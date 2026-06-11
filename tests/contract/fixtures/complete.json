@@ -1,0 +1,158 @@
+{
+  "contract_version": "bim-json/1.0",
+  "target_schema": "IFC2X3",
+  "units": {
+    "length": "MILLIMETRE"
+  },
+  "project": {
+    "id": "project-001",
+    "name": "Complete contract project"
+  },
+  "site": {
+    "id": "site-001",
+    "name": "Main site"
+  },
+  "building": {
+    "id": "building-001",
+    "name": "Main building"
+  },
+  "storeys": [
+    {
+      "id": "storey-001",
+      "name": "Ground floor",
+      "elevation": 0.0
+    },
+    {
+      "id": "storey-002",
+      "name": "First floor",
+      "elevation": 3000.0
+    }
+  ],
+  "elements": [
+    {
+      "id": "wall-001",
+      "kind": "wall",
+      "name": "External wall",
+      "storey_id": "storey-001",
+      "dimensions": {
+        "length": 5000.0,
+        "height": 3000.0,
+        "thickness": 240.0
+      },
+      "properties": {
+        "is_external": true,
+        "load_bearing": false
+      }
+    },
+    {
+      "id": "column-001",
+      "kind": "column",
+      "name": "Column",
+      "storey_id": "storey-001",
+      "dimensions": {
+        "width": 400.0,
+        "depth": 400.0,
+        "height": 3000.0
+      },
+      "properties": {
+        "load_bearing": true
+      }
+    },
+    {
+      "id": "beam-001",
+      "kind": "beam",
+      "name": "Beam",
+      "storey_id": "storey-002",
+      "dimensions": {
+        "length": 5000.0,
+        "width": 300.0,
+        "height": 500.0
+      },
+      "properties": {
+        "load_bearing": true
+      }
+    },
+    {
+      "id": "slab-001",
+      "kind": "slab",
+      "name": "Floor slab",
+      "storey_id": "storey-001",
+      "dimensions": {
+        "length": 8000.0,
+        "width": 6000.0,
+        "thickness": 200.0
+      },
+      "properties": {
+        "predefined_type": "FLOOR"
+      }
+    },
+    {
+      "id": "door-001",
+      "kind": "door",
+      "name": "Main door",
+      "storey_id": "storey-001",
+      "dimensions": {
+        "width": 900.0,
+        "height": 2100.0
+      },
+      "properties": {
+        "predefined_type": "DOOR"
+      }
+    },
+    {
+      "id": "window-001",
+      "kind": "window",
+      "name": "Front window",
+      "storey_id": "storey-001",
+      "dimensions": {
+        "width": 1200.0,
+        "height": 1500.0
+      },
+      "properties": {
+        "predefined_type": "WINDOW"
+      }
+    },
+    {
+      "id": "stair-001",
+      "kind": "stair",
+      "name": "Main stair",
+      "storey_id": "storey-001",
+      "dimensions": {
+        "length": 4000.0,
+        "width": 1200.0,
+        "height": 3000.0
+      },
+      "properties": {
+        "predefined_type": "STRAIGHT_RUN_STAIR"
+      }
+    },
+    {
+      "id": "stair-flight-001",
+      "kind": "stair_flight",
+      "name": "First flight",
+      "storey_id": "storey-001",
+      "dimensions": {
+        "width": 1200.0,
+        "rise": 1500.0,
+        "run": 3000.0
+      },
+      "properties": {
+        "predefined_type": "STRAIGHT"
+      }
+    },
+    {
+      "id": "roof-001",
+      "kind": "roof",
+      "name": "Main roof",
+      "storey_id": "storey-002",
+      "dimensions": {
+        "length": 8000.0,
+        "width": 6000.0,
+        "thickness": 300.0
+      },
+      "properties": {
+        "predefined_type": "FLAT_ROOF"
+      }
+    }
+  ]
+}
