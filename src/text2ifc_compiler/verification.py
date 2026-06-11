@@ -142,3 +142,10 @@ def identity_map(source: Any) -> dict[str, str]:
         _bim_json_id(entity): str(entity.GlobalId)
         for entity in entities
     }
+
+
+def measure_element_dimensions(
+    source: Any, bim_json_id: str
+) -> dict[str, float]:
+    del source, bim_json_id
+    raise NotImplementedError("IFC dimension measurement is not implemented.")

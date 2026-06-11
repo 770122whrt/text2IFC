@@ -4,6 +4,7 @@ from .verification import (
     containment_map,
     hierarchy_snapshot,
     identity_map,
+    measure_element_dimensions,
     open_ifc,
     verify_ifc,
 )
@@ -15,7 +16,7 @@ __all__ = [
     "containment_map",
     "hierarchy_snapshot",
     "identity_map",
+    "measure_element_dimensions",
     "open_ifc",
     "verify_ifc",
 ]
-
