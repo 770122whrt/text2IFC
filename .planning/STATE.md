@@ -12,8 +12,8 @@ requirements.
 ## Status
 
 - Phase: 1
-- Stage: Specification
-- State: In progress
+- Stage: Planning complete
+- State: Ready to execute
 - Branch: `main`
 - Remote: `https://github.com/770122whrt/text2IFC`
 
@@ -46,9 +46,8 @@ requirements.
 
 ## Next Action
 
-Complete the Phase 1 ambiguity interview, write
-`.planning/phases/01-bim-json-contract-validator/01-SPEC.md`, then create and
-verify the Phase 1 plan.
+Execute Phase 1 in wave order from
+`.planning/phases/01-bim-json-1-0-contract-and-validator/01-01-PLAN.md`.
 
 ---
-*Last activity: 2026-06-11 - initialized project documentation and Phase 1*
+*Last activity: 2026-06-11 - completed Phase 1 specification, research, and plans*

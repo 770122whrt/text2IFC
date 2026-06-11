@@ -10,7 +10,28 @@ errors, and migrate or explicitly reject existing project JSON artifacts.
 **Explicit boundary:** This phase defines data meaning and validation. It does
 not expand IFC generation behavior.
 
-**Status:** Specification in progress
+**Plans:** 4 plans in 3 waves
+
+**Wave 1**
+
+- `01-01-PLAN.md` - Canonical structural contract, validator, and CLI
+
+**Wave 2** *(blocked on Wave 1 completion)*
+
+- `01-02-PLAN.md` - Semantic identity and storey-reference validation
+- `01-04-PLAN.md` - Generated contract reference and drift check
+
+**Wave 3** *(blocked on Wave 2 semantic validation)*
+
+- `01-03-PLAN.md` - Complete legacy migration audit
+
+**Cross-cutting constraints:**
+
+- JSON Schema Draft 2020-12 remains the single structural source of truth.
+- Validation and migration are deterministic and never invent required data.
+- Validation performs no IFC I/O and no remote schema resolution.
+
+**Status:** Ready to execute
 
 ## Phase 2: Minimum BIM JSON to IFC2X3 Compiler
 

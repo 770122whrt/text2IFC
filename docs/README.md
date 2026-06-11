@@ -22,6 +22,10 @@ Use this page as the stable entry point for project documentation.
 - [Requirements](../.planning/REQUIREMENTS.md)
 - [Roadmap](../.planning/ROADMAP.md)
 - [Current state](../.planning/STATE.md)
+- [Phase 1 specification](../.planning/phases/01-bim-json-1-0-contract-and-validator/01-SPEC.md)
+- [Phase 1 implementation context](../.planning/phases/01-bim-json-1-0-contract-and-validator/01-CONTEXT.md)
+- [Phase 1 research](../.planning/phases/01-bim-json-1-0-contract-and-validator/01-RESEARCH.md)
+- [Phase 1 validation strategy](../.planning/phases/01-bim-json-1-0-contract-and-validator/01-VALIDATION.md)
 - Phase artifacts live under `.planning/phases/NN-phase-name/`.
 
 ## Data and Methodology
