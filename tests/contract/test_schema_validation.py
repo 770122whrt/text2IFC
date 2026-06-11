@@ -270,6 +270,21 @@ def test_cli_returns_two_for_malformed_json(tmp_path):
     _assert_issue(payload["errors"], "INVALID_JSON", "/")
 
 
+@pytest.mark.parametrize("token", ["1e400", "NaN", "Infinity"])
+def test_cli_rejects_non_finite_json_numbers(tmp_path, token):
+    path = tmp_path / "non-finite.json"
+    text = FIXTURE.read_text(encoding="utf-8").replace(
+        "5000.0", token, 1
+    )
+    path.write_text(text, encoding="utf-8")
+
+    result = _run_cli(path)
+
+    assert result.returncode == 2
+    payload = json.loads(result.stdout)
+    _assert_issue(payload["errors"], "INVALID_JSON", "/")
+
+
 def test_cli_rejects_files_larger_than_ten_mebibytes(tmp_path):
     path = tmp_path / "large.json"
     path.write_bytes(b" " * (10 * 1024 * 1024 + 1))

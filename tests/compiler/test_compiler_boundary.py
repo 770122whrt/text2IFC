@@ -43,6 +43,11 @@ def _break_storey_reference(document: dict) -> dict:
     return document
 
 
+def _use_non_finite_dimension(document: dict) -> dict:
+    document["elements"][0]["dimensions"]["length"] = float("inf")
+    return document
+
+
 @pytest.mark.parametrize(
     ("mutate", "expected_code", "expected_path"),
     [
@@ -52,6 +57,11 @@ def _break_storey_reference(document: dict) -> dict:
             _break_storey_reference,
             "UNRESOLVED_STOREY_REFERENCE",
             "/elements/0/storey_id",
+        ),
+        (
+            _use_non_finite_dimension,
+            "NON_FINITE_NUMBER",
+            "/elements/0/dimensions/length",
         ),
     ],
 )

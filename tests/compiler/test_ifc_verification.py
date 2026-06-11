@@ -142,6 +142,26 @@ def test_cli_rejects_malformed_and_oversized_json(
     assert not oversized_output.exists()
 
 
+def test_compiler_cli_rejects_non_finite_json_number(
+    tmp_path: Path,
+    capsys,
+) -> None:
+    source = tmp_path / "non-finite.json"
+    source.write_text(
+        '{"contract_version":"bim-json/1.0","value":1e400}',
+        encoding="utf-8",
+    )
+    output = tmp_path / "non-finite.ifc"
+
+    exit_code, payload = _run_cli(
+        capsys, [str(source), str(output)]
+    )
+
+    assert exit_code == 2
+    assert payload["input_errors"][0]["code"] == "INVALID_JSON"
+    assert not output.exists()
+
+
 def test_cli_usage_failure_is_stable(capsys) -> None:
     exit_code, payload = _run_cli(capsys, [])
 

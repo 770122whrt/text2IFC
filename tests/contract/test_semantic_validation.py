@@ -1,5 +1,6 @@
 import copy
 import json
+import math
 from pathlib import Path
 
 import pytest
@@ -104,3 +105,23 @@ def test_valid_document_has_no_semantic_issues_and_is_not_mutated():
 
     assert validate_document(document) == []
     assert document == original
+
+
+@pytest.mark.parametrize(
+    ("value", "path"),
+    [
+        (math.inf, "/elements/0/dimensions/length"),
+        (math.nan, "/elements/0/dimensions/length"),
+        (10**400, "/storeys/0/elevation"),
+    ],
+)
+def test_numbers_must_be_representable_as_finite_runtime_values(
+    value, path
+):
+    document = _complete_document()
+    if path.startswith("/storeys"):
+        document["storeys"][0]["elevation"] = value
+    else:
+        document["elements"][0]["dimensions"]["length"] = value
+
+    assert ("NON_FINITE_NUMBER", path) in _pairs(document)
