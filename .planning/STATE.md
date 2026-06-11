@@ -7,13 +7,13 @@ See: `.planning/PROJECT.md` (updated 2026-06-11)
 **Core value:** Produce valid, inspectable IFC models from explicit user
 requirements.
 
-**Current focus:** Phase 2.5 - BIM JSON 1.1 Spatial Ground Truth
+**Current focus:** Phase 2.5 - BIM JSON 2.0 IFC Semantic Graph
 
 ## Status
 
 - Phase: 2.5
-- Stage: Discovery complete
-- State: Ready to specify
+- Stage: Specification and implementation context complete
+- State: Ready to plan
 - Plans: Not yet planned
 - Branch: `main`
 - Remote: `https://github.com/770122whrt/text2IFC`
@@ -53,8 +53,15 @@ requirements.
 
 - Phase 1 defines one BIM JSON 1.0 contract and validator.
 - Phase 2 implements the minimum IFC2X3 compiler.
-- Phase 2.5 establishes BIM JSON 1.1 spatial ground truth before model training.
-- Phase 3 consumes BIM JSON 1.1 and does not define a competing data shape.
+- Phase 2.5 establishes the breaking BIM JSON 2.0 IFC semantic graph before
+  model training.
+- Phase 3 consumes formal BIM JSON 2.0 and does not define a competing shape.
+- IFC2X3 EXPRESS and official PSD definitions are the deterministic knowledge
+  sources; bSDD is optional enrichment and not the IFC2X3 schema authority.
+- The language model emits semantic IFC classes and values, while the compiler
+  creates low-level IFC implementation objects.
+- Formal documents are complete and compiler-ready; incomplete or unsupported
+  content uses a separate Draft Envelope.
 - Placement, spaces, and opening/filling relationships move to Phase 2.5.
 - Materials, type reuse, complex geometry, connection topology, and broader
   product classes remain Phase 4.
@@ -74,15 +81,15 @@ requirements.
 - Existing source files include text encoding problems.
 - Project-local dependency handling is not yet standardized for new machines.
 - Baseline model/provider choice must remain replaceable and reproducible.
-- BIM JSON 1.1 field semantics and supported extraction-loss taxonomy are not
-  yet locked.
+- Registry generation and acquisition code do not yet exist.
+- BIM JSON 2.0 and Draft Envelope schemas are specified but not implemented.
 - Existing BIMNet train/test folders leak scene families (`7y3`, `e9z`, and
   `px4`) across file-level splits and must not be reused as model splits.
 
 ## Next Action
 
-Run Phase 2.5 specification to lock placement, spaces, openings/fills,
-IFC extraction, loss reporting, migration, and compiler compatibility.
+Run Phase 2.5 planning, starting with official IFC2X3 source acquisition,
+manifest verification, and deterministic declaration/property registries.
 
 ## Accumulated Context
 
@@ -92,4 +99,4 @@ IFC extraction, loss reporting, migration, and compiler compatibility.
   the spatial ground truth required for Text-to-JSON training.
 
 ---
-*Last activity: 2026-06-11 - inserted Phase 2.5 after a 35-file IFC gap audit*
+*Last activity: 2026-06-11 - specified BIM JSON 2.0 semantic graph and official-source knowledge policy*

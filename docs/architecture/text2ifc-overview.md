@@ -28,7 +28,7 @@ The training-data path runs in the opposite direction:
 ```text
 Authorized source IFC
   -> deterministic supported-subset extraction
-  -> BIM JSON 1.1 ground truth + provenance + loss report
+  -> formal BIM JSON 2.0 or Draft Envelope + provenance + loss report
   -> natural-language descriptions and instructions
   -> paired Text-to-JSON dataset
 ```
@@ -81,15 +81,17 @@ Compile BIM JSON 1.0 to reopenable IFC2X3 with hierarchy, element counts,
 basic dimensions, selected properties, stable identity, atomic output, and
 schema-level verification.
 
-### Phase 2.5: BIM JSON 1.1 Spatial Ground Truth
+### Phase 2.5: BIM JSON 2.0 IFC Semantic Graph
 
-Add hierarchical placement, spaces, opening/filling relationships, deterministic
-IFC ground-truth extraction, explicit losses, 1.0 migration, and minimum
-spatial compiler support.
+Build official-source IFC2X3 declaration and property registries. Replace the
+fixed element-kind vocabulary with explicit IFC semantic entities and
+relationships, parent-relative placement, bounded generatable geometry,
+formal-versus-Draft semantics, deterministic extraction, explicit losses, 1.0
+migration, and the initial BIMNet architectural compiler profile.
 
 ### Phase 3: Text-to-JSON Dataset and Baseline
 
-Create provenance-linked BIM JSON 1.1 pairs from the Phase 2.5 ground truth,
+Create provenance-linked formal BIM JSON 2.0 pairs from Phase 2.5 ground truth,
 evaluate structured-output baselines, and run the first spatial
 Text-to-JSON-to-IFC demonstration.
 
@@ -114,6 +116,7 @@ Every probabilistic output is validated before it reaches the deterministic
 IFC compiler. Invalid or incomplete input must produce actionable errors or
 clarification questions, not silently invented building data.
 
-The JSON Schema at `schemas/bim-json/1.0/schema.json` is the only structural
-truth for compiler input. The compiler consumes the Phase 1 validator and does
-not maintain a second independent BIM data model.
+Each versioned JSON Schema is the only structural truth for its contract.
+IFC2X3 class and property knowledge is generated from official EXPRESS and PSD
+sources, while project-authored capability overlays state what can be
+generated, extracted, or created only by the compiler.

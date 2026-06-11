@@ -73,30 +73,39 @@ source placement. A 35-file IFC audit confirmed that this prevents spatial
 training and motivated the inserted Phase 2.5 without invalidating Phase 2's
 minimum-compiler acceptance criteria.
 
-## Phase 2.5: BIM JSON 1.1 Spatial Ground Truth (INSERTED)
+## Phase 2.5: BIM JSON 2.0 IFC Semantic Graph (INSERTED)
 
-**Goal:** Define and validate a spatially meaningful BIM JSON 1.1, extract its
-supported ground truth deterministically from authorized IFC sources, report
-all unsupported source content, and extend the compiler with the minimum
-placement, space, and opening/filling behavior needed before Text-to-JSON
-training.
+**Goal:** Define and validate an IFC2X3-aligned BIM JSON 2.0 semantic entity
+graph, build deterministic knowledge registries from official buildingSMART
+sources, extract authorized IFC ground truth without silent loss, and extend
+the compiler for the initial BIMNet architectural generation profile.
 
-**Requirements:** JSON-06, GEO-01, GEO-02, SPACE-01, EXTRACT-01, COMPAT-01
+**Requirements:** JSON-06, KNOW-01, KNOW-02, ENTITY-01, CAP-01, GEO-01,
+GEO-02, SPACE-01, DRAFT-01, EXTRACT-01, COMPAT-01
 
 **Depends on:** Phase 1, Phase 2
 
 **Evidence:** `02.5-IFC-GAP-AUDIT.md` audits 25 BIMNet IFC2X3 and 10
 buildingSMART IFC4/IFC4X3 files.
 
-**Explicit boundary:** This phase establishes spatial truth and deterministic
-normalization. Material/type fidelity, arbitrary geometry, connection
-topology, broader product classes, and IFC4/IFC4X3 output remain Phase 4.
+**Canonical refs:**
 
-**Status:** Inserted - ready for specification
+- `.planning/phases/02.5-bim-json-2.0-ifc-semantic-graph/02.5-SPEC.md`
+- `.planning/phases/02.5-bim-json-2.0-ifc-semantic-graph/02.5-CONTEXT.md`
+- `.planning/phases/02.5-bim-json-2.0-ifc-semantic-graph/02.5-IFC-GAP-AUDIT.md`
+- `docs/reference/ifc2x3-knowledge-sources.md`
+
+**Explicit boundary:** This phase establishes official IFC2X3 knowledge,
+IFC-class semantic truth, parent-relative placement, bounded semantic
+geometry, Draft/loss accounting, and the BIMNet architectural generation
+profile. Arbitrary BRep/tessellation, materials, type reuse, broad connection
+topology, furnishing/MEP generation, and IFC4/IFC4X3 output remain Phase 4.
+
+**Status:** Specified - ready for planning
 
 ## Phase 3: Text-to-JSON Dataset and Baseline
 
-**Goal:** Use canonical BIM JSON 1.1 ground truth to build provenance-linked
+**Goal:** Use canonical formal BIM JSON 2.0 ground truth to build provenance-linked
 text/JSON pairs, establish a structured-output Text-to-JSON baseline, evaluate
 it, and demonstrate the first spatial Text-to-JSON-to-IFC request.
 
@@ -111,7 +120,7 @@ it, and demonstrate the first spatial Text-to-JSON-to-IFC request.
   text generation or augmentation.
 - buildingSMART samples remain a separate cross-schema and relationship track.
 - IFC-to-BIM-JSON is an offline label-construction step; runtime inference
-  remains Natural Language to BIM JSON to IFC.
+  remains Natural Language to formal BIM JSON 2.0 to IFC.
 
 **Status:** Blocked on Phase 2.5
 

@@ -26,7 +26,9 @@ explicit user requirements instead of generating fragile IFC text directly.
 
 - [x] Define and validate BIM JSON 1.0.
 - [x] Build a minimum IFC2X3 compiler from the validated contract.
-- [ ] Extend the contract to BIM JSON 1.1 spatial ground truth.
+- [ ] Define BIM JSON 2.0 as an IFC2X3-aligned semantic entity graph.
+- [ ] Build deterministic IFC2X3 declaration and property-set registries from
+  official buildingSMART sources.
 - [ ] Extract supported ground truth from authorized IFC with explicit losses.
 - [ ] Build a Text-to-JSON dataset pipeline and measurable baseline.
 - [ ] Complete the first Text-to-JSON-to-IFC end-to-end loop.
@@ -76,7 +78,8 @@ explicit user requirements instead of generating fragile IFC text directly.
 | Target IFC2X3 first | Matches all current BIMNet source models | Adopted |
 | Make JSON Schema the unique BIM JSON structural truth | Stabilize the boundary before compiler and model work | Adopted |
 | Build the minimum compiler in Phase 2 | Establish deterministic output before Text-to-JSON | Complete |
-| Insert spatial contract Phase 2.5 | BIM JSON 1.0 collapses different layouts to the same representation | Adopted |
+| Make Phase 2.5 a breaking BIM JSON 2.0 contract | IFC class identity, placement, relationships, and Draft semantics cannot be added safely as a minor revision | Adopted |
+| Build official-source IFC2X3 knowledge first | Schema correctness cannot depend on model memory or retrieval | Adopted |
 | Build Text-to-JSON in Phase 3 | Reach an early end-to-end text2IFC baseline | Pending |
 | Defer materials, complex geometry, and topology to Phase 4 | Keep spatial ground truth separate from full IFC fidelity | Adopted |
 | Use TDD and GSD phase artifacts | Keep behavior and planning traceable | Adopted |

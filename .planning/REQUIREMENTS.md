@@ -42,28 +42,46 @@ requirements.
   from the same source used by validation.
 - [x] **DOC-02**: Durable documentation is indexed from `docs/README.md`.
 
-### Spatial Ground Truth and Extraction
+### IFC Semantic Graph, Knowledge, and Extraction
 
-- [ ] **JSON-06**: BIM JSON 1.1 extends BIM JSON 1.0 through a versioned schema
-  and an explicit deterministic 1.0-to-1.1 migration.
+- [ ] **JSON-06**: BIM JSON 2.0 is a separately versioned IFC2X3-aligned
+  semantic entity graph, and BIM JSON 1.0 migrates deterministically to an
+  explicit Draft Envelope rather than receiving invented spatial facts.
+- [ ] **KNOW-01**: A deterministic registry generated from official IFC2X3
+  EXPRESS validates class names, inheritance, attributes, relationships,
+  selects, and enumerations.
+- [ ] **KNOW-02**: A deterministic registry generated from official IFC2X3 PSD
+  definitions validates standard property-set names, property names, types,
+  applicability, and provenance.
+- [ ] **ENTITY-01**: BIM JSON 2.0 represents semantic IFC objects in
+  `entities` with explicit `ifc_class`, stable identity, typed attributes, and
+  source provenance.
+- [ ] **CAP-01**: Every recognized IFC2X3 entity has an explicit generation,
+  extraction, compiler-only, or unsupported capability and no unsupported
+  entity is silently emitted or dropped.
 - [ ] **GEO-01**: BIM JSON and generated IFC preserve hierarchical local
   placement and orientation for supported spatial objects.
-- [ ] **GEO-02**: BIM JSON and generated IFC preserve supported opening,
-  host-element, and filling-element relationships.
+- [ ] **GEO-02**: BIM JSON and generated IFC preserve supported semantic
+  geometry plus explicit opening, host-element, and filling-element
+  relationships.
 - [ ] **SPACE-01**: BIM JSON represents supported rooms/spaces with stable
   identity, storey membership, placement, and geometry.
+- [ ] **DRAFT-01**: Incomplete, ambiguous, extract-only, or unsupported content
+  uses a separate Draft Envelope that enumerates every missing fact, loss,
+  provenance record, and future clarification target.
 - [ ] **EXTRACT-01**: Authorized IFC sources are deterministically normalized
-  into valid BIM JSON 1.1 plus provenance and a complete machine-readable loss
-  report.
-- [ ] **COMPAT-01**: The compiler accepts valid BIM JSON 1.1 and preserves the
+  into valid BIM JSON 2.0 or an explicit Draft plus provenance and a complete
+  machine-readable loss report.
+- [ ] **COMPAT-01**: The compiler accepts formal BIM JSON 2.0 within the
+  architectural generation profile and preserves the
   Phase 2 guarantees while adding the supported spatial subset.
 
 ### Text-to-JSON Baseline
 
 - [ ] **TEXT-01**: The project can generate provenance-linked text and BIM JSON
-  1.1 pairs from approved ground-truth records without split leakage.
+  2.0 pairs from approved formal ground-truth records without split leakage.
 - [ ] **TEXT-02**: A structured-output baseline converts natural language into
-  BIM JSON 1.1 without generating raw IFC text.
+  formal BIM JSON 2.0 without generating raw IFC text.
 - [ ] **TEXT-03**: Text-to-JSON output is evaluated with field-level,
   collection-level, and document-validity metrics.
 - [ ] **E2E-01**: At least one spatial natural-language request completes the
@@ -77,8 +95,9 @@ requirements.
 - **GEO-04**: Preserve supported topology and connection relationships.
 - **GEO-05**: Preserve supported arbitrary profiles, BReps, tessellation, and
   reusable mapped geometry.
-- **IFC-06**: Expand beyond the initial nine element kinds with explicit
-  schema-aware support for selected architectural, structural, and MEP classes.
+- **IFC-06**: Expand beyond the Phase 2.5 architectural generation profile
+  with schema-aware support for selected structural, furnishing, and MEP
+  classes.
 
 ### Natural-language Agent
 
@@ -121,9 +140,14 @@ requirements.
 | VER-02 | Phase 2 | Complete |
 | VER-03 | Phase 2 | Complete |
 | JSON-06 | Phase 2.5 | Pending |
+| KNOW-01 | Phase 2.5 | Pending |
+| KNOW-02 | Phase 2.5 | Pending |
+| ENTITY-01 | Phase 2.5 | Pending |
+| CAP-01 | Phase 2.5 | Pending |
 | GEO-01 | Phase 2.5 | Pending |
 | GEO-02 | Phase 2.5 | Pending |
 | SPACE-01 | Phase 2.5 | Pending |
+| DRAFT-01 | Phase 2.5 | Pending |
 | EXTRACT-01 | Phase 2.5 | Pending |
 | COMPAT-01 | Phase 2.5 | Pending |
 | TEXT-01 | Phase 3 | Pending |
@@ -142,10 +166,10 @@ requirements.
 | DEPLOY-01 | Phase 6 | Deferred |
 
 **Coverage:**
-- tracked requirements: 34 total
-- Mapped to phases: 34
+- tracked requirements: 40 total
+- Mapped to phases: 40
 - Unmapped: 0
 
 ---
 *Requirements defined: 2026-06-11*
-*Last updated: 2026-06-11 after Phase 2 verification*
+*Last updated: 2026-06-11 after Phase 2.5 specification*

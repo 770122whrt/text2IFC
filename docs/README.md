@@ -31,11 +31,14 @@ Use this page as the stable entry point for project documentation.
 ## Data and Methodology
 
 - [BIM JSON 1.0 contract reference](reference/bim-json-1.0.md)
+- [IFC2X3 knowledge sources and no-fabrication policy](reference/ifc2x3-knowledge-sources.md)
 - [Dataset organization](../dataset/data_organization.md)
 - [External data source catalog](../dataset/sources/CATALOG.md)
 - [Dataset manifest format](../dataset/manifests/README.md)
 - [Existing methodology notes](methodology.md)
 - [IFC2X3 TC1 EXPRESS schema](../schemas/ifc/IFC2X3_TC1.exp)
+- [Phase 2.5 BIM JSON 2.0 specification](../.planning/phases/02.5-bim-json-2.0-ifc-semantic-graph/02.5-SPEC.md)
+- [Phase 2.5 implementation context](../.planning/phases/02.5-bim-json-2.0-ifc-semantic-graph/02.5-CONTEXT.md)
 
 ## Document Placement Rules
 
