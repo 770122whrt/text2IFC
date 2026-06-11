@@ -43,7 +43,30 @@ VER-03
 
 **Depends on:** Phase 1
 
-**Status:** Deferred
+**Plans:** 4 plans in 3 waves
+
+**Wave 1**
+
+- [ ] `02-01-PLAN.md` - Validated compiler boundary, hierarchy, identity, and
+  atomic IFC2X3 output
+
+**Wave 2** *(blocked on Wave 1 completion)*
+
+- [ ] `02-02-PLAN.md` - Deterministic all-family geometry and dimensions
+- [ ] `02-03-PLAN.md` - Selected property and predefined-type fidelity
+
+**Wave 3** *(blocked on Wave 2 completion)*
+
+- [ ] `02-04-PLAN.md` - Verifier proof, CLI, complete acceptance, and docs
+
+**Cross-cutting constraints:**
+
+- BIM JSON 1.0 validation runs before any IFC output path is touched.
+- Tests inspect serialized and reopened IFC instead of compiler bookkeeping.
+- Output replacement occurs only after in-memory and reopened verification.
+- Every behavior follows a recorded RED-GREEN TDD cycle.
+
+**Status:** Planned - ready to execute
 
 ## Phase 3: Text-to-JSON Dataset and Baseline
 

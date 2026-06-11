@@ -12,8 +12,9 @@ requirements.
 ## Status
 
 - Phase: 2
-- Stage: Specification and planning
-- State: Planning
+- Stage: Execution
+- State: Ready to execute
+- Plans: 4 in 3 waves
 - Branch: `main`
 - Remote: `https://github.com/770122whrt/text2IFC`
 
@@ -45,6 +46,10 @@ requirements.
 - High-fidelity placement and opening relationships are deferred to Phase 4.
 - Phase specifications precede executable implementation plans.
 - Implementation plans must use TDD tasks and explicit verification commands.
+- Phase 2 geometry APIs receive SI metres while direct IFC attributes remain
+  in declared millimetre project units.
+- Phase 2 uses dimension-preserving envelopes and deterministic synthetic
+  placement; source placement fidelity remains Phase 4.
 
 ## Known Risks
 
@@ -55,7 +60,8 @@ requirements.
 
 ## Next Action
 
-Specify and plan Phase 2 minimum BIM JSON to IFC2X3 compiler behavior.
+Execute `02-01-PLAN.md`: write and commit behavioral RED tests for the
+validated compiler boundary, hierarchy, stable identity, and atomic output.
 
 ---
-*Last activity: 2026-06-11 - verified and completed Phase 1*
+*Last activity: 2026-06-11 - planned Phase 2 in four TDD plans across three waves*
