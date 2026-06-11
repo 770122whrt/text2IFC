@@ -36,14 +36,13 @@ created: 2026-06-11
 | 01-01 | 01 | 1 | JSON-01..04 | T-01-01, T-01-02 | Bounded local-only validation | unit/CLI | `python -m pytest tests/contract/test_schema_validation.py -q` | yes | green |
 | 01-02 | 02 | 2 | JSON-02, JSON-03 | T-01-01 | Stable semantic errors | unit | `python -m pytest tests/contract/test_semantic_validation.py -q` | yes | green |
 | 01-03 | 03 | 3 | JSON-05 | T-01-03, T-01-04 | No overwrite or silent loss | integration | `python -m pytest tests/contract/test_migration.py -q` | Wave 0 | pending |
-| 01-04 | 04 | 2 | DOC-01, DOC-02 | T-01-02 | Local deterministic docs | unit | `python -m pytest tests/contract/test_reference.py -q` | Wave 0 | pending |
+| 01-04 | 04 | 2 | DOC-01, DOC-02 | T-01-02 | Local deterministic docs | unit | `python -m pytest tests/contract/test_reference.py -q` | yes | green |
 
 ## Wave 0 Requirements
 
 - [x] `pyproject.toml` configures `src` and `.deps/python312` on pytest's path.
 - [x] `tests/contract/fixtures/complete.json` covers every supported family.
-- [ ] Remaining contract test modules are created before their corresponding
-  GREEN steps.
+- [ ] The migration test module is created before its GREEN step.
 
 ## Manual-Only Verifications
 
