@@ -7,13 +7,13 @@ See: `.planning/PROJECT.md` (updated 2026-06-11)
 **Core value:** Produce valid, inspectable IFC models from explicit user
 requirements.
 
-**Current focus:** Phase 1 - BIM JSON 1.0 Contract and Validator
+**Current focus:** Phase 2 - Minimum BIM JSON to IFC2X3 Compiler
 
 ## Status
 
-- Phase: 1
-- Stage: Implementation complete; verification pending
-- State: Executing
+- Phase: 2
+- Stage: Specification and planning
+- State: Planning
 - Branch: `main`
 - Remote: `https://github.com/770122whrt/text2IFC`
 
@@ -33,7 +33,9 @@ requirements.
 - All 53 legacy JSON models classified by deterministic migration audit.
 - Current migration yield is 0 converted and 53 explicitly rejected because
   required source facts are missing.
-- Contract and repository regression suite currently passes 46 tests.
+- Phase 1 Nyquist validation, deep code review, security verification, and
+  requirement coverage checks passed.
+- Contract and repository regression suite currently passes 97 tests.
 
 ## Current Decisions
 
@@ -53,7 +55,7 @@ requirements.
 
 ## Next Action
 
-Run Phase 1 GSD verification, code review, and requirement coverage audit.
+Specify and plan Phase 2 minimum BIM JSON to IFC2X3 compiler behavior.
 
 ---
-*Last activity: 2026-06-11 - completed Phase 1 Plan 03 migration audit*
+*Last activity: 2026-06-11 - verified and completed Phase 1*

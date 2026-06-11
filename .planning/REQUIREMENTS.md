@@ -8,15 +8,15 @@ requirements.
 
 ### BIM JSON Contract
 
-- [ ] **JSON-01**: The project defines one versioned BIM JSON contract for
+- [x] **JSON-01**: The project defines one versioned BIM JSON contract for
   Phase 1 input.
-- [ ] **JSON-02**: Invalid BIM JSON is rejected with field-level errors before
+- [x] **JSON-02**: Invalid BIM JSON is rejected with field-level errors before
   IFC generation.
-- [ ] **JSON-03**: The contract distinguishes required values from optional
+- [x] **JSON-03**: The contract distinguishes required values from optional
   values without silently inventing missing required data.
-- [ ] **JSON-04**: The contract covers the supported project hierarchy,
+- [x] **JSON-04**: The contract covers the supported project hierarchy,
   element families, basic dimensions, and selected common properties.
-- [ ] **JSON-05**: Existing project JSON artifacts can be converted to the
+- [x] **JSON-05**: Existing project JSON artifacts can be converted to the
   versioned contract or rejected with an explicit incompatibility report.
 
 ### IFC Generation
@@ -38,9 +38,9 @@ requirements.
 
 ### Documentation
 
-- [ ] **DOC-01**: The BIM JSON contract and supported IFC subset are documented
+- [x] **DOC-01**: The BIM JSON contract and supported IFC subset are documented
   from the same source used by validation.
-- [ ] **DOC-02**: Durable documentation is indexed from `docs/README.md`.
+- [x] **DOC-02**: Durable documentation is indexed from `docs/README.md`.
 
 ### Text-to-JSON Baseline
 
@@ -87,13 +87,13 @@ requirements.
 
 | Requirement | Phase | Status |
 |---|---|---|
-| JSON-01 | Phase 1 | Pending |
-| JSON-02 | Phase 1 | Pending |
-| JSON-03 | Phase 1 | Pending |
-| JSON-04 | Phase 1 | Pending |
-| JSON-05 | Phase 1 | Pending |
-| DOC-01 | Phase 1 | Pending |
-| DOC-02 | Phase 1 | Pending |
+| JSON-01 | Phase 1 | Complete |
+| JSON-02 | Phase 1 | Complete |
+| JSON-03 | Phase 1 | Complete |
+| JSON-04 | Phase 1 | Complete |
+| JSON-05 | Phase 1 | Complete |
+| DOC-01 | Phase 1 | Complete |
+| DOC-02 | Phase 1 | Complete |
 | IFC-01 | Phase 2 | Pending |
 | IFC-02 | Phase 2 | Pending |
 | IFC-03 | Phase 2 | Pending |
@@ -124,4 +124,4 @@ requirements.
 
 ---
 *Requirements defined: 2026-06-11*
-*Last updated: 2026-06-11 after project planning initialization*
+*Last updated: 2026-06-11 after Phase 1 verification*
