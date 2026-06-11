@@ -3,6 +3,7 @@ from pathlib import Path
 from typing import Any
 
 import ifcopenshell
+import ifcopenshell.geom
 import ifcopenshell.util.element
 from ifcopenshell.validate import json_logger, validate
 
@@ -147,5 +148,41 @@ def identity_map(source: Any) -> dict[str, str]:
 def measure_element_dimensions(
     source: Any, bim_json_id: str
 ) -> dict[str, float]:
-    del source, bim_json_id
-    raise NotImplementedError("IFC dimension measurement is not implemented.")
+    ifc_file = _as_file(source)
+    try:
+        global_id = identity_map(ifc_file)[bim_json_id]
+    except KeyError as exc:
+        raise KeyError(f"Unknown BIM JSON ID: {bim_json_id}") from exc
+    element = ifc_file.by_guid(global_id)
+
+    if element.is_a("IfcDoor") or element.is_a("IfcWindow"):
+        return {
+            "width": float(element.OverallWidth),
+            "height": float(element.OverallHeight),
+        }
+
+    dimension_names_by_class = {
+        "IfcWall": ("length", "thickness", "height"),
+        "IfcColumn": ("width", "depth", "height"),
+        "IfcBeam": ("length", "width", "height"),
+        "IfcSlab": ("length", "width", "thickness"),
+        "IfcStair": ("length", "width", "height"),
+        "IfcStairFlight": ("run", "width", "rise"),
+        "IfcRoof": ("length", "width", "thickness"),
+    }
+    try:
+        dimension_names = dimension_names_by_class[element.is_a()]
+    except KeyError as exc:
+        raise ValueError(
+            f"Element {bim_json_id!r} has unsupported IFC class "
+            f"{element.is_a()!r}."
+        ) from exc
+
+    settings = ifcopenshell.geom.settings()
+    shape = ifcopenshell.geom.create_shape(settings, element)
+    vertices = shape.geometry.verts
+    axes = (vertices[0::3], vertices[1::3], vertices[2::3])
+    extents_mm = tuple(
+        (max(axis) - min(axis)) * 1000.0 for axis in axes
+    )
+    return dict(zip(dimension_names, extents_mm, strict=True))
