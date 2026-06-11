@@ -79,11 +79,65 @@ def _normalize_error(error: ValidationError) -> list[ValidationIssue]:
     ]
 
 
-def validate_document(document: Any) -> list[ValidationIssue]:
+def _sort_issues(issues: Iterable[ValidationIssue]) -> list[ValidationIssue]:
+    return sorted(
+        set(issues), key=lambda issue: (issue.path, issue.code, issue.message)
+    )
+
+
+def _validate_structure(document: Any) -> list[ValidationIssue]:
     validator = Draft202012Validator(load_schema())
     issues = [
         issue
         for error in validator.iter_errors(document)
         for issue in _normalize_error(error)
     ]
-    return sorted(set(issues), key=lambda issue: (issue.path, issue.code, issue.message))
+    return _sort_issues(issues)
+
+
+def _identity_entries(document: dict[str, Any]) -> Iterable[tuple[str, str]]:
+    for key in ("project", "site", "building"):
+        yield document[key]["id"], f"/{key}/id"
+    for index, storey in enumerate(document["storeys"]):
+        yield storey["id"], f"/storeys/{index}/id"
+    for index, element in enumerate(document["elements"]):
+        yield element["id"], f"/elements/{index}/id"
+
+
+def _validate_semantics(document: dict[str, Any]) -> list[ValidationIssue]:
+    issues: list[ValidationIssue] = []
+    first_paths: dict[str, str] = {}
+
+    for object_id, path in _identity_entries(document):
+        first_path = first_paths.get(object_id)
+        if first_path is None:
+            first_paths[object_id] = path
+            continue
+        issues.append(
+            ValidationIssue(
+                code="DUPLICATE_ID",
+                path=path,
+                message=f"ID {object_id!r} is already used at {first_path}.",
+            )
+        )
+
+    storey_ids = {storey["id"] for storey in document["storeys"]}
+    for index, element in enumerate(document["elements"]):
+        storey_id = element["storey_id"]
+        if storey_id not in storey_ids:
+            issues.append(
+                ValidationIssue(
+                    code="UNRESOLVED_STOREY_REFERENCE",
+                    path=f"/elements/{index}/storey_id",
+                    message=f"Storey ID {storey_id!r} is not declared.",
+                )
+            )
+
+    return _sort_issues(issues)
+
+
+def validate_document(document: Any) -> list[ValidationIssue]:
+    structural_issues = _validate_structure(document)
+    if structural_issues:
+        return structural_issues
+    return _validate_semantics(document)
