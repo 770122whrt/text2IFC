@@ -42,25 +42,43 @@ requirements.
   from the same source used by validation.
 - [x] **DOC-02**: Durable documentation is indexed from `docs/README.md`.
 
+### Spatial Ground Truth and Extraction
+
+- [ ] **JSON-06**: BIM JSON 1.1 extends BIM JSON 1.0 through a versioned schema
+  and an explicit deterministic 1.0-to-1.1 migration.
+- [ ] **GEO-01**: BIM JSON and generated IFC preserve hierarchical local
+  placement and orientation for supported spatial objects.
+- [ ] **GEO-02**: BIM JSON and generated IFC preserve supported opening,
+  host-element, and filling-element relationships.
+- [ ] **SPACE-01**: BIM JSON represents supported rooms/spaces with stable
+  identity, storey membership, placement, and geometry.
+- [ ] **EXTRACT-01**: Authorized IFC sources are deterministically normalized
+  into valid BIM JSON 1.1 plus provenance and a complete machine-readable loss
+  report.
+- [ ] **COMPAT-01**: The compiler accepts valid BIM JSON 1.1 and preserves the
+  Phase 2 guarantees while adding the supported spatial subset.
+
 ### Text-to-JSON Baseline
 
 - [ ] **TEXT-01**: The project can generate provenance-linked text and BIM JSON
-  pairs from approved IFC sources.
+  1.1 pairs from approved ground-truth records without split leakage.
 - [ ] **TEXT-02**: A structured-output baseline converts natural language into
-  BIM JSON 1.0 without generating raw IFC text.
+  BIM JSON 1.1 without generating raw IFC text.
 - [ ] **TEXT-03**: Text-to-JSON output is evaluated with field-level,
   collection-level, and document-validity metrics.
-- [ ] **E2E-01**: At least one natural-language request completes the validated
-  Text-to-JSON-to-IFC pipeline.
+- [ ] **E2E-01**: At least one spatial natural-language request completes the
+  validated Text-to-JSON-to-IFC pipeline.
 
 ## Later Requirements
 
 ### Geometric and Relational Fidelity
 
-- **GEO-01**: Preserve exact local placement and orientation.
-- **GEO-02**: Preserve opening and filling relationships.
 - **GEO-03**: Preserve material assignments and layer details.
 - **GEO-04**: Preserve supported topology and connection relationships.
+- **GEO-05**: Preserve supported arbitrary profiles, BReps, tessellation, and
+  reusable mapped geometry.
+- **IFC-06**: Expand beyond the initial nine element kinds with explicit
+  schema-aware support for selected architectural, structural, and MEP classes.
 
 ### Natural-language Agent
 
@@ -102,14 +120,20 @@ requirements.
 | VER-01 | Phase 2 | Complete |
 | VER-02 | Phase 2 | Complete |
 | VER-03 | Phase 2 | Complete |
+| JSON-06 | Phase 2.5 | Pending |
+| GEO-01 | Phase 2.5 | Pending |
+| GEO-02 | Phase 2.5 | Pending |
+| SPACE-01 | Phase 2.5 | Pending |
+| EXTRACT-01 | Phase 2.5 | Pending |
+| COMPAT-01 | Phase 2.5 | Pending |
 | TEXT-01 | Phase 3 | Pending |
 | TEXT-02 | Phase 3 | Pending |
 | TEXT-03 | Phase 3 | Pending |
 | E2E-01 | Phase 3 | Pending |
-| GEO-01 | Phase 4 | Deferred |
-| GEO-02 | Phase 4 | Deferred |
 | GEO-03 | Phase 4 | Deferred |
 | GEO-04 | Phase 4 | Deferred |
+| GEO-05 | Phase 4 | Deferred |
+| IFC-06 | Phase 4 | Deferred |
 | AGENT-01 | Phase 5 | Deferred |
 | AGENT-02 | Phase 5 | Deferred |
 | AGENT-03 | Phase 5 | Deferred |
@@ -118,8 +142,8 @@ requirements.
 | DEPLOY-01 | Phase 6 | Deferred |
 
 **Coverage:**
-- actionable requirements: 22 total
-- Mapped to phases: 22
+- tracked requirements: 34 total
+- Mapped to phases: 34
 - Unmapped: 0
 
 ---

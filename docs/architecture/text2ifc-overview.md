@@ -21,6 +21,22 @@ Natural language
 The model does not directly generate IFC STEP text. It generates a constrained
 BIM JSON document that deterministic code compiles into IFC.
 
+## Offline Dataset Construction
+
+The training-data path runs in the opposite direction:
+
+```text
+Authorized source IFC
+  -> deterministic supported-subset extraction
+  -> BIM JSON 1.1 ground truth + provenance + loss report
+  -> natural-language descriptions and instructions
+  -> paired Text-to-JSON dataset
+```
+
+This reverse path exists only to create labels from IFC assets that already
+contain the building truth. It is not called when an end user asks the system
+to create a new model.
+
 ## Current Capabilities
 
 - 25 IFC2X3 Coordination View source models.
@@ -65,15 +81,22 @@ Compile BIM JSON 1.0 to reopenable IFC2X3 with hierarchy, element counts,
 basic dimensions, selected properties, stable identity, atomic output, and
 schema-level verification.
 
+### Phase 2.5: BIM JSON 1.1 Spatial Ground Truth
+
+Add hierarchical placement, spaces, opening/filling relationships, deterministic
+IFC ground-truth extraction, explicit losses, 1.0 migration, and minimum
+spatial compiler support.
+
 ### Phase 3: Text-to-JSON Dataset and Baseline
 
-Create provenance-linked text/JSON pairs, evaluate structured-output baselines,
-and run the first Text-to-JSON-to-IFC demonstration.
+Create provenance-linked BIM JSON 1.1 pairs from the Phase 2.5 ground truth,
+evaluate structured-output baselines, and run the first spatial
+Text-to-JSON-to-IFC demonstration.
 
 ### Phase 4: High-fidelity IFC Round Trip
 
-Add precise placement, orientation, openings, filling relationships, material
-assignments, topology preservation, and explicit loss reports.
+Add material/type fidelity, complex geometry, broader product classes,
+connection topology preservation, and explicit loss reports.
 
 ### Phase 5: Multi-turn Clarification Agent
 

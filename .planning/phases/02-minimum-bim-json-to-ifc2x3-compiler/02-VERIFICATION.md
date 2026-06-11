@@ -59,3 +59,10 @@ project artifact gap.
 
 **PASSED.** No Phase 2 requirement, review finding, security threat, or
 verification gap remains open.
+
+## Forward Discovery
+
+Phase 2's synthetic placement was an explicit contract boundary, not a hidden
+failure. The subsequent IFC gap audit recorded 4,271 placed BIMNet products,
+including 2,499 rotated or tilted products, and led to the inserted Phase 2.5
+spatial contract. Phase 2 remains verified against BIM JSON 1.0.

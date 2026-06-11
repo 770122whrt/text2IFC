@@ -188,6 +188,15 @@ model. Exact source placement and relational fidelity remain separate work.
 | Acceptance Criteria | 0.84 | 0.70 | Met | Twelve automated pass/fail criteria |
 | **Ambiguity** | **0.12** | **<= 0.20** | **Met** | Ready for implementation discussion and planning |
 
+## Post-Verification Discovery
+
+Phase 2 correctly met its locked minimum-compiler scope using deterministic
+synthetic placement. A later audit of 25 BIMNet and 10 buildingSMART IFC files
+found that BIM JSON 1.0 cannot represent source placement, spaces, or
+opening/filling relationships. Those facts do not invalidate this completed
+specification; they define the inserted Phase 2.5 prerequisite for spatial
+Text-to-JSON training.
+
 ## Interview Log
 
 | Round | Perspective | Question summary | Decision locked |

@@ -68,26 +68,62 @@ VER-03
 
 **Status:** Complete - verified 2026-06-11
 
-## Phase 3: Text-to-JSON Dataset and Baseline
+**Post-verification discovery:** BIM JSON 1.0 intentionally contains no
+source placement. A 35-file IFC audit confirmed that this prevents spatial
+training and motivated the inserted Phase 2.5 without invalidating Phase 2's
+minimum-compiler acceptance criteria.
 
-**Goal:** Build provenance-linked text/JSON pairs, establish a structured-output
-Text-to-JSON baseline, evaluate it, and demonstrate the first end-to-end
-Text-to-JSON-to-IFC request.
+## Phase 2.5: BIM JSON 1.1 Spatial Ground Truth (INSERTED)
 
-**Requirements:** TEXT-01, TEXT-02, TEXT-03, E2E-01
+**Goal:** Define and validate a spatially meaningful BIM JSON 1.1, extract its
+supported ground truth deterministically from authorized IFC sources, report
+all unsupported source content, and extend the compiler with the minimum
+placement, space, and opening/filling behavior needed before Text-to-JSON
+training.
+
+**Requirements:** JSON-06, GEO-01, GEO-02, SPACE-01, EXTRACT-01, COMPAT-01
 
 **Depends on:** Phase 1, Phase 2
 
-**Status:** Ready for specification
+**Evidence:** `02.5-IFC-GAP-AUDIT.md` audits 25 BIMNet IFC2X3 and 10
+buildingSMART IFC4/IFC4X3 files.
+
+**Explicit boundary:** This phase establishes spatial truth and deterministic
+normalization. Material/type fidelity, arbitrary geometry, connection
+topology, broader product classes, and IFC4/IFC4X3 output remain Phase 4.
+
+**Status:** Inserted - ready for specification
+
+## Phase 3: Text-to-JSON Dataset and Baseline
+
+**Goal:** Use canonical BIM JSON 1.1 ground truth to build provenance-linked
+text/JSON pairs, establish a structured-output Text-to-JSON baseline, evaluate
+it, and demonstrate the first spatial Text-to-JSON-to-IFC request.
+
+**Requirements:** TEXT-01, TEXT-02, TEXT-03, E2E-01
+
+**Depends on:** Phase 1, Phase 2, Phase 2.5
+
+**Data boundary:**
+
+- BIMNet is the primary authorized IFC2X3 source.
+- Train, validation, and test split by Matterport scene family before any
+  text generation or augmentation.
+- buildingSMART samples remain a separate cross-schema and relationship track.
+- IFC-to-BIM-JSON is an offline label-construction step; runtime inference
+  remains Natural Language to BIM JSON to IFC.
+
+**Status:** Blocked on Phase 2.5
 
 ## Phase 4: High-fidelity IFC Round Trip
 
-**Goal:** Preserve precise placement, orientation, materials, openings, filling
-relationships, and supported topology, while reporting every unsupported loss.
+**Goal:** Preserve material/type fidelity, complex source geometry, supported
+connection topology, and broader product classes while reporting every
+unsupported loss.
 
-**Requirements:** GEO-01, GEO-02, GEO-03, GEO-04
+**Requirements:** GEO-03, GEO-04, GEO-05, IFC-06
 
-**Depends on:** Phase 2
+**Depends on:** Phase 2.5
 
 **Status:** Deferred
 

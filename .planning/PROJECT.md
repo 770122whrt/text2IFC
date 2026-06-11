@@ -24,25 +24,30 @@ explicit user requirements instead of generating fragile IFC text directly.
 
 ### Active
 
-- [ ] Define a versioned BIM JSON contract.
-- [ ] Validate BIM JSON before IFC generation.
-- [ ] Build a minimum IFC2X3 compiler from the validated contract.
+- [x] Define and validate BIM JSON 1.0.
+- [x] Build a minimum IFC2X3 compiler from the validated contract.
+- [ ] Extend the contract to BIM JSON 1.1 spatial ground truth.
+- [ ] Extract supported ground truth from authorized IFC with explicit losses.
 - [ ] Build a Text-to-JSON dataset pipeline and measurable baseline.
 - [ ] Complete the first Text-to-JSON-to-IFC end-to-end loop.
 
 ### Out of Scope
 
 - IFC generation in Phase 1 - Phase 1 only defines and validates the contract.
-- Precise local placement and global coordinates in Phase 2 - deferred to
-  the high-fidelity Phase 4.
-- Opening and filling relationships in Phase 2 - deferred to Phase 4.
+- Precise local placement and global coordinates were outside completed
+  Phase 2 and are now assigned to inserted Phase 2.5.
+- Opening and filling relationships were outside completed Phase 2 and are
+  now assigned to inserted Phase 2.5.
 - Direct natural-language-to-IFC generation - BIM JSON remains the contract.
 - Fine-tuning before the deterministic compiler and evaluation contract are
   stable.
 
 ## Context
 
-- Dataset: 25 IFC2X3 Coordination View models, split into 18 train and 7 test.
+- Dataset: 25 authorized BIMNet IFC2X3 models. Existing 18/7 file folders are
+  source organization only; model splits must be rebuilt by scene family.
+- External fixtures: 10 CC BY 4.0 buildingSMART IFC4/IFC4X3 samples for
+  cross-schema and relationship testing.
 - IFC schema: `schemas/ifc/IFC2X3_TC1.exp`.
 - Current prototype: `scripts/ifc_pipeline/roundtrip.py`.
 - Current tests: `tests/test_json_to_ifc.py`.
@@ -67,13 +72,14 @@ explicit user requirements instead of generating fragile IFC text directly.
 
 | Decision | Rationale | Outcome |
 |---|---|---|
-| Use BIM JSON between text and IFC | Validation and debugging are possible before IFC generation | Pending |
-| Target IFC2X3 first | Matches all current source models | Pending |
-| Make Phase 1 the unique BIM JSON contract | Stabilize the boundary before compiler and model work | Pending |
-| Build the minimum compiler in Phase 2 | Establish deterministic output before Text-to-JSON | Pending |
+| Use BIM JSON between text and IFC | Validation and debugging are possible before IFC generation | Adopted |
+| Target IFC2X3 first | Matches all current BIMNet source models | Adopted |
+| Make JSON Schema the unique BIM JSON structural truth | Stabilize the boundary before compiler and model work | Adopted |
+| Build the minimum compiler in Phase 2 | Establish deterministic output before Text-to-JSON | Complete |
+| Insert spatial contract Phase 2.5 | BIM JSON 1.0 collapses different layouts to the same representation | Adopted |
 | Build Text-to-JSON in Phase 3 | Reach an early end-to-end text2IFC baseline | Pending |
-| Defer exact placement and openings to Phase 4 | Prevent the minimum compiler from becoming a full reconstruction project | Pending |
-| Use TDD and GSD phase artifacts | Keep behavior and planning traceable | Pending |
+| Defer materials, complex geometry, and topology to Phase 4 | Keep spatial ground truth separate from full IFC fidelity | Adopted |
+| Use TDD and GSD phase artifacts | Keep behavior and planning traceable | Adopted |
 
 ---
-*Last updated: 2026-06-11 after project planning initialization*
+*Last updated: 2026-06-11 after Phase 2.5 insertion*

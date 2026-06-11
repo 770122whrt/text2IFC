@@ -6,6 +6,22 @@ must have a reviewed license, provenance, validation status, and intended use.
 
 ## Approved Sources
 
+### BIMNet
+
+- Repository: https://github.com/LydJason/BIMNet
+- Dataset basis: Matterport3D-derived scans with dedicated manually modeled IFC
+- Local content: 25 IFC2X3 files
+- Authorization: User confirmed Matterport3D/BIMNet authorization for local
+  training on 2026-06-11.
+- Status: Approved for local extraction, train/validation/test construction,
+  baseline evaluation, and local model training.
+- Split rule: Group by the base Matterport scene ID before generating any
+  text variants. Different floors of one scene must remain in one split.
+- Redistribution: Not inferred from local training authorization. Raw or
+  derived redistribution must follow the source terms and documented grant.
+- Manifest requirement: Phase 2.5 must add file hashes, scene-family IDs,
+  authorization status, and approved uses before pair generation.
+
 ### buildingSMART Sample-Test-Files
 
 - Repository: https://github.com/buildingSMART/Sample-Test-Files
