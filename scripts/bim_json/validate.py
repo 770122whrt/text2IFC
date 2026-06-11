@@ -8,6 +8,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "src"))
 sys.path.insert(0, str(ROOT / ".deps" / "python312"))
 
+from text2ifc_contract import loads_strict_json
 from text2ifc_contract.validation import ValidationIssue, validate_document
 
 
@@ -37,7 +38,7 @@ def _load_document(path: Path) -> Any:
         raise ValueError(
             f"FILE_TOO_LARGE:{size} bytes exceeds the {MAX_INPUT_BYTES} byte limit."
         )
-    return json.loads(path.read_text(encoding="utf-8"))
+    return loads_strict_json(path.read_text(encoding="utf-8"))
 
 
 def main(argv: list[str] | None = None) -> int:

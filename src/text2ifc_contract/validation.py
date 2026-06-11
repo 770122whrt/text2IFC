@@ -1,4 +1,7 @@
+import math
+from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
+from numbers import Number
 from typing import Any, Iterable
 
 from jsonschema import Draft202012Validator
@@ -105,7 +108,7 @@ def _identity_entries(document: dict[str, Any]) -> Iterable[tuple[str, str]]:
 
 
 def _validate_semantics(document: dict[str, Any]) -> list[ValidationIssue]:
-    issues: list[ValidationIssue] = []
+    issues = _non_finite_number_issues(document)
     first_paths: dict[str, str] = {}
 
     for object_id, path in _identity_entries(document):
@@ -134,6 +137,42 @@ def _validate_semantics(document: dict[str, Any]) -> list[ValidationIssue]:
             )
 
     return _sort_issues(issues)
+
+
+def _non_finite_number_issues(
+    value: Any, path: tuple[Any, ...] = ()
+) -> list[ValidationIssue]:
+    if isinstance(value, Mapping):
+        return [
+            issue
+            for key, child in value.items()
+            for issue in _non_finite_number_issues(child, (*path, key))
+        ]
+    if isinstance(value, Sequence) and not isinstance(
+        value, (str, bytes, bytearray)
+    ):
+        return [
+            issue
+            for index, child in enumerate(value)
+            for issue in _non_finite_number_issues(child, (*path, index))
+        ]
+    if isinstance(value, Number) and not isinstance(value, bool):
+        try:
+            finite = math.isfinite(value)
+        except (OverflowError, TypeError, ValueError):
+            finite = False
+        if not finite:
+            return [
+                ValidationIssue(
+                    code="NON_FINITE_NUMBER",
+                    path=_pointer(path),
+                    message=(
+                        "Number must be representable as a finite "
+                        "runtime value."
+                    ),
+                )
+            ]
+    return []
 
 
 def validate_document(document: Any) -> list[ValidationIssue]:
