@@ -43,6 +43,38 @@ def test_psd_parser_rejects_external_entities(psd_zip_factory, tmp_path: Path) -
         build_property_registry(archive)
 
 
+def test_psd_parser_preserves_complex_property_children(psd_zip_factory) -> None:
+    xml = (
+        "<PropertySetDef>"
+        "<Name>Pset_Colour</Name>"
+        "<ApplicableClasses><ClassName>IfcWall</ClassName></ApplicableClasses>"
+        "<PropertyDefs><PropertyDef><Name>Colour</Name><PropertyType>"
+        '<TypeComplexProperty name="RGB_Colour">'
+        "<PropertyDef><Name>Red</Name><PropertyType>"
+        '<TypePropertySingleValue><DataType type="IfcInteger"/>'
+        "</TypePropertySingleValue></PropertyType></PropertyDef>"
+        "<PropertyDef><Name>Green</Name><PropertyType>"
+        '<TypePropertySingleValue><DataType type="IfcInteger"/>'
+        "</TypePropertySingleValue></PropertyType></PropertyDef>"
+        "</TypeComplexProperty></PropertyType></PropertyDef></PropertyDefs>"
+        "</PropertySetDef>"
+    )
+    archive = psd_zip_factory({"R2x3_TC1/psd/Pset_Colour.xml": xml})
+
+    registry = build_property_registry(archive)
+    colour = registry["property_sets"]["Pset_Colour"]["properties"]["Colour"]
+
+    assert registry["counts"] == {
+        "property_sets": 1,
+        "property_definitions": 1,
+        "complex_properties": 1,
+        "simple_properties": 2,
+    }
+    assert colour["complex_name"] == "RGB_Colour"
+    assert colour["properties"]["Red"]["data_type"] == "IfcInteger"
+    assert colour["properties"]["Green"]["data_type"] == "IfcInteger"
+
+
 def test_checked_in_property_registry_matches_official_inventory(
     project_root: Path,
 ) -> None:
