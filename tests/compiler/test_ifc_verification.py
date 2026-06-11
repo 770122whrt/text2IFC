@@ -16,9 +16,14 @@ def _run_cli(capsys, argv: list[str]) -> tuple[int, dict]:
 
 def test_verifier_reports_stable_errors_for_deliberately_invalid_ifc() -> None:
     invalid = create_file("IFC2X3")
-    invalid.create_entity(
-        "IfcRoof", GlobalId=ifcopenshell.guid.new()
+    first_global_id = ifcopenshell.guid.compress(
+        "00000000-0000-0000-0000-000000000001"
     )
+    second_global_id = ifcopenshell.guid.compress(
+        "00000000-0000-0000-0000-000000000002"
+    )
+    invalid.create_entity("IfcRoof", GlobalId=first_global_id)
+    invalid.create_entity("IfcRoof", GlobalId=second_global_id)
 
     issues = verify_ifc(invalid)
 
@@ -28,13 +33,25 @@ def test_verifier_reports_stable_errors_for_deliberately_invalid_ifc() -> None:
     ] == [
         (
             "IFC_SCHEMA_ERROR",
-            "IfcRoof",
+            f"IfcRoof:{first_global_id}",
             "IfcRoof.OwnerHistory",
             "Attribute not optional",
         ),
         (
             "IFC_SCHEMA_ERROR",
-            "IfcRoof",
+            f"IfcRoof:{first_global_id}",
+            "IfcRoof.ShapeType",
+            "Attribute not optional",
+        ),
+        (
+            "IFC_SCHEMA_ERROR",
+            f"IfcRoof:{second_global_id}",
+            "IfcRoof.OwnerHistory",
+            "Attribute not optional",
+        ),
+        (
+            "IFC_SCHEMA_ERROR",
+            f"IfcRoof:{second_global_id}",
             "IfcRoof.ShapeType",
             "Attribute not optional",
         ),
@@ -158,3 +175,27 @@ def test_cli_output_failure_is_machine_readable(
         "IFC_OUTPUT_ERROR"
     ]
     assert not output.exists()
+
+
+def test_cli_rejects_input_output_path_conflict(
+    complete_document: dict,
+    tmp_path: Path,
+    capsys,
+) -> None:
+    source = tmp_path / "same-path.json"
+    original = json.dumps(complete_document).encode("utf-8")
+    source.write_bytes(original)
+
+    exit_code, payload = _run_cli(
+        capsys, [str(source), str(source)]
+    )
+
+    assert exit_code == 2
+    assert payload["input_errors"] == [
+        {
+            "code": "PATH_CONFLICT",
+            "path": "/",
+            "message": "Input and output paths must differ.",
+        }
+    ]
+    assert source.read_bytes() == original

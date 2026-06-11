@@ -53,6 +53,29 @@ def _placement_x_by_bim_id(model) -> dict[str, float]:
     return result
 
 
+def _expected_x_positions(document: dict) -> dict[str, float]:
+    x_dimension_by_kind = {
+        "wall": "length",
+        "column": "width",
+        "beam": "length",
+        "slab": "length",
+        "door": "width",
+        "window": "width",
+        "stair": "length",
+        "stair_flight": "run",
+        "roof": "length",
+    }
+    offset_mm = 0.0
+    result: dict[str, float] = {}
+    for element in document["elements"]:
+        result[element["id"]] = offset_mm
+        offset_mm += (
+            element["dimensions"][x_dimension_by_kind[element["kind"]]]
+            + 1000.0
+        )
+    return result
+
+
 def test_all_family_counts_and_dimensions_are_recovered_within_one_mm(
     complete_document: dict, tmp_path: Path
 ) -> None:
@@ -85,10 +108,7 @@ def test_synthetic_placements_are_complete_stable_and_source_ordered(
 
     first_positions = _placement_x_by_bim_id(open_ifc(first))
     second_positions = _placement_x_by_bim_id(open_ifc(second))
-    expected_positions = {
-        element["id"]: float(index * 10_000)
-        for index, element in enumerate(complete_document["elements"])
-    }
+    expected_positions = _expected_x_positions(complete_document)
 
     assert first_positions == second_positions == expected_positions
     assert len(set(first_positions.values())) == len(
@@ -115,3 +135,26 @@ def test_single_family_document_creates_no_other_element_classes(
     for kind, ifc_class in IFC_CLASS_BY_KIND.items():
         if kind != "wall":
             assert model.by_type(ifc_class) == []
+
+
+def test_synthetic_placements_do_not_overlap_long_elements(
+    complete_document: dict, tmp_path: Path
+) -> None:
+    document = copy.deepcopy(complete_document)
+    first_wall = copy.deepcopy(document["elements"][0])
+    second_wall = copy.deepcopy(first_wall)
+    first_wall["id"] = "wall-long-a"
+    first_wall["dimensions"]["length"] = 15_000.0
+    second_wall["id"] = "wall-long-b"
+    second_wall["dimensions"]["length"] = 20_000.0
+    document["elements"] = [first_wall, second_wall]
+    output = tmp_path / "long-walls.ifc"
+
+    result = compile_document(document, output)
+    assert result.success
+    positions = _placement_x_by_bim_id(open_ifc(output))
+
+    assert (
+        positions["wall-long-a"] + first_wall["dimensions"]["length"]
+        < positions["wall-long-b"]
+    )
