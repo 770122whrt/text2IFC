@@ -57,7 +57,7 @@ VER-03
 
 **Wave 3** *(blocked on Wave 2 completion)*
 
-- [ ] `02-04-PLAN.md` - Verifier proof, CLI, complete acceptance, and docs
+- [x] `02-04-PLAN.md` - Verifier proof, CLI, complete acceptance, and docs
 
 **Cross-cutting constraints:**
 
@@ -66,7 +66,7 @@ VER-03
 - Output replacement occurs only after in-memory and reopened verification.
 - Every behavior follows a recorded RED-GREEN TDD cycle.
 
-**Status:** Planned - ready to execute
+**Status:** Implementation complete - verification in progress
 
 ## Phase 3: Text-to-JSON Dataset and Baseline
 
