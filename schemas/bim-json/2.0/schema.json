@@ -1,10 +1,76 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://text2ifc.local/schemas/bim-json/2.0/schema.json",
+  "title": "text2IFC BIM JSON 2.0",
   "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "ifc_schema",
+    "units",
+    "entities",
+    "relationships",
+    "provenance"
+  ],
   "properties": {
-    "schema_version": {
-      "const": "bim-json/2.0"
+    "schema_version": {"const": "bim-json/2.0"},
+    "ifc_schema": {"const": "IFC2X3"},
+    "units": {"$ref": "#/$defs/units"},
+    "entities": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/entity"}
+    },
+    "relationships": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/relationship"}
+    },
+    "provenance": {"$ref": "#/$defs/provenance"}
+  },
+  "$defs": {
+    "nonEmptyString": {"type": "string", "minLength": 1},
+    "units": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["length"],
+      "properties": {"length": {"const": "MILLIMETRE"}}
+    },
+    "provenance": {
+      "type": "object",
+      "minProperties": 1
+    },
+    "entity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "ifc_class",
+        "attributes",
+        "property_sets",
+        "provenance"
+      ],
+      "properties": {
+        "id": {"$ref": "#/$defs/nonEmptyString"},
+        "ifc_class": {"$ref": "#/$defs/nonEmptyString"},
+        "global_id": {},
+        "attributes": {"type": "object"},
+        "property_sets": {
+          "type": "object",
+          "additionalProperties": {"type": "object"}
+        },
+        "provenance": {"$ref": "#/$defs/provenance"}
+      }
+    },
+    "relationship": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "ifc_class", "attributes", "provenance"],
+      "properties": {
+        "id": {"$ref": "#/$defs/nonEmptyString"},
+        "ifc_class": {"$ref": "#/$defs/nonEmptyString"},
+        "global_id": {},
+        "attributes": {"type": "object"},
+        "provenance": {"$ref": "#/$defs/provenance"}
+      }
     }
   }
 }
