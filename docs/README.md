@@ -30,6 +30,7 @@ Use this page as the stable entry point for project documentation.
 
 ## Data and Methodology
 
+- [BIM JSON 1.0 contract reference](reference/bim-json-1.0.md)
 - [Dataset organization](../dataset/data_organization.md)
 - [External data source catalog](../dataset/sources/CATALOG.md)
 - [Dataset manifest format](../dataset/manifests/README.md)
