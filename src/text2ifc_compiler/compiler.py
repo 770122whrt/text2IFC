@@ -35,7 +35,7 @@ def compile_document(
 
     output = Path(output_path).resolve()
     bootstrap = build_ifc(document)
-    ifc_issues = verify_ifc(bootstrap.ifc_file)
+    ifc_issues = verify_ifc(bootstrap.ifc_file, express_rules=False)
     if ifc_issues:
         return CompilationResult(ifc_issues=ifc_issues)
 
@@ -58,6 +58,17 @@ def compile_document(
         os.replace(temporary_path, output)
         temporary_path = None
         return CompilationResult(output_path=output)
+    except OSError as exc:
+        return CompilationResult(
+            ifc_issues=(
+                IfcValidationIssue(
+                    code="IFC_OUTPUT_ERROR",
+                    entity="",
+                    attribute=str(output),
+                    message=f"{type(exc).__name__}: {exc}",
+                ),
+            )
+        )
     finally:
         if temporary_path is not None:
             temporary_path.unlink(missing_ok=True)

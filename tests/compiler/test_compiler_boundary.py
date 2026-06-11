@@ -173,8 +173,11 @@ def test_verification_failure_never_replaces_destination(
     before = set(tmp_path.iterdir())
     calls = 0
 
-    def fail_reopened_verification(source) -> tuple[IfcValidationIssue, ...]:
+    def fail_reopened_verification(
+        source, **kwargs
+    ) -> tuple[IfcValidationIssue, ...]:
         nonlocal calls
+        del source, kwargs
         calls += 1
         if calls == 1:
             return ()
@@ -210,4 +213,3 @@ def test_compilation_does_not_mutate_input(
     compile_document(complete_document, tmp_path / "immutable.ifc")
 
     assert complete_document == original
-

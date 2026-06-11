@@ -41,9 +41,11 @@ def _stable_message(value: Any) -> str:
     return str(value).splitlines()[0].strip()
 
 
-def verify_ifc(source: Any) -> tuple[IfcValidationIssue, ...]:
+def verify_ifc(
+    source: Any, *, express_rules: bool = True
+) -> tuple[IfcValidationIssue, ...]:
     logger = json_logger()
-    validate(_as_file(source), logger, express_rules=True)
+    validate(_as_file(source), logger, express_rules=express_rules)
     issues = {
         IfcValidationIssue(
             code=(
