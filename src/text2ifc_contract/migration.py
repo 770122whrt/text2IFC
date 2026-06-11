@@ -25,6 +25,7 @@ SOURCE_FAMILIES = (
     ("stair_flights", "stair_flight"),
     ("roofs", "roof"),
 )
+_CONFLICT = object()
 
 
 def _diagnostic(
@@ -174,20 +175,63 @@ def _value(mapping: Any, *names: str) -> Any:
     return None
 
 
-def _dimension_value(element: dict[str, Any], kind: str, dimension: str) -> Any:
+def _explicit_value(
+    candidates: Iterable[tuple[str, Any]],
+    path: str,
+    diagnostics: list[dict[str, str]],
+) -> Any:
+    present = [
+        (name, value)
+        for name, value in candidates
+        if value is not None
+    ]
+    if not present:
+        return None
+    first_value = present[0][1]
+    if any(value != first_value for _, value in present[1:]):
+        rendered = ", ".join(f"{name}={value!r}" for name, value in present)
+        diagnostics.append(
+            _diagnostic(
+                "CONFLICTING_ALIASES",
+                path,
+                f"Conflicting explicit source values: {rendered}.",
+            )
+        )
+        return _CONFLICT
+    return first_value
+
+
+def _mapping_candidates(
+    mapping: Any,
+    prefix: str,
+    names: Iterable[str],
+) -> list[tuple[str, Any]]:
+    if not isinstance(mapping, dict):
+        return []
+    return [
+        (f"{prefix}{name}", mapping[name])
+        for name in names
+        if name in mapping
+    ]
+
+
+def _dimension_value(
+    element: dict[str, Any],
+    kind: str,
+    dimension: str,
+    path: str,
+    diagnostics: list[dict[str, str]],
+) -> Any:
     aliases = {
         "width": ("width", "w"),
         "height": ("height", "h"),
     }
     direct_names = aliases.get(dimension, (dimension,))
-    direct = _value(element, *direct_names)
-    if direct is not None:
-        return direct
-
+    candidates = _mapping_candidates(element, "", direct_names)
     dimensions = element.get("dimensions")
-    nested = _value(dimensions, *direct_names)
-    if nested is not None:
-        return nested
+    candidates.extend(
+        _mapping_candidates(dimensions, "dimensions.", direct_names)
+    )
 
     legacy_dimensions = element.get("dims")
     if isinstance(legacy_dimensions, dict):
@@ -205,53 +249,61 @@ def _dimension_value(element: dict[str, Any], kind: str, dimension: str) -> Any:
         }
         names = legacy_maps.get(kind, {}).get(dimension)
         if names:
-            value = _value(legacy_dimensions, *names)
-            if value is not None:
-                return value
+            candidates.extend(
+                _mapping_candidates(legacy_dimensions, "dims.", names)
+            )
 
     profile = element.get("profile")
-    if not isinstance(profile, dict) or profile.get("type") != "rectangle":
-        return None
-    profile_maps = {
-        "wall": {
-            "length": ("x_dim",),
-            "thickness": ("y_dim",),
-            "height": ("depth",),
-        },
-        "column": {
-            "width": ("x_dim",),
-            "depth": ("y_dim",),
-            "height": ("depth",),
-        },
-        "beam": {
-            "length": ("depth",),
-            "width": ("x_dim",),
-            "height": ("y_dim",),
-        },
-        "slab": {
-            "length": ("x_dim",),
-            "width": ("y_dim",),
-            "thickness": ("depth",),
-        },
-        "roof": {
-            "length": ("x_dim",),
-            "width": ("y_dim",),
-            "thickness": ("depth",),
-        },
-    }
-    names = profile_maps.get(kind, {}).get(dimension)
-    return _value(profile, *names) if names else None
+    if isinstance(profile, dict) and profile.get("type") == "rectangle":
+        profile_maps = {
+            "wall": {
+                "length": ("x_dim",),
+                "thickness": ("y_dim",),
+                "height": ("depth",),
+            },
+            "column": {
+                "width": ("x_dim",),
+                "depth": ("y_dim",),
+                "height": ("depth",),
+            },
+            "beam": {
+                "length": ("depth",),
+                "width": ("x_dim",),
+                "height": ("y_dim",),
+            },
+            "slab": {
+                "length": ("x_dim",),
+                "width": ("y_dim",),
+                "thickness": ("depth",),
+            },
+            "roof": {
+                "length": ("x_dim",),
+                "width": ("y_dim",),
+                "thickness": ("depth",),
+            },
+        }
+        names = profile_maps.get(kind, {}).get(dimension)
+        if names:
+            candidates.extend(_mapping_candidates(profile, "profile.", names))
+
+    return _explicit_value(candidates, f"{path}/{dimension}", diagnostics)
 
 
-def _property_value(element: dict[str, Any], name: str) -> Any:
+def _property_value(
+    element: dict[str, Any],
+    name: str,
+    path: str,
+    diagnostics: list[dict[str, str]],
+) -> Any:
     aliases = {
         "predefined_type": ("predefined_type", "pretype"),
     }
     names = aliases.get(name, (name,))
-    value = _value(element, *names)
-    if value is not None:
-        return value
-    return _value(element.get("properties"), *names)
+    candidates = _mapping_candidates(element, "", names)
+    candidates.extend(
+        _mapping_candidates(element.get("properties"), "properties.", names)
+    )
+    return _explicit_value(candidates, f"{path}/{name}", diagnostics)
 
 
 def _omissions(source: dict[str, Any]) -> list[str]:
@@ -390,7 +442,17 @@ def migrate_model(source: Any, source_ref: str) -> dict[str, Any]:
             )
             continue
         storey_name_counts[name] += 1
-        elevation = _value(storey_source, "elevation", "elev")
+        elevation = _explicit_value(
+            _mapping_candidates(
+                storey_source,
+                "",
+                ("elevation", "elev"),
+            ),
+            f"{path}/elevation",
+            diagnostics,
+        )
+        if elevation is _CONFLICT:
+            continue
         if not isinstance(elevation, (int, float)) or isinstance(elevation, bool):
             diagnostics.append(
                 _diagnostic(
@@ -516,7 +578,15 @@ def migrate_model(source: Any, source_ref: str) -> dict[str, Any]:
 
             dimensions: dict[str, Any] = {}
             for dimension in required_dimensions:
-                value = _dimension_value(element_source, kind, dimension)
+                value = _dimension_value(
+                    element_source,
+                    kind,
+                    dimension,
+                    path,
+                    diagnostics,
+                )
+                if value is _CONFLICT:
+                    continue
                 if value is None:
                     diagnostics.append(
                         _diagnostic(
@@ -542,7 +612,14 @@ def migrate_model(source: Any, source_ref: str) -> dict[str, Any]:
 
             properties: dict[str, Any] = {}
             for property_name in allowed_properties:
-                value = _property_value(element_source, property_name)
+                value = _property_value(
+                    element_source,
+                    property_name,
+                    path,
+                    diagnostics,
+                )
+                if value is _CONFLICT:
+                    continue
                 if value is not None:
                     properties[property_name] = value
 

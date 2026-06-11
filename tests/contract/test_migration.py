@@ -176,6 +176,25 @@ def test_roundtrip_rectangle_profile_and_long_aliases_are_normalized():
 
 
 @pytest.mark.parametrize(
+    "mutation",
+    [
+        lambda model: model["storeys"][0].__setitem__("elevation", 100),
+        lambda model: model["doors"][0].__setitem__("width", 1000),
+        lambda model: model["slabs"][0].__setitem__("predefined_type", "ROOF"),
+    ],
+)
+def test_conflicting_aliases_reject_instead_of_overwriting_source(mutation):
+    migrate_model, _ = _migration_api()
+    source = _legacy_model()
+    mutation(source)
+
+    result = migrate_model(source, "conflict.json#$")
+
+    assert result["disposition"] == "rejected"
+    assert "CONFLICTING_ALIASES" in _codes(result)
+
+
+@pytest.mark.parametrize(
     ("mutation", "code"),
     [
         (
