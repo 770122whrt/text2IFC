@@ -110,7 +110,7 @@ topology, furnishing/MEP generation, and IFC4/IFC4X3 output remain Phase 4.
 
 **Wave 2** *(blocked on Wave 1 completion)*
 
-- [ ] `02.5-02-PLAN.md` - Formal BIM JSON 2.0, Draft Envelope, capability
+- [x] `02.5-02-PLAN.md` - Formal BIM JSON 2.0, Draft Envelope, capability
   overlay, registry validation, and 1.0 Draft migration
 
 **Wave 3** *(blocked on Wave 2 completion)*
@@ -143,7 +143,7 @@ topology, furnishing/MEP generation, and IFC4/IFC4X3 output remain Phase 4.
 - Every implementation behavior follows recorded RED-GREEN TDD before full
   regression.
 
-**Status:** In progress - Wave 1 complete 2026-06-11
+**Status:** In progress - Wave 2 complete 2026-06-11
 
 ## Phase 3: Text-to-JSON Dataset and Baseline
 

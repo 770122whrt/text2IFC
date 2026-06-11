@@ -12,9 +12,9 @@ requirements.
 ## Status
 
 - Phase: 2.5
-- Stage: Wave 1 complete
-- State: Ready to execute Wave 2
-- Plans: 1 of 6 complete in 5 waves
+- Stage: Wave 2 complete
+- State: Ready to execute Wave 3
+- Plans: 2 of 6 complete in 5 waves
 - Branch: `main`
 - Remote: `https://github.com/770122whrt/text2IFC`
 
@@ -54,6 +54,11 @@ requirements.
   property sets, 6 complex properties, and 1850 simple properties.
 - Runtime knowledge loading is immutable, deterministic, and offline.
 - Repository regression suite currently passes 171 tests.
+- Formal BIM JSON 2.0 and separate Draft Envelope schemas are implemented.
+- All 653 IFC2X3 entities have explicit project capability states.
+- BIM JSON 1.0 migration preserves known facts in Draft, lists placement
+  gaps, and records unknown space coverage without fabrication.
+- Repository regression suite currently passes 194 tests.
 
 ## Current Decisions
 
@@ -87,7 +92,8 @@ requirements.
 - Existing source files include text encoding problems.
 - Project-local dependency handling is not yet standardized for new machines.
 - Baseline model/provider choice must remain replaceable and reproducible.
-- BIM JSON 2.0 and Draft Envelope schemas are specified but not implemented.
+- Placement, semantic geometry, and relationship endpoint rules are not yet
+  implemented in the BIM JSON 2.0 formal validator.
 - Existing BIMNet train/test folders leak scene families (`7y3`, `e9z`, and
   `px4`) across file-level splits and must not be reused as model splits.
 - IfcOpenShell 0.8.5 late-bound EXPRESS schema cleanup corrupts the Windows
@@ -97,9 +103,8 @@ requirements.
 
 ## Next Action
 
-Execute `02.5-02-PLAN.md`: formal BIM JSON 2.0, separate Draft Envelope,
-project-authored IFC2X3 capability overlay, registry-backed semantic
-validation, and loss-explicit BIM JSON 1.0 migration.
+Execute `02.5-03-PLAN.md`: parent-relative placement, bounded semantic
+geometry, spaces, openings, and void/fill relationship validation.
 
 ## Accumulated Context
 
@@ -109,4 +114,4 @@ validation, and loss-explicit BIM JSON 1.0 migration.
   the spatial ground truth required for Text-to-JSON training.
 
 ---
-*Last activity: 2026-06-11 - completed Phase 2.5 Plan 01 official IFC2X3 knowledge registry*
+*Last activity: 2026-06-11 - completed Phase 2.5 Plan 02 BIM JSON 2.0 and Draft contracts*
