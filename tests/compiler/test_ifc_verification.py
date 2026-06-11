@@ -137,3 +137,24 @@ def test_cli_usage_failure_is_stable(capsys) -> None:
         }
     ]
 
+
+def test_cli_output_failure_is_machine_readable(
+    complete_document: dict,
+    tmp_path: Path,
+    capsys,
+) -> None:
+    source = tmp_path / "valid.json"
+    source.write_text(json.dumps(complete_document), encoding="utf-8")
+    output = tmp_path / "missing-parent" / "output.ifc"
+
+    exit_code, payload = _run_cli(
+        capsys, [str(source), str(output)]
+    )
+
+    assert exit_code == 1
+    assert payload["success"] is False
+    assert payload["input_errors"] == []
+    assert [issue["code"] for issue in payload["ifc_errors"]] == [
+        "IFC_OUTPUT_ERROR"
+    ]
+    assert not output.exists()
