@@ -117,6 +117,99 @@ def test_invalid_documents_return_stable_codes_and_paths(mutation, code, path):
     _assert_issue(_issues(document), code, path)
 
 
+@pytest.mark.parametrize(
+    ("path_parts", "expected_path"),
+    [
+        (("contract_version",), "/contract_version"),
+        (("target_schema",), "/target_schema"),
+        (("units",), "/units"),
+        (("project",), "/project"),
+        (("site",), "/site"),
+        (("building",), "/building"),
+        (("storeys",), "/storeys"),
+        (("elements",), "/elements"),
+        (("project", "id"), "/project/id"),
+        (("project", "name"), "/project/name"),
+        (("site", "id"), "/site/id"),
+        (("site", "name"), "/site/name"),
+        (("building", "id"), "/building/id"),
+        (("building", "name"), "/building/name"),
+        (("storeys", 0, "id"), "/storeys/0/id"),
+        (("storeys", 0, "name"), "/storeys/0/name"),
+        (("storeys", 0, "elevation"), "/storeys/0/elevation"),
+        (("elements", 0, "id"), "/elements/0/id"),
+        (("elements", 0, "kind"), "/elements/0/kind"),
+        (("elements", 0, "name"), "/elements/0/name"),
+        (("elements", 0, "storey_id"), "/elements/0/storey_id"),
+        (("elements", 0, "dimensions"), "/elements/0/dimensions"),
+    ],
+)
+def test_every_common_required_field_is_rejected_when_missing(
+    path_parts, expected_path
+):
+    document = _complete_document()
+    parent = document
+    for part in path_parts[:-1]:
+        parent = parent[part]
+    parent.pop(path_parts[-1])
+
+    _assert_issue(_issues(document), "REQUIRED_FIELD", expected_path)
+
+
+@pytest.mark.parametrize(
+    ("kind", "dimension"),
+    [
+        ("wall", "length"),
+        ("wall", "height"),
+        ("wall", "thickness"),
+        ("column", "width"),
+        ("column", "depth"),
+        ("column", "height"),
+        ("beam", "length"),
+        ("beam", "width"),
+        ("beam", "height"),
+        ("slab", "length"),
+        ("slab", "width"),
+        ("slab", "thickness"),
+        ("door", "width"),
+        ("door", "height"),
+        ("window", "width"),
+        ("window", "height"),
+        ("stair", "length"),
+        ("stair", "width"),
+        ("stair", "height"),
+        ("stair_flight", "width"),
+        ("stair_flight", "rise"),
+        ("stair_flight", "run"),
+        ("roof", "length"),
+        ("roof", "width"),
+        ("roof", "thickness"),
+    ],
+)
+def test_every_family_dimension_is_rejected_when_missing(kind, dimension):
+    document = _complete_document()
+    index = next(
+        index
+        for index, element in enumerate(document["elements"])
+        if element["kind"] == kind
+    )
+    document["elements"][index]["dimensions"].pop(dimension)
+
+    _assert_issue(
+        _issues(document),
+        "REQUIRED_FIELD",
+        f"/elements/{index}/dimensions/{dimension}",
+    )
+
+
+def test_optional_element_properties_may_be_omitted():
+    document = _complete_document()
+    for element in document["elements"]:
+        element.pop("properties", None)
+
+    assert _issues(document) == []
+
+
 def test_validation_does_not_mutate_input():
     document = _complete_document()
     original = copy.deepcopy(document)
