@@ -14,16 +14,16 @@ not expand IFC generation behavior.
 
 **Wave 1**
 
-- `01-01-PLAN.md` - Canonical structural contract, validator, and CLI
+- [x] `01-01-PLAN.md` - Canonical structural contract, validator, and CLI
 
 **Wave 2** *(blocked on Wave 1 completion)*
 
-- `01-02-PLAN.md` - Semantic identity and storey-reference validation
-- `01-04-PLAN.md` - Generated contract reference and drift check
+- [ ] `01-02-PLAN.md` - Semantic identity and storey-reference validation
+- [ ] `01-04-PLAN.md` - Generated contract reference and drift check
 
 **Wave 3** *(blocked on Wave 2 semantic validation)*
 
-- `01-03-PLAN.md` - Complete legacy migration audit
+- [ ] `01-03-PLAN.md` - Complete legacy migration audit
 
 **Cross-cutting constraints:**
 
@@ -31,7 +31,7 @@ not expand IFC generation behavior.
 - Validation and migration are deterministic and never invent required data.
 - Validation performs no IFC I/O and no remote schema resolution.
 
-**Status:** Ready to execute
+**Status:** In progress - Wave 1 complete
 
 ## Phase 2: Minimum BIM JSON to IFC2X3 Compiler
 

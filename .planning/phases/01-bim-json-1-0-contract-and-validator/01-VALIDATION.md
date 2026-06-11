@@ -33,7 +33,7 @@ created: 2026-06-11
 
 | Task ID | Plan | Wave | Requirement | Threat Ref | Secure behavior | Test type | Automated command | File exists | Status |
 |---|---:|---:|---|---|---|---|---|---|---|
-| 01-01 | 01 | 1 | JSON-01..04 | T-01-01, T-01-02 | Bounded local-only validation | unit/CLI | `python -m pytest tests/contract/test_schema_validation.py -q` | Wave 0 | pending |
+| 01-01 | 01 | 1 | JSON-01..04 | T-01-01, T-01-02 | Bounded local-only validation | unit/CLI | `python -m pytest tests/contract/test_schema_validation.py -q` | yes | green |
 | 01-02 | 02 | 2 | JSON-02, JSON-03 | T-01-01 | Stable semantic errors | unit | `python -m pytest tests/contract/test_semantic_validation.py -q` | Wave 0 | pending |
 | 01-03 | 03 | 3 | JSON-05 | T-01-03, T-01-04 | No overwrite or silent loss | integration | `python -m pytest tests/contract/test_migration.py -q` | Wave 0 | pending |
 | 01-04 | 04 | 2 | DOC-01, DOC-02 | T-01-02 | Local deterministic docs | unit | `python -m pytest tests/contract/test_reference.py -q` | Wave 0 | pending |
