@@ -27,7 +27,7 @@ key-files:
 key-decisions:
   - "Seven three-dimensional families use rectangular dimension envelopes."
   - "Door and window preserve only provided width and height attributes."
-  - "Synthetic X placement follows source order at ten-metre intervals."
+  - "Synthetic X placement follows source order using each element extent plus a one-metre gap."
 patterns-established:
   - "Measurement does not depend on IFC profile or representation subtype."
 requirements-completed: [IFC-03, IFC-04, VER-01, VER-02, VER-03]
@@ -57,13 +57,16 @@ within 1 mm in reopened IFC2X3 output.**
   without inventing thickness.
 - Added deterministic placements to every element and public dimension
   measurement from reopened IFC.
+- Hardened placement after review so elements longer than ten metres cannot
+  overlap their source-order neighbor.
 - Proved single-family documents create no extra IFC element classes.
 
 ## Task Commits
 
 1. **RED: All-family geometry fidelity** - `ebd4a3c`
 2. **GREEN: Minimum geometry and reopened measurement** - `393eb82`
-3. **REFACTOR:** Not required.
+3. **Review RED/GREEN: Extent-aware non-overlap placement** - `69e8544`,
+   `d9a322b`
 
 ## Test Evidence
 
@@ -91,7 +94,10 @@ serialization and reopen.
 
 ## Deviations from Plan
 
-None.
+The initial ten-metre interval was deterministic but did not guarantee
+non-overlap for elements longer than ten metres. Deep review added a failing
+long-wall case, then changed placement to cumulative X extents plus a
+one-metre gap.
 
 ## Issues Encountered
 
@@ -118,4 +124,3 @@ orchestration.
 
 *Phase: 02-minimum-bim-json-to-ifc2x3-compiler*
 *Completed: 2026-06-11*
-

@@ -66,7 +66,7 @@ VER-03
 - Output replacement occurs only after in-memory and reopened verification.
 - Every behavior follows a recorded RED-GREEN TDD cycle.
 
-**Status:** Implementation complete - verification in progress
+**Status:** Complete - verified 2026-06-11
 
 ## Phase 3: Text-to-JSON Dataset and Baseline
 
@@ -78,7 +78,7 @@ Text-to-JSON-to-IFC request.
 
 **Depends on:** Phase 1, Phase 2
 
-**Status:** Deferred
+**Status:** Ready for specification
 
 ## Phase 4: High-fidelity IFC Round Trip
 

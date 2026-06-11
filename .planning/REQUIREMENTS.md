@@ -21,20 +21,20 @@ requirements.
 
 ### IFC Generation
 
-- [ ] **IFC-01**: Valid Phase 1 BIM JSON generates an IFC2X3 file that
+- [x] **IFC-01**: Valid Phase 1 BIM JSON generates an IFC2X3 file that
   IfcOpenShell can reopen.
-- [ ] **IFC-02**: Generated IFC preserves the project, site, building, and
+- [x] **IFC-02**: Generated IFC preserves the project, site, building, and
   storey hierarchy.
-- [ ] **IFC-03**: Generated IFC preserves supported element types and counts.
-- [ ] **IFC-04**: Generated IFC preserves Phase 1 basic dimensions.
-- [ ] **IFC-05**: Generated IFC preserves selected Phase 1 common properties.
+- [x] **IFC-03**: Generated IFC preserves supported element types and counts.
+- [x] **IFC-04**: Generated IFC preserves Phase 1 basic dimensions.
+- [x] **IFC-05**: Generated IFC preserves selected Phase 1 common properties.
 
 ### Verification
 
-- [ ] **VER-01**: Each Phase 1 compiler behavior is introduced with a failing
+- [x] **VER-01**: Each Phase 1 compiler behavior is introduced with a failing
   automated test before implementation.
-- [ ] **VER-02**: Generated IFC is checked against IFC2X3 schema-level validity.
-- [ ] **VER-03**: A repeatable command runs the Phase 1 test suite.
+- [x] **VER-02**: Generated IFC is checked against IFC2X3 schema-level validity.
+- [x] **VER-03**: A repeatable command runs the Phase 1 test suite.
 
 ### Documentation
 
@@ -94,14 +94,14 @@ requirements.
 | JSON-05 | Phase 1 | Complete |
 | DOC-01 | Phase 1 | Complete |
 | DOC-02 | Phase 1 | Complete |
-| IFC-01 | Phase 2 | Pending |
-| IFC-02 | Phase 2 | Pending |
-| IFC-03 | Phase 2 | Pending |
-| IFC-04 | Phase 2 | Pending |
-| IFC-05 | Phase 2 | Pending |
-| VER-01 | Phase 2 | Pending |
-| VER-02 | Phase 2 | Pending |
-| VER-03 | Phase 2 | Pending |
+| IFC-01 | Phase 2 | Complete |
+| IFC-02 | Phase 2 | Complete |
+| IFC-03 | Phase 2 | Complete |
+| IFC-04 | Phase 2 | Complete |
+| IFC-05 | Phase 2 | Complete |
+| VER-01 | Phase 2 | Complete |
+| VER-02 | Phase 2 | Complete |
+| VER-03 | Phase 2 | Complete |
 | TEXT-01 | Phase 3 | Pending |
 | TEXT-02 | Phase 3 | Pending |
 | TEXT-03 | Phase 3 | Pending |
@@ -124,4 +124,4 @@ requirements.
 
 ---
 *Requirements defined: 2026-06-11*
-*Last updated: 2026-06-11 after Phase 1 verification*
+*Last updated: 2026-06-11 after Phase 2 verification*

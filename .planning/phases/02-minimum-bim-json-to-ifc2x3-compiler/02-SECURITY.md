@@ -1,56 +1,62 @@
-# Phase 2 Security Design
+---
+phase: 2
+slug: minimum-bim-json-to-ifc2x3-compiler
+status: verified
+threats_open: 0
+asvs_level: 1
+created: 2026-06-11
+---
 
-**Created:** 2026-06-11
-**Status:** Design complete; implementation pending
+# Phase 2 Security
 
-## Assets and Trust Boundaries
+## Trust Boundaries
 
-Assets:
-
-- canonical BIM JSON input,
-- existing destination IFC files,
-- generated IFC artifacts,
-- deterministic BIM-ID-to-GlobalId mapping,
-- local filesystem paths and temporary files.
-
-Trust boundaries:
-
-- JSON enters through the Phase 1 validator,
-- IfcOpenShell receives validated but still untrusted values,
-- the compiler writes a temporary artifact before replacing a destination,
-- verifier output is normalized before reaching users or tests.
+| Boundary | Data crossing |
+|---|---|
+| JSON file to strict parser and contract validator | Untrusted structured input |
+| Validated BIM JSON to IfcOpenShell | Bounded values and user strings |
+| Temporary IFC to reopened verifier | Generated artifact before publication |
+| Verified temporary file to destination | Atomic local filesystem replacement |
 
 ## Threat Register
 
-| ID | Threat | Severity | Required mitigation | Planned evidence |
-|---|---|---:|---|---|
-| T-02-01 | Invalid input overwrites a valid IFC | High | Validate before output work; sibling temp plus `os.replace` only after verification | Sentinel output tests |
-| T-02-02 | Partial or invalid IFC is exposed after compiler failure | High | Reopen and schema-verify temp artifact; always clean temp on failure | Injected verification failure |
-| T-02-03 | Path confusion writes outside the requested destination | Medium | Resolve destination parent; create temp only in that parent; never derive paths from BIM IDs | CLI path tests |
-| T-02-04 | Duplicate or colliding identities corrupt traceability | High | Phase 1 uniqueness gate plus deterministic domain-separated UUIDv5; assert generated uniqueness | Repeat compile identity tests |
-| T-02-05 | Unit confusion creates unsafe 1000x geometry | High | One reviewed mm-to-m boundary and reopened dimension tests for every family | Parameterized 1 mm tests |
-| T-02-06 | Arbitrary predefined strings cause invalid IFC enums | Medium | Allowlist compatible enums; use `NOTDEFINED` where mandatory; preserve source in pset | Custom value tests plus schema validation |
-| T-02-07 | Resource exhaustion from huge inputs or geometry | Medium | Retain 10 MiB file input limit; schema requires finite explicit arrays; document deployment limits | Existing CLI limit regression |
-| T-02-08 | Validator diagnostics leak unstable internals | Low | Stable issue codes, paths, entity IDs, deterministic sort; omit memory addresses | Negative verifier snapshot tests |
-| T-02-09 | Temporary files remain after failure | Medium | `try/finally` cleanup using exact resolved temp path | Failure-path filesystem tests |
+| ID | Threat | Mitigation | Status |
+|---|---|---|---|
+| T-02-01 | Invalid input overwrites valid IFC | Validate before output work; sentinel tests | closed |
+| T-02-02 | Partial or invalid IFC is exposed | Verify sibling temporary file before `os.replace` | closed |
+| T-02-03 | Path confusion or input/output collision | Resolve paths, reject conflicts, derive no path from BIM data | closed |
+| T-02-04 | Duplicate or colliding identities | Unique source IDs plus domain-separated deterministic UUIDv5 | closed |
+| T-02-05 | Millimetre/metre confusion | One conversion boundary and all-family reopened 1 mm tests | closed |
+| T-02-06 | Arbitrary strings invalidate IFC enums | Allow compatible enums; preserve exact source string in pset | closed |
+| T-02-07 | Resource exhaustion | CLI 10 MiB limit, 1000-issue cap, finite-number rejection | closed |
+| T-02-08 | Diagnostics leak unstable internals | Stable codes, entity IDs, attributes, and deterministic sorting | closed |
+| T-02-09 | Temporary files remain after failure | Exact-path cleanup in `finally` with failure tests | closed |
+| T-02-10 | NaN, Infinity, or overflow reaches geometry | Strict JSON parsing plus recursive semantic finite-number check | closed |
 
-## Security Invariants
+## Accepted Risks
 
-1. No output path is touched before canonical validation succeeds.
-2. Destination replacement occurs only after in-memory and reopened validation
-   both succeed.
-3. Required hierarchy, references, dimensions, and properties are never
-   synthesized from defaults.
-4. Mandatory IFC bookkeeping values such as `NOTDEFINED` are used only where
-   the IFC2X3 schema requires them and do not replace source properties.
-5. Original BIM JSON IDs remain recoverable even when IFC enums cannot encode
-   source vocabulary.
-6. No BIM JSON string is interpreted as a filesystem path, Python expression,
-   or IfcOpenShell class name.
+- The in-memory Python API does not impose transport-size limits. Phase 6
+  deployment must enforce request quotas before calling it.
+- Finite coordinates and dimensions currently have no product maximum.
+  Schema-required positivity and deployment resource limits are sufficient for
+  Phase 2; domain maxima require a later product decision.
 
-## Phase Exit Gate
+## Implementation Evidence
 
-Phase 2 cannot be marked complete while any High threat lacks an automated
-test. The final security verification must rerun the complete compiler suite
-and inspect atomic-output, unit, identity, and enum handling directly.
+- Destination sentinels survive validation, verifier, output, and path-conflict
+  failures.
+- Reopened temporary IFC receives schema and EXPRESS validation.
+- Same-class invalid entities each retain a normalized diagnostic identity.
+- Long elements receive extent-aware non-overlapping synthetic placement.
+- `NaN`, `Infinity`, `1e400`, and unrepresentable huge integers are rejected
+  before IFC generation.
+- `python -m pytest tests -q` reports `142 passed`.
 
+## Sign-Off
+
+- [x] All High threats have automated evidence.
+- [x] All threats have a disposition.
+- [x] Accepted residual risks are documented with future ownership.
+- [x] `threats_open: 0` confirmed.
+
+**Approval:** verified 2026-06-11

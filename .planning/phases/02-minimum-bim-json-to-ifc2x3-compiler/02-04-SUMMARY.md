@@ -82,10 +82,9 @@ path with stable diagnostics, negative verifier proof, and atomic output.**
 - Regression: `132 passed in 66.00s`.
 - Contract reference drift check passed.
 - `python -m compileall -q src scripts` and `git diff --check` passed.
-- Real process smoke:
-  `python scripts/bim_json/compile_ifc.py
-  tests/contract/fixtures/complete.json cli-smoke-final.ifc`
-  exited 0 in 4.7 seconds with `success: true`.
+- A real process smoke compiled the canonical complete fixture to
+  `cli-smoke-final.ifc`, exited 0 in 4.7 seconds, and returned
+  `success: true`.
 
 ## CLI Contract
 
@@ -119,18 +118,26 @@ None.
 
 ## Next Phase Readiness
 
-Phase 2 implementation is ready for GSD verification, code review, security
-review, and requirement coverage audit.
+Phase 2 implementation passed GSD verification, deep code review, security
+review, and requirement coverage audit after four review-driven fixes.
+
+## Post-Plan Review
+
+- Verifier diagnostics now retain every same-class invalid entity.
+- Input and output path conflicts fail without touching source data.
+- Synthetic placement uses actual element extents rather than a fixed stride.
+- Strict JSON loading and semantic validation reject non-finite numbers before
+  IfcOpenShell receives them.
+- Final repository regression: `142 passed`.
 
 ## Self-Check: PASSED
 
 - RED and GREEN commits exist in order.
 - Positive and negative verifier paths are covered.
-- CLI failure paths preserve existing output and avoid partial artifacts.
+- CLI error paths preserve existing output and avoid partial artifacts.
 - Full compiler and repository suites pass.
 
 ---
 
 *Phase: 02-minimum-bim-json-to-ifc2x3-compiler*
 *Completed: 2026-06-11*
-
