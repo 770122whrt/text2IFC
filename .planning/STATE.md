@@ -12,9 +12,9 @@ requirements.
 ## Status
 
 - Phase: 2.5
-- Stage: Planning complete
-- State: Ready to execute
-- Plans: 6 plans in 5 waves
+- Stage: Wave 1 complete
+- State: Ready to execute Wave 2
+- Plans: 1 of 6 complete in 5 waves
 - Branch: `main`
 - Remote: `https://github.com/770122whrt/text2IFC`
 
@@ -48,6 +48,12 @@ requirements.
 - A 35-file IFC gap audit quantified placement, space, relationship, material,
   type, geometry, and product-class information absent from BIM JSON 1.0.
 - The user confirmed Matterport3D/BIMNet authorization for local training.
+- Official IFC2X3 acquisition is URL-allowlisted, bounded, and SHA-256
+  verified before parsing.
+- Generated IFC2X3 knowledge covers 980 declarations, 653 entities, 317
+  property sets, 6 complex properties, and 1850 simple properties.
+- Runtime knowledge loading is immutable, deterministic, and offline.
+- Repository regression suite currently passes 171 tests.
 
 ## Current Decisions
 
@@ -81,16 +87,19 @@ requirements.
 - Existing source files include text encoding problems.
 - Project-local dependency handling is not yet standardized for new machines.
 - Baseline model/provider choice must remain replaceable and reproducible.
-- Registry generation and acquisition code do not yet exist.
 - BIM JSON 2.0 and Draft Envelope schemas are specified but not implemented.
 - Existing BIMNet train/test folders leak scene families (`7y3`, `e9z`, and
   `px4`) across file-level splits and must not be reused as model splits.
+- IfcOpenShell 0.8.5 late-bound EXPRESS schema cleanup corrupts the Windows
+  heap; registry generation isolates parsing in a hard-exit worker.
+- The repository `.pytest-tmp` directory can acquire restrictive Windows ACLs;
+  verification may need a unique `%TEMP%` basetemp.
 
 ## Next Action
 
-Execute `02.5-01-PLAN.md`: official IFC2X3 source acquisition, manifest
-verification, and deterministic declaration/property registries. Do not begin
-the BIM JSON 2.0 schema before Wave 1 passes.
+Execute `02.5-02-PLAN.md`: formal BIM JSON 2.0, separate Draft Envelope,
+project-authored IFC2X3 capability overlay, registry-backed semantic
+validation, and loss-explicit BIM JSON 1.0 migration.
 
 ## Accumulated Context
 
@@ -100,4 +109,4 @@ the BIM JSON 2.0 schema before Wave 1 passes.
   the spatial ground truth required for Text-to-JSON training.
 
 ---
-*Last activity: 2026-06-11 - planned Phase 2.5 in six plans and five waves*
+*Last activity: 2026-06-11 - completed Phase 2.5 Plan 01 official IFC2X3 knowledge registry*

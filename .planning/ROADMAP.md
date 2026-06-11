@@ -105,7 +105,7 @@ topology, furnishing/MEP generation, and IFC4/IFC4X3 output remain Phase 4.
 
 **Wave 1**
 
-- [ ] `02.5-01-PLAN.md` - Official IFC2X3 source manifest, safe acquisition,
+- [x] `02.5-01-PLAN.md` - Official IFC2X3 source manifest, safe acquisition,
   declaration registry, and PSD property registry
 
 **Wave 2** *(blocked on Wave 1 completion)*
@@ -143,7 +143,7 @@ topology, furnishing/MEP generation, and IFC4/IFC4X3 output remain Phase 4.
 - Every implementation behavior follows recorded RED-GREEN TDD before full
   regression.
 
-**Status:** Planned - ready for execution
+**Status:** In progress - Wave 1 complete 2026-06-11
 
 ## Phase 3: Text-to-JSON Dataset and Baseline
 
