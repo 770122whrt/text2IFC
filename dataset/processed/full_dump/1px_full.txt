@@ -1,0 +1,3882 @@
+================================================================================
+IFC完整信息导出
+文件: 1px.ifc
+Schema: IFC2X3
+总实体数: 12131
+================================================================================
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+【一、项目层级结构】
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  [#105] IfcProject
+    GlobalId: 3D1Nijvnv6WAopLsMyX0D5
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 项目编号
+    LongName: 项目名称
+    Phase: 项目状态
+    RepresentationContexts: [IfcGeometricRepresentationContext(#97)]
+    UnitsInContext: IfcUnitAssignment(#92)
+
+  [#20259] IfcSite
+    GlobalId: 3D1Nijvnv6WAopLsMyX0D7
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: Default
+    ObjectPlacement: IfcLocalPlacement(#20256)
+    CompositionType: ELEMENT
+    RefLatitude: [39, 55, 0, 114440]
+    RefLongitude: [116, 25, 59, 866333]
+    RefElevation: 0.00
+
+  [#115] IfcBuilding
+    GlobalId: 3D1Nijvnv6WAopLsMyX0D4
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 
+    ObjectPlacement: IfcLocalPlacement(#32)
+    LongName: 
+    CompositionType: ELEMENT
+    [属性集]
+      Pset_BuildingCommon:
+        NumberOfStoreys = 2
+        IsLandmarked = UNKNOWN
+
+  [#148] IfcBuildingStorey
+    GlobalId: 3D1Nijvnv6WAopLsL3U$tM
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 地板
+    ObjectType: 标高:正负零标高
+    ObjectPlacement: IfcLocalPlacement(#147)
+    LongName: 地板
+    CompositionType: ELEMENT
+    Elevation: 0.00
+    [属性集]
+      Pset_BuildingStoreyCommon:
+        AboveGround = UNKNOWN
+
+  [#154] IfcBuildingStorey
+    GlobalId: 3D1Nijvnv6WAopLsL3UBYN
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 天花板
+    ObjectType: 标高:上标头
+    ObjectPlacement: IfcLocalPlacement(#153)
+    LongName: 天花板
+    CompositionType: ELEMENT
+    Elevation: 2680.00
+    [属性集]
+      Pset_BuildingStoreyCommon:
+        AboveGround = UNKNOWN
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+【二、建筑构件详情】
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+--- IfcWall (45个) ---
+  [#196] IfcWallStandardCase
+    GlobalId: 12EuPCouz3xfcXxGyLWtWd
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 基本墙:外 - 240:218400
+    ObjectType: 基本墙:外 - 240
+    ObjectPlacement: IfcLocalPlacement(#165)
+    Representation: IfcProductDefinitionShape(#192)
+    Tag: 218400
+    [属性集]
+      Pset_QuantityTakeOff:
+        Reference = 外 - 240
+      Pset_ReinforcementBarPitchOfWall:
+        Reference = 外 - 240
+      Pset_WallCommon:
+        Reference = 外 - 240
+        IsExternal = True
+        ExtendToStructure = False
+        LoadBearing = False
+    [材料关联] IfcMaterialLayerSetUsage
+      层集用法: ForSet=基本墙:外 - 240
+    [几何表达] 类型=Curve2D, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcPolyline
+    [几何表达] 类型=SweptSolid, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcRectangleProfileDef
+        矩形截面: 9637.7 x 240.0
+        拉伸深度: 2680.0
+        位置: (0.0, 0.0, 0.0)
+    [所在空间] IfcBuildingStorey "地板"(#148)
+    [开洞] 推拉窗:TLC1215 2:241989:1(#21190)
+    [开洞] 固定:0406 x 0610mm:246197:1(#21219)
+    [开洞] 固定:0406 x 0610mm:247490:1(#21245)
+    [开洞] 固定:0406 x 0610mm:247588:1(#21271)
+
+  [#287] IfcWallStandardCase
+    GlobalId: 12EuPCouz3xfcXxGyLWtkz
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 基本墙:外 - 240:218810
+    ObjectType: 基本墙:外 - 240
+    ObjectPlacement: IfcLocalPlacement(#267)
+    Representation: IfcProductDefinitionShape(#285)
+    Tag: 218810
+    [属性集]
+      Pset_QuantityTakeOff:
+        Reference = 外 - 240
+      Pset_ReinforcementBarPitchOfWall:
+        Reference = 外 - 240
+      Pset_WallCommon:
+        Reference = 外 - 240
+        IsExternal = True
+        ExtendToStructure = False
+        LoadBearing = False
+    [材料关联] IfcMaterialLayerSetUsage
+      层集用法: ForSet=基本墙:外 - 240
+    [几何表达] 类型=Curve2D, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcPolyline
+    [几何表达] 类型=SweptSolid, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcRectangleProfileDef
+        矩形截面: 8749.4 x 240.0
+        拉伸深度: 2680.0
+        位置: (0.0, 0.0, 0.0)
+    [所在空间] IfcBuildingStorey "地板"(#148)
+    [开洞] 推拉窗:TLC1215:241475:1(#21298)
+    [开洞] 推拉窗:TLC1215:240105:1(#21325)
+
+  [#331] IfcWallStandardCase
+    GlobalId: 12EuPCouz3xfcXxGyLWtfg
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 基本墙:外 - 241:218989
+    ObjectType: 基本墙:外 - 241
+    ObjectPlacement: IfcLocalPlacement(#311)
+    Representation: IfcProductDefinitionShape(#329)
+    Tag: 218989
+    [属性集]
+      Pset_QuantityTakeOff:
+        Reference = 外 - 241
+      Pset_ReinforcementBarPitchOfWall:
+        Reference = 外 - 241
+      Pset_WallCommon:
+        IsExternal = True
+        Reference = 外 - 241
+        ExtendToStructure = False
+        LoadBearing = False
+    [材料关联] IfcMaterialLayerSetUsage
+      层集用法: ForSet=基本墙:外 - 241
+    [几何表达] 类型=Curve2D, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcPolyline
+    [几何表达] 类型=SweptSolid, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcRectangleProfileDef
+        矩形截面: 5183.7 x 120.0
+        拉伸深度: 2680.0
+        位置: (0.0, 0.0, 0.0)
+    [所在空间] IfcBuildingStorey "地板"(#148)
+    [开洞] 单扇 - 与墙齐:0915 x 2134mm 5:281050:1(#21352)
+
+  [#392] IfcWallStandardCase
+    GlobalId: 12EuPCouz3xfcXxGyLWtLD
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 基本墙:外 - 240:219210
+    ObjectType: 基本墙:外 - 240
+    ObjectPlacement: IfcLocalPlacement(#372)
+    Representation: IfcProductDefinitionShape(#390)
+    Tag: 219210
+    [属性集]
+      Pset_QuantityTakeOff:
+        Reference = 外 - 240
+      Pset_ReinforcementBarPitchOfWall:
+        Reference = 外 - 240
+      Pset_WallCommon:
+        Reference = 外 - 240
+        IsExternal = True
+        ExtendToStructure = False
+        LoadBearing = False
+    [材料关联] IfcMaterialLayerSetUsage
+      层集用法: ForSet=基本墙:外 - 240
+    [几何表达] 类型=Curve2D, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcPolyline
+    [几何表达] 类型=SweptSolid, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcRectangleProfileDef
+        矩形截面: 2849.4 x 240.0
+        拉伸深度: 2680.0
+        位置: (0.0, 0.0, 0.0)
+    [所在空间] IfcBuildingStorey "地板"(#148)
+
+  [#436] IfcWallStandardCase
+    GlobalId: 12EuPCouz3xfcXxGyLWtNz
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 基本墙:外 - 240:219386
+    ObjectType: 基本墙:外 - 240
+    ObjectPlacement: IfcLocalPlacement(#416)
+    Representation: IfcProductDefinitionShape(#434)
+    Tag: 219386
+    [属性集]
+      Pset_QuantityTakeOff:
+        Reference = 外 - 240
+      Pset_ReinforcementBarPitchOfWall:
+        Reference = 外 - 240
+      Pset_WallCommon:
+        Reference = 外 - 240
+        IsExternal = True
+        ExtendToStructure = False
+        LoadBearing = False
+    [材料关联] IfcMaterialLayerSetUsage
+      层集用法: ForSet=基本墙:外 - 240
+    [几何表达] 类型=Curve2D, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcPolyline
+    [几何表达] 类型=SweptSolid, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcRectangleProfileDef
+        矩形截面: 2001.2 x 240.0
+        拉伸深度: 2680.0
+        位置: (0.0, 0.0, 0.0)
+    [所在空间] IfcBuildingStorey "地板"(#148)
+
+  [#480] IfcWallStandardCase
+    GlobalId: 12EuPCouz3xfcXxGyLWtPf
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 基本墙:外 - 240:220014
+    ObjectType: 基本墙:外 - 240
+    ObjectPlacement: IfcLocalPlacement(#460)
+    Representation: IfcProductDefinitionShape(#478)
+    Tag: 220014
+    [属性集]
+      Pset_QuantityTakeOff:
+        Reference = 外 - 240
+      Pset_ReinforcementBarPitchOfWall:
+        Reference = 外 - 240
+      Pset_WallCommon:
+        Reference = 外 - 240
+        IsExternal = True
+        ExtendToStructure = False
+        LoadBearing = False
+    [材料关联] IfcMaterialLayerSetUsage
+      层集用法: ForSet=基本墙:外 - 240
+    [几何表达] 类型=Curve2D, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcPolyline
+    [几何表达] 类型=SweptSolid, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcRectangleProfileDef
+        矩形截面: 4293.1 x 240.0
+        拉伸深度: 2680.0
+        位置: (0.0, 0.0, 0.0)
+    [所在空间] IfcBuildingStorey "地板"(#148)
+    [开洞] 推拉窗-双层单列:600 x 600:251678:1(#21380)
+    [开洞] 固定:0915 x 1220mm:252203:1(#21407)
+
+  [#524] IfcWallStandardCase
+    GlobalId: 12EuPCouz3xfcXxGyLWtF2
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 基本墙:外 - 240:220869
+    ObjectType: 基本墙:外 - 240
+    ObjectPlacement: IfcLocalPlacement(#504)
+    Representation: IfcProductDefinitionShape(#522)
+    Tag: 220869
+    [属性集]
+      Pset_QuantityTakeOff:
+        Reference = 外 - 240
+      Pset_ReinforcementBarPitchOfWall:
+        Reference = 外 - 240
+      Pset_WallCommon:
+        Reference = 外 - 240
+        IsExternal = True
+        ExtendToStructure = False
+        LoadBearing = False
+    [材料关联] IfcMaterialLayerSetUsage
+      层集用法: ForSet=基本墙:外 - 240
+    [几何表达] 类型=Curve2D, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcPolyline
+    [几何表达] 类型=SweptSolid, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcRectangleProfileDef
+        矩形截面: 4427.5 x 240.0
+        拉伸深度: 2680.0
+        位置: (0.0, 0.0, 0.0)
+    [所在空间] IfcBuildingStorey "地板"(#148)
+    [开洞] 固定:0406 x 0610mm 2:247729:1(#21434)
+    [开洞] 固定:0406 x 0610mm 3:278986:1(#21461)
+
+  [#568] IfcWallStandardCase
+    GlobalId: 12EuPCouz3xfcXxGyLWqqb
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 基本墙:80:221218
+    ObjectType: 基本墙:80
+    ObjectPlacement: IfcLocalPlacement(#548)
+    Representation: IfcProductDefinitionShape(#566)
+    Tag: 221218
+    [属性集]
+      Pset_QuantityTakeOff:
+        Reference = 80
+      Pset_ReinforcementBarPitchOfWall:
+        Reference = 80
+      Pset_WallCommon:
+        IsExternal = True
+        Reference = 80
+        ExtendToStructure = False
+        LoadBearing = False
+    [材料关联] IfcMaterialLayerSetUsage
+      层集用法: ForSet=基本墙:80
+    [几何表达] 类型=Curve2D, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcPolyline
+    [几何表达] 类型=SweptSolid, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcRectangleProfileDef
+        矩形截面: 2475.3 x 84.0
+        拉伸深度: 2680.0
+        位置: (0.0, 0.0, 0.0)
+    [所在空间] IfcBuildingStorey "地板"(#148)
+
+  [#629] IfcWallStandardCase
+    GlobalId: 12EuPCouz3xfcXxGyLWqty
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 基本墙:145:221435
+    ObjectType: 基本墙:145
+    ObjectPlacement: IfcLocalPlacement(#609)
+    Representation: IfcProductDefinitionShape(#627)
+    Tag: 221435
+    [属性集]
+      Pset_QuantityTakeOff:
+        Reference = 145
+      Pset_ReinforcementBarPitchOfWall:
+        Reference = 145
+      Pset_WallCommon:
+        IsExternal = True
+        Reference = 145
+        ExtendToStructure = False
+        LoadBearing = False
+    [材料关联] IfcMaterialLayerSetUsage
+      层集用法: ForSet=基本墙:145
+    [几何表达] 类型=Curve2D, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcPolyline
+    [几何表达] 类型=SweptSolid, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcRectangleProfileDef
+        矩形截面: 3020.0 x 145.0
+        拉伸深度: 2680.0
+        位置: (0.0, 0.0, 0.0)
+    [所在空间] IfcBuildingStorey "地板"(#148)
+
+  [#690] IfcWallStandardCase
+    GlobalId: 2KwUpHYjb0EAZdiYz6$C_a
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 基本墙:外 - 240:222376
+    ObjectType: 基本墙:外 - 240
+    ObjectPlacement: IfcLocalPlacement(#670)
+    Representation: IfcProductDefinitionShape(#688)
+    Tag: 222376
+    [属性集]
+      Pset_QuantityTakeOff:
+        Reference = 外 - 240
+      Pset_ReinforcementBarPitchOfWall:
+        Reference = 外 - 240
+      Pset_WallCommon:
+        Reference = 外 - 240
+        IsExternal = True
+        ExtendToStructure = False
+        LoadBearing = False
+    [材料关联] IfcMaterialLayerSetUsage
+      层集用法: ForSet=基本墙:外 - 240
+    [几何表达] 类型=Curve2D, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcPolyline
+    [几何表达] 类型=SweptSolid, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcRectangleProfileDef
+        矩形截面: 1491.1 x 240.0
+        拉伸深度: 2680.0
+        位置: (0.0, 0.0, 0.0)
+    [所在空间] IfcBuildingStorey "地板"(#148)
+
+  [#747] IfcWallStandardCase
+    GlobalId: 2KwUpHYjb0EAZdiYz6$CxR
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 基本墙:140:222679
+    ObjectType: 基本墙:140
+    ObjectPlacement: IfcLocalPlacement(#714)
+    Representation: IfcProductDefinitionShape(#745)
+    Tag: 222679
+    [属性集]
+      Pset_QuantityTakeOff:
+        Reference = 140
+      Pset_ReinforcementBarPitchOfWall:
+        Reference = 140
+      Pset_WallCommon:
+        IsExternal = True
+        Reference = 140
+        ExtendToStructure = False
+        LoadBearing = False
+    [材料关联] IfcMaterialLayerSetUsage
+      层集用法: ForSet=基本墙:140
+    [几何表达] 类型=Curve2D, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcPolyline
+    [几何表达] 类型=SweptSolid, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcArbitraryClosedProfileDef
+        任意截面(含孔洞=False)
+        拉伸深度: 2680.0
+        位置: (0.0, 0.0, 0.0)
+    [所在空间] IfcBuildingStorey "地板"(#148)
+    [开洞] 单扇 - 与墙齐:0915 x 2134mm 5:275861:1(#21488)
+    [开洞] 固定:0406 x 0610mm 2:248402:1(#21515)
+
+  [#808] IfcWallStandardCase
+    GlobalId: 2KwUpHYjb0EAZdiYz6$Cmt
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 基本墙:80:223035
+    ObjectType: 基本墙:80
+    ObjectPlacement: IfcLocalPlacement(#788)
+    Representation: IfcProductDefinitionShape(#806)
+    Tag: 223035
+    [属性集]
+      Pset_QuantityTakeOff:
+        Reference = 80
+      Pset_ReinforcementBarPitchOfWall:
+        Reference = 80
+      Pset_WallCommon:
+        IsExternal = True
+        Reference = 80
+        ExtendToStructure = False
+        LoadBearing = False
+    [材料关联] IfcMaterialLayerSetUsage
+      层集用法: ForSet=基本墙:80
+    [几何表达] 类型=Curve2D, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcPolyline
+    [几何表达] 类型=SweptSolid, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcRectangleProfileDef
+        矩形截面: 2046.6 x 84.0
+        拉伸深度: 2680.0
+        位置: (0.0, 0.0, 0.0)
+    [所在空间] IfcBuildingStorey "地板"(#148)
+    [开洞] 单扇 - 与墙齐:0915 x 2134mm 5:275678:1(#21542)
+
+  [#852] IfcWallStandardCase
+    GlobalId: 2KwUpHYjb0EAZdiYz6$CCg
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 基本墙:外 - 240:223270
+    ObjectType: 基本墙:外 - 240
+    ObjectPlacement: IfcLocalPlacement(#832)
+    Representation: IfcProductDefinitionShape(#850)
+    Tag: 223270
+    [属性集]
+      Pset_QuantityTakeOff:
+        Reference = 外 - 240
+      Pset_ReinforcementBarPitchOfWall:
+        Reference = 外 - 240
+      Pset_WallCommon:
+        Reference = 外 - 240
+        IsExternal = True
+        ExtendToStructure = False
+        LoadBearing = False
+    [材料关联] IfcMaterialLayerSetUsage
+      层集用法: ForSet=基本墙:外 - 240
+    [几何表达] 类型=Curve2D, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcPolyline
+    [几何表达] 类型=SweptSolid, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcRectangleProfileDef
+        矩形截面: 2321.3 x 240.0
+        拉伸深度: 2680.0
+        位置: (0.0, 0.0, 0.0)
+    [所在空间] IfcBuildingStorey "地板"(#148)
+
+  [#896] IfcWallStandardCase
+    GlobalId: 2KwUpHYjb0EAZdiYz6$C8J
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 基本墙:110:223519
+    ObjectType: 基本墙:110
+    ObjectPlacement: IfcLocalPlacement(#876)
+    Representation: IfcProductDefinitionShape(#894)
+    Tag: 223519
+    [属性集]
+      Pset_QuantityTakeOff:
+        Reference = 110
+      Pset_ReinforcementBarPitchOfWall:
+        Reference = 110
+      Pset_WallCommon:
+        IsExternal = True
+        Reference = 110
+        ExtendToStructure = False
+        LoadBearing = False
+    [材料关联] IfcMaterialLayerSetUsage
+      层集用法: ForSet=基本墙:110
+    [几何表达] 类型=Curve2D, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcPolyline
+    [几何表达] 类型=SweptSolid, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcRectangleProfileDef
+        矩形截面: 1812.4 x 110.0
+        拉伸深度: 2680.0
+        位置: (0.0, 0.0, 0.0)
+    [所在空间] IfcBuildingStorey "地板"(#148)
+
+  [#957] IfcWallStandardCase
+    GlobalId: 2KwUpHYjb0EAZdiYz6$C0Y
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 基本墙:80:224046
+    ObjectType: 基本墙:80
+    ObjectPlacement: IfcLocalPlacement(#937)
+    Representation: IfcProductDefinitionShape(#955)
+    Tag: 224046
+    [属性集]
+      Pset_QuantityTakeOff:
+        Reference = 80
+      Pset_ReinforcementBarPitchOfWall:
+        Reference = 80
+      Pset_WallCommon:
+        IsExternal = True
+        Reference = 80
+        ExtendToStructure = False
+        LoadBearing = False
+    [材料关联] IfcMaterialLayerSetUsage
+      层集用法: ForSet=基本墙:80
+    [几何表达] 类型=Curve2D, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcPolyline
+    [几何表达] 类型=SweptSolid, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcRectangleProfileDef
+        矩形截面: 2205.5 x 84.0
+        拉伸深度: 2680.0
+        位置: (0.0, 0.0, 0.0)
+    [所在空间] IfcBuildingStorey "地板"(#148)
+
+  [#1001] IfcWallStandardCase
+    GlobalId: 2KwUpHYjb0EAZdiYz6$CVj
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 基本墙:80:224481
+    ObjectType: 基本墙:80
+    ObjectPlacement: IfcLocalPlacement(#981)
+    Representation: IfcProductDefinitionShape(#999)
+    Tag: 224481
+    [属性集]
+      Pset_QuantityTakeOff:
+        Reference = 80
+      Pset_ReinforcementBarPitchOfWall:
+        Reference = 80
+      Pset_WallCommon:
+        IsExternal = True
+        Reference = 80
+        ExtendToStructure = False
+        LoadBearing = False
+    [材料关联] IfcMaterialLayerSetUsage
+      层集用法: ForSet=基本墙:80
+    [几何表达] 类型=Curve2D, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcPolyline
+    [几何表达] 类型=SweptSolid, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcRectangleProfileDef
+        矩形截面: 1085.3 x 84.0
+        拉伸深度: 2680.0
+        位置: (0.0, 0.0, 0.0)
+    [所在空间] IfcBuildingStorey "地板"(#148)
+    [开洞] 单扇 - 与墙齐:0915 x 2134mm 7:277597:1(#21570)
+
+  [#1045] IfcWallStandardCase
+    GlobalId: 2KwUpHYjb0EAZdiYz6$CQt
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 基本墙:110:224699
+    ObjectType: 基本墙:110
+    ObjectPlacement: IfcLocalPlacement(#1025)
+    Representation: IfcProductDefinitionShape(#1043)
+    Tag: 224699
+    [属性集]
+      Pset_QuantityTakeOff:
+        Reference = 110
+      Pset_ReinforcementBarPitchOfWall:
+        Reference = 110
+      Pset_WallCommon:
+        IsExternal = True
+        Reference = 110
+        ExtendToStructure = False
+        LoadBearing = False
+    [材料关联] IfcMaterialLayerSetUsage
+      层集用法: ForSet=基本墙:110
+    [几何表达] 类型=Curve2D, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcPolyline
+    [几何表达] 类型=SweptSolid, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcRectangleProfileDef
+        矩形截面: 1848.4 x 110.0
+        拉伸深度: 2680.0
+        位置: (0.0, 0.0, 0.0)
+    [所在空间] IfcBuildingStorey "地板"(#148)
+    [开洞] 单扇 - 与墙齐:0915 x 2134mm 6:277828:1(#21598)
+
+  [#1089] IfcWallStandardCase
+    GlobalId: 2KwUpHYjb0EAZdiYz6$CNj
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 基本墙:310:224993
+    ObjectType: 基本墙:310
+    ObjectPlacement: IfcLocalPlacement(#1069)
+    Representation: IfcProductDefinitionShape(#1087)
+    Tag: 224993
+    [属性集]
+      Pset_QuantityTakeOff:
+        Reference = 310
+      Pset_ReinforcementBarPitchOfWall:
+        Reference = 310
+      Pset_WallCommon:
+        IsExternal = True
+        Reference = 310
+        ExtendToStructure = False
+        LoadBearing = False
+    [材料关联] IfcMaterialLayerSetUsage
+      层集用法: ForSet=基本墙:310
+    [几何表达] 类型=Curve2D, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcPolyline
+    [几何表达] 类型=SweptSolid, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcRectangleProfileDef
+        矩形截面: 2154.0 x 310.0
+        拉伸深度: 2680.0
+        位置: (0.0, 0.0, 0.0)
+    [所在空间] IfcBuildingStorey "地板"(#148)
+
+  [#1161] IfcWallStandardCase
+    GlobalId: 2KwUpHYjb0EAZdiYz6$Dcf
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 基本墙:外 - 240:225957
+    ObjectType: 基本墙:外 - 240
+    ObjectPlacement: IfcLocalPlacement(#1130)
+    Representation: IfcProductDefinitionShape(#1159)
+    Tag: 225957
+    [属性集]
+      Pset_QuantityTakeOff:
+        Reference = 外 - 240
+      Pset_ReinforcementBarPitchOfWall:
+        Reference = 外 - 240
+      Pset_WallCommon:
+        Reference = 外 - 240
+        IsExternal = True
+        ExtendToStructure = False
+        LoadBearing = False
+    [材料关联] IfcMaterialLayerSetUsage
+      层集用法: ForSet=基本墙:外 - 240
+    [几何表达] 类型=Curve2D, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcPolyline
+    [几何表达] 类型=SweptSolid, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcArbitraryClosedProfileDef
+        任意截面(含孔洞=False)
+        拉伸深度: 2680.0
+        位置: (0.0, 0.0, 0.0)
+    [所在空间] IfcBuildingStorey "地板"(#148)
+
+  [#1205] IfcWallStandardCase
+    GlobalId: 2KwUpHYjb0EAZdiYz6$DY9
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 基本墙:110:226181
+    ObjectType: 基本墙:110
+    ObjectPlacement: IfcLocalPlacement(#1185)
+    Representation: IfcProductDefinitionShape(#1203)
+    Tag: 226181
+    [属性集]
+      Pset_QuantityTakeOff:
+        Reference = 110
+      Pset_ReinforcementBarPitchOfWall:
+        Reference = 110
+      Pset_WallCommon:
+        IsExternal = True
+        Reference = 110
+        ExtendToStructure = False
+        LoadBearing = False
+    [材料关联] IfcMaterialLayerSetUsage
+      层集用法: ForSet=基本墙:110
+    [几何表达] 类型=Curve2D, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcPolyline
+    [几何表达] 类型=SweptSolid, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcRectangleProfileDef
+        矩形截面: 1820.0 x 110.0
+        拉伸深度: 2680.0
+        位置: (0.0, 0.0, 0.0)
+    [所在空间] IfcBuildingStorey "地板"(#148)
+
+  [#1249] IfcWallStandardCase
+    GlobalId: 2KwUpHYjb0EAZdiYz6$D$$
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 基本墙:120:226547
+    ObjectType: 基本墙:120
+    ObjectPlacement: IfcLocalPlacement(#1229)
+    Representation: IfcProductDefinitionShape(#1247)
+    Tag: 226547
+    [属性集]
+      Pset_QuantityTakeOff:
+        Reference = 120
+      Pset_ReinforcementBarPitchOfWall:
+        Reference = 120
+      Pset_WallCommon:
+        IsExternal = True
+        Reference = 120
+        ExtendToStructure = False
+        LoadBearing = False
+    [材料关联] IfcMaterialLayerSetUsage
+      层集用法: ForSet=基本墙:120
+    [几何表达] 类型=Curve2D, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcPolyline
+    [几何表达] 类型=SweptSolid, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcRectangleProfileDef
+        矩形截面: 5660.0 x 120.0
+        拉伸深度: 2680.0
+        位置: (0.0, 0.0, 0.0)
+    [所在空间] IfcBuildingStorey "地板"(#148)
+    [开洞] 单扇 - 与墙齐:0915 x 2134mm 4:274865:1(#21626)
+    [开洞] 单扇 - 与墙齐:0915 x 2134mm 5:275329:1(#21653)
+
+  [#1310] IfcWallStandardCase
+    GlobalId: 2KwUpHYjb0EAZdiYz6$Dw8
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 基本墙:外 - 240:226692
+    ObjectType: 基本墙:外 - 240
+    ObjectPlacement: IfcLocalPlacement(#1290)
+    Representation: IfcProductDefinitionShape(#1308)
+    Tag: 226692
+    [属性集]
+      Pset_QuantityTakeOff:
+        Reference = 外 - 240
+      Pset_ReinforcementBarPitchOfWall:
+        Reference = 外 - 240
+      Pset_WallCommon:
+        Reference = 外 - 240
+        IsExternal = True
+        ExtendToStructure = False
+        LoadBearing = False
+    [材料关联] IfcMaterialLayerSetUsage
+      层集用法: ForSet=基本墙:外 - 240
+    [几何表达] 类型=Curve2D, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcPolyline
+    [几何表达] 类型=SweptSolid, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcRectangleProfileDef
+        矩形截面: 1800.0 x 240.0
+        拉伸深度: 2680.0
+        位置: (0.0, 0.0, 0.0)
+    [所在空间] IfcBuildingStorey "地板"(#148)
+
+  [#1354] IfcWallStandardCase
+    GlobalId: 2KwUpHYjb0EAZdiYz6$Drm
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 基本墙:外 - 240:226940
+    ObjectType: 基本墙:外 - 240
+    ObjectPlacement: IfcLocalPlacement(#1334)
+    Representation: IfcProductDefinitionShape(#1352)
+    Tag: 226940
+    [属性集]
+      Pset_QuantityTakeOff:
+        Reference = 外 - 240
+      Pset_ReinforcementBarPitchOfWall:
+        Reference = 外 - 240
+      Pset_WallCommon:
+        Reference = 外 - 240
+        IsExternal = True
+        ExtendToStructure = False
+        LoadBearing = False
+    [材料关联] IfcMaterialLayerSetUsage
+      层集用法: ForSet=基本墙:外 - 240
+    [几何表达] 类型=Curve2D, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcPolyline
+    [几何表达] 类型=SweptSolid, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcRectangleProfileDef
+        矩形截面: 3604.0 x 240.0
+        拉伸深度: 2680.0
+        位置: (0.0, 0.0, 0.0)
+    [所在空间] IfcBuildingStorey "地板"(#148)
+    [开洞] 推拉窗-双层单列:600 x 601:253606:1(#21680)
+    [开洞] 推拉窗-双层单列:600 x 601:253478:1(#21707)
+
+  [#1398] IfcWallStandardCase
+    GlobalId: 2KwUpHYjb0EAZdiYz6$DmY
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 基本墙:140:227118
+    ObjectType: 基本墙:140
+    ObjectPlacement: IfcLocalPlacement(#1378)
+    Representation: IfcProductDefinitionShape(#1396)
+    Tag: 227118
+    [属性集]
+      Pset_QuantityTakeOff:
+        Reference = 140
+      Pset_ReinforcementBarPitchOfWall:
+        Reference = 140
+      Pset_WallCommon:
+        IsExternal = True
+        Reference = 140
+        ExtendToStructure = False
+        LoadBearing = False
+    [材料关联] IfcMaterialLayerSetUsage
+      层集用法: ForSet=基本墙:140
+    [几何表达] 类型=Curve2D, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcPolyline
+    [几何表达] 类型=SweptSolid, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcRectangleProfileDef
+        矩形截面: 4626.1 x 140.0
+        拉伸深度: 2680.0
+        位置: (0.0, 0.0, 0.0)
+    [所在空间] IfcBuildingStorey "地板"(#148)
+
+  [#1442] IfcWallStandardCase
+    GlobalId: 2KwUpHYjb0EAZdiYz6$DpP
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 基本墙:110:227285
+    ObjectType: 基本墙:110
+    ObjectPlacement: IfcLocalPlacement(#1422)
+    Representation: IfcProductDefinitionShape(#1440)
+    Tag: 227285
+    [属性集]
+      Pset_QuantityTakeOff:
+        Reference = 110
+      Pset_ReinforcementBarPitchOfWall:
+        Reference = 110
+      Pset_WallCommon:
+        IsExternal = True
+        Reference = 110
+        ExtendToStructure = False
+        LoadBearing = False
+    [材料关联] IfcMaterialLayerSetUsage
+      层集用法: ForSet=基本墙:110
+    [几何表达] 类型=Curve2D, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcPolyline
+    [几何表达] 类型=SweptSolid, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcRectangleProfileDef
+        矩形截面: 1934.0 x 110.0
+        拉伸深度: 2680.0
+        位置: (0.0, 0.0, 0.0)
+    [所在空间] IfcBuildingStorey "地板"(#148)
+
+  [#1486] IfcWallStandardCase
+    GlobalId: 2KwUpHYjb0EAZdiYz6$DCz
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 基本墙:120:227377
+    ObjectType: 基本墙:120
+    ObjectPlacement: IfcLocalPlacement(#1466)
+    Representation: IfcProductDefinitionShape(#1484)
+    Tag: 227377
+    [属性集]
+      Pset_QuantityTakeOff:
+        Reference = 120
+      Pset_ReinforcementBarPitchOfWall:
+        Reference = 120
+      Pset_WallCommon:
+        IsExternal = True
+        Reference = 120
+        ExtendToStructure = False
+        LoadBearing = False
+    [材料关联] IfcMaterialLayerSetUsage
+      层集用法: ForSet=基本墙:120
+    [几何表达] 类型=Curve2D, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcPolyline
+    [几何表达] 类型=SweptSolid, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcRectangleProfileDef
+        矩形截面: 1789.0 x 120.0
+        拉伸深度: 2680.0
+        位置: (0.0, 0.0, 0.0)
+    [所在空间] IfcBuildingStorey "地板"(#148)
+    [开洞] 单扇 - 与墙齐:0915 x 2134mm 3:274157:1(#21734)
+
+  [#1530] IfcWallStandardCase
+    GlobalId: 2KwUpHYjb0EAZdiYz6$D8k
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 基本墙:145:227618
+    ObjectType: 基本墙:145
+    ObjectPlacement: IfcLocalPlacement(#1510)
+    Representation: IfcProductDefinitionShape(#1528)
+    Tag: 227618
+    [属性集]
+      Pset_QuantityTakeOff:
+        Reference = 145
+      Pset_ReinforcementBarPitchOfWall:
+        Reference = 145
+      Pset_WallCommon:
+        IsExternal = True
+        Reference = 145
+        ExtendToStructure = False
+        LoadBearing = False
+    [材料关联] IfcMaterialLayerSetUsage
+      层集用法: ForSet=基本墙:145
+    [几何表达] 类型=Curve2D, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcPolyline
+    [几何表达] 类型=SweptSolid, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcRectangleProfileDef
+        矩形截面: 3761.0 x 145.0
+        拉伸深度: 2680.0
+        位置: (0.0, 0.0, 0.0)
+    [所在空间] IfcBuildingStorey "地板"(#148)
+    [开洞] 单扇 - 与墙齐:0915 x 2134mm 3:272794:1(#21762)
+
+  [#1574] IfcWallStandardCase
+    GlobalId: 2KwUpHYjb0EAZdiYz6$D6v
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 基本墙:外 - 240:228021
+    ObjectType: 基本墙:外 - 240
+    ObjectPlacement: IfcLocalPlacement(#1554)
+    Representation: IfcProductDefinitionShape(#1572)
+    Tag: 228021
+    [属性集]
+      Pset_QuantityTakeOff:
+        Reference = 外 - 240
+      Pset_ReinforcementBarPitchOfWall:
+        Reference = 外 - 240
+      Pset_WallCommon:
+        Reference = 外 - 240
+        IsExternal = True
+        ExtendToStructure = False
+        LoadBearing = False
+    [材料关联] IfcMaterialLayerSetUsage
+      层集用法: ForSet=基本墙:外 - 240
+    [几何表达] 类型=Curve2D, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcPolyline
+    [几何表达] 类型=SweptSolid, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcRectangleProfileDef
+        矩形截面: 1789.0 x 240.0
+        拉伸深度: 2680.0
+        位置: (0.0, 0.0, 0.0)
+    [所在空间] IfcBuildingStorey "地板"(#148)
+
+  [#1618] IfcWallStandardCase
+    GlobalId: 2KwUpHYjb0EAZdiYz6$D0n
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 基本墙:外 - 240:228157
+    ObjectType: 基本墙:外 - 240
+    ObjectPlacement: IfcLocalPlacement(#1598)
+    Representation: IfcProductDefinitionShape(#1616)
+    Tag: 228157
+    [属性集]
+      Pset_QuantityTakeOff:
+        Reference = 外 - 240
+      Pset_ReinforcementBarPitchOfWall:
+        Reference = 外 - 240
+      Pset_WallCommon:
+        Reference = 外 - 240
+        IsExternal = True
+        ExtendToStructure = False
+        LoadBearing = False
+    [材料关联] IfcMaterialLayerSetUsage
+      层集用法: ForSet=基本墙:外 - 240
+    [几何表达] 类型=Curve2D, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcPolyline
+    [几何表达] 类型=SweptSolid, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcRectangleProfileDef
+        矩形截面: 5863.2 x 240.0
+        拉伸深度: 2680.0
+        位置: (0.0, 0.0, 0.0)
+    [所在空间] IfcBuildingStorey "地板"(#148)
+    [开洞] 推拉窗-双层单列:600 x 602:254422:1(#21790)
+    [开洞] 推拉窗-双层单列:600 x 602:255042:1(#21817)
+    [开洞] 固定:0406 x 1830mm 3:255262:1(#21843)
+
+  [#1662] IfcWallStandardCase
+    GlobalId: 2KwUpHYjb0EAZdiYz6$DSu
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 基本墙:外 - 240:228404
+    ObjectType: 基本墙:外 - 240
+    ObjectPlacement: IfcLocalPlacement(#1642)
+    Representation: IfcProductDefinitionShape(#1660)
+    Tag: 228404
+    [属性集]
+      Pset_QuantityTakeOff:
+        Reference = 外 - 240
+      Pset_ReinforcementBarPitchOfWall:
+        Reference = 外 - 240
+      Pset_WallCommon:
+        Reference = 外 - 240
+        IsExternal = True
+        ExtendToStructure = False
+        LoadBearing = False
+    [材料关联] IfcMaterialLayerSetUsage
+      层集用法: ForSet=基本墙:外 - 240
+    [几何表达] 类型=Curve2D, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcPolyline
+    [几何表达] 类型=SweptSolid, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcRectangleProfileDef
+        矩形截面: 14715.1 x 240.0
+        拉伸深度: 2680.0
+        位置: (0.0, 0.0, 0.0)
+    [所在空间] IfcBuildingStorey "地板"(#148)
+    [开洞] 推拉窗-双层单列:600 x 603:259072:1(#21870)
+    [开洞] 推拉窗-双层单列:600 x 603:260062:1(#21897)
+    [开洞] 推拉窗-双层单列:600 x 603:261051:1(#21923)
+    [开洞] 推拉窗-双层单列:600 x 604:262155:1(#21949)
+
+  [#1706] IfcWallStandardCase
+    GlobalId: 2KwUpHYjb0EAZdiYz6$DV6
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 基本墙:外 - 240:228554
+    ObjectType: 基本墙:外 - 240
+    ObjectPlacement: IfcLocalPlacement(#1686)
+    Representation: IfcProductDefinitionShape(#1704)
+    Tag: 228554
+    [属性集]
+      Pset_QuantityTakeOff:
+        Reference = 外 - 240
+      Pset_ReinforcementBarPitchOfWall:
+        Reference = 外 - 240
+      Pset_WallCommon:
+        Reference = 外 - 240
+        IsExternal = True
+        ExtendToStructure = False
+        LoadBearing = False
+    [材料关联] IfcMaterialLayerSetUsage
+      层集用法: ForSet=基本墙:外 - 240
+    [几何表达] 类型=Curve2D, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcPolyline
+    [几何表达] 类型=SweptSolid, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcRectangleProfileDef
+        矩形截面: 923.9 x 240.0
+        拉伸深度: 2680.0
+        位置: (0.0, 0.0, 0.0)
+    [所在空间] IfcBuildingStorey "地板"(#148)
+
+  [#1750] IfcWallStandardCase
+    GlobalId: 2KwUpHYjb0EAZdiYz6$DOT
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 基本墙:外 - 240:228625
+    ObjectType: 基本墙:外 - 240
+    ObjectPlacement: IfcLocalPlacement(#1730)
+    Representation: IfcProductDefinitionShape(#1748)
+    Tag: 228625
+    [属性集]
+      Pset_QuantityTakeOff:
+        Reference = 外 - 240
+      Pset_ReinforcementBarPitchOfWall:
+        Reference = 外 - 240
+      Pset_WallCommon:
+        Reference = 外 - 240
+        IsExternal = True
+        ExtendToStructure = False
+        LoadBearing = False
+    [材料关联] IfcMaterialLayerSetUsage
+      层集用法: ForSet=基本墙:外 - 240
+    [几何表达] 类型=Curve2D, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcPolyline
+    [几何表达] 类型=SweptSolid, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcRectangleProfileDef
+        矩形截面: 2255.1 x 240.0
+        拉伸深度: 2680.0
+        位置: (0.0, 0.0, 0.0)
+    [所在空间] IfcBuildingStorey "地板"(#148)
+
+  [#1794] IfcWallStandardCase
+    GlobalId: 2KwUpHYjb0EAZdiYz6$DLH
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 基本墙:110:228957
+    ObjectType: 基本墙:110
+    ObjectPlacement: IfcLocalPlacement(#1774)
+    Representation: IfcProductDefinitionShape(#1792)
+    Tag: 228957
+    [属性集]
+      Pset_QuantityTakeOff:
+        Reference = 110
+      Pset_ReinforcementBarPitchOfWall:
+        Reference = 110
+      Pset_WallCommon:
+        IsExternal = True
+        Reference = 110
+        ExtendToStructure = False
+        LoadBearing = False
+    [材料关联] IfcMaterialLayerSetUsage
+      层集用法: ForSet=基本墙:110
+    [几何表达] 类型=Curve2D, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcPolyline
+    [几何表达] 类型=SweptSolid, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcRectangleProfileDef
+        矩形截面: 3783.9 x 110.0
+        拉伸深度: 2680.0
+        位置: (0.0, 0.0, 0.0)
+    [所在空间] IfcBuildingStorey "地板"(#148)
+    [开洞] 单扇 - 与墙齐:0915 x 2134mm 3:272608:1(#21976)
+    [开洞] 单扇 - 与墙齐:0915 x 2134mm 3:272682:1(#22003)
+
+  [#1838] IfcWallStandardCase
+    GlobalId: 2KwUpHYjb0EAZdiYz6$DNn
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 基本墙:外 - 240:229117
+    ObjectType: 基本墙:外 - 240
+    ObjectPlacement: IfcLocalPlacement(#1818)
+    Representation: IfcProductDefinitionShape(#1836)
+    Tag: 229117
+    [属性集]
+      Pset_QuantityTakeOff:
+        Reference = 外 - 240
+      Pset_ReinforcementBarPitchOfWall:
+        Reference = 外 - 240
+      Pset_WallCommon:
+        Reference = 外 - 240
+        IsExternal = True
+        ExtendToStructure = False
+        LoadBearing = False
+    [材料关联] IfcMaterialLayerSetUsage
+      层集用法: ForSet=基本墙:外 - 240
+    [几何表达] 类型=Curve2D, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcPolyline
+    [几何表达] 类型=SweptSolid, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcRectangleProfileDef
+        矩形截面: 1624.7 x 240.0
+        拉伸深度: 2680.0
+        位置: (0.0, 0.0, 0.0)
+    [所在空间] IfcBuildingStorey "地板"(#148)
+
+  [#1882] IfcWallStandardCase
+    GlobalId: 2KwUpHYjb0EAZdiYz6$DJ_
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 基本墙:50:229362
+    ObjectType: 基本墙:50
+    ObjectPlacement: IfcLocalPlacement(#1862)
+    Representation: IfcProductDefinitionShape(#1880)
+    Tag: 229362
+    [属性集]
+      Pset_QuantityTakeOff:
+        Reference = 50
+      Pset_ReinforcementBarPitchOfWall:
+        Reference = 50
+      Pset_WallCommon:
+        IsExternal = True
+        Reference = 50
+        ExtendToStructure = False
+        LoadBearing = False
+    [材料关联] IfcMaterialLayerSetUsage
+      层集用法: ForSet=基本墙:50
+    [几何表达] 类型=Curve2D, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcPolyline
+    [几何表达] 类型=SweptSolid, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcRectangleProfileDef
+        矩形截面: 5471.2 x 55.0
+        拉伸深度: 2680.0
+        位置: (0.0, 0.0, 0.0)
+    [所在空间] IfcBuildingStorey "地板"(#148)
+    [开洞] 单扇 - 与墙齐:0915 x 2134mm 3:271795:1(#22030)
+
+  [#1943] IfcWallStandardCase
+    GlobalId: 2KwUpHYjb0EAZdiYz6$2hs
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 基本墙:140:229882
+    ObjectType: 基本墙:140
+    ObjectPlacement: IfcLocalPlacement(#1923)
+    Representation: IfcProductDefinitionShape(#1941)
+    Tag: 229882
+    [属性集]
+      Pset_QuantityTakeOff:
+        Reference = 140
+      Pset_ReinforcementBarPitchOfWall:
+        Reference = 140
+      Pset_WallCommon:
+        IsExternal = True
+        Reference = 140
+        ExtendToStructure = False
+        LoadBearing = False
+    [材料关联] IfcMaterialLayerSetUsage
+      层集用法: ForSet=基本墙:140
+    [几何表达] 类型=Curve2D, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcPolyline
+    [几何表达] 类型=SweptSolid, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcRectangleProfileDef
+        矩形截面: 4428.5 x 140.0
+        拉伸深度: 2680.0
+        位置: (0.0, 0.0, 0.0)
+    [所在空间] IfcBuildingStorey "地板"(#148)
+    [开洞] 固定:0406 x 1830mm 8:268582:1(#22058)
+    [开洞] 固定:0406 x 1830mm 8:269582:1(#22085)
+
+  [#1987] IfcWallStandardCase
+    GlobalId: 2KwUpHYjb0EAZdiYz6$2Xm
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 基本墙:120:230268
+    ObjectType: 基本墙:120
+    ObjectPlacement: IfcLocalPlacement(#1967)
+    Representation: IfcProductDefinitionShape(#1985)
+    Tag: 230268
+    [属性集]
+      Pset_QuantityTakeOff:
+        Reference = 120
+      Pset_ReinforcementBarPitchOfWall:
+        Reference = 120
+      Pset_WallCommon:
+        IsExternal = True
+        Reference = 120
+        ExtendToStructure = False
+        LoadBearing = False
+    [材料关联] IfcMaterialLayerSetUsage
+      层集用法: ForSet=基本墙:120
+    [几何表达] 类型=Curve2D, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcPolyline
+    [几何表达] 类型=SweptSolid, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcRectangleProfileDef
+        矩形截面: 1175.3 x 120.0
+        拉伸深度: 2680.0
+        位置: (0.0, 0.0, 0.0)
+    [所在空间] IfcBuildingStorey "地板"(#148)
+    [开洞] 单扇 - 与墙齐:0915 x 2134mm 3:272377:1(#22112)
+
+  [#2031] IfcWallStandardCase
+    GlobalId: 2KwUpHYjb0EAZdiYz6$2yh
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 基本墙:140:230439
+    ObjectType: 基本墙:140
+    ObjectPlacement: IfcLocalPlacement(#2011)
+    Representation: IfcProductDefinitionShape(#2029)
+    Tag: 230439
+    [属性集]
+      Pset_QuantityTakeOff:
+        Reference = 140
+      Pset_ReinforcementBarPitchOfWall:
+        Reference = 140
+      Pset_WallCommon:
+        IsExternal = True
+        Reference = 140
+        ExtendToStructure = False
+        LoadBearing = False
+    [材料关联] IfcMaterialLayerSetUsage
+      层集用法: ForSet=基本墙:140
+    [几何表达] 类型=Curve2D, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcPolyline
+    [几何表达] 类型=SweptSolid, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcRectangleProfileDef
+        矩形截面: 692.0 x 140.0
+        拉伸深度: 2680.0
+        位置: (0.0, 0.0, 0.0)
+    [所在空间] IfcBuildingStorey "地板"(#148)
+
+  [#2075] IfcWallStandardCase
+    GlobalId: 2KwUpHYjb0EAZdiYz6$2uX
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 基本墙:外 - 240:230701
+    ObjectType: 基本墙:外 - 240
+    ObjectPlacement: IfcLocalPlacement(#2055)
+    Representation: IfcProductDefinitionShape(#2073)
+    Tag: 230701
+    [属性集]
+      Pset_QuantityTakeOff:
+        Reference = 外 - 240
+      Pset_ReinforcementBarPitchOfWall:
+        Reference = 外 - 240
+      Pset_WallCommon:
+        Reference = 外 - 240
+        IsExternal = True
+        ExtendToStructure = False
+        LoadBearing = False
+    [材料关联] IfcMaterialLayerSetUsage
+      层集用法: ForSet=基本墙:外 - 240
+    [几何表达] 类型=Curve2D, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcPolyline
+    [几何表达] 类型=SweptSolid, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcRectangleProfileDef
+        矩形截面: 2577.4 x 240.0
+        拉伸深度: 2680.0
+        位置: (0.0, 0.0, 0.0)
+    [所在空间] IfcBuildingStorey "地板"(#148)
+    [开洞] 平开门-木门-双扇:M1521:309239:1(#22140)
+
+  [#2119] IfcWallStandardCase
+    GlobalId: 2KwUpHYjb0EAZdiYz6$2wf
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 基本墙:外 - 240:230821
+    ObjectType: 基本墙:外 - 240
+    ObjectPlacement: IfcLocalPlacement(#2099)
+    Representation: IfcProductDefinitionShape(#2117)
+    Tag: 230821
+    [属性集]
+      Pset_QuantityTakeOff:
+        Reference = 外 - 240
+      Pset_ReinforcementBarPitchOfWall:
+        Reference = 外 - 240
+      Pset_WallCommon:
+        Reference = 外 - 240
+        IsExternal = True
+        ExtendToStructure = False
+        LoadBearing = False
+    [材料关联] IfcMaterialLayerSetUsage
+      层集用法: ForSet=基本墙:外 - 240
+    [几何表达] 类型=Curve2D, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcPolyline
+    [几何表达] 类型=SweptSolid, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcRectangleProfileDef
+        矩形截面: 2577.4 x 240.0
+        拉伸深度: 2680.0
+        位置: (0.0, 0.0, 0.0)
+    [所在空间] IfcBuildingStorey "地板"(#148)
+
+  [#2163] IfcWallStandardCase
+    GlobalId: 2KwUpHYjb0EAZdiYz6$2r7
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 基本墙:外 - 240:230987
+    ObjectType: 基本墙:外 - 240
+    ObjectPlacement: IfcLocalPlacement(#2143)
+    Representation: IfcProductDefinitionShape(#2161)
+    Tag: 230987
+    [属性集]
+      Pset_QuantityTakeOff:
+        Reference = 外 - 240
+      Pset_ReinforcementBarPitchOfWall:
+        Reference = 外 - 240
+      Pset_WallCommon:
+        Reference = 外 - 240
+        IsExternal = True
+        ExtendToStructure = False
+        LoadBearing = False
+    [材料关联] IfcMaterialLayerSetUsage
+      层集用法: ForSet=基本墙:外 - 240
+    [几何表达] 类型=Curve2D, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcPolyline
+    [几何表达] 类型=SweptSolid, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcRectangleProfileDef
+        矩形截面: 6785.2 x 240.0
+        拉伸深度: 2680.0
+        位置: (0.0, 0.0, 0.0)
+    [所在空间] IfcBuildingStorey "地板"(#148)
+    [开洞] 推拉窗-双层单列:600 x 604:263685:1(#22170)
+    [开洞] 推拉窗-双层单列:600 x 604:264015:1(#22197)
+
+  [#2207] IfcWallStandardCase
+    GlobalId: 2KwUpHYjb0EAZdiYz6$2mZ
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 基本墙:外 - 240:231215
+    ObjectType: 基本墙:外 - 240
+    ObjectPlacement: IfcLocalPlacement(#2187)
+    Representation: IfcProductDefinitionShape(#2205)
+    Tag: 231215
+    [属性集]
+      Pset_QuantityTakeOff:
+        Reference = 外 - 240
+      Pset_ReinforcementBarPitchOfWall:
+        Reference = 外 - 240
+      Pset_WallCommon:
+        Reference = 外 - 240
+        IsExternal = True
+        ExtendToStructure = False
+        LoadBearing = False
+    [材料关联] IfcMaterialLayerSetUsage
+      层集用法: ForSet=基本墙:外 - 240
+    [几何表达] 类型=Curve2D, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcPolyline
+    [几何表达] 类型=SweptSolid, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcRectangleProfileDef
+        矩形截面: 7378.2 x 240.0
+        拉伸深度: 2680.0
+        位置: (0.0, 0.0, 0.0)
+    [所在空间] IfcBuildingStorey "地板"(#148)
+    [开洞] 推拉窗-双层单列:600 x 604:265469:1(#22224)
+    [开洞] 固定:0406 x 1830mm 7:265917:1(#22251)
+
+  [#2251] IfcWallStandardCase
+    GlobalId: 34yYvUt3vBkODS1huAEdhY
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 基本墙:外 - 240:231444
+    ObjectType: 基本墙:外 - 240
+    ObjectPlacement: IfcLocalPlacement(#2231)
+    Representation: IfcProductDefinitionShape(#2249)
+    Tag: 231444
+    [属性集]
+      Pset_QuantityTakeOff:
+        Reference = 外 - 240
+      Pset_ReinforcementBarPitchOfWall:
+        Reference = 外 - 240
+      Pset_WallCommon:
+        Reference = 外 - 240
+        IsExternal = True
+        ExtendToStructure = False
+        LoadBearing = False
+    [材料关联] IfcMaterialLayerSetUsage
+      层集用法: ForSet=基本墙:外 - 240
+    [几何表达] 类型=Curve2D, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcPolyline
+    [几何表达] 类型=SweptSolid, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcRectangleProfileDef
+        矩形截面: 2700.5 x 240.0
+        拉伸深度: 2680.0
+        位置: (0.0, 0.0, 0.0)
+    [所在空间] IfcBuildingStorey "地板"(#148)
+
+  [#5189] IfcWallStandardCase
+    GlobalId: 2lo7UQjNT7gxOHhbM3JbX8
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 基本墙:外 - 242:267346
+    ObjectType: 基本墙:外 - 242
+    ObjectPlacement: IfcLocalPlacement(#5169)
+    Representation: IfcProductDefinitionShape(#5187)
+    Tag: 267346
+    [属性集]
+      Pset_QuantityTakeOff:
+        Reference = 外 - 242
+      Pset_ReinforcementBarPitchOfWall:
+        Reference = 外 - 242
+      Pset_WallCommon:
+        IsExternal = True
+        Reference = 外 - 242
+        ExtendToStructure = False
+        LoadBearing = False
+    [材料关联] IfcMaterialLayerSetUsage
+      层集用法: ForSet=基本墙:外 - 242
+    [几何表达] 类型=Curve2D, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcPolyline
+    [几何表达] 类型=SweptSolid, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcRectangleProfileDef
+        矩形截面: 1930.0 x 350.0
+        拉伸深度: 2680.0
+        位置: (0.0, 0.0, 0.0)
+    [所在空间] IfcBuildingStorey "地板"(#148)
+    [开洞] 单扇 - 与墙齐:0915 x 2134mm 2:269936:1(#22278)
+
+  [#6508] IfcWallStandardCase
+    GlobalId: 2AJ6T3vZDDZRJL7l0pGeM6
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 基本墙:外 - 243:276420
+    ObjectType: 基本墙:外 - 243
+    ObjectPlacement: IfcLocalPlacement(#6488)
+    Representation: IfcProductDefinitionShape(#6506)
+    Tag: 276420
+    [属性集]
+      Pset_QuantityTakeOff:
+        Reference = 外 - 243
+      Pset_ReinforcementBarPitchOfWall:
+        Reference = 外 - 243
+      Pset_WallCommon:
+        IsExternal = True
+        Reference = 外 - 243
+        ExtendToStructure = False
+        LoadBearing = False
+    [材料关联] IfcMaterialLayerSetUsage
+      层集用法: ForSet=基本墙:外 - 243
+    [几何表达] 类型=Curve2D, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcPolyline
+    [几何表达] 类型=SweptSolid, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcRectangleProfileDef
+        矩形截面: 1000.3 x 100.0
+        拉伸深度: 2680.0
+        位置: (0.0, 0.0, 0.0)
+    [所在空间] IfcBuildingStorey "地板"(#148)
+    [开洞] 单扇 - 与墙齐:0915 x 2134mm 5:278596:1(#22306)
+
+
+--- IfcWallStandardCase (45个) ---
+
+--- IfcColumn (7个) ---
+  [#2316] IfcColumn
+    GlobalId: 34yYvUt3vBkODS1huAEdbW
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 矩形柱:330.177:232342
+    ObjectType: 矩形柱:330.177
+    ObjectPlacement: IfcLocalPlacement(#2315)
+    Representation: IfcProductDefinitionShape(#2312)
+    Tag: 232342
+    [属性集]
+      Pset_ColumnCommon:
+        IsExternal = False
+        Reference = 330.177
+        Slope = 0.00
+      Pset_QuantityTakeOff:
+        Reference = 330.177
+      Pset_ReinforcementBarPitchOfColumn:
+        Reference = 330.177
+    [材料关联] IfcMaterial
+      材料: 默认墙
+    [几何表达] 类型=MappedRepresentation, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcMappedItem
+        映射源: IfcRepresentationMap(#2303)
+    [所在空间] IfcBuildingStorey "地板"(#148)
+
+  [#2373] IfcColumn
+    GlobalId: 34yYvUt3vBkODS1huAEdue
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 矩形柱:540*330:232670
+    ObjectType: 矩形柱:540*330
+    ObjectPlacement: IfcLocalPlacement(#2372)
+    Representation: IfcProductDefinitionShape(#2369)
+    Tag: 232670
+    [属性集]
+      Pset_ColumnCommon:
+        IsExternal = False
+        Reference = 540*330
+        Slope = 0.00
+      Pset_QuantityTakeOff:
+        Reference = 540*330
+      Pset_ReinforcementBarPitchOfColumn:
+        Reference = 540*330
+    [几何表达] 类型=MappedRepresentation, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcMappedItem
+        映射源: IfcRepresentationMap(#2362)
+    [所在空间] IfcBuildingStorey "地板"(#148)
+
+  [#2429] IfcColumn
+    GlobalId: 34yYvUt3vBkODS1huAEdz_
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 矩形柱:540*330:232840
+    ObjectType: 矩形柱:540*330
+    ObjectPlacement: IfcLocalPlacement(#2428)
+    Representation: IfcProductDefinitionShape(#2425)
+    Tag: 232840
+    [属性集]
+      Pset_ColumnCommon:
+        IsExternal = False
+        Reference = 540*330
+        Slope = 0.00
+      Pset_QuantityTakeOff:
+        Reference = 540*330
+      Pset_ReinforcementBarPitchOfColumn:
+        Reference = 540*330
+    [几何表达] 类型=MappedRepresentation, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcMappedItem
+        映射源: IfcRepresentationMap(#2418)
+    [所在空间] IfcBuildingStorey "地板"(#148)
+
+  [#2484] IfcColumn
+    GlobalId: 34yYvUt3vBkODS1huAEdo$
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 矩形柱:540*330:233033
+    ObjectType: 矩形柱:540*330
+    ObjectPlacement: IfcLocalPlacement(#2483)
+    Representation: IfcProductDefinitionShape(#2480)
+    Tag: 233033
+    [属性集]
+      Pset_ColumnCommon:
+        IsExternal = False
+        Reference = 540*330
+        Slope = 0.00
+      Pset_QuantityTakeOff:
+        Reference = 540*330
+      Pset_ReinforcementBarPitchOfColumn:
+        Reference = 540*330
+    [几何表达] 类型=MappedRepresentation, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcMappedItem
+        映射源: IfcRepresentationMap(#2473)
+    [所在空间] IfcBuildingStorey "地板"(#148)
+
+  [#2564] IfcColumn
+    GlobalId: 34yYvUt3vBkODS1huAEc6q
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 矩形柱:400*540:234306
+    ObjectType: 矩形柱:400*540
+    ObjectPlacement: IfcLocalPlacement(#2563)
+    Representation: IfcProductDefinitionShape(#2560)
+    Tag: 234306
+    [属性集]
+      Pset_ColumnCommon:
+        IsExternal = False
+        Reference = 400*540
+        Slope = 0.00
+      Pset_QuantityTakeOff:
+        Reference = 400*540
+      Pset_ReinforcementBarPitchOfColumn:
+        Reference = 400*540
+    [材料关联] IfcMaterial
+      材料: 默认墙
+    [几何表达] 类型=MappedRepresentation, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcMappedItem
+        映射源: IfcRepresentationMap(#2553)
+    [所在空间] IfcBuildingStorey "地板"(#148)
+
+  [#2642] IfcColumn
+    GlobalId: 34yYvUt3vBkODS1huAEc4M
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 矩形柱:350.400:234464
+    ObjectType: 矩形柱:350.400
+    ObjectPlacement: IfcLocalPlacement(#2641)
+    Representation: IfcProductDefinitionShape(#2638)
+    Tag: 234464
+    [属性集]
+      Pset_ColumnCommon:
+        IsExternal = False
+        Reference = 350.400
+        Slope = 0.00
+      Pset_QuantityTakeOff:
+        Reference = 350.400
+      Pset_ReinforcementBarPitchOfColumn:
+        Reference = 350.400
+    [材料关联] IfcMaterial
+      材料: 默认墙
+    [几何表达] 类型=MappedRepresentation, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcMappedItem
+        映射源: IfcRepresentationMap(#2631)
+    [所在空间] IfcBuildingStorey "地板"(#148)
+
+  [#6009] IfcColumn
+    GlobalId: 2hzYH0z2T6GRsEFliKJQE_
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 矩形柱:540*330 2:273726
+    ObjectType: 矩形柱:540*330 2
+    ObjectPlacement: IfcLocalPlacement(#6008)
+    Representation: IfcProductDefinitionShape(#6005)
+    Tag: 273726
+    [属性集]
+      Pset_ColumnCommon:
+        IsExternal = False
+        Reference = 540*330 2
+        Slope = 0.00
+      Pset_QuantityTakeOff:
+        Reference = 540*330 2
+      Pset_ReinforcementBarPitchOfColumn:
+        Reference = 540*330 2
+    [材料关联] IfcMaterial
+      材料: 默认墙
+    [几何表达] 类型=MappedRepresentation, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcMappedItem
+        映射源: IfcRepresentationMap(#5998)
+    [所在空间] IfcBuildingStorey "地板"(#148)
+
+
+--- IfcBeam (1个) ---
+  [#7125] IfcBeam
+    GlobalId: 2kMW8XyZv1d9XdPJLihM2E
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 混凝土梁-矩形砼梁-有标记:200x300:288315
+    ObjectType: 混凝土梁-矩形砼梁-有标记:200x300
+    ObjectPlacement: IfcLocalPlacement(#7105)
+    Representation: IfcProductDefinitionShape(#7123)
+    Tag: 288315
+    [属性集]
+      Pset_BeamCommon:
+        IsExternal = False
+        Reference = 200x300
+        FireRating = N/A
+        Slope = 0.00
+        Span = 1900.00
+      Pset_ConcreteElementGeneral:
+        FireRating = N/A
+      Pset_ManufacturerTypeInformation:
+        Manufacturer = N/A
+      Pset_QuantityTakeOff:
+        Reference = 200x300
+      Pset_ReinforcementBarPitchOfBeam:
+        Reference = 200x300
+    [几何表达] 类型=Curve2D, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcPolyline
+    [几何表达] 类型=SweptSolid, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcRectangleProfileDef
+        矩形截面: 600.0 x 200.0
+        拉伸深度: 1900.0
+        位置: (0.0, 0.0, -300.0)
+    [所在空间] IfcBuildingStorey "天花板"(#154)
+
+
+--- IfcSlab (1个) ---
+  [#7257] IfcSlab
+    GlobalId: 2kMW8XyZv1d9XdPJLihOke
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 楼板:常规 - 300mm:298269
+    ObjectType: 楼板:常规 - 300mm
+    ObjectPlacement: IfcLocalPlacement(#7184)
+    Representation: IfcProductDefinitionShape(#7255)
+    Tag: 298269
+    PredefinedType: FLOOR
+    [属性集]
+      Pset_QuantityTakeOff:
+        Reference = 常规 - 300mm
+      Pset_ReinforcementBarPitchOfSlab:
+        Reference = 常规 - 300mm
+      Pset_SlabCommon:
+        IsExternal = False
+        Reference = 常规 - 300mm
+        LoadBearing = False
+        PitchAngle = 0.00
+    [材料关联] IfcMaterialLayerSetUsage
+      层集用法: ForSet=楼板:常规 - 300mm
+    [几何表达] 类型=SweptSolid, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcArbitraryClosedProfileDef
+        任意截面(含孔洞=False)
+        拉伸深度: 300.0
+        位置: (-2893.2, -1370.0, 0.0)
+    [所在空间] IfcBuildingStorey "地板"(#148)
+
+
+--- IfcRailing (2个) ---
+  [#20138] IfcRailing
+    GlobalId: 2kMW8XyZv1d9XdPJLihNhL
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 栏杆扶手:900mm 圆管:293984
+    ObjectType: 栏杆扶手:900mm 圆管
+    ObjectPlacement: IfcLocalPlacement(#20005)
+    Representation: IfcProductDefinitionShape(#20136)
+    Tag: 293984
+    PredefinedType: NOTDEFINED
+    [属性集]
+      Pset_QuantityTakeOff:
+        Reference = 900mm 圆管
+      Pset_RailingCommon:
+        IsExternal = False
+        Reference = 900mm 圆管
+        Height = 900.00
+    [几何表达] 类型=SweptSolid, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcCircleProfileDef
+        拉伸深度: 860.0
+        位置: (-254.2, -4673.8, 0.0)
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcCircleProfileDef
+        拉伸深度: 860.0
+        位置: (-254.2, -3673.8, 0.0)
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcCircleProfileDef
+        拉伸深度: 860.0
+        位置: (-254.2, -2673.8, 0.0)
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcCircleProfileDef
+        拉伸深度: 860.0
+        位置: (-254.2, -1673.8, 0.0)
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcCircleProfileDef
+        拉伸深度: 860.0
+        位置: (-254.2, -673.8, 0.0)
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcCircleProfileDef
+        拉伸深度: 860.0
+        位置: (-254.2, 326.2, 0.0)
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcCircleProfileDef
+        拉伸深度: 860.0
+        位置: (-254.2, 1326.2, 0.0)
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcCircleProfileDef
+        拉伸深度: 860.0
+        位置: (-254.2, 2326.2, 0.0)
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcCircleProfileDef
+        拉伸深度: 860.0
+        位置: (-254.2, 3326.2, 0.0)
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcCircleProfileDef
+        拉伸深度: 860.0
+        位置: (-254.2, -4961.3, 0.0)
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcCircleProfileDef
+        拉伸深度: 860.0
+        位置: (-254.2, 4313.7, 0.0)
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcCircleProfileDef
+        拉伸深度: 9300.0
+        位置: (-254.2, -4973.8, 685.0)
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcCircleProfileDef
+        拉伸深度: 9300.0
+        位置: (-254.2, -4973.8, 485.0)
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcCircleProfileDef
+        拉伸深度: 9300.0
+        位置: (-254.2, -4973.8, 285.0)
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcCircleProfileDef
+        拉伸深度: 9300.0
+        位置: (-254.2, -4973.8, 85.0)
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcCircleProfileDef
+        拉伸深度: 9300.0
+        位置: (-254.2, -4973.8, 880.0)
+    [所在空间] IfcBuildingStorey "地板"(#148)
+
+  [#20240] IfcRailing
+    GlobalId: 2kMW8XyZv1d9XdPJLihNe8
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 栏杆扶手:900mm 圆管:294077
+    ObjectType: 栏杆扶手:900mm 圆管
+    ObjectPlacement: IfcLocalPlacement(#20155)
+    Representation: IfcProductDefinitionShape(#20238)
+    Tag: 294077
+    PredefinedType: NOTDEFINED
+    [属性集]
+      Pset_QuantityTakeOff:
+        Reference = 900mm 圆管
+      Pset_RailingCommon:
+        IsExternal = False
+        Reference = 900mm 圆管
+        Height = 900.00
+    [几何表达] 类型=SweptSolid, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcCircleProfileDef
+        拉伸深度: 860.0
+        位置: (-2423.4, -238.5, 0.0)
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcCircleProfileDef
+        拉伸深度: 860.0
+        位置: (-2423.4, 761.5, 0.0)
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcCircleProfileDef
+        拉伸深度: 860.0
+        位置: (-2423.4, 1761.5, 0.0)
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcCircleProfileDef
+        拉伸深度: 860.0
+        位置: (-2423.4, -626.0, 0.0)
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcCircleProfileDef
+        拉伸深度: 860.0
+        位置: (-2423.4, 2749.0, 0.0)
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcCircleProfileDef
+        拉伸深度: 3400.0
+        位置: (-2423.4, -638.5, 685.0)
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcCircleProfileDef
+        拉伸深度: 3400.0
+        位置: (-2423.4, -638.5, 485.0)
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcCircleProfileDef
+        拉伸深度: 3400.0
+        位置: (-2423.4, -638.5, 285.0)
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcCircleProfileDef
+        拉伸深度: 3400.0
+        位置: (-2423.4, -638.5, 85.0)
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcCircleProfileDef
+        拉伸深度: 3400.0
+        位置: (-2423.4, -638.5, 880.0)
+    [所在空间] IfcBuildingStorey "地板"(#148)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+【三、门窗与洞口】
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+--- IfcDoor (16个) ---
+  [#5509] IfcDoor
+    GlobalId: 2hzYH0z2T6GRsEFliKJP3m
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 单扇 - 与墙齐:0915 x 2134mm 2:269936
+    ObjectType: 单扇 - 与墙齐:0915 x 2134mm 2
+    ObjectPlacement: IfcLocalPlacement(#22288)
+    Representation: IfcProductDefinitionShape(#5503)
+    Tag: 269936
+    OverallHeight: 2134.00
+    OverallWidth: 650.00
+    [属性集]
+      单扇 - 与墙齐:0915 x 2134mm 2:269936:
+        PanelOperation = SWINGING
+        PanelPosition = NOTDEFINED
+      Pset_DoorCommon:
+        IsExternal = False
+        Reference = 0915 x 2134mm 2
+        ThermalTransmittance = 3.70
+      Pset_QuantityTakeOff:
+        Reference = 0915 x 2134mm 2
+    [材料关联] IfcMaterialList
+      材料: 门 - 框架
+      材料: 门 - 嵌板
+    [几何表达] 类型=MappedRepresentation, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcMappedItem
+        映射源: IfcRepresentationMap(#5469)
+    [所在空间] IfcBuildingStorey "地板"(#148)
+    [填充洞口] 单扇 - 与墙齐:0915 x 2134mm 2:269936:1(#22278)
+
+  [#5614] IfcDoor
+    GlobalId: 2hzYH0z2T6GRsEFliKJQip
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 单扇 - 与墙齐:0915 x 2134mm 3:271795
+    ObjectType: 单扇 - 与墙齐:0915 x 2134mm 3
+    ObjectPlacement: IfcLocalPlacement(#22040)
+    Representation: IfcProductDefinitionShape(#5608)
+    Tag: 271795
+    OverallHeight: 2400.00
+    OverallWidth: 620.00
+    [属性集]
+      单扇 - 与墙齐:0915 x 2134mm 3:271795:
+        PanelOperation = SWINGING
+        PanelPosition = NOTDEFINED
+      Pset_DoorCommon:
+        IsExternal = False
+        Reference = 0915 x 2134mm 3
+        ThermalTransmittance = 3.70
+      Pset_QuantityTakeOff:
+        Reference = 0915 x 2134mm 3
+    [材料关联] IfcMaterialList
+      材料: 门 - 框架
+      材料: 门 - 嵌板
+    [几何表达] 类型=MappedRepresentation, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcMappedItem
+        映射源: IfcRepresentationMap(#5594)
+    [所在空间] IfcBuildingStorey "地板"(#148)
+    [填充洞口] 单扇 - 与墙齐:0915 x 2134mm 3:271795:1(#22030)
+
+  [#5719] IfcDoor
+    GlobalId: 2hzYH0z2T6GRsEFliKJQbv
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 单扇 - 与墙齐:0915 x 2134mm 3:272377
+    ObjectType: 单扇 - 与墙齐:0915 x 2134mm 3
+    ObjectPlacement: IfcLocalPlacement(#22122)
+    Representation: IfcProductDefinitionShape(#5713)
+    Tag: 272377
+    OverallHeight: 2400.00
+    OverallWidth: 620.00
+    [属性集]
+      单扇 - 与墙齐:0915 x 2134mm 3:272377:
+        PanelOperation = SWINGING
+        PanelPosition = NOTDEFINED
+      Pset_DoorCommon:
+        IsExternal = False
+        Reference = 0915 x 2134mm 3
+        ThermalTransmittance = 3.70
+      Pset_QuantityTakeOff:
+        Reference = 0915 x 2134mm 3
+    [材料关联] IfcMaterialList
+      材料: 门 - 框架
+      材料: 门 - 嵌板
+    [几何表达] 类型=MappedRepresentation, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcMappedItem
+        映射源: IfcRepresentationMap(#5699)
+    [所在空间] IfcBuildingStorey "地板"(#148)
+    [填充洞口] 单扇 - 与墙齐:0915 x 2134mm 3:272377:1(#22112)
+
+  [#5823] IfcDoor
+    GlobalId: 2hzYH0z2T6GRsEFliKJQPW
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 单扇 - 与墙齐:0915 x 2134mm 3:272608
+    ObjectType: 单扇 - 与墙齐:0915 x 2134mm 3
+    ObjectPlacement: IfcLocalPlacement(#21986)
+    Representation: IfcProductDefinitionShape(#5817)
+    Tag: 272608
+    OverallHeight: 2400.00
+    OverallWidth: 620.00
+    [属性集]
+      单扇 - 与墙齐:0915 x 2134mm 3:272608:
+        PanelOperation = SWINGING
+        PanelPosition = NOTDEFINED
+      Pset_DoorCommon:
+        IsExternal = False
+        Reference = 0915 x 2134mm 3
+        ThermalTransmittance = 3.70
+      Pset_QuantityTakeOff:
+        Reference = 0915 x 2134mm 3
+    [材料关联] IfcMaterialList
+      材料: 门 - 框架
+      材料: 门 - 嵌板
+    [几何表达] 类型=MappedRepresentation, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcMappedItem
+        映射源: IfcRepresentationMap(#5803)
+    [所在空间] IfcBuildingStorey "地板"(#148)
+    [填充洞口] 单扇 - 与墙齐:0915 x 2134mm 3:272608:1(#21976)
+
+  [#5850] IfcDoor
+    GlobalId: 2hzYH0z2T6GRsEFliKJQUg
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 单扇 - 与墙齐:0915 x 2134mm 3:272682
+    ObjectType: 单扇 - 与墙齐:0915 x 2134mm 3
+    ObjectPlacement: IfcLocalPlacement(#22012)
+    Representation: IfcProductDefinitionShape(#5844)
+    Tag: 272682
+    OverallHeight: 2400.00
+    OverallWidth: 620.00
+    [属性集]
+      单扇 - 与墙齐:0915 x 2134mm 3:272608:
+        PanelOperation = SWINGING
+        PanelPosition = NOTDEFINED
+      Pset_DoorCommon:
+        IsExternal = False
+        Reference = 0915 x 2134mm 3
+        ThermalTransmittance = 3.70
+      Pset_QuantityTakeOff:
+        Reference = 0915 x 2134mm 3
+    [材料关联] IfcMaterialList
+      材料: 门 - 框架
+      材料: 门 - 嵌板
+    [几何表达] 类型=MappedRepresentation, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcMappedItem
+        映射源: IfcRepresentationMap(#5803)
+    [所在空间] IfcBuildingStorey "地板"(#148)
+    [填充洞口] 单扇 - 与墙齐:0915 x 2134mm 3:272682:1(#22003)
+
+  [#5953] IfcDoor
+    GlobalId: 2hzYH0z2T6GRsEFliKJQSQ
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 单扇 - 与墙齐:0915 x 2134mm 3:272794
+    ObjectType: 单扇 - 与墙齐:0915 x 2134mm 3
+    ObjectPlacement: IfcLocalPlacement(#21772)
+    Representation: IfcProductDefinitionShape(#5947)
+    Tag: 272794
+    OverallHeight: 2400.00
+    OverallWidth: 620.00
+    [属性集]
+      单扇 - 与墙齐:0915 x 2134mm 3:272794:
+        PanelOperation = SWINGING
+        PanelPosition = NOTDEFINED
+      Pset_DoorCommon:
+        IsExternal = False
+        Reference = 0915 x 2134mm 3
+        ThermalTransmittance = 3.70
+      Pset_QuantityTakeOff:
+        Reference = 0915 x 2134mm 3
+    [材料关联] IfcMaterialList
+      材料: 门 - 框架
+      材料: 门 - 嵌板
+    [几何表达] 类型=MappedRepresentation, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcMappedItem
+        映射源: IfcRepresentationMap(#5933)
+    [所在空间] IfcBuildingStorey "地板"(#148)
+    [填充洞口] 单扇 - 与墙齐:0915 x 2134mm 3:272794:1(#21762)
+
+  [#6050] IfcDoor
+    GlobalId: 2hzYH0z2T6GRsEFliKJQ1j
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 单扇 - 与墙齐:0915 x 2134mm 3:274157
+    ObjectType: 单扇 - 与墙齐:0915 x 2134mm 3
+    ObjectPlacement: IfcLocalPlacement(#21744)
+    Representation: IfcProductDefinitionShape(#6044)
+    Tag: 274157
+    OverallHeight: 2400.00
+    OverallWidth: 620.00
+    [属性集]
+      单扇 - 与墙齐:0915 x 2134mm 3:272377:
+        PanelOperation = SWINGING
+        PanelPosition = NOTDEFINED
+      Pset_DoorCommon:
+        IsExternal = False
+        Reference = 0915 x 2134mm 3
+        ThermalTransmittance = 3.70
+      Pset_QuantityTakeOff:
+        Reference = 0915 x 2134mm 3
+    [材料关联] IfcMaterialList
+      材料: 门 - 框架
+      材料: 门 - 嵌板
+    [几何表达] 类型=MappedRepresentation, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcMappedItem
+        映射源: IfcRepresentationMap(#5699)
+    [所在空间] IfcBuildingStorey "地板"(#148)
+    [填充洞口] 单扇 - 与墙齐:0915 x 2134mm 3:274157:1(#21734)
+
+  [#6153] IfcDoor
+    GlobalId: 2hzYH0z2T6GRsEFliKJRyn
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 单扇 - 与墙齐:0915 x 2134mm 4:274865
+    ObjectType: 单扇 - 与墙齐:0915 x 2134mm 4
+    ObjectPlacement: IfcLocalPlacement(#21636)
+    Representation: IfcProductDefinitionShape(#6147)
+    Tag: 274865
+    OverallHeight: 2260.00
+    OverallWidth: 700.00
+    [属性集]
+      单扇 - 与墙齐:0915 x 2134mm 4:274865:
+        PanelOperation = SWINGING
+        PanelPosition = NOTDEFINED
+      Pset_DoorCommon:
+        IsExternal = False
+        Reference = 0915 x 2134mm 4
+        ThermalTransmittance = 3.70
+      Pset_QuantityTakeOff:
+        Reference = 0915 x 2134mm 4
+    [材料关联] IfcMaterialList
+      材料: 门 - 框架
+      材料: 门 - 嵌板
+    [几何表达] 类型=MappedRepresentation, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcMappedItem
+        映射源: IfcRepresentationMap(#6133)
+    [所在空间] IfcBuildingStorey "地板"(#148)
+    [填充洞口] 单扇 - 与墙齐:0915 x 2134mm 4:274865:1(#21626)
+
+  [#6258] IfcDoor
+    GlobalId: 2hzYH0z2T6GRsEFliKJRq1
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 单扇 - 与墙齐:0915 x 2134mm 5:275329
+    ObjectType: 单扇 - 与墙齐:0915 x 2134mm 5
+    ObjectPlacement: IfcLocalPlacement(#21662)
+    Representation: IfcProductDefinitionShape(#6252)
+    Tag: 275329
+    OverallHeight: 2300.00
+    OverallWidth: 720.00
+    [属性集]
+      单扇 - 与墙齐:0915 x 2134mm 5:275329:
+        PanelOperation = SWINGING
+        PanelPosition = NOTDEFINED
+      Pset_DoorCommon:
+        IsExternal = False
+        Reference = 0915 x 2134mm 5
+        ThermalTransmittance = 3.70
+      Pset_QuantityTakeOff:
+        Reference = 0915 x 2134mm 5
+    [材料关联] IfcMaterialList
+      材料: 门 - 框架
+      材料: 门 - 嵌板
+    [几何表达] 类型=MappedRepresentation, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcMappedItem
+        映射源: IfcRepresentationMap(#6238)
+    [所在空间] IfcBuildingStorey "地板"(#148)
+    [填充洞口] 单扇 - 与墙齐:0915 x 2134mm 5:275329:1(#21653)
+
+  [#6363] IfcDoor
+    GlobalId: 2hzYH0z2T6GRsEFliKJRfU
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 单扇 - 与墙齐:0915 x 2134mm 5:275678
+    ObjectType: 单扇 - 与墙齐:0915 x 2134mm 5
+    ObjectPlacement: IfcLocalPlacement(#21552)
+    Representation: IfcProductDefinitionShape(#6357)
+    Tag: 275678
+    OverallHeight: 2300.00
+    OverallWidth: 720.00
+    [属性集]
+      单扇 - 与墙齐:0915 x 2134mm 5:275678:
+        PanelOperation = SWINGING
+        PanelPosition = NOTDEFINED
+      Pset_DoorCommon:
+        IsExternal = False
+        Reference = 0915 x 2134mm 5
+        ThermalTransmittance = 3.70
+      Pset_QuantityTakeOff:
+        Reference = 0915 x 2134mm 5
+    [材料关联] IfcMaterialList
+      材料: 门 - 框架
+      材料: 门 - 嵌板
+    [几何表达] 类型=MappedRepresentation, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcMappedItem
+        映射源: IfcRepresentationMap(#6343)
+    [所在空间] IfcBuildingStorey "地板"(#148)
+    [填充洞口] 单扇 - 与墙齐:0915 x 2134mm 5:275678:1(#21542)
+
+  [#6467] IfcDoor
+    GlobalId: 2hzYH0z2T6GRsEFliKJRiL
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 单扇 - 与墙齐:0915 x 2134mm 5:275861
+    ObjectType: 单扇 - 与墙齐:0915 x 2134mm 5
+    ObjectPlacement: IfcLocalPlacement(#21498)
+    Representation: IfcProductDefinitionShape(#6461)
+    Tag: 275861
+    OverallHeight: 2300.00
+    OverallWidth: 720.00
+    [属性集]
+      单扇 - 与墙齐:0915 x 2134mm 5:275861:
+        PanelOperation = SWINGING
+        PanelPosition = NOTDEFINED
+      Pset_DoorCommon:
+        IsExternal = False
+        Reference = 0915 x 2134mm 5
+        ThermalTransmittance = 3.70
+      Pset_QuantityTakeOff:
+        Reference = 0915 x 2134mm 5
+    [材料关联] IfcMaterialList
+      材料: 门 - 框架
+      材料: 门 - 嵌板
+    [几何表达] 类型=MappedRepresentation, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcMappedItem
+        映射源: IfcRepresentationMap(#6447)
+    [所在空间] IfcBuildingStorey "地板"(#148)
+    [填充洞口] 单扇 - 与墙齐:0915 x 2134mm 5:275861:1(#21488)
+
+  [#6632] IfcDoor
+    GlobalId: 2AJ6T3vZDDZRJL7l0pGeuV
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 单扇 - 与墙齐:0915 x 2134mm 7:277597
+    ObjectType: 单扇 - 与墙齐:0915 x 2134mm 7
+    ObjectPlacement: IfcLocalPlacement(#21580)
+    Representation: IfcProductDefinitionShape(#6626)
+    Tag: 277597
+    OverallHeight: 2300.00
+    OverallWidth: 600.00
+    [属性集]
+      单扇 - 与墙齐:0915 x 2134mm 7:277597:
+        PanelOperation = SWINGING
+        PanelPosition = NOTDEFINED
+      Pset_DoorCommon:
+        IsExternal = False
+        Reference = 0915 x 2134mm 7
+        ThermalTransmittance = 3.70
+      Pset_QuantityTakeOff:
+        Reference = 0915 x 2134mm 7
+    [材料关联] IfcMaterialList
+      材料: 门 - 框架
+      材料: 门 - 嵌板
+    [几何表达] 类型=MappedRepresentation, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcMappedItem
+        映射源: IfcRepresentationMap(#6612)
+    [所在空间] IfcBuildingStorey "地板"(#148)
+    [填充洞口] 单扇 - 与墙齐:0915 x 2134mm 7:277597:1(#21570)
+
+  [#6737] IfcDoor
+    GlobalId: 2AJ6T3vZDDZRJL7l0pGey6
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 单扇 - 与墙齐:0915 x 2134mm 6:277828
+    ObjectType: 单扇 - 与墙齐:0915 x 2134mm 6
+    ObjectPlacement: IfcLocalPlacement(#21608)
+    Representation: IfcProductDefinitionShape(#6731)
+    Tag: 277828
+    OverallHeight: 2300.00
+    OverallWidth: 660.00
+    [属性集]
+      单扇 - 与墙齐:0915 x 2134mm 6:277828:
+        PanelOperation = SWINGING
+        PanelPosition = NOTDEFINED
+      Pset_DoorCommon:
+        IsExternal = False
+        Reference = 0915 x 2134mm 6
+        ThermalTransmittance = 3.70
+      Pset_QuantityTakeOff:
+        Reference = 0915 x 2134mm 6
+    [材料关联] IfcMaterialList
+      材料: 门 - 框架
+      材料: 门 - 嵌板
+    [几何表达] 类型=MappedRepresentation, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcMappedItem
+        映射源: IfcRepresentationMap(#6717)
+    [所在空间] IfcBuildingStorey "地板"(#148)
+    [填充洞口] 单扇 - 与墙齐:0915 x 2134mm 6:277828:1(#21598)
+
+  [#6842] IfcDoor
+    GlobalId: 2AJ6T3vZDDZRJL7l0pGl86
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 单扇 - 与墙齐:0915 x 2134mm 5:278596
+    ObjectType: 单扇 - 与墙齐:0915 x 2134mm 5
+    ObjectPlacement: IfcLocalPlacement(#22316)
+    Representation: IfcProductDefinitionShape(#6836)
+    Tag: 278596
+    OverallHeight: 2300.00
+    OverallWidth: 720.00
+    [属性集]
+      单扇 - 与墙齐:0915 x 2134mm 5:278596:
+        PanelOperation = SWINGING
+        PanelPosition = NOTDEFINED
+      Pset_DoorCommon:
+        IsExternal = False
+        Reference = 0915 x 2134mm 5
+        ThermalTransmittance = 3.70
+      Pset_QuantityTakeOff:
+        Reference = 0915 x 2134mm 5
+    [材料关联] IfcMaterialList
+      材料: 门 - 框架
+      材料: 门 - 嵌板
+    [几何表达] 类型=MappedRepresentation, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcMappedItem
+        映射源: IfcRepresentationMap(#6822)
+    [所在空间] IfcBuildingStorey "地板"(#148)
+    [填充洞口] 单扇 - 与墙齐:0915 x 2134mm 5:278596:1(#22306)
+
+  [#7084] IfcDoor
+    GlobalId: 2AJ6T3vZDDZRJL7l0pGlkO
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 单扇 - 与墙齐:0915 x 2134mm 5:281050
+    ObjectType: 单扇 - 与墙齐:0915 x 2134mm 5
+    ObjectPlacement: IfcLocalPlacement(#21362)
+    Representation: IfcProductDefinitionShape(#7078)
+    Tag: 281050
+    OverallHeight: 2300.00
+    OverallWidth: 720.00
+    [属性集]
+      单扇 - 与墙齐:0915 x 2134mm 5:281050:
+        PanelOperation = SWINGING
+        PanelPosition = NOTDEFINED
+      Pset_DoorCommon:
+        IsExternal = False
+        Reference = 0915 x 2134mm 5
+        ThermalTransmittance = 3.70
+      Pset_QuantityTakeOff:
+        Reference = 0915 x 2134mm 5
+    [材料关联] IfcMaterialList
+      材料: 门 - 框架
+      材料: 门 - 嵌板
+    [几何表达] 类型=MappedRepresentation, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcMappedItem
+        映射源: IfcRepresentationMap(#7064)
+    [所在空间] IfcBuildingStorey "地板"(#148)
+    [填充洞口] 单扇 - 与墙齐:0915 x 2134mm 5:281050:1(#21352)
+
+  [#19973] IfcDoor
+    GlobalId: 1o8D4YEoL7TehCbXrciYn5
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 平开门-木门-双扇:M1521:309239
+    ObjectType: 平开门-木门-双扇:M1521
+    ObjectPlacement: IfcLocalPlacement(#22152)
+    Representation: IfcProductDefinitionShape(#19967)
+    Tag: 309239
+    OverallHeight: 2438.00
+    OverallWidth: 1852.00
+    [属性集]
+      平开门-木门-双扇:M1521:309239:
+        PanelOperation = NOTDEFINED
+        PanelPosition = NOTDEFINED
+      Pset_ConcreteElementGeneral:
+        FireRating = N/A
+      Pset_DoorCommon:
+        IsExternal = False
+        Reference = M1521
+        FireRating = N/A
+      Pset_ManufacturerTypeInformation:
+        Manufacturer = N/A
+      Pset_QuantityTakeOff:
+        Reference = M1521
+    [材料关联] IfcMaterialList
+      材料: 不锈钢
+      材料: 木饰面-黄色
+    [几何表达] 类型=MappedRepresentation, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcMappedItem
+        映射源: IfcRepresentationMap(#19933)
+    [所在空间] IfcBuildingStorey "地板"(#148)
+    [填充洞口] 平开门-木门-双扇:M1521:309239:1(#22140)
+
+
+--- IfcWindow (26个) ---
+  [#2865] IfcWindow
+    GlobalId: 0TrfJ6849Bp9glS3PHCeFv
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 推拉窗:TLC1215:240105
+    ObjectType: 推拉窗:TLC1215
+    ObjectPlacement: IfcLocalPlacement(#21334)
+    Representation: IfcProductDefinitionShape(#2859)
+    Tag: 240105
+    OverallHeight: 1450.00
+    OverallWidth: 1750.00
+    [属性集]
+      推拉窗:TLC1215:240105:
+      Pset_ManufacturerTypeInformation:
+        Manufacturer = N/A
+      Pset_QuantityTakeOff:
+        Reference = TLC1215
+      Pset_WindowCommon:
+        IsExternal = True
+        Reference = TLC1215
+        ThermalTransmittance = 3.69
+    [材料关联] IfcMaterialList
+      材料: 玻璃
+      材料: 窗框
+    [几何表达] 类型=MappedRepresentation, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcMappedItem
+        映射源: IfcRepresentationMap(#2827)
+    [所在空间] IfcBuildingStorey "地板"(#148)
+    [填充洞口] 推拉窗:TLC1215:240105:1(#21325)
+
+  [#2899] IfcWindow
+    GlobalId: 0TrfJ6849Bp9glS3PHCeLJ
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 推拉窗:TLC1215:241475
+    ObjectType: 推拉窗:TLC1215
+    ObjectPlacement: IfcLocalPlacement(#21308)
+    Representation: IfcProductDefinitionShape(#2893)
+    Tag: 241475
+    OverallHeight: 1450.00
+    OverallWidth: 1750.00
+    [属性集]
+      推拉窗:TLC1215:240105:
+      Pset_ManufacturerTypeInformation:
+        Manufacturer = N/A
+      Pset_QuantityTakeOff:
+        Reference = TLC1215
+      Pset_WindowCommon:
+        IsExternal = True
+        Reference = TLC1215
+        ThermalTransmittance = 3.69
+    [材料关联] IfcMaterialList
+      材料: 玻璃
+      材料: 窗框
+    [几何表达] 类型=MappedRepresentation, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcMappedItem
+        映射源: IfcRepresentationMap(#2827)
+    [所在空间] IfcBuildingStorey "地板"(#148)
+    [填充洞口] 推拉窗:TLC1215:241475:1(#21298)
+
+  [#3081] IfcWindow
+    GlobalId: 0TrfJ6849Bp9glS3PHCfjL
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 推拉窗:TLC1215 2:241989
+    ObjectType: 推拉窗:TLC1215 2
+    ObjectPlacement: IfcLocalPlacement(#21202)
+    Representation: IfcProductDefinitionShape(#3075)
+    Tag: 241989
+    OverallHeight: 1100.00
+    OverallWidth: 2300.00
+    [属性集]
+      推拉窗:TLC1215 2:241989:
+      Pset_ManufacturerTypeInformation:
+        Manufacturer = N/A
+      Pset_QuantityTakeOff:
+        Reference = TLC1215 2
+      Pset_WindowCommon:
+        IsExternal = True
+        Reference = TLC1215 2
+        ThermalTransmittance = 3.69
+    [材料关联] IfcMaterialList
+      材料: 玻璃
+      材料: 窗框
+    [几何表达] 类型=MappedRepresentation, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcMappedItem
+        映射源: IfcRepresentationMap(#3063)
+    [所在空间] IfcBuildingStorey "地板"(#148)
+    [填充洞口] 推拉窗:TLC1215 2:241989:1(#21190)
+
+  [#3241] IfcWindow
+    GlobalId: 0TrfJ6849Bp9glS3PHCkkb
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 固定:0406 x 0610mm:246197
+    ObjectType: 固定:0406 x 0610mm
+    ObjectPlacement: IfcLocalPlacement(#21228)
+    Representation: IfcProductDefinitionShape(#3235)
+    Tag: 246197
+    OverallHeight: 1400.00
+    OverallWidth: 850.00
+    [属性集]
+      固定:0406 x 0610mm:246197:
+      Pset_QuantityTakeOff:
+        Reference = 0406 x 0610mm
+      Pset_WindowCommon:
+        IsExternal = True
+        Reference = 0406 x 0610mm
+        ThermalTransmittance = 3.69
+    [材料关联] IfcMaterialList
+      材料: 玻璃
+      材料: 窗扇
+    [几何表达] 类型=MappedRepresentation, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcMappedItem
+        映射源: IfcRepresentationMap(#3213)
+    [所在空间] IfcBuildingStorey "地板"(#148)
+    [填充洞口] 固定:0406 x 0610mm:246197:1(#21219)
+
+  [#3269] IfcWindow
+    GlobalId: 0TrfJ6849Bp9glS3PHCkpI
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 固定:0406 x 0610mm:247490
+    ObjectType: 固定:0406 x 0610mm
+    ObjectPlacement: IfcLocalPlacement(#21254)
+    Representation: IfcProductDefinitionShape(#3263)
+    Tag: 247490
+    OverallHeight: 1400.00
+    OverallWidth: 850.00
+    [属性集]
+      固定:0406 x 0610mm:246197:
+      Pset_QuantityTakeOff:
+        Reference = 0406 x 0610mm
+      Pset_WindowCommon:
+        IsExternal = True
+        Reference = 0406 x 0610mm
+        ThermalTransmittance = 3.69
+    [材料关联] IfcMaterialList
+      材料: 玻璃
+      材料: 窗扇
+    [几何表达] 类型=MappedRepresentation, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcMappedItem
+        映射源: IfcRepresentationMap(#3213)
+    [所在空间] IfcBuildingStorey "地板"(#148)
+    [填充洞口] 固定:0406 x 0610mm:247490:1(#21245)
+
+  [#3295] IfcWindow
+    GlobalId: 0TrfJ6849Bp9glS3PHCkqq
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 固定:0406 x 0610mm:247588
+    ObjectType: 固定:0406 x 0610mm
+    ObjectPlacement: IfcLocalPlacement(#21280)
+    Representation: IfcProductDefinitionShape(#3289)
+    Tag: 247588
+    OverallHeight: 1400.00
+    OverallWidth: 850.00
+    [属性集]
+      固定:0406 x 0610mm:246197:
+      Pset_QuantityTakeOff:
+        Reference = 0406 x 0610mm
+      Pset_WindowCommon:
+        IsExternal = True
+        Reference = 0406 x 0610mm
+        ThermalTransmittance = 3.69
+    [材料关联] IfcMaterialList
+      材料: 玻璃
+      材料: 窗扇
+    [几何表达] 类型=MappedRepresentation, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcMappedItem
+        映射源: IfcRepresentationMap(#3213)
+    [所在空间] IfcBuildingStorey "地板"(#148)
+    [填充洞口] 固定:0406 x 0610mm:247588:1(#21271)
+
+  [#3431] IfcWindow
+    GlobalId: 0TrfJ6849Bp9glS3PHCksX
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 固定:0406 x 0610mm 2:247729
+    ObjectType: 固定:0406 x 0610mm 2
+    ObjectPlacement: IfcLocalPlacement(#21444)
+    Representation: IfcProductDefinitionShape(#3425)
+    Tag: 247729
+    OverallHeight: 1200.00
+    OverallWidth: 600.00
+    [属性集]
+      固定:0406 x 0610mm 2:247729:
+      Pset_QuantityTakeOff:
+        Reference = 0406 x 0610mm 2
+      Pset_WindowCommon:
+        IsExternal = True
+        Reference = 0406 x 0610mm 2
+        ThermalTransmittance = 3.69
+    [材料关联] IfcMaterialList
+      材料: 玻璃
+      材料: 窗扇
+    [几何表达] 类型=MappedRepresentation, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcMappedItem
+        映射源: IfcRepresentationMap(#3413)
+    [所在空间] IfcBuildingStorey "地板"(#148)
+    [填充洞口] 固定:0406 x 0610mm 2:247729:1(#21434)
+
+  [#3569] IfcWindow
+    GlobalId: 0TrfJ6849Bp9glS3PHCk12
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 固定:0406 x 0610mm 2:248402
+    ObjectType: 固定:0406 x 0610mm 2
+    ObjectPlacement: IfcLocalPlacement(#21524)
+    Representation: IfcProductDefinitionShape(#3563)
+    Tag: 248402
+    OverallHeight: 1200.00
+    OverallWidth: 600.00
+    [属性集]
+      固定:0406 x 0610mm 2:248402:
+      Pset_QuantityTakeOff:
+        Reference = 0406 x 0610mm 2
+      Pset_WindowCommon:
+        IsExternal = True
+        Reference = 0406 x 0610mm 2
+        ThermalTransmittance = 3.69
+    [材料关联] IfcMaterialList
+      材料: 玻璃
+      材料: 窗扇
+    [几何表达] 类型=MappedRepresentation, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcMappedItem
+        映射源: IfcRepresentationMap(#3551)
+    [所在空间] IfcBuildingStorey "地板"(#148)
+    [填充洞口] 固定:0406 x 0610mm 2:248402:1(#21515)
+
+  [#3755] IfcWindow
+    GlobalId: 0TrfJ6849Bp9glS3PHClqE
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 推拉窗-双层单列:600 x 600:251678
+    ObjectType: 推拉窗-双层单列:600 x 600
+    ObjectPlacement: IfcLocalPlacement(#21390)
+    Representation: IfcProductDefinitionShape(#3749)
+    Tag: 251678
+    OverallHeight: 1200.00
+    OverallWidth: 800.00
+    [属性集]
+      推拉窗-双层单列:600 x 600:251678:
+      Pset_ManufacturerTypeInformation:
+        Manufacturer = N/A
+      Pset_QuantityTakeOff:
+        Reference = 600 x 600
+      Pset_WindowCommon:
+        IsExternal = True
+        Reference = 600 x 600
+        ThermalTransmittance = 5.56
+    [材料关联] IfcMaterial
+      材料: 玻璃
+    [几何表达] 类型=MappedRepresentation, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcMappedItem
+        映射源: IfcRepresentationMap(#3739)
+    [所在空间] IfcBuildingStorey "地板"(#148)
+    [填充洞口] 推拉窗-双层单列:600 x 600:251678:1(#21380)
+
+  [#3897] IfcWindow
+    GlobalId: 0TrfJ6849Bp9glS3PHClCx
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 固定:0915 x 1220mm:252203
+    ObjectType: 固定:0915 x 1220mm
+    ObjectPlacement: IfcLocalPlacement(#21416)
+    Representation: IfcProductDefinitionShape(#3891)
+    Tag: 252203
+    OverallHeight: 850.00
+    OverallWidth: 1000.00
+    [属性集]
+      固定:0915 x 1220mm:252203:
+      Pset_QuantityTakeOff:
+        Reference = 0915 x 1220mm
+      Pset_WindowCommon:
+        IsExternal = True
+        Reference = 0915 x 1220mm
+        ThermalTransmittance = 3.69
+    [材料关联] IfcMaterialList
+      材料: 玻璃
+      材料: 窗扇
+    [几何表达] 类型=MappedRepresentation, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcMappedItem
+        映射源: IfcRepresentationMap(#3879)
+    [所在空间] IfcBuildingStorey "地板"(#148)
+    [填充洞口] 固定:0915 x 1220mm:252203:1(#21407)
+
+  [#4084] IfcWindow
+    GlobalId: 0TrfJ6849Bp9glS3PHClGs
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 推拉窗-双层单列:600 x 601:253478
+    ObjectType: 推拉窗-双层单列:600 x 601
+    ObjectPlacement: IfcLocalPlacement(#21716)
+    Representation: IfcProductDefinitionShape(#4078)
+    Tag: 253478
+    OverallHeight: 1500.00
+    OverallWidth: 800.00
+    [属性集]
+      推拉窗-双层单列:600 x 601:253478:
+      Pset_ManufacturerTypeInformation:
+        Manufacturer = N/A
+      Pset_QuantityTakeOff:
+        Reference = 600 x 601
+      Pset_WindowCommon:
+        IsExternal = True
+        Reference = 600 x 601
+        ThermalTransmittance = 5.56
+    [材料关联] IfcMaterial
+      材料: 玻璃
+    [几何表达] 类型=MappedRepresentation, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcMappedItem
+        映射源: IfcRepresentationMap(#4068)
+    [所在空间] IfcBuildingStorey "地板"(#148)
+    [填充洞口] 推拉窗-双层单列:600 x 601:253478:1(#21707)
+
+  [#4116] IfcWindow
+    GlobalId: 0TrfJ6849Bp9glS3PHClIs
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 推拉窗-双层单列:600 x 601:253606
+    ObjectType: 推拉窗-双层单列:600 x 601
+    ObjectPlacement: IfcLocalPlacement(#21690)
+    Representation: IfcProductDefinitionShape(#4110)
+    Tag: 253606
+    OverallHeight: 1500.00
+    OverallWidth: 800.00
+    [属性集]
+      推拉窗-双层单列:600 x 601:253478:
+      Pset_ManufacturerTypeInformation:
+        Manufacturer = N/A
+      Pset_QuantityTakeOff:
+        Reference = 600 x 601
+      Pset_WindowCommon:
+        IsExternal = True
+        Reference = 600 x 601
+        ThermalTransmittance = 5.56
+    [材料关联] IfcMaterial
+      材料: 玻璃
+    [几何表达] 类型=MappedRepresentation, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcMappedItem
+        映射源: IfcRepresentationMap(#4068)
+    [所在空间] IfcBuildingStorey "地板"(#148)
+    [填充洞口] 推拉窗-双层单列:600 x 601:253606:1(#21680)
+
+  [#4305] IfcWindow
+    GlobalId: 0TrfJ6849Bp9glS3PHCil6
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 推拉窗-双层单列:600 x 602:254422
+    ObjectType: 推拉窗-双层单列:600 x 602
+    ObjectPlacement: IfcLocalPlacement(#21800)
+    Representation: IfcProductDefinitionShape(#4299)
+    Tag: 254422
+    OverallHeight: 1000.00
+    OverallWidth: 560.00
+    [属性集]
+      推拉窗-双层单列:600 x 602:254422:
+      Pset_ManufacturerTypeInformation:
+        Manufacturer = N/A
+      Pset_QuantityTakeOff:
+        Reference = 600 x 602
+      Pset_WindowCommon:
+        IsExternal = True
+        Reference = 600 x 602
+        ThermalTransmittance = 5.56
+    [材料关联] IfcMaterial
+      材料: 玻璃
+    [几何表达] 类型=MappedRepresentation, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcMappedItem
+        映射源: IfcRepresentationMap(#4289)
+    [所在空间] IfcBuildingStorey "地板"(#148)
+    [填充洞口] 推拉窗-双层单列:600 x 602:254422:1(#21790)
+
+  [#4337] IfcWindow
+    GlobalId: 0TrfJ6849Bp9glS3PHCivI
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 推拉窗-双层单列:600 x 602:255042
+    ObjectType: 推拉窗-双层单列:600 x 602
+    ObjectPlacement: IfcLocalPlacement(#21826)
+    Representation: IfcProductDefinitionShape(#4331)
+    Tag: 255042
+    OverallHeight: 1000.00
+    OverallWidth: 560.00
+    [属性集]
+      推拉窗-双层单列:600 x 602:254422:
+      Pset_ManufacturerTypeInformation:
+        Manufacturer = N/A
+      Pset_QuantityTakeOff:
+        Reference = 600 x 602
+      Pset_WindowCommon:
+        IsExternal = True
+        Reference = 600 x 602
+        ThermalTransmittance = 5.56
+    [材料关联] IfcMaterial
+      材料: 玻璃
+    [几何表达] 类型=MappedRepresentation, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcMappedItem
+        映射源: IfcRepresentationMap(#4289)
+    [所在空间] IfcBuildingStorey "地板"(#148)
+    [填充洞口] 推拉窗-双层单列:600 x 602:255042:1(#21817)
+
+  [#4477] IfcWindow
+    GlobalId: 0TrfJ6849Bp9glS3PHCiyE
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 固定:0406 x 1830mm 3:255262
+    ObjectType: 固定:0406 x 1830mm 3
+    ObjectPlacement: IfcLocalPlacement(#21852)
+    Representation: IfcProductDefinitionShape(#4471)
+    Tag: 255262
+    OverallHeight: 1000.00
+    OverallWidth: 700.00
+    [属性集]
+      固定:0406 x 1830mm 3:255262:
+      Pset_QuantityTakeOff:
+        Reference = 0406 x 1830mm 3
+      Pset_WindowCommon:
+        IsExternal = True
+        Reference = 0406 x 1830mm 3
+        ThermalTransmittance = 3.69
+    [材料关联] IfcMaterialList
+      材料: 玻璃
+      材料: 窗扇
+    [几何表达] 类型=MappedRepresentation, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcMappedItem
+        映射源: IfcRepresentationMap(#4459)
+    [所在空间] IfcBuildingStorey "地板"(#148)
+    [填充洞口] 固定:0406 x 1830mm 3:255262:1(#21843)
+
+  [#4664] IfcWindow
+    GlobalId: 0TrfJ6849Bp9glS3PHCjuG
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 推拉窗-双层单列:600 x 603:259072
+    ObjectType: 推拉窗-双层单列:600 x 603
+    ObjectPlacement: IfcLocalPlacement(#21880)
+    Representation: IfcProductDefinitionShape(#4658)
+    Tag: 259072
+    OverallHeight: 1400.00
+    OverallWidth: 650.00
+    [属性集]
+      推拉窗-双层单列:600 x 603:259072:
+      Pset_ManufacturerTypeInformation:
+        Manufacturer = N/A
+      Pset_QuantityTakeOff:
+        Reference = 600 x 603
+      Pset_WindowCommon:
+        IsExternal = True
+        Reference = 600 x 603
+        ThermalTransmittance = 5.56
+    [材料关联] IfcMaterial
+      材料: 玻璃
+    [几何表达] 类型=MappedRepresentation, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcMappedItem
+        映射源: IfcRepresentationMap(#4648)
+    [所在空间] IfcBuildingStorey "地板"(#148)
+    [填充洞口] 推拉窗-双层单列:600 x 603:259072:1(#21870)
+
+  [#4696] IfcWindow
+    GlobalId: 0TrfJ6849Bp9glS3PHCjtE
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 推拉窗-双层单列:600 x 603:260062
+    ObjectType: 推拉窗-双层单列:600 x 603
+    ObjectPlacement: IfcLocalPlacement(#21906)
+    Representation: IfcProductDefinitionShape(#4690)
+    Tag: 260062
+    OverallHeight: 1400.00
+    OverallWidth: 650.00
+    [属性集]
+      推拉窗-双层单列:600 x 603:259072:
+      Pset_ManufacturerTypeInformation:
+        Manufacturer = N/A
+      Pset_QuantityTakeOff:
+        Reference = 600 x 603
+      Pset_WindowCommon:
+        IsExternal = True
+        Reference = 600 x 603
+        ThermalTransmittance = 5.56
+    [材料关联] IfcMaterial
+      材料: 玻璃
+    [几何表达] 类型=MappedRepresentation, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcMappedItem
+        映射源: IfcRepresentationMap(#4648)
+    [所在空间] IfcBuildingStorey "地板"(#148)
+    [填充洞口] 推拉窗-双层单列:600 x 603:260062:1(#21897)
+
+  [#4726] IfcWindow
+    GlobalId: 0TrfJ6849Bp9glS3PHCj6h
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 推拉窗-双层单列:600 x 603:261051
+    ObjectType: 推拉窗-双层单列:600 x 603
+    ObjectPlacement: IfcLocalPlacement(#21932)
+    Representation: IfcProductDefinitionShape(#4720)
+    Tag: 261051
+    OverallHeight: 1400.00
+    OverallWidth: 650.00
+    [属性集]
+      推拉窗-双层单列:600 x 603:259072:
+      Pset_ManufacturerTypeInformation:
+        Manufacturer = N/A
+      Pset_QuantityTakeOff:
+        Reference = 600 x 603
+      Pset_WindowCommon:
+        IsExternal = True
+        Reference = 600 x 603
+        ThermalTransmittance = 5.56
+    [材料关联] IfcMaterial
+      材料: 玻璃
+    [几何表达] 类型=MappedRepresentation, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcMappedItem
+        映射源: IfcRepresentationMap(#4648)
+    [所在空间] IfcBuildingStorey "地板"(#148)
+    [填充洞口] 推拉窗-双层单列:600 x 603:261051:1(#21923)
+
+  [#4915] IfcWindow
+    GlobalId: 2lo7UQjNT7gxOHhbM3JamH
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 推拉窗-双层单列:600 x 604:262155
+    ObjectType: 推拉窗-双层单列:600 x 604
+    ObjectPlacement: IfcLocalPlacement(#21958)
+    Representation: IfcProductDefinitionShape(#4909)
+    Tag: 262155
+    OverallHeight: 1400.00
+    OverallWidth: 950.00
+    [属性集]
+      推拉窗-双层单列:600 x 604:262155:
+      Pset_ManufacturerTypeInformation:
+        Manufacturer = N/A
+      Pset_QuantityTakeOff:
+        Reference = 600 x 604
+      Pset_WindowCommon:
+        IsExternal = True
+        Reference = 600 x 604
+        ThermalTransmittance = 5.56
+    [材料关联] IfcMaterial
+      材料: 玻璃
+    [几何表达] 类型=MappedRepresentation, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcMappedItem
+        映射源: IfcRepresentationMap(#4899)
+    [所在空间] IfcBuildingStorey "地板"(#148)
+    [填充洞口] 推拉窗-双层单列:600 x 604:262155:1(#21949)
+
+  [#4947] IfcWindow
+    GlobalId: 2lo7UQjNT7gxOHhbM3JaeV
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 推拉窗-双层单列:600 x 604:263685
+    ObjectType: 推拉窗-双层单列:600 x 604
+    ObjectPlacement: IfcLocalPlacement(#22180)
+    Representation: IfcProductDefinitionShape(#4941)
+    Tag: 263685
+    OverallHeight: 1400.00
+    OverallWidth: 950.00
+    [属性集]
+      推拉窗-双层单列:600 x 604:262155:
+      Pset_ManufacturerTypeInformation:
+        Manufacturer = N/A
+      Pset_QuantityTakeOff:
+        Reference = 600 x 604
+      Pset_WindowCommon:
+        IsExternal = True
+        Reference = 600 x 604
+        ThermalTransmittance = 5.56
+    [材料关联] IfcMaterial
+      材料: 玻璃
+    [几何表达] 类型=MappedRepresentation, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcMappedItem
+        映射源: IfcRepresentationMap(#4899)
+    [所在空间] IfcBuildingStorey "地板"(#148)
+    [填充洞口] 推拉窗-双层单列:600 x 604:263685:1(#22170)
+
+  [#4977] IfcWindow
+    GlobalId: 2lo7UQjNT7gxOHhbM3JajL
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 推拉窗-双层单列:600 x 604:264015
+    ObjectType: 推拉窗-双层单列:600 x 604
+    ObjectPlacement: IfcLocalPlacement(#22206)
+    Representation: IfcProductDefinitionShape(#4971)
+    Tag: 264015
+    OverallHeight: 1400.00
+    OverallWidth: 950.00
+    [属性集]
+      推拉窗-双层单列:600 x 604:262155:
+      Pset_ManufacturerTypeInformation:
+        Manufacturer = N/A
+      Pset_QuantityTakeOff:
+        Reference = 600 x 604
+      Pset_WindowCommon:
+        IsExternal = True
+        Reference = 600 x 604
+        ThermalTransmittance = 5.56
+    [材料关联] IfcMaterial
+      材料: 玻璃
+    [几何表达] 类型=MappedRepresentation, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcMappedItem
+        映射源: IfcRepresentationMap(#4899)
+    [所在空间] IfcBuildingStorey "地板"(#148)
+    [填充洞口] 推拉窗-双层单列:600 x 604:264015:1(#22197)
+
+  [#5007] IfcWindow
+    GlobalId: 2lo7UQjNT7gxOHhbM3Ja3d
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 推拉窗-双层单列:600 x 604:265469
+    ObjectType: 推拉窗-双层单列:600 x 604
+    ObjectPlacement: IfcLocalPlacement(#22234)
+    Representation: IfcProductDefinitionShape(#5001)
+    Tag: 265469
+    OverallHeight: 1400.00
+    OverallWidth: 950.00
+    [属性集]
+      推拉窗-双层单列:600 x 604:262155:
+      Pset_ManufacturerTypeInformation:
+        Manufacturer = N/A
+      Pset_QuantityTakeOff:
+        Reference = 600 x 604
+      Pset_WindowCommon:
+        IsExternal = True
+        Reference = 600 x 604
+        ThermalTransmittance = 5.56
+    [材料关联] IfcMaterial
+      材料: 玻璃
+    [几何表达] 类型=MappedRepresentation, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcMappedItem
+        映射源: IfcRepresentationMap(#4899)
+    [所在空间] IfcBuildingStorey "地板"(#148)
+    [填充洞口] 推拉窗-双层单列:600 x 604:265469:1(#22224)
+
+  [#5147] IfcWindow
+    GlobalId: 2lo7UQjNT7gxOHhbM3JaAd
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 固定:0406 x 1830mm 7:265917
+    ObjectType: 固定:0406 x 1830mm 7
+    ObjectPlacement: IfcLocalPlacement(#22260)
+    Representation: IfcProductDefinitionShape(#5141)
+    Tag: 265917
+    OverallHeight: 1000.00
+    OverallWidth: 1200.00
+    [属性集]
+      固定:0406 x 1830mm 7:265917:
+      Pset_QuantityTakeOff:
+        Reference = 0406 x 1830mm 7
+      Pset_WindowCommon:
+        IsExternal = True
+        Reference = 0406 x 1830mm 7
+        ThermalTransmittance = 3.69
+    [材料关联] IfcMaterialList
+      材料: 玻璃
+      材料: 窗扇
+    [几何表达] 类型=MappedRepresentation, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcMappedItem
+        映射源: IfcRepresentationMap(#5129)
+    [所在空间] IfcBuildingStorey "地板"(#148)
+    [填充洞口] 固定:0406 x 1830mm 7:265917:1(#22251)
+
+  [#5346] IfcWindow
+    GlobalId: 2hzYH0z2T6GRsEFliKJPUc
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 固定:0406 x 1830mm 8:268582
+    ObjectType: 固定:0406 x 1830mm 8
+    ObjectPlacement: IfcLocalPlacement(#22068)
+    Representation: IfcProductDefinitionShape(#5340)
+    Tag: 268582
+    OverallHeight: 1000.00
+    OverallWidth: 700.00
+    [属性集]
+      固定:0406 x 1830mm 8:268582:
+      Pset_QuantityTakeOff:
+        Reference = 0406 x 1830mm 8
+      Pset_WindowCommon:
+        IsExternal = True
+        Reference = 0406 x 1830mm 8
+        ThermalTransmittance = 3.69
+    [材料关联] IfcMaterialList
+      材料: 玻璃
+      材料: 窗扇
+    [几何表达] 类型=MappedRepresentation, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcMappedItem
+        映射源: IfcRepresentationMap(#5328)
+    [所在空间] IfcBuildingStorey "地板"(#148)
+    [填充洞口] 固定:0406 x 1830mm 8:268582:1(#22058)
+
+  [#5374] IfcWindow
+    GlobalId: 2hzYH0z2T6GRsEFliKJPEE
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 固定:0406 x 1830mm 8:269582
+    ObjectType: 固定:0406 x 1830mm 8
+    ObjectPlacement: IfcLocalPlacement(#22094)
+    Representation: IfcProductDefinitionShape(#5368)
+    Tag: 269582
+    OverallHeight: 1000.00
+    OverallWidth: 700.00
+    [属性集]
+      固定:0406 x 1830mm 8:268582:
+      Pset_QuantityTakeOff:
+        Reference = 0406 x 1830mm 8
+      Pset_WindowCommon:
+        IsExternal = True
+        Reference = 0406 x 1830mm 8
+        ThermalTransmittance = 3.69
+    [材料关联] IfcMaterialList
+      材料: 玻璃
+      材料: 窗扇
+    [几何表达] 类型=MappedRepresentation, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcMappedItem
+        映射源: IfcRepresentationMap(#5328)
+    [所在空间] IfcBuildingStorey "地板"(#148)
+    [填充洞口] 固定:0406 x 1830mm 8:269582:1(#22085)
+
+  [#6979] IfcWindow
+    GlobalId: 2AJ6T3vZDDZRJL7l0pGlE8
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 固定:0406 x 0610mm 3:278986
+    ObjectType: 固定:0406 x 0610mm 3
+    ObjectPlacement: IfcLocalPlacement(#21470)
+    Representation: IfcProductDefinitionShape(#6973)
+    Tag: 278986
+    OverallHeight: 1200.00
+    OverallWidth: 560.00
+    [属性集]
+      固定:0406 x 0610mm 3:278986:
+      Pset_QuantityTakeOff:
+        Reference = 0406 x 0610mm 3
+      Pset_WindowCommon:
+        IsExternal = True
+        Reference = 0406 x 0610mm 3
+        ThermalTransmittance = 3.69
+    [材料关联] IfcMaterialList
+      材料: 玻璃
+      材料: 窗扇
+    [几何表达] 类型=MappedRepresentation, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcMappedItem
+        映射源: IfcRepresentationMap(#6961)
+    [所在空间] IfcBuildingStorey "地板"(#148)
+    [填充洞口] 固定:0406 x 0610mm 3:278986:1(#21461)
+
+
+--- IfcOpeningElement (42个) ---
+  [#22306] IfcOpeningElement
+    GlobalId: 2AJ6T3vZDDZRJL7kCpGl86
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 单扇 - 与墙齐:0915 x 2134mm 5:278596:1
+    ObjectType: Opening
+    ObjectPlacement: IfcLocalPlacement(#22304)
+    Representation: IfcProductDefinitionShape(#22299)
+    [几何表达] 类型=SweptSolid, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcRectangleProfileDef
+        矩形截面: 720.0 x 2300.0
+        拉伸深度: 100.0
+        位置: (0.0, 0.0, 0.0)
+
+  [#21190] IfcOpeningElement
+    GlobalId: 0TrfJ6849Bp9glS2LHCfjL
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 推拉窗:TLC1215 2:241989:1
+    ObjectType: Opening
+    ObjectPlacement: IfcLocalPlacement(#21188)
+    Representation: IfcProductDefinitionShape(#21183)
+    [几何表达] 类型=SweptSolid, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcRectangleProfileDef
+        矩形截面: 1100.0 x 2300.0
+        拉伸深度: 240.0
+        位置: (0.0, 0.0, 0.0)
+
+  [#21219] IfcOpeningElement
+    GlobalId: 0TrfJ6849Bp9glS2LHCkkb
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 固定:0406 x 0610mm:246197:1
+    ObjectType: Opening
+    ObjectPlacement: IfcLocalPlacement(#21218)
+    Representation: IfcProductDefinitionShape(#21213)
+    [几何表达] 类型=SweptSolid, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcRectangleProfileDef
+        矩形截面: 1400.0 x 850.0
+        拉伸深度: 240.0
+        位置: (0.0, 0.0, 0.0)
+
+  [#21245] IfcOpeningElement
+    GlobalId: 0TrfJ6849Bp9glS2LHCkpI
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 固定:0406 x 0610mm:247490:1
+    ObjectType: Opening
+    ObjectPlacement: IfcLocalPlacement(#21244)
+    Representation: IfcProductDefinitionShape(#21239)
+    [几何表达] 类型=SweptSolid, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcRectangleProfileDef
+        矩形截面: 1400.0 x 850.0
+        拉伸深度: 240.0
+        位置: (0.0, 0.0, 0.0)
+
+  [#21271] IfcOpeningElement
+    GlobalId: 0TrfJ6849Bp9glS2LHCkqq
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 固定:0406 x 0610mm:247588:1
+    ObjectType: Opening
+    ObjectPlacement: IfcLocalPlacement(#21270)
+    Representation: IfcProductDefinitionShape(#21265)
+    [几何表达] 类型=SweptSolid, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcRectangleProfileDef
+        矩形截面: 1400.0 x 850.0
+        拉伸深度: 240.0
+        位置: (0.0, 0.0, 0.0)
+
+  [#21298] IfcOpeningElement
+    GlobalId: 0TrfJ6849Bp9glS2LHCeLJ
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 推拉窗:TLC1215:241475:1
+    ObjectType: Opening
+    ObjectPlacement: IfcLocalPlacement(#21296)
+    Representation: IfcProductDefinitionShape(#21291)
+    [几何表达] 类型=SweptSolid, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcRectangleProfileDef
+        矩形截面: 1450.0 x 1750.0
+        拉伸深度: 240.0
+        位置: (0.0, 0.0, 0.0)
+
+  [#21325] IfcOpeningElement
+    GlobalId: 0TrfJ6849Bp9glS2LHCeFv
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 推拉窗:TLC1215:240105:1
+    ObjectType: Opening
+    ObjectPlacement: IfcLocalPlacement(#21324)
+    Representation: IfcProductDefinitionShape(#21319)
+    [几何表达] 类型=SweptSolid, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcRectangleProfileDef
+        矩形截面: 1450.0 x 1750.0
+        拉伸深度: 240.0
+        位置: (0.0, 0.0, 0.0)
+
+  [#21352] IfcOpeningElement
+    GlobalId: 2AJ6T3vZDDZRJL7kCpGlkO
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 单扇 - 与墙齐:0915 x 2134mm 5:281050:1
+    ObjectType: Opening
+    ObjectPlacement: IfcLocalPlacement(#21350)
+    Representation: IfcProductDefinitionShape(#21345)
+    [几何表达] 类型=SweptSolid, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcRectangleProfileDef
+        矩形截面: 720.0 x 2300.0
+        拉伸深度: 120.0
+        位置: (0.0, 0.0, 0.0)
+
+  [#21380] IfcOpeningElement
+    GlobalId: 0TrfJ6849Bp9glS2LHClqE
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 推拉窗-双层单列:600 x 600:251678:1
+    ObjectType: Opening
+    ObjectPlacement: IfcLocalPlacement(#21378)
+    Representation: IfcProductDefinitionShape(#21373)
+    [几何表达] 类型=SweptSolid, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcRectangleProfileDef
+        矩形截面: 1200.0 x 800.0
+        拉伸深度: 240.0
+        位置: (0.0, 0.0, 0.0)
+
+  [#21407] IfcOpeningElement
+    GlobalId: 0TrfJ6849Bp9glS2LHClCx
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 固定:0915 x 1220mm:252203:1
+    ObjectType: Opening
+    ObjectPlacement: IfcLocalPlacement(#21406)
+    Representation: IfcProductDefinitionShape(#21401)
+    [几何表达] 类型=SweptSolid, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcRectangleProfileDef
+        矩形截面: 850.0 x 1000.0
+        拉伸深度: 240.0
+        位置: (0.0, 0.0, 0.0)
+
+  [#21434] IfcOpeningElement
+    GlobalId: 0TrfJ6849Bp9glS2LHCksX
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 固定:0406 x 0610mm 2:247729:1
+    ObjectType: Opening
+    ObjectPlacement: IfcLocalPlacement(#21432)
+    Representation: IfcProductDefinitionShape(#21427)
+    [几何表达] 类型=SweptSolid, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcRectangleProfileDef
+        矩形截面: 1200.0 x 600.0
+        拉伸深度: 240.0
+        位置: (0.0, 0.0, 0.0)
+
+  [#21461] IfcOpeningElement
+    GlobalId: 2AJ6T3vZDDZRJL7kCpGlE8
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 固定:0406 x 0610mm 3:278986:1
+    ObjectType: Opening
+    ObjectPlacement: IfcLocalPlacement(#21460)
+    Representation: IfcProductDefinitionShape(#21455)
+    [几何表达] 类型=SweptSolid, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcRectangleProfileDef
+        矩形截面: 1200.0 x 560.0
+        拉伸深度: 240.0
+        位置: (0.0, 0.0, 0.0)
+
+  [#21488] IfcOpeningElement
+    GlobalId: 2hzYH0z2T6GRsEFkWKJRiL
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 单扇 - 与墙齐:0915 x 2134mm 5:275861:1
+    ObjectType: Opening
+    ObjectPlacement: IfcLocalPlacement(#21486)
+    Representation: IfcProductDefinitionShape(#21481)
+    [几何表达] 类型=SweptSolid, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcRectangleProfileDef
+        矩形截面: 720.0 x 2300.0
+        拉伸深度: 140.0
+        位置: (0.0, 0.0, 0.0)
+
+  [#21515] IfcOpeningElement
+    GlobalId: 0TrfJ6849Bp9glS2LHCk12
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 固定:0406 x 0610mm 2:248402:1
+    ObjectType: Opening
+    ObjectPlacement: IfcLocalPlacement(#21514)
+    Representation: IfcProductDefinitionShape(#21509)
+    [几何表达] 类型=SweptSolid, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcRectangleProfileDef
+        矩形截面: 1200.0 x 600.0
+        拉伸深度: 140.0
+        位置: (0.0, 0.0, 0.0)
+
+  [#21542] IfcOpeningElement
+    GlobalId: 2hzYH0z2T6GRsEFkWKJRfU
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 单扇 - 与墙齐:0915 x 2134mm 5:275678:1
+    ObjectType: Opening
+    ObjectPlacement: IfcLocalPlacement(#21540)
+    Representation: IfcProductDefinitionShape(#21535)
+    [几何表达] 类型=SweptSolid, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcRectangleProfileDef
+        矩形截面: 720.0 x 2300.0
+        拉伸深度: 84.0
+        位置: (0.0, 0.0, 0.0)
+
+  [#21570] IfcOpeningElement
+    GlobalId: 2AJ6T3vZDDZRJL7kCpGeuV
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 单扇 - 与墙齐:0915 x 2134mm 7:277597:1
+    ObjectType: Opening
+    ObjectPlacement: IfcLocalPlacement(#21568)
+    Representation: IfcProductDefinitionShape(#21563)
+    [几何表达] 类型=SweptSolid, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcRectangleProfileDef
+        矩形截面: 600.0 x 2300.0
+        拉伸深度: 84.0
+        位置: (0.0, 0.0, 0.0)
+
+  [#21598] IfcOpeningElement
+    GlobalId: 2AJ6T3vZDDZRJL7kCpGey6
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 单扇 - 与墙齐:0915 x 2134mm 6:277828:1
+    ObjectType: Opening
+    ObjectPlacement: IfcLocalPlacement(#21596)
+    Representation: IfcProductDefinitionShape(#21591)
+    [几何表达] 类型=SweptSolid, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcRectangleProfileDef
+        矩形截面: 660.0 x 2300.0
+        拉伸深度: 110.0
+        位置: (0.0, 0.0, 0.0)
+
+  [#21626] IfcOpeningElement
+    GlobalId: 2hzYH0z2T6GRsEFkWKJRyn
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 单扇 - 与墙齐:0915 x 2134mm 4:274865:1
+    ObjectType: Opening
+    ObjectPlacement: IfcLocalPlacement(#21624)
+    Representation: IfcProductDefinitionShape(#21619)
+    [几何表达] 类型=SweptSolid, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcRectangleProfileDef
+        矩形截面: 700.0 x 2260.0
+        拉伸深度: 120.0
+        位置: (0.0, 0.0, 0.0)
+
+  [#21653] IfcOpeningElement
+    GlobalId: 2hzYH0z2T6GRsEFkWKJRq1
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 单扇 - 与墙齐:0915 x 2134mm 5:275329:1
+    ObjectType: Opening
+    ObjectPlacement: IfcLocalPlacement(#21652)
+    Representation: IfcProductDefinitionShape(#21647)
+    [几何表达] 类型=SweptSolid, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcRectangleProfileDef
+        矩形截面: 720.0 x 2300.0
+        拉伸深度: 120.0
+        位置: (0.0, 0.0, 0.0)
+
+  [#21680] IfcOpeningElement
+    GlobalId: 0TrfJ6849Bp9glS2LHClIs
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 推拉窗-双层单列:600 x 601:253606:1
+    ObjectType: Opening
+    ObjectPlacement: IfcLocalPlacement(#21678)
+    Representation: IfcProductDefinitionShape(#21673)
+    [几何表达] 类型=SweptSolid, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcRectangleProfileDef
+        矩形截面: 1500.0 x 800.0
+        拉伸深度: 240.0
+        位置: (0.0, 0.0, 0.0)
+
+  [#21707] IfcOpeningElement
+    GlobalId: 0TrfJ6849Bp9glS2LHClGs
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 推拉窗-双层单列:600 x 601:253478:1
+    ObjectType: Opening
+    ObjectPlacement: IfcLocalPlacement(#21706)
+    Representation: IfcProductDefinitionShape(#21701)
+    [几何表达] 类型=SweptSolid, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcRectangleProfileDef
+        矩形截面: 1500.0 x 800.0
+        拉伸深度: 240.0
+        位置: (0.0, 0.0, 0.0)
+
+  [#21734] IfcOpeningElement
+    GlobalId: 2hzYH0z2T6GRsEFkWKJQ1j
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 单扇 - 与墙齐:0915 x 2134mm 3:274157:1
+    ObjectType: Opening
+    ObjectPlacement: IfcLocalPlacement(#21732)
+    Representation: IfcProductDefinitionShape(#21727)
+    [几何表达] 类型=SweptSolid, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcRectangleProfileDef
+        矩形截面: 620.0 x 2400.0
+        拉伸深度: 120.0
+        位置: (0.0, 0.0, 0.0)
+
+  [#21762] IfcOpeningElement
+    GlobalId: 2hzYH0z2T6GRsEFkWKJQSQ
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 单扇 - 与墙齐:0915 x 2134mm 3:272794:1
+    ObjectType: Opening
+    ObjectPlacement: IfcLocalPlacement(#21760)
+    Representation: IfcProductDefinitionShape(#21755)
+    [几何表达] 类型=SweptSolid, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcRectangleProfileDef
+        矩形截面: 620.0 x 2400.0
+        拉伸深度: 145.0
+        位置: (0.0, 0.0, 0.0)
+
+  [#21790] IfcOpeningElement
+    GlobalId: 0TrfJ6849Bp9glS2LHCil6
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 推拉窗-双层单列:600 x 602:254422:1
+    ObjectType: Opening
+    ObjectPlacement: IfcLocalPlacement(#21788)
+    Representation: IfcProductDefinitionShape(#21783)
+    [几何表达] 类型=SweptSolid, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcRectangleProfileDef
+        矩形截面: 1000.0 x 560.0
+        拉伸深度: 240.0
+        位置: (0.0, 0.0, 0.0)
+
+  [#21817] IfcOpeningElement
+    GlobalId: 0TrfJ6849Bp9glS2LHCivI
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 推拉窗-双层单列:600 x 602:255042:1
+    ObjectType: Opening
+    ObjectPlacement: IfcLocalPlacement(#21816)
+    Representation: IfcProductDefinitionShape(#21811)
+    [几何表达] 类型=SweptSolid, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcRectangleProfileDef
+        矩形截面: 1000.0 x 560.0
+        拉伸深度: 240.0
+        位置: (0.0, 0.0, 0.0)
+
+  [#21843] IfcOpeningElement
+    GlobalId: 0TrfJ6849Bp9glS2LHCiyE
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 固定:0406 x 1830mm 3:255262:1
+    ObjectType: Opening
+    ObjectPlacement: IfcLocalPlacement(#21842)
+    Representation: IfcProductDefinitionShape(#21837)
+    [几何表达] 类型=SweptSolid, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcRectangleProfileDef
+        矩形截面: 1000.0 x 700.0
+        拉伸深度: 240.0
+        位置: (0.0, 0.0, 0.0)
+
+  [#21870] IfcOpeningElement
+    GlobalId: 0TrfJ6849Bp9glS2LHCjuG
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 推拉窗-双层单列:600 x 603:259072:1
+    ObjectType: Opening
+    ObjectPlacement: IfcLocalPlacement(#21868)
+    Representation: IfcProductDefinitionShape(#21863)
+    [几何表达] 类型=SweptSolid, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcRectangleProfileDef
+        矩形截面: 1400.0 x 650.0
+        拉伸深度: 240.0
+        位置: (0.0, 0.0, 0.0)
+
+  [#21897] IfcOpeningElement
+    GlobalId: 0TrfJ6849Bp9glS2LHCjtE
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 推拉窗-双层单列:600 x 603:260062:1
+    ObjectType: Opening
+    ObjectPlacement: IfcLocalPlacement(#21896)
+    Representation: IfcProductDefinitionShape(#21891)
+    [几何表达] 类型=SweptSolid, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcRectangleProfileDef
+        矩形截面: 1400.0 x 650.0
+        拉伸深度: 240.0
+        位置: (0.0, 0.0, 0.0)
+
+  [#21923] IfcOpeningElement
+    GlobalId: 0TrfJ6849Bp9glS2LHCj6h
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 推拉窗-双层单列:600 x 603:261051:1
+    ObjectType: Opening
+    ObjectPlacement: IfcLocalPlacement(#21922)
+    Representation: IfcProductDefinitionShape(#21917)
+    [几何表达] 类型=SweptSolid, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcRectangleProfileDef
+        矩形截面: 1400.0 x 650.0
+        拉伸深度: 240.0
+        位置: (0.0, 0.0, 0.0)
+
+  [#21949] IfcOpeningElement
+    GlobalId: 2lo7UQjNT7gxOHhaQ3JamH
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 推拉窗-双层单列:600 x 604:262155:1
+    ObjectType: Opening
+    ObjectPlacement: IfcLocalPlacement(#21948)
+    Representation: IfcProductDefinitionShape(#21943)
+    [几何表达] 类型=SweptSolid, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcRectangleProfileDef
+        矩形截面: 1400.0 x 950.0
+        拉伸深度: 240.0
+        位置: (0.0, 0.0, 0.0)
+
+  [#21976] IfcOpeningElement
+    GlobalId: 2hzYH0z2T6GRsEFkWKJQPW
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 单扇 - 与墙齐:0915 x 2134mm 3:272608:1
+    ObjectType: Opening
+    ObjectPlacement: IfcLocalPlacement(#21974)
+    Representation: IfcProductDefinitionShape(#21969)
+    [几何表达] 类型=SweptSolid, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcRectangleProfileDef
+        矩形截面: 620.0 x 2400.0
+        拉伸深度: 110.0
+        位置: (0.0, 0.0, 0.0)
+
+  [#22003] IfcOpeningElement
+    GlobalId: 2hzYH0z2T6GRsEFkWKJQUg
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 单扇 - 与墙齐:0915 x 2134mm 3:272682:1
+    ObjectType: Opening
+    ObjectPlacement: IfcLocalPlacement(#22002)
+    Representation: IfcProductDefinitionShape(#21997)
+    [几何表达] 类型=SweptSolid, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcRectangleProfileDef
+        矩形截面: 620.0 x 2400.0
+        拉伸深度: 110.0
+        位置: (0.0, 0.0, 0.0)
+
+  [#22030] IfcOpeningElement
+    GlobalId: 2hzYH0z2T6GRsEFkWKJQip
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 单扇 - 与墙齐:0915 x 2134mm 3:271795:1
+    ObjectType: Opening
+    ObjectPlacement: IfcLocalPlacement(#22028)
+    Representation: IfcProductDefinitionShape(#22023)
+    [几何表达] 类型=SweptSolid, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcRectangleProfileDef
+        矩形截面: 620.0 x 2400.0
+        拉伸深度: 55.0
+        位置: (0.0, 0.0, 0.0)
+
+  [#22058] IfcOpeningElement
+    GlobalId: 2hzYH0z2T6GRsEFkWKJPUc
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 固定:0406 x 1830mm 8:268582:1
+    ObjectType: Opening
+    ObjectPlacement: IfcLocalPlacement(#22056)
+    Representation: IfcProductDefinitionShape(#22051)
+    [几何表达] 类型=SweptSolid, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcRectangleProfileDef
+        矩形截面: 1000.0 x 700.0
+        拉伸深度: 140.0
+        位置: (0.0, 0.0, 0.0)
+
+  [#22085] IfcOpeningElement
+    GlobalId: 2hzYH0z2T6GRsEFkWKJPEE
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 固定:0406 x 1830mm 8:269582:1
+    ObjectType: Opening
+    ObjectPlacement: IfcLocalPlacement(#22084)
+    Representation: IfcProductDefinitionShape(#22079)
+    [几何表达] 类型=SweptSolid, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcRectangleProfileDef
+        矩形截面: 1000.0 x 700.0
+        拉伸深度: 140.0
+        位置: (0.0, 0.0, 0.0)
+
+  [#22112] IfcOpeningElement
+    GlobalId: 2hzYH0z2T6GRsEFkWKJQbv
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 单扇 - 与墙齐:0915 x 2134mm 3:272377:1
+    ObjectType: Opening
+    ObjectPlacement: IfcLocalPlacement(#22110)
+    Representation: IfcProductDefinitionShape(#22105)
+    [几何表达] 类型=SweptSolid, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcRectangleProfileDef
+        矩形截面: 620.0 x 2400.0
+        拉伸深度: 120.0
+        位置: (0.0, 0.0, 0.0)
+
+  [#22140] IfcOpeningElement
+    GlobalId: 1o8D4YEoL7TehCbWvciYn5
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 平开门-木门-双扇:M1521:309239:1
+    ObjectType: Opening
+    ObjectPlacement: IfcLocalPlacement(#22138)
+    Representation: IfcProductDefinitionShape(#22133)
+    [几何表达] 类型=SweptSolid, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcRectangleProfileDef
+        矩形截面: 2438.0 x 1852.0
+        拉伸深度: 240.0
+        位置: (0.0, 0.0, 0.0)
+
+  [#22170] IfcOpeningElement
+    GlobalId: 2lo7UQjNT7gxOHhaQ3JaeV
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 推拉窗-双层单列:600 x 604:263685:1
+    ObjectType: Opening
+    ObjectPlacement: IfcLocalPlacement(#22168)
+    Representation: IfcProductDefinitionShape(#22163)
+    [几何表达] 类型=SweptSolid, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcRectangleProfileDef
+        矩形截面: 1400.0 x 950.0
+        拉伸深度: 240.0
+        位置: (0.0, 0.0, 0.0)
+
+  [#22197] IfcOpeningElement
+    GlobalId: 2lo7UQjNT7gxOHhaQ3JajL
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 推拉窗-双层单列:600 x 604:264015:1
+    ObjectType: Opening
+    ObjectPlacement: IfcLocalPlacement(#22196)
+    Representation: IfcProductDefinitionShape(#22191)
+    [几何表达] 类型=SweptSolid, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcRectangleProfileDef
+        矩形截面: 1400.0 x 950.0
+        拉伸深度: 240.0
+        位置: (0.0, 0.0, 0.0)
+
+  [#22224] IfcOpeningElement
+    GlobalId: 2lo7UQjNT7gxOHhaQ3Ja3d
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 推拉窗-双层单列:600 x 604:265469:1
+    ObjectType: Opening
+    ObjectPlacement: IfcLocalPlacement(#22222)
+    Representation: IfcProductDefinitionShape(#22217)
+    [几何表达] 类型=SweptSolid, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcRectangleProfileDef
+        矩形截面: 1400.0 x 950.0
+        拉伸深度: 240.0
+        位置: (0.0, 0.0, 0.0)
+
+  [#22251] IfcOpeningElement
+    GlobalId: 2lo7UQjNT7gxOHhaQ3JaAd
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 固定:0406 x 1830mm 7:265917:1
+    ObjectType: Opening
+    ObjectPlacement: IfcLocalPlacement(#22250)
+    Representation: IfcProductDefinitionShape(#22245)
+    [几何表达] 类型=SweptSolid, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcRectangleProfileDef
+        矩形截面: 1000.0 x 1200.0
+        拉伸深度: 240.0
+        位置: (0.0, 0.0, 0.0)
+
+  [#22278] IfcOpeningElement
+    GlobalId: 2hzYH0z2T6GRsEFkWKJP3m
+    OwnerHistory: IfcOwnerHistory(#41)
+    Name: 单扇 - 与墙齐:0915 x 2134mm 2:269936:1
+    ObjectType: Opening
+    ObjectPlacement: IfcLocalPlacement(#22276)
+    Representation: IfcProductDefinitionShape(#22271)
+    [几何表达] 类型=SweptSolid, 上下文=IfcGeometricRepresentationSubContext
+      几何项: IfcExtrudedAreaSolid
+        截面: IfcRectangleProfileDef
+        矩形截面: 650.0 x 2134.0
+        拉伸深度: 350.0
+        位置: (0.0, 0.0, 0.0)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+【四、材料定义】
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+IfcMaterial (11个):
+  [205] 默认墙
+  [2833] 玻璃
+  [2843] 窗框
+  [3219] 窗扇
+  [5477] 门 - 框架
+  [5487] 门 - 嵌板
+  [7261] 默认楼板
+  [7386] 金属 - 壁骨层
+  [7400] 石膏墙板
+  [19941] 不锈钢
+  [19951] 木饰面-黄色
+
+IfcMaterialLayerSet (13个):
+  [220] 基本墙:外 - 240
+    层1: 默认墙, 厚度=240.0
+  [335] 基本墙:外 - 241
+    层1: 默认墙, 厚度=120.0
+  [572] 基本墙:80
+    层1: 默认墙, 厚度=84.0
+  [633] 基本墙:145
+    层1: 默认墙, 厚度=145.0
+  [751] 基本墙:140
+    层1: 默认墙, 厚度=140.0
+  [900] 基本墙:110
+    层1: 默认墙, 厚度=110.0
+  [1093] 基本墙:310
+    层1: 默认墙, 厚度=310.0
+  [1253] 基本墙:120
+    层1: 默认墙, 厚度=120.0
+  [1886] 基本墙:50
+    层1: 默认墙, 厚度=55.0
+  [5193] 基本墙:外 - 242
+    层1: 默认墙, 厚度=350.0
+  [6512] 基本墙:外 - 243
+    层1: 默认墙, 厚度=100.0
+  [7272] 楼板:常规 - 300mm
+    层1: 默认楼板, 厚度=300.0
+  [7412] 复合天花板:光面
+    层1: 金属 - 壁骨层, 厚度=200.0
+    层2: 石膏墙板, 厚度=100.0
+
+IfcMaterialList (54个):
+  [2853] 玻璃, 窗框
+  [2868] 玻璃, 窗框
+  [2902] 玻璃, 窗框
+  [3069] 玻璃, 窗框
+  [3084] 玻璃, 窗框
+  [3229] 玻璃, 窗扇
+  [3244] 玻璃, 窗扇
+  [3272] 玻璃, 窗扇
+  [3298] 玻璃, 窗扇
+  [3419] 玻璃, 窗扇
+  [3434] 玻璃, 窗扇
+  [3557] 玻璃, 窗扇
+  [3572] 玻璃, 窗扇
+  [3885] 玻璃, 窗扇
+  [3900] 玻璃, 窗扇
+  [4465] 玻璃, 窗扇
+  [4480] 玻璃, 窗扇
+  [5135] 玻璃, 窗扇
+  [5150] 玻璃, 窗扇
+  [5334] 玻璃, 窗扇
+  [5349] 玻璃, 窗扇
+  [5377] 玻璃, 窗扇
+  [5497] 门 - 框架, 门 - 嵌板
+  [5512] 门 - 框架, 门 - 嵌板
+  [5602] 门 - 框架, 门 - 嵌板
+  [5617] 门 - 框架, 门 - 嵌板
+  [5707] 门 - 框架, 门 - 嵌板
+  [5722] 门 - 框架, 门 - 嵌板
+  [5811] 门 - 框架, 门 - 嵌板
+  [5826] 门 - 框架, 门 - 嵌板
+  [5853] 门 - 框架, 门 - 嵌板
+  [5941] 门 - 框架, 门 - 嵌板
+  [5956] 门 - 框架, 门 - 嵌板
+  [6053] 门 - 框架, 门 - 嵌板
+  [6141] 门 - 框架, 门 - 嵌板
+  [6156] 门 - 框架, 门 - 嵌板
+  [6246] 门 - 框架, 门 - 嵌板
+  [6261] 门 - 框架, 门 - 嵌板
+  [6351] 门 - 框架, 门 - 嵌板
+  [6366] 门 - 框架, 门 - 嵌板
+  [6455] 门 - 框架, 门 - 嵌板
+  [6470] 门 - 框架, 门 - 嵌板
+  [6620] 门 - 框架, 门 - 嵌板
+  [6635] 门 - 框架, 门 - 嵌板
+  [6725] 门 - 框架, 门 - 嵌板
+  [6740] 门 - 框架, 门 - 嵌板
+  [6830] 门 - 框架, 门 - 嵌板
+  [6845] 门 - 框架, 门 - 嵌板
+  [6967] 玻璃, 窗扇
+  [6982] 玻璃, 窗扇
+  [7072] 门 - 框架, 门 - 嵌板
+  [7087] 门 - 框架, 门 - 嵌板
+  [19961] 不锈钢, 木饰面-黄色
+  [19976] 不锈钢, 木饰面-黄色
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+【五、MEP设备管线】
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  本模型不包含MEP设备管线构件
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+【六、空间关系】
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+空间包含关系 (2条):
+  IfcBuildingStorey "天花板" → [IfcBeam:1, IfcCovering:1]
+  IfcBuildingStorey "地板" → [IfcWallStandardCase:45, IfcColumn:7, IfcWindow:26, IfcDoor:16, IfcSlab:1, IfcRailing:2]
+
+聚合关系 (3条):
+  IfcProject "项目编号" → [IfcSite "Default"]
+  IfcSite "Default" → [IfcBuilding ""]
+  IfcBuilding "" → [IfcBuildingStorey "地板", IfcBuildingStorey "天花板"]
+
+开洞关系 (42条):
+  基本墙:外 - 243:276420(#6508) ← 开洞 单扇 - 与墙齐:0915 x 2134mm 5:278596:1(#22306)
+  基本墙:外 - 240:218400(#196) ← 开洞 推拉窗:TLC1215 2:241989:1(#21190)
+  基本墙:外 - 240:218400(#196) ← 开洞 固定:0406 x 0610mm:246197:1(#21219)
+  基本墙:外 - 240:218400(#196) ← 开洞 固定:0406 x 0610mm:247490:1(#21245)
+  基本墙:外 - 240:218400(#196) ← 开洞 固定:0406 x 0610mm:247588:1(#21271)
+  基本墙:外 - 240:218810(#287) ← 开洞 推拉窗:TLC1215:241475:1(#21298)
+  基本墙:外 - 240:218810(#287) ← 开洞 推拉窗:TLC1215:240105:1(#21325)
+  基本墙:外 - 241:218989(#331) ← 开洞 单扇 - 与墙齐:0915 x 2134mm 5:281050:1(#21352)
+  基本墙:外 - 240:220014(#480) ← 开洞 推拉窗-双层单列:600 x 600:251678:1(#21380)
+  基本墙:外 - 240:220014(#480) ← 开洞 固定:0915 x 1220mm:252203:1(#21407)
+  基本墙:外 - 240:220869(#524) ← 开洞 固定:0406 x 0610mm 2:247729:1(#21434)
+  基本墙:外 - 240:220869(#524) ← 开洞 固定:0406 x 0610mm 3:278986:1(#21461)
+  基本墙:140:222679(#747) ← 开洞 单扇 - 与墙齐:0915 x 2134mm 5:275861:1(#21488)
+  基本墙:140:222679(#747) ← 开洞 固定:0406 x 0610mm 2:248402:1(#21515)
+  基本墙:80:223035(#808) ← 开洞 单扇 - 与墙齐:0915 x 2134mm 5:275678:1(#21542)
+  基本墙:80:224481(#1001) ← 开洞 单扇 - 与墙齐:0915 x 2134mm 7:277597:1(#21570)
+  基本墙:110:224699(#1045) ← 开洞 单扇 - 与墙齐:0915 x 2134mm 6:277828:1(#21598)
+  基本墙:120:226547(#1249) ← 开洞 单扇 - 与墙齐:0915 x 2134mm 4:274865:1(#21626)
+  基本墙:120:226547(#1249) ← 开洞 单扇 - 与墙齐:0915 x 2134mm 5:275329:1(#21653)
+  基本墙:外 - 240:226940(#1354) ← 开洞 推拉窗-双层单列:600 x 601:253606:1(#21680)
+  基本墙:外 - 240:226940(#1354) ← 开洞 推拉窗-双层单列:600 x 601:253478:1(#21707)
+  基本墙:120:227377(#1486) ← 开洞 单扇 - 与墙齐:0915 x 2134mm 3:274157:1(#21734)
+  基本墙:145:227618(#1530) ← 开洞 单扇 - 与墙齐:0915 x 2134mm 3:272794:1(#21762)
+  基本墙:外 - 240:228157(#1618) ← 开洞 推拉窗-双层单列:600 x 602:254422:1(#21790)
+  基本墙:外 - 240:228157(#1618) ← 开洞 推拉窗-双层单列:600 x 602:255042:1(#21817)
+  基本墙:外 - 240:228157(#1618) ← 开洞 固定:0406 x 1830mm 3:255262:1(#21843)
+  基本墙:外 - 240:228404(#1662) ← 开洞 推拉窗-双层单列:600 x 603:259072:1(#21870)
+  基本墙:外 - 240:228404(#1662) ← 开洞 推拉窗-双层单列:600 x 603:260062:1(#21897)
+  基本墙:外 - 240:228404(#1662) ← 开洞 推拉窗-双层单列:600 x 603:261051:1(#21923)
+  基本墙:外 - 240:228404(#1662) ← 开洞 推拉窗-双层单列:600 x 604:262155:1(#21949)
+  基本墙:110:228957(#1794) ← 开洞 单扇 - 与墙齐:0915 x 2134mm 3:272608:1(#21976)
+  基本墙:110:228957(#1794) ← 开洞 单扇 - 与墙齐:0915 x 2134mm 3:272682:1(#22003)
+  基本墙:50:229362(#1882) ← 开洞 单扇 - 与墙齐:0915 x 2134mm 3:271795:1(#22030)
+  基本墙:140:229882(#1943) ← 开洞 固定:0406 x 1830mm 8:268582:1(#22058)
+  基本墙:140:229882(#1943) ← 开洞 固定:0406 x 1830mm 8:269582:1(#22085)
+  基本墙:120:230268(#1987) ← 开洞 单扇 - 与墙齐:0915 x 2134mm 3:272377:1(#22112)
+  基本墙:外 - 240:230701(#2075) ← 开洞 平开门-木门-双扇:M1521:309239:1(#22140)
+  基本墙:外 - 240:230987(#2163) ← 开洞 推拉窗-双层单列:600 x 604:263685:1(#22170)
+  基本墙:外 - 240:230987(#2163) ← 开洞 推拉窗-双层单列:600 x 604:264015:1(#22197)
+  基本墙:外 - 240:231215(#2207) ← 开洞 推拉窗-双层单列:600 x 604:265469:1(#22224)
+  基本墙:外 - 240:231215(#2207) ← 开洞 固定:0406 x 1830mm 7:265917:1(#22251)
+  基本墙:外 - 242:267346(#5189) ← 开洞 单扇 - 与墙齐:0915 x 2134mm 2:269936:1(#22278)
+
+路径连接关系 (61条):
+
+分组关系 (0条):
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+【七、类型定义】
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+IfcWallType (11个):
+  [224] 基本墙:外 - 240 | PredefinedType=STANDARD
+  [339] 基本墙:外 - 241 | PredefinedType=STANDARD
+  [576] 基本墙:80 | PredefinedType=STANDARD
+  [637] 基本墙:145 | PredefinedType=STANDARD
+  [755] 基本墙:140 | PredefinedType=STANDARD
+  [904] 基本墙:110 | PredefinedType=STANDARD
+  [1097] 基本墙:310 | PredefinedType=STANDARD
+  [1257] 基本墙:120 | PredefinedType=STANDARD
+  [1890] 基本墙:50 | PredefinedType=STANDARD
+  [5197] 基本墙:外 - 242 | PredefinedType=STANDARD
+  [6516] 基本墙:外 - 243 | PredefinedType=STANDARD
+
+IfcColumnType (7个):
+  [2305] 330.177 | PredefinedType=COLUMN
+  [2363] 540*330 | PredefinedType=COLUMN
+  [2419] 540*330 | PredefinedType=COLUMN
+  [2474] 540*330 | PredefinedType=COLUMN
+  [2554] 400*540 | PredefinedType=COLUMN
+  [2632] 350.400 | PredefinedType=COLUMN
+  [5999] 540*330 2 | PredefinedType=COLUMN
+
+IfcBeamType (1个):
+  [7128] 200x300 | PredefinedType=BEAM
+
+IfcSlabType (1个):
+  [7260] 楼板:常规 - 300mm | PredefinedType=FLOOR
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+【八、实体类型统计】
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  IfcCartesianPoint: 2700
+  IfcPolyLoop: 1892
+  IfcFaceOuterBound: 1892
+  IfcFace: 1892
+  IfcAxis2Placement3D: 478
+  IfcPropertySet: 338
+  IfcRelDefinesByProperties: 274
+  IfcExtrudedAreaSolid: 242
+  IfcShapeRepresentation: 223
+  IfcPropertySingleValue: 195
+  IfcPolyline: 184
+  IfcStyledItem: 184
+  IfcAxis2Placement2D: 156
+  IfcLocalPlacement: 145
+  IfcProductDefinitionShape: 141
+  IfcRectangleProfileDef: 130
+  IfcRelAssociatesMaterial: 115
+  IfcRelConnectsPathElements: 61
+  IfcMaterialList: 54
+  IfcArbitraryProfileDefWithVoids: 52
+  IfcRelDefinesByType: 50
+  IfcMappedItem: 49
+  IfcMaterialLayerSetUsage: 47
+  IfcWallStandardCase: 45
+  IfcOpeningElement: 42
+  IfcRelVoidsElement: 42
+  IfcRelFillsElement: 42
+  IfcRepresentationMap: 36
+  IfcArbitraryClosedProfileDef: 34
+  IfcWindow: 26
+  IfcCircleProfileDef: 26
+  IfcPresentationStyleAssignment: 21
+  IfcSIUnit: 19
+  IfcConnectedFaceSet: 17
+  IfcDoor: 16
+  IfcDerivedUnitElement: 16
+  IfcWindowLiningProperties: 15
+  IfcWindowStyle: 15
+  IfcDoorLiningProperties: 14
+  IfcDoorPanelProperties: 14
+  IfcDoorStyle: 14
+  IfcMaterialLayer: 14
+  IfcMaterialLayerSet: 13
+  IfcColourRgb: 11
+  IfcSurfaceStyleRendering: 11
+  IfcSurfaceStyle: 11
+  IfcMaterial: 11
+  IfcStyledRepresentation: 11
+  IfcMaterialDefinitionRepresentation: 11
+  IfcWallType: 11
+
+================================================================================
+导出完成
+================================================================================
