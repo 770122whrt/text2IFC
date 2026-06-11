@@ -1,7 +1,7 @@
 ---
 phase: 1
 slug: bim-json-1-0-contract-and-validator
-status: implementation_complete
+status: validated
 nyquist_compliant: true
 wave_0_complete: true
 created: 2026-06-11
@@ -48,6 +48,30 @@ created: 2026-06-11
 
 All Phase 1 behaviors have automated verification.
 
+## Requirement Coverage
+
+| Requirement | Automated evidence | Status |
+|---|---|---|
+| JSON-01 | Version constants and top-level required-field cases in `test_schema_validation.py` | covered |
+| JSON-02 | Structural, semantic, and CLI diagnostics in schema and semantic suites | covered |
+| JSON-03 | Every common required field and family dimension removal; optional-property omission; migration rejection tests | covered |
+| JSON-04 | Complete nine-family fixture plus generated kind/dimension reference checks | covered |
+| JSON-05 | Synthetic conversion and deterministic 53-record real audit in `test_migration.py` | covered |
+| DOC-01 | Exact schema-to-Markdown equality and drift failure in `test_reference.py` | covered |
+| DOC-02 | Documentation-index link assertion in `test_reference.py` | covered |
+
+## Validation Audit 2026-06-11
+
+| Metric | Count |
+|---|---:|
+| Gaps found | 1 |
+| Resolved | 1 |
+| Escalated | 0 |
+
+The resolved gap added exhaustive removal coverage for top-level, hierarchy,
+storey, common element, and family-specific dimension requirements. Fresh
+evidence: `python -m pytest tests -q` produced `94 passed`.
+
 ## Validation Sign-Off
 
 - [x] Every plan has a plan-specific automated command.
@@ -56,5 +80,6 @@ All Phase 1 behaviors have automated verification.
 - [x] No watch-mode command is used.
 - [x] Expected feedback latency is below 40 seconds.
 - [x] `nyquist_compliant: true` is set.
+- [x] Every Phase 1 requirement has direct automated evidence.
 
-**Approval:** planned 2026-06-11
+**Approval:** Nyquist validated 2026-06-11
