@@ -110,7 +110,15 @@ def test_synthetic_placements_are_complete_stable_and_source_ordered(
     second_positions = _placement_x_by_bim_id(open_ifc(second))
     expected_positions = _expected_x_positions(complete_document)
 
-    assert first_positions == second_positions == expected_positions
+    assert first_positions.keys() == second_positions.keys()
+    assert first_positions.keys() == expected_positions.keys()
+    for bim_json_id, expected in expected_positions.items():
+        assert first_positions[bim_json_id] == pytest.approx(
+            expected, abs=1e-6
+        )
+        assert second_positions[bim_json_id] == pytest.approx(
+            expected, abs=1e-6
+        )
     assert len(set(first_positions.values())) == len(
         complete_document["elements"]
     )

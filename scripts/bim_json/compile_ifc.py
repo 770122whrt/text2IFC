@@ -92,6 +92,20 @@ def main(argv: list[str] | None = None) -> int:
 
     source = Path(args[0])
     output = Path(args[1])
+    if source.resolve() == output.resolve():
+        _write_payload(
+            _result_payload(
+                success=False,
+                input_issues=(
+                    _input_issue(
+                        "PATH_CONFLICT",
+                        "Input and output paths must differ.",
+                    ),
+                ),
+            )
+        )
+        return 2
+
     try:
         document = _load_document(source)
     except ValueError as exc:

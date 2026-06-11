@@ -14,7 +14,7 @@ from ifcopenshell.api.root.create_entity import create_entity
 from ifcopenshell.api.spatial.assign_container import assign_container
 from ifcopenshell.api.unit.assign_unit import assign_unit
 
-from .geometry import add_element_geometry
+from .geometry import add_element_geometry, element_x_extent_m
 from .identity import assign_identity
 from .properties import apply_selected_properties
 
@@ -142,7 +142,8 @@ def build_ifc(document: Mapping[str, Any]) -> BootstrapResult:
         ifc_file, products=storeys, relating_object=building
     )
 
-    for source_index, element_data in enumerate(document["elements"]):
+    x_offset_m = 0.0
+    for element_data in document["elements"]:
         kind = element_data["kind"]
         element = _create_rooted(
             ifc_file,
@@ -165,11 +166,11 @@ def build_ifc(document: Mapping[str, Any]) -> BootstrapResult:
             element,
             element_data,
             body_context,
-            source_index,
+            x_offset_m,
         )
         apply_selected_properties(ifc_file, element, element_data)
+        x_offset_m += element_x_extent_m(element_data) + 1.0
 
     return BootstrapResult(
         ifc_file=ifc_file, body_context=body_context
     )
-

@@ -32,9 +32,16 @@ def _entity_name(instance: Any) -> str:
     if instance is None:
         return ""
     try:
-        return instance.is_a()
+        entity_type = instance.is_a()
     except (AttributeError, RuntimeError):
         return type(instance).__name__
+    global_id = getattr(instance, "GlobalId", None)
+    if global_id:
+        return f"{entity_type}:{global_id}"
+    try:
+        return f"{entity_type}:#{instance.id()}"
+    except (AttributeError, RuntimeError):
+        return entity_type
 
 
 def _stable_message(value: Any) -> str:

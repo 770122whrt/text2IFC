@@ -22,9 +22,26 @@ BOX_DIMENSIONS_BY_KIND = {
     "roof": ("length", "width", "thickness"),
 }
 
+X_DIMENSION_BY_KIND = {
+    "wall": "length",
+    "column": "width",
+    "beam": "length",
+    "slab": "length",
+    "door": "width",
+    "window": "width",
+    "stair": "length",
+    "stair_flight": "run",
+    "roof": "length",
+}
+
 
 def mm_to_m(value: float) -> float:
     return float(value) / 1000.0
+
+
+def element_x_extent_m(element_data: Mapping[str, Any]) -> float:
+    dimension_name = X_DIMENSION_BY_KIND[element_data["kind"]]
+    return mm_to_m(element_data["dimensions"][dimension_name])
 
 
 def _box_representation(
@@ -62,10 +79,10 @@ def add_element_geometry(
     element: Any,
     element_data: Mapping[str, Any],
     body_context: Any,
-    source_index: int,
+    x_offset_m: float,
 ) -> None:
     placement = numpy.eye(4)
-    placement[0, 3] = source_index * 10.0
+    placement[0, 3] = x_offset_m
     edit_object_placement(
         ifc_file,
         product=element,
