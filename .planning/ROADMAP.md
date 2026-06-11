@@ -52,7 +52,7 @@ VER-03
 
 **Wave 2** *(blocked on Wave 1 completion)*
 
-- [ ] `02-02-PLAN.md` - Deterministic all-family geometry and dimensions
+- [x] `02-02-PLAN.md` - Deterministic all-family geometry and dimensions
 - [ ] `02-03-PLAN.md` - Selected property and predefined-type fidelity
 
 **Wave 3** *(blocked on Wave 2 completion)*

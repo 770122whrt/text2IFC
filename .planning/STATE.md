@@ -60,8 +60,8 @@ requirements.
 
 ## Next Action
 
-Execute `02-02-PLAN.md`: write and commit RED tests for all-family geometry,
-deterministic placement, and reopened dimension recovery.
+Execute `02-03-PLAN.md`: write and commit RED tests for selected boolean and
+predefined-type property fidelity.
 
 ---
-*Last activity: 2026-06-11 - completed Phase 2 Plan 02-01 with 106 passing tests*
+*Last activity: 2026-06-11 - completed Phase 2 Plan 02-02 with 109 passing tests*
