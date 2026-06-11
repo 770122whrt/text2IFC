@@ -1,9 +1,13 @@
+import os
+import tempfile
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Mapping
 
 from text2ifc_contract.validation import ValidationIssue
+from text2ifc_contract.validation import validate_document
 
+from .bootstrap import build_ifc
 from .verification import IfcValidationIssue, verify_ifc
 
 
@@ -25,4 +29,35 @@ class CompilationResult:
 def compile_document(
     document: Mapping[str, Any], output_path: str | Path
 ) -> CompilationResult:
-    raise NotImplementedError("Phase 2 compiler is not implemented.")
+    input_issues = tuple(validate_document(document))
+    if input_issues:
+        return CompilationResult(input_issues=input_issues)
+
+    output = Path(output_path).resolve()
+    bootstrap = build_ifc(document)
+    ifc_issues = verify_ifc(bootstrap.ifc_file)
+    if ifc_issues:
+        return CompilationResult(ifc_issues=ifc_issues)
+
+    temporary_path: Path | None = None
+    try:
+        with tempfile.NamedTemporaryFile(
+            mode="wb",
+            prefix=f".{output.name}.",
+            suffix=".tmp",
+            dir=output.parent,
+            delete=False,
+        ) as temporary:
+            temporary_path = Path(temporary.name)
+
+        bootstrap.ifc_file.write(str(temporary_path))
+        reopened_issues = verify_ifc(temporary_path)
+        if reopened_issues:
+            return CompilationResult(ifc_issues=reopened_issues)
+
+        os.replace(temporary_path, output)
+        temporary_path = None
+        return CompilationResult(output_path=output)
+    finally:
+        if temporary_path is not None:
+            temporary_path.unlink(missing_ok=True)
