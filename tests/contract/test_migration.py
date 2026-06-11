@@ -107,6 +107,21 @@ def test_known_aliases_and_singleton_shapes_convert_without_mutating_source():
     assert validate_document(document) == []
 
 
+def test_legacy_singleton_name_arrays_are_normalized():
+    migrate_model, _ = _migration_api()
+    source = _legacy_model()
+    source["project"] = ["Project"]
+    source["site"] = ["Site"]
+    source["building"] = ["Building"]
+
+    result = migrate_model(source, "basic.json#$[0]")
+
+    assert result["disposition"] == "converted", result["diagnostics"]
+    assert result["document"]["project"]["name"] == "Project"
+    assert result["document"]["site"]["name"] == "Site"
+    assert result["document"]["building"]["name"] == "Building"
+
+
 def test_missing_ids_are_deterministic_and_recorded_without_overwriting_existing_ids():
     migrate_model, _ = _migration_api()
     source = _legacy_model()
