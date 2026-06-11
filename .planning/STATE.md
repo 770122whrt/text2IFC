@@ -12,8 +12,8 @@ requirements.
 ## Status
 
 - Phase: 2
-- Stage: Execution
-- State: Ready to execute
+- Stage: Execution - Wave 2
+- State: In progress
 - Plans: 4 in 3 waves
 - Branch: `main`
 - Remote: `https://github.com/770122whrt/text2IFC`
@@ -60,8 +60,8 @@ requirements.
 
 ## Next Action
 
-Execute `02-01-PLAN.md`: write and commit behavioral RED tests for the
-validated compiler boundary, hierarchy, stable identity, and atomic output.
+Execute `02-02-PLAN.md`: write and commit RED tests for all-family geometry,
+deterministic placement, and reopened dimension recovery.
 
 ---
-*Last activity: 2026-06-11 - planned Phase 2 in four TDD plans across three waves*
+*Last activity: 2026-06-11 - completed Phase 2 Plan 02-01 with 106 passing tests*

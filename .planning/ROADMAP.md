@@ -47,7 +47,7 @@ VER-03
 
 **Wave 1**
 
-- [ ] `02-01-PLAN.md` - Validated compiler boundary, hierarchy, identity, and
+- [x] `02-01-PLAN.md` - Validated compiler boundary, hierarchy, identity, and
   atomic IFC2X3 output
 
 **Wave 2** *(blocked on Wave 1 completion)*
