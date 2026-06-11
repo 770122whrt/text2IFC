@@ -12,9 +12,9 @@ requirements.
 ## Status
 
 - Phase: 2.5
-- Stage: Specification and implementation context complete
-- State: Ready to plan
-- Plans: Not yet planned
+- Stage: Planning complete
+- State: Ready to execute
+- Plans: 6 plans in 5 waves
 - Branch: `main`
 - Remote: `https://github.com/770122whrt/text2IFC`
 
@@ -88,8 +88,9 @@ requirements.
 
 ## Next Action
 
-Run Phase 2.5 planning, starting with official IFC2X3 source acquisition,
-manifest verification, and deterministic declaration/property registries.
+Execute `02.5-01-PLAN.md`: official IFC2X3 source acquisition, manifest
+verification, and deterministic declaration/property registries. Do not begin
+the BIM JSON 2.0 schema before Wave 1 passes.
 
 ## Accumulated Context
 
@@ -99,4 +100,4 @@ manifest verification, and deterministic declaration/property registries.
   the spatial ground truth required for Text-to-JSON training.
 
 ---
-*Last activity: 2026-06-11 - specified BIM JSON 2.0 semantic graph and official-source knowledge policy*
+*Last activity: 2026-06-11 - planned Phase 2.5 in six plans and five waves*

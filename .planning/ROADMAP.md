@@ -101,7 +101,49 @@ geometry, Draft/loss accounting, and the BIMNet architectural generation
 profile. Arbitrary BRep/tessellation, materials, type reuse, broad connection
 topology, furnishing/MEP generation, and IFC4/IFC4X3 output remain Phase 4.
 
-**Status:** Specified - ready for planning
+**Plans:** 6 plans in 5 waves
+
+**Wave 1**
+
+- [ ] `02.5-01-PLAN.md` - Official IFC2X3 source manifest, safe acquisition,
+  declaration registry, and PSD property registry
+
+**Wave 2** *(blocked on Wave 1 completion)*
+
+- [ ] `02.5-02-PLAN.md` - Formal BIM JSON 2.0, Draft Envelope, capability
+  overlay, registry validation, and 1.0 Draft migration
+
+**Wave 3** *(blocked on Wave 2 completion)*
+
+- [ ] `02.5-03-PLAN.md` - Parent-relative placement, semantic geometry,
+  spaces, openings, and void/fill relationship validation
+
+**Wave 4** *(blocked on Wave 3 completion)*
+
+- [ ] `02.5-04-PLAN.md` - Deterministic IFC2X3 extraction and complete loss
+  accounting
+- [ ] `02.5-05-PLAN.md` - BIM JSON 2.0 architectural compiler profile and
+  reopened IFC verification
+
+**Wave 5** *(blocked on both Wave 4 plans)*
+
+- [ ] `02.5-06-PLAN.md` - All-25 BIMNet audit, provenance, generated
+  references, reviews, and phase acceptance
+
+**Cross-cutting constraints:**
+
+- Official-source schema/property facts and project-authored capability
+  decisions remain separate.
+- Normal validation and compilation are offline; network access is restricted
+  to an explicit hash-verified acquisition command.
+- Formal input is complete and compiler-ready; incomplete or unsupported
+  content remains a Draft and never reaches IFC output.
+- No source class, relation, property, geometry, or migration fact is silently
+  dropped, substituted, or invented.
+- Every implementation behavior follows recorded RED-GREEN TDD before full
+  regression.
+
+**Status:** Planned - ready for execution
 
 ## Phase 3: Text-to-JSON Dataset and Baseline
 
