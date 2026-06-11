@@ -12,7 +12,7 @@ requirements.
 ## Status
 
 - Phase: 1
-- Stage: Wave 1 complete
+- Stage: Wave 2 in progress
 - State: Executing
 - Branch: `main`
 - Remote: `https://github.com/770122whrt/text2IFC`
@@ -28,7 +28,8 @@ requirements.
 - Repository published with Git LFS.
 - Durable documentation index and Git publishing guide established.
 - BIM JSON 1.0 structural schema, validator, and bounded CLI implemented.
-- Contract and repository regression suite currently passes 19 tests.
+- Global ID uniqueness and storey-reference integrity checks implemented.
+- Contract and repository regression suite currently passes 27 tests.
 
 ## Current Decisions
 
@@ -48,9 +49,8 @@ requirements.
 
 ## Next Action
 
-Execute Wave 2 plans:
-`.planning/phases/01-bim-json-1-0-contract-and-validator/01-02-PLAN.md` and
+Execute Wave 2 Plan 01-04:
 `.planning/phases/01-bim-json-1-0-contract-and-validator/01-04-PLAN.md`.
 
 ---
-*Last activity: 2026-06-11 - completed Phase 1 Plan 01 structural validation*
+*Last activity: 2026-06-11 - completed Phase 1 Plan 02 semantic validation*
