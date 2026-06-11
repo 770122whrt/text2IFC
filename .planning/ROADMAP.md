@@ -23,7 +23,7 @@ not expand IFC generation behavior.
 
 **Wave 3** *(blocked on Wave 2 semantic validation)*
 
-- [ ] `01-03-PLAN.md` - Complete legacy migration audit
+- [x] `01-03-PLAN.md` - Complete legacy migration audit
 
 **Cross-cutting constraints:**
 
@@ -31,7 +31,7 @@ not expand IFC generation behavior.
 - Validation and migration are deterministic and never invent required data.
 - Validation performs no IFC I/O and no remote schema resolution.
 
-**Status:** In progress - Wave 2 complete
+**Status:** Implementation complete - phase verification pending
 
 ## Phase 2: Minimum BIM JSON to IFC2X3 Compiler
 

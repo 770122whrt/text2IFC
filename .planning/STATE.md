@@ -12,7 +12,7 @@ requirements.
 ## Status
 
 - Phase: 1
-- Stage: Wave 2 complete
+- Stage: Implementation complete; verification pending
 - State: Executing
 - Branch: `main`
 - Remote: `https://github.com/770122whrt/text2IFC`
@@ -30,7 +30,10 @@ requirements.
 - BIM JSON 1.0 structural schema, validator, and bounded CLI implemented.
 - Global ID uniqueness and storey-reference integrity checks implemented.
 - Generated BIM JSON reference and schema drift check implemented.
-- Contract and repository regression suite currently passes 35 tests.
+- All 53 legacy JSON models classified by deterministic migration audit.
+- Current migration yield is 0 converted and 53 explicitly rejected because
+  required source facts are missing.
+- Contract and repository regression suite currently passes 46 tests.
 
 ## Current Decisions
 
@@ -50,8 +53,7 @@ requirements.
 
 ## Next Action
 
-Execute Wave 3 Plan 01-03:
-`.planning/phases/01-bim-json-1-0-contract-and-validator/01-03-PLAN.md`.
+Run Phase 1 GSD verification, code review, and requirement coverage audit.
 
 ---
-*Last activity: 2026-06-11 - completed Phase 1 Plan 04 contract reference*
+*Last activity: 2026-06-11 - completed Phase 1 Plan 03 migration audit*
