@@ -1,0 +1,492 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://text2ifc.local/schemas/bim-json/1.0/schema.json",
+  "title": "text2IFC BIM JSON 1.0",
+  "description": "Canonical structured input contract for the IFC2X3 compiler.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract_version",
+    "target_schema",
+    "units",
+    "project",
+    "site",
+    "building",
+    "storeys",
+    "elements"
+  ],
+  "properties": {
+    "contract_version": {
+      "const": "bim-json/1.0"
+    },
+    "target_schema": {
+      "const": "IFC2X3"
+    },
+    "units": {
+      "$ref": "#/$defs/units"
+    },
+    "project": {
+      "$ref": "#/$defs/namedObject"
+    },
+    "site": {
+      "$ref": "#/$defs/namedObject"
+    },
+    "building": {
+      "$ref": "#/$defs/namedObject"
+    },
+    "storeys": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/storey"
+      }
+    },
+    "elements": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/element"
+      }
+    }
+  },
+  "$defs": {
+    "nonEmptyString": {
+      "type": "string",
+      "minLength": 1
+    },
+    "positiveLength": {
+      "type": "number",
+      "exclusiveMinimum": 0
+    },
+    "namedObject": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "name"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "name": {
+          "$ref": "#/$defs/nonEmptyString"
+        }
+      }
+    },
+    "units": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "length"
+      ],
+      "properties": {
+        "length": {
+          "const": "MILLIMETRE"
+        }
+      }
+    },
+    "storey": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "name",
+        "elevation"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "name": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "elevation": {
+          "type": "number"
+        }
+      }
+    },
+    "dimensions": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "length": {
+          "$ref": "#/$defs/positiveLength"
+        },
+        "width": {
+          "$ref": "#/$defs/positiveLength"
+        },
+        "height": {
+          "$ref": "#/$defs/positiveLength"
+        },
+        "depth": {
+          "$ref": "#/$defs/positiveLength"
+        },
+        "thickness": {
+          "$ref": "#/$defs/positiveLength"
+        },
+        "rise": {
+          "$ref": "#/$defs/positiveLength"
+        },
+        "run": {
+          "$ref": "#/$defs/positiveLength"
+        }
+      }
+    },
+    "elementProperties": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "is_external": {
+          "type": "boolean"
+        },
+        "load_bearing": {
+          "type": "boolean"
+        },
+        "predefined_type": {
+          "$ref": "#/$defs/nonEmptyString"
+        }
+      }
+    },
+    "element": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "kind",
+        "name",
+        "storey_id",
+        "dimensions"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "kind": {
+          "enum": [
+            "wall",
+            "column",
+            "beam",
+            "slab",
+            "door",
+            "window",
+            "stair",
+            "stair_flight",
+            "roof"
+          ]
+        },
+        "name": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "storey_id": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "dimensions": {
+          "$ref": "#/$defs/dimensions"
+        },
+        "properties": {
+          "$ref": "#/$defs/elementProperties"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "wall"
+              }
+            },
+            "required": [
+              "kind"
+            ]
+          },
+          "then": {
+            "properties": {
+              "dimensions": {
+                "required": [
+                  "length",
+                  "height",
+                  "thickness"
+                ],
+                "propertyNames": {
+                  "enum": [
+                    "length",
+                    "height",
+                    "thickness"
+                  ]
+                }
+              },
+              "properties": {
+                "propertyNames": {
+                  "enum": [
+                    "is_external",
+                    "load_bearing"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "column"
+              }
+            },
+            "required": [
+              "kind"
+            ]
+          },
+          "then": {
+            "properties": {
+              "dimensions": {
+                "required": [
+                  "width",
+                  "depth",
+                  "height"
+                ],
+                "propertyNames": {
+                  "enum": [
+                    "width",
+                    "depth",
+                    "height"
+                  ]
+                }
+              },
+              "properties": {
+                "propertyNames": {
+                  "enum": [
+                    "load_bearing"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "beam"
+              }
+            },
+            "required": [
+              "kind"
+            ]
+          },
+          "then": {
+            "properties": {
+              "dimensions": {
+                "required": [
+                  "length",
+                  "width",
+                  "height"
+                ],
+                "propertyNames": {
+                  "enum": [
+                    "length",
+                    "width",
+                    "height"
+                  ]
+                }
+              },
+              "properties": {
+                "propertyNames": {
+                  "enum": [
+                    "load_bearing"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "slab"
+              }
+            },
+            "required": [
+              "kind"
+            ]
+          },
+          "then": {
+            "properties": {
+              "dimensions": {
+                "required": [
+                  "length",
+                  "width",
+                  "thickness"
+                ],
+                "propertyNames": {
+                  "enum": [
+                    "length",
+                    "width",
+                    "thickness"
+                  ]
+                }
+              },
+              "properties": {
+                "propertyNames": {
+                  "enum": [
+                    "predefined_type"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "enum": [
+                  "door",
+                  "window"
+                ]
+              }
+            },
+            "required": [
+              "kind"
+            ]
+          },
+          "then": {
+            "properties": {
+              "dimensions": {
+                "required": [
+                  "width",
+                  "height"
+                ],
+                "propertyNames": {
+                  "enum": [
+                    "width",
+                    "height"
+                  ]
+                }
+              },
+              "properties": {
+                "propertyNames": {
+                  "enum": [
+                    "predefined_type"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "stair"
+              }
+            },
+            "required": [
+              "kind"
+            ]
+          },
+          "then": {
+            "properties": {
+              "dimensions": {
+                "required": [
+                  "length",
+                  "width",
+                  "height"
+                ],
+                "propertyNames": {
+                  "enum": [
+                    "length",
+                    "width",
+                    "height"
+                  ]
+                }
+              },
+              "properties": {
+                "propertyNames": {
+                  "enum": [
+                    "predefined_type"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "stair_flight"
+              }
+            },
+            "required": [
+              "kind"
+            ]
+          },
+          "then": {
+            "properties": {
+              "dimensions": {
+                "required": [
+                  "width",
+                  "rise",
+                  "run"
+                ],
+                "propertyNames": {
+                  "enum": [
+                    "width",
+                    "rise",
+                    "run"
+                  ]
+                }
+              },
+              "properties": {
+                "propertyNames": {
+                  "enum": [
+                    "predefined_type"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "roof"
+              }
+            },
+            "required": [
+              "kind"
+            ]
+          },
+          "then": {
+            "properties": {
+              "dimensions": {
+                "required": [
+                  "length",
+                  "width",
+                  "thickness"
+                ],
+                "propertyNames": {
+                  "enum": [
+                    "length",
+                    "width",
+                    "thickness"
+                  ]
+                }
+              },
+              "properties": {
+                "propertyNames": {
+                  "enum": [
+                    "predefined_type"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}
