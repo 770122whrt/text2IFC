@@ -31,10 +31,15 @@ Use this page as the stable entry point for project documentation.
 ## Data and Methodology
 
 - [BIM JSON 1.0 contract reference](reference/bim-json-1.0.md)
+- [BIM JSON 2.0 semantic contract reference](reference/bim-json-2.0.md)
+- [IFC2X3 generation profile](reference/ifc2x3-generation-profile.md)
 - [IFC2X3 knowledge sources and no-fabrication policy](reference/ifc2x3-knowledge-sources.md)
 - [Dataset organization](../dataset/data_organization.md)
 - [External data source catalog](../dataset/sources/CATALOG.md)
 - [Dataset manifest format](../dataset/manifests/README.md)
+- [Authorized BIMNet IFC2X3 manifest](../dataset/manifests/bimnet-ifc2x3.jsonl)
+- [BIMNet extraction audit](../dataset/processed/bim-json-2.0/extraction-audit.json)
+- [BIMNet scene families](../dataset/processed/bim-json-2.0/scene-families.json)
 - [Existing methodology notes](methodology.md)
 - [IFC2X3 TC1 EXPRESS schema](../schemas/ifc/IFC2X3_TC1.exp)
 - [Phase 2.5 BIM JSON 2.0 specification](../.planning/phases/02.5-bim-json-2.0-ifc-semantic-graph/02.5-SPEC.md)
