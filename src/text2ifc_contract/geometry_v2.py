@@ -140,6 +140,72 @@ def _validate_polygon(
     return issues
 
 
+def _validate_position(
+    position: Any, path: str
+) -> list[ValidationIssue]:
+    if not isinstance(position, dict):
+        return [
+            _issue(
+                "INVALID_REPRESENTATION_POSITION",
+                path,
+                "Representation position must be an object.",
+            )
+        ]
+    issues: list[ValidationIssue] = []
+    vectors: dict[str, list[float]] = {}
+    for field in ("origin", "axis", "ref_direction"):
+        raw = position.get(field)
+        field_path = f"{path}/{field}"
+        if (
+            not isinstance(raw, list)
+            or len(raw) != 3
+            or any(_number(item) is None for item in raw)
+        ):
+            issues.append(
+                _issue(
+                    "INVALID_REPRESENTATION_VECTOR",
+                    field_path,
+                    f"{field} must contain three finite numbers.",
+                )
+            )
+            continue
+        vector = [float(item) for item in raw]
+        vectors[field] = vector
+        if field == "origin":
+            if any(abs(item) > MAX_COORDINATE_MAGNITUDE for item in vector):
+                issues.append(
+                    _issue(
+                        "COORDINATE_LIMIT_EXCEEDED",
+                        field_path,
+                        "Representation origin exceeds the coordinate limit.",
+                    )
+                )
+        elif math.sqrt(sum(item * item for item in vector)) <= VECTOR_TOLERANCE:
+            issues.append(
+                _issue(
+                    "ZERO_REPRESENTATION_VECTOR",
+                    field_path,
+                    f"{field} must be non-zero.",
+                )
+            )
+    axis = vectors.get("axis")
+    ref_direction = vectors.get("ref_direction")
+    if axis and ref_direction:
+        axis_norm = math.sqrt(sum(item * item for item in axis))
+        ref_norm = math.sqrt(sum(item * item for item in ref_direction))
+        if axis_norm > VECTOR_TOLERANCE and ref_norm > VECTOR_TOLERANCE:
+            dot = sum(a * b for a, b in zip(axis, ref_direction))
+            if abs(dot / (axis_norm * ref_norm)) > VECTOR_TOLERANCE:
+                issues.append(
+                    _issue(
+                        "NON_ORTHOGONAL_REPRESENTATION_POSITION",
+                        f"{path}/ref_direction",
+                        "axis and ref_direction must be orthogonal.",
+                    )
+                )
+    return issues
+
+
 def validate_geometry(
     document: dict[str, Any],
 ) -> list[ValidationIssue]:
@@ -180,13 +246,20 @@ def validate_geometry(
             )
             continue
         for field in sorted(
-            set(representation) - {"kind", "profile", "depth", "direction"}
+            set(representation)
+            - {"kind", "profile", "depth", "direction", "position"}
         ):
             issues.append(
                 _issue(
                     "UNSUPPORTED_GEOMETRY_FIELD",
                     f"{base}/{field}",
                     f"Extruded profile does not support {field!r}.",
+                )
+            )
+        if "position" in representation:
+            issues.extend(
+                _validate_position(
+                    representation["position"], f"{base}/position"
                 )
             )
 

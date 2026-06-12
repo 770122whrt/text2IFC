@@ -55,6 +55,16 @@
         "ref_direction": {"$ref": "#/$defs/vector3"}
       }
     },
+    "localPosition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["origin", "axis", "ref_direction"],
+      "properties": {
+        "origin": {"$ref": "#/$defs/vector3"},
+        "axis": {"$ref": "#/$defs/vector3"},
+        "ref_direction": {"$ref": "#/$defs/vector3"}
+      }
+    },
     "point2": {
       "type": "array",
       "minItems": 2,
@@ -101,7 +111,8 @@
         "kind": {"type": "string"},
         "profile": {"$ref": "#/$defs/profile"},
         "depth": {"type": "number"},
-        "direction": {"$ref": "#/$defs/vector3"}
+        "direction": {"$ref": "#/$defs/vector3"},
+        "position": {"$ref": "#/$defs/localPosition"}
       },
       "allOf": [
         {

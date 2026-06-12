@@ -34,3 +34,19 @@ def test_unsupported_required_geometry_forces_draft_without_box_substitution(
         and loss["kind"] == "MAPPED_GEOMETRY"
         for loss in hxp_result.losses
     )
+
+
+def test_missing_representation_is_not_counted_as_a_source_item(
+    i5n_result,
+) -> None:
+    reported_source_items = sum(
+        1
+        for item in i5n_result.losses
+        if item["path"].endswith("/attributes/Representation")
+        and item["kind"] != "MISSING_REPRESENTATION"
+    )
+
+    assert (
+        i5n_result.inventory["representations"]["reported"]
+        == reported_source_items
+    )
