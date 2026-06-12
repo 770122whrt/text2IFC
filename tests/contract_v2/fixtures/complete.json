@@ -1,0 +1,435 @@
+{
+  "schema_version": "bim-json/2.0",
+  "ifc_schema": "IFC2X3",
+  "units": {
+    "length": "MILLIMETRE"
+  },
+  "entities": [
+    {
+      "id": "project-1",
+      "ifc_class": "IfcProject",
+      "attributes": {"Name": "Project"},
+      "property_sets": {},
+      "provenance": {"source": "test"}
+    },
+    {
+      "id": "site-1",
+      "ifc_class": "IfcSite",
+      "attributes": {
+        "Name": "Site",
+        "ObjectPlacement": {
+          "relative_to": "project-1",
+          "origin": [0, 0, 0],
+          "axis": [0, 0, 1],
+          "ref_direction": [1, 0, 0]
+        }
+      },
+      "property_sets": {},
+      "provenance": {"source": "test"}
+    },
+    {
+      "id": "building-1",
+      "ifc_class": "IfcBuilding",
+      "attributes": {
+        "Name": "Building",
+        "ObjectPlacement": {
+          "relative_to": "site-1",
+          "origin": [0, 0, 0],
+          "axis": [0, 0, 1],
+          "ref_direction": [1, 0, 0]
+        }
+      },
+      "property_sets": {},
+      "provenance": {"source": "test"}
+    },
+    {
+      "id": "storey-1",
+      "ifc_class": "IfcBuildingStorey",
+      "attributes": {
+        "Name": "Level 1",
+        "Elevation": 3000,
+        "ObjectPlacement": {
+          "relative_to": "building-1",
+          "origin": [1000, 2000, 3000],
+          "axis": [0, 0, 1],
+          "ref_direction": [1, 0, 0]
+        }
+      },
+      "property_sets": {},
+      "provenance": {"source": "test"}
+    },
+    {
+      "id": "wall-1",
+      "ifc_class": "IfcWall",
+      "attributes": {
+        "Name": "Wall",
+        "ObjectPlacement": {
+          "relative_to": "storey-1",
+          "origin": [100, 200, 0],
+          "axis": [0, 0, 2],
+          "ref_direction": [3, 0, 0]
+        },
+        "Representation": {
+          "kind": "extruded_profile",
+          "profile": {"kind": "rectangle", "x": 5000, "y": 200},
+          "depth": 3000,
+          "direction": [0, 0, 1]
+        }
+      },
+      "property_sets": {
+        "Pset_WallCommon": {"IsExternal": true}
+      },
+      "provenance": {"source": "test"}
+    },
+    {
+      "id": "column-1",
+      "ifc_class": "IfcColumn",
+      "attributes": {
+        "Name": "Column",
+        "ObjectPlacement": {
+          "relative_to": "storey-1",
+          "origin": [6000, 0, 0],
+          "axis": [0, 0, 1],
+          "ref_direction": [1, 0, 0]
+        },
+        "Representation": {
+          "kind": "extruded_profile",
+          "profile": {"kind": "rectangle", "x": 400, "y": 400},
+          "depth": 3000,
+          "direction": [0, 0, 1]
+        }
+      },
+      "property_sets": {},
+      "provenance": {"source": "test"}
+    },
+    {
+      "id": "beam-1",
+      "ifc_class": "IfcBeam",
+      "attributes": {
+        "Name": "Beam",
+        "ObjectPlacement": {
+          "relative_to": "storey-1",
+          "origin": [0, 1000, 2500],
+          "axis": [0, 0, 1],
+          "ref_direction": [1, 0, 0]
+        },
+        "Representation": {
+          "kind": "extruded_profile",
+          "profile": {"kind": "rectangle", "x": 300, "y": 500},
+          "depth": 5000,
+          "direction": [1, 0, 0]
+        }
+      },
+      "property_sets": {},
+      "provenance": {"source": "test"}
+    },
+    {
+      "id": "slab-1",
+      "ifc_class": "IfcSlab",
+      "attributes": {
+        "Name": "Slab",
+        "PredefinedType": "FLOOR",
+        "ObjectPlacement": {
+          "relative_to": "storey-1",
+          "origin": [0, 0, 0],
+          "axis": [0, 0, 1],
+          "ref_direction": [1, 0, 0]
+        },
+        "Representation": {
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "polygon",
+            "points": [[0, 0], [8000, 0], [8000, 6000], [0, 6000], [0, 0]]
+          },
+          "depth": 200,
+          "direction": [0, 0, 1]
+        }
+      },
+      "property_sets": {},
+      "provenance": {"source": "test"}
+    },
+    {
+      "id": "door-1",
+      "ifc_class": "IfcDoor",
+      "attributes": {
+        "Name": "Door",
+        "OverallWidth": 900,
+        "OverallHeight": 2100,
+        "ObjectPlacement": {
+          "relative_to": "opening-1",
+          "origin": [0, 0, 0],
+          "axis": [0, 0, 1],
+          "ref_direction": [1, 0, 0]
+        },
+        "Representation": {
+          "kind": "extruded_profile",
+          "profile": {"kind": "rectangle", "x": 900, "y": 100},
+          "depth": 2100,
+          "direction": [0, 0, 1]
+        }
+      },
+      "property_sets": {},
+      "provenance": {"source": "test"}
+    },
+    {
+      "id": "window-1",
+      "ifc_class": "IfcWindow",
+      "attributes": {
+        "Name": "Window",
+        "OverallWidth": 1200,
+        "OverallHeight": 1500,
+        "ObjectPlacement": {
+          "relative_to": "wall-1",
+          "origin": [2500, 0, 900],
+          "axis": [0, 0, 1],
+          "ref_direction": [1, 0, 0]
+        },
+        "Representation": {
+          "kind": "extruded_profile",
+          "profile": {"kind": "rectangle", "x": 1200, "y": 100},
+          "depth": 1500,
+          "direction": [0, 0, 1]
+        }
+      },
+      "property_sets": {},
+      "provenance": {"source": "test"}
+    },
+    {
+      "id": "stair-1",
+      "ifc_class": "IfcStair",
+      "attributes": {
+        "Name": "Stair",
+        "ShapeType": "STRAIGHT_RUN_STAIR",
+        "ObjectPlacement": {
+          "relative_to": "storey-1",
+          "origin": [0, 7000, 0],
+          "axis": [0, 0, 1],
+          "ref_direction": [1, 0, 0]
+        },
+        "Representation": {
+          "kind": "extruded_profile",
+          "profile": {"kind": "rectangle", "x": 4000, "y": 1200},
+          "depth": 3000,
+          "direction": [0, 0, 1]
+        }
+      },
+      "property_sets": {},
+      "provenance": {"source": "test"}
+    },
+    {
+      "id": "stair-flight-1",
+      "ifc_class": "IfcStairFlight",
+      "attributes": {
+        "Name": "Flight",
+        "ObjectPlacement": {
+          "relative_to": "stair-1",
+          "origin": [0, 0, 0],
+          "axis": [0, 0, 1],
+          "ref_direction": [1, 0, 0]
+        },
+        "Representation": {
+          "kind": "extruded_profile",
+          "profile": {"kind": "rectangle", "x": 3000, "y": 1200},
+          "depth": 1500,
+          "direction": [0, 0, 1]
+        }
+      },
+      "property_sets": {},
+      "provenance": {"source": "test"}
+    },
+    {
+      "id": "roof-1",
+      "ifc_class": "IfcRoof",
+      "attributes": {
+        "Name": "Roof",
+        "ShapeType": "FLAT_ROOF",
+        "ObjectPlacement": {
+          "relative_to": "building-1",
+          "origin": [0, 0, 6000],
+          "axis": [0, 0, 1],
+          "ref_direction": [1, 0, 0]
+        },
+        "Representation": {
+          "kind": "extruded_profile",
+          "profile": {"kind": "rectangle", "x": 8000, "y": 6000},
+          "depth": 300,
+          "direction": [0, 0, 1]
+        }
+      },
+      "property_sets": {},
+      "provenance": {"source": "test"}
+    },
+    {
+      "id": "space-1",
+      "ifc_class": "IfcSpace",
+      "attributes": {
+        "Name": "Room",
+        "InteriorOrExteriorSpace": "INTERNAL",
+        "ObjectPlacement": {
+          "relative_to": "storey-1",
+          "origin": [300, 300, 0],
+          "axis": [0, 0, 1],
+          "ref_direction": [1, 0, 0]
+        },
+        "Representation": {
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "polygon",
+            "points": [[0, 0], [4000, 0], [4000, 3000], [0, 3000], [0, 0]]
+          },
+          "depth": 2800,
+          "direction": [0, 0, 1]
+        }
+      },
+      "property_sets": {},
+      "provenance": {"source": "test"}
+    },
+    {
+      "id": "opening-1",
+      "ifc_class": "IfcOpeningElement",
+      "attributes": {
+        "Name": "Door opening",
+        "ObjectPlacement": {
+          "relative_to": "wall-1",
+          "origin": [500, 0, 0],
+          "axis": [0, 0, 1],
+          "ref_direction": [1, 0, 0]
+        },
+        "Representation": {
+          "kind": "extruded_profile",
+          "profile": {"kind": "rectangle", "x": 900, "y": 200},
+          "depth": 2100,
+          "direction": [0, 0, 1]
+        }
+      },
+      "property_sets": {},
+      "provenance": {"source": "test"}
+    },
+    {
+      "id": "plate-1",
+      "ifc_class": "IfcPlate",
+      "attributes": {
+        "Name": "Plate",
+        "ObjectPlacement": {
+          "relative_to": "storey-1",
+          "origin": [9000, 0, 0],
+          "axis": [0, 0, 1],
+          "ref_direction": [1, 0, 0]
+        },
+        "Representation": {
+          "kind": "extruded_profile",
+          "profile": {"kind": "rectangle", "x": 2000, "y": 1000},
+          "depth": 20,
+          "direction": [0, 0, 1]
+        }
+      },
+      "property_sets": {},
+      "provenance": {"source": "test"}
+    },
+    {
+      "id": "covering-1",
+      "ifc_class": "IfcCovering",
+      "attributes": {
+        "Name": "Covering",
+        "ObjectPlacement": {
+          "relative_to": "storey-1",
+          "origin": [0, 0, 200],
+          "axis": [0, 0, 1],
+          "ref_direction": [1, 0, 0]
+        },
+        "Representation": {
+          "kind": "extruded_profile",
+          "profile": {"kind": "rectangle", "x": 8000, "y": 6000},
+          "depth": 10,
+          "direction": [0, 0, 1]
+        }
+      },
+      "property_sets": {},
+      "provenance": {"source": "test"}
+    },
+    {
+      "id": "curtain-wall-1",
+      "ifc_class": "IfcCurtainWall",
+      "attributes": {
+        "Name": "Curtain wall",
+        "ObjectPlacement": {
+          "relative_to": "storey-1",
+          "origin": [0, 6000, 0],
+          "axis": [0, 0, 1],
+          "ref_direction": [1, 0, 0]
+        },
+        "Representation": {
+          "kind": "extruded_profile",
+          "profile": {"kind": "rectangle", "x": 5000, "y": 100},
+          "depth": 3000,
+          "direction": [0, 0, 1]
+        }
+      },
+      "property_sets": {},
+      "provenance": {"source": "test"}
+    },
+    {
+      "id": "member-1",
+      "ifc_class": "IfcMember",
+      "attributes": {
+        "Name": "Member",
+        "ObjectPlacement": {
+          "relative_to": "storey-1",
+          "origin": [7000, 1000, 0],
+          "axis": [0, 0, 1],
+          "ref_direction": [1, 0, 0]
+        },
+        "Representation": {
+          "kind": "extruded_profile",
+          "profile": {"kind": "rectangle", "x": 100, "y": 100},
+          "depth": 3000,
+          "direction": [0, 0, 1]
+        }
+      },
+      "property_sets": {},
+      "provenance": {"source": "test"}
+    },
+    {
+      "id": "railing-1",
+      "ifc_class": "IfcRailing",
+      "attributes": {
+        "Name": "Railing",
+        "ObjectPlacement": {
+          "relative_to": "stair-1",
+          "origin": [0, 0, 900],
+          "axis": [0, 0, 1],
+          "ref_direction": [1, 0, 0]
+        },
+        "Representation": {
+          "kind": "extruded_profile",
+          "profile": {"kind": "rectangle", "x": 50, "y": 50},
+          "depth": 4000,
+          "direction": [1, 0, 0]
+        }
+      },
+      "property_sets": {},
+      "provenance": {"source": "test"}
+    }
+  ],
+  "relationships": [
+    {
+      "id": "void-1",
+      "ifc_class": "IfcRelVoidsElement",
+      "attributes": {
+        "RelatingBuildingElement": "wall-1",
+        "RelatedOpeningElement": "opening-1"
+      },
+      "provenance": {"source": "test"}
+    },
+    {
+      "id": "fill-1",
+      "ifc_class": "IfcRelFillsElement",
+      "attributes": {
+        "RelatingOpeningElement": "opening-1",
+        "RelatedBuildingElement": "door-1"
+      },
+      "provenance": {"source": "test"}
+    }
+  ],
+  "provenance": {"source": "test"}
+}
