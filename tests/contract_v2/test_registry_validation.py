@@ -72,6 +72,34 @@ def test_inherited_attribute_is_accepted_and_class_invalid_attribute_rejected() 
 
 
 @pytest.mark.parametrize(
+    ("attribute", "value"),
+    [
+        ("PredefinedType", "BANANA"),
+        ("OverallWidth", "wide"),
+    ],
+)
+def test_native_ifc_attribute_values_use_registry_types(
+    attribute: str, value
+) -> None:
+    complete = json.loads(
+        (
+            ROOT / "tests" / "contract_v2" / "fixtures" / "complete.json"
+        ).read_text(encoding="utf-8")
+    )
+    target_id = "slab-1" if attribute == "PredefinedType" else "door-1"
+    target = next(
+        item for item in complete["entities"] if item["id"] == target_id
+    )
+    target["attributes"][attribute] = value
+    target_index = complete["entities"].index(target)
+
+    assert (
+        "INVALID_IFC_ATTRIBUTE_TYPE",
+        f"/entities/{target_index}/attributes/{attribute}",
+    ) in issue_pairs(complete)
+
+
+@pytest.mark.parametrize(
     "global_id",
     ["short", "012345678901234567890!", 42],
 )

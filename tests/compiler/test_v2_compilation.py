@@ -90,6 +90,15 @@ def test_v2_invalid_or_draft_input_preserves_destination(tmp_path: Path) -> None
     assert not result.success
     assert output.read_bytes() == b"sentinel"
 
+    invalid_attribute = document()
+    slab = next(
+        item for item in invalid_attribute["entities"] if item["id"] == "slab-1"
+    )
+    slab["attributes"]["PredefinedType"] = "BANANA"
+    result = compile_document(invalid_attribute, output)
+    assert not result.success
+    assert output.read_bytes() == b"sentinel"
+
     draft = {
         "draft_version": "bim-json-draft/1.0",
         "target_schema_version": "bim-json/2.0",
