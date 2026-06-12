@@ -112,6 +112,37 @@ def test_representation_local_position_is_independent_and_validated() -> None:
     ) in pairs(value)
 
 
+def test_explicit_solid_position_requires_local_z_extrusion_component() -> None:
+    value = document()
+    representation = entity(value, "wall-1")["attributes"]["Representation"]
+    representation["position"] = {
+        "origin": [0.0, 0.0, 0.0],
+        "axis": [0.0, 1.0, 0.0],
+        "ref_direction": [1.0, 0.0, 0.0],
+    }
+    representation["direction"] = [1.0, 0.0, 0.0]
+
+    assert (
+        "INVALID_EXTRUSION_DIRECTION",
+        "/entities/4/attributes/Representation/direction",
+    ) in pairs(value)
+
+
+def test_wall_standard_case_requires_rectangle_profile() -> None:
+    value = document()
+    wall = entity(value, "wall-1")
+    wall["ifc_class"] = "IfcWallStandardCase"
+    wall["attributes"]["Representation"]["profile"] = {
+        "kind": "polygon",
+        "points": [[0, 0], [5000, 0], [5000, 200], [0, 200], [0, 0]],
+    }
+
+    assert (
+        "WALL_STANDARD_CASE_REQUIRES_RECTANGLE",
+        "/entities/4/attributes/Representation/profile/kind",
+    ) in pairs(value)
+
+
 def test_unsupported_source_geometry_is_valid_only_as_explicit_draft_loss() -> None:
     partial = document()
     entity(partial, "wall-1")["attributes"].pop("Representation")
