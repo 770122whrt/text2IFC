@@ -24,6 +24,7 @@ from .validation import (
 
 
 _GLOBAL_ID = re.compile(r"^[0-9A-Za-z_$]{22}$")
+_ENUMERATION = re.compile(r"<enumeration [^:]+: \(([^)]*)\)>")
 _CAPABILITY_CODES = {
     "extract-only": "CLASS_NOT_GENERATABLE",
     "compiler-only": "COMPILER_ONLY_CLASS",
@@ -50,6 +51,26 @@ def _property_type_matches(value: Any, record) -> bool:
     ):
         return isinstance(value, Number) and not isinstance(value, bool)
     return value is None or isinstance(value, (str, bool, Number, list, dict))
+
+
+def _attribute_type_matches(value: Any, record: dict[str, Any]) -> bool:
+    if value is None:
+        return bool(record["optional"])
+    type_expression = record["type"]
+    enumeration = _ENUMERATION.search(type_expression)
+    if enumeration:
+        return isinstance(value, str) and value in enumeration.group(1).split(", ")
+    if "<string>" in type_expression:
+        return isinstance(value, str)
+    if "<real>" in type_expression:
+        return isinstance(value, Number) and not isinstance(value, bool)
+    if "<integer>" in type_expression:
+        return isinstance(value, int) and not isinstance(value, bool)
+    if "<boolean>" in type_expression or "<logical>" in type_expression:
+        return isinstance(value, bool)
+    if type_expression.startswith(("<list ", "<set ", "<array ")):
+        return isinstance(value, list)
+    return False
 
 
 def _semantic_issues(document: dict[str, Any]) -> list[ValidationIssue]:
@@ -129,10 +150,12 @@ def _semantic_issues(document: dict[str, Any]) -> list[ValidationIssue]:
                 )
 
             allowed_attributes = {
-                attribute["name"] for attribute in declaration["attributes"]
+                attribute["name"]: attribute
+                for attribute in declaration["attributes"]
             }
-            for name in record["attributes"]:
-                if name not in allowed_attributes:
+            for name, value in record["attributes"].items():
+                attribute = allowed_attributes.get(name)
+                if attribute is None:
                     issues.append(
                         _issue(
                             "INVALID_IFC_ATTRIBUTE",
@@ -140,6 +163,29 @@ def _semantic_issues(document: dict[str, Any]) -> list[ValidationIssue]:
                             f"{name!r} is not available on {ifc_class}.",
                         )
                     )
+                elif (
+                    collection_name == "entities"
+                    and name not in {"ObjectPlacement", "Representation"}
+                ):
+                    if attribute["derived"]:
+                        issues.append(
+                            _issue(
+                                "DERIVED_IFC_ATTRIBUTE",
+                                f"{base}/attributes/{name}",
+                                f"{name!r} is derived and cannot be authored.",
+                            )
+                        )
+                    elif not _attribute_type_matches(value, attribute):
+                        issues.append(
+                            _issue(
+                                "INVALID_IFC_ATTRIBUTE_TYPE",
+                                f"{base}/attributes/{name}",
+                                (
+                                    f"{name!r} does not match its IFC2X3 "
+                                    f"type {attribute['type']}."
+                                ),
+                            )
+                        )
 
             for pset_name, values in record.get("property_sets", {}).items():
                 pset_path = f"{base}/property_sets/{pset_name}"
