@@ -12,9 +12,9 @@ requirements.
 ## Status
 
 - Phase: 2.5
-- Stage: Wave 4 in progress
-- State: Plan 04 complete; Plan 05 ready
-- Plans: 4 of 6 complete in 5 waves
+- Stage: Wave 4 complete
+- State: Plan 05 complete; Plan 06 ready
+- Plans: 5 of 6 complete in 5 waves
 - Branch: `main`
 - Remote: `https://github.com/770122whrt/text2IFC`
 
@@ -73,6 +73,15 @@ requirements.
 - Independent represented-plus-reported inventories balance for hxp, i5n,
   and vt2_1 representative files.
 - Repository regression suite currently passes 231 tests.
+- Formal BIM JSON 2.0 now compiles to schema-valid IFC2X3 with exact initial
+  architectural profile classes and no proxy substitution.
+- Exact `IfcWallStandardCase` receives the IFC2X3-required generated material
+  layer usage while retaining its source semantic class.
+- Parent-relative placement, rectangle/polygon extrusion, optional
+  representation-local position, typed properties, and void/fill relations
+  survive reopened verification.
+- BIM JSON 1.0 compiler behavior remains compatible.
+- Repository regression suite currently passes 238 tests.
 
 ## Current Decisions
 
@@ -100,14 +109,20 @@ requirements.
   not part of runtime Natural Language to IFC inference.
 - BIMNet dataset splits are grouped by Matterport scene family before text
   generation; buildingSMART data remains a separate cross-schema track.
+- `Representation.position` is geometry-local and independent from product
+  `ObjectPlacement`; missing local position is compiler-derived from the
+  semantic extrusion direction.
+- Exact `IfcWallStandardCase` requires a compiler-generated anonymous
+  `IfcMaterialLayerSetUsage` under IFC2X3. This is low-level schema
+  bookkeeping, not a claim about source material composition.
 
 ## Known Risks
 
 - Existing source files include text encoding problems.
 - Project-local dependency handling is not yet standardized for new machines.
 - Baseline model/provider choice must remain replaceable and reproducible.
-- BIM JSON 2.0 compilation is not yet implemented, so reopened
-  source-to-JSON-to-IFC evidence remains the final Wave 4 objective.
+- The all-25-file extraction audit may be expensive and must remain bounded,
+  deterministic, and hash-addressed.
 - Existing BIMNet train/test folders leak scene families (`7y3`, `e9z`, and
   `px4`) across file-level splits and must not be reused as model splits.
 - IfcOpenShell 0.8.5 late-bound EXPRESS schema cleanup corrupts the Windows
@@ -117,8 +132,8 @@ requirements.
 
 ## Next Action
 
-Execute `02.5-05-PLAN.md`: compile formal BIM JSON 2.0 into reopenable IFC2X3
-with exact classes, placement, geometry, properties, and void/fill relations.
+Execute `02.5-06-PLAN.md`: build all-25 BIMNet provenance and extraction
+accounting, generated references, and final Phase 2.5 acceptance evidence.
 
 ## Accumulated Context
 
@@ -128,4 +143,4 @@ with exact classes, placement, geometry, properties, and void/fill relations.
   the spatial ground truth required for Text-to-JSON training.
 
 ---
-*Last activity: 2026-06-12 - completed Phase 2.5 Plan 04 IFC2X3 extraction*
+*Last activity: 2026-06-12 - completed Phase 2.5 Plan 05 IFC2X3 compilation*
