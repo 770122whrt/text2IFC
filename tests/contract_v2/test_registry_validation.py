@@ -110,6 +110,17 @@ def test_source_global_id_is_optional_but_format_checked(global_id) -> None:
     assert ("INVALID_GLOBAL_ID", "/entities/1/global_id") in issue_pairs(value)
 
 
+def test_source_global_ids_are_unique_across_semantic_records() -> None:
+    value = document()
+    duplicate = value["entities"][1]["global_id"]
+    value["entities"][0]["global_id"] = duplicate
+
+    assert (
+        "DUPLICATE_GLOBAL_ID",
+        "/entities/1/global_id",
+    ) in issue_pairs(value)
+
+
 def test_standard_property_names_types_and_applicability_use_registry() -> None:
     value = document()
     value["entities"][1]["property_sets"]["Pset_WallCommon"]["IsExternal"] = "yes"
