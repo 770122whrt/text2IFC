@@ -26,11 +26,19 @@ def test_capability_overlay_covers_every_ifc2x3_entity() -> None:
 
     assert len(capabilities) == 653
     assert capabilities["IfcWall"] == "generate"
+    assert capabilities["IfcWallStandardCase"] == "generate"
     assert capabilities["IfcSpace"] == "generate"
     assert capabilities["IfcBuildingElementProxy"] == "extract-only"
     assert capabilities["IfcFurnishingElement"] == "extract-only"
     assert capabilities["IfcCartesianPoint"] == "compiler-only"
     assert capabilities["IfcStructuralAnalysisModel"] == "unsupported"
+
+
+def test_wall_standard_case_is_preserved_as_an_exact_generatable_class() -> None:
+    value = document()
+    value["entities"][1]["ifc_class"] = "IfcWallStandardCase"
+
+    assert validate_v2_document(value) == []
 
 
 @pytest.mark.parametrize(

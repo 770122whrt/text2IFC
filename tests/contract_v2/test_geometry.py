@@ -95,6 +95,23 @@ def test_formal_semantic_product_requires_representation() -> None:
     ) in pairs(value)
 
 
+def test_representation_local_position_is_independent_and_validated() -> None:
+    value = document()
+    representation = entity(value, "wall-1")["attributes"]["Representation"]
+    representation["position"] = {
+        "origin": [125.0, 250.0, 0.0],
+        "axis": [0.0, 0.0, 2.0],
+        "ref_direction": [3.0, 0.0, 0.0],
+    }
+    assert validate_v2_document(value) == []
+
+    representation["position"]["axis"] = [0.0, 0.0, 0.0]
+    assert (
+        "ZERO_REPRESENTATION_VECTOR",
+        "/entities/4/attributes/Representation/position/axis",
+    ) in pairs(value)
+
+
 def test_unsupported_source_geometry_is_valid_only_as_explicit_draft_loss() -> None:
     partial = document()
     entity(partial, "wall-1")["attributes"].pop("Representation")
