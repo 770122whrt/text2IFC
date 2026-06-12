@@ -1,3 +1,4 @@
+import math
 from typing import Any, Mapping
 
 import numpy
@@ -106,3 +107,115 @@ def add_element_geometry(
     assign_representation(
         ifc_file, product=element, representation=representation
     )
+
+
+def _axis2placement3d(ifc_file: Any, value: Mapping[str, Any]) -> Any:
+    return ifc_file.createIfcAxis2Placement3D(
+        ifc_file.createIfcCartesianPoint(
+            tuple(float(item) for item in value["origin"])
+        ),
+        ifc_file.createIfcDirection(
+            tuple(float(item) for item in value["axis"])
+        ),
+        ifc_file.createIfcDirection(
+            tuple(float(item) for item in value["ref_direction"])
+        ),
+    )
+
+
+def _default_solid_position(
+    direction: list[float],
+) -> tuple[dict[str, list[float]], list[float]]:
+    magnitude = math.sqrt(sum(item * item for item in direction))
+    axis = [item / magnitude for item in direction]
+    candidate = [1.0, 0.0, 0.0]
+    if abs(sum(a * b for a, b in zip(axis, candidate))) > 0.9:
+        candidate = [0.0, 1.0, 0.0]
+    projection = sum(a * b for a, b in zip(axis, candidate))
+    ref_direction = [
+        candidate[index] - projection * axis[index] for index in range(3)
+    ]
+    ref_magnitude = math.sqrt(sum(item * item for item in ref_direction))
+    ref_direction = [item / ref_magnitude for item in ref_direction]
+    return (
+        {
+            "origin": [0.0, 0.0, 0.0],
+            "axis": axis,
+            "ref_direction": ref_direction,
+        },
+        [0.0, 0.0, 1.0],
+    )
+
+
+def assign_v2_placement(
+    ifc_file: Any,
+    product: Any,
+    placement: Mapping[str, Any],
+    parent: Any | None,
+) -> None:
+    parent_placement = (
+        getattr(parent, "ObjectPlacement", None) if parent is not None else None
+    )
+    product.ObjectPlacement = ifc_file.createIfcLocalPlacement(
+        parent_placement,
+        _axis2placement3d(ifc_file, placement),
+    )
+
+
+def _v2_profile(ifc_file: Any, profile: Mapping[str, Any]) -> Any:
+    if profile["kind"] == "rectangle":
+        profile_position = ifc_file.createIfcAxis2Placement2D(
+            ifc_file.createIfcCartesianPoint((0.0, 0.0)),
+            ifc_file.createIfcDirection((1.0, 0.0)),
+        )
+        return ifc_file.create_entity(
+            "IfcRectangleProfileDef",
+            ProfileType="AREA",
+            ProfileName=None,
+            Position=profile_position,
+            XDim=float(profile["x"]),
+            YDim=float(profile["y"]),
+        )
+    points = [
+        ifc_file.createIfcCartesianPoint(
+            tuple(float(coordinate) for coordinate in point)
+        )
+        for point in profile["points"]
+    ]
+    return ifc_file.create_entity(
+        "IfcArbitraryClosedProfileDef",
+        ProfileType="AREA",
+        ProfileName=None,
+        OuterCurve=ifc_file.createIfcPolyline(points),
+    )
+
+
+def add_v2_geometry(
+    ifc_file: Any,
+    product: Any,
+    representation: Mapping[str, Any],
+    body_context: Any,
+) -> None:
+    direction = [float(item) for item in representation["direction"]]
+    if "position" in representation:
+        position = representation["position"]
+        extrusion_direction = direction
+    else:
+        position, extrusion_direction = _default_solid_position(direction)
+    solid = ifc_file.create_entity(
+        "IfcExtrudedAreaSolid",
+        SweptArea=_v2_profile(ifc_file, representation["profile"]),
+        Position=_axis2placement3d(ifc_file, position),
+        ExtrudedDirection=ifc_file.createIfcDirection(
+            tuple(extrusion_direction)
+        ),
+        Depth=float(representation["depth"]),
+    )
+    shape = ifc_file.create_entity(
+        "IfcShapeRepresentation",
+        ContextOfItems=body_context,
+        RepresentationIdentifier="Body",
+        RepresentationType="SweptSolid",
+        Items=[solid],
+    )
+    assign_representation(ifc_file, product=product, representation=shape)

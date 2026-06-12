@@ -84,4 +84,6 @@ def test_v2_round_trips_rectangle_polygon_and_solid_position(
     actual_points = [
         list(point.Coordinates) for point in slab_solid.SweptArea.OuterCurve.Points
     ]
-    assert actual_points == pytest.approx(source_points)
+    assert len(actual_points) == len(source_points)
+    for actual, expected in zip(actual_points, source_points, strict=True):
+        assert actual == pytest.approx(expected)

@@ -6,8 +6,9 @@ from typing import Any, Mapping
 
 from text2ifc_contract.validation import ValidationIssue
 from text2ifc_contract.validation import validate_document
+from text2ifc_contract.validation_v2 import validate_v2_document
 
-from .bootstrap import build_ifc
+from .bootstrap import build_ifc, build_ifc_v2
 from .verification import IfcValidationIssue, verify_ifc
 
 
@@ -29,12 +30,26 @@ class CompilationResult:
 def compile_document(
     document: Mapping[str, Any], output_path: str | Path
 ) -> CompilationResult:
-    input_issues = tuple(validate_document(document))
+    if document.get("schema_version") == "bim-json/2.0":
+        input_issues = tuple(validate_v2_document(document))
+        builder = build_ifc_v2
+    elif document.get("draft_version") == "bim-json-draft/1.0":
+        input_issues = (
+            ValidationIssue(
+                "DRAFT_NOT_COMPILABLE",
+                "/draft_version",
+                "Draft Envelopes must be completed before IFC compilation.",
+            ),
+        )
+        builder = build_ifc_v2
+    else:
+        input_issues = tuple(validate_document(document))
+        builder = build_ifc
     if input_issues:
         return CompilationResult(input_issues=input_issues)
 
     output = Path(output_path).resolve()
-    bootstrap = build_ifc(document)
+    bootstrap = builder(document)
     ifc_issues = verify_ifc(bootstrap.ifc_file, express_rules=False)
     if ifc_issues:
         return CompilationResult(ifc_issues=ifc_issues)

@@ -143,10 +143,7 @@ def identity_map(source: Any) -> dict[str, str]:
     ifc_file = _as_file(source)
     entities = [
         *ifc_file.by_type("IfcProject"),
-        *ifc_file.by_type("IfcSite"),
-        *ifc_file.by_type("IfcBuilding"),
-        *ifc_file.by_type("IfcBuildingStorey"),
-        *ifc_file.by_type("IfcElement"),
+        *ifc_file.by_type("IfcProduct"),
     ]
     return {
         _bim_json_id(entity): str(entity.GlobalId)

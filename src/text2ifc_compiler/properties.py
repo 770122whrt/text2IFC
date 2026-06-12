@@ -110,3 +110,12 @@ def apply_selected_properties(
             FALLBACK_PSET,
             {"PredefinedType": predefined_type},
         )
+
+
+def apply_v2_properties(
+    ifc_file: Any,
+    product: Any,
+    property_sets: Mapping[str, Mapping[str, Any]],
+) -> None:
+    for name in sorted(property_sets):
+        _write_pset(ifc_file, product, name, property_sets[name])

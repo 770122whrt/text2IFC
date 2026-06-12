@@ -27,8 +27,9 @@ def assign_identity(
     contract_version: str,
     object_kind: str,
     bim_json_id: str,
+    global_id: str | None = None,
 ) -> None:
-    entity.GlobalId = global_id_for(
+    entity.GlobalId = global_id or global_id_for(
         contract_version, object_kind, bim_json_id
     )
     pset = add_pset(
@@ -39,4 +40,3 @@ def assign_identity(
         pset=pset,
         properties={IDENTITY_PROPERTY: bim_json_id},
     )
-

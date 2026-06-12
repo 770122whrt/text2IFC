@@ -138,7 +138,11 @@ def main(argv: list[str] | None = None) -> int:
     payload = _result_payload(
         success=result.success,
         output_path=result.output_path,
-        schema=document.get("target_schema") if result.success else None,
+        schema=(
+            document.get("target_schema") or document.get("ifc_schema")
+            if result.success
+            else None
+        ),
         input_issues=result.input_issues,
         ifc_issues=result.ifc_issues,
     )
