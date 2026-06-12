@@ -12,9 +12,9 @@ requirements.
 ## Status
 
 - Phase: 2.5
-- Stage: Wave 2 complete
-- State: Ready to execute Wave 3
-- Plans: 2 of 6 complete in 5 waves
+- Stage: Wave 3 complete
+- State: Ready to execute Wave 4
+- Plans: 3 of 6 complete in 5 waves
 - Branch: `main`
 - Remote: `https://github.com/770122whrt/text2IFC`
 
@@ -59,6 +59,13 @@ requirements.
 - BIM JSON 1.0 migration preserves known facts in Draft, lists placement
   gaps, and records unknown space coverage without fabrication.
 - Repository regression suite currently passes 194 tests.
+- BIM JSON 2.0 validates bounded parent-relative placement and derives
+  deterministic world transforms without mutating source documents.
+- Formal geometry supports bounded rectangle and closed-polygon extrusions;
+  unsupported geometry remains explicit Draft/loss content.
+- `IfcSpace`, `IfcOpeningElement`, `IfcRelVoidsElement`, and
+  `IfcRelFillsElement` are covered by the complete semantic fixture.
+- Repository regression suite currently passes 219 tests.
 
 ## Current Decisions
 
@@ -92,8 +99,8 @@ requirements.
 - Existing source files include text encoding problems.
 - Project-local dependency handling is not yet standardized for new machines.
 - Baseline model/provider choice must remain replaceable and reproducible.
-- Placement, semantic geometry, and relationship endpoint rules are not yet
-  implemented in the BIM JSON 2.0 formal validator.
+- IFC2X3 extraction and BIM JSON 2.0 compilation are not yet implemented, so
+  source-to-JSON-to-IFC round-trip evidence remains a Wave 4 objective.
 - Existing BIMNet train/test folders leak scene families (`7y3`, `e9z`, and
   `px4`) across file-level splits and must not be reused as model splits.
 - IfcOpenShell 0.8.5 late-bound EXPRESS schema cleanup corrupts the Windows
@@ -103,8 +110,8 @@ requirements.
 
 ## Next Action
 
-Execute `02.5-03-PLAN.md`: parent-relative placement, bounded semantic
-geometry, spaces, openings, and void/fill relationship validation.
+Execute Wave 4 plans `02.5-04-PLAN.md` and `02.5-05-PLAN.md`: deterministic
+IFC2X3 extraction with loss accounting and BIM JSON 2.0 compilation.
 
 ## Accumulated Context
 
@@ -114,4 +121,4 @@ geometry, spaces, openings, and void/fill relationship validation.
   the spatial ground truth required for Text-to-JSON training.
 
 ---
-*Last activity: 2026-06-11 - completed Phase 2.5 Plan 02 BIM JSON 2.0 and Draft contracts*
+*Last activity: 2026-06-12 - completed Phase 2.5 Plan 03 spatial semantic graph*

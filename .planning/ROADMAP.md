@@ -115,7 +115,7 @@ topology, furnishing/MEP generation, and IFC4/IFC4X3 output remain Phase 4.
 
 **Wave 3** *(blocked on Wave 2 completion)*
 
-- [ ] `02.5-03-PLAN.md` - Parent-relative placement, semantic geometry,
+- [x] `02.5-03-PLAN.md` - Parent-relative placement, semantic geometry,
   spaces, openings, and void/fill relationship validation
 
 **Wave 4** *(blocked on Wave 3 completion)*
@@ -143,7 +143,7 @@ topology, furnishing/MEP generation, and IFC4/IFC4X3 output remain Phase 4.
 - Every implementation behavior follows recorded RED-GREEN TDD before full
   regression.
 
-**Status:** In progress - Wave 2 complete 2026-06-11
+**Status:** In progress - Wave 3 complete 2026-06-12
 
 ## Phase 3: Text-to-JSON Dataset and Baseline
 
