@@ -78,6 +78,7 @@ def _semantic_issues(document: dict[str, Any]) -> list[ValidationIssue]:
     capabilities = load_capabilities()
     issues = _non_finite_number_issues(document)
     first_ids: dict[str, str] = {}
+    first_global_ids: dict[str, str] = {}
 
     for collection_name in ("entities", "relationships"):
         for index, record in enumerate(document[collection_name]):
@@ -148,6 +149,20 @@ def _semantic_issues(document: dict[str, Any]) -> list[ValidationIssue]:
                         "GlobalId must be a 22-character compressed IFC identifier.",
                     )
                 )
+            elif isinstance(global_id, str):
+                if global_id in first_global_ids:
+                    issues.append(
+                        _issue(
+                            "DUPLICATE_GLOBAL_ID",
+                            f"{base}/global_id",
+                            (
+                                f"GlobalId {global_id!r} is already used at "
+                                f"{first_global_ids[global_id]}."
+                            ),
+                        )
+                    )
+                else:
+                    first_global_ids[global_id] = f"{base}/global_id"
 
             allowed_attributes = {
                 attribute["name"]: attribute
