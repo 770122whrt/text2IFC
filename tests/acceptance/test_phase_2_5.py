@@ -24,6 +24,10 @@ FAMILIES = (
     / "bim-json-2.0"
     / "scene-families.json"
 )
+BIM_JSON_REFERENCE = ROOT / "docs" / "reference" / "bim-json-2.0.md"
+PROFILE_REFERENCE = (
+    ROOT / "docs" / "reference" / "ifc2x3-generation-profile.md"
+)
 CATEGORIES = {
     "entities",
     "relationships",
@@ -141,3 +145,29 @@ def test_checked_in_audit_regenerates_without_drift() -> None:
         check=False,
     )
     assert completed.returncode == 0, completed.stdout + completed.stderr
+
+
+def test_generated_contract_and_profile_references_are_current() -> None:
+    completed = subprocess.run(
+        [
+            sys.executable,
+            "scripts/bim_json_v2/generate_reference.py",
+            "--check",
+        ],
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+        timeout=30,
+        check=False,
+    )
+    assert completed.returncode == 0, completed.stdout + completed.stderr
+
+    contract = BIM_JSON_REFERENCE.read_text(encoding="utf-8")
+    profile = PROFILE_REFERENCE.read_text(encoding="utf-8")
+    assert "`bim-json/2.0`" in contract
+    assert "Formal" in contract and "Draft Envelope" in contract
+    assert "`Representation.position`" in contract
+    assert "23" in profile
+    assert "`IfcWallStandardCase`" in profile
+    assert "`IfcCartesianPoint`" in profile
+    assert "compiler-only" in profile
