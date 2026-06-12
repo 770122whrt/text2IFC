@@ -282,18 +282,31 @@ def validate_geometry(
             )
 
         direction = representation.get("direction")
-        if (
+        valid_direction = not (
             not isinstance(direction, list)
             or len(direction) != 3
             or any(_number(item) is None for item in direction)
             or math.sqrt(sum(float(item) ** 2 for item in direction))
             <= VECTOR_TOLERANCE
-        ):
+        )
+        if not valid_direction:
             issues.append(
                 _issue(
                     "INVALID_EXTRUSION_DIRECTION",
                     f"{base}/direction",
                     "Extrusion direction must be a non-zero finite 3D vector.",
+                )
+            )
+        elif (
+            "position" in representation
+            and abs(float(direction[2])) <= VECTOR_TOLERANCE
+        ):
+            issues.append(
+                _issue(
+                    "INVALID_EXTRUSION_DIRECTION",
+                    f"{base}/direction",
+                    "Extrusion direction must have a non-zero local Z component "
+                    "when Representation.position is explicit.",
                 )
             )
 
@@ -319,6 +332,15 @@ def validate_geometry(
                     "UNSUPPORTED_PROFILE_KIND",
                     f"{profile_path}/kind",
                     "Profile kind must be rectangle or polygon.",
+                )
+            )
+        if ifc_class == "IfcWallStandardCase" and profile_kind != "rectangle":
+            issues.append(
+                _issue(
+                    "WALL_STANDARD_CASE_REQUIRES_RECTANGLE",
+                    f"{profile_path}/kind",
+                    "IfcWallStandardCase requires a rectangle profile in the "
+                    "initial generation adapter.",
                 )
             )
 
