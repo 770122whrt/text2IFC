@@ -11,6 +11,9 @@ from jsonschema import Draft202012Validator
 from text2ifc_knowledge.registry import load_ifc2x3_registry
 
 from .capabilities import load_capabilities
+from .geometry_v2 import validate_geometry
+from .placement import validate_placement_graph
+from .relationships_v2 import validate_relationships
 from .schema import load_schema_v2
 from .validation import (
     ValidationIssue,
@@ -104,7 +107,7 @@ def _semantic_issues(document: dict[str, Any]) -> list[ValidationIssue]:
                         f"{ifc_class!r} belongs in relationships.",
                     )
                 )
-            if state != "generate":
+            if state != "generate" and collection_name != "relationships":
                 issues.append(
                     _issue(
                         _CAPABILITY_CODES[state],
@@ -180,6 +183,9 @@ def _semantic_issues(document: dict[str, Any]) -> list[ValidationIssue]:
                                 f"{property_name!r} has an invalid IFC value type.",
                             )
                         )
+    issues.extend(validate_placement_graph(document))
+    issues.extend(validate_geometry(document))
+    issues.extend(validate_relationships(document))
     return _sort_issues(issues)
 
 

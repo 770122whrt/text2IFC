@@ -38,6 +38,90 @@
       "type": "object",
       "minProperties": 1
     },
+    "vector3": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": {"type": "number"}
+    },
+    "objectPlacement": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["relative_to", "origin", "axis", "ref_direction"],
+      "properties": {
+        "relative_to": {"$ref": "#/$defs/nonEmptyString"},
+        "origin": {"$ref": "#/$defs/vector3"},
+        "axis": {"$ref": "#/$defs/vector3"},
+        "ref_direction": {"$ref": "#/$defs/vector3"}
+      }
+    },
+    "point2": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "items": {"type": "number"}
+    },
+    "profile": {
+      "type": "object",
+      "required": ["kind"],
+      "properties": {
+        "kind": {"type": "string"},
+        "x": {"type": "number"},
+        "y": {"type": "number"},
+        "points": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/point2"}
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {"kind": {"const": "rectangle"}},
+            "required": ["kind"]
+          },
+          "then": {
+            "required": ["x", "y"]
+          }
+        },
+        {
+          "if": {
+            "properties": {"kind": {"const": "polygon"}},
+            "required": ["kind"]
+          },
+          "then": {
+            "required": ["points"]
+          }
+        }
+      ]
+    },
+    "representation": {
+      "type": "object",
+      "required": ["kind"],
+      "properties": {
+        "kind": {"type": "string"},
+        "profile": {"$ref": "#/$defs/profile"},
+        "depth": {"type": "number"},
+        "direction": {"$ref": "#/$defs/vector3"}
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {"kind": {"const": "extruded_profile"}},
+            "required": ["kind"]
+          },
+          "then": {
+            "required": ["profile", "depth", "direction"]
+          }
+        }
+      ]
+    },
+    "attributes": {
+      "type": "object",
+      "properties": {
+        "ObjectPlacement": {"$ref": "#/$defs/objectPlacement"},
+        "Representation": {"$ref": "#/$defs/representation"}
+      }
+    },
     "entity": {
       "type": "object",
       "additionalProperties": false,
@@ -52,7 +136,7 @@
         "id": {"$ref": "#/$defs/nonEmptyString"},
         "ifc_class": {"$ref": "#/$defs/nonEmptyString"},
         "global_id": {},
-        "attributes": {"type": "object"},
+        "attributes": {"$ref": "#/$defs/attributes"},
         "property_sets": {
           "type": "object",
           "additionalProperties": {"type": "object"}

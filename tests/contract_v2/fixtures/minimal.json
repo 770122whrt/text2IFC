@@ -21,7 +21,23 @@
       "ifc_class": "IfcWall",
       "global_id": "0YvctVUKv6qx0Dq$ZJOO1x",
       "attributes": {
-        "Name": "Wall"
+        "Name": "Wall",
+        "ObjectPlacement": {
+          "relative_to": "project-1",
+          "origin": [0, 0, 0],
+          "axis": [0, 0, 1],
+          "ref_direction": [1, 0, 0]
+        },
+        "Representation": {
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 200,
+            "y": 3000
+          },
+          "depth": 5000,
+          "direction": [1, 0, 0]
+        }
       },
       "property_sets": {
         "Pset_WallCommon": {

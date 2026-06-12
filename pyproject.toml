@@ -13,4 +13,4 @@ dependencies = [
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["src", ".deps/python312"]
-addopts = "--basetemp=.pytest-tmp"
+addopts = "--basetemp=.pytest-tmp --import-mode=importlib"

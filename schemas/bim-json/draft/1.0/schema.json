@@ -16,7 +16,10 @@
   "properties": {
     "draft_version": {"const": "bim-json-draft/1.0"},
     "target_schema_version": {"const": "bim-json/2.0"},
-    "partial_document": {"type": "object"},
+    "partial_document": {
+      "type": "object",
+      "description": "A deliberately incomplete BIM JSON 2.0 document; omissions must be listed in missing_facts or losses."
+    },
     "missing_facts": {
       "type": "array",
       "items": {"$ref": "#/$defs/missingFact"}
