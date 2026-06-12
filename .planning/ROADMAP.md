@@ -120,7 +120,7 @@ topology, furnishing/MEP generation, and IFC4/IFC4X3 output remain Phase 4.
 
 **Wave 4** *(blocked on Wave 3 completion)*
 
-- [ ] `02.5-04-PLAN.md` - Deterministic IFC2X3 extraction and complete loss
+- [x] `02.5-04-PLAN.md` - Deterministic IFC2X3 extraction and complete loss
   accounting
 - [ ] `02.5-05-PLAN.md` - BIM JSON 2.0 architectural compiler profile and
   reopened IFC verification
@@ -143,7 +143,7 @@ topology, furnishing/MEP generation, and IFC4/IFC4X3 output remain Phase 4.
 - Every implementation behavior follows recorded RED-GREEN TDD before full
   regression.
 
-**Status:** In progress - Wave 3 complete 2026-06-12
+**Status:** In progress - Plan 04 complete; Plan 05 ready 2026-06-12
 
 ## Phase 3: Text-to-JSON Dataset and Baseline
 
