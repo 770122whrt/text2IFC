@@ -127,7 +127,7 @@ topology, furnishing/MEP generation, and IFC4/IFC4X3 output remain Phase 4.
 
 **Wave 5** *(blocked on both Wave 4 plans)*
 
-- [ ] `02.5-06-PLAN.md` - All-25 BIMNet audit, provenance, generated
+- [x] `02.5-06-PLAN.md` - All-25 BIMNet audit, provenance, generated
   references, reviews, and phase acceptance
 
 **Cross-cutting constraints:**
@@ -143,7 +143,7 @@ topology, furnishing/MEP generation, and IFC4/IFC4X3 output remain Phase 4.
 - Every implementation behavior follows recorded RED-GREEN TDD before full
   regression.
 
-**Status:** In progress - Wave 4 complete; Plan 06 ready 2026-06-12
+**Status:** Complete - verified 2026-06-12
 
 ## Phase 3: Text-to-JSON Dataset and Baseline
 
@@ -164,7 +164,7 @@ it, and demonstrate the first spatial Text-to-JSON-to-IFC request.
 - IFC-to-BIM-JSON is an offline label-construction step; runtime inference
   remains Natural Language to formal BIM JSON 2.0 to IFC.
 
-**Status:** Blocked on Phase 2.5
+**Status:** Ready for planning
 
 ## Phase 4: High-fidelity IFC Round Trip
 

@@ -44,35 +44,35 @@ requirements.
 
 ### IFC Semantic Graph, Knowledge, and Extraction
 
-- [ ] **JSON-06**: BIM JSON 2.0 is a separately versioned IFC2X3-aligned
+- [x] **JSON-06**: BIM JSON 2.0 is a separately versioned IFC2X3-aligned
   semantic entity graph, and BIM JSON 1.0 migrates deterministically to an
   explicit Draft Envelope rather than receiving invented spatial facts.
-- [ ] **KNOW-01**: A deterministic registry generated from official IFC2X3
+- [x] **KNOW-01**: A deterministic registry generated from official IFC2X3
   EXPRESS validates class names, inheritance, attributes, relationships,
   selects, and enumerations.
-- [ ] **KNOW-02**: A deterministic registry generated from official IFC2X3 PSD
+- [x] **KNOW-02**: A deterministic registry generated from official IFC2X3 PSD
   definitions validates standard property-set names, property names, types,
   applicability, and provenance.
-- [ ] **ENTITY-01**: BIM JSON 2.0 represents semantic IFC objects in
+- [x] **ENTITY-01**: BIM JSON 2.0 represents semantic IFC objects in
   `entities` with explicit `ifc_class`, stable identity, typed attributes, and
   source provenance.
-- [ ] **CAP-01**: Every recognized IFC2X3 entity has an explicit generation,
+- [x] **CAP-01**: Every recognized IFC2X3 entity has an explicit generation,
   extraction, compiler-only, or unsupported capability and no unsupported
   entity is silently emitted or dropped.
-- [ ] **GEO-01**: BIM JSON and generated IFC preserve hierarchical local
+- [x] **GEO-01**: BIM JSON and generated IFC preserve hierarchical local
   placement and orientation for supported spatial objects.
-- [ ] **GEO-02**: BIM JSON and generated IFC preserve supported semantic
+- [x] **GEO-02**: BIM JSON and generated IFC preserve supported semantic
   geometry plus explicit opening, host-element, and filling-element
   relationships.
-- [ ] **SPACE-01**: BIM JSON represents supported rooms/spaces with stable
+- [x] **SPACE-01**: BIM JSON represents supported rooms/spaces with stable
   identity, storey membership, placement, and geometry.
-- [ ] **DRAFT-01**: Incomplete, ambiguous, extract-only, or unsupported content
+- [x] **DRAFT-01**: Incomplete, ambiguous, extract-only, or unsupported content
   uses a separate Draft Envelope that enumerates every missing fact, loss,
   provenance record, and future clarification target.
-- [ ] **EXTRACT-01**: Authorized IFC sources are deterministically normalized
+- [x] **EXTRACT-01**: Authorized IFC sources are deterministically normalized
   into valid BIM JSON 2.0 or an explicit Draft plus provenance and a complete
   machine-readable loss report.
-- [ ] **COMPAT-01**: The compiler accepts formal BIM JSON 2.0 within the
+- [x] **COMPAT-01**: The compiler accepts formal BIM JSON 2.0 within the
   architectural generation profile and preserves the
   Phase 2 guarantees while adding the supported spatial subset.
 
@@ -139,17 +139,17 @@ requirements.
 | VER-01 | Phase 2 | Complete |
 | VER-02 | Phase 2 | Complete |
 | VER-03 | Phase 2 | Complete |
-| JSON-06 | Phase 2.5 | Pending |
-| KNOW-01 | Phase 2.5 | Pending |
-| KNOW-02 | Phase 2.5 | Pending |
-| ENTITY-01 | Phase 2.5 | Pending |
-| CAP-01 | Phase 2.5 | Pending |
-| GEO-01 | Phase 2.5 | Pending |
-| GEO-02 | Phase 2.5 | Pending |
-| SPACE-01 | Phase 2.5 | Pending |
-| DRAFT-01 | Phase 2.5 | Pending |
-| EXTRACT-01 | Phase 2.5 | Pending |
-| COMPAT-01 | Phase 2.5 | Pending |
+| JSON-06 | Phase 2.5 | Complete |
+| KNOW-01 | Phase 2.5 | Complete |
+| KNOW-02 | Phase 2.5 | Complete |
+| ENTITY-01 | Phase 2.5 | Complete |
+| CAP-01 | Phase 2.5 | Complete |
+| GEO-01 | Phase 2.5 | Complete |
+| GEO-02 | Phase 2.5 | Complete |
+| SPACE-01 | Phase 2.5 | Complete |
+| DRAFT-01 | Phase 2.5 | Complete |
+| EXTRACT-01 | Phase 2.5 | Complete |
+| COMPAT-01 | Phase 2.5 | Complete |
 | TEXT-01 | Phase 3 | Pending |
 | TEXT-02 | Phase 3 | Pending |
 | TEXT-03 | Phase 3 | Pending |
@@ -172,4 +172,4 @@ requirements.
 
 ---
 *Requirements defined: 2026-06-11*
-*Last updated: 2026-06-11 after Phase 2.5 specification*
+*Last updated: 2026-06-12 after Phase 2.5 verification*

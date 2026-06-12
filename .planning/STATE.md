@@ -7,14 +7,14 @@ See: `.planning/PROJECT.md` (updated 2026-06-11)
 **Core value:** Produce valid, inspectable IFC models from explicit user
 requirements.
 
-**Current focus:** Phase 2.5 - BIM JSON 2.0 IFC Semantic Graph
+**Current focus:** Phase 3 planning - Text-to-JSON Dataset and Baseline
 
 ## Status
 
-- Phase: 2.5
-- Stage: Wave 4 complete
-- State: Plan 05 complete; Plan 06 ready
-- Plans: 5 of 6 complete in 5 waves
+- Phase: 3
+- Stage: Planning ready
+- State: Phase 2.5 verified; Phase 3 discussion/specification next
+- Plans: Phase 2.5 complete, 6 of 6 plans in 5 waves
 - Branch: `main`
 - Remote: `https://github.com/770122whrt/text2IFC`
 
@@ -82,6 +82,17 @@ requirements.
   survive reopened verification.
 - BIM JSON 1.0 compiler behavior remains compatible.
 - Repository regression suite currently passes 238 tests.
+- All 25 authorized BIMNet IFC2X3 files have hash-addressed provenance and
+  deterministic represented-plus-reported extraction accounting.
+- The 25 files map to 19 Matterport scene families; no Phase 3 split has been
+  assigned.
+- Generated BIM JSON 2.0 and IFC2X3 generation-profile references are
+  drift-checked from canonical schemas and registries.
+- Deep code review fixed three Formal/typed-identity gaps through recorded
+  RED/GREEN commits.
+- Phase 2.5 security verification closes all 23 threats with none open.
+- All 11 Phase 2.5 requirements are verified.
+- Repository regression suite currently passes 248 tests.
 
 ## Current Decisions
 
@@ -121,8 +132,9 @@ requirements.
 - Existing source files include text encoding problems.
 - Project-local dependency handling is not yet standardized for new machines.
 - Baseline model/provider choice must remain replaceable and reproducible.
-- The all-25-file extraction audit may be expensive and must remain bounded,
-  deterministic, and hash-addressed.
+- All 25 extraction labels are currently Drafts because material, type,
+  connection, and complex-geometry losses are explicit. Phase 3 must define
+  how Formal training targets are selected or completed.
 - Existing BIMNet train/test folders leak scene families (`7y3`, `e9z`, and
   `px4`) across file-level splits and must not be reused as model splits.
 - IfcOpenShell 0.8.5 late-bound EXPRESS schema cleanup corrupts the Windows
@@ -132,8 +144,9 @@ requirements.
 
 ## Next Action
 
-Execute `02.5-06-PLAN.md`: build all-25 BIMNet provenance and extraction
-accounting, generated references, and final Phase 2.5 acceptance evidence.
+Discuss and specify Phase 3: split the 19 scene families before text
+generation, define Formal versus clarification training records, and establish
+the structured-output Text-to-JSON baseline and evaluation metrics.
 
 ## Accumulated Context
 
@@ -143,4 +156,4 @@ accounting, generated references, and final Phase 2.5 acceptance evidence.
   the spatial ground truth required for Text-to-JSON training.
 
 ---
-*Last activity: 2026-06-12 - completed Phase 2.5 Plan 05 IFC2X3 compilation*
+*Last activity: 2026-06-12 - verified and completed Phase 2.5*
