@@ -212,6 +212,32 @@ def test_invalid_partial_document_stays_draft_clarification() -> None:
     assert result["sidecar"]["losses"][0]["kind"] == "MATERIAL_ASSOCIATION"
 
 
+def test_projectable_partial_document_promotes_with_projection_omissions() -> None:
+    projectable_partial = copy.deepcopy(_load_json(COMPLETE_FIXTURE))
+    wall = next(
+        item for item in projectable_partial["entities"] if item["id"] == "wall-1"
+    )
+    wall["property_sets"]["Pset_WallCommon"]["IsExternal"] = "yes"
+
+    result = build_formal_target_from_draft(
+        _draft(projectable_partial, [_loss("UNSUPPORTED_PROPERTY_VALUE")]),
+        source_record=_source_record(),
+        split="train",
+    )
+
+    assert result["target_kind"] == "formal"
+    assert result["target"] is not None
+    assert result["sidecar"]["projection_omissions"]
+    assert result["sidecar"]["projection_omission_count"] == 1
+    assert result["sidecar"]["projection_omissions"][0]["issue_code"] == (
+        "INVALID_PROPERTY_TYPE"
+    )
+    projected_wall = next(
+        item for item in result["target"]["entities"] if item["id"] == "wall-1"
+    )
+    assert "IsExternal" not in projected_wall["property_sets"]["Pset_WallCommon"]
+
+
 def test_gold_set_writes_formal_targets_only_for_valid_partials(tmp_path: Path) -> None:
     complete = _load_json(COMPLETE_FIXTURE)
     invalid = copy.deepcopy(complete)
