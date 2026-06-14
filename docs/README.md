@@ -15,6 +15,10 @@ Use this page as the stable entry point for project documentation.
   - Target pipeline
   - Current repository capabilities
   - GSD phase boundaries
+- [Phase 2.5 BIM JSON 2.0 IFC Semantic Graph Summary](architecture/phase-2-5-summary.md)
+  - Completed semantic graph foundation
+  - Verified IFC2X3 extraction and compilation boundary
+  - Phase 3 handoff constraints
 
 ## Project Planning
 
