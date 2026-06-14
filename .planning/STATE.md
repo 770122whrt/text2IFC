@@ -13,8 +13,8 @@ requirements.
 
 - Phase: 3
 - Stage: Executing
-- State: Phase 3 Wave 1 complete; Wave 2 ready
-- Plans: Phase 3 planned, 1 of 6 plans complete
+- State: Phase 3 Wave 2 complete; Wave 3 blocked by zero formal gold targets
+- Plans: Phase 3 planned, 2 of 6 plans complete
 - Branch: `main`
 - Remote: `https://github.com/770122whrt/text2IFC`
 
@@ -92,6 +92,12 @@ requirements.
 - The split builder rejects missing dataset/training authorization, disabled
   training eligibility, missing SHA-256 values, non-IFC2X3 records, and
   mutated family leakage before downstream dataset generation.
+- Phase 3 Draft triage now preserves all 25 BIMNet Draft records, all 8,280
+  original loss records, and per-record sidecars split by train/validation/test.
+- Current formal gold target count is 0. All 25 Draft partial documents fail
+  `validate_v2_document` because of missing representations, non-rectangular
+  `IfcWallStandardCase` profiles, invalid IFC attribute/property value types,
+  and non-generatable classes.
 - Generated BIM JSON 2.0 and IFC2X3 generation-profile references are
   drift-checked from canonical schemas and registries.
 - Deep code review fixed three Formal/typed-identity gaps through recorded
@@ -150,6 +156,9 @@ requirements.
 - All 25 extraction labels are currently Drafts because material, type,
   connection, and complex-geometry losses are explicit. Phase 3 must define
   how Formal training targets are selected or completed.
+- Wave 3 cannot generate formal Text/JSON pairs from the current gold manifest
+  because `formal == 0`; continuing requires a supported-scope projection
+  decision or Phase 4 fidelity work first.
 - Existing BIMNet train/test folders leak scene families (`7y3`, `e9z`, and
   `px4`) across file-level splits and must not be reused as model splits;
   downstream Phase 3 code must consume `dataset/splits/bimnet-scene-splits.json`.
@@ -160,9 +169,12 @@ requirements.
 
 ## Next Action
 
-Execute Phase 3 Wave 2 (`03-02-PLAN.md`): triage all Draft extraction records,
-promote only supported-scope validated `partial_document` payloads into formal
-gold targets, and preserve all omitted source facts in sidecars.
+Resolve the Phase 3 zero-formal-gold decision before Wave 3:
+
+1. Either insert a supported-scope projection step that records every omitted
+   invalid fact in sidecars and produces validated formal targets; or
+2. Defer Text/JSON pair generation until Phase 4 expands extractor/compiler
+   fidelity enough for Draft partials to validate directly.
 
 ## Accumulated Context
 
@@ -175,6 +187,9 @@ gold targets, and preserve all omitted source facts in sidecars.
   baseline, and E2E/decision report.
 - Phase 3 Wave 1 completed on 2026-06-14 with RED/GREEN commits `687cebe` and
   `9576753`; focused split tests, split drift check, and full regression passed.
+- Phase 3 Wave 2 completed on 2026-06-14 with RED/GREEN commits `b186531` and
+  `f201553`; all 25 records are triaged as `draft_clarification`, with zero
+  formal gold targets.
 
 ---
-*Last activity: 2026-06-14 - completed Phase 3 Wave 1 split gate*
+*Last activity: 2026-06-14 - completed Phase 3 Wave 2 triage and identified zero-formal blocker*
