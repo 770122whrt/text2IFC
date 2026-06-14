@@ -13,8 +13,8 @@ requirements.
 
 - Phase: 3
 - Stage: Executing
-- State: Phase 3 Wave 4 complete; Wave 5 ready
-- Plans: Phase 3 planned, 5 of 7 plans complete
+- State: Phase 3 Wave 5 complete; Wave 6 ready
+- Plans: Phase 3 planned, 6 of 7 plans complete
 - Branch: `main`
 - Remote: `https://github.com/770122whrt/text2IFC`
 
@@ -111,13 +111,19 @@ requirements.
 - The deterministic evaluation fixture contains 4 records: parse success 0.75,
   schema valid 0.50, semantic valid 0.25, and one compile/reopen-checked
   valid prediction with both rates at 1.00.
+- Phase 3 now has a structured-output baseline runner with fake/file provider
+  modes, a prompt contract forbidding raw IFC/STEP and low-level IFC helper
+  entities, raw/parsed prediction separation, Draft rejection, diagnostics, and
+  evaluator integration.
+- The validation fake baseline smoke run produced 20 accepted formal
+  predictions, 0 invalid predictions, and 1.00 parse/schema/semantic validity.
 - Generated BIM JSON 2.0 and IFC2X3 generation-profile references are
   drift-checked from canonical schemas and registries.
 - Deep code review fixed three Formal/typed-identity gaps through recorded
   RED/GREEN commits.
 - Phase 2.5 security verification closes all 23 threats with none open.
 - All 11 Phase 2.5 requirements are verified.
-- Repository regression suite currently passes 271 tests.
+- Repository regression suite currently passes 276 tests.
 
 ## Current Decisions
 
@@ -182,8 +188,8 @@ requirements.
 
 ## Next Action
 
-Execute Phase 3 Wave 5 (`03-05-PLAN.md`): build the structured-output
-Text-to-JSON baseline and evaluate it with the provider-independent harness.
+Execute Phase 3 Wave 6 (`03-06-PLAN.md`): run the end-to-end demo and produce
+the Phase 3 summary plus RAG/fine-tune decision report.
 
 ## Accumulated Context
 
@@ -209,6 +215,9 @@ Text-to-JSON baseline and evaluate it with the provider-independent harness.
 - Phase 3 Wave 4 completed on 2026-06-14 with RED/GREEN commits `ed7719a` and
   `bcd6c12`; the provider-independent evaluation harness and fixture reports
   passed focused checks and full regression.
+- Phase 3 Wave 5 completed on 2026-06-14 with RED/GREEN commits `aaf46e4` and
+  `d06693f`; the structured-output fake/file baseline runner produced a
+  validation fake smoke run and passed full regression.
 
 ---
-*Last activity: 2026-06-14 - completed Phase 3 Wave 4 evaluation harness*
+*Last activity: 2026-06-14 - completed Phase 3 Wave 5 structured-output baseline*

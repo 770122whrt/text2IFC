@@ -202,7 +202,7 @@ beyond the Phase 2.5 formal generation profile.
 
 **Wave 5** *(blocked on Wave 4 completion)*
 
-- [ ] `03-05-PLAN.md` - Structured-output Text-to-JSON baseline
+- [x] `03-05-PLAN.md` - Structured-output Text-to-JSON baseline
 
 **Wave 6** *(blocked on Wave 5 completion)*
 
@@ -223,7 +223,7 @@ beyond the Phase 2.5 formal generation profile.
 - Every implementation behavior with defined inputs and outputs follows a
   recorded RED-GREEN TDD cycle.
 
-**Status:** In progress - Wave 4 complete, Wave 5 ready
+**Status:** In progress - Wave 5 complete, Wave 6 ready
 
 ## Phase 4: High-fidelity IFC Round Trip
 
