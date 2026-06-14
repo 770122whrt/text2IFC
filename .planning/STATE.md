@@ -13,8 +13,8 @@ requirements.
 
 - Phase: 3
 - Stage: Executing
-- State: Phase 3 Wave 2 complete; Wave 3 blocked by zero formal gold targets
-- Plans: Phase 3 planned, 2 of 6 plans complete
+- State: Phase 3 Wave 2 complete; inserted Wave 2.5 ready
+- Plans: Phase 3 planned, 2 of 7 plans complete
 - Branch: `main`
 - Remote: `https://github.com/770122whrt/text2IFC`
 
@@ -171,10 +171,9 @@ requirements.
 
 Resolve the Phase 3 zero-formal-gold decision before Wave 3:
 
-1. Either insert a supported-scope projection step that records every omitted
-   invalid fact in sidecars and produces validated formal targets; or
-2. Defer Text/JSON pair generation until Phase 4 expands extractor/compiler
-   fidelity enough for Draft partials to validate directly.
+Execute inserted Wave 2.5 (`03-02.5-PLAN.md`): create a supported-scope
+projection that records every omitted invalid fact in sidecars and produces
+validated formal targets for Wave 3 text generation.
 
 ## Accumulated Context
 
@@ -190,6 +189,9 @@ Resolve the Phase 3 zero-formal-gold decision before Wave 3:
 - Phase 3 Wave 2 completed on 2026-06-14 with RED/GREEN commits `b186531` and
   `f201553`; all 25 records are triaged as `draft_clarification`, with zero
   formal gold targets.
+- Phase 3 Wave 2.5 inserted on 2026-06-14 after GSD SDK was unavailable in
+  this runtime. The insertion resolves the zero-formal-gold finding by adding a
+  no-fabrication supported-scope projection before pair generation.
 
 ---
-*Last activity: 2026-06-14 - completed Phase 3 Wave 2 triage and identified zero-formal blocker*
+*Last activity: 2026-06-14 - inserted Phase 3 Wave 2.5 projection plan*

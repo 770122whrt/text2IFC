@@ -187,6 +187,11 @@ beyond the Phase 2.5 formal generation profile.
 
 - [x] `03-02-PLAN.md` - Draft triage and formal supported-scope gold set
 
+**Wave 2.5** *(INSERTED; blocked on Wave 2 zero-formal finding)*
+
+- [ ] `03-02.5-PLAN.md` - Supported-scope projection for formal
+  Text-to-JSON targets
+
 **Wave 3** *(blocked on Wave 2 completion)*
 
 - [ ] `03-03-PLAN.md` - Deterministic Text/JSON pair generation
@@ -218,8 +223,8 @@ beyond the Phase 2.5 formal generation profile.
 - Every implementation behavior with defined inputs and outputs follows a
   recorded RED-GREEN TDD cycle.
 
-**Status:** In progress - Wave 2 complete; Wave 3 blocked until the zero-formal
-gold-set finding is resolved
+**Status:** In progress - Wave 2 complete; inserted Wave 2.5 ready to resolve
+the zero-formal gold-set finding
 
 ## Phase 4: High-fidelity IFC Round Trip
 
