@@ -13,8 +13,8 @@ requirements.
 
 - Phase: 3
 - Stage: Executing
-- State: Phase 3 Wave 2 complete; inserted Wave 2.5 ready
-- Plans: Phase 3 planned, 2 of 7 plans complete
+- State: Phase 3 Wave 2.5 complete; Wave 3 ready
+- Plans: Phase 3 planned, 3 of 7 plans complete
 - Branch: `main`
 - Remote: `https://github.com/770122whrt/text2IFC`
 
@@ -98,6 +98,10 @@ requirements.
   `validate_v2_document` because of missing representations, non-rectangular
   `IfcWallStandardCase` profiles, invalid IFC attribute/property value types,
   and non-generatable classes.
+- Inserted Wave 2.5 resolves the zero-formal blocker with conservative
+  supported-scope projection. Phase 3 now has 25 formal targets, 0
+  `draft_clarification` records, and 5,325 projection omissions retained in
+  sidecars.
 - Generated BIM JSON 2.0 and IFC2X3 generation-profile references are
   drift-checked from canonical schemas and registries.
 - Deep code review fixed three Formal/typed-identity gaps through recorded
@@ -156,9 +160,9 @@ requirements.
 - All 25 extraction labels are currently Drafts because material, type,
   connection, and complex-geometry losses are explicit. Phase 3 must define
   how Formal training targets are selected or completed.
-- Wave 3 cannot generate formal Text/JSON pairs from the current gold manifest
-  because `formal == 0`; continuing requires a supported-scope projection
-  decision or Phase 4 fidelity work first.
+- Projection removes invalid formal facts and records omissions, but it reduces
+  IFC source fidelity. Phase 4 still owns high-fidelity material/type/topology
+  and complex-geometry recovery.
 - Existing BIMNet train/test folders leak scene families (`7y3`, `e9z`, and
   `px4`) across file-level splits and must not be reused as model splits;
   downstream Phase 3 code must consume `dataset/splits/bimnet-scene-splits.json`.
@@ -171,9 +175,9 @@ requirements.
 
 Resolve the Phase 3 zero-formal-gold decision before Wave 3:
 
-Execute inserted Wave 2.5 (`03-02.5-PLAN.md`): create a supported-scope
-projection that records every omitted invalid fact in sidecars and produces
-validated formal targets for Wave 3 text generation.
+Execute Phase 3 Wave 3 (`03-03-PLAN.md`): generate deterministic
+provenance-linked Text/JSON pairs from formal targets without mentioning
+sidecar-only omissions as formal facts.
 
 ## Accumulated Context
 
@@ -192,6 +196,8 @@ validated formal targets for Wave 3 text generation.
 - Phase 3 Wave 2.5 inserted on 2026-06-14 after GSD SDK was unavailable in
   this runtime. The insertion resolves the zero-formal-gold finding by adding a
   no-fabrication supported-scope projection before pair generation.
+- Phase 3 Wave 2.5 completed on 2026-06-14 with RED/GREEN commits `1026482`,
+  `1181217`, `6f3f76f`, and `f01220a`; all 25 formal targets validate.
 
 ---
-*Last activity: 2026-06-14 - inserted Phase 3 Wave 2.5 projection plan*
+*Last activity: 2026-06-14 - completed Phase 3 Wave 2.5 projection*

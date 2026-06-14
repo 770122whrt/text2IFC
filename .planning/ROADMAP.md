@@ -189,10 +189,10 @@ beyond the Phase 2.5 formal generation profile.
 
 **Wave 2.5** *(INSERTED; blocked on Wave 2 zero-formal finding)*
 
-- [ ] `03-02.5-PLAN.md` - Supported-scope projection for formal
+- [x] `03-02.5-PLAN.md` - Supported-scope projection for formal
   Text-to-JSON targets
 
-**Wave 3** *(blocked on Wave 2 completion)*
+**Wave 3** *(blocked on Wave 2.5 completion)*
 
 - [ ] `03-03-PLAN.md` - Deterministic Text/JSON pair generation
 
@@ -223,8 +223,7 @@ beyond the Phase 2.5 formal generation profile.
 - Every implementation behavior with defined inputs and outputs follows a
   recorded RED-GREEN TDD cycle.
 
-**Status:** In progress - Wave 2 complete; inserted Wave 2.5 ready to resolve
-the zero-formal gold-set finding
+**Status:** In progress - Wave 2.5 complete, Wave 3 ready
 
 ## Phase 4: High-fidelity IFC Round Trip
 
