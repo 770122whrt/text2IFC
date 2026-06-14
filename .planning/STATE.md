@@ -12,9 +12,9 @@ requirements.
 ## Status
 
 - Phase: 3
-- Stage: Ready to execute
-- State: Phase 3 specification and execution plans written
-- Plans: Phase 3 planned, 6 plans in 6 waves
+- Stage: Executing
+- State: Phase 3 Wave 1 complete; Wave 2 ready
+- Plans: Phase 3 planned, 1 of 6 plans complete
 - Branch: `main`
 - Remote: `https://github.com/770122whrt/text2IFC`
 
@@ -86,6 +86,12 @@ requirements.
   deterministic represented-plus-reported extraction accounting.
 - The 25 files map to 19 Matterport scene families; no Phase 3 split has been
   assigned.
+- Phase 3 now has a deterministic BIMNet scene-family split manifest:
+  13 train families / 17 files, 3 validation families / 5 files, and 3 test
+  families / 3 files.
+- The split builder rejects missing dataset/training authorization, disabled
+  training eligibility, missing SHA-256 values, non-IFC2X3 records, and
+  mutated family leakage before downstream dataset generation.
 - Generated BIM JSON 2.0 and IFC2X3 generation-profile references are
   drift-checked from canonical schemas and registries.
 - Deep code review fixed three Formal/typed-identity gaps through recorded
@@ -145,7 +151,8 @@ requirements.
   connection, and complex-geometry losses are explicit. Phase 3 must define
   how Formal training targets are selected or completed.
 - Existing BIMNet train/test folders leak scene families (`7y3`, `e9z`, and
-  `px4`) across file-level splits and must not be reused as model splits.
+  `px4`) across file-level splits and must not be reused as model splits;
+  downstream Phase 3 code must consume `dataset/splits/bimnet-scene-splits.json`.
 - IfcOpenShell 0.8.5 late-bound EXPRESS schema cleanup corrupts the Windows
   heap; registry generation isolates parsing in a hard-exit worker.
 - The repository `.pytest-tmp` directory can acquire restrictive Windows ACLs;
@@ -153,9 +160,9 @@ requirements.
 
 ## Next Action
 
-Execute Phase 3 Wave 1 (`03-01-PLAN.md`): create the scene-family split
-manifest and provenance gate with RED/GREEN TDD, then continue through the
-planned waves.
+Execute Phase 3 Wave 2 (`03-02-PLAN.md`): triage all Draft extraction records,
+promote only supported-scope validated `partial_document` payloads into formal
+gold targets, and preserve all omitted source facts in sidecars.
 
 ## Accumulated Context
 
@@ -166,6 +173,8 @@ planned waves.
 - Phase 3 specified and planned on 2026-06-14 with six waves: split,
   gold-set construction, pair generation, evaluation harness, structured-output
   baseline, and E2E/decision report.
+- Phase 3 Wave 1 completed on 2026-06-14 with RED/GREEN commits `687cebe` and
+  `9576753`; focused split tests, split drift check, and full regression passed.
 
 ---
-*Last activity: 2026-06-14 - planned Phase 3*
+*Last activity: 2026-06-14 - completed Phase 3 Wave 1 split gate*

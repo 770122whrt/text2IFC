@@ -181,7 +181,7 @@ beyond the Phase 2.5 formal generation profile.
 
 **Wave 1**
 
-- [ ] `03-01-PLAN.md` - Scene-family split manifest and provenance gate
+- [x] `03-01-PLAN.md` - Scene-family split manifest and provenance gate
 
 **Wave 2** *(blocked on Wave 1 completion)*
 
@@ -218,7 +218,7 @@ beyond the Phase 2.5 formal generation profile.
 - Every implementation behavior with defined inputs and outputs follows a
   recorded RED-GREEN TDD cycle.
 
-**Status:** Planned - ready to execute
+**Status:** In progress - Wave 1 complete, Wave 2 ready
 
 ## Phase 4: High-fidelity IFC Round Trip
 
