@@ -24,9 +24,19 @@ from .evaluation import (
     evaluate_prediction_cases,
     run_fixture_evaluation,
 )
+from .baseline import (
+    BaselineError,
+    FakeProvider,
+    FileProvider,
+    run_baseline,
+    run_baseline_records,
+)
 
 __all__ = [
+    "BaselineError",
     "EvaluationError",
+    "FakeProvider",
+    "FileProvider",
     "GoldSetError",
     "PairGenerationError",
     "SplitManifestError",
@@ -40,6 +50,8 @@ __all__ = [
     "evaluate_prediction_cases",
     "load_bimnet_manifest",
     "load_scene_families",
+    "run_baseline",
+    "run_baseline_records",
     "run_fixture_evaluation",
     "triage_extraction_audit",
 ]
