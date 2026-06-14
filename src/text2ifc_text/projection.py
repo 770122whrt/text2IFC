@@ -214,6 +214,123 @@ def _apply_issue(
     )
 
 
+def _entity_index(issue_path: str) -> int:
+    tokens = _tokens(issue_path)
+    if len(tokens) < 2 or tokens[0] != "entities":
+        raise ProjectionError(f"issue path does not identify an entity: {issue_path}")
+    return int(tokens[1])
+
+
+def _relationship_index(issue_path: str) -> int:
+    tokens = _tokens(issue_path)
+    if len(tokens) < 2 or tokens[0] != "relationships":
+        raise ProjectionError(
+            f"issue path does not identify a relationship: {issue_path}"
+        )
+    return int(tokens[1])
+
+
+def _apply_issue_batch(
+    document: dict[str, Any],
+    issues: list[Any],
+    *,
+    source_record: dict[str, Any],
+) -> list[dict[str, Any]]:
+    entity_drops: dict[int, Any] = {}
+    relationship_drops: dict[int, Any] = {}
+    field_drops: dict[str, Any] = {}
+
+    for issue in issues:
+        code = issue.code
+        if code in ENTITY_DROP_CODES or code in PLACEMENT_ENTITY_DROP_CODES:
+            entity_drops.setdefault(_entity_index(issue.path), issue)
+        elif code in RELATIONSHIP_DROP_CODES:
+            relationship_drops.setdefault(_relationship_index(issue.path), issue)
+        elif code in ATTRIBUTE_DROP_CODES:
+            entity_index = _entity_index(issue.path)
+            if entity_index not in entity_drops:
+                field_drops.setdefault(issue.path, issue)
+        elif code in PROPERTY_DROP_CODES:
+            entity_index = _entity_index(issue.path)
+            if entity_index not in entity_drops:
+                field_drops.setdefault(_property_set_path(issue.path), issue)
+        else:
+            raise ProjectionError(
+                f"unsupported projection issue {issue.code} at "
+                f"{issue.path}: {issue.message}"
+            )
+
+    omissions: list[dict[str, Any]] = []
+    for path, issue in sorted(
+        field_drops.items(),
+        key=lambda item: (len(_tokens(item[0])), item[0]),
+        reverse=True,
+    ):
+        try:
+            entity_id = _entity_id_for_path(document, issue.path)
+            omitted = _delete(document, path)
+        except (KeyError, IndexError, ValueError, TypeError):
+            continue
+        reason = (
+            "property value omitted because validator rejected its value"
+            if issue.code in PROPERTY_DROP_CODES
+            else "native IFC attribute omitted because validator rejected its value"
+        )
+        omissions.append(
+            _omission(
+                source_record=source_record,
+                issue=issue,
+                path=path,
+                omitted_value=omitted,
+                reason=reason,
+                entity_id=entity_id,
+            )
+        )
+
+    for index, issue in sorted(relationship_drops.items(), reverse=True):
+        path = f"/relationships/{index}"
+        try:
+            relationship_id = _relationship_id_for_path(document, path)
+            omitted = _delete(document, path)
+        except (KeyError, IndexError, ValueError, TypeError):
+            continue
+        omissions.append(
+            _omission(
+                source_record=source_record,
+                issue=issue,
+                path=path,
+                omitted_value=omitted,
+                reason="relationship omitted because its class or endpoints are not formal",
+                entity_id=relationship_id,
+            )
+        )
+
+    for index, issue in sorted(entity_drops.items(), reverse=True):
+        path = f"/entities/{index}"
+        try:
+            entity_id = _entity_id_for_path(document, path)
+            omitted = _delete(document, path)
+        except (KeyError, IndexError, ValueError, TypeError):
+            continue
+        omissions.append(
+            _omission(
+                source_record=source_record,
+                issue=issue,
+                path=path,
+                omitted_value=omitted,
+                reason="entity omitted because it is outside the formal generation profile",
+                entity_id=entity_id,
+            )
+        )
+
+    if not omissions:
+        first = issues[0]
+        raise ProjectionError(
+            f"projection made no progress for {first.code} at {first.path}"
+        )
+    return omissions
+
+
 def project_supported_scope_target(
     document: dict[str, Any],
     *,
@@ -229,7 +346,7 @@ def project_supported_scope_target(
                 "omissions": omissions,
                 "validation_issues": [],
             }
-        omissions.append(
-            _apply_issue(target, issues[0], source_record=source_record)
+        omissions.extend(
+            _apply_issue_batch(target, issues, source_record=source_record)
         )
     raise ProjectionError("projection step limit exceeded")

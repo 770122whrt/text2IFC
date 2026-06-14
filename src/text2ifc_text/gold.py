@@ -14,6 +14,7 @@ from typing import Any, Callable
 from text2ifc_contract.draft import validate_draft
 from text2ifc_contract.validation_v2 import validate_v2_document
 
+from .projection import ProjectionError, project_supported_scope_target
 from .splits import (
     DEFAULT_MANIFEST_PATH,
     ROOT,
@@ -200,11 +201,45 @@ def build_formal_target_from_draft(
         ),
         "draft_validation_issues": draft_issues,
         "validation_issues": validation_issues,
+        "pre_projection_validation_issues": validation_issues,
+        "projection_omission_count": 0,
+        "projection_omissions": [],
     }
-    if validation_issues or draft_issues:
+    if draft_issues:
         return {
             "target_kind": "draft_clarification",
             "target": None,
+            "sidecar": sidecar,
+        }
+    if validation_issues:
+        try:
+            projection = project_supported_scope_target(
+                partial_document,
+                source_record=source_record,
+            )
+        except ProjectionError as exc:
+            sidecar["projection_error"] = str(exc)
+            return {
+                "target_kind": "draft_clarification",
+                "target": None,
+                "sidecar": sidecar,
+            }
+        projected_target = projection["target"]
+        projected_issues = [
+            _issue_payload(issue) for issue in validate_v2_document(projected_target)
+        ]
+        sidecar["validation_issues"] = projected_issues
+        sidecar["projection_omissions"] = projection["omissions"]
+        sidecar["projection_omission_count"] = len(projection["omissions"])
+        if projected_issues:
+            return {
+                "target_kind": "draft_clarification",
+                "target": None,
+                "sidecar": sidecar,
+            }
+        return {
+            "target_kind": "formal",
+            "target": projected_target,
             "sidecar": sidecar,
         }
     return {
@@ -239,6 +274,9 @@ def _formal_result_from_document(
         "clarification_targets": [],
         "draft_validation_issues": [],
         "validation_issues": validation_issues,
+        "pre_projection_validation_issues": validation_issues,
+        "projection_omission_count": 0,
+        "projection_omissions": [],
     }
     if validation_issues:
         return {
@@ -348,6 +386,9 @@ def _record_from_result(
         "loss_count": promotion["sidecar"]["loss_count"],
         "missing_fact_count": promotion["sidecar"]["missing_fact_count"],
         "validation_issue_count": len(promotion["sidecar"]["validation_issues"]),
+        "projection_omission_count": promotion["sidecar"].get(
+            "projection_omission_count", 0
+        ),
     }
     return manifest_record, outputs
 
