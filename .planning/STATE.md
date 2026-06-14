@@ -13,8 +13,8 @@ requirements.
 
 - Phase: 3
 - Stage: Executing
-- State: Phase 3 Wave 3 complete; Wave 4 ready
-- Plans: Phase 3 planned, 4 of 7 plans complete
+- State: Phase 3 Wave 4 complete; Wave 5 ready
+- Plans: Phase 3 planned, 5 of 7 plans complete
 - Branch: `main`
 - Remote: `https://github.com/770122whrt/text2IFC`
 
@@ -105,13 +105,19 @@ requirements.
 - Phase 3 now has 100 deterministic Text-to-BIM-JSON pair records generated
   from 25 formal targets: 68 train, 20 validation, and 12 test records across
   concise, enumerated, spatial, and property-focused styles.
+- Phase 3 now has a provider-independent evaluation harness with parse,
+  schema, semantic, class, property, relationship, placement, geometry,
+  compile, reopen, and split/source error-bucket metrics.
+- The deterministic evaluation fixture contains 4 records: parse success 0.75,
+  schema valid 0.50, semantic valid 0.25, and one compile/reopen-checked
+  valid prediction with both rates at 1.00.
 - Generated BIM JSON 2.0 and IFC2X3 generation-profile references are
   drift-checked from canonical schemas and registries.
 - Deep code review fixed three Formal/typed-identity gaps through recorded
   RED/GREEN commits.
 - Phase 2.5 security verification closes all 23 threats with none open.
 - All 11 Phase 2.5 requirements are verified.
-- Repository regression suite currently passes 248 tests.
+- Repository regression suite currently passes 271 tests.
 
 ## Current Decisions
 
@@ -176,8 +182,8 @@ requirements.
 
 ## Next Action
 
-Execute Phase 3 Wave 4 (`03-04-PLAN.md`): build the provider-independent
-evaluation harness before making any baseline quality claims.
+Execute Phase 3 Wave 5 (`03-05-PLAN.md`): build the structured-output
+Text-to-JSON baseline and evaluate it with the provider-independent harness.
 
 ## Accumulated Context
 
@@ -200,6 +206,9 @@ evaluation harness before making any baseline quality claims.
   `1181217`, `6f3f76f`, and `f01220a`; all 25 formal targets validate.
 - Phase 3 Wave 3 completed on 2026-06-14 with RED/GREEN commits `faeec4a` and
   `9dac1de`; 100 deterministic split-aware pair records were generated.
+- Phase 3 Wave 4 completed on 2026-06-14 with RED/GREEN commits `ed7719a` and
+  `bcd6c12`; the provider-independent evaluation harness and fixture reports
+  passed focused checks and full regression.
 
 ---
-*Last activity: 2026-06-14 - completed Phase 3 Wave 3 pair generation*
+*Last activity: 2026-06-14 - completed Phase 3 Wave 4 evaluation harness*

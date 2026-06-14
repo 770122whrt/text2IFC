@@ -177,7 +177,7 @@ Text-to-JSON. It does not fine-tune a production model, does not implement the
 runtime multi-turn clarification Agent, and does not expand source IFC fidelity
 beyond the Phase 2.5 formal generation profile.
 
-**Plans:** 6 plans in 6 waves
+**Plans:** 7 plans in 7 waves
 
 **Wave 1**
 
@@ -198,7 +198,7 @@ beyond the Phase 2.5 formal generation profile.
 
 **Wave 4** *(blocked on Wave 3 completion)*
 
-- [ ] `03-04-PLAN.md` - Provider-independent evaluation harness
+- [x] `03-04-PLAN.md` - Provider-independent evaluation harness
 
 **Wave 5** *(blocked on Wave 4 completion)*
 
@@ -223,7 +223,7 @@ beyond the Phase 2.5 formal generation profile.
 - Every implementation behavior with defined inputs and outputs follows a
   recorded RED-GREEN TDD cycle.
 
-**Status:** In progress - Wave 3 complete, Wave 4 ready
+**Status:** In progress - Wave 4 complete, Wave 5 ready
 
 ## Phase 4: High-fidelity IFC Round Trip
 
