@@ -7,14 +7,14 @@ See: `.planning/PROJECT.md` (updated 2026-06-11)
 **Core value:** Produce valid, inspectable IFC models from explicit user
 requirements.
 
-**Current focus:** Phase 3 planning - Text-to-JSON Dataset and Baseline
+**Current focus:** Phase 3 execution - Text-to-JSON Dataset and Baseline
 
 ## Status
 
 - Phase: 3
-- Stage: Planning ready
-- State: Phase 2.5 verified; Phase 3 discussion/specification next
-- Plans: Phase 2.5 complete, 6 of 6 plans in 5 waves
+- Stage: Ready to execute
+- State: Phase 3 specification and execution plans written
+- Plans: Phase 3 planned, 6 plans in 6 waves
 - Branch: `main`
 - Remote: `https://github.com/770122whrt/text2IFC`
 
@@ -126,6 +126,15 @@ requirements.
 - Exact `IfcWallStandardCase` requires a compiler-generated anonymous
   `IfcMaterialLayerSetUsage` under IFC2X3. This is low-level schema
   bookkeeping, not a claim about source material composition.
+- Phase 3 starts with data truth, not model tuning: scene-family splitting,
+  Draft triage, formal supported-scope gold targets, text pairs, evaluation,
+  baseline, then E2E demo.
+- A Draft `partial_document` can become a Phase 3 formal target only when it
+  validates as BIM JSON 2.0 and every omitted source fact remains in a sidecar.
+- Structured-output baseline outputs formal BIM JSON 2.0 and forbids raw IFC
+  STEP text or low-level compiler entities.
+- RAG, fine-tuning, and runtime clarification are decided after baseline
+  metrics; Phase 3 only produces the decision report and labeled Draft data.
 
 ## Known Risks
 
@@ -144,9 +153,9 @@ requirements.
 
 ## Next Action
 
-Discuss and specify Phase 3: split the 19 scene families before text
-generation, define Formal versus clarification training records, and establish
-the structured-output Text-to-JSON baseline and evaluation metrics.
+Execute Phase 3 Wave 1 (`03-01-PLAN.md`): create the scene-family split
+manifest and provenance gate with RED/GREEN TDD, then continue through the
+planned waves.
 
 ## Accumulated Context
 
@@ -154,6 +163,9 @@ the structured-output Text-to-JSON baseline and evaluation metrics.
 
 - Phase 2.5 inserted after Phase 2 on 2026-06-11: BIM JSON 1.0 cannot represent
   the spatial ground truth required for Text-to-JSON training.
+- Phase 3 specified and planned on 2026-06-14 with six waves: split,
+  gold-set construction, pair generation, evaluation harness, structured-output
+  baseline, and E2E/decision report.
 
 ---
-*Last activity: 2026-06-12 - verified and completed Phase 2.5*
+*Last activity: 2026-06-14 - planned Phase 3*

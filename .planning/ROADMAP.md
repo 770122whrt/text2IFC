@@ -155,6 +155,14 @@ it, and demonstrate the first spatial Text-to-JSON-to-IFC request.
 
 **Depends on:** Phase 1, Phase 2, Phase 2.5
 
+**Canonical refs:**
+
+- `.planning/phases/03-text-to-json-dataset-and-baseline/03-SPEC.md`
+- `.planning/phases/03-text-to-json-dataset-and-baseline/03-CONTEXT.md`
+- `.planning/phases/03-text-to-json-dataset-and-baseline/03-RESEARCH.md`
+- `.planning/phases/03-text-to-json-dataset-and-baseline/03-VALIDATION.md`
+- `.planning/phases/03-text-to-json-dataset-and-baseline/03-GOAL-PROMPT.md`
+
 **Data boundary:**
 
 - BIMNet is the primary authorized IFC2X3 source.
@@ -164,7 +172,53 @@ it, and demonstrate the first spatial Text-to-JSON-to-IFC request.
 - IFC-to-BIM-JSON is an offline label-construction step; runtime inference
   remains Natural Language to formal BIM JSON 2.0 to IFC.
 
-**Status:** Ready for planning
+**Explicit boundary:** This phase builds the data and evaluation loop for
+Text-to-JSON. It does not fine-tune a production model, does not implement the
+runtime multi-turn clarification Agent, and does not expand source IFC fidelity
+beyond the Phase 2.5 formal generation profile.
+
+**Plans:** 6 plans in 6 waves
+
+**Wave 1**
+
+- [ ] `03-01-PLAN.md` - Scene-family split manifest and provenance gate
+
+**Wave 2** *(blocked on Wave 1 completion)*
+
+- [ ] `03-02-PLAN.md` - Draft triage and formal supported-scope gold set
+
+**Wave 3** *(blocked on Wave 2 completion)*
+
+- [ ] `03-03-PLAN.md` - Deterministic Text/JSON pair generation
+
+**Wave 4** *(blocked on Wave 3 completion)*
+
+- [ ] `03-04-PLAN.md` - Provider-independent evaluation harness
+
+**Wave 5** *(blocked on Wave 4 completion)*
+
+- [ ] `03-05-PLAN.md` - Structured-output Text-to-JSON baseline
+
+**Wave 6** *(blocked on Wave 5 completion)*
+
+- [ ] `03-06-PLAN.md` - End-to-end demo, summary, and RAG/fine-tune decision
+  report
+
+**Cross-cutting constraints:**
+
+- Scene-family split assignment happens before any text generation,
+  augmentation, baseline run, or fine-tuning export.
+- Formal baseline targets are supported-scope BIM JSON 2.0 documents; source
+  losses remain in sidecars and are not invented into the target.
+- Draft/clarification records remain separate from formal baseline records.
+- The model layer outputs BIM JSON 2.0 only; raw IFC STEP and low-level IFC
+  implementation objects remain compiler output.
+- Evaluation reports invalid JSON/BIM JSON as first-class failures before
+  semantic field scoring.
+- Every implementation behavior with defined inputs and outputs follows a
+  recorded RED-GREEN TDD cycle.
+
+**Status:** Planned - ready to execute
 
 ## Phase 4: High-fidelity IFC Round Trip
 
