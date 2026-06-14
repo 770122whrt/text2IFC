@@ -220,11 +220,14 @@ def run_demo(
     atomic_write_text(output / "metrics.json", render_json(evaluation["metrics"]))
 
     output_ifc = output / "output.ifc"
-    compilation = compile_document(prediction, output_ifc)
+    compile_target = output_ifc if not output_ifc.exists() else output / ".output.check.ifc"
+    compilation = compile_document(prediction, compile_target)
+    if compilation.success and compile_target != output_ifc:
+        compile_target.unlink(missing_ok=True)
     diagnostics["compiled_ifc"] = {
         "attempted": True,
         "success": compilation.success,
-        "output_path": str(compilation.output_path) if compilation.output_path else None,
+        "output_path": str(output_ifc if compilation.success else compilation.output_path),
         "issues": _compiler_issues(compilation),
     }
     atomic_write_text(output / "diagnostics.json", render_json(diagnostics))
