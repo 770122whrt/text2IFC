@@ -38,12 +38,18 @@ def test_projection_removes_only_validator_rejected_facts_and_records_omissions(
     site["attributes"]["RefLatitude"] = "not-a-compound-angle"
 
     wall = _entity(document, "wall-1")
-    wall["ifc_class"] = "IfcWallStandardCase"
-    wall["attributes"]["Representation"]["profile"] = {
+    wall["property_sets"]["Pset_WallCommon"]["IsExternal"] = "yes"
+
+    standard_case_wall = copy.deepcopy(wall)
+    standard_case_wall["id"] = "stdwall-1"
+    standard_case_wall["ifc_class"] = "IfcWallStandardCase"
+    standard_case_wall["property_sets"]["Pset_WallCommon"]["IsExternal"] = True
+    standard_case_wall["attributes"]["ObjectPlacement"]["relative_to"] = "storey-1"
+    standard_case_wall["attributes"]["Representation"]["profile"] = {
         "kind": "polygon",
         "points": [[0, 0], [5000, 0], [5000, 200], [0, 200], [0, 0]],
     }
-    wall["property_sets"]["Pset_WallCommon"]["IsExternal"] = "yes"
+    document["entities"].append(standard_case_wall)
 
     door = _entity(document, "door-1")
     door["attributes"].pop("Representation")
@@ -72,12 +78,15 @@ def test_projection_removes_only_validator_rejected_facts_and_records_omissions(
 
     projected_ids = {record["id"] for record in result["target"]["entities"]}
     assert "site-1" in projected_ids
-    assert "wall-1" not in projected_ids
+    assert "wall-1" in projected_ids
+    assert "stdwall-1" not in projected_ids
     assert "door-1" not in projected_ids
     assert "proxy-1" not in projected_ids
 
     site_projected = _entity(result["target"], "site-1")
     assert "RefLatitude" not in site_projected["attributes"]
+    wall_projected = _entity(result["target"], "wall-1")
+    assert "IsExternal" not in wall_projected["property_sets"]["Pset_WallCommon"]
 
     serialized = json.dumps(result["target"], sort_keys=True)
     assert "not-a-compound-angle" not in serialized
