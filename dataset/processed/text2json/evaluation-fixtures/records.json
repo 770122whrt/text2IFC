@@ -1,0 +1,52 @@
+{
+  "fixture-invalid-json": {
+    "compiler_issues": [],
+    "parse_error": "Expecting property name enclosed in double quotes at line 1 column 2",
+    "record_id": "fixture-invalid-json",
+    "source_file_id": "fixture-ifc",
+    "split": "validation",
+    "stage": "parse",
+    "validation_issues": []
+  },
+  "fixture-perfect": {
+    "compiler_issues": [],
+    "record_id": "fixture-perfect",
+    "source_file_id": "fixture-ifc",
+    "split": "validation",
+    "stage": "ok",
+    "validation_issues": []
+  },
+  "fixture-schema-invalid": {
+    "compiler_issues": [],
+    "record_id": "fixture-schema-invalid",
+    "source_file_id": "fixture-ifc",
+    "split": "validation",
+    "stage": "schema",
+    "validation_issues": [
+      {
+        "code": "REQUIRED_FIELD",
+        "message": "Required field 'ifc_schema' is missing.",
+        "path": "/ifc_schema"
+      }
+    ]
+  },
+  "fixture-semantic-invalid": {
+    "compiler_issues": [],
+    "record_id": "fixture-semantic-invalid",
+    "source_file_id": "fixture-ifc",
+    "split": "validation",
+    "stage": "semantic",
+    "validation_issues": [
+      {
+        "code": "CLASS_NOT_GENERATABLE",
+        "message": "'IfcBuildingElementProxy' capability is extract-only.",
+        "path": "/entities/4/ifc_class"
+      },
+      {
+        "code": "PROPERTY_SET_NOT_APPLICABLE",
+        "message": "Pset_WallCommon is not applicable to IfcBuildingElementProxy.",
+        "path": "/entities/4/property_sets/Pset_WallCommon"
+      }
+    ]
+  }
+}
