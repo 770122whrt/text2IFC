@@ -13,8 +13,8 @@ requirements.
 
 - Phase: 3
 - Stage: Executing
-- State: Phase 3 Wave 2.5 complete; Wave 3 ready
-- Plans: Phase 3 planned, 3 of 7 plans complete
+- State: Phase 3 Wave 3 complete; Wave 4 ready
+- Plans: Phase 3 planned, 4 of 7 plans complete
 - Branch: `main`
 - Remote: `https://github.com/770122whrt/text2IFC`
 
@@ -102,6 +102,9 @@ requirements.
   supported-scope projection. Phase 3 now has 25 formal targets, 0
   `draft_clarification` records, and 5,325 projection omissions retained in
   sidecars.
+- Phase 3 now has 100 deterministic Text-to-BIM-JSON pair records generated
+  from 25 formal targets: 68 train, 20 validation, and 12 test records across
+  concise, enumerated, spatial, and property-focused styles.
 - Generated BIM JSON 2.0 and IFC2X3 generation-profile references are
   drift-checked from canonical schemas and registries.
 - Deep code review fixed three Formal/typed-identity gaps through recorded
@@ -173,11 +176,8 @@ requirements.
 
 ## Next Action
 
-Resolve the Phase 3 zero-formal-gold decision before Wave 3:
-
-Execute Phase 3 Wave 3 (`03-03-PLAN.md`): generate deterministic
-provenance-linked Text/JSON pairs from formal targets without mentioning
-sidecar-only omissions as formal facts.
+Execute Phase 3 Wave 4 (`03-04-PLAN.md`): build the provider-independent
+evaluation harness before making any baseline quality claims.
 
 ## Accumulated Context
 
@@ -198,6 +198,8 @@ sidecar-only omissions as formal facts.
   no-fabrication supported-scope projection before pair generation.
 - Phase 3 Wave 2.5 completed on 2026-06-14 with RED/GREEN commits `1026482`,
   `1181217`, `6f3f76f`, and `f01220a`; all 25 formal targets validate.
+- Phase 3 Wave 3 completed on 2026-06-14 with RED/GREEN commits `faeec4a` and
+  `9dac1de`; 100 deterministic split-aware pair records were generated.
 
 ---
-*Last activity: 2026-06-14 - completed Phase 3 Wave 2.5 projection*
+*Last activity: 2026-06-14 - completed Phase 3 Wave 3 pair generation*

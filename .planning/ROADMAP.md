@@ -194,7 +194,7 @@ beyond the Phase 2.5 formal generation profile.
 
 **Wave 3** *(blocked on Wave 2.5 completion)*
 
-- [ ] `03-03-PLAN.md` - Deterministic Text/JSON pair generation
+- [x] `03-03-PLAN.md` - Deterministic Text/JSON pair generation
 
 **Wave 4** *(blocked on Wave 3 completion)*
 
@@ -223,7 +223,7 @@ beyond the Phase 2.5 formal generation profile.
 - Every implementation behavior with defined inputs and outputs follows a
   recorded RED-GREEN TDD cycle.
 
-**Status:** In progress - Wave 2.5 complete, Wave 3 ready
+**Status:** In progress - Wave 3 complete, Wave 4 ready
 
 ## Phase 4: High-fidelity IFC Round Trip
 
