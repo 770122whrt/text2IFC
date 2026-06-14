@@ -78,13 +78,13 @@ requirements.
 
 ### Text-to-JSON Baseline
 
-- [ ] **TEXT-01**: The project can generate provenance-linked text and BIM JSON
+- [x] **TEXT-01**: The project can generate provenance-linked text and BIM JSON
   2.0 pairs from approved formal ground-truth records without split leakage.
-- [ ] **TEXT-02**: A structured-output baseline converts natural language into
+- [x] **TEXT-02**: A structured-output baseline converts natural language into
   formal BIM JSON 2.0 without generating raw IFC text.
-- [ ] **TEXT-03**: Text-to-JSON output is evaluated with field-level,
+- [x] **TEXT-03**: Text-to-JSON output is evaluated with field-level,
   collection-level, and document-validity metrics.
-- [ ] **E2E-01**: At least one spatial natural-language request completes the
+- [x] **E2E-01**: At least one spatial natural-language request completes the
   validated Text-to-JSON-to-IFC pipeline.
 
 ## Later Requirements
@@ -150,10 +150,10 @@ requirements.
 | DRAFT-01 | Phase 2.5 | Complete |
 | EXTRACT-01 | Phase 2.5 | Complete |
 | COMPAT-01 | Phase 2.5 | Complete |
-| TEXT-01 | Phase 3 | Pending |
-| TEXT-02 | Phase 3 | Pending |
-| TEXT-03 | Phase 3 | Pending |
-| E2E-01 | Phase 3 | Pending |
+| TEXT-01 | Phase 3 | Complete |
+| TEXT-02 | Phase 3 | Complete |
+| TEXT-03 | Phase 3 | Complete |
+| E2E-01 | Phase 3 | Complete |
 | GEO-03 | Phase 4 | Deferred |
 | GEO-04 | Phase 4 | Deferred |
 | GEO-05 | Phase 4 | Deferred |
@@ -172,4 +172,4 @@ requirements.
 
 ---
 *Requirements defined: 2026-06-11*
-*Last updated: 2026-06-12 after Phase 2.5 verification*
+*Last updated: 2026-06-14 after Phase 3 verification*

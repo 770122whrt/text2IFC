@@ -223,7 +223,7 @@ beyond the Phase 2.5 formal generation profile.
 - Every implementation behavior with defined inputs and outputs follows a
   recorded RED-GREEN TDD cycle.
 
-**Status:** In progress - Wave 5 complete, Wave 6 ready
+**Status:** Complete - verified 2026-06-14
 
 ## Phase 4: High-fidelity IFC Round Trip
 
@@ -246,7 +246,7 @@ targeted follow-up questions and persistent conversation state.
 
 **Depends on:** Phase 1, Phase 3
 
-**Status:** Deferred
+**Status:** Ready
 
 ## Phase 6: Data Expansion, Fine-tuning, and Deployment
 

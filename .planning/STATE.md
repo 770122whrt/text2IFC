@@ -7,14 +7,15 @@ See: `.planning/PROJECT.md` (updated 2026-06-11)
 **Core value:** Produce valid, inspectable IFC models from explicit user
 requirements.
 
-**Current focus:** Phase 3 execution - Text-to-JSON Dataset and Baseline
+**Current focus:** Phase 3 complete; next-phase selection
 
 ## Status
 
 - Phase: 3
-- Stage: Executing
-- State: Phase 3 Wave 5 complete; Wave 6 ready
-- Plans: Phase 3 planned, 6 of 7 plans complete
+- Stage: Verified
+- State: Phase 3 complete; Phase 5 Agent work is ready if interactive
+  clarification is the next priority
+- Plans: Phase 3 complete, 7 of 7 plans complete
 - Branch: `main`
 - Remote: `https://github.com/770122whrt/text2IFC`
 
@@ -117,13 +118,19 @@ requirements.
   evaluator integration.
 - The validation fake baseline smoke run produced 20 accepted formal
   predictions, 0 invalid predictions, and 1.00 parse/schema/semantic validity.
+- Phase 3 E2E demo selected validation spatial record
+  `bimnet-ifc2x3-i5n:spatial:09fcea3d6d138620`, validated the predicted BIM
+  JSON 2.0, compiled IFC2X3, and reopened with no compiler issues.
+- Phase 3 summary and RAG/fine-tune/Agent decision reports are written under
+  `docs/architecture/`.
 - Generated BIM JSON 2.0 and IFC2X3 generation-profile references are
   drift-checked from canonical schemas and registries.
 - Deep code review fixed three Formal/typed-identity gaps through recorded
   RED/GREEN commits.
 - Phase 2.5 security verification closes all 23 threats with none open.
 - All 11 Phase 2.5 requirements are verified.
-- Repository regression suite currently passes 276 tests.
+- Phase 3 final verification passes 281 tests plus split, gold, pair,
+  evaluation, E2E, registry, accounting, and compileall gates.
 
 ## Current Decisions
 
@@ -172,9 +179,6 @@ requirements.
 - Existing source files include text encoding problems.
 - Project-local dependency handling is not yet standardized for new machines.
 - Baseline model/provider choice must remain replaceable and reproducible.
-- All 25 extraction labels are currently Drafts because material, type,
-  connection, and complex-geometry losses are explicit. Phase 3 must define
-  how Formal training targets are selected or completed.
 - Projection removes invalid formal facts and records omissions, but it reduces
   IFC source fidelity. Phase 4 still owns high-fidelity material/type/topology
   and complex-geometry recovery.
@@ -188,8 +192,10 @@ requirements.
 
 ## Next Action
 
-Execute Phase 3 Wave 6 (`03-06-PLAN.md`): run the end-to-end demo and produce
-the Phase 3 summary plus RAG/fine-tune decision report.
+Plan the next phase. Recommended default: Phase 5 multi-turn clarification
+Agent, because the project goal includes asking users for missing required
+facts. Alternative: run a real file/live provider baseline first if model
+quality measurement is the immediate priority.
 
 ## Accumulated Context
 
@@ -218,6 +224,9 @@ the Phase 3 summary plus RAG/fine-tune decision report.
 - Phase 3 Wave 5 completed on 2026-06-14 with RED/GREEN commits `aaf46e4` and
   `d06693f`; the structured-output fake/file baseline runner produced a
   validation fake smoke run and passed full regression.
+- Phase 3 Wave 6 completed on 2026-06-14 with RED/GREEN commits `f1d5bcf` and
+  `8cba218`; stabilization commit `0cfcb83` kept check commands clean, and the
+  final gates passed.
 
 ---
-*Last activity: 2026-06-14 - completed Phase 3 Wave 5 structured-output baseline*
+*Last activity: 2026-06-14 - completed and verified Phase 3*

@@ -19,6 +19,12 @@ Use this page as the stable entry point for project documentation.
   - Completed semantic graph foundation
   - Verified IFC2X3 extraction and compilation boundary
   - Phase 3 handoff constraints
+- [Phase 3 Text-to-JSON Dataset and Baseline Summary](architecture/phase-3-summary.md)
+  - Scene-family split, formal gold targets, pair counts, baseline, evaluator,
+    and E2E demo
+- [Text-to-JSON RAG, Fine-tune, and Agent Decision](architecture/text2json-rag-finetune-decision.md)
+  - Metric-backed routing for RAG, fine-tuning, multi-turn Agent, and Phase 4
+    fidelity work
 
 ## Project Planning
 
