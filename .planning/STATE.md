@@ -7,14 +7,14 @@ See: `.planning/PROJECT.md` (updated 2026-06-11)
 **Core value:** Produce valid, inspectable IFC models from explicit user
 requirements.
 
-**Current focus:** Phase 5 planned; next step is Agent execution
+**Current focus:** Phase 5 Wave 2; missing-fact diagnostics to Chinese questions
 
 ## Status
 
 - Phase: 5
-- Stage: Planned
-- State: Phase 5 multi-turn clarification Agent is specified and planned
-- Plans: Phase 5 planned, 0 of 6 plans complete
+- Stage: Executing
+- State: Phase 5 Wave 1 complete; Wave 2 is next
+- Plans: Phase 5 in progress, 1 of 6 plans complete
 - Branch: `main`
 - Remote: `https://github.com/770122whrt/text2IFC`
 
@@ -124,6 +124,10 @@ requirements.
   `docs/architecture/`.
 - Phase 5 is specified and planned as a Chinese-first multi-turn clarification
   Agent with a final simple-room IFC acceptance artifact.
+- Phase 5 Wave 1 implemented deterministic Agent state primitives:
+  original-request preservation, transcript turns, missing facts, accepted
+  facts, candidate document storage, deterministic JSON serialization, and
+  metadata redaction.
 - Generated BIM JSON 2.0 and IFC2X3 generation-profile references are
   drift-checked from canonical schemas and registries.
 - Deep code review fixed three Formal/typed-identity gaps through recorded
@@ -181,6 +185,8 @@ requirements.
   `dataset/processed/agent-demo/simple-room/output.ifc`.
 - Live Mimo provider work is optional smoke-test behavior behind environment
   variables; fake/file providers remain required for deterministic tests.
+- Agent state is independent from BIM JSON structure; it can hold candidate
+  BIM JSON as plain JSON but does not define a second BIM JSON model.
 
 ## Known Risks
 
@@ -200,8 +206,7 @@ requirements.
 
 ## Next Action
 
-Execute Phase 5 Wave 1: Agent state contract, transcript, missing facts, and
-redaction primitives.
+Execute Phase 5 Wave 2: missing-fact diagnostics to bounded Chinese questions.
 
 ## Accumulated Context
 
@@ -236,6 +241,9 @@ redaction primitives.
 - Phase 5 was specified and planned on 2026-06-15 with six waves: Agent state,
   missing-fact questions, answer merge, provider/Mimo adapter, simple-room
   Agent demo to IFC, and final verification/summary.
+- Phase 5 Wave 1 completed on 2026-06-15 with RED commit `c53712e` and GREEN
+  commit `d5ca58a`; `tests/agent/test_agent_state.py` passed and the
+  `tests/contract_v2 tests/compiler` regression slice passed.
 
 ---
 *Last activity: 2026-06-14 - completed and verified Phase 3*

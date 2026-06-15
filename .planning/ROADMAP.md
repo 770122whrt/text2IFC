@@ -269,7 +269,7 @@ IFC, STEP text, low-level IFC helper entities, or compiler bookkeeping.
 
 **Wave 1**
 
-- [ ] `05-01-PLAN.md` - Agent state contract, transcript, missing facts, and
+- [x] `05-01-PLAN.md` - Agent state contract, transcript, missing facts, and
   redaction primitives
 
 **Wave 2** *(blocked on Wave 1 completion)*
