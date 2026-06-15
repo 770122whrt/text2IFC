@@ -80,6 +80,8 @@ def run_case(case_id: str, output_dir: Path | None = None) -> dict[str, Any]:
 def _case(case_id: str) -> dict[str, Any]:
     if case_id == "simple-room-fixed":
         return _simple_room_fixed()
+    if case_id == "two-room-suite":
+        return _two_room_suite()
     raise ValueError(f"Unknown geometry gate case: {case_id}")
 
 
@@ -222,6 +224,183 @@ def _simple_room_candidate() -> dict[str, Any]:
                 "IfcRelVoidsElement",
                 {
                     "RelatingBuildingElement": "wall-north",
+                    "RelatedOpeningElement": "opening-window-1",
+                },
+            ),
+            _relationship(
+                "fill-window-1",
+                "IfcRelFillsElement",
+                {
+                    "RelatingOpeningElement": "opening-window-1",
+                    "RelatedBuildingElement": "window-1",
+                },
+            ),
+        ],
+        "provenance": {"source": "phase-4-geometry-gate"},
+    }
+
+
+def _two_room_suite() -> dict[str, Any]:
+    return {
+        "input_text": (
+            "请创建一个单层双房间套间，总长 8 米、宽 4 米、高 3 米；"
+            "中间在 x=4 米处设置分隔墙，分隔墙中间有门，东墙中间有窗。"
+        ),
+        "candidate": _two_room_candidate(),
+        "expected": {
+            "case_id": "two-room-suite",
+            "units": "METRE",
+            "tolerance": 0.05,
+            "walls": {
+                "wall-south": {
+                    "axis": "x",
+                    "bbox": {
+                        "x": [0.0, 8.0],
+                        "y": [-0.1, 0.1],
+                        "z": [0.0, 3.0],
+                    },
+                },
+                "wall-north": {
+                    "axis": "x",
+                    "bbox": {
+                        "x": [0.0, 8.0],
+                        "y": [3.9, 4.1],
+                        "z": [0.0, 3.0],
+                    },
+                },
+                "wall-west": {
+                    "axis": "y",
+                    "bbox": {
+                        "x": [-0.1, 0.1],
+                        "y": [0.0, 4.0],
+                        "z": [0.0, 3.0],
+                    },
+                },
+                "wall-east": {
+                    "axis": "y",
+                    "bbox": {
+                        "x": [7.9, 8.1],
+                        "y": [0.0, 4.0],
+                        "z": [0.0, 3.0],
+                    },
+                },
+                "wall-partition": {
+                    "axis": "y",
+                    "bbox": {
+                        "x": [3.9, 4.1],
+                        "y": [0.0, 4.0],
+                        "z": [0.0, 3.0],
+                    },
+                },
+            },
+        },
+    }
+
+
+def _two_room_candidate() -> dict[str, Any]:
+    return {
+        "schema_version": "bim-json/2.0",
+        "ifc_schema": "IFC2X3",
+        "units": {"length": "MILLIMETRE"},
+        "entities": [
+            _entity("project-1", "IfcProject", {"Name": "Text2IFC Geometry Gate"}),
+            _entity(
+                "site-1",
+                "IfcSite",
+                {"Name": "Site", "ObjectPlacement": _placement("project-1")},
+            ),
+            _entity(
+                "building-1",
+                "IfcBuilding",
+                {"Name": "Building", "ObjectPlacement": _placement("site-1")},
+            ),
+            _entity(
+                "storey-1",
+                "IfcBuildingStorey",
+                {
+                    "Name": "Level 1",
+                    "Elevation": 0,
+                    "ObjectPlacement": _placement("building-1"),
+                },
+            ),
+            _entity(
+                "space-west",
+                "IfcSpace",
+                {
+                    "Name": "West Room",
+                    "InteriorOrExteriorSpace": "INTERNAL",
+                    "ObjectPlacement": _placement("storey-1"),
+                    "Representation": _polygon_representation(
+                        [[0, 0], [4000, 0], [4000, 4000], [0, 4000], [0, 0]],
+                        3000,
+                    ),
+                },
+            ),
+            _entity(
+                "space-east",
+                "IfcSpace",
+                {
+                    "Name": "East Room",
+                    "InteriorOrExteriorSpace": "INTERNAL",
+                    "ObjectPlacement": _placement("storey-1"),
+                    "Representation": _polygon_representation(
+                        [[4000, 0], [8000, 0], [8000, 4000], [4000, 4000], [4000, 0]],
+                        3000,
+                    ),
+                },
+            ),
+            _wall("wall-south", [4000, 0, 0], 8000),
+            _wall("wall-north", [4000, 4000, 0], 8000),
+            _wall("wall-west", [0, 2000, 0], 4000, [0, 1, 0]),
+            _wall("wall-east", [8000, 2000, 0], 4000, [0, 1, 0]),
+            _wall("wall-partition", [4000, 2000, 0], 4000, [0, 1, 0]),
+            _opening("opening-door-1", "wall-partition", [0, 0, 0], 900, 2100),
+            _entity(
+                "door-1",
+                "IfcDoor",
+                {
+                    "Name": "Door",
+                    "OverallWidth": 900,
+                    "OverallHeight": 2100,
+                    "ObjectPlacement": _placement("opening-door-1"),
+                    "Representation": _rectangle_representation(900, 100, 2100),
+                },
+            ),
+            _opening("opening-window-1", "wall-east", [0, 0, 900], 1200, 1500),
+            _entity(
+                "window-1",
+                "IfcWindow",
+                {
+                    "Name": "Window",
+                    "OverallWidth": 1200,
+                    "OverallHeight": 1500,
+                    "ObjectPlacement": _placement("opening-window-1"),
+                    "Representation": _rectangle_representation(1200, 100, 1500),
+                },
+            ),
+        ],
+        "relationships": [
+            _relationship(
+                "void-door-1",
+                "IfcRelVoidsElement",
+                {
+                    "RelatingBuildingElement": "wall-partition",
+                    "RelatedOpeningElement": "opening-door-1",
+                },
+            ),
+            _relationship(
+                "fill-door-1",
+                "IfcRelFillsElement",
+                {
+                    "RelatingOpeningElement": "opening-door-1",
+                    "RelatedBuildingElement": "door-1",
+                },
+            ),
+            _relationship(
+                "void-window-1",
+                "IfcRelVoidsElement",
+                {
+                    "RelatingBuildingElement": "wall-east",
                     "RelatedOpeningElement": "opening-window-1",
                 },
             ),
