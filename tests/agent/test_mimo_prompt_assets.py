@@ -51,3 +51,12 @@ def test_mimo_prompt_iteration_log_records_v1_false_draft_failure():
     assert "mimo-live-simple-room-v1" in text
     assert "entities 为空" in text
     assert "mimo-bim-json-v2.md" in text
+
+
+def test_mimo_prompt_iteration_log_records_v2_live_success():
+    text = ITERATIONS.read_text(encoding="utf-8")
+
+    assert "mimo-live-simple-room-v2" in text
+    assert "validation_issue_count: 0" in text
+    assert "compile_success: true" in text
+    assert "output.ifc" in text
