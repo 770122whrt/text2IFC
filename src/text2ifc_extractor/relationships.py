@@ -24,6 +24,17 @@ _COMPILER_DERIVED = {
 
 
 def explicit_relationship(relation, entity_ids: dict[int, str]):
+    if relation.is_a() == "IfcRelDefinesByType":
+        type_id = entity_ids.get(relation.RelatingType.id())
+        related_ids = [
+            entity_ids.get(item.id()) for item in relation.RelatedObjects
+        ]
+        if type_id is None or any(item is None for item in related_ids):
+            return None
+        return {
+            "RelatedObjects": sorted(related_ids),
+            "RelatingType": type_id,
+        }
     names = _ENDPOINTS.get(relation.is_a())
     if names is None:
         return None
@@ -38,7 +49,11 @@ def explicit_relationship(relation, entity_ids: dict[int, str]):
 
 
 def relationship_category(ifc_class: str) -> str:
-    if ifc_class in _ENDPOINTS or ifc_class in _COMPILER_DERIVED:
+    if (
+        ifc_class in _ENDPOINTS
+        or ifc_class == "IfcRelDefinesByType"
+        or ifc_class in _COMPILER_DERIVED
+    ):
         return "represented"
     return "reported"
 

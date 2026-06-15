@@ -22,20 +22,20 @@ does not rewrite official schema facts.
 
 | State | Count | Meaning |
 | --- | ---: | --- |
-| `generate` | 23 | Accepted in Formal BIM JSON and emitted exactly |
+| `generate` | 25 | Accepted in Formal BIM JSON and emitted exactly |
 | `extract-only` | 2 | Preserved during extraction but cannot compile formally |
 | `compiler-only` | 24 | Generated from semantic input, never model-authored |
-| `unsupported` | 604 | Reported as Draft/loss content |
+| `unsupported` | 602 | Reported as Draft/loss content |
 
 ## Generate Classes
 
 ### Semantic Entities
 
-`IfcBeam`, `IfcBuilding`, `IfcBuildingStorey`, `IfcColumn`, `IfcCovering`, `IfcCurtainWall`, `IfcDoor`, `IfcMember`, `IfcOpeningElement`, `IfcPlate`, `IfcProject`, `IfcRailing`, `IfcRoof`, `IfcSite`, `IfcSlab`, `IfcSpace`, `IfcStair`, `IfcStairFlight`, `IfcWall`, `IfcWallStandardCase`, `IfcWindow`
+`IfcBeam`, `IfcBuilding`, `IfcBuildingStorey`, `IfcColumn`, `IfcCovering`, `IfcCurtainWall`, `IfcDoor`, `IfcMember`, `IfcOpeningElement`, `IfcPlate`, `IfcProject`, `IfcRailing`, `IfcRoof`, `IfcSite`, `IfcSlab`, `IfcSpace`, `IfcStair`, `IfcStairFlight`, `IfcWall`, `IfcWallStandardCase`, `IfcWallType`, `IfcWindow`
 
 ### Explicit Semantic Relationships
 
-`IfcRelFillsElement`, `IfcRelVoidsElement`
+`IfcRelDefinesByType`, `IfcRelFillsElement`, `IfcRelVoidsElement`
 
 `IfcWallStandardCase` remains exact and is not downgraded to `IfcWall`.
 `IfcSpace`, `IfcOpeningElement`, and explicit void/fill endpoints are part of
@@ -60,7 +60,7 @@ bookkeeping relationships directly.
 
 ## Unsupported Boundary
 
-The remaining 604 IFC2X3 entities are explicit
+The remaining 602 IFC2X3 entities are explicit
 `unsupported` capabilities. Unknown class strings are invalid. A known
 non-generate class cannot pass Formal validation and cannot be silently
 dropped.

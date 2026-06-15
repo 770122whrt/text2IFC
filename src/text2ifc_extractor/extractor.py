@@ -74,7 +74,11 @@ def _project_relative_path(path: Path) -> str:
 
 
 def _is_semantic_product(entity) -> bool:
-    return entity.is_a("IfcProduct") or entity.is_a("IfcProject")
+    return (
+        entity.is_a("IfcProduct")
+        or entity.is_a("IfcProject")
+        or entity.is_a("IfcTypeObject")
+    )
 
 
 def _requires_geometry(ifc_class: str, registry) -> bool:
@@ -252,6 +256,7 @@ def extract_ifc2x3(path: str | Path) -> ExtractionResult:
     material_count = 0
     material_represented = 0
     type_count = 0
+    type_represented = 0
     connection_count = 0
     for relation in source_relationships:
         ifc_class = relation.is_a()
@@ -260,6 +265,21 @@ def extract_ifc2x3(path: str | Path) -> ExtractionResult:
             if relation.id() in represented_material_relations:
                 material_represented += 1
                 represented_relationships += 1
+                continue
+        if ifc_class == "IfcRelDefinesByType":
+            type_count += 1
+            if capabilities[relation.RelatingType.is_a()] != "generate":
+                losses.append(
+                    loss(
+                        _source_ref(relation, source_sha256),
+                        "/relationships",
+                        "TYPE_RELATIONSHIP",
+                        (
+                            f"{ifc_class} to {relation.RelatingType.is_a()} "
+                            "is outside the supported type reuse profile."
+                        ),
+                    )
+                )
                 continue
         state = relationship_category(ifc_class)
         if state == "represented":
@@ -278,11 +298,11 @@ def extract_ifc2x3(path: str | Path) -> ExtractionResult:
             if getattr(relation, "GlobalId", None):
                 relation_record["global_id"] = relation.GlobalId
             relationship_records.append(relation_record)
+            if ifc_class == "IfcRelDefinesByType":
+                type_represented += 1
         if state == "reported":
             kind = relationship_loss_kind(ifc_class)
-            if kind == "TYPE_RELATIONSHIP":
-                type_count += 1
-            elif kind == "CONNECTION_RELATIONSHIP":
+            if kind == "CONNECTION_RELATIONSHIP":
                 connection_count += 1
             losses.append(
                 loss(
@@ -321,7 +341,7 @@ def extract_ifc2x3(path: str | Path) -> ExtractionResult:
             representation_source - representation_reported,
         ),
         "materials": category(material_count, material_represented),
-        "types": category(type_count, 0),
+        "types": category(type_count, type_represented),
         "connections": category(connection_count, 0),
     }
 
