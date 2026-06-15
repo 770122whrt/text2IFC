@@ -7,14 +7,14 @@ See: `.planning/PROJECT.md` (updated 2026-06-11)
 **Core value:** Produce valid, inspectable IFC models from explicit user
 requirements.
 
-**Current focus:** Phase 5 Wave 4; fake/file providers and optional Mimo adapter
+**Current focus:** Phase 5 Wave 5; scripted Chinese clarification demo to IFC
 
 ## Status
 
 - Phase: 5
 - Stage: Executing
-- State: Phase 5 Wave 3 complete; Wave 4 is next
-- Plans: Phase 5 in progress, 3 of 6 plans complete
+- State: Phase 5 Wave 4 complete; Wave 5 is next
+- Plans: Phase 5 in progress, 4 of 6 plans complete
 - Branch: `main`
 - Remote: `https://github.com/770122whrt/text2IFC`
 
@@ -135,6 +135,9 @@ requirements.
 - Phase 5 Wave 3 implemented answer parsing, transcript-preserving answer
   merge, unknown-answer Draft behavior, explicit correction facts, and
   validation-gated `formal_ready` session transitions.
+- Phase 5 Wave 4 implemented fake/file Agent providers, provider JSON
+  diagnostics, redacted Mimo runtime config checks, optional live Mimo adapter,
+  and raw IFC/STEP plus low-level helper output guardrails.
 - Generated BIM JSON 2.0 and IFC2X3 generation-profile references are
   drift-checked from canonical schemas and registries.
 - Deep code review fixed three Formal/typed-identity gaps through recorded
@@ -198,6 +201,8 @@ requirements.
   terms in user-facing text.
 - Unknown user answers keep Agent state as Draft. Invalid candidates produce
   new open missing facts rather than defaults.
+- Provider tests remain deterministic without network or credentials. Mimo live
+  smoke is optional; config checks report env var names only.
 
 ## Known Risks
 
@@ -217,7 +222,7 @@ requirements.
 
 ## Next Action
 
-Execute Phase 5 Wave 4: fake/file providers and optional Mimo adapter.
+Execute Phase 5 Wave 5: scripted Chinese clarification demo to IFC.
 
 ## Accumulated Context
 
@@ -261,6 +266,9 @@ Execute Phase 5 Wave 4: fake/file providers and optional Mimo adapter.
 - Phase 5 Wave 3 completed on 2026-06-15 with RED commit `114e735` and GREEN
   commit `97fce76`; `tests/agent/test_answer_merge.py` and `tests/agent`
   passed.
+- Phase 5 Wave 4 completed on 2026-06-15 with RED commit `0d14a22` and GREEN
+  commit `e521c68`; provider tests, `run_mimo_smoke.py --check-config`, and
+  `tests/agent` passed.
 
 ---
 *Last activity: 2026-06-14 - completed and verified Phase 3*

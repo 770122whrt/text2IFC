@@ -282,7 +282,7 @@ IFC, STEP text, low-level IFC helper entities, or compiler bookkeeping.
 
 **Wave 4** *(blocked on Wave 3 completion)*
 
-- [ ] `05-04-PLAN.md` - Fake/file providers and optional Anthropic-compatible
+- [x] `05-04-PLAN.md` - Fake/file providers and optional Anthropic-compatible
   Mimo adapter
 
 **Wave 5** *(blocked on Wave 4 completion)*
