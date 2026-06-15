@@ -21,6 +21,7 @@ from .geometry import (
 from .identity import semantic_id
 from .inventory import category
 from .losses import loss, sort_losses
+from .materials import extract_material_assignments
 from .placement import extract_object_placement
 from .properties import native_attributes, property_sets
 from .relationships import (
@@ -137,6 +138,7 @@ def extract_ifc2x3(path: str | Path) -> ExtractionResult:
     representation_source = 0
     representation_reported = 0
     represented_entities = 0
+    represented_material_relations: set[int] = set()
 
     for entity in ordered_entities:
         index = entity_index[entity.id()]
@@ -145,6 +147,10 @@ def extract_ifc2x3(path: str | Path) -> ExtractionResult:
         source_ref = _source_ref(entity, source_sha256)
         attributes = native_attributes(entity)
         psets, pset_represented, pset_reported = property_sets(entity)
+        materials, material_relation_ids = extract_material_assignments(
+            entity, length_factor
+        )
+        represented_material_relations.update(material_relation_ids)
         represented_properties += pset_represented
         reported_properties += pset_reported
         if pset_reported:
@@ -233,6 +239,8 @@ def extract_ifc2x3(path: str | Path) -> ExtractionResult:
                 "source_sha256": source_sha256,
             },
         }
+        if materials:
+            record["materials"] = materials
         global_id = getattr(entity, "GlobalId", None)
         if global_id:
             record["global_id"] = global_id
@@ -242,10 +250,17 @@ def extract_ifc2x3(path: str | Path) -> ExtractionResult:
     source_relationships = list(ifc_file.by_type("IfcRelationship"))
     represented_relationships = 0
     material_count = 0
+    material_represented = 0
     type_count = 0
     connection_count = 0
     for relation in source_relationships:
         ifc_class = relation.is_a()
+        if ifc_class == "IfcRelAssociatesMaterial":
+            material_count += 1
+            if relation.id() in represented_material_relations:
+                material_represented += 1
+                represented_relationships += 1
+                continue
         state = relationship_category(ifc_class)
         if state == "represented":
             represented_relationships += 1
@@ -265,9 +280,7 @@ def extract_ifc2x3(path: str | Path) -> ExtractionResult:
             relationship_records.append(relation_record)
         if state == "reported":
             kind = relationship_loss_kind(ifc_class)
-            if kind == "MATERIAL_ASSOCIATION":
-                material_count += 1
-            elif kind == "TYPE_RELATIONSHIP":
+            if kind == "TYPE_RELATIONSHIP":
                 type_count += 1
             elif kind == "CONNECTION_RELATIONSHIP":
                 connection_count += 1
@@ -307,7 +320,7 @@ def extract_ifc2x3(path: str | Path) -> ExtractionResult:
             representation_source,
             representation_source - representation_reported,
         ),
-        "materials": category(material_count, 0),
+        "materials": category(material_count, material_represented),
         "types": category(type_count, 0),
         "connections": category(connection_count, 0),
     }
