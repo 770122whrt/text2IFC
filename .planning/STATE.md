@@ -7,14 +7,14 @@ See: `.planning/PROJECT.md` (updated 2026-06-11)
 **Core value:** Produce valid, inspectable IFC models from explicit user
 requirements.
 
-**Current focus:** Phase 5 Wave 5; scripted Chinese clarification demo to IFC
+**Current focus:** Phase 5 Wave 6; final verification and summary
 
 ## Status
 
 - Phase: 5
 - Stage: Executing
-- State: Phase 5 Wave 4 complete; Wave 5 is next
-- Plans: Phase 5 in progress, 4 of 6 plans complete
+- State: Phase 5 Wave 5 complete; Wave 6 is next
+- Plans: Phase 5 in progress, 5 of 6 plans complete
 - Branch: `main`
 - Remote: `https://github.com/770122whrt/text2IFC`
 
@@ -138,6 +138,9 @@ requirements.
 - Phase 5 Wave 4 implemented fake/file Agent providers, provider JSON
   diagnostics, redacted Mimo runtime config checks, optional live Mimo adapter,
   and raw IFC/STEP plus low-level helper output guardrails.
+- Phase 5 Wave 5 implemented the scripted Chinese clarification demo and wrote
+  `dataset/processed/agent-demo/simple-room/output.ifc`, a reopenable IFC2X3
+  file tracked through Git LFS.
 - Generated BIM JSON 2.0 and IFC2X3 generation-profile references are
   drift-checked from canonical schemas and registries.
 - Deep code review fixed three Formal/typed-identity gaps through recorded
@@ -203,6 +206,9 @@ requirements.
   new open missing facts rather than defaults.
 - Provider tests remain deterministic without network or credentials. Mimo live
   smoke is optional; config checks report env var names only.
+- The simple-room demo reaches `formal_ready`, validates BIM JSON 2.0, asks
+  three Chinese clarification questions, compiles IFC, and records transcript,
+  state, candidate, diagnostics, metrics, report, and IFC artifacts.
 
 ## Known Risks
 
@@ -222,7 +228,8 @@ requirements.
 
 ## Next Action
 
-Execute Phase 5 Wave 5: scripted Chinese clarification demo to IFC.
+Execute Phase 5 Wave 6: final verification, summary, security review, and
+roadmap/state update.
 
 ## Accumulated Context
 
@@ -269,6 +276,10 @@ Execute Phase 5 Wave 5: scripted Chinese clarification demo to IFC.
 - Phase 5 Wave 4 completed on 2026-06-15 with RED commit `0d14a22` and GREEN
   commit `e521c68`; provider tests, `run_mimo_smoke.py --check-config`, and
   `tests/agent` passed.
+- Phase 5 Wave 5 completed on 2026-06-15 with RED commit `b10a574` and GREEN
+  commit `5a812dd`; `tests/agent/test_clarification_demo.py`,
+  `scripts/agent/run_clarification_demo.py --check`, and `tests/agent`
+  passed.
 
 ---
 *Last activity: 2026-06-14 - completed and verified Phase 3*

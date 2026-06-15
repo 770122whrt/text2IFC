@@ -287,7 +287,7 @@ IFC, STEP text, low-level IFC helper entities, or compiler bookkeeping.
 
 **Wave 5** *(blocked on Wave 4 completion)*
 
-- [ ] `05-05-PLAN.md` - Scripted Chinese clarification demo to IFC
+- [x] `05-05-PLAN.md` - Scripted Chinese clarification demo to IFC
 
 **Wave 6** *(blocked on Wave 5 completion)*
 
