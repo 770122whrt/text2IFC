@@ -65,17 +65,29 @@ types. Official property sets and properties use their buildingSMART names.
 Project-specific sets remain explicitly custom and are not presented as
 official definitions.
 
+## Materials
+
+`entities[].materials` is optional and currently supports selected
+`material_layer_set_usage` semantics. A material layer-set usage records a
+layer set name, layer direction, direction sense, reference-line offset, and
+one or more named layers with positive millimetre thicknesses.
+
+This is semantic material input. The compiler creates the corresponding
+`IfcMaterial`, `IfcMaterialLayer`, `IfcMaterialLayerSet`,
+`IfcMaterialLayerSetUsage`, and `IfcRelAssociatesMaterial` resources.
+Unsupported material constructs remain Draft/loss content.
+
 ## Compiler Boundary
 
 The model emits semantic classes, attributes, placement, geometry, properties,
-and user relationships. The compiler creates `IfcCartesianPoint`,
+materials, and user relationships. The compiler creates `IfcCartesianPoint`,
 `IfcDirection`, `IfcLocalPlacement`, `IfcOwnerHistory`, representation
 resources, containment, aggregation, and property attachments.
 
 Exact `IfcWallStandardCase` is retained. IFC2X3 requires a material layer-set
-usage for this exact subtype, so the compiler creates the minimum technical
-attachment from the supplied wall profile without claiming a source material
-composition.
+usage for this exact subtype. When no explicit material is supplied, the
+compiler creates the minimum technical attachment from the supplied wall
+profile without claiming a source material composition.
 
 ## Commands
 

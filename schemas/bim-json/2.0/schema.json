@@ -126,6 +126,39 @@
         }
       ]
     },
+    "materialLayer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "thickness"],
+      "properties": {
+        "name": {"$ref": "#/$defs/nonEmptyString"},
+        "thickness": {"type": "number", "exclusiveMinimum": 0}
+      }
+    },
+    "materialAssignment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "layer_set_name",
+        "direction",
+        "direction_sense",
+        "offset_from_reference_line",
+        "layers"
+      ],
+      "properties": {
+        "kind": {"const": "material_layer_set_usage"},
+        "layer_set_name": {"$ref": "#/$defs/nonEmptyString"},
+        "direction": {"enum": ["AXIS1", "AXIS2", "AXIS3"]},
+        "direction_sense": {"enum": ["POSITIVE", "NEGATIVE"]},
+        "offset_from_reference_line": {"type": "number"},
+        "layers": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/materialLayer"}
+        }
+      }
+    },
     "attributes": {
       "type": "object",
       "properties": {
@@ -148,6 +181,10 @@
         "ifc_class": {"$ref": "#/$defs/nonEmptyString"},
         "global_id": {},
         "attributes": {"$ref": "#/$defs/attributes"},
+        "materials": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/materialAssignment"}
+        },
         "property_sets": {
           "type": "object",
           "additionalProperties": {"type": "object"}

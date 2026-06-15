@@ -223,6 +223,7 @@ def _add_wall_standard_case_material(
     ifc_file: Any,
     wall: Any,
     representation: Mapping[str, Any] | None,
+    material_assignment: Mapping[str, Any] | None = None,
 ) -> None:
     if representation is None:
         raise ValueError(
@@ -233,20 +234,57 @@ def _add_wall_standard_case_material(
         raise ValueError(
             "IfcWallStandardCase material thickness requires a rectangle profile."
         )
-    material = add_material(ifc_file, name="text2IFC generated material")
+    if material_assignment is None:
+        material_assignment = {
+            "layer_set_name": "text2IFC generated wall layer",
+            "direction": "AXIS2",
+            "direction_sense": "POSITIVE",
+            "offset_from_reference_line": 0.0,
+            "layers": [
+                {
+                    "name": "text2IFC generated material",
+                    "thickness": float(profile["y"]),
+                }
+            ],
+        }
     layer_set = add_material_set(
         ifc_file,
-        name="text2IFC generated wall layer",
+        name=material_assignment["layer_set_name"],
         set_type="IfcMaterialLayerSet",
     )
-    layer = add_layer(ifc_file, layer_set=layer_set, material=material)
-    layer.LayerThickness = float(profile["y"])
+    for layer_data in material_assignment["layers"]:
+        material = add_material(ifc_file, name=layer_data["name"])
+        layer = add_layer(ifc_file, layer_set=layer_set, material=material)
+        layer.LayerThickness = float(layer_data["thickness"])
     assign_material(
         ifc_file,
         products=[wall],
         type="IfcMaterialLayerSetUsage",
         material=layer_set,
     )
+    usage = _material_layer_set_usage(wall)
+    usage.LayerSetDirection = material_assignment["direction"]
+    usage.DirectionSense = material_assignment["direction_sense"]
+    usage.OffsetFromReferenceLine = float(
+        material_assignment["offset_from_reference_line"]
+    )
+
+
+def _material_layer_set_usage(wall: Any) -> Any:
+    for relation in wall.HasAssociations:
+        if not relation.is_a("IfcRelAssociatesMaterial"):
+            continue
+        material = relation.RelatingMaterial
+        if material.is_a("IfcMaterialLayerSetUsage"):
+            return material
+    raise ValueError("IfcWallStandardCase material layer usage was not created.")
+
+
+def _first_material_assignment(record: Mapping[str, Any]) -> Mapping[str, Any] | None:
+    assignments = record.get("materials") or []
+    if not assignments:
+        return None
+    return assignments[0]
 
 
 def build_ifc_v2(document: Mapping[str, Any]) -> BootstrapResult:
@@ -327,7 +365,10 @@ def build_ifc_v2(document: Mapping[str, Any]) -> BootstrapResult:
             )
         if entity.is_a() == "IfcWallStandardCase":
             _add_wall_standard_case_material(
-                ifc_file, entity, representation
+                ifc_file,
+                entity,
+                representation,
+                _first_material_assignment(record),
             )
 
     for record in document["entities"]:
