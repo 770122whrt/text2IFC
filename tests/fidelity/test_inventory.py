@@ -1,5 +1,8 @@
 from __future__ import annotations
 
+import json
+import subprocess
+import sys
 from pathlib import Path
 
 from text2ifc_fidelity.inventory import build_fidelity_inventory
@@ -59,3 +62,30 @@ def test_fidelity_inventory_counts_phase4_source_fact_classes() -> None:
         "explicit_loss",
         "deferred",
     }
+
+
+def test_fidelity_inventory_cli_writes_checked_inventory(
+    tmp_path: Path,
+) -> None:
+    output_path = tmp_path / "fidelity-inventory.json"
+
+    completed = subprocess.run(
+        [
+            sys.executable,
+            "scripts/ifc_pipeline_v2/fidelity_inventory.py",
+            "--all",
+            "--check",
+            "--output",
+            str(output_path),
+        ],
+        cwd=ROOT,
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+
+    assert completed.returncode == 0, completed.stderr
+    payload = json.loads(output_path.read_text(encoding="utf-8"))
+    assert payload["counts"]["files"]["total"] == 25
+    assert len(payload["records"]) == 25
+    assert json.loads(completed.stdout)["success"] is True
