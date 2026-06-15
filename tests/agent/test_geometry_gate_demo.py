@@ -5,21 +5,25 @@ import subprocess
 import sys
 from pathlib import Path
 
+import pytest
+
 
 ROOT = Path(__file__).resolve().parents[2]
 
 
-def test_geometry_gate_demo_writes_simple_room_audit_artifacts(
+@pytest.mark.parametrize("case_id", ["simple-room-fixed", "two-room-suite"])
+def test_geometry_gate_demo_writes_case_audit_artifacts(
+    case_id: str,
     tmp_path: Path,
 ) -> None:
-    output_dir = tmp_path / "simple-room-fixed"
+    output_dir = tmp_path / case_id
 
     completed = subprocess.run(
         [
             sys.executable,
             "scripts/agent/run_geometry_gate_demo.py",
             "--case",
-            "simple-room-fixed",
+            case_id,
             "--output-dir",
             str(output_dir),
             "--check",
