@@ -5,6 +5,7 @@ from __future__ import annotations
 from typing import Any, Mapping
 
 import ifcopenshell.api.owner
+from ifcopenshell.api.type.assign_type import assign_type
 
 from .identity import global_id_for
 
@@ -16,6 +17,18 @@ def add_v2_relationships(
 ) -> None:
     for record in relationships:
         ifc_class = record["ifc_class"]
+        if ifc_class == "IfcRelDefinesByType":
+            attributes = record["attributes"]
+            assign_type(
+                ifc_file,
+                related_objects=[
+                    entities[entity_id]
+                    for entity_id in attributes["RelatedObjects"]
+                ],
+                relating_type=entities[attributes["RelatingType"]],
+                should_map_representations=False,
+            )
+            continue
         attributes = {
             name: entities[entity_id]
             for name, entity_id in record["attributes"].items()

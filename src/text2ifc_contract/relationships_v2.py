@@ -18,6 +18,10 @@ SUPPORTED_RELATIONSHIPS = {
         "RelatingOpeningElement": "IfcOpeningElement",
         "RelatedBuildingElement": "IfcElement",
     },
+    "IfcRelDefinesByType": {
+        "RelatedObjects": "IfcObject",
+        "RelatingType": "IfcTypeObject",
+    },
 }
 
 
@@ -52,10 +56,7 @@ def validate_relationships(
                 _issue(
                     "UNSUPPORTED_RELATIONSHIP_CLASS",
                     f"{base}/ifc_class",
-                    (
-                        "Only IfcRelVoidsElement and IfcRelFillsElement are "
-                        "explicit formal relationships."
-                    ),
+                    "This IFC relationship is not explicit in the formal profile.",
                 )
             )
             continue
@@ -63,7 +64,12 @@ def validate_relationships(
         for attribute, expected_class in endpoint_types.items():
             path = f"{base}/attributes/{attribute}"
             endpoint_id = attributes.get(attribute)
-            if not isinstance(endpoint_id, str) or endpoint_id not in entities:
+            endpoint_ids = (
+                endpoint_id
+                if attribute == "RelatedObjects" and isinstance(endpoint_id, list)
+                else [endpoint_id]
+            )
+            if not endpoint_ids:
                 issues.append(
                     _issue(
                         "UNRESOLVED_RELATIONSHIP_ENDPOINT",
@@ -72,17 +78,27 @@ def validate_relationships(
                     )
                 )
                 continue
-            actual_class = entities[endpoint_id]["ifc_class"]
-            if not _matches_class(actual_class, expected_class, registry):
-                issues.append(
-                    _issue(
-                        "RELATIONSHIP_ENDPOINT_TYPE_MISMATCH",
-                        path,
-                        (
-                            f"{attribute} requires {expected_class}, "
-                            f"but {endpoint_id!r} is {actual_class}."
-                        ),
+            for item_id in endpoint_ids:
+                if not isinstance(item_id, str) or item_id not in entities:
+                    issues.append(
+                        _issue(
+                            "UNRESOLVED_RELATIONSHIP_ENDPOINT",
+                            path,
+                            f"Relationship endpoint {item_id!r} is not declared.",
+                        )
                     )
-                )
+                    continue
+                actual_class = entities[item_id]["ifc_class"]
+                if not _matches_class(actual_class, expected_class, registry):
+                    issues.append(
+                        _issue(
+                            "RELATIONSHIP_ENDPOINT_TYPE_MISMATCH",
+                            path,
+                            (
+                                f"{attribute} requires {expected_class}, "
+                                f"but {item_id!r} is {actual_class}."
+                            ),
+                        )
+                    )
 
     return issues
