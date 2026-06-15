@@ -3,6 +3,7 @@ from pathlib import Path
 
 PROMPT = Path("prompts/agent/mimo-bim-json-v1.md")
 PROMPT_V2 = Path("prompts/agent/mimo-bim-json-v2.md")
+PROMPT_V3 = Path("prompts/agent/mimo-bim-json-v3.md")
 ITERATIONS = Path("prompts/agent/mimo-bim-json-iterations.md")
 
 
@@ -60,3 +61,28 @@ def test_mimo_prompt_iteration_log_records_v2_live_success():
     assert "validation_issue_count: 0" in text
     assert "compile_success: true" in text
     assert "output.ifc" in text
+
+
+def test_mimo_bim_json_v3_prompt_encodes_geometry_gate_contract():
+    text = PROMPT_V3.read_text(encoding="utf-8")
+
+    assert "{{USER_REQUEST}}" in text
+    assert "{{REFERENCE_JSON}}" in text
+    assert "{{VALIDATION_FEEDBACK}}" in text
+    assert "BIM JSON 2.0" in text
+    assert "rectangle profile center-origin" in text
+    assert "south/north walls" in text
+    assert "east/west walls" in text
+    assert "geometry failure feedback" in text
+    assert "Do not output raw IFC" in text
+    assert "IfcCartesianPoint" in text
+    assert "IfcDirection" in text
+    assert "IfcOwnerHistory" in text
+
+
+def test_mimo_prompt_iteration_log_records_v3_geometry_gate_contract():
+    text = ITERATIONS.read_text(encoding="utf-8")
+
+    assert "mimo-bim-json-v3.md" in text
+    assert "geometry gate" in text
+    assert "rectangle profile center-origin" in text
