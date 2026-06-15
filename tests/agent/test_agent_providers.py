@@ -7,6 +7,8 @@ import pytest
 from text2ifc_agent.providers import (
     FakeAgentProvider,
     FileAgentProvider,
+    MimoAgentProvider,
+    MimoConfig,
     ProviderOutput,
     ProviderOutputError,
     load_mimo_config_from_env,
@@ -142,3 +144,48 @@ def test_mimo_check_config_cli_is_redacted_and_non_networked(monkeypatch, tmp_pa
     assert '"configured": false' in result.stdout
     assert "ANTHROPIC_AUTH_TOKEN" in result.stdout
     assert "Bearer" not in result.stdout
+
+
+def test_mimo_provider_uses_configured_generation_limits(monkeypatch):
+    captured = {}
+
+    class Response:
+        def __enter__(self):
+            return self
+
+        def __exit__(self, exc_type, exc, traceback):
+            return False
+
+        def read(self):
+            return b'{"content":[{"type":"text","text":"{\\"ok\\": true}"}]}'
+
+    def fake_urlopen(request, timeout):
+        captured["body"] = json.loads(request.data.decode("utf-8"))
+        captured["timeout"] = timeout
+        return Response()
+
+    monkeypatch.setattr(
+        "text2ifc_agent.providers.urllib.request.urlopen",
+        fake_urlopen,
+    )
+
+    provider = MimoAgentProvider(
+        config=MimoConfig(
+            token="secret-token",
+            base_url="https://example.invalid/anthropic",
+            model="mimo-v2.5-pro",
+            max_tokens=2048,
+            timeout_seconds=45,
+        )
+    )
+
+    output = provider.generate_candidate(
+        session_id="mimo-budget",
+        prompt='Return {"ok": true}',
+        schema={},
+        state={},
+    )
+
+    assert captured["body"]["max_tokens"] == 2048
+    assert captured["timeout"] == 45
+    assert output.text == '{"ok": true}'
