@@ -1,0 +1,664 @@
+{
+  "accepted_facts": [
+    {
+      "id": "fact-mf-room-size-001",
+      "path": "/answers/mf-room-size",
+      "raw_answer": "房间长 6 米，宽 4 米，高 3 米。",
+      "source_question_id": "mf-room-size",
+      "value": "房间长 6 米，宽 4 米，高 3 米。"
+    },
+    {
+      "id": "fact-mf-door-position-001",
+      "path": "/answers/mf-door-position",
+      "raw_answer": "门在南侧墙中间，宽 0.9 米，高 2.1 米，底部贴地。",
+      "source_question_id": "mf-door-position",
+      "value": "门在南侧墙中间，宽 0.9 米，高 2.1 米，底部贴地。"
+    },
+    {
+      "id": "fact-mf-window-position-001",
+      "path": "/answers/mf-window-position",
+      "raw_answer": "窗在北侧墙中间，宽 1.2 米，高 1.5 米，窗台高 0.9 米。",
+      "source_question_id": "mf-window-position",
+      "value": "窗在北侧墙中间，宽 1.2 米，高 1.5 米，窗台高 0.9 米。"
+    }
+  ],
+  "candidate_document": {
+    "entities": [
+      {
+        "attributes": {
+          "Name": "Text2IFC Demo Project"
+        },
+        "id": "project-1",
+        "ifc_class": "IfcProject",
+        "property_sets": {},
+        "provenance": {
+          "source": "phase-5-scripted-demo"
+        }
+      },
+      {
+        "attributes": {
+          "Name": "Site",
+          "ObjectPlacement": {
+            "axis": [
+              0,
+              0,
+              1
+            ],
+            "origin": [
+              0,
+              0,
+              0
+            ],
+            "ref_direction": [
+              1,
+              0,
+              0
+            ],
+            "relative_to": "project-1"
+          }
+        },
+        "id": "site-1",
+        "ifc_class": "IfcSite",
+        "property_sets": {},
+        "provenance": {
+          "source": "phase-5-scripted-demo"
+        }
+      },
+      {
+        "attributes": {
+          "Name": "Building",
+          "ObjectPlacement": {
+            "axis": [
+              0,
+              0,
+              1
+            ],
+            "origin": [
+              0,
+              0,
+              0
+            ],
+            "ref_direction": [
+              1,
+              0,
+              0
+            ],
+            "relative_to": "site-1"
+          }
+        },
+        "id": "building-1",
+        "ifc_class": "IfcBuilding",
+        "property_sets": {},
+        "provenance": {
+          "source": "phase-5-scripted-demo"
+        }
+      },
+      {
+        "attributes": {
+          "Elevation": 0,
+          "Name": "Level 1",
+          "ObjectPlacement": {
+            "axis": [
+              0,
+              0,
+              1
+            ],
+            "origin": [
+              0,
+              0,
+              0
+            ],
+            "ref_direction": [
+              1,
+              0,
+              0
+            ],
+            "relative_to": "building-1"
+          }
+        },
+        "id": "storey-1",
+        "ifc_class": "IfcBuildingStorey",
+        "property_sets": {},
+        "provenance": {
+          "source": "phase-5-scripted-demo"
+        }
+      },
+      {
+        "attributes": {
+          "InteriorOrExteriorSpace": "INTERNAL",
+          "Name": "Room",
+          "ObjectPlacement": {
+            "axis": [
+              0,
+              0,
+              1
+            ],
+            "origin": [
+              0,
+              0,
+              0
+            ],
+            "ref_direction": [
+              1,
+              0,
+              0
+            ],
+            "relative_to": "storey-1"
+          },
+          "Representation": {
+            "depth": 3000,
+            "direction": [
+              0,
+              0,
+              1
+            ],
+            "kind": "extruded_profile",
+            "profile": {
+              "kind": "polygon",
+              "points": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  6000,
+                  0
+                ],
+                [
+                  6000,
+                  4000
+                ],
+                [
+                  0,
+                  4000
+                ],
+                [
+                  0,
+                  0
+                ]
+              ]
+            }
+          }
+        },
+        "id": "space-1",
+        "ifc_class": "IfcSpace",
+        "property_sets": {},
+        "provenance": {
+          "source": "phase-5-scripted-demo"
+        }
+      },
+      {
+        "attributes": {
+          "Name": "wall-south",
+          "ObjectPlacement": {
+            "axis": [
+              0,
+              0,
+              1
+            ],
+            "origin": [
+              0,
+              0,
+              0
+            ],
+            "ref_direction": [
+              1,
+              0,
+              0
+            ],
+            "relative_to": "storey-1"
+          },
+          "Representation": {
+            "depth": 3000,
+            "direction": [
+              0,
+              0,
+              1
+            ],
+            "kind": "extruded_profile",
+            "profile": {
+              "kind": "rectangle",
+              "x": 6000,
+              "y": 200
+            }
+          }
+        },
+        "id": "wall-south",
+        "ifc_class": "IfcWall",
+        "property_sets": {},
+        "provenance": {
+          "source": "phase-5-scripted-demo"
+        }
+      },
+      {
+        "attributes": {
+          "Name": "wall-north",
+          "ObjectPlacement": {
+            "axis": [
+              0,
+              0,
+              1
+            ],
+            "origin": [
+              0,
+              4000,
+              0
+            ],
+            "ref_direction": [
+              1,
+              0,
+              0
+            ],
+            "relative_to": "storey-1"
+          },
+          "Representation": {
+            "depth": 3000,
+            "direction": [
+              0,
+              0,
+              1
+            ],
+            "kind": "extruded_profile",
+            "profile": {
+              "kind": "rectangle",
+              "x": 6000,
+              "y": 200
+            }
+          }
+        },
+        "id": "wall-north",
+        "ifc_class": "IfcWall",
+        "property_sets": {},
+        "provenance": {
+          "source": "phase-5-scripted-demo"
+        }
+      },
+      {
+        "attributes": {
+          "Name": "wall-west",
+          "ObjectPlacement": {
+            "axis": [
+              0,
+              0,
+              1
+            ],
+            "origin": [
+              0,
+              0,
+              0
+            ],
+            "ref_direction": [
+              1,
+              0,
+              0
+            ],
+            "relative_to": "storey-1"
+          },
+          "Representation": {
+            "depth": 3000,
+            "direction": [
+              0,
+              0,
+              1
+            ],
+            "kind": "extruded_profile",
+            "profile": {
+              "kind": "rectangle",
+              "x": 4000,
+              "y": 200
+            }
+          }
+        },
+        "id": "wall-west",
+        "ifc_class": "IfcWall",
+        "property_sets": {},
+        "provenance": {
+          "source": "phase-5-scripted-demo"
+        }
+      },
+      {
+        "attributes": {
+          "Name": "wall-east",
+          "ObjectPlacement": {
+            "axis": [
+              0,
+              0,
+              1
+            ],
+            "origin": [
+              6000,
+              0,
+              0
+            ],
+            "ref_direction": [
+              1,
+              0,
+              0
+            ],
+            "relative_to": "storey-1"
+          },
+          "Representation": {
+            "depth": 3000,
+            "direction": [
+              0,
+              0,
+              1
+            ],
+            "kind": "extruded_profile",
+            "profile": {
+              "kind": "rectangle",
+              "x": 4000,
+              "y": 200
+            }
+          }
+        },
+        "id": "wall-east",
+        "ifc_class": "IfcWall",
+        "property_sets": {},
+        "provenance": {
+          "source": "phase-5-scripted-demo"
+        }
+      },
+      {
+        "attributes": {
+          "Name": "opening-door-1",
+          "ObjectPlacement": {
+            "axis": [
+              0,
+              0,
+              1
+            ],
+            "origin": [
+              2550,
+              0,
+              0
+            ],
+            "ref_direction": [
+              1,
+              0,
+              0
+            ],
+            "relative_to": "wall-south"
+          },
+          "Representation": {
+            "depth": 2100,
+            "direction": [
+              0,
+              0,
+              1
+            ],
+            "kind": "extruded_profile",
+            "profile": {
+              "kind": "rectangle",
+              "x": 900,
+              "y": 200
+            }
+          }
+        },
+        "id": "opening-door-1",
+        "ifc_class": "IfcOpeningElement",
+        "property_sets": {},
+        "provenance": {
+          "source": "phase-5-scripted-demo"
+        }
+      },
+      {
+        "attributes": {
+          "Name": "Door",
+          "ObjectPlacement": {
+            "axis": [
+              0,
+              0,
+              1
+            ],
+            "origin": [
+              0,
+              0,
+              0
+            ],
+            "ref_direction": [
+              1,
+              0,
+              0
+            ],
+            "relative_to": "opening-door-1"
+          },
+          "OverallHeight": 2100,
+          "OverallWidth": 900,
+          "Representation": {
+            "depth": 2100,
+            "direction": [
+              0,
+              0,
+              1
+            ],
+            "kind": "extruded_profile",
+            "profile": {
+              "kind": "rectangle",
+              "x": 900,
+              "y": 100
+            }
+          }
+        },
+        "id": "door-1",
+        "ifc_class": "IfcDoor",
+        "property_sets": {},
+        "provenance": {
+          "source": "phase-5-scripted-demo"
+        }
+      },
+      {
+        "attributes": {
+          "Name": "opening-window-1",
+          "ObjectPlacement": {
+            "axis": [
+              0,
+              0,
+              1
+            ],
+            "origin": [
+              2400,
+              0,
+              900
+            ],
+            "ref_direction": [
+              1,
+              0,
+              0
+            ],
+            "relative_to": "wall-north"
+          },
+          "Representation": {
+            "depth": 1500,
+            "direction": [
+              0,
+              0,
+              1
+            ],
+            "kind": "extruded_profile",
+            "profile": {
+              "kind": "rectangle",
+              "x": 1200,
+              "y": 200
+            }
+          }
+        },
+        "id": "opening-window-1",
+        "ifc_class": "IfcOpeningElement",
+        "property_sets": {},
+        "provenance": {
+          "source": "phase-5-scripted-demo"
+        }
+      },
+      {
+        "attributes": {
+          "Name": "Window",
+          "ObjectPlacement": {
+            "axis": [
+              0,
+              0,
+              1
+            ],
+            "origin": [
+              0,
+              0,
+              0
+            ],
+            "ref_direction": [
+              1,
+              0,
+              0
+            ],
+            "relative_to": "opening-window-1"
+          },
+          "OverallHeight": 1500,
+          "OverallWidth": 1200,
+          "Representation": {
+            "depth": 1500,
+            "direction": [
+              0,
+              0,
+              1
+            ],
+            "kind": "extruded_profile",
+            "profile": {
+              "kind": "rectangle",
+              "x": 1200,
+              "y": 100
+            }
+          }
+        },
+        "id": "window-1",
+        "ifc_class": "IfcWindow",
+        "property_sets": {},
+        "provenance": {
+          "source": "phase-5-scripted-demo"
+        }
+      }
+    ],
+    "ifc_schema": "IFC2X3",
+    "provenance": {
+      "source": "phase-5-scripted-demo"
+    },
+    "relationships": [
+      {
+        "attributes": {
+          "RelatedOpeningElement": "opening-door-1",
+          "RelatingBuildingElement": "wall-south"
+        },
+        "id": "void-door-1",
+        "ifc_class": "IfcRelVoidsElement",
+        "provenance": {
+          "source": "phase-5-scripted-demo"
+        }
+      },
+      {
+        "attributes": {
+          "RelatedBuildingElement": "door-1",
+          "RelatingOpeningElement": "opening-door-1"
+        },
+        "id": "fill-door-1",
+        "ifc_class": "IfcRelFillsElement",
+        "provenance": {
+          "source": "phase-5-scripted-demo"
+        }
+      },
+      {
+        "attributes": {
+          "RelatedOpeningElement": "opening-window-1",
+          "RelatingBuildingElement": "wall-north"
+        },
+        "id": "void-window-1",
+        "ifc_class": "IfcRelVoidsElement",
+        "provenance": {
+          "source": "phase-5-scripted-demo"
+        }
+      },
+      {
+        "attributes": {
+          "RelatedBuildingElement": "window-1",
+          "RelatingOpeningElement": "opening-window-1"
+        },
+        "id": "fill-window-1",
+        "ifc_class": "IfcRelFillsElement",
+        "provenance": {
+          "source": "phase-5-scripted-demo"
+        }
+      }
+    ],
+    "schema_version": "bim-json/2.0",
+    "units": {
+      "length": "MILLIMETRE"
+    }
+  },
+  "language": "zh-CN",
+  "missing_facts": [
+    {
+      "code": "MISSING_ROOM_SIZE",
+      "id": "mf-room-size",
+      "path": "/entities/space-1/attributes/Representation",
+      "question_zh": "房间的长、宽、高分别是多少？",
+      "rationale": "simple-room demo requires explicit room dimensions",
+      "source": "agent",
+      "status": "answered"
+    },
+    {
+      "code": "MISSING_DOOR_POSITION",
+      "id": "mf-door-position",
+      "path": "/entities/door-1/attributes/ObjectPlacement",
+      "question_zh": "门位于哪面墙上？门洞的水平位置和底部高度是多少？",
+      "rationale": "door placement must be explicit",
+      "source": "agent",
+      "status": "answered"
+    },
+    {
+      "code": "MISSING_WINDOW_POSITION",
+      "id": "mf-window-position",
+      "path": "/entities/window-1/attributes/ObjectPlacement",
+      "question_zh": "窗位于哪面墙上？窗的水平位置、窗台高度和尺寸是多少？",
+      "rationale": "window placement must be explicit",
+      "source": "agent",
+      "status": "answered"
+    }
+  ],
+  "original_request": "请帮我创建一个单层矩形房间，包含四面墙、一扇门和一扇窗。",
+  "schema_version": "text2ifc/agent-state-v1",
+  "status": "formal_ready",
+  "transcript": [
+    {
+      "content": "请帮我创建一个单层矩形房间，包含四面墙、一扇门和一扇窗。",
+      "question_ids": [],
+      "role": "user"
+    },
+    {
+      "content": "房间的长、宽、高分别是多少？\n门位于哪面墙上？门洞的水平位置和底部高度是多少？\n窗位于哪面墙上？窗的水平位置、窗台高度和尺寸是多少？",
+      "question_ids": [
+        "mf-room-size",
+        "mf-door-position",
+        "mf-window-position"
+      ],
+      "role": "agent"
+    },
+    {
+      "content": "房间长 6 米，宽 4 米，高 3 米。",
+      "question_ids": [
+        "mf-room-size"
+      ],
+      "role": "user"
+    },
+    {
+      "content": "门在南侧墙中间，宽 0.9 米，高 2.1 米，底部贴地。",
+      "question_ids": [
+        "mf-door-position"
+      ],
+      "role": "user"
+    },
+    {
+      "content": "窗在北侧墙中间，宽 1.2 米，高 1.5 米，窗台高 0.9 米。",
+      "question_ids": [
+        "mf-window-position"
+      ],
+      "role": "user"
+    }
+  ]
+}

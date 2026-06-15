@@ -1,0 +1,40 @@
+{
+  "schema_version": "text2ifc/agent-transcript-v1",
+  "turns": [
+    {
+      "content": "请帮我创建一个单层矩形房间，包含四面墙、一扇门和一扇窗。",
+      "question_ids": [],
+      "role": "user"
+    },
+    {
+      "content": "房间的长、宽、高分别是多少？\n门位于哪面墙上？门洞的水平位置和底部高度是多少？\n窗位于哪面墙上？窗的水平位置、窗台高度和尺寸是多少？",
+      "question_ids": [
+        "mf-room-size",
+        "mf-door-position",
+        "mf-window-position"
+      ],
+      "role": "agent"
+    },
+    {
+      "content": "房间长 6 米，宽 4 米，高 3 米。",
+      "question_ids": [
+        "mf-room-size"
+      ],
+      "role": "user"
+    },
+    {
+      "content": "门在南侧墙中间，宽 0.9 米，高 2.1 米，底部贴地。",
+      "question_ids": [
+        "mf-door-position"
+      ],
+      "role": "user"
+    },
+    {
+      "content": "窗在北侧墙中间，宽 1.2 米，高 1.5 米，窗台高 0.9 米。",
+      "question_ids": [
+        "mf-window-position"
+      ],
+      "role": "user"
+    }
+  ]
+}
