@@ -2,6 +2,30 @@
 
 这个文件记录 Mimo provider 的真实测试反馈和 prompt 版本变化。不要在这里写入 token、完整私有 URL、请求头值或任何密钥。
 
+## mimo-bim-json-v3.md
+
+Date: 2026-06-15
+
+Goal: add a geometry gate contract after the simple-room IFC reopened but failed
+spatial inspection in a viewer.
+
+Observed failure:
+- The IFC file contained four IfcWall objects and passed basic reopen checks.
+- East/west walls were generated with the same local direction as south/north
+  walls, so the room was visually disconnected.
+- The model treated wall placement as a wall start or corner, while the IFC
+  rectangle profile uses rectangle profile center-origin semantics.
+
+New contract:
+- `mimo-bim-json-v3.md` records the geometry gate rule.
+- south/north walls run along X.
+- east/west walls run along Y and normally use `ref_direction: [0, 1, 0]`.
+- rectangle profile center-origin is explicit.
+- geometry failure feedback must be repaired, or the response must remain Draft
+  with Chinese clarification questions.
+- The model must still output BIM JSON 2.0 only, not raw IFC or compiler-level
+  objects.
+
 ## mimo-smoke-001
 
 日期：2026-06-15
