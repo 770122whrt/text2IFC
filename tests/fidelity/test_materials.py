@@ -6,6 +6,7 @@ from pathlib import Path
 import ifcopenshell.util.element
 
 from text2ifc_compiler import compile_document, open_ifc
+from text2ifc_extractor import extract_ifc2x3
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -24,10 +25,7 @@ def _by_bim_id(model, bim_json_id: str):
     raise KeyError(bim_json_id)
 
 
-def test_v2_compiles_explicit_wall_material_layer_set_usage(
-    tmp_path: Path,
-) -> None:
-    value = document()
+def _add_explicit_wall_material(value: dict) -> dict:
     wall = next(item for item in value["entities"] if item["id"] == "wall-1")
     wall["ifc_class"] = "IfcWallStandardCase"
     wall["materials"] = [
@@ -43,6 +41,14 @@ def test_v2_compiles_explicit_wall_material_layer_set_usage(
             ],
         }
     ]
+    return wall["materials"][0]
+
+
+def test_v2_compiles_explicit_wall_material_layer_set_usage(
+    tmp_path: Path,
+) -> None:
+    value = document()
+    _add_explicit_wall_material(value)
     output = tmp_path / "explicit-wall-material.ifc"
 
     result = compile_document(value, output)
@@ -66,3 +72,24 @@ def test_v2_compiles_explicit_wall_material_layer_set_usage(
     layers = list(layer_set.MaterialLayers)
     assert [layer.Material.Name for layer in layers] == ["Gypsum board", "Concrete"]
     assert [layer.LayerThickness for layer in layers] == [12.5, 175.0]
+
+
+def test_extractor_preserves_supported_wall_material_layers(
+    tmp_path: Path,
+) -> None:
+    value = document()
+    expected = _add_explicit_wall_material(value)
+    source_ifc = tmp_path / "source-material.ifc"
+    assert compile_document(value, source_ifc).success
+
+    extraction = extract_ifc2x3(source_ifc)
+    extracted = extraction.document or extraction.draft["partial_document"]
+    wall = next(
+        entity
+        for entity in extracted["entities"]
+        if entity["ifc_class"] == "IfcWallStandardCase"
+        and entity["attributes"].get("Name") == "Wall"
+    )
+
+    assert wall["materials"] == [expected]
+    assert all(loss["kind"] != "MATERIAL_ASSOCIATION" for loss in extraction.losses)
