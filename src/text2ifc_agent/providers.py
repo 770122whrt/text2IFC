@@ -148,6 +148,8 @@ class MimoConfig:
     token: str
     base_url: str
     model: str
+    max_tokens: int = 4096
+    timeout_seconds: int = 60
 
 
 def load_mimo_config_from_env(
@@ -200,7 +202,7 @@ class MimoAgentProvider:
         body = json.dumps(
             {
                 "model": self.config.model,
-                "max_tokens": 512,
+                "max_tokens": self.config.max_tokens,
                 "messages": [{"role": "user", "content": prompt}],
             },
             ensure_ascii=False,
@@ -216,7 +218,10 @@ class MimoAgentProvider:
             method="POST",
         )
         try:
-            with urllib.request.urlopen(request, timeout=30) as response:
+            with urllib.request.urlopen(
+                request,
+                timeout=self.config.timeout_seconds,
+            ) as response:
                 payload = json.loads(response.read().decode("utf-8"))
         except (OSError, urllib.error.URLError, json.JSONDecodeError) as exc:
             raise ProviderOutputError(
