@@ -7,14 +7,14 @@ See: `.planning/PROJECT.md` (updated 2026-06-11)
 **Core value:** Produce valid, inspectable IFC models from explicit user
 requirements.
 
-**Current focus:** Phase 5 Wave 6; final verification and summary
+**Current focus:** Phase 5 complete; next recommended phase is Phase 4
 
 ## Status
 
 - Phase: 5
-- Stage: Executing
-- State: Phase 5 Wave 5 complete; Wave 6 is next
-- Plans: Phase 5 in progress, 5 of 6 plans complete
+- Stage: Verified
+- State: Phase 5 complete; Chinese-first clarification Agent demo produces a reopenable IFC2X3 file
+- Plans: Phase 5 complete, 6 of 6 plans complete
 - Branch: `main`
 - Remote: `https://github.com/770122whrt/text2IFC`
 
@@ -141,6 +141,10 @@ requirements.
 - Phase 5 Wave 5 implemented the scripted Chinese clarification demo and wrote
   `dataset/processed/agent-demo/simple-room/output.ifc`, a reopenable IFC2X3
   file tracked through Git LFS.
+- Phase 5 Wave 6 completed final verification: 30 Agent tests passed, full
+  regression passed 311 tests, compileall passed, Phase 3 E2E regression
+  passed, IFC2X3 registry check passed, and Agent artifact secret scan reported
+  zero findings.
 - Generated BIM JSON 2.0 and IFC2X3 generation-profile references are
   drift-checked from canonical schemas and registries.
 - Deep code review fixed three Formal/typed-identity gaps through recorded
@@ -228,8 +232,8 @@ requirements.
 
 ## Next Action
 
-Execute Phase 5 Wave 6: final verification, summary, security review, and
-roadmap/state update.
+Proceed to Phase 4: High-fidelity IFC Round Trip. Phase 6 remains deferred
+until Phase 4 and Phase 5 are both complete.
 
 ## Accumulated Context
 
@@ -280,6 +284,10 @@ roadmap/state update.
   commit `5a812dd`; `tests/agent/test_clarification_demo.py`,
   `scripts/agent/run_clarification_demo.py --check`, and `tests/agent`
   passed.
+- Phase 5 Wave 6 completed on 2026-06-15 with RED commit `d90e9c1`, GREEN
+  commit `a421fd3`, and this final documentation/verification commit; final
+  gates passed and `dataset/processed/agent-demo/simple-room/output.ifc` is the
+  Phase 5 acceptance artifact.
 
 ---
-*Last activity: 2026-06-14 - completed and verified Phase 3*
+*Last activity: 2026-06-15 - completed and verified Phase 5*

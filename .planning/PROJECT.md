@@ -5,7 +5,7 @@
 text2IFC is a research and engineering project that converts natural-language
 building requirements into valid IFC building models. The system uses a
 validated BIM JSON representation and deterministic IfcOpenShell generation,
-with a future multi-turn agent for missing information.
+with a first multi-turn clarification Agent for missing information.
 
 ## Core Value
 
@@ -21,17 +21,23 @@ explicit user requirements instead of generating fragile IFC text directly.
 - Storey elevation, selected wall properties, and door/window dimensions have
   automated tests.
 - Large IFC and research files are published through Git LFS.
+- The Phase 3 Text-to-JSON-to-IFC baseline loop is complete.
+- The Phase 5 Chinese-first clarification Agent demo writes a reopenable IFC2X3
+  file.
 
 ### Active
 
 - [x] Define and validate BIM JSON 1.0.
 - [x] Build a minimum IFC2X3 compiler from the validated contract.
-- [ ] Define BIM JSON 2.0 as an IFC2X3-aligned semantic entity graph.
-- [ ] Build deterministic IFC2X3 declaration and property-set registries from
+- [x] Define BIM JSON 2.0 as an IFC2X3-aligned semantic entity graph.
+- [x] Build deterministic IFC2X3 declaration and property-set registries from
   official buildingSMART sources.
-- [ ] Extract supported ground truth from authorized IFC with explicit losses.
-- [ ] Build a Text-to-JSON dataset pipeline and measurable baseline.
-- [ ] Complete the first Text-to-JSON-to-IFC end-to-end loop.
+- [x] Extract supported ground truth from authorized IFC with explicit losses.
+- [x] Build a Text-to-JSON dataset pipeline and measurable baseline.
+- [x] Complete the first Text-to-JSON-to-IFC end-to-end loop.
+- [x] Complete the first multi-turn clarification Agent demo to IFC.
+- [ ] Preserve high-fidelity IFC material/type/topology/geometry details.
+- [ ] Expand approved data, compare fine-tuning, and package deployment.
 
 ### Out of Scope
 
@@ -80,9 +86,10 @@ explicit user requirements instead of generating fragile IFC text directly.
 | Build the minimum compiler in Phase 2 | Establish deterministic output before Text-to-JSON | Complete |
 | Make Phase 2.5 a breaking BIM JSON 2.0 contract | IFC class identity, placement, relationships, and Draft semantics cannot be added safely as a minor revision | Adopted |
 | Build official-source IFC2X3 knowledge first | Schema correctness cannot depend on model memory or retrieval | Adopted |
-| Build Text-to-JSON in Phase 3 | Reach an early end-to-end text2IFC baseline | Pending |
+| Build Text-to-JSON in Phase 3 | Reach an early end-to-end text2IFC baseline | Complete |
+| Build multi-turn clarification in Phase 5 | Missing natural-language facts should produce questions, not fabrication | Complete |
 | Defer materials, complex geometry, and topology to Phase 4 | Keep spatial ground truth separate from full IFC fidelity | Adopted |
 | Use TDD and GSD phase artifacts | Keep behavior and planning traceable | Adopted |
 
 ---
-*Last updated: 2026-06-11 after Phase 2.5 insertion*
+*Last updated: 2026-06-15 after Phase 5 verification*

@@ -291,7 +291,7 @@ IFC, STEP text, low-level IFC helper entities, or compiler bookkeeping.
 
 **Wave 6** *(blocked on Wave 5 completion)*
 
-- [ ] `05-06-PLAN.md` - Final verification, summary, security review, and
+- [x] `05-06-PLAN.md` - Final verification, summary, security review, and
   roadmap/state update
 
 **Cross-cutting constraints:**
@@ -304,7 +304,7 @@ IFC, STEP text, low-level IFC helper entities, or compiler bookkeeping.
   secret-safe.
 - The final phase gate is a generated, reopenable IFC file.
 
-**Status:** Planned - ready to execute
+**Status:** Complete - verified 2026-06-15
 
 ## Phase 6: Data Expansion, Fine-tuning, and Deployment
 
