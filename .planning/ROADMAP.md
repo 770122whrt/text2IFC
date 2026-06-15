@@ -274,7 +274,7 @@ IFC, STEP text, low-level IFC helper entities, or compiler bookkeeping.
 
 **Wave 2** *(blocked on Wave 1 completion)*
 
-- [ ] `05-02-PLAN.md` - Missing-fact diagnostics to bounded Chinese questions
+- [x] `05-02-PLAN.md` - Missing-fact diagnostics to bounded Chinese questions
 
 **Wave 3** *(blocked on Wave 2 completion)*
 

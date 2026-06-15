@@ -7,14 +7,14 @@ See: `.planning/PROJECT.md` (updated 2026-06-11)
 **Core value:** Produce valid, inspectable IFC models from explicit user
 requirements.
 
-**Current focus:** Phase 5 Wave 2; missing-fact diagnostics to Chinese questions
+**Current focus:** Phase 5 Wave 3; answer merge and Draft/Formal transitions
 
 ## Status
 
 - Phase: 5
 - Stage: Executing
-- State: Phase 5 Wave 1 complete; Wave 2 is next
-- Plans: Phase 5 in progress, 1 of 6 plans complete
+- State: Phase 5 Wave 2 complete; Wave 3 is next
+- Plans: Phase 5 in progress, 2 of 6 plans complete
 - Branch: `main`
 - Remote: `https://github.com/770122whrt/text2IFC`
 
@@ -128,6 +128,10 @@ requirements.
   original-request preservation, transcript turns, missing facts, accepted
   facts, candidate document storage, deterministic JSON serialization, and
   metadata redaction.
+- Phase 5 Wave 2 implemented missing-fact question planning: validator and
+  Draft diagnostics normalize into open Agent missing facts, rank the simple
+  room-critical gaps first, and return at most three Chinese user-facing
+  questions per turn.
 - Generated BIM JSON 2.0 and IFC2X3 generation-profile references are
   drift-checked from canonical schemas and registries.
 - Deep code review fixed three Formal/typed-identity gaps through recorded
@@ -187,6 +191,8 @@ requirements.
   variables; fake/file providers remain required for deterministic tests.
 - Agent state is independent from BIM JSON structure; it can hold candidate
   BIM JSON as plain JSON but does not define a second BIM JSON model.
+- Question planning never fills missing facts and avoids low-level IFC helper
+  terms in user-facing text.
 
 ## Known Risks
 
@@ -206,7 +212,7 @@ requirements.
 
 ## Next Action
 
-Execute Phase 5 Wave 2: missing-fact diagnostics to bounded Chinese questions.
+Execute Phase 5 Wave 3: answer merge and Draft/Formal transitions.
 
 ## Accumulated Context
 
@@ -244,6 +250,9 @@ Execute Phase 5 Wave 2: missing-fact diagnostics to bounded Chinese questions.
 - Phase 5 Wave 1 completed on 2026-06-15 with RED commit `c53712e` and GREEN
   commit `d5ca58a`; `tests/agent/test_agent_state.py` passed and the
   `tests/contract_v2 tests/compiler` regression slice passed.
+- Phase 5 Wave 2 completed on 2026-06-15 with RED commit `ba69e37` and GREEN
+  commit `0b9fc84`; `tests/agent/test_question_planner.py` and
+  `tests/agent` passed.
 
 ---
 *Last activity: 2026-06-14 - completed and verified Phase 3*
