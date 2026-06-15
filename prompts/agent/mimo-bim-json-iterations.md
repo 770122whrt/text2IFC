@@ -1,0 +1,56 @@
+# Mimo BIM JSON Prompt Iterations
+
+这个文件记录 Mimo provider 的真实测试反馈和 prompt 版本变化。不要在这里写入 token、完整私有 URL、请求头值或任何密钥。
+
+## mimo-smoke-001
+
+日期：2026-06-15
+
+目标：验证 `.env` 中的 Mimo 配置是否能完成一次请求和回复。
+
+结果：
+
+- `.env` 中存在 `ANTHROPIC_AUTH_TOKEN`、`ANTHROPIC_BASE_URL`、`TEXT2IFC_MIMO_MODEL`。
+- 配置检查通过，模型名来自环境变量。
+- 使用 `x-api-key` 方向可以获得 HTTP 200。
+- 使用 Bearer 授权方向失败，后续 provider 继续使用 `x-api-key`。
+- 低 `max_tokens` 时回复可能只包含 thinking 内容，没有可用 text。
+- 增加 token 预算后，可以成功请求并获得文本回复。
+
+结论：Mimo 可以连通并往返，但真实输出需要更强的输出合同约束。
+
+## mimo-live-simple-room-001
+
+日期：2026-06-15
+
+目标：用中文自然语言描述一个简单房间，让 Mimo 生成 BIM JSON 2.0，再进入 IFC 编译链路。
+
+输入摘要：
+
+- 一个 6m x 4m x 3m 的单层矩形房间。
+- 四面墙。
+- 南墙一个 900mm x 2100mm 门。
+- 北墙一个 1200mm x 1500mm 窗，窗台高 900mm。
+
+结果：
+
+- Mimo 返回 HTTP 200，说明请求往返成功。
+- 返回内容是中文解释和分析，不是只输出一个 JSON 对象。
+- 自动解析器从正文中抓到了普通尺寸 JSON：`{"length": "MILLIMETRE"}`。
+- 校验结果是 validation failed，因为缺少 `schema_version`、`ifc_schema`、`entities`、`relationships`、`provenance` 等 Formal BIM JSON 必需字段。
+
+问题判断：
+
+- 模型把任务理解成“评价或说明参考 JSON”，而不是“生成唯一可校验 JSON”。
+- prompt 没有足够强地禁止解释文本、Markdown 和片段 JSON。
+- prompt 没有把失败反馈作为下一轮修复输入。
+
+下一版合同：
+
+- 新增 `mimo-bim-json-v1.md`。
+- 强制“只输出一个完整 JSON 对象”。
+- 明确根字段、实体字段、关系字段和 BIM JSON 2.0 / IFC2X3 固定值。
+- 明确不要输出 IFC、STEP、`IfcCartesianPoint`、`IfcDirection`、`IfcOwnerHistory` 或 STEP ID。
+- 明确 `REFERENCE_JSON` 只是结构参考。
+- 明确 `VALIDATION_FEEDBACK` 必须被用于修复上一轮失败。
+- 保留 prompt 版本和每轮失败原因，避免后续调参丢失上下文。

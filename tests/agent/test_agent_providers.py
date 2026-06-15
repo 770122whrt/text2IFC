@@ -119,13 +119,20 @@ def test_raw_ifc_step_or_low_level_helper_output_is_rejected(text):
         validate_provider_output(ProviderOutput(text=text, metadata={}))
 
 
-def test_mimo_check_config_cli_is_redacted_and_non_networked(monkeypatch):
+def test_mimo_check_config_cli_is_redacted_and_non_networked(monkeypatch, tmp_path):
     monkeypatch.delenv("ANTHROPIC_AUTH_TOKEN", raising=False)
     monkeypatch.delenv("ANTHROPIC_BASE_URL", raising=False)
     monkeypatch.delenv("TEXT2IFC_MIMO_MODEL", raising=False)
+    missing_env_file = tmp_path / "missing.env"
 
     result = subprocess.run(
-        [sys.executable, "scripts/agent/run_mimo_smoke.py", "--check-config"],
+        [
+            sys.executable,
+            "scripts/agent/run_mimo_smoke.py",
+            "--check-config",
+            "--env-file",
+            str(missing_env_file),
+        ],
         check=False,
         capture_output=True,
         text=True,
