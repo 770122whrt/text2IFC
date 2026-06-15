@@ -259,7 +259,7 @@ boxes or proxies.
 
 **Wave 1** *(blocked on Wave 0 generated-IFC gate)*
 
-- [ ] `04-01-PLAN.md` - Fidelity inventory and metric harness
+- [x] `04-01-PLAN.md` - Fidelity inventory and metric harness
 
 **Wave 2** *(blocked on Wave 1 inventory)*
 
@@ -298,7 +298,7 @@ boxes or proxies.
 - Every implementation behavior with defined inputs and outputs follows a
   recorded RED-GREEN TDD cycle.
 
-**Status:** In progress - Wave 0 complete, ready for Wave 1 fidelity inventory
+**Status:** In progress - Wave 1 complete, ready for Wave 2 material fidelity
 
 ## Phase 5: Multi-turn Clarification Agent
 
