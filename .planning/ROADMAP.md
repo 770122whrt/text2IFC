@@ -206,7 +206,7 @@ beyond the Phase 2.5 formal generation profile.
 
 **Wave 6** *(blocked on Wave 5 completion)*
 
-- [ ] `03-06-PLAN.md` - End-to-end demo, summary, and RAG/fine-tune decision
+- [x] `03-06-PLAN.md` - End-to-end demo, summary, and RAG/fine-tune decision
   report
 
 **Cross-cutting constraints:**
@@ -239,14 +239,72 @@ unsupported loss.
 
 ## Phase 5: Multi-turn Clarification Agent
 
-**Goal:** Turn incomplete natural-language requests into valid BIM JSON through
-targeted follow-up questions and persistent conversation state.
+**Goal:** Turn incomplete Chinese natural-language requests into explicit Draft
+clarification state or valid formal BIM JSON 2.0, then compile the completed
+simple-room Agent demo to a reopenable IFC2X3 file.
 
 **Requirements:** AGENT-01, AGENT-02, AGENT-03
 
-**Depends on:** Phase 1, Phase 3
+**Depends on:** Phase 1, Phase 2.5, Phase 3
 
-**Status:** Ready
+**Canonical refs:**
+
+- `.planning/phases/05-multi-turn-clarification-agent/05-SPEC.md`
+- `.planning/phases/05-multi-turn-clarification-agent/05-CONTEXT.md`
+- `.planning/phases/05-multi-turn-clarification-agent/05-AI-SPEC.md`
+- `.planning/phases/05-multi-turn-clarification-agent/05-RESEARCH.md`
+- `.planning/phases/05-multi-turn-clarification-agent/05-VALIDATION.md`
+- `.planning/phases/05-multi-turn-clarification-agent/05-GOAL-PROMPT.md`
+
+**Explicit boundary:** Phase 5 builds the runtime clarification Agent, not
+Phase 4 fidelity and not Phase 6 fine-tuning/deployment. The Agent asks Chinese
+questions, keeps unknown required facts as Draft, and compiles IFC only after
+formal BIM JSON 2.0 validation. The model/provider layer must not output raw
+IFC, STEP text, low-level IFC helper entities, or compiler bookkeeping.
+
+**Final acceptance artifact:**
+`dataset/processed/agent-demo/simple-room/output.ifc`
+
+**Plans:** 6 plans in 6 waves
+
+**Wave 1**
+
+- [ ] `05-01-PLAN.md` - Agent state contract, transcript, missing facts, and
+  redaction primitives
+
+**Wave 2** *(blocked on Wave 1 completion)*
+
+- [ ] `05-02-PLAN.md` - Missing-fact diagnostics to bounded Chinese questions
+
+**Wave 3** *(blocked on Wave 2 completion)*
+
+- [ ] `05-03-PLAN.md` - Answer merge and Draft/Formal transitions
+
+**Wave 4** *(blocked on Wave 3 completion)*
+
+- [ ] `05-04-PLAN.md` - Fake/file providers and optional Anthropic-compatible
+  Mimo adapter
+
+**Wave 5** *(blocked on Wave 4 completion)*
+
+- [ ] `05-05-PLAN.md` - Scripted Chinese clarification demo to IFC
+
+**Wave 6** *(blocked on Wave 5 completion)*
+
+- [ ] `05-06-PLAN.md` - Final verification, summary, security review, and
+  roadmap/state update
+
+**Cross-cutting constraints:**
+
+- Chinese-first interaction with 1-3 user-facing questions per turn.
+- No silent defaults when required facts are unknown.
+- Draft state is explicit and never compiled.
+- Formal BIM JSON 2.0 validation gates IFC compilation.
+- Fake/file providers are deterministic; live Mimo smoke is optional and
+  secret-safe.
+- The final phase gate is a generated, reopenable IFC file.
+
+**Status:** Planned - ready to execute
 
 ## Phase 6: Data Expansion, Fine-tuning, and Deployment
 

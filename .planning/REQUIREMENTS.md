@@ -158,9 +158,9 @@ requirements.
 | GEO-04 | Phase 4 | Deferred |
 | GEO-05 | Phase 4 | Deferred |
 | IFC-06 | Phase 4 | Deferred |
-| AGENT-01 | Phase 5 | Deferred |
-| AGENT-02 | Phase 5 | Deferred |
-| AGENT-03 | Phase 5 | Deferred |
+| AGENT-01 | Phase 5 | Planned |
+| AGENT-02 | Phase 5 | Planned |
+| AGENT-03 | Phase 5 | Planned |
 | MODEL-01 | Phase 6 | Deferred |
 | MODEL-02 | Phase 6 | Deferred |
 | DEPLOY-01 | Phase 6 | Deferred |

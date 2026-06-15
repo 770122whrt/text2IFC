@@ -7,15 +7,14 @@ See: `.planning/PROJECT.md` (updated 2026-06-11)
 **Core value:** Produce valid, inspectable IFC models from explicit user
 requirements.
 
-**Current focus:** Phase 3 complete; next-phase selection
+**Current focus:** Phase 5 planned; next step is Agent execution
 
 ## Status
 
-- Phase: 3
-- Stage: Verified
-- State: Phase 3 complete; Phase 5 Agent work is ready if interactive
-  clarification is the next priority
-- Plans: Phase 3 complete, 7 of 7 plans complete
+- Phase: 5
+- Stage: Planned
+- State: Phase 5 multi-turn clarification Agent is specified and planned
+- Plans: Phase 5 planned, 0 of 6 plans complete
 - Branch: `main`
 - Remote: `https://github.com/770122whrt/text2IFC`
 
@@ -123,6 +122,8 @@ requirements.
   JSON 2.0, compiled IFC2X3, and reopened with no compiler issues.
 - Phase 3 summary and RAG/fine-tune/Agent decision reports are written under
   `docs/architecture/`.
+- Phase 5 is specified and planned as a Chinese-first multi-turn clarification
+  Agent with a final simple-room IFC acceptance artifact.
 - Generated BIM JSON 2.0 and IFC2X3 generation-profile references are
   drift-checked from canonical schemas and registries.
 - Deep code review fixed three Formal/typed-identity gaps through recorded
@@ -173,6 +174,13 @@ requirements.
   STEP text or low-level compiler entities.
 - RAG, fine-tuning, and runtime clarification are decided after baseline
   metrics; Phase 3 only produces the decision report and labeled Draft data.
+- Phase 5 asks 1-3 Chinese clarification questions per turn, keeps unknown
+  required facts as Draft, and compiles IFC only after formal BIM JSON 2.0
+  validation passes.
+- The final Phase 5 acceptance artifact is
+  `dataset/processed/agent-demo/simple-room/output.ifc`.
+- Live Mimo provider work is optional smoke-test behavior behind environment
+  variables; fake/file providers remain required for deterministic tests.
 
 ## Known Risks
 
@@ -192,10 +200,8 @@ requirements.
 
 ## Next Action
 
-Plan the next phase. Recommended default: Phase 5 multi-turn clarification
-Agent, because the project goal includes asking users for missing required
-facts. Alternative: run a real file/live provider baseline first if model
-quality measurement is the immediate priority.
+Execute Phase 5 Wave 1: Agent state contract, transcript, missing facts, and
+redaction primitives.
 
 ## Accumulated Context
 
@@ -227,6 +233,9 @@ quality measurement is the immediate priority.
 - Phase 3 Wave 6 completed on 2026-06-14 with RED/GREEN commits `f1d5bcf` and
   `8cba218`; stabilization commit `0cfcb83` kept check commands clean, and the
   final gates passed.
+- Phase 5 was specified and planned on 2026-06-15 with six waves: Agent state,
+  missing-fact questions, answer merge, provider/Mimo adapter, simple-room
+  Agent demo to IFC, and final verification/summary.
 
 ---
 *Last activity: 2026-06-14 - completed and verified Phase 3*
