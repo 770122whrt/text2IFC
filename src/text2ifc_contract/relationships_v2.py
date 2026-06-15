@@ -64,20 +64,32 @@ def validate_relationships(
         for attribute, expected_class in endpoint_types.items():
             path = f"{base}/attributes/{attribute}"
             endpoint_id = attributes.get(attribute)
-            endpoint_ids = (
-                endpoint_id
-                if attribute == "RelatedObjects" and isinstance(endpoint_id, list)
-                else [endpoint_id]
-            )
-            if not endpoint_ids:
+            if attribute == "RelatedObjects":
+                if (
+                    not isinstance(endpoint_id, list)
+                    or not endpoint_id
+                    or not all(isinstance(item, str) for item in endpoint_id)
+                ):
+                    issues.append(
+                        _issue(
+                            "RELATIONSHIP_ENDPOINT_SHAPE",
+                            path,
+                            "RelatedObjects must be a non-empty list of entity IDs.",
+                        )
+                    )
+                    continue
+                endpoint_ids = endpoint_id
+            elif not isinstance(endpoint_id, str):
                 issues.append(
                     _issue(
-                        "UNRESOLVED_RELATIONSHIP_ENDPOINT",
+                        "RELATIONSHIP_ENDPOINT_SHAPE",
                         path,
-                        f"Relationship endpoint {endpoint_id!r} is not declared.",
+                        f"{attribute} must be a single entity ID.",
                     )
                 )
                 continue
+            else:
+                endpoint_ids = [endpoint_id]
             for item_id in endpoint_ids:
                 if not isinstance(item_id, str) or item_id not in entities:
                     issues.append(
