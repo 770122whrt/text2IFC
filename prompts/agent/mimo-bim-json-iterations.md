@@ -54,3 +54,34 @@
 - 明确 `REFERENCE_JSON` 只是结构参考。
 - 明确 `VALIDATION_FEEDBACK` 必须被用于修复上一轮失败。
 - 保留 prompt 版本和每轮失败原因，避免后续调参丢失上下文。
+
+## mimo-live-simple-room-v1
+
+日期：2026-06-15
+
+目标：使用 `mimo-bim-json-v1.md`，再次让 Mimo 根据完整中文房间描述生成 BIM JSON 2.0，并尝试进入 IFC 编译。
+
+结果：
+
+- Mimo 返回 HTTP 200。
+- 输出已经可以被 JSON 解析，不再是解释文本。
+- BIM JSON 2.0 校验仍然失败。
+- 失败点：根对象混入 `missing_facts` 和 `clarification_targets`，但同时又使用 `schema_version: "bim-json/2.0"`。
+- 失败点：`entities` 为空，无法表达房间、墙、门、窗、洞口和关系。
+- 搜索标记：entities 为空。
+- 编译未尝试，因为 Formal BIM JSON 校验未通过。
+
+问题判断：
+
+- v1 成功约束了“只输出 JSON”，但没有阻止模型把完整输入误判成 Draft。
+- `VALIDATION_FEEDBACK` 里的上一轮缺失信息被模型当成真实缺失继续沿用。
+- 模型没有把“南墙中间”“北墙中间”“底部贴地”“窗台高”识别为足够的位置事实。
+
+下一版合同：
+
+- 新增 `mimo-bim-json-v2.md`。
+- 明确信息足够时不要输出 Draft 字段。
+- 明确 `entities` 不得为空。
+- 明确 `missing_facts` 和 `clarification_targets` 不能混入 Formal BIM JSON 根对象。
+- 明确“南墙中间”“北墙中间”等中文位置表达已经足够，可以计算居中洞口位置。
+- 明确上一轮 validation feedback 只用于修复格式和字段错误，不代表用户真实缺失信息。
