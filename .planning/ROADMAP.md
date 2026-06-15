@@ -263,7 +263,7 @@ boxes or proxies.
 
 **Wave 2** *(blocked on Wave 1 inventory)*
 
-- [ ] `04-02-PLAN.md` - Material and layer fidelity
+- [x] `04-02-PLAN.md` - Material and layer fidelity
 
 **Wave 3** *(blocked on Wave 2 material support)*
 
@@ -298,7 +298,7 @@ boxes or proxies.
 - Every implementation behavior with defined inputs and outputs follows a
   recorded RED-GREEN TDD cycle.
 
-**Status:** In progress - Wave 1 complete, ready for Wave 2 material fidelity
+**Status:** In progress - Wave 2 complete, ready for Wave 3 type reuse fidelity
 
 ## Phase 5: Multi-turn Clarification Agent
 

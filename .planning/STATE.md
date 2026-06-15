@@ -7,14 +7,14 @@ See: `.planning/PROJECT.md` (updated 2026-06-11)
 **Core value:** Produce valid, inspectable IFC models from explicit user
 requirements.
 
-**Current focus:** Phase 4 Wave 2 material and layer fidelity
+**Current focus:** Phase 4 Wave 3 type reuse fidelity
 
 ## Status
 
 - Phase: 4
 - Stage: In progress
-- State: Phase 4 Wave 1 fidelity inventory complete; Wave 2 is next
-- Plans: Phase 4 planned, 2 of 7 plans complete
+- State: Phase 4 Wave 2 material and layer fidelity complete; Wave 3 is next
+- Plans: Phase 4 planned, 3 of 7 plans complete
 - Branch: `main`
 - Remote: `https://github.com/770122whrt/text2IFC`
 
@@ -176,6 +176,11 @@ requirements.
   1012 type relationships, 4526 connection topology relationships, 1033 mapped
   geometry items, 2654 BRep-related items, 125 tessellation/face-based surface
   items, 845 openings, and 189 spaces across the authorized source set.
+- Phase 4 Wave 2 added BIM JSON 2.0 `materials` support for selected
+  `material_layer_set_usage` facts and compiler/extractor round-trip support
+  for wall material layers.
+- Regenerated BIMNet extraction accounting now reports 2554 material source
+  facts, 1533 represented material facts, and 1021 remaining material losses.
 
 ## Current Decisions
 
@@ -260,7 +265,7 @@ requirements.
 
 ## Next Action
 
-Execute Phase 4 Wave 2: Material and layer fidelity. Phase 6 remains
+Execute Phase 4 Wave 3: Type reuse fidelity. Phase 6 remains
 deferred until Phase 4 and Phase 5 are both complete.
 
 ## Accumulated Context
@@ -328,6 +333,9 @@ deferred until Phase 4 and Phase 5 are both complete.
 - Phase 4 Wave 1 completed on 2026-06-15 with RED/GREEN commits `53f5b44`,
   `31cf2ea`, `1930f1f`, and `3148beb`; the inventory covers 25 / 25
   authorized files and provides the metric baseline for Waves 2-6.
+- Phase 4 Wave 2 completed on 2026-06-15 with RED/GREEN commits `eca6a97`,
+  `20cb5d0`, `1dfeeee`, and `94b3189`; selected wall material layer-set usage
+  now round-trips and BIMNet extraction accounting was regenerated.
 
 ---
-*Last activity: 2026-06-15 - completed Phase 4 Wave 1 fidelity inventory*
+*Last activity: 2026-06-15 - completed Phase 4 Wave 2 material and layer fidelity*
