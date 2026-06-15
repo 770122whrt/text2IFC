@@ -8,6 +8,7 @@ import ifcopenshell.util.element
 
 from text2ifc_compiler import compile_document, open_ifc
 from text2ifc_contract.validation_v2 import validate_v2_document
+from text2ifc_extractor import extract_ifc2x3
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -119,3 +120,30 @@ def test_type_reuse_related_objects_must_be_a_non_empty_list() -> None:
         "RELATIONSHIP_ENDPOINT_SHAPE",
         "/relationships/2/attributes/RelatedObjects",
     ) in issues
+
+
+def test_extractor_preserves_supported_wall_type_reuse(
+    tmp_path: Path,
+) -> None:
+    value = document()
+    _add_wall_type_reuse(value)
+    source_ifc = tmp_path / "source-wall-type.ifc"
+    assert compile_document(value, source_ifc).success
+
+    extraction = extract_ifc2x3(source_ifc)
+    extracted = extraction.document or extraction.draft["partial_document"]
+    wall_type = next(
+        entity
+        for entity in extracted["entities"]
+        if entity["ifc_class"] == "IfcWallType"
+        and entity["attributes"]["Name"] == "Interior partition type"
+    )
+    relation = next(
+        item
+        for item in extracted["relationships"]
+        if item["ifc_class"] == "IfcRelDefinesByType"
+    )
+
+    assert relation["attributes"]["RelatingType"] == wall_type["id"]
+    assert len(relation["attributes"]["RelatedObjects"]) == 2
+    assert all(loss["kind"] != "TYPE_RELATIONSHIP" for loss in extraction.losses)
