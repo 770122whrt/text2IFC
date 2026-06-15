@@ -36,6 +36,8 @@ explicit user requirements instead of generating fragile IFC text directly.
 - [x] Build a Text-to-JSON dataset pipeline and measurable baseline.
 - [x] Complete the first Text-to-JSON-to-IFC end-to-end loop.
 - [x] Complete the first multi-turn clarification Agent demo to IFC.
+- [ ] Establish generated-IFC correctness gates for spatial, content,
+  attribute, relationship, and IFC-structure quality.
 - [ ] Preserve high-fidelity IFC material/type/topology/geometry details.
 - [ ] Expand approved data, compare fine-tuning, and package deployment.
 
@@ -88,8 +90,9 @@ explicit user requirements instead of generating fragile IFC text directly.
 | Build official-source IFC2X3 knowledge first | Schema correctness cannot depend on model memory or retrieval | Adopted |
 | Build Text-to-JSON in Phase 3 | Reach an early end-to-end text2IFC baseline | Complete |
 | Build multi-turn clarification in Phase 5 | Missing natural-language facts should produce questions, not fabrication | Complete |
-| Defer materials, complex geometry, and topology to Phase 4 | Keep spatial ground truth separate from full IFC fidelity | Adopted |
+| Start Phase 4 with generated-IFC correctness gates | A reopenable IFC can still be spatially wrong; high-fidelity work needs a reliable text-json-ifc gate first | Adopted |
+| Defer materials, complex geometry, and topology to Phase 4 | Keep generated correctness separate from full IFC source fidelity | Adopted |
 | Use TDD and GSD phase artifacts | Keep behavior and planning traceable | Adopted |
 
 ---
-*Last updated: 2026-06-15 after Phase 5 verification*
+*Last updated: 2026-06-15 after Phase 4 specification and planning*

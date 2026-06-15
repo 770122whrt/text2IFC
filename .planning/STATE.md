@@ -7,14 +7,14 @@ See: `.planning/PROJECT.md` (updated 2026-06-11)
 **Core value:** Produce valid, inspectable IFC models from explicit user
 requirements.
 
-**Current focus:** Phase 5 complete; next recommended phase is Phase 4
+**Current focus:** Phase 4 planned; next recommended action is Wave 0 generated-IFC correctness gate
 
 ## Status
 
-- Phase: 5
-- Stage: Verified
-- State: Phase 5 complete; Chinese-first clarification Agent demo produces a reopenable IFC2X3 file
-- Plans: Phase 5 complete, 6 of 6 plans complete
+- Phase: 4
+- Stage: Ready to execute
+- State: Phase 4 specified and planned; Wave 0 will harden generated IFC correctness before high-fidelity source work
+- Plans: Phase 4 planned, 0 of 7 plans complete
 - Branch: `main`
 - Remote: `https://github.com/770122whrt/text2IFC`
 
@@ -153,6 +153,14 @@ requirements.
 - All 11 Phase 2.5 requirements are verified.
 - Phase 3 final verification passes 281 tests plus split, gold, pair,
   evaluation, E2E, registry, accounting, and compileall gates.
+- Phase 4 is specified and planned with Wave 0 as a generated-IFC correctness
+  gate before high-fidelity source round-trip expansion.
+- Wave 0 requires `simple-room-fixed` and `two-room-suite` to pass automated
+  parse, BIM JSON validation, compile, reopen, spatial topology, attribute,
+  relationship, IFC-structure, metrics, report, and artifact secret-scan gates.
+- Phase 4 planning adds quantitative experiment records so prompt/provider,
+  Agent, schema, compiler, and fidelity changes can be evaluated by error
+  classes and metrics rather than visual inspection alone.
 
 ## Current Decisions
 
@@ -170,6 +178,11 @@ requirements.
 - Placement, spaces, and opening/filling relationships move to Phase 2.5.
 - Materials, type reuse, complex geometry, connection topology, and broader
   product classes remain Phase 4.
+- Generated IFC correctness now precedes Phase 4 high-fidelity source work:
+  text-json-ifc demos must prove spatial relationships, content, attributes,
+  relationships, and IFC structure under automated checks.
+- Prompt/provider iterations for geometry-sensitive generation are durable
+  artifacts and must record metrics, repair iterations, and failure classes.
 - Phase specifications precede executable implementation plans.
 - Implementation plans must use TDD tasks and explicit verification commands.
 - Phase 2 geometry APIs receive SI metres while direct IFC attributes remain
@@ -232,8 +245,8 @@ requirements.
 
 ## Next Action
 
-Proceed to Phase 4: High-fidelity IFC Round Trip. Phase 6 remains deferred
-until Phase 4 and Phase 5 are both complete.
+Execute Phase 4 Wave 0: Generated IFC correctness gate. Phase 6 remains
+deferred until Phase 4 and Phase 5 are both complete.
 
 ## Accumulated Context
 
@@ -288,6 +301,11 @@ until Phase 4 and Phase 5 are both complete.
   commit `a421fd3`, and this final documentation/verification commit; final
   gates passed and `dataset/processed/agent-demo/simple-room/output.ifc` is the
   Phase 5 acceptance artifact.
+- Phase 4 was specified and planned on 2026-06-15 with seven waves. Wave 0 is
+  a new generated-IFC correctness gate for `simple-room-fixed` and
+  `two-room-suite`; Waves 1-6 expand source fidelity through inventory,
+  materials, type reuse, topology, complex/mapped geometry, broader classes,
+  all-25 audit, and Phase 6 readiness.
 
 ---
-*Last activity: 2026-06-15 - completed and verified Phase 5*
+*Last activity: 2026-06-15 - specified and planned Phase 4*

@@ -227,15 +227,78 @@ beyond the Phase 2.5 formal generation profile.
 
 ## Phase 4: High-fidelity IFC Round Trip
 
-**Goal:** Preserve material/type fidelity, complex source geometry, supported
-connection topology, and broader product classes while reporting every
-unsupported loss.
+**Goal:** Improve the full text-to-BIM-JSON-to-IFC path so generated IFC is
+spatially and semantically correct under automated checks, then preserve
+material/type fidelity, complex source geometry, supported connection topology,
+and broader product classes while reporting every unsupported loss.
 
-**Requirements:** GEO-03, GEO-04, GEO-05, IFC-06
+**Requirements:** GEN-01, GEN-02, GEO-03, GEO-04, GEO-05, IFC-06
 
-**Depends on:** Phase 2.5
+**Depends on:** Phase 2.5, Phase 3, Phase 5
 
-**Status:** Deferred
+**Canonical refs:**
+
+- `.planning/phases/04-high-fidelity-ifc-round-trip/04-SPEC.md`
+- `.planning/phases/04-high-fidelity-ifc-round-trip/04-CONTEXT.md`
+- `.planning/phases/04-high-fidelity-ifc-round-trip/04-VALIDATION.md`
+- `.planning/phases/04-high-fidelity-ifc-round-trip/04-GOAL-PROMPT.md`
+
+**Explicit boundary:** Phase 4 starts with a generated-IFC correctness gate for
+the text -> BIM JSON -> IFC path. It does not proceed to high-fidelity source
+round-trip work until `simple-room-fixed` and `two-room-suite` pass automated
+spatial, attribute, relationship, and IFC-structure checks. Unsupported source
+facts remain explicit Draft/loss content and are never replaced with fabricated
+boxes or proxies.
+
+**Plans:** 7 plans in 7 waves
+
+**Wave 0**
+
+- [ ] `04-00-PLAN.md` - Generated IFC correctness gate for simple-room-fixed
+  and two-room-suite
+
+**Wave 1** *(blocked on Wave 0 generated-IFC gate)*
+
+- [ ] `04-01-PLAN.md` - Fidelity inventory and metric harness
+
+**Wave 2** *(blocked on Wave 1 inventory)*
+
+- [ ] `04-02-PLAN.md` - Material and layer fidelity
+
+**Wave 3** *(blocked on Wave 2 material support)*
+
+- [ ] `04-03-PLAN.md` - Type reuse fidelity
+
+**Wave 4** *(blocked on Wave 3 type support)*
+
+- [ ] `04-04-PLAN.md` - Connection topology fidelity
+
+**Wave 5** *(blocked on Wave 4 topology support)*
+
+- [ ] `04-05-PLAN.md` - Complex and mapped geometry fidelity
+
+**Wave 6** *(blocked on Wave 5 geometry support)*
+
+- [ ] `04-06-PLAN.md` - Broader classes, all-25 audit, and Phase 6 readiness
+
+**Cross-cutting constraints:**
+
+- Generated IFC acceptance requires spatial topology, attribute correctness,
+  relationship correctness, IFC hierarchy/containment correctness, compile,
+  reopen, and artifact secret-scan checks.
+- Prompt and provider iterations must be versioned and tied to machine-readable
+  experiment records.
+- The model layer outputs BIM JSON 2.0 semantics only; raw IFC STEP and
+  low-level helper objects remain compiler output.
+- Unsupported material, type, topology, product-class, BRep, mapped geometry,
+  and tessellation facts must be explicitly represented as losses or Draft
+  content.
+- Phase 3 scene-family splits and provenance remain binding for any BIMNet
+  benchmark or training-related artifact.
+- Every implementation behavior with defined inputs and outputs follows a
+  recorded RED-GREEN TDD cycle.
+
+**Status:** Planned - ready for Wave 0 execution
 
 ## Phase 5: Multi-turn Clarification Agent
 

@@ -91,6 +91,12 @@ requirements.
 
 ### Geometric and Relational Fidelity
 
+- **GEN-01**: Generated text-to-BIM-JSON-to-IFC demos preserve correct spatial
+  relationships, user-visible content, supported attributes, IFC hierarchy,
+  containment, and opening/filling relationships under automated checks.
+- **GEN-02**: Text-to-BIM-JSON-to-IFC experiments record quantitative metrics,
+  error classes, prompt/provider versions, repair iterations, and durable
+  artifacts so reliability can improve through measured iteration.
 - **GEO-03**: Preserve material assignments and layer details.
 - **GEO-04**: Preserve supported topology and connection relationships.
 - **GEO-05**: Preserve supported arbitrary profiles, BReps, tessellation, and
@@ -154,10 +160,12 @@ requirements.
 | TEXT-02 | Phase 3 | Complete |
 | TEXT-03 | Phase 3 | Complete |
 | E2E-01 | Phase 3 | Complete |
-| GEO-03 | Phase 4 | Deferred |
-| GEO-04 | Phase 4 | Deferred |
-| GEO-05 | Phase 4 | Deferred |
-| IFC-06 | Phase 4 | Deferred |
+| GEN-01 | Phase 4 | Planned |
+| GEN-02 | Phase 4 | Planned |
+| GEO-03 | Phase 4 | Planned |
+| GEO-04 | Phase 4 | Planned |
+| GEO-05 | Phase 4 | Planned |
+| IFC-06 | Phase 4 | Planned |
 | AGENT-01 | Phase 5 | Complete |
 | AGENT-02 | Phase 5 | Complete |
 | AGENT-03 | Phase 5 | Complete |
@@ -166,10 +174,10 @@ requirements.
 | DEPLOY-01 | Phase 6 | Deferred |
 
 **Coverage:**
-- tracked requirements: 40 total
-- Mapped to phases: 40
+- tracked requirements: 42 total
+- Mapped to phases: 42
 - Unmapped: 0
 
 ---
 *Requirements defined: 2026-06-11*
-*Last updated: 2026-06-15 after Phase 5 verification*
+*Last updated: 2026-06-15 after Phase 4 specification and planning*
