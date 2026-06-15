@@ -85,3 +85,27 @@
 - 明确 `missing_facts` 和 `clarification_targets` 不能混入 Formal BIM JSON 根对象。
 - 明确“南墙中间”“北墙中间”等中文位置表达已经足够，可以计算居中洞口位置。
 - 明确上一轮 validation feedback 只用于修复格式和字段错误，不代表用户真实缺失信息。
+
+## mimo-live-simple-room-v2
+
+日期：2026-06-15
+
+目标：使用 `mimo-bim-json-v2.md`，要求 Mimo 对完整中文房间描述输出 Formal BIM JSON 2.0，并完成 JSON -> IFC 编译。
+
+结果：
+
+- HTTP 往返成功。
+- `parse_status: ok`
+- `validation_issue_count: 0`
+- `compile_success: true`
+- 输出 IFC：`dataset/processed/agent-demo/mimo-live-simple-room-v2/output.ifc`
+- 重新打开 IFC 成功。
+- BIM JSON 统计：13 个 entities，4 个 relationships。
+- IFC 统计：4 个 `IfcWall`，1 个 `IfcDoor`，1 个 `IfcWindow`，1 个 `IfcSpace`。
+- Agent artifact secret scan 结果：0 findings。
+
+结论：
+
+- v2 prompt 可以把这个简单中文完整输入稳定推进到 text -> BIM JSON 2.0 -> IFC。
+- 当前成功仍是 simple-room 级别，不代表已经覆盖 BIMNet 复杂场景。
+- 下一步应该把这条 live 路径固化为可复用脚本或受控 smoke test，并继续扩展到多轮 Draft 补全输入。
