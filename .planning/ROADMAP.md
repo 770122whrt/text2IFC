@@ -278,7 +278,7 @@ IFC, STEP text, low-level IFC helper entities, or compiler bookkeeping.
 
 **Wave 3** *(blocked on Wave 2 completion)*
 
-- [ ] `05-03-PLAN.md` - Answer merge and Draft/Formal transitions
+- [x] `05-03-PLAN.md` - Answer merge and Draft/Formal transitions
 
 **Wave 4** *(blocked on Wave 3 completion)*
 

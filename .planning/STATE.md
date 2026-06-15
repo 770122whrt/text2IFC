@@ -7,14 +7,14 @@ See: `.planning/PROJECT.md` (updated 2026-06-11)
 **Core value:** Produce valid, inspectable IFC models from explicit user
 requirements.
 
-**Current focus:** Phase 5 Wave 3; answer merge and Draft/Formal transitions
+**Current focus:** Phase 5 Wave 4; fake/file providers and optional Mimo adapter
 
 ## Status
 
 - Phase: 5
 - Stage: Executing
-- State: Phase 5 Wave 2 complete; Wave 3 is next
-- Plans: Phase 5 in progress, 2 of 6 plans complete
+- State: Phase 5 Wave 3 complete; Wave 4 is next
+- Plans: Phase 5 in progress, 3 of 6 plans complete
 - Branch: `main`
 - Remote: `https://github.com/770122whrt/text2IFC`
 
@@ -132,6 +132,9 @@ requirements.
   Draft diagnostics normalize into open Agent missing facts, rank the simple
   room-critical gaps first, and return at most three Chinese user-facing
   questions per turn.
+- Phase 5 Wave 3 implemented answer parsing, transcript-preserving answer
+  merge, unknown-answer Draft behavior, explicit correction facts, and
+  validation-gated `formal_ready` session transitions.
 - Generated BIM JSON 2.0 and IFC2X3 generation-profile references are
   drift-checked from canonical schemas and registries.
 - Deep code review fixed three Formal/typed-identity gaps through recorded
@@ -193,6 +196,8 @@ requirements.
   BIM JSON as plain JSON but does not define a second BIM JSON model.
 - Question planning never fills missing facts and avoids low-level IFC helper
   terms in user-facing text.
+- Unknown user answers keep Agent state as Draft. Invalid candidates produce
+  new open missing facts rather than defaults.
 
 ## Known Risks
 
@@ -212,7 +217,7 @@ requirements.
 
 ## Next Action
 
-Execute Phase 5 Wave 3: answer merge and Draft/Formal transitions.
+Execute Phase 5 Wave 4: fake/file providers and optional Mimo adapter.
 
 ## Accumulated Context
 
@@ -253,6 +258,9 @@ Execute Phase 5 Wave 3: answer merge and Draft/Formal transitions.
 - Phase 5 Wave 2 completed on 2026-06-15 with RED commit `ba69e37` and GREEN
   commit `0b9fc84`; `tests/agent/test_question_planner.py` and
   `tests/agent` passed.
+- Phase 5 Wave 3 completed on 2026-06-15 with RED commit `114e735` and GREEN
+  commit `97fce76`; `tests/agent/test_answer_merge.py` and `tests/agent`
+  passed.
 
 ---
 *Last activity: 2026-06-14 - completed and verified Phase 3*
