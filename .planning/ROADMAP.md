@@ -254,7 +254,7 @@ boxes or proxies.
 
 **Wave 0**
 
-- [ ] `04-00-PLAN.md` - Generated IFC correctness gate for simple-room-fixed
+- [x] `04-00-PLAN.md` - Generated IFC correctness gate for simple-room-fixed
   and two-room-suite
 
 **Wave 1** *(blocked on Wave 0 generated-IFC gate)*
@@ -298,7 +298,7 @@ boxes or proxies.
 - Every implementation behavior with defined inputs and outputs follows a
   recorded RED-GREEN TDD cycle.
 
-**Status:** Planned - ready for Wave 0 execution
+**Status:** In progress - Wave 0 complete, ready for Wave 1 fidelity inventory
 
 ## Phase 5: Multi-turn Clarification Agent
 

@@ -61,8 +61,8 @@ must include:
 python -m pytest tests/ifc_quality tests/agent tests/compiler -q
 python scripts/agent/run_geometry_gate_demo.py --case simple-room-fixed --check
 python scripts/agent/run_geometry_gate_demo.py --case two-room-suite --check
-python scripts/ifc_quality/check_generated_ifc.py dataset/processed/agent-demo/geometry-gate/simple-room-fixed/output.ifc --expect dataset/processed/agent-demo/geometry-gate/simple-room-fixed/expected.json
-python scripts/ifc_quality/check_generated_ifc.py dataset/processed/agent-demo/geometry-gate/two-room-suite/output.ifc --expect dataset/processed/agent-demo/geometry-gate/two-room-suite/expected.json
+python scripts/ifc_quality/check_generated_ifc.py --ifc dataset/processed/agent-demo/geometry-gate/simple-room-fixed/output.ifc --expectation dataset/processed/agent-demo/geometry-gate/simple-room-fixed/expected.json
+python scripts/ifc_quality/check_generated_ifc.py --ifc dataset/processed/agent-demo/geometry-gate/two-room-suite/output.ifc --expectation dataset/processed/agent-demo/geometry-gate/two-room-suite/expected.json
 python scripts/agent/scan_agent_artifacts.py --path dataset/processed/agent-demo/geometry-gate
 python -m compileall src scripts -q
 ```

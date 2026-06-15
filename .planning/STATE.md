@@ -7,14 +7,14 @@ See: `.planning/PROJECT.md` (updated 2026-06-11)
 **Core value:** Produce valid, inspectable IFC models from explicit user
 requirements.
 
-**Current focus:** Phase 4 planned; next recommended action is Wave 0 generated-IFC correctness gate
+**Current focus:** Phase 4 Wave 1 fidelity inventory and metric harness
 
 ## Status
 
 - Phase: 4
-- Stage: Ready to execute
-- State: Phase 4 specified and planned; Wave 0 will harden generated IFC correctness before high-fidelity source work
-- Plans: Phase 4 planned, 0 of 7 plans complete
+- Stage: In progress
+- State: Phase 4 Wave 0 generated-IFC correctness gate complete; Wave 1 is next
+- Plans: Phase 4 planned, 1 of 7 plans complete
 - Branch: `main`
 - Remote: `https://github.com/770122whrt/text2IFC`
 
@@ -161,6 +161,14 @@ requirements.
 - Phase 4 planning adds quantitative experiment records so prompt/provider,
   Agent, schema, compiler, and fidelity changes can be evaluated by error
   classes and metrics rather than visual inspection alone.
+- Phase 4 Wave 0 now rejects the known disconnected live simple-room IFC with
+  stable `WALL_ORIENTATION_MISMATCH` and `ROOM_ENCLOSURE_OPEN` diagnostics.
+- Phase 4 Wave 0 generated `simple-room-fixed` and `two-room-suite` audit
+  artifacts under `dataset/processed/agent-demo/geometry-gate/`; both cases
+  pass parse, BIM JSON validation, compile/reopen, geometry, attributes,
+  relationships, IFC structure, and artifact secret-scan gates.
+- `mimo-bim-json-v3.md` records the rectangle profile center-origin and wall
+  orientation rules learned from the live geometry failure.
 
 ## Current Decisions
 
@@ -245,7 +253,7 @@ requirements.
 
 ## Next Action
 
-Execute Phase 4 Wave 0: Generated IFC correctness gate. Phase 6 remains
+Execute Phase 4 Wave 1: Fidelity inventory and metric harness. Phase 6 remains
 deferred until Phase 4 and Phase 5 are both complete.
 
 ## Accumulated Context
@@ -306,6 +314,10 @@ deferred until Phase 4 and Phase 5 are both complete.
   `two-room-suite`; Waves 1-6 expand source fidelity through inventory,
   materials, type reuse, topology, complex/mapped geometry, broader classes,
   all-25 audit, and Phase 6 readiness.
+- Phase 4 Wave 0 completed on 2026-06-15 with RED/GREEN commits `768596d`,
+  `4b25802`, `fcf276b`, `d2af026`, `cc600b5`, `9ab2275`, `a796c90`,
+  `d96fc00`, `11a8dbe`, and `b55cf63`; focused quality/demo tests, prompt
+  tests, compileall, demo commands, and artifact secret scan passed.
 
 ---
-*Last activity: 2026-06-15 - specified and planned Phase 4*
+*Last activity: 2026-06-15 - completed Phase 4 Wave 0 generated IFC correctness gate*
