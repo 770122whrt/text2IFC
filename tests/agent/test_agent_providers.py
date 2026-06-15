@@ -91,7 +91,7 @@ def test_mimo_config_check_reports_missing_env_names_without_values(monkeypatch)
 
 def test_redaction_removes_secret_values_from_provider_payloads():
     payload = {
-        "headers": {"authorization": "Bearer secret-value"},
+        "headers": {"authorization": "test-secret-value"},
         "token": "secret-token",
         "base_url": "https://example.invalid/private",
         "env": ["ANTHROPIC_AUTH_TOKEN", "ANTHROPIC_BASE_URL"],
@@ -100,7 +100,7 @@ def test_redaction_removes_secret_values_from_provider_payloads():
     redacted = redact_provider_payload(payload)
     rendered = json.dumps(redacted, sort_keys=True)
 
-    assert "secret-value" not in rendered
+    assert "test-secret-value" not in rendered
     assert "secret-token" not in rendered
     assert "https://example.invalid/private" not in rendered
     assert "ANTHROPIC_AUTH_TOKEN" in rendered
@@ -135,4 +135,3 @@ def test_mimo_check_config_cli_is_redacted_and_non_networked(monkeypatch):
     assert '"configured": false' in result.stdout
     assert "ANTHROPIC_AUTH_TOKEN" in result.stdout
     assert "Bearer" not in result.stdout
-

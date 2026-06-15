@@ -116,7 +116,7 @@ def test_redaction_removes_secret_values_but_preserves_environment_variable_name
         "provider": "mimo",
         "env": ["ANTHROPIC_AUTH_TOKEN", "ANTHROPIC_BASE_URL"],
         "headers": {
-            "authorization": "Bearer live-secret-value",
+            "authorization": "test-secret-value",
             "x-api-key": "another-secret-value",
         },
         "base_url": "https://example.invalid/private-endpoint",
@@ -128,10 +128,9 @@ def test_redaction_removes_secret_values_but_preserves_environment_variable_name
 
     assert "ANTHROPIC_AUTH_TOKEN" in rendered
     assert "ANTHROPIC_BASE_URL" in rendered
-    assert "live-secret-value" not in rendered
+    assert "test-secret-value" not in rendered
     assert "another-secret-value" not in rendered
     assert "sensitive-token-value" not in rendered
     assert "https://example.invalid/private-endpoint" not in rendered
     assert redacted["headers"]["authorization"] == "[REDACTED]"
     assert redacted["headers"]["x-api-key"] == "[REDACTED]"
-
