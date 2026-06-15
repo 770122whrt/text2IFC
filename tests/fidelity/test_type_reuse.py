@@ -7,6 +7,7 @@ from pathlib import Path
 import ifcopenshell.util.element
 
 from text2ifc_compiler import compile_document, open_ifc
+from text2ifc_contract.validation_v2 import validate_v2_document
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -76,3 +77,45 @@ def test_v2_compiles_wall_type_reuse_relationship(tmp_path: Path) -> None:
         "wall-1",
         "wall-2",
     }
+
+
+def test_type_reuse_endpoints_are_validated_before_compilation() -> None:
+    value = document()
+    _add_wall_type_reuse(value)
+    relation = next(
+        item
+        for item in value["relationships"]
+        if item["ifc_class"] == "IfcRelDefinesByType"
+    )
+    relation["attributes"]["RelatingType"] = "wall-1"
+
+    issues = {
+        (issue.code, issue.path)
+        for issue in validate_v2_document(value)
+    }
+
+    assert (
+        "RELATIONSHIP_ENDPOINT_TYPE_MISMATCH",
+        "/relationships/2/attributes/RelatingType",
+    ) in issues
+
+
+def test_type_reuse_related_objects_must_be_a_non_empty_list() -> None:
+    value = document()
+    _add_wall_type_reuse(value)
+    relation = next(
+        item
+        for item in value["relationships"]
+        if item["ifc_class"] == "IfcRelDefinesByType"
+    )
+    relation["attributes"]["RelatedObjects"] = "wall-1"
+
+    issues = {
+        (issue.code, issue.path)
+        for issue in validate_v2_document(value)
+    }
+
+    assert (
+        "RELATIONSHIP_ENDPOINT_SHAPE",
+        "/relationships/2/attributes/RelatedObjects",
+    ) in issues
