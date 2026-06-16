@@ -275,7 +275,7 @@ boxes or proxies.
 
 **Wave 5** *(blocked on Wave 4 topology support)*
 
-- [ ] `04-05-PLAN.md` - Complex and mapped geometry fidelity
+- [x] `04-05-PLAN.md` - Complex and mapped geometry fidelity
 
 **Wave 6** *(blocked on Wave 5 geometry support)*
 
@@ -298,7 +298,7 @@ boxes or proxies.
 - Every implementation behavior with defined inputs and outputs follows a
   recorded RED-GREEN TDD cycle.
 
-**Status:** In progress - Wave 4 complete, ready for Wave 5 complex and mapped geometry fidelity
+**Status:** In progress - Wave 5 complete, ready for Wave 6 broader classes, all-25 audit, and Phase 6 readiness
 
 ## Phase 5: Multi-turn Clarification Agent
 

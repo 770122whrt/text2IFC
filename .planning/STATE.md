@@ -7,14 +7,14 @@ See: `.planning/PROJECT.md` (updated 2026-06-11)
 **Core value:** Produce valid, inspectable IFC models from explicit user
 requirements.
 
-**Current focus:** Phase 4 Wave 5 complex and mapped geometry fidelity
+**Current focus:** Phase 4 Wave 6 broader classes, all-25 audit, and Phase 6 readiness
 
 ## Status
 
 - Phase: 4
 - Stage: In progress
-- State: Phase 4 Wave 4 connection topology fidelity complete; Wave 5 is next
-- Plans: Phase 4 planned, 5 of 7 plans complete
+- State: Phase 4 Wave 5 complex and mapped geometry fidelity complete; Wave 6 is next
+- Plans: Phase 4 planned, 6 of 7 plans complete
 - Branch: `main`
 - Remote: `https://github.com/770122whrt/text2IFC`
 
@@ -191,6 +191,11 @@ requirements.
   `IfcRelConnectsPathElements`.
 - Regenerated BIMNet extraction accounting now reports 2263 connection source
   facts, 2263 represented connection facts, and 0 remaining connection losses.
+- Phase 4 Wave 5 keeps mapped, BRep, tessellated, boolean, and surface-model
+  geometry out of Formal BIM JSON until exact-enough round-trip support exists.
+- Unsupported complex geometry losses now explicitly record the source IFC
+  item class and `substitution: "none"` so downstream data and evaluation can
+  distinguish honest unsupported geometry from fabricated proxy geometry.
 
 ## Current Decisions
 
@@ -208,6 +213,9 @@ requirements.
 - Placement, spaces, and opening/filling relationships move to Phase 2.5.
 - Materials, type reuse, complex geometry, connection topology, and broader
   product classes remain Phase 4.
+- Complex source geometry is not box-substituted. Until a narrow mapped/BRep
+  subset can be represented and reopened faithfully, complex geometry remains
+  Draft/loss content with no-substitution metadata.
 - Generated IFC correctness now precedes Phase 4 high-fidelity source work:
   text-json-ifc demos must prove spatial relationships, content, attributes,
   relationships, and IFC structure under automated checks.
@@ -275,8 +283,8 @@ requirements.
 
 ## Next Action
 
-Execute Phase 4 Wave 5: Complex and mapped geometry fidelity. Phase 6 remains
-deferred until Phase 4 and Phase 5 are both complete.
+Execute Phase 4 Wave 6: Broader classes, all-25 audit, and Phase 6 readiness.
+Phase 6 remains deferred until Phase 4 and Phase 5 are both complete.
 
 ## Accumulated Context
 
@@ -353,6 +361,10 @@ deferred until Phase 4 and Phase 5 are both complete.
 - Phase 4 Wave 4 completed on 2026-06-16 with RED/GREEN commits `42edd7b`,
   `75010ee`, `5d58ae2`, and `0556563`; selected path element topology now
   round-trips and BIMNet connection accounting was regenerated.
+- Phase 4 Wave 5 completed on 2026-06-16 with RED/GREEN commits `05517ed` and
+  `ea832d2`; unsupported complex geometry losses now record no-substitution
+  metadata instead of promoting unsafe mapped/BRep/tessellated geometry to
+  Formal BIM JSON.
 
 ---
-*Last activity: 2026-06-16 - completed Phase 4 Wave 4 connection topology fidelity*
+*Last activity: 2026-06-16 - completed Phase 4 Wave 5 complex and mapped geometry fidelity*
