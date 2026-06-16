@@ -7,6 +7,7 @@ from pathlib import Path
 import ifcopenshell.util.element
 
 from text2ifc_compiler import compile_document, open_ifc
+from text2ifc_extractor import extract_ifc2x3
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -65,3 +66,33 @@ def test_v2_compiles_path_element_topology_relationship(
     assert _bim_id(relation.RelatedElement) == "wall-2"
     assert relation.RelatingConnectionType == "ATEND"
     assert relation.RelatedConnectionType == "ATSTART"
+
+
+def test_extractor_preserves_supported_path_element_topology(
+    tmp_path: Path,
+) -> None:
+    value = document()
+    _add_connected_wall_pair(value)
+    source_ifc = tmp_path / "source-connected-walls.ifc"
+    assert compile_document(value, source_ifc).success
+
+    extraction = extract_ifc2x3(source_ifc)
+    extracted = extraction.document or extraction.draft["partial_document"]
+    relation = next(
+        item
+        for item in extracted["relationships"]
+        if item["ifc_class"] == "IfcRelConnectsPathElements"
+    )
+
+    assert relation["attributes"]["RelatingConnectionType"] == "ATEND"
+    assert relation["attributes"]["RelatedConnectionType"] == "ATSTART"
+    assert len(
+        {
+            relation["attributes"]["RelatingElement"],
+            relation["attributes"]["RelatedElement"],
+        }
+    ) == 2
+    assert all(
+        loss["kind"] != "CONNECTION_RELATIONSHIP"
+        for loss in extraction.losses
+    )
