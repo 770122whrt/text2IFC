@@ -7,14 +7,14 @@ See: `.planning/PROJECT.md` (updated 2026-06-11)
 **Core value:** Produce valid, inspectable IFC models from explicit user
 requirements.
 
-**Current focus:** Phase 4 Wave 6 broader classes, all-25 audit, and Phase 6 readiness
+**Current focus:** Phase 6 data expansion, fine-tuning, and deployment planning
 
 ## Status
 
 - Phase: 4
-- Stage: In progress
-- State: Phase 4 Wave 5 complex and mapped geometry fidelity complete; Wave 6 is next
-- Plans: Phase 4 planned, 6 of 7 plans complete
+- Stage: Complete
+- State: Phase 4 complete and verified; Phase 6 is ready to specify
+- Plans: Phase 4 complete, 7 of 7 plans complete
 - Branch: `main`
 - Remote: `https://github.com/770122whrt/text2IFC`
 
@@ -196,6 +196,19 @@ requirements.
 - Unsupported complex geometry losses now explicitly record the source IFC
   item class and `substitution: "none"` so downstream data and evaluation can
   distinguish honest unsupported geometry from fabricated proxy geometry.
+- Phase 4 Wave 6 completed the broader class and all-25 audit closure. Common
+  BIMNet architectural product classes already marked `generate` remain
+  supported; extract-only classes such as `IfcBuildingElementProxy` and
+  `IfcFurnishingElement` now receive explicit no-substitution class losses.
+- Phase 4 final verification passed: 337 repository tests, 89 focused
+  IFC-quality/Agent/compiler tests, compileall, generated IFC demo gates,
+  direct generated IFC checks, all-25 audit accounting, fidelity inventory, and
+  geometry-gate artifact secret scan.
+- Phase 4 final metrics across 25 authorized BIMNet IFC2X3 files: entities
+  4444/5308 represented, relationships 15046/16926 represented, properties
+  17607/18758 represented, representations 4509/6382 represented, materials
+  1533/2554 represented, types 154/1012 represented, and connections
+  2263/2263 represented.
 
 ## Current Decisions
 
@@ -216,6 +229,10 @@ requirements.
 - Complex source geometry is not box-substituted. Until a narrow mapped/BRep
   subset can be represented and reopened faithfully, complex geometry remains
   Draft/loss content with no-substitution metadata.
+- Phase 6 may start only under the supported-scope boundary: formal targets
+  must validate as BIM JSON 2.0, Draft/loss sidecars stay linked, generated IFC
+  quality gates block deployment, and source-equivalent BIMNet geometry is not
+  claimed until mapped/BRep/tessellated geometry has exact verified support.
 - Generated IFC correctness now precedes Phase 4 high-fidelity source work:
   text-json-ifc demos must prove spatial relationships, content, attributes,
   relationships, and IFC structure under automated checks.
@@ -283,8 +300,9 @@ requirements.
 
 ## Next Action
 
-Execute Phase 4 Wave 6: Broader classes, all-25 audit, and Phase 6 readiness.
-Phase 6 remains deferred until Phase 4 and Phase 5 are both complete.
+Specify Phase 6: Data Expansion, Fine-tuning, and Deployment. Start from
+`docs/architecture/phase-4-summary.md` and preserve the supported-scope,
+loss-sidecar, and generated-IFC-gate boundaries.
 
 ## Accumulated Context
 
@@ -365,6 +383,10 @@ Phase 6 remains deferred until Phase 4 and Phase 5 are both complete.
   `ea832d2`; unsupported complex geometry losses now record no-substitution
   metadata instead of promoting unsafe mapped/BRep/tessellated geometry to
   Formal BIM JSON.
+- Phase 4 Wave 6 completed on 2026-06-16 with RED/GREEN commits `1cd3021` and
+  `12226f0`; regression stabilization commit `27941f7`; final documentation
+  and artifact verification commit follows. The phase closes with all-25 audit
+  accounting balanced and Phase 6 ready under supported-scope constraints.
 
 ---
-*Last activity: 2026-06-16 - completed Phase 4 Wave 5 complex and mapped geometry fidelity*
+*Last activity: 2026-06-16 - completed Phase 4 Wave 6 and final Phase 4 verification*

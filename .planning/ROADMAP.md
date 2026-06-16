@@ -279,7 +279,7 @@ boxes or proxies.
 
 **Wave 6** *(blocked on Wave 5 geometry support)*
 
-- [ ] `04-06-PLAN.md` - Broader classes, all-25 audit, and Phase 6 readiness
+- [x] `04-06-PLAN.md` - Broader classes, all-25 audit, and Phase 6 readiness
 
 **Cross-cutting constraints:**
 
@@ -298,7 +298,7 @@ boxes or proxies.
 - Every implementation behavior with defined inputs and outputs follows a
   recorded RED-GREEN TDD cycle.
 
-**Status:** In progress - Wave 5 complete, ready for Wave 6 broader classes, all-25 audit, and Phase 6 readiness
+**Status:** Complete - verified 2026-06-16
 
 ## Phase 5: Multi-turn Clarification Agent
 
@@ -378,4 +378,4 @@ select the deployable approach, and package the full text2IFC service.
 
 **Depends on:** Phase 3, Phase 4, Phase 5
 
-**Status:** Deferred
+**Status:** Ready to specify - Phase 3, Phase 4, and Phase 5 prerequisites complete
