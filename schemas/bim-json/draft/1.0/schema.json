@@ -57,6 +57,9 @@
         "kind": {"$ref": "#/$defs/nonEmptyString"},
         "message": {"$ref": "#/$defs/nonEmptyString"},
         "source_item_class": {"$ref": "#/$defs/nonEmptyString"},
+        "source_capability": {
+          "enum": ["extract-only", "compiler-only", "unsupported"]
+        },
         "substitution": {"enum": ["none"]}
       }
     },

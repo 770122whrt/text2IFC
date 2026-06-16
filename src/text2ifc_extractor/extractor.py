@@ -171,14 +171,16 @@ def extract_ifc2x3(path: str | Path) -> ExtractionResult:
         if capability == "generate":
             represented_entities += 1
         else:
-            losses.append(
-                loss(
-                    source_ref,
-                    f"/entities/{index}/ifc_class",
-                    "CLASS_CAPABILITY",
-                    f"{ifc_class} capability is {capability}.",
-                )
+            class_loss = loss(
+                source_ref,
+                f"/entities/{index}/ifc_class",
+                "CLASS_CAPABILITY",
+                f"{ifc_class} capability is {capability}.",
             )
+            class_loss["source_item_class"] = ifc_class
+            class_loss["source_capability"] = capability
+            class_loss["substitution"] = "none"
+            losses.append(class_loss)
 
         if entity.is_a("IfcProduct"):
             placement = extract_object_placement(

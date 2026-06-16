@@ -19,6 +19,7 @@ def test_extract_only_product_class_losses_are_explicit() -> None:
         for result in results
         for loss in result.losses
         if loss["kind"] == "CLASS_CAPABILITY"
+        and loss.get("source_capability") == "extract-only"
     ]
 
     assert class_losses
