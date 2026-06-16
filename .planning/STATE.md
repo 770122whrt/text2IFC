@@ -7,14 +7,14 @@ See: `.planning/PROJECT.md` (updated 2026-06-11)
 **Core value:** Produce valid, inspectable IFC models from explicit user
 requirements.
 
-**Current focus:** Phase 4 Wave 4 connection topology fidelity
+**Current focus:** Phase 4 Wave 5 complex and mapped geometry fidelity
 
 ## Status
 
 - Phase: 4
 - Stage: In progress
-- State: Phase 4 Wave 3 type reuse fidelity complete; Wave 4 is next
-- Plans: Phase 4 planned, 4 of 7 plans complete
+- State: Phase 4 Wave 4 connection topology fidelity complete; Wave 5 is next
+- Plans: Phase 4 planned, 5 of 7 plans complete
 - Branch: `main`
 - Remote: `https://github.com/770122whrt/text2IFC`
 
@@ -187,6 +187,10 @@ requirements.
 - Regenerated BIMNet extraction accounting now reports 1012 type relationship
   source facts, 154 represented type relationships, and 858 remaining type
   relationship losses.
+- Phase 4 Wave 4 added selected connection topology support through
+  `IfcRelConnectsPathElements`.
+- Regenerated BIMNet extraction accounting now reports 2263 connection source
+  facts, 2263 represented connection facts, and 0 remaining connection losses.
 
 ## Current Decisions
 
@@ -271,7 +275,7 @@ requirements.
 
 ## Next Action
 
-Execute Phase 4 Wave 4: Connection topology fidelity. Phase 6 remains
+Execute Phase 4 Wave 5: Complex and mapped geometry fidelity. Phase 6 remains
 deferred until Phase 4 and Phase 5 are both complete.
 
 ## Accumulated Context
@@ -346,6 +350,9 @@ deferred until Phase 4 and Phase 5 are both complete.
   `adad41e`, `4d74825`, `fe65d8d`, `29c9997`, and `a3ade19`; selected wall
   type reuse now round-trips and unsupported type/style relationships remain
   loss-explicit.
+- Phase 4 Wave 4 completed on 2026-06-16 with RED/GREEN commits `42edd7b`,
+  `75010ee`, `5d58ae2`, and `0556563`; selected path element topology now
+  round-trips and BIMNet connection accounting was regenerated.
 
 ---
-*Last activity: 2026-06-16 - completed Phase 4 Wave 3 type reuse fidelity*
+*Last activity: 2026-06-16 - completed Phase 4 Wave 4 connection topology fidelity*

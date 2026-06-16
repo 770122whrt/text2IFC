@@ -271,7 +271,7 @@ boxes or proxies.
 
 **Wave 4** *(blocked on Wave 3 type support)*
 
-- [ ] `04-04-PLAN.md` - Connection topology fidelity
+- [x] `04-04-PLAN.md` - Connection topology fidelity
 
 **Wave 5** *(blocked on Wave 4 topology support)*
 
@@ -298,7 +298,7 @@ boxes or proxies.
 - Every implementation behavior with defined inputs and outputs follows a
   recorded RED-GREEN TDD cycle.
 
-**Status:** In progress - Wave 3 complete, ready for Wave 4 connection topology fidelity
+**Status:** In progress - Wave 4 complete, ready for Wave 5 complex and mapped geometry fidelity
 
 ## Phase 5: Multi-turn Clarification Agent
 
