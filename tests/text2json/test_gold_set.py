@@ -141,11 +141,13 @@ def _draft(partial_document: dict[str, Any], losses: list[dict[str, str]]) -> di
 
 def test_triage_extraction_audit_preserves_counts_and_split_join() -> None:
     triage = triage_extraction_audit(AUDIT_PATH, SPLIT_PATH)
+    audit = _load_json(AUDIT_PATH)
 
     assert triage["schema_version"] == "text2ifc/text2json-draft-triage-v1"
     assert triage["file_count"] == 25
     assert triage["aggregate"]["status_counts"] == {"draft": 25}
-    assert triage["aggregate"]["loss_count"] == 8280
+    assert triage["aggregate"]["loss_count"] == audit["aggregate"]["loss_count"]
+    assert triage["aggregate"]["loss_counts"] == audit["aggregate"]["loss_counts"]
     assert len(triage["records"]) == 25
     assert {record["split"] for record in triage["records"]} == {
         "train",
