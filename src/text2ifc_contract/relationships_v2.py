@@ -22,7 +22,12 @@ SUPPORTED_RELATIONSHIPS = {
         "RelatedObjects": "IfcObject",
         "RelatingType": "IfcTypeObject",
     },
+    "IfcRelConnectsPathElements": {
+        "RelatingElement": "IfcElement",
+        "RelatedElement": "IfcElement",
+    },
 }
+CONNECTION_TYPES = {"ATPATH", "ATSTART", "ATEND", "NOTDEFINED"}
 
 
 def _issue(code: str, path: str, message: str) -> ValidationIssue:
@@ -61,6 +66,8 @@ def validate_relationships(
             )
             continue
         attributes = relation["attributes"]
+        if ifc_class == "IfcRelConnectsPathElements":
+            issues.extend(_validate_path_connection_attributes(base, attributes))
         for attribute, expected_class in endpoint_types.items():
             path = f"{base}/attributes/{attribute}"
             endpoint_id = attributes.get(attribute)
@@ -113,4 +120,42 @@ def validate_relationships(
                         )
                     )
 
+    return issues
+
+
+def _validate_path_connection_attributes(
+    base: str,
+    attributes: dict[str, Any],
+) -> list[ValidationIssue]:
+    issues: list[ValidationIssue] = []
+    for name in ("RelatingPriorities", "RelatedPriorities"):
+        value = attributes.get(name)
+        if not isinstance(value, list) or not all(
+            isinstance(item, int) and not isinstance(item, bool) for item in value
+        ):
+            issues.append(
+                _issue(
+                    "RELATIONSHIP_ATTRIBUTE_SHAPE",
+                    f"{base}/attributes/{name}",
+                    f"{name} must be a list of integer priorities.",
+                )
+            )
+    for name in ("RelatingConnectionType", "RelatedConnectionType"):
+        value = attributes.get(name)
+        if value not in CONNECTION_TYPES:
+            issues.append(
+                _issue(
+                    "RELATIONSHIP_ATTRIBUTE_VALUE",
+                    f"{base}/attributes/{name}",
+                    f"{name} must be an IfcConnectionTypeEnum value.",
+                )
+            )
+    if attributes.get("ConnectionGeometry") is not None:
+        issues.append(
+            _issue(
+                "UNSUPPORTED_RELATIONSHIP_ATTRIBUTE",
+                f"{base}/attributes/ConnectionGeometry",
+                "ConnectionGeometry is not supported in the formal profile.",
+            )
+        )
     return issues

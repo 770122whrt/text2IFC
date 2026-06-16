@@ -29,6 +29,26 @@ def add_v2_relationships(
                 should_map_representations=False,
             )
             continue
+        if ifc_class == "IfcRelConnectsPathElements":
+            attributes = record["attributes"]
+            ifc_file.create_entity(
+                ifc_class,
+                GlobalId=record.get("global_id")
+                or global_id_for(
+                    "bim-json/2.0", ifc_class, record["id"]
+                ),
+                OwnerHistory=ifcopenshell.api.owner.create_owner_history(ifc_file),
+                Name=None,
+                Description=None,
+                ConnectionGeometry=None,
+                RelatingElement=entities[attributes["RelatingElement"]],
+                RelatedElement=entities[attributes["RelatedElement"]],
+                RelatingPriorities=attributes["RelatingPriorities"],
+                RelatedPriorities=attributes["RelatedPriorities"],
+                RelatedConnectionType=attributes["RelatedConnectionType"],
+                RelatingConnectionType=attributes["RelatingConnectionType"],
+            )
+            continue
         attributes = {
             name: entities[entity_id]
             for name, entity_id in record["attributes"].items()
