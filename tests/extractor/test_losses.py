@@ -14,7 +14,11 @@ def test_unsupported_source_constructs_are_explicit_losses(
 
     assert "MATERIAL_ASSOCIATION" in _kinds(hxp_result)
     assert "TYPE_RELATIONSHIP" in _kinds(hxp_result)
-    assert "CONNECTION_RELATIONSHIP" in _kinds(hxp_result)
+    assert hxp_result.inventory["connections"]["source"] == (
+        hxp_result.inventory["connections"]["represented"]
+        + hxp_result.inventory["connections"]["reported"]
+    )
+    assert hxp_result.inventory["connections"]["represented"] > 0
 
 
 def test_unsupported_required_geometry_forces_draft_without_box_substitution(

@@ -22,10 +22,10 @@ does not rewrite official schema facts.
 
 | State | Count | Meaning |
 | --- | ---: | --- |
-| `generate` | 25 | Accepted in Formal BIM JSON and emitted exactly |
+| `generate` | 26 | Accepted in Formal BIM JSON and emitted exactly |
 | `extract-only` | 2 | Preserved during extraction but cannot compile formally |
 | `compiler-only` | 24 | Generated from semantic input, never model-authored |
-| `unsupported` | 602 | Reported as Draft/loss content |
+| `unsupported` | 601 | Reported as Draft/loss content |
 
 ## Generate Classes
 
@@ -35,7 +35,7 @@ does not rewrite official schema facts.
 
 ### Explicit Semantic Relationships
 
-`IfcRelDefinesByType`, `IfcRelFillsElement`, `IfcRelVoidsElement`
+`IfcRelConnectsPathElements`, `IfcRelDefinesByType`, `IfcRelFillsElement`, `IfcRelVoidsElement`
 
 `IfcWallStandardCase` remains exact and is not downgraded to `IfcWall`.
 `IfcSpace`, `IfcOpeningElement`, and explicit void/fill endpoints are part of
@@ -60,7 +60,7 @@ bookkeeping relationships directly.
 
 ## Unsupported Boundary
 
-The remaining 602 IFC2X3 entities are explicit
+The remaining 601 IFC2X3 entities are explicit
 `unsupported` capabilities. Unknown class strings are invalid. A known
 non-generate class cannot pass Formal validation and cannot be silently
 dropped.

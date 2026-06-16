@@ -258,6 +258,7 @@ def extract_ifc2x3(path: str | Path) -> ExtractionResult:
     type_count = 0
     type_represented = 0
     connection_count = 0
+    connection_represented = 0
     for relation in source_relationships:
         ifc_class = relation.is_a()
         if ifc_class == "IfcRelAssociatesMaterial":
@@ -281,6 +282,8 @@ def extract_ifc2x3(path: str | Path) -> ExtractionResult:
                     )
                 )
                 continue
+        if ifc_class.startswith("IfcRelConnects"):
+            connection_count += 1
         state = relationship_category(ifc_class)
         if state == "represented":
             represented_relationships += 1
@@ -300,10 +303,10 @@ def extract_ifc2x3(path: str | Path) -> ExtractionResult:
             relationship_records.append(relation_record)
             if ifc_class == "IfcRelDefinesByType":
                 type_represented += 1
+            elif ifc_class.startswith("IfcRelConnects"):
+                connection_represented += 1
         if state == "reported":
             kind = relationship_loss_kind(ifc_class)
-            if kind == "CONNECTION_RELATIONSHIP":
-                connection_count += 1
             losses.append(
                 loss(
                     _source_ref(relation, source_sha256),
@@ -342,7 +345,7 @@ def extract_ifc2x3(path: str | Path) -> ExtractionResult:
         ),
         "materials": category(material_count, material_represented),
         "types": category(type_count, type_represented),
-        "connections": category(connection_count, 0),
+        "connections": category(connection_count, connection_represented),
     }
 
     losses = sort_losses(losses)

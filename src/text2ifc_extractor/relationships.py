@@ -35,6 +35,21 @@ def explicit_relationship(relation, entity_ids: dict[int, str]):
             "RelatedObjects": sorted(related_ids),
             "RelatingType": type_id,
         }
+    if relation.is_a() == "IfcRelConnectsPathElements":
+        relating_id = entity_ids.get(relation.RelatingElement.id())
+        related_id = entity_ids.get(relation.RelatedElement.id())
+        if relating_id is None or related_id is None:
+            return None
+        if relation.ConnectionGeometry is not None:
+            return None
+        return {
+            "RelatingElement": relating_id,
+            "RelatedElement": related_id,
+            "RelatingPriorities": list(relation.RelatingPriorities or ()),
+            "RelatedPriorities": list(relation.RelatedPriorities or ()),
+            "RelatingConnectionType": relation.RelatingConnectionType,
+            "RelatedConnectionType": relation.RelatedConnectionType,
+        }
     names = _ENDPOINTS.get(relation.is_a())
     if names is None:
         return None
@@ -52,6 +67,7 @@ def relationship_category(ifc_class: str) -> str:
     if (
         ifc_class in _ENDPOINTS
         or ifc_class == "IfcRelDefinesByType"
+        or ifc_class == "IfcRelConnectsPathElements"
         or ifc_class in _COMPILER_DERIVED
     ):
         return "represented"
