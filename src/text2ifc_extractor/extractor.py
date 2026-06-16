@@ -207,14 +207,15 @@ def extract_ifc2x3(path: str | Path) -> ExtractionResult:
                 representation = extracted
                 continue
             representation_reported += 1
-            losses.append(
-                loss(
-                    source_ref,
-                    f"/entities/{index}/attributes/Representation",
-                    geometry_loss_kind(item.is_a()),
-                    f"{item.is_a()} cannot be represented by the formal profile.",
-                )
+            geometry_loss = loss(
+                source_ref,
+                f"/entities/{index}/attributes/Representation",
+                geometry_loss_kind(item.is_a()),
+                f"{item.is_a()} cannot be represented by the formal profile.",
             )
+            geometry_loss["source_item_class"] = item.is_a()
+            geometry_loss["substitution"] = "none"
+            losses.append(geometry_loss)
         non_body_count = len(all_items) - len(body_items)
         if non_body_count > 0:
             # Axis and annotation representations are compiler-derived.
