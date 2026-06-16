@@ -267,7 +267,7 @@ boxes or proxies.
 
 **Wave 3** *(blocked on Wave 2 material support)*
 
-- [ ] `04-03-PLAN.md` - Type reuse fidelity
+- [x] `04-03-PLAN.md` - Type reuse fidelity
 
 **Wave 4** *(blocked on Wave 3 type support)*
 
@@ -298,7 +298,7 @@ boxes or proxies.
 - Every implementation behavior with defined inputs and outputs follows a
   recorded RED-GREEN TDD cycle.
 
-**Status:** In progress - Wave 2 complete, ready for Wave 3 type reuse fidelity
+**Status:** In progress - Wave 3 complete, ready for Wave 4 connection topology fidelity
 
 ## Phase 5: Multi-turn Clarification Agent
 

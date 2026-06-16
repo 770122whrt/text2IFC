@@ -7,14 +7,14 @@ See: `.planning/PROJECT.md` (updated 2026-06-11)
 **Core value:** Produce valid, inspectable IFC models from explicit user
 requirements.
 
-**Current focus:** Phase 4 Wave 3 type reuse fidelity
+**Current focus:** Phase 4 Wave 4 connection topology fidelity
 
 ## Status
 
 - Phase: 4
 - Stage: In progress
-- State: Phase 4 Wave 2 material and layer fidelity complete; Wave 3 is next
-- Plans: Phase 4 planned, 3 of 7 plans complete
+- State: Phase 4 Wave 3 type reuse fidelity complete; Wave 4 is next
+- Plans: Phase 4 planned, 4 of 7 plans complete
 - Branch: `main`
 - Remote: `https://github.com/770122whrt/text2IFC`
 
@@ -181,6 +181,12 @@ requirements.
   for wall material layers.
 - Regenerated BIMNet extraction accounting now reports 2554 material source
   facts, 1533 represented material facts, and 1021 remaining material losses.
+- Phase 4 Wave 3 added selected wall type reuse support through `IfcWallType`
+  and `IfcRelDefinesByType` while keeping unsupported type/style constructs as
+  explicit losses.
+- Regenerated BIMNet extraction accounting now reports 1012 type relationship
+  source facts, 154 represented type relationships, and 858 remaining type
+  relationship losses.
 
 ## Current Decisions
 
@@ -265,7 +271,7 @@ requirements.
 
 ## Next Action
 
-Execute Phase 4 Wave 3: Type reuse fidelity. Phase 6 remains
+Execute Phase 4 Wave 4: Connection topology fidelity. Phase 6 remains
 deferred until Phase 4 and Phase 5 are both complete.
 
 ## Accumulated Context
@@ -336,6 +342,10 @@ deferred until Phase 4 and Phase 5 are both complete.
 - Phase 4 Wave 2 completed on 2026-06-15 with RED/GREEN commits `eca6a97`,
   `20cb5d0`, `1dfeeee`, and `94b3189`; selected wall material layer-set usage
   now round-trips and BIMNet extraction accounting was regenerated.
+- Phase 4 Wave 3 completed on 2026-06-16 with RED/GREEN commits `0f7cfe4`,
+  `adad41e`, `4d74825`, `fe65d8d`, `29c9997`, and `a3ade19`; selected wall
+  type reuse now round-trips and unsupported type/style relationships remain
+  loss-explicit.
 
 ---
-*Last activity: 2026-06-15 - completed Phase 4 Wave 2 material and layer fidelity*
+*Last activity: 2026-06-16 - completed Phase 4 Wave 3 type reuse fidelity*

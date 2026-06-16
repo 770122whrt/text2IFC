@@ -167,7 +167,9 @@ def test_generated_contract_and_profile_references_are_current() -> None:
     assert "`bim-json/2.0`" in contract
     assert "Formal" in contract and "Draft Envelope" in contract
     assert "`Representation.position`" in contract
-    assert "23" in profile
+    assert "25" in profile
     assert "`IfcWallStandardCase`" in profile
+    assert "`IfcWallType`" in profile
+    assert "`IfcRelDefinesByType`" in profile
     assert "`IfcCartesianPoint`" in profile
     assert "compiler-only" in profile
