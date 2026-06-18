@@ -1,0 +1,64 @@
+{
+  "entities": {
+    "items": {
+      "$ref": "#/definitions/IfcEntity"
+    },
+    "type": "array"
+  },
+  "ifc_schema": {
+    "description": "使用的IFC标准版本",
+    "enum": [
+      "IFC2X3",
+      "IFC4",
+      "IFC4.3"
+    ],
+    "type": "string"
+  },
+  "provenance": {
+    "$ref": "#/definitions/Provenance"
+  },
+  "relationships": {
+    "items": {
+      "$ref": "#/definitions/IfcRelationship"
+    },
+    "type": "array"
+  },
+  "schema_version": {
+    "description": "BIM JSON模式版本",
+    "enum": [
+      "bim-json/2.0",
+      "bim-json/2.1"
+    ],
+    "type": "string"
+  },
+  "units": {
+    "properties": {
+      "area": {
+        "enum": [
+          "SQUARE_METRE",
+          "SQUARE_MILLIMETRE"
+        ],
+        "type": "string"
+      },
+      "length": {
+        "enum": [
+          "MILLIMETRE",
+          "METRE",
+          "CENTIMETRE"
+        ],
+        "type": "string"
+      },
+      "volume": {
+        "enum": [
+          "CUBIC_METRE",
+          "CUBIC_MILLIMETRE"
+        ],
+        "type": "string"
+      }
+    },
+    "required": [
+      "length"
+    ],
+    "type": "object"
+  }
+}

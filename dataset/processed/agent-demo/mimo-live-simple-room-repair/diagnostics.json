@@ -1,0 +1,60 @@
+{
+  "content_types": [
+    "text",
+    "thinking"
+  ],
+  "entity_count": 2,
+  "http_status": 200,
+  "issues": [
+    {
+      "code": "INVALID_TYPE",
+      "message": "{'type': 'array', 'items': {'$ref': '#/definitions/IfcEntity'}} is not of type 'array'",
+      "path": "/entities"
+    },
+    {
+      "code": "INVALID_ENUM",
+      "message": "'IFC2X3' was expected",
+      "path": "/ifc_schema"
+    },
+    {
+      "code": "INVALID_TYPE",
+      "message": "{'type': 'array', 'items': {'$ref': '#/definitions/IfcRelationship'}} is not of type 'array'",
+      "path": "/relationships"
+    },
+    {
+      "code": "INVALID_ENUM",
+      "message": "'bim-json/2.0' was expected",
+      "path": "/schema_version"
+    },
+    {
+      "code": "REQUIRED_FIELD",
+      "message": "Required field 'length' is missing.",
+      "path": "/units/length"
+    },
+    {
+      "code": "UNSUPPORTED_FIELD",
+      "message": "Field 'properties' is not supported.",
+      "path": "/units/properties"
+    },
+    {
+      "code": "UNSUPPORTED_FIELD",
+      "message": "Field 'required' is not supported.",
+      "path": "/units/required"
+    },
+    {
+      "code": "UNSUPPORTED_FIELD",
+      "message": "Field 'type' is not supported.",
+      "path": "/units/type"
+    }
+  ],
+  "model": "mimo-v2.5-pro",
+  "provider": "mimo",
+  "relationship_count": 2,
+  "request_text": "?????????????6???4???3????????????????0.9??2.1????????????1.2??1.5?????0.9??",
+  "response_bytes": 27047,
+  "schema_version": "text2ifc/mimo-live-simple-room-repair-v1",
+  "stage": "validation",
+  "stop_reason": "end_turn",
+  "success": false,
+  "validation_issue_count": 8
+}

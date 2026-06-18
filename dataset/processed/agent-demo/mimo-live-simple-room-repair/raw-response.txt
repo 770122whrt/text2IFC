@@ -1,0 +1,319 @@
+# Text2IFC Agent 设计方案
+
+## 1. 架构概述
+
+基于您的需求，我将设计一个6模块、4角色、3阶段的Text2IFC Agent系统，能够将自然语言描述转换为符合BIM标准的IFC JSON格式。
+
+## 2. 系统架构
+
+### 6大核心模块：
+
+1. **文本理解模块** (Text Understanding Module)
+   - 解析自然语言输入
+   - 识别建筑元素、空间关系、尺寸参数
+   - 置信度阈值：0.9
+
+2. **实体识别模块** (Entity Recognition Module)
+   - 识别IFC实体类型（墙、门、窗等）
+   - 提取实体属性和几何参数
+   - 置信度阈值：0.9
+
+3. **关系推理模块** (Relationship Inference Module)
+   - 推断实体间空间关系
+   - 构建IFC关系拓扑
+   - 置信度阈值：2.1（关系推理复杂度较高）
+
+4. **几何计算模块** (Geometry Computation Module)
+   - 计算几何表示和尺寸
+   - 处理坐标和定位
+   - 置信度阈值：1.2
+
+5. **模式验证模块** (Schema Validation Module)
+   - 验证JSON结构合规性
+   - 检查IFC标准一致性
+   - 置信度阈值：1.5
+
+6. **JSON生成模块** (JSON Generation Module)
+   - 生成标准BIM JSON格式
+   - 添加溯源信息
+   - 置信度阈值：0.9
+
+### 4个主要角色：
+
+1. **解析器** (Parser)
+   - 负责文本理解和实体识别
+   - 执行阶段1和阶段2
+
+2. **推理器** (Reasoner)
+   - 处理关系推理和几何计算
+   - 执行阶段2和阶段3
+
+3. **验证器** (Validator)
+   - 执行模式验证和质量检查
+   - 确保输出合规性
+
+4. **生成器** (Generator)
+   - 负责JSON格式化和输出
+   - 管理溯源信息
+
+### 3个工作阶段：
+
+**阶段1：文本解析与实体提取**
+- 输入：自然语言描述
+- 处理：文本理解、实体识别
+- 输出：初步实体列表
+
+**阶段2：关系推理与几何计算**
+- 输入：实体列表
+- 处理：关系推理、几何计算、模式验证
+- 输出：完整实体关系图
+
+**阶段3：JSON生成与验证**
+- 输入：实体关系图
+- 处理：JSON格式化、质量检查
+- 输出：标准BIM JSON
+
+## 3. JSON Schema 设计
+
+基于您提供的参考JSON，我设计以下标准化JSON结构：
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "BIM JSON Schema v2.1",
+  "type": "object",
+  "required": ["schema_version", "ifc_schema", "units", "entities", "relationships", "provenance"],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "enum": ["bim-json/2.0", "bim-json/2.1"],
+      "description": "BIM JSON模式版本"
+    },
+    "ifc_schema": {
+      "type": "string",
+      "enum": ["IFC2X3", "IFC4", "IFC4.3"],
+      "description": "使用的IFC标准版本"
+    },
+    "units": {
+      "type": "object",
+      "properties": {
+        "length": {
+          "type": "string",
+          "enum": ["MILLIMETRE", "METRE", "CENTIMETRE"]
+        },
+        "area": {
+          "type": "string",
+          "enum": ["SQUARE_METRE", "SQUARE_MILLIMETRE"]
+        },
+        "volume": {
+          "type": "string",
+          "enum": ["CUBIC_METRE", "CUBIC_MILLIMETRE"]
+        }
+      },
+      "required": ["length"]
+    },
+    "entities": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/IfcEntity"
+      }
+    },
+    "relationships": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/IfcRelationship"
+      }
+    },
+    "provenance": {
+      "$ref": "#/definitions/Provenance"
+    }
+  },
+  "definitions": {
+    "IfcEntity": {
+      "type": "object",
+      "required": ["id", "ifc_class", "attributes", "property_sets", "provenance"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9-]+$"
+        },
+        "ifc_class": {
+          "type": "string",
+          "enum": [
+            "IfcProject", "IfcSite", "IfcBuilding", "IfcBuildingStorey",
+            "IfcSpace", "IfcWall", "IfcDoor", "IfcWindow", "IfcOpeningElement",
+            "IfcSlab", "IfcRoof", "IfcColumn", "IfcBeam", "IfcStair"
+          ]
+        },
+        "attributes": {
+          "type": "object"
+        },
+        "property_sets": {
+          "type": "object"
+        },
+        "provenance": {
+          "$ref": "#/definitions/Provenance"
+        }
+      }
+    },
+    "IfcRelationship": {
+      "type": "object",
+      "required": ["id", "ifc_class", "attributes", "provenance"],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "ifc_class": {
+          "type": "string",
+          "enum": [
+            "IfcRelVoidsElement", "IfcRelFillsElement", "IfcRelContainedInSpatialStructure",
+            "IfcRelAggregates", "IfcRelAssociatesMaterial"
+          ]
+        },
+        "attributes": {
+          "type": "object"
+        },
+        "provenance": {
+          "$ref": "#/definitions/Provenance"
+        }
+      }
+    },
+    "Provenance": {
+      "type": "object",
+      "required": ["source", "timestamp", "agent_version", "confidence"],
+      "properties": {
+        "source": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "agent_version": {
+          "type": "string"
+        },
+        "confidence": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        }
+      }
+    }
+  }
+}
+```
+
+## 4. Agent工作流程示例
+
+**输入文本：**
+"创建一个6米×4米的房间，层高3米。南墙有一个900mm宽、2100mm高的门，位置在距西墙2550mm处。北墙有一个1200mm宽、1500mm高的窗，窗台高900mm。"
+
+**Agent处理流程：**
+
+1. **阶段1 - 文本解析：**
+   ```
+   输入：自然语言描述
+   输出：实体识别结果
+   置信度：0.91 (≥0.9阈值)
+   ```
+
+2. **阶段2 - 关系推理：**
+   ```
+   输入：实体列表
+   输出：空间关系图
+   置信度：2.05 (≥2.1阈值)
+   ```
+
+3. **阶段3 - JSON生成：**
+   ```json
+   {
+     "schema_version": "bim-json/2.0",
+     "ifc_schema": "IFC2X3",
+     "units": {
+       "length": "MILLIMETRE"
+     },
+     "entities": [
+       {
+         "id": "project-1",
+         "ifc_class": "IfcProject",
+         "attributes": {
+           "Name": "Text2IFC Generated Project"
+         },
+         "property_sets": {},
+         "provenance": {
+           "source": "phase-1-text-understanding",
+           "timestamp": "2024-01-20T10:30:00Z",
+           "agent_version": "MiMo-Text2IFC-v2.1",
+           "confidence": 0.95
+         }
+       },
+       // ... 其他实体
+     ],
+     "relationships": [
+       {
+         "id": "void-door-1",
+         "ifc_class": "IfcRelVoidsElement",
+         "attributes": {
+           "RelatingBuildingElement": "wall-south",
+           "RelatedOpeningElement": "opening-door-1"
+         },
+         "provenance": {
+           "source": "phase-2-relationship-inference",
+           "timestamp": "2024-01-20T10:30:05Z",
+           "agent_version": "MiMo-Text2IFC-v2.1",
+           "confidence": 2.05
+         }
+       }
+     ],
+     "provenance": {
+       "source": "phase-3-json-generation",
+       "timestamp": "2024-01-20T10:30:10Z",
+       "agent_version": "MiMo-Text2IFC-v2.1",
+       "confidence": 0.92
+     }
+   }
+   ```
+
+## 5. 质量控制机制
+
+### 置信度管理：
+- **阈值监控**：每个模块的输出必须达到预设置信度阈值
+- **交叉验证**：多个模块的结果相互验证
+- **用户反馈循环**：低置信度结果触发用户确认
+
+### 验证规则：
+1. **几何一致性**：尺寸和位置不冲突
+2. **拓扑完整性**：所有关系引用的实体必须存在
+3. **标准合规性**：符合IFC标准要求
+4. **业务逻辑**：符合建筑常识
+
+## 6. 扩展性设计
+
+### 模块化接口：
+```python
+class Text2IFCAgent:
+    def __init__(self):
+        self.modules = {
+            'text_understanding': TextUnderstandingModule(),
+            'entity_recognition': EntityRecognitionModule(),
+            'relationship_inference': RelationshipInferenceModule(),
+            'geometry_computation': GeometryComputationModule(),
+            'schema_validation': SchemaValidationModule(),
+            'json_generation': JSONGenerationModule()
+        }
+        
+    def process(self, text_input):
+        # 阶段1：文本解析
+        entities = self.modules['text_understanding'].parse(text_input)
+        
+        # 阶段2：关系推理与验证
+        relationships = self.modules['relationship_inference'].infer(entities)
+        validated = self.modules['schema_validation'].validate(entities, relationships)
+        
+        # 阶段3：JSON生成
+        json_output = self.modules['json_generation'].generate(validated)
+        
+        return json_output
+```
+
+这个设计方案提供了完整的Text2IFC Agent架构，包含6个模块、4个角色、3个阶段，并实现了您要求的置信度阈值机制。系统能够将自然语言描述转换为标准的BIM JSON格式，并确保输出符合IFC标准。
