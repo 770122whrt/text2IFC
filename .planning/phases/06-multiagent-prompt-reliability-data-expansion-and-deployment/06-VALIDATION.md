@@ -9,7 +9,8 @@ Phase 6 is valid only if the system can prove:
 - which prompt produced each model output;
 - which agent role produced each intermediate artifact;
 - whether missing facts stayed Draft;
-- whether repair improved measurable failures;
+- whether failure routing correctly chose no repair, conditional repair, Draft,
+  or blocking failure;
 - whether the Audit Agent caught semantic mismatch without overriding hard
   deterministic failures;
 - whether expanded data and model evaluation preserve licensing, provenance,
@@ -24,7 +25,8 @@ Phase 6 is valid only if the system can prove:
 | Design Brief gate | Design Brief schema validation | yes |
 | BIM JSON gate | `validate_v2_document` for Formal | yes |
 | Draft honesty gate | missing facts explicit, no hidden defaults | yes |
-| Repair gate | before/after issues and no invented facts | yes for repair claims |
+| Failure-route gate | no-repair success, repair attempt, Draft, or block recorded | yes |
+| Repair gate | before/after issues and no invented facts | yes only for repair claims |
 | IFC gate | compile, reopen, generated IFC quality | yes for Formal demos |
 | Audit gate | audit report with deterministic status preserved | yes |
 | Data gate | license, provenance, split, sidecars | yes for model work |
@@ -46,7 +48,8 @@ The demo must also write a trace bundle with:
 - `candidate.json` or `draft.json`
 - `validation-feedback.json`
 - `geometry-feedback.json`
-- `repair-attempts.json`
+- `repair-attempts.json` or an empty repair-attempt list when no repair was
+  needed
 - `audit-report.json`
 - `metrics.json`
 - `report.md`
@@ -56,7 +59,8 @@ The demo must also write a trace bundle with:
 - Agent tests pass.
 - Prompt registry tests pass.
 - Design Brief tests pass.
-- Repair-mode tests pass.
+- Failure-routing tests pass, including zero-repair success and repair-attempt
+  cases.
 - Audit Agent tests pass.
 - Full regression passes.
 - `python -m compileall src scripts -q` passes.

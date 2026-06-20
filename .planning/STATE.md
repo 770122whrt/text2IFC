@@ -219,6 +219,8 @@ fine-tuning, and deployment planning
   prompt orchestration.
 - Phase 6 defines five logical roles: Design Brief Agent, BIM JSON Generator
   Agent, generator repair mode, Audit Agent, and Observer Loop.
+- Phase 6 acceptance now has a phase-local single-entry report at
+  `.planning/phases/06-multiagent-prompt-reliability-data-expansion-and-deployment/06-ACCEPTANCE-TRACE-REPORT.md`.
 
 ## Current Decisions
 
@@ -300,8 +302,9 @@ fine-tuning, and deployment planning
 - The BIM JSON Generator Agent consumes Design Brief, schema/capability
   context, few-shot examples, and feedback to output formal BIM JSON 2.0 or
   Draft only.
-- Repair starts as a measured generator mode rather than a standalone physical
-  Repair Agent.
+- Repair is conditional rather than mandatory. Successful first-pass generation
+  records `no_repair_needed`; failed generation routes to `repair_attempted`,
+  `draft_required`, or `blocked_failure`.
 - Audit Agent is separate from generation and cannot override deterministic
   schema, compiler, reopen, generated-IFC, split, or secret-scan gates.
 - Fine-tuning in Phase 6 is a metric-backed decision after prompt-only and

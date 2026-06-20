@@ -37,6 +37,9 @@ Use this page as the stable entry point for project documentation.
 - [Phase 6 Acceptance and Trace Report](architecture/phase-6-acceptance-and-trace-report.md)
   - Final acceptance criteria, intermediate input/output artifacts, gates, and
     stop-and-report rules
+- [Phase 6 phase-local acceptance report](../.planning/phases/06-multiagent-prompt-reliability-data-expansion-and-deployment/06-ACCEPTANCE-TRACE-REPORT.md)
+  - Same Phase 6 acceptance topic placed inside the Phase 6 planning folder for
+    faster review
 
 ## Project Planning
 

@@ -120,9 +120,11 @@ requirements.
 - **AGENT-05**: An Audit Agent reviews user intent coverage against the Design
   Brief, BIM JSON, validator diagnostics, generated IFC metrics, and artifacts,
   but cannot override deterministic failures.
-- **REPAIR-01**: Repair begins as a measured mode of the BIM JSON Generator,
-  uses validation and geometry feedback, records before/after issue deltas, and
-  returns Draft questions instead of inventing missing facts.
+- **REPAIR-01**: Failure handling distinguishes no-repair success, conditional
+  repair attempts, Draft clarification, and blocking failures. Repair is not
+  required for every successful run; when attempted, it uses validation and
+  geometry feedback, records before/after issue deltas, and returns Draft
+  questions instead of inventing missing facts.
 - **OBS-01**: Prompt and Agent iteration uses an Observer Loop that records
   failure classes, metrics, prompt/provider versions, repair attempts, and
   experiment evidence before prompt changes are accepted.

@@ -8,7 +8,7 @@
 ## 一页结论
 
 Phase 6 的最终目标已经明确：把当前 text2IFC 从“可以跑通 demo”推进到
-“可追踪、可审核、可修复、可部署”的多 Agent 系统。
+“可追踪、可审核、可条件修复、可部署”的多 Agent 系统。
 
 最终验收效果不是只看模型有没有返回 JSON，而是看完整链路是否成立：
 
@@ -16,7 +16,7 @@ Phase 6 的最终目标已经明确：把当前 text2IFC 从“可以跑通 demo
 中文自然语言
   -> Design Brief Agent 提取意图
   -> BIM JSON Generator 生成 BIM JSON 2.0 或 Draft
-  -> Repair Mode 根据验证失败修复或转 Draft
+  -> Failure Routing 判断无需修复、可安全修复、转 Draft 或阻塞
   -> Deterministic Gates 做硬检查
   -> Audit Agent 做语义审核
   -> 编译生成 IFC2X3
@@ -28,7 +28,7 @@ Phase 6 完成时，最小最终验收产物是：
 `dataset/processed/agent-demo/phase6-multiagent/output.ifc`
 
 同时必须生成完整追踪包，包括输入、prompt、模型原始输出、解析后 JSON、验证反馈、
-修复记录、审核报告、指标和 Markdown 报告。没有这些中间证据，即使 IFC 能打开，
+失败路由、可选修复记录、审核报告、指标和 Markdown 报告。没有这些中间证据，即使 IFC 能打开，
 也不能算 Phase 6 完成。
 
 ## 这份文档解决什么问题
@@ -76,7 +76,7 @@ Phase 6 完成时，必须存在并通过检查：
 | 候选 BIM JSON 或 Draft | `candidate.json` 或 `draft.json` | Formal 走 BIM JSON 验证；不完整则保留 Draft |
 | 验证反馈 | `validation-feedback.json` | 记录 schema/semantic validator 结果 |
 | 几何反馈 | `geometry-feedback.json` | 记录 compiled IFC 几何质量检查 |
-| 修复记录 | `repair-attempts.json` | 记录每次 repair 的输入问题和输出变化 |
+| 失败路由/修复记录 | `repair-attempts.json` | 记录无需修复、repair attempt、Draft 或 blocking failure；无修复时为空列表 |
 | 审核报告 | `audit-report.json` | 记录 Audit Agent 的语义审核结果 |
 | 指标 | `metrics.json` | 记录通过率、失败类别、repair 次数等 |
 | 人读报告 | `report.md` | 汇总本次运行结果和失败原因 |
@@ -89,7 +89,8 @@ Phase 6 完成时，必须存在并通过检查：
 | Design Brief gate | 检查意图提取是否结构化、没有伪装成 BIM JSON | 返回 Draft 或报错 |
 | BIM JSON gate | `validate_v2_document` 检查 Formal BIM JSON | 不编译 IFC |
 | Draft honesty gate | 检查缺失事实是否明确保留 | 不能静默默认补全 |
-| Repair gate | 检查 repair 是否减少错误，是否编造事实 | 无法修复则转 Draft 并报告 |
+| Failure-route gate | 检查失败后是否路由到无需修复、repair、Draft 或 blocking failure | 路由缺失则失败 |
+| Repair gate | 仅当 repair 被尝试时，检查是否减少错误、是否编造事实 | 无法安全修复则转 Draft 并报告 |
 | IFC gate | 编译、重开、几何、关系、属性、结构检查 | 阻止部署验收 |
 | Audit gate | 审核用户意图与输出是否一致 | 标记 mismatch，不能覆盖硬失败 |
 | Data gate | license、provenance、split、sidecar 检查 | 阻止训练/评估导出 |
@@ -152,9 +153,12 @@ python -m compileall src scripts -q
 为什么要做：BIM JSON 是 text2IFC 的模型输出合同。这样 deterministic compiler
 才能在写 IFC 前检查结构、语义、几何和关系。
 
-### Repair Mode
+### Conditional Failure Routing / Repair
 
-结论：Repair 第一版不单独拆成物理 Agent，而是 BIM JSON Generator 的 repair mode。
+结论：repair 不是每次必须。第一版必须实现的是 failure routing：成功输出记录
+`no_repair_needed`；失败输出根据原因进入 `repair_attempted`、`draft_required`
+或 `blocked_failure`。如果进入 repair，repair 不单独拆成物理 Agent，而是
+BIM JSON Generator 的条件性 repair mode。
 
 它的输入包括：
 
@@ -162,16 +166,20 @@ python -m compileall src scripts -q
 - validator 反馈
 - geometry gate 反馈
 - 已知用户事实
-- repair attempt number
+- failure route
+- repair attempt number，当且仅当进入 repair
 
 它的输出仍然只能是：
 
+- `no_repair_needed`
 - 修复后的 BIM JSON
 - Draft update
+- blocking failure report
 
-为什么要这样：repair 的本质仍然是“生成更正确的 BIM JSON”。如果太早拆成独立
-Repair Agent，会产生两套 prompt、两套责任边界和更多漂移风险。等 repair 数据
-足够多，再根据指标判断是否值得拆分。
+为什么要这样：如果首次生成已经通过 validation 和 geometry gate，repair 反而是
+多余风险。失败时也不是所有错误都适合 repair；缺用户事实时应该 Draft/追问。
+只有已知事实足够、错误属于可修复结构或几何问题时，才尝试 repair。等 repair
+数据足够多，再根据指标判断是否值得拆分独立 Repair Agent。
 
 ### Audit Agent
 
@@ -363,9 +371,10 @@ placement、representation、space、wall、door、window、void/fill 等必要�
 }
 ```
 
-预期作用：如果 Formal BIM JSON 未通过验证，不能编译 IFC。该反馈进入 repair mode。
+预期作用：如果 Formal BIM JSON 未通过验证，不能编译 IFC。该反馈进入 failure
+routing；只有在已知事实足够时才进入 repair。
 
-### 7. 修复记录
+### 7. 失败路由和修复记录
 
 文件：`repair-attempts.json`
 
@@ -373,6 +382,7 @@ placement、representation、space、wall、door、window、void/fill 等必要�
 [
   {
     "attempt_number": 1,
+    "route": "repair_attempted",
     "mode": "repair",
     "input_issue_codes": ["REQUIRED_ATTRIBUTE_MISSING"],
     "output_issue_codes": [],
@@ -383,7 +393,8 @@ placement、representation、space、wall、door、window、void/fill 等必要�
 ]
 ```
 
-预期作用：repair 不能只说“修好了”，必须说明修复了什么、还剩什么、是否有编造风险。
+预期作用：成功首轮生成应记录空 repair list 或 `no_repair_needed`。repair 不能只说
+“修好了”，必须说明修复了什么、还剩什么、是否有编造风险。
 
 ### 8. 几何反馈
 
@@ -439,12 +450,13 @@ placement、representation、space、wall、door、window、void/fill 等必要�
   "compile_reopen_success": true,
   "geometry_pass": true,
   "audit_pass": true,
-  "repair_attempt_count": 1,
+  "failure_route": "no_repair_needed",
+  "repair_attempt_count": 0,
   "failure_class": null
 }
 ```
 
-预期作用：后续 prompt-only、repair-mode、RAG、fine-tune 的比较必须基于这些指标。
+预期作用：后续 prompt-only、conditional repair、RAG、fine-tune 的比较必须基于这些指标。
 
 ## 什么时候必须停止并向用户汇报
 
@@ -456,6 +468,7 @@ placement、representation、space、wall、door、window、void/fill 等必要�
 | provider 返回 raw IFC、STEP 或低层 IFC helper | 违反系统边界 | 拒绝输出，记录 provider boundary failure |
 | prompt 没有 template ID 或 hash | 无法复现和审计 | 阻止进入正式实验结论 |
 | demo 使用 hard-coded JSON 却标成 live model 输出 | 属于证据污染 | 立即制止，报告为 artifact provenance 问题 |
+| failure routing 缺失 | 系统不知道失败后发生了什么 | 阻止进入正式实验结论 |
 | repair 静默补充用户没给的数据 | 会制造虚假 BIM | 停止 repair，转 Draft 或追问 |
 | Audit Agent 想覆盖 deterministic gate 失败 | 会把错误 IFC 包装成成功 | 强制保留失败状态 |
 | 训练数据 license 不明确 | 可能违法或污染训练集 | 不纳入训练，标记待确认 |
@@ -468,7 +481,7 @@ placement、representation、space、wall、door、window、void/fill 等必要�
 |---:|---|---|---|---|
 | 0 | `06-00` | Prompt registry 和 multi-agent design contract | 没有 prompt 追踪就无法可信迭代 | registry、renderer、设计文档 |
 | 1 | `06-01` | Design Brief Agent | 把理解用户意图和生成 BIM JSON 分开 | `design-brief.json`、schema、测试 |
-| 2 | `06-02` | BIM JSON Generator 和 repair mode | 让生成和修复都在同一 BIM JSON 合同内 | generator、repair、repair trace |
+| 2 | `06-02` | BIM JSON Generator 和 conditional failure routing | 让成功、repair、Draft、blocking failure 都可追踪 | generator、failure route、optional repair trace |
 | 3 | `06-03` | Audit Agent | 检查语义覆盖，但不覆盖硬失败 | `audit-report.json`、审核测试 |
 | 4 | `06-04` | Experiment harness | 用指标比较 prompt/repair/audit | experiment records、metrics、report |
 | 5 | `06-05` | 数据扩展和模型决策 | 微调前先确认数据和指标是否支持 | training manifest、model decision |

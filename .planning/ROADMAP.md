@@ -373,8 +373,8 @@ IFC, STEP text, low-level IFC helper entities, or compiler bookkeeping.
 
 **Goal:** Build a traceable multi-agent prompt and audit architecture, expand
 approved training data only after reliability metrics exist, compare prompt-only,
-repair-mode, optional RAG, and fine-tune approaches, then package the supported
-text2IFC service.
+conditional repair, optional RAG, and fine-tune approaches, then package the
+supported text2IFC service.
 
 **Requirements:** PROMPT-01, AGENT-04, AGENT-05, REPAIR-01, OBS-01, MODEL-01,
 MODEL-02, DEPLOY-01
@@ -388,14 +388,16 @@ MODEL-02, DEPLOY-01
 - `.planning/phases/06-multiagent-prompt-reliability-data-expansion-and-deployment/06-AI-SPEC.md`
 - `.planning/phases/06-multiagent-prompt-reliability-data-expansion-and-deployment/06-RESEARCH.md`
 - `.planning/phases/06-multiagent-prompt-reliability-data-expansion-and-deployment/06-VALIDATION.md`
+- `.planning/phases/06-multiagent-prompt-reliability-data-expansion-and-deployment/06-ACCEPTANCE-TRACE-REPORT.md`
 - `docs/architecture/phase-6-multiagent-design.md`
 
 **Explicit boundary:** Phase 6 starts with prompt registry, traceability, and
 multi-agent responsibility separation before data expansion or fine-tuning.
 Design Brief captures user intent; BIM JSON Generator emits BIM JSON 2.0 or
-Draft; repair starts as generator repair mode; Audit Agent reviews semantic
-coverage but cannot override deterministic validation, compile, reopen,
-generated-IFC, split, or secret-scan gates.
+Draft; failure routing decides whether no repair is needed, a conditional
+repair attempt is safe, Draft clarification is required, or the run must block;
+Audit Agent reviews semantic coverage but cannot override deterministic
+validation, compile, reopen, generated-IFC, split, or secret-scan gates.
 
 **Plans:** 7 plans in 7 waves
 
@@ -409,9 +411,10 @@ generated-IFC, split, or secret-scan gates.
 
 **Wave 2** *(blocked on Wave 1 Design Brief contract)*
 
-- [ ] `06-02-PLAN.md` - BIM JSON Generator orchestration and repair mode
+- [ ] `06-02-PLAN.md` - BIM JSON Generator orchestration and conditional
+  failure routing
 
-**Wave 3** *(blocked on Wave 2 generation and repair traceability)*
+**Wave 3** *(blocked on Wave 2 generation and failure-routing traceability)*
 
 - [ ] `06-03-PLAN.md` - Audit Agent and deterministic gate integration
 
@@ -435,13 +438,16 @@ generated-IFC, split, or secret-scan gates.
 - The model layer outputs Design Brief, BIM JSON 2.0, Draft updates, or audit
   reports only; raw IFC, STEP text, STEP IDs, and low-level helper entities
   remain forbidden.
-- Repair may not invent missing user facts. It must return Draft questions when
-  feedback cannot be resolved from known facts.
+- Repair is not required for successful runs. Failure routing must record
+  whether no repair was needed, repair was attempted, Draft clarification was
+  required, or the run blocked. Any repair attempt may not invent missing user
+  facts and must return Draft questions when feedback cannot be resolved from
+  known facts.
 - Audit Agent cannot pass failed deterministic gates.
 - Dataset expansion must preserve license status, source provenance, sidecar
   losses, and Phase 3 scene-family splits.
-- Fine-tuning is selected only if measured prompt-only and repair-mode
-  baselines justify it.
+- Fine-tuning is selected only if measured prompt-only, conditional repair, and
+  optional RAG baselines justify it.
 - All conversation-specific work happens in the C-drive `multiagent-design`
   worktree; the E-drive working tree is not edited.
 

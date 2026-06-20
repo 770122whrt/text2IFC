@@ -12,8 +12,8 @@ can open successfully and still be spatially wrong unless a geometry gate checks
 the compiled file.
 
 The next problem is prompt and agent reliability. We need to know exactly what
-prompt, input facts, feedback, repair attempt, and audit result created each
-BIM JSON and IFC artifact.
+prompt, input facts, feedback, failure route, optional repair attempt, and
+audit result created each BIM JSON and IFC artifact.
 
 ## Current Reality
 
@@ -73,20 +73,24 @@ Why it exists:
   lets validators and the deterministic compiler catch errors before IFC is
   written.
 
-## Repair Starts As A Mode
+## Repair Is Conditional
 
 What it does:
 
-- Reuses the BIM JSON Generator with explicit validation and geometry feedback.
-- Records the previous candidate, feedback codes, attempt number, fixed issues,
-  and remaining issues.
-- Returns repaired BIM JSON or Draft questions.
+- Runs only after a candidate fails validation or generated IFC quality checks.
+- Records the route as one of: no repair needed, repair attempted, Draft
+  required, or blocked failure.
+- When repair is safe, reuses the BIM JSON Generator with explicit validation
+  and geometry feedback.
+- Returns repaired BIM JSON, Draft questions, or a blocking failure report.
 
 Why it is not a separate agent first:
 
-- Repair has the same output contract as generation. If we split it too early,
-  we create two prompt systems before we have enough failure data. We can split
-  it later if measured experiments show a specialized Repair Agent is better.
+- Successful first-pass generation should not require repair.
+- When repair is attempted, it has the same output contract as generation. If
+  we split it too early, we create two prompt systems before we have enough
+  failure data. We can split it later if measured experiments show a
+  specialized Repair Agent is better.
 
 ## Audit Agent
 
@@ -116,8 +120,8 @@ Why it exists:
 What it does:
 
 - Records prompt template ID, template hash, rendered inputs, raw output,
-  parsed output, validation feedback, geometry feedback, repair attempts,
-  metrics, audit result, and final artifacts.
+  parsed output, validation feedback, geometry feedback, failure route,
+  optional repair attempts, metrics, audit result, and final artifacts.
 - Classifies failures before prompt changes are accepted.
 - Requires a test or experiment case before production prompt updates.
 
@@ -139,12 +143,13 @@ Every provider-backed run should record:
 - raw response
 - parsed output
 - validation feedback
-- repair attempts
+- failure route
+- repair attempts when attempted
 - metrics
 - artifact paths
 
-This is the first Phase 6 wave because all later model comparison, repair, RAG,
-and fine-tuning decisions depend on it.
+This is the first Phase 6 wave because all later model comparison, conditional
+repair, RAG, and fine-tuning decisions depend on it.
 
 ## Hard Boundary
 
@@ -166,7 +171,7 @@ The system must not say:
 
 1. Prompt registry and trace bundle.
 2. Design Brief Agent.
-3. BIM JSON Generator and repair mode.
+3. BIM JSON Generator and conditional failure routing.
 4. Audit Agent.
 5. Experiment harness and reliability metrics.
 6. Data expansion and model decision.

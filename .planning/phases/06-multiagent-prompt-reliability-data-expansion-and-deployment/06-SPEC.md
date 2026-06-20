@@ -33,8 +33,11 @@ entities, STEP IDs, compiler bookkeeping, or hidden defaults.
   renderer before claiming prompt iteration capability.
 - A Design Brief or expert-understanding step is allowed and recommended for
   weak natural-language inputs.
-- Repair should start as a measured repair mode of the BIM JSON Generator, not
-  as a separate physical agent.
+- Repair is conditional, not mandatory for every run. Successful generation may
+  have zero repair attempts; failed generation must route to a safe repair
+  attempt, Draft clarification, or blocking failure. If implemented, repair
+  starts as a measured mode of the BIM JSON Generator, not as a separate
+  physical agent.
 - Audit should be separate from generation. Agent audit may review semantic
   coverage and human intent, but deterministic validators and IFC quality gates
   remain authoritative.
@@ -64,8 +67,10 @@ entities, STEP IDs, compiler bookkeeping, or hidden defaults.
 - A BIM JSON Generator Agent that consumes the Design Brief, schema summary,
   capability profile, few-shot examples, and feedback to produce BIM JSON 2.0
   or Draft updates.
-- A repair mode inside the BIM JSON Generator using validation and generated
-  IFC quality feedback.
+- Conditional failure routing inside the BIM JSON Generator: no repair needed,
+  safe repair attempt, Draft clarification, or blocking failure. Repair uses
+  validation and generated IFC quality feedback only when enough known facts
+  exist.
 - An Audit Agent that compares the original request, Design Brief, BIM JSON,
   deterministic diagnostics, and IFC metrics to produce an evidence-linked
   review report.
@@ -88,8 +93,8 @@ entities, STEP IDs, compiler bookkeeping, or hidden defaults.
   boolean, or surface geometry that Phase 4 still reports as loss-explicit.
 - Training on unlicensed or unclear-license data.
 - Silent defaults for missing user facts.
-- Claiming production fine-tuning value before prompt-only and repair-mode
-  baselines are evaluated.
+- Claiming production fine-tuning value before prompt-only, conditional repair,
+  Draft, and blocking-failure routes are evaluated.
 
 ## Agent Roles
 
@@ -127,20 +132,23 @@ Why it exists:
 - Keeping generation focused on semantic BIM JSON prevents the model from
   producing fragile STEP text or low-level IFC resource objects.
 
-### 3. Repair Mode
+### 3. Conditional Repair Route
 
 What it does:
 
+- Runs only when a previous candidate failed and the known user facts are
+  sufficient to attempt a safe correction.
 - Re-runs the BIM JSON Generator with structured validator and IFC quality
   feedback, such as schema errors, wall orientation errors, room enclosure
   failures, opening host mismatches, or missing containment.
-- Produces a repaired BIM JSON candidate or Draft questions.
+- Produces a repaired BIM JSON candidate, Draft questions, or a blocking
+  failure record.
 
 Why it starts as a mode, not a separate agent:
 
-- Repair still has the same output contract as generation: BIM JSON 2.0 or
-  Draft. Keeping it inside the generator avoids two competing prompt families
-  while the failure taxonomy is still small.
+- Repair, when attempted, still has the same output contract as generation:
+  BIM JSON 2.0 or Draft. Keeping it inside the generator avoids two competing
+  prompt families while the failure taxonomy is still small.
 - It can be split into a standalone Repair Agent later if measured experiments
   show a specialized repair prompt improves results.
 
@@ -199,14 +207,16 @@ Why it exists:
 - Acceptance: Tests show complete, incomplete, and ambiguous Chinese requests
   become valid Design Brief records without generating BIM JSON or IFC.
 
-### 3. Generator and repair contract
+### 3. Generator and failure-routing contract
 
 - Current: `mimo-bim-json-v3.md` contains useful constraints, but the pipeline
   does not have a reusable prompt renderer and repair attempt contract.
-- Target: BIM JSON generation and repair use the same registry-backed template
-  family and record repair attempts with feedback codes and outcomes.
-- Acceptance: A validation or geometry failure can be replayed through repair
-  mode, and the trace records before/after candidates and error deltas.
+- Target: BIM JSON generation uses registry-backed templates and records the
+  failure route for every run: no repair needed, repair attempted, Draft
+  clarification, or blocked failure.
+- Acceptance: A successful first-pass generation records zero repair attempts.
+  A validation or geometry failure records its route; if repair is attempted,
+  the trace records before/after candidates and error deltas.
 
 ### 4. Agent audit contract
 
@@ -222,8 +232,8 @@ Why it exists:
 - Current: Phase 3 has 100 deterministic text/BIM JSON pairs and Phase 4 has
   all-25 fidelity accounting.
 - Target: Phase 6 expands only approved data, preserves scene-family split
-  separation, and compares prompt-only, repair-mode, optional RAG, and optional
-  fine-tune baselines before choosing deployment.
+  separation, and compares prompt-only, conditional repair, optional RAG, and
+  optional fine-tune baselines before choosing deployment.
 - Acceptance: A decision report states whether fine-tuning is justified and
   cites metrics, data counts, split integrity, and known unsupported facts.
 
@@ -244,14 +254,15 @@ Why it exists:
       paths.
 - [ ] Design Brief Agent outputs validated structured briefs, not BIM JSON.
 - [ ] BIM JSON Generator outputs only formal BIM JSON 2.0 or Draft updates.
-- [ ] Repair is implemented as generator repair mode with measured error
-      deltas.
+- [ ] Failure routing records zero-repair success, conditional repair attempts,
+      Draft clarification, and blocking failures. Any repair attempt records
+      measured error deltas.
 - [ ] Audit Agent is separate from generation and cannot override deterministic
       gates.
 - [ ] Dataset expansion preserves licensing, provenance, sidecars, and
       scene-family split separation.
-- [ ] Model decision compares prompt-only, repair-mode, optional RAG, and
-      optional fine-tune baselines.
+- [ ] Model decision compares prompt-only, conditional repair, optional RAG,
+      and optional fine-tune baselines.
 - [ ] Deployment demo produces a real IFC2X3 file and a complete trace bundle.
 - [ ] No secret values, provider headers, or private URLs are written to
       artifacts or commits.
@@ -263,7 +274,7 @@ Why it exists:
 | Goal Clarity | 0.84 | 0.75 | Met | Multi-agent reliability and deployment are now explicit. |
 | Boundary Clarity | 0.83 | 0.70 | Met | Raw IFC, standalone repair agent, and deterministic-gate override are out. |
 | Constraint Clarity | 0.82 | 0.65 | Met | C-worktree, prompt registry, traceability, and no-secret rules are locked. |
-| Acceptance Criteria | 0.79 | 0.70 | Met | Prompt traces, brief validation, repair deltas, audit, metrics, and IFC demo are measurable. |
+| Acceptance Criteria | 0.80 | 0.70 | Met | Prompt traces, brief validation, failure routes, optional repair deltas, audit, metrics, and IFC demo are measurable. |
 
 Ambiguity: 0.18. Gate passed for planning, with model-provider and deployment
 interface details to be resolved by Phase 6 execution evidence.
@@ -275,7 +286,7 @@ interface details to be resolved by Phase 6 execution evidence.
 | 1 | Reality check | Does `two-room-suite` prove unified prompt control? | No. It is a deterministic gate with a hard-coded candidate. |
 | 2 | System designer | What must exist before prompt iteration can be trusted? | Versioned prompt registry, renderer, trace bundle, metrics, and failure taxonomy. |
 | 3 | Product boundary | Should weak input be polished first? | Yes. Use a Design Brief Agent before BIM JSON generation. |
-| 4 | Failure analyst | Should repair be a separate agent now? | No. Start as generator repair mode, split later only if metrics justify it. |
+| 4 | Failure analyst | Is repair always mandatory? | No. Successful runs should record zero repairs; failed runs route to conditional repair, Draft, or blocking failure. |
 | 5 | Safety reviewer | Can Agent audit approve invalid output? | No. It may explain and flag issues, but deterministic gates remain authoritative. |
 
 ---

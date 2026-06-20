@@ -75,8 +75,8 @@ Current evidence:
 
 Planning implication:
 
-- Compare prompt-only, repair-mode, optional RAG, and fine-tune only after
-  traceable prompt runs and reliability metrics exist.
+- Compare prompt-only, conditional repair, optional RAG, and fine-tune only
+  after traceable prompt runs and reliability metrics exist.
 
 ## Validation Architecture
 
@@ -107,7 +107,7 @@ Phase 6 needs layered validation:
 
 1. Prompt registry and trace bundle.
 2. Design Brief Agent.
-3. BIM JSON Generator orchestration and repair mode.
+3. BIM JSON Generator orchestration and conditional failure routing.
 4. Audit Agent and deterministic gate integration.
 5. Experiment harness and metrics.
 6. Data expansion plus prompt/RAG/fine-tune decision.

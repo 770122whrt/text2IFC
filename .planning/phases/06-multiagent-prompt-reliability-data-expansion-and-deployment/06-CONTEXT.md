@@ -16,8 +16,9 @@ step caused each outcome?"
 
 Therefore Phase 6 begins with multi-agent design and prompt traceability before
 data expansion, fine-tuning, or deployment claims. Model improvement comes only
-after the project can measure prompt-only generation, repair-mode generation,
-audit findings, generated IFC quality, and data split safety.
+after the project can measure prompt-only generation, conditional repair,
+Draft, blocking-failure routes, audit findings, generated IFC quality, and data
+split safety.
 </domain>
 
 <decisions>
@@ -52,9 +53,11 @@ audit findings, generated IFC quality, and data split safety.
 - **D-08:** BIM JSON Generator Agent converts the Design Brief into formal BIM
   JSON 2.0 or Draft updates. It does not output raw IFC, STEP text, or low-level
   IFC helper objects.
-- **D-09:** Repair starts as a `repair_mode` of the BIM JSON Generator. It uses
-  validation and geometry feedback and remains subject to the same output
-  contract as generation.
+- **D-09:** Repair is conditional. A successful first-pass generation records
+  zero repair attempts. A failed generation routes to a safe repair attempt,
+  Draft clarification, or blocking failure. If repair is attempted, it remains
+  a `repair_mode` of the BIM JSON Generator and uses validation and geometry
+  feedback under the same output contract as generation.
 - **D-10:** Audit Agent is separate from generation. It checks semantic coverage
   against the user request and Design Brief, but it cannot overrule schema,
   compiler, reopen, geometry, or secret-scan failures.
@@ -70,7 +73,7 @@ audit findings, generated IFC quality, and data split safety.
 - **D-14:** Draft and loss sidecars remain linked to formal targets and are not
   silently converted into training truth.
 - **D-15:** Fine-tuning is a decision, not an assumption. It must be compared
-  against prompt-only, repair-mode, and optional RAG-assisted baselines.
+  against prompt-only, conditional repair, and optional RAG-assisted baselines.
 - **D-16:** RAG is considered only for recurring schema/class/property
   knowledge failures. It is not a substitute for the official IFC2X3 registries
   and validators.
@@ -97,6 +100,9 @@ audit findings, generated IFC quality, and data split safety.
   - locked Phase 6 boundaries, agent roles, and acceptance criteria.
 - `.planning/phases/06-multiagent-prompt-reliability-data-expansion-and-deployment/06-AI-SPEC.md`
   - AI system design contract for multi-agent prompt orchestration.
+- `.planning/phases/06-multiagent-prompt-reliability-data-expansion-and-deployment/06-ACCEPTANCE-TRACE-REPORT.md`
+  - single-entry Phase 6 acceptance, trace, input/output, and supervision
+    report for user review.
 - `.planning/REQUIREMENTS.md` - Phase 6 requirements, including MODEL,
   DEPLOY, prompt traceability, repair, audit, and observer-loop requirements.
 - `.planning/ROADMAP.md` - phase dependencies and wave ordering.
@@ -150,8 +156,8 @@ audit findings, generated IFC quality, and data split safety.
 <deferred>
 ## Deferred Ideas
 
-- Standalone physical Repair Agent, unless repair-mode metrics show that a
-  separate specialized prompt is better.
+- Standalone physical Repair Agent, unless conditional repair metrics show that
+  a separate specialized prompt is better.
 - Production LangGraph or workflow-framework migration, unless the in-repo
   orchestrator becomes too hard to observe or resume.
 - Full browser-based IFC review UI.

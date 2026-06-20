@@ -7,13 +7,14 @@
 
 Phase 6 is a structured multi-agent generation and evaluation system. It is
 not a free-form chatbot, not a raw IFC generator, and not a fine-tuning project
-until prompt-only and repair-mode baselines have been measured.
+until prompt-only, conditional repair, Draft, and blocking-failure routes have
+been measured.
 
 The AI system has five logical roles:
 
 1. Design Brief Agent
 2. BIM JSON Generator Agent
-3. BIM JSON Generator repair mode
+3. BIM JSON Generator conditional failure route
 4. Audit Agent
 5. Observer Loop
 
@@ -105,10 +106,11 @@ It must not output:
 - compiler-only objects
 - hidden default facts
 
-### Repair mode output
+### Conditional repair output
 
-Repair mode has the same output contract as BIM JSON generation, plus trace
-metadata:
+Repair is not mandatory for every run. A successful first-pass generation
+records zero repair attempts. When repair is attempted, it has the same output
+contract as BIM JSON generation, plus trace metadata:
 
 - previous candidate artifact path
 - feedback codes
@@ -141,7 +143,8 @@ It cannot turn a deterministic failure into a pass.
 | Design Brief validity | brief schema passes | required |
 | BIM JSON validity | `validate_v2_document` passes for Formal | required |
 | Draft honesty | missing facts remain Draft, no hidden defaults | required |
-| Repair usefulness | issue count decreases or converts to Draft | required for repair success |
+| Failure routing | no-repair success, repair attempt, Draft, or block is recorded | required |
+| Repair usefulness | issue count decreases or converts to Draft | required only when repair is attempted |
 | IFC output | compile and reopen success | required for Formal demos |
 | Generated geometry | Phase 4 quality gate passes | required for deployment demos |
 | Agent audit | report exists and deterministic failure is blocking | required |
@@ -154,8 +157,11 @@ It cannot turn a deterministic failure into a pass.
 - Renderer guardrail: reject prompt calls without template ID or template hash.
 - Compiler guardrail: compile only after formal BIM JSON 2.0 validation.
 - Audit guardrail: audit cannot override deterministic failures.
-- Repair guardrail: repair may not invent missing facts; it must return Draft
-  questions when feedback cannot be resolved from known facts.
+- Failure-routing guardrail: successful runs do not need repair. Failed runs
+  must route to safe repair, Draft clarification, or blocking failure.
+- Repair guardrail: when repair is attempted, it may not invent missing facts;
+  it must return Draft questions when feedback cannot be resolved from known
+  facts.
 - Data guardrail: training exports require provenance, split assignment, and
   license status.
 - Secret guardrail: never write token values, headers, or full provider URLs to
@@ -184,7 +190,7 @@ Each Phase 6 run should write a trace bundle:
 
 - [x] Multi-agent roles defined.
 - [x] Prompt registry and renderer selected as the Phase 6 entry point.
-- [x] Repair starts as generator repair mode.
+- [x] Repair is conditional and starts as generator repair mode only when safe.
 - [x] Audit is separate and subordinate to deterministic gates.
 - [x] Fine-tuning is deferred until prompt/repair evaluation exists.
 - [x] Trace bundle requirements defined.
