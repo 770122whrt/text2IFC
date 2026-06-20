@@ -34,6 +34,9 @@ Use this page as the stable entry point for project documentation.
 - [Phase 6 Multi-agent Design](architecture/phase-6-multiagent-design.md)
   - Prompt registry, Design Brief Agent, BIM JSON Generator, repair mode,
     Audit Agent, and Observer Loop
+- [Phase 6 Acceptance and Trace Report](architecture/phase-6-acceptance-and-trace-report.md)
+  - Final acceptance criteria, intermediate input/output artifacts, gates, and
+    stop-and-report rules
 
 ## Project Planning
 
