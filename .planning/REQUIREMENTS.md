@@ -110,6 +110,22 @@ requirements.
 - **AGENT-01**: Convert natural language into valid BIM JSON.
 - **AGENT-02**: Ask targeted questions for missing required values.
 - **AGENT-03**: Maintain multi-turn clarification state.
+- **PROMPT-01**: Every provider-backed prompt run is rendered from a versioned
+  prompt registry and records template ID, template hash, structured inputs,
+  rendered prompt, raw output, parsed output, feedback, repair attempts,
+  metrics, and artifact paths.
+- **AGENT-04**: A Design Brief Agent converts raw user text into explicit known
+  facts, missing facts, ambiguities, corrections, and clarification targets
+  without outputting BIM JSON or IFC.
+- **AGENT-05**: An Audit Agent reviews user intent coverage against the Design
+  Brief, BIM JSON, validator diagnostics, generated IFC metrics, and artifacts,
+  but cannot override deterministic failures.
+- **REPAIR-01**: Repair begins as a measured mode of the BIM JSON Generator,
+  uses validation and geometry feedback, records before/after issue deltas, and
+  returns Draft questions instead of inventing missing facts.
+- **OBS-01**: Prompt and Agent iteration uses an Observer Loop that records
+  failure classes, metrics, prompt/provider versions, repair attempts, and
+  experiment evidence before prompt changes are accepted.
 - **MODEL-01**: Evaluate fine-tuning against prompt-only and structured-output
   baselines.
 - **MODEL-02**: Expand training data only from license-reviewed sources with
@@ -169,15 +185,20 @@ requirements.
 | AGENT-01 | Phase 5 | Complete |
 | AGENT-02 | Phase 5 | Complete |
 | AGENT-03 | Phase 5 | Complete |
+| PROMPT-01 | Phase 6 | Planned |
+| AGENT-04 | Phase 6 | Planned |
+| AGENT-05 | Phase 6 | Planned |
+| REPAIR-01 | Phase 6 | Planned |
+| OBS-01 | Phase 6 | Planned |
 | MODEL-01 | Phase 6 | Deferred |
 | MODEL-02 | Phase 6 | Deferred |
 | DEPLOY-01 | Phase 6 | Deferred |
 
 **Coverage:**
-- tracked requirements: 42 total
-- Mapped to phases: 42
+- tracked requirements: 47 total
+- Mapped to phases: 47
 - Unmapped: 0
 
 ---
 *Requirements defined: 2026-06-11*
-*Last updated: 2026-06-15 after Phase 4 specification and planning*
+*Last updated: 2026-06-18 after Phase 6 multi-agent planning*

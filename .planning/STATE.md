@@ -7,15 +7,17 @@ See: `.planning/PROJECT.md` (updated 2026-06-11)
 **Core value:** Produce valid, inspectable IFC models from explicit user
 requirements.
 
-**Current focus:** Phase 6 data expansion, fine-tuning, and deployment planning
+**Current focus:** Phase 6 multi-agent prompt reliability, data expansion,
+fine-tuning, and deployment planning
 
 ## Status
 
-- Phase: 4
-- Stage: Complete
-- State: Phase 4 complete and verified; Phase 6 is ready to specify
-- Plans: Phase 4 complete, 7 of 7 plans complete
-- Branch: `main`
+- Phase: 6
+- Stage: Planned
+- State: Phase 6 specified and planned for multi-agent prompt reliability,
+  data expansion, model decision, and deployment
+- Plans: Phase 6 planned, 7 of 7 plans written, 0 executed
+- Branch: `multiagent-design` in C-drive worktree
 - Remote: `https://github.com/770122whrt/text2IFC`
 
 ## Completed Foundation
@@ -209,6 +211,14 @@ requirements.
   17607/18758 represented, representations 4509/6382 represented, materials
   1533/2554 represented, types 154/1012 represented, and connections
   2263/2263 represented.
+- Phase 6 is specified and planned with a Wave 0 prompt registry and
+  multi-agent design contract before data expansion, fine-tuning, or
+  deployment.
+- Phase 6 records that `two-room-suite` is currently a deterministic
+  geometry-gate artifact with a hard-coded candidate, not proof of unified live
+  prompt orchestration.
+- Phase 6 defines five logical roles: Design Brief Agent, BIM JSON Generator
+  Agent, generator repair mode, Audit Agent, and Observer Loop.
 
 ## Current Decisions
 
@@ -281,6 +291,24 @@ requirements.
 - The simple-room demo reaches `formal_ready`, validates BIM JSON 2.0, asks
   three Chinese clarification questions, compiles IFC, and records transcript,
   state, candidate, diagnostics, metrics, report, and IFC artifacts.
+- Phase 6 prompt/provider work must use versioned prompt templates, template
+  hashes, structured renderer inputs, raw/parsed output traces, feedback,
+  repair-attempt records, metrics, and artifact paths.
+- The Design Brief Agent is allowed and recommended as a first step for weak
+  natural-language input. It records intent, known facts, missing facts, and
+  ambiguities without generating BIM JSON or IFC.
+- The BIM JSON Generator Agent consumes Design Brief, schema/capability
+  context, few-shot examples, and feedback to output formal BIM JSON 2.0 or
+  Draft only.
+- Repair starts as a measured generator mode rather than a standalone physical
+  Repair Agent.
+- Audit Agent is separate from generation and cannot override deterministic
+  schema, compiler, reopen, generated-IFC, split, or secret-scan gates.
+- Fine-tuning in Phase 6 is a metric-backed decision after prompt-only and
+  repair-mode baselines, not an assumed next action.
+- This conversation's implementation work must stay in
+  `C:\Users\rt do believe\.codex\worktrees\a542\bimnet`; do not edit the
+  E-drive working tree files.
 
 ## Known Risks
 
@@ -300,9 +328,9 @@ requirements.
 
 ## Next Action
 
-Specify Phase 6: Data Expansion, Fine-tuning, and Deployment. Start from
-`docs/architecture/phase-4-summary.md` and preserve the supported-scope,
-loss-sidecar, and generated-IFC-gate boundaries.
+Execute Phase 6 Wave 0 in the C-drive `multiagent-design` worktree: prompt
+registry, prompt trace contract, and multi-agent design contract. Preserve the
+supported-scope, loss-sidecar, generated-IFC-gate, and no-secret boundaries.
 
 ## Accumulated Context
 
@@ -387,6 +415,11 @@ loss-sidecar, and generated-IFC-gate boundaries.
   `12226f0`; regression stabilization commit `27941f7`; final documentation
   and artifact verification commit follows. The phase closes with all-25 audit
   accounting balanced and Phase 6 ready under supported-scope constraints.
+- Phase 6 was specified and planned on 2026-06-18 with seven waves. Wave 0
+  introduces prompt registry and multi-agent traceability; Wave 1 adds Design
+  Brief; Wave 2 adds BIM JSON generation plus repair mode; Wave 3 adds Audit
+  Agent; Wave 4 adds reliability experiments; Wave 5 handles data/model
+  decision; Wave 6 packages the supported deployable demo.
 
 ---
-*Last activity: 2026-06-16 - completed Phase 4 Wave 6 and final Phase 4 verification*
+*Last activity: 2026-06-18 - specified and planned Phase 6 multi-agent prompt reliability*

@@ -36,10 +36,12 @@ explicit user requirements instead of generating fragile IFC text directly.
 - [x] Build a Text-to-JSON dataset pipeline and measurable baseline.
 - [x] Complete the first Text-to-JSON-to-IFC end-to-end loop.
 - [x] Complete the first multi-turn clarification Agent demo to IFC.
-- [ ] Establish generated-IFC correctness gates for spatial, content,
+- [x] Establish generated-IFC correctness gates for spatial, content,
   attribute, relationship, and IFC-structure quality.
-- [ ] Preserve high-fidelity IFC material/type/topology/geometry details.
-- [ ] Expand approved data, compare fine-tuning, and package deployment.
+- [x] Preserve selected high-fidelity IFC material/type/topology details and
+  report unsupported complex geometry as explicit losses.
+- [ ] Build multi-agent prompt traceability, then expand approved data, compare
+  model approaches, and package deployment.
 
 ### Out of Scope
 
@@ -92,7 +94,8 @@ explicit user requirements instead of generating fragile IFC text directly.
 | Build multi-turn clarification in Phase 5 | Missing natural-language facts should produce questions, not fabrication | Complete |
 | Start Phase 4 with generated-IFC correctness gates | A reopenable IFC can still be spatially wrong; high-fidelity work needs a reliable text-json-ifc gate first | Adopted |
 | Defer materials, complex geometry, and topology to Phase 4 | Keep generated correctness separate from full IFC source fidelity | Adopted |
+| Start Phase 6 with prompt registry and multi-agent traceability | Fine-tuning and deployment decisions need reproducible prompt inputs, repair attempts, metrics, and audits | Adopted |
 | Use TDD and GSD phase artifacts | Keep behavior and planning traceable | Adopted |
 
 ---
-*Last updated: 2026-06-15 after Phase 4 specification and planning*
+*Last updated: 2026-06-18 after Phase 6 multi-agent planning*

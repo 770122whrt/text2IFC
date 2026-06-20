@@ -25,6 +25,15 @@ Use this page as the stable entry point for project documentation.
 - [Text-to-JSON RAG, Fine-tune, and Agent Decision](architecture/text2json-rag-finetune-decision.md)
   - Metric-backed routing for RAG, fine-tuning, multi-turn Agent, and Phase 4
     fidelity work
+- [Phase 4 High-fidelity IFC Round Trip Summary](architecture/phase-4-summary.md)
+  - Generated IFC correctness gate, all-25 fidelity accounting, and Phase 6
+    readiness boundary
+- [Phase 5 Multi-turn Clarification Agent Summary](architecture/phase-5-summary.md)
+  - Chinese-first clarification Agent, provider boundary, and simple-room IFC
+    artifact
+- [Phase 6 Multi-agent Design](architecture/phase-6-multiagent-design.md)
+  - Prompt registry, Design Brief Agent, BIM JSON Generator, repair mode,
+    Audit Agent, and Observer Loop
 
 ## Project Planning
 

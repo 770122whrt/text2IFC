@@ -369,13 +369,80 @@ IFC, STEP text, low-level IFC helper entities, or compiler bookkeeping.
 
 **Status:** Complete - verified 2026-06-15
 
-## Phase 6: Data Expansion, Fine-tuning, and Deployment
+## Phase 6: Multi-agent Prompt Reliability, Data Expansion, Fine-tuning, and Deployment
 
-**Goal:** Expand approved training data, compare fine-tuning with the baseline,
-select the deployable approach, and package the full text2IFC service.
+**Goal:** Build a traceable multi-agent prompt and audit architecture, expand
+approved training data only after reliability metrics exist, compare prompt-only,
+repair-mode, optional RAG, and fine-tune approaches, then package the supported
+text2IFC service.
 
-**Requirements:** MODEL-01, MODEL-02, DEPLOY-01
+**Requirements:** PROMPT-01, AGENT-04, AGENT-05, REPAIR-01, OBS-01, MODEL-01,
+MODEL-02, DEPLOY-01
 
 **Depends on:** Phase 3, Phase 4, Phase 5
 
-**Status:** Ready to specify - Phase 3, Phase 4, and Phase 5 prerequisites complete
+**Canonical refs:**
+
+- `.planning/phases/06-multiagent-prompt-reliability-data-expansion-and-deployment/06-SPEC.md`
+- `.planning/phases/06-multiagent-prompt-reliability-data-expansion-and-deployment/06-CONTEXT.md`
+- `.planning/phases/06-multiagent-prompt-reliability-data-expansion-and-deployment/06-AI-SPEC.md`
+- `.planning/phases/06-multiagent-prompt-reliability-data-expansion-and-deployment/06-RESEARCH.md`
+- `.planning/phases/06-multiagent-prompt-reliability-data-expansion-and-deployment/06-VALIDATION.md`
+- `docs/architecture/phase-6-multiagent-design.md`
+
+**Explicit boundary:** Phase 6 starts with prompt registry, traceability, and
+multi-agent responsibility separation before data expansion or fine-tuning.
+Design Brief captures user intent; BIM JSON Generator emits BIM JSON 2.0 or
+Draft; repair starts as generator repair mode; Audit Agent reviews semantic
+coverage but cannot override deterministic validation, compile, reopen,
+generated-IFC, split, or secret-scan gates.
+
+**Plans:** 7 plans in 7 waves
+
+**Wave 0**
+
+- [ ] `06-00-PLAN.md` - Prompt registry and multi-agent design contract
+
+**Wave 1** *(blocked on Wave 0 prompt traceability)*
+
+- [ ] `06-01-PLAN.md` - Design Brief Agent contract
+
+**Wave 2** *(blocked on Wave 1 Design Brief contract)*
+
+- [ ] `06-02-PLAN.md` - BIM JSON Generator orchestration and repair mode
+
+**Wave 3** *(blocked on Wave 2 generation and repair traceability)*
+
+- [ ] `06-03-PLAN.md` - Audit Agent and deterministic gate integration
+
+**Wave 4** *(blocked on Wave 3 audit integration)*
+
+- [ ] `06-04-PLAN.md` - Experiment harness and reliability metrics
+
+**Wave 5** *(blocked on Wave 4 experiment harness)*
+
+- [ ] `06-05-PLAN.md` - Data expansion and model decision
+
+**Wave 6** *(blocked on Wave 5 model decision)*
+
+- [ ] `06-06-PLAN.md` - Deployable service and final multi-agent IFC demo
+
+**Cross-cutting constraints:**
+
+- All provider-backed prompt calls must use a versioned prompt template,
+  template hash, structured renderer inputs, and durable trace artifacts.
+- BIM JSON Schema remains the only BIM JSON structural truth.
+- The model layer outputs Design Brief, BIM JSON 2.0, Draft updates, or audit
+  reports only; raw IFC, STEP text, STEP IDs, and low-level helper entities
+  remain forbidden.
+- Repair may not invent missing user facts. It must return Draft questions when
+  feedback cannot be resolved from known facts.
+- Audit Agent cannot pass failed deterministic gates.
+- Dataset expansion must preserve license status, source provenance, sidecar
+  losses, and Phase 3 scene-family splits.
+- Fine-tuning is selected only if measured prompt-only and repair-mode
+  baselines justify it.
+- All conversation-specific work happens in the C-drive `multiagent-design`
+  worktree; the E-drive working tree is not edited.
+
+**Status:** Specified and planned - ready for Wave 0 execution
