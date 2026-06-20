@@ -31,6 +31,10 @@ entities, STEP IDs, compiler bookkeeping, or hidden defaults.
   hard-coded candidate.
 - Phase 6 must introduce a unified prompt registry and traceable prompt input
   renderer before claiming prompt iteration capability.
+- Every Phase 6 generation run must produce a generated human-readable
+  `report.md` that gathers the critical intermediate inputs and outputs into
+  one review document. The many JSON trace files remain for machines and
+  reproducibility; the Markdown report is the human audit entry point.
 - A Design Brief or expert-understanding step is allowed and recommended for
   weak natural-language inputs.
 - Repair is conditional, not mandatory for every run. Successful generation may
@@ -77,6 +81,11 @@ entities, STEP IDs, compiler bookkeeping, or hidden defaults.
 - An Observer or iteration loop that records prompt/provider versions, traces,
   failure classes, repair attempts, and metric changes before prompt updates
   are accepted.
+- A run report generator that composes the trace bundle into one Markdown
+  report containing the original user input, Design Brief, rendered prompt,
+  model raw output, parsed BIM JSON or Draft, validation feedback, geometry
+  feedback, failure or repair route, audit result, metrics, final IFC path when
+  compiled, and artifact paths back to the source files.
 - Dataset expansion only from license-reviewed sources with provenance,
   scene-family split integrity, and sidecar loss accounting.
 - Prompt-only, RAG-assisted, and fine-tune comparison only after evaluation
@@ -227,7 +236,22 @@ Why it exists:
 - Acceptance: Tests prove that an audit report flags semantic mismatch and
   preserves deterministic failure status.
 
-### 5. Data and model decision
+### 5. Run report contract
+
+- Current: Some demos write `report.md`, but reports are not yet a required
+  generated artifact that exposes all critical intermediate inputs and outputs
+  from the run.
+- Target: Every Phase 6 run writes a generated `report.md` that is complete
+  enough for a human to review the full text -> brief -> prompt -> raw response
+  -> BIM JSON or Draft -> validation -> geometry -> audit -> IFC chain without
+  opening each JSON sidecar manually.
+- Acceptance: Tests fail a run report that omits the original input, Design
+  Brief, rendered prompt reference, raw model output reference, parsed BIM JSON
+  or Draft, validation feedback, geometry feedback, failure route, repair
+  attempts when present, audit result, metrics, final IFC path when compiled,
+  or secret-redaction status.
+
+### 6. Data and model decision
 
 - Current: Phase 3 has 100 deterministic text/BIM JSON pairs and Phase 4 has
   all-25 fidelity accounting.
@@ -237,14 +261,15 @@ Why it exists:
 - Acceptance: A decision report states whether fine-tuning is justified and
   cites metrics, data counts, split integrity, and known unsupported facts.
 
-### 6. Deployment package
+### 7. Deployment package
 
 - Current: Demo scripts exist, but no deployable service boundary is selected.
 - Target: A repeatable CLI or service runs the supported-scope path:
   request -> Design Brief -> questions or BIM JSON -> validation -> IFC ->
   audit report.
 - Acceptance: The final Phase 6 demo writes a real IFC file plus trace,
-  metrics, and audit artifacts under a phase-specific output directory.
+  metrics, audit artifacts, and a generated human-readable `report.md` under a
+  phase-specific output directory.
 
 ## Acceptance Checklist
 
@@ -259,6 +284,14 @@ Why it exists:
       measured error deltas.
 - [ ] Audit Agent is separate from generation and cannot override deterministic
       gates.
+- [ ] Every Phase 6 run writes a generated `report.md` containing the original
+      input, Design Brief, rendered prompt reference, raw model output
+      reference, parsed BIM JSON or Draft, validation feedback, geometry
+      feedback, failure/repair route, audit result, metrics, final IFC path
+      when compiled, and artifact paths to the source trace files.
+- [ ] Run reports are generated from actual trace artifacts and pass secret
+      redaction checks; hand-written or hard-coded reports do not count as
+      Phase 6 acceptance evidence.
 - [ ] Dataset expansion preserves licensing, provenance, sidecars, and
       scene-family split separation.
 - [ ] Model decision compares prompt-only, conditional repair, optional RAG,
@@ -274,7 +307,7 @@ Why it exists:
 | Goal Clarity | 0.84 | 0.75 | Met | Multi-agent reliability and deployment are now explicit. |
 | Boundary Clarity | 0.83 | 0.70 | Met | Raw IFC, standalone repair agent, and deterministic-gate override are out. |
 | Constraint Clarity | 0.82 | 0.65 | Met | C-worktree, prompt registry, traceability, and no-secret rules are locked. |
-| Acceptance Criteria | 0.80 | 0.70 | Met | Prompt traces, brief validation, failure routes, optional repair deltas, audit, metrics, and IFC demo are measurable. |
+| Acceptance Criteria | 0.84 | 0.70 | Met | Prompt traces, brief validation, failure routes, optional repair deltas, generated run reports, audit, metrics, and IFC demo are measurable. |
 
 Ambiguity: 0.18. Gate passed for planning, with model-provider and deployment
 interface details to be resolved by Phase 6 execution evidence.

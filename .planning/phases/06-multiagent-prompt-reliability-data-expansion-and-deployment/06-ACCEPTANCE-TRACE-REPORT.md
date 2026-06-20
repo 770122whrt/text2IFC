@@ -240,5 +240,11 @@ input.txt
 | `06-00-PLAN.md` 到 `06-06-PLAN.md` | 具体执行计划 |
 | `docs/architecture/phase-6-acceptance-and-trace-report.md` | 架构文档区的同主题长报告 |
 
+## 8. Report Boundary
+
+本文件是 Phase 6 的规划和验收说明，不是运行时产物。Phase 6 要实现的是每次
+text2IFC 运行都自动生成自己的 `report.md`，把本次运行的中间输入输出汇总到一个
+Markdown 审核入口里。
+
 ---
 *本文件是 Phase 6 文件夹内的单入口验收报告，方便直接审阅。*

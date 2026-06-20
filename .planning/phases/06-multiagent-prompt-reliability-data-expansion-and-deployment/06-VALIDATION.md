@@ -15,7 +15,10 @@ Phase 6 is valid only if the system can prove:
   deterministic failures;
 - whether expanded data and model evaluation preserve licensing, provenance,
   and split integrity;
-- whether the deployable path produces a real, reopenable IFC2X3 file.
+- whether the deployable path produces a real, reopenable IFC2X3 file;
+- whether each run writes a generated Markdown `report.md` that exposes the
+  critical intermediate inputs and outputs for human review without requiring
+  the reviewer to manually open every JSON sidecar.
 
 ## Required Gates
 
@@ -29,6 +32,7 @@ Phase 6 is valid only if the system can prove:
 | Repair gate | before/after issues and no invented facts | yes only for repair claims |
 | IFC gate | compile, reopen, generated IFC quality | yes for Formal demos |
 | Audit gate | audit report with deterministic status preserved | yes |
+| Run report gate | `report.md` contains original input, Design Brief, prompt, raw output, parsed BIM JSON or Draft, validation, geometry, failure route, audit, metrics, and final artifacts | yes |
 | Data gate | license, provenance, split, sidecars | yes for model work |
 | Secret gate | artifact scan | yes |
 
@@ -54,6 +58,11 @@ The demo must also write a trace bundle with:
 - `metrics.json`
 - `report.md`
 
+`report.md` is not a loose summary. It is the human-review entry point generated
+from the same trace artifacts above. It must include or link each critical
+intermediate input/output, name the final IFC artifact when compilation
+succeeds, and state the secret-redaction status.
+
 ## Review Checks Before Phase Completion
 
 - Agent tests pass.
@@ -65,6 +74,8 @@ The demo must also write a trace bundle with:
 - Full regression passes.
 - `python -m compileall src scripts -q` passes.
 - Demo command writes and reopens `output.ifc`.
+- Demo command writes `report.md` with all required intermediate
+  input/output sections.
 - Artifact secret scan passes.
 - Data split and provenance checks pass if data/model artifacts are generated.
 - Requirement coverage checks include all Phase 6 requirements.

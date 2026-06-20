@@ -397,7 +397,8 @@ Design Brief captures user intent; BIM JSON Generator emits BIM JSON 2.0 or
 Draft; failure routing decides whether no repair is needed, a conditional
 repair attempt is safe, Draft clarification is required, or the run must block;
 Audit Agent reviews semantic coverage but cannot override deterministic
-validation, compile, reopen, generated-IFC, split, or secret-scan gates.
+validation, compile, reopen, generated-IFC, run-report, split, or secret-scan
+gates.
 
 **Plans:** 7 plans in 7 waves
 
@@ -444,6 +445,11 @@ validation, compile, reopen, generated-IFC, split, or secret-scan gates.
   facts and must return Draft questions when feedback cannot be resolved from
   known facts.
 - Audit Agent cannot pass failed deterministic gates.
+- Every Phase 6 run must write a generated `report.md` as the human-review
+  entry point. The report must expose the original input, Design Brief,
+  rendered prompt, raw output, parsed BIM JSON or Draft, validation feedback,
+  geometry feedback, failure/repair route, audit result, metrics, final IFC
+  path when compiled, and links or paths to the source trace sidecars.
 - Dataset expansion must preserve license status, source provenance, sidecar
   losses, and Phase 3 scene-family splits.
 - Fine-tuning is selected only if measured prompt-only, conditional repair, and

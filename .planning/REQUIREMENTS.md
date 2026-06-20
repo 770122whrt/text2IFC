@@ -96,7 +96,9 @@ requirements.
   containment, and opening/filling relationships under automated checks.
 - **GEN-02**: Text-to-BIM-JSON-to-IFC experiments record quantitative metrics,
   error classes, prompt/provider versions, repair iterations, and durable
-  artifacts so reliability can improve through measured iteration.
+  artifacts, including a generated human-readable `report.md` that exposes
+  critical intermediate inputs and outputs, so reliability can improve through
+  measured iteration.
 - **GEO-03**: Preserve material assignments and layer details.
 - **GEO-04**: Preserve supported topology and connection relationships.
 - **GEO-05**: Preserve supported arbitrary profiles, BReps, tessellation, and
@@ -127,7 +129,10 @@ requirements.
   questions instead of inventing missing facts.
 - **OBS-01**: Prompt and Agent iteration uses an Observer Loop that records
   failure classes, metrics, prompt/provider versions, repair attempts, and
-  experiment evidence before prompt changes are accepted.
+  experiment evidence before prompt changes are accepted. Each run must also
+  produce a generated Markdown report that lets a human review the input,
+  prompt, raw output, parsed BIM JSON or Draft, validation feedback, geometry
+  feedback, audit result, metrics, and final artifacts from one file.
 - **MODEL-01**: Evaluate fine-tuning against prompt-only and structured-output
   baselines.
 - **MODEL-02**: Expand training data only from license-reviewed sources with
