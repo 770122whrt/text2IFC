@@ -38,6 +38,8 @@ explicit user requirements instead of generating fragile IFC text directly.
 - [x] Complete the first multi-turn clarification Agent demo to IFC.
 - [ ] Establish generated-IFC correctness gates for spatial, content,
   attribute, relationship, and IFC-structure quality.
+- [ ] Define and verify an IFCx-inspired additive BIM JSON repair layer before
+  Phase 6 data/model expansion.
 - [ ] Preserve high-fidelity IFC material/type/topology/geometry details.
 - [ ] Expand approved data, compare fine-tuning, and package deployment.
 
@@ -58,6 +60,8 @@ explicit user requirements instead of generating fragile IFC text directly.
   source organization only; model splits must be rebuilt by scene family.
 - External fixtures: 10 CC BY 4.0 buildingSMART IFC4/IFC4X3 samples for
   cross-schema and relationship testing.
+- IFCx research: `buildingSMART/IFC5-development` alpha examples are used as
+  JSON organization inspiration only; IFC2X3 remains the output boundary.
 - IFC schema: `schemas/ifc/IFC2X3_TC1.exp`.
 - Current prototype: `scripts/ifc_pipeline/roundtrip.py`.
 - Current tests: `tests/test_json_to_ifc.py`.
@@ -91,8 +95,10 @@ explicit user requirements instead of generating fragile IFC text directly.
 | Build Text-to-JSON in Phase 3 | Reach an early end-to-end text2IFC baseline | Complete |
 | Build multi-turn clarification in Phase 5 | Missing natural-language facts should produce questions, not fabrication | Complete |
 | Start Phase 4 with generated-IFC correctness gates | A reopenable IFC can still be spatially wrong; high-fidelity work needs a reliable text-json-ifc gate first | Adopted |
+| Insert jsonfix before Phase 6 | Training/deployment should not start before additive repair semantics are tested | Adopted |
+| Borrow IFCx ideas without replacing BIM JSON | Layered patch composition is useful, but IFC5 alpha is not the project schema truth | Adopted |
 | Defer materials, complex geometry, and topology to Phase 4 | Keep generated correctness separate from full IFC source fidelity | Adopted |
 | Use TDD and GSD phase artifacts | Keep behavior and planning traceable | Adopted |
 
 ---
-*Last updated: 2026-06-15 after Phase 4 specification and planning*
+*Last updated: 2026-06-20 after Phase 5.5 jsonfix specification and planning*

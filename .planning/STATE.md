@@ -7,15 +7,17 @@ See: `.planning/PROJECT.md` (updated 2026-06-11)
 **Core value:** Produce valid, inspectable IFC models from explicit user
 requirements.
 
-**Current focus:** Phase 6 data expansion, fine-tuning, and deployment planning
+**Current focus:** Phase 5.5 jsonfix IFCx-inspired additive BIM JSON planning
+and execution
 
 ## Status
 
-- Phase: 4
-- Stage: Complete
-- State: Phase 4 complete and verified; Phase 6 is ready to specify
-- Plans: Phase 4 complete, 7 of 7 plans complete
-- Branch: `main`
+- Phase: 5.5
+- Stage: Planned
+- State: Phase 5.5 jsonfix is specified and planned; Wave 1 is ready to
+  execute on the `jsonfix` branch
+- Plans: Phase 5.5 planned, 0 of 6 plans complete
+- Branch: `jsonfix`
 - Remote: `https://github.com/770122whrt/text2IFC`
 
 ## Completed Foundation
@@ -209,6 +211,15 @@ requirements.
   17607/18758 represented, representations 4509/6382 represented, materials
   1533/2554 represented, types 154/1012 represented, and connections
   2263/2263 represented.
+- IFCx research notes now explain the `buildingSMART/IFC5-development`
+  `hello-wall.ifcx` structure, additive layers, path composition, `inherits`,
+  namespaced attributes, and the boundary between IFCx alpha and text2IFC BIM
+  JSON.
+- Phase 5.5 is specified and planned as an inserted jsonfix phase before Phase
+  6. It starts with a separate `bim-json-patch/1.0` envelope rather than a full
+  BIM JSON 3.0 migration.
+- Phase 5.5 final planned artifact is
+  `dataset/processed/jsonfix/missing-piece-repair/output.ifc`.
 
 ## Current Decisions
 
@@ -281,6 +292,21 @@ requirements.
 - The simple-room demo reaches `formal_ready`, validates BIM JSON 2.0, asks
   three Chinese clarification questions, compiles IFC, and records transcript,
   state, candidate, diagnostics, metrics, report, and IFC artifacts.
+- jsonfix is inserted before Phase 6 because training/deployment should not
+  start until additive repair semantics are tested.
+- IFCx/IFC5 alpha is a research source for layer, patch, path, inheritance, and
+  namespaced-attribute organization; it is not the text2IFC schema authority or
+  output target.
+- Phase 5.5 starts with a separate `bim-json-patch/1.0` envelope that targets
+  BIM JSON 2.0. It does not immediately replace the Formal BIM JSON shape with
+  top-level `layers[]`.
+- Patch operations are semantic and provenance-bearing. They must not contain
+  raw IFC, STEP text, STEP IDs, `IfcCartesianPoint`, `IfcDirection`,
+  `IfcOwnerHistory`, OpenUSD mesh points, face indices, or generic transform
+  matrices as normal model output.
+- Patch composition must not silently overwrite or delete source facts.
+  Deletion-like intent is review-required tombstone content in Phase 5.5.
+- Composed candidates must pass `validate_v2_document` before IFC compilation.
 
 ## Known Risks
 
@@ -297,12 +323,21 @@ requirements.
   heap; registry generation isolates parsing in a hard-exit worker.
 - The repository `.pytest-tmp` directory can acquire restrictive Windows ACLs;
   verification may need a unique `%TEMP%` basetemp.
+- jsonfix could accidentally become a second BIM JSON model if patch validation
+  is treated as compile readiness. The planned composer must always validate
+  composed output as Formal BIM JSON 2.0.
+- Patch prompts could overfit to IFCx examples and output mesh or low-level IFC
+  helper facts. The planned prompt contract must explicitly forbid this.
+- Source overwrite and deletion semantics are risky for training truth. Phase
+  5.5 requires explicit provenance and review-required tombstones.
 
 ## Next Action
 
-Specify Phase 6: Data Expansion, Fine-tuning, and Deployment. Start from
-`docs/architecture/phase-4-summary.md` and preserve the supported-scope,
-loss-sidecar, and generated-IFC-gate boundaries.
+Execute Phase 5.5 Wave 1:
+`.planning/phases/05.5-jsonfix-ifcx-inspired-additive-bim-json/05.5-01-PLAN.md`.
+Start with RED tests for `bim-json-patch/1.0` schema fixtures, then implement
+the patch validator. Do not stage or commit `dataset/external/` sample
+directories unless the user explicitly requests it.
 
 ## Accumulated Context
 
@@ -387,6 +422,10 @@ loss-sidecar, and generated-IFC-gate boundaries.
   `12226f0`; regression stabilization commit `27941f7`; final documentation
   and artifact verification commit follows. The phase closes with all-25 audit
   accounting balanced and Phase 6 ready under supported-scope constraints.
+- Phase 5.5 was specified and planned on 2026-06-20 after IFCx research. The
+  inserted phase focuses on `bim-json-patch/1.0`, deterministic patch
+  composition, natural-language repair handoff, a missing-piece json2IFC demo,
+  and a BIM JSON 3.0 decision report before Phase 6 resumes.
 
 ---
-*Last activity: 2026-06-16 - completed Phase 4 Wave 6 and final Phase 4 verification*
+*Last activity: 2026-06-20 - specified and planned Phase 5.5 jsonfix*

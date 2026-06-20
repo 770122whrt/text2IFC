@@ -26,6 +26,15 @@ Use this page as the stable entry point for project documentation.
   - Metric-backed routing for RAG, fine-tuning, multi-turn Agent, and Phase 4
     fidelity work
 
+## Research and Exploratory Analysis
+
+- [IFCx Hello Wall structure reading report](research/ifcx-hello-wall-structure-reading.md)
+  - IFCx alpha top-level structure, node/path composition, layer behavior, and
+    Hello Wall reading order
+- [IFCx and BIM JSON comparison for jsonfix](research/ifcx-vs-bim-json-jsonfix-strategy.md)
+  - Comparison between IFCx alpha and BIM JSON 2.0, with an incremental patch
+    direction for IFC2X3 json2IFC work
+
 ## Project Planning
 
 - [Project context](../.planning/PROJECT.md)
@@ -61,6 +70,7 @@ Use this page as the stable entry point for project documentation.
 |---|---|
 | Task-oriented instructions | `docs/how-to/` |
 | Architecture and design explanation | `docs/architecture/` |
+| Research and exploratory analysis | `docs/research/` |
 | Dataset reference | `dataset/` |
 | GSD project memory | `.planning/` |
 | Phase specification and plans | `.planning/phases/NN-phase-name/` |

@@ -110,6 +110,30 @@ requirements.
 - **AGENT-01**: Convert natural language into valid BIM JSON.
 - **AGENT-02**: Ask targeted questions for missing required values.
 - **AGENT-03**: Maintain multi-turn clarification state.
+
+### Additive JSON Repair
+
+- **JSONFIX-01**: Define a separate `bim-json-patch/1.0` envelope for
+  provenance-bearing additive repairs that target BIM JSON 2.0 without
+  replacing the Formal BIM JSON contract.
+- **JSONFIX-02**: Compose validated patch layers with a BIM JSON 2.0 base
+  document deterministically, without mutating the base document or compiling
+  unvalidated candidates.
+- **JSONFIX-03**: Preserve source, user, Agent, validator, and compiler
+  provenance so repaired facts are auditable and no source fact is silently
+  overwritten or deleted.
+- **JSONFIX-04**: Reject raw IFC, STEP text, STEP IDs, low-level IFC helper
+  objects, unsupported operations, destructive deletes, and missing provenance
+  before composition or compilation.
+- **JSONFIX-05**: Demonstrate the missing-piece repair path from text intent
+  to patch JSON, composed BIM JSON, validated IFC2X3 output, reopen check, and
+  generated-IFC quality report.
+- **JSONFIX-06**: Produce an evidence-based BIM JSON 3.0 decision report for
+  patch layers, type reuse, namespace facts, boundary objects, deletion
+  semantics, and future expert/reviewer Agent patch layers.
+
+### Model, Data, and Deployment
+
 - **MODEL-01**: Evaluate fine-tuning against prompt-only and structured-output
   baselines.
 - **MODEL-02**: Expand training data only from license-reviewed sources with
@@ -169,15 +193,21 @@ requirements.
 | AGENT-01 | Phase 5 | Complete |
 | AGENT-02 | Phase 5 | Complete |
 | AGENT-03 | Phase 5 | Complete |
+| JSONFIX-01 | Phase 5.5 | Planned |
+| JSONFIX-02 | Phase 5.5 | Planned |
+| JSONFIX-03 | Phase 5.5 | Planned |
+| JSONFIX-04 | Phase 5.5 | Planned |
+| JSONFIX-05 | Phase 5.5 | Planned |
+| JSONFIX-06 | Phase 5.5 | Planned |
 | MODEL-01 | Phase 6 | Deferred |
 | MODEL-02 | Phase 6 | Deferred |
 | DEPLOY-01 | Phase 6 | Deferred |
 
 **Coverage:**
-- tracked requirements: 42 total
-- Mapped to phases: 42
+- tracked requirements: 48 total
+- Mapped to phases: 48
 - Unmapped: 0
 
 ---
 *Requirements defined: 2026-06-11*
-*Last updated: 2026-06-15 after Phase 4 specification and planning*
+*Last updated: 2026-06-20 after Phase 5.5 jsonfix specification and planning*

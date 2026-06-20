@@ -369,6 +369,80 @@ IFC, STEP text, low-level IFC helper entities, or compiler bookkeeping.
 
 **Status:** Complete - verified 2026-06-15
 
+## Phase 5.5: jsonfix IFCx-Inspired Additive BIM JSON (INSERTED)
+
+**Goal:** Improve the JSON repair boundary before Phase 6 by defining an
+IFCx-inspired additive patch envelope, composing patches into valid BIM JSON
+2.0, and proving a missing-piece repair path that compiles to IFC2X3.
+
+**Requirements:** JSONFIX-01, JSONFIX-02, JSONFIX-03, JSONFIX-04,
+JSONFIX-05, JSONFIX-06
+
+**Depends on:** Phase 2.5, Phase 4, Phase 5
+
+**Canonical refs:**
+
+- `.planning/phases/05.5-jsonfix-ifcx-inspired-additive-bim-json/05.5-SPEC.md`
+- `.planning/phases/05.5-jsonfix-ifcx-inspired-additive-bim-json/05.5-CONTEXT.md`
+- `.planning/phases/05.5-jsonfix-ifcx-inspired-additive-bim-json/05.5-RESEARCH.md`
+- `.planning/phases/05.5-jsonfix-ifcx-inspired-additive-bim-json/05.5-VALIDATION.md`
+- `.planning/phases/05.5-jsonfix-ifcx-inspired-additive-bim-json/05.5-GOAL-PROMPT.md`
+- `docs/research/ifcx-hello-wall-structure-reading.md`
+- `docs/research/ifcx-vs-bim-json-jsonfix-strategy.md`
+
+**Explicit boundary:** Phase 5.5 does not replace BIM JSON 2.0, does not
+target IFC5 output, does not depend on remote IFCx schema resolution, and does
+not ask the model to output raw IFC, STEP, OpenUSD mesh, transform matrices, or
+low-level IFC helper objects. IFCx is used as research inspiration for layer,
+patch, path, inheritance, and namespaced-attribute organization. IFC2X3
+validation and compilation remain the output truth.
+
+**Final acceptance artifact:**
+`dataset/processed/jsonfix/missing-piece-repair/output.ifc`
+
+**Plans:** 6 plans in 6 waves
+
+**Wave 1**
+
+- [ ] `05.5-01-PLAN.md` - Patch envelope schema and validator
+
+**Wave 2** *(blocked on Wave 1 completion)*
+
+- [ ] `05.5-02-PLAN.md` - Patch composer and provenance diagnostics
+
+**Wave 3** *(blocked on Wave 2 completion)*
+
+- [ ] `05.5-03-PLAN.md` - Natural-language repair handoff and prompt contract
+
+**Wave 4** *(blocked on Wave 3 completion)*
+
+- [ ] `05.5-04-PLAN.md` - Missing-piece json2IFC demo and quality gate
+
+**Wave 5** *(blocked on Wave 4 completion)*
+
+- [ ] `05.5-05-PLAN.md` - BIM JSON 3.0 decision report
+
+**Wave 6** *(blocked on Wave 5 completion)*
+
+- [ ] `05.5-06-PLAN.md` - Final verification, summary, and roadmap update
+
+**Cross-cutting constraints:**
+
+- BIM JSON 2.0 remains the Formal document structural truth.
+- `bim-json-patch/1.0` is a transformation envelope, not a compilable model.
+- Patches must preserve provenance and must not silently overwrite or delete
+  source facts.
+- Destructive deletion is review-required tombstone intent only in this phase.
+- All composed candidates must pass `validate_v2_document` before IFC compile.
+- Unsupported geometry and unsupported classes remain explicit losses or Draft
+  facts, not fabricated proxy geometry.
+- Prompt/provider work must use the versioned semantic patch contract and
+  deterministic fake/file tests before any live provider experiment.
+- Every implementation behavior with defined inputs and outputs follows a
+  recorded RED-GREEN TDD cycle.
+
+**Status:** Planned - ready to execute on `jsonfix`
+
 ## Phase 6: Data Expansion, Fine-tuning, and Deployment
 
 **Goal:** Expand approved training data, compare fine-tuning with the baseline,
@@ -376,6 +450,7 @@ select the deployable approach, and package the full text2IFC service.
 
 **Requirements:** MODEL-01, MODEL-02, DEPLOY-01
 
-**Depends on:** Phase 3, Phase 4, Phase 5
+**Depends on:** Phase 3, Phase 4, Phase 5, Phase 5.5
 
-**Status:** Ready to specify - Phase 3, Phase 4, and Phase 5 prerequisites complete
+**Status:** Deferred until Phase 5.5 jsonfix validates or rejects the additive
+repair boundary for downstream data/model work
