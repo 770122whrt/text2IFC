@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import importlib
 import json
+import subprocess
+import sys
 from pathlib import Path
 
 import pytest
@@ -11,6 +13,7 @@ from text2ifc_jsonfix.composer import compose_patches
 
 ROOT = Path(__file__).resolve().parents[2]
 BASE_FIXTURE = ROOT / "tests" / "contract_v2" / "fixtures" / "complete.json"
+COMPOSE_CLI = ROOT / "scripts" / "jsonfix" / "compose_patch.py"
 
 
 def _api():
@@ -200,4 +203,57 @@ def test_provenance_report_is_deterministic_and_counted(
             fact["path"],
             fact.get("layer_id") or "",
         ),
+    )
+
+
+def test_compose_cli_writes_candidate_diagnostics_and_provenance(
+    base_document: dict,
+    tmp_path: Path,
+) -> None:
+    base_path = tmp_path / "base.json"
+    patch_path = tmp_path / "patch.json"
+    output_path = tmp_path / "candidate.json"
+    diagnostics_path = tmp_path / "diagnostics.json"
+    provenance_path = tmp_path / "provenance.json"
+    base_path.write_text(
+        json.dumps(base_document, ensure_ascii=False),
+        encoding="utf-8",
+    )
+    patch_path.write_text(
+        json.dumps(_patch(), ensure_ascii=False),
+        encoding="utf-8",
+    )
+
+    completed = subprocess.run(
+        [
+            sys.executable,
+            str(COMPOSE_CLI),
+            str(base_path),
+            str(patch_path),
+            "--output",
+            str(output_path),
+            "--diagnostics",
+            str(diagnostics_path),
+            "--provenance",
+            str(provenance_path),
+        ],
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+        check=False,
+    )
+
+    assert completed.returncode == 0, completed.stdout + completed.stderr
+    assert json.loads(output_path.read_text(encoding="utf-8"))["schema_version"] == (
+        "bim-json/2.0"
+    )
+    assert json.loads(
+        diagnostics_path.read_text(encoding="utf-8")
+    )["formal_valid"]
+    assert (
+        json.loads(provenance_path.read_text(encoding="utf-8"))[
+            "schema_version"
+        ]
+        == "text2ifc/jsonfix-provenance-v1"
     )
