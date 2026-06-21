@@ -8,8 +8,8 @@ progress:
   total_phases: 8
   completed_phases: 6
   total_plans: 40
-  completed_plans: 36
-  percent: 90
+  completed_plans: 37
+  percent: 93
 ---
 
 # Project State
@@ -22,15 +22,15 @@ See: `.planning/PROJECT.md` (updated 2026-06-11)
 requirements.
 
 **Current focus:** Phase 05.5 jsonfix IFCx-inspired additive BIM JSON,
-Wave 3 natural-language repair handoff
+Wave 4 missing-piece json2IFC demo
 
 ## Status
 
 - Phase: 5.5
 - Stage: Executing
-- State: Phase 5.5 Waves 1-2 complete; prompt/provider repair handoff is next
+- State: Phase 5.5 Waves 1-3 complete; strict IFC2X3 demo gate is next
 
-- Plans: Phase 5.5 executing, 2 of 6 plans complete
+- Plans: Phase 5.5 executing, 3 of 6 plans complete
 - Branch: `jsonfix`
 - Remote: `https://github.com/770122whrt/text2IFC`
 
@@ -313,6 +313,13 @@ Wave 3 natural-language repair handoff
 - Wave 2 verification passed 29 jsonfix tests and 101 BIM JSON 2.0
   contract/compiler regression tests.
 
+- Phase 5.5 Wave 3 added a Chinese-first versioned semantic patch prompt,
+  checked-in few-shot examples, a deterministic missing-wall repair case, and
+  fake/file provider handoff.
+
+- Wave 3 verification passed 44 jsonfix tests, 41 Agent tests, and 101 BIM JSON
+  2.0 contract/compiler regression tests without live provider access.
+
 ## Current Decisions
 
 - Phase 1 defines one BIM JSON 1.0 contract and validator.
@@ -463,12 +470,11 @@ Wave 3 natural-language repair handoff
 
 ## Next Action
 
-Execute Phase 5.5 Wave 3:
-`.planning/phases/05.5-jsonfix-ifcx-inspired-additive-bim-json/05.5-03-PLAN.md`.
-Start with RED tests for the repair request contract, versioned prompt,
-few-shot semantic patch output, and deterministic fake/file providers. Do not
-stage or commit `dataset/external/` sample directories unless the user
-explicitly requests it.
+Execute Phase 5.5 Wave 4:
+`.planning/phases/05.5-jsonfix-ifcx-inspired-additive-bim-json/05.5-04-PLAN.md`.
+Start with RED tests for the strict IFC2X3 artifact checker and the
+missing-piece compose/compile/reopen/quality artifact set. Treat external
+sample directories as read-only and do not stage or commit them.
 
 ## Accumulated Context
 
@@ -591,5 +597,9 @@ explicitly requests it.
   `984ab0c`, `b292427`, `129c48d`, `8deae48`, and `d6351d1`; all jsonfix tests
   and the BIM JSON 2.0 contract/compiler regression slice passed.
 
+- Phase 5.5 Wave 3 completed on 2026-06-21 with RED/GREEN commits `6491525`,
+  `5c3ad57`, `5641ee2`, `4ed0b6d`, `7b1a4b7`, and `231e681`; jsonfix, Agent,
+  and BIM JSON 2.0 contract/compiler regressions passed.
+
 ---
-*Last activity: 2026-06-21 - completed Phase 5.5 Wave 2 patch composition*
+*Last activity: 2026-06-21 - completed Phase 5.5 Wave 3 repair handoff*

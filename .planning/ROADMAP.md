@@ -412,7 +412,7 @@ validation and compilation remain the output truth.
 
 **Wave 3** *(blocked on Wave 2 completion)*
 
-- [ ] `05.5-03-PLAN.md` - Natural-language repair handoff and prompt contract
+- [x] `05.5-03-PLAN.md` - Natural-language repair handoff and prompt contract
 
 **Wave 4** *(blocked on Wave 3 completion)*
 
