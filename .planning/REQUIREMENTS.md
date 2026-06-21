@@ -192,14 +192,14 @@ requirements.
 | AGENT-01 | Phase 5 | Complete |
 | AGENT-02 | Phase 5 | Complete |
 | AGENT-03 | Phase 5 | Complete |
-| PROMPT-01 | Phase 6 | Planned |
-| AGENT-04 | Phase 6 | Planned |
-| AGENT-05 | Phase 6 | Planned |
-| REPAIR-01 | Phase 6 | Planned |
-| OBS-01 | Phase 6 | Planned |
-| MODEL-01 | Phase 6 | Deferred |
-| MODEL-02 | Phase 6 | Deferred |
-| DEPLOY-01 | Phase 6 | Deferred |
+| PROMPT-01 | Phase 6 | Complete |
+| AGENT-04 | Phase 6 | Complete |
+| AGENT-05 | Phase 6 | Complete |
+| REPAIR-01 | Phase 6 | Complete |
+| OBS-01 | Phase 6 | Complete |
+| MODEL-01 | Phase 6 | Complete |
+| MODEL-02 | Phase 6 | Complete |
+| DEPLOY-01 | Phase 6 | Complete |
 
 **Coverage:**
 - tracked requirements: 47 total

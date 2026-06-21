@@ -7,15 +7,15 @@ See: `.planning/PROJECT.md` (updated 2026-06-11)
 **Core value:** Produce valid, inspectable IFC models from explicit user
 requirements.
 
-**Current focus:** Phase 6 multi-agent prompt reliability, currently packaging
-the selected prompt-only path as a deployable service and final IFC demo
+**Current focus:** Phase 6 complete; prepare human review of the final
+trace-backed IFC demo and choose the next milestone
 
 ## Status
 
 - Phase: 6
-- Stage: Executing
-- State: Waves 0-5 verified; prompt-only deployment selected, Wave 6 in progress
-- Plans: Phase 6 planned, 7 of 7 plans written, 6 executed
+- Stage: Complete
+- State: All Phase 6 waves verified
+- Plans: Phase 6 planned, 7 of 7 plans written, 7 executed
 - Branch: `multiagent-design` in C-drive worktree
 - Remote: `https://github.com/770122whrt/text2IFC`
 
@@ -334,9 +334,9 @@ the selected prompt-only path as a deployable service and final IFC demo
 
 ## Next Action
 
-Execute Phase 6 Wave 6 in the C-drive `multiagent-design` worktree: package the
-prompt-only multi-agent path as a repeatable service, generate the final
-trace-backed `report.md`, compile/reopen `output.ifc`, and run final gates.
+Review the final Phase 6 `report.md` and `output.ifc`, then decide whether the
+next milestone should prioritize a real-provider Chinese benchmark, reviewed
+Chinese data expansion, or HTTP deployment packaging.
 
 ## Accumulated Context
 
@@ -453,6 +453,12 @@ trace-backed `report.md`, compile/reopen `output.ifc`, and run final gates.
   sidecars. Only 68 train records are training-eligible. Prompt-only plus
   deterministic gates was selected for deployment; RAG and fine-tuning remain
   deferred until real-provider and Chinese-first reviewed evidence exists.
+- Phase 6 Wave 6 completed on 2026-06-21 with RED commit `ecb2481`, GREEN
+  commit `c60bae5`, and Windows worktree stability fix `c3a559e`. The service
+  acceptance path writes a complete trace bundle, generated `report.md`, and
+  real IFC2X3 artifact. Phase 6 focused verification passed 72 tests, full
+  repository regression passed 368 tests, compileall passed, and the final
+  artifact scan found zero secrets.
 
 ---
-*Last activity: 2026-06-21 - completed Phase 6 Wave 5 data and model decision*
+*Last activity: 2026-06-21 - completed and verified Phase 6*

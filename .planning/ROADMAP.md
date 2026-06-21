@@ -429,7 +429,7 @@ gates.
 
 **Wave 6** *(blocked on Wave 5 model decision)*
 
-- [ ] `06-06-PLAN.md` - Deployable service and final multi-agent IFC demo
+- [x] `06-06-PLAN.md` - Deployable service and final multi-agent IFC demo
 
 **Cross-cutting constraints:**
 
@@ -457,4 +457,4 @@ gates.
 - All conversation-specific work happens in the C-drive `multiagent-design`
   worktree; the E-drive working tree is not edited.
 
-**Status:** In progress - Waves 0-5 complete, ready for Wave 6
+**Status:** Complete - verified 2026-06-21
