@@ -9,6 +9,14 @@ import pytest
 
 
 ROOT = Path(__file__).resolve().parents[2]
+GEOMETRY_CASE = (
+    ROOT
+    / "dataset"
+    / "processed"
+    / "agent-demo"
+    / "geometry-gate"
+    / "simple-room-fixed"
+)
 REQUIRED_HEADINGS = (
     "## Original Input",
     "## Design Brief",
@@ -41,6 +49,70 @@ def _record():
         "metrics": {"success": True},
         "failure_class": None,
         "artifact_paths": {"report": "report.md"},
+    }
+
+
+def _brief(*, include_width=True):
+    room = {"length_mm": 6000, "height_mm": 3000}
+    if include_width:
+        room["width_mm"] = 4000
+    return {
+        "schema_version": "text2ifc/design-brief/1.0",
+        "language": "zh-CN",
+        "original_request": "创建一个长6米、宽4米、高3米的单层房间。",
+        "known_facts": {
+            "storey_count": 1,
+            "room": room,
+            "walls": {"count": 4, "enclosure": "closed"},
+        },
+        "missing_facts": []
+        if include_width
+        else [
+            {
+                "id": "room-width",
+                "code": "ROOM_WIDTH_MISSING",
+                "path": "/room/width_mm",
+                "message": "缺少房间宽度。",
+                "source": "user_request",
+            }
+        ],
+        "ambiguities": [],
+        "user_corrections": [],
+        "clarification_questions": [],
+        "provenance": {"source": "user_request"},
+    }
+
+
+def _geometry_candidate():
+    return json.loads((GEOMETRY_CASE / "candidate.json").read_text(encoding="utf-8"))
+
+
+def _geometry_expectation():
+    return json.loads((GEOMETRY_CASE / "expected.json").read_text(encoding="utf-8"))
+
+
+def _draft():
+    return {
+        "draft_version": "bim-json-draft/1.0",
+        "target_schema_version": "bim-json/2.0",
+        "partial_document": {"room": {}},
+        "missing_facts": [
+            {
+                "entity_id": "space-1",
+                "path": "/room/width_mm",
+                "code": "ROOM_WIDTH_MISSING",
+                "message": "缺少房间宽度。",
+            }
+        ],
+        "losses": [],
+        "clarification_targets": [
+            {
+                "entity_id": "space-1",
+                "path": "/room/width_mm",
+                "question": "房间宽度是多少？",
+            }
+        ],
+        "provenance": {"source": "provider"},
     }
 
 
@@ -120,3 +192,87 @@ def test_phase6_experiment_writes_real_trace_report_and_ifc(tmp_path):
     assert metrics["success"] is True
     assert metrics["failure_route"] == "no_repair_needed"
     assert metrics["repair_attempt_count"] == 0
+
+
+def test_experiment_matrix_covers_success_draft_repair_block_and_audit(tmp_path):
+    experiments = _experiments()
+    cases = [
+        {
+            "case_id": "success",
+            "input_text": _brief()["original_request"],
+            "design_brief": _brief(),
+            "candidate": _geometry_candidate(),
+            "expectation": _geometry_expectation(),
+        },
+        {
+            "case_id": "draft",
+            "input_text": "创建一个房间，但我不知道宽度。",
+            "design_brief": _brief(include_width=False),
+            "candidate": _draft(),
+            "expectation": _geometry_expectation(),
+        },
+        {
+            "case_id": "repair",
+            "input_text": _brief()["original_request"],
+            "design_brief": _brief(),
+            "candidate": {"schema_version": "bim-json/2.0"},
+            "expectation": _geometry_expectation(),
+        },
+        {
+            "case_id": "blocked",
+            "input_text": _brief()["original_request"],
+            "design_brief": _brief(),
+            "raw_response": "{",
+            "expectation": _geometry_expectation(),
+        },
+        {
+            "case_id": "audit",
+            "input_text": _brief()["original_request"],
+            "design_brief": _brief(),
+            "candidate": _geometry_candidate(),
+            "expectation": _geometry_expectation(),
+            "audit_mismatches": [
+                {
+                    "code": "USER_INTENT_MISMATCH",
+                    "message": "生成结果与用户意图不一致。",
+                }
+            ],
+        },
+    ]
+
+    summary = experiments.run_phase6_matrix(cases=cases, output_dir=tmp_path)
+
+    assert set(summary["failure_routes"]) == {
+        "no_repair_needed",
+        "draft_required",
+        "repair_attempted",
+        "blocked_failure",
+    }
+    assert set(summary["failure_classes"]) == {
+        "success",
+        "draft",
+        "invalid_bim_json",
+        "invalid_json",
+        "audit_mismatch",
+    }
+    assert (tmp_path / "experiment-matrix.json").exists()
+
+
+def test_failed_rerun_removes_stale_ifc_and_candidate(tmp_path):
+    experiments = _experiments()
+    output = tmp_path / "same-case"
+    common = {
+        "case_id": "same-case",
+        "input_text": _brief()["original_request"],
+        "design_brief": _brief(),
+        "expectation": _geometry_expectation(),
+        "output_dir": output,
+    }
+    experiments.run_phase6_case(candidate=_geometry_candidate(), **common)
+    assert (output / "output.ifc").exists()
+
+    experiments.run_phase6_case(raw_response="{", **common)
+
+    assert not (output / "output.ifc").exists()
+    assert not (output / "candidate.json").exists()
+    assert (output / "parsed-response.json").exists()
