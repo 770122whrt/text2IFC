@@ -65,6 +65,17 @@ def test_run_report_requires_full_intermediate_io_manifest(tmp_path):
         experiments.write_experiment_report(tmp_path, manifest)
 
 
+def test_experiment_secret_status_requires_real_scan(tmp_path):
+    experiments = _experiments()
+    (tmp_path / "raw-response.txt").write_text(
+        "authorization: Bearer should-not-appear",
+        encoding="utf-8",
+    )
+
+    with pytest.raises(experiments.ExperimentError, match="secret scan"):
+        experiments.assert_artifacts_secret_safe(tmp_path)
+
+
 def test_phase6_experiment_writes_real_trace_report_and_ifc(tmp_path):
     output = tmp_path / "phase6-multiagent"
     completed = subprocess.run(
