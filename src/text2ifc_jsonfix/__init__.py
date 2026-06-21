@@ -1,6 +1,7 @@
 """IFCx-inspired additive repair tools for BIM JSON."""
 
 from .composer import CompositionResult, compose_patches
+from .demo import run_missing_piece_demo
 from .handoff import (
     RepairHandoffResult,
     render_repair_prompt,
@@ -22,6 +23,7 @@ __all__ = [
     "parse_step_schema",
     "repair_case",
     "render_repair_prompt",
+    "run_missing_piece_demo",
     "run_repair_handoff",
     "validate_patch_document",
 ]
