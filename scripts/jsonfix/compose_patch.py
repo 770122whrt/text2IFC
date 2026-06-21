@@ -15,6 +15,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "src"))
 
 from text2ifc_jsonfix.composer import compose_patches  # noqa: E402
+from text2ifc_jsonfix.provenance import build_provenance_report  # noqa: E402
 
 
 MAX_INPUT_BYTES = 10 * 1024 * 1024
@@ -64,6 +65,7 @@ def _parser() -> argparse.ArgumentParser:
     parser.add_argument("patches", type=Path, nargs="+")
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--diagnostics", type=Path)
+    parser.add_argument("--provenance", type=Path)
     return parser
 
 
@@ -76,6 +78,11 @@ def main(argv: list[str] | None = None) -> int:
         diagnostics = result.to_dict()
         if args.diagnostics:
             _write_json_atomic(args.diagnostics, diagnostics)
+        if args.provenance and base.get("provenance", {}).get("document_id"):
+            _write_json_atomic(
+                args.provenance,
+                build_provenance_report(base, result),
+            )
         if result.valid:
             _write_json_atomic(args.output, result.document)
         print(
