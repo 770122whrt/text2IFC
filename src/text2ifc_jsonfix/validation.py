@@ -26,18 +26,6 @@ PATCH_SCHEMA_PATH = (
     / "schema.json"
 )
 
-SUPPORTED_OPERATIONS = frozenset(
-    {
-        "add_entity",
-        "set_attribute",
-        "set_property",
-        "add_relationship",
-        "set_material",
-        "mark_missing",
-        "mark_unsupported_loss",
-        "request_tombstone",
-    }
-)
 DESTRUCTIVE_OPERATIONS = frozenset(
     {
         "delete",
@@ -163,6 +151,9 @@ def _content_guardrail_issues(
 
 def _operation_issues(document: dict[str, Any]) -> list[ValidationIssue]:
     issues: list[ValidationIssue] = []
+    supported_operations = frozenset(
+        load_patch_schema()["x-supported-operations"]
+    )
     for layer_index, layer in enumerate(document["layers"]):
         for operation_index, operation in enumerate(layer["operations"]):
             path = ("layers", layer_index, "operations", operation_index, "op")
@@ -175,7 +166,7 @@ def _operation_issues(document: dict[str, Any]) -> list[ValidationIssue]:
                         "Destructive changes require a review tombstone.",
                     )
                 )
-            elif operation_name not in SUPPORTED_OPERATIONS:
+            elif operation_name not in supported_operations:
                 issues.append(
                     _issue(
                         "UNSUPPORTED_PATCH_OPERATION",

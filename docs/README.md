@@ -51,6 +51,7 @@ Use this page as the stable entry point for project documentation.
 
 - [BIM JSON 1.0 contract reference](reference/bim-json-1.0.md)
 - [BIM JSON 2.0 semantic contract reference](reference/bim-json-2.0.md)
+- [BIM JSON Patch 1.0 reference](reference/bim-json-patch-1.0.md)
 - [IFC2X3 generation profile](reference/ifc2x3-generation-profile.md)
 - [IFC2X3 knowledge sources and no-fabrication policy](reference/ifc2x3-knowledge-sources.md)
 - [Dataset organization](../dataset/data_organization.md)

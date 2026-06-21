@@ -3,6 +3,16 @@
   "$id": "https://text2ifc.local/schemas/bim-json-patch/1.0/schema.json",
   "title": "text2IFC BIM JSON Patch 1.0",
   "description": "An ordered, provenance-bearing transformation envelope targeting formal BIM JSON 2.0.",
+  "x-supported-operations": [
+    "add_entity",
+    "set_attribute",
+    "set_property",
+    "add_relationship",
+    "set_material",
+    "mark_missing",
+    "mark_unsupported_loss",
+    "request_tombstone"
+  ],
   "type": "object",
   "additionalProperties": false,
   "required": [
