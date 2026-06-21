@@ -425,7 +425,7 @@ gates.
 
 **Wave 5** *(blocked on Wave 4 experiment harness)*
 
-- [ ] `06-05-PLAN.md` - Data expansion and model decision
+- [x] `06-05-PLAN.md` - Data expansion and model decision
 
 **Wave 6** *(blocked on Wave 5 model decision)*
 
@@ -457,4 +457,4 @@ gates.
 - All conversation-specific work happens in the C-drive `multiagent-design`
   worktree; the E-drive working tree is not edited.
 
-**Status:** In progress - Waves 0-4 complete, ready for Wave 5
+**Status:** In progress - Waves 0-5 complete, ready for Wave 6

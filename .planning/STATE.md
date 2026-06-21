@@ -7,15 +7,15 @@ See: `.planning/PROJECT.md` (updated 2026-06-11)
 **Core value:** Produce valid, inspectable IFC models from explicit user
 requirements.
 
-**Current focus:** Phase 6 multi-agent prompt reliability, currently executing
-split-safe data expansion and the metric-backed model decision
+**Current focus:** Phase 6 multi-agent prompt reliability, currently packaging
+the selected prompt-only path as a deployable service and final IFC demo
 
 ## Status
 
 - Phase: 6
 - Stage: Executing
-- State: Waves 0-4 prompt, Design Brief, Generator, routing, Audit, and experiments verified
-- Plans: Phase 6 planned, 7 of 7 plans written, 5 executed
+- State: Waves 0-5 verified; prompt-only deployment selected, Wave 6 in progress
+- Plans: Phase 6 planned, 7 of 7 plans written, 6 executed
 - Branch: `multiagent-design` in C-drive worktree
 - Remote: `https://github.com/770122whrt/text2IFC`
 
@@ -334,9 +334,9 @@ split-safe data expansion and the metric-backed model decision
 
 ## Next Action
 
-Execute Phase 6 Wave 4 in the C-drive `multiagent-design` worktree: experiment
-harness, reliability metrics, complete trace persistence, and generated
-`report.md` assembled from actual run artifacts.
+Execute Phase 6 Wave 6 in the C-drive `multiagent-design` worktree: package the
+prompt-only multi-agent path as a repeatable service, generate the final
+trace-backed `report.md`, compile/reopen `output.ifc`, and run final gates.
 
 ## Accumulated Context
 
@@ -446,6 +446,13 @@ harness, reliability metrics, complete trace persistence, and generated
   The formal run compiled and reopened IFC2X3; the five-case matrix covers all
   four failure routes and five outcome classes; Agent regression passed 62
   tests; artifact scans found zero secrets across both output sets.
+- Phase 6 Wave 5 completed on 2026-06-21 with RED commits `69935a2` and
+  `0d2c84d`, GREEN commit `cba91bc`, and model-decision commit `b5a533c`.
+  The deterministic manifest links 100 pairs to 25 authorized IFC2X3 sources,
+  19 isolated scene families, formal targets, hashes, licenses, and loss
+  sidecars. Only 68 train records are training-eligible. Prompt-only plus
+  deterministic gates was selected for deployment; RAG and fine-tuning remain
+  deferred until real-provider and Chinese-first reviewed evidence exists.
 
 ---
-*Last activity: 2026-06-21 - completed Phase 6 Wave 4 experiment harness and reliability metrics*
+*Last activity: 2026-06-21 - completed Phase 6 Wave 5 data and model decision*
