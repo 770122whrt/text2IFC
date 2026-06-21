@@ -8,14 +8,14 @@ See: `.planning/PROJECT.md` (updated 2026-06-11)
 requirements.
 
 **Current focus:** Phase 6 multi-agent prompt reliability, currently executing
-the experiment harness, reliability metrics, and generated run reports
+split-safe data expansion and the metric-backed model decision
 
 ## Status
 
 - Phase: 6
 - Stage: Executing
-- State: Waves 0-3 prompt, Design Brief, Generator, routing, and Audit verified
-- Plans: Phase 6 planned, 7 of 7 plans written, 4 executed
+- State: Waves 0-4 prompt, Design Brief, Generator, routing, Audit, and experiments verified
+- Plans: Phase 6 planned, 7 of 7 plans written, 5 executed
 - Branch: `multiagent-design` in C-drive worktree
 - Remote: `https://github.com/770122whrt/text2IFC`
 
@@ -220,6 +220,10 @@ the experiment harness, reliability metrics, and generated run reports
   Agent, generator repair mode, Audit Agent, and Observer Loop.
 - Phase 6 acceptance now has a phase-local single-entry report at
   `.planning/phases/06-multiagent-prompt-reliability-data-expansion-and-deployment/06-ACCEPTANCE-TRACE-REPORT.md`.
+- Phase 6 Wave 4 now writes a formal fake-provider trace bundle with a real
+  compiled/reopened IFC2X3 file and a generated `report.md`, plus a five-case
+  controlled matrix covering success, Draft, repair routing, blocked invalid
+  JSON, and semantic audit mismatch.
 
 ## Current Decisions
 
@@ -436,6 +440,12 @@ harness, reliability metrics, complete trace persistence, and generated
 - Phase 6 Wave 3 completed on 2026-06-21 with RED commit `fcdde3f` and GREEN
   commit `a486c17`. Evidence-linked Audit reports preserve deterministic gate
   failures and passed 55 Agent tests plus the secret scan.
+- Phase 6 Wave 4 completed on 2026-06-21 with initial RED/GREEN commits
+  `0df6d57`, `7228acd`, and `8a581a7`, followed by failure-path and durable
+  matrix RED/GREEN commits `6b7c466`, `37f95a3`, `fd59d60`, and `29f5a67`.
+  The formal run compiled and reopened IFC2X3; the five-case matrix covers all
+  four failure routes and five outcome classes; Agent regression passed 62
+  tests; artifact scans found zero secrets across both output sets.
 
 ---
-*Last activity: 2026-06-21 - completed Phase 6 Wave 3 Audit Agent and deterministic gate integration*
+*Last activity: 2026-06-21 - completed Phase 6 Wave 4 experiment harness and reliability metrics*

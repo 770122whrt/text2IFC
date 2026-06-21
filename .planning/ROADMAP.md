@@ -421,7 +421,7 @@ gates.
 
 **Wave 4** *(blocked on Wave 3 audit integration)*
 
-- [ ] `06-04-PLAN.md` - Experiment harness and reliability metrics
+- [x] `06-04-PLAN.md` - Experiment harness and reliability metrics
 
 **Wave 5** *(blocked on Wave 4 experiment harness)*
 
@@ -457,4 +457,4 @@ gates.
 - All conversation-specific work happens in the C-drive `multiagent-design`
   worktree; the E-drive working tree is not edited.
 
-**Status:** In progress - Waves 0-3 complete, ready for Wave 4
+**Status:** In progress - Waves 0-4 complete, ready for Wave 5
