@@ -408,7 +408,7 @@ gates.
 
 **Wave 1** *(blocked on Wave 0 prompt traceability)*
 
-- [ ] `06-01-PLAN.md` - Design Brief Agent contract
+- [x] `06-01-PLAN.md` - Design Brief Agent contract
 
 **Wave 2** *(blocked on Wave 1 Design Brief contract)*
 
@@ -457,4 +457,4 @@ gates.
 - All conversation-specific work happens in the C-drive `multiagent-design`
   worktree; the E-drive working tree is not edited.
 
-**Status:** In progress - Wave 0 complete, ready for Wave 1
+**Status:** In progress - Waves 0-1 complete, ready for Wave 2

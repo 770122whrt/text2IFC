@@ -8,14 +8,14 @@ See: `.planning/PROJECT.md` (updated 2026-06-11)
 requirements.
 
 **Current focus:** Phase 6 multi-agent prompt reliability, currently executing
-the Design Brief Agent contract
+BIM JSON Generator orchestration and conditional failure routing
 
 ## Status
 
 - Phase: 6
 - Stage: Executing
-- State: Wave 0 prompt registry and multi-agent design contract verified
-- Plans: Phase 6 planned, 7 of 7 plans written, 1 executed
+- State: Waves 0-1 prompt registry and Design Brief contract verified
+- Plans: Phase 6 planned, 7 of 7 plans written, 2 executed
 - Branch: `multiagent-design` in C-drive worktree
 - Remote: `https://github.com/770122whrt/text2IFC`
 
@@ -330,9 +330,9 @@ the Design Brief Agent contract
 
 ## Next Action
 
-Execute Phase 6 Wave 1 in the C-drive `multiagent-design` worktree: Design
-Brief schema, validator, and registered Chinese-first prompt. Preserve missing
-facts as explicit Draft inputs rather than inventing BIM JSON facts.
+Execute Phase 6 Wave 2 in the C-drive `multiagent-design` worktree: registry-
+rendered BIM JSON generation and conditional failure routing. Preserve Formal
+validation and Draft honesty, with zero repair attempts on first-pass success.
 
 ## Accumulated Context
 
@@ -426,6 +426,10 @@ facts as explicit Draft inputs rather than inventing BIM JSON facts.
   `3b69a9b`, GREEN commit `cf64af1`, and architecture commit `38937da`.
   Prompt registry, hash-verified rendering, trace validation, and five-role
   responsibility boundaries passed the full Agent regression and secret scan.
+- Phase 6 Wave 1 completed on 2026-06-21 with RED commits `ecaf6c2` and
+  `a5ed5b8`, GREEN commit `f80c2da`, and prompt commit `0e735a3`. The
+  Design Brief contract, validator, and Chinese-first registered prompt passed
+  46 Agent tests and the artifact secret scan.
 
 ---
-*Last activity: 2026-06-21 - completed Phase 6 Wave 0 prompt registry and multi-agent design contract*
+*Last activity: 2026-06-21 - completed Phase 6 Wave 1 Design Brief Agent contract*
