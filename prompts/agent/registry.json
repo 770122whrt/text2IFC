@@ -67,6 +67,27 @@
         "IfcOwnerHistory",
         "compiler_only_object"
       ]
+    },
+    {
+      "template_id": "audit.v1",
+      "role": "audit",
+      "mode": "semantic_review",
+      "path": "prompts/agent/audit-v1.md",
+      "sha256": "sha256:b1a604e51fa716138250dead168ea65e6667d5af6f2d67eac0624e4190a5ee5c",
+      "required_inputs": [
+        "USER_REQUEST",
+        "DESIGN_BRIEF",
+        "CANDIDATE",
+        "DETERMINISTIC_GATES",
+        "EVIDENCE"
+      ],
+      "forbidden_outputs": [
+        "bim_json_generation",
+        "bim_json_repair",
+        "raw_ifc",
+        "step_text",
+        "deterministic_gate_override"
+      ]
     }
   ]
 }
