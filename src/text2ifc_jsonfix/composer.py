@@ -25,6 +25,7 @@ class ProvenanceEvent:
     layer_provenance: dict[str, Any]
     previous_value: Any = None
     value: Any = None
+    overwrote_existing: bool = False
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
@@ -439,6 +440,9 @@ def _apply_operation(
             layer_provenance={},
             previous_value=copy.deepcopy(previous),
             value=copy.deepcopy(operation["value"]),
+            overwrote_existing=bool(
+                issue and issue.code == "SOURCE_FACT_OVERWRITTEN"
+            ),
         )
 
     assert event is not None

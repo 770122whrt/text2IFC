@@ -82,6 +82,7 @@ def _patch_fact(event: ProvenanceEvent) -> dict[str, Any]:
         "operation": event.operation,
         "previous_value": copy.deepcopy(event.previous_value),
         "value": copy.deepcopy(event.value),
+        "overwrote_existing": event.overwrote_existing,
     }
 
 
