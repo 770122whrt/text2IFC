@@ -43,6 +43,30 @@
         "IfcOwnerHistory",
         "compiler_only_object"
       ]
+    },
+    {
+      "template_id": "bim-json-generator.v1",
+      "role": "bim_json_generator",
+      "mode": "generate_or_repair",
+      "path": "prompts/agent/bim-json-generator-v1.md",
+      "sha256": "sha256:c99b445f1b536d74130446256a944f2bdb128e7762d779be2c9f4d196011dec0",
+      "required_inputs": [
+        "DESIGN_BRIEF",
+        "SCHEMA_SUMMARY",
+        "CAPABILITY_PROFILE",
+        "FEW_SHOTS",
+        "VALIDATION_FEEDBACK",
+        "GEOMETRY_FEEDBACK"
+      ],
+      "forbidden_outputs": [
+        "raw_ifc",
+        "step_text",
+        "step_id",
+        "IfcCartesianPoint",
+        "IfcDirection",
+        "IfcOwnerHistory",
+        "compiler_only_object"
+      ]
     }
   ]
 }
