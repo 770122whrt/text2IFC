@@ -1,182 +1,160 @@
 # Phase 6 Multi-agent Design
 
-**Date:** 2026-06-18
-**Branch:** `multiagent-design`
-**Worktree:** `C:\Users\rt do believe\.codex\worktrees\a542\bimnet`
+## Purpose
 
-## Why This Exists
+Phase 6 keeps one product boundary:
 
-Phase 5 proved that text2IFC can ask Chinese clarification questions and write
-a real IFC file after BIM JSON validation. Phase 4 proved that a generated IFC
-can open successfully and still be spatially wrong unless a geometry gate checks
-the compiled file.
+```text
+Chinese natural language
+  -> Design Brief
+  -> Formal BIM JSON 2.0 or Draft
+  -> deterministic validation and IFC2X3 compilation
+  -> deterministic quality gates
+  -> semantic audit and run report
+```
 
-The next problem is prompt and agent reliability. We need to know exactly what
-prompt, input facts, feedback, failure route, optional repair attempt, and
-audit result created each BIM JSON and IFC artifact.
-
-## Current Reality
-
-The current repository has useful pieces, but they are not yet one unified
-multi-agent architecture.
-
-- `prompts/agent/mimo-bim-json-v3.md` is the best current geometry-aware prompt.
-- `src/text2ifc_agent/providers.py` can call fake/file providers and optional
-  Anthropic-compatible Mimo.
-- `src/text2ifc_agent/session.py` handles Phase 5 clarification state.
-- `scripts/agent/run_geometry_gate_demo.py` writes the `two-room-suite`
-  geometry-gate artifact, but the BIM JSON candidate is hard-coded. That case
-  proves the quality gate, not live prompt orchestration.
+The model layer does not generate IFC or STEP text. BIM JSON Schema remains
+the only structural truth for BIM JSON. Deterministic checks decide whether a
+Formal candidate can be compiled and accepted.
 
 ## Design Brief Agent
 
-What it does:
+### What it does
 
-- Reads the user's original Chinese request.
-- Extracts explicit building facts: storeys, rooms, dimensions, placements,
-  openings, relationships, and user constraints.
-- Records missing facts and ambiguities.
-- Produces a Design Brief JSON object.
+The Design Brief Agent translates the original Chinese request into explicit
+known facts, missing facts, ambiguities, corrections, clarification targets,
+and provenance. It produces a Design Brief record, not BIM JSON.
 
-What it does not do:
+### Why it exists
 
-- It does not output BIM JSON entities.
-- It does not output IFC or STEP.
-- It does not invent missing dimensions or spatial relationships.
+User requests often mix intent, partial measurements, and spatial language.
+Separating understanding from schema construction makes missing information
+visible and gives later generation and audit stages the same intent record.
 
-Why it exists:
+### What it must not do
 
-- Weak natural language is often incomplete. A Design Brief separates "what the
-  user seems to want" from "how to build valid BIM JSON." This makes the BIM
-  JSON Generator easier to control and gives the Audit Agent something to
-  compare against.
+- It must not emit BIM JSON entities or relationships.
+- It must not emit IFC, STEP text, or compiler objects.
+- It must not fill missing dimensions, placements, or relationships.
 
 ## BIM JSON Generator Agent
 
-What it does:
+### What it does
 
-- Reads the Design Brief, BIM JSON schema summary, capability profile,
-  few-shot examples, and validation feedback.
-- Outputs formal BIM JSON 2.0 when facts are complete.
-- Outputs a Draft update when facts are missing.
+The Generator consumes the Design Brief, BIM JSON schema and capability
+context, named few-shot assets, and any deterministic feedback. It produces
+either Formal BIM JSON 2.0 or a Draft update with clarification questions.
 
-What it does not do:
+### Why it exists
 
-- It does not output raw IFC.
-- It does not output STEP text.
-- It does not output `IfcCartesianPoint`, `IfcDirection`, `IfcOwnerHistory`,
-  STEP IDs, or compiler-only objects.
+BIM JSON is the validated semantic boundary between language understanding and
+IFC compilation. A focused generator is easier to measure and repair than a
+single prompt responsible for understanding, low-level IFC, and self-review.
 
-Why it exists:
+### What it must not do
 
-- BIM JSON is the project contract. Keeping the model at this semantic level
-  lets validators and the deterministic compiler catch errors before IFC is
-  written.
+- It must not output raw IFC, STEP text, STEP IDs, `IfcCartesianPoint`,
+  `IfcDirection`, `IfcOwnerHistory`, or compiler-only objects.
+- It must not compile IFC or bypass BIM JSON validation.
+- It must not turn unknown user facts into defaults.
 
-## Repair Is Conditional
+## Conditional Failure Routing
 
-What it does:
+### What it does
 
-- Runs only after a candidate fails validation or generated IFC quality checks.
-- Records the route as one of: no repair needed, repair attempted, Draft
-  required, or blocked failure.
-- When repair is safe, reuses the BIM JSON Generator with explicit validation
-  and geometry feedback.
-- Returns repaired BIM JSON, Draft questions, or a blocking failure report.
+Every generation run records exactly one route:
 
-Why it is not a separate agent first:
+- `no_repair_needed`: the first Formal candidate passes the required gates.
+- `repair_attempted`: known facts are sufficient and structured feedback can
+  be used for a bounded generator retry.
+- `draft_required`: user facts are missing or ambiguous, so the system asks
+  for clarification.
+- `blocked_failure`: the failure is unsafe, inconsistent, or not recoverable
+  automatically.
 
-- Successful first-pass generation should not require repair.
-- When repair is attempted, it has the same output contract as generation. If
-  we split it too early, we create two prompt systems before we have enough
-  failure data. We can split it later if measured experiments show a
-  specialized Repair Agent is better.
+Repair is conditional. A successful first pass records zero repair attempts.
+Repair begins as a mode of the BIM JSON Generator because both generation and
+repair have the same Formal-or-Draft output contract.
+
+### Why it exists
+
+Failure routing prevents repeated model calls from being mistaken for
+improvement. It exposes whether a failure came from missing user information,
+repairable model output, or a blocking system/provider problem.
+
+### What it must not do
+
+- It must not repair missing user facts by invention.
+- It must not retry indefinitely.
+- It must not hide before/after diagnostics or issue-count changes.
 
 ## Audit Agent
 
-What it does:
+### What it does
 
-- Reviews the original request, Design Brief, BIM JSON, validator results,
-  generated IFC quality metrics, and artifact paths.
-- Reports whether the output matches the user's intent.
-- Flags mismatch, unsupported facts, suspicious assumptions, and human-review
-  needs.
+The Audit Agent compares the original request, Design Brief, BIM JSON,
+validator feedback, generated IFC metrics, and artifact references. It reports
+intent coverage, mismatches, unsupported facts, and human-review notes.
 
-What it does not do:
+### Why it exists
 
-- It does not generate BIM JSON.
-- It does not repair BIM JSON.
-- It does not pass a failed deterministic gate.
+Schema and geometry gates can prove structural properties but cannot fully
+decide whether the result reflects the user's intended meaning. A separate
+review role reduces generator self-review bias.
 
-Why it exists:
+### What it must not do
 
-- Deterministic gates measure hard facts such as schema validity, relationships,
-  compiled geometry, and reopen success. The Audit Agent reviews semantic
-  intent coverage, which is closer to how a human expert would inspect the
-  result.
+- Audit cannot override deterministic gates.
+- It must not modify BIM JSON, repair candidates, or compile IFC.
+- It must not recommend acceptance when required evidence is absent.
 
 ## Observer Loop
 
-What it does:
+### What it does
 
-- Records prompt template ID, template hash, rendered inputs, raw output,
-  parsed output, validation feedback, geometry feedback, failure route,
-  optional repair attempts, metrics, audit result, and final artifacts.
-- Classifies failures before prompt changes are accepted.
-- Requires a test or experiment case before production prompt updates.
+The Observer Loop records prompt identity, renderer inputs, rendered prompt,
+raw and parsed outputs, validation and geometry feedback, failure route,
+repair attempts, audit result, metrics, and artifact paths. It generates the
+human-facing `report.md` from those trace artifacts.
 
-Why it exists:
+### Why it exists
 
-- Prompt iteration needs memory. Without a trace bundle and metrics, prompt
-  updates become anecdotes. The Observer Loop turns prompt tuning into measured
-  engineering work.
+Prompt changes are experiments. They are accepted only when a stable case,
+failure classification, and measured result show an improvement without
+weakening safety or data-split guarantees.
 
-## Prompt Registry Requirement
+### What it must not do
 
-Every provider-backed run should record:
+- It must not describe a hard-coded candidate as live provider output.
+- It must not write provider tokens, headers, or private URLs to artifacts.
+- It must not accept a hand-written report as run evidence.
 
-- `template_id`
-- `template_hash`
-- role and mode
-- renderer input JSON
-- rendered prompt
-- raw response
-- parsed output
-- validation feedback
-- failure route
-- repair attempts when attempted
-- metrics
-- artifact paths
+## Prompt And Trace Contract
 
-This is the first Phase 6 wave because all later model comparison, conditional
-repair, RAG, and fine-tuning decisions depend on it.
+Every provider-backed call uses `prompts/agent/registry.json`. The registry
+defines the template ID, role, mode, path, content hash, required inputs, and
+forbidden output classes. The renderer validates the hash before use.
 
-## Hard Boundary
+A reproducible provider trace records at least:
 
-Audit cannot override deterministic gates.
+- template ID and template hash;
+- structured renderer input path and rendered prompt path;
+- raw response and parsed response paths;
+- validation feedback and metrics paths;
+- the complete artifact-path manifest.
 
-The system may say:
+Later Phase 6 waves extend the same trace with Design Brief, geometry,
+failure-routing, repair, audit, and generated report artifacts.
 
-- "The model understood the user intent, but geometry failed."
-- "The IFC opens, but the room is not spatially correct."
-- "The user did not provide enough information, so this remains Draft."
+## Evidence Boundary
 
-The system must not say:
+`dataset/processed/agent-demo/geometry-gate/two-room-suite` is a deterministic
+geometry-gate fixture. Its candidate is defined in
+`scripts/agent/run_geometry_gate_demo.py`; it does not prove a live provider
+call, multi-turn behavior, or unified prompt control.
 
-- "The audit agent thinks it is probably fine, so compile anyway."
-- "The model guessed a wall placement, so treat it as user-provided."
-- "The geometry is unsupported, so substitute a box and call it faithful."
-
-## Phase 6 Execution Order
-
-1. Prompt registry and trace bundle.
-2. Design Brief Agent.
-3. BIM JSON Generator and conditional failure routing.
-4. Audit Agent.
-5. Experiment harness and reliability metrics.
-6. Data expansion and model decision.
-7. Deployable CLI/service and final IFC demo.
-
----
-*This document records the Phase 6 multi-agent design direction before
-implementation.*
+Live, replayed, and deterministic runs must be labeled separately. Provider
+behavior can be claimed only when prompt metadata, raw provider output, and
+artifact provenance all agree. Expired credentials, unclear provider output,
+hard-coded evidence presented as live output, or secret leakage blocks the
+claim and must be reported.
