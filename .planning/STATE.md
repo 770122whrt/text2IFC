@@ -8,14 +8,14 @@ See: `.planning/PROJECT.md` (updated 2026-06-11)
 requirements.
 
 **Current focus:** Phase 6 multi-agent prompt reliability, currently executing
-BIM JSON Generator orchestration and conditional failure routing
+Audit Agent and deterministic gate integration
 
 ## Status
 
 - Phase: 6
 - Stage: Executing
-- State: Waves 0-1 prompt registry and Design Brief contract verified
-- Plans: Phase 6 planned, 7 of 7 plans written, 2 executed
+- State: Waves 0-2 prompt, Design Brief, Generator, and routing verified
+- Plans: Phase 6 planned, 7 of 7 plans written, 3 executed
 - Branch: `multiagent-design` in C-drive worktree
 - Remote: `https://github.com/770122whrt/text2IFC`
 
@@ -330,9 +330,9 @@ BIM JSON Generator orchestration and conditional failure routing
 
 ## Next Action
 
-Execute Phase 6 Wave 2 in the C-drive `multiagent-design` worktree: registry-
-rendered BIM JSON generation and conditional failure routing. Preserve Formal
-validation and Draft honesty, with zero repair attempts on first-pass success.
+Execute Phase 6 Wave 3 in the C-drive `multiagent-design` worktree: Audit Agent
+and deterministic gate integration. Audit may explain semantic mismatch but
+must keep schema, compiler, reopen, and geometry failures blocking.
 
 ## Accumulated Context
 
@@ -430,6 +430,9 @@ validation and Draft honesty, with zero repair attempts on first-pass success.
   `a5ed5b8`, GREEN commit `f80c2da`, and prompt commit `0e735a3`. The
   Design Brief contract, validator, and Chinese-first registered prompt passed
   46 Agent tests and the artifact secret scan.
+- Phase 6 Wave 2 completed on 2026-06-21 with RED commit `c4bdfeb` and GREEN
+  commit `efd108c`. Registry-rendered Formal/Draft generation and four-route
+  conditional failure handling passed 52 Agent tests and the secret scan.
 
 ---
-*Last activity: 2026-06-21 - completed Phase 6 Wave 1 Design Brief Agent contract*
+*Last activity: 2026-06-21 - completed Phase 6 Wave 2 Generator and conditional failure routing*

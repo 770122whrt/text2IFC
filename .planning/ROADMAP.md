@@ -412,7 +412,7 @@ gates.
 
 **Wave 2** *(blocked on Wave 1 Design Brief contract)*
 
-- [ ] `06-02-PLAN.md` - BIM JSON Generator orchestration and conditional
+- [x] `06-02-PLAN.md` - BIM JSON Generator orchestration and conditional
   failure routing
 
 **Wave 3** *(blocked on Wave 2 generation and failure-routing traceability)*
@@ -457,4 +457,4 @@ gates.
 - All conversation-specific work happens in the C-drive `multiagent-design`
   worktree; the E-drive working tree is not edited.
 
-**Status:** In progress - Waves 0-1 complete, ready for Wave 2
+**Status:** In progress - Waves 0-2 complete, ready for Wave 3
