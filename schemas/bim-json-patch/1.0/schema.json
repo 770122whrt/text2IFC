@@ -1,0 +1,132 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://text2ifc.local/schemas/bim-json-patch/1.0/schema.json",
+  "title": "text2IFC BIM JSON Patch 1.0",
+  "description": "An ordered, provenance-bearing transformation envelope targeting formal BIM JSON 2.0.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "patch_version",
+    "target_schema_version",
+    "target_ifc_schema",
+    "target_document_id",
+    "layers"
+  ],
+  "properties": {
+    "patch_version": {
+      "const": "bim-json-patch/1.0"
+    },
+    "target_schema_version": {
+      "const": "bim-json/2.0"
+    },
+    "target_ifc_schema": {
+      "const": "IFC2X3"
+    },
+    "target_document_id": {
+      "$ref": "#/$defs/nonEmptyString"
+    },
+    "layers": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/layer"
+      }
+    }
+  },
+  "$defs": {
+    "nonEmptyString": {
+      "type": "string",
+      "minLength": 1
+    },
+    "provenance": {
+      "type": "object",
+      "minProperties": 1
+    },
+    "target": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "collection",
+        "id"
+      ],
+      "properties": {
+        "collection": {
+          "enum": [
+            "document",
+            "entities",
+            "relationships"
+          ]
+        },
+        "id": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "path": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "property_set": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "property": {
+          "$ref": "#/$defs/nonEmptyString"
+        }
+      }
+    },
+    "operation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "op",
+        "target",
+        "value"
+      ],
+      "properties": {
+        "op": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "target": {
+          "$ref": "#/$defs/target"
+        },
+        "value": {},
+        "overwrite": {
+          "type": "boolean"
+        },
+        "review_required": {
+          "type": "boolean"
+        }
+      }
+    },
+    "layer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "kind",
+        "provenance",
+        "operations"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "kind": {
+          "enum": [
+            "user",
+            "agent",
+            "validator",
+            "reviewer"
+          ]
+        },
+        "provenance": {
+          "$ref": "#/$defs/provenance"
+        },
+        "operations": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/operation"
+          }
+        }
+      }
+    }
+  }
+}
