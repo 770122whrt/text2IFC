@@ -4,7 +4,7 @@
 
 ## Inputs
 
-- Design Brief：`{"ambiguities": [], "clarification_questions": [], "known_facts": {"door": {"host": "south_wall", "position": "center"}, "room": {"height_mm": 3000, "length_mm": 6000, "width_mm": 4000}, "storey_count": 1, "walls": {"count": 4, "enclosure": "closed"}, "window": {"host": "north_wall", "position": "center"}}, "language": "zh-CN", "missing_facts": [], "original_request": "创建一个单层矩形房间，长6米、宽4米、高3米；四面墙闭合，南墙中央有门，北墙中央有窗。", "provenance": {"source": "user_request"}, "schema_version": "text2ifc/design-brief/1.0", "user_corrections": []}`
+- Design Brief：`{"ambiguities": [], "clarification_questions": [], "known_facts": {"door": {"height_mm": 2100, "host": "south_wall", "position": "center", "width_mm": 900}, "room": {"height_mm": 3000, "length_mm": 6000, "width_mm": 4000}, "storey_count": 1, "walls": {"count": 4, "enclosure": "closed"}, "window": {"height_mm": 1500, "host": "north_wall", "position": "center", "sill_height_mm": 900, "width_mm": 1200}}, "language": "zh-CN", "missing_facts": [], "original_request": "请创建一个单层矩形房间，长6米、宽4米、高3米；四面墙闭合，南墙中央设置一扇宽0.9米、高2.1米的门，北墙中央设置一扇宽1.2米、高1.5米、窗台高0.9米的窗。", "provenance": {"source": "user_request"}, "schema_version": "text2ifc/design-brief/1.0", "user_corrections": []}`
 - BIM JSON Schema 摘要：`{"ifc_schema": "IFC2X3", "schema_version": "bim-json/2.0"}`
 - 当前可生成能力：`{"ifc_schema": "IFC2X3", "profile": "architectural-generation"}`
 - 命名 few-shot 示例：`[]`
