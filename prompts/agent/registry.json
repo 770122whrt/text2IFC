@@ -21,6 +21,28 @@
         "IfcOwnerHistory",
         "compiler_only_object"
       ]
+    },
+    {
+      "template_id": "design-brief.v1",
+      "role": "design_brief",
+      "mode": "extract_or_clarify",
+      "path": "prompts/agent/design-brief-v1.md",
+      "sha256": "sha256:b944c7a82d6eb5f9ae6a625dc208c1164f8179cf4d5346606979f07dac992411",
+      "required_inputs": [
+        "USER_REQUEST",
+        "PRIOR_CONTEXT"
+      ],
+      "forbidden_outputs": [
+        "bim_json_entities",
+        "bim_json_relationships",
+        "raw_ifc",
+        "step_text",
+        "step_id",
+        "IfcCartesianPoint",
+        "IfcDirection",
+        "IfcOwnerHistory",
+        "compiler_only_object"
+      ]
     }
   ]
 }
