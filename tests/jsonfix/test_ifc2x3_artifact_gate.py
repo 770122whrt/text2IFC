@@ -69,9 +69,10 @@ def test_non_ifc2x3_declaration_fails_even_when_reopen_matches(
     path = _write(tmp_path / f"{schema}.ifc", f"FILE_SCHEMA(('{schema}'));")
 
     class Model:
-        schema = schema
+        def __init__(self, value: str) -> None:
+            self.schema = value
 
-    monkeypatch.setattr(module.ifcopenshell, "open", lambda _: Model())
+    monkeypatch.setattr(module.ifcopenshell, "open", lambda _: Model(schema))
     monkeypatch.setattr(module, "verify_ifc", lambda _: ())
 
     result = module.check_ifc2x3_artifact(path)
