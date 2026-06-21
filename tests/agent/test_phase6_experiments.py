@@ -276,3 +276,40 @@ def test_failed_rerun_removes_stale_ifc_and_candidate(tmp_path):
     assert not (output / "output.ifc").exists()
     assert not (output / "candidate.json").exists()
     assert (output / "parsed-response.json").exists()
+
+
+def test_phase6_matrix_cli_writes_durable_controlled_cases(tmp_path):
+    output = tmp_path / "matrix"
+    completed = subprocess.run(
+        [
+            sys.executable,
+            "scripts/agent/run_phase6_experiment.py",
+            "--output-dir",
+            str(output),
+            "--matrix",
+            "--check",
+        ],
+        cwd=ROOT,
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+
+    assert completed.returncode == 0, completed.stderr
+    summary = json.loads((output / "experiment-matrix.json").read_text(encoding="utf-8"))
+    assert summary["case_count"] == 5
+    assert set(summary["failure_routes"]) == {
+        "no_repair_needed",
+        "draft_required",
+        "repair_attempted",
+        "blocked_failure",
+    }
+    assert set(summary["failure_classes"]) == {
+        "success",
+        "draft",
+        "invalid_bim_json",
+        "invalid_json",
+        "audit_mismatch",
+    }
+    for case_id in ("success", "draft", "repair", "blocked", "audit"):
+        assert (output / case_id / "report.md").exists()
