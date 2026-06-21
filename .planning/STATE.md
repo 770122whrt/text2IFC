@@ -8,8 +8,8 @@ progress:
   total_phases: 8
   completed_phases: 6
   total_plans: 40
-  completed_plans: 35
-  percent: 88
+  completed_plans: 36
+  percent: 90
 ---
 
 # Project State
@@ -22,15 +22,15 @@ See: `.planning/PROJECT.md` (updated 2026-06-11)
 requirements.
 
 **Current focus:** Phase 05.5 jsonfix IFCx-inspired additive BIM JSON,
-Wave 2 patch composition
+Wave 3 natural-language repair handoff
 
 ## Status
 
 - Phase: 5.5
 - Stage: Executing
-- State: Phase 5.5 Wave 1 complete; deterministic patch composition is next
+- State: Phase 5.5 Waves 1-2 complete; prompt/provider repair handoff is next
 
-- Plans: Phase 5.5 executing, 1 of 6 plans complete
+- Plans: Phase 5.5 executing, 2 of 6 plans complete
 - Branch: `jsonfix`
 - Remote: `https://github.com/770122whrt/text2IFC`
 
@@ -306,6 +306,13 @@ Wave 2 patch composition
 - Wave 1 verification passed 16 focused jsonfix tests and 101 BIM JSON 2.0
   contract/compiler regression tests.
 
+- Phase 5.5 Wave 2 implemented atomic semantic-id composition, explicit
+  conflict/overwrite diagnostics, Formal candidate validation, and fact-level
+  provenance reports.
+
+- Wave 2 verification passed 29 jsonfix tests and 101 BIM JSON 2.0
+  contract/compiler regression tests.
+
 ## Current Decisions
 
 - Phase 1 defines one BIM JSON 1.0 contract and validator.
@@ -456,11 +463,12 @@ Wave 2 patch composition
 
 ## Next Action
 
-Execute Phase 5.5 Wave 2:
-`.planning/phases/05.5-jsonfix-ifcx-inspired-additive-bim-json/05.5-02-PLAN.md`.
-Start with RED tests for immutable patch composition, conflicts, provenance
-diagnostics, and Formal BIM JSON 2.0 validation. Do not stage or commit
-`dataset/external/` sample directories unless the user explicitly requests it.
+Execute Phase 5.5 Wave 3:
+`.planning/phases/05.5-jsonfix-ifcx-inspired-additive-bim-json/05.5-03-PLAN.md`.
+Start with RED tests for the repair request contract, versioned prompt,
+few-shot semantic patch output, and deterministic fake/file providers. Do not
+stage or commit `dataset/external/` sample directories unless the user
+explicitly requests it.
 
 ## Accumulated Context
 
@@ -579,5 +587,9 @@ diagnostics, and Formal BIM JSON 2.0 validation. Do not stage or commit
   `2f8a94c`, `328b6b4`, and `a14d8a5`; focused jsonfix tests and the BIM JSON
   2.0 contract/compiler regression slice passed.
 
+- Phase 5.5 Wave 2 completed on 2026-06-21 with RED/GREEN commits `f27a4c9`,
+  `984ab0c`, `b292427`, `129c48d`, `8deae48`, and `d6351d1`; all jsonfix tests
+  and the BIM JSON 2.0 contract/compiler regression slice passed.
+
 ---
-*Last activity: 2026-06-21 - completed Phase 5.5 Wave 1 patch contract*
+*Last activity: 2026-06-21 - completed Phase 5.5 Wave 2 patch composition*
