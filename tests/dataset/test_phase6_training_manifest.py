@@ -3,6 +3,9 @@ from __future__ import annotations
 import copy
 import importlib
 import importlib.util
+import json
+import subprocess
+import sys
 from pathlib import Path
 
 import pytest
@@ -98,3 +101,48 @@ def test_validation_and_test_records_cannot_be_training_eligible():
 
     with pytest.raises(module.Phase6ManifestError, match="training_eligible"):
         module.validate_phase6_manifest(manifest)
+
+
+def test_training_manifest_cli_writes_and_detects_drift(tmp_path):
+    output = tmp_path / "training-manifest.json"
+    command = [
+        sys.executable,
+        "scripts/dataset/build_phase6_training_manifest.py",
+        "--output",
+        str(output),
+    ]
+
+    written = subprocess.run(
+        [*command, "--write"],
+        cwd=ROOT,
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+    assert written.returncode == 0, written.stderr
+    payload = json.loads(output.read_text(encoding="utf-8"))
+    assert payload["counts"]["records"] == 100
+
+    checked = subprocess.run(
+        [*command, "--check"],
+        cwd=ROOT,
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+    assert checked.returncode == 0, checked.stderr
+
+    payload["records"][0]["license_status"] = "unknown"
+    output.write_text(
+        json.dumps(payload, ensure_ascii=False, sort_keys=True, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    drifted = subprocess.run(
+        [*command, "--check"],
+        cwd=ROOT,
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+    assert drifted.returncode == 2
+    assert "drift" in drifted.stdout.lower()
