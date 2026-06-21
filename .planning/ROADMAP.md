@@ -404,7 +404,7 @@ validation and compilation remain the output truth.
 
 **Wave 1**
 
-- [ ] `05.5-01-PLAN.md` - Patch envelope schema and validator
+- [x] `05.5-01-PLAN.md` - Patch envelope schema and validator
 
 **Wave 2** *(blocked on Wave 1 completion)*
 
@@ -441,7 +441,7 @@ validation and compilation remain the output truth.
 - Every implementation behavior with defined inputs and outputs follows a
   recorded RED-GREEN TDD cycle.
 
-**Status:** Planned - ready to execute on `jsonfix`
+**Status:** In progress - Wave 1 complete, Wave 2 next
 
 ## Phase 6: Data Expansion, Fine-tuning, and Deployment
 
