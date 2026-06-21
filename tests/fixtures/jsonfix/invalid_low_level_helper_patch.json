@@ -1,0 +1,33 @@
+{
+  "patch_version": "bim-json-patch/1.0",
+  "target_schema_version": "bim-json/2.0",
+  "target_ifc_schema": "IFC2X3",
+  "target_document_id": "simple-room-base",
+  "layers": [
+    {
+      "id": "low-level-helper",
+      "kind": "agent",
+      "provenance": {
+        "source": "test"
+      },
+      "operations": [
+        {
+          "op": "add_entity",
+          "target": {
+            "collection": "entities",
+            "id": "point-1"
+          },
+          "value": {
+            "id": "point-1",
+            "ifc_class": "IfcCartesianPoint",
+            "attributes": {},
+            "property_sets": {},
+            "provenance": {
+              "source": "test"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "patch_version": "bim-json-patch/1.0",
+  "target_schema_version": "bim-json/2.0",
+  "target_ifc_schema": "IFC2X3",
+  "target_document_id": "simple-room-base",
+  "layers": [
+    {
+      "id": "agent-fire-rating-001",
+      "kind": "agent",
+      "provenance": {
+        "source": "agent-interpretation",
+        "prompt_version": "semantic-patch-v1"
+      },
+      "operations": [
+        {
+          "op": "set_property",
+          "target": {
+            "collection": "entities",
+            "id": "wall-north",
+            "property_set": "Pset_WallCommon",
+            "property": "FireRating"
+          },
+          "value": "R30"
+        }
+      ]
+    }
+  ]
+}

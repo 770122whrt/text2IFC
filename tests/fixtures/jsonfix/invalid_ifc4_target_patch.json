@@ -1,0 +1,27 @@
+{
+  "patch_version": "bim-json-patch/1.0",
+  "target_schema_version": "bim-json/2.0",
+  "target_ifc_schema": "IFC4",
+  "target_document_id": "simple-room-base",
+  "layers": [
+    {
+      "id": "ifc4-target",
+      "kind": "user",
+      "provenance": {
+        "source": "test"
+      },
+      "operations": [
+        {
+          "op": "mark_missing",
+          "target": {
+            "collection": "entities",
+            "id": "wall-west"
+          },
+          "value": {
+            "reason": "missing"
+          }
+        }
+      ]
+    }
+  ]
+}
