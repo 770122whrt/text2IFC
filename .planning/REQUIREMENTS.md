@@ -126,8 +126,9 @@ requirements.
   objects, unsupported operations, destructive deletes, and missing provenance
   before composition or compilation.
 - **JSONFIX-05**: Demonstrate the missing-piece repair path from text intent
-  to patch JSON, composed BIM JSON, validated IFC2X3 output, reopen check, and
-  generated-IFC quality report.
+  to patch JSON, composed BIM JSON, and a final IFC whose STEP header and
+  IfcOpenShell-reopened schema both equal IFC2X3, whose full IFC validation has
+  zero errors, and whose supported-scope generated-IFC quality report passes.
 - **JSONFIX-06**: Produce an evidence-based BIM JSON 3.0 decision report for
   patch layers, type reuse, namespace facts, boundary objects, deletion
   semantics, and future expert/reviewer Agent patch layers.
