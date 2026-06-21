@@ -8,14 +8,14 @@ See: `.planning/PROJECT.md` (updated 2026-06-11)
 requirements.
 
 **Current focus:** Phase 6 multi-agent prompt reliability, currently executing
-Audit Agent and deterministic gate integration
+the experiment harness, reliability metrics, and generated run reports
 
 ## Status
 
 - Phase: 6
 - Stage: Executing
-- State: Waves 0-2 prompt, Design Brief, Generator, and routing verified
-- Plans: Phase 6 planned, 7 of 7 plans written, 3 executed
+- State: Waves 0-3 prompt, Design Brief, Generator, routing, and Audit verified
+- Plans: Phase 6 planned, 7 of 7 plans written, 4 executed
 - Branch: `multiagent-design` in C-drive worktree
 - Remote: `https://github.com/770122whrt/text2IFC`
 
@@ -330,9 +330,9 @@ Audit Agent and deterministic gate integration
 
 ## Next Action
 
-Execute Phase 6 Wave 3 in the C-drive `multiagent-design` worktree: Audit Agent
-and deterministic gate integration. Audit may explain semantic mismatch but
-must keep schema, compiler, reopen, and geometry failures blocking.
+Execute Phase 6 Wave 4 in the C-drive `multiagent-design` worktree: experiment
+harness, reliability metrics, complete trace persistence, and generated
+`report.md` assembled from actual run artifacts.
 
 ## Accumulated Context
 
@@ -433,6 +433,9 @@ must keep schema, compiler, reopen, and geometry failures blocking.
 - Phase 6 Wave 2 completed on 2026-06-21 with RED commit `c4bdfeb` and GREEN
   commit `efd108c`. Registry-rendered Formal/Draft generation and four-route
   conditional failure handling passed 52 Agent tests and the secret scan.
+- Phase 6 Wave 3 completed on 2026-06-21 with RED commit `fcdde3f` and GREEN
+  commit `a486c17`. Evidence-linked Audit reports preserve deterministic gate
+  failures and passed 55 Agent tests plus the secret scan.
 
 ---
-*Last activity: 2026-06-21 - completed Phase 6 Wave 2 Generator and conditional failure routing*
+*Last activity: 2026-06-21 - completed Phase 6 Wave 3 Audit Agent and deterministic gate integration*

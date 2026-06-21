@@ -417,7 +417,7 @@ gates.
 
 **Wave 3** *(blocked on Wave 2 generation and failure-routing traceability)*
 
-- [ ] `06-03-PLAN.md` - Audit Agent and deterministic gate integration
+- [x] `06-03-PLAN.md` - Audit Agent and deterministic gate integration
 
 **Wave 4** *(blocked on Wave 3 audit integration)*
 
@@ -457,4 +457,4 @@ gates.
 - All conversation-specific work happens in the C-drive `multiagent-design`
   worktree; the E-drive working tree is not edited.
 
-**Status:** In progress - Waves 0-2 complete, ready for Wave 3
+**Status:** In progress - Waves 0-3 complete, ready for Wave 4
