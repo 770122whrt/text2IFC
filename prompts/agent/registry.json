@@ -1,0 +1,26 @@
+{
+  "schema_version": "text2ifc/prompt-registry/1.0",
+  "templates": [
+    {
+      "template_id": "bim-json-generator.v3",
+      "role": "bim_json_generator",
+      "mode": "generate_or_repair",
+      "path": "prompts/agent/mimo-bim-json-v3.md",
+      "sha256": "sha256:bca281dab3b85ac79f9921582a2b447c63d406dd4cad1fb1a3d2970a6ebdc4fd",
+      "required_inputs": [
+        "USER_REQUEST",
+        "REFERENCE_JSON",
+        "VALIDATION_FEEDBACK"
+      ],
+      "forbidden_outputs": [
+        "raw_ifc",
+        "step_text",
+        "step_id",
+        "IfcCartesianPoint",
+        "IfcDirection",
+        "IfcOwnerHistory",
+        "compiler_only_object"
+      ]
+    }
+  ]
+}
