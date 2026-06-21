@@ -13,6 +13,7 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "src"))
+sys.path.insert(0, str(ROOT / ".deps" / "python312"))
 
 from text2ifc_jsonfix.external_inventory import inventory_external_ifc  # noqa: E402
 
