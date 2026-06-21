@@ -404,7 +404,7 @@ gates.
 
 **Wave 0**
 
-- [ ] `06-00-PLAN.md` - Prompt registry and multi-agent design contract
+- [x] `06-00-PLAN.md` - Prompt registry and multi-agent design contract
 
 **Wave 1** *(blocked on Wave 0 prompt traceability)*
 
@@ -457,4 +457,4 @@ gates.
 - All conversation-specific work happens in the C-drive `multiagent-design`
   worktree; the E-drive working tree is not edited.
 
-**Status:** Specified and planned - ready for Wave 0 execution
+**Status:** In progress - Wave 0 complete, ready for Wave 1

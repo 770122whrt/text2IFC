@@ -7,16 +7,15 @@ See: `.planning/PROJECT.md` (updated 2026-06-11)
 **Core value:** Produce valid, inspectable IFC models from explicit user
 requirements.
 
-**Current focus:** Phase 6 multi-agent prompt reliability, data expansion,
-fine-tuning, and deployment planning
+**Current focus:** Phase 6 multi-agent prompt reliability, currently executing
+the Design Brief Agent contract
 
 ## Status
 
 - Phase: 6
-- Stage: Planned
-- State: Phase 6 specified and planned for multi-agent prompt reliability,
-  data expansion, model decision, and deployment
-- Plans: Phase 6 planned, 7 of 7 plans written, 0 executed
+- Stage: Executing
+- State: Wave 0 prompt registry and multi-agent design contract verified
+- Plans: Phase 6 planned, 7 of 7 plans written, 1 executed
 - Branch: `multiagent-design` in C-drive worktree
 - Remote: `https://github.com/770122whrt/text2IFC`
 
@@ -331,9 +330,9 @@ fine-tuning, and deployment planning
 
 ## Next Action
 
-Execute Phase 6 Wave 0 in the C-drive `multiagent-design` worktree: prompt
-registry, prompt trace contract, and multi-agent design contract. Preserve the
-supported-scope, loss-sidecar, generated-IFC-gate, and no-secret boundaries.
+Execute Phase 6 Wave 1 in the C-drive `multiagent-design` worktree: Design
+Brief schema, validator, and registered Chinese-first prompt. Preserve missing
+facts as explicit Draft inputs rather than inventing BIM JSON facts.
 
 ## Accumulated Context
 
@@ -423,6 +422,10 @@ supported-scope, loss-sidecar, generated-IFC-gate, and no-secret boundaries.
   Brief; Wave 2 adds BIM JSON generation plus repair mode; Wave 3 adds Audit
   Agent; Wave 4 adds reliability experiments; Wave 5 handles data/model
   decision; Wave 6 packages the supported deployable demo.
+- Phase 6 Wave 0 completed on 2026-06-21 with RED commits `4f355bf` and
+  `3b69a9b`, GREEN commit `cf64af1`, and architecture commit `38937da`.
+  Prompt registry, hash-verified rendering, trace validation, and five-role
+  responsibility boundaries passed the full Agent regression and secret scan.
 
 ---
-*Last activity: 2026-06-18 - specified and planned Phase 6 multi-agent prompt reliability*
+*Last activity: 2026-06-21 - completed Phase 6 Wave 0 prompt registry and multi-agent design contract*
