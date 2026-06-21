@@ -67,5 +67,5 @@ def test_design_brief_rejects_bim_json_entities():
 
     issues = design_brief.validate_design_brief(document)
 
-    assert any(issue.code == "ADDITIONAL_PROPERTY" for issue in issues)
+    assert any(issue.code == "UNSUPPORTED_FIELD" for issue in issues)
     assert any("entities" in issue.message for issue in issues)
