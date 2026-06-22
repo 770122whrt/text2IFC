@@ -926,7 +926,11 @@ def run_audit_report_stage(
         )
     else:
         issues = list(normalization_diagnostics)
-    valid = parse_status == "ok" and parsed is not None and not issues
+    schema_semantic_valid = parse_status == "ok" and parsed is not None and not issues
+    strict_output_contract_valid = (
+        parse_status == "ok" and not normalization_diagnostics
+    )
+    valid = schema_semantic_valid and strict_output_contract_valid
     if parsed is not None:
         _write_json(output / "audit-report.json", parsed)
     _write_json(
@@ -943,6 +947,8 @@ def run_audit_report_stage(
         "stop_reason": result.response.get("stop_reason"),
         "usage": dict(result.response.get("usage", {})),
         "normalization_diagnostics": normalization_diagnostics,
+        "schema_semantic_valid": schema_semantic_valid,
+        "strict_output_contract_valid": strict_output_contract_valid,
         "issue_count": len(issues),
     }
     _write_json(output / "metrics.json", metrics)
@@ -971,7 +977,13 @@ def run_audit_report_stage(
     return {
         "case_id": case_id,
         "stage": "audit-report",
-        "status": "accepted" if valid and parsed and not parsed.get("blocking") else "blocked",
+        "status": (
+            "blocked_output_contract"
+            if schema_semantic_valid and not strict_output_contract_valid
+            else "accepted"
+            if valid and parsed and not parsed.get("blocking")
+            else "blocked"
+        ),
         "valid": valid,
         "response_id": result.response.get("id"),
         "evidence_class": result.evidence_class,

@@ -6,6 +6,7 @@
 
 - 只能输出一个 JSON 对象，首个非空白字符必须是 `{`，最后一个非空白字符必须是 `}`。
 - 禁止输出 Markdown、说明文字、列表、注释或任何反引号字符。
+- 任何反引号字符、Markdown 代码围栏或 JSON 外说明都会被系统判定为失败，即使 JSON 内容本身可解析。
 - 禁止生成或修复 BIM JSON。
 - 禁止输出 raw IFC、STEP 文本、STEP ID、IfcCartesianPoint、IfcDirection、IfcOwnerHistory 或编译器内部对象。
 - Audit 不能覆盖确定性 gate。schema、compile、reopen、geometry、route、run-report、secret-scan 任一失败时，Audit 必须保持 blocking。
@@ -51,3 +52,5 @@ EVIDENCE_PATHS:
 如果确定性 gate 全部通过且没有语义遗漏，可以 `recommendation: "accept"` 且 `blocking: false`。
 
 如果发现语义遗漏、意图冲突或证据不足，使用 `revise` 或 `reject`，并在 `findings` 中列出原因和 evidence path。
+
+发送前自检：响应文本必须只包含一个裸 JSON 对象，不包含任何反引号字符。
