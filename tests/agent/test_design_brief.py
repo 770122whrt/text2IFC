@@ -69,3 +69,209 @@ def test_design_brief_rejects_bim_json_entities():
 
     assert any(issue.code == "UNSUPPORTED_FIELD" for issue in issues)
     assert any("entities" in issue.message for issue in issues)
+
+
+def _v2_evidence_catalog():
+    return [
+        {"evidence_id": "schema:bim-json-v2:entity"},
+        {"evidence_id": "schema:bim-json-v2:representation"},
+        {"evidence_id": "capability:IFC2X3:IfcSpace"},
+        {"evidence_id": "few-shot:design-brief-v2:incomplete-room"},
+    ]
+
+
+def _brief_v2(**overrides):
+    document = {
+        "schema_version": "text2ifc/design-brief/2.0",
+        "language": "zh-CN",
+        "original_request": "创建一个长6米、宽4米、高3米的矩形房间。",
+        "status": "ready",
+        "known_facts": {
+            "space": {"length_mm": 6000, "width_mm": 4000, "height_mm": 3000}
+        },
+        "fact_sources": [
+            {
+                "path": "/known_facts/space",
+                "source_turns": ["turn-user-001"],
+                "evidence_refs": ["schema:bim-json-v2:entity"],
+            }
+        ],
+        "missing_facts": [],
+        "ambiguities": [],
+        "unsupported_requests": [],
+        "user_corrections": [],
+        "clarification_questions": [],
+        "provenance": {
+            "source_turns": ["turn-user-001"],
+            "selected_evidence_ids": [
+                "schema:bim-json-v2:entity",
+                "capability:IFC2X3:IfcSpace",
+            ],
+            "few_shot_ids": [],
+        },
+    }
+    document.update(overrides)
+    return document
+
+
+def test_v2_ready_brief_is_schema_and_evidence_valid():
+    design_brief = _module()
+
+    issues = design_brief.validate_design_brief(
+        _brief_v2(), evidence_catalog=_v2_evidence_catalog()
+    )
+
+    assert issues == []
+
+
+def test_v2_rejects_question_evidence_not_supplied_to_model():
+    design_brief = _module()
+    document = _brief_v2(
+        status="needs_clarification",
+        missing_facts=[
+            {
+                "id": "mf-wall-thickness",
+                "code": "WALL_THICKNESS_MISSING",
+                "path": "/known_facts/walls/thickness_mm",
+                "message": "墙体厚度尚未提供。",
+                "reason": "请求要求生成具有实体厚度的墙体。",
+                "blocking": True,
+                "evidence_refs": ["schema:bim-json-v2:representation"],
+                "source_turns": ["turn-user-001"],
+            }
+        ],
+        clarification_questions=[
+            {
+                "id": "q-wall-thickness",
+                "text": "墙体厚度是多少？",
+                "targets": ["mf-wall-thickness"],
+                "reason": "缺少该值无法生成用户要求的墙体实体。",
+                "evidence_refs": ["schema:not-supplied"],
+            }
+        ],
+    )
+
+    issues = design_brief.validate_design_brief(
+        document, evidence_catalog=_v2_evidence_catalog()
+    )
+
+    assert any(issue.code == "UNKNOWN_EVIDENCE_REF" for issue in issues)
+    assert any(
+        issue.path == "/clarification_questions/0/evidence_refs/0"
+        for issue in issues
+    )
+
+
+def test_v2_rejects_question_without_matching_blocker():
+    design_brief = _module()
+    document = _brief_v2(
+        status="needs_clarification",
+        missing_facts=[
+            {
+                "id": "mf-room-width",
+                "code": "ROOM_WIDTH_MISSING",
+                "path": "/known_facts/space/width_mm",
+                "message": "房间宽度尚未提供。",
+                "reason": "矩形空间轮廓需要宽度。",
+                "blocking": True,
+                "evidence_refs": ["schema:bim-json-v2:representation"],
+                "source_turns": ["turn-user-001"],
+            }
+        ],
+        clarification_questions=[
+            {
+                "id": "q-height",
+                "text": "房间高度是多少？",
+                "targets": ["mf-room-height"],
+                "reason": "需要确认高度。",
+                "evidence_refs": ["schema:bim-json-v2:representation"],
+            }
+        ],
+    )
+
+    issues = design_brief.validate_design_brief(
+        document, evidence_catalog=_v2_evidence_catalog()
+    )
+
+    assert any(issue.code == "UNKNOWN_CLARIFICATION_TARGET" for issue in issues)
+
+
+def test_v2_ready_status_rejects_blocking_missing_fact():
+    design_brief = _module()
+    document = _brief_v2(
+        missing_facts=[
+            {
+                "id": "mf-room-width",
+                "code": "ROOM_WIDTH_MISSING",
+                "path": "/known_facts/space/width_mm",
+                "message": "房间宽度尚未提供。",
+                "reason": "矩形空间轮廓需要宽度。",
+                "blocking": True,
+                "evidence_refs": ["schema:bim-json-v2:representation"],
+                "source_turns": ["turn-user-001"],
+            }
+        ]
+    )
+
+    issues = design_brief.validate_design_brief(
+        document, evidence_catalog=_v2_evidence_catalog()
+    )
+
+    assert any(issue.code == "READINESS_CONFLICT" for issue in issues)
+
+
+def test_v2_ready_status_rejects_blocking_unsupported_request():
+    design_brief = _module()
+    document = _brief_v2(
+        unsupported_requests=[
+            {
+                "id": "unsupported-window-operation",
+                "path": "/known_facts/windows/0/operation_type",
+                "message": "当前生成能力不支持该窗扇开启机构。",
+                "reason": "用户明确要求保留该语义，但能力证据标记为 unsupported。",
+                "blocking": True,
+                "requested_value": "复杂联动上悬窗",
+                "evidence_refs": ["capability:IFC2X3:IfcSpace"],
+                "source_turns": ["turn-user-001"],
+            }
+        ]
+    )
+
+    issues = design_brief.validate_design_brief(
+        document, evidence_catalog=_v2_evidence_catalog()
+    )
+
+    assert any(issue.code == "READINESS_CONFLICT" for issue in issues)
+
+
+def test_v2_needs_clarification_requires_one_to_three_questions():
+    design_brief = _module()
+    document = _brief_v2(status="needs_clarification")
+
+    issues = design_brief.validate_design_brief(
+        document, evidence_catalog=_v2_evidence_catalog()
+    )
+
+    assert any(issue.path == "/clarification_questions" for issue in issues)
+
+
+def test_v2_correction_requires_source_turn_and_evidence():
+    design_brief = _module()
+    document = _brief_v2(
+        user_corrections=[
+            {
+                "path": "/known_facts/walls/thickness_mm",
+                "value": 300,
+                "source_turn": "turn-user-002",
+                "replaces": None,
+            }
+        ]
+    )
+
+    issues = design_brief.validate_design_brief(
+        document, evidence_catalog=_v2_evidence_catalog()
+    )
+
+    assert any(
+        issue.path == "/user_corrections/0/evidence_refs" for issue in issues
+    )
