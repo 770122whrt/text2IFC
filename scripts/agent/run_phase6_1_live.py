@@ -20,6 +20,7 @@ from text2ifc_agent.live_pipeline import (  # noqa: E402
     run_design_brief_stage,
     run_generator_stage,
     run_repair_stage,
+    run_audit_report_stage,
 )
 from text2ifc_agent.clarification import ClarificationError  # noqa: E402
 from text2ifc_agent.live_trace import write_live_trace  # noqa: E402
@@ -64,7 +65,7 @@ def main(
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--stage",
-        choices=("design-brief", "clarify", "generate", "repair"),
+        choices=("design-brief", "clarify", "generate", "repair", "audit-report"),
         default="design-brief",
     )
     parser.add_argument(
@@ -75,6 +76,7 @@ def main(
     parser.add_argument("--env-file", type=Path, default=DEFAULT_ENV_FILE)
     parser.add_argument("--output-dir", type=Path)
     parser.add_argument("--answers", type=Path)
+    parser.add_argument("--case-dir", type=Path)
     parser.add_argument("--design-source-dir", type=Path)
     parser.add_argument("--generator-source-dir", type=Path)
     parser.add_argument("--v1-baseline-dir", type=Path, default=DEFAULT_V1_BASELINE)
@@ -144,6 +146,14 @@ def main(
                 provider_factory=provider_factory,
                 output_dir=output_dir,
                 generator_source_dir=generator_source_dir,
+                case_id=args.case,
+            )
+        elif args.stage == "audit-report":
+            provider = provider_factory()
+            case_dir = args.case_dir or (DEFAULT_LIVE_ROOT / args.case)
+            result = run_audit_report_stage(
+                provider=provider,
+                case_dir=case_dir,
                 case_id=args.case,
             )
         else:

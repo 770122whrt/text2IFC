@@ -195,6 +195,35 @@
         "step_text",
         "deterministic_gate_override"
       ]
+    },
+    {
+      "template_id": "audit.v2",
+      "role": "audit",
+      "mode": "semantic_review",
+      "path": "prompts/agent/audit-v2.md",
+      "sha256": "sha256:5fdc246f61c9c598d0fa81997739dde43712cc19920a255023f70964a17f9674",
+      "required_inputs": [
+        "USER_REQUEST",
+        "CONVERSATION",
+        "DESIGN_BRIEF",
+        "TERMINAL_DOCUMENT",
+        "DETERMINISTIC_GATES",
+        "REPAIR_ROUTE",
+        "METRICS",
+        "EVIDENCE_PATHS"
+      ],
+      "forbidden_outputs": [
+        "bim_json_generation",
+        "bim_json_repair",
+        "raw_ifc",
+        "step_text",
+        "step_id",
+        "IfcCartesianPoint",
+        "IfcDirection",
+        "IfcOwnerHistory",
+        "compiler_only_object",
+        "deterministic_gate_override"
+      ]
     }
   ]
 }

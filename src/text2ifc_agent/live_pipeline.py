@@ -22,12 +22,14 @@ from .generator import validate_generation_document
 from .failure_routing import route_generation_failure
 from .fact_delta import evaluate_repair_fact_delta
 from .providers import validate_provider_output
+from .run_report import build_live_run_report
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DESIGN_BRIEF_TEMPLATE_ID = "design-brief.v2.1"
 GENERATOR_TEMPLATE_ID = "bim-json-generator.v2"
 REPAIR_TEMPLATE_ID = "bim-json-generator-repair.v2"
+AUDIT_TEMPLATE_ID = "audit.v2"
 FORMAL_SCHEMA_PATH = PROJECT_ROOT / "schemas" / "bim-json" / "2.0" / "schema.json"
 DRAFT_SCHEMA_PATH = (
     PROJECT_ROOT / "schemas" / "bim-json" / "draft" / "1.0" / "schema.json"
@@ -848,6 +850,136 @@ def run_repair_stage(
     }
 
 
+def run_audit_report_stage(
+    *,
+    provider: Any,
+    case_dir: Path | str,
+    case_id: str,
+) -> dict[str, Any]:
+    """Run real Audit v2 and generate the case report from sidecars."""
+    root = Path(case_dir)
+    output = root / "audit"
+    output.mkdir(parents=True, exist_ok=True)
+    design = root / "design-brief"
+    generator = root / "generator"
+    repair = root / "repair"
+    user_request = (design / "input.txt").read_text(encoding="utf-8").rstrip("\r\n")
+    conversation = json.loads(
+        (design / "conversation.json").read_text(encoding="utf-8")
+    )
+    design_brief = json.loads(
+        (design / "design-brief.json").read_text(encoding="utf-8")
+    )
+    terminal_document_path = _first_existing_path(
+        generator,
+        ("candidate.json", "draft.json", "parsed-output.json"),
+    )
+    if terminal_document_path is None:
+        raise ValueError("Audit requires a terminal Generator document")
+    terminal_document = json.loads(terminal_document_path.read_text(encoding="utf-8"))
+    generator_validation = json.loads(
+        (generator / "validation.json").read_text(encoding="utf-8")
+    )
+    generator_metrics = json.loads(
+        (generator / "metrics.json").read_text(encoding="utf-8")
+    )
+    repair_route = json.loads((repair / "route.json").read_text(encoding="utf-8"))
+    repair_metrics = json.loads((repair / "metrics.json").read_text(encoding="utf-8"))
+    deterministic_gates = {
+        "bim_json_validation": bool(generator_validation.get("valid")),
+        "repair_route_terminal": repair_route.get("route")
+        in {"no_repair_needed", "repair_attempted", "draft_required"},
+    }
+    evidence_paths = _audit_evidence_paths(root)
+    renderer_inputs = {
+        "USER_REQUEST": user_request,
+        "CONVERSATION": conversation,
+        "DESIGN_BRIEF": design_brief,
+        "TERMINAL_DOCUMENT": terminal_document,
+        "DETERMINISTIC_GATES": deterministic_gates,
+        "REPAIR_ROUTE": repair_route,
+        "METRICS": {
+            "generator": generator_metrics,
+            "repair": repair_metrics,
+        },
+        "EVIDENCE_PATHS": evidence_paths,
+    }
+    rendered = render_prompt(template_id=AUDIT_TEMPLATE_ID, inputs=renderer_inputs)
+    _write_json(output / "prompt-render-input.json", renderer_inputs)
+    _write_text(output / "prompt-rendered.md", rendered["text"])
+    result = provider.generate_live(
+        session_id=f"phase6.1-{case_id}-audit-01",
+        prompt=rendered["text"],
+        schema={"schema_version": "text2ifc/audit/2.0"},
+        state={"case_id": case_id, "stage": "audit"},
+    )
+    validate_provider_output(result.output)
+    provider_manifest = write_live_trace(result=result, output_dir=output)
+    parse_status, parsed, normalization_diagnostics = result.output.parse_json()
+    issues: list[dict[str, Any]] = []
+    if parse_status == "ok" and parsed is not None:
+        _write_json(output / "parsed-output.json", parsed)
+        issues = _validate_live_audit_output(
+            parsed,
+            case_dir=root,
+            deterministic_gates=deterministic_gates,
+        )
+    else:
+        issues = list(normalization_diagnostics)
+    valid = parse_status == "ok" and parsed is not None and not issues
+    if parsed is not None:
+        _write_json(output / "audit-report.json", parsed)
+    _write_json(
+        output / "validation.json",
+        {"valid": valid, "issue_count": len(issues), "issues": issues},
+    )
+    metrics = {
+        "case_id": case_id,
+        "stage": "audit",
+        "valid": valid,
+        "evidence_class": result.evidence_class,
+        "response_id": result.response.get("id"),
+        "model": result.response.get("model"),
+        "stop_reason": result.response.get("stop_reason"),
+        "usage": dict(result.response.get("usage", {})),
+        "normalization_diagnostics": normalization_diagnostics,
+        "issue_count": len(issues),
+    }
+    _write_json(output / "metrics.json", metrics)
+    _write_json(
+        output / "trace-manifest.json",
+        {
+            "schema_version": "text2ifc/live-stage-trace/1.0",
+            "case_id": case_id,
+            "stage": "audit",
+            "template_id": rendered["metadata"]["template_id"],
+            "template_hash": rendered["metadata"]["template_hash"],
+            "provider": provider_manifest,
+            "evidence_paths": evidence_paths,
+            "artifacts": {
+                "renderer_inputs": "prompt-render-input.json",
+                "rendered_prompt": "prompt-rendered.md",
+                "model_text": "model-text.txt",
+                "parsed_output": "parsed-output.json" if parsed else None,
+                "audit_report": "audit-report.json" if parsed else None,
+                "validation": "validation.json",
+                "metrics": "metrics.json",
+            },
+        },
+    )
+    report_path = build_live_run_report(case_dir=root)
+    return {
+        "case_id": case_id,
+        "stage": "audit-report",
+        "status": "accepted" if valid and parsed and not parsed.get("blocking") else "blocked",
+        "valid": valid,
+        "response_id": result.response.get("id"),
+        "evidence_class": result.evidence_class,
+        "report_path": portable_artifact_path(report_path),
+        "output_dir": portable_artifact_path(root),
+    }
+
+
 def _select_generator_context(design_context: dict[str, Any]) -> dict[str, Any]:
     capabilities = [
         record
@@ -901,6 +1033,82 @@ def _repair_evidence_by_path(
                 f"validation:{code}"
             )
     return by_path
+
+
+def _audit_evidence_paths(root: Path) -> list[str]:
+    paths = [
+        "design-brief/input.txt",
+        "design-brief/conversation.json",
+        "design-brief/design-brief.json",
+        "design-brief/response.raw.json",
+        "generator/candidate.json",
+        "generator/validation.json",
+        "generator/metrics.json",
+        "repair/route.json",
+        "repair/metrics.json",
+    ]
+    return [path for path in paths if (root / path).is_file()]
+
+
+def _validate_live_audit_output(
+    payload: dict[str, Any],
+    *,
+    case_dir: Path,
+    deterministic_gates: dict[str, bool],
+) -> list[dict[str, Any]]:
+    issues: list[dict[str, Any]] = []
+    if payload.get("schema_version") != "text2ifc/audit/2.0":
+        issues.append(
+            {
+                "code": "UNSUPPORTED_AUDIT_VERSION",
+                "path": "/schema_version",
+                "message": "Audit output must use text2ifc/audit/2.0.",
+            }
+        )
+    if payload.get("recommendation") not in {"accept", "revise", "reject"}:
+        issues.append(
+            {
+                "code": "INVALID_AUDIT_RECOMMENDATION",
+                "path": "/recommendation",
+                "message": "Audit recommendation is not canonical.",
+            }
+        )
+    if not all(deterministic_gates.values()) and payload.get("blocking") is False:
+        issues.append(
+            {
+                "code": "DETERMINISTIC_GATE_OVERRIDE",
+                "path": "/blocking",
+                "message": "Audit cannot pass failed deterministic gates.",
+            }
+        )
+    evidence_paths = payload.get("evidence_paths", [])
+    if not isinstance(evidence_paths, list):
+        issues.append(
+            {
+                "code": "INVALID_AUDIT_EVIDENCE_PATHS",
+                "path": "/evidence_paths",
+                "message": "Audit evidence_paths must be a list.",
+            }
+        )
+        return issues
+    for index, relative in enumerate(evidence_paths):
+        if not isinstance(relative, str) or not (case_dir / relative).is_file():
+            issues.append(
+                {
+                    "code": "AUDIT_EVIDENCE_PATH_MISSING",
+                    "path": f"/evidence_paths/{index}",
+                    "message": f"Audit evidence path does not exist: {relative!r}.",
+                }
+            )
+    return issues
+
+
+def _first_existing_path(root: Path, names: tuple[str, ...]) -> Path | None:
+    for name in names:
+        path = root / name
+        if path.is_file():
+            return path
+    return None
 
 
 def compare_design_brief_runs(
