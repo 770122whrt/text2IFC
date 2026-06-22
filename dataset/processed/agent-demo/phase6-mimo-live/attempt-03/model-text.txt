@@ -1,0 +1,74 @@
+```json
+{
+    "schema_version": "text2ifc/design-brief/1.0",
+    "language": "zh-CN",
+    "original_request": "请创建一个单层矩形房间，长6米、宽4米、高3米；四面墙闭合，南墙中央设置一扇宽0.9米、高2.1米的门，北墙中央设置一扇宽1.2米、高1.5米、窗台高0.9米的窗。",
+    "known_facts": {
+        "room": {
+            "type": "single_story",
+            "shape": "rectangular",
+            "dimensions": {
+                "length": 6.0,
+                "width": 4.0,
+                "height": 3.0
+            }
+        },
+        "walls": {
+            "number": 4,
+            "closure": "closed",
+            "thickness": 0.3
+        },
+        "doors": [
+            {
+                "width": 0.9,
+                "height": 2.1,
+                "position": "center",
+                "wall": "south"
+            }
+        ],
+        "windows": [
+            {
+                "width": 1.2,
+                "height": 1.5,
+                "position": "center",
+                "sill_height": 0.9,
+                "wall": "north"
+            }
+        ]
+    },
+    "missing_facts": [],
+    "ambiguities": [
+        {
+            "id": "ambiguity1",
+            "message": "‘中央’可能指墙的几何中心，或者门的中心线对齐墙的中心线，或者其他点。",
+            "options": ["center of wall", "center line aligned", "other"],
+            "path": "doors.0.position"
+        },
+        {
+            "id": "ambiguity2",
+            "message": "‘中央’可能指墙的几何中心，或者窗的中心线对齐墙的中心线，或者其他点。",
+            "options": ["center of wall", "center line aligned", "other"],
+            "path": "windows.0.position"
+        },
+        {
+            "id": "ambiguity3",
+            "message": "房间的绝对方位（如地理北向）未指定，但提供了相对方向南、北。",
+            "options": ["assumed north up", "user defined orientation", "other"],
+            "path": "room.orientation"
+        }
+    ],
+    "user_corrections": [
+        {
+            "path": "walls.thickness",
+            "value": 0.3,
+            "source_turn": "user_answer"
+        }
+    ],
+    "clarification_questions": [],
+    "provenance": {
+        "known_facts": ["user_original_request", "user_answer"],
+        "missing_facts": [],
+        "ambiguities": ["user_original_request"]
+    }
+}
+```

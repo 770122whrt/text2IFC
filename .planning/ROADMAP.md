@@ -492,9 +492,9 @@ user intent to force a run through a gate.
 
 - [x] `06.1-00-PLAN.md` - Real Mimo envelope, streaming, and trace contract
 
-**Wave 1** *(blocked on Wave 0 exact response provenance)*
+**Wave 1** *(verified on Wave 0 exact response provenance)*
 
-- [ ] `06.1-01-PLAN.md` - Dynamic Design Brief Agent and clarification ownership
+- [x] `06.1-01-PLAN.md` - Dynamic Design Brief Agent and clarification ownership
 
 **Wave 2** *(blocked on Wave 1 readiness contract)*
 
@@ -526,4 +526,4 @@ user intent to force a run through a gate.
   evidence, provider `id`/`model`/`stop_reason`/`usage`, event stream, metrics,
   and secret-scan result.
 
-**Status:** In Progress - Wave 0 verified with real Mimo 2026-06-22
+**Status:** In Progress - Waves 0-1 verified with real Mimo 2026-06-22

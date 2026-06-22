@@ -7,15 +7,15 @@ See: `.planning/PROJECT.md` (updated 2026-06-11)
 **Core value:** Produce valid, inspectable IFC models from explicit user
 requirements.
 
-**Current focus:** Phase 6.1 Wave 1 - evidence-grounded Design Brief v2 on the
-verified real-Mimo streaming and trace foundation
+**Current focus:** Phase 6.1 Wave 2 - real Chinese multi-turn clarification on
+the verified Design Brief v2.1 live foundation
 
 ## Status
 
 - Phase: 6.1
 - Stage: In Progress
-- State: Wave 0 verified with real Mimo; Wave 1 ready
-- Plans: Phase 6.1 planned, 7 of 7 plans written, 1 executed
+- State: Waves 0-1 verified with real Mimo; Wave 2 ready
+- Plans: Phase 6.1 planned, 7 of 7 plans written, 2 executed
 - Branch: `multiagent-design` in C-drive worktree
 - Remote: `https://github.com/770122whrt/text2IFC`
 
@@ -346,9 +346,9 @@ verified real-Mimo streaming and trace foundation
 
 ## Next Action
 
-Review the Phase 6.1 specification and plans, then execute Wave 0 to preserve
-exact Mimo response envelopes and streaming events before changing Agent
-prompts or orchestration.
+Execute Phase 6.1 Wave 2: preserve immutable Chinese clarification turns,
+rerun the real Mimo Design Brief Agent after every answer, and verify ready,
+Draft, and unknown-answer routes without deterministic question authorship.
 
 ## Accumulated Context
 
@@ -482,6 +482,12 @@ prompts or orchestration.
   `msg_2bc401bbfdaa455696937d1d`, `stop_reason=end_turn`, request
   `max_tokens=131072`, 15 ordered SSE events, complete usage, parsed bare JSON,
   and zero secret findings. Agent regression passed 76 tests.
+- Phase 6.1 Wave 1 completed on 2026-06-22 with evidence-grounded Design Brief
+  2.0, request-scoped schema/capability context, and immutable prompt versions.
+  The first real v2 response was schema-valid but fenced and was retained as a
+  failed-format experiment. Prompt v2.1 then produced bare JSON response
+  `msg_164276907f364826bb9a625c`, `end_turn`, status `ready`, zero validation
+  issues, zero normalization diagnostics, and zero secret findings.
 
 ---
-*Last activity: 2026-06-22 - completed Phase 6.1 Wave 0 real Mimo trace gate*
+*Last activity: 2026-06-22 - completed Phase 6.1 Wave 1 live Design Brief gate*
