@@ -1,5 +1,7 @@
 import json
 import importlib.util
+import subprocess
+import sys
 from pathlib import Path
 
 from text2ifc_agent.context_selection import select_design_brief_context
@@ -1187,3 +1189,35 @@ def test_finalize_cli_writes_canonical_ifc_and_report(tmp_path: Path, capsys):
     assert summary["valid"] is True
     assert (output_dir / "output.ifc").is_file()
     assert (output_dir / "report.md").is_file()
+
+
+def test_phase6_1_artifact_verifier_accepts_finalized_root(tmp_path: Path):
+    case_dir = _write_finalizable_case_dir(tmp_path / "complete-room")
+    output_dir = tmp_path / "phase6.1-mimo-live"
+    result = run_final_acceptance_stage(
+        case_dir=case_dir,
+        output_dir=output_dir,
+        case_id="complete-room",
+    )
+    assert result["valid"] is True
+    script = Path("scripts/agent/verify_phase6_1_artifacts.py")
+    assert script.is_file(), "Phase 6.1 artifact verifier script is missing"
+
+    completed = subprocess.run(
+        [
+            sys.executable,
+            str(script),
+            "--root",
+            str(output_dir),
+        ],
+        cwd=PROJECT_ROOT,
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+
+    assert completed.returncode == 0, completed.stderr or completed.stdout
+    payload = json.loads(completed.stdout)
+    assert payload["valid"] is True
+    assert payload["output_ifc_reopenable"] is True
+    assert payload["geometry_success"] is True
