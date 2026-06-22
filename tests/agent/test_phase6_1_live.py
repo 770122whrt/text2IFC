@@ -13,6 +13,7 @@ from text2ifc_agent.live_pipeline import (
     run_design_brief_stage,
     run_generator_stage,
     run_repair_stage,
+    run_audit_report_stage,
 )
 from text2ifc_agent.providers import LiveProviderResult, ProviderOutput
 
@@ -770,6 +771,83 @@ def _write_repairable_generator_source(path: Path) -> Path:
     return path
 
 
+def _write_auditable_case_dir(path: Path) -> Path:
+    case = complete_room_case()
+    design = path / "design-brief"
+    generator = path / "generator"
+    repair = path / "repair"
+    design.mkdir(parents=True)
+    generator.mkdir(parents=True)
+    repair.mkdir(parents=True)
+    formal = json.loads(
+        Path("tests/contract_v2/fixtures/minimal.json").read_text(encoding="utf-8")
+    )
+    brief = _valid_ready_brief(case)
+
+    (design / "input.txt").write_text(case["user_request"] + "\n", encoding="utf-8")
+    (design / "conversation.json").write_text(
+        json.dumps(case["conversation"], ensure_ascii=False),
+        encoding="utf-8",
+    )
+    (design / "prompt-rendered.md").write_text("Design Brief prompt", encoding="utf-8")
+    (design / "request.redacted.json").write_text(
+        json.dumps({"request": {"model": "mimo-v2.5-pro"}}),
+        encoding="utf-8",
+    )
+    (design / "response.raw.json").write_text(
+        json.dumps({"id": "msg_design", "stop_reason": "end_turn"}),
+        encoding="utf-8",
+    )
+    (design / "model-text.txt").write_text(
+        json.dumps(brief, ensure_ascii=False),
+        encoding="utf-8",
+    )
+    (design / "design-brief.json").write_text(
+        json.dumps(brief, ensure_ascii=False),
+        encoding="utf-8",
+    )
+    (design / "validation.json").write_text(
+        json.dumps({"valid": True, "issues": []}),
+        encoding="utf-8",
+    )
+    (design / "metrics.json").write_text(
+        json.dumps({"response_id": "msg_design", "evidence_class": "live"}),
+        encoding="utf-8",
+    )
+
+    (generator / "prompt-rendered.md").write_text("Generator prompt", encoding="utf-8")
+    (generator / "response.raw.json").write_text(
+        json.dumps({"id": "msg_generator", "stop_reason": "end_turn"}),
+        encoding="utf-8",
+    )
+    (generator / "model-text.txt").write_text(
+        json.dumps(formal, ensure_ascii=False),
+        encoding="utf-8",
+    )
+    (generator / "candidate.json").write_text(
+        json.dumps(formal, ensure_ascii=False),
+        encoding="utf-8",
+    )
+    (generator / "validation.json").write_text(
+        json.dumps({"valid": True, "issues": []}),
+        encoding="utf-8",
+    )
+    (generator / "metrics.json").write_text(
+        json.dumps({"response_id": "msg_generator", "evidence_class": "live"}),
+        encoding="utf-8",
+    )
+
+    (repair / "route.json").write_text(
+        json.dumps({"route": "no_repair_needed", "provider_call_count": 0}),
+        encoding="utf-8",
+    )
+    (repair / "metrics.json").write_text(
+        json.dumps({"route": "no_repair_needed", "evidence_class": "live-derived-no-call"}),
+        encoding="utf-8",
+    )
+    return path
+
+
 def test_successful_first_pass_repair_stage_never_creates_provider(tmp_path: Path):
     source_dir = _write_valid_generator_source(tmp_path / "generator")
     calls = []
@@ -872,3 +950,41 @@ def test_repair_cli_records_zero_calls_for_live_first_pass_success(
     assert exit_code == 0
     assert summary["route"] == "no_repair_needed"
     assert summary["provider_call_count"] == 0
+
+
+def test_live_audit_report_stage_calls_provider_and_generates_report(
+    tmp_path: Path,
+):
+    case_dir = _write_auditable_case_dir(tmp_path / "complete-room")
+    payload = {
+        "schema_version": "text2ifc/audit/2.0",
+        "recommendation": "accept",
+        "blocking": False,
+        "deterministic_gate_status": "passed",
+        "findings": [],
+        "evidence_paths": [
+            "design-brief/design-brief.json",
+            "generator/candidate.json",
+            "repair/route.json",
+        ],
+    }
+    provider = _RecordingLiveProvider(payload)
+
+    result = run_audit_report_stage(
+        provider=provider,
+        case_dir=case_dir,
+        case_id="complete-room",
+    )
+
+    assert result["status"] == "accepted"
+    assert result["valid"] is True
+    assert result["response_id"] == "msg_unit_design_brief_v2"
+    assert "repair/route.json" in provider.prompt
+    assert (case_dir / "audit" / "prompt-rendered.md").is_file()
+    assert (case_dir / "audit" / "response.raw.json").is_file()
+    assert json.loads(
+        (case_dir / "audit" / "audit-report.json").read_text(encoding="utf-8")
+    ) == payload
+    report = (case_dir / "report.md").read_text(encoding="utf-8")
+    assert "## Audit Agent" in report
+    assert "(audit/audit-report.json)" in report
