@@ -55,6 +55,8 @@ def default_output_dir(*, stage: str, case_id: str) -> Path:
         return DEFAULT_LIVE_ROOT / case_id
     if stage == "generate":
         return DEFAULT_LIVE_ROOT / case_id / "generator"
+    if stage == "finalize":
+        return DEFAULT_LIVE_ROOT
     return DEFAULT_LIVE_ROOT / case_id / stage
 
 
