@@ -14,6 +14,7 @@ from text2ifc_agent.live_pipeline import (
     run_generator_stage,
     run_repair_stage,
     run_audit_report_stage,
+    run_final_acceptance_stage,
 )
 from text2ifc_agent.providers import LiveProviderResult, ProviderOutput
 
@@ -848,6 +849,56 @@ def _write_auditable_case_dir(path: Path) -> Path:
     return path
 
 
+def _write_finalizable_case_dir(path: Path) -> Path:
+    case_dir = _write_auditable_case_dir(path)
+    live_candidate = json.loads(
+        (
+            PROJECT_ROOT
+            / "dataset/processed/agent-demo/phase6.1-mimo-live/complete-room/generator/candidate.json"
+        ).read_text(encoding="utf-8")
+    )
+    generator = case_dir / "generator"
+    (generator / "candidate.json").write_text(
+        json.dumps(live_candidate, ensure_ascii=False),
+        encoding="utf-8",
+    )
+    (generator / "model-text.txt").write_text(
+        json.dumps(live_candidate, ensure_ascii=False),
+        encoding="utf-8",
+    )
+    (case_dir / "audit").mkdir(parents=True)
+    (case_dir / "audit" / "audit-report.json").write_text(
+        json.dumps(
+            {
+                "schema_version": "text2ifc/audit/2.0",
+                "recommendation": "accept",
+                "blocking": False,
+                "deterministic_gate_status": "passed",
+                "findings": [],
+                "evidence_paths": [
+                    "design-brief/design-brief.json",
+                    "generator/candidate.json",
+                    "repair/route.json",
+                ],
+            },
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+    (case_dir / "audit" / "metrics.json").write_text(
+        json.dumps(
+            {
+                "response_id": "msg_audit_accept",
+                "evidence_class": "live",
+                "valid": True,
+                "strict_output_contract_valid": True,
+            }
+        ),
+        encoding="utf-8",
+    )
+    return case_dir
+
+
 def test_successful_first_pass_repair_stage_never_creates_provider(tmp_path: Path):
     source_dir = _write_valid_generator_source(tmp_path / "generator")
     calls = []
@@ -1061,3 +1112,33 @@ def test_audit_report_cli_uses_injected_provider_and_case_dir(
     assert summary["status"] == "accepted"
     assert summary["response_id"] == "msg_unit_design_brief_v2"
     assert (case_dir / "report.md").is_file()
+
+
+def test_final_acceptance_stage_writes_geometry_checked_ifc_and_root_report(
+    tmp_path: Path,
+):
+    case_dir = _write_finalizable_case_dir(tmp_path / "complete-room")
+    output_dir = tmp_path / "phase6.1-mimo-live"
+
+    result = run_final_acceptance_stage(
+        case_dir=case_dir,
+        output_dir=output_dir,
+        case_id="complete-room",
+    )
+
+    assert result["valid"] is True
+    assert result["ifc_path"] == str(output_dir / "output.ifc")
+    assert (output_dir / "output.ifc").is_file()
+    assert (output_dir / "report.md").is_file()
+    geometry = json.loads((output_dir / "geometry-feedback.json").read_text(encoding="utf-8"))
+    assert geometry["success"] is True
+    assert geometry["issues"] == []
+    east_bbox = geometry["metrics"]["walls"]["wall-east"]["bbox"]
+    assert east_bbox["x"] == [5.85, 6.15]
+    metrics = json.loads((output_dir / "acceptance-metrics.json").read_text(encoding="utf-8"))
+    assert metrics["audit_response_id"] == "msg_audit_accept"
+    assert metrics["compile_reopen_success"] is True
+    assert metrics["geometry_success"] is True
+    report = (output_dir / "report.md").read_text(encoding="utf-8")
+    assert "output.ifc" in report
+    assert "complete-room/report.md" in report
