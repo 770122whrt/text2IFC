@@ -728,6 +728,48 @@ def _write_valid_generator_source(path: Path) -> Path:
     return path
 
 
+def _write_repairable_generator_source(path: Path) -> Path:
+    path.mkdir(parents=True)
+    formal = json.loads(
+        Path("tests/contract_v2/fixtures/minimal.json").read_text(encoding="utf-8")
+    )
+    case = complete_room_case()
+    brief = _valid_ready_brief(case)
+    files = {
+        "input.txt": case["user_request"] + "\n",
+        "conversation.json": json.dumps(case["conversation"], ensure_ascii=False),
+        "design-brief.json": json.dumps(brief, ensure_ascii=False),
+        "candidate.json": json.dumps(formal, ensure_ascii=False),
+        "validation.json": json.dumps(
+            {
+                "valid": False,
+                "issue_count": 1,
+                "issues": [
+                    {
+                        "code": "INVALID_ENUM",
+                        "path": "/entities/0/ifc_class",
+                        "message": "Invalid IFC class enum.",
+                    }
+                ],
+            }
+        ),
+        "metrics.json": json.dumps(
+            {
+                "response_id": "msg_live_invalid_enum",
+                "contract_status": "invalid",
+                "contract_valid": False,
+                "evidence_class": "live",
+            }
+        ),
+        "generator-context.json": json.dumps(
+            {"capability_profile": [{"evidence_id": "schema:formal"}], "few_shots": []}
+        ),
+    }
+    for name, content in files.items():
+        (path / name).write_text(content, encoding="utf-8")
+    return path
+
+
 def test_successful_first_pass_repair_stage_never_creates_provider(tmp_path: Path):
     source_dir = _write_valid_generator_source(tmp_path / "generator")
     calls = []
@@ -755,6 +797,47 @@ def test_successful_first_pass_repair_stage_never_creates_provider(tmp_path: Pat
     metrics = json.loads((output_dir / "metrics.json").read_text(encoding="utf-8"))
     assert metrics["evidence_class"] == "live-derived-no-call"
     assert metrics["source_generator_response_id"] == "msg_live_formal"
+
+
+def test_repair_stage_calls_provider_once_for_eligible_contract_failure(
+    tmp_path: Path,
+):
+    source_dir = _write_repairable_generator_source(tmp_path / "generator")
+    repaired = json.loads(
+        Path("tests/contract_v2/fixtures/minimal.json").read_text(encoding="utf-8")
+    )
+    repaired["entities"][0]["ifc_class"] = "IfcProject"
+    provider = _RecordingLiveProvider(repaired)
+    created = []
+
+    def provider_factory():
+        created.append("created")
+        return provider
+
+    output_dir = tmp_path / "repair"
+    result = run_repair_stage(
+        provider_factory=provider_factory,
+        output_dir=output_dir,
+        generator_source_dir=source_dir,
+        case_id="complete-room",
+    )
+
+    assert created == ["created"]
+    assert result["route"] == "repair_attempted"
+    assert result["provider_call_count"] == 1
+    assert result["valid"] is True
+    assert result["repair_attempts"][0]["result_status"] == "improved"
+    assert "INVALID_ENUM" in provider.prompt
+    assert (output_dir / "prompt-rendered.md").is_file()
+    assert (output_dir / "response.raw.json").is_file()
+    assert json.loads(
+        (output_dir / "repaired-candidate.json").read_text(encoding="utf-8")
+    ) == repaired
+    fact_delta = json.loads((output_dir / "fact-delta.json").read_text(encoding="utf-8"))
+    assert fact_delta["valid"] is True
+    metrics = json.loads((output_dir / "metrics.json").read_text(encoding="utf-8"))
+    assert metrics["evidence_class"] == "unit_test_fixture"
+    assert metrics["source_generator_response_id"] == "msg_live_invalid_enum"
 
 
 def test_repair_cli_records_zero_calls_for_live_first_pass_success(
