@@ -7,15 +7,15 @@ See: `.planning/PROJECT.md` (updated 2026-06-11)
 **Core value:** Produce valid, inspectable IFC models from explicit user
 requirements.
 
-**Current focus:** Phase 6.1 Wave 4 - conditional real-Mimo repair and fact-delta
-gates after the verified first-pass Formal Generator result
+**Current focus:** Phase 6.1 Wave 5 - real Mimo Audit and generated review
+report after the terminal Generator/Repair route
 
 ## Status
 
 - Phase: 6.1
 - Stage: In Progress
-- State: Waves 0-3 verified with real Mimo; Wave 4 ready
-- Plans: Phase 6.1 planned, 7 of 7 plans written, 4 executed
+- State: Waves 0-4 verified with real Mimo; Wave 5 ready
+- Plans: Phase 6.1 planned, 7 of 7 plans written, 5 executed
 - Branch: `multiagent-design` in C-drive worktree
 - Remote: `https://github.com/770122whrt/text2IFC`
 
@@ -224,6 +224,14 @@ gates after the verified first-pass Formal Generator result
   compiled/reopened IFC2X3 file and a generated `report.md`, plus a five-case
   controlled matrix covering success, Draft, repair routing, blocked invalid
   JSON, and semantic audit mismatch.
+- Phase 6.1 replaces fake-provider acceptance with real Mimo evidence. Waves
+  0-3 verified streaming response envelopes, Design Brief v2.1, real Chinese
+  clarification, and exact Formal/Draft Generator routing.
+- Phase 6.1 Wave 4 records conditional repair truthfully: the canonical live
+  Generator result needed no repair, so the repair stage wrote
+  `no_repair_needed`, `provider_call_count: 0`, and
+  `evidence_class: live-derived-no-call` linked to response
+  `msg_99a7039ffef047d2815e0c4f`.
 
 ## Current Decisions
 
@@ -346,9 +354,10 @@ gates after the verified first-pass Formal Generator result
 
 ## Next Action
 
-Execute Phase 6.1 Wave 4: record `no_repair_needed` for the successful live
-Formal first pass, then prove one-attempt repair eligibility and semantic
-fact-delta blocking without supervisor-authored mutations.
+Execute Phase 6.1 Wave 5: run real Mimo Audit on the terminal generation route
+and generate the review report from actual trace artifacts. Do not allow Audit
+to override deterministic schema, route, geometry, compile, reopen, or
+secret-scan gates.
 
 ## Accumulated Context
 
@@ -498,6 +507,15 @@ fact-delta blocking without supervisor-authored mutations.
   Mimo response `msg_99a7039ffef047d2815e0c4f` returned strict Formal BIM JSON
   2.0 with 13 entities, 4 relationships, zero contract issues, and zero secret
   findings. No repair was invoked and no IFC was compiled in this wave.
+- Phase 6.1 Wave 4 completed on 2026-06-22 with RED/GREEN commits `3b2145f`,
+  `87a508e`, `c0b3c8a`, `65a0651`, `a11e850`, and `d6ba0d8`, followed by
+  this documentation/artifact commit. The canonical repair stage preserved
+  `no_repair_needed` and zero provider calls for the real Formal Generator
+  result. Controlled eligible repair is covered as unit/replay evidence only,
+  not live quality evidence. Focused tests passed 45 checks; the Agent suite
+  passed 125 checks; service/IFC gate slice passed 6 checks; compileall passed.
+  Full `python -m pytest -q` was attempted twice and timed out at 120s and
+  300s without failure output; collection found 431 tests.
 
 ---
-*Last activity: 2026-06-22 - completed Phase 6.1 Wave 3 live Generator gate*
+*Last activity: 2026-06-22 - completed Phase 6.1 Wave 4 conditional repair route*

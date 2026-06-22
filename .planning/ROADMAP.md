@@ -504,9 +504,9 @@ user intent to force a run through a gate.
 
 - [x] `06.1-03-PLAN.md` - Formal/Draft Generator contracts and output routing
 
-**Wave 4** *(blocked on Wave 3 deterministic failure evidence)*
+**Wave 4** *(verified on Wave 3 terminal generation route)*
 
-- [ ] `06.1-04-PLAN.md` - Conditional Mimo repair without supervisor mutation
+- [x] `06.1-04-PLAN.md` - Conditional Mimo repair without supervisor mutation
 
 **Wave 5** *(blocked on Wave 4 terminal generation route)*
 
@@ -526,4 +526,4 @@ user intent to force a run through a gate.
   evidence, provider `id`/`model`/`stop_reason`/`usage`, event stream, metrics,
   and secret-scan result.
 
-**Status:** In Progress - Waves 0-3 verified with real Mimo 2026-06-22
+**Status:** In Progress - Waves 0-4 verified with real Mimo 2026-06-22
