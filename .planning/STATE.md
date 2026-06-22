@@ -7,15 +7,14 @@ See: `.planning/PROJECT.md` (updated 2026-06-11)
 **Core value:** Produce valid, inspectable IFC models from explicit user
 requirements.
 
-**Current focus:** Phase 6.1 Wave 5 - real Mimo Audit and generated review
-report after the terminal Generator/Repair route
+**Current focus:** Phase 6.1 Wave 6 - reach final IFC/report acceptance gates
 
 ## Status
 
 - Phase: 6.1
 - Stage: In Progress
-- State: Waves 0-4 verified with real Mimo; Wave 5 ready
-- Plans: Phase 6.1 planned, 7 of 7 plans written, 5 executed
+- State: Waves 0-5 verified with real Mimo; Wave 6 ready
+- Plans: Phase 6.1 planned, 7 of 7 plans written, 6 executed
 - Branch: `multiagent-design` in C-drive worktree
 - Remote: `https://github.com/770122whrt/text2IFC`
 
@@ -232,6 +231,14 @@ report after the terminal Generator/Repair route
   `no_repair_needed`, `provider_call_count: 0`, and
   `evidence_class: live-derived-no-call` linked to response
   `msg_99a7039ffef047d2815e0c4f`.
+- Phase 6.1 Wave 5 ran a separate real Mimo Audit Agent and generated the
+  single-entry live report. A fenced Audit response
+  `msg_463225669d994c2390ccebf0` triggered a strict output-contract fix and
+  prompt strengthening. The final Audit response
+  `msg_7cbe7cb111df4758b0e78786` returned bare JSON with
+  `recommendation: accept`, `blocking: false`, and zero validation issues.
+  `report.md` is generated from sidecars and links Generator parsed output to
+  `generator/candidate.json`.
 
 ## Current Decisions
 
@@ -354,10 +361,10 @@ report after the terminal Generator/Repair route
 
 ## Next Action
 
-Execute Phase 6.1 Wave 5: run real Mimo Audit on the terminal generation route
-and generate the review report from actual trace artifacts. Do not allow Audit
-to override deterministic schema, route, geometry, compile, reopen, or
-secret-scan gates.
+Execute Phase 6.1 Wave 6: run the final live acceptance matrix and produce the
+final accepted Formal artifact. Do not claim final acceptance until the accepted
+Formal path has `output.ifc`, generated `report.md`, deterministic gates,
+Audit, and secret scan all passing.
 
 ## Accumulated Context
 
@@ -516,6 +523,16 @@ secret-scan gates.
   passed 125 checks; service/IFC gate slice passed 6 checks; compileall passed.
   Full `python -m pytest -q` was attempted twice and timed out at 120s and
   300s without failure output; collection found 431 tests.
+- Phase 6.1 Wave 5 completed on 2026-06-22 with RED/GREEN commits `b8af624`,
+  `0b579ca`, `3d3855f`, `f85779d`, `1b60898`, `fa0ad2e`, `12dba94`,
+  `bfdf5dc`, and `884e44e`, followed by this documentation/artifact commit.
+  The first real Audit response `msg_463225669d994c2390ccebf0` exposed a
+  strict output-contract gap by using an outer Markdown fence. After the gate
+  and prompt fix, real Audit response `msg_7cbe7cb111df4758b0e78786` was
+  `end_turn`, strict bare JSON, valid Audit v2, `recommendation: accept`, and
+  `blocking: false`. The generated `report.md` is sidecar-derived and links
+  the Generator parsed output to `generator/candidate.json`. Agent regression
+  passed 129 tests and compileall passed.
 
 ---
-*Last activity: 2026-06-22 - completed Phase 6.1 Wave 4 conditional repair route*
+*Last activity: 2026-06-22 - completed Phase 6.1 Wave 5 real Audit/report gate*

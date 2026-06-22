@@ -508,11 +508,11 @@ user intent to force a run through a gate.
 
 - [x] `06.1-04-PLAN.md` - Conditional Mimo repair without supervisor mutation
 
-**Wave 5** *(blocked on Wave 4 terminal generation route)*
+**Wave 5** *(verified on Wave 4 terminal generation route)*
 
-- [ ] `06.1-05-PLAN.md` - Real Mimo Audit and generated review report
+- [x] `06.1-05-PLAN.md` - Real Mimo Audit and generated review report
 
-**Wave 6** *(blocked on all live roles and deterministic gates)*
+**Wave 6** *(blocked on final IFC acceptance gates)*
 
 - [ ] `06.1-06-PLAN.md` - Live acceptance matrix, IFC artifact, and final review
 
@@ -526,4 +526,4 @@ user intent to force a run through a gate.
   evidence, provider `id`/`model`/`stop_reason`/`usage`, event stream, metrics,
   and secret-scan result.
 
-**Status:** In Progress - Waves 0-4 verified with real Mimo 2026-06-22
+**Status:** In Progress - Waves 0-5 verified with real Mimo 2026-06-22
