@@ -14,6 +14,7 @@ from .live_trace import write_live_trace
 from .prompt_registry import render_prompt
 
 
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DESIGN_BRIEF_TEMPLATE_ID = "design-brief.v2.1"
 
 
@@ -188,7 +189,7 @@ def run_design_brief_stage(
         "valid": acceptance_valid,
         "schema_semantic_valid": schema_semantic_valid,
         "strict_output_contract_valid": strict_output_contract_valid,
-        "output_dir": str(output),
+        "output_dir": portable_artifact_path(output),
         "response_id": result.response.get("id"),
         "evidence_class": result.evidence_class,
     }
@@ -228,7 +229,7 @@ def compare_design_brief_runs(
     evidence_valid = _trace_evidence_is_current(v2_manifest)
 
     v1_record = {
-        "source_dir": str(baseline),
+        "source_dir": portable_artifact_path(baseline),
         "model_text_sha256": _file_sha256(v1_text_path),
         "metadata_sha256": _file_sha256(v1_metadata_path),
         "response_id": v1_metadata.get("response_id", v1_metadata.get("id")),
@@ -248,7 +249,7 @@ def compare_design_brief_runs(
         "design_status": None,
     }
     v2_record = {
-        "source_dir": str(current),
+        "source_dir": portable_artifact_path(current),
         "trace_manifest_sha256": _file_sha256(current / "trace-manifest.json"),
         "response_id": v2_metrics.get("response_id"),
         "model": v2_metrics.get("model"),
@@ -301,14 +302,13 @@ def compare_design_brief_runs(
 
 
 def _trace_evidence_is_current(manifest: dict[str, Any]) -> bool:
-    project_root = Path(__file__).resolve().parents[2]
     evidence = manifest.get("selected_evidence", [])
     if not isinstance(evidence, list) or not evidence:
         return False
     for record in evidence:
         if not isinstance(record, dict):
             return False
-        source_path = project_root / str(record.get("source_path", ""))
+        source_path = PROJECT_ROOT / str(record.get("source_path", ""))
         if not source_path.is_file():
             return False
         if record.get("source_sha256") != _file_sha256(source_path):
@@ -318,6 +318,15 @@ def _trace_evidence_is_current(manifest: dict[str, Any]) -> bool:
 
 def _file_sha256(path: Path) -> str:
     return "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def portable_artifact_path(path: Path | str) -> str:
+    """Return repository-relative paths when the artifact is in this worktree."""
+    resolved = Path(path).resolve()
+    try:
+        return resolved.relative_to(PROJECT_ROOT).as_posix()
+    except ValueError:
+        return str(resolved)
 
 
 def _lower_number(left: Any, right: Any) -> bool:
