@@ -4,11 +4,17 @@ from __future__ import annotations
 
 import json
 import hashlib
+from datetime import datetime, timezone
 from dataclasses import asdict
 from pathlib import Path
 from typing import Any
 
 from .context_selection import select_design_brief_context
+from .clarification import (
+    ClarificationCall,
+    ClarificationController,
+    ClarificationError,
+)
 from .design_brief import load_design_brief_schema, validate_design_brief
 from .live_trace import write_live_trace
 from .prompt_registry import render_prompt
@@ -48,6 +54,23 @@ def complete_room_case() -> dict[str, Any]:
     }
 
 
+def clarified_room_case() -> dict[str, Any]:
+    """Return the incomplete room case whose wall thickness needs clarification."""
+    base = complete_room_case()
+    return {
+        "case_id": "clarified-room",
+        "user_request": base["user_request"],
+        "conversation": [
+            {
+                "turn_id": "turn-user-001",
+                "role": "user",
+                "content": base["user_request"],
+                "question_ids": [],
+            }
+        ],
+    }
+
+
 def run_design_brief_stage(
     *,
     provider: Any,
@@ -82,8 +105,14 @@ def run_design_brief_stage(
     _write_json(output / "prompt-render-input.json", renderer_inputs)
     _write_text(output / "prompt-rendered.md", rendered["text"])
 
+    call_index = case.get("call_index")
+    session_id = (
+        f"phase6.1-{case['case_id']}-design-brief-{int(call_index):02d}"
+        if call_index is not None
+        else f"phase6.1-{case['case_id']}-design-brief-v2"
+    )
     result = provider.generate_live(
-        session_id=f"phase6.1-{case['case_id']}-design-brief-v2",
+        session_id=session_id,
         prompt=rendered["text"],
         schema=schema,
         state={"case_id": case["case_id"], "stage": "design-brief"},
@@ -192,6 +221,201 @@ def run_design_brief_stage(
         "output_dir": portable_artifact_path(output),
         "response_id": result.response.get("id"),
         "evidence_class": result.evidence_class,
+    }
+
+
+def run_clarification_case(
+    *,
+    provider: Any,
+    output_dir: Path | str,
+    case: dict[str, Any],
+    answers: list[str],
+) -> dict[str, Any]:
+    """Run model-authored clarification rounds with append-only user answers."""
+    output = Path(output_dir)
+    output.mkdir(parents=True, exist_ok=True)
+    calls_dir = output / "calls"
+    states_dir = output / "states"
+    calls_dir.mkdir(parents=True, exist_ok=True)
+    states_dir.mkdir(parents=True, exist_ok=True)
+    event_path = output / "events.jsonl"
+    if event_path.exists():
+        event_path.unlink()
+
+    user_request = str(case["user_request"])
+    _write_text(output / "input.txt", user_request + "\n")
+    _write_json(output / "answers.json", {"answers": list(answers)})
+    controller = ClarificationController.start(
+        case_id=str(case["case_id"]),
+        user_request=user_request,
+    )
+
+    def invoke(transcript: list[dict[str, Any]], call_index: int) -> ClarificationCall:
+        call_dir = calls_dir / f"{call_index:02d}-design-brief"
+        _append_event(
+            event_path,
+            {
+                "event": "design_brief_call_started",
+                "case_id": case["case_id"],
+                "call_index": call_index,
+                "turn_count": len(transcript),
+            },
+        )
+        stage_result = run_design_brief_stage(
+            provider=provider,
+            output_dir=call_dir,
+            case={
+                "case_id": case["case_id"],
+                "call_index": call_index,
+                "user_request": user_request,
+                "conversation": transcript,
+            },
+        )
+        _append_event(
+            event_path,
+            {
+                "event": "design_brief_call_completed",
+                "case_id": case["case_id"],
+                "call_index": call_index,
+                "response_id": stage_result.get("response_id"),
+                "status": stage_result.get("status"),
+                "schema_semantic_valid": stage_result.get(
+                    "schema_semantic_valid"
+                ),
+                "strict_output_contract_valid": stage_result.get(
+                    "strict_output_contract_valid"
+                ),
+            },
+        )
+        if not stage_result["valid"]:
+            raise ClarificationError(
+                "live Design Brief call failed acceptance gates: "
+                + str(stage_result["status"])
+            )
+        brief = json.loads(
+            (call_dir / "design-brief.json").read_text(encoding="utf-8")
+        )
+        selection = json.loads(
+            (call_dir / "context-selection.json").read_text(encoding="utf-8")
+        )
+        manifest = json.loads(
+            (call_dir / "trace-manifest.json").read_text(encoding="utf-8")
+        )
+        return ClarificationCall(
+            call_index=call_index,
+            response_id=str(stage_result["response_id"]),
+            prompt_template_id=str(manifest["template_id"]),
+            prompt_template_hash=str(manifest["template_hash"]),
+            artifact_dir=portable_artifact_path(call_dir),
+            brief=brief,
+            evidence_catalog=list(selection["evidence"]),
+        )
+
+    first_call = invoke(controller.transcript_dicts(), 1)
+    controller = controller.record_model_call(first_call)
+    _write_json(states_dir / "after-call-01.json", controller.to_dict())
+
+    answer_index = 0
+    while controller.status == "needs_clarification" and answer_index < len(answers):
+        answer = answers[answer_index]
+        answer_index += 1
+        _append_event(
+            event_path,
+            {
+                "event": "user_answer_appended",
+                "case_id": case["case_id"],
+                "answer_index": answer_index,
+                "question_ids": list(controller.pending_question_ids),
+            },
+        )
+        controller = controller.answer_and_rerun(
+            answer=answer,
+            invoke_design_brief=invoke,
+        )
+        _write_json(
+            states_dir / f"after-call-{len(controller.calls):02d}.json",
+            controller.to_dict(),
+        )
+
+    terminal_statuses = {"ready", "draft_required", "blocked"}
+    terminal = controller.status in terminal_statuses
+    final_brief = controller.calls[-1].brief
+    _write_json(output / "conversation.json", controller.transcript_dicts())
+    _write_json(output / "state.json", controller.to_dict())
+    _write_json(output / "design-brief.json", final_brief)
+
+    call_metrics = [
+        json.loads(
+            (
+                calls_dir
+                / f"{call.call_index:02d}-design-brief"
+                / "metrics.json"
+            ).read_text(encoding="utf-8")
+        )
+        for call in controller.calls
+    ]
+    metrics = {
+        "case_id": case["case_id"],
+        "evidence_class": "live" if all(
+            item.get("evidence_class") == "live" for item in call_metrics
+        ) else "unit_or_replay",
+        "live_call_count": len(controller.calls),
+        "response_ids": [call.response_id for call in controller.calls],
+        "design_statuses": [call.brief["status"] for call in controller.calls],
+        "answer_turn_count": sum(
+            1 for turn in controller.transcript if turn.role == "user"
+        ) - 1,
+        "terminal_status": controller.status,
+        "terminal": terminal,
+        "all_end_turn": all(
+            item.get("stop_reason") == "end_turn" for item in call_metrics
+        ),
+        "all_strict_output_contract_valid": all(
+            item.get("strict_output_contract_valid") is True
+            for item in call_metrics
+        ),
+    }
+    _write_json(output / "metrics.json", metrics)
+    _write_json(
+        output / "call-manifest.json",
+        {
+            "schema_version": "text2ifc/live-clarification-manifest/1.0",
+            "case_id": case["case_id"],
+            "calls": [
+                {
+                    "call_index": call.call_index,
+                    "response_id": call.response_id,
+                    "prompt_template_id": call.prompt_template_id,
+                    "prompt_template_hash": call.prompt_template_hash,
+                    "artifact_dir": call.artifact_dir,
+                    "design_status": call.brief["status"],
+                }
+                for call in controller.calls
+            ],
+            "final_design_brief": "design-brief.json",
+            "conversation": "conversation.json",
+            "metrics": "metrics.json",
+        },
+    )
+    _append_event(
+        event_path,
+        {
+            "event": "clarification_terminal",
+            "case_id": case["case_id"],
+            "status": controller.status,
+            "terminal": terminal,
+            "live_call_count": len(controller.calls),
+        },
+    )
+    return {
+        "case_id": case["case_id"],
+        "stage": "clarify",
+        "status": controller.status,
+        "valid": terminal,
+        "live_call_count": len(controller.calls),
+        "response_ids": [call.response_id for call in controller.calls],
+        "evidence_class": metrics["evidence_class"],
+        "output_dir": portable_artifact_path(output),
     }
 
 
@@ -348,3 +572,12 @@ def _write_text(path: Path, text: str) -> None:
     temporary = path.with_name(path.name + ".tmp")
     temporary.write_text(text, encoding="utf-8")
     temporary.replace(path)
+
+
+def _append_event(path: Path, payload: dict[str, Any]) -> None:
+    record = {
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+        **payload,
+    }
+    with path.open("a", encoding="utf-8", newline="\n") as stream:
+        stream.write(json.dumps(record, ensure_ascii=False, sort_keys=True) + "\n")

@@ -371,6 +371,7 @@ def test_live_clarification_run_preserves_two_provider_calls_and_all_turns(
     first["original_request"] = case["user_request"]
     first["status"] = "needs_clarification"
     first["known_facts"]["walls"].pop("thickness_mm")
+    first["user_corrections"] = []
     first["missing_facts"] = [
         {
             "id": "mf-wall-thickness",
@@ -392,16 +393,18 @@ def test_live_clarification_run_preserves_two_provider_calls_and_all_turns(
             "evidence_refs": ["schema:bim-json-v2:representation"],
         }
     ]
+    for fact_source in first["fact_sources"]:
+        fact_source["source_turns"] = ["turn-user-001"]
     first["provenance"]["source_turns"] = ["turn-user-001"]
     second = json.loads(json.dumps(first, ensure_ascii=False))
     second["status"] = "ready"
     second["known_facts"]["walls"]["thickness_mm"] = 300
     second["missing_facts"] = []
     second["clarification_questions"] = []
-    second["fact_sources"][0]["source_turns"] = [
-        "turn-user-001",
-        "turn-user-003",
-    ]
+    for fact_source in second["fact_sources"]:
+        fact_source["source_turns"] = ["turn-user-001"]
+        if fact_source["path"] == "/known_facts/walls":
+            fact_source["source_turns"].append("turn-user-003")
     second["provenance"]["source_turns"] = [
         "turn-user-001",
         "turn-user-003",
@@ -455,6 +458,7 @@ def test_live_clarification_cli_consumes_answer_file_with_injected_provider(
     first["original_request"] = case["user_request"]
     first["status"] = "needs_clarification"
     first["known_facts"]["walls"].pop("thickness_mm")
+    first["user_corrections"] = []
     first["missing_facts"] = [
         {
             "id": "mf-wall-thickness",
@@ -476,16 +480,18 @@ def test_live_clarification_cli_consumes_answer_file_with_injected_provider(
             "evidence_refs": ["schema:bim-json-v2:representation"],
         }
     ]
+    for fact_source in first["fact_sources"]:
+        fact_source["source_turns"] = ["turn-user-001"]
     first["provenance"]["source_turns"] = ["turn-user-001"]
     second = json.loads(json.dumps(first, ensure_ascii=False))
     second["status"] = "ready"
     second["known_facts"]["walls"]["thickness_mm"] = 300
     second["missing_facts"] = []
     second["clarification_questions"] = []
-    second["fact_sources"][0]["source_turns"] = [
-        "turn-user-001",
-        "turn-user-003",
-    ]
+    for fact_source in second["fact_sources"]:
+        fact_source["source_turns"] = ["turn-user-001"]
+        if fact_source["path"] == "/known_facts/walls":
+            fact_source["source_turns"].append("turn-user-003")
     second["provenance"]["source_turns"] = [
         "turn-user-001",
         "turn-user-003",

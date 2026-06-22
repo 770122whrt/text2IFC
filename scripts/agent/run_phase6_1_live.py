@@ -13,10 +13,13 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "src"))
 
 from text2ifc_agent.live_pipeline import (  # noqa: E402
+    clarified_room_case,
     compare_design_brief_runs,
     complete_room_case,
+    run_clarification_case,
     run_design_brief_stage,
 )
+from text2ifc_agent.clarification import ClarificationError  # noqa: E402
 from text2ifc_agent.live_trace import write_live_trace  # noqa: E402
 from text2ifc_agent.providers import (  # noqa: E402
     MimoAgentProvider,
@@ -49,12 +52,17 @@ def main(
     provider_factory=MimoAgentProvider,
 ) -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--stage", choices=("design-brief",), default="design-brief")
-    parser.add_argument("--case", choices=("complete-room",), default="complete-room")
+    parser.add_argument(
+        "--stage", choices=("design-brief", "clarify"), default="design-brief"
+    )
+    parser.add_argument(
+        "--case", choices=("complete-room", "clarified-room"), default="complete-room"
+    )
     parser.add_argument("--live", action="store_true")
     parser.add_argument("--check-config", action="store_true")
     parser.add_argument("--env-file", type=Path, default=DEFAULT_ENV_FILE)
     parser.add_argument("--output-dir", type=Path)
+    parser.add_argument("--answers", type=Path)
     parser.add_argument("--v1-baseline-dir", type=Path, default=DEFAULT_V1_BASELINE)
     args = parser.parse_args(argv)
     _load_env_file(args.env_file)
@@ -77,27 +85,51 @@ def main(
 
     output_dir = args.output_dir or (
         DEFAULT_LIVE_ROOT / args.case / args.stage
+        if args.stage == "design-brief"
+        else DEFAULT_LIVE_ROOT / args.case
     )
-    case = complete_room_case()
+    if args.stage == "clarify" and args.case != "clarified-room":
+        parser.error("--stage clarify requires --case clarified-room")
+    if args.stage == "design-brief" and args.case != "complete-room":
+        parser.error("--stage design-brief requires --case complete-room")
+    case = clarified_room_case() if args.case == "clarified-room" else complete_room_case()
     try:
-        result = run_design_brief_stage(
-            provider=provider_factory(),
-            output_dir=output_dir,
-            case=case,
-        )
-    except ProviderOutputError as exc:
-        if exc.live_result is not None:
-            write_live_trace(result=exc.live_result, output_dir=output_dir)
+        provider = provider_factory()
+        if args.stage == "clarify":
+            if args.answers is None or not args.answers.is_file():
+                parser.error("--stage clarify requires an existing --answers JSON file")
+            answer_payload = json.loads(args.answers.read_text(encoding="utf-8"))
+            answers = answer_payload.get("answers")
+            if not isinstance(answers, list) or not all(
+                isinstance(answer, str) and answer for answer in answers
+            ):
+                parser.error("answer file must contain a non-empty string answers list")
+            result = run_clarification_case(
+                provider=provider,
+                output_dir=output_dir,
+                case=case,
+                answers=answers,
+            )
+        else:
+            result = run_design_brief_stage(
+                provider=provider,
+                output_dir=output_dir,
+                case=case,
+            )
+    except (ProviderOutputError, ClarificationError) as exc:
+        live_result = getattr(exc, "live_result", None)
+        if live_result is not None:
+            write_live_trace(result=live_result, output_dir=output_dir)
         failure = {
             "status": "blocked_provider_failure",
             "message": str(exc),
-            "details": exc.details,
+            "details": getattr(exc, "details", {}),
             "output_dir": str(output_dir),
         }
         print(json.dumps(failure, ensure_ascii=False, sort_keys=True))
         return 2
 
-    if (
+    if args.stage == "design-brief" and (
         args.v1_baseline_dir.is_dir()
         and (args.v1_baseline_dir / "model-text.txt").is_file()
         and (args.v1_baseline_dir / "response-metadata.json").is_file()
