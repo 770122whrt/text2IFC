@@ -140,6 +140,32 @@ requirements.
 - **DEPLOY-01**: Package the selected model and deterministic compiler behind
   a repeatable deployment interface.
 
+### Live Mimo Multi-agent Acceptance
+
+- [ ] **LIVE-01**: Every Phase 6.1 acceptance role uses the configured real
+  Mimo Anthropic API and preserves the exact response envelope, including
+  provider response ID, model, `stop_reason`, content blocks, and usage.
+- [ ] **LIVE-02**: A real Mimo Design Brief Agent dynamically derives known,
+  missing, ambiguous, unsupported, and corrected facts from the user request,
+  conversation, BIM JSON schema, capability evidence, and relevant examples;
+  it does not use a global hard-coded required/not-required field list.
+- [ ] **LIVE-03**: The Chinese-first live workflow asks one to three evidence-
+  linked questions per clarification turn, preserves every user answer, and
+  reruns the Design Brief Agent until it reports ready, Draft, or blocked.
+- [ ] **LIVE-04**: A real Mimo Generator receives both canonical Formal BIM
+  JSON 2.0 and Draft Envelope contracts and returns exactly one contract-valid
+  object; unknown versions and malformed envelopes are blocked explicitly.
+- [ ] **LIVE-05**: Repair is called through real Mimo only after deterministic
+  validation feedback makes repair eligible, preserves before/after evidence,
+  and never receives supervisor-authored facts or silent ambiguity removal.
+- [ ] **LIVE-06**: A real Mimo Audit Agent reviews intent coverage after all
+  deterministic gates, cannot override failures, and an accepted live run
+  produces a reopened, geometry-checked IFC2X3 file.
+- [ ] **OBS-02**: A live run exposes stage progress through persisted stream
+  events and generates one `report.md` from trace sidecars containing every
+  material input/output, route, metric, and final artifact path while excluding
+  credentials, authorization headers, and private provider URLs.
+
 ## Out of Scope
 
 | Feature | Reason |
@@ -200,12 +226,19 @@ requirements.
 | MODEL-01 | Phase 6 | Complete |
 | MODEL-02 | Phase 6 | Complete |
 | DEPLOY-01 | Phase 6 | Complete |
+| LIVE-01 | Phase 6.1 | Planned |
+| LIVE-02 | Phase 6.1 | Planned |
+| LIVE-03 | Phase 6.1 | Planned |
+| LIVE-04 | Phase 6.1 | Planned |
+| LIVE-05 | Phase 6.1 | Planned |
+| LIVE-06 | Phase 6.1 | Planned |
+| OBS-02 | Phase 6.1 | Planned |
 
 **Coverage:**
-- tracked requirements: 47 total
-- Mapped to phases: 47
+- tracked requirements: 53 total
+- Mapped to phases: 53
 - Unmapped: 0
 
 ---
 *Requirements defined: 2026-06-11*
-*Last updated: 2026-06-18 after Phase 6 multi-agent planning*
+*Last updated: 2026-06-22 after Phase 6.1 live-Mimo insertion*

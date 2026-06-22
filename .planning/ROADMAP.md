@@ -458,3 +458,72 @@ gates.
   worktree; the E-drive working tree is not edited.
 
 **Status:** Complete - verified 2026-06-21
+
+## Phase 6.1: Live Mimo Multi-agent Pipeline (INSERTED)
+
+**Goal:** Replace the Phase 6 fake-provider acceptance claim with an observable,
+Chinese-first, real-Mimo multi-agent pipeline that reaches validated BIM JSON
+2.0 or an explicit canonical Draft, compiles accepted Formal output to IFC2X3,
+and records exact provider evidence without supervisor-authored semantic facts.
+
+**Requirements:** LIVE-01, LIVE-02, LIVE-03, LIVE-04, LIVE-05, LIVE-06, OBS-02
+
+**Depends on:** Phase 6
+
+**Canonical refs:**
+
+- `.planning/phases/06.1-live-mimo-multiagent-pipeline/06.1-SPEC.md`
+- `.planning/phases/06.1-live-mimo-multiagent-pipeline/06.1-CONTEXT.md`
+- `.planning/phases/06.1-live-mimo-multiagent-pipeline/06.1-AI-SPEC.md`
+- `.planning/phases/06.1-live-mimo-multiagent-pipeline/06.1-RESEARCH.md`
+- `.planning/phases/06.1-live-mimo-multiagent-pipeline/06.1-VALIDATION.md`
+
+**Explicit boundary:** Every acceptance run calls the configured Mimo Anthropic
+API for the Design Brief Agent, BIM JSON Generator, and Audit Agent. Repair also
+uses Mimo when deterministic feedback makes repair eligible. Fake/file
+providers remain available only for isolated unit tests and replay; their output
+cannot support a live quality, completion, or deployment claim. The Observer is
+not a semantic agent and may never delete ambiguity, add facts, or reinterpret
+user intent to force a run through a gate.
+
+**Plans:** 7 plans in 7 waves
+
+**Wave 0**
+
+- [ ] `06.1-00-PLAN.md` - Real Mimo envelope, streaming, and trace contract
+
+**Wave 1** *(blocked on Wave 0 exact response provenance)*
+
+- [ ] `06.1-01-PLAN.md` - Dynamic Design Brief Agent and clarification ownership
+
+**Wave 2** *(blocked on Wave 1 readiness contract)*
+
+- [ ] `06.1-02-PLAN.md` - Real Chinese multi-turn orchestration
+
+**Wave 3** *(blocked on Wave 2 clarified Design Brief)*
+
+- [ ] `06.1-03-PLAN.md` - Formal/Draft Generator contracts and output routing
+
+**Wave 4** *(blocked on Wave 3 deterministic failure evidence)*
+
+- [ ] `06.1-04-PLAN.md` - Conditional Mimo repair without supervisor mutation
+
+**Wave 5** *(blocked on Wave 4 terminal generation route)*
+
+- [ ] `06.1-05-PLAN.md` - Real Mimo Audit and generated review report
+
+**Wave 6** *(blocked on all live roles and deterministic gates)*
+
+- [ ] `06.1-06-PLAN.md` - Live acceptance matrix, IFC artifact, and final review
+
+**Acceptance artifacts:**
+
+- `dataset/processed/agent-demo/phase6.1-mimo-live/output.ifc`
+- `dataset/processed/agent-demo/phase6.1-mimo-live/report.md`
+- A trace bundle containing original Chinese input, conversation turns,
+  Design Brief prompt/request/raw response/parsed output, Generator evidence,
+  validation and geometry feedback, conditional repair evidence, Audit
+  evidence, provider `id`/`model`/`stop_reason`/`usage`, event stream, metrics,
+  and secret-scan result.
+
+**Status:** Planned - specification and plans written 2026-06-22

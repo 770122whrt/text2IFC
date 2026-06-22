@@ -7,15 +7,15 @@ See: `.planning/PROJECT.md` (updated 2026-06-11)
 **Core value:** Produce valid, inspectable IFC models from explicit user
 requirements.
 
-**Current focus:** Phase 6 complete; prepare human review of the final
-trace-backed IFC demo and choose the next milestone
+**Current focus:** Phase 6.1 planned to replace fake-provider acceptance with a
+fully observable real-Mimo multi-agent pipeline and IFC acceptance artifact
 
 ## Status
 
-- Phase: 6
-- Stage: Complete
-- State: All Phase 6 waves verified
-- Plans: Phase 6 planned, 7 of 7 plans written, 7 executed
+- Phase: 6.1
+- Stage: Planned
+- State: Specification complete; seven live-Mimo plans awaiting execution
+- Plans: Phase 6.1 planned, 7 of 7 plans written, 0 executed
 - Branch: `multiagent-design` in C-drive worktree
 - Remote: `https://github.com/770122whrt/text2IFC`
 
@@ -293,6 +293,18 @@ trace-backed IFC demo and choose the next milestone
   new open missing facts rather than defaults.
 - Provider tests remain deterministic without network or credentials. Mimo live
   smoke is optional; config checks report env var names only.
+- The preceding optional-live rules remain historical Phase 5/6 constraints.
+  Phase 6.1 acceptance supersedes them: Design Brief, Generator, conditional
+  Repair, and Audit evidence must come from real Mimo calls, while fake/file
+  providers are unit/replay tools only.
+- Phase 6.1 clarification necessity is derived per request from user text,
+  transcript, canonical schemas, generation capability, and relevant examples;
+  no global required/not-required field list is allowed.
+- Design Brief Agent is the only semantic owner of clarification questions.
+  Deterministic clarification code validates count, mapping, evidence, and
+  transcript state but does not author questions or facts.
+- The Observer may diagnose, block, and report prompt/provider/routing failures,
+  but cannot delete ambiguity or add semantic facts to force success.
 - The simple-room demo reaches `formal_ready`, validates BIM JSON 2.0, asks
   three Chinese clarification questions, compiles IFC, and records transcript,
   state, candidate, diagnostics, metrics, report, and IFC artifacts.
@@ -334,9 +346,9 @@ trace-backed IFC demo and choose the next milestone
 
 ## Next Action
 
-Review the final Phase 6 `report.md` and `output.ifc`, then decide whether the
-next milestone should prioritize a real-provider Chinese benchmark, reviewed
-Chinese data expansion, or HTTP deployment packaging.
+Review the Phase 6.1 specification and plans, then execute Wave 0 to preserve
+exact Mimo response envelopes and streaming events before changing Agent
+prompts or orchestration.
 
 ## Accumulated Context
 
@@ -459,6 +471,12 @@ Chinese data expansion, or HTTP deployment packaging.
   real IFC2X3 artifact. Phase 6 focused verification passed 72 tests, full
   repository regression passed 368 tests, compileall passed, and the final
   artifact scan found zero secrets.
+- Phase 6.1 was inserted and planned on 2026-06-22 after real Mimo experiments
+  showed that Phase 6 fake-provider acceptance did not verify live behavior.
+  Seven waves now cover exact provider envelopes/streaming, evidence-grounded
+  Design Brief v2, real Chinese clarification, exact Formal/Draft Generator
+  contracts, conditional repair, real Audit/reporting, and final live IFC
+  acceptance. No Phase 6.1 wave has executed yet.
 
 ---
-*Last activity: 2026-06-21 - completed and verified Phase 6*
+*Last activity: 2026-06-22 - specified and planned Phase 6.1 live Mimo closure*
