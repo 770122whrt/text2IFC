@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import hashlib
 from dataclasses import asdict
 from pathlib import Path
 from typing import Any
@@ -171,7 +172,137 @@ def run_design_brief_stage(
         "valid": valid,
         "output_dir": str(output),
         "response_id": result.response.get("id"),
+        "evidence_class": result.evidence_class,
     }
+
+
+def compare_design_brief_runs(
+    *,
+    v1_dir: Path | str,
+    v2_dir: Path | str,
+    output_path: Path | str,
+) -> dict[str, Any]:
+    """Compare v1/v2 from persisted traces without semantic overrides."""
+    baseline = Path(v1_dir)
+    current = Path(v2_dir)
+    v1_text_path = baseline / "model-text.txt"
+    v1_metadata_path = baseline / "response-metadata.json"
+    v1_text = v1_text_path.read_text(encoding="utf-8")
+    from .providers import ProviderOutput
+
+    v1_parse_status, v1_payload, v1_normalization = ProviderOutput(
+        text=v1_text,
+        metadata={},
+    ).parse_json()
+    v1_issues = (
+        validate_design_brief(v1_payload)
+        if v1_parse_status == "ok" and v1_payload is not None
+        else []
+    )
+    v1_metadata = json.loads(v1_metadata_path.read_text(encoding="utf-8"))
+    v2_metrics = json.loads((current / "metrics.json").read_text(encoding="utf-8"))
+    v2_validation = json.loads(
+        (current / "validation.json").read_text(encoding="utf-8")
+    )
+    v2_manifest = json.loads(
+        (current / "trace-manifest.json").read_text(encoding="utf-8")
+    )
+    evidence_valid = _trace_evidence_is_current(v2_manifest)
+
+    v1_record = {
+        "source_dir": str(baseline),
+        "model_text_sha256": _file_sha256(v1_text_path),
+        "metadata_sha256": _file_sha256(v1_metadata_path),
+        "response_id": v1_metadata.get("response_id", v1_metadata.get("id")),
+        "model": v1_metadata.get("model"),
+        "stop_reason": v1_metadata.get("stop_reason"),
+        "parse_valid": v1_parse_status == "ok",
+        "schema_semantic_valid": v1_parse_status == "ok" and not v1_issues,
+        "normalization_codes": [
+            item.get("code") for item in v1_normalization if item.get("code")
+        ],
+        "question_count": (
+            len(v1_payload.get("clarification_questions", []))
+            if isinstance(v1_payload, dict)
+            else None
+        ),
+        "evidence_valid": False,
+        "design_status": None,
+    }
+    v2_record = {
+        "source_dir": str(current),
+        "trace_manifest_sha256": _file_sha256(current / "trace-manifest.json"),
+        "response_id": v2_metrics.get("response_id"),
+        "model": v2_metrics.get("model"),
+        "stop_reason": v2_metrics.get("stop_reason"),
+        "parse_valid": bool(v2_metrics.get("parse_valid")),
+        "schema_semantic_valid": bool(v2_validation.get("valid")),
+        "normalization_codes": [
+            item.get("code")
+            for item in v2_metrics.get("normalization_diagnostics", [])
+            if isinstance(item, dict) and item.get("code")
+        ],
+        "question_count": v2_metrics.get("question_count"),
+        "evidence_valid": evidence_valid,
+        "design_status": v2_metrics.get("design_status"),
+    }
+
+    improvements: list[str] = []
+    regressions: list[str] = []
+    if v1_record["normalization_codes"] and not v2_record["normalization_codes"]:
+        improvements.append("bare_json_without_outer_markdown_fence")
+    if not v1_record["evidence_valid"] and v2_record["evidence_valid"]:
+        improvements.append("hash_verified_evidence_grounding")
+    if _lower_number(v2_record["question_count"], v1_record["question_count"]):
+        improvements.append("fewer_clarification_questions")
+
+    if v1_record["parse_valid"] and not v2_record["parse_valid"]:
+        regressions.append("parse_validity_regressed")
+    if v1_record["schema_semantic_valid"] and not v2_record["schema_semantic_valid"]:
+        regressions.append("schema_semantic_validity_regressed")
+    if _higher_number(v2_record["question_count"], v1_record["question_count"]):
+        regressions.append("clarification_question_count_increased")
+    if not v2_record["evidence_valid"]:
+        regressions.append("v2_evidence_hash_or_path_invalid")
+
+    comparison = {
+        "schema_version": "text2ifc/design-brief-comparison/1.0",
+        "comparison_basis": "persisted_trace_artifacts_only",
+        "v1": v1_record,
+        "v2": v2_record,
+        "improvements": improvements,
+        "regressions": regressions,
+    }
+    _write_json(Path(output_path), comparison)
+    return comparison
+
+
+def _trace_evidence_is_current(manifest: dict[str, Any]) -> bool:
+    project_root = Path(__file__).resolve().parents[2]
+    evidence = manifest.get("selected_evidence", [])
+    if not isinstance(evidence, list) or not evidence:
+        return False
+    for record in evidence:
+        if not isinstance(record, dict):
+            return False
+        source_path = project_root / str(record.get("source_path", ""))
+        if not source_path.is_file():
+            return False
+        if record.get("source_sha256") != _file_sha256(source_path):
+            return False
+    return True
+
+
+def _file_sha256(path: Path) -> str:
+    return "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def _lower_number(left: Any, right: Any) -> bool:
+    return isinstance(left, int) and isinstance(right, int) and left < right
+
+
+def _higher_number(left: Any, right: Any) -> bool:
+    return isinstance(left, int) and isinstance(right, int) and left > right
 
 
 def _write_json(path: Path, payload: Any) -> None:
