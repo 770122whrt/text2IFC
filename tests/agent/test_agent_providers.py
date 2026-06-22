@@ -1,7 +1,9 @@
 import importlib
+import io
 import json
 import subprocess
 import sys
+import urllib.error
 
 import pytest
 
@@ -399,6 +401,56 @@ def test_mimo_replay_stream_rejects_non_end_turn_before_json_parse(monkeypatch):
             schema={},
             state={},
         )
+
+
+def test_mimo_http_error_preserves_safe_provider_diagnostics(monkeypatch):
+    def reject(request, timeout):
+        raise urllib.error.HTTPError(
+            url="https://example.invalid/private/v1/messages",
+            code=400,
+            msg="Bad Request",
+            hdrs=None,
+            fp=io.BytesIO(
+                json.dumps(
+                    {
+                        "type": "error",
+                        "error": {
+                            "type": "invalid_request_error",
+                            "message": "max_tokens exceeds provider limit",
+                        },
+                    }
+                ).encode("utf-8")
+            ),
+        )
+
+    monkeypatch.setattr(
+        "text2ifc_agent.providers.urllib.request.urlopen",
+        reject,
+    )
+    provider = MimoAgentProvider(
+        config=MimoConfig(
+            token="secret-token",
+            base_url="https://example.invalid/private",
+            model="mimo-v2.5-pro",
+        )
+    )
+
+    with pytest.raises(ProviderOutputError, match="HTTP 400") as captured:
+        provider.generate_live(
+            session_id="mimo-rejected",
+            prompt='Return exactly {"ok": true}',
+            schema={},
+            state={},
+        )
+
+    assert captured.value.details == {
+        "http_status": 400,
+        "error_type": "invalid_request_error",
+        "message": "max_tokens exceeds provider limit",
+    }
+    rendered = json.dumps(captured.value.details, sort_keys=True)
+    assert "secret-token" not in rendered
+    assert "example.invalid" not in rendered
 
 
 def test_live_trace_replay_writes_reviewable_secret_safe_bundle(monkeypatch, tmp_path):
