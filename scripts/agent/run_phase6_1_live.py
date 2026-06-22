@@ -18,6 +18,7 @@ from text2ifc_agent.live_pipeline import (  # noqa: E402
     complete_room_case,
     run_clarification_case,
     run_design_brief_stage,
+    run_generator_stage,
 )
 from text2ifc_agent.clarification import ClarificationError  # noqa: E402
 from text2ifc_agent.live_trace import write_live_trace  # noqa: E402
@@ -53,7 +54,9 @@ def main(
 ) -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "--stage", choices=("design-brief", "clarify"), default="design-brief"
+        "--stage",
+        choices=("design-brief", "clarify", "generate"),
+        default="design-brief",
     )
     parser.add_argument(
         "--case", choices=("complete-room", "clarified-room"), default="complete-room"
@@ -63,6 +66,7 @@ def main(
     parser.add_argument("--env-file", type=Path, default=DEFAULT_ENV_FILE)
     parser.add_argument("--output-dir", type=Path)
     parser.add_argument("--answers", type=Path)
+    parser.add_argument("--design-source-dir", type=Path)
     parser.add_argument("--v1-baseline-dir", type=Path, default=DEFAULT_V1_BASELINE)
     args = parser.parse_args(argv)
     _load_env_file(args.env_file)
@@ -83,11 +87,12 @@ def main(
         )
         return 2
 
-    output_dir = args.output_dir or (
-        DEFAULT_LIVE_ROOT / args.case / args.stage
-        if args.stage == "design-brief"
-        else DEFAULT_LIVE_ROOT / args.case
-    )
+    if args.output_dir is not None:
+        output_dir = args.output_dir
+    elif args.stage == "clarify":
+        output_dir = DEFAULT_LIVE_ROOT / args.case
+    else:
+        output_dir = DEFAULT_LIVE_ROOT / args.case / args.stage
     if args.stage == "clarify" and args.case != "clarified-room":
         parser.error("--stage clarify requires --case clarified-room")
     if args.stage == "design-brief" and args.case != "complete-room":
@@ -109,6 +114,18 @@ def main(
                 output_dir=output_dir,
                 case=case,
                 answers=answers,
+            )
+        elif args.stage == "generate":
+            design_source_dir = args.design_source_dir or (
+                DEFAULT_LIVE_ROOT / "complete-room" / "design-brief"
+                if args.case == "complete-room"
+                else DEFAULT_LIVE_ROOT / "clarified-room"
+            )
+            result = run_generator_stage(
+                provider=provider,
+                output_dir=output_dir,
+                design_source_dir=design_source_dir,
+                case_id=args.case,
             )
         else:
             result = run_design_brief_stage(

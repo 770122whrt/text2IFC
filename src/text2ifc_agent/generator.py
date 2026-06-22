@@ -86,31 +86,12 @@ def generate_bim_json_candidate(
             output=output,
         )
 
-    classification, discriminator_diagnostics = _classify_document(document)
-    if classification == "unknown_contract":
-        return _result(
-            status="blocked_failure",
-            classification=classification,
-            document=document,
-            diagnostics=[*parse_diagnostics, *discriminator_diagnostics],
-            prompt_trace=prompt_trace,
-            rendered=rendered["text"],
-            output=output,
-        )
-    if classification == "draft":
-        issues = validate_draft(document)
-        status = "draft" if not issues else "invalid"
-    else:
-        issues = validate_v2_document(document)
-        status = "formal" if not issues else "invalid"
+    contract = validate_generation_document(document)
     return _result(
-        status=status,
-        classification=classification,
+        status=contract["status"],
+        classification=contract["classification"],
         document=document,
-        diagnostics=[
-            *parse_diagnostics,
-            *[_issue_payload(issue) for issue in issues],
-        ],
+        diagnostics=[*parse_diagnostics, *contract["diagnostics"]],
         prompt_trace=prompt_trace,
         rendered=rendered["text"],
         output=output,
@@ -213,3 +194,25 @@ def _classify_document(
 
 def _diagnostic(code: str, path: str, message: str) -> dict[str, str]:
     return {"code": code, "path": path, "message": message}
+
+
+def validate_generation_document(document: dict[str, Any]) -> dict[str, Any]:
+    """Classify first, then call exactly one canonical contract validator."""
+    classification, discriminator_diagnostics = _classify_document(document)
+    if classification == "unknown_contract":
+        return {
+            "status": "blocked_failure",
+            "classification": classification,
+            "diagnostics": discriminator_diagnostics,
+        }
+    if classification == "draft":
+        issues = validate_draft(document)
+        status = "draft" if not issues else "invalid"
+    else:
+        issues = validate_v2_document(document)
+        status = "formal" if not issues else "invalid"
+    return {
+        "status": status,
+        "classification": classification,
+        "diagnostics": [_issue_payload(issue) for issue in issues],
+    }

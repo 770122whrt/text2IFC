@@ -18,10 +18,26 @@ from .clarification import (
 from .design_brief import load_design_brief_schema, validate_design_brief
 from .live_trace import write_live_trace
 from .prompt_registry import render_prompt
+from .generator import validate_generation_document
+from .providers import validate_provider_output
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DESIGN_BRIEF_TEMPLATE_ID = "design-brief.v2.1"
+GENERATOR_TEMPLATE_ID = "bim-json-generator.v2"
+FORMAL_SCHEMA_PATH = PROJECT_ROOT / "schemas" / "bim-json" / "2.0" / "schema.json"
+DRAFT_SCHEMA_PATH = (
+    PROJECT_ROOT / "schemas" / "bim-json" / "draft" / "1.0" / "schema.json"
+)
+GENERATOR_FEW_SHOT_PATH = (
+    PROJECT_ROOT
+    / "dataset"
+    / "processed"
+    / "agent-demo"
+    / "geometry-gate"
+    / "simple-room-fixed"
+    / "candidate.json"
+)
 
 
 def complete_room_case() -> dict[str, Any]:
@@ -416,6 +432,202 @@ def run_clarification_case(
         "response_ids": [call.response_id for call in controller.calls],
         "evidence_class": metrics["evidence_class"],
         "output_dir": portable_artifact_path(output),
+    }
+
+
+def run_generator_stage(
+    *,
+    provider: Any,
+    output_dir: Path | str,
+    design_source_dir: Path | str,
+    case_id: str,
+) -> dict[str, Any]:
+    """Run one real Generator call with exact Formal and Draft contracts."""
+    output = Path(output_dir)
+    source = Path(design_source_dir)
+    output.mkdir(parents=True, exist_ok=True)
+    user_request = (source / "input.txt").read_text(encoding="utf-8").rstrip("\r\n")
+    conversation = json.loads(
+        (source / "conversation.json").read_text(encoding="utf-8")
+    )
+    design_brief = json.loads(
+        (source / "design-brief.json").read_text(encoding="utf-8")
+    )
+    design_context = json.loads(
+        (source / "context-selection.json").read_text(encoding="utf-8")
+    )
+    if design_brief.get("status") != "ready":
+        raise ValueError("Generator requires a ready Design Brief")
+    formal_schema = json.loads(FORMAL_SCHEMA_PATH.read_text(encoding="utf-8"))
+    draft_schema = json.loads(DRAFT_SCHEMA_PATH.read_text(encoding="utf-8"))
+    generator_context = _select_generator_context(design_context)
+    renderer_inputs = {
+        "USER_REQUEST": user_request,
+        "CONVERSATION": conversation,
+        "DESIGN_BRIEF": design_brief,
+        "FORMAL_SCHEMA": formal_schema,
+        "DRAFT_SCHEMA": draft_schema,
+        "CAPABILITY_PROFILE": generator_context["capability_profile"],
+        "FEW_SHOTS": generator_context["few_shots"],
+    }
+    rendered = render_prompt(
+        template_id=GENERATOR_TEMPLATE_ID,
+        inputs=renderer_inputs,
+    )
+
+    _write_text(output / "input.txt", user_request + "\n")
+    _write_json(output / "conversation.json", conversation)
+    _write_json(output / "design-brief.json", design_brief)
+    _write_json(output / "generator-context.json", generator_context)
+    _write_json(output / "prompt-render-input.json", renderer_inputs)
+    _write_text(output / "prompt-rendered.md", rendered["text"])
+
+    result = provider.generate_live(
+        session_id=f"phase6.1-{case_id}-generator-01",
+        prompt=rendered["text"],
+        schema=formal_schema,
+        state={"case_id": case_id, "stage": "generate"},
+    )
+    validate_provider_output(result.output)
+    provider_manifest = write_live_trace(result=result, output_dir=output)
+    parse_status, parsed, normalization_diagnostics = result.output.parse_json()
+    if parse_status == "ok" and parsed is not None:
+        _write_json(output / "parsed-output.json", parsed)
+        contract = validate_generation_document(parsed)
+    else:
+        contract = {
+            "status": "invalid",
+            "classification": "unparsed",
+            "diagnostics": [],
+        }
+    contract_diagnostics = list(contract["diagnostics"])
+    diagnostics = [*normalization_diagnostics, *contract_diagnostics]
+    strict_output_contract_valid = (
+        parse_status == "ok" and not normalization_diagnostics
+    )
+    contract_valid = contract["status"] in {"formal", "draft"} and not contract_diagnostics
+    acceptance_valid = contract_valid and strict_output_contract_valid
+
+    if contract_valid and parsed is not None:
+        artifact_name = "candidate.json" if contract["classification"] == "formal" else "draft.json"
+        _write_json(output / artifact_name, parsed)
+    else:
+        artifact_name = None
+    stage_status = (
+        str(contract["status"])
+        if strict_output_contract_valid
+        else "blocked_output_contract"
+    )
+    classification_record = {
+        "status": stage_status,
+        "contract_status": contract["status"],
+        "classification": contract["classification"],
+        "schema_version": parsed.get("schema_version") if parsed else None,
+        "draft_version": parsed.get("draft_version") if parsed else None,
+        "target_schema_version": (
+            parsed.get("target_schema_version") if parsed else None
+        ),
+        "diagnostics": diagnostics,
+    }
+    _write_json(output / "classification.json", classification_record)
+    _write_json(
+        output / "validation.json",
+        {
+            "valid": contract_valid,
+            "issue_count": len(contract_diagnostics),
+            "issues": contract_diagnostics,
+        },
+    )
+    metrics = {
+        "case_id": case_id,
+        "stage": "generate",
+        "evidence_class": result.evidence_class,
+        "response_id": result.response.get("id"),
+        "model": result.response.get("model"),
+        "stop_reason": result.response.get("stop_reason"),
+        "usage": dict(result.response.get("usage", {})),
+        "parse_valid": parse_status == "ok",
+        "classification": contract["classification"],
+        "contract_status": contract["status"],
+        "contract_valid": contract_valid,
+        "strict_output_contract_valid": strict_output_contract_valid,
+        "normalization_diagnostics": normalization_diagnostics,
+        "issue_count": len(contract_diagnostics),
+    }
+    _write_json(output / "metrics.json", metrics)
+    _write_json(
+        output / "trace-manifest.json",
+        {
+            "schema_version": "text2ifc/live-stage-trace/1.0",
+            "case_id": case_id,
+            "stage": "generate",
+            "template_id": rendered["metadata"]["template_id"],
+            "template_hash": rendered["metadata"]["template_hash"],
+            "source_design_brief": portable_artifact_path(
+                source / "design-brief.json"
+            ),
+            "formal_schema": {
+                "path": portable_artifact_path(FORMAL_SCHEMA_PATH),
+                "sha256": _file_sha256(FORMAL_SCHEMA_PATH),
+            },
+            "draft_schema": {
+                "path": portable_artifact_path(DRAFT_SCHEMA_PATH),
+                "sha256": _file_sha256(DRAFT_SCHEMA_PATH),
+            },
+            "provider": provider_manifest,
+            "artifacts": {
+                "input": "input.txt",
+                "conversation": "conversation.json",
+                "design_brief": "design-brief.json",
+                "generator_context": "generator-context.json",
+                "renderer_inputs": "prompt-render-input.json",
+                "rendered_prompt": "prompt-rendered.md",
+                "model_text": "model-text.txt",
+                "parsed_output": "parsed-output.json" if parsed else None,
+                "accepted_document": artifact_name,
+                "classification": "classification.json",
+                "validation": "validation.json",
+                "metrics": "metrics.json",
+            },
+        },
+    )
+    return {
+        "case_id": case_id,
+        "stage": "generate",
+        "status": stage_status,
+        "classification": contract["classification"],
+        "valid": acceptance_valid,
+        "contract_valid": contract_valid,
+        "strict_output_contract_valid": strict_output_contract_valid,
+        "response_id": result.response.get("id"),
+        "evidence_class": result.evidence_class,
+        "output_dir": portable_artifact_path(output),
+    }
+
+
+def _select_generator_context(design_context: dict[str, Any]) -> dict[str, Any]:
+    capabilities = [
+        record
+        for record in design_context.get("evidence", [])
+        if isinstance(record, dict)
+        and record.get("kind") == "ifc_generation_capability"
+    ]
+    example = json.loads(GENERATOR_FEW_SHOT_PATH.read_text(encoding="utf-8"))
+    return {
+        "schema_version": "text2ifc/generator-context/1.0",
+        "capability_profile": capabilities,
+        "few_shots": [
+            {
+                "few_shot_id": "generator-v2.formal-rectangular-room",
+                "condition": (
+                    "A complete rectangular room request needs a Formal semantic "
+                    "graph; example values are not defaults and must not be copied."
+                ),
+                "source_path": portable_artifact_path(GENERATOR_FEW_SHOT_PATH),
+                "source_sha256": _file_sha256(GENERATOR_FEW_SHOT_PATH),
+                "output": example,
+            }
+        ],
     }
 
 
