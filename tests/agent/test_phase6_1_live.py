@@ -4,8 +4,10 @@ from pathlib import Path
 
 from text2ifc_agent.context_selection import select_design_brief_context
 from text2ifc_agent.live_pipeline import (
+    PROJECT_ROOT,
     compare_design_brief_runs,
     complete_room_case,
+    portable_artifact_path,
     run_design_brief_stage,
 )
 from text2ifc_agent.providers import LiveProviderResult, ProviderOutput
@@ -59,6 +61,12 @@ class _RecordingLiveProvider:
                 metadata={"provider": "mimo", "session_id": session_id},
             ),
         )
+
+
+def test_repository_artifact_paths_are_portable():
+    path = PROJECT_ROOT / "dataset" / "processed" / "trace.json"
+
+    assert portable_artifact_path(path) == "dataset/processed/trace.json"
 
 
 def _valid_ready_brief(case: dict) -> dict:
