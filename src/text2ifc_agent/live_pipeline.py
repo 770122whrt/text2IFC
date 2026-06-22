@@ -20,6 +20,7 @@ from .live_trace import write_live_trace
 from .prompt_registry import render_prompt
 from .generator import validate_generation_document
 from .failure_routing import route_generation_failure
+from .fact_delta import evaluate_repair_fact_delta
 from .providers import validate_provider_output
 
 
@@ -659,9 +660,103 @@ def run_repair_stage(
     provider_call_count = 0
     evidence_class = "deterministic-no-call"
     valid = False
+    provider_manifest: dict[str, Any] | None = None
+    repaired_document: dict[str, Any] | None = None
+    repaired_artifact_name: str | None = None
+    fact_delta: dict[str, Any] | None = None
+    repair_diagnostics: list[dict[str, Any]] = []
     if route["route"] == "no_repair_needed":
         evidence_class = "live-derived-no-call"
         valid = bool(validation.get("valid")) and candidate is not None
+    elif route["route"] == "repair_attempted" and candidate is not None:
+        formal_schema = json.loads(FORMAL_SCHEMA_PATH.read_text(encoding="utf-8"))
+        draft_schema = json.loads(DRAFT_SCHEMA_PATH.read_text(encoding="utf-8"))
+        allowed_change_paths = _repair_allowed_change_paths(validation_issues)
+        evidence_by_path = _repair_evidence_by_path(
+            validation_issues,
+            allowed_change_paths,
+        )
+        renderer_inputs = {
+            "USER_REQUEST": user_request,
+            "CONVERSATION": conversation,
+            "DESIGN_BRIEF": design_brief,
+            "CANDIDATE": candidate,
+            "FORMAL_SCHEMA": formal_schema,
+            "DRAFT_SCHEMA": draft_schema,
+            "CAPABILITY_PROFILE": generator_context.get("capability_profile", []),
+            "VALIDATION_FEEDBACK": validation_issues,
+            "GEOMETRY_FEEDBACK": [],
+            "ALLOWED_CHANGE_PATHS": allowed_change_paths,
+            "EVIDENCE_BY_PATH": evidence_by_path,
+        }
+        rendered = render_prompt(
+            template_id=REPAIR_TEMPLATE_ID,
+            inputs=renderer_inputs,
+        )
+        _write_json(output / "prompt-render-input.json", renderer_inputs)
+        _write_text(output / "prompt-rendered.md", rendered["text"])
+        provider = provider_factory()
+        provider_call_count = 1
+        live_result = provider.generate_live(
+            session_id=f"phase6.1-{case_id}-repair-01",
+            prompt=rendered["text"],
+            schema=formal_schema,
+            state={"case_id": case_id, "stage": "repair"},
+        )
+        validate_provider_output(live_result.output)
+        provider_manifest = write_live_trace(result=live_result, output_dir=output)
+        evidence_class = live_result.evidence_class
+        parse_status, parsed, normalization_diagnostics = live_result.output.parse_json()
+        if parse_status == "ok" and parsed is not None:
+            _write_json(output / "parsed-output.json", parsed)
+            contract = validate_generation_document(parsed)
+        else:
+            contract = {
+                "status": "invalid",
+                "classification": "unparsed",
+                "diagnostics": [],
+            }
+        repair_diagnostics = [
+            *normalization_diagnostics,
+            *list(contract["diagnostics"]),
+        ]
+        if parsed is not None and contract["status"] in {"formal", "draft"}:
+            repaired_document = parsed
+            repaired_artifact_name = (
+                "repaired-candidate.json"
+                if contract["classification"] == "formal"
+                else "repaired-draft.json"
+            )
+            _write_json(output / repaired_artifact_name, repaired_document)
+            fact_delta = evaluate_repair_fact_delta(
+                before=candidate,
+                after=repaired_document,
+                allowed_change_paths=allowed_change_paths,
+                evidence_by_path=evidence_by_path,
+            )
+            _write_json(output / "fact-delta.json", fact_delta)
+        route = route_generation_failure(
+            previous_candidate=candidate,
+            validation_feedback=validation_issues,
+            geometry_feedback=[],
+            known_facts=design_brief.get("known_facts", {}),
+            repaired_candidate=repaired_document,
+            repaired_feedback=repair_diagnostics,
+        )
+        if fact_delta is not None and not fact_delta["valid"]:
+            route = {
+                "route": "blocked_failure",
+                "repair_attempts": route.get("repair_attempts", []),
+                "blocking_reason": "repair fact-delta gate failed",
+                "fact_delta_issues": fact_delta["issues"],
+            }
+        valid = (
+            route["route"] == "repair_attempted"
+            and repaired_document is not None
+            and contract["status"] in {"formal", "draft"}
+            and not repair_diagnostics
+            and (fact_delta is None or fact_delta["valid"])
+        )
     else:
         route = {
             **route,
@@ -681,6 +776,8 @@ def run_repair_stage(
         "source_generator_response_id": source_metrics.get("response_id"),
         "source_generator_dir": portable_artifact_path(source),
         "validation_issue_count": len(validation_issues),
+        "repair_diagnostics": repair_diagnostics,
+        "fact_delta": "fact-delta.json" if fact_delta is not None else None,
         **{
             key: value
             for key, value in route.items()
@@ -701,6 +798,9 @@ def run_repair_stage(
         "source_generator_response_id": source_metrics.get("response_id"),
         "source_generator_evidence_class": source_metrics.get("evidence_class"),
         "source_generator_contract_valid": source_metrics.get("contract_valid"),
+        "repair_diagnostic_count": len(repair_diagnostics),
+        "repaired_artifact": repaired_artifact_name,
+        "fact_delta_valid": fact_delta.get("valid") if fact_delta else None,
     }
     _write_json(output / "metrics.json", metrics)
     _write_json(
@@ -711,6 +811,7 @@ def run_repair_stage(
             "stage": "repair",
             "template_id": REPAIR_TEMPLATE_ID,
             "source_generator": portable_artifact_path(source),
+            "provider": provider_manifest,
             "provider_call_count": provider_call_count,
             "artifacts": {
                 "input": "input.txt",
@@ -718,6 +819,16 @@ def run_repair_stage(
                 "design_brief": "design-brief.json",
                 "candidate": "candidate.json" if candidate is not None else None,
                 "source_validation": "source-validation.json",
+                "renderer_inputs": (
+                    "prompt-render-input.json" if provider_call_count else None
+                ),
+                "rendered_prompt": (
+                    "prompt-rendered.md" if provider_call_count else None
+                ),
+                "model_text": "model-text.txt" if provider_call_count else None,
+                "parsed_output": "parsed-output.json" if repaired_document else None,
+                "repaired_document": repaired_artifact_name,
+                "fact_delta": "fact-delta.json" if fact_delta is not None else None,
                 "route": "route.json",
                 "repair_attempts": "repair-attempts.json",
                 "metrics": "metrics.json",
@@ -761,6 +872,35 @@ def _select_generator_context(design_context: dict[str, Any]) -> dict[str, Any]:
             }
         ],
     }
+
+
+def _repair_allowed_change_paths(
+    validation_issues: list[dict[str, Any]],
+) -> list[str]:
+    paths: list[str] = []
+    for issue in validation_issues:
+        issue_path = issue.get("path")
+        if isinstance(issue_path, str) and issue_path:
+            paths.append(issue_path)
+        for fact_path in issue.get("required_fact_paths", []):
+            if isinstance(fact_path, str) and fact_path:
+                paths.append(fact_path)
+    return sorted(set(paths))
+
+
+def _repair_evidence_by_path(
+    validation_issues: list[dict[str, Any]],
+    allowed_change_paths: list[str],
+) -> dict[str, list[str]]:
+    by_path = {path: ["schema:bim-json-v2"] for path in allowed_change_paths}
+    for issue in validation_issues:
+        code = str(issue.get("code", "UNKNOWN"))
+        issue_path = issue.get("path")
+        if isinstance(issue_path, str) and issue_path:
+            by_path.setdefault(issue_path, ["schema:bim-json-v2"]).append(
+                f"validation:{code}"
+            )
+    return by_path
 
 
 def compare_design_brief_runs(
