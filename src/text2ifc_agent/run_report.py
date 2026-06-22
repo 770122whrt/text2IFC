@@ -113,10 +113,7 @@ def _stage_section(root: Path, title: str, stage_dir: Path) -> list[str]:
     response_id = raw.get("id") or metrics.get("response_id")
     stop_reason = raw.get("stop_reason") or metrics.get("stop_reason")
     relative_stage = stage_dir.relative_to(root).as_posix()
-    parsed_name = _first_existing(
-        stage_dir,
-        ("design-brief.json", "candidate.json", "draft.json", "audit-report.json"),
-    )
+    parsed_name = _stage_parsed_artifact(stage_dir)
     lines = [
         f"## {title}",
         "",
@@ -208,6 +205,14 @@ def _first_existing(stage_dir: Path, names: tuple[str, ...]) -> str | None:
         if (stage_dir / name).is_file():
             return name
     return None
+
+
+def _stage_parsed_artifact(stage_dir: Path) -> str | None:
+    if stage_dir.name == "generator":
+        return _first_existing(stage_dir, ("candidate.json", "draft.json", "parsed-output.json"))
+    if stage_dir.name == "audit":
+        return _first_existing(stage_dir, ("audit-report.json", "parsed-output.json"))
+    return _first_existing(stage_dir, ("design-brief.json", "parsed-output.json"))
 
 
 def _embed_text(path: Path) -> str:
