@@ -47,6 +47,14 @@ DEFAULT_V1_BASELINE = (
 )
 
 
+def default_output_dir(*, stage: str, case_id: str) -> Path:
+    if stage == "clarify":
+        return DEFAULT_LIVE_ROOT / case_id
+    if stage == "generate":
+        return DEFAULT_LIVE_ROOT / case_id / "generator"
+    return DEFAULT_LIVE_ROOT / case_id / stage
+
+
 def main(
     argv: list[str] | None = None,
     *,
@@ -89,10 +97,8 @@ def main(
 
     if args.output_dir is not None:
         output_dir = args.output_dir
-    elif args.stage == "clarify":
-        output_dir = DEFAULT_LIVE_ROOT / args.case
     else:
-        output_dir = DEFAULT_LIVE_ROOT / args.case / args.stage
+        output_dir = default_output_dir(stage=args.stage, case_id=args.case)
     if args.stage == "clarify" and args.case != "clarified-room":
         parser.error("--stage clarify requires --case clarified-room")
     if args.stage == "design-brief" and args.case != "complete-room":
