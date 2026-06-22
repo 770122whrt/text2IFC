@@ -990,6 +990,35 @@ def test_live_audit_report_stage_calls_provider_and_generates_report(
     assert "(audit/audit-report.json)" in report
 
 
+def test_live_audit_report_stage_blocks_fenced_output_contract(tmp_path: Path):
+    case_dir = _write_auditable_case_dir(tmp_path / "complete-room")
+    payload = {
+        "schema_version": "text2ifc/audit/2.0",
+        "recommendation": "accept",
+        "blocking": False,
+        "deterministic_gate_status": "passed",
+        "findings": [],
+        "evidence_paths": [
+            "design-brief/design-brief.json",
+            "generator/candidate.json",
+            "repair/route.json",
+        ],
+    }
+    provider = _RecordingLiveProvider(payload, fenced=True)
+
+    result = run_audit_report_stage(
+        provider=provider,
+        case_dir=case_dir,
+        case_id="complete-room",
+    )
+
+    assert result["status"] == "blocked_output_contract"
+    assert result["valid"] is False
+    metrics = json.loads((case_dir / "audit" / "metrics.json").read_text(encoding="utf-8"))
+    assert metrics["strict_output_contract_valid"] is False
+    assert metrics["normalization_diagnostics"][0]["code"] == "OUTER_JSON_FENCE_REMOVED"
+
+
 def test_audit_report_cli_uses_injected_provider_and_case_dir(
     tmp_path: Path,
     capsys,
