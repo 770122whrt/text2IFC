@@ -27,6 +27,7 @@ class AgentProvider(Protocol):
 @dataclass(frozen=True)
 class GenerationResult:
     status: str
+    classification: str
     document: dict[str, Any] | None
     diagnostics: list[dict[str, str]]
     prompt_trace: dict[str, Any]
@@ -77,6 +78,7 @@ def generate_bim_json_candidate(
     if parse_status != "ok" or document is None:
         return _result(
             status="invalid",
+            classification="unparsed",
             document=None,
             diagnostics=parse_diagnostics,
             prompt_trace=prompt_trace,
@@ -84,7 +86,18 @@ def generate_bim_json_candidate(
             output=output,
         )
 
-    if document.get("draft_version") == "bim-json-draft/1.0":
+    classification, discriminator_diagnostics = _classify_document(document)
+    if classification == "unknown_contract":
+        return _result(
+            status="blocked_failure",
+            classification=classification,
+            document=document,
+            diagnostics=[*parse_diagnostics, *discriminator_diagnostics],
+            prompt_trace=prompt_trace,
+            rendered=rendered["text"],
+            output=output,
+        )
+    if classification == "draft":
         issues = validate_draft(document)
         status = "draft" if not issues else "invalid"
     else:
@@ -92,8 +105,12 @@ def generate_bim_json_candidate(
         status = "formal" if not issues else "invalid"
     return _result(
         status=status,
+        classification=classification,
         document=document,
-        diagnostics=[_issue_payload(issue) for issue in issues],
+        diagnostics=[
+            *parse_diagnostics,
+            *[_issue_payload(issue) for issue in issues],
+        ],
         prompt_trace=prompt_trace,
         rendered=rendered["text"],
         output=output,
@@ -103,6 +120,7 @@ def generate_bim_json_candidate(
 def _result(
     *,
     status: str,
+    classification: str,
     document: dict[str, Any] | None,
     diagnostics: list[dict[str, str]],
     prompt_trace: dict[str, Any],
@@ -111,6 +129,7 @@ def _result(
 ) -> GenerationResult:
     return GenerationResult(
         status=status,
+        classification=classification,
         document=document,
         diagnostics=diagnostics,
         prompt_trace=prompt_trace,
@@ -122,3 +141,75 @@ def _result(
 
 def _issue_payload(issue: ValidationIssue) -> dict[str, str]:
     return {"code": issue.code, "path": issue.path, "message": issue.message}
+
+
+def _classify_document(
+    document: dict[str, Any],
+) -> tuple[str, list[dict[str, str]]]:
+    has_formal = "schema_version" in document
+    has_draft = "draft_version" in document
+    if has_formal and has_draft:
+        return (
+            "unknown_contract",
+            [
+                _diagnostic(
+                    "CONFLICTING_OUTPUT_DISCRIMINATORS",
+                    "",
+                    "Output contains both schema_version and draft_version.",
+                )
+            ],
+        )
+    if has_draft:
+        draft_version = document.get("draft_version")
+        if draft_version != "bim-json-draft/1.0":
+            return (
+                "unknown_contract",
+                [
+                    _diagnostic(
+                        "UNKNOWN_DRAFT_VERSION",
+                        "/draft_version",
+                        f"Unknown Draft version: {draft_version!r}.",
+                    )
+                ],
+            )
+        target_version = document.get("target_schema_version")
+        if target_version != "bim-json/2.0":
+            return (
+                "unknown_contract",
+                [
+                    _diagnostic(
+                        "INVALID_DRAFT_TARGET_VERSION",
+                        "/target_schema_version",
+                        f"Draft target must be 'bim-json/2.0', got {target_version!r}.",
+                    )
+                ],
+            )
+        return "draft", []
+    if has_formal:
+        formal_version = document.get("schema_version")
+        if formal_version != "bim-json/2.0":
+            return (
+                "unknown_contract",
+                [
+                    _diagnostic(
+                        "UNKNOWN_FORMAL_VERSION",
+                        "/schema_version",
+                        f"Unknown Formal version: {formal_version!r}.",
+                    )
+                ],
+            )
+        return "formal", []
+    return (
+        "unknown_contract",
+        [
+            _diagnostic(
+                "MISSING_OUTPUT_DISCRIMINATOR",
+                "",
+                "Output must contain exactly one canonical version discriminator.",
+            )
+        ],
+    )
+
+
+def _diagnostic(code: str, path: str, message: str) -> dict[str, str]:
+    return {"code": code, "path": path, "message": message}
