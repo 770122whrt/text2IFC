@@ -487,6 +487,10 @@ def test_live_trace_replay_writes_reviewable_secret_safe_bundle(monkeypatch, tmp
         "response.raw.json",
     }
     assert expected <= {path.name for path in tmp_path.iterdir()}
+    request = json.loads(
+        (tmp_path / "request.redacted.json").read_text(encoding="utf-8")
+    )
+    assert request["request"]["max_tokens"] == 131072
     response = json.loads((tmp_path / "response.raw.json").read_text(encoding="utf-8"))
     assert response["id"] == "msg-live-001"
     events = [
