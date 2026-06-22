@@ -500,9 +500,9 @@ user intent to force a run through a gate.
 
 - [x] `06.1-02-PLAN.md` - Real Chinese multi-turn orchestration
 
-**Wave 3** *(blocked on Wave 2 clarified Design Brief)*
+**Wave 3** *(verified on Wave 2 clarified Design Brief)*
 
-- [ ] `06.1-03-PLAN.md` - Formal/Draft Generator contracts and output routing
+- [x] `06.1-03-PLAN.md` - Formal/Draft Generator contracts and output routing
 
 **Wave 4** *(blocked on Wave 3 deterministic failure evidence)*
 
@@ -526,4 +526,4 @@ user intent to force a run through a gate.
   evidence, provider `id`/`model`/`stop_reason`/`usage`, event stream, metrics,
   and secret-scan result.
 
-**Status:** In Progress - Waves 0-2 verified with real Mimo 2026-06-22
+**Status:** In Progress - Waves 0-3 verified with real Mimo 2026-06-22

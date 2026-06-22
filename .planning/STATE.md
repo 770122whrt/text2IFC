@@ -7,15 +7,15 @@ See: `.planning/PROJECT.md` (updated 2026-06-11)
 **Core value:** Produce valid, inspectable IFC models from explicit user
 requirements.
 
-**Current focus:** Phase 6.1 Wave 3 - exact Formal/Draft Generator contracts on
-the verified real-Mimo clarified Design Brief
+**Current focus:** Phase 6.1 Wave 4 - conditional real-Mimo repair and fact-delta
+gates after the verified first-pass Formal Generator result
 
 ## Status
 
 - Phase: 6.1
 - Stage: In Progress
-- State: Waves 0-2 verified with real Mimo; Wave 3 ready
-- Plans: Phase 6.1 planned, 7 of 7 plans written, 3 executed
+- State: Waves 0-3 verified with real Mimo; Wave 4 ready
+- Plans: Phase 6.1 planned, 7 of 7 plans written, 4 executed
 - Branch: `multiagent-design` in C-drive worktree
 - Remote: `https://github.com/770122whrt/text2IFC`
 
@@ -346,9 +346,9 @@ the verified real-Mimo clarified Design Brief
 
 ## Next Action
 
-Execute Phase 6.1 Wave 3: supply the ready live Design Brief plus both exact
-canonical Formal and Draft schemas to the real Mimo Generator, then classify
-the untouched response by exact discriminator before validation.
+Execute Phase 6.1 Wave 4: record `no_repair_needed` for the successful live
+Formal first pass, then prove one-attempt repair eligibility and semantic
+fact-delta blocking without supervisor-authored mutations.
 
 ## Accumulated Context
 
@@ -493,6 +493,11 @@ the untouched response by exact discriminator before validation.
   wall thickness; the exact 300 mm user answer was appended; response
   `msg_d7c51fc05baf4f3eb82cc3f5` returned `ready`. Both calls were `end_turn`,
   strict bare JSON, schema/evidence valid, and the 40-file scan found no secrets.
+- Phase 6.1 Wave 3 completed on 2026-06-22 with exact discriminator-first
+  Formal/Draft routing and both full canonical schemas in Generator v2. Real
+  Mimo response `msg_99a7039ffef047d2815e0c4f` returned strict Formal BIM JSON
+  2.0 with 13 entities, 4 relationships, zero contract issues, and zero secret
+  findings. No repair was invoked and no IFC was compiled in this wave.
 
 ---
-*Last activity: 2026-06-22 - completed Phase 6.1 Wave 2 live clarification gate*
+*Last activity: 2026-06-22 - completed Phase 6.1 Wave 3 live Generator gate*

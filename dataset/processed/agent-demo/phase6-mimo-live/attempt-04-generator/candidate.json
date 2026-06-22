@@ -1,0 +1,41 @@
+{
+  "schema_version": "text2ifc/draft-envelope/1.0",
+  "status": "draft",
+  "ambiguities": [
+    {
+      "id": "ambiguity1",
+      "message": "‘中央’可能指墙的几何中心，或者门的中心线对齐墙的中心线，或者其他点。",
+      "options": [
+        "center of wall",
+        "center line aligned",
+        "other"
+      ],
+      "path": "doors.0.position"
+    },
+    {
+      "id": "ambiguity2",
+      "message": "‘中央’可能指墙的几何中心，或者窗的中心线对齐墙的中心线，或者其他点。",
+      "options": [
+        "center of wall",
+        "center line aligned",
+        "other"
+      ],
+      "path": "windows.0.position"
+    },
+    {
+      "id": "ambiguity3",
+      "message": "房间的绝对方位（如地理北向）未指定，但提供了相对方向南、北。",
+      "options": [
+        "assumed north up",
+        "user defined orientation",
+        "other"
+      ],
+      "path": "room.orientation"
+    }
+  ],
+  "clarification_questions": [
+    "请指定门在南墙上的精确位置：墙的几何中心、门的中心线对齐墙的中心线，或其他点？",
+    "请指定窗在北墙上的精确位置：墙的几何中心、窗的中心线对齐墙的中心线，或其他点？",
+    "请确认房间的绝对方位，例如是否假设北方为上？"
+  ]
+}
