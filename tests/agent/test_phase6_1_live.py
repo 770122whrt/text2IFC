@@ -700,6 +700,18 @@ def test_live_cli_uses_stable_generator_directory_name():
     assert path == module.DEFAULT_LIVE_ROOT / "complete-room" / "generator"
 
 
+def test_live_cli_uses_phase_root_finalize_directory():
+    script_path = Path("scripts/agent/run_phase6_1_live.py")
+    spec = importlib.util.spec_from_file_location("run_phase6_1_live_finalize_paths", script_path)
+    assert spec is not None and spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+
+    path = module.default_output_dir(stage="finalize", case_id="complete-room")
+
+    assert path == module.DEFAULT_LIVE_ROOT
+
+
 def _write_valid_generator_source(path: Path) -> Path:
     path.mkdir(parents=True)
     formal = json.loads(
