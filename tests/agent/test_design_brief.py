@@ -1,5 +1,6 @@
 import importlib
 import importlib.util
+import hashlib
 
 
 MODULE_NAME = "text2ifc_agent.design_brief"
@@ -275,3 +276,55 @@ def test_v2_correction_requires_source_turn_and_evidence():
     assert any(
         issue.path == "/user_corrections/0/evidence_refs" for issue in issues
     )
+
+
+def test_context_selector_returns_hash_verified_existing_evidence():
+    assert importlib.util.find_spec("text2ifc_agent.context_selection") is not None, (
+        "Design Brief context selector is missing"
+    )
+    selector = importlib.import_module("text2ifc_agent.context_selection")
+
+    selection = selector.select_design_brief_context(
+        user_request=(
+            "创建一个矩形房间，四面墙闭合，南墙有门，北墙有窗，墙厚300毫米。"
+        ),
+        conversation=[
+            {"turn_id": "turn-user-001", "role": "user", "content": "创建房间。"}
+        ],
+    )
+
+    evidence = selection["evidence"]
+    evidence_ids = {record["evidence_id"] for record in evidence}
+    assert {
+        "capability:IFC2X3:IfcSpace",
+        "capability:IFC2X3:IfcWall",
+        "capability:IFC2X3:IfcDoor",
+        "capability:IFC2X3:IfcWindow",
+        "schema:bim-json-v2:entity",
+        "schema:bim-json-v2:representation",
+    } <= evidence_ids
+    assert len(evidence_ids) == len(evidence)
+    for record in evidence:
+        source = selector.PROJECT_ROOT / record["source_path"]
+        assert source.is_file()
+        assert record["source_sha256"] == (
+            "sha256:" + hashlib.sha256(source.read_bytes()).hexdigest()
+        )
+        assert record["json_pointer"].startswith("/")
+    assert selection["request_sha256"].startswith("sha256:")
+
+
+def test_context_selector_uses_named_conditional_examples_not_policy_lists():
+    selector = importlib.import_module("text2ifc_agent.context_selection")
+
+    selection = selector.select_design_brief_context(
+        user_request="创建一个房间，但我还不知道宽度。",
+        conversation=[],
+    )
+
+    few_shot_ids = {record["few_shot_id"] for record in selection["few_shots"]}
+    assert "design-brief-v2.incomplete-room" in few_shot_ids
+    rendered = repr(selection)
+    assert "required_facts" not in rendered
+    assert "not_required" not in rendered
+    assert "全局必填字段清单" not in rendered
