@@ -7,7 +7,9 @@ from text2ifc_agent.live_pipeline import (
     PROJECT_ROOT,
     compare_design_brief_runs,
     complete_room_case,
+    clarified_room_case,
     portable_artifact_path,
+    run_clarification_case,
     run_design_brief_stage,
 )
 from text2ifc_agent.providers import LiveProviderResult, ProviderOutput
@@ -60,6 +62,24 @@ class _RecordingLiveProvider:
                 text=text,
                 metadata={"provider": "mimo", "session_id": session_id},
             ),
+        )
+
+
+class _SequenceLiveProvider:
+    def __init__(self, payloads: list[dict]) -> None:
+        self.payloads = payloads
+        self.prompts = []
+        self.session_ids = []
+
+    def generate_live(self, *, session_id, prompt, schema, state):
+        index = len(self.prompts)
+        self.prompts.append(prompt)
+        self.session_ids.append(session_id)
+        return _RecordingLiveProvider(self.payloads[index]).generate_live(
+            session_id=session_id,
+            prompt=prompt,
+            schema=schema,
+            state=state,
         )
 
 
@@ -341,3 +361,164 @@ def test_live_cli_runs_design_brief_case_through_injected_provider(
     assert output["status"] == "ready"
     assert output["evidence_class"] == "unit_test_fixture"
     assert (tmp_path / "design-brief.json").is_file()
+
+
+def test_live_clarification_run_preserves_two_provider_calls_and_all_turns(
+    tmp_path: Path,
+):
+    case = clarified_room_case()
+    first = _valid_ready_brief(complete_room_case())
+    first["original_request"] = case["user_request"]
+    first["status"] = "needs_clarification"
+    first["known_facts"]["walls"].pop("thickness_mm")
+    first["missing_facts"] = [
+        {
+            "id": "mf-wall-thickness",
+            "code": "WALL_THICKNESS_MISSING",
+            "path": "/known_facts/walls/thickness_mm",
+            "message": "墙体厚度尚未提供。",
+            "reason": "生成用户要求的实体墙体需要明确厚度。",
+            "blocking": True,
+            "evidence_refs": ["schema:bim-json-v2:representation"],
+            "source_turns": ["turn-user-001"],
+        }
+    ]
+    first["clarification_questions"] = [
+        {
+            "id": "q-wall-thickness",
+            "text": "请问墙体厚度是多少毫米？",
+            "targets": ["mf-wall-thickness"],
+            "reason": "缺少厚度时不能生成所要求的实体墙体。",
+            "evidence_refs": ["schema:bim-json-v2:representation"],
+        }
+    ]
+    first["provenance"]["source_turns"] = ["turn-user-001"]
+    second = json.loads(json.dumps(first, ensure_ascii=False))
+    second["status"] = "ready"
+    second["known_facts"]["walls"]["thickness_mm"] = 300
+    second["missing_facts"] = []
+    second["clarification_questions"] = []
+    second["fact_sources"][0]["source_turns"] = [
+        "turn-user-001",
+        "turn-user-003",
+    ]
+    second["provenance"]["source_turns"] = [
+        "turn-user-001",
+        "turn-user-003",
+    ]
+    provider = _SequenceLiveProvider([first, second])
+
+    result = run_clarification_case(
+        provider=provider,
+        output_dir=tmp_path,
+        case=case,
+        answers=["墙体厚度为300毫米。"],
+    )
+
+    assert result["status"] == "ready"
+    assert result["valid"] is True
+    assert result["live_call_count"] == 2
+    assert provider.session_ids == [
+        "phase6.1-clarified-room-design-brief-01",
+        "phase6.1-clarified-room-design-brief-02",
+    ]
+    assert "请问墙体厚度是多少毫米？" in provider.prompts[1]
+    assert "墙体厚度为300毫米。" in provider.prompts[1]
+    conversation = json.loads(
+        (tmp_path / "conversation.json").read_text(encoding="utf-8")
+    )
+    assert [turn["role"] for turn in conversation] == [
+        "user",
+        "assistant",
+        "user",
+    ]
+    assert conversation[-1]["content"] == "墙体厚度为300毫米。"
+    assert json.loads(
+        (tmp_path / "design-brief.json").read_text(encoding="utf-8")
+    ) == second
+    metrics = json.loads((tmp_path / "metrics.json").read_text(encoding="utf-8"))
+    assert metrics["response_ids"] == [
+        "msg_unit_design_brief_v2",
+        "msg_unit_design_brief_v2",
+    ]
+    assert metrics["answer_turn_count"] == 1
+    assert metrics["all_strict_output_contract_valid"] is True
+    assert (tmp_path / "calls/01-design-brief/response.raw.json").is_file()
+    assert (tmp_path / "calls/02-design-brief/response.raw.json").is_file()
+
+
+def test_live_clarification_cli_consumes_answer_file_with_injected_provider(
+    tmp_path: Path, capsys
+):
+    case = clarified_room_case()
+    first = _valid_ready_brief(complete_room_case())
+    first["original_request"] = case["user_request"]
+    first["status"] = "needs_clarification"
+    first["known_facts"]["walls"].pop("thickness_mm")
+    first["missing_facts"] = [
+        {
+            "id": "mf-wall-thickness",
+            "code": "WALL_THICKNESS_MISSING",
+            "path": "/known_facts/walls/thickness_mm",
+            "message": "墙体厚度尚未提供。",
+            "reason": "生成实体墙体需要明确厚度。",
+            "blocking": True,
+            "evidence_refs": ["schema:bim-json-v2:representation"],
+            "source_turns": ["turn-user-001"],
+        }
+    ]
+    first["clarification_questions"] = [
+        {
+            "id": "q-wall-thickness",
+            "text": "请问墙体厚度是多少毫米？",
+            "targets": ["mf-wall-thickness"],
+            "reason": "缺少厚度时不能生成实体墙体。",
+            "evidence_refs": ["schema:bim-json-v2:representation"],
+        }
+    ]
+    first["provenance"]["source_turns"] = ["turn-user-001"]
+    second = json.loads(json.dumps(first, ensure_ascii=False))
+    second["status"] = "ready"
+    second["known_facts"]["walls"]["thickness_mm"] = 300
+    second["missing_facts"] = []
+    second["clarification_questions"] = []
+    second["fact_sources"][0]["source_turns"] = [
+        "turn-user-001",
+        "turn-user-003",
+    ]
+    second["provenance"]["source_turns"] = [
+        "turn-user-001",
+        "turn-user-003",
+    ]
+    provider = _SequenceLiveProvider([first, second])
+    answer_file = tmp_path / "answers.json"
+    answer_file.write_text(
+        json.dumps({"answers": ["墙体厚度为300毫米。"]}, ensure_ascii=False),
+        encoding="utf-8",
+    )
+    script_path = Path("scripts/agent/run_phase6_1_live.py")
+    spec = importlib.util.spec_from_file_location("run_phase6_1_live_clarify", script_path)
+    assert spec is not None and spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    output_dir = tmp_path / "output"
+
+    exit_code = module.main(
+        [
+            "--stage",
+            "clarify",
+            "--case",
+            "clarified-room",
+            "--answers",
+            str(answer_file),
+            "--live",
+            "--output-dir",
+            str(output_dir),
+        ],
+        provider_factory=lambda: provider,
+    )
+
+    summary = json.loads(capsys.readouterr().out)
+    assert exit_code == 0
+    assert summary["status"] == "ready"
+    assert summary["live_call_count"] == 2
