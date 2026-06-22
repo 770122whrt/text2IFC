@@ -293,3 +293,65 @@ def test_missing_known_fact_routes_to_draft_without_invention():
     assert result["route"] == "draft_required"
     assert result["repair_attempts"] == []
     assert result["missing_fact_paths"] == ["/space/width_mm"]
+
+
+def test_repair_eligibility_is_explicit_and_bounded():
+    routing = _module("failure_routing")
+    known_facts = _brief()["known_facts"]
+
+    eligible = routing.assess_repair_eligibility(
+        issues=[
+            {
+                "code": "WALL_ORIENTATION_MISMATCH",
+                "required_fact_paths": ["/wall/length_mm"],
+            }
+        ],
+        known_facts=known_facts,
+    )
+    exhausted = routing.assess_repair_eligibility(
+        issues=[{"code": "INVALID_ENUM"}],
+        known_facts=known_facts,
+        prior_attempt_count=1,
+    )
+
+    assert eligible["route"] == "repair_attempted"
+    assert eligible["eligible"] is True
+    assert eligible["max_attempts"] == 1
+    assert exhausted["route"] == "blocked_failure"
+    assert exhausted["eligible"] is False
+    assert exhausted["blocking_code"] == "MAX_REPAIR_ATTEMPTS_REACHED"
+
+
+def test_non_repairable_issue_and_supervisor_patch_block():
+    routing = _module("failure_routing")
+    known_facts = _brief()["known_facts"]
+
+    unsupported = routing.assess_repair_eligibility(
+        issues=[{"code": "USER_INTENT_AMBIGUOUS"}],
+        known_facts=known_facts,
+    )
+    supervisor = routing.assess_repair_eligibility(
+        issues=[{"code": "INVALID_ENUM"}],
+        known_facts=known_facts,
+        semantic_patch_source="supervisor",
+    )
+
+    assert unsupported["route"] == "blocked_failure"
+    assert unsupported["blocking_code"] == "NON_REPAIRABLE_ISSUE_CLASS"
+    assert supervisor["route"] == "blocked_failure"
+    assert supervisor["blocking_code"] == "SUPERVISOR_SEMANTIC_PATCH_FORBIDDEN"
+
+
+def test_aborted_attempt_evidence_is_machine_readable_and_ineligible():
+    routing = _module("failure_routing")
+    marker_path = (
+        ROOT
+        / "dataset/processed/agent-demo/phase6-mimo-live/attempt-05-repair/ABORTED.json"
+    )
+    assert marker_path.is_file(), "attempt-05 needs a machine-readable aborted marker"
+    marker = json.loads(marker_path.read_text(encoding="utf-8"))
+
+    assert marker["status"] == "aborted"
+    assert marker["acceptance_eligible"] is False
+    with pytest.raises(ValueError, match="aborted"):
+        routing.assert_repair_evidence_eligible(marker)
