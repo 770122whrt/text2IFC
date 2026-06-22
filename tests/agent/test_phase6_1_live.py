@@ -683,3 +683,15 @@ def test_live_generator_cli_uses_injected_provider_and_design_source(
     assert exit_code == 0
     assert summary["status"] == "formal"
     assert summary["classification"] == "formal"
+
+
+def test_live_cli_uses_stable_generator_directory_name():
+    script_path = Path("scripts/agent/run_phase6_1_live.py")
+    spec = importlib.util.spec_from_file_location("run_phase6_1_live_paths", script_path)
+    assert spec is not None and spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+
+    path = module.default_output_dir(stage="generate", case_id="complete-room")
+
+    assert path == module.DEFAULT_LIVE_ROOT / "complete-room" / "generator"
