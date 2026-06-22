@@ -134,3 +134,54 @@ def test_design_brief_v2_1_strengthens_live_bare_json_contract():
     assert "任何反引号字符" in rendered["text"]
     assert "响应将被判定为失败" in rendered["text"]
     assert "发送前自检" in rendered["text"]
+
+
+def test_generator_v1_registry_hash_remains_historical():
+    prompt_registry = importlib.import_module("text2ifc_agent.prompt_registry")
+    registry = prompt_registry.load_prompt_registry()
+
+    assert registry["bim-json-generator.v1"]["sha256"] == (
+        "sha256:c99b445f1b536d74130446256a944f2bdb128e7762d779be2c9f4d196011dec0"
+    )
+
+
+def test_generator_v2_renders_both_exact_canonical_contracts():
+    prompt_registry = importlib.import_module("text2ifc_agent.prompt_registry")
+    registry = prompt_registry.load_prompt_registry()
+    formal_schema = json.loads(
+        (
+            prompt_registry.PROJECT_ROOT
+            / "schemas/bim-json/2.0/schema.json"
+        ).read_text(encoding="utf-8")
+    )
+    draft_schema = json.loads(
+        (
+            prompt_registry.PROJECT_ROOT
+            / "schemas/bim-json/draft/1.0/schema.json"
+        ).read_text(encoding="utf-8")
+    )
+
+    rendered = prompt_registry.render_prompt(
+        template_id="bim-json-generator.v2",
+        inputs={
+            "USER_REQUEST": "创建一个矩形房间。",
+            "CONVERSATION": [],
+            "DESIGN_BRIEF": {"status": "ready"},
+            "FORMAL_SCHEMA": formal_schema,
+            "DRAFT_SCHEMA": draft_schema,
+            "CAPABILITY_PROFILE": [],
+            "FEW_SHOTS": [],
+        },
+    )
+    text = rendered["text"]
+
+    assert registry["bim-json-generator.v2"]["sha256"].startswith("sha256:")
+    assert formal_schema["$id"] in text
+    assert draft_schema["$id"] in text
+    assert '"schema_version": "bim-json/2.0"' in text
+    assert '"draft_version": "bim-json-draft/1.0"' in text
+    assert '"target_schema_version": "bim-json/2.0"' in text
+    assert "任何反引号字符" in text
+    assert "SCHEMA_SUMMARY" not in text
+    assert "{{FORMAL_SCHEMA}}" not in text
+    assert "{{DRAFT_SCHEMA}}" not in text
