@@ -12,13 +12,16 @@ from text2ifc_agent.providers import LiveProviderResult, ProviderOutput
 
 
 class _RecordingLiveProvider:
-    def __init__(self, payload: dict) -> None:
+    def __init__(self, payload: dict, *, fenced: bool = False) -> None:
         self.payload = payload
+        self.fenced = fenced
         self.prompt = ""
 
     def generate_live(self, *, session_id, prompt, schema, state):
         self.prompt = prompt
         text = json.dumps(self.payload, ensure_ascii=False)
+        if self.fenced:
+            text = "```json\n" + text + "\n```"
         response = {
             "id": "msg_unit_design_brief_v2",
             "type": "message",
@@ -190,11 +193,16 @@ def test_design_brief_stage_writes_reproducible_unedited_trace(tmp_path: Path):
     metrics = json.loads((tmp_path / "metrics.json").read_text(encoding="utf-8"))
     assert metrics["parse_valid"] is True
     assert metrics["schema_semantic_valid"] is True
+    assert metrics["strict_output_contract_valid"] is True
     assert metrics["response_id"] == "msg_unit_design_brief_v2"
     assert metrics["stop_reason"] == "end_turn"
     assert result["status"] == "ready"
     assert "supervisor_feedback" not in provider.prompt
     assert "text2ifc/design-brief/2.0" in provider.prompt
+    manifest = json.loads(
+        (tmp_path / "trace-manifest.json").read_text(encoding="utf-8")
+    )
+    assert manifest["template_id"] == "design-brief.v2.1"
 
 
 def test_design_brief_stage_records_invalid_model_output_without_editing_it(tmp_path: Path):
@@ -215,6 +223,30 @@ def test_design_brief_stage_records_invalid_model_output_without_editing_it(tmp_
     validation = json.loads((tmp_path / "validation.json").read_text(encoding="utf-8"))
     assert validation["valid"] is False
     assert validation["issues"][0]["code"] == "UNSUPPORTED_DESIGN_BRIEF_VERSION"
+
+
+def test_design_brief_stage_blocks_fenced_live_text_even_when_json_is_valid(
+    tmp_path: Path,
+):
+    case = complete_room_case()
+    provider = _RecordingLiveProvider(_valid_ready_brief(case), fenced=True)
+
+    result = run_design_brief_stage(
+        provider=provider,
+        output_dir=tmp_path,
+        case=case,
+    )
+
+    assert result["status"] == "blocked_output_contract"
+    assert result["valid"] is False
+    assert (tmp_path / "design-brief.json").is_file()
+    metrics = json.loads((tmp_path / "metrics.json").read_text(encoding="utf-8"))
+    assert metrics["parse_valid"] is True
+    assert metrics["schema_semantic_valid"] is True
+    assert metrics["strict_output_contract_valid"] is False
+    assert metrics["normalization_diagnostics"][0]["code"] == (
+        "OUTER_JSON_FENCE_REMOVED"
+    )
 
 
 def test_v1_v2_comparison_is_derived_from_trace_artifacts(tmp_path: Path):

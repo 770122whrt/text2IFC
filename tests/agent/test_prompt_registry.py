@@ -58,6 +58,15 @@ def test_design_brief_v1_registry_hash_remains_historical():
     )
 
 
+def test_design_brief_v2_registry_hash_remains_live_attempt_history():
+    prompt_registry = importlib.import_module("text2ifc_agent.prompt_registry")
+    registry = prompt_registry.load_prompt_registry()
+
+    assert registry["design-brief.v2"]["sha256"] == (
+        "sha256:338baa65b301ebef566c8fc0761c44de836c7f42bc1adf951ba39ff4ff4dacdf"
+    )
+
+
 def test_registry_renders_evidence_grounded_design_brief_v2_prompt():
     prompt_registry = importlib.import_module("text2ifc_agent.prompt_registry")
     selector = importlib.import_module("text2ifc_agent.context_selection")
@@ -104,3 +113,24 @@ def test_registry_renders_evidence_grounded_design_brief_v2_prompt():
         "FEW_SHOTS",
     ):
         assert "{{" + placeholder + "}}" not in text
+
+
+def test_design_brief_v2_1_strengthens_live_bare_json_contract():
+    prompt_registry = importlib.import_module("text2ifc_agent.prompt_registry")
+    registry = prompt_registry.load_prompt_registry()
+
+    rendered = prompt_registry.render_prompt(
+        template_id="design-brief.v2.1",
+        inputs={
+            "USER_REQUEST": "创建一个房间。",
+            "CONVERSATION": [],
+            "DESIGN_BRIEF_SCHEMA": {"type": "object"},
+            "EVIDENCE_CATALOG": [],
+            "FEW_SHOTS": [],
+        },
+    )
+
+    assert registry["design-brief.v2.1"]["sha256"].startswith("sha256:")
+    assert "任何反引号字符" in rendered["text"]
+    assert "响应将被判定为失败" in rendered["text"]
+    assert "发送前自检" in rendered["text"]
