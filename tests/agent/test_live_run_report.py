@@ -40,6 +40,7 @@ def _write_minimal_case(case_dir: Path) -> Path:
     _write_text(generator / "prompt-rendered.md", "Generator prompt")
     _write_json(generator / "response.raw.json", {"id": "msg_generator", "stop_reason": "end_turn"})
     _write_text(generator / "model-text.txt", '{"schema_version":"bim-json/2.0"}')
+    _write_json(generator / "design-brief.json", {"status": "ready"})
     _write_json(generator / "candidate.json", {"schema_version": "bim-json/2.0"})
     _write_json(generator / "validation.json", {"valid": True, "issues": []})
     _write_json(generator / "metrics.json", {"response_id": "msg_generator", "evidence_class": "live"})
@@ -84,6 +85,8 @@ def test_live_report_is_generated_from_stage_sidecars_and_links_every_stage(tmp_
     assert "msg_design" in report
     assert "msg_generator" in report
     assert "msg_audit" in report
+    assert "Source: [generator/candidate.json](generator/candidate.json)" in report
+    assert "Source: [generator/design-brief.json](generator/design-brief.json)" not in report
 
 
 def test_live_report_rejects_missing_material_sidecar(tmp_path: Path):
