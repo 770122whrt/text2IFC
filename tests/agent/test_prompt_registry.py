@@ -185,3 +185,35 @@ def test_generator_v2_renders_both_exact_canonical_contracts():
     assert "SCHEMA_SUMMARY" not in text
     assert "{{FORMAL_SCHEMA}}" not in text
     assert "{{DRAFT_SCHEMA}}" not in text
+
+
+def test_repair_v2_prompt_contains_immutable_evidence_and_delta_contract():
+    prompt_registry = importlib.import_module("text2ifc_agent.prompt_registry")
+
+    rendered = prompt_registry.render_prompt(
+        template_id="bim-json-generator-repair.v2",
+        inputs={
+            "USER_REQUEST": "创建一个房间。",
+            "CONVERSATION": [],
+            "DESIGN_BRIEF": {"status": "ready"},
+            "CANDIDATE": {"schema_version": "bim-json/2.0"},
+            "FORMAL_SCHEMA": {"$id": "formal", "type": "object"},
+            "DRAFT_SCHEMA": {"$id": "draft", "type": "object"},
+            "CAPABILITY_PROFILE": [],
+            "VALIDATION_FEEDBACK": [{"code": "INVALID_ENUM"}],
+            "GEOMETRY_FEEDBACK": [],
+            "ALLOWED_CHANGE_PATHS": ["/entities/0/attributes/PredefinedType"],
+            "EVIDENCE_BY_PATH": {
+                "/entities/0/attributes/PredefinedType": ["schema:formal"]
+            },
+        },
+    )
+    text = rendered["text"]
+
+    assert rendered["metadata"]["template_id"] == "bim-json-generator-repair.v2"
+    assert "最多一次" in text
+    assert "只允许修改" in text
+    assert "supervisor" in text.lower()
+    assert "任何反引号字符" in text
+    assert "{{ALLOWED_CHANGE_PATHS}}" not in text
+    assert "{{EVIDENCE_BY_PATH}}" not in text

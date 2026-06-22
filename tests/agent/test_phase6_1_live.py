@@ -12,6 +12,7 @@ from text2ifc_agent.live_pipeline import (
     run_clarification_case,
     run_design_brief_stage,
     run_generator_stage,
+    run_repair_stage,
 )
 from text2ifc_agent.providers import LiveProviderResult, ProviderOutput
 
@@ -695,3 +696,96 @@ def test_live_cli_uses_stable_generator_directory_name():
     path = module.default_output_dir(stage="generate", case_id="complete-room")
 
     assert path == module.DEFAULT_LIVE_ROOT / "complete-room" / "generator"
+
+
+def _write_valid_generator_source(path: Path) -> Path:
+    path.mkdir(parents=True)
+    formal = json.loads(
+        Path("tests/contract_v2/fixtures/minimal.json").read_text(encoding="utf-8")
+    )
+    case = complete_room_case()
+    brief = _valid_ready_brief(case)
+    files = {
+        "input.txt": case["user_request"] + "\n",
+        "conversation.json": json.dumps(case["conversation"], ensure_ascii=False),
+        "design-brief.json": json.dumps(brief, ensure_ascii=False),
+        "candidate.json": json.dumps(formal, ensure_ascii=False),
+        "validation.json": json.dumps({"valid": True, "issue_count": 0, "issues": []}),
+        "metrics.json": json.dumps(
+            {
+                "response_id": "msg_live_formal",
+                "contract_status": "formal",
+                "contract_valid": True,
+                "evidence_class": "live",
+            }
+        ),
+        "generator-context.json": json.dumps(
+            {"capability_profile": [], "few_shots": []}
+        ),
+    }
+    for name, content in files.items():
+        (path / name).write_text(content, encoding="utf-8")
+    return path
+
+
+def test_successful_first_pass_repair_stage_never_creates_provider(tmp_path: Path):
+    source_dir = _write_valid_generator_source(tmp_path / "generator")
+    calls = []
+
+    def forbidden_provider_factory():
+        calls.append("created")
+        raise AssertionError("no provider may be created for first-pass success")
+
+    output_dir = tmp_path / "repair"
+    result = run_repair_stage(
+        provider_factory=forbidden_provider_factory,
+        output_dir=output_dir,
+        generator_source_dir=source_dir,
+        case_id="complete-room",
+    )
+
+    assert calls == []
+    assert result["route"] == "no_repair_needed"
+    assert result["provider_call_count"] == 0
+    assert result["repair_attempts"] == []
+    assert result["valid"] is True
+    route = json.loads((output_dir / "route.json").read_text(encoding="utf-8"))
+    assert route["route"] == "no_repair_needed"
+    assert route["repair_attempts"] == []
+    metrics = json.loads((output_dir / "metrics.json").read_text(encoding="utf-8"))
+    assert metrics["evidence_class"] == "live-derived-no-call"
+    assert metrics["source_generator_response_id"] == "msg_live_formal"
+
+
+def test_repair_cli_records_zero_calls_for_live_first_pass_success(
+    tmp_path: Path, capsys
+):
+    source_dir = _write_valid_generator_source(tmp_path / "generator")
+    script_path = Path("scripts/agent/run_phase6_1_live.py")
+    spec = importlib.util.spec_from_file_location("run_phase6_1_live_repair", script_path)
+    assert spec is not None and spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    output_dir = tmp_path / "repair"
+
+    exit_code = module.main(
+        [
+            "--stage",
+            "repair",
+            "--case",
+            "complete-room",
+            "--generator-source-dir",
+            str(source_dir),
+            "--live",
+            "--output-dir",
+            str(output_dir),
+        ],
+        provider_factory=lambda: (_ for _ in ()).throw(
+            AssertionError("provider must not be created")
+        ),
+    )
+
+    summary = json.loads(capsys.readouterr().out)
+    assert exit_code == 0
+    assert summary["route"] == "no_repair_needed"
+    assert summary["provider_call_count"] == 0
