@@ -19,6 +19,7 @@ from text2ifc_agent.live_pipeline import (  # noqa: E402
     run_clarification_case,
     run_design_brief_stage,
     run_generator_stage,
+    run_repair_stage,
 )
 from text2ifc_agent.clarification import ClarificationError  # noqa: E402
 from text2ifc_agent.live_trace import write_live_trace  # noqa: E402
@@ -63,7 +64,7 @@ def main(
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--stage",
-        choices=("design-brief", "clarify", "generate"),
+        choices=("design-brief", "clarify", "generate", "repair"),
         default="design-brief",
     )
     parser.add_argument(
@@ -75,6 +76,7 @@ def main(
     parser.add_argument("--output-dir", type=Path)
     parser.add_argument("--answers", type=Path)
     parser.add_argument("--design-source-dir", type=Path)
+    parser.add_argument("--generator-source-dir", type=Path)
     parser.add_argument("--v1-baseline-dir", type=Path, default=DEFAULT_V1_BASELINE)
     args = parser.parse_args(argv)
     _load_env_file(args.env_file)
@@ -105,8 +107,8 @@ def main(
         parser.error("--stage design-brief requires --case complete-room")
     case = clarified_room_case() if args.case == "clarified-room" else complete_room_case()
     try:
-        provider = provider_factory()
         if args.stage == "clarify":
+            provider = provider_factory()
             if args.answers is None or not args.answers.is_file():
                 parser.error("--stage clarify requires an existing --answers JSON file")
             answer_payload = json.loads(args.answers.read_text(encoding="utf-8"))
@@ -122,6 +124,7 @@ def main(
                 answers=answers,
             )
         elif args.stage == "generate":
+            provider = provider_factory()
             design_source_dir = args.design_source_dir or (
                 DEFAULT_LIVE_ROOT / "complete-room" / "design-brief"
                 if args.case == "complete-room"
@@ -133,7 +136,18 @@ def main(
                 design_source_dir=design_source_dir,
                 case_id=args.case,
             )
+        elif args.stage == "repair":
+            generator_source_dir = args.generator_source_dir or (
+                DEFAULT_LIVE_ROOT / args.case / "generator"
+            )
+            result = run_repair_stage(
+                provider_factory=provider_factory,
+                output_dir=output_dir,
+                generator_source_dir=generator_source_dir,
+                case_id=args.case,
+            )
         else:
+            provider = provider_factory()
             result = run_design_brief_stage(
                 provider=provider,
                 output_dir=output_dir,

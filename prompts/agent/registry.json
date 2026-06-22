@@ -145,6 +145,37 @@
       ]
     },
     {
+      "template_id": "bim-json-generator-repair.v2",
+      "role": "bim_json_generator",
+      "mode": "repair",
+      "path": "prompts/agent/bim-json-generator-repair-v2.md",
+      "sha256": "sha256:053e607a0001676dc37871c6d96df92d880a5cbb4db61c941884758d9d151fbf",
+      "required_inputs": [
+        "USER_REQUEST",
+        "CONVERSATION",
+        "DESIGN_BRIEF",
+        "CANDIDATE",
+        "FORMAL_SCHEMA",
+        "DRAFT_SCHEMA",
+        "CAPABILITY_PROFILE",
+        "VALIDATION_FEEDBACK",
+        "GEOMETRY_FEEDBACK",
+        "ALLOWED_CHANGE_PATHS",
+        "EVIDENCE_BY_PATH"
+      ],
+      "forbidden_outputs": [
+        "raw_ifc",
+        "step_text",
+        "step_id",
+        "IfcCartesianPoint",
+        "IfcDirection",
+        "IfcOwnerHistory",
+        "compiler_only_object",
+        "unsupported_user_fact",
+        "supervisor_semantic_patch"
+      ]
+    },
+    {
       "template_id": "audit.v1",
       "role": "audit",
       "mode": "semantic_review",

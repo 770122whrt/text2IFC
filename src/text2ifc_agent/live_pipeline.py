@@ -19,12 +19,14 @@ from .design_brief import load_design_brief_schema, validate_design_brief
 from .live_trace import write_live_trace
 from .prompt_registry import render_prompt
 from .generator import validate_generation_document
+from .failure_routing import route_generation_failure
 from .providers import validate_provider_output
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DESIGN_BRIEF_TEMPLATE_ID = "design-brief.v2.1"
 GENERATOR_TEMPLATE_ID = "bim-json-generator.v2"
+REPAIR_TEMPLATE_ID = "bim-json-generator-repair.v2"
 FORMAL_SCHEMA_PATH = PROJECT_ROOT / "schemas" / "bim-json" / "2.0" / "schema.json"
 DRAFT_SCHEMA_PATH = (
     PROJECT_ROOT / "schemas" / "bim-json" / "draft" / "1.0" / "schema.json"
@@ -601,6 +603,136 @@ def run_generator_stage(
         "strict_output_contract_valid": strict_output_contract_valid,
         "response_id": result.response.get("id"),
         "evidence_class": result.evidence_class,
+        "output_dir": portable_artifact_path(output),
+    }
+
+
+def run_repair_stage(
+    *,
+    provider_factory: Any,
+    output_dir: Path | str,
+    generator_source_dir: Path | str,
+    case_id: str,
+) -> dict[str, Any]:
+    """Route a generator result through bounded repair or no-repair evidence."""
+    output = Path(output_dir)
+    source = Path(generator_source_dir)
+    output.mkdir(parents=True, exist_ok=True)
+
+    user_request = (source / "input.txt").read_text(encoding="utf-8").rstrip("\r\n")
+    conversation = json.loads(
+        (source / "conversation.json").read_text(encoding="utf-8")
+    )
+    design_brief = json.loads(
+        (source / "design-brief.json").read_text(encoding="utf-8")
+    )
+    validation = json.loads((source / "validation.json").read_text(encoding="utf-8"))
+    source_metrics = json.loads((source / "metrics.json").read_text(encoding="utf-8"))
+    generator_context_path = source / "generator-context.json"
+    generator_context = (
+        json.loads(generator_context_path.read_text(encoding="utf-8"))
+        if generator_context_path.is_file()
+        else {"capability_profile": [], "few_shots": []}
+    )
+    candidate_path = source / "candidate.json"
+    candidate = (
+        json.loads(candidate_path.read_text(encoding="utf-8"))
+        if candidate_path.is_file()
+        else None
+    )
+    validation_issues = list(validation.get("issues", []))
+    route = route_generation_failure(
+        previous_candidate=candidate,
+        validation_feedback=validation_issues,
+        geometry_feedback=[],
+        known_facts=design_brief.get("known_facts", {}),
+    )
+
+    _write_text(output / "input.txt", user_request + "\n")
+    _write_json(output / "conversation.json", conversation)
+    _write_json(output / "design-brief.json", design_brief)
+    if candidate is not None:
+        _write_json(output / "candidate.json", candidate)
+    _write_json(output / "source-validation.json", validation)
+    _write_json(output / "generator-context.json", generator_context)
+
+    provider_call_count = 0
+    evidence_class = "deterministic-no-call"
+    valid = False
+    if route["route"] == "no_repair_needed":
+        evidence_class = "live-derived-no-call"
+        valid = bool(validation.get("valid")) and candidate is not None
+    else:
+        route = {
+            **route,
+            "blocking_reason": route.get(
+                "blocking_reason",
+                "repair orchestration is only enabled after an eligible failure",
+            ),
+        }
+
+    route_record = {
+        "schema_version": "text2ifc/repair-route/1.0",
+        "case_id": case_id,
+        "route": route["route"],
+        "valid": valid,
+        "provider_call_count": provider_call_count,
+        "repair_attempts": list(route.get("repair_attempts", [])),
+        "source_generator_response_id": source_metrics.get("response_id"),
+        "source_generator_dir": portable_artifact_path(source),
+        "validation_issue_count": len(validation_issues),
+        **{
+            key: value
+            for key, value in route.items()
+            if key not in {"route", "repair_attempts"}
+        },
+    }
+    _write_json(output / "route.json", route_record)
+    _write_json(output / "repair-attempts.json", route_record["repair_attempts"])
+
+    metrics = {
+        "case_id": case_id,
+        "stage": "repair",
+        "route": route_record["route"],
+        "valid": valid,
+        "evidence_class": evidence_class,
+        "provider_call_count": provider_call_count,
+        "repair_attempt_count": len(route_record["repair_attempts"]),
+        "source_generator_response_id": source_metrics.get("response_id"),
+        "source_generator_evidence_class": source_metrics.get("evidence_class"),
+        "source_generator_contract_valid": source_metrics.get("contract_valid"),
+    }
+    _write_json(output / "metrics.json", metrics)
+    _write_json(
+        output / "trace-manifest.json",
+        {
+            "schema_version": "text2ifc/live-stage-trace/1.0",
+            "case_id": case_id,
+            "stage": "repair",
+            "template_id": REPAIR_TEMPLATE_ID,
+            "source_generator": portable_artifact_path(source),
+            "provider_call_count": provider_call_count,
+            "artifacts": {
+                "input": "input.txt",
+                "conversation": "conversation.json",
+                "design_brief": "design-brief.json",
+                "candidate": "candidate.json" if candidate is not None else None,
+                "source_validation": "source-validation.json",
+                "route": "route.json",
+                "repair_attempts": "repair-attempts.json",
+                "metrics": "metrics.json",
+            },
+        },
+    )
+    return {
+        "case_id": case_id,
+        "stage": "repair",
+        "route": route_record["route"],
+        "valid": valid,
+        "provider_call_count": provider_call_count,
+        "repair_attempts": route_record["repair_attempts"],
+        "evidence_class": evidence_class,
+        "source_generator_response_id": source_metrics.get("response_id"),
         "output_dir": portable_artifact_path(output),
     }
 
