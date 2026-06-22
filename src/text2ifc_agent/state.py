@@ -29,6 +29,13 @@ _SECRET_KEY_PARTS = (
     "base_url",
     "url",
 )
+_SAFE_TOKEN_COUNTER_KEYS = {
+    "max-tokens",
+    "input-tokens",
+    "output-tokens",
+    "cache-read-input-tokens",
+    "cache-creation-input-tokens",
+}
 _ENV_VAR_NAMES = {"ANTHROPIC_AUTH_TOKEN", "ANTHROPIC_BASE_URL"}
 
 
@@ -236,6 +243,8 @@ def _redact(value: Any, *, parent_key: str) -> Any:
 
 def _is_secret_key(key: str) -> bool:
     normalized = key.lower().replace("_", "-")
+    if normalized in _SAFE_TOKEN_COUNTER_KEYS:
+        return False
     return any(part in normalized for part in _SECRET_KEY_PARTS)
 
 
