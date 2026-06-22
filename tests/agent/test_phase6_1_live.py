@@ -1,8 +1,10 @@
 import json
+import importlib.util
 from pathlib import Path
 
 from text2ifc_agent.context_selection import select_design_brief_context
 from text2ifc_agent.live_pipeline import (
+    compare_design_brief_runs,
     complete_room_case,
     run_design_brief_stage,
 )
@@ -213,3 +215,89 @@ def test_design_brief_stage_records_invalid_model_output_without_editing_it(tmp_
     validation = json.loads((tmp_path / "validation.json").read_text(encoding="utf-8"))
     assert validation["valid"] is False
     assert validation["issues"][0]["code"] == "UNSUPPORTED_DESIGN_BRIEF_VERSION"
+
+
+def test_v1_v2_comparison_is_derived_from_trace_artifacts(tmp_path: Path):
+    case = complete_room_case()
+    v1_dir = tmp_path / "v1"
+    v2_dir = tmp_path / "v2"
+    v1_dir.mkdir()
+    v1_payload = {
+        "schema_version": "text2ifc/design-brief/1.0",
+        "language": "zh-CN",
+        "original_request": case["user_request"],
+        "known_facts": {},
+        "missing_facts": [],
+        "ambiguities": [],
+        "user_corrections": [],
+        "clarification_questions": ["墙体厚度是多少？"],
+        "provenance": {"source": "user_request"},
+    }
+    (v1_dir / "model-text.txt").write_text(
+        "```json\n" + json.dumps(v1_payload, ensure_ascii=False) + "\n```",
+        encoding="utf-8",
+    )
+    (v1_dir / "response-metadata.json").write_text(
+        json.dumps(
+            {
+                "id": "msg_v1",
+                "model": "mimo-v2.5-pro",
+                "stop_reason": "end_turn",
+            }
+        ),
+        encoding="utf-8",
+    )
+    provider = _RecordingLiveProvider(_valid_ready_brief(case))
+    run_design_brief_stage(provider=provider, output_dir=v2_dir, case=case)
+
+    comparison = compare_design_brief_runs(
+        v1_dir=v1_dir,
+        v2_dir=v2_dir,
+        output_path=v2_dir / "comparison.json",
+    )
+
+    assert comparison["v1"]["response_id"] == "msg_v1"
+    assert comparison["v1"]["normalization_codes"] == [
+        "OUTER_JSON_FENCE_REMOVED"
+    ]
+    assert comparison["v1"]["question_count"] == 1
+    assert comparison["v2"]["question_count"] == 0
+    assert comparison["v2"]["evidence_valid"] is True
+    assert comparison["regressions"] == []
+    assert comparison["improvements"]
+    persisted = json.loads(
+        (v2_dir / "comparison.json").read_text(encoding="utf-8")
+    )
+    assert persisted == comparison
+
+
+def test_live_cli_runs_design_brief_case_through_injected_provider(
+    tmp_path: Path, capsys
+):
+    script_path = Path("scripts/agent/run_phase6_1_live.py")
+    assert script_path.is_file(), "Phase 6.1 live CLI is missing"
+    spec = importlib.util.spec_from_file_location("run_phase6_1_live", script_path)
+    assert spec is not None and spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    case = complete_room_case()
+    provider = _RecordingLiveProvider(_valid_ready_brief(case))
+
+    exit_code = module.main(
+        [
+            "--stage",
+            "design-brief",
+            "--case",
+            "complete-room",
+            "--live",
+            "--output-dir",
+            str(tmp_path),
+        ],
+        provider_factory=lambda: provider,
+    )
+
+    output = json.loads(capsys.readouterr().out)
+    assert exit_code == 0
+    assert output["status"] == "ready"
+    assert output["evidence_class"] == "unit_test_fixture"
+    assert (tmp_path / "design-brief.json").is_file()
