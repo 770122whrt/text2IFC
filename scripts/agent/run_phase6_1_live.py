@@ -21,6 +21,7 @@ from text2ifc_agent.live_pipeline import (  # noqa: E402
     run_generator_stage,
     run_repair_stage,
     run_audit_report_stage,
+    run_final_acceptance_stage,
 )
 from text2ifc_agent.clarification import ClarificationError  # noqa: E402
 from text2ifc_agent.live_trace import write_live_trace  # noqa: E402
@@ -65,7 +66,14 @@ def main(
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--stage",
-        choices=("design-brief", "clarify", "generate", "repair", "audit-report"),
+        choices=(
+            "design-brief",
+            "clarify",
+            "generate",
+            "repair",
+            "audit-report",
+            "finalize",
+        ),
         default="design-brief",
     )
     parser.add_argument(
@@ -154,6 +162,13 @@ def main(
             result = run_audit_report_stage(
                 provider=provider,
                 case_dir=case_dir,
+                case_id=args.case,
+            )
+        elif args.stage == "finalize":
+            case_dir = args.case_dir or (DEFAULT_LIVE_ROOT / args.case)
+            result = run_final_acceptance_stage(
+                case_dir=case_dir,
+                output_dir=output_dir,
                 case_id=args.case,
             )
         else:

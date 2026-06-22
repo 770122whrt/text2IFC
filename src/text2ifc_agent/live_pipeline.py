@@ -9,6 +9,10 @@ from dataclasses import asdict
 from pathlib import Path
 from typing import Any
 
+from text2ifc_compiler import compile_document
+from text2ifc_quality import check_generated_ifc
+
+from .artifact_scan import scan_path
 from .context_selection import select_design_brief_context
 from .clarification import (
     ClarificationCall,
@@ -992,6 +996,108 @@ def run_audit_report_stage(
     }
 
 
+def run_final_acceptance_stage(
+    *,
+    case_dir: Path | str,
+    output_dir: Path | str,
+    case_id: str,
+) -> dict[str, Any]:
+    """Compile the accepted live Formal candidate to the canonical IFC artifact."""
+    case_root = Path(case_dir)
+    output = Path(output_dir)
+    output.mkdir(parents=True, exist_ok=True)
+    candidate_path = case_root / "generator" / "candidate.json"
+    audit_report_path = case_root / "audit" / "audit-report.json"
+    audit_metrics_path = case_root / "audit" / "metrics.json"
+    if not candidate_path.is_file():
+        raise ValueError("Final acceptance requires generator/candidate.json")
+    if not audit_report_path.is_file() or not audit_metrics_path.is_file():
+        raise ValueError("Final acceptance requires accepted audit artifacts")
+    candidate = json.loads(candidate_path.read_text(encoding="utf-8"))
+    audit_report = json.loads(audit_report_path.read_text(encoding="utf-8"))
+    audit_metrics = json.loads(audit_metrics_path.read_text(encoding="utf-8"))
+    if audit_report.get("blocking") is not False or audit_report.get("recommendation") != "accept":
+        raise ValueError("Final acceptance requires a non-blocking accepted audit")
+    if audit_metrics.get("strict_output_contract_valid") is not True:
+        raise ValueError("Final acceptance requires strict Audit output contract")
+
+    output_ifc = output / "output.ifc"
+    compilation = compile_document(candidate, output_ifc)
+    ifc_verification = {
+        "success": compilation.success,
+        "output_path": str(output_ifc) if compilation.success else None,
+        "input_issues": [_issue_to_dict(issue) for issue in compilation.input_issues],
+        "ifc_issues": [_issue_to_dict(issue) for issue in compilation.ifc_issues],
+    }
+    _write_json(output / "ifc-verification.json", ifc_verification)
+
+    expectation = _wall_geometry_expectation_from_candidate(case_id, candidate)
+    _write_json(output / "geometry-expectation.json", expectation)
+    if compilation.success:
+        quality = check_generated_ifc(output_ifc, expectation)
+        geometry_feedback = {
+            "success": quality.success,
+            "issues": quality.issues,
+            "metrics": quality.metrics,
+        }
+    else:
+        geometry_feedback = {
+            "success": False,
+            "issues": [
+                {
+                    "code": "COMPILE_REOPEN_FAILED",
+                    "path": "/output.ifc",
+                    "message": "IFC compilation or reopen verification failed.",
+                }
+            ],
+            "metrics": {},
+        }
+    _write_json(output / "geometry-feedback.json", geometry_feedback)
+
+    secret_scan = scan_path(output)
+    _write_json(output / "secret-scan.json", secret_scan)
+    metrics = {
+        "case_id": case_id,
+        "stage": "final-acceptance",
+        "valid": bool(
+            compilation.success
+            and geometry_feedback["success"]
+            and secret_scan["finding_count"] == 0
+        ),
+        "compile_reopen_success": compilation.success,
+        "geometry_success": geometry_feedback["success"],
+        "secret_finding_count": secret_scan["finding_count"],
+        "audit_response_id": audit_metrics.get("response_id"),
+        "audit_evidence_class": audit_metrics.get("evidence_class"),
+        "audit_strict_output_contract_valid": audit_metrics.get(
+            "strict_output_contract_valid"
+        ),
+        "source_case_dir": portable_artifact_path(case_root),
+        "ifc_path": "output.ifc" if compilation.success else None,
+    }
+    _write_json(output / "acceptance-metrics.json", metrics)
+    _write_final_report(
+        output / "report.md",
+        case_id=case_id,
+        case_dir=case_root,
+        metrics=metrics,
+        ifc_verification=ifc_verification,
+        geometry_feedback=geometry_feedback,
+        secret_scan=secret_scan,
+    )
+    return {
+        "case_id": case_id,
+        "stage": "final-acceptance",
+        "valid": metrics["valid"],
+        "ifc_path": str(output_ifc),
+        "report_path": str(output / "report.md"),
+        "output_dir": str(output),
+        "compile_reopen_success": compilation.success,
+        "geometry_success": geometry_feedback["success"],
+        "secret_finding_count": secret_scan["finding_count"],
+    }
+
+
 def _select_generator_context(design_context: dict[str, Any]) -> dict[str, Any]:
     capabilities = [
         record
@@ -1113,6 +1219,116 @@ def _validate_live_audit_output(
                 }
             )
     return issues
+
+
+def _wall_geometry_expectation_from_candidate(
+    case_id: str,
+    candidate: dict[str, Any],
+) -> dict[str, Any]:
+    walls = {}
+    for entity in candidate.get("entities", []):
+        if not isinstance(entity, dict) or not str(entity.get("id", "")).startswith("wall-"):
+            continue
+        attributes = entity.get("attributes", {})
+        placement = attributes.get("ObjectPlacement", {})
+        representation = attributes.get("Representation", {})
+        profile = representation.get("profile", {})
+        origin = placement.get("origin", [0, 0, 0])
+        ref_direction = placement.get("ref_direction", [1, 0, 0])
+        length_mm = float(profile.get("x", 0))
+        thickness_mm = float(profile.get("y", 0))
+        depth_mm = float(representation.get("depth", 0))
+        origin_x = float(origin[0])
+        origin_y = float(origin[1])
+        origin_z = float(origin[2]) if len(origin) > 2 else 0.0
+        axis = "y" if abs(float(ref_direction[1])) > abs(float(ref_direction[0])) else "x"
+        if axis == "x":
+            bbox = {
+                "x": _metre_range(origin_x - length_mm / 2, origin_x + length_mm / 2),
+                "y": _metre_range(origin_y - thickness_mm / 2, origin_y + thickness_mm / 2),
+                "z": _metre_range(origin_z, origin_z + depth_mm),
+            }
+        else:
+            bbox = {
+                "x": _metre_range(origin_x - thickness_mm / 2, origin_x + thickness_mm / 2),
+                "y": _metre_range(origin_y - length_mm / 2, origin_y + length_mm / 2),
+                "z": _metre_range(origin_z, origin_z + depth_mm),
+            }
+        walls[str(entity["id"])] = {"axis": axis, "bbox": bbox}
+    return {
+        "case_id": case_id,
+        "tolerance": 0.05,
+        "units": "METRE",
+        "walls": walls,
+    }
+
+
+def _metre_range(start_mm: float, end_mm: float) -> list[float]:
+    return [round(start_mm / 1000, 6), round(end_mm / 1000, 6)]
+
+
+def _write_final_report(
+    path: Path,
+    *,
+    case_id: str,
+    case_dir: Path,
+    metrics: dict[str, Any],
+    ifc_verification: dict[str, Any],
+    geometry_feedback: dict[str, Any],
+    secret_scan: dict[str, Any],
+) -> None:
+    case_link = f"{case_id}/report.md"
+    lines = [
+        "# Phase 6.1 Final Acceptance Report",
+        "",
+        "Generated from live trace sidecars and deterministic IFC gates.",
+        "",
+        "## Accepted Live Case",
+        "",
+        f"- case_id: `{case_id}`",
+        f"- source_case_dir: `{portable_artifact_path(case_dir)}`",
+        f"- case_report: [{case_link}]({case_link})",
+        "",
+        "## Final IFC",
+        "",
+        "- [output.ifc](output.ifc)",
+        "- [ifc-verification.json](ifc-verification.json)",
+        "- [geometry-feedback.json](geometry-feedback.json)",
+        "",
+        "## Acceptance Metrics",
+        "",
+        "```json",
+        json.dumps(metrics, ensure_ascii=False, indent=2, sort_keys=True),
+        "```",
+        "",
+        "## IFC Verification",
+        "",
+        "```json",
+        json.dumps(ifc_verification, ensure_ascii=False, indent=2, sort_keys=True),
+        "```",
+        "",
+        "## Geometry Feedback",
+        "",
+        "```json",
+        json.dumps(geometry_feedback, ensure_ascii=False, indent=2, sort_keys=True),
+        "```",
+        "",
+        "## Secret Scan",
+        "",
+        "```json",
+        json.dumps(secret_scan, ensure_ascii=False, indent=2, sort_keys=True),
+        "```",
+        "",
+    ]
+    _write_text(path, "\n".join(lines))
+
+
+def _issue_to_dict(issue: Any) -> dict[str, Any]:
+    return {
+        "code": getattr(issue, "code", ""),
+        "path": getattr(issue, "path", getattr(issue, "entity", "")),
+        "message": getattr(issue, "message", str(issue)),
+    }
 
 
 def _first_existing_path(root: Path, names: tuple[str, ...]) -> Path | None:
