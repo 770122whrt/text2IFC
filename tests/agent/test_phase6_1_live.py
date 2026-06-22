@@ -11,6 +11,7 @@ from text2ifc_agent.live_pipeline import (
     portable_artifact_path,
     run_clarification_case,
     run_design_brief_stage,
+    run_generator_stage,
 )
 from text2ifc_agent.providers import LiveProviderResult, ProviderOutput
 
@@ -528,3 +529,157 @@ def test_live_clarification_cli_consumes_answer_file_with_injected_provider(
     assert exit_code == 0
     assert summary["status"] == "ready"
     assert summary["live_call_count"] == 2
+
+
+def _write_ready_design_source(path: Path) -> Path:
+    path.mkdir(parents=True)
+    case = complete_room_case()
+    brief = _valid_ready_brief(case)
+    selection = select_design_brief_context(
+        user_request=case["user_request"],
+        conversation=case["conversation"],
+    )
+    (path / "input.txt").write_text(case["user_request"] + "\n", encoding="utf-8")
+    (path / "conversation.json").write_text(
+        json.dumps(case["conversation"], ensure_ascii=False),
+        encoding="utf-8",
+    )
+    (path / "design-brief.json").write_text(
+        json.dumps(brief, ensure_ascii=False),
+        encoding="utf-8",
+    )
+    (path / "context-selection.json").write_text(
+        json.dumps(selection, ensure_ascii=False),
+        encoding="utf-8",
+    )
+    return path
+
+
+def test_live_generator_stage_renders_exact_contracts_and_routes_formal(
+    tmp_path: Path,
+):
+    source_dir = _write_ready_design_source(tmp_path / "design-source")
+    formal = json.loads(
+        Path("tests/contract_v2/fixtures/minimal.json").read_text(encoding="utf-8")
+    )
+    provider = _RecordingLiveProvider(formal)
+    output_dir = tmp_path / "generator"
+
+    result = run_generator_stage(
+        provider=provider,
+        output_dir=output_dir,
+        design_source_dir=source_dir,
+        case_id="complete-room",
+    )
+
+    assert result["status"] == "formal"
+    assert result["classification"] == "formal"
+    assert result["valid"] is True
+    assert result["strict_output_contract_valid"] is True
+    assert json.loads(
+        (output_dir / "candidate.json").read_text(encoding="utf-8")
+    ) == formal
+    assert not (output_dir / "draft.json").exists()
+    expected_files = {
+        "input.txt",
+        "conversation.json",
+        "design-brief.json",
+        "generator-context.json",
+        "prompt-render-input.json",
+        "prompt-rendered.md",
+        "request.redacted.json",
+        "response.raw.json",
+        "response-metadata.json",
+        "events.jsonl",
+        "model-text.txt",
+        "parsed-output.json",
+        "candidate.json",
+        "classification.json",
+        "validation.json",
+        "metrics.json",
+        "trace-manifest.json",
+    }
+    assert expected_files <= {item.name for item in output_dir.iterdir()}
+    renderer_inputs = json.loads(
+        (output_dir / "prompt-render-input.json").read_text(encoding="utf-8")
+    )
+    assert renderer_inputs["FORMAL_SCHEMA"]["$id"].endswith(
+        "/bim-json/2.0/schema.json"
+    )
+    assert renderer_inputs["DRAFT_SCHEMA"]["$id"].endswith(
+        "/bim-json/draft/1.0/schema.json"
+    )
+    assert "SCHEMA_SUMMARY" not in renderer_inputs
+    assert "bim-json-draft/1.0" in provider.prompt
+    metrics = json.loads((output_dir / "metrics.json").read_text(encoding="utf-8"))
+    assert metrics["response_id"] == "msg_unit_design_brief_v2"
+    assert metrics["normalization_diagnostics"] == []
+
+
+def test_live_generator_stage_blocks_unknown_contract_without_editing_output(
+    tmp_path: Path,
+):
+    source_dir = _write_ready_design_source(tmp_path / "design-source")
+    unknown = {
+        "draft_version": "text2ifc/draft-envelope/1.0",
+        "target_schema_version": "bim-json/2.0",
+        "partial_document": {},
+    }
+    provider = _RecordingLiveProvider(unknown)
+    output_dir = tmp_path / "generator"
+
+    result = run_generator_stage(
+        provider=provider,
+        output_dir=output_dir,
+        design_source_dir=source_dir,
+        case_id="complete-room",
+    )
+
+    assert result["status"] == "blocked_failure"
+    assert result["classification"] == "unknown_contract"
+    assert result["valid"] is False
+    assert not (output_dir / "candidate.json").exists()
+    assert not (output_dir / "draft.json").exists()
+    assert json.loads(
+        (output_dir / "parsed-output.json").read_text(encoding="utf-8")
+    ) == unknown
+    classification = json.loads(
+        (output_dir / "classification.json").read_text(encoding="utf-8")
+    )
+    assert classification["diagnostics"][0]["code"] == "UNKNOWN_DRAFT_VERSION"
+
+
+def test_live_generator_cli_uses_injected_provider_and_design_source(
+    tmp_path: Path, capsys
+):
+    source_dir = _write_ready_design_source(tmp_path / "design-source")
+    formal = json.loads(
+        Path("tests/contract_v2/fixtures/minimal.json").read_text(encoding="utf-8")
+    )
+    provider = _RecordingLiveProvider(formal)
+    script_path = Path("scripts/agent/run_phase6_1_live.py")
+    spec = importlib.util.spec_from_file_location("run_phase6_1_live_generate", script_path)
+    assert spec is not None and spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    output_dir = tmp_path / "generator"
+
+    exit_code = module.main(
+        [
+            "--stage",
+            "generate",
+            "--case",
+            "complete-room",
+            "--design-source-dir",
+            str(source_dir),
+            "--live",
+            "--output-dir",
+            str(output_dir),
+        ],
+        provider_factory=lambda: provider,
+    )
+
+    summary = json.loads(capsys.readouterr().out)
+    assert exit_code == 0
+    assert summary["status"] == "formal"
+    assert summary["classification"] == "formal"
