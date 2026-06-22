@@ -1,0 +1,152 @@
+{
+  "schema_version": "text2ifc/design-brief-few-shots/2.0",
+  "few_shots": [
+    {
+      "few_shot_id": "design-brief-v2.incomplete-room",
+      "selection_terms": ["房间", "矩形", "尺寸", "宽度", "不知道", "不清楚"],
+      "input": {
+        "user_request": "创建一个矩形房间，但我还不知道宽度。",
+        "conversation": [
+          {"turn_id": "turn-user-001", "role": "user", "content": "创建一个矩形房间，但我还不知道宽度。"}
+        ]
+      },
+      "reasoning_summary": "用户明确要求生成矩形空间，又明确说明宽度未知。矩形轮廓证据需要两个平面尺寸，因此宽度是当前请求的阻塞事实；不能用常见值补齐。",
+      "output": {
+        "schema_version": "text2ifc/design-brief/2.0",
+        "language": "zh-CN",
+        "original_request": "创建一个矩形房间，但我还不知道宽度。",
+        "status": "needs_clarification",
+        "known_facts": {"space": {"shape": "rectangle"}},
+        "fact_sources": [
+          {
+            "path": "/known_facts/space/shape",
+            "source_turns": ["turn-user-001"],
+            "evidence_refs": ["schema:bim-json-v2:representation"]
+          }
+        ],
+        "missing_facts": [
+          {
+            "id": "mf-space-width",
+            "code": "SPACE_WIDTH_MISSING",
+            "path": "/known_facts/space/width_mm",
+            "message": "矩形房间宽度尚未确定。",
+            "reason": "用户要求生成矩形房间，矩形轮廓需要宽度；用户明确表示该值未知。",
+            "blocking": true,
+            "evidence_refs": ["schema:bim-json-v2:representation"],
+            "source_turns": ["turn-user-001"]
+          }
+        ],
+        "ambiguities": [],
+        "unsupported_requests": [],
+        "user_corrections": [],
+        "clarification_questions": [
+          {
+            "id": "q-space-width",
+            "text": "房间宽度是多少？如果暂时不知道，可以直接告诉我不知道。",
+            "targets": ["mf-space-width"],
+            "reason": "该问题只询问当前矩形空间生成所缺少的阻塞事实。",
+            "evidence_refs": ["schema:bim-json-v2:representation"]
+          }
+        ],
+        "provenance": {
+          "source_turns": ["turn-user-001"],
+          "selected_evidence_ids": ["schema:bim-json-v2:representation", "capability:IFC2X3:IfcSpace"],
+          "few_shot_ids": ["design-brief-v2.incomplete-room"]
+        }
+      }
+    },
+    {
+      "few_shot_id": "design-brief-v2.complete-room-openings",
+      "selection_terms": ["房间", "墙", "门", "窗", "中央", "厚度", "南墙", "北墙"],
+      "input": {
+        "user_request": "创建一个6米乘4米、高3米的矩形房间，墙厚300毫米；南墙中央有一扇0.9米乘2.1米的门，北墙中央有一扇1.2米乘1.5米、窗台高0.9米的窗。",
+        "conversation": [
+          {"turn_id": "turn-user-001", "role": "user", "content": "创建一个6米乘4米、高3米的矩形房间，墙厚300毫米；南墙中央有一扇0.9米乘2.1米的门，北墙中央有一扇1.2米乘1.5米、窗台高0.9米的窗。"}
+        ]
+      },
+      "reasoning_summary": "当前请求已给出所要求构件的尺寸、宿主和局部位置。用户没有要求地理定向、门开启方向或窗扇机构；能力与 Schema 证据也不要求这些未请求语义才能表达当前模型，因此不追问。这里的“中央”按普通建筑语言表示构件中心线与宿主墙中心线对齐，不凭空增加距离。",
+      "output": {
+        "schema_version": "text2ifc/design-brief/2.0",
+        "language": "zh-CN",
+        "original_request": "创建一个6米乘4米、高3米的矩形房间，墙厚300毫米；南墙中央有一扇0.9米乘2.1米的门，北墙中央有一扇1.2米乘1.5米、窗台高0.9米的窗。",
+        "status": "ready",
+        "known_facts": {
+          "space": {"shape": "rectangle", "length_mm": 6000, "width_mm": 4000, "height_mm": 3000},
+          "walls": {"count": 4, "enclosure": "closed", "thickness_mm": 300},
+          "door": {"host": "south_wall", "alignment": "host_centerline", "width_mm": 900, "height_mm": 2100},
+          "window": {"host": "north_wall", "alignment": "host_centerline", "width_mm": 1200, "height_mm": 1500, "sill_height_mm": 900}
+        },
+        "fact_sources": [
+          {
+            "path": "/known_facts",
+            "source_turns": ["turn-user-001"],
+            "evidence_refs": ["schema:bim-json-v2:entity", "schema:bim-json-v2:representation"]
+          }
+        ],
+        "missing_facts": [],
+        "ambiguities": [],
+        "unsupported_requests": [],
+        "user_corrections": [],
+        "clarification_questions": [],
+        "provenance": {
+          "source_turns": ["turn-user-001"],
+          "selected_evidence_ids": [
+            "schema:bim-json-v2:entity",
+            "schema:bim-json-v2:representation",
+            "capability:IFC2X3:IfcSpace",
+            "capability:IFC2X3:IfcWall",
+            "capability:IFC2X3:IfcDoor",
+            "capability:IFC2X3:IfcWindow"
+          ],
+          "few_shot_ids": ["design-brief-v2.complete-room-openings"]
+        }
+      }
+    },
+    {
+      "few_shot_id": "design-brief-v2.explicit-unsupported-window-style",
+      "selection_terms": ["窗", "窗型", "开启机构", "联动", "WindowStyle"],
+      "input": {
+        "user_request": "创建一扇复杂联动上悬窗，并保留完整窗扇开启机构语义。",
+        "conversation": [
+          {"turn_id": "turn-user-001", "role": "user", "content": "创建一扇复杂联动上悬窗，并保留完整窗扇开启机构语义。"}
+        ]
+      },
+      "reasoning_summary": "用户明确要求保留窗扇开启机构，而当前能力证据将 IfcWindowStyle 标记为 unsupported。不能静默丢弃，也不能把该事实当成未请求的可选细节；应进入 Draft 路由。",
+      "output": {
+        "schema_version": "text2ifc/design-brief/2.0",
+        "language": "zh-CN",
+        "original_request": "创建一扇复杂联动上悬窗，并保留完整窗扇开启机构语义。",
+        "status": "draft_required",
+        "known_facts": {"window": {"operation_semantics": "复杂联动上悬"}},
+        "fact_sources": [
+          {
+            "path": "/known_facts/window/operation_semantics",
+            "source_turns": ["turn-user-001"],
+            "evidence_refs": ["capability:IFC2X3:IfcWindow"]
+          }
+        ],
+        "missing_facts": [],
+        "ambiguities": [],
+        "unsupported_requests": [
+          {
+            "id": "unsupported-window-style",
+            "path": "/known_facts/window/operation_semantics",
+            "message": "当前生成能力不能保真表达所要求的完整窗扇开启机构。",
+            "reason": "用户明确要求该语义，且 IfcWindowStyle 能力记录为 unsupported。",
+            "blocking": true,
+            "requested_value": "复杂联动上悬",
+            "evidence_refs": ["capability:IFC2X3:IfcWindowStyle"],
+            "source_turns": ["turn-user-001"]
+          }
+        ],
+        "user_corrections": [],
+        "clarification_questions": [],
+        "provenance": {
+          "source_turns": ["turn-user-001"],
+          "selected_evidence_ids": ["capability:IFC2X3:IfcWindow", "capability:IFC2X3:IfcWindowStyle"],
+          "few_shot_ids": ["design-brief-v2.explicit-unsupported-window-style"]
+        }
+      }
+    }
+  ]
+}
