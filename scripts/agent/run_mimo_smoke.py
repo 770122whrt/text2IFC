@@ -98,6 +98,7 @@ def main(argv: list[str] | None = None, *, provider_factory=MimoAgentProvider) -
                         "provider": "mimo",
                         "status": "failed",
                         "message": str(exc),
+                        "details": exc.details,
                     },
                     sort_keys=True,
                 )

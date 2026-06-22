@@ -30,9 +30,16 @@ LOW_LEVEL_FORBIDDEN_TERMS = (
 class ProviderOutputError(ValueError):
     """Raised when provider output violates the Agent boundary."""
 
-    def __init__(self, message: str, *, live_result: "LiveProviderResult | None" = None) -> None:
+    def __init__(
+        self,
+        message: str,
+        *,
+        live_result: "LiveProviderResult | None" = None,
+        details: dict[str, Any] | None = None,
+    ) -> None:
         super().__init__(message)
         self.live_result = live_result
+        self.details = {} if details is None else details
 
 
 @dataclass(frozen=True)
@@ -306,6 +313,15 @@ class MimoAgentProvider:
             ) as response:
                 events = tuple(_read_anthropic_sse(response))
                 http_status = int(getattr(response, "status", 200))
+        except urllib.error.HTTPError as exc:
+            details = _safe_http_error_details(
+                exc,
+                secrets=(self.config.token, self.config.base_url),
+            )
+            raise ProviderOutputError(
+                f"Mimo live request failed for {session_id}: HTTP {exc.code}",
+                details=details,
+            ) from exc
         except (OSError, urllib.error.URLError, UnicodeDecodeError) as exc:
             raise ProviderOutputError(
                 f"Mimo live request failed for {session_id}: {type(exc).__name__}"
@@ -478,3 +494,33 @@ def _apply_content_delta(block: dict[str, Any], delta: dict[str, Any]) -> None:
     if field is None:
         raise ProviderOutputError(f"Unsupported Mimo content delta type: {delta_type}")
     block[field] = str(block.get(field, "")) + str(delta.get(field, ""))
+
+
+def _safe_http_error_details(
+    error: urllib.error.HTTPError,
+    *,
+    secrets: tuple[str, ...],
+) -> dict[str, Any]:
+    error_type = "http_error"
+    message = str(error.reason or "HTTP request rejected")
+    try:
+        body = error.read().decode("utf-8")
+        payload = json.loads(body)
+    except (AttributeError, UnicodeDecodeError, json.JSONDecodeError):
+        payload = None
+    if isinstance(payload, dict):
+        provider_error = payload.get("error", payload)
+        if isinstance(provider_error, dict):
+            if isinstance(provider_error.get("type"), str):
+                error_type = provider_error["type"]
+            if isinstance(provider_error.get("message"), str):
+                message = provider_error["message"]
+    for secret in secrets:
+        if secret:
+            message = message.replace(secret, "[REDACTED]")
+            error_type = error_type.replace(secret, "[REDACTED]")
+    return {
+        "http_status": int(error.code),
+        "error_type": error_type[:200],
+        "message": message[:1000],
+    }
