@@ -1,0 +1,18 @@
+{
+  "schema_version": "text2ifc/diagnostic-attempt-status/1.0",
+  "attempt_id": "attempt-05-repair",
+  "status": "aborted",
+  "acceptance_eligible": false,
+  "real_repair_response_id": null,
+  "contains_supervisor_semantic_patch": true,
+  "reason": "The user stopped the run because supervisor-authored ambiguity decisions were being introduced instead of diagnosing and routing the failure.",
+  "allowed_uses": [
+    "failure-analysis",
+    "regression-test-input"
+  ],
+  "forbidden_uses": [
+    "live-quality-evidence",
+    "repair-success-evidence",
+    "final-candidate-source"
+  ]
+}
