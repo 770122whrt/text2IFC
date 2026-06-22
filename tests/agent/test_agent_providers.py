@@ -8,6 +8,7 @@ import pytest
 from text2ifc_agent.providers import (
     FakeAgentProvider,
     FileAgentProvider,
+    LiveProviderResult,
     MimoAgentProvider,
     MimoConfig,
     ProviderOutput,
@@ -448,3 +449,87 @@ def test_live_trace_replay_writes_reviewable_secret_safe_bundle(monkeypatch, tmp
     )
     assert "secret-token" not in all_text
     assert "example.invalid" not in all_text
+
+
+def test_mimo_live_cli_writes_trace_bundle_without_secret_output(
+    monkeypatch, tmp_path, capsys
+):
+    smoke = importlib.import_module("scripts.agent.run_mimo_smoke")
+    for name in (
+        "ANTHROPIC_AUTH_TOKEN",
+        "ANTHROPIC_BASE_URL",
+        "TEXT2IFC_MIMO_MODEL",
+    ):
+        monkeypatch.delenv(name, raising=False)
+    env_file = tmp_path / ".env"
+    env_file.write_text(
+        "ANTHROPIC_AUTH_TOKEN=secret-token\n"
+        "ANTHROPIC_BASE_URL=https://example.invalid/private\n"
+        "TEXT2IFC_MIMO_MODEL=mimo-v2.5-pro\n",
+        encoding="utf-8",
+    )
+    output = ProviderOutput(
+        text='{"ok": true}',
+        metadata={
+            "provider": "mimo",
+            "evidence_class": "live",
+            "response_id": "msg-cli-001",
+        },
+    )
+    live_result = LiveProviderResult(
+        session_id="mimo-smoke",
+        evidence_class="live",
+        http_status=200,
+        request={
+            "model": "mimo-v2.5-pro",
+            "max_tokens": 131072,
+            "stream": True,
+            "messages": [{"role": "user", "content": "test"}],
+        },
+        response={
+            "id": "msg-cli-001",
+            "type": "message",
+            "role": "assistant",
+            "model": "mimo-v2.5-pro",
+            "content": [{"type": "text", "text": '{"ok": true}'}],
+            "stop_reason": "end_turn",
+            "usage": {"input_tokens": 1, "output_tokens": 1},
+        },
+        events=(
+            {
+                "sequence": 0,
+                "event": "message_start",
+                "data": {"type": "message_start", "message": {"id": "msg-cli-001"}},
+            },
+        ),
+        output=output,
+    )
+
+    class Provider:
+        def generate_live(self, **kwargs):
+            assert kwargs["session_id"] == "mimo-smoke"
+            return live_result
+
+    trace_dir = tmp_path / "trace"
+    exit_code = smoke.main(
+        [
+            "--live",
+            "--env-file",
+            str(env_file),
+            "--trace-dir",
+            str(trace_dir),
+        ],
+        provider_factory=Provider,
+    )
+
+    stdout = capsys.readouterr().out
+    summary = json.loads(stdout)
+    assert exit_code == 0
+    assert summary["provider"] == "mimo"
+    assert summary["evidence_class"] == "live"
+    assert summary["response_id"] == "msg-cli-001"
+    assert summary["stop_reason"] == "end_turn"
+    assert summary["usage"] == {"input_tokens": 1, "output_tokens": 1}
+    assert (trace_dir / "response.raw.json").exists()
+    assert "secret-token" not in stdout
+    assert "example.invalid" not in stdout
