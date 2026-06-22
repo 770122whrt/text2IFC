@@ -70,6 +70,31 @@
       ]
     },
     {
+      "template_id": "design-brief.v2.1",
+      "role": "design_brief",
+      "mode": "extract_or_clarify",
+      "path": "prompts/agent/design-brief-v2.1.md",
+      "sha256": "sha256:d291cc39614dc3872631ae52e2b8716f8127a9d4b577cb703e37ba06c2e9f345",
+      "required_inputs": [
+        "USER_REQUEST",
+        "CONVERSATION",
+        "DESIGN_BRIEF_SCHEMA",
+        "EVIDENCE_CATALOG",
+        "FEW_SHOTS"
+      ],
+      "forbidden_outputs": [
+        "bim_json_entities",
+        "bim_json_relationships",
+        "raw_ifc",
+        "step_text",
+        "step_id",
+        "IfcCartesianPoint",
+        "IfcDirection",
+        "IfcOwnerHistory",
+        "compiler_only_object"
+      ]
+    },
+    {
       "template_id": "bim-json-generator.v1",
       "role": "bim_json_generator",
       "mode": "generate_or_repair",

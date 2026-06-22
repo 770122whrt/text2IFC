@@ -14,6 +14,9 @@ from .live_trace import write_live_trace
 from .prompt_registry import render_prompt
 
 
+DESIGN_BRIEF_TEMPLATE_ID = "design-brief.v2.1"
+
+
 def complete_room_case() -> dict[str, Any]:
     """Return the versioned Chinese room case used for v1/v2 comparison."""
     user_request = (
@@ -68,7 +71,7 @@ def run_design_brief_stage(
         "FEW_SHOTS": selection["few_shots"],
     }
     rendered = render_prompt(
-        template_id="design-brief.v2",
+        template_id=DESIGN_BRIEF_TEMPLATE_ID,
         inputs=renderer_inputs,
     )
 
@@ -97,35 +100,46 @@ def run_design_brief_stage(
     serialized_issues = [asdict(issue) for issue in issues]
     if parse_status != "ok":
         serialized_issues = list(parse_diagnostics)
-    valid = parse_status == "ok" and not serialized_issues
+    schema_semantic_valid = parse_status == "ok" and not serialized_issues
+    strict_output_contract_valid = (
+        parse_status == "ok" and not parse_diagnostics
+    )
     validation = {
-        "valid": valid,
+        "valid": schema_semantic_valid,
         "issue_count": len(serialized_issues),
         "issues": serialized_issues,
     }
     _write_json(output / "validation.json", validation)
 
-    if valid and parsed is not None:
+    if schema_semantic_valid and parsed is not None:
         _write_json(output / "design-brief.json", parsed)
-        stage_status = str(parsed["status"])
+        if strict_output_contract_valid:
+            stage_status = str(parsed["status"])
+        else:
+            stage_status = "blocked_output_contract"
     else:
         stage_status = "blocked_prompt_defect"
+
+    acceptance_valid = schema_semantic_valid and strict_output_contract_valid
 
     metrics = {
         "case_id": case["case_id"],
         "stage": "design-brief",
         "evidence_class": result.evidence_class,
         "parse_valid": parse_status == "ok",
-        "schema_semantic_valid": valid,
+        "schema_semantic_valid": schema_semantic_valid,
+        "strict_output_contract_valid": strict_output_contract_valid,
         "normalization_diagnostics": parse_diagnostics,
         "response_id": result.response.get("id"),
         "model": result.response.get("model"),
         "stop_reason": result.response.get("stop_reason"),
         "usage": dict(result.response.get("usage", {})),
-        "design_status": parsed.get("status") if valid and parsed else None,
+        "design_status": (
+            parsed.get("status") if schema_semantic_valid and parsed else None
+        ),
         "question_count": (
             len(parsed.get("clarification_questions", []))
-            if valid and parsed
+            if schema_semantic_valid and parsed
             else None
         ),
     }
@@ -159,7 +173,9 @@ def run_design_brief_stage(
             "rendered_prompt": "prompt-rendered.md",
             "model_text": "model-text.txt",
             "parsed_output": "parsed-output.json" if parsed is not None else None,
-            "design_brief": "design-brief.json" if valid else None,
+            "design_brief": (
+                "design-brief.json" if schema_semantic_valid else None
+            ),
             "validation": "validation.json",
             "metrics": "metrics.json",
         },
@@ -169,7 +185,9 @@ def run_design_brief_stage(
         "case_id": case["case_id"],
         "stage": "design-brief",
         "status": stage_status,
-        "valid": valid,
+        "valid": acceptance_valid,
+        "schema_semantic_valid": schema_semantic_valid,
+        "strict_output_contract_valid": strict_output_contract_valid,
         "output_dir": str(output),
         "response_id": result.response.get("id"),
         "evidence_class": result.evidence_class,
@@ -237,6 +255,9 @@ def compare_design_brief_runs(
         "stop_reason": v2_metrics.get("stop_reason"),
         "parse_valid": bool(v2_metrics.get("parse_valid")),
         "schema_semantic_valid": bool(v2_validation.get("valid")),
+        "strict_output_contract_valid": bool(
+            v2_metrics.get("strict_output_contract_valid")
+        ),
         "normalization_codes": [
             item.get("code")
             for item in v2_metrics.get("normalization_diagnostics", [])
@@ -264,6 +285,8 @@ def compare_design_brief_runs(
         regressions.append("clarification_question_count_increased")
     if not v2_record["evidence_valid"]:
         regressions.append("v2_evidence_hash_or_path_invalid")
+    if not v2_record["strict_output_contract_valid"]:
+        regressions.append("strict_output_contract_violated")
 
     comparison = {
         "schema_version": "text2ifc/design-brief-comparison/1.0",
