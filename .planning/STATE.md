@@ -7,15 +7,15 @@ See: `.planning/PROJECT.md` (updated 2026-06-11)
 **Core value:** Produce valid, inspectable IFC models from explicit user
 requirements.
 
-**Current focus:** Phase 6.1 planned to replace fake-provider acceptance with a
-fully observable real-Mimo multi-agent pipeline and IFC acceptance artifact
+**Current focus:** Phase 6.1 Wave 1 - evidence-grounded Design Brief v2 on the
+verified real-Mimo streaming and trace foundation
 
 ## Status
 
 - Phase: 6.1
-- Stage: Planned
-- State: Specification complete; seven live-Mimo plans awaiting execution
-- Plans: Phase 6.1 planned, 7 of 7 plans written, 0 executed
+- Stage: In Progress
+- State: Wave 0 verified with real Mimo; Wave 1 ready
+- Plans: Phase 6.1 planned, 7 of 7 plans written, 1 executed
 - Branch: `multiagent-design` in C-drive worktree
 - Remote: `https://github.com/770122whrt/text2IFC`
 
@@ -476,7 +476,12 @@ prompts or orchestration.
   Seven waves now cover exact provider envelopes/streaming, evidence-grounded
   Design Brief v2, real Chinese clarification, exact Formal/Draft Generator
   contracts, conditional repair, real Audit/reporting, and final live IFC
-  acceptance. No Phase 6.1 wave has executed yet.
+  acceptance.
+- Phase 6.1 Wave 0 completed on 2026-06-22 with four RED/GREEN cycles. The
+  canonical real `mimo-v2.5-pro` smoke retained response ID
+  `msg_2bc401bbfdaa455696937d1d`, `stop_reason=end_turn`, request
+  `max_tokens=131072`, 15 ordered SSE events, complete usage, parsed bare JSON,
+  and zero secret findings. Agent regression passed 76 tests.
 
 ---
-*Last activity: 2026-06-22 - specified and planned Phase 6.1 live Mimo closure*
+*Last activity: 2026-06-22 - completed Phase 6.1 Wave 0 real Mimo trace gate*
