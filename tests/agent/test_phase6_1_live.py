@@ -1142,3 +1142,36 @@ def test_final_acceptance_stage_writes_geometry_checked_ifc_and_root_report(
     report = (output_dir / "report.md").read_text(encoding="utf-8")
     assert "output.ifc" in report
     assert "complete-room/report.md" in report
+
+
+def test_finalize_cli_writes_canonical_ifc_and_report(tmp_path: Path, capsys):
+    case_dir = _write_finalizable_case_dir(tmp_path / "complete-room")
+    output_dir = tmp_path / "phase6.1-mimo-live"
+    script_path = Path("scripts/agent/run_phase6_1_live.py")
+    spec = importlib.util.spec_from_file_location("run_phase6_1_live_finalize", script_path)
+    assert spec is not None and spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+
+    exit_code = module.main(
+        [
+            "--stage",
+            "finalize",
+            "--case",
+            "complete-room",
+            "--case-dir",
+            str(case_dir),
+            "--output-dir",
+            str(output_dir),
+            "--live",
+        ],
+        provider_factory=lambda: (_ for _ in ()).throw(
+            AssertionError("finalize must not create a provider")
+        ),
+    )
+
+    summary = json.loads(capsys.readouterr().out)
+    assert exit_code == 0
+    assert summary["valid"] is True
+    assert (output_dir / "output.ifc").is_file()
+    assert (output_dir / "report.md").is_file()
