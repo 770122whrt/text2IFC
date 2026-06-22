@@ -7,15 +7,15 @@ See: `.planning/PROJECT.md` (updated 2026-06-11)
 **Core value:** Produce valid, inspectable IFC models from explicit user
 requirements.
 
-**Current focus:** Phase 6.1 Wave 2 - real Chinese multi-turn clarification on
-the verified Design Brief v2.1 live foundation
+**Current focus:** Phase 6.1 Wave 3 - exact Formal/Draft Generator contracts on
+the verified real-Mimo clarified Design Brief
 
 ## Status
 
 - Phase: 6.1
 - Stage: In Progress
-- State: Waves 0-1 verified with real Mimo; Wave 2 ready
-- Plans: Phase 6.1 planned, 7 of 7 plans written, 2 executed
+- State: Waves 0-2 verified with real Mimo; Wave 3 ready
+- Plans: Phase 6.1 planned, 7 of 7 plans written, 3 executed
 - Branch: `multiagent-design` in C-drive worktree
 - Remote: `https://github.com/770122whrt/text2IFC`
 
@@ -346,9 +346,9 @@ the verified Design Brief v2.1 live foundation
 
 ## Next Action
 
-Execute Phase 6.1 Wave 2: preserve immutable Chinese clarification turns,
-rerun the real Mimo Design Brief Agent after every answer, and verify ready,
-Draft, and unknown-answer routes without deterministic question authorship.
+Execute Phase 6.1 Wave 3: supply the ready live Design Brief plus both exact
+canonical Formal and Draft schemas to the real Mimo Generator, then classify
+the untouched response by exact discriminator before validation.
 
 ## Accumulated Context
 
@@ -488,6 +488,11 @@ Draft, and unknown-answer routes without deterministic question authorship.
   failed-format experiment. Prompt v2.1 then produced bare JSON response
   `msg_164276907f364826bb9a625c`, `end_turn`, status `ready`, zero validation
   issues, zero normalization diagnostics, and zero secret findings.
+- Phase 6.1 Wave 2 completed on 2026-06-22 with a real two-call Chinese
+  clarification. Mimo response `msg_c4981c9c476443d2a929e240` asked only for
+  wall thickness; the exact 300 mm user answer was appended; response
+  `msg_d7c51fc05baf4f3eb82cc3f5` returned `ready`. Both calls were `end_turn`,
+  strict bare JSON, schema/evidence valid, and the 40-file scan found no secrets.
 
 ---
-*Last activity: 2026-06-22 - completed Phase 6.1 Wave 1 live Design Brief gate*
+*Last activity: 2026-06-22 - completed Phase 6.1 Wave 2 live clarification gate*

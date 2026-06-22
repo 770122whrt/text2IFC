@@ -496,9 +496,9 @@ user intent to force a run through a gate.
 
 - [x] `06.1-01-PLAN.md` - Dynamic Design Brief Agent and clarification ownership
 
-**Wave 2** *(blocked on Wave 1 readiness contract)*
+**Wave 2** *(verified on Wave 1 readiness contract)*
 
-- [ ] `06.1-02-PLAN.md` - Real Chinese multi-turn orchestration
+- [x] `06.1-02-PLAN.md` - Real Chinese multi-turn orchestration
 
 **Wave 3** *(blocked on Wave 2 clarified Design Brief)*
 
@@ -526,4 +526,4 @@ user intent to force a run through a gate.
   evidence, provider `id`/`model`/`stop_reason`/`usage`, event stream, metrics,
   and secret-scan result.
 
-**Status:** In Progress - Waves 0-1 verified with real Mimo 2026-06-22
+**Status:** In Progress - Waves 0-2 verified with real Mimo 2026-06-22
