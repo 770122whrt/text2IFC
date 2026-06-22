@@ -1,3 +1,4 @@
+import importlib
 import json
 import subprocess
 import sys
@@ -69,6 +70,45 @@ def test_provider_output_invalid_json_is_diagnostic_not_payload():
     output = ProviderOutput(text="{", metadata={"provider": "fake"})
 
     status, payload, diagnostics = output.parse_json()
+
+    assert status == "parse_error"
+    assert payload is None
+    assert diagnostics[0]["code"] == "JSON_DECODE_ERROR"
+
+
+@pytest.mark.parametrize(
+    "text",
+    [
+        '```json\n{"ok": true}\n```',
+        '```\n{"ok": true}\n```',
+    ],
+)
+def test_provider_output_accepts_one_outer_json_code_fence(text):
+    output = ProviderOutput(text=text, metadata={"provider": "mimo"})
+
+    status, payload, diagnostics = output.parse_json()
+
+    assert status == "ok"
+    assert payload == {"ok": True}
+    assert diagnostics == [
+        {
+            "code": "OUTER_JSON_FENCE_REMOVED",
+            "path": "",
+            "message": "Removed one outer Markdown fence before JSON parsing.",
+        }
+    ]
+
+
+@pytest.mark.parametrize(
+    "text",
+    [
+        'Here is JSON:\n```json\n{"ok": true}\n```',
+        '```json\n{"ok": true}\n```\nextra',
+        '{"first": true}\n{"second": true}',
+    ],
+)
+def test_provider_output_does_not_extract_json_from_mixed_content(text):
+    status, payload, diagnostics = ProviderOutput(text=text, metadata={}).parse_json()
 
     assert status == "parse_error"
     assert payload is None
@@ -189,3 +229,222 @@ def test_mimo_provider_uses_configured_generation_limits(monkeypatch):
     assert captured["body"]["max_tokens"] == 2048
     assert captured["timeout"] == 45
     assert output.text == '{"ok": true}'
+
+
+def test_mimo_default_config_uses_documented_live_limits():
+    config = MimoConfig(
+        token="secret-token",
+        base_url="https://example.invalid/anthropic",
+        model="mimo-v2.5-pro",
+    )
+
+    assert config.max_tokens == 131072
+    assert config.timeout_seconds == 900
+
+
+def _streaming_response(stop_reason="end_turn"):
+    payloads = [
+        {
+            "type": "message_start",
+            "message": {
+                "id": "msg-live-001",
+                "type": "message",
+                "role": "assistant",
+                "model": "mimo-v2.5-pro",
+                "content": [],
+                "stop_reason": None,
+                "usage": {"input_tokens": 11, "cache_read_input_tokens": 3},
+            },
+        },
+        {
+            "type": "content_block_start",
+            "index": 0,
+            "content_block": {"type": "text", "text": ""},
+        },
+        {
+            "type": "content_block_delta",
+            "index": 0,
+            "delta": {"type": "text_delta", "text": '{"ok":'},
+        },
+        {
+            "type": "content_block_delta",
+            "index": 0,
+            "delta": {"type": "text_delta", "text": " true}"},
+        },
+        {"type": "content_block_stop", "index": 0},
+        {
+            "type": "content_block_start",
+            "index": 1,
+            "content_block": {"type": "thinking", "thinking": ""},
+        },
+        {
+            "type": "content_block_delta",
+            "index": 1,
+            "delta": {"type": "thinking_delta", "thinking": "checked"},
+        },
+        {"type": "content_block_stop", "index": 1},
+        {
+            "type": "message_delta",
+            "delta": {"stop_reason": stop_reason, "stop_sequence": None},
+            "usage": {"output_tokens": 7},
+        },
+        {"type": "message_stop"},
+    ]
+
+    class StreamingResponse:
+        status = 200
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, exc_type, exc, traceback):
+            return False
+
+        def __iter__(self):
+            for payload in payloads:
+                yield f"event: {payload['type']}\n".encode("utf-8")
+                yield (
+                    "data: " + json.dumps(payload, ensure_ascii=False) + "\n"
+                ).encode("utf-8")
+                yield b"\n"
+
+    return StreamingResponse()
+
+
+def test_mimo_replay_stream_preserves_exact_response_envelope(monkeypatch):
+    captured = {}
+
+    def fake_urlopen(request, timeout):
+        captured["body"] = json.loads(request.data.decode("utf-8"))
+        captured["timeout"] = timeout
+        return _streaming_response()
+
+    monkeypatch.setattr(
+        "text2ifc_agent.providers.urllib.request.urlopen",
+        fake_urlopen,
+    )
+    provider = MimoAgentProvider(
+        config=MimoConfig(
+            token="secret-token",
+            base_url="https://example.invalid/anthropic",
+            model="mimo-v2.5-pro",
+        )
+    )
+
+    result = provider.generate_live(
+        session_id="mimo-live-envelope",
+        prompt='Return exactly {"ok": true}',
+        schema={},
+        state={},
+    )
+
+    assert captured["body"]["stream"] is True
+    assert captured["body"]["max_tokens"] == 131072
+    assert captured["timeout"] == 900
+    assert result.evidence_class == "live"
+    assert result.http_status == 200
+    assert [event["event"] for event in result.events] == [
+        "message_start",
+        "content_block_start",
+        "content_block_delta",
+        "content_block_delta",
+        "content_block_stop",
+        "content_block_start",
+        "content_block_delta",
+        "content_block_stop",
+        "message_delta",
+        "message_stop",
+    ]
+    assert result.response == {
+        "id": "msg-live-001",
+        "type": "message",
+        "role": "assistant",
+        "model": "mimo-v2.5-pro",
+        "content": [
+            {"type": "text", "text": '{"ok": true}'},
+            {"type": "thinking", "thinking": "checked"},
+        ],
+        "stop_reason": "end_turn",
+        "stop_sequence": None,
+        "usage": {
+            "input_tokens": 11,
+            "cache_read_input_tokens": 3,
+            "output_tokens": 7,
+        },
+    }
+    assert result.output.text == '{"ok": true}'
+    assert result.output.metadata["response_id"] == "msg-live-001"
+    assert "secret-token" not in json.dumps(result.request, sort_keys=True)
+    assert "example.invalid" not in json.dumps(result.request, sort_keys=True)
+
+
+def test_mimo_replay_stream_rejects_non_end_turn_before_json_parse(monkeypatch):
+    monkeypatch.setattr(
+        "text2ifc_agent.providers.urllib.request.urlopen",
+        lambda request, timeout: _streaming_response("max_tokens"),
+    )
+    provider = MimoAgentProvider(
+        config=MimoConfig(
+            token="secret-token",
+            base_url="https://example.invalid/anthropic",
+            model="mimo-v2.5-pro",
+        )
+    )
+
+    with pytest.raises(ProviderOutputError, match="stop_reason=max_tokens"):
+        provider.generate_live(
+            session_id="mimo-truncated",
+            prompt='Return exactly {"ok": true}',
+            schema={},
+            state={},
+        )
+
+
+def test_live_trace_replay_writes_reviewable_secret_safe_bundle(monkeypatch, tmp_path):
+    try:
+        trace_module = importlib.import_module("text2ifc_agent.live_trace")
+    except ModuleNotFoundError:
+        pytest.fail("live trace module is not implemented")
+    monkeypatch.setattr(
+        "text2ifc_agent.providers.urllib.request.urlopen",
+        lambda request, timeout: _streaming_response(),
+    )
+    provider = MimoAgentProvider(
+        config=MimoConfig(
+            token="secret-token",
+            base_url="https://example.invalid/anthropic",
+            model="mimo-v2.5-pro",
+        )
+    )
+    result = provider.generate_live(
+        session_id="mimo-trace",
+        prompt='Return exactly {"ok": true}',
+        schema={},
+        state={},
+    )
+
+    manifest = trace_module.write_live_trace(result=result, output_dir=tmp_path)
+
+    assert manifest["evidence_class"] == "live"
+    expected = {
+        "events.jsonl",
+        "model-text.txt",
+        "request.redacted.json",
+        "response-metadata.json",
+        "response.raw.json",
+    }
+    assert expected <= {path.name for path in tmp_path.iterdir()}
+    response = json.loads((tmp_path / "response.raw.json").read_text(encoding="utf-8"))
+    assert response["id"] == "msg-live-001"
+    events = [
+        json.loads(line)
+        for line in (tmp_path / "events.jsonl").read_text(encoding="utf-8").splitlines()
+    ]
+    assert events[0]["event"] == "message_start"
+    all_text = "\n".join(
+        path.read_text(encoding="utf-8")
+        for path in tmp_path.iterdir()
+        if path.suffix in {".json", ".jsonl", ".txt"}
+    )
+    assert "secret-token" not in all_text
+    assert "example.invalid" not in all_text
