@@ -127,6 +127,110 @@ def test_generator_accepts_formal_and_draft_provider_outputs():
     assert draft_result.diagnostics == []
 
 
+def test_unknown_draft_version_blocks_before_formal_validation(monkeypatch):
+    generator = _module("generator")
+
+    def forbidden_formal_validator(document):
+        raise AssertionError("unknown Draft must not reach Formal validation")
+
+    monkeypatch.setattr(generator, "validate_v2_document", forbidden_formal_validator)
+    provider = FakeAgentProvider(
+        {
+            "case-1": {
+                "text": json.dumps(
+                    {
+                        "draft_version": "text2ifc/draft-envelope/1.0",
+                        "target_schema_version": "bim-json/2.0",
+                        "partial_document": {},
+                    }
+                )
+            }
+        }
+    )
+
+    result = _generate(provider)
+
+    assert result.status == "blocked_failure"
+    assert result.classification == "unknown_contract"
+    assert result.document["draft_version"] == "text2ifc/draft-envelope/1.0"
+    assert result.diagnostics[0]["code"] == "UNKNOWN_DRAFT_VERSION"
+    assert result.diagnostics[0]["path"] == "/draft_version"
+
+
+@pytest.mark.parametrize(
+    ("document", "code"),
+    [
+        (
+            {
+                "schema_version": "bim-json/2.0",
+                "draft_version": "bim-json-draft/1.0",
+                "target_schema_version": "bim-json/2.0",
+            },
+            "CONFLICTING_OUTPUT_DISCRIMINATORS",
+        ),
+        ({"ifc_schema": "IFC2X3"}, "MISSING_OUTPUT_DISCRIMINATOR"),
+        (
+            {"schema_version": "text2ifc/formal/9.9"},
+            "UNKNOWN_FORMAL_VERSION",
+        ),
+        (
+            {
+                "draft_version": "bim-json-draft/1.0",
+                "target_schema_version": "IFC2X3",
+            },
+            "INVALID_DRAFT_TARGET_VERSION",
+        ),
+    ],
+)
+def test_discriminator_conflicts_and_unknown_versions_block(document, code):
+    provider = FakeAgentProvider(
+        {"case-1": {"text": json.dumps(document, ensure_ascii=False)}}
+    )
+
+    result = _generate(provider)
+
+    assert result.status == "blocked_failure"
+    assert result.classification == "unknown_contract"
+    assert result.diagnostics[0]["code"] == code
+
+
+def test_whole_response_outer_fence_is_diagnosed_but_exact_formal_routes():
+    formal = FORMAL_FIXTURE.read_text(encoding="utf-8")
+    provider = FakeAgentProvider(
+        {"case-1": {"text": "```json\n" + formal + "\n```"}}
+    )
+
+    result = _generate(provider)
+
+    assert result.status == "formal"
+    assert result.classification == "formal"
+    assert result.diagnostics == [
+        {
+            "code": "OUTER_JSON_FENCE_REMOVED",
+            "path": "",
+            "message": "Removed one outer Markdown fence before JSON parsing.",
+        }
+    ]
+
+
+@pytest.mark.parametrize(
+    "text",
+    [
+        'Here is the object: {"schema_version":"bim-json/2.0"}',
+        '{"schema_version":"bim-json/2.0"}{"schema_version":"bim-json/2.0"}',
+    ],
+)
+def test_preamble_and_multiple_objects_are_rejected_without_brace_extraction(text):
+    provider = FakeAgentProvider({"case-1": {"text": text}})
+
+    result = _generate(provider)
+
+    assert result.status == "invalid"
+    assert result.classification == "unparsed"
+    assert result.document is None
+    assert result.diagnostics[0]["code"] == "JSON_DECODE_ERROR"
+
+
 def test_successful_first_pass_records_no_repair_needed():
     routing = _module("failure_routing")
 
