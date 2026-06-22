@@ -988,3 +988,47 @@ def test_live_audit_report_stage_calls_provider_and_generates_report(
     report = (case_dir / "report.md").read_text(encoding="utf-8")
     assert "## Audit Agent" in report
     assert "(audit/audit-report.json)" in report
+
+
+def test_audit_report_cli_uses_injected_provider_and_case_dir(
+    tmp_path: Path,
+    capsys,
+):
+    case_dir = _write_auditable_case_dir(tmp_path / "complete-room")
+    payload = {
+        "schema_version": "text2ifc/audit/2.0",
+        "recommendation": "accept",
+        "blocking": False,
+        "deterministic_gate_status": "passed",
+        "findings": [],
+        "evidence_paths": [
+            "design-brief/design-brief.json",
+            "generator/candidate.json",
+            "repair/route.json",
+        ],
+    }
+    provider = _RecordingLiveProvider(payload)
+    script_path = Path("scripts/agent/run_phase6_1_live.py")
+    spec = importlib.util.spec_from_file_location("run_phase6_1_live_audit", script_path)
+    assert spec is not None and spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+
+    exit_code = module.main(
+        [
+            "--stage",
+            "audit-report",
+            "--case",
+            "complete-room",
+            "--case-dir",
+            str(case_dir),
+            "--live",
+        ],
+        provider_factory=lambda: provider,
+    )
+
+    summary = json.loads(capsys.readouterr().out)
+    assert exit_code == 0
+    assert summary["status"] == "accepted"
+    assert summary["response_id"] == "msg_unit_design_brief_v2"
+    assert (case_dir / "report.md").is_file()
