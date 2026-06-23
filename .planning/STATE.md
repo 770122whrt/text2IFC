@@ -544,6 +544,15 @@ metrics justify it.
   passed, 25 focused live-report tests passed, the Agent suite passed 134 tests,
   service/compiler/dataset passed 56 tests, compileall passed, and the final
   artifact secret scan found zero sensitive strings.
+- Phase 6.1 MiMo API compatibility was re-verified on 2026-06-23 after the
+  official Anthropic-compatible MiMo API reference was captured. The provider
+  now accepts `API_KEY` / `MIMO_API_KEY` and sends the documented `api-key`
+  header. Live smoke response `msg_db85c7ecd9cf4ff79823ffa0` returned
+  `stop_reason: end_turn`. The clarified-room matrix then produced a live
+  Formal Generator response `msg_4190b4fc62c04a839d1a48ee`, live Audit response
+  `msg_33bcfd37905c45bfbf3d4e67`, `no_repair_needed` routing, and an
+  independently verified IFC artifact at
+  `dataset/processed/agent-demo/phase6.1-mimo-live/clarified-room-final/output.ifc`.
 
 ---
-*Last activity: 2026-06-23 - completed Phase 6.1 live Mimo final IFC acceptance*
+*Last activity: 2026-06-23 - verified MiMo API_KEY live responses and clarified-room IFC acceptance*

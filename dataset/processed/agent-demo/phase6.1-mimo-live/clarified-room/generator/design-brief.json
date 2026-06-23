@@ -1,0 +1,214 @@
+{
+  "ambiguities": [],
+  "clarification_questions": [],
+  "fact_sources": [
+    {
+      "evidence_refs": [
+        "schema:bim-json-v2:representation"
+      ],
+      "path": "/known_facts/space/shape",
+      "source_turns": [
+        "turn-user-001"
+      ]
+    },
+    {
+      "evidence_refs": [
+        "schema:bim-json-v2:representation"
+      ],
+      "path": "/known_facts/space/length_mm",
+      "source_turns": [
+        "turn-user-001"
+      ]
+    },
+    {
+      "evidence_refs": [
+        "schema:bim-json-v2:representation"
+      ],
+      "path": "/known_facts/space/width_mm",
+      "source_turns": [
+        "turn-user-001"
+      ]
+    },
+    {
+      "evidence_refs": [
+        "schema:bim-json-v2:representation"
+      ],
+      "path": "/known_facts/space/height_mm",
+      "source_turns": [
+        "turn-user-001"
+      ]
+    },
+    {
+      "evidence_refs": [
+        "capability:IFC2X3:IfcBuildingStorey"
+      ],
+      "path": "/known_facts/space/storeys",
+      "source_turns": [
+        "turn-user-001"
+      ]
+    },
+    {
+      "evidence_refs": [
+        "capability:IFC2X3:IfcWall"
+      ],
+      "path": "/known_facts/walls/count",
+      "source_turns": [
+        "turn-user-001"
+      ]
+    },
+    {
+      "evidence_refs": [
+        "capability:IFC2X3:IfcWall"
+      ],
+      "path": "/known_facts/walls/enclosure",
+      "source_turns": [
+        "turn-user-001"
+      ]
+    },
+    {
+      "evidence_refs": [
+        "capability:IFC2X3:IfcWall"
+      ],
+      "path": "/known_facts/walls/thickness_mm",
+      "source_turns": [
+        "turn-user-003"
+      ]
+    },
+    {
+      "evidence_refs": [
+        "capability:IFC2X3:IfcDoor"
+      ],
+      "path": "/known_facts/door/host",
+      "source_turns": [
+        "turn-user-001"
+      ]
+    },
+    {
+      "evidence_refs": [
+        "capability:IFC2X3:IfcDoor"
+      ],
+      "path": "/known_facts/door/alignment",
+      "source_turns": [
+        "turn-user-001"
+      ]
+    },
+    {
+      "evidence_refs": [
+        "capability:IFC2X3:IfcDoor"
+      ],
+      "path": "/known_facts/door/width_mm",
+      "source_turns": [
+        "turn-user-001"
+      ]
+    },
+    {
+      "evidence_refs": [
+        "capability:IFC2X3:IfcDoor"
+      ],
+      "path": "/known_facts/door/height_mm",
+      "source_turns": [
+        "turn-user-001"
+      ]
+    },
+    {
+      "evidence_refs": [
+        "capability:IFC2X3:IfcWindow"
+      ],
+      "path": "/known_facts/window/host",
+      "source_turns": [
+        "turn-user-001"
+      ]
+    },
+    {
+      "evidence_refs": [
+        "capability:IFC2X3:IfcWindow"
+      ],
+      "path": "/known_facts/window/alignment",
+      "source_turns": [
+        "turn-user-001"
+      ]
+    },
+    {
+      "evidence_refs": [
+        "capability:IFC2X3:IfcWindow"
+      ],
+      "path": "/known_facts/window/width_mm",
+      "source_turns": [
+        "turn-user-001"
+      ]
+    },
+    {
+      "evidence_refs": [
+        "capability:IFC2X3:IfcWindow"
+      ],
+      "path": "/known_facts/window/height_mm",
+      "source_turns": [
+        "turn-user-001"
+      ]
+    },
+    {
+      "evidence_refs": [
+        "capability:IFC2X3:IfcWindow"
+      ],
+      "path": "/known_facts/window/sill_height_mm",
+      "source_turns": [
+        "turn-user-001"
+      ]
+    }
+  ],
+  "known_facts": {
+    "door": {
+      "alignment": "host_centerline",
+      "height_mm": 2100,
+      "host": "south_wall",
+      "width_mm": 900
+    },
+    "space": {
+      "height_mm": 3000,
+      "length_mm": 6000,
+      "shape": "rectangle",
+      "storeys": 1,
+      "width_mm": 4000
+    },
+    "walls": {
+      "count": 4,
+      "enclosure": "closed",
+      "thickness_mm": 300
+    },
+    "window": {
+      "alignment": "host_centerline",
+      "height_mm": 1500,
+      "host": "north_wall",
+      "sill_height_mm": 900,
+      "width_mm": 1200
+    }
+  },
+  "language": "zh-CN",
+  "missing_facts": [],
+  "original_request": "请创建一个单层矩形房间，长6米、宽4米、高3米；四面墙闭合，南墙中央设置一扇宽0.9米、高2.1米的门，北墙中央设置一扇宽1.2米、高1.5米、窗台高0.9米的窗。",
+  "provenance": {
+    "few_shot_ids": [
+      "design-brief-v2.complete-room-openings"
+    ],
+    "selected_evidence_ids": [
+      "schema:bim-json-v2:entity",
+      "schema:bim-json-v2:representation",
+      "capability:IFC2X3:IfcSpace",
+      "capability:IFC2X3:IfcWall",
+      "capability:IFC2X3:IfcDoor",
+      "capability:IFC2X3:IfcWindow",
+      "capability:IFC2X3:IfcBuildingStorey",
+      "capability:IFC2X3:IfcOpeningElement",
+      "capability:IFC2X3:IfcRelVoidsElement",
+      "capability:IFC2X3:IfcRelFillsElement"
+    ],
+    "source_turns": [
+      "turn-user-001",
+      "turn-user-003"
+    ]
+  },
+  "schema_version": "text2ifc/design-brief/2.0",
+  "status": "ready",
+  "unsupported_requests": [],
+  "user_corrections": []
+}
