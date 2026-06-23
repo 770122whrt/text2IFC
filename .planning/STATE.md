@@ -258,10 +258,12 @@ requirements.
   scripted answer workflow into a Chinese-first interactive terminal session
   with durable `conversation.json`, `events.jsonl`, `session.json`, trace
   sidecars, generated `report.md`, and final `output.ifc`.
-- Phase 6.2 Wave 0 is a provider/framework checkpoint: OpenAI Agents SDK is a
-  candidate only if real Mimo Chat Completions compatibility and required trace
-  metadata preservation pass. Otherwise the native orchestrator plus OpenAI
-  Python SDK provider remains the implementation path.
+- Phase 6.2 Wave 0 is a provider/framework research and compatibility
+  checkpoint: OpenAI Agents SDK research must be written before live smoke
+  interpretation, and the SDK is a candidate only if real Mimo Chat Completions
+  compatibility and required trace metadata preservation pass. Otherwise the
+  native orchestrator plus OpenAI Python SDK provider remains the implementation
+  path.
 
 ## Current Decisions
 
@@ -393,10 +395,11 @@ requirements.
 
 ## Next Action
 
-Execute Phase 6.2 Wave 0: verify OpenAI-compatible Mimo and OpenAI Agents SDK
-compatibility with redacted live evidence, then choose the implementation route
-for the interactive CLI. Do not begin API/service packaging until the CLI
-clarification loop and final IFC artifact are verified.
+Execute Phase 6.2 Wave 0: first write OpenAI Agents SDK research, then verify
+OpenAI-compatible Mimo and Agents SDK compatibility with redacted live evidence,
+then choose the implementation route for the interactive CLI. Do not begin
+API/service packaging until the CLI clarification loop and final IFC artifact
+are verified.
 
 ## Accumulated Context
 

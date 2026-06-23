@@ -572,8 +572,8 @@ unit-test tools and cannot satisfy live CLI acceptance.
 
 **Wave 0**
 
-- [ ] `06.2-00-PLAN.md` - OpenAI-compatible Mimo and Agents SDK compatibility
-  checkpoint
+- [ ] `06.2-00-PLAN.md` - OpenAI Agents SDK research and OpenAI-compatible
+  Mimo compatibility checkpoint
 
 **Wave 1** *(blocked on Wave 0 provider/framework decision)*
 
