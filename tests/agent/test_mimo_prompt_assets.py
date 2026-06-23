@@ -5,6 +5,8 @@ PROMPT = Path("prompts/agent/mimo-bim-json-v1.md")
 PROMPT_V2 = Path("prompts/agent/mimo-bim-json-v2.md")
 PROMPT_V3 = Path("prompts/agent/mimo-bim-json-v3.md")
 ITERATIONS = Path("prompts/agent/mimo-bim-json-iterations.md")
+DESIGN_BRIEF_V21 = Path("prompts/agent/design-brief-v2.1.md")
+DESIGN_BRIEF_FEW_SHOTS = Path("prompts/agent/few-shots/design-brief-v2.json")
 
 
 def test_mimo_bim_json_prompt_preserves_live_io_contract():
@@ -86,3 +88,15 @@ def test_mimo_prompt_iteration_log_records_v3_geometry_gate_contract():
     assert "mimo-bim-json-v3.md" in text
     assert "geometry gate" in text
     assert "rectangle profile center-origin" in text
+
+
+def test_design_brief_v21_routes_user_unknown_answer_to_terminal_draft():
+    text = DESIGN_BRIEF_V21.read_text(encoding="utf-8")
+    few_shots = DESIGN_BRIEF_FEW_SHOTS.read_text(encoding="utf-8")
+
+    assert "用户已经回答不知道" in text
+    assert "不得继续追问同一个事实" in text
+    assert "status" in few_shots
+    assert "draft_required" in few_shots
+    assert "我不知道墙体厚度" in few_shots
+    assert '"clarification_questions": []' in few_shots
