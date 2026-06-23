@@ -536,6 +536,87 @@ def test_live_clarification_cli_consumes_answer_file_with_injected_provider(
     assert summary["live_call_count"] == 2
 
 
+def test_live_cli_runs_unknown_answer_case_to_draft_without_ifc(
+    tmp_path: Path, capsys
+):
+    case = clarified_room_case()
+    first = _valid_ready_brief(complete_room_case())
+    first["original_request"] = case["user_request"]
+    first["status"] = "needs_clarification"
+    first["known_facts"]["walls"].pop("thickness_mm")
+    first["missing_facts"] = [
+        {
+            "id": "mf-wall-thickness",
+            "code": "WALL_THICKNESS_MISSING",
+            "path": "/known_facts/walls/thickness_mm",
+            "message": "墙体厚度尚未提供。",
+            "reason": "生成实体墙体需要明确厚度。",
+            "blocking": True,
+            "evidence_refs": ["schema:bim-json-v2:representation"],
+            "source_turns": ["turn-user-001"],
+        }
+    ]
+    first["clarification_questions"] = [
+        {
+            "id": "q-wall-thickness",
+            "text": "请问墙体厚度是多少毫米？",
+            "targets": ["mf-wall-thickness"],
+            "reason": "缺少厚度时不能生成实体墙体。",
+            "evidence_refs": ["schema:bim-json-v2:representation"],
+        }
+    ]
+    for fact_source in first["fact_sources"]:
+        fact_source["source_turns"] = ["turn-user-001"]
+    first["provenance"]["source_turns"] = ["turn-user-001"]
+    second = json.loads(json.dumps(first, ensure_ascii=False))
+    second["status"] = "draft_required"
+    second["missing_facts"] = [
+        {
+            **first["missing_facts"][0],
+            "source_turns": ["turn-user-001", "turn-user-003"],
+        }
+    ]
+    second["clarification_questions"] = []
+    second["user_corrections"] = []
+    second["provenance"]["source_turns"] = ["turn-user-001", "turn-user-003"]
+    provider = _SequenceLiveProvider([first, second])
+    answer_file = tmp_path / "answers.json"
+    answer_file.write_text(
+        json.dumps({"answers": ["我不知道。"]}, ensure_ascii=False),
+        encoding="utf-8",
+    )
+    script_path = Path("scripts/agent/run_phase6_1_live.py")
+    spec = importlib.util.spec_from_file_location("run_phase6_1_live_unknown", script_path)
+    assert spec is not None and spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    output_dir = tmp_path / "unknown-answer"
+
+    exit_code = module.main(
+        [
+            "--stage",
+            "clarify",
+            "--case",
+            "unknown-answer",
+            "--answers",
+            str(answer_file),
+            "--output-dir",
+            str(output_dir),
+            "--live",
+        ],
+        provider_factory=lambda: provider,
+    )
+
+    summary = json.loads(capsys.readouterr().out)
+    assert exit_code == 0
+    assert summary["case_id"] == "unknown-answer"
+    assert summary["status"] == "draft_required"
+    assert summary["valid"] is True
+    assert not (output_dir / "output.ifc").exists()
+    metrics = json.loads((output_dir / "metrics.json").read_text(encoding="utf-8"))
+    assert metrics["terminal_status"] == "draft_required"
+
+
 def _write_ready_design_source(path: Path) -> Path:
     path.mkdir(parents=True)
     case = complete_room_case()
