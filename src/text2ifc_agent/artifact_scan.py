@@ -9,7 +9,13 @@ from typing import Any
 
 SCHEMA_VERSION = "text2ifc/agent-artifact-scan-v1"
 TEXT_SUFFIXES = {".json", ".jsonl", ".md", ".txt", ".log", ".yaml", ".yml"}
-ALLOWED_ENV_NAMES = {"ANTHROPIC_AUTH_TOKEN", "ANTHROPIC_BASE_URL", "TEXT2IFC_MIMO_MODEL"}
+ALLOWED_ENV_NAMES = {
+    "API_KEY",
+    "MIMO_API_KEY",
+    "ANTHROPIC_AUTH_TOKEN",
+    "ANTHROPIC_BASE_URL",
+    "TEXT2IFC_MIMO_MODEL",
+}
 SECRET_PATTERNS = (
     ("SECRET_LIKE_PATTERN", re.compile(r"\bBearer\s+[A-Za-z0-9._~+/=-]{8,}", re.IGNORECASE)),
     ("SECRET_LIKE_PATTERN", re.compile(r"\btp-[A-Za-z0-9_-]{12,}", re.IGNORECASE)),
@@ -18,7 +24,7 @@ SECRET_PATTERNS = (
         "SECRET_LIKE_PATTERN",
         re.compile(
             r"(?i)\b(api[_-]?key|auth[_-]?token|authorization|x-api-key)\b"
-            r"\s*[:=]\s*[\"']?(?!ANTHROPIC_AUTH_TOKEN\b|TEXT2IFC_MIMO_MODEL\b)"
+            r"\s*[:=]\s*[\"']?(?!API_KEY\b|MIMO_API_KEY\b|ANTHROPIC_AUTH_TOKEN\b|TEXT2IFC_MIMO_MODEL\b)"
             r"[A-Za-z0-9._~+/=-]{8,}"
         ),
     ),

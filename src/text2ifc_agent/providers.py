@@ -14,8 +14,11 @@ from .state import redact_metadata
 
 
 MIMO_TOKEN_ENV = "ANTHROPIC_AUTH_TOKEN"
+MIMO_API_KEY_ENV = "API_KEY"
+MIMO_OFFICIAL_API_KEY_ENV = "MIMO_API_KEY"
 MIMO_BASE_URL_ENV = "ANTHROPIC_BASE_URL"
 MIMO_MODEL_ENV = "TEXT2IFC_MIMO_MODEL"
+MIMO_TOKEN_ENV_CHOICES = (MIMO_API_KEY_ENV, MIMO_OFFICIAL_API_KEY_ENV, MIMO_TOKEN_ENV)
 LOW_LEVEL_FORBIDDEN_TERMS = (
     "ISO-10303-21",
     "HEADER;",
@@ -197,14 +200,24 @@ def load_mimo_config_from_env(
     environ: dict[str, str] | None = None,
 ) -> dict[str, Any]:
     env = os.environ if environ is None else environ
-    required = (MIMO_TOKEN_ENV, MIMO_BASE_URL_ENV, MIMO_MODEL_ENV)
-    missing = [name for name in required if not env.get(name)]
+    token_env = _configured_mimo_token_env(env)
+    missing = []
+    if token_env is None:
+        missing.append("API_KEY or MIMO_API_KEY or ANTHROPIC_AUTH_TOKEN")
+    for name in (MIMO_BASE_URL_ENV, MIMO_MODEL_ENV):
+        if not env.get(name):
+            missing.append(name)
     return {
         "provider": "mimo",
         "configured": not missing,
         "missing": missing,
-        "required_env": list(required),
-        "token_configured": bool(env.get(MIMO_TOKEN_ENV)),
+        "required_env": [
+            "API_KEY or MIMO_API_KEY or ANTHROPIC_AUTH_TOKEN",
+            MIMO_BASE_URL_ENV,
+            MIMO_MODEL_ENV,
+        ],
+        "token_configured": token_env is not None,
+        "token_env": token_env,
         "base_url_configured": bool(env.get(MIMO_BASE_URL_ENV)),
         "model": env.get(MIMO_MODEL_ENV, "") if env.get(MIMO_MODEL_ENV) else None,
     }
@@ -219,7 +232,7 @@ def _mimo_config_or_error(environ: dict[str, str] | None = None) -> MimoConfig:
             + ", ".join(status["missing"])
         )
     return MimoConfig(
-        token=env[MIMO_TOKEN_ENV],
+        token=env[_configured_mimo_token_env(env) or MIMO_TOKEN_ENV],
         base_url=env[MIMO_BASE_URL_ENV].rstrip("/"),
         model=env[MIMO_MODEL_ENV],
     )
@@ -249,11 +262,11 @@ class MimoAgentProvider:
             ensure_ascii=False,
         ).encode("utf-8")
         request = urllib.request.Request(
-            f"{self.config.base_url}/v1/messages",
+            _mimo_messages_endpoint(self.config.base_url),
             data=body,
             headers={
                 "content-type": "application/json",
-                "x-api-key": self.config.token,
+                "api-key": self.config.token,
                 "anthropic-version": "2023-06-01",
             },
             method="POST",
@@ -297,11 +310,11 @@ class MimoAgentProvider:
         }
         body = json.dumps(request_payload, ensure_ascii=False).encode("utf-8")
         request = urllib.request.Request(
-            f"{self.config.base_url}/v1/messages",
+            _mimo_messages_endpoint(self.config.base_url),
             data=body,
             headers={
                 "content-type": "application/json",
-                "x-api-key": self.config.token,
+                "api-key": self.config.token,
                 "anthropic-version": "2023-06-01",
             },
             method="POST",
@@ -362,6 +375,22 @@ class MimoAgentProvider:
 
 def redact_provider_payload(payload: Any) -> Any:
     return redact_metadata(payload)
+
+
+def _configured_mimo_token_env(env: dict[str, str] | os._Environ[str]) -> str | None:
+    for name in MIMO_TOKEN_ENV_CHOICES:
+        if env.get(name):
+            return name
+    return None
+
+
+def _mimo_messages_endpoint(base_url: str) -> str:
+    url = base_url.rstrip("/")
+    if url.endswith("/v1/messages"):
+        return url
+    if url.endswith("/v1"):
+        return f"{url}/messages"
+    return f"{url}/v1/messages"
 
 
 def validate_provider_output(output: ProviderOutput) -> ProviderOutput:

@@ -36,7 +36,12 @@ _SAFE_TOKEN_COUNTER_KEYS = {
     "cache-read-input-tokens",
     "cache-creation-input-tokens",
 }
-_ENV_VAR_NAMES = {"ANTHROPIC_AUTH_TOKEN", "ANTHROPIC_BASE_URL"}
+_ENV_VAR_NAMES = {
+    "API_KEY",
+    "MIMO_API_KEY",
+    "ANTHROPIC_AUTH_TOKEN",
+    "ANTHROPIC_BASE_URL",
+}
 
 
 class AgentStatus(str, Enum):
