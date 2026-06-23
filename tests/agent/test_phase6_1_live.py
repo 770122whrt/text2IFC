@@ -736,6 +736,46 @@ def test_live_generator_stage_blocks_unknown_contract_without_editing_output(
     assert classification["diagnostics"][0]["code"] == "UNKNOWN_DRAFT_VERSION"
 
 
+def test_invalid_contract_replay_cli_blocks_without_provider_or_ifc(
+    tmp_path: Path, capsys
+):
+    script_path = Path("scripts/agent/run_phase6_1_live.py")
+    spec = importlib.util.spec_from_file_location("run_phase6_1_live_invalid", script_path)
+    assert spec is not None and spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    output_dir = tmp_path / "invalid-contract"
+
+    exit_code = module.main(
+        [
+            "--stage",
+            "invalid-contract",
+            "--case",
+            "invalid-contract",
+            "--output-dir",
+            str(output_dir),
+            "--live",
+        ],
+        provider_factory=lambda: (_ for _ in ()).throw(
+            AssertionError("invalid-contract replay must not call a provider")
+        ),
+    )
+
+    summary = json.loads(capsys.readouterr().out)
+    assert exit_code == 0
+    assert summary["case_id"] == "invalid-contract"
+    assert summary["status"] == "blocked_replay"
+    assert summary["classification"] == "unknown_contract"
+    assert summary["evidence_class"] == "replay"
+    assert summary["writes_ifc"] is False
+    assert (output_dir / "classification.json").is_file()
+    assert (output_dir / "metrics.json").is_file()
+    assert (output_dir / "report.md").is_file()
+    assert not (output_dir / "output.ifc").exists()
+    metrics = json.loads((output_dir / "metrics.json").read_text(encoding="utf-8"))
+    assert metrics["excluded_from_live_quality"] is True
+
+
 def test_live_generator_cli_uses_injected_provider_and_design_source(
     tmp_path: Path, capsys
 ):
