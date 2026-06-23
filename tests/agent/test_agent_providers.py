@@ -120,6 +120,8 @@ def test_provider_output_does_not_extract_json_from_mixed_content(text):
 
 def test_mimo_config_check_reports_missing_env_names_without_values(monkeypatch):
     monkeypatch.delenv("ANTHROPIC_AUTH_TOKEN", raising=False)
+    monkeypatch.delenv("API_KEY", raising=False)
+    monkeypatch.delenv("MIMO_API_KEY", raising=False)
     monkeypatch.delenv("ANTHROPIC_BASE_URL", raising=False)
     monkeypatch.delenv("TEXT2IFC_MIMO_MODEL", raising=False)
 
@@ -132,6 +134,24 @@ def test_mimo_config_check_reports_missing_env_names_without_values(monkeypatch)
     assert "TEXT2IFC_MIMO_MODEL" in rendered
     assert "Bearer" not in rendered
     assert "https://" not in rendered
+
+
+def test_mimo_config_accepts_official_api_key_env_without_legacy_token():
+    result = load_mimo_config_from_env(
+        {
+            "API_KEY": "secret-token",
+            "ANTHROPIC_BASE_URL": "https://api.xiaomimimo.com/anthropic",
+            "TEXT2IFC_MIMO_MODEL": "mimo-v2.5-pro",
+        }
+    )
+    rendered = json.dumps(result, sort_keys=True)
+
+    assert result["configured"] is True
+    assert result["token_configured"] is True
+    assert result["token_env"] == "API_KEY"
+    assert result["missing"] == []
+    assert "secret-token" not in rendered
+    assert "https://api.xiaomimimo.com" not in rendered
 
 
 def test_redaction_removes_secret_values_from_provider_payloads():
@@ -204,6 +224,8 @@ def test_mimo_provider_uses_configured_generation_limits(monkeypatch):
 
     def fake_urlopen(request, timeout):
         captured["body"] = json.loads(request.data.decode("utf-8"))
+        captured["url"] = request.full_url
+        captured["headers"] = dict(request.header_items())
         captured["timeout"] = timeout
         return Response()
 
@@ -231,7 +253,51 @@ def test_mimo_provider_uses_configured_generation_limits(monkeypatch):
 
     assert captured["body"]["max_tokens"] == 2048
     assert captured["timeout"] == 45
+    assert captured["url"] == "https://example.invalid/anthropic/v1/messages"
+    assert captured["headers"]["Api-key"] == "secret-token"
+    assert "X-api-key" not in captured["headers"]
     assert output.text == '{"ok": true}'
+
+
+def test_mimo_provider_does_not_duplicate_full_messages_endpoint(monkeypatch):
+    captured = {}
+
+    class Response:
+        def __enter__(self):
+            return self
+
+        def __exit__(self, exc_type, exc, traceback):
+            return False
+
+        def read(self):
+            return b'{"content":[{"type":"text","text":"{\\"ok\\": true}"}]}'
+
+    def fake_urlopen(request, timeout):
+        del timeout
+        captured["url"] = request.full_url
+        return Response()
+
+    monkeypatch.setattr(
+        "text2ifc_agent.providers.urllib.request.urlopen",
+        fake_urlopen,
+    )
+
+    provider = MimoAgentProvider(
+        config=MimoConfig(
+            token="secret-token",
+            base_url="https://api.xiaomimimo.com/anthropic/v1/messages",
+            model="mimo-v2.5-pro",
+        )
+    )
+
+    provider.generate_candidate(
+        session_id="mimo-endpoint",
+        prompt='Return {"ok": true}',
+        schema={},
+        state={},
+    )
+
+    assert captured["url"] == "https://api.xiaomimimo.com/anthropic/v1/messages"
 
 
 def test_mimo_default_config_uses_documented_live_limits():
