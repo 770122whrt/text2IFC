@@ -40,6 +40,11 @@ Use this page as the stable entry point for project documentation.
 - [Phase 6 phase-local acceptance report](../.planning/phases/06-multiagent-prompt-reliability-data-expansion-and-deployment/06-ACCEPTANCE-TRACE-REPORT.md)
   - Same Phase 6 acceptance topic placed inside the Phase 6 planning folder for
     faster review
+- [Phase 6.2 Interactive CLI specification](../.planning/phases/06.2-interactive-cli-with-openai-compatible-mimo-agent-orchestration/06.2-SPEC.md)
+  - CLI clarification, OpenAI-compatible Mimo checkpoint, trace/report, and
+    final IFC acceptance boundary
+- [Phase 6.2 plan outline](../.planning/phases/06.2-interactive-cli-with-openai-compatible-mimo-agent-orchestration/06.2-PLAN-OUTLINE.md)
+  - Wave order and checkpoints for the interactive CLI implementation
 
 ## Project Planning
 

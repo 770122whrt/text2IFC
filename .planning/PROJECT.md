@@ -42,6 +42,8 @@ explicit user requirements instead of generating fragile IFC text directly.
   report unsupported complex geometry as explicit losses.
 - [ ] Build multi-agent prompt traceability, then expand approved data, compare
   model approaches, and package deployment.
+- [ ] Build an interactive Chinese-first CLI that lets the user participate in
+  the real Mimo multi-agent clarification loop and produces a traceable IFC.
 
 ### Out of Scope
 
@@ -95,7 +97,8 @@ explicit user requirements instead of generating fragile IFC text directly.
 | Start Phase 4 with generated-IFC correctness gates | A reopenable IFC can still be spatially wrong; high-fidelity work needs a reliable text-json-ifc gate first | Adopted |
 | Defer materials, complex geometry, and topology to Phase 4 | Keep generated correctness separate from full IFC source fidelity | Adopted |
 | Start Phase 6 with prompt registry and multi-agent traceability | Fine-tuning and deployment decisions need reproducible prompt inputs, repair attempts, metrics, and audits | Adopted |
+| Insert Phase 6.2 for interactive CLI before service/API work | The user needs to participate in clarification turns and inspect intermediate inputs/outputs before API packaging | Adopted |
 | Use TDD and GSD phase artifacts | Keep behavior and planning traceable | Adopted |
 
 ---
-*Last updated: 2026-06-18 after Phase 6 multi-agent planning*
+*Last updated: 2026-06-23 after Phase 6.2 interactive CLI planning*

@@ -531,3 +531,95 @@ user intent to force a run through a gate.
   excluded from live-quality metrics.
 
 **Status:** Complete - verified with real Mimo and final IFC gates 2026-06-23
+
+## Phase 6.2: Interactive CLI with OpenAI-Compatible Mimo Agent Orchestration (INSERTED)
+
+**Goal:** Turn the Phase 6.1 scripted-answer live workflow into a Chinese-first
+interactive CLI where the user types the request and clarification answers,
+while the system persists role-isolated Mimo evidence, deterministic gates,
+generated report, and a final IFC2X3 artifact.
+
+**Requirements:** CLI-01, CLI-02, CLI-03, CLI-04, CLI-05, CLI-06
+
+**Depends on:** Phase 6.1
+
+**Canonical refs:**
+
+- `.planning/phases/06.2-interactive-cli-with-openai-compatible-mimo-agent-orchestration/06.2-SPEC.md`
+- `.planning/phases/06.2-interactive-cli-with-openai-compatible-mimo-agent-orchestration/06.2-CONTEXT.md`
+- `.planning/phases/06.2-interactive-cli-with-openai-compatible-mimo-agent-orchestration/06.2-AI-SPEC.md`
+- `.planning/phases/06.2-interactive-cli-with-openai-compatible-mimo-agent-orchestration/06.2-RESEARCH.md`
+- `.planning/phases/06.2-interactive-cli-with-openai-compatible-mimo-agent-orchestration/06.2-VALIDATION.md`
+- `.planning/phases/06.2-interactive-cli-with-openai-compatible-mimo-agent-orchestration/06.2-PLAN-OUTLINE.md`
+- `docs/reference/mimo-openai-api.md`
+
+**Explicit boundary:** Phase 6.2 prioritizes the local CLI clarification
+experience over public API/service work. It may use OpenAI Agents SDK only if
+Wave 0 proves compatibility with Mimo Chat Completions and preserves required
+trace evidence. Otherwise the native text2IFC orchestrator plus OpenAI Python
+SDK provider remains the implementation path. Fake/file/replay providers remain
+unit-test tools and cannot satisfy live CLI acceptance.
+
+**Final acceptance artifacts:**
+
+- `dataset/processed/agent-demo/phase6.2-interactive-cli/output.ifc`
+- `dataset/processed/agent-demo/phase6.2-interactive-cli/report.md`
+- `dataset/processed/agent-demo/phase6.2-interactive-cli/conversation.json`
+- `dataset/processed/agent-demo/phase6.2-interactive-cli/events.jsonl`
+- Complete trace sidecars under the same output directory.
+
+**Plans:** 7 plans in 7 waves
+
+**Wave 0**
+
+- [ ] `06.2-00-PLAN.md` - OpenAI-compatible Mimo and Agents SDK compatibility
+  checkpoint
+
+**Wave 1** *(blocked on Wave 0 provider/framework decision)*
+
+- [ ] `06.2-01-PLAN.md` - Interactive CLI session shell and persistence
+
+**Wave 2** *(blocked on Wave 1 durable session shell)*
+
+- [ ] `06.2-02-PLAN.md` - Interactive Design Brief clarification loop
+
+**Wave 3** *(blocked on Wave 2 ready Design Brief or canonical Draft routing)*
+
+- [ ] `06.2-03-PLAN.md` - BIM JSON generation and deterministic IFC gates
+
+**Wave 4** *(blocked on Wave 3 terminal generation and gate state)*
+
+- [ ] `06.2-04-PLAN.md` - Audit, conditional repair, and generated report
+  integration
+
+**Wave 5** *(blocked on Wave 4 generated report integration)*
+
+- [ ] `06.2-05-PLAN.md` - Interactive acceptance matrix and final CLI IFC demo
+
+**Wave 6** *(blocked on Wave 5 final artifact bundle)*
+
+- [ ] `06.2-06-PLAN.md` - Final verification, security review, and roadmap
+  state update
+
+**Cross-cutting constraints:**
+
+- All Phase 6.2 work happens in the C-drive `multiagent-design` worktree; the
+  E-drive working tree is not edited.
+- The CLI may support scripted stdin for deterministic tests, but the scripted
+  path must exercise the same code path as a human terminal session.
+- Real-provider claims require real Mimo response IDs, model, finish reason,
+  usage, raw output, prompt ID/hash, parsed output, and evidence-class labels.
+- A truncated OpenAI-compatible response (`finish_reason: length`) blocks
+  semantic acceptance.
+- The model layer outputs Design Brief, BIM JSON 2.0, canonical Draft, repair
+  output, or Audit only; raw IFC/STEP and low-level IFC helper objects remain
+  forbidden.
+- Formal BIM JSON 2.0 validation gates IFC compilation; Draft and blocked
+  outcomes write reports but no IFC.
+- Every CLI run must generate `report.md` from trace sidecars so the user can
+  review original input, transcript, prompts, raw outputs, parsed outputs,
+  gate feedback, route, metrics, Audit, and final artifact paths in one file.
+- OpenAI Agents SDK adoption is conditional on Wave 0 evidence; a rejected SDK
+  does not block the native OpenAI SDK provider path.
+
+**Status:** Planned - ready for Phase 6.2 execution

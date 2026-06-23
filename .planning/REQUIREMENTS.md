@@ -166,6 +166,28 @@ requirements.
   material input/output, route, metric, and final artifact path while excluding
   credentials, authorization headers, and private provider URLs.
 
+### Interactive CLI and OpenAI-Compatible Orchestration
+
+- [ ] **CLI-01**: The project verifies Mimo OpenAI-compatible Chat Completions
+  and OpenAI Agents SDK feasibility with redacted live evidence before any SDK
+  adoption claim.
+- [ ] **CLI-02**: A Chinese-first CLI accepts user request and answer turns from
+  stdin, persists append-only session state, and supports safe status/help/quit
+  behavior.
+- [ ] **CLI-03**: The interactive Design Brief loop asks one to three Chinese
+  Agent-authored clarification questions per turn and records user answers as
+  real transcript turns rather than prewritten `answers.json` facts.
+- [ ] **CLI-04**: The CLI executes the role-isolated Design Brief, Generator,
+  deterministic validation, IFC compile/reopen, geometry gates, conditional
+  repair, and Audit route to a terminal Formal, Draft, or blocked outcome.
+- [ ] **CLI-05**: Every CLI run generates a human-review `report.md` from trace
+  sidecars containing the original input, transcript, prompts, raw outputs,
+  parsed outputs, gate feedback, route, metrics, audit result, and final
+  artifact paths.
+- [ ] **CLI-06**: Live CLI claims require real Mimo provider IDs, finish
+  reasons, usage, raw output, artifact secret scan, and evidence-class labels;
+  fake/file/replay output cannot satisfy live acceptance.
+
 ## Out of Scope
 
 | Feature | Reason |
@@ -233,12 +255,18 @@ requirements.
 | LIVE-05 | Phase 6.1 | Complete |
 | LIVE-06 | Phase 6.1 | Complete |
 | OBS-02 | Phase 6.1 | Complete |
+| CLI-01 | Phase 6.2 | Planned |
+| CLI-02 | Phase 6.2 | Planned |
+| CLI-03 | Phase 6.2 | Planned |
+| CLI-04 | Phase 6.2 | Planned |
+| CLI-05 | Phase 6.2 | Planned |
+| CLI-06 | Phase 6.2 | Planned |
 
 **Coverage:**
-- tracked requirements: 53 total
-- Mapped to phases: 53
+- tracked requirements: 59 total
+- Mapped to phases: 59
 - Unmapped: 0
 
 ---
 *Requirements defined: 2026-06-11*
-*Last updated: 2026-06-23 after Phase 6.1 live-Mimo final acceptance*
+*Last updated: 2026-06-23 after Phase 6.2 interactive CLI planning*

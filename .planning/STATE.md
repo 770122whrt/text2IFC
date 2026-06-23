@@ -7,14 +7,14 @@ See: `.planning/PROJECT.md` (updated 2026-06-11)
 **Core value:** Produce valid, inspectable IFC models from explicit user
 requirements.
 
-**Current focus:** Phase 6.1 complete - live Mimo acceptance and failure-route matrix verified
+**Current focus:** Phase 6.2 planned - interactive CLI with OpenAI-compatible Mimo orchestration
 
 ## Status
 
-- Phase: 6.1
-- Stage: Complete
-- State: Waves 0-6 verified with real Mimo evidence and deterministic final IFC gates
-- Plans: Phase 6.1 planned, 7 of 7 plans written, 7 executed
+- Phase: 6.2
+- Stage: Planned
+- State: Phase 6.2 SPEC, CONTEXT, AI-SPEC, RESEARCH, VALIDATION, and 7-wave plan written
+- Plans: Phase 6.2 planned, 7 of 7 plans written, 0 executed
 - Branch: `multiagent-design` in C-drive worktree
 - Remote: `https://github.com/770122whrt/text2IFC`
 
@@ -254,6 +254,14 @@ requirements.
   `unknown_contract`, writes no IFC, and is explicitly
   `excluded_from_live_quality`, so replay evidence cannot inflate live Mimo
   quality claims.
+- Phase 6.2 is planned as an inserted CLI-first phase. It turns Phase 6.1's
+  scripted answer workflow into a Chinese-first interactive terminal session
+  with durable `conversation.json`, `events.jsonl`, `session.json`, trace
+  sidecars, generated `report.md`, and final `output.ifc`.
+- Phase 6.2 Wave 0 is a provider/framework checkpoint: OpenAI Agents SDK is a
+  candidate only if real Mimo Chat Completions compatibility and required trace
+  metadata preservation pass. Otherwise the native orchestrator plus OpenAI
+  Python SDK provider remains the implementation path.
 
 ## Current Decisions
 
@@ -327,9 +335,18 @@ requirements.
   Phase 6.1 acceptance supersedes them: Design Brief, Generator, conditional
   Repair, and Audit evidence must come from real Mimo calls, while fake/file
   providers are unit/replay tools only.
+- Phase 6.2 extends the live-evidence rule to the user-facing CLI: fake/file
+  and replay providers remain test tools only and cannot satisfy live CLI
+  acceptance.
 - Phase 6.1 clarification necessity is derived per request from user text,
   transcript, canonical schemas, generation capability, and relevant examples;
   no global required/not-required field list is allowed.
+- Phase 6.2 scripted stdin is allowed for deterministic tests only if it
+  exercises the same CLI code path as a human terminal session; prewritten
+  `answers.json` facts are not accepted as the interactive product path.
+- Phase 6.2 treats OpenAI Agents SDK as a conditional integration. A failed SDK
+  compatibility checkpoint is not a product failure if the native OpenAI SDK
+  provider path remains evidence-complete.
 - Design Brief Agent is the only semantic owner of clarification questions.
   Deterministic clarification code validates count, mapping, evidence, and
   transcript state but does not author questions or facts.
@@ -376,10 +393,10 @@ requirements.
 
 ## Next Action
 
-Review Phase 6.1 with the user and decide the next milestone: broaden the live
-case matrix, harden deployment ergonomics, or start a metric-backed provider /
-prompt improvement loop. Do not begin fine-tuning until live prompt-only
-metrics justify it.
+Execute Phase 6.2 Wave 0: verify OpenAI-compatible Mimo and OpenAI Agents SDK
+compatibility with redacted live evidence, then choose the implementation route
+for the interactive CLI. Do not begin API/service packaging until the CLI
+clarification loop and final IFC artifact are verified.
 
 ## Accumulated Context
 
@@ -567,6 +584,11 @@ metrics justify it.
   question. `design-brief.v2.1` now requires `draft_required` when a current
   blocking fact cannot be supplied by the user, and the rerun passed with real
   MiMo evidence.
+- Phase 6.2 was specified and planned on 2026-06-23 after the user prioritized
+  CLI clarification over public API/service work. Seven waves now cover
+  OpenAI-compatible Mimo and Agents SDK checkpointing, durable CLI sessions,
+  interactive Design Brief questions, Generator and IFC gates,
+  Audit/repair/report integration, acceptance matrix, and final verification.
 
 ---
-*Last activity: 2026-06-23 - verified MiMo API_KEY live responses, clarified-room IFC acceptance, unknown-answer Draft routing, and invalid-contract blocking*
+*Last activity: 2026-06-23 - planned Phase 6.2 interactive CLI with OpenAI-compatible Mimo orchestration*
