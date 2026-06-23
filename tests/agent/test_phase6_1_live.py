@@ -1055,6 +1055,40 @@ def test_live_audit_report_stage_calls_provider_and_generates_report(
     assert "(audit/audit-report.json)" in report
 
 
+def test_live_audit_report_stage_accepts_clarified_final_design_brief_layout(
+    tmp_path: Path,
+):
+    case_dir = _write_auditable_case_dir(tmp_path / "clarified-room")
+    calls_dir = case_dir / "calls"
+    calls_dir.mkdir()
+    (case_dir / "design-brief").rename(calls_dir / "02-design-brief")
+    payload = {
+        "schema_version": "text2ifc/audit/2.0",
+        "recommendation": "accept",
+        "blocking": False,
+        "deterministic_gate_status": "passed",
+        "findings": [],
+        "evidence_paths": [
+            "calls/02-design-brief/design-brief.json",
+            "generator/candidate.json",
+            "repair/route.json",
+        ],
+    }
+    provider = _RecordingLiveProvider(payload)
+
+    result = run_audit_report_stage(
+        provider=provider,
+        case_dir=case_dir,
+        case_id="clarified-room",
+    )
+
+    assert result["status"] == "accepted"
+    assert result["valid"] is True
+    assert "calls/02-design-brief/design-brief.json" in provider.prompt
+    report = (case_dir / "report.md").read_text(encoding="utf-8")
+    assert "calls/02-design-brief/prompt-rendered.md" in report
+
+
 def test_live_audit_report_stage_blocks_fenced_output_contract(tmp_path: Path):
     case_dir = _write_auditable_case_dir(tmp_path / "complete-room")
     payload = {
