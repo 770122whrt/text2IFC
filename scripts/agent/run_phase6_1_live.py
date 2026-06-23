@@ -5,12 +5,21 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import site
 import sys
 from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "src"))
+sys.path.insert(0, str(ROOT / ".deps" / "python312"))
+USER_SITE = Path(site.getusersitepackages())
+try:
+    user_site_exists = USER_SITE.exists()
+except OSError:
+    user_site_exists = False
+if user_site_exists or str(USER_SITE) not in sys.path:
+    sys.path.append(str(USER_SITE))
 
 from text2ifc_agent.live_pipeline import (  # noqa: E402
     clarified_room_case,
