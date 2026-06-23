@@ -539,11 +539,11 @@ metrics justify it.
   `blocking: false`. The generated `report.md` is sidecar-derived and links
   the Generator parsed output to `generator/candidate.json`. Agent regression
   passed 129 tests and compileall passed.
-- Phase 6.1 Wave 6 completed on 2026-06-22 with final acceptance commits and
+- Phase 6.1 Wave 6 completed on 2026-06-23 with final acceptance commits and
   generated root artifacts. The live finalize command passed, artifact verifier
   passed, 25 focused live-report tests passed, the Agent suite passed 134 tests,
-  service/compiler passed 50 tests, compileall passed, and the final artifact
-  secret scan found zero sensitive strings.
+  service/compiler/dataset passed 56 tests, compileall passed, and the final
+  artifact secret scan found zero sensitive strings.
 
 ---
-*Last activity: 2026-06-22 - completed Phase 6.1 live Mimo final IFC acceptance*
+*Last activity: 2026-06-23 - completed Phase 6.1 live Mimo final IFC acceptance*

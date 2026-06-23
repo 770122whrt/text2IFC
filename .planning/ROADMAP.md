@@ -526,4 +526,4 @@ user intent to force a run through a gate.
   evidence, provider `id`/`model`/`stop_reason`/`usage`, event stream, metrics,
   and secret-scan result.
 
-**Status:** Complete - verified with real Mimo and final IFC gates 2026-06-22
+**Status:** Complete - verified with real Mimo and final IFC gates 2026-06-23

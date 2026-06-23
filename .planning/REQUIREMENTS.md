@@ -241,4 +241,4 @@ requirements.
 
 ---
 *Requirements defined: 2026-06-11*
-*Last updated: 2026-06-22 after Phase 6.1 live-Mimo final acceptance*
+*Last updated: 2026-06-23 after Phase 6.1 live-Mimo final acceptance*
