@@ -514,7 +514,7 @@ user intent to force a run through a gate.
 
 **Wave 6** *(blocked on final IFC acceptance gates)*
 
-- [ ] `06.1-06-PLAN.md` - Live acceptance matrix, IFC artifact, and final review
+- [x] `06.1-06-PLAN.md` - Live acceptance matrix, IFC artifact, and final review
 
 **Acceptance artifacts:**
 
@@ -526,4 +526,4 @@ user intent to force a run through a gate.
   evidence, provider `id`/`model`/`stop_reason`/`usage`, event stream, metrics,
   and secret-scan result.
 
-**Status:** In Progress - Waves 0-5 verified with real Mimo 2026-06-22
+**Status:** Complete - verified with real Mimo and final IFC gates 2026-06-22

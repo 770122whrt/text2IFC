@@ -7,14 +7,14 @@ See: `.planning/PROJECT.md` (updated 2026-06-11)
 **Core value:** Produce valid, inspectable IFC models from explicit user
 requirements.
 
-**Current focus:** Phase 6.1 Wave 6 - reach final IFC/report acceptance gates
+**Current focus:** Phase 6.1 complete - live Mimo IFC acceptance verified
 
 ## Status
 
 - Phase: 6.1
-- Stage: In Progress
-- State: Waves 0-5 verified with real Mimo; Wave 6 ready
-- Plans: Phase 6.1 planned, 7 of 7 plans written, 6 executed
+- Stage: Complete
+- State: Waves 0-6 verified with real Mimo evidence and deterministic final IFC gates
+- Plans: Phase 6.1 planned, 7 of 7 plans written, 7 executed
 - Branch: `multiagent-design` in C-drive worktree
 - Remote: `https://github.com/770122whrt/text2IFC`
 
@@ -239,6 +239,12 @@ requirements.
   `recommendation: accept`, `blocking: false`, and zero validation issues.
   `report.md` is generated from sidecars and links Generator parsed output to
   `generator/candidate.json`.
+- Phase 6.1 Wave 6 produced the final accepted live artifacts:
+  `dataset/processed/agent-demo/phase6.1-mimo-live/output.ifc` and generated
+  `dataset/processed/agent-demo/phase6.1-mimo-live/report.md`. The final
+  acceptance metrics report `valid: true`, `compile_reopen_success: true`,
+  `geometry_success: true`, and `secret_finding_count: 0`. The root artifact
+  verifier reopened the IFC as IFC2X3 and passed.
 
 ## Current Decisions
 
@@ -361,10 +367,10 @@ requirements.
 
 ## Next Action
 
-Execute Phase 6.1 Wave 6: run the final live acceptance matrix and produce the
-final accepted Formal artifact. Do not claim final acceptance until the accepted
-Formal path has `output.ifc`, generated `report.md`, deterministic gates,
-Audit, and secret scan all passing.
+Review Phase 6.1 with the user and decide the next milestone: broaden the live
+case matrix, harden deployment ergonomics, or start a metric-backed provider /
+prompt improvement loop. Do not begin fine-tuning until live prompt-only
+metrics justify it.
 
 ## Accumulated Context
 
@@ -533,6 +539,11 @@ Audit, and secret scan all passing.
   `blocking: false`. The generated `report.md` is sidecar-derived and links
   the Generator parsed output to `generator/candidate.json`. Agent regression
   passed 129 tests and compileall passed.
+- Phase 6.1 Wave 6 completed on 2026-06-22 with final acceptance commits and
+  generated root artifacts. The live finalize command passed, artifact verifier
+  passed, 25 focused live-report tests passed, the Agent suite passed 134 tests,
+  service/compiler passed 50 tests, compileall passed, and the final artifact
+  secret scan found zero sensitive strings.
 
 ---
-*Last activity: 2026-06-22 - completed Phase 6.1 Wave 5 real Audit/report gate*
+*Last activity: 2026-06-22 - completed Phase 6.1 live Mimo final IFC acceptance*
