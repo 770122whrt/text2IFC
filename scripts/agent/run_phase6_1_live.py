@@ -28,6 +28,7 @@ from text2ifc_agent.live_pipeline import (  # noqa: E402
     run_clarification_case,
     run_design_brief_stage,
     run_generator_stage,
+    run_invalid_contract_replay_stage,
     run_repair_stage,
     run_audit_report_stage,
     run_final_acceptance_stage,
@@ -82,6 +83,7 @@ def main(
             "design-brief",
             "clarify",
             "generate",
+            "invalid-contract",
             "repair",
             "audit-report",
             "finalize",
@@ -90,7 +92,7 @@ def main(
     )
     parser.add_argument(
         "--case",
-        choices=("complete-room", "clarified-room", "unknown-answer"),
+        choices=("complete-room", "clarified-room", "unknown-answer", "invalid-contract"),
         default="complete-room",
     )
     parser.add_argument("--live", action="store_true")
@@ -129,6 +131,8 @@ def main(
         parser.error("--stage clarify requires --case clarified-room or unknown-answer")
     if args.stage == "design-brief" and args.case != "complete-room":
         parser.error("--stage design-brief requires --case complete-room")
+    if args.stage == "invalid-contract" and args.case != "invalid-contract":
+        parser.error("--stage invalid-contract requires --case invalid-contract")
     if args.case == "clarified-room":
         case = clarified_room_case()
     elif args.case == "unknown-answer":
@@ -165,6 +169,8 @@ def main(
                 design_source_dir=design_source_dir,
                 case_id=args.case,
             )
+        elif args.stage == "invalid-contract":
+            result = run_invalid_contract_replay_stage(output_dir=output_dir)
         elif args.stage == "repair":
             generator_source_dir = args.generator_source_dir or (
                 DEFAULT_LIVE_ROOT / args.case / "generator"

@@ -620,6 +620,112 @@ def run_generator_stage(
     }
 
 
+def run_invalid_contract_replay_stage(
+    *,
+    output_dir: Path | str,
+) -> dict[str, Any]:
+    """Write an auditable replay fixture for an unknown contract response."""
+    output = Path(output_dir)
+    output.mkdir(parents=True, exist_ok=True)
+    replay_response = {
+        "id": "replay-invalid-contract-001",
+        "type": "message",
+        "role": "assistant",
+        "model": "replay-fixture",
+        "stop_reason": "end_turn",
+        "content": [
+            {
+                "type": "text",
+                "text": json.dumps(
+                    {
+                        "draft_version": "text2ifc/draft-envelope/1.0",
+                        "target_schema_version": "bim-json/2.0",
+                        "partial_document": {},
+                    },
+                    ensure_ascii=False,
+                ),
+            }
+        ],
+        "usage": {"input_tokens": 0, "output_tokens": 0},
+    }
+    model_text = str(replay_response["content"][0]["text"])
+    parsed = json.loads(model_text)
+    contract = validate_generation_document(parsed)
+    diagnostics = list(contract["diagnostics"])
+    classification = {
+        "status": "blocked_replay",
+        "contract_status": contract["status"],
+        "classification": contract["classification"],
+        "schema_version": parsed.get("schema_version"),
+        "draft_version": parsed.get("draft_version"),
+        "target_schema_version": parsed.get("target_schema_version"),
+        "diagnostics": diagnostics,
+    }
+    metrics = {
+        "case_id": "invalid-contract",
+        "stage": "invalid-contract",
+        "evidence_class": "replay",
+        "response_id": replay_response["id"],
+        "model": replay_response["model"],
+        "stop_reason": replay_response["stop_reason"],
+        "parse_valid": True,
+        "classification": contract["classification"],
+        "contract_status": contract["status"],
+        "contract_valid": False,
+        "strict_output_contract_valid": True,
+        "issue_count": len(diagnostics),
+        "excluded_from_live_quality": True,
+        "writes_ifc": False,
+    }
+
+    _write_json(output / "response.raw.json", replay_response)
+    _write_text(output / "model-text.txt", model_text + "\n")
+    _write_json(output / "parsed-output.json", parsed)
+    _write_json(output / "classification.json", classification)
+    _write_json(
+        output / "validation.json",
+        {"valid": False, "issue_count": len(diagnostics), "issues": diagnostics},
+    )
+    _write_json(output / "metrics.json", metrics)
+    _write_text(
+        output / "report.md",
+        "\n".join(
+            [
+                "# Phase 6.1 Invalid Contract Replay",
+                "",
+                "Generated from a saved replay fixture. This artifact is excluded from live provider quality metrics.",
+                "",
+                "## Result",
+                "",
+                "- status: `blocked_replay`",
+                "- evidence_class: `replay`",
+                "- writes_ifc: `false`",
+                "",
+                "## Source Sidecars",
+                "",
+                "- [response.raw.json](response.raw.json)",
+                "- [model-text.txt](model-text.txt)",
+                "- [parsed-output.json](parsed-output.json)",
+                "- [classification.json](classification.json)",
+                "- [validation.json](validation.json)",
+                "- [metrics.json](metrics.json)",
+            ]
+        )
+        + "\n",
+    )
+    return {
+        "case_id": "invalid-contract",
+        "stage": "invalid-contract",
+        "status": "blocked_replay",
+        "classification": contract["classification"],
+        "valid": True,
+        "evidence_class": "replay",
+        "writes_ifc": False,
+        "excluded_from_live_quality": True,
+        "output_dir": portable_artifact_path(output),
+    }
+
+
 def run_repair_stage(
     *,
     provider_factory: Any,
