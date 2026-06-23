@@ -172,7 +172,8 @@ requirements.
   and OpenAI Agents SDK feasibility with redacted live evidence before any SDK
   adoption claim.
 - [ ] **CLI-02**: A Chinese-first CLI accepts user request and answer turns from
-  stdin, persists append-only session state, and supports safe status/help/quit
+  stdin, persists append-only session records in a shared SQLite database keyed
+  by `session_id` and `session_hash`, and supports safe status/help/quit
   behavior.
 - [ ] **CLI-03**: The interactive Design Brief loop asks one to three Chinese
   Agent-authored clarification questions per turn and records user answers as
@@ -180,13 +181,17 @@ requirements.
 - [ ] **CLI-04**: The CLI executes the role-isolated Design Brief, Generator,
   deterministic validation, IFC compile/reopen, geometry gates, conditional
   repair, and Audit route to a terminal Formal, Draft, or blocked outcome.
-- [ ] **CLI-05**: Every CLI run generates a human-review `report.md` from trace
-  sidecars containing the original input, transcript, prompts, raw outputs,
-  parsed outputs, gate feedback, route, metrics, audit result, and final
-  artifact paths.
+- [ ] **CLI-05**: Every CLI run generates a human-review `report.md` from
+  session DB records and linked artifact references containing the original
+  input, transcript, prompts, raw outputs, parsed outputs, gate feedback,
+  route, metrics, audit result, and final artifact paths.
 - [ ] **CLI-06**: Live CLI claims require real Mimo provider IDs, finish
   reasons, usage, raw output, artifact secret scan, and evidence-class labels;
   fake/file/replay output cannot satisfy live acceptance.
+- [ ] **CLI-07**: The shared session store exposes query, resume, and export
+  interfaces so users and later APIs can list sessions, inspect turns, inspect
+  agent calls, inspect artifacts, resume incomplete sessions, and export one
+  session's review bundle by `session_id` or `session_hash`.
 
 ## Out of Scope
 
@@ -261,10 +266,11 @@ requirements.
 | CLI-04 | Phase 6.2 | Planned |
 | CLI-05 | Phase 6.2 | Planned |
 | CLI-06 | Phase 6.2 | Planned |
+| CLI-07 | Phase 6.2 | Planned |
 
 **Coverage:**
-- tracked requirements: 59 total
-- Mapped to phases: 59
+- tracked requirements: 60 total
+- Mapped to phases: 60
 - Unmapped: 0
 
 ---

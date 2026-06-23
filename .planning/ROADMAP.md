@@ -539,7 +539,7 @@ interactive CLI where the user types the request and clarification answers,
 while the system persists role-isolated Mimo evidence, deterministic gates,
 generated report, and a final IFC2X3 artifact.
 
-**Requirements:** CLI-01, CLI-02, CLI-03, CLI-04, CLI-05, CLI-06
+**Requirements:** CLI-01, CLI-02, CLI-03, CLI-04, CLI-05, CLI-06, CLI-07
 
 **Depends on:** Phase 6.1
 
@@ -562,11 +562,13 @@ unit-test tools and cannot satisfy live CLI acceptance.
 
 **Final acceptance artifacts:**
 
-- `dataset/processed/agent-demo/phase6.2-interactive-cli/output.ifc`
-- `dataset/processed/agent-demo/phase6.2-interactive-cli/report.md`
-- `dataset/processed/agent-demo/phase6.2-interactive-cli/conversation.json`
-- `dataset/processed/agent-demo/phase6.2-interactive-cli/events.jsonl`
-- Complete trace sidecars under the same output directory.
+- `dataset/processed/agent-demo/phase6.2-interactive-cli/sessions.sqlite`
+- `dataset/processed/agent-demo/phase6.2-interactive-cli/final-acceptance.json`
+  naming the accepted `session_id` and `session_hash`
+- `dataset/processed/agent-demo/phase6.2-interactive-cli/runs/<session_hash>/output.ifc`
+- `dataset/processed/agent-demo/phase6.2-interactive-cli/runs/<session_hash>/report.md`
+- `dataset/processed/agent-demo/phase6.2-interactive-cli/runs/<session_hash>/session-export.json`
+- Large-object artifacts linked from the session DB as needed.
 
 **Plans:** 7 plans in 7 waves
 
@@ -577,7 +579,8 @@ unit-test tools and cannot satisfy live CLI acceptance.
 
 **Wave 1** *(blocked on Wave 0 provider/framework decision)*
 
-- [ ] `06.2-01-PLAN.md` - Interactive CLI session shell and persistence
+- [ ] `06.2-01-PLAN.md` - Interactive CLI session shell, shared DB, and
+  query/resume/export interface
 
 **Wave 2** *(blocked on Wave 1 durable session shell)*
 
@@ -594,7 +597,8 @@ unit-test tools and cannot satisfy live CLI acceptance.
 
 **Wave 5** *(blocked on Wave 4 generated report integration)*
 
-- [ ] `06.2-05-PLAN.md` - Interactive acceptance matrix and final CLI IFC demo
+- [ ] `06.2-05-PLAN.md` - Interactive acceptance matrix and final
+  Codex-as-user CLI IFC demo
 
 **Wave 6** *(blocked on Wave 5 final artifact bundle)*
 
@@ -607,6 +611,14 @@ unit-test tools and cannot satisfy live CLI acceptance.
   E-drive working tree is not edited.
 - The CLI may support scripted stdin for deterministic tests, but the scripted
   path must exercise the same code path as a human terminal session.
+- The shared SQLite session DB is the primary evidence container for Phase 6.2
+  CLI runs. Each run receives a stable `session_id` and `session_hash`;
+  artifact files are linked payloads or exported review bundles.
+- Session query, resume, and export commands are part of the Phase 6.2 product
+  surface, not optional debug helpers.
+- Final acceptance requires a real-time UAT in which Codex acts as the user and
+  Mimo acts as the Agent provider. Scripted stdin is regression support, not the
+  highest acceptance evidence.
 - Real-provider claims require real Mimo response IDs, model, finish reason,
   usage, raw output, prompt ID/hash, parsed output, and evidence-class labels.
 - A truncated OpenAI-compatible response (`finish_reason: length`) blocks
@@ -616,7 +628,8 @@ unit-test tools and cannot satisfy live CLI acceptance.
   forbidden.
 - Formal BIM JSON 2.0 validation gates IFC compilation; Draft and blocked
   outcomes write reports but no IFC.
-- Every CLI run must generate `report.md` from trace sidecars so the user can
+- Every CLI run must generate `report.md` from session DB records and linked
+  artifacts so the user can
   review original input, transcript, prompts, raw outputs, parsed outputs,
   gate feedback, route, metrics, Audit, and final artifact paths in one file.
 - OpenAI Agents SDK adoption is conditional on Wave 0 evidence; a rejected SDK

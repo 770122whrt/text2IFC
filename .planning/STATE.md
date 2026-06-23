@@ -256,8 +256,9 @@ requirements.
   quality claims.
 - Phase 6.2 is planned as an inserted CLI-first phase. It turns Phase 6.1's
   scripted answer workflow into a Chinese-first interactive terminal session
-  with durable `conversation.json`, `events.jsonl`, `session.json`, trace
-  sidecars, generated `report.md`, and final `output.ifc`.
+  with a shared SQLite session DB, stable `session_id`/`session_hash`, query /
+  resume / export interfaces, generated `report.md`, and final IFC artifacts
+  linked from the accepted session.
 - Phase 6.2 Wave 0 is a provider/framework research and compatibility
   checkpoint: OpenAI Agents SDK research must be written before live smoke
   interpretation, and the SDK is a candidate only if real Mimo Chat Completions
@@ -346,6 +347,12 @@ requirements.
 - Phase 6.2 scripted stdin is allowed for deterministic tests only if it
   exercises the same CLI code path as a human terminal session; prewritten
   `answers.json` facts are not accepted as the interactive product path.
+- Phase 6.2 uses a shared session database as the primary evidence container.
+  Per-session directories under `runs/<session_hash>/` hold large artifacts and
+  exported review bundles, but they are not independent truth stores.
+- Phase 6.2 final acceptance requires a real-time CLI UAT where Codex acts as
+  the user and Mimo acts as the Agent provider; scripted stdin remains
+  regression support.
 - Phase 6.2 treats OpenAI Agents SDK as a conditional integration. A failed SDK
   compatibility checkpoint is not a product failure if the native OpenAI SDK
   provider path remains evidence-complete.
@@ -397,9 +404,10 @@ requirements.
 
 Execute Phase 6.2 Wave 0: first write OpenAI Agents SDK research, then verify
 OpenAI-compatible Mimo and Agents SDK compatibility with redacted live evidence,
-then choose the implementation route for the interactive CLI. Do not begin
-API/service packaging until the CLI clarification loop and final IFC artifact
-are verified.
+then choose the implementation route for the interactive CLI. After Wave 0,
+Wave 1 must implement the shared session DB and query/resume/export interface
+before Agent semantics are layered on top. Do not begin API/service packaging
+until the CLI clarification loop and final IFC artifact are verified.
 
 ## Accumulated Context
 
@@ -592,6 +600,12 @@ are verified.
   OpenAI-compatible Mimo and Agents SDK checkpointing, durable CLI sessions,
   interactive Design Brief questions, Generator and IFC gates,
   Audit/repair/report integration, acceptance matrix, and final verification.
+- Phase 6.2 planning was revised on 2026-06-23 so the session architecture is a
+  shared SQLite DB for all conversations rather than one DB per run. Each
+  conversation has a stable `session_id` and `session_hash`; CLI interfaces must
+  support listing, showing, resuming, and exporting sessions. Final acceptance
+  also now requires Codex-as-user real-time CLI UAT with Mimo-backed Agent
+  responses.
 
 ---
-*Last activity: 2026-06-23 - planned Phase 6.2 interactive CLI with OpenAI-compatible Mimo orchestration*
+*Last activity: 2026-06-23 - revised Phase 6.2 plan for shared session DB and real-time CLI UAT*
