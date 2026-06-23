@@ -103,6 +103,66 @@
       }
     },
     {
+      "few_shot_id": "design-brief-v2.answered-unknown-wall-thickness",
+      "selection_terms": ["房间", "墙", "厚度", "不知道", "无法提供"],
+      "input": {
+        "user_request": "请创建一个单层矩形房间，长6米、宽4米、高3米；四面墙闭合，南墙中央设置一扇宽0.9米、高2.1米的门，北墙中央设置一扇宽1.2米、高1.5米、窗台高0.9米的窗。",
+        "conversation": [
+          {"turn_id": "turn-user-001", "role": "user", "content": "请创建一个单层矩形房间，长6米、宽4米、高3米；四面墙闭合，南墙中央设置一扇宽0.9米、高2.1米的门，北墙中央设置一扇宽1.2米、高1.5米、窗台高0.9米的窗。"},
+          {"turn_id": "turn-assistant-002", "role": "assistant", "content": "墙体厚度是多少？如果暂时不知道，可以直接告诉我不知道。"},
+          {"turn_id": "turn-user-003", "role": "user", "content": "我不知道墙体厚度。"}
+        ]
+      },
+      "reasoning_summary": "第一轮缺少墙厚时可以追问；用户随后明确表示不知道墙体厚度，继续追问同一事实没有新增信息。不能补默认墙厚，必须进入 Draft 并保留缺失事实。",
+      "output": {
+        "schema_version": "text2ifc/design-brief/2.0",
+        "language": "zh-CN",
+        "original_request": "请创建一个单层矩形房间，长6米、宽4米、高3米；四面墙闭合，南墙中央设置一扇宽0.9米、高2.1米的门，北墙中央设置一扇宽1.2米、高1.5米、窗台高0.9米的窗。",
+        "status": "draft_required",
+        "known_facts": {
+          "space": {"shape": "rectangle", "length_mm": 6000, "width_mm": 4000, "height_mm": 3000},
+          "walls": {"count": 4, "enclosure": "closed"},
+          "door": {"host": "south_wall", "alignment": "host_centerline", "width_mm": 900, "height_mm": 2100},
+          "window": {"host": "north_wall", "alignment": "host_centerline", "width_mm": 1200, "height_mm": 1500, "sill_height_mm": 900}
+        },
+        "fact_sources": [
+          {
+            "path": "/known_facts",
+            "source_turns": ["turn-user-001", "turn-user-003"],
+            "evidence_refs": ["schema:bim-json-v2:entity", "schema:bim-json-v2:representation"]
+          }
+        ],
+        "missing_facts": [
+          {
+            "id": "mf-wall-thickness",
+            "code": "WALL_THICKNESS_MISSING",
+            "path": "/known_facts/walls/thickness_mm",
+            "message": "墙体厚度尚未确定。",
+            "reason": "用户要求闭合墙体，但在追问后明确表示不知道墙体厚度；该阻塞事实不能由系统默认补齐。",
+            "blocking": true,
+            "evidence_refs": ["capability:IFC2X3:IfcWall"],
+            "source_turns": ["turn-user-003"]
+          }
+        ],
+        "ambiguities": [],
+        "unsupported_requests": [],
+        "user_corrections": [],
+        "clarification_questions": [],
+        "provenance": {
+          "source_turns": ["turn-user-001", "turn-user-003"],
+          "selected_evidence_ids": [
+            "schema:bim-json-v2:entity",
+            "schema:bim-json-v2:representation",
+            "capability:IFC2X3:IfcSpace",
+            "capability:IFC2X3:IfcWall",
+            "capability:IFC2X3:IfcDoor",
+            "capability:IFC2X3:IfcWindow"
+          ],
+          "few_shot_ids": ["design-brief-v2.answered-unknown-wall-thickness"]
+        }
+      }
+    },
+    {
       "few_shot_id": "design-brief-v2.explicit-unsupported-window-style",
       "selection_terms": ["窗", "窗型", "开启机构", "联动", "WindowStyle"],
       "input": {
