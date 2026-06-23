@@ -60,6 +60,7 @@ Use this page as the stable entry point for project documentation.
 - [IFC2X3 generation profile](reference/ifc2x3-generation-profile.md)
 - [IFC2X3 knowledge sources and no-fabrication policy](reference/ifc2x3-knowledge-sources.md)
 - [MiMo Anthropic API compatibility reference](reference/mimo-anthropic-api.md)
+- [MiMo OpenAI API compatibility reference](reference/mimo-openai-api.md)
 - [Dataset organization](../dataset/data_organization.md)
 - [External data source catalog](../dataset/sources/CATALOG.md)
 - [Dataset manifest format](../dataset/manifests/README.md)
