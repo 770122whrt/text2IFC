@@ -7,7 +7,7 @@ See: `.planning/PROJECT.md` (updated 2026-06-11)
 **Core value:** Produce valid, inspectable IFC models from explicit user
 requirements.
 
-**Current focus:** Phase 6.1 complete - live Mimo IFC acceptance verified
+**Current focus:** Phase 6.1 complete - live Mimo acceptance and failure-route matrix verified
 
 ## Status
 
@@ -245,6 +245,15 @@ requirements.
   acceptance metrics report `valid: true`, `compile_reopen_success: true`,
   `geometry_success: true`, and `secret_finding_count: 0`. The root artifact
   verifier reopened the IFC as IFC2X3 and passed.
+- Phase 6.1 live matrix now includes a real unknown-answer Draft path. The
+  Design Brief Agent first asked for wall thickness, then after the user
+  answered `我不知道。`, real Mimo response `msg_f87c960adc6f4ec99172f658`
+  terminated as `draft_required`, wrote no IFC, and preserved the missing wall
+  thickness fact instead of repeating the same question.
+- Phase 6.1 invalid-contract replay now blocks nonexistent Draft versions as
+  `unknown_contract`, writes no IFC, and is explicitly
+  `excluded_from_live_quality`, so replay evidence cannot inflate live Mimo
+  quality claims.
 
 ## Current Decisions
 
@@ -553,6 +562,11 @@ metrics justify it.
   `msg_33bcfd37905c45bfbf3d4e67`, `no_repair_needed` routing, and an
   independently verified IFC artifact at
   `dataset/processed/agent-demo/phase6.1-mimo-live/clarified-room-final/output.ifc`.
+- Phase 6.1 prompt hardening on 2026-06-23 fixed the real unknown-answer
+  failure where MiMo recognized `不知道` but repeated the same clarification
+  question. `design-brief.v2.1` now requires `draft_required` when a current
+  blocking fact cannot be supplied by the user, and the rerun passed with real
+  MiMo evidence.
 
 ---
-*Last activity: 2026-06-23 - verified MiMo API_KEY live responses and clarified-room IFC acceptance*
+*Last activity: 2026-06-23 - verified MiMo API_KEY live responses, clarified-room IFC acceptance, unknown-answer Draft routing, and invalid-contract blocking*

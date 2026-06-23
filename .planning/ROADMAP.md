@@ -525,5 +525,9 @@ user intent to force a run through a gate.
   validation and geometry feedback, conditional repair evidence, Audit
   evidence, provider `id`/`model`/`stop_reason`/`usage`, event stream, metrics,
   and secret-scan result.
+- Live matrix sidecars also cover non-IFC terminal outcomes: `unknown-answer`
+  must stop at canonical Draft after the user says a required fact is unknown,
+  and `invalid-contract` replay must block as `unknown_contract` while staying
+  excluded from live-quality metrics.
 
 **Status:** Complete - verified with real Mimo and final IFC gates 2026-06-23
