@@ -26,7 +26,7 @@ from .generator import validate_generation_document
 from .failure_routing import route_generation_failure
 from .fact_delta import evaluate_repair_fact_delta
 from .providers import validate_provider_output
-from .run_report import build_live_run_report
+from .run_report import build_live_run_report, resolve_final_design_brief_dir
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -864,7 +864,7 @@ def run_audit_report_stage(
     root = Path(case_dir)
     output = root / "audit"
     output.mkdir(parents=True, exist_ok=True)
-    design = root / "design-brief"
+    design = resolve_final_design_brief_dir(root)
     generator = root / "generator"
     repair = root / "repair"
     user_request = (design / "input.txt").read_text(encoding="utf-8").rstrip("\r\n")
@@ -1154,11 +1154,13 @@ def _repair_evidence_by_path(
 
 
 def _audit_evidence_paths(root: Path) -> list[str]:
+    design = resolve_final_design_brief_dir(root)
+    design_relative = design.relative_to(root).as_posix()
     paths = [
-        "design-brief/input.txt",
-        "design-brief/conversation.json",
-        "design-brief/design-brief.json",
-        "design-brief/response.raw.json",
+        f"{design_relative}/input.txt",
+        f"{design_relative}/conversation.json",
+        f"{design_relative}/design-brief.json",
+        f"{design_relative}/response.raw.json",
         "generator/candidate.json",
         "generator/validation.json",
         "generator/metrics.json",

@@ -61,15 +61,33 @@ STAGE_SIDECARS: tuple[tuple[str, str, tuple[str, ...]], ...] = (
 )
 
 
+def resolve_final_design_brief_dir(root: Path | str) -> Path:
+    """Return the final Design Brief sidecar directory for a live case."""
+    case_root = Path(root)
+    canonical = case_root / "design-brief"
+    if (canonical / "design-brief.json").is_file():
+        return canonical
+    calls_root = case_root / "calls"
+    candidates = [
+        item
+        for item in sorted(calls_root.glob("*-design-brief"))
+        if (item / "design-brief.json").is_file()
+    ]
+    if candidates:
+        return candidates[-1]
+    return canonical
+
+
 def build_live_run_report(*, case_dir: Path | str) -> Path:
     """Render report.md from required live sidecars in a case directory."""
     root = Path(case_dir)
     _require_sidecars(root)
     report_path = root / "report.md"
-    design = root / "design-brief"
+    design = resolve_final_design_brief_dir(root)
     generator = root / "generator"
     repair = root / "repair"
     audit = root / "audit"
+    design_relative = design.relative_to(root).as_posix()
 
     lines: list[str] = [
         "# Phase 6.1 Live Mimo Run Report",
@@ -80,13 +98,13 @@ def build_live_run_report(*, case_dir: Path | str) -> Path:
         "",
         _embed_text(design / "input.txt"),
         "",
-        _source_link("design-brief/input.txt"),
+        _source_link(f"{design_relative}/input.txt"),
         "",
         "## Conversation",
         "",
         _embed_json(design / "conversation.json"),
         "",
-        _source_link("design-brief/conversation.json"),
+        _source_link(f"{design_relative}/conversation.json"),
         "",
     ]
     lines.extend(_stage_section(root, "Design Brief Agent", design))
@@ -101,10 +119,12 @@ def build_live_run_report(*, case_dir: Path | str) -> Path:
 
 def _require_sidecars(root: Path) -> None:
     for _title, directory, files in STAGE_SIDECARS:
+        stage_dir = resolve_final_design_brief_dir(root) if directory == "design-brief" else root / directory
         for name in files:
-            relative = Path(directory) / name
-            if not (root / relative).is_file():
-                raise RunReportError(f"required sidecar is missing: {relative.as_posix()}")
+            path = stage_dir / name
+            if not path.is_file():
+                relative = path.relative_to(root).as_posix()
+                raise RunReportError(f"required sidecar is missing: {relative}")
 
 
 def _stage_section(root: Path, title: str, stage_dir: Path) -> list[str]:
@@ -173,7 +193,9 @@ def _repair_section(repair_dir: Path) -> list[str]:
 def _metrics_section(root: Path) -> list[str]:
     lines = ["## Metrics", ""]
     for title, directory, _files in STAGE_SIDECARS:
-        metrics_path = root / directory / "metrics.json"
+        stage_dir = resolve_final_design_brief_dir(root) if directory == "design-brief" else root / directory
+        metrics_path = stage_dir / "metrics.json"
+        relative_stage = stage_dir.relative_to(root).as_posix()
         metrics = _read_json(metrics_path)
         lines.extend(
             [
@@ -181,7 +203,7 @@ def _metrics_section(root: Path) -> list[str]:
                 "",
                 _json_block(metrics),
                 "",
-                _source_link(f"{directory}/metrics.json"),
+                _source_link(f"{relative_stage}/metrics.json"),
                 "",
             ]
         )
@@ -191,9 +213,11 @@ def _metrics_section(root: Path) -> list[str]:
 def _source_sidecars_section(root: Path) -> list[str]:
     lines = ["## Source Sidecars", ""]
     for title, directory, files in STAGE_SIDECARS:
+        stage_dir = resolve_final_design_brief_dir(root) if directory == "design-brief" else root / directory
+        relative_stage = stage_dir.relative_to(root).as_posix()
         lines.extend([f"### {title}", ""])
         for name in files:
-            relative = f"{directory}/{name}"
+            relative = f"{relative_stage}/{name}"
             if (root / relative).is_file():
                 lines.append(f"- [{relative}]({relative})")
         lines.append("")
