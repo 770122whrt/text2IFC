@@ -96,6 +96,12 @@ def clarified_room_case() -> dict[str, Any]:
     }
 
 
+def unknown_answer_case() -> dict[str, Any]:
+    """Return the same missing-thickness case with a distinct matrix id."""
+    base = clarified_room_case()
+    return {**base, "case_id": "unknown-answer"}
+
+
 def run_design_brief_stage(
     *,
     provider: Any,

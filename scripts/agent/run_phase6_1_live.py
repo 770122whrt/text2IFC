@@ -31,6 +31,7 @@ from text2ifc_agent.live_pipeline import (  # noqa: E402
     run_repair_stage,
     run_audit_report_stage,
     run_final_acceptance_stage,
+    unknown_answer_case,
 )
 from text2ifc_agent.clarification import ClarificationError  # noqa: E402
 from text2ifc_agent.live_trace import write_live_trace  # noqa: E402
@@ -88,7 +89,9 @@ def main(
         default="design-brief",
     )
     parser.add_argument(
-        "--case", choices=("complete-room", "clarified-room"), default="complete-room"
+        "--case",
+        choices=("complete-room", "clarified-room", "unknown-answer"),
+        default="complete-room",
     )
     parser.add_argument("--live", action="store_true")
     parser.add_argument("--check-config", action="store_true")
@@ -122,11 +125,16 @@ def main(
         output_dir = args.output_dir
     else:
         output_dir = default_output_dir(stage=args.stage, case_id=args.case)
-    if args.stage == "clarify" and args.case != "clarified-room":
-        parser.error("--stage clarify requires --case clarified-room")
+    if args.stage == "clarify" and args.case not in {"clarified-room", "unknown-answer"}:
+        parser.error("--stage clarify requires --case clarified-room or unknown-answer")
     if args.stage == "design-brief" and args.case != "complete-room":
         parser.error("--stage design-brief requires --case complete-room")
-    case = clarified_room_case() if args.case == "clarified-room" else complete_room_case()
+    if args.case == "clarified-room":
+        case = clarified_room_case()
+    elif args.case == "unknown-answer":
+        case = unknown_answer_case()
+    else:
+        case = complete_room_case()
     try:
         if args.stage == "clarify":
             provider = provider_factory()

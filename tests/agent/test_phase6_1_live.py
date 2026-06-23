@@ -544,6 +544,7 @@ def test_live_cli_runs_unknown_answer_case_to_draft_without_ifc(
     first["original_request"] = case["user_request"]
     first["status"] = "needs_clarification"
     first["known_facts"]["walls"].pop("thickness_mm")
+    first["user_corrections"] = []
     first["missing_facts"] = [
         {
             "id": "mf-wall-thickness",
