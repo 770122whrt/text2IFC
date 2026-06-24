@@ -214,8 +214,20 @@ def test_phase6_2_check_openai_compat_cli_writes_report(tmp_path, capsys):
     assert "secret-api-key" not in markdown_path.read_text(encoding="utf-8")
 
 
-def test_phase6_2_check_openai_compat_cli_missing_config_is_safe(tmp_path, capsys):
+def test_phase6_2_check_openai_compat_cli_missing_config_is_safe(
+    monkeypatch, tmp_path, capsys
+):
     from scripts.agent import run_phase6_2_cli
+
+    for name in (
+        "API_KEY",
+        "MIMO_API_KEY",
+        "OPENAI_API_KEY",
+        "OpenAI_BASE_URL",
+        "OPENAI_BASE_URL",
+        "TEXT2IFC_MIMO_MODEL",
+    ):
+        monkeypatch.delenv(name, raising=False)
 
     exit_code = run_phase6_2_cli.main(
         [
