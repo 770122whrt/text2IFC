@@ -1,4 +1,5 @@
 import json
+from pathlib import Path
 
 import pytest
 
@@ -150,3 +151,86 @@ def test_compatibility_report_shape_records_decision_and_evidence_classes():
     assert report["agents_sdk"]["metadata_gaps"] == ["finish_reason_not_first_class"]
     assert report["responses_api"]["http_status"] == 404
     assert "secret" not in rendered.lower()
+
+
+def test_phase6_2_check_openai_compat_cli_writes_report(tmp_path, capsys):
+    from scripts.agent import run_phase6_2_cli
+
+    def fake_runner(config):
+        assert config["configured"] is True
+        return build_compatibility_report(
+            openai_sdk={
+                "status": "passed",
+                "evidence_class": "sdk_smoke",
+                "response_id": "chatcmpl-live-001",
+            },
+            agents_sdk={
+                "status": "limited",
+                "evidence_class": "sdk_smoke",
+                "metadata_gaps": ["finish_reason_not_first_class"],
+            },
+            responses_api={
+                "status": "unavailable",
+                "http_status": 404,
+                "evidence_class": "sdk_smoke",
+            },
+        )
+
+    env_file = tmp_path / ".env"
+    env_file.write_text(
+        "\n".join(
+            [
+                "API_KEY=secret-api-key",
+                "OpenAI_BASE_URL=https://api.xiaomimimo.com",
+                "TEXT2IFC_MIMO_MODEL=mimo-v2.5-pro",
+            ]
+        ),
+        encoding="utf-8",
+    )
+
+    exit_code = run_phase6_2_cli.main(
+        [
+            "--check-openai-compat",
+            "--env-file",
+            str(env_file),
+            "--output-dir",
+            str(tmp_path),
+        ],
+        compatibility_runner=fake_runner,
+    )
+
+    stdout = capsys.readouterr().out
+    report_path = tmp_path / "compatibility-report.json"
+    markdown_path = tmp_path / "report.md"
+    report = json.loads(report_path.read_text(encoding="utf-8"))
+    assert exit_code == 0
+    assert report["decision"] == "limited_sdk"
+    assert report["implementation_route"] == "native_orchestrator_with_openai_sdk_provider"
+    assert markdown_path.exists()
+    assert "limited_sdk" in markdown_path.read_text(encoding="utf-8")
+    assert "secret-api-key" not in stdout
+    assert "api.xiaomimimo.com" not in stdout
+    assert "secret-api-key" not in report_path.read_text(encoding="utf-8")
+    assert "secret-api-key" not in markdown_path.read_text(encoding="utf-8")
+
+
+def test_phase6_2_check_openai_compat_cli_missing_config_is_safe(tmp_path, capsys):
+    from scripts.agent import run_phase6_2_cli
+
+    exit_code = run_phase6_2_cli.main(
+        [
+            "--check-openai-compat",
+            "--env-file",
+            str(Path(tmp_path) / "missing.env"),
+            "--output-dir",
+            str(tmp_path),
+        ]
+    )
+
+    stdout = capsys.readouterr().out
+    report = json.loads((tmp_path / "compatibility-report.json").read_text(encoding="utf-8"))
+    assert exit_code == 2
+    assert report["decision"] == "blocked"
+    assert report["blocker"] == "missing_openai_compatible_config"
+    assert "API_KEY or MIMO_API_KEY or OPENAI_API_KEY" in stdout
+    assert "https://" not in stdout
