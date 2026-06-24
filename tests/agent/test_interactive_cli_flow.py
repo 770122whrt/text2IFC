@@ -1,7 +1,11 @@
 import json
 
 from text2ifc_agent.clarification import ClarificationCall
-from text2ifc_agent.interactive_cli_flow import run_design_brief_clarification_loop
+from text2ifc_agent.interactive_cli_flow import (
+    make_openai_design_brief_invoker,
+    run_design_brief_clarification_loop,
+)
+from text2ifc_agent.openai_compat import load_openai_compatible_runtime_config
 from text2ifc_agent.session_store import SessionStore
 
 
@@ -211,3 +215,78 @@ def test_phase6_2_cli_runs_design_brief_loop_with_injected_invoker(
     assert export["turns"][1]["text"] == "墙体厚度是多少毫米？"
     assert export["turns"][2]["text"] == "墙体厚度为300mm。"
     assert (root / "runs" / summary["session_hash"] / "design-brief.json").is_file()
+
+
+def test_openai_design_brief_invoker_writes_trace_and_returns_call(tmp_path):
+    captured = {}
+    original_request = "创建一个6米乘4米、高3米的房间。"
+    brief = _brief(
+        original_request=original_request,
+        status="needs_clarification",
+    )
+
+    class Response:
+        def model_dump(self):
+            return {
+                "id": "chatcmpl-design-001",
+                "object": "chat.completion",
+                "model": "mimo-v2.5-pro",
+                "choices": [
+                    {
+                        "index": 0,
+                        "finish_reason": "stop",
+                        "message": {
+                            "role": "assistant",
+                            "content": json.dumps(brief, ensure_ascii=False),
+                        },
+                    }
+                ],
+                "usage": {
+                    "prompt_tokens": 100,
+                    "completion_tokens": 200,
+                    "total_tokens": 300,
+                },
+            }
+
+    class ChatCompletions:
+        def create(self, **kwargs):
+            captured.update(kwargs)
+            return Response()
+
+    class Client:
+        def __init__(self):
+            self.chat = type("Chat", (), {"completions": ChatCompletions()})()
+
+    config = load_openai_compatible_runtime_config(
+        {
+            "API_KEY": "secret-api-key",
+            "OpenAI_BASE_URL": "https://api.xiaomimimo.com",
+            "TEXT2IFC_MIMO_MODEL": "mimo-v2.5-pro",
+        }
+    )
+    invoker = make_openai_design_brief_invoker(
+        config=config,
+        run_dir=tmp_path,
+        client_factory=lambda **kwargs: Client(),
+    )
+
+    call = invoker(
+        [{"turn_id": "turn-user-001", "role": "user", "content": original_request}],
+        1,
+    )
+
+    assert call.response_id == "chatcmpl-design-001"
+    assert call.prompt_template_id == "design-brief.v2.1"
+    assert call.brief == brief
+    assert captured["model"] == "mimo-v2.5-pro"
+    assert captured["max_completion_tokens"] == 1024
+    assert "text2ifc/design-brief/2.0" in captured["messages"][0]["content"]
+    assert (tmp_path / "calls" / "01-design-brief" / "prompt-rendered.md").is_file()
+    assert (tmp_path / "calls" / "01-design-brief" / "response.raw.json").is_file()
+    metrics = json.loads(
+        (tmp_path / "calls" / "01-design-brief" / "metrics.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    assert metrics["response_id"] == "chatcmpl-design-001"
+    assert metrics["finish_reason"] == "stop"
