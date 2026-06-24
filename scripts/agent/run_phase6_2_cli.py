@@ -17,8 +17,8 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "src"))
 
 from text2ifc_agent.openai_compat import (  # noqa: E402
-    build_compatibility_report,
     load_openai_compatible_config,
+    run_phase6_2_compatibility_check,
 )
 
 
@@ -94,7 +94,7 @@ def _check_openai_compat(
         print(json.dumps(report, ensure_ascii=False, sort_keys=True))
         return 2
 
-    runner = compatibility_runner or _not_implemented_live_runner
+    runner = compatibility_runner or _live_compatibility_runner
     report = runner(config)
     _write_reports(output_dir=output_dir, report=report)
     summary = {
@@ -107,24 +107,9 @@ def _check_openai_compat(
     return 0 if report.get("decision") != "blocked" else 2
 
 
-def _not_implemented_live_runner(config: dict[str, Any]) -> dict[str, Any]:
+def _live_compatibility_runner(config: dict[str, Any]) -> dict[str, Any]:
     del config
-    return build_compatibility_report(
-        openai_sdk={
-            "status": "blocked",
-            "evidence_class": "sdk_smoke",
-            "blocker": "live_openai_compat_runner_not_implemented",
-        },
-        agents_sdk={
-            "status": "blocked",
-            "evidence_class": "sdk_smoke",
-            "blocker": "live_agents_sdk_runner_not_implemented",
-        },
-        responses_api={
-            "status": "not_checked",
-            "evidence_class": "sdk_smoke",
-        },
-    )
+    return run_phase6_2_compatibility_check(dict(os.environ))
 
 
 def _write_reports(*, output_dir: Path, report: dict[str, Any]) -> None:
