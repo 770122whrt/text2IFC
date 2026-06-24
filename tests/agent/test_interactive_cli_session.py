@@ -49,6 +49,23 @@ def test_session_export_uses_db_truth_and_session_hash_run_dir(tmp_path):
     assert export["artifacts"][0]["kind"] == "placeholder"
 
 
+def test_session_export_records_the_export_artifact_in_payload(tmp_path):
+    root = tmp_path / "phase6.2-interactive-cli"
+    store = SessionStore.open(root / "sessions.sqlite", artifact_root=root)
+    session = store.create_session(original_input="创建一个房间")
+
+    export_path = store.export_session(session.session_hash)
+    export = json.loads(export_path.read_text(encoding="utf-8"))
+
+    assert export["artifacts"] == [
+        {
+            "kind": "session_export",
+            "path": str(Path("runs") / session.session_hash / "session-export.json"),
+            "created_at": export["artifacts"][0]["created_at"],
+        }
+    ]
+
+
 def test_dry_run_cli_scripted_stdin_creates_incomplete_queryable_session(tmp_path):
     from scripts.agent import run_phase6_2_cli
 
