@@ -7,8 +7,11 @@ from text2ifc_agent.openai_compat import (
     OpenAICompatError,
     build_compatibility_report,
     load_openai_compatible_config,
+    load_openai_compatible_runtime_config,
     normalize_openai_base_url,
     parse_chat_completion_evidence,
+    run_openai_sdk_chat_smoke,
+    run_phase6_2_compatibility_check,
 )
 
 
@@ -151,6 +154,109 @@ def test_compatibility_report_shape_records_decision_and_evidence_classes():
     assert report["agents_sdk"]["metadata_gaps"] == ["finish_reason_not_first_class"]
     assert report["responses_api"]["http_status"] == 404
     assert "secret" not in rendered.lower()
+
+
+def test_runtime_config_keeps_secrets_out_of_public_repr():
+    config = load_openai_compatible_runtime_config(
+        {
+            "API_KEY": "secret-api-key",
+            "OpenAI_BASE_URL": "https://api.xiaomimimo.com",
+            "TEXT2IFC_MIMO_MODEL": "mimo-v2.5-pro",
+        }
+    )
+
+    assert config.api_key == "secret-api-key"
+    assert config.base_url == "https://api.xiaomimimo.com/v1"
+    assert config.model == "mimo-v2.5-pro"
+    assert "secret-api-key" not in repr(config)
+    assert "api.xiaomimimo.com" not in repr(config)
+
+
+def test_openai_sdk_chat_smoke_uses_injected_client_and_preserves_evidence():
+    captured = {}
+
+    class Response:
+        def model_dump(self):
+            return {
+                "id": "chatcmpl-live-001",
+                "object": "chat.completion",
+                "model": "mimo-v2.5-pro",
+                "choices": [
+                    {
+                        "index": 0,
+                        "finish_reason": "stop",
+                        "message": {"role": "assistant", "content": '{"ok": true}'},
+                    }
+                ],
+                "usage": {
+                    "prompt_tokens": 10,
+                    "completion_tokens": 3,
+                    "total_tokens": 13,
+                },
+            }
+
+    class ChatCompletions:
+        def create(self, **kwargs):
+            captured.update(kwargs)
+            return Response()
+
+    class Client:
+        def __init__(self):
+            self.chat = type("Chat", (), {"completions": ChatCompletions()})()
+
+    def client_factory(*, api_key, base_url):
+        assert api_key == "secret-api-key"
+        assert base_url == "https://api.xiaomimimo.com/v1"
+        return Client()
+
+    config = load_openai_compatible_runtime_config(
+        {
+            "API_KEY": "secret-api-key",
+            "OpenAI_BASE_URL": "https://api.xiaomimimo.com",
+            "TEXT2IFC_MIMO_MODEL": "mimo-v2.5-pro",
+        }
+    )
+    evidence = run_openai_sdk_chat_smoke(config, client_factory=client_factory)
+
+    assert captured["model"] == "mimo-v2.5-pro"
+    assert captured["max_completion_tokens"] == 1024
+    assert evidence["status"] == "passed"
+    assert evidence["response_id"] == "chatcmpl-live-001"
+    assert evidence["finish_reason"] == "stop"
+    assert evidence["usage"]["total_tokens"] == 13
+
+
+def test_phase6_2_compatibility_check_combines_live_probe_results():
+    report = run_phase6_2_compatibility_check(
+        {
+            "API_KEY": "secret-api-key",
+            "OpenAI_BASE_URL": "https://api.xiaomimimo.com",
+            "TEXT2IFC_MIMO_MODEL": "mimo-v2.5-pro",
+        },
+        openai_sdk_runner=lambda config: {
+            "status": "passed",
+            "evidence_class": "sdk_smoke",
+            "response_id": "chatcmpl-live-001",
+        },
+        agents_sdk_runner=lambda config: {
+            "status": "limited",
+            "evidence_class": "sdk_smoke",
+            "metadata_gaps": ["finish_reason_not_first_class"],
+        },
+        responses_api_probe=lambda config: {
+            "status": "unavailable",
+            "http_status": 404,
+            "evidence_class": "sdk_smoke",
+        },
+    )
+    rendered = json.dumps(report, sort_keys=True)
+
+    assert report["decision"] == "limited_sdk"
+    assert report["openai_sdk"]["response_id"] == "chatcmpl-live-001"
+    assert report["agents_sdk"]["metadata_gaps"] == ["finish_reason_not_first_class"]
+    assert report["responses_api"]["status"] == "unavailable"
+    assert "secret-api-key" not in rendered
+    assert "api.xiaomimimo.com" not in rendered
 
 
 def test_phase6_2_check_openai_compat_cli_writes_report(tmp_path, capsys):
