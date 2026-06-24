@@ -18,10 +18,12 @@ sys.path.insert(0, str(ROOT / "src"))
 
 from text2ifc_agent.openai_compat import (  # noqa: E402
     load_openai_compatible_config,
+    load_openai_compatible_runtime_config,
     run_phase6_2_compatibility_check,
 )
 from text2ifc_agent.clarification import DesignBriefInvoker  # noqa: E402
 from text2ifc_agent.interactive_cli_flow import (  # noqa: E402
+    make_openai_design_brief_invoker,
     run_design_brief_clarification_loop,
 )
 from text2ifc_agent.interactive_session import run_interactive_session  # noqa: E402
@@ -71,6 +73,7 @@ def main(
     *,
     compatibility_runner: CompatibilityRunner | None = None,
     design_brief_invoker: DesignBriefInvoker | None = None,
+    openai_client_factory: Callable[..., Any] | None = None,
 ) -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--check-openai-compat", action="store_true")
@@ -106,6 +109,7 @@ def main(
         return _run_interactive_cli(
             arguments,
             design_brief_invoker=design_brief_invoker,
+            openai_client_factory=openai_client_factory,
         )
     parser.print_help()
     return 2
@@ -153,6 +157,7 @@ def _run_interactive_cli(
     arguments: argparse.Namespace,
     *,
     design_brief_invoker: DesignBriefInvoker | None,
+    openai_client_factory: Callable[..., Any] | None,
 ) -> int:
     output_root = arguments.output_root
     db_path = arguments.db or (output_root / "sessions.sqlite")
@@ -160,13 +165,17 @@ def _run_interactive_cli(
     store = SessionStore.open(db_path, artifact_root=output_root)
     try:
         if arguments.live and arguments.stop_after == "design-brief":
-            if design_brief_invoker is None:
-                raise RuntimeError("Phase 6.2 live Design Brief invoker is not implemented")
             if arguments.resume:
                 session = store.get_session(arguments.resume)
             else:
                 initial_prompt = arguments.prompt or _initial_user_prompt(input_lines)
                 session = store.create_session(original_input=initial_prompt)
+            if design_brief_invoker is None:
+                design_brief_invoker = make_openai_design_brief_invoker(
+                    config=load_openai_compatible_runtime_config(dict(os.environ)),
+                    run_dir=session.run_dir,
+                    client_factory=openai_client_factory,
+                )
             result = run_design_brief_clarification_loop(
                 store=store,
                 session=session.session_hash,
