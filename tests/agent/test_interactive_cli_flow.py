@@ -150,3 +150,64 @@ def test_unknown_answer_routes_to_draft_without_ifc_artifact(tmp_path):
     assert store.get_session(session.session_hash).status == "draft_required"
     assert not (root / "runs" / session.session_hash / "output.ifc").exists()
     assert "这个厚度我不知道。" in json.dumps(export["turns"], ensure_ascii=False)
+
+
+def test_phase6_2_cli_runs_design_brief_loop_with_injected_invoker(
+    tmp_path, capsys
+):
+    from scripts.agent import run_phase6_2_cli
+
+    root = tmp_path / "phase6.2-interactive-cli"
+    scripted_stdin = tmp_path / "clarified-room.stdin"
+    scripted_stdin.write_text(
+        "\n".join(
+            [
+                "创建一个6米乘4米、高3米的房间，南墙有门，北墙有窗。",
+                "墙体厚度为300mm。",
+            ]
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    observed = []
+
+    def invoke(transcript, call_index):
+        observed.append((transcript, call_index))
+        original_request = transcript[0]["content"]
+        if call_index == 1:
+            return _call(
+                call_index,
+                original_request=original_request,
+                status="needs_clarification",
+            )
+        return _call(
+            call_index,
+            original_request=original_request,
+            status="ready",
+            source_turns=["turn-user-001", "turn-user-003"],
+        )
+
+    exit_code = run_phase6_2_cli.main(
+        [
+            "--live",
+            "--stop-after",
+            "design-brief",
+            "--scripted-stdin",
+            str(scripted_stdin),
+            "--output-root",
+            str(root),
+            "--db",
+            str(root / "sessions.sqlite"),
+        ],
+        design_brief_invoker=invoke,
+    )
+    summary = json.loads(capsys.readouterr().out)
+    store = SessionStore.open(root / "sessions.sqlite", artifact_root=root)
+    export = store.session_export_payload(summary["session_hash"])
+
+    assert exit_code == 0
+    assert summary["status"] == "ready"
+    assert [call_index for _, call_index in observed] == [1, 2]
+    assert export["turns"][1]["text"] == "墙体厚度是多少毫米？"
+    assert export["turns"][2]["text"] == "墙体厚度为300mm。"
+    assert (root / "runs" / summary["session_hash"] / "design-brief.json").is_file()
