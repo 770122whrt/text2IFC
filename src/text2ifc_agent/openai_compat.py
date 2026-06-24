@@ -222,11 +222,10 @@ def build_compatibility_report(
     """Build the Wave 0 compatibility report skeleton and route decision."""
 
     decision = _decide_route(openai_sdk=openai_sdk, agents_sdk=agents_sdk)
-    implementation_route = (
-        "agents_sdk"
-        if decision == "adopt_agents_sdk"
-        else "native_orchestrator_with_openai_sdk_provider"
-    )
+    implementation_route = {
+        "adopt_agents_sdk": "agents_sdk",
+        "blocked": "blocked",
+    }.get(decision, "native_orchestrator_with_openai_sdk_provider")
     return {
         "phase": "6.2",
         "provider": "mimo-openai-compatible",
@@ -266,7 +265,7 @@ def _decide_route(
     agents_sdk: dict[str, Any],
 ) -> str:
     if openai_sdk.get("status") != "passed":
-        return "native_orchestrator"
+        return "blocked"
     if agents_sdk.get("status") == "passed" and not agents_sdk.get("metadata_gaps"):
         return "adopt_agents_sdk"
     if agents_sdk.get("status") in {"passed", "limited"}:
