@@ -574,7 +574,7 @@ unit-test tools and cannot satisfy live CLI acceptance.
 
 **Wave 0**
 
-- [ ] `06.2-00-PLAN.md` - OpenAI Agents SDK research and OpenAI-compatible
+- [x] `06.2-00-PLAN.md` - OpenAI Agents SDK research and OpenAI-compatible
   Mimo compatibility checkpoint
 
 **Wave 1** *(blocked on Wave 0 provider/framework decision)*
@@ -635,4 +635,4 @@ unit-test tools and cannot satisfy live CLI acceptance.
 - OpenAI Agents SDK adoption is conditional on Wave 0 evidence; a rejected SDK
   does not block the native OpenAI SDK provider path.
 
-**Status:** Planned - ready for Phase 6.2 execution
+**Status:** In progress - Wave 0 verified 2026-06-24; Wave 1 ready

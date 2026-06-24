@@ -7,14 +7,14 @@ See: `.planning/PROJECT.md` (updated 2026-06-11)
 **Core value:** Produce valid, inspectable IFC models from explicit user
 requirements.
 
-**Current focus:** Phase 6.2 planned - interactive CLI with OpenAI-compatible Mimo orchestration
+**Current focus:** Phase 6.2 Wave 1 - shared SQLite interactive CLI session shell
 
 ## Status
 
 - Phase: 6.2
-- Stage: Planned
-- State: Phase 6.2 SPEC, CONTEXT, AI-SPEC, RESEARCH, VALIDATION, and 7-wave plan written
-- Plans: Phase 6.2 planned, 7 of 7 plans written, 0 executed
+- Stage: In progress
+- State: Phase 6.2 Wave 0 verified with real Mimo OpenAI-compatible evidence; Wave 1 ready
+- Plans: Phase 6.2 planned, 7 of 7 plans written, 1 executed
 - Branch: `multiagent-design` in C-drive worktree
 - Remote: `https://github.com/770122whrt/text2IFC`
 
@@ -265,6 +265,14 @@ requirements.
   compatibility and required trace metadata preservation pass. Otherwise the
   native orchestrator plus OpenAI Python SDK provider remains the implementation
   path.
+- Phase 6.2 Wave 0 completed with real Mimo OpenAI-compatible evidence.
+  The native OpenAI SDK Chat Completions path passed with `finish_reason: stop`,
+  usage, response ID, raw content, and redacted request metadata. OpenAI Agents
+  SDK was classified as `limited_sdk` because its Chat Completions final result
+  lacks first-class `response_id` and `finish_reason`; it also required explicit
+  AsyncOpenAI client cleanup to avoid a `.venv` process exit-code anomaly.
+  The implementation route is
+  `native_orchestrator_with_openai_sdk_provider`.
 
 ## Current Decisions
 
@@ -402,11 +410,10 @@ requirements.
 
 ## Next Action
 
-Execute Phase 6.2 Wave 0: first write OpenAI Agents SDK research, then verify
-OpenAI-compatible Mimo and Agents SDK compatibility with redacted live evidence,
-then choose the implementation route for the interactive CLI. After Wave 0,
-Wave 1 must implement the shared session DB and query/resume/export interface
-before Agent semantics are layered on top. Do not begin API/service packaging
+Execute Phase 6.2 Wave 1: implement the shared SQLite session DB, interactive
+CLI shell, and query/resume/export interface on top of the verified native
+OpenAI SDK provider route. Do not begin Design Brief Agent semantics until the
+session DB is the primary evidence container. Do not begin API/service packaging
 until the CLI clarification loop and final IFC artifact are verified.
 
 ## Accumulated Context
@@ -608,4 +615,4 @@ until the CLI clarification loop and final IFC artifact are verified.
   responses.
 
 ---
-*Last activity: 2026-06-23 - revised Phase 6.2 plan for shared session DB and real-time CLI UAT*
+*Last activity: 2026-06-24 - completed Phase 6.2 Wave 0 live Mimo compatibility checkpoint*

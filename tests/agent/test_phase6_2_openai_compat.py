@@ -1,4 +1,5 @@
 import json
+import types
 from pathlib import Path
 
 import pytest
@@ -272,6 +273,75 @@ def test_phase6_2_compatibility_check_combines_live_probe_results():
     assert report["responses_api"]["status"] == "unavailable"
     assert "secret-api-key" not in rendered
     assert "api.xiaomimimo.com" not in rendered
+
+
+def test_agents_sdk_smoke_closes_async_openai_client(monkeypatch):
+    import sys
+    import text2ifc_agent.openai_compat as openai_compat
+
+    clients = []
+
+    class FakeAsyncOpenAI:
+        def __init__(self, **kwargs):
+            self.kwargs = kwargs
+            self.closed = False
+            clients.append(self)
+
+        async def close(self):
+            self.closed = True
+
+    class FakeModelSettings:
+        def __init__(self, **kwargs):
+            self.kwargs = kwargs
+
+    class FakeModel:
+        def __init__(self, **kwargs):
+            self.kwargs = kwargs
+
+    class FakeAgent:
+        def __init__(self, **kwargs):
+            self.kwargs = kwargs
+
+    class FakeUsage:
+        def model_dump(self):
+            return {"total_tokens": 3}
+
+    class FakeRawResponse:
+        usage = FakeUsage()
+
+    class FakeResult:
+        final_output = '{"ok": true}'
+        last_response_id = None
+        raw_responses = [FakeRawResponse()]
+
+    class FakeRunner:
+        @staticmethod
+        def run_sync(agent, prompt):
+            assert prompt
+            return FakeResult()
+
+    fake_agents = types.SimpleNamespace(
+        Agent=FakeAgent,
+        ModelSettings=FakeModelSettings,
+        OpenAIChatCompletionsModel=FakeModel,
+        Runner=FakeRunner,
+        set_tracing_disabled=lambda disabled: None,
+    )
+    fake_openai = types.SimpleNamespace(AsyncOpenAI=FakeAsyncOpenAI)
+    monkeypatch.setitem(sys.modules, "agents", fake_agents)
+    monkeypatch.setitem(sys.modules, "openai", fake_openai)
+    config = load_openai_compatible_runtime_config(
+        {
+            "API_KEY": "secret-api-key",
+            "OpenAI_BASE_URL": "https://api.xiaomimimo.com",
+            "TEXT2IFC_MIMO_MODEL": "mimo-v2.5-pro",
+        }
+    )
+
+    evidence = openai_compat._safe_agents_sdk_runner(config)
+
+    assert evidence["status"] == "limited"
+    assert clients and clients[0].closed is True
 
 
 def test_phase6_2_check_openai_compat_cli_writes_report(tmp_path, capsys):

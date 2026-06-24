@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import asyncio
 from dataclasses import dataclass
 from typing import Any, Callable
 
@@ -332,9 +333,10 @@ def _safe_agents_sdk_runner(config: OpenAICompatRuntimeConfig) -> dict[str, Any]
         from openai import AsyncOpenAI
 
         set_tracing_disabled(True)
+        openai_client = AsyncOpenAI(api_key=config.api_key, base_url=config.base_url)
         model = OpenAIChatCompletionsModel(
             model=config.model,
-            openai_client=AsyncOpenAI(api_key=config.api_key, base_url=config.base_url),
+            openai_client=openai_client,
         )
         agent = Agent(
             name="Phase 6.2 compatibility smoke",
@@ -373,6 +375,9 @@ def _safe_agents_sdk_runner(config: OpenAICompatRuntimeConfig) -> dict[str, Any]
             "blocker": "agents_sdk_exception",
             "error_type": type(exc).__name__,
         }
+    finally:
+        if "openai_client" in locals():
+            asyncio.run(openai_client.close())
 
 
 def _object_to_dict(value: Any) -> dict[str, Any]:
