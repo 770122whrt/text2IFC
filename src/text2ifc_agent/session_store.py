@@ -215,6 +215,34 @@ class SessionStore:
             )
             self._touch(session.session_id, now)
 
+    def record_agent_call(self, session_id: str, payload: dict[str, Any]) -> None:
+        self.record_payload(session_id, table="agent_calls", payload=payload)
+
+    def record_payload(
+        self,
+        session_id: str,
+        *,
+        table: str,
+        payload: dict[str, Any],
+    ) -> None:
+        if table not in {"agent_calls", "prompts", "responses", "gates", "metrics"}:
+            raise ValueError(f"unsupported session payload table: {table}")
+        session = self.get_session(session_id)
+        now = _utc_now()
+        with self._connection:
+            self._connection.execute(
+                f"""
+                INSERT INTO {table} (session_id, payload_json, created_at)
+                VALUES (?, ?, ?)
+                """,
+                (
+                    session.session_id,
+                    json.dumps(payload, ensure_ascii=False, sort_keys=True),
+                    now,
+                ),
+            )
+            self._touch(session.session_id, now)
+
     def list_artifacts(self, identifier: str) -> list[dict[str, Any]]:
         session = self.get_session(identifier)
         rows = self._connection.execute(
