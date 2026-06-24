@@ -1,5 +1,6 @@
 import json
 
+from text2ifc_agent.context_selection import select_design_brief_context
 from text2ifc_agent.clarification import ClarificationCall
 from text2ifc_agent.interactive_cli_flow import (
     make_openai_design_brief_invoker,
@@ -224,6 +225,15 @@ def test_openai_design_brief_invoker_writes_trace_and_returns_call(tmp_path):
         original_request=original_request,
         status="needs_clarification",
     )
+    selection = select_design_brief_context(
+        user_request=original_request,
+        conversation=[
+            {"turn_id": "turn-user-001", "role": "user", "content": original_request}
+        ],
+    )
+    selected_evidence_ids = [item["evidence_id"] for item in selection["evidence"]]
+    brief["fact_sources"][0]["evidence_refs"] = ["schema:bim-json-v2:representation"]
+    brief["provenance"]["selected_evidence_ids"] = selected_evidence_ids
 
     class Response:
         def model_dump(self):
@@ -290,3 +300,106 @@ def test_openai_design_brief_invoker_writes_trace_and_returns_call(tmp_path):
     )
     assert metrics["response_id"] == "chatcmpl-design-001"
     assert metrics["finish_reason"] == "stop"
+
+
+def test_phase6_2_cli_builds_default_openai_design_brief_invoker(
+    tmp_path, capsys
+):
+    from scripts.agent import run_phase6_2_cli
+
+    root = tmp_path / "phase6.2-interactive-cli"
+    env_file = tmp_path / ".env"
+    env_file.write_text(
+        "\n".join(
+            [
+                "API_KEY=secret-api-key",
+                "OpenAI_BASE_URL=https://api.xiaomimimo.com",
+                "TEXT2IFC_MIMO_MODEL=mimo-v2.5-pro",
+            ]
+        ),
+        encoding="utf-8",
+    )
+    original_request = "创建一个6米乘4米、高3米的房间。"
+    scripted_stdin = tmp_path / "clarified-room.stdin"
+    scripted_stdin.write_text(original_request + "\n墙体厚度为300mm。\n", encoding="utf-8")
+
+    first = _brief(original_request=original_request, status="needs_clarification")
+    first_selection = select_design_brief_context(
+        user_request=original_request,
+        conversation=[{"turn_id": "turn-user-001", "role": "user", "content": original_request}],
+    )
+    first["fact_sources"][0]["evidence_refs"] = ["schema:bim-json-v2:representation"]
+    first["provenance"]["selected_evidence_ids"] = [
+        item["evidence_id"] for item in first_selection["evidence"]
+    ]
+    second = _brief(
+        original_request=original_request,
+        status="ready",
+        source_turns=["turn-user-001", "turn-user-003"],
+    )
+    second["fact_sources"][0]["evidence_refs"] = ["schema:bim-json-v2:representation"]
+    second["provenance"]["selected_evidence_ids"] = [
+        item["evidence_id"] for item in first_selection["evidence"]
+    ]
+    responses = [first, second]
+
+    class Response:
+        def __init__(self, payload, index):
+            self.payload = payload
+            self.index = index
+
+        def model_dump(self):
+            return {
+                "id": f"chatcmpl-design-{self.index}",
+                "object": "chat.completion",
+                "model": "mimo-v2.5-pro",
+                "choices": [
+                    {
+                        "index": 0,
+                        "finish_reason": "stop",
+                        "message": {
+                            "role": "assistant",
+                            "content": json.dumps(self.payload, ensure_ascii=False),
+                        },
+                    }
+                ],
+                "usage": {"total_tokens": 10 + self.index},
+            }
+
+    class ChatCompletions:
+        def __init__(self):
+            self.index = 0
+
+        def create(self, **kwargs):
+            self.index += 1
+            return Response(responses[self.index - 1], self.index)
+
+    class Client:
+        def __init__(self):
+            self.chat = type("Chat", (), {"completions": ChatCompletions()})()
+
+    exit_code = run_phase6_2_cli.main(
+        [
+            "--live",
+            "--stop-after",
+            "design-brief",
+            "--env-file",
+            str(env_file),
+            "--scripted-stdin",
+            str(scripted_stdin),
+            "--output-root",
+            str(root),
+            "--db",
+            str(root / "sessions.sqlite"),
+        ],
+        openai_client_factory=lambda **kwargs: Client(),
+    )
+
+    summary = json.loads(capsys.readouterr().out)
+
+    assert exit_code == 0
+    assert summary["status"] == "ready"
+    assert (root / "runs" / summary["session_hash"] / "design-brief.json").is_file()
+    assert (
+        root / "runs" / summary["session_hash"] / "calls" / "01-design-brief" / "response.raw.json"
+    ).is_file()
