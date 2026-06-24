@@ -23,7 +23,7 @@ def test_openai_compatible_config_accepts_api_key_without_leaking_values():
 
     assert config["configured"] is True
     assert config["api_key_env"] == "API_KEY"
-    assert config["base_url"] == "https://api.xiaomimimo.com/v1"
+    assert config["base_url_configured"] is True
     assert config["model"] == "mimo-v2.5-pro"
     assert config["missing"] == []
     assert "secret-api-key" not in rendered
