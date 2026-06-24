@@ -7,14 +7,14 @@ See: `.planning/PROJECT.md` (updated 2026-06-11)
 **Core value:** Produce valid, inspectable IFC models from explicit user
 requirements.
 
-**Current focus:** Phase 6.2 Wave 1 - shared SQLite interactive CLI session shell
+**Current focus:** Phase 6.2 Wave 2 - interactive Design Brief clarification loop
 
 ## Status
 
 - Phase: 6.2
 - Stage: In progress
-- State: Phase 6.2 Wave 0 verified with real Mimo OpenAI-compatible evidence; Wave 1 ready
-- Plans: Phase 6.2 planned, 7 of 7 plans written, 1 executed
+- State: Phase 6.2 Waves 0-1 verified; Wave 2 ready
+- Plans: Phase 6.2 planned, 7 of 7 plans written, 2 executed
 - Branch: `multiagent-design` in C-drive worktree
 - Remote: `https://github.com/770122whrt/text2IFC`
 
@@ -273,6 +273,14 @@ requirements.
   AsyncOpenAI client cleanup to avoid a `.venv` process exit-code anomaly.
   The implementation route is
   `native_orchestrator_with_openai_sdk_provider`.
+- Phase 6.2 Wave 1 completed the shared SQLite session DB and initial
+  interactive CLI shell. The canonical dry-run session preserves Chinese input,
+  stores turns/events/artifacts in
+  `dataset/processed/agent-demo/phase6.2-interactive-cli/sessions.sqlite`,
+  exports
+  `dataset/processed/agent-demo/phase6.2-interactive-cli/runs/a26e3365a3204b38/session-export.json`,
+  and remains `incomplete` after user `quit` without fabricating Agent or IFC
+  results.
 
 ## Current Decisions
 
@@ -410,11 +418,12 @@ requirements.
 
 ## Next Action
 
-Execute Phase 6.2 Wave 1: implement the shared SQLite session DB, interactive
-CLI shell, and query/resume/export interface on top of the verified native
-OpenAI SDK provider route. Do not begin Design Brief Agent semantics until the
-session DB is the primary evidence container. Do not begin API/service packaging
-until the CLI clarification loop and final IFC artifact are verified.
+Execute Phase 6.2 Wave 2: connect the Chinese Design Brief clarification loop
+to the shared SQLite CLI session. Mimo-backed clarification must write prompt
+IDs/hashes, raw response references, parsed Design Brief or Draft state,
+questions, and user answers into the DB. Do not begin BIM JSON generation until
+the DB-backed Design Brief loop can reach ready or Draft without hidden files or
+prewritten answers.
 
 ## Accumulated Context
 
@@ -615,4 +624,4 @@ until the CLI clarification loop and final IFC artifact are verified.
   responses.
 
 ---
-*Last activity: 2026-06-24 - completed Phase 6.2 Wave 0 live Mimo compatibility checkpoint*
+*Last activity: 2026-06-24 - completed Phase 6.2 Wave 1 shared SQLite CLI shell*

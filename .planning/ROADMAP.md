@@ -579,7 +579,7 @@ unit-test tools and cannot satisfy live CLI acceptance.
 
 **Wave 1** *(blocked on Wave 0 provider/framework decision)*
 
-- [ ] `06.2-01-PLAN.md` - Interactive CLI session shell, shared DB, and
+- [x] `06.2-01-PLAN.md` - Interactive CLI session shell, shared DB, and
   query/resume/export interface
 
 **Wave 2** *(blocked on Wave 1 durable session shell)*
@@ -635,4 +635,4 @@ unit-test tools and cannot satisfy live CLI acceptance.
 - OpenAI Agents SDK adoption is conditional on Wave 0 evidence; a rejected SDK
   does not block the native OpenAI SDK provider path.
 
-**Status:** In progress - Wave 0 verified 2026-06-24; Wave 1 ready
+**Status:** In progress - Waves 0-1 verified 2026-06-24; Wave 2 ready

@@ -20,6 +20,8 @@ from text2ifc_agent.openai_compat import (  # noqa: E402
     load_openai_compatible_config,
     run_phase6_2_compatibility_check,
 )
+from text2ifc_agent.interactive_session import run_interactive_session  # noqa: E402
+from text2ifc_agent.session_store import SessionStore  # noqa: E402
 
 
 DEFAULT_ENV_FILE = ROOT / ".env"
@@ -29,6 +31,13 @@ DEFAULT_OUTPUT_DIR = (
     / "processed"
     / "agent-demo"
     / "phase6.2-openai-compat"
+)
+DEFAULT_INTERACTIVE_ROOT = (
+    ROOT
+    / "dataset"
+    / "processed"
+    / "agent-demo"
+    / "phase6.2-interactive-cli"
 )
 
 
@@ -60,16 +69,28 @@ def main(
 ) -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--check-openai-compat", action="store_true")
+    parser.add_argument("--check-config", action="store_true")
     parser.add_argument("--env-file", type=Path, default=DEFAULT_ENV_FILE)
     parser.add_argument("--output-dir", type=Path, default=DEFAULT_OUTPUT_DIR)
+    parser.add_argument("--output-root", type=Path, default=DEFAULT_INTERACTIVE_ROOT)
+    parser.add_argument("--db", type=Path)
+    parser.add_argument("--prompt")
+    parser.add_argument("--scripted-stdin", type=Path)
+    parser.add_argument("--dry-run", action="store_true")
+    parser.add_argument("--resume")
     arguments = parser.parse_args(argv)
     load_env_file(arguments.env_file)
 
+    if arguments.check_config:
+        print(json.dumps(load_openai_compatible_config(dict(os.environ)), ensure_ascii=False, sort_keys=True))
+        return 0
     if arguments.check_openai_compat:
         return _check_openai_compat(
             output_dir=arguments.output_dir,
             compatibility_runner=compatibility_runner,
         )
+    if arguments.dry_run or arguments.prompt or arguments.scripted_stdin or arguments.resume:
+        return _run_interactive_cli(arguments)
     parser.print_help()
     return 2
 
@@ -110,6 +131,31 @@ def _check_openai_compat(
 def _live_compatibility_runner(config: dict[str, Any]) -> dict[str, Any]:
     del config
     return run_phase6_2_compatibility_check(dict(os.environ))
+
+
+def _run_interactive_cli(arguments: argparse.Namespace) -> int:
+    output_root = arguments.output_root
+    db_path = arguments.db or (output_root / "sessions.sqlite")
+    input_lines = _load_input_lines(arguments.scripted_stdin)
+    store = SessionStore.open(db_path, artifact_root=output_root)
+    try:
+        result = run_interactive_session(
+            store=store,
+            input_lines=input_lines,
+            dry_run=arguments.dry_run,
+            prompt=arguments.prompt,
+            resume=arguments.resume,
+        )
+    finally:
+        store.close()
+    print(json.dumps(result.__dict__, ensure_ascii=False, sort_keys=True))
+    return 0
+
+
+def _load_input_lines(path: Path | None) -> list[str]:
+    if path is not None:
+        return path.read_text(encoding="utf-8").splitlines()
+    return sys.stdin.read().splitlines()
 
 
 def _write_reports(*, output_dir: Path, report: dict[str, Any]) -> None:
