@@ -31,6 +31,11 @@ _SECRET_KEY_PARTS = (
 )
 _SAFE_TOKEN_COUNTER_KEYS = {
     "max-tokens",
+    "max-completion-tokens",
+    "prompt-tokens",
+    "completion-tokens",
+    "total-tokens",
+    "reasoning-tokens",
     "input-tokens",
     "output-tokens",
     "cache-read-input-tokens",
