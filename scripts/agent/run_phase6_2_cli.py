@@ -20,6 +20,10 @@ from text2ifc_agent.openai_compat import (  # noqa: E402
     load_openai_compatible_config,
     run_phase6_2_compatibility_check,
 )
+from text2ifc_agent.clarification import DesignBriefInvoker  # noqa: E402
+from text2ifc_agent.interactive_cli_flow import (  # noqa: E402
+    run_design_brief_clarification_loop,
+)
 from text2ifc_agent.interactive_session import run_interactive_session  # noqa: E402
 from text2ifc_agent.session_store import SessionStore  # noqa: E402
 
@@ -66,6 +70,7 @@ def main(
     argv: list[str] | None = None,
     *,
     compatibility_runner: CompatibilityRunner | None = None,
+    design_brief_invoker: DesignBriefInvoker | None = None,
 ) -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--check-openai-compat", action="store_true")
@@ -77,6 +82,8 @@ def main(
     parser.add_argument("--prompt")
     parser.add_argument("--scripted-stdin", type=Path)
     parser.add_argument("--dry-run", action="store_true")
+    parser.add_argument("--live", action="store_true")
+    parser.add_argument("--stop-after", choices=("design-brief",))
     parser.add_argument("--resume")
     arguments = parser.parse_args(argv)
     load_env_file(arguments.env_file)
@@ -89,8 +96,17 @@ def main(
             output_dir=arguments.output_dir,
             compatibility_runner=compatibility_runner,
         )
-    if arguments.dry_run or arguments.prompt or arguments.scripted_stdin or arguments.resume:
-        return _run_interactive_cli(arguments)
+    if (
+        arguments.dry_run
+        or arguments.live
+        or arguments.prompt
+        or arguments.scripted_stdin
+        or arguments.resume
+    ):
+        return _run_interactive_cli(
+            arguments,
+            design_brief_invoker=design_brief_invoker,
+        )
     parser.print_help()
     return 2
 
@@ -133,19 +149,38 @@ def _live_compatibility_runner(config: dict[str, Any]) -> dict[str, Any]:
     return run_phase6_2_compatibility_check(dict(os.environ))
 
 
-def _run_interactive_cli(arguments: argparse.Namespace) -> int:
+def _run_interactive_cli(
+    arguments: argparse.Namespace,
+    *,
+    design_brief_invoker: DesignBriefInvoker | None,
+) -> int:
     output_root = arguments.output_root
     db_path = arguments.db or (output_root / "sessions.sqlite")
     input_lines = _load_input_lines(arguments.scripted_stdin)
     store = SessionStore.open(db_path, artifact_root=output_root)
     try:
-        result = run_interactive_session(
-            store=store,
-            input_lines=input_lines,
-            dry_run=arguments.dry_run,
-            prompt=arguments.prompt,
-            resume=arguments.resume,
-        )
+        if arguments.live and arguments.stop_after == "design-brief":
+            if design_brief_invoker is None:
+                raise RuntimeError("Phase 6.2 live Design Brief invoker is not implemented")
+            if arguments.resume:
+                session = store.get_session(arguments.resume)
+            else:
+                initial_prompt = arguments.prompt or _initial_user_prompt(input_lines)
+                session = store.create_session(original_input=initial_prompt)
+            result = run_design_brief_clarification_loop(
+                store=store,
+                session=session.session_hash,
+                invoke_design_brief=design_brief_invoker,
+                user_answers=_remaining_user_answers(input_lines, arguments.prompt),
+            )
+        else:
+            result = run_interactive_session(
+                store=store,
+                input_lines=input_lines,
+                dry_run=arguments.dry_run,
+                prompt=arguments.prompt,
+                resume=arguments.resume,
+            )
     finally:
         store.close()
     print(json.dumps(result.__dict__, ensure_ascii=False, sort_keys=True))
@@ -156,6 +191,19 @@ def _load_input_lines(path: Path | None) -> list[str]:
     if path is not None:
         return path.read_text(encoding="utf-8").splitlines()
     return sys.stdin.read().splitlines()
+
+
+def _remaining_user_answers(input_lines: list[str], prompt: str | None) -> list[str]:
+    if prompt is not None:
+        return [line for line in input_lines if line.strip()]
+    return [line for line in input_lines[1:] if line.strip()]
+
+
+def _initial_user_prompt(input_lines: list[str]) -> str:
+    for line in input_lines:
+        if line.strip():
+            return line.strip()
+    raise ValueError("Phase 6.2 live Design Brief requires an initial user prompt")
 
 
 def _write_reports(*, output_dir: Path, report: dict[str, Any]) -> None:
