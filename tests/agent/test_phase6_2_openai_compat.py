@@ -188,6 +188,31 @@ def test_runtime_config_keeps_secrets_out_of_public_repr():
     assert "api.xiaomimimo.com" not in repr(config)
 
 
+def test_runtime_config_defaults_to_large_design_brief_token_budget():
+    config = load_openai_compatible_runtime_config(
+        {
+            "API_KEY": "secret-api-key",
+            "OpenAI_BASE_URL": "https://api.xiaomimimo.com",
+            "TEXT2IFC_MIMO_MODEL": "mimo-v2.5-pro",
+        }
+    )
+
+    assert config.max_completion_tokens == 131072
+
+
+def test_runtime_config_accepts_explicit_max_completion_tokens():
+    config = load_openai_compatible_runtime_config(
+        {
+            "API_KEY": "secret-api-key",
+            "OpenAI_BASE_URL": "https://api.xiaomimimo.com",
+            "TEXT2IFC_MIMO_MODEL": "mimo-v2.5-pro",
+            "TEXT2IFC_MIMO_MAX_COMPLETION_TOKENS": "4096",
+        }
+    )
+
+    assert config.max_completion_tokens == 4096
+
+
 def test_openai_sdk_chat_smoke_uses_injected_client_and_preserves_evidence():
     captured = {}
 
@@ -235,7 +260,7 @@ def test_openai_sdk_chat_smoke_uses_injected_client_and_preserves_evidence():
     evidence = run_openai_sdk_chat_smoke(config, client_factory=client_factory)
 
     assert captured["model"] == "mimo-v2.5-pro"
-    assert captured["max_completion_tokens"] == 1024
+    assert captured["max_completion_tokens"] == 131072
     assert evidence["status"] == "passed"
     assert evidence["response_id"] == "chatcmpl-live-001"
     assert evidence["finish_reason"] == "stop"
