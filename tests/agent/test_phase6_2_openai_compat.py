@@ -156,6 +156,21 @@ def test_compatibility_report_shape_records_decision_and_evidence_classes():
     assert "secret" not in rendered.lower()
 
 
+def test_compatibility_report_blocks_when_openai_sdk_smoke_fails():
+    report = build_compatibility_report(
+        openai_sdk={
+            "status": "blocked",
+            "evidence_class": "sdk_smoke",
+            "blocker": "openai_sdk_exception",
+        },
+        agents_sdk={"status": "not_checked", "evidence_class": "sdk_smoke"},
+        responses_api={"status": "not_checked", "evidence_class": "sdk_smoke"},
+    )
+
+    assert report["decision"] == "blocked"
+    assert report["implementation_route"] == "blocked"
+
+
 def test_runtime_config_keeps_secrets_out_of_public_repr():
     config = load_openai_compatible_runtime_config(
         {
