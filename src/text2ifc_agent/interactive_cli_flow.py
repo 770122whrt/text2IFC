@@ -319,11 +319,8 @@ def run_ready_session_to_ifc(
     else:
         store.mark_session_status(stored_session.session_id, "final_blocked")
     export_path = store.export_session(stored_session.session_id)
-    store.record_artifact(
-        stored_session.session_id,
-        kind="session_export",
-        path=Path("runs") / stored_session.session_hash / export_path.name,
-    )
+    if final["valid"]:
+        _write_final_acceptance_index(store, stored_session, export_path)
     return SessionIfcResult(
         session_id=stored_session.session_id,
         session_hash=stored_session.session_hash,
@@ -461,6 +458,25 @@ def _record_existing_artifact(
             kind=kind,
             path=Path("runs") / session.session_hash / name,
         )
+
+
+def _write_final_acceptance_index(
+    store: SessionStore,
+    session: Any,
+    export_path: Path,
+) -> None:
+    payload = {
+        "schema_version": "text2ifc/phase6.2-final-acceptance-v1",
+        "session_id": session.session_id,
+        "session_hash": session.session_hash,
+        "status": "compiled",
+        "artifacts": {
+            "ifc": f"runs/{session.session_hash}/output.ifc",
+            "report": f"runs/{session.session_hash}/report.md",
+            "session_export": f"runs/{session.session_hash}/{export_path.name}",
+        },
+    }
+    _write_json(store.artifact_root / "final-acceptance.json", payload)
 
 
 def _openai_client(
