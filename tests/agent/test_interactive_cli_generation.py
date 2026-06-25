@@ -118,9 +118,67 @@ def test_ready_phase6_2_session_generates_ifc_report_and_db_artifacts(tmp_path):
     assert store.get_session(session.session_hash).status == "compiled"
 
 
+def test_phase6_2_cli_resumes_ready_session_to_ifc(tmp_path, capsys):
+    from scripts.agent import run_phase6_2_cli
+
+    root = tmp_path / "phase6.2-interactive-cli"
+    store = SessionStore.open(root / "sessions.sqlite", artifact_root=root)
+    session = store.create_session(original_input="创建一个完整的测试房间。")
+    _write_ready_design_brief_call(session.run_dir)
+    store.mark_session_status(session.session_id, "ready")
+    store.close()
+
+    candidate = json.loads(
+        (PHASE6_1_COMPLETE / "generator" / "candidate.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    audit = {
+        "schema_version": "text2ifc/audit/2.0",
+        "recommendation": "accept",
+        "blocking": False,
+        "deterministic_gate_status": "passed",
+        "findings": [],
+        "evidence_paths": [
+            "design-brief/design-brief.json",
+            "generator/candidate.json",
+            "repair/route.json",
+        ],
+    }
+    provider = _SequenceLiveProvider([candidate, audit])
+
+    exit_code = run_phase6_2_cli.main(
+        [
+            "--live",
+            "--stop-after",
+            "ifc",
+            "--resume",
+            session.session_hash,
+            "--output-root",
+            str(root),
+            "--db",
+            str(root / "sessions.sqlite"),
+        ],
+        live_provider_factory=lambda: provider,
+    )
+    summary = json.loads(capsys.readouterr().out)
+
+    assert exit_code == 0
+    assert summary["status"] == "compiled"
+    assert summary["session_hash"] == session.session_hash
+    assert (session.run_dir / "output.ifc").is_file()
+    assert (session.run_dir / "report.md").is_file()
+
+
 def _write_ready_design_brief_call(run_dir: Path) -> None:
     call_dir = run_dir / "calls" / "01-design-brief"
     call_dir.mkdir(parents=True)
+    for source in (PHASE6_1_COMPLETE / "design-brief").iterdir():
+        if source.is_file():
+            (call_dir / source.name).write_text(
+                source.read_text(encoding="utf-8"),
+                encoding="utf-8",
+            )
     for name in ("conversation.json", "context-selection.json", "design-brief.json"):
         (call_dir / name).write_text(
             (PHASE6_1_COMPLETE / "design-brief" / name).read_text(encoding="utf-8"),
