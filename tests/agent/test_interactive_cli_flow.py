@@ -290,6 +290,7 @@ def test_openai_design_brief_invoker_writes_trace_and_returns_call(tmp_path):
     assert call.brief == brief
     assert captured["model"] == "mimo-v2.5-pro"
     assert captured["max_completion_tokens"] == 131072
+    assert captured["response_format"] == {"type": "json_object"}
     assert "text2ifc/design-brief/2.0" in captured["messages"][0]["content"]
     assert (tmp_path / "calls" / "01-design-brief" / "prompt-rendered.md").is_file()
     assert (tmp_path / "calls" / "01-design-brief" / "response.raw.json").is_file()
