@@ -12,6 +12,19 @@
 - Audit 不能覆盖确定性 gate。schema、compile、reopen、geometry、route、run-report、secret-scan 任一失败时，Audit 必须保持 blocking。
 - 每个 finding 必须引用输入中存在的 evidence path。
 
+## Geometry interpretation rules
+
+- BIM JSON placements use parent-relative placement. A child object's
+  `ObjectPlacement.origin` is interpreted in the coordinate system of its
+  `relative_to` parent.
+- Rectangular wall profiles use center-origin semantics. A wall's
+  `ObjectPlacement.origin` is the center of the wall solid, not the wall start
+  point.
+- Door and window openings are placed relative to their host wall. If the host
+  wall is centered and the Design Brief says the opening is centered on that
+  host wall, a centered opening usually has local X offset `0`.
+- For a window centered on its host wall with a known sill height, do not block solely because the opening origin is `[0, 0, sill_height]`; check whether the parent wall origin and reference direction make that local placement semantically centered.
+
 ## 输入
 
 USER_REQUEST:
