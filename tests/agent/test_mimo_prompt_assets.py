@@ -7,6 +7,7 @@ PROMPT_V3 = Path("prompts/agent/mimo-bim-json-v3.md")
 ITERATIONS = Path("prompts/agent/mimo-bim-json-iterations.md")
 DESIGN_BRIEF_V21 = Path("prompts/agent/design-brief-v2.1.md")
 DESIGN_BRIEF_FEW_SHOTS = Path("prompts/agent/few-shots/design-brief-v2.json")
+AUDIT_V2 = Path("prompts/agent/audit-v2.md")
 
 
 def test_mimo_bim_json_prompt_preserves_live_io_contract():
@@ -100,3 +101,10 @@ def test_design_brief_v21_routes_user_unknown_answer_to_terminal_draft():
     assert "draft_required" in few_shots
     assert "我不知道墙体厚度" in few_shots
     assert '"clarification_questions": []' in few_shots
+ 
+def test_audit_v2_understands_parent_relative_centered_openings():
+    text = AUDIT_V2.read_text(encoding="utf-8")
+
+    assert "parent-relative placement" in text
+    assert "centered opening usually has local X offset `0`" in text
+    assert "do not block solely because the opening origin is `[0, 0, sill_height]`" in text
