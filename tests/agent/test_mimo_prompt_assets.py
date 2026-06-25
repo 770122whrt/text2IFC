@@ -108,3 +108,10 @@ def test_audit_v2_understands_parent_relative_centered_openings():
     assert "parent-relative placement" in text
     assert "centered opening usually has local X offset `0`" in text
     assert "do not block solely because the opening origin is `[0, 0, sill_height]`" in text
+
+
+def test_bim_json_generator_v2_keeps_wall_rotation_out_of_representation_position():
+    text = Path("prompts/agent/bim-json-generator-v2.md").read_text(encoding="utf-8")
+
+    assert "Do not duplicate wall rotation into `Representation.position`" in text
+    assert "wall orientation belongs in `ObjectPlacement.ref_direction`" in text
