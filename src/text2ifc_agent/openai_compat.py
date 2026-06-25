@@ -12,6 +12,8 @@ from .providers import redact_provider_payload
 OPENAI_API_KEY_ENV_CHOICES = ("API_KEY", "MIMO_API_KEY", "OPENAI_API_KEY")
 OPENAI_BASE_URL_ENV_CHOICES = ("OpenAI_BASE_URL", "OPENAI_BASE_URL")
 OPENAI_MODEL_ENV = "TEXT2IFC_MIMO_MODEL"
+OPENAI_MAX_COMPLETION_TOKENS_ENV = "TEXT2IFC_MIMO_MAX_COMPLETION_TOKENS"
+DEFAULT_OPENAI_MAX_COMPLETION_TOKENS = 131072
 
 
 @dataclass
@@ -32,7 +34,7 @@ class OpenAICompatRuntimeConfig:
     base_url: str
     base_url_env: str
     model: str
-    max_completion_tokens: int = 1024
+    max_completion_tokens: int = DEFAULT_OPENAI_MAX_COMPLETION_TOKENS
 
     def __repr__(self) -> str:
         return (
@@ -83,6 +85,7 @@ def load_openai_compatible_config(
         "base_url_configured": base_url_env is not None,
         "base_url_env": base_url_env,
         "model": env.get(OPENAI_MODEL_ENV) or None,
+        "max_completion_tokens": _load_max_completion_tokens(env),
     }
 
 
@@ -113,6 +116,7 @@ def load_openai_compatible_runtime_config(
         base_url=normalize_openai_base_url(env[base_url_env]),
         base_url_env=base_url_env,
         model=str(env[OPENAI_MODEL_ENV]),
+        max_completion_tokens=_load_max_completion_tokens(env),
     )
 
 
@@ -243,6 +247,35 @@ def _first_present(env: dict[str, str], names: tuple[str, ...]) -> str | None:
         if env.get(name):
             return name
     return None
+
+
+def _load_max_completion_tokens(env: dict[str, str]) -> int:
+    raw_value = env.get(OPENAI_MAX_COMPLETION_TOKENS_ENV)
+    if raw_value is None or raw_value.strip() == "":
+        return DEFAULT_OPENAI_MAX_COMPLETION_TOKENS
+    try:
+        value = int(raw_value)
+    except ValueError as exc:
+        raise OpenAICompatError(
+            "OpenAI-compatible max completion token setting must be an integer",
+            evidence={
+                "provider": "mimo-openai-compatible",
+                "parse_eligible": False,
+                "failure_class": "invalid_max_completion_tokens",
+                "env": OPENAI_MAX_COMPLETION_TOKENS_ENV,
+            },
+        ) from exc
+    if value <= 0:
+        raise OpenAICompatError(
+            "OpenAI-compatible max completion token setting must be positive",
+            evidence={
+                "provider": "mimo-openai-compatible",
+                "parse_eligible": False,
+                "failure_class": "invalid_max_completion_tokens",
+                "env": OPENAI_MAX_COMPLETION_TOKENS_ENV,
+            },
+        )
+    return value
 
 
 def _first_choice(response: dict[str, Any]) -> dict[str, Any]:
