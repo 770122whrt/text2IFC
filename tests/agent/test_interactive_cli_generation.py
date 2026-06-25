@@ -111,6 +111,13 @@ def test_ready_phase6_2_session_generates_ifc_report_and_db_artifacts(tmp_path):
     assert (session.run_dir / "output.ifc").is_file()
     assert (session.run_dir / "report.md").is_file()
     assert (session.run_dir / "session-export.json").is_file()
+    final_acceptance = json.loads((root / "final-acceptance.json").read_text(encoding="utf-8"))
+    assert final_acceptance["session_hash"] == session.session_hash
+    assert final_acceptance["artifacts"]["ifc"] == f"runs/{session.session_hash}/output.ifc"
+    assert final_acceptance["artifacts"]["report"] == f"runs/{session.session_hash}/report.md"
+    assert final_acceptance["artifacts"]["session_export"] == (
+        f"runs/{session.session_hash}/session-export.json"
+    )
     artifact_paths = {artifact["path"] for artifact in export["artifacts"]}
     assert f"runs/{session.session_hash}/candidate.json" in artifact_paths
     assert f"runs/{session.session_hash}/output.ifc" in artifact_paths
