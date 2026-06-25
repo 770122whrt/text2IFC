@@ -6,6 +6,7 @@ import pytest
 
 from text2ifc_agent.openai_compat import (
     OpenAICompatError,
+    OpenAICompatibleMimoLiveProvider,
     build_compatibility_report,
     load_openai_compatible_config,
     load_openai_compatible_runtime_config,
@@ -261,6 +262,72 @@ def test_openai_sdk_chat_smoke_uses_injected_client_and_preserves_evidence():
 
     assert captured["model"] == "mimo-v2.5-pro"
     assert captured["max_completion_tokens"] == 131072
+
+
+def test_openai_compatible_live_provider_returns_live_provider_result():
+    captured = {}
+
+    class Response:
+        def model_dump(self):
+            return {
+                "id": "chatcmpl-generator-001",
+                "object": "chat.completion",
+                "model": "mimo-v2.5-pro",
+                "choices": [
+                    {
+                        "index": 0,
+                        "finish_reason": "stop",
+                        "message": {
+                            "role": "assistant",
+                            "content": '{"schema_version":"bim-json/2.0"}',
+                        },
+                    }
+                ],
+                "usage": {
+                    "prompt_tokens": 11,
+                    "completion_tokens": 7,
+                    "total_tokens": 18,
+                },
+            }
+
+    class ChatCompletions:
+        def create(self, **kwargs):
+            captured.update(kwargs)
+            return Response()
+
+    class Client:
+        def __init__(self, **kwargs):
+            captured["client_kwargs"] = kwargs
+            self.chat = type("Chat", (), {"completions": ChatCompletions()})()
+
+    config = load_openai_compatible_runtime_config(
+        {
+            "API_KEY": "secret-api-key",
+            "OpenAI_BASE_URL": "https://api.xiaomimimo.com",
+            "TEXT2IFC_MIMO_MODEL": "mimo-v2.5-pro",
+        }
+    )
+    provider = OpenAICompatibleMimoLiveProvider(
+        config=config,
+        client_factory=Client,
+    )
+
+    result = provider.generate_live(
+        session_id="phase6.2-session-generator-01",
+        prompt="Return JSON",
+        schema={"schema_version": "bim-json/2.0"},
+        state={"stage": "generate"},
+    )
+
+    assert result.evidence_class == "live"
+    assert result.http_status == 200
+    assert result.response["id"] == "chatcmpl-generator-001"
+    assert result.response["stop_reason"] == "stop"
+    assert result.output.text == '{"schema_version":"bim-json/2.0"}'
+    assert result.output.metadata["provider"] == "mimo-openai-compatible"
+    assert captured["model"] == "mimo-v2.5-pro"
+    assert captured["max_completion_tokens"] == 131072
+    assert captured["client_kwargs"]["api_key"] == "secret-api-key"
     assert evidence["status"] == "passed"
     assert evidence["response_id"] == "chatcmpl-live-001"
     assert evidence["finish_reason"] == "stop"
