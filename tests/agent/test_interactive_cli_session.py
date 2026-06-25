@@ -60,7 +60,7 @@ def test_session_export_records_the_export_artifact_in_payload(tmp_path):
     assert export["artifacts"] == [
         {
             "kind": "session_export",
-            "path": str(Path("runs") / session.session_hash / "session-export.json"),
+            "path": f"runs/{session.session_hash}/session-export.json",
             "created_at": export["artifacts"][0]["created_at"],
         }
     ]

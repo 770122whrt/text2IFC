@@ -17,6 +17,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "src"))
 
 from text2ifc_agent.openai_compat import (  # noqa: E402
+    OpenAICompatibleMimoLiveProvider,
     load_openai_compatible_config,
     load_openai_compatible_runtime_config,
     run_phase6_2_compatibility_check,
@@ -25,6 +26,7 @@ from text2ifc_agent.clarification import DesignBriefInvoker  # noqa: E402
 from text2ifc_agent.interactive_cli_flow import (  # noqa: E402
     make_openai_design_brief_invoker,
     run_design_brief_clarification_loop,
+    run_ready_session_to_ifc,
 )
 from text2ifc_agent.interactive_session import run_interactive_session  # noqa: E402
 from text2ifc_agent.session_store import SessionStore  # noqa: E402
@@ -74,6 +76,7 @@ def main(
     compatibility_runner: CompatibilityRunner | None = None,
     design_brief_invoker: DesignBriefInvoker | None = None,
     openai_client_factory: Callable[..., Any] | None = None,
+    live_provider_factory: Callable[[], Any] | None = None,
 ) -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--check-openai-compat", action="store_true")
@@ -86,7 +89,7 @@ def main(
     parser.add_argument("--scripted-stdin", type=Path)
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--live", action="store_true")
-    parser.add_argument("--stop-after", choices=("design-brief",))
+    parser.add_argument("--stop-after", choices=("design-brief", "ifc"))
     parser.add_argument("--resume")
     arguments = parser.parse_args(argv)
     load_env_file(arguments.env_file)
@@ -110,6 +113,7 @@ def main(
             arguments,
             design_brief_invoker=design_brief_invoker,
             openai_client_factory=openai_client_factory,
+            live_provider_factory=live_provider_factory,
         )
     parser.print_help()
     return 2
@@ -158,30 +162,58 @@ def _run_interactive_cli(
     *,
     design_brief_invoker: DesignBriefInvoker | None,
     openai_client_factory: Callable[..., Any] | None,
+    live_provider_factory: Callable[[], Any] | None,
 ) -> int:
     output_root = arguments.output_root
     db_path = arguments.db or (output_root / "sessions.sqlite")
-    input_lines = _load_input_lines(arguments.scripted_stdin)
+    input_lines = (
+        []
+        if arguments.resume and arguments.scripted_stdin is None and arguments.prompt is None
+        else _load_input_lines(arguments.scripted_stdin)
+    )
     store = SessionStore.open(db_path, artifact_root=output_root)
     try:
-        if arguments.live and arguments.stop_after == "design-brief":
+        if arguments.live and arguments.stop_after in {"design-brief", "ifc"}:
             if arguments.resume:
                 session = store.get_session(arguments.resume)
             else:
                 initial_prompt = arguments.prompt or _initial_user_prompt(input_lines)
                 session = store.create_session(original_input=initial_prompt)
-            if design_brief_invoker is None:
-                design_brief_invoker = make_openai_design_brief_invoker(
-                    config=load_openai_compatible_runtime_config(dict(os.environ)),
-                    run_dir=session.run_dir,
-                    client_factory=openai_client_factory,
+            if (
+                arguments.stop_after == "ifc"
+                and arguments.resume
+                and session.status == "ready"
+            ):
+                result = run_ready_session_to_ifc(
+                    store=store,
+                    session=session.session_hash,
+                    provider_factory=live_provider_factory
+                    or _default_openai_live_provider_factory(
+                        openai_client_factory=openai_client_factory
+                    ),
                 )
-            result = run_design_brief_clarification_loop(
-                store=store,
-                session=session.session_hash,
-                invoke_design_brief=design_brief_invoker,
-                user_answers=_remaining_user_answers(input_lines, arguments.prompt),
-            )
+            else:
+                if design_brief_invoker is None:
+                    design_brief_invoker = make_openai_design_brief_invoker(
+                        config=load_openai_compatible_runtime_config(dict(os.environ)),
+                        run_dir=session.run_dir,
+                        client_factory=openai_client_factory,
+                    )
+                result = run_design_brief_clarification_loop(
+                    store=store,
+                    session=session.session_hash,
+                    invoke_design_brief=design_brief_invoker,
+                    user_answers=_remaining_user_answers(input_lines, arguments.prompt),
+                )
+            if arguments.stop_after == "ifc" and result.status == "ready":
+                result = run_ready_session_to_ifc(
+                    store=store,
+                    session=session.session_hash,
+                    provider_factory=live_provider_factory
+                    or _default_openai_live_provider_factory(
+                        openai_client_factory=openai_client_factory
+                    ),
+                )
         else:
             result = run_interactive_session(
                 store=store,
@@ -193,7 +225,20 @@ def _run_interactive_cli(
     finally:
         store.close()
     print(json.dumps(result.__dict__, ensure_ascii=False, sort_keys=True))
-    return 0
+    return 0 if getattr(result, "status", None) in {"ready", "compiled", "open", "incomplete"} else 2
+
+
+def _default_openai_live_provider_factory(
+    *,
+    openai_client_factory: Callable[..., Any] | None,
+) -> Callable[[], Any]:
+    def create_provider() -> OpenAICompatibleMimoLiveProvider:
+        return OpenAICompatibleMimoLiveProvider(
+            config=load_openai_compatible_runtime_config(dict(os.environ)),
+            client_factory=openai_client_factory,
+        )
+
+    return create_provider
 
 
 def _load_input_lines(path: Path | None) -> list[str]:

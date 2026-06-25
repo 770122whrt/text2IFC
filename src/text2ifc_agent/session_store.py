@@ -205,13 +205,14 @@ class SessionStore:
     def record_artifact(self, session_id: str, *, kind: str, path: Path | str) -> None:
         session = self.get_session(session_id)
         now = _utc_now()
+        path_text = path.as_posix() if isinstance(path, Path) else str(path).replace("\\", "/")
         with self._connection:
             self._connection.execute(
                 """
                 INSERT INTO artifacts (session_id, kind, path, created_at)
                 VALUES (?, ?, ?, ?)
                 """,
-                (session.session_id, kind, str(path), now),
+                (session.session_id, kind, path_text, now),
             )
             self._touch(session.session_id, now)
 

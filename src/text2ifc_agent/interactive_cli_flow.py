@@ -3,10 +3,17 @@
 from __future__ import annotations
 
 import json
+import shutil
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Callable, Iterable
 
+from .live_pipeline import (
+    run_audit_report_stage,
+    run_final_acceptance_stage,
+    run_generator_stage,
+    run_repair_stage,
+)
 from .clarification import ClarificationCall, ClarificationController, DesignBriefInvoker
 from .context_selection import select_design_brief_context
 from .design_brief import load_design_brief_schema, validate_design_brief
@@ -29,6 +36,18 @@ class DesignBriefLoopResult:
     session_hash: str
     status: str
     call_count: int
+
+
+@dataclass(frozen=True)
+class SessionIfcResult:
+    session_id: str
+    session_hash: str
+    status: str
+    generator_status: str
+    repair_route: str
+    audit_status: str
+    ifc_path: str | None
+    report_path: str | None
 
 
 def make_openai_design_brief_invoker(
@@ -208,6 +227,114 @@ def run_design_brief_clarification_loop(
     )
 
 
+def run_ready_session_to_ifc(
+    *,
+    store: SessionStore,
+    session: str,
+    provider_factory: Callable[[], Any],
+) -> SessionIfcResult:
+    """Generate BIM JSON, run deterministic gates, and compile a ready session."""
+
+    stored_session = store.get_session(session)
+    if stored_session.status != "ready":
+        raise ValueError("Phase 6.2 IFC generation requires a ready session")
+
+    design_dir = _prepare_design_source(stored_session)
+    generator = run_generator_stage(
+        provider=provider_factory(),
+        output_dir=stored_session.run_dir / "generator",
+        design_source_dir=design_dir,
+        case_id=stored_session.session_hash,
+        session_prefix="phase6.2",
+    )
+    _record_stage_payloads(store, stored_session.session_id, "generator", generator)
+    if generator["classification"] == "formal" and (
+        stored_session.run_dir / "generator" / "candidate.json"
+    ).is_file():
+        _copy_artifact_to_run_root(
+            store,
+            stored_session,
+            kind="candidate",
+            source=stored_session.run_dir / "generator" / "candidate.json",
+            target_name="candidate.json",
+        )
+
+    repair = run_repair_stage(
+        provider_factory=provider_factory,
+        output_dir=stored_session.run_dir / "repair",
+        generator_source_dir=stored_session.run_dir / "generator",
+        case_id=stored_session.session_hash,
+    )
+    _record_stage_payloads(store, stored_session.session_id, "repair", repair)
+
+    if not generator["valid"] or repair["route"] not in {
+        "no_repair_needed",
+        "repair_attempted",
+    }:
+        store.mark_session_status(stored_session.session_id, "draft_or_blocked")
+        store.export_session(stored_session.session_id)
+        return SessionIfcResult(
+            session_id=stored_session.session_id,
+            session_hash=stored_session.session_hash,
+            status="draft_or_blocked",
+            generator_status=str(generator["status"]),
+            repair_route=str(repair["route"]),
+            audit_status="not_run",
+            ifc_path=None,
+            report_path=None,
+        )
+
+    audit = run_audit_report_stage(
+        provider=provider_factory(),
+        case_dir=stored_session.run_dir,
+        case_id=stored_session.session_hash,
+        session_prefix="phase6.2",
+    )
+    _record_stage_payloads(store, stored_session.session_id, "audit", audit)
+    if not audit["valid"] or audit["status"] != "accepted":
+        store.mark_session_status(stored_session.session_id, "audit_blocked")
+        store.export_session(stored_session.session_id)
+        return SessionIfcResult(
+            session_id=stored_session.session_id,
+            session_hash=stored_session.session_hash,
+            status="audit_blocked",
+            generator_status=str(generator["status"]),
+            repair_route=str(repair["route"]),
+            audit_status=str(audit["status"]),
+            ifc_path=None,
+            report_path=str(audit.get("report_path")) if audit.get("report_path") else None,
+        )
+
+    final = run_final_acceptance_stage(
+        case_dir=stored_session.run_dir,
+        output_dir=stored_session.run_dir,
+        case_id=stored_session.session_hash,
+    )
+    _record_stage_payloads(store, stored_session.session_id, "final_acceptance", final)
+    if final["valid"]:
+        store.mark_session_status(stored_session.session_id, "compiled")
+        _record_existing_artifact(store, stored_session, kind="ifc", name="output.ifc")
+        _record_existing_artifact(store, stored_session, kind="report", name="report.md")
+    else:
+        store.mark_session_status(stored_session.session_id, "final_blocked")
+    export_path = store.export_session(stored_session.session_id)
+    store.record_artifact(
+        stored_session.session_id,
+        kind="session_export",
+        path=Path("runs") / stored_session.session_hash / export_path.name,
+    )
+    return SessionIfcResult(
+        session_id=stored_session.session_id,
+        session_hash=stored_session.session_hash,
+        status="compiled" if final["valid"] else "final_blocked",
+        generator_status=str(generator["status"]),
+        repair_route=str(repair["route"]),
+        audit_status=str(audit["status"]),
+        ifc_path=str(stored_session.run_dir / "output.ifc") if final["valid"] else None,
+        report_path=str(stored_session.run_dir / "report.md") if final["valid"] else None,
+    )
+
+
 def _record_call(store: SessionStore, session_id: str, call: ClarificationCall) -> None:
     store.record_agent_call(
         session_id,
@@ -251,6 +378,88 @@ def _write_design_brief_artifact(
         kind="design_brief",
         path=Path("runs") / session.session_hash / "design-brief.json",
     )
+
+
+def _prepare_design_source(session: Any) -> Path:
+    design_dir = session.run_dir / "design-brief"
+    design_dir.mkdir(parents=True, exist_ok=True)
+    final_call_dir = _latest_design_brief_call_dir(session.run_dir)
+    for source in final_call_dir.iterdir():
+        if source.is_file():
+            shutil.copyfile(source, design_dir / source.name)
+    for name in ("conversation.json", "context-selection.json", "design-brief.json"):
+        if not (design_dir / name).is_file():
+            raise ValueError(
+                f"ready session is missing Design Brief artifact: {design_dir / name}"
+            )
+    (design_dir / "input.txt").write_text(session.original_input + "\n", encoding="utf-8")
+    if not (design_dir / "validation.json").is_file():
+        brief = json.loads((design_dir / "design-brief.json").read_text(encoding="utf-8"))
+        issues = validate_design_brief(brief)
+        _write_json(
+            design_dir / "validation.json",
+            {
+                "valid": not issues,
+                "issue_count": len(issues),
+                "issues": [
+                    {
+                        "code": issue.code,
+                        "path": issue.path,
+                        "message": issue.message,
+                    }
+                    for issue in issues
+                ],
+            },
+        )
+    return design_dir
+
+
+def _latest_design_brief_call_dir(run_dir: Path) -> Path:
+    calls = sorted((run_dir / "calls").glob("*-design-brief"))
+    for call_dir in reversed(calls):
+        if (call_dir / "design-brief.json").is_file():
+            return call_dir
+    if (run_dir / "design-brief.json").is_file():
+        return run_dir
+    raise ValueError("ready session has no Design Brief call artifacts")
+
+
+def _record_stage_payloads(
+    store: SessionStore,
+    session_id: str,
+    stage: str,
+    payload: dict[str, Any],
+) -> None:
+    store.record_payload(session_id, table="metrics", payload={"stage": stage, **payload})
+    store.append_event(session_id, event_type=f"{stage}_completed", payload=payload)
+
+
+def _copy_artifact_to_run_root(
+    store: SessionStore,
+    session: Any,
+    *,
+    kind: str,
+    source: Path,
+    target_name: str,
+) -> None:
+    target = session.run_dir / target_name
+    shutil.copyfile(source, target)
+    _record_existing_artifact(store, session, kind=kind, name=target_name)
+
+
+def _record_existing_artifact(
+    store: SessionStore,
+    session: Any,
+    *,
+    kind: str,
+    name: str,
+) -> None:
+    if (session.run_dir / name).is_file():
+        store.record_artifact(
+            session.session_id,
+            kind=kind,
+            path=Path("runs") / session.session_hash / name,
+        )
 
 
 def _openai_client(

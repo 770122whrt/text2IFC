@@ -456,6 +456,7 @@ def run_generator_stage(
     output_dir: Path | str,
     design_source_dir: Path | str,
     case_id: str,
+    session_prefix: str = "phase6.1",
 ) -> dict[str, Any]:
     """Run one real Generator call with exact Formal and Draft contracts."""
     output = Path(output_dir)
@@ -498,7 +499,7 @@ def run_generator_stage(
     _write_text(output / "prompt-rendered.md", rendered["text"])
 
     result = provider.generate_live(
-        session_id=f"phase6.1-{case_id}-generator-01",
+        session_id=f"{session_prefix}-{case_id}-generator-01",
         prompt=rendered["text"],
         schema=formal_schema,
         state={"case_id": case_id, "stage": "generate"},
@@ -971,6 +972,7 @@ def run_audit_report_stage(
     provider: Any,
     case_dir: Path | str,
     case_id: str,
+    session_prefix: str = "phase6.1",
 ) -> dict[str, Any]:
     """Run real Audit v2 and generate the case report from sidecars."""
     root = Path(case_dir)
@@ -1024,7 +1026,7 @@ def run_audit_report_stage(
     _write_json(output / "prompt-render-input.json", renderer_inputs)
     _write_text(output / "prompt-rendered.md", rendered["text"])
     result = provider.generate_live(
-        session_id=f"phase6.1-{case_id}-audit-01",
+        session_id=f"{session_prefix}-{case_id}-audit-01",
         prompt=rendered["text"],
         schema={"schema_version": "text2ifc/audit/2.0"},
         state={"case_id": case_id, "stage": "audit"},

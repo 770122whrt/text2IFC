@@ -6,7 +6,7 @@ import asyncio
 from dataclasses import dataclass
 from typing import Any, Callable
 
-from .providers import redact_provider_payload
+from .providers import LiveProviderResult, ProviderOutput, redact_provider_payload, validate_provider_output
 
 
 OPENAI_API_KEY_ENV_CHOICES = ("API_KEY", "MIMO_API_KEY", "OPENAI_API_KEY")
@@ -154,6 +154,80 @@ def run_openai_sdk_chat_smoke(
         "status": "passed",
         **evidence,
     }
+
+
+class OpenAICompatibleMimoLiveProvider:
+    """OpenAI-compatible Mimo adapter for live Generator/Audit calls."""
+
+    def __init__(
+        self,
+        *,
+        config: OpenAICompatRuntimeConfig,
+        client_factory: Callable[..., Any] | None = None,
+    ) -> None:
+        self.config = config
+        if client_factory is None:
+            from openai import OpenAI
+
+            client_factory = OpenAI
+        self.client = client_factory(api_key=config.api_key, base_url=config.base_url)
+
+    def generate_live(
+        self,
+        *,
+        session_id: str,
+        prompt: str,
+        schema: dict[str, Any],
+        state: dict[str, Any],
+    ) -> LiveProviderResult:
+        del schema, state
+        request = {
+            "model": self.config.model,
+            "messages": [{"role": "user", "content": prompt}],
+            "temperature": 0,
+            "max_completion_tokens": self.config.max_completion_tokens,
+        }
+        response = self.client.chat.completions.create(**request)
+        payload = _object_to_dict(response)
+        evidence = parse_chat_completion_evidence(
+            payload,
+            request=request,
+            evidence_class="live",
+        )
+        output = validate_provider_output(
+            ProviderOutput(
+                text=str(evidence["content_text"]),
+                metadata={
+                    "provider": "mimo-openai-compatible",
+                    "evidence_class": "live",
+                    "session_id": session_id,
+                    "response_id": evidence["response_id"],
+                    "model": evidence["model"],
+                    "stop_reason": evidence["finish_reason"],
+                    "usage": evidence["usage"],
+                },
+            )
+        )
+        response_envelope = {
+            **payload,
+            "stop_reason": evidence["finish_reason"],
+            "usage": evidence["usage"],
+        }
+        return LiveProviderResult(
+            session_id=session_id,
+            evidence_class="live",
+            http_status=200,
+            request=request,
+            response=response_envelope,
+            events=(
+                {
+                    "sequence": 0,
+                    "event": "chat.completion",
+                    "data": redact_provider_payload(response_envelope),
+                },
+            ),
+            output=output,
+        )
 
 
 def run_phase6_2_compatibility_check(

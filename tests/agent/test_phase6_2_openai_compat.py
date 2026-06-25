@@ -262,6 +262,10 @@ def test_openai_sdk_chat_smoke_uses_injected_client_and_preserves_evidence():
 
     assert captured["model"] == "mimo-v2.5-pro"
     assert captured["max_completion_tokens"] == 131072
+    assert evidence["status"] == "passed"
+    assert evidence["response_id"] == "chatcmpl-live-001"
+    assert evidence["finish_reason"] == "stop"
+    assert evidence["usage"]["total_tokens"] == 13
 
 
 def test_openai_compatible_live_provider_returns_live_provider_result():
@@ -328,10 +332,6 @@ def test_openai_compatible_live_provider_returns_live_provider_result():
     assert captured["model"] == "mimo-v2.5-pro"
     assert captured["max_completion_tokens"] == 131072
     assert captured["client_kwargs"]["api_key"] == "secret-api-key"
-    assert evidence["status"] == "passed"
-    assert evidence["response_id"] == "chatcmpl-live-001"
-    assert evidence["finish_reason"] == "stop"
-    assert evidence["usage"]["total_tokens"] == 13
 
 
 def test_phase6_2_compatibility_check_combines_live_probe_results():
