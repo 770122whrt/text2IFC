@@ -88,6 +88,7 @@ def make_openai_design_brief_invoker(
             "messages": [{"role": "user", "content": rendered["text"]}],
             "temperature": 0,
             "max_completion_tokens": config.max_completion_tokens,
+            "response_format": {"type": "json_object"},
         }
         response = client.chat.completions.create(**request)
         payload = _object_to_dict(response)

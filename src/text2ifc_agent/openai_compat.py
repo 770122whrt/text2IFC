@@ -142,6 +142,7 @@ def run_openai_sdk_chat_smoke(
         ],
         "temperature": 0,
         "max_completion_tokens": config.max_completion_tokens,
+        "response_format": {"type": "json_object"},
     }
     response = client.chat.completions.create(**request)
     payload = _object_to_dict(response)
@@ -186,6 +187,7 @@ class OpenAICompatibleMimoLiveProvider:
             "messages": [{"role": "user", "content": prompt}],
             "temperature": 0,
             "max_completion_tokens": self.config.max_completion_tokens,
+            "response_format": {"type": "json_object"},
         }
         response = self.client.chat.completions.create(**request)
         payload = _object_to_dict(response)
