@@ -51,6 +51,8 @@ Draft Envelope 1.0 完整 canonical Schema：
 
 四、矩形拉伸 profile 使用中心原点语义。墙的 ObjectPlacement.origin 是墙实体中心，不是墙段起点。沿局部 Y 方向的墙必须通过语义 ref_direction 表达旋转，不能仍按 X 方向放置。
 
+Rule: wall orientation belongs in `ObjectPlacement.ref_direction`. Do not duplicate wall rotation into `Representation.position`. For ordinary straight wall solids, omit `Representation.position` unless the Design Brief or geometry feedback explicitly requires a local solid offset that is independent from the product placement.
+
 五、门窗洞口相对宿主墙表达。用户说门窗位于墙中央时，按构件中心线与宿主墙中心线对齐表达；不要把宿主墙的全局起点坐标复制成洞口局部偏移。
 
 六、空间、构件、宿主、void/fill、containment 与闭合关系必须使用 Formal Schema 声明的语义实体和 relationships。低层 IFC 关系由确定性编译器生成时，不要在 BIM JSON 中创造编译器对象。
