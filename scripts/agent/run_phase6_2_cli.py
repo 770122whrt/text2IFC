@@ -11,7 +11,7 @@ import json
 import os
 import sys
 from pathlib import Path
-from typing import Any, Callable
+from typing import Any, Callable, Iterable, TextIO
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "src"))
@@ -77,6 +77,7 @@ def main(
     design_brief_invoker: DesignBriefInvoker | None = None,
     openai_client_factory: Callable[..., Any] | None = None,
     live_provider_factory: Callable[[], Any] | None = None,
+    stdin: TextIO | Iterable[str] | None = None,
 ) -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--check-openai-compat", action="store_true")
@@ -114,6 +115,7 @@ def main(
             design_brief_invoker=design_brief_invoker,
             openai_client_factory=openai_client_factory,
             live_provider_factory=live_provider_factory,
+            stdin=stdin or sys.stdin,
         )
     parser.print_help()
     return 2
@@ -163,13 +165,14 @@ def _run_interactive_cli(
     design_brief_invoker: DesignBriefInvoker | None,
     openai_client_factory: Callable[..., Any] | None,
     live_provider_factory: Callable[[], Any] | None,
+    stdin: TextIO | Iterable[str],
 ) -> int:
     output_root = arguments.output_root
     db_path = arguments.db or (output_root / "sessions.sqlite")
     input_lines = (
         []
         if arguments.resume and arguments.scripted_stdin is None and arguments.prompt is None
-        else _load_input_lines(arguments.scripted_stdin)
+        else _load_input_lines(arguments.scripted_stdin, stdin=stdin)
     )
     store = SessionStore.open(db_path, artifact_root=output_root)
     try:
@@ -241,16 +244,16 @@ def _default_openai_live_provider_factory(
     return create_provider
 
 
-def _load_input_lines(path: Path | None) -> list[str]:
+def _load_input_lines(path: Path | None, *, stdin: TextIO | Iterable[str]) -> Iterable[str]:
     if path is not None:
-        return path.read_text(encoding="utf-8").splitlines()
-    return sys.stdin.read().splitlines()
+        return iter(path.read_text(encoding="utf-8").splitlines())
+    return (line.rstrip("\r\n") for line in stdin)
 
 
-def _remaining_user_answers(input_lines: list[str], prompt: str | None) -> list[str]:
+def _remaining_user_answers(input_lines: Iterable[str], prompt: str | None) -> Iterable[str]:
     if prompt is not None:
         return [line for line in input_lines if line.strip()]
-    return [line for line in input_lines[1:] if line.strip()]
+    return (line for line in input_lines if line.strip())
 
 
 def _initial_user_prompt(input_lines: list[str]) -> str:
