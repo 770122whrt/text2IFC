@@ -320,6 +320,12 @@ def run_ready_session_to_ifc(
         store.mark_session_status(stored_session.session_id, "final_blocked")
     export_path = store.export_session(stored_session.session_id)
     if final["valid"]:
+        _write_phase6_2_session_report(
+            store=store,
+            session=stored_session,
+            export_path=export_path,
+            final=final,
+        )
         _write_final_acceptance_index(store, stored_session, export_path)
     return SessionIfcResult(
         session_id=stored_session.session_id,
@@ -477,6 +483,149 @@ def _write_final_acceptance_index(
         },
     }
     _write_json(store.artifact_root / "final-acceptance.json", payload)
+
+
+def _write_phase6_2_session_report(
+    *,
+    store: SessionStore,
+    session: Any,
+    export_path: Path,
+    final: dict[str, Any],
+) -> None:
+    export = store.session_export_payload(session.session_id)
+    turns = export.get("turns", [])
+    events = export.get("events", [])
+    artifacts = export.get("artifacts", [])
+    relative_export = Path("runs") / session.session_hash / export_path.name
+    lines = [
+        "# Phase 6.2 Interactive CLI Run Report",
+        "",
+        "Generated from SQLite session records and linked trace artifacts.",
+        "",
+        "## Original Input",
+        "",
+        "```text",
+        session.original_input,
+        "```",
+        "",
+        "## Transcript",
+        "",
+        _json_block(turns),
+        "",
+        "## Design Brief Agent",
+        "",
+        *_report_links(
+            session.run_dir,
+            (
+                "design-brief/input.txt",
+                "design-brief/conversation.json",
+                "design-brief/prompt-rendered.md",
+                "design-brief/request.redacted.json",
+                "design-brief/response.raw.json",
+                "design-brief/model-text.txt",
+                "design-brief/design-brief.json",
+                "design-brief/validation.json",
+                "design-brief/metrics.json",
+            ),
+        ),
+        "",
+        "## BIM JSON Generator",
+        "",
+        *_report_links(
+            session.run_dir,
+            (
+                "generator/prompt-rendered.md",
+                "generator/request.redacted.json",
+                "generator/response.raw.json",
+                "generator/model-text.txt",
+                "generator/candidate.json",
+                "generator/validation.json",
+                "generator/metrics.json",
+            ),
+        ),
+        "",
+        "## Repair Route",
+        "",
+        *_report_links(
+            session.run_dir,
+            (
+                "repair/route.json",
+                "repair/repair-attempts.json",
+                "repair/source-validation.json",
+                "repair/metrics.json",
+            ),
+        ),
+        "",
+        "## Audit Agent",
+        "",
+        *_report_links(
+            session.run_dir,
+            (
+                "audit/prompt-rendered.md",
+                "audit/request.redacted.json",
+                "audit/response.raw.json",
+                "audit/model-text.txt",
+                "audit/audit-report.json",
+                "audit/validation.json",
+                "audit/metrics.json",
+            ),
+        ),
+        "",
+        "## Deterministic Gates",
+        "",
+        *_report_links(
+            session.run_dir,
+            (
+                "acceptance-metrics.json",
+                "ifc-verification.json",
+                "geometry-feedback.json",
+                "secret-scan.json",
+            ),
+        ),
+        "",
+        "```json",
+        json.dumps(final, ensure_ascii=False, indent=2, sort_keys=True),
+        "```",
+        "",
+        "## Final Artifacts",
+        "",
+        *_report_links(
+            session.run_dir,
+            (
+                "output.ifc",
+                "candidate.json",
+                "report.md",
+            ),
+        ),
+        "",
+        "## Session Export",
+        "",
+        f"- [{relative_export.as_posix()}]({relative_export.as_posix()})",
+        "",
+        "## Session DB Evidence",
+        "",
+        "### Events",
+        "",
+        _json_block(events),
+        "",
+        "### Artifact Index",
+        "",
+        _json_block(artifacts),
+        "",
+    ]
+    (session.run_dir / "report.md").write_text("\n".join(lines), encoding="utf-8")
+
+
+def _report_links(root: Path, relatives: tuple[str, ...]) -> list[str]:
+    lines = []
+    for relative in relatives:
+        if (root / relative).is_file():
+            lines.append(f"- [{relative}]({relative})")
+    return lines
+
+
+def _json_block(payload: Any) -> str:
+    return "```json\n" + json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True) + "\n```"
 
 
 def _openai_client(
