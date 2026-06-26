@@ -5,6 +5,7 @@ import sys
 from pathlib import Path
 
 from text2ifc_agent.clarification import ClarificationCall
+from text2ifc_agent.context_selection import select_design_brief_context
 from text2ifc_agent.providers import LiveProviderResult, ProviderOutput
 from text2ifc_agent.session_store import SessionStore
 
@@ -240,6 +241,78 @@ def test_repl_chat_script_path_help_runs_from_repo_root():
     assert "ModuleNotFoundError" not in result.stderr
 
 
+def test_default_live_repl_design_brief_trace_is_session_scoped(tmp_path):
+    from scripts.agent import run_text2ifc_chat
+
+    root = tmp_path / "phase6.2-fix-repl"
+    env_file = tmp_path / ".env"
+    env_file.write_text(
+        "\n".join(
+            [
+                "API_KEY=secret-api-key",
+                "OpenAI_BASE_URL=https://api.xiaomimimo.com",
+                "TEXT2IFC_MIMO_MODEL=mimo-v2.5-pro",
+            ]
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    output = io.StringIO()
+    ready_brief = _brief(original_request=ORIGINAL_REQUEST, status="ready")
+    selection = select_design_brief_context(
+        user_request=ORIGINAL_REQUEST,
+        conversation=[
+            {"turn_id": "turn-user-001", "role": "user", "content": ORIGINAL_REQUEST}
+        ],
+    )
+    selected_evidence_ids = [item["evidence_id"] for item in selection["evidence"]]
+    ready_brief["fact_sources"][0]["evidence_refs"] = selected_evidence_ids[:1]
+    ready_brief["provenance"]["selected_evidence_ids"] = selected_evidence_ids
+    candidate = json.loads(
+        (PHASE6_1_COMPLETE / "generator" / "candidate.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    audit = {
+        "schema_version": "text2ifc/audit/2.0",
+        "recommendation": "accept",
+        "blocking": False,
+        "deterministic_gate_status": "passed",
+        "findings": [],
+        "evidence_paths": [
+            "design-brief/design-brief.json",
+            "generator/candidate.json",
+            "repair/route.json",
+        ],
+    }
+    provider = _SequenceLiveProvider([candidate, audit])
+
+    exit_code = run_text2ifc_chat.main(
+        [
+            "--live",
+            "--env-file",
+            str(env_file),
+            "--output-root",
+            str(root),
+            "--db",
+            str(root / "sessions.sqlite"),
+        ],
+        openai_client_factory=lambda **kwargs: _OpenAIClientSequence([ready_brief]),
+        live_provider_factory=lambda: provider,
+        input_func=lambda prompt: ORIGINAL_REQUEST,
+        stdout=output,
+    )
+
+    final = json.loads((root / "final-acceptance.json").read_text(encoding="utf-8"))
+    run_dir = root / "runs" / final["session_hash"]
+
+    assert exit_code == 0
+    assert not (root / "calls" / "01-design-brief").exists()
+    assert (run_dir / "calls" / "01-design-brief" / "conversation.json").is_file()
+    assert (run_dir / "design-brief" / "conversation.json").is_file()
+    assert (run_dir / "output.ifc").is_file()
+
+
 def _brief(*, original_request: str, status: str, source_turns=None):
     source_turns = source_turns or ["turn-user-001"]
     blocker = {
@@ -361,6 +434,55 @@ class _SequenceLiveProvider:
                 metadata={"provider": "mimo", "session_id": session_id},
             ),
         )
+
+
+class _OpenAIClientSequence:
+    def __init__(self, payloads: list[dict]) -> None:
+        self.chat = type(
+            "Chat",
+            (),
+            {"completions": _OpenAIChatCompletionsSequence(payloads)},
+        )()
+
+
+class _OpenAIChatCompletionsSequence:
+    def __init__(self, payloads: list[dict]) -> None:
+        self.payloads = payloads
+        self.index = 0
+
+    def create(self, **kwargs):
+        del kwargs
+        self.index += 1
+        payload = self.payloads[self.index - 1]
+        return _OpenAIResponse(payload, self.index)
+
+
+class _OpenAIResponse:
+    def __init__(self, payload: dict, index: int) -> None:
+        self.payload = payload
+        self.index = index
+
+    def model_dump(self):
+        return {
+            "id": f"chatcmpl-phase62-fix-design-{self.index}",
+            "object": "chat.completion",
+            "model": "mimo-v2.5-pro",
+            "choices": [
+                {
+                    "index": 0,
+                    "finish_reason": "stop",
+                    "message": {
+                        "role": "assistant",
+                        "content": json.dumps(self.payload, ensure_ascii=False),
+                    },
+                }
+            ],
+            "usage": {
+                "prompt_tokens": 100,
+                "completion_tokens": 200,
+                "total_tokens": 300,
+            },
+        }
 
 
 def _write_design_brief_trace_fixture(
