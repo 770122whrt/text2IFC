@@ -7,14 +7,14 @@ See: `.planning/PROJECT.md` (updated 2026-06-11)
 **Core value:** Produce valid, inspectable IFC models from explicit user
 requirements.
 
-**Current focus:** Phase 6.2 Wave 5 - interactive acceptance matrix and UAT closure
+**Current focus:** Post-Phase 6.2 planning for the next interaction/usability phase
 
 ## Status
 
 - Phase: 6.2
-- Stage: In progress
-- State: Phase 6.2 Waves 0-4 verified; accepted live IFC session generated
-- Plans: Phase 6.2 planned, 7 of 7 plans written, 5 materially executed
+- Stage: Complete
+- State: Phase 6.2 verified with DB-backed live Mimo CLI IFC acceptance
+- Plans: Phase 6.2 planned, 7 of 7 plans written, 7 of 7 materially executed
 - Branch: `multiagent-design` in C-drive worktree
 - Remote: `https://github.com/770122whrt/text2IFC`
 
@@ -298,6 +298,23 @@ requirements.
   `geometry_success: true`, `secret_finding_count: 0`, and
   `audit_evidence_class: live`. Acceptance artifacts are under
   `dataset/processed/agent-demo/phase6.2-interactive-cli/`.
+- Phase 6.2 final accepted session is now `0fe9f14742b5c5d7`. It was generated
+  with real Mimo calls, passes the Phase 6.2 artifact verifier, reopens as
+  IFC2X3, passes geometry gates, has `audit_evidence_class: live`, and reports
+  `secret_finding_count: 0`.
+- Phase 6.2 report generation is now DB-backed. The accepted `report.md`
+  includes original input, transcript, Design Brief sidecars, Generator
+  sidecars, Repair route, Audit sidecars, deterministic gates, final artifacts,
+  session export, events, and artifact index.
+- Phase 6.2 query/resume/export commands are implemented and covered by tests.
+  Read-only session queries no longer mutate `sessions.sqlite`.
+- Real Mimo prompt iteration in Phase 6.2 found and fixed additional Design
+  Brief issues: failed calls now preserve evidence before raising, and
+  `design-brief.v2.1` now requires target-valid questions and exact transcript
+  `source_turns`.
+- Final Phase 6.2 verification passed 55 focused tests, 228 Agent/Service/
+  Compiler regression tests, compileall, artifact verifier, and accepted-run
+  secret scan.
 
 ## Current Decisions
 
@@ -435,11 +452,10 @@ requirements.
 
 ## Next Action
 
-Execute Phase 6.2 Wave 5: broaden the interactive acceptance matrix and record
-the explicit Codex-as-user terminal UAT closure. The happy-path live IFC
-artifact exists at session `2063e6228b5f2f6d`; remaining closure should verify
-query/resume/export review ergonomics, Draft/unknown-answer behavior, and final
-Wave 6 security/coverage review before marking Phase 6.2 complete.
+Plan the next usability/interactivity phase. Candidate follow-up: add a robust
+Windows UTF-8 interactive wrapper or explicit `--stdin-encoding utf-8` mode so
+direct Chinese terminal input is reliable outside UTF-8 files, then broaden
+live CLI UAT beyond the simple clarified-room case.
 
 ## Accumulated Context
 
@@ -640,4 +656,4 @@ Wave 6 security/coverage review before marking Phase 6.2 complete.
   responses.
 
 ---
-*Last activity: 2026-06-25 - completed Phase 6.2 live IFC happy path with accepted session 2063e6228b5f2f6d*
+*Last activity: 2026-06-26 - completed Phase 6.2 final verification with accepted session 0fe9f14742b5c5d7*

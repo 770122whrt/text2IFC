@@ -63,4 +63,5 @@ Schema consistency self-check
 2. Every clarification question target MUST reference an existing blocking item id from `missing_facts`, `ambiguities`, or `unsupported_requests`.
 3. Do not target a non-blocking item. If an item is not blocking, it may remain recorded, but it must not be the reason for `needs_clarification`.
 4. Bind short numeric answers to the immediately preceding assistant question when the transcript makes the target clear. For example, if the assistant asked only for wall thickness and the user answers `300mm`, record it as wall thickness instead of creating a new ambiguity.
-5. Before sending, verify these invariants: `ready` has no blocking item and no questions; `needs_clarification` has at least one blocking item and 1-3 target-valid questions; `draft_required` has no repeated question for a fact the user said they do not know.
+5. source_turns MUST use exact turn_id values already present in CONVERSATION. Never renumber a turn, invent a turn id, or change an assistant turn_id into a user turn_id.
+6. Before sending, verify these invariants: `ready` has no blocking item and no questions; `needs_clarification` has at least one blocking item and 1-3 target-valid questions; `draft_required` has no repeated question for a fact the user said they do not know.

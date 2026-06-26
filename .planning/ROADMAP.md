@@ -597,12 +597,12 @@ unit-test tools and cannot satisfy live CLI acceptance.
 
 **Wave 5** *(blocked on Wave 4 generated report integration)*
 
-- [ ] `06.2-05-PLAN.md` - Interactive acceptance matrix and final
+- [x] `06.2-05-PLAN.md` - Interactive acceptance matrix and final
   Codex-as-user CLI IFC demo
 
 **Wave 6** *(blocked on Wave 5 final artifact bundle)*
 
-- [ ] `06.2-06-PLAN.md` - Final verification, security review, and roadmap
+- [x] `06.2-06-PLAN.md` - Final verification, security review, and roadmap
   state update
 
 **Cross-cutting constraints:**
@@ -635,6 +635,5 @@ unit-test tools and cannot satisfy live CLI acceptance.
 - OpenAI Agents SDK adoption is conditional on Wave 0 evidence; a rejected SDK
   does not block the native OpenAI SDK provider path.
 
-**Status:** In progress - Waves 0-4 verified; accepted live IFC session
-`2063e6228b5f2f6d` generated 2026-06-25; Wave 5 matrix/UAT and Wave 6 final
-review remain
+**Status:** Complete - verified 2026-06-26 with accepted live IFC session
+`0fe9f14742b5c5d7`

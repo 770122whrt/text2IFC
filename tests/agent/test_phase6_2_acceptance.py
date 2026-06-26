@@ -9,13 +9,16 @@ ACCEPTANCE_ROOT = ROOT / "dataset/processed/agent-demo/phase6.2-interactive-cli"
 def test_phase6_2_artifact_verifier_accepts_live_cli_ifc_bundle():
     from scripts.agent import verify_phase6_2_artifacts
 
+    final_acceptance = json.loads(
+        (ACCEPTANCE_ROOT / "final-acceptance.json").read_text(encoding="utf-8")
+    )
     result = verify_phase6_2_artifacts.verify(
         ACCEPTANCE_ROOT,
         session_from=ACCEPTANCE_ROOT / "final-acceptance.json",
     )
 
     assert result["valid"] is True
-    assert result["session_hash"] == "2063e6228b5f2f6d"
+    assert result["session_hash"] == final_acceptance["session_hash"]
     assert result["session_in_db"] is True
     assert result["output_ifc_reopenable"] is True
     assert result["geometry_success"] is True
