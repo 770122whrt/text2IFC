@@ -109,6 +109,7 @@ def test_design_brief_v21_enforces_question_target_consistency():
     assert "needs_clarification MUST include 1-3 clarification_questions" in text
     assert "Every clarification question target MUST reference an existing blocking item id" in text
     assert "Bind short numeric answers to the immediately preceding assistant question" in text
+    assert "source_turns MUST use exact turn_id values already present in CONVERSATION" in text
  
 def test_audit_v2_understands_parent_relative_centered_openings():
     text = AUDIT_V2.read_text(encoding="utf-8")
