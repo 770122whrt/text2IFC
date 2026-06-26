@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import sys
 from dataclasses import dataclass
 from pathlib import Path
@@ -184,6 +185,12 @@ def run_repl_chat(
     if ifc_result.ifc_path:
         active_stdout.write(f"IFC: {ifc_result.ifc_path}\n")
     if ifc_result.report_path:
+        _write_fix_repl_report_and_acceptance(
+            store=store,
+            session_id=ifc_result.session_id,
+            ifc_path=ifc_result.ifc_path,
+            report_path=ifc_result.report_path,
+        )
         active_stdout.write(f"report.md: {ifc_result.report_path}\n")
     active_stdout.flush()
     return ReplChatResult(
@@ -232,3 +239,66 @@ def _read_input(stdout: TextIO, input_func: InputFunc | None, prompt: str) -> st
 
 def _is_quit(value: str) -> bool:
     return value.strip().lower() in {"quit", "exit", "\u9000\u51fa", "q"}
+
+
+def _write_fix_repl_report_and_acceptance(
+    *,
+    store: SessionStore,
+    session_id: str,
+    ifc_path: str | None,
+    report_path: str | None,
+) -> None:
+    session = store.get_session(session_id)
+    export_path = store.export_session(session.session_id)
+    export = store.session_export_payload(session.session_id)
+    events = export.get("events", [])
+    started = _first_event(events, "repl_session_started")
+    interaction_mode = str(started.get("payload", {}).get("interaction_mode", ""))
+    input_source = str(started.get("payload", {}).get("input_source", ""))
+    if report_path:
+        report_file = Path(report_path)
+        existing = report_file.read_text(encoding="utf-8") if report_file.is_file() else ""
+        section = "\n".join(
+            [
+                "# Phase 6.2-fix Real REPL Acceptance",
+                "",
+                "## REPL Interaction Evidence",
+                "",
+                f"- interaction_mode: `{interaction_mode}`",
+                f"- input_source: `{input_source}`",
+                f"- session_hash: `{session.session_hash}`",
+                "",
+                "```json",
+                json.dumps(events, ensure_ascii=False, indent=2, sort_keys=True),
+                "```",
+                "",
+            ]
+        )
+        report_file.write_text(section + existing, encoding="utf-8")
+
+    artifacts = {
+        "report": f"runs/{session.session_hash}/report.md",
+        "session_export": f"runs/{session.session_hash}/{export_path.name}",
+    }
+    if ifc_path:
+        artifacts["ifc"] = f"runs/{session.session_hash}/output.ifc"
+    final = {
+        "schema_version": "text2ifc/phase6.2-fix-final-acceptance-v1",
+        "session_id": session.session_id,
+        "session_hash": session.session_hash,
+        "status": store.get_session(session.session_id).status,
+        "interaction_mode": interaction_mode,
+        "input_source": input_source,
+        "artifacts": artifacts,
+    }
+    (store.artifact_root / "final-acceptance.json").write_text(
+        json.dumps(final, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+
+
+def _first_event(events: list[Any], event_type: str) -> dict[str, Any]:
+    for event in events:
+        if isinstance(event, dict) and event.get("event_type") == event_type:
+            return event
+    return {}
