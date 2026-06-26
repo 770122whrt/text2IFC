@@ -1,5 +1,7 @@
 import json
 import io
+import subprocess
+import sys
 from pathlib import Path
 
 from text2ifc_agent.clarification import ClarificationCall
@@ -216,6 +218,26 @@ def test_live_repl_ready_session_compiles_ifc_with_fix_acceptance_report(tmp_pat
     assert "input_source" in report
     assert "assistant_question_displayed" in report
     assert "report.md:" in output.getvalue()
+
+
+def test_repl_chat_script_path_help_runs_from_repo_root():
+    result = subprocess.run(
+        [
+            sys.executable,
+            str(ROOT / "scripts" / "agent" / "run_text2ifc_chat.py"),
+            "--help",
+        ],
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+        errors="replace",
+        check=False,
+    )
+
+    assert result.returncode == 0
+    assert "--live" in result.stdout
+    assert "ModuleNotFoundError" not in result.stderr
 
 
 def _brief(*, original_request: str, status: str, source_turns=None):
