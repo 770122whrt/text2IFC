@@ -10,6 +10,7 @@ from pathlib import Path
 from typing import Any, Callable, TextIO
 
 ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "src"))
 
 from scripts.agent.run_phase6_2_cli import load_env_file  # noqa: E402
