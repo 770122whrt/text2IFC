@@ -584,15 +584,15 @@ unit-test tools and cannot satisfy live CLI acceptance.
 
 **Wave 2** *(blocked on Wave 1 durable session shell)*
 
-- [ ] `06.2-02-PLAN.md` - Interactive Design Brief clarification loop
+- [x] `06.2-02-PLAN.md` - Interactive Design Brief clarification loop
 
 **Wave 3** *(blocked on Wave 2 ready Design Brief or canonical Draft routing)*
 
-- [ ] `06.2-03-PLAN.md` - BIM JSON generation and deterministic IFC gates
+- [x] `06.2-03-PLAN.md` - BIM JSON generation and deterministic IFC gates
 
 **Wave 4** *(blocked on Wave 3 terminal generation and gate state)*
 
-- [ ] `06.2-04-PLAN.md` - Audit, conditional repair, and generated report
+- [x] `06.2-04-PLAN.md` - Audit, conditional repair, and generated report
   integration
 
 **Wave 5** *(blocked on Wave 4 generated report integration)*
@@ -635,4 +635,6 @@ unit-test tools and cannot satisfy live CLI acceptance.
 - OpenAI Agents SDK adoption is conditional on Wave 0 evidence; a rejected SDK
   does not block the native OpenAI SDK provider path.
 
-**Status:** In progress - Waves 0-1 verified 2026-06-24; Wave 2 ready
+**Status:** In progress - Waves 0-4 verified; accepted live IFC session
+`2063e6228b5f2f6d` generated 2026-06-25; Wave 5 matrix/UAT and Wave 6 final
+review remain

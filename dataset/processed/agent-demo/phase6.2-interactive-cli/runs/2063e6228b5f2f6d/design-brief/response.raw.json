@@ -1,0 +1,40 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "message": {
+        "annotations": null,
+        "audio": null,
+        "content": "{\"schema_version\": \"text2ifc/design-brief/2.0\", \"language\": \"zh-CN\", \"original_request\": \"创建一个长6米、宽4米、高3米的房间，南墙中间有一扇900mm宽、2100mm高的门，北墙中间有一扇1200mm宽、1500mm高、窗台900mm高的窗。\", \"status\": \"ready\", \"known_facts\": {\"space\": {\"shape\": \"rectangle\", \"length_mm\": 6000, \"width_mm\": 4000, \"height_mm\": 3000}, \"walls\": {\"count\": 4, \"enclosure\": \"closed\", \"thickness_mm\": 300}, \"door\": {\"host\": \"south_wall\", \"alignment\": \"host_centerline\", \"width_mm\": 900, \"height_mm\": 2100}, \"window\": {\"host\": \"north_wall\", \"alignment\": \"host_centerline\", \"width_mm\": 1200, \"height_mm\": 1500, \"sill_height_mm\": 900}}, \"fact_sources\": [{\"path\": \"/known_facts\", \"source_turns\": [\"turn-user-001\", \"turn-user-003\"], \"evidence_refs\": [\"schema:bim-json-v2:entity\", \"schema:bim-json-v2:representation\"]}], \"missing_facts\": [], \"ambiguities\": [], \"unsupported_requests\": [], \"user_corrections\": [], \"clarification_questions\": [], \"provenance\": {\"source_turns\": [\"turn-user-001\", \"turn-user-003\"], \"selected_evidence_ids\": [\"schema:bim-json-v2:entity\", \"schema:bim-json-v2:representation\", \"capability:IFC2X3:IfcSpace\", \"capability:IFC2X3:IfcWall\", \"capability:IFC2X3:IfcDoor\", \"capability:IFC2X3:IfcWindow\"], \"few_shot_ids\": [\"design-brief-v2.complete-room-openings\"]}}",
+        "function_call": null,
+        "refusal": null,
+        "role": "assistant",
+        "tool_calls": null
+      }
+    }
+  ],
+  "created": 1782401191,
+  "id": "1b9ab01ef2b94f74a4e2ba0137da7c5a",
+  "model": "mimo-v2.5-pro",
+  "moderation": null,
+  "object": "chat.completion",
+  "service_tier": null,
+  "system_fingerprint": null,
+  "usage": {
+    "completion_tokens": 464,
+    "completion_tokens_details": {
+      "accepted_prediction_tokens": null,
+      "audio_tokens": null,
+      "reasoning_tokens": 0,
+      "rejected_prediction_tokens": null
+    },
+    "prompt_tokens": 9468,
+    "prompt_tokens_details": {
+      "audio_tokens": null,
+      "cached_tokens": 9408
+    },
+    "total_tokens": 9932
+  }
+}

@@ -7,14 +7,14 @@ See: `.planning/PROJECT.md` (updated 2026-06-11)
 **Core value:** Produce valid, inspectable IFC models from explicit user
 requirements.
 
-**Current focus:** Phase 6.2 Wave 2 - interactive Design Brief clarification loop
+**Current focus:** Phase 6.2 Wave 5 - interactive acceptance matrix and UAT closure
 
 ## Status
 
 - Phase: 6.2
 - Stage: In progress
-- State: Phase 6.2 Waves 0-1 verified; Wave 2 ready
-- Plans: Phase 6.2 planned, 7 of 7 plans written, 2 executed
+- State: Phase 6.2 Waves 0-4 verified; accepted live IFC session generated
+- Plans: Phase 6.2 planned, 7 of 7 plans written, 5 materially executed
 - Branch: `multiagent-design` in C-drive worktree
 - Remote: `https://github.com/770122whrt/text2IFC`
 
@@ -281,6 +281,23 @@ requirements.
   `dataset/processed/agent-demo/phase6.2-interactive-cli/runs/a26e3365a3204b38/session-export.json`,
   and remains `incomplete` after user `quit` without fabricating Agent or IFC
   results.
+- Phase 6.2 Wave 2 completed the DB-backed Mimo Design Brief loop. A real
+  clarified-room session reached `ready` after Mimo asked for wall thickness
+  and the user supplied `300mm`; Design Brief calls preserve prompt hashes,
+  redacted requests, raw responses, parsed outputs, and usage metadata.
+- Phase 6.2 Wave 3/4 connected ready sessions to real Mimo Generator and Audit
+  calls, deterministic repair routing, IFC compile/reopen, geometry gates,
+  generated reports, session export, and a root `final-acceptance.json`.
+- Phase 6.2 live prompt iteration found and fixed three real failures:
+  `finish_reason=length` at the old 1024 token budget, Audit misunderstanding
+  parent-relative centered openings, Generator duplicating wall rotation into
+  `Representation.position`, and Mimo fenced JSON output before
+  `response_format` was added.
+- Phase 6.2 accepted live session `2063e6228b5f2f6d` is compiled. Its final
+  metrics report `valid: true`, `compile_reopen_success: true`,
+  `geometry_success: true`, `secret_finding_count: 0`, and
+  `audit_evidence_class: live`. Acceptance artifacts are under
+  `dataset/processed/agent-demo/phase6.2-interactive-cli/`.
 
 ## Current Decisions
 
@@ -418,12 +435,11 @@ requirements.
 
 ## Next Action
 
-Execute Phase 6.2 Wave 2: connect the Chinese Design Brief clarification loop
-to the shared SQLite CLI session. Mimo-backed clarification must write prompt
-IDs/hashes, raw response references, parsed Design Brief or Draft state,
-questions, and user answers into the DB. Do not begin BIM JSON generation until
-the DB-backed Design Brief loop can reach ready or Draft without hidden files or
-prewritten answers.
+Execute Phase 6.2 Wave 5: broaden the interactive acceptance matrix and record
+the explicit Codex-as-user terminal UAT closure. The happy-path live IFC
+artifact exists at session `2063e6228b5f2f6d`; remaining closure should verify
+query/resume/export review ergonomics, Draft/unknown-answer behavior, and final
+Wave 6 security/coverage review before marking Phase 6.2 complete.
 
 ## Accumulated Context
 
@@ -624,4 +640,4 @@ prewritten answers.
   responses.
 
 ---
-*Last activity: 2026-06-24 - completed Phase 6.2 Wave 1 shared SQLite CLI shell*
+*Last activity: 2026-06-25 - completed Phase 6.2 live IFC happy path with accepted session 2063e6228b5f2f6d*

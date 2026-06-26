@@ -1,0 +1,67 @@
+{
+  "ambiguities": [],
+  "clarification_questions": [],
+  "fact_sources": [
+    {
+      "evidence_refs": [
+        "schema:bim-json-v2:entity",
+        "schema:bim-json-v2:representation"
+      ],
+      "path": "/known_facts",
+      "source_turns": [
+        "turn-user-001",
+        "turn-user-003"
+      ]
+    }
+  ],
+  "known_facts": {
+    "door": {
+      "alignment": "host_centerline",
+      "height_mm": 2100,
+      "host": "south_wall",
+      "width_mm": 900
+    },
+    "space": {
+      "height_mm": 3000,
+      "length_mm": 6000,
+      "shape": "rectangle",
+      "width_mm": 4000
+    },
+    "walls": {
+      "count": 4,
+      "enclosure": "closed",
+      "thickness_mm": 300
+    },
+    "window": {
+      "alignment": "host_centerline",
+      "height_mm": 1500,
+      "host": "north_wall",
+      "sill_height_mm": 900,
+      "width_mm": 1200
+    }
+  },
+  "language": "zh-CN",
+  "missing_facts": [],
+  "original_request": "创建一个长6米、宽4米、高3米的房间，南墙中间有一扇900mm宽、2100mm高的门，北墙中间有一扇1200mm宽、1500mm高、窗台900mm高的窗。",
+  "provenance": {
+    "few_shot_ids": [
+      "design-brief-v2.complete-room-openings"
+    ],
+    "selected_evidence_ids": [
+      "schema:bim-json-v2:entity",
+      "schema:bim-json-v2:representation",
+      "capability:IFC2X3:IfcSpace",
+      "capability:IFC2X3:IfcWall",
+      "capability:IFC2X3:IfcDoor",
+      "capability:IFC2X3:IfcWindow"
+    ],
+    "source_turns": [
+      "turn-user-001",
+      "turn-user-003"
+    ]
+  },
+  "schema_version": "text2ifc/design-brief/2.0",
+  "status": "ready",
+  "unsupported_requests": [],
+  "user_corrections": []
+}
