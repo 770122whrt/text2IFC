@@ -7,16 +7,18 @@ See: `.planning/PROJECT.md` (updated 2026-06-11)
 **Core value:** Produce valid, inspectable IFC models from explicit user
 requirements.
 
-**Current focus:** Phase 6.2-fix planning for the real human-facing REPL CLI
-acceptance gap
+**Current focus:** Phase 6.2-fix real human-facing REPL CLI acceptance handoff
 
 ## Status
 
 - Phase: 6.2-fix
-- Stage: Planned for user review
-- State: Phase 6.2 produced a DB-backed real Mimo pipeline and IFC artifact, but
-  final user-facing REPL acceptance is not yet complete
-- Plans: Phase 6.2-fix SPEC and 4 plans written for review
+- Stage: Awaiting user-run real terminal UAT
+- State: Waves 0-2 are implemented and automatically verified. The dedicated
+  `run_text2ifc_chat.py` REPL now prints Mimo questions before reading user
+  answers, records terminal interaction evidence, routes ready sessions to IFC,
+  and writes a Phase 6.2-fix final acceptance index/report. Wave 3 still needs
+  a real human terminal run without scripted stdin or fake/replay providers.
+- Plans: Phase 6.2-fix Waves 0-2 complete; Wave 3 pending user UAT
 - Branch: `multiagent-design` in C-drive worktree
 - Remote: `https://github.com/770122whrt/text2IFC`
 
@@ -405,6 +407,12 @@ acceptance gap
 - Phase 6.2 final acceptance requires a real-time CLI UAT where Codex acts as
   the user and Mimo acts as the Agent provider; scripted stdin remains
   regression support.
+- Phase 6.2-fix Waves 0-2 implemented the missing real REPL product boundary.
+  Focused tests now prove the assistant question is printed before answer
+  input; `run_text2ifc_chat.py` can be run directly by file path; ready REPL
+  sessions route through the existing BIM JSON, IFC, Audit, report, and export
+  gates; and Phase 6.2-fix `final-acceptance.json` records
+  `interaction_mode: "human_repl_live"` and `input_source: "terminal"`.
 - Phase 6.2 treats OpenAI Agents SDK as a conditional integration. A failed SDK
   compatibility checkpoint is not a product failure if the native OpenAI SDK
   provider path remains evidence-complete.
@@ -454,9 +462,12 @@ acceptance gap
 
 ## Next Action
 
-Review and execute Phase 6.2-fix. The next implementation step is the RED test
-plan that proves a true REPL prints Mimo's question before reading the user's
-answer and that scripted stdin cannot satisfy final acceptance.
+Run Phase 6.2-fix Wave 3 real terminal UAT from the C-drive worktree:
+`.venv\Scripts\python scripts\agent\run_text2ifc_chat.py --live --output-root dataset\processed\agent-demo\phase6.2-fix-repl`
+
+The user should type the building request and answer the Mimo-authored
+questions in the terminal. Do not use `--scripted-stdin`, answer files, fake
+providers, or replay output for final acceptance.
 
 ## Accumulated Context
 
@@ -657,4 +668,5 @@ answer and that scripted stdin cannot satisfy final acceptance.
   responses.
 
 ---
-*Last activity: 2026-06-26 - planned Phase 6.2-fix real REPL acceptance correction*
+*Last activity: 2026-06-26 - implemented Phase 6.2-fix Waves 0-2 and prepared
+real terminal REPL UAT handoff*

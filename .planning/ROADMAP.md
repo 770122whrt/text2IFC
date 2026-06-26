@@ -672,16 +672,16 @@ tools only and cannot satisfy final Phase 6.2-fix acceptance.
 
 **Wave 0**
 
-- [ ] `06.2-fix-00-PLAN.md` - Failure reproduction and REPL acceptance contract
+- [x] `06.2-fix-00-PLAN.md` - Failure reproduction and REPL acceptance contract
 
 **Wave 1** *(blocked on Wave 0 RED tests)*
 
-- [ ] `06.2-fix-01-PLAN.md` - Chinese REPL entrypoint and stepwise Design
+- [x] `06.2-fix-01-PLAN.md` - Chinese REPL entrypoint and stepwise Design
   Brief loop
 
 **Wave 2** *(blocked on Wave 1 REPL interaction)*
 
-- [ ] `06.2-fix-02-PLAN.md` - REPL-to-IFC route, report evidence, and strict
+- [x] `06.2-fix-02-PLAN.md` - REPL-to-IFC route, report evidence, and strict
   verifier
 
 **Wave 3** *(blocked on Wave 2 verifier and report gates)*
@@ -704,4 +704,5 @@ tools only and cannot satisfy final Phase 6.2-fix acceptance.
 - All work remains in the C-drive `multiagent-design` worktree; the E-drive
   working tree is not edited.
 
-**Status:** Planned for user review 2026-06-26
+**Status:** Waves 0-2 implemented and automatically verified 2026-06-26;
+awaiting real human terminal REPL UAT for Wave 3.
