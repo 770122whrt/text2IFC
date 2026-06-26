@@ -1,5 +1,7 @@
 import json
 
+import pytest
+
 from text2ifc_agent.context_selection import select_design_brief_context
 from text2ifc_agent.clarification import ClarificationCall
 from text2ifc_agent.interactive_cli_flow import (
@@ -7,6 +9,7 @@ from text2ifc_agent.interactive_cli_flow import (
     run_design_brief_clarification_loop,
 )
 from text2ifc_agent.openai_compat import load_openai_compatible_runtime_config
+from text2ifc_agent.openai_compat import OpenAICompatError
 from text2ifc_agent.session_store import SessionStore
 
 
@@ -369,6 +372,71 @@ def test_openai_design_brief_invoker_writes_trace_and_returns_call(tmp_path):
     )
     assert metrics["response_id"] == "chatcmpl-design-001"
     assert metrics["finish_reason"] == "stop"
+
+
+def test_openai_design_brief_invoker_preserves_schema_failure_evidence(tmp_path):
+    invalid_brief = {
+        "schema_version": "text2ifc/design-brief/2.0",
+        "language": "zh-CN",
+        "status": "ready",
+    }
+
+    class Response:
+        def model_dump(self):
+            return {
+                "id": "chatcmpl-design-invalid",
+                "object": "chat.completion",
+                "model": "mimo-v2.5-pro",
+                "choices": [
+                    {
+                        "index": 0,
+                        "finish_reason": "stop",
+                        "message": {
+                            "role": "assistant",
+                            "content": json.dumps(invalid_brief, ensure_ascii=False),
+                        },
+                    }
+                ],
+                "usage": {"total_tokens": 33},
+            }
+
+    class ChatCompletions:
+        def create(self, **kwargs):
+            return Response()
+
+    class Client:
+        def __init__(self):
+            self.chat = type("Chat", (), {"completions": ChatCompletions()})()
+
+    config = load_openai_compatible_runtime_config(
+        {
+            "API_KEY": "secret-api-key",
+            "OpenAI_BASE_URL": "https://api.xiaomimimo.com",
+            "TEXT2IFC_MIMO_MODEL": "mimo-v2.5-pro",
+        }
+    )
+    invoker = make_openai_design_brief_invoker(
+        config=config,
+        run_dir=tmp_path,
+        client_factory=lambda **kwargs: Client(),
+    )
+
+    with pytest.raises(OpenAICompatError, match="failed schema validation"):
+        invoker(
+            [{"turn_id": "turn-user-001", "role": "user", "content": "create a room"}],
+            1,
+        )
+
+    call_dir = tmp_path / "calls" / "01-design-brief"
+    assert (call_dir / "response.raw.json").is_file()
+    assert (call_dir / "model-text.txt").is_file()
+    assert (call_dir / "parsed-output.json").is_file()
+    validation = json.loads((call_dir / "validation.json").read_text(encoding="utf-8"))
+    assert validation["valid"] is False
+    assert validation["issue_count"] > 0
+    metrics = json.loads((call_dir / "metrics.json").read_text(encoding="utf-8"))
+    assert metrics["response_id"] == "chatcmpl-design-invalid"
+    assert metrics["schema_semantic_valid"] is False
 
 
 def test_phase6_2_cli_builds_default_openai_design_brief_invoker(
