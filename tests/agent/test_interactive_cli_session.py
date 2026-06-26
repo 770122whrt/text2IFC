@@ -151,6 +151,28 @@ def test_query_cli_lists_shows_turns_and_exports_session(tmp_path, capsys):
     assert Path(export_output["export_path"]).is_file()
 
 
+def test_read_only_query_cli_does_not_mutate_existing_session_db(tmp_path, capsys):
+    from scripts.agent import query_phase6_2_sessions
+
+    root = tmp_path / "phase6.2-interactive-cli"
+    db_path = root / "sessions.sqlite"
+    store = SessionStore.open(db_path, artifact_root=root)
+    session = store.create_session(original_input="create a small office")
+    store.close()
+    before = db_path.read_bytes()
+
+    assert query_phase6_2_sessions.main(["--db", str(db_path), "list"]) == 0
+    capsys.readouterr()
+    assert query_phase6_2_sessions.main(["--db", str(db_path), "show", session.session_hash]) == 0
+    capsys.readouterr()
+    assert query_phase6_2_sessions.main(["--db", str(db_path), "turns", session.session_hash]) == 0
+    capsys.readouterr()
+    assert query_phase6_2_sessions.main(["--db", str(db_path), "artifacts", session.session_hash]) == 0
+    capsys.readouterr()
+
+    assert db_path.read_bytes() == before
+
+
 def test_interactive_session_resume_appends_to_existing_hash(tmp_path):
     root = tmp_path / "phase6.2-interactive-cli"
     store = SessionStore.open(root / "sessions.sqlite", artifact_root=root)
