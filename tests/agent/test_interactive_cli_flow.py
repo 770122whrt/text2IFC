@@ -218,6 +218,74 @@ def test_phase6_2_cli_runs_design_brief_loop_with_injected_invoker(
     assert (root / "runs" / summary["session_hash"] / "design-brief.json").is_file()
 
 
+def test_live_cli_reads_clarification_answers_lazily(tmp_path, capsys):
+    from scripts.agent import run_phase6_2_cli
+
+    root = tmp_path / "phase6.2-interactive-cli"
+
+    class LazyStdin:
+        def __init__(self):
+            self.lines = iter(
+                [
+                    "create a simple room\n",
+                    "wall thickness is 300mm\n",
+                ]
+            )
+            self.read_called = False
+            self.line_count = 0
+
+        def read(self):
+            self.read_called = True
+            raise AssertionError("live CLI must not pre-read all stdin")
+
+        def __iter__(self):
+            return self
+
+        def __next__(self):
+            line = next(self.lines)
+            self.line_count += 1
+            return line
+
+    stdin = LazyStdin()
+    observed_line_counts = []
+
+    def invoke(transcript, call_index):
+        observed_line_counts.append(stdin.line_count)
+        original_request = transcript[0]["content"]
+        if call_index == 1:
+            return _call(
+                call_index,
+                original_request=original_request,
+                status="needs_clarification",
+            )
+        return _call(
+            call_index,
+            original_request=original_request,
+            status="ready",
+            source_turns=["turn-user-001", "turn-user-003"],
+        )
+
+    exit_code = run_phase6_2_cli.main(
+        [
+            "--live",
+            "--stop-after",
+            "design-brief",
+            "--output-root",
+            str(root),
+            "--db",
+            str(root / "sessions.sqlite"),
+        ],
+        design_brief_invoker=invoke,
+        stdin=stdin,
+    )
+    summary = json.loads(capsys.readouterr().out)
+
+    assert exit_code == 0
+    assert summary["status"] == "ready"
+    assert stdin.read_called is False
+    assert observed_line_counts == [1, 2]
+
+
 def test_openai_design_brief_invoker_writes_trace_and_returns_call(tmp_path):
     captured = {}
     original_request = "创建一个6米乘4米、高3米的房间。"
