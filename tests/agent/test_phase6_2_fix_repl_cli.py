@@ -1,9 +1,14 @@
+import json
 import io
+from pathlib import Path
 
 from text2ifc_agent.clarification import ClarificationCall
+from text2ifc_agent.providers import LiveProviderResult, ProviderOutput
 from text2ifc_agent.session_store import SessionStore
 
 
+ROOT = Path(__file__).resolve().parents[2]
+PHASE6_1_COMPLETE = ROOT / "dataset/processed/agent-demo/phase6.1-mimo-live/complete-room"
 EVIDENCE = [
     {"evidence_id": "schema:bim-json-v2:representation"},
     {"evidence_id": "capability:IFC2X3:IfcSpace"},
@@ -140,6 +145,79 @@ def test_live_repl_quit_records_incomplete_without_ifc(tmp_path):
     assert "\u5df2\u9000\u51fa" in output.getvalue()
 
 
+def test_live_repl_ready_session_compiles_ifc_with_fix_acceptance_report(tmp_path):
+    from scripts.agent import run_text2ifc_chat
+
+    root = tmp_path / "phase6.2-fix-repl"
+    output = io.StringIO()
+    answers = iter([ORIGINAL_REQUEST, ANSWER_TEXT])
+
+    def invoke(transcript, call_index):
+        if call_index == 1:
+            call = _call(
+                call_index,
+                original_request=transcript[0]["content"],
+                status="needs_clarification",
+            )
+        else:
+            call = _call(
+                call_index,
+                original_request=transcript[0]["content"],
+                status="ready",
+                source_turns=["turn-user-001", "turn-user-003"],
+            )
+        _write_design_brief_trace_fixture(root, call_index, transcript, call.brief)
+        return call
+
+    candidate = json.loads(
+        (PHASE6_1_COMPLETE / "generator" / "candidate.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    audit = {
+        "schema_version": "text2ifc/audit/2.0",
+        "recommendation": "accept",
+        "blocking": False,
+        "deterministic_gate_status": "passed",
+        "findings": [],
+        "evidence_paths": [
+            "design-brief/design-brief.json",
+            "generator/candidate.json",
+            "repair/route.json",
+        ],
+    }
+    provider = _SequenceLiveProvider([candidate, audit])
+
+    exit_code = run_text2ifc_chat.main(
+        [
+            "--live",
+            "--output-root",
+            str(root),
+            "--db",
+            str(root / "sessions.sqlite"),
+        ],
+        design_brief_invoker=invoke,
+        live_provider_factory=lambda: provider,
+        input_func=lambda prompt: next(answers),
+        stdout=output,
+    )
+
+    final = json.loads((root / "final-acceptance.json").read_text(encoding="utf-8"))
+    report_path = root / final["artifacts"]["report"]
+    report = report_path.read_text(encoding="utf-8")
+
+    assert exit_code == 0
+    assert final["schema_version"] == "text2ifc/phase6.2-fix-final-acceptance-v1"
+    assert final["interaction_mode"] == "human_repl_live"
+    assert final["input_source"] == "terminal"
+    assert (root / final["artifacts"]["ifc"]).is_file()
+    assert "## REPL Interaction Evidence" in report
+    assert "human_repl_live" in report
+    assert "input_source" in report
+    assert "assistant_question_displayed" in report
+    assert "report.md:" in output.getvalue()
+
+
 def _brief(*, original_request: str, status: str, source_turns=None):
     source_turns = source_turns or ["turn-user-001"]
     blocker = {
@@ -210,4 +288,85 @@ def _call(index, *, original_request, status, source_turns=None):
             source_turns=source_turns,
         ),
         evidence_catalog=EVIDENCE,
+    )
+
+
+class _SequenceLiveProvider:
+    def __init__(self, payloads: list[dict]) -> None:
+        self.payloads = payloads
+        self.session_ids: list[str] = []
+
+    def generate_live(self, *, session_id, prompt, schema, state):
+        del prompt, schema, state
+        index = len(self.session_ids)
+        self.session_ids.append(session_id)
+        payload = self.payloads[index]
+        text = json.dumps(payload, ensure_ascii=False)
+        response = {
+            "id": f"msg_phase62_fix_provider_{index + 1}",
+            "type": "message",
+            "role": "assistant",
+            "model": "mimo-v2.5-pro",
+            "stop_reason": "end_turn",
+            "content": [{"type": "text", "text": text}],
+            "usage": {"input_tokens": 100, "output_tokens": 200},
+        }
+        return LiveProviderResult(
+            session_id=session_id,
+            evidence_class="unit_test_fixture",
+            http_status=200,
+            request={
+                "model": "mimo-v2.5-pro",
+                "max_tokens": 131072,
+                "stream": True,
+                "messages": [{"role": "user", "content": "<redacted-test-prompt>"}],
+            },
+            response=response,
+            events=(
+                {
+                    "sequence": 0,
+                    "event": "message_start",
+                    "data": {"type": "message_start", "message": response},
+                },
+                {
+                    "sequence": 1,
+                    "event": "message_stop",
+                    "data": {"type": "message_stop"},
+                },
+            ),
+            output=ProviderOutput(
+                text=text,
+                metadata={"provider": "mimo", "session_id": session_id},
+            ),
+        )
+
+
+def _write_design_brief_trace_fixture(
+    root: Path,
+    call_index: int,
+    transcript: list[dict],
+    brief: dict,
+) -> None:
+    runs = list((root / "runs").iterdir())
+    assert len(runs) == 1
+    call_dir = runs[0] / "calls" / f"{call_index:02d}-design-brief"
+    call_dir.mkdir(parents=True, exist_ok=True)
+    payloads = {
+        "conversation.json": transcript,
+        "context-selection.json": {"evidence": EVIDENCE, "few_shots": []},
+        "request.redacted.json": {"model": "mimo-v2.5-pro"},
+        "response.raw.json": {"id": f"msg_phase62_fix_{call_index}"},
+        "design-brief.json": brief,
+        "validation.json": {"valid": True, "issue_count": 0, "issues": []},
+        "metrics.json": {"response_id": f"msg_phase62_fix_{call_index}"},
+    }
+    for name, payload in payloads.items():
+        (call_dir / name).write_text(
+            json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
+            encoding="utf-8",
+        )
+    (call_dir / "prompt-rendered.md").write_text("<test design brief prompt>\n", encoding="utf-8")
+    (call_dir / "model-text.txt").write_text(
+        json.dumps(brief, ensure_ascii=False),
+        encoding="utf-8",
     )
