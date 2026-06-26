@@ -192,6 +192,11 @@ requirements.
   interfaces so users and later APIs can list sessions, inspect turns, inspect
   agent calls, inspect artifacts, resume incomplete sessions, and export one
   session's review bundle by `session_id` or `session_hash`.
+- [ ] **CLI-08**: Final interactive CLI acceptance requires a true human-facing
+  Chinese REPL run: the assistant question is visible before each user answer
+  is read, the accepted session is marked as terminal/live interaction, and
+  scripted stdin, prewritten answer files, fake providers, or replay evidence
+  cannot satisfy final acceptance.
 
 ## Out of Scope
 
@@ -260,19 +265,20 @@ requirements.
 | LIVE-05 | Phase 6.1 | Complete |
 | LIVE-06 | Phase 6.1 | Complete |
 | OBS-02 | Phase 6.1 | Complete |
-| CLI-01 | Phase 6.2 | Planned |
-| CLI-02 | Phase 6.2 | Planned |
-| CLI-03 | Phase 6.2 | Planned |
-| CLI-04 | Phase 6.2 | Planned |
-| CLI-05 | Phase 6.2 | Planned |
-| CLI-06 | Phase 6.2 | Planned |
-| CLI-07 | Phase 6.2 | Planned |
+| CLI-01 | Phase 6.2 | Complete |
+| CLI-02 | Phase 6.2-fix | Planned |
+| CLI-03 | Phase 6.2-fix | Planned |
+| CLI-04 | Phase 6.2-fix | Planned |
+| CLI-05 | Phase 6.2-fix | Planned |
+| CLI-06 | Phase 6.2-fix | Planned |
+| CLI-07 | Phase 6.2-fix | Planned |
+| CLI-08 | Phase 6.2-fix | Planned |
 
 **Coverage:**
-- tracked requirements: 60 total
-- Mapped to phases: 60
+- tracked requirements: 61 total
+- Mapped to phases: 61
 - Unmapped: 0
 
 ---
 *Requirements defined: 2026-06-11*
-*Last updated: 2026-06-23 after Phase 6.2 interactive CLI planning*
+*Last updated: 2026-06-26 after Phase 6.2-fix REPL acceptance planning*

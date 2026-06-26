@@ -637,3 +637,71 @@ unit-test tools and cannot satisfy live CLI acceptance.
 
 **Status:** Complete - verified 2026-06-26 with accepted live IFC session
 `0fe9f14742b5c5d7`
+
+## Phase 6.2-fix: Real-time REPL CLI UAT Correction (INSERTED)
+
+**Goal:** Correct the Phase 6.2 acceptance gap by delivering a true
+Chinese-first terminal REPL where the user types a request, sees each
+Mimo-authored clarification question before answering, and receives a validated
+IFC2X3 artifact plus a DB-backed review report.
+
+**Requirements:** CLI-02, CLI-03, CLI-04, CLI-05, CLI-06, CLI-07, CLI-08
+
+**Depends on:** Phase 6.2
+
+**Canonical refs:**
+
+- `.planning/phases/06.2-fix-real-time-repl-cli-uat/06.2-fix-SPEC.md`
+- `.planning/phases/06.2-fix-real-time-repl-cli-uat/06.2-fix-PLAN-OUTLINE.md`
+
+**Explicit boundary:** This phase does not replace the Phase 6.2 backend
+pipeline, provider path, session DB, query/export commands, Generator, Audit,
+or compiler. It fixes the user-facing acceptance boundary. Scripted stdin,
+prewritten answer files, fake providers, and replay evidence remain regression
+tools only and cannot satisfy final Phase 6.2-fix acceptance.
+
+**Final acceptance artifacts:**
+
+- `dataset/processed/agent-demo/phase6.2-fix-repl/sessions.sqlite`
+- `dataset/processed/agent-demo/phase6.2-fix-repl/final-acceptance.json`
+- `dataset/processed/agent-demo/phase6.2-fix-repl/runs/<session_hash>/output.ifc`
+- `dataset/processed/agent-demo/phase6.2-fix-repl/runs/<session_hash>/report.md`
+- `dataset/processed/agent-demo/phase6.2-fix-repl/runs/<session_hash>/session-export.json`
+
+**Plans:** 4 plans in 4 waves
+
+**Wave 0**
+
+- [ ] `06.2-fix-00-PLAN.md` - Failure reproduction and REPL acceptance contract
+
+**Wave 1** *(blocked on Wave 0 RED tests)*
+
+- [ ] `06.2-fix-01-PLAN.md` - Chinese REPL entrypoint and stepwise Design
+  Brief loop
+
+**Wave 2** *(blocked on Wave 1 REPL interaction)*
+
+- [ ] `06.2-fix-02-PLAN.md` - REPL-to-IFC route, report evidence, and strict
+  verifier
+
+**Wave 3** *(blocked on Wave 2 verifier and report gates)*
+
+- [ ] `06.2-fix-03-PLAN.md` - Real Mimo REPL UAT, final verification, and
+  documentation closure
+
+**Cross-cutting constraints:**
+
+- Final accepted evidence must be `interaction_mode: "human_repl_live"` and
+  `input_source: "terminal"`.
+- The REPL must print/persist Mimo's assistant question before reading the
+  user's answer.
+- Scripted stdin, file input, fake providers, and replay evidence cannot
+  satisfy final acceptance even if they produce valid IFC.
+- Regression tests may use fake providers and scripted IO, but they must be
+  labelled as regression evidence only.
+- Formal BIM JSON 2.0 validation still gates IFC compilation.
+- Draft, quit, and blocked outcomes write trace/report artifacts but no IFC.
+- All work remains in the C-drive `multiagent-design` worktree; the E-drive
+  working tree is not edited.
+
+**Status:** Planned for user review 2026-06-26

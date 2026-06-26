@@ -7,14 +7,16 @@ See: `.planning/PROJECT.md` (updated 2026-06-11)
 **Core value:** Produce valid, inspectable IFC models from explicit user
 requirements.
 
-**Current focus:** Post-Phase 6.2 planning for the next interaction/usability phase
+**Current focus:** Phase 6.2-fix planning for the real human-facing REPL CLI
+acceptance gap
 
 ## Status
 
-- Phase: 6.2
-- Stage: Complete
-- State: Phase 6.2 verified with DB-backed live Mimo CLI IFC acceptance
-- Plans: Phase 6.2 planned, 7 of 7 plans written, 7 of 7 materially executed
+- Phase: 6.2-fix
+- Stage: Planned for user review
+- State: Phase 6.2 produced a DB-backed real Mimo pipeline and IFC artifact, but
+  final user-facing REPL acceptance is not yet complete
+- Plans: Phase 6.2-fix SPEC and 4 plans written for review
 - Branch: `multiagent-design` in C-drive worktree
 - Remote: `https://github.com/770122whrt/text2IFC`
 
@@ -452,10 +454,9 @@ requirements.
 
 ## Next Action
 
-Plan the next usability/interactivity phase. Candidate follow-up: add a robust
-Windows UTF-8 interactive wrapper or explicit `--stdin-encoding utf-8` mode so
-direct Chinese terminal input is reliable outside UTF-8 files, then broaden
-live CLI UAT beyond the simple clarified-room case.
+Review and execute Phase 6.2-fix. The next implementation step is the RED test
+plan that proves a true REPL prints Mimo's question before reading the user's
+answer and that scripted stdin cannot satisfy final acceptance.
 
 ## Accumulated Context
 
@@ -656,4 +657,4 @@ live CLI UAT beyond the simple clarified-room case.
   responses.
 
 ---
-*Last activity: 2026-06-26 - completed Phase 6.2 final verification with accepted session 0fe9f14742b5c5d7*
+*Last activity: 2026-06-26 - planned Phase 6.2-fix real REPL acceptance correction*
