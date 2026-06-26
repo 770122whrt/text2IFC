@@ -364,7 +364,7 @@ class SessionStore:
                 """
             )
             self._connection.execute(
-                "INSERT OR REPLACE INTO meta (key, value) VALUES ('schema_version', ?)",
+                "INSERT OR IGNORE INTO meta (key, value) VALUES ('schema_version', ?)",
                 (str(SCHEMA_VERSION),),
             )
 
