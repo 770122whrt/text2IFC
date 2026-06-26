@@ -113,6 +113,35 @@ def make_openai_design_brief_invoker(
                 evidence={"parse_status": parse_status, "diagnostics": diagnostics},
             )
         if diagnostics:
+            _write_design_brief_trace(
+                call_dir=call_dir,
+                transcript=transcript,
+                selection=selection,
+                renderer_inputs=renderer_inputs,
+                rendered_text=rendered["text"],
+                request=evidence["request"],
+                response=payload,
+                model_text=str(evidence["content_text"]),
+                parsed=parsed,
+                validation={
+                    "valid": False,
+                    "issue_count": len(diagnostics),
+                    "issues": diagnostics,
+                },
+                metrics={
+                    "response_id": evidence["response_id"],
+                    "model": evidence["model"],
+                    "finish_reason": evidence["finish_reason"],
+                    "usage": evidence["usage"],
+                    "prompt_template_id": rendered["metadata"]["template_id"],
+                    "prompt_template_hash": rendered["metadata"]["template_hash"],
+                    "parse_valid": True,
+                    "schema_semantic_valid": False,
+                    "strict_output_contract_valid": False,
+                    "design_status": parsed.get("status"),
+                    "question_count": len(parsed.get("clarification_questions", [])),
+                },
+            )
             raise OpenAICompatError(
                 "OpenAI-compatible Design Brief violated strict JSON output contract",
                 evidence={"parse_status": parse_status, "diagnostics": diagnostics},
@@ -121,46 +150,51 @@ def make_openai_design_brief_invoker(
             parsed,
             evidence_catalog=selection["evidence"],
         )
+        serialized_issues = [
+            {
+                "code": issue.code,
+                "path": issue.path,
+                "message": issue.message,
+            }
+            for issue in issues
+        ]
+        metrics = {
+            "response_id": evidence["response_id"],
+            "model": evidence["model"],
+            "finish_reason": evidence["finish_reason"],
+            "usage": evidence["usage"],
+            "prompt_template_id": rendered["metadata"]["template_id"],
+            "prompt_template_hash": rendered["metadata"]["template_hash"],
+            "parse_valid": True,
+            "schema_semantic_valid": not issues,
+            "strict_output_contract_valid": True,
+            "design_status": parsed.get("status"),
+            "question_count": len(parsed.get("clarification_questions", [])),
+        }
+        _write_design_brief_trace(
+            call_dir=call_dir,
+            transcript=transcript,
+            selection=selection,
+            renderer_inputs=renderer_inputs,
+            rendered_text=rendered["text"],
+            request=evidence["request"],
+            response=payload,
+            model_text=str(evidence["content_text"]),
+            parsed=parsed,
+            validation={
+                "valid": not issues,
+                "issue_count": len(serialized_issues),
+                "issues": serialized_issues,
+            },
+            metrics=metrics,
+        )
         if issues:
             raise OpenAICompatError(
                 "OpenAI-compatible Design Brief failed schema validation",
-                evidence={
-                    "issues": [
-                        {
-                            "code": issue.code,
-                            "path": issue.path,
-                            "message": issue.message,
-                        }
-                        for issue in issues
-                    ]
-                },
+                evidence={"issues": serialized_issues},
             )
 
-        _write_json(call_dir / "conversation.json", transcript)
-        _write_json(call_dir / "context-selection.json", selection)
-        _write_json(call_dir / "prompt-render-input.json", renderer_inputs)
-        (call_dir / "prompt-rendered.md").write_text(rendered["text"], encoding="utf-8")
-        _write_json(call_dir / "request.redacted.json", evidence["request"])
-        _write_json(call_dir / "response.raw.json", payload)
-        (call_dir / "model-text.txt").write_text(str(evidence["content_text"]), encoding="utf-8")
-        _write_json(call_dir / "parsed-output.json", parsed)
         _write_json(call_dir / "design-brief.json", parsed)
-        _write_json(
-            call_dir / "metrics.json",
-            {
-                "response_id": evidence["response_id"],
-                "model": evidence["model"],
-                "finish_reason": evidence["finish_reason"],
-                "usage": evidence["usage"],
-                "prompt_template_id": rendered["metadata"]["template_id"],
-                "prompt_template_hash": rendered["metadata"]["template_hash"],
-                "parse_valid": True,
-                "schema_semantic_valid": True,
-                "strict_output_contract_valid": True,
-                "design_status": parsed.get("status"),
-                "question_count": len(parsed.get("clarification_questions", [])),
-            },
-        )
         return ClarificationCall(
             call_index=call_index,
             response_id=str(evidence["response_id"]),
@@ -172,6 +206,32 @@ def make_openai_design_brief_invoker(
         )
 
     return invoke
+
+
+def _write_design_brief_trace(
+    *,
+    call_dir: Path,
+    transcript: list[dict[str, Any]],
+    selection: dict[str, Any],
+    renderer_inputs: dict[str, Any],
+    rendered_text: str,
+    request: dict[str, Any],
+    response: dict[str, Any],
+    model_text: str,
+    parsed: dict[str, Any],
+    validation: dict[str, Any],
+    metrics: dict[str, Any],
+) -> None:
+    _write_json(call_dir / "conversation.json", transcript)
+    _write_json(call_dir / "context-selection.json", selection)
+    _write_json(call_dir / "prompt-render-input.json", renderer_inputs)
+    (call_dir / "prompt-rendered.md").write_text(rendered_text, encoding="utf-8")
+    _write_json(call_dir / "request.redacted.json", request)
+    _write_json(call_dir / "response.raw.json", response)
+    (call_dir / "model-text.txt").write_text(model_text, encoding="utf-8")
+    _write_json(call_dir / "parsed-output.json", parsed)
+    _write_json(call_dir / "validation.json", validation)
+    _write_json(call_dir / "metrics.json", metrics)
 
 
 def run_design_brief_clarification_loop(
