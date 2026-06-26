@@ -1,0 +1,234 @@
+"""Human-facing Phase 6.2-fix REPL orchestration."""
+
+from __future__ import annotations
+
+import sys
+from dataclasses import dataclass
+from pathlib import Path
+from typing import Any, Callable, TextIO
+
+from .clarification import ClarificationController, DesignBriefInvoker
+from .interactive_cli_flow import (
+    _persist_new_turns,
+    _record_call,
+    _write_design_brief_artifact,
+    run_ready_session_to_ifc,
+)
+from .session_store import SessionStore
+
+
+InputFunc = Callable[[str], str]
+
+
+@dataclass(frozen=True)
+class ReplChatResult:
+    session_id: str
+    session_hash: str
+    status: str
+    ifc_path: str | None = None
+    report_path: str | None = None
+
+
+def configure_utf8_stdio(stdout: TextIO | None = None) -> dict[str, str | None]:
+    """Best-effort UTF-8 configuration for Windows terminal use."""
+
+    streams = (sys.stdin, sys.stdout, sys.stderr)
+    for stream in streams:
+        reconfigure = getattr(stream, "reconfigure", None)
+        if callable(reconfigure):
+            try:
+                reconfigure(encoding="utf-8", errors="replace")
+            except Exception:
+                pass
+    active_stdout = stdout or sys.stdout
+    return {
+        "stdin_encoding": getattr(sys.stdin, "encoding", None),
+        "stdout_encoding": getattr(active_stdout, "encoding", None),
+        "stderr_encoding": getattr(sys.stderr, "encoding", None),
+    }
+
+
+def run_repl_chat(
+    *,
+    store: SessionStore,
+    invoke_design_brief: DesignBriefInvoker,
+    input_func: InputFunc | None = None,
+    stdout: TextIO | None = None,
+    stop_after: str = "ifc",
+    provider_factory: Callable[[], Any] | None = None,
+    terminal_metadata: dict[str, Any] | None = None,
+) -> ReplChatResult:
+    """Run a Chinese-first REPL session.
+
+    The key product boundary is deliberate: assistant questions are printed and
+    persisted before user answers are requested.
+    """
+
+    active_stdout = stdout or sys.stdout
+    metadata = terminal_metadata or {}
+    original_request = _read_input(
+        active_stdout,
+        input_func,
+        "\u8bf7\u8f93\u5165\u5efa\u7b51\u9700\u6c42\uff1a",
+    )
+    if _is_quit(original_request):
+        active_stdout.write("\u5df2\u9000\u51fa\uff0c\u672a\u521b\u5efa\u4f1a\u8bdd\u3002\n")
+        active_stdout.flush()
+        return ReplChatResult(session_id="", session_hash="", status="incomplete")
+
+    session = store.create_session(original_input=original_request)
+    store.append_event(
+        session.session_id,
+        event_type="repl_session_started",
+        payload={
+            "interaction_mode": "human_repl_live",
+            "input_source": "terminal",
+            "terminal_encoding": metadata,
+        },
+    )
+    active_stdout.write(
+        f"\u5df2\u521b\u5efa\u4f1a\u8bdd\uff1asession_hash={session.session_hash}\n"
+    )
+    active_stdout.write("\u6b63\u5728\u8bf7 Mimo \u68b3\u7406\u9700\u6c42...\n")
+    active_stdout.flush()
+
+    controller = ClarificationController.start(
+        case_id=session.session_hash,
+        user_request=session.original_input,
+    )
+    persisted_turn_count = 1
+    first_call = invoke_design_brief(controller.transcript_dicts(), 1)
+    controller = controller.record_model_call(first_call)
+    _record_call(store, session.session_id, first_call)
+    persisted_turn_count = _persist_new_turns(
+        store=store,
+        session_id=session.session_id,
+        controller=controller,
+        persisted_turn_count=persisted_turn_count,
+    )
+
+    while controller.status == "needs_clarification":
+        _display_questions(
+            store=store,
+            session_id=session.session_id,
+            controller=controller,
+            stdout=active_stdout,
+        )
+        store.append_event(
+            session.session_id,
+            event_type="user_answer_requested",
+            payload={"question_ids": list(controller.pending_question_ids)},
+        )
+        answer = _read_input(
+            active_stdout,
+            input_func,
+            "\u4f60\u7684\u56de\u7b54\uff1a",
+        )
+        if _is_quit(answer):
+            store.append_event(
+                session.session_id,
+                event_type="user_quit",
+                payload={"status": "incomplete"},
+            )
+            store.mark_session_status(session.session_id, "incomplete")
+            store.export_session(session.session_id)
+            active_stdout.write("\u5df2\u9000\u51fa\uff0c\u4f1a\u8bdd\u5df2\u4fdd\u5b58\u4e3a\u672a\u5b8c\u6210\u3002\n")
+            active_stdout.flush()
+            return ReplChatResult(
+                session_id=session.session_id,
+                session_hash=session.session_hash,
+                status="incomplete",
+            )
+        store.append_event(
+            session.session_id,
+            event_type="user_answer_received",
+            payload={"question_ids": list(controller.pending_question_ids)},
+        )
+        controller = controller.answer_and_rerun(
+            answer=answer,
+            invoke_design_brief=invoke_design_brief,
+        )
+        _record_call(store, session.session_id, controller.calls[-1])
+        persisted_turn_count = _persist_new_turns(
+            store=store,
+            session_id=session.session_id,
+            controller=controller,
+            persisted_turn_count=persisted_turn_count,
+        )
+
+    store.mark_session_status(session.session_id, controller.status)
+    _write_design_brief_artifact(store, session.session_id, controller.calls[-1])
+    store.export_session(session.session_id)
+    if controller.status == "ready":
+        active_stdout.write("\u9700\u6c42\u5df2\u660e\u786e\u3002\n")
+    else:
+        active_stdout.write(f"\u4f1a\u8bdd\u505c\u5728 {controller.status}\u3002\n")
+    active_stdout.write(f"session_hash: {session.session_hash}\n")
+    active_stdout.flush()
+
+    if stop_after == "design-brief" or controller.status != "ready":
+        return ReplChatResult(
+            session_id=session.session_id,
+            session_hash=session.session_hash,
+            status=controller.status,
+        )
+    if provider_factory is None:
+        raise ValueError("IFC generation requires a provider_factory")
+    active_stdout.write("\u6b63\u5728\u751f\u6210 BIM JSON \u5e76\u7f16\u8bd1 IFC...\n")
+    active_stdout.flush()
+    ifc_result = run_ready_session_to_ifc(
+        store=store,
+        session=session.session_hash,
+        provider_factory=provider_factory,
+    )
+    if ifc_result.ifc_path:
+        active_stdout.write(f"IFC: {ifc_result.ifc_path}\n")
+    if ifc_result.report_path:
+        active_stdout.write(f"report.md: {ifc_result.report_path}\n")
+    active_stdout.flush()
+    return ReplChatResult(
+        session_id=ifc_result.session_id,
+        session_hash=ifc_result.session_hash,
+        status=ifc_result.status,
+        ifc_path=ifc_result.ifc_path,
+        report_path=ifc_result.report_path,
+    )
+
+
+def _display_questions(
+    *,
+    store: SessionStore,
+    session_id: str,
+    controller: ClarificationController,
+    stdout: TextIO,
+) -> None:
+    questions = [
+        turn for turn in controller.transcript if turn.role == "assistant"
+    ][-len(controller.pending_question_ids) :]
+    stdout.write("\u9700\u8981\u8865\u5145\u4fe1\u606f\uff1a\n")
+    for index, turn in enumerate(questions, start=1):
+        stdout.write(f"{index}. {turn.content}\n")
+        store.append_event(
+            session_id,
+            event_type="assistant_question_displayed",
+            payload={
+                "turn_id": turn.turn_id,
+                "question_ids": list(turn.question_ids),
+                "text": turn.content,
+            },
+        )
+    stdout.flush()
+
+
+def _read_input(stdout: TextIO, input_func: InputFunc | None, prompt: str) -> str:
+    stdout.write(prompt)
+    stdout.flush()
+    if input_func is None:
+        value = input()
+    else:
+        value = input_func(prompt)
+    return value.strip()
+
+
+def _is_quit(value: str) -> bool:
+    return value.strip().lower() in {"quit", "exit", "\u9000\u51fa", "q"}
