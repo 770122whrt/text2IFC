@@ -56,3 +56,11 @@ Design Brief 2.0 完整输出 Schema：
 最终输出检查
 
 现在只返回一个满足 text2ifc/design-brief/2.0 Schema 的裸 JSON 对象。不要使用 Markdown。不要输出任何反引号字符。不要在对象前后添加任何文字。发送前再次确认首字符是左花括号、末字符是右花括号。
+
+Schema consistency self-check
+
+1. needs_clarification MUST include 1-3 clarification_questions; never return needs_clarification with an empty clarification_questions array.
+2. Every clarification question target MUST reference an existing blocking item id from `missing_facts`, `ambiguities`, or `unsupported_requests`.
+3. Do not target a non-blocking item. If an item is not blocking, it may remain recorded, but it must not be the reason for `needs_clarification`.
+4. Bind short numeric answers to the immediately preceding assistant question when the transcript makes the target clear. For example, if the assistant asked only for wall thickness and the user answers `300mm`, record it as wall thickness instead of creating a new ambiguity.
+5. Before sending, verify these invariants: `ready` has no blocking item and no questions; `needs_clarification` has at least one blocking item and 1-3 target-valid questions; `draft_required` has no repeated question for a fact the user said they do not know.
