@@ -27,6 +27,7 @@ from .failure_routing import route_generation_failure
 from .fact_delta import evaluate_repair_fact_delta
 from .providers import validate_provider_output
 from .run_report import build_live_run_report, resolve_final_design_brief_dir
+from .semantic_coverage import build_semantic_geometry_expectation
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -1239,12 +1240,21 @@ def run_candidate_gate_stage(
 
     expectation = _wall_geometry_expectation_from_candidate(case_id, candidate)
     _write_json(output / "geometry-expectation.json", expectation)
+    semantic_expectation = _semantic_geometry_expectation_from_case(
+        case_root=case_root,
+        case_id=case_id,
+        candidate=candidate,
+    )
+    if semantic_expectation is not None:
+        _write_json(output / "semantic-geometry-expectation.json", semantic_expectation)
+    expectation_for_check = semantic_expectation if semantic_expectation is not None else expectation
     if compilation.success:
-        quality = check_generated_ifc(output_ifc, expectation)
+        quality = check_generated_ifc(output_ifc, expectation_for_check)
         geometry_feedback = {
             "success": quality.success,
             "issues": quality.issues,
             "metrics": quality.metrics,
+            "expectation_source": expectation_for_check.get("source", "candidate"),
         }
     else:
         geometry_feedback = {
@@ -1257,6 +1267,7 @@ def run_candidate_gate_stage(
                 }
             ],
             "metrics": {},
+            "expectation_source": expectation_for_check.get("source", "candidate"),
         }
     _write_json(output / "geometry-feedback.json", geometry_feedback)
     return {
@@ -1269,7 +1280,38 @@ def run_candidate_gate_stage(
         "geometry_success": geometry_feedback["success"],
         "ifc_verification": ifc_verification,
         "geometry_feedback": geometry_feedback,
+        "semantic_geometry_expectation": semantic_expectation,
     }
+
+
+def _semantic_geometry_expectation_from_case(
+    *,
+    case_root: Path,
+    case_id: str,
+    candidate: dict[str, Any],
+) -> dict[str, Any] | None:
+    design_brief_path = _find_design_brief_path(case_root)
+    if design_brief_path is None:
+        return None
+    design_brief = json.loads(design_brief_path.read_text(encoding="utf-8"))
+    if not isinstance(design_brief, dict):
+        return None
+    return build_semantic_geometry_expectation(
+        case_id=case_id,
+        design_brief=design_brief,
+        candidate=candidate,
+    )
+
+
+def _find_design_brief_path(case_root: Path) -> Path | None:
+    direct = case_root / "design-brief.json"
+    if direct.is_file():
+        return direct
+    try:
+        resolved = resolve_final_design_brief_dir(case_root) / "design-brief.json"
+    except FileNotFoundError:
+        return None
+    return resolved if resolved.is_file() else None
 
 
 def _select_generator_context(design_context: dict[str, Any]) -> dict[str, Any]:

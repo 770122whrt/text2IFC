@@ -73,10 +73,14 @@ def check_generated_ifc(
         expected_bbox = expected_wall.get("bbox")
         if expected_bbox and not _bbox_matches(actual_bbox, expected_bbox, tolerance):
             wall_had_geometry_issue = True
+            bbox_issue_code = str(expected_wall.get("bbox_issue_code", "WALL_BBOX_MISMATCH"))
+            bbox_issue_path = str(
+                expected_wall.get("bbox_issue_path", f"/walls/{wall_id}/bbox")
+            )
             issues.append(
                 _issue(
-                    "WALL_BBOX_MISMATCH",
-                    f"/walls/{wall_id}/bbox",
+                    bbox_issue_code,
+                    bbox_issue_path,
                     f"Wall {wall_id!r} world bounding box is outside tolerance.",
                 )
             )
