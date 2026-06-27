@@ -48,6 +48,27 @@ def test_phase6_2_fix_verifier_rejects_missing_question_before_answer_event(tmp_
     assert "assistant_question_displayed_before_answer" in result["issues"]
 
 
+def test_phase6_2_fix_verifier_rejects_missing_semantic_coverage(tmp_path):
+    from scripts.agent import verify_phase6_2_fix_artifacts
+
+    root, final_path = _write_minimal_acceptance(
+        tmp_path,
+        interaction_mode="human_repl_live",
+        input_source="terminal",
+        event_types=[
+            "repl_session_started",
+            "assistant_question_displayed",
+            "user_answer_requested",
+            "user_answer_received",
+        ],
+    )
+
+    result = verify_phase6_2_fix_artifacts.verify(root, session_from=final_path)
+
+    assert result["valid"] is False
+    assert "semantic_coverage_required" in result["issues"]
+
+
 def _write_minimal_acceptance(
     tmp_path: Path,
     *,

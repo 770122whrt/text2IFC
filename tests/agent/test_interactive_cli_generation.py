@@ -111,7 +111,12 @@ def test_ready_phase6_2_session_generates_ifc_report_and_db_artifacts(tmp_path):
     assert (session.run_dir / "candidate.json").is_file()
     assert (session.run_dir / "output.ifc").is_file()
     assert (session.run_dir / "report.md").is_file()
+    assert (session.run_dir / "semantic-coverage.json").is_file()
     assert (session.run_dir / "session-export.json").is_file()
+    report = (session.run_dir / "report.md").read_text(encoding="utf-8")
+    assert "## Semantic Coverage" in report
+    assert "semantic-coverage.json" in report
+    assert "semantic-capabilities.json" in report
     final_acceptance = json.loads((root / "final-acceptance.json").read_text(encoding="utf-8"))
     assert final_acceptance["session_hash"] == session.session_hash
     assert final_acceptance["artifacts"]["ifc"] == f"runs/{session.session_hash}/output.ifc"
