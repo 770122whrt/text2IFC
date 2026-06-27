@@ -46,12 +46,14 @@ def _write_minimal_case(case_dir: Path) -> Path:
     _write_json(generator / "metrics.json", {"response_id": "msg_generator", "evidence_class": "live"})
 
     _write_json(repair / "route.json", {"route": "no_repair_needed", "provider_call_count": 0})
+    _write_json(repair / "repair-attempts.json", [])
     _write_json(repair / "metrics.json", {"route": "no_repair_needed", "evidence_class": "live-derived-no-call"})
 
     _write_text(audit / "prompt-rendered.md", "Audit prompt")
     _write_json(audit / "response.raw.json", {"id": "msg_audit", "stop_reason": "end_turn"})
     _write_text(audit / "model-text.txt", '{"recommendation":"accept"}')
     _write_json(audit / "audit-report.json", {"recommendation": "accept", "blocking": False})
+    _write_json(audit / "validation.json", {"valid": True, "issues": []})
     _write_json(audit / "metrics.json", {"response_id": "msg_audit", "evidence_class": "live"})
     return case_dir
 
