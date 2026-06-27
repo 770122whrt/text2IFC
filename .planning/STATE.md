@@ -7,13 +7,13 @@ See: `.planning/PROJECT.md` (updated 2026-06-11)
 **Core value:** Produce valid, inspectable IFC models from explicit user
 requirements.
 
-**Current focus:** Phase 6.2-fix Wave 5 semantic fidelity and capability
-coverage before final human-terminal UAT
+**Current focus:** Phase 6.2-fix final human-terminal UAT after Wave 5 semantic
+coverage fix
 
 ## Status
 
 - Phase: 6.2-fix
-- Stage: Planning Wave 5 semantic fidelity fix
+- Stage: Awaiting final real human-terminal Mimo REPL UAT after Wave 5
 - State: Waves 0-2 are implemented and automatically verified. Wave 3 real UAT
   produced useful live evidence and fixed defects 001/002, then exposed defect
   003: Audit accepted before final generated-IFC geometry feedback existed.
@@ -24,11 +24,15 @@ coverage before final human-terminal UAT
   generated a real accepted IFC, but post-review exposed defect 004: geometry
   expectations can be derived from candidate wall placements rather than Design
   Brief/user facts, and unsupported explicit facts such as inward door opening
-  can be silently lost. Wave 5 is now specified/planned to add semantic
-  capability and coverage gates before final acceptance.
+  can be silently lost. Wave 5 is now implemented and automatically verified:
+  semantic geometry expectations, fact-level capability coverage,
+  unsupported-fact Draft/block routing, report integration, Audit evidence, and
+  final verifier hardening are in place. Final acceptance is still pending
+  until a new human-terminal live Mimo run writes and verifies
+  `final-acceptance.json`.
 - Plans: Phase 6.2-fix Waves 0-2 complete; Wave 3 produced UAT defect evidence;
-  Wave 4 implementation/regression complete; Wave 5 plan/spec update in
-  progress; final user-run UAT blocked until semantic coverage fix executes
+  Wave 4 implementation/regression complete; Wave 5 implementation/regression
+  complete; final user-run UAT pending
 - Branch: `multiagent-design` in C-drive worktree
 - Remote: `https://github.com/770122whrt/text2IFC`
 
@@ -460,6 +464,13 @@ coverage before final human-terminal UAT
   geometry expectations, fact-level support profile, unsupported-fact
   Draft-first routing, `semantic-coverage.json`, report integration, and final
   verifier hardening before final user-run UAT.
+- Phase 6.2-fix Wave 5 was implemented and automatically verified on
+  2026-06-27. The pipeline now writes `semantic-capabilities.json`,
+  `semantic-coverage.json`, and `semantic-geometry-expectation.json`; blocks
+  unwaived unsupported facts such as `/known_facts/door/opening_direction`;
+  uses Design-Brief-derived wall expectations for supported rectangular rooms;
+  exposes semantic coverage in generated reports and Audit inputs; and requires
+  semantic coverage in the final artifact verifier.
 - Phase 6.2 treats OpenAI Agents SDK as a conditional integration. A failed SDK
   compatibility checkpoint is not a product failure if the native OpenAI SDK
   provider path remains evidence-complete.
@@ -509,13 +520,13 @@ coverage before final human-terminal UAT
 
 ## Next Action
 
-Execute Phase 6.2-fix Wave 5 from the C-drive worktree:
-`.venv\Scripts\python -m pytest tests\agent\test_phase6_2_fix_semantic_fidelity.py -q`
+Run final Phase 6.2-fix real human-terminal Mimo REPL UAT from the C-drive
+worktree:
+`.venv\Scripts\python scripts\agent\run_text2ifc_chat.py --live --output-root dataset\processed\agent-demo\phase6.2-fix-repl`
 
-Use TDD to add Design-Brief-derived semantic geometry expectations,
-fact-level capability coverage, Draft-first unsupported-fact routing, report
-integration, and final verifier hardening. Only after Wave 5 passes should the
-final real human-terminal Mimo REPL UAT be rerun.
+For accepted IFC evidence, avoid unsupported door operation semantics unless
+intentionally testing the Draft/blocking path. After `final-acceptance.json` is
+written, run the Phase 6.2-fix artifact verifier and artifact secret scan.
 
 ## Accumulated Context
 
@@ -716,5 +727,5 @@ final real human-terminal Mimo REPL UAT be rerun.
   responses.
 
 ---
-*Last activity: 2026-06-27 - revised Phase 6.2-fix SPEC/PLAN for Wave 5
-semantic fidelity and capability coverage before final UAT*
+*Last activity: 2026-06-27 - implemented Phase 6.2-fix Wave 5 semantic
+coverage gates and prepared final human-terminal UAT handoff*

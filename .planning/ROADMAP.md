@@ -704,7 +704,7 @@ explicit facts remain Draft/blocked unless the user waives them.
 
 **Wave 5** *(inserted after Wave 4 live UAT review defect 004)*
 
-- [ ] `06.2-fix-05-PLAN.md` - Semantic fidelity gate and BIM JSON capability
+- [x] `06.2-fix-05-PLAN.md` - Semantic fidelity gate and BIM JSON capability
   contract
 
 **Cross-cutting constraints:**
@@ -744,4 +744,8 @@ Follow-up live session `d462b95089755d47` proved the real REPL can generate a
 viewable IFC, but review exposed defect 004: candidate-derived geometry
 expectations can be circular, and unsupported explicit facts such as inward
 door opening can be silently lost. Wave 5 is now planned to add semantic
-capability and coverage gates before final Phase 6.2-fix acceptance.
+capability and coverage gates before final Phase 6.2-fix acceptance. Wave 5
+implementation and automated verification are complete: semantic geometry,
+semantic capability, semantic coverage, report, Audit evidence, and verifier
+gates are implemented. Final Phase 6.2-fix acceptance still requires a fresh
+real human-terminal Mimo REPL run after Wave 5.
