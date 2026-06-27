@@ -1,4 +1,5 @@
 import json
+from copy import deepcopy
 from pathlib import Path
 
 from text2ifc_agent.interactive_cli_flow import run_ready_session_to_ifc
@@ -125,6 +126,81 @@ def test_ready_phase6_2_session_generates_ifc_report_and_db_artifacts(tmp_path):
     assert store.get_session(session.session_hash).status == "compiled"
 
 
+def test_ready_session_repairs_geometry_failure_after_audit_revise(tmp_path):
+    root = tmp_path / "phase6.2-interactive-cli"
+    store = SessionStore.open(root / "sessions.sqlite", artifact_root=root)
+    session = store.create_session(original_input="创建一个需要几何修复的矩形房间。")
+    _write_ready_design_brief_call(session.run_dir)
+    store.mark_session_status(session.session_id, "ready")
+
+    repaired_candidate = json.loads(
+        (PHASE6_1_COMPLETE / "generator" / "candidate.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    blocked_candidate = _geometry_blocked_candidate(repaired_candidate)
+    audit_revise = {
+        "schema_version": "text2ifc/audit/2.0",
+        "recommendation": "revise",
+        "blocking": True,
+        "deterministic_gate_status": "failed",
+        "findings": [
+            {
+                "code": "GEOMETRY_TRUE_POSITIVE",
+                "message": "东西墙方向错误，候选 BIM JSON 需要修复。",
+                "evidence_path": "geometry-feedback.json",
+            }
+        ],
+        "evidence_paths": [
+            "design-brief/design-brief.json",
+            "generator/candidate.json",
+            "repair/route.json",
+            "geometry-feedback.json",
+        ],
+    }
+    audit_accept = {
+        "schema_version": "text2ifc/audit/2.0",
+        "recommendation": "accept",
+        "blocking": False,
+        "deterministic_gate_status": "passed",
+        "findings": [],
+        "evidence_paths": [
+            "design-brief/design-brief.json",
+            "generator/candidate.json",
+            "repair/route.json",
+            "geometry-feedback.json",
+        ],
+    }
+    provider = _SequenceLiveProvider(
+        [blocked_candidate, audit_revise, repaired_candidate, audit_accept]
+    )
+
+    result = run_ready_session_to_ifc(
+        store=store,
+        session=session.session_hash,
+        provider_factory=lambda: provider,
+    )
+
+    assert result.status == "compiled"
+    assert provider.session_ids == [
+        f"phase6.2-{session.session_hash}-generator-01",
+        f"phase6.2-{session.session_hash}-audit-01",
+        f"phase6.1-{session.session_hash}-repair-01",
+        f"phase6.2-{session.session_hash}-audit-02",
+    ]
+    repair_route = json.loads(
+        (session.run_dir / "repair" / "route.json").read_text(encoding="utf-8")
+    )
+    assert repair_route["route"] == "repair_attempted"
+    assert repair_route["repair_attempts"][0]["result_status"] == "improved"
+    geometry = json.loads(
+        (session.run_dir / "geometry-feedback.json").read_text(encoding="utf-8")
+    )
+    assert geometry["success"] is True
+    assert (session.run_dir / "output.ifc").is_file()
+    assert store.get_session(session.session_hash).status == "compiled"
+
+
 def test_phase6_2_cli_resumes_ready_session_to_ifc(tmp_path, capsys):
     from scripts.agent import run_phase6_2_cli
 
@@ -175,6 +251,16 @@ def test_phase6_2_cli_resumes_ready_session_to_ifc(tmp_path, capsys):
     assert summary["session_hash"] == session.session_hash
     assert (session.run_dir / "output.ifc").is_file()
     assert (session.run_dir / "report.md").is_file()
+
+
+def _geometry_blocked_candidate(candidate: dict) -> dict:
+    candidate = deepcopy(candidate)
+    for entity in candidate["entities"]:
+        if entity.get("id") in {"wall-west", "wall-east"}:
+            profile = entity["attributes"]["Representation"]["profile"]
+            profile["x"] = 300
+            profile["y"] = 4000
+    return candidate
 
 
 def _write_ready_design_brief_call(run_dir: Path) -> None:
