@@ -800,6 +800,17 @@ def _write_phase6_2_session_report(
             ),
         ),
         "",
+        "## Semantic Coverage",
+        "",
+        *_report_links(
+            session.run_dir,
+            (
+                "semantic-capabilities.json",
+                "semantic-coverage.json",
+                "semantic-geometry-expectation.json",
+            ),
+        ),
+        "",
         "## Deterministic Gates",
         "",
         *_report_links(

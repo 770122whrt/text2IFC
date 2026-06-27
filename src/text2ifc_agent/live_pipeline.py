@@ -1025,7 +1025,18 @@ def run_audit_report_stage(
     repair_metrics = json.loads((repair / "metrics.json").read_text(encoding="utf-8"))
     ifc_verification = _read_optional_json(root / "ifc-verification.json")
     geometry_feedback = _read_optional_json(root / "geometry-feedback.json")
+    semantic_coverage = _read_optional_json(root / "semantic-coverage.json")
+    semantic_capabilities = _read_optional_json(root / "semantic-capabilities.json")
     deterministic_gates = {
+        "semantic_coverage": bool(semantic_coverage.get("valid"))
+        if semantic_coverage is not None
+        else True,
+        "semantic_coverage_feedback": semantic_coverage
+        if semantic_coverage is not None
+        else {"valid": None, "blocking_facts": [], "skip_reason": "not_run"},
+        "semantic_capability_profile": semantic_capabilities
+        if semantic_capabilities is not None
+        else {"skip_reason": "not_written"},
         "bim_json_validation": bool(generator_validation.get("valid")),
         "repair_route_terminal": repair_route.get("route")
         in {"no_repair_needed", "repair_attempted", "draft_required"},
@@ -1469,6 +1480,9 @@ def _audit_evidence_paths(root: Path) -> list[str]:
         "generator/metrics.json",
         "repair/route.json",
         "repair/metrics.json",
+        "semantic-capabilities.json",
+        "semantic-coverage.json",
+        "semantic-geometry-expectation.json",
         "ifc-verification.json",
         "geometry-feedback.json",
         "geometry-expectation.json",
@@ -1534,7 +1548,12 @@ def _deterministic_gate_booleans(gates: Mapping[str, Any]) -> dict[str, bool]:
     return {
         str(key): bool(value)
         for key, value in gates.items()
-        if key != "geometry_feedback"
+        if key
+        not in {
+            "geometry_feedback",
+            "semantic_coverage_feedback",
+            "semantic_capability_profile",
+        }
     }
 
 

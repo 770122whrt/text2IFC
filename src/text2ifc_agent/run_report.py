@@ -63,6 +63,9 @@ STAGE_SIDECARS: tuple[tuple[str, str, tuple[str, ...]], ...] = (
 )
 
 GATE_SIDECARS: tuple[str, ...] = (
+    "semantic-capabilities.json",
+    "semantic-coverage.json",
+    "semantic-geometry-expectation.json",
     "ifc-verification.json",
     "geometry-expectation.json",
     "geometry-feedback.json",
@@ -121,6 +124,7 @@ def build_live_run_report(*, case_dir: Path | str) -> Path:
     lines.extend(_stage_section(root, "BIM JSON Generator", generator))
     lines.extend(_repair_section(repair))
     lines.extend(_stage_section(root, "Audit Agent", audit))
+    lines.extend(_semantic_coverage_section(root))
     lines.extend(_generated_ifc_gates_section(root))
     lines.extend(_metrics_section(root))
     lines.extend(_source_sidecars_section(root))
@@ -225,6 +229,28 @@ def _generated_ifc_gates_section(root: Path) -> list[str]:
             ]
         )
     return lines
+
+
+def _semantic_coverage_section(root: Path) -> list[str]:
+    if not (root / "semantic-coverage.json").is_file():
+        return []
+    lines = [
+        "## Semantic Coverage",
+        "",
+        _source_link("semantic-capabilities.json"),
+        _source_link("semantic-coverage.json"),
+        "",
+        _embed_json(root / "semantic-coverage.json"),
+        "",
+    ]
+    if (root / "semantic-geometry-expectation.json").is_file():
+        lines.extend(
+            [
+                _source_link("semantic-geometry-expectation.json"),
+                "",
+            ]
+        )
+    return [line for line in lines if line]
 
 
 def _metrics_section(root: Path) -> list[str]:

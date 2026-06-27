@@ -25,6 +25,7 @@ except OSError:
 DEFAULT_ROOT = ROOT / "dataset/processed/agent-demo/phase6.2-fix-repl"
 REQUIRED_REPORT_SECTIONS = (
     "## REPL Interaction Evidence",
+    "## Semantic Coverage",
     "## Final Artifacts",
 )
 
@@ -43,6 +44,8 @@ def main(argv: list[str] | None = None) -> int:
 def verify(root: Path | str, *, session_from: Path | str) -> dict[str, Any]:
     active_root = Path(root)
     final_path = Path(session_from)
+    if not final_path.is_absolute():
+        final_path = active_root / final_path
     db_path = active_root / "sessions.sqlite"
     issues: list[str] = []
     missing: list[str] = []
@@ -63,6 +66,8 @@ def verify(root: Path | str, *, session_from: Path | str) -> dict[str, Any]:
     artifacts = final.get("artifacts", {}) if isinstance(final.get("artifacts"), dict) else {}
     report_path = active_root / str(artifacts.get("report", ""))
     export_path = active_root / str(artifacts.get("session_export", ""))
+    run_dir = active_root / "runs" / session_hash if session_hash else report_path.parent
+    semantic_coverage_path = run_dir / "semantic-coverage.json"
     if not report_path.is_file():
         missing.append("report.md")
     if not export_path.is_file():
@@ -94,10 +99,22 @@ def verify(root: Path | str, *, session_from: Path | str) -> dict[str, Any]:
         output_ifc_reopenable = _ifc_reopens_as_ifc2x3(ifc_path)
         if ifc_path.is_file() and not output_ifc_reopenable:
             issues.append("output_ifc_not_reopenable")
+        semantic_coverage = (
+            _read_json(semantic_coverage_path)
+            if semantic_coverage_path.is_file()
+            else {}
+        )
+        if not semantic_coverage_path.is_file():
+            issues.append("semantic_coverage_required")
+        elif semantic_coverage.get("valid") is not True:
+            issues.append("semantic_coverage_blocking_facts")
     elif artifacts.get("ifc"):
         issues.append("ifc_written_for_non_formal_outcome")
 
-    metrics = _latest_metric(export, stage="acceptance")
+    metrics = _latest_metric(
+        export,
+        stages={"acceptance", "final-acceptance", "final_acceptance"},
+    )
     audit_evidence_class = metrics.get("audit_evidence_class")
     if final.get("status") == "compiled" and audit_evidence_class not in {"live", "live-derived-no-call"}:
         issues.append("live_mimo_evidence_required")
@@ -144,6 +161,8 @@ def _question_before_answer(events: list[Any]) -> bool:
             "user_answer_received",
         }
     ]
+    if "user_answer_requested" not in ordered and "user_answer_received" not in ordered:
+        return True
     try:
         question = ordered.index("assistant_question_displayed")
         requested = ordered.index("user_answer_requested")
@@ -153,11 +172,11 @@ def _question_before_answer(events: list[Any]) -> bool:
     return question < requested < received
 
 
-def _latest_metric(export: dict[str, Any], *, stage: str) -> dict[str, Any]:
+def _latest_metric(export: dict[str, Any], *, stages: set[str]) -> dict[str, Any]:
     metrics = export.get("metrics", []) if isinstance(export, dict) else []
     for record in reversed(metrics):
         payload = record.get("payload", {}) if isinstance(record, dict) else {}
-        if payload.get("stage") == stage:
+        if payload.get("stage") in stages:
             return payload
     return {}
 
