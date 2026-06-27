@@ -418,6 +418,12 @@ requirements.
   output root instead of `runs/<session_hash>`, causing IFC generation to miss
   `design-brief/conversation.json`. The invoker is now constructed after
   session creation with the session run directory.
+- Phase 6.2-fix UAT defect 002 was reproduced and fixed on 2026-06-27. A real
+  run reached Generator `formal`, Repair `no_repair_needed`, real Audit
+  `accepted`, and IFC reopen success, but final geometry gates failed with
+  wall-orientation/enclosure issues. The REPL previously exited silently for
+  `final_blocked`; it now prints stage summaries and paths to `output.ifc`,
+  `report.md`, and `geometry-feedback.json` without claiming acceptance.
 - Phase 6.2 treats OpenAI Agents SDK as a conditional integration. A failed SDK
   compatibility checkpoint is not a product failure if the native OpenAI SDK
   provider path remains evidence-complete.
@@ -673,5 +679,5 @@ providers, or replay output for final acceptance.
   responses.
 
 ---
-*Last activity: 2026-06-27 - fixed Phase 6.2-fix UAT defect 001 and prepared
+*Last activity: 2026-06-27 - fixed Phase 6.2-fix UAT defect 002 and prepared
 the rerun command*
