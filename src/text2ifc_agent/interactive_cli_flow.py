@@ -378,6 +378,10 @@ def run_ready_session_to_ifc(
         _record_existing_artifact(store, stored_session, kind="report", name="report.md")
     else:
         store.mark_session_status(stored_session.session_id, "final_blocked")
+        if (stored_session.run_dir / "output.ifc").is_file():
+            _record_existing_artifact(store, stored_session, kind="ifc", name="output.ifc")
+        if (stored_session.run_dir / "report.md").is_file():
+            _record_existing_artifact(store, stored_session, kind="report", name="report.md")
     export_path = store.export_session(stored_session.session_id)
     if final["valid"]:
         _write_phase6_2_session_report(
@@ -394,8 +398,16 @@ def run_ready_session_to_ifc(
         generator_status=str(generator["status"]),
         repair_route=str(repair["route"]),
         audit_status=str(audit["status"]),
-        ifc_path=str(stored_session.run_dir / "output.ifc") if final["valid"] else None,
-        report_path=str(stored_session.run_dir / "report.md") if final["valid"] else None,
+        ifc_path=(
+            str(stored_session.run_dir / "output.ifc")
+            if (stored_session.run_dir / "output.ifc").is_file()
+            else None
+        ),
+        report_path=(
+            str(stored_session.run_dir / "report.md")
+            if (stored_session.run_dir / "report.md").is_file()
+            else None
+        ),
     )
 
 

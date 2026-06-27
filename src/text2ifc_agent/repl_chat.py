@@ -188,16 +188,30 @@ def run_repl_chat(
         session=session.session_hash,
         provider_factory=provider_factory,
     )
+    _print_ifc_stage_summary(
+        store=store,
+        session_id=ifc_result.session_id,
+        stdout=active_stdout,
+    )
     if ifc_result.ifc_path:
-        active_stdout.write(f"IFC: {ifc_result.ifc_path}\n")
+        if ifc_result.status == "compiled":
+            active_stdout.write(f"IFC: {ifc_result.ifc_path}\n")
+        else:
+            active_stdout.write(f"IFC（未通过最终验收）: {ifc_result.ifc_path}\n")
     if ifc_result.report_path:
-        _write_fix_repl_report_and_acceptance(
-            store=store,
-            session_id=ifc_result.session_id,
-            ifc_path=ifc_result.ifc_path,
-            report_path=ifc_result.report_path,
-        )
+        if ifc_result.status == "compiled":
+            _write_fix_repl_report_and_acceptance(
+                store=store,
+                session_id=ifc_result.session_id,
+                ifc_path=ifc_result.ifc_path,
+                report_path=ifc_result.report_path,
+            )
         active_stdout.write(f"report.md: {ifc_result.report_path}\n")
+    if ifc_result.status != "compiled":
+        feedback_path = Path(store.get_session(ifc_result.session_id).run_dir) / "geometry-feedback.json"
+        if feedback_path.is_file():
+            active_stdout.write(f"geometry-feedback.json: {feedback_path}\n")
+        active_stdout.write(f"最终验收未通过，状态：{ifc_result.status}\n")
     active_stdout.flush()
     return ReplChatResult(
         session_id=ifc_result.session_id,
@@ -245,6 +259,45 @@ def _read_input(stdout: TextIO, input_func: InputFunc | None, prompt: str) -> st
 
 def _is_quit(value: str) -> bool:
     return value.strip().lower() in {"quit", "exit", "\u9000\u51fa", "q"}
+
+
+def _print_ifc_stage_summary(
+    *,
+    store: SessionStore,
+    session_id: str,
+    stdout: TextIO,
+) -> None:
+    export = store.session_export_payload(session_id)
+    events = export.get("events", [])
+    stage_events = {
+        "generator_completed": "Generator",
+        "repair_completed": "Repair",
+        "audit_completed": "Audit",
+        "final_acceptance_completed": "Final",
+    }
+    for event in events:
+        if not isinstance(event, dict):
+            continue
+        label = stage_events.get(str(event.get("event_type")))
+        if label is None:
+            continue
+        payload = event.get("payload", {})
+        if not isinstance(payload, dict):
+            payload = {}
+        status = (
+            payload.get("status")
+            or payload.get("route")
+            or payload.get("valid")
+            or "done"
+        )
+        details: list[str] = [f"{label}: {status}"]
+        response_id = payload.get("response_id")
+        if response_id:
+            details.append(f"response_id={response_id}")
+        if label == "Final":
+            details.append(f"compile_reopen_success={payload.get('compile_reopen_success')}")
+            details.append(f"geometry_success={payload.get('geometry_success')}")
+        stdout.write("；".join(details) + "\n")
 
 
 def _write_fix_repl_report_and_acceptance(
