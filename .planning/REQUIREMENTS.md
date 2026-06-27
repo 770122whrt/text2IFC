@@ -197,6 +197,11 @@ requirements.
   is read, the accepted session is marked as terminal/live interaction, and
   scripted stdin, prewritten answer files, fake providers, or replay evidence
   cannot satisfy final acceptance.
+- [ ] **CLI-09**: Deterministic generated-IFC feedback is available to Audit
+  before final acceptance. Audit can classify failed schema, compile, reopen,
+  geometry, report, verifier, or secret-scan gates, but cannot override them;
+  true candidate geometry failures route to bounded repair/generation, and
+  gate disputes block for human/developer review.
 
 ## Out of Scope
 
@@ -273,12 +278,13 @@ requirements.
 | CLI-06 | Phase 6.2-fix | Planned |
 | CLI-07 | Phase 6.2-fix | Planned |
 | CLI-08 | Phase 6.2-fix | Planned |
+| CLI-09 | Phase 6.2-fix | Planned |
 
 **Coverage:**
-- tracked requirements: 61 total
-- Mapped to phases: 61
+- tracked requirements: 62 total
+- Mapped to phases: 62
 - Unmapped: 0
 
 ---
 *Requirements defined: 2026-06-11*
-*Last updated: 2026-06-26 after Phase 6.2-fix REPL acceptance planning*
+*Last updated: 2026-06-27 after Phase 6.2-fix geometry gate/audit routing planning*

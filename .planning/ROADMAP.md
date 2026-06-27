@@ -645,7 +645,8 @@ Chinese-first terminal REPL where the user types a request, sees each
 Mimo-authored clarification question before answering, and receives a validated
 IFC2X3 artifact plus a DB-backed review report.
 
-**Requirements:** CLI-02, CLI-03, CLI-04, CLI-05, CLI-06, CLI-07, CLI-08
+**Requirements:** CLI-02, CLI-03, CLI-04, CLI-05, CLI-06, CLI-07, CLI-08,
+CLI-09, AGENT-05, REPAIR-01, OBS-01
 
 **Depends on:** Phase 6.2
 
@@ -658,7 +659,10 @@ IFC2X3 artifact plus a DB-backed review report.
 pipeline, provider path, session DB, query/export commands, Generator, Audit,
 or compiler. It fixes the user-facing acceptance boundary. Scripted stdin,
 prewritten answer files, fake providers, and replay evidence remain regression
-tools only and cannot satisfy final Phase 6.2-fix acceptance.
+tools only and cannot satisfy final Phase 6.2-fix acceptance. After UAT defect
+003, the phase also fixes the ordering boundary: generated-IFC gate feedback
+must reach decisive Audit before acceptance, and confirmed geometry failures
+must route to bounded repair/generation or explicit blocking.
 
 **Final acceptance artifacts:**
 
@@ -668,7 +672,7 @@ tools only and cannot satisfy final Phase 6.2-fix acceptance.
 - `dataset/processed/agent-demo/phase6.2-fix-repl/runs/<session_hash>/report.md`
 - `dataset/processed/agent-demo/phase6.2-fix-repl/runs/<session_hash>/session-export.json`
 
-**Plans:** 4 plans in 4 waves
+**Plans:** 5 plans in 5 waves
 
 **Wave 0**
 
@@ -689,6 +693,11 @@ tools only and cannot satisfy final Phase 6.2-fix acceptance.
 - [ ] `06.2-fix-03-PLAN.md` - Real Mimo REPL UAT, final verification, and
   documentation closure
 
+**Wave 4** *(inserted after Wave 3 UAT defect 003)*
+
+- [ ] `06.2-fix-04-PLAN.md` - Geometry feedback to Audit and bounded repair
+  loop
+
 **Cross-cutting constraints:**
 
 - Final accepted evidence must be `interaction_mode: "human_repl_live"` and
@@ -700,9 +709,16 @@ tools only and cannot satisfy final Phase 6.2-fix acceptance.
 - Regression tests may use fake providers and scripted IO, but they must be
   labelled as regression evidence only.
 - Formal BIM JSON 2.0 validation still gates IFC compilation.
+- Generated-IFC compile, reopen, and geometry feedback must be available to
+  decisive Audit before final acceptance.
+- Audit may classify failed deterministic gates but cannot override them.
+- True candidate geometry failures route to bounded repair/generation; gate
+  disputes block for human/developer review.
 - Draft, quit, and blocked outcomes write trace/report artifacts but no IFC.
 - All work remains in the C-drive `multiagent-design` worktree; the E-drive
   working tree is not edited.
 
-**Status:** Waves 0-2 implemented and automatically verified 2026-06-26;
-awaiting real human terminal REPL UAT for Wave 3.
+**Status:** Waves 0-2 implemented and automatically verified 2026-06-26.
+Wave 3 real UAT found defects 001 and 002 that were fixed, then exposed UAT
+defect 003: Audit accepted before final geometry feedback existed. Wave 4 is
+planned to correct gate -> Audit -> repair routing before final closure.
