@@ -413,6 +413,11 @@ requirements.
   sessions route through the existing BIM JSON, IFC, Audit, report, and export
   gates; and Phase 6.2-fix `final-acceptance.json` records
   `interaction_mode: "human_repl_live"` and `input_source: "terminal"`.
+- Phase 6.2-fix UAT defect 001 was reproduced and fixed on 2026-06-27. The
+  default live REPL path previously wrote Design Brief call traces under the
+  output root instead of `runs/<session_hash>`, causing IFC generation to miss
+  `design-brief/conversation.json`. The invoker is now constructed after
+  session creation with the session run directory.
 - Phase 6.2 treats OpenAI Agents SDK as a conditional integration. A failed SDK
   compatibility checkpoint is not a product failure if the native OpenAI SDK
   provider path remains evidence-complete.
@@ -668,5 +673,5 @@ providers, or replay output for final acceptance.
   responses.
 
 ---
-*Last activity: 2026-06-26 - implemented Phase 6.2-fix Waves 0-2 and prepared
-real terminal REPL UAT handoff*
+*Last activity: 2026-06-27 - fixed Phase 6.2-fix UAT defect 001 and prepared
+the rerun command*
