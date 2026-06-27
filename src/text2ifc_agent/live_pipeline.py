@@ -7,7 +7,7 @@ import hashlib
 from datetime import datetime, timezone
 from dataclasses import asdict
 from pathlib import Path
-from typing import Any, Mapping
+from typing import Any, Mapping, Sequence
 
 from text2ifc_compiler import compile_document
 from text2ifc_quality import check_generated_ifc
@@ -733,6 +733,8 @@ def run_repair_stage(
     output_dir: Path | str,
     generator_source_dir: Path | str,
     case_id: str,
+    geometry_feedback: Sequence[Mapping[str, Any]] | None = None,
+    prior_attempt_count: int = 0,
 ) -> dict[str, Any]:
     """Route a generator result through bounded repair or no-repair evidence."""
     output = Path(output_dir)
@@ -761,11 +763,13 @@ def run_repair_stage(
         else None
     )
     validation_issues = list(validation.get("issues", []))
+    geometry_issues = [dict(issue) for issue in list(geometry_feedback or [])]
     route = route_generation_failure(
         previous_candidate=candidate,
         validation_feedback=validation_issues,
-        geometry_feedback=[],
+        geometry_feedback=geometry_issues,
         known_facts=design_brief.get("known_facts", {}),
+        prior_attempt_count=prior_attempt_count,
     )
 
     _write_text(output / "input.txt", user_request + "\n")
@@ -790,9 +794,13 @@ def run_repair_stage(
     elif route["route"] == "repair_attempted" and candidate is not None:
         formal_schema = json.loads(FORMAL_SCHEMA_PATH.read_text(encoding="utf-8"))
         draft_schema = json.loads(DRAFT_SCHEMA_PATH.read_text(encoding="utf-8"))
-        allowed_change_paths = _repair_allowed_change_paths(validation_issues)
+        repair_issues = [*validation_issues, *geometry_issues]
+        allowed_change_paths = _repair_allowed_change_paths(
+            repair_issues,
+            candidate=candidate,
+        )
         evidence_by_path = _repair_evidence_by_path(
-            validation_issues,
+            repair_issues,
             allowed_change_paths,
         )
         renderer_inputs = {
@@ -804,7 +812,7 @@ def run_repair_stage(
             "DRAFT_SCHEMA": draft_schema,
             "CAPABILITY_PROFILE": generator_context.get("capability_profile", []),
             "VALIDATION_FEEDBACK": validation_issues,
-            "GEOMETRY_FEEDBACK": [],
+            "GEOMETRY_FEEDBACK": geometry_issues,
             "ALLOWED_CHANGE_PATHS": allowed_change_paths,
             "EVIDENCE_BY_PATH": evidence_by_path,
         }
@@ -857,10 +865,11 @@ def run_repair_stage(
         route = route_generation_failure(
             previous_candidate=candidate,
             validation_feedback=validation_issues,
-            geometry_feedback=[],
+            geometry_feedback=geometry_issues,
             known_facts=design_brief.get("known_facts", {}),
             repaired_candidate=repaired_document,
             repaired_feedback=repair_diagnostics,
+            prior_attempt_count=prior_attempt_count,
         )
         if fact_delta is not None and not fact_delta["valid"]:
             route = {
@@ -895,6 +904,7 @@ def run_repair_stage(
         "source_generator_response_id": source_metrics.get("response_id"),
         "source_generator_dir": portable_artifact_path(source),
         "validation_issue_count": len(validation_issues),
+        "geometry_issue_count": len(geometry_issues),
         "repair_diagnostics": repair_diagnostics,
         "fact_delta": "fact-delta.json" if fact_delta is not None else None,
         **{
@@ -918,6 +928,8 @@ def run_repair_stage(
         "source_generator_evidence_class": source_metrics.get("evidence_class"),
         "source_generator_contract_valid": source_metrics.get("contract_valid"),
         "repair_diagnostic_count": len(repair_diagnostics),
+        "geometry_issue_count": len(geometry_issues),
+        "prior_attempt_count": prior_attempt_count,
         "repaired_artifact": repaired_artifact_name,
         "fact_delta_valid": fact_delta.get("valid") if fact_delta else None,
     }
@@ -973,6 +985,7 @@ def run_audit_report_stage(
     case_dir: Path | str,
     case_id: str,
     session_prefix: str = "phase6.1",
+    audit_call_index: int = 1,
 ) -> dict[str, Any]:
     """Run real Audit v2 and generate the case report from sidecars."""
     root = Path(case_dir)
@@ -1037,7 +1050,7 @@ def run_audit_report_stage(
     _write_json(output / "prompt-render-input.json", renderer_inputs)
     _write_text(output / "prompt-rendered.md", rendered["text"])
     result = provider.generate_live(
-        session_id=f"{session_prefix}-{case_id}-audit-01",
+        session_id=f"{session_prefix}-{case_id}-audit-{audit_call_index:02d}",
         prompt=rendered["text"],
         schema={"schema_version": "text2ifc/audit/2.0"},
         state={"case_id": case_id, "stage": "audit"},
@@ -1287,16 +1300,48 @@ def _select_generator_context(design_context: dict[str, Any]) -> dict[str, Any]:
 
 def _repair_allowed_change_paths(
     validation_issues: list[dict[str, Any]],
+    *,
+    candidate: dict[str, Any] | None = None,
 ) -> list[str]:
     paths: list[str] = []
     for issue in validation_issues:
         issue_path = issue.get("path")
         if isinstance(issue_path, str) and issue_path:
             paths.append(issue_path)
+            paths.extend(_geometry_issue_candidate_paths(issue_path, candidate))
         for fact_path in issue.get("required_fact_paths", []):
             if isinstance(fact_path, str) and fact_path:
                 paths.append(fact_path)
     return sorted(set(paths))
+
+
+def _geometry_issue_candidate_paths(
+    issue_path: str,
+    candidate: dict[str, Any] | None,
+) -> list[str]:
+    if candidate is None or not issue_path.startswith("/walls"):
+        return []
+    wall_ids: list[str] = []
+    parts = [part for part in issue_path.split("/") if part]
+    if len(parts) >= 2 and parts[0] == "walls":
+        wall_ids.append(parts[1])
+    elif issue_path == "/walls":
+        wall_ids.extend(
+            str(entity.get("id"))
+            for entity in candidate.get("entities", [])
+            if isinstance(entity, dict) and str(entity.get("id", "")).startswith("wall-")
+        )
+    allowed: list[str] = []
+    for index, entity in enumerate(candidate.get("entities", [])):
+        if not isinstance(entity, dict) or entity.get("id") not in wall_ids:
+            continue
+        allowed.extend(
+            [
+                f"/entities/{index}/attributes/ObjectPlacement",
+                f"/entities/{index}/attributes/Representation",
+            ]
+        )
+    return allowed
 
 
 def _repair_evidence_by_path(

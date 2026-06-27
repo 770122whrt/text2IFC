@@ -18,6 +18,7 @@ from .live_pipeline import (
 from .clarification import ClarificationCall, ClarificationController, DesignBriefInvoker
 from .context_selection import select_design_brief_context
 from .design_brief import load_design_brief_schema, validate_design_brief
+from .generator import validate_generation_document
 from .openai_compat import (
     OpenAICompatError,
     OpenAICompatRuntimeConfig,
@@ -366,6 +367,17 @@ def run_ready_session_to_ifc(
     )
     _record_stage_payloads(store, stored_session.session_id, "audit", audit)
     if not audit["valid"] or audit["status"] != "accepted":
+        repair_attempt = _attempt_geometry_repair_after_audit(
+            store=store,
+            stored_session=stored_session,
+            provider_factory=provider_factory,
+            repair_attempt_count=len(repair.get("repair_attempts", [])),
+        )
+        if repair_attempt is not None:
+            repair = repair_attempt["repair"]
+            candidate_gates = repair_attempt["candidate_gates"]
+            audit = repair_attempt["audit"]
+    if not audit["valid"] or audit["status"] != "accepted":
         store.mark_session_status(stored_session.session_id, "audit_blocked")
         if (stored_session.run_dir / "output.ifc").is_file():
             _record_existing_artifact(store, stored_session, kind="ifc", name="output.ifc")
@@ -434,6 +446,93 @@ def run_ready_session_to_ifc(
             else None
         ),
     )
+
+
+def _attempt_geometry_repair_after_audit(
+    *,
+    store: SessionStore,
+    stored_session: Any,
+    provider_factory: Callable[[], Any],
+    repair_attempt_count: int,
+) -> dict[str, Any] | None:
+    run_dir = stored_session.run_dir
+    audit_report_path = run_dir / "audit" / "audit-report.json"
+    geometry_feedback_path = run_dir / "geometry-feedback.json"
+    if not audit_report_path.is_file() or not geometry_feedback_path.is_file():
+        return None
+    audit_report = json.loads(audit_report_path.read_text(encoding="utf-8"))
+    if audit_report.get("recommendation") != "revise" or audit_report.get("blocking") is not True:
+        return None
+    geometry_feedback = json.loads(geometry_feedback_path.read_text(encoding="utf-8"))
+    if geometry_feedback.get("success") is not False or not geometry_feedback.get("issues"):
+        return None
+
+    repair = run_repair_stage(
+        provider_factory=provider_factory,
+        output_dir=run_dir / "repair",
+        generator_source_dir=run_dir / "generator",
+        case_id=stored_session.session_hash,
+        geometry_feedback=list(geometry_feedback.get("issues", [])),
+        prior_attempt_count=repair_attempt_count,
+    )
+    _record_stage_payloads(store, stored_session.session_id, "repair", repair)
+    repaired_candidate = run_dir / "repair" / "repaired-candidate.json"
+    if repair["route"] != "repair_attempted" or not repaired_candidate.is_file():
+        return {"repair": repair, "candidate_gates": None, "audit": {"valid": False, "status": "blocked"}}
+
+    _promote_repaired_candidate(run_dir, repaired_candidate)
+    candidate_gates = run_candidate_gate_stage(
+        case_dir=run_dir,
+        output_dir=run_dir,
+        case_id=stored_session.session_hash,
+    )
+    _record_stage_payloads(
+        store,
+        stored_session.session_id,
+        "candidate_gates",
+        candidate_gates,
+    )
+    audit = run_audit_report_stage(
+        provider=provider_factory(),
+        case_dir=run_dir,
+        case_id=stored_session.session_hash,
+        session_prefix="phase6.2",
+        audit_call_index=2,
+    )
+    _record_stage_payloads(store, stored_session.session_id, "audit", audit)
+    return {"repair": repair, "candidate_gates": candidate_gates, "audit": audit}
+
+
+def _promote_repaired_candidate(run_dir: Path, repaired_candidate: Path) -> None:
+    generator_dir = run_dir / "generator"
+    candidate = json.loads(repaired_candidate.read_text(encoding="utf-8"))
+    contract = validate_generation_document(candidate)
+    shutil.copyfile(repaired_candidate, generator_dir / "candidate.json")
+    shutil.copyfile(repaired_candidate, run_dir / "candidate.json")
+    _write_json(
+        generator_dir / "validation.json",
+        {
+            "valid": contract["status"] == "formal",
+            "issue_count": len(contract["diagnostics"]),
+            "issues": contract["diagnostics"],
+        },
+    )
+    metrics_path = generator_dir / "metrics.json"
+    metrics = (
+        json.loads(metrics_path.read_text(encoding="utf-8"))
+        if metrics_path.is_file()
+        else {}
+    )
+    metrics.update(
+        {
+            "contract_status": contract["status"],
+            "classification": contract["classification"],
+            "contract_valid": contract["status"] == "formal",
+            "issue_count": len(contract["diagnostics"]),
+            "repaired_candidate_promoted": True,
+        }
+    )
+    _write_json(metrics_path, metrics)
 
 
 def _record_call(store: SessionStore, session_id: str, call: ClarificationCall) -> None:
