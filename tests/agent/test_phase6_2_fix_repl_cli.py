@@ -403,6 +403,10 @@ def test_live_repl_routes_geometry_failure_through_audit_before_final_status(tmp
     assert "output.ifc" in rendered
     assert "report.md" in rendered
     assert "geometry-feedback.json" in rendered
+    report = (run_dir / "report.md").read_text(encoding="utf-8")
+    assert "geometry-feedback.json" in report
+    assert "repair/repair-attempts.json" in report
+    assert "audit/validation.json" in report
 
 
 def _brief(*, original_request: str, status: str, source_turns=None):
