@@ -1,4 +1,5 @@
 import json
+from copy import deepcopy
 import io
 import subprocess
 import sys
@@ -313,6 +314,80 @@ def test_default_live_repl_design_brief_trace_is_session_scoped(tmp_path):
     assert (run_dir / "output.ifc").is_file()
 
 
+def test_live_repl_final_blocked_prints_audit_and_artifact_paths(tmp_path):
+    from scripts.agent import run_text2ifc_chat
+
+    root = tmp_path / "phase6.2-fix-repl"
+    output = io.StringIO()
+    answers = iter([ORIGINAL_REQUEST, ANSWER_TEXT])
+
+    def invoke(transcript, call_index):
+        if call_index == 1:
+            call = _call(
+                call_index,
+                original_request=transcript[0]["content"],
+                status="needs_clarification",
+            )
+        else:
+            call = _call(
+                call_index,
+                original_request=transcript[0]["content"],
+                status="ready",
+                source_turns=["turn-user-001", "turn-user-003"],
+            )
+        _write_design_brief_trace_fixture(root, call_index, transcript, call.brief)
+        return call
+
+    candidate = _geometry_blocked_candidate()
+    audit = {
+        "schema_version": "text2ifc/audit/2.0",
+        "recommendation": "accept",
+        "blocking": False,
+        "deterministic_gate_status": "passed",
+        "findings": [],
+        "evidence_paths": [
+            "design-brief/design-brief.json",
+            "generator/candidate.json",
+            "repair/route.json",
+        ],
+    }
+    provider = _SequenceLiveProvider([candidate, audit])
+
+    exit_code = run_text2ifc_chat.main(
+        [
+            "--live",
+            "--output-root",
+            str(root),
+            "--db",
+            str(root / "sessions.sqlite"),
+        ],
+        design_brief_invoker=invoke,
+        live_provider_factory=lambda: provider,
+        input_func=lambda prompt: next(answers),
+        stdout=output,
+    )
+
+    store = SessionStore.open(root / "sessions.sqlite", artifact_root=root)
+    try:
+        session = store.list_sessions()[0]
+    finally:
+        store.close()
+    rendered = output.getvalue()
+    run_dir = root / "runs" / session.session_hash
+
+    assert exit_code == 2
+    assert session.status == "final_blocked"
+    assert (run_dir / "output.ifc").is_file()
+    assert (run_dir / "report.md").is_file()
+    assert (run_dir / "geometry-feedback.json").is_file()
+    assert "Generator" in rendered
+    assert "Audit" in rendered
+    assert "final_blocked" in rendered
+    assert "output.ifc" in rendered
+    assert "report.md" in rendered
+    assert "geometry-feedback.json" in rendered
+
+
 def _brief(*, original_request: str, status: str, source_turns=None):
     source_turns = source_turns or ["turn-user-001"]
     blocker = {
@@ -434,6 +509,21 @@ class _SequenceLiveProvider:
                 metadata={"provider": "mimo", "session_id": session_id},
             ),
         )
+
+
+def _geometry_blocked_candidate() -> dict:
+    candidate = json.loads(
+        (PHASE6_1_COMPLETE / "generator" / "candidate.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    candidate = deepcopy(candidate)
+    for entity in candidate["entities"]:
+        if entity.get("id") in {"wall-west", "wall-east"}:
+            profile = entity["attributes"]["Representation"]["profile"]
+            profile["x"] = 300
+            profile["y"] = 4000
+    return candidate
 
 
 class _OpenAIClientSequence:
