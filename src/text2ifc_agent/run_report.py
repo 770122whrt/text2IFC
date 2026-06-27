@@ -44,6 +44,7 @@ STAGE_SIDECARS: tuple[tuple[str, str, tuple[str, ...]], ...] = (
         "repair",
         (
             "route.json",
+            "repair-attempts.json",
             "metrics.json",
         ),
     ),
@@ -55,9 +56,18 @@ STAGE_SIDECARS: tuple[tuple[str, str, tuple[str, ...]], ...] = (
             "response.raw.json",
             "model-text.txt",
             "audit-report.json",
+            "validation.json",
             "metrics.json",
         ),
     ),
+)
+
+GATE_SIDECARS: tuple[str, ...] = (
+    "ifc-verification.json",
+    "geometry-expectation.json",
+    "geometry-feedback.json",
+    "acceptance-metrics.json",
+    "secret-scan.json",
 )
 
 
@@ -111,6 +121,7 @@ def build_live_run_report(*, case_dir: Path | str) -> Path:
     lines.extend(_stage_section(root, "BIM JSON Generator", generator))
     lines.extend(_repair_section(repair))
     lines.extend(_stage_section(root, "Audit Agent", audit))
+    lines.extend(_generated_ifc_gates_section(root))
     lines.extend(_metrics_section(root))
     lines.extend(_source_sidecars_section(root))
     _write_text(report_path, "\n".join(lines).rstrip() + "\n")
@@ -185,9 +196,35 @@ def _repair_section(repair_dir: Path) -> list[str]:
         f"- evidence_class: `{metrics.get('evidence_class')}`",
         "",
         _source_link("repair/route.json"),
+        _source_link("repair/repair-attempts.json"),
         _source_link("repair/metrics.json"),
         "",
     ]
+
+
+def _generated_ifc_gates_section(root: Path) -> list[str]:
+    existing = [name for name in GATE_SIDECARS if (root / name).is_file()]
+    if not existing:
+        return []
+    lines = [
+        "## Generated IFC Gates",
+        "",
+    ]
+    for name in existing:
+        lines.append(_source_link(name))
+    lines.append("")
+    if (root / "geometry-feedback.json").is_file():
+        lines.extend(
+            [
+                "### Geometry Feedback",
+                "",
+                _embed_json(root / "geometry-feedback.json"),
+                "",
+                _source_link("geometry-feedback.json"),
+                "",
+            ]
+        )
+    return lines
 
 
 def _metrics_section(root: Path) -> list[str]:
@@ -220,6 +257,12 @@ def _source_sidecars_section(root: Path) -> list[str]:
             relative = f"{relative_stage}/{name}"
             if (root / relative).is_file():
                 lines.append(f"- [{relative}]({relative})")
+        lines.append("")
+    existing_gates = [name for name in GATE_SIDECARS if (root / name).is_file()]
+    if existing_gates:
+        lines.extend(["### Generated IFC Gates", ""])
+        for name in existing_gates:
+            lines.append(f"- [{name}]({name})")
         lines.append("")
     return lines
 

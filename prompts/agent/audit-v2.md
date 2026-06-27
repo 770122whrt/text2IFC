@@ -25,6 +25,24 @@
   host wall, a centered opening usually has local X offset `0`.
 - For a window centered on its host wall with a known sill height, do not block solely because the opening origin is `[0, 0, sill_height]`; check whether the parent wall origin and reference direction make that local placement semantically centered.
 
+## Deterministic gate classification rules
+
+- You must not override deterministic gates. Failed schema, compile, reopen,
+  geometry, report, verifier, or secret-scan gates cannot become accepted
+  because of Audit wording.
+- If deterministic gates fail and you agree the candidate BIM JSON caused the
+  failure, output `recommendation: "revise"`, `blocking: true`, and cite the
+  geometry feedback or validation evidence path.
+- If deterministic gates fail and you believe the gate itself is wrong or
+  underspecified, output a finding with `code: "gate_dispute"`,
+  `recommendation: "reject"` or `"revise"`, and `blocking: true`. A
+  `gate_dispute` blocks human/developer review; it is never acceptance.
+- If you output `recommendation: "accept"` with `blocking: false` while a
+  deterministic gate failed, the system will classify it as
+  `audit_override_attempt` and block the run.
+- When geometry feedback is present, explicitly decide whether it is a true
+  candidate issue, missing user fact, gate_dispute, or blocked pipeline issue.
+
 ## 输入
 
 USER_REQUEST:
