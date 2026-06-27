@@ -978,6 +978,7 @@ def _write_auditable_case_dir(path: Path) -> Path:
         json.dumps({"route": "no_repair_needed", "provider_call_count": 0}),
         encoding="utf-8",
     )
+    (repair / "repair-attempts.json").write_text("[]", encoding="utf-8")
     (repair / "metrics.json").write_text(
         json.dumps({"route": "no_repair_needed", "evidence_class": "live-derived-no-call"}),
         encoding="utf-8",
