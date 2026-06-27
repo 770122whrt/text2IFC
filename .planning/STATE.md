@@ -7,20 +7,24 @@ See: `.planning/PROJECT.md` (updated 2026-06-11)
 **Core value:** Produce valid, inspectable IFC models from explicit user
 requirements.
 
-**Current focus:** Phase 6.2-fix gate -> Audit -> repair routing correction
+**Current focus:** Phase 6.2-fix real human-terminal UAT after Wave 4 repair
+correction
 
 ## Status
 
 - Phase: 6.2-fix
-- Stage: Planning Wave 4 corrective implementation after real UAT defect 003
+- Stage: Awaiting final real human-terminal Mimo REPL UAT
 - State: Waves 0-2 are implemented and automatically verified. Wave 3 real UAT
   produced useful live evidence and fixed defects 001/002, then exposed defect
   003: Audit accepted before final generated-IFC geometry feedback existed.
-  Phase 6.2-fix now has a planned Wave 4 to move deterministic gate evidence
-  before decisive Audit and route confirmed geometry failures to bounded
-  repair/generation or explicit blocking.
+  Wave 4 is now implemented and automatically verified. Generated-IFC gate
+  evidence reaches decisive Audit, Audit override attempts block, true geometry
+  failures can route to one bounded repair attempt, and repaired candidates
+  rerun gates plus Audit before acceptance. Final Phase 6.2-fix acceptance is
+  still pending because no new human-terminal live Mimo `final-acceptance.json`
+  has been produced after the fix.
 - Plans: Phase 6.2-fix Waves 0-2 complete; Wave 3 produced UAT defect evidence;
-  Wave 4 planned before final closure
+  Wave 4 implementation/regression complete; final user-run UAT pending
 - Branch: `multiagent-design` in C-drive worktree
 - Remote: `https://github.com/770122whrt/text2IFC`
 
@@ -433,6 +437,14 @@ requirements.
   generated-IFC gate evidence before decisive Audit, Audit classification
   without override authority, bounded repair/generation for true geometry
   failures, and gate-dispute blocking for uncertain gate results.
+- Phase 6.2-fix Wave 4 was implemented and automatically verified on
+  2026-06-27. The pipeline now writes candidate generated-IFC gate evidence
+  before Audit, includes `geometry-feedback.json` in Audit prompt inputs,
+  rejects Audit `accept` over failed deterministic gates as
+  `AUDIT_OVERRIDE_ATTEMPT`, and routes Audit `revise` on true geometry failures
+  through one bounded repair attempt followed by regenerated gates and a second
+  Audit. Reports now link generated-IFC gate sidecars, repair attempts, and
+  Audit validation.
 - Phase 6.2 treats OpenAI Agents SDK as a conditional integration. A failed SDK
   compatibility checkpoint is not a product failure if the native OpenAI SDK
   provider path remains evidence-complete.
@@ -482,14 +494,13 @@ requirements.
 
 ## Next Action
 
-Execute Phase 6.2-fix Wave 4 from the C-drive worktree:
-`.planning/phases/06.2-fix-real-time-repl-cli-uat/06.2-fix-04-PLAN.md`
+Run final Phase 6.2-fix real human-terminal Mimo REPL UAT from the C-drive
+worktree:
+`.venv\Scripts\python scripts\agent\run_text2ifc_chat.py --live --output-root dataset\processed\agent-demo\phase6.2-fix-repl`
 
-Start with RED tests that prove geometry feedback reaches Audit before
-decisive acceptance and that an Audit `accept` cannot override failed
-deterministic gates. After GREEN, rerun real Mimo REPL UAT and verify that a
-geometry defect repairs, blocks, or becomes a gate dispute instead of ending as
-"Audit accepted, late final geometry blocked".
+The accepted run must not use `--scripted-stdin`, answer files, fake providers,
+or replay output. After it writes `final-acceptance.json`, run the Phase 6.2-fix
+artifact verifier and artifact secret scan.
 
 ## Accumulated Context
 
@@ -690,5 +701,5 @@ geometry defect repairs, blocks, or becomes a gate dispute instead of ending as
   responses.
 
 ---
-*Last activity: 2026-06-27 - specified Phase 6.2-fix UAT defect 003 and Wave 4
-gate/Audit/repair routing plan*
+*Last activity: 2026-06-27 - implemented Phase 6.2-fix Wave 4 gate/Audit/repair
+routing and prepared final human-terminal UAT handoff*

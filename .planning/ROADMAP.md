@@ -695,7 +695,7 @@ must route to bounded repair/generation or explicit blocking.
 
 **Wave 4** *(inserted after Wave 3 UAT defect 003)*
 
-- [ ] `06.2-fix-04-PLAN.md` - Geometry feedback to Audit and bounded repair
+- [x] `06.2-fix-04-PLAN.md` - Geometry feedback to Audit and bounded repair
   loop
 
 **Cross-cutting constraints:**
@@ -721,4 +721,8 @@ must route to bounded repair/generation or explicit blocking.
 **Status:** Waves 0-2 implemented and automatically verified 2026-06-26.
 Wave 3 real UAT found defects 001 and 002 that were fixed, then exposed UAT
 defect 003: Audit accepted before final geometry feedback existed. Wave 4 is
-planned to correct gate -> Audit -> repair routing before final closure.
+implemented and automatically verified: generated-IFC gate feedback now reaches
+Audit before acceptance, Audit override attempts block, and Audit `revise` can
+route true geometry failures to bounded repair and a second gate/Audit pass.
+Final Phase 6.2-fix acceptance remains pending until a new real human-terminal
+Mimo REPL UAT writes and verifies `final-acceptance.json`.
