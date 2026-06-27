@@ -7,24 +7,28 @@ See: `.planning/PROJECT.md` (updated 2026-06-11)
 **Core value:** Produce valid, inspectable IFC models from explicit user
 requirements.
 
-**Current focus:** Phase 6.2-fix real human-terminal UAT after Wave 4 repair
-correction
+**Current focus:** Phase 6.2-fix Wave 5 semantic fidelity and capability
+coverage before final human-terminal UAT
 
 ## Status
 
 - Phase: 6.2-fix
-- Stage: Awaiting final real human-terminal Mimo REPL UAT
+- Stage: Planning Wave 5 semantic fidelity fix
 - State: Waves 0-2 are implemented and automatically verified. Wave 3 real UAT
   produced useful live evidence and fixed defects 001/002, then exposed defect
   003: Audit accepted before final generated-IFC geometry feedback existed.
-  Wave 4 is now implemented and automatically verified. Generated-IFC gate
-  evidence reaches decisive Audit, Audit override attempts block, true geometry
-  failures can route to one bounded repair attempt, and repaired candidates
-  rerun gates plus Audit before acceptance. Final Phase 6.2-fix acceptance is
-  still pending because no new human-terminal live Mimo `final-acceptance.json`
-  has been produced after the fix.
+  Wave 4 is implemented and automatically verified. Generated-IFC gate evidence
+  reaches decisive Audit, Audit override attempts block, true geometry failures
+  can route to one bounded repair attempt, and repaired candidates rerun gates
+  plus Audit before acceptance. Follow-up live session `d462b95089755d47`
+  generated a real accepted IFC, but post-review exposed defect 004: geometry
+  expectations can be derived from candidate wall placements rather than Design
+  Brief/user facts, and unsupported explicit facts such as inward door opening
+  can be silently lost. Wave 5 is now specified/planned to add semantic
+  capability and coverage gates before final acceptance.
 - Plans: Phase 6.2-fix Waves 0-2 complete; Wave 3 produced UAT defect evidence;
-  Wave 4 implementation/regression complete; final user-run UAT pending
+  Wave 4 implementation/regression complete; Wave 5 plan/spec update in
+  progress; final user-run UAT blocked until semantic coverage fix executes
 - Branch: `multiagent-design` in C-drive worktree
 - Remote: `https://github.com/770122whrt/text2IFC`
 
@@ -445,6 +449,17 @@ correction
   through one bounded repair attempt followed by regenerated gates and a second
   Audit. Reports now link generated-IFC gate sidecars, repair attempts, and
   Audit validation.
+- Phase 6.2-fix post-Wave-4 live UAT session `d462b95089755d47` produced real
+  Mimo Design Brief/Generator/Audit evidence, compiled and reopened IFC2X3,
+  and geometry-success output. Review then identified defect 004: the geometry
+  expectation can be circular when derived from candidate wall placements, and
+  explicit unsupported user facts such as `door.opening_direction:
+  "into_space"` need Draft/blocking coverage instead of silent acceptance.
+- Phase 6.2-fix Wave 5 is now specified and planned as a semantic fidelity
+  gate and BIM JSON capability contract: Design-Brief-derived rectangular-room
+  geometry expectations, fact-level support profile, unsupported-fact
+  Draft-first routing, `semantic-coverage.json`, report integration, and final
+  verifier hardening before final user-run UAT.
 - Phase 6.2 treats OpenAI Agents SDK as a conditional integration. A failed SDK
   compatibility checkpoint is not a product failure if the native OpenAI SDK
   provider path remains evidence-complete.
@@ -494,13 +509,13 @@ correction
 
 ## Next Action
 
-Run final Phase 6.2-fix real human-terminal Mimo REPL UAT from the C-drive
-worktree:
-`.venv\Scripts\python scripts\agent\run_text2ifc_chat.py --live --output-root dataset\processed\agent-demo\phase6.2-fix-repl`
+Execute Phase 6.2-fix Wave 5 from the C-drive worktree:
+`.venv\Scripts\python -m pytest tests\agent\test_phase6_2_fix_semantic_fidelity.py -q`
 
-The accepted run must not use `--scripted-stdin`, answer files, fake providers,
-or replay output. After it writes `final-acceptance.json`, run the Phase 6.2-fix
-artifact verifier and artifact secret scan.
+Use TDD to add Design-Brief-derived semantic geometry expectations,
+fact-level capability coverage, Draft-first unsupported-fact routing, report
+integration, and final verifier hardening. Only after Wave 5 passes should the
+final real human-terminal Mimo REPL UAT be rerun.
 
 ## Accumulated Context
 
@@ -701,5 +716,5 @@ artifact verifier and artifact secret scan.
   responses.
 
 ---
-*Last activity: 2026-06-27 - implemented Phase 6.2-fix Wave 4 gate/Audit/repair
-routing and prepared final human-terminal UAT handoff*
+*Last activity: 2026-06-27 - revised Phase 6.2-fix SPEC/PLAN for Wave 5
+semantic fidelity and capability coverage before final UAT*

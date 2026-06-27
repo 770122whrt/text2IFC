@@ -657,12 +657,16 @@ CLI-09, AGENT-05, REPAIR-01, OBS-01
 
 **Explicit boundary:** This phase does not replace the Phase 6.2 backend
 pipeline, provider path, session DB, query/export commands, Generator, Audit,
-or compiler. It fixes the user-facing acceptance boundary. Scripted stdin,
-prewritten answer files, fake providers, and replay evidence remain regression
-tools only and cannot satisfy final Phase 6.2-fix acceptance. After UAT defect
-003, the phase also fixes the ordering boundary: generated-IFC gate feedback
-must reach decisive Audit before acceptance, and confirmed geometry failures
-must route to bounded repair/generation or explicit blocking.
+or compiler. It fixes the user-facing acceptance boundary and the trust gates
+around accepted IFC output. Scripted stdin, prewritten answer files, fake
+providers, and replay evidence remain regression tools only and cannot satisfy
+final Phase 6.2-fix acceptance. After UAT defect 003, generated-IFC gate
+feedback must reach decisive Audit before acceptance, and confirmed geometry
+failures must route to bounded repair/generation or explicit blocking. After
+UAT defect 004, Formal acceptance must also prove Design-Brief semantic
+coverage: geometry expectations for supported rectangular rooms derive from
+user facts rather than candidate wall placements alone, and unsupported
+explicit facts remain Draft/blocked unless the user waives them.
 
 **Final acceptance artifacts:**
 
@@ -672,7 +676,7 @@ must route to bounded repair/generation or explicit blocking.
 - `dataset/processed/agent-demo/phase6.2-fix-repl/runs/<session_hash>/report.md`
 - `dataset/processed/agent-demo/phase6.2-fix-repl/runs/<session_hash>/session-export.json`
 
-**Plans:** 5 plans in 5 waves
+**Plans:** 6 plans in 6 waves
 
 **Wave 0**
 
@@ -698,6 +702,11 @@ must route to bounded repair/generation or explicit blocking.
 - [x] `06.2-fix-04-PLAN.md` - Geometry feedback to Audit and bounded repair
   loop
 
+**Wave 5** *(inserted after Wave 4 live UAT review defect 004)*
+
+- [ ] `06.2-fix-05-PLAN.md` - Semantic fidelity gate and BIM JSON capability
+  contract
+
 **Cross-cutting constraints:**
 
 - Final accepted evidence must be `interaction_mode: "human_repl_live"` and
@@ -714,6 +723,13 @@ must route to bounded repair/generation or explicit blocking.
 - Audit may classify failed deterministic gates but cannot override them.
 - True candidate geometry failures route to bounded repair/generation; gate
   disputes block for human/developer review.
+- Supported rectangular-room semantic geometry expectations derive from the
+  Design Brief and explicit user facts, not only from candidate wall boxes.
+- Every explicit user fact must be represented, compiler-generated,
+  unsupported/Draft, waived by the user, or blocked as unknown capability
+  before Formal acceptance.
+- Custom property text preservation cannot count as faithful IFC semantic
+  support.
 - Draft, quit, and blocked outcomes write trace/report artifacts but no IFC.
 - All work remains in the C-drive `multiagent-design` worktree; the E-drive
   working tree is not edited.
@@ -724,5 +740,8 @@ defect 003: Audit accepted before final geometry feedback existed. Wave 4 is
 implemented and automatically verified: generated-IFC gate feedback now reaches
 Audit before acceptance, Audit override attempts block, and Audit `revise` can
 route true geometry failures to bounded repair and a second gate/Audit pass.
-Final Phase 6.2-fix acceptance remains pending until a new real human-terminal
-Mimo REPL UAT writes and verifies `final-acceptance.json`.
+Follow-up live session `d462b95089755d47` proved the real REPL can generate a
+viewable IFC, but review exposed defect 004: candidate-derived geometry
+expectations can be circular, and unsupported explicit facts such as inward
+door opening can be silently lost. Wave 5 is now planned to add semantic
+capability and coverage gates before final Phase 6.2-fix acceptance.
