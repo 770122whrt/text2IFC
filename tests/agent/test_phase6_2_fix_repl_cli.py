@@ -314,7 +314,7 @@ def test_default_live_repl_design_brief_trace_is_session_scoped(tmp_path):
     assert (run_dir / "output.ifc").is_file()
 
 
-def test_live_repl_final_blocked_prints_audit_and_artifact_paths(tmp_path):
+def test_live_repl_routes_geometry_failure_through_audit_before_final_status(tmp_path):
     from scripts.agent import run_text2ifc_chat
 
     root = tmp_path / "phase6.2-fix-repl"
@@ -376,13 +376,30 @@ def test_live_repl_final_blocked_prints_audit_and_artifact_paths(tmp_path):
     run_dir = root / "runs" / session.session_hash
 
     assert exit_code == 2
-    assert session.status == "final_blocked"
+    assert session.status == "audit_blocked"
     assert (run_dir / "output.ifc").is_file()
     assert (run_dir / "report.md").is_file()
     assert (run_dir / "geometry-feedback.json").is_file()
+    audit_input = json.loads(
+        (run_dir / "audit" / "prompt-render-input.json").read_text(encoding="utf-8")
+    )
+    gate_feedback = audit_input["DETERMINISTIC_GATES"]["geometry_feedback"]
+    assert gate_feedback["success"] is False
+    assert [issue["code"] for issue in gate_feedback["issues"]] == [
+        "WALL_ORIENTATION_MISMATCH",
+        "WALL_ORIENTATION_MISMATCH",
+        "ROOM_ENCLOSURE_OPEN",
+    ]
+    audit_validation = json.loads(
+        (run_dir / "audit" / "validation.json").read_text(encoding="utf-8")
+    )
+    assert audit_validation["valid"] is False
+    assert {
+        issue["code"] for issue in audit_validation["issues"]
+    } == {"AUDIT_OVERRIDE_ATTEMPT"}
     assert "Generator" in rendered
     assert "Audit" in rendered
-    assert "final_blocked" in rendered
+    assert "audit_blocked" in rendered
     assert "output.ifc" in rendered
     assert "report.md" in rendered
     assert "geometry-feedback.json" in rendered
