@@ -7,7 +7,7 @@ import hashlib
 from datetime import datetime, timezone
 from dataclasses import asdict
 from pathlib import Path
-from typing import Any
+from typing import Any, Mapping
 
 from text2ifc_compiler import compile_document
 from text2ifc_quality import check_generated_ifc
@@ -1003,10 +1003,21 @@ def run_audit_report_stage(
     )
     repair_route = json.loads((repair / "route.json").read_text(encoding="utf-8"))
     repair_metrics = json.loads((repair / "metrics.json").read_text(encoding="utf-8"))
+    ifc_verification = _read_optional_json(root / "ifc-verification.json")
+    geometry_feedback = _read_optional_json(root / "geometry-feedback.json")
     deterministic_gates = {
         "bim_json_validation": bool(generator_validation.get("valid")),
         "repair_route_terminal": repair_route.get("route")
         in {"no_repair_needed", "repair_attempted", "draft_required"},
+        "ifc_compile_reopen": bool(ifc_verification.get("success"))
+        if ifc_verification is not None
+        else True,
+        "geometry_success": bool(geometry_feedback.get("success"))
+        if geometry_feedback is not None
+        else True,
+        "geometry_feedback": geometry_feedback
+        if geometry_feedback is not None
+        else {"success": None, "issues": [], "metrics": {}, "skip_reason": "not_run"},
     }
     evidence_paths = _audit_evidence_paths(root)
     renderer_inputs = {
@@ -1135,6 +1146,74 @@ def run_final_acceptance_stage(
     if audit_metrics.get("strict_output_contract_valid") is not True:
         raise ValueError("Final acceptance requires strict Audit output contract")
 
+    gate_result = run_candidate_gate_stage(
+        case_dir=case_root,
+        output_dir=output,
+        case_id=case_id,
+    )
+    ifc_verification = gate_result["ifc_verification"]
+    geometry_feedback = gate_result["geometry_feedback"]
+    output_ifc = output / "output.ifc"
+
+    secret_scan = scan_path(output)
+    _write_json(output / "secret-scan.json", secret_scan)
+    metrics = {
+        "case_id": case_id,
+        "stage": "final-acceptance",
+        "valid": bool(
+            gate_result["compile_reopen_success"]
+            and geometry_feedback["success"]
+            and secret_scan["finding_count"] == 0
+        ),
+        "compile_reopen_success": gate_result["compile_reopen_success"],
+        "geometry_success": geometry_feedback["success"],
+        "secret_finding_count": secret_scan["finding_count"],
+        "audit_response_id": audit_metrics.get("response_id"),
+        "audit_evidence_class": audit_metrics.get("evidence_class"),
+        "audit_strict_output_contract_valid": audit_metrics.get(
+            "strict_output_contract_valid"
+        ),
+        "source_case_dir": portable_artifact_path(case_root),
+        "ifc_path": "output.ifc" if gate_result["compile_reopen_success"] else None,
+    }
+    _write_json(output / "acceptance-metrics.json", metrics)
+    _write_final_report(
+        output / "report.md",
+        case_id=case_id,
+        case_dir=case_root,
+        metrics=metrics,
+        ifc_verification=ifc_verification,
+        geometry_feedback=geometry_feedback,
+        secret_scan=secret_scan,
+    )
+    return {
+        "case_id": case_id,
+        "stage": "final-acceptance",
+        "valid": metrics["valid"],
+        "ifc_path": str(output_ifc),
+        "report_path": str(output / "report.md"),
+        "output_dir": str(output),
+        "compile_reopen_success": gate_result["compile_reopen_success"],
+        "geometry_success": geometry_feedback["success"],
+        "secret_finding_count": secret_scan["finding_count"],
+    }
+
+
+def run_candidate_gate_stage(
+    *,
+    case_dir: Path | str,
+    output_dir: Path | str,
+    case_id: str,
+) -> dict[str, Any]:
+    """Compile a Formal candidate and write deterministic IFC gate evidence."""
+    case_root = Path(case_dir)
+    output = Path(output_dir)
+    output.mkdir(parents=True, exist_ok=True)
+    candidate_path = case_root / "generator" / "candidate.json"
+    if not candidate_path.is_file():
+        raise ValueError("Candidate gates require generator/candidate.json")
+    candidate = json.loads(candidate_path.read_text(encoding="utf-8"))
+
     output_ifc = output / "output.ifc"
     compilation = compile_document(candidate, output_ifc)
     ifc_verification = {
@@ -1167,48 +1246,16 @@ def run_final_acceptance_stage(
             "metrics": {},
         }
     _write_json(output / "geometry-feedback.json", geometry_feedback)
-
-    secret_scan = scan_path(output)
-    _write_json(output / "secret-scan.json", secret_scan)
-    metrics = {
-        "case_id": case_id,
-        "stage": "final-acceptance",
-        "valid": bool(
-            compilation.success
-            and geometry_feedback["success"]
-            and secret_scan["finding_count"] == 0
-        ),
-        "compile_reopen_success": compilation.success,
-        "geometry_success": geometry_feedback["success"],
-        "secret_finding_count": secret_scan["finding_count"],
-        "audit_response_id": audit_metrics.get("response_id"),
-        "audit_evidence_class": audit_metrics.get("evidence_class"),
-        "audit_strict_output_contract_valid": audit_metrics.get(
-            "strict_output_contract_valid"
-        ),
-        "source_case_dir": portable_artifact_path(case_root),
-        "ifc_path": "output.ifc" if compilation.success else None,
-    }
-    _write_json(output / "acceptance-metrics.json", metrics)
-    _write_final_report(
-        output / "report.md",
-        case_id=case_id,
-        case_dir=case_root,
-        metrics=metrics,
-        ifc_verification=ifc_verification,
-        geometry_feedback=geometry_feedback,
-        secret_scan=secret_scan,
-    )
     return {
         "case_id": case_id,
-        "stage": "final-acceptance",
-        "valid": metrics["valid"],
+        "stage": "candidate-gates",
+        "valid": bool(compilation.success and geometry_feedback["success"]),
         "ifc_path": str(output_ifc),
-        "report_path": str(output / "report.md"),
         "output_dir": str(output),
         "compile_reopen_success": compilation.success,
         "geometry_success": geometry_feedback["success"],
-        "secret_finding_count": secret_scan["finding_count"],
+        "ifc_verification": ifc_verification,
+        "geometry_feedback": geometry_feedback,
     }
 
 
@@ -1280,6 +1327,9 @@ def _audit_evidence_paths(root: Path) -> list[str]:
         "generator/metrics.json",
         "repair/route.json",
         "repair/metrics.json",
+        "ifc-verification.json",
+        "geometry-feedback.json",
+        "geometry-expectation.json",
     ]
     return [path for path in paths if (root / path).is_file()]
 
@@ -1288,7 +1338,7 @@ def _validate_live_audit_output(
     payload: dict[str, Any],
     *,
     case_dir: Path,
-    deterministic_gates: dict[str, bool],
+    deterministic_gates: dict[str, Any],
 ) -> list[dict[str, Any]]:
     issues: list[dict[str, Any]] = []
     if payload.get("schema_version") != "text2ifc/audit/2.0":
@@ -1307,10 +1357,11 @@ def _validate_live_audit_output(
                 "message": "Audit recommendation is not canonical.",
             }
         )
-    if not all(deterministic_gates.values()) and payload.get("blocking") is False:
+    gate_values = _deterministic_gate_booleans(deterministic_gates)
+    if not all(gate_values.values()) and payload.get("blocking") is False:
         issues.append(
             {
-                "code": "DETERMINISTIC_GATE_OVERRIDE",
+                "code": "AUDIT_OVERRIDE_ATTEMPT",
                 "path": "/blocking",
                 "message": "Audit cannot pass failed deterministic gates.",
             }
@@ -1335,6 +1386,21 @@ def _validate_live_audit_output(
                 }
             )
     return issues
+
+
+def _deterministic_gate_booleans(gates: Mapping[str, Any]) -> dict[str, bool]:
+    return {
+        str(key): bool(value)
+        for key, value in gates.items()
+        if key != "geometry_feedback"
+    }
+
+
+def _read_optional_json(path: Path) -> dict[str, Any] | None:
+    if not path.is_file():
+        return None
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    return payload if isinstance(payload, dict) else None
 
 
 def _wall_geometry_expectation_from_candidate(

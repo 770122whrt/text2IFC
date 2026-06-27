@@ -10,6 +10,7 @@ from typing import Any, Callable, Iterable
 
 from .live_pipeline import (
     run_audit_report_stage,
+    run_candidate_gate_stage,
     run_final_acceptance_stage,
     run_generator_stage,
     run_repair_stage,
@@ -345,6 +346,18 @@ def run_ready_session_to_ifc(
             report_path=None,
         )
 
+    candidate_gates = run_candidate_gate_stage(
+        case_dir=stored_session.run_dir,
+        output_dir=stored_session.run_dir,
+        case_id=stored_session.session_hash,
+    )
+    _record_stage_payloads(
+        store,
+        stored_session.session_id,
+        "candidate_gates",
+        candidate_gates,
+    )
+
     audit = run_audit_report_stage(
         provider=provider_factory(),
         case_dir=stored_session.run_dir,
@@ -354,6 +367,10 @@ def run_ready_session_to_ifc(
     _record_stage_payloads(store, stored_session.session_id, "audit", audit)
     if not audit["valid"] or audit["status"] != "accepted":
         store.mark_session_status(stored_session.session_id, "audit_blocked")
+        if (stored_session.run_dir / "output.ifc").is_file():
+            _record_existing_artifact(store, stored_session, kind="ifc", name="output.ifc")
+        if (stored_session.run_dir / "report.md").is_file():
+            _record_existing_artifact(store, stored_session, kind="report", name="report.md")
         store.export_session(stored_session.session_id)
         return SessionIfcResult(
             session_id=stored_session.session_id,
@@ -362,8 +379,16 @@ def run_ready_session_to_ifc(
             generator_status=str(generator["status"]),
             repair_route=str(repair["route"]),
             audit_status=str(audit["status"]),
-            ifc_path=None,
-            report_path=str(audit.get("report_path")) if audit.get("report_path") else None,
+            ifc_path=(
+                str(stored_session.run_dir / "output.ifc")
+                if (stored_session.run_dir / "output.ifc").is_file()
+                else None
+            ),
+            report_path=(
+                str(stored_session.run_dir / "report.md")
+                if (stored_session.run_dir / "report.md").is_file()
+                else str(audit.get("report_path")) if audit.get("report_path") else None
+            ),
         )
 
     final = run_final_acceptance_stage(
