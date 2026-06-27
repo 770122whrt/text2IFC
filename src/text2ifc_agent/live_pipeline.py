@@ -27,7 +27,11 @@ from .failure_routing import route_generation_failure
 from .fact_delta import evaluate_repair_fact_delta
 from .providers import validate_provider_output
 from .run_report import build_live_run_report, resolve_final_design_brief_dir
-from .semantic_coverage import build_semantic_geometry_expectation
+from .semantic_capabilities import build_semantic_capability_profile
+from .semantic_coverage import (
+    build_semantic_geometry_expectation,
+    evaluate_semantic_coverage,
+)
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -478,6 +482,7 @@ def run_generator_stage(
     formal_schema = json.loads(FORMAL_SCHEMA_PATH.read_text(encoding="utf-8"))
     draft_schema = json.loads(DRAFT_SCHEMA_PATH.read_text(encoding="utf-8"))
     generator_context = _select_generator_context(design_context)
+    semantic_profile = generator_context["semantic_capability_profile"]
     renderer_inputs = {
         "USER_REQUEST": user_request,
         "CONVERSATION": conversation,
@@ -495,6 +500,7 @@ def run_generator_stage(
     _write_text(output / "input.txt", user_request + "\n")
     _write_json(output / "conversation.json", conversation)
     _write_json(output / "design-brief.json", design_brief)
+    _write_json(output / "semantic-capabilities.json", semantic_profile)
     _write_json(output / "generator-context.json", generator_context)
     _write_json(output / "prompt-render-input.json", renderer_inputs)
     _write_text(output / "prompt-rendered.md", rendered["text"])
@@ -1284,6 +1290,49 @@ def run_candidate_gate_stage(
     }
 
 
+def run_semantic_coverage_stage(
+    *,
+    case_dir: Path | str,
+    output_dir: Path | str,
+    case_id: str,
+) -> dict[str, Any]:
+    """Write fact-level coverage evidence for the generated candidate."""
+    case_root = Path(case_dir)
+    output = Path(output_dir)
+    candidate_path = case_root / "generator" / "candidate.json"
+    if not candidate_path.is_file():
+        raise ValueError("Semantic coverage requires generator/candidate.json")
+    design_brief_path = _find_design_brief_path(case_root)
+    if design_brief_path is None:
+        raise ValueError("Semantic coverage requires design-brief.json")
+    candidate = json.loads(candidate_path.read_text(encoding="utf-8"))
+    design_brief = json.loads(design_brief_path.read_text(encoding="utf-8"))
+    profile_path = case_root / "generator" / "semantic-capabilities.json"
+    profile = (
+        json.loads(profile_path.read_text(encoding="utf-8"))
+        if profile_path.is_file()
+        else build_semantic_capability_profile()
+    )
+    _write_json(output / "semantic-capabilities.json", profile)
+    coverage = evaluate_semantic_coverage(
+        case_id=case_id,
+        design_brief=design_brief,
+        candidate=candidate,
+        capability_profile=profile,
+    )
+    _write_json(output / "semantic-coverage.json", coverage)
+    return {
+        "case_id": case_id,
+        "stage": "semantic-coverage",
+        "valid": bool(coverage["valid"]),
+        "blocking_fact_count": len(coverage["blocking_facts"]),
+        "fact_count": len(coverage["facts"]),
+        "capability_profile_id": profile.get("profile_id"),
+        "capability_profile_hash": profile.get("profile_hash"),
+        "coverage": coverage,
+    }
+
+
 def _semantic_geometry_expectation_from_case(
     *,
     case_root: Path,
@@ -1321,10 +1370,16 @@ def _select_generator_context(design_context: dict[str, Any]) -> dict[str, Any]:
         if isinstance(record, dict)
         and record.get("kind") == "ifc_generation_capability"
     ]
+    semantic_profile = build_semantic_capability_profile()
     example = json.loads(GENERATOR_FEW_SHOT_PATH.read_text(encoding="utf-8"))
     return {
         "schema_version": "text2ifc/generator-context/1.0",
-        "capability_profile": capabilities,
+        "capability_profile": {
+            "schema_version": "text2ifc/generator-capability-profile/2.0",
+            "ifc_generation_capabilities": capabilities,
+            "semantic_capability_profile": semantic_profile,
+        },
+        "semantic_capability_profile": semantic_profile,
         "few_shots": [
             {
                 "few_shot_id": "generator-v2.formal-rectangular-room",

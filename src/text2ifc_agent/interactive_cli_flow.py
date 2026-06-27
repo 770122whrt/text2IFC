@@ -14,6 +14,7 @@ from .live_pipeline import (
     run_final_acceptance_stage,
     run_generator_stage,
     run_repair_stage,
+    run_semantic_coverage_stage,
 )
 from .clarification import ClarificationCall, ClarificationController, DesignBriefInvoker
 from .context_selection import select_design_brief_context
@@ -321,6 +322,34 @@ def run_ready_session_to_ifc(
             source=stored_session.run_dir / "generator" / "candidate.json",
             target_name="candidate.json",
         )
+        if (stored_session.run_dir / "generator" / "semantic-capabilities.json").is_file():
+            _copy_artifact_to_run_root(
+                store,
+                stored_session,
+                kind="semantic_capabilities",
+                source=stored_session.run_dir / "generator" / "semantic-capabilities.json",
+                target_name="semantic-capabilities.json",
+            )
+
+    semantic_coverage: dict[str, Any] | None = None
+    if generator["classification"] == "formal" and generator["valid"]:
+        semantic_coverage = run_semantic_coverage_stage(
+            case_dir=stored_session.run_dir,
+            output_dir=stored_session.run_dir,
+            case_id=stored_session.session_hash,
+        )
+        _record_stage_payloads(
+            store,
+            stored_session.session_id,
+            "semantic_coverage",
+            semantic_coverage,
+        )
+        _record_existing_artifact(
+            store,
+            stored_session,
+            kind="semantic_coverage",
+            name="semantic-coverage.json",
+        )
 
     repair = run_repair_stage(
         provider_factory=provider_factory,
@@ -330,10 +359,14 @@ def run_ready_session_to_ifc(
     )
     _record_stage_payloads(store, stored_session.session_id, "repair", repair)
 
-    if not generator["valid"] or repair["route"] not in {
-        "no_repair_needed",
-        "repair_attempted",
-    }:
+    if (
+        not generator["valid"]
+        or (semantic_coverage is not None and not semantic_coverage["valid"])
+        or repair["route"] not in {
+            "no_repair_needed",
+            "repair_attempted",
+        }
+    ):
         store.mark_session_status(stored_session.session_id, "draft_or_blocked")
         store.export_session(stored_session.session_id)
         return SessionIfcResult(
