@@ -19,6 +19,7 @@ from .session_store import SessionStore
 
 
 InputFunc = Callable[[str], str]
+DesignBriefInvokerFactory = Callable[[Path], DesignBriefInvoker]
 
 
 @dataclass(frozen=True)
@@ -52,7 +53,8 @@ def configure_utf8_stdio(stdout: TextIO | None = None) -> dict[str, str | None]:
 def run_repl_chat(
     *,
     store: SessionStore,
-    invoke_design_brief: DesignBriefInvoker,
+    invoke_design_brief: DesignBriefInvoker | None = None,
+    design_brief_invoker_factory: DesignBriefInvokerFactory | None = None,
     input_func: InputFunc | None = None,
     stdout: TextIO | None = None,
     stop_after: str = "ifc",
@@ -78,6 +80,10 @@ def run_repl_chat(
         return ReplChatResult(session_id="", session_hash="", status="incomplete")
 
     session = store.create_session(original_input=original_request)
+    if invoke_design_brief is None:
+        if design_brief_invoker_factory is None:
+            raise ValueError("REPL requires a Design Brief invoker")
+        invoke_design_brief = design_brief_invoker_factory(session.run_dir)
     store.append_event(
         session.session_id,
         event_type="repl_session_started",

@@ -65,12 +65,17 @@ def main(
     db_path = args.db or (output_root / "sessions.sqlite")
     store = SessionStore.open(db_path, artifact_root=output_root)
     try:
+        design_brief_invoker_factory = None
         if design_brief_invoker is None:
-            design_brief_invoker = make_openai_design_brief_invoker(
-                config=load_openai_compatible_runtime_config(dict(os.environ)),
-                run_dir=output_root,
-                client_factory=openai_client_factory,
-            )
+            config = load_openai_compatible_runtime_config(dict(os.environ))
+
+            def design_brief_invoker_factory(run_dir: Path) -> DesignBriefInvoker:
+                return make_openai_design_brief_invoker(
+                    config=config,
+                    run_dir=run_dir,
+                    client_factory=openai_client_factory,
+                )
+
         if live_provider_factory is None:
             live_provider_factory = _default_provider_factory(
                 openai_client_factory=openai_client_factory
@@ -78,6 +83,7 @@ def main(
         result = run_repl_chat(
             store=store,
             invoke_design_brief=design_brief_invoker,
+            design_brief_invoker_factory=design_brief_invoker_factory,
             input_func=input_func,
             stdout=active_stdout,
             stop_after=args.stop_after,
