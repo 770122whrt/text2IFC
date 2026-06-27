@@ -201,7 +201,8 @@ requirements.
   before final acceptance. Audit can classify failed schema, compile, reopen,
   geometry, report, verifier, or secret-scan gates, but cannot override them;
   true candidate geometry failures route to bounded repair/generation, and
-  gate disputes block for human/developer review.
+  gate disputes block for human/developer review. An Audit `accept` over failed
+  deterministic gates is treated as `audit_override_attempt`, not acceptance.
 
 ## Out of Scope
 
