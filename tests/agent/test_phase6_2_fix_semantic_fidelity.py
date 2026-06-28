@@ -77,6 +77,38 @@ def test_candidate_gate_accepts_polygon_space_with_corner_origin_outside_walls(t
     assert semantic_expectation["walls"]["wall-south"]["bbox"]["y"] == [-0.2, 0.0]
 
 
+def test_chinese_outside_wall_placement_activates_same_semantic_gate(tmp_path):
+    case_dir = tmp_path / "semantic-chinese-outside-placement"
+    generator_dir = case_dir / "generator"
+    generator_dir.mkdir(parents=True)
+    candidate = _outside_boundary_gap_candidate()
+    design_brief = _outside_boundary_design_brief()
+    design_brief["known_facts"]["walls"]["placement"] = "外侧"
+    (generator_dir / "candidate.json").write_text(
+        json.dumps(candidate, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+    (case_dir / "design-brief.json").write_text(
+        json.dumps(design_brief, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+
+    result = run_candidate_gate_stage(
+        case_dir=case_dir,
+        output_dir=case_dir,
+        case_id="semantic-chinese-outside-placement",
+    )
+
+    assert result["geometry_success"] is False
+    semantic_expectation = json.loads(
+        (case_dir / "semantic-geometry-expectation.json").read_text(encoding="utf-8")
+    )
+    assert semantic_expectation["source_facts"]["walls"]["placement"] == "outside_boundary"
+    assert semantic_expectation["source_facts"]["walls"]["placement_raw"] == "外侧"
+    feedback = json.loads((case_dir / "geometry-feedback.json").read_text(encoding="utf-8"))
+    assert any(issue["code"] == "WALL_OUTSIDE_BOUNDARY_GAP" for issue in feedback["issues"])
+
+
 def test_unwaived_unsupported_door_opening_direction_blocks_formal_ifc(tmp_path):
     root = tmp_path / "phase6.2-fix-repl"
     store = SessionStore.open(root / "sessions.sqlite", artifact_root=root)
