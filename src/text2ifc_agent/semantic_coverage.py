@@ -73,7 +73,9 @@ def build_semantic_geometry_expectation(
         return None
     if space_facts.get("shape") != "rectangle":
         return None
-    if wall_facts.get("placement") != "outside_boundary":
+    wall_placement = wall_facts.get("placement")
+    canonical_wall_placement = _canonical_wall_placement(wall_placement)
+    if canonical_wall_placement != "outside_boundary":
         return None
     if wall_facts.get("enclosure") not in {None, "closed"}:
         return None
@@ -132,13 +134,45 @@ def build_semantic_geometry_expectation(
                 "height_mm": height_mm,
             },
             "walls": {
-                "placement": "outside_boundary",
+                "placement": canonical_wall_placement,
+                **(
+                    {"placement_raw": wall_placement}
+                    if wall_placement != canonical_wall_placement
+                    else {}
+                ),
                 "thickness_mm": thickness_mm,
                 "enclosure": wall_facts.get("enclosure"),
             },
         },
         "walls": walls,
     }
+
+
+def _canonical_wall_placement(value: Any) -> str | None:
+    if not isinstance(value, str):
+        return None
+    normalized = value.strip().lower().replace("-", "_").replace(" ", "_")
+    if normalized in {
+        "outside_boundary",
+        "external_boundary",
+        "outside",
+        "outside_room_boundary",
+        "exterior",
+        "outer",
+    }:
+        return "outside_boundary"
+    compact = value.strip()
+    if compact in {
+        "外侧",
+        "外部",
+        "房间边界外侧",
+        "边界外侧",
+        "室外侧",
+        "澶栦晶",
+        "НвІа",
+    }:
+        return "outside_boundary"
+    return normalized if normalized else None
 
 
 def _known_fact_leaves(design_brief: Mapping[str, Any]) -> list[tuple[str, Any]]:

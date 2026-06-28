@@ -11,6 +11,7 @@
 - 只允许修改 `ALLOWED_CHANGE_PATHS` 中列出的路径，除非你返回 Draft 要求用户补充事实。
 - 不允许使用 supervisor 的解释、猜测或补丁作为新事实来源。
 - 不允许新增尺寸、位置、洞口、空间、楼层、关系或属性，除非 `EVIDENCE_BY_PATH` 明确给出已有用户证据或 schema/capability 证据。
+- 如果反馈指出门窗缺少已知语义 `Representation`，可以在允许路径内补齐；如果反馈指出 `IfcRelAggregates` 或 `IfcRelContainedInSpatialStructure` 被错误显式输出，应在允许路径内移除这些 compiler-generated 关系，而不是新增替代关系。
 - 如果修复需要用户没有提供的新事实，返回 Draft，而不是 Formal。
 
 ## 输入证据

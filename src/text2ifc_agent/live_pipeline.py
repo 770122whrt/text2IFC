@@ -54,6 +54,21 @@ GENERATOR_FEW_SHOT_PATH = (
 )
 
 
+class RepairSource:
+    def __init__(
+        self,
+        *,
+        document: dict[str, Any] | None,
+        kind: str,
+        source_path: str | None,
+        repair_artifact_name: str | None,
+    ) -> None:
+        self.document = document
+        self.kind = kind
+        self.source_path = source_path
+        self.repair_artifact_name = repair_artifact_name
+
+
 def complete_room_case() -> dict[str, Any]:
     """Return the versioned Chinese room case used for v1/v2 comparison."""
     user_request = (
@@ -763,12 +778,8 @@ def run_repair_stage(
         if generator_context_path.is_file()
         else {"capability_profile": [], "few_shots": []}
     )
-    candidate_path = source / "candidate.json"
-    candidate = (
-        json.loads(candidate_path.read_text(encoding="utf-8"))
-        if candidate_path.is_file()
-        else None
-    )
+    repair_source = _resolve_repair_source(source, validation, source_metrics)
+    candidate = repair_source.document
     validation_issues = list(validation.get("issues", []))
     geometry_issues = [dict(issue) for issue in list(geometry_feedback or [])]
     route = route_generation_failure(
@@ -782,8 +793,8 @@ def run_repair_stage(
     _write_text(output / "input.txt", user_request + "\n")
     _write_json(output / "conversation.json", conversation)
     _write_json(output / "design-brief.json", design_brief)
-    if candidate is not None:
-        _write_json(output / "candidate.json", candidate)
+    if candidate is not None and repair_source.repair_artifact_name is not None:
+        _write_json(output / repair_source.repair_artifact_name, candidate)
     _write_json(output / "source-validation.json", validation)
     _write_json(output / "generator-context.json", generator_context)
 
@@ -913,6 +924,9 @@ def run_repair_stage(
         "validation_issue_count": len(validation_issues),
         "geometry_issue_count": len(geometry_issues),
         "repair_diagnostics": repair_diagnostics,
+        "source_document_kind": repair_source.kind,
+        "source_document_path": repair_source.source_path,
+        "repair_source_artifact": repair_source.repair_artifact_name,
         "fact_delta": "fact-delta.json" if fact_delta is not None else None,
         **{
             key: value
@@ -937,6 +951,9 @@ def run_repair_stage(
         "repair_diagnostic_count": len(repair_diagnostics),
         "geometry_issue_count": len(geometry_issues),
         "prior_attempt_count": prior_attempt_count,
+        "source_document_kind": repair_source.kind,
+        "source_document_path": repair_source.source_path,
+        "repair_source_artifact": repair_source.repair_artifact_name,
         "repaired_artifact": repaired_artifact_name,
         "fact_delta_valid": fact_delta.get("valid") if fact_delta else None,
     }
@@ -955,7 +972,16 @@ def run_repair_stage(
                 "input": "input.txt",
                 "conversation": "conversation.json",
                 "design_brief": "design-brief.json",
-                "candidate": "candidate.json" if candidate is not None else None,
+                "candidate": (
+                    repair_source.repair_artifact_name
+                    if repair_source.kind == "candidate"
+                    else None
+                ),
+                "invalid_candidate": (
+                    repair_source.repair_artifact_name
+                    if repair_source.kind == "invalid_formal"
+                    else None
+                ),
                 "source_validation": "source-validation.json",
                 "renderer_inputs": (
                     "prompt-render-input.json" if provider_call_count else None
@@ -1406,6 +1432,43 @@ def _select_generator_context(design_context: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def _resolve_repair_source(
+    source: Path,
+    validation: Mapping[str, Any],
+    source_metrics: Mapping[str, Any],
+) -> RepairSource:
+    candidate_path = source / "candidate.json"
+    if candidate_path.is_file():
+        return RepairSource(
+            document=json.loads(candidate_path.read_text(encoding="utf-8")),
+            kind="candidate",
+            source_path="candidate.json",
+            repair_artifact_name="candidate.json",
+        )
+
+    parsed_path = source / "parsed-output.json"
+    if (
+        parsed_path.is_file()
+        and source_metrics.get("classification") == "formal"
+        and validation.get("valid") is False
+    ):
+        parsed = json.loads(parsed_path.read_text(encoding="utf-8"))
+        if isinstance(parsed, dict) and parsed.get("schema_version") == "bim-json/2.0":
+            return RepairSource(
+                document=parsed,
+                kind="invalid_formal",
+                source_path="parsed-output.json",
+                repair_artifact_name="invalid-candidate.json",
+            )
+
+    return RepairSource(
+        document=None,
+        kind="none",
+        source_path=None,
+        repair_artifact_name=None,
+    )
+
+
 def _repair_allowed_change_paths(
     validation_issues: list[dict[str, Any]],
     *,
@@ -1416,11 +1479,22 @@ def _repair_allowed_change_paths(
         issue_path = issue.get("path")
         if isinstance(issue_path, str) and issue_path:
             paths.append(issue_path)
+            if issue.get("code") == "UNSUPPORTED_RELATIONSHIP_CLASS":
+                relationship_path = _relationship_item_path(issue_path)
+                if relationship_path is not None:
+                    paths.append(relationship_path)
             paths.extend(_geometry_issue_candidate_paths(issue_path, candidate))
         for fact_path in issue.get("required_fact_paths", []):
             if isinstance(fact_path, str) and fact_path:
                 paths.append(fact_path)
     return sorted(set(paths))
+
+
+def _relationship_item_path(issue_path: str) -> str | None:
+    parts = [part for part in issue_path.split("/") if part]
+    if len(parts) >= 2 and parts[0] == "relationships" and parts[1].isdigit():
+        return f"/relationships/{parts[1]}"
+    return None
 
 
 def _geometry_issue_candidate_paths(

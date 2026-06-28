@@ -52,6 +52,8 @@ Draft Envelope 1.0 完整 canonical Schema：
 四、矩形拉伸 profile 使用中心原点语义。墙的 ObjectPlacement.origin 是墙实体中心，不是墙段起点。沿局部 Y 方向的墙必须通过语义 ref_direction 表达旋转，不能仍按 X 方向放置。
 
 Rule: wall orientation belongs in `ObjectPlacement.ref_direction`. Do not duplicate wall rotation into `Representation.position`. For ordinary straight wall solids, omit `Representation.position` unless the Design Brief or geometry feedback explicitly requires a local solid offset that is independent from the product placement.
+Rule: Formal `IfcDoor` and `IfcWindow` entities must include semantic `Representation` geometry when they are generated. Width/height fields alone are not enough for Formal BIM JSON 2.0 acceptance.
+Rule: Do not explicitly output `IfcRelAggregates` or `IfcRelContainedInSpatialStructure` in BIM JSON. Spatial aggregation, containment, owner history, local placement helpers, and low-level IFC bookkeeping are compiler-generated unless the schema/context explicitly lists them as supported semantic output.
 
 五、门窗洞口相对宿主墙表达。用户说门窗位于墙中央时，按构件中心线与宿主墙中心线对齐表达；不要把宿主墙的全局起点坐标复制成洞口局部偏移。
 
