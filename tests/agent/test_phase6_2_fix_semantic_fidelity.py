@@ -46,6 +46,37 @@ def test_candidate_gate_derives_wall_expectations_from_design_brief(tmp_path):
     )
 
 
+def test_candidate_gate_accepts_polygon_space_with_corner_origin_outside_walls(tmp_path):
+    case_dir = tmp_path / "semantic-corner-origin"
+    generator_dir = case_dir / "generator"
+    generator_dir.mkdir(parents=True)
+    candidate = _outside_boundary_corner_origin_candidate()
+    (generator_dir / "candidate.json").write_text(
+        json.dumps(candidate, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+    (case_dir / "design-brief.json").write_text(
+        json.dumps(_outside_boundary_design_brief(), ensure_ascii=False, indent=2)
+        + "\n",
+        encoding="utf-8",
+    )
+
+    result = run_candidate_gate_stage(
+        case_dir=case_dir,
+        output_dir=case_dir,
+        case_id="semantic-corner-origin",
+    )
+
+    assert result["geometry_success"] is True
+    feedback = json.loads((case_dir / "geometry-feedback.json").read_text(encoding="utf-8"))
+    assert feedback["issues"] == []
+    semantic_expectation = json.loads(
+        (case_dir / "semantic-geometry-expectation.json").read_text(encoding="utf-8")
+    )
+    assert semantic_expectation["walls"]["wall-south"]["bbox"]["x"] == [-0.2, 6.2]
+    assert semantic_expectation["walls"]["wall-south"]["bbox"]["y"] == [-0.2, 0.0]
+
+
 def test_unwaived_unsupported_door_opening_direction_blocks_formal_ifc(tmp_path):
     root = tmp_path / "phase6.2-fix-repl"
     store = SessionStore.open(root / "sessions.sqlite", artifact_root=root)
@@ -231,6 +262,31 @@ def _outside_boundary_gap_candidate() -> dict:
     _set_wall(entity_by_id["wall-north"], origin=[3000, 4200, 0], ref=[1, 0, 0], x=6400, y=200)
     _set_wall(entity_by_id["wall-west"], origin=[-200, 2000, 0], ref=[0, 1, 0], x=4000, y=200)
     _set_wall(entity_by_id["wall-east"], origin=[6200, 2000, 0], ref=[0, 1, 0], x=4000, y=200)
+    return candidate
+
+
+def _outside_boundary_corner_origin_candidate() -> dict:
+    candidate = deepcopy(
+        json.loads(
+            (PHASE6_1_COMPLETE / "generator" / "candidate.json").read_text(
+                encoding="utf-8"
+            )
+        )
+    )
+    entity_by_id = {entity["id"]: entity for entity in candidate["entities"]}
+
+    space = entity_by_id["space-1"]
+    space["attributes"]["ObjectPlacement"]["origin"] = [0, 0, 0]
+    space["attributes"]["ObjectPlacement"]["ref_direction"] = [1, 0, 0]
+    space["attributes"]["Representation"]["profile"] = {
+        "kind": "polygon",
+        "points": [[0, 0], [6000, 0], [6000, 4000], [0, 4000], [0, 0]],
+    }
+
+    _set_wall(entity_by_id["wall-south"], origin=[3000, -100, 0], ref=[1, 0, 0], x=6400, y=200)
+    _set_wall(entity_by_id["wall-north"], origin=[3000, 4100, 0], ref=[1, 0, 0], x=6400, y=200)
+    _set_wall(entity_by_id["wall-west"], origin=[-100, 2000, 0], ref=[0, 1, 0], x=4000, y=200)
+    _set_wall(entity_by_id["wall-east"], origin=[6100, 2000, 0], ref=[0, 1, 0], x=4000, y=200)
     return candidate
 
 
