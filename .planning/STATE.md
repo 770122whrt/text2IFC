@@ -7,13 +7,13 @@ See: `.planning/PROJECT.md` (updated 2026-06-11)
 **Core value:** Produce valid, inspectable IFC models from explicit user
 requirements.
 
-**Current focus:** Phase 6.2-fix final human-terminal UAT after Wave 5 semantic
-coverage fix
+**Current focus:** Phase 6.2-fix Wave 6 invalid Formal recovery before final
+human-terminal UAT
 
 ## Status
 
 - Phase: 6.2-fix
-- Stage: Awaiting final real human-terminal Mimo REPL UAT after Wave 5
+- Stage: Planning and executing Wave 6 invalid Formal recovery
 - State: Waves 0-2 are implemented and automatically verified. Wave 3 real UAT
   produced useful live evidence and fixed defects 001/002, then exposed defect
   003: Audit accepted before final generated-IFC geometry feedback existed.
@@ -28,11 +28,16 @@ coverage fix
   semantic geometry expectations, fact-level capability coverage,
   unsupported-fact Draft/block routing, report integration, Audit evidence, and
   final verifier hardening are in place. Final acceptance is still pending
-  until a new human-terminal live Mimo run writes and verifies
-  `final-acceptance.json`.
+  because the next live UAT exposed defect 005: parseable invalid Formal
+  Generator output was preserved as `parsed-output.json`, but Repair only used
+  validated `candidate.json` as a previous candidate and therefore blocked with
+  `previous_candidate=None`. Wave 6 now adds bounded invalid Formal recovery
+  and Design Brief gate vocabulary normalization before the next human-terminal
+  live Mimo acceptance run.
 - Plans: Phase 6.2-fix Waves 0-2 complete; Wave 3 produced UAT defect evidence;
   Wave 4 implementation/regression complete; Wave 5 implementation/regression
-  complete; final user-run UAT pending
+  complete; Wave 6 planned for invalid Formal recovery; final user-run UAT
+  pending after Wave 6
 - Branch: `multiagent-design` in C-drive worktree
 - Remote: `https://github.com/770122whrt/text2IFC`
 
@@ -520,13 +525,14 @@ coverage fix
 
 ## Next Action
 
-Run final Phase 6.2-fix real human-terminal Mimo REPL UAT from the C-drive
-worktree:
-`.venv\Scripts\python scripts\agent\run_text2ifc_chat.py --live --output-root dataset\processed\agent-demo\phase6.2-fix-repl`
+Execute Phase 6.2-fix Wave 6 from the C-drive worktree:
 
-For accepted IFC evidence, avoid unsupported door operation semantics unless
-intentionally testing the Draft/blocking path. After `final-acceptance.json` is
-written, run the Phase 6.2-fix artifact verifier and artifact secret scan.
+1. Add RED tests for parseable invalid Formal recovery and Design Brief
+   placement normalization.
+2. Implement bounded repair/regeneration for actionable invalid Formal output.
+3. Run focused Phase 6.2-fix regression and compileall.
+4. After Wave 6 passes, rerun real human-terminal Mimo REPL UAT:
+   `.venv\Scripts\python scripts\agent\run_text2ifc_chat.py --live --output-root dataset\processed\agent-demo\phase6.2-fix-repl`
 
 ## Accumulated Context
 
@@ -727,5 +733,5 @@ written, run the Phase 6.2-fix artifact verifier and artifact secret scan.
   responses.
 
 ---
-*Last activity: 2026-06-27 - implemented Phase 6.2-fix Wave 5 semantic
-coverage gates and prepared final human-terminal UAT handoff*
+*Last activity: 2026-06-28 - planned Phase 6.2-fix Wave 6 after invalid Formal
+recovery defect in live human-terminal UAT*

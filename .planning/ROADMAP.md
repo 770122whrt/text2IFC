@@ -666,7 +666,10 @@ failures must route to bounded repair/generation or explicit blocking. After
 UAT defect 004, Formal acceptance must also prove Design-Brief semantic
 coverage: geometry expectations for supported rectangular rooms derive from
 user facts rather than candidate wall placements alone, and unsupported
-explicit facts remain Draft/blocked unless the user waives them.
+explicit facts remain Draft/blocked unless the user waives them. After UAT
+defect 005, parseable invalid Formal Generator output must enter bounded
+repair/regeneration when diagnostics are actionable instead of blocking only
+because no validated `candidate.json` exists.
 
 **Final acceptance artifacts:**
 
@@ -676,7 +679,7 @@ explicit facts remain Draft/blocked unless the user waives them.
 - `dataset/processed/agent-demo/phase6.2-fix-repl/runs/<session_hash>/report.md`
 - `dataset/processed/agent-demo/phase6.2-fix-repl/runs/<session_hash>/session-export.json`
 
-**Plans:** 6 plans in 6 waves
+**Plans:** 7 plans in 7 waves
 
 **Wave 0**
 
@@ -706,6 +709,11 @@ explicit facts remain Draft/blocked unless the user waives them.
 
 - [x] `06.2-fix-05-PLAN.md` - Semantic fidelity gate and BIM JSON capability
   contract
+
+**Wave 6** *(inserted after Wave 5 final UAT defect 005)*
+
+- [ ] `06.2-fix-06-PLAN.md` - Invalid Formal recovery loop and Design Brief
+  gate normalization
 
 **Cross-cutting constraints:**
 
@@ -747,5 +755,8 @@ door opening can be silently lost. Wave 5 is now planned to add semantic
 capability and coverage gates before final Phase 6.2-fix acceptance. Wave 5
 implementation and automated verification are complete: semantic geometry,
 semantic capability, semantic coverage, report, Audit evidence, and verifier
-gates are implemented. Final Phase 6.2-fix acceptance still requires a fresh
-real human-terminal Mimo REPL run after Wave 5.
+gates are implemented. Final UAT then exposed defect 005: parseable invalid
+Formal Generator output was not treated as a repair source, so repair blocked
+with `previous_candidate=None`. Wave 6 is planned to add bounded invalid Formal
+recovery and Design Brief gate vocabulary normalization before the next real
+human-terminal Mimo REPL acceptance run.
