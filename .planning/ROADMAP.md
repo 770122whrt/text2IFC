@@ -712,7 +712,7 @@ because no validated `candidate.json` exists.
 
 **Wave 6** *(inserted after Wave 5 final UAT defect 005)*
 
-- [ ] `06.2-fix-06-PLAN.md` - Invalid Formal recovery loop and Design Brief
+- [x] `06.2-fix-06-PLAN.md` - Invalid Formal recovery loop and Design Brief
   gate normalization
 
 **Cross-cutting constraints:**
@@ -757,6 +757,9 @@ implementation and automated verification are complete: semantic geometry,
 semantic capability, semantic coverage, report, Audit evidence, and verifier
 gates are implemented. Final UAT then exposed defect 005: parseable invalid
 Formal Generator output was not treated as a repair source, so repair blocked
-with `previous_candidate=None`. Wave 6 is planned to add bounded invalid Formal
-recovery and Design Brief gate vocabulary normalization before the next real
-human-terminal Mimo REPL acceptance run.
+with `previous_candidate=None`. Wave 6 is implemented and automatically
+verified: parseable invalid Formal output can now enter bounded repair when
+diagnostics are actionable, repair route evidence records the invalid Formal
+source, and Design Brief outside-boundary wording is normalized for semantic
+geometry gates. Final Phase 6.2-fix acceptance still requires a fresh real
+human-terminal Mimo REPL run after Wave 6.

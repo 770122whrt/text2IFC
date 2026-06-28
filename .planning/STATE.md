@@ -7,13 +7,13 @@ See: `.planning/PROJECT.md` (updated 2026-06-11)
 **Core value:** Produce valid, inspectable IFC models from explicit user
 requirements.
 
-**Current focus:** Phase 6.2-fix Wave 6 invalid Formal recovery before final
-human-terminal UAT
+**Current focus:** Phase 6.2-fix final human-terminal UAT after Wave 6 invalid
+Formal recovery fix
 
 ## Status
 
 - Phase: 6.2-fix
-- Stage: Planning and executing Wave 6 invalid Formal recovery
+- Stage: Awaiting final real human-terminal Mimo REPL UAT after Wave 6
 - State: Waves 0-2 are implemented and automatically verified. Wave 3 real UAT
   produced useful live evidence and fixed defects 001/002, then exposed defect
   003: Audit accepted before final generated-IFC geometry feedback existed.
@@ -31,13 +31,16 @@ human-terminal UAT
   because the next live UAT exposed defect 005: parseable invalid Formal
   Generator output was preserved as `parsed-output.json`, but Repair only used
   validated `candidate.json` as a previous candidate and therefore blocked with
-  `previous_candidate=None`. Wave 6 now adds bounded invalid Formal recovery
-  and Design Brief gate vocabulary normalization before the next human-terminal
-  live Mimo acceptance run.
+  `previous_candidate=None`. Wave 6 is now implemented and automatically
+  verified: actionable invalid Formal output can enter bounded repair, invalid
+  recovery source evidence is recorded, and Design Brief outside-boundary
+  wording is normalized for semantic geometry gates. Final acceptance is still
+  pending until a fresh human-terminal live Mimo run writes and verifies
+  `final-acceptance.json`.
 - Plans: Phase 6.2-fix Waves 0-2 complete; Wave 3 produced UAT defect evidence;
   Wave 4 implementation/regression complete; Wave 5 implementation/regression
-  complete; Wave 6 planned for invalid Formal recovery; final user-run UAT
-  pending after Wave 6
+  complete; Wave 6 implementation/regression complete; final user-run UAT
+  pending
 - Branch: `multiagent-design` in C-drive worktree
 - Remote: `https://github.com/770122whrt/text2IFC`
 
@@ -476,6 +479,13 @@ human-terminal UAT
   uses Design-Brief-derived wall expectations for supported rectangular rooms;
   exposes semantic coverage in generated reports and Audit inputs; and requires
   semantic coverage in the final artifact verifier.
+- Phase 6.2-fix Wave 6 was implemented and automatically verified on
+  2026-06-28. Parseable invalid Formal Generator output can now enter bounded
+  repair as `invalid_formal` when diagnostics are actionable, route evidence
+  records `invalid-candidate.json`, missing door semantic `Representation` and
+  unsupported compiler relationship output are repair-eligible when facts are
+  known, and Design Brief outside-boundary wording is normalized for semantic
+  geometry gates.
 - Phase 6.2 treats OpenAI Agents SDK as a conditional integration. A failed SDK
   compatibility checkpoint is not a product failure if the native OpenAI SDK
   provider path remains evidence-complete.
@@ -525,14 +535,14 @@ human-terminal UAT
 
 ## Next Action
 
-Execute Phase 6.2-fix Wave 6 from the C-drive worktree:
+Run final Phase 6.2-fix real human-terminal Mimo REPL UAT from the C-drive
+worktree:
 
-1. Add RED tests for parseable invalid Formal recovery and Design Brief
-   placement normalization.
-2. Implement bounded repair/regeneration for actionable invalid Formal output.
-3. Run focused Phase 6.2-fix regression and compileall.
-4. After Wave 6 passes, rerun real human-terminal Mimo REPL UAT:
-   `.venv\Scripts\python scripts\agent\run_text2ifc_chat.py --live --output-root dataset\processed\agent-demo\phase6.2-fix-repl`
+`.venv\Scripts\python scripts\agent\run_text2ifc_chat.py --live --output-root dataset\processed\agent-demo\phase6.2-fix-repl`
+
+For accepted IFC evidence, avoid unsupported door operation semantics unless
+intentionally testing the Draft/blocking path. After `final-acceptance.json` is
+written, run the Phase 6.2-fix artifact verifier and artifact secret scan.
 
 ## Accumulated Context
 
@@ -733,5 +743,5 @@ Execute Phase 6.2-fix Wave 6 from the C-drive worktree:
   responses.
 
 ---
-*Last activity: 2026-06-28 - planned Phase 6.2-fix Wave 6 after invalid Formal
-recovery defect in live human-terminal UAT*
+*Last activity: 2026-06-28 - implemented Phase 6.2-fix Wave 6 invalid Formal
+recovery and prepared final human-terminal UAT handoff*
