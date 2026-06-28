@@ -122,6 +122,50 @@ def test_unwaived_unsupported_door_opening_direction_blocks_formal_ifc(tmp_path)
     assert not (session.run_dir / "output.ifc").exists()
 
 
+def test_post_audit_blocked_repair_route_refreshes_report(tmp_path):
+    root = tmp_path / "phase6.2-fix-repl"
+    store = SessionStore.open(root / "sessions.sqlite", artifact_root=root)
+    session = store.create_session(original_input="创建一个外贴边界的矩形房间。")
+    _write_ready_outside_boundary_design_brief(session.run_dir)
+    store.mark_session_status(session.session_id, "ready")
+
+    candidate = _outside_boundary_gap_candidate()
+    audit = {
+        "schema_version": "text2ifc/audit/2.0",
+        "recommendation": "revise",
+        "blocking": True,
+        "deterministic_gate_status": "failed",
+        "findings": [
+            {
+                "code": "WALL_OUTSIDE_BOUNDARY_GAP",
+                "description": "墙体外贴边界位置不满足设计简报。",
+                "evidence_paths": ["geometry-feedback.json"],
+                "severity": "blocking",
+            }
+        ],
+        "evidence_paths": [
+            "design-brief/design-brief.json",
+            "generator/candidate.json",
+            "geometry-feedback.json",
+            "repair/route.json",
+        ],
+    }
+    provider = _SequenceLiveProvider([candidate, audit])
+
+    result = run_ready_session_to_ifc(
+        store=store,
+        session=session.session_hash,
+        provider_factory=lambda: provider,
+    )
+
+    assert result.status == "audit_blocked"
+    route = json.loads((session.run_dir / "repair" / "route.json").read_text(encoding="utf-8"))
+    assert route["route"] == "blocked_failure"
+    report = (session.run_dir / "report.md").read_text(encoding="utf-8")
+    assert "- route: `blocked_failure`" in report
+    assert "- route: `no_repair_needed`" not in report
+
+
 def _outside_boundary_design_brief() -> dict:
     return {
         "schema_version": "text2ifc/design-brief/2.0",
@@ -184,6 +228,31 @@ def _write_ready_design_brief_with_opening_direction(run_dir: Path) -> None:
         json.dumps(design_brief, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
         encoding="utf-8",
     )
+    (run_dir / "design-brief.json").write_text(
+        json.dumps(design_brief, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+
+
+def _write_ready_outside_boundary_design_brief(run_dir: Path) -> None:
+    call_dir = run_dir / "calls" / "01-design-brief"
+    call_dir.mkdir(parents=True)
+    design_brief_dir = run_dir / "design-brief"
+    design_brief_dir.mkdir(parents=True, exist_ok=True)
+    design_brief = _outside_boundary_design_brief()
+    source_dir = PHASE6_1_COMPLETE / "design-brief"
+    for source in source_dir.iterdir():
+        if source.is_file():
+            for target_dir in (call_dir, design_brief_dir):
+                (target_dir / source.name).write_text(
+                    source.read_text(encoding="utf-8"),
+                    encoding="utf-8",
+                )
+    for target_dir in (call_dir, design_brief_dir):
+        (target_dir / "design-brief.json").write_text(
+            json.dumps(design_brief, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
+            encoding="utf-8",
+        )
     (run_dir / "design-brief.json").write_text(
         json.dumps(design_brief, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
         encoding="utf-8",
