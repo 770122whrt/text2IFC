@@ -27,6 +27,7 @@ from .openai_compat import (
 )
 from .prompt_registry import render_prompt
 from .providers import ProviderOutput
+from .run_report import build_live_run_report
 from .session_store import SessionStore
 
 
@@ -410,6 +411,7 @@ def run_ready_session_to_ifc(
             repair = repair_attempt["repair"]
             candidate_gates = repair_attempt["candidate_gates"]
             audit = repair_attempt["audit"]
+            build_live_run_report(case_dir=stored_session.run_dir)
     if not audit["valid"] or audit["status"] != "accepted":
         store.mark_session_status(stored_session.session_id, "audit_blocked")
         if (stored_session.run_dir / "output.ifc").is_file():
