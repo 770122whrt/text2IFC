@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from math import hypot
 from typing import Any, Mapping
 
 
@@ -87,16 +88,15 @@ def build_semantic_geometry_expectation(
     space = _find_space(candidate)
     if space is None:
         return None
-    origin = _placement_origin(space)
-    if origin is None:
+    space_bounds = _space_inner_bounds(
+        space,
+        length_mm=length_mm,
+        width_mm=width_mm,
+    )
+    if space_bounds is None:
         return None
-    origin_x, origin_y, origin_z = origin
-    x_min = origin_x - length_mm / 2
-    x_max = origin_x + length_mm / 2
-    y_min = origin_y - width_mm / 2
-    y_max = origin_y + width_mm / 2
-    z_min = origin_z
-    z_max = origin_z + height_mm
+    x_min, x_max, y_min, y_max, z_min = space_bounds
+    z_max = z_min + height_mm
 
     walls = {
         "wall-south": {
@@ -208,6 +208,102 @@ def _placement_origin(entity: Mapping[str, Any]) -> tuple[float, float, float] |
         float(origin[1]),
         float(origin[2]) if len(origin) > 2 else 0.0,
     )
+
+
+def _space_inner_bounds(
+    entity: Mapping[str, Any],
+    *,
+    length_mm: float,
+    width_mm: float,
+) -> tuple[float, float, float, float, float] | None:
+    origin = _placement_origin(entity)
+    if origin is None:
+        return None
+    profile = _representation_profile(entity)
+    if isinstance(profile, Mapping) and profile.get("kind") == "polygon":
+        bounds = _polygon_plan_bounds(entity, profile)
+        if bounds is None:
+            return None
+        x_min, _x_max, y_min, _y_max, z_min = bounds
+        return (x_min, x_min + length_mm, y_min, y_min + width_mm, z_min)
+
+    origin_x, origin_y, origin_z = origin
+    return (
+        origin_x - length_mm / 2,
+        origin_x + length_mm / 2,
+        origin_y - width_mm / 2,
+        origin_y + width_mm / 2,
+        origin_z,
+    )
+
+
+def _representation_profile(entity: Mapping[str, Any]) -> Mapping[str, Any] | None:
+    attributes = entity.get("attributes")
+    if not isinstance(attributes, Mapping):
+        return None
+    representation = attributes.get("Representation")
+    if not isinstance(representation, Mapping):
+        return None
+    profile = representation.get("profile")
+    return profile if isinstance(profile, Mapping) else None
+
+
+def _polygon_plan_bounds(
+    entity: Mapping[str, Any],
+    profile: Mapping[str, Any],
+) -> tuple[float, float, float, float, float] | None:
+    origin = _placement_origin(entity)
+    if origin is None:
+        return None
+    local_x, local_y = _local_plan_axes(entity)
+    if local_x is None or local_y is None:
+        return None
+    points = profile.get("points")
+    if not isinstance(points, list) or not points:
+        return None
+
+    world_points: list[tuple[float, float]] = []
+    origin_x, origin_y, origin_z = origin
+    for point in points:
+        if not isinstance(point, list) or len(point) < 2:
+            return None
+        local_point_x = _number(point[0])
+        local_point_y = _number(point[1])
+        if local_point_x is None or local_point_y is None:
+            return None
+        world_points.append(
+            (
+                origin_x + local_point_x * local_x[0] + local_point_y * local_y[0],
+                origin_y + local_point_x * local_x[1] + local_point_y * local_y[1],
+            )
+        )
+    x_values = [point[0] for point in world_points]
+    y_values = [point[1] for point in world_points]
+    return (min(x_values), max(x_values), min(y_values), max(y_values), origin_z)
+
+
+def _local_plan_axes(
+    entity: Mapping[str, Any],
+) -> tuple[tuple[float, float] | None, tuple[float, float] | None]:
+    attributes = entity.get("attributes")
+    if not isinstance(attributes, Mapping):
+        return (None, None)
+    placement = attributes.get("ObjectPlacement")
+    if not isinstance(placement, Mapping):
+        return (None, None)
+    ref_direction = placement.get("ref_direction", [1, 0, 0])
+    if not isinstance(ref_direction, list) or len(ref_direction) < 2:
+        return (None, None)
+    ref_x = _number(ref_direction[0])
+    ref_y = _number(ref_direction[1])
+    if ref_x is None or ref_y is None:
+        return (None, None)
+    norm = hypot(ref_x, ref_y)
+    if norm == 0:
+        return (None, None)
+    local_x = (ref_x / norm, ref_y / norm)
+    local_y = (-local_x[1], local_x[0])
+    return (local_x, local_y)
 
 
 def _bbox(
