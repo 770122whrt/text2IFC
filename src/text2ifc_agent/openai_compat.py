@@ -1,4 +1,4 @@
-"""OpenAI-compatible Mimo config and evidence helpers for Phase 6.2."""
+"""OpenAI-compatible provider config and evidence helpers for Phase 6.2."""
 
 from __future__ import annotations
 
@@ -9,10 +9,16 @@ from typing import Any, Callable
 from .providers import LiveProviderResult, ProviderOutput, redact_provider_payload, validate_provider_output
 
 
+PROVIDER_ENV = "TEXT2IFC_PROVIDER"
+PROVIDER_MIMO = "mimo"
+PROVIDER_DEEPSEEK = "deepseek"
 OPENAI_API_KEY_ENV_CHOICES = ("API_KEY", "MIMO_API_KEY", "OPENAI_API_KEY")
+DEEPSEEK_API_KEY_ENV_CHOICES = ("DEEPSEEK_API_KEY", "API_KEY", "OPENAI_API_KEY")
 OPENAI_BASE_URL_ENV_CHOICES = ("OpenAI_BASE_URL", "OPENAI_BASE_URL")
-OPENAI_MODEL_ENV = "TEXT2IFC_MIMO_MODEL"
+MIMO_MODEL_ENV = "TEXT2IFC_MIMO_MODEL"
+DEEPSEEK_MODEL_ENV = "TEXT2IFC_DEEPSEEK_MODEL"
 OPENAI_MAX_COMPLETION_TOKENS_ENV = "TEXT2IFC_MIMO_MAX_COMPLETION_TOKENS"
+DEEPSEEK_MAX_TOKENS_ENV = "TEXT2IFC_DEEPSEEK_MAX_TOKENS"
 DEFAULT_OPENAI_MAX_COMPLETION_TOKENS = 131072
 
 
@@ -29,28 +35,35 @@ class OpenAICompatError(ValueError):
 
 @dataclass(frozen=True, repr=False)
 class OpenAICompatRuntimeConfig:
+    provider: str
+    provider_label: str
     api_key: str
     api_key_env: str
     base_url: str
     base_url_env: str
     model: str
+    model_env: str
     max_completion_tokens: int = DEFAULT_OPENAI_MAX_COMPLETION_TOKENS
 
     def __repr__(self) -> str:
         return (
             "OpenAICompatRuntimeConfig("
+            f"provider={self.provider!r}, "
             f"api_key_env={self.api_key_env!r}, "
             f"base_url_env={self.base_url_env!r}, "
+            f"model_env={self.model_env!r}, "
             f"model={self.model!r}, "
             f"max_completion_tokens={self.max_completion_tokens!r}, "
             "api_key='[REDACTED]', base_url='[REDACTED]')"
         )
 
 
-def normalize_openai_base_url(raw_url: str) -> str:
-    """Normalize an OpenAI-compatible base URL to the `/v1` root."""
+def normalize_openai_base_url(raw_url: str, *, provider: str = PROVIDER_MIMO) -> str:
+    """Normalize provider-specific OpenAI-compatible base URLs."""
 
     url = raw_url.rstrip("/")
+    if provider == PROVIDER_DEEPSEEK:
+        return url
     if url.endswith("/v1"):
         return url
     return f"{url}/v1"
@@ -59,33 +72,38 @@ def normalize_openai_base_url(raw_url: str) -> str:
 def load_openai_compatible_config(
     environ: dict[str, str] | None = None,
 ) -> dict[str, Any]:
-    """Return a redacted config status for the Mimo OpenAI-compatible path."""
+    """Return a redacted config status for the OpenAI-compatible path."""
 
     env = {} if environ is None else environ
-    api_key_env = _first_present(env, OPENAI_API_KEY_ENV_CHOICES)
+    provider = _resolve_provider(env)
+    provider_label = _provider_label(provider)
+    api_key_env = _first_present(env, _api_key_env_choices(provider))
     base_url_env = _first_present(env, OPENAI_BASE_URL_ENV_CHOICES)
+    model_env = _model_env(provider, env)
     missing: list[str] = []
     if api_key_env is None:
-        missing.append("API_KEY or MIMO_API_KEY or OPENAI_API_KEY")
+        missing.append(_api_key_missing_label(provider))
     if base_url_env is None:
         missing.append("OpenAI_BASE_URL or OPENAI_BASE_URL")
-    if not env.get(OPENAI_MODEL_ENV):
-        missing.append(OPENAI_MODEL_ENV)
+    if not model_env:
+        missing.append(_model_missing_label(provider))
     return {
-        "provider": "mimo-openai-compatible",
+        "provider": provider_label,
+        "provider_key": provider,
         "configured": not missing,
         "missing": missing,
         "required_env": [
-            "API_KEY or MIMO_API_KEY or OPENAI_API_KEY",
+            _api_key_missing_label(provider),
             "OpenAI_BASE_URL or OPENAI_BASE_URL",
-            OPENAI_MODEL_ENV,
+            _model_missing_label(provider),
         ],
         "api_key_configured": api_key_env is not None,
         "api_key_env": api_key_env,
         "base_url_configured": base_url_env is not None,
         "base_url_env": base_url_env,
-        "model": env.get(OPENAI_MODEL_ENV) or None,
-        "max_completion_tokens": _load_max_completion_tokens(env),
+        "model_env": model_env,
+        "model": env.get(model_env, "") if model_env else None,
+        "max_completion_tokens": _load_max_completion_tokens(env, provider=provider),
     }
 
 
@@ -100,7 +118,7 @@ def load_openai_compatible_runtime_config(
         raise OpenAICompatError(
             "OpenAI-compatible config is incomplete",
             evidence={
-                "provider": "mimo-openai-compatible",
+                "provider": status["provider"],
                 "parse_eligible": False,
                 "failure_class": "missing_config",
                 "missing": list(status["missing"]),
@@ -108,15 +126,21 @@ def load_openai_compatible_runtime_config(
         )
     api_key_env = status["api_key_env"]
     base_url_env = status["base_url_env"]
+    model_env = status["model_env"]
     assert isinstance(api_key_env, str)
     assert isinstance(base_url_env, str)
+    assert isinstance(model_env, str)
+    provider = str(status["provider_key"])
     return OpenAICompatRuntimeConfig(
+        provider=provider,
+        provider_label=str(status["provider"]),
         api_key=env[api_key_env],
         api_key_env=api_key_env,
-        base_url=normalize_openai_base_url(env[base_url_env]),
+        base_url=normalize_openai_base_url(env[base_url_env], provider=provider),
         base_url_env=base_url_env,
-        model=str(env[OPENAI_MODEL_ENV]),
-        max_completion_tokens=_load_max_completion_tokens(env),
+        model=str(env[model_env]),
+        model_env=model_env,
+        max_completion_tokens=_load_max_completion_tokens(env, provider=provider),
     )
 
 
@@ -141,15 +165,16 @@ def run_openai_sdk_chat_smoke(
             }
         ],
         "temperature": 0,
-        "max_completion_tokens": config.max_completion_tokens,
         "response_format": {"type": "json_object"},
     }
+    request.update(_token_limit_request(config))
     response = client.chat.completions.create(**request)
     payload = _object_to_dict(response)
     evidence = parse_chat_completion_evidence(
         payload,
         request=request,
         evidence_class="sdk_smoke",
+        provider_label=config.provider_label,
     )
     return {
         "status": "passed",
@@ -157,8 +182,8 @@ def run_openai_sdk_chat_smoke(
     }
 
 
-class OpenAICompatibleMimoLiveProvider:
-    """OpenAI-compatible Mimo adapter for live Generator/Audit calls."""
+class OpenAICompatibleLiveProvider:
+    """OpenAI-compatible adapter for live Generator/Audit calls."""
 
     def __init__(
         self,
@@ -186,21 +211,22 @@ class OpenAICompatibleMimoLiveProvider:
             "model": self.config.model,
             "messages": [{"role": "user", "content": prompt}],
             "temperature": 0,
-            "max_completion_tokens": self.config.max_completion_tokens,
             "response_format": {"type": "json_object"},
         }
+        request.update(_token_limit_request(self.config))
         response = self.client.chat.completions.create(**request)
         payload = _object_to_dict(response)
         evidence = parse_chat_completion_evidence(
             payload,
             request=request,
             evidence_class="live",
+            provider_label=self.config.provider_label,
         )
         output = validate_provider_output(
             ProviderOutput(
                 text=str(evidence["content_text"]),
                 metadata={
-                    "provider": "mimo-openai-compatible",
+                    "provider": self.config.provider_label,
                     "evidence_class": "live",
                     "session_id": session_id,
                     "response_id": evidence["response_id"],
@@ -232,6 +258,10 @@ class OpenAICompatibleMimoLiveProvider:
         )
 
 
+class OpenAICompatibleMimoLiveProvider(OpenAICompatibleLiveProvider):
+    """Backward-compatible class name for the original Mimo path."""
+
+
 def run_phase6_2_compatibility_check(
     environ: dict[str, str],
     *,
@@ -246,7 +276,7 @@ def run_phase6_2_compatibility_check(
     except OpenAICompatError as exc:
         return {
             "phase": "6.2",
-            "provider": "mimo-openai-compatible",
+            "provider": exc.evidence.get("provider", "openai-compatible"),
             "decision": "blocked",
             "implementation_route": "blocked",
             "blocker": exc.evidence.get("failure_class"),
@@ -267,6 +297,7 @@ def parse_chat_completion_evidence(
     *,
     request: dict[str, Any],
     evidence_class: str,
+    provider_label: str = "mimo-openai-compatible",
 ) -> dict[str, Any]:
     """Extract acceptance evidence from an OpenAI chat-completion response."""
 
@@ -274,7 +305,7 @@ def parse_chat_completion_evidence(
     message = choice.get("message") if isinstance(choice.get("message"), dict) else {}
     finish_reason = choice.get("finish_reason")
     evidence = {
-        "provider": "mimo-openai-compatible",
+        "provider": provider_label,
         "evidence_class": evidence_class,
         "response_id": response.get("id"),
         "object": response.get("object"),
@@ -309,7 +340,7 @@ def build_compatibility_report(
     }.get(decision, "native_orchestrator_with_openai_sdk_provider")
     return {
         "phase": "6.2",
-        "provider": "mimo-openai-compatible",
+        "provider": str(openai_sdk.get("provider", "mimo-openai-compatible")),
         "decision": decision,
         "implementation_route": implementation_route,
         "openai_sdk": redact_provider_payload(openai_sdk),
@@ -325,8 +356,60 @@ def _first_present(env: dict[str, str], names: tuple[str, ...]) -> str | None:
     return None
 
 
-def _load_max_completion_tokens(env: dict[str, str]) -> int:
-    raw_value = env.get(OPENAI_MAX_COMPLETION_TOKENS_ENV)
+def _resolve_provider(env: dict[str, str]) -> str:
+    configured = env.get(PROVIDER_ENV, "").strip().lower()
+    if configured in {PROVIDER_MIMO, PROVIDER_DEEPSEEK}:
+        return configured
+    if env.get(DEEPSEEK_MODEL_ENV):
+        return PROVIDER_DEEPSEEK
+    return PROVIDER_MIMO
+
+
+def _provider_label(provider: str) -> str:
+    return f"{provider}-openai-compatible"
+
+
+def _api_key_env_choices(provider: str) -> tuple[str, ...]:
+    return (
+        DEEPSEEK_API_KEY_ENV_CHOICES
+        if provider == PROVIDER_DEEPSEEK
+        else OPENAI_API_KEY_ENV_CHOICES
+    )
+
+
+def _api_key_missing_label(provider: str) -> str:
+    if provider == PROVIDER_DEEPSEEK:
+        return "DEEPSEEK_API_KEY or API_KEY or OPENAI_API_KEY"
+    return "API_KEY or MIMO_API_KEY or OPENAI_API_KEY"
+
+
+def _model_env(provider: str, env: dict[str, str]) -> str | None:
+    if provider == PROVIDER_DEEPSEEK:
+        return DEEPSEEK_MODEL_ENV if env.get(DEEPSEEK_MODEL_ENV) else None
+    return MIMO_MODEL_ENV if env.get(MIMO_MODEL_ENV) else None
+
+
+def _model_missing_label(provider: str) -> str:
+    return DEEPSEEK_MODEL_ENV if provider == PROVIDER_DEEPSEEK else MIMO_MODEL_ENV
+
+
+def token_limit_request(config: OpenAICompatRuntimeConfig) -> dict[str, int]:
+    if config.provider == PROVIDER_DEEPSEEK:
+        return {"max_tokens": config.max_completion_tokens}
+    return {"max_completion_tokens": config.max_completion_tokens}
+
+
+def _token_limit_request(config: OpenAICompatRuntimeConfig) -> dict[str, int]:
+    return token_limit_request(config)
+
+
+def _load_max_completion_tokens(env: dict[str, str], *, provider: str) -> int:
+    env_name = (
+        DEEPSEEK_MAX_TOKENS_ENV
+        if provider == PROVIDER_DEEPSEEK
+        else OPENAI_MAX_COMPLETION_TOKENS_ENV
+    )
+    raw_value = env.get(env_name)
     if raw_value is None or raw_value.strip() == "":
         return DEFAULT_OPENAI_MAX_COMPLETION_TOKENS
     try:
@@ -335,20 +418,20 @@ def _load_max_completion_tokens(env: dict[str, str]) -> int:
         raise OpenAICompatError(
             "OpenAI-compatible max completion token setting must be an integer",
             evidence={
-                "provider": "mimo-openai-compatible",
+                "provider": _provider_label(provider),
                 "parse_eligible": False,
                 "failure_class": "invalid_max_completion_tokens",
-                "env": OPENAI_MAX_COMPLETION_TOKENS_ENV,
+                "env": env_name,
             },
         ) from exc
     if value <= 0:
         raise OpenAICompatError(
             "OpenAI-compatible max completion token setting must be positive",
             evidence={
-                "provider": "mimo-openai-compatible",
+                "provider": _provider_label(provider),
                 "parse_eligible": False,
                 "failure_class": "invalid_max_completion_tokens",
-                "env": OPENAI_MAX_COMPLETION_TOKENS_ENV,
+                "env": env_name,
             },
         )
     return value

@@ -17,7 +17,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "src"))
 
 from text2ifc_agent.openai_compat import (  # noqa: E402
-    OpenAICompatibleMimoLiveProvider,
+    OpenAICompatibleLiveProvider,
     load_openai_compatible_config,
     load_openai_compatible_runtime_config,
     run_phase6_2_compatibility_check,
@@ -66,7 +66,7 @@ def load_env_file(path: Path) -> None:
         key, value = line.split("=", 1)
         key = key.strip()
         value = _unquote(value.strip())
-        if key and key not in os.environ:
+        if key:
             os.environ[key] = value
 
 
@@ -131,7 +131,7 @@ def _check_openai_compat(
     if not config["configured"]:
         report = {
             "phase": "6.2",
-            "provider": "mimo-openai-compatible",
+            "provider": config["provider"],
             "decision": "blocked",
             "implementation_route": "blocked",
             "blocker": "missing_openai_compatible_config",
@@ -235,8 +235,8 @@ def _default_openai_live_provider_factory(
     *,
     openai_client_factory: Callable[..., Any] | None,
 ) -> Callable[[], Any]:
-    def create_provider() -> OpenAICompatibleMimoLiveProvider:
-        return OpenAICompatibleMimoLiveProvider(
+    def create_provider() -> OpenAICompatibleLiveProvider:
+        return OpenAICompatibleLiveProvider(
             config=load_openai_compatible_runtime_config(dict(os.environ)),
             client_factory=openai_client_factory,
         )

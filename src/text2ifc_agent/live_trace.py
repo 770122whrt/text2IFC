@@ -25,15 +25,16 @@ def write_live_trace(
 ) -> dict[str, Any]:
     output = Path(output_dir)
     output.mkdir(parents=True, exist_ok=True)
+    provider = str(result.output.metadata.get("provider", "mimo"))
 
     request_artifact = {
-        "provider": "mimo",
+        "provider": provider,
         "evidence_class": result.evidence_class,
         "session_id": result.session_id,
         "request": redact_provider_payload(result.request),
     }
     metadata_artifact = {
-        "provider": "mimo",
+        "provider": provider,
         "evidence_class": result.evidence_class,
         "session_id": result.session_id,
         "http_status": result.http_status,
@@ -51,7 +52,7 @@ def write_live_trace(
     _write_text(output / TRACE_FILES["text"], result.output.text)
 
     return {
-        "provider": "mimo",
+        "provider": provider,
         "evidence_class": result.evidence_class,
         "session_id": result.session_id,
         "response_id": result.response.get("id"),

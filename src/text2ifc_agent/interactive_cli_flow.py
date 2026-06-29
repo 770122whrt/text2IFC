@@ -24,6 +24,7 @@ from .openai_compat import (
     OpenAICompatError,
     OpenAICompatRuntimeConfig,
     parse_chat_completion_evidence,
+    token_limit_request,
 )
 from .prompt_registry import render_prompt
 from .providers import ProviderOutput
@@ -91,20 +92,21 @@ def make_openai_design_brief_invoker(
             "model": config.model,
             "messages": [{"role": "user", "content": rendered["text"]}],
             "temperature": 0,
-            "max_completion_tokens": config.max_completion_tokens,
             "response_format": {"type": "json_object"},
         }
+        request.update(token_limit_request(config))
         response = client.chat.completions.create(**request)
         payload = _object_to_dict(response)
         evidence = parse_chat_completion_evidence(
             payload,
             request=request,
             evidence_class="live",
+            provider_label=config.provider_label,
         )
         provider_output = ProviderOutput(
             text=str(evidence["content_text"]),
             metadata={
-                "provider": "mimo-openai-compatible",
+                "provider": config.provider_label,
                 "response_id": evidence["response_id"],
                 "finish_reason": evidence["finish_reason"],
                 "model": evidence["model"],

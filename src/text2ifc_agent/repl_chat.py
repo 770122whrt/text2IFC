@@ -96,7 +96,7 @@ def run_repl_chat(
     active_stdout.write(
         f"\u5df2\u521b\u5efa\u4f1a\u8bdd\uff1asession_hash={session.session_hash}\n"
     )
-    active_stdout.write("\u6b63\u5728\u8bf7 Mimo \u68b3\u7406\u9700\u6c42...\n")
+    active_stdout.write("\u6b63\u5728\u8bf7\u6a21\u578b\u68b3\u7406\u9700\u6c42...\n")
     active_stdout.flush()
 
     controller = ClarificationController.start(

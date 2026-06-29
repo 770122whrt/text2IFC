@@ -643,3 +643,45 @@ def test_phase6_2_check_openai_compat_cli_missing_config_is_safe(
     assert report["blocker"] == "missing_openai_compatible_config"
     assert "API_KEY or MIMO_API_KEY or OPENAI_API_KEY" in stdout
     assert "https://" not in stdout
+
+
+def test_phase6_2_env_file_overrides_stale_process_provider_env(
+    monkeypatch, tmp_path, capsys
+):
+    from scripts.agent import run_phase6_2_cli
+
+    monkeypatch.setenv("TEXT2IFC_PROVIDER", "mimo")
+    monkeypatch.setenv("OPENAI_BASE_URL", "https://stale.example.invalid")
+    monkeypatch.setenv("TEXT2IFC_MIMO_MODEL", "mimo-v2.5-pro")
+    monkeypatch.setenv("API_KEY", "stale-secret")
+    env_file = tmp_path / ".env"
+    env_file.write_text(
+        "\n".join(
+            [
+                "TEXT2IFC_PROVIDER=deepseek",
+                "OpenAI_BASE_URL=https://api.deepseek.com",
+                "API_KEY=secret-deepseek-key",
+                "TEXT2IFC_DEEPSEEK_MODEL=deepseek-v4-flash",
+            ]
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+
+    exit_code = run_phase6_2_cli.main(
+        [
+            "--check-config",
+            "--env-file",
+            str(env_file),
+        ]
+    )
+
+    stdout = capsys.readouterr().out
+    payload = json.loads(stdout)
+    assert exit_code == 0
+    assert payload["provider"] == "deepseek-openai-compatible"
+    assert payload["model"] == "deepseek-v4-flash"
+    runtime_config = load_openai_compatible_runtime_config(dict(run_phase6_2_cli.os.environ))
+    assert runtime_config.base_url == "https://api.deepseek.com"
+    assert "secret-deepseek-key" not in stdout
+    assert "api.deepseek.com" not in stdout

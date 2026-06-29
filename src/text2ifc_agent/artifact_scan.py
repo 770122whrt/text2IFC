@@ -12,9 +12,13 @@ TEXT_SUFFIXES = {".json", ".jsonl", ".md", ".txt", ".log", ".yaml", ".yml"}
 ALLOWED_ENV_NAMES = {
     "API_KEY",
     "MIMO_API_KEY",
+    "DEEPSEEK_API_KEY",
     "ANTHROPIC_AUTH_TOKEN",
     "ANTHROPIC_BASE_URL",
     "TEXT2IFC_MIMO_MODEL",
+    "TEXT2IFC_DEEPSEEK_MODEL",
+    "TEXT2IFC_DEEPSEEK_MAX_TOKENS",
+    "TEXT2IFC_PROVIDER",
 }
 SECRET_PATTERNS = (
     ("SECRET_LIKE_PATTERN", re.compile(r"\bBearer\s+[A-Za-z0-9._~+/=-]{8,}", re.IGNORECASE)),
@@ -24,7 +28,7 @@ SECRET_PATTERNS = (
         "SECRET_LIKE_PATTERN",
         re.compile(
             r"(?i)\b(api[_-]?key|auth[_-]?token|authorization|x-api-key)\b"
-            r"\s*[:=]\s*[\"']?(?!API_KEY\b|MIMO_API_KEY\b|ANTHROPIC_AUTH_TOKEN\b|TEXT2IFC_MIMO_MODEL\b)"
+            r"\s*[:=]\s*[\"']?(?!API_KEY\b|MIMO_API_KEY\b|DEEPSEEK_API_KEY\b|ANTHROPIC_AUTH_TOKEN\b|TEXT2IFC_MIMO_MODEL\b|TEXT2IFC_DEEPSEEK_MODEL\b)"
             r"[A-Za-z0-9._~+/=-]{8,}"
         ),
     ),

@@ -19,7 +19,7 @@ from text2ifc_agent.interactive_cli_flow import (  # noqa: E402
     make_openai_design_brief_invoker,
 )
 from text2ifc_agent.openai_compat import (  # noqa: E402
-    OpenAICompatibleMimoLiveProvider,
+    OpenAICompatibleLiveProvider,
     load_openai_compatible_runtime_config,
 )
 from text2ifc_agent.repl_chat import (  # noqa: E402
@@ -101,9 +101,9 @@ def main(
 def _default_provider_factory(
     *,
     openai_client_factory: Callable[..., Any] | None,
-) -> Callable[[], OpenAICompatibleMimoLiveProvider]:
-    def create_provider() -> OpenAICompatibleMimoLiveProvider:
-        return OpenAICompatibleMimoLiveProvider(
+) -> Callable[[], OpenAICompatibleLiveProvider]:
+    def create_provider() -> OpenAICompatibleLiveProvider:
+        return OpenAICompatibleLiveProvider(
             config=load_openai_compatible_runtime_config(dict(os.environ)),
             client_factory=openai_client_factory,
         )
