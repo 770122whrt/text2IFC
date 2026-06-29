@@ -1,5 +1,6 @@
 import json
 import types
+import text2ifc_agent.openai_compat as openai_compat
 from pathlib import Path
 
 import pytest
@@ -34,6 +35,27 @@ def test_openai_compatible_config_accepts_api_key_without_leaking_values():
     assert config["missing"] == []
     assert "secret-api-key" not in rendered
     assert "api.xiaomimimo.com" not in rendered
+
+
+def test_deepseek_config_accepts_flash_model_without_leaking_values():
+    config = load_openai_compatible_config(
+        {
+            "TEXT2IFC_PROVIDER": "deepseek",
+            "API_KEY": "secret-deepseek-key",
+            "OpenAI_BASE_URL": "https://api.deepseek.com",
+            "TEXT2IFC_DEEPSEEK_MODEL": "deepseek-v4-flash",
+        }
+    )
+    rendered = json.dumps(config, sort_keys=True)
+
+    assert config["configured"] is True
+    assert config["provider"] == "deepseek-openai-compatible"
+    assert config["api_key_env"] == "API_KEY"
+    assert config["base_url_configured"] is True
+    assert config["model"] == "deepseek-v4-flash"
+    assert config["missing"] == []
+    assert "secret-deepseek-key" not in rendered
+    assert "api.deepseek.com" not in rendered
 
 
 def test_openai_compatible_config_reports_missing_names_only():
@@ -189,6 +211,25 @@ def test_runtime_config_keeps_secrets_out_of_public_repr():
     assert "api.xiaomimimo.com" not in repr(config)
 
 
+def test_deepseek_runtime_config_keeps_base_url_without_v1_suffix():
+    config = load_openai_compatible_runtime_config(
+        {
+            "TEXT2IFC_PROVIDER": "deepseek",
+            "API_KEY": "secret-deepseek-key",
+            "OpenAI_BASE_URL": "https://api.deepseek.com",
+            "TEXT2IFC_DEEPSEEK_MODEL": "deepseek-v4-flash",
+        }
+    )
+
+    assert config.provider == "deepseek"
+    assert config.provider_label == "deepseek-openai-compatible"
+    assert config.api_key == "secret-deepseek-key"
+    assert config.base_url == "https://api.deepseek.com"
+    assert config.model == "deepseek-v4-flash"
+    assert "secret-deepseek-key" not in repr(config)
+    assert "api.deepseek.com" not in repr(config)
+
+
 def test_runtime_config_defaults_to_large_design_brief_token_budget():
     config = load_openai_compatible_runtime_config(
         {
@@ -334,6 +375,77 @@ def test_openai_compatible_live_provider_returns_live_provider_result():
     assert captured["max_completion_tokens"] == 131072
     assert captured["response_format"] == {"type": "json_object"}
     assert captured["client_kwargs"]["api_key"] == "secret-api-key"
+
+
+def test_deepseek_live_provider_uses_flash_model_and_safe_provider_label():
+    captured = {}
+
+    class Response:
+        def model_dump(self):
+            return {
+                "id": "deepseek-chat-001",
+                "object": "chat.completion",
+                "model": "deepseek-v4-flash",
+                "choices": [
+                    {
+                        "index": 0,
+                        "finish_reason": "stop",
+                        "message": {
+                            "role": "assistant",
+                            "content": '{"ok":true}',
+                        },
+                    }
+                ],
+                "usage": {
+                    "prompt_tokens": 11,
+                    "completion_tokens": 7,
+                    "total_tokens": 18,
+                },
+            }
+
+    class ChatCompletions:
+        def create(self, **kwargs):
+            captured.update(kwargs)
+            return Response()
+
+    class Client:
+        def __init__(self, **kwargs):
+            captured["client_kwargs"] = kwargs
+            self.chat = type("Chat", (), {"completions": ChatCompletions()})()
+
+    config = load_openai_compatible_runtime_config(
+        {
+            "TEXT2IFC_PROVIDER": "deepseek",
+            "API_KEY": "secret-deepseek-key",
+            "OpenAI_BASE_URL": "https://api.deepseek.com",
+            "TEXT2IFC_DEEPSEEK_MODEL": "deepseek-v4-flash",
+        }
+    )
+    provider_cls = getattr(openai_compat, "OpenAICompatibleLiveProvider")
+    provider = provider_cls(
+        config=config,
+        client_factory=Client,
+    )
+
+    result = provider.generate_live(
+        session_id="phase6.2-session-generator-01",
+        prompt="Return JSON",
+        schema={"schema_version": "bim-json/2.0"},
+        state={"stage": "generate"},
+    )
+
+    assert result.evidence_class == "live"
+    assert result.response["id"] == "deepseek-chat-001"
+    assert result.output.text == '{"ok":true}'
+    assert result.output.metadata["provider"] == "deepseek-openai-compatible"
+    assert captured["model"] == "deepseek-v4-flash"
+    assert captured["max_tokens"] == 131072
+    assert "max_completion_tokens" not in captured
+    assert captured["response_format"] == {"type": "json_object"}
+    assert captured["client_kwargs"] == {
+        "api_key": "secret-deepseek-key",
+        "base_url": "https://api.deepseek.com",
+    }
 
 
 def test_phase6_2_compatibility_check_combines_live_probe_results():
