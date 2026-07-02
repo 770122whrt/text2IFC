@@ -91,8 +91,12 @@ def _write_complex_two_storey_case(case_dir: Path) -> dict[str, Any]:
     fixture = load_complex_fixture(source_dir)
     input_text = fixture["input_text"]
     expectations = fixture["expectations"]
+    readme_path = source_dir / "README.md"
+    readme_text = readme_path.read_text(encoding="utf-8") if readme_path.is_file() else None
     _reset_case_dir(case_dir)
     (case_dir / "input.txt").write_text(input_text, encoding="utf-8")
+    if readme_text is not None:
+        (case_dir / "README.md").write_text(readme_text, encoding="utf-8")
     _write_json(case_dir / "expected-manual-review.json", fixture["metadata"])
     expected_facts = _expected_from_manual_review(
         case_id="complex-two-storey",
