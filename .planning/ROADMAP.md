@@ -809,7 +809,7 @@ and reduce review noise while preserving debug/full trace on demand.
 
 **Wave 3** *(blocked on Wave 2 expected facts)*
 
-- [ ] `06.3-03-PLAN.md` - Dynamic completeness, containment, and opening/fill
+- [x] `06.3-03-PLAN.md` - Dynamic completeness, containment, and opening/fill
   gates
 
 **Wave 4** *(blocked on Wave 3 dynamic gates)*

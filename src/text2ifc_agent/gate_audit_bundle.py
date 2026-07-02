@@ -7,6 +7,8 @@ import json
 from pathlib import Path
 from typing import Any, Mapping
 
+from .dynamic_gates import evaluate_dynamic_gates
+
 
 GATE_SUMMARY_SCHEMA_VERSION = "text2ifc/gate-summary/1.0"
 
@@ -42,12 +44,14 @@ def write_gate_summary(
         hash_json_file(expected_facts_path) if expected_facts_path.is_file() else None
     )
 
+    dynamic_gates = _dynamic_expected_fact_gates(root)
     artifact_paths = _existing_artifact_paths(
         root,
         [
             "generator/candidate.json",
             "generator/validation.json",
             "expected-facts.json",
+            "dynamic-gates.json",
             "semantic-coverage.json",
             "ifc-verification.json",
             "geometry-feedback.json",
@@ -60,6 +64,7 @@ def write_gate_summary(
 
     gates = [
         _bim_json_validation_gate(root),
+        *dynamic_gates,
         _semantic_coverage_gate(root),
         _ifc_compile_reopen_gate(root),
         _geometry_gate(root),
@@ -177,6 +182,45 @@ def _semantic_coverage_gate(root: Path) -> dict[str, Any]:
         issues=issues,
         source_paths=["semantic-coverage.json"],
     )
+
+
+def _dynamic_expected_fact_gates(root: Path) -> list[dict[str, Any]]:
+    candidate = _read_optional_json(root / "generator" / "candidate.json")
+    expected_facts = _read_optional_json(root / "expected-facts.json")
+    if candidate is None or expected_facts is None:
+        return [
+            _gate(
+                "dynamic_entity_completeness",
+                applicability="not_applicable",
+                status="skipped",
+                basis="candidate or expected-facts sidecar is not present",
+                source_paths=[],
+            ),
+            _gate(
+                "dynamic_storey_containment",
+                applicability="not_applicable",
+                status="skipped",
+                basis="candidate or expected-facts sidecar is not present",
+                source_paths=[],
+            ),
+            _gate(
+                "dynamic_opening_fill",
+                applicability="not_applicable",
+                status="skipped",
+                basis="candidate or expected-facts sidecar is not present",
+                source_paths=[],
+            ),
+        ]
+    gates = evaluate_dynamic_gates(candidate=candidate, expected_facts=expected_facts)
+    _write_json(
+        root / "dynamic-gates.json",
+        {
+            "schema_version": "text2ifc/dynamic-gates/1.0",
+            "gates": gates,
+            "valid": _overall_status(gates) == "passed",
+        },
+    )
+    return gates
 
 
 def _ifc_compile_reopen_gate(root: Path) -> dict[str, Any]:
