@@ -7,13 +7,13 @@ See: `.planning/PROJECT.md` (updated 2026-06-11)
 **Core value:** Produce valid, inspectable IFC models from explicit user
 requirements.
 
-**Current focus:** Phase 6.3 Gate-Audit fusion and compact trace planning for
-complex multi-storey reliability
+**Current focus:** Phase 6.3 Wave 2 dynamic expected facts for complex
+multi-storey reliability
 
 ## Status
 
 - Phase: 6.3
-- Stage: SPEC and PLAN drafted for user review
+- Stage: Waves 0-1 implemented and verified; Wave 2 next
 - State: Phase 6.2-fix Waves 0-2 are implemented and automatically verified.
   Wave 3 real UAT
   produced useful live evidence and fixed defects 001/002, then exposed defect
@@ -45,11 +45,14 @@ complex multi-storey reliability
   follow-up cross-review strengthened the plan so non-two-storey coverage must
   reach dynamic gates and route decisions, Gate/Audit/Route evidence must bind
   through hashes, and compact non-accept traces must preserve recoverable
-  failure evidence.
+  failure evidence. Wave 0 is implemented with the complex two-storey
+  fixture/no-false-accept baseline. Wave 1 is implemented with
+  `gate-summary.json`, candidate/expected-facts hash binding, and decisive
+  Audit prompt integration.
 - Plans: Phase 6.2-fix Waves 0-2 complete; Wave 3 produced UAT defect evidence;
   Wave 4 implementation/regression complete; Wave 5 implementation/regression
   complete; Wave 6 implementation/regression complete; Phase 6.3 planned in
-  seven waves; final user-run UAT remains pending but is no longer the only
+  seven waves; Waves 0-1 implemented and verified; final user-run UAT remains pending but is no longer the only
   active next step
 - Branch: `multiagent-design` in C-drive worktree
 - Remote: `https://github.com/770122whrt/text2IFC`
@@ -551,11 +554,13 @@ Review Phase 6.3 planning documents:
 - `.planning/phases/06.3-gate-audit-fusion-dynamic-routing-and-compact-trace/06.3-PLAN-OUTLINE.md`
 - `.planning/phases/06.3-gate-audit-fusion-dynamic-routing-and-compact-trace/06.3-00-PLAN.md` through `06.3-06-PLAN.md`
 
-After approval, execute Phase 6.3 Wave 0 in the C-drive worktree. Phase
+Execute Phase 6.3 Wave 2 in the C-drive worktree: derive dynamic
+`expected-facts.json` from Design Brief and transcript evidence, including the
+reusable non-two-storey fixture needed by later gate and route tests. Phase
 6.2-fix final human-terminal UAT can still be run later, but complex
 multi-storey no-false-accept and Gate-Audit routing are now the immediate
-planning focus. During execution, treat the strengthened Phase 6.3 constraints
-as blocking acceptance criteria, especially non-two-storey gate/route coverage,
+focus. During execution, treat the strengthened Phase 6.3 constraints as
+blocking acceptance criteria, especially non-two-storey gate/route coverage,
 hash-bound evidence, and compact failure trace recovery.
 
 ## Accumulated Context
@@ -757,5 +762,5 @@ hash-bound evidence, and compact failure trace recovery.
   responses.
 
 ---
-*Last activity: 2026-07-02 - strengthened Phase 6.3 Gate-Audit fusion, dynamic
-routing, and compact trace SPEC/PLAN after cross-review*
+*Last activity: 2026-07-02 - completed Phase 6.3 Waves 0-1 and advanced to
+Wave 2 expected-facts extraction*

@@ -796,12 +796,12 @@ and reduce review noise while preserving debug/full trace on demand.
 
 **Wave 0**
 
-- [ ] `06.3-00-PLAN.md` - Complex multi-storey failure fixture and
+- [x] `06.3-00-PLAN.md` - Complex multi-storey failure fixture and
   no-false-accept baseline
 
 **Wave 1** *(blocked on Wave 0 fixture baseline)*
 
-- [ ] `06.3-01-PLAN.md` - Gate-Audit evidence bundle and applicability states
+- [x] `06.3-01-PLAN.md` - Gate-Audit evidence bundle and applicability states
 
 **Wave 2** *(blocked on Wave 1 shared evidence bundle)*
 

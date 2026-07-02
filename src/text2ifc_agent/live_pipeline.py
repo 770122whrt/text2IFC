@@ -25,6 +25,11 @@ from .prompt_registry import render_prompt
 from .generator import validate_generation_document
 from .failure_routing import route_generation_failure
 from .fact_delta import evaluate_repair_fact_delta
+from .gate_audit_bundle import (
+    gate_summary_hash,
+    validate_gate_summary_binding,
+    write_gate_summary,
+)
 from .providers import validate_provider_output
 from .run_report import build_live_run_report, resolve_final_design_brief_dir
 from .semantic_capabilities import build_semantic_capability_profile
@@ -1053,7 +1058,22 @@ def run_audit_report_stage(
     geometry_feedback = _read_optional_json(root / "geometry-feedback.json")
     semantic_coverage = _read_optional_json(root / "semantic-coverage.json")
     semantic_capabilities = _read_optional_json(root / "semantic-capabilities.json")
+    gate_summary = write_gate_summary(case_dir=root, case_id=case_id)
+    gate_summary_path = root / "gate-summary.json"
+    gate_summary_digest = gate_summary_hash(gate_summary_path)
+    gate_summary_binding_issues = validate_gate_summary_binding(
+        case_dir=root,
+        summary=gate_summary,
+    )
     deterministic_gates = {
+        "gate_summary_binding": not gate_summary_binding_issues,
+        "gate_summary_binding_feedback": {
+            "valid": not gate_summary_binding_issues,
+            "issues": gate_summary_binding_issues,
+            "gate_summary_hash": gate_summary_digest,
+            "candidate_hash": gate_summary.get("candidate_hash"),
+            "expected_facts_hash": gate_summary.get("expected_facts_hash"),
+        },
         "semantic_coverage": bool(semantic_coverage.get("valid"))
         if semantic_coverage is not None
         else True,
@@ -1083,6 +1103,10 @@ def run_audit_report_stage(
         "DESIGN_BRIEF": design_brief,
         "TERMINAL_DOCUMENT": terminal_document,
         "DETERMINISTIC_GATES": deterministic_gates,
+        "GATE_SUMMARY": gate_summary,
+        "GATE_SUMMARY_HASH": gate_summary_digest,
+        "CANDIDATE_HASH": gate_summary.get("candidate_hash"),
+        "EXPECTED_FACTS_HASH": gate_summary.get("expected_facts_hash"),
         "REPAIR_ROUTE": repair_route,
         "METRICS": {
             "generator": generator_metrics,
@@ -1148,6 +1172,7 @@ def run_audit_report_stage(
             "template_hash": rendered["metadata"]["template_hash"],
             "provider": provider_manifest,
             "evidence_paths": evidence_paths,
+            "gate_summary_hash": gate_summary_digest,
             "artifacts": {
                 "renderer_inputs": "prompt-render-input.json",
                 "rendered_prompt": "prompt-rendered.md",
@@ -1554,6 +1579,7 @@ def _audit_evidence_paths(root: Path) -> list[str]:
         "generator/metrics.json",
         "repair/route.json",
         "repair/metrics.json",
+        "gate-summary.json",
         "semantic-capabilities.json",
         "semantic-coverage.json",
         "semantic-geometry-expectation.json",
@@ -1625,6 +1651,7 @@ def _deterministic_gate_booleans(gates: Mapping[str, Any]) -> dict[str, bool]:
         if key
         not in {
             "geometry_feedback",
+            "gate_summary_binding_feedback",
             "semantic_coverage_feedback",
             "semantic_capability_profile",
         }
