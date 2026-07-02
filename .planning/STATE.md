@@ -7,14 +7,15 @@ See: `.planning/PROJECT.md` (updated 2026-06-11)
 **Core value:** Produce valid, inspectable IFC models from explicit user
 requirements.
 
-**Current focus:** Phase 6.2-fix final human-terminal UAT after Wave 6 invalid
-Formal recovery fix
+**Current focus:** Phase 6.3 Gate-Audit fusion and compact trace planning for
+complex multi-storey reliability
 
 ## Status
 
-- Phase: 6.2-fix
-- Stage: Awaiting final real human-terminal Mimo REPL UAT after Wave 6
-- State: Waves 0-2 are implemented and automatically verified. Wave 3 real UAT
+- Phase: 6.3
+- Stage: SPEC and PLAN drafted for user review
+- State: Phase 6.2-fix Waves 0-2 are implemented and automatically verified.
+  Wave 3 real UAT
   produced useful live evidence and fixed defects 001/002, then exposed defect
   003: Audit accepted before final generated-IFC geometry feedback existed.
   Wave 4 is implemented and automatically verified. Generated-IFC gate evidence
@@ -36,11 +37,20 @@ Formal recovery fix
   recovery source evidence is recorded, and Design Brief outside-boundary
   wording is normalized for semantic geometry gates. Final acceptance is still
   pending until a fresh human-terminal live Mimo run writes and verifies
-  `final-acceptance.json`.
+  `final-acceptance.json`. A later complex multi-storey run was correctly
+  blocked as `audit_blocked`, but exposed the next reliability gap: complex
+  expected facts, Gate-Audit applicability, stage routing, and compact trace
+  need a dedicated inserted Phase 6.3 before broader Phase 7 work. Phase 6.3
+  SPEC, PLAN-OUTLINE, and seven wave plans are drafted for review. A
+  follow-up cross-review strengthened the plan so non-two-storey coverage must
+  reach dynamic gates and route decisions, Gate/Audit/Route evidence must bind
+  through hashes, and compact non-accept traces must preserve recoverable
+  failure evidence.
 - Plans: Phase 6.2-fix Waves 0-2 complete; Wave 3 produced UAT defect evidence;
   Wave 4 implementation/regression complete; Wave 5 implementation/regression
-  complete; Wave 6 implementation/regression complete; final user-run UAT
-  pending
+  complete; Wave 6 implementation/regression complete; Phase 6.3 planned in
+  seven waves; final user-run UAT remains pending but is no longer the only
+  active next step
 - Branch: `multiagent-design` in C-drive worktree
 - Remote: `https://github.com/770122whrt/text2IFC`
 
@@ -535,14 +545,18 @@ Formal recovery fix
 
 ## Next Action
 
-Run final Phase 6.2-fix real human-terminal Mimo REPL UAT from the C-drive
-worktree:
+Review Phase 6.3 planning documents:
 
-`.venv\Scripts\python scripts\agent\run_text2ifc_chat.py --live --output-root dataset\processed\agent-demo\phase6.2-fix-repl`
+- `.planning/phases/06.3-gate-audit-fusion-dynamic-routing-and-compact-trace/06.3-SPEC.md`
+- `.planning/phases/06.3-gate-audit-fusion-dynamic-routing-and-compact-trace/06.3-PLAN-OUTLINE.md`
+- `.planning/phases/06.3-gate-audit-fusion-dynamic-routing-and-compact-trace/06.3-00-PLAN.md` through `06.3-06-PLAN.md`
 
-For accepted IFC evidence, avoid unsupported door operation semantics unless
-intentionally testing the Draft/blocking path. After `final-acceptance.json` is
-written, run the Phase 6.2-fix artifact verifier and artifact secret scan.
+After approval, execute Phase 6.3 Wave 0 in the C-drive worktree. Phase
+6.2-fix final human-terminal UAT can still be run later, but complex
+multi-storey no-false-accept and Gate-Audit routing are now the immediate
+planning focus. During execution, treat the strengthened Phase 6.3 constraints
+as blocking acceptance criteria, especially non-two-storey gate/route coverage,
+hash-bound evidence, and compact failure trace recovery.
 
 ## Accumulated Context
 
@@ -743,5 +757,5 @@ written, run the Phase 6.2-fix artifact verifier and artifact secret scan.
   responses.
 
 ---
-*Last activity: 2026-06-28 - implemented Phase 6.2-fix Wave 6 invalid Formal
-recovery and prepared final human-terminal UAT handoff*
+*Last activity: 2026-07-02 - strengthened Phase 6.3 Gate-Audit fusion, dynamic
+routing, and compact trace SPEC/PLAN after cross-review*

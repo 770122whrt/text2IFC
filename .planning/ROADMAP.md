@@ -763,3 +763,90 @@ diagnostics are actionable, repair route evidence records the invalid Formal
 source, and Design Brief outside-boundary wording is normalized for semantic
 geometry gates. Final Phase 6.2-fix acceptance still requires a fresh real
 human-terminal Mimo REPL run after Wave 6.
+
+## Phase 6.3: Gate-Audit Fusion, Dynamic Routing, and Compact Trace (INSERTED)
+
+**Goal:** Add scalable complex-building reliability to the live text2IFC
+pipeline by fusing deterministic gates with dynamic Audit reasoning, routing
+failures back to the correct stage, and reducing default trace artifacts enough
+to speed up normal generation runs without losing auditability.
+
+**Requirements:** GEN-03, GATE-01, GATE-02, GATE-03, ROUTE-01, TRACE-02,
+AGENT-04, AGENT-05, REPAIR-01, OBS-01
+
+**Depends on:** Phase 6.2-fix
+
+**Canonical refs:**
+
+- `.planning/phases/06.3-gate-audit-fusion-dynamic-routing-and-compact-trace/06.3-SPEC.md`
+- `.planning/phases/06.3-gate-audit-fusion-dynamic-routing-and-compact-trace/06.3-PLAN-OUTLINE.md`
+
+**Explicit boundary:** Phase 6.3 is not Phase 7 and not a BIM JSON schema
+redesign. It improves the current live REPL pipeline so complex multi-storey
+requests can be dynamically audited, safely blocked, and routed to Design
+Brief, Generator, local repair, Draft, or gate-dispute review. The phase may
+add sidecars such as `expected-facts.json`, `gate-summary.json`,
+`route-decision.json`, and `trace-manifest.json`, but JSON Schema remains the
+single BIM JSON structural truth. Single-room and two-room demos are smoke
+regressions only; the primary target is complex multi-storey no-false-accept
+behavior and accurate routing. Compact trace exists to speed normal generation
+and reduce review noise while preserving debug/full trace on demand.
+
+**Plans:** 7 plans in 7 waves
+
+**Wave 0**
+
+- [ ] `06.3-00-PLAN.md` - Complex multi-storey failure fixture and
+  no-false-accept baseline
+
+**Wave 1** *(blocked on Wave 0 fixture baseline)*
+
+- [ ] `06.3-01-PLAN.md` - Gate-Audit evidence bundle and applicability states
+
+**Wave 2** *(blocked on Wave 1 shared evidence bundle)*
+
+- [ ] `06.3-02-PLAN.md` - Dynamic expected facts from Design Brief
+
+**Wave 3** *(blocked on Wave 2 expected facts)*
+
+- [ ] `06.3-03-PLAN.md` - Dynamic completeness, containment, and opening/fill
+  gates
+
+**Wave 4** *(blocked on Wave 3 dynamic gates)*
+
+- [ ] `06.3-04-PLAN.md` - Route decisions and bounded stage back-routing
+
+**Wave 5** *(blocked on Wave 4 route decisions)*
+
+- [ ] `06.3-05-PLAN.md` - Compact trace levels and artifact write reduction
+
+**Wave 6** *(blocked on Wave 5 compact trace)*
+
+- [ ] `06.3-06-PLAN.md` - Complex-building matrix, final verification, and
+  documentation closure
+
+**Cross-cutting constraints:**
+
+- Gate and Audit form one review system: gates provide deterministic evidence,
+  Audit provides dynamic classification, and failed applicable gates cannot be
+  accepted by Audit wording.
+- Every nontrivial gate must declare applicability, basis, and source evidence.
+- Expected facts derive from Design Brief and transcript evidence, not
+  hard-coded floor, room, wall, door, or window counts.
+- Non-two-storey coverage must exercise expected-fact extraction, dynamic
+  gates, and route decisions; extraction-only coverage is not enough.
+- Gate summary, Audit input, route decision, report, and trace manifest must
+  bind to the same candidate through matching evidence hashes.
+- Stage routes must distinguish Design Brief revision, Generator regeneration,
+  local repair, Draft/clarification, gate dispute, and blocked failure.
+- Back-routing is bounded and observable; stalled or non-improving loops block
+  with evidence.
+- Compact trace is the default to reduce normal run file writes and latency;
+  debug/full trace remains available for provider and prompt audit. Compact
+  non-accept routes must still preserve or link recoverable failure evidence.
+- Phase 6.3 may add orchestration sidecars but does not silently change BIM
+  JSON 2.0 schema or add a second BIM JSON model.
+- All work remains in the C-drive `multiagent-design` worktree; the E-drive
+  working tree is not edited.
+
+**Status:** Planned 2026-07-02. SPEC and PLAN files drafted for review.

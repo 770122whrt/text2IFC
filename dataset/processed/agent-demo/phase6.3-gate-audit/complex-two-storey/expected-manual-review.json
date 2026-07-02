@@ -1,0 +1,73 @@
+{
+  "schema_version": "text2ifc/phase6.3-complex-manual-review/1.0",
+  "usage": "manual_review_truth_for_phase6_3_wave0_only",
+  "case_id": "complex-two-storey-residential-001",
+  "source": {
+    "input_path": "input.txt",
+    "language": "zh-CN",
+    "unit": "millimetre"
+  },
+  "expectations": {
+    "production_rule": false,
+    "storey_count": 2,
+    "storey_elevations_mm": {
+      "storey-1": 0,
+      "storey-2": 3150
+    },
+    "building_outline_mm": {
+      "x": 10000,
+      "y": 8000
+    },
+    "space_ids_by_storey": {
+      "storey-1": [
+        "living",
+        "kitchen",
+        "bathroom-1",
+        "stair-room"
+      ],
+      "storey-2": [
+        "main-bedroom",
+        "secondary-bedroom",
+        "study",
+        "bathroom-2",
+        "corridor"
+      ]
+    },
+    "space_counts": {
+      "storey-1": 4,
+      "storey-2": 5
+    },
+    "door_counts": {
+      "total": 9,
+      "storey-1": 5,
+      "storey-2": 4
+    },
+    "window_counts": {
+      "total": 9,
+      "storey-1": 4,
+      "storey-2": 5
+    },
+    "slab_roof_stair_expectations": {
+      "ground_floor_slab": true,
+      "second_floor_slab": true,
+      "roof_slab": true,
+      "stair": true
+    },
+    "opening_fill_obligations": {
+      "doors_require_opening_and_fill": true,
+      "windows_require_opening_and_fill": true
+    },
+    "containment_expectations": {
+      "IfcBuildingStorey_contains_elements": true,
+      "IfcSpace_present_for_each_named_space": true,
+      "doors_windows_embedded_in_host_walls": true
+    },
+    "known_gate_limitations": [
+      "second-floor missing doors",
+      "windows without opening/fill relationships",
+      "wrong storey containment",
+      "geometry gate may confuse parent-relative storey elevation",
+      "wall-axis checks must not assume one rectangular-room convention"
+    ]
+  }
+}

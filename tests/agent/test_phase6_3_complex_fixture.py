@@ -16,12 +16,18 @@ FIXTURE_DIR = (
 def test_complex_two_storey_fixture_records_manual_review_truth():
     fixture = load_complex_fixture(FIXTURE_DIR)
 
-    assert "两层小型住宅建筑" in fixture["input_text"]
+    assert "IfcBuildingStorey" in fixture["input_text"]
     expectations = fixture["expectations"]
     assert expectations["storey_count"] == 2
-    assert expectations["spaces_by_storey"] == {
-        "storey-1": ["客厅", "厨房", "卫生间", "楼梯间"],
-        "storey-2": ["主卧", "次卧", "书房", "卫生间", "走廊"],
+    assert expectations["space_ids_by_storey"] == {
+        "storey-1": ["living", "kitchen", "bathroom-1", "stair-room"],
+        "storey-2": [
+            "main-bedroom",
+            "secondary-bedroom",
+            "study",
+            "bathroom-2",
+            "corridor",
+        ],
     }
     assert expectations["door_counts"] == {
         "total": 9,

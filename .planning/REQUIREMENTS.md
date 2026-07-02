@@ -204,6 +204,36 @@ requirements.
   gate disputes block for human/developer review. An Audit `accept` over failed
   deterministic gates is treated as `audit_override_attempt`, not acceptance.
 
+### Scalable Gate-Audit and Complex-building Reliability
+
+- [ ] **GEN-03**: Complex multi-storey natural-language requests must not be
+  accepted merely because BIM JSON validates and IFC reopens. The system must
+  either produce an accepted IFC whose applicable explicit facts are covered,
+  or block with a precise route and evidence.
+- [ ] **GATE-01**: Deterministic gates and Audit operate on one shared evidence
+  bundle for the same candidate. Audit can classify, dispute applicability, or
+  route failures, but cannot override failed applicable gates. The shared
+  evidence must bind gate summary, Audit input, route decision, report, and
+  manifest through matching candidate and evidence hashes.
+- [ ] **GATE-02**: Expected facts and gate checks are dynamically derived from
+  Design Brief and transcript evidence. Production logic must not hard-code
+  storey count, room count, wall count, door/window count, or the two-storey
+  benchmark shape, and non-two-storey coverage must exercise dynamic gates and
+  route decisions rather than expected-fact extraction only.
+- [ ] **GATE-03**: Formal acceptance checks dynamic completeness, storey/space
+  containment, host-wall obligations, and door/window opening/fill
+  relationships when those facts are explicit and currently supported.
+- [ ] **ROUTE-01**: Failed Gate-Audit review records a route decision that
+  identifies the owning next stage: Design Brief revision, Generator
+  regeneration, local repair, Draft/clarification, gate dispute, or blocked
+  failure. Bounded retry loops stop when issue counts do not improve, and
+  stale/mismatched evidence hashes block acceptance.
+- [ ] **TRACE-02**: Live REPL generation supports compact/debug/full trace
+  levels. Compact is the default to reduce normal generation file writes and
+  review noise, while debug/full preserves complete prompt/provider evidence
+  for audits. Compact non-accept routes must preserve or link recoverable
+  redacted evidence for the failed owning stage.
+
 ## Out of Scope
 
 | Feature | Reason |
@@ -280,12 +310,18 @@ requirements.
 | CLI-07 | Phase 6.2-fix | Planned |
 | CLI-08 | Phase 6.2-fix | Planned |
 | CLI-09 | Phase 6.2-fix | Planned |
+| GEN-03 | Phase 6.3 | Planned |
+| GATE-01 | Phase 6.3 | Planned |
+| GATE-02 | Phase 6.3 | Planned |
+| GATE-03 | Phase 6.3 | Planned |
+| ROUTE-01 | Phase 6.3 | Planned |
+| TRACE-02 | Phase 6.3 | Planned |
 
 **Coverage:**
-- tracked requirements: 62 total
-- Mapped to phases: 62
+- tracked requirements: 68 total
+- Mapped to phases: 68
 - Unmapped: 0
 
 ---
 *Requirements defined: 2026-06-11*
-*Last updated: 2026-06-27 after Phase 6.2-fix geometry gate/audit routing planning*
+*Last updated: 2026-07-02 after Phase 6.3 Gate-Audit fusion planning*
