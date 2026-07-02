@@ -5,7 +5,10 @@ from pathlib import Path
 
 from text2ifc_agent.live_trace import write_live_trace
 from text2ifc_agent.providers import LiveProviderResult, ProviderOutput
+from text2ifc_agent.clarification import ClarificationCall
+from text2ifc_agent.interactive_cli_flow import SessionIfcResult
 from text2ifc_agent.repl_chat import ReplChatResult
+from text2ifc_agent.session_store import SessionStore
 from text2ifc_agent.trace_levels import (
     DEFAULT_TRACE_LEVEL,
     TraceLevelError,
@@ -81,6 +84,51 @@ def test_text2ifc_chat_passes_trace_level_to_repl(monkeypatch, tmp_path):
     )
 
     assert exit_code == 0
+    assert captured["trace_level"] == "full"
+
+
+def test_repl_passes_trace_level_to_ifc_generation(monkeypatch, tmp_path):
+    import text2ifc_agent.repl_chat as repl_chat
+
+    store = SessionStore.open(tmp_path / "sessions.sqlite", artifact_root=tmp_path)
+    captured: dict[str, str | None] = {}
+
+    def invoke_design_brief(transcript, call_index):
+        return _ready_call(call_index, transcript[0]["content"])
+
+    def fake_run_ready_session_to_ifc(**kwargs):
+        captured["trace_level"] = kwargs.get("trace_level")
+        session = kwargs["store"].get_session(kwargs["session"])
+        return SessionIfcResult(
+            session_id=session.session_id,
+            session_hash=session.session_hash,
+            status="compiled",
+            generator_status="formal",
+            repair_route="no_repair_needed",
+            audit_status="accepted",
+            ifc_path=None,
+            report_path=None,
+        )
+
+    monkeypatch.setattr(
+        repl_chat,
+        "run_ready_session_to_ifc",
+        fake_run_ready_session_to_ifc,
+    )
+
+    try:
+        result = repl_chat.run_repl_chat(
+            store=store,
+            invoke_design_brief=invoke_design_brief,
+            input_func=lambda prompt: "创建一个简单房间",
+            stop_after="ifc",
+            provider_factory=lambda: object(),
+            trace_level="full",
+        )
+    finally:
+        store.close()
+
+    assert result.status == "compiled"
     assert captured["trace_level"] == "full"
 
 
@@ -183,4 +231,33 @@ def _live_result() -> LiveProviderResult:
             text=json.dumps({"ok": True}),
             metadata={"provider": "unit-test"},
         ),
+    )
+
+
+def _ready_call(call_index: int, original_request: str) -> ClarificationCall:
+    return ClarificationCall(
+        call_index=call_index,
+        response_id=f"msg_trace_ready_{call_index}",
+        prompt_template_id="design-brief.v2.1",
+        prompt_template_hash="sha256:test",
+        artifact_dir=f"calls/{call_index:02d}-design-brief",
+        brief={
+            "schema_version": "text2ifc/design-brief/2.0",
+            "language": "zh-CN",
+            "original_request": original_request,
+            "status": "ready",
+            "known_facts": {},
+            "fact_sources": [],
+            "missing_facts": [],
+            "ambiguities": [],
+            "unsupported_requests": [],
+            "user_corrections": [],
+            "clarification_questions": [],
+            "provenance": {
+                "source_turns": ["turn-user-001"],
+                "selected_evidence_ids": [],
+                "few_shot_ids": [],
+            },
+        },
+        evidence_catalog=[],
     )
