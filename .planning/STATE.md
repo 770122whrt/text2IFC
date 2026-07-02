@@ -7,13 +7,13 @@ See: `.planning/PROJECT.md` (updated 2026-06-11)
 **Core value:** Produce valid, inspectable IFC models from explicit user
 requirements.
 
-**Current focus:** Phase 6.3 Wave 6 complex-building matrix, final
-verification, and documentation closure
+**Current focus:** Post-Phase 6.3 complex live generation improvement and
+next-phase planning
 
 ## Status
 
 - Phase: 6.3
-- Stage: Waves 0-1 implemented and verified; Wave 2 next
+- Stage: Waves 0-6 implemented and verified
 - State: Phase 6.2-fix Waves 0-2 are implemented and automatically verified.
   Wave 3 real UAT
   produced useful live evidence and fixed defects 001/002, then exposed defect
@@ -60,12 +60,21 @@ verification, and documentation closure
   bounded attempt/stall detection, and Audit-stage integration. Wave 5 is
   implemented with compact/debug/full trace-level policy, CLI propagation,
   stage-local compact `trace/` evidence, compact-aware report resolution, and
-  root `trace-manifest.json` hashing actual run artifacts.
+  root `trace-manifest.json` hashing actual run artifacts. Wave 6 is
+  implemented with a repeatable complex-building matrix and final artifact
+  verifier. The matrix covers the user's complex two-storey prompt as an
+  honest blocked `generator_regeneration_required` route, a non-two-storey
+  three-level dynamic gate/route case, and simple/two-room smoke regressions.
+  Final verification reports `valid: true`, `false_accept_count: 0`,
+  `hash_binding_valid: true`, `secret_finding_count: 0`, and
+  non-two-storey gate/route coverage. This completes Phase 6.3 as a
+  reliability/evidence-routing phase, but does not claim complex live provider
+  generation already produces an accepted final IFC.
 - Plans: Phase 6.2-fix Waves 0-2 complete; Wave 3 produced UAT defect evidence;
   Wave 4 implementation/regression complete; Wave 5 implementation/regression
   complete; Wave 6 implementation/regression complete; Phase 6.3 planned in
-  seven waves; Waves 0-5 implemented and verified; final user-run UAT remains pending but is no longer the only
-  active next step
+  seven waves; Waves 0-6 implemented and verified; final complex live IFC
+  generation remains future work
 - Branch: `multiagent-design` in C-drive worktree
 - Remote: `https://github.com/770122whrt/text2IFC`
 
@@ -560,19 +569,14 @@ verification, and documentation closure
 
 ## Next Action
 
-Review Phase 6.3 planning documents:
-
-- `.planning/phases/06.3-gate-audit-fusion-dynamic-routing-and-compact-trace/06.3-SPEC.md`
-- `.planning/phases/06.3-gate-audit-fusion-dynamic-routing-and-compact-trace/06.3-PLAN-OUTLINE.md`
-- `.planning/phases/06.3-gate-audit-fusion-dynamic-routing-and-compact-trace/06.3-00-PLAN.md` through `06.3-06-PLAN.md`
-
-Execute Phase 6.3 Wave 6 in the C-drive worktree: run the complex-building
-matrix, including the user's two-storey residential prompt and at least one
-non-two-storey case, then close Phase 6.3 only if final verification proves no
-false accept, hash-bound evidence, compact trace recovery, route decisions,
-and generated IFC/report artifacts. Phase 6.2-fix final human-terminal UAT can
-still be run later, but complex multi-storey no-false-accept and Gate-Audit
-routing are now the immediate focus.
+Use the Phase 6.3 matrix artifacts to plan the next complex live generation
+work. The next phase should improve Generator/Design-Brief decomposition for
+complex multi-storey requests until the user's two-storey residential prompt
+can produce an accepted IFC, while preserving the Phase 6.3 no-false-accept,
+hash binding, route-decision, compact trace, and verifier gates. A fresh live
+provider UAT may be run, but it must not be reported as accepted unless the
+generated candidate passes the deterministic gates, Audit, verifier, and
+artifact secret scan.
 
 ## Accumulated Context
 
@@ -773,5 +777,5 @@ routing are now the immediate focus.
   responses.
 
 ---
-*Last activity: 2026-07-02 - completed Phase 6.3 Wave 5 compact trace and
-advanced to Wave 6 complex-building verification*
+*Last activity: 2026-07-02 - completed Phase 6.3 Wave 6 matrix verification
+and closed Phase 6.3 reliability evidence routing*

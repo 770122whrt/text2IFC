@@ -1,0 +1,35 @@
+{
+  "artifact_paths": [
+    "expected-facts.json",
+    "gate-summary.json",
+    "route-decision.json",
+    "report.md",
+    "trace-manifest.json"
+  ],
+  "baseline_status": null,
+  "case_id": "two-room-smoke",
+  "expected_counts": {
+    "IfcBuildingStorey": 1,
+    "IfcDoor": 0,
+    "IfcSpace": 2,
+    "IfcWindow": 0
+  },
+  "gate_applicability": {
+    "bim_json_validation": "applicable",
+    "dynamic_entity_completeness": "applicable",
+    "dynamic_opening_fill": "applicable",
+    "dynamic_storey_containment": "applicable",
+    "geometry": "applicable",
+    "ifc_compile_reopen": "applicable",
+    "repair_route": "applicable",
+    "semantic_coverage": "not_applicable"
+  },
+  "gate_issue_codes": [],
+  "gate_overall_status": "passed",
+  "input_text": "two-room-smoke regression smoke",
+  "non_two_storey_gate_route_covered": false,
+  "owner_stage": "none",
+  "route": "accept",
+  "schema_version": "text2ifc/phase6.3-case-summary/1.0",
+  "status": "accepted"
+}

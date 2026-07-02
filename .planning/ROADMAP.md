@@ -822,7 +822,7 @@ and reduce review noise while preserving debug/full trace on demand.
 
 **Wave 6** *(blocked on Wave 5 compact trace)*
 
-- [ ] `06.3-06-PLAN.md` - Complex-building matrix, final verification, and
+- [x] `06.3-06-PLAN.md` - Complex-building matrix, final verification, and
   documentation closure
 
 **Cross-cutting constraints:**
@@ -849,4 +849,7 @@ and reduce review noise while preserving debug/full trace on demand.
 - All work remains in the C-drive `multiagent-design` worktree; the E-drive
   working tree is not edited.
 
-**Status:** Planned 2026-07-02. SPEC and PLAN files drafted for review.
+**Status:** Complete - verified 2026-07-02. Phase 6.3 closes the reliability
+architecture for complex-building no-false-accept, dynamic Gate/Audit routing,
+hash-bound evidence, and compact trace. The complex two-storey matrix case is
+currently an honest blocked route, not a claimed accepted live IFC.

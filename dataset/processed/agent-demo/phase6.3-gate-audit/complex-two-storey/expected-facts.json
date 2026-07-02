@@ -1,0 +1,197 @@
+{
+  "case_id": "complex-two-storey",
+  "door_counts_by_storey": {
+    "storey-1": 5,
+    "storey-2": 4
+  },
+  "doors": [
+    {
+      "host_wall": "storey-1-south-wall",
+      "id": "door-1",
+      "storey": "storey-1"
+    },
+    {
+      "host_wall": "storey-1-south-wall",
+      "id": "door-2",
+      "storey": "storey-1"
+    },
+    {
+      "host_wall": "storey-1-south-wall",
+      "id": "door-3",
+      "storey": "storey-1"
+    },
+    {
+      "host_wall": "storey-1-south-wall",
+      "id": "door-4",
+      "storey": "storey-1"
+    },
+    {
+      "host_wall": "storey-1-south-wall",
+      "id": "door-5",
+      "storey": "storey-1"
+    },
+    {
+      "host_wall": "storey-2-south-wall",
+      "id": "door-6",
+      "storey": "storey-2"
+    },
+    {
+      "host_wall": "storey-2-south-wall",
+      "id": "door-7",
+      "storey": "storey-2"
+    },
+    {
+      "host_wall": "storey-2-south-wall",
+      "id": "door-8",
+      "storey": "storey-2"
+    },
+    {
+      "host_wall": "storey-2-south-wall",
+      "id": "door-9",
+      "storey": "storey-2"
+    }
+  ],
+  "required_relationships": {
+    "containment": {
+      "doors": 9,
+      "spaces": 9,
+      "storeys": 2,
+      "windows": 9
+    },
+    "opening_fill": {
+      "doors": 9,
+      "windows": 9
+    }
+  },
+  "roof": {
+    "id": "roof-slab"
+  },
+  "schema_version": "text2ifc/expected-facts/1.0",
+  "sidecar_role": "orchestration_expectations_not_bim_json_schema",
+  "slabs": [
+    {
+      "id": "ground-slab"
+    },
+    {
+      "id": "second-floor-slab"
+    }
+  ],
+  "source": {
+    "original_request_sha256": "sha256:c2b29e962d578a8c71b56e24a94a2d78527ebbd1dfd6fa741d621178648af781"
+  },
+  "space_counts_by_storey": {
+    "storey-1": 4,
+    "storey-2": 5
+  },
+  "spaces": [
+    {
+      "id": "living",
+      "storey": "storey-1"
+    },
+    {
+      "id": "kitchen",
+      "storey": "storey-1"
+    },
+    {
+      "id": "bathroom-1",
+      "storey": "storey-1"
+    },
+    {
+      "id": "stair-room",
+      "storey": "storey-1"
+    },
+    {
+      "id": "main-bedroom",
+      "storey": "storey-2"
+    },
+    {
+      "id": "secondary-bedroom",
+      "storey": "storey-2"
+    },
+    {
+      "id": "study",
+      "storey": "storey-2"
+    },
+    {
+      "id": "bathroom-2",
+      "storey": "storey-2"
+    },
+    {
+      "id": "corridor",
+      "storey": "storey-2"
+    }
+  ],
+  "stairs": [
+    {
+      "id": "stair-1"
+    }
+  ],
+  "storey_count": 2,
+  "storeys": [
+    {
+      "elevation_mm": 0,
+      "id": "storey-1"
+    },
+    {
+      "elevation_mm": 3150,
+      "id": "storey-2"
+    }
+  ],
+  "total_counts": {
+    "IfcBuildingStorey": 2,
+    "IfcDoor": 9,
+    "IfcSpace": 9,
+    "IfcWindow": 9
+  },
+  "window_counts_by_storey": {
+    "storey-1": 4,
+    "storey-2": 5
+  },
+  "windows": [
+    {
+      "host_wall": "storey-1-north-wall",
+      "id": "window-1",
+      "storey": "storey-1"
+    },
+    {
+      "host_wall": "storey-1-north-wall",
+      "id": "window-2",
+      "storey": "storey-1"
+    },
+    {
+      "host_wall": "storey-1-north-wall",
+      "id": "window-3",
+      "storey": "storey-1"
+    },
+    {
+      "host_wall": "storey-1-north-wall",
+      "id": "window-4",
+      "storey": "storey-1"
+    },
+    {
+      "host_wall": "storey-2-north-wall",
+      "id": "window-5",
+      "storey": "storey-2"
+    },
+    {
+      "host_wall": "storey-2-north-wall",
+      "id": "window-6",
+      "storey": "storey-2"
+    },
+    {
+      "host_wall": "storey-2-north-wall",
+      "id": "window-7",
+      "storey": "storey-2"
+    },
+    {
+      "host_wall": "storey-2-north-wall",
+      "id": "window-8",
+      "storey": "storey-2"
+    },
+    {
+      "host_wall": "storey-2-north-wall",
+      "id": "window-9",
+      "storey": "storey-2"
+    }
+  ]
+}

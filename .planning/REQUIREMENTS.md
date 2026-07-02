@@ -310,12 +310,12 @@ requirements.
 | CLI-07 | Phase 6.2-fix | Planned |
 | CLI-08 | Phase 6.2-fix | Planned |
 | CLI-09 | Phase 6.2-fix | Planned |
-| GEN-03 | Phase 6.3 | Planned |
-| GATE-01 | Phase 6.3 | Planned |
-| GATE-02 | Phase 6.3 | Planned |
-| GATE-03 | Phase 6.3 | Planned |
-| ROUTE-01 | Phase 6.3 | Planned |
-| TRACE-02 | Phase 6.3 | Planned |
+| GEN-03 | Phase 6.3 | Complete |
+| GATE-01 | Phase 6.3 | Complete |
+| GATE-02 | Phase 6.3 | Complete |
+| GATE-03 | Phase 6.3 | Complete |
+| ROUTE-01 | Phase 6.3 | Complete |
+| TRACE-02 | Phase 6.3 | Complete |
 
 **Coverage:**
 - tracked requirements: 68 total
@@ -324,4 +324,4 @@ requirements.
 
 ---
 *Requirements defined: 2026-06-11*
-*Last updated: 2026-07-02 after Phase 6.3 Gate-Audit fusion planning*
+*Last updated: 2026-07-02 after Phase 6.3 Wave 6 matrix verification*

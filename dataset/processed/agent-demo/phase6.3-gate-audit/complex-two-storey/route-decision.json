@@ -1,0 +1,165 @@
+{
+  "allowed_next_action": "rerun_generator_with_gate_feedback",
+  "attempt_index": 0,
+  "candidate_hash": "ea270d71bc1562346b17b9cc2e5cefcd189e96185297831c468d4a82c3e8cb40",
+  "expected_facts_hash": "1a28c6f3e0d1c4e09e20502816991b99f9b467173e286d2d34ff4430ef8a3f9b",
+  "gate_summary_hash": "efacdba4e192e9ade25961bc3ddff3730164d3d6866f650ee5626d9cb7f8da64",
+  "input_issue_count": 10,
+  "issue_delta": null,
+  "max_attempts": 1,
+  "output_issue_count": 10,
+  "owner_stage": "generator",
+  "route": "generator_regeneration_required",
+  "route_basis": {
+    "audit_blocking": false,
+    "audit_recommendation": "accept",
+    "gate_summary_overall_status": "failed",
+    "non_two_storey_evidence": false
+  },
+  "schema_version": "text2ifc/route-decision/1.0",
+  "source_gates": [
+    {
+      "issue_codes": [],
+      "name": "bim_json_validation",
+      "status": "passed"
+    },
+    {
+      "issue_codes": [
+        "EXPECTED_ENTITY_MISSING"
+      ],
+      "name": "dynamic_entity_completeness",
+      "status": "failed"
+    },
+    {
+      "issue_codes": [
+        "EXPECTED_ENTITY_MISSING",
+        "STOREY_CONTAINMENT_MISMATCH"
+      ],
+      "name": "dynamic_storey_containment",
+      "status": "failed"
+    },
+    {
+      "issue_codes": [
+        "OPENING_FILL_RELATIONSHIP_MISSING",
+        "VOID_RELATIONSHIP_MISSING"
+      ],
+      "name": "dynamic_opening_fill",
+      "status": "failed"
+    },
+    {
+      "issue_codes": [],
+      "name": "semantic_coverage",
+      "status": "skipped"
+    },
+    {
+      "issue_codes": [],
+      "name": "ifc_compile_reopen",
+      "status": "passed"
+    },
+    {
+      "issue_codes": [],
+      "name": "geometry",
+      "status": "passed"
+    },
+    {
+      "issue_codes": [],
+      "name": "repair_route",
+      "status": "passed"
+    }
+  ],
+  "source_issue_codes": [
+    "EXPECTED_ENTITY_MISSING",
+    "OPENING_FILL_RELATIONSHIP_MISSING",
+    "STOREY_CONTAINMENT_MISMATCH",
+    "VOID_RELATIONSHIP_MISSING"
+  ],
+  "source_issues": [
+    {
+      "actual": 5,
+      "code": "EXPECTED_ENTITY_MISSING",
+      "expected": 9,
+      "gate": "dynamic_entity_completeness",
+      "ifc_class": "IfcDoor",
+      "path": "/doors",
+      "status": "failed"
+    },
+    {
+      "actual": 0,
+      "code": "STOREY_CONTAINMENT_MISMATCH",
+      "expected": 4,
+      "expected_storey": "storey-2",
+      "gate": "dynamic_storey_containment",
+      "ifc_class": "IfcDoor",
+      "path": "/doors/storey-2",
+      "status": "failed"
+    },
+    {
+      "actual_storey": null,
+      "code": "EXPECTED_ENTITY_MISSING",
+      "expected_storey": "storey-2",
+      "gate": "dynamic_storey_containment",
+      "path": "/doors/door-6",
+      "status": "failed"
+    },
+    {
+      "actual_storey": null,
+      "code": "EXPECTED_ENTITY_MISSING",
+      "expected_storey": "storey-2",
+      "gate": "dynamic_storey_containment",
+      "path": "/doors/door-7",
+      "status": "failed"
+    },
+    {
+      "actual_storey": null,
+      "code": "EXPECTED_ENTITY_MISSING",
+      "expected_storey": "storey-2",
+      "gate": "dynamic_storey_containment",
+      "path": "/doors/door-8",
+      "status": "failed"
+    },
+    {
+      "actual_storey": null,
+      "code": "EXPECTED_ENTITY_MISSING",
+      "expected_storey": "storey-2",
+      "gate": "dynamic_storey_containment",
+      "path": "/doors/door-9",
+      "status": "failed"
+    },
+    {
+      "actual": 5,
+      "code": "OPENING_FILL_RELATIONSHIP_MISSING",
+      "expected": 9,
+      "gate": "dynamic_opening_fill",
+      "ifc_class": "IfcDoor",
+      "path": "/doors/fills",
+      "status": "failed"
+    },
+    {
+      "actual": 5,
+      "code": "VOID_RELATIONSHIP_MISSING",
+      "expected": 9,
+      "gate": "dynamic_opening_fill",
+      "ifc_class": "IfcDoor",
+      "path": "/doors/voids",
+      "status": "failed"
+    },
+    {
+      "actual": 0,
+      "code": "OPENING_FILL_RELATIONSHIP_MISSING",
+      "expected": 9,
+      "gate": "dynamic_opening_fill",
+      "ifc_class": "IfcWindow",
+      "path": "/windows/fills",
+      "status": "failed"
+    },
+    {
+      "actual": 0,
+      "code": "VOID_RELATIONSHIP_MISSING",
+      "expected": 9,
+      "gate": "dynamic_opening_fill",
+      "ifc_class": "IfcWindow",
+      "path": "/windows/voids",
+      "status": "failed"
+    }
+  ]
+}

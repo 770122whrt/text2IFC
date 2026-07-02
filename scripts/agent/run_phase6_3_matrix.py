@@ -88,16 +88,23 @@ def run_matrix(output_root: Path) -> dict[str, Any]:
 
 def _write_complex_two_storey_case(case_dir: Path) -> dict[str, Any]:
     source_dir = SOURCE_FIXTURE_ROOT / "complex-two-storey"
+    input_source = source_dir / "input.txt"
+    review_source = source_dir / "expected-manual-review.json"
+    input_source_text = input_source.read_text(encoding="utf-8")
+    review_source_text = review_source.read_text(encoding="utf-8")
     fixture = load_complex_fixture(source_dir)
     input_text = fixture["input_text"]
     expectations = fixture["expectations"]
     readme_path = source_dir / "README.md"
     readme_text = readme_path.read_text(encoding="utf-8") if readme_path.is_file() else None
     _reset_case_dir(case_dir)
-    (case_dir / "input.txt").write_text(input_text, encoding="utf-8")
+    (case_dir / "input.txt").write_text(input_source_text, encoding="utf-8")
     if readme_text is not None:
         (case_dir / "README.md").write_text(readme_text, encoding="utf-8")
-    _write_json(case_dir / "expected-manual-review.json", fixture["metadata"])
+    (case_dir / "expected-manual-review.json").write_text(
+        review_source_text,
+        encoding="utf-8",
+    )
     expected_facts = _expected_from_manual_review(
         case_id="complex-two-storey",
         input_text=input_text,
@@ -149,10 +156,11 @@ def _write_complex_two_storey_case(case_dir: Path) -> dict[str, Any]:
 
 def _write_three_storey_case(case_dir: Path) -> dict[str, Any]:
     source = SOURCE_FIXTURE_ROOT / "non-two-storey-three-level" / "design-brief.json"
-    design_brief = json.loads(source.read_text(encoding="utf-8"))
+    design_brief_text = source.read_text(encoding="utf-8")
+    design_brief = json.loads(design_brief_text)
     input_text = str(design_brief.get("original_request", "three-storey fixture"))
     _reset_case_dir(case_dir)
-    _write_json(case_dir / "design-brief.json", design_brief)
+    (case_dir / "design-brief.json").write_text(design_brief_text, encoding="utf-8")
     (case_dir / "input.txt").write_text(input_text + "\n", encoding="utf-8")
     expected_facts = build_expected_facts(
         case_id="non-two-storey-three-level",
