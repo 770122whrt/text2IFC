@@ -87,16 +87,13 @@ def run_matrix(output_root: Path) -> dict[str, Any]:
 
 
 def _write_complex_two_storey_case(case_dir: Path) -> dict[str, Any]:
-    _reset_case_dir(case_dir)
     source_dir = SOURCE_FIXTURE_ROOT / "complex-two-storey"
     fixture = load_complex_fixture(source_dir)
     input_text = fixture["input_text"]
     expectations = fixture["expectations"]
+    _reset_case_dir(case_dir)
     (case_dir / "input.txt").write_text(input_text, encoding="utf-8")
-    shutil.copyfile(
-        source_dir / "expected-manual-review.json",
-        case_dir / "expected-manual-review.json",
-    )
+    _write_json(case_dir / "expected-manual-review.json", fixture["metadata"])
     expected_facts = _expected_from_manual_review(
         case_id="complex-two-storey",
         input_text=input_text,
@@ -147,10 +144,10 @@ def _write_complex_two_storey_case(case_dir: Path) -> dict[str, Any]:
 
 
 def _write_three_storey_case(case_dir: Path) -> dict[str, Any]:
-    _reset_case_dir(case_dir)
     source = SOURCE_FIXTURE_ROOT / "non-two-storey-three-level" / "design-brief.json"
     design_brief = json.loads(source.read_text(encoding="utf-8"))
     input_text = str(design_brief.get("original_request", "three-storey fixture"))
+    _reset_case_dir(case_dir)
     _write_json(case_dir / "design-brief.json", design_brief)
     (case_dir / "input.txt").write_text(input_text + "\n", encoding="utf-8")
     expected_facts = build_expected_facts(
