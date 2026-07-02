@@ -31,6 +31,7 @@ from .gate_audit_bundle import (
     write_gate_summary,
 )
 from .providers import validate_provider_output
+from .route_decision import write_route_decision
 from .run_report import build_live_run_report, resolve_final_design_brief_dir
 from .semantic_capabilities import build_semantic_capability_profile
 from .semantic_coverage import (
@@ -1147,10 +1148,34 @@ def run_audit_report_stage(
         output / "validation.json",
         {"valid": valid, "issue_count": len(issues), "issues": issues},
     )
+    route_audit_payload = parsed if isinstance(parsed, dict) else {
+        "recommendation": "reject",
+        "blocking": True,
+        "findings": [],
+    }
+    if issues:
+        route_audit_payload = {
+            **route_audit_payload,
+            "blocking": True,
+            "findings": [
+                *(
+                    route_audit_payload.get("findings", [])
+                    if isinstance(route_audit_payload.get("findings", []), list)
+                    else []
+                ),
+                *issues,
+            ],
+        }
+    route_decision = write_route_decision(
+        case_dir=root,
+        audit=route_audit_payload,
+    )
     metrics = {
         "case_id": case_id,
         "stage": "audit",
         "valid": valid,
+        "route_decision": route_decision["route"],
+        "route_owner_stage": route_decision["owner_stage"],
         "evidence_class": result.evidence_class,
         "response_id": result.response.get("id"),
         "model": result.response.get("model"),
@@ -1181,6 +1206,7 @@ def run_audit_report_stage(
                 "audit_report": "audit-report.json" if parsed else None,
                 "validation": "validation.json",
                 "metrics": "metrics.json",
+                "route_decision": "../route-decision.json",
             },
         },
     )
@@ -1199,6 +1225,8 @@ def run_audit_report_stage(
         "response_id": result.response.get("id"),
         "evidence_class": result.evidence_class,
         "report_path": portable_artifact_path(report_path),
+        "route_decision": route_decision["route"],
+        "route_owner_stage": route_decision["owner_stage"],
         "output_dir": portable_artifact_path(root),
     }
 

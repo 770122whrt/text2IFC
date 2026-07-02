@@ -814,7 +814,7 @@ and reduce review noise while preserving debug/full trace on demand.
 
 **Wave 4** *(blocked on Wave 3 dynamic gates)*
 
-- [ ] `06.3-04-PLAN.md` - Route decisions and bounded stage back-routing
+- [x] `06.3-04-PLAN.md` - Route decisions and bounded stage back-routing
 
 **Wave 5** *(blocked on Wave 4 route decisions)*
 
