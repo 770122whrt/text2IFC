@@ -99,3 +99,73 @@ def test_phase6_3_verifier_rejects_false_accepted_blocking_gate(tmp_path):
     verification = json.loads(verifier.stdout)
     assert verification["valid"] is False
     assert "FALSE_ACCEPT_BLOCKING_GATES" in verification["issue_codes"]
+
+
+def test_matrix_runner_can_use_same_fixture_and_output_root_without_deleting_sources(
+    monkeypatch,
+    tmp_path,
+):
+    from scripts.agent import run_phase6_3_matrix
+
+    source_root = tmp_path / "phase6.3-gate-audit"
+    complex_dir = source_root / "complex-two-storey"
+    three_dir = source_root / "non-two-storey-three-level"
+    complex_dir.mkdir(parents=True)
+    three_dir.mkdir(parents=True)
+    (complex_dir / "input.txt").write_text(
+        "two storey fixture with IfcBuildingStorey\n",
+        encoding="utf-8",
+    )
+    _write_json(
+        complex_dir / "expected-manual-review.json",
+        {
+            "schema_version": "text2ifc/phase6.3-complex-manual-review/1.0",
+            "usage": "manual_review_truth_for_phase6_3_wave0_only",
+            "expectations": {
+                "production_rule": False,
+                "storey_count": 2,
+                "storey_elevations_mm": {"storey-1": 0, "storey-2": 3150},
+                "space_ids_by_storey": {"storey-1": ["space-1"], "storey-2": ["space-2"]},
+                "space_counts": {"storey-1": 1, "storey-2": 1},
+                "door_counts": {"total": 2, "storey-1": 1, "storey-2": 1},
+                "window_counts": {"total": 2, "storey-1": 1, "storey-2": 1},
+            },
+        },
+    )
+    _write_json(
+        three_dir / "design-brief.json",
+        {
+            "schema_version": "text2ifc/design-brief/2.0",
+            "status": "ready",
+            "language": "zh-CN",
+            "original_request": "three-storey fixture",
+            "known_facts": {
+                "storeys": [
+                    {"id": "storey-1"},
+                    {"id": "storey-2"},
+                    {"id": "storey-3"},
+                ],
+                "spaces": [{"id": "level-3-room", "storey": "storey-3"}],
+                "doors": [{"id": "level-3-door", "storey": "storey-3"}],
+                "windows": [{"id": "level-3-window", "storey": "storey-3"}],
+            },
+            "fact_sources": [],
+            "missing_facts": [],
+            "ambiguities": [],
+            "unsupported_requests": [],
+        },
+    )
+    monkeypatch.setattr(run_phase6_3_matrix, "SOURCE_FIXTURE_ROOT", source_root)
+
+    summary = run_phase6_3_matrix.run_matrix(source_root)
+
+    assert summary["case_count"] >= 4
+    assert (source_root / "complex-two-storey" / "input.txt").is_file()
+    assert (source_root / "non-two-storey-three-level" / "design-brief.json").is_file()
+
+
+def _write_json(path: Path, payload: dict) -> None:
+    path.write_text(
+        json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
