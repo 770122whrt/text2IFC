@@ -8,6 +8,7 @@ from text2ifc_agent.providers import LiveProviderResult, ProviderOutput
 from text2ifc_agent.clarification import ClarificationCall
 from text2ifc_agent.interactive_cli_flow import SessionIfcResult
 from text2ifc_agent.repl_chat import ReplChatResult
+from text2ifc_agent.run_report import build_live_run_report
 from text2ifc_agent.session_store import SessionStore
 from text2ifc_agent.trace_levels import (
     DEFAULT_TRACE_LEVEL,
@@ -191,6 +192,26 @@ def test_compact_live_trace_can_preserve_deep_evidence_under_trace_directory(tmp
     assert manifest["deferred_artifacts"]["response_sha256"].startswith("sha256:")
 
 
+def test_run_report_writes_trace_manifest_with_compact_evidence_hashes(tmp_path):
+    case_dir = _write_compact_report_case(tmp_path / "case")
+
+    report_path = build_live_run_report(case_dir=case_dir)
+
+    manifest_path = case_dir / "trace-manifest.json"
+    assert report_path == case_dir / "report.md"
+    assert manifest_path.is_file()
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    artifacts = manifest["artifact_hashes"]
+    assert manifest["schema_version"] == "text2ifc/run-trace-manifest/1.0"
+    assert artifacts["report.md"].startswith("sha256:")
+    assert artifacts["generator/candidate.json"].startswith("sha256:")
+    assert artifacts["expected-facts.json"].startswith("sha256:")
+    assert artifacts["gate-summary.json"].startswith("sha256:")
+    assert artifacts["route-decision.json"].startswith("sha256:")
+    assert artifacts["generator/trace/response.raw.json"].startswith("sha256:")
+    assert "generator/response.raw.json" not in artifacts
+
+
 def test_non_accept_routes_force_deep_evidence_preservation():
     assert should_preserve_deep_evidence(route="accept", validation_valid=True) is False
     assert (
@@ -261,3 +282,72 @@ def _ready_call(call_index: int, original_request: str) -> ClarificationCall:
         },
         evidence_catalog=[],
     )
+
+
+def _write_compact_report_case(case_dir: Path) -> Path:
+    design = case_dir / "design-brief"
+    generator = case_dir / "generator"
+    repair = case_dir / "repair"
+    audit = case_dir / "audit"
+    _write_text(design / "input.txt", "创建一个简单房间\n")
+    _write_json(design / "conversation.json", [{"role": "user", "content": "创建一个简单房间"}])
+    _write_text(design / "prompt-rendered.md", "Design Brief prompt")
+    _write_json(design / "trace" / "response.raw.json", {"id": "msg_design", "stop_reason": "end_turn"})
+    _write_text(design / "trace" / "model-text.txt", '{"status":"ready"}')
+    _write_json(design / "trace" / "request.redacted.json", {"request": {"model": "unit-test"}})
+    _write_json(design / "design-brief.json", {"status": "ready"})
+    _write_json(design / "validation.json", {"valid": True, "issues": []})
+    _write_json(design / "metrics.json", {"response_id": "msg_design", "evidence_class": "unit"})
+
+    _write_text(generator / "prompt-rendered.md", "Generator prompt")
+    _write_json(generator / "trace" / "response.raw.json", {"id": "msg_generator", "stop_reason": "end_turn"})
+    _write_text(generator / "trace" / "model-text.txt", '{"schema_version":"bim-json/2.0"}')
+    _write_json(generator / "trace" / "request.redacted.json", {"request": {"model": "unit-test"}})
+    _write_json(generator / "candidate.json", {"schema_version": "bim-json/2.0"})
+    _write_json(generator / "validation.json", {"valid": True, "issues": []})
+    _write_json(generator / "metrics.json", {"response_id": "msg_generator", "evidence_class": "unit"})
+
+    _write_json(repair / "route.json", {"route": "no_repair_needed", "provider_call_count": 0})
+    _write_json(repair / "repair-attempts.json", [])
+    _write_json(repair / "metrics.json", {"route": "no_repair_needed", "evidence_class": "unit"})
+
+    _write_text(audit / "prompt-rendered.md", "Audit prompt")
+    _write_json(audit / "trace" / "response.raw.json", {"id": "msg_audit", "stop_reason": "end_turn"})
+    _write_text(audit / "trace" / "model-text.txt", '{"recommendation":"accept"}')
+    _write_json(audit / "trace" / "request.redacted.json", {"request": {"model": "unit-test"}})
+    _write_json(audit / "audit-report.json", {"recommendation": "accept", "blocking": False})
+    _write_json(audit / "validation.json", {"valid": True, "issues": []})
+    _write_json(audit / "metrics.json", {"response_id": "msg_audit", "evidence_class": "unit"})
+
+    _write_json(case_dir / "expected-facts.json", {"schema_version": "text2ifc/expected-facts/1.0"})
+    _write_json(
+        case_dir / "gate-summary.json",
+        {
+            "schema_version": "text2ifc/gate-summary/1.0",
+            "candidate_hash": "sha256:test",
+            "expected_facts_hash": "sha256:test",
+            "gates": [],
+            "overall_status": "passed",
+        },
+    )
+    _write_json(
+        case_dir / "route-decision.json",
+        {
+            "schema_version": "text2ifc/route-decision/1.0",
+            "route": "accept",
+        },
+    )
+    return case_dir
+
+
+def _write_json(path: Path, payload: dict) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+
+
+def _write_text(path: Path, text: str) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(text, encoding="utf-8")
