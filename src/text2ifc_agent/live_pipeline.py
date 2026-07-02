@@ -133,6 +133,7 @@ def run_design_brief_stage(
     provider: Any,
     output_dir: Path | str,
     case: dict[str, Any],
+    trace_level: str | None = "debug",
 ) -> dict[str, Any]:
     """Run one Design Brief v2 call and preserve all input/output evidence."""
     output = Path(output_dir)
@@ -174,7 +175,12 @@ def run_design_brief_stage(
         schema=schema,
         state={"case_id": case["case_id"], "stage": "design-brief"},
     )
-    provider_manifest = write_live_trace(result=result, output_dir=output)
+    provider_manifest = write_live_trace(
+        result=result,
+        output_dir=output,
+        trace_level=trace_level,
+        preserve_deep_evidence=trace_level == "compact",
+    )
     parse_status, parsed, parse_diagnostics = result.output.parse_json()
     issues = []
     if parse_status == "ok" and parsed is not None:
@@ -483,6 +489,7 @@ def run_generator_stage(
     design_source_dir: Path | str,
     case_id: str,
     session_prefix: str = "phase6.1",
+    trace_level: str | None = "debug",
 ) -> dict[str, Any]:
     """Run one real Generator call with exact Formal and Draft contracts."""
     output = Path(output_dir)
@@ -533,7 +540,12 @@ def run_generator_stage(
         state={"case_id": case_id, "stage": "generate"},
     )
     validate_provider_output(result.output)
-    provider_manifest = write_live_trace(result=result, output_dir=output)
+    provider_manifest = write_live_trace(
+        result=result,
+        output_dir=output,
+        trace_level=trace_level,
+        preserve_deep_evidence=trace_level == "compact",
+    )
     parse_status, parsed, normalization_diagnostics = result.output.parse_json()
     if parse_status == "ok" and parsed is not None:
         _write_json(output / "parsed-output.json", parsed)
@@ -763,6 +775,7 @@ def run_repair_stage(
     case_id: str,
     geometry_feedback: Sequence[Mapping[str, Any]] | None = None,
     prior_attempt_count: int = 0,
+    trace_level: str | None = "debug",
 ) -> dict[str, Any]:
     """Route a generator result through bounded repair or no-repair evidence."""
     output = Path(output_dir)
@@ -855,7 +868,12 @@ def run_repair_stage(
             state={"case_id": case_id, "stage": "repair"},
         )
         validate_provider_output(live_result.output)
-        provider_manifest = write_live_trace(result=live_result, output_dir=output)
+        provider_manifest = write_live_trace(
+            result=live_result,
+            output_dir=output,
+            trace_level=trace_level,
+            preserve_deep_evidence=trace_level == "compact",
+        )
         evidence_class = live_result.evidence_class
         parse_status, parsed, normalization_diagnostics = live_result.output.parse_json()
         if parse_status == "ok" and parsed is not None:
@@ -1025,6 +1043,7 @@ def run_audit_report_stage(
     case_id: str,
     session_prefix: str = "phase6.1",
     audit_call_index: int = 1,
+    trace_level: str | None = "debug",
 ) -> dict[str, Any]:
     """Run real Audit v2 and generate the case report from sidecars."""
     root = Path(case_dir)
@@ -1125,7 +1144,12 @@ def run_audit_report_stage(
         state={"case_id": case_id, "stage": "audit"},
     )
     validate_provider_output(result.output)
-    provider_manifest = write_live_trace(result=result, output_dir=output)
+    provider_manifest = write_live_trace(
+        result=result,
+        output_dir=output,
+        trace_level=trace_level,
+        preserve_deep_evidence=trace_level == "compact",
+    )
     parse_status, parsed, normalization_diagnostics = result.output.parse_json()
     issues: list[dict[str, Any]] = []
     if parse_status == "ok" and parsed is not None:

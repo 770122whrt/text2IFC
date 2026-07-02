@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 from pathlib import Path
 from typing import Any
@@ -133,6 +134,7 @@ def build_live_run_report(*, case_dir: Path | str) -> Path:
     lines.extend(_metrics_section(root))
     lines.extend(_source_sidecars_section(root))
     _write_text(report_path, "\n".join(lines).rstrip() + "\n")
+    _write_run_trace_manifest(root=root, report_path=report_path)
     return report_path
 
 
@@ -140,14 +142,16 @@ def _require_sidecars(root: Path) -> None:
     for _title, directory, files in STAGE_SIDECARS:
         stage_dir = resolve_final_design_brief_dir(root) if directory == "design-brief" else root / directory
         for name in files:
-            path = stage_dir / name
+            path = _stage_sidecar_path(stage_dir, name)
             if not path.is_file():
-                relative = path.relative_to(root).as_posix()
+                relative = (stage_dir / name).relative_to(root).as_posix()
                 raise RunReportError(f"required sidecar is missing: {relative}")
 
 
 def _stage_section(root: Path, title: str, stage_dir: Path) -> list[str]:
-    raw = _read_json(stage_dir / "response.raw.json")
+    raw_path = _stage_sidecar_path(stage_dir, "response.raw.json")
+    model_text_path = _stage_sidecar_path(stage_dir, "model-text.txt")
+    raw = _read_json(raw_path)
     metrics = _read_json(stage_dir / "metrics.json")
     response_id = raw.get("id") or metrics.get("response_id")
     stop_reason = raw.get("stop_reason") or metrics.get("stop_reason")
@@ -166,8 +170,8 @@ def _stage_section(root: Path, title: str, stage_dir: Path) -> list[str]:
         "",
         "### Raw Model Output",
         "",
-        _source_link(f"{relative_stage}/response.raw.json"),
-        _source_link(f"{relative_stage}/model-text.txt"),
+        _source_link(raw_path.relative_to(root).as_posix()),
+        _source_link(model_text_path.relative_to(root).as_posix()),
         "",
     ]
     if parsed_name:
@@ -284,8 +288,9 @@ def _source_sidecars_section(root: Path) -> list[str]:
         relative_stage = stage_dir.relative_to(root).as_posix()
         lines.extend([f"### {title}", ""])
         for name in files:
-            relative = f"{relative_stage}/{name}"
-            if (root / relative).is_file():
+            path = _stage_sidecar_path(stage_dir, name)
+            if path.is_file():
+                relative = path.relative_to(root).as_posix()
                 lines.append(f"- [{relative}]({relative})")
         lines.append("")
     existing_gates = [name for name in GATE_SIDECARS if (root / name).is_file()]
@@ -302,6 +307,16 @@ def _first_existing(stage_dir: Path, names: tuple[str, ...]) -> str | None:
         if (stage_dir / name).is_file():
             return name
     return None
+
+
+def _stage_sidecar_path(stage_dir: Path, name: str) -> Path:
+    direct = stage_dir / name
+    if direct.is_file():
+        return direct
+    traced = stage_dir / "trace" / name
+    if traced.is_file():
+        return traced
+    return direct
 
 
 def _stage_parsed_artifact(stage_dir: Path) -> str | None:
@@ -336,3 +351,29 @@ def _write_text(path: Path, text: str) -> None:
     temporary = path.with_name(path.name + ".tmp")
     temporary.write_text(text, encoding="utf-8")
     temporary.replace(path)
+
+
+def _write_run_trace_manifest(*, root: Path, report_path: Path) -> None:
+    artifacts: dict[str, str] = {}
+    for path in sorted(root.rglob("*")):
+        if not path.is_file():
+            continue
+        relative = path.relative_to(root).as_posix()
+        if relative == "trace-manifest.json" or relative.endswith(".tmp"):
+            continue
+        artifacts[relative] = _file_sha256(path)
+    manifest = {
+        "schema_version": "text2ifc/run-trace-manifest/1.0",
+        "trace_level": "compact" if any("/trace/" in key for key in artifacts) else "debug",
+        "report_path": report_path.relative_to(root).as_posix(),
+        "artifact_count": len(artifacts),
+        "artifact_hashes": artifacts,
+    }
+    _write_text(
+        root / "trace-manifest.json",
+        json.dumps(manifest, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
+    )
+
+
+def _file_sha256(path: Path) -> str:
+    return "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest()

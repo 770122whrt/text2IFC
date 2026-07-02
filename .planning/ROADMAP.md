@@ -818,7 +818,7 @@ and reduce review noise while preserving debug/full trace on demand.
 
 **Wave 5** *(blocked on Wave 4 route decisions)*
 
-- [ ] `06.3-05-PLAN.md` - Compact trace levels and artifact write reduction
+- [x] `06.3-05-PLAN.md` - Compact trace levels and artifact write reduction
 
 **Wave 6** *(blocked on Wave 5 compact trace)*
 

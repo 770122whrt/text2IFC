@@ -300,6 +300,7 @@ def run_ready_session_to_ifc(
     store: SessionStore,
     session: str,
     provider_factory: Callable[[], Any],
+    trace_level: str | None = "debug",
 ) -> SessionIfcResult:
     """Generate BIM JSON, run deterministic gates, and compile a ready session."""
 
@@ -326,6 +327,7 @@ def run_ready_session_to_ifc(
         design_source_dir=design_dir,
         case_id=stored_session.session_hash,
         session_prefix="phase6.2",
+        trace_level=trace_level,
     )
     _record_stage_payloads(store, stored_session.session_id, "generator", generator)
     if generator["classification"] == "formal" and (
@@ -372,6 +374,7 @@ def run_ready_session_to_ifc(
         output_dir=stored_session.run_dir / "repair",
         generator_source_dir=stored_session.run_dir / "generator",
         case_id=stored_session.session_hash,
+        trace_level=trace_level,
     )
     _record_stage_payloads(store, stored_session.session_id, "repair", repair)
 
@@ -413,6 +416,7 @@ def run_ready_session_to_ifc(
         case_dir=stored_session.run_dir,
         case_id=stored_session.session_hash,
         session_prefix="phase6.2",
+        trace_level=trace_level,
     )
     _record_stage_payloads(store, stored_session.session_id, "audit", audit)
     if not audit["valid"] or audit["status"] != "accepted":

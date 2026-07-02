@@ -60,6 +60,7 @@ def run_repl_chat(
     stop_after: str = "ifc",
     provider_factory: Callable[[], Any] | None = None,
     terminal_metadata: dict[str, Any] | None = None,
+    trace_level: str | None = None,
 ) -> ReplChatResult:
     """Run a Chinese-first REPL session.
 
@@ -187,6 +188,7 @@ def run_repl_chat(
         store=store,
         session=session.session_hash,
         provider_factory=provider_factory,
+        trace_level=trace_level or "debug",
     )
     _print_ifc_stage_summary(
         store=store,

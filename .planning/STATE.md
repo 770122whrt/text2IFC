@@ -7,8 +7,8 @@ See: `.planning/PROJECT.md` (updated 2026-06-11)
 **Core value:** Produce valid, inspectable IFC models from explicit user
 requirements.
 
-**Current focus:** Phase 6.3 Wave 5 compact trace levels and artifact write
-reduction for complex multi-storey reliability
+**Current focus:** Phase 6.3 Wave 6 complex-building matrix, final
+verification, and documentation closure
 
 ## Status
 
@@ -57,11 +57,14 @@ reduction for complex multi-storey reliability
   gate logic and fails on missing `storey-3` facts without hard-coded
   two-storey assumptions. Wave 4 is implemented with hash-bound
   `route-decision.json`, canonical route ownership, stale evidence blocking,
-  bounded attempt/stall detection, and Audit-stage integration.
+  bounded attempt/stall detection, and Audit-stage integration. Wave 5 is
+  implemented with compact/debug/full trace-level policy, CLI propagation,
+  stage-local compact `trace/` evidence, compact-aware report resolution, and
+  root `trace-manifest.json` hashing actual run artifacts.
 - Plans: Phase 6.2-fix Waves 0-2 complete; Wave 3 produced UAT defect evidence;
   Wave 4 implementation/regression complete; Wave 5 implementation/regression
   complete; Wave 6 implementation/regression complete; Phase 6.3 planned in
-  seven waves; Waves 0-4 implemented and verified; final user-run UAT remains pending but is no longer the only
+  seven waves; Waves 0-5 implemented and verified; final user-run UAT remains pending but is no longer the only
   active next step
 - Branch: `multiagent-design` in C-drive worktree
 - Remote: `https://github.com/770122whrt/text2IFC`
@@ -563,14 +566,13 @@ Review Phase 6.3 planning documents:
 - `.planning/phases/06.3-gate-audit-fusion-dynamic-routing-and-compact-trace/06.3-PLAN-OUTLINE.md`
 - `.planning/phases/06.3-gate-audit-fusion-dynamic-routing-and-compact-trace/06.3-00-PLAN.md` through `06.3-06-PLAN.md`
 
-Execute Phase 6.3 Wave 5 in the C-drive worktree: add compact/debug/full trace
-levels so normal generation writes fewer review files while non-accept runs
-remain recoverable through hash-bound evidence. Phase 6.2-fix final
-human-terminal UAT can still be run later, but complex multi-storey
-no-false-accept and Gate-Audit routing are now the immediate focus. During
-execution, treat the strengthened Phase 6.3 constraints as blocking acceptance
-criteria, especially non-two-storey gate/route coverage, hash-bound evidence,
-and compact failure trace recovery.
+Execute Phase 6.3 Wave 6 in the C-drive worktree: run the complex-building
+matrix, including the user's two-storey residential prompt and at least one
+non-two-storey case, then close Phase 6.3 only if final verification proves no
+false accept, hash-bound evidence, compact trace recovery, route decisions,
+and generated IFC/report artifacts. Phase 6.2-fix final human-terminal UAT can
+still be run later, but complex multi-storey no-false-accept and Gate-Audit
+routing are now the immediate focus.
 
 ## Accumulated Context
 
@@ -771,5 +773,5 @@ and compact failure trace recovery.
   responses.
 
 ---
-*Last activity: 2026-07-02 - completed Phase 6.3 Wave 4 route decisions and
-advanced to Wave 5 compact trace*
+*Last activity: 2026-07-02 - completed Phase 6.3 Wave 5 compact trace and
+advanced to Wave 6 complex-building verification*

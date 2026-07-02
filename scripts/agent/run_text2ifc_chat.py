@@ -95,6 +95,7 @@ def main(
             stop_after=args.stop_after,
             provider_factory=live_provider_factory,
             terminal_metadata=terminal_metadata,
+            trace_level=args.trace_level,
         )
     finally:
         store.close()

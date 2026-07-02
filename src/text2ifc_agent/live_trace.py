@@ -25,6 +25,7 @@ def write_live_trace(
     result: LiveProviderResult,
     output_dir: Path | str,
     trace_level: str | None = "debug",
+    preserve_deep_evidence: bool = False,
 ) -> dict[str, Any]:
     output = Path(output_dir)
     output.mkdir(parents=True, exist_ok=True)
@@ -57,12 +58,23 @@ def write_live_trace(
         "model_text_sha256": _text_sha256(result.output.text),
     }
     written_files = {"metadata": TRACE_FILES["metadata"]}
+    deep_evidence: dict[str, str] = {}
     if active_trace_level in {"debug", "full"}:
         _write_json(output / TRACE_FILES["request"], request_artifact)
         _write_json(output / TRACE_FILES["response"], result.response)
         _write_jsonl(output / TRACE_FILES["events"], result.events)
         _write_text(output / TRACE_FILES["text"], result.output.text)
         written_files = dict(TRACE_FILES)
+    elif preserve_deep_evidence:
+        trace_dir = output / "trace"
+        trace_dir.mkdir(parents=True, exist_ok=True)
+        _write_json(trace_dir / TRACE_FILES["request"], request_artifact)
+        _write_json(trace_dir / TRACE_FILES["response"], result.response)
+        _write_jsonl(trace_dir / TRACE_FILES["events"], result.events)
+        _write_text(trace_dir / TRACE_FILES["text"], result.output.text)
+        deep_evidence = {
+            key: f"trace/{name}" for key, name in TRACE_FILES.items() if key != "metadata"
+        }
 
     return {
         "provider": provider,
@@ -75,6 +87,7 @@ def write_live_trace(
         "deferred_artifacts": deferred_artifacts
         if active_trace_level == "compact"
         else {},
+        "deep_evidence": deep_evidence,
     }
 
 
