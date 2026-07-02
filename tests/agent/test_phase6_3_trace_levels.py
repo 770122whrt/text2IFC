@@ -5,6 +5,7 @@ from pathlib import Path
 
 from text2ifc_agent.live_trace import write_live_trace
 from text2ifc_agent.providers import LiveProviderResult, ProviderOutput
+from text2ifc_agent.repl_chat import ReplChatResult
 from text2ifc_agent.trace_levels import (
     DEFAULT_TRACE_LEVEL,
     TraceLevelError,
@@ -52,6 +53,37 @@ def test_text2ifc_chat_cli_exposes_trace_level_contract():
     assert "full" in result.stdout
 
 
+def test_text2ifc_chat_passes_trace_level_to_repl(monkeypatch, tmp_path):
+    from scripts.agent import run_text2ifc_chat
+
+    captured: dict[str, str | None] = {}
+
+    def fake_run_repl_chat(**kwargs):
+        captured["trace_level"] = kwargs.get("trace_level")
+        return ReplChatResult(
+            session_id="session-1",
+            session_hash="hash-1",
+            status="ready",
+        )
+
+    monkeypatch.setattr(run_text2ifc_chat, "run_repl_chat", fake_run_repl_chat)
+
+    exit_code = run_text2ifc_chat.main(
+        [
+            "--live",
+            "--trace-level",
+            "full",
+            "--output-root",
+            str(tmp_path / "out"),
+            "--db",
+            str(tmp_path / "out" / "sessions.sqlite"),
+        ]
+    )
+
+    assert exit_code == 0
+    assert captured["trace_level"] == "full"
+
+
 def test_compact_live_trace_writes_fewer_provider_artifacts_than_debug(tmp_path):
     result = _live_result()
     debug_dir = tmp_path / "debug"
@@ -82,6 +114,33 @@ def test_compact_live_trace_writes_fewer_provider_artifacts_than_debug(tmp_path)
     assert "model-text.txt" not in compact_files
     assert compact_manifest["deferred_artifacts"]["response_sha256"].startswith("sha256:")
     assert compact_manifest["deferred_artifacts"]["model_text_sha256"].startswith("sha256:")
+
+
+def test_compact_live_trace_can_preserve_deep_evidence_under_trace_directory(tmp_path):
+    result = _live_result()
+
+    manifest = write_live_trace(
+        result=result,
+        output_dir=tmp_path,
+        trace_level="compact",
+        preserve_deep_evidence=True,
+    )
+
+    top_level_files = {path.name for path in tmp_path.iterdir() if path.is_file()}
+    trace_files = {
+        path.name
+        for path in (tmp_path / "trace").iterdir()
+        if path.is_file()
+    }
+
+    assert "response-metadata.json" in top_level_files
+    assert "response.raw.json" not in top_level_files
+    assert "request.redacted.json" not in top_level_files
+    assert "response.raw.json" in trace_files
+    assert "request.redacted.json" in trace_files
+    assert "model-text.txt" in trace_files
+    assert manifest["deep_evidence"]["response"] == "trace/response.raw.json"
+    assert manifest["deferred_artifacts"]["response_sha256"].startswith("sha256:")
 
 
 def test_non_accept_routes_force_deep_evidence_preservation():
