@@ -805,7 +805,7 @@ and reduce review noise while preserving debug/full trace on demand.
 
 **Wave 2** *(blocked on Wave 1 shared evidence bundle)*
 
-- [ ] `06.3-02-PLAN.md` - Dynamic expected facts from Design Brief
+- [x] `06.3-02-PLAN.md` - Dynamic expected facts from Design Brief
 
 **Wave 3** *(blocked on Wave 2 expected facts)*
 

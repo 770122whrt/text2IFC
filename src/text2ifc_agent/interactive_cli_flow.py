@@ -19,6 +19,7 @@ from .live_pipeline import (
 from .clarification import ClarificationCall, ClarificationController, DesignBriefInvoker
 from .context_selection import select_design_brief_context
 from .design_brief import load_design_brief_schema, validate_design_brief
+from .expected_facts import write_expected_facts
 from .generator import validate_generation_document
 from .openai_compat import (
     OpenAICompatError,
@@ -307,6 +308,18 @@ def run_ready_session_to_ifc(
         raise ValueError("Phase 6.2 IFC generation requires a ready session")
 
     design_dir = _prepare_design_source(stored_session)
+    design_brief = json.loads((design_dir / "design-brief.json").read_text(encoding="utf-8"))
+    write_expected_facts(
+        case_dir=stored_session.run_dir,
+        case_id=stored_session.session_hash,
+        design_brief=design_brief,
+    )
+    _record_existing_artifact(
+        store,
+        stored_session,
+        kind="expected_facts",
+        name="expected-facts.json",
+    )
     generator = run_generator_stage(
         provider=provider_factory(),
         output_dir=stored_session.run_dir / "generator",

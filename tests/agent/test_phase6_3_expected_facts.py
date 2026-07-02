@@ -1,16 +1,23 @@
 import json
 from pathlib import Path
 
+from text2ifc_agent.gate_audit_bundle import hash_json_file
 from text2ifc_agent.expected_facts import (
     build_expected_facts,
     write_expected_facts,
 )
+from text2ifc_agent.interactive_cli_flow import run_ready_session_to_ifc
+from text2ifc_agent.providers import LiveProviderResult, ProviderOutput
+from text2ifc_agent.session_store import SessionStore
 
 
 ROOT = Path(__file__).resolve().parents[2]
 THREE_STOREY_FIXTURE = (
     ROOT
     / "dataset/processed/agent-demo/phase6.3-gate-audit/non-two-storey-three-level/design-brief.json"
+)
+PHASE6_1_COMPLETE = (
+    ROOT / "dataset/processed/agent-demo/phase6.1-mimo-live/complete-room"
 )
 
 
@@ -96,6 +103,54 @@ def test_write_expected_facts_persists_sidecar_without_mutating_design_brief(tmp
     assert payload["total_counts"]["IfcDoor"] == 9
 
 
+def test_ready_session_writes_expected_facts_before_gate_summary(tmp_path):
+    root = tmp_path / "phase6.3-expected-flow"
+    store = SessionStore.open(root / "sessions.sqlite", artifact_root=root)
+    session = store.create_session(original_input="complex expected facts fixture")
+    _write_ready_design_brief_call(session.run_dir, _two_storey_design_brief())
+    store.mark_session_status(session.session_id, "ready")
+
+    candidate = json.loads(
+        (PHASE6_1_COMPLETE / "generator" / "candidate.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    audit = {
+        "schema_version": "text2ifc/audit/2.0",
+        "recommendation": "accept",
+        "blocking": False,
+        "deterministic_gate_status": "passed",
+        "findings": [],
+        "evidence_paths": [
+            "expected-facts.json",
+            "gate-summary.json",
+            "generator/candidate.json",
+            "repair/route.json",
+        ],
+    }
+    provider = _SequenceLiveProvider([candidate, audit])
+
+    result = run_ready_session_to_ifc(
+        store=store,
+        session=session.session_hash,
+        provider_factory=lambda: provider,
+    )
+
+    assert result.status == "compiled"
+    expected_path = session.run_dir / "expected-facts.json"
+    assert expected_path.is_file()
+    gate_summary = json.loads(
+        (session.run_dir / "gate-summary.json").read_text(encoding="utf-8")
+    )
+    prompt_inputs = json.loads(
+        (session.run_dir / "audit" / "prompt-render-input.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    assert gate_summary["expected_facts_hash"] == hash_json_file(expected_path)
+    assert prompt_inputs["EXPECTED_FACTS_HASH"] == hash_json_file(expected_path)
+
+
 def _two_storey_design_brief() -> dict:
     spaces = [
         {"id": "living", "storey": "storey-1"},
@@ -173,3 +228,62 @@ def _two_storey_design_brief() -> dict:
         "clarification_questions": [],
         "provenance": {"source_turns": ["turn-user-001"]},
     }
+
+
+def _write_ready_design_brief_call(run_dir: Path, design_brief: dict) -> None:
+    call_dir = run_dir / "calls" / "01-design-brief"
+    design_dir = run_dir / "design-brief"
+    call_dir.mkdir(parents=True)
+    design_dir.mkdir(parents=True)
+    for source in (PHASE6_1_COMPLETE / "design-brief").iterdir():
+        if source.is_file():
+            for target_dir in (call_dir, design_dir):
+                (target_dir / source.name).write_text(
+                    source.read_text(encoding="utf-8"),
+                    encoding="utf-8",
+                )
+    text = json.dumps(design_brief, ensure_ascii=False, indent=2, sort_keys=True) + "\n"
+    for target in (
+        call_dir / "design-brief.json",
+        design_dir / "design-brief.json",
+        run_dir / "design-brief.json",
+    ):
+        target.write_text(text, encoding="utf-8")
+
+
+class _SequenceLiveProvider:
+    def __init__(self, payloads: list[dict]) -> None:
+        self.payloads = payloads
+        self.call_count = 0
+
+    def generate_live(self, *, session_id, prompt, schema, state):
+        del prompt, schema, state
+        self.call_count += 1
+        payload = self.payloads.pop(0)
+        text = json.dumps(payload, ensure_ascii=False)
+        response = {
+            "id": f"msg_phase63_expected_{self.call_count}",
+            "type": "message",
+            "role": "assistant",
+            "model": "unit-test",
+            "stop_reason": "end_turn",
+            "content": [{"type": "text", "text": text}],
+            "usage": {"input_tokens": 1, "output_tokens": 1},
+        }
+        return LiveProviderResult(
+            session_id=session_id,
+            evidence_class="unit_test_fixture",
+            http_status=200,
+            request={
+                "model": "unit-test",
+                "max_tokens": 131072,
+                "stream": True,
+                "messages": [{"role": "user", "content": "<redacted-test-prompt>"}],
+            },
+            response=response,
+            events=(),
+            output=ProviderOutput(
+                text=text,
+                metadata={"provider": "unit-test", "session_id": session_id},
+            ),
+        )
