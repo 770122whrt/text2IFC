@@ -116,6 +116,7 @@ def test_matrix_runner_can_use_same_fixture_and_output_root_without_deleting_sou
         "two storey fixture with IfcBuildingStorey\n",
         encoding="utf-8",
     )
+    (complex_dir / "README.md").write_text("fixture note\n", encoding="utf-8")
     _write_json(
         complex_dir / "expected-manual-review.json",
         {
@@ -161,6 +162,7 @@ def test_matrix_runner_can_use_same_fixture_and_output_root_without_deleting_sou
 
     assert summary["case_count"] >= 4
     assert (source_root / "complex-two-storey" / "input.txt").is_file()
+    assert (source_root / "complex-two-storey" / "README.md").is_file()
     assert (source_root / "non-two-storey-three-level" / "design-brief.json").is_file()
 
 
