@@ -3,10 +3,12 @@
 from __future__ import annotations
 
 import json
+import hashlib
 from pathlib import Path
 from typing import Any
 
 from .providers import LiveProviderResult, redact_provider_payload
+from .trace_levels import normalize_trace_level
 
 
 TRACE_FILES = {
@@ -22,10 +24,12 @@ def write_live_trace(
     *,
     result: LiveProviderResult,
     output_dir: Path | str,
+    trace_level: str | None = "debug",
 ) -> dict[str, Any]:
     output = Path(output_dir)
     output.mkdir(parents=True, exist_ok=True)
     provider = str(result.output.metadata.get("provider", "mimo"))
+    active_trace_level = normalize_trace_level(trace_level)
 
     request_artifact = {
         "provider": provider,
@@ -45,19 +49,32 @@ def write_live_trace(
         "event_count": len(result.events),
     }
 
-    _write_json(output / TRACE_FILES["request"], request_artifact)
-    _write_json(output / TRACE_FILES["response"], result.response)
     _write_json(output / TRACE_FILES["metadata"], metadata_artifact)
-    _write_jsonl(output / TRACE_FILES["events"], result.events)
-    _write_text(output / TRACE_FILES["text"], result.output.text)
+    deferred_artifacts = {
+        "request_sha256": _payload_sha256(request_artifact),
+        "response_sha256": _payload_sha256(result.response),
+        "events_sha256": _payload_sha256(list(result.events)),
+        "model_text_sha256": _text_sha256(result.output.text),
+    }
+    written_files = {"metadata": TRACE_FILES["metadata"]}
+    if active_trace_level in {"debug", "full"}:
+        _write_json(output / TRACE_FILES["request"], request_artifact)
+        _write_json(output / TRACE_FILES["response"], result.response)
+        _write_jsonl(output / TRACE_FILES["events"], result.events)
+        _write_text(output / TRACE_FILES["text"], result.output.text)
+        written_files = dict(TRACE_FILES)
 
     return {
         "provider": provider,
+        "trace_level": active_trace_level,
         "evidence_class": result.evidence_class,
         "session_id": result.session_id,
         "response_id": result.response.get("id"),
         "stop_reason": result.response.get("stop_reason"),
-        "artifacts": dict(TRACE_FILES),
+        "artifacts": written_files,
+        "deferred_artifacts": deferred_artifacts
+        if active_trace_level == "compact"
+        else {},
     }
 
 
@@ -74,3 +91,12 @@ def _write_text(path: Path, text: str) -> None:
     temporary = path.with_name(path.name + ".tmp")
     temporary.write_text(text, encoding="utf-8")
     temporary.replace(path)
+
+
+def _payload_sha256(payload: Any) -> str:
+    text = json.dumps(payload, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+    return _text_sha256(text)
+
+
+def _text_sha256(text: str) -> str:
+    return "sha256:" + hashlib.sha256(text.encode("utf-8")).hexdigest()

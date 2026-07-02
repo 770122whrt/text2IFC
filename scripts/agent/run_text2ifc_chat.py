@@ -28,6 +28,7 @@ from text2ifc_agent.repl_chat import (  # noqa: E402
     run_repl_chat,
 )
 from text2ifc_agent.session_store import SessionStore  # noqa: E402
+from text2ifc_agent.trace_levels import DEFAULT_TRACE_LEVEL  # noqa: E402
 
 
 DEFAULT_ENV_FILE = ROOT / ".env"
@@ -51,6 +52,11 @@ def main(
     parser.add_argument("--output-root", type=Path, default=DEFAULT_OUTPUT_ROOT)
     parser.add_argument("--db", type=Path)
     parser.add_argument("--stop-after", choices=("design-brief", "ifc"), default="ifc")
+    parser.add_argument(
+        "--trace-level",
+        choices=("compact", "debug", "full"),
+        default=DEFAULT_TRACE_LEVEL,
+    )
     parser.add_argument("--debug", action="store_true")
     args = parser.parse_args(argv)
 
