@@ -25,11 +25,17 @@ def build_expected_facts(
         spaces = _space_records_from_nested(nested_storeys, storeys)
         doors = _opening_records_from_nested(nested_storeys, storeys, "doors")
         windows = _opening_records_from_nested(nested_storeys, storeys, "windows")
-    elif _is_storey_list(known_facts.get("storeys")) and isinstance(
-        known_facts.get("spaces"), Mapping
-    ):
+    elif _is_storey_list(known_facts.get("storeys")):
         storeys = _storey_records_from_list(_records(known_facts.get("storeys")))
-        spaces = _space_records_from_storey_map(known_facts.get("spaces"), storeys)
+        if isinstance(known_facts.get("spaces"), Mapping):
+            spaces = _space_records_from_storey_map(known_facts.get("spaces"), storeys)
+        elif isinstance(known_facts.get("spaces"), list):
+            spaces = _records(known_facts.get("spaces"))
+        else:
+            spaces = _space_records_from_storey_list(
+                _records(known_facts.get("storeys")),
+                storeys,
+            )
         space_storeys = _space_name_storey_map(spaces)
         doors = _flat_opening_records(
             known_facts.get("doors"),
@@ -311,6 +317,36 @@ def _space_records_from_storey_map(value: Any, storeys: list[Mapping[str, Any]])
     return records
 
 
+def _space_records_from_storey_list(
+    storey_payloads: list[Mapping[str, Any]],
+    storeys: list[Mapping[str, Any]],
+) -> list[dict[str, Any]]:
+    records: list[dict[str, Any]] = []
+    for storey_payload, storey in zip(storey_payloads, storeys):
+        spaces = storey_payload.get("spaces")
+        if not isinstance(spaces, list):
+            continue
+        for index, space in enumerate(spaces, start=1):
+            if not isinstance(space, Mapping):
+                continue
+            record = _copy_payload(space)
+            record["storey"] = str(storey["id"])
+            record["source_key"] = f"{storey.get('source_key', storey['id'])}.spaces[{index}]"
+            _normalize_space_dimensions(record)
+            records.append(record)
+    return records
+
+
+def _normalize_space_dimensions(record: dict[str, Any]) -> None:
+    length = _number_alias(record, ("length_mm", "length"))
+    width = _number_alias(record, ("width_mm", "width"))
+    depth = _number_alias(record, ("depth_mm", "depth"))
+    if length is not None and width is not None:
+        record["dimensions_mm"] = [length, width]
+    elif width is not None and depth is not None:
+        record["dimensions_mm"] = [width, depth]
+
+
 def _opening_records_from_nested(
     nested_storeys: list[tuple[str, Mapping[str, Any]]],
     storeys: list[Mapping[str, Any]],
@@ -433,6 +469,12 @@ def _infer_opening_storey(
     *,
     space_storeys: Mapping[str, str],
 ) -> str:
+    existing_storey = _string(record.get("storey"))
+    if existing_storey:
+        return existing_storey
+    floor = record.get("floor")
+    if isinstance(floor, int) and 1 <= floor <= len(storeys):
+        return str(storeys[floor - 1]["id"])
     text = " ".join(str(record.get(key, "")) for key in ("host_wall", "source_key", "id"))
     for storey in reversed(storeys):
         name = _string(storey.get("name")) or _string(storey.get("source_key"))
@@ -472,6 +514,9 @@ def _roof_record(known_facts: Mapping[str, Any]) -> dict[str, Any] | None:
         if not _string(record.get("id")):
             record.setdefault("source_key", "roof")
         return record
+    roof_elevation = _number_alias(known_facts, ("roof_elevation_mm",))
+    if roof_elevation is not None:
+        return {"source_key": "roof", "elevation_mm": roof_elevation}
     slabs = known_facts.get("slabs")
     roof_payload = None
     if isinstance(slabs, Mapping):
@@ -510,8 +555,8 @@ def _singular_stair_record(
     record["storey"] = str(storeys[0]["id"]) if storeys else "storey-1"
     record["source_key"] = "stair"
     for target, names in {
-        "start_elevation_mm": ("start_elevation_mm", "start_elevation"),
-        "end_elevation_mm": ("end_elevation_mm", "end_elevation"),
+        "start_elevation_mm": ("start_elevation_mm", "start_elevation", "from_elevation_mm"),
+        "end_elevation_mm": ("end_elevation_mm", "end_elevation", "to_elevation_mm"),
         "start_z_mm": ("start_z_mm",),
         "end_z_mm": ("end_z_mm",),
     }.items():

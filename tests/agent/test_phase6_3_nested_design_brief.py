@@ -285,3 +285,71 @@ def test_expected_facts_normalizes_live_deepseek_floor_map_without_storey_list()
     assert expected["spaces"][4]["storey"] == "storey-2"
     assert expected["doors"][2]["storey"] == "storey-2"
     assert expected["windows"][3]["sill_height_mm"] == 1600
+
+
+def test_expected_facts_normalizes_live_deepseek_storey_list_with_inline_spaces():
+    design_brief = {
+        "schema_version": "text2ifc/design-brief/2.0",
+        "status": "ready",
+        "language": "zh-CN",
+        "known_facts": {
+            "building": {
+                "length_mm": 10000,
+                "width_mm": 8000,
+                "num_storeys": 2,
+                "storey_height_mm": 3000,
+                "slab_thickness_mm": 150,
+                "wall_thickness_mm": 200,
+            },
+            "storeys": [
+                {
+                    "name": "首层",
+                    "elevation_mm": 0,
+                    "spaces": [
+                        {"name": "客厅", "length_mm": 6000, "width_mm": 4500},
+                        {"name": "厨房", "length_mm": 4000, "width_mm": 3500},
+                    ],
+                },
+                {
+                    "name": "二层",
+                    "elevation_mm": 3150,
+                    "spaces": [
+                        {"name": "主卧", "length_mm": 5000, "width_mm": 4000},
+                        {"name": "走廊", "width_mm": 1200},
+                    ],
+                },
+            ],
+            "doors": [
+                {"floor": 1, "host": "首层客厅南墙", "width_mm": 1200, "height_mm": 2200},
+                {"floor": 2, "host": "二层主卧", "width_mm": 900, "height_mm": 2100},
+            ],
+            "windows": [
+                {"floor": 1, "host": "首层客厅南墙", "quantity": 2, "width_mm": 1500, "height_mm": 1200},
+                {"floor": 2, "host": "二层主卧南墙", "quantity": 2, "width_mm": 1500, "height_mm": 1200},
+            ],
+            "roof_elevation_mm": 6150,
+            "stair": {"from_elevation_mm": 150, "to_elevation_mm": 3150},
+        },
+        "missing_facts": [],
+        "ambiguities": [],
+        "unsupported_requests": [],
+    }
+
+    expected = build_expected_facts(
+        case_id="live-storey-list-inline-spaces",
+        design_brief=design_brief,
+    )
+
+    assert expected["storeys"] == [
+        {"id": "storey-1", "source_key": "首层", "elevation_mm": 0, "name": "首层"},
+        {"id": "storey-2", "source_key": "二层", "elevation_mm": 3150, "name": "二层"},
+    ]
+    assert expected["space_counts_by_storey"] == {"storey-1": 2, "storey-2": 2}
+    assert expected["door_counts_by_storey"] == {"storey-1": 1, "storey-2": 1}
+    assert expected["window_counts_by_storey"] == {"storey-1": 2, "storey-2": 2}
+    assert expected["spaces"][0]["dimensions_mm"] == [6000, 4500]
+    assert expected["spaces"][2]["storey"] == "storey-2"
+    assert expected["doors"][1]["storey"] == "storey-2"
+    assert expected["roof"]["elevation_mm"] == 6150
+    assert expected["stairs"][0]["start_elevation_mm"] == 150
+    assert expected["stairs"][0]["end_elevation_mm"] == 3150
