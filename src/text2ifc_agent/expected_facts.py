@@ -47,18 +47,18 @@ def build_expected_facts(
         elif isinstance(known_facts.get("spaces"), list):
             spaces = _records(known_facts.get("spaces"))
         else:
-            spaces = _space_records_from_storey_list(
+            spaces = _suffix_floor_records(known_facts, "spaces", storeys) or _space_records_from_storey_list(
                 _records(known_facts.get("storeys")),
                 storeys,
             )
         space_storeys = _space_name_storey_map(spaces)
-        doors = _flat_opening_records(
+        doors = _suffix_floor_records(known_facts, "doors", storeys) or _flat_opening_records(
             known_facts.get("doors"),
             storeys,
             "doors",
             space_storeys=space_storeys,
         )
-        windows = _flat_opening_records(
+        windows = _suffix_floor_records(known_facts, "windows", storeys) or _flat_opening_records(
             known_facts.get("windows"),
             storeys,
             "windows",
@@ -361,6 +361,54 @@ def _space_records_from_storey_list(
     return records
 
 
+def _suffix_floor_records(
+    known_facts: Mapping[str, Any],
+    prefix: str,
+    storeys: list[Mapping[str, Any]],
+) -> list[dict[str, Any]]:
+    records: list[dict[str, Any]] = []
+    floor_to_storey = _floor_label_to_storey(storeys)
+    singular = prefix[:-1]
+    for key, value in known_facts.items():
+        if not isinstance(key, str) or not key.startswith(f"{prefix}_"):
+            continue
+        floor_label = key.removeprefix(f"{prefix}_")
+        storey_id = floor_to_storey.get(floor_label)
+        if storey_id is None or not isinstance(value, list):
+            continue
+        for index, payload in enumerate(value, start=1):
+            if not isinstance(payload, Mapping):
+                continue
+            count = _positive_count(_first_present(payload, ("count", "quantity")))
+            for sequence in range(1, count + 1):
+                record = _normalize_opening_payload(payload) if prefix in {"doors", "windows"} else _copy_payload(payload)
+                record["storey"] = storey_id
+                suffix = index if count == 1 else f"{index}.{sequence}"
+                record["source_key"] = f"{key}.{singular}[{suffix}]"
+                if prefix == "spaces":
+                    _normalize_space_dimensions(record)
+                records.append(record)
+    return records
+
+
+def _floor_label_to_storey(storeys: list[Mapping[str, Any]]) -> dict[str, str]:
+    labels = ["ground", "first", "second", "third", "fourth", "fifth"]
+    mapping: dict[str, str] = {}
+    for index, storey in enumerate(storeys):
+        storey_id = _string(storey.get("id"))
+        if not storey_id:
+            continue
+        if index < len(labels):
+            mapping[labels[index]] = storey_id
+        source_key = _string(storey.get("source_key"))
+        name = _string(storey.get("name"))
+        if source_key:
+            mapping[source_key.lower()] = storey_id
+        if name:
+            mapping[name.lower()] = storey_id
+    return mapping
+
+
 def _normalize_space_dimensions(record: dict[str, Any]) -> None:
     length = _number_alias(record, ("length_mm", "length"))
     width = _number_alias(record, ("width_mm", "width"))
@@ -525,7 +573,18 @@ def _slab_records(known_facts: Mapping[str, Any]) -> list[Mapping[str, Any]]:
         return flat
     slabs = known_facts.get("slabs")
     if not isinstance(slabs, Mapping):
-        return []
+        default_thickness = _number_alias(known_facts, ("slab_thickness_mm",))
+        if default_thickness is None:
+            return []
+        storey_elevations = _storey_elevations(known_facts)
+        return [
+            {
+                "source_key": f"storey-{index}-slab",
+                "elevation_mm": elevation,
+                "thickness_mm": default_thickness,
+            }
+            for index, elevation in enumerate(storey_elevations or [0], start=1)
+        ]
     records: list[dict[str, Any]] = []
     for source_key, payload in slabs.items():
         if source_key == "roof" or not isinstance(source_key, str):
@@ -547,7 +606,21 @@ def _roof_record(known_facts: Mapping[str, Any]) -> dict[str, Any] | None:
         return record
     roof_elevation = _number_alias(known_facts, ("roof_elevation_mm",))
     if roof_elevation is not None:
-        return {"source_key": "roof", "elevation_mm": roof_elevation}
+        record = {"source_key": "roof", "elevation_mm": roof_elevation}
+        thickness = _number_alias(known_facts, ("roof_slab_thickness_mm",))
+        if thickness is not None:
+            record["thickness_mm"] = thickness
+        return record
+    roof_thickness = _number_alias(known_facts, ("roof_slab_thickness_mm",))
+    building = known_facts.get("building")
+    building_facts = building if isinstance(building, Mapping) else {}
+    building_height = _number_alias(building_facts, ("height_mm",))
+    if roof_thickness is not None and building_height is not None:
+        return {
+            "source_key": "roof",
+            "elevation_mm": building_height,
+            "thickness_mm": roof_thickness,
+        }
     slabs = known_facts.get("slabs")
     roof_payload = None
     if isinstance(slabs, Mapping):
@@ -557,6 +630,25 @@ def _roof_record(known_facts: Mapping[str, Any]) -> dict[str, Any] | None:
         record["source_key"] = "roof"
         return record
     return None
+
+
+def _storey_elevations(known_facts: Mapping[str, Any]) -> list[int | float]:
+    storeys = known_facts.get("storeys")
+    records = _records(storeys)
+    if records:
+        return [
+            elevation
+            for record in records
+            if (elevation := _number_alias(record, ("elevation_mm", "elevation"))) is not None
+        ]
+    if isinstance(storeys, Mapping):
+        return [
+            elevation
+            for record in storeys.values()
+            if isinstance(record, Mapping)
+            if (elevation := _number_alias(record, ("elevation_mm", "elevation"))) is not None
+        ]
+    return []
 
 
 def _stair_records_from_nested(

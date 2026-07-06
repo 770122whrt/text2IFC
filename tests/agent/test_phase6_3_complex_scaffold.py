@@ -124,6 +124,29 @@ def test_complex_scaffold_accepts_live_deepseek_design_brief_field_aliases(tmp_p
     assert compilation.success
 
 
+def test_complex_scaffold_uses_room_label_when_opening_host_wall_is_missing(tmp_path):
+    design_brief = _complex_two_storey_nested_design_brief()
+    expected = build_expected_facts(
+        case_id="room-label-opening-host",
+        design_brief=design_brief,
+    )
+    expected["doors"][0].pop("host_wall", None)
+    expected["doors"][0]["room"] = "主卧"
+
+    candidate = build_scaffold_candidate(
+        case_id="room-label-opening-host",
+        design_brief=design_brief,
+        expected_facts=expected,
+    )
+
+    class_counts = collections.Counter(
+        entity["ifc_class"] for entity in candidate["entities"]
+    )
+    assert class_counts["IfcDoor"] == expected["total_counts"]["IfcDoor"]
+    compilation = compile_document(candidate, tmp_path / "room-label-opening-host.ifc")
+    assert compilation.success
+
+
 def _validation_issue(issue) -> dict:
     return {
         "code": issue.code,

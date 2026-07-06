@@ -418,3 +418,61 @@ def test_expected_facts_normalizes_nested_storey_map_with_space_lists_and_floor_
     assert expected["window_counts_by_storey"] == {"storey-1": 1, "storey-2": 1}
     assert expected["spaces"][2]["storey"] == "storey-2"
     assert expected["doors"][1]["storey"] == "storey-2"
+
+
+def test_expected_facts_normalizes_live_deepseek_suffix_floor_collections():
+    design_brief = {
+        "schema_version": "text2ifc/design-brief/2.0",
+        "status": "ready",
+        "language": "zh-CN",
+        "known_facts": {
+            "building": {
+                "width_x_mm": 10000,
+                "depth_y_mm": 8000,
+                "height_mm": 6150,
+            },
+            "wall_thickness_mm": 200,
+            "slab_thickness_mm": 150,
+            "roof_slab_thickness_mm": 150,
+            "storeys": [
+                {"name": "首层", "elevation_mm": 0, "height_mm": 3000},
+                {"name": "二层", "elevation_mm": 3150, "height_mm": 3000},
+            ],
+            "spaces_ground": [
+                {"name": "living", "dimensions_mm": [6000, 4500]},
+                {"name": "kitchen", "dimensions_mm": [4000, 3500]},
+            ],
+            "spaces_first": [
+                {"name": "master", "dimensions_mm": [5000, 4000]},
+                {"name": "corridor", "width_mm": 1200},
+            ],
+            "doors_ground": [
+                {"host_wall": "south_wall", "width_mm": 1200, "height_mm": 2200},
+            ],
+            "doors_first": [
+                {"host_wall": "master_wall", "width_mm": 900, "height_mm": 2100},
+            ],
+            "windows_ground": [
+                {"host_wall": "south_wall", "count": 2, "width_mm": 1500, "height_mm": 1200},
+            ],
+            "windows_first": [
+                {"host_wall": "master_wall", "width_mm": 1500, "height_mm": 1200},
+            ],
+            "stair": {"start_elevation_mm": 150, "end_elevation_mm": 3150},
+        },
+        "missing_facts": [],
+        "ambiguities": [],
+        "unsupported_requests": [],
+    }
+
+    expected = build_expected_facts(
+        case_id="suffix-floor-collections",
+        design_brief=design_brief,
+    )
+
+    assert expected["storey_count"] == 2
+    assert expected["space_counts_by_storey"] == {"storey-1": 2, "storey-2": 2}
+    assert expected["door_counts_by_storey"] == {"storey-1": 1, "storey-2": 1}
+    assert expected["window_counts_by_storey"] == {"storey-1": 2, "storey-2": 1}
+    assert expected["roof"]["thickness_mm"] == 150
+    assert expected["slabs"][0]["thickness_mm"] == 150

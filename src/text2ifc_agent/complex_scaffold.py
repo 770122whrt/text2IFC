@@ -39,9 +39,13 @@ def build_scaffold_candidate(
     storey_height = _number_alias(building_facts, ("storey_height_mm",)) or _storey_height_from_expected(expected_facts)
     walls = known_facts.get("walls", {})
     wall_facts = walls if isinstance(walls, Mapping) else {}
-    wall_thickness = _number_alias(building_facts, ("wall_thickness_mm",)) or _required_number_alias(
-        wall_facts,
-        ("thickness_mm", "thickness"),
+    wall_thickness = (
+        _number_alias(building_facts, ("wall_thickness_mm",))
+        or _number_alias(known_facts, ("wall_thickness_mm",))
+        or _required_number_alias(
+            wall_facts,
+            ("thickness_mm", "thickness"),
+        )
     )
     default_slab_thickness = float(_number_alias(building_facts, ("slab_thickness_mm",)) or 150)
 
@@ -195,7 +199,7 @@ def build_scaffold_candidate(
         for record in _records(expected_facts.get(collection)):
             sequence += 1
             storey_id = _required_text(record, "storey")
-            host_key = _required_text(record, "host_wall")
+            host_key = _required_text_alias(record, ("host_wall", "room", "name", "source_key"))
             host_id = _ensure_host_wall(
                 entities=entities,
                 host_walls=host_walls,
@@ -578,3 +582,11 @@ def _required_text(record: Mapping[str, Any], key: str) -> str:
     if not isinstance(value, str) or not value:
         raise ValueError(f"scaffold requires text fact: {key}")
     return value
+
+
+def _required_text_alias(record: Mapping[str, Any], keys: tuple[str, ...]) -> str:
+    for key in keys:
+        value = record.get(key)
+        if isinstance(value, str) and value:
+            return value
+    raise ValueError(f"scaffold requires text fact: {'/'.join(keys)}")
