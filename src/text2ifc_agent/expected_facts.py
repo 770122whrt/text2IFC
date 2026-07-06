@@ -43,6 +43,22 @@ def build_expected_facts(
             "windows",
             space_storeys=space_storeys,
         )
+    elif isinstance(known_facts.get("spaces"), Mapping):
+        storeys = _storey_records_from_floor_map(
+            known_facts.get("spaces"),
+            known_facts.get("building"),
+        )
+        spaces = _space_records_from_storey_map(known_facts.get("spaces"), storeys)
+        doors = _opening_records_from_storey_map(
+            known_facts.get("doors"),
+            storeys,
+            "doors",
+        )
+        windows = _opening_records_from_storey_map(
+            known_facts.get("windows"),
+            storeys,
+            "windows",
+        )
     else:
         storeys = _records(known_facts.get("storeys"))
         spaces = _records(known_facts.get("spaces"))
@@ -197,6 +213,45 @@ def _storey_records_from_list(storey_records: list[Mapping[str, Any]]) -> list[d
     return records
 
 
+def _storey_records_from_floor_map(value: Any, building: Any) -> list[dict[str, Any]]:
+    if not isinstance(value, Mapping):
+        return []
+    building_facts = building if isinstance(building, Mapping) else {}
+    storey_height = _number_alias(building_facts, ("storey_height_mm", "height_mm")) or 3000
+    slab_thickness = _number_alias(building_facts, ("slab_thickness_mm",)) or 150
+    records: list[dict[str, Any]] = []
+    for index, source_key in enumerate(_ordered_floor_keys(value), start=1):
+        records.append(
+            {
+                "id": f"storey-{index}",
+                "source_key": source_key,
+                "elevation_mm": int((index - 1) * (storey_height + slab_thickness)),
+            }
+        )
+    return records
+
+
+def _ordered_floor_keys(value: Mapping[str, Any]) -> list[str]:
+    def sort_key(item: tuple[str, Any]) -> tuple[int, str]:
+        key = item[0]
+        normalized = key.lower()
+        if normalized in {"ground_floor", "first_storey", "storey_1", "storey-1"}:
+            return (0, key)
+        if normalized in {"first_floor", "second_storey", "storey_2", "storey-2"}:
+            return (1, key)
+        if "ground" in normalized or "首" in key:
+            return (0, key)
+        if "first" in normalized or "二" in key:
+            return (1, key)
+        return (10, key)
+
+    return [
+        key
+        for key, payload in sorted(value.items(), key=sort_key)
+        if isinstance(key, str) and isinstance(payload, list)
+    ]
+
+
 def _space_records_from_nested(
     nested_storeys: list[tuple[str, Mapping[str, Any]]],
     storeys: list[Mapping[str, Any]],
@@ -249,6 +304,9 @@ def _space_records_from_storey_map(value: Any, storeys: list[Mapping[str, Any]])
             width = _number_alias(space, ("width_mm", "width"))
             if width is not None:
                 record["width_mm"] = width
+            depth = _number_alias(space, ("depth_mm", "depth"))
+            if depth is not None:
+                record["depth_mm"] = depth
             records.append(record)
     return records
 
@@ -302,6 +360,41 @@ def _flat_opening_records(
             sequence_by_id[base] = sequence_by_id.get(base, 0) + 1
             record["source_key"] = f"{base}[{sequence_by_id[base]}]"
             records.append(record)
+    return records
+
+
+def _opening_records_from_storey_map(
+    value: Any,
+    storeys: list[Mapping[str, Any]],
+    collection: str,
+) -> list[dict[str, Any]]:
+    if not isinstance(value, Mapping):
+        return _flat_opening_records(value, storeys, collection)
+    storey_by_source = {
+        str(storey.get("source_key")): str(storey.get("id"))
+        for storey in storeys
+        if storey.get("source_key") and storey.get("id")
+    }
+    records: list[dict[str, Any]] = []
+    singular = collection[:-1]
+    for source_key in _ordered_floor_keys(value):
+        openings = value.get(source_key)
+        if not isinstance(openings, list):
+            continue
+        storey_id = storey_by_source.get(source_key)
+        if storey_id is None:
+            continue
+        sequence = 0
+        for opening in openings:
+            if not isinstance(opening, Mapping):
+                continue
+            count = _positive_count(_first_present(opening, ("count", "quantity")))
+            for _ in range(count):
+                sequence += 1
+                record = _normalize_opening_payload(opening)
+                record["storey"] = storey_id
+                record["source_key"] = f"{source_key}.{singular}[{sequence}]"
+                records.append(record)
     return records
 
 
@@ -410,7 +503,7 @@ def _singular_stair_record(
     known_facts: Mapping[str, Any],
     storeys: list[Mapping[str, Any]],
 ) -> list[dict[str, Any]]:
-    stair = known_facts.get("stair")
+    stair = known_facts.get("stair") or known_facts.get("stairs")
     if not isinstance(stair, Mapping):
         return []
     record = _copy_payload(stair)
@@ -419,6 +512,8 @@ def _singular_stair_record(
     for target, names in {
         "start_elevation_mm": ("start_elevation_mm", "start_elevation"),
         "end_elevation_mm": ("end_elevation_mm", "end_elevation"),
+        "start_z_mm": ("start_z_mm",),
+        "end_z_mm": ("end_z_mm",),
     }.items():
         value = _number_alias(record, names)
         if value is not None:

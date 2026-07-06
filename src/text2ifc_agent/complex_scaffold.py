@@ -28,8 +28,8 @@ def build_scaffold_candidate(
     building = known_facts.get("building", {})
     building_facts = building if isinstance(building, Mapping) else {}
 
-    width = _required_number_alias(building_facts, ("width_x_mm", "overall_width_x"))
-    depth = _required_number_alias(building_facts, ("depth_y_mm", "overall_depth_y"))
+    width = _required_number_alias(building_facts, ("width_x_mm", "overall_width_x", "width_mm"))
+    depth = _required_number_alias(building_facts, ("depth_y_mm", "overall_depth_y", "depth_mm"))
     storey_height = _number_alias(building_facts, ("storey_height_mm",)) or _storey_height_from_expected(expected_facts)
     walls = known_facts.get("walls", {})
     wall_facts = walls if isinstance(walls, Mapping) else {}
@@ -413,6 +413,10 @@ def _dimensions(record: Mapping[str, Any]) -> tuple[float, float] | None:
         and isinstance(value[1], (int, float))
     ):
         return float(value[0]), float(value[1])
+    width = _number_alias(record, ("width_mm", "width"))
+    depth = _number_alias(record, ("depth_mm", "depth"))
+    if width is not None and depth is not None:
+        return float(width), float(depth)
     return None
 
 

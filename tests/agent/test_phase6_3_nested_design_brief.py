@@ -208,3 +208,80 @@ def test_expected_facts_normalizes_live_deepseek_flat_multistorey_dialect():
     assert expected["roof"]["source_key"] == "roof"
     assert expected["roof"]["elevation_mm"] == 6150
     assert expected["roof"]["thickness_mm"] == 150
+
+
+def test_expected_facts_normalizes_live_deepseek_floor_map_without_storey_list():
+    design_brief = {
+        "schema_version": "text2ifc/design-brief/2.0",
+        "status": "ready",
+        "language": "zh-CN",
+        "known_facts": {
+            "building": {
+                "width_mm": 10000,
+                "depth_mm": 8000,
+                "num_storeys": 2,
+                "storey_height_mm": 3000,
+                "slab_thickness_mm": 150,
+                "wall_thickness_mm": 200,
+            },
+            "spaces": {
+                "ground_floor": [
+                    {"name": "living", "width_mm": 6000, "depth_mm": 4500},
+                    {"name": "kitchen", "width_mm": 4000, "depth_mm": 3500},
+                    {"name": "bathroom", "width_mm": 2500, "depth_mm": 2500},
+                    {"name": "stair", "width_mm": 3500, "depth_mm": 3500},
+                ],
+                "first_floor": [
+                    {"name": "master", "width_mm": 5000, "depth_mm": 4000},
+                    {"name": "second", "width_mm": 4000, "depth_mm": 3500},
+                    {"name": "study", "width_mm": 3000, "depth_mm": 2500},
+                    {"name": "bathroom2", "width_mm": 2500, "depth_mm": 2500},
+                    {"name": "corridor", "width_mm": 1200},
+                ],
+            },
+            "doors": {
+                "ground_floor": [
+                    {"name": "entry", "host": "south_wall", "width_mm": 1200, "height_mm": 2200},
+                    {"name": "kitchen door", "host": "east_wall_living", "width_mm": 900, "height_mm": 2100},
+                ],
+                "first_floor": [
+                    {"name": "master door", "host": "wall_main_bedroom", "width_mm": 900, "height_mm": 2100},
+                    {"name": "bath door", "host": "west_wall_bathroom_ff", "width_mm": 750, "height_mm": 2100},
+                ],
+            },
+            "windows": {
+                "ground_floor": [
+                    {"name": "living south 1", "host": "south_wall", "width_mm": 1500, "height_mm": 1200, "sill_height_mm": 900},
+                    {"name": "living south 2", "host": "south_wall", "width_mm": 1500, "height_mm": 1200, "sill_height_mm": 900},
+                ],
+                "first_floor": [
+                    {"name": "master south 1", "host": "south_wall", "width_mm": 1500, "height_mm": 1200, "sill_height_mm": 900},
+                    {"name": "bath west", "host": "west_wall", "width_mm": 800, "height_mm": 600, "sill_height_mm": 1600},
+                ],
+            },
+            "roof": {"elevation_mm": 6150},
+            "stairs": {"start_z_mm": 150, "end_z_mm": 3150},
+        },
+        "missing_facts": [],
+        "ambiguities": [],
+        "unsupported_requests": [],
+    }
+
+    expected = build_expected_facts(
+        case_id="live-floor-map-dialect",
+        design_brief=design_brief,
+    )
+
+    assert expected["storeys"] == [
+        {"id": "storey-1", "source_key": "ground_floor", "elevation_mm": 0},
+        {"id": "storey-2", "source_key": "first_floor", "elevation_mm": 3150},
+    ]
+    assert expected["space_counts_by_storey"] == {"storey-1": 4, "storey-2": 5}
+    assert expected["door_counts_by_storey"] == {"storey-1": 2, "storey-2": 2}
+    assert expected["window_counts_by_storey"] == {"storey-1": 2, "storey-2": 2}
+    assert expected["total_counts"]["IfcBuildingStorey"] == 2
+    assert expected["total_counts"]["IfcSpace"] == 9
+    assert expected["spaces"][0]["storey"] == "storey-1"
+    assert expected["spaces"][4]["storey"] == "storey-2"
+    assert expected["doors"][2]["storey"] == "storey-2"
+    assert expected["windows"][3]["sill_height_mm"] == 1600
