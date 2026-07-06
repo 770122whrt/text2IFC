@@ -4,6 +4,7 @@ from pathlib import Path
 
 from text2ifc_agent.complex_scaffold import build_scaffold_candidate
 from text2ifc_agent.expected_facts import build_expected_facts
+import text2ifc_agent.interactive_cli_flow as interactive_flow
 from text2ifc_agent.interactive_cli_flow import run_ready_session_to_ifc
 from text2ifc_agent.providers import LiveProviderResult, ProviderOutput
 from text2ifc_agent.session_store import SessionStore
@@ -111,6 +112,126 @@ def test_ready_session_uses_complex_scaffold_when_generator_output_is_unparsed(t
     store.close()
 
 
+def test_ready_session_promotes_complex_scaffold_after_geometry_audit_block(
+    tmp_path,
+    monkeypatch,
+):
+    root = tmp_path / "phase6.3-scaffold-geometry-recovery"
+    store = SessionStore.open(root / "sessions.sqlite", artifact_root=root)
+    session = store.create_session(original_input="complex two-storey geometry recovery")
+    design_brief = _complex_two_storey_nested_design_brief()
+    _write_ready_design_brief_call(session.run_dir, design_brief)
+    store.mark_session_status(session.session_id, "ready")
+    expected = build_expected_facts(
+        case_id=session.session_hash,
+        design_brief=design_brief,
+    )
+    malformed_candidate = _geometry_mismatched_candidate(
+        build_scaffold_candidate(
+            case_id=session.session_hash,
+            design_brief=design_brief,
+            expected_facts=expected,
+        )
+    )
+    audit_block = {
+        "schema_version": "text2ifc/audit/2.0",
+        "recommendation": "revise",
+        "blocking": True,
+        "deterministic_gate_status": "failed",
+        "findings": [
+            {
+                "code": "ROOM_ENCLOSURE_OPEN",
+                "message": "几何门禁显示墙体闭合失败，需要重建几何候选。",
+                "path": "/geometry",
+            }
+        ],
+        "evidence_paths": [
+            "geometry-feedback.json",
+            "gate-summary.json",
+            "generator/candidate.json",
+        ],
+    }
+    audit_accept = {
+        "schema_version": "text2ifc/audit/2.0",
+        "recommendation": "accept",
+        "blocking": False,
+        "deterministic_gate_status": "passed",
+        "findings": [],
+        "evidence_paths": [
+            "expected-facts.json",
+            "scaffold/candidate.json",
+            "geometry-feedback.json",
+            "gate-summary.json",
+        ],
+    }
+    provider = _SequenceLiveProvider([malformed_candidate, audit_block, audit_accept])
+    original_gate_stage = interactive_flow.run_candidate_gate_stage
+    gate_calls = {"count": 0}
+
+    def gate_stage_with_first_geometry_failure(*, case_dir, output_dir, case_id):
+        result = original_gate_stage(
+            case_dir=case_dir,
+            output_dir=output_dir,
+            case_id=case_id,
+        )
+        gate_calls["count"] += 1
+        if gate_calls["count"] == 1:
+            geometry_feedback = {
+                "success": False,
+                "issues": [
+                    {
+                        "code": "WALL_BBOX_MISMATCH",
+                        "message": "unit test injected wall bbox mismatch",
+                        "path": "/walls/storey-2-wall-north/bbox",
+                    },
+                    {
+                        "code": "ROOM_ENCLOSURE_OPEN",
+                        "message": "unit test injected open enclosure",
+                        "path": "/walls",
+                    },
+                ],
+                "metrics": {},
+                "expectation_source": "unit-test",
+            }
+            (Path(output_dir) / "geometry-feedback.json").write_text(
+                json.dumps(geometry_feedback, ensure_ascii=False, indent=2, sort_keys=True)
+                + "\n",
+                encoding="utf-8",
+            )
+            return {
+                **result,
+                "valid": False,
+                "geometry_success": False,
+                "geometry_feedback": geometry_feedback,
+            }
+        return result
+
+    monkeypatch.setattr(
+        interactive_flow,
+        "run_candidate_gate_stage",
+        gate_stage_with_first_geometry_failure,
+    )
+
+    result = run_ready_session_to_ifc(
+        store=store,
+        session=session.session_hash,
+        provider_factory=lambda: provider,
+    )
+
+    assert result.status == "compiled"
+    assert result.audit_status == "accepted"
+    route = json.loads((session.run_dir / "scaffold" / "route.json").read_text(encoding="utf-8"))
+    gate_summary = json.loads(
+        (session.run_dir / "gate-summary.json").read_text(encoding="utf-8")
+    )
+    assert route["route"] == "scaffold_promoted_from_geometry_audit"
+    assert "ROOM_ENCLOSURE_OPEN" in route["source_issue_codes"]
+    assert gate_summary["overall_status"] == "passed"
+    assert (session.run_dir / "generator" / "original-candidate-before-scaffold.json").is_file()
+    assert (session.run_dir / "output.ifc").is_file()
+    store.close()
+
+
 def _dynamic_incomplete_candidate(candidate: dict) -> dict:
     result = deepcopy(candidate)
     removed_ids = {
@@ -132,6 +253,20 @@ def _dynamic_incomplete_candidate(candidate: dict) -> dict:
         for relationship in result["relationships"]
         if not _references_removed_or_window_fill(relationship, removed_ids)
     ]
+    return result
+
+
+def _geometry_mismatched_candidate(candidate: dict) -> dict:
+    result = deepcopy(candidate)
+    for entity in result["entities"]:
+        if entity.get("id") == "storey-2-wall-north":
+            placement = entity["attributes"]["ObjectPlacement"]
+            placement["origin"] = [
+                placement["origin"][0],
+                placement["origin"][1] - 750,
+                placement["origin"][2],
+            ]
+            break
     return result
 
 

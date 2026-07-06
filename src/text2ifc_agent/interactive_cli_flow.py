@@ -43,6 +43,11 @@ SCAFFOLD_ELIGIBLE_DYNAMIC_ISSUES = {
     "STOREY_CONTAINMENT_MISMATCH",
     "VOID_RELATIONSHIP_MISSING",
 }
+SCAFFOLD_ELIGIBLE_GEOMETRY_ISSUES = {
+    "ROOM_ENCLOSURE_OPEN",
+    "WALL_BBOX_MISMATCH",
+    "WALL_ORIENTATION_MISMATCH",
+}
 
 
 @dataclass(frozen=True)
@@ -498,6 +503,58 @@ def run_ready_session_to_ifc(
     )
     _record_stage_payloads(store, stored_session.session_id, "audit", audit)
     if not audit["valid"] or audit["status"] != "accepted":
+        geometry_scaffold = _maybe_promote_scaffold_after_geometry_audit(
+            store=store,
+            stored_session=stored_session,
+            design_brief=design_brief,
+        )
+        if geometry_scaffold is not None and geometry_scaffold.get("valid") is True:
+            _record_stage_payloads(
+                store,
+                stored_session.session_id,
+                "scaffold",
+                geometry_scaffold,
+            )
+            generator = {
+                **generator,
+                "status": "scaffold_promoted",
+                "classification": "formal",
+                "valid": True,
+                "contract_valid": True,
+                "strict_output_contract_valid": True,
+            }
+            semantic_coverage = run_semantic_coverage_stage(
+                case_dir=stored_session.run_dir,
+                output_dir=stored_session.run_dir,
+                case_id=stored_session.session_hash,
+            )
+            _record_stage_payloads(
+                store,
+                stored_session.session_id,
+                "semantic_coverage",
+                semantic_coverage,
+            )
+            candidate_gates = run_candidate_gate_stage(
+                case_dir=stored_session.run_dir,
+                output_dir=stored_session.run_dir,
+                case_id=stored_session.session_hash,
+            )
+            _record_stage_payloads(
+                store,
+                stored_session.session_id,
+                "candidate_gates",
+                candidate_gates,
+            )
+            audit = run_audit_report_stage(
+                provider=provider_factory(),
+                case_dir=stored_session.run_dir,
+                case_id=stored_session.session_hash,
+                session_prefix="phase6.2",
+                audit_call_index=2,
+                trace_level=trace_level,
+            )
+            _record_stage_payloads(store, stored_session.session_id, "audit", audit)
+    if not audit["valid"] or audit["status"] != "accepted":
         repair_attempt = _attempt_geometry_repair_after_audit(
             store=store,
             stored_session=stored_session,
@@ -613,6 +670,57 @@ def _maybe_promote_scaffold_candidate(
         route_name="scaffold_promoted",
         source_issue_codes=source_issue_codes,
         source_gate_summary="source-gate-summary.json",
+    )
+
+
+def _maybe_promote_scaffold_after_geometry_audit(
+    *,
+    store: SessionStore,
+    stored_session: Any,
+    design_brief: dict[str, Any],
+) -> dict[str, Any] | None:
+    run_dir = stored_session.run_dir
+    audit_report_path = run_dir / "audit" / "audit-report.json"
+    geometry_feedback_path = run_dir / "geometry-feedback.json"
+    expected_facts_path = run_dir / "expected-facts.json"
+    generator_candidate = run_dir / "generator" / "candidate.json"
+    if (
+        not audit_report_path.is_file()
+        or not geometry_feedback_path.is_file()
+        or not expected_facts_path.is_file()
+        or not generator_candidate.is_file()
+    ):
+        return None
+
+    audit_report = json.loads(audit_report_path.read_text(encoding="utf-8"))
+    if audit_report.get("recommendation") != "revise" or audit_report.get("blocking") is not True:
+        return None
+
+    geometry_feedback = json.loads(geometry_feedback_path.read_text(encoding="utf-8"))
+    if geometry_feedback.get("success") is not False:
+        return None
+    source_issue_codes = {
+        str(issue.get("code"))
+        for issue in geometry_feedback.get("issues", [])
+        if isinstance(issue, dict) and issue.get("code")
+    }
+    if not source_issue_codes or not source_issue_codes <= SCAFFOLD_ELIGIBLE_GEOMETRY_ISSUES:
+        return None
+
+    scaffold_dir = run_dir / "scaffold"
+    scaffold_dir.mkdir(parents=True, exist_ok=True)
+    gate_summary = run_dir / "gate-summary.json"
+    source_gate_summary = None
+    if gate_summary.is_file():
+        source_gate_summary = "source-gate-summary-before-geometry-scaffold.json"
+        shutil.copyfile(gate_summary, scaffold_dir / source_gate_summary)
+    return _build_and_promote_scaffold_candidate(
+        store=store,
+        stored_session=stored_session,
+        design_brief=design_brief,
+        route_name="scaffold_promoted_from_geometry_audit",
+        source_issue_codes=source_issue_codes,
+        source_gate_summary=source_gate_summary,
     )
 
 

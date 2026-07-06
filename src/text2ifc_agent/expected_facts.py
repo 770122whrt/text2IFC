@@ -25,14 +25,34 @@ def build_expected_facts(
         spaces = _space_records_from_nested(nested_storeys, storeys)
         doors = _opening_records_from_nested(nested_storeys, storeys, "doors")
         windows = _opening_records_from_nested(nested_storeys, storeys, "windows")
+    elif _is_storey_list(known_facts.get("storeys")) and isinstance(
+        known_facts.get("spaces"), Mapping
+    ):
+        storeys = _storey_records_from_list(_records(known_facts.get("storeys")))
+        spaces = _space_records_from_storey_map(known_facts.get("spaces"), storeys)
+        space_storeys = _space_name_storey_map(spaces)
+        doors = _flat_opening_records(
+            known_facts.get("doors"),
+            storeys,
+            "doors",
+            space_storeys=space_storeys,
+        )
+        windows = _flat_opening_records(
+            known_facts.get("windows"),
+            storeys,
+            "windows",
+            space_storeys=space_storeys,
+        )
     else:
         storeys = _records(known_facts.get("storeys"))
         spaces = _records(known_facts.get("spaces"))
         doors = _records(known_facts.get("doors"))
         windows = _records(known_facts.get("windows"))
     slabs = _slab_records(known_facts)
-    stairs = _records(known_facts.get("stairs")) or _stair_records_from_nested(
-        nested_storeys, storeys
+    stairs = (
+        _records(known_facts.get("stairs"))
+        or _singular_stair_record(known_facts, storeys)
+        or _stair_records_from_nested(nested_storeys, storeys)
     )
     roof = _roof_record(known_facts)
 
@@ -124,6 +144,14 @@ def _records(value: Any) -> list[Mapping[str, Any]]:
     return [item for item in value if isinstance(item, Mapping)]
 
 
+def _is_storey_list(value: Any) -> bool:
+    return isinstance(value, list) and any(
+        isinstance(item, Mapping)
+        and ("elevation" in item or "elevation_mm" in item or "name" in item)
+        for item in value
+    )
+
+
 def _nested_storeys(value: Any) -> list[tuple[str, Mapping[str, Any]]]:
     if not isinstance(value, Mapping):
         return []
@@ -152,6 +180,23 @@ def _storey_records_from_nested(
     return records
 
 
+def _storey_records_from_list(storey_records: list[Mapping[str, Any]]) -> list[dict[str, Any]]:
+    records: list[dict[str, Any]] = []
+    for index, payload in enumerate(storey_records, start=1):
+        source_key = _string(payload.get("source_key")) or _string(payload.get("name")) or f"storey-{index}"
+        record: dict[str, Any] = {
+            "id": _string(payload.get("id")) or f"storey-{index}",
+            "source_key": source_key,
+        }
+        if _string(payload.get("name")):
+            record["name"] = payload["name"]
+        elevation = _number_alias(payload, ("elevation_mm", "elevation"))
+        if elevation is not None:
+            record["elevation_mm"] = elevation
+        records.append(record)
+    return records
+
+
 def _space_records_from_nested(
     nested_storeys: list[tuple[str, Mapping[str, Any]]],
     storeys: list[Mapping[str, Any]],
@@ -171,6 +216,43 @@ def _space_records_from_nested(
     return records
 
 
+def _space_records_from_storey_map(value: Any, storeys: list[Mapping[str, Any]]) -> list[dict[str, Any]]:
+    if not isinstance(value, Mapping):
+        return _copy_records(_records(value))
+    storey_by_source = {
+        str(storey.get("source_key")): str(storey.get("id"))
+        for storey in storeys
+        if storey.get("source_key") and storey.get("id")
+    }
+    records: list[dict[str, Any]] = []
+    for source_key, spaces in value.items():
+        if not isinstance(source_key, str) or not isinstance(spaces, list):
+            continue
+        storey_id = storey_by_source.get(source_key)
+        if storey_id is None:
+            continue
+        for index, space in enumerate(spaces, start=1):
+            if not isinstance(space, Mapping):
+                continue
+            record = _copy_payload(space)
+            record["storey"] = storey_id
+            record["source_key"] = f"{source_key}.spaces[{index}]"
+            rectangle = space.get("rectangle")
+            if isinstance(rectangle, Mapping):
+                min_x = _number_alias(rectangle, ("min_x",))
+                min_y = _number_alias(rectangle, ("min_y",))
+                max_x = _number_alias(rectangle, ("max_x",))
+                max_y = _number_alias(rectangle, ("max_y",))
+                if None not in {min_x, min_y, max_x, max_y}:
+                    record["dimensions_mm"] = [max_x - min_x, max_y - min_y]
+                    record["origin_mm"] = [min_x, min_y, 0]
+            width = _number_alias(space, ("width_mm", "width"))
+            if width is not None:
+                record["width_mm"] = width
+            records.append(record)
+    return records
+
+
 def _opening_records_from_nested(
     nested_storeys: list[tuple[str, Mapping[str, Any]]],
     storeys: list[Mapping[str, Any]],
@@ -186,15 +268,89 @@ def _opening_records_from_nested(
         for opening in openings:
             if not isinstance(opening, Mapping):
                 continue
-            count = _positive_count(opening.get("count"))
+            count = _positive_count(_first_present(opening, ("count", "quantity")))
             for _ in range(count):
                 sequence += 1
-                record = _copy_payload(opening)
-                record.pop("count", None)
+                record = _normalize_opening_payload(opening)
                 record["storey"] = storey["id"]
                 record["source_key"] = f"{source_key}.{singular}[{sequence}]"
                 records.append(record)
     return records
+
+
+def _flat_opening_records(
+    value: Any,
+    storeys: list[Mapping[str, Any]],
+    collection: str,
+    *,
+    space_storeys: Mapping[str, str] | None = None,
+) -> list[dict[str, Any]]:
+    records: list[dict[str, Any]] = []
+    sequence_by_id: dict[str, int] = {}
+    for opening in _records(value):
+        count = _positive_count(_first_present(opening, ("count", "quantity")))
+        for _ in range(count):
+            record = _normalize_opening_payload(opening)
+            if _string(record.get("id")):
+                record["source_id"] = record.pop("id")
+            record["storey"] = _infer_opening_storey(
+                record,
+                storeys,
+                space_storeys=space_storeys or {},
+            )
+            base = _string(opening.get("id")) or f"{collection[:-1]}_{len(records) + 1}"
+            sequence_by_id[base] = sequence_by_id.get(base, 0) + 1
+            record["source_key"] = f"{base}[{sequence_by_id[base]}]"
+            records.append(record)
+    return records
+
+
+def _normalize_opening_payload(opening: Mapping[str, Any]) -> dict[str, Any]:
+    record = _copy_payload(opening)
+    for key in ("count", "quantity", "width", "height", "sill_height", "host"):
+        record.pop(key, None)
+    host = _string(_first_present(opening, ("host_wall", "host")))
+    if host:
+        record["host_wall"] = host
+    width = _number_alias(opening, ("width_mm", "width"))
+    height = _number_alias(opening, ("height_mm", "height"))
+    sill = _number_alias(opening, ("sill_height_mm", "sill_height"))
+    if width is not None:
+        record["width_mm"] = width
+    if height is not None:
+        record["height_mm"] = height
+    if sill is not None:
+        record["sill_height_mm"] = sill
+    return record
+
+
+def _space_name_storey_map(spaces: list[Mapping[str, Any]]) -> dict[str, str]:
+    mapping: dict[str, str] = {}
+    for space in spaces:
+        name = _string(space.get("name"))
+        storey = _string(space.get("storey"))
+        if name and storey:
+            mapping[name] = storey
+    return mapping
+
+
+def _infer_opening_storey(
+    record: Mapping[str, Any],
+    storeys: list[Mapping[str, Any]],
+    *,
+    space_storeys: Mapping[str, str],
+) -> str:
+    text = " ".join(str(record.get(key, "")) for key in ("host_wall", "source_key", "id"))
+    for storey in reversed(storeys):
+        name = _string(storey.get("name")) or _string(storey.get("source_key"))
+        if name and name in text:
+            return str(storey["id"])
+    for space_name, storey_id in space_storeys.items():
+        if space_name in text:
+            return storey_id
+    if "二层" in text or "second" in text.lower():
+        return str(storeys[min(1, len(storeys) - 1)]["id"])
+    return str(storeys[0]["id"]) if storeys else ""
 
 
 def _slab_records(known_facts: Mapping[str, Any]) -> list[Mapping[str, Any]]:
@@ -209,6 +365,7 @@ def _slab_records(known_facts: Mapping[str, Any]) -> list[Mapping[str, Any]]:
         if source_key == "roof" or not isinstance(source_key, str):
             continue
         record = _copy_payload(payload)
+        record = _normalize_dimension_aliases(record)
         record["source_key"] = source_key
         records.append(record)
     records.sort(key=lambda record: record.get("elevation_mm", 1_000_000))
@@ -218,10 +375,16 @@ def _slab_records(known_facts: Mapping[str, Any]) -> list[Mapping[str, Any]]:
 def _roof_record(known_facts: Mapping[str, Any]) -> dict[str, Any] | None:
     roof = known_facts.get("roof")
     if isinstance(roof, Mapping):
-        return deepcopy(dict(roof))
+        record = _normalize_dimension_aliases(deepcopy(dict(roof)))
+        if not _string(record.get("id")):
+            record.setdefault("source_key", "roof")
+        return record
     slabs = known_facts.get("slabs")
-    if isinstance(slabs, Mapping) and isinstance(slabs.get("roof"), Mapping):
-        record = _copy_payload(slabs["roof"])
+    roof_payload = None
+    if isinstance(slabs, Mapping):
+        roof_payload = slabs.get("roof") or slabs.get("roof_slab")
+    if isinstance(roof_payload, Mapping):
+        record = _normalize_dimension_aliases(_copy_payload(roof_payload))
         record["source_key"] = "roof"
         return record
     return None
@@ -243,8 +406,54 @@ def _stair_records_from_nested(
     return records
 
 
+def _singular_stair_record(
+    known_facts: Mapping[str, Any],
+    storeys: list[Mapping[str, Any]],
+) -> list[dict[str, Any]]:
+    stair = known_facts.get("stair")
+    if not isinstance(stair, Mapping):
+        return []
+    record = _copy_payload(stair)
+    record["storey"] = str(storeys[0]["id"]) if storeys else "storey-1"
+    record["source_key"] = "stair"
+    for target, names in {
+        "start_elevation_mm": ("start_elevation_mm", "start_elevation"),
+        "end_elevation_mm": ("end_elevation_mm", "end_elevation"),
+    }.items():
+        value = _number_alias(record, names)
+        if value is not None:
+            record[target] = value
+    return [record]
+
+
 def _copy_payload(value: Any) -> dict[str, Any]:
     return deepcopy(dict(value)) if isinstance(value, Mapping) else {}
+
+
+def _normalize_dimension_aliases(record: dict[str, Any]) -> dict[str, Any]:
+    aliases = {
+        "elevation_mm": ("elevation_mm", "elevation", "bottom_elevation", "elevation_bottom"),
+        "thickness_mm": ("thickness_mm", "thickness"),
+    }
+    for target, names in aliases.items():
+        value = _number_alias(record, names)
+        if value is not None:
+            record[target] = value
+    return record
+
+
+def _number_alias(record: Mapping[str, Any], names: tuple[str, ...]) -> int | float | None:
+    value = _first_present(record, names)
+    if isinstance(value, (int, float)):
+        return value
+    return None
+
+
+def _first_present(record: Mapping[str, Any], names: tuple[str, ...]) -> Any:
+    for name in names:
+        if name in record:
+            return record[name]
+    return None
 
 
 def _positive_count(value: Any) -> int:

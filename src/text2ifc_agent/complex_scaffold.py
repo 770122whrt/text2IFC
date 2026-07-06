@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import re
+import hashlib
 from typing import Any, Mapping
 
 
@@ -27,11 +28,16 @@ def build_scaffold_candidate(
     building = known_facts.get("building", {})
     building_facts = building if isinstance(building, Mapping) else {}
 
-    width = _required_number(building_facts, "width_x_mm")
-    depth = _required_number(building_facts, "depth_y_mm")
-    storey_height = _required_number(building_facts, "storey_height_mm")
-    wall_thickness = _required_number(building_facts, "wall_thickness_mm")
-    default_slab_thickness = float(building_facts.get("slab_thickness_mm", 150))
+    width = _required_number_alias(building_facts, ("width_x_mm", "overall_width_x"))
+    depth = _required_number_alias(building_facts, ("depth_y_mm", "overall_depth_y"))
+    storey_height = _number_alias(building_facts, ("storey_height_mm",)) or _storey_height_from_expected(expected_facts)
+    walls = known_facts.get("walls", {})
+    wall_facts = walls if isinstance(walls, Mapping) else {}
+    wall_thickness = _number_alias(building_facts, ("wall_thickness_mm",)) or _required_number_alias(
+        wall_facts,
+        ("thickness_mm", "thickness"),
+    )
+    default_slab_thickness = float(_number_alias(building_facts, ("slab_thickness_mm",)) or 150)
 
     entities: list[dict[str, Any]] = [
         _entity("project-1", "IfcProject", {"Name": f"{case_id} Project"}),
@@ -84,6 +90,8 @@ def build_scaffold_candidate(
         dimensions = _dimensions(space)
         if dimensions is None and isinstance(space.get("width_mm"), (int, float)):
             dimensions = (width, float(space["width_mm"]))
+        if dimensions is None:
+            dimensions = (width, min(depth, 1200))
         attributes: dict[str, Any] = {
             "Name": str(space.get("source_key", "Space")),
             "InteriorOrExteriorSpace": "INTERNAL",
@@ -101,7 +109,7 @@ def build_scaffold_candidate(
                     [0, dimensions[1]],
                     [0, 0],
                 ],
-                float(space.get("height_mm", storey_height)),
+                float(_number_alias(space, ("height_mm", "height", "net_height")) or storey_height),
             )
         entities.append(
             _entity(
@@ -387,6 +395,15 @@ def _storey_for_elevation(
     return min(candidates)[1]
 
 
+def _storey_height_from_expected(expected_facts: Mapping[str, Any]) -> float:
+    storeys = _records(expected_facts.get("storeys"))
+    for storey in storeys:
+        value = _number_alias(storey, ("height_mm", "height", "net_height"))
+        if value is not None:
+            return float(value)
+    return 3000.0
+
+
 def _dimensions(record: Mapping[str, Any]) -> tuple[float, float] | None:
     value = record.get("dimensions_mm")
     if (
@@ -488,17 +505,24 @@ def _opening_relationships(
 
 
 def _generated_id(prefix: str, record: Mapping[str, Any], fallback_index: int) -> str:
-    explicit = record.get("id")
-    if isinstance(explicit, str) and explicit:
-        return explicit
     source_key = record.get("source_key")
     if isinstance(source_key, str) and source_key:
         return f"{prefix}-{_slug(source_key)}"
+    explicit = record.get("id")
+    if isinstance(explicit, str) and explicit:
+        return explicit
     return f"{prefix}-{fallback_index}"
 
 
 def _slug(value: str) -> str:
-    return re.sub(r"[^a-zA-Z0-9]+", "-", value).strip("-").lower()
+    slug = re.sub(r"[^a-zA-Z0-9]+", "-", value).strip("-").lower()
+    if slug:
+        return f"{slug}-{_short_hash(value)}" if slug != value.lower() else slug
+    return _short_hash(value)
+
+
+def _short_hash(value: str) -> str:
+    return hashlib.sha1(value.encode("utf-8")).hexdigest()[:8]
 
 
 def _records(value: Any) -> list[Mapping[str, Any]]:
@@ -512,6 +536,21 @@ def _required_number(record: Mapping[str, Any], key: str) -> float:
     if not isinstance(value, (int, float)):
         raise ValueError(f"scaffold requires numeric fact: {key}")
     return float(value)
+
+
+def _required_number_alias(record: Mapping[str, Any], keys: tuple[str, ...]) -> float:
+    value = _number_alias(record, keys)
+    if value is None:
+        raise ValueError(f"scaffold requires numeric fact: {'/'.join(keys)}")
+    return float(value)
+
+
+def _number_alias(record: Mapping[str, Any], keys: tuple[str, ...]) -> float | None:
+    for key in keys:
+        value = record.get(key)
+        if isinstance(value, (int, float)):
+            return float(value)
+    return None
 
 
 def _required_text(record: Mapping[str, Any], key: str) -> str:

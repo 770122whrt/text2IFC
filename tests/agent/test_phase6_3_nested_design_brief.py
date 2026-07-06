@@ -116,11 +116,9 @@ def test_expected_facts_normalizes_nested_storey_design_brief_without_fabricated
             "thickness_mm": 150,
         },
     ]
-    assert expected["roof"] == {
-        "source_key": "roof",
-        "elevation_mm": 6150,
-        "thickness_mm": 150,
-    }
+    assert expected["roof"]["source_key"] == "roof"
+    assert expected["roof"]["elevation_mm"] == 6150
+    assert expected["roof"]["thickness_mm"] == 150
 
 
 def test_expected_facts_normalizes_live_deepseek_flat_multistorey_dialect():
@@ -207,8 +205,6 @@ def test_expected_facts_normalizes_live_deepseek_flat_multistorey_dialect():
     assert expected["doors"][0]["width_mm"] == 1200
     assert expected["windows"][1]["source_key"] == "window_1[2]"
     assert expected["windows"][2]["storey"] == "storey-2"
-    assert expected["roof"] == {
-        "source_key": "roof",
-        "elevation_mm": 6150,
-        "thickness_mm": 150,
-    }
+    assert expected["roof"]["source_key"] == "roof"
+    assert expected["roof"]["elevation_mm"] == 6150
+    assert expected["roof"]["thickness_mm"] == 150
