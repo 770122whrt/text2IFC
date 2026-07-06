@@ -37,7 +37,7 @@ def test_complex_nested_design_brief_scaffold_compiles_and_passes_dynamic_gates(
     assert class_counts["IfcRoof"] == 1
     assert class_counts["IfcStair"] == 1
 
-    assert [issue.as_dict() for issue in validate_v2_document(candidate)] == []
+    assert [_validation_issue(issue) for issue in validate_v2_document(candidate)] == []
     gates = evaluate_dynamic_gates(candidate=candidate, expected_facts=expected)
     assert {gate["name"]: gate["status"] for gate in gates} == {
         "dynamic_entity_completeness": "passed",
@@ -49,7 +49,9 @@ def test_complex_nested_design_brief_scaffold_compiles_and_passes_dynamic_gates(
     compilation = compile_document(candidate, output_ifc)
     assert compilation.success, json.dumps(
         {
-            "input_issues": [issue.as_dict() for issue in compilation.input_issues],
+            "input_issues": [
+                _validation_issue(issue) for issue in compilation.input_issues
+            ],
             "ifc_issues": [
                 {
                     "code": issue.code,
@@ -64,6 +66,14 @@ def test_complex_nested_design_brief_scaffold_compiles_and_passes_dynamic_gates(
         indent=2,
     )
     assert output_ifc.is_file()
+
+
+def _validation_issue(issue) -> dict:
+    return {
+        "code": issue.code,
+        "path": issue.path,
+        "message": issue.message,
+    }
 
 
 def _complex_two_storey_nested_design_brief() -> dict:
