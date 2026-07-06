@@ -112,6 +112,63 @@ def test_ready_session_uses_complex_scaffold_when_generator_output_is_unparsed(t
     store.close()
 
 
+def test_ready_session_uses_complex_scaffold_when_ready_generator_returns_draft(tmp_path):
+    root = tmp_path / "phase6.3-scaffold-draft-generator"
+    store = SessionStore.open(root / "sessions.sqlite", artifact_root=root)
+    session = store.create_session(original_input="complex two-storey draft generator")
+    design_brief = _complex_two_storey_nested_design_brief()
+    _write_ready_design_brief_call(session.run_dir, design_brief)
+    store.mark_session_status(session.session_id, "ready")
+    draft = {
+        "draft_version": "bim-json-draft/1.0",
+        "target_schema_version": "bim-json/2.0",
+        "missing_facts": [
+            {
+                "code": "not_generated",
+                "entity_id": "wall-1",
+                "message": "generator omitted formal geometry already represented in Design Brief",
+                "path": "/walls",
+            }
+        ],
+        "partial_document": {
+            "schema_version": "bim-json/2.0",
+            "ifc_schema": "IFC2X3",
+            "units": {"length": "MILLIMETRE"},
+            "entities": [],
+            "relationships": [],
+        },
+        "clarification_targets": [],
+        "losses": [],
+        "provenance": {"source": "unit-test"},
+    }
+    audit = {
+        "schema_version": "text2ifc/audit/2.0",
+        "recommendation": "accept",
+        "blocking": False,
+        "deterministic_gate_status": "passed",
+        "findings": [],
+        "evidence_paths": [
+            "expected-facts.json",
+            "scaffold/candidate.json",
+            "generator/original-classification-before-scaffold.json",
+        ],
+    }
+    provider = _SequenceLiveProvider([draft, audit])
+
+    result = run_ready_session_to_ifc(
+        store=store,
+        session=session.session_hash,
+        provider_factory=lambda: provider,
+    )
+
+    assert result.status == "compiled"
+    route = json.loads((session.run_dir / "scaffold" / "route.json").read_text(encoding="utf-8"))
+    assert route["route"] == "scaffold_promoted_from_generator_failure"
+    assert (session.run_dir / "generator" / "draft.json").is_file()
+    assert (session.run_dir / "generator" / "candidate.json").is_file()
+    store.close()
+
+
 def test_ready_session_promotes_complex_scaffold_after_geometry_audit_block(
     tmp_path,
     monkeypatch,

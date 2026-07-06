@@ -732,7 +732,7 @@ def _maybe_promote_scaffold_from_generator_failure(
     generator: dict[str, Any],
 ) -> dict[str, Any] | None:
     run_dir = stored_session.run_dir
-    if generator.get("valid") is True:
+    if generator.get("valid") is True and generator.get("classification") == "formal":
         return None
     if (run_dir / "generator" / "candidate.json").is_file():
         return None
