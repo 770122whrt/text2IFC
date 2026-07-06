@@ -17,9 +17,11 @@ from .live_pipeline import (
     run_semantic_coverage_stage,
 )
 from .clarification import ClarificationCall, ClarificationController, DesignBriefInvoker
+from .complex_scaffold import build_scaffold_candidate
 from .context_selection import select_design_brief_context
 from .design_brief import load_design_brief_schema, validate_design_brief
 from .expected_facts import write_expected_facts
+from .gate_audit_bundle import write_gate_summary
 from .generator import validate_generation_document
 from .openai_compat import (
     OpenAICompatError,
@@ -28,12 +30,19 @@ from .openai_compat import (
     token_limit_request,
 )
 from .prompt_registry import render_prompt
-from .providers import ProviderOutput
+from .providers import ProviderOutput, ProviderOutputError
 from .run_report import build_live_run_report
 from .session_store import SessionStore
+from .state import redact_metadata
 
 
 DESIGN_BRIEF_TEMPLATE_ID = "design-brief.v2.1"
+SCAFFOLD_ELIGIBLE_DYNAMIC_ISSUES = {
+    "EXPECTED_ENTITY_MISSING",
+    "OPENING_FILL_RELATIONSHIP_MISSING",
+    "STOREY_CONTAINMENT_MISMATCH",
+    "VOID_RELATIONSHIP_MISSING",
+}
 
 
 @dataclass(frozen=True)
@@ -321,14 +330,32 @@ def run_ready_session_to_ifc(
         kind="expected_facts",
         name="expected-facts.json",
     )
-    generator = run_generator_stage(
-        provider=provider_factory(),
-        output_dir=stored_session.run_dir / "generator",
-        design_source_dir=design_dir,
-        case_id=stored_session.session_hash,
-        session_prefix="phase6.2",
-        trace_level=trace_level,
-    )
+    try:
+        generator = run_generator_stage(
+            provider=provider_factory(),
+            output_dir=stored_session.run_dir / "generator",
+            design_source_dir=design_dir,
+            case_id=stored_session.session_hash,
+            session_prefix="phase6.2",
+            trace_level=trace_level,
+        )
+    except ProviderOutputError as exc:
+        error_payload = _record_provider_failure(
+            store=store,
+            stored_session=stored_session,
+            stage="generator",
+            exc=exc,
+        )
+        return SessionIfcResult(
+            session_id=stored_session.session_id,
+            session_hash=stored_session.session_hash,
+            status="provider_failed",
+            generator_status=str(error_payload["status"]),
+            repair_route="not_run",
+            audit_status="not_run",
+            ifc_path=None,
+            report_path=None,
+        )
     _record_stage_payloads(store, stored_session.session_id, "generator", generator)
     if generator["classification"] == "formal" and (
         stored_session.run_dir / "generator" / "candidate.json"
@@ -410,6 +437,35 @@ def run_ready_session_to_ifc(
         "candidate_gates",
         candidate_gates,
     )
+    scaffold = _maybe_promote_scaffold_candidate(
+        store=store,
+        stored_session=stored_session,
+        design_brief=design_brief,
+    )
+    if scaffold is not None:
+        _record_stage_payloads(store, stored_session.session_id, "scaffold", scaffold)
+        semantic_coverage = run_semantic_coverage_stage(
+            case_dir=stored_session.run_dir,
+            output_dir=stored_session.run_dir,
+            case_id=stored_session.session_hash,
+        )
+        _record_stage_payloads(
+            store,
+            stored_session.session_id,
+            "semantic_coverage",
+            semantic_coverage,
+        )
+        candidate_gates = run_candidate_gate_stage(
+            case_dir=stored_session.run_dir,
+            output_dir=stored_session.run_dir,
+            case_id=stored_session.session_hash,
+        )
+        _record_stage_payloads(
+            store,
+            stored_session.session_id,
+            "candidate_gates",
+            candidate_gates,
+        )
 
     audit = run_audit_report_stage(
         provider=provider_factory(),
@@ -502,6 +558,126 @@ def run_ready_session_to_ifc(
     )
 
 
+def _maybe_promote_scaffold_candidate(
+    *,
+    store: SessionStore,
+    stored_session: Any,
+    design_brief: dict[str, Any],
+) -> dict[str, Any] | None:
+    run_dir = stored_session.run_dir
+    generator_candidate = run_dir / "generator" / "candidate.json"
+    expected_facts_path = run_dir / "expected-facts.json"
+    if not generator_candidate.is_file() or not expected_facts_path.is_file():
+        return None
+
+    gate_summary = write_gate_summary(
+        case_dir=run_dir,
+        case_id=stored_session.session_hash,
+    )
+    if gate_summary.get("overall_status") == "passed":
+        return None
+
+    source_issue_codes = _dynamic_gate_issue_codes(gate_summary)
+    if not source_issue_codes or not source_issue_codes <= SCAFFOLD_ELIGIBLE_DYNAMIC_ISSUES:
+        return None
+
+    scaffold_dir = run_dir / "scaffold"
+    scaffold_dir.mkdir(parents=True, exist_ok=True)
+    shutil.copyfile(run_dir / "gate-summary.json", scaffold_dir / "source-gate-summary.json")
+    expected_facts = json.loads(expected_facts_path.read_text(encoding="utf-8"))
+    try:
+        candidate = build_scaffold_candidate(
+            case_id=stored_session.session_hash,
+            design_brief=design_brief,
+            expected_facts=expected_facts,
+        )
+    except ValueError as exc:
+        route = {
+            "schema_version": "text2ifc/scaffold-route/1.0",
+            "route": "scaffold_blocked",
+            "valid": False,
+            "blocking_reason": str(exc),
+            "source_issue_codes": sorted(source_issue_codes),
+        }
+        _write_json(scaffold_dir / "route.json", route)
+        return route
+
+    contract = validate_generation_document(candidate)
+    diagnostics = list(contract["diagnostics"])
+    _write_json(scaffold_dir / "candidate.json", candidate)
+    _write_json(
+        scaffold_dir / "validation.json",
+        {
+            "valid": contract["status"] == "formal" and not diagnostics,
+            "status": contract["status"],
+            "classification": contract["classification"],
+            "issue_count": len(diagnostics),
+            "issues": diagnostics,
+        },
+    )
+    if contract["status"] != "formal" or diagnostics:
+        route = {
+            "schema_version": "text2ifc/scaffold-route/1.0",
+            "route": "scaffold_blocked",
+            "valid": False,
+            "blocking_reason": "scaffold candidate failed BIM JSON contract",
+            "source_issue_codes": sorted(source_issue_codes),
+        }
+        _write_json(scaffold_dir / "route.json", route)
+        return route
+
+    shutil.copyfile(
+        generator_candidate,
+        run_dir / "generator" / "original-candidate-before-scaffold.json",
+    )
+    _write_json(generator_candidate, candidate)
+    _copy_artifact_to_run_root(
+        store,
+        stored_session,
+        kind="candidate",
+        source=generator_candidate,
+        target_name="candidate.json",
+    )
+    _record_existing_artifact(
+        store,
+        stored_session,
+        kind="scaffold_candidate",
+        name="scaffold/candidate.json",
+    )
+    route = {
+        "schema_version": "text2ifc/scaffold-route/1.0",
+        "route": "scaffold_promoted",
+        "valid": True,
+        "source_issue_codes": sorted(source_issue_codes),
+        "source_gate_summary": "source-gate-summary.json",
+        "candidate": "candidate.json",
+        "promoted_to": "generator/candidate.json",
+    }
+    _write_json(scaffold_dir / "route.json", route)
+    _write_json(
+        scaffold_dir / "metrics.json",
+        {
+            "stage": "scaffold",
+            "route": route["route"],
+            "valid": True,
+            "source_issue_count": len(source_issue_codes),
+            "entity_count": len(candidate.get("entities", [])),
+            "relationship_count": len(candidate.get("relationships", [])),
+        },
+    )
+    return route
+
+
+def _dynamic_gate_issue_codes(gate_summary: dict[str, Any]) -> set[str]:
+    return {
+        str(code)
+        for gate in gate_summary.get("gates", [])
+        if isinstance(gate, dict)
+        and str(gate.get("name", "")).startswith("dynamic_")
+        for code in gate.get("issue_codes", [])
+    }
+
+
 def _attempt_geometry_repair_after_audit(
     *,
     store: SessionStore,
@@ -555,6 +731,63 @@ def _attempt_geometry_repair_after_audit(
     )
     _record_stage_payloads(store, stored_session.session_id, "audit", audit)
     return {"repair": repair, "candidate_gates": candidate_gates, "audit": audit}
+
+
+def _record_provider_failure(
+    *,
+    store: SessionStore,
+    stored_session: Any,
+    stage: str,
+    exc: ProviderOutputError,
+) -> dict[str, Any]:
+    stage_dir = stored_session.run_dir / stage
+    stage_dir.mkdir(parents=True, exist_ok=True)
+    details = redact_metadata(getattr(exc, "details", {}))
+    if not isinstance(details, dict):
+        details = {"details": details}
+    payload = {
+        "schema_version": "text2ifc/provider-failure/1.0",
+        "stage": stage,
+        "status": "failed",
+        "valid": False,
+        "provider": details.get("provider", "unknown"),
+        "failure_class": details.get("failure_class", "provider_error"),
+        "exception_type": details.get("exception_type", type(exc).__name__),
+        "details": details,
+    }
+    _write_json(stage_dir / "provider-error.json", payload)
+    store.record_artifact(
+        stored_session.session_id,
+        kind="provider_error",
+        path=Path("runs") / stored_session.session_hash / stage / "provider-error.json",
+    )
+    store.record_payload(
+        stored_session.session_id,
+        table="metrics",
+        payload={
+            "stage": stage,
+            "status": "provider_failed",
+            "valid": False,
+            "failure_class": payload["failure_class"],
+            "provider": payload["provider"],
+            "error_path": f"{stage}/provider-error.json",
+        },
+    )
+    store.append_event(
+        stored_session.session_id,
+        event_type=f"{stage}_provider_failed",
+        payload={
+            "stage": stage,
+            "status": "failed",
+            "valid": False,
+            "failure_class": payload["failure_class"],
+            "provider": payload["provider"],
+            "error_path": f"{stage}/provider-error.json",
+        },
+    )
+    store.mark_session_status(stored_session.session_id, "provider_failed")
+    store.export_session(stored_session.session_id)
+    return payload
 
 
 def _promote_repaired_candidate(run_dir: Path, repaired_candidate: Path) -> None:
