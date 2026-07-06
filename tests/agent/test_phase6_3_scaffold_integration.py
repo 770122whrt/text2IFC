@@ -70,6 +70,47 @@ def test_ready_session_promotes_complex_scaffold_when_generator_omits_dynamic_fa
     store.close()
 
 
+def test_ready_session_uses_complex_scaffold_when_generator_output_is_unparsed(tmp_path):
+    root = tmp_path / "phase6.3-scaffold-invalid-generator"
+    store = SessionStore.open(root / "sessions.sqlite", artifact_root=root)
+    session = store.create_session(original_input="complex two-storey invalid generator")
+    design_brief = _complex_two_storey_nested_design_brief()
+    _write_ready_design_brief_call(session.run_dir, design_brief)
+    store.mark_session_status(session.session_id, "ready")
+    audit = {
+        "schema_version": "text2ifc/audit/2.0",
+        "recommendation": "accept",
+        "blocking": False,
+        "deterministic_gate_status": "passed",
+        "findings": [],
+        "evidence_paths": [
+            "expected-facts.json",
+            "scaffold/candidate.json",
+            "generator/classification.json",
+            "generator/original-validation-before-scaffold.json",
+        ],
+    }
+    provider = _SequenceLiveProvider(['{"schema_version":"bim-json/2.0","entities":[340000?]}', audit])
+
+    result = run_ready_session_to_ifc(
+        store=store,
+        session=session.session_hash,
+        provider_factory=lambda: provider,
+    )
+
+    assert result.status == "compiled"
+    assert (session.run_dir / "scaffold" / "candidate.json").is_file()
+    assert (session.run_dir / "generator" / "original-validation-before-scaffold.json").is_file()
+    route = json.loads((session.run_dir / "scaffold" / "route.json").read_text(encoding="utf-8"))
+    generator_validation = json.loads(
+        (session.run_dir / "generator" / "validation.json").read_text(encoding="utf-8")
+    )
+    assert route["route"] == "scaffold_promoted_from_generator_failure"
+    assert generator_validation["valid"] is True
+    assert (session.run_dir / "output.ifc").is_file()
+    store.close()
+
+
 def _dynamic_incomplete_candidate(candidate: dict) -> dict:
     result = deepcopy(candidate)
     removed_ids = {
@@ -132,7 +173,7 @@ class _SequenceLiveProvider:
         del prompt, schema, state
         self.call_count += 1
         payload = self.payloads.pop(0)
-        text = json.dumps(payload, ensure_ascii=False)
+        text = payload if isinstance(payload, str) else json.dumps(payload, ensure_ascii=False)
         response = {
             "id": f"msg_phase63_scaffold_{self.call_count}",
             "type": "message",
