@@ -68,6 +68,62 @@ def test_complex_nested_design_brief_scaffold_compiles_and_passes_dynamic_gates(
     assert output_ifc.is_file()
 
 
+def test_complex_scaffold_accepts_live_deepseek_design_brief_field_aliases(tmp_path):
+    design_brief = {
+        "schema_version": "text2ifc/design-brief/2.0",
+        "status": "ready",
+        "language": "zh-CN",
+        "known_facts": {
+            "building": {
+                "number_of_storeys": 2,
+                "overall_width_x": 10000,
+                "overall_depth_y": 8000,
+            },
+            "walls": {"thickness": 200},
+            "storeys": [
+                {"name": "首层", "elevation": 0, "net_height": 3000},
+                {"name": "二层", "elevation": 3150, "net_height": 3000},
+            ],
+            "spaces": {
+                "首层": [
+                    {"name": "客厅", "rectangle": {"min_x": 0, "min_y": 0, "max_x": 6000, "max_y": 4500}},
+                    {"name": "厨房", "rectangle": {"min_x": 6000, "min_y": 0, "max_x": 10000, "max_y": 3500}},
+                ],
+                "二层": [
+                    {"name": "主卧", "rectangle": {"min_x": 0, "min_y": 0, "max_x": 5000, "max_y": 4000}},
+                ],
+            },
+            "doors": [{"id": "door_1", "host": "客厅南墙", "width": 1200, "height": 2200}],
+            "windows": [{"id": "window_1", "host": "主卧南墙", "quantity": 2, "width": 1500, "height": 1200, "sill_height": 900}],
+            "slabs": {
+                "ground_floor": {"elevation": 0, "thickness": 150},
+                "first_floor": {"elevation": 3150, "thickness": 150},
+            },
+            "roof": {"bottom_elevation": 6150, "thickness": 150},
+            "stair": {"start_elevation": 150, "end_elevation": 3150},
+        },
+        "missing_facts": [],
+        "ambiguities": [],
+        "unsupported_requests": [],
+    }
+    expected = build_expected_facts(
+        case_id="live-deepseek-scaffold-aliases",
+        design_brief=design_brief,
+    )
+
+    candidate = build_scaffold_candidate(
+        case_id="live-deepseek-scaffold-aliases",
+        design_brief=design_brief,
+        expected_facts=expected,
+    )
+
+    assert [_validation_issue(issue) for issue in validate_v2_document(candidate)] == []
+    gates = evaluate_dynamic_gates(candidate=candidate, expected_facts=expected)
+    assert all(gate["status"] == "passed" for gate in gates)
+    compilation = compile_document(candidate, tmp_path / "alias-scaffold.ifc")
+    assert compilation.success
+
+
 def _validation_issue(issue) -> dict:
     return {
         "code": issue.code,
