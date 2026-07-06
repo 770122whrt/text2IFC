@@ -376,6 +376,28 @@ def run_ready_session_to_ifc(
                 target_name="semantic-capabilities.json",
             )
 
+    generator_scaffold = _maybe_promote_scaffold_from_generator_failure(
+        store=store,
+        stored_session=stored_session,
+        design_brief=design_brief,
+        generator=generator,
+    )
+    if generator_scaffold is not None and generator_scaffold.get("valid") is True:
+        _record_stage_payloads(
+            store,
+            stored_session.session_id,
+            "scaffold",
+            generator_scaffold,
+        )
+        generator = {
+            **generator,
+            "status": "scaffold_promoted",
+            "classification": "formal",
+            "valid": True,
+            "contract_valid": True,
+            "strict_output_contract_valid": True,
+        }
+
     semantic_coverage: dict[str, Any] | None = None
     if generator["classification"] == "formal" and generator["valid"]:
         semantic_coverage = run_semantic_coverage_stage(
@@ -584,6 +606,71 @@ def _maybe_promote_scaffold_candidate(
     scaffold_dir = run_dir / "scaffold"
     scaffold_dir.mkdir(parents=True, exist_ok=True)
     shutil.copyfile(run_dir / "gate-summary.json", scaffold_dir / "source-gate-summary.json")
+    return _build_and_promote_scaffold_candidate(
+        store=store,
+        stored_session=stored_session,
+        design_brief=design_brief,
+        route_name="scaffold_promoted",
+        source_issue_codes=source_issue_codes,
+        source_gate_summary="source-gate-summary.json",
+    )
+
+
+def _maybe_promote_scaffold_from_generator_failure(
+    *,
+    store: SessionStore,
+    stored_session: Any,
+    design_brief: dict[str, Any],
+    generator: dict[str, Any],
+) -> dict[str, Any] | None:
+    run_dir = stored_session.run_dir
+    if generator.get("valid") is True:
+        return None
+    if (run_dir / "generator" / "candidate.json").is_file():
+        return None
+    expected_facts_path = run_dir / "expected-facts.json"
+    if not expected_facts_path.is_file():
+        return None
+    classification = run_dir / "generator" / "classification.json"
+    validation = run_dir / "generator" / "validation.json"
+    if classification.is_file():
+        shutil.copyfile(
+            classification,
+            run_dir / "generator" / "original-classification-before-scaffold.json",
+        )
+    if validation.is_file():
+        shutil.copyfile(
+            validation,
+            run_dir / "generator" / "original-validation-before-scaffold.json",
+        )
+    source_issue_codes = {
+        str(issue.get("code"))
+        for issue in _read_json_issues(classification)
+        if issue.get("code")
+    }
+    return _build_and_promote_scaffold_candidate(
+        store=store,
+        stored_session=stored_session,
+        design_brief=design_brief,
+        route_name="scaffold_promoted_from_generator_failure",
+        source_issue_codes=source_issue_codes or {"GENERATOR_OUTPUT_CONTRACT_FAILED"},
+        source_gate_summary=None,
+    )
+
+
+def _build_and_promote_scaffold_candidate(
+    *,
+    store: SessionStore,
+    stored_session: Any,
+    design_brief: dict[str, Any],
+    route_name: str,
+    source_issue_codes: set[str],
+    source_gate_summary: str | None,
+) -> dict[str, Any]:
+    run_dir = stored_session.run_dir
+    scaffold_dir = run_dir / "scaffold"
+    scaffold_dir.mkdir(parents=True, exist_ok=True)
+    expected_facts_path = run_dir / "expected-facts.json"
     expected_facts = json.loads(expected_facts_path.read_text(encoding="utf-8"))
     try:
         candidate = build_scaffold_candidate(
@@ -626,11 +713,35 @@ def _maybe_promote_scaffold_candidate(
         _write_json(scaffold_dir / "route.json", route)
         return route
 
-    shutil.copyfile(
-        generator_candidate,
-        run_dir / "generator" / "original-candidate-before-scaffold.json",
-    )
+    generator_candidate = run_dir / "generator" / "candidate.json"
+    if generator_candidate.is_file():
+        shutil.copyfile(
+            generator_candidate,
+            run_dir / "generator" / "original-candidate-before-scaffold.json",
+        )
     _write_json(generator_candidate, candidate)
+    _write_json(
+        run_dir / "generator" / "validation.json",
+        {
+            "valid": True,
+            "issue_count": 0,
+            "issues": [],
+            "source": "scaffold_candidate",
+        },
+    )
+    _write_json(
+        run_dir / "generator" / "classification.json",
+        {
+            "status": "scaffold_promoted",
+            "contract_status": "formal",
+            "classification": "formal",
+            "schema_version": "bim-json/2.0",
+            "draft_version": None,
+            "target_schema_version": None,
+            "diagnostics": [],
+            "source": "scaffold_candidate",
+        },
+    )
     _copy_artifact_to_run_root(
         store,
         stored_session,
@@ -646,10 +757,10 @@ def _maybe_promote_scaffold_candidate(
     )
     route = {
         "schema_version": "text2ifc/scaffold-route/1.0",
-        "route": "scaffold_promoted",
+        "route": route_name,
         "valid": True,
         "source_issue_codes": sorted(source_issue_codes),
-        "source_gate_summary": "source-gate-summary.json",
+        "source_gate_summary": source_gate_summary,
         "candidate": "candidate.json",
         "promoted_to": "generator/candidate.json",
     }
@@ -676,6 +787,14 @@ def _dynamic_gate_issue_codes(gate_summary: dict[str, Any]) -> set[str]:
         and str(gate.get("name", "")).startswith("dynamic_")
         for code in gate.get("issue_codes", [])
     }
+
+
+def _read_json_issues(path: Path) -> list[dict[str, Any]]:
+    if not path.is_file():
+        return []
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    issues = payload.get("diagnostics") or payload.get("issues") or []
+    return [issue for issue in issues if isinstance(issue, dict)]
 
 
 def _attempt_geometry_repair_after_audit(
