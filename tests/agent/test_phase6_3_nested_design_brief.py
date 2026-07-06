@@ -353,3 +353,68 @@ def test_expected_facts_normalizes_live_deepseek_storey_list_with_inline_spaces(
     assert expected["roof"]["elevation_mm"] == 6150
     assert expected["stairs"][0]["start_elevation_mm"] == 150
     assert expected["stairs"][0]["end_elevation_mm"] == 3150
+
+
+def test_expected_facts_normalizes_nested_storey_map_with_space_lists_and_floor_labels():
+    design_brief = {
+        "schema_version": "text2ifc/design-brief/2.0",
+        "status": "ready",
+        "language": "zh-CN",
+        "known_facts": {
+            "building": {
+                "outer_dimensions_mm": {"x": 10000, "y": 8000},
+                "number_of_storeys": 2,
+                "storey_height_mm": 3000,
+                "slab_thickness_mm": 150,
+                "wall_thickness_mm": 200,
+            },
+            "storeys": {
+                "ground": {
+                    "elevation_mm": 0,
+                    "spaces": [
+                        {"name": "living", "dimensions_mm": [6000, 4500]},
+                        {"name": "kitchen", "dimensions_mm": [4000, 3500]},
+                    ],
+                },
+                "first": {
+                    "elevation_mm": 3150,
+                    "spaces": [
+                        {"name": "master", "dimensions_mm": [5000, 4000]},
+                        {"name": "corridor", "width_mm": 1200},
+                    ],
+                },
+            },
+            "doors": [
+                {"floor": "ground", "host_wall": "south_wall", "width_mm": 1200, "height_mm": 2200},
+                {"floor": "first", "host_wall": "master_wall", "width_mm": 900, "height_mm": 2100},
+            ],
+            "windows": [
+                {"floor": "ground", "host_wall": "south_wall", "width_mm": 1500, "height_mm": 1200},
+                {"floor": "first", "host_wall": "master_wall", "width_mm": 1500, "height_mm": 1200},
+            ],
+            "slabs": {
+                "ground_floor": {"elevation_mm": 0, "thickness_mm": 150},
+                "first_floor": {"elevation_mm": 3150, "thickness_mm": 150},
+                "roof": {"elevation_mm": 6150, "thickness_mm": 150},
+            },
+            "stairs": {"start_elevation_mm": 150, "end_elevation_mm": 3150},
+        },
+        "missing_facts": [],
+        "ambiguities": [],
+        "unsupported_requests": [],
+    }
+
+    expected = build_expected_facts(
+        case_id="nested-map-space-list-floor-labels",
+        design_brief=design_brief,
+    )
+
+    assert expected["storeys"] == [
+        {"id": "storey-1", "source_key": "ground", "elevation_mm": 0},
+        {"id": "storey-2", "source_key": "first", "elevation_mm": 3150},
+    ]
+    assert expected["space_counts_by_storey"] == {"storey-1": 2, "storey-2": 2}
+    assert expected["door_counts_by_storey"] == {"storey-1": 1, "storey-2": 1}
+    assert expected["window_counts_by_storey"] == {"storey-1": 1, "storey-2": 1}
+    assert expected["spaces"][2]["storey"] == "storey-2"
+    assert expected["doors"][1]["storey"] == "storey-2"

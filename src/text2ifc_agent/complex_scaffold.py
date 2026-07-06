@@ -560,6 +560,16 @@ def _number_alias(record: Mapping[str, Any], keys: tuple[str, ...]) -> float | N
         value = record.get(key)
         if isinstance(value, (int, float)):
             return float(value)
+    outer_dimensions = record.get("outer_dimensions_mm")
+    if isinstance(outer_dimensions, Mapping):
+        if any(key in keys for key in ("width_x_mm", "overall_width_x", "length_mm")):
+            value = outer_dimensions.get("x")
+            if isinstance(value, (int, float)):
+                return float(value)
+        if any(key in keys for key in ("depth_y_mm", "overall_depth_y", "depth_mm")):
+            value = outer_dimensions.get("y")
+            if isinstance(value, (int, float)):
+                return float(value)
     return None
 
 

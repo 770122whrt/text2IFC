@@ -25,6 +25,21 @@ def build_expected_facts(
         spaces = _space_records_from_nested(nested_storeys, storeys)
         doors = _opening_records_from_nested(nested_storeys, storeys, "doors")
         windows = _opening_records_from_nested(nested_storeys, storeys, "windows")
+        space_storeys = _space_name_storey_map(spaces)
+        if not doors:
+            doors = _flat_opening_records(
+                known_facts.get("doors"),
+                storeys,
+                "doors",
+                space_storeys=space_storeys,
+            )
+        if not windows:
+            windows = _flat_opening_records(
+                known_facts.get("windows"),
+                storeys,
+                "windows",
+                space_storeys=space_storeys,
+            )
     elif _is_storey_list(known_facts.get("storeys")):
         storeys = _storey_records_from_list(_records(known_facts.get("storeys")))
         if isinstance(known_facts.get("spaces"), Mapping):
@@ -265,15 +280,24 @@ def _space_records_from_nested(
     records: list[dict[str, Any]] = []
     for (source_key, payload), storey in zip(nested_storeys, storeys):
         spaces = payload.get("spaces")
-        if not isinstance(spaces, Mapping):
-            continue
-        for space_key, space_payload in spaces.items():
-            if not isinstance(space_key, str):
-                continue
-            record = _copy_payload(space_payload)
-            record["storey"] = storey["id"]
-            record["source_key"] = f"{source_key}.spaces.{space_key}"
-            records.append(record)
+        if isinstance(spaces, Mapping):
+            for space_key, space_payload in spaces.items():
+                if not isinstance(space_key, str):
+                    continue
+                record = _copy_payload(space_payload)
+                record["storey"] = storey["id"]
+                record["source_key"] = f"{source_key}.spaces.{space_key}"
+                _normalize_space_dimensions(record)
+                records.append(record)
+        elif isinstance(spaces, list):
+            for index, space_payload in enumerate(spaces, start=1):
+                if not isinstance(space_payload, Mapping):
+                    continue
+                record = _copy_payload(space_payload)
+                record["storey"] = storey["id"]
+                record["source_key"] = f"{source_key}.spaces[{index}]"
+                _normalize_space_dimensions(record)
+                records.append(record)
     return records
 
 
@@ -475,6 +499,13 @@ def _infer_opening_storey(
     floor = record.get("floor")
     if isinstance(floor, int) and 1 <= floor <= len(storeys):
         return str(storeys[floor - 1]["id"])
+    if isinstance(floor, str):
+        floor_key = floor.lower()
+        for storey in storeys:
+            source_key = str(storey.get("source_key", "")).lower()
+            name = str(storey.get("name", "")).lower()
+            if floor_key in {source_key, name}:
+                return str(storey["id"])
     text = " ".join(str(record.get(key, "")) for key in ("host_wall", "source_key", "id"))
     for storey in reversed(storeys):
         name = _string(storey.get("name")) or _string(storey.get("source_key"))
