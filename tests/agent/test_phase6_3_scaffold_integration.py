@@ -1,0 +1,161 @@
+import json
+from copy import deepcopy
+from pathlib import Path
+
+from text2ifc_agent.complex_scaffold import build_scaffold_candidate
+from text2ifc_agent.expected_facts import build_expected_facts
+from text2ifc_agent.interactive_cli_flow import run_ready_session_to_ifc
+from text2ifc_agent.providers import LiveProviderResult, ProviderOutput
+from text2ifc_agent.session_store import SessionStore
+
+from tests.agent.test_phase6_3_complex_scaffold import (
+    _complex_two_storey_nested_design_brief,
+)
+
+
+ROOT = Path(__file__).resolve().parents[2]
+PHASE6_1_COMPLETE = ROOT / "dataset/processed/agent-demo/phase6.1-mimo-live/complete-room"
+
+
+def test_ready_session_promotes_complex_scaffold_when_generator_omits_dynamic_facts(tmp_path):
+    root = tmp_path / "phase6.3-scaffold-integration"
+    store = SessionStore.open(root / "sessions.sqlite", artifact_root=root)
+    session = store.create_session(original_input="complex two-storey scaffold integration")
+    design_brief = _complex_two_storey_nested_design_brief()
+    _write_ready_design_brief_call(session.run_dir, design_brief)
+    store.mark_session_status(session.session_id, "ready")
+    expected = build_expected_facts(
+        case_id=session.session_hash,
+        design_brief=design_brief,
+    )
+    incomplete_candidate = _dynamic_incomplete_candidate(
+        build_scaffold_candidate(
+            case_id=session.session_hash,
+            design_brief=design_brief,
+            expected_facts=expected,
+        )
+    )
+    audit = {
+        "schema_version": "text2ifc/audit/2.0",
+        "recommendation": "accept",
+        "blocking": False,
+        "deterministic_gate_status": "passed",
+        "findings": [],
+        "evidence_paths": [
+            "expected-facts.json",
+            "scaffold/candidate.json",
+            "gate-summary.json",
+            "generator/candidate.json",
+        ],
+    }
+    provider = _SequenceLiveProvider([incomplete_candidate, audit])
+
+    result = run_ready_session_to_ifc(
+        store=store,
+        session=session.session_hash,
+        provider_factory=lambda: provider,
+    )
+
+    assert result.status == "compiled"
+    assert (session.run_dir / "scaffold" / "candidate.json").is_file()
+    assert (session.run_dir / "scaffold" / "route.json").is_file()
+    assert (session.run_dir / "generator" / "original-candidate-before-scaffold.json").is_file()
+    gate_summary = json.loads(
+        (session.run_dir / "gate-summary.json").read_text(encoding="utf-8")
+    )
+    route = json.loads((session.run_dir / "scaffold" / "route.json").read_text(encoding="utf-8"))
+    assert gate_summary["overall_status"] == "passed"
+    assert route["route"] == "scaffold_promoted"
+    assert (session.run_dir / "output.ifc").is_file()
+    store.close()
+
+
+def _dynamic_incomplete_candidate(candidate: dict) -> dict:
+    result = deepcopy(candidate)
+    removed_ids = {
+        entity["id"]
+        for entity in result["entities"]
+        if entity["ifc_class"] == "IfcDoor" and entity["id"].startswith("door-second-floor")
+    }
+    removed_ids.update(
+        entity["id"]
+        for entity in result["entities"]
+        if entity["ifc_class"] == "IfcOpeningElement"
+        and any(entity["id"] == f"opening-{door_id}" for door_id in removed_ids)
+    )
+    result["entities"] = [
+        entity for entity in result["entities"] if entity["id"] not in removed_ids
+    ]
+    result["relationships"] = [
+        relationship
+        for relationship in result["relationships"]
+        if not _references_removed_or_window_fill(relationship, removed_ids)
+    ]
+    return result
+
+
+def _references_removed_or_window_fill(
+    relationship: dict,
+    removed_ids: set[str],
+) -> bool:
+    attributes = relationship.get("attributes", {})
+    if any(value in removed_ids for value in attributes.values()):
+        return True
+    if relationship["ifc_class"] == "IfcRelFillsElement":
+        return str(attributes.get("RelatedBuildingElement", "")).startswith("window-")
+    if relationship["ifc_class"] == "IfcRelVoidsElement":
+        return str(attributes.get("RelatedOpeningElement", "")).startswith("opening-window-")
+    return False
+
+
+def _write_ready_design_brief_call(run_dir: Path, design_brief: dict) -> None:
+    call_dir = run_dir / "calls" / "01-design-brief"
+    call_dir.mkdir(parents=True)
+    for source in (PHASE6_1_COMPLETE / "design-brief").iterdir():
+        if source.is_file():
+            (call_dir / source.name).write_text(
+                source.read_text(encoding="utf-8"),
+                encoding="utf-8",
+            )
+    (call_dir / "design-brief.json").write_text(
+        json.dumps(design_brief, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+
+
+class _SequenceLiveProvider:
+    def __init__(self, payloads: list[dict]) -> None:
+        self.payloads = list(payloads)
+        self.call_count = 0
+
+    def generate_live(self, *, session_id, prompt, schema, state):
+        del prompt, schema, state
+        self.call_count += 1
+        payload = self.payloads.pop(0)
+        text = json.dumps(payload, ensure_ascii=False)
+        response = {
+            "id": f"msg_phase63_scaffold_{self.call_count}",
+            "type": "message",
+            "role": "assistant",
+            "model": "unit-test",
+            "stop_reason": "end_turn",
+            "content": [{"type": "text", "text": text}],
+            "usage": {"input_tokens": 1, "output_tokens": 1},
+        }
+        return LiveProviderResult(
+            session_id=session_id,
+            evidence_class="unit_test_fixture",
+            http_status=200,
+            request={
+                "model": "unit-test",
+                "max_tokens": 131072,
+                "stream": True,
+                "messages": [{"role": "user", "content": "<redacted-test-prompt>"}],
+            },
+            response=response,
+            events=(),
+            output=ProviderOutput(
+                text=text,
+                metadata={"provider": "unit-test", "session_id": session_id},
+            ),
+        )
