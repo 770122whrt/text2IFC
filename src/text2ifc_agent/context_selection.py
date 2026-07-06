@@ -19,6 +19,7 @@ FEW_SHOT_PATH = (
 )
 
 _ENTITY_TERMS: tuple[tuple[str, tuple[str, ...]], ...] = (
+    ("IfcBuilding", ("IfcBuilding", "建筑", "building")),
     ("IfcSpace", ("房间", "空间", "室内")),
     ("IfcWall", ("墙", "墙体")),
     ("IfcDoor", ("门", "门洞")),

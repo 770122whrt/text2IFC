@@ -256,6 +256,46 @@ def test_v2_needs_clarification_requires_one_to_three_questions():
     assert any(issue.path == "/clarification_questions" for issue in issues)
 
 
+def test_v2_terminal_statuses_reject_clarification_questions():
+    design_brief = _module()
+
+    for status in ("draft_required", "blocked"):
+        document = _brief_v2(
+            status=status,
+            missing_facts=[
+                {
+                    "id": "mf-room-height",
+                    "code": "ROOM_HEIGHT_MISSING",
+                    "path": "/known_facts/space/height_mm",
+                    "message": "房间高度尚未确定。",
+                    "reason": "矩形空间需要高度才能生成几何。",
+                    "blocking": True,
+                    "evidence_refs": ["schema:bim-json-v2:representation"],
+                    "source_turns": ["turn-user-001"],
+                }
+            ],
+            clarification_questions=[
+                {
+                    "id": "q-room-height",
+                    "text": "房间高度是多少？",
+                    "targets": ["mf-room-height"],
+                    "reason": "如果仍可询问用户，应使用 needs_clarification。",
+                    "evidence_refs": ["schema:bim-json-v2:representation"],
+                }
+            ],
+        )
+
+        issues = design_brief.validate_design_brief(
+            document, evidence_catalog=_v2_evidence_catalog()
+        )
+
+        assert any(
+            issue.code == "READINESS_CONFLICT"
+            and issue.path == "/clarification_questions"
+            for issue in issues
+        )
+
+
 def test_v2_correction_requires_source_turn_and_evidence():
     design_brief = _module()
     document = _brief_v2(
@@ -312,6 +352,19 @@ def test_context_selector_returns_hash_verified_existing_evidence():
         )
         assert record["json_pointer"].startswith("/")
     assert selection["request_sha256"].startswith("sha256:")
+
+
+def test_context_selector_supplies_ifc_building_when_request_names_it():
+    selector = importlib.import_module("text2ifc_agent.context_selection")
+
+    selection = selector.select_design_brief_context(
+        user_request="请生成 IfcBuilding、两个 IfcBuildingStorey、IfcSpace、IfcWall、IfcDoor。",
+        conversation=[],
+    )
+
+    evidence_ids = {record["evidence_id"] for record in selection["evidence"]}
+    assert "capability:IFC2X3:IfcBuilding" in evidence_ids
+    assert "IfcBuilding" in selection["selected_ifc_classes"]
 
 
 def test_context_selector_uses_named_conditional_examples_not_policy_lists():
