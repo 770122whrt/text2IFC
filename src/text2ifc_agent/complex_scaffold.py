@@ -30,11 +30,11 @@ def build_scaffold_candidate(
 
     width = _required_number_alias(
         building_facts,
-        ("width_x_mm", "overall_width_x", "length_mm", "width_mm"),
+        ("width_x_mm", "overall_width_x", "x_dim_mm", "length_mm", "width_mm"),
     )
     depth = _required_number_alias(
         building_facts,
-        ("depth_y_mm", "overall_depth_y", "depth_mm", "width_mm"),
+        ("depth_y_mm", "overall_depth_y", "y_dim_mm", "depth_mm", "width_mm"),
     )
     storey_height = _number_alias(building_facts, ("storey_height_mm",)) or _storey_height_from_expected(expected_facts)
     walls = known_facts.get("walls", {})
@@ -566,11 +566,11 @@ def _number_alias(record: Mapping[str, Any], keys: tuple[str, ...]) -> float | N
             return float(value)
     outer_dimensions = record.get("outer_dimensions_mm")
     if isinstance(outer_dimensions, Mapping):
-        if any(key in keys for key in ("width_x_mm", "overall_width_x", "length_mm")):
+        if any(key in keys for key in ("width_x_mm", "overall_width_x", "x_dim_mm", "length_mm")):
             value = outer_dimensions.get("x")
             if isinstance(value, (int, float)):
                 return float(value)
-        if any(key in keys for key in ("depth_y_mm", "overall_depth_y", "depth_mm")):
+        if any(key in keys for key in ("depth_y_mm", "overall_depth_y", "y_dim_mm", "depth_mm")):
             value = outer_dimensions.get("y")
             if isinstance(value, (int, float)):
                 return float(value)

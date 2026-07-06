@@ -385,8 +385,8 @@ def test_expected_facts_normalizes_nested_storey_map_with_space_lists_and_floor_
                 },
             },
             "doors": [
-                {"floor": "ground", "host_wall": "south_wall", "width_mm": 1200, "height_mm": 2200},
-                {"floor": "first", "host_wall": "master_wall", "width_mm": 900, "height_mm": 2100},
+                {"storey": "ground", "host_wall": "south_wall", "width_mm": 1200, "height_mm": 2200},
+                {"storey": "first", "host_wall": "master_wall", "width_mm": 900, "height_mm": 2100},
             ],
             "windows": [
                 {"floor": "ground", "host_wall": "south_wall", "width_mm": 1500, "height_mm": 1200},
@@ -417,6 +417,7 @@ def test_expected_facts_normalizes_nested_storey_map_with_space_lists_and_floor_
     assert expected["door_counts_by_storey"] == {"storey-1": 1, "storey-2": 1}
     assert expected["window_counts_by_storey"] == {"storey-1": 1, "storey-2": 1}
     assert expected["spaces"][2]["storey"] == "storey-2"
+    assert expected["doors"][0]["storey"] == "storey-1"
     assert expected["doors"][1]["storey"] == "storey-2"
 
 

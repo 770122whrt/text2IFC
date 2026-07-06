@@ -543,7 +543,8 @@ def _infer_opening_storey(
 ) -> str:
     existing_storey = _string(record.get("storey"))
     if existing_storey:
-        return existing_storey
+        canonical = _canonical_storey_id(existing_storey, storeys)
+        return canonical or existing_storey
     floor = record.get("floor")
     if isinstance(floor, int) and 1 <= floor <= len(storeys):
         return str(storeys[floor - 1]["id"])
@@ -565,6 +566,24 @@ def _infer_opening_storey(
     if "二层" in text or "second" in text.lower():
         return str(storeys[min(1, len(storeys) - 1)]["id"])
     return str(storeys[0]["id"]) if storeys else ""
+
+
+def _canonical_storey_id(label: str, storeys: list[Mapping[str, Any]]) -> str | None:
+    normalized_label = label.lower()
+    for storey in storeys:
+        storey_id = _string(storey.get("id"))
+        source_key = _string(storey.get("source_key"))
+        name = _string(storey.get("name"))
+        if storey_id == label:
+            return storey_id
+        if source_key and source_key.lower() == normalized_label:
+            return storey_id
+        if name and name.lower() == normalized_label:
+            return storey_id
+    aliases = {"ground_floor": 0, "first_floor": 1, "second_floor": 1}
+    if normalized_label in aliases and aliases[normalized_label] < len(storeys):
+        return str(storeys[aliases[normalized_label]]["id"])
+    return None
 
 
 def _slab_records(known_facts: Mapping[str, Any]) -> list[Mapping[str, Any]]:
