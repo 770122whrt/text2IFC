@@ -76,8 +76,8 @@ def test_complex_scaffold_accepts_live_deepseek_design_brief_field_aliases(tmp_p
         "known_facts": {
             "building": {
                 "number_of_storeys": 2,
-                "x_dim_mm": 10000,
-                "y_dim_mm": 8000,
+                "length_x_mm": 10000,
+                "width_y_mm": 8000,
             },
             "walls": {"thickness": 200},
             "storeys": [
