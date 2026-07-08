@@ -52,18 +52,26 @@ def build_expected_facts(
                 storeys,
             )
         space_storeys = _space_name_storey_map(spaces)
-        doors = _suffix_floor_records(known_facts, "doors", storeys) or _flat_opening_records(
-            known_facts.get("doors"),
-            storeys,
-            "doors",
-            space_storeys=space_storeys,
-        )
-        windows = _suffix_floor_records(known_facts, "windows", storeys) or _flat_opening_records(
-            known_facts.get("windows"),
-            storeys,
-            "windows",
-            space_storeys=space_storeys,
-        )
+        doors = _suffix_floor_records(known_facts, "doors", storeys)
+        if not doors and isinstance(known_facts.get("doors"), Mapping):
+            doors = _opening_records_from_storey_map(known_facts.get("doors"), storeys, "doors")
+        if not doors:
+            doors = _flat_opening_records(
+                known_facts.get("doors"),
+                storeys,
+                "doors",
+                space_storeys=space_storeys,
+            )
+        windows = _suffix_floor_records(known_facts, "windows", storeys)
+        if not windows and isinstance(known_facts.get("windows"), Mapping):
+            windows = _opening_records_from_storey_map(known_facts.get("windows"), storeys, "windows")
+        if not windows:
+            windows = _flat_opening_records(
+                known_facts.get("windows"),
+                storeys,
+                "windows",
+                space_storeys=space_storeys,
+            )
     elif isinstance(known_facts.get("spaces"), Mapping):
         storeys = _storey_records_from_floor_map(
             known_facts.get("spaces"),
@@ -269,7 +277,7 @@ def _ordered_floor_keys(value: Mapping[str, Any]) -> list[str]:
     return [
         key
         for key, payload in sorted(value.items(), key=sort_key)
-        if isinstance(key, str) and isinstance(payload, list)
+        if isinstance(key, str) and isinstance(payload, (list, Mapping))
     ]
 
 
@@ -311,17 +319,25 @@ def _space_records_from_storey_map(value: Any, storeys: list[Mapping[str, Any]])
     }
     records: list[dict[str, Any]] = []
     for source_key, spaces in value.items():
-        if not isinstance(source_key, str) or not isinstance(spaces, list):
+        if not isinstance(source_key, str) or not isinstance(spaces, (list, Mapping)):
             continue
-        storey_id = storey_by_source.get(source_key)
+        storey_id = storey_by_source.get(source_key) or _canonical_storey_id(source_key, storeys)
         if storey_id is None:
             continue
-        for index, space in enumerate(spaces, start=1):
+        if isinstance(spaces, Mapping):
+            items = list(spaces.items())
+        else:
+            items = list(enumerate(spaces, start=1))
+        for index, space in items:
             if not isinstance(space, Mapping):
                 continue
             record = _copy_payload(space)
+            if isinstance(index, str) and not _string(record.get("name")):
+                record["name"] = index
             record["storey"] = storey_id
-            record["source_key"] = f"{source_key}.spaces[{index}]"
+            record["source_key"] = (
+                f"{source_key}.spaces.{index}" if isinstance(index, str) else f"{source_key}.spaces[{index}]"
+            )
             rectangle = space.get("rectangle")
             if isinstance(rectangle, Mapping):
                 min_x = _number_alias(rectangle, ("min_x",))
@@ -487,21 +503,31 @@ def _opening_records_from_storey_map(
     singular = collection[:-1]
     for source_key in _ordered_floor_keys(value):
         openings = value.get(source_key)
-        if not isinstance(openings, list):
+        if not isinstance(openings, (list, Mapping)):
             continue
-        storey_id = storey_by_source.get(source_key)
+        storey_id = storey_by_source.get(source_key) or _canonical_storey_id(source_key, storeys)
         if storey_id is None:
             continue
         sequence = 0
-        for opening in openings:
+        if isinstance(openings, Mapping):
+            items = list(openings.items())
+        else:
+            items = list(enumerate(openings, start=1))
+        for opening_key, opening in items:
             if not isinstance(opening, Mapping):
                 continue
             count = _positive_count(_first_present(opening, ("count", "quantity")))
             for _ in range(count):
                 sequence += 1
                 record = _normalize_opening_payload(opening)
+                if isinstance(opening_key, str) and not _string(record.get("name")):
+                    record["name"] = opening_key
                 record["storey"] = storey_id
-                record["source_key"] = f"{source_key}.{singular}[{sequence}]"
+                if isinstance(opening_key, str):
+                    suffix = opening_key if count == 1 else f"{opening_key}.{sequence}"
+                    record["source_key"] = f"{source_key}.{singular}.{suffix}"
+                else:
+                    record["source_key"] = f"{source_key}.{singular}[{sequence}]"
                 records.append(record)
     return records
 

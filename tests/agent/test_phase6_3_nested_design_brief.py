@@ -477,3 +477,70 @@ def test_expected_facts_normalizes_live_deepseek_suffix_floor_collections():
     assert expected["window_counts_by_storey"] == {"storey-1": 2, "storey-2": 1}
     assert expected["roof"]["thickness_mm"] == 150
     assert expected["slabs"][0]["thickness_mm"] == 150
+
+
+def test_expected_facts_normalizes_storey_mapping_records_not_zero_counts():
+    design_brief = {
+        "schema_version": "text2ifc/design-brief/2.0",
+        "status": "ready",
+        "language": "zh-CN",
+        "known_facts": {
+            "building": {
+                "width_mm": 10000,
+                "depth_mm": 8000,
+                "storeys": 2,
+                "clear_height_per_storey_mm": 3000,
+                "wall_thickness_mm": 200,
+                "slab_thickness_mm": 150,
+                "roof_elevation_mm": 6150,
+            },
+            "storeys": [
+                {"name": "首层", "elevation_mm": 0, "height_mm": 3000},
+                {"name": "二层", "elevation_mm": 3150, "height_mm": 3000},
+            ],
+            "spaces": {
+                "首层": {
+                    "客厅": {"width_mm": 6000, "depth_mm": 4500},
+                    "厨房": {"width_mm": 4000, "depth_mm": 3500},
+                },
+                "二层": {
+                    "主卧": {"width_mm": 5000, "depth_mm": 4000},
+                    "走廊": {"width_mm": 1200},
+                },
+            },
+            "doors": {
+                "首层": {
+                    "客厅外门": {"host": "客厅南墙", "width_mm": 1200, "height_mm": 2200},
+                },
+                "二层": {
+                    "主卧门": {"host": "走廊至主卧", "width_mm": 900, "height_mm": 2100},
+                },
+            },
+            "windows": {
+                "首层": {
+                    "客厅南窗1": {"host": "客厅南墙", "width_mm": 1500, "height_mm": 1200},
+                },
+                "二层": {
+                    "主卧南窗1": {"host": "主卧南墙", "width_mm": 1500, "height_mm": 1200},
+                },
+            },
+            "stairs": {"start_elevation_mm": 150, "end_elevation_mm": 3150},
+        },
+        "missing_facts": [],
+        "ambiguities": [],
+        "unsupported_requests": [],
+    }
+
+    expected = build_expected_facts(
+        case_id="storey-mapping-records",
+        design_brief=design_brief,
+    )
+
+    assert expected["space_counts_by_storey"] == {"storey-1": 2, "storey-2": 2}
+    assert expected["door_counts_by_storey"] == {"storey-1": 1, "storey-2": 1}
+    assert expected["window_counts_by_storey"] == {"storey-1": 1, "storey-2": 1}
+    assert expected["total_counts"]["IfcSpace"] == 4
+    assert expected["total_counts"]["IfcDoor"] == 2
+    assert expected["total_counts"]["IfcWindow"] == 2
+    assert expected["spaces"][0]["name"] == "客厅"
+    assert expected["doors"][0]["host_wall"] == "客厅南墙"
