@@ -1,0 +1,48 @@
+{
+  "rounds": [
+    {
+      "attempted_action": "stop_for_user_input",
+      "input_issue_count": 1,
+      "issue_delta": null,
+      "issues": [
+        {
+          "actual_ref": null,
+          "evidence": "Stair location is required from the user.",
+          "expected_fact_ref": null,
+          "issue_id": "issue_clarification_two_storey_route_0001",
+          "issue_type": "missing_required_fact",
+          "owner": "user",
+          "retryable": true,
+          "severity": "blocking",
+          "source": "semantic_validation",
+          "suggested_route": "ask_user"
+        }
+      ],
+      "max_feedback_rounds": 2,
+      "output_issue_count": 1,
+      "retry_allowed": false,
+      "round_index": 0,
+      "route": "ask_user",
+      "route_decision": {
+        "blocking_issue_ids": [
+          "issue_clarification_two_storey_route_0001"
+        ],
+        "current_feedback_round": 0,
+        "final_status": "draft",
+        "human_review_required": false,
+        "max_feedback_rounds": 2,
+        "reason": "Route ask_user selected from 1 issue(s); first issue issue_clarification_two_storey_route_0001 is missing_required_fact owned by user.",
+        "retry_allowed": false,
+        "route": "ask_user",
+        "schema_version": "text2ifc/route-decision/2.0",
+        "source_issue_count": 1,
+        "target_stage": "user"
+      },
+      "schema_version": "text2ifc/feedback-round/1.0",
+      "source_stage": "design_brief",
+      "target_stage": "user",
+      "terminal_status": "draft"
+    }
+  ],
+  "schema_version": "text2ifc/feedback-rounds/1.0"
+}

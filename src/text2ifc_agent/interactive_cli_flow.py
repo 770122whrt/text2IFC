@@ -6,7 +6,7 @@ import json
 import shutil
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Callable, Iterable
+from typing import Any, Callable, Iterable, Mapping
 
 from .live_pipeline import (
     run_audit_report_stage,
@@ -23,6 +23,15 @@ from .design_brief import load_design_brief_schema, validate_design_brief
 from .expected_facts import write_expected_facts
 from .gate_audit_bundle import write_gate_summary
 from .generator import validate_generation_document
+from .feedback_loop import write_feedback_artifacts
+from .issue_normalizers import (
+    normalize_audit_findings,
+    normalize_gate_sidecars,
+    normalize_provider_failure,
+    normalize_validation_issues,
+    write_terminal_issues,
+)
+from .issues import write_issues
 from .openai_compat import (
     OpenAICompatError,
     OpenAICompatRuntimeConfig,
@@ -351,6 +360,12 @@ def run_ready_session_to_ifc(
             stage="generator",
             exc=exc,
         )
+        _write_provider_failure_issues(
+            store=store,
+            stored_session=stored_session,
+            stage="generator",
+            error_payload=error_payload,
+        )
         return SessionIfcResult(
             session_id=stored_session.session_id,
             session_hash=stored_session.session_hash,
@@ -441,6 +456,7 @@ def run_ready_session_to_ifc(
         }
     ):
         store.mark_session_status(stored_session.session_id, "draft_or_blocked")
+        _write_terminal_non_accept_issues(store=store, stored_session=stored_session)
         store.export_session(stored_session.session_id)
         return SessionIfcResult(
             session_id=stored_session.session_id,
@@ -568,6 +584,7 @@ def run_ready_session_to_ifc(
             build_live_run_report(case_dir=stored_session.run_dir)
     if not audit["valid"] or audit["status"] != "accepted":
         store.mark_session_status(stored_session.session_id, "audit_blocked")
+        _write_terminal_non_accept_issues(store=store, stored_session=stored_session)
         if (stored_session.run_dir / "output.ifc").is_file():
             _record_existing_artifact(store, stored_session, kind="ifc", name="output.ifc")
         if (stored_session.run_dir / "report.md").is_file():
@@ -600,10 +617,12 @@ def run_ready_session_to_ifc(
     _record_stage_payloads(store, stored_session.session_id, "final_acceptance", final)
     if final["valid"]:
         store.mark_session_status(stored_session.session_id, "compiled")
+        _write_phase6_4_accept_artifacts(store=store, stored_session=stored_session)
         _record_existing_artifact(store, stored_session, kind="ifc", name="output.ifc")
         _record_existing_artifact(store, stored_session, kind="report", name="report.md")
     else:
         store.mark_session_status(stored_session.session_id, "final_blocked")
+        _write_terminal_non_accept_issues(store=store, stored_session=stored_session)
         if (stored_session.run_dir / "output.ifc").is_file():
             _record_existing_artifact(store, stored_session, kind="ifc", name="output.ifc")
         if (stored_session.run_dir / "report.md").is_file():
@@ -615,6 +634,15 @@ def run_ready_session_to_ifc(
             session=stored_session,
             export_path=export_path,
             final=final,
+        )
+        _write_phase6_4_case_result(
+            store=store,
+            stored_session=stored_session,
+            final_status="accepted",
+            output_type="ifc",
+            route="accepted",
+            failure_owner=None,
+            blocking_issue_count=0,
         )
         _write_final_acceptance_index(store, stored_session, export_path)
     return SessionIfcResult(
@@ -1015,6 +1043,230 @@ def _record_provider_failure(
     store.mark_session_status(stored_session.session_id, "provider_failed")
     store.export_session(stored_session.session_id)
     return payload
+
+
+def _write_provider_failure_issues(
+    *,
+    store: SessionStore,
+    stored_session: Any,
+    stage: str,
+    error_payload: dict[str, Any],
+) -> None:
+    issues = normalize_provider_failure(error_payload, stage=stage)
+    write_terminal_issues(stored_session.run_dir, issues)
+    write_feedback_artifacts(
+        stored_session.run_dir,
+        source_stage=stage,
+        issues=issues,
+    )
+    _record_existing_artifact(store, stored_session, kind="issues", name="issues.json")
+    _record_existing_artifact(
+        store,
+        stored_session,
+        kind="route_decision",
+        name="route-decision.json",
+    )
+    _record_existing_artifact(
+        store,
+        stored_session,
+        kind="feedback_rounds",
+        name="feedback-rounds.json",
+    )
+    _write_phase6_4_case_result(
+        store=store,
+        stored_session=stored_session,
+        final_status="blocked",
+        output_type="none",
+        route="provider_retry",
+        failure_owner="provider",
+        blocking_issue_count=len(issues),
+    )
+
+
+def _write_terminal_non_accept_issues(
+    *,
+    store: SessionStore,
+    stored_session: Any,
+) -> None:
+    run_dir = stored_session.run_dir
+    issues = []
+    generator_validation = _read_optional_issues(run_dir / "generator" / "validation.json")
+    if generator_validation:
+        issues.extend(
+            normalize_validation_issues(
+                generator_validation,
+                source="schema_validation",
+            )
+        )
+    semantic_coverage = _read_optional_json(run_dir / "semantic-coverage.json")
+    if semantic_coverage and semantic_coverage.get("valid") is False:
+        issues.extend(
+            normalize_validation_issues(
+                _semantic_coverage_diagnostics(semantic_coverage),
+                source="semantic_validation",
+            )
+        )
+    issues.extend(normalize_gate_sidecars(run_dir))
+    audit_report = _read_optional_json(run_dir / "audit" / "audit-report.json")
+    if audit_report:
+        issues.extend(normalize_audit_findings(audit_report))
+    audit_validation = _read_optional_issues(run_dir / "audit" / "validation.json")
+    if audit_validation:
+        issues.extend(
+            normalize_validation_issues(
+                audit_validation,
+                source="semantic_validation",
+            )
+        )
+    if issues:
+        write_terminal_issues(run_dir, issues)
+        round_record = write_feedback_artifacts(
+            run_dir,
+            source_stage="workflow",
+            issues=issues,
+        )
+        _record_existing_artifact(store, stored_session, kind="issues", name="issues.json")
+        _record_existing_artifact(
+            store,
+            stored_session,
+            kind="route_decision",
+            name="route-decision.json",
+        )
+        _record_existing_artifact(
+            store,
+            stored_session,
+            kind="feedback_rounds",
+            name="feedback-rounds.json",
+        )
+        _write_phase6_4_case_result(
+            store=store,
+            stored_session=stored_session,
+            final_status=str(round_record["route_decision"]["final_status"]),
+            output_type="none",
+            route=str(round_record["route_decision"]["route"]),
+            failure_owner=issues[0].owner if issues else None,
+            blocking_issue_count=len(issues),
+        )
+
+
+def _write_phase6_4_accept_artifacts(
+    *,
+    store: SessionStore,
+    stored_session: Any,
+) -> None:
+    write_issues(stored_session.run_dir / "issues.json", [])
+    write_feedback_artifacts(
+        stored_session.run_dir,
+        source_stage="final",
+        issues=[],
+    )
+    _record_existing_artifact(store, stored_session, kind="issues", name="issues.json")
+    _record_existing_artifact(
+        store,
+        stored_session,
+        kind="route_decision",
+        name="route-decision.json",
+    )
+    _record_existing_artifact(
+        store,
+        stored_session,
+        kind="feedback_rounds",
+        name="feedback-rounds.json",
+    )
+
+
+def _write_phase6_4_case_result(
+    *,
+    store: SessionStore,
+    stored_session: Any,
+    final_status: str,
+    output_type: str,
+    route: str,
+    failure_owner: str | None,
+    blocking_issue_count: int,
+) -> None:
+    payload = {
+        "schema_version": "text2ifc/phase6.4-case-result/1.0",
+        "case_id": stored_session.session_hash,
+        "input_language": "zh-CN",
+        "workflow_language": "en-US-control",
+        "prompt_language": "zh-CN",
+        "output_type": output_type,
+        "schema_passed": _json_bool(stored_session.run_dir / "generator" / "validation.json", "valid"),
+        "compile_reopen_passed": _json_bool(stored_session.run_dir / "ifc-verification.json", "success"),
+        "deterministic_gates_passed": _json_value(stored_session.run_dir / "gate-summary.json", "overall_status") == "passed",
+        "audit_passed": _json_value(stored_session.run_dir / "audit" / "audit-report.json", "recommendation") == "accept",
+        "final_status": final_status,
+        "route": route,
+        "failure_owner": failure_owner,
+        "blocking_issue_count": blocking_issue_count,
+        "evidence_paths": [
+            path
+            for path in (
+                "design-brief/design-brief.json",
+                "generator/candidate.json",
+                "generator/validation.json",
+                "ifc-verification.json",
+                "geometry-feedback.json",
+                "gate-summary.json",
+                "audit/audit-report.json",
+                "issues.json",
+                "route-decision.json",
+                "feedback-rounds.json",
+                "output.ifc",
+            )
+            if (stored_session.run_dir / path).is_file()
+        ],
+    }
+    _write_json(stored_session.run_dir / "case-result.json", payload)
+    _record_existing_artifact(
+        store,
+        stored_session,
+        kind="case_result",
+        name="case-result.json",
+    )
+
+
+def _json_bool(path: Path, key: str) -> bool:
+    return bool(_json_value(path, key))
+
+
+def _json_value(path: Path, key: str) -> Any:
+    payload = _read_optional_json(path)
+    if not payload:
+        return None
+    return payload.get(key)
+
+
+def _read_optional_issues(path: Path) -> list[dict[str, Any]]:
+    payload = _read_optional_json(path)
+    if not payload:
+        return []
+    raw = payload.get("diagnostics") or payload.get("issues") or []
+    return [dict(item) for item in raw if isinstance(item, dict)]
+
+
+def _read_optional_json(path: Path) -> dict[str, Any] | None:
+    if not path.is_file():
+        return None
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    return dict(payload) if isinstance(payload, Mapping) else None
+
+
+def _semantic_coverage_diagnostics(payload: Mapping[str, Any]) -> list[dict[str, Any]]:
+    raw = payload.get("blocking_facts") or []
+    diagnostics: list[dict[str, Any]] = []
+    for item in raw:
+        if not isinstance(item, dict):
+            continue
+        diagnostics.append(
+            {
+                "code": str(item.get("coverage_state") or "SEMANTIC_COVERAGE_FAILED").upper(),
+                "path": item.get("path"),
+                "message": item.get("reason") or item.get("message") or "Semantic coverage failed.",
+            }
+        )
+    return diagnostics
 
 
 def _promote_repaired_candidate(run_dir: Path, repaired_candidate: Path) -> None:

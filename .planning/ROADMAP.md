@@ -853,3 +853,80 @@ and reduce review noise while preserving debug/full trace on demand.
 architecture for complex-building no-false-accept, dynamic Gate/Audit routing,
 hash-bound evidence, and compact trace. The complex two-storey matrix case is
 currently an honest blocked route, not a claimed accepted live IFC.
+
+## Phase 6.4: Feedback Routing Loop MVP and Live DeepSeek Matrix (INSERTED)
+
+**Goal:** Turn the current mostly linear text2IFC workflow into a
+feedback-capable loop by normalizing validation, compiler, gate, Audit,
+provider, and runtime failures into structured Issues, aggregating them into
+RouteDecision v2, recording bounded feedback rounds, producing matrix
+artifacts, and proving the result with deterministic TDD plus real DeepSeek
+live workflow evidence.
+
+**Requirements:** GEN-02, GEN-03, GATE-01, ROUTE-01, TRACE-02, AGENT-04,
+AGENT-05, REPAIR-01, OBS-01, CLI-02, CLI-03, CLI-04, CLI-05, CLI-06, CLI-08
+
+**Depends on:** Phase 6.3
+
+**Canonical refs:**
+
+- `.planning/phases/06.4-feedback-routing-loop-mvp-and-live-deepseek-matrix/06.4-SPEC.md`
+- `.planning/phases/06.4-feedback-routing-loop-mvp-and-live-deepseek-matrix/06.4-PLAN-OUTLINE.md`
+
+**Explicit boundary:** Phase 6.4 prioritizes the feedback loop mechanism over
+making one complex two-storey prompt pass. It does not introduce RAG,
+fine-tuning, deployment changes, large BIM JSON schema redesign, or
+case-specific production fixes. Deterministic TDD/regression tests must pass
+before real DeepSeek live tests. Live acceptance requires real provider
+evidence and cannot be satisfied by fake/file/replay providers, prewritten
+`answers.json`, or exact scripted clarification transcripts.
+
+**Plans:** 6 plans in 6 waves
+
+**Wave 0**
+
+- [x] `06.4-00-PLAN.md` - Issue and RouteDecision v2 contracts
+
+**Wave 1** *(blocked on Wave 0 contracts)*
+
+- [x] `06.4-01-PLAN.md` - Failure source Issue normalization
+
+**Wave 2** *(blocked on Wave 1 normalizers)*
+
+- [x] `06.4-02-PLAN.md` - Bounded feedback round controller
+
+**Wave 3** *(blocked on Wave 2 feedback rounds)*
+
+- [x] `06.4-03-PLAN.md` - Matrix artifacts and report integration
+
+**Wave 4** *(blocked on Wave 3 matrix/report artifacts)*
+
+- [x] `06.4-04-PLAN.md` - Adaptive CLI and live UAT harness
+
+**Wave 5** *(blocked on Wave 4 live UAT harness)*
+
+- [x] `06.4-05-PLAN.md` - Real DeepSeek live matrix and final verification
+
+**Cross-cutting constraints:**
+
+- New machine-readable workflow fields, JSON keys, enum values, issue types,
+  route names, structured logs, and tests use English control vocabulary.
+- Chinese raw user input is preserved as source text; Chinese may appear in
+  transcripts, reports, or optional `message_zh`, but not as control keys.
+- JSON Schema remains the single BIM JSON structural truth.
+- Every terminal non-accept run with a session directory writes
+  `issues.json`, `route-decision.json`, `feedback-rounds.json`,
+  `case-result.json`, and `report.md`.
+- Feedback loops are bounded to `max_feedback_rounds = 2` by default and stop
+  on non-improving issue counts.
+- DeepSeek secrets, headers, private base URLs, and token values never appear
+  in prompts, traces, reports, commits, or final answers.
+- `finish_reason=length` or equivalent provider truncation blocks acceptance.
+- Real DeepSeek live acceptance happens only after deterministic TDD and matrix
+  tests pass.
+
+**Status:** Complete - verified 2026-07-09. Phase 6.4 now has normalized
+Issues, RouteDecision v2, bounded feedback rounds, generated matrix/report
+artifacts, adaptive live-UAT guardrails, a real DeepSeek JSON smoke, a real
+DeepSeek accepted IFC workflow, a real DeepSeek non-accept Draft route, and
+zero secret findings in generated Phase 6.4 artifacts.

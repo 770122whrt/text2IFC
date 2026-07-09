@@ -7,7 +7,7 @@ from pathlib import Path
 
 from text2ifc_agent.clarification import ClarificationCall
 from text2ifc_agent.context_selection import select_design_brief_context
-from text2ifc_agent.providers import LiveProviderResult, ProviderOutput
+from text2ifc_agent.providers import LiveProviderResult, ProviderOutput, ProviderOutputError
 from text2ifc_agent.session_store import SessionStore
 
 
@@ -147,6 +147,109 @@ def test_live_repl_quit_records_incomplete_without_ifc(tmp_path):
     assert session.status == "incomplete"
     assert not (root / "runs" / session.session_hash / "output.ifc").exists()
     assert "\u5df2\u9000\u51fa" in output.getvalue()
+
+
+def test_live_repl_reprompts_empty_clarification_answer(tmp_path):
+    from scripts.agent import run_text2ifc_chat
+
+    root = tmp_path / "phase6.2-fix-repl"
+    output = io.StringIO()
+    answers = iter([ORIGINAL_REQUEST, "   ", ANSWER_TEXT])
+
+    def invoke(transcript, call_index):
+        original_request = transcript[0]["content"]
+        if call_index == 1:
+            return _call(
+                call_index,
+                original_request=original_request,
+                status="needs_clarification",
+            )
+        return _call(
+            call_index,
+            original_request=original_request,
+            status="ready",
+            source_turns=["turn-user-001", "turn-user-003"],
+        )
+
+    exit_code = run_text2ifc_chat.main(
+        [
+            "--live",
+            "--stop-after",
+            "design-brief",
+            "--output-root",
+            str(root),
+            "--db",
+            str(root / "sessions.sqlite"),
+        ],
+        design_brief_invoker=invoke,
+        input_func=lambda prompt: next(answers),
+        stdout=output,
+    )
+
+    store = SessionStore.open(root / "sessions.sqlite", artifact_root=root)
+    try:
+        session = store.list_sessions()[0]
+        export = store.session_export_payload(session.session_id)
+    finally:
+        store.close()
+
+    rendered = output.getvalue()
+    event_types = [event["event_type"] for event in export["events"]]
+    assert exit_code == 0
+    assert session.status == "ready"
+    assert "\u56de\u7b54\u4e0d\u80fd\u4e3a\u7a7a" in rendered
+    assert [turn["text"] for turn in export["turns"]] == [
+        ORIGINAL_REQUEST,
+        QUESTION_TEXT,
+        ANSWER_TEXT,
+    ]
+    assert event_types.count("user_empty_answer_rejected") == 1
+    assert event_types.count("user_answer_received") == 1
+    assert event_types.index("user_empty_answer_rejected") < event_types.index(
+        "user_answer_received"
+    )
+
+
+def test_live_repl_acknowledges_answer_before_rerunning_design_brief(tmp_path):
+    from scripts.agent import run_text2ifc_chat
+
+    root = tmp_path / "phase6.2-fix-repl"
+    output = io.StringIO()
+    answers = iter([ORIGINAL_REQUEST, ANSWER_TEXT])
+
+    def invoke(transcript, call_index):
+        original_request = transcript[0]["content"]
+        if call_index == 1:
+            return _call(
+                call_index,
+                original_request=original_request,
+                status="needs_clarification",
+            )
+        assert "\u5df2\u6536\u5230\u56de\u7b54\uff0c\u6b63\u5728\u7ee7\u7eed\u68b3\u7406\u9700\u6c42" in output.getvalue()
+        return _call(
+            call_index,
+            original_request=original_request,
+            status="ready",
+            source_turns=["turn-user-001", "turn-user-003"],
+        )
+
+    exit_code = run_text2ifc_chat.main(
+        [
+            "--live",
+            "--stop-after",
+            "design-brief",
+            "--output-root",
+            str(root),
+            "--db",
+            str(root / "sessions.sqlite"),
+        ],
+        design_brief_invoker=invoke,
+        input_func=lambda prompt: next(answers),
+        stdout=output,
+    )
+
+    assert exit_code == 0
+    assert "\u9700\u6c42\u5df2\u660e\u786e" in output.getvalue()
 
 
 def test_live_repl_ready_session_compiles_ifc_with_fix_acceptance_report(tmp_path):
@@ -407,6 +510,91 @@ def test_live_repl_routes_geometry_failure_through_audit_before_final_status(tmp
     assert "geometry-feedback.json" in report
     assert "repair/repair-attempts.json" in report
     assert "audit/validation.json" in report
+
+
+def test_live_repl_records_provider_failure_without_traceback(tmp_path):
+    from scripts.agent import run_text2ifc_chat
+
+    root = tmp_path / "phase6.2-fix-repl"
+    output = io.StringIO()
+
+    def invoke(transcript, call_index):
+        call = _call(
+            call_index,
+            original_request=transcript[0]["content"],
+            status="ready",
+            source_turns=["turn-user-001"],
+        )
+        _write_design_brief_trace_fixture(root, call_index, transcript, call.brief)
+        return call
+
+    class FailingProvider:
+        def generate_live(self, *, session_id, prompt, schema, state):
+            del prompt, schema, state
+            raise ProviderOutputError(
+                "OpenAI-compatible live request failed for generator: RuntimeError",
+                details={
+                    "provider": "deepseek-openai-compatible",
+                    "failure_class": "provider_connection_error",
+                    "exception_type": "RuntimeError",
+                    "session_id": session_id,
+                    "request": {"model": "deepseek-v4-flash", "max_tokens": 8192},
+                },
+            )
+
+    exit_code = run_text2ifc_chat.main(
+        [
+            "--live",
+            "--output-root",
+            str(root),
+            "--db",
+            str(root / "sessions.sqlite"),
+        ],
+        design_brief_invoker=invoke,
+        live_provider_factory=FailingProvider,
+        input_func=lambda prompt: ORIGINAL_REQUEST,
+        stdout=output,
+    )
+
+    store = SessionStore.open(root / "sessions.sqlite", artifact_root=root)
+    try:
+        session = store.list_sessions()[0]
+        export = store.session_export_payload(session.session_id)
+    finally:
+        store.close()
+    run_dir = root / "runs" / session.session_hash
+    provider_error = json.loads(
+        (run_dir / "generator" / "provider-error.json").read_text(encoding="utf-8")
+    )
+    issues = json.loads((run_dir / "issues.json").read_text(encoding="utf-8"))
+    route_decision = json.loads(
+        (run_dir / "route-decision.json").read_text(encoding="utf-8")
+    )
+    feedback_rounds = json.loads(
+        (run_dir / "feedback-rounds.json").read_text(encoding="utf-8")
+    )
+
+    assert exit_code == 2
+    assert session.status == "provider_failed"
+    assert provider_error["stage"] == "generator"
+    assert provider_error["failure_class"] == "provider_connection_error"
+    assert provider_error["provider"] == "deepseek-openai-compatible"
+    assert issues["schema_version"] == "text2ifc/issues/1.0"
+    assert issues["issues"][0]["source"] == "provider"
+    assert issues["issues"][0]["owner"] == "provider"
+    assert issues["issues"][0]["issue_type"] == "provider_format_error"
+    assert issues["issues"][0]["suggested_route"] == "provider_retry"
+    assert route_decision["schema_version"] == "text2ifc/route-decision/2.0"
+    assert route_decision["route"] == "provider_retry"
+    assert route_decision["target_stage"] == "provider"
+    assert feedback_rounds["schema_version"] == "text2ifc/feedback-rounds/1.0"
+    assert feedback_rounds["rounds"][0]["attempted_action"] == "prepare_provider_retry"
+    assert (run_dir / "session-export.json").is_file()
+    assert any(event["event_type"] == "generator_provider_failed" for event in export["events"])
+    rendered = output.getvalue()
+    assert "Provider: failed" in rendered
+    assert "generator/provider-error.json" in rendered
+    assert "Traceback" not in rendered
 
 
 def _brief(*, original_request: str, status: str, source_turns=None):

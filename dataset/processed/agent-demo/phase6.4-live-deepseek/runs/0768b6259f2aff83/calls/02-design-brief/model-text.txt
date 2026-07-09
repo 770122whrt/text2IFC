@@ -1,0 +1,108 @@
+{
+  "schema_version": "text2ifc/design-brief/2.0",
+  "language": "zh-CN",
+  "original_request": "创建一个两层住宅，但我还不知道楼梯位置、墙厚、楼板厚度和门窗尺寸。",
+  "status": "needs_clarification",
+  "known_facts": {
+    "walls": {
+      "thickness_mm": 200
+    }
+  },
+  "fact_sources": [
+    {
+      "path": "/known_facts/walls/thickness_mm",
+      "source_turns": ["turn-user-005"],
+      "evidence_refs": ["capability:IFC2X3:IfcWall"]
+    }
+  ],
+  "missing_facts": [
+    {
+      "id": "mf-floor-length-width",
+      "code": "FLOOR_PLAN_MISSING",
+      "path": "/known_facts/building/storey/floor_plan",
+      "message": "一层住宅的平面尺寸（长和宽）尚未确定。",
+      "reason": "用户请求创建两层住宅，但未提供一层平面尺寸。",
+      "blocking": true,
+      "evidence_refs": ["schema:bim-json-v2:representation"],
+      "source_turns": ["turn-user-001"]
+    },
+    {
+      "id": "mf-floor-height",
+      "code": "STOREY_HEIGHT_MISSING",
+      "path": "/known_facts/building/storey/height_mm",
+      "message": "层高尚未确定。",
+      "reason": "用户请求创建两层住宅，但未提供层高。",
+      "blocking": true,
+      "evidence_refs": ["schema:bim-json-v2:representation"],
+      "source_turns": ["turn-user-001"]
+    },
+    {
+      "id": "mf-slab-thickness",
+      "code": "SLAB_THICKNESS_MISSING",
+      "path": "/known_facts/slabs/thickness_mm",
+      "message": "楼板厚度尚未确定。",
+      "reason": "用户明确表示还不知道楼板厚度，后续也未提供。",
+      "blocking": true,
+      "evidence_refs": ["capability:IFC2X3:IfcSlab"],
+      "source_turns": ["turn-user-001"]
+    },
+    {
+      "id": "mf-stair-location",
+      "code": "STAIR_LOCATION_MISSING",
+      "path": "/known_facts/stairs/location",
+      "message": "楼梯位置尚未确定。",
+      "reason": "用户明确表示还不知道楼梯位置，后续也未提供。",
+      "blocking": true,
+      "evidence_refs": ["capability:IFC2X3:IfcStair"],
+      "source_turns": ["turn-user-001"]
+    },
+    {
+      "id": "mf-opening-sizes",
+      "code": "OPENING_SIZES_MISSING",
+      "path": "/known_facts/openings/sizes",
+      "message": "门窗尺寸尚未确定。",
+      "reason": "用户明确表示还不知道门窗尺寸，后续也未提供。",
+      "blocking": true,
+      "evidence_refs": ["capability:IFC2X3:IfcDoor", "capability:IFC2X3:IfcWindow"],
+      "source_turns": ["turn-user-001"]
+    }
+  ],
+  "ambiguities": [],
+  "unsupported_requests": [],
+  "user_corrections": [],
+  "clarification_questions": [
+    {
+      "id": "q-floor-plan-height",
+      "text": "请提供一层住宅的平面尺寸（长和宽）以及层高是多少？",
+      "targets": ["mf-floor-length-width", "mf-floor-height"],
+      "reason": "矩形楼层空间需要平面尺寸和层高才能生成。",
+      "evidence_refs": ["schema:bim-json-v2:representation"]
+    },
+    {
+      "id": "q-slab-thickness",
+      "text": "楼板厚度是多少？",
+      "targets": ["mf-slab-thickness"],
+      "reason": "楼层板需要厚度才能生成。",
+      "evidence_refs": ["capability:IFC2X3:IfcSlab"]
+    },
+    {
+      "id": "q-stair-openings",
+      "text": "楼梯的位置在哪里？门窗的尺寸（宽度和高度）分别是多少？",
+      "targets": ["mf-stair-location", "mf-opening-sizes"],
+      "reason": "楼梯和门窗需要位置和尺寸才能生成。",
+      "evidence_refs": ["capability:IFC2X3:IfcStair", "capability:IFC2X3:IfcDoor", "capability:IFC2X3:IfcWindow"]
+    }
+  ],
+  "provenance": {
+    "source_turns": ["turn-user-001", "turn-assistant-002", "turn-assistant-003", "turn-assistant-004", "turn-user-005"],
+    "selected_evidence_ids": [
+      "schema:bim-json-v2:representation",
+      "capability:IFC2X3:IfcWall",
+      "capability:IFC2X3:IfcSlab",
+      "capability:IFC2X3:IfcStair",
+      "capability:IFC2X3:IfcDoor",
+      "capability:IFC2X3:IfcWindow"
+    ],
+    "few_shot_ids": []
+  }
+}

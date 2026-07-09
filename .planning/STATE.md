@@ -7,13 +7,13 @@ See: `.planning/PROJECT.md` (updated 2026-06-11)
 **Core value:** Produce valid, inspectable IFC models from explicit user
 requirements.
 
-**Current focus:** Post-Phase 6.3 complex live generation improvement and
-next-phase planning
+**Current focus:** Phase 6.4 feedback routing loop MVP and live DeepSeek
+matrix planning
 
 ## Status
 
-- Phase: 6.3
-- Stage: Waves 0-6 implemented and verified
+- Phase: 6.4
+- Stage: Wave 0 implemented and verified; Wave 1 next
 - State: Phase 6.2-fix Waves 0-2 are implemented and automatically verified.
   Wave 3 real UAT
   produced useful live evidence and fixed defects 001/002, then exposed defect
@@ -569,14 +569,16 @@ next-phase planning
 
 ## Next Action
 
-Use the Phase 6.3 matrix artifacts to plan the next complex live generation
-work. The next phase should improve Generator/Design-Brief decomposition for
-complex multi-storey requests until the user's two-storey residential prompt
-can produce an accepted IFC, while preserving the Phase 6.3 no-false-accept,
-hash binding, route-decision, compact trace, and verifier gates. A fresh live
-provider UAT may be run, but it must not be reported as accepted unless the
-generated candidate passes the deterministic gates, Audit, verifier, and
-artifact secret scan.
+Review and execute Phase 6.4. Start with Wave 0 Issue and RouteDecision v2
+contracts, then proceed through failure normalization, bounded feedback rounds,
+matrix/report artifacts, adaptive CLI live UAT, and final real DeepSeek
+verification. Wave 0 is now complete: Issue model, English-control language
+guard, and RouteDecision v2 aggregation are implemented and verified while
+preserving Phase 6.3 route compatibility. Next execute Wave 1 failure-source
+normalization. Deterministic TDD and matrix tests must pass before any real
+DeepSeek acceptance claim. The final live test must not use fake/file/replay
+providers, prewritten `answers.json`, or exact scripted clarification
+transcripts.
 
 ## Accumulated Context
 
@@ -777,5 +779,10 @@ artifact secret scan.
   responses.
 
 ---
-*Last activity: 2026-07-02 - completed Phase 6.3 Wave 6 matrix verification
-and closed Phase 6.3 reliability evidence routing*
+*Last activity: 2026-07-09 - completed Phase 6.4. Real DeepSeek JSON smoke
+passed; accepted live workflow compiled IFC at
+`dataset/processed/agent-demo/phase6.4-live-deepseek/runs/129e4e93ae4e4583/output.ifc`;
+non-accept live workflow stopped honestly as Draft route `ask_user` at
+`dataset/processed/agent-demo/phase6.4-live-deepseek/runs/0768b6259f2aff83`;
+Phase 6.4 focused tests, REPL/semantic regressions, compileall, matrix, and
+secret scans passed.*

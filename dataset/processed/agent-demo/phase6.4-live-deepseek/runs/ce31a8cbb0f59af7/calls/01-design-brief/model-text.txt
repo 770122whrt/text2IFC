@@ -1,0 +1,80 @@
+{
+  "schema_version": "text2ifc/design-brief/2.0",
+  "language": "zh-CN",
+  "original_request": "创建一个两层住宅，但我还不知道楼梯位置、墙厚、楼板厚度和门窗尺寸。",
+  "status": "draft_required",
+  "known_facts": {
+    "building": {
+      "levels": 2,
+      "type": "residential"
+    }
+  },
+  "fact_sources": [
+    {
+      "path": "/known_facts/building/levels",
+      "source_turns": ["turn-user-001"],
+      "evidence_refs": ["schema:bim-json-v2:entity"]
+    }
+  ],
+  "missing_facts": [
+    {
+      "id": "mf-staircase-location",
+      "code": "STAIRCASE_LOCATION_MISSING",
+      "path": "/known_facts/staircase/location",
+      "message": "楼梯位置尚未确定。",
+      "reason": "用户要求创建两层住宅，楼梯连接两层的具体位置未指定。",
+      "blocking": true,
+      "evidence_refs": ["capability:IFC2X3:IfcStair"],
+      "source_turns": ["turn-user-001"]
+    },
+    {
+      "id": "mf-wall-thickness",
+      "code": "WALL_THICKNESS_MISSING",
+      "path": "/known_facts/walls/thickness_mm",
+      "message": "墙体厚度尚未确定。",
+      "reason": "住宅墙体厚度未知，无默认值。",
+      "blocking": true,
+      "evidence_refs": ["capability:IFC2X3:IfcWall"],
+      "source_turns": ["turn-user-001"]
+    },
+    {
+      "id": "mf-slab-thickness",
+      "code": "SLAB_THICKNESS_MISSING",
+      "path": "/known_facts/slabs/thickness_mm",
+      "message": "楼板厚度尚未确定。",
+      "reason": "住宅楼板厚度未知，无默认值。",
+      "blocking": true,
+      "evidence_refs": ["capability:IFC2X3:IfcSlab"],
+      "source_turns": ["turn-user-001"]
+    },
+    {
+      "id": "mf-opening-dimensions",
+      "code": "OPENING_DIMENSIONS_MISSING",
+      "path": "/known_facts/openings/dimensions",
+      "message": "门窗尺寸尚未确定。",
+      "reason": "用户未指定门和窗的具体尺寸。",
+      "blocking": true,
+      "evidence_refs": ["capability:IFC2X3:IfcDoor", "capability:IFC2X3:IfcWindow"],
+      "source_turns": ["turn-user-001"]
+    }
+  ],
+  "ambiguities": [],
+  "unsupported_requests": [],
+  "user_corrections": [],
+  "clarification_questions": [],
+  "provenance": {
+    "source_turns": ["turn-user-001"],
+    "selected_evidence_ids": [
+      "schema:bim-json-v2:entity",
+      "capability:IFC2X3:IfcStair",
+      "capability:IFC2X3:IfcWall",
+      "capability:IFC2X3:IfcSlab",
+      "capability:IFC2X3:IfcDoor",
+      "capability:IFC2X3:IfcWindow"
+    ],
+    "few_shot_ids": [
+      "design-brief-v2.answered-unknown-wall-thickness",
+      "design-brief-v2.incomplete-room"
+    ]
+  }
+}

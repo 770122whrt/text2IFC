@@ -138,6 +138,104 @@ def build_live_run_report(*, case_dir: Path | str) -> Path:
     return report_path
 
 
+def build_phase6_4_review_report(*, case_dir: Path | str) -> Path:
+    """Render the Phase 6.4 human-review report from actual sidecars."""
+
+    root = Path(case_dir)
+    report_path = root / "report.md"
+    case_result = _read_optional_json(root / "case-result.json") or {}
+    route_decision = _read_optional_json(root / "route-decision.json") or {}
+    lines: list[str] = [
+        "# Phase 6.4 Feedback Routing Run Report",
+        "",
+        "Generated from run artifacts. This report is the human review entry point.",
+        "",
+        "## Original Input",
+        "",
+        _optional_text_block(root / "input.txt"),
+        "",
+        _optional_source_link("input.txt", root / "input.txt"),
+        "",
+        "## Transcript",
+        "",
+        _optional_json_block(root / "conversation.json"),
+        "",
+        _optional_source_link("conversation.json", root / "conversation.json"),
+        "",
+        "## Design Brief",
+        "",
+        *_phase6_4_links(root, ("design-brief/design-brief.json", "design-brief/validation.json")),
+        "",
+        "## BIM JSON or Draft",
+        "",
+        *_phase6_4_links(
+            root,
+            (
+                "generator/candidate.json",
+                "generator/draft.json",
+                "generator/parsed-output.json",
+            ),
+        ),
+        "",
+        "## Validation",
+        "",
+        *_phase6_4_links(
+            root,
+            (
+                "generator/validation.json",
+                "semantic-coverage.json",
+            ),
+        ),
+        "",
+        "## Compiler and Reopen",
+        "",
+        *_phase6_4_links(root, ("ifc-verification.json", "output.ifc")),
+        "",
+        "## Gates",
+        "",
+        *_phase6_4_links(root, ("gate-summary.json", "geometry-feedback.json")),
+        "",
+        "## Audit",
+        "",
+        *_phase6_4_links(root, ("audit/audit-report.json", "audit/validation.json")),
+        "",
+        "## Normalized Issues",
+        "",
+        _optional_json_block(root / "issues.json"),
+        "",
+        _optional_source_link("issues.json", root / "issues.json"),
+        "",
+        "## Route Decision",
+        "",
+        f"- route: `{route_decision.get('route')}`",
+        f"- target_stage: `{route_decision.get('target_stage')}`",
+        f"- final_status: `{route_decision.get('final_status')}`",
+        "",
+        _optional_json_block(root / "route-decision.json"),
+        "",
+        _optional_source_link("route-decision.json", root / "route-decision.json"),
+        "",
+        "## Feedback Rounds",
+        "",
+        _optional_json_block(root / "feedback-rounds.json"),
+        "",
+        _optional_source_link("feedback-rounds.json", root / "feedback-rounds.json"),
+        "",
+        "## Final Status",
+        "",
+        f"- final_status: `{case_result.get('final_status', route_decision.get('final_status'))}`",
+        f"- failure_owner: `{case_result.get('failure_owner')}`",
+        f"- output_type: `{case_result.get('output_type')}`",
+        "",
+        "## Evidence Paths",
+        "",
+        *_phase6_4_evidence_lines(root, case_result),
+        "",
+    ]
+    _write_text(report_path, "\n".join(line for line in lines if line is not None).rstrip() + "\n")
+    return report_path
+
+
 def _require_sidecars(root: Path) -> None:
     for _title, directory, files in STAGE_SIDECARS:
         stage_dir = resolve_final_design_brief_dir(root) if directory == "design-brief" else root / directory
@@ -345,6 +443,57 @@ def _source_link(relative: str) -> str:
 
 def _read_json(path: Path) -> Any:
     return json.loads(path.read_text(encoding="utf-8"))
+
+
+def _read_optional_json(path: Path) -> Any:
+    if not path.is_file():
+        return None
+    return _read_json(path)
+
+
+def _optional_text_block(path: Path) -> str:
+    if not path.is_file():
+        return "_Missing artifact._"
+    return _embed_text(path)
+
+
+def _optional_json_block(path: Path) -> str:
+    if not path.is_file():
+        return "_Missing artifact._"
+    return _embed_json(path)
+
+
+def _optional_source_link(relative: str, path: Path) -> str:
+    if not path.is_file():
+        return ""
+    return f"[{relative}]({relative})"
+
+
+def _phase6_4_links(root: Path, relatives: tuple[str, ...]) -> list[str]:
+    lines: list[str] = []
+    for relative in relatives:
+        if (root / relative).is_file():
+            lines.append(f"- [{relative}]({relative})")
+    return lines or ["_No artifact recorded._"]
+
+
+def _phase6_4_evidence_lines(
+    root: Path,
+    case_result: dict[str, Any],
+) -> list[str]:
+    paths = case_result.get("evidence_paths")
+    if not isinstance(paths, list) or not paths:
+        paths = [
+            "issues.json",
+            "route-decision.json",
+            "feedback-rounds.json",
+            "case-result.json",
+        ]
+    lines: list[str] = []
+    for relative in paths:
+        if isinstance(relative, str) and (root / relative).exists():
+            lines.append(f"- [{relative}]({relative})")
+    return lines or ["_No evidence paths recorded._"]
 
 
 def _write_text(path: Path, text: str) -> None:

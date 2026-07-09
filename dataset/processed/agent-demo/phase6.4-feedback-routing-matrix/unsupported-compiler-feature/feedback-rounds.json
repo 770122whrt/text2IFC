@@ -1,0 +1,48 @@
+{
+  "rounds": [
+    {
+      "attempted_action": "stop_unsupported",
+      "input_issue_count": 1,
+      "issue_delta": null,
+      "issues": [
+        {
+          "actual_ref": null,
+          "evidence": "Compiler cannot emit this feature yet.",
+          "expected_fact_ref": null,
+          "issue_id": "issue_unsupported_compiler_feature_0001",
+          "issue_type": "compiler_unsupported_feature",
+          "owner": "compiler",
+          "retryable": false,
+          "severity": "blocking",
+          "source": "compiler",
+          "suggested_route": "blocked_as_unsupported"
+        }
+      ],
+      "max_feedback_rounds": 2,
+      "output_issue_count": 1,
+      "retry_allowed": false,
+      "round_index": 0,
+      "route": "blocked_as_unsupported",
+      "route_decision": {
+        "blocking_issue_ids": [
+          "issue_unsupported_compiler_feature_0001"
+        ],
+        "current_feedback_round": 0,
+        "final_status": "blocked",
+        "human_review_required": false,
+        "max_feedback_rounds": 2,
+        "reason": "Route blocked_as_unsupported selected from 1 issue(s); first issue issue_unsupported_compiler_feature_0001 is compiler_unsupported_feature owned by compiler.",
+        "retry_allowed": false,
+        "route": "blocked_as_unsupported",
+        "schema_version": "text2ifc/route-decision/2.0",
+        "source_issue_count": 1,
+        "target_stage": "compiler"
+      },
+      "schema_version": "text2ifc/feedback-round/1.0",
+      "source_stage": "compiler",
+      "target_stage": "compiler",
+      "terminal_status": "blocked"
+    }
+  ],
+  "schema_version": "text2ifc/feedback-rounds/1.0"
+}

@@ -1,0 +1,74 @@
+{
+  "ambiguities": [],
+  "clarification_questions": [],
+  "fact_sources": [
+    {
+      "evidence_refs": [
+        "capability:IFC2X3:IfcBuilding",
+        "capability:IFC2X3:IfcBuildingStorey",
+        "capability:IFC2X3:IfcSpace",
+        "capability:IFC2X3:IfcWall",
+        "capability:IFC2X3:IfcDoor",
+        "capability:IFC2X3:IfcSlab"
+      ],
+      "path": "/known_facts",
+      "source_turns": [
+        "turn-user-001"
+      ]
+    }
+  ],
+  "known_facts": {
+    "building": {
+      "name": "Phase6.4验收房间",
+      "storey_elevation_m": 0,
+      "storey_height_m": 3
+    },
+    "door": {
+      "count": 1,
+      "height_m": 2.1,
+      "host_wall_orientation": "south",
+      "position": "center",
+      "width_m": 0.9
+    },
+    "slab": {
+      "material": "钢筋混凝土",
+      "thickness_m": 0.15,
+      "top_elevation_m": 0
+    },
+    "space": {
+      "height_m": 3,
+      "length_m": 6,
+      "name": "房间101",
+      "shape": "rectangle",
+      "width_m": 4
+    },
+    "walls": {
+      "count": 4,
+      "height_m": 3,
+      "material": "混凝土",
+      "position_relative_to_room": "exterior",
+      "thickness_m": 0.2
+    }
+  },
+  "language": "zh-CN",
+  "missing_facts": [],
+  "original_request": "创建一个名为Phase6.4验收房间的单层建筑。建筑首层标高为0米，层高为3米。创建一个矩形房间，内部净尺寸为东西方向6米、南北方向4米。房间四周使用厚度0.2米、高度3米的混凝土墙，墙体位于房间边界外侧。在南侧墙体中央设置一扇门，门宽0.9米，高2.1米。创建厚度0.15米的钢筋混凝土地板，地板顶面标高为0米。将内部空间定义为IfcSpace，空间名称为房间101。",
+  "provenance": {
+    "few_shot_ids": [],
+    "selected_evidence_ids": [
+      "capability:IFC2X3:IfcBuilding",
+      "capability:IFC2X3:IfcBuildingStorey",
+      "capability:IFC2X3:IfcSpace",
+      "capability:IFC2X3:IfcWall",
+      "capability:IFC2X3:IfcDoor",
+      "capability:IFC2X3:IfcSlab"
+    ],
+    "source_turns": [
+      "turn-user-001"
+    ]
+  },
+  "schema_version": "text2ifc/design-brief/2.0",
+  "status": "ready",
+  "unsupported_requests": [],
+  "user_corrections": []
+}

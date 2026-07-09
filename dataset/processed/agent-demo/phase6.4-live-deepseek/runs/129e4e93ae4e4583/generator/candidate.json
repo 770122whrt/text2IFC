@@ -1,0 +1,629 @@
+{
+  "entities": [
+    {
+      "attributes": {
+        "Name": "Phase6.4验收房间"
+      },
+      "id": "project-1",
+      "ifc_class": "IfcProject",
+      "property_sets": {},
+      "provenance": {
+        "source": "phase-4-request"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "Site",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            0,
+            0,
+            0
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ],
+          "relative_to": "project-1"
+        }
+      },
+      "id": "site-1",
+      "ifc_class": "IfcSite",
+      "property_sets": {},
+      "provenance": {
+        "source": "phase-4-request"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "Phase6.4验收房间",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            0,
+            0,
+            0
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ],
+          "relative_to": "site-1"
+        }
+      },
+      "id": "building-1",
+      "ifc_class": "IfcBuilding",
+      "property_sets": {},
+      "provenance": {
+        "source": "phase-4-request"
+      }
+    },
+    {
+      "attributes": {
+        "Elevation": 0,
+        "Name": "Level 1",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            0,
+            0,
+            0
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ],
+          "relative_to": "building-1"
+        }
+      },
+      "id": "storey-1",
+      "ifc_class": "IfcBuildingStorey",
+      "property_sets": {},
+      "provenance": {
+        "source": "phase-4-request"
+      }
+    },
+    {
+      "attributes": {
+        "InteriorOrExteriorSpace": "INTERNAL",
+        "Name": "房间101",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            0,
+            0,
+            0
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ],
+          "relative_to": "storey-1"
+        },
+        "Representation": {
+          "depth": 3000,
+          "direction": [
+            0,
+            0,
+            1
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "polygon",
+            "points": [
+              [
+                0,
+                0
+              ],
+              [
+                6000,
+                0
+              ],
+              [
+                6000,
+                4000
+              ],
+              [
+                0,
+                4000
+              ],
+              [
+                0,
+                0
+              ]
+            ]
+          }
+        }
+      },
+      "id": "space-1",
+      "ifc_class": "IfcSpace",
+      "property_sets": {},
+      "provenance": {
+        "source": "phase-4-request"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "wall-south",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            3000,
+            -100,
+            0
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ],
+          "relative_to": "storey-1"
+        },
+        "Representation": {
+          "depth": 3000,
+          "direction": [
+            0,
+            0,
+            1
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 6000,
+            "y": 200
+          }
+        }
+      },
+      "id": "wall-south",
+      "ifc_class": "IfcWall",
+      "materials": [
+        {
+          "direction": "AXIS2",
+          "direction_sense": "POSITIVE",
+          "kind": "material_layer_set_usage",
+          "layer_set_name": "Concrete-200",
+          "layers": [
+            {
+              "name": "混凝土",
+              "thickness": 100
+            }
+          ],
+          "offset_from_reference_line": 0
+        },
+        {
+          "direction": "AXIS2",
+          "direction_sense": "NEGATIVE",
+          "kind": "material_layer_set_usage",
+          "layer_set_name": "Concrete-200",
+          "layers": [
+            {
+              "name": "混凝土",
+              "thickness": 100
+            }
+          ],
+          "offset_from_reference_line": 0
+        }
+      ],
+      "property_sets": {},
+      "provenance": {
+        "source": "phase-4-request"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "wall-north",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            3000,
+            4100,
+            0
+          ],
+          "ref_direction": [
+            -1,
+            0,
+            0
+          ],
+          "relative_to": "storey-1"
+        },
+        "Representation": {
+          "depth": 3000,
+          "direction": [
+            0,
+            0,
+            1
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 6000,
+            "y": 200
+          }
+        }
+      },
+      "id": "wall-north",
+      "ifc_class": "IfcWall",
+      "materials": [
+        {
+          "direction": "AXIS2",
+          "direction_sense": "POSITIVE",
+          "kind": "material_layer_set_usage",
+          "layer_set_name": "Concrete-200",
+          "layers": [
+            {
+              "name": "混凝土",
+              "thickness": 100
+            }
+          ],
+          "offset_from_reference_line": 0
+        },
+        {
+          "direction": "AXIS2",
+          "direction_sense": "NEGATIVE",
+          "kind": "material_layer_set_usage",
+          "layer_set_name": "Concrete-200",
+          "layers": [
+            {
+              "name": "混凝土",
+              "thickness": 100
+            }
+          ],
+          "offset_from_reference_line": 0
+        }
+      ],
+      "property_sets": {},
+      "provenance": {
+        "source": "phase-4-request"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "wall-west",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            -100,
+            2000,
+            0
+          ],
+          "ref_direction": [
+            0,
+            -1,
+            0
+          ],
+          "relative_to": "storey-1"
+        },
+        "Representation": {
+          "depth": 3000,
+          "direction": [
+            0,
+            0,
+            1
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 4000,
+            "y": 200
+          }
+        }
+      },
+      "id": "wall-west",
+      "ifc_class": "IfcWall",
+      "materials": [
+        {
+          "direction": "AXIS2",
+          "direction_sense": "POSITIVE",
+          "kind": "material_layer_set_usage",
+          "layer_set_name": "Concrete-200",
+          "layers": [
+            {
+              "name": "混凝土",
+              "thickness": 100
+            }
+          ],
+          "offset_from_reference_line": 0
+        },
+        {
+          "direction": "AXIS2",
+          "direction_sense": "NEGATIVE",
+          "kind": "material_layer_set_usage",
+          "layer_set_name": "Concrete-200",
+          "layers": [
+            {
+              "name": "混凝土",
+              "thickness": 100
+            }
+          ],
+          "offset_from_reference_line": 0
+        }
+      ],
+      "property_sets": {},
+      "provenance": {
+        "source": "phase-4-request"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "wall-east",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            6100,
+            2000,
+            0
+          ],
+          "ref_direction": [
+            0,
+            1,
+            0
+          ],
+          "relative_to": "storey-1"
+        },
+        "Representation": {
+          "depth": 3000,
+          "direction": [
+            0,
+            0,
+            1
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 4000,
+            "y": 200
+          }
+        }
+      },
+      "id": "wall-east",
+      "ifc_class": "IfcWall",
+      "materials": [
+        {
+          "direction": "AXIS2",
+          "direction_sense": "POSITIVE",
+          "kind": "material_layer_set_usage",
+          "layer_set_name": "Concrete-200",
+          "layers": [
+            {
+              "name": "混凝土",
+              "thickness": 100
+            }
+          ],
+          "offset_from_reference_line": 0
+        },
+        {
+          "direction": "AXIS2",
+          "direction_sense": "NEGATIVE",
+          "kind": "material_layer_set_usage",
+          "layer_set_name": "Concrete-200",
+          "layers": [
+            {
+              "name": "混凝土",
+              "thickness": 100
+            }
+          ],
+          "offset_from_reference_line": 0
+        }
+      ],
+      "property_sets": {},
+      "provenance": {
+        "source": "phase-4-request"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "Floor",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            3000,
+            2000,
+            0
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ],
+          "relative_to": "storey-1"
+        },
+        "Representation": {
+          "depth": 150,
+          "direction": [
+            0,
+            0,
+            -1
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 6000,
+            "y": 4000
+          }
+        }
+      },
+      "id": "slab-1",
+      "ifc_class": "IfcSlab",
+      "materials": [
+        {
+          "direction": "AXIS3",
+          "direction_sense": "NEGATIVE",
+          "kind": "material_layer_set_usage",
+          "layer_set_name": "ReinforcedConcrete-150",
+          "layers": [
+            {
+              "name": "钢筋混凝土",
+              "thickness": 150
+            }
+          ],
+          "offset_from_reference_line": 0
+        }
+      ],
+      "property_sets": {},
+      "provenance": {
+        "source": "phase-4-request"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "opening-door-1",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            0,
+            0,
+            0
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ],
+          "relative_to": "wall-south"
+        },
+        "Representation": {
+          "depth": 2100,
+          "direction": [
+            0,
+            0,
+            1
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 900,
+            "y": 200
+          }
+        }
+      },
+      "id": "opening-door-1",
+      "ifc_class": "IfcOpeningElement",
+      "property_sets": {},
+      "provenance": {
+        "source": "phase-4-request"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "Door",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            0,
+            0,
+            0
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ],
+          "relative_to": "opening-door-1"
+        },
+        "OverallHeight": 2100,
+        "OverallWidth": 900,
+        "Representation": {
+          "depth": 2100,
+          "direction": [
+            0,
+            0,
+            1
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 900,
+            "y": 100
+          }
+        }
+      },
+      "id": "door-1",
+      "ifc_class": "IfcDoor",
+      "property_sets": {},
+      "provenance": {
+        "source": "phase-4-request"
+      }
+    }
+  ],
+  "ifc_schema": "IFC2X3",
+  "provenance": {
+    "source": "phase-4-request"
+  },
+  "relationships": [
+    {
+      "attributes": {
+        "RelatedOpeningElement": "opening-door-1",
+        "RelatingBuildingElement": "wall-south"
+      },
+      "id": "void-door-1",
+      "ifc_class": "IfcRelVoidsElement",
+      "provenance": {
+        "source": "phase-4-request"
+      }
+    },
+    {
+      "attributes": {
+        "RelatedBuildingElement": "door-1",
+        "RelatingOpeningElement": "opening-door-1"
+      },
+      "id": "fill-door-1",
+      "ifc_class": "IfcRelFillsElement",
+      "provenance": {
+        "source": "phase-4-request"
+      }
+    }
+  ],
+  "schema_version": "bim-json/2.0",
+  "units": {
+    "length": "MILLIMETRE"
+  }
+}

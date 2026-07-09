@@ -1,0 +1,165 @@
+{
+  "ambiguities": [],
+  "clarification_questions": [
+    {
+      "evidence_refs": [
+        "schema:bim-json-v2:representation",
+        "capability:IFC2X3:IfcSlab"
+      ],
+      "id": "q-floor-plan",
+      "reason": "这两层住宅需要明确的平面尺寸和层高才能定义空间和楼板。",
+      "targets": [
+        "mf-floor-plan"
+      ],
+      "text": "请提供住宅的一层平面尺寸（长和宽）以及层高是多少？"
+    },
+    {
+      "evidence_refs": [
+        "capability:IFC2X3:IfcWall",
+        "capability:IFC2X3:IfcSlab",
+        "schema:bim-json-v2:representation"
+      ],
+      "id": "q-wall-slab-thickness",
+      "reason": "墙厚和楼板厚度是生成墙壁和楼板构件的基本几何参数。",
+      "targets": [
+        "mf-wall-thickness",
+        "mf-slab-thickness"
+      ],
+      "text": "墙体厚度和楼板厚度分别是多少？"
+    },
+    {
+      "evidence_refs": [
+        "capability:IFC2X3:IfcStair",
+        "capability:IFC2X3:IfcDoor",
+        "capability:IFC2X3:IfcWindow",
+        "capability:IFC2X3:IfcOpeningElement",
+        "schema:bim-json-v2:representation"
+      ],
+      "id": "q-stair-openings",
+      "reason": "楼梯需要定位，门窗需要尺寸才能正确创建。",
+      "targets": [
+        "mf-stair-location",
+        "mf-door-window-sizes"
+      ],
+      "text": "楼梯的位置在哪里？门窗的尺寸（宽度和高度）是多少？"
+    }
+  ],
+  "fact_sources": [
+    {
+      "evidence_refs": [
+        "schema:bim-json-v2:entity",
+        "schema:bim-json-v2:representation",
+        "capability:IFC2X3:IfcWall",
+        "capability:IFC2X3:IfcSlab",
+        "capability:IFC2X3:IfcStair",
+        "capability:IFC2X3:IfcDoor",
+        "capability:IFC2X3:IfcWindow"
+      ],
+      "path": "/known_facts",
+      "source_turns": [
+        "turn-user-001"
+      ]
+    }
+  ],
+  "known_facts": {},
+  "language": "zh-CN",
+  "missing_facts": [
+    {
+      "blocking": true,
+      "code": "SPACE_DIMENSIONS_MISSING",
+      "evidence_refs": [
+        "schema:bim-json-v2:representation",
+        "capability:IFC2X3:IfcSlab"
+      ],
+      "id": "mf-floor-plan",
+      "message": "住宅的平面尺寸和层高尚未确定。",
+      "path": "/known_facts/space/floor_plan_dimensions",
+      "reason": "两层住宅需要一层平面尺寸（长和宽）以及层高才能定义空间边界。",
+      "source_turns": [
+        "turn-user-001"
+      ]
+    },
+    {
+      "blocking": true,
+      "code": "WALL_THICKNESS_MISSING",
+      "evidence_refs": [
+        "capability:IFC2X3:IfcWall",
+        "schema:bim-json-v2:representation"
+      ],
+      "id": "mf-wall-thickness",
+      "message": "墙体厚度尚未确定。",
+      "path": "/known_facts/walls/thickness_mm",
+      "reason": "用户明确表示不知道墙体厚度，而墙厚是生成墙壁构件所必需的。",
+      "source_turns": [
+        "turn-user-001"
+      ]
+    },
+    {
+      "blocking": true,
+      "code": "SLAB_THICKNESS_MISSING",
+      "evidence_refs": [
+        "capability:IFC2X3:IfcSlab",
+        "schema:bim-json-v2:representation"
+      ],
+      "id": "mf-slab-thickness",
+      "message": "楼板厚度尚未确定。",
+      "path": "/known_facts/slabs/thickness_mm",
+      "reason": "用户明确表示不知道楼板厚度，而楼板厚度是生成楼板构件所必需的。",
+      "source_turns": [
+        "turn-user-001"
+      ]
+    },
+    {
+      "blocking": true,
+      "code": "STAIR_LOCATION_MISSING",
+      "evidence_refs": [
+        "capability:IFC2X3:IfcStair",
+        "schema:bim-json-v2:representation"
+      ],
+      "id": "mf-stair-location",
+      "message": "楼梯位置尚未确定。",
+      "path": "/known_facts/stair/location",
+      "reason": "用户明确表示不知道楼梯位置，而楼梯位置（包括平面定位和可能的尺寸）是生成楼梯构件所必需的。",
+      "source_turns": [
+        "turn-user-001"
+      ]
+    },
+    {
+      "blocking": true,
+      "code": "OPENING_SIZES_MISSING",
+      "evidence_refs": [
+        "capability:IFC2X3:IfcDoor",
+        "capability:IFC2X3:IfcWindow",
+        "capability:IFC2X3:IfcOpeningElement",
+        "schema:bim-json-v2:representation"
+      ],
+      "id": "mf-door-window-sizes",
+      "message": "门窗尺寸尚未确定。",
+      "path": "/known_facts/openings/door_window_sizes",
+      "reason": "用户明确表示不知道门窗尺寸，而门窗的宽度和高度是生成门、窗和洞口所必需的。",
+      "source_turns": [
+        "turn-user-001"
+      ]
+    }
+  ],
+  "original_request": "创建一个两层住宅，但我还不知道楼梯位置、墙厚、楼板厚度和门窗尺寸。",
+  "provenance": {
+    "few_shot_ids": [],
+    "selected_evidence_ids": [
+      "schema:bim-json-v2:entity",
+      "schema:bim-json-v2:representation",
+      "capability:IFC2X3:IfcWall",
+      "capability:IFC2X3:IfcSlab",
+      "capability:IFC2X3:IfcStair",
+      "capability:IFC2X3:IfcDoor",
+      "capability:IFC2X3:IfcWindow"
+    ],
+    "source_turns": [
+      "turn-user-001"
+    ]
+  },
+  "schema_version": "text2ifc/design-brief/2.0",
+  "status": "needs_clarification",
+  "unsupported_requests": [],
+  "user_corrections": []
+}

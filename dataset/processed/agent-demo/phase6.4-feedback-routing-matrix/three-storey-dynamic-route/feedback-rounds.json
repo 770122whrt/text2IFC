@@ -1,0 +1,48 @@
+{
+  "rounds": [
+    {
+      "attempted_action": "prepare_generator_feedback",
+      "input_issue_count": 1,
+      "issue_delta": null,
+      "issues": [
+        {
+          "actual_ref": null,
+          "evidence": "A non-two-storey assignment is missing without hard-coded room names.",
+          "expected_fact_ref": null,
+          "issue_id": "issue_three_storey_dynamic_route_0001",
+          "issue_type": "missing_storey_assignment",
+          "owner": "generator",
+          "retryable": true,
+          "severity": "blocking",
+          "source": "deterministic_gate",
+          "suggested_route": "regenerate_json"
+        }
+      ],
+      "max_feedback_rounds": 2,
+      "output_issue_count": 1,
+      "retry_allowed": true,
+      "round_index": 0,
+      "route": "regenerate_json",
+      "route_decision": {
+        "blocking_issue_ids": [
+          "issue_three_storey_dynamic_route_0001"
+        ],
+        "current_feedback_round": 0,
+        "final_status": "blocked",
+        "human_review_required": false,
+        "max_feedback_rounds": 2,
+        "reason": "Route regenerate_json selected from 1 issue(s); first issue issue_three_storey_dynamic_route_0001 is missing_storey_assignment owned by generator.",
+        "retry_allowed": true,
+        "route": "regenerate_json",
+        "schema_version": "text2ifc/route-decision/2.0",
+        "source_issue_count": 1,
+        "target_stage": "generator"
+      },
+      "schema_version": "text2ifc/feedback-round/1.0",
+      "source_stage": "gate",
+      "target_stage": "generator",
+      "terminal_status": "retry_prepared"
+    }
+  ],
+  "schema_version": "text2ifc/feedback-rounds/1.0"
+}

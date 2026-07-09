@@ -1,0 +1,48 @@
+{
+  "rounds": [
+    {
+      "attempted_action": "prepare_provider_retry",
+      "input_issue_count": 1,
+      "issue_delta": null,
+      "issues": [
+        {
+          "actual_ref": null,
+          "evidence": "Provider returned finish_reason=length.",
+          "expected_fact_ref": null,
+          "issue_id": "issue_provider_truncation_0001",
+          "issue_type": "provider_truncation",
+          "owner": "provider",
+          "retryable": true,
+          "severity": "blocking",
+          "source": "provider",
+          "suggested_route": "provider_retry"
+        }
+      ],
+      "max_feedback_rounds": 2,
+      "output_issue_count": 1,
+      "retry_allowed": true,
+      "round_index": 0,
+      "route": "provider_retry",
+      "route_decision": {
+        "blocking_issue_ids": [
+          "issue_provider_truncation_0001"
+        ],
+        "current_feedback_round": 0,
+        "final_status": "blocked",
+        "human_review_required": false,
+        "max_feedback_rounds": 2,
+        "reason": "Route provider_retry selected from 1 issue(s); first issue issue_provider_truncation_0001 is provider_truncation owned by provider.",
+        "retry_allowed": true,
+        "route": "provider_retry",
+        "schema_version": "text2ifc/route-decision/2.0",
+        "source_issue_count": 1,
+        "target_stage": "provider"
+      },
+      "schema_version": "text2ifc/feedback-round/1.0",
+      "source_stage": "provider",
+      "target_stage": "provider",
+      "terminal_status": "retry_prepared"
+    }
+  ],
+  "schema_version": "text2ifc/feedback-rounds/1.0"
+}

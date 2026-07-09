@@ -1,0 +1,1454 @@
+{
+  "CANDIDATE_HASH": "a4ae3299b4c75b940970c681971ac5831730006e2c5f34de8cd5c34c3bc836fa",
+  "CONVERSATION": [
+    {
+      "content": "创建一个名为Phase6.4验收房间的单层建筑。建筑首层标高为0米，层高为3米。创建一个矩形房间，内部净尺寸为东西方向6米、南北方向4米。房间四周使用厚度0.2米、高度3米的混凝土墙，墙体位于房间边界外侧。在南侧墙体中央设置一扇门，门宽0.9米，高2.1米。创建厚度0.15米的钢筋混凝土地板，地板顶面标高为0米。将内部空间定义为IfcSpace，空间名称为房间101。",
+      "question_ids": [],
+      "role": "user",
+      "turn_id": "turn-user-001"
+    }
+  ],
+  "DESIGN_BRIEF": {
+    "ambiguities": [],
+    "clarification_questions": [],
+    "fact_sources": [
+      {
+        "evidence_refs": [
+          "capability:IFC2X3:IfcBuilding",
+          "capability:IFC2X3:IfcBuildingStorey",
+          "capability:IFC2X3:IfcSpace",
+          "capability:IFC2X3:IfcWall",
+          "capability:IFC2X3:IfcDoor",
+          "capability:IFC2X3:IfcSlab"
+        ],
+        "path": "/known_facts",
+        "source_turns": [
+          "turn-user-001"
+        ]
+      }
+    ],
+    "known_facts": {
+      "building": {
+        "name": "Phase6.4验收房间",
+        "storey_elevation_m": 0,
+        "storey_height_m": 3
+      },
+      "door": {
+        "count": 1,
+        "height_m": 2.1,
+        "host_wall_orientation": "south",
+        "position": "center",
+        "width_m": 0.9
+      },
+      "slab": {
+        "material": "钢筋混凝土",
+        "thickness_m": 0.15,
+        "top_elevation_m": 0
+      },
+      "space": {
+        "height_m": 3,
+        "length_m": 6,
+        "name": "房间101",
+        "shape": "rectangle",
+        "width_m": 4
+      },
+      "walls": {
+        "count": 4,
+        "height_m": 3,
+        "material": "混凝土",
+        "position_relative_to_room": "exterior",
+        "thickness_m": 0.2
+      }
+    },
+    "language": "zh-CN",
+    "missing_facts": [],
+    "original_request": "创建一个名为Phase6.4验收房间的单层建筑。建筑首层标高为0米，层高为3米。创建一个矩形房间，内部净尺寸为东西方向6米、南北方向4米。房间四周使用厚度0.2米、高度3米的混凝土墙，墙体位于房间边界外侧。在南侧墙体中央设置一扇门，门宽0.9米，高2.1米。创建厚度0.15米的钢筋混凝土地板，地板顶面标高为0米。将内部空间定义为IfcSpace，空间名称为房间101。",
+    "provenance": {
+      "few_shot_ids": [],
+      "selected_evidence_ids": [
+        "capability:IFC2X3:IfcBuilding",
+        "capability:IFC2X3:IfcBuildingStorey",
+        "capability:IFC2X3:IfcSpace",
+        "capability:IFC2X3:IfcWall",
+        "capability:IFC2X3:IfcDoor",
+        "capability:IFC2X3:IfcSlab"
+      ],
+      "source_turns": [
+        "turn-user-001"
+      ]
+    },
+    "schema_version": "text2ifc/design-brief/2.0",
+    "status": "ready",
+    "unsupported_requests": [],
+    "user_corrections": []
+  },
+  "DETERMINISTIC_GATES": {
+    "bim_json_validation": true,
+    "gate_summary_binding": true,
+    "gate_summary_binding_feedback": {
+      "candidate_hash": "a4ae3299b4c75b940970c681971ac5831730006e2c5f34de8cd5c34c3bc836fa",
+      "expected_facts_hash": "56d59c16da39898a5b59e58d826b4c018c9f7dc2099fcff9ecd144d98fd6279a",
+      "gate_summary_hash": "1b891408e65d353219b780f944941eb36735befc014bea01230bb06c56a5c5d2",
+      "issues": [],
+      "valid": true
+    },
+    "geometry_feedback": {
+      "expectation_source": "candidate",
+      "issues": [],
+      "metrics": {
+        "case_id": "129e4e93ae4e4583",
+        "wall_set_convention": "primary",
+        "walls": {
+          "wall-east": {
+            "axis": "y",
+            "bbox": {
+              "x": [
+                6.000000000000001,
+                6.2
+              ],
+              "y": [
+                0.0,
+                4.0
+              ],
+              "z": [
+                0.0,
+                3.0
+              ]
+            },
+            "ifc_class": "IfcWall"
+          },
+          "wall-north": {
+            "axis": "x",
+            "bbox": {
+              "x": [
+                0.0,
+                6.0
+              ],
+              "y": [
+                3.9999999999999996,
+                4.199999999999999
+              ],
+              "z": [
+                0.0,
+                3.0
+              ]
+            },
+            "ifc_class": "IfcWall"
+          },
+          "wall-south": {
+            "axis": "x",
+            "bbox": {
+              "x": [
+                0.0,
+                6.0
+              ],
+              "y": [
+                -0.2,
+                0.0
+              ],
+              "z": [
+                0.0,
+                3.0
+              ]
+            },
+            "ifc_class": "IfcWall"
+          },
+          "wall-west": {
+            "axis": "y",
+            "bbox": {
+              "x": [
+                -0.2,
+                0.0
+              ],
+              "y": [
+                0.0,
+                4.0
+              ],
+              "z": [
+                0.0,
+                3.0
+              ]
+            },
+            "ifc_class": "IfcWall"
+          }
+        }
+      },
+      "success": true
+    },
+    "geometry_success": true,
+    "ifc_compile_reopen": true,
+    "repair_route_terminal": true,
+    "semantic_capability_profile": {
+      "compiler_generated_fact_prefixes": [
+        "/compiler_generated/owner_history",
+        "/compiler_generated/local_placement_helpers",
+        "/compiler_generated/void_fill_low_level_ifc"
+      ],
+      "custom_property_policy": {
+        "counts_as_semantic_support": false,
+        "state": "preserved_text_only"
+      },
+      "ifc_schema": "IFC2X3",
+      "profile_hash": "sha256:1a9b5d81e65c07e3b578782744596bd9a56eb1ecf9702c94dbde5fd91681bbb5",
+      "profile_id": "text2ifc/semantic-capabilities/ifc2x3-bim-json-2.0/1.0",
+      "schema_version": "text2ifc/semantic-capability-profile/1.0",
+      "structural_truth": "schemas/bim-json/2.0/schema.json",
+      "supported_fact_prefixes": [
+        "/known_facts/building",
+        "/known_facts/space",
+        "/known_facts/walls",
+        "/known_facts/slab",
+        "/known_facts/door/host",
+        "/known_facts/door/alignment",
+        "/known_facts/door/height_mm",
+        "/known_facts/door/width_mm",
+        "/known_facts/window"
+      ],
+      "unsupported_facts": [
+        {
+          "current_ifc_boundary": "IfcDoorStyle.OperationType is not generated",
+          "draft_required_unless_waived": true,
+          "path": "/known_facts/door/opening_direction",
+          "reason": "Current BIM JSON 2.0 generation profile supports IfcDoor dimensions and placement, but does not generate IfcDoorStyle OperationType or door swing semantics.",
+          "state": "unsupported"
+        }
+      ]
+    },
+    "semantic_coverage": true,
+    "semantic_coverage_feedback": {
+      "blocking_facts": [],
+      "candidate_entity_count": 12,
+      "capability_profile_hash": "sha256:1a9b5d81e65c07e3b578782744596bd9a56eb1ecf9702c94dbde5fd91681bbb5",
+      "capability_profile_id": "text2ifc/semantic-capabilities/ifc2x3-bim-json-2.0/1.0",
+      "case_id": "129e4e93ae4e4583",
+      "custom_property_policy": {
+        "counts_as_semantic_support": false,
+        "state": "preserved_text_only"
+      },
+      "facts": [
+        {
+          "coverage_state": "represented",
+          "path": "/known_facts/building/name",
+          "reason": "Fact is inside the current supported semantic profile.",
+          "value": "Phase6.4验收房间"
+        },
+        {
+          "coverage_state": "represented",
+          "path": "/known_facts/building/storey_elevation_m",
+          "reason": "Fact is inside the current supported semantic profile.",
+          "value": 0
+        },
+        {
+          "coverage_state": "represented",
+          "path": "/known_facts/building/storey_height_m",
+          "reason": "Fact is inside the current supported semantic profile.",
+          "value": 3
+        },
+        {
+          "coverage_state": "represented",
+          "path": "/known_facts/door/count",
+          "reason": "Fact is inside the current supported semantic profile.",
+          "value": 1
+        },
+        {
+          "coverage_state": "represented",
+          "path": "/known_facts/door/height_m",
+          "reason": "Fact is inside the current supported semantic profile.",
+          "value": 2.1
+        },
+        {
+          "coverage_state": "represented",
+          "path": "/known_facts/door/host_wall_orientation",
+          "reason": "Fact is inside the current supported semantic profile.",
+          "value": "south"
+        },
+        {
+          "coverage_state": "represented",
+          "path": "/known_facts/door/position",
+          "reason": "Fact is inside the current supported semantic profile.",
+          "value": "center"
+        },
+        {
+          "coverage_state": "represented",
+          "path": "/known_facts/door/width_m",
+          "reason": "Fact is inside the current supported semantic profile.",
+          "value": 0.9
+        },
+        {
+          "coverage_state": "represented",
+          "path": "/known_facts/slab/material",
+          "reason": "Fact is inside the current supported semantic profile.",
+          "value": "钢筋混凝土"
+        },
+        {
+          "coverage_state": "represented",
+          "path": "/known_facts/slab/thickness_m",
+          "reason": "Fact is inside the current supported semantic profile.",
+          "value": 0.15
+        },
+        {
+          "coverage_state": "represented",
+          "path": "/known_facts/slab/top_elevation_m",
+          "reason": "Fact is inside the current supported semantic profile.",
+          "value": 0
+        },
+        {
+          "coverage_state": "represented",
+          "path": "/known_facts/space/height_m",
+          "reason": "Fact is inside the current supported semantic profile.",
+          "value": 3
+        },
+        {
+          "coverage_state": "represented",
+          "path": "/known_facts/space/length_m",
+          "reason": "Fact is inside the current supported semantic profile.",
+          "value": 6
+        },
+        {
+          "coverage_state": "represented",
+          "path": "/known_facts/space/name",
+          "reason": "Fact is inside the current supported semantic profile.",
+          "value": "房间101"
+        },
+        {
+          "coverage_state": "represented",
+          "path": "/known_facts/space/shape",
+          "reason": "Fact is inside the current supported semantic profile.",
+          "value": "rectangle"
+        },
+        {
+          "coverage_state": "represented",
+          "path": "/known_facts/space/width_m",
+          "reason": "Fact is inside the current supported semantic profile.",
+          "value": 4
+        },
+        {
+          "coverage_state": "represented",
+          "path": "/known_facts/walls/count",
+          "reason": "Fact is inside the current supported semantic profile.",
+          "value": 4
+        },
+        {
+          "coverage_state": "represented",
+          "path": "/known_facts/walls/height_m",
+          "reason": "Fact is inside the current supported semantic profile.",
+          "value": 3
+        },
+        {
+          "coverage_state": "represented",
+          "path": "/known_facts/walls/material",
+          "reason": "Fact is inside the current supported semantic profile.",
+          "value": "混凝土"
+        },
+        {
+          "coverage_state": "represented",
+          "path": "/known_facts/walls/position_relative_to_room",
+          "reason": "Fact is inside the current supported semantic profile.",
+          "value": "exterior"
+        },
+        {
+          "coverage_state": "represented",
+          "path": "/known_facts/walls/thickness_m",
+          "reason": "Fact is inside the current supported semantic profile.",
+          "value": 0.2
+        }
+      ],
+      "schema_version": "text2ifc/semantic-coverage/1.0",
+      "valid": true
+    }
+  },
+  "EVIDENCE_PATHS": [
+    "design-brief/input.txt",
+    "design-brief/conversation.json",
+    "design-brief/design-brief.json",
+    "design-brief/response.raw.json",
+    "generator/candidate.json",
+    "generator/validation.json",
+    "generator/metrics.json",
+    "repair/route.json",
+    "repair/metrics.json",
+    "gate-summary.json",
+    "semantic-capabilities.json",
+    "semantic-coverage.json",
+    "ifc-verification.json",
+    "geometry-feedback.json",
+    "geometry-expectation.json"
+  ],
+  "EXPECTED_FACTS_HASH": "56d59c16da39898a5b59e58d826b4c018c9f7dc2099fcff9ecd144d98fd6279a",
+  "GATE_SUMMARY": {
+    "artifact_hashes": {
+      "dynamic-gates.json": "3c30a49d26894955629483b520504a5984a39aa354c03d281e0ba9a0b09f7db9",
+      "expected-facts.json": "56d59c16da39898a5b59e58d826b4c018c9f7dc2099fcff9ecd144d98fd6279a",
+      "generator/candidate.json": "a4ae3299b4c75b940970c681971ac5831730006e2c5f34de8cd5c34c3bc836fa",
+      "generator/validation.json": "6be6595f4f77090199203073905e3755e4015ff1a83b3412d64571cd872b4c41",
+      "geometry-feedback.json": "5c6c3bce78d0434906eb5f0fbe6b6c4ad0545ff4396f1996c3e20a5363381e09",
+      "ifc-verification.json": "85df45900c12ba9cc911367fc9534427544a711ca81b76817199157e7bcf1835",
+      "repair/route.json": "3282ab5e8a7f823509dc74e5003276b11467f964f9127f912351a398911f59c5",
+      "semantic-coverage.json": "71ebc1de14c91f57055695474396cad7edb76f4f2c0d4681af18cfaf9ef5fc89"
+    },
+    "candidate_hash": "a4ae3299b4c75b940970c681971ac5831730006e2c5f34de8cd5c34c3bc836fa",
+    "candidate_path": "generator/candidate.json",
+    "case_id": "129e4e93ae4e4583",
+    "evidence": {
+      "compile_reopen": {
+        "ifc_issues": [],
+        "input_issues": [],
+        "output_path": "dataset\\processed\\agent-demo\\phase6.4-live-deepseek\\runs\\129e4e93ae4e4583\\output.ifc",
+        "success": true
+      },
+      "geometry": {
+        "expectation_source": "candidate",
+        "issues": [],
+        "metrics": {
+          "case_id": "129e4e93ae4e4583",
+          "wall_set_convention": "primary",
+          "walls": {
+            "wall-east": {
+              "axis": "y",
+              "bbox": {
+                "x": [
+                  6.000000000000001,
+                  6.2
+                ],
+                "y": [
+                  0.0,
+                  4.0
+                ],
+                "z": [
+                  0.0,
+                  3.0
+                ]
+              },
+              "ifc_class": "IfcWall"
+            },
+            "wall-north": {
+              "axis": "x",
+              "bbox": {
+                "x": [
+                  0.0,
+                  6.0
+                ],
+                "y": [
+                  3.9999999999999996,
+                  4.199999999999999
+                ],
+                "z": [
+                  0.0,
+                  3.0
+                ]
+              },
+              "ifc_class": "IfcWall"
+            },
+            "wall-south": {
+              "axis": "x",
+              "bbox": {
+                "x": [
+                  0.0,
+                  6.0
+                ],
+                "y": [
+                  -0.2,
+                  0.0
+                ],
+                "z": [
+                  0.0,
+                  3.0
+                ]
+              },
+              "ifc_class": "IfcWall"
+            },
+            "wall-west": {
+              "axis": "y",
+              "bbox": {
+                "x": [
+                  -0.2,
+                  0.0
+                ],
+                "y": [
+                  0.0,
+                  4.0
+                ],
+                "z": [
+                  0.0,
+                  3.0
+                ]
+              },
+              "ifc_class": "IfcWall"
+            }
+          }
+        },
+        "success": true
+      },
+      "repair_history": {
+        "case_id": "129e4e93ae4e4583",
+        "fact_delta": null,
+        "geometry_issue_count": 0,
+        "provider_call_count": 0,
+        "repair_attempts": [],
+        "repair_diagnostics": [],
+        "repair_source_artifact": "candidate.json",
+        "route": "no_repair_needed",
+        "schema_version": "text2ifc/repair-route/1.0",
+        "source_document_kind": "candidate",
+        "source_document_path": "candidate.json",
+        "source_generator_dir": "dataset/processed/agent-demo/phase6.4-live-deepseek/runs/129e4e93ae4e4583/generator",
+        "source_generator_response_id": "140ad36c-7e57-4f58-ae9e-97dbcdecc779",
+        "valid": true,
+        "validation_issue_count": 0
+      },
+      "schema_validation": {
+        "issue_count": 0,
+        "issues": [],
+        "valid": true
+      },
+      "semantic_coverage": {
+        "blocking_facts": [],
+        "candidate_entity_count": 12,
+        "capability_profile_hash": "sha256:1a9b5d81e65c07e3b578782744596bd9a56eb1ecf9702c94dbde5fd91681bbb5",
+        "capability_profile_id": "text2ifc/semantic-capabilities/ifc2x3-bim-json-2.0/1.0",
+        "case_id": "129e4e93ae4e4583",
+        "custom_property_policy": {
+          "counts_as_semantic_support": false,
+          "state": "preserved_text_only"
+        },
+        "facts": [
+          {
+            "coverage_state": "represented",
+            "path": "/known_facts/building/name",
+            "reason": "Fact is inside the current supported semantic profile.",
+            "value": "Phase6.4验收房间"
+          },
+          {
+            "coverage_state": "represented",
+            "path": "/known_facts/building/storey_elevation_m",
+            "reason": "Fact is inside the current supported semantic profile.",
+            "value": 0
+          },
+          {
+            "coverage_state": "represented",
+            "path": "/known_facts/building/storey_height_m",
+            "reason": "Fact is inside the current supported semantic profile.",
+            "value": 3
+          },
+          {
+            "coverage_state": "represented",
+            "path": "/known_facts/door/count",
+            "reason": "Fact is inside the current supported semantic profile.",
+            "value": 1
+          },
+          {
+            "coverage_state": "represented",
+            "path": "/known_facts/door/height_m",
+            "reason": "Fact is inside the current supported semantic profile.",
+            "value": 2.1
+          },
+          {
+            "coverage_state": "represented",
+            "path": "/known_facts/door/host_wall_orientation",
+            "reason": "Fact is inside the current supported semantic profile.",
+            "value": "south"
+          },
+          {
+            "coverage_state": "represented",
+            "path": "/known_facts/door/position",
+            "reason": "Fact is inside the current supported semantic profile.",
+            "value": "center"
+          },
+          {
+            "coverage_state": "represented",
+            "path": "/known_facts/door/width_m",
+            "reason": "Fact is inside the current supported semantic profile.",
+            "value": 0.9
+          },
+          {
+            "coverage_state": "represented",
+            "path": "/known_facts/slab/material",
+            "reason": "Fact is inside the current supported semantic profile.",
+            "value": "钢筋混凝土"
+          },
+          {
+            "coverage_state": "represented",
+            "path": "/known_facts/slab/thickness_m",
+            "reason": "Fact is inside the current supported semantic profile.",
+            "value": 0.15
+          },
+          {
+            "coverage_state": "represented",
+            "path": "/known_facts/slab/top_elevation_m",
+            "reason": "Fact is inside the current supported semantic profile.",
+            "value": 0
+          },
+          {
+            "coverage_state": "represented",
+            "path": "/known_facts/space/height_m",
+            "reason": "Fact is inside the current supported semantic profile.",
+            "value": 3
+          },
+          {
+            "coverage_state": "represented",
+            "path": "/known_facts/space/length_m",
+            "reason": "Fact is inside the current supported semantic profile.",
+            "value": 6
+          },
+          {
+            "coverage_state": "represented",
+            "path": "/known_facts/space/name",
+            "reason": "Fact is inside the current supported semantic profile.",
+            "value": "房间101"
+          },
+          {
+            "coverage_state": "represented",
+            "path": "/known_facts/space/shape",
+            "reason": "Fact is inside the current supported semantic profile.",
+            "value": "rectangle"
+          },
+          {
+            "coverage_state": "represented",
+            "path": "/known_facts/space/width_m",
+            "reason": "Fact is inside the current supported semantic profile.",
+            "value": 4
+          },
+          {
+            "coverage_state": "represented",
+            "path": "/known_facts/walls/count",
+            "reason": "Fact is inside the current supported semantic profile.",
+            "value": 4
+          },
+          {
+            "coverage_state": "represented",
+            "path": "/known_facts/walls/height_m",
+            "reason": "Fact is inside the current supported semantic profile.",
+            "value": 3
+          },
+          {
+            "coverage_state": "represented",
+            "path": "/known_facts/walls/material",
+            "reason": "Fact is inside the current supported semantic profile.",
+            "value": "混凝土"
+          },
+          {
+            "coverage_state": "represented",
+            "path": "/known_facts/walls/position_relative_to_room",
+            "reason": "Fact is inside the current supported semantic profile.",
+            "value": "exterior"
+          },
+          {
+            "coverage_state": "represented",
+            "path": "/known_facts/walls/thickness_m",
+            "reason": "Fact is inside the current supported semantic profile.",
+            "value": 0.2
+          }
+        ],
+        "schema_version": "text2ifc/semantic-coverage/1.0",
+        "valid": true
+      }
+    },
+    "expected_facts_hash": "56d59c16da39898a5b59e58d826b4c018c9f7dc2099fcff9ecd144d98fd6279a",
+    "expected_facts_path": "expected-facts.json",
+    "gates": [
+      {
+        "applicability": "applicable",
+        "basis": "generator validation sidecar",
+        "issue_codes": [],
+        "issue_count": 0,
+        "issues": [],
+        "name": "bim_json_validation",
+        "source_paths": [
+          "generator/validation.json"
+        ],
+        "status": "passed"
+      },
+      {
+        "applicability": "applicable",
+        "basis": "expected-facts total_counts compared with candidate entities",
+        "issue_codes": [],
+        "issue_count": 0,
+        "issues": [],
+        "name": "dynamic_entity_completeness",
+        "source_paths": [
+          "expected-facts.json",
+          "generator/candidate.json"
+        ],
+        "status": "passed"
+      },
+      {
+        "applicability": "not_applicable",
+        "basis": "expected facts contain no storey membership expectations",
+        "issue_codes": [],
+        "issue_count": 0,
+        "issues": [],
+        "name": "dynamic_storey_containment",
+        "source_paths": [
+          "expected-facts.json",
+          "generator/candidate.json"
+        ],
+        "status": "skipped"
+      },
+      {
+        "applicability": "applicable",
+        "basis": "expected opening/fill obligations compared with IfcRelVoidsElement and IfcRelFillsElement",
+        "issue_codes": [],
+        "issue_count": 0,
+        "issues": [],
+        "name": "dynamic_opening_fill",
+        "source_paths": [
+          "expected-facts.json",
+          "generator/candidate.json"
+        ],
+        "status": "passed"
+      },
+      {
+        "applicability": "applicable",
+        "basis": "semantic coverage sidecar",
+        "issue_codes": [],
+        "issue_count": 0,
+        "issues": [],
+        "name": "semantic_coverage",
+        "source_paths": [
+          "semantic-coverage.json"
+        ],
+        "status": "passed"
+      },
+      {
+        "applicability": "applicable",
+        "basis": "IFC compile/reopen sidecar",
+        "issue_codes": [],
+        "issue_count": 0,
+        "issues": [],
+        "name": "ifc_compile_reopen",
+        "source_paths": [
+          "ifc-verification.json"
+        ],
+        "status": "passed"
+      },
+      {
+        "applicability": "applicable",
+        "basis": "geometry feedback sidecar",
+        "issue_codes": [],
+        "issue_count": 0,
+        "issues": [],
+        "name": "geometry",
+        "source_paths": [
+          "geometry-feedback.json"
+        ],
+        "status": "passed"
+      },
+      {
+        "applicability": "applicable",
+        "basis": "repair route is no_repair_needed",
+        "issue_codes": [],
+        "issue_count": 0,
+        "issues": [],
+        "name": "repair_route",
+        "source_paths": [
+          "repair/route.json"
+        ],
+        "status": "passed"
+      }
+    ],
+    "overall_status": "passed",
+    "schema_version": "text2ifc/gate-summary/1.0"
+  },
+  "GATE_SUMMARY_HASH": "1b891408e65d353219b780f944941eb36735befc014bea01230bb06c56a5c5d2",
+  "METRICS": {
+    "generator": {
+      "case_id": "129e4e93ae4e4583",
+      "classification": "formal",
+      "contract_status": "formal",
+      "contract_valid": true,
+      "evidence_class": "live",
+      "issue_count": 0,
+      "model": "deepseek-v4-flash",
+      "normalization_diagnostics": [],
+      "parse_valid": true,
+      "response_id": "140ad36c-7e57-4f58-ae9e-97dbcdecc779",
+      "stage": "generate",
+      "stop_reason": "stop",
+      "strict_output_contract_valid": true,
+      "usage": {
+        "completion_tokens": 11677,
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": null,
+          "audio_tokens": null,
+          "reasoning_tokens": 8532,
+          "rejected_prediction_tokens": null
+        },
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 7742,
+        "prompt_tokens": 7742,
+        "prompt_tokens_details": {
+          "audio_tokens": null,
+          "cached_tokens": 0
+        },
+        "total_tokens": 19419
+      }
+    },
+    "repair": {
+      "case_id": "129e4e93ae4e4583",
+      "evidence_class": "live-derived-no-call",
+      "fact_delta_valid": null,
+      "geometry_issue_count": 0,
+      "prior_attempt_count": 0,
+      "provider_call_count": 0,
+      "repair_attempt_count": 0,
+      "repair_diagnostic_count": 0,
+      "repair_source_artifact": "candidate.json",
+      "repaired_artifact": null,
+      "route": "no_repair_needed",
+      "source_document_kind": "candidate",
+      "source_document_path": "candidate.json",
+      "source_generator_contract_valid": true,
+      "source_generator_evidence_class": "live",
+      "source_generator_response_id": "140ad36c-7e57-4f58-ae9e-97dbcdecc779",
+      "stage": "repair",
+      "valid": true
+    }
+  },
+  "REPAIR_ROUTE": {
+    "case_id": "129e4e93ae4e4583",
+    "fact_delta": null,
+    "geometry_issue_count": 0,
+    "provider_call_count": 0,
+    "repair_attempts": [],
+    "repair_diagnostics": [],
+    "repair_source_artifact": "candidate.json",
+    "route": "no_repair_needed",
+    "schema_version": "text2ifc/repair-route/1.0",
+    "source_document_kind": "candidate",
+    "source_document_path": "candidate.json",
+    "source_generator_dir": "dataset/processed/agent-demo/phase6.4-live-deepseek/runs/129e4e93ae4e4583/generator",
+    "source_generator_response_id": "140ad36c-7e57-4f58-ae9e-97dbcdecc779",
+    "valid": true,
+    "validation_issue_count": 0
+  },
+  "TERMINAL_DOCUMENT": {
+    "entities": [
+      {
+        "attributes": {
+          "Name": "Phase6.4验收房间"
+        },
+        "id": "project-1",
+        "ifc_class": "IfcProject",
+        "property_sets": {},
+        "provenance": {
+          "source": "phase-4-request"
+        }
+      },
+      {
+        "attributes": {
+          "Name": "Site",
+          "ObjectPlacement": {
+            "axis": [
+              0,
+              0,
+              1
+            ],
+            "origin": [
+              0,
+              0,
+              0
+            ],
+            "ref_direction": [
+              1,
+              0,
+              0
+            ],
+            "relative_to": "project-1"
+          }
+        },
+        "id": "site-1",
+        "ifc_class": "IfcSite",
+        "property_sets": {},
+        "provenance": {
+          "source": "phase-4-request"
+        }
+      },
+      {
+        "attributes": {
+          "Name": "Phase6.4验收房间",
+          "ObjectPlacement": {
+            "axis": [
+              0,
+              0,
+              1
+            ],
+            "origin": [
+              0,
+              0,
+              0
+            ],
+            "ref_direction": [
+              1,
+              0,
+              0
+            ],
+            "relative_to": "site-1"
+          }
+        },
+        "id": "building-1",
+        "ifc_class": "IfcBuilding",
+        "property_sets": {},
+        "provenance": {
+          "source": "phase-4-request"
+        }
+      },
+      {
+        "attributes": {
+          "Elevation": 0,
+          "Name": "Level 1",
+          "ObjectPlacement": {
+            "axis": [
+              0,
+              0,
+              1
+            ],
+            "origin": [
+              0,
+              0,
+              0
+            ],
+            "ref_direction": [
+              1,
+              0,
+              0
+            ],
+            "relative_to": "building-1"
+          }
+        },
+        "id": "storey-1",
+        "ifc_class": "IfcBuildingStorey",
+        "property_sets": {},
+        "provenance": {
+          "source": "phase-4-request"
+        }
+      },
+      {
+        "attributes": {
+          "InteriorOrExteriorSpace": "INTERNAL",
+          "Name": "房间101",
+          "ObjectPlacement": {
+            "axis": [
+              0,
+              0,
+              1
+            ],
+            "origin": [
+              0,
+              0,
+              0
+            ],
+            "ref_direction": [
+              1,
+              0,
+              0
+            ],
+            "relative_to": "storey-1"
+          },
+          "Representation": {
+            "depth": 3000,
+            "direction": [
+              0,
+              0,
+              1
+            ],
+            "kind": "extruded_profile",
+            "profile": {
+              "kind": "polygon",
+              "points": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  6000,
+                  0
+                ],
+                [
+                  6000,
+                  4000
+                ],
+                [
+                  0,
+                  4000
+                ],
+                [
+                  0,
+                  0
+                ]
+              ]
+            }
+          }
+        },
+        "id": "space-1",
+        "ifc_class": "IfcSpace",
+        "property_sets": {},
+        "provenance": {
+          "source": "phase-4-request"
+        }
+      },
+      {
+        "attributes": {
+          "Name": "wall-south",
+          "ObjectPlacement": {
+            "axis": [
+              0,
+              0,
+              1
+            ],
+            "origin": [
+              3000,
+              -100,
+              0
+            ],
+            "ref_direction": [
+              1,
+              0,
+              0
+            ],
+            "relative_to": "storey-1"
+          },
+          "Representation": {
+            "depth": 3000,
+            "direction": [
+              0,
+              0,
+              1
+            ],
+            "kind": "extruded_profile",
+            "profile": {
+              "kind": "rectangle",
+              "x": 6000,
+              "y": 200
+            }
+          }
+        },
+        "id": "wall-south",
+        "ifc_class": "IfcWall",
+        "materials": [
+          {
+            "direction": "AXIS2",
+            "direction_sense": "POSITIVE",
+            "kind": "material_layer_set_usage",
+            "layer_set_name": "Concrete-200",
+            "layers": [
+              {
+                "name": "混凝土",
+                "thickness": 100
+              }
+            ],
+            "offset_from_reference_line": 0
+          },
+          {
+            "direction": "AXIS2",
+            "direction_sense": "NEGATIVE",
+            "kind": "material_layer_set_usage",
+            "layer_set_name": "Concrete-200",
+            "layers": [
+              {
+                "name": "混凝土",
+                "thickness": 100
+              }
+            ],
+            "offset_from_reference_line": 0
+          }
+        ],
+        "property_sets": {},
+        "provenance": {
+          "source": "phase-4-request"
+        }
+      },
+      {
+        "attributes": {
+          "Name": "wall-north",
+          "ObjectPlacement": {
+            "axis": [
+              0,
+              0,
+              1
+            ],
+            "origin": [
+              3000,
+              4100,
+              0
+            ],
+            "ref_direction": [
+              -1,
+              0,
+              0
+            ],
+            "relative_to": "storey-1"
+          },
+          "Representation": {
+            "depth": 3000,
+            "direction": [
+              0,
+              0,
+              1
+            ],
+            "kind": "extruded_profile",
+            "profile": {
+              "kind": "rectangle",
+              "x": 6000,
+              "y": 200
+            }
+          }
+        },
+        "id": "wall-north",
+        "ifc_class": "IfcWall",
+        "materials": [
+          {
+            "direction": "AXIS2",
+            "direction_sense": "POSITIVE",
+            "kind": "material_layer_set_usage",
+            "layer_set_name": "Concrete-200",
+            "layers": [
+              {
+                "name": "混凝土",
+                "thickness": 100
+              }
+            ],
+            "offset_from_reference_line": 0
+          },
+          {
+            "direction": "AXIS2",
+            "direction_sense": "NEGATIVE",
+            "kind": "material_layer_set_usage",
+            "layer_set_name": "Concrete-200",
+            "layers": [
+              {
+                "name": "混凝土",
+                "thickness": 100
+              }
+            ],
+            "offset_from_reference_line": 0
+          }
+        ],
+        "property_sets": {},
+        "provenance": {
+          "source": "phase-4-request"
+        }
+      },
+      {
+        "attributes": {
+          "Name": "wall-west",
+          "ObjectPlacement": {
+            "axis": [
+              0,
+              0,
+              1
+            ],
+            "origin": [
+              -100,
+              2000,
+              0
+            ],
+            "ref_direction": [
+              0,
+              -1,
+              0
+            ],
+            "relative_to": "storey-1"
+          },
+          "Representation": {
+            "depth": 3000,
+            "direction": [
+              0,
+              0,
+              1
+            ],
+            "kind": "extruded_profile",
+            "profile": {
+              "kind": "rectangle",
+              "x": 4000,
+              "y": 200
+            }
+          }
+        },
+        "id": "wall-west",
+        "ifc_class": "IfcWall",
+        "materials": [
+          {
+            "direction": "AXIS2",
+            "direction_sense": "POSITIVE",
+            "kind": "material_layer_set_usage",
+            "layer_set_name": "Concrete-200",
+            "layers": [
+              {
+                "name": "混凝土",
+                "thickness": 100
+              }
+            ],
+            "offset_from_reference_line": 0
+          },
+          {
+            "direction": "AXIS2",
+            "direction_sense": "NEGATIVE",
+            "kind": "material_layer_set_usage",
+            "layer_set_name": "Concrete-200",
+            "layers": [
+              {
+                "name": "混凝土",
+                "thickness": 100
+              }
+            ],
+            "offset_from_reference_line": 0
+          }
+        ],
+        "property_sets": {},
+        "provenance": {
+          "source": "phase-4-request"
+        }
+      },
+      {
+        "attributes": {
+          "Name": "wall-east",
+          "ObjectPlacement": {
+            "axis": [
+              0,
+              0,
+              1
+            ],
+            "origin": [
+              6100,
+              2000,
+              0
+            ],
+            "ref_direction": [
+              0,
+              1,
+              0
+            ],
+            "relative_to": "storey-1"
+          },
+          "Representation": {
+            "depth": 3000,
+            "direction": [
+              0,
+              0,
+              1
+            ],
+            "kind": "extruded_profile",
+            "profile": {
+              "kind": "rectangle",
+              "x": 4000,
+              "y": 200
+            }
+          }
+        },
+        "id": "wall-east",
+        "ifc_class": "IfcWall",
+        "materials": [
+          {
+            "direction": "AXIS2",
+            "direction_sense": "POSITIVE",
+            "kind": "material_layer_set_usage",
+            "layer_set_name": "Concrete-200",
+            "layers": [
+              {
+                "name": "混凝土",
+                "thickness": 100
+              }
+            ],
+            "offset_from_reference_line": 0
+          },
+          {
+            "direction": "AXIS2",
+            "direction_sense": "NEGATIVE",
+            "kind": "material_layer_set_usage",
+            "layer_set_name": "Concrete-200",
+            "layers": [
+              {
+                "name": "混凝土",
+                "thickness": 100
+              }
+            ],
+            "offset_from_reference_line": 0
+          }
+        ],
+        "property_sets": {},
+        "provenance": {
+          "source": "phase-4-request"
+        }
+      },
+      {
+        "attributes": {
+          "Name": "Floor",
+          "ObjectPlacement": {
+            "axis": [
+              0,
+              0,
+              1
+            ],
+            "origin": [
+              3000,
+              2000,
+              0
+            ],
+            "ref_direction": [
+              1,
+              0,
+              0
+            ],
+            "relative_to": "storey-1"
+          },
+          "Representation": {
+            "depth": 150,
+            "direction": [
+              0,
+              0,
+              -1
+            ],
+            "kind": "extruded_profile",
+            "profile": {
+              "kind": "rectangle",
+              "x": 6000,
+              "y": 4000
+            }
+          }
+        },
+        "id": "slab-1",
+        "ifc_class": "IfcSlab",
+        "materials": [
+          {
+            "direction": "AXIS3",
+            "direction_sense": "NEGATIVE",
+            "kind": "material_layer_set_usage",
+            "layer_set_name": "ReinforcedConcrete-150",
+            "layers": [
+              {
+                "name": "钢筋混凝土",
+                "thickness": 150
+              }
+            ],
+            "offset_from_reference_line": 0
+          }
+        ],
+        "property_sets": {},
+        "provenance": {
+          "source": "phase-4-request"
+        }
+      },
+      {
+        "attributes": {
+          "Name": "opening-door-1",
+          "ObjectPlacement": {
+            "axis": [
+              0,
+              0,
+              1
+            ],
+            "origin": [
+              0,
+              0,
+              0
+            ],
+            "ref_direction": [
+              1,
+              0,
+              0
+            ],
+            "relative_to": "wall-south"
+          },
+          "Representation": {
+            "depth": 2100,
+            "direction": [
+              0,
+              0,
+              1
+            ],
+            "kind": "extruded_profile",
+            "profile": {
+              "kind": "rectangle",
+              "x": 900,
+              "y": 200
+            }
+          }
+        },
+        "id": "opening-door-1",
+        "ifc_class": "IfcOpeningElement",
+        "property_sets": {},
+        "provenance": {
+          "source": "phase-4-request"
+        }
+      },
+      {
+        "attributes": {
+          "Name": "Door",
+          "ObjectPlacement": {
+            "axis": [
+              0,
+              0,
+              1
+            ],
+            "origin": [
+              0,
+              0,
+              0
+            ],
+            "ref_direction": [
+              1,
+              0,
+              0
+            ],
+            "relative_to": "opening-door-1"
+          },
+          "OverallHeight": 2100,
+          "OverallWidth": 900,
+          "Representation": {
+            "depth": 2100,
+            "direction": [
+              0,
+              0,
+              1
+            ],
+            "kind": "extruded_profile",
+            "profile": {
+              "kind": "rectangle",
+              "x": 900,
+              "y": 100
+            }
+          }
+        },
+        "id": "door-1",
+        "ifc_class": "IfcDoor",
+        "property_sets": {},
+        "provenance": {
+          "source": "phase-4-request"
+        }
+      }
+    ],
+    "ifc_schema": "IFC2X3",
+    "provenance": {
+      "source": "phase-4-request"
+    },
+    "relationships": [
+      {
+        "attributes": {
+          "RelatedOpeningElement": "opening-door-1",
+          "RelatingBuildingElement": "wall-south"
+        },
+        "id": "void-door-1",
+        "ifc_class": "IfcRelVoidsElement",
+        "provenance": {
+          "source": "phase-4-request"
+        }
+      },
+      {
+        "attributes": {
+          "RelatedBuildingElement": "door-1",
+          "RelatingOpeningElement": "opening-door-1"
+        },
+        "id": "fill-door-1",
+        "ifc_class": "IfcRelFillsElement",
+        "provenance": {
+          "source": "phase-4-request"
+        }
+      }
+    ],
+    "schema_version": "bim-json/2.0",
+    "units": {
+      "length": "MILLIMETRE"
+    }
+  },
+  "USER_REQUEST": "创建一个名为Phase6.4验收房间的单层建筑。建筑首层标高为0米，层高为3米。创建一个矩形房间，内部净尺寸为东西方向6米、南北方向4米。房间四周使用厚度0.2米、高度3米的混凝土墙，墙体位于房间边界外侧。在南侧墙体中央设置一扇门，门宽0.9米，高2.1米。创建厚度0.15米的钢筋混凝土地板，地板顶面标高为0米。将内部空间定义为IfcSpace，空间名称为房间101。"
+}

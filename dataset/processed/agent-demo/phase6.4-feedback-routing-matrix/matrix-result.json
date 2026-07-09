@@ -1,0 +1,92 @@
+{
+  "accepted_count": 2,
+  "blocked_count": 5,
+  "case_count": 8,
+  "cases": [
+    {
+      "audit_passed": true,
+      "blocking_issue_count": 0,
+      "case_id": "simple-accepted-ifc",
+      "deterministic_gates_passed": true,
+      "failure_owner": null,
+      "final_status": "accepted",
+      "report": "simple-accepted-ifc/report.md",
+      "route": "accepted"
+    },
+    {
+      "audit_passed": true,
+      "blocking_issue_count": 0,
+      "case_id": "two-room-smoke",
+      "deterministic_gates_passed": true,
+      "failure_owner": null,
+      "final_status": "accepted",
+      "report": "two-room-smoke/report.md",
+      "route": "accepted"
+    },
+    {
+      "audit_passed": false,
+      "blocking_issue_count": 1,
+      "case_id": "controlled-two-storey-route",
+      "deterministic_gates_passed": false,
+      "failure_owner": "generator",
+      "final_status": "blocked",
+      "report": "controlled-two-storey-route/report.md",
+      "route": "regenerate_json"
+    },
+    {
+      "audit_passed": false,
+      "blocking_issue_count": 1,
+      "case_id": "clarification-two-storey-route",
+      "deterministic_gates_passed": false,
+      "failure_owner": "user",
+      "final_status": "draft",
+      "report": "clarification-two-storey-route/report.md",
+      "route": "ask_user"
+    },
+    {
+      "audit_passed": false,
+      "blocking_issue_count": 1,
+      "case_id": "ambiguous-two-storey-route",
+      "deterministic_gates_passed": false,
+      "failure_owner": "design_brief",
+      "final_status": "blocked",
+      "report": "ambiguous-two-storey-route/report.md",
+      "route": "revise_design_brief"
+    },
+    {
+      "audit_passed": false,
+      "blocking_issue_count": 1,
+      "case_id": "provider-truncation",
+      "deterministic_gates_passed": false,
+      "failure_owner": "provider",
+      "final_status": "blocked",
+      "report": "provider-truncation/report.md",
+      "route": "provider_retry"
+    },
+    {
+      "audit_passed": false,
+      "blocking_issue_count": 1,
+      "case_id": "unsupported-compiler-feature",
+      "deterministic_gates_passed": false,
+      "failure_owner": "compiler",
+      "final_status": "blocked",
+      "report": "unsupported-compiler-feature/report.md",
+      "route": "blocked_as_unsupported"
+    },
+    {
+      "audit_passed": false,
+      "blocking_issue_count": 1,
+      "case_id": "three-storey-dynamic-route",
+      "deterministic_gates_passed": false,
+      "failure_owner": "generator",
+      "final_status": "blocked",
+      "report": "three-storey-dynamic-route/report.md",
+      "route": "regenerate_json"
+    }
+  ],
+  "draft_count": 1,
+  "failed_count": 0,
+  "false_accept_count": 0,
+  "matrix_report": "matrix-report.md",
+  "schema_version": "text2ifc/phase6.4-feedback-matrix/1.0"
+}

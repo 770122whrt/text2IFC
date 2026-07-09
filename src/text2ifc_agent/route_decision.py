@@ -4,16 +4,18 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
-from typing import Any, Mapping
+from typing import Any, Mapping, Sequence
 
 from .gate_audit_bundle import (
     gate_summary_hash,
     hash_json_file,
     validate_gate_summary_binding,
 )
+from .issues import Issue, issue_to_dict
 
 
 ROUTE_DECISION_SCHEMA_VERSION = "text2ifc/route-decision/1.0"
+ROUTE_DECISION_V2_SCHEMA_VERSION = "text2ifc/route-decision/2.0"
 
 CANONICAL_ROUTES = {
     "accept",
@@ -321,4 +323,182 @@ def _write_json(path: Path, payload: Mapping[str, Any]) -> None:
     path.write_text(
         json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
         encoding="utf-8",
+    )
+
+
+def decide_route_from_issues(
+    issues: Sequence[Issue | Mapping[str, Any]],
+    *,
+    current_feedback_round: int,
+    max_feedback_rounds: int,
+    human_review_required: bool = False,
+) -> dict[str, Any]:
+    """Aggregate normalized Phase 6.4 issues into RouteDecision v2."""
+
+    issue_payloads = [issue_to_dict(issue) for issue in issues]
+    blocking = [
+        issue
+        for issue in issue_payloads
+        if issue["severity"] in {"warning", "blocking", "fatal"}
+    ]
+    route, target_stage = _choose_v2_route(blocking)
+    retry_allowed = (
+        route
+        in {"ask_user", "revise_design_brief", "regenerate_json", "repair_json", "provider_retry"}
+        and current_feedback_round < max_feedback_rounds
+    )
+    final_status = _v2_final_status(route, blocking)
+    decision = {
+        "schema_version": ROUTE_DECISION_V2_SCHEMA_VERSION,
+        "final_status": final_status,
+        "route": route,
+        "reason": _v2_reason(route, blocking),
+        "blocking_issue_ids": [issue["issue_id"] for issue in blocking],
+        "retry_allowed": retry_allowed,
+        "target_stage": target_stage,
+        "max_feedback_rounds": max_feedback_rounds,
+        "current_feedback_round": current_feedback_round,
+        "human_review_required": human_review_required,
+    }
+    if route != "accepted":
+        decision["source_issue_count"] = len(blocking)
+    return decision
+
+
+def _choose_v2_route(issues: list[dict[str, Any]]) -> tuple[str, str]:
+    if not issues:
+        return "accepted", "none"
+    fatal_runtime = _first_issue(issues, owner="runtime", issue_type="runtime_error")
+    if fatal_runtime is not None:
+        return "runtime_blocked", "runtime"
+    provider_truncation = _first_issue(issues, owner="provider", issue_type="provider_truncation")
+    if provider_truncation is not None:
+        return "provider_retry", "provider"
+    unsupported_schema = _first_issue(
+        issues,
+        owner="schema",
+        issue_type="unsupported_schema_capability",
+    )
+    if unsupported_schema is not None:
+        return "blocked_as_unsupported", "schema"
+    unsupported_compiler = _first_issue(
+        issues,
+        owner="compiler",
+        issue_type="compiler_unsupported_feature",
+    )
+    if unsupported_compiler is not None:
+        return "blocked_as_unsupported", "compiler"
+    missing_user_fact = _first_issue(
+        issues,
+        owner="user",
+        issue_type="missing_required_fact",
+    ) or _first_issue(issues, owner="user", issue_type="draft_unresolved_path")
+    if missing_user_fact is not None:
+        return "ask_user", "user"
+    design_issue = _first_issue(
+        issues,
+        owner="design_brief",
+        issue_type="semantic_mismatch",
+    ) or _first_issue(
+        issues,
+        owner="design_brief",
+        issue_type="changed_original_request",
+    )
+    if design_issue is not None:
+        return "revise_design_brief", "design_brief"
+    repair_issue = _first_issue(issues, owner="repair", issue_type="invalid_json") or _first_issue(
+        issues,
+        owner="repair",
+        issue_type="schema_mismatch",
+    )
+    if repair_issue is not None:
+        return "repair_json", "repair"
+    generator_issue = _first_owned_issue(
+        issues,
+        owner="generator",
+        issue_types={
+            "missing_entity",
+            "missing_relationship",
+            "missing_host",
+            "missing_storey_assignment",
+            "missing_space_boundary",
+            "missing_vertical_connection",
+        },
+    )
+    if generator_issue is not None:
+        return "regenerate_json", "generator"
+    gate_issue = _first_issue(issues, owner="gate", issue_type="gate_false_positive")
+    if gate_issue is not None:
+        return "gate_issue", "gate"
+    suggested = _first_suggested_route(issues)
+    if suggested is not None:
+        return suggested, _target_stage_for_v2_route(suggested, issues[0])
+    return "runtime_blocked", "runtime"
+
+
+def _first_issue(
+    issues: list[dict[str, Any]],
+    *,
+    owner: str,
+    issue_type: str,
+) -> dict[str, Any] | None:
+    for issue in issues:
+        if issue["owner"] == owner and issue["issue_type"] == issue_type:
+            return issue
+    return None
+
+
+def _first_owned_issue(
+    issues: list[dict[str, Any]],
+    *,
+    owner: str,
+    issue_types: set[str],
+) -> dict[str, Any] | None:
+    for issue in issues:
+        if issue["owner"] == owner and issue["issue_type"] in issue_types:
+            return issue
+    return None
+
+
+def _first_suggested_route(issues: list[dict[str, Any]]) -> str | None:
+    for issue in issues:
+        route = issue.get("suggested_route")
+        if route != "accepted":
+            return str(route)
+    return None
+
+
+def _target_stage_for_v2_route(route: str, issue: Mapping[str, Any]) -> str:
+    return {
+        "accepted": "none",
+        "ask_user": "user",
+        "revise_design_brief": "design_brief",
+        "regenerate_json": "generator",
+        "repair_json": "repair",
+        "blocked_as_unsupported": str(issue.get("owner", "schema")),
+        "gate_issue": "gate",
+        "provider_retry": "provider",
+        "runtime_blocked": "runtime",
+    }[route]
+
+
+def _v2_final_status(route: str, issues: list[dict[str, Any]]) -> str:
+    if route == "accepted":
+        return "accepted"
+    if any(issue["severity"] == "fatal" for issue in issues):
+        return "failed"
+    if route == "ask_user":
+        return "draft"
+    return "blocked"
+
+
+def _v2_reason(route: str, issues: list[dict[str, Any]]) -> str:
+    if route == "accepted":
+        return "No blocking or warning issues were found."
+    if not issues:
+        return f"Route {route} selected without issue evidence."
+    first = issues[0]
+    return (
+        f"Route {route} selected from {len(issues)} issue(s); "
+        f"first issue {first['issue_id']} is {first['issue_type']} owned by {first['owner']}."
     )
