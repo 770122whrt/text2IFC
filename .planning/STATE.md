@@ -787,6 +787,8 @@ non-accept live workflow stopped honestly as Draft route `ask_user` at
 `dataset/processed/agent-demo/phase6.4-live-deepseek/runs/0768b6259f2aff83`.
 `live-chain-coverage-report.md` proves 8 / 8 required workflow links, and
 `chain-completeness-report.md` proves the required deterministic route matrix
-with explicit non-live route boundaries. Phase 6.4 focused tests passed
-46 checks, compileall passed, and the live artifact secret scan found zero
-findings.*
+with explicit route boundaries. `route-live-uat-report.md` adds real DeepSeek
+route-level evidence for all defined Phase 6.4 routes: three auto-resolved
+correction routes, four correct-terminal routes, and one provider retry-control
+route. Phase 6.4 focused tests passed 49 checks, compileall passed, and the
+live plus route-live artifact secret scans found zero findings.*

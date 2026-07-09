@@ -1,0 +1,35 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "message": {
+        "annotations": null,
+        "audio": null,
+        "content": "{\n  \"route\": \"runtime_blocked\",\n  \"target_stage\": \"correct_terminal_live\",\n  \"resolution_status\": \"runtime_blocked\",\n  \"action_summary\": \"Terminal route expected correct_terminal_live but hit runtime exception; cannot auto-fix.\",\n  \"should_continue_pipeline\": false,\n  \"should_ask_user\": true,\n  \"should_block\": true\n}",
+        "function_call": null,
+        "reasoning_content": "We are given a route \"runtime_blocked\" with expected status \"correct_terminal_live\". This suggests that the route is expected to end at a terminal state that is live (correct_terminal_live). However, the issue feedback indicates a runtime error: \"The run hit an unexpected local exception after a session directory existed.\" So the actual outcome is a runtime error, not the expected terminal live state. The resolution_status should be \"runtime_blocked\" as per the instruction. Since this is a terminal route (correct_terminal_live implies it should terminate), and we have a runtime error, we should not fabricate a fix. The system must not proceed, and should block. So should_continue_pipeline = false, should_ask_user = true (to inform user of the error), should_block = true. action_summary should explain why we cannot auto-fix: because the expected terminal state was not reached due to a runtime error, and we cannot auto-fix runtime exceptions.\n\nReturn JSON with these fields.",
+        "refusal": null,
+        "role": "assistant",
+        "tool_calls": null
+      }
+    }
+  ],
+  "created": 1783569921,
+  "id": "e28e5bec-6c96-442a-be5c-65fc0ee2924c",
+  "model": "deepseek-v4-flash",
+  "moderation": null,
+  "object": "chat.completion",
+  "service_tier": null,
+  "system_fingerprint": "fp_8b330d02d0_prod0820_fp8_kvcache_20260402",
+  "usage": {
+    "completion_tokens": 296,
+    "completion_tokens_details": "[REDACTED]",
+    "prompt_cache_hit_tokens": "[REDACTED]",
+    "prompt_cache_miss_tokens": "[REDACTED]",
+    "prompt_tokens": 229,
+    "prompt_tokens_details": "[REDACTED]",
+    "total_tokens": 525
+  }
+}

@@ -18,15 +18,23 @@ DEFAULT_LIVE_ROOT = ROOT / "dataset" / "processed" / "agent-demo" / "phase6.4-li
 DEFAULT_MATRIX_ROOT = (
     ROOT / "dataset" / "processed" / "agent-demo" / "phase6.4-feedback-routing-matrix"
 )
+DEFAULT_ROUTE_LIVE_ROOT = (
+    ROOT / "dataset" / "processed" / "agent-demo" / "phase6.4-route-live-uat"
+)
 
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--live-root", type=Path, default=DEFAULT_LIVE_ROOT)
     parser.add_argument("--matrix-root", type=Path, default=DEFAULT_MATRIX_ROOT)
+    parser.add_argument("--route-live-root", type=Path, default=DEFAULT_ROUTE_LIVE_ROOT)
     args = parser.parse_args(argv)
 
-    result = build_chain_completeness(live_root=args.live_root, matrix_root=args.matrix_root)
+    result = build_chain_completeness(
+        live_root=args.live_root,
+        matrix_root=args.matrix_root,
+        route_live_root=args.route_live_root,
+    )
     print(json.dumps(result, ensure_ascii=False, sort_keys=True))
     return 0 if result["overall_status"] == "phase6_4_evidence_complete_with_boundaries" else 2
 

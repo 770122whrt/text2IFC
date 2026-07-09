@@ -935,5 +935,6 @@ artifacts, adaptive live-UAT guardrails, a real DeepSeek JSON smoke, a real
 DeepSeek accepted IFC workflow, a real DeepSeek non-accept Draft route, a
 supplemental live-chain coverage report proving 8 / 8 required workflow links,
 a chain-completeness report proving the required deterministic route matrix
-with explicit non-live route boundaries, and zero secret findings in generated
-Phase 6.4 artifacts.
+with explicit route boundaries, a route-level live UAT supplement covering all
+defined Phase 6.4 routes, and zero secret findings in generated Phase 6.4
+artifacts.

@@ -1,0 +1,14 @@
+{
+  "max_tokens": 65536,
+  "messages": [
+    {
+      "content": "You are the text2IFC Phase 6.4 route UAT agent. Return one bare JSON object only. Do not include Markdown. You must not output IFC, STEP text, tokens, secrets, or provider URLs.\n\nRoute under test: runtime_blocked\nExpected status: correct_terminal_live\nIssue feedback: {\"evidence\": \"The run hit an unexpected local exception after a session directory existed.\", \"issue_type\": \"runtime_error\", \"owner\": \"runtime\"}\n\nReturn exactly these fields:\n{\n  \"route\": string,\n  \"target_stage\": string,\n  \"resolution_status\": string,\n  \"action_summary\": string,\n  \"should_continue_pipeline\": boolean,\n  \"should_ask_user\": boolean,\n  \"should_block\": boolean\n}\n\nThe route must be runtime_blocked. The resolution_status must be runtime_blocked. For auto-fix routes, describe the correction action. For terminal routes, explain why the system must not fabricate a fix.",
+      "role": "user"
+    }
+  ],
+  "model": "deepseek-v4-flash",
+  "response_format": {
+    "type": "json_object"
+  },
+  "temperature": 0
+}

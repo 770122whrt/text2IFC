@@ -1,0 +1,25 @@
+{
+  "case_id": "gate_issue",
+  "evidence_paths": [
+    "cases/gate_issue/request.redacted.json",
+    "cases/gate_issue/response.raw.json",
+    "cases/gate_issue/parsed-output.json"
+  ],
+  "finish_reason": "stop",
+  "model": "deepseek-v4-flash",
+  "model_output": {
+    "action_summary": "The system must not fabricate a fix because the gate applicability is disputed, and Audit wording cannot override the gate. A manual gate review is required.",
+    "resolution_status": "gate_review_required",
+    "route": "gate_issue",
+    "should_ask_user": false,
+    "should_block": true,
+    "should_continue_pipeline": false,
+    "target_stage": "correct_terminal_live"
+  },
+  "model_output_valid": true,
+  "provider": "deepseek-openai-compatible",
+  "response_id": "6a8e2a74-5d01-47ff-9af9-349f71a6d90a",
+  "route": "gate_issue",
+  "schema_version": "text2ifc/phase6.4-route-live-uat-case/1.0",
+  "status": "correct_terminal_live"
+}

@@ -51,6 +51,59 @@ def test_chain_completeness_combines_live_links_and_route_matrix(tmp_path):
     assert (root / "chain-completeness-report.md").is_file()
 
 
+def test_chain_completeness_can_include_route_live_uat_supplement(tmp_path):
+    from text2ifc_agent.chain_completeness import build_chain_completeness
+
+    live_root = tmp_path / "live"
+    matrix_root = tmp_path / "matrix"
+    route_live_root = tmp_path / "route-live"
+    _write_json(
+        live_root / "live-chain-coverage-result.json",
+        {
+            "all_required_links_passed": True,
+            "passed_required_link_count": 8,
+            "required_link_count": 8,
+            "links": [{"route": "accepted", "status": "passed"}, {"route": "ask_user", "status": "passed"}],
+        },
+    )
+    _write_json(
+        matrix_root / "matrix-result.json",
+        {
+            "false_accept_count": 0,
+            "cases": [{"route": route} for route in ["accepted", "ask_user", "regenerate_json", "revise_design_brief", "provider_retry", "blocked_as_unsupported"]],
+        },
+    )
+    _write_json(
+        route_live_root / "route-live-uat-summary.json",
+        {
+            "all_required_routes_live_checked": True,
+            "covered_routes": [
+                "ask_user",
+                "regenerate_json",
+                "revise_design_brief",
+                "repair_json",
+                "provider_retry",
+                "blocked_as_unsupported",
+                "gate_issue",
+                "runtime_blocked",
+            ],
+            "auto_resolved_routes": ["regenerate_json", "repair_json", "revise_design_brief"],
+            "correct_terminal_routes": ["ask_user", "blocked_as_unsupported", "gate_issue", "runtime_blocked"],
+            "retry_control_routes": ["provider_retry"],
+        },
+    )
+
+    result = build_chain_completeness(
+        live_root=live_root,
+        matrix_root=matrix_root,
+        route_live_root=route_live_root,
+    )
+
+    assert result["route_live_uat_complete"] is True
+    assert result["route_live_uat"]["auto_resolved_routes"] == ["regenerate_json", "repair_json", "revise_design_brief"]
+    assert result["not_live_verified_routes"] == []
+
+
 def test_chain_completeness_fails_if_matrix_misses_required_route(tmp_path):
     from text2ifc_agent.chain_completeness import build_chain_completeness
 

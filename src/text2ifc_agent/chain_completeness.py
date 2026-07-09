@@ -29,11 +29,18 @@ def build_chain_completeness(
     *,
     live_root: Path | str,
     matrix_root: Path | str,
+    route_live_root: Path | str | None = None,
 ) -> dict[str, Any]:
     live_dir = Path(live_root)
     matrix_dir = Path(matrix_root)
+    route_live_dir = Path(route_live_root) if route_live_root is not None else None
     live = _read_json(live_dir / "live-chain-coverage-result.json")
     matrix = _read_json(matrix_dir / "matrix-result.json")
+    route_live = (
+        _read_json(route_live_dir / "route-live-uat-summary.json")
+        if route_live_dir is not None
+        else {}
+    )
 
     matrix_routes = sorted(
         {
@@ -52,9 +59,16 @@ def build_chain_completeness(
             if link.get("route") and link.get("status") == "passed"
         }
     )
+    route_live_routes = sorted(
+        str(route)
+        for route in route_live.get("covered_routes", [])
+        if route
+    )
+    combined_live_routes = sorted(set(live_routes).union(route_live_routes))
     live_links_passed = bool(live.get("all_required_links_passed"))
     false_accept_count = int(matrix.get("false_accept_count", 0))
     matrix_complete = not missing_matrix_routes and false_accept_count == 0
+    route_live_complete = bool(route_live.get("all_required_routes_live_checked"))
     complete = live_links_passed and matrix_complete
     result = {
         "schema_version": SCHEMA_VERSION,
@@ -82,13 +96,23 @@ def build_chain_completeness(
                 "coverage in Phase 6.4 unless separately live-tested."
             ),
         },
+        "route_live_uat_complete": route_live_complete,
+        "route_live_uat": {
+            "covered_routes": route_live_routes,
+            "auto_resolved_routes": list(route_live.get("auto_resolved_routes", [])),
+            "correct_terminal_routes": list(route_live.get("correct_terminal_routes", [])),
+            "retry_control_routes": list(route_live.get("retry_control_routes", [])),
+        },
         "not_live_verified_routes": sorted(
-            set(REQUIRED_MATRIX_ROUTES).union(CONTRACT_ONLY_ROUTES).difference(live_routes)
+            set(REQUIRED_MATRIX_ROUTES).union(CONTRACT_ONLY_ROUTES).difference(combined_live_routes)
         ),
         "contract_only_routes": list(CONTRACT_ONLY_ROUTES),
         "evidence_inputs": {
             "live_chain_coverage": str(live_dir / "live-chain-coverage-result.json"),
             "feedback_matrix": str(matrix_dir / "matrix-result.json"),
+            "route_live_uat": str(route_live_dir / "route-live-uat-summary.json")
+            if route_live_dir is not None
+            else "",
         },
     }
     _write_json(live_dir / "chain-completeness-result.json", result)
@@ -141,10 +165,19 @@ def _write_report(path: Path, result: dict[str, Any]) -> None:
         f"- not_live_verified_routes: `{result['not_live_verified_routes']}`",
         f"- contract_only_routes: `{result['contract_only_routes']}`",
         "",
+        "## Route-Level Live UAT Supplement",
+        "",
+        f"- complete: `{result['route_live_uat_complete']}`",
+        f"- covered_routes: `{result['route_live_uat']['covered_routes']}`",
+        f"- auto_resolved_routes: `{result['route_live_uat']['auto_resolved_routes']}`",
+        f"- correct_terminal_routes: `{result['route_live_uat']['correct_terminal_routes']}`",
+        f"- retry_control_routes: `{result['route_live_uat']['retry_control_routes']}`",
+        "",
         "## Evidence Inputs",
         "",
         f"- live_chain_coverage: `{result['evidence_inputs']['live_chain_coverage']}`",
         f"- feedback_matrix: `{result['evidence_inputs']['feedback_matrix']}`",
+        f"- route_live_uat: `{result['evidence_inputs']['route_live_uat']}`",
     ]
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text("\n".join(lines).rstrip() + "\n", encoding="utf-8")

@@ -1,0 +1,35 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "message": {
+        "annotations": null,
+        "audio": null,
+        "content": "{\n  \"route\": \"ask_user\",\n  \"target_stage\": \"correct_terminal_live\",\n  \"resolution_status\": \"needs_user_answer\",\n  \"action_summary\": \"The system must request the missing wall thickness and floor thickness from the user because these are required facts that the user must provide. The system must not fabricate these values as it could lead to incorrect IFC output.\",\n  \"should_continue_pipeline\": false,\n  \"should_ask_user\": true,\n  \"should_block\": true\n}",
+        "function_call": null,
+        "reasoning_content": "We are asked to output JSON for a UAT agent. The route is \"ask_user\". Expected status is \"correct_terminal_live\". The issue feedback indicates missing required facts (wall thickness and floor thickness), owner is user. Since it's a user issue, the system should ask the user for clarification. So resolution_status should be \"needs_user_answer\". The action_summary should describe why we need to ask the user. Since it's a terminal route, we should not fabricate a fix. So should_continue_pipeline is false? Actually, UAT terminal means the route ends here? But we are to ask user, so maybe should_continue_pipeline is false because we are waiting for user input. Should_ask_user is true. Should_block could be true because we cannot proceed without the info.\n\nThe user says: \"For terminal routes, explain why the system must not fabricate a fix.\" So action_summary should include that.\n\nConstruct JSON.",
+        "refusal": null,
+        "role": "assistant",
+        "tool_calls": null
+      }
+    }
+  ],
+  "created": 1783569889,
+  "id": "65393a90-7d15-4762-8549-0d9ae5c5acf7",
+  "model": "deepseek-v4-flash",
+  "moderation": null,
+  "object": "chat.completion",
+  "service_tier": null,
+  "system_fingerprint": "fp_8b330d02d0_prod0820_fp8_kvcache_20260402",
+  "usage": {
+    "completion_tokens": 309,
+    "completion_tokens_details": "[REDACTED]",
+    "prompt_cache_hit_tokens": "[REDACTED]",
+    "prompt_cache_miss_tokens": "[REDACTED]",
+    "prompt_tokens": 225,
+    "prompt_tokens_details": "[REDACTED]",
+    "total_tokens": 534
+  }
+}

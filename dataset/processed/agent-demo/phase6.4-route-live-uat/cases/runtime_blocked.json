@@ -1,0 +1,25 @@
+{
+  "case_id": "runtime_blocked",
+  "evidence_paths": [
+    "cases/runtime_blocked/request.redacted.json",
+    "cases/runtime_blocked/response.raw.json",
+    "cases/runtime_blocked/parsed-output.json"
+  ],
+  "finish_reason": "stop",
+  "model": "deepseek-v4-flash",
+  "model_output": {
+    "action_summary": "Terminal route expected correct_terminal_live but hit runtime exception; cannot auto-fix.",
+    "resolution_status": "runtime_blocked",
+    "route": "runtime_blocked",
+    "should_ask_user": true,
+    "should_block": true,
+    "should_continue_pipeline": false,
+    "target_stage": "correct_terminal_live"
+  },
+  "model_output_valid": true,
+  "provider": "deepseek-openai-compatible",
+  "response_id": "e28e5bec-6c96-442a-be5c-65fc0ee2924c",
+  "route": "runtime_blocked",
+  "schema_version": "text2ifc/phase6.4-route-live-uat-case/1.0",
+  "status": "correct_terminal_live"
+}

@@ -1,0 +1,25 @@
+{
+  "case_id": "revise_design_brief",
+  "evidence_paths": [
+    "cases/revise_design_brief/request.redacted.json",
+    "cases/revise_design_brief/response.raw.json",
+    "cases/revise_design_brief/parsed-output.json"
+  ],
+  "finish_reason": "stop",
+  "model": "deepseek-v4-flash",
+  "model_output": {
+    "action_summary": "The Design Brief added a room not in the original request. The system cannot auto-correct because it changes the original request. User feedback required to resolve discrepancy.",
+    "resolution_status": "design_brief_feedback_ready",
+    "route": "revise_design_brief",
+    "should_ask_user": true,
+    "should_block": true,
+    "should_continue_pipeline": false,
+    "target_stage": "design_brief"
+  },
+  "model_output_valid": true,
+  "provider": "deepseek-openai-compatible",
+  "response_id": "7cd3b3f9-db27-4da1-8ddb-b308ba57242a",
+  "route": "revise_design_brief",
+  "schema_version": "text2ifc/phase6.4-route-live-uat-case/1.0",
+  "status": "auto_resolved_live"
+}

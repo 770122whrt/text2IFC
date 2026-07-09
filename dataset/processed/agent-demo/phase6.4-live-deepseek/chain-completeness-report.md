@@ -21,10 +21,19 @@
 Live evidence proves the accepted IFC path and the non-accept ask_user path. Other failure routes are deterministic/unit coverage in Phase 6.4 unless separately live-tested.
 
 - live_covered_routes: `['accepted', 'ask_user']`
-- not_live_verified_routes: `['blocked_as_unsupported', 'gate_issue', 'provider_retry', 'regenerate_json', 'repair_json', 'revise_design_brief', 'runtime_blocked']`
+- not_live_verified_routes: `[]`
 - contract_only_routes: `['repair_json', 'gate_issue', 'runtime_blocked']`
+
+## Route-Level Live UAT Supplement
+
+- complete: `True`
+- covered_routes: `['ask_user', 'blocked_as_unsupported', 'gate_issue', 'provider_retry', 'regenerate_json', 'repair_json', 'revise_design_brief', 'runtime_blocked']`
+- auto_resolved_routes: `['regenerate_json', 'repair_json', 'revise_design_brief']`
+- correct_terminal_routes: `['ask_user', 'blocked_as_unsupported', 'gate_issue', 'runtime_blocked']`
+- retry_control_routes: `['provider_retry']`
 
 ## Evidence Inputs
 
 - live_chain_coverage: `dataset\processed\agent-demo\phase6.4-live-deepseek\live-chain-coverage-result.json`
 - feedback_matrix: `dataset\processed\agent-demo\phase6.4-feedback-routing-matrix\matrix-result.json`
+- route_live_uat: `dataset\processed\agent-demo\phase6.4-route-live-uat\route-live-uat-summary.json`

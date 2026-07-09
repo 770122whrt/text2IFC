@@ -1,0 +1,25 @@
+{
+  "case_id": "provider_retry",
+  "evidence_paths": [
+    "cases/provider_retry/request.redacted.json",
+    "cases/provider_retry/response.raw.json",
+    "cases/provider_retry/parsed-output.json"
+  ],
+  "finish_reason": "stop",
+  "model": "deepseek-v4-flash",
+  "model_output": {
+    "action_summary": "Retry the provider request with increased max_tokens or adjusted parameters to avoid truncation.",
+    "resolution_status": "provider_retry_ready",
+    "route": "provider_retry",
+    "should_ask_user": false,
+    "should_block": false,
+    "should_continue_pipeline": true,
+    "target_stage": "retry_control_live"
+  },
+  "model_output_valid": true,
+  "provider": "deepseek-openai-compatible",
+  "response_id": "0b068773-0c12-4a4d-9c59-fcf1b4d3244f",
+  "route": "provider_retry",
+  "schema_version": "text2ifc/phase6.4-route-live-uat-case/1.0",
+  "status": "retry_control_live"
+}

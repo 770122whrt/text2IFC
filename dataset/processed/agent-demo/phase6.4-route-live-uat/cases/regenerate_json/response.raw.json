@@ -1,0 +1,35 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "message": {
+        "annotations": null,
+        "audio": null,
+        "content": "{\n  \"route\": \"regenerate_json\",\n  \"target_stage\": \"generator\",\n  \"resolution_status\": \"generator_feedback_ready\",\n  \"action_summary\": \"Regenerate JSON to include a vertical connection (e.g., stair or ramp) between the two storeys as required by the Design Brief.\",\n  \"should_continue_pipeline\": true,\n  \"should_ask_user\": false,\n  \"should_block\": false\n}",
+        "function_call": null,
+        "reasoning_content": "We need to output JSON with the given fields. The route is \"regenerate_json\". The expected status is \"auto_resolved_live\" but the resolution_status must be \"generator_feedback_ready\"? Wait the instruction says: \"The resolution_status must be generator_feedback_ready.\" But the expected status from the context is auto_resolved_live. However, the user says \"Return exactly these fields\" and then gives a specific resolution_status that must be generator_feedback_ready. Also the action_summary should describe the correction action for auto-fix routes. Since this is regenerate_json route, it's an auto-fix route? Actually regenerate_json is a route that asks the generator to produce a new JSON. The issue is missing vertical connection. So action_summary should describe that we need to regenerate the JSON with a vertical connection. Also should_continue_pipeline: likely true because after regenerating we continue. should_ask_user: false because it's auto-fix. should_block: false. Let's construct JSON.",
+        "refusal": null,
+        "role": "assistant",
+        "tool_calls": null
+      }
+    }
+  ],
+  "created": 1783569892,
+  "id": "983935af-ecd6-4728-86f1-41db8013dbc1",
+  "model": "deepseek-v4-flash",
+  "moderation": null,
+  "object": "chat.completion",
+  "service_tier": null,
+  "system_fingerprint": "fp_8b330d02d0_prod0820_fp8_kvcache_20260402",
+  "usage": {
+    "completion_tokens": 308,
+    "completion_tokens_details": "[REDACTED]",
+    "prompt_cache_hit_tokens": "[REDACTED]",
+    "prompt_cache_miss_tokens": "[REDACTED]",
+    "prompt_tokens": 241,
+    "prompt_tokens_details": "[REDACTED]",
+    "total_tokens": 549
+  }
+}

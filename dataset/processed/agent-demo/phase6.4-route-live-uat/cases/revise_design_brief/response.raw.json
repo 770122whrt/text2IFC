@@ -1,0 +1,35 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "message": {
+        "annotations": null,
+        "audio": null,
+        "content": "{\n  \"route\": \"revise_design_brief\",\n  \"target_stage\": \"design_brief\",\n  \"resolution_status\": \"design_brief_feedback_ready\",\n  \"action_summary\": \"The Design Brief added a room not in the original request. The system cannot auto-correct because it changes the original request. User feedback required to resolve discrepancy.\",\n  \"should_continue_pipeline\": false,\n  \"should_ask_user\": true,\n  \"should_block\": true\n}",
+        "function_call": null,
+        "reasoning_content": "We need to output JSON for the route \"revise_design_brief\". The expected status is \"auto_resolved_live\" but the given issue feedback indicates a changed original request. The resolution_status must be \"design_brief_feedback_ready\". Since this is an auto-resolved route, but there is an issue, we need to determine action. The route is revise_design_brief, which typically involves updating the design brief. The issue type is \"changed_original_request\" and owner is \"design_brief\". The evidence says the Design Brief added a room not in original request. So the action should be to remove that room or correct the brief. But we are to output the fields.\n\nWe need to set:\n- route: \"revise_design_brief\"\n- target_stage: presumably the stage after this route, but not given. We can infer maybe \"design_brief\" or \"feedback\"? Actually we need target_stage as string. Since it's route under test, maybe target_stage is \"design_brief\"? But the expected status is \"auto_resolved_live\" meaning it auto-resolved and pipeline continues. But the resolution_status must be \"design_brief_feedback_ready\". That suggests that the system determined that the design brief needs feedback due to a mismatch. It is not auto-resolved because it changed original request. So should_continue_pipeline? Probably false because it needs user feedback. Should_ask_user? Yes, because issue requires user input. Should_block? Possibly yes, because pipeline should not proceed without user confirmation.\n\nBut careful: The instruction says \"The resolution_status must be design_brief_feedback_ready.\" So we set that. For auto-fix routes, describe the correction action. But this is not auto-fix; it's a feedback route. So action_summary should explain that the design brief introduced an extra room, and the system cannot automatically correct it without user input. Or it could propose to remove the extra room? But it says \"For auto-fix routes, describe the correction action. For terminal routes, explain why the system must not fabricate a fix.\" This route is neither auto-fix nor terminal? Actually revise_design_brief is a route that can auto-fix? The expected status was auto_resolved_live, but with this issue it becomes feedback. So we need to treat it as feedback. So action_summary: \"The Design Brief added a room not in original request. The system cannot auto-correct because it changes the original request. User feedback required to resolve discrepancy.\"\n\nLet's set:\n- target_stage: \"design_brief_feedback\" or \"design_brief\"? Not sure. Typically after this route, pipeline should go to user feedback stage. So maybe \"user_feedback\". But we can set to \"design_brief\" as the stage that needs revision. I'll set \"design_brief\".\n\n- should_continue_pipeline: false (since needs feedback)\n- should_ask_user: true\n- should_block: true\n\nNow output JSON only.",
+        "refusal": null,
+        "role": "assistant",
+        "tool_calls": null
+      }
+    }
+  ],
+  "created": 1783569895,
+  "id": "7cd3b3f9-db27-4da1-8ddb-b308ba57242a",
+  "model": "deepseek-v4-flash",
+  "moderation": null,
+  "object": "chat.completion",
+  "service_tier": null,
+  "system_fingerprint": "fp_8b330d02d0_prod0820_fp8_kvcache_20260402",
+  "usage": {
+    "completion_tokens": 735,
+    "completion_tokens_details": "[REDACTED]",
+    "prompt_cache_hit_tokens": "[REDACTED]",
+    "prompt_cache_miss_tokens": "[REDACTED]",
+    "prompt_tokens": 243,
+    "prompt_tokens_details": "[REDACTED]",
+    "total_tokens": 978
+  }
+}

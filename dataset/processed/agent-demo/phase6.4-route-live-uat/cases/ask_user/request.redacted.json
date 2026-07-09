@@ -1,0 +1,14 @@
+{
+  "max_tokens": 65536,
+  "messages": [
+    {
+      "content": "You are the text2IFC Phase 6.4 route UAT agent. Return one bare JSON object only. Do not include Markdown. You must not output IFC, STEP text, tokens, secrets, or provider URLs.\n\nRoute under test: ask_user\nExpected status: correct_terminal_live\nIssue feedback: {\"evidence\": \"Wall thickness and floor thickness are missing.\", \"issue_type\": \"missing_required_fact\", \"owner\": \"user\"}\n\nReturn exactly these fields:\n{\n  \"route\": string,\n  \"target_stage\": string,\n  \"resolution_status\": string,\n  \"action_summary\": string,\n  \"should_continue_pipeline\": boolean,\n  \"should_ask_user\": boolean,\n  \"should_block\": boolean\n}\n\nThe route must be ask_user. The resolution_status must be needs_user_answer. For auto-fix routes, describe the correction action. For terminal routes, explain why the system must not fabricate a fix.",
+      "role": "user"
+    }
+  ],
+  "model": "deepseek-v4-flash",
+  "response_format": {
+    "type": "json_object"
+  },
+  "temperature": 0
+}
