@@ -881,7 +881,7 @@ before real DeepSeek live tests. Live acceptance requires real provider
 evidence and cannot be satisfied by fake/file/replay providers, prewritten
 `answers.json`, or exact scripted clarification transcripts.
 
-**Plans:** 6 plans in 6 waves
+**Plans:** 7 plans in 7 waves
 
 **Wave 0**
 
@@ -907,6 +907,10 @@ evidence and cannot be satisfied by fake/file/replay providers, prewritten
 
 - [x] `06.4-05-PLAN.md` - Real DeepSeek live matrix and final verification
 
+**Wave 6** *(supplemental verification; blocked on Wave 5 live evidence)*
+
+- [x] `06.4-06-PLAN.md` - Supplemental live chain coverage evidence
+
 **Cross-cutting constraints:**
 
 - New machine-readable workflow fields, JSON keys, enum values, issue types,
@@ -928,5 +932,8 @@ evidence and cannot be satisfied by fake/file/replay providers, prewritten
 **Status:** Complete - verified 2026-07-09. Phase 6.4 now has normalized
 Issues, RouteDecision v2, bounded feedback rounds, generated matrix/report
 artifacts, adaptive live-UAT guardrails, a real DeepSeek JSON smoke, a real
-DeepSeek accepted IFC workflow, a real DeepSeek non-accept Draft route, and
-zero secret findings in generated Phase 6.4 artifacts.
+DeepSeek accepted IFC workflow, a real DeepSeek non-accept Draft route, a
+supplemental live-chain coverage report proving 8 / 8 required workflow links,
+a chain-completeness report proving the required deterministic route matrix
+with explicit non-live route boundaries, and zero secret findings in generated
+Phase 6.4 artifacts.

@@ -7,13 +7,12 @@ See: `.planning/PROJECT.md` (updated 2026-06-11)
 **Core value:** Produce valid, inspectable IFC models from explicit user
 requirements.
 
-**Current focus:** Phase 6.4 feedback routing loop MVP and live DeepSeek
-matrix planning
+**Current focus:** Phase 6.4 supplemental live chain coverage closure
 
 ## Status
 
 - Phase: 6.4
-- Stage: Wave 0 implemented and verified; Wave 1 next
+- Stage: Complete, including Wave 6 supplemental live-chain coverage
 - State: Phase 6.2-fix Waves 0-2 are implemented and automatically verified.
   Wave 3 real UAT
   produced useful live evidence and fixed defects 001/002, then exposed defect
@@ -73,8 +72,9 @@ matrix planning
 - Plans: Phase 6.2-fix Waves 0-2 complete; Wave 3 produced UAT defect evidence;
   Wave 4 implementation/regression complete; Wave 5 implementation/regression
   complete; Wave 6 implementation/regression complete; Phase 6.3 planned in
-  seven waves; Waves 0-6 implemented and verified; final complex live IFC
-  generation remains future work
+  seven waves; Waves 0-6 implemented and verified; Phase 6.4 Waves 0-6
+  implemented and verified; final complex live IFC generation remains future
+  work
 - Branch: `multiagent-design` in C-drive worktree
 - Remote: `https://github.com/770122whrt/text2IFC`
 
@@ -779,10 +779,14 @@ transcripts.
   responses.
 
 ---
-*Last activity: 2026-07-09 - completed Phase 6.4. Real DeepSeek JSON smoke
-passed; accepted live workflow compiled IFC at
+*Last activity: 2026-07-09 - completed Phase 6.4 including supplemental chain
+coverage. Real DeepSeek JSON smoke passed; accepted live workflow compiled IFC
+at
 `dataset/processed/agent-demo/phase6.4-live-deepseek/runs/129e4e93ae4e4583/output.ifc`;
 non-accept live workflow stopped honestly as Draft route `ask_user` at
-`dataset/processed/agent-demo/phase6.4-live-deepseek/runs/0768b6259f2aff83`;
-Phase 6.4 focused tests, REPL/semantic regressions, compileall, matrix, and
-secret scans passed.*
+`dataset/processed/agent-demo/phase6.4-live-deepseek/runs/0768b6259f2aff83`.
+`live-chain-coverage-report.md` proves 8 / 8 required workflow links, and
+`chain-completeness-report.md` proves the required deterministic route matrix
+with explicit non-live route boundaries. Phase 6.4 focused tests passed
+46 checks, compileall passed, and the live artifact secret scan found zero
+findings.*
