@@ -21,6 +21,25 @@ def test_generated_ifc_gate_reports_vertical_slab_wall_gap(tmp_path: Path):
     ]
 
 
+def test_generated_ifc_gate_keeps_slab_gap_when_wall_also_fails(tmp_path: Path):
+    output = tmp_path / "slab-gap-with-wall-error.ifc"
+    result = compile_document(_slab_gap_document(), output)
+    expectation = _slab_gap_expectation()
+    expectation["walls"]["wall-1"]["bbox"]["x"] = [0.0, 6.0]
+
+    assert result.success
+    gate = check_generated_ifc(output, expectation)
+
+    codes = {item["code"] for item in gate.issues}
+    assert "WALL_BBOX_MISMATCH" in codes
+    assert "VERTICAL_SLAB_WALL_GAP" in codes
+    wall_issue = next(item for item in gate.issues if item["code"] == "WALL_BBOX_MISMATCH")
+    assert wall_issue["entity_ids"] == ["wall-1"]
+    assert wall_issue["expected"]["x"] == [0.0, 6.0]
+    assert wall_issue["actual"]["x"] == [-3.0, 3.0]
+    assert wall_issue["source_fact_refs"] == ["/known_facts/storeys/0/walls/interior/0"]
+
+
 def _slab_gap_expectation() -> dict:
     return {
         "case_id": "slab-gap",
@@ -33,6 +52,7 @@ def _slab_gap_expectation() -> dict:
                     "y": [-0.1, 0.1],
                     "z": [0.0, 3.0],
                 },
+                "source_fact_refs": ["/known_facts/storeys/0/walls/interior/0"],
             }
         },
         "slabs": {
