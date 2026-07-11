@@ -113,6 +113,14 @@ def build_design_geometry_expectation(
                 "source_fact_refs": [source_a[1], source_b[1], path],
             }
 
+    for slab in slabs.values():
+        slab_bottom = slab["bbox"]["z"][0]
+        slab["must_touch_walls"] = sorted(
+            wall_id
+            for wall_id, wall in walls.items()
+            if abs(wall["bbox"]["z"][1] - slab_bottom) <= 0.000001
+        )
+
     return {
         "schema_version": "text2ifc/design-geometry-expectation/1.0",
         "case_id": case_id,
