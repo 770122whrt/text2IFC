@@ -59,6 +59,57 @@ def test_expected_facts_extracts_complex_multi_storey_obligations(tmp_path):
     assert expected["source_paths"]["/known_facts/doors/0"] == ["turn-user-001"]
 
 
+def test_expected_facts_reads_canonical_floor_slabs_and_vertical_datums():
+    expected = build_expected_facts(
+        case_id="canonical-datums",
+        design_brief={
+            "known_facts": {
+                "storeys": [
+                    {"id": "storey-1", "elevation_mm": 0},
+                    {"id": "storey-2", "elevation_mm": 3150},
+                ],
+                "floor_slabs": [
+                    {
+                        "id": "ground-floor-slab",
+                        "storey": "storey-1",
+                        "top_elevation_mm": 0,
+                        "thickness_mm": 150,
+                    },
+                    {
+                        "id": "first-floor-slab",
+                        "storey": "storey-2",
+                        "top_elevation_mm": 3150,
+                        "thickness_mm": 150,
+                        "opening": {"bounds": "x=0..2000,y=4000..8000"},
+                    },
+                ],
+                "roof_slab": {
+                    "id": "roof-slab",
+                    "bottom_elevation_mm": 6150,
+                    "thickness_mm": 150,
+                },
+            }
+        },
+    )
+
+    assert expected["slabs"] == [
+        {
+            "id": "ground-floor-slab",
+            "storey": "storey-1",
+            "top_elevation_mm": 0,
+            "thickness_mm": 150,
+        },
+        {
+            "id": "first-floor-slab",
+            "storey": "storey-2",
+            "top_elevation_mm": 3150,
+            "thickness_mm": 150,
+            "opening": {"bounds": "x=0..2000,y=4000..8000"},
+        },
+    ]
+    assert expected["roof"]["bottom_elevation_mm"] == 6150
+
+
 def test_expected_facts_three_storey_fixture_is_data_driven_and_reusable():
     design_brief = json.loads(THREE_STOREY_FIXTURE.read_text(encoding="utf-8"))
 

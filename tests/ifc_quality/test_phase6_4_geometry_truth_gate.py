@@ -40,6 +40,96 @@ def test_generated_ifc_gate_keeps_slab_gap_when_wall_also_fails(tmp_path: Path):
     assert wall_issue["source_fact_refs"] == ["/known_facts/storeys/0/walls/interior/0"]
 
 
+def test_generated_ifc_gate_rejects_wrong_roof_stair_and_opening_bounds(tmp_path: Path):
+    output = tmp_path / "bad-stair-system.ifc"
+    document = _slab_gap_document()
+    document["entities"].extend(
+        [
+            _entity(
+                "roof-slab",
+                "IfcSlab",
+                {
+                    "Name": "Roof",
+                    "ObjectPlacement": _placement("building-1", [0, 0, 9300]),
+                    "Representation": _rectangle(6000, 4000, 150),
+                },
+            ),
+            _entity(
+                "stair-1",
+                "IfcStair",
+                    {
+                        "Name": "Stair",
+                        "ShapeType": "STRAIGHT_RUN_STAIR",
+                        "ObjectPlacement": _placement("storey-1", [0, 0, 0]),
+                        "Representation": _rectangle(1000, 3900, 3000),
+                    },
+                ),
+            _entity(
+                "stair-flight-1",
+                "IfcStairFlight",
+                {
+                    "Name": "Ramp-like flight",
+                    "ObjectPlacement": _placement("stair-1"),
+                    "Representation": _rectangle(1000, 3900, 3000),
+                },
+            ),
+            _entity(
+                "stair-opening-1",
+                "IfcOpeningElement",
+                {
+                    "Name": "Wrong stair opening",
+                    "ObjectPlacement": _placement("building-1", [4000, 2000, 3150]),
+                    "Representation": _rectangle(2000, 4000, 150),
+                },
+            ),
+        ]
+    )
+    document["relationships"].append(
+        {
+            "id": "void-stair-opening",
+            "ifc_class": "IfcRelVoidsElement",
+            "attributes": {
+                "RelatingBuildingElement": "slab-storey-2-floor",
+                "RelatedOpeningElement": "stair-opening-1",
+            },
+            "provenance": {"source": "test"},
+        }
+    )
+    result = compile_document(document, output)
+    expectation = _slab_gap_expectation()
+    expectation.update(
+        {
+            "roof": {
+                "roof-slab": {
+                    "bbox": {"x": [-3.0, 3.0], "y": [-2.0, 2.0], "z": [6.15, 6.3]}
+                }
+            },
+            "stairs": {
+                "stair-1": {
+                    "flight_ids": ["stair-flight-1"],
+                    "bbox": {"x": [0.5, 1.5], "y": [4.05, 7.95], "z": [0.15, 3.15]},
+                    "require_steps": True,
+                }
+            },
+            "floor_openings": {
+                "stair-opening-1": {
+                    "bbox": {"x": [0.0, 2.0], "y": [4.0, 8.0], "z": [3.0, 3.15]}
+                }
+            },
+        }
+    )
+
+    assert result.success
+    gate = check_generated_ifc(output, expectation)
+
+    codes = {item["code"] for item in gate.issues}
+    assert "ROOF_BBOX_MISMATCH" in codes
+    assert "STAIR_FOOTPRINT_MISMATCH" in codes
+    assert "STAIR_RISE_DIRECTION_MISMATCH" in codes
+    assert "STAIR_STEP_PROFILE_MISSING" in codes
+    assert "STAIR_OPENING_BBOX_MISMATCH" in codes
+
+
 def _slab_gap_expectation() -> dict:
     return {
         "case_id": "slab-gap",

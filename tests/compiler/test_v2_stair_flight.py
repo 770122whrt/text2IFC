@@ -1,5 +1,7 @@
 from pathlib import Path
 
+import ifcopenshell.geom
+
 from text2ifc_compiler import compile_document, open_ifc
 
 
@@ -149,3 +151,86 @@ def test_v2_compiles_stair_with_aggregated_stair_flight(tmp_path: Path):
     assert [item.is_a() for item in stair_aggregates[0].RelatedObjects] == [
         "IfcStairFlight"
     ]
+
+
+def test_v2_stair_flight_step_profile_uses_run_rise_and_width_axes(tmp_path: Path):
+    document = {
+        "schema_version": "bim-json/2.0",
+        "ifc_schema": "IFC2X3",
+        "units": {"length": "MILLIMETRE"},
+        "entities": [
+            *_base_entities(),
+            {
+                "id": "stair-1",
+                "ifc_class": "IfcStair",
+                "attributes": {
+                    "Name": "Main stair",
+                    "ShapeType": "STRAIGHT_RUN_STAIR",
+                    "ObjectPlacement": {
+                        "relative_to": "storey-1",
+                        "origin": [500, 4050, 150],
+                        "axis": [0, 0, 1],
+                        "ref_direction": [1, 0, 0],
+                    },
+                },
+                "property_sets": {},
+                "provenance": {"source": "test"},
+            },
+            {
+                "id": "stair-flight-1",
+                "ifc_class": "IfcStairFlight",
+                "attributes": {
+                    "Name": "Stepped flight",
+                    "ObjectPlacement": {
+                        "relative_to": "stair-1",
+                        "origin": [0, 0, 0],
+                        "axis": [0, 0, 1],
+                        "ref_direction": [1, 0, 0],
+                    },
+                    "Representation": {
+                        "kind": "extruded_profile",
+                        "profile": {
+                            "kind": "polygon",
+                            "points": [
+                                [0, 0], [3900, 0], [3900, 3000],
+                                [2600, 3000], [2600, 2000],
+                                [1300, 2000], [1300, 1000],
+                                [0, 1000], [0, 0],
+                            ],
+                        },
+                        "depth": 1000,
+                        "direction": [-1, 0, 0],
+                    },
+                },
+                "property_sets": {},
+                "provenance": {"source": "test"},
+            },
+        ],
+        "relationships": [
+            {
+                "id": "aggregate-stair-flight",
+                "ifc_class": "IfcRelAggregates",
+                "attributes": {
+                    "RelatingObject": "stair-1",
+                    "RelatedObjects": ["stair-flight-1"],
+                },
+                "provenance": {"source": "test"},
+            }
+        ],
+        "provenance": {"source": "test"},
+    }
+
+    output = tmp_path / "stepped-flight.ifc"
+    result = compile_document(document, output)
+
+    assert result.success
+    flight = open_ifc(output).by_type("IfcStairFlight")[0]
+    settings = ifcopenshell.geom.settings()
+    settings.set(settings.USE_WORLD_COORDS, True)
+    vertices = ifcopenshell.geom.create_shape(settings, flight).geometry.verts
+    assert vertices, "IfcStairFlight must compile to non-empty stepped geometry"
+    bbox = [
+        [round(min(vertices[index::3]), 6), round(max(vertices[index::3]), 6)]
+        for index in range(3)
+    ]
+    assert bbox == [[0.5, 1.5], [4.05, 7.95], [0.15, 3.15]]

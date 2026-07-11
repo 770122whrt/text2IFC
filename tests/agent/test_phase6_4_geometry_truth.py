@@ -73,6 +73,69 @@ def test_candidate_gate_uses_design_derived_geometry_expectation(tmp_path):
     ]
 
 
+def test_derives_canonical_slab_roof_stair_and_opening_expectations():
+    design_brief = _controlled_design_brief()
+    known = design_brief["known_facts"]
+    known["building"].pop("outer_bounds")
+    known["building"]["outline"] = {
+        "x_min": 0,
+        "x_max": 10000,
+        "y_min": 0,
+        "y_max": 8000,
+    }
+    known["floor_slabs"] = [
+        {
+            "id": "first-floor-slab",
+            "storey": "storey-2",
+            "top_elevation_mm": 3150,
+            "thickness_mm": 150,
+            "opening": {"id": "stair-opening-1", "bounds": "x=0..2000,y=4000..8000"},
+        }
+    ]
+    known["roof_slab"] = {
+        "id": "roof-slab",
+        "bottom_elevation_mm": 6150,
+        "thickness_mm": 150,
+    }
+    known["stairs"] = [
+        {
+            "id": "stair-1",
+            "bounds": "x=500..1500,y=4050..7950",
+            "opening_bounds": "x=0..2000,y=4000..8000",
+            "start_elevation_mm": 150,
+            "end_elevation_mm": 3150,
+        }
+    ]
+    expected_facts = _controlled_expected_facts()
+    expected_facts.update(
+        {
+            "slabs": known["floor_slabs"],
+            "roof": known["roof_slab"],
+            "stairs": known["stairs"],
+        }
+    )
+
+    expectation = build_design_geometry_expectation(
+        case_id="canonical-two-storey",
+        design_brief=design_brief,
+        expected_facts=expected_facts,
+    )
+
+    assert expectation["slabs"]["first-floor-slab"]["bbox"]["z"] == [3.0, 3.15]
+    assert expectation["roof"]["roof-slab"]["bbox"]["z"] == [6.15, 6.3]
+    assert expectation["stairs"]["stair-1"]["bbox"] == {
+        "x": [0.5, 1.5],
+        "y": [4.05, 7.95],
+        "z": [0.15, 3.15],
+    }
+    assert expectation["stairs"]["stair-1"]["require_steps"] is True
+    assert expectation["floor_openings"]["stair-opening-1"]["bbox"] == {
+        "x": [0.0, 2.0],
+        "y": [4.0, 8.0],
+        "z": [3.0, 3.15],
+    }
+
+
 def _controlled_design_brief() -> dict:
     return {
         "known_facts": {
