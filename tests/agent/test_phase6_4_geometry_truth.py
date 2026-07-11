@@ -1,3 +1,6 @@
+import json
+
+from text2ifc_agent.live_pipeline import _semantic_geometry_expectation_from_case
 from text2ifc_agent.semantic_coverage import build_design_geometry_expectation
 
 
@@ -42,6 +45,30 @@ def test_derives_structural_slab_below_storey_top_elevation():
         "/known_facts/building/outer_bounds",
         "/known_facts/building/floor_slab_thickness_mm",
         "/known_facts/storeys/1/elevation_mm",
+    ]
+
+
+def test_candidate_gate_uses_design_derived_geometry_expectation(tmp_path):
+    design_brief = _controlled_design_brief()
+    expected_facts = _controlled_expected_facts()
+    (tmp_path / "design-brief.json").write_text(
+        json.dumps(design_brief), encoding="utf-8"
+    )
+    (tmp_path / "expected-facts.json").write_text(
+        json.dumps(expected_facts), encoding="utf-8"
+    )
+
+    expectation = _semantic_geometry_expectation_from_case(
+        case_root=tmp_path,
+        case_id="two-storey-control",
+        candidate={"entities": []},
+    )
+
+    assert expectation is not None
+    assert expectation["source"] == "design_brief_expected_facts"
+    assert expectation["walls"]["storey-2-wall-landing-corridor"]["bbox"]["y"] == [
+        4.0,
+        8.0,
     ]
 
 
