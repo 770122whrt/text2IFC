@@ -7,12 +7,12 @@ See: `.planning/PROJECT.md` (updated 2026-06-11)
 **Core value:** Produce valid, inspectable IFC models from explicit user
 requirements.
 
-**Current focus:** Phase 6.4 supplemental live chain coverage closure
+**Current focus:** Phase 6.4 bounded multi-storey feedback closure and manual IFC review
 
 ## Status
 
 - Phase: 6.4
-- Stage: Complete, including Wave 6 supplemental live-chain coverage
+- Stage: Complete through Wave 8 bounded orchestration stabilization
 - State: Phase 6.2-fix Waves 0-2 are implemented and automatically verified.
   Wave 3 real UAT
   produced useful live evidence and fixed defects 001/002, then exposed defect
@@ -73,8 +73,8 @@ requirements.
   Wave 4 implementation/regression complete; Wave 5 implementation/regression
   complete; Wave 6 implementation/regression complete; Phase 6.3 planned in
   seven waves; Waves 0-6 implemented and verified; Phase 6.4 Waves 0-6
-  implemented and verified; final complex live IFC generation remains future
-  work
+  implemented and verified; Phase 6.4 Waves 7-8 complete with a real accepted
+  two-storey DeepSeek IFC after two bounded Generator regenerations
 - Branch: `multiagent-design` in C-drive worktree
 - Remote: `https://github.com/770122whrt/text2IFC`
 
@@ -779,16 +779,14 @@ strict RED/GREEN TDD and run real DeepSeek only after deterministic GREEN.
   responses.
 
 ---
-*Last activity: 2026-07-09 - completed Phase 6.4 including supplemental chain
-coverage. Real DeepSeek JSON smoke passed; accepted live workflow compiled IFC
-at
-`dataset/processed/agent-demo/phase6.4-live-deepseek/runs/129e4e93ae4e4583/output.ifc`;
-non-accept live workflow stopped honestly as Draft route `ask_user` at
-`dataset/processed/agent-demo/phase6.4-live-deepseek/runs/0768b6259f2aff83`.
-`live-chain-coverage-report.md` proves 8 / 8 required workflow links, and
-`chain-completeness-report.md` proves the required deterministic route matrix
-with explicit route boundaries. `route-live-uat-report.md` adds real DeepSeek
-route-level evidence for all defined Phase 6.4 routes: three auto-resolved
-correction routes, four correct-terminal routes, and one provider retry-control
-route. Phase 6.4 focused tests passed 49 checks, compileall passed, and the
-live plus route-live artifact secret scans found zero findings.*
+*Last activity: 2026-07-11 - completed Phase 6.4 Wave 8 bounded orchestration
+stabilization. Gate failure is authoritative, Scaffold output is diagnostic
+only, feedback retains component-level evidence, and non-improvement compares
+structured issue evidence rather than counts. Real DeepSeek session
+`5a19ce5b34bce809` executed Generator/Audit rounds 01-03 and produced accepted
+IFC2X3 at
+`dataset/processed/agent-demo/phase6.4-authoritative-gate-live-deepseek-final-2/two-storey-residential/output.ifc`.
+Focused regression passed 71 tests. Complete regression passed 678 tests
+before the final observability-only logger patch; the post-patch run passed
+677 tests and hit one process-pool `MemoryError`, which passed on isolated
+rerun.*

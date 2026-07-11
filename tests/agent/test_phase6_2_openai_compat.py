@@ -16,6 +16,7 @@ from text2ifc_agent.openai_compat import (
     run_openai_sdk_chat_smoke,
     run_phase6_2_compatibility_check,
 )
+from text2ifc_agent.providers import ProviderOutputError
 
 
 def test_openai_compatible_config_accepts_api_key_without_leaking_values():
@@ -230,6 +231,48 @@ def test_deepseek_runtime_config_keeps_base_url_without_v1_suffix():
     assert "api.deepseek.com" not in repr(config)
 
 
+def test_deepseek_runtime_config_defaults_to_bounded_output_budget():
+    config = load_openai_compatible_runtime_config(
+        {
+            "TEXT2IFC_PROVIDER": "deepseek",
+            "API_KEY": "secret-deepseek-key",
+            "OpenAI_BASE_URL": "https://api.deepseek.com",
+            "TEXT2IFC_DEEPSEEK_MODEL": "deepseek-v4-flash",
+        }
+    )
+
+    assert config.max_completion_tokens == 8192
+
+
+def test_deepseek_runtime_config_accepts_explicit_output_budget():
+    config = load_openai_compatible_runtime_config(
+        {
+            "TEXT2IFC_PROVIDER": "deepseek",
+            "API_KEY": "secret-deepseek-key",
+            "OpenAI_BASE_URL": "https://api.deepseek.com",
+            "TEXT2IFC_DEEPSEEK_MODEL": "deepseek-v4-flash",
+            "TEXT2IFC_DEEPSEEK_MAX_TOKENS": "16384",
+        }
+    )
+
+    assert config.max_completion_tokens == 16384
+
+
+def test_runtime_config_accepts_explicit_provider_timeout():
+    config = load_openai_compatible_runtime_config(
+        {
+            "TEXT2IFC_PROVIDER": "deepseek",
+            "API_KEY": "secret-deepseek-key",
+            "OpenAI_BASE_URL": "https://api.deepseek.com",
+            "TEXT2IFC_DEEPSEEK_MODEL": "deepseek-v4-flash",
+            "TEXT2IFC_PROVIDER_TIMEOUT_SECONDS": "1800",
+        }
+    )
+
+    assert config.timeout_seconds == 1800.0
+    assert "1800" in repr(config)
+
+
 def test_runtime_config_defaults_to_large_design_brief_token_budget():
     config = load_openai_compatible_runtime_config(
         {
@@ -439,13 +482,56 @@ def test_deepseek_live_provider_uses_flash_model_and_safe_provider_label():
     assert result.output.text == '{"ok":true}'
     assert result.output.metadata["provider"] == "deepseek-openai-compatible"
     assert captured["model"] == "deepseek-v4-flash"
-    assert captured["max_tokens"] == 131072
+    assert captured["max_tokens"] == 8192
     assert "max_completion_tokens" not in captured
     assert captured["response_format"] == {"type": "json_object"}
     assert captured["client_kwargs"] == {
         "api_key": "secret-deepseek-key",
         "base_url": "https://api.deepseek.com",
     }
+
+
+def test_deepseek_live_provider_wraps_connection_failure_without_secrets():
+    class ChatCompletions:
+        def create(self, **kwargs):
+            del kwargs
+            raise RuntimeError(
+                "peer closed connection; token=secret-deepseek-key; url=https://api.deepseek.com"
+            )
+
+    class Client:
+        def __init__(self, **kwargs):
+            self.chat = type("Chat", (), {"completions": ChatCompletions()})()
+
+    config = load_openai_compatible_runtime_config(
+        {
+            "TEXT2IFC_PROVIDER": "deepseek",
+            "API_KEY": "secret-deepseek-key",
+            "OpenAI_BASE_URL": "https://api.deepseek.com",
+            "TEXT2IFC_DEEPSEEK_MODEL": "deepseek-v4-flash",
+        }
+    )
+    provider = openai_compat.OpenAICompatibleLiveProvider(
+        config=config,
+        client_factory=Client,
+    )
+
+    with pytest.raises(ProviderOutputError, match="OpenAI-compatible live request failed") as captured:
+        provider.generate_live(
+            session_id="phase6.2-session-generator-01",
+            prompt="Return JSON",
+            schema={"schema_version": "bim-json/2.0"},
+            state={"stage": "generate"},
+        )
+
+    details = captured.value.details
+    rendered = json.dumps(details, sort_keys=True)
+    assert details["provider"] == "deepseek-openai-compatible"
+    assert details["failure_class"] == "provider_connection_error"
+    assert details["exception_type"] == "RuntimeError"
+    assert details["request"]["max_tokens"] == 8192
+    assert "secret-deepseek-key" not in rendered
+    assert "api.deepseek.com" not in rendered
 
 
 def test_phase6_2_compatibility_check_combines_live_probe_results():
@@ -618,11 +704,16 @@ def test_phase6_2_check_openai_compat_cli_missing_config_is_safe(
 
     for name in (
         "API_KEY",
+        "DEEPSEEK_API_KEY",
         "MIMO_API_KEY",
         "OPENAI_API_KEY",
         "OpenAI_BASE_URL",
         "OPENAI_BASE_URL",
+        "TEXT2IFC_PROVIDER",
+        "TEXT2IFC_DEEPSEEK_MODEL",
+        "TEXT2IFC_DEEPSEEK_MAX_TOKENS",
         "TEXT2IFC_MIMO_MODEL",
+        "TEXT2IFC_MIMO_MAX_COMPLETION_TOKENS",
     ):
         monkeypatch.delenv(name, raising=False)
 

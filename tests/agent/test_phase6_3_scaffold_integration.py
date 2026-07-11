@@ -57,7 +57,7 @@ def test_ready_session_promotes_complex_scaffold_when_generator_omits_dynamic_fa
         provider_factory=lambda: provider,
     )
 
-    assert result.status == "compiled"
+    assert result.status == "final_blocked"
     assert (session.run_dir / "scaffold" / "candidate.json").is_file()
     assert (session.run_dir / "scaffold" / "route.json").is_file()
     assert (session.run_dir / "generator" / "original-candidate-before-scaffold.json").is_file()
@@ -67,7 +67,15 @@ def test_ready_session_promotes_complex_scaffold_when_generator_omits_dynamic_fa
     route = json.loads((session.run_dir / "scaffold" / "route.json").read_text(encoding="utf-8"))
     assert gate_summary["overall_status"] == "passed"
     assert route["route"] == "scaffold_promoted"
+    origin = json.loads(
+        (session.run_dir / "candidate-origin.json").read_text(encoding="utf-8")
+    )
+    assert origin["candidate_origin"] == "deterministic_scaffold_fallback"
+    assert origin["live_acceptance_eligible"] is False
     assert (session.run_dir / "output.ifc").is_file()
+    report = (session.run_dir / "report.md").read_text(encoding="utf-8")
+    assert "## Diagnostic Non-Accepted Case" in report
+    assert "## Accepted Live Case" not in report
     store.close()
 
 
@@ -99,7 +107,7 @@ def test_ready_session_uses_complex_scaffold_when_generator_output_is_unparsed(t
         provider_factory=lambda: provider,
     )
 
-    assert result.status == "compiled"
+    assert result.status == "final_blocked"
     assert (session.run_dir / "scaffold" / "candidate.json").is_file()
     assert (session.run_dir / "generator" / "original-validation-before-scaffold.json").is_file()
     route = json.loads((session.run_dir / "scaffold" / "route.json").read_text(encoding="utf-8"))
@@ -161,7 +169,7 @@ def test_ready_session_uses_complex_scaffold_when_ready_generator_returns_draft(
         provider_factory=lambda: provider,
     )
 
-    assert result.status == "compiled"
+    assert result.status == "final_blocked"
     route = json.loads((session.run_dir / "scaffold" / "route.json").read_text(encoding="utf-8"))
     assert route["route"] == "scaffold_promoted_from_generator_failure"
     assert (session.run_dir / "generator" / "draft.json").is_file()
@@ -275,7 +283,7 @@ def test_ready_session_promotes_complex_scaffold_after_geometry_audit_block(
         provider_factory=lambda: provider,
     )
 
-    assert result.status == "compiled"
+    assert result.status == "final_blocked"
     assert result.audit_status == "accepted"
     route = json.loads((session.run_dir / "scaffold" / "route.json").read_text(encoding="utf-8"))
     gate_summary = json.loads(

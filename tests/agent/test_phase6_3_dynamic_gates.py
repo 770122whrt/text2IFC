@@ -13,6 +13,43 @@ THREE_STOREY_FIXTURE = (
 )
 
 
+def test_dynamic_gates_match_legacy_semantic_space_id_once_with_evidence():
+    expected = _expected_facts(
+        storeys=["storey-1"],
+        doors=[],
+        windows=[],
+    )
+    expected["spaces"] = [
+        {"id": "living_room", "storey": "storey-1"}
+    ]
+    expected["space_counts_by_storey"] = {"storey-1": 1}
+    expected["total_counts"]["IfcSpace"] = 1
+    expected["required_relationships"]["containment"]["spaces"] = 1
+    candidate = _candidate(
+        storeys=["storey-1"],
+        walls=[],
+        doors=[],
+        windows=[],
+        include_opening_relationships=True,
+    )
+    candidate["entities"].append(
+        _entity("space-storey-1-living-room", "IfcSpace", "storey-1")
+    )
+
+    gates = _by_name(evaluate_dynamic_gates(candidate=candidate, expected_facts=expected))
+
+    storey_gate = gates["dynamic_storey_containment"]
+    assert storey_gate["status"] == "passed"
+    assert storey_gate["entity_matches"] == [
+        {
+            "collection": "spaces",
+            "expected_id": "living_room",
+            "candidate_id": "space-storey-1-living-room",
+            "match_basis": "unique_semantic_alias",
+        }
+    ]
+
+
 def test_dynamic_gates_fail_missing_requested_second_floor_doors():
     expected = _expected_facts(
         storeys=["storey-1", "storey-2"],
@@ -73,6 +110,155 @@ def test_dynamic_gates_fail_windows_without_void_fill_relationships():
         "issue_codes"
     ]
     assert "OPENING_FILL_RELATIONSHIP_MISSING" in gates["dynamic_opening_fill"][
+        "issue_codes"
+    ]
+
+
+def test_dynamic_gates_fail_openings_outside_host_wall_local_bounds():
+    expected = _expected_facts(
+        storeys=["storey-1"],
+        doors=[],
+        windows=[
+            {
+                "id": "window-north",
+                "storey": "storey-1",
+                "host_wall": "wall-north",
+            }
+        ],
+    )
+    candidate = _candidate(
+        storeys=["storey-1"],
+        walls=[("wall-north", "storey-1")],
+        doors=[],
+        windows=[("window-north", "storey-1", "wall-north")],
+        include_opening_relationships=True,
+    )
+    _set_rectangle(candidate, "wall-north", x=10000, y=200)
+    _set_rectangle(candidate, "opening-window-north", x=1200, y=200)
+    _set_placement_origin(candidate, "opening-window-north", [8500, 0, 900])
+
+    gates = _by_name(evaluate_dynamic_gates(candidate=candidate, expected_facts=expected))
+
+    assert gates["dynamic_opening_fill"]["status"] == "failed"
+    assert "OPENING_HOST_LOCAL_BOUNDS_MISMATCH" in gates["dynamic_opening_fill"][
+        "issue_codes"
+    ]
+    issue = next(
+        issue
+        for issue in gates["dynamic_opening_fill"]["issues"]
+        if issue["code"] == "OPENING_HOST_LOCAL_BOUNDS_MISMATCH"
+    )
+    assert issue["opening_id"] == "opening-window-north"
+    assert issue["host_wall"] == "wall-north"
+    assert issue["opening_origin"] == [8500, 0, 900]
+
+
+def test_dynamic_gates_fail_filling_that_repeats_parent_wall_rotation():
+    expected = _expected_facts(
+        storeys=["storey-1"],
+        doors=[
+            {
+                "id": "door-internal",
+                "storey": "storey-1",
+                "host_wall": "wall-internal",
+            }
+        ],
+        windows=[],
+    )
+    candidate = _candidate(
+        storeys=["storey-1"],
+        walls=[("wall-internal", "storey-1")],
+        doors=[("door-internal", "storey-1", "wall-internal")],
+        windows=[],
+        include_opening_relationships=True,
+    )
+    _set_rectangle(candidate, "wall-internal", x=3500, y=200)
+    _set_rectangle(candidate, "opening-door-internal", x=900, y=200)
+    _set_placement_origin(candidate, "opening-door-internal", [0, 1750, 0])
+    _set_ref_direction(candidate, "opening-door-internal", [0, 1, 0])
+    _set_ref_direction(candidate, "door-internal", [0, 1, 0])
+
+    gates = _by_name(evaluate_dynamic_gates(candidate=candidate, expected_facts=expected))
+
+    assert gates["dynamic_opening_fill"]["status"] == "failed"
+    assert "FILLING_RELATIVE_ROTATION_MISMATCH" in gates["dynamic_opening_fill"][
+        "issue_codes"
+    ]
+
+
+def test_dynamic_gates_include_opening_thickness_in_host_bounds():
+    expected = _expected_facts(
+        storeys=["storey-1"],
+        doors=[],
+        windows=[
+            {"id": "window-north", "storey": "storey-1", "host_wall": "wall-north"}
+        ],
+    )
+    candidate = _candidate(
+        storeys=["storey-1"],
+        walls=[("wall-north", "storey-1")],
+        doors=[],
+        windows=[("window-north", "storey-1", "wall-north")],
+        include_opening_relationships=True,
+    )
+    _set_rectangle(candidate, "wall-north", x=10000, y=200)
+    _set_rectangle(candidate, "opening-window-north", x=1200, y=400)
+
+    gates = _by_name(evaluate_dynamic_gates(candidate=candidate, expected_facts=expected))
+
+    assert "OPENING_HOST_LOCAL_BOUNDS_MISMATCH" in gates["dynamic_opening_fill"][
+        "issue_codes"
+    ]
+
+
+def test_dynamic_gates_fail_filling_with_wrong_placement_parent():
+    expected = _expected_facts(
+        storeys=["storey-1"],
+        doors=[
+            {"id": "door-internal", "storey": "storey-1", "host_wall": "wall-internal"}
+        ],
+        windows=[],
+    )
+    candidate = _candidate(
+        storeys=["storey-1"],
+        walls=[("wall-internal", "storey-1")],
+        doors=[("door-internal", "storey-1", "wall-internal")],
+        windows=[],
+        include_opening_relationships=True,
+    )
+    _entity_by_id(candidate, "door-internal")["attributes"]["ObjectPlacement"][
+        "relative_to"
+    ] = "wall-internal"
+
+    gates = _by_name(evaluate_dynamic_gates(candidate=candidate, expected_facts=expected))
+
+    assert "FILLING_PLACEMENT_CHAIN_MISMATCH" in gates["dynamic_opening_fill"][
+        "issue_codes"
+    ]
+
+
+def test_dynamic_gates_fail_filling_bounds_outside_opening():
+    expected = _expected_facts(
+        storeys=["storey-1"],
+        doors=[
+            {"id": "door-internal", "storey": "storey-1", "host_wall": "wall-internal"}
+        ],
+        windows=[],
+    )
+    candidate = _candidate(
+        storeys=["storey-1"],
+        walls=[("wall-internal", "storey-1")],
+        doors=[("door-internal", "storey-1", "wall-internal")],
+        windows=[],
+        include_opening_relationships=True,
+    )
+    _set_rectangle(candidate, "opening-door-internal", x=900, y=200)
+    _set_rectangle(candidate, "door-internal", x=900, y=200)
+    _set_placement_origin(candidate, "door-internal", [100, 0, 0])
+
+    gates = _by_name(evaluate_dynamic_gates(candidate=candidate, expected_facts=expected))
+
+    assert "FILLING_OPENING_BOUNDS_MISMATCH" in gates["dynamic_opening_fill"][
         "issue_codes"
     ]
 
@@ -261,6 +447,32 @@ def _entity(entity_id: str, ifc_class: str, relative_to: str) -> dict:
         "property_sets": {},
         "provenance": {"source": "test-fixture"},
     }
+
+
+def _set_rectangle(candidate: dict, entity_id: str, *, x: int, y: int) -> None:
+    entity = _entity_by_id(candidate, entity_id)
+    entity["attributes"]["Representation"] = {
+        "kind": "extruded_profile",
+        "depth": 3000,
+        "direction": [0, 0, 1],
+        "profile": {"kind": "rectangle", "x": x, "y": y},
+    }
+
+
+def _set_placement_origin(candidate: dict, entity_id: str, origin: list[int]) -> None:
+    _entity_by_id(candidate, entity_id)["attributes"]["ObjectPlacement"][
+        "origin"
+    ] = origin
+
+
+def _set_ref_direction(candidate: dict, entity_id: str, ref_direction: list[int]) -> None:
+    _entity_by_id(candidate, entity_id)["attributes"]["ObjectPlacement"][
+        "ref_direction"
+    ] = ref_direction
+
+
+def _entity_by_id(candidate: dict, entity_id: str) -> dict:
+    return next(entity for entity in candidate["entities"] if entity["id"] == entity_id)
 
 
 def _opening_relationships(element_id: str, opening_id: str, host_wall: str) -> list[dict]:

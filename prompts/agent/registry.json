@@ -74,7 +74,7 @@
       "role": "design_brief",
       "mode": "extract_or_clarify",
       "path": "prompts/agent/design-brief-v2.1.md",
-      "sha256": "sha256:86b6b53d8dad0003e6cb21d6b9cd58c8b5de7d5614abb24e62d5cb0ae9f209e4",
+      "sha256": "sha256:034aee1f6cd5a8fdd133cbec42f939f8d85064d5777489fc74ba293358940819",
       "required_inputs": [
         "USER_REQUEST",
         "CONVERSATION",
@@ -123,15 +123,17 @@
       "role": "bim_json_generator",
       "mode": "generate",
       "path": "prompts/agent/bim-json-generator-v2.md",
-      "sha256": "sha256:bcab4c881da24850cb63f0132d212491f56aef86f62b275a92356b54e9a86ed2",
+      "sha256": "sha256:ce4fe7bb29facebb625844178ab34e20d4885498ce03d6d64d127e10dd0ff5fd",
       "required_inputs": [
         "USER_REQUEST",
         "CONVERSATION",
         "DESIGN_BRIEF",
+        "ENTITY_ID_CONTRACT",
         "FORMAL_SCHEMA",
         "DRAFT_SCHEMA",
         "CAPABILITY_PROFILE",
-        "FEW_SHOTS"
+        "FEW_SHOTS",
+        "GENERATION_FEEDBACK"
       ],
       "forbidden_outputs": [
         "raw_ifc",
@@ -201,7 +203,7 @@
       "role": "audit",
       "mode": "semantic_review",
       "path": "prompts/agent/audit-v2.md",
-      "sha256": "sha256:e64d181e7642acb4326d9ef5b280d88bce4c542603e07fe1755aab094d16e405",
+      "sha256": "sha256:c50b607a677bf04bffc93a3f0c7e4edec2c45b470dd3a076615c765cbfb95a61",
       "required_inputs": [
         "USER_REQUEST",
         "CONVERSATION",

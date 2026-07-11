@@ -77,6 +77,36 @@ def test_candidate_gate_accepts_polygon_space_with_corner_origin_outside_walls(t
     assert semantic_expectation["walls"]["wall-south"]["bbox"]["y"] == [-0.2, 0.0]
 
 
+def test_candidate_gate_accepts_center_overlap_outside_wall_corners(tmp_path):
+    case_dir = tmp_path / "semantic-center-overlap"
+    generator_dir = case_dir / "generator"
+    generator_dir.mkdir(parents=True)
+    candidate = _outside_boundary_center_overlap_candidate()
+    (generator_dir / "candidate.json").write_text(
+        json.dumps(candidate, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+    (case_dir / "design-brief.json").write_text(
+        json.dumps(_outside_boundary_design_brief(), ensure_ascii=False, indent=2)
+        + "\n",
+        encoding="utf-8",
+    )
+
+    result = run_candidate_gate_stage(
+        case_dir=case_dir,
+        output_dir=case_dir,
+        case_id="semantic-center-overlap",
+    )
+
+    assert result["geometry_success"] is True
+    feedback = json.loads((case_dir / "geometry-feedback.json").read_text(encoding="utf-8"))
+    assert feedback["issues"] == []
+    semantic_expectation = json.loads(
+        (case_dir / "semantic-geometry-expectation.json").read_text(encoding="utf-8")
+    )
+    assert semantic_expectation["source_facts"]["walls"]["placement"] == "outside_boundary"
+
+
 def test_chinese_outside_wall_placement_activates_same_semantic_gate(tmp_path):
     case_dir = tmp_path / "semantic-chinese-outside-placement"
     generator_dir = case_dir / "generator"
@@ -154,7 +184,7 @@ def test_unwaived_unsupported_door_opening_direction_blocks_formal_ifc(tmp_path)
     assert not (session.run_dir / "output.ifc").exists()
 
 
-def test_post_audit_blocked_repair_route_refreshes_report(tmp_path):
+def test_post_audit_geometry_failure_regenerates_json_and_refreshes_report(tmp_path):
     root = tmp_path / "phase6.2-fix-repl"
     store = SessionStore.open(root / "sessions.sqlite", artifact_root=root)
     session = store.create_session(original_input="创建一个外贴边界的矩形房间。")
@@ -182,7 +212,16 @@ def test_post_audit_blocked_repair_route_refreshes_report(tmp_path):
             "repair/route.json",
         ],
     }
-    provider = _SequenceLiveProvider([candidate, audit])
+    audit_accept = {
+        **audit,
+        "recommendation": "accept",
+        "blocking": False,
+        "deterministic_gate_status": "passed",
+        "findings": [],
+    }
+    provider = _SequenceLiveProvider(
+        [candidate, audit, _outside_boundary_center_overlap_candidate(), audit_accept]
+    )
 
     result = run_ready_session_to_ifc(
         store=store,
@@ -190,12 +229,18 @@ def test_post_audit_blocked_repair_route_refreshes_report(tmp_path):
         provider_factory=lambda: provider,
     )
 
-    assert result.status == "audit_blocked"
-    route = json.loads((session.run_dir / "repair" / "route.json").read_text(encoding="utf-8"))
-    assert route["route"] == "blocked_failure"
+    assert result.status == "compiled"
+    feedback = json.loads(
+        (
+            session.run_dir
+            / "generator-regeneration-01"
+            / "generation-feedback.json"
+        ).read_text(encoding="utf-8")
+    )
+    assert feedback["route"] == "regenerate_json"
     report = (session.run_dir / "report.md").read_text(encoding="utf-8")
-    assert "- route: `blocked_failure`" in report
-    assert "- route: `no_repair_needed`" not in report
+    assert "generator-regeneration-01" in report
+    assert "- route: `blocked_failure`" not in report
 
 
 def _outside_boundary_design_brief() -> dict:
@@ -388,6 +433,40 @@ def _outside_boundary_corner_origin_candidate() -> dict:
     _set_wall(entity_by_id["wall-north"], origin=[3000, 4100, 0], ref=[1, 0, 0], x=6400, y=200)
     _set_wall(entity_by_id["wall-west"], origin=[-100, 2000, 0], ref=[0, 1, 0], x=4000, y=200)
     _set_wall(entity_by_id["wall-east"], origin=[6100, 2000, 0], ref=[0, 1, 0], x=4000, y=200)
+    return candidate
+
+
+def _outside_boundary_center_overlap_candidate() -> dict:
+    candidate = _outside_boundary_corner_origin_candidate()
+    entity_by_id = {entity["id"]: entity for entity in candidate["entities"]}
+    _set_wall(
+        entity_by_id["wall-south"],
+        origin=[3000, -100, 0],
+        ref=[1, 0, 0],
+        x=6200,
+        y=200,
+    )
+    _set_wall(
+        entity_by_id["wall-north"],
+        origin=[3000, 4100, 0],
+        ref=[1, 0, 0],
+        x=6200,
+        y=200,
+    )
+    _set_wall(
+        entity_by_id["wall-west"],
+        origin=[-100, 2000, 0],
+        ref=[0, 1, 0],
+        x=4200,
+        y=200,
+    )
+    _set_wall(
+        entity_by_id["wall-east"],
+        origin=[6100, 2000, 0],
+        ref=[0, 1, 0],
+        x=4200,
+        y=200,
+    )
     return candidate
 
 

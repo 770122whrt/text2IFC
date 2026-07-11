@@ -22,6 +22,10 @@ SUPPORTED_RELATIONSHIPS = {
         "RelatedObjects": "IfcObject",
         "RelatingType": "IfcTypeObject",
     },
+    "IfcRelAggregates": {
+        "RelatingObject": "IfcObjectDefinition",
+        "RelatedObjects": "IfcObjectDefinition",
+    },
     "IfcRelConnectsPathElements": {
         "RelatingElement": "IfcElement",
         "RelatedElement": "IfcElement",

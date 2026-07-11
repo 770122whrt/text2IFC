@@ -20,18 +20,18 @@ FEW_SHOT_PATH = (
 
 _ENTITY_TERMS: tuple[tuple[str, tuple[str, ...]], ...] = (
     ("IfcBuilding", ("IfcBuilding", "建筑", "building")),
-    ("IfcSpace", ("房间", "空间", "室内")),
-    ("IfcWall", ("墙", "墙体")),
-    ("IfcDoor", ("门", "门洞")),
-    ("IfcWindow", ("窗", "窗户")),
+    ("IfcSpace", ("房间", "空间", "室内", "space", "spaces", "room", "rooms")),
+    ("IfcWall", ("墙", "墙体", "wall", "walls", "partition", "partitions")),
+    ("IfcDoor", ("门", "门洞", "door", "doors")),
+    ("IfcWindow", ("窗", "窗户", "window", "windows")),
     ("IfcWindowStyle", ("窗型", "开启机构", "WindowStyle")),
-    ("IfcOpeningElement", ("洞口", "开洞")),
-    ("IfcBuildingStorey", ("楼层", "层高", "单层", "多层")),
-    ("IfcSlab", ("楼板", "地板", "板")),
-    ("IfcRoof", ("屋顶", "屋面")),
+    ("IfcOpeningElement", ("洞口", "开洞", "opening", "openings")),
+    ("IfcBuildingStorey", ("楼层", "层高", "单层", "多层", "storey", "storeys", "two-storey", "multi-storey")),
+    ("IfcSlab", ("楼板", "地板", "板", "slab", "slabs", "floor slab", "roof slab")),
+    ("IfcRoof", ("屋顶", "屋面", "roof")),
     ("IfcBeam", ("梁",)),
     ("IfcColumn", ("柱",)),
-    ("IfcStair", ("楼梯",)),
+    ("IfcStair", ("楼梯", "stair", "stairs", "stairwell", "stair landing")),
     ("IfcRailing", ("栏杆", "扶手")),
     ("IfcCurtainWall", ("幕墙",)),
     ("IfcCovering", ("天花", "吊顶", "饰面")),
@@ -102,16 +102,37 @@ def select_design_brief_context(
 
 
 def _select_ifc_classes(text: str) -> list[str]:
+    normalized_text = text.lower()
     selected = [
         ifc_class
         for ifc_class, terms in _ENTITY_TERMS
-        if any(term in text for term in terms)
+        if any(term.lower() in normalized_text for term in terms)
     ]
+    if "IfcBuildingStorey" not in selected and _has_chinese_storey_signal(text):
+        selected.append("IfcBuildingStorey")
     if "IfcDoor" in selected or "IfcWindow" in selected:
         selected.extend(
             ["IfcOpeningElement", "IfcRelVoidsElement", "IfcRelFillsElement"]
         )
     return list(dict.fromkeys(selected))
+
+
+def _has_chinese_storey_signal(text: str) -> bool:
+    storey_terms = (
+        "楼层",
+        "层高",
+        "首层",
+        "二层",
+        "三层",
+        "每层",
+        "单层",
+        "双层",
+        "多层",
+        "标高",
+        "净高",
+        "楼面",
+    )
+    return any(term in text for term in storey_terms)
 
 
 def _select_few_shots(text: str, *, max_few_shots: int) -> list[dict[str, Any]]:

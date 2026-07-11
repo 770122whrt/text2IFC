@@ -117,10 +117,16 @@ def test_ready_session_writes_expected_facts_before_gate_summary(tmp_path):
     )
     audit = {
         "schema_version": "text2ifc/audit/2.0",
-        "recommendation": "accept",
-        "blocking": False,
-        "deterministic_gate_status": "passed",
-        "findings": [],
+        "recommendation": "revise",
+        "blocking": True,
+        "deterministic_gate_status": "failed",
+        "findings": [
+            {
+                "code": "EXPECTED_ENTITY_MISSING",
+                "severity": "blocking",
+                "message": "The single-room candidate does not satisfy two-storey expected facts.",
+            }
+        ],
         "evidence_paths": [
             "expected-facts.json",
             "gate-summary.json",
@@ -128,7 +134,9 @@ def test_ready_session_writes_expected_facts_before_gate_summary(tmp_path):
             "repair/route.json",
         ],
     }
-    provider = _SequenceLiveProvider([candidate, audit])
+    provider = _SequenceLiveProvider(
+        [candidate, audit, candidate, audit, candidate, audit]
+    )
 
     result = run_ready_session_to_ifc(
         store=store,
@@ -136,7 +144,7 @@ def test_ready_session_writes_expected_facts_before_gate_summary(tmp_path):
         provider_factory=lambda: provider,
     )
 
-    assert result.status == "compiled"
+    assert result.status == "audit_blocked"
     expected_path = session.run_dir / "expected-facts.json"
     assert expected_path.is_file()
     gate_summary = json.loads(

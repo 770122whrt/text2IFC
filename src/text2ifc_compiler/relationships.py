@@ -50,7 +50,11 @@ def add_v2_relationships(
             )
             continue
         attributes = {
-            name: entities[entity_id]
+            name: (
+                [entities[item_id] for item_id in entity_id]
+                if isinstance(entity_id, list)
+                else entities[entity_id]
+            )
             for name, entity_id in record["attributes"].items()
         }
         ifc_file.create_entity(

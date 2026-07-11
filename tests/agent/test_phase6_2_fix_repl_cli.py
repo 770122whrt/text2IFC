@@ -442,6 +442,11 @@ def test_live_repl_routes_geometry_failure_through_audit_before_final_status(tmp
         return call
 
     candidate = _geometry_blocked_candidate()
+    regenerated_candidate = json.loads(
+        (PHASE6_1_COMPLETE / "generator" / "candidate.json").read_text(
+            encoding="utf-8"
+        )
+    )
     audit = {
         "schema_version": "text2ifc/audit/2.0",
         "recommendation": "accept",
@@ -454,7 +459,9 @@ def test_live_repl_routes_geometry_failure_through_audit_before_final_status(tmp
             "repair/route.json",
         ],
     }
-    provider = _SequenceLiveProvider([candidate, audit])
+    provider = _SequenceLiveProvider(
+        [candidate, audit, regenerated_candidate, audit]
+    )
 
     exit_code = run_text2ifc_chat.main(
         [
@@ -478,34 +485,50 @@ def test_live_repl_routes_geometry_failure_through_audit_before_final_status(tmp
     rendered = output.getvalue()
     run_dir = root / "runs" / session.session_hash
 
-    assert exit_code == 2
-    assert session.status == "audit_blocked"
+    assert exit_code == 0
+    assert session.status == "compiled"
     assert (run_dir / "output.ifc").is_file()
     assert (run_dir / "report.md").is_file()
     assert (run_dir / "geometry-feedback.json").is_file()
-    audit_input = json.loads(
-        (run_dir / "audit" / "prompt-render-input.json").read_text(encoding="utf-8")
+    first_audit_input = json.loads(
+        (
+            run_dir
+            / "evaluation-rounds"
+            / "round-01"
+            / "audit"
+            / "prompt-render-input.json"
+        ).read_text(encoding="utf-8")
     )
-    gate_feedback = audit_input["DETERMINISTIC_GATES"]["geometry_feedback"]
+    gate_feedback = first_audit_input["DETERMINISTIC_GATES"]["geometry_feedback"]
     assert gate_feedback["success"] is False
     assert [issue["code"] for issue in gate_feedback["issues"]] == [
         "WALL_ORIENTATION_MISMATCH",
         "WALL_ORIENTATION_MISMATCH",
         "ROOM_ENCLOSURE_OPEN",
     ]
-    audit_validation = json.loads(
+    first_audit_validation = json.loads(
+        (
+            run_dir
+            / "evaluation-rounds"
+            / "round-01"
+            / "audit"
+            / "validation.json"
+        ).read_text(encoding="utf-8")
+    )
+    assert first_audit_validation["valid"] is False
+    assert {
+        issue["code"] for issue in first_audit_validation["issues"]
+    } == {"AUDIT_OVERRIDE_ATTEMPT"}
+    latest_audit_validation = json.loads(
         (run_dir / "audit" / "validation.json").read_text(encoding="utf-8")
     )
-    assert audit_validation["valid"] is False
-    assert {
-        issue["code"] for issue in audit_validation["issues"]
-    } == {"AUDIT_OVERRIDE_ATTEMPT"}
+    assert latest_audit_validation["valid"] is True
+    assert (run_dir / "generator-regeneration-01" / "generation-feedback.json").is_file()
     assert "Generator" in rendered
     assert "Audit" in rendered
-    assert "audit_blocked" in rendered
+    assert "IFC:" in rendered
     assert "output.ifc" in rendered
     assert "report.md" in rendered
-    assert "geometry-feedback.json" in rendered
     report = (run_dir / "report.md").read_text(encoding="utf-8")
     assert "geometry-feedback.json" in report
     assert "repair/repair-attempts.json" in report

@@ -27,10 +27,18 @@ def normalize_validation_issues(
             route = "blocked_as_unsupported"
             retryable = False
         elif "DRAFT" in code or "UNRESOLVED" in code:
-            owner = "user"
-            issue_type = "draft_unresolved_path"
-            route = "ask_user"
-            retryable = True
+            if source == "schema_validation" and (
+                "PLACEMENT_PARENT" in code or "RELATIONSHIP_ENDPOINT" in code
+            ):
+                owner = "generator"
+                issue_type = "missing_relationship"
+                route = "regenerate_json"
+                retryable = True
+            else:
+                owner = "user"
+                issue_type = "draft_unresolved_path"
+                route = "ask_user"
+                retryable = True
         elif "MISSING" in code and source == "semantic_validation":
             owner = "user"
             issue_type = "missing_required_fact"
@@ -49,6 +57,46 @@ def normalize_validation_issues(
                 owner=owner,
                 issue_type=issue_type,
                 expected_fact_ref=_string_or_none(diagnostic.get("expected_fact_ref")),
+                actual_ref=path,
+                evidence=_evidence(code, message),
+                suggested_route=route,
+                retryable=retryable,
+            )
+        )
+    return issues
+
+
+def normalize_generator_draft_issues(draft: Mapping[str, Any]) -> list[Issue]:
+    """Normalize Generator Draft records without treating model omissions as user gaps."""
+
+    issues: list[Issue] = []
+    for index, item in enumerate(_list_of_dicts(draft.get("missing_facts")), start=1):
+        code = _upper_code(item)
+        message = _diagnostic_message(item)
+        path = _string_or_none(item.get("path"))
+        if "UNSUPPORTED" in code:
+            owner = "schema"
+            issue_type = "unsupported_schema_capability"
+            route = "blocked_as_unsupported"
+            retryable = False
+        elif "USER" in code or "DRAFT" in code or "UNRESOLVED" in code:
+            owner = "user"
+            issue_type = "missing_required_fact"
+            route = "ask_user"
+            retryable = True
+        else:
+            owner = "generator"
+            issue_type = "missing_entity"
+            route = "regenerate_json"
+            retryable = True
+        issues.append(
+            Issue(
+                issue_id=f"issue_generator_draft_{index:04d}",
+                source="semantic_validation",
+                severity="blocking",
+                owner=owner,
+                issue_type=issue_type,
+                expected_fact_ref=_string_or_none(item.get("expected_fact_ref")),
                 actual_ref=path,
                 evidence=_evidence(code, message),
                 suggested_route=route,
@@ -140,8 +188,14 @@ def normalize_gate_sidecars(case_dir: Path | str) -> list[Issue]:
         for gate in _list_of_dicts(gate_summary.get("gates")):
             if gate.get("status") != "failed":
                 continue
-            for code in gate.get("issue_codes") or ["GATE_FAILED"]:
+            gate_issues = _list_of_dicts(gate.get("issues"))
+            details = gate_issues or [
+                {"code": code, "message": f"Gate failed: {gate.get('name', '')}"}
+                for code in gate.get("issue_codes") or ["GATE_FAILED"]
+            ]
+            for detail in details:
                 gate_index += 1
+                code = _upper_code(detail)
                 issue_type = _gate_issue_type(str(code))
                 issues.append(
                     Issue(
@@ -150,8 +204,12 @@ def normalize_gate_sidecars(case_dir: Path | str) -> list[Issue]:
                         severity="blocking",
                         owner="generator" if issue_type != "gate_false_positive" else "gate",
                         issue_type=issue_type,
-                        actual_ref=str(gate.get("name", "")) or None,
-                        evidence=_evidence(str(code), f"Gate failed: {gate.get('name', '')}"),
+                        actual_ref=(
+                            _string_or_none(detail.get("path"))
+                            or str(gate.get("name", ""))
+                            or None
+                        ),
+                        evidence=_gate_detail_evidence(code, detail),
                         suggested_route=(
                             "gate_issue"
                             if issue_type == "gate_false_positive"
@@ -181,7 +239,7 @@ def normalize_audit_findings(report: Mapping[str, Any]) -> list[Issue]:
                 owner=owner,
                 issue_type=issue_type,
                 actual_ref=_string_or_none(finding.get("path")),
-                evidence=_evidence(code, _diagnostic_message(finding)),
+                evidence=_gate_detail_evidence(code, finding),
                 suggested_route=route,
                 retryable=route in {"revise_design_brief", "regenerate_json", "repair_json"},
             )
@@ -247,6 +305,8 @@ def write_terminal_issues(
 
 def _gate_issue_type(code: str) -> str:
     upper = code.upper()
+    if "MISMATCH" in upper:
+        return "geometry_invalid"
     if "ENTITY" in upper:
         return "missing_entity"
     if "RELATIONSHIP" in upper or "VOID" in upper or "FILL" in upper:
@@ -267,6 +327,10 @@ def _gate_issue_type(code: str) -> str:
 def _audit_mapping(code: str) -> tuple[str, str, str]:
     if "DESIGN" in code or "ORIGINAL_REQUEST" in code:
         return "design_brief", "changed_original_request", "revise_design_brief"
+    if "OPENING" in code or "FILLING" in code:
+        return "generator", "geometry_invalid", "regenerate_json"
+    if "PLACEMENT_MISMATCH" in code or "BBOX_MISMATCH" in code:
+        return "generator", "geometry_invalid", "regenerate_json"
     if "STAIR" in code or "VERTICAL" in code:
         return "generator", "missing_vertical_connection", "regenerate_json"
     if "ENTITY" in code:
@@ -298,6 +362,21 @@ def _evidence(code: str, message: str) -> str:
     clean_code = code or "UNKNOWN"
     clean_message = message or "No diagnostic message was provided."
     return f"{clean_code}: {clean_message}"
+
+
+def _gate_detail_evidence(code: str, detail: Mapping[str, Any]) -> str:
+    message = _diagnostic_message(detail)
+    evidence_detail = {
+        key: value
+        for key, value in detail.items()
+        if key not in {"code", "message", "error", "reason"}
+    }
+    if evidence_detail:
+        message = (
+            f"{message} Evidence: "
+            f"{json.dumps(evidence_detail, ensure_ascii=False, sort_keys=True)}"
+        )
+    return _evidence(code, message)
 
 
 def _string_or_none(value: Any) -> str | None:

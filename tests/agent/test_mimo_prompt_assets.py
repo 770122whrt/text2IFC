@@ -1,4 +1,7 @@
+import json
 from pathlib import Path
+
+from text2ifc_agent.design_brief import validate_design_brief
 
 
 PROMPT = Path("prompts/agent/mimo-bim-json-v1.md")
@@ -108,8 +111,54 @@ def test_design_brief_v21_enforces_question_target_consistency():
 
     assert "needs_clarification MUST include 1-3 clarification_questions" in text
     assert "Every clarification question target MUST reference an existing blocking item id" in text
+    assert "Optional or not-yet-decided items must not consume a clarification question slot" in text
+    assert "If you ask about an ambiguity, that ambiguity MUST be marked blocking: true" in text
+    assert "Prioritize blocking geometry facts before optional openings or style choices" in text
+    assert "Initial user phrases like not decided or not thought through yet are not the same as an answered unknown" in text
+    assert "draft_required and blocked MUST have an empty clarification_questions array" in text
+    assert "original_request MUST exactly equal CONVERSATION[0].content" in text
+    assert "including punctuation, typos, trailing symbols, and unusual characters" in text
+    assert "Never normalize, clean, summarize, translate, or append later answers to original_request" in text
     assert "Bind short numeric answers to the immediately preceding assistant question" in text
     assert "source_turns MUST use exact turn_id values already present in CONVERSATION" in text
+    assert "missing_facts and unsupported_requests items MUST include a non-empty `code`" in text
+    assert "ambiguities items MUST NOT include `code`" in text
+
+
+def test_design_brief_v21_defines_canonical_multistorey_structure():
+    text = DESIGN_BRIEF_V21.read_text(encoding="utf-8")
+
+    assert "Canonical multi-storey Design Brief structure" in text
+    assert "Use `elevation_mm`; do not use `level` as a substitute" in text
+    assert "Do not create top-level `storey_1`, `storey_2`, `spaces_ground`, `spaces_first`, or generic `openings`" in text
+    assert "Put doors and windows inside the storey that owns their host wall" in text
+
+
+def test_design_brief_few_shots_include_valid_standard_two_storey_contract():
+    payload = json.loads(DESIGN_BRIEF_FEW_SHOTS.read_text(encoding="utf-8"))
+    shot = next(
+        item
+        for item in payload["few_shots"]
+        if item["few_shot_id"] == "design-brief-v2.standard-two-storey-building"
+    )
+
+    output = shot["output"]
+    known = output["known_facts"]
+    assert "storey_1" not in known
+    assert "storey_2" not in known
+    assert "spaces_ground" not in known
+    assert "spaces_first" not in known
+    assert "openings" not in known
+    assert [storey["id"] for storey in known["storeys"]] == ["storey-1", "storey-2"]
+    assert [storey["elevation_mm"] for storey in known["storeys"]] == [0, 3150]
+    assert known["storeys"][0]["doors"][0]["host_wall"] == "storey-1-wall-south"
+    assert known["storeys"][1]["windows"][0]["host_wall"] == "storey-2-wall-south"
+
+    evidence_catalog = [
+        {"evidence_id": evidence_id}
+        for evidence_id in output["provenance"]["selected_evidence_ids"]
+    ]
+    assert validate_design_brief(output, evidence_catalog=evidence_catalog) == []
  
 def test_audit_v2_understands_parent_relative_centered_openings():
     text = AUDIT_V2.read_text(encoding="utf-8")
@@ -128,8 +177,113 @@ def test_audit_v2_classifies_gate_failures_without_override():
     assert "geometry feedback" in text
 
 
+def test_audit_v2_requires_component_level_geometry_quality_findings():
+    text = AUDIT_V2.read_text(encoding="utf-8")
+
+    assert "Opening and filling alignment" in text
+    assert "OPENING_FILLING_ORIENTATION_MISMATCH" in text
+    assert "host_wall" in text
+    assert "opening" in text
+    assert "filling" in text
+    assert "Vertical closure" in text
+    assert "VERTICAL_SLAB_WALL_GAP" in text
+    assert "wall_top_z" in text
+    assert "slab_bottom_z" in text
+    assert "gap_mm" in text
+
+
 def test_bim_json_generator_v2_keeps_wall_rotation_out_of_representation_position():
     text = Path("prompts/agent/bim-json-generator-v2.md").read_text(encoding="utf-8")
 
     assert "Do not duplicate wall rotation into `Representation.position`" in text
     assert "wall orientation belongs in `ObjectPlacement.ref_direction`" in text
+
+
+def test_bim_json_generator_v2_contains_multistorey_error_constraints():
+    text = Path("prompts/agent/bim-json-generator-v2.md").read_text(encoding="utf-8")
+
+    assert "{{ENTITY_ID_CONTRACT}}" in text
+    assert "must use `entity_id` verbatim" in text
+    assert "does not change the human-facing Name" in text
+    assert "Multi-storey generation rules" in text
+    assert "Each storey must declare its own exterior and interior walls" in text
+    assert "A second-storey window must reference a second-storey wall" in text
+    assert "Every ObjectPlacement.relative_to and relationship endpoint must reference an entity id already declared in entities" in text
+
+
+def test_bim_json_generator_v2_requires_medium_straight_stair_contract():
+    text = Path("prompts/agent/bim-json-generator-v2.md").read_text(encoding="utf-8")
+
+    assert "Medium straight-stair contract" in text
+    assert "IfcStairFlight" in text
+    assert "IfcRelAggregates" in text
+    assert "Do not represent a supported straight stair as only one solid block" in text
+
+
+def test_bim_json_generator_v2_repeats_schema_self_checks_for_live_errors():
+    text = Path("prompts/agent/bim-json-generator-v2.md").read_text(encoding="utf-8")
+
+    assert "Polygon profiles must be closed rings" in text
+    assert "Do not place `PredefinedType` or `ShapeType` inside property_sets" in text
+    assert "Put IFC enum attributes such as `ShapeType` on `attributes`" in text
+
+
+def test_bim_json_generator_v2_requires_addressable_draft_paths():
+    text = Path("prompts/agent/bim-json-generator-v2.md").read_text(encoding="utf-8")
+
+    assert "Draft path rules" in text
+    assert "must point into `partial_document`, `missing_facts`, `losses`, or `clarification_targets`" in text
+    assert "Do not output pseudo paths such as `/entities/ifc_class/door/placement`" in text
+
+
+def test_design_brief_v21_preserves_explicit_layout_facts_and_blocks_conflicts():
+    text = DESIGN_BRIEF_V21.read_text(encoding="utf-8")
+
+    assert "Do not replace explicit coordinates" in text
+    assert "LAYOUT_SPACE_OVERLAP" in text
+    assert "DOOR_HOST_NO_SHARED_SEGMENT" in text
+    assert "STAIR_OPENING_SPACE_COLLISION" in text
+
+
+def test_generator_v2_teaches_rotated_host_opening_and_filling_placement():
+    text = Path("prompts/agent/bim-json-generator-v2.md").read_text(encoding="utf-8")
+    payload = json.loads(
+        Path("prompts/agent/few-shots/bim-json-generator-v2-two-storey-standard.json").read_text(
+            encoding="utf-8"
+        )
+    )
+
+    assert "An opening placed relative to its host wall" in text
+    assert "A filling placed relative to its opening" in text
+    entities = {entity["id"]: entity for entity in payload["entities"]}
+    east_wall = entities["storey-2-wall-east"]
+    opening = entities["opening-storey-2-window-east"]
+    window = entities["window-storey-2-east"]
+    assert east_wall["attributes"]["ObjectPlacement"]["ref_direction"] == [0, 1, 0]
+    assert opening["attributes"]["ObjectPlacement"] == {
+        "relative_to": "storey-2-wall-east",
+        "origin": [900, 0, 900],
+        "axis": [0, 0, 1],
+        "ref_direction": [1, 0, 0],
+    }
+    assert window["attributes"]["ObjectPlacement"] == {
+        "relative_to": "opening-storey-2-window-east",
+        "origin": [0, 0, 0],
+        "axis": [0, 0, 1],
+        "ref_direction": [1, 0, 0],
+    }
+
+
+def test_design_brief_few_shot_preserves_controlled_layout_coordinates():
+    payload = json.loads(DESIGN_BRIEF_FEW_SHOTS.read_text(encoding="utf-8"))
+    shot = next(
+        item
+        for item in payload["few_shots"]
+        if item["few_shot_id"] == "design-brief-v2.coordinate-controlled-two-storey"
+    )
+
+    known = shot["output"]["known_facts"]
+    ground = known["storeys"][0]
+    assert ground["spaces"][0]["bounding_box"] == "x=0..4000, y=0..4000"
+    assert ground["doors"][0]["center_global_mm"] == [4000, 2000]
+    assert known["stairs"][0]["opening_bounds"] == "x=0..2000, y=4000..8000"

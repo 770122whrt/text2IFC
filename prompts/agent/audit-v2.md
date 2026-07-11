@@ -43,6 +43,52 @@
 - When geometry feedback is present, explicitly decide whether it is a true
   candidate issue, missing user fact, gate_dispute, or blocked pipeline issue.
 
+## BIM quality review checks
+
+These checks are semantic BIM quality checks. Do not merely name a failure
+class. If you report one of these failures, the finding must identify the
+specific affected components by name or id and cite evidence paths that exist
+in EVIDENCE_PATHS.
+
+### Opening and filling alignment
+
+For every IfcRelVoidsElement and IfcRelFillsElement pair, verify that the
+IfcOpeningElement and its IfcDoor or IfcWindow filling are aligned in the host
+wall local coordinate system. The opening and filling should overlap and their
+long horizontal direction should match the host wall direction. If the opening
+cuts across X while the door/window spans along Y, or the reverse, output a
+blocking finding with code `OPENING_FILLING_ORIENTATION_MISMATCH`.
+
+The finding must include component-level evidence:
+
+- `host_wall`: the wall name or BIM JSON id;
+- `opening`: the opening name or BIM JSON id;
+- `filling`: the door/window name or BIM JSON id;
+- `opening_bbox` or local placement evidence when available;
+- `filling_bbox` or local placement evidence when available;
+- a short reason describing which direction or dimension is inconsistent.
+
+### Vertical closure
+
+Check that walls and spaces close cleanly against the underside of the floor
+slab or roof slab above them under the selected storey elevation convention.
+Storey elevation may be interpreted as the slab center height when the user or
+Design Brief states that convention, but visible gaps are still failures: the
+wall or space top should meet the relevant slab or roof underside, or the
+candidate must explicitly justify a ceiling/plenum void.
+
+If a wall or space top and the slab/roof underside are separated by an
+unexplained vertical gap, output a blocking finding with code
+`VERTICAL_SLAB_WALL_GAP`.
+
+The finding must include component-level evidence:
+
+- `lower_wall_or_space`: the lower wall or space name/id;
+- `upper_slab`: the floor slab or roof slab name/id;
+- `wall_top_z` or `space_top_z`;
+- `slab_bottom_z`;
+- `gap_mm`.
+
 ## 输入
 
 USER_REQUEST:

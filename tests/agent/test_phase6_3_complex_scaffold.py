@@ -124,6 +124,65 @@ def test_complex_scaffold_accepts_live_deepseek_design_brief_field_aliases(tmp_p
     assert compilation.success
 
 
+def test_complex_scaffold_accepts_footprint_and_xy_min_max_aliases(tmp_path):
+    design_brief = {
+        "schema_version": "text2ifc/design-brief/2.0",
+        "status": "ready",
+        "language": "zh-CN",
+        "known_facts": {
+            "building": {
+                "footprint": {"x_min": 0, "x_max": 10000, "y_min": 0, "y_max": 8000},
+                "storeys": 2,
+            },
+            "wall_thickness": 200,
+            "storeys": [
+                {"name": "Ground", "wall_base": 0, "wall_top": 3000},
+                {"name": "First", "slab_top": 3150, "wall_base": 3150, "wall_top": 6150},
+            ],
+            "spaces": {
+                "ground": {
+                    "living_room": {"x_min": 0, "x_max": 6000, "y_min": 0, "y_max": 4500},
+                    "kitchen": {"x_min": 6000, "x_max": 10000, "y_min": 0, "y_max": 3500},
+                },
+                "first": {
+                    "master_bedroom": {"x_min": 0, "x_max": 5000, "y_min": 0, "y_max": 4000},
+                },
+            },
+            "doors": {
+                "ground": [{"host": "living_room south exterior", "width": 1200, "height": 2200}],
+                "first": [{"room": "master_bedroom", "width": 900, "height": 2100}],
+            },
+            "windows": {
+                "ground": [{"wall": "living_room south exterior", "width": 1500, "height": 1200, "sill": 900}],
+                "first": [{"wall": "master_bedroom south exterior", "width": 1500, "height": 1200, "sill": 900}],
+            },
+            "roof_slab": {"bottom_elevation": 6150, "thickness": 150},
+            "stair": {"rise_from_z": 150, "rise_to_z": 3150, "width": 1000},
+        },
+        "missing_facts": [],
+        "ambiguities": [],
+        "unsupported_requests": [],
+    }
+    expected = build_expected_facts(
+        case_id="footprint-xy-aliases",
+        design_brief=design_brief,
+    )
+
+    assert expected["spaces"][0]["dimensions_mm"] == [6000, 4500]
+    assert expected["spaces"][0]["origin_mm"] == [0, 0, 0]
+    assert expected["spaces"][1]["origin_mm"] == [6000, 0, 0]
+
+    candidate = build_scaffold_candidate(
+        case_id="footprint-xy-aliases",
+        design_brief=design_brief,
+        expected_facts=expected,
+    )
+
+    assert [_validation_issue(issue) for issue in validate_v2_document(candidate)] == []
+    compilation = compile_document(candidate, tmp_path / "footprint-alias-scaffold.ifc")
+    assert compilation.success
+
+
 def test_complex_scaffold_uses_room_label_when_opening_host_wall_is_missing(tmp_path):
     design_brief = _complex_two_storey_nested_design_brief()
     expected = build_expected_facts(

@@ -881,7 +881,7 @@ before real DeepSeek live tests. Live acceptance requires real provider
 evidence and cannot be satisfied by fake/file/replay providers, prewritten
 `answers.json`, or exact scripted clarification transcripts.
 
-**Plans:** 7 plans in 7 waves
+**Plans:** 9 plans in 9 waves
 
 **Wave 0**
 
@@ -911,6 +911,14 @@ evidence and cannot be satisfied by fake/file/replay providers, prewritten
 
 - [x] `06.4-06-PLAN.md` - Supplemental live chain coverage evidence
 
+**Wave 7** *(manual-IFC bugfix; blocked on Wave 6 evidence)*
+
+- [x] `06.4-07-PLAN.md` - Geometry truth, stair frame, and Gate/Audit redesign
+
+**Wave 8** *(bounded orchestration stabilization; blocked on Wave 7)*
+
+- [x] `06.4-08-PLAN.md` - Gate-authoritative bounded regeneration and live closure
+
 **Cross-cutting constraints:**
 
 - New machine-readable workflow fields, JSON keys, enum values, issue types,
@@ -921,20 +929,20 @@ evidence and cannot be satisfied by fake/file/replay providers, prewritten
 - Every terminal non-accept run with a session directory writes
   `issues.json`, `route-decision.json`, `feedback-rounds.json`,
   `case-result.json`, and `report.md`.
-- Feedback loops are bounded to `max_feedback_rounds = 2` by default and stop
-  on non-improving issue counts.
+- Feedback loops are bounded to `max_feedback_rounds = 2` by default. Early
+  non-improvement requires unchanged structured issue evidence, not merely an
+  unchanged issue count.
 - DeepSeek secrets, headers, private base URLs, and token values never appear
   in prompts, traces, reports, commits, or final answers.
 - `finish_reason=length` or equivalent provider truncation blocks acceptance.
 - Real DeepSeek live acceptance happens only after deterministic TDD and matrix
   tests pass.
 
-**Status:** Supplemental Wave 7 in progress as of 2026-07-11. The original
-route-loop scope was verified 2026-07-09; manual IFC review then found a
-candidate-derived geometry expectation false-positive. Wave 7 closes that
-geometry-truth, compiler-stair-frame, Gate/Audit, and regeneration-evidence
-gap before any further phase. Existing completed evidence remains valid only
-for route connectivity, not as proof of visual multi-storey correctness.
+**Status:** Supplemental Waves 7 and 8 complete and verified 2026-07-11. The
+final real DeepSeek session `5a19ce5b34bce809` executed two Generator
+regenerations, passed the complete deterministic Gate summary and Audit, and
+produced a reopened IFC2X3 artifact. Complete regression passed 678 tests.
+Manual visual IFC review remains a separate human acceptance activity.
 
 **Prior verified scope:** Phase 6.4 has normalized
 Issues, RouteDecision v2, bounded feedback rounds, generated matrix/report

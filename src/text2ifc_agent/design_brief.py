@@ -141,6 +141,7 @@ def _validate_v2_semantics(
                 if isinstance(record_id, str):
                     blockers[record_id] = record
 
+    status = document.get("status")
     questions = document.get("clarification_questions", [])
     if isinstance(questions, list):
         for question_index, question in enumerate(questions):
@@ -161,8 +162,19 @@ def _validate_v2_semantics(
                             ),
                         )
                     )
+        if status in {"draft_required", "blocked"} and questions:
+            issues.append(
+                ValidationIssue(
+                    code="READINESS_CONFLICT",
+                    path="/clarification_questions",
+                    message=(
+                        f"A {status} Design Brief must not include clarification "
+                        "questions; use needs_clarification when user-answerable "
+                        "blockers remain."
+                    ),
+                )
+            )
 
-    status = document.get("status")
     if status == "ready" and blockers:
         issues.append(
             ValidationIssue(

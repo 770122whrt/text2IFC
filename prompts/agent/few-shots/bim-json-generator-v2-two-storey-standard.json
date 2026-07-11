@@ -1,0 +1,551 @@
+{
+  "schema_version": "bim-json/2.0",
+  "ifc_schema": "IFC2X3",
+  "units": {
+    "length": "MILLIMETRE"
+  },
+  "provenance": {
+    "source": "prompt-few-shot",
+    "case_id": "generator-v2-two-storey-standard"
+  },
+  "entities": [
+    {
+      "id": "project-1",
+      "ifc_class": "IfcProject",
+      "attributes": {
+        "Name": "Two Storey Example Project"
+      },
+      "property_sets": {},
+      "provenance": {
+        "source": "prompt-few-shot"
+      }
+    },
+    {
+      "id": "site-1",
+      "ifc_class": "IfcSite",
+      "attributes": {
+        "Name": "Site",
+        "ObjectPlacement": {
+          "relative_to": "project-1",
+          "origin": [
+            0,
+            0,
+            0
+          ],
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ]
+        }
+      },
+      "property_sets": {},
+      "provenance": {
+        "source": "prompt-few-shot"
+      }
+    },
+    {
+      "id": "building-1",
+      "ifc_class": "IfcBuilding",
+      "attributes": {
+        "Name": "Building",
+        "ObjectPlacement": {
+          "relative_to": "site-1",
+          "origin": [
+            0,
+            0,
+            0
+          ],
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ]
+        }
+      },
+      "property_sets": {},
+      "provenance": {
+        "source": "prompt-few-shot"
+      }
+    },
+    {
+      "id": "storey-1",
+      "ifc_class": "IfcBuildingStorey",
+      "attributes": {
+        "Name": "Storey 1",
+        "Elevation": 0,
+        "ObjectPlacement": {
+          "relative_to": "building-1",
+          "origin": [
+            0,
+            0,
+            0
+          ],
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ]
+        }
+      },
+      "property_sets": {},
+      "provenance": {
+        "source": "prompt-few-shot"
+      }
+    },
+    {
+      "id": "storey-2",
+      "ifc_class": "IfcBuildingStorey",
+      "attributes": {
+        "Name": "Storey 2",
+        "Elevation": 3150,
+        "ObjectPlacement": {
+          "relative_to": "building-1",
+          "origin": [
+            0,
+            0,
+            3150
+          ],
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ]
+        }
+      },
+      "property_sets": {},
+      "provenance": {
+        "source": "prompt-few-shot"
+      }
+    },
+    {
+      "id": "storey-1-space-living",
+      "ifc_class": "IfcSpace",
+      "attributes": {
+        "Name": "Living",
+        "InteriorOrExteriorSpace": "INTERNAL",
+        "ObjectPlacement": {
+          "relative_to": "storey-1",
+          "origin": [
+            0,
+            0,
+            0
+          ],
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ]
+        },
+        "Representation": {
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "polygon",
+            "points": [
+              [
+                0,
+                0
+              ],
+              [
+                6000,
+                0
+              ],
+              [
+                6000,
+                4000
+              ],
+              [
+                0,
+                4000
+              ],
+              [
+                0,
+                0
+              ]
+            ]
+          },
+          "depth": 3000,
+          "direction": [
+            0,
+            0,
+            1
+          ]
+        }
+      },
+      "property_sets": {},
+      "provenance": {
+        "source": "prompt-few-shot"
+      }
+    },
+    {
+      "id": "storey-2-space-bedroom",
+      "ifc_class": "IfcSpace",
+      "attributes": {
+        "Name": "Bedroom",
+        "InteriorOrExteriorSpace": "INTERNAL",
+        "ObjectPlacement": {
+          "relative_to": "storey-2",
+          "origin": [
+            0,
+            0,
+            0
+          ],
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ]
+        },
+        "Representation": {
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "polygon",
+            "points": [
+              [
+                0,
+                0
+              ],
+              [
+                6000,
+                0
+              ],
+              [
+                6000,
+                4000
+              ],
+              [
+                0,
+                4000
+              ],
+              [
+                0,
+                0
+              ]
+            ]
+          },
+          "depth": 3000,
+          "direction": [
+            0,
+            0,
+            1
+          ]
+        }
+      },
+      "property_sets": {},
+      "provenance": {
+        "source": "prompt-few-shot"
+      }
+    },
+    {
+      "id": "storey-1-wall-south",
+      "ifc_class": "IfcWall",
+      "attributes": {
+        "Name": "Storey 1 South Wall",
+        "ObjectPlacement": {
+          "relative_to": "storey-1",
+          "origin": [
+            3000,
+            0,
+            0
+          ],
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ]
+        },
+        "Representation": {
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 6000,
+            "y": 200
+          },
+          "depth": 3000,
+          "direction": [
+            0,
+            0,
+            1
+          ]
+        }
+      },
+      "property_sets": {},
+      "provenance": {
+        "source": "prompt-few-shot"
+      }
+    },
+    {
+      "id": "storey-2-wall-south",
+      "ifc_class": "IfcWall",
+      "attributes": {
+        "Name": "Storey 2 South Wall",
+        "ObjectPlacement": {
+          "relative_to": "storey-2",
+          "origin": [
+            3000,
+            0,
+            0
+          ],
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ]
+        },
+        "Representation": {
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 6000,
+            "y": 200
+          },
+          "depth": 3000,
+          "direction": [
+            0,
+            0,
+            1
+          ]
+        }
+      },
+      "property_sets": {},
+      "provenance": {
+        "source": "prompt-few-shot"
+      }
+    },
+    {
+      "id": "opening-storey-2-window-south",
+      "ifc_class": "IfcOpeningElement",
+      "attributes": {
+        "Name": "Storey 2 South Window Opening",
+        "ObjectPlacement": {
+          "relative_to": "storey-2-wall-south",
+          "origin": [
+            0,
+            0,
+            900
+          ],
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ]
+        },
+        "Representation": {
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 1500,
+            "y": 200
+          },
+          "depth": 1200,
+          "direction": [
+            0,
+            0,
+            1
+          ]
+        }
+      },
+      "property_sets": {},
+      "provenance": {
+        "source": "prompt-few-shot"
+      }
+    },
+    {
+      "id": "window-storey-2-south",
+      "ifc_class": "IfcWindow",
+      "attributes": {
+        "Name": "Storey 2 South Window",
+        "OverallWidth": 1500,
+        "OverallHeight": 1200,
+        "ObjectPlacement": {
+          "relative_to": "opening-storey-2-window-south",
+          "origin": [
+            0,
+            0,
+            0
+          ],
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ]
+        },
+        "Representation": {
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 1500,
+            "y": 100
+          },
+          "depth": 1200,
+          "direction": [
+            0,
+            0,
+            1
+          ]
+        }
+      },
+      "property_sets": {},
+      "provenance": {
+        "source": "prompt-few-shot"
+      }
+    },
+    {
+      "id": "storey-2-wall-east",
+      "ifc_class": "IfcWall",
+      "attributes": {
+        "Name": "Storey 2 East Wall",
+        "ObjectPlacement": {
+          "relative_to": "storey-2",
+          "origin": [10000, 4000, 0],
+          "axis": [0, 0, 1],
+          "ref_direction": [0, 1, 0]
+        },
+        "Representation": {
+          "kind": "extruded_profile",
+          "profile": {"kind": "rectangle", "x": 8000, "y": 200},
+          "depth": 3000,
+          "direction": [0, 0, 1]
+        }
+      },
+      "property_sets": {},
+      "provenance": {"source": "prompt-few-shot"}
+    },
+    {
+      "id": "opening-storey-2-window-east",
+      "ifc_class": "IfcOpeningElement",
+      "attributes": {
+        "Name": "Storey 2 East Window Opening",
+        "ObjectPlacement": {
+          "relative_to": "storey-2-wall-east",
+          "origin": [900, 0, 900],
+          "axis": [0, 0, 1],
+          "ref_direction": [1, 0, 0]
+        },
+        "Representation": {
+          "kind": "extruded_profile",
+          "profile": {"kind": "rectangle", "x": 1200, "y": 200},
+          "depth": 1000,
+          "direction": [0, 0, 1]
+        }
+      },
+      "property_sets": {},
+      "provenance": {"source": "prompt-few-shot"}
+    },
+    {
+      "id": "window-storey-2-east",
+      "ifc_class": "IfcWindow",
+      "attributes": {
+        "Name": "Storey 2 East Window",
+        "OverallWidth": 1200,
+        "OverallHeight": 1000,
+        "ObjectPlacement": {
+          "relative_to": "opening-storey-2-window-east",
+          "origin": [0, 0, 0],
+          "axis": [0, 0, 1],
+          "ref_direction": [1, 0, 0]
+        },
+        "Representation": {
+          "kind": "extruded_profile",
+          "profile": {"kind": "rectangle", "x": 1200, "y": 100},
+          "depth": 1000,
+          "direction": [0, 0, 1]
+        }
+      },
+      "property_sets": {},
+      "provenance": {"source": "prompt-few-shot"}
+    }
+  ],
+  "relationships": [
+    {
+      "id": "void-storey-2-window-south",
+      "ifc_class": "IfcRelVoidsElement",
+      "attributes": {
+        "RelatingBuildingElement": "storey-2-wall-south",
+        "RelatedOpeningElement": "opening-storey-2-window-south"
+      },
+      "provenance": {
+        "source": "prompt-few-shot"
+      }
+    },
+    {
+      "id": "fill-storey-2-window-south",
+      "ifc_class": "IfcRelFillsElement",
+      "attributes": {
+        "RelatingOpeningElement": "opening-storey-2-window-south",
+        "RelatedBuildingElement": "window-storey-2-south"
+      },
+      "provenance": {
+        "source": "prompt-few-shot"
+      }
+    },
+    {
+      "id": "void-storey-2-window-east",
+      "ifc_class": "IfcRelVoidsElement",
+      "attributes": {
+        "RelatingBuildingElement": "storey-2-wall-east",
+        "RelatedOpeningElement": "opening-storey-2-window-east"
+      },
+      "provenance": {"source": "prompt-few-shot"}
+    },
+    {
+      "id": "fill-storey-2-window-east",
+      "ifc_class": "IfcRelFillsElement",
+      "attributes": {
+        "RelatingOpeningElement": "opening-storey-2-window-east",
+        "RelatedBuildingElement": "window-storey-2-east"
+      },
+      "provenance": {"source": "prompt-few-shot"}
+    }
+  ]
+}

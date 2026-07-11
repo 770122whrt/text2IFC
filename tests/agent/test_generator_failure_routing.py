@@ -311,15 +311,52 @@ def test_repair_eligibility_is_explicit_and_bounded():
     exhausted = routing.assess_repair_eligibility(
         issues=[{"code": "INVALID_ENUM"}],
         known_facts=known_facts,
-        prior_attempt_count=1,
+        prior_attempt_count=3,
     )
 
     assert eligible["route"] == "repair_attempted"
     assert eligible["eligible"] is True
-    assert eligible["max_attempts"] == 1
+    assert eligible["max_attempts"] == 3
     assert exhausted["route"] == "blocked_failure"
     assert exhausted["eligible"] is False
     assert exhausted["blocking_code"] == "MAX_REPAIR_ATTEMPTS_REACHED"
+
+
+def test_standard_property_and_polygon_schema_issues_are_repairable():
+    routing = _module("failure_routing")
+
+    result = routing.assess_repair_eligibility(
+        issues=[
+            {"code": "UNKNOWN_STANDARD_PROPERTY"},
+            {"code": "OPEN_POLYGON_PROFILE"},
+        ],
+        known_facts=_brief()["known_facts"],
+    )
+
+    assert result["route"] == "repair_attempted"
+    assert result["eligible"] is True
+    assert result["issue_codes"] == [
+        "OPEN_POLYGON_PROFILE",
+        "UNKNOWN_STANDARD_PROPERTY",
+    ]
+
+
+def test_non_empty_structure_schema_issue_is_repairable():
+    routing = _module("failure_routing")
+
+    result = routing.assess_repair_eligibility(
+        issues=[
+            {
+                "code": "INVALID_STRUCTURE",
+                "path": "/entities/0/provenance",
+            }
+        ],
+        known_facts=_brief()["known_facts"],
+    )
+
+    assert result["route"] == "repair_attempted"
+    assert result["eligible"] is True
+    assert result["issue_codes"] == ["INVALID_STRUCTURE"]
 
 
 def test_non_repairable_issue_and_supervisor_patch_block():

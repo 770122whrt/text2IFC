@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from collections import defaultdict
+import re
 from typing import Any, Mapping
 
 
@@ -93,6 +94,7 @@ def _storey_containment_gate(
         )
 
     issues: list[dict[str, Any]] = []
+    entity_matches: list[dict[str, Any]] = []
     for collection, counts in sorted(expected_storey_counts.items()):
         ifc_class = _CLASS_BY_COLLECTION[collection]
         actual_counts = graph.count_collection_by_storey(ifc_class)
@@ -116,7 +118,16 @@ def _storey_containment_gate(
             expected_storey = _string(record.get("storey"))
             if not entity_id or not expected_storey:
                 continue
-            actual_storey = graph.storey_for_entity(entity_id)
+            match = _resolve_expected_entity(
+                graph=graph,
+                expected_facts=expected_facts,
+                collection=collection,
+                record=record,
+            )
+            candidate_id = match.get("candidate_id") if match else None
+            if match:
+                entity_matches.append(match)
+            actual_storey = graph.storey_for_entity(candidate_id) if candidate_id else None
             if actual_storey is None:
                 issues.append(
                     {
@@ -139,7 +150,7 @@ def _storey_containment_gate(
 
             expected_host = _string(record.get("host_wall"))
             if expected_host and collection in {"doors", "windows"}:
-                actual_host = graph.host_wall_for_opening_element(entity_id)
+                actual_host = graph.host_wall_for_opening_element(candidate_id) if candidate_id else None
                 if actual_host != expected_host:
                     issues.append(
                         {
@@ -156,8 +167,83 @@ def _storey_containment_gate(
         status="failed" if issues else "passed",
         basis="expected storey and host-wall facts compared with candidate placement/void-fill graph",
         issues=issues,
+        entity_matches=entity_matches,
         source_paths=["expected-facts.json", "generator/candidate.json"],
     )
+
+
+def _resolve_expected_entity(
+    *,
+    graph: "_CandidateGraph",
+    expected_facts: Mapping[str, Any],
+    collection: str,
+    record: Mapping[str, Any],
+) -> dict[str, str] | None:
+    expected_id = _string(record.get("id"))
+    expected_storey = _string(record.get("storey"))
+    if not expected_id or not expected_storey:
+        return None
+    canonical_id = _canonical_entity_id(
+        expected_facts=expected_facts,
+        collection=collection,
+        expected_id=expected_id,
+        expected_storey=expected_storey,
+    )
+    if canonical_id and graph.entity(canonical_id) is not None:
+        return {
+            "collection": collection,
+            "expected_id": expected_id,
+            "candidate_id": canonical_id,
+            "match_basis": "canonical_entity_id",
+        }
+    if graph.entity(expected_id) is not None:
+        return {
+            "collection": collection,
+            "expected_id": expected_id,
+            "candidate_id": expected_id,
+            "match_basis": "exact_brief_id",
+        }
+
+    expected_tokens = set(_entity_id_tokens(expected_id))
+    if not expected_tokens:
+        return None
+    ifc_class = _CLASS_BY_COLLECTION[collection]
+    matching_ids = [
+        candidate_id
+        for candidate_id in graph.ids_by_class(ifc_class)
+        if graph.storey_for_entity(candidate_id) == expected_storey
+        and expected_tokens.issubset(set(_entity_id_tokens(candidate_id)))
+    ]
+    if len(matching_ids) != 1:
+        return None
+    return {
+        "collection": collection,
+        "expected_id": expected_id,
+        "candidate_id": matching_ids[0],
+        "match_basis": "unique_semantic_alias",
+    }
+
+
+def _canonical_entity_id(
+    *,
+    expected_facts: Mapping[str, Any],
+    collection: str,
+    expected_id: str,
+    expected_storey: str,
+) -> str | None:
+    contract = expected_facts.get("entity_id_contract", {})
+    records = contract.get(collection, []) if isinstance(contract, Mapping) else []
+    for item in _records(records):
+        if (
+            _string(item.get("brief_id")) == expected_id
+            and _string(item.get("storey")) == expected_storey
+        ):
+            return _string(item.get("entity_id"))
+    return None
+
+
+def _entity_id_tokens(value: str) -> list[str]:
+    return [token for token in re.split(r"[^a-z0-9]+", value.lower()) if token]
 
 
 def _opening_fill_gate(
@@ -190,6 +276,21 @@ def _opening_fill_gate(
             for entity_id in actual_elements
             if graph.explicit_host_wall_for_opening_element(entity_id)
         ]
+        for entity_id in elements_with_fill:
+            opening_id = graph.explicit_fill_opening_for(entity_id)
+            host_wall = (
+                graph.explicit_host_wall_for_opening(opening_id)
+                if opening_id
+                else None
+            )
+            issues.extend(
+                _opening_fill_geometry_issues(
+                    graph,
+                    element_id=entity_id,
+                    opening_id=opening_id,
+                    host_wall=host_wall,
+                )
+            )
         if len(elements_with_fill) < expected_count:
             issues.append(
                 {
@@ -219,6 +320,106 @@ def _opening_fill_gate(
         issues=issues,
         source_paths=["expected-facts.json", "generator/candidate.json"],
     )
+
+
+def _opening_fill_geometry_issues(
+    graph: "_CandidateGraph",
+    *,
+    element_id: str,
+    opening_id: str | None,
+    host_wall: str | None,
+) -> list[dict[str, Any]]:
+    if not opening_id or not host_wall:
+        return []
+    issues: list[dict[str, Any]] = []
+    opening = graph.entity(opening_id)
+    host = graph.entity(host_wall)
+    element = graph.entity(element_id)
+    opening_placement = _placement(opening)
+    host_profile = _rectangle_profile(host)
+    opening_profile = _rectangle_profile(opening)
+    opening_origin = _number_list(opening_placement.get("origin"), 3)
+    if host_profile and opening_profile and opening_origin:
+        half_host_x = host_profile["x"] / 2
+        half_host_y = host_profile["y"] / 2
+        half_opening_x = opening_profile["x"] / 2
+        half_opening_y = opening_profile["y"] / 2
+        outside_along_length = abs(opening_origin[0]) + half_opening_x > half_host_x + 1e-6
+        outside_thickness = abs(opening_origin[1]) + half_opening_y > half_host_y + 1e-6
+        if outside_along_length or outside_thickness:
+            issues.append(
+                {
+                    "code": "OPENING_HOST_LOCAL_BOUNDS_MISMATCH",
+                    "path": f"/entities/{opening_id}/attributes/ObjectPlacement/origin",
+                    "element_id": element_id,
+                    "opening_id": opening_id,
+                    "host_wall": host_wall,
+                    "opening_origin": opening_origin,
+                    "host_profile": host_profile,
+                    "opening_profile": opening_profile,
+                    "outside_along_length": outside_along_length,
+                    "outside_thickness": outside_thickness,
+                }
+            )
+    element_placement = _placement(element)
+    element_relative_to = _string(element_placement.get("relative_to"))
+    element_ref = _number_list(element_placement.get("ref_direction"), 3)
+    if element_relative_to != opening_id:
+        issues.append(
+            {
+                "code": "FILLING_PLACEMENT_CHAIN_MISMATCH",
+                "path": f"/entities/{element_id}/attributes/ObjectPlacement/relative_to",
+                "element_id": element_id,
+                "opening_id": opening_id,
+                "host_wall": host_wall,
+                "actual_relative_to": element_relative_to,
+                "expected_relative_to": opening_id,
+            }
+        )
+    if element_relative_to == opening_id and element_ref and element_ref != [1, 0, 0]:
+        issues.append(
+            {
+                "code": "FILLING_RELATIVE_ROTATION_MISMATCH",
+                "path": f"/entities/{element_id}/attributes/ObjectPlacement/ref_direction",
+                "element_id": element_id,
+                "opening_id": opening_id,
+                "host_wall": host_wall,
+                "actual_ref_direction": element_ref,
+                "expected_ref_direction": [1, 0, 0],
+            }
+        )
+    element_profile = _rectangle_profile(element)
+    element_origin = _number_list(element_placement.get("origin"), 3)
+    if (
+        element_relative_to == opening_id
+        and element_profile
+        and opening_profile
+        and element_origin
+    ):
+        outside_opening_x = (
+            abs(element_origin[0]) + element_profile["x"] / 2
+            > opening_profile["x"] / 2 + 1e-6
+        )
+        outside_opening_y = (
+            abs(element_origin[1]) + element_profile["y"] / 2
+            > opening_profile["y"] / 2 + 1e-6
+        )
+        if outside_opening_x or outside_opening_y:
+            issues.append(
+                {
+                    "code": "FILLING_OPENING_BOUNDS_MISMATCH",
+                    "path": f"/entities/{element_id}/attributes/ObjectPlacement/origin",
+                    "element_id": element_id,
+                    "opening_id": opening_id,
+                    "host_wall": host_wall,
+                    "element_origin": element_origin,
+                    "element_profile": element_profile,
+                    "opening_profile": opening_profile,
+                    "outside_opening_x": outside_opening_x,
+                    "outside_opening_y": outside_opening_y,
+                }
+            )
+    return issues
 
 
 class _CandidateGraph:
@@ -311,6 +512,12 @@ class _CandidateGraph:
         if not opening_id:
             return None
         return self._host_by_opening.get(opening_id)
+
+    def explicit_host_wall_for_opening(self, opening_id: str) -> str | None:
+        return self._host_by_opening.get(opening_id)
+
+    def entity(self, entity_id: str) -> Mapping[str, Any] | None:
+        return self.entities.get(entity_id)
 
     def _build_explicit_containment(self) -> dict[str, str]:
         result: dict[str, str] = {}
@@ -434,6 +641,39 @@ def _records(value: Any) -> list[Mapping[str, Any]]:
     return [item for item in value if isinstance(item, Mapping)]
 
 
+def _placement(entity: Mapping[str, Any] | None) -> Mapping[str, Any]:
+    if not isinstance(entity, Mapping):
+        return {}
+    placement = entity.get("attributes", {}).get("ObjectPlacement", {})
+    return placement if isinstance(placement, Mapping) else {}
+
+
+def _rectangle_profile(entity: Mapping[str, Any] | None) -> dict[str, float] | None:
+    if not isinstance(entity, Mapping):
+        return None
+    representation = entity.get("attributes", {}).get("Representation", {})
+    if not isinstance(representation, Mapping):
+        return None
+    profile = representation.get("profile", {})
+    if not isinstance(profile, Mapping) or profile.get("kind") != "rectangle":
+        return None
+    x = profile.get("x")
+    y = profile.get("y")
+    if not isinstance(x, (int, float)) or not isinstance(y, (int, float)):
+        return None
+    return {"x": float(x), "y": float(y)}
+
+
+def _number_list(value: Any, length: int) -> list[int | float] | None:
+    if (
+        isinstance(value, list)
+        and len(value) >= length
+        and all(isinstance(item, (int, float)) for item in value[:length])
+    ):
+        return list(value[:length])
+    return None
+
+
 def _clean_storey_counts(value: Any) -> dict[str, int]:
     if not isinstance(value, Mapping):
         return {}
@@ -468,10 +708,11 @@ def _gate(
     status: str,
     basis: str,
     issues: list[dict[str, Any]] | None = None,
+    entity_matches: list[dict[str, Any]] | None = None,
     source_paths: list[str],
 ) -> dict[str, Any]:
     issue_list = list(issues or [])
-    return {
+    payload = {
         "name": name,
         "applicability": applicability,
         "status": status,
@@ -481,3 +722,6 @@ def _gate(
         "issue_codes": sorted({str(issue.get("code", "UNKNOWN")) for issue in issue_list}),
         "source_paths": source_paths,
     }
+    if entity_matches is not None:
+        payload["entity_matches"] = entity_matches
+    return payload

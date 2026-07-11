@@ -6,7 +6,13 @@ import asyncio
 from dataclasses import dataclass
 from typing import Any, Callable
 
-from .providers import LiveProviderResult, ProviderOutput, redact_provider_payload, validate_provider_output
+from .providers import (
+    LiveProviderResult,
+    ProviderOutput,
+    ProviderOutputError,
+    redact_provider_payload,
+    validate_provider_output,
+)
 
 
 PROVIDER_ENV = "TEXT2IFC_PROVIDER"
@@ -19,7 +25,10 @@ MIMO_MODEL_ENV = "TEXT2IFC_MIMO_MODEL"
 DEEPSEEK_MODEL_ENV = "TEXT2IFC_DEEPSEEK_MODEL"
 OPENAI_MAX_COMPLETION_TOKENS_ENV = "TEXT2IFC_MIMO_MAX_COMPLETION_TOKENS"
 DEEPSEEK_MAX_TOKENS_ENV = "TEXT2IFC_DEEPSEEK_MAX_TOKENS"
+PROVIDER_TIMEOUT_SECONDS_ENV = "TEXT2IFC_PROVIDER_TIMEOUT_SECONDS"
 DEFAULT_OPENAI_MAX_COMPLETION_TOKENS = 131072
+DEFAULT_DEEPSEEK_MAX_TOKENS = 8192
+DEFAULT_PROVIDER_TIMEOUT_SECONDS = 1800.0
 
 
 @dataclass
@@ -44,6 +53,7 @@ class OpenAICompatRuntimeConfig:
     model: str
     model_env: str
     max_completion_tokens: int = DEFAULT_OPENAI_MAX_COMPLETION_TOKENS
+    timeout_seconds: float = DEFAULT_PROVIDER_TIMEOUT_SECONDS
 
     def __repr__(self) -> str:
         return (
@@ -54,6 +64,7 @@ class OpenAICompatRuntimeConfig:
             f"model_env={self.model_env!r}, "
             f"model={self.model!r}, "
             f"max_completion_tokens={self.max_completion_tokens!r}, "
+            f"timeout_seconds={self.timeout_seconds!r}, "
             "api_key='[REDACTED]', base_url='[REDACTED]')"
         )
 
@@ -104,6 +115,7 @@ def load_openai_compatible_config(
         "model_env": model_env,
         "model": env.get(model_env, "") if model_env else None,
         "max_completion_tokens": _load_max_completion_tokens(env, provider=provider),
+        "timeout_seconds": _load_provider_timeout_seconds(env),
     }
 
 
@@ -141,6 +153,7 @@ def load_openai_compatible_runtime_config(
         model=str(env[model_env]),
         model_env=model_env,
         max_completion_tokens=_load_max_completion_tokens(env, provider=provider),
+        timeout_seconds=_load_provider_timeout_seconds(env),
     )
 
 
@@ -151,11 +164,10 @@ def run_openai_sdk_chat_smoke(
 ) -> dict[str, Any]:
     """Run one OpenAI SDK Chat Completions smoke and return evidence."""
 
-    if client_factory is None:
-        from openai import OpenAI
-
-        client_factory = OpenAI
-    client = client_factory(api_key=config.api_key, base_url=config.base_url)
+    client = _create_openai_client(
+        config=config,
+        client_factory=client_factory,
+    )
     request = {
         "model": config.model,
         "messages": [
@@ -192,11 +204,10 @@ class OpenAICompatibleLiveProvider:
         client_factory: Callable[..., Any] | None = None,
     ) -> None:
         self.config = config
-        if client_factory is None:
-            from openai import OpenAI
-
-            client_factory = OpenAI
-        self.client = client_factory(api_key=config.api_key, base_url=config.base_url)
+        self.client = _create_openai_client(
+            config=config,
+            client_factory=client_factory,
+        )
 
     def generate_live(
         self,
@@ -214,7 +225,19 @@ class OpenAICompatibleLiveProvider:
             "response_format": {"type": "json_object"},
         }
         request.update(_token_limit_request(self.config))
-        response = self.client.chat.completions.create(**request)
+        try:
+            response = self.client.chat.completions.create(**request)
+        except Exception as exc:
+            raise ProviderOutputError(
+                f"OpenAI-compatible live request failed for {session_id}: {type(exc).__name__}",
+                details={
+                    "provider": self.config.provider_label,
+                    "failure_class": "provider_connection_error",
+                    "exception_type": type(exc).__name__,
+                    "session_id": session_id,
+                    "request": redact_provider_payload(request),
+                },
+            ) from exc
         payload = _object_to_dict(response)
         evidence = parse_chat_completion_evidence(
             payload,
@@ -399,8 +422,35 @@ def token_limit_request(config: OpenAICompatRuntimeConfig) -> dict[str, int]:
     return {"max_completion_tokens": config.max_completion_tokens}
 
 
+def _load_provider_timeout_seconds(env: dict[str, str]) -> float:
+    raw = env.get(PROVIDER_TIMEOUT_SECONDS_ENV, "").strip()
+    if not raw:
+        return DEFAULT_PROVIDER_TIMEOUT_SECONDS
+    try:
+        value = float(raw)
+    except ValueError:
+        return DEFAULT_PROVIDER_TIMEOUT_SECONDS
+    return value if value > 0 else DEFAULT_PROVIDER_TIMEOUT_SECONDS
+
+
 def _token_limit_request(config: OpenAICompatRuntimeConfig) -> dict[str, int]:
     return token_limit_request(config)
+
+
+def _create_openai_client(
+    *,
+    config: OpenAICompatRuntimeConfig,
+    client_factory: Callable[..., Any] | None,
+) -> Any:
+    if client_factory is None:
+        from openai import OpenAI
+
+        return OpenAI(
+            api_key=config.api_key,
+            base_url=config.base_url,
+            timeout=config.timeout_seconds,
+        )
+    return client_factory(api_key=config.api_key, base_url=config.base_url)
 
 
 def _load_max_completion_tokens(env: dict[str, str], *, provider: str) -> int:
@@ -411,6 +461,8 @@ def _load_max_completion_tokens(env: dict[str, str], *, provider: str) -> int:
     )
     raw_value = env.get(env_name)
     if raw_value is None or raw_value.strip() == "":
+        if provider == PROVIDER_DEEPSEEK:
+            return DEFAULT_DEEPSEEK_MAX_TOKENS
         return DEFAULT_OPENAI_MAX_COMPLETION_TOKENS
     try:
         value = int(raw_value)

@@ -30,8 +30,15 @@ def _number(value: Any) -> float | None:
     return float(value)
 
 
-def _requires_representation(ifc_class: str, declaration) -> bool:
+def _requires_representation(
+    ifc_class: str,
+    declaration,
+    *,
+    is_aggregate_parent: bool = False,
+) -> bool:
     if declaration is None:
+        return False
+    if ifc_class == "IfcStair" and is_aggregate_parent:
         return False
     return ifc_class == "IfcSpace" or "IfcElement" in declaration["supertypes"]
 
@@ -211,6 +218,11 @@ def validate_geometry(
 ) -> list[ValidationIssue]:
     registry = load_ifc2x3_registry()
     issues: list[ValidationIssue] = []
+    aggregate_parent_ids = {
+        relation.get("attributes", {}).get("RelatingObject")
+        for relation in document.get("relationships", [])
+        if relation.get("ifc_class") == "IfcRelAggregates"
+    }
 
     for index, record in enumerate(document.get("entities", [])):
         ifc_class = record["ifc_class"]
@@ -218,7 +230,11 @@ def validate_geometry(
         base = f"/entities/{index}/attributes/Representation"
         representation = record["attributes"].get("Representation")
         if representation is None:
-            if _requires_representation(ifc_class, declaration):
+            if _requires_representation(
+                ifc_class,
+                declaration,
+                is_aggregate_parent=record["id"] in aggregate_parent_ids,
+            ):
                 issues.append(
                     _issue(
                         "MISSING_REPRESENTATION",

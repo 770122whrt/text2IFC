@@ -207,6 +207,225 @@
           "few_shot_ids": ["design-brief-v2.explicit-unsupported-window-style"]
         }
       }
+    },
+    {
+      "few_shot_id": "design-brief-v2.standard-two-storey-building",
+      "selection_terms": ["两层", "双层", "二层", "多层", "楼梯", "IfcStair", "storey", "two-storey"],
+      "input": {
+        "user_request": "创建一个两层测试建筑。首层标高0毫米，二层标高3150毫米，每层净高3000毫米，墙厚200毫米，楼板厚150毫米，屋面板厚150毫米。首层有客厅和楼梯间，二层有卧室和楼梯平台。每层都有独立外墙。首层南墙有门，二层南墙有窗，楼梯连接两层。",
+        "conversation": [
+          {
+            "turn_id": "turn-user-001",
+            "role": "user",
+            "content": "创建一个两层测试建筑。首层标高0毫米，二层标高3150毫米，每层净高3000毫米，墙厚200毫米，楼板厚150毫米，屋面板厚150毫米。首层有客厅和楼梯间，二层有卧室和楼梯平台。每层都有独立外墙。首层南墙有门，二层南墙有窗，楼梯连接两层。"
+          }
+        ]
+      },
+      "reasoning_summary": "多层请求应使用一个规范的 known_facts.storeys 数组承载各楼层事实。不要把楼层事实拆成顶层 storey_1/storey_2、spaces_ground/spaces_first，也不要把门窗合并成 generic openings；门窗应放入其宿主墙所在楼层。这里用户已经给出楼层标高、层高、墙厚、楼板和屋面板厚度、空间、门窗和楼梯语义，因此可以进入 ready。",
+      "output": {
+        "schema_version": "text2ifc/design-brief/2.0",
+        "language": "zh-CN",
+        "original_request": "创建一个两层测试建筑。首层标高0毫米，二层标高3150毫米，每层净高3000毫米，墙厚200毫米，楼板厚150毫米，屋面板厚150毫米。首层有客厅和楼梯间，二层有卧室和楼梯平台。每层都有独立外墙。首层南墙有门，二层南墙有窗，楼梯连接两层。",
+        "status": "ready",
+        "known_facts": {
+          "building": {
+            "storey_count": 2,
+            "wall_thickness_mm": 200,
+            "floor_slab_thickness_mm": 150,
+            "roof_slab_thickness_mm": 150
+          },
+          "storeys": [
+            {
+              "id": "storey-1",
+              "name": "首层",
+              "elevation_mm": 0,
+              "net_height_mm": 3000,
+              "spaces": [
+                {
+                  "id": "space-living",
+                  "name": "客厅",
+                  "location": "west"
+                },
+                {
+                  "id": "space-stair-hall",
+                  "name": "楼梯间",
+                  "location": "east"
+                }
+              ],
+              "walls": {
+                "exterior": [
+                  {"id": "storey-1-wall-south", "side": "south"},
+                  {"id": "storey-1-wall-north", "side": "north"},
+                  {"id": "storey-1-wall-west", "side": "west"},
+                  {"id": "storey-1-wall-east", "side": "east"}
+                ]
+              },
+              "doors": [
+                {
+                  "id": "door-storey-1-south",
+                  "host_wall": "storey-1-wall-south",
+                  "location": "center"
+                }
+              ],
+              "windows": []
+            },
+            {
+              "id": "storey-2",
+              "name": "二层",
+              "elevation_mm": 3150,
+              "net_height_mm": 3000,
+              "spaces": [
+                {
+                  "id": "space-bedroom",
+                  "name": "卧室",
+                  "location": "west"
+                },
+                {
+                  "id": "space-stair-landing",
+                  "name": "楼梯平台",
+                  "location": "east"
+                }
+              ],
+              "walls": {
+                "exterior": [
+                  {"id": "storey-2-wall-south", "side": "south"},
+                  {"id": "storey-2-wall-north", "side": "north"},
+                  {"id": "storey-2-wall-west", "side": "west"},
+                  {"id": "storey-2-wall-east", "side": "east"}
+                ]
+              },
+              "doors": [],
+              "windows": [
+                {
+                  "id": "window-storey-2-south",
+                  "host_wall": "storey-2-wall-south",
+                  "location": "center"
+                }
+              ]
+            }
+          ],
+          "stairs": [
+            {
+              "id": "stair-1",
+              "from_storey": "storey-1",
+              "to_storey": "storey-2",
+              "semantic_requirement": "connects_two_storeys"
+            }
+          ]
+        },
+        "fact_sources": [
+          {
+            "path": "/known_facts",
+            "source_turns": ["turn-user-001"],
+            "evidence_refs": [
+              "schema:bim-json-v2:entity",
+              "schema:bim-json-v2:representation",
+              "capability:IFC2X3:IfcBuilding",
+              "capability:IFC2X3:IfcBuildingStorey",
+              "capability:IFC2X3:IfcSpace",
+              "capability:IFC2X3:IfcWall",
+              "capability:IFC2X3:IfcDoor",
+              "capability:IFC2X3:IfcWindow",
+              "capability:IFC2X3:IfcSlab",
+              "capability:IFC2X3:IfcRoof",
+              "capability:IFC2X3:IfcStair"
+            ]
+          }
+        ],
+        "missing_facts": [],
+        "ambiguities": [],
+        "unsupported_requests": [],
+        "user_corrections": [],
+        "clarification_questions": [],
+        "provenance": {
+          "source_turns": ["turn-user-001"],
+          "selected_evidence_ids": [
+            "schema:bim-json-v2:entity",
+            "schema:bim-json-v2:representation",
+            "capability:IFC2X3:IfcBuilding",
+            "capability:IFC2X3:IfcBuildingStorey",
+            "capability:IFC2X3:IfcSpace",
+            "capability:IFC2X3:IfcWall",
+            "capability:IFC2X3:IfcDoor",
+            "capability:IFC2X3:IfcWindow",
+            "capability:IFC2X3:IfcSlab",
+            "capability:IFC2X3:IfcRoof",
+            "capability:IFC2X3:IfcStair"
+          ],
+          "few_shot_ids": ["design-brief-v2.standard-two-storey-building"]
+        }
+      }
+    },
+    {
+      "few_shot_id": "design-brief-v2.coordinate-controlled-two-storey",
+      "selection_terms": [
+        "CONTROL_LAYOUT_V2",
+        "精确坐标",
+        "共享墙段",
+        "stair-opening"
+      ],
+      "input": {
+        "user_request": "CONTROL_LAYOUT_V2。首层客厅 x=0..4000、y=0..4000，首层走廊 x=4000..6000、y=0..8000；客厅到走廊的门在 x=4000、y=2000。二层楼梯洞口为 x=0..2000、y=4000..8000，不能作为 IfcSpace。",
+        "conversation": [
+          {
+            "turn_id": "turn-user-001",
+            "role": "user",
+            "content": "CONTROL_LAYOUT_V2。首层客厅 x=0..4000、y=0..4000，首层走廊 x=4000..6000、y=0..8000；客厅到走廊的门在 x=4000、y=2000。二层楼梯洞口为 x=0..2000、y=4000..8000，不能作为 IfcSpace。"
+          }
+        ]
+      },
+      "reasoning_summary": "显式空间边界、门中心和楼梯洞口是原始用户事实，必须保留在嵌套 storeys 结构中，不得转写为模糊的 location 或 center。",
+      "output": {
+        "schema_version": "text2ifc/design-brief/2.0",
+        "language": "zh-CN",
+        "status": "ready",
+        "original_request": "CONTROL_LAYOUT_V2。首层客厅 x=0..4000、y=0..4000，首层走廊 x=4000..6000、y=0..8000；客厅到走廊的门在 x=4000、y=2000。二层楼梯洞口为 x=0..2000、y=4000..8000，不能作为 IfcSpace。",
+        "known_facts": {
+          "storeys": [
+            {
+              "id": "storey-1",
+              "elevation_mm": 0,
+              "spaces": [
+                {"id": "space-living", "bounding_box": "x=0..4000, y=0..4000"},
+                {"id": "space-corridor", "bounding_box": "x=4000..6000, y=0..8000"}
+              ],
+              "walls": {"interior": [{"id": "storey-1-wall-living-corridor", "from": "space-living", "to": "space-corridor"}]},
+              "doors": [
+                {"id": "door-living-corridor", "host_wall": "storey-1-wall-living-corridor", "center_global_mm": [4000, 2000]}
+              ],
+              "windows": []
+            },
+            {
+              "id": "storey-2",
+              "elevation_mm": 3150,
+              "spaces": [],
+              "walls": {"interior": []},
+              "doors": [],
+              "windows": []
+            }
+          ],
+          "stairs": [
+            {"id": "stair-1", "from_storey": "storey-1", "to_storey": "storey-2", "opening_bounds": "x=0..2000, y=4000..8000"}
+          ]
+        },
+        "fact_sources": [
+          {
+            "path": "/known_facts",
+            "source_turns": ["turn-user-001"],
+            "evidence_refs": ["schema:bim-json-v2:entity", "capability:IFC2X3:IfcSpace", "capability:IFC2X3:IfcDoor", "capability:IFC2X3:IfcStair"]
+          }
+        ],
+        "missing_facts": [],
+        "ambiguities": [],
+        "unsupported_requests": [],
+        "user_corrections": [],
+        "clarification_questions": [],
+        "provenance": {
+          "source_turns": ["turn-user-001"],
+          "selected_evidence_ids": ["schema:bim-json-v2:entity", "capability:IFC2X3:IfcSpace", "capability:IFC2X3:IfcDoor", "capability:IFC2X3:IfcStair"],
+          "few_shot_ids": ["design-brief-v2.coordinate-controlled-two-storey"]
+        }
+      }
     }
   ]
 }

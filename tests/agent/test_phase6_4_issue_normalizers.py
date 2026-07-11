@@ -6,6 +6,7 @@ from text2ifc_agent.issues import validate_issue_dict
 from text2ifc_agent.issue_normalizers import (
     normalize_audit_findings,
     normalize_compiler_result,
+    normalize_generator_draft_issues,
     normalize_gate_sidecars,
     normalize_provider_failure,
     normalize_reopen_result,
@@ -80,6 +81,82 @@ def test_normalizes_draft_unresolved_paths_as_user_owned_ask_user():
         route="ask_user",
     )
     assert payload["retryable"] is True
+
+
+def test_normalizes_generator_draft_missing_entities_as_generator_regeneration():
+    issues = normalize_generator_draft_issues(
+        {
+            "missing_facts": [
+                {
+                    "code": "MISSING_ENTITIES",
+                    "path": "/entities",
+                    "message": (
+                        "All remaining walls, spaces, slabs, stair, doors, windows, "
+                        "openings, and relationships are omitted due to manual generation "
+                        "limitations. The Design Brief contains complete facts for automatic generation."
+                    ),
+                }
+            ]
+        }
+    )
+
+    payload = _assert_valid(
+        issues[0],
+        source="semantic_validation",
+        owner="generator",
+        issue_type="missing_entity",
+        route="regenerate_json",
+    )
+    assert payload["retryable"] is True
+
+
+def test_normalizes_generator_draft_user_fact_gaps_as_ask_user():
+    issues = normalize_generator_draft_issues(
+        {
+            "missing_facts": [
+                {
+                    "code": "REQUIRED_USER_FACT_MISSING",
+                    "path": "/known_facts/walls/thickness",
+                    "message": "Wall thickness is missing from the user request.",
+                }
+            ]
+        }
+    )
+
+    _assert_valid(
+        issues[0],
+        source="semantic_validation",
+        owner="user",
+        issue_type="missing_required_fact",
+        route="ask_user",
+    )
+
+
+def test_normalizes_unresolved_model_references_as_generator_regeneration():
+    issues = normalize_validation_issues(
+        [
+            {
+                "code": "UNRESOLVED_PLACEMENT_PARENT",
+                "path": "/entities/10/attributes/ObjectPlacement/relative_to",
+                "message": "Placement parent 'wall-a' is not declared.",
+            },
+            {
+                "code": "UNRESOLVED_RELATIONSHIP_ENDPOINT",
+                "path": "/relationships/1/attributes/RelatingBuildingElement",
+                "message": "Relationship endpoint 'wall-a' is not declared.",
+            },
+        ],
+        source="schema_validation",
+    )
+
+    for issue in issues:
+        _assert_valid(
+            issue,
+            source="schema_validation",
+            owner="generator",
+            issue_type="missing_relationship",
+            route="regenerate_json",
+        )
 
 
 def test_normalizes_compiler_errors_and_unsupported_features():
@@ -180,6 +257,53 @@ def test_normalizes_geometry_and_gate_sidecars(tmp_path):
     )
 
 
+def test_dynamic_gate_feedback_preserves_entity_level_geometry_evidence(tmp_path):
+    root = tmp_path / "case"
+    root.mkdir()
+    (root / "gate-summary.json").write_text(
+        json.dumps(
+            {
+                "overall_status": "failed",
+                "gates": [
+                    {
+                        "name": "dynamic_opening_fill",
+                        "status": "failed",
+                        "issue_codes": ["OPENING_HOST_LOCAL_BOUNDS_MISMATCH"],
+                        "issues": [
+                            {
+                                "code": "OPENING_HOST_LOCAL_BOUNDS_MISMATCH",
+                                "path": "/entities/opening-1/attributes/ObjectPlacement/origin",
+                                "element_id": "door-1",
+                                "opening_id": "opening-1",
+                                "host_wall": "wall-1",
+                                "opening_origin": [0, 0, 0],
+                                "host_profile": {"x": 4000, "y": 200},
+                                "opening_profile": {"x": 900, "y": 2100},
+                            }
+                        ],
+                    }
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    issues = normalize_gate_sidecars(root)
+
+    assert len(issues) == 1
+    _assert_valid(
+        issues[0],
+        source="deterministic_gate",
+        owner="generator",
+        issue_type="geometry_invalid",
+        route="regenerate_json",
+    )
+    assert issues[0].actual_ref == "/entities/opening-1/attributes/ObjectPlacement/origin"
+    assert "opening-1" in issues[0].evidence
+    assert "wall-1" in issues[0].evidence
+    assert "opening_profile" in issues[0].evidence
+
+
 def test_normalizes_audit_findings_to_owners_and_routes():
     issues = normalize_audit_findings(
         {
@@ -195,6 +319,11 @@ def test_normalizes_audit_findings_to_owners_and_routes():
                     "code": "EXPECTED_STAIR_MISSING",
                     "severity": "blocking",
                     "message": "The stair requested by the user is absent.",
+                },
+                {
+                    "code": "OPENING_FILLING_ORIENTATION_MISMATCH",
+                    "severity": "blocking",
+                    "message": "A filling element is not aligned with its opening.",
                 },
             ],
         }
@@ -214,6 +343,48 @@ def test_normalizes_audit_findings_to_owners_and_routes():
         issue_type="missing_vertical_connection",
         route="regenerate_json",
     )
+    _assert_valid(
+        issues[2],
+        source="audit",
+        owner="generator",
+        issue_type="geometry_invalid",
+        route="regenerate_json",
+    )
+
+
+def test_audit_space_placement_details_route_to_generator():
+    issues = normalize_audit_findings(
+        {
+            "recommendation": "revise",
+            "blocking": True,
+            "findings": [
+                {
+                    "code": "SPACE_PLACEMENT_MISMATCH",
+                    "severity": "error",
+                    "message": "Space placement does not match expected bounds.",
+                    "details": [
+                        {
+                            "space_id": "space-storey-1-living-room",
+                            "expected_bbox": "x=0..4000,y=0..4000",
+                            "actual_bbox_global": "x=2000..6000,y=2000..6000",
+                        }
+                    ],
+                }
+            ],
+        }
+    )
+
+    assert len(issues) == 1
+    _assert_valid(
+        issues[0],
+        source="audit",
+        owner="generator",
+        issue_type="geometry_invalid",
+        route="regenerate_json",
+    )
+    assert "space-storey-1-living-room" in issues[0].evidence
+    assert "expected_bbox" in issues[0].evidence
+    assert "actual_bbox_global" in issues[0].evidence
 
 
 def test_normalizes_provider_failures_without_leaking_request_details():

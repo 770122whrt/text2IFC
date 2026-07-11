@@ -25,6 +25,7 @@ from .gate_audit_bundle import write_gate_summary
 from .generator import validate_generation_document
 from .feedback_loop import write_feedback_artifacts
 from .issue_normalizers import (
+    normalize_generator_draft_issues,
     normalize_audit_findings,
     normalize_gate_sidecars,
     normalize_provider_failure,
@@ -77,6 +78,19 @@ class SessionIfcResult:
     audit_status: str
     ifc_path: str | None
     report_path: str | None
+
+
+def _emit_progress(
+    progress: Callable[[str, dict[str, Any]], None] | None,
+    stage: str,
+    payload: dict[str, Any],
+) -> None:
+    if progress is not None:
+        progress(stage, payload)
+
+
+def _gate_progress_status(candidate_gates: Mapping[str, Any]) -> str:
+    return "passed" if candidate_gates.get("valid") is True else "failed"
 
 
 def make_openai_design_brief_invoker(
@@ -322,6 +336,14 @@ def _geometry_failure_requires_regeneration(
     run_dir: Path,
     audit_report: Mapping[str, Any],
 ) -> bool:
+    gate_summary_path = run_dir / "gate-summary.json"
+    if gate_summary_path.is_file():
+        gate_summary = json.loads(gate_summary_path.read_text(encoding="utf-8"))
+        if (
+            isinstance(gate_summary, Mapping)
+            and gate_summary.get("overall_status") == "failed"
+        ):
+            return True
     geometry_feedback_path = run_dir / "geometry-feedback.json"
     if geometry_feedback_path.is_file():
         geometry_feedback = json.loads(geometry_feedback_path.read_text(encoding="utf-8"))
@@ -344,6 +366,7 @@ def run_ready_session_to_ifc(
     session: str,
     provider_factory: Callable[[], Any],
     trace_level: str | None = "debug",
+    progress: Callable[[str, dict[str, Any]], None] | None = None,
 ) -> SessionIfcResult:
     """Generate BIM JSON, run deterministic gates, and compile a ready session."""
 
@@ -365,6 +388,7 @@ def run_ready_session_to_ifc(
         name="expected-facts.json",
     )
     try:
+        _emit_progress(progress, "generator", {"status": "started"})
         generator = run_generator_stage(
             provider=provider_factory(),
             output_dir=stored_session.run_dir / "generator",
@@ -397,9 +421,19 @@ def run_ready_session_to_ifc(
             report_path=None,
         )
     _record_stage_payloads(store, stored_session.session_id, "generator", generator)
+    _emit_progress(
+        progress,
+        "generator",
+        {"status": generator.get("status"), "response_id": generator.get("response_id")},
+    )
     if generator["classification"] == "formal" and (
         stored_session.run_dir / "generator" / "candidate.json"
     ).is_file():
+        _write_candidate_origin(
+            stored_session.run_dir,
+            candidate_origin="live_model_generator",
+            live_acceptance_eligible=True,
+        )
         _copy_artifact_to_run_root(
             store,
             stored_session,
@@ -429,6 +463,7 @@ def run_ready_session_to_ifc(
             "scaffold",
             generator_scaffold,
         )
+        _emit_progress(progress, "scaffold", {"status": generator_scaffold.get("route") or "promoted"})
         generator = {
             **generator,
             "status": "scaffold_promoted",
@@ -440,6 +475,7 @@ def run_ready_session_to_ifc(
 
     semantic_coverage: dict[str, Any] | None = None
     if generator["classification"] == "formal" and generator["valid"]:
+        _emit_progress(progress, "semantic_coverage", {"status": "started"})
         semantic_coverage = run_semantic_coverage_stage(
             case_dir=stored_session.run_dir,
             output_dir=stored_session.run_dir,
@@ -451,6 +487,7 @@ def run_ready_session_to_ifc(
             "semantic_coverage",
             semantic_coverage,
         )
+        _emit_progress(progress, "semantic_coverage", {"status": semantic_coverage.get("status") or semantic_coverage.get("valid")})
         _record_existing_artifact(
             store,
             stored_session,
@@ -458,6 +495,7 @@ def run_ready_session_to_ifc(
             name="semantic-coverage.json",
         )
 
+    _emit_progress(progress, "repair", {"status": "started"})
     repair = run_repair_stage(
         provider_factory=provider_factory,
         output_dir=stored_session.run_dir / "repair",
@@ -466,8 +504,53 @@ def run_ready_session_to_ifc(
         trace_level=trace_level,
     )
     _record_stage_payloads(store, stored_session.session_id, "repair", repair)
+    _emit_progress(progress, "repair", {"route": repair.get("route")})
+    repaired_candidate = stored_session.run_dir / "repair" / "repaired-candidate.json"
+    if repair["route"] == "repair_attempted" and repaired_candidate.is_file():
+        _promote_repaired_candidate(stored_session.run_dir, repaired_candidate)
+        promoted_validation = json.loads(
+            (stored_session.run_dir / "generator" / "validation.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        generator = {
+            **generator,
+            "status": "repaired",
+            "classification": "formal",
+            "valid": bool(promoted_validation["valid"]),
+            "contract_valid": bool(promoted_validation["valid"]),
+            "strict_output_contract_valid": bool(promoted_validation["valid"]),
+        }
+        _record_existing_artifact(
+            store,
+            stored_session,
+            kind="candidate",
+            name="candidate.json",
+        )
+        if generator["valid"]:
+            _emit_progress(progress, "semantic_coverage", {"status": "started"})
+            semantic_coverage = run_semantic_coverage_stage(
+                case_dir=stored_session.run_dir,
+                output_dir=stored_session.run_dir,
+                case_id=stored_session.session_hash,
+            )
+            _record_stage_payloads(
+                store,
+                stored_session.session_id,
+                "semantic_coverage",
+                semantic_coverage,
+            )
+            _emit_progress(progress, "semantic_coverage", {"status": semantic_coverage.get("status") or semantic_coverage.get("valid")})
+            _record_existing_artifact(
+                store,
+                stored_session,
+                kind="semantic_coverage",
+                name="semantic-coverage.json",
+            )
 
     if (
+        generator["classification"] != "formal"
+        or
         not generator["valid"]
         or (semantic_coverage is not None and not semantic_coverage["valid"])
         or repair["route"] not in {
@@ -489,6 +572,7 @@ def run_ready_session_to_ifc(
             report_path=None,
         )
 
+    _emit_progress(progress, "candidate_gates", {"status": "started"})
     candidate_gates = run_candidate_gate_stage(
         case_dir=stored_session.run_dir,
         output_dir=stored_session.run_dir,
@@ -500,6 +584,7 @@ def run_ready_session_to_ifc(
         "candidate_gates",
         candidate_gates,
     )
+    _emit_progress(progress, "candidate_gates", {"status": _gate_progress_status(candidate_gates)})
     scaffold = _maybe_promote_scaffold_candidate(
         store=store,
         stored_session=stored_session,
@@ -507,6 +592,8 @@ def run_ready_session_to_ifc(
     )
     if scaffold is not None:
         _record_stage_payloads(store, stored_session.session_id, "scaffold", scaffold)
+        _emit_progress(progress, "scaffold", {"status": scaffold.get("route") or "promoted"})
+        _emit_progress(progress, "semantic_coverage", {"status": "started"})
         semantic_coverage = run_semantic_coverage_stage(
             case_dir=stored_session.run_dir,
             output_dir=stored_session.run_dir,
@@ -518,6 +605,8 @@ def run_ready_session_to_ifc(
             "semantic_coverage",
             semantic_coverage,
         )
+        _emit_progress(progress, "semantic_coverage", {"status": semantic_coverage.get("status") or semantic_coverage.get("valid")})
+        _emit_progress(progress, "candidate_gates", {"status": "started"})
         candidate_gates = run_candidate_gate_stage(
             case_dir=stored_session.run_dir,
             output_dir=stored_session.run_dir,
@@ -529,7 +618,9 @@ def run_ready_session_to_ifc(
             "candidate_gates",
             candidate_gates,
         )
+        _emit_progress(progress, "candidate_gates", {"status": _gate_progress_status(candidate_gates)})
 
+    _emit_progress(progress, "audit", {"status": "started"})
     audit = run_audit_report_stage(
         provider=provider_factory(),
         case_dir=stored_session.run_dir,
@@ -538,6 +629,8 @@ def run_ready_session_to_ifc(
         trace_level=trace_level,
     )
     _record_stage_payloads(store, stored_session.session_id, "audit", audit)
+    _emit_progress(progress, "audit", {"status": audit.get("status"), "response_id": audit.get("response_id")})
+    _archive_round_evidence(stored_session.run_dir, 1)
     if not audit["valid"] or audit["status"] != "accepted":
         geometry_scaffold = _maybe_promote_scaffold_after_geometry_audit(
             store=store,
@@ -551,6 +644,7 @@ def run_ready_session_to_ifc(
                 "scaffold",
                 geometry_scaffold,
             )
+            _emit_progress(progress, "scaffold", {"status": geometry_scaffold.get("route") or "promoted"})
             generator = {
                 **generator,
                 "status": "scaffold_promoted",
@@ -559,6 +653,7 @@ def run_ready_session_to_ifc(
                 "contract_valid": True,
                 "strict_output_contract_valid": True,
             }
+            _emit_progress(progress, "semantic_coverage", {"status": "started"})
             semantic_coverage = run_semantic_coverage_stage(
                 case_dir=stored_session.run_dir,
                 output_dir=stored_session.run_dir,
@@ -570,6 +665,8 @@ def run_ready_session_to_ifc(
                 "semantic_coverage",
                 semantic_coverage,
             )
+            _emit_progress(progress, "semantic_coverage", {"status": semantic_coverage.get("status") or semantic_coverage.get("valid")})
+            _emit_progress(progress, "candidate_gates", {"status": "started"})
             candidate_gates = run_candidate_gate_stage(
                 case_dir=stored_session.run_dir,
                 output_dir=stored_session.run_dir,
@@ -581,6 +678,8 @@ def run_ready_session_to_ifc(
                 "candidate_gates",
                 candidate_gates,
             )
+            _emit_progress(progress, "candidate_gates", {"status": _gate_progress_status(candidate_gates)})
+            _emit_progress(progress, "audit", {"status": "started"})
             audit = run_audit_report_stage(
                 provider=provider_factory(),
                 case_dir=stored_session.run_dir,
@@ -590,7 +689,39 @@ def run_ready_session_to_ifc(
                 trace_level=trace_level,
             )
             _record_stage_payloads(store, stored_session.session_id, "audit", audit)
-    if not audit["valid"] or audit["status"] != "accepted":
+            _emit_progress(progress, "audit", {"status": audit.get("status"), "response_id": audit.get("response_id")})
+    regeneration_attempted = False
+    previous_issue_count: int | None = None
+    for feedback_round_index in range(2):
+        if (
+            candidate_gates.get("valid") is True
+            and audit["valid"]
+            and audit["status"] == "accepted"
+        ):
+            break
+        regeneration_attempt = _attempt_generator_regeneration_after_audit(
+            store=store,
+            stored_session=stored_session,
+            provider_factory=provider_factory,
+            design_dir=design_dir,
+            trace_level=trace_level,
+            progress=progress,
+            feedback_round_index=feedback_round_index,
+            previous_issue_count=previous_issue_count,
+        )
+        if regeneration_attempt is None:
+            break
+        regeneration_attempted = True
+        generator = regeneration_attempt["generator"]
+        semantic_coverage = regeneration_attempt["semantic_coverage"]
+        candidate_gates = regeneration_attempt["candidate_gates"]
+        audit = regeneration_attempt["audit"]
+        previous_issue_count = regeneration_attempt["issue_count"]
+        build_live_run_report(case_dir=stored_session.run_dir)
+    if (
+        (not audit["valid"] or audit["status"] != "accepted")
+        and not regeneration_attempted
+    ):
         repair_attempt = _attempt_geometry_repair_after_audit(
             store=store,
             stored_session=stored_session,
@@ -602,7 +733,11 @@ def run_ready_session_to_ifc(
             candidate_gates = repair_attempt["candidate_gates"]
             audit = repair_attempt["audit"]
             build_live_run_report(case_dir=stored_session.run_dir)
-    if not audit["valid"] or audit["status"] != "accepted":
+    if (
+        candidate_gates.get("valid") is not True
+        or not audit["valid"]
+        or audit["status"] != "accepted"
+    ):
         store.mark_session_status(stored_session.session_id, "audit_blocked")
         _write_terminal_non_accept_issues(store=store, stored_session=stored_session)
         if (stored_session.run_dir / "output.ifc").is_file():
@@ -629,12 +764,14 @@ def run_ready_session_to_ifc(
             ),
         )
 
+    _emit_progress(progress, "final_acceptance", {"status": "started"})
     final = run_final_acceptance_stage(
         case_dir=stored_session.run_dir,
         output_dir=stored_session.run_dir,
         case_id=stored_session.session_hash,
     )
     _record_stage_payloads(store, stored_session.session_id, "final_acceptance", final)
+    _emit_progress(progress, "final_acceptance", {"status": final.get("status") or final.get("valid")})
     if final["valid"]:
         store.mark_session_status(stored_session.session_id, "compiled")
         _write_phase6_4_accept_artifacts(store=store, stored_session=stored_session)
@@ -898,6 +1035,12 @@ def _build_and_promote_scaffold_candidate(
             "source": "scaffold_candidate",
         },
     )
+    _write_candidate_origin(
+        run_dir,
+        candidate_origin="deterministic_scaffold_fallback",
+        live_acceptance_eligible=False,
+        route=route_name,
+    )
     _copy_artifact_to_run_root(
         store,
         stored_session,
@@ -1008,6 +1151,268 @@ def _attempt_geometry_repair_after_audit(
     return {"repair": repair, "candidate_gates": candidate_gates, "audit": audit}
 
 
+def _attempt_generator_regeneration_after_audit(
+    *,
+    store: SessionStore,
+    stored_session: Any,
+    provider_factory: Callable[[], Any],
+    design_dir: Path,
+    trace_level: str | None,
+    progress: Callable[[str, dict[str, Any]], None] | None,
+    feedback_round_index: int,
+    previous_issue_count: int | None,
+) -> dict[str, Any] | None:
+    run_dir = stored_session.run_dir
+    audit_report_path = run_dir / "audit" / "audit-report.json"
+    if not audit_report_path.is_file():
+        return None
+    audit_report = json.loads(audit_report_path.read_text(encoding="utf-8"))
+    if not _geometry_failure_requires_regeneration(run_dir, audit_report):
+        return None
+
+    issues = [
+        *normalize_gate_sidecars(run_dir),
+        *normalize_audit_findings(audit_report),
+    ]
+    if not issues:
+        return None
+    round_record = write_feedback_artifacts(
+        run_dir,
+        source_stage="audit",
+        issues=issues,
+        previous_issue_count=previous_issue_count,
+        current_feedback_round=feedback_round_index,
+    )
+    route_decision = round_record["route_decision"]
+    _record_existing_artifact(store, stored_session, kind="issues", name="issues.json")
+    _record_existing_artifact(
+        store,
+        stored_session,
+        kind="route_decision",
+        name="route-decision.json",
+    )
+    _record_existing_artifact(
+        store,
+        stored_session,
+        kind="feedback_rounds",
+        name="feedback-rounds.json",
+    )
+    if (
+        route_decision.get("route") != "regenerate_json"
+        or route_decision.get("retry_allowed") is not True
+    ):
+        return None
+
+    feedback = {
+        "schema_version": "text2ifc/generator-regeneration-feedback/1.0",
+        "route": route_decision["route"],
+        "target_stage": route_decision["target_stage"],
+        "source_stage": "audit",
+        "route_decision": route_decision,
+        "issues": round_record["issues"],
+        "evidence_paths": [
+            path
+            for path in (
+                "generator/candidate.json",
+                "generator/validation.json",
+                "geometry-feedback.json",
+                "gate-summary.json",
+                "audit/audit-report.json",
+                "issues.json",
+                "feedback-rounds.json",
+            )
+            if (run_dir / path).is_file()
+        ],
+    }
+    round_number = feedback_round_index + 1
+    regeneration_dir = run_dir / f"generator-regeneration-{round_number:02d}"
+    regeneration_dir.mkdir(parents=True, exist_ok=True)
+    _write_json(regeneration_dir / "generation-feedback.json", feedback)
+    _emit_progress(
+        progress,
+        "generator",
+        {"status": "regeneration_started", "route": "regenerate_json"},
+    )
+    generator = run_generator_stage(
+        provider=provider_factory(),
+        output_dir=regeneration_dir,
+        design_source_dir=design_dir,
+        case_id=stored_session.session_hash,
+        session_prefix="phase6.2",
+        trace_level=trace_level,
+        generation_feedback=feedback,
+        generator_call_index=round_number + 1,
+    )
+    _record_stage_payloads(
+        store,
+        stored_session.session_id,
+        "generator_regeneration",
+        generator,
+    )
+    _emit_progress(
+        progress,
+        "generator",
+        {"status": generator.get("status"), "response_id": generator.get("response_id")},
+    )
+    if (
+        generator["classification"] != "formal"
+        or not generator["valid"]
+        or not (regeneration_dir / "candidate.json").is_file()
+    ):
+        return {
+            "generator": generator,
+            "semantic_coverage": None,
+            "candidate_gates": None,
+            "audit": {"valid": False, "status": "blocked"},
+            "issue_count": len(round_record["issues"]),
+        }
+
+    _promote_regenerated_generator_output(
+        store=store,
+        stored_session=stored_session,
+        regeneration_dir=regeneration_dir,
+    )
+    _emit_progress(progress, "semantic_coverage", {"status": "started"})
+    semantic_coverage = run_semantic_coverage_stage(
+        case_dir=run_dir,
+        output_dir=run_dir,
+        case_id=stored_session.session_hash,
+    )
+    _record_stage_payloads(
+        store,
+        stored_session.session_id,
+        "semantic_coverage",
+        semantic_coverage,
+    )
+    _emit_progress(
+        progress,
+        "semantic_coverage",
+        {"status": semantic_coverage.get("status") or semantic_coverage.get("valid")},
+    )
+    _emit_progress(progress, "candidate_gates", {"status": "started"})
+    candidate_gates = run_candidate_gate_stage(
+        case_dir=run_dir,
+        output_dir=run_dir,
+        case_id=stored_session.session_hash,
+    )
+    _record_stage_payloads(
+        store,
+        stored_session.session_id,
+        "candidate_gates",
+        candidate_gates,
+    )
+    _emit_progress(
+        progress,
+        "candidate_gates",
+        {"status": _gate_progress_status(candidate_gates)},
+    )
+    _emit_progress(progress, "audit", {"status": "started"})
+    audit = run_audit_report_stage(
+        provider=provider_factory(),
+        case_dir=run_dir,
+        case_id=stored_session.session_hash,
+        session_prefix="phase6.2",
+        audit_call_index=round_number + 1,
+        trace_level=trace_level,
+    )
+    _record_stage_payloads(store, stored_session.session_id, "audit", audit)
+    _emit_progress(
+        progress,
+        "audit",
+        {"status": audit.get("status"), "response_id": audit.get("response_id")},
+    )
+    _archive_round_evidence(run_dir, round_number + 1)
+    return {
+        "generator": generator,
+        "semantic_coverage": semantic_coverage,
+        "candidate_gates": candidate_gates,
+        "audit": audit,
+        "issue_count": len(round_record["issues"]),
+    }
+
+
+def _promote_regenerated_generator_output(
+    *,
+    store: SessionStore,
+    stored_session: Any,
+    regeneration_dir: Path,
+) -> None:
+    run_dir = stored_session.run_dir
+    generator_dir = run_dir / "generator"
+    backup_dir = run_dir / "generator-before-regeneration-01"
+    if generator_dir.is_dir() and not backup_dir.exists():
+        shutil.copytree(generator_dir, backup_dir)
+    for source in regeneration_dir.iterdir():
+        if source.is_file():
+            shutil.copyfile(source, generator_dir / source.name)
+    _copy_artifact_to_run_root(
+        store,
+        stored_session,
+        kind="candidate",
+        source=generator_dir / "candidate.json",
+        target_name="candidate.json",
+    )
+    if (generator_dir / "semantic-capabilities.json").is_file():
+        _copy_artifact_to_run_root(
+            store,
+            stored_session,
+            kind="semantic_capabilities",
+            source=generator_dir / "semantic-capabilities.json",
+            target_name="semantic-capabilities.json",
+        )
+    _write_candidate_origin(
+        run_dir,
+        candidate_origin="live_model_regeneration",
+        live_acceptance_eligible=True,
+        route="regenerate_json",
+    )
+    _record_existing_artifact(
+        store,
+        stored_session,
+        kind="generator_regeneration",
+        name=f"{regeneration_dir.name}/generation-feedback.json",
+    )
+
+
+def _archive_round_evidence(run_dir: Path, round_number: int) -> None:
+    round_dir = run_dir / "evaluation-rounds" / f"round-{round_number:02d}"
+    round_dir.mkdir(parents=True, exist_ok=True)
+    for relative in (
+        "candidate.json",
+        "semantic-coverage.json",
+        "ifc-verification.json",
+        "geometry-feedback.json",
+        "gate-summary.json",
+        "dynamic-gates.json",
+    ):
+        source = run_dir / relative
+        if source.is_file():
+            shutil.copyfile(source, round_dir / source.name)
+    audit_dir = run_dir / "audit"
+    archived_audit = round_dir / "audit"
+    if audit_dir.is_dir():
+        if archived_audit.exists():
+            raise ValueError(f"evaluation round {round_number} already exists")
+        shutil.copytree(audit_dir, archived_audit)
+
+
+def _write_candidate_origin(
+    run_dir: Path,
+    *,
+    candidate_origin: str,
+    live_acceptance_eligible: bool,
+    route: str | None = None,
+) -> None:
+    payload = {
+        "schema_version": "text2ifc/candidate-origin/1.0",
+        "candidate_origin": candidate_origin,
+        "live_acceptance_eligible": live_acceptance_eligible,
+    }
+    if route is not None:
+        payload["route"] = route
+    _write_json(run_dir / "candidate-origin.json", payload)
+
+
 def _record_provider_failure(
     *,
     store: SessionStore,
@@ -1110,6 +1515,10 @@ def _write_terminal_non_accept_issues(
 ) -> None:
     run_dir = stored_session.run_dir
     issues = []
+    generator_metrics = _read_optional_json(run_dir / "generator" / "metrics.json")
+    generator_draft = _read_optional_json(run_dir / "generator" / "parsed-output.json")
+    if generator_metrics and generator_metrics.get("classification") != "formal" and generator_draft:
+        issues.extend(normalize_generator_draft_issues(generator_draft))
     generator_validation = _read_optional_issues(run_dir / "generator" / "validation.json")
     if generator_validation:
         issues.extend(
@@ -1629,7 +2038,11 @@ def _openai_client(
     if client_factory is None:
         from openai import OpenAI
 
-        client_factory = OpenAI
+        return OpenAI(
+            api_key=config.api_key,
+            base_url=config.base_url,
+            timeout=config.timeout_seconds,
+        )
     return client_factory(api_key=config.api_key, base_url=config.base_url)
 
 

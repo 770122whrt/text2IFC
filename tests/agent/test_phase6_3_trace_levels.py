@@ -133,6 +133,121 @@ def test_repl_passes_trace_level_to_ifc_generation(monkeypatch, tmp_path):
     assert captured["trace_level"] == "full"
 
 
+def test_repl_prints_live_ifc_stage_progress(monkeypatch, tmp_path):
+    import io
+    import text2ifc_agent.repl_chat as repl_chat
+
+    store = SessionStore.open(tmp_path / "sessions.sqlite", artifact_root=tmp_path)
+    stdout = io.StringIO()
+
+    def invoke_design_brief(transcript, call_index):
+        return _ready_call(call_index, transcript[0]["content"])
+
+    def fake_run_ready_session_to_ifc(**kwargs):
+        progress = kwargs["progress"]
+        progress("generator", {"status": "started"})
+        progress("generator", {"status": "formal"})
+        progress("repair", {"route": "repair_attempted"})
+        progress("audit", {"status": "started"})
+        progress("audit", {"status": "blocked"})
+        session = kwargs["store"].get_session(kwargs["session"])
+        return SessionIfcResult(
+            session_id=session.session_id,
+            session_hash=session.session_hash,
+            status="audit_blocked",
+            generator_status="formal",
+            repair_route="repair_attempted",
+            audit_status="blocked",
+            ifc_path=None,
+            report_path=None,
+        )
+
+    monkeypatch.setattr(
+        repl_chat,
+        "run_ready_session_to_ifc",
+        fake_run_ready_session_to_ifc,
+    )
+
+    try:
+        result = repl_chat.run_repl_chat(
+            store=store,
+            invoke_design_brief=invoke_design_brief,
+            input_func=lambda prompt: "创建两层测试建筑",
+            stdout=stdout,
+            stop_after="ifc",
+            provider_factory=lambda: object(),
+        )
+    finally:
+        store.close()
+
+    output = stdout.getvalue()
+    assert result.status == "audit_blocked"
+    assert "进入 Generator" in output
+    assert "Generator 完成：formal" in output
+    assert "Repair 路由：repair_attempted" in output
+    assert "进入 Audit" in output
+    assert "Audit 完成：blocked" in output
+
+
+def test_repl_persists_live_stage_progress_as_one_jsonl_artifact(monkeypatch, tmp_path):
+    import io
+    import text2ifc_agent.repl_chat as repl_chat
+
+    store = SessionStore.open(tmp_path / "sessions.sqlite", artifact_root=tmp_path)
+
+    def invoke_design_brief(transcript, call_index):
+        return _ready_call(call_index, transcript[0]["content"])
+
+    def fake_run_ready_session_to_ifc(**kwargs):
+        progress = kwargs["progress"]
+        progress("generator", {"status": "started"})
+        progress("generator", {"status": "formal", "response_id": "response-1"})
+        session = kwargs["store"].get_session(kwargs["session"])
+        return SessionIfcResult(
+            session_id=session.session_id,
+            session_hash=session.session_hash,
+            status="compiled",
+            generator_status="formal",
+            repair_route="no_repair_needed",
+            audit_status="accepted",
+            ifc_path=None,
+            report_path=None,
+        )
+
+    monkeypatch.setattr(
+        repl_chat,
+        "run_ready_session_to_ifc",
+        fake_run_ready_session_to_ifc,
+    )
+    try:
+        result = repl_chat.run_repl_chat(
+            store=store,
+            invoke_design_brief=invoke_design_brief,
+            input_func=lambda prompt: "Create a room",
+            stdout=io.StringIO(),
+            stop_after="ifc",
+            provider_factory=lambda: object(),
+        )
+        progress_path = tmp_path / "runs" / result.session_hash / "progress.jsonl"
+        progress_events = [
+            json.loads(line)
+            for line in progress_path.read_text(encoding="utf-8").splitlines()
+        ]
+    finally:
+        store.close()
+
+    assert [event["stage"] for event in progress_events] == [
+        "session",
+        "design_brief",
+        "design_brief",
+        "generator",
+        "generator",
+    ]
+    assert progress_events[-1]["status"] == "formal"
+    assert progress_events[-1]["response_id"] == "response-1"
+    assert all(isinstance(event["elapsed_seconds"], float) for event in progress_events)
+
+
 def test_compact_live_trace_writes_fewer_provider_artifacts_than_debug(tmp_path):
     result = _live_result()
     debug_dir = tmp_path / "debug"

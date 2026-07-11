@@ -14,7 +14,7 @@ PHASE6_1_COMPLETE = (
 )
 
 
-def test_repair_stage_uses_parseable_invalid_formal_as_recovery_source(tmp_path):
+def test_repair_stage_blocks_invalid_formal_recovery_that_changes_unreported_facts(tmp_path):
     invalid_candidate = _invalid_formal_candidate()
     repaired_candidate = _valid_complete_room_candidate()
     source_dir = _write_invalid_formal_generator_source(
@@ -37,15 +37,19 @@ def test_repair_stage_uses_parseable_invalid_formal_as_recovery_source(tmp_path)
     )
 
     assert created == ["created"]
-    assert result["route"] == "repair_attempted"
+    assert result["route"] == "blocked_failure"
     assert result["provider_call_count"] == 1
-    assert result["valid"] is True
+    assert result["valid"] is False
     assert (output_dir / "invalid-candidate.json").is_file()
     assert not (source_dir / "candidate.json").exists()
     route = json.loads((output_dir / "route.json").read_text(encoding="utf-8"))
     assert route["source_document_kind"] == "invalid_formal"
     assert route["source_document_path"] == "parsed-output.json"
     assert route["repair_attempts"][0]["result_status"] == "improved"
+    assert route["blocking_reason"] == "repair fact-delta gate failed"
+    assert {
+        issue["code"] for issue in route["fact_delta_issues"]
+    } == {"UNPERMITTED_FACT_DELTA"}
     assert "failure feedback has no previous candidate" not in json.dumps(route)
     assert json.loads(
         (output_dir / "repaired-candidate.json").read_text(encoding="utf-8")
@@ -80,6 +84,97 @@ def test_invalid_formal_contract_errors_are_repair_eligible_when_facts_are_known
     assert result["issue_codes"] == [
         "MISSING_REPRESENTATION",
         "UNSUPPORTED_RELATIONSHIP_CLASS",
+    ]
+
+
+def test_open_polygon_profile_routes_to_repair_agent_with_machine_feedback(tmp_path):
+    invalid_candidate = _open_polygon_candidate()
+    repaired_candidate = deepcopy(invalid_candidate)
+    wall = next(entity for entity in repaired_candidate["entities"] if entity["ifc_class"] == "IfcWall")
+    points = wall["attributes"]["Representation"]["profile"]["points"]
+    points.append(deepcopy(points[0]))
+    source_dir = _write_invalid_formal_generator_source(
+        tmp_path / "generator",
+        invalid_candidate=invalid_candidate,
+    )
+    provider = _RecordingLiveProvider(repaired_candidate)
+    created = []
+
+    def provider_factory():
+        created.append("created")
+        return provider
+
+    output_dir = tmp_path / "repair"
+    result = run_repair_stage(
+        provider_factory=provider_factory,
+        output_dir=output_dir,
+        generator_source_dir=source_dir,
+        case_id="open-polygon-agent-repair",
+    )
+
+    assert created == ["created"]
+    assert result["route"] == "repair_attempted"
+    assert result["provider_call_count"] == 1
+    assert result["valid"] is True
+    assert "OPEN_POLYGON_PROFILE" in provider.prompt
+    assert "/attributes/Representation/profile/points" in provider.prompt
+    assert "closed ring" in provider.prompt
+    repaired = json.loads(
+        (output_dir / "repaired-candidate.json").read_text(encoding="utf-8")
+    )
+    wall = next(entity for entity in repaired["entities"] if entity["ifc_class"] == "IfcWall")
+    points = wall["attributes"]["Representation"]["profile"]["points"]
+    assert points == [[0, 0], [6000, 0], [6000, 4000], [0, 4000], [0, 0]]
+    route = json.loads((output_dir / "route.json").read_text(encoding="utf-8"))
+    assert route["repair_attempts"][0]["result_status"] == "improved"
+
+
+def test_open_polygon_profile_is_repair_eligible_when_facts_are_known():
+    result = assess_repair_eligibility(
+        issues=[
+            {
+                "code": "OPEN_POLYGON_PROFILE",
+                "path": "/entities/1/attributes/Representation/profile/points",
+            }
+        ],
+        known_facts={"space": {"length_mm": 6000, "width_mm": 4000}},
+    )
+
+    assert result["route"] == "repair_attempted"
+    assert result["eligible"] is True
+    assert result["issue_codes"] == ["OPEN_POLYGON_PROFILE"]
+
+
+def test_stair_schema_contract_errors_are_repair_eligible_when_facts_are_known():
+    result = assess_repair_eligibility(
+        issues=[
+            {
+                "code": "MISSING_OBJECT_PLACEMENT",
+                "path": "/entities/35/attributes/ObjectPlacement",
+            },
+            {
+                "code": "INVALID_IFC_ATTRIBUTE",
+                "path": "/entities/36/attributes/NumberOfRisers",
+            },
+        ],
+        known_facts={
+            "stair": {
+                "width_mm": 1000,
+                "from_storey": "storey-1",
+                "to_storey": "storey-2",
+            },
+            "storeys": [
+                {"id": "storey-1", "elevation_mm": 0},
+                {"id": "storey-2", "elevation_mm": 3150},
+            ],
+        },
+    )
+
+    assert result["route"] == "repair_attempted"
+    assert result["eligible"] is True
+    assert result["issue_codes"] == [
+        "INVALID_IFC_ATTRIBUTE",
+        "MISSING_OBJECT_PLACEMENT",
     ]
 
 
@@ -183,6 +278,17 @@ def _invalid_formal_candidate() -> dict:
             "provenance": {"source": "text2ifc-generator"},
         }
     )
+    return candidate
+
+
+def _open_polygon_candidate() -> dict:
+    candidate = deepcopy(_valid_complete_room_candidate())
+    wall = next(entity for entity in candidate["entities"] if entity["ifc_class"] == "IfcWall")
+    wall["attributes"]["Representation"]["profile"] = {
+        "kind": "polygon",
+        "points": [[0, 0], [6000, 0], [6000, 4000], [0, 4000]],
+    }
+    wall["attributes"]["Representation"]["depth"] = 3000
     return candidate
 
 

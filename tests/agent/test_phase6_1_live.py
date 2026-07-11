@@ -7,6 +7,7 @@ from pathlib import Path
 from text2ifc_agent.context_selection import select_design_brief_context
 from text2ifc_agent.live_pipeline import (
     PROJECT_ROOT,
+    _validate_live_audit_output,
     compare_design_brief_runs,
     complete_room_case,
     clarified_room_case,
@@ -1176,6 +1177,44 @@ def test_live_audit_report_stage_calls_provider_and_generates_report(
     report = (case_dir / "report.md").read_text(encoding="utf-8")
     assert "## Audit Agent" in report
     assert "(audit/audit-report.json)" in report
+
+
+def test_live_audit_validation_normalizes_root_relative_evidence_paths(tmp_path: Path):
+    case_dir = _write_auditable_case_dir(tmp_path / "complete-room")
+    for relative in ("geometry-feedback.json", "gate-summary.json"):
+        (case_dir / relative).write_text("{}", encoding="utf-8")
+    payload = {
+        "schema_version": "text2ifc/audit/2.0",
+        "recommendation": "revise",
+        "blocking": True,
+        "deterministic_gate_status": "failed",
+        "findings": [
+            {
+                "code": "GEOMETRY_BBOX_MISMATCH",
+                "message": "Generator candidate does not satisfy geometry gates.",
+                "severity": "blocking",
+                "evidence_ref": "/geometry-feedback.json",
+            }
+        ],
+        "evidence_paths": [
+            "/geometry-feedback.json",
+            "/gate-summary.json",
+            "/generator/candidate.json",
+        ],
+    }
+
+    issues = _validate_live_audit_output(
+        payload,
+        case_dir=case_dir,
+        deterministic_gates={"geometry": False, "schema": True},
+    )
+
+    assert issues == []
+    assert payload["evidence_paths"] == [
+        "geometry-feedback.json",
+        "gate-summary.json",
+        "generator/candidate.json",
+    ]
 
 
 def test_live_audit_report_stage_accepts_clarified_final_design_brief_layout(

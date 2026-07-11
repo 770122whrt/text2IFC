@@ -367,6 +367,74 @@ def test_context_selector_supplies_ifc_building_when_request_names_it():
     assert "IfcBuilding" in selection["selected_ifc_classes"]
 
 
+def test_context_selector_supplies_ifc_stair_for_english_stair_requests():
+    selector = importlib.import_module("text2ifc_agent.context_selection")
+
+    selection = selector.select_design_brief_context(
+        user_request=(
+            "Create a two-storey building with a straight stair from the ground "
+            "storey stairwell to the first storey stair landing."
+        ),
+        conversation=[],
+    )
+
+    evidence_ids = {record["evidence_id"] for record in selection["evidence"]}
+    assert "capability:IFC2X3:IfcStair" in evidence_ids
+
+
+def test_context_selector_matches_english_ifc_terms_case_insensitively():
+    selector = importlib.import_module("text2ifc_agent.context_selection")
+
+    selection = selector.select_design_brief_context(
+        user_request="Generate an IfcStair in a StairRoom with one IfcWindow.",
+        conversation=[],
+    )
+
+    evidence_ids = {record["evidence_id"] for record in selection["evidence"]}
+    assert "capability:IFC2X3:IfcStair" in evidence_ids
+    assert "capability:IFC2X3:IfcWindow" in evidence_ids
+
+
+def test_context_selector_supplies_core_ifc_capabilities_for_english_multistorey_requests():
+    selector = importlib.import_module("text2ifc_agent.context_selection")
+
+    selection = selector.select_design_brief_context(
+        user_request=(
+            "Create a two-storey building with spaces, walls, slabs, stairs, "
+            "doors, windows, and openings."
+        ),
+        conversation=[],
+    )
+
+    evidence_ids = {item["evidence_id"] for item in selection["evidence"]}
+    assert "capability:IFC2X3:IfcBuilding" in evidence_ids
+    assert "capability:IFC2X3:IfcBuildingStorey" in evidence_ids
+    assert "capability:IFC2X3:IfcSpace" in evidence_ids
+    assert "capability:IFC2X3:IfcWall" in evidence_ids
+    assert "capability:IFC2X3:IfcSlab" in evidence_ids
+    assert "capability:IFC2X3:IfcStair" in evidence_ids
+    assert "capability:IFC2X3:IfcDoor" in evidence_ids
+    assert "capability:IFC2X3:IfcWindow" in evidence_ids
+    assert "capability:IFC2X3:IfcOpeningElement" in evidence_ids
+    assert "IfcStair" in selection["selected_ifc_classes"]
+
+
+def test_context_selector_supplies_storey_for_chinese_floor_elevation_requests():
+    selector = importlib.import_module("text2ifc_agent.context_selection")
+
+    selection = selector.select_design_brief_context(
+        user_request=(
+            "创建一个双层建筑。首层标高0毫米，二层标高3150毫米，"
+            "每层净高3000毫米，每层都有独立四面外墙和楼板。"
+        ),
+        conversation=[],
+    )
+
+    evidence_ids = {item["evidence_id"] for item in selection["evidence"]}
+    assert "capability:IFC2X3:IfcBuildingStorey" in evidence_ids
+    assert "IfcBuildingStorey" in selection["selected_ifc_classes"]
+
+
 def test_context_selector_uses_named_conditional_examples_not_policy_lists():
     selector = importlib.import_module("text2ifc_agent.context_selection")
 

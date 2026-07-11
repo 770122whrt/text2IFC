@@ -131,19 +131,19 @@ def test_ready_phase6_2_session_generates_ifc_report_and_db_artifacts(tmp_path):
     assert store.get_session(session.session_hash).status == "compiled"
 
 
-def test_ready_session_repairs_geometry_failure_after_audit_revise(tmp_path):
+def test_ready_session_regenerates_json_after_geometry_audit_revise(tmp_path):
     root = tmp_path / "phase6.2-interactive-cli"
     store = SessionStore.open(root / "sessions.sqlite", artifact_root=root)
     session = store.create_session(original_input="创建一个需要几何修复的矩形房间。")
     _write_ready_design_brief_call(session.run_dir)
     store.mark_session_status(session.session_id, "ready")
 
-    repaired_candidate = json.loads(
+    regenerated_candidate = json.loads(
         (PHASE6_1_COMPLETE / "generator" / "candidate.json").read_text(
             encoding="utf-8"
         )
     )
-    blocked_candidate = _geometry_blocked_candidate(repaired_candidate)
+    blocked_candidate = _geometry_blocked_candidate(regenerated_candidate)
     audit_revise = {
         "schema_version": "text2ifc/audit/2.0",
         "recommendation": "revise",
@@ -177,7 +177,7 @@ def test_ready_session_repairs_geometry_failure_after_audit_revise(tmp_path):
         ],
     }
     provider = _SequenceLiveProvider(
-        [blocked_candidate, audit_revise, repaired_candidate, audit_accept]
+        [blocked_candidate, audit_revise, regenerated_candidate, audit_accept]
     )
 
     result = run_ready_session_to_ifc(
@@ -190,20 +190,245 @@ def test_ready_session_repairs_geometry_failure_after_audit_revise(tmp_path):
     assert provider.session_ids == [
         f"phase6.2-{session.session_hash}-generator-01",
         f"phase6.2-{session.session_hash}-audit-01",
-        f"phase6.1-{session.session_hash}-repair-01",
+        f"phase6.2-{session.session_hash}-generator-02",
         f"phase6.2-{session.session_hash}-audit-02",
     ]
-    repair_route = json.loads(
-        (session.run_dir / "repair" / "route.json").read_text(encoding="utf-8")
+    assert (session.run_dir / "generator-regeneration-01" / "prompt-render-input.json").is_file()
+    prompt_inputs = json.loads(
+        (session.run_dir / "generator-regeneration-01" / "prompt-render-input.json").read_text(
+            encoding="utf-8"
+        )
     )
-    assert repair_route["route"] == "repair_attempted"
-    assert repair_route["repair_attempts"][0]["result_status"] == "improved"
+    assert prompt_inputs["GENERATION_FEEDBACK"]["route"] == "regenerate_json"
+    assert prompt_inputs["GENERATION_FEEDBACK"]["target_stage"] == "generator"
+    assert prompt_inputs["GENERATION_FEEDBACK"]["issues"]
     geometry = json.loads(
         (session.run_dir / "geometry-feedback.json").read_text(encoding="utf-8")
     )
     assert geometry["success"] is True
     assert (session.run_dir / "output.ifc").is_file()
     assert store.get_session(session.session_hash).status == "compiled"
+
+
+def test_geometry_gate_failure_regenerates_when_audit_incorrectly_accepts(tmp_path):
+    root = tmp_path / "phase6.2-interactive-cli"
+    store = SessionStore.open(root / "sessions.sqlite", artifact_root=root)
+    session = store.create_session(
+        original_input="Create a rectangular room whose geometry must be checked."
+    )
+    _write_ready_design_brief_call(session.run_dir)
+    store.mark_session_status(session.session_id, "ready")
+
+    regenerated_candidate = json.loads(
+        (PHASE6_1_COMPLETE / "generator" / "candidate.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    blocked_candidate = _geometry_blocked_candidate(regenerated_candidate)
+    incorrect_accept = {
+        "schema_version": "text2ifc/audit/2.0",
+        "recommendation": "accept",
+        "blocking": False,
+        "deterministic_gate_status": "passed",
+        "findings": [],
+        "evidence_paths": [
+            "design-brief/design-brief.json",
+            "generator/candidate.json",
+            "repair/route.json",
+            "geometry-feedback.json",
+        ],
+    }
+    final_accept = deepcopy(incorrect_accept)
+    provider = _SequenceLiveProvider(
+        [blocked_candidate, incorrect_accept, regenerated_candidate, final_accept]
+    )
+    progress_events = []
+
+    result = run_ready_session_to_ifc(
+        store=store,
+        session=session.session_hash,
+        provider_factory=lambda: provider,
+        progress=lambda stage, payload: progress_events.append((stage, payload)),
+    )
+
+    assert result.status == "compiled"
+    assert provider.session_ids == [
+        f"phase6.2-{session.session_hash}-generator-01",
+        f"phase6.2-{session.session_hash}-audit-01",
+        f"phase6.2-{session.session_hash}-generator-02",
+        f"phase6.2-{session.session_hash}-audit-02",
+    ]
+    feedback = json.loads(
+        (
+            session.run_dir
+            / "generator-regeneration-01"
+            / "generation-feedback.json"
+        ).read_text(encoding="utf-8")
+    )
+    assert feedback["route"] == "regenerate_json"
+    assert any(
+        issue["source"] == "geometry_gate" for issue in feedback["issues"]
+    )
+    gate_statuses = [
+        payload["status"]
+        for stage, payload in progress_events
+        if stage == "candidate_gates" and payload.get("status") != "started"
+    ]
+    assert gate_statuses == ["failed", "passed"]
+
+
+def test_geometry_feedback_allows_two_generator_regeneration_rounds(tmp_path):
+    root = tmp_path / "phase6.2-interactive-cli"
+    store = SessionStore.open(root / "sessions.sqlite", artifact_root=root)
+    session = store.create_session(original_input="Create a checked rectangular room.")
+    _write_ready_design_brief_call(session.run_dir)
+    store.mark_session_status(session.session_id, "ready")
+
+    valid_candidate = json.loads(
+        (PHASE6_1_COMPLETE / "generator" / "candidate.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    first_blocked = _geometry_blocked_candidate(valid_candidate)
+    second_blocked = _geometry_blocked_candidate_one_wall(valid_candidate)
+    audit_revise = {
+        "schema_version": "text2ifc/audit/2.0",
+        "recommendation": "revise",
+        "blocking": True,
+        "deterministic_gate_status": "failed",
+        "findings": [],
+        "evidence_paths": [
+            "design-brief/design-brief.json",
+            "generator/candidate.json",
+            "repair/route.json",
+            "geometry-feedback.json",
+        ],
+    }
+    audit_accept = {
+        **audit_revise,
+        "recommendation": "accept",
+        "blocking": False,
+        "deterministic_gate_status": "passed",
+    }
+    provider = _SequenceLiveProvider(
+        [
+            first_blocked,
+            audit_revise,
+            second_blocked,
+            audit_revise,
+            valid_candidate,
+            audit_accept,
+        ]
+    )
+
+    result = run_ready_session_to_ifc(
+        store=store,
+        session=session.session_hash,
+        provider_factory=lambda: provider,
+    )
+
+    assert result.status == "compiled"
+    assert provider.session_ids == [
+        f"phase6.2-{session.session_hash}-generator-01",
+        f"phase6.2-{session.session_hash}-audit-01",
+        f"phase6.2-{session.session_hash}-generator-02",
+        f"phase6.2-{session.session_hash}-audit-02",
+        f"phase6.2-{session.session_hash}-generator-03",
+        f"phase6.2-{session.session_hash}-audit-03",
+    ]
+    rounds = json.loads(
+        (session.run_dir / "feedback-rounds.json").read_text(encoding="utf-8")
+    )["rounds"]
+    assert [record["round_index"] for record in rounds] == [0, 1, 2]
+    assert rounds[-1]["route"] == "accepted"
+    assert (session.run_dir / "generator-regeneration-01").is_dir()
+    assert (session.run_dir / "generator-regeneration-02").is_dir()
+    assert (session.run_dir / "evaluation-rounds" / "round-01").is_dir()
+    assert (session.run_dir / "evaluation-rounds" / "round-02").is_dir()
+    assert (session.run_dir / "evaluation-rounds" / "round-03").is_dir()
+
+
+def test_failed_dynamic_gate_cannot_be_overridden_by_audit_accept(
+    tmp_path, monkeypatch
+):
+    root = tmp_path / "phase6.2-interactive-cli"
+    store = SessionStore.open(root / "sessions.sqlite", artifact_root=root)
+    session = store.create_session(
+        original_input="Create a checked room with correctly oriented openings."
+    )
+    _write_ready_design_brief_call(session.run_dir)
+    store.mark_session_status(session.session_id, "ready")
+
+    def write_opening_expected_facts(*, case_dir, case_id, design_brief):
+        del case_id, design_brief
+        payload = {
+            "schema_version": "text2ifc/expected-facts/1.0",
+            "total_counts": {"IfcDoor": 1},
+            "required_relationships": {"opening_fill": {"doors": 1}},
+        }
+        path = Path(case_dir) / "expected-facts.json"
+        path.write_text(json.dumps(payload), encoding="utf-8")
+        return payload
+
+    monkeypatch.setattr(
+        "text2ifc_agent.interactive_cli_flow.write_expected_facts",
+        write_opening_expected_facts,
+    )
+
+    valid_candidate = json.loads(
+        (PHASE6_1_COMPLETE / "generator" / "candidate.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    first_blocked = _geometry_blocked_candidate(valid_candidate)
+    second_blocked = _opening_axis_blocked_candidate(valid_candidate)
+    incorrect_accept = {
+        "schema_version": "text2ifc/audit/2.0",
+        "recommendation": "accept",
+        "blocking": False,
+        "deterministic_gate_status": "passed",
+        "findings": [],
+        "evidence_paths": [
+            "design-brief/design-brief.json",
+            "generator/candidate.json",
+            "repair/route.json",
+            "gate-summary.json",
+        ],
+    }
+    provider = _SequenceLiveProvider(
+        [
+            first_blocked,
+            incorrect_accept,
+            second_blocked,
+            incorrect_accept,
+            valid_candidate,
+            incorrect_accept,
+        ]
+    )
+
+    result = run_ready_session_to_ifc(
+        store=store,
+        session=session.session_hash,
+        provider_factory=lambda: provider,
+    )
+
+    assert result.status == "compiled"
+    assert provider.session_ids == [
+        f"phase6.2-{session.session_hash}-generator-01",
+        f"phase6.2-{session.session_hash}-audit-01",
+        f"phase6.2-{session.session_hash}-generator-02",
+        f"phase6.2-{session.session_hash}-audit-02",
+        f"phase6.2-{session.session_hash}-generator-03",
+        f"phase6.2-{session.session_hash}-audit-03",
+    ]
+    gate_summary = json.loads(
+        (session.run_dir / "gate-summary.json").read_text(encoding="utf-8")
+    )
+    assert gate_summary["overall_status"] == "passed"
+    case_result = json.loads(
+        (session.run_dir / "case-result.json").read_text(encoding="utf-8")
+    )
+    assert case_result["deterministic_gates_passed"] is True
 
 
 def test_phase6_2_cli_resumes_ready_session_to_ifc(tmp_path, capsys):
@@ -258,6 +483,54 @@ def test_phase6_2_cli_resumes_ready_session_to_ifc(tmp_path, capsys):
     assert (session.run_dir / "report.md").is_file()
 
 
+def test_ready_session_stops_cleanly_when_generator_returns_draft(tmp_path):
+    root = tmp_path / "phase6.2-interactive-cli"
+    store = SessionStore.open(root / "sessions.sqlite", artifact_root=root)
+    session = store.create_session(original_input="Create a building that remains draft.")
+    _write_ready_design_brief_call(session.run_dir)
+    store.mark_session_status(session.session_id, "ready")
+
+    draft = {
+        "draft_version": "bim-json-draft/1.0",
+        "target_schema_version": "bim-json/2.0",
+        "partial_document": {
+            "schema_version": "bim-json/2.0",
+            "ifc_schema": "IFC2X3",
+            "units": {"length": "MILLIMETRE"},
+            "entities": [],
+            "relationships": [],
+        },
+        "missing_facts": [
+            {
+                "entity_id": "space",
+                "path": "/entities",
+                "code": "MISSING_IFCSPACE",
+                "message": "No spaces defined.",
+            }
+        ],
+        "losses": [],
+        "clarification_targets": [],
+        "provenance": {"source": "unit-test"},
+    }
+    provider = _SequenceLiveProvider([draft])
+
+    result = run_ready_session_to_ifc(
+        store=store,
+        session=session.session_hash,
+        provider_factory=lambda: provider,
+    )
+
+    assert result.status == "draft_or_blocked"
+    assert result.generator_status == "draft"
+    assert result.audit_status == "not_run"
+    assert result.ifc_path is None
+    assert not (session.run_dir / "output.ifc").exists()
+    assert (session.run_dir / "issues.json").is_file()
+    assert (session.run_dir / "route-decision.json").is_file()
+    assert (session.run_dir / "feedback-rounds.json").is_file()
+    assert store.get_session(session.session_hash).status == "draft_or_blocked"
+
+
 def _geometry_blocked_candidate(candidate: dict) -> dict:
     candidate = deepcopy(candidate)
     for entity in candidate["entities"]:
@@ -265,6 +538,29 @@ def _geometry_blocked_candidate(candidate: dict) -> dict:
             profile = entity["attributes"]["Representation"]["profile"]
             profile["x"] = 300
             profile["y"] = 4000
+    return candidate
+
+
+def _geometry_blocked_candidate_one_wall(candidate: dict) -> dict:
+    candidate = deepcopy(candidate)
+    for entity in candidate["entities"]:
+        if entity.get("id") == "wall-west":
+            profile = entity["attributes"]["Representation"]["profile"]
+            profile["x"] = 300
+            profile["y"] = 4000
+    return candidate
+
+
+def _opening_axis_blocked_candidate(candidate: dict) -> dict:
+    candidate = deepcopy(candidate)
+    opening = next(
+        entity
+        for entity in candidate["entities"]
+        if entity.get("ifc_class") == "IfcOpeningElement"
+    )
+    representation = opening["attributes"]["Representation"]
+    representation["profile"]["y"] = 2100
+    representation["depth"] = 200
     return candidate
 
 

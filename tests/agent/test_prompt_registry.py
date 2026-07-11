@@ -167,10 +167,22 @@ def test_generator_v2_renders_both_exact_canonical_contracts():
             "USER_REQUEST": "创建一个矩形房间。",
             "CONVERSATION": [],
             "DESIGN_BRIEF": {"status": "ready"},
+            "ENTITY_ID_CONTRACT": {
+                "spaces": [
+                    {
+                        "brief_id": "living_room",
+                        "entity_id": "space-storey-1-living-room",
+                        "storey": "storey-1",
+                    }
+                ],
+                "doors": [],
+                "windows": [],
+            },
             "FORMAL_SCHEMA": formal_schema,
             "DRAFT_SCHEMA": draft_schema,
             "CAPABILITY_PROFILE": [],
             "FEW_SHOTS": [],
+            "GENERATION_FEEDBACK": {},
         },
     )
     text = rendered["text"]
@@ -183,8 +195,34 @@ def test_generator_v2_renders_both_exact_canonical_contracts():
     assert '"target_schema_version": "bim-json/2.0"' in text
     assert "任何反引号字符" in text
     assert "SCHEMA_SUMMARY" not in text
+    assert '"entity_id": "space-storey-1-living-room"' in text
+    assert "{{ENTITY_ID_CONTRACT}}" not in text
     assert "{{FORMAL_SCHEMA}}" not in text
     assert "{{DRAFT_SCHEMA}}" not in text
+
+
+def test_generator_context_includes_standard_two_storey_few_shot():
+    live_pipeline = importlib.import_module("text2ifc_agent.live_pipeline")
+    context = live_pipeline._select_generator_context({"evidence": []})
+
+    few_shots = context["few_shots"]
+    ids = [item["few_shot_id"] for item in few_shots]
+    assert "generator-v2.formal-two-storey-standard" in ids
+
+    two_storey = next(
+        item
+        for item in few_shots
+        if item["few_shot_id"] == "generator-v2.formal-two-storey-standard"
+    )
+    output = two_storey["output"]
+    assert output["schema_version"] == "bim-json/2.0"
+    assert any(entity["id"] == "storey-2" for entity in output["entities"])
+    assert any(entity["id"] == "storey-2-wall-south" for entity in output["entities"])
+    assert any(
+        entity.get("ifc_class") == "IfcWindow"
+        and entity["attributes"]["ObjectPlacement"]["relative_to"].startswith("opening-storey-2-")
+        for entity in output["entities"]
+    )
 
 
 def test_repair_v2_prompt_contains_immutable_evidence_and_delta_contract():

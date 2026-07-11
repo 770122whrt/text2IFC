@@ -57,11 +57,50 @@ Design Brief 2.0 完整输出 Schema：
 
 现在只返回一个满足 text2ifc/design-brief/2.0 Schema 的裸 JSON 对象。不要使用 Markdown。不要输出任何反引号字符。不要在对象前后添加任何文字。发送前再次确认首字符是左花括号、末字符是右花括号。
 
+Canonical multi-storey Design Brief structure
+
+1. For a multi-storey building, put all floor-specific facts inside `known_facts.storeys`, an array of storey objects. Each storey object should include stable `id`, `name` when available, `elevation_mm`, `net_height_mm`, and floor-local `spaces`, `walls`, `doors`, `windows`, and `stairs` when those facts are present.
+2. Use `elevation_mm`; do not use `level` as a substitute for elevation. If the user says first floor elevation is 0 mm and second floor elevation is 3150 mm, write `"elevation_mm": 0` and `"elevation_mm": 3150`.
+3. Do not create top-level `storey_1`, `storey_2`, `spaces_ground`, `spaces_first`, or generic `openings` as the primary multi-storey structure. These scattered dialects make downstream verification ambiguous. Prefer the canonical nested `storeys` array.
+4. Put doors and windows inside the storey that owns their host wall. Do not merge doors and windows into a generic `openings` list. A second-storey window on a second-storey south wall belongs under the second storey and should name a second-storey host wall.
+5. Use stable semantic ids in Design Brief facts when the user request is clear, for example `storey-1`, `storey-2`, `storey-1-wall-south`, and `storey-2-wall-south`. These are semantic ids for later BIM JSON generation, not IFC STEP ids.
+6. If the request has enough facts for a canonical nested multi-storey Design Brief, return `ready`; do not invent missing dimensions, and do not ask about details that are not required by the requested supported model.
+
+Layout fact preservation and conflict handling
+
+1. Do not replace explicit coordinates, bounding rectangles, host-wall ids,
+   opening centers, elevations, or stair-opening extents with a derived,
+   rounded, relative, or approximate fact. Preserve the explicit value and its
+   source turn in `known_facts`.
+2. Before returning `ready`, compare every same-storey explicit space rectangle.
+   A positive-area intersection is a blocking layout conflict. Record
+   `LAYOUT_SPACE_OVERLAP` in the blocking item's reason, do not choose a new
+   rectangle, and ask the user to resolve it when that is possible.
+3. Before returning `ready`, verify that each explicitly located door or window
+   has a host wall on the same storey. For an interior door, its stated center
+   must lie on a positive-length shared boundary segment of the named spaces.
+   If not, record `DOOR_HOST_NO_SHARED_SEGMENT` in a blocking item's reason;
+   do not move the door or substitute another wall.
+4. Before returning `ready`, verify that an explicit stair opening does not
+   positively overlap an explicitly declared same-storey IfcSpace. If it does,
+   record `STAIR_OPENING_SPACE_COLLISION` in a blocking item's reason; do not
+   silently delete the opening, stair, or space.
+5. Use `needs_clarification` for a layout conflict the user can resolve. Use
+   `draft_required` only after the user cannot or will not supply the required
+   correction. A conflicting layout must never be reported as `ready`.
+
 Schema consistency self-check
 
 1. needs_clarification MUST include 1-3 clarification_questions; never return needs_clarification with an empty clarification_questions array.
 2. Every clarification question target MUST reference an existing blocking item id from `missing_facts`, `ambiguities`, or `unsupported_requests`.
 3. Do not target a non-blocking item. If an item is not blocking, it may remain recorded, but it must not be the reason for `needs_clarification`.
-4. Bind short numeric answers to the immediately preceding assistant question when the transcript makes the target clear. For example, if the assistant asked only for wall thickness and the user answers `300mm`, record it as wall thickness instead of creating a new ambiguity.
-5. source_turns MUST use exact turn_id values already present in CONVERSATION. Never renumber a turn, invent a turn id, or change an assistant turn_id into a user turn_id.
-6. Before sending, verify these invariants: `ready` has no blocking item and no questions; `needs_clarification` has at least one blocking item and 1-3 target-valid questions; `draft_required` has no repeated question for a fact the user said they do not know.
+4. Optional or not-yet-decided items must not consume a clarification question slot unless they block faithful generation of the current requested model. If you ask about an ambiguity, that ambiguity MUST be marked blocking: true; if it remains blocking: false, do not include it in any question targets.
+5. Prioritize blocking geometry facts before optional openings or style choices. For example, if height, wall thickness, and floor thickness are missing, ask those before asking whether optional doors/windows should be added.
+6. Initial user phrases like not decided or not thought through yet are not the same as an answered unknown. On the first turn, if the fact is user-answerable, use `needs_clarification`; reserve `draft_required` for facts the user already answered as unknown/unimportant/unavailable or for unsupported semantics that cannot be faithfully generated.
+7. draft_required and blocked MUST have an empty clarification_questions array. If you still have questions to ask, the status MUST be `needs_clarification`, not `draft_required` or `blocked`.
+8. original_request MUST exactly equal CONVERSATION[0].content, including punctuation, typos, trailing symbols, and unusual characters. Never normalize, clean, summarize, translate, or append later answers to original_request.
+9. Bind short numeric answers to the immediately preceding assistant question when the transcript makes the target clear. For example, if the assistant asked only for wall thickness and the user answers `300mm`, record it as wall thickness instead of creating a new ambiguity.
+10. source_turns MUST use exact turn_id values already present in CONVERSATION. Never renumber a turn, invent a turn id, or change an assistant turn_id into a user turn_id.
+11. Every missing_facts and unsupported_requests items MUST include a non-empty `code` string. Use a stable uppercase snake-case code such as `ROOM_DIMENSION_REFERENCE_MISSING`; do not omit `code` when those items have id/path/message/reason.
+12. ambiguities items MUST NOT include `code`; the Design Brief 2.0 schema does not allow that field there. Use id/path/message/reason/blocking/evidence_refs/source_turns to describe ambiguity records.
+13. Before sending, verify these invariants: `ready` has no blocking item and no questions; `needs_clarification` has at least one blocking item and 1-3 target-valid questions; `draft_required` has no clarification questions and no repeated question for a fact the user said they do not know; every blocking missing_facts or unsupported_requests item has id, code, path, message, reason, blocking, evidence_refs, and source_turns; every blocking ambiguities item has id, path, message, reason, blocking, evidence_refs, and source_turns, and no code field.

@@ -4,8 +4,10 @@ from __future__ import annotations
 
 import json
 import sys
-from dataclasses import dataclass
+from dataclasses import dataclass, field
+from datetime import datetime, timezone
 from pathlib import Path
+from time import monotonic
 from typing import Any, Callable, TextIO
 
 from .clarification import ClarificationController, DesignBriefInvoker
@@ -29,6 +31,32 @@ class ReplChatResult:
     status: str
     ifc_path: str | None = None
     report_path: str | None = None
+
+
+@dataclass
+class _ProgressLogger:
+    path: Path
+    started_at: float = field(default_factory=monotonic)
+    sequence: int = 0
+
+    def record(self, stage: str, status: str, **payload: Any) -> None:
+        self.sequence += 1
+        event: dict[str, Any] = {
+            "sequence": self.sequence,
+            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "elapsed_seconds": round(monotonic() - self.started_at, 3),
+            "stage": stage,
+            "status": status,
+        }
+        event.update(
+            {
+                key: value
+                for key, value in payload.items()
+                if isinstance(value, (str, int, float, bool)) or value is None
+            }
+        )
+        with self.path.open("a", encoding="utf-8") as stream:
+            stream.write(json.dumps(event, ensure_ascii=False, sort_keys=True) + "\n")
 
 
 def configure_utf8_stdio(stdout: TextIO | None = None) -> dict[str, str | None]:
@@ -81,6 +109,8 @@ def run_repl_chat(
         return ReplChatResult(session_id="", session_hash="", status="incomplete")
 
     session = store.create_session(original_input=original_request)
+    progress_logger = _ProgressLogger(session.run_dir / "progress.jsonl")
+    progress_logger.record("session", "created", session_hash=session.session_hash)
     if invoke_design_brief is None:
         if design_brief_invoker_factory is None:
             raise ValueError("REPL requires a Design Brief invoker")
@@ -105,8 +135,15 @@ def run_repl_chat(
         user_request=session.original_input,
     )
     persisted_turn_count = 1
+    progress_logger.record("design_brief", "started", call_index=1)
     first_call = invoke_design_brief(controller.transcript_dicts(), 1)
     controller = controller.record_model_call(first_call)
+    progress_logger.record(
+        "design_brief",
+        controller.status,
+        call_index=1,
+        response_id=first_call.response_id,
+    )
     _record_call(store, session.session_id, first_call)
     persisted_turn_count = _persist_new_turns(
         store=store,
@@ -127,34 +164,56 @@ def run_repl_chat(
             event_type="user_answer_requested",
             payload={"question_ids": list(controller.pending_question_ids)},
         )
-        answer = _read_input(
-            active_stdout,
-            input_func,
-            "\u4f60\u7684\u56de\u7b54\uff1a",
-        )
-        if _is_quit(answer):
+        while True:
+            answer = _read_input(
+                active_stdout,
+                input_func,
+                "\u4f60\u7684\u56de\u7b54\uff1a",
+            )
+            if _is_quit(answer):
+                store.append_event(
+                    session.session_id,
+                    event_type="user_quit",
+                    payload={"status": "incomplete"},
+                )
+                store.mark_session_status(session.session_id, "incomplete")
+                store.export_session(session.session_id)
+                active_stdout.write("\u5df2\u9000\u51fa\uff0c\u4f1a\u8bdd\u5df2\u4fdd\u5b58\u4e3a\u672a\u5b8c\u6210\u3002\n")
+                active_stdout.flush()
+                return ReplChatResult(
+                    session_id=session.session_id,
+                    session_hash=session.session_hash,
+                    status="incomplete",
+                )
+            if answer:
+                break
             store.append_event(
                 session.session_id,
-                event_type="user_quit",
-                payload={"status": "incomplete"},
+                event_type="user_empty_answer_rejected",
+                payload={"question_ids": list(controller.pending_question_ids)},
             )
-            store.mark_session_status(session.session_id, "incomplete")
-            store.export_session(session.session_id)
-            active_stdout.write("\u5df2\u9000\u51fa\uff0c\u4f1a\u8bdd\u5df2\u4fdd\u5b58\u4e3a\u672a\u5b8c\u6210\u3002\n")
+            active_stdout.write(
+                "\u56de\u7b54\u4e0d\u80fd\u4e3a\u7a7a\uff0c\u8bf7\u91cd\u65b0\u8f93\u5165\uff1b\u8f93\u5165 quit \u9000\u51fa\u3002\n"
+            )
             active_stdout.flush()
-            return ReplChatResult(
-                session_id=session.session_id,
-                session_hash=session.session_hash,
-                status="incomplete",
-            )
         store.append_event(
             session.session_id,
             event_type="user_answer_received",
             payload={"question_ids": list(controller.pending_question_ids)},
         )
+        active_stdout.write("\u5df2\u6536\u5230\u56de\u7b54\uff0c\u6b63\u5728\u7ee7\u7eed\u68b3\u7406\u9700\u6c42...\n")
+        active_stdout.flush()
+        next_call_index = len(controller.calls) + 1
+        progress_logger.record("design_brief", "started", call_index=next_call_index)
         controller = controller.answer_and_rerun(
             answer=answer,
             invoke_design_brief=invoke_design_brief,
+        )
+        progress_logger.record(
+            "design_brief",
+            controller.status,
+            call_index=next_call_index,
+            response_id=controller.calls[-1].response_id,
         )
         _record_call(store, session.session_id, controller.calls[-1])
         persisted_turn_count = _persist_new_turns(
@@ -189,6 +248,12 @@ def run_repl_chat(
         session=session.session_hash,
         provider_factory=provider_factory,
         trace_level=trace_level or "debug",
+        progress=lambda stage, payload: _record_and_print_ifc_progress(
+            logger=progress_logger,
+            stage=stage,
+            payload=payload,
+            stdout=active_stdout,
+        ),
     )
     _print_ifc_stage_summary(
         store=store,
@@ -210,6 +275,13 @@ def run_repl_chat(
             )
         active_stdout.write(f"report.md: {ifc_result.report_path}\n")
     if ifc_result.status != "compiled":
+        provider_error_path = (
+            Path(store.get_session(ifc_result.session_id).run_dir)
+            / "generator"
+            / "provider-error.json"
+        )
+        if provider_error_path.is_file():
+            active_stdout.write(f"generator/provider-error.json: {provider_error_path}\n")
         feedback_path = Path(store.get_session(ifc_result.session_id).run_dir) / "geometry-feedback.json"
         if feedback_path.is_file():
             active_stdout.write(f"geometry-feedback.json: {feedback_path}\n")
@@ -273,6 +345,7 @@ def _print_ifc_stage_summary(
     events = export.get("events", [])
     stage_events = {
         "generator_completed": "Generator",
+        "generator_provider_failed": "Provider",
         "repair_completed": "Repair",
         "audit_completed": "Audit",
         "final_acceptance_completed": "Final",
@@ -300,6 +373,48 @@ def _print_ifc_stage_summary(
             details.append(f"compile_reopen_success={payload.get('compile_reopen_success')}")
             details.append(f"geometry_success={payload.get('geometry_success')}")
         stdout.write("；".join(details) + "\n")
+
+
+def _print_ifc_live_progress(
+    *,
+    stage: str,
+    payload: dict[str, Any],
+    stdout: TextIO,
+) -> None:
+    labels = {
+        "generator": "Generator",
+        "semantic_coverage": "Semantic coverage",
+        "repair": "Repair",
+        "candidate_gates": "Gate",
+        "audit": "Audit",
+        "final_acceptance": "Final",
+        "scaffold": "Scaffold",
+    }
+    label = labels.get(stage, stage)
+    status = str(payload.get("status") or payload.get("route") or "started")
+    if status == "started":
+        stdout.write(f"进入 {label}...\n")
+    elif stage == "repair":
+        stdout.write(f"{label} 路由：{status}\n")
+    else:
+        stdout.write(f"{label} 完成：{status}\n")
+    stdout.flush()
+
+
+def _record_and_print_ifc_progress(
+    *,
+    logger: _ProgressLogger,
+    stage: str,
+    payload: dict[str, Any],
+    stdout: TextIO,
+) -> None:
+    status = str(payload.get("status") or payload.get("route") or "started")
+    logger.record(
+        stage,
+        status,
+        **{key: value for key, value in payload.items() if key not in {"status", "route"}},
+    )
+    _print_ifc_live_progress(stage=stage, payload=payload, stdout=stdout)
 
 
 def _write_fix_repl_report_and_acceptance(

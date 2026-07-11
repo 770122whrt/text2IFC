@@ -59,6 +59,13 @@ GENERATOR_FEW_SHOT_PATH = (
     / "simple-room-fixed"
     / "candidate.json"
 )
+GENERATOR_MULTI_STOREY_FEW_SHOT_PATH = (
+    PROJECT_ROOT
+    / "prompts"
+    / "agent"
+    / "few-shots"
+    / "bim-json-generator-v2-two-storey-standard.json"
+)
 
 
 class RepairSource:
@@ -491,6 +498,8 @@ def run_generator_stage(
     case_id: str,
     session_prefix: str = "phase6.1",
     trace_level: str | None = "debug",
+    generation_feedback: Mapping[str, Any] | None = None,
+    generator_call_index: int = 1,
 ) -> dict[str, Any]:
     """Run one real Generator call with exact Formal and Draft contracts."""
     output = Path(output_dir)
@@ -512,14 +521,17 @@ def run_generator_stage(
     draft_schema = json.loads(DRAFT_SCHEMA_PATH.read_text(encoding="utf-8"))
     generator_context = _select_generator_context(design_context)
     semantic_profile = generator_context["semantic_capability_profile"]
+    entity_id_contract = _load_entity_id_contract(source.parent / "expected-facts.json")
     renderer_inputs = {
         "USER_REQUEST": user_request,
         "CONVERSATION": conversation,
         "DESIGN_BRIEF": design_brief,
+        "ENTITY_ID_CONTRACT": entity_id_contract,
         "FORMAL_SCHEMA": formal_schema,
         "DRAFT_SCHEMA": draft_schema,
         "CAPABILITY_PROFILE": generator_context["capability_profile"],
         "FEW_SHOTS": generator_context["few_shots"],
+        "GENERATION_FEEDBACK": dict(generation_feedback or {}),
     }
     rendered = render_prompt(
         template_id=GENERATOR_TEMPLATE_ID,
@@ -535,10 +547,15 @@ def run_generator_stage(
     _write_text(output / "prompt-rendered.md", rendered["text"])
 
     result = provider.generate_live(
-        session_id=f"{session_prefix}-{case_id}-generator-01",
+        session_id=f"{session_prefix}-{case_id}-generator-{generator_call_index:02d}",
         prompt=rendered["text"],
         schema=formal_schema,
-        state={"case_id": case_id, "stage": "generate"},
+        state={
+            "case_id": case_id,
+            "stage": "generate",
+            "generator_call_index": generator_call_index,
+            "has_generation_feedback": bool(generation_feedback),
+        },
     )
     validate_provider_output(result.output)
     provider_manifest = write_live_trace(
@@ -598,6 +615,8 @@ def run_generator_stage(
     metrics = {
         "case_id": case_id,
         "stage": "generate",
+        "generator_call_index": generator_call_index,
+        "has_generation_feedback": bool(generation_feedback),
         "evidence_class": result.evidence_class,
         "response_id": result.response.get("id"),
         "model": result.response.get("model"),
@@ -660,6 +679,14 @@ def run_generator_stage(
         "evidence_class": result.evidence_class,
         "output_dir": portable_artifact_path(output),
     }
+
+
+def _load_entity_id_contract(expected_facts_path: Path) -> dict[str, Any]:
+    if not expected_facts_path.is_file():
+        return {"spaces": [], "doors": [], "windows": []}
+    payload = json.loads(expected_facts_path.read_text(encoding="utf-8"))
+    contract = payload.get("entity_id_contract", {}) if isinstance(payload, Mapping) else {}
+    return dict(contract) if isinstance(contract, Mapping) else {"spaces": [], "doors": [], "windows": []}
 
 
 def run_invalid_contract_replay_stage(
@@ -1087,6 +1114,7 @@ def run_audit_report_stage(
         summary=gate_summary,
     )
     deterministic_gates = {
+        "gate_summary_passed": gate_summary.get("overall_status") == "passed",
         "gate_summary_binding": not gate_summary_binding_issues,
         "gate_summary_binding_feedback": {
             "valid": not gate_summary_binding_issues,
@@ -1276,6 +1304,10 @@ def run_final_acceptance_stage(
     candidate = json.loads(candidate_path.read_text(encoding="utf-8"))
     audit_report = json.loads(audit_report_path.read_text(encoding="utf-8"))
     audit_metrics = json.loads(audit_metrics_path.read_text(encoding="utf-8"))
+    candidate_origin = _read_optional_json(case_root / "candidate-origin.json") or {
+        "candidate_origin": "legacy_unspecified",
+        "live_acceptance_eligible": True,
+    }
     if audit_report.get("blocking") is not False or audit_report.get("recommendation") != "accept":
         raise ValueError("Final acceptance requires a non-blocking accepted audit")
     if audit_metrics.get("strict_output_contract_valid") is not True:
@@ -1296,13 +1328,20 @@ def run_final_acceptance_stage(
         "case_id": case_id,
         "stage": "final-acceptance",
         "valid": bool(
-            gate_result["compile_reopen_success"]
-            and geometry_feedback["success"]
+            gate_result["valid"]
             and secret_scan["finding_count"] == 0
+            and candidate_origin.get("live_acceptance_eligible") is True
         ),
         "compile_reopen_success": gate_result["compile_reopen_success"],
         "geometry_success": geometry_feedback["success"],
+        "deterministic_gates_passed": gate_result[
+            "deterministic_gates_passed"
+        ],
         "secret_finding_count": secret_scan["finding_count"],
+        "candidate_origin": candidate_origin.get("candidate_origin"),
+        "live_acceptance_eligible": candidate_origin.get(
+            "live_acceptance_eligible"
+        ),
         "audit_response_id": audit_metrics.get("response_id"),
         "audit_evidence_class": audit_metrics.get("evidence_class"),
         "audit_strict_output_contract_valid": audit_metrics.get(
@@ -1391,14 +1430,26 @@ def run_candidate_gate_stage(
             "expectation_source": expectation_for_check.get("source", "candidate"),
         }
     _write_json(output / "geometry-feedback.json", geometry_feedback)
+    gate_summary = write_gate_summary(
+        case_dir=case_root,
+        case_id=case_id,
+        output_dir=output,
+    )
+    deterministic_gates_passed = gate_summary.get("overall_status") == "passed"
     return {
         "case_id": case_id,
         "stage": "candidate-gates",
-        "valid": bool(compilation.success and geometry_feedback["success"]),
+        "valid": bool(
+            compilation.success
+            and geometry_feedback["success"]
+            and deterministic_gates_passed
+        ),
         "ifc_path": str(output_ifc),
         "output_dir": str(output),
         "compile_reopen_success": compilation.success,
         "geometry_success": geometry_feedback["success"],
+        "deterministic_gates_passed": deterministic_gates_passed,
+        "gate_summary": gate_summary,
         "ifc_verification": ifc_verification,
         "geometry_feedback": geometry_feedback,
         "semantic_geometry_expectation": semantic_expectation,
@@ -1498,6 +1549,9 @@ def _select_generator_context(design_context: dict[str, Any]) -> dict[str, Any]:
     ]
     semantic_profile = build_semantic_capability_profile()
     example = json.loads(GENERATOR_FEW_SHOT_PATH.read_text(encoding="utf-8"))
+    two_storey_example = json.loads(
+        GENERATOR_MULTI_STOREY_FEW_SHOT_PATH.read_text(encoding="utf-8")
+    )
     return {
         "schema_version": "text2ifc/generator-context/1.0",
         "capability_profile": {
@@ -1516,6 +1570,20 @@ def _select_generator_context(design_context: dict[str, Any]) -> dict[str, Any]:
                 "source_path": portable_artifact_path(GENERATOR_FEW_SHOT_PATH),
                 "source_sha256": _file_sha256(GENERATOR_FEW_SHOT_PATH),
                 "output": example,
+            },
+            {
+                "few_shot_id": "generator-v2.formal-two-storey-standard",
+                "condition": (
+                    "A multi-storey request needs storey-local placements, "
+                    "storey-specific walls, and openings/windows hosted by walls "
+                    "on the same storey. Example values are not defaults and "
+                    "must not be copied."
+                ),
+                "source_path": portable_artifact_path(
+                    GENERATOR_MULTI_STOREY_FEW_SHOT_PATH
+                ),
+                "source_sha256": _file_sha256(GENERATOR_MULTI_STOREY_FEW_SHOT_PATH),
+                "output": two_storey_example,
             }
         ],
     }
@@ -1696,8 +1764,20 @@ def _validate_live_audit_output(
             }
         )
         return issues
+    normalized_paths: list[str] = []
     for index, relative in enumerate(evidence_paths):
-        if not isinstance(relative, str) or not (case_dir / relative).is_file():
+        normalized = (
+            _normalize_audit_evidence_path(relative)
+            if isinstance(relative, str)
+            else None
+        )
+        if (
+            normalized is None
+            or not normalized
+            or Path(normalized).is_absolute()
+            or ".." in Path(normalized).parts
+            or not (case_dir / normalized).is_file()
+        ):
             issues.append(
                 {
                     "code": "AUDIT_EVIDENCE_PATH_MISSING",
@@ -1705,7 +1785,20 @@ def _validate_live_audit_output(
                     "message": f"Audit evidence path does not exist: {relative!r}.",
                 }
             )
+        else:
+            normalized_paths.append(normalized)
+    if len(normalized_paths) == len(evidence_paths):
+        payload["evidence_paths"] = normalized_paths
     return issues
+
+
+def _normalize_audit_evidence_path(relative: str) -> str:
+    path = relative.replace("\\", "/").strip()
+    while path.startswith("/"):
+        path = path[1:]
+    while path.startswith("./"):
+        path = path[2:]
+    return path
 
 
 def _deterministic_gate_booleans(gates: Mapping[str, Any]) -> dict[str, bool]:
@@ -1786,12 +1879,17 @@ def _write_final_report(
     secret_scan: dict[str, Any],
 ) -> None:
     case_link = f"{case_id}/report.md"
+    case_heading = (
+        "Accepted Live Case"
+        if metrics.get("valid") is True
+        else "Diagnostic Non-Accepted Case"
+    )
     lines = [
         "# Phase 6.1 Final Acceptance Report",
         "",
         "Generated from live trace sidecars and deterministic IFC gates.",
         "",
-        "## Accepted Live Case",
+        f"## {case_heading}",
         "",
         f"- case_id: `{case_id}`",
         f"- source_case_dir: `{portable_artifact_path(case_dir)}`",

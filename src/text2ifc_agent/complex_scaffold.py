@@ -41,7 +41,7 @@ def build_scaffold_candidate(
     wall_facts = walls if isinstance(walls, Mapping) else {}
     wall_thickness = (
         _number_alias(building_facts, ("wall_thickness_mm",))
-        or _number_alias(known_facts, ("wall_thickness_mm",))
+        or _number_alias(known_facts, ("wall_thickness_mm", "wall_thickness"))
         or _required_number_alias(
             wall_facts,
             ("thickness_mm", "thickness"),
@@ -574,6 +574,18 @@ def _number_alias(record: Mapping[str, Any], keys: tuple[str, ...]) -> float | N
             value = outer_dimensions.get("y")
             if isinstance(value, (int, float)):
                 return float(value)
+    footprint = record.get("footprint")
+    if isinstance(footprint, Mapping):
+        if any(key in keys for key in ("width_x_mm", "overall_width_x", "x_dim_mm", "length_x_mm", "length_mm", "width_mm")):
+            x_min = footprint.get("x_min")
+            x_max = footprint.get("x_max")
+            if isinstance(x_min, (int, float)) and isinstance(x_max, (int, float)):
+                return float(x_max) - float(x_min)
+        if any(key in keys for key in ("depth_y_mm", "overall_depth_y", "y_dim_mm", "width_y_mm", "depth_mm")):
+            y_min = footprint.get("y_min")
+            y_max = footprint.get("y_max")
+            if isinstance(y_min, (int, float)) and isinstance(y_max, (int, float)):
+                return float(y_max) - float(y_min)
     return None
 
 
