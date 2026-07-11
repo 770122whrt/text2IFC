@@ -35,6 +35,7 @@ from .route_decision import write_route_decision
 from .run_report import build_live_run_report, resolve_final_design_brief_dir
 from .semantic_capabilities import build_semantic_capability_profile
 from .semantic_coverage import (
+    build_design_geometry_expectation,
     build_semantic_geometry_expectation,
     evaluate_semantic_coverage,
 )
@@ -1459,6 +1460,17 @@ def _semantic_geometry_expectation_from_case(
     design_brief = json.loads(design_brief_path.read_text(encoding="utf-8"))
     if not isinstance(design_brief, dict):
         return None
+    expected_facts_path = case_root / "expected-facts.json"
+    if expected_facts_path.is_file():
+        expected_facts = json.loads(expected_facts_path.read_text(encoding="utf-8"))
+        if isinstance(expected_facts, dict):
+            design_expectation = build_design_geometry_expectation(
+                case_id=case_id,
+                design_brief=design_brief,
+                expected_facts=expected_facts,
+            )
+            if design_expectation["walls"] or design_expectation["slabs"]:
+                return design_expectation
     return build_semantic_geometry_expectation(
         case_id=case_id,
         design_brief=design_brief,
