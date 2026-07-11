@@ -41,6 +41,7 @@ def test_derives_structural_slab_below_storey_top_elevation():
         "z": [3.0, 3.15],
     }
     assert slab["datum"] == "storey_slab_top"
+    assert slab["must_touch_walls"] == ["storey-1-wall-utility-corridor"]
     assert slab["source_fact_refs"] == [
         "/known_facts/building/outer_bounds",
         "/known_facts/building/floor_slab_thickness_mm",
@@ -85,8 +86,19 @@ def _controlled_design_brief() -> dict:
                     "id": "storey-1",
                     "elevation_mm": 0,
                     "net_height_mm": 3000,
-                    "spaces": [],
-                    "walls": {"interior": []},
+                    "spaces": [
+                        {"id": "utility", "bounding_box": "x=2000..4000,y=4000..8000"},
+                        {"id": "corridor", "bounding_box": "x=4000..6000,y=0..8000"},
+                    ],
+                    "walls": {
+                        "interior": [
+                            {
+                                "id": "storey-1-wall-utility-corridor",
+                                "from": "utility",
+                                "to": "corridor",
+                            }
+                        ]
+                    },
                 },
                 {
                     "id": "storey-2",
