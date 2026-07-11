@@ -318,6 +318,26 @@ def run_design_brief_clarification_loop(
     )
 
 
+def _geometry_failure_requires_regeneration(
+    run_dir: Path,
+    audit_report: Mapping[str, Any],
+) -> bool:
+    geometry_feedback_path = run_dir / "geometry-feedback.json"
+    if geometry_feedback_path.is_file():
+        geometry_feedback = json.loads(geometry_feedback_path.read_text(encoding="utf-8"))
+        if (
+            isinstance(geometry_feedback, Mapping)
+            and geometry_feedback.get("success") is False
+            and isinstance(geometry_feedback.get("issues"), list)
+            and geometry_feedback["issues"]
+        ):
+            return True
+    return (
+        audit_report.get("recommendation") == "revise"
+        and audit_report.get("blocking") is True
+    )
+
+
 def run_ready_session_to_ifc(
     *,
     store: SessionStore,
