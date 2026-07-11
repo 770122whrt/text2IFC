@@ -3,11 +3,209 @@
 from __future__ import annotations
 
 from math import hypot
+import re
 from typing import Any, Mapping
 
 
 ACCEPTED_COVERAGE_STATES = {"represented", "compiler_generated", "waived_by_user"}
 BLOCKING_COVERAGE_STATES = {"unsupported_draft", "blocked_unknown_capability"}
+
+
+def build_design_geometry_expectation(
+    *,
+    case_id: str,
+    design_brief: Mapping[str, Any],
+    expected_facts: Mapping[str, Any],
+) -> dict[str, Any]:
+    """Derive checkable geometry only from confirmed Design Brief facts."""
+    known = design_brief.get("known_facts")
+    known_facts = known if isinstance(known, Mapping) else {}
+    building = known_facts.get("building")
+    building_facts = building if isinstance(building, Mapping) else {}
+    outer_bounds = _plan_bounds(building_facts.get("outer_bounds"))
+    wall_thickness = _number(building_facts.get("wall_thickness_mm"))
+    slab_thickness = _number(building_facts.get("floor_slab_thickness_mm"))
+    expected_storeys = {
+        str(record.get("id")): record
+        for record in _records(expected_facts.get("storeys"))
+        if isinstance(record.get("id"), str)
+    }
+    raw_storeys = _records(known_facts.get("storeys"))
+    walls: dict[str, dict[str, Any]] = {}
+    slabs: dict[str, dict[str, Any]] = {}
+    unresolved: list[dict[str, Any]] = []
+
+    for storey_index, storey in enumerate(raw_storeys):
+        storey_id = _string(storey.get("id"))
+        if storey_id is None or storey_id not in expected_storeys:
+            unresolved.append(
+                _unresolved_geometry(
+                    path=f"/known_facts/storeys/{storey_index}",
+                    reason="storey_id_not_confirmed_in_expected_facts",
+                )
+            )
+            continue
+        elevation = _number(storey.get("elevation_mm"))
+        height = _number(storey.get("net_height_mm"))
+        if elevation is None or height is None or height <= 0:
+            unresolved.append(
+                _unresolved_geometry(
+                    path=f"/known_facts/storeys/{storey_index}",
+                    reason="storey_elevation_or_net_height_missing",
+                )
+            )
+            continue
+
+        if outer_bounds is not None and slab_thickness is not None and slab_thickness > 0:
+            slabs[f"slab-{storey_id}-floor"] = {
+                "bbox": _bbox(
+                    outer_bounds[0],
+                    outer_bounds[1],
+                    outer_bounds[2],
+                    outer_bounds[3],
+                    elevation - slab_thickness,
+                    elevation,
+                ),
+                "datum": "storey_slab_top",
+                "source_fact_refs": [
+                    "/known_facts/building/outer_bounds",
+                    "/known_facts/building/floor_slab_thickness_mm",
+                    f"/known_facts/storeys/{storey_index}/elevation_mm",
+                ],
+            }
+
+        interior_walls = _interior_walls(storey)
+        spaces = _spaces_by_id(storey, storey_index=storey_index)
+        for wall_index, wall in enumerate(interior_walls):
+            wall_id = _string(wall.get("id"))
+            from_id = _string(wall.get("from"))
+            to_id = _string(wall.get("to"))
+            path = f"/known_facts/storeys/{storey_index}/walls/interior/{wall_index}"
+            if wall_id is None or from_id is None or to_id is None:
+                unresolved.append(_unresolved_geometry(path=path, reason="interior_wall_identity_missing"))
+                continue
+            source_a = spaces.get(from_id)
+            source_b = spaces.get(to_id)
+            segment = _shared_wall_segment(source_a, source_b)
+            if segment is None or wall_thickness is None or wall_thickness <= 0:
+                unresolved.append(
+                    _unresolved_geometry(
+                        path=path,
+                        reason="shared_boundary_not_unique_or_wall_thickness_missing",
+                        source_fact_refs=[
+                            source_a[1] if source_a is not None else "",
+                            source_b[1] if source_b is not None else "",
+                            path,
+                        ],
+                    )
+                )
+                continue
+            axis, coordinate, start, end = segment
+            if axis == "x":
+                bbox = _bbox(start, end, coordinate - wall_thickness / 2, coordinate + wall_thickness / 2, elevation, elevation + height)
+            else:
+                bbox = _bbox(coordinate - wall_thickness / 2, coordinate + wall_thickness / 2, start, end, elevation, elevation + height)
+            walls[wall_id] = {
+                "axis": axis,
+                "bbox": bbox,
+                "bbox_issue_code": "WALL_SEGMENT_MISMATCH",
+                "bbox_issue_path": f"/walls/{wall_id}",
+                "source_fact_refs": [source_a[1], source_b[1], path],
+            }
+
+    return {
+        "schema_version": "text2ifc/design-geometry-expectation/1.0",
+        "case_id": case_id,
+        "source": "design_brief_expected_facts",
+        "units": "METRE",
+        "tolerance": 0.05,
+        "walls": walls,
+        "slabs": slabs,
+        "unresolved": unresolved,
+    }
+
+
+def _records(value: Any) -> list[Mapping[str, Any]]:
+    if not isinstance(value, list):
+        return []
+    return [item for item in value if isinstance(item, Mapping)]
+
+
+def _string(value: Any) -> str | None:
+    return value if isinstance(value, str) and value else None
+
+
+def _plan_bounds(value: Any) -> tuple[float, float, float, float] | None:
+    if not isinstance(value, str):
+        return None
+    match = re.fullmatch(
+        r"\s*x\s*=\s*(-?\d+(?:\.\d+)?)\s*\.\.\s*(-?\d+(?:\.\d+)?)\s*,\s*y\s*=\s*(-?\d+(?:\.\d+)?)\s*\.\.\s*(-?\d+(?:\.\d+)?)\s*",
+        value,
+    )
+    if match is None:
+        return None
+    x_min, x_max, y_min, y_max = (float(item) for item in match.groups())
+    return (x_min, x_max, y_min, y_max) if x_min < x_max and y_min < y_max else None
+
+
+def _interior_walls(storey: Mapping[str, Any]) -> list[Mapping[str, Any]]:
+    walls = storey.get("walls")
+    if not isinstance(walls, Mapping):
+        return []
+    return _records(walls.get("interior"))
+
+
+def _spaces_by_id(
+    storey: Mapping[str, Any],
+    *,
+    storey_index: int,
+) -> dict[str, tuple[tuple[float, float, float, float], str]]:
+    result: dict[str, tuple[tuple[float, float, float, float], str]] = {}
+    for index, space in enumerate(_records(storey.get("spaces"))):
+        space_id = _string(space.get("id"))
+        bounds = _plan_bounds(space.get("bounding_box"))
+        if space_id is not None and bounds is not None:
+            result[space_id] = (
+                bounds,
+                f"/known_facts/storeys/{storey_index}/spaces/{index}",
+            )
+    return result
+
+
+def _shared_wall_segment(
+    left: tuple[tuple[float, float, float, float], str] | None,
+    right: tuple[tuple[float, float, float, float], str] | None,
+) -> tuple[str, float, float, float] | None:
+    if left is None or right is None:
+        return None
+    left_bounds, _ = left
+    right_bounds, _ = right
+    left_x_min, left_x_max, left_y_min, left_y_max = left_bounds
+    right_x_min, right_x_max, right_y_min, right_y_max = right_bounds
+    if left_x_max == right_x_min or right_x_max == left_x_min:
+        start, end = max(left_y_min, right_y_min), min(left_y_max, right_y_max)
+        if start < end:
+            coordinate = left_x_max if left_x_max == right_x_min else right_x_max
+            return ("y", coordinate, start, end)
+    if left_y_max == right_y_min or right_y_max == left_y_min:
+        start, end = max(left_x_min, right_x_min), min(left_x_max, right_x_max)
+        if start < end:
+            coordinate = left_y_max if left_y_max == right_y_min else right_y_max
+            return ("x", coordinate, start, end)
+    return None
+
+
+def _unresolved_geometry(
+    *,
+    path: str,
+    reason: str,
+    source_fact_refs: list[str] | None = None,
+) -> dict[str, Any]:
+    return {
+        "path": path,
+        "reason": reason,
+        "source_fact_refs": [item for item in source_fact_refs or [] if item],
+    }
 
 
 def evaluate_semantic_coverage(
@@ -118,7 +316,56 @@ def build_semantic_geometry_expectation(
             "bbox": _bbox(x_max, x_max + thickness_mm, y_min, y_max, z_min, z_max),
         },
     }
+    center_overlap_walls = {
+        "wall-south": {
+            "axis": "x",
+            "bbox": _bbox(
+                x_min - thickness_mm / 2,
+                x_max + thickness_mm / 2,
+                y_min - thickness_mm,
+                y_min,
+                z_min,
+                z_max,
+            ),
+        },
+        "wall-north": {
+            "axis": "x",
+            "bbox": _bbox(
+                x_min - thickness_mm / 2,
+                x_max + thickness_mm / 2,
+                y_max,
+                y_max + thickness_mm,
+                z_min,
+                z_max,
+            ),
+        },
+        "wall-west": {
+            "axis": "y",
+            "bbox": _bbox(
+                x_min - thickness_mm,
+                x_min,
+                y_min - thickness_mm / 2,
+                y_max + thickness_mm / 2,
+                z_min,
+                z_max,
+            ),
+        },
+        "wall-east": {
+            "axis": "y",
+            "bbox": _bbox(
+                x_max,
+                x_max + thickness_mm,
+                y_min - thickness_mm / 2,
+                y_max + thickness_mm / 2,
+                z_min,
+                z_max,
+            ),
+        },
+    }
     for wall_id, wall in walls.items():
+        wall["bbox_issue_code"] = "WALL_OUTSIDE_BOUNDARY_GAP"
+        wall["bbox_issue_path"] = f"/walls/{wall_id}"
+    for wall_id, wall in center_overlap_walls.items():
         wall["bbox_issue_code"] = "WALL_OUTSIDE_BOUNDARY_GAP"
         wall["bbox_issue_path"] = f"/walls/{wall_id}"
     return {
@@ -145,6 +392,16 @@ def build_semantic_geometry_expectation(
             },
         },
         "walls": walls,
+        "accepted_wall_sets": [
+            {
+                "convention": "long_wall_through",
+                "walls": walls,
+            },
+            {
+                "convention": "center_overlap",
+                "walls": center_overlap_walls,
+            },
+        ],
     }
 
 
