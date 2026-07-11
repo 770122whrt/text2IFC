@@ -929,7 +929,14 @@ evidence and cannot be satisfied by fake/file/replay providers, prewritten
 - Real DeepSeek live acceptance happens only after deterministic TDD and matrix
   tests pass.
 
-**Status:** Complete - verified 2026-07-09. Phase 6.4 now has normalized
+**Status:** Supplemental Wave 7 in progress as of 2026-07-11. The original
+route-loop scope was verified 2026-07-09; manual IFC review then found a
+candidate-derived geometry expectation false-positive. Wave 7 closes that
+geometry-truth, compiler-stair-frame, Gate/Audit, and regeneration-evidence
+gap before any further phase. Existing completed evidence remains valid only
+for route connectivity, not as proof of visual multi-storey correctness.
+
+**Prior verified scope:** Phase 6.4 has normalized
 Issues, RouteDecision v2, bounded feedback rounds, generated matrix/report
 artifacts, adaptive live-UAT guardrails, a real DeepSeek JSON smoke, a real
 DeepSeek accepted IFC workflow, a real DeepSeek non-accept Draft route, a

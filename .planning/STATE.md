@@ -569,16 +569,16 @@ requirements.
 
 ## Next Action
 
-Review and execute Phase 6.4. Start with Wave 0 Issue and RouteDecision v2
-contracts, then proceed through failure normalization, bounded feedback rounds,
-matrix/report artifacts, adaptive CLI live UAT, and final real DeepSeek
-verification. Wave 0 is now complete: Issue model, English-control language
-guard, and RouteDecision v2 aggregation are implemented and verified while
-preserving Phase 6.3 route compatibility. Next execute Wave 1 failure-source
-normalization. Deterministic TDD and matrix tests must pass before any real
-DeepSeek acceptance claim. The final live test must not use fake/file/replay
-providers, prewritten `answers.json`, or exact scripted clarification
-transcripts.
+Execute Phase 6.4 supplemental Wave 7: Geometry Truth Closure and Feedback
+Regeneration. The preceding route-loop work is evidence of connectivity, not
+evidence that a multi-storey IFC is geometrically correct. The next work is to
+derive one geometry expectation from confirmed Brief/Expected Facts, compare
+it to reopened IFC geometry, correct the confirmed stair local-frame compiler
+defect, bind the evidence to Audit, and route Generator-owned geometry failure
+to `regenerate_json`. Storey elevation is locked as the top surface of the
+structural slab. Geometry ambiguity must go to `revise_design_brief`; the
+workflow must never fabricate a wall direction or a stair coordinate. Follow
+strict RED/GREEN TDD and run real DeepSeek only after deterministic GREEN.
 
 ## Accumulated Context
 
