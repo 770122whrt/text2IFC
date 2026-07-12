@@ -102,3 +102,23 @@ def test_graded_cases_resolve_to_distinct_fixture_files():
     assert run_phase6_5_live_stability.case_fixture_path("hard").name == (
         "hard-three-storey-l-shape.json"
     )
+
+
+def test_medium_case_is_a_two_storey_l_shape_without_prewritten_model_output():
+    payload = json.loads(
+        run_phase6_5_live_stability.case_fixture_path("medium").read_text(
+            encoding="utf-8"
+        )
+    )
+    text = payload["input"]
+
+    assert payload["difficulty"] == "medium"
+    assert payload["storey_count"] == 2
+    assert payload["expected_minimums"]["IfcSpace"] >= 9
+    assert payload["expected_minimums"]["IfcWall"] >= 20
+    assert "L 形" in text
+    assert "storey-1-wall-notch-horizontal" in text
+    assert "storey-2-wall-notch-vertical" in text
+    assert "opening-medium-stair" in text
+    assert "design_brief" not in payload
+    assert "model_output" not in payload
