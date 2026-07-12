@@ -70,6 +70,7 @@ Canonical multi-storey Design Brief structure
 9. Keep confirmed stair geometry in `known_facts.stairs`: stable `id`, `from_storey`, `to_storey`, plan bounds under the literal key `bounds`, not `plan_bounds`, plus `opening_bounds`, `start_elevation_mm`, `end_elevation_mm`, width, and run when those facts were supplied.
 10. Do not collapse explicit slab instances into thickness-only building metadata. `building.floor_slab_thickness_mm` and `building.roof_slab_thickness_mm` may summarize repeated thickness, but they do not replace `floor_slabs` or `roof_slab` records.
 11. When the user gives a rectangular global building outline, prefer `building.outline` with numeric `x_min`, `x_max`, `y_min`, and `y_max`. Preserve legacy text bounds only when the source itself is not safely separable into those four confirmed coordinates.
+12. When the user gives axis-aligned wall centerline segments, preserve each segment as its own wall record with stable `id`, owning `storey`, numeric `start_mm: [x, y]`, numeric `end_mm: [x, y]`, `thickness_mm`, and `height_mm`. A 90-degree L turn is two independent straight wall records sharing one endpoint, not a single bent or polyline wall. Do not merge adjacent segments or change their order or coordinates.
 
 Layout fact preservation and conflict handling
 
