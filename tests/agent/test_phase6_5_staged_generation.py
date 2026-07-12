@@ -6,7 +6,7 @@ import pytest
 from text2ifc_agent.candidate_index import build_candidate_index
 from text2ifc_agent.providers import LiveProviderResult, ProviderOutput
 from text2ifc_agent.revisions import hash_json_value
-from text2ifc_agent.staged_generation import run_staged_generation
+from text2ifc_agent.staged_generation import build_skeleton_workspace, run_staged_generation
 from text2ifc_contract.validation_v2 import validate_v2_document
 
 
@@ -214,6 +214,25 @@ class SequenceProvider:
             events=(),
             output=ProviderOutput(text=text, metadata={"provider": "fake"}),
         )
+
+
+@pytest.mark.parametrize("storey_count", [2, 3, 5])
+def test_skeleton_workspace_uses_explicit_dynamic_storeys(storey_count):
+    expected = {
+        "storeys": [
+            {"id": f"level-{index}", "elevation_mm": (index - 1) * 3300}
+            for index in range(1, storey_count + 1)
+        ]
+    }
+
+    skeleton = build_skeleton_workspace(expected)
+
+    storeys = [entity for entity in skeleton["entities"] if entity["ifc_class"] == "IfcBuildingStorey"]
+    assert [entity["id"] for entity in storeys] == [f"level-{index}" for index in range(1, storey_count + 1)]
+    assert [entity["attributes"]["Elevation"] for entity in storeys] == [
+        (index - 1) * 3300 for index in range(1, storey_count + 1)
+    ]
+    assert validate_v2_document(skeleton) == []
 
 
 @pytest.mark.parametrize("storey_count", [2, 3])
