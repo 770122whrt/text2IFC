@@ -348,12 +348,22 @@ def _opening_fill_geometry_issues(
         and not _bounds_contain(host_bounds, opening_host_bounds)
     )
     if opening_outside_host:
+        zero_origin_placement = dict(opening_placement)
+        zero_origin_placement["origin"] = [0, 0, 0]
+        opening_zero_origin_bounds = _placed_bounds(
+            opening_local_bounds, zero_origin_placement
+        )
         shape_exceeds_host = all(
-            bounds is not None for bounds in (opening_local_bounds, host_bounds)
+            bounds is not None for bounds in (opening_zero_origin_bounds, host_bounds)
         ) and any(
-            float(opening_local_bounds["size"][index])
+            float(opening_zero_origin_bounds["size"][index])
             > float(host_bounds["size"][index]) + 1e-6
             for index in range(3)
+        )
+        allowed_origin_ranges = (
+            _allowed_origin_ranges(host_bounds, opening_zero_origin_bounds)
+            if not shape_exceeds_host
+            else None
         )
         issues.append(
             {
@@ -376,6 +386,11 @@ def _opening_fill_geometry_issues(
                 "host_profile": host_profile,
                 "opening_bounds": opening_host_bounds,
                 "host_bounds": host_bounds,
+                **(
+                    {"allowed_origin_ranges": allowed_origin_ranges}
+                    if allowed_origin_ranges is not None
+                    else {}
+                ),
             }
         )
     elif host_profile and opening_profile and opening_origin:
@@ -796,6 +811,18 @@ def _bounds_contain(
         and float(inner["max"][index]) <= float(outer["max"][index]) + tolerance
         for index in range(3)
     )
+
+
+def _allowed_origin_ranges(
+    outer: Mapping[str, Any], inner: Mapping[str, Any]
+) -> dict[str, list[float]]:
+    return {
+        axis: [
+            float(outer["min"][index]) - float(inner["min"][index]),
+            float(outer["max"][index]) - float(inner["max"][index]),
+        ]
+        for index, axis in enumerate(("x", "y", "z"))
+    }
 
 
 def _normalized_vector(value: Any) -> list[float] | None:
