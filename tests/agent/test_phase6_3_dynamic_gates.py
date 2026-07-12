@@ -206,9 +206,18 @@ def test_dynamic_gates_include_opening_thickness_in_host_bounds():
 
     gates = _by_name(evaluate_dynamic_gates(candidate=candidate, expected_facts=expected))
 
-    assert "OPENING_HOST_LOCAL_BOUNDS_MISMATCH" in gates["dynamic_opening_fill"][
+    assert "OPENING_PROFILE_THICKNESS_MISMATCH" in gates["dynamic_opening_fill"][
         "issue_codes"
     ]
+    issue = next(
+        issue
+        for issue in gates["dynamic_opening_fill"]["issues"]
+        if issue["code"] == "OPENING_PROFILE_THICKNESS_MISMATCH"
+    )
+    assert issue["path"].endswith("/attributes/Representation/profile/y")
+    assert issue["actual_profile_y"] == 400
+    assert issue["expected_host_thickness"] == 200
+    assert "Representation profile.y" in issue["message"]
 
 
 def test_dynamic_gates_fail_filling_with_wrong_placement_parent():

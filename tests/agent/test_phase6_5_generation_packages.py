@@ -248,7 +248,7 @@ def test_cross_package_uses_opening_entity_and_void_relation_for_slab_opening_bo
     manifest = build_generation_package_manifest(expected)
     package = manifest["packages"][-1]
 
-    assert "opening-slab-storey-2" in package["owned_component_ids"]
+    assert "opening-slab-storey-2-stair" in package["owned_component_ids"]
     assert "rel-voids-slab-storey-2" in package["owned_relationship_ids"]
 
 
