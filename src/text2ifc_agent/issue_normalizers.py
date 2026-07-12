@@ -421,7 +421,7 @@ def _targeted_issues(
     fallback_ref: str | None = None,
 ) -> list[Issue]:
     targets = list(target_ids)
-    refs = [f"entity:{target_id}#/" for target_id in targets]
+    refs = [f"entity:{target_id}#/attributes" for target_id in targets]
     if not refs:
         refs = [fallback_ref or _string_or_none(detail.get("path"))]
     return [
