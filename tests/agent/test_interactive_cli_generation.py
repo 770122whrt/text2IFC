@@ -131,7 +131,9 @@ def test_ready_phase6_2_session_generates_ifc_report_and_db_artifacts(tmp_path):
     assert store.get_session(session.session_hash).status == "compiled"
 
 
-def test_ready_session_regenerates_json_after_geometry_audit_revise(tmp_path):
+def test_ready_session_applies_scoped_changeset_after_geometry_audit_revise(
+    tmp_path, monkeypatch
+):
     root = tmp_path / "phase6.2-interactive-cli"
     store = SessionStore.open(root / "sessions.sqlite", artifact_root=root)
     session = store.create_session(original_input="创建一个需要几何修复的矩形房间。")
@@ -176,8 +178,36 @@ def test_ready_session_regenerates_json_after_geometry_audit_revise(tmp_path):
             "geometry-feedback.json",
         ],
     }
-    provider = _SequenceLiveProvider(
-        [blocked_candidate, audit_revise, regenerated_candidate, audit_accept]
+    provider = _SequenceLiveProvider([blocked_candidate, audit_revise, audit_accept])
+    scoped_calls = []
+
+    def apply_scoped_round(**kwargs):
+        scoped_calls.append(kwargs)
+        return {
+            "valid": True,
+            "status": "applied",
+            "candidate": regenerated_candidate,
+            "revision": {
+                "revision_id": "revision-01",
+                "sequence": 1,
+                "candidate_hash": "sha256:" + "1" * 64,
+            },
+            "preservation": {
+                "unrelated_component_preservation_rate": 1.0,
+                "forbidden_drift_ids": [],
+            },
+            "issues": [],
+            "scope": {"scope_id": "scope-revision-01"},
+            "stage": {
+                "status": "changeset",
+                "classification": "changeset",
+                "response_id": "msg_changeset_1",
+            },
+        }
+
+    monkeypatch.setattr(
+        "text2ifc_agent.interactive_cli_flow.run_scoped_changeset_round",
+        apply_scoped_round,
     )
 
     result = run_ready_session_to_ifc(
@@ -190,18 +220,14 @@ def test_ready_session_regenerates_json_after_geometry_audit_revise(tmp_path):
     assert provider.session_ids == [
         f"phase6.2-{session.session_hash}-generator-01",
         f"phase6.2-{session.session_hash}-audit-01",
-        f"phase6.2-{session.session_hash}-generator-02",
         f"phase6.2-{session.session_hash}-audit-02",
     ]
-    assert (session.run_dir / "generator-regeneration-01" / "prompt-render-input.json").is_file()
-    prompt_inputs = json.loads(
-        (session.run_dir / "generator-regeneration-01" / "prompt-render-input.json").read_text(
-            encoding="utf-8"
-        )
-    )
-    assert prompt_inputs["GENERATION_FEEDBACK"]["route"] == "regenerate_json"
-    assert prompt_inputs["GENERATION_FEEDBACK"]["target_stage"] == "generator"
-    assert prompt_inputs["GENERATION_FEEDBACK"]["issues"]
+    assert len(scoped_calls) == 1
+    assert scoped_calls[0]["round_number"] == 1
+    assert scoped_calls[0]["issues"]
+    assert not (session.run_dir / "generator-regeneration-01").exists()
+    assert (session.run_dir / "candidate-revision.json").is_file()
+    assert (session.run_dir / "generator-before-changesets" / "candidate.json").is_file()
     geometry = json.loads(
         (session.run_dir / "geometry-feedback.json").read_text(encoding="utf-8")
     )
