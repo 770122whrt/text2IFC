@@ -131,6 +131,66 @@ def test_ready_phase6_2_session_generates_ifc_report_and_db_artifacts(tmp_path):
     assert store.get_session(session.session_hash).status == "compiled"
 
 
+def test_ready_session_can_select_staged_initial_generation(tmp_path, monkeypatch):
+    root = tmp_path / "phase6.5-staged-cli"
+    store = SessionStore.open(root / "sessions.sqlite", artifact_root=root)
+    session = store.create_session(original_input="创建一个分阶段生成的建筑。")
+    _write_ready_design_brief_call(session.run_dir)
+    store.mark_session_status(session.session_id, "ready")
+    candidate = json.loads(
+        (PHASE6_1_COMPLETE / "generator" / "candidate.json").read_text(encoding="utf-8")
+    )
+    staged_calls = []
+
+    def staged_generation(**kwargs):
+        staged_calls.append(kwargs)
+        return {
+            "valid": True,
+            "status": "formal",
+            "candidate": candidate,
+            "revision": {
+                "revision_id": "revision-02",
+                "sequence": 2,
+                "candidate_hash": "sha256:" + "2" * 64,
+            },
+            "package_records": [
+                {"package_id": "package-storey-1", "status": "accepted"},
+                {"package_id": "package-cross-storey", "status": "accepted"},
+            ],
+            "issues": [],
+        }
+
+    monkeypatch.setattr(
+        "text2ifc_agent.interactive_cli_flow.run_staged_generation",
+        staged_generation,
+    )
+    audit = {
+        "schema_version": "text2ifc/audit/2.0",
+        "recommendation": "accept",
+        "blocking": False,
+        "deterministic_gate_status": "passed",
+        "findings": [],
+        "evidence_paths": ["generator/candidate.json", "gate-summary.json"],
+    }
+    provider = _SequenceLiveProvider([audit])
+
+    result = run_ready_session_to_ifc(
+        store=store,
+        session=session.session_hash,
+        provider_factory=lambda: provider,
+        generation_strategy="staged",
+    )
+
+    assert result.status == "compiled"
+    assert len(staged_calls) == 1
+    assert provider.session_ids == [f"phase6.2-{session.session_hash}-audit-01"]
+    strategy = json.loads((session.run_dir / "generation-strategy.json").read_text(encoding="utf-8"))
+    assert strategy["strategy"] == "staged"
+    assert strategy["fallback_used"] is False
+    assert (session.run_dir / "generator-staged").is_dir()
+    assert (session.run_dir / "generator" / "candidate.json").is_file()
+
+
 def test_ready_session_applies_scoped_changeset_after_geometry_audit_revise(
     tmp_path, monkeypatch
 ):
