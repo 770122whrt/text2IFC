@@ -110,7 +110,7 @@ def run_staged_generation(
             sequence=sequence,
             issue_id=issue_id,
         )
-        issues = [
+        base_issues = [
             {
                 "issue_id": issue_id,
                 "actual_ref": f"entity:{package['owned_component_ids'][0]}#/" if package.get("owned_component_ids") else "package:/",
@@ -118,49 +118,79 @@ def run_staged_generation(
                 "evidence": f"Generate only components owned by {package_id}.",
             }
         ]
-        stage = run_changeset_stage(
-            provider=provider,
-            output_dir=package_dir,
-            case_id=case_id,
-            call_index=sequence,
-            user_request=user_request,
-            conversation=conversation,
-            design_brief=design_brief,
-            expected_facts=expected_facts,
-            candidate=workspace,
-            base_revision=revision,
-            scope=scope,
-            issues=issues,
-            trace_level=trace_level,
-        )
+        retry_feedback: list[dict[str, Any]] = []
+        stage: dict[str, Any] = {}
+        gate: dict[str, Any] = {"valid": False, "issues": []}
+        changeset: dict[str, Any] | None = None
+        active_dir = package_dir
+        attempt_count = 0
+        for attempt_count in range(1, 4):
+            active_dir = (
+                package_dir
+                if attempt_count == 1
+                else package_dir / f"attempt-{attempt_count:02d}"
+            )
+            active_dir.mkdir(parents=True, exist_ok=True)
+            stage = run_changeset_stage(
+                provider=provider,
+                output_dir=active_dir,
+                case_id=case_id,
+                call_index=sequence * 10 + attempt_count,
+                user_request=user_request,
+                conversation=conversation,
+                design_brief=design_brief,
+                expected_facts=expected_facts,
+                candidate=workspace,
+                base_revision=revision,
+                scope=scope,
+                issues=[*base_issues, *retry_feedback],
+                trace_level=trace_level,
+            )
+            if stage.get("classification") == "draft" and stage.get("valid") is True:
+                record = {
+                    "package_id": package_id,
+                    "artifact_dir": active_dir.relative_to(output).as_posix(),
+                    "pre_apply_status": "partial_not_formal",
+                    "response_id": stage.get("response_id"),
+                    "classification": "draft",
+                    "attempt_count": attempt_count,
+                    "status": "draft_required",
+                }
+                package_records.append(record)
+                _write_json(output / "package-records.json", {"packages": package_records})
+                return _blocked("draft_required", stage.get("diagnostics", []), package_records)
+            if stage.get("classification") != "changeset" or stage.get("valid") is not True:
+                retry_feedback = _retry_issues(
+                    issue_id, stage.get("diagnostics", []), "stage_contract"
+                )
+                if attempt_count < 3:
+                    continue
+                break
+            changeset = _read_json(active_dir / "changeset.json")
+            gate = validate_package_changeset(
+                manifest=manifest,
+                package_id=package_id,
+                workspace=workspace,
+                changeset=changeset,
+            )
+            _write_json(active_dir / "package-gate.json", gate)
+            if gate["valid"]:
+                break
+            retry_feedback = _retry_issues(issue_id, gate["issues"], "package_gate")
+
         record = {
             "package_id": package_id,
-            "artifact_dir": artifact_dir,
+            "artifact_dir": active_dir.relative_to(output).as_posix(),
             "pre_apply_status": "partial_not_formal",
             "response_id": stage.get("response_id"),
             "classification": stage.get("classification"),
+            "attempt_count": attempt_count,
         }
-        if stage.get("classification") == "draft" and stage.get("valid") is True:
-            package_records.append({**record, "status": "draft_required"})
-            _write_json(output / "package-records.json", {"packages": package_records})
-            return _blocked("draft_required", stage.get("diagnostics", []), package_records)
-        if stage.get("classification") != "changeset" or stage.get("valid") is not True:
+        if changeset is None or not gate["valid"]:
+            diagnostics = gate["issues"] or stage.get("diagnostics", [])
             package_records.append({**record, "status": "blocked"})
             _write_json(output / "package-records.json", {"packages": package_records})
-            return _blocked("package_blocked", stage.get("diagnostics", []), package_records)
-
-        changeset = _read_json(package_dir / "changeset.json")
-        gate = validate_package_changeset(
-            manifest=manifest,
-            package_id=package_id,
-            workspace=workspace,
-            changeset=changeset,
-        )
-        _write_json(package_dir / "package-gate.json", gate)
-        if not gate["valid"]:
-            package_records.append({**record, "status": "blocked", "gate_issue_count": len(gate["issues"])})
-            _write_json(output / "package-records.json", {"packages": package_records})
-            return _blocked("package_blocked", gate["issues"], package_records)
+            return _blocked("package_blocked", diagnostics, package_records)
 
         before_hashes = build_candidate_index(workspace)["component_hashes"]
         workspace = _apply_add_operations(workspace, changeset["operations"])
@@ -184,10 +214,10 @@ def run_staged_generation(
             sequence=sequence,
             parent_revision_id=str(revision["revision_id"]),
             source_route="staged_composition",
-            artifact=f"{artifact_dir}/workspace-after.json",
+            artifact=f"{active_dir.relative_to(output).as_posix()}/workspace-after.json",
         )
-        _write_json(package_dir / "workspace-after.json", workspace)
-        _write_json(package_dir / "revision.json", revision)
+        _write_json(active_dir / "workspace-after.json", workspace)
+        _write_json(active_dir / "revision.json", revision)
         package_records.append(
             {
                 **record,
@@ -243,6 +273,26 @@ def _package_scope(
         "dependencies": [],
         "forbidden_ids": sorted(build_candidate_index(workspace)["component_hashes"]),
     }
+
+
+def _retry_issues(
+    issue_id: str,
+    diagnostics: Any,
+    source: str,
+) -> list[dict[str, Any]]:
+    return [
+        {
+            "issue_id": issue_id,
+            "actual_ref": str(diagnostic.get("path") or "package:/"),
+            "expected_fact_ref": None,
+            "evidence": (
+                f"{source}:{diagnostic.get('code', 'UNKNOWN')}:"
+                f"{diagnostic.get('message', 'Package output failed validation.')}"
+            ),
+        }
+        for diagnostic in diagnostics
+        if isinstance(diagnostic, Mapping)
+    ]
 
 
 def _apply_add_operations(
