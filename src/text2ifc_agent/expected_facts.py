@@ -143,6 +143,11 @@ def build_expected_facts(
         spaces = _records(known_facts.get("spaces"))
         doors = _records(known_facts.get("doors"))
         windows = _records(known_facts.get("windows"))
+    walls = _wall_records(
+        known_facts=known_facts,
+        storeys=storeys,
+        nested_storeys=nested_storeys,
+    )
     slabs = _slab_records(known_facts)
     stairs = (
         _records(known_facts.get("stairs"))
@@ -151,6 +156,7 @@ def build_expected_facts(
     )
     roof = _roof_record(known_facts)
     entity_id_contract = _build_entity_id_contract(
+        walls=walls,
         spaces=spaces,
         doors=doors,
         windows=windows,
@@ -167,6 +173,7 @@ def build_expected_facts(
         },
         "storeys": _copy_records(storeys),
         "storey_count": len(storeys),
+        "walls": _copy_records(walls),
         "spaces": _copy_records(spaces),
         "doors": _copy_records(doors),
         "windows": _copy_records(windows),
@@ -200,6 +207,9 @@ def build_expected_facts(
         "sidecar_role": "orchestration_expectations_not_bim_json_schema",
     }
     fixture_reuse = known_facts.get("fixture_reuse")
+    if walls:
+        payload["total_counts"]["IfcWall"] = len(walls)
+        payload["required_relationships"]["containment"]["walls"] = len(walls)
     if isinstance(fixture_reuse, Mapping):
         payload["fixture_reuse"] = deepcopy(dict(fixture_reuse))
     payload["generation_package_manifest"] = build_generation_package_manifest(payload)
@@ -208,6 +218,7 @@ def build_expected_facts(
 
 def _build_entity_id_contract(
     *,
+    walls: list[Mapping[str, Any]],
     spaces: list[Mapping[str, Any]],
     doors: list[Mapping[str, Any]],
     windows: list[Mapping[str, Any]],
@@ -217,11 +228,84 @@ def _build_entity_id_contract(
     return {
         collection: _canonical_entity_records(collection, records)
         for collection, records in {
+            "walls": walls,
             "spaces": spaces,
             "doors": doors,
             "windows": windows,
         }.items()
     }
+
+
+def _wall_records(
+    *,
+    known_facts: Mapping[str, Any],
+    storeys: list[Mapping[str, Any]],
+    nested_storeys: list[tuple[str, Mapping[str, Any]]],
+) -> list[dict[str, Any]]:
+    walls = known_facts.get("walls")
+    if isinstance(walls, list):
+        return _copy_records(_records(walls))
+    if isinstance(walls, Mapping):
+        return _component_records_from_storey_map(walls, storeys, "walls")
+    if nested_storeys:
+        return _component_records_from_nested(nested_storeys, storeys, "walls")
+    return _component_records_from_storey_list(
+        _records(known_facts.get("storeys")), storeys, "walls"
+    )
+
+
+def _component_records_from_nested(
+    nested_storeys: list[tuple[str, Mapping[str, Any]]],
+    storeys: list[Mapping[str, Any]],
+    collection: str,
+) -> list[dict[str, Any]]:
+    records: list[dict[str, Any]] = []
+    for (source_key, payload), storey in zip(nested_storeys, storeys):
+        for index, item in enumerate(_records(payload.get(collection)), start=1):
+            record = _copy_payload(item)
+            record["storey"] = storey["id"]
+            record.setdefault("source_key", f"{source_key}.{collection}[{index}]")
+            records.append(record)
+    return records
+
+
+def _component_records_from_storey_list(
+    source_storeys: list[Mapping[str, Any]],
+    storeys: list[Mapping[str, Any]],
+    collection: str,
+) -> list[dict[str, Any]]:
+    records: list[dict[str, Any]] = []
+    for source, storey in zip(source_storeys, storeys):
+        for index, item in enumerate(_records(source.get(collection)), start=1):
+            record = _copy_payload(item)
+            record["storey"] = storey["id"]
+            record.setdefault("source_key", f"{storey['id']}.{collection}[{index}]")
+            records.append(record)
+    return records
+
+
+def _component_records_from_storey_map(
+    value: Mapping[str, Any],
+    storeys: list[Mapping[str, Any]],
+    collection: str,
+) -> list[dict[str, Any]]:
+    records: list[dict[str, Any]] = []
+    for source_key in _ordered_floor_keys(value):
+        storey_id = _canonical_storey_id(source_key, storeys)
+        if storey_id is None:
+            continue
+        raw = value[source_key]
+        items = list(raw.items()) if isinstance(raw, Mapping) else list(enumerate(raw, start=1)) if isinstance(raw, list) else []
+        for index, (item_key, item) in enumerate(items, start=1):
+            if not isinstance(item, Mapping):
+                continue
+            record = _copy_payload(item)
+            if isinstance(item_key, str):
+                record.setdefault("name", item_key)
+            record["storey"] = storey_id
+            record.setdefault("source_key", f"{source_key}.{collection}[{index}]")
+            records.append(record)
+    return records
 
 
 def _canonical_entity_records(

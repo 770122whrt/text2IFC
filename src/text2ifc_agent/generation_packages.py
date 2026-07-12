@@ -53,7 +53,7 @@ def build_generation_package_manifest(
 
     local_components = {storey_id: [] for storey_id in storey_ids}
     local_refs = {storey_id: set() for storey_id in storey_ids}
-    for collection in ("spaces", "doors", "windows"):
+    for collection in ("walls", "spaces", "doors", "windows"):
         for index, record in enumerate(_records(expected_facts.get(collection))):
             storey_id = _non_empty(record.get("storey"))
             if storey_id not in local_components:
