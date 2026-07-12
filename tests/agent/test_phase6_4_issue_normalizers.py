@@ -331,8 +331,8 @@ def test_geometry_gate_entity_ids_become_stable_changeset_targets(tmp_path):
     issues = normalize_gate_sidecars(root)
 
     assert [issue.actual_ref for issue in issues] == [
-        "entity:slab-ground#/",
-        "entity:slab-first#/",
+        "entity:slab-ground#/attributes",
+        "entity:slab-first#/attributes",
     ]
     assert len({issue.issue_id for issue in issues}) == 2
 
@@ -353,8 +353,8 @@ def test_audit_affected_entities_become_generator_scoped_targets():
     )
 
     assert [issue.actual_ref for issue in issues] == [
-        "entity:slab-ground#/",
-        "entity:slab-first#/",
+        "entity:slab-ground#/attributes",
+        "entity:slab-first#/attributes",
     ]
     for issue in issues:
         _assert_valid(
