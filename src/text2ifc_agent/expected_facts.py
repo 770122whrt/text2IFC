@@ -8,6 +8,8 @@ from copy import deepcopy
 from pathlib import Path
 from typing import Any, Mapping
 
+from .generation_packages import build_generation_package_manifest
+
 
 EXPECTED_FACTS_SCHEMA_VERSION = "text2ifc/expected-facts/1.0"
 
@@ -200,6 +202,7 @@ def build_expected_facts(
     fixture_reuse = known_facts.get("fixture_reuse")
     if isinstance(fixture_reuse, Mapping):
         payload["fixture_reuse"] = deepcopy(dict(fixture_reuse))
+    payload["generation_package_manifest"] = build_generation_package_manifest(payload)
     return payload
 
 
