@@ -308,6 +308,41 @@ def test_dynamic_gate_feedback_preserves_entity_level_geometry_evidence(tmp_path
     assert "opening_profile" in issues[0].evidence
 
 
+def test_dynamic_gate_explicit_targets_exclude_context_only_opening(tmp_path):
+    root = tmp_path / "case"
+    root.mkdir()
+    (root / "gate-summary.json").write_text(
+        json.dumps(
+            {
+                "overall_status": "failed",
+                "gates": [
+                    {
+                        "name": "dynamic_opening_fill",
+                        "status": "failed",
+                        "issues": [
+                            {
+                                "code": "FILLING_REPRESENTATION_MISMATCH",
+                                "path": "/entities/door-1/attributes/Representation",
+                                "target_entity_ids": ["door-1"],
+                                "element_id": "door-1",
+                                "opening_id": "opening-1",
+                                "host_wall": "wall-1",
+                            }
+                        ],
+                    }
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    issues = normalize_gate_sidecars(root)
+
+    assert [issue.actual_ref for issue in issues] == ["entity:door-1#/attributes"]
+    assert "opening-1" in issues[0].evidence
+    assert "wall-1" in issues[0].evidence
+
+
 def test_geometry_gate_entity_ids_become_stable_changeset_targets(tmp_path):
     root = tmp_path / "case"
     root.mkdir()
