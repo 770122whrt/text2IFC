@@ -41,6 +41,7 @@ Staged package add mode
 6. Every generated geometric product must include supported semantic Representation geometry, except an IfcStair decomposed into IfcStairFlight children: in IFC2X3 the stair container has no Representation and each flight owns the stepped geometry.
 7. Polygon profiles must be a closed outer ring and cannot contain a `holes` field. Represent a confirmed slab opening as a separately authorized IfcOpeningElement plus IfcRelVoidsElement hosted by the slab.
 8. A stair package that authorizes flight IDs must generate the IfcStairFlight entities and their IfcRelAggregates relationship. Storey elevations are parent datums: upper slabs use a storey-local Z offset, not the same absolute elevation again.
+9. For every add operation, copy an authorized ID character-for-character from CHANGE_SCOPE.entity_ids or CHANGE_SCOPE.relationship_ids. target_id and value.id must be identical. Do not add, remove, translate, normalize, or duplicate prefixes or suffixes, even during a retry.
 
 输入
 
