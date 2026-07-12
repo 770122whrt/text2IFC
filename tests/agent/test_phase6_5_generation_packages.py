@@ -151,3 +151,38 @@ def test_expected_facts_preserves_explicit_storey_owned_wall_inventory():
     }
     assert "wall-a-north" in local["storey-a"]
     assert "wall-b-north" in local["storey-b"]
+
+
+def test_local_package_declares_deterministic_containment_void_and_fill_relationship_ids():
+    expected = _expected(2)
+    expected["walls"] = [
+        {"id": "wall-storey-1-south", "storey": "storey-1"},
+    ]
+    expected["doors"] = [
+        {
+            "id": "door-storey-1-south",
+            "storey": "storey-1",
+            "host_wall": "wall-storey-1-south",
+        }
+    ]
+    expected["windows"] = [
+        {
+            "id": "window-storey-1-north",
+            "storey": "storey-1",
+            "host_wall": "wall-storey-1-north",
+        }
+    ]
+
+    manifest = build_generation_package_manifest(expected)
+    package = next(
+        item for item in manifest["packages"] if item["package_id"] == "package-storey-1"
+    )
+
+    assert package["owned_relationship_ids"] == [
+        "rel-contains-storey-1",
+        "rel-voids-door-storey-1-south",
+        "rel-fills-door-storey-1-south",
+        "rel-voids-window-storey-1-north",
+        "rel-fills-window-storey-1-north",
+    ]
+    assert not set(package["owned_relationship_ids"]) & set(package["owned_component_ids"])

@@ -329,3 +329,32 @@ def test_staged_generation_retries_only_the_failed_package_within_three_attempts
     assert result["package_records"][0]["attempt_count"] == 2
     assert all(record["attempt_count"] == 1 for record in result["package_records"][1:])
     assert (tmp_path / "package-01-package-storey-1" / "attempt-02" / "changeset.json").is_file()
+
+
+def test_staged_scope_exposes_manifest_relationship_ownership_to_provider(tmp_path):
+    skeleton, manifest, expected, package_values = _fixture(2)
+    first = manifest["packages"][1]
+    relationship_ids = [
+        value["id"] for value in package_values[0] if value["ifc_class"].startswith("IfcRel")
+    ]
+    first["owned_component_ids"] = [
+        value for value in first["owned_component_ids"] if value not in relationship_ids
+    ]
+    first["owned_relationship_ids"] = relationship_ids
+    provider = SequenceProvider(_changesets(skeleton, manifest, expected, package_values))
+
+    result = run_staged_generation(
+        provider=provider,
+        output_dir=tmp_path,
+        case_id="case-relationship-scope",
+        user_request="创建两层建筑。",
+        conversation=[{"role": "user", "content": "创建两层建筑。"}],
+        design_brief={"status": "ready"},
+        expected_facts=expected,
+        skeleton=skeleton,
+        manifest=manifest,
+    )
+
+    assert result["valid"] is True
+    assert provider.calls[0]["state"]["scope"]["relationship_ids"] == relationship_ids
+    assert not set(relationship_ids) & set(provider.calls[0]["state"]["scope"]["entity_ids"])
