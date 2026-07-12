@@ -7,12 +7,12 @@ See: `.planning/PROJECT.md` (updated 2026-06-11)
 **Core value:** Produce valid, inspectable IFC models from explicit user
 requirements.
 
-**Current focus:** Phase 6.5 component-scoped ChangeSets and multi-storey stability planning
+**Current focus:** Phase 6.5 immutable ChangeSet application and dependency scope
 
 ## Status
 
 - Phase: 6.5
-- Stage: SPEC and seven-wave implementation plan drafted for review
+- Stage: Wave 0 contracts complete; Wave 1 in progress
 - State: Phase 6.2-fix Waves 0-2 are implemented and automatically verified.
   Wave 3 real UAT
   produced useful live evidence and fixed defects 001/002, then exposed defect
@@ -569,10 +569,11 @@ requirements.
 
 ## Next Action
 
-Review Phase 6.5 SPEC and plans. After approval, execute Wave 0 contracts with
-strict RED/GREEN TDD. Do not run real DeepSeek Phase 6.5 stability claims until
-Waves 0-5 deterministic verification pass. Preserve all existing terminal
-records and historical live artifacts.
+Execute Phase 6.5 Wave 1 with strict RED/GREEN TDD: stable-ID candidate index,
+semantic component hashes, deterministic dependency closure, and immutable
+ChangeSet application. Do not run real DeepSeek Phase 6.5 stability claims
+until Waves 0-5 deterministic verification pass. Preserve all existing
+terminal records and historical live artifacts.
 
 ## Accumulated Context
 
@@ -773,8 +774,8 @@ records and historical live artifacts.
   responses.
 
 ---
-*Last activity: 2026-07-12 - drafted Phase 6.5 SPEC, AI contract, validation
-strategy, and seven implementation waves. Phase 6.5 replaces Generator-owned
-full-document regeneration with stable-ID ChangeSets, then introduces staged
-storey composition. It explicitly excludes IFC5 migration and existing-IFC
-editing. No Phase 6.5 implementation or live stability claim exists yet.*
+*Last activity: 2026-07-12 - completed Phase 6.5 Wave 0 ChangeSet, immutable
+revision, and allowed-scope contracts through RED/GREEN TDD. The focused and
+compatibility regression set reports 52 passed. No candidate mutation,
+provider prompt, live model call, IFC5 dependency, or existing-IFC edit path
+was added. Wave 1 is the next implementation boundary.*

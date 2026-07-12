@@ -991,7 +991,7 @@ is reserved for a later phase that may reuse the ChangeSet revision interface.
 
 **Wave 0**
 
-- [ ] `06.5-00-PLAN.md` - ChangeSet, revision, and scope contracts
+- [x] `06.5-00-PLAN.md` - ChangeSet, revision, and scope contracts
 
 **Wave 1** *(blocked on Wave 0)*
 
