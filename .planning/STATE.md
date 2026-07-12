@@ -7,12 +7,12 @@ See: `.planning/PROJECT.md` (updated 2026-06-11)
 **Core value:** Produce valid, inspectable IFC models from explicit user
 requirements.
 
-**Current focus:** Phase 6.5 deterministic two-/three-storey matrix and regression closure
+**Current focus:** Phase 6.5 real DeepSeek two-/three-storey stability campaign
 
 ## Status
 
 - Phase: 6.5
-- Stage: Waves 0-4 complete; Wave 5 next
+- Stage: Waves 0-5 complete; Wave 6 next
 - State: Phase 6.2-fix Waves 0-2 are implemented and automatically verified.
   Wave 3 real UAT
   produced useful live evidence and fixed defects 001/002, then exposed defect
@@ -569,10 +569,10 @@ requirements.
 
 ## Next Action
 
-Execute Phase 6.5 Wave 5 with strict RED/GREEN TDD: deterministic two-/three-
-storey matrix fixtures, branch evidence, artifact verification, and required
-regressions. Do not run real DeepSeek Phase 6.5 stability claims until Wave 5
-deterministic verification passes.
+Execute Phase 6.5 Wave 6: build and test the live stability harness, then run
+independent real DeepSeek two-/three-storey sessions. Require three consecutive
+accepted runs per case; retain and classify every failed run without weakening
+correct Gates or using prewritten model answers.
 
 ## Accumulated Context
 
@@ -773,8 +773,9 @@ deterministic verification passes.
   responses.
 
 ---
-*Last activity: 2026-07-12 - completed Phase 6.5 Wave 4 revision-aware local and
-global Gate plans, candidate-hash binding, Audit revision evidence, generated
-revision/package reports, and progress-derived timing. The expanded focused
-regression reports 114 passed; compileall and diff checks pass. Real DeepSeek
-staged quality evidence remains blocked until Wave 5 deterministic closure.*
+*Last activity: 2026-07-12 - completed Phase 6.5 Wave 5 deterministic closure.
+The eight-row matrix has three accepted cases, including real deterministic
+two- and three-storey IFC files, zero false accepts, and zero secret findings.
+Agent regression reports 467 passed; compiler/contract/IFC-quality reports 109
+passed; compileall and redacted DeepSeek configuration checks pass. Wave 6 real
+provider stability evidence is now unblocked but not yet claimed.*

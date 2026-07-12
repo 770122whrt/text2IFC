@@ -1011,7 +1011,7 @@ is reserved for a later phase that may reuse the ChangeSet revision interface.
 
 **Wave 5** *(blocked on Wave 4)*
 
-- [ ] `06.5-05-PLAN.md` - Deterministic multi-storey matrix and regression closure
+- [x] `06.5-05-PLAN.md` - Deterministic multi-storey matrix and regression closure
 
 **Wave 6** *(blocked on Wave 5 deterministic verification)*
 
