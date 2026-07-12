@@ -115,3 +115,39 @@ def test_expected_facts_embeds_the_same_generation_package_manifest():
         for package in expected["generation_package_manifest"]["packages"]
         if package["kind"] == "storey_local"
     ] == ["storey-a", "storey-b"]
+
+
+def test_expected_facts_preserves_explicit_storey_owned_wall_inventory():
+    brief = {
+        "schema_version": "text2ifc/design-brief/2.0",
+        "status": "ready",
+        "language": "zh-CN",
+        "known_facts": {
+            "storeys": [
+                {"id": "storey-a", "elevation_mm": 0},
+                {"id": "storey-b", "elevation_mm": 3150},
+            ],
+            "walls": [
+                {"id": "wall-a-north", "storey": "storey-a", "axis": "north"},
+                {"id": "wall-b-north", "storey": "storey-b", "axis": "north"},
+            ],
+            "spaces": [],
+            "doors": [],
+            "windows": [],
+        },
+        "missing_facts": [],
+        "ambiguities": [],
+        "unsupported_requests": [],
+        "fact_sources": [],
+    }
+
+    expected = build_expected_facts(case_id="case-walls", design_brief=brief)
+
+    assert expected["walls"] == brief["known_facts"]["walls"]
+    local = {
+        package["storey_id"]: package["owned_component_ids"]
+        for package in expected["generation_package_manifest"]["packages"]
+        if package["kind"] == "storey_local"
+    }
+    assert "wall-a-north" in local["storey-a"]
+    assert "wall-b-north" in local["storey-b"]
