@@ -308,6 +308,34 @@ def test_dynamic_gate_feedback_preserves_entity_level_geometry_evidence(tmp_path
     assert "opening_profile" in issues[0].evidence
 
 
+def test_audit_component_ids_become_stable_generator_targets():
+    candidate = {
+        "entities": [
+            {"id": "door-1"},
+            {"id": "opening-door-1"},
+            {"id": "wall-1"},
+        ]
+    }
+    report = {
+        "blocking": True,
+        "findings": [
+            {
+                "code": "OPENING_NOT_CENTERED",
+                "message": "The opening is not centered.",
+                "component_ids": ["door-1", "opening-door-1", "wall-1"],
+            }
+        ],
+    }
+
+    issues = normalize_audit_findings(report, candidate=candidate)
+
+    assert [issue.actual_ref for issue in issues] == [
+        "entity:door-1#/attributes",
+        "entity:opening-door-1#/attributes",
+        "entity:wall-1#/attributes",
+    ]
+
+
 def test_dynamic_gate_explicit_targets_exclude_context_only_opening(tmp_path):
     root = tmp_path / "case"
     root.mkdir()

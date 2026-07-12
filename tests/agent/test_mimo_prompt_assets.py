@@ -215,6 +215,14 @@ def test_audit_v2_requires_component_level_geometry_quality_findings():
     assert "gap_mm" in text
 
 
+def test_audit_v2_does_not_recompute_a_passed_deterministic_invariant():
+    text = AUDIT_V2.read_text(encoding="utf-8")
+
+    assert "Do not recompute or contradict that same invariant by mental arithmetic" in text
+    assert "machine-readable contradictory evidence" in text
+    assert "component_ids" in text
+
+
 def test_bim_json_generator_v2_keeps_wall_rotation_out_of_representation_position():
     text = Path("prompts/agent/bim-json-generator-v2.md").read_text(encoding="utf-8")
 
