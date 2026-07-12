@@ -11,7 +11,7 @@ from .route_decision import decide_route_from_issues
 
 
 FEEDBACK_ROUNDS_SCHEMA_VERSION = "text2ifc/feedback-rounds/1.0"
-DEFAULT_MAX_FEEDBACK_ROUNDS = 2
+DEFAULT_MAX_FEEDBACK_ROUNDS = 3
 
 
 def plan_feedback_round(

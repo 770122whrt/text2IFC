@@ -69,15 +69,15 @@ def test_feedback_round_stops_when_issue_count_does_not_improve():
     assert round_record["terminal_status"] == "blocked_non_improving"
 
 
-def test_feedback_round_stops_after_default_two_round_limit():
+def test_feedback_round_stops_after_default_three_round_limit():
     round_record = plan_feedback_round(
         source_stage="generator",
         issues=[_issue()],
         previous_issue_count=3,
-        current_feedback_round=2,
+        current_feedback_round=3,
     )
 
-    assert round_record["max_feedback_rounds"] == 2
+    assert round_record["max_feedback_rounds"] == 3
     assert round_record["retry_allowed"] is False
     assert round_record["attempted_action"] == "stop_attempt_limit"
     assert round_record["terminal_status"] == "blocked_attempt_limit"

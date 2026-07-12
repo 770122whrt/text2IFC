@@ -43,6 +43,8 @@ Draft Envelope 1.0 完整 canonical Schema：
 三、不要只输出局部 patch；不要只修一个实体；不要输出 diff；不要输出解释文字。
 四、每个 feedback issue 都必须被逐项处理：若能在当前能力范围内修正，重建相关空间、墙、楼层、门窗、开洞、楼板或楼梯关系；若不能保真表达，返回 Draft 并列出具体缺失或不支持原因。
 五、不得改变用户事实，不得静默补充新的尺寸、位置、构件或关系。若 feedback 暴露的是缺失用户事实而不是生成错误，返回 Draft。
+6. Preserve every component that is not identified by a blocking feedback issue and already passed its deterministic checks. Do not change an unrelated placement, extrusion direction, entity id, relationship, or profile while correcting a named component.
+7. For each geometry issue, compare its structured `expected` and `actual` values before changing the named component. Correct the parent-relative coordinate transform that caused the mismatch; do not copy the expected world bbox directly into a local placement.
 
 唯一合法的输出合同
 
@@ -105,11 +107,21 @@ Multi-storey generation rules
 5. If the Design Brief asks for a stair or vertical connection and the current capability supports it, include an `IfcStair` or supported equivalent linked to the relevant storey. If the exact stair geometry is under-specified but the user allowed a simple straight or switchback stair, choose that allowed option and record only the user-supported facts.
 6. Keep floor semantics explicit in ids and names when useful, for example `storey-2-wall-south`, `opening-storey-2-window-south`, and `window-storey-2-south`. These ids are examples of structure, not values to copy blindly.
 
+Local datum and parent-placement rules
+
+1. Convert a confirmed global target to parent-local coordinates exactly once. `ObjectPlacement.origin` is always local to `relative_to`; never repeat the parent storey, slab, wall, or stair translation in the child origin.
+2. For a floor slab whose confirmed datum is its top surface, local Z is `top_elevation_mm - parent_storey_elevation_mm - thickness_mm`. Therefore a 150 mm slab with top elevation 3150 mm, relative to a storey at 3150 mm, starts at local Z `-150`, not `0` or `3150`.
+3. For a roof slab whose confirmed datum is its bottom surface, local Z is `bottom_elevation_mm - parent_storey_elevation_mm`. Therefore a roof bottom at 6150 mm relative to a storey at 3150 mm starts at local Z `3000`, not `6150`.
+4. For an opening placed relative to a slab, subtract the slab world origin from the confirmed opening world center. Do not reuse the opening's global coordinates as its slab-local origin.
+5. Keep `IfcStair` and `IfcStairFlight` placement axes vertical (`axis: [0, 0, 1]`). Express rise/run using the stair-step polygon, not by tilting both ObjectPlacement and Representation.
+6. For the supported straight-flight convention shown by the standard two-storey example, the parent stair starts at the confirmed lower footprint corner; the step profile first coordinate is run, the second is rise, and `Representation.depth` is stair width.
+
 Medium straight-stair contract
 
 1. When the Design Brief asks for a supported simple straight stair and gives enough facts for start elevation, end elevation, width, horizontal run, direction, and host storey/space: Do not represent a supported straight stair as only one solid block.
 2. Output an `IfcStair` parent with `ShapeType: "STRAIGHT_RUN_STAIR"` and a full parent-relative `ObjectPlacement`. The parent may omit `Representation` when it is decomposed into flights, but it must not omit `ObjectPlacement`.
 3. Output at least one `IfcStairFlight` child with its own parent-relative `ObjectPlacement` and visible flight geometry. For a straight run, prefer a closed polygon stair-step side profile extruded across the stair width instead of a rectangular mass. The profile should encode multiple riser/tread steps whenever the rise/run facts are known.
+   For `IfcStairFlight`, `Representation.direction` is the actual stair-width extrusion direction in the parent coordinate system. For example, a flight running along local `+Y` with width extending along local `+X` uses `direction: [1, 0, 0]`; do not negate the width direction.
 4. Add an explicit `IfcRelAggregates` relationship from the `IfcStair` parent to the `IfcStairFlight` child. Use `RelatingObject` for the stair id and `RelatedObjects` as a non-empty array of stair-flight ids.
 5. If the user permits a simple straight stair but omits exact riser/tread count, choose a reasonable count from the known total rise and run only when this does not invent a new user-facing dimension; preserve the total rise, total run, width, direction, and elevations from the Design Brief.
 6. Do not output `NumberOfRisers`, `NumberOfTreads`, `RiserHeight`, `TreadLength`, or other stair-flight attributes unless the provided Formal Schema explicitly allows them. If those facts are useful, encode the visible stair shape in `Representation.profile.points` and preserve user facts in allowed semantic fields only.

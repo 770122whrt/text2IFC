@@ -22,7 +22,9 @@ def build_design_geometry_expectation(
     known_facts = known if isinstance(known, Mapping) else {}
     building = known_facts.get("building")
     building_facts = building if isinstance(building, Mapping) else {}
-    outer_bounds = _plan_bounds(building_facts.get("outer_bounds"))
+    outer_bounds = _plan_bounds(building_facts.get("outline")) or _plan_bounds(
+        building_facts.get("outer_bounds")
+    )
     wall_thickness = _number(building_facts.get("wall_thickness_mm"))
     slab_thickness = _number(building_facts.get("floor_slab_thickness_mm"))
     expected_storeys = {
@@ -33,7 +35,90 @@ def build_design_geometry_expectation(
     raw_storeys = _records(known_facts.get("storeys"))
     walls: dict[str, dict[str, Any]] = {}
     slabs: dict[str, dict[str, Any]] = {}
+    roof: dict[str, dict[str, Any]] = {}
+    stairs: dict[str, dict[str, Any]] = {}
+    floor_openings: dict[str, dict[str, Any]] = {}
     unresolved: list[dict[str, Any]] = []
+
+    explicit_slabs = _records(expected_facts.get("slabs"))
+    for slab_index, slab in enumerate(explicit_slabs):
+        slab_id = _string(slab.get("id"))
+        top = _number(slab.get("top_elevation_mm"))
+        thickness = _number(slab.get("thickness_mm"))
+        storey_id = _string(slab.get("storey"))
+        storey = expected_storeys.get(storey_id) if storey_id is not None else None
+        if top is None and isinstance(storey, Mapping):
+            top = _number(storey.get("elevation_mm"))
+        if thickness is None:
+            thickness = slab_thickness
+        bounds = _plan_bounds(slab.get("bounds")) or outer_bounds
+        path = f"/known_facts/floor_slabs/{slab_index}"
+        if slab_id is None or top is None or thickness is None or bounds is None:
+            unresolved.append(_unresolved_geometry(path=path, reason="floor_slab_geometry_missing"))
+            continue
+        slab_bbox = _bbox(
+            bounds[0], bounds[1], bounds[2], bounds[3], top - thickness, top
+        )
+        slabs[slab_id] = {
+            "bbox": slab_bbox,
+            "datum": "slab_top",
+            "source_fact_refs": [path],
+        }
+        opening = slab.get("opening")
+        if isinstance(opening, Mapping):
+            opening_bounds = _plan_bounds(opening.get("bounds"))
+            if opening_bounds is not None:
+                opening_id = _string(opening.get("id")) or f"opening-{slab_id}-stair"
+                floor_openings[opening_id] = {
+                    "bbox": _bbox(
+                        opening_bounds[0],
+                        opening_bounds[1],
+                        opening_bounds[2],
+                        opening_bounds[3],
+                        top - thickness,
+                        top,
+                    ),
+                    "host_slab_id": slab_id,
+                    "source_fact_refs": [f"{path}/opening"],
+                }
+
+    roof_record = expected_facts.get("roof")
+    if isinstance(roof_record, Mapping):
+        roof_id = _string(roof_record.get("id"))
+        bottom = _number(roof_record.get("bottom_elevation_mm"))
+        if bottom is None:
+            bottom = _number(roof_record.get("elevation_mm"))
+        thickness = _number(roof_record.get("thickness_mm"))
+        bounds = _plan_bounds(roof_record.get("bounds")) or outer_bounds
+        if roof_id is not None and bottom is not None and thickness is not None and bounds is not None:
+            roof[roof_id] = {
+                "bbox": _bbox(
+                    bounds[0], bounds[1], bounds[2], bounds[3], bottom, bottom + thickness
+                ),
+                "datum": "roof_bottom",
+                "source_fact_refs": ["/known_facts/roof_slab"],
+            }
+
+    for stair_index, stair in enumerate(_records(expected_facts.get("stairs"))):
+        stair_id = _string(stair.get("id"))
+        bounds = _plan_bounds(stair.get("bounds")) or _plan_bounds(
+            stair.get("plan_bounds")
+        )
+        start = _number(stair.get("start_elevation_mm"))
+        end = _number(stair.get("end_elevation_mm"))
+        path = f"/known_facts/stairs/{stair_index}"
+        if stair_id is None or bounds is None or start is None or end is None:
+            unresolved.append(_unresolved_geometry(path=path, reason="stair_geometry_missing"))
+            continue
+        flight_ids = stair.get("flight_ids")
+        if not isinstance(flight_ids, list) or not flight_ids:
+            flight_ids = [stair_id.replace("stair-", "stair-flight-", 1)]
+        stairs[stair_id] = {
+            "flight_ids": [str(item) for item in flight_ids],
+            "bbox": _bbox(bounds[0], bounds[1], bounds[2], bounds[3], start, end),
+            "require_steps": True,
+            "source_fact_refs": [path],
+        }
 
     for storey_index, storey in enumerate(raw_storeys):
         storey_id = _string(storey.get("id"))
@@ -56,7 +141,7 @@ def build_design_geometry_expectation(
             )
             continue
 
-        if outer_bounds is not None and slab_thickness is not None and slab_thickness > 0:
+        if not explicit_slabs and outer_bounds is not None and slab_thickness is not None and slab_thickness > 0:
             slabs[f"slab-{storey_id}-floor"] = {
                 "bbox": _bbox(
                     outer_bounds[0],
@@ -129,6 +214,9 @@ def build_design_geometry_expectation(
         "tolerance": 0.05,
         "walls": walls,
         "slabs": slabs,
+        "roof": roof,
+        "stairs": stairs,
+        "floor_openings": floor_openings,
         "unresolved": unresolved,
     }
 
@@ -144,6 +232,14 @@ def _string(value: Any) -> str | None:
 
 
 def _plan_bounds(value: Any) -> tuple[float, float, float, float] | None:
+    if isinstance(value, Mapping):
+        coordinates = tuple(
+            _number(value.get(key)) for key in ("x_min", "x_max", "y_min", "y_max")
+        )
+        if all(item is not None for item in coordinates):
+            x_min, x_max, y_min, y_max = coordinates
+            if x_min < x_max and y_min < y_max:
+                return (x_min, x_max, y_min, y_max)
     if not isinstance(value, str):
         return None
     match = re.fullmatch(

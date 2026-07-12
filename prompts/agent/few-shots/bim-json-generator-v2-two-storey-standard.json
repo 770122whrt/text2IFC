@@ -504,6 +504,135 @@
       },
       "property_sets": {},
       "provenance": {"source": "prompt-few-shot"}
+    },
+    {
+      "id": "ground-floor-slab",
+      "ifc_class": "IfcSlab",
+      "attributes": {
+        "Name": "Ground Floor Slab",
+        "ObjectPlacement": {
+          "relative_to": "storey-1",
+          "origin": [5000, 4000, -150],
+          "axis": [0, 0, 1],
+          "ref_direction": [1, 0, 0]
+        },
+        "Representation": {
+          "kind": "extruded_profile",
+          "profile": {"kind": "rectangle", "x": 10000, "y": 8000},
+          "depth": 150,
+          "direction": [0, 0, 1]
+        }
+      },
+      "property_sets": {},
+      "provenance": {"source": "prompt-few-shot"}
+    },
+    {
+      "id": "first-floor-slab",
+      "ifc_class": "IfcSlab",
+      "attributes": {
+        "Name": "First Floor Slab",
+        "ObjectPlacement": {
+          "relative_to": "storey-2",
+          "origin": [5000, 4000, -150],
+          "axis": [0, 0, 1],
+          "ref_direction": [1, 0, 0]
+        },
+        "Representation": {
+          "kind": "extruded_profile",
+          "profile": {"kind": "rectangle", "x": 10000, "y": 8000},
+          "depth": 150,
+          "direction": [0, 0, 1]
+        }
+      },
+      "property_sets": {},
+      "provenance": {"source": "prompt-few-shot"}
+    },
+    {
+      "id": "roof-slab",
+      "ifc_class": "IfcSlab",
+      "attributes": {
+        "Name": "Roof Slab",
+        "ObjectPlacement": {
+          "relative_to": "storey-2",
+          "origin": [5000, 4000, 3000],
+          "axis": [0, 0, 1],
+          "ref_direction": [1, 0, 0]
+        },
+        "Representation": {
+          "kind": "extruded_profile",
+          "profile": {"kind": "rectangle", "x": 10000, "y": 8000},
+          "depth": 150,
+          "direction": [0, 0, 1]
+        }
+      },
+      "property_sets": {},
+      "provenance": {"source": "prompt-few-shot"}
+    },
+    {
+      "id": "opening-first-floor-slab-stair",
+      "ifc_class": "IfcOpeningElement",
+      "attributes": {
+        "Name": "First Floor Stair Opening",
+        "ObjectPlacement": {
+          "relative_to": "first-floor-slab",
+          "origin": [-4000, 2000, 0],
+          "axis": [0, 0, 1],
+          "ref_direction": [1, 0, 0]
+        },
+        "Representation": {
+          "kind": "extruded_profile",
+          "profile": {"kind": "rectangle", "x": 2000, "y": 4000},
+          "depth": 150,
+          "direction": [0, 0, 1]
+        }
+      },
+      "property_sets": {},
+      "provenance": {"source": "prompt-few-shot"}
+    },
+    {
+      "id": "stair-1",
+      "ifc_class": "IfcStair",
+      "attributes": {
+        "Name": "Main Straight Stair",
+        "ShapeType": "STRAIGHT_RUN_STAIR",
+        "ObjectPlacement": {
+          "relative_to": "storey-1",
+          "origin": [500, 4050, 150],
+          "axis": [0, 0, 1],
+          "ref_direction": [1, 0, 0]
+        }
+      },
+      "property_sets": {},
+      "provenance": {"source": "prompt-few-shot"}
+    },
+    {
+      "id": "stair-flight-1",
+      "ifc_class": "IfcStairFlight",
+      "attributes": {
+        "Name": "Main Stepped Flight",
+        "ObjectPlacement": {
+          "relative_to": "stair-1",
+          "origin": [0, 0, 0],
+          "axis": [0, 0, 1],
+          "ref_direction": [1, 0, 0]
+        },
+        "Representation": {
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "polygon",
+            "points": [
+              [0, 0], [0, 1000],
+              [1300, 1000], [1300, 2000],
+              [2600, 2000], [2600, 3000],
+              [3900, 3000], [3900, 0], [0, 0]
+            ]
+          },
+          "depth": 1000,
+          "direction": [1, 0, 0]
+        }
+      },
+      "property_sets": {},
+      "provenance": {"source": "prompt-few-shot"}
     }
   ],
   "relationships": [
@@ -544,6 +673,24 @@
       "attributes": {
         "RelatingOpeningElement": "opening-storey-2-window-east",
         "RelatedBuildingElement": "window-storey-2-east"
+      },
+      "provenance": {"source": "prompt-few-shot"}
+    },
+    {
+      "id": "void-first-floor-stair",
+      "ifc_class": "IfcRelVoidsElement",
+      "attributes": {
+        "RelatingBuildingElement": "first-floor-slab",
+        "RelatedOpeningElement": "opening-first-floor-slab-stair"
+      },
+      "provenance": {"source": "prompt-few-shot"}
+    },
+    {
+      "id": "aggregate-main-stair-flight",
+      "ifc_class": "IfcRelAggregates",
+      "attributes": {
+        "RelatingObject": "stair-1",
+        "RelatedObjects": ["stair-flight-1"]
       },
       "provenance": {"source": "prompt-few-shot"}
     }

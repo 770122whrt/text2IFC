@@ -132,6 +132,10 @@ def test_design_brief_v21_defines_canonical_multistorey_structure():
     assert "Use `elevation_mm`; do not use `level` as a substitute" in text
     assert "Do not create top-level `storey_1`, `storey_2`, `spaces_ground`, `spaces_first`, or generic `openings`" in text
     assert "Put doors and windows inside the storey that owns their host wall" in text
+    assert "Use `known_facts.floor_slabs`" in text
+    assert "Use one `known_facts.roof_slab`" in text
+    assert "Do not collapse explicit slab instances into thickness-only building metadata" in text
+    assert "literal key `bounds`, not `plan_bounds`" in text
 
 
 def test_design_brief_few_shots_include_valid_standard_two_storey_contract():
@@ -153,6 +157,25 @@ def test_design_brief_few_shots_include_valid_standard_two_storey_contract():
     assert [storey["elevation_mm"] for storey in known["storeys"]] == [0, 3150]
     assert known["storeys"][0]["doors"][0]["host_wall"] == "storey-1-wall-south"
     assert known["storeys"][1]["windows"][0]["host_wall"] == "storey-2-wall-south"
+    assert known["floor_slabs"] == [
+        {
+            "id": "ground-floor-slab",
+            "storey": "storey-1",
+            "top_elevation_mm": 0,
+            "thickness_mm": 150,
+        },
+        {
+            "id": "first-floor-slab",
+            "storey": "storey-2",
+            "top_elevation_mm": 3150,
+            "thickness_mm": 150,
+        },
+    ]
+    assert known["roof_slab"] == {
+        "id": "roof-slab",
+        "bottom_elevation_mm": 6150,
+        "thickness_mm": 150,
+    }
 
     evidence_catalog = [
         {"evidence_id": evidence_id}
@@ -209,6 +232,7 @@ def test_bim_json_generator_v2_contains_multistorey_error_constraints():
     assert "Each storey must declare its own exterior and interior walls" in text
     assert "A second-storey window must reference a second-storey wall" in text
     assert "Every ObjectPlacement.relative_to and relationship endpoint must reference an entity id already declared in entities" in text
+    assert "Preserve every component that is not identified by a blocking feedback issue" in text
 
 
 def test_bim_json_generator_v2_requires_medium_straight_stair_contract():
@@ -218,6 +242,26 @@ def test_bim_json_generator_v2_requires_medium_straight_stair_contract():
     assert "IfcStairFlight" in text
     assert "IfcRelAggregates" in text
     assert "Do not represent a supported straight stair as only one solid block" in text
+    assert "`Representation.direction` is the actual stair-width extrusion direction" in text
+
+
+def test_generator_two_storey_example_teaches_local_datums_and_stepped_stair():
+    text = Path("prompts/agent/bim-json-generator-v2.md").read_text(encoding="utf-8")
+    payload = json.loads(
+        Path("prompts/agent/few-shots/bim-json-generator-v2-two-storey-standard.json").read_text(
+            encoding="utf-8"
+        )
+    )
+
+    assert "Convert a confirmed global target to parent-local coordinates exactly once" in text
+    assert "top_elevation_mm - parent_storey_elevation_mm - thickness_mm" in text
+    entities = {entity["id"]: entity for entity in payload["entities"]}
+    assert entities["first-floor-slab"]["attributes"]["ObjectPlacement"]["origin"][2] == -150
+    assert entities["roof-slab"]["attributes"]["ObjectPlacement"]["origin"][2] == 3000
+    assert entities["stair-flight-1"]["attributes"]["Representation"]["profile"]["kind"] == "polygon"
+    assert len(entities["stair-flight-1"]["attributes"]["Representation"]["profile"]["points"]) >= 7
+    assert entities["stair-flight-1"]["attributes"]["Representation"]["direction"] == [1, 0, 0]
+    assert entities["opening-first-floor-slab-stair"]["attributes"]["ObjectPlacement"]["origin"] == [-4000, 2000, 0]
 
 
 def test_bim_json_generator_v2_repeats_schema_self_checks_for_live_errors():

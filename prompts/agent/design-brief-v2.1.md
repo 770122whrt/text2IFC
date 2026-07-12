@@ -65,6 +65,11 @@ Canonical multi-storey Design Brief structure
 4. Put doors and windows inside the storey that owns their host wall. Do not merge doors and windows into a generic `openings` list. A second-storey window on a second-storey south wall belongs under the second storey and should name a second-storey host wall.
 5. Use stable semantic ids in Design Brief facts when the user request is clear, for example `storey-1`, `storey-2`, `storey-1-wall-south`, and `storey-2-wall-south`. These are semantic ids for later BIM JSON generation, not IFC STEP ids.
 6. If the request has enough facts for a canonical nested multi-storey Design Brief, return `ready`; do not invent missing dimensions, and do not ask about details that are not required by the requested supported model.
+7. Use `known_facts.floor_slabs` when the user explicitly requests or locates floor slabs. Each slab record must preserve a stable `id`, owning `storey`, `top_elevation_mm`, `thickness_mm`, and an `opening.bounds` object when a stair opening is confirmed.
+8. Use one `known_facts.roof_slab` object when the user explicitly requests a roof slab. Preserve a stable `id`, `bottom_elevation_mm`, and `thickness_mm`; do not store the global bottom elevation as a storey-local coordinate.
+9. Keep confirmed stair geometry in `known_facts.stairs`: stable `id`, `from_storey`, `to_storey`, plan bounds under the literal key `bounds`, not `plan_bounds`, plus `opening_bounds`, `start_elevation_mm`, `end_elevation_mm`, width, and run when those facts were supplied.
+10. Do not collapse explicit slab instances into thickness-only building metadata. `building.floor_slab_thickness_mm` and `building.roof_slab_thickness_mm` may summarize repeated thickness, but they do not replace `floor_slabs` or `roof_slab` records.
+11. When the user gives a rectangular global building outline, prefer `building.outline` with numeric `x_min`, `x_max`, `y_min`, and `y_max`. Preserve legacy text bounds only when the source itself is not safely separable into those four confirmed coordinates.
 
 Layout fact preservation and conflict handling
 

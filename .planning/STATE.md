@@ -779,14 +779,14 @@ strict RED/GREEN TDD and run real DeepSeek only after deterministic GREEN.
   responses.
 
 ---
-*Last activity: 2026-07-11 - completed Phase 6.4 Wave 8 bounded orchestration
-stabilization. Gate failure is authoritative, Scaffold output is diagnostic
-only, feedback retains component-level evidence, and non-improvement compares
-structured issue evidence rather than counts. Real DeepSeek session
-`5a19ce5b34bce809` executed Generator/Audit rounds 01-03 and produced accepted
-IFC2X3 at
-`dataset/processed/agent-demo/phase6.4-authoritative-gate-live-deepseek-final-2/two-storey-residential/output.ifc`.
-Focused regression passed 71 tests. Complete regression passed 678 tests
-before the final observability-only logger patch; the post-patch run passed
-677 tests and hit one process-pool `MemoryError`, which passed on isolated
-rerun.*
+*Last activity: 2026-07-12 - completed Phase 6.4 Wave 9 deterministic datum and
+stair geometry bugfix. Canonical floor slabs, roof, stairs, and stair openings
+now reach expected-facts and world-geometry Gate checks; `IfcStairFlight`
+compiles a stepped side profile with an intuitive width direction; feedback
+preserves expected/actual evidence; bounded Generator feedback allows three
+regenerations. Rechecking prior acceptance exposed a missing `plan_bounds`
+alias and rejected its stair footprint, so that artifact is no longer claimed
+as geometrically accepted. Six real DeepSeek investigations proved the strict
+Gate and loop operate, but full-document regeneration still changes previously
+passing openings. No Wave 9 live IFC is claimed as final acceptance. The next
+required design is schema-validated component-level constrained regeneration.*

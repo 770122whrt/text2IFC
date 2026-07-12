@@ -176,7 +176,7 @@ def normalize_gate_sidecars(case_dir: Path | str) -> list[Issue]:
                     owner="gate",
                     issue_type="geometry_invalid",
                     actual_ref=_string_or_none(item.get("path")),
-                    evidence=_evidence(code, _diagnostic_message(item)),
+                    evidence=_gate_detail_evidence(code, item),
                     suggested_route="regenerate_json",
                     retryable=True,
                 )

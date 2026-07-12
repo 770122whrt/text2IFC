@@ -881,7 +881,7 @@ before real DeepSeek live tests. Live acceptance requires real provider
 evidence and cannot be satisfied by fake/file/replay providers, prewritten
 `answers.json`, or exact scripted clarification transcripts.
 
-**Plans:** 9 plans in 9 waves
+**Plans:** 10 plans in 10 waves
 
 **Wave 0**
 
@@ -919,6 +919,11 @@ evidence and cannot be satisfied by fake/file/replay providers, prewritten
 
 - [x] `06.4-08-PLAN.md` - Gate-authoritative bounded regeneration and live closure
 
+**Wave 9** *(datum/stair truth bugfix; blocked on Wave 8)*
+
+- [x] `06.4-09-PLAN.md` - Canonical slab/roof/stair expectations, stepped
+  `IfcStairFlight` compilation, and authoritative world-geometry checks
+
 **Cross-cutting constraints:**
 
 - New machine-readable workflow fields, JSON keys, enum values, issue types,
@@ -929,7 +934,7 @@ evidence and cannot be satisfied by fake/file/replay providers, prewritten
 - Every terminal non-accept run with a session directory writes
   `issues.json`, `route-decision.json`, `feedback-rounds.json`,
   `case-result.json`, and `report.md`.
-- Feedback loops are bounded to `max_feedback_rounds = 2` by default. Early
+- Feedback loops are bounded to `max_feedback_rounds = 3` by default. Early
   non-improvement requires unchanged structured issue evidence, not merely an
   unchanged issue count.
 - DeepSeek secrets, headers, private base URLs, and token values never appear
@@ -938,10 +943,12 @@ evidence and cannot be satisfied by fake/file/replay providers, prewritten
 - Real DeepSeek live acceptance happens only after deterministic TDD and matrix
   tests pass.
 
-**Status:** Supplemental Waves 7 and 8 complete and verified 2026-07-11. The
-final real DeepSeek session `5a19ce5b34bce809` executed two Generator
-regenerations, passed the complete deterministic Gate summary and Audit, and
-produced a reopened IFC2X3 artifact. Complete regression passed 678 tests.
+**Status:** Supplemental Wave 9 completed its deterministic compiler/Gate
+scope on 2026-07-12. Rechecking prior live acceptance exposed missing stair
+expectation coverage, so the earlier accepted session is not evidence that the
+stair system was geometrically correct. Current live DeepSeek runs are honestly
+blocked when stair/opening/window geometry drifts. Component-level constrained
+regeneration remains required before claiming stable multi-storey acceptance.
 Manual visual IFC review remains a separate human acceptance activity.
 
 **Prior verified scope:** Phase 6.4 has normalized

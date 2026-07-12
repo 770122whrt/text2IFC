@@ -217,6 +217,8 @@ def test_normalizes_geometry_and_gate_sidecars(tmp_path):
                         "code": "ROOM_ENCLOSURE_OPEN",
                         "path": "/spaces/space-1",
                         "message": "Room enclosure is open.",
+                        "expected": {"closed": True},
+                        "actual": {"closed": False},
                     }
                 ],
             }
@@ -248,6 +250,8 @@ def test_normalizes_geometry_and_gate_sidecars(tmp_path):
         issue_type="geometry_invalid",
         route="regenerate_json",
     )
+    assert '"expected": {"closed": true}' in issues[0].evidence
+    assert '"actual": {"closed": false}' in issues[0].evidence
     _assert_valid(
         issues[1],
         source="deterministic_gate",

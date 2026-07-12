@@ -23,7 +23,7 @@ from .design_brief import load_design_brief_schema, validate_design_brief
 from .expected_facts import write_expected_facts
 from .gate_audit_bundle import write_gate_summary
 from .generator import validate_generation_document
-from .feedback_loop import write_feedback_artifacts
+from .feedback_loop import DEFAULT_MAX_FEEDBACK_ROUNDS, write_feedback_artifacts
 from .issue_normalizers import (
     normalize_generator_draft_issues,
     normalize_audit_findings,
@@ -692,7 +692,7 @@ def run_ready_session_to_ifc(
             _emit_progress(progress, "audit", {"status": audit.get("status"), "response_id": audit.get("response_id")})
     regeneration_attempted = False
     previous_issue_count: int | None = None
-    for feedback_round_index in range(2):
+    for feedback_round_index in range(DEFAULT_MAX_FEEDBACK_ROUNDS):
         if (
             candidate_gates.get("valid") is True
             and audit["valid"]

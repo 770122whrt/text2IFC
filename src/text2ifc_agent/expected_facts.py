@@ -864,6 +864,9 @@ def _canonical_storey_id(label: str, storeys: list[Mapping[str, Any]]) -> str | 
 
 
 def _slab_records(known_facts: Mapping[str, Any]) -> list[Mapping[str, Any]]:
+    canonical = _records(known_facts.get("floor_slabs"))
+    if canonical:
+        return canonical
     flat = _records(known_facts.get("slabs"))
     if flat:
         return flat

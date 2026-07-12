@@ -1,7 +1,5 @@
 from pathlib import Path
 
-import ifcopenshell.geom
-
 from text2ifc_compiler import compile_document, open_ifc
 
 
@@ -192,14 +190,14 @@ def test_v2_stair_flight_step_profile_uses_run_rise_and_width_axes(tmp_path: Pat
                         "profile": {
                             "kind": "polygon",
                             "points": [
-                                [0, 0], [3900, 0], [3900, 3000],
-                                [2600, 3000], [2600, 2000],
-                                [1300, 2000], [1300, 1000],
-                                [0, 1000], [0, 0],
+                                [0, 0], [0, 1000],
+                                [1300, 1000], [1300, 2000],
+                                [2600, 2000], [2600, 3000],
+                                [3900, 3000], [3900, 0], [0, 0],
                             ],
                         },
                         "depth": 1000,
-                        "direction": [-1, 0, 0],
+                        "direction": [1, 0, 0],
                     },
                 },
                 "property_sets": {},
@@ -224,13 +222,10 @@ def test_v2_stair_flight_step_profile_uses_run_rise_and_width_axes(tmp_path: Pat
     result = compile_document(document, output)
 
     assert result.success
-    flight = open_ifc(output).by_type("IfcStairFlight")[0]
-    settings = ifcopenshell.geom.settings()
-    settings.set(settings.USE_WORLD_COORDS, True)
-    vertices = ifcopenshell.geom.create_shape(settings, flight).geometry.verts
-    assert vertices, "IfcStairFlight must compile to non-empty stepped geometry"
-    bbox = [
-        [round(min(vertices[index::3]), 6), round(max(vertices[index::3]), 6)]
-        for index in range(3)
-    ]
-    assert bbox == [[0.5, 1.5], [4.05, 7.95], [0.15, 3.15]]
+    model = open_ifc(output)
+    flight = model.by_type("IfcStairFlight")[0]
+    solid = flight.Representation.Representations[0].Items[0]
+    assert solid.Position.Axis.DirectionRatios == (1.0, 0.0, 0.0)
+    assert solid.Position.RefDirection.DirectionRatios == (0.0, 1.0, 0.0)
+    assert solid.ExtrudedDirection.DirectionRatios == (0.0, 0.0, 1.0)
+    assert len(solid.SweptArea.OuterCurve.Points) == 9

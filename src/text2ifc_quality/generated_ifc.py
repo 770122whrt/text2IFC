@@ -54,12 +54,206 @@ def check_generated_ifc(
             ],
             metrics={"case_id": expectation.get("case_id"), "walls": {}},
         )
-    return _check_slabs(
+    slab_result = _check_slabs(
         products_by_id=products_by_id,
         tolerance=tolerance,
         expectation=expectation,
         wall_result=selected_result,
     )
+    return _check_roof_stairs_and_openings(
+        products_by_id=products_by_id,
+        tolerance=tolerance,
+        expectation=expectation,
+        prior_result=slab_result,
+    )
+
+
+def _check_roof_stairs_and_openings(
+    *,
+    products_by_id: Mapping[str, Any],
+    tolerance: float,
+    expectation: Mapping[str, Any],
+    prior_result: GeneratedIfcCheckResult,
+) -> GeneratedIfcCheckResult:
+    issues = list(prior_result.issues)
+    metrics = dict(prior_result.metrics)
+    metrics["roof"] = _check_component_bboxes(
+        products_by_id=products_by_id,
+        expected_components=expectation.get("roof"),
+        tolerance=tolerance,
+        missing_code="MISSING_ROOF",
+        mismatch_code="ROOF_BBOX_MISMATCH",
+        path_prefix="roof",
+        issues=issues,
+    )
+    metrics["floor_openings"] = _check_component_bboxes(
+        products_by_id=products_by_id,
+        expected_components=expectation.get("floor_openings"),
+        tolerance=tolerance,
+        missing_code="MISSING_STAIR_OPENING",
+        mismatch_code="STAIR_OPENING_BBOX_MISMATCH",
+        path_prefix="floor_openings",
+        issues=issues,
+    )
+    stair_metrics: dict[str, Any] = {}
+    expected_stairs = expectation.get("stairs")
+    if isinstance(expected_stairs, Mapping):
+        for stair_id, expected_stair in expected_stairs.items():
+            if not isinstance(expected_stair, Mapping):
+                continue
+            flight_ids = expected_stair.get("flight_ids", [])
+            if not isinstance(flight_ids, list):
+                flight_ids = []
+            flights = [
+                products_by_id.get(str(flight_id)) for flight_id in flight_ids
+            ]
+            flights = [flight for flight in flights if flight is not None]
+            if not flights:
+                issues.append(
+                    _issue(
+                        "MISSING_STAIR_FLIGHT",
+                        f"/stairs/{stair_id}",
+                        f"Expected stair {stair_id!r} has no checkable IfcStairFlight.",
+                        entity_ids=[str(stair_id), *[str(item) for item in flight_ids]],
+                        source_fact_refs=expected_stair.get("source_fact_refs"),
+                    )
+                )
+                continue
+            actual_bbox = _combined_bbox([_bbox_for_product(flight) for flight in flights])
+            stair_metrics[str(stair_id)] = {
+                "flight_ids": [str(item) for item in flight_ids],
+                "bbox": actual_bbox,
+                "has_stepped_profile": all(_has_stepped_profile(flight) for flight in flights),
+            }
+            expected_bbox = expected_stair.get("bbox")
+            if isinstance(expected_bbox, Mapping):
+                if not _axes_match(actual_bbox, expected_bbox, ("x", "y"), tolerance):
+                    issues.append(
+                        _issue(
+                            "STAIR_FOOTPRINT_MISMATCH",
+                            f"/stairs/{stair_id}/bbox",
+                            f"Stair {stair_id!r} plan footprint is outside tolerance.",
+                            entity_ids=[str(stair_id), *[str(item) for item in flight_ids]],
+                            expected={axis: expected_bbox[axis] for axis in ("x", "y")},
+                            actual={axis: actual_bbox[axis] for axis in ("x", "y")},
+                            source_fact_refs=expected_stair.get("source_fact_refs"),
+                        )
+                    )
+                if not _axes_match(actual_bbox, expected_bbox, ("z",), tolerance):
+                    issues.append(
+                        _issue(
+                            "STAIR_RISE_DIRECTION_MISMATCH",
+                            f"/stairs/{stair_id}/bbox/z",
+                            f"Stair {stair_id!r} does not rise through the confirmed elevations.",
+                            entity_ids=[str(stair_id), *[str(item) for item in flight_ids]],
+                            expected={"z": expected_bbox["z"]},
+                            actual={"z": actual_bbox["z"]},
+                            source_fact_refs=expected_stair.get("source_fact_refs"),
+                        )
+                    )
+            if expected_stair.get("require_steps") is True and not all(
+                _has_stepped_profile(flight) for flight in flights
+            ):
+                issues.append(
+                    _issue(
+                        "STAIR_STEP_PROFILE_MISSING",
+                        f"/stairs/{stair_id}/flight_profile",
+                        f"Stair {stair_id!r} is a ramp-like solid, not a stepped flight.",
+                        entity_ids=[str(stair_id), *[str(item) for item in flight_ids]],
+                        expected={"stepped_profile": True},
+                        actual={"stepped_profile": False},
+                        source_fact_refs=expected_stair.get("source_fact_refs"),
+                    )
+                )
+    metrics["stairs"] = stair_metrics
+    return GeneratedIfcCheckResult(success=not issues, issues=issues, metrics=metrics)
+
+
+def _check_component_bboxes(
+    *,
+    products_by_id: Mapping[str, Any],
+    expected_components: Any,
+    tolerance: float,
+    missing_code: str,
+    mismatch_code: str,
+    path_prefix: str,
+    issues: list[dict[str, Any]],
+) -> dict[str, Any]:
+    metrics: dict[str, Any] = {}
+    if not isinstance(expected_components, Mapping):
+        return metrics
+    for component_id, expected_component in expected_components.items():
+        if not isinstance(expected_component, Mapping):
+            continue
+        product = products_by_id.get(str(component_id))
+        if product is None:
+            issues.append(
+                _issue(
+                    missing_code,
+                    f"/{path_prefix}/{component_id}",
+                    f"Expected component {component_id!r} was not found in the IFC.",
+                    entity_ids=[str(component_id)],
+                    source_fact_refs=expected_component.get("source_fact_refs"),
+                )
+            )
+            continue
+        actual_bbox = _bbox_for_product(product)
+        metrics[str(component_id)] = {"ifc_class": product.is_a(), "bbox": actual_bbox}
+        expected_bbox = expected_component.get("bbox")
+        if isinstance(expected_bbox, Mapping) and not _bbox_matches(
+            actual_bbox, expected_bbox, tolerance
+        ):
+            issues.append(
+                _issue(
+                    mismatch_code,
+                    f"/{path_prefix}/{component_id}/bbox",
+                    f"Component {component_id!r} world bounding box is outside tolerance.",
+                    entity_ids=[str(component_id)],
+                    expected=expected_bbox,
+                    actual=actual_bbox,
+                    source_fact_refs=expected_component.get("source_fact_refs"),
+                )
+            )
+    return metrics
+
+
+def _combined_bbox(boxes: list[Mapping[str, list[float]]]) -> dict[str, list[float]]:
+    return {
+        axis: [
+            min(box[axis][0] for box in boxes),
+            max(box[axis][1] for box in boxes),
+        ]
+        for axis in AXES
+    }
+
+
+def _axes_match(
+    actual: Mapping[str, list[float]],
+    expected: Mapping[str, list[float]],
+    axes: tuple[str, ...],
+    tolerance: float,
+) -> bool:
+    return all(
+        abs(actual[axis][index] - expected[axis][index]) <= tolerance
+        for axis in axes
+        for index in (0, 1)
+    )
+
+
+def _has_stepped_profile(product: Any) -> bool:
+    representation = getattr(product, "Representation", None)
+    for shape in getattr(representation, "Representations", ()) or ():
+        for item in getattr(shape, "Items", ()) or ():
+            profile = getattr(item, "SweptArea", None)
+            curve = getattr(profile, "OuterCurve", None)
+            points = getattr(curve, "Points", ()) or ()
+            coordinates = [tuple(point.Coordinates) for point in points]
+            if len(coordinates) >= 7:
+                unique_x = {round(float(point[0]), 6) for point in coordinates}
+                unique_y = {round(float(point[1]), 6) for point in coordinates}
+                if len(unique_x) >= 3 and len(unique_y) >= 3:
+                    return True
+    return False
 
 
 def _check_slabs(

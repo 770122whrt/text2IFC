@@ -1520,7 +1520,10 @@ def _semantic_geometry_expectation_from_case(
                 design_brief=design_brief,
                 expected_facts=expected_facts,
             )
-            if design_expectation["walls"] or design_expectation["slabs"]:
+            if any(
+                design_expectation.get(key)
+                for key in ("walls", "slabs", "roof", "stairs", "floor_openings")
+            ):
                 return design_expectation
     return build_semantic_geometry_expectation(
         case_id=case_id,

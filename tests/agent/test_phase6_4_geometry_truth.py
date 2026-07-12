@@ -136,6 +136,79 @@ def test_derives_canonical_slab_roof_stair_and_opening_expectations():
     }
 
 
+def test_legacy_slab_identity_uses_confirmed_storey_datum_and_building_thickness():
+    expectation = build_design_geometry_expectation(
+        case_id="legacy-slab-id",
+        design_brief=_controlled_design_brief(),
+        expected_facts={
+            **_controlled_expected_facts(),
+            "slabs": [{"id": "first-floor-slab", "storey": "storey-2"}],
+        },
+    )
+
+    assert expectation["slabs"]["first-floor-slab"]["bbox"] == {
+        "x": [0.0, 10.0],
+        "y": [0.0, 8.0],
+        "z": [3.0, 3.15],
+    }
+
+
+def test_live_design_brief_plan_bounds_alias_keeps_stair_gate_active():
+    design_brief = _controlled_design_brief()
+    stair = {
+        "id": "stair-1",
+        "plan_bounds": "x=500..1500,y=4050..7950",
+        "start_elevation_mm": 150,
+        "end_elevation_mm": 3150,
+    }
+    design_brief["known_facts"]["stairs"] = [stair]
+    expected_facts = {**_controlled_expected_facts(), "stairs": [stair]}
+
+    expectation = build_design_geometry_expectation(
+        case_id="live-plan-bounds-alias",
+        design_brief=design_brief,
+        expected_facts=expected_facts,
+    )
+
+    assert expectation["stairs"]["stair-1"]["bbox"] == {
+        "x": [0.5, 1.5],
+        "y": [4.05, 7.95],
+        "z": [0.15, 3.15],
+    }
+
+
+def test_candidate_gate_keeps_design_expectation_for_stair_only_case(tmp_path):
+    design_brief = {
+        "known_facts": {
+            "stairs": [
+                {
+                    "id": "stair-1",
+                    "bounds": "x=0..1000,y=0..3000",
+                    "start_elevation_mm": 0,
+                    "end_elevation_mm": 3000,
+                }
+            ]
+        }
+    }
+    expected_facts = {"stairs": design_brief["known_facts"]["stairs"]}
+    (tmp_path / "design-brief.json").write_text(
+        json.dumps(design_brief), encoding="utf-8"
+    )
+    (tmp_path / "expected-facts.json").write_text(
+        json.dumps(expected_facts), encoding="utf-8"
+    )
+
+    expectation = _semantic_geometry_expectation_from_case(
+        case_root=tmp_path,
+        case_id="stair-only",
+        candidate={"entities": []},
+    )
+
+    assert expectation is not None
+    assert expectation["source"] == "design_brief_expected_facts"
+    assert "stair-1" in expectation["stairs"]
+
+
 def _controlled_design_brief() -> dict:
     return {
         "known_facts": {
