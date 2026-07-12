@@ -19,6 +19,21 @@ def _entity(entity_id, ifc_class, relative_to=None):
             "axis": [0, 0, 1],
             "ref_direction": [1, 0, 0],
         }
+    if ifc_class in {
+        "IfcWall",
+        "IfcSpace",
+        "IfcOpeningElement",
+        "IfcWindow",
+        "IfcSlab",
+        "IfcStair",
+        "IfcStairFlight",
+    }:
+        attributes["Representation"] = {
+            "kind": "extruded_profile",
+            "profile": {"kind": "rectangle", "x": 1000, "y": 200},
+            "depth": 3000,
+            "direction": [0, 0, 1],
+        }
     return {
         "id": entity_id,
         "ifc_class": ifc_class,
@@ -68,7 +83,6 @@ def _fixture(storey_count):
             "space": f"space-{index}",
             "opening": f"opening-{index}",
             "window": f"window-{index}",
-            "containment": f"containment-{index}",
             "void": f"void-{index}",
             "fill": f"fill-{index}",
         }
@@ -77,12 +91,6 @@ def _fixture(storey_count):
             _entity(ids["space"], "IfcSpace", storey_id),
             _entity(ids["opening"], "IfcOpeningElement", ids["wall"]),
             _entity(ids["window"], "IfcWindow", ids["opening"]),
-            _relationship(
-                ids["containment"],
-                "IfcRelContainedInSpatialStructure",
-                RelatingStructure=storey_id,
-                RelatedElements=[ids["wall"], ids["space"], ids["opening"], ids["window"]],
-            ),
             _relationship(
                 ids["void"],
                 "IfcRelVoidsElement",
@@ -246,7 +254,7 @@ def test_staged_generation_stops_on_package_draft_without_promoting_candidate(tm
     payloads[1] = {
         "draft_version": "bim-json-draft/1.0",
         "target_schema_version": "bim-json/2.0",
-        "partial_document": {"entities": {}},
+        "partial_document": {"entities": {"wall-2": {"attributes": {}}}},
         "missing_facts": [
             {
                 "entity_id": "wall-2",

@@ -7,7 +7,15 @@ from typing import Any, Mapping, Sequence
 
 
 _LOCAL_CLASSES = {"IfcWall", "IfcWallStandardCase", "IfcSpace", "IfcDoor", "IfcWindow", "IfcOpeningElement"}
-_CROSS_CLASSES = {"IfcSlab", "IfcStair", "IfcStairFlight", "IfcRamp", "IfcRampFlight"}
+_CROSS_CLASSES = {
+    "IfcSlab",
+    "IfcStair",
+    "IfcStairFlight",
+    "IfcRamp",
+    "IfcRampFlight",
+    "IfcOpeningElement",
+}
+_CROSS_ONLY_CLASSES = _CROSS_CLASSES - {"IfcOpeningElement"}
 _REFERENCE_FIELDS = {
     "relative_to",
     "RelatingObject",
@@ -34,7 +42,7 @@ def validate_package_changeset(
     package = _find_package(manifest, package_id)
     if package is None:
         return _result([_issue("PACKAGE_NOT_DECLARED", "/package_id", package_id)])
-    if changeset.get("package_id") != package_id:
+    if changeset.get("package_id") not in {None, package_id}:
         issues.append(_issue("PACKAGE_BINDING_MISMATCH", "/package_id", package_id))
 
     operations = _records(changeset.get("operations"))
@@ -96,10 +104,13 @@ def _local_package_issues(
     relationships = [
         value for value in combined.values() if str(value.get("ifc_class", "")).startswith("IfcRel")
     ]
+    current_relationships = [
+        value for value in values.values() if str(value.get("ifc_class", "")).startswith("IfcRel")
+    ]
     containment = _containment_map(relationships)
     for component_id, value in values.items():
         ifc_class = str(value.get("ifc_class", ""))
-        if ifc_class in _CROSS_CLASSES:
+        if ifc_class in _CROSS_ONLY_CLASSES:
             issues.append(_issue("PACKAGE_VERTICAL_COMPONENT_IN_LOCAL", f"/{component_id}/ifc_class", component_id))
         elif not ifc_class.startswith("IfcRel") and ifc_class not in _LOCAL_CLASSES:
             issues.append(_issue("PACKAGE_LOCAL_COMPONENT_INVALID", f"/{component_id}/ifc_class", component_id))
@@ -108,14 +119,14 @@ def _local_package_issues(
         str(rel.get("attributes", {}).get("RelatedOpeningElement")): str(
             rel.get("attributes", {}).get("RelatingBuildingElement")
         )
-        for rel in relationships
+        for rel in current_relationships
         if rel.get("ifc_class") == "IfcRelVoidsElement"
     }
     fills = {
         str(rel.get("attributes", {}).get("RelatedBuildingElement")): str(
             rel.get("attributes", {}).get("RelatingOpeningElement")
         )
-        for rel in relationships
+        for rel in current_relationships
         if rel.get("ifc_class") == "IfcRelFillsElement"
     }
     for opening_id, host_id in voids.items():
