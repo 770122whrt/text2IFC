@@ -33,6 +33,7 @@ def _inputs() -> dict:
                 "actual": {"top": 3000},
             }
         ],
+        "CONTEXT_ISSUES": [],
         "CHANGESET_SCHEMA": {"title": "text2IFC BIM JSON ChangeSet 1.0"},
         "DRAFT_SCHEMA": {"title": "BIM JSON Draft Envelope 1.0"},
         "FEW_SHOTS": [
@@ -117,3 +118,26 @@ def test_staged_package_prompt_teaches_add_operations_are_generator_owned():
     assert {"IfcRelVoidsElement", "IfcRelFillsElement"} <= {
         operation.get("value", {}).get("ifc_class") for operation in operations
     }
+
+
+def test_staged_cross_storey_few_shot_teaches_flight_and_slab_opening_graph():
+    assert "changeset-staged-cross-storey" in {path.stem for path in FEW_SHOT_PATHS}
+    example = json.loads(
+        open(
+            "prompts/agent/few-shot/changeset-staged-cross-storey.json",
+            encoding="utf-8",
+        ).read()
+    )
+
+    classes = {
+        operation.get("value", {}).get("ifc_class")
+        for operation in example["output"]["operations"]
+    }
+    assert {
+        "IfcSlab",
+        "IfcOpeningElement",
+        "IfcStair",
+        "IfcStairFlight",
+        "IfcRelVoidsElement",
+        "IfcRelAggregates",
+    } <= classes
