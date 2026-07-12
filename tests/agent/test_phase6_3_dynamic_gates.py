@@ -273,6 +273,45 @@ def test_dynamic_gates_fail_filling_bounds_outside_opening():
     ]
 
 
+def test_dynamic_gates_enforce_expected_host_centerline_alignment():
+    expected = _expected_facts(
+        storeys=["storey-1"],
+        doors=[
+            {
+                "id": "door-south",
+                "storey": "storey-1",
+                "host_wall": "wall-south",
+                "alignment": "host_centerline",
+            }
+        ],
+        windows=[],
+    )
+    candidate = _candidate(
+        storeys=["storey-1"],
+        walls=[("wall-south", "storey-1")],
+        doors=[("door-south", "storey-1", "wall-south")],
+        windows=[],
+        include_opening_relationships=True,
+    )
+    _set_rectangle(candidate, "wall-south", x=8000, y=200)
+    _set_rectangle(candidate, "opening-door-south", x=900, y=200)
+    _set_rectangle(candidate, "door-south", x=900, y=100)
+    _set_placement_origin(candidate, "opening-door-south", [100, 0, 0])
+
+    gates = _by_name(evaluate_dynamic_gates(candidate=candidate, expected_facts=expected))
+
+    issue = next(
+        item
+        for item in gates["dynamic_opening_fill"]["issues"]
+        if item["code"] == "OPENING_HOST_ALIGNMENT_MISMATCH"
+    )
+    assert issue["path"] == "/entities/opening-door-south/attributes/ObjectPlacement/origin/0"
+    assert issue["target_entity_ids"] == ["opening-door-south"]
+    assert issue["expected_local_x"] == 0.0
+    assert issue["actual_local_x"] == 100.0
+    assert issue["source_alignment"] == "host_centerline"
+
+
 def test_dynamic_gates_allow_equivalent_opening_and_filling_representation_dialects():
     expected = _expected_facts(
         storeys=["storey-1"],

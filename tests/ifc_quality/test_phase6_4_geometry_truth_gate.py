@@ -128,6 +128,15 @@ def test_generated_ifc_gate_rejects_wrong_roof_stair_and_opening_bounds(tmp_path
     assert "STAIR_RISE_DIRECTION_MISMATCH" in codes
     assert "STAIR_STEP_PROFILE_MISSING" in codes
     assert "STAIR_OPENING_BBOX_MISMATCH" in codes
+    stair_rise = next(
+        item for item in gate.issues if item["code"] == "STAIR_RISE_DIRECTION_MISMATCH"
+    )
+    assert stair_rise["endpoint_deltas"] == {
+        "lower": pytest.approx(-0.15),
+        "upper": pytest.approx(0.15),
+    }
+    assert stair_rise["translation_only_valid"] is False
+    assert stair_rise["recommended_action"] == "reshape_flight_profile_preserve_endpoints"
 
 
 def _slab_gap_expectation() -> dict:
