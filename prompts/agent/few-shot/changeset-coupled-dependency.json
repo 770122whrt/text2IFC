@@ -1,0 +1,51 @@
+{
+  "few_shot_id": "changeset.coupled-dependency",
+  "description": "Align an opening and filling through explicitly authorized coupled operations.",
+  "input": {
+    "issues": [
+      {
+        "issue_id": "issue-opening-placement",
+        "actual_ref": "entity:opening-a#/attributes/ObjectPlacement",
+        "expected": {"origin": [2400, 0, 900]},
+        "actual": {"origin": [0, 2400, 900]}
+      },
+      {
+        "issue_id": "issue-filling-placement",
+        "actual_ref": "entity:window-a#/attributes/ObjectPlacement",
+        "expected": {"origin": [0, 0, 0]},
+        "actual": {"origin": [0, 0, 900]}
+      }
+    ]
+  },
+  "output": {
+    "schema_version": "text2ifc/bim-json-changeset/1.0",
+    "changeset_id": "changeset-opening-window-a",
+    "base_revision_id": "revision-base",
+    "base_candidate_hash": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+    "expected_facts_hash": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+    "source_issue_ids": ["issue-opening-placement", "issue-filling-placement"],
+    "scope_id": "scope-opening-window-a",
+    "operations": [
+      {
+        "operation_id": "operation-opening-a-placement",
+        "op": "update_entity",
+        "target_id": "opening-a",
+        "target_component_hash": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "changes": {
+          "/attributes/ObjectPlacement/origin": [2400, 0, 900]
+        },
+        "evidence_refs": ["issue-opening-placement:/expected"]
+      },
+      {
+        "operation_id": "operation-window-a-placement",
+        "op": "update_entity",
+        "target_id": "window-a",
+        "target_component_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+        "changes": {
+          "/attributes/ObjectPlacement/origin": [0, 0, 0]
+        },
+        "evidence_refs": ["issue-filling-placement:/expected"]
+      }
+    ]
+  }
+}

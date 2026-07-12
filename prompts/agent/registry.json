@@ -178,6 +178,38 @@
       ]
     },
     {
+      "template_id": "bim-json-changeset.v1",
+      "role": "bim_json_generator",
+      "mode": "changeset",
+      "path": "prompts/agent/bim-json-changeset-v1.md",
+      "sha256": "sha256:df006bfe8c8d3ed3b80f5ee807f8a4bf1da73023fa978f90988e9da99e7a311a",
+      "required_inputs": [
+        "USER_REQUEST",
+        "CONVERSATION",
+        "DESIGN_BRIEF",
+        "EXPECTED_FACTS",
+        "SCOPED_COMPONENTS",
+        "BASE_REVISION",
+        "CHANGE_SCOPE",
+        "ISSUES",
+        "CHANGESET_SCHEMA",
+        "DRAFT_SCHEMA",
+        "FEW_SHOTS"
+      ],
+      "forbidden_outputs": [
+        "raw_ifc",
+        "step_text",
+        "step_id",
+        "IfcCartesianPoint",
+        "IfcDirection",
+        "IfcOwnerHistory",
+        "compiler_only_object",
+        "full_bim_json_replacement",
+        "array_index_target",
+        "unauthorized_component_change"
+      ]
+    },
+    {
       "template_id": "audit.v1",
       "role": "audit",
       "mode": "semantic_review",
