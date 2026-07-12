@@ -180,7 +180,7 @@ def _stair_endpoint_diagnostics(
     lower_delta = float(expected_z[0]) - float(actual_z[0])
     upper_delta = float(expected_z[1]) - float(actual_z[1])
     translation_only_valid = abs(lower_delta - upper_delta) <= tolerance
-    return {
+    diagnostics = {
         "endpoint_deltas": {"lower": lower_delta, "upper": upper_delta},
         "translation_only_valid": translation_only_valid,
         "recommended_action": (
@@ -189,6 +189,18 @@ def _stair_endpoint_diagnostics(
             else "reshape_flight_profile_preserve_endpoints"
         ),
     }
+    if not translation_only_valid:
+        diagnostics["correction_constraints"] = {
+            "lower_endpoint": (
+                "Create a non-zero-width horizontal tread edge at the expected "
+                "lower world elevation."
+            ),
+            "upper_endpoint": "Preserve the expected upper world elevation.",
+            "forbidden": (
+                "Do not fix only parent or flight translation when endpoint deltas differ."
+            ),
+        }
+    return diagnostics
 
 
 def _check_component_bboxes(
