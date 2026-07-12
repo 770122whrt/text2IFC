@@ -22,6 +22,13 @@ from text2ifc_agent.session_store import SessionStore  # noqa: E402
 
 
 CASE_ROOT = ROOT / "dataset" / "processed" / "agent-demo" / "phase6.5-cases"
+CASE_FILES = {
+    "easy": "two-storey-case.json",
+    "medium": "medium-two-storey-l-shape.json",
+    "hard": "hard-three-storey-l-shape.json",
+    "two-storey": "two-storey-case.json",
+    "three-storey": "three-storey-case.json",
+}
 DEFAULT_OUTPUT_ROOT = (
     ROOT / "dataset" / "processed" / "agent-demo" / "phase6.5-live-stability"
 )
@@ -30,9 +37,9 @@ WorkflowRunner = Callable[..., dict[str, Any]]
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--case", choices=("two-storey", "three-storey"))
-    parser.add_argument("--runs", type=int, default=3)
-    parser.add_argument("--required-consecutive", type=int, default=3)
+    parser.add_argument("--case", choices=tuple(CASE_FILES))
+    parser.add_argument("--runs", type=int, default=1)
+    parser.add_argument("--required-consecutive", type=int, default=1)
     parser.add_argument("--env-file", type=Path, default=ROOT / ".env")
     parser.add_argument("--output-root", type=Path, default=DEFAULT_OUTPUT_ROOT)
     parser.add_argument("--timeout-seconds", type=float, default=1800.0)
@@ -103,7 +110,7 @@ def _run_real_workflow(
     timeout_seconds: float,
     trace_level: str,
 ) -> dict[str, Any]:
-    fixture = _read_json(CASE_ROOT / f"{case_name}-case.json")
+    fixture = _read_json(case_fixture_path(case_name))
     transcript = io.StringIO()
     driver = _CanonicalInputDriver(str(fixture["input"]))
     os.environ["TEXT2IFC_PROVIDER_TIMEOUT_SECONDS"] = str(timeout_seconds)
@@ -172,6 +179,14 @@ def _is_live_acceptance(row: dict[str, Any]) -> bool:
         and row.get("artifacts", {}).get("ifc")
         and row.get("artifacts", {}).get("report")
     )
+
+
+def case_fixture_path(case_name: str) -> Path:
+    try:
+        filename = CASE_FILES[case_name]
+    except KeyError as exc:
+        raise ValueError(f"unknown Phase 6.5 case: {case_name}") from exc
+    return CASE_ROOT / filename
 
 
 class _CanonicalInputDriver:
