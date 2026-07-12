@@ -74,6 +74,7 @@ def collect_revision_audit_evidence(case_dir: Path | str) -> dict[str, Any]:
         "preservation": preservation,
         "source_issue_ids": source_issue_ids,
         "operations": operations,
+        "changesets": changesets,
         "scopes": scopes,
         "packages": list(package_records.get("packages", [])),
         "gate_evidence": gate_evidence,

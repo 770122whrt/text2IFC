@@ -7,6 +7,8 @@ import json
 from pathlib import Path
 from typing import Any
 
+from .audit import collect_revision_audit_evidence
+
 
 class RunReportError(ValueError):
     """Raised when a live run lacks evidence required for report generation."""
@@ -131,6 +133,8 @@ def build_live_run_report(*, case_dir: Path | str) -> Path:
     lines.extend(_stage_section(root, "Audit Agent", audit))
     lines.extend(_semantic_coverage_section(root))
     lines.extend(_generated_ifc_gates_section(root))
+    lines.extend(_revision_history_section(root))
+    lines.extend(_stage_timing_section(root))
     lines.extend(_metrics_section(root))
     lines.extend(_source_sidecars_section(root))
     _write_text(report_path, "\n".join(lines).rstrip() + "\n")
@@ -379,6 +383,107 @@ def _metrics_section(root: Path) -> list[str]:
     return lines
 
 
+def _revision_history_section(root: Path) -> list[str]:
+    evidence = collect_revision_audit_evidence(root)
+    if evidence.get("status") == "not_applicable":
+        return []
+    revision = evidence.get("revision", {})
+    preservation = evidence.get("preservation", {})
+    lines = [
+        "## Revision and ChangeSet History",
+        "",
+        f"- evidence_status: `{evidence.get('status')}`",
+        f"- revision_id: `{revision.get('revision_id')}`",
+        f"- candidate_hash: `{revision.get('candidate_hash')}`",
+        f"- expected_facts_hash: `{revision.get('expected_facts_hash')}`",
+        f"- changed_ids: `{evidence.get('changed_ids', [])}`",
+        f"- dependency_ids: `{evidence.get('dependency_ids', [])}`",
+        f"- source_issue_ids: `{evidence.get('source_issue_ids', [])}`",
+        "",
+        "### Preservation",
+        "",
+        _json_block(preservation),
+        "",
+    ]
+    for index, record in enumerate(evidence.get("changesets", []), start=1):
+        payload = record.get("payload", {}) if isinstance(record, dict) else {}
+        path = record.get("path") if isinstance(record, dict) else None
+        lines.extend(
+            [
+                f"### ChangeSet {index}",
+                "",
+                f"- changeset_id: `{payload.get('changeset_id')}`",
+                f"- source_issue_ids: `{payload.get('source_issue_ids', [])}`",
+                "",
+                _json_block(payload.get("operations", [])),
+                "",
+                _source_link(str(path)) if path else "",
+                "",
+            ]
+        )
+    for index, record in enumerate(evidence.get("scopes", []), start=1):
+        payload = record.get("payload", {}) if isinstance(record, dict) else {}
+        path = record.get("path") if isinstance(record, dict) else None
+        lines.extend(
+            [
+                f"### Allowed Scope {index}",
+                "",
+                _json_block(payload),
+                "",
+                _source_link(str(path)) if path else "",
+                "",
+            ]
+        )
+    packages = evidence.get("packages", [])
+    if packages:
+        lines.extend(
+            [
+                "## Generation Packages",
+                "",
+                _json_block(packages),
+                "",
+                _source_link("generator-staged/package-records.json"),
+                "",
+            ]
+        )
+    gate_evidence = evidence.get("gate_evidence", {})
+    if gate_evidence:
+        lines.extend(
+            [
+                "### Revision Gates",
+                "",
+                _json_block(gate_evidence),
+                "",
+                _source_link("revision-gates.json"),
+                "",
+            ]
+        )
+    return [line for line in lines if line is not None]
+
+
+def _stage_timing_section(root: Path) -> list[str]:
+    progress_path = root / "progress.jsonl"
+    if not progress_path.is_file():
+        return []
+    events: list[dict[str, Any]] = []
+    for line in progress_path.read_text(encoding="utf-8").splitlines():
+        try:
+            payload = json.loads(line)
+        except json.JSONDecodeError:
+            continue
+        if isinstance(payload, dict) and isinstance(payload.get("elapsed_seconds"), (int, float)):
+            events.append(payload)
+    by_stage: dict[str, list[float]] = {}
+    for event in events:
+        by_stage.setdefault(str(event.get("stage", "unknown")), []).append(float(event["elapsed_seconds"]))
+    lines = ["## Stage Timing", ""]
+    for stage, values in by_stage.items():
+        duration = round(max(values) - min(values), 3) if len(values) > 1 else 0.0
+        lines.append(f"- {stage}: `{duration}` seconds")
+    lines.extend(["", _source_link("progress.jsonl"), ""])
+    return lines
+
+
 def _source_sidecars_section(root: Path) -> list[str]:
     lines = ["## Source Sidecars", ""]
     for title, directory, files in STAGE_SIDECARS:
@@ -396,6 +501,25 @@ def _source_sidecars_section(root: Path) -> list[str]:
         lines.extend(["### Generated IFC Gates", ""])
         for name in existing_gates:
             lines.append(f"- [{name}]({name})")
+        lines.append("")
+    revision_sidecars = [
+        path
+        for path in (
+            root / "candidate-revision.json",
+            root / "component-preservation.json",
+            root / "revision-gates.json",
+            root / "generator-staged" / "package-records.json",
+            root / "progress.jsonl",
+        )
+        if path.is_file()
+    ]
+    revision_sidecars.extend(sorted(root.glob("changeset-round-*/change-scope.json")))
+    revision_sidecars.extend(sorted(root.glob("changeset-round-*/changeset.json")))
+    if revision_sidecars:
+        lines.extend(["### Revision and Package Evidence", ""])
+        for path in revision_sidecars:
+            relative = path.relative_to(root).as_posix()
+            lines.append(f"- [{relative}]({relative})")
         lines.append("")
     return lines
 
