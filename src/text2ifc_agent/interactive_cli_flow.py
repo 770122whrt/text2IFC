@@ -42,6 +42,7 @@ from .openai_compat import (
 from .prompt_registry import render_prompt
 from .providers import ProviderOutput, ProviderOutputError
 from .run_report import build_live_run_report
+from .scoped_loop import run_scoped_changeset_round
 from .session_store import SessionStore
 from .state import redact_metadata
 
@@ -694,7 +695,8 @@ def run_ready_session_to_ifc(
     previous_issue_count: int | None = None
     for feedback_round_index in range(DEFAULT_MAX_FEEDBACK_ROUNDS):
         if (
-            candidate_gates.get("valid") is True
+            candidate_gates is not None
+            and candidate_gates.get("valid") is True
             and audit["valid"]
             and audit["status"] == "accepted"
         ):
@@ -718,6 +720,8 @@ def run_ready_session_to_ifc(
         audit = regeneration_attempt["audit"]
         previous_issue_count = regeneration_attempt["issue_count"]
         build_live_run_report(case_dir=stored_session.run_dir)
+        if candidate_gates is None:
+            break
     if (
         (not audit["valid"] or audit["status"] != "accepted")
         and not regeneration_attempted
@@ -734,7 +738,8 @@ def run_ready_session_to_ifc(
             audit = repair_attempt["audit"]
             build_live_run_report(case_dir=stored_session.run_dir)
     if (
-        candidate_gates.get("valid") is not True
+        candidate_gates is None
+        or candidate_gates.get("valid") is not True
         or not audit["valid"]
         or audit["status"] != "accepted"
     ):
@@ -1203,74 +1208,81 @@ def _attempt_generator_regeneration_after_audit(
     ):
         return None
 
-    feedback = {
-        "schema_version": "text2ifc/generator-regeneration-feedback/1.0",
-        "route": route_decision["route"],
-        "target_stage": route_decision["target_stage"],
-        "source_stage": "audit",
-        "route_decision": route_decision,
-        "issues": round_record["issues"],
-        "evidence_paths": [
-            path
-            for path in (
-                "generator/candidate.json",
-                "generator/validation.json",
-                "geometry-feedback.json",
-                "gate-summary.json",
-                "audit/audit-report.json",
-                "issues.json",
-                "feedback-rounds.json",
-            )
-            if (run_dir / path).is_file()
-        ],
-    }
     round_number = feedback_round_index + 1
-    regeneration_dir = run_dir / f"generator-regeneration-{round_number:02d}"
-    regeneration_dir.mkdir(parents=True, exist_ok=True)
-    _write_json(regeneration_dir / "generation-feedback.json", feedback)
+    changeset_dir = run_dir / f"changeset-round-{round_number:02d}"
+    changeset_dir.mkdir(parents=True, exist_ok=True)
+    candidate = _read_required_json(run_dir / "candidate.json")
+    expected_facts = _read_required_json(run_dir / "expected-facts.json")
+    base_revision = _read_optional_json(run_dir / "candidate-revision.json")
+    user_request = (design_dir / "input.txt").read_text(encoding="utf-8").rstrip("\r\n")
+    conversation = json.loads(
+        (design_dir / "conversation.json").read_text(encoding="utf-8")
+    )
+    if not isinstance(conversation, list):
+        raise ValueError("Design Brief conversation must be a JSON array")
+    design_brief = _read_required_json(design_dir / "design-brief.json")
     _emit_progress(
         progress,
-        "generator",
-        {"status": "regeneration_started", "route": "regenerate_json"},
+        "changeset_scope",
+        {"status": "planning", "route": "regenerate_json", "round": round_number},
     )
-    generator = run_generator_stage(
+    _emit_progress(
+        progress,
+        "changeset",
+        {"status": "model_call_started", "round": round_number},
+    )
+    scoped = run_scoped_changeset_round(
         provider=provider_factory(),
-        output_dir=regeneration_dir,
-        design_source_dir=design_dir,
+        output_dir=changeset_dir,
         case_id=stored_session.session_hash,
-        session_prefix="phase6.2",
+        round_number=round_number,
+        user_request=user_request,
+        conversation=conversation,
+        design_brief=design_brief,
+        expected_facts=expected_facts,
+        candidate=candidate,
+        issues=round_record["issues"],
         trace_level=trace_level,
-        generation_feedback=feedback,
-        generator_call_index=round_number + 1,
+        base_revision=base_revision,
     )
     _record_stage_payloads(
         store,
         stored_session.session_id,
-        "generator_regeneration",
-        generator,
+        "changeset",
+        scoped,
     )
     _emit_progress(
         progress,
-        "generator",
-        {"status": generator.get("status"), "response_id": generator.get("response_id")},
+        "changeset",
+        {
+            "status": scoped.get("status"),
+            "response_id": (scoped.get("stage") or {}).get("response_id"),
+            "round": round_number,
+        },
     )
-    if (
-        generator["classification"] != "formal"
-        or not generator["valid"]
-        or not (regeneration_dir / "candidate.json").is_file()
-    ):
+    if not scoped["valid"] or scoped.get("candidate") is None:
         return {
-            "generator": generator,
+            "generator": {
+                "status": scoped.get("status", "blocked"),
+                "classification": (scoped.get("stage") or {}).get("classification", "invalid"),
+                "valid": False,
+            },
             "semantic_coverage": None,
             "candidate_gates": None,
             "audit": {"valid": False, "status": "blocked"},
             "issue_count": len(round_record["issues"]),
         }
 
-    _promote_regenerated_generator_output(
+    _promote_changeset_revision(
         store=store,
         stored_session=stored_session,
-        regeneration_dir=regeneration_dir,
+        changeset_dir=changeset_dir,
+        scoped=scoped,
+    )
+    _emit_progress(
+        progress,
+        "changeset_application",
+        {"status": "applied", "revision_id": scoped["revision"]["revision_id"]},
     )
     _emit_progress(progress, "semantic_coverage", {"status": "started"})
     semantic_coverage = run_semantic_coverage_stage(
@@ -1323,12 +1335,60 @@ def _attempt_generator_regeneration_after_audit(
     )
     _archive_round_evidence(run_dir, round_number + 1)
     return {
-        "generator": generator,
+        "generator": {
+            "status": "changeset_applied",
+            "classification": "changeset",
+            "valid": True,
+            "response_id": (scoped.get("stage") or {}).get("response_id"),
+        },
         "semantic_coverage": semantic_coverage,
         "candidate_gates": candidate_gates,
         "audit": audit,
         "issue_count": len(round_record["issues"]),
     }
+
+
+def _promote_changeset_revision(
+    *,
+    store: SessionStore,
+    stored_session: Any,
+    changeset_dir: Path,
+    scoped: Mapping[str, Any],
+) -> None:
+    run_dir = stored_session.run_dir
+    generator_dir = run_dir / "generator"
+    backup_dir = run_dir / "generator-before-changesets"
+    if generator_dir.is_dir() and not backup_dir.exists():
+        shutil.copytree(generator_dir, backup_dir)
+    revision_id = str(scoped["revision"]["revision_id"])
+    revision_dir = changeset_dir / "revisions" / revision_id
+    candidate_path = revision_dir / "candidate.json"
+    if not candidate_path.is_file():
+        revision_dir.mkdir(parents=True, exist_ok=True)
+        _write_json(candidate_path, scoped["candidate"])
+    shutil.copyfile(candidate_path, generator_dir / "candidate.json")
+    _copy_artifact_to_run_root(
+        store,
+        stored_session,
+        kind="candidate",
+        source=candidate_path,
+        target_name="candidate.json",
+    )
+    _write_json(run_dir / "candidate-revision.json", scoped["revision"])
+    _write_json(run_dir / "component-preservation.json", scoped["preservation"])
+    _write_candidate_origin(
+        run_dir,
+        candidate_origin="changeset_revision",
+        live_acceptance_eligible=True,
+        route="regenerate_json",
+    )
+    for name, kind in (
+        (f"{changeset_dir.name}/change-scope.json", "change_scope"),
+        (f"{changeset_dir.name}/changeset.json", "changeset"),
+        ("candidate-revision.json", "candidate_revision"),
+        ("component-preservation.json", "component_preservation"),
+    ):
+        _record_existing_artifact(store, stored_session, kind=kind, name=name)
 
 
 def _promote_regenerated_generator_output(
@@ -1680,6 +1740,13 @@ def _read_optional_json(path: Path) -> dict[str, Any] | None:
         return None
     payload = json.loads(path.read_text(encoding="utf-8"))
     return dict(payload) if isinstance(payload, Mapping) else None
+
+
+def _read_required_json(path: Path) -> dict[str, Any]:
+    payload = _read_optional_json(path)
+    if payload is None:
+        raise ValueError(f"Required JSON object is missing or invalid: {path}")
+    return payload
 
 
 def _semantic_coverage_diagnostics(payload: Mapping[str, Any]) -> list[dict[str, Any]]:

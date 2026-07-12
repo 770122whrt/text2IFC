@@ -236,7 +236,9 @@ def test_ready_session_applies_scoped_changeset_after_geometry_audit_revise(
     assert store.get_session(session.session_hash).status == "compiled"
 
 
-def test_geometry_gate_failure_regenerates_when_audit_incorrectly_accepts(tmp_path):
+def test_geometry_gate_failure_uses_changeset_when_audit_incorrectly_accepts(
+    tmp_path, monkeypatch
+):
     root = tmp_path / "phase6.2-interactive-cli"
     store = SessionStore.open(root / "sessions.sqlite", artifact_root=root)
     session = store.create_session(
@@ -265,8 +267,9 @@ def test_geometry_gate_failure_regenerates_when_audit_incorrectly_accepts(tmp_pa
         ],
     }
     final_accept = deepcopy(incorrect_accept)
-    provider = _SequenceLiveProvider(
-        [blocked_candidate, incorrect_accept, regenerated_candidate, final_accept]
+    provider = _SequenceLiveProvider([blocked_candidate, incorrect_accept, final_accept])
+    scoped_calls = _install_scoped_candidate_sequence(
+        monkeypatch, [regenerated_candidate]
     )
     progress_events = []
 
@@ -281,20 +284,11 @@ def test_geometry_gate_failure_regenerates_when_audit_incorrectly_accepts(tmp_pa
     assert provider.session_ids == [
         f"phase6.2-{session.session_hash}-generator-01",
         f"phase6.2-{session.session_hash}-audit-01",
-        f"phase6.2-{session.session_hash}-generator-02",
         f"phase6.2-{session.session_hash}-audit-02",
     ]
-    feedback = json.loads(
-        (
-            session.run_dir
-            / "generator-regeneration-01"
-            / "generation-feedback.json"
-        ).read_text(encoding="utf-8")
-    )
-    assert feedback["route"] == "regenerate_json"
-    assert any(
-        issue["source"] == "geometry_gate" for issue in feedback["issues"]
-    )
+    assert len(scoped_calls) == 1
+    assert any(issue["source"] == "geometry_gate" for issue in scoped_calls[0]["issues"])
+    assert (session.run_dir / "changeset-round-01").is_dir()
     gate_statuses = [
         payload["status"]
         for stage, payload in progress_events
@@ -303,7 +297,7 @@ def test_geometry_gate_failure_regenerates_when_audit_incorrectly_accepts(tmp_pa
     assert gate_statuses == ["failed", "passed"]
 
 
-def test_geometry_feedback_allows_two_generator_regeneration_rounds(tmp_path):
+def test_geometry_feedback_allows_two_scoped_changeset_rounds(tmp_path, monkeypatch):
     root = tmp_path / "phase6.2-interactive-cli"
     store = SessionStore.open(root / "sessions.sqlite", artifact_root=root)
     session = store.create_session(original_input="Create a checked rectangular room.")
@@ -340,12 +334,11 @@ def test_geometry_feedback_allows_two_generator_regeneration_rounds(tmp_path):
         [
             first_blocked,
             audit_revise,
-            second_blocked,
             audit_revise,
-            valid_candidate,
             audit_accept,
         ]
     )
+    _install_scoped_candidate_sequence(monkeypatch, [second_blocked, valid_candidate])
 
     result = run_ready_session_to_ifc(
         store=store,
@@ -357,9 +350,7 @@ def test_geometry_feedback_allows_two_generator_regeneration_rounds(tmp_path):
     assert provider.session_ids == [
         f"phase6.2-{session.session_hash}-generator-01",
         f"phase6.2-{session.session_hash}-audit-01",
-        f"phase6.2-{session.session_hash}-generator-02",
         f"phase6.2-{session.session_hash}-audit-02",
-        f"phase6.2-{session.session_hash}-generator-03",
         f"phase6.2-{session.session_hash}-audit-03",
     ]
     rounds = json.loads(
@@ -367,8 +358,8 @@ def test_geometry_feedback_allows_two_generator_regeneration_rounds(tmp_path):
     )["rounds"]
     assert [record["round_index"] for record in rounds] == [0, 1, 2]
     assert rounds[-1]["route"] == "accepted"
-    assert (session.run_dir / "generator-regeneration-01").is_dir()
-    assert (session.run_dir / "generator-regeneration-02").is_dir()
+    assert (session.run_dir / "changeset-round-01").is_dir()
+    assert (session.run_dir / "changeset-round-02").is_dir()
     assert (session.run_dir / "evaluation-rounds" / "round-01").is_dir()
     assert (session.run_dir / "evaluation-rounds" / "round-02").is_dir()
     assert (session.run_dir / "evaluation-rounds" / "round-03").is_dir()
@@ -425,12 +416,11 @@ def test_failed_dynamic_gate_cannot_be_overridden_by_audit_accept(
         [
             first_blocked,
             incorrect_accept,
-            second_blocked,
             incorrect_accept,
-            valid_candidate,
             incorrect_accept,
         ]
     )
+    _install_scoped_candidate_sequence(monkeypatch, [second_blocked, valid_candidate])
 
     result = run_ready_session_to_ifc(
         store=store,
@@ -442,9 +432,7 @@ def test_failed_dynamic_gate_cannot_be_overridden_by_audit_accept(
     assert provider.session_ids == [
         f"phase6.2-{session.session_hash}-generator-01",
         f"phase6.2-{session.session_hash}-audit-01",
-        f"phase6.2-{session.session_hash}-generator-02",
         f"phase6.2-{session.session_hash}-audit-02",
-        f"phase6.2-{session.session_hash}-generator-03",
         f"phase6.2-{session.session_hash}-audit-03",
     ]
     gate_summary = json.loads(
@@ -588,6 +576,42 @@ def _opening_axis_blocked_candidate(candidate: dict) -> dict:
     representation["profile"]["y"] = 2100
     representation["depth"] = 200
     return candidate
+
+
+def _install_scoped_candidate_sequence(monkeypatch, candidates):
+    calls = []
+
+    def apply_scoped_round(**kwargs):
+        calls.append(kwargs)
+        candidate = candidates[len(calls) - 1]
+        sequence = len(calls)
+        return {
+            "valid": True,
+            "status": "applied",
+            "candidate": candidate,
+            "revision": {
+                "revision_id": f"revision-{sequence:02d}",
+                "sequence": sequence,
+                "candidate_hash": "sha256:" + str(sequence) * 64,
+            },
+            "preservation": {
+                "unrelated_component_preservation_rate": 1.0,
+                "forbidden_drift_ids": [],
+            },
+            "issues": [],
+            "scope": {"scope_id": f"scope-revision-{sequence:02d}"},
+            "stage": {
+                "status": "changeset",
+                "classification": "changeset",
+                "response_id": f"msg_changeset_{sequence}",
+            },
+        }
+
+    monkeypatch.setattr(
+        "text2ifc_agent.interactive_cli_flow.run_scoped_changeset_round",
+        apply_scoped_round,
+    )
+    return calls
 
 
 def _write_ready_design_brief_call(run_dir: Path) -> None:
