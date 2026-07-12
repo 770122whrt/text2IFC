@@ -1,4 +1,5 @@
 import json
+import sys
 import types
 import text2ifc_agent.openai_compat as openai_compat
 from pathlib import Path
@@ -17,6 +18,47 @@ from text2ifc_agent.openai_compat import (
     run_phase6_2_compatibility_check,
 )
 from text2ifc_agent.providers import ProviderOutputError
+
+
+def test_real_openai_clients_disable_hidden_sdk_retries(monkeypatch):
+    calls = []
+
+    class OpenAI:
+        def __init__(self, **kwargs):
+            calls.append(kwargs)
+
+    monkeypatch.setitem(sys.modules, "openai", types.SimpleNamespace(OpenAI=OpenAI))
+    config = openai_compat.OpenAICompatRuntimeConfig(
+        provider="deepseek",
+        provider_label="DeepSeek",
+        api_key="secret",
+        api_key_env="API_KEY",
+        base_url="https://provider.invalid",
+        base_url_env="OpenAI_BASE_URL",
+        model="model",
+        model_env="TEXT2IFC_DEEPSEEK_MODEL",
+        timeout_seconds=123,
+    )
+
+    openai_compat._create_openai_client(config=config, client_factory=None)
+    from text2ifc_agent.interactive_cli_flow import _openai_client
+
+    _openai_client(config=config, client_factory=None)
+
+    assert calls == [
+        {
+            "api_key": "secret",
+            "base_url": "https://provider.invalid",
+            "timeout": 123,
+            "max_retries": 0,
+        },
+        {
+            "api_key": "secret",
+            "base_url": "https://provider.invalid",
+            "timeout": 123,
+            "max_retries": 0,
+        },
+    ]
 
 
 def test_openai_compatible_config_accepts_api_key_without_leaking_values():
