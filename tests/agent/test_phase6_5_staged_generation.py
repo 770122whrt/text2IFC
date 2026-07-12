@@ -305,3 +305,27 @@ def test_staged_generation_stops_on_package_draft_without_promoting_candidate(tm
     assert len(result["package_records"]) == 2
     assert not (tmp_path / "candidate.json").exists()
     assert not (tmp_path / "output.ifc").exists()
+
+
+def test_staged_generation_retries_only_the_failed_package_within_three_attempts(tmp_path):
+    skeleton, manifest, expected, package_values = _fixture(2)
+    valid_payloads = _changesets(skeleton, manifest, expected, package_values)
+    provider = SequenceProvider([skeleton, *valid_payloads])
+
+    result = run_staged_generation(
+        provider=provider,
+        output_dir=tmp_path,
+        case_id="case-package-retry",
+        user_request="创建两层建筑。",
+        conversation=[{"role": "user", "content": "创建两层建筑。"}],
+        design_brief={"status": "ready"},
+        expected_facts=expected,
+        skeleton=skeleton,
+        manifest=manifest,
+    )
+
+    assert result["valid"] is True
+    assert len(provider.calls) == len(valid_payloads) + 1
+    assert result["package_records"][0]["attempt_count"] == 2
+    assert all(record["attempt_count"] == 1 for record in result["package_records"][1:])
+    assert (tmp_path / "package-01-package-storey-1" / "attempt-02" / "changeset.json").is_file()
