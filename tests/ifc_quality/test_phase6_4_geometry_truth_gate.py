@@ -1,7 +1,12 @@
 from pathlib import Path
 
+import pytest
+
 from text2ifc_compiler import compile_document
-from text2ifc_quality.generated_ifc import check_generated_ifc
+from text2ifc_quality.generated_ifc import (
+    _stair_endpoint_diagnostics,
+    check_generated_ifc,
+)
 
 
 def test_generated_ifc_gate_reports_vertical_slab_wall_gap(tmp_path: Path):
@@ -132,11 +137,26 @@ def test_generated_ifc_gate_rejects_wrong_roof_stair_and_opening_bounds(tmp_path
         item for item in gate.issues if item["code"] == "STAIR_RISE_DIRECTION_MISMATCH"
     )
     assert stair_rise["endpoint_deltas"] == {
-        "lower": pytest.approx(-0.15),
+        "lower": pytest.approx(0.15),
         "upper": pytest.approx(0.15),
     }
-    assert stair_rise["translation_only_valid"] is False
-    assert stair_rise["recommended_action"] == "reshape_flight_profile_preserve_endpoints"
+    assert stair_rise["translation_only_valid"] is True
+    assert stair_rise["recommended_action"] == "translate_stair"
+
+
+def test_stair_endpoint_diagnostics_require_profile_reshape_when_only_one_end_differs():
+    diagnostics = _stair_endpoint_diagnostics(
+        actual_z=[0.3, 3.15],
+        expected_z=[0.15, 3.15],
+        tolerance=0.05,
+    )
+
+    assert diagnostics["endpoint_deltas"] == {
+        "lower": pytest.approx(-0.15),
+        "upper": pytest.approx(0.0),
+    }
+    assert diagnostics["translation_only_valid"] is False
+    assert diagnostics["recommended_action"] == "reshape_flight_profile_preserve_endpoints"
 
 
 def _slab_gap_expectation() -> dict:
