@@ -1378,9 +1378,10 @@ def _attempt_generator_regeneration_after_audit(
     if not _geometry_failure_requires_regeneration(run_dir, audit_report):
         return None
 
+    candidate = _read_required_json(run_dir / "candidate.json")
     issues = [
         *normalize_gate_sidecars(run_dir),
-        *normalize_audit_findings(audit_report),
+        *normalize_audit_findings(audit_report, candidate=candidate),
     ]
     if not issues:
         return None
@@ -1414,7 +1415,6 @@ def _attempt_generator_regeneration_after_audit(
     round_number = feedback_round_index + 1
     changeset_dir = run_dir / f"changeset-round-{round_number:02d}"
     changeset_dir.mkdir(parents=True, exist_ok=True)
-    candidate = _read_required_json(run_dir / "candidate.json")
     expected_facts = _read_required_json(run_dir / "expected-facts.json")
     base_revision = _read_optional_json(run_dir / "candidate-revision.json")
     user_request = (design_dir / "input.txt").read_text(encoding="utf-8").rstrip("\r\n")

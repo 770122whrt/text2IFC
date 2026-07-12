@@ -164,21 +164,22 @@ def normalize_gate_sidecars(case_dir: Path | str) -> list[Issue]:
 
     root = Path(case_dir)
     issues: list[Issue] = []
+    candidate_ids = _candidate_entity_ids(_read_json(root / "candidate.json"))
     geometry = _read_json(root / "geometry-feedback.json")
     if geometry and geometry.get("success") is False:
         for index, item in enumerate(_list_of_dicts(geometry.get("issues")), start=1):
             code = _upper_code(item)
-            issues.append(
-                Issue(
+            issues.extend(
+                _targeted_issues(
                     issue_id=f"issue_geometry_gate_{index:04d}",
                     source="geometry_gate",
                     severity="blocking",
                     owner="gate",
                     issue_type="geometry_invalid",
-                    actual_ref=_string_or_none(item.get("path")),
-                    evidence=_gate_detail_evidence(code, item),
-                    suggested_route="regenerate_json",
+                    route="regenerate_json",
                     retryable=True,
+                    detail=item,
+                    target_ids=_existing_target_ids(item.get("entity_ids"), candidate_ids),
                 )
             )
 
@@ -197,51 +198,59 @@ def normalize_gate_sidecars(case_dir: Path | str) -> list[Issue]:
                 gate_index += 1
                 code = _upper_code(detail)
                 issue_type = _gate_issue_type(str(code))
-                issues.append(
-                    Issue(
+                issues.extend(
+                    _targeted_issues(
                         issue_id=f"issue_deterministic_gate_{gate_index:04d}",
                         source="deterministic_gate",
                         severity="blocking",
                         owner="generator" if issue_type != "gate_false_positive" else "gate",
                         issue_type=issue_type,
-                        actual_ref=(
-                            _string_or_none(detail.get("path"))
-                            or str(gate.get("name", ""))
-                            or None
-                        ),
-                        evidence=_gate_detail_evidence(code, detail),
-                        suggested_route=(
+                        route=(
                             "gate_issue"
                             if issue_type == "gate_false_positive"
                             else "regenerate_json"
                         ),
                         retryable=issue_type != "gate_false_positive",
+                        detail=detail,
+                        target_ids=_existing_target_ids(detail.get("entity_ids"), candidate_ids),
+                        fallback_ref=(
+                            _string_or_none(detail.get("path"))
+                            or str(gate.get("name", ""))
+                            or None
+                        ),
                     )
                 )
     return issues
 
 
-def normalize_audit_findings(report: Mapping[str, Any]) -> list[Issue]:
+def normalize_audit_findings(
+    report: Mapping[str, Any],
+    *,
+    candidate: Mapping[str, Any] | None = None,
+) -> list[Issue]:
     """Normalize Audit Agent findings into issue ownership."""
 
     findings = _list_of_dicts(report.get("findings"))
     if not findings and report.get("blocking") is True:
         findings = [report]
     issues: list[Issue] = []
+    candidate_ids = _candidate_entity_ids(candidate)
     for index, finding in enumerate(findings, start=1):
         code = _upper_code(finding)
         owner, issue_type, route = _audit_mapping(code)
-        issues.append(
-            Issue(
+        issues.extend(
+            _targeted_issues(
                 issue_id=f"issue_audit_{index:04d}",
                 source="audit",
                 severity=_severity(finding),
                 owner=owner,
                 issue_type=issue_type,
-                actual_ref=_string_or_none(finding.get("path")),
-                evidence=_gate_detail_evidence(code, finding),
-                suggested_route=route,
+                route=route,
                 retryable=route in {"revise_design_brief", "regenerate_json", "repair_json"},
+                detail=finding,
+                target_ids=_existing_target_ids(
+                    finding.get("affected_entities"), candidate_ids
+                ),
             )
         )
     return issues
@@ -329,7 +338,7 @@ def _audit_mapping(code: str) -> tuple[str, str, str]:
         return "design_brief", "changed_original_request", "revise_design_brief"
     if "OPENING" in code or "FILLING" in code:
         return "generator", "geometry_invalid", "regenerate_json"
-    if "PLACEMENT_MISMATCH" in code or "BBOX_MISMATCH" in code:
+    if "PLACEMENT" in code or "BBOX_MISMATCH" in code:
         return "generator", "geometry_invalid", "regenerate_json"
     if "STAIR" in code or "VERTICAL" in code:
         return "generator", "missing_vertical_connection", "regenerate_json"
@@ -377,6 +386,58 @@ def _gate_detail_evidence(code: str, detail: Mapping[str, Any]) -> str:
             f"{json.dumps(evidence_detail, ensure_ascii=False, sort_keys=True)}"
         )
     return _evidence(code, message)
+
+
+def _candidate_entity_ids(candidate: Mapping[str, Any] | None) -> set[str] | None:
+    if not candidate:
+        return None
+    return {
+        str(entity.get("id"))
+        for entity in _list_of_dicts(candidate.get("entities"))
+        if entity.get("id")
+    }
+
+
+def _existing_target_ids(value: Any, candidate_ids: set[str] | None) -> list[str]:
+    values = list(
+        dict.fromkeys(str(item) for item in value)
+    ) if isinstance(value, list) else []
+    if candidate_ids is None:
+        return values
+    return [item for item in values if item in candidate_ids]
+
+
+def _targeted_issues(
+    *,
+    issue_id: str,
+    source: str,
+    severity: str,
+    owner: str,
+    issue_type: str,
+    route: str,
+    retryable: bool,
+    detail: Mapping[str, Any],
+    target_ids: Sequence[str],
+    fallback_ref: str | None = None,
+) -> list[Issue]:
+    targets = list(target_ids)
+    refs = [f"entity:{target_id}#/" for target_id in targets]
+    if not refs:
+        refs = [fallback_ref or _string_or_none(detail.get("path"))]
+    return [
+        Issue(
+            issue_id=(issue_id if len(refs) == 1 else f"{issue_id}_{index:02d}"),
+            source=source,
+            severity=severity,
+            owner=owner,
+            issue_type=issue_type,
+            actual_ref=actual_ref,
+            evidence=_gate_detail_evidence(_upper_code(detail), detail),
+            suggested_route=route,
+            retryable=retryable,
+        )
+        for index, actual_ref in enumerate(refs, start=1)
+    ]
 
 
 def _string_or_none(value: Any) -> str | None:
