@@ -2,6 +2,7 @@ import json
 from copy import deepcopy
 from pathlib import Path
 
+from text2ifc_agent.candidate_index import build_candidate_index
 from text2ifc_agent.live_pipeline import run_candidate_gate_stage
 from text2ifc_agent.interactive_cli_flow import run_ready_session_to_ifc
 from text2ifc_agent.providers import LiveProviderResult, ProviderOutput
@@ -184,7 +185,9 @@ def test_unwaived_unsupported_door_opening_direction_blocks_formal_ifc(tmp_path)
     assert not (session.run_dir / "output.ifc").exists()
 
 
-def test_post_audit_geometry_failure_regenerates_json_and_refreshes_report(tmp_path):
+def test_post_audit_geometry_failure_regenerates_json_and_refreshes_report(
+    tmp_path, monkeypatch
+):
     root = tmp_path / "phase6.2-fix-repl"
     store = SessionStore.open(root / "sessions.sqlite", artifact_root=root)
     session = store.create_session(original_input="创建一个外贴边界的矩形房间。")
@@ -219,9 +222,9 @@ def test_post_audit_geometry_failure_regenerates_json_and_refreshes_report(tmp_p
         "deterministic_gate_status": "passed",
         "findings": [],
     }
-    provider = _SequenceLiveProvider(
-        [candidate, audit, _outside_boundary_center_overlap_candidate(), audit_accept]
-    )
+    corrected = _outside_boundary_center_overlap_candidate()
+    provider = _SequenceLiveProvider([candidate, audit, audit_accept])
+    _install_scoped_result(monkeypatch, corrected)
 
     result = run_ready_session_to_ifc(
         store=store,
@@ -233,13 +236,13 @@ def test_post_audit_geometry_failure_regenerates_json_and_refreshes_report(tmp_p
     feedback = json.loads(
         (
             session.run_dir
-            / "generator-regeneration-01"
-            / "generation-feedback.json"
+            / "changeset-round-01"
+            / "changeset.json"
         ).read_text(encoding="utf-8")
     )
-    assert feedback["route"] == "regenerate_json"
+    assert feedback["changeset_id"] == "changeset-revision-01"
     report = (session.run_dir / "report.md").read_text(encoding="utf-8")
-    assert "generator-regeneration-01" in report
+    assert "changeset-revision-01" in report
     assert "- route: `blocked_failure`" not in report
 
 
@@ -333,6 +336,52 @@ def _write_ready_outside_boundary_design_brief(run_dir: Path) -> None:
     (run_dir / "design-brief.json").write_text(
         json.dumps(design_brief, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
         encoding="utf-8",
+    )
+
+
+def _install_scoped_result(monkeypatch, candidate: dict) -> None:
+    def apply_scoped_round(**kwargs):
+        output_dir = Path(kwargs["output_dir"])
+        output_dir.mkdir(parents=True, exist_ok=True)
+        scope = {"scope_id": "scope-revision-01"}
+        changeset = {
+            "changeset_id": "changeset-revision-01",
+            "source_issue_ids": ["issue-wall-boundary-001"],
+            "operations": [{"operation_id": "correct-wall-boundary"}],
+        }
+        (output_dir / "change-scope.json").write_text(
+            json.dumps(scope), encoding="utf-8"
+        )
+        (output_dir / "changeset.json").write_text(
+            json.dumps(changeset), encoding="utf-8"
+        )
+        return {
+            "valid": True,
+            "status": "applied",
+            "candidate": candidate,
+            "revision": {
+                "revision_id": "revision-01",
+                "sequence": 1,
+                "candidate_hash": build_candidate_index(candidate)["candidate_hash"],
+            },
+            "preservation": {
+                "changed_ids": ["wall-east", "wall-north", "wall-south", "wall-west"],
+                "dependency_ids": [],
+                "unrelated_component_preservation_rate": 1.0,
+                "forbidden_drift_ids": [],
+            },
+            "issues": [],
+            "scope": scope,
+            "stage": {
+                "status": "changeset",
+                "classification": "changeset",
+                "response_id": "msg_changeset_1",
+            },
+        }
+
+    monkeypatch.setattr(
+        "text2ifc_agent.interactive_cli_flow.run_scoped_changeset_round",
+        apply_scoped_round,
     )
 
 

@@ -17,6 +17,7 @@ from .live_pipeline import (
     run_semantic_coverage_stage,
 )
 from .clarification import ClarificationCall, ClarificationController, DesignBriefInvoker
+from .audit import collect_revision_audit_evidence
 from .candidate_index import build_candidate_index
 from .complex_scaffold import build_scaffold_candidate
 from .context_selection import select_design_brief_context
@@ -2326,6 +2327,12 @@ def _write_phase6_2_session_report(
         json.dumps(final, ensure_ascii=False, indent=2, sort_keys=True),
         "```",
         "",
+        "## Revision and ChangeSet History",
+        "",
+        _json_block(collect_revision_audit_evidence(session.run_dir)),
+        "",
+        *_revision_report_links(session.run_dir),
+        "",
         "## Final Artifacts",
         "",
         *_report_links(
@@ -2361,6 +2368,25 @@ def _report_links(root: Path, relatives: tuple[str, ...]) -> list[str]:
         if (root / relative).is_file():
             lines.append(f"- [{relative}]({relative})")
     return lines
+
+
+def _revision_report_links(root: Path) -> list[str]:
+    paths = [
+        path
+        for path in (
+            root / "candidate-revision.json",
+            root / "component-preservation.json",
+            root / "revision-gates.json",
+            root / "generator-staged" / "package-records.json",
+        )
+        if path.is_file()
+    ]
+    paths.extend(sorted(root.glob("changeset-round-*/change-scope.json")))
+    paths.extend(sorted(root.glob("changeset-round-*/changeset.json")))
+    return [
+        f"- [{path.relative_to(root).as_posix()}]({path.relative_to(root).as_posix()})"
+        for path in paths
+    ]
 
 
 def _json_block(payload: Any) -> str:

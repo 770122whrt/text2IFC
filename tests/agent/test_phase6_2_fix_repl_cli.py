@@ -5,6 +5,7 @@ import subprocess
 import sys
 from pathlib import Path
 
+from text2ifc_agent.candidate_index import build_candidate_index
 from text2ifc_agent.clarification import ClarificationCall
 from text2ifc_agent.context_selection import select_design_brief_context
 from text2ifc_agent.providers import LiveProviderResult, ProviderOutput, ProviderOutputError
@@ -417,7 +418,9 @@ def test_default_live_repl_design_brief_trace_is_session_scoped(tmp_path):
     assert (run_dir / "output.ifc").is_file()
 
 
-def test_live_repl_routes_geometry_failure_through_audit_before_final_status(tmp_path):
+def test_live_repl_routes_geometry_failure_through_audit_before_final_status(
+    tmp_path, monkeypatch
+):
     from scripts.agent import run_text2ifc_chat
 
     root = tmp_path / "phase6.2-fix-repl"
@@ -459,9 +462,8 @@ def test_live_repl_routes_geometry_failure_through_audit_before_final_status(tmp
             "repair/route.json",
         ],
     }
-    provider = _SequenceLiveProvider(
-        [candidate, audit, regenerated_candidate, audit]
-    )
+    provider = _SequenceLiveProvider([candidate, audit, audit])
+    _install_scoped_result(monkeypatch, regenerated_candidate)
 
     exit_code = run_text2ifc_chat.main(
         [
@@ -490,6 +492,8 @@ def test_live_repl_routes_geometry_failure_through_audit_before_final_status(tmp
     assert (run_dir / "output.ifc").is_file()
     assert (run_dir / "report.md").is_file()
     assert (run_dir / "geometry-feedback.json").is_file()
+    assert (run_dir / "changeset-round-01" / "changeset.json").is_file()
+    assert (run_dir / "candidate-revision.json").is_file()
     first_audit_input = json.loads(
         (
             run_dir
@@ -523,7 +527,7 @@ def test_live_repl_routes_geometry_failure_through_audit_before_final_status(tmp
         (run_dir / "audit" / "validation.json").read_text(encoding="utf-8")
     )
     assert latest_audit_validation["valid"] is True
-    assert (run_dir / "generator-regeneration-01" / "generation-feedback.json").is_file()
+    assert (run_dir / "changeset-round-01" / "changeset.json").is_file()
     assert "Generator" in rendered
     assert "Audit" in rendered
     assert "IFC:" in rendered
@@ -756,6 +760,52 @@ def _geometry_blocked_candidate() -> dict:
             profile["x"] = 300
             profile["y"] = 4000
     return candidate
+
+
+def _install_scoped_result(monkeypatch, candidate: dict) -> None:
+    def apply_scoped_round(**kwargs):
+        output_dir = Path(kwargs["output_dir"])
+        output_dir.mkdir(parents=True, exist_ok=True)
+        scope = {"scope_id": "scope-revision-01"}
+        changeset = {
+            "changeset_id": "changeset-revision-01",
+            "source_issue_ids": ["issue-geometry-001"],
+            "operations": [{"operation_id": "replace-wall-geometry"}],
+        }
+        (output_dir / "change-scope.json").write_text(
+            json.dumps(scope), encoding="utf-8"
+        )
+        (output_dir / "changeset.json").write_text(
+            json.dumps(changeset), encoding="utf-8"
+        )
+        return {
+            "valid": True,
+            "status": "applied",
+            "candidate": candidate,
+            "revision": {
+                "revision_id": "revision-01",
+                "sequence": 1,
+                "candidate_hash": build_candidate_index(candidate)["candidate_hash"],
+            },
+            "preservation": {
+                "changed_ids": ["wall-east", "wall-west"],
+                "dependency_ids": [],
+                "unrelated_component_preservation_rate": 1.0,
+                "forbidden_drift_ids": [],
+            },
+            "issues": [],
+            "scope": scope,
+            "stage": {
+                "status": "changeset",
+                "classification": "changeset",
+                "response_id": "msg_changeset_1",
+            },
+        }
+
+    monkeypatch.setattr(
+        "text2ifc_agent.interactive_cli_flow.run_scoped_changeset_round",
+        apply_scoped_round,
+    )
 
 
 class _OpenAIClientSequence:
