@@ -7,12 +7,12 @@ See: `.planning/PROJECT.md` (updated 2026-06-11)
 **Core value:** Produce valid, inspectable IFC models from explicit user
 requirements.
 
-**Current focus:** Phase 6.5 dynamic staged multi-storey initial composition
+**Current focus:** Phase 6.5 revision Gates, reports, timing, and compact evidence
 
 ## Status
 
 - Phase: 6.5
-- Stage: Waves 0-2 complete; Wave 3 next
+- Stage: Waves 0-3 complete; Wave 4 next
 - State: Phase 6.2-fix Waves 0-2 are implemented and automatically verified.
   Wave 3 real UAT
   produced useful live evidence and fixed defects 001/002, then exposed defect
@@ -569,11 +569,10 @@ requirements.
 
 ## Next Action
 
-Execute Phase 6.5 Wave 3 with strict RED/GREEN TDD: dynamic storey packages,
-shared-shell composition, deterministic package ordering, package-level Draft
-blocking, and one complete composed BIM JSON candidate. Do not run real
-DeepSeek Phase 6.5 stability claims until Waves 0-5 deterministic verification
-pass.
+Execute Phase 6.5 Wave 4 with strict RED/GREEN TDD: revision-aware local/global
+Gates, package and ChangeSet evidence in generated reports, progress timing,
+and compact artifact policy. Do not run real DeepSeek Phase 6.5 stability claims
+until Waves 0-5 deterministic verification pass.
 
 ## Accumulated Context
 
@@ -774,9 +773,9 @@ pass.
   responses.
 
 ---
-*Last activity: 2026-07-12 - completed Phase 6.5 Wave 2 provider-backed scoped
-ChangeSet generation and active feedback-loop integration through RED/GREEN TDD.
-The initial complete candidate is retained; Audit/Gate retries now create only
-transactionally applied revisions, stable collection refs are resolved exactly,
-and unrelated-component preservation remains 1.0. Phase 6.5 Wave 2 verification
-reports 68 passed; the integration slice reports 48 passed; compileall passes.*
+*Last activity: 2026-07-12 - completed Phase 6.5 Wave 3 dynamic package manifests,
+ownership Gates, provider-backed staged composition, explicit wall facts,
+dynamic skeletons, staged CLI strategy, and package-local retries through
+RED/GREEN TDD. Expanded verification reports 164 passed; compileall passes.
+Partial workspaces remain non-Formal and non-compile-eligible; real DeepSeek
+staged quality evidence remains pending after Waves 4-5.*

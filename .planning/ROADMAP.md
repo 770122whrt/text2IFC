@@ -1003,7 +1003,7 @@ is reserved for a later phase that may reuse the ChangeSet revision interface.
 
 **Wave 3** *(blocked on Wave 2)*
 
-- [ ] `06.5-03-PLAN.md` - Dynamic staged multi-storey initial composition
+- [x] `06.5-03-PLAN.md` - Dynamic staged multi-storey initial composition
 
 **Wave 4** *(blocked on Wave 3)*
 
@@ -1031,4 +1031,4 @@ is reserved for a later phase that may reuse the ChangeSet revision interface.
   satisfied by fake/file/replay providers or prewritten model responses.
 - All work remains in the C-drive `multiagent-design` worktree.
 
-**Status:** Waves 0-2 complete on 2026-07-12; Wave 3 is next.
+**Status:** Waves 0-3 complete on 2026-07-12; Wave 4 is next.
