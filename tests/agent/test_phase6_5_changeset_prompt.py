@@ -120,6 +120,15 @@ def test_staged_package_prompt_teaches_add_operations_are_generator_owned():
     }
 
 
+def test_staged_package_prompt_requires_exact_authorized_ids_without_rewriting():
+    rendered = render_prompt(template_id="bim-json-changeset.v1", inputs=_inputs())
+    text = rendered["text"]
+
+    assert "copy an authorized ID character-for-character" in text
+    assert "target_id and value.id must be identical" in text
+    assert "Do not add, remove, translate, normalize, or duplicate prefixes or suffixes" in text
+
+
 def test_staged_cross_storey_few_shot_teaches_flight_and_slab_opening_graph():
     assert "changeset-staged-cross-storey" in {path.stem for path in FEW_SHOT_PATHS}
     example = json.loads(
