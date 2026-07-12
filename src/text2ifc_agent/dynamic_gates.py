@@ -265,6 +265,16 @@ def _opening_fill_gate(
         ifc_class = _CLASS_BY_COLLECTION[collection]
         if expected_count <= 0:
             continue
+        expected_by_candidate: dict[str, Mapping[str, Any]] = {}
+        for record in _records(expected_facts.get(collection)):
+            match = _resolve_expected_entity(
+                graph=graph,
+                expected_facts=expected_facts,
+                collection=collection,
+                record=record,
+            )
+            if match is not None:
+                expected_by_candidate[match["candidate_id"]] = record
         actual_elements = graph.ids_by_class(ifc_class)
         elements_with_fill = [
             entity_id
@@ -289,6 +299,7 @@ def _opening_fill_gate(
                     element_id=entity_id,
                     opening_id=opening_id,
                     host_wall=host_wall,
+                    expected_record=expected_by_candidate.get(entity_id),
                 )
             )
         if len(elements_with_fill) < expected_count:
@@ -328,6 +339,7 @@ def _opening_fill_geometry_issues(
     element_id: str,
     opening_id: str | None,
     host_wall: str | None,
+    expected_record: Mapping[str, Any] | None = None,
 ) -> list[dict[str, Any]]:
     if not opening_id or not host_wall:
         return []
@@ -339,6 +351,29 @@ def _opening_fill_geometry_issues(
     host_profile = _rectangle_profile(host)
     opening_profile = _rectangle_profile(opening)
     opening_origin = _number_list(opening_placement.get("origin"), 3)
+    if (
+        isinstance(expected_record, Mapping)
+        and expected_record.get("alignment") == "host_centerline"
+        and opening_origin is not None
+        and abs(float(opening_origin[0])) > 1e-6
+    ):
+        issues.append(
+            {
+                "code": "OPENING_HOST_ALIGNMENT_MISMATCH",
+                "path": f"/entities/{opening_id}/attributes/ObjectPlacement/origin/0",
+                "message": (
+                    "Expected host_centerline alignment requires opening local X "
+                    "origin 0 in the host wall coordinate system."
+                ),
+                "element_id": element_id,
+                "opening_id": opening_id,
+                "host_wall": host_wall,
+                "target_entity_ids": [opening_id],
+                "source_alignment": "host_centerline",
+                "expected_local_x": 0.0,
+                "actual_local_x": float(opening_origin[0]),
+            }
+        )
     host_bounds = _representation_bounds(host)
     opening_local_bounds = _representation_bounds(opening)
     opening_host_bounds = _placed_bounds(opening_local_bounds, opening_placement)

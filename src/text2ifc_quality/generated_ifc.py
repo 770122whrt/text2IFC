@@ -140,8 +140,12 @@ def _check_roof_stairs_and_openings(
                         )
                     )
                 if not _axes_match(actual_bbox, expected_bbox, ("z",), tolerance):
-                    issues.append(
-                        _issue(
+                    endpoint_diagnostics = _stair_endpoint_diagnostics(
+                        actual_z=actual_bbox["z"],
+                        expected_z=expected_bbox["z"],
+                        tolerance=tolerance,
+                    )
+                    stair_issue = _issue(
                             "STAIR_RISE_DIRECTION_MISMATCH",
                             f"/stairs/{stair_id}/bbox/z",
                             f"Stair {stair_id!r} does not rise through the confirmed elevations.",
@@ -150,7 +154,8 @@ def _check_roof_stairs_and_openings(
                             actual={"z": actual_bbox["z"]},
                             source_fact_refs=expected_stair.get("source_fact_refs"),
                         )
-                    )
+                    stair_issue.update(endpoint_diagnostics)
+                    issues.append(stair_issue)
             if expected_stair.get("require_steps") is True and not all(
                 _has_stepped_profile(flight) for flight in flights
             ):
@@ -167,6 +172,23 @@ def _check_roof_stairs_and_openings(
                 )
     metrics["stairs"] = stair_metrics
     return GeneratedIfcCheckResult(success=not issues, issues=issues, metrics=metrics)
+
+
+def _stair_endpoint_diagnostics(
+    *, actual_z: list[float], expected_z: list[float], tolerance: float
+) -> dict[str, Any]:
+    lower_delta = float(expected_z[0]) - float(actual_z[0])
+    upper_delta = float(expected_z[1]) - float(actual_z[1])
+    translation_only_valid = abs(lower_delta - upper_delta) <= tolerance
+    return {
+        "endpoint_deltas": {"lower": lower_delta, "upper": upper_delta},
+        "translation_only_valid": translation_only_valid,
+        "recommended_action": (
+            "translate_stair"
+            if translation_only_valid
+            else "reshape_flight_profile_preserve_endpoints"
+        ),
+    }
 
 
 def _check_component_bboxes(
