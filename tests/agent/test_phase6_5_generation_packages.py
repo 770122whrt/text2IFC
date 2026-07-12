@@ -179,10 +179,22 @@ def test_local_package_declares_deterministic_containment_void_and_fill_relation
     )
 
     assert package["owned_relationship_ids"] == [
-        "rel-contains-storey-1",
         "rel-voids-door-storey-1-south",
         "rel-fills-door-storey-1-south",
         "rel-voids-window-storey-1-north",
         "rel-fills-window-storey-1-north",
     ]
     assert not set(package["owned_relationship_ids"]) & set(package["owned_component_ids"])
+
+
+def test_cross_package_uses_opening_entity_and_void_relation_for_slab_opening_bounds():
+    expected = _expected(2)
+    expected["slabs"][1]["opening"] = {
+        "bounds": {"x_min": 6000, "x_max": 8000, "y_min": 1000, "y_max": 6000}
+    }
+
+    manifest = build_generation_package_manifest(expected)
+    package = manifest["packages"][-1]
+
+    assert "opening-slab-storey-2" in package["owned_component_ids"]
+    assert package["owned_relationship_ids"] == ["rel-voids-slab-storey-2"]

@@ -110,7 +110,10 @@ def test_staged_package_prompt_teaches_add_operations_are_generator_owned():
         "add_entity",
         "add_relationship",
     }
-    assert any(
+    assert not any(
         operation.get("value", {}).get("ifc_class") == "IfcRelContainedInSpatialStructure"
         for operation in operations
     )
+    assert {"IfcRelVoidsElement", "IfcRelFillsElement"} <= {
+        operation.get("value", {}).get("ifc_class") for operation in operations
+    }

@@ -205,3 +205,44 @@ def test_cross_storey_package_accepts_only_declared_vertical_components():
     )
 
     assert result["valid"] is True
+
+
+@pytest.mark.parametrize(
+    ("mutate", "code"),
+    [
+        (
+            lambda value: value["attributes"].pop("Representation", None),
+            "PACKAGE_REPRESENTATION_MISSING",
+        ),
+        (
+            lambda value: value["attributes"]["Representation"]["profile"].update(
+                {"kind": "polygon", "points": [[0, 0], [1, 0], [1, 1]], "holes": []}
+            ),
+            "PACKAGE_PROFILE_HOLES_UNSUPPORTED",
+        ),
+    ],
+)
+def test_package_gate_rejects_missing_geometry_or_polygon_holes(mutate, code):
+    manifest = _manifest()
+    manifest["packages"][-1]["owned_component_ids"].append("slab-test")
+    slab = _entity(
+        "slab-test",
+        "IfcSlab",
+        Representation={
+            "kind": "extruded_profile",
+            "profile": {"kind": "rectangle", "x": 8000, "y": 6000},
+            "depth": 150,
+            "direction": [0, 0, 1],
+        },
+    )
+    mutate(slab)
+
+    result = validate_package_changeset(
+        manifest=manifest,
+        package_id="package-cross-storey",
+        workspace=_workspace(),
+        changeset=_changeset("package-cross-storey", [slab]),
+    )
+
+    assert result["valid"] is False
+    assert code in {issue["code"] for issue in result["issues"]}
