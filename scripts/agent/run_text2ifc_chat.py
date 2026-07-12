@@ -53,6 +53,11 @@ def main(
     parser.add_argument("--db", type=Path)
     parser.add_argument("--stop-after", choices=("design-brief", "ifc"), default="ifc")
     parser.add_argument(
+        "--generation-strategy",
+        choices=("legacy_full", "staged"),
+        default="legacy_full",
+    )
+    parser.add_argument(
         "--trace-level",
         choices=("compact", "debug", "full"),
         default=DEFAULT_TRACE_LEVEL,
@@ -96,6 +101,7 @@ def main(
             provider_factory=live_provider_factory,
             terminal_metadata=terminal_metadata,
             trace_level=args.trace_level,
+            generation_strategy=args.generation_strategy,
         )
     finally:
         store.close()

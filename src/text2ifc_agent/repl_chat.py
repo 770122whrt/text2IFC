@@ -89,6 +89,7 @@ def run_repl_chat(
     provider_factory: Callable[[], Any] | None = None,
     terminal_metadata: dict[str, Any] | None = None,
     trace_level: str | None = None,
+    generation_strategy: str = "legacy_full",
 ) -> ReplChatResult:
     """Run a Chinese-first REPL session.
 
@@ -254,6 +255,7 @@ def run_repl_chat(
             payload=payload,
             stdout=active_stdout,
         ),
+        generation_strategy=generation_strategy,
     )
     _print_ifc_stage_summary(
         store=store,
