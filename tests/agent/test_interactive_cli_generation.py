@@ -2,6 +2,7 @@ import json
 from copy import deepcopy
 from pathlib import Path
 
+from text2ifc_agent.candidate_index import build_candidate_index
 from text2ifc_agent.interactive_cli_flow import run_ready_session_to_ifc
 from text2ifc_agent.providers import LiveProviderResult, ProviderOutput
 from text2ifc_agent.session_store import SessionStore
@@ -151,7 +152,7 @@ def test_ready_session_can_select_staged_initial_generation(tmp_path, monkeypatc
             "revision": {
                 "revision_id": "revision-02",
                 "sequence": 2,
-                "candidate_hash": "sha256:" + "2" * 64,
+                "candidate_hash": build_candidate_index(candidate)["candidate_hash"],
             },
             "package_records": [
                 {"package_id": "package-storey-1", "status": "accepted"},
@@ -260,7 +261,9 @@ def test_ready_session_applies_scoped_changeset_after_geometry_audit_revise(
             "revision": {
                 "revision_id": "revision-01",
                 "sequence": 1,
-                "candidate_hash": "sha256:" + "1" * 64,
+                "candidate_hash": build_candidate_index(regenerated_candidate)[
+                    "candidate_hash"
+                ],
             },
             "preservation": {
                 "unrelated_component_preservation_rate": 1.0,
@@ -662,7 +665,7 @@ def _install_scoped_candidate_sequence(monkeypatch, candidates):
             "revision": {
                 "revision_id": f"revision-{sequence:02d}",
                 "sequence": sequence,
-                "candidate_hash": "sha256:" + str(sequence) * 64,
+                "candidate_hash": build_candidate_index(candidate)["candidate_hash"],
             },
             "preservation": {
                 "unrelated_component_preservation_rate": 1.0,

@@ -17,6 +17,7 @@ from .live_pipeline import (
     run_semantic_coverage_stage,
 )
 from .clarification import ClarificationCall, ClarificationController, DesignBriefInvoker
+from .candidate_index import build_candidate_index
 from .complex_scaffold import build_scaffold_candidate
 from .context_selection import select_design_brief_context
 from .design_brief import load_design_brief_schema, validate_design_brief
@@ -42,6 +43,7 @@ from .openai_compat import (
 from .prompt_registry import render_prompt
 from .providers import ProviderOutput, ProviderOutputError
 from .run_report import build_live_run_report
+from .revision_gates import build_revision_gate_plan, write_revision_gate_evidence
 from .scoped_loop import run_scoped_changeset_round
 from .session_store import SessionStore
 from .staged_generation import build_skeleton_workspace, run_staged_generation
@@ -477,6 +479,19 @@ def run_ready_session_to_ifc(
                 source=stored_session.run_dir / "generator" / "semantic-capabilities.json",
                 target_name="semantic-capabilities.json",
             )
+        for name, kind in (
+            ("candidate-revision.json", "candidate_revision"),
+            ("component-preservation.json", "component_preservation"),
+        ):
+            source = stored_session.run_dir / "generator" / name
+            if source.is_file():
+                _copy_artifact_to_run_root(
+                    store,
+                    stored_session,
+                    kind=kind,
+                    source=source,
+                    target_name=name,
+                )
 
     generator_scaffold = _maybe_promote_scaffold_from_generator_failure(
         store=store,
@@ -606,6 +621,10 @@ def run_ready_session_to_ifc(
         output_dir=stored_session.run_dir,
         case_id=stored_session.session_hash,
     )
+    candidate_gates = _bind_revision_gate_evidence(
+        run_dir=stored_session.run_dir,
+        candidate_gates=candidate_gates,
+    )
     _record_stage_payloads(
         store,
         stored_session.session_id,
@@ -639,6 +658,10 @@ def run_ready_session_to_ifc(
             case_dir=stored_session.run_dir,
             output_dir=stored_session.run_dir,
             case_id=stored_session.session_hash,
+        )
+        candidate_gates = _bind_revision_gate_evidence(
+            run_dir=stored_session.run_dir,
+            candidate_gates=candidate_gates,
         )
         _record_stage_payloads(
             store,
@@ -699,6 +722,10 @@ def run_ready_session_to_ifc(
                 case_dir=stored_session.run_dir,
                 output_dir=stored_session.run_dir,
                 case_id=stored_session.session_hash,
+            )
+            candidate_gates = _bind_revision_gate_evidence(
+                run_dir=stored_session.run_dir,
+                candidate_gates=candidate_gates,
             )
             _record_stage_payloads(
                 store,
@@ -1200,6 +1227,7 @@ def _run_staged_initial_generation(
         (design_dir / "conversation.json").read_text(encoding="utf-8")
     )
     design_brief = _read_required_json(design_dir / "design-brief.json")
+    skeleton = build_skeleton_workspace(expected_facts)
     result = run_staged_generation(
         provider=provider,
         output_dir=staged_dir,
@@ -1208,7 +1236,7 @@ def _run_staged_initial_generation(
         conversation=conversation,
         design_brief=design_brief,
         expected_facts=expected_facts,
-        skeleton=build_skeleton_workspace(expected_facts),
+        skeleton=skeleton,
         manifest=expected_facts.get("generation_package_manifest", {}),
         trace_level=trace_level,
     )
@@ -1226,6 +1254,13 @@ def _run_staged_initial_generation(
         _write_json(generator_dir / "candidate.json", result["candidate"])
         _write_json(generator_dir / "parsed-output.json", result["candidate"])
         _write_json(generator_dir / "candidate-revision.json", result["revision"])
+        _write_json(
+            generator_dir / "component-preservation.json",
+            _initial_generation_preservation(
+                skeleton=skeleton,
+                candidate=result["candidate"],
+            ),
+        )
     _write_json(
         generator_dir / "validation.json",
         {"valid": bool(result.get("valid")), "issue_count": len(diagnostics), "issues": diagnostics},
@@ -1474,6 +1509,10 @@ def _attempt_generator_regeneration_after_audit(
         output_dir=run_dir,
         case_id=stored_session.session_hash,
     )
+    candidate_gates = _bind_revision_gate_evidence(
+        run_dir=run_dir,
+        candidate_gates=candidate_gates,
+    )
     _record_stage_payloads(
         store,
         stored_session.session_id,
@@ -1512,6 +1551,70 @@ def _attempt_generator_regeneration_after_audit(
         "candidate_gates": candidate_gates,
         "audit": audit,
         "issue_count": len(round_record["issues"]),
+    }
+
+
+def _initial_generation_preservation(
+    *,
+    skeleton: Mapping[str, Any],
+    candidate: Mapping[str, Any],
+) -> dict[str, Any]:
+    """Describe initial staged composition without claiming a scoped edit."""
+
+    before = build_candidate_index(skeleton)
+    after = build_candidate_index(candidate)
+    all_ids = set(before["component_hashes"]) | set(after["component_hashes"])
+    changed_ids = sorted(
+        component_id
+        for component_id in all_ids
+        if before["component_hashes"].get(component_id)
+        != after["component_hashes"].get(component_id)
+    )
+    return {
+        "schema_version": "text2ifc/component-preservation/1.0",
+        "mode": "initial_staged_composition",
+        "changed_ids": changed_ids,
+        "dependency_ids": [],
+        "unchanged_ids": sorted(all_ids - set(changed_ids)),
+        "forbidden_drift_ids": [],
+        "unrelated_component_count": 0,
+        "unrelated_component_preservation_rate": 1.0,
+    }
+
+
+def _bind_revision_gate_evidence(
+    *,
+    run_dir: Path,
+    candidate_gates: Mapping[str, Any],
+) -> dict[str, Any]:
+    revision = _read_optional_json(run_dir / "candidate-revision.json")
+    preservation = _read_optional_json(run_dir / "component-preservation.json")
+    candidate = _read_optional_json(run_dir / "candidate.json")
+    if not revision or not preservation or not candidate:
+        return dict(candidate_gates)
+    plan = build_revision_gate_plan(
+        candidate=candidate,
+        revision=revision,
+        changed_ids=preservation.get("changed_ids", []),
+        dependency_ids=preservation.get("dependency_ids", []),
+        preservation=preservation,
+        final=True,
+    )
+    evidence = write_revision_gate_evidence(
+        output_path=run_dir / "revision-gates.json",
+        plan=plan,
+        gate_results={
+            "revision_id": revision.get("revision_id"),
+            "candidate_hash": build_candidate_index(candidate)["candidate_hash"],
+            "deterministic_gates": dict(candidate_gates),
+        },
+    )
+    if evidence["valid"]:
+        return dict(candidate_gates)
+    return {
+        **dict(candidate_gates),
+        "valid": False,
+        "revision_gate_evidence": evidence,
     }
 
 
