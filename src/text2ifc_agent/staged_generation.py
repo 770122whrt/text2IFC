@@ -15,6 +15,50 @@ from .package_gates import validate_package_changeset
 from .revisions import hash_json_value
 
 
+def build_skeleton_workspace(expected_facts: Mapping[str, Any]) -> dict[str, Any]:
+    """Build only deterministic spatial hierarchy from explicit storey facts."""
+
+    storeys = [
+        dict(storey)
+        for storey in expected_facts.get("storeys", [])
+        if isinstance(storey, Mapping)
+    ]
+    entities = [
+        _entity("project-main", "IfcProject", "Project"),
+        _entity("site-main", "IfcSite", "Site", relative_to="project-main"),
+        _entity("building-main", "IfcBuilding", "Building", relative_to="site-main"),
+    ]
+    for index, storey in enumerate(storeys, start=1):
+        storey_id = str(storey["id"])
+        elevation = storey["elevation_mm"]
+        entity = _entity(
+            storey_id,
+            "IfcBuildingStorey",
+            str(storey.get("name") or f"Storey {index}"),
+            relative_to="building-main",
+            origin=[0, 0, elevation],
+        )
+        entity["attributes"]["Elevation"] = elevation
+        entities.append(entity)
+    relationships = [
+        _aggregate("aggregate-project-site", "project-main", ["site-main"]),
+        _aggregate("aggregate-site-building", "site-main", ["building-main"]),
+        _aggregate(
+            "aggregate-building-storeys",
+            "building-main",
+            [str(storey["id"]) for storey in storeys],
+        ),
+    ]
+    return {
+        "schema_version": "bim-json/2.0",
+        "ifc_schema": "IFC2X3",
+        "units": {"length": "MILLIMETRE"},
+        "entities": entities,
+        "relationships": relationships,
+        "provenance": {"source": "text2ifc/staged-skeleton"},
+    }
+
+
 def run_staged_generation(
     *,
     provider: Any,
@@ -277,3 +321,42 @@ def _write_json(path: Path, payload: Any) -> None:
         encoding="utf-8",
     )
     temporary.replace(path)
+
+
+def _entity(
+    entity_id: str,
+    ifc_class: str,
+    name: str,
+    *,
+    relative_to: str | None = None,
+    origin: list[int | float] | None = None,
+) -> dict[str, Any]:
+    attributes: dict[str, Any] = {"Name": name}
+    if relative_to is not None:
+        attributes["ObjectPlacement"] = {
+            "relative_to": relative_to,
+            "origin": origin or [0, 0, 0],
+            "axis": [0, 0, 1],
+            "ref_direction": [1, 0, 0],
+        }
+    return {
+        "id": entity_id,
+        "ifc_class": ifc_class,
+        "attributes": attributes,
+        "property_sets": {},
+        "provenance": {"source": "text2ifc/staged-skeleton"},
+    }
+
+
+def _aggregate(
+    relationship_id: str, relating: str, related: list[str]
+) -> dict[str, Any]:
+    return {
+        "id": relationship_id,
+        "ifc_class": "IfcRelAggregates",
+        "attributes": {
+            "RelatingObject": relating,
+            "RelatedObjects": related,
+        },
+        "provenance": {"source": "text2ifc/staged-skeleton"},
+    }

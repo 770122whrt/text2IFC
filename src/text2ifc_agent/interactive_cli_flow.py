@@ -44,6 +44,7 @@ from .providers import ProviderOutput, ProviderOutputError
 from .run_report import build_live_run_report
 from .scoped_loop import run_scoped_changeset_round
 from .session_store import SessionStore
+from .staged_generation import build_skeleton_workspace, run_staged_generation
 from .state import redact_metadata
 
 
@@ -368,6 +369,7 @@ def run_ready_session_to_ifc(
     provider_factory: Callable[[], Any],
     trace_level: str | None = "debug",
     progress: Callable[[str, dict[str, Any]], None] | None = None,
+    generation_strategy: str = "legacy_full",
 ) -> SessionIfcResult:
     """Generate BIM JSON, run deterministic gates, and compile a ready session."""
 
@@ -377,10 +379,25 @@ def run_ready_session_to_ifc(
 
     design_dir = _prepare_design_source(stored_session)
     design_brief = json.loads((design_dir / "design-brief.json").read_text(encoding="utf-8"))
-    write_expected_facts(
+    expected_facts_path = write_expected_facts(
         case_dir=stored_session.run_dir,
         case_id=stored_session.session_hash,
         design_brief=design_brief,
+    )
+    expected_facts = (
+        dict(expected_facts_path)
+        if isinstance(expected_facts_path, Mapping)
+        else _read_required_json(Path(expected_facts_path))
+    )
+    if generation_strategy not in {"legacy_full", "staged"}:
+        raise ValueError("generation_strategy must be 'legacy_full' or 'staged'")
+    _write_json(
+        stored_session.run_dir / "generation-strategy.json",
+        {
+            "schema_version": "text2ifc/generation-strategy/1.0",
+            "strategy": generation_strategy,
+            "fallback_used": False,
+        },
     )
     _record_existing_artifact(
         store,
@@ -390,14 +407,24 @@ def run_ready_session_to_ifc(
     )
     try:
         _emit_progress(progress, "generator", {"status": "started"})
-        generator = run_generator_stage(
-            provider=provider_factory(),
-            output_dir=stored_session.run_dir / "generator",
-            design_source_dir=design_dir,
-            case_id=stored_session.session_hash,
-            session_prefix="phase6.2",
-            trace_level=trace_level,
-        )
+        if generation_strategy == "staged":
+            generator = _run_staged_initial_generation(
+                provider=provider_factory(),
+                run_dir=stored_session.run_dir,
+                design_dir=design_dir,
+                case_id=stored_session.session_hash,
+                expected_facts=expected_facts,
+                trace_level=trace_level,
+            )
+        else:
+            generator = run_generator_stage(
+                provider=provider_factory(),
+                output_dir=stored_session.run_dir / "generator",
+                design_source_dir=design_dir,
+                case_id=stored_session.session_hash,
+                session_prefix="phase6.2",
+                trace_level=trace_level,
+            )
     except ProviderOutputError as exc:
         error_payload = _record_provider_failure(
             store=store,
@@ -1154,6 +1181,146 @@ def _attempt_geometry_repair_after_audit(
     )
     _record_stage_payloads(store, stored_session.session_id, "audit", audit)
     return {"repair": repair, "candidate_gates": candidate_gates, "audit": audit}
+
+
+def _run_staged_initial_generation(
+    *,
+    provider: Any,
+    run_dir: Path,
+    design_dir: Path,
+    case_id: str,
+    expected_facts: Mapping[str, Any],
+    trace_level: str | None,
+) -> dict[str, Any]:
+    staged_dir = run_dir / "generator-staged"
+    staged_dir.mkdir(parents=True, exist_ok=True)
+    generator_dir = run_dir / "generator"
+    generator_dir.mkdir(parents=True, exist_ok=True)
+    conversation = json.loads(
+        (design_dir / "conversation.json").read_text(encoding="utf-8")
+    )
+    design_brief = _read_required_json(design_dir / "design-brief.json")
+    result = run_staged_generation(
+        provider=provider,
+        output_dir=staged_dir,
+        case_id=case_id,
+        user_request=(design_dir / "input.txt").read_text(encoding="utf-8").rstrip("\r\n"),
+        conversation=conversation,
+        design_brief=design_brief,
+        expected_facts=expected_facts,
+        skeleton=build_skeleton_workspace(expected_facts),
+        manifest=expected_facts.get("generation_package_manifest", {}),
+        trace_level=trace_level,
+    )
+    _write_text(
+        generator_dir / "input.txt",
+        (design_dir / "input.txt").read_text(encoding="utf-8"),
+    )
+    _write_json(generator_dir / "conversation.json", conversation)
+    _write_json(generator_dir / "design-brief.json", design_brief)
+    classification = "formal" if result.get("valid") else (
+        "draft" if result.get("status") == "draft_required" else "invalid"
+    )
+    diagnostics = list(result.get("issues", []))
+    if result.get("valid") and isinstance(result.get("candidate"), Mapping):
+        _write_json(generator_dir / "candidate.json", result["candidate"])
+        _write_json(generator_dir / "parsed-output.json", result["candidate"])
+        _write_json(generator_dir / "candidate-revision.json", result["revision"])
+    _write_json(
+        generator_dir / "validation.json",
+        {"valid": bool(result.get("valid")), "issue_count": len(diagnostics), "issues": diagnostics},
+    )
+    _write_json(
+        generator_dir / "classification.json",
+        {
+            "status": classification,
+            "contract_status": classification,
+            "classification": classification,
+            "schema_version": "bim-json/2.0" if classification == "formal" else None,
+            "diagnostics": diagnostics,
+        },
+    )
+    response_ids = [
+        record.get("response_id")
+        for record in result.get("package_records", [])
+        if isinstance(record, Mapping) and record.get("response_id")
+    ]
+    package_trace_paths = [
+        f"../generator-staged/{record.get('artifact_dir')}"
+        for record in result.get("package_records", [])
+        if isinstance(record, Mapping) and record.get("artifact_dir")
+    ]
+    _write_text(
+        generator_dir / "prompt-rendered.md",
+        "# Staged Generator Prompt Index\n\n"
+        + "Each package keeps its rendered prompt in the referenced trace directory.\n\n"
+        + "\n".join(f"- {path}/prompt-rendered.md" for path in package_trace_paths)
+        + "\n",
+    )
+    _write_json(
+        generator_dir / "response.raw.json",
+        {
+            "schema_version": "text2ifc/staged-response-index/1.0",
+            "response_ids": response_ids,
+            "package_trace_paths": package_trace_paths,
+        },
+    )
+    _write_text(
+        generator_dir / "model-text.txt",
+        "\n".join(f"{path}/model-text.txt" for path in package_trace_paths) + "\n",
+    )
+    metrics = {
+        "case_id": case_id,
+        "stage": "generate",
+        "generation_strategy": "staged",
+        "classification": classification,
+        "contract_status": classification,
+        "contract_valid": bool(result.get("valid")),
+        "strict_output_contract_valid": bool(result.get("valid")),
+        "response_id": response_ids[-1] if response_ids else None,
+        "response_ids": response_ids,
+        "package_count": len(result.get("package_records", [])),
+        "evidence_class": "provider-backed-staged",
+        "issue_count": len(diagnostics),
+    }
+    _write_json(generator_dir / "metrics.json", metrics)
+    _write_json(
+        generator_dir / "generator-context.json",
+        {
+            "generation_strategy": "staged",
+            "package_manifest": "../expected-facts.json#/generation_package_manifest",
+            "package_trace_root": "../generator-staged",
+            "capability_profile": [],
+            "few_shots": [],
+        },
+    )
+    _write_json(
+        generator_dir / "trace-manifest.json",
+        {
+            "schema_version": "text2ifc/live-stage-trace/1.0",
+            "case_id": case_id,
+            "stage": "generate",
+            "generation_strategy": "staged",
+            "package_trace_root": "../generator-staged",
+            "artifacts": {
+                "candidate": "candidate.json" if result.get("valid") else None,
+                "validation": "validation.json",
+                "metrics": "metrics.json",
+            },
+        },
+    )
+    return {
+        "case_id": case_id,
+        "stage": "generate",
+        "status": classification,
+        "classification": classification,
+        "valid": bool(result.get("valid")),
+        "contract_valid": bool(result.get("valid")),
+        "strict_output_contract_valid": bool(result.get("valid")),
+        "response_id": metrics["response_id"],
+        "evidence_class": metrics["evidence_class"],
+        "output_dir": str(generator_dir),
+    }
 
 
 def _attempt_generator_regeneration_after_audit(
@@ -2128,3 +2295,9 @@ def _write_json(path: Path, payload: Any) -> None:
         json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
         encoding="utf-8",
     )
+
+
+def _write_text(path: Path, text: str) -> None:
+    temporary = path.with_name(path.name + ".tmp")
+    temporary.write_text(text, encoding="utf-8")
+    temporary.replace(path)

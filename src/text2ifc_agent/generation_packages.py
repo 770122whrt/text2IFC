@@ -119,7 +119,15 @@ def build_generation_package_manifest(
             "package_id": "package-skeleton",
             "kind": "skeleton",
             "storey_id": None,
-            "owned_component_ids": ["project-main", "site-main", "building-main", *storey_ids],
+            "owned_component_ids": [
+                "project-main",
+                "site-main",
+                "building-main",
+                *storey_ids,
+                "aggregate-project-site",
+                "aggregate-site-building",
+                "aggregate-building-storeys",
+            ],
             "allowed_reference_ids": [],
         }
     ]
