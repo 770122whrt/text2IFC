@@ -59,6 +59,33 @@ def test_derives_explicit_straight_wall_segment_bounds_for_irregular_envelope():
     assert wall["bbox_issue_code"] == "WALL_SEGMENT_MISMATCH"
 
 
+def test_derives_wall_bbox_from_axis_aligned_centerline_endpoints_and_thickness():
+    design_brief = _controlled_design_brief()
+    expected_facts = _controlled_expected_facts()
+    expected_facts["walls"] = [
+        {
+            "id": "storey-1-wall-l-east",
+            "storey": "storey-1",
+            "start_mm": [8000, 0],
+            "end_mm": [8000, 5000],
+            "thickness_mm": 200,
+            "height_mm": 3000,
+        }
+    ]
+
+    expectation = build_design_geometry_expectation(
+        case_id="l-shaped-endpoints",
+        design_brief=design_brief,
+        expected_facts=expected_facts,
+    )
+
+    assert expectation["walls"]["storey-1-wall-l-east"]["bbox"] == {
+        "x": [7.9, 8.1],
+        "y": [0.0, 5.0],
+        "z": [0.0, 3.0],
+    }
+
+
 def test_derives_structural_slab_below_storey_top_elevation():
     expectation = build_design_geometry_expectation(
         case_id="two-storey-control",
