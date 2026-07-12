@@ -82,3 +82,23 @@ def test_live_harness_has_no_scripted_model_answer_option():
     assert "--trace-level" in option_strings
     assert "--scripted-stdin" not in option_strings
     assert "--answers-json" not in option_strings
+
+
+def test_live_harness_exposes_graded_cases_with_single_run_defaults():
+    parser = run_phase6_5_live_stability.build_parser()
+    case_action = next(action for action in parser._actions if action.dest == "case")
+
+    assert {"easy", "medium", "hard"} <= set(case_action.choices)
+    args = parser.parse_args(["--case", "medium"])
+    assert args.runs == 1
+    assert args.required_consecutive == 1
+
+
+def test_graded_cases_resolve_to_distinct_fixture_files():
+    assert run_phase6_5_live_stability.case_fixture_path("easy").name == "two-storey-case.json"
+    assert run_phase6_5_live_stability.case_fixture_path("medium").name == (
+        "medium-two-storey-l-shape.json"
+    )
+    assert run_phase6_5_live_stability.case_fixture_path("hard").name == (
+        "hard-three-storey-l-shape.json"
+    )
