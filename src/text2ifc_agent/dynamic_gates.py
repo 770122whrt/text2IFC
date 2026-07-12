@@ -11,6 +11,7 @@ DYNAMIC_GATES_SCHEMA_VERSION = "text2ifc/dynamic-gates/1.0"
 
 _EXPECTED_COLLECTIONS = {
     "IfcBuildingStorey": "storeys",
+    "IfcWall": "walls",
     "IfcSpace": "spaces",
     "IfcDoor": "doors",
     "IfcWindow": "windows",
@@ -755,7 +756,7 @@ def _expected_total_counts(expected_facts: Mapping[str, Any]) -> dict[str, int]:
 
 def _expected_counts_by_storey(expected_facts: Mapping[str, Any]) -> dict[str, dict[str, int]]:
     result: dict[str, dict[str, int]] = {}
-    for collection in ("spaces", "doors", "windows"):
+    for collection in ("walls", "spaces", "doors", "windows"):
         explicit_key = f"{collection[:-1]}_counts_by_storey"
         raw_counts = expected_facts.get(explicit_key, {})
         counts = _clean_storey_counts(raw_counts)
@@ -789,7 +790,7 @@ def _expected_opening_fill_counts(expected_facts: Mapping[str, Any]) -> dict[str
 
 def _exact_expected_records(expected_facts: Mapping[str, Any]) -> dict[str, list[Mapping[str, Any]]]:
     result: dict[str, list[Mapping[str, Any]]] = {}
-    for collection in ("spaces", "doors", "windows"):
+    for collection in ("walls", "spaces", "doors", "windows"):
         records = [
             record
             for record in _records(expected_facts.get(collection))

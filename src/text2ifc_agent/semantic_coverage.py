@@ -126,6 +126,35 @@ def build_design_geometry_expectation(
             "source_fact_refs": [path],
         }
 
+    for wall_index, wall in enumerate(_records(expected_facts.get("walls"))):
+        wall_id = _string(wall.get("id"))
+        storey_id = _string(wall.get("storey"))
+        bounds = _plan_bounds(wall.get("bounds"))
+        if bounds is None:
+            continue
+        storey = expected_storeys.get(storey_id) if storey_id is not None else None
+        elevation = _number(storey.get("elevation_mm")) if isinstance(storey, Mapping) else None
+        height = _number(wall.get("height_mm"))
+        if height is None and isinstance(storey, Mapping):
+            height = _number(storey.get("net_height_mm"))
+        path = f"/known_facts/walls/{wall_index}"
+        if wall_id is None or storey_id is None or elevation is None or height is None:
+            unresolved.append(
+                _unresolved_geometry(path=path, reason="explicit_wall_geometry_missing")
+            )
+            continue
+        x_span = bounds[1] - bounds[0]
+        y_span = bounds[3] - bounds[2]
+        walls[wall_id] = {
+            "axis": "x" if x_span >= y_span else "y",
+            "bbox": _bbox(
+                bounds[0], bounds[1], bounds[2], bounds[3], elevation, elevation + height
+            ),
+            "bbox_issue_code": "WALL_SEGMENT_MISMATCH",
+            "bbox_issue_path": f"/walls/{wall_id}",
+            "source_fact_refs": [path],
+        }
+
     for storey_index, storey in enumerate(raw_storeys):
         storey_id = _string(storey.get("id"))
         if storey_id is None or storey_id not in expected_storeys:
