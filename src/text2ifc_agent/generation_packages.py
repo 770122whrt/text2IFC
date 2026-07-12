@@ -88,10 +88,17 @@ def build_generation_package_manifest(
                     )
 
     cross_components: list[str] = []
+    cross_relationships: list[str] = []
     cross_refs: set[str] = set()
     for collection in ("slabs", "stairs"):
         for index, record in enumerate(_records(expected_facts.get(collection))):
-            cross_components.append(_component_id(record, f"{collection[:-1]}-{index + 1}"))
+            component_id = _component_id(record, f"{collection[:-1]}-{index + 1}")
+            cross_components.append(component_id)
+            if collection == "slabs" and isinstance(record.get("opening"), Mapping):
+                opening = record["opening"]
+                if isinstance(opening.get("bounds"), Mapping):
+                    cross_components.append(f"opening-{component_id}")
+                    cross_relationships.append(f"rel-voids-{component_id}")
             if collection == "stairs":
                 for field in ("from_storey", "to_storey"):
                     endpoint = _non_empty(record.get(field))
@@ -143,10 +150,7 @@ def build_generation_package_manifest(
             "kind": "storey_local",
             "storey_id": storey_id,
             "owned_component_ids": _ordered_unique(local_components[storey_id]),
-            "owned_relationship_ids": [
-                f"rel-contains-{storey_id}",
-                *_ordered_unique(local_relationships[storey_id]),
-            ],
+            "owned_relationship_ids": _ordered_unique(local_relationships[storey_id]),
             "allowed_reference_ids": sorted({storey_id, *local_refs[storey_id]}),
         }
         for storey_id in storey_ids
@@ -157,10 +161,7 @@ def build_generation_package_manifest(
             "kind": "cross_storey",
             "storey_id": None,
             "owned_component_ids": _ordered_unique(cross_components),
-            "owned_relationship_ids": [
-                f"rel-contains-{component_id}"
-                for component_id in _ordered_unique(cross_components)
-            ],
+            "owned_relationship_ids": _ordered_unique(cross_relationships),
             "allowed_reference_ids": sorted({*storey_ids, *cross_refs}),
         }
     )

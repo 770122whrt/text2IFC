@@ -10,7 +10,7 @@
     },
     "change_scope": {
       "entity_ids": ["wall-a", "space-a", "opening-window-a", "window-a"],
-      "relationship_ids": ["rel-contains-level-a", "rel-voids-window-a", "rel-fills-window-a"]
+      "relationship_ids": ["rel-voids-window-a", "rel-fills-window-a"]
     }
   },
   "output": {
@@ -89,18 +89,6 @@
             "Representation": {"kind": "extruded_profile", "profile": {"kind": "rectangle", "x": 1200, "y": 100}, "depth": 1000, "direction": [0, 0, 1]}
           },
           "property_sets": {},
-          "provenance": {"source": "issue-package-level-a"}
-        },
-        "evidence_refs": ["issue-package-level-a:/expected"]
-      },
-      {
-        "operation_id": "operation-add-containment-level-a",
-        "op": "add_relationship",
-        "target_id": "rel-contains-level-a",
-        "value": {
-          "id": "rel-contains-level-a",
-          "ifc_class": "IfcRelContainedInSpatialStructure",
-          "attributes": {"RelatingStructure": "level-a", "RelatedElements": ["wall-a", "space-a", "opening-window-a", "window-a"]},
           "provenance": {"source": "issue-package-level-a"}
         },
         "evidence_refs": ["issue-package-level-a:/expected"]

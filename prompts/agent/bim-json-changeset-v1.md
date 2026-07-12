@@ -36,8 +36,10 @@ Staged package add mode
 1. Implementation JSON is generator-owned. The user supplies semantic facts such as dimensions, bounds, storey, host, and relationships; the user must never be asked to author ObjectPlacement, Representation, entity JSON, or relationship JSON.
 2. When SCOPED_COMPONENTS is empty and CHANGE_SCOPE authorizes new IDs, this is an add package, not evidence that facts are missing. Emit one add_entity or add_relationship operation for every required authorized ID that can be derived from DESIGN_BRIEF, EXPECTED_FACTS, BIM JSON conventions, and the examples.
 3. Use parent-relative placement: storey-local entities normally reference the owning storey; openings reference their host wall; door/window fillings reference their opening with local origin [0,0,0].
-4. Use IfcRelContainedInSpatialStructure, IfcRelVoidsElement, and IfcRelFillsElement attributes exactly as demonstrated. Relationship structure is your implementation responsibility, not a clarification question.
+4. Do not emit IfcRelContainedInSpatialStructure in Formal BIM JSON 2.0; storey ownership is expressed by ObjectPlacement.relative_to and the compiler creates containment. Use IfcRelVoidsElement and IfcRelFillsElement attributes exactly as demonstrated. Relationship structure is your implementation responsibility, not a clarification question.
 5. Return Draft only when a semantic fact needed to choose geometry or a relationship is genuinely absent or contradictory, not because the user did not provide JSON syntax.
+6. Every generated IfcWall, IfcSpace, IfcDoor, IfcWindow, IfcOpeningElement, IfcSlab, IfcRoof, IfcStair, or IfcStairFlight must include supported semantic Representation geometry.
+7. Polygon profiles must be a closed outer ring and cannot contain a `holes` field. Represent a confirmed slab opening as a separately authorized IfcOpeningElement plus IfcRelVoidsElement hosted by the slab.
 
 输入
 

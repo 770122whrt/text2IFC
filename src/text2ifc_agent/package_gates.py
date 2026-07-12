@@ -16,6 +16,7 @@ _CROSS_CLASSES = {
     "IfcOpeningElement",
 }
 _CROSS_ONLY_CLASSES = _CROSS_CLASSES - {"IfcOpeningElement"}
+_REPRESENTED_CLASSES = _LOCAL_CLASSES | _CROSS_CLASSES
 _REFERENCE_FIELDS = {
     "relative_to",
     "RelatingObject",
@@ -69,6 +70,7 @@ def validate_package_changeset(
             issues.append(_issue("PACKAGE_VALUE_ID_MISMATCH", f"{path}/value/id", target_id))
             continue
         values[target_id] = dict(value)
+        issues.extend(_representation_issues(target_id, value))
 
     package_ids = set(values)
     visible_ids = set(existing) | package_ids | allowed_refs
@@ -170,6 +172,46 @@ def _manifest_ownership_issues(manifest: Mapping[str, Any]) -> list[dict[str, An
         for component_id, package_ids in sorted(owners.items())
         if len(package_ids) > 1
     ]
+
+
+def _representation_issues(
+    component_id: str,
+    value: Mapping[str, Any],
+) -> list[dict[str, Any]]:
+    if str(value.get("ifc_class", "")) not in _REPRESENTED_CLASSES:
+        return []
+    attributes = value.get("attributes")
+    representation = attributes.get("Representation") if isinstance(attributes, Mapping) else None
+    if not isinstance(representation, Mapping):
+        return [
+            _issue(
+                "PACKAGE_REPRESENTATION_MISSING",
+                f"/{component_id}/attributes/Representation",
+                component_id,
+            )
+        ]
+    profile = representation.get("profile")
+    if not isinstance(profile, Mapping) or profile.get("kind") != "polygon":
+        return []
+    issues: list[dict[str, Any]] = []
+    if "holes" in profile:
+        issues.append(
+            _issue(
+                "PACKAGE_PROFILE_HOLES_UNSUPPORTED",
+                f"/{component_id}/attributes/Representation/profile/holes",
+                component_id,
+            )
+        )
+    points = profile.get("points")
+    if isinstance(points, list) and points and points[0] != points[-1]:
+        issues.append(
+            _issue(
+                "PACKAGE_POLYGON_PROFILE_OPEN",
+                f"/{component_id}/attributes/Representation/profile/points",
+                component_id,
+            )
+        )
+    return issues
 
 
 def _component_references(value: Mapping[str, Any]) -> list[tuple[str, str]]:

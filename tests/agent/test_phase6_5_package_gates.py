@@ -4,6 +4,16 @@ from text2ifc_agent.package_gates import validate_package_changeset
 
 
 def _entity(entity_id, ifc_class, **attributes):
+    if ifc_class in {
+        "IfcWall", "IfcSpace", "IfcOpeningElement", "IfcDoor", "IfcWindow",
+        "IfcSlab", "IfcStair", "IfcStairFlight",
+    } and "Representation" not in attributes:
+        attributes["Representation"] = {
+            "kind": "extruded_profile",
+            "profile": {"kind": "rectangle", "x": 1000, "y": 200},
+            "depth": 3000,
+            "direction": [0, 0, 1],
+        }
     return {
         "id": entity_id,
         "ifc_class": ifc_class,
