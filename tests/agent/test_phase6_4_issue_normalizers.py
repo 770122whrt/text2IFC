@@ -366,6 +366,35 @@ def test_audit_affected_entities_become_generator_scoped_targets():
         )
 
 
+def test_ifc_schema_audit_with_components_routes_to_generator():
+    issues = normalize_audit_findings(
+        {
+            "blocking": True,
+            "findings": [
+                {
+                    "code": "IFC_SCHEMA_ERROR",
+                    "severity": "blocking",
+                    "components": ["stair-1", "stair-flight-1"],
+                    "message": "A decomposed stair must not also own Representation.",
+                }
+            ],
+        }
+    )
+
+    assert [issue.actual_ref for issue in issues] == [
+        "entity:stair-1#/attributes",
+        "entity:stair-flight-1#/attributes",
+    ]
+    for issue in issues:
+        _assert_valid(
+            issue,
+            source="audit",
+            owner="generator",
+            issue_type="geometry_invalid",
+            route="regenerate_json",
+        )
+
+
 def test_normalizes_audit_findings_to_owners_and_routes():
     issues = normalize_audit_findings(
         {

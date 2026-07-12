@@ -141,3 +141,9 @@ def test_staged_cross_storey_few_shot_teaches_flight_and_slab_opening_graph():
         "IfcRelVoidsElement",
         "IfcRelAggregates",
     } <= classes
+    stair = next(
+        operation["value"]
+        for operation in example["output"]["operations"]
+        if operation.get("value", {}).get("ifc_class") == "IfcStair"
+    )
+    assert "Representation" not in stair["attributes"]

@@ -217,6 +217,34 @@ def test_cross_storey_package_accepts_only_declared_vertical_components():
     assert result["valid"] is True
 
 
+def test_cross_storey_package_accepts_geometry_on_flight_not_decomposed_stair():
+    manifest = _manifest()
+    package = manifest["packages"][-1]
+    package["owned_component_ids"] = ["stair-1-2", "stair-flight-1-2"]
+    package["owned_relationship_ids"] = ["aggregate-stair-1-2-flight"]
+    stair = _entity("stair-1-2", "IfcStair")
+    stair["attributes"].pop("Representation")
+    values = [
+        stair,
+        _entity("stair-flight-1-2", "IfcStairFlight"),
+        _relationship(
+            "aggregate-stair-1-2-flight",
+            "IfcRelAggregates",
+            RelatingObject="stair-1-2",
+            RelatedObjects=["stair-flight-1-2"],
+        ),
+    ]
+
+    result = validate_package_changeset(
+        manifest=manifest,
+        package_id="package-cross-storey",
+        workspace=_workspace(),
+        changeset=_changeset("package-cross-storey", values),
+    )
+
+    assert result == {"valid": True, "issues": []}
+
+
 @pytest.mark.parametrize(
     ("mutate", "code"),
     [

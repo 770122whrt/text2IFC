@@ -164,6 +164,47 @@ def test_expected_facts_preserves_explicit_storey_owned_wall_inventory():
     assert "wall-b-north" in local["storey-b"]
 
 
+def test_expected_facts_flattens_grouped_walls_inside_storey_records():
+    brief = {
+        "schema_version": "text2ifc/design-brief/2.0",
+        "status": "ready",
+        "language": "zh-CN",
+        "known_facts": {
+            "storeys": [
+                {
+                    "id": "storey-1",
+                    "elevation_mm": 0,
+                    "walls": {
+                        "exterior": [
+                            {"id": "wall-south", "side": "south"},
+                            {"id": "wall-east", "side": "east"},
+                        ],
+                        "interior": [{"id": "wall-partition", "axis": "x"}],
+                    },
+                }
+            ],
+            "spaces": [],
+            "doors": [],
+            "windows": [],
+        },
+        "missing_facts": [],
+        "ambiguities": [],
+        "unsupported_requests": [],
+        "fact_sources": [],
+    }
+
+    expected = build_expected_facts(case_id="case-grouped-walls", design_brief=brief)
+
+    assert [(wall["id"], wall["storey"]) for wall in expected["walls"]] == [
+        ("wall-south", "storey-1"),
+        ("wall-east", "storey-1"),
+        ("wall-partition", "storey-1"),
+    ]
+    assert expected["generation_package_manifest"]["packages"][1][
+        "owned_component_ids"
+    ] == ["wall-south", "wall-east", "wall-partition"]
+
+
 def test_local_package_declares_deterministic_containment_void_and_fill_relationship_ids():
     expected = _expected(2)
     expected["walls"] = [
