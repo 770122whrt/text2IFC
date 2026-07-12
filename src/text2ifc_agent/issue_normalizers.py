@@ -212,7 +212,9 @@ def normalize_gate_sidecars(case_dir: Path | str) -> list[Issue]:
                         ),
                         retryable=issue_type != "gate_false_positive",
                         detail=detail,
-                        target_ids=_existing_target_ids(detail.get("entity_ids"), candidate_ids),
+                        target_ids=_existing_target_ids(
+                            _structured_target_ids(detail), candidate_ids
+                        ),
                         fallback_ref=(
                             _string_or_none(detail.get("path"))
                             or str(gate.get("name", ""))
@@ -405,6 +407,14 @@ def _existing_target_ids(value: Any, candidate_ids: set[str] | None) -> list[str
     if candidate_ids is None:
         return values
     return [item for item in values if item in candidate_ids]
+
+
+def _structured_target_ids(detail: Mapping[str, Any]) -> list[str]:
+    values = list(detail.get("entity_ids") or [])
+    opening_id = detail.get("opening_id")
+    if isinstance(opening_id, str) and opening_id:
+        values.append(opening_id)
+    return list(dict.fromkeys(str(item) for item in values))
 
 
 def _targeted_issues(

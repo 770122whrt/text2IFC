@@ -94,12 +94,30 @@ def build_generation_package_manifest(
         for index, record in enumerate(_records(expected_facts.get(collection))):
             component_id = _component_id(record, f"{collection[:-1]}-{index + 1}")
             cross_components.append(component_id)
-            if collection == "slabs" and isinstance(record.get("opening"), Mapping):
-                opening = record["opening"]
-                if isinstance(opening.get("bounds"), Mapping):
-                    cross_components.append(f"opening-{component_id}")
-                    cross_relationships.append(f"rel-voids-{component_id}")
+            if collection == "slabs":
+                openings = _slab_openings(record)
+                for opening_index, opening in enumerate(openings):
+                    if not isinstance(opening.get("bounds"), Mapping):
+                        continue
+                    opening_id = _component_id(
+                        opening,
+                        (
+                            f"opening-{component_id}"
+                            if opening_index == 0
+                            else f"opening-{component_id}-{opening_index + 1}"
+                        ),
+                    )
+                    cross_components.append(opening_id)
+                    relationship_id = (
+                        f"rel-voids-{component_id}"
+                        if opening_index == 0
+                        else f"rel-voids-{component_id}-{opening_index + 1}"
+                    )
+                    cross_relationships.append(relationship_id)
             if collection == "stairs":
+                flight_ids = _stair_flight_ids(record, component_id)
+                cross_components.extend(flight_ids)
+                cross_relationships.append(f"aggregate-{component_id}-flight")
                 for field in ("from_storey", "to_storey"):
                     endpoint = _non_empty(record.get(field))
                     if endpoint not in storey_ids:
@@ -176,6 +194,21 @@ def build_generation_package_manifest(
 
 def _records(value: Any) -> list[dict[str, Any]]:
     return [dict(item) for item in value] if isinstance(value, list) else []
+
+
+def _slab_openings(record: Mapping[str, Any]) -> list[dict[str, Any]]:
+    openings = _records(record.get("openings"))
+    singular = record.get("opening")
+    if isinstance(singular, Mapping):
+        openings.insert(0, dict(singular))
+    return openings
+
+
+def _stair_flight_ids(record: Mapping[str, Any], stair_id: str) -> list[str]:
+    explicit = record.get("flight_ids")
+    if isinstance(explicit, list) and explicit:
+        return _ordered_unique([str(item) for item in explicit if str(item)])
+    return [stair_id.replace("stair-", "stair-flight-", 1)]
 
 
 def _component_id(record: Mapping[str, Any], fallback: str) -> str:

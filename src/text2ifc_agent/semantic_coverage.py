@@ -64,11 +64,17 @@ def build_design_geometry_expectation(
             "datum": "slab_top",
             "source_fact_refs": [path],
         }
-        opening = slab.get("opening")
-        if isinstance(opening, Mapping):
+        openings = _records(slab.get("openings"))
+        if isinstance(slab.get("opening"), Mapping):
+            openings.insert(0, dict(slab["opening"]))
+        for opening_index, opening in enumerate(openings):
             opening_bounds = _plan_bounds(opening.get("bounds"))
             if opening_bounds is not None:
-                opening_id = _string(opening.get("id")) or f"opening-{slab_id}-stair"
+                opening_id = _string(opening.get("id")) or (
+                    f"opening-{slab_id}-stair"
+                    if opening_index == 0
+                    else f"opening-{slab_id}-stair-{opening_index + 1}"
+                )
                 floor_openings[opening_id] = {
                     "bbox": _bbox(
                         opening_bounds[0],
@@ -79,7 +85,7 @@ def build_design_geometry_expectation(
                         top,
                     ),
                     "host_slab_id": slab_id,
-                    "source_fact_refs": [f"{path}/opening"],
+                    "source_fact_refs": [f"{path}/openings/{opening_index}"],
                 }
 
     roof_record = expected_facts.get("roof")
