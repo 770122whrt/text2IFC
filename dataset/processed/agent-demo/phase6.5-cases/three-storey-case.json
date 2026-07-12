@@ -1,0 +1,56 @@
+{
+  "case_id": "three-storey-accepted",
+  "input": "创建一个三层矩形建筑，每层包含一个办公室和一个楼梯间，并生成两段竖向楼梯、各层楼板、屋面、门窗和正确楼层归属。",
+  "design_brief": {
+    "schema_version": "text2ifc/design-brief/2.0",
+    "status": "ready",
+    "language": "zh-CN",
+    "original_request": "创建一个三层矩形建筑，每层包含一个办公室和一个楼梯间，并生成两段竖向楼梯、各层楼板、屋面、门窗和正确楼层归属。",
+    "known_facts": {
+      "building": {
+        "width_x_mm": 8000,
+        "depth_y_mm": 6000,
+        "storey_height_mm": 3000,
+        "wall_thickness_mm": 200,
+        "slab_thickness_mm": 150
+      },
+      "storeys": [
+        {"id": "storey-1", "name": "首层", "elevation_mm": 0},
+        {"id": "storey-2", "name": "二层", "elevation_mm": 3150},
+        {"id": "storey-3", "name": "三层", "elevation_mm": 6300}
+      ],
+      "spaces": [
+        {"id": "space-storey-1-office", "storey": "storey-1", "name": "首层办公室", "origin_mm": [0, 0, 0], "dimensions_mm": [6000, 6000], "height_mm": 3000},
+        {"id": "space-storey-1-stair", "storey": "storey-1", "name": "首层楼梯间", "origin_mm": [6000, 0, 0], "dimensions_mm": [2000, 6000], "height_mm": 3000},
+        {"id": "space-storey-2-office", "storey": "storey-2", "name": "二层办公室", "origin_mm": [0, 0, 0], "dimensions_mm": [6000, 6000], "height_mm": 3000},
+        {"id": "space-storey-2-stair", "storey": "storey-2", "name": "二层楼梯间", "origin_mm": [6000, 0, 0], "dimensions_mm": [2000, 6000], "height_mm": 3000},
+        {"id": "space-storey-3-office", "storey": "storey-3", "name": "三层办公室", "origin_mm": [0, 0, 0], "dimensions_mm": [6000, 6000], "height_mm": 3000},
+        {"id": "space-storey-3-stair", "storey": "storey-3", "name": "三层楼梯间", "origin_mm": [6000, 0, 0], "dimensions_mm": [2000, 6000], "height_mm": 3000}
+      ],
+      "slabs": [
+        {"id": "slab-ground", "storey": "storey-1", "elevation_mm": 0, "thickness_mm": 150},
+        {"id": "slab-storey-2", "storey": "storey-2", "elevation_mm": 3150, "thickness_mm": 150},
+        {"id": "slab-storey-3", "storey": "storey-3", "elevation_mm": 6300, "thickness_mm": 150}
+      ],
+      "roof": {"id": "roof-main", "elevation_mm": 9300, "thickness_mm": 150},
+      "stairs": [
+        {"id": "stair-1-2", "storey": "storey-1", "start_elevation_mm": 150, "end_elevation_mm": 3150, "width_mm": 1000},
+        {"id": "stair-2-3", "storey": "storey-2", "start_elevation_mm": 3300, "end_elevation_mm": 6300, "width_mm": 1000}
+      ],
+      "doors": [
+        {"id": "door-storey-1", "storey": "storey-1", "host_wall": "storey-1-south", "width_mm": 900, "height_mm": 2100},
+        {"id": "door-storey-2", "storey": "storey-2", "host_wall": "storey-2-south", "width_mm": 900, "height_mm": 2100},
+        {"id": "door-storey-3", "storey": "storey-3", "host_wall": "storey-3-south", "width_mm": 900, "height_mm": 2100}
+      ],
+      "windows": [
+        {"id": "window-storey-1", "storey": "storey-1", "host_wall": "storey-1-north", "width_mm": 1200, "height_mm": 1000, "sill_height_mm": 900},
+        {"id": "window-storey-2", "storey": "storey-2", "host_wall": "storey-2-north", "width_mm": 1200, "height_mm": 1000, "sill_height_mm": 900},
+        {"id": "window-storey-3", "storey": "storey-3", "host_wall": "storey-3-north", "width_mm": 1200, "height_mm": 1000, "sill_height_mm": 900}
+      ]
+    },
+    "fact_sources": [],
+    "missing_facts": [],
+    "ambiguities": [],
+    "unsupported_requests": []
+  }
+}
