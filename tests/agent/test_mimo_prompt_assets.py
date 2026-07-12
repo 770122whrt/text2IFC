@@ -243,6 +243,15 @@ def test_bim_json_generator_v2_contains_multistorey_error_constraints():
     assert "Preserve every component that is not identified by a blocking feedback issue" in text
 
 
+def test_design_brief_v2_normalizes_axis_aligned_wall_segments_without_bent_walls():
+    text = Path("prompts/agent/design-brief-v2.1.md").read_text(encoding="utf-8")
+
+    assert "start_mm" in text
+    assert "end_mm" in text
+    assert "two independent straight wall records" in text
+    assert "single bent or polyline wall" in text
+
+
 def test_bim_json_generator_v2_requires_medium_straight_stair_contract():
     text = Path("prompts/agent/bim-json-generator-v2.md").read_text(encoding="utf-8")
 

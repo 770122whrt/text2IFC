@@ -163,3 +163,28 @@ def test_staged_cross_storey_few_shot_teaches_flight_and_slab_opening_graph():
         if operation.get("value", {}).get("ifc_class") == "IfcStair"
     )
     assert "Representation" not in stair["attributes"]
+
+
+def test_orthogonal_wall_few_shot_uses_two_independent_straight_walls():
+    assert "changeset-staged-orthogonal-walls" in {path.stem for path in FEW_SHOT_PATHS}
+    example = json.loads(
+        open(
+            "prompts/agent/few-shot/changeset-staged-orthogonal-walls.json",
+            encoding="utf-8",
+        ).read()
+    )
+
+    walls = [
+        operation["value"]
+        for operation in example["output"]["operations"]
+        if operation.get("value", {}).get("ifc_class") == "IfcWall"
+    ]
+    assert len(walls) == 2
+    assert {tuple(wall["attributes"]["ObjectPlacement"]["ref_direction"]) for wall in walls} == {
+        (1, 0, 0),
+        (0, 1, 0),
+    }
+    assert all(
+        wall["attributes"]["Representation"]["profile"]["kind"] == "rectangle"
+        for wall in walls
+    )
