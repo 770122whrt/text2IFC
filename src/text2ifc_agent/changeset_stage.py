@@ -39,6 +39,7 @@ def run_changeset_stage(
     base_revision: Mapping[str, Any],
     scope: Mapping[str, Any],
     issues: list[dict[str, Any]],
+    context_issues: list[dict[str, Any]] | None = None,
     trace_level: str | None = "debug",
 ) -> dict[str, Any]:
     """Ask the provider for a ChangeSet or canonical Draft and validate its binding."""
@@ -56,6 +57,7 @@ def run_changeset_stage(
         "BASE_REVISION": dict(base_revision),
         "CHANGE_SCOPE": dict(scope),
         "ISSUES": issues,
+        "CONTEXT_ISSUES": list(context_issues or []),
         "CHANGESET_SCHEMA": changeset_schema,
         "DRAFT_SCHEMA": draft_schema,
         "FEW_SHOTS": [_read_json(path) for path in FEW_SHOT_PATHS],

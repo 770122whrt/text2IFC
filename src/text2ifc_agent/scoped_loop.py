@@ -30,6 +30,7 @@ def resolve_issue_component_refs(
 
     resolved: list[dict[str, Any]] = []
     diagnostics: list[dict[str, str]] = []
+    context: list[dict[str, Any]] = []
     for issue in issues:
         payload = issue.to_dict() if isinstance(issue, Issue) else dict(issue)
         actual_ref = str(payload.get("actual_ref") or "")
@@ -38,7 +39,7 @@ def resolve_issue_component_refs(
             continue
         match = _COLLECTION_REF.fullmatch(actual_ref)
         if match is None:
-            diagnostics.append(_unresolved(payload, actual_ref))
+            context.append(payload)
             continue
         collection_name = match.group("collection")
         collection = candidate.get(collection_name)
@@ -49,7 +50,7 @@ def resolve_issue_component_refs(
         kind = "entity" if collection_name == "entities" else "relationship"
         payload["actual_ref"] = f"{kind}:{component['id']}#{match.group('path')}"
         resolved.append(payload)
-    return {"resolved": resolved, "issues": diagnostics}
+    return {"resolved": resolved, "context": context, "issues": diagnostics}
 
 
 def run_scoped_changeset_round(
@@ -73,8 +74,27 @@ def run_scoped_changeset_round(
     output.mkdir(parents=True, exist_ok=True)
     revision = dict(base_revision or _initial_revision(candidate, expected_facts))
     resolved = resolve_issue_component_refs(candidate=candidate, issues=issues)
-    if resolved["issues"]:
-        return _blocked("scope_unresolved", resolved["issues"])
+    _write_json(
+        output / "scope-resolution.json",
+        {
+            "actionable_issue_ids": [
+                issue.get("issue_id") for issue in resolved["resolved"]
+            ],
+            "context_issue_ids": [
+                issue.get("issue_id") for issue in resolved["context"]
+            ],
+            "issues": resolved["issues"],
+        },
+    )
+    if resolved["issues"] or not resolved["resolved"]:
+        diagnostics = resolved["issues"] or [
+            {
+                "code": "CHANGESET_TARGET_UNRESOLVED",
+                "path": "/issues",
+                "message": "No issue identifies a stable candidate component.",
+            }
+        ]
+        return _blocked("scope_unresolved", diagnostics)
 
     next_sequence = int(revision["sequence"]) + 1
     scope_result = derive_change_scope(
@@ -103,6 +123,7 @@ def run_scoped_changeset_round(
         base_revision=revision,
         scope=scope,
         issues=resolved["resolved"],
+        context_issues=resolved["context"],
         trace_level=trace_level,
     )
     if not stage["valid"] or stage["classification"] != "changeset":

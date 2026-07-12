@@ -67,6 +67,12 @@ Expected Facts：
 本轮结构化 Issues：
 {{ISSUES}}
 
+仅作上下文的失败证据（不得把这些 issue ID 写入 source_issue_ids，也不得因此扩大 CHANGE_SCOPE）：
+{{CONTEXT_ISSUES}}
+
+只有 ISSUES 决定本轮授权目标和 source_issue_ids。CONTEXT_ISSUES 只解释编译、重开等下游症状，
+用于理解失败原因，但不是可直接修改的组件目标。
+
 ChangeSet 完整 Schema：
 {{CHANGESET_SCHEMA}}
 

@@ -17,6 +17,15 @@ def add_v2_relationships(
 ) -> None:
     for record in relationships:
         ifc_class = record["ifc_class"]
+        if ifc_class == "IfcRelAggregates":
+            attributes = record["attributes"]
+            relating_object = entities[attributes["RelatingObject"]]
+            related_objects = [
+                entities[entity_id]
+                for entity_id in attributes["RelatedObjects"]
+            ]
+            if _aggregate_already_assigned(relating_object, related_objects):
+                continue
         if ifc_class == "IfcRelDefinesByType":
             attributes = record["attributes"]
             assign_type(
@@ -68,3 +77,13 @@ def add_v2_relationships(
             Description=None,
             **attributes,
         )
+
+
+def _aggregate_already_assigned(relating_object: Any, related_objects: list[Any]) -> bool:
+    return all(
+        any(
+            relation.RelatingObject == relating_object
+            for relation in getattr(related_object, "Decomposes", ())
+        )
+        for related_object in related_objects
+    )
