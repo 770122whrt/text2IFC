@@ -308,7 +308,7 @@ def test_dynamic_gates_allow_equivalent_opening_and_filling_representation_diale
     assert gates["dynamic_opening_fill"]["status"] == "passed"
 
 
-def test_dynamic_gates_target_opening_when_its_height_and_thickness_axes_are_swapped():
+def test_dynamic_gates_target_opening_when_wall_normal_dialect_lacks_origin_compensation():
     expected = _expected_facts(
         storeys=["storey-1"],
         doors=[
@@ -324,11 +324,11 @@ def test_dynamic_gates_target_opening_when_its_height_and_thickness_axes_are_swa
         include_opening_relationships=True,
     )
     _set_rectangle(candidate, "wall-south", x=8000, y=200)
-    _set_rectangle(candidate, "opening-door-south", x=900, y=200)
+    _set_rectangle(candidate, "opening-door-south", x=900, y=2100)
     opening_representation = _entity_by_id(candidate, "opening-door-south")[
         "attributes"
     ]["Representation"]
-    opening_representation["depth"] = 2100
+    opening_representation["depth"] = 200
     opening_representation["direction"] = [0, 1, 0]
     _set_rectangle(candidate, "door-south", x=900, y=2100)
     filling_representation = _entity_by_id(candidate, "door-south")["attributes"][
@@ -343,10 +343,15 @@ def test_dynamic_gates_target_opening_when_its_height_and_thickness_axes_are_swa
     issue = next(
         item for item in issues if item["code"] == "OPENING_HOST_LOCAL_BOUNDS_MISMATCH"
     )
-    assert issue["path"] == "/entities/opening-door-south/attributes/Representation"
+    assert issue["path"] == "/entities/opening-door-south/attributes/ObjectPlacement/origin"
     assert issue["target_entity_ids"] == ["opening-door-south"]
-    assert issue["opening_bounds"]["size"] == [900.0, 2100.0, 200.0]
+    assert issue["opening_bounds"]["size"] == [900.0, 200.0, 2100.0]
     assert issue["host_bounds"]["size"] == [8000.0, 200.0, 3000.0]
+    assert issue["allowed_origin_ranges"] == {
+        "x": [-3550.0, 3550.0],
+        "y": [-100.0, -100.0],
+        "z": [1050.0, 1950.0],
+    }
     assert not any(
         item["code"] == "FILLING_OPENING_BOUNDS_MISMATCH" for item in issues
     )
