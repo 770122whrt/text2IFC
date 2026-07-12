@@ -48,7 +48,9 @@ def validate_package_changeset(
     operations = _records(changeset.get("operations"))
     existing = _components(workspace)
     targets = [str(operation.get("target_id") or "") for operation in operations]
-    owned = set(package.get("owned_component_ids", []))
+    owned = set(package.get("owned_component_ids", [])) | set(
+        package.get("owned_relationship_ids", [])
+    )
     allowed_refs = set(package.get("allowed_reference_ids", []))
     duplicate_targets = {target for target, count in Counter(targets).items() if target and count > 1}
     values: dict[str, dict[str, Any]] = {}
@@ -158,7 +160,10 @@ def _local_package_issues(
 def _manifest_ownership_issues(manifest: Mapping[str, Any]) -> list[dict[str, Any]]:
     owners: dict[str, list[str]] = {}
     for package in _records(manifest.get("packages")):
-        for component_id in package.get("owned_component_ids", []):
+        for component_id in [
+            *package.get("owned_component_ids", []),
+            *package.get("owned_relationship_ids", []),
+        ]:
             owners.setdefault(str(component_id), []).append(str(package.get("package_id")))
     return [
         _issue("PACKAGE_COMPONENT_MULTIPLE_OWNERS", "/packages", component_id)

@@ -52,6 +52,7 @@ def build_generation_package_manifest(
         )
 
     local_components = {storey_id: [] for storey_id in storey_ids}
+    local_relationships = {storey_id: [] for storey_id in storey_ids}
     local_refs = {storey_id: set() for storey_id in storey_ids}
     for collection in ("walls", "spaces", "doors", "windows"):
         for index, record in enumerate(_records(expected_facts.get(collection))):
@@ -81,6 +82,9 @@ def build_generation_package_manifest(
                     local_refs[storey_id].add(host_wall)
                     local_components[storey_id].extend(
                         [host_wall, f"opening-{component_id}"]
+                    )
+                    local_relationships[storey_id].extend(
+                        [f"rel-voids-{component_id}", f"rel-fills-{component_id}"]
                     )
 
     cross_components: list[str] = []
@@ -124,6 +128,8 @@ def build_generation_package_manifest(
                 "site-main",
                 "building-main",
                 *storey_ids,
+            ],
+            "owned_relationship_ids": [
                 "aggregate-project-site",
                 "aggregate-site-building",
                 "aggregate-building-storeys",
@@ -137,6 +143,10 @@ def build_generation_package_manifest(
             "kind": "storey_local",
             "storey_id": storey_id,
             "owned_component_ids": _ordered_unique(local_components[storey_id]),
+            "owned_relationship_ids": [
+                f"rel-contains-{storey_id}",
+                *_ordered_unique(local_relationships[storey_id]),
+            ],
             "allowed_reference_ids": sorted({storey_id, *local_refs[storey_id]}),
         }
         for storey_id in storey_ids
@@ -147,6 +157,10 @@ def build_generation_package_manifest(
             "kind": "cross_storey",
             "storey_id": None,
             "owned_component_ids": _ordered_unique(cross_components),
+            "owned_relationship_ids": [
+                f"rel-contains-{component_id}"
+                for component_id in _ordered_unique(cross_components)
+            ],
             "allowed_reference_ids": sorted({*storey_ids, *cross_refs}),
         }
     )

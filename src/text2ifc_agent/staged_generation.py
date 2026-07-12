@@ -262,14 +262,20 @@ def _package_scope(
     issue_id: str,
 ) -> dict[str, Any]:
     owned = [str(value) for value in package.get("owned_component_ids", [])]
+    owned_relationships = [
+        str(value) for value in package.get("owned_relationship_ids", [])
+    ]
     return {
         "schema_version": "text2ifc/change-scope/1.0",
         "scope_id": f"scope-package-{sequence}",
         "base_revision_id": revision["revision_id"],
         "source_issue_ids": [issue_id],
         "entity_ids": owned,
-        "relationship_ids": [],
-        "allowed_paths": {component_id: ["/"] for component_id in owned},
+        "relationship_ids": owned_relationships,
+        "allowed_paths": {
+            component_id: ["/"]
+            for component_id in [*owned, *owned_relationships]
+        },
         "dependencies": [],
         "forbidden_ids": sorted(build_candidate_index(workspace)["component_hashes"]),
     }

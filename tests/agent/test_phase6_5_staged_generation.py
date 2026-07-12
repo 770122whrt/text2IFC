@@ -356,5 +356,10 @@ def test_staged_scope_exposes_manifest_relationship_ownership_to_provider(tmp_pa
     )
 
     assert result["valid"] is True
-    assert provider.calls[0]["state"]["scope"]["relationship_ids"] == relationship_ids
-    assert not set(relationship_ids) & set(provider.calls[0]["state"]["scope"]["entity_ids"])
+    prompt_inputs = json.loads(
+        (tmp_path / "package-01-package-storey-1" / "prompt-render-input.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    assert prompt_inputs["CHANGE_SCOPE"]["relationship_ids"] == relationship_ids
+    assert not set(relationship_ids) & set(prompt_inputs["CHANGE_SCOPE"]["entity_ids"])
