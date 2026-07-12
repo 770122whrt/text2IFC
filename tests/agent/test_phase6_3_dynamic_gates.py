@@ -272,6 +272,57 @@ def test_dynamic_gates_fail_filling_bounds_outside_opening():
     ]
 
 
+def test_dynamic_gates_target_filling_representation_when_height_and_thickness_are_swapped():
+    expected = _expected_facts(
+        storeys=["storey-1"],
+        doors=[
+            {"id": "door-south", "storey": "storey-1", "host_wall": "wall-south"}
+        ],
+        windows=[],
+    )
+    candidate = _candidate(
+        storeys=["storey-1"],
+        walls=[("wall-south", "storey-1")],
+        doors=[("door-south", "storey-1", "wall-south")],
+        windows=[],
+        include_opening_relationships=True,
+    )
+    _set_rectangle(candidate, "wall-south", x=8000, y=200)
+    _set_rectangle(candidate, "opening-door-south", x=900, y=200)
+    opening_representation = _entity_by_id(candidate, "opening-door-south")[
+        "attributes"
+    ]["Representation"]
+    opening_representation["depth"] = 2100
+    opening_representation["direction"] = [0, 0, 1]
+    _set_rectangle(candidate, "door-south", x=900, y=2100)
+    filling_representation = _entity_by_id(candidate, "door-south")["attributes"][
+        "Representation"
+    ]
+    filling_representation["depth"] = 200
+    filling_representation["direction"] = [0, 1, 0]
+
+    gates = _by_name(evaluate_dynamic_gates(candidate=candidate, expected_facts=expected))
+
+    issue = next(
+        issue
+        for issue in gates["dynamic_opening_fill"]["issues"]
+        if issue["code"] == "FILLING_REPRESENTATION_MISMATCH"
+    )
+    assert issue["path"] == "/entities/door-south/attributes/Representation"
+    assert issue["element_id"] == "door-south"
+    assert issue["opening_id"] == "opening-door-south"
+    assert issue["expected_representation"] == {
+        "profile": {"x": 900.0, "y": 200.0},
+        "depth": 2100.0,
+        "direction": [0.0, 0.0, 1.0],
+    }
+    assert issue["actual_representation"] == {
+        "profile": {"x": 900.0, "y": 2100.0},
+        "depth": 200.0,
+        "direction": [0.0, 1.0, 0.0],
+    }
+
+
 def test_dynamic_gates_fail_cross_storey_host_mismatch():
     expected = _expected_facts(
         storeys=["storey-1", "storey-2", "storey-3"],
