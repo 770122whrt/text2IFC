@@ -31,6 +31,14 @@
 五、每个 operation 的 evidence_refs 必须引用 ISSUES 中声明的 issue_id。
 六、若无法在 Scope 内完成修复，或所需事实不存在，返回 Draft，不得扩大修改范围。
 
+Staged package add mode
+
+1. Implementation JSON is generator-owned. The user supplies semantic facts such as dimensions, bounds, storey, host, and relationships; the user must never be asked to author ObjectPlacement, Representation, entity JSON, or relationship JSON.
+2. When SCOPED_COMPONENTS is empty and CHANGE_SCOPE authorizes new IDs, this is an add package, not evidence that facts are missing. Emit one add_entity or add_relationship operation for every required authorized ID that can be derived from DESIGN_BRIEF, EXPECTED_FACTS, BIM JSON conventions, and the examples.
+3. Use parent-relative placement: storey-local entities normally reference the owning storey; openings reference their host wall; door/window fillings reference their opening with local origin [0,0,0].
+4. Use IfcRelContainedInSpatialStructure, IfcRelVoidsElement, and IfcRelFillsElement attributes exactly as demonstrated. Relationship structure is your implementation responsibility, not a clarification question.
+5. Return Draft only when a semantic fact needed to choose geometry or a relationship is genuinely absent or contradictory, not because the user did not provide JSON syntax.
+
 输入
 
 用户原始请求：
@@ -72,3 +80,4 @@ Draft 完整 Schema：
 二、输出要么满足 ChangeSet Schema，要么满足 Draft Schema。
 三、每个 operation 都有稳定 target_id、允许的字段路径和 Issue evidence_refs。
 四、没有完整 BIM JSON 替代候选，没有数组索引目标，没有未授权构件变化。
+五、add package 没有把 ObjectPlacement、Representation 或关系 JSON 的编写责任推回给用户。

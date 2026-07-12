@@ -98,7 +98,7 @@ def test_staged_package_prompt_teaches_add_operations_are_generator_owned():
     rendered = render_prompt(template_id="bim-json-changeset.v1", inputs=_inputs())
 
     assert "Implementation JSON is generator-owned" in rendered["text"]
-    assert "staged-package-add" in {path.stem for path in FEW_SHOT_PATHS}
+    assert "changeset-staged-package-add" in {path.stem for path in FEW_SHOT_PATHS}
     example = json.loads(
         open(
             "prompts/agent/few-shot/changeset-staged-package-add.json",
