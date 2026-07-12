@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import hashlib
+import copy
 import json
 from functools import lru_cache
 from pathlib import Path
@@ -30,6 +31,20 @@ def hash_json_value(value: Any) -> str:
     return f"sha256:{hashlib.sha256(encoded).hexdigest()}"
 
 
+def hash_bim_json_candidate(candidate: Mapping[str, Any]) -> str:
+    """Hash a candidate independently of entity/relationship array order."""
+
+    canonical = copy.deepcopy(dict(candidate))
+    for collection_name in ("entities", "relationships"):
+        collection = canonical.get(collection_name)
+        if isinstance(collection, list):
+            canonical[collection_name] = sorted(
+                collection,
+                key=lambda item: str(item.get("id", "")) if isinstance(item, Mapping) else "",
+            )
+    return hash_json_value(canonical)
+
+
 def validate_revision_record(
     record: Any,
     *,
@@ -54,7 +69,7 @@ def validate_revision_record(
         )
 
     if candidate is not None:
-        if record["candidate_hash"] != hash_json_value(candidate):
+        if record["candidate_hash"] != hash_bim_json_candidate(candidate):
             issues.append(
                 ValidationIssue(
                     code="REVISION_CANDIDATE_HASH_MISMATCH",

@@ -6,7 +6,7 @@ import copy
 from collections.abc import Mapping
 from typing import Any
 
-from text2ifc_agent.revisions import hash_json_value
+from text2ifc_agent.revisions import hash_bim_json_candidate, hash_json_value
 
 
 class CandidateIndexError(ValueError):
@@ -25,13 +25,8 @@ def build_candidate_index(candidate: Mapping[str, Any]) -> dict[str, Any]:
         )
 
     components = {**entities, **relationships}
-    canonical_candidate = copy.deepcopy(dict(candidate))
-    canonical_candidate["entities"] = [entities[key] for key in sorted(entities)]
-    canonical_candidate["relationships"] = [
-        relationships[key] for key in sorted(relationships)
-    ]
     return {
-        "candidate_hash": hash_json_value(canonical_candidate),
+        "candidate_hash": hash_bim_json_candidate(candidate),
         "entities": copy.deepcopy(entities),
         "relationships": copy.deepcopy(relationships),
         "component_hashes": {
