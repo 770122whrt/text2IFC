@@ -36,14 +36,18 @@ def _issue():
 
 
 class ChangeSetProvider:
-    def __init__(self, candidate, expected):
+    def __init__(self, candidate, expected, *, violate_scope_once=False):
         self.candidate = candidate
         self.expected = expected
+        self.violate_scope_once = violate_scope_once
         self.calls = []
 
     def generate_live(self, *, session_id, prompt, schema, state):
         self.calls.append({"session_id": session_id, "prompt": prompt, "schema": schema, "state": state})
         index = build_candidate_index(self.candidate)
+        changes = {"/attributes/Name": "Corrected wall"}
+        if self.violate_scope_once and len(self.calls) == 1:
+            changes = {"/attributes/ObjectPlacement/axis": [0, 1, 0]}
         payload = {
             "schema_version": "text2ifc/bim-json-changeset/1.0",
             "changeset_id": "changeset-revision-01",
@@ -58,7 +62,7 @@ class ChangeSetProvider:
                     "op": "update_entity",
                     "target_id": "wall-1",
                     "target_component_hash": index["component_hashes"]["wall-1"],
-                    "changes": {"/attributes/Name": "Corrected wall"},
+                    "changes": changes,
                     "evidence_refs": ["issue-wall-001:/expected"],
                 }
             ],
@@ -167,3 +171,35 @@ def test_scoped_round_uses_component_issues_for_scope_and_keeps_global_evidence(
     assert scope["source_issue_ids"] == ["issue-wall-001"]
     resolution = json.loads((tmp_path / "scope-resolution.json").read_text(encoding="utf-8"))
     assert resolution["context_issue_ids"] == ["issue-compile-001"]
+
+
+def test_scoped_round_retries_one_application_scope_violation_without_mutating_base(tmp_path):
+    candidate = _candidate()
+    expected = _expected()
+    provider = ChangeSetProvider(candidate, expected, violate_scope_once=True)
+    before = build_candidate_index(candidate)
+
+    result = run_scoped_changeset_round(
+        provider=provider,
+        output_dir=tmp_path,
+        case_id="case-application-retry",
+        round_number=1,
+        user_request="Correct the wall name.",
+        conversation=[{"role": "user", "content": "Correct the wall name."}],
+        design_brief={"status": "ready"},
+        expected_facts=expected,
+        candidate=candidate,
+        issues=[_issue()],
+        trace_level="debug",
+    )
+
+    assert result["valid"] is True
+    assert len(provider.calls) == 2
+    assert "CHANGESET_SCOPE_VIOLATION" in provider.calls[1]["prompt"]
+    assert (tmp_path / "attempt-02" / "application.json").is_file()
+    assert (tmp_path / "revisions" / "revision-01" / "candidate.json").is_file()
+    assert build_candidate_index(candidate) == before
+    wall = next(
+        entity for entity in result["candidate"]["entities"] if entity["id"] == "wall-1"
+    )
+    assert wall["attributes"]["Name"] == "Corrected wall"
