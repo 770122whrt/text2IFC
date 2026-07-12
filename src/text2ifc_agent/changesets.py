@@ -95,6 +95,20 @@ def _semantic_issues(document: dict[str, Any]) -> list[ValidationIssue]:
             )
         targets.add(target)
 
+        if operation["op"] in {"add_entity", "add_relationship"}:
+            provenance = operation["value"].get("provenance")
+            if not isinstance(provenance, dict) or not provenance:
+                issues.append(
+                    ValidationIssue(
+                        code="EMPTY_CHANGESET_PROVENANCE",
+                        path=f"/operations/{index}/value/provenance",
+                        message=(
+                            "Added components require non-empty provenance tied "
+                            "to existing evidence."
+                        ),
+                    )
+                )
+
         for evidence_index, evidence_ref in enumerate(operation["evidence_refs"]):
             issue_id = evidence_ref.split(":/", 1)[0]
             if issue_id not in declared_issues:
