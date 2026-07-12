@@ -7,12 +7,12 @@ See: `.planning/PROJECT.md` (updated 2026-06-11)
 **Core value:** Produce valid, inspectable IFC models from explicit user
 requirements.
 
-**Current focus:** Phase 6.5 immutable ChangeSet application and dependency scope
+**Current focus:** Phase 6.5 ChangeSet Generator and feedback-loop integration
 
 ## Status
 
 - Phase: 6.5
-- Stage: Wave 0 contracts complete; Wave 1 in progress
+- Stage: Waves 0-1 complete; Wave 2 in progress
 - State: Phase 6.2-fix Waves 0-2 are implemented and automatically verified.
   Wave 3 real UAT
   produced useful live evidence and fixed defects 001/002, then exposed defect
@@ -569,11 +569,10 @@ requirements.
 
 ## Next Action
 
-Execute Phase 6.5 Wave 1 with strict RED/GREEN TDD: stable-ID candidate index,
-semantic component hashes, deterministic dependency closure, and immutable
-ChangeSet application. Do not run real DeepSeek Phase 6.5 stability claims
-until Waves 0-5 deterministic verification pass. Preserve all existing
-terminal records and historical live artifacts.
+Execute Phase 6.5 Wave 2 with strict RED/GREEN TDD: dedicated ChangeSet prompt,
+provider-backed ChangeSet stage, stable Issue refs, and replacement of the
+full-document `regenerate_json` path. Do not run real DeepSeek Phase 6.5
+stability claims until Waves 0-5 deterministic verification pass.
 
 ## Accumulated Context
 
@@ -774,8 +773,9 @@ terminal records and historical live artifacts.
   responses.
 
 ---
-*Last activity: 2026-07-12 - completed Phase 6.5 Wave 0 ChangeSet, immutable
-revision, and allowed-scope contracts through RED/GREEN TDD. The focused and
-compatibility regression set reports 52 passed. No candidate mutation,
-provider prompt, live model call, IFC5 dependency, or existing-IFC edit path
-was added. Wave 1 is the next implementation boundary.*
+*Last activity: 2026-07-12 - completed Phase 6.5 Wave 1 stable candidate index,
+semantic hashes, deterministic dependency scope, and transactional ChangeSet
+application through RED/GREEN TDD. Phase 6.5 focused verification reports 50
+passed; expanded Wave 1 regression reports 130 passed; compileall passes.
+Array-index Issue refs block instead of widening scope, implicit cascade delete
+is rejected, and invalid composed candidates produce no Revision.*

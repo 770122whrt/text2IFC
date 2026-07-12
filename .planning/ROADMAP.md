@@ -995,7 +995,7 @@ is reserved for a later phase that may reuse the ChangeSet revision interface.
 
 **Wave 1** *(blocked on Wave 0)*
 
-- [ ] `06.5-01-PLAN.md` - Immutable applicator and deterministic dependency scope
+- [x] `06.5-01-PLAN.md` - Immutable applicator and deterministic dependency scope
 
 **Wave 2** *(blocked on Wave 1)*
 
