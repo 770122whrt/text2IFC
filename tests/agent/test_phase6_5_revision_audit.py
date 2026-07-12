@@ -111,4 +111,4 @@ def test_audit_prompt_requires_revision_evidence_and_keeps_gates_authoritative()
     assert "revision-01" in rendered["text"]
     assert "window-a" in rendered["text"]
     assert "deterministic" in rendered["text"].lower()
-    assert "REVISION_EVIDENCE" not in rendered["text"]
+    assert "{{REVISION_EVIDENCE}}" not in rendered["text"]

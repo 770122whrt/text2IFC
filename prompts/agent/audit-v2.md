@@ -106,6 +106,14 @@ TERMINAL_DOCUMENT:
 DETERMINISTIC_GATES:
 {{DETERMINISTIC_GATES}}
 
+REVISION_EVIDENCE:
+{{REVISION_EVIDENCE}}
+
+Revision evidence rules:
+- Review changed IDs, dependency closure, operations, source Issues, package records, preservation, local/global Gates, and IFC results for the same revision hash.
+- If revision evidence reports a hash or binding failure, keep the result blocking.
+- Audit may recommend a semantic route, but it may not expand ChangeSet scope or override a failed deterministic Gate.
+
 REPAIR_ROUTE:
 {{REPAIR_ROUTE}}
 

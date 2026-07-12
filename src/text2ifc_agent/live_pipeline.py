@@ -21,6 +21,7 @@ from .clarification import (
 )
 from .design_brief import load_design_brief_schema, validate_design_brief
 from .live_trace import write_live_trace
+from .audit import collect_revision_audit_evidence
 from .prompt_registry import render_prompt
 from .generator import validate_generation_document
 from .failure_routing import route_generation_failure
@@ -1152,6 +1153,7 @@ def run_audit_report_stage(
         "DESIGN_BRIEF": design_brief,
         "TERMINAL_DOCUMENT": terminal_document,
         "DETERMINISTIC_GATES": deterministic_gates,
+        "REVISION_EVIDENCE": collect_revision_audit_evidence(root),
         "GATE_SUMMARY": gate_summary,
         "GATE_SUMMARY_HASH": gate_summary_digest,
         "CANDIDATE_HASH": gate_summary.get("candidate_hash"),
