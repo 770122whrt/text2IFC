@@ -449,6 +449,7 @@ def _create_openai_client(
             api_key=config.api_key,
             base_url=config.base_url,
             timeout=config.timeout_seconds,
+            max_retries=0,
         )
     return client_factory(api_key=config.api_key, base_url=config.base_url)
 
