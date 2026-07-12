@@ -415,12 +415,37 @@ def _opening_fill_geometry_issues(
             }
         )
     element_profile = _rectangle_profile(element)
+    opening_representation = _extrusion_representation(opening)
+    element_representation = _extrusion_representation(element)
+    representation_mismatch = (
+        opening_representation is not None
+        and element_representation is not None
+        and element_representation != opening_representation
+    )
+    if representation_mismatch:
+        issues.append(
+            {
+                "code": "FILLING_REPRESENTATION_MISMATCH",
+                "path": f"/entities/{element_id}/attributes/Representation",
+                "message": (
+                    "Filling profile, extrusion depth, and direction must match "
+                    "the opening representation so both occupy the same volume."
+                ),
+                "element_id": element_id,
+                "opening_id": opening_id,
+                "host_wall": host_wall,
+                "target_entity_ids": [element_id],
+                "actual_representation": element_representation,
+                "expected_representation": opening_representation,
+            }
+        )
     element_origin = _number_list(element_placement.get("origin"), 3)
     if (
         element_relative_to == opening_id
         and element_profile
         and opening_profile
         and element_origin
+        and not representation_mismatch
     ):
         outside_opening_x = (
             abs(element_origin[0]) + element_profile["x"] / 2
@@ -688,6 +713,26 @@ def _rectangle_profile(entity: Mapping[str, Any] | None) -> dict[str, float] | N
     if not isinstance(x, (int, float)) or not isinstance(y, (int, float)):
         return None
     return {"x": float(x), "y": float(y)}
+
+
+def _extrusion_representation(
+    entity: Mapping[str, Any] | None,
+) -> dict[str, Any] | None:
+    if not isinstance(entity, Mapping):
+        return None
+    representation = entity.get("attributes", {}).get("Representation", {})
+    if not isinstance(representation, Mapping):
+        return None
+    profile = _rectangle_profile(entity)
+    depth = representation.get("depth")
+    direction = _number_list(representation.get("direction"), 3)
+    if profile is None or not isinstance(depth, (int, float)) or direction is None:
+        return None
+    return {
+        "profile": profile,
+        "depth": float(depth),
+        "direction": [float(value) for value in direction],
+    }
 
 
 def _number_list(value: Any, length: int) -> list[int | float] | None:

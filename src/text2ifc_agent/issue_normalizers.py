@@ -416,6 +416,9 @@ def _existing_target_ids(value: Any, candidate_ids: set[str] | None) -> list[str
 
 
 def _structured_target_ids(detail: Mapping[str, Any]) -> list[str]:
+    explicit_targets = detail.get("target_entity_ids")
+    if isinstance(explicit_targets, list):
+        return list(dict.fromkeys(str(item) for item in explicit_targets))
     values = list(detail.get("entity_ids") or [])
     values.extend(detail.get("components") or [])
     opening_id = detail.get("opening_id")
