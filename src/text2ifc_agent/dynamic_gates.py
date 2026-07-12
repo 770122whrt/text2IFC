@@ -339,36 +339,50 @@ def _opening_fill_geometry_issues(
     host_profile = _rectangle_profile(host)
     opening_profile = _rectangle_profile(opening)
     opening_origin = _number_list(opening_placement.get("origin"), 3)
-    if host_profile and opening_profile and opening_origin:
-        half_host_x = host_profile["x"] / 2
-        half_host_y = host_profile["y"] / 2
-        half_opening_x = opening_profile["x"] / 2
-        half_opening_y = opening_profile["y"] / 2
-        outside_along_length = abs(opening_origin[0]) + half_opening_x > half_host_x + 1e-6
-        profile_thickness_mismatch = opening_profile["y"] > host_profile["y"] + 1e-6
-        outside_thickness = (
-            not profile_thickness_mismatch
-            and abs(opening_origin[1]) + half_opening_y > half_host_y + 1e-6
+    host_bounds = _representation_bounds(host)
+    opening_local_bounds = _representation_bounds(opening)
+    opening_host_bounds = _placed_bounds(opening_local_bounds, opening_placement)
+    opening_outside_host = (
+        host_bounds is not None
+        and opening_host_bounds is not None
+        and not _bounds_contain(host_bounds, opening_host_bounds)
+    )
+    if opening_outside_host:
+        shape_exceeds_host = all(
+            bounds is not None for bounds in (opening_local_bounds, host_bounds)
+        ) and any(
+            float(opening_local_bounds["size"][index])
+            > float(host_bounds["size"][index]) + 1e-6
+            for index in range(3)
         )
-        if profile_thickness_mismatch:
-            issues.append(
-                {
-                    "code": "OPENING_PROFILE_THICKNESS_MISMATCH",
-                    "path": f"/entities/{opening_id}/attributes/Representation/profile/y",
-                    "message": (
-                        "Opening Representation profile.y must equal the host wall "
-                        "thickness; opening height belongs in Representation.depth."
-                    ),
-                    "element_id": element_id,
-                    "opening_id": opening_id,
-                    "host_wall": host_wall,
-                    "actual_profile_y": opening_profile["y"],
-                    "expected_host_thickness": host_profile["y"],
-                    "opening_profile": opening_profile,
-                    "host_profile": host_profile,
-                }
-            )
-        if outside_along_length or outside_thickness:
+        issues.append(
+            {
+                "code": "OPENING_HOST_LOCAL_BOUNDS_MISMATCH",
+                "path": (
+                    f"/entities/{opening_id}/attributes/Representation"
+                    if shape_exceeds_host
+                    else f"/entities/{opening_id}/attributes/ObjectPlacement/origin"
+                ),
+                "message": (
+                    "Opening transformed local bounds must remain inside the host "
+                    "wall bounds. Check placement and representation axes."
+                ),
+                "element_id": element_id,
+                "opening_id": opening_id,
+                "host_wall": host_wall,
+                "target_entity_ids": [opening_id],
+                "opening_origin": opening_origin,
+                "opening_profile": opening_profile,
+                "host_profile": host_profile,
+                "opening_bounds": opening_host_bounds,
+                "host_bounds": host_bounds,
+            }
+        )
+    elif host_profile and opening_profile and opening_origin:
+        half_host_x = host_profile["x"] / 2
+        half_opening_x = opening_profile["x"] / 2
+        outside_along_length = abs(opening_origin[0]) + half_opening_x > half_host_x + 1e-6
+        if outside_along_length:
             issues.append(
                 {
                     "code": "OPENING_HOST_LOCAL_BOUNDS_MISMATCH",
@@ -384,7 +398,8 @@ def _opening_fill_geometry_issues(
                     "host_profile": host_profile,
                     "opening_profile": opening_profile,
                     "outside_along_length": outside_along_length,
-                    "outside_thickness": outside_thickness,
+                    "outside_thickness": False,
+                    "target_entity_ids": [opening_id],
                 }
             )
     element_placement = _placement(element)
@@ -415,59 +430,40 @@ def _opening_fill_geometry_issues(
             }
         )
     element_profile = _rectangle_profile(element)
-    opening_representation = _extrusion_representation(opening)
-    element_representation = _extrusion_representation(element)
-    representation_mismatch = (
-        opening_representation is not None
-        and element_representation is not None
-        and element_representation != opening_representation
-    )
-    if representation_mismatch:
-        issues.append(
-            {
-                "code": "FILLING_REPRESENTATION_MISMATCH",
-                "path": f"/entities/{element_id}/attributes/Representation",
-                "message": (
-                    "Filling profile, extrusion depth, and direction must match "
-                    "the opening representation so both occupy the same volume."
-                ),
-                "element_id": element_id,
-                "opening_id": opening_id,
-                "host_wall": host_wall,
-                "target_entity_ids": [element_id],
-                "actual_representation": element_representation,
-                "expected_representation": opening_representation,
-            }
-        )
     element_origin = _number_list(element_placement.get("origin"), 3)
+    element_local_bounds = _representation_bounds(element)
+    element_opening_bounds = _placed_bounds(element_local_bounds, element_placement)
     if (
         element_relative_to == opening_id
         and element_profile
         and opening_profile
         and element_origin
-        and not representation_mismatch
+        and opening_local_bounds is not None
+        and element_opening_bounds is not None
+        and not opening_outside_host
     ):
-        outside_opening_x = (
-            abs(element_origin[0]) + element_profile["x"] / 2
-            > opening_profile["x"] / 2 + 1e-6
-        )
-        outside_opening_y = (
-            abs(element_origin[1]) + element_profile["y"] / 2
-            > opening_profile["y"] / 2 + 1e-6
-        )
-        if outside_opening_x or outside_opening_y:
+        if not _bounds_contain(opening_local_bounds, element_opening_bounds):
             issues.append(
                 {
                     "code": "FILLING_OPENING_BOUNDS_MISMATCH",
-                    "path": f"/entities/{element_id}/attributes/ObjectPlacement/origin",
+                    "path": (
+                        f"/entities/{element_id}/attributes/ObjectPlacement/origin"
+                        if any(abs(float(value)) > 1e-6 for value in element_origin)
+                        else f"/entities/{element_id}/attributes/Representation"
+                    ),
+                    "message": (
+                        "Filling transformed local bounds must remain inside the "
+                        "opening bounds. Check placement and representation axes."
+                    ),
                     "element_id": element_id,
                     "opening_id": opening_id,
                     "host_wall": host_wall,
+                    "target_entity_ids": [element_id],
                     "element_origin": element_origin,
                     "element_profile": element_profile,
                     "opening_profile": opening_profile,
-                    "outside_opening_x": outside_opening_x,
-                    "outside_opening_y": outside_opening_y,
+                    "element_bounds": element_opening_bounds,
+                    "opening_bounds": opening_local_bounds,
                 }
             )
     return issues
@@ -715,9 +711,7 @@ def _rectangle_profile(entity: Mapping[str, Any] | None) -> dict[str, float] | N
     return {"x": float(x), "y": float(y)}
 
 
-def _extrusion_representation(
-    entity: Mapping[str, Any] | None,
-) -> dict[str, Any] | None:
+def _representation_bounds(entity: Mapping[str, Any] | None) -> dict[str, Any] | None:
     if not isinstance(entity, Mapping):
         return None
     representation = entity.get("attributes", {}).get("Representation", {})
@@ -728,11 +722,102 @@ def _extrusion_representation(
     direction = _number_list(representation.get("direction"), 3)
     if profile is None or not isinstance(depth, (int, float)) or direction is None:
         return None
+    axis = _normalized_vector(direction)
+    if axis is None:
+        return None
+    candidate = [1.0, 0.0, 0.0]
+    if abs(_dot(axis, candidate)) > 0.9:
+        candidate = [0.0, 1.0, 0.0]
+    projection = _dot(axis, candidate)
+    ref_direction = _normalized_vector(
+        [candidate[index] - projection * axis[index] for index in range(3)]
+    )
+    if ref_direction is None:
+        return None
+    local_y = _cross(axis, ref_direction)
+    points = []
+    for x in (-profile["x"] / 2, profile["x"] / 2):
+        for y in (-profile["y"] / 2, profile["y"] / 2):
+            for extrusion in (0.0, float(depth)):
+                points.append(
+                    [
+                        ref_direction[index] * x
+                        + local_y[index] * y
+                        + axis[index] * extrusion
+                        for index in range(3)
+                    ]
+                )
+    return _bounds_from_points(points)
+
+
+def _placed_bounds(
+    bounds: Mapping[str, Any] | None,
+    placement: Mapping[str, Any],
+) -> dict[str, Any] | None:
+    if bounds is None:
+        return None
+    origin = _number_list(placement.get("origin"), 3)
+    axis = _normalized_vector(_number_list(placement.get("axis"), 3))
+    ref_direction = _normalized_vector(_number_list(placement.get("ref_direction"), 3))
+    if origin is None or axis is None or ref_direction is None:
+        return None
+    local_y = _cross(axis, ref_direction)
+    points = []
+    for x in (bounds["min"][0], bounds["max"][0]):
+        for y in (bounds["min"][1], bounds["max"][1]):
+            for z in (bounds["min"][2], bounds["max"][2]):
+                points.append(
+                    [
+                        float(origin[index])
+                        + ref_direction[index] * x
+                        + local_y[index] * y
+                        + axis[index] * z
+                        for index in range(3)
+                    ]
+                )
+    return _bounds_from_points(points)
+
+
+def _bounds_from_points(points: list[list[float]]) -> dict[str, list[float]]:
+    minimum = [min(point[index] for point in points) for index in range(3)]
+    maximum = [max(point[index] for point in points) for index in range(3)]
     return {
-        "profile": profile,
-        "depth": float(depth),
-        "direction": [float(value) for value in direction],
+        "min": minimum,
+        "max": maximum,
+        "size": [maximum[index] - minimum[index] for index in range(3)],
     }
+
+
+def _bounds_contain(
+    outer: Mapping[str, Any], inner: Mapping[str, Any], *, tolerance: float = 1e-6
+) -> bool:
+    return all(
+        float(inner["min"][index]) >= float(outer["min"][index]) - tolerance
+        and float(inner["max"][index]) <= float(outer["max"][index]) + tolerance
+        for index in range(3)
+    )
+
+
+def _normalized_vector(value: Any) -> list[float] | None:
+    if not isinstance(value, list) or len(value) < 3:
+        return None
+    numbers = [float(item) for item in value[:3]]
+    magnitude = sum(item * item for item in numbers) ** 0.5
+    if magnitude <= 1e-12:
+        return None
+    return [item / magnitude for item in numbers]
+
+
+def _dot(left: list[float], right: list[float]) -> float:
+    return sum(a * b for a, b in zip(left, right))
+
+
+def _cross(left: list[float], right: list[float]) -> list[float]:
+    return [
+        left[1] * right[2] - left[2] * right[1],
+        left[2] * right[0] - left[0] * right[2],
+        left[0] * right[1] - left[1] * right[0],
+    ]
 
 
 def _number_list(value: Any, length: int) -> list[int | float] | None:
