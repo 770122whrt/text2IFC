@@ -42,6 +42,10 @@
   `audit_override_attempt` and block the run.
 - When geometry feedback is present, explicitly decide whether it is a true
   candidate issue, missing user fact, gate_dispute, or blocked pipeline issue.
+- When a deterministic Gate has passed a specific invariant, treat that
+  machine result as authoritative for the same revision. Do not recompute or contradict that same invariant by mental arithmetic. If another artifact
+  contains machine-readable contradictory evidence, report `gate_dispute`
+  and cite both evidence paths instead of reporting the candidate as wrong.
 
 ## BIM quality review checks
 
@@ -133,6 +137,10 @@ EVIDENCE_PATHS:
 - `deterministic_gate_status`: `passed` 或 `failed`
 - `findings`: array
 - `evidence_paths`: array
+
+Every blocking finding about candidate components must include `component_ids`
+with exact BIM JSON IDs from TERMINAL_DOCUMENT. Do not translate, rename, or
+infer alternate IDs.
 
 如果确定性 gate 全部通过且没有语义遗漏，可以 `recommendation: "accept"` 且 `blocking: false`。
 

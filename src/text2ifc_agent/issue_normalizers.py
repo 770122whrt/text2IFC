@@ -252,6 +252,7 @@ def normalize_audit_findings(
                 detail=finding,
                 target_ids=_existing_target_ids(
                     [
+                        *list(finding.get("component_ids") or []),
                         *list(finding.get("affected_entities") or []),
                         *list(finding.get("components") or []),
                     ],
