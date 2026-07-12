@@ -157,6 +157,16 @@ def test_stair_endpoint_diagnostics_require_profile_reshape_when_only_one_end_di
     }
     assert diagnostics["translation_only_valid"] is False
     assert diagnostics["recommended_action"] == "reshape_flight_profile_preserve_endpoints"
+    assert diagnostics["correction_constraints"] == {
+        "lower_endpoint": (
+            "Create a non-zero-width horizontal tread edge at the expected "
+            "lower world elevation."
+        ),
+        "upper_endpoint": "Preserve the expected upper world elevation.",
+        "forbidden": (
+            "Do not fix only parent or flight translation when endpoint deltas differ."
+        ),
+    }
 
 
 def _slab_gap_expectation() -> dict:
