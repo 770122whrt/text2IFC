@@ -189,6 +189,16 @@ def test_ready_session_can_select_staged_initial_generation(tmp_path, monkeypatc
     assert strategy["fallback_used"] is False
     assert (session.run_dir / "generator-staged").is_dir()
     assert (session.run_dir / "generator" / "candidate.json").is_file()
+    revision_gates = json.loads(
+        (session.run_dir / "revision-gates.json").read_text(encoding="utf-8")
+    )
+    assert revision_gates["valid"] is True
+    assert revision_gates["plan"]["global_gates_mandatory"] is True
+    audit_inputs = json.loads(
+        (session.run_dir / "audit" / "prompt-render-input.json").read_text(encoding="utf-8")
+    )
+    assert audit_inputs["REVISION_EVIDENCE"]["status"] == "bound"
+    assert audit_inputs["REVISION_EVIDENCE"]["revision"]["revision_id"] == "revision-02"
 
 
 def test_ready_session_applies_scoped_changeset_after_geometry_audit_revise(
