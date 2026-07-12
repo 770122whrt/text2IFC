@@ -1007,7 +1007,7 @@ is reserved for a later phase that may reuse the ChangeSet revision interface.
 
 **Wave 4** *(blocked on Wave 3)*
 
-- [ ] `06.5-04-PLAN.md` - Revision Gates, Audit, reports, timing, and compact evidence
+- [x] `06.5-04-PLAN.md` - Revision Gates, Audit, reports, timing, and compact evidence
 
 **Wave 5** *(blocked on Wave 4)*
 

@@ -7,12 +7,12 @@ See: `.planning/PROJECT.md` (updated 2026-06-11)
 **Core value:** Produce valid, inspectable IFC models from explicit user
 requirements.
 
-**Current focus:** Phase 6.5 revision Gates, reports, timing, and compact evidence
+**Current focus:** Phase 6.5 deterministic two-/three-storey matrix and regression closure
 
 ## Status
 
 - Phase: 6.5
-- Stage: Waves 0-3 complete; Wave 4 next
+- Stage: Waves 0-4 complete; Wave 5 next
 - State: Phase 6.2-fix Waves 0-2 are implemented and automatically verified.
   Wave 3 real UAT
   produced useful live evidence and fixed defects 001/002, then exposed defect
@@ -569,10 +569,10 @@ requirements.
 
 ## Next Action
 
-Execute Phase 6.5 Wave 4 with strict RED/GREEN TDD: revision-aware local/global
-Gates, package and ChangeSet evidence in generated reports, progress timing,
-and compact artifact policy. Do not run real DeepSeek Phase 6.5 stability claims
-until Waves 0-5 deterministic verification pass.
+Execute Phase 6.5 Wave 5 with strict RED/GREEN TDD: deterministic two-/three-
+storey matrix fixtures, branch evidence, artifact verification, and required
+regressions. Do not run real DeepSeek Phase 6.5 stability claims until Wave 5
+deterministic verification passes.
 
 ## Accumulated Context
 
@@ -773,9 +773,8 @@ until Waves 0-5 deterministic verification pass.
   responses.
 
 ---
-*Last activity: 2026-07-12 - completed Phase 6.5 Wave 3 dynamic package manifests,
-ownership Gates, provider-backed staged composition, explicit wall facts,
-dynamic skeletons, staged CLI strategy, and package-local retries through
-RED/GREEN TDD. Expanded verification reports 164 passed; compileall passes.
-Partial workspaces remain non-Formal and non-compile-eligible; real DeepSeek
-staged quality evidence remains pending after Waves 4-5.*
+*Last activity: 2026-07-12 - completed Phase 6.5 Wave 4 revision-aware local and
+global Gate plans, candidate-hash binding, Audit revision evidence, generated
+revision/package reports, and progress-derived timing. The expanded focused
+regression reports 114 passed; compileall and diff checks pass. Real DeepSeek
+staged quality evidence remains blocked until Wave 5 deterministic closure.*
