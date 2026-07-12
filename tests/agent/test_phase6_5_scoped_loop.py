@@ -131,3 +131,39 @@ def test_scoped_round_applies_changeset_and_preserves_unrelated_components(tmp_p
     assert (tmp_path / "changeset.json").is_file()
     assert (tmp_path / "revisions" / "revision-01" / "candidate.json").is_file()
     assert provider.calls[0]["state"]["stage"] == "changeset"
+
+
+def test_scoped_round_uses_component_issues_for_scope_and_keeps_global_evidence(tmp_path):
+    candidate = _candidate()
+    expected = _expected()
+    provider = ChangeSetProvider(candidate, expected)
+    global_issue = {
+        **_issue(),
+        "issue_id": "issue-compile-001",
+        "actual_ref": "/output.ifc",
+        "evidence": "COMPILE_REOPEN_FAILED: output could not be reopened.",
+    }
+
+    result = run_scoped_changeset_round(
+        provider=provider,
+        output_dir=tmp_path,
+        case_id="case-context-evidence",
+        round_number=1,
+        user_request="Correct the wall name.",
+        conversation=[{"role": "user", "content": "Correct the wall name."}],
+        design_brief={"status": "ready"},
+        expected_facts=expected,
+        candidate=candidate,
+        issues=[_issue(), global_issue],
+        trace_level="debug",
+    )
+
+    assert result["valid"] is True
+    assert provider.calls
+    prompt = provider.calls[0]["prompt"]
+    assert "issue-wall-001" in prompt
+    assert "issue-compile-001" in prompt
+    scope = json.loads((tmp_path / "change-scope.json").read_text(encoding="utf-8"))
+    assert scope["source_issue_ids"] == ["issue-wall-001"]
+    resolution = json.loads((tmp_path / "scope-resolution.json").read_text(encoding="utf-8"))
+    assert resolution["context_issue_ids"] == ["issue-compile-001"]

@@ -41,3 +41,53 @@ def test_v2_generates_bookkeeping_and_explicit_void_fill_relations(
     assert model.by_type("IfcRelAggregates")
     assert model.by_type("IfcRelContainedInSpatialStructure")
     assert model.by_type("IfcRelDefinesByProperties")
+
+
+def test_v2_deduplicates_explicit_spatial_aggregates_already_derived_from_placement(
+    tmp_path: Path,
+) -> None:
+    payload = document()
+    payload["relationships"].extend(
+        [
+            {
+                "id": "aggregate-project-site",
+                "ifc_class": "IfcRelAggregates",
+                "attributes": {
+                    "RelatingObject": "project-1",
+                    "RelatedObjects": ["site-1"],
+                },
+                "provenance": {"source": "test"},
+            },
+            {
+                "id": "aggregate-site-building",
+                "ifc_class": "IfcRelAggregates",
+                "attributes": {
+                    "RelatingObject": "site-1",
+                    "RelatedObjects": ["building-1"],
+                },
+                "provenance": {"source": "test"},
+            },
+            {
+                "id": "aggregate-building-storey",
+                "ifc_class": "IfcRelAggregates",
+                "attributes": {
+                    "RelatingObject": "building-1",
+                    "RelatedObjects": ["storey-1"],
+                },
+                "provenance": {"source": "test"},
+            },
+        ]
+    )
+
+    output = tmp_path / "deduplicated-spatial-aggregates.ifc"
+    result = compile_document(payload, output)
+
+    assert result.success
+    model = open_ifc(output)
+    spatial_aggregates = [
+        relation
+        for relation in model.by_type("IfcRelAggregates")
+        if relation.RelatingObject.is_a()
+        in {"IfcProject", "IfcSite", "IfcBuilding"}
+    ]
+    assert len(spatial_aggregates) == 3
