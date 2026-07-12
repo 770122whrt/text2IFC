@@ -129,7 +129,7 @@ def build_design_geometry_expectation(
     for wall_index, wall in enumerate(_records(expected_facts.get("walls"))):
         wall_id = _string(wall.get("id"))
         storey_id = _string(wall.get("storey"))
-        bounds = _plan_bounds(wall.get("bounds"))
+        bounds = _wall_plan_bounds(wall)
         if bounds is None:
             continue
         storey = expected_storeys.get(storey_id) if storey_id is not None else None
@@ -285,6 +285,34 @@ def _plan_bounds(value: Any) -> tuple[float, float, float, float] | None:
         return None
     x_min, x_max, y_min, y_max = (float(item) for item in match.groups())
     return (x_min, x_max, y_min, y_max) if x_min < x_max and y_min < y_max else None
+
+
+def _wall_plan_bounds(wall: Mapping[str, Any]) -> tuple[float, float, float, float] | None:
+    explicit = _plan_bounds(wall.get("bounds"))
+    if explicit is not None:
+        return explicit
+    start = wall.get("start_mm")
+    end = wall.get("end_mm")
+    thickness = _number(wall.get("thickness_mm"))
+    if (
+        not isinstance(start, list)
+        or not isinstance(end, list)
+        or len(start) < 2
+        or len(end) < 2
+        or thickness is None
+        or thickness <= 0
+    ):
+        return None
+    x1, y1 = _number(start[0]), _number(start[1])
+    x2, y2 = _number(end[0]), _number(end[1])
+    if None in {x1, y1, x2, y2}:
+        return None
+    half = thickness / 2
+    if y1 == y2 and x1 != x2:
+        return (min(x1, x2), max(x1, x2), y1 - half, y1 + half)
+    if x1 == x2 and y1 != y2:
+        return (x1 - half, x1 + half, min(y1, y2), max(y1, y2))
+    return None
 
 
 def _interior_walls(storey: Mapping[str, Any]) -> list[Mapping[str, Any]]:
