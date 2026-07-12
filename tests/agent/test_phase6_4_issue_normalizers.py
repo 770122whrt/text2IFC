@@ -302,7 +302,7 @@ def test_dynamic_gate_feedback_preserves_entity_level_geometry_evidence(tmp_path
         issue_type="geometry_invalid",
         route="regenerate_json",
     )
-    assert issues[0].actual_ref == "/entities/opening-1/attributes/ObjectPlacement/origin"
+    assert issues[0].actual_ref == "entity:opening-1#/attributes"
     assert "opening-1" in issues[0].evidence
     assert "wall-1" in issues[0].evidence
     assert "opening_profile" in issues[0].evidence

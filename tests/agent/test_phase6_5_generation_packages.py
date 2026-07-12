@@ -58,8 +58,19 @@ def test_manifest_discovers_one_local_package_per_explicit_storey(storey_count):
     ]
     assert manifest["packages"][-1]["owned_component_ids"] == [
         *[f"slab-storey-{index}" for index in range(1, storey_count + 1)],
-        *[f"stair-{index}-{index + 1}" for index in range(1, storey_count)],
+        *[
+            component_id
+            for index in range(1, storey_count)
+            for component_id in (
+                f"stair-{index}-{index + 1}",
+                f"stair-flight-{index}-{index + 1}",
+            )
+        ],
         "roof-main",
+    ]
+    assert manifest["packages"][-1]["owned_relationship_ids"] == [
+        f"aggregate-stair-{index}-{index + 1}-flight"
+        for index in range(1, storey_count)
     ]
 
 
@@ -197,4 +208,19 @@ def test_cross_package_uses_opening_entity_and_void_relation_for_slab_opening_bo
     package = manifest["packages"][-1]
 
     assert "opening-slab-storey-2" in package["owned_component_ids"]
-    assert package["owned_relationship_ids"] == ["rel-voids-slab-storey-2"]
+    assert "rel-voids-slab-storey-2" in package["owned_relationship_ids"]
+
+
+def test_cross_package_preserves_explicit_plural_slab_opening_id():
+    expected = _expected(2)
+    expected["slabs"][1]["openings"] = [
+        {
+            "id": "stair-opening-storey-2",
+            "bounds": {"x_min": 6000, "x_max": 8000, "y_min": 1000, "y_max": 6000},
+        }
+    ]
+
+    package = build_generation_package_manifest(expected)["packages"][-1]
+
+    assert "stair-opening-storey-2" in package["owned_component_ids"]
+    assert "rel-voids-slab-storey-2" in package["owned_relationship_ids"]

@@ -153,6 +153,33 @@ def test_legacy_slab_identity_uses_confirmed_storey_datum_and_building_thickness
     }
 
 
+def test_plural_slab_openings_preserve_explicit_identity_in_geometry_expectation():
+    design_brief = _controlled_design_brief()
+    slab = {
+        "id": "first-floor-slab",
+        "storey": "storey-2",
+        "top_elevation_mm": 3150,
+        "thickness_mm": 150,
+        "openings": [
+            {
+                "id": "stair-opening-storey-2",
+                "bounds": {"x_min": 6000, "x_max": 8000, "y_min": 1000, "y_max": 6000},
+            }
+        ],
+    }
+    expected_facts = {**_controlled_expected_facts(), "slabs": [slab]}
+
+    expectation = build_design_geometry_expectation(
+        case_id="plural-opening",
+        design_brief=design_brief,
+        expected_facts=expected_facts,
+    )
+
+    assert expectation["floor_openings"]["stair-opening-storey-2"]["host_slab_id"] == (
+        "first-floor-slab"
+    )
+
+
 def test_live_design_brief_plan_bounds_alias_keeps_stair_gate_active():
     design_brief = _controlled_design_brief()
     stair = {
