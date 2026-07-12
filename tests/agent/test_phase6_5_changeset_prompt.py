@@ -1,5 +1,6 @@
 import json
 
+from text2ifc_agent.changeset_stage import FEW_SHOT_PATHS
 from text2ifc_agent.prompt_registry import load_prompt_registry, render_prompt
 
 
@@ -91,3 +92,25 @@ def test_changeset_few_shots_are_generic_and_schema_valid_json():
         "changeset.single-component",
         "changeset.coupled-dependency",
     }
+
+
+def test_staged_package_prompt_teaches_add_operations_are_generator_owned():
+    rendered = render_prompt(template_id="bim-json-changeset.v1", inputs=_inputs())
+
+    assert "Implementation JSON is generator-owned" in rendered["text"]
+    assert "staged-package-add" in {path.stem for path in FEW_SHOT_PATHS}
+    example = json.loads(
+        open(
+            "prompts/agent/few-shot/changeset-staged-package-add.json",
+            encoding="utf-8",
+        ).read()
+    )
+    operations = example["output"]["operations"]
+    assert {operation["op"] for operation in operations} == {
+        "add_entity",
+        "add_relationship",
+    }
+    assert any(
+        operation.get("value", {}).get("ifc_class") == "IfcRelContainedInSpatialStructure"
+        for operation in operations
+    )
