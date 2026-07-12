@@ -145,6 +145,40 @@ def test_dynamic_gates_allow_neutral_or_correct_storey_component_names():
     assert gates["dynamic_storey_name_consistency"]["status"] == "passed"
 
 
+def test_dynamic_gates_require_all_expected_walls_on_their_declared_storeys():
+    expected = _expected_facts(
+        storeys=["storey-1", "storey-2"], doors=[], windows=[]
+    )
+    expected["walls"] = [
+        {"id": "wall-1-a", "storey": "storey-1"},
+        {"id": "wall-1-b", "storey": "storey-1"},
+        {"id": "wall-2-a", "storey": "storey-2"},
+    ]
+    expected["total_counts"]["IfcWall"] = 3
+    candidate = _candidate(
+        storeys=["storey-1", "storey-2"],
+        walls=[("wall-1-a", "storey-1"), ("wall-2-a", "storey-1")],
+        doors=[],
+        windows=[],
+        include_opening_relationships=True,
+    )
+
+    gates = _by_name(evaluate_dynamic_gates(candidate=candidate, expected_facts=expected))
+
+    assert gates["dynamic_entity_completeness"]["status"] == "failed"
+    assert any(
+        issue["ifc_class"] == "IfcWall" and issue["expected"] == 3
+        for issue in gates["dynamic_entity_completeness"]["issues"]
+    )
+    assert gates["dynamic_storey_containment"]["status"] == "failed"
+    assert any(
+        issue.get("path") == "/walls/wall-2-a/storey"
+        and issue.get("expected_storey") == "storey-2"
+        and issue.get("actual_storey") == "storey-1"
+        for issue in gates["dynamic_storey_containment"]["issues"]
+    )
+
+
 def test_dynamic_gates_fail_windows_without_void_fill_relationships():
     expected = _expected_facts(
         storeys=["storey-1"],

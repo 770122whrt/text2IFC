@@ -26,6 +26,39 @@ def test_derives_shared_wall_segment_from_confirmed_space_bounds():
     ]
 
 
+def test_derives_explicit_straight_wall_segment_bounds_for_irregular_envelope():
+    design_brief = _controlled_design_brief()
+    expected_facts = _controlled_expected_facts()
+    expected_facts["walls"] = [
+        {
+            "id": "storey-1-wall-l-south",
+            "storey": "storey-1",
+            "bounds": {
+                "x_min": 0,
+                "x_max": 8000,
+                "y_min": 0,
+                "y_max": 200,
+            },
+            "height_mm": 3000,
+        }
+    ]
+
+    expectation = build_design_geometry_expectation(
+        case_id="l-shaped-envelope",
+        design_brief=design_brief,
+        expected_facts=expected_facts,
+    )
+
+    wall = expectation["walls"]["storey-1-wall-l-south"]
+    assert wall["axis"] == "x"
+    assert wall["bbox"] == {
+        "x": [0.0, 8.0],
+        "y": [0.0, 0.2],
+        "z": [0.0, 3.0],
+    }
+    assert wall["bbox_issue_code"] == "WALL_SEGMENT_MISMATCH"
+
+
 def test_derives_structural_slab_below_storey_top_elevation():
     expectation = build_design_geometry_expectation(
         case_id="two-storey-control",
