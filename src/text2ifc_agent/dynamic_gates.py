@@ -33,6 +33,7 @@ def evaluate_dynamic_gates(
     return [
         _entity_completeness_gate(graph, expected_facts),
         _storey_containment_gate(graph, expected_facts),
+        _storey_name_consistency_gate(graph, expected_facts),
         _opening_fill_gate(graph, expected_facts),
     ]
 
@@ -170,6 +171,73 @@ def _storey_containment_gate(
         entity_matches=entity_matches,
         source_paths=["expected-facts.json", "generator/candidate.json"],
     )
+
+
+def _storey_name_consistency_gate(
+    graph: "_CandidateGraph",
+    expected_facts: Mapping[str, Any],
+) -> dict[str, Any]:
+    storey_names = {
+        storey_id: storey_name
+        for record in _records(expected_facts.get("storeys"))
+        if (storey_id := _string(record.get("id")))
+        and (storey_name := _string(record.get("name")))
+    }
+    unique_labels = {
+        name: storey_id
+        for name, ids in _group_storey_names(storey_names).items()
+        if len(ids) == 1
+        for storey_id in ids
+    }
+    if len(unique_labels) < 2:
+        return _gate(
+            "dynamic_storey_name_consistency",
+            applicability="not_applicable",
+            status="skipped",
+            basis="expected facts contain fewer than two unique explicit storey names",
+            source_paths=["expected-facts.json", "generator/candidate.json"],
+        )
+
+    issues: list[dict[str, Any]] = []
+    for entity_id, entity in sorted(graph.entities.items()):
+        actual_storey = graph.storey_for_entity(entity_id)
+        expected_storey_name = storey_names.get(actual_storey or "")
+        attributes = entity.get("attributes", {})
+        actual_name = _string(attributes.get("Name")) if isinstance(attributes, Mapping) else None
+        if not actual_storey or not expected_storey_name or not actual_name:
+            continue
+        for conflicting_name, conflicting_storey in sorted(unique_labels.items()):
+            if conflicting_storey == actual_storey or conflicting_name not in actual_name:
+                continue
+            issues.append(
+                {
+                    "code": "STOREY_NAME_CONFLICT",
+                    "path": f"/entities/{entity_id}/attributes/Name",
+                    "entity_id": entity_id,
+                    "target_entity_ids": [entity_id],
+                    "actual_name": actual_name,
+                    "expected_storey": actual_storey,
+                    "expected_storey_name": expected_storey_name,
+                    "conflicting_storey": conflicting_storey,
+                    "conflicting_storey_name": conflicting_name,
+                }
+            )
+
+    return _gate(
+        "dynamic_storey_name_consistency",
+        applicability="applicable",
+        status="failed" if issues else "passed",
+        basis="explicit component storey labels compared with placement-derived ownership",
+        issues=issues,
+        source_paths=["expected-facts.json", "generator/candidate.json"],
+    )
+
+
+def _group_storey_names(storey_names: Mapping[str, str]) -> dict[str, list[str]]:
+    grouped: dict[str, list[str]] = defaultdict(list)
+    for storey_id, name in storey_names.items():
+        grouped[name].append(storey_id)
+    return grouped
 
 
 def _resolve_expected_entity(

@@ -42,6 +42,7 @@ Staged package add mode
 7. Polygon profiles must be a closed outer ring and cannot contain a `holes` field. Represent a confirmed slab opening as a separately authorized IfcOpeningElement plus IfcRelVoidsElement hosted by the slab.
 8. A stair package that authorizes flight IDs must generate the IfcStairFlight entities and their IfcRelAggregates relationship. Storey elevations are parent datums: upper slabs use a storey-local Z offset, not the same absolute elevation again.
 9. For every add operation, copy an authorized ID character-for-character from CHANGE_SCOPE.entity_ids or CHANGE_SCOPE.relationship_ids. target_id and value.id must be identical. Do not add, remove, translate, normalize, or duplicate prefixes or suffixes, even during a retry.
+10. Never copy a display-name storey label from a sibling package. For every storey-owned component, use the current package storey name or a storey-neutral Name. A component placed under storey 2 must not be named as a storey-1 component, and the same rule applies dynamically to any number of storeys.
 
 输入
 
