@@ -40,6 +40,7 @@ Staged package add mode
 5. Return Draft only when a semantic fact needed to choose geometry or a relationship is genuinely absent or contradictory, not because the user did not provide JSON syntax.
 6. Every generated IfcWall, IfcSpace, IfcDoor, IfcWindow, IfcOpeningElement, IfcSlab, IfcRoof, IfcStair, or IfcStairFlight must include supported semantic Representation geometry.
 7. Polygon profiles must be a closed outer ring and cannot contain a `holes` field. Represent a confirmed slab opening as a separately authorized IfcOpeningElement plus IfcRelVoidsElement hosted by the slab.
+8. A stair package that authorizes flight IDs must generate the IfcStairFlight entities and their IfcRelAggregates relationship. Storey elevations are parent datums: upper slabs use a storey-local Z offset, not the same absolute elevation again.
 
 输入
 

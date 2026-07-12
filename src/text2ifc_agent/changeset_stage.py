@@ -22,6 +22,7 @@ FEW_SHOT_PATHS = (
     PROJECT_ROOT / "prompts" / "agent" / "few-shot" / "changeset-single-component.json",
     PROJECT_ROOT / "prompts" / "agent" / "few-shot" / "changeset-coupled-dependency.json",
     PROJECT_ROOT / "prompts" / "agent" / "few-shot" / "changeset-staged-package-add.json",
+    PROJECT_ROOT / "prompts" / "agent" / "few-shot" / "changeset-staged-cross-storey.json",
 )
 
 
