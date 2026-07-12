@@ -345,12 +345,38 @@ def _opening_fill_geometry_issues(
         half_opening_x = opening_profile["x"] / 2
         half_opening_y = opening_profile["y"] / 2
         outside_along_length = abs(opening_origin[0]) + half_opening_x > half_host_x + 1e-6
-        outside_thickness = abs(opening_origin[1]) + half_opening_y > half_host_y + 1e-6
+        profile_thickness_mismatch = opening_profile["y"] > host_profile["y"] + 1e-6
+        outside_thickness = (
+            not profile_thickness_mismatch
+            and abs(opening_origin[1]) + half_opening_y > half_host_y + 1e-6
+        )
+        if profile_thickness_mismatch:
+            issues.append(
+                {
+                    "code": "OPENING_PROFILE_THICKNESS_MISMATCH",
+                    "path": f"/entities/{opening_id}/attributes/Representation/profile/y",
+                    "message": (
+                        "Opening Representation profile.y must equal the host wall "
+                        "thickness; opening height belongs in Representation.depth."
+                    ),
+                    "element_id": element_id,
+                    "opening_id": opening_id,
+                    "host_wall": host_wall,
+                    "actual_profile_y": opening_profile["y"],
+                    "expected_host_thickness": host_profile["y"],
+                    "opening_profile": opening_profile,
+                    "host_profile": host_profile,
+                }
+            )
         if outside_along_length or outside_thickness:
             issues.append(
                 {
                     "code": "OPENING_HOST_LOCAL_BOUNDS_MISMATCH",
                     "path": f"/entities/{opening_id}/attributes/ObjectPlacement/origin",
+                    "message": (
+                        "Opening placement origin and profile must remain inside the "
+                        "host wall local length and thickness bounds."
+                    ),
                     "element_id": element_id,
                     "opening_id": opening_id,
                     "host_wall": host_wall,

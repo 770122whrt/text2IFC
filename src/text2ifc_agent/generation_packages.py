@@ -102,9 +102,9 @@ def build_generation_package_manifest(
                     opening_id = _component_id(
                         opening,
                         (
-                            f"opening-{component_id}"
+                            f"opening-{component_id}-stair"
                             if opening_index == 0
-                            else f"opening-{component_id}-{opening_index + 1}"
+                            else f"opening-{component_id}-stair-{opening_index + 1}"
                         ),
                     )
                     cross_components.append(opening_id)
