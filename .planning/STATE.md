@@ -7,12 +7,12 @@ See: `.planning/PROJECT.md` (updated 2026-06-11)
 **Core value:** Produce valid, inspectable IFC models from explicit user
 requirements.
 
-**Current focus:** Phase 6.5 ChangeSet Generator and feedback-loop integration
+**Current focus:** Phase 6.5 dynamic staged multi-storey initial composition
 
 ## Status
 
 - Phase: 6.5
-- Stage: Waves 0-1 complete; Wave 2 in progress
+- Stage: Waves 0-2 complete; Wave 3 next
 - State: Phase 6.2-fix Waves 0-2 are implemented and automatically verified.
   Wave 3 real UAT
   produced useful live evidence and fixed defects 001/002, then exposed defect
@@ -569,10 +569,11 @@ requirements.
 
 ## Next Action
 
-Execute Phase 6.5 Wave 2 with strict RED/GREEN TDD: dedicated ChangeSet prompt,
-provider-backed ChangeSet stage, stable Issue refs, and replacement of the
-full-document `regenerate_json` path. Do not run real DeepSeek Phase 6.5
-stability claims until Waves 0-5 deterministic verification pass.
+Execute Phase 6.5 Wave 3 with strict RED/GREEN TDD: dynamic storey packages,
+shared-shell composition, deterministic package ordering, package-level Draft
+blocking, and one complete composed BIM JSON candidate. Do not run real
+DeepSeek Phase 6.5 stability claims until Waves 0-5 deterministic verification
+pass.
 
 ## Accumulated Context
 
@@ -773,9 +774,9 @@ stability claims until Waves 0-5 deterministic verification pass.
   responses.
 
 ---
-*Last activity: 2026-07-12 - completed Phase 6.5 Wave 1 stable candidate index,
-semantic hashes, deterministic dependency scope, and transactional ChangeSet
-application through RED/GREEN TDD. Phase 6.5 focused verification reports 50
-passed; expanded Wave 1 regression reports 130 passed; compileall passes.
-Array-index Issue refs block instead of widening scope, implicit cascade delete
-is rejected, and invalid composed candidates produce no Revision.*
+*Last activity: 2026-07-12 - completed Phase 6.5 Wave 2 provider-backed scoped
+ChangeSet generation and active feedback-loop integration through RED/GREEN TDD.
+The initial complete candidate is retained; Audit/Gate retries now create only
+transactionally applied revisions, stable collection refs are resolved exactly,
+and unrelated-component preservation remains 1.0. Phase 6.5 Wave 2 verification
+reports 68 passed; the integration slice reports 48 passed; compileall passes.*

@@ -999,7 +999,7 @@ is reserved for a later phase that may reuse the ChangeSet revision interface.
 
 **Wave 2** *(blocked on Wave 1)*
 
-- [ ] `06.5-02-PLAN.md` - ChangeSet Generator and feedback-loop integration
+- [x] `06.5-02-PLAN.md` - ChangeSet Generator and feedback-loop integration
 
 **Wave 3** *(blocked on Wave 2)*
 
@@ -1031,4 +1031,4 @@ is reserved for a later phase that may reuse the ChangeSet revision interface.
   satisfied by fake/file/replay providers or prewritten model responses.
 - All work remains in the C-drive `multiagent-design` worktree.
 
-**Status:** Planned on 2026-07-12; awaiting user review before execution.
+**Status:** Waves 0-2 complete on 2026-07-12; Wave 3 is next.
