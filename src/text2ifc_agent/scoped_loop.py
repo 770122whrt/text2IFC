@@ -110,52 +110,62 @@ def run_scoped_changeset_round(
     _write_json(output / "resolved-issues.json", {"issues": resolved["resolved"]})
     _write_json(output / "change-scope.json", scope)
 
-    stage = run_changeset_stage(
-        provider=provider,
-        output_dir=output,
-        case_id=case_id,
-        call_index=round_number,
-        user_request=user_request,
-        conversation=conversation,
-        design_brief=design_brief,
-        expected_facts=expected_facts,
-        candidate=candidate,
-        base_revision=revision,
-        scope=scope,
-        issues=resolved["resolved"],
-        context_issues=resolved["context"],
-        trace_level=trace_level,
-    )
-    if not stage["valid"] or stage["classification"] != "changeset":
-        return {
-            **_blocked(stage["classification"], stage["diagnostics"]),
-            "stage": stage,
-            "scope": scope,
-        }
+    stage: dict[str, Any] = {}
+    changeset: dict[str, Any] = {}
+    applied: dict[str, Any] = {}
+    application_feedback: list[dict[str, Any]] = []
+    for attempt in range(1, 3):
+        active_output = output if attempt == 1 else output / f"attempt-{attempt:02d}"
+        stage = run_changeset_stage(
+            provider=provider,
+            output_dir=active_output,
+            case_id=case_id,
+            call_index=(round_number if attempt == 1 else round_number * 100 + attempt),
+            user_request=user_request,
+            conversation=conversation,
+            design_brief=design_brief,
+            expected_facts=expected_facts,
+            candidate=candidate,
+            base_revision=revision,
+            scope=scope,
+            issues=resolved["resolved"],
+            context_issues=[*resolved["context"], *application_feedback],
+            trace_level=trace_level,
+        )
+        if not stage["valid"] or stage["classification"] != "changeset":
+            return {
+                **_blocked(stage["classification"], stage["diagnostics"]),
+                "stage": stage,
+                "scope": scope,
+            }
 
-    changeset = _read_json(output / "changeset.json")
-    applied = apply_changeset(
-        candidate=candidate,
-        changeset=changeset,
-        scope=scope,
-        base_revision=revision,
-        expected_facts=expected_facts,
-    )
-    _write_json(
-        output / "application.json",
-        {
+        changeset = _read_json(active_output / "changeset.json")
+        applied = apply_changeset(
+            candidate=candidate,
+            changeset=changeset,
+            scope=scope,
+            base_revision=revision,
+            expected_facts=expected_facts,
+        )
+        application_payload = {
             "valid": applied["valid"],
             "issues": applied["issues"],
             "preservation": applied["preservation"],
             "revision": applied["revision"],
-        },
-    )
-    if not applied["valid"]:
-        return {
-            **_blocked("application_blocked", applied["issues"]),
-            "stage": stage,
-            "scope": scope,
         }
+        _write_json(active_output / "application.json", application_payload)
+        if applied["valid"]:
+            if active_output != output:
+                _write_json(output / "changeset.json", changeset)
+                _write_json(output / "application.json", application_payload)
+            break
+        if attempt == 2:
+            return {
+                **_blocked("application_blocked", applied["issues"]),
+                "stage": stage,
+                "scope": scope,
+            }
+        application_feedback = _application_feedback(applied["issues"])
 
     new_revision = applied["revision"]
     revision_dir = output / "revisions" / str(new_revision["revision_id"])
@@ -173,6 +183,21 @@ def run_scoped_changeset_round(
         "scope": scope,
         "stage": stage,
     }
+
+
+def _application_feedback(issues: Sequence[Mapping[str, Any]]) -> list[dict[str, Any]]:
+    return [
+        {
+            "issue_id": f"issue-changeset-application-{index:04d}",
+            "actual_ref": str(issue.get("path") or "/changeset"),
+            "expected_fact_ref": None,
+            "evidence": (
+                f"{issue.get('code', 'CHANGESET_APPLICATION_ERROR')}: "
+                f"{issue.get('message', 'ChangeSet application failed.')}"
+            ),
+        }
+        for index, issue in enumerate(issues, start=1)
+    ]
 
 
 def _initial_revision(
