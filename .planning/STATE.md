@@ -7,12 +7,12 @@ See: `.planning/PROJECT.md` (updated 2026-06-11)
 **Core value:** Produce valid, inspectable IFC models from explicit user
 requirements.
 
-**Current focus:** Phase 6.4 bounded multi-storey feedback closure and manual IFC review
+**Current focus:** Phase 6.5 component-scoped ChangeSets and multi-storey stability planning
 
 ## Status
 
-- Phase: 6.4
-- Stage: Complete through Wave 8 bounded orchestration stabilization
+- Phase: 6.5
+- Stage: SPEC and seven-wave implementation plan drafted for review
 - State: Phase 6.2-fix Waves 0-2 are implemented and automatically verified.
   Wave 3 real UAT
   produced useful live evidence and fixed defects 001/002, then exposed defect
@@ -569,16 +569,10 @@ requirements.
 
 ## Next Action
 
-Execute Phase 6.4 supplemental Wave 7: Geometry Truth Closure and Feedback
-Regeneration. The preceding route-loop work is evidence of connectivity, not
-evidence that a multi-storey IFC is geometrically correct. The next work is to
-derive one geometry expectation from confirmed Brief/Expected Facts, compare
-it to reopened IFC geometry, correct the confirmed stair local-frame compiler
-defect, bind the evidence to Audit, and route Generator-owned geometry failure
-to `regenerate_json`. Storey elevation is locked as the top surface of the
-structural slab. Geometry ambiguity must go to `revise_design_brief`; the
-workflow must never fabricate a wall direction or a stair coordinate. Follow
-strict RED/GREEN TDD and run real DeepSeek only after deterministic GREEN.
+Review Phase 6.5 SPEC and plans. After approval, execute Wave 0 contracts with
+strict RED/GREEN TDD. Do not run real DeepSeek Phase 6.5 stability claims until
+Waves 0-5 deterministic verification pass. Preserve all existing terminal
+records and historical live artifacts.
 
 ## Accumulated Context
 
@@ -779,14 +773,8 @@ strict RED/GREEN TDD and run real DeepSeek only after deterministic GREEN.
   responses.
 
 ---
-*Last activity: 2026-07-12 - completed Phase 6.4 Wave 9 deterministic datum and
-stair geometry bugfix. Canonical floor slabs, roof, stairs, and stair openings
-now reach expected-facts and world-geometry Gate checks; `IfcStairFlight`
-compiles a stepped side profile with an intuitive width direction; feedback
-preserves expected/actual evidence; bounded Generator feedback allows three
-regenerations. Rechecking prior acceptance exposed a missing `plan_bounds`
-alias and rejected its stair footprint, so that artifact is no longer claimed
-as geometrically accepted. Six real DeepSeek investigations proved the strict
-Gate and loop operate, but full-document regeneration still changes previously
-passing openings. No Wave 9 live IFC is claimed as final acceptance. The next
-required design is schema-validated component-level constrained regeneration.*
+*Last activity: 2026-07-12 - drafted Phase 6.5 SPEC, AI contract, validation
+strategy, and seven implementation waves. Phase 6.5 replaces Generator-owned
+full-document regeneration with stable-ID ChangeSets, then introduces staged
+storey composition. It explicitly excludes IFC5 migration and existing-IFC
+editing. No Phase 6.5 implementation or live stability claim exists yet.*

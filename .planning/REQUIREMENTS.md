@@ -234,6 +234,32 @@ requirements.
   for audits. Compact non-accept routes must preserve or link recoverable
   redacted evidence for the failed owning stage.
 
+### Component-scoped Generation and Multi-storey Stability
+
+- [ ] **PATCH-01**: Generator-owned feedback rounds return a versioned,
+  schema-validated, stable-ID-addressed ChangeSet or canonical Draft instead of
+  replacing the complete BIM JSON candidate.
+- [ ] **PATCH-02**: Every ChangeSet is bound to the exact base candidate,
+  expected facts, source Issues, allowed IDs/paths, and dependency closure;
+  stale, unsupported, evidence-free, or out-of-scope operations are rejected
+  before candidate promotion.
+- [ ] **PATCH-03**: A deterministic applicator creates an immutable complete
+  BIM JSON 2.0 revision and proves that every entity and relationship outside
+  the declared dependency closure retains the same semantic hash.
+- [ ] **PATCH-04**: Scoped revision candidates rerun relevant local Gates and
+  all final global schema, semantic, relationship, compiler, reopen, geometry,
+  and Audit checks before acceptance.
+- [ ] **MULTI-01**: Initial complex-building generation can compose a dynamic
+  building/storey skeleton, one package per explicit storey, and a cross-storey
+  package without fixed storey counts or a second Formal BIM model contract.
+- [ ] **MULTI-02**: Package ownership prevents duplicate IDs, cross-storey host
+  mismatch, orphan opening/filling relations, and ambiguous ownership of
+  stairs, intermediate slabs, roofs, and vertical connections.
+- [ ] **STABLE-01**: One canonical two-storey and one canonical three-storey
+  Chinese Text2IFC case each achieve three consecutive accepted real DeepSeek
+  runs with unrelated-component preservation rate 1.0 and complete IFC/report
+  evidence.
+
 ## Out of Scope
 
 | Feature | Reason |

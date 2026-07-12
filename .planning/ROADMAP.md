@@ -960,3 +960,75 @@ a chain-completeness report proving the required deterministic route matrix
 with explicit route boundaries, a route-level live UAT supplement covering all
 defined Phase 6.4 routes, and zero secret findings in generated Phase 6.4
 artifacts.
+
+## Phase 6.5: Component-scoped ChangeSets and Multi-storey Stability (INSERTED)
+
+**Goal:** Replace full-document Generator regeneration with immutable,
+stable-ID-addressed BIM JSON ChangeSets, then reuse the same deterministic
+composition boundary for dynamic storey packages so real Chinese two- and
+three-storey Text2IFC requests produce stable, traceable IFC2X3 results.
+
+**Requirements:** GEN-02, GEN-03, GATE-01, GATE-02, GATE-03, ROUTE-01,
+TRACE-02, REPAIR-01, OBS-01, PATCH-01, PATCH-02, PATCH-03, PATCH-04, MULTI-01,
+MULTI-02, STABLE-01
+
+**Depends on:** Phase 6.4
+
+**Canonical refs:**
+
+- `.planning/phases/06.5-component-scoped-changesets-and-multistorey-stability/06.5-SPEC.md`
+- `.planning/phases/06.5-component-scoped-changesets-and-multistorey-stability/06.5-CONTEXT.md`
+- `.planning/phases/06.5-component-scoped-changesets-and-multistorey-stability/06.5-AI-SPEC.md`
+- `.planning/phases/06.5-component-scoped-changesets-and-multistorey-stability/06.5-PLAN-OUTLINE.md`
+
+**Explicit boundary:** Phase 6.5 remains a Text2IFC generation phase. It uses
+IFC5 development ideas only as architectural inspiration and does not adopt
+IFC5/IFCX, import or edit existing IFC, add RAG/fine-tuning, redesign the Formal
+BIM JSON schema, or package a service. Existing-IFC natural-language completion
+is reserved for a later phase that may reuse the ChangeSet revision interface.
+
+**Plans:** 7 plans in 7 waves
+
+**Wave 0**
+
+- [ ] `06.5-00-PLAN.md` - ChangeSet, revision, and scope contracts
+
+**Wave 1** *(blocked on Wave 0)*
+
+- [ ] `06.5-01-PLAN.md` - Immutable applicator and deterministic dependency scope
+
+**Wave 2** *(blocked on Wave 1)*
+
+- [ ] `06.5-02-PLAN.md` - ChangeSet Generator and feedback-loop integration
+
+**Wave 3** *(blocked on Wave 2)*
+
+- [ ] `06.5-03-PLAN.md` - Dynamic staged multi-storey initial composition
+
+**Wave 4** *(blocked on Wave 3)*
+
+- [ ] `06.5-04-PLAN.md` - Revision Gates, Audit, reports, timing, and compact evidence
+
+**Wave 5** *(blocked on Wave 4)*
+
+- [ ] `06.5-05-PLAN.md` - Deterministic multi-storey matrix and regression closure
+
+**Wave 6** *(blocked on Wave 5 deterministic verification)*
+
+- [ ] `06.5-06-PLAN.md` - Real DeepSeek two/three-storey stability campaign
+
+**Cross-cutting constraints:**
+
+- Formal BIM JSON 2.0 JSON Schema remains the single model truth.
+- ChangeSets and composition workspaces are workflow sidecars, not alternative
+  Formal BIM models.
+- Feedback Changes address stable semantic IDs, not array indexes.
+- Every accepted revision has unrelated-component preservation rate 1.0.
+- Default maximum is three ChangeSet rounds after the initial candidate.
+- Local Gates may accelerate feedback; final acceptance always runs complete
+  global Gates, compile/reopen, postcompile geometry checks, and Audit.
+- Deterministic tests precede real DeepSeek calls, and live evidence cannot be
+  satisfied by fake/file/replay providers or prewritten model responses.
+- All work remains in the C-drive `multiagent-design` worktree.
+
+**Status:** Planned on 2026-07-12; awaiting user review before execution.

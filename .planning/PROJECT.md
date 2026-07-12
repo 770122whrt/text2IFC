@@ -100,6 +100,7 @@ explicit user requirements instead of generating fragile IFC text directly.
 | Start Phase 6 with prompt registry and multi-agent traceability | Fine-tuning and deployment decisions need reproducible prompt inputs, repair attempts, metrics, and audits | Adopted |
 | Insert Phase 6.2 for interactive CLI before service/API work | The user needs to participate in clarification turns and inspect intermediate inputs/outputs before API packaging | Adopted |
 | Insert Phase 6.2-fix for real REPL acceptance | Phase 6.2 built the DB-backed Mimo pipeline but did not deliver the one-command human-facing question/answer REPL expected by the user | Adopted |
+| Insert Phase 6.5 for component-scoped ChangeSets | Phase 6.4 proved the loop but full-document regeneration can damage already-passing components; stable-ID incremental composition is required before broader IFC editing or Phase 7 | Adopted |
 | Use TDD and GSD phase artifacts | Keep behavior and planning traceable | Adopted |
 
 ---
