@@ -41,7 +41,7 @@ def _revision(module, *, sequence: int = 0) -> dict:
         "revision_id": f"revision-{sequence:02d}",
         "sequence": sequence,
         "parent_revision_id": None if sequence == 0 else f"revision-{sequence - 1:02d}",
-        "candidate_hash": module.hash_json_value(candidate),
+        "candidate_hash": module.hash_bim_json_candidate(candidate),
         "expected_facts_hash": module.hash_json_value(expected),
         "component_hashes": {
             "storey-1": module.hash_json_value(candidate["entities"][0]),
@@ -111,6 +111,21 @@ def test_revision_contract_rejects_stale_candidate_and_expected_facts_hashes():
         "REVISION_EXPECTED_FACTS_HASH_MISMATCH",
         "REVISION_COMPONENT_HASH_MISMATCH",
     }
+
+
+def test_revision_candidate_binding_is_independent_of_collection_order():
+    module = _revisions_module()
+    revision = _revision(module)
+    reordered = _candidate()
+    reordered["entities"].reverse()
+
+    issues = module.validate_revision_record(
+        revision,
+        candidate=reordered,
+        expected_facts=_expected_facts(),
+    )
+
+    assert issues == []
 
 
 @pytest.mark.parametrize(
