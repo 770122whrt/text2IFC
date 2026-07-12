@@ -186,7 +186,7 @@ def test_dynamic_gates_fail_filling_that_repeats_parent_wall_rotation():
     ]
 
 
-def test_dynamic_gates_include_opening_thickness_in_host_bounds():
+def test_dynamic_gates_compare_transformed_opening_bounds_with_host_wall():
     expected = _expected_facts(
         storeys=["storey-1"],
         doors=[],
@@ -206,18 +206,18 @@ def test_dynamic_gates_include_opening_thickness_in_host_bounds():
 
     gates = _by_name(evaluate_dynamic_gates(candidate=candidate, expected_facts=expected))
 
-    assert "OPENING_PROFILE_THICKNESS_MISMATCH" in gates["dynamic_opening_fill"][
+    assert "OPENING_HOST_LOCAL_BOUNDS_MISMATCH" in gates["dynamic_opening_fill"][
         "issue_codes"
     ]
     issue = next(
         issue
         for issue in gates["dynamic_opening_fill"]["issues"]
-        if issue["code"] == "OPENING_PROFILE_THICKNESS_MISMATCH"
+        if issue["code"] == "OPENING_HOST_LOCAL_BOUNDS_MISMATCH"
     )
-    assert issue["path"].endswith("/attributes/Representation/profile/y")
-    assert issue["actual_profile_y"] == 400
-    assert issue["expected_host_thickness"] == 200
-    assert "Representation profile.y" in issue["message"]
+    assert issue["path"].endswith("/attributes/Representation")
+    assert issue["target_entity_ids"] == ["opening-window-north"]
+    assert issue["opening_bounds"]["size"] == [1200.0, 400.0, 3000.0]
+    assert issue["host_bounds"]["size"] == [10000.0, 200.0, 3000.0]
 
 
 def test_dynamic_gates_fail_filling_with_wrong_placement_parent():
@@ -272,7 +272,7 @@ def test_dynamic_gates_fail_filling_bounds_outside_opening():
     ]
 
 
-def test_dynamic_gates_target_filling_representation_when_height_and_thickness_are_swapped():
+def test_dynamic_gates_allow_equivalent_opening_and_filling_representation_dialects():
     expected = _expected_facts(
         storeys=["storey-1"],
         doors=[
@@ -303,24 +303,51 @@ def test_dynamic_gates_target_filling_representation_when_height_and_thickness_a
 
     gates = _by_name(evaluate_dynamic_gates(candidate=candidate, expected_facts=expected))
 
-    issue = next(
-        issue
-        for issue in gates["dynamic_opening_fill"]["issues"]
-        if issue["code"] == "FILLING_REPRESENTATION_MISMATCH"
+    assert gates["dynamic_opening_fill"]["status"] == "passed"
+
+
+def test_dynamic_gates_target_opening_when_its_height_and_thickness_axes_are_swapped():
+    expected = _expected_facts(
+        storeys=["storey-1"],
+        doors=[
+            {"id": "door-south", "storey": "storey-1", "host_wall": "wall-south"}
+        ],
+        windows=[],
     )
-    assert issue["path"] == "/entities/door-south/attributes/Representation"
-    assert issue["element_id"] == "door-south"
-    assert issue["opening_id"] == "opening-door-south"
-    assert issue["expected_representation"] == {
-        "profile": {"x": 900.0, "y": 200.0},
-        "depth": 2100.0,
-        "direction": [0.0, 0.0, 1.0],
-    }
-    assert issue["actual_representation"] == {
-        "profile": {"x": 900.0, "y": 2100.0},
-        "depth": 200.0,
-        "direction": [0.0, 1.0, 0.0],
-    }
+    candidate = _candidate(
+        storeys=["storey-1"],
+        walls=[("wall-south", "storey-1")],
+        doors=[("door-south", "storey-1", "wall-south")],
+        windows=[],
+        include_opening_relationships=True,
+    )
+    _set_rectangle(candidate, "wall-south", x=8000, y=200)
+    _set_rectangle(candidate, "opening-door-south", x=900, y=200)
+    opening_representation = _entity_by_id(candidate, "opening-door-south")[
+        "attributes"
+    ]["Representation"]
+    opening_representation["depth"] = 2100
+    opening_representation["direction"] = [0, 1, 0]
+    _set_rectangle(candidate, "door-south", x=900, y=2100)
+    filling_representation = _entity_by_id(candidate, "door-south")["attributes"][
+        "Representation"
+    ]
+    filling_representation["depth"] = 200
+    filling_representation["direction"] = [0, 1, 0]
+
+    gates = _by_name(evaluate_dynamic_gates(candidate=candidate, expected_facts=expected))
+
+    issues = gates["dynamic_opening_fill"]["issues"]
+    issue = next(
+        item for item in issues if item["code"] == "OPENING_HOST_LOCAL_BOUNDS_MISMATCH"
+    )
+    assert issue["path"] == "/entities/opening-door-south/attributes/Representation"
+    assert issue["target_entity_ids"] == ["opening-door-south"]
+    assert issue["opening_bounds"]["size"] == [900.0, 2100.0, 200.0]
+    assert issue["host_bounds"]["size"] == [8000.0, 200.0, 3000.0]
+    assert not any(
+        item["code"] == "FILLING_OPENING_BOUNDS_MISMATCH" for item in issues
+    )
 
 
 def test_dynamic_gates_fail_cross_storey_host_mismatch():
