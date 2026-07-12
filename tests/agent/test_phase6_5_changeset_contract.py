@@ -45,7 +45,11 @@ def _valid_changeset(*, operation: dict | None = None) -> dict:
             "operation_id": "operation-add-entity",
             "op": "add_entity",
             "target_id": "wall-storey-2-east",
-            "value": {"id": "wall-storey-2-east", "ifc_class": "IfcWall"},
+            "value": {
+                "id": "wall-storey-2-east",
+                "ifc_class": "IfcWall",
+                "provenance": {"source": "issue-geometry-001"},
+            },
             "evidence_refs": ["issue-geometry-001:/expected"],
         },
         {
@@ -127,6 +131,29 @@ def test_changeset_contract_rejects_evidence_from_an_undeclared_issue():
     issues = module.validate_changeset(document)
 
     assert {issue.code for issue in issues} == {"UNDECLARED_CHANGESET_EVIDENCE"}
+
+
+def test_changeset_contract_rejects_empty_provenance_on_added_component():
+    module = _changesets_module()
+    operation = {
+        "operation_id": "operation-add-entity",
+        "op": "add_entity",
+        "target_id": "wall-storey-1-south",
+        "value": {
+            "id": "wall-storey-1-south",
+            "ifc_class": "IfcWall",
+            "attributes": {},
+            "property_sets": {},
+            "provenance": {},
+        },
+        "evidence_refs": ["issue-geometry-001:/expected"],
+    }
+
+    issues = module.validate_changeset(_valid_changeset(operation=operation))
+
+    assert [(issue.code, issue.path) for issue in issues] == [
+        ("EMPTY_CHANGESET_PROVENANCE", "/operations/0/value/provenance")
+    ]
 
 
 def test_changeset_canonical_serialization_is_deterministic_and_non_mutating():
