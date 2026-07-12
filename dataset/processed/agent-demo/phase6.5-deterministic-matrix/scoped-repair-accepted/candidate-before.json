@@ -1,0 +1,75 @@
+{
+  "entities": [
+    {
+      "attributes": {
+        "Name": "Project"
+      },
+      "id": "project-1",
+      "ifc_class": "IfcProject",
+      "property_sets": {},
+      "provenance": {
+        "source": "test"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "Wall",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            0,
+            0,
+            0
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ],
+          "relative_to": "project-1"
+        },
+        "Representation": {
+          "depth": 5000,
+          "direction": [
+            1,
+            0,
+            0
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 200,
+            "y": 3000
+          }
+        }
+      },
+      "global_id": "0YvctVUKv6qx0Dq$ZJOO1x",
+      "id": "wall-1",
+      "ifc_class": "IfcWall",
+      "property_sets": {
+        "Pset_WallCommon": {
+          "IsExternal": true
+        },
+        "custom:text2ifc.Example": {
+          "Code": "A"
+        }
+      },
+      "provenance": {
+        "source": "test"
+      }
+    }
+  ],
+  "ifc_schema": "IFC2X3",
+  "provenance": {
+    "source": "test"
+  },
+  "relationships": [],
+  "schema_version": "bim-json/2.0",
+  "units": {
+    "length": "MILLIMETRE"
+  }
+}

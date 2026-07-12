@@ -1,0 +1,320 @@
+{
+  "case_id": "three-storey-accepted",
+  "door_counts_by_storey": {
+    "storey-1": 1,
+    "storey-2": 1,
+    "storey-3": 1
+  },
+  "doors": [
+    {
+      "height_mm": 2100,
+      "host_wall": "storey-1-south",
+      "source_id": "door-storey-1",
+      "source_key": "door-storey-1[1]",
+      "storey": "storey-1",
+      "width_mm": 900
+    },
+    {
+      "height_mm": 2100,
+      "host_wall": "storey-2-south",
+      "source_id": "door-storey-2",
+      "source_key": "door-storey-2[1]",
+      "storey": "storey-2",
+      "width_mm": 900
+    },
+    {
+      "height_mm": 2100,
+      "host_wall": "storey-3-south",
+      "source_id": "door-storey-3",
+      "source_key": "door-storey-3[1]",
+      "storey": "storey-3",
+      "width_mm": 900
+    }
+  ],
+  "entity_id_contract": {
+    "doors": [],
+    "spaces": [
+      {
+        "brief_id": "space-storey-1-office",
+        "entity_id": "space-storey-1-space-storey-1-office",
+        "storey": "storey-1"
+      },
+      {
+        "brief_id": "space-storey-1-stair",
+        "entity_id": "space-storey-1-space-storey-1-stair",
+        "storey": "storey-1"
+      },
+      {
+        "brief_id": "space-storey-2-office",
+        "entity_id": "space-storey-2-space-storey-2-office",
+        "storey": "storey-2"
+      },
+      {
+        "brief_id": "space-storey-2-stair",
+        "entity_id": "space-storey-2-space-storey-2-stair",
+        "storey": "storey-2"
+      },
+      {
+        "brief_id": "space-storey-3-office",
+        "entity_id": "space-storey-3-space-storey-3-office",
+        "storey": "storey-3"
+      },
+      {
+        "brief_id": "space-storey-3-stair",
+        "entity_id": "space-storey-3-space-storey-3-stair",
+        "storey": "storey-3"
+      }
+    ],
+    "walls": [],
+    "windows": []
+  },
+  "generation_package_manifest": {
+    "issues": [
+      {
+        "code": "PACKAGE_CROSS_STOREY_ENDPOINT_UNRESOLVED",
+        "message": "Stair endpoint None is not an explicit storey.",
+        "path": "/stairs/0/from_storey"
+      },
+      {
+        "code": "PACKAGE_CROSS_STOREY_ENDPOINT_UNRESOLVED",
+        "message": "Stair endpoint None is not an explicit storey.",
+        "path": "/stairs/0/to_storey"
+      },
+      {
+        "code": "PACKAGE_CROSS_STOREY_ENDPOINT_UNRESOLVED",
+        "message": "Stair endpoint None is not an explicit storey.",
+        "path": "/stairs/1/from_storey"
+      },
+      {
+        "code": "PACKAGE_CROSS_STOREY_ENDPOINT_UNRESOLVED",
+        "message": "Stair endpoint None is not an explicit storey.",
+        "path": "/stairs/1/to_storey"
+      }
+    ],
+    "packages": [],
+    "schema_version": "text2ifc/generation-package-manifest/1.0",
+    "status": "draft_required",
+    "storey_count": 3
+  },
+  "required_relationships": {
+    "containment": {
+      "doors": 3,
+      "spaces": 6,
+      "storeys": 3,
+      "windows": 3
+    },
+    "opening_fill": {
+      "doors": 3,
+      "windows": 3
+    }
+  },
+  "roof": {
+    "elevation_mm": 9300,
+    "id": "roof-main",
+    "thickness_mm": 150
+  },
+  "schema_version": "text2ifc/expected-facts/1.0",
+  "sidecar_role": "orchestration_expectations_not_bim_json_schema",
+  "slabs": [
+    {
+      "elevation_mm": 0,
+      "id": "slab-ground",
+      "storey": "storey-1",
+      "thickness_mm": 150
+    },
+    {
+      "elevation_mm": 3150,
+      "id": "slab-storey-2",
+      "storey": "storey-2",
+      "thickness_mm": 150
+    },
+    {
+      "elevation_mm": 6300,
+      "id": "slab-storey-3",
+      "storey": "storey-3",
+      "thickness_mm": 150
+    }
+  ],
+  "source": {
+    "design_brief_schema_version": "text2ifc/design-brief/2.0",
+    "language": "zh-CN",
+    "status": "ready"
+  },
+  "source_paths": {},
+  "space_counts_by_storey": {
+    "storey-1": 2,
+    "storey-2": 2,
+    "storey-3": 2
+  },
+  "spaces": [
+    {
+      "dimensions_mm": [
+        6000,
+        6000
+      ],
+      "height_mm": 3000,
+      "id": "space-storey-1-office",
+      "name": "首层办公室",
+      "origin_mm": [
+        0,
+        0,
+        0
+      ],
+      "storey": "storey-1"
+    },
+    {
+      "dimensions_mm": [
+        2000,
+        6000
+      ],
+      "height_mm": 3000,
+      "id": "space-storey-1-stair",
+      "name": "首层楼梯间",
+      "origin_mm": [
+        6000,
+        0,
+        0
+      ],
+      "storey": "storey-1"
+    },
+    {
+      "dimensions_mm": [
+        6000,
+        6000
+      ],
+      "height_mm": 3000,
+      "id": "space-storey-2-office",
+      "name": "二层办公室",
+      "origin_mm": [
+        0,
+        0,
+        0
+      ],
+      "storey": "storey-2"
+    },
+    {
+      "dimensions_mm": [
+        2000,
+        6000
+      ],
+      "height_mm": 3000,
+      "id": "space-storey-2-stair",
+      "name": "二层楼梯间",
+      "origin_mm": [
+        6000,
+        0,
+        0
+      ],
+      "storey": "storey-2"
+    },
+    {
+      "dimensions_mm": [
+        6000,
+        6000
+      ],
+      "height_mm": 3000,
+      "id": "space-storey-3-office",
+      "name": "三层办公室",
+      "origin_mm": [
+        0,
+        0,
+        0
+      ],
+      "storey": "storey-3"
+    },
+    {
+      "dimensions_mm": [
+        2000,
+        6000
+      ],
+      "height_mm": 3000,
+      "id": "space-storey-3-stair",
+      "name": "三层楼梯间",
+      "origin_mm": [
+        6000,
+        0,
+        0
+      ],
+      "storey": "storey-3"
+    }
+  ],
+  "stairs": [
+    {
+      "end_elevation_mm": 3150,
+      "id": "stair-1-2",
+      "start_elevation_mm": 150,
+      "storey": "storey-1",
+      "width_mm": 1000
+    },
+    {
+      "end_elevation_mm": 6300,
+      "id": "stair-2-3",
+      "start_elevation_mm": 3300,
+      "storey": "storey-2",
+      "width_mm": 1000
+    }
+  ],
+  "storey_count": 3,
+  "storeys": [
+    {
+      "elevation_mm": 0,
+      "id": "storey-1",
+      "name": "首层",
+      "source_key": "首层"
+    },
+    {
+      "elevation_mm": 3150,
+      "id": "storey-2",
+      "name": "二层",
+      "source_key": "二层"
+    },
+    {
+      "elevation_mm": 6300,
+      "id": "storey-3",
+      "name": "三层",
+      "source_key": "三层"
+    }
+  ],
+  "total_counts": {
+    "IfcBuildingStorey": 3,
+    "IfcDoor": 3,
+    "IfcSpace": 6,
+    "IfcWindow": 3
+  },
+  "unresolved_expectations": [],
+  "walls": [],
+  "window_counts_by_storey": {
+    "storey-1": 1,
+    "storey-2": 1,
+    "storey-3": 1
+  },
+  "windows": [
+    {
+      "height_mm": 1000,
+      "host_wall": "storey-1-north",
+      "sill_height_mm": 900,
+      "source_id": "window-storey-1",
+      "source_key": "window-storey-1[1]",
+      "storey": "storey-1",
+      "width_mm": 1200
+    },
+    {
+      "height_mm": 1000,
+      "host_wall": "storey-2-north",
+      "sill_height_mm": 900,
+      "source_id": "window-storey-2",
+      "source_key": "window-storey-2[1]",
+      "storey": "storey-2",
+      "width_mm": 1200
+    },
+    {
+      "height_mm": 1000,
+      "host_wall": "storey-3-north",
+      "sill_height_mm": 900,
+      "source_id": "window-storey-3",
+      "source_key": "window-storey-3[1]",
+      "storey": "storey-3",
+      "width_mm": 1200
+    }
+  ]
+}

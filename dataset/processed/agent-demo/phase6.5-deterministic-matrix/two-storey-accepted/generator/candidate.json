@@ -1,0 +1,1573 @@
+{
+  "entities": [
+    {
+      "attributes": {
+        "Name": "two-storey-accepted Project"
+      },
+      "id": "project-1",
+      "ifc_class": "IfcProject",
+      "property_sets": {},
+      "provenance": {
+        "source": "phase6.3-complex-scaffold"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "Site",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            0,
+            0,
+            0
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ],
+          "relative_to": "project-1"
+        }
+      },
+      "id": "site-1",
+      "ifc_class": "IfcSite",
+      "property_sets": {},
+      "provenance": {
+        "source": "phase6.3-complex-scaffold"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "Building",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            0,
+            0,
+            0
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ],
+          "relative_to": "site-1"
+        }
+      },
+      "id": "building-1",
+      "ifc_class": "IfcBuilding",
+      "property_sets": {},
+      "provenance": {
+        "source": "phase6.3-complex-scaffold"
+      }
+    },
+    {
+      "attributes": {
+        "Elevation": 0.0,
+        "Name": "storey-1",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            0,
+            0,
+            0.0
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ],
+          "relative_to": "building-1"
+        }
+      },
+      "id": "storey-1",
+      "ifc_class": "IfcBuildingStorey",
+      "property_sets": {},
+      "provenance": {
+        "source": "phase6.3-complex-scaffold"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "storey-1-wall-south",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            0,
+            0,
+            0
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ],
+          "relative_to": "storey-1"
+        },
+        "Representation": {
+          "depth": 3000.0,
+          "direction": [
+            0,
+            0,
+            1
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 8000.0,
+            "y": 200.0
+          }
+        }
+      },
+      "id": "storey-1-wall-south",
+      "ifc_class": "IfcWall",
+      "property_sets": {},
+      "provenance": {
+        "source": "phase6.3-complex-scaffold"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "storey-1-wall-north",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            0,
+            5800.0,
+            0
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ],
+          "relative_to": "storey-1"
+        },
+        "Representation": {
+          "depth": 3000.0,
+          "direction": [
+            0,
+            0,
+            1
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 8000.0,
+            "y": 200.0
+          }
+        }
+      },
+      "id": "storey-1-wall-north",
+      "ifc_class": "IfcWall",
+      "property_sets": {},
+      "provenance": {
+        "source": "phase6.3-complex-scaffold"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "storey-1-wall-west",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            0,
+            0,
+            0
+          ],
+          "ref_direction": [
+            0,
+            1,
+            0
+          ],
+          "relative_to": "storey-1"
+        },
+        "Representation": {
+          "depth": 3000.0,
+          "direction": [
+            0,
+            0,
+            1
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 6000.0,
+            "y": 200.0
+          }
+        }
+      },
+      "id": "storey-1-wall-west",
+      "ifc_class": "IfcWall",
+      "property_sets": {},
+      "provenance": {
+        "source": "phase6.3-complex-scaffold"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "storey-1-wall-east",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            7800.0,
+            0,
+            0
+          ],
+          "ref_direction": [
+            0,
+            1,
+            0
+          ],
+          "relative_to": "storey-1"
+        },
+        "Representation": {
+          "depth": 3000.0,
+          "direction": [
+            0,
+            0,
+            1
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 6000.0,
+            "y": 200.0
+          }
+        }
+      },
+      "id": "storey-1-wall-east",
+      "ifc_class": "IfcWall",
+      "property_sets": {},
+      "provenance": {
+        "source": "phase6.3-complex-scaffold"
+      }
+    },
+    {
+      "attributes": {
+        "Elevation": 3150.0,
+        "Name": "storey-2",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            0,
+            0,
+            3150.0
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ],
+          "relative_to": "building-1"
+        }
+      },
+      "id": "storey-2",
+      "ifc_class": "IfcBuildingStorey",
+      "property_sets": {},
+      "provenance": {
+        "source": "phase6.3-complex-scaffold"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "storey-2-wall-south",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            0,
+            0,
+            0
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ],
+          "relative_to": "storey-2"
+        },
+        "Representation": {
+          "depth": 3000.0,
+          "direction": [
+            0,
+            0,
+            1
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 8000.0,
+            "y": 200.0
+          }
+        }
+      },
+      "id": "storey-2-wall-south",
+      "ifc_class": "IfcWall",
+      "property_sets": {},
+      "provenance": {
+        "source": "phase6.3-complex-scaffold"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "storey-2-wall-north",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            0,
+            5800.0,
+            0
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ],
+          "relative_to": "storey-2"
+        },
+        "Representation": {
+          "depth": 3000.0,
+          "direction": [
+            0,
+            0,
+            1
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 8000.0,
+            "y": 200.0
+          }
+        }
+      },
+      "id": "storey-2-wall-north",
+      "ifc_class": "IfcWall",
+      "property_sets": {},
+      "provenance": {
+        "source": "phase6.3-complex-scaffold"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "storey-2-wall-west",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            0,
+            0,
+            0
+          ],
+          "ref_direction": [
+            0,
+            1,
+            0
+          ],
+          "relative_to": "storey-2"
+        },
+        "Representation": {
+          "depth": 3000.0,
+          "direction": [
+            0,
+            0,
+            1
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 6000.0,
+            "y": 200.0
+          }
+        }
+      },
+      "id": "storey-2-wall-west",
+      "ifc_class": "IfcWall",
+      "property_sets": {},
+      "provenance": {
+        "source": "phase6.3-complex-scaffold"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "storey-2-wall-east",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            7800.0,
+            0,
+            0
+          ],
+          "ref_direction": [
+            0,
+            1,
+            0
+          ],
+          "relative_to": "storey-2"
+        },
+        "Representation": {
+          "depth": 3000.0,
+          "direction": [
+            0,
+            0,
+            1
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 6000.0,
+            "y": 200.0
+          }
+        }
+      },
+      "id": "storey-2-wall-east",
+      "ifc_class": "IfcWall",
+      "property_sets": {},
+      "provenance": {
+        "source": "phase6.3-complex-scaffold"
+      }
+    },
+    {
+      "attributes": {
+        "InteriorOrExteriorSpace": "INTERNAL",
+        "Name": "Space",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            0,
+            0,
+            0
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ],
+          "relative_to": "storey-1"
+        },
+        "Representation": {
+          "depth": 3000.0,
+          "direction": [
+            0,
+            0,
+            1
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "polygon",
+            "points": [
+              [
+                0,
+                0
+              ],
+              [
+                4000.0,
+                0
+              ],
+              [
+                4000.0,
+                6000.0
+              ],
+              [
+                0,
+                6000.0
+              ],
+              [
+                0,
+                0
+              ]
+            ]
+          }
+        }
+      },
+      "id": "space-storey-1-west",
+      "ifc_class": "IfcSpace",
+      "property_sets": {},
+      "provenance": {
+        "source": "phase6.3-complex-scaffold"
+      }
+    },
+    {
+      "attributes": {
+        "InteriorOrExteriorSpace": "INTERNAL",
+        "Name": "Space",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            0,
+            0,
+            0
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ],
+          "relative_to": "storey-1"
+        },
+        "Representation": {
+          "depth": 3000.0,
+          "direction": [
+            0,
+            0,
+            1
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "polygon",
+            "points": [
+              [
+                0,
+                0
+              ],
+              [
+                4000.0,
+                0
+              ],
+              [
+                4000.0,
+                6000.0
+              ],
+              [
+                0,
+                6000.0
+              ],
+              [
+                0,
+                0
+              ]
+            ]
+          }
+        }
+      },
+      "id": "space-storey-1-east",
+      "ifc_class": "IfcSpace",
+      "property_sets": {},
+      "provenance": {
+        "source": "phase6.3-complex-scaffold"
+      }
+    },
+    {
+      "attributes": {
+        "InteriorOrExteriorSpace": "INTERNAL",
+        "Name": "Space",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            0,
+            0,
+            0
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ],
+          "relative_to": "storey-2"
+        },
+        "Representation": {
+          "depth": 3000.0,
+          "direction": [
+            0,
+            0,
+            1
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "polygon",
+            "points": [
+              [
+                0,
+                0
+              ],
+              [
+                4000.0,
+                0
+              ],
+              [
+                4000.0,
+                6000.0
+              ],
+              [
+                0,
+                6000.0
+              ],
+              [
+                0,
+                0
+              ]
+            ]
+          }
+        }
+      },
+      "id": "space-storey-2-west",
+      "ifc_class": "IfcSpace",
+      "property_sets": {},
+      "provenance": {
+        "source": "phase6.3-complex-scaffold"
+      }
+    },
+    {
+      "attributes": {
+        "InteriorOrExteriorSpace": "INTERNAL",
+        "Name": "Space",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            0,
+            0,
+            0
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ],
+          "relative_to": "storey-2"
+        },
+        "Representation": {
+          "depth": 3000.0,
+          "direction": [
+            0,
+            0,
+            1
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "polygon",
+            "points": [
+              [
+                0,
+                0
+              ],
+              [
+                4000.0,
+                0
+              ],
+              [
+                4000.0,
+                6000.0
+              ],
+              [
+                0,
+                6000.0
+              ],
+              [
+                0,
+                0
+              ]
+            ]
+          }
+        }
+      },
+      "id": "space-storey-2-east",
+      "ifc_class": "IfcSpace",
+      "property_sets": {},
+      "provenance": {
+        "source": "phase6.3-complex-scaffold"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "Slab",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            0,
+            0,
+            0
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ],
+          "relative_to": "storey-1"
+        },
+        "PredefinedType": "FLOOR",
+        "Representation": {
+          "depth": 150.0,
+          "direction": [
+            0,
+            0,
+            1
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "polygon",
+            "points": [
+              [
+                0,
+                0
+              ],
+              [
+                8000.0,
+                0
+              ],
+              [
+                8000.0,
+                6000.0
+              ],
+              [
+                0,
+                6000.0
+              ],
+              [
+                0,
+                0
+              ]
+            ]
+          }
+        }
+      },
+      "id": "slab-ground",
+      "ifc_class": "IfcSlab",
+      "property_sets": {},
+      "provenance": {
+        "source": "phase6.3-complex-scaffold"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "Slab",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            0,
+            0,
+            0
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ],
+          "relative_to": "storey-2"
+        },
+        "PredefinedType": "FLOOR",
+        "Representation": {
+          "depth": 150.0,
+          "direction": [
+            0,
+            0,
+            1
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "polygon",
+            "points": [
+              [
+                0,
+                0
+              ],
+              [
+                8000.0,
+                0
+              ],
+              [
+                8000.0,
+                6000.0
+              ],
+              [
+                0,
+                6000.0
+              ],
+              [
+                0,
+                0
+              ]
+            ]
+          }
+        }
+      },
+      "id": "slab-storey-2",
+      "ifc_class": "IfcSlab",
+      "property_sets": {},
+      "provenance": {
+        "source": "phase6.3-complex-scaffold"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "Roof",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            0,
+            0,
+            6150.0
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ],
+          "relative_to": "building-1"
+        },
+        "Representation": {
+          "depth": 150.0,
+          "direction": [
+            0,
+            0,
+            1
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 8000.0,
+            "y": 6000.0
+          }
+        },
+        "ShapeType": "FLAT_ROOF"
+      },
+      "id": "roof-main",
+      "ifc_class": "IfcRoof",
+      "property_sets": {},
+      "provenance": {
+        "source": "phase6.3-complex-scaffold"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "stair",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            200.0,
+            2500.0,
+            0
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ],
+          "relative_to": "storey-1"
+        },
+        "Representation": {
+          "depth": 3000.0,
+          "direction": [
+            0,
+            0,
+            1
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 3500,
+            "y": 1200
+          }
+        },
+        "ShapeType": "STRAIGHT_RUN_STAIR"
+      },
+      "id": "stair-stair",
+      "ifc_class": "IfcStair",
+      "property_sets": {},
+      "provenance": {
+        "source": "phase6.3-complex-scaffold"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "storey-1-wall-storey-1-south",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            0,
+            0,
+            0
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ],
+          "relative_to": "storey-1"
+        },
+        "Representation": {
+          "depth": 3000.0,
+          "direction": [
+            0,
+            0,
+            1
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 8000.0,
+            "y": 200.0
+          }
+        }
+      },
+      "id": "storey-1-wall-storey-1-south",
+      "ifc_class": "IfcWall",
+      "property_sets": {},
+      "provenance": {
+        "source": "phase6.3-complex-scaffold"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "Opening for door-door-storey-1-1-3cfa6644",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            200.0,
+            0,
+            0.0
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ],
+          "relative_to": "storey-1-wall-storey-1-south"
+        },
+        "Representation": {
+          "depth": 2100.0,
+          "direction": [
+            0,
+            0,
+            1
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 900.0,
+            "y": 200.0
+          }
+        }
+      },
+      "id": "opening-door-door-storey-1-1-3cfa6644",
+      "ifc_class": "IfcOpeningElement",
+      "property_sets": {},
+      "provenance": {
+        "source": "phase6.3-complex-scaffold"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "door-door-storey-1-1-3cfa6644",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            0,
+            0,
+            0
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ],
+          "relative_to": "opening-door-door-storey-1-1-3cfa6644"
+        },
+        "OverallHeight": 2100.0,
+        "OverallWidth": 900.0,
+        "Representation": {
+          "depth": 2100.0,
+          "direction": [
+            0,
+            0,
+            1
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 900.0,
+            "y": 100.0
+          }
+        }
+      },
+      "id": "door-door-storey-1-1-3cfa6644",
+      "ifc_class": "IfcDoor",
+      "property_sets": {},
+      "provenance": {
+        "source": "phase6.3-complex-scaffold"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "storey-2-wall-storey-2-south",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            0,
+            0,
+            0
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ],
+          "relative_to": "storey-2"
+        },
+        "Representation": {
+          "depth": 3000.0,
+          "direction": [
+            0,
+            0,
+            1
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 8000.0,
+            "y": 200.0
+          }
+        }
+      },
+      "id": "storey-2-wall-storey-2-south",
+      "ifc_class": "IfcWall",
+      "property_sets": {},
+      "provenance": {
+        "source": "phase6.3-complex-scaffold"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "Opening for door-door-storey-2-1-851c75f8",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            200.0,
+            0,
+            0.0
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ],
+          "relative_to": "storey-2-wall-storey-2-south"
+        },
+        "Representation": {
+          "depth": 2100.0,
+          "direction": [
+            0,
+            0,
+            1
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 900.0,
+            "y": 200.0
+          }
+        }
+      },
+      "id": "opening-door-door-storey-2-1-851c75f8",
+      "ifc_class": "IfcOpeningElement",
+      "property_sets": {},
+      "provenance": {
+        "source": "phase6.3-complex-scaffold"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "door-door-storey-2-1-851c75f8",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            0,
+            0,
+            0
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ],
+          "relative_to": "opening-door-door-storey-2-1-851c75f8"
+        },
+        "OverallHeight": 2100.0,
+        "OverallWidth": 900.0,
+        "Representation": {
+          "depth": 2100.0,
+          "direction": [
+            0,
+            0,
+            1
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 900.0,
+            "y": 100.0
+          }
+        }
+      },
+      "id": "door-door-storey-2-1-851c75f8",
+      "ifc_class": "IfcDoor",
+      "property_sets": {},
+      "provenance": {
+        "source": "phase6.3-complex-scaffold"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "storey-1-wall-storey-1-north",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            0,
+            0,
+            0
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ],
+          "relative_to": "storey-1"
+        },
+        "Representation": {
+          "depth": 3000.0,
+          "direction": [
+            0,
+            0,
+            1
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 8000.0,
+            "y": 200.0
+          }
+        }
+      },
+      "id": "storey-1-wall-storey-1-north",
+      "ifc_class": "IfcWall",
+      "property_sets": {},
+      "provenance": {
+        "source": "phase6.3-complex-scaffold"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "Opening for window-window-storey-1-1-1f138422",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            200.0,
+            0,
+            900.0
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ],
+          "relative_to": "storey-1-wall-storey-1-north"
+        },
+        "Representation": {
+          "depth": 1000.0,
+          "direction": [
+            0,
+            0,
+            1
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 1200.0,
+            "y": 200.0
+          }
+        }
+      },
+      "id": "opening-window-window-storey-1-1-1f138422",
+      "ifc_class": "IfcOpeningElement",
+      "property_sets": {},
+      "provenance": {
+        "source": "phase6.3-complex-scaffold"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "window-window-storey-1-1-1f138422",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            0,
+            0,
+            0
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ],
+          "relative_to": "opening-window-window-storey-1-1-1f138422"
+        },
+        "OverallHeight": 1000.0,
+        "OverallWidth": 1200.0,
+        "Representation": {
+          "depth": 1000.0,
+          "direction": [
+            0,
+            0,
+            1
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 1200.0,
+            "y": 100.0
+          }
+        }
+      },
+      "id": "window-window-storey-1-1-1f138422",
+      "ifc_class": "IfcWindow",
+      "property_sets": {},
+      "provenance": {
+        "source": "phase6.3-complex-scaffold"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "storey-2-wall-storey-2-north",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            0,
+            0,
+            0
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ],
+          "relative_to": "storey-2"
+        },
+        "Representation": {
+          "depth": 3000.0,
+          "direction": [
+            0,
+            0,
+            1
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 8000.0,
+            "y": 200.0
+          }
+        }
+      },
+      "id": "storey-2-wall-storey-2-north",
+      "ifc_class": "IfcWall",
+      "property_sets": {},
+      "provenance": {
+        "source": "phase6.3-complex-scaffold"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "Opening for window-window-storey-2-1-3bd78dba",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            200.0,
+            0,
+            900.0
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ],
+          "relative_to": "storey-2-wall-storey-2-north"
+        },
+        "Representation": {
+          "depth": 1000.0,
+          "direction": [
+            0,
+            0,
+            1
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 1200.0,
+            "y": 200.0
+          }
+        }
+      },
+      "id": "opening-window-window-storey-2-1-3bd78dba",
+      "ifc_class": "IfcOpeningElement",
+      "property_sets": {},
+      "provenance": {
+        "source": "phase6.3-complex-scaffold"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "window-window-storey-2-1-3bd78dba",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            0,
+            0,
+            0
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ],
+          "relative_to": "opening-window-window-storey-2-1-3bd78dba"
+        },
+        "OverallHeight": 1000.0,
+        "OverallWidth": 1200.0,
+        "Representation": {
+          "depth": 1000.0,
+          "direction": [
+            0,
+            0,
+            1
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 1200.0,
+            "y": 100.0
+          }
+        }
+      },
+      "id": "window-window-storey-2-1-3bd78dba",
+      "ifc_class": "IfcWindow",
+      "property_sets": {},
+      "provenance": {
+        "source": "phase6.3-complex-scaffold"
+      }
+    }
+  ],
+  "ifc_schema": "IFC2X3",
+  "provenance": {
+    "case_id": "two-storey-accepted",
+    "scaffold_role": "deterministic_candidate_from_explicit_design_brief_facts",
+    "source": "phase6.3-complex-scaffold"
+  },
+  "relationships": [
+    {
+      "attributes": {
+        "RelatedOpeningElement": "opening-door-door-storey-1-1-3cfa6644",
+        "RelatingBuildingElement": "storey-1-wall-storey-1-south"
+      },
+      "id": "void-opening-door-door-storey-1-1-3cfa6644",
+      "ifc_class": "IfcRelVoidsElement",
+      "provenance": {
+        "source": "phase6.3-complex-scaffold"
+      }
+    },
+    {
+      "attributes": {
+        "RelatedBuildingElement": "door-door-storey-1-1-3cfa6644",
+        "RelatingOpeningElement": "opening-door-door-storey-1-1-3cfa6644"
+      },
+      "id": "fill-opening-door-door-storey-1-1-3cfa6644",
+      "ifc_class": "IfcRelFillsElement",
+      "provenance": {
+        "source": "phase6.3-complex-scaffold"
+      }
+    },
+    {
+      "attributes": {
+        "RelatedOpeningElement": "opening-door-door-storey-2-1-851c75f8",
+        "RelatingBuildingElement": "storey-2-wall-storey-2-south"
+      },
+      "id": "void-opening-door-door-storey-2-1-851c75f8",
+      "ifc_class": "IfcRelVoidsElement",
+      "provenance": {
+        "source": "phase6.3-complex-scaffold"
+      }
+    },
+    {
+      "attributes": {
+        "RelatedBuildingElement": "door-door-storey-2-1-851c75f8",
+        "RelatingOpeningElement": "opening-door-door-storey-2-1-851c75f8"
+      },
+      "id": "fill-opening-door-door-storey-2-1-851c75f8",
+      "ifc_class": "IfcRelFillsElement",
+      "provenance": {
+        "source": "phase6.3-complex-scaffold"
+      }
+    },
+    {
+      "attributes": {
+        "RelatedOpeningElement": "opening-window-window-storey-1-1-1f138422",
+        "RelatingBuildingElement": "storey-1-wall-storey-1-north"
+      },
+      "id": "void-opening-window-window-storey-1-1-1f138422",
+      "ifc_class": "IfcRelVoidsElement",
+      "provenance": {
+        "source": "phase6.3-complex-scaffold"
+      }
+    },
+    {
+      "attributes": {
+        "RelatedBuildingElement": "window-window-storey-1-1-1f138422",
+        "RelatingOpeningElement": "opening-window-window-storey-1-1-1f138422"
+      },
+      "id": "fill-opening-window-window-storey-1-1-1f138422",
+      "ifc_class": "IfcRelFillsElement",
+      "provenance": {
+        "source": "phase6.3-complex-scaffold"
+      }
+    },
+    {
+      "attributes": {
+        "RelatedOpeningElement": "opening-window-window-storey-2-1-3bd78dba",
+        "RelatingBuildingElement": "storey-2-wall-storey-2-north"
+      },
+      "id": "void-opening-window-window-storey-2-1-3bd78dba",
+      "ifc_class": "IfcRelVoidsElement",
+      "provenance": {
+        "source": "phase6.3-complex-scaffold"
+      }
+    },
+    {
+      "attributes": {
+        "RelatedBuildingElement": "window-window-storey-2-1-3bd78dba",
+        "RelatingOpeningElement": "opening-window-window-storey-2-1-3bd78dba"
+      },
+      "id": "fill-opening-window-window-storey-2-1-3bd78dba",
+      "ifc_class": "IfcRelFillsElement",
+      "provenance": {
+        "source": "phase6.3-complex-scaffold"
+      }
+    }
+  ],
+  "schema_version": "bim-json/2.0",
+  "units": {
+    "length": "MILLIMETRE"
+  }
+}

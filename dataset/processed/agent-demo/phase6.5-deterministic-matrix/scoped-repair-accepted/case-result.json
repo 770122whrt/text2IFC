@@ -1,0 +1,46 @@
+{
+  "artifact_refs": [
+    "scoped-repair-accepted/change-scope.json",
+    "scoped-repair-accepted/changeset.json",
+    "scoped-repair-accepted/candidate-revision.json",
+    "scoped-repair-accepted/component-preservation.json",
+    "scoped-repair-accepted/output.ifc"
+  ],
+  "audit": {
+    "status": "accepted"
+  },
+  "case_id": "scoped-repair-accepted",
+  "changed_ids": [
+    "wall-1"
+  ],
+  "changeset_id": "changeset-revision-01",
+  "dependency_ids": [],
+  "evidence_class": "deterministic_fixture",
+  "gates": {
+    "audit": true,
+    "bim_json_schema": true,
+    "bim_json_semantics": true,
+    "expected_fact_coverage": true,
+    "generated_ifc_geometry": true,
+    "ifc_compile": true,
+    "ifc_reopen": true,
+    "relationship_integrity": true,
+    "secret_scan": true,
+    "unrelated_component_preservation": true
+  },
+  "issue_code": null,
+  "issue_delta": {
+    "after": 0,
+    "before": 1
+  },
+  "outcome": "accepted",
+  "preservation_rate": 1.0,
+  "revision_id": "revision-01",
+  "route": "accept",
+  "timings_seconds": {
+    "changeset_apply_and_compile": 1.262441
+  },
+  "unchanged_ids": [
+    "project-1"
+  ]
+}

@@ -1,0 +1,157 @@
+{
+  "case_id": "two-storey-accepted",
+  "design_brief": {
+    "ambiguities": [],
+    "fact_sources": [],
+    "known_facts": {
+      "building": {
+        "depth_y_mm": 6000,
+        "slab_thickness_mm": 150,
+        "storey_height_mm": 3000,
+        "wall_thickness_mm": 200,
+        "width_x_mm": 8000
+      },
+      "doors": [
+        {
+          "height_mm": 2100,
+          "host_wall": "storey-1-south",
+          "id": "door-storey-1",
+          "storey": "storey-1",
+          "width_mm": 900
+        },
+        {
+          "height_mm": 2100,
+          "host_wall": "storey-2-south",
+          "id": "door-storey-2",
+          "storey": "storey-2",
+          "width_mm": 900
+        }
+      ],
+      "roof": {
+        "elevation_mm": 6150,
+        "id": "roof-main",
+        "thickness_mm": 150
+      },
+      "slabs": [
+        {
+          "elevation_mm": 0,
+          "id": "slab-ground",
+          "storey": "storey-1",
+          "thickness_mm": 150
+        },
+        {
+          "elevation_mm": 3150,
+          "id": "slab-storey-2",
+          "storey": "storey-2",
+          "thickness_mm": 150
+        }
+      ],
+      "spaces": [
+        {
+          "dimensions_mm": [
+            4000,
+            6000
+          ],
+          "height_mm": 3000,
+          "id": "space-storey-1-west",
+          "name": "首层西室",
+          "origin_mm": [
+            0,
+            0,
+            0
+          ],
+          "storey": "storey-1"
+        },
+        {
+          "dimensions_mm": [
+            4000,
+            6000
+          ],
+          "height_mm": 3000,
+          "id": "space-storey-1-east",
+          "name": "首层东室",
+          "origin_mm": [
+            4000,
+            0,
+            0
+          ],
+          "storey": "storey-1"
+        },
+        {
+          "dimensions_mm": [
+            4000,
+            6000
+          ],
+          "height_mm": 3000,
+          "id": "space-storey-2-west",
+          "name": "二层西室",
+          "origin_mm": [
+            0,
+            0,
+            0
+          ],
+          "storey": "storey-2"
+        },
+        {
+          "dimensions_mm": [
+            4000,
+            6000
+          ],
+          "height_mm": 3000,
+          "id": "space-storey-2-east",
+          "name": "二层东室",
+          "origin_mm": [
+            4000,
+            0,
+            0
+          ],
+          "storey": "storey-2"
+        }
+      ],
+      "stair": {
+        "end_elevation_mm": 3150,
+        "id": "stair-1-2",
+        "start_elevation_mm": 150,
+        "storey": "storey-1",
+        "width_mm": 1000
+      },
+      "storeys": [
+        {
+          "elevation_mm": 0,
+          "id": "storey-1",
+          "name": "首层"
+        },
+        {
+          "elevation_mm": 3150,
+          "id": "storey-2",
+          "name": "二层"
+        }
+      ],
+      "windows": [
+        {
+          "height_mm": 1000,
+          "host_wall": "storey-1-north",
+          "id": "window-storey-1",
+          "sill_height_mm": 900,
+          "storey": "storey-1",
+          "width_mm": 1200
+        },
+        {
+          "height_mm": 1000,
+          "host_wall": "storey-2-north",
+          "id": "window-storey-2",
+          "sill_height_mm": 900,
+          "storey": "storey-2",
+          "width_mm": 1200
+        }
+      ]
+    },
+    "language": "zh-CN",
+    "missing_facts": [],
+    "original_request": "创建一个两层矩形建筑，每层包含两个明确定位的空间，并生成楼板、屋面、楼梯、门窗和正确楼层归属。",
+    "schema_version": "text2ifc/design-brief/2.0",
+    "status": "ready",
+    "unsupported_requests": []
+  },
+  "input": "创建一个两层矩形建筑，每层包含两个明确定位的空间，并生成楼板、屋面、楼梯、门窗和正确楼层归属。"
+}
