@@ -308,6 +308,64 @@ def test_dynamic_gate_feedback_preserves_entity_level_geometry_evidence(tmp_path
     assert "opening_profile" in issues[0].evidence
 
 
+def test_geometry_gate_entity_ids_become_stable_changeset_targets(tmp_path):
+    root = tmp_path / "case"
+    root.mkdir()
+    (root / "geometry-feedback.json").write_text(
+        json.dumps(
+            {
+                "success": False,
+                "issues": [
+                    {
+                        "code": "SLAB_BBOX_MISMATCH",
+                        "path": "/slabs/slab-ground/bbox",
+                        "entity_ids": ["slab-ground", "slab-first"],
+                        "message": "Slab bounds are outside tolerance.",
+                    }
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    issues = normalize_gate_sidecars(root)
+
+    assert [issue.actual_ref for issue in issues] == [
+        "entity:slab-ground#/",
+        "entity:slab-first#/",
+    ]
+    assert len({issue.issue_id for issue in issues}) == 2
+
+
+def test_audit_affected_entities_become_generator_scoped_targets():
+    issues = normalize_audit_findings(
+        {
+            "blocking": True,
+            "findings": [
+                {
+                    "code": "PLACEMENT_ORIGIN_MISMATCH",
+                    "severity": "error",
+                    "affected_entities": ["slab-ground", "slab-first"],
+                    "message": "Slab origins are centered instead of corner based.",
+                }
+            ],
+        }
+    )
+
+    assert [issue.actual_ref for issue in issues] == [
+        "entity:slab-ground#/",
+        "entity:slab-first#/",
+    ]
+    for issue in issues:
+        _assert_valid(
+            issue,
+            source="audit",
+            owner="generator",
+            issue_type="geometry_invalid",
+            route="regenerate_json",
+        )
+
+
 def test_normalizes_audit_findings_to_owners_and_routes():
     issues = normalize_audit_findings(
         {
