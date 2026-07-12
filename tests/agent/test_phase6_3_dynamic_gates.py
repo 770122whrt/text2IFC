@@ -203,6 +203,7 @@ def test_dynamic_gates_compare_transformed_opening_bounds_with_host_wall():
     )
     _set_rectangle(candidate, "wall-north", x=10000, y=200)
     _set_rectangle(candidate, "opening-window-north", x=1200, y=400)
+    _set_placement_origin(candidate, "opening-window-north", [0, 0, 900])
 
     gates = _by_name(evaluate_dynamic_gates(candidate=candidate, expected_facts=expected))
 
@@ -300,6 +301,7 @@ def test_dynamic_gates_allow_equivalent_opening_and_filling_representation_diale
     ]
     filling_representation["depth"] = 200
     filling_representation["direction"] = [0, 1, 0]
+    _set_placement_origin(candidate, "door-south", [0, -100, 1050])
 
     gates = _by_name(evaluate_dynamic_gates(candidate=candidate, expected_facts=expected))
 
