@@ -153,7 +153,21 @@ def test_apply_changeset_adds_and_removes_entities_by_id():
     door = {
         "id": "door-new",
         "ifc_class": "IfcDoor",
-        "attributes": {"Name": "New door"},
+        "attributes": {
+            "Name": "New door",
+            "ObjectPlacement": {
+                "relative_to": "project-1",
+                "origin": [0, 0, 0],
+                "axis": [0, 0, 1],
+                "ref_direction": [1, 0, 0],
+            },
+            "Representation": {
+                "kind": "extruded_profile",
+                "profile": {"kind": "rectangle", "x": 900, "y": 100},
+                "depth": 2100,
+                "direction": [0, 0, 1],
+            },
+        },
         "property_sets": {},
         "provenance": {"source": "issue-wall-001"},
     }
