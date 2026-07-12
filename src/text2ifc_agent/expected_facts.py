@@ -261,10 +261,15 @@ def _component_records_from_nested(
 ) -> list[dict[str, Any]]:
     records: list[dict[str, Any]] = []
     for (source_key, payload), storey in zip(nested_storeys, storeys):
-        for index, item in enumerate(_records(payload.get(collection)), start=1):
+        for index, (group, item) in enumerate(
+            _grouped_component_records(payload.get(collection)), start=1
+        ):
             record = _copy_payload(item)
             record["storey"] = storey["id"]
-            record.setdefault("source_key", f"{source_key}.{collection}[{index}]")
+            group_path = f".{group}" if group else ""
+            record.setdefault(
+                "source_key", f"{source_key}.{collection}{group_path}[{index}]"
+            )
             records.append(record)
     return records
 
@@ -276,10 +281,15 @@ def _component_records_from_storey_list(
 ) -> list[dict[str, Any]]:
     records: list[dict[str, Any]] = []
     for source, storey in zip(source_storeys, storeys):
-        for index, item in enumerate(_records(source.get(collection)), start=1):
+        for index, (group, item) in enumerate(
+            _grouped_component_records(source.get(collection)), start=1
+        ):
             record = _copy_payload(item)
             record["storey"] = storey["id"]
-            record.setdefault("source_key", f"{storey['id']}.{collection}[{index}]")
+            group_path = f".{group}" if group else ""
+            record.setdefault(
+                "source_key", f"{storey['id']}.{collection}{group_path}[{index}]"
+            )
             records.append(record)
     return records
 
@@ -306,6 +316,18 @@ def _component_records_from_storey_map(
             record.setdefault("source_key", f"{source_key}.{collection}[{index}]")
             records.append(record)
     return records
+
+
+def _grouped_component_records(value: Any) -> list[tuple[str | None, Mapping[str, Any]]]:
+    if isinstance(value, list):
+        return [(None, item) for item in _records(value)]
+    if not isinstance(value, Mapping):
+        return []
+    return [
+        (str(group), item)
+        for group, items in value.items()
+        for item in _records(items)
+    ]
 
 
 def _canonical_entity_records(

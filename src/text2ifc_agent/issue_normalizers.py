@@ -251,7 +251,11 @@ def normalize_audit_findings(
                 retryable=route in {"revise_design_brief", "regenerate_json", "repair_json"},
                 detail=finding,
                 target_ids=_existing_target_ids(
-                    finding.get("affected_entities"), candidate_ids
+                    [
+                        *list(finding.get("affected_entities") or []),
+                        *list(finding.get("components") or []),
+                    ],
+                    candidate_ids,
                 ),
             )
         )
@@ -336,6 +340,8 @@ def _gate_issue_type(code: str) -> str:
 
 
 def _audit_mapping(code: str) -> tuple[str, str, str]:
+    if code == "IFC_SCHEMA_ERROR":
+        return "generator", "geometry_invalid", "regenerate_json"
     if "DESIGN" in code or "ORIGINAL_REQUEST" in code:
         return "design_brief", "changed_original_request", "revise_design_brief"
     if "OPENING" in code or "FILLING" in code:
@@ -411,6 +417,7 @@ def _existing_target_ids(value: Any, candidate_ids: set[str] | None) -> list[str
 
 def _structured_target_ids(detail: Mapping[str, Any]) -> list[str]:
     values = list(detail.get("entity_ids") or [])
+    values.extend(detail.get("components") or [])
     opening_id = detail.get("opening_id")
     if isinstance(opening_id, str) and opening_id:
         values.append(opening_id)

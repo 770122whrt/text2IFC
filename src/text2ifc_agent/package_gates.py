@@ -16,7 +16,7 @@ _CROSS_CLASSES = {
     "IfcOpeningElement",
 }
 _CROSS_ONLY_CLASSES = _CROSS_CLASSES - {"IfcOpeningElement"}
-_REPRESENTED_CLASSES = _LOCAL_CLASSES | _CROSS_CLASSES
+_REPRESENTED_CLASSES = _LOCAL_CLASSES | (_CROSS_CLASSES - {"IfcStair"})
 _REFERENCE_FIELDS = {
     "relative_to",
     "RelatingObject",
