@@ -129,6 +129,13 @@ def test_staged_package_prompt_requires_exact_authorized_ids_without_rewriting()
     assert "Do not add, remove, translate, normalize, or duplicate prefixes or suffixes" in text
 
 
+def test_staged_package_prompt_forbids_copying_another_storey_display_name():
+    rendered = render_prompt(template_id="bim-json-changeset.v1", inputs=_inputs())
+
+    assert "Never copy a display-name storey label from a sibling package" in rendered["text"]
+    assert "use the current package storey name or a storey-neutral Name" in rendered["text"]
+
+
 def test_staged_cross_storey_few_shot_teaches_flight_and_slab_opening_graph():
     assert "changeset-staged-cross-storey" in {path.stem for path in FEW_SHOT_PATHS}
     example = json.loads(

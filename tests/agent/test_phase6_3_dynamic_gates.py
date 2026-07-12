@@ -83,6 +83,68 @@ def test_dynamic_gates_fail_missing_requested_second_floor_doors():
     )
 
 
+def test_dynamic_gates_reject_component_name_that_explicitly_names_another_storey():
+    expected = _expected_facts(
+        storeys=["storey-1", "storey-2"], doors=[], windows=[]
+    )
+    expected["storeys"] = [
+        {"id": "storey-1", "name": "首层"},
+        {"id": "storey-2", "name": "二层"},
+    ]
+    candidate = _candidate(
+        storeys=["storey-1", "storey-2"],
+        walls=[("storey-2-wall-east", "storey-2")],
+        doors=[],
+        windows=[],
+        include_opening_relationships=True,
+    )
+    _entity_by_id(candidate, "storey-2-wall-east")["attributes"]["Name"] = "首层东外墙"
+
+    gates = _by_name(evaluate_dynamic_gates(candidate=candidate, expected_facts=expected))
+
+    gate = gates["dynamic_storey_name_consistency"]
+    assert gate["status"] == "failed"
+    assert gate["issues"] == [
+        {
+            "code": "STOREY_NAME_CONFLICT",
+            "path": "/entities/storey-2-wall-east/attributes/Name",
+            "entity_id": "storey-2-wall-east",
+            "target_entity_ids": ["storey-2-wall-east"],
+            "actual_name": "首层东外墙",
+            "expected_storey": "storey-2",
+            "expected_storey_name": "二层",
+            "conflicting_storey": "storey-1",
+            "conflicting_storey_name": "首层",
+        }
+    ]
+
+
+def test_dynamic_gates_allow_neutral_or_correct_storey_component_names():
+    expected = _expected_facts(
+        storeys=["storey-1", "storey-2"], doors=[], windows=[]
+    )
+    expected["storeys"] = [
+        {"id": "storey-1", "name": "首层"},
+        {"id": "storey-2", "name": "二层"},
+    ]
+    candidate = _candidate(
+        storeys=["storey-1", "storey-2"],
+        walls=[
+            ("storey-2-wall-east", "storey-2"),
+            ("storey-2-wall-west", "storey-2"),
+        ],
+        doors=[],
+        windows=[],
+        include_opening_relationships=True,
+    )
+    _entity_by_id(candidate, "storey-2-wall-east")["attributes"]["Name"] = "二层东外墙"
+    _entity_by_id(candidate, "storey-2-wall-west")["attributes"]["Name"] = "西外墙"
+
+    gates = _by_name(evaluate_dynamic_gates(candidate=candidate, expected_facts=expected))
+
+    assert gates["dynamic_storey_name_consistency"]["status"] == "passed"
+
+
 def test_dynamic_gates_fail_windows_without_void_fill_relationships():
     expected = _expected_facts(
         storeys=["storey-1"],
