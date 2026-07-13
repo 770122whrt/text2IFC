@@ -110,6 +110,15 @@ def _check_roof_stairs_and_openings(
 ) -> GeneratedIfcCheckResult:
     issues = list(prior_result.issues)
     metrics = dict(prior_result.metrics)
+    metrics["spaces"] = _check_component_bboxes(
+        products_by_id=products_by_id,
+        expected_components=expectation.get("spaces"),
+        tolerance=tolerance,
+        missing_code="MISSING_SPACE",
+        mismatch_code="SPACE_BBOX_MISMATCH",
+        path_prefix="spaces",
+        issues=issues,
+    )
     metrics["roof"] = _check_component_bboxes(
         products_by_id=products_by_id,
         expected_components=expectation.get("roof"),
@@ -162,7 +171,7 @@ def _check_roof_stairs_and_openings(
             if isinstance(expected_bbox, Mapping):
                 if not _axes_match(actual_bbox, expected_bbox, ("x", "y"), tolerance):
                     stair_issue = _issue(
-                            "STAIR_FOOTPRINT_MISMATCH",
+                            str(expected_stair.get("bbox_issue_code", "STAIR_FOOTPRINT_MISMATCH")),
                             f"/stairs/{stair_id}/bbox",
                             f"Stair {stair_id!r} plan footprint is outside tolerance.",
                             entity_ids=[str(stair_id), *[str(item) for item in flight_ids]],
@@ -308,7 +317,7 @@ def _check_component_bboxes(
         ):
             issues.append(
                 _issue(
-                    mismatch_code,
+                    str(expected_component.get("bbox_issue_code", mismatch_code)),
                     f"/{path_prefix}/{component_id}/bbox",
                     f"Component {component_id!r} world bounding box is outside tolerance.",
                     entity_ids=[str(component_id)],
