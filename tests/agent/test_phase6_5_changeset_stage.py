@@ -228,3 +228,46 @@ def test_changeset_stage_blocks_stale_model_binding_before_application(tmp_path)
     assert "CHANGESET_OUTPUT_BINDING_ERROR" in {
         issue["code"] for issue in result["diagnostics"]
     }
+
+
+def test_changeset_stage_accepts_nonempty_authorized_issue_subset(tmp_path):
+    candidate = _candidate()
+    expected = _expected()
+    payload = _changeset(candidate, expected)
+    provider = RecordingProvider(payload)
+    scope = _scope()
+    scope["source_issue_ids"].append("issue-wall-002")
+
+    result = run_changeset_stage(
+        provider=provider,
+        output_dir=tmp_path,
+        case_id="case-a",
+        call_index=1,
+        user_request="Fix the named wall.",
+        conversation=[{"role": "user", "content": "Fix issue-wall-001 first."}],
+        design_brief={"status": "ready", "known_facts": {"wall_name": "Correct"}},
+        expected_facts=expected,
+        candidate=candidate,
+        base_revision=_revision(candidate, expected),
+        scope=scope,
+        issues=_issues(),
+        trace_level="debug",
+    )
+
+    assert result["valid"] is True
+
+
+def test_changeset_stage_rejects_issue_outside_authorized_scope(tmp_path):
+    candidate = _candidate()
+    expected = _expected()
+    payload = _changeset(candidate, expected)
+    payload["source_issue_ids"] = ["issue-unknown"]
+    payload["operations"][0]["evidence_refs"] = ["issue-unknown:/expected"]
+    provider = RecordingProvider(payload)
+
+    result = _run(tmp_path, provider)
+
+    assert result["valid"] is False
+    assert "CHANGESET_OUTPUT_BINDING_ERROR" in {
+        issue["code"] for issue in result["diagnostics"]
+    }

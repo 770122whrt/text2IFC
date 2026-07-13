@@ -114,6 +114,35 @@ def test_apply_changeset_updates_copy_and_creates_deterministic_revision():
     assert first["preservation"]["unrelated_component_preservation_rate"] == 1.0
 
 
+def test_apply_changeset_accepts_nonempty_authorized_issue_subset():
+    module = _module()
+    candidate = _candidate()
+    expected = _expected_facts()
+    changeset = _changeset(candidate, expected)
+    scope = _scope()
+    scope["source_issue_ids"].append("issue-wall-002")
+
+    result = _apply(module, candidate, changeset, scope, expected)
+
+    assert result["valid"] is True
+
+
+def test_apply_changeset_rejects_issue_outside_authorized_scope():
+    module = _module()
+    candidate = _candidate()
+    expected = _expected_facts()
+    changeset = _changeset(candidate, expected)
+    changeset["source_issue_ids"] = ["issue-unknown"]
+    changeset["operations"][0]["evidence_refs"] = ["issue-unknown:/expected"]
+
+    result = _apply(module, candidate, changeset, _scope(), expected)
+
+    assert result["valid"] is False
+    assert "CHANGESET_SCOPE_BINDING_MISMATCH" in {
+        issue["code"] for issue in result["issues"]
+    }
+
+
 @pytest.mark.parametrize(
     ("mutation", "code"),
     [
