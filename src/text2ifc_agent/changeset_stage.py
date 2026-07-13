@@ -201,12 +201,14 @@ def _binding_diagnostics(
         for field, expected in checks
         if changeset.get(field) != expected
     ]
-    if set(changeset.get("source_issue_ids", [])) != set(scope.get("source_issue_ids", [])):
+    source_issue_ids = set(changeset.get("source_issue_ids", []))
+    authorized_issue_ids = set(scope.get("source_issue_ids", []))
+    if not source_issue_ids or not source_issue_ids.issubset(authorized_issue_ids):
         diagnostics.append(
             _diagnostic(
                 "CHANGESET_OUTPUT_BINDING_ERROR",
                 "/source_issue_ids",
-                "ChangeSet source issues do not match the authorized scope.",
+                "ChangeSet source issues must be a non-empty subset of the authorized scope.",
             )
         )
     return diagnostics

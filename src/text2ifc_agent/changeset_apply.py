@@ -171,12 +171,14 @@ def _preflight_issues(
                 "ChangeSet, scope, and base revision bindings must agree.",
             )
         )
-    if set(changeset["source_issue_ids"]) != set(scope["source_issue_ids"]):
+    source_issue_ids = set(changeset["source_issue_ids"])
+    authorized_issue_ids = set(scope["source_issue_ids"])
+    if not source_issue_ids or not source_issue_ids.issubset(authorized_issue_ids):
         issues.append(
             _issue(
                 "CHANGESET_SCOPE_BINDING_MISMATCH",
                 "/source_issue_ids",
-                "ChangeSet and scope must bind the same source Issues.",
+                "ChangeSet source Issues must be a non-empty subset of the authorized scope.",
             )
         )
     revision_contract = validate_revision_record(
