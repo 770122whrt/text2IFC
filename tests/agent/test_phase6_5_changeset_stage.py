@@ -230,6 +230,33 @@ def test_changeset_stage_blocks_stale_model_binding_before_application(tmp_path)
     }
 
 
+def test_changeset_stage_binds_malformed_system_hash_and_preserves_raw_value(tmp_path):
+    candidate = _candidate()
+    expected = _expected()
+    payload = _changeset(candidate, expected)
+    malformed_hash = payload["expected_facts_hash"][:-1]
+    payload["expected_facts_hash"] = malformed_hash
+    provider = RecordingProvider(payload)
+
+    result = _run(tmp_path, provider)
+
+    assert result["valid"] is True
+    accepted = json.loads((tmp_path / "changeset.json").read_text(encoding="utf-8"))
+    raw_parsed = json.loads(
+        (tmp_path / "provider-parsed-output.json").read_text(encoding="utf-8")
+    )
+    validation = json.loads((tmp_path / "validation.json").read_text(encoding="utf-8"))
+    assert accepted["expected_facts_hash"] == hash_json_value(expected)
+    assert raw_parsed["expected_facts_hash"] == malformed_hash
+    assert validation["normalizations"] == [
+        {
+            "code": "CONTROL_FIELD_BOUND",
+            "path": "/expected_facts_hash",
+            "message": "Malformed system control field was bound to the authorized value.",
+        }
+    ]
+
+
 def test_changeset_stage_accepts_nonempty_authorized_issue_subset(tmp_path):
     candidate = _candidate()
     expected = _expected()
