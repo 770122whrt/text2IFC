@@ -1,0 +1,104 @@
+{
+  "few_shot_id": "changeset.staged-negative-y-stair",
+  "input": {
+    "expected_facts": {
+      "stair": {
+        "id": "stair-negative-y",
+        "flight_ids": ["stair-flight-negative-y"],
+        "bounds": {"x": [4300, 5300], "y": [4300, 7500]},
+        "run_direction": "-Y",
+        "width_direction": "+X",
+        "start_elevation_mm": 3150,
+        "end_elevation_mm": 6500,
+        "number_of_risers": 2,
+        "number_of_treads": 2,
+        "riser_height": 1675,
+        "tread_depth": 1600,
+        "width": 1000
+      }
+    },
+    "change_scope": {
+      "scope_id": "scope-negative-y-stair",
+      "entity_ids": ["stair-negative-y", "stair-flight-negative-y"],
+      "relationship_ids": ["aggregate-negative-y-stair-flight"]
+    }
+  },
+  "output": {
+    "schema_version": "text2ifc/bim-json-changeset/1.0",
+    "changeset_id": "changeset-negative-y-stair",
+    "base_revision_id": "revision-base",
+    "base_candidate_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "expected_facts_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "source_issue_ids": ["issue-negative-y-stair"],
+    "scope_id": "scope-negative-y-stair",
+    "operations": [
+      {
+        "operation_id": "add-negative-y-stair",
+        "op": "add_entity",
+        "target_id": "stair-negative-y",
+        "value": {
+          "id": "stair-negative-y",
+          "ifc_class": "IfcStair",
+          "attributes": {
+            "Name": "Negative Y stair",
+            "ShapeType": "STRAIGHT_RUN_STAIR",
+            "ObjectPlacement": {
+              "relative_to": "storey-lower",
+              "origin": [5300, 7500, 0],
+              "axis": [0, 0, 1],
+              "ref_direction": [-1, 0, 0]
+            }
+          },
+          "property_sets": {},
+          "provenance": {"source": "issue-negative-y-stair"}
+        },
+        "evidence_refs": ["issue-negative-y-stair:/expected"]
+      },
+      {
+        "operation_id": "add-negative-y-stair-flight",
+        "op": "add_entity",
+        "target_id": "stair-flight-negative-y",
+        "value": {
+          "id": "stair-flight-negative-y",
+          "ifc_class": "IfcStairFlight",
+          "attributes": {
+            "Name": "Negative Y stepped flight",
+            "ObjectPlacement": {
+              "relative_to": "stair-negative-y",
+              "origin": [0, 0, 0],
+              "axis": [0, 0, 1],
+              "ref_direction": [1, 0, 0]
+            },
+            "Representation": {
+              "kind": "extruded_profile",
+              "profile": {
+                "kind": "polygon",
+                "points": [[0, 0], [3200, 0], [3200, 3350], [1600, 3350], [1600, 1675], [0, 1675], [0, 0]]
+              },
+              "depth": 1000,
+              "direction": [1, 0, 0]
+            }
+          },
+          "property_sets": {},
+          "provenance": {"source": "issue-negative-y-stair"}
+        },
+        "evidence_refs": ["issue-negative-y-stair:/expected"]
+      },
+      {
+        "operation_id": "aggregate-negative-y-stair-flight",
+        "op": "add_relationship",
+        "target_id": "aggregate-negative-y-stair-flight",
+        "value": {
+          "id": "aggregate-negative-y-stair-flight",
+          "ifc_class": "IfcRelAggregates",
+          "attributes": {
+            "RelatingObject": "stair-negative-y",
+            "RelatedObjects": ["stair-flight-negative-y"]
+          },
+          "provenance": {"source": "issue-negative-y-stair"}
+        },
+        "evidence_refs": ["issue-negative-y-stair:/expected"]
+      }
+    ]
+  }
+}

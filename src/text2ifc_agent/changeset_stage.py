@@ -26,6 +26,7 @@ FEW_SHOT_PATHS = (
     PROJECT_ROOT / "prompts" / "agent" / "few-shot" / "changeset-staged-package-add.json",
     PROJECT_ROOT / "prompts" / "agent" / "few-shot" / "changeset-staged-orthogonal-walls.json",
     PROJECT_ROOT / "prompts" / "agent" / "few-shot" / "changeset-staged-cross-storey.json",
+    PROJECT_ROOT / "prompts" / "agent" / "few-shot" / "changeset-staged-negative-y-stair.json",
 )
 
 
