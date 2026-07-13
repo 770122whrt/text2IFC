@@ -146,6 +146,7 @@ def build_design_geometry_expectation(
                         top,
                     ),
                     "host_slab_id": slab_id,
+                    "bbox_issue_code": "FLOOR_OPENING_BBOX_MISMATCH",
                     "source_fact_refs": [f"{path}/openings/{opening_index}"],
                 }
 
@@ -187,6 +188,7 @@ def build_design_geometry_expectation(
         stairs[stair_id] = {
             "flight_ids": [str(item) for item in flight_ids],
             "bbox": _bbox(bounds[0], bounds[1], bounds[2], bounds[3], start, end),
+            "bbox_issue_code": "STAIR_BBOX_MISMATCH",
             "require_steps": True,
             "source_fact_refs": [path],
         }
@@ -198,6 +200,7 @@ def build_design_geometry_expectation(
             explicit_wall_ids.add(wall_id)
         storey_id = _string(wall.get("storey"))
         bounds = _wall_plan_bounds(wall)
+        bbox_issue_code = "WALL_SEGMENT_MISMATCH"
         storey = expected_storeys.get(storey_id) if storey_id is not None else None
         elevation = _number(storey.get("elevation_mm")) if isinstance(storey, Mapping) else None
         height = _number(wall.get("height_mm"))
@@ -217,6 +220,7 @@ def build_design_geometry_expectation(
                 segment = _shared_wall_segment(source_a, source_b)
                 thickness = _number(wall.get("thickness_mm")) or wall_thickness
                 if segment is not None and thickness is not None and thickness > 0:
+                    bbox_issue_code = "INTERIOR_WALL_SHARED_BOUNDARY_MISMATCH"
                     axis, coordinate, start, end = segment
                     if axis == "x":
                         bounds = (
@@ -254,7 +258,7 @@ def build_design_geometry_expectation(
             "bbox": _bbox(
                 bounds[0], bounds[1], bounds[2], bounds[3], elevation, elevation + height
             ),
-            "bbox_issue_code": "WALL_SEGMENT_MISMATCH",
+            "bbox_issue_code": bbox_issue_code,
             "bbox_issue_path": f"/walls/{wall_id}",
             "source_fact_refs": [path],
         }
@@ -339,7 +343,7 @@ def build_design_geometry_expectation(
             walls[wall_id] = {
                 "axis": axis,
                 "bbox": bbox,
-                "bbox_issue_code": "WALL_SEGMENT_MISMATCH",
+                "bbox_issue_code": "INTERIOR_WALL_SHARED_BOUNDARY_MISMATCH",
                 "bbox_issue_path": f"/walls/{wall_id}",
                 "source_fact_refs": [source_a[1], source_b[1], path],
             }
