@@ -176,12 +176,23 @@ def build_design_geometry_expectation(
         bounds = _plan_bounds(stair.get("bounds")) or _plan_bounds(
             stair.get("plan_bounds")
         )
+        opening_bounds = _plan_bounds(stair.get("opening_bounds"))
         start = _number(stair.get("start_elevation_mm"))
         end = _number(stair.get("end_elevation_mm"))
         path = f"/known_facts/stairs/{stair_index}"
         if stair_id is None or bounds is None or start is None or end is None:
             unresolved.append(_unresolved_geometry(path=path, reason="stair_geometry_missing"))
             continue
+        if opening_bounds is not None and not _plan_bounds_contain(
+            opening_bounds, bounds
+        ):
+            unresolved.append(
+                _unresolved_geometry(
+                    path=f"{path}/opening_bounds",
+                    reason="stair_opening_does_not_contain_stair_bounds",
+                    source_fact_refs=[path],
+                )
+            )
         flight_ids = stair.get("flight_ids")
         if not isinstance(flight_ids, list) or not flight_ids:
             flight_ids = [stair_id.replace("stair-", "stair-flight-", 1)]
@@ -477,6 +488,18 @@ def _wall_plan_bounds(
     if x1 == x2 and y1 != y2:
         return (x1 - half, x1 + half, min(y1, y2), max(y1, y2))
     return None
+
+
+def _plan_bounds_contain(
+    outer: tuple[float, float, float, float],
+    inner: tuple[float, float, float, float],
+) -> bool:
+    return (
+        outer[0] <= inner[0]
+        and outer[1] >= inner[1]
+        and outer[2] <= inner[2]
+        and outer[3] >= inner[3]
+    )
 
 
 def _interior_walls(storey: Mapping[str, Any]) -> list[Mapping[str, Any]]:

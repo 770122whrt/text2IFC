@@ -494,6 +494,44 @@ def test_explicit_wall_inherits_confirmed_building_thickness_and_storey_height()
     }
 
 
+def test_three_storey_wall_bounds_use_each_storeys_confirmed_height():
+    storeys = [
+        {"id": "storey-1", "elevation_mm": 0, "net_height_mm": 3000},
+        {"id": "storey-2", "elevation_mm": 3150, "net_height_mm": 3200},
+        {"id": "storey-3", "elevation_mm": 6500, "net_height_mm": 3000},
+    ]
+    walls = [
+        {
+            "id": f"wall-{index}",
+            "storey": storey["id"],
+            "start_mm": [0, 0],
+            "end_mm": [6000, 0],
+        }
+        for index, storey in enumerate(storeys, start=1)
+    ]
+
+    expectation = build_design_geometry_expectation(
+        case_id="nonuniform-three-storey",
+        design_brief={
+            "known_facts": {
+                "building": {"wall_thickness_mm": 200},
+                "storeys": storeys,
+            }
+        },
+        expected_facts={
+            "storeys": [
+                {"id": item["id"], "elevation_mm": item["elevation_mm"]}
+                for item in storeys
+            ],
+            "walls": walls,
+        },
+    )
+
+    assert expectation["walls"]["wall-1"]["bbox"]["z"] == [0.0, 3.0]
+    assert expectation["walls"]["wall-2"]["bbox"]["z"] == [3.15, 6.35]
+    assert expectation["walls"]["wall-3"]["bbox"]["z"] == [6.5, 9.5]
+
+
 def test_required_geometry_with_unresolved_facts_is_marked_incomplete():
     expectation = build_design_geometry_expectation(
         case_id="incomplete-required-geometry",
