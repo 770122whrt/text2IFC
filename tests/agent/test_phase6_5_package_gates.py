@@ -384,3 +384,41 @@ def test_package_gate_accepts_simple_stepped_flight_profile():
     )
 
     assert result == {"valid": True, "issues": []}
+
+
+def test_package_gate_accepts_collinearity_outside_segment_bounds():
+    manifest = _manifest()
+    manifest["packages"][-1]["owned_component_ids"] = ["slab-notched"]
+    manifest["packages"][-1]["owned_relationship_ids"] = []
+    slab = _entity(
+        "slab-notched",
+        "IfcSlab",
+        Representation={
+            "kind": "extruded_profile",
+            "profile": {
+                "kind": "polygon",
+                "points": [
+                    [0, 0],
+                    [1, 0],
+                    [1, 1],
+                    [2, 1],
+                    [2, 0],
+                    [3, 0],
+                    [3, 2],
+                    [0, 2],
+                    [0, 0],
+                ],
+            },
+            "depth": 150,
+            "direction": [0, 0, 1],
+        },
+    )
+
+    result = validate_package_changeset(
+        manifest=manifest,
+        package_id="package-cross-storey",
+        workspace=_workspace(),
+        changeset=_changeset("package-cross-storey", [slab]),
+    )
+
+    assert result == {"valid": True, "issues": []}
