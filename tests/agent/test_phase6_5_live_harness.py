@@ -168,6 +168,7 @@ def test_hard_case_is_three_storey_with_two_stair_systems_and_no_model_output():
     assert "slab-storey-2 Z=3000..3150" in text
     assert "slab-storey-3 Z=6350..6500" in text
     assert "roof-hard Z=9500..9650" in text
+    assert "所有外墙、内墙和楼梯核心边界墙的厚度均为 200" in text
     assert "stair-hard-1-2" in text
     assert "stair-hard-2-3" in text
     assert "opening-hard-stair-1-2" in text
