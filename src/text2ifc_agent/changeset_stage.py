@@ -2,7 +2,9 @@
 
 from __future__ import annotations
 
+import copy
 import json
+import re
 from pathlib import Path
 from typing import Any, Mapping
 
@@ -81,8 +83,13 @@ def run_changeset_stage(
         trace_level=trace_level,
         preserve_deep_evidence=trace_level == "compact",
     )
-    parse_status, parsed, normalization_diagnostics = result.output.parse_json()
-    diagnostics = list(normalization_diagnostics)
+    parse_status, parsed, parse_diagnostics = result.output.parse_json()
+    provider_parsed = copy.deepcopy(parsed)
+    control_normalizations: list[dict[str, str]] = []
+    if isinstance(parsed, Mapping) and parsed.get("schema_version") == "text2ifc/bim-json-changeset/1.0":
+        parsed, control_normalizations = _bind_malformed_hashes(parsed, base_revision)
+    normalization_diagnostics = [*parse_diagnostics, *control_normalizations]
+    diagnostics = list(parse_diagnostics)
     classification = "invalid"
     artifact_name: str | None = None
 
@@ -112,6 +119,8 @@ def run_changeset_stage(
             )
         )
 
+    if provider_parsed is not None and provider_parsed != parsed:
+        _write_json(output / "provider-parsed-output.json", provider_parsed)
     if parsed is not None:
         _write_json(output / "parsed-output.json", parsed)
     if artifact_name is not None:
@@ -119,7 +128,12 @@ def run_changeset_stage(
     valid = artifact_name is not None
     _write_json(
         output / "validation.json",
-        {"valid": valid, "issue_count": len(diagnostics), "issues": diagnostics},
+        {
+            "valid": valid,
+            "issue_count": len(diagnostics),
+            "issues": diagnostics,
+            "normalizations": control_normalizations,
+        },
     )
     metrics = {
         "case_id": case_id,
@@ -148,6 +162,11 @@ def run_changeset_stage(
             "artifacts": {
                 "renderer_inputs": "prompt-render-input.json",
                 "rendered_prompt": "prompt-rendered.md",
+                "provider_parsed_output": (
+                    "provider-parsed-output.json"
+                    if provider_parsed is not None and provider_parsed != parsed
+                    else None
+                ),
                 "parsed_output": "parsed-output.json" if parsed is not None else None,
                 "accepted_document": artifact_name,
                 "validation": "validation.json",
@@ -212,6 +231,31 @@ def _binding_diagnostics(
             )
         )
     return diagnostics
+
+
+def _bind_malformed_hashes(
+    changeset: Mapping[str, Any], base_revision: Mapping[str, Any]
+) -> tuple[dict[str, Any], list[dict[str, str]]]:
+    bound = copy.deepcopy(dict(changeset))
+    diagnostics: list[dict[str, str]] = []
+    for field in ("base_candidate_hash", "expected_facts_hash"):
+        value = bound.get(field)
+        if isinstance(value, str) and re.fullmatch(r"sha256:[0-9a-f]{64}", value):
+            continue
+        expected = base_revision.get(
+            "candidate_hash" if field == "base_candidate_hash" else "expected_facts_hash"
+        )
+        if not isinstance(expected, str):
+            continue
+        bound[field] = expected
+        diagnostics.append(
+            _diagnostic(
+                "CONTROL_FIELD_BOUND",
+                f"/{field}",
+                "Malformed system control field was bound to the authorized value.",
+            )
+        )
+    return bound, diagnostics
 
 
 def _issue_payload(issue: Any) -> dict[str, str]:
