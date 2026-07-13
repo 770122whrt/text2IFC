@@ -79,6 +79,63 @@ def test_generated_ifc_gate_fails_closed_for_incomplete_required_expectation(
     assert issue["source_fact_refs"] == ["/known_facts/storeys/0/spaces/0"]
 
 
+def test_generated_ifc_gate_reports_space_world_bbox_mismatch(tmp_path: Path):
+    output = tmp_path / "bad-space.ifc"
+    document = _slab_gap_document()
+    document["entities"].append(
+        _entity(
+            "space-a",
+            "IfcSpace",
+            {
+                "Name": "Space A",
+                "InteriorOrExteriorSpace": "INTERNAL",
+                "ObjectPlacement": _placement("storey-1"),
+                "Representation": _rectangle(1000, 1000, 3000),
+            },
+        )
+    )
+    result = compile_document(document, output)
+    expectation = _slab_gap_expectation()
+    expectation["spaces"] = {
+        "space-a": {
+            "bbox": {"x": [0.0, 1.0], "y": [0.0, 1.0], "z": [0.0, 3.0]},
+            "source_fact_refs": ["/known_facts/storeys/0/spaces/0"],
+        }
+    }
+
+    assert result.success
+    gate = check_generated_ifc(output, expectation)
+
+    issue = next(item for item in gate.issues if item["code"] == "SPACE_BBOX_MISMATCH")
+    assert issue["entity_ids"] == ["space-a"]
+    assert issue["expected"]["x"] == [0.0, 1.0]
+    assert issue["actual"]["x"] == [-0.5, 0.5]
+
+
+def test_generated_ifc_gate_uses_shared_boundary_issue_code(tmp_path: Path):
+    output = tmp_path / "bad-shared-wall.ifc"
+    result = compile_document(_slab_gap_document(), output)
+    expectation = _slab_gap_expectation()
+    expectation["walls"]["wall-1"].update(
+        {
+            "bbox": {"x": [0.0, 6.0], "y": [-0.1, 0.1], "z": [0.0, 3.0]},
+            "bbox_issue_code": "INTERIOR_WALL_SHARED_BOUNDARY_MISMATCH",
+        }
+    )
+
+    assert result.success
+    gate = check_generated_ifc(output, expectation)
+
+    issue = next(
+        item
+        for item in gate.issues
+        if item["code"] == "INTERIOR_WALL_SHARED_BOUNDARY_MISMATCH"
+    )
+    assert issue["entity_ids"] == ["wall-1"]
+    assert issue["expected"]["x"] == [0.0, 6.0]
+    assert issue["actual"]["x"] == [-3.0, 3.0]
+
+
 def test_generated_ifc_gate_rejects_wrong_roof_stair_and_opening_bounds(tmp_path: Path):
     output = tmp_path / "bad-stair-system.ifc"
     document = _slab_gap_document()
@@ -147,12 +204,14 @@ def test_generated_ifc_gate_rejects_wrong_roof_stair_and_opening_bounds(tmp_path
                 "stair-1": {
                     "flight_ids": ["stair-flight-1"],
                     "bbox": {"x": [0.5, 1.5], "y": [4.05, 7.95], "z": [0.15, 3.15]},
+                    "bbox_issue_code": "STAIR_BBOX_MISMATCH",
                     "require_steps": True,
                 }
             },
             "floor_openings": {
                 "stair-opening-1": {
-                    "bbox": {"x": [0.0, 2.0], "y": [4.0, 8.0], "z": [3.0, 3.15]}
+                    "bbox": {"x": [0.0, 2.0], "y": [4.0, 8.0], "z": [3.0, 3.15]},
+                    "bbox_issue_code": "FLOOR_OPENING_BBOX_MISMATCH",
                 }
             },
         }
@@ -163,10 +222,10 @@ def test_generated_ifc_gate_rejects_wrong_roof_stair_and_opening_bounds(tmp_path
 
     codes = {item["code"] for item in gate.issues}
     assert "ROOF_BBOX_MISMATCH" in codes
-    assert "STAIR_FOOTPRINT_MISMATCH" in codes
+    assert "STAIR_BBOX_MISMATCH" in codes
     assert "STAIR_RISE_DIRECTION_MISMATCH" in codes
     assert "STAIR_STEP_PROFILE_MISSING" in codes
-    assert "STAIR_OPENING_BBOX_MISMATCH" in codes
+    assert "FLOOR_OPENING_BBOX_MISMATCH" in codes
     stair_rise = next(
         item for item in gate.issues if item["code"] == "STAIR_RISE_DIRECTION_MISMATCH"
     )
