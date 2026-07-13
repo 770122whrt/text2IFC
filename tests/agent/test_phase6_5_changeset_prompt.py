@@ -210,3 +210,62 @@ def test_orthogonal_wall_few_shot_uses_two_independent_straight_walls():
         wall["attributes"]["Representation"]["profile"]["kind"] == "rectangle"
         for wall in walls
     )
+
+
+def test_prompt_defines_one_canonical_geometry_authoring_contract():
+    text = render_prompt(template_id="bim-json-changeset.v1", inputs=_inputs())[
+        "text"
+    ]
+
+    assert "Rectangle profiles are centered on ObjectPlacement.origin" in text
+    assert "origin_x = (x_min + x_max) / 2" in text
+    assert "origin_y = (y_min + y_max) / 2" in text
+    assert "derive an interior wall only from the unique shared boundary" in text
+    assert "Do not guess a wall axis or coordinate" in text
+    assert "encode stair plan orientation exactly once" in text
+    assert "Do not rotate both the parent stair and the child flight" in text
+    assert "Do not silently repair or translate geometry" in text
+
+
+def test_storey_package_few_shot_places_rectangle_at_bounds_center():
+    example = json.loads(
+        open(
+            "prompts/agent/few-shot/changeset-staged-package-add.json",
+            encoding="utf-8",
+        ).read()
+    )
+    expected_space = example["input"]["expected_facts"]["space"]
+    space = next(
+        operation["value"]
+        for operation in example["output"]["operations"]
+        if operation.get("value", {}).get("ifc_class") == "IfcSpace"
+    )
+
+    assert expected_space["bounds"] == {"x": [0, 6000], "y": [0, 6000]}
+    assert space["attributes"]["ObjectPlacement"]["origin"] == [3000, 3000, 0]
+
+
+def test_cross_storey_few_shot_uses_canonical_bounds_and_single_orientation():
+    example = json.loads(
+        open(
+            "prompts/agent/few-shot/changeset-staged-cross-storey.json",
+            encoding="utf-8",
+        ).read()
+    )
+    facts = example["input"]["expected_facts"]
+    stair = next(
+        operation["value"]
+        for operation in example["output"]["operations"]
+        if operation.get("value", {}).get("ifc_class") == "IfcStair"
+    )
+    flight = next(
+        operation["value"]
+        for operation in example["output"]["operations"]
+        if operation.get("value", {}).get("ifc_class") == "IfcStairFlight"
+    )
+
+    assert facts["stair"]["bounds"] == {"x": [6500, 7500], "y": [1500, 5100]}
+    assert facts["opening"]["bounds"] == {"x": [6000, 8000], "y": [1000, 6000]}
+    assert stair["attributes"]["ObjectPlacement"]["ref_direction"] == [1, 0, 0]
+    assert flight["attributes"]["ObjectPlacement"]["ref_direction"] == [1, 0, 0]
+    assert flight["attributes"]["Representation"]["direction"] == [1, 0, 0]
