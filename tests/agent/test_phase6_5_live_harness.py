@@ -120,5 +120,8 @@ def test_medium_case_is_a_two_storey_l_shape_without_prewritten_model_output():
     assert "storey-1-wall-notch-horizontal" in text
     assert "storey-2-wall-notch-vertical" in text
     assert "opening-medium-stair" in text
+    assert "20 级" in text
+    assert "踢面高 150" in text
+    assert "踏面进深 170" in text
     assert "design_brief" not in payload
     assert "model_output" not in payload
