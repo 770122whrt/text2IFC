@@ -60,12 +60,45 @@ def check_generated_ifc(
         expectation=expectation,
         wall_result=selected_result,
     )
-    return _check_roof_stairs_and_openings(
+    result = _check_roof_stairs_and_openings(
         products_by_id=products_by_id,
         tolerance=tolerance,
         expectation=expectation,
         prior_result=slab_result,
     )
+    if expectation.get("complete") is not False:
+        return result
+
+    issues = list(result.issues)
+    unresolved = expectation.get("unresolved")
+    unresolved_records = (
+        [item for item in unresolved if isinstance(item, Mapping)]
+        if isinstance(unresolved, list)
+        else []
+    )
+    if not unresolved_records:
+        unresolved_records = [
+            {
+                "path": "/geometry-expectation",
+                "reason": "required_geometry_expectation_incomplete",
+                "source_fact_refs": [],
+            }
+        ]
+    for record in unresolved_records:
+        reason = str(record.get("reason", "required_geometry_expectation_incomplete"))
+        issues.append(
+            _issue(
+                "GEOMETRY_EXPECTATION_INCOMPLETE",
+                str(record.get("path", "/geometry-expectation")),
+                "Required geometry could not be derived from confirmed facts.",
+                actual={"reason": reason},
+                source_fact_refs=record.get("source_fact_refs"),
+            )
+        )
+    metrics = dict(result.metrics)
+    metrics["expectation_complete"] = False
+    metrics["unresolved_expectation_count"] = len(unresolved_records)
+    return GeneratedIfcCheckResult(success=False, issues=issues, metrics=metrics)
 
 
 def _check_roof_stairs_and_openings(
