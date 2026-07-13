@@ -247,6 +247,12 @@ def test_dynamic_gates_fail_openings_outside_host_wall_local_bounds():
     assert issue["opening_id"] == "opening-window-north"
     assert issue["host_wall"] == "wall-north"
     assert issue["opening_origin"] == [8500, 0, 900]
+    assert issue["recommended_action"] == "align_opening_frame_to_host"
+    assert issue["coordinate_contract"] == {
+        "local_x": "opening width along the host wall",
+        "local_y": "opening thickness through the host wall",
+        "local_z": "opening height",
+    }
 
 
 def test_dynamic_gates_fail_filling_that_repeats_parent_wall_rotation():
@@ -367,6 +373,18 @@ def test_dynamic_gates_fail_filling_bounds_outside_opening():
     assert "FILLING_OPENING_BOUNDS_MISMATCH" in gates["dynamic_opening_fill"][
         "issue_codes"
     ]
+    issue = next(
+        item
+        for item in gates["dynamic_opening_fill"]["issues"]
+        if item["code"] == "FILLING_OPENING_BOUNDS_MISMATCH"
+    )
+    assert issue["recommended_action"] == "align_filling_to_opening_frame"
+    assert issue["correction_constraints"] == {
+        "placement": "Use identity ref_direction [1,0,0] relative to the opening.",
+        "profile": "Use profile.x=semantic width and profile.y=assembly thickness.",
+        "extrusion": "Use depth=semantic height and direction=[0,0,1].",
+        "forbidden": "Do not swap width, thickness, and height to chase one bounds check.",
+    }
 
 
 def test_dynamic_gates_enforce_expected_host_centerline_alignment():
