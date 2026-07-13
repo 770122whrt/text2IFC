@@ -490,6 +490,7 @@ def _opening_fill_geometry_issues(
                 "host_profile": host_profile,
                 "opening_bounds": opening_host_bounds,
                 "host_bounds": host_bounds,
+                **_opening_frame_correction(),
                 **(
                     {"allowed_origin_ranges": allowed_origin_ranges}
                     if allowed_origin_ranges is not None
@@ -519,6 +520,7 @@ def _opening_fill_geometry_issues(
                     "outside_along_length": outside_along_length,
                     "outside_thickness": False,
                     "target_entity_ids": [opening_id],
+                    **_opening_frame_correction(),
                 }
             )
     element_placement = _placement(element)
@@ -583,9 +585,48 @@ def _opening_fill_geometry_issues(
                     "opening_profile": opening_profile,
                     "element_bounds": element_opening_bounds,
                     "opening_bounds": opening_local_bounds,
+                    "recommended_action": "align_filling_to_opening_frame",
+                    "correction_constraints": {
+                        "placement": (
+                            "Use identity ref_direction [1,0,0] relative to the opening."
+                        ),
+                        "profile": (
+                            "Use profile.x=semantic width and profile.y=assembly thickness."
+                        ),
+                        "extrusion": (
+                            "Use depth=semantic height and direction=[0,0,1]."
+                        ),
+                        "forbidden": (
+                            "Do not swap width, thickness, and height to chase one bounds check."
+                        ),
+                    },
                 }
             )
     return issues
+
+
+def _opening_frame_correction() -> dict[str, Any]:
+    return {
+        "recommended_action": "align_opening_frame_to_host",
+        "coordinate_contract": {
+            "local_x": "opening width along the host wall",
+            "local_y": "opening thickness through the host wall",
+            "local_z": "opening height",
+        },
+        "correction_constraints": {
+            "placement": (
+                "Place and orient the opening in the host wall local frame before "
+                "adjusting its filling."
+            ),
+            "profile": (
+                "Use profile.x=semantic width and profile.y=host-wall thickness."
+            ),
+            "extrusion": "Use depth=semantic height and direction=[0,0,1].",
+            "forbidden": (
+                "Do not swap width, thickness, and height to chase one bounds check."
+            ),
+        },
+    }
 
 
 class _CandidateGraph:
