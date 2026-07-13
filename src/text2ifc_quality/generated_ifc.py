@@ -128,8 +128,7 @@ def _check_roof_stairs_and_openings(
             expected_bbox = expected_stair.get("bbox")
             if isinstance(expected_bbox, Mapping):
                 if not _axes_match(actual_bbox, expected_bbox, ("x", "y"), tolerance):
-                    issues.append(
-                        _issue(
+                    stair_issue = _issue(
                             "STAIR_FOOTPRINT_MISMATCH",
                             f"/stairs/{stair_id}/bbox",
                             f"Stair {stair_id!r} plan footprint is outside tolerance.",
@@ -138,7 +137,14 @@ def _check_roof_stairs_and_openings(
                             actual={axis: actual_bbox[axis] for axis in ("x", "y")},
                             source_fact_refs=expected_stair.get("source_fact_refs"),
                         )
+                    stair_issue.update(
+                        _stair_footprint_diagnostics(
+                            actual_bbox=actual_bbox,
+                            expected_bbox=expected_bbox,
+                            tolerance=tolerance,
+                        )
                     )
+                    issues.append(stair_issue)
                 if not _axes_match(actual_bbox, expected_bbox, ("z",), tolerance):
                     endpoint_diagnostics = _stair_endpoint_diagnostics(
                         actual_z=actual_bbox["z"],
@@ -201,6 +207,36 @@ def _stair_endpoint_diagnostics(
             ),
         }
     return diagnostics
+
+
+def _stair_footprint_diagnostics(
+    *,
+    actual_bbox: Mapping[str, list[float]],
+    expected_bbox: Mapping[str, list[float]],
+    tolerance: float,
+) -> dict[str, Any]:
+    actual_x_span = float(actual_bbox["x"][1]) - float(actual_bbox["x"][0])
+    actual_y_span = float(actual_bbox["y"][1]) - float(actual_bbox["y"][0])
+    expected_x_span = float(expected_bbox["x"][1]) - float(expected_bbox["x"][0])
+    expected_y_span = float(expected_bbox["y"][1]) - float(expected_bbox["y"][0])
+    axes_swapped = (
+        abs(actual_x_span - expected_y_span) <= tolerance
+        and abs(actual_y_span - expected_x_span) <= tolerance
+    )
+    if not axes_swapped:
+        return {"plan_axes_swapped": False}
+    return {
+        "plan_axes_swapped": True,
+        "recommended_action": "rotate_parent_stair_placement",
+        "correction_constraints": {
+            "change": "Adjust IfcStair ObjectPlacement.ref_direction in plan.",
+            "preserve": (
+                "Preserve the stepped flight profile and its horizontal width "
+                "extrusion direction."
+            ),
+            "verify": "Recompile and compare the world-space X/Y footprint.",
+        },
+    }
 
 
 def _check_component_bboxes(
