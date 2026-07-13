@@ -46,6 +46,39 @@ def test_generated_ifc_gate_keeps_slab_gap_when_wall_also_fails(tmp_path: Path):
     assert wall_issue["source_fact_refs"] == ["/known_facts/storeys/0/walls/interior/0"]
 
 
+def test_generated_ifc_gate_fails_closed_for_incomplete_required_expectation(
+    tmp_path: Path,
+):
+    output = tmp_path / "incomplete-expectation.ifc"
+    result = compile_document(_slab_gap_document(), output)
+    expectation = _slab_gap_expectation()
+    expectation.update(
+        {
+            "complete": False,
+            "unresolved": [
+                {
+                    "path": "/known_facts/storeys/0/spaces/0",
+                    "reason": "space_geometry_missing",
+                    "source_fact_refs": ["/known_facts/storeys/0/spaces/0"],
+                }
+            ],
+        }
+    )
+
+    assert result.success
+    gate = check_generated_ifc(output, expectation)
+
+    assert gate.success is False
+    issue = next(
+        item
+        for item in gate.issues
+        if item["code"] == "GEOMETRY_EXPECTATION_INCOMPLETE"
+    )
+    assert issue["path"] == "/known_facts/storeys/0/spaces/0"
+    assert issue["actual"] == {"reason": "space_geometry_missing"}
+    assert issue["source_fact_refs"] == ["/known_facts/storeys/0/spaces/0"]
+
+
 def test_generated_ifc_gate_rejects_wrong_roof_stair_and_opening_bounds(tmp_path: Path):
     output = tmp_path / "bad-stair-system.ifc"
     document = _slab_gap_document()
