@@ -174,7 +174,7 @@ def normalize_gate_sidecars(case_dir: Path | str) -> list[Issue]:
                     issue_id=f"issue_geometry_gate_{index:04d}",
                     source="geometry_gate",
                     severity="blocking",
-                    owner="gate",
+                    owner="generator",
                     issue_type="geometry_invalid",
                     route="regenerate_json",
                     retryable=True,
