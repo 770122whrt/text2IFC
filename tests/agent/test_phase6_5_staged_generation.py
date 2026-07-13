@@ -331,6 +331,48 @@ def test_staged_generation_retries_only_the_failed_package_within_three_attempts
     assert (tmp_path / "package-01-package-storey-1" / "attempt-02" / "changeset.json").is_file()
 
 
+def test_staged_generation_retries_package_when_merged_workspace_breaks_schema(tmp_path):
+    skeleton, manifest, expected, package_values = _fixture(2)
+    valid_payloads = _changesets(skeleton, manifest, expected, package_values)
+    invalid_first = copy.deepcopy(valid_payloads[0])
+    invalid_wall = next(
+        operation["value"]
+        for operation in invalid_first["operations"]
+        if operation["value"]["ifc_class"] == "IfcWall"
+    )
+    invalid_wall["attributes"]["connected_spaces"] = ["space-1"]
+    provider = SequenceProvider([invalid_first, *valid_payloads])
+
+    result = run_staged_generation(
+        provider=provider,
+        output_dir=tmp_path,
+        case_id="case-package-schema-retry",
+        user_request="Create a two-storey building.",
+        conversation=[{"role": "user", "content": "Create a two-storey building."}],
+        design_brief={"status": "ready"},
+        expected_facts=expected,
+        skeleton=skeleton,
+        manifest=manifest,
+    )
+
+    assert result["valid"] is True
+    assert len(provider.calls) == len(valid_payloads) + 1
+    assert result["package_records"][0]["attempt_count"] == 2
+    retry_inputs = json.loads(
+        (
+            tmp_path
+            / "package-01-package-storey-1"
+            / "attempt-02"
+            / "prompt-render-input.json"
+        ).read_text(encoding="utf-8")
+    )
+    assert any(
+        issue["actual_ref"].endswith("/attributes/connected_spaces")
+        and "INVALID_IFC_ATTRIBUTE" in issue["evidence"]
+        for issue in retry_inputs["ISSUES"]
+    )
+
+
 def test_staged_scope_exposes_manifest_relationship_ownership_to_provider(tmp_path):
     skeleton, manifest, expected, package_values = _fixture(2)
     first = manifest["packages"][1]

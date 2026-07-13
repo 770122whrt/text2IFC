@@ -302,6 +302,13 @@ def test_bim_json_generator_v2_requires_addressable_draft_paths():
     assert "Do not output pseudo paths such as `/entities/ifc_class/door/placement`" in text
 
 
+def test_changeset_prompt_keeps_semantic_adjacency_out_of_ifc_attributes():
+    text = Path("prompts/agent/bim-json-changeset-v1.md").read_text(encoding="utf-8")
+
+    assert "connected_spaces" in text
+    assert "must not be emitted as an IFC entity attribute" in text
+
+
 def test_design_brief_v21_preserves_explicit_layout_facts_and_blocks_conflicts():
     text = DESIGN_BRIEF_V21.read_text(encoding="utf-8")
 
