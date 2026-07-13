@@ -159,6 +159,15 @@ def test_hard_case_is_three_storey_with_two_stair_systems_and_no_model_output():
     assert payload["expected_minimums"]["IfcWindow"] >= 9
     assert payload["expected_minimums"]["IfcStair"] == 2
     assert payload["expected_minimums"]["IfcStairFlight"] == 2
+    assert "storey-1 基准标高 0" in text
+    assert "storey-2 基准标高 3150" in text
+    assert "storey-3 基准标高 6500" in text
+    assert "首层墙体 Z=0..3000" in text
+    assert "二层墙体 Z=3150..6350" in text
+    assert "三层墙体 Z=6500..9500" in text
+    assert "slab-storey-2 Z=3000..3150" in text
+    assert "slab-storey-3 Z=6350..6500" in text
+    assert "roof-hard Z=9500..9650" in text
     assert "stair-hard-1-2" in text
     assert "stair-hard-2-3" in text
     assert "opening-hard-stair-1-2" in text
