@@ -43,6 +43,7 @@ def test_complex_nested_design_brief_scaffold_compiles_and_passes_dynamic_gates(
         "dynamic_entity_completeness": "passed",
         "dynamic_storey_containment": "passed",
         "dynamic_opening_fill": "passed",
+        "dynamic_storey_name_consistency": "skipped",
     }
 
     output_ifc = tmp_path / "two-storey-scaffold.ifc"
