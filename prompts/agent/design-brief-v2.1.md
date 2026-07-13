@@ -71,6 +71,10 @@ Canonical multi-storey Design Brief structure
 10. Do not collapse explicit slab instances into thickness-only building metadata. `building.floor_slab_thickness_mm` and `building.roof_slab_thickness_mm` may summarize repeated thickness, but they do not replace `floor_slabs` or `roof_slab` records.
 11. When the user gives a rectangular global building outline, prefer `building.outline` with numeric `x_min`, `x_max`, `y_min`, and `y_max`. Preserve legacy text bounds only when the source itself is not safely separable into those four confirmed coordinates.
 12. When the user gives axis-aligned wall centerline segments, preserve each segment as its own wall record with stable `id`, owning `storey`, numeric `start_mm: [x, y]`, numeric `end_mm: [x, y]`, `thickness_mm`, and `height_mm`. A 90-degree L turn is two independent straight wall records sharing one endpoint, not a single bent or polyline wall. Do not merge adjacent segments or change their order or coordinates.
+13. For every confirmed axis-aligned plan rectangle, use exactly `bounds: {"x": [x_min, x_max], "y": [y_min, y_max]}` with millimetre values. Use this shape for spaces, stairs, and slab openings when their bounds were supplied.
+14. Use the literal key `polygon` for slab, roof, and building outline point lists. Each point is `[x, y]` in millimetres and a closed polygon repeats its first point as its last point.
+15. Use the literal key `connects` for the two space ids of an interior wall. The ids must exactly match space ids in the same storey.
+16. Do not emit `bounds_mm`, `polygon_mm`, `connecting_spaces`, or string bounds such as `x=0..4000`. These are non-canonical geometry dialects and make deterministic verification impossible.
 
 Layout fact preservation and conflict handling
 

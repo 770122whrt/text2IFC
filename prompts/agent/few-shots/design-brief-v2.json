@@ -381,7 +381,12 @@
         "CONTROL_LAYOUT_V2",
         "精确坐标",
         "共享墙段",
-        "stair-opening"
+        "stair-opening",
+        "L形",
+        "L-shaped",
+        "bounds",
+        "polygon",
+        "楼梯洞口"
       ],
       "input": {
         "user_request": "CONTROL_LAYOUT_V2。首层客厅 x=0..4000、y=0..4000，首层走廊 x=4000..6000、y=0..8000；客厅到走廊的门在 x=4000、y=2000。二层楼梯洞口为 x=0..2000、y=4000..8000，不能作为 IfcSpace。",
@@ -405,10 +410,10 @@
               "id": "storey-1",
               "elevation_mm": 0,
               "spaces": [
-                {"id": "space-living", "bounding_box": "x=0..4000, y=0..4000"},
-                {"id": "space-corridor", "bounding_box": "x=4000..6000, y=0..8000"}
+                {"id": "space-living", "bounds": {"x": [0, 4000], "y": [0, 4000]}},
+                {"id": "space-corridor", "bounds": {"x": [4000, 6000], "y": [0, 8000]}}
               ],
-              "walls": {"interior": [{"id": "storey-1-wall-living-corridor", "from": "space-living", "to": "space-corridor"}]},
+              "walls": {"interior": [{"id": "storey-1-wall-living-corridor", "connects": ["space-living", "space-corridor"]}]},
               "doors": [
                 {"id": "door-living-corridor", "host_wall": "storey-1-wall-living-corridor", "center_global_mm": [4000, 2000]}
               ],
@@ -424,7 +429,7 @@
             }
           ],
           "stairs": [
-            {"id": "stair-1", "from_storey": "storey-1", "to_storey": "storey-2", "opening_bounds": "x=0..2000, y=4000..8000"}
+            {"id": "stair-1", "from_storey": "storey-1", "to_storey": "storey-2", "opening_bounds": {"x": [0, 2000], "y": [4000, 8000]}}
           ]
         },
         "fact_sources": [
