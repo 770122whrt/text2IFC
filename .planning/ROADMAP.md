@@ -1017,6 +1017,14 @@ is reserved for a later phase that may reuse the ChangeSet revision interface.
 
 - [ ] `06.5-06-PLAN.md` - Real DeepSeek two/three-storey stability campaign
 
+**Supplemental Medium geometry closure**
+
+- [x] `06.5-07.1-PLAN.md` - Canonical Medium geometry contract, component
+  evidence, bounded ChangeSet loop, and one accepted real DeepSeek Medium IFC
+- [x] `06.5-07.1-SUMMARY.md` - Session `a95a0f967982690a` passed schema,
+  global Gates, compile/reopen, geometry, final Audit, and secret scan after two
+  evidence-driven ChangeSet rounds
+
 **Cross-cutting constraints:**
 
 - Formal BIM JSON 2.0 JSON Schema remains the single model truth.
@@ -1031,4 +1039,6 @@ is reserved for a later phase that may reuse the ChangeSet revision interface.
   satisfied by fake/file/replay providers or prewritten model responses.
 - All work remains in the C-drive `multiagent-design` worktree.
 
-**Status:** Waves 0-3 complete on 2026-07-12; Wave 4 is next.
+**Status:** Waves 0-5 and the 6.5-07.1 Medium geometry supplement are complete.
+Wave 6 remains open for the Hard three-storey fixture, real DeepSeek acceptance,
+and final Easy/Medium/Hard matrix closure.

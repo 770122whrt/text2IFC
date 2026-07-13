@@ -773,9 +773,10 @@ correct Gates or using prewritten model answers.
   responses.
 
 ---
-*Last activity: 2026-07-12 - completed Phase 6.5 Wave 5 deterministic closure.
-The eight-row matrix has three accepted cases, including real deterministic
-two- and three-storey IFC files, zero false accepts, and zero secret findings.
-Agent regression reports 467 passed; compiler/contract/IFC-quality reports 109
-passed; compileall and redacted DeepSeek configuration checks pass. Wave 6 real
-provider stability evidence is now unblocked but not yet claimed.*
+*Last activity: 2026-07-13 - completed the Phase 6.5-07.1 Medium geometry
+supplement. Real DeepSeek session `a95a0f967982690a` produced an accepted,
+reopenable two-storey L-shaped IFC after a stair ChangeSet and an opening-frame
+ChangeSet. All global Gates and final Audit passed, preservation rate was 1.0,
+and the 252-file artifact scan found zero secrets. Focused regression reports
+187 passed with one known pre-existing Hard-fixture RED failure. Wave 6 remains
+open for the Hard three-storey fixture and final live matrix.*
