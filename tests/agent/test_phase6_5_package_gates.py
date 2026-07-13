@@ -6,7 +6,7 @@ from text2ifc_agent.package_gates import validate_package_changeset
 def _entity(entity_id, ifc_class, **attributes):
     if ifc_class in {
         "IfcWall", "IfcSpace", "IfcOpeningElement", "IfcDoor", "IfcWindow",
-        "IfcSlab", "IfcStair", "IfcStairFlight",
+        "IfcSlab", "IfcStair", "IfcStairFlight", "IfcRoof",
     } and "Representation" not in attributes:
         attributes["Representation"] = {
             "kind": "extruded_profile",
@@ -203,7 +203,7 @@ def test_package_gate_rejects_window_hosted_by_another_storeys_wall():
 def test_cross_storey_package_accepts_only_declared_vertical_components():
     values = [
         _entity("slab-2", "IfcSlab"),
-        _entity("roof", "IfcSlab", PredefinedType="ROOF"),
+        _entity("roof", "IfcRoof", ShapeType="FLAT_ROOF"),
         _entity("stair-1-2", "IfcStair"),
     ]
 
