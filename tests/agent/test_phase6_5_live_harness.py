@@ -173,6 +173,8 @@ def test_hard_case_is_three_storey_with_two_stair_systems_and_no_model_output():
     assert "stair-hard-2-3" in text
     assert "opening-hard-stair-1-2" in text
     assert "opening-hard-stair-2-3" in text
+    assert "21 个等高踢面、20 个踏面" in text
+    assert "20 个等高踢面、20 个踏面" in text
     assert "storey-3-wall-notch-horizontal" in text
     assert "wall-3-office-north-shaft" in text
     assert "design_brief" not in payload

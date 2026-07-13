@@ -172,6 +172,7 @@ def test_staged_cross_storey_few_shot_teaches_flight_and_slab_opening_graph():
     )
     points = flight["attributes"]["Representation"]["profile"]["points"]
     assert expected_stair["number_of_risers"] == 3
+    assert expected_stair["number_of_treads"] == 3
     assert expected_stair["riser_height"] == 1000
     assert expected_stair["tread_depth"] == 1200
     assert points[:3] == [[0, 0], [3600, 0], [3600, 3000]]
@@ -184,7 +185,27 @@ def test_staged_package_prompt_defines_local_simple_stair_profile_convention():
 
     assert "local [run, rise] coordinates" in text
     assert "must not overlap its closing edges" in text
-    assert "number_of_risers * tread_depth" in text
+    assert "number_of_treads * tread_depth" in text
+
+
+def test_negative_y_stair_few_shot_uses_one_parent_rotation():
+    assert "changeset-staged-negative-y-stair" in {path.stem for path in FEW_SHOT_PATHS}
+    example = json.loads(
+        open(
+            "prompts/agent/few-shot/changeset-staged-negative-y-stair.json",
+            encoding="utf-8",
+        ).read()
+    )
+    operations = {operation["target_id"]: operation for operation in example["output"]["operations"]}
+    stair = operations["stair-negative-y"]["value"]
+    flight = operations["stair-flight-negative-y"]["value"]
+
+    assert example["input"]["expected_facts"]["stair"]["run_direction"] == "-Y"
+    assert stair["attributes"]["ObjectPlacement"]["origin"][:2] == [5300, 7500]
+    assert stair["attributes"]["ObjectPlacement"]["ref_direction"] == [-1, 0, 0]
+    assert flight["attributes"]["ObjectPlacement"]["origin"] == [0, 0, 0]
+    assert flight["attributes"]["ObjectPlacement"]["ref_direction"] == [1, 0, 0]
+    assert flight["attributes"]["Representation"]["direction"] == [1, 0, 0]
 
 
 def test_orthogonal_wall_few_shot_uses_two_independent_straight_walls():

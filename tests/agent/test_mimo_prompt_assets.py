@@ -318,6 +318,8 @@ def test_design_brief_v21_preserves_explicit_layout_facts_and_blocks_conflicts()
     assert "LAYOUT_SPACE_OVERLAP" in text
     assert "DOOR_HOST_NO_SHARED_SEGMENT" in text
     assert "STAIR_OPENING_SPACE_COLLISION" in text
+    assert "number_of_risers" in text
+    assert "number_of_treads" in text
 
 
 def test_generator_v2_teaches_rotated_host_opening_and_filling_placement():
