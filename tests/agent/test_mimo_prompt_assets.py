@@ -306,6 +306,8 @@ def test_design_brief_v21_preserves_explicit_layout_facts_and_blocks_conflicts()
     text = DESIGN_BRIEF_V21.read_text(encoding="utf-8")
 
     assert "Do not replace explicit coordinates" in text
+    assert "`walls: {exterior: [...], interior: [...]}`" in text
+    assert "Do not emit sibling `exterior_walls` or `interior_walls` keys" in text
     assert "LAYOUT_SPACE_OVERLAP" in text
     assert "DOOR_HOST_NO_SHARED_SEGMENT" in text
     assert "STAIR_OPENING_SPACE_COLLISION" in text
