@@ -246,7 +246,7 @@ def test_normalizes_geometry_and_gate_sidecars(tmp_path):
     _assert_valid(
         issues[0],
         source="geometry_gate",
-        owner="gate",
+        owner="generator",
         issue_type="geometry_invalid",
         route="regenerate_json",
     )
