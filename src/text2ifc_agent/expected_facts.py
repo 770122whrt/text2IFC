@@ -262,7 +262,7 @@ def _component_records_from_nested(
     records: list[dict[str, Any]] = []
     for (source_key, payload), storey in zip(nested_storeys, storeys):
         for index, (group, item) in enumerate(
-            _grouped_component_records(payload.get(collection)), start=1
+            _storey_component_groups(payload, collection), start=1
         ):
             record = _copy_payload(item)
             record["storey"] = storey["id"]
@@ -282,7 +282,7 @@ def _component_records_from_storey_list(
     records: list[dict[str, Any]] = []
     for source, storey in zip(source_storeys, storeys):
         for index, (group, item) in enumerate(
-            _grouped_component_records(source.get(collection)), start=1
+            _storey_component_groups(source, collection), start=1
         ):
             record = _copy_payload(item)
             record["storey"] = storey["id"]
@@ -327,6 +327,22 @@ def _grouped_component_records(value: Any) -> list[tuple[str | None, Mapping[str
         (str(group), item)
         for group, items in value.items()
         for item in _records(items)
+    ]
+
+
+def _storey_component_groups(
+    storey: Mapping[str, Any], collection: str
+) -> list[tuple[str | None, Mapping[str, Any]]]:
+    canonical = _grouped_component_records(storey.get(collection))
+    if canonical or collection != "walls":
+        return canonical
+    return [
+        (group, item)
+        for group, key in (
+            ("exterior", "exterior_walls"),
+            ("interior", "interior_walls"),
+        )
+        for item in _records(storey.get(key))
     ]
 
 

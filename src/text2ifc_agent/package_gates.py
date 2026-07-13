@@ -87,6 +87,19 @@ def validate_package_changeset(
                     )
                 )
 
+    for component_id in sorted(owned - set(existing) - set(values)):
+        issues.append(
+            _issue(
+                "PACKAGE_OWNED_COMPONENT_MISSING",
+                f"/{component_id}",
+                component_id,
+                message=(
+                    f"Package {package_id!r} declares component {component_id!r}, "
+                    "but the changeset did not generate it."
+                ),
+            )
+        )
+
     issues.extend(_manifest_ownership_issues(manifest))
     kind = str(package.get("kind"))
     if kind == "storey_local":
@@ -276,10 +289,13 @@ def _issue(
     path: str,
     component_id: str,
     related_component_id: str | None = None,
+    message: str | None = None,
 ) -> dict[str, Any]:
     payload = {"code": code, "path": path, "component_id": component_id}
     if related_component_id is not None:
         payload["related_component_id"] = related_component_id
+    if message is not None:
+        payload["message"] = message
     return payload
 
 
