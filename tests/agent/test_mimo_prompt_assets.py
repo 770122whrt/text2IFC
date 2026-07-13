@@ -1,3 +1,4 @@
+import importlib
 import json
 from pathlib import Path
 
@@ -136,6 +137,10 @@ def test_design_brief_v21_defines_canonical_multistorey_structure():
     assert "Use one `known_facts.roof_slab`" in text
     assert "Do not collapse explicit slab instances into thickness-only building metadata" in text
     assert "literal key `bounds`, not `plan_bounds`" in text
+    assert '`bounds: {"x": [x_min, x_max], "y": [y_min, y_max]}`' in text
+    assert "Use the literal key `polygon` for slab, roof, and building outline point lists" in text
+    assert "Use the literal key `connects` for the two space ids of an interior wall" in text
+    assert "Do not emit `bounds_mm`, `polygon_mm`, `connecting_spaces`, or string bounds" in text
 
 
 def test_design_brief_few_shots_include_valid_standard_two_storey_contract():
@@ -345,6 +350,29 @@ def test_design_brief_few_shot_preserves_controlled_layout_coordinates():
 
     known = shot["output"]["known_facts"]
     ground = known["storeys"][0]
-    assert ground["spaces"][0]["bounding_box"] == "x=0..4000, y=0..4000"
+    assert ground["spaces"][0]["bounds"] == {"x": [0, 4000], "y": [0, 4000]}
+    assert ground["walls"]["interior"][0]["connects"] == [
+        "space-living",
+        "space-corridor",
+    ]
     assert ground["doors"][0]["center_global_mm"] == [4000, 2000]
-    assert known["stairs"][0]["opening_bounds"] == "x=0..2000, y=4000..8000"
+    assert known["stairs"][0]["opening_bounds"] == {
+        "x": [0, 2000],
+        "y": [4000, 8000],
+    }
+
+
+def test_context_selector_supplies_coordinate_multistorey_example_for_medium_layout():
+    selector = importlib.import_module("text2ifc_agent.context_selection")
+
+    selection = selector.select_design_brief_context(
+        user_request=(
+            "创建两层L形建筑，外轮廓polygon由六段墙组成；"
+            "space-1 bounds x=200..3000,y=200..4000，"
+            "楼梯洞口bounds x=3800..5200,y=4000..7800。"
+        ),
+        conversation=[],
+    )
+
+    few_shot_ids = {record["few_shot_id"] for record in selection["few_shots"]}
+    assert "design-brief-v2.coordinate-controlled-two-storey" in few_shot_ids
