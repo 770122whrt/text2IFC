@@ -5,6 +5,7 @@ import pytest
 from text2ifc_compiler import compile_document
 from text2ifc_quality.generated_ifc import (
     _stair_endpoint_diagnostics,
+    _stair_footprint_diagnostics,
     check_generated_ifc,
 )
 
@@ -166,6 +167,27 @@ def test_stair_endpoint_diagnostics_require_profile_reshape_when_only_one_end_di
         "forbidden": (
             "Do not fix only parent or flight translation when endpoint deltas differ."
         ),
+    }
+
+
+def test_stair_footprint_diagnostics_identify_swapped_plan_axes():
+    diagnostics = _stair_footprint_diagnostics(
+        actual_bbox={"x": [0.6, 4.0], "y": [4.2, 5.2]},
+        expected_bbox={"x": [4.0, 5.0], "y": [4.2, 7.6]},
+        tolerance=0.05,
+    )
+
+    assert diagnostics == {
+        "plan_axes_swapped": True,
+        "recommended_action": "rotate_parent_stair_placement",
+        "correction_constraints": {
+            "change": "Adjust IfcStair ObjectPlacement.ref_direction in plan.",
+            "preserve": (
+                "Preserve the stepped flight profile and its horizontal width "
+                "extrusion direction."
+            ),
+            "verify": "Recompile and compare the world-space X/Y footprint.",
+        },
     }
 
 
