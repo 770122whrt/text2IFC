@@ -189,11 +189,17 @@ def test_derives_canonical_slab_roof_stair_and_opening_expectations():
         "z": [0.15, 3.15],
     }
     assert expectation["stairs"]["stair-1"]["require_steps"] is True
+    assert expectation["stairs"]["stair-1"]["bbox_issue_code"] == (
+        "STAIR_BBOX_MISMATCH"
+    )
     assert expectation["floor_openings"]["stair-opening-1"]["bbox"] == {
         "x": [0.0, 2.0],
         "y": [4.0, 8.0],
         "z": [3.0, 3.15],
     }
+    assert expectation["floor_openings"]["stair-opening-1"][
+        "bbox_issue_code"
+    ] == "FLOOR_OPENING_BBOX_MISMATCH"
 
 
 def test_legacy_slab_identity_uses_confirmed_storey_datum_and_building_thickness():
@@ -365,6 +371,9 @@ def test_canonical_bounds_and_connects_derive_spaces_and_shared_walls():
         "z": [0.0, 3.0],
     }
     assert expectation["walls"]["wall-a-b"]["axis"] == "y"
+    assert expectation["walls"]["wall-a-b"]["bbox_issue_code"] == (
+        "INTERIOR_WALL_SHARED_BOUNDARY_MISMATCH"
+    )
     assert expectation["walls"]["wall-a-b"]["bbox"] == {
         "x": [2.9, 3.1],
         "y": [0.0, 4.0],
