@@ -346,3 +346,41 @@ def test_package_gate_rejects_self_overlapping_polygon_profile():
     )
     assert issue["component_id"] == "slab-test"
     assert issue["path"].endswith("/profile/points")
+
+
+def test_package_gate_accepts_simple_stepped_flight_profile():
+    manifest = _manifest()
+    manifest["packages"][-1]["owned_component_ids"] = ["stair-flight-1-2"]
+    manifest["packages"][-1]["owned_relationship_ids"] = []
+    flight = _entity(
+        "stair-flight-1-2",
+        "IfcStairFlight",
+        Representation={
+            "kind": "extruded_profile",
+            "profile": {
+                "kind": "polygon",
+                "points": [
+                    [0, 0],
+                    [3600, 0],
+                    [3600, 3000],
+                    [2400, 3000],
+                    [2400, 2000],
+                    [1200, 2000],
+                    [1200, 1000],
+                    [0, 1000],
+                    [0, 0],
+                ],
+            },
+            "depth": 1000,
+            "direction": [1, 0, 0],
+        },
+    )
+
+    result = validate_package_changeset(
+        manifest=manifest,
+        package_id="package-cross-storey",
+        workspace=_workspace(),
+        changeset=_changeset("package-cross-storey", [flight]),
+    )
+
+    assert result == {"valid": True, "issues": []}

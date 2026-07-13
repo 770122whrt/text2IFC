@@ -7,7 +7,7 @@
       "upper_storey": {"id": "level-upper", "elevation_mm": 3150},
       "slab": {"id": "slab-upper", "top_elevation_mm": 3150, "thickness_mm": 150, "bounds": [0, 8000, 0, 6000]},
       "opening": {"id": "opening-stair", "host_slab": "slab-upper", "bounds": [6000, 8000, 1000, 6000]},
-      "stair": {"id": "stair-a", "flight_ids": ["stair-flight-a"], "start_elevation_mm": 150, "end_elevation_mm": 3150}
+      "stair": {"id": "stair-a", "flight_ids": ["stair-flight-a"], "bounds": {"x_min": 6500, "x_max": 7500, "y_min": 1500, "y_max": 5100}, "start_elevation_mm": 150, "end_elevation_mm": 3150, "number_of_risers": 3, "riser_height": 1000, "tread_depth": 1200, "width": 1000}
     },
     "change_scope": {
       "entity_ids": ["slab-upper", "opening-stair", "stair-a", "stair-flight-a"],
@@ -84,7 +84,7 @@
           "attributes": {
             "Name": "Stepped flight",
             "ObjectPlacement": {"relative_to": "stair-a", "origin": [0, 0, 0], "axis": [0, 0, 1], "ref_direction": [1, 0, 0]},
-            "Representation": {"kind": "extruded_profile", "profile": {"kind": "polygon", "points": [[0, 0], [0, 1000], [1200, 1000], [1200, 2000], [2400, 2000], [2400, 3000], [3500, 3000], [3500, 0], [0, 0]]}, "depth": 1000, "direction": [1, 0, 0]}
+            "Representation": {"kind": "extruded_profile", "profile": {"kind": "polygon", "points": [[0, 0], [3600, 0], [3600, 3000], [2400, 3000], [2400, 2000], [1200, 2000], [1200, 1000], [0, 1000], [0, 0]]}, "depth": 1000, "direction": [1, 0, 0]}
           },
           "property_sets": {},
           "provenance": {"source": "issue-package-cross-storey"}

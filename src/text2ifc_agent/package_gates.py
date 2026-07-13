@@ -225,7 +225,86 @@ def _representation_issues(
                 component_id,
             )
         )
+    elif isinstance(points, list) and _polygon_self_intersects(points):
+        issues.append(
+            _issue(
+                "PACKAGE_POLYGON_PROFILE_SELF_INTERSECTS",
+                f"/{component_id}/attributes/Representation/profile/points",
+                component_id,
+                message=(
+                    "Polygon profile edges intersect or overlap; emit one simple "
+                    "closed outer ring."
+                ),
+            )
+        )
     return issues
+
+
+def _polygon_self_intersects(points: list[Any]) -> bool:
+    try:
+        vertices = [(float(point[0]), float(point[1])) for point in points]
+    except (IndexError, TypeError, ValueError):
+        return False
+    if len(vertices) < 4 or vertices[0] != vertices[-1]:
+        return False
+    vertices = vertices[:-1]
+    if len(vertices) < 3:
+        return False
+    segments = [
+        (vertices[index], vertices[(index + 1) % len(vertices)])
+        for index in range(len(vertices))
+    ]
+    last = len(segments) - 1
+    for left_index, left in enumerate(segments):
+        for right_index in range(left_index + 1, len(segments)):
+            right = segments[right_index]
+            intersection = _segment_intersection_kind(*left, *right)
+            if intersection == "none":
+                continue
+            adjacent = right_index == left_index + 1 or (
+                left_index == 0 and right_index == last
+            )
+            if not adjacent or intersection != "endpoint":
+                return True
+    return False
+
+
+def _segment_intersection_kind(
+    a: tuple[float, float],
+    b: tuple[float, float],
+    c: tuple[float, float],
+    d: tuple[float, float],
+) -> str:
+    epsilon = 1e-9
+
+    def orient(
+        p: tuple[float, float],
+        q: tuple[float, float],
+        r: tuple[float, float],
+    ) -> float:
+        return (q[0] - p[0]) * (r[1] - p[1]) - (q[1] - p[1]) * (
+            r[0] - p[0]
+        )
+
+    orientations = (orient(a, b, c), orient(a, b, d), orient(c, d, a), orient(c, d, b))
+    if all(abs(value) <= epsilon for value in orientations):
+        axis = 0 if abs(b[0] - a[0]) >= abs(b[1] - a[1]) else 1
+        overlap = min(max(a[axis], b[axis]), max(c[axis], d[axis])) - max(
+            min(a[axis], b[axis]), min(c[axis], d[axis])
+        )
+        if overlap > epsilon:
+            return "overlap"
+        return "endpoint" if overlap >= -epsilon else "none"
+
+    def sign(value: float) -> int:
+        return 1 if value > epsilon else -1 if value < -epsilon else 0
+
+    first, second, third, fourth = (sign(value) for value in orientations)
+    if first * second < 0 and third * fourth < 0:
+        return "cross"
+    if 0 in {first, second, third, fourth}:
+        return "endpoint"
+    return "none"
 
 
 def _component_references(value: Mapping[str, Any]) -> list[tuple[str, str]]:
