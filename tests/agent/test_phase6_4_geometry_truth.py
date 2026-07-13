@@ -296,6 +296,192 @@ def test_candidate_gate_keeps_design_expectation_for_stair_only_case(tmp_path):
     assert "stair-1" in expectation["stairs"]
 
 
+def test_canonical_bounds_and_connects_derive_spaces_and_shared_walls():
+    design_brief = {
+        "known_facts": {
+            "building": {"wall_thickness_mm": 200},
+            "storeys": [
+                {
+                    "id": "level-a",
+                    "elevation_mm": 0,
+                    "net_height_mm": 3000,
+                    "spaces": [
+                        {
+                            "id": "space-a",
+                            "bounds": {"x": [0, 3000], "y": [0, 4000]},
+                        },
+                        {
+                            "id": "space-b",
+                            "bounds": {"x": [3000, 6000], "y": [0, 4000]},
+                        },
+                    ],
+                    "walls": {
+                        "interior": [
+                            {
+                                "id": "wall-a-b",
+                                "connects": ["space-a", "space-b"],
+                                "thickness_mm": 200,
+                            }
+                        ]
+                    },
+                }
+            ],
+        }
+    }
+    expected_facts = {
+        "storeys": [{"id": "level-a", "elevation_mm": 0}],
+        "spaces": [
+            {
+                "id": "space-a",
+                "storey": "level-a",
+                "bounds": {"x": [0, 3000], "y": [0, 4000]},
+            },
+            {
+                "id": "space-b",
+                "storey": "level-a",
+                "bounds": {"x": [3000, 6000], "y": [0, 4000]},
+            },
+        ],
+        "walls": [
+            {
+                "id": "wall-a-b",
+                "storey": "level-a",
+                "connects": ["space-a", "space-b"],
+                "thickness_mm": 200,
+                "height_mm": 3000,
+            }
+        ],
+    }
+
+    expectation = build_design_geometry_expectation(
+        case_id="canonical-shared-boundary",
+        design_brief=design_brief,
+        expected_facts=expected_facts,
+    )
+
+    assert expectation["spaces"]["space-a"]["bbox"] == {
+        "x": [0.0, 3.0],
+        "y": [0.0, 4.0],
+        "z": [0.0, 3.0],
+    }
+    assert expectation["walls"]["wall-a-b"]["axis"] == "y"
+    assert expectation["walls"]["wall-a-b"]["bbox"] == {
+        "x": [2.9, 3.1],
+        "y": [0.0, 4.0],
+        "z": [0.0, 3.0],
+    }
+
+
+def test_canonical_polygon_derives_slab_and_roof_plan_bounds():
+    polygon = [[0, 0], [6000, 0], [6000, 3000], [4000, 3000], [4000, 5000], [0, 5000], [0, 0]]
+    design_brief = {
+        "known_facts": {
+            "building": {"wall_thickness_mm": 200},
+            "storeys": [
+                {"id": "level-a", "elevation_mm": 0, "net_height_mm": 3000}
+            ],
+        }
+    }
+    expected_facts = {
+        "storeys": [{"id": "level-a", "elevation_mm": 0}],
+        "slabs": [
+            {
+                "id": "slab-a",
+                "storey": "level-a",
+                "polygon": polygon,
+                "top_elevation_mm": 0,
+                "thickness_mm": 150,
+            }
+        ],
+        "roof": {
+            "id": "roof-a",
+            "polygon": polygon,
+            "bottom_elevation_mm": 3000,
+            "thickness_mm": 150,
+        },
+    }
+
+    expectation = build_design_geometry_expectation(
+        case_id="canonical-polygon",
+        design_brief=design_brief,
+        expected_facts=expected_facts,
+    )
+
+    assert expectation["slabs"]["slab-a"]["bbox"] == {
+        "x": [0.0, 6.0],
+        "y": [0.0, 5.0],
+        "z": [-0.15, 0.0],
+    }
+    assert expectation["roof"]["roof-a"]["bbox"] == {
+        "x": [0.0, 6.0],
+        "y": [0.0, 5.0],
+        "z": [3.0, 3.15],
+    }
+
+
+def test_required_geometry_with_unresolved_facts_is_marked_incomplete():
+    expectation = build_design_geometry_expectation(
+        case_id="incomplete-required-geometry",
+        design_brief={
+            "known_facts": {
+                "building": {"wall_thickness_mm": 200},
+                "storeys": [
+                    {
+                        "id": "level-a",
+                        "elevation_mm": 0,
+                        "net_height_mm": 3000,
+                        "spaces": [
+                            {
+                                "id": "space-a",
+                                "bounds": {"x": [0, 3000], "y": [0, 4000]},
+                            }
+                        ],
+                        "walls": {
+                            "interior": [
+                                {
+                                    "id": "wall-unresolved",
+                                    "connects": ["space-a", "space-missing"],
+                                }
+                            ]
+                        },
+                    }
+                ],
+            }
+        },
+        expected_facts={
+            "storeys": [{"id": "level-a", "elevation_mm": 0}],
+            "spaces": [
+                {
+                    "id": "space-a",
+                    "storey": "level-a",
+                    "bounds": {"x": [0, 3000], "y": [0, 4000]},
+                }
+            ],
+            "walls": [
+                {
+                    "id": "wall-unresolved",
+                    "storey": "level-a",
+                    "connects": ["space-a", "space-missing"],
+                    "height_mm": 3000,
+                    "thickness_mm": 200,
+                }
+            ],
+        },
+    )
+
+    assert expectation["complete"] is False
+    assert expectation["unresolved"] == [
+        {
+            "path": "/known_facts/storeys/0/walls/interior/0",
+            "reason": "shared_boundary_not_unique_or_wall_thickness_missing",
+            "source_fact_refs": [
+                "/known_facts/storeys/0/spaces/0",
+                "/known_facts/storeys/0/walls/interior/0",
+            ],
+        }
+    ]
+
+
 def _controlled_design_brief() -> dict:
     return {
         "known_facts": {
