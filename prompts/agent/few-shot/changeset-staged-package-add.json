@@ -5,7 +5,7 @@
     "expected_facts": {
       "storey": {"id": "level-a", "elevation_mm": 0},
       "wall": {"id": "wall-a", "length_mm": 8000, "thickness_mm": 200, "height_mm": 3000},
-      "space": {"id": "space-a", "origin_mm": [0, 0, 0], "dimensions_mm": [6000, 6000], "height_mm": 3000},
+      "space": {"id": "space-a", "bounds": {"x": [0, 6000], "y": [0, 6000]}, "height_mm": 3000},
       "window": {"id": "window-a", "host_wall": "wall-a", "width_mm": 1200, "height_mm": 1000, "sill_height_mm": 900}
     },
     "change_scope": {
@@ -49,7 +49,7 @@
           "attributes": {
             "Name": "Space A",
             "InteriorOrExteriorSpace": "INTERNAL",
-            "ObjectPlacement": {"relative_to": "level-a", "origin": [0, 0, 0], "axis": [0, 0, 1], "ref_direction": [1, 0, 0]},
+            "ObjectPlacement": {"relative_to": "level-a", "origin": [3000, 3000, 0], "axis": [0, 0, 1], "ref_direction": [1, 0, 0]},
             "Representation": {"kind": "extruded_profile", "profile": {"kind": "rectangle", "x": 6000, "y": 6000}, "depth": 3000, "direction": [0, 0, 1]}
           },
           "property_sets": {},

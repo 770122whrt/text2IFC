@@ -45,6 +45,15 @@ Staged package add mode
 10. For every add operation, copy an authorized ID character-for-character from CHANGE_SCOPE.entity_ids or CHANGE_SCOPE.relationship_ids. target_id and value.id must be identical. Do not add, remove, translate, normalize, or duplicate prefixes or suffixes, even during a retry.
 11. Never copy a display-name storey label from a sibling package. For every storey-owned component, use the current package storey name or a storey-neutral Name. A component placed under storey 2 must not be named as a storey-1 component, and the same rule applies dynamically to any number of storeys.
 
+Canonical geometry authoring contract
+
+1. Canonical plan bounds use `{"x": [x_min, x_max], "y": [y_min, y_max]}` in millimetres. Do not invent an alternate bounds shape.
+2. Rectangle profiles are centered on ObjectPlacement.origin. For confirmed bounds, use `origin_x = (x_min + x_max) / 2`, `origin_y = (y_min + y_max) / 2`, `profile.x = x_max - x_min`, and `profile.y = y_max - y_min`.
+3. For an interior wall with `connects: [space_a, space_b]`, derive an interior wall only from the unique shared boundary of those two confirmed space bounds. Do not guess a wall axis or coordinate. If the boundary is missing or non-unique, return Draft or a scoped unresolved result.
+4. Polygon coordinates stay in the declared local frame. Do not translate polygon points and ObjectPlacement by the same offset.
+5. For a stepped IfcStairFlight, profile coordinate 1 is run and coordinate 2 is rise. The horizontal Representation.direction is the width vector. Keep child ObjectPlacement neutral relative to the stair and encode stair plan orientation exactly once. Do not rotate both the parent stair and the child flight for the same direction change.
+6. Do not silently repair or translate geometry. Use only confirmed facts and scoped Issue evidence; otherwise return Draft.
+
 输入
 
 用户原始请求：
