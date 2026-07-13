@@ -125,3 +125,29 @@ def test_medium_case_is_a_two_storey_l_shape_without_prewritten_model_output():
     assert "踏面进深 170" in text
     assert "design_brief" not in payload
     assert "model_output" not in payload
+
+
+def test_hard_case_is_three_storey_with_two_stair_systems_and_no_model_output():
+    payload = json.loads(
+        run_phase6_5_live_stability.case_fixture_path("hard").read_text(
+            encoding="utf-8"
+        )
+    )
+    text = payload["input"]
+
+    assert payload["difficulty"] == "hard"
+    assert payload["storey_count"] == 3
+    assert payload["expected_minimums"]["IfcSpace"] >= 16
+    assert payload["expected_minimums"]["IfcWall"] >= 40
+    assert payload["expected_minimums"]["IfcDoor"] >= 12
+    assert payload["expected_minimums"]["IfcWindow"] >= 9
+    assert payload["expected_minimums"]["IfcStair"] == 2
+    assert payload["expected_minimums"]["IfcStairFlight"] == 2
+    assert "stair-hard-1-2" in text
+    assert "stair-hard-2-3" in text
+    assert "opening-hard-stair-1-2" in text
+    assert "opening-hard-stair-2-3" in text
+    assert "storey-3-wall-notch-horizontal" in text
+    assert "wall-3-office-north-shaft" in text
+    assert "design_brief" not in payload
+    assert "model_output" not in payload
