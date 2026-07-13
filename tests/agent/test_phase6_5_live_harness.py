@@ -127,6 +127,22 @@ def test_medium_case_is_a_two_storey_l_shape_without_prewritten_model_output():
     assert "model_output" not in payload
 
 
+def test_medium_case_uses_half_wall_thickness_for_perimeter_clear_bounds():
+    payload = json.loads(
+        run_phase6_5_live_stability.case_fixture_path("medium").read_text(
+            encoding="utf-8"
+        )
+    )
+    text = payload["input"]
+
+    assert "space-1-reception bounds x=100..3000,y=100..4000" in text
+    assert "space-1-office-north bounds x=100..3000,y=4000..7900" in text
+    assert "space-1-service-north bounds x=5800..9900,y=2400..4900" in text
+    assert "space-2-office-south bounds x=100..3800,y=100..4000" in text
+    assert "space-2-office-north bounds x=100..3800,y=4000..7900" in text
+    assert "space-2-east-north bounds x=5800..9900,y=2400..4900" in text
+
+
 def test_hard_case_is_three_storey_with_two_stair_systems_and_no_model_output():
     payload = json.loads(
         run_phase6_5_live_stability.case_fixture_path("hard").read_text(
