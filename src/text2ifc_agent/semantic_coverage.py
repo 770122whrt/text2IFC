@@ -199,13 +199,16 @@ def build_design_geometry_expectation(
         if wall_id is not None:
             explicit_wall_ids.add(wall_id)
         storey_id = _string(wall.get("storey"))
-        bounds = _wall_plan_bounds(wall)
+        bounds = _wall_plan_bounds(wall, default_thickness=wall_thickness)
         bbox_issue_code = "WALL_SEGMENT_MISMATCH"
         storey = expected_storeys.get(storey_id) if storey_id is not None else None
+        design_storey = design_storeys.get(storey_id) if storey_id is not None else None
         elevation = _number(storey.get("elevation_mm")) if isinstance(storey, Mapping) else None
         height = _number(wall.get("height_mm"))
         if height is None and isinstance(storey, Mapping):
             height = _number(storey.get("net_height_mm"))
+        if height is None and isinstance(design_storey, Mapping):
+            height = _number(design_storey.get("net_height_mm"))
         path = design_wall_paths.get(wall_id or "", f"/known_facts/walls/{wall_index}")
         if wall_id is None or storey_id is None or elevation is None or height is None:
             unresolved.append(
@@ -444,13 +447,17 @@ def _polygon_plan_bounds_from_fact(
     return (x_min, x_max, y_min, y_max)
 
 
-def _wall_plan_bounds(wall: Mapping[str, Any]) -> tuple[float, float, float, float] | None:
+def _wall_plan_bounds(
+    wall: Mapping[str, Any],
+    *,
+    default_thickness: float | None = None,
+) -> tuple[float, float, float, float] | None:
     explicit = _plan_bounds(wall.get("bounds"))
     if explicit is not None:
         return explicit
     start = wall.get("start_mm")
     end = wall.get("end_mm")
-    thickness = _number(wall.get("thickness_mm"))
+    thickness = _number(wall.get("thickness_mm")) or default_thickness
     if (
         not isinstance(start, list)
         or not isinstance(end, list)
