@@ -59,7 +59,7 @@ Design Brief 2.0 完整输出 Schema：
 
 Canonical multi-storey Design Brief structure
 
-1. For a multi-storey building, put all floor-specific facts inside `known_facts.storeys`, an array of storey objects. Each storey object should include stable `id`, `name` when available, `elevation_mm`, `net_height_mm`, and floor-local `spaces`, `walls`, `doors`, `windows`, and `stairs` when those facts are present.
+1. For a multi-storey building, put all floor-specific facts inside `known_facts.storeys`, an array of storey objects. Each storey object should include stable `id`, `name` when available, `elevation_mm`, `net_height_mm`, and floor-local `spaces`, `walls`, `doors`, `windows`, and `stairs` when those facts are present. Each storey `walls` value must use exactly `walls: {exterior: [...], interior: [...]}`. Do not emit sibling `exterior_walls` or `interior_walls` keys. Preserve every wall record inside the matching group.
 2. Use `elevation_mm`; do not use `level` as a substitute for elevation. If the user says first floor elevation is 0 mm and second floor elevation is 3150 mm, write `"elevation_mm": 0` and `"elevation_mm": 3150`.
 3. Do not create top-level `storey_1`, `storey_2`, `spaces_ground`, `spaces_first`, or generic `openings` as the primary multi-storey structure. These scattered dialects make downstream verification ambiguous. Prefer the canonical nested `storeys` array.
 4. Put doors and windows inside the storey that owns their host wall. Do not merge doors and windows into a generic `openings` list. A second-storey window on a second-storey south wall belongs under the second storey and should name a second-storey host wall.
