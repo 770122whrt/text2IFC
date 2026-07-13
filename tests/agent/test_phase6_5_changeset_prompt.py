@@ -164,6 +164,28 @@ def test_staged_cross_storey_few_shot_teaches_flight_and_slab_opening_graph():
     )
     assert "Representation" not in stair["attributes"]
 
+    expected_stair = example["input"]["expected_facts"]["stair"]
+    flight = next(
+        operation["value"]
+        for operation in example["output"]["operations"]
+        if operation.get("value", {}).get("ifc_class") == "IfcStairFlight"
+    )
+    points = flight["attributes"]["Representation"]["profile"]["points"]
+    assert expected_stair["number_of_risers"] == 3
+    assert expected_stair["riser_height"] == 1000
+    assert expected_stair["tread_depth"] == 1200
+    assert points[:3] == [[0, 0], [3600, 0], [3600, 3000]]
+    assert points[-2:] == [[0, 1000], [0, 0]]
+
+
+def test_staged_package_prompt_defines_local_simple_stair_profile_convention():
+    rendered = render_prompt(template_id="bim-json-changeset.v1", inputs=_inputs())
+    text = rendered["text"]
+
+    assert "local [run, rise] coordinates" in text
+    assert "must not overlap its closing edges" in text
+    assert "number_of_risers * tread_depth" in text
+
 
 def test_orthogonal_wall_few_shot_uses_two_independent_straight_walls():
     assert "changeset-staged-orthogonal-walls" in {path.stem for path in FEW_SHOT_PATHS}

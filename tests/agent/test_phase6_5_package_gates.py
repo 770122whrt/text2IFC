@@ -304,3 +304,45 @@ def test_package_gate_rejects_missing_geometry_or_polygon_holes(mutate, code):
 
     assert result["valid"] is False
     assert code in {issue["code"] for issue in result["issues"]}
+
+
+def test_package_gate_rejects_self_overlapping_polygon_profile():
+    manifest = _manifest()
+    manifest["packages"][-1]["owned_component_ids"] = ["slab-test"]
+    manifest["packages"][-1]["owned_relationship_ids"] = []
+    slab = _entity(
+        "slab-test",
+        "IfcSlab",
+        Representation={
+            "kind": "extruded_profile",
+            "profile": {
+                "kind": "polygon",
+                "points": [
+                    [-1, 1],
+                    [0, 1],
+                    [0, 2],
+                    [1, 2],
+                    [1, 1],
+                    [-1, 1],
+                ],
+            },
+            "depth": 150,
+            "direction": [0, 0, 1],
+        },
+    )
+
+    result = validate_package_changeset(
+        manifest=manifest,
+        package_id="package-cross-storey",
+        workspace=_workspace(),
+        changeset=_changeset("package-cross-storey", [slab]),
+    )
+
+    assert result["valid"] is False
+    issue = next(
+        issue
+        for issue in result["issues"]
+        if issue["code"] == "PACKAGE_POLYGON_PROFILE_SELF_INTERSECTS"
+    )
+    assert issue["component_id"] == "slab-test"
+    assert issue["path"].endswith("/profile/points")
