@@ -173,6 +173,23 @@ def run_staged_generation(
                 workspace=workspace,
                 changeset=changeset,
             )
+            if gate["valid"]:
+                proposed_workspace = _apply_add_operations(
+                    workspace, changeset["operations"]
+                )
+                schema_issues = validate_v2_document(proposed_workspace)
+                if schema_issues:
+                    gate = {
+                        "valid": False,
+                        "issues": [
+                            {
+                                "code": issue.code,
+                                "path": issue.path,
+                                "message": issue.message,
+                            }
+                            for issue in schema_issues
+                        ],
+                    }
             _write_json(active_dir / "package-gate.json", gate)
             if gate["valid"]:
                 break
