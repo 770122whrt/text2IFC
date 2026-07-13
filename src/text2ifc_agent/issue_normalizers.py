@@ -21,7 +21,12 @@ def normalize_validation_issues(
         code = _upper_code(diagnostic)
         path = _string_or_none(diagnostic.get("path"))
         message = _diagnostic_message(diagnostic)
-        if "UNSUPPORTED" in code:
+        if source == "semantic_validation" and "AUDIT" in code:
+            owner = "provider"
+            issue_type = "provider_format_error"
+            route = "provider_retry"
+            retryable = True
+        elif "UNSUPPORTED" in code:
             owner = "schema"
             issue_type = "unsupported_schema_capability"
             route = "blocked_as_unsupported"
