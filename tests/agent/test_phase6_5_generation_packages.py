@@ -205,6 +205,51 @@ def test_expected_facts_flattens_grouped_walls_inside_storey_records():
     ] == ["wall-south", "wall-east", "wall-partition"]
 
 
+def test_expected_facts_reads_separate_exterior_and_interior_wall_lists():
+    brief = {
+        "schema_version": "text2ifc/design-brief/2.0",
+        "status": "ready",
+        "language": "zh-CN",
+        "known_facts": {
+            "storeys": [
+                {
+                    "id": "storey-1",
+                    "elevation_mm": 0,
+                    "exterior_walls": [
+                        {"id": "storey-1-wall-notch-horizontal"},
+                        {"id": "storey-1-wall-notch-vertical"},
+                    ],
+                    "interior_walls": [
+                        {"id": "wall-1-office-stair"},
+                    ],
+                }
+            ],
+            "spaces": [],
+            "doors": [],
+            "windows": [],
+        },
+        "missing_facts": [],
+        "ambiguities": [],
+        "unsupported_requests": [],
+        "fact_sources": [],
+    }
+
+    expected = build_expected_facts(case_id="case-wall-aliases", design_brief=brief)
+
+    assert [(wall["id"], wall["storey"]) for wall in expected["walls"]] == [
+        ("storey-1-wall-notch-horizontal", "storey-1"),
+        ("storey-1-wall-notch-vertical", "storey-1"),
+        ("wall-1-office-stair", "storey-1"),
+    ]
+    assert expected["generation_package_manifest"]["packages"][1][
+        "owned_component_ids"
+    ] == [
+        "storey-1-wall-notch-horizontal",
+        "storey-1-wall-notch-vertical",
+        "wall-1-office-stair",
+    ]
+
+
 def test_local_package_declares_deterministic_containment_void_and_fill_relationship_ids():
     expected = _expected(2)
     expected["walls"] = [

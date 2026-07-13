@@ -217,6 +217,26 @@ def test_cross_storey_package_accepts_only_declared_vertical_components():
     assert result["valid"] is True
 
 
+def test_package_gate_rejects_declared_owned_components_that_are_not_generated():
+    result = validate_package_changeset(
+        manifest=_manifest(),
+        package_id="package-cross-storey",
+        workspace=_workspace(),
+        changeset=_changeset(
+            "package-cross-storey",
+            [_entity("slab-2", "IfcSlab")],
+        ),
+    )
+
+    missing = {
+        issue["component_id"]
+        for issue in result["issues"]
+        if issue["code"] == "PACKAGE_OWNED_COMPONENT_MISSING"
+    }
+    assert result["valid"] is False
+    assert missing == {"roof", "stair-1-2"}
+
+
 def test_cross_storey_package_accepts_geometry_on_flight_not_decomposed_stair():
     manifest = _manifest()
     package = manifest["packages"][-1]
