@@ -428,6 +428,46 @@ def test_canonical_polygon_derives_slab_and_roof_plan_bounds():
     }
 
 
+def test_explicit_wall_inherits_confirmed_building_thickness_and_storey_height():
+    design_brief = {
+        "known_facts": {
+            "building": {"wall_thickness_mm": 200},
+            "storeys": [
+                {
+                    "id": "level-a",
+                    "elevation_mm": 3150,
+                    "net_height_mm": 3000,
+                }
+            ],
+        }
+    }
+    expected_facts = {
+        "storeys": [{"id": "level-a", "elevation_mm": 3150}],
+        "walls": [
+            {
+                "id": "wall-a",
+                "storey": "level-a",
+                "start_mm": [0, 4000],
+                "end_mm": [6000, 4000],
+            }
+        ],
+    }
+
+    expectation = build_design_geometry_expectation(
+        case_id="canonical-wall-inheritance",
+        design_brief=design_brief,
+        expected_facts=expected_facts,
+    )
+
+    assert expectation["complete"] is True
+    assert expectation["unresolved"] == []
+    assert expectation["walls"]["wall-a"]["bbox"] == {
+        "x": [0.0, 6.0],
+        "y": [3.9, 4.1],
+        "z": [3.15, 6.15],
+    }
+
+
 def test_required_geometry_with_unresolved_facts_is_marked_incomplete():
     expectation = build_design_geometry_expectation(
         case_id="incomplete-required-geometry",
