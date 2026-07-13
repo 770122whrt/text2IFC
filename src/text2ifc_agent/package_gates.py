@@ -13,6 +13,7 @@ _CROSS_CLASSES = {
     "IfcStairFlight",
     "IfcRamp",
     "IfcRampFlight",
+    "IfcRoof",
     "IfcOpeningElement",
 }
 _CROSS_ONLY_CLASSES = _CROSS_CLASSES - {"IfcOpeningElement"}
