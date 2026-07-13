@@ -98,6 +98,45 @@ def _gate_progress_status(candidate_gates: Mapping[str, Any]) -> str:
     return "passed" if candidate_gates.get("valid") is True else "failed"
 
 
+def _emit_candidate_gate_progress(
+    progress: Callable[[str, dict[str, Any]], None] | None,
+    candidate_gates: Mapping[str, Any],
+) -> None:
+    _emit_progress(
+        progress,
+        "candidate_gates",
+        {"status": _gate_progress_status(candidate_gates)},
+    )
+    geometry_feedback = candidate_gates.get("geometry_feedback")
+    if not isinstance(geometry_feedback, Mapping):
+        return
+    raw_issues = geometry_feedback.get("issues")
+    issues = [item for item in raw_issues if isinstance(item, Mapping)] if isinstance(raw_issues, list) else []
+    total = len(issues)
+    for index, issue in enumerate(issues, start=1):
+        entity_ids = issue.get("entity_ids")
+        components = (
+            [str(item) for item in entity_ids]
+            if isinstance(entity_ids, list)
+            else []
+        )
+        _emit_progress(
+            progress,
+            "issue",
+            {
+                "status": "open",
+                "issue_index": index,
+                "issue_total": total,
+                "code": str(issue.get("code", "UNKNOWN")),
+                "component": ", ".join(components),
+                "expected": issue.get("expected"),
+                "actual": issue.get("actual"),
+                "owner": "generator",
+                "route": "regenerate_json",
+            },
+        )
+
+
 def make_openai_design_brief_invoker(
     *,
     config: OpenAICompatRuntimeConfig,
@@ -632,7 +671,7 @@ def run_ready_session_to_ifc(
         "candidate_gates",
         candidate_gates,
     )
-    _emit_progress(progress, "candidate_gates", {"status": _gate_progress_status(candidate_gates)})
+    _emit_candidate_gate_progress(progress, candidate_gates)
     scaffold = _maybe_promote_scaffold_candidate(
         store=store,
         stored_session=stored_session,
@@ -670,7 +709,7 @@ def run_ready_session_to_ifc(
             "candidate_gates",
             candidate_gates,
         )
-        _emit_progress(progress, "candidate_gates", {"status": _gate_progress_status(candidate_gates)})
+        _emit_candidate_gate_progress(progress, candidate_gates)
 
     _emit_progress(progress, "audit", {"status": "started"})
     audit = run_audit_report_stage(
@@ -734,7 +773,7 @@ def run_ready_session_to_ifc(
                 "candidate_gates",
                 candidate_gates,
             )
-            _emit_progress(progress, "candidate_gates", {"status": _gate_progress_status(candidate_gates)})
+            _emit_candidate_gate_progress(progress, candidate_gates)
             _emit_progress(progress, "audit", {"status": "started"})
             audit = run_audit_report_stage(
                 provider=provider_factory(),
@@ -1520,11 +1559,7 @@ def _attempt_generator_regeneration_after_audit(
         "candidate_gates",
         candidate_gates,
     )
-    _emit_progress(
-        progress,
-        "candidate_gates",
-        {"status": _gate_progress_status(candidate_gates)},
-    )
+    _emit_candidate_gate_progress(progress, candidate_gates)
     _emit_progress(progress, "audit", {"status": "started"})
     audit = run_audit_report_stage(
         provider=provider_factory(),

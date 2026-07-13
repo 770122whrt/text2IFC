@@ -383,6 +383,20 @@ def _print_ifc_live_progress(
     payload: dict[str, Any],
     stdout: TextIO,
 ) -> None:
+    if stage == "issue":
+        issue_index = int(payload.get("issue_index", 0))
+        issue_total = int(payload.get("issue_total", 0))
+        stdout.write(f"[Issue {issue_index:02d}/{issue_total:02d}]\n")
+        for key in ("code", "component"):
+            stdout.write(f"{key}: {payload.get(key, '')}\n")
+        for key in ("expected", "actual"):
+            stdout.write(
+                f"{key}: {json.dumps(payload.get(key), ensure_ascii=False, sort_keys=True)}\n"
+            )
+        for key in ("owner", "route", "status"):
+            stdout.write(f"{key}: {payload.get(key, '')}\n")
+        stdout.flush()
+        return
     labels = {
         "generator": "Generator",
         "semantic_coverage": "Semantic coverage",
