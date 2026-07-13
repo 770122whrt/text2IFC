@@ -202,6 +202,32 @@ def test_derives_canonical_slab_roof_stair_and_opening_expectations():
     ] == "FLOOR_OPENING_BBOX_MISMATCH"
 
 
+def test_stair_opening_bounds_must_contain_the_stair_plan_bounds():
+    design_brief = _controlled_design_brief()
+    stair = {
+        "id": "stair-1",
+        "bounds": {"x": [4300, 5300], "y": [4300, 7500]},
+        "opening_bounds": {"x": [4500, 5200], "y": [4400, 7400]},
+        "start_elevation_mm": 0,
+        "end_elevation_mm": 3150,
+    }
+    design_brief["known_facts"]["stairs"] = [stair]
+    expected_facts = {**_controlled_expected_facts(), "stairs": [stair]}
+
+    expectation = build_design_geometry_expectation(
+        case_id="stair-opening-too-small",
+        design_brief=design_brief,
+        expected_facts=expected_facts,
+    )
+
+    assert expectation["complete"] is False
+    assert {
+        "path": "/known_facts/stairs/0/opening_bounds",
+        "reason": "stair_opening_does_not_contain_stair_bounds",
+        "source_fact_refs": ["/known_facts/stairs/0"],
+    } in expectation["unresolved"]
+
+
 def test_legacy_slab_identity_uses_confirmed_storey_datum_and_building_thickness():
     expectation = build_design_geometry_expectation(
         case_id="legacy-slab-id",
