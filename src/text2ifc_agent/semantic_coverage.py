@@ -22,8 +22,10 @@ def build_design_geometry_expectation(
     known_facts = known if isinstance(known, Mapping) else {}
     building = known_facts.get("building")
     building_facts = building if isinstance(building, Mapping) else {}
-    outer_bounds = _plan_bounds(building_facts.get("outline")) or _plan_bounds(
-        building_facts.get("outer_bounds")
+    outer_bounds = (
+        _plan_bounds(building_facts.get("outline"))
+        or _polygon_plan_bounds_from_fact(building_facts.get("outline"))
+        or _plan_bounds(building_facts.get("outer_bounds"))
     )
     wall_thickness = _number(building_facts.get("wall_thickness_mm"))
     slab_thickness = _number(building_facts.get("floor_slab_thickness_mm"))
@@ -33,12 +35,67 @@ def build_design_geometry_expectation(
         if isinstance(record.get("id"), str)
     }
     raw_storeys = _records(known_facts.get("storeys"))
+    design_storeys = {
+        str(record.get("id")): record
+        for record in raw_storeys
+        if isinstance(record.get("id"), str)
+    }
+    design_space_paths: dict[str, str] = {}
+    design_wall_paths: dict[str, str] = {}
+    for storey_index, storey in enumerate(raw_storeys):
+        for space_index, space in enumerate(_records(storey.get("spaces"))):
+            space_id = _string(space.get("id"))
+            if space_id is not None:
+                design_space_paths[space_id] = (
+                    f"/known_facts/storeys/{storey_index}/spaces/{space_index}"
+                )
+        for wall_index, wall in enumerate(_interior_walls(storey)):
+            wall_id = _string(wall.get("id"))
+            if wall_id is not None:
+                design_wall_paths[wall_id] = (
+                    f"/known_facts/storeys/{storey_index}/walls/interior/{wall_index}"
+                )
+    spaces: dict[str, dict[str, Any]] = {}
+    space_sources: dict[
+        str, tuple[tuple[float, float, float, float], str]
+    ] = {}
     walls: dict[str, dict[str, Any]] = {}
     slabs: dict[str, dict[str, Any]] = {}
     roof: dict[str, dict[str, Any]] = {}
     stairs: dict[str, dict[str, Any]] = {}
     floor_openings: dict[str, dict[str, Any]] = {}
     unresolved: list[dict[str, Any]] = []
+
+    for space_index, space in enumerate(_records(expected_facts.get("spaces"))):
+        space_id = _string(space.get("id"))
+        storey_id = _string(space.get("storey"))
+        bounds = _plan_bounds(space.get("bounds"))
+        storey = expected_storeys.get(storey_id) if storey_id is not None else None
+        design_storey = design_storeys.get(storey_id) if storey_id is not None else None
+        elevation = _number(storey.get("elevation_mm")) if isinstance(storey, Mapping) else None
+        height = _number(space.get("height_mm"))
+        if height is None and isinstance(design_storey, Mapping):
+            height = _number(design_storey.get("net_height_mm"))
+        path = design_space_paths.get(space_id or "", f"/known_facts/spaces/{space_index}")
+        if (
+            space_id is None
+            or storey_id is None
+            or bounds is None
+            or elevation is None
+            or height is None
+        ):
+            unresolved.append(
+                _unresolved_geometry(path=path, reason="space_geometry_missing")
+            )
+            continue
+        spaces[space_id] = {
+            "bbox": _bbox(
+                bounds[0], bounds[1], bounds[2], bounds[3], elevation, elevation + height
+            ),
+            "storey_id": storey_id,
+            "source_fact_refs": [path],
+        }
+        space_sources[space_id] = (bounds, path)
 
     explicit_slabs = _records(expected_facts.get("slabs"))
     for slab_index, slab in enumerate(explicit_slabs):
@@ -51,7 +108,11 @@ def build_design_geometry_expectation(
             top = _number(storey.get("elevation_mm"))
         if thickness is None:
             thickness = slab_thickness
-        bounds = _plan_bounds(slab.get("bounds")) or outer_bounds
+        bounds = (
+            _plan_bounds(slab.get("bounds"))
+            or _polygon_plan_bounds_from_fact(slab.get("polygon"))
+            or outer_bounds
+        )
         path = f"/known_facts/floor_slabs/{slab_index}"
         if slab_id is None or top is None or thickness is None or bounds is None:
             unresolved.append(_unresolved_geometry(path=path, reason="floor_slab_geometry_missing"))
@@ -95,7 +156,11 @@ def build_design_geometry_expectation(
         if bottom is None:
             bottom = _number(roof_record.get("elevation_mm"))
         thickness = _number(roof_record.get("thickness_mm"))
-        bounds = _plan_bounds(roof_record.get("bounds")) or outer_bounds
+        bounds = (
+            _plan_bounds(roof_record.get("bounds"))
+            or _polygon_plan_bounds_from_fact(roof_record.get("polygon"))
+            or outer_bounds
+        )
         if roof_id is not None and bottom is not None and thickness is not None and bounds is not None:
             roof[roof_id] = {
                 "bbox": _bbox(
@@ -126,23 +191,62 @@ def build_design_geometry_expectation(
             "source_fact_refs": [path],
         }
 
+    explicit_wall_ids: set[str] = set()
     for wall_index, wall in enumerate(_records(expected_facts.get("walls"))):
         wall_id = _string(wall.get("id"))
+        if wall_id is not None:
+            explicit_wall_ids.add(wall_id)
         storey_id = _string(wall.get("storey"))
         bounds = _wall_plan_bounds(wall)
-        if bounds is None:
-            continue
         storey = expected_storeys.get(storey_id) if storey_id is not None else None
         elevation = _number(storey.get("elevation_mm")) if isinstance(storey, Mapping) else None
         height = _number(wall.get("height_mm"))
         if height is None and isinstance(storey, Mapping):
             height = _number(storey.get("net_height_mm"))
-        path = f"/known_facts/walls/{wall_index}"
+        path = design_wall_paths.get(wall_id or "", f"/known_facts/walls/{wall_index}")
         if wall_id is None or storey_id is None or elevation is None or height is None:
             unresolved.append(
                 _unresolved_geometry(path=path, reason="explicit_wall_geometry_missing")
             )
             continue
+        if bounds is None:
+            connects = wall.get("connects")
+            if isinstance(connects, list) and len(connects) == 2:
+                source_a = space_sources.get(str(connects[0]))
+                source_b = space_sources.get(str(connects[1]))
+                segment = _shared_wall_segment(source_a, source_b)
+                thickness = _number(wall.get("thickness_mm")) or wall_thickness
+                if segment is not None and thickness is not None and thickness > 0:
+                    axis, coordinate, start, end = segment
+                    if axis == "x":
+                        bounds = (
+                            start,
+                            end,
+                            coordinate - thickness / 2,
+                            coordinate + thickness / 2,
+                        )
+                    else:
+                        bounds = (
+                            coordinate - thickness / 2,
+                            coordinate + thickness / 2,
+                            start,
+                            end,
+                        )
+                else:
+                    unresolved.append(
+                        _unresolved_geometry(
+                            path=path,
+                            reason="shared_boundary_not_unique_or_wall_thickness_missing",
+                            source_fact_refs=[
+                                source_a[1] if source_a is not None else "",
+                                source_b[1] if source_b is not None else "",
+                                path,
+                            ],
+                        )
+                    )
+                    continue
+            else:
+                continue
         x_span = bounds[1] - bounds[0]
         y_span = bounds[3] - bounds[2]
         walls[wall_id] = {
@@ -195,17 +299,24 @@ def build_design_geometry_expectation(
             }
 
         interior_walls = _interior_walls(storey)
-        spaces = _spaces_by_id(storey, storey_index=storey_index)
+        storey_spaces = _spaces_by_id(storey, storey_index=storey_index)
         for wall_index, wall in enumerate(interior_walls):
             wall_id = _string(wall.get("id"))
-            from_id = _string(wall.get("from"))
-            to_id = _string(wall.get("to"))
+            if wall_id is not None and wall_id in explicit_wall_ids:
+                continue
+            connects = wall.get("connects")
+            if isinstance(connects, list) and len(connects) == 2:
+                from_id = _string(connects[0])
+                to_id = _string(connects[1])
+            else:
+                from_id = _string(wall.get("from"))
+                to_id = _string(wall.get("to"))
             path = f"/known_facts/storeys/{storey_index}/walls/interior/{wall_index}"
             if wall_id is None or from_id is None or to_id is None:
                 unresolved.append(_unresolved_geometry(path=path, reason="interior_wall_identity_missing"))
                 continue
-            source_a = spaces.get(from_id)
-            source_b = spaces.get(to_id)
+            source_a = storey_spaces.get(from_id)
+            source_b = storey_spaces.get(to_id)
             segment = _shared_wall_segment(source_a, source_b)
             if segment is None or wall_thickness is None or wall_thickness <= 0:
                 unresolved.append(
@@ -247,6 +358,8 @@ def build_design_geometry_expectation(
         "source": "design_brief_expected_facts",
         "units": "METRE",
         "tolerance": 0.05,
+        "complete": not unresolved,
+        "spaces": spaces,
         "walls": walls,
         "slabs": slabs,
         "roof": roof,
@@ -268,6 +381,21 @@ def _string(value: Any) -> str | None:
 
 def _plan_bounds(value: Any) -> tuple[float, float, float, float] | None:
     if isinstance(value, Mapping):
+        x_range = value.get("x")
+        y_range = value.get("y")
+        if (
+            isinstance(x_range, list)
+            and len(x_range) == 2
+            and isinstance(y_range, list)
+            and len(y_range) == 2
+        ):
+            coordinates = tuple(
+                _number(item) for item in (*x_range, *y_range)
+            )
+            if all(item is not None for item in coordinates):
+                x_min, x_max, y_min, y_max = coordinates
+                if x_min < x_max and y_min < y_max:
+                    return (x_min, x_max, y_min, y_max)
         coordinates = tuple(
             _number(value.get(key)) for key in ("x_min", "x_max", "y_min", "y_max")
         )
@@ -285,6 +413,31 @@ def _plan_bounds(value: Any) -> tuple[float, float, float, float] | None:
         return None
     x_min, x_max, y_min, y_max = (float(item) for item in match.groups())
     return (x_min, x_max, y_min, y_max) if x_min < x_max and y_min < y_max else None
+
+
+def _polygon_plan_bounds_from_fact(
+    value: Any,
+) -> tuple[float, float, float, float] | None:
+    if isinstance(value, Mapping):
+        value = value.get("points")
+    if not isinstance(value, list) or len(value) < 3:
+        return None
+    points: list[tuple[float, float]] = []
+    for point in value:
+        if not isinstance(point, list) or len(point) < 2:
+            return None
+        x = _number(point[0])
+        y = _number(point[1])
+        if x is None or y is None:
+            return None
+        points.append((x, y))
+    x_values = [point[0] for point in points]
+    y_values = [point[1] for point in points]
+    x_min, x_max = min(x_values), max(x_values)
+    y_min, y_max = min(y_values), max(y_values)
+    if x_min >= x_max or y_min >= y_max:
+        return None
+    return (x_min, x_max, y_min, y_max)
 
 
 def _wall_plan_bounds(wall: Mapping[str, Any]) -> tuple[float, float, float, float] | None:
@@ -330,7 +483,9 @@ def _spaces_by_id(
     result: dict[str, tuple[tuple[float, float, float, float], str]] = {}
     for index, space in enumerate(_records(storey.get("spaces"))):
         space_id = _string(space.get("id"))
-        bounds = _plan_bounds(space.get("bounding_box"))
+        bounds = _plan_bounds(space.get("bounds")) or _plan_bounds(
+            space.get("bounding_box")
+        )
         if space_id is not None and bounds is not None:
             result[space_id] = (
                 bounds,
