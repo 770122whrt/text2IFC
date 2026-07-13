@@ -299,10 +299,29 @@ def _segment_intersection_kind(
     def sign(value: float) -> int:
         return 1 if value > epsilon else -1 if value < -epsilon else 0
 
+    def on_segment(
+        start: tuple[float, float],
+        end: tuple[float, float],
+        point: tuple[float, float],
+    ) -> bool:
+        return (
+            min(start[0], end[0]) - epsilon
+            <= point[0]
+            <= max(start[0], end[0]) + epsilon
+            and min(start[1], end[1]) - epsilon
+            <= point[1]
+            <= max(start[1], end[1]) + epsilon
+        )
+
     first, second, third, fourth = (sign(value) for value in orientations)
     if first * second < 0 and third * fourth < 0:
         return "cross"
-    if 0 in {first, second, third, fourth}:
+    if (
+        (first == 0 and on_segment(a, b, c))
+        or (second == 0 and on_segment(a, b, d))
+        or (third == 0 and on_segment(c, d, a))
+        or (fourth == 0 and on_segment(c, d, b))
+    ):
         return "endpoint"
     return "none"
 
