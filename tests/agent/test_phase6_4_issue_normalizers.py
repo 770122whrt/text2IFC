@@ -2,7 +2,7 @@ import json
 
 import pytest
 
-from text2ifc_agent.issues import validate_issue_dict
+from text2ifc_agent.issues import Issue, validate_issue_dict
 from text2ifc_agent.issue_normalizers import (
     normalize_audit_findings,
     normalize_compiler_result,
@@ -14,6 +14,7 @@ from text2ifc_agent.issue_normalizers import (
     normalize_validation_issues,
     write_terminal_issues,
 )
+from text2ifc_agent.route_decision import decide_route_from_issues
 
 
 def _assert_valid(issue, *, source, owner, issue_type, route):
@@ -59,6 +60,46 @@ def test_normalizes_schema_and_semantic_validation_issues():
     )
     assert first["actual_ref"] == "/entities/0/attributes/ObjectPlacement"
     assert second["retryable"] is False
+
+
+def test_audit_evidence_contract_failure_does_not_ask_user_or_hide_generator_route():
+    audit_issue = normalize_validation_issues(
+        [
+            {
+                "code": "AUDIT_EVIDENCE_PATH_MISSING",
+                "path": "/evidence_paths/6",
+                "message": "Audit evidence path does not exist.",
+            }
+        ],
+        source="semantic_validation",
+    )[0]
+    generator_issue = Issue(
+        issue_id="issue_stair_bbox",
+        source="geometry_gate",
+        severity="blocking",
+        owner="generator",
+        issue_type="geometry_invalid",
+        evidence="STAIR_BBOX_MISMATCH",
+        suggested_route="regenerate_json",
+        retryable=True,
+    )
+
+    payload = _assert_valid(
+        audit_issue,
+        source="semantic_validation",
+        owner="provider",
+        issue_type="provider_format_error",
+        route="provider_retry",
+    )
+    decision = decide_route_from_issues(
+        [generator_issue, audit_issue],
+        current_feedback_round=1,
+        max_feedback_rounds=3,
+    )
+
+    assert payload["retryable"] is True
+    assert decision["route"] == "regenerate_json"
+    assert decision["target_stage"] == "generator"
 
 
 def test_normalizes_draft_unresolved_paths_as_user_owned_ask_user():
