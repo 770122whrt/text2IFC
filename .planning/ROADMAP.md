@@ -1015,7 +1015,15 @@ is reserved for a later phase that may reuse the ChangeSet revision interface.
 
 **Wave 6** *(blocked on Wave 5 deterministic verification)*
 
-- [ ] `06.5-06-PLAN.md` - Real DeepSeek two/three-storey stability campaign
+- [x] `06.5-06-PLAN.md` - Real DeepSeek graded multi-storey acceptance campaign
+
+**Supplemental graded acceptance closure**
+
+- [x] `06.5-07-PLAN.md` - Easy/Medium/Hard canonical fixtures, storey-name
+  consistency, and one real accepted IFC per difficulty
+- [x] `06.5-07-SUMMARY.md` - Hard session `999d210c233b1c34` passed schema,
+  staged generation, three bounded ChangeSet rounds, global Gates,
+  compile/reopen, geometry, Audit, preservation, and secret scan
 
 **Supplemental Medium geometry closure**
 
@@ -1039,6 +1047,9 @@ is reserved for a later phase that may reuse the ChangeSet revision interface.
   satisfied by fake/file/replay providers or prewritten model responses.
 - All work remains in the C-drive `multiagent-design` worktree.
 
-**Status:** Waves 0-5 and the 6.5-07.1 Medium geometry supplement are complete.
-Wave 6 remains open for the Hard three-storey fixture, real DeepSeek acceptance,
-and final Easy/Medium/Hard matrix closure.
+**Status:** Phase 6.5 graded acceptance is complete. Easy, Medium, and Hard each
+have an accepted review artifact. The Hard three-storey real DeepSeek session
+`999d210c233b1c34` reached `revision-07` after three bounded ChangeSet rounds,
+then passed global Gates, compile/reopen, postcompile geometry, final Audit,
+preservation 1.0, and a zero-finding secret scan. This is one accepted run per
+difficulty, not a statistical stability-rate claim.

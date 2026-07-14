@@ -7,12 +7,12 @@ See: `.planning/PROJECT.md` (updated 2026-06-11)
 **Core value:** Produce valid, inspectable IFC models from explicit user
 requirements.
 
-**Current focus:** Phase 6.5 real DeepSeek two-/three-storey stability campaign
+**Current focus:** Phase 6.5 accepted Hard IFC handoff and next-phase selection
 
 ## Status
 
 - Phase: 6.5
-- Stage: Waves 0-5 complete; Wave 6 next
+- Stage: Phase 6.5 graded Easy/Medium/Hard acceptance complete
 - State: Phase 6.2-fix Waves 0-2 are implemented and automatically verified.
   Wave 3 real UAT
   produced useful live evidence and fixed defects 001/002, then exposed defect
@@ -773,10 +773,14 @@ correct Gates or using prewritten model answers.
   responses.
 
 ---
-*Last activity: 2026-07-13 - completed the Phase 6.5-07.1 Medium geometry
-supplement. Real DeepSeek session `a95a0f967982690a` produced an accepted,
-reopenable two-storey L-shaped IFC after a stair ChangeSet and an opening-frame
-ChangeSet. All global Gates and final Audit passed, preservation rate was 1.0,
-and the 252-file artifact scan found zero secrets. Focused regression reports
-187 passed with one known pre-existing Hard-fixture RED failure. Wave 6 remains
-open for the Hard three-storey fixture and final live matrix.*
+*Last activity: 2026-07-14 - completed Phase 6.5 graded acceptance. Real
+DeepSeek Hard session `999d210c233b1c34` generated a non-uniform three-storey
+L-shaped building through staged packages and three bounded scoped ChangeSet
+rounds. Revision `revision-07` passed schema, semantic coverage, global Gates,
+compile/reopen, postcompile geometry, final Audit, preservation 1.0, and a
+zero-finding 296-file secret scan. Independent IfcOpenShell inspection confirmed
+3 storeys, 18 spaces, 48 walls, 12 doors, 9 windows, 2 stepped stairs, and
+complete door/window void-fill relationships. Agent/compiler/IFC-quality
+regression passed 600 tests and compileall passed. The accepted IFC is ready
+for separate user visual review; one accepted case per difficulty is not
+reported as a statistical stability rate.*
