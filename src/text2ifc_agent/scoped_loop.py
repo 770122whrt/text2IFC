@@ -132,6 +132,11 @@ def run_scoped_changeset_round(
             context_issues=[*resolved["context"], *application_feedback],
             trace_level=trace_level,
         )
+        if stage["classification"] == "invalid" and attempt < 2:
+            application_feedback = _changeset_validation_feedback(
+                stage["diagnostics"]
+            )
+            continue
         if not stage["valid"] or stage["classification"] != "changeset":
             return {
                 **_blocked(stage["classification"], stage["diagnostics"]),
@@ -194,6 +199,23 @@ def _application_feedback(issues: Sequence[Mapping[str, Any]]) -> list[dict[str,
             "evidence": (
                 f"{issue.get('code', 'CHANGESET_APPLICATION_ERROR')}: "
                 f"{issue.get('message', 'ChangeSet application failed.')}"
+            ),
+        }
+        for index, issue in enumerate(issues, start=1)
+    ]
+
+
+def _changeset_validation_feedback(
+    issues: Sequence[Mapping[str, Any]],
+) -> list[dict[str, Any]]:
+    return [
+        {
+            "issue_id": f"issue-changeset-validation-{index:04d}",
+            "actual_ref": str(issue.get("path") or "/changeset"),
+            "expected_fact_ref": None,
+            "evidence": (
+                f"{issue.get('code', 'CHANGESET_VALIDATION_ERROR')}: "
+                f"{issue.get('message', 'ChangeSet validation failed.')}"
             ),
         }
         for index, issue in enumerate(issues, start=1)
