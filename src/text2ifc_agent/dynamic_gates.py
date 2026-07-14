@@ -608,6 +608,8 @@ def _opening_fill_geometry_issues(
 def _opening_frame_correction() -> dict[str, Any]:
     return {
         "recommended_action": "align_opening_frame_to_host",
+        "expected_object_placement_ref_direction": [1, 0, 0],
+        "expected_representation_direction": [0, 0, 1],
         "coordinate_contract": {
             "local_x": "opening width along the host wall",
             "local_y": "opening thickness through the host wall",
