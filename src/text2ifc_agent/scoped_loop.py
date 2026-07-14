@@ -19,6 +19,7 @@ _COLLECTION_REF = re.compile(
     r"^/(?P<collection>entities|relationships)/(?P<selector>[^/]+)(?P<path>/.*)$"
 )
 _STABLE_REF = re.compile(r"^(entity|relationship):[A-Za-z][A-Za-z0-9._:-]*#/.*$")
+MAX_CHANGESET_ATTEMPTS = 3
 
 
 def resolve_issue_component_refs(
@@ -114,7 +115,7 @@ def run_scoped_changeset_round(
     changeset: dict[str, Any] = {}
     applied: dict[str, Any] = {}
     application_feedback: list[dict[str, Any]] = []
-    for attempt in range(1, 3):
+    for attempt in range(1, MAX_CHANGESET_ATTEMPTS + 1):
         active_output = output if attempt == 1 else output / f"attempt-{attempt:02d}"
         stage = run_changeset_stage(
             provider=provider,
@@ -132,7 +133,10 @@ def run_scoped_changeset_round(
             context_issues=[*resolved["context"], *application_feedback],
             trace_level=trace_level,
         )
-        if stage["classification"] == "invalid" and attempt < 2:
+        if (
+            stage["classification"] == "invalid"
+            and attempt < MAX_CHANGESET_ATTEMPTS
+        ):
             application_feedback = _changeset_validation_feedback(
                 stage["diagnostics"]
             )
@@ -164,7 +168,7 @@ def run_scoped_changeset_round(
                 _write_json(output / "changeset.json", changeset)
                 _write_json(output / "application.json", application_payload)
             break
-        if attempt == 2:
+        if attempt == MAX_CHANGESET_ATTEMPTS:
             return {
                 **_blocked("application_blocked", applied["issues"]),
                 "stage": stage,
