@@ -36,10 +36,18 @@ def _issue():
 
 
 class ChangeSetProvider:
-    def __init__(self, candidate, expected, *, violate_scope_once=False):
+    def __init__(
+        self,
+        candidate,
+        expected,
+        *,
+        violate_scope_once=False,
+        invalid_contract_once=False,
+    ):
         self.candidate = candidate
         self.expected = expected
         self.violate_scope_once = violate_scope_once
+        self.invalid_contract_once = invalid_contract_once
         self.calls = []
 
     def generate_live(self, *, session_id, prompt, schema, state):
@@ -67,6 +75,8 @@ class ChangeSetProvider:
                 }
             ],
         }
+        if self.invalid_contract_once and len(self.calls) == 1:
+            payload["operations"][0]["evidence_refs"] = ["issue-wall-001:"]
         text = json.dumps(payload, ensure_ascii=False)
         return LiveProviderResult(
             session_id=session_id,
@@ -203,3 +213,31 @@ def test_scoped_round_retries_one_application_scope_violation_without_mutating_b
         entity for entity in result["candidate"]["entities"] if entity["id"] == "wall-1"
     )
     assert wall["attributes"]["Name"] == "Corrected wall"
+
+
+def test_scoped_round_retries_one_invalid_changeset_with_schema_feedback(tmp_path):
+    candidate = _candidate()
+    expected = _expected()
+    provider = ChangeSetProvider(candidate, expected, invalid_contract_once=True)
+    before = build_candidate_index(candidate)
+
+    result = run_scoped_changeset_round(
+        provider=provider,
+        output_dir=tmp_path,
+        case_id="case-contract-retry",
+        round_number=1,
+        user_request="Correct the wall name.",
+        conversation=[{"role": "user", "content": "Correct the wall name."}],
+        design_brief={"status": "ready"},
+        expected_facts=expected,
+        candidate=candidate,
+        issues=[_issue()],
+        trace_level="debug",
+    )
+
+    assert result["valid"] is True
+    assert len(provider.calls) == 2
+    assert "SCHEMA_VALIDATION_ERROR" in provider.calls[1]["prompt"]
+    assert "/operations/0" in provider.calls[1]["prompt"]
+    assert (tmp_path / "attempt-02" / "changeset.json").is_file()
+    assert build_candidate_index(candidate) == before
