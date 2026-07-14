@@ -902,9 +902,21 @@ def _opening_records_from_storey_map(
 
 def _normalize_opening_payload(opening: Mapping[str, Any]) -> dict[str, Any]:
     record = _copy_payload(opening)
-    for key in ("count", "quantity", "width", "height", "sill_height", "sill", "host", "wall"):
+    for key in (
+        "count",
+        "quantity",
+        "width",
+        "height",
+        "sill_height",
+        "sill",
+        "host_wall_id",
+        "host",
+        "wall",
+    ):
         record.pop(key, None)
-    host = _string(_first_present(opening, ("host_wall", "host", "wall")))
+    host = _string(
+        _first_present(opening, ("host_wall", "host_wall_id", "host", "wall"))
+    )
     if host:
         record["host_wall"] = host
     width = _number_alias(opening, ("width_mm", "width"))
