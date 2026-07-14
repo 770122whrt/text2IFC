@@ -412,6 +412,60 @@ def test_dynamic_gate_explicit_targets_exclude_context_only_opening(tmp_path):
     assert "wall-1" in issues[0].evidence
 
 
+@pytest.mark.parametrize("element_id", ["door-1", "window-1"])
+def test_dynamic_gate_path_targets_filling_instead_of_context_opening(
+    tmp_path, element_id
+):
+    root = tmp_path / "case"
+    root.mkdir()
+    (root / "candidate.json").write_text(
+        json.dumps(
+            {
+                "entities": [
+                    {"id": element_id},
+                    {"id": "opening-1"},
+                    {"id": "wall-1"},
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+    (root / "gate-summary.json").write_text(
+        json.dumps(
+            {
+                "overall_status": "failed",
+                "gates": [
+                    {
+                        "name": "dynamic_opening_fill",
+                        "status": "failed",
+                        "issues": [
+                            {
+                                "code": "FILLING_RELATIVE_ROTATION_MISMATCH",
+                                "path": (
+                                    f"/entities/{element_id}/attributes/"
+                                    "ObjectPlacement/ref_direction"
+                                ),
+                                "element_id": element_id,
+                                "opening_id": "opening-1",
+                                "host_wall": "wall-1",
+                            }
+                        ],
+                    }
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    issues = normalize_gate_sidecars(root)
+
+    assert [issue.actual_ref for issue in issues] == [
+        f"entity:{element_id}#/attributes"
+    ]
+    assert "opening-1" in issues[0].evidence
+    assert "wall-1" in issues[0].evidence
+
+
 def test_geometry_gate_entity_ids_become_stable_changeset_targets(tmp_path):
     root = tmp_path / "case"
     root.mkdir()
