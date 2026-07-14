@@ -54,7 +54,8 @@ class ChangeSetProvider:
         self.calls.append({"session_id": session_id, "prompt": prompt, "schema": schema, "state": state})
         index = build_candidate_index(self.candidate)
         changes = {"/attributes/Name": "Corrected wall"}
-        if self.violate_scope_once and len(self.calls) == 1:
+        scope_violation_call = 2 if self.invalid_contract_once else 1
+        if self.violate_scope_once and len(self.calls) == scope_violation_call:
             changes = {"/attributes/ObjectPlacement/axis": [0, 1, 0]}
         payload = {
             "schema_version": "text2ifc/bim-json-changeset/1.0",
@@ -240,4 +241,39 @@ def test_scoped_round_retries_one_invalid_changeset_with_schema_feedback(tmp_pat
     assert "SCHEMA_VALIDATION_ERROR" in provider.calls[1]["prompt"]
     assert "/operations/0" in provider.calls[1]["prompt"]
     assert (tmp_path / "attempt-02" / "changeset.json").is_file()
+    assert build_candidate_index(candidate) == before
+
+
+def test_scoped_round_uses_three_attempt_budget_for_contract_then_scope_feedback(
+    tmp_path,
+):
+    candidate = _candidate()
+    expected = _expected()
+    provider = ChangeSetProvider(
+        candidate,
+        expected,
+        invalid_contract_once=True,
+        violate_scope_once=True,
+    )
+    before = build_candidate_index(candidate)
+
+    result = run_scoped_changeset_round(
+        provider=provider,
+        output_dir=tmp_path,
+        case_id="case-contract-then-scope-retry",
+        round_number=1,
+        user_request="Correct the wall name.",
+        conversation=[{"role": "user", "content": "Correct the wall name."}],
+        design_brief={"status": "ready"},
+        expected_facts=expected,
+        candidate=candidate,
+        issues=[_issue()],
+        trace_level="debug",
+    )
+
+    assert result["valid"] is True
+    assert len(provider.calls) == 3
+    assert "SCHEMA_VALIDATION_ERROR" in provider.calls[1]["prompt"]
+    assert "CHANGESET_SCOPE_VIOLATION" in provider.calls[2]["prompt"]
+    assert (tmp_path / "attempt-03" / "application.json").is_file()
     assert build_candidate_index(candidate) == before
