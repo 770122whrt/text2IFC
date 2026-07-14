@@ -133,6 +133,8 @@ def test_design_brief_v21_defines_canonical_multistorey_structure():
     assert "Use `elevation_mm`; do not use `level` as a substitute" in text
     assert "Do not create top-level `storey_1`, `storey_2`, `spaces_ground`, `spaces_first`, or generic `openings`" in text
     assert "Put doors and windows inside the storey that owns their host wall" in text
+    assert "Use exactly `host_wall`" in text
+    assert "Do not emit `host_wall_id`" in text
     assert "Use `known_facts.floor_slabs`" in text
     assert "Use one `known_facts.roof_slab`" in text
     assert "Do not collapse explicit slab instances into thickness-only building metadata" in text

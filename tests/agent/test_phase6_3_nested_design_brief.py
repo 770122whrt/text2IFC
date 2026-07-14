@@ -552,6 +552,52 @@ def test_expected_facts_reads_inline_storey_list_doors_and_windows():
     assert expected["windows"][2]["id"] == "window-master-south-2"
 
 
+def test_expected_facts_normalizes_explicit_host_wall_id_without_guessing():
+    design_brief = {
+        "schema_version": "text2ifc/design-brief/2.0",
+        "status": "ready",
+        "language": "zh-CN",
+        "known_facts": {
+            "storeys": [
+                {
+                    "id": "storey-1",
+                    "elevation_mm": 0,
+                    "doors": [
+                        {
+                            "id": "door-entry",
+                            "host_wall_id": "storey-1-wall-south",
+                            "width_mm": 1200,
+                            "height_mm": 2200,
+                        }
+                    ],
+                    "windows": [
+                        {
+                            "id": "window-west",
+                            "host_wall_id": "storey-1-wall-west",
+                            "width_mm": 1500,
+                            "height_mm": 1200,
+                            "sill_height_mm": 900,
+                        }
+                    ],
+                }
+            ]
+        },
+        "missing_facts": [],
+        "ambiguities": [],
+        "unsupported_requests": [],
+    }
+
+    expected = build_expected_facts(
+        case_id="explicit-host-wall-id",
+        design_brief=design_brief,
+    )
+
+    assert expected["doors"][0]["host_wall"] == "storey-1-wall-south"
+    assert expected["windows"][0]["host_wall"] == "storey-1-wall-west"
+    assert "host_wall_id" not in expected["doors"][0]
+    assert "host_wall_id" not in expected["windows"][0]
+
+
 def test_expected_facts_infers_flat_opening_storey_from_chinese_location():
     design_brief = {
         "schema_version": "text2ifc/design-brief/2.0",
