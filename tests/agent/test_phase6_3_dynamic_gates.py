@@ -253,6 +253,8 @@ def test_dynamic_gates_fail_openings_outside_host_wall_local_bounds():
         "local_y": "opening thickness through the host wall",
         "local_z": "opening height",
     }
+    assert issue["expected_object_placement_ref_direction"] == [1, 0, 0]
+    assert issue["expected_representation_direction"] == [0, 0, 1]
 
 
 def test_dynamic_gates_fail_filling_that_repeats_parent_wall_rotation():
