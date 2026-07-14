@@ -425,6 +425,12 @@ def _structured_target_ids(detail: Mapping[str, Any]) -> list[str]:
     explicit_targets = detail.get("target_entity_ids")
     if isinstance(explicit_targets, list):
         return list(dict.fromkeys(str(item) for item in explicit_targets))
+    path = detail.get("path")
+    if isinstance(path, str) and path.startswith("/entities/"):
+        path_parts = path.split("/")
+        if len(path_parts) > 2 and path_parts[2]:
+            entity_id = path_parts[2].replace("~1", "/").replace("~0", "~")
+            return [entity_id]
     values = list(detail.get("entity_ids") or [])
     values.extend(detail.get("components") or [])
     opening_id = detail.get("opening_id")
