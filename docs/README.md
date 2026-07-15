@@ -11,6 +11,10 @@ Use this page as the stable entry point for project documentation.
 
 ## Architecture
 
+- [当前 text2IFC 工作流与数据流](architecture/current-workflow-and-data-flow.md)
+  - 当前 Phase 6.5 端到端工作流
+  - Agent、Gate、编译器和版本修订的职责边界
+  - 主要数据合同、权威顺序、失败路由和报告产物
 - [text2IFC Architecture Overview](architecture/text2ifc-overview.md)
   - Target pipeline
   - Current repository capabilities
