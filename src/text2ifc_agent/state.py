@@ -29,7 +29,29 @@ _SECRET_KEY_PARTS = (
     "base_url",
     "url",
 )
-_ENV_VAR_NAMES = {"ANTHROPIC_AUTH_TOKEN", "ANTHROPIC_BASE_URL"}
+_SAFE_TOKEN_COUNTER_KEYS = {
+    "max-tokens",
+    "max-completion-tokens",
+    "prompt-tokens",
+    "completion-tokens",
+    "total-tokens",
+    "reasoning-tokens",
+    "input-tokens",
+    "output-tokens",
+    "cache-read-input-tokens",
+    "cache-creation-input-tokens",
+}
+_ENV_VAR_NAMES = {
+    "API_KEY",
+    "MIMO_API_KEY",
+    "DEEPSEEK_API_KEY",
+    "ANTHROPIC_AUTH_TOKEN",
+    "ANTHROPIC_BASE_URL",
+    "OpenAI_BASE_URL",
+    "OPENAI_BASE_URL",
+    "TEXT2IFC_PROVIDER",
+    "TEXT2IFC_DEEPSEEK_MODEL",
+}
 
 
 class AgentStatus(str, Enum):
@@ -236,6 +258,8 @@ def _redact(value: Any, *, parent_key: str) -> Any:
 
 def _is_secret_key(key: str) -> bool:
     normalized = key.lower().replace("_", "-")
+    if normalized in _SAFE_TOKEN_COUNTER_KEYS:
+        return False
     return any(part in normalized for part in _SECRET_KEY_PARTS)
 
 

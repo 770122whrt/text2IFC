@@ -1,0 +1,49 @@
+{
+  "schema_version": "text2ifc/design-brief/2.0",
+  "language": "zh-CN",
+  "original_request": "创建一个长6米、宽4米、高3米的房间，南墙中间有一扇900mm宽、2100mm高的门，北墙中间有一扇1200mm宽、1500mm高、窗台900mm高的窗。",
+  "status": "ready",
+  "known_facts": {
+    "space": {
+      "shape": "rectangle",
+      "length_mm": 6000,
+      "width_mm": 4000,
+      "height_mm": 3000
+    },
+    "walls": {
+      "count": 4,
+      "enclosure": "closed",
+      "thickness_mm": 300
+    },
+    "door": {
+      "width_mm": 900,
+      "height_mm": 2100,
+      "host": "south_wall",
+      "alignment": "host_centerline"
+    },
+    "window": {
+      "width_mm": 1200,
+      "height_mm": 1500,
+      "sill_height_mm": 900,
+      "host": "north_wall",
+      "alignment": "host_centerline"
+    }
+  },
+  "fact_sources": [
+    {
+      "path": "/known_facts",
+      "source_turns": ["turn-user-001", "turn-user-003"],
+      "evidence_refs": ["schema:bim-json-v2:entity", "schema:bim-json-v2:representation"]
+    }
+  ],
+  "missing_facts": [],
+  "ambiguities": [],
+  "unsupported_requests": [],
+  "user_corrections": [],
+  "clarification_questions": [],
+  "provenance": {
+    "source_turns": ["turn-user-001", "turn-user-003"],
+    "selected_evidence_ids": ["schema:bim-json-v2:entity", "schema:bim-json-v2:representation", "capability:IFC2X3:IfcSpace", "capability:IFC2X3:IfcWall", "capability:IFC2X3:IfcDoor", "capability:IFC2X3:IfcWindow", "capability:IFC2X3:IfcOpeningElement", "capability:IFC2X3:IfcRelVoidsElement", "capability:IFC2X3:IfcRelFillsElement"],
+    "few_shot_ids": ["design-brief-v2.complete-room-openings"]
+  }
+}

@@ -1,0 +1,161 @@
+{
+  "case_count": 4,
+  "cases": [
+    {
+      "artifact_paths": [
+        "expected-facts.json",
+        "gate-summary.json",
+        "route-decision.json",
+        "report.md",
+        "trace-manifest.json"
+      ],
+      "baseline_status": "blocked",
+      "case_id": "complex-two-storey",
+      "expected_counts": {
+        "IfcBuildingStorey": 2,
+        "IfcDoor": 9,
+        "IfcSpace": 9,
+        "IfcWindow": 9
+      },
+      "gate_applicability": {
+        "bim_json_validation": "applicable",
+        "dynamic_entity_completeness": "applicable",
+        "dynamic_opening_fill": "applicable",
+        "dynamic_storey_containment": "applicable",
+        "geometry": "applicable",
+        "ifc_compile_reopen": "applicable",
+        "repair_route": "applicable",
+        "semantic_coverage": "not_applicable"
+      },
+      "gate_issue_codes": [
+        "EXPECTED_ENTITY_MISSING",
+        "OPENING_FILL_RELATIONSHIP_MISSING",
+        "STOREY_CONTAINMENT_MISMATCH",
+        "VOID_RELATIONSHIP_MISSING"
+      ],
+      "gate_overall_status": "failed",
+      "input_text": "创建一个两层小型住宅建筑，单位为毫米。建筑整体为矩形平面，外轮廓尺寸为东西向 10000 mm、南北向 8000 mm，共两层，每层净高 3000 mm，墙厚 200 mm，楼板厚度 150 mm，首层地板厚度 150 mm。坐标约定为：建筑西南角为原点，X 轴向东，Y 轴向北，Z 轴向上。首层包含客厅、厨房、卫生间、楼梯间四个空间：客厅位于西南侧，尺寸 6000 mm × 4500 mm；厨房位于东南侧，尺寸 4000 mm × 3500 mm；卫生间位于东北侧，尺寸 2500 mm × 2500 mm；楼梯间位于西北侧，尺寸 3500 mm × 3500 mm。二层包含主卧、次卧、书房、卫生间、走廊五个空间：主卧位于西南侧，尺寸 5000 mm × 4000 mm；次卧位于东南侧，尺寸 4000 mm × 3500 mm；书房位于东北侧，尺寸 3000 mm × 2500 mm；二层卫生间位于西北侧，尺寸 2500 mm × 2500 mm；走廊连接楼梯口和各房间，宽度 1200 mm。要求生成 IfcBuilding、两个 IfcBuildingStorey、所有 IfcSpace、外墙、内墙、首层地板、二层楼板、屋面板、楼梯、门和窗，并保持空间归属和相邻关系正确。首层客厅南墙居中设置一樘外门，尺寸 1200 mm × 2200 mm；客厅东墙与厨房之间设置一樘室内门，尺寸 900 mm × 2100 mm；厨房北墙与卫生间/过道区域之间设置一樘门，尺寸 800 mm × 2100 mm；卫生间西墙设置一樘门，尺寸 750 mm × 2100 mm；楼梯间东墙设置一樘门，尺寸 900 mm × 2100 mm。二层楼梯上来后进入走廊，走廊分别连接主卧、次卧、书房和卫生间，每个房间门尺寸均为 900 mm × 2100 mm，卫生间门尺寸为 750 mm × 2100 mm。窗户要求如下：客厅南墙设置两扇窗，每扇 1500 mm × 1200 mm，窗台高 900 mm，分布在外门两侧；厨房东墙设置一扇窗，尺寸 1200 mm × 1000 mm，窗台高 1000 mm；首层卫生间北墙设置一扇小窗，尺寸 800 mm × 600 mm，窗台高 1600 mm；主卧南墙设置两扇窗，每扇 1500 mm × 1200 mm，窗台高 900 mm；次卧东墙设置一扇窗，尺寸 1400 mm × 1200 mm，窗台高 900 mm；书房北墙设置一扇窗，尺寸 1200 mm × 1000 mm，窗台高 900 mm；二层卫生间西墙设置一扇小窗，尺寸 800 mm × 600 mm，窗台高 1600 mm。楼梯位于首层楼梯间内，从首层 Z=150 mm 起步到二层楼面 Z=3150 mm，采用直跑或折返楼梯均可，但必须正确连接两层，生成 IfcStair 或等效楼梯构件。所有墙体必须与对应楼层关联，门窗必须嵌入对应墙体并与相邻空间关系一致，楼板和屋面板应覆盖建筑外轮廓，二层空间位于 Z=3150 mm 以上，屋面板位于二层顶部 Z=6150 mm 附近。请生成完整 IFC 模型，保证 IfcSpace、墙、门、窗、楼板、楼梯和楼层结构关系正确。\n",
+      "non_two_storey_gate_route_covered": false,
+      "owner_stage": "generator",
+      "route": "generator_regeneration_required",
+      "schema_version": "text2ifc/phase6.3-case-summary/1.0",
+      "status": "blocked"
+    },
+    {
+      "artifact_paths": [
+        "expected-facts.json",
+        "gate-summary.json",
+        "route-decision.json",
+        "report.md",
+        "trace-manifest.json"
+      ],
+      "baseline_status": null,
+      "case_id": "non-two-storey-three-level",
+      "expected_counts": {
+        "IfcBuildingStorey": 3,
+        "IfcDoor": 3,
+        "IfcSpace": 3,
+        "IfcWindow": 3
+      },
+      "gate_applicability": {
+        "bim_json_validation": "applicable",
+        "dynamic_entity_completeness": "applicable",
+        "dynamic_opening_fill": "applicable",
+        "dynamic_storey_containment": "applicable",
+        "geometry": "applicable",
+        "ifc_compile_reopen": "applicable",
+        "repair_route": "applicable",
+        "semantic_coverage": "not_applicable"
+      },
+      "gate_issue_codes": [
+        "EXPECTED_ENTITY_MISSING",
+        "OPENING_FILL_RELATIONSHIP_MISSING",
+        "STOREY_CONTAINMENT_MISMATCH",
+        "VOID_RELATIONSHIP_MISSING"
+      ],
+      "gate_overall_status": "failed",
+      "input_text": "three-storey scalability fixture",
+      "non_two_storey_gate_route_covered": true,
+      "owner_stage": "generator",
+      "route": "generator_regeneration_required",
+      "schema_version": "text2ifc/phase6.3-case-summary/1.0",
+      "status": "blocked"
+    },
+    {
+      "artifact_paths": [
+        "expected-facts.json",
+        "gate-summary.json",
+        "route-decision.json",
+        "report.md",
+        "trace-manifest.json"
+      ],
+      "baseline_status": null,
+      "case_id": "simple-room-smoke",
+      "expected_counts": {
+        "IfcBuildingStorey": 1,
+        "IfcDoor": 0,
+        "IfcSpace": 1,
+        "IfcWindow": 0
+      },
+      "gate_applicability": {
+        "bim_json_validation": "applicable",
+        "dynamic_entity_completeness": "applicable",
+        "dynamic_opening_fill": "applicable",
+        "dynamic_storey_containment": "applicable",
+        "geometry": "applicable",
+        "ifc_compile_reopen": "applicable",
+        "repair_route": "applicable",
+        "semantic_coverage": "not_applicable"
+      },
+      "gate_issue_codes": [],
+      "gate_overall_status": "passed",
+      "input_text": "simple-room-smoke regression smoke",
+      "non_two_storey_gate_route_covered": false,
+      "owner_stage": "none",
+      "route": "accept",
+      "schema_version": "text2ifc/phase6.3-case-summary/1.0",
+      "status": "accepted"
+    },
+    {
+      "artifact_paths": [
+        "expected-facts.json",
+        "gate-summary.json",
+        "route-decision.json",
+        "report.md",
+        "trace-manifest.json"
+      ],
+      "baseline_status": null,
+      "case_id": "two-room-smoke",
+      "expected_counts": {
+        "IfcBuildingStorey": 1,
+        "IfcDoor": 0,
+        "IfcSpace": 2,
+        "IfcWindow": 0
+      },
+      "gate_applicability": {
+        "bim_json_validation": "applicable",
+        "dynamic_entity_completeness": "applicable",
+        "dynamic_opening_fill": "applicable",
+        "dynamic_storey_containment": "applicable",
+        "geometry": "applicable",
+        "ifc_compile_reopen": "applicable",
+        "repair_route": "applicable",
+        "semantic_coverage": "not_applicable"
+      },
+      "gate_issue_codes": [],
+      "gate_overall_status": "passed",
+      "input_text": "two-room-smoke regression smoke",
+      "non_two_storey_gate_route_covered": false,
+      "owner_stage": "none",
+      "route": "accept",
+      "schema_version": "text2ifc/phase6.3-case-summary/1.0",
+      "status": "accepted"
+    }
+  ],
+  "complex_two_storey_status": "blocked",
+  "false_accept_count": 0,
+  "matrix_report": "matrix-report.md",
+  "non_two_storey_gate_route_covered": true,
+  "root": "dataset\\processed\\agent-demo\\phase6.3-gate-audit",
+  "schema_version": "text2ifc/phase6.3-matrix/1.0"
+}

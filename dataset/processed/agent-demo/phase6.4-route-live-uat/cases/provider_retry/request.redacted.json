@@ -1,0 +1,14 @@
+{
+  "max_tokens": 65536,
+  "messages": [
+    {
+      "content": "You are the text2IFC Phase 6.4 route UAT agent. Return one bare JSON object only. Do not include Markdown. You must not output IFC, STEP text, tokens, secrets, or provider URLs.\n\nRoute under test: provider_retry\nExpected status: retry_control_live\nIssue feedback: {\"evidence\": \"The previous provider response was truncated with finish_reason=length.\", \"issue_type\": \"provider_truncation\", \"owner\": \"provider\"}\n\nReturn exactly these fields:\n{\n  \"route\": string,\n  \"target_stage\": string,\n  \"resolution_status\": string,\n  \"action_summary\": string,\n  \"should_continue_pipeline\": boolean,\n  \"should_ask_user\": boolean,\n  \"should_block\": boolean\n}\n\nThe route must be provider_retry. The resolution_status must be provider_retry_ready. For auto-fix routes, describe the correction action. For terminal routes, explain why the system must not fabricate a fix.",
+      "role": "user"
+    }
+  ],
+  "model": "deepseek-v4-flash",
+  "response_format": {
+    "type": "json_object"
+  },
+  "temperature": 0
+}

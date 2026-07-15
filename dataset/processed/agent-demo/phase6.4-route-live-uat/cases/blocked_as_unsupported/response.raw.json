@@ -1,0 +1,35 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "message": {
+        "annotations": null,
+        "audio": null,
+        "content": "{\n  \"route\": \"blocked_as_unsupported\",\n  \"target_stage\": \"block\",\n  \"resolution_status\": \"unsupported_blocked\",\n  \"action_summary\": \"Blocking pipeline: unsupported feature; no automated fix available.\",\n  \"should_continue_pipeline\": false,\n  \"should_ask_user\": false,\n  \"should_block\": true\n}",
+        "function_call": null,
+        "reasoning_content": "We are given a route \"blocked_as_unsupported\" and expected status \"correct_terminal_live\". This is a terminal route meaning the pipeline should stop because the feature is unsupported. The issue feedback indicates compiler unsupported feature. So resolution_status should be \"unsupported_blocked\". should_continue_pipeline is false because it's terminal. should_ask_user is false because it's auto-blocked. should_block is true. action_summary: Since it's terminal, explain that the system must not fabricate a fix; it blocks because unsupported. target_stage: probably \"block\" or something, but we need to output target_stage as a string. The instruction says \"target_stage\" but not defined. I'll assume \"block\" as that aligns with the route. Alternatively, maybe \"terminal\". Let's read: \"Return exactly these fields\". I'll set target_stage to \"block\" as the route name suggests. But careful: the route is blocked_as_unsupported, so the target stage is likely the stage where it blocks. I'll set to \"block\". Also for action_summary, describe why it's terminal: \"The feature is outside the compiler support boundary; system must not fabricate a fix.\" But keep concise.\n\nThus:\n{\n  \"route\": \"blocked_as_unsupported\",\n  \"target_stage\": \"block\",\n  \"resolution_status\": \"unsupported_blocked\",\n  \"action_summary\": \"Blocking pipeline: unsupported feature; no automated fix available.\",\n  \"should_continue_pipeline\": false,\n  \"should_ask_user\": false,\n  \"should_block\": true\n}",
+        "refusal": null,
+        "role": "assistant",
+        "tool_calls": null
+      }
+    }
+  ],
+  "created": 1783569913,
+  "id": "02661331-a39d-47b5-b2a6-e09729c12c10",
+  "model": "deepseek-v4-flash",
+  "moderation": null,
+  "object": "chat.completion",
+  "service_tier": null,
+  "system_fingerprint": "fp_8b330d02d0_prod0820_fp8_kvcache_20260402",
+  "usage": {
+    "completion_tokens": 424,
+    "completion_tokens_details": "[REDACTED]",
+    "prompt_cache_hit_tokens": "[REDACTED]",
+    "prompt_cache_miss_tokens": "[REDACTED]",
+    "prompt_tokens": 238,
+    "prompt_tokens_details": "[REDACTED]",
+    "total_tokens": 662
+  }
+}

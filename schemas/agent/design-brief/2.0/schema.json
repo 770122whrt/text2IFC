@@ -1,0 +1,222 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://text2ifc.local/schemas/agent/design-brief/2.0/schema.json",
+  "title": "text2IFC Evidence-grounded Design Brief 2.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "language",
+    "original_request",
+    "status",
+    "known_facts",
+    "fact_sources",
+    "missing_facts",
+    "ambiguities",
+    "unsupported_requests",
+    "user_corrections",
+    "clarification_questions",
+    "provenance"
+  ],
+  "properties": {
+    "schema_version": {"const": "text2ifc/design-brief/2.0"},
+    "language": {"const": "zh-CN"},
+    "original_request": {"type": "string", "minLength": 1},
+    "status": {
+      "enum": ["ready", "needs_clarification", "draft_required", "blocked"]
+    },
+    "known_facts": {"type": "object"},
+    "fact_sources": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/factSource"}
+    },
+    "missing_facts": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/missingFact"}
+    },
+    "ambiguities": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/ambiguity"}
+    },
+    "unsupported_requests": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/unsupportedRequest"}
+    },
+    "user_corrections": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/correction"}
+    },
+    "clarification_questions": {
+      "type": "array",
+      "maxItems": 3,
+      "items": {"$ref": "#/$defs/question"}
+    },
+    "provenance": {"$ref": "#/$defs/provenance"}
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {"status": {"const": "needs_clarification"}},
+        "required": ["status"]
+      },
+      "then": {
+        "properties": {
+          "clarification_questions": {"minItems": 1, "maxItems": 3}
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {"status": {"const": "ready"}},
+        "required": ["status"]
+      },
+      "then": {
+        "properties": {"clarification_questions": {"maxItems": 0}}
+      }
+    }
+  ],
+  "$defs": {
+    "nonEmptyString": {"type": "string", "minLength": 1},
+    "jsonPointer": {"type": "string", "pattern": "^/"},
+    "stringList": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/nonEmptyString"}
+    },
+    "evidenceRefs": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/nonEmptyString"}
+    },
+    "factSource": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "source_turns", "evidence_refs"],
+      "properties": {
+        "path": {"$ref": "#/$defs/jsonPointer"},
+        "source_turns": {"$ref": "#/$defs/stringList"},
+        "evidence_refs": {"$ref": "#/$defs/evidenceRefs"}
+      }
+    },
+    "missingFact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "code",
+        "path",
+        "message",
+        "reason",
+        "blocking",
+        "evidence_refs",
+        "source_turns"
+      ],
+      "properties": {
+        "id": {"$ref": "#/$defs/nonEmptyString"},
+        "code": {"$ref": "#/$defs/nonEmptyString"},
+        "path": {"$ref": "#/$defs/jsonPointer"},
+        "message": {"$ref": "#/$defs/nonEmptyString"},
+        "reason": {"$ref": "#/$defs/nonEmptyString"},
+        "blocking": {"type": "boolean"},
+        "evidence_refs": {"$ref": "#/$defs/evidenceRefs"},
+        "source_turns": {"$ref": "#/$defs/stringList"}
+      }
+    },
+    "ambiguity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "path",
+        "message",
+        "reason",
+        "blocking",
+        "evidence_refs",
+        "source_turns",
+        "options"
+      ],
+      "properties": {
+        "id": {"$ref": "#/$defs/nonEmptyString"},
+        "path": {"$ref": "#/$defs/jsonPointer"},
+        "message": {"$ref": "#/$defs/nonEmptyString"},
+        "reason": {"$ref": "#/$defs/nonEmptyString"},
+        "blocking": {"type": "boolean"},
+        "evidence_refs": {"$ref": "#/$defs/evidenceRefs"},
+        "source_turns": {"$ref": "#/$defs/stringList"},
+        "options": {
+          "type": "array",
+          "minItems": 2,
+          "items": {}
+        }
+      }
+    },
+    "unsupportedRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "path",
+        "message",
+        "reason",
+        "blocking",
+        "requested_value",
+        "evidence_refs",
+        "source_turns"
+      ],
+      "properties": {
+        "id": {"$ref": "#/$defs/nonEmptyString"},
+        "path": {"$ref": "#/$defs/jsonPointer"},
+        "message": {"$ref": "#/$defs/nonEmptyString"},
+        "reason": {"$ref": "#/$defs/nonEmptyString"},
+        "blocking": {"type": "boolean"},
+        "requested_value": {},
+        "evidence_refs": {"$ref": "#/$defs/evidenceRefs"},
+        "source_turns": {"$ref": "#/$defs/stringList"}
+      }
+    },
+    "correction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "value", "source_turn", "evidence_refs"],
+      "properties": {
+        "path": {"$ref": "#/$defs/jsonPointer"},
+        "value": {},
+        "source_turn": {"$ref": "#/$defs/nonEmptyString"},
+        "replaces": {},
+        "evidence_refs": {"$ref": "#/$defs/evidenceRefs"}
+      }
+    },
+    "question": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "text", "targets", "reason", "evidence_refs"],
+      "properties": {
+        "id": {"$ref": "#/$defs/nonEmptyString"},
+        "text": {"$ref": "#/$defs/nonEmptyString"},
+        "targets": {"$ref": "#/$defs/stringList"},
+        "reason": {"$ref": "#/$defs/nonEmptyString"},
+        "evidence_refs": {"$ref": "#/$defs/evidenceRefs"}
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_turns", "selected_evidence_ids", "few_shot_ids"],
+      "properties": {
+        "source_turns": {"$ref": "#/$defs/stringList"},
+        "selected_evidence_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/nonEmptyString"}
+        },
+        "few_shot_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/nonEmptyString"}
+        }
+      }
+    }
+  }
+}

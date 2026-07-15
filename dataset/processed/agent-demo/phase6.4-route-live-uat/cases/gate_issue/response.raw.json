@@ -1,0 +1,35 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "message": {
+        "annotations": null,
+        "audio": null,
+        "content": "{\n  \"route\": \"gate_issue\",\n  \"target_stage\": \"correct_terminal_live\",\n  \"resolution_status\": \"gate_review_required\",\n  \"action_summary\": \"The system must not fabricate a fix because the gate applicability is disputed, and Audit wording cannot override the gate. A manual gate review is required.\",\n  \"should_continue_pipeline\": false,\n  \"should_ask_user\": false,\n  \"should_block\": true\n}",
+        "function_call": null,
+        "reasoning_content": "We are given a route \"gate_issue\" with expected status \"correct_terminal_live\" and issue feedback indicating gate false positive. The instruction says for terminal routes, explain why the system must not fabricate a fix. Since the expected status is \"correct_terminal_live\", it's a terminal route (live terminal). So resolution_status should be gate_review_required (as per instruction). action_summary should explain why not to fabricate. should_continue_pipeline = false, should_ask_user = false? Wait, we need to check the guidelines: The route is gate_issue, which is an auto-fix? Actually the description says: \"For auto-fix routes, describe the correction action. For terminal routes, explain why the system must not fabricate a fix.\" Here the expected status is correct_terminal_live, so it's terminal. Therefore action_summary should be about not fabricating. Also should_ask_user might be false because it's terminal? But need to think: The resolution_status is gate_review_required, meaning the gate review is needed. So should_ask_user? The pipeline should not continue because issue is not resolved. So should_continue_pipeline = false. should_block? The issue is a gate false positive, so it should block? Actually \"should_block\" indicates whether the process should be blocked. Since it's a gate issue that needs review, probably should_block = true. Let's structure output.",
+        "refusal": null,
+        "role": "assistant",
+        "tool_calls": null
+      }
+    }
+  ],
+  "created": 1783569917,
+  "id": "6a8e2a74-5d01-47ff-9af9-349f71a6d90a",
+  "model": "deepseek-v4-flash",
+  "moderation": null,
+  "object": "chat.completion",
+  "service_tier": null,
+  "system_fingerprint": "fp_8b330d02d0_prod0820_fp8_kvcache_20260402",
+  "usage": {
+    "completion_tokens": 401,
+    "completion_tokens_details": "[REDACTED]",
+    "prompt_cache_hit_tokens": "[REDACTED]",
+    "prompt_cache_miss_tokens": "[REDACTED]",
+    "prompt_tokens": 236,
+    "prompt_tokens_details": "[REDACTED]",
+    "total_tokens": 637
+  }
+}

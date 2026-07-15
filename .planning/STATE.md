@@ -7,15 +7,75 @@ See: `.planning/PROJECT.md` (updated 2026-06-11)
 **Core value:** Produce valid, inspectable IFC models from explicit user
 requirements.
 
-**Current focus:** Phase 6 data expansion, fine-tuning, and deployment planning
+**Current focus:** Phase 6.5 accepted Hard IFC handoff and next-phase selection
 
 ## Status
 
-- Phase: 4
-- Stage: Complete
-- State: Phase 4 complete and verified; Phase 6 is ready to specify
-- Plans: Phase 4 complete, 7 of 7 plans complete
-- Branch: `main`
+- Phase: 6.5
+- Stage: Phase 6.5 graded Easy/Medium/Hard acceptance complete
+- State: Phase 6.2-fix Waves 0-2 are implemented and automatically verified.
+  Wave 3 real UAT
+  produced useful live evidence and fixed defects 001/002, then exposed defect
+  003: Audit accepted before final generated-IFC geometry feedback existed.
+  Wave 4 is implemented and automatically verified. Generated-IFC gate evidence
+  reaches decisive Audit, Audit override attempts block, true geometry failures
+  can route to one bounded repair attempt, and repaired candidates rerun gates
+  plus Audit before acceptance. Follow-up live session `d462b95089755d47`
+  generated a real accepted IFC, but post-review exposed defect 004: geometry
+  expectations can be derived from candidate wall placements rather than Design
+  Brief/user facts, and unsupported explicit facts such as inward door opening
+  can be silently lost. Wave 5 is now implemented and automatically verified:
+  semantic geometry expectations, fact-level capability coverage,
+  unsupported-fact Draft/block routing, report integration, Audit evidence, and
+  final verifier hardening are in place. Final acceptance is still pending
+  because the next live UAT exposed defect 005: parseable invalid Formal
+  Generator output was preserved as `parsed-output.json`, but Repair only used
+  validated `candidate.json` as a previous candidate and therefore blocked with
+  `previous_candidate=None`. Wave 6 is now implemented and automatically
+  verified: actionable invalid Formal output can enter bounded repair, invalid
+  recovery source evidence is recorded, and Design Brief outside-boundary
+  wording is normalized for semantic geometry gates. Final acceptance is still
+  pending until a fresh human-terminal live Mimo run writes and verifies
+  `final-acceptance.json`. A later complex multi-storey run was correctly
+  blocked as `audit_blocked`, but exposed the next reliability gap: complex
+  expected facts, Gate-Audit applicability, stage routing, and compact trace
+  need a dedicated inserted Phase 6.3 before broader Phase 7 work. Phase 6.3
+  SPEC, PLAN-OUTLINE, and seven wave plans are drafted for review. A
+  follow-up cross-review strengthened the plan so non-two-storey coverage must
+  reach dynamic gates and route decisions, Gate/Audit/Route evidence must bind
+  through hashes, and compact non-accept traces must preserve recoverable
+  failure evidence. Wave 0 is implemented with the complex two-storey
+  fixture/no-false-accept baseline. Wave 1 is implemented with
+  `gate-summary.json`, candidate/expected-facts hash binding, and decisive
+  Audit prompt integration. Wave 2 is implemented with dynamic
+  `expected-facts.json` extraction from Design Brief known facts, a reusable
+  non-two-storey fixture, and REPL integration that binds Audit prompts to the
+  expected-facts hash. Wave 3 is implemented with dynamic entity
+  completeness, storey containment, host-wall, and opening/fill gates in the
+  GateSummary bundle. The reusable three-storey fixture now reaches dynamic
+  gate logic and fails on missing `storey-3` facts without hard-coded
+  two-storey assumptions. Wave 4 is implemented with hash-bound
+  `route-decision.json`, canonical route ownership, stale evidence blocking,
+  bounded attempt/stall detection, and Audit-stage integration. Wave 5 is
+  implemented with compact/debug/full trace-level policy, CLI propagation,
+  stage-local compact `trace/` evidence, compact-aware report resolution, and
+  root `trace-manifest.json` hashing actual run artifacts. Wave 6 is
+  implemented with a repeatable complex-building matrix and final artifact
+  verifier. The matrix covers the user's complex two-storey prompt as an
+  honest blocked `generator_regeneration_required` route, a non-two-storey
+  three-level dynamic gate/route case, and simple/two-room smoke regressions.
+  Final verification reports `valid: true`, `false_accept_count: 0`,
+  `hash_binding_valid: true`, `secret_finding_count: 0`, and
+  non-two-storey gate/route coverage. This completes Phase 6.3 as a
+  reliability/evidence-routing phase, but does not claim complex live provider
+  generation already produces an accepted final IFC.
+- Plans: Phase 6.2-fix Waves 0-2 complete; Wave 3 produced UAT defect evidence;
+  Wave 4 implementation/regression complete; Wave 5 implementation/regression
+  complete; Wave 6 implementation/regression complete; Phase 6.3 planned in
+  seven waves; Waves 0-6 implemented and verified; Phase 6.4 Waves 0-6
+  implemented and verified; Phase 6.4 Waves 7-8 complete with a real accepted
+  two-storey DeepSeek IFC after two bounded Generator regenerations
+- Branch: `multiagent-design` in C-drive worktree
 - Remote: `https://github.com/770122whrt/text2IFC`
 
 ## Completed Foundation
@@ -209,6 +269,112 @@ requirements.
   17607/18758 represented, representations 4509/6382 represented, materials
   1533/2554 represented, types 154/1012 represented, and connections
   2263/2263 represented.
+- Phase 6 is specified and planned with a Wave 0 prompt registry and
+  multi-agent design contract before data expansion, fine-tuning, or
+  deployment.
+- Phase 6 records that `two-room-suite` is currently a deterministic
+  geometry-gate artifact with a hard-coded candidate, not proof of unified live
+  prompt orchestration.
+- Phase 6 defines five logical roles: Design Brief Agent, BIM JSON Generator
+  Agent, generator repair mode, Audit Agent, and Observer Loop.
+- Phase 6 acceptance now has a phase-local single-entry report at
+  `.planning/phases/06-multiagent-prompt-reliability-data-expansion-and-deployment/06-ACCEPTANCE-TRACE-REPORT.md`.
+- Phase 6 Wave 4 now writes a formal fake-provider trace bundle with a real
+  compiled/reopened IFC2X3 file and a generated `report.md`, plus a five-case
+  controlled matrix covering success, Draft, repair routing, blocked invalid
+  JSON, and semantic audit mismatch.
+- Phase 6.1 replaces fake-provider acceptance with real Mimo evidence. Waves
+  0-3 verified streaming response envelopes, Design Brief v2.1, real Chinese
+  clarification, and exact Formal/Draft Generator routing.
+- Phase 6.1 Wave 4 records conditional repair truthfully: the canonical live
+  Generator result needed no repair, so the repair stage wrote
+  `no_repair_needed`, `provider_call_count: 0`, and
+  `evidence_class: live-derived-no-call` linked to response
+  `msg_99a7039ffef047d2815e0c4f`.
+- Phase 6.1 Wave 5 ran a separate real Mimo Audit Agent and generated the
+  single-entry live report. A fenced Audit response
+  `msg_463225669d994c2390ccebf0` triggered a strict output-contract fix and
+  prompt strengthening. The final Audit response
+  `msg_7cbe7cb111df4758b0e78786` returned bare JSON with
+  `recommendation: accept`, `blocking: false`, and zero validation issues.
+  `report.md` is generated from sidecars and links Generator parsed output to
+  `generator/candidate.json`.
+- Phase 6.1 Wave 6 produced the final accepted live artifacts:
+  `dataset/processed/agent-demo/phase6.1-mimo-live/output.ifc` and generated
+  `dataset/processed/agent-demo/phase6.1-mimo-live/report.md`. The final
+  acceptance metrics report `valid: true`, `compile_reopen_success: true`,
+  `geometry_success: true`, and `secret_finding_count: 0`. The root artifact
+  verifier reopened the IFC as IFC2X3 and passed.
+- Phase 6.1 live matrix now includes a real unknown-answer Draft path. The
+  Design Brief Agent first asked for wall thickness, then after the user
+  answered `我不知道。`, real Mimo response `msg_f87c960adc6f4ec99172f658`
+  terminated as `draft_required`, wrote no IFC, and preserved the missing wall
+  thickness fact instead of repeating the same question.
+- Phase 6.1 invalid-contract replay now blocks nonexistent Draft versions as
+  `unknown_contract`, writes no IFC, and is explicitly
+  `excluded_from_live_quality`, so replay evidence cannot inflate live Mimo
+  quality claims.
+- Phase 6.2 is planned as an inserted CLI-first phase. It turns Phase 6.1's
+  scripted answer workflow into a Chinese-first interactive terminal session
+  with a shared SQLite session DB, stable `session_id`/`session_hash`, query /
+  resume / export interfaces, generated `report.md`, and final IFC artifacts
+  linked from the accepted session.
+- Phase 6.2 Wave 0 is a provider/framework research and compatibility
+  checkpoint: OpenAI Agents SDK research must be written before live smoke
+  interpretation, and the SDK is a candidate only if real Mimo Chat Completions
+  compatibility and required trace metadata preservation pass. Otherwise the
+  native orchestrator plus OpenAI Python SDK provider remains the implementation
+  path.
+- Phase 6.2 Wave 0 completed with real Mimo OpenAI-compatible evidence.
+  The native OpenAI SDK Chat Completions path passed with `finish_reason: stop`,
+  usage, response ID, raw content, and redacted request metadata. OpenAI Agents
+  SDK was classified as `limited_sdk` because its Chat Completions final result
+  lacks first-class `response_id` and `finish_reason`; it also required explicit
+  AsyncOpenAI client cleanup to avoid a `.venv` process exit-code anomaly.
+  The implementation route is
+  `native_orchestrator_with_openai_sdk_provider`.
+- Phase 6.2 Wave 1 completed the shared SQLite session DB and initial
+  interactive CLI shell. The canonical dry-run session preserves Chinese input,
+  stores turns/events/artifacts in
+  `dataset/processed/agent-demo/phase6.2-interactive-cli/sessions.sqlite`,
+  exports
+  `dataset/processed/agent-demo/phase6.2-interactive-cli/runs/a26e3365a3204b38/session-export.json`,
+  and remains `incomplete` after user `quit` without fabricating Agent or IFC
+  results.
+- Phase 6.2 Wave 2 completed the DB-backed Mimo Design Brief loop. A real
+  clarified-room session reached `ready` after Mimo asked for wall thickness
+  and the user supplied `300mm`; Design Brief calls preserve prompt hashes,
+  redacted requests, raw responses, parsed outputs, and usage metadata.
+- Phase 6.2 Wave 3/4 connected ready sessions to real Mimo Generator and Audit
+  calls, deterministic repair routing, IFC compile/reopen, geometry gates,
+  generated reports, session export, and a root `final-acceptance.json`.
+- Phase 6.2 live prompt iteration found and fixed three real failures:
+  `finish_reason=length` at the old 1024 token budget, Audit misunderstanding
+  parent-relative centered openings, Generator duplicating wall rotation into
+  `Representation.position`, and Mimo fenced JSON output before
+  `response_format` was added.
+- Phase 6.2 accepted live session `2063e6228b5f2f6d` is compiled. Its final
+  metrics report `valid: true`, `compile_reopen_success: true`,
+  `geometry_success: true`, `secret_finding_count: 0`, and
+  `audit_evidence_class: live`. Acceptance artifacts are under
+  `dataset/processed/agent-demo/phase6.2-interactive-cli/`.
+- Phase 6.2 final accepted session is now `0fe9f14742b5c5d7`. It was generated
+  with real Mimo calls, passes the Phase 6.2 artifact verifier, reopens as
+  IFC2X3, passes geometry gates, has `audit_evidence_class: live`, and reports
+  `secret_finding_count: 0`.
+- Phase 6.2 report generation is now DB-backed. The accepted `report.md`
+  includes original input, transcript, Design Brief sidecars, Generator
+  sidecars, Repair route, Audit sidecars, deterministic gates, final artifacts,
+  session export, events, and artifact index.
+- Phase 6.2 query/resume/export commands are implemented and covered by tests.
+  Read-only session queries no longer mutate `sessions.sqlite`.
+- Real Mimo prompt iteration in Phase 6.2 found and fixed additional Design
+  Brief issues: failed calls now preserve evidence before raising, and
+  `design-brief.v2.1` now requires target-valid questions and exact transcript
+  `source_turns`.
+- Final Phase 6.2 verification passed 55 focused tests, 228 Agent/Service/
+  Compiler regression tests, compileall, artifact verifier, and accepted-run
+  secret scan.
 
 ## Current Decisions
 
@@ -278,9 +444,112 @@ requirements.
   new open missing facts rather than defaults.
 - Provider tests remain deterministic without network or credentials. Mimo live
   smoke is optional; config checks report env var names only.
+- The preceding optional-live rules remain historical Phase 5/6 constraints.
+  Phase 6.1 acceptance supersedes them: Design Brief, Generator, conditional
+  Repair, and Audit evidence must come from real Mimo calls, while fake/file
+  providers are unit/replay tools only.
+- Phase 6.2 extends the live-evidence rule to the user-facing CLI: fake/file
+  and replay providers remain test tools only and cannot satisfy live CLI
+  acceptance.
+- Phase 6.1 clarification necessity is derived per request from user text,
+  transcript, canonical schemas, generation capability, and relevant examples;
+  no global required/not-required field list is allowed.
+- Phase 6.2 scripted stdin is allowed for deterministic tests only if it
+  exercises the same CLI code path as a human terminal session; prewritten
+  `answers.json` facts are not accepted as the interactive product path.
+- Phase 6.2 uses a shared session database as the primary evidence container.
+  Per-session directories under `runs/<session_hash>/` hold large artifacts and
+  exported review bundles, but they are not independent truth stores.
+- Phase 6.2 final acceptance requires a real-time CLI UAT where Codex acts as
+  the user and Mimo acts as the Agent provider; scripted stdin remains
+  regression support.
+- Phase 6.2-fix Waves 0-2 implemented the missing real REPL product boundary.
+  Focused tests now prove the assistant question is printed before answer
+  input; `run_text2ifc_chat.py` can be run directly by file path; ready REPL
+  sessions route through the existing BIM JSON, IFC, Audit, report, and export
+  gates; and Phase 6.2-fix `final-acceptance.json` records
+  `interaction_mode: "human_repl_live"` and `input_source: "terminal"`.
+- Phase 6.2-fix UAT defect 001 was reproduced and fixed on 2026-06-27. The
+  default live REPL path previously wrote Design Brief call traces under the
+  output root instead of `runs/<session_hash>`, causing IFC generation to miss
+  `design-brief/conversation.json`. The invoker is now constructed after
+  session creation with the session run directory.
+- Phase 6.2-fix UAT defect 002 was reproduced and fixed on 2026-06-27. A real
+  run reached Generator `formal`, Repair `no_repair_needed`, real Audit
+  `accepted`, and IFC reopen success, but final geometry gates failed with
+  wall-orientation/enclosure issues. The REPL previously exited silently for
+  `final_blocked`; it now prints stage summaries and paths to `output.ifc`,
+  `report.md`, and `geometry-feedback.json` without claiming acceptance.
+- Phase 6.2-fix UAT defect 003 was specified and planned on 2026-06-27. The
+  same real run showed a stage-order contract mismatch: Audit reviewed only
+  validation and repair-route evidence, while generated-IFC geometry feedback
+  was produced later by final acceptance. The next Wave 4 fix requires
+  generated-IFC gate evidence before decisive Audit, Audit classification
+  without override authority, bounded repair/generation for true geometry
+  failures, and gate-dispute blocking for uncertain gate results.
+- Phase 6.2-fix Wave 4 was implemented and automatically verified on
+  2026-06-27. The pipeline now writes candidate generated-IFC gate evidence
+  before Audit, includes `geometry-feedback.json` in Audit prompt inputs,
+  rejects Audit `accept` over failed deterministic gates as
+  `AUDIT_OVERRIDE_ATTEMPT`, and routes Audit `revise` on true geometry failures
+  through one bounded repair attempt followed by regenerated gates and a second
+  Audit. Reports now link generated-IFC gate sidecars, repair attempts, and
+  Audit validation.
+- Phase 6.2-fix post-Wave-4 live UAT session `d462b95089755d47` produced real
+  Mimo Design Brief/Generator/Audit evidence, compiled and reopened IFC2X3,
+  and geometry-success output. Review then identified defect 004: the geometry
+  expectation can be circular when derived from candidate wall placements, and
+  explicit unsupported user facts such as `door.opening_direction:
+  "into_space"` need Draft/blocking coverage instead of silent acceptance.
+- Phase 6.2-fix Wave 5 is now specified and planned as a semantic fidelity
+  gate and BIM JSON capability contract: Design-Brief-derived rectangular-room
+  geometry expectations, fact-level support profile, unsupported-fact
+  Draft-first routing, `semantic-coverage.json`, report integration, and final
+  verifier hardening before final user-run UAT.
+- Phase 6.2-fix Wave 5 was implemented and automatically verified on
+  2026-06-27. The pipeline now writes `semantic-capabilities.json`,
+  `semantic-coverage.json`, and `semantic-geometry-expectation.json`; blocks
+  unwaived unsupported facts such as `/known_facts/door/opening_direction`;
+  uses Design-Brief-derived wall expectations for supported rectangular rooms;
+  exposes semantic coverage in generated reports and Audit inputs; and requires
+  semantic coverage in the final artifact verifier.
+- Phase 6.2-fix Wave 6 was implemented and automatically verified on
+  2026-06-28. Parseable invalid Formal Generator output can now enter bounded
+  repair as `invalid_formal` when diagnostics are actionable, route evidence
+  records `invalid-candidate.json`, missing door semantic `Representation` and
+  unsupported compiler relationship output are repair-eligible when facts are
+  known, and Design Brief outside-boundary wording is normalized for semantic
+  geometry gates.
+- Phase 6.2 treats OpenAI Agents SDK as a conditional integration. A failed SDK
+  compatibility checkpoint is not a product failure if the native OpenAI SDK
+  provider path remains evidence-complete.
+- Design Brief Agent is the only semantic owner of clarification questions.
+  Deterministic clarification code validates count, mapping, evidence, and
+  transcript state but does not author questions or facts.
+- The Observer may diagnose, block, and report prompt/provider/routing failures,
+  but cannot delete ambiguity or add semantic facts to force success.
 - The simple-room demo reaches `formal_ready`, validates BIM JSON 2.0, asks
   three Chinese clarification questions, compiles IFC, and records transcript,
   state, candidate, diagnostics, metrics, report, and IFC artifacts.
+- Phase 6 prompt/provider work must use versioned prompt templates, template
+  hashes, structured renderer inputs, raw/parsed output traces, feedback,
+  repair-attempt records, metrics, and artifact paths.
+- The Design Brief Agent is allowed and recommended as a first step for weak
+  natural-language input. It records intent, known facts, missing facts, and
+  ambiguities without generating BIM JSON or IFC.
+- The BIM JSON Generator Agent consumes Design Brief, schema/capability
+  context, few-shot examples, and feedback to output formal BIM JSON 2.0 or
+  Draft only.
+- Repair is conditional rather than mandatory. Successful first-pass generation
+  records `no_repair_needed`; failed generation routes to `repair_attempted`,
+  `draft_required`, or `blocked_failure`.
+- Audit Agent is separate from generation and cannot override deterministic
+  schema, compiler, reopen, generated-IFC, split, or secret-scan gates.
+- Fine-tuning in Phase 6 is a metric-backed decision after prompt-only and
+  repair-mode baselines, not an assumed next action.
+- This conversation's implementation work must stay in
+  `C:\Users\rt do believe\.codex\worktrees\a542\bimnet`; do not edit the
+  E-drive working tree files.
 
 ## Known Risks
 
@@ -300,9 +569,10 @@ requirements.
 
 ## Next Action
 
-Specify Phase 6: Data Expansion, Fine-tuning, and Deployment. Start from
-`docs/architecture/phase-4-summary.md` and preserve the supported-scope,
-loss-sidecar, and generated-IFC-gate boundaries.
+Execute Phase 6.5 Wave 6: build and test the live stability harness, then run
+independent real DeepSeek two-/three-storey sessions. Require three consecutive
+accepted runs per case; retain and classify every failed run without weakening
+correct Gates or using prewritten model answers.
 
 ## Accumulated Context
 
@@ -387,6 +657,130 @@ loss-sidecar, and generated-IFC-gate boundaries.
   `12226f0`; regression stabilization commit `27941f7`; final documentation
   and artifact verification commit follows. The phase closes with all-25 audit
   accounting balanced and Phase 6 ready under supported-scope constraints.
+- Phase 6 was specified and planned on 2026-06-18 with seven waves. Wave 0
+  introduces prompt registry and multi-agent traceability; Wave 1 adds Design
+  Brief; Wave 2 adds BIM JSON generation plus repair mode; Wave 3 adds Audit
+  Agent; Wave 4 adds reliability experiments; Wave 5 handles data/model
+  decision; Wave 6 packages the supported deployable demo.
+- Phase 6 Wave 0 completed on 2026-06-21 with RED commits `4f355bf` and
+  `3b69a9b`, GREEN commit `cf64af1`, and architecture commit `38937da`.
+  Prompt registry, hash-verified rendering, trace validation, and five-role
+  responsibility boundaries passed the full Agent regression and secret scan.
+- Phase 6 Wave 1 completed on 2026-06-21 with RED commits `ecaf6c2` and
+  `a5ed5b8`, GREEN commit `f80c2da`, and prompt commit `0e735a3`. The
+  Design Brief contract, validator, and Chinese-first registered prompt passed
+  46 Agent tests and the artifact secret scan.
+- Phase 6 Wave 2 completed on 2026-06-21 with RED commit `c4bdfeb` and GREEN
+  commit `efd108c`. Registry-rendered Formal/Draft generation and four-route
+  conditional failure handling passed 52 Agent tests and the secret scan.
+- Phase 6 Wave 3 completed on 2026-06-21 with RED commit `fcdde3f` and GREEN
+  commit `a486c17`. Evidence-linked Audit reports preserve deterministic gate
+  failures and passed 55 Agent tests plus the secret scan.
+- Phase 6 Wave 4 completed on 2026-06-21 with initial RED/GREEN commits
+  `0df6d57`, `7228acd`, and `8a581a7`, followed by failure-path and durable
+  matrix RED/GREEN commits `6b7c466`, `37f95a3`, `fd59d60`, and `29f5a67`.
+  The formal run compiled and reopened IFC2X3; the five-case matrix covers all
+  four failure routes and five outcome classes; Agent regression passed 62
+  tests; artifact scans found zero secrets across both output sets.
+- Phase 6 Wave 5 completed on 2026-06-21 with RED commits `69935a2` and
+  `0d2c84d`, GREEN commit `cba91bc`, and model-decision commit `b5a533c`.
+  The deterministic manifest links 100 pairs to 25 authorized IFC2X3 sources,
+  19 isolated scene families, formal targets, hashes, licenses, and loss
+  sidecars. Only 68 train records are training-eligible. Prompt-only plus
+  deterministic gates was selected for deployment; RAG and fine-tuning remain
+  deferred until real-provider and Chinese-first reviewed evidence exists.
+- Phase 6 Wave 6 completed on 2026-06-21 with RED commit `ecb2481`, GREEN
+  commit `c60bae5`, and Windows worktree stability fix `c3a559e`. The service
+  acceptance path writes a complete trace bundle, generated `report.md`, and
+  real IFC2X3 artifact. Phase 6 focused verification passed 72 tests, full
+  repository regression passed 368 tests, compileall passed, and the final
+  artifact scan found zero secrets.
+- Phase 6.1 was inserted and planned on 2026-06-22 after real Mimo experiments
+  showed that Phase 6 fake-provider acceptance did not verify live behavior.
+  Seven waves now cover exact provider envelopes/streaming, evidence-grounded
+  Design Brief v2, real Chinese clarification, exact Formal/Draft Generator
+  contracts, conditional repair, real Audit/reporting, and final live IFC
+  acceptance.
+- Phase 6.1 Wave 0 completed on 2026-06-22 with four RED/GREEN cycles. The
+  canonical real `mimo-v2.5-pro` smoke retained response ID
+  `msg_2bc401bbfdaa455696937d1d`, `stop_reason=end_turn`, request
+  `max_tokens=131072`, 15 ordered SSE events, complete usage, parsed bare JSON,
+  and zero secret findings. Agent regression passed 76 tests.
+- Phase 6.1 Wave 1 completed on 2026-06-22 with evidence-grounded Design Brief
+  2.0, request-scoped schema/capability context, and immutable prompt versions.
+  The first real v2 response was schema-valid but fenced and was retained as a
+  failed-format experiment. Prompt v2.1 then produced bare JSON response
+  `msg_164276907f364826bb9a625c`, `end_turn`, status `ready`, zero validation
+  issues, zero normalization diagnostics, and zero secret findings.
+- Phase 6.1 Wave 2 completed on 2026-06-22 with a real two-call Chinese
+  clarification. Mimo response `msg_c4981c9c476443d2a929e240` asked only for
+  wall thickness; the exact 300 mm user answer was appended; response
+  `msg_d7c51fc05baf4f3eb82cc3f5` returned `ready`. Both calls were `end_turn`,
+  strict bare JSON, schema/evidence valid, and the 40-file scan found no secrets.
+- Phase 6.1 Wave 3 completed on 2026-06-22 with exact discriminator-first
+  Formal/Draft routing and both full canonical schemas in Generator v2. Real
+  Mimo response `msg_99a7039ffef047d2815e0c4f` returned strict Formal BIM JSON
+  2.0 with 13 entities, 4 relationships, zero contract issues, and zero secret
+  findings. No repair was invoked and no IFC was compiled in this wave.
+- Phase 6.1 Wave 4 completed on 2026-06-22 with RED/GREEN commits `3b2145f`,
+  `87a508e`, `c0b3c8a`, `65a0651`, `a11e850`, and `d6ba0d8`, followed by
+  this documentation/artifact commit. The canonical repair stage preserved
+  `no_repair_needed` and zero provider calls for the real Formal Generator
+  result. Controlled eligible repair is covered as unit/replay evidence only,
+  not live quality evidence. Focused tests passed 45 checks; the Agent suite
+  passed 125 checks; service/IFC gate slice passed 6 checks; compileall passed.
+  Full `python -m pytest -q` was attempted twice and timed out at 120s and
+  300s without failure output; collection found 431 tests.
+- Phase 6.1 Wave 5 completed on 2026-06-22 with RED/GREEN commits `b8af624`,
+  `0b579ca`, `3d3855f`, `f85779d`, `1b60898`, `fa0ad2e`, `12dba94`,
+  `bfdf5dc`, and `884e44e`, followed by this documentation/artifact commit.
+  The first real Audit response `msg_463225669d994c2390ccebf0` exposed a
+  strict output-contract gap by using an outer Markdown fence. After the gate
+  and prompt fix, real Audit response `msg_7cbe7cb111df4758b0e78786` was
+  `end_turn`, strict bare JSON, valid Audit v2, `recommendation: accept`, and
+  `blocking: false`. The generated `report.md` is sidecar-derived and links
+  the Generator parsed output to `generator/candidate.json`. Agent regression
+  passed 129 tests and compileall passed.
+- Phase 6.1 Wave 6 completed on 2026-06-23 with final acceptance commits and
+  generated root artifacts. The live finalize command passed, artifact verifier
+  passed, 25 focused live-report tests passed, the Agent suite passed 134 tests,
+  service/compiler/dataset passed 56 tests, compileall passed, and the final
+  artifact secret scan found zero sensitive strings.
+- Phase 6.1 MiMo API compatibility was re-verified on 2026-06-23 after the
+  official Anthropic-compatible MiMo API reference was captured. The provider
+  now accepts `API_KEY` / `MIMO_API_KEY` and sends the documented `api-key`
+  header. Live smoke response `msg_db85c7ecd9cf4ff79823ffa0` returned
+  `stop_reason: end_turn`. The clarified-room matrix then produced a live
+  Formal Generator response `msg_4190b4fc62c04a839d1a48ee`, live Audit response
+  `msg_33bcfd37905c45bfbf3d4e67`, `no_repair_needed` routing, and an
+  independently verified IFC artifact at
+  `dataset/processed/agent-demo/phase6.1-mimo-live/clarified-room-final/output.ifc`.
+- Phase 6.1 prompt hardening on 2026-06-23 fixed the real unknown-answer
+  failure where MiMo recognized `不知道` but repeated the same clarification
+  question. `design-brief.v2.1` now requires `draft_required` when a current
+  blocking fact cannot be supplied by the user, and the rerun passed with real
+  MiMo evidence.
+- Phase 6.2 was specified and planned on 2026-06-23 after the user prioritized
+  CLI clarification over public API/service work. Seven waves now cover
+  OpenAI-compatible Mimo and Agents SDK checkpointing, durable CLI sessions,
+  interactive Design Brief questions, Generator and IFC gates,
+  Audit/repair/report integration, acceptance matrix, and final verification.
+- Phase 6.2 planning was revised on 2026-06-23 so the session architecture is a
+  shared SQLite DB for all conversations rather than one DB per run. Each
+  conversation has a stable `session_id` and `session_hash`; CLI interfaces must
+  support listing, showing, resuming, and exporting sessions. Final acceptance
+  also now requires Codex-as-user real-time CLI UAT with Mimo-backed Agent
+  responses.
 
 ---
-*Last activity: 2026-06-16 - completed Phase 4 Wave 6 and final Phase 4 verification*
+*Last activity: 2026-07-14 - completed Phase 6.5 graded acceptance. Real
+DeepSeek Hard session `999d210c233b1c34` generated a non-uniform three-storey
+L-shaped building through staged packages and three bounded scoped ChangeSet
+rounds. Revision `revision-07` passed schema, semantic coverage, global Gates,
+compile/reopen, postcompile geometry, final Audit, preservation 1.0, and a
+zero-finding 296-file secret scan. Independent IfcOpenShell inspection confirmed
+3 storeys, 18 spaces, 48 walls, 12 doors, 9 windows, 2 stepped stairs, and
+complete door/window void-fill relationships. Agent/compiler/IFC-quality
+regression passed 600 tests and compileall passed. The accepted IFC is ready
+for separate user visual review; one accepted case per difficulty is not
+reported as a statistical stability rate.*

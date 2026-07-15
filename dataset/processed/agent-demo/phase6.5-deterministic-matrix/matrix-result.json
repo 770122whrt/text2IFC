@@ -1,0 +1,342 @@
+{
+  "accepted_count": 3,
+  "blocked_count": 4,
+  "case_count": 8,
+  "cases": [
+    {
+      "artifact_refs": [
+        "two-storey-accepted/input.json",
+        "two-storey-accepted/design-brief.json",
+        "two-storey-accepted/expected-facts.json",
+        "two-storey-accepted/generator/candidate.json",
+        "two-storey-accepted/output.ifc",
+        "two-storey-accepted/gate-summary.json"
+      ],
+      "audit": {
+        "status": "accepted"
+      },
+      "case_id": "two-storey-accepted",
+      "changed_ids": [],
+      "changeset_id": null,
+      "dependency_ids": [],
+      "evidence_class": "deterministic_fixture",
+      "gates": {
+        "audit": true,
+        "bim_json_schema": true,
+        "bim_json_semantics": true,
+        "expected_fact_coverage": true,
+        "generated_ifc_geometry": true,
+        "ifc_compile": true,
+        "ifc_reopen": true,
+        "relationship_integrity": true,
+        "secret_scan": true,
+        "unrelated_component_preservation": true
+      },
+      "issue_code": null,
+      "issue_delta": {
+        "after": 0,
+        "before": 0
+      },
+      "outcome": "accepted",
+      "preservation_rate": 1.0,
+      "revision_id": null,
+      "route": "accept",
+      "timings_seconds": {
+        "build_candidate": 0.009214,
+        "candidate_gates": 1.459275,
+        "total": 1.468489
+      },
+      "unchanged_ids": []
+    },
+    {
+      "artifact_refs": [
+        "three-storey-accepted/input.json",
+        "three-storey-accepted/design-brief.json",
+        "three-storey-accepted/expected-facts.json",
+        "three-storey-accepted/generator/candidate.json",
+        "three-storey-accepted/output.ifc",
+        "three-storey-accepted/gate-summary.json"
+      ],
+      "audit": {
+        "status": "accepted"
+      },
+      "case_id": "three-storey-accepted",
+      "changed_ids": [],
+      "changeset_id": null,
+      "dependency_ids": [],
+      "evidence_class": "deterministic_fixture",
+      "gates": {
+        "audit": true,
+        "bim_json_schema": true,
+        "bim_json_semantics": true,
+        "expected_fact_coverage": true,
+        "generated_ifc_geometry": true,
+        "ifc_compile": true,
+        "ifc_reopen": true,
+        "relationship_integrity": true,
+        "secret_scan": true,
+        "unrelated_component_preservation": true
+      },
+      "issue_code": null,
+      "issue_delta": {
+        "after": 0,
+        "before": 0
+      },
+      "outcome": "accepted",
+      "preservation_rate": 1.0,
+      "revision_id": null,
+      "route": "accept",
+      "timings_seconds": {
+        "build_candidate": 0.009182,
+        "candidate_gates": 1.49528,
+        "total": 1.504462
+      },
+      "unchanged_ids": []
+    },
+    {
+      "artifact_refs": [
+        "scoped-repair-accepted/change-scope.json",
+        "scoped-repair-accepted/changeset.json",
+        "scoped-repair-accepted/candidate-revision.json",
+        "scoped-repair-accepted/component-preservation.json",
+        "scoped-repair-accepted/output.ifc"
+      ],
+      "audit": {
+        "status": "accepted"
+      },
+      "case_id": "scoped-repair-accepted",
+      "changed_ids": [
+        "wall-1"
+      ],
+      "changeset_id": "changeset-revision-01",
+      "dependency_ids": [],
+      "evidence_class": "deterministic_fixture",
+      "gates": {
+        "audit": true,
+        "bim_json_schema": true,
+        "bim_json_semantics": true,
+        "expected_fact_coverage": true,
+        "generated_ifc_geometry": true,
+        "ifc_compile": true,
+        "ifc_reopen": true,
+        "relationship_integrity": true,
+        "secret_scan": true,
+        "unrelated_component_preservation": true
+      },
+      "issue_code": null,
+      "issue_delta": {
+        "after": 0,
+        "before": 1
+      },
+      "outcome": "accepted",
+      "preservation_rate": 1.0,
+      "revision_id": "revision-01",
+      "route": "accept",
+      "timings_seconds": {
+        "changeset_apply_and_compile": 1.262441
+      },
+      "unchanged_ids": [
+        "project-1"
+      ]
+    },
+    {
+      "artifact_refs": [
+        "draft-missing-fact/issues.json",
+        "draft-missing-fact/route-decision.json"
+      ],
+      "audit": {
+        "status": "blocked"
+      },
+      "case_id": "draft-missing-fact",
+      "changed_ids": [],
+      "changeset_id": null,
+      "dependency_ids": [],
+      "evidence_class": "deterministic_fixture",
+      "gates": {
+        "audit": false,
+        "bim_json_schema": false,
+        "bim_json_semantics": false,
+        "expected_fact_coverage": false,
+        "generated_ifc_geometry": false,
+        "ifc_compile": false,
+        "ifc_reopen": false,
+        "relationship_integrity": false,
+        "secret_scan": false,
+        "unrelated_component_preservation": false
+      },
+      "issue_code": "MISSING_REQUIRED_FACT",
+      "issue_delta": {
+        "after": 1,
+        "before": 1
+      },
+      "outcome": "draft",
+      "preservation_rate": 1.0,
+      "revision_id": null,
+      "route": "draft_required",
+      "timings_seconds": {
+        "classification": 0.0
+      },
+      "unchanged_ids": []
+    },
+    {
+      "artifact_refs": [
+        "scope-violation/issues.json",
+        "scope-violation/route-decision.json"
+      ],
+      "audit": {
+        "status": "blocked"
+      },
+      "case_id": "scope-violation",
+      "changed_ids": [],
+      "changeset_id": null,
+      "dependency_ids": [],
+      "evidence_class": "deterministic_fixture",
+      "gates": {
+        "audit": false,
+        "bim_json_schema": false,
+        "bim_json_semantics": false,
+        "expected_fact_coverage": false,
+        "generated_ifc_geometry": false,
+        "ifc_compile": false,
+        "ifc_reopen": false,
+        "relationship_integrity": false,
+        "secret_scan": false,
+        "unrelated_component_preservation": false
+      },
+      "issue_code": "CHANGESET_SCOPE_VIOLATION",
+      "issue_delta": {
+        "after": 1,
+        "before": 1
+      },
+      "outcome": "blocked",
+      "preservation_rate": 1.0,
+      "revision_id": null,
+      "route": "blocked_failure",
+      "timings_seconds": {
+        "classification": 0.0
+      },
+      "unchanged_ids": []
+    },
+    {
+      "artifact_refs": [
+        "stale-binding/issues.json",
+        "stale-binding/route-decision.json"
+      ],
+      "audit": {
+        "status": "blocked"
+      },
+      "case_id": "stale-binding",
+      "changed_ids": [],
+      "changeset_id": null,
+      "dependency_ids": [],
+      "evidence_class": "deterministic_fixture",
+      "gates": {
+        "audit": false,
+        "bim_json_schema": false,
+        "bim_json_semantics": false,
+        "expected_fact_coverage": false,
+        "generated_ifc_geometry": false,
+        "ifc_compile": false,
+        "ifc_reopen": false,
+        "relationship_integrity": false,
+        "secret_scan": false,
+        "unrelated_component_preservation": false
+      },
+      "issue_code": "CHANGESET_BASE_HASH_MISMATCH",
+      "issue_delta": {
+        "after": 1,
+        "before": 1
+      },
+      "outcome": "blocked",
+      "preservation_rate": 1.0,
+      "revision_id": null,
+      "route": "blocked_failure",
+      "timings_seconds": {
+        "classification": 0.0
+      },
+      "unchanged_ids": []
+    },
+    {
+      "artifact_refs": [
+        "unsupported-request/issues.json",
+        "unsupported-request/route-decision.json"
+      ],
+      "audit": {
+        "status": "blocked"
+      },
+      "case_id": "unsupported-request",
+      "changed_ids": [],
+      "changeset_id": null,
+      "dependency_ids": [],
+      "evidence_class": "deterministic_fixture",
+      "gates": {
+        "audit": false,
+        "bim_json_schema": false,
+        "bim_json_semantics": false,
+        "expected_fact_coverage": false,
+        "generated_ifc_geometry": false,
+        "ifc_compile": false,
+        "ifc_reopen": false,
+        "relationship_integrity": false,
+        "secret_scan": false,
+        "unrelated_component_preservation": false
+      },
+      "issue_code": "UNSUPPORTED_CAPABILITY",
+      "issue_delta": {
+        "after": 1,
+        "before": 1
+      },
+      "outcome": "blocked",
+      "preservation_rate": 1.0,
+      "revision_id": null,
+      "route": "draft_required",
+      "timings_seconds": {
+        "classification": 0.0
+      },
+      "unchanged_ids": []
+    },
+    {
+      "artifact_refs": [
+        "non-improving/issues.json",
+        "non-improving/route-decision.json"
+      ],
+      "audit": {
+        "status": "blocked"
+      },
+      "case_id": "non-improving",
+      "changed_ids": [],
+      "changeset_id": null,
+      "dependency_ids": [],
+      "evidence_class": "deterministic_fixture",
+      "gates": {
+        "audit": false,
+        "bim_json_schema": false,
+        "bim_json_semantics": false,
+        "expected_fact_coverage": false,
+        "generated_ifc_geometry": false,
+        "ifc_compile": false,
+        "ifc_reopen": false,
+        "relationship_integrity": false,
+        "secret_scan": false,
+        "unrelated_component_preservation": false
+      },
+      "issue_code": "FEEDBACK_NOT_IMPROVING",
+      "issue_delta": {
+        "after": 1,
+        "before": 1
+      },
+      "outcome": "blocked",
+      "preservation_rate": 1.0,
+      "revision_id": null,
+      "route": "blocked_failure",
+      "timings_seconds": {
+        "classification": 0.0
+      },
+      "unchanged_ids": []
+    }
+  ],
+  "draft_count": 1,
+  "evidence_class": "deterministic_fixture",
+  "false_accept_count": 0,
+  "schema_version": "text2ifc/phase6.5-deterministic-matrix/1.0"
+}

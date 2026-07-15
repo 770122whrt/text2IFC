@@ -1,0 +1,368 @@
+{
+  "schema_version": "bim-json/2.0",
+  "ifc_schema": "IFC2X3",
+  "units": {
+    "length": "MILLIMETRE"
+  },
+  "entities": [
+    {
+      "id": "project-1",
+      "ifc_class": "IfcProject",
+      "attributes": {
+        "Name": "Text2IFC Geometry Gate"
+      },
+      "property_sets": {},
+      "provenance": {
+        "source": "phase-4-geometry-gate"
+      }
+    },
+    {
+      "id": "site-1",
+      "ifc_class": "IfcSite",
+      "attributes": {
+        "Name": "Site",
+        "ObjectPlacement": {
+          "relative_to": "project-1",
+          "origin": [0, 0, 0],
+          "axis": [0, 0, 1],
+          "ref_direction": [1, 0, 0]
+        }
+      },
+      "property_sets": {},
+      "provenance": {
+        "source": "phase-4-geometry-gate"
+      }
+    },
+    {
+      "id": "building-1",
+      "ifc_class": "IfcBuilding",
+      "attributes": {
+        "Name": "Building",
+        "ObjectPlacement": {
+          "relative_to": "site-1",
+          "origin": [0, 0, 0],
+          "axis": [0, 0, 1],
+          "ref_direction": [1, 0, 0]
+        }
+      },
+      "property_sets": {},
+      "provenance": {
+        "source": "phase-4-geometry-gate"
+      }
+    },
+    {
+      "id": "storey-1",
+      "ifc_class": "IfcBuildingStorey",
+      "attributes": {
+        "Name": "Level 1",
+        "Elevation": 0,
+        "ObjectPlacement": {
+          "relative_to": "building-1",
+          "origin": [0, 0, 0],
+          "axis": [0, 0, 1],
+          "ref_direction": [1, 0, 0]
+        }
+      },
+      "property_sets": {},
+      "provenance": {
+        "source": "phase-4-geometry-gate"
+      }
+    },
+    {
+      "id": "space-1",
+      "ifc_class": "IfcSpace",
+      "attributes": {
+        "Name": "Room",
+        "InteriorOrExteriorSpace": "INTERNAL",
+        "ObjectPlacement": {
+          "relative_to": "storey-1",
+          "origin": [0, 0, 0],
+          "axis": [0, 0, 1],
+          "ref_direction": [1, 0, 0]
+        },
+        "Representation": {
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "polygon",
+            "points": [[0, 0], [6000, 0], [6000, 4000], [0, 4000], [0, 0]]
+          },
+          "depth": 3000,
+          "direction": [0, 0, 1]
+        }
+      },
+      "property_sets": {},
+      "provenance": {
+        "source": "phase-4-geometry-gate"
+      }
+    },
+    {
+      "id": "wall-south",
+      "ifc_class": "IfcWall",
+      "attributes": {
+        "Name": "wall-south",
+        "ObjectPlacement": {
+          "relative_to": "storey-1",
+          "origin": [3000, 0, 0],
+          "axis": [0, 0, 1],
+          "ref_direction": [1, 0, 0]
+        },
+        "Representation": {
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 6000,
+            "y": 300
+          },
+          "depth": 3000,
+          "direction": [0, 0, 1]
+        }
+      },
+      "property_sets": {},
+      "provenance": {
+        "source": "phase-4-geometry-gate"
+      }
+    },
+    {
+      "id": "wall-north",
+      "ifc_class": "IfcWall",
+      "attributes": {
+        "Name": "wall-north",
+        "ObjectPlacement": {
+          "relative_to": "storey-1",
+          "origin": [3000, 4000, 0],
+          "axis": [0, 0, 1],
+          "ref_direction": [1, 0, 0]
+        },
+        "Representation": {
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 6000,
+            "y": 300
+          },
+          "depth": 3000,
+          "direction": [0, 0, 1]
+        }
+      },
+      "property_sets": {},
+      "provenance": {
+        "source": "phase-4-geometry-gate"
+      }
+    },
+    {
+      "id": "wall-west",
+      "ifc_class": "IfcWall",
+      "attributes": {
+        "Name": "wall-west",
+        "ObjectPlacement": {
+          "relative_to": "storey-1",
+          "origin": [0, 2000, 0],
+          "axis": [0, 0, 1],
+          "ref_direction": [0, 1, 0]
+        },
+        "Representation": {
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 4000,
+            "y": 300
+          },
+          "depth": 3000,
+          "direction": [0, 0, 1]
+        }
+      },
+      "property_sets": {},
+      "provenance": {
+        "source": "phase-4-geometry-gate"
+      }
+    },
+    {
+      "id": "wall-east",
+      "ifc_class": "IfcWall",
+      "attributes": {
+        "Name": "wall-east",
+        "ObjectPlacement": {
+          "relative_to": "storey-1",
+          "origin": [6000, 2000, 0],
+          "axis": [0, 0, 1],
+          "ref_direction": [0, 1, 0]
+        },
+        "Representation": {
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 4000,
+            "y": 300
+          },
+          "depth": 3000,
+          "direction": [0, 0, 1]
+        }
+      },
+      "property_sets": {},
+      "provenance": {
+        "source": "phase-4-geometry-gate"
+      }
+    },
+    {
+      "id": "opening-door-1",
+      "ifc_class": "IfcOpeningElement",
+      "attributes": {
+        "Name": "opening-door-1",
+        "ObjectPlacement": {
+          "relative_to": "wall-south",
+          "origin": [0, 0, 0],
+          "axis": [0, 0, 1],
+          "ref_direction": [1, 0, 0]
+        },
+        "Representation": {
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 900,
+            "y": 300
+          },
+          "depth": 2100,
+          "direction": [0, 0, 1]
+        }
+      },
+      "property_sets": {},
+      "provenance": {
+        "source": "phase-4-geometry-gate"
+      }
+    },
+    {
+      "id": "door-1",
+      "ifc_class": "IfcDoor",
+      "attributes": {
+        "Name": "Door",
+        "ObjectPlacement": {
+          "relative_to": "opening-door-1",
+          "origin": [0, 0, 0],
+          "axis": [0, 0, 1],
+          "ref_direction": [1, 0, 0]
+        },
+        "OverallWidth": 900,
+        "OverallHeight": 2100,
+        "Representation": {
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 900,
+            "y": 100
+          },
+          "depth": 2100,
+          "direction": [0, 0, 1]
+        }
+      },
+      "property_sets": {},
+      "provenance": {
+        "source": "phase-4-geometry-gate"
+      }
+    },
+    {
+      "id": "opening-window-1",
+      "ifc_class": "IfcOpeningElement",
+      "attributes": {
+        "Name": "opening-window-1",
+        "ObjectPlacement": {
+          "relative_to": "wall-north",
+          "origin": [0, 0, 900],
+          "axis": [0, 0, 1],
+          "ref_direction": [1, 0, 0]
+        },
+        "Representation": {
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 1200,
+            "y": 300
+          },
+          "depth": 1500,
+          "direction": [0, 0, 1]
+        }
+      },
+      "property_sets": {},
+      "provenance": {
+        "source": "phase-4-geometry-gate"
+      }
+    },
+    {
+      "id": "window-1",
+      "ifc_class": "IfcWindow",
+      "attributes": {
+        "Name": "Window",
+        "ObjectPlacement": {
+          "relative_to": "opening-window-1",
+          "origin": [0, 0, 0],
+          "axis": [0, 0, 1],
+          "ref_direction": [1, 0, 0]
+        },
+        "OverallWidth": 1200,
+        "OverallHeight": 1500,
+        "Representation": {
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 1200,
+            "y": 100
+          },
+          "depth": 1500,
+          "direction": [0, 0, 1]
+        }
+      },
+      "property_sets": {},
+      "provenance": {
+        "source": "phase-4-geometry-gate"
+      }
+    }
+  ],
+  "relationships": [
+    {
+      "id": "void-door-1",
+      "ifc_class": "IfcRelVoidsElement",
+      "attributes": {
+        "RelatingBuildingElement": "wall-south",
+        "RelatedOpeningElement": "opening-door-1"
+      },
+      "provenance": {
+        "source": "phase-4-geometry-gate"
+      }
+    },
+    {
+      "id": "fill-door-1",
+      "ifc_class": "IfcRelFillsElement",
+      "attributes": {
+        "RelatingOpeningElement": "opening-door-1",
+        "RelatedBuildingElement": "door-1"
+      },
+      "provenance": {
+        "source": "phase-4-geometry-gate"
+      }
+    },
+    {
+      "id": "void-window-1",
+      "ifc_class": "IfcRelVoidsElement",
+      "attributes": {
+        "RelatingBuildingElement": "wall-north",
+        "RelatedOpeningElement": "opening-window-1"
+      },
+      "provenance": {
+        "source": "phase-4-geometry-gate"
+      }
+    },
+    {
+      "id": "fill-window-1",
+      "ifc_class": "IfcRelFillsElement",
+      "attributes": {
+        "RelatingOpeningElement": "opening-window-1",
+        "RelatedBuildingElement": "window-1"
+      },
+      "provenance": {
+        "source": "phase-4-geometry-gate"
+      }
+    }
+  ],
+  "provenance": {
+    "source": "phase-4-geometry-gate"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "case_id": "ask_user",
+  "evidence_paths": [
+    "cases/ask_user/request.redacted.json",
+    "cases/ask_user/response.raw.json",
+    "cases/ask_user/parsed-output.json"
+  ],
+  "finish_reason": "stop",
+  "model": "deepseek-v4-flash",
+  "model_output": {
+    "action_summary": "The system must request the missing wall thickness and floor thickness from the user because these are required facts that the user must provide. The system must not fabricate these values as it could lead to incorrect IFC output.",
+    "resolution_status": "needs_user_answer",
+    "route": "ask_user",
+    "should_ask_user": true,
+    "should_block": true,
+    "should_continue_pipeline": false,
+    "target_stage": "correct_terminal_live"
+  },
+  "model_output_valid": true,
+  "provider": "deepseek-openai-compatible",
+  "response_id": "65393a90-7d15-4762-8549-0d9ae5c5acf7",
+  "route": "ask_user",
+  "schema_version": "text2ifc/phase6.4-route-live-uat-case/1.0",
+  "status": "correct_terminal_live"
+}

@@ -1,0 +1,212 @@
+{
+  "rounds": [
+    {
+      "attempted_action": "prepare_generator_feedback",
+      "input_issue_count": 6,
+      "issue_delta": null,
+      "issue_set_changed": false,
+      "issues": [
+        {
+          "actual_ref": "/output.ifc",
+          "evidence": "COMPILE_REOPEN_FAILED: IFC compilation or reopen verification failed.",
+          "expected_fact_ref": null,
+          "issue_id": "issue_geometry_gate_0001",
+          "issue_type": "geometry_invalid",
+          "owner": "gate",
+          "retryable": true,
+          "severity": "blocking",
+          "source": "geometry_gate",
+          "suggested_route": "regenerate_json"
+        },
+        {
+          "actual_ref": "IfcBuildingStorey:1VWdUS6trI6B1hPsHYyeF2",
+          "evidence": "IFC_SCHEMA_ERROR: With inverse: Evidence: {\"path\": \"IfcBuildingStorey:1VWdUS6trI6B1hPsHYyeF2\"}",
+          "expected_fact_ref": null,
+          "issue_id": "issue_deterministic_gate_0001",
+          "issue_type": "geometry_invalid",
+          "owner": "generator",
+          "retryable": true,
+          "severity": "blocking",
+          "source": "deterministic_gate",
+          "suggested_route": "regenerate_json"
+        },
+        {
+          "actual_ref": "IfcBuildingStorey:24yOIOXMvNYRknSVZNCQ2L",
+          "evidence": "IFC_SCHEMA_ERROR: With inverse: Evidence: {\"path\": \"IfcBuildingStorey:24yOIOXMvNYRknSVZNCQ2L\"}",
+          "expected_fact_ref": null,
+          "issue_id": "issue_deterministic_gate_0002",
+          "issue_type": "geometry_invalid",
+          "owner": "generator",
+          "retryable": true,
+          "severity": "blocking",
+          "source": "deterministic_gate",
+          "suggested_route": "regenerate_json"
+        },
+        {
+          "actual_ref": "/output.ifc",
+          "evidence": "COMPILE_REOPEN_FAILED: IFC compilation or reopen verification failed. Evidence: {\"path\": \"/output.ifc\"}",
+          "expected_fact_ref": null,
+          "issue_id": "issue_deterministic_gate_0003",
+          "issue_type": "geometry_invalid",
+          "owner": "generator",
+          "retryable": true,
+          "severity": "blocking",
+          "source": "deterministic_gate",
+          "suggested_route": "regenerate_json"
+        },
+        {
+          "actual_ref": null,
+          "evidence": "OPENING_FILLING_ORIENTATION_MISMATCH: Multiple door openings and their fillings have orientation mismatch: the opening's local X does not align with the host wall's local X direction. This results in the door width direction being perpendicular to the wall length direction. Evidence: {\"components\": [{\"filling\": \"door-storey-1-door-living-corridor\", \"host_wall\": \"storey-1-wall-living-corridor\", \"opening\": \"opening-door-storey-1-door-living-corridor\", \"opening_placement_ref_direction\": [1, 0, 0], \"reason\": \"Opening local X direction (global X) is perpendicular to wall local X direction (global Y). Door width (900mm) is measured along wall length direction, but opening orientation causes it to span across wall thickness.\", \"wall_placement_ref_direction\": [0, 1, 0]}, {\"filling\": \"door-storey-1-door-kitchen-corridor\", \"host_wall\": \"storey-1-wall-kitchen-corridor\", \"opening\": \"opening-door-storey-1-door-kitchen-corridor\", \"opening_placement_ref_direction\": [1, 0, 0], \"reason\": \"Same orientation mismatch.\", \"wall_placement_ref_direction\": [0, 1, 0]}, {\"filling\": \"door-storey-1-door-stairwell-utility\", \"host_wall\": \"storey-1-wall-stairwell-utility\", \"opening\": \"opening-door-storey-1-door-stairwell-utility\", \"opening_placement_ref_direction\": [1, 0, 0], \"reason\": \"Same orientation mismatch.\", \"wall_placement_ref_direction\": [0, 1, 0]}, {\"filling\": \"door-storey-1-door-utility-corridor\", \"host_wall\": \"storey-1-wall-utility-corridor\", \"opening\": \"opening-door-storey-1-door-utility-corridor\", \"opening_placement_ref_direction\": [1, 0, 0], \"reason\": \"Same orientation mismatch.\", \"wall_placement_ref_direction\": [0, 1, 0]}, {\"filling\": \"door-storey-1-door-bathroom-corridor\", \"host_wall\": \"storey-1-wall-bathroom-corridor\", \"opening\": \"opening-door-storey-1-door-bathroom-corridor\", \"opening_placement_ref_direction\": [1, 0, 0], \"reason\": \"Same orientation mismatch.\", \"wall_placement_ref_direction\": [0, 1, 0]}, {\"filling\": \"door-storey-2-door-master-corridor\", \"host_wall\": \"storey-2-wall-master-corridor\", \"opening\": \"opening-door-storey-2-door-master-corridor\", \"opening_placement_ref_direction\": [1, 0, 0], \"reason\": \"Same orientation mismatch.\", \"wall_placement_ref_direction\": [0, 1, 0]}, {\"filling\": \"door-storey-2-door-bedroom2-corridor\", \"host_wall\": \"storey-2-wall-bedroom2-corridor\", \"opening\": \"opening-door-storey-2-door-bedroom2-corridor\", \"opening_placement_ref_direction\": [1, 0, 0], \"reason\": \"Same orientation mismatch.\", \"wall_placement_ref_direction\": [0, 1, 0]}, {\"filling\": \"door-storey-2-door-landing-corridor\", \"host_wall\": \"storey-2-wall-landing-corridor\", \"opening\": \"opening-door-storey-2-door-landing-corridor\", \"opening_placement_ref_direction\": [1, 0, 0], \"reason\": \"Same orientation mismatch.\", \"wall_placement_ref_direction\": [0, 1, 0]}, {\"filling\": \"door-storey-2-door-study-corridor\", \"host_wall\": \"storey-2-wall-study-corridor\", \"opening\": \"opening-door-storey-2-door-study-corridor\", \"opening_placement_ref_direction\": [1, 0, 0], \"reason\": \"Same orientation mismatch.\", \"wall_placement_ref_direction\": [0, 1, 0]}], \"evidence_paths\": [\"design-brief/design-brief.json\", \"generator/candidate.json\"], \"severity\": \"error\"}",
+          "expected_fact_ref": null,
+          "issue_id": "issue_audit_0001",
+          "issue_type": "geometry_invalid",
+          "owner": "generator",
+          "retryable": true,
+          "severity": "blocking",
+          "source": "audit",
+          "suggested_route": "regenerate_json"
+        },
+        {
+          "actual_ref": null,
+          "evidence": "DETERMINISTIC_GATE_FAILURE: IFC compilation or reopen verification failed. Geometry feedback indicates COMPILE_REOPEN_FAILED. The BIM JSON may have issues that prevent IFC generation. Evidence: {\"evidence_paths\": [\"gate-summary.json\", \"geometry-feedback.json\"], \"severity\": \"blocking\"}",
+          "expected_fact_ref": null,
+          "issue_id": "issue_audit_0002",
+          "issue_type": "semantic_mismatch",
+          "owner": "audit",
+          "retryable": true,
+          "severity": "blocking",
+          "source": "audit",
+          "suggested_route": "revise_design_brief"
+        }
+      ],
+      "max_feedback_rounds": 2,
+      "output_issue_count": 6,
+      "retry_allowed": true,
+      "round_index": 0,
+      "route": "regenerate_json",
+      "route_decision": {
+        "blocking_issue_ids": [
+          "issue_geometry_gate_0001",
+          "issue_deterministic_gate_0001",
+          "issue_deterministic_gate_0002",
+          "issue_deterministic_gate_0003",
+          "issue_audit_0001",
+          "issue_audit_0002"
+        ],
+        "current_feedback_round": 0,
+        "final_status": "blocked",
+        "human_review_required": false,
+        "max_feedback_rounds": 2,
+        "reason": "Route regenerate_json selected from 6 issue(s); first issue issue_geometry_gate_0001 is geometry_invalid owned by gate.",
+        "retry_allowed": true,
+        "route": "regenerate_json",
+        "schema_version": "text2ifc/route-decision/2.0",
+        "source_issue_count": 6,
+        "target_stage": "generator"
+      },
+      "schema_version": "text2ifc/feedback-round/1.0",
+      "source_stage": "audit",
+      "target_stage": "generator",
+      "terminal_status": "retry_prepared"
+    },
+    {
+      "attempted_action": "prepare_generator_feedback",
+      "input_issue_count": 6,
+      "issue_delta": 3,
+      "issue_set_changed": true,
+      "issues": [
+        {
+          "actual_ref": "/entities/opening-window-storey-1-window-kitchen-east/attributes/ObjectPlacement/origin",
+          "evidence": "OPENING_HOST_LOCAL_BOUNDS_MISMATCH: No diagnostic message was provided. Evidence: {\"element_id\": \"window-storey-1-window-kitchen-east\", \"host_profile\": {\"x\": 8000.0, \"y\": 200.0}, \"host_wall\": \"storey-1-wall-east\", \"opening_id\": \"opening-window-storey-1-window-kitchen-east\", \"opening_origin\": [0, -2000, 1000], \"opening_profile\": {\"x\": 1200.0, \"y\": 200.0}, \"outside_along_length\": false, \"outside_thickness\": true, \"path\": \"/entities/opening-window-storey-1-window-kitchen-east/attributes/ObjectPlacement/origin\"}",
+          "expected_fact_ref": null,
+          "issue_id": "issue_deterministic_gate_0001",
+          "issue_type": "geometry_invalid",
+          "owner": "generator",
+          "retryable": true,
+          "severity": "blocking",
+          "source": "deterministic_gate",
+          "suggested_route": "regenerate_json"
+        },
+        {
+          "actual_ref": "/entities/opening-window-storey-2-window-bedroom2-east/attributes/ObjectPlacement/origin",
+          "evidence": "OPENING_HOST_LOCAL_BOUNDS_MISMATCH: No diagnostic message was provided. Evidence: {\"element_id\": \"window-storey-2-window-bedroom2-east\", \"host_profile\": {\"x\": 8000.0, \"y\": 200.0}, \"host_wall\": \"storey-2-wall-east\", \"opening_id\": \"opening-window-storey-2-window-bedroom2-east\", \"opening_origin\": [0, -2000, 900], \"opening_profile\": {\"x\": 1400.0, \"y\": 200.0}, \"outside_along_length\": false, \"outside_thickness\": true, \"path\": \"/entities/opening-window-storey-2-window-bedroom2-east/attributes/ObjectPlacement/origin\"}",
+          "expected_fact_ref": null,
+          "issue_id": "issue_deterministic_gate_0002",
+          "issue_type": "geometry_invalid",
+          "owner": "generator",
+          "retryable": true,
+          "severity": "blocking",
+          "source": "deterministic_gate",
+          "suggested_route": "regenerate_json"
+        },
+        {
+          "actual_ref": null,
+          "evidence": "SLAB_OPENING_POSITION_MISMATCH: No diagnostic message was provided. Evidence: {\"affected_components\": [\"first-floor-slab\", \"opening-first-floor-slab-stair\"], \"description\": \"First floor slab opening for stair does not match the specified stair-opening bounds (x=0..2000, y=4000..8000). The opening in the candidate BIM JSON is placed such that its global X range is 1000..3000 and global Y range is 2000..6000, which does not cover the intended stair opening area.\", \"evidence\": {\"candidate_slab_opening_placement\": \"generator/candidate.json -> entities[?id=='opening-first-floor-slab-stair'].attributes.ObjectPlacement\", \"candidate_slab_opening_profile\": \"generator/candidate.json -> entities[?id=='opening-first-floor-slab-stair'].attributes.Representation\", \"design_brief_stair_opening\": \"design-brief/design-brief.json -> /known_facts/floor_slabs[1]/opening/bounds\"}, \"severity\": \"blocking\"}",
+          "expected_fact_ref": null,
+          "issue_id": "issue_audit_0001",
+          "issue_type": "geometry_invalid",
+          "owner": "generator",
+          "retryable": true,
+          "severity": "blocking",
+          "source": "audit",
+          "suggested_route": "regenerate_json"
+        }
+      ],
+      "max_feedback_rounds": 2,
+      "output_issue_count": 3,
+      "retry_allowed": true,
+      "round_index": 1,
+      "route": "regenerate_json",
+      "route_decision": {
+        "blocking_issue_ids": [
+          "issue_deterministic_gate_0001",
+          "issue_deterministic_gate_0002",
+          "issue_audit_0001"
+        ],
+        "current_feedback_round": 1,
+        "final_status": "blocked",
+        "human_review_required": false,
+        "max_feedback_rounds": 2,
+        "reason": "Route regenerate_json selected from 3 issue(s); first issue issue_deterministic_gate_0001 is geometry_invalid owned by generator.",
+        "retry_allowed": true,
+        "route": "regenerate_json",
+        "schema_version": "text2ifc/route-decision/2.0",
+        "source_issue_count": 3,
+        "target_stage": "generator"
+      },
+      "schema_version": "text2ifc/feedback-round/1.0",
+      "source_stage": "audit",
+      "target_stage": "generator",
+      "terminal_status": "retry_prepared"
+    },
+    {
+      "attempted_action": "none",
+      "input_issue_count": 0,
+      "issue_delta": null,
+      "issue_set_changed": true,
+      "issues": [],
+      "max_feedback_rounds": 2,
+      "output_issue_count": 0,
+      "retry_allowed": false,
+      "round_index": 2,
+      "route": "accepted",
+      "route_decision": {
+        "blocking_issue_ids": [],
+        "current_feedback_round": 2,
+        "final_status": "accepted",
+        "human_review_required": false,
+        "max_feedback_rounds": 2,
+        "reason": "No blocking or warning issues were found.",
+        "retry_allowed": false,
+        "route": "accepted",
+        "schema_version": "text2ifc/route-decision/2.0",
+        "target_stage": "none"
+      },
+      "schema_version": "text2ifc/feedback-round/1.0",
+      "source_stage": "final",
+      "target_stage": "none",
+      "terminal_status": "accepted"
+    }
+  ],
+  "schema_version": "text2ifc/feedback-rounds/1.0"
+}

@@ -14,8 +14,11 @@ from .state import redact_metadata
 
 
 MIMO_TOKEN_ENV = "ANTHROPIC_AUTH_TOKEN"
+MIMO_API_KEY_ENV = "API_KEY"
+MIMO_OFFICIAL_API_KEY_ENV = "MIMO_API_KEY"
 MIMO_BASE_URL_ENV = "ANTHROPIC_BASE_URL"
 MIMO_MODEL_ENV = "TEXT2IFC_MIMO_MODEL"
+MIMO_TOKEN_ENV_CHOICES = (MIMO_API_KEY_ENV, MIMO_OFFICIAL_API_KEY_ENV, MIMO_TOKEN_ENV)
 LOW_LEVEL_FORBIDDEN_TERMS = (
     "ISO-10303-21",
     "HEADER;",
@@ -30,6 +33,17 @@ LOW_LEVEL_FORBIDDEN_TERMS = (
 class ProviderOutputError(ValueError):
     """Raised when provider output violates the Agent boundary."""
 
+    def __init__(
+        self,
+        message: str,
+        *,
+        live_result: "LiveProviderResult | None" = None,
+        details: dict[str, Any] | None = None,
+    ) -> None:
+        super().__init__(message)
+        self.live_result = live_result
+        self.details = {} if details is None else details
+
 
 @dataclass(frozen=True)
 class ProviderOutput:
@@ -37,8 +51,9 @@ class ProviderOutput:
     metadata: dict[str, Any]
 
     def parse_json(self) -> tuple[str, dict[str, Any] | None, list[dict[str, Any]]]:
+        text, normalization_diagnostics = _normalize_json_text(self.text)
         try:
-            payload = json.loads(self.text)
+            payload = json.loads(text)
         except json.JSONDecodeError as exc:
             return (
                 "parse_error",
@@ -63,7 +78,25 @@ class ProviderOutput:
                     }
                 ],
             )
-        return ("ok", payload, [])
+        return ("ok", payload, normalization_diagnostics)
+
+
+def _normalize_json_text(text: str) -> tuple[str, list[dict[str, str]]]:
+    stripped = text.strip()
+    lines = stripped.splitlines()
+    if len(lines) >= 3 and lines[0].strip().lower() in {"```", "```json"}:
+        if lines[-1].strip() == "```":
+            return (
+                "\n".join(lines[1:-1]).strip(),
+                [
+                    {
+                        "code": "OUTER_JSON_FENCE_REMOVED",
+                        "path": "",
+                        "message": "Removed one outer Markdown fence before JSON parsing.",
+                    }
+                ],
+            )
+    return text, []
 
 
 class FakeAgentProvider:
@@ -148,22 +181,43 @@ class MimoConfig:
     token: str
     base_url: str
     model: str
-    max_tokens: int = 4096
-    timeout_seconds: int = 60
+    max_tokens: int = 131072
+    timeout_seconds: int = 900
+
+
+@dataclass(frozen=True)
+class LiveProviderResult:
+    session_id: str
+    evidence_class: str
+    http_status: int
+    request: dict[str, Any]
+    response: dict[str, Any]
+    events: tuple[dict[str, Any], ...]
+    output: ProviderOutput
 
 
 def load_mimo_config_from_env(
     environ: dict[str, str] | None = None,
 ) -> dict[str, Any]:
     env = os.environ if environ is None else environ
-    required = (MIMO_TOKEN_ENV, MIMO_BASE_URL_ENV, MIMO_MODEL_ENV)
-    missing = [name for name in required if not env.get(name)]
+    token_env = _configured_mimo_token_env(env)
+    missing = []
+    if token_env is None:
+        missing.append("API_KEY or MIMO_API_KEY or ANTHROPIC_AUTH_TOKEN")
+    for name in (MIMO_BASE_URL_ENV, MIMO_MODEL_ENV):
+        if not env.get(name):
+            missing.append(name)
     return {
         "provider": "mimo",
         "configured": not missing,
         "missing": missing,
-        "required_env": list(required),
-        "token_configured": bool(env.get(MIMO_TOKEN_ENV)),
+        "required_env": [
+            "API_KEY or MIMO_API_KEY or ANTHROPIC_AUTH_TOKEN",
+            MIMO_BASE_URL_ENV,
+            MIMO_MODEL_ENV,
+        ],
+        "token_configured": token_env is not None,
+        "token_env": token_env,
         "base_url_configured": bool(env.get(MIMO_BASE_URL_ENV)),
         "model": env.get(MIMO_MODEL_ENV, "") if env.get(MIMO_MODEL_ENV) else None,
     }
@@ -178,14 +232,14 @@ def _mimo_config_or_error(environ: dict[str, str] | None = None) -> MimoConfig:
             + ", ".join(status["missing"])
         )
     return MimoConfig(
-        token=env[MIMO_TOKEN_ENV],
+        token=env[_configured_mimo_token_env(env) or MIMO_TOKEN_ENV],
         base_url=env[MIMO_BASE_URL_ENV].rstrip("/"),
         model=env[MIMO_MODEL_ENV],
     )
 
 
 class MimoAgentProvider:
-    """Anthropic-compatible provider adapter used only for optional live smoke."""
+    """Anthropic-compatible provider adapter with an auditable streaming path."""
 
     def __init__(self, config: MimoConfig | None = None) -> None:
         self.config = config or _mimo_config_or_error()
@@ -208,11 +262,11 @@ class MimoAgentProvider:
             ensure_ascii=False,
         ).encode("utf-8")
         request = urllib.request.Request(
-            f"{self.config.base_url}/v1/messages",
+            _mimo_messages_endpoint(self.config.base_url),
             data=body,
             headers={
                 "content-type": "application/json",
-                "x-api-key": self.config.token,
+                "api-key": self.config.token,
                 "anthropic-version": "2023-06-01",
             },
             method="POST",
@@ -239,9 +293,104 @@ class MimoAgentProvider:
             )
         )
 
+    def generate_live(
+        self,
+        *,
+        session_id: str,
+        prompt: str,
+        schema: dict[str, Any],
+        state: dict[str, Any],
+    ) -> LiveProviderResult:
+        del schema, state
+        request_payload = {
+            "model": self.config.model,
+            "max_tokens": self.config.max_tokens,
+            "stream": True,
+            "messages": [{"role": "user", "content": prompt}],
+        }
+        body = json.dumps(request_payload, ensure_ascii=False).encode("utf-8")
+        request = urllib.request.Request(
+            _mimo_messages_endpoint(self.config.base_url),
+            data=body,
+            headers={
+                "content-type": "application/json",
+                "api-key": self.config.token,
+                "anthropic-version": "2023-06-01",
+            },
+            method="POST",
+        )
+        try:
+            with urllib.request.urlopen(
+                request,
+                timeout=self.config.timeout_seconds,
+            ) as response:
+                events = tuple(_read_anthropic_sse(response))
+                http_status = int(getattr(response, "status", 200))
+        except urllib.error.HTTPError as exc:
+            details = _safe_http_error_details(
+                exc,
+                secrets=(self.config.token, self.config.base_url),
+            )
+            raise ProviderOutputError(
+                f"Mimo live request failed for {session_id}: HTTP {exc.code}",
+                details=details,
+            ) from exc
+        except (OSError, urllib.error.URLError, UnicodeDecodeError) as exc:
+            raise ProviderOutputError(
+                f"Mimo live request failed for {session_id}: {type(exc).__name__}"
+            ) from exc
+
+        response_envelope = _reconstruct_anthropic_message(events)
+        output = validate_provider_output(
+            ProviderOutput(
+                text=_extract_anthropic_text(response_envelope),
+                metadata={
+                    "provider": "mimo",
+                    "evidence_class": "live",
+                    "session_id": session_id,
+                    "response_id": response_envelope.get("id"),
+                    "model": response_envelope.get("model"),
+                    "stop_reason": response_envelope.get("stop_reason"),
+                    "usage": dict(response_envelope.get("usage", {})),
+                },
+            )
+        )
+        result = LiveProviderResult(
+            session_id=session_id,
+            evidence_class="live",
+            http_status=http_status,
+            request=request_payload,
+            response=response_envelope,
+            events=events,
+            output=output,
+        )
+        stop_reason = response_envelope.get("stop_reason")
+        if stop_reason != "end_turn":
+            raise ProviderOutputError(
+                f"Mimo live response is not complete: stop_reason={stop_reason}",
+                live_result=result,
+            )
+        return result
+
 
 def redact_provider_payload(payload: Any) -> Any:
     return redact_metadata(payload)
+
+
+def _configured_mimo_token_env(env: dict[str, str] | os._Environ[str]) -> str | None:
+    for name in MIMO_TOKEN_ENV_CHOICES:
+        if env.get(name):
+            return name
+    return None
+
+
+def _mimo_messages_endpoint(base_url: str) -> str:
+    url = base_url.rstrip("/")
+    if url.endswith("/v1/messages"):
+        return url
+    if url.endswith("/v1"):
+        return f"{url}/messages"
+    return f"{url}/v1/messages"
 
 
 def validate_provider_output(output: ProviderOutput) -> ProviderOutput:
@@ -262,3 +411,145 @@ def _extract_anthropic_text(payload: dict[str, Any]) -> str:
     if chunks:
         return "\n".join(chunks)
     return json.dumps(payload, ensure_ascii=False, sort_keys=True)
+
+
+def _read_anthropic_sse(response: Any) -> list[dict[str, Any]]:
+    events: list[dict[str, Any]] = []
+    event_name: str | None = None
+    data_lines: list[str] = []
+
+    def flush() -> None:
+        nonlocal event_name, data_lines
+        if not data_lines:
+            event_name = None
+            return
+        data_text = "\n".join(data_lines)
+        data_lines = []
+        if data_text == "[DONE]":
+            event_name = None
+            return
+        try:
+            payload = json.loads(data_text)
+        except json.JSONDecodeError as exc:
+            raise ProviderOutputError(
+                f"Mimo SSE event is not valid JSON at event {len(events)}"
+            ) from exc
+        if not isinstance(payload, dict):
+            raise ProviderOutputError(
+                f"Mimo SSE event must be an object at event {len(events)}"
+            )
+        resolved_name = event_name or str(payload.get("type", "message"))
+        events.append(
+            {
+                "sequence": len(events),
+                "event": resolved_name,
+                "data": payload,
+            }
+        )
+        event_name = None
+
+    for raw_line in response:
+        line = raw_line.decode("utf-8").rstrip("\r\n")
+        if not line:
+            flush()
+        elif line.startswith(":"):
+            continue
+        elif line.startswith("event:"):
+            event_name = line.split(":", 1)[1].strip()
+        elif line.startswith("data:"):
+            data_lines.append(line.split(":", 1)[1].lstrip())
+    flush()
+    if not events:
+        raise ProviderOutputError("Mimo live response contained no SSE events")
+    return events
+
+
+def _reconstruct_anthropic_message(
+    events: tuple[dict[str, Any], ...] | list[dict[str, Any]],
+) -> dict[str, Any]:
+    message: dict[str, Any] | None = None
+    blocks: dict[int, dict[str, Any]] = {}
+
+    for event in events:
+        payload = event.get("data", {})
+        event_type = payload.get("type", event.get("event"))
+        if event_type == "message_start":
+            initial = payload.get("message")
+            if not isinstance(initial, dict):
+                raise ProviderOutputError("Mimo message_start is missing message object")
+            message = json.loads(json.dumps(initial, ensure_ascii=False))
+            message["content"] = []
+            message["usage"] = dict(initial.get("usage", {}))
+        elif event_type == "content_block_start":
+            index = payload.get("index")
+            block = payload.get("content_block")
+            if not isinstance(index, int) or not isinstance(block, dict):
+                raise ProviderOutputError("Mimo content_block_start is malformed")
+            blocks[index] = json.loads(json.dumps(block, ensure_ascii=False))
+        elif event_type == "content_block_delta":
+            index = payload.get("index")
+            delta = payload.get("delta")
+            if not isinstance(index, int) or not isinstance(delta, dict) or index not in blocks:
+                raise ProviderOutputError("Mimo content_block_delta is malformed")
+            _apply_content_delta(blocks[index], delta)
+        elif event_type == "message_delta":
+            if message is None:
+                raise ProviderOutputError("Mimo message_delta arrived before message_start")
+            delta = payload.get("delta", {})
+            if isinstance(delta, dict):
+                for key, value in delta.items():
+                    message[key] = value
+            usage = payload.get("usage", {})
+            if isinstance(usage, dict):
+                message.setdefault("usage", {}).update(usage)
+
+    if message is None:
+        raise ProviderOutputError("Mimo SSE stream is missing message_start")
+    message["content"] = [blocks[index] for index in sorted(blocks)]
+    if not message.get("id") or not message.get("model"):
+        raise ProviderOutputError("Mimo response envelope is missing id or model")
+    return message
+
+
+def _apply_content_delta(block: dict[str, Any], delta: dict[str, Any]) -> None:
+    delta_type = delta.get("type")
+    field_by_type = {
+        "text_delta": "text",
+        "thinking_delta": "thinking",
+        "signature_delta": "signature",
+        "input_json_delta": "partial_json",
+    }
+    field = field_by_type.get(str(delta_type))
+    if field is None:
+        raise ProviderOutputError(f"Unsupported Mimo content delta type: {delta_type}")
+    block[field] = str(block.get(field, "")) + str(delta.get(field, ""))
+
+
+def _safe_http_error_details(
+    error: urllib.error.HTTPError,
+    *,
+    secrets: tuple[str, ...],
+) -> dict[str, Any]:
+    error_type = "http_error"
+    message = str(error.reason or "HTTP request rejected")
+    try:
+        body = error.read().decode("utf-8")
+        payload = json.loads(body)
+    except (AttributeError, UnicodeDecodeError, json.JSONDecodeError):
+        payload = None
+    if isinstance(payload, dict):
+        provider_error = payload.get("error", payload)
+        if isinstance(provider_error, dict):
+            if isinstance(provider_error.get("type"), str):
+                error_type = provider_error["type"]
+            if isinstance(provider_error.get("message"), str):
+                message = provider_error["message"]
+    for secret in secrets:
+        if secret:
+            message = message.replace(secret, "[REDACTED]")
+            error_type = error_type.replace(secret, "[REDACTED]")
+    return {
+        "http_status": int(error.code),
+        "error_type": error_type[:200],
+        "message": message[:1000],
+    }

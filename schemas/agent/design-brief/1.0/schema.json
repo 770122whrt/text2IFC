@@ -1,0 +1,86 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://text2ifc.local/schemas/agent/design-brief/1.0/schema.json",
+  "title": "text2IFC Design Brief 1.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "language",
+    "original_request",
+    "known_facts",
+    "missing_facts",
+    "ambiguities",
+    "user_corrections",
+    "clarification_questions",
+    "provenance"
+  ],
+  "properties": {
+    "schema_version": {"const": "text2ifc/design-brief/1.0"},
+    "language": {"const": "zh-CN"},
+    "original_request": {"type": "string", "minLength": 1},
+    "known_facts": {
+      "type": "object"
+    },
+    "missing_facts": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/missingFact"}
+    },
+    "ambiguities": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/ambiguity"}
+    },
+    "user_corrections": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/correction"}
+    },
+    "clarification_questions": {
+      "type": "array",
+      "maxItems": 3,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "provenance": {
+      "type": "object",
+      "minProperties": 1
+    }
+  },
+  "$defs": {
+    "missingFact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "code", "path", "message"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "code": {"type": "string", "minLength": 1},
+        "path": {"type": "string", "minLength": 1},
+        "message": {"type": "string", "minLength": 1},
+        "source": {"type": "string", "minLength": 1}
+      }
+    },
+    "ambiguity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "path", "message"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "path": {"type": "string", "minLength": 1},
+        "message": {"type": "string", "minLength": 1},
+        "options": {
+          "type": "array",
+          "items": {}
+        }
+      }
+    },
+    "correction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "value", "source_turn"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "value": {},
+        "source_turn": {"type": "string", "minLength": 1},
+        "replaces": {}
+      }
+    }
+  }
+}

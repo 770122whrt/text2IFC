@@ -147,6 +147,38 @@ def _default_solid_position(
     )
 
 
+def _default_stair_solid_position(
+    direction: list[float],
+) -> tuple[dict[str, list[float]], list[float]]:
+    """Keep a step-profile's positive second coordinate aligned with global +Z."""
+    magnitude = math.sqrt(sum(item * item for item in direction))
+    horizontal = [direction[0] / magnitude, direction[1] / magnitude, 0.0]
+    return (
+        {
+            "origin": [0.0, 0.0, 0.0],
+            "axis": [-horizontal[0], -horizontal[1], 0.0],
+            "ref_direction": [horizontal[1], -horizontal[0], 0.0],
+        },
+        [0.0, 0.0, 1.0],
+    )
+
+
+def _default_stair_flight_solid_position(
+    direction: list[float],
+) -> tuple[dict[str, list[float]], list[float]]:
+    """Map step-profile run/rise while keeping direction as the actual width vector."""
+    magnitude = math.sqrt(sum(item * item for item in direction))
+    horizontal = [direction[0] / magnitude, direction[1] / magnitude, 0.0]
+    return (
+        {
+            "origin": [0.0, 0.0, 0.0],
+            "axis": horizontal,
+            "ref_direction": [-horizontal[1], horizontal[0], 0.0],
+        },
+        [0.0, 0.0, 1.0],
+    )
+
+
 def assign_v2_placement(
     ifc_file: Any,
     product: Any,
@@ -200,6 +232,10 @@ def add_v2_geometry(
     if "position" in representation:
         position = representation["position"]
         extrusion_direction = direction
+    elif product.is_a("IfcStairFlight") and direction[2] == 0:
+        position, extrusion_direction = _default_stair_flight_solid_position(direction)
+    elif product.is_a("IfcStair") and direction[2] == 0:
+        position, extrusion_direction = _default_stair_solid_position(direction)
     else:
         position, extrusion_direction = _default_solid_position(direction)
     solid = ifc_file.create_entity(

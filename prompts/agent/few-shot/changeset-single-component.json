@@ -1,0 +1,36 @@
+{
+  "few_shot_id": "changeset.single-component",
+  "description": "Correct one named wall field while preserving every unrelated component.",
+  "input": {
+    "issue": {
+      "issue_id": "issue-wall-a-depth",
+      "actual_ref": "entity:wall-a#/attributes/Representation/depth",
+      "expected": 3200,
+      "actual": 3000
+    },
+    "allowed_paths": {
+      "wall-a": ["/attributes/Representation/depth"]
+    }
+  },
+  "output": {
+    "schema_version": "text2ifc/bim-json-changeset/1.0",
+    "changeset_id": "changeset-wall-a",
+    "base_revision_id": "revision-base",
+    "base_candidate_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "expected_facts_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "source_issue_ids": ["issue-wall-a-depth"],
+    "scope_id": "scope-wall-a",
+    "operations": [
+      {
+        "operation_id": "operation-wall-a-depth",
+        "op": "update_entity",
+        "target_id": "wall-a",
+        "target_component_hash": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "changes": {
+          "/attributes/Representation/depth": 3200
+        },
+        "evidence_refs": ["issue-wall-a-depth:/expected"]
+      }
+    ]
+  }
+}

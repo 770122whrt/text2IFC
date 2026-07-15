@@ -1,0 +1,190 @@
+{
+  "accepted_session_hash": "129e4e93ae4e4583",
+  "all_required_links_passed": true,
+  "links": [
+    {
+      "evidence_level": "live_model_verified",
+      "evidence_paths": [
+        "smoke-json.json"
+      ],
+      "finish_reasons": [
+        "stop"
+      ],
+      "link_id": "provider_smoke_json",
+      "notes": "DeepSeek-compatible smoke call returned a non-truncated JSON response.",
+      "provider": "deepseek-openai-compatible",
+      "provider_response_ids": [
+        "d6e24adb-c725-4500-bafb-7cb346f180db"
+      ],
+      "required": true,
+      "source_stage": "provider_config",
+      "status": "passed",
+      "target_stage": "json_smoke"
+    },
+    {
+      "evidence_level": "live_model_verified",
+      "evidence_paths": [
+        "calls/01-design-brief/request.redacted.json",
+        "calls/01-design-brief/response.raw.json",
+        "calls/01-design-brief/metrics.json",
+        "design-brief/design-brief.json"
+      ],
+      "finish_reasons": [
+        "stop"
+      ],
+      "link_id": "accepted_user_input_to_design_brief",
+      "model": "deepseek-v4-flash",
+      "notes": "Accepted run used a real model call to produce a Design Brief.",
+      "provider_response_ids": [
+        "6d009189-217c-458c-81be-bc98f908fe02"
+      ],
+      "required": true,
+      "source_stage": "user_input",
+      "status": "passed",
+      "target_stage": "design_brief"
+    },
+    {
+      "evidence_level": "live_model_verified",
+      "evidence_paths": [
+        "generator/prompt-rendered.md",
+        "generator/trace/request.redacted.json",
+        "generator/trace/response.raw.json",
+        "generator/metrics.json",
+        "generator/candidate.json",
+        "generator/validation.json"
+      ],
+      "finish_reasons": [
+        "stop"
+      ],
+      "link_id": "accepted_design_brief_to_bim_json",
+      "model": "deepseek-v4-flash",
+      "notes": "Accepted run used a real model call to generate BIM JSON before validation.",
+      "provider_response_ids": [
+        "140ad36c-7e57-4f58-ae9e-97dbcdecc779"
+      ],
+      "required": true,
+      "source_stage": "design_brief",
+      "status": "passed",
+      "target_stage": "bim_json_generator"
+    },
+    {
+      "evidence_level": "deterministic_verified",
+      "evidence_paths": [
+        "gate-summary.json",
+        "geometry-feedback.json",
+        "ifc-verification.json",
+        "case-result.json"
+      ],
+      "final_status": "accepted",
+      "finish_reasons": [],
+      "link_id": "accepted_bim_json_to_deterministic_gates",
+      "notes": "Local schema, compiler, reopen, and geometry gates accepted the candidate.",
+      "provider_response_ids": [],
+      "required": true,
+      "route": "accepted",
+      "source_stage": "bim_json",
+      "status": "passed",
+      "target_stage": "deterministic_gates"
+    },
+    {
+      "evidence_level": "live_model_verified",
+      "evidence_paths": [
+        "audit/prompt-rendered.md",
+        "audit/trace/request.redacted.json",
+        "audit/trace/response.raw.json",
+        "audit/metrics.json",
+        "audit/audit-report.json"
+      ],
+      "final_status": "accepted",
+      "finish_reasons": [
+        "stop"
+      ],
+      "link_id": "accepted_deterministic_gates_to_audit",
+      "model": "deepseek-v4-flash",
+      "notes": "Audit Agent reviewed the accepted candidate after deterministic gates.",
+      "provider_response_ids": [
+        "1f6f7cf5-aae0-4b45-b89e-1aed9d22815d"
+      ],
+      "required": true,
+      "route": "accepted",
+      "source_stage": "deterministic_gates",
+      "status": "passed",
+      "target_stage": "audit_agent"
+    },
+    {
+      "evidence_level": "artifact_verified",
+      "evidence_paths": [
+        "route-decision.json",
+        "feedback-rounds.json",
+        "output.ifc",
+        "report.md"
+      ],
+      "final_status": "accepted",
+      "finish_reasons": [],
+      "link_id": "accepted_audit_to_ifc",
+      "notes": "Accepted route produced the final IFC and human review report.",
+      "provider_response_ids": [],
+      "required": true,
+      "route": "accepted",
+      "source_stage": "audit_agent",
+      "status": "passed",
+      "target_stage": "ifc_and_report"
+    },
+    {
+      "evidence_level": "live_model_verified",
+      "evidence_paths": [
+        "calls",
+        "design-brief.json",
+        "conversation.json"
+      ],
+      "finish_reasons": [
+        "stop",
+        "stop",
+        "stop",
+        "stop",
+        "stop"
+      ],
+      "link_id": "nonaccept_user_input_to_design_brief_draft",
+      "model": "deepseek-v4-flash",
+      "notes": "Non-accept run used real model calls and remained in Draft instead of inventing missing facts.",
+      "provider_response_ids": [
+        "d56e538d-6f86-43f0-91fe-aeaf7c5b3cfe",
+        "866cd965-d981-4ee0-b965-0794154f3f62",
+        "a6cf881d-9eea-4b44-a78e-7568433a5ac4",
+        "ef216096-e6ce-4ade-8116-9dde38f15705",
+        "69bb3321-1f1d-4c7f-b255-621e7993cd1f"
+      ],
+      "required": true,
+      "source_stage": "user_input",
+      "status": "passed",
+      "target_stage": "design_brief_draft"
+    },
+    {
+      "evidence_level": "artifact_verified",
+      "evidence_paths": [
+        "issues.json",
+        "route-decision.json",
+        "feedback-rounds.json",
+        "case-result.json",
+        "report.md"
+      ],
+      "final_status": "draft",
+      "finish_reasons": [],
+      "link_id": "nonaccept_issues_to_ask_user",
+      "notes": "Missing user facts became issues and routed to ask_user, not accepted IFC.",
+      "provider_response_ids": [],
+      "required": true,
+      "route": "ask_user",
+      "source_stage": "issues",
+      "status": "passed",
+      "target_stage": "user"
+    }
+  ],
+  "missing_required_link_ids": [],
+  "nonaccept_session_hash": "0768b6259f2aff83",
+  "passed_required_link_count": 8,
+  "provider": "deepseek-openai-compatible",
+  "report": "live-chain-coverage-report.md",
+  "required_link_count": 8,
+  "schema_version": "text2ifc/phase6.4-live-chain-coverage/1.0"
+}

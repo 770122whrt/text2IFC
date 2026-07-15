@@ -1,0 +1,25 @@
+{
+  "case_id": "repair_json",
+  "evidence_paths": [
+    "cases/repair_json/request.redacted.json",
+    "cases/repair_json/response.raw.json",
+    "cases/repair_json/parsed-output.json"
+  ],
+  "finish_reason": "stop",
+  "model": "deepseek-v4-flash",
+  "model_output": {
+    "action_summary": "Applied schema repair to fix mismatch.",
+    "resolution_status": "repair_feedback_ready",
+    "route": "repair_json",
+    "should_ask_user": false,
+    "should_block": false,
+    "should_continue_pipeline": true,
+    "target_stage": "repair"
+  },
+  "model_output_valid": true,
+  "provider": "deepseek-openai-compatible",
+  "response_id": "31befec5-8d76-42d1-99d4-15292c029a98",
+  "route": "repair_json",
+  "schema_version": "text2ifc/phase6.4-route-live-uat-case/1.0",
+  "status": "auto_resolved_live"
+}

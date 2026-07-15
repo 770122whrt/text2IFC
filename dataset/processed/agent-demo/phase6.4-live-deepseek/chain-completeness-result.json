@@ -1,0 +1,76 @@
+{
+  "contract_only_routes": [
+    "repair_json",
+    "gate_issue",
+    "runtime_blocked"
+  ],
+  "deterministic_route_matrix_complete": true,
+  "evidence_inputs": {
+    "feedback_matrix": "dataset\\processed\\agent-demo\\phase6.4-feedback-routing-matrix\\matrix-result.json",
+    "live_chain_coverage": "dataset\\processed\\agent-demo\\phase6.4-live-deepseek\\live-chain-coverage-result.json",
+    "route_live_uat": "dataset\\processed\\agent-demo\\phase6.4-route-live-uat\\route-live-uat-summary.json"
+  },
+  "false_accept_count": 0,
+  "live_core_chain_complete": true,
+  "live_required_links": {
+    "missing_link_ids": [],
+    "passed": 8,
+    "total": 8
+  },
+  "live_route_coverage": {
+    "boundary": "Live evidence proves the accepted IFC path and the non-accept ask_user path. Other failure routes are deterministic/unit coverage in Phase 6.4 unless separately live-tested.",
+    "covered_routes": [
+      "accepted",
+      "ask_user"
+    ]
+  },
+  "matrix_route_coverage": {
+    "covered_routes": [
+      "accepted",
+      "ask_user",
+      "blocked_as_unsupported",
+      "provider_retry",
+      "regenerate_json",
+      "revise_design_brief"
+    ],
+    "missing_routes": [],
+    "required_routes": [
+      "accepted",
+      "ask_user",
+      "regenerate_json",
+      "revise_design_brief",
+      "provider_retry",
+      "blocked_as_unsupported"
+    ]
+  },
+  "not_live_verified_routes": [],
+  "overall_status": "phase6_4_evidence_complete_with_boundaries",
+  "route_live_uat": {
+    "auto_resolved_routes": [
+      "regenerate_json",
+      "repair_json",
+      "revise_design_brief"
+    ],
+    "correct_terminal_routes": [
+      "ask_user",
+      "blocked_as_unsupported",
+      "gate_issue",
+      "runtime_blocked"
+    ],
+    "covered_routes": [
+      "ask_user",
+      "blocked_as_unsupported",
+      "gate_issue",
+      "provider_retry",
+      "regenerate_json",
+      "repair_json",
+      "revise_design_brief",
+      "runtime_blocked"
+    ],
+    "retry_control_routes": [
+      "provider_retry"
+    ]
+  },
+  "route_live_uat_complete": true,
+  "schema_version": "text2ifc/phase6.4-chain-completeness/1.0"
+}

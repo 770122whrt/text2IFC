@@ -1,0 +1,120 @@
+{
+  "few_shot_id": "changeset.staged-cross-storey",
+  "description": "Add a parent-relative upper slab, stair opening, stair, stepped flight, and their explicit void and aggregate relationships.",
+  "input": {
+    "expected_facts": {
+      "lower_storey": {"id": "level-lower", "elevation_mm": 0},
+      "upper_storey": {"id": "level-upper", "elevation_mm": 3150},
+      "slab": {"id": "slab-upper", "top_elevation_mm": 3150, "thickness_mm": 150, "bounds": {"x": [0, 8000], "y": [0, 6000]}},
+      "opening": {"id": "opening-stair", "host_slab": "slab-upper", "bounds": {"x": [6000, 8000], "y": [1000, 6000]}},
+      "stair": {"id": "stair-a", "flight_ids": ["stair-flight-a"], "bounds": {"x": [6500, 7500], "y": [1500, 5100]}, "run_direction": "+Y", "width_direction": "+X", "start_elevation_mm": 150, "end_elevation_mm": 3150, "number_of_risers": 3, "number_of_treads": 3, "riser_height": 1000, "tread_depth": 1200, "width": 1000}
+    },
+    "change_scope": {
+      "entity_ids": ["slab-upper", "opening-stair", "stair-a", "stair-flight-a"],
+      "relationship_ids": ["rel-voids-slab-upper", "aggregate-stair-flight"]
+    }
+  },
+  "output": {
+    "schema_version": "text2ifc/bim-json-changeset/1.0",
+    "changeset_id": "changeset-cross-storey",
+    "base_revision_id": "revision-base",
+    "base_candidate_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "expected_facts_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "source_issue_ids": ["issue-package-cross-storey"],
+    "scope_id": "scope-package-cross-storey",
+    "operations": [
+      {
+        "operation_id": "add-slab-upper",
+        "op": "add_entity",
+        "target_id": "slab-upper",
+        "value": {
+          "id": "slab-upper",
+          "ifc_class": "IfcSlab",
+          "attributes": {
+            "Name": "Upper slab",
+            "ObjectPlacement": {"relative_to": "level-upper", "origin": [4000, 3000, -150], "axis": [0, 0, 1], "ref_direction": [1, 0, 0]},
+            "Representation": {"kind": "extruded_profile", "profile": {"kind": "rectangle", "x": 8000, "y": 6000}, "depth": 150, "direction": [0, 0, 1]}
+          },
+          "property_sets": {},
+          "provenance": {"source": "issue-package-cross-storey"}
+        },
+        "evidence_refs": ["issue-package-cross-storey:/expected"]
+      },
+      {
+        "operation_id": "add-opening-stair",
+        "op": "add_entity",
+        "target_id": "opening-stair",
+        "value": {
+          "id": "opening-stair",
+          "ifc_class": "IfcOpeningElement",
+          "attributes": {
+            "Name": "Stair opening",
+            "ObjectPlacement": {"relative_to": "slab-upper", "origin": [3000, 500, 0], "axis": [0, 0, 1], "ref_direction": [1, 0, 0]},
+            "Representation": {"kind": "extruded_profile", "profile": {"kind": "rectangle", "x": 2000, "y": 5000}, "depth": 150, "direction": [0, 0, 1]}
+          },
+          "property_sets": {},
+          "provenance": {"source": "issue-package-cross-storey"}
+        },
+        "evidence_refs": ["issue-package-cross-storey:/expected"]
+      },
+      {
+        "operation_id": "add-stair-a",
+        "op": "add_entity",
+        "target_id": "stair-a",
+        "value": {
+          "id": "stair-a",
+          "ifc_class": "IfcStair",
+          "attributes": {
+            "Name": "Main stair",
+            "ShapeType": "STRAIGHT_RUN_STAIR",
+            "ObjectPlacement": {"relative_to": "level-lower", "origin": [6500, 1500, 150], "axis": [0, 0, 1], "ref_direction": [1, 0, 0]}
+          },
+          "property_sets": {},
+          "provenance": {"source": "issue-package-cross-storey"}
+        },
+        "evidence_refs": ["issue-package-cross-storey:/expected"]
+      },
+      {
+        "operation_id": "add-stair-flight-a",
+        "op": "add_entity",
+        "target_id": "stair-flight-a",
+        "value": {
+          "id": "stair-flight-a",
+          "ifc_class": "IfcStairFlight",
+          "attributes": {
+            "Name": "Stepped flight",
+            "ObjectPlacement": {"relative_to": "stair-a", "origin": [0, 0, 0], "axis": [0, 0, 1], "ref_direction": [1, 0, 0]},
+            "Representation": {"kind": "extruded_profile", "profile": {"kind": "polygon", "points": [[0, 0], [3600, 0], [3600, 3000], [2400, 3000], [2400, 2000], [1200, 2000], [1200, 1000], [0, 1000], [0, 0]]}, "depth": 1000, "direction": [1, 0, 0]}
+          },
+          "property_sets": {},
+          "provenance": {"source": "issue-package-cross-storey"}
+        },
+        "evidence_refs": ["issue-package-cross-storey:/expected"]
+      },
+      {
+        "operation_id": "add-void-slab-upper",
+        "op": "add_relationship",
+        "target_id": "rel-voids-slab-upper",
+        "value": {
+          "id": "rel-voids-slab-upper",
+          "ifc_class": "IfcRelVoidsElement",
+          "attributes": {"RelatingBuildingElement": "slab-upper", "RelatedOpeningElement": "opening-stair"},
+          "provenance": {"source": "issue-package-cross-storey"}
+        },
+        "evidence_refs": ["issue-package-cross-storey:/expected"]
+      },
+      {
+        "operation_id": "add-aggregate-stair-flight",
+        "op": "add_relationship",
+        "target_id": "aggregate-stair-flight",
+        "value": {
+          "id": "aggregate-stair-flight",
+          "ifc_class": "IfcRelAggregates",
+          "attributes": {"RelatingObject": "stair-a", "RelatedObjects": ["stair-flight-a"]},
+          "provenance": {"source": "issue-package-cross-storey"}
+        },
+        "evidence_refs": ["issue-package-cross-storey:/expected"]
+      }
+    ]
+  }
+}

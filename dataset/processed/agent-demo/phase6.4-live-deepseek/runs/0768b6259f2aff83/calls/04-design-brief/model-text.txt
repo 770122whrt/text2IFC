@@ -1,0 +1,108 @@
+{
+  "schema_version": "text2ifc/design-brief/2.0",
+  "language": "zh-CN",
+  "original_request": "创建一个两层住宅，但我还不知道楼梯位置、墙厚、楼板厚度和门窗尺寸。",
+  "status": "needs_clarification",
+  "known_facts": {
+    "walls": { "thickness_mm": 200 },
+    "slabs": { "thickness_mm": 150 },
+    "windows": { "dimensions": { "width_mm": 1200, "height_mm": 1000, "sill_height_mm": 900 } }
+  },
+  "fact_sources": [
+    { "path": "/known_facts/walls/thickness_mm", "source_turns": ["turn-user-005"], "evidence_refs": ["capability:IFC2X3:IfcWall"] },
+    { "path": "/known_facts/slabs/thickness_mm", "source_turns": ["turn-user-009"], "evidence_refs": ["capability:IFC2X3:IfcSlab"] },
+    { "path": "/known_facts/windows/dimensions", "source_turns": ["turn-user-013"], "evidence_refs": ["capability:IFC2X3:IfcWindow"] }
+  ],
+  "missing_facts": [
+    {
+      "id": "mf-floor-plan-dimensions",
+      "code": "FLOOR_PLAN_MISSING",
+      "path": "/known_facts/floor_plan/length_mm",
+      "message": "一层平面尺寸（长度和宽度）尚未确定。",
+      "reason": "两层住宅需要定义每层平面范围，目前未知。",
+      "blocking": true,
+      "evidence_refs": ["schema:bim-json-v2:representation", "capability:IFC2X3:IfcSpace"],
+      "source_turns": ["turn-user-001"]
+    },
+    {
+      "id": "mf-storey-height",
+      "code": "STOREY_HEIGHT_MISSING",
+      "path": "/known_facts/storey_height_mm",
+      "message": "层高尚未确定。",
+      "reason": "需要定义每层的高度。",
+      "blocking": true,
+      "evidence_refs": ["capability:IFC2X3:IfcBuildingStorey"],
+      "source_turns": ["turn-user-001"]
+    },
+    {
+      "id": "mf-stair-location",
+      "code": "STAIR_LOCATION_MISSING",
+      "path": "/known_facts/stair/location",
+      "message": "楼梯位置尚未确定。",
+      "reason": "需要知道楼梯在平面中的位置。",
+      "blocking": true,
+      "evidence_refs": ["capability:IFC2X3:IfcStair"],
+      "source_turns": ["turn-user-001"]
+    },
+    {
+      "id": "mf-door-sizes",
+      "code": "DOOR_SIZES_MISSING",
+      "path": "/known_facts/doors/sizes",
+      "message": "门的宽度和高度尚未确定。",
+      "reason": "用户未提供门尺寸。",
+      "blocking": true,
+      "evidence_refs": ["capability:IFC2X3:IfcDoor"],
+      "source_turns": ["turn-user-001"]
+    },
+    {
+      "id": "mf-window-location",
+      "code": "WINDOW_LOCATION_MISSING",
+      "path": "/known_facts/windows/location",
+      "message": "窗的位置（所在的墙面）尚未确定。",
+      "reason": "用户未提供窗的宿主墙。",
+      "blocking": true,
+      "evidence_refs": ["capability:IFC2X3:IfcWindow"],
+      "source_turns": ["turn-user-001"]
+    }
+  ],
+  "ambiguities": [],
+  "unsupported_requests": [],
+  "user_corrections": [],
+  "clarification_questions": [
+    {
+      "id": "q-floor-plan-height",
+      "text": "请提供一层住宅的平面尺寸（长度和宽度）以及层高是多少？",
+      "targets": ["mf-floor-plan-dimensions", "mf-storey-height"],
+      "reason": "需要这些尺寸才能生成空间和楼层。",
+      "evidence_refs": ["schema:bim-json-v2:representation", "capability:IFC2X3:IfcSpace", "capability:IFC2X3:IfcBuildingStorey"]
+    },
+    {
+      "id": "q-stair-location",
+      "text": "楼梯的位置在哪里？（例如，在哪个房间或轴网位置）",
+      "targets": ["mf-stair-location"],
+      "reason": "需要知道楼梯在平面中的位置。",
+      "evidence_refs": ["capability:IFC2X3:IfcStair"]
+    },
+    {
+      "id": "q-openings",
+      "text": "请提供门（入户门和室内门）的尺寸（宽度和高度）以及窗的位置（所在的墙面或轴网）。如果暂时不知道，可以告诉我。",
+      "targets": ["mf-door-sizes", "mf-window-location"],
+      "reason": "需要门尺寸和窗位置才能生成洞口和填充构件。",
+      "evidence_refs": ["capability:IFC2X3:IfcDoor", "capability:IFC2X3:IfcWindow"]
+    }
+  ],
+  "provenance": {
+    "few_shot_ids": ["design-brief-v2.incomplete-room", "design-brief-v2.answered-unknown-wall-thickness"],
+    "selected_evidence_ids": [
+      "schema:bim-json-v2:representation",
+      "capability:IFC2X3:IfcSpace",
+      "capability:IFC2X3:IfcBuildingStorey",
+      "capability:IFC2X3:IfcWall",
+      "capability:IFC2X3:IfcSlab",
+      "capability:IFC2X3:IfcDoor",
+      "capability:IFC2X3:IfcWindow",
+      "capability:IFC2X3:IfcStair"
+    ],
+    "source_turns": ["turn-user-001", "turn-user-005", "turn-user-009", "turn-user-013"]
+  }
+}

@@ -1,0 +1,122 @@
+{
+  "few_shot_id": "changeset.staged-package-add",
+  "description": "Add one storey-local wall, space, opening, filling, containment, void, and fill relationship from explicit semantic facts.",
+  "input": {
+    "expected_facts": {
+      "storey": {"id": "level-a", "elevation_mm": 0},
+      "wall": {"id": "wall-a", "length_mm": 8000, "thickness_mm": 200, "height_mm": 3000},
+      "space": {"id": "space-a", "bounds": {"x": [0, 6000], "y": [0, 6000]}, "height_mm": 3000},
+      "window": {"id": "window-a", "host_wall": "wall-a", "width_mm": 1200, "height_mm": 1000, "sill_height_mm": 900}
+    },
+    "change_scope": {
+      "entity_ids": ["wall-a", "space-a", "opening-window-a", "window-a"],
+      "relationship_ids": ["rel-voids-window-a", "rel-fills-window-a"]
+    }
+  },
+  "output": {
+    "schema_version": "text2ifc/bim-json-changeset/1.0",
+    "changeset_id": "changeset-package-level-a",
+    "base_revision_id": "revision-base",
+    "base_candidate_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "expected_facts_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "source_issue_ids": ["issue-package-level-a"],
+    "scope_id": "scope-package-level-a",
+    "operations": [
+      {
+        "operation_id": "operation-add-wall-a",
+        "op": "add_entity",
+        "target_id": "wall-a",
+        "value": {
+          "id": "wall-a",
+          "ifc_class": "IfcWall",
+          "attributes": {
+            "Name": "Wall A",
+            "ObjectPlacement": {"relative_to": "level-a", "origin": [4000, 0, 0], "axis": [0, 0, 1], "ref_direction": [1, 0, 0]},
+            "Representation": {"kind": "extruded_profile", "profile": {"kind": "rectangle", "x": 8000, "y": 200}, "depth": 3000, "direction": [0, 0, 1]}
+          },
+          "property_sets": {},
+          "provenance": {"source": "issue-package-level-a"}
+        },
+        "evidence_refs": ["issue-package-level-a:/expected"]
+      },
+      {
+        "operation_id": "operation-add-space-a",
+        "op": "add_entity",
+        "target_id": "space-a",
+        "value": {
+          "id": "space-a",
+          "ifc_class": "IfcSpace",
+          "attributes": {
+            "Name": "Space A",
+            "InteriorOrExteriorSpace": "INTERNAL",
+            "ObjectPlacement": {"relative_to": "level-a", "origin": [3000, 3000, 0], "axis": [0, 0, 1], "ref_direction": [1, 0, 0]},
+            "Representation": {"kind": "extruded_profile", "profile": {"kind": "rectangle", "x": 6000, "y": 6000}, "depth": 3000, "direction": [0, 0, 1]}
+          },
+          "property_sets": {},
+          "provenance": {"source": "issue-package-level-a"}
+        },
+        "evidence_refs": ["issue-package-level-a:/expected"]
+      },
+      {
+        "operation_id": "operation-add-opening-window-a",
+        "op": "add_entity",
+        "target_id": "opening-window-a",
+        "value": {
+          "id": "opening-window-a",
+          "ifc_class": "IfcOpeningElement",
+          "attributes": {
+            "Name": "Opening for Window A",
+            "ObjectPlacement": {"relative_to": "wall-a", "origin": [3400, 0, 900], "axis": [0, 0, 1], "ref_direction": [1, 0, 0]},
+            "Representation": {"kind": "extruded_profile", "profile": {"kind": "rectangle", "x": 1200, "y": 200}, "depth": 1000, "direction": [0, 0, 1]}
+          },
+          "property_sets": {},
+          "provenance": {"source": "issue-package-level-a"}
+        },
+        "evidence_refs": ["issue-package-level-a:/expected"]
+      },
+      {
+        "operation_id": "operation-add-window-a",
+        "op": "add_entity",
+        "target_id": "window-a",
+        "value": {
+          "id": "window-a",
+          "ifc_class": "IfcWindow",
+          "attributes": {
+            "Name": "Window A",
+            "OverallWidth": 1200,
+            "OverallHeight": 1000,
+            "ObjectPlacement": {"relative_to": "opening-window-a", "origin": [0, 0, 0], "axis": [0, 0, 1], "ref_direction": [1, 0, 0]},
+            "Representation": {"kind": "extruded_profile", "profile": {"kind": "rectangle", "x": 1200, "y": 100}, "depth": 1000, "direction": [0, 0, 1]}
+          },
+          "property_sets": {},
+          "provenance": {"source": "issue-package-level-a"}
+        },
+        "evidence_refs": ["issue-package-level-a:/expected"]
+      },
+      {
+        "operation_id": "operation-add-void-window-a",
+        "op": "add_relationship",
+        "target_id": "rel-voids-window-a",
+        "value": {
+          "id": "rel-voids-window-a",
+          "ifc_class": "IfcRelVoidsElement",
+          "attributes": {"RelatingBuildingElement": "wall-a", "RelatedOpeningElement": "opening-window-a"},
+          "provenance": {"source": "issue-package-level-a"}
+        },
+        "evidence_refs": ["issue-package-level-a:/expected"]
+      },
+      {
+        "operation_id": "operation-add-fill-window-a",
+        "op": "add_relationship",
+        "target_id": "rel-fills-window-a",
+        "value": {
+          "id": "rel-fills-window-a",
+          "ifc_class": "IfcRelFillsElement",
+          "attributes": {"RelatingOpeningElement": "opening-window-a", "RelatedBuildingElement": "window-a"},
+          "provenance": {"source": "issue-package-level-a"}
+        },
+        "evidence_refs": ["issue-package-level-a:/expected"]
+      }
+    ]
+  }
+}

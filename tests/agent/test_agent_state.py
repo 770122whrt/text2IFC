@@ -134,3 +134,23 @@ def test_redaction_removes_secret_values_but_preserves_environment_variable_name
     assert "https://example.invalid/private-endpoint" not in rendered
     assert redacted["headers"]["authorization"] == "[REDACTED]"
     assert redacted["headers"]["x-api-key"] == "[REDACTED]"
+
+
+def test_redaction_preserves_numeric_token_counters_but_not_credentials():
+    metadata = {
+        "max_tokens": 131072,
+        "input_tokens": 70,
+        "output_tokens": 28,
+        "cache_read_input_tokens": 192,
+        "token": "sensitive-token-value",
+        "auth_token": "another-sensitive-value",
+    }
+
+    redacted = redact_metadata(metadata)
+
+    assert redacted["max_tokens"] == 131072
+    assert redacted["input_tokens"] == 70
+    assert redacted["output_tokens"] == 28
+    assert redacted["cache_read_input_tokens"] == 192
+    assert redacted["token"] == "[REDACTED]"
+    assert redacted["auth_token"] == "[REDACTED]"

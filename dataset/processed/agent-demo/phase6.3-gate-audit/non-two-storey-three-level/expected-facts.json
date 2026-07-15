@@ -1,0 +1,122 @@
+{
+  "case_id": "non-two-storey-three-level",
+  "door_counts_by_storey": {
+    "storey-1": 1,
+    "storey-2": 1,
+    "storey-3": 1
+  },
+  "doors": [
+    {
+      "host_wall": "level-1-south-wall",
+      "id": "level-1-door",
+      "storey": "storey-1"
+    },
+    {
+      "host_wall": "level-2-south-wall",
+      "id": "level-2-door",
+      "storey": "storey-2"
+    },
+    {
+      "host_wall": "level-3-south-wall",
+      "id": "level-3-door",
+      "storey": "storey-3"
+    }
+  ],
+  "fixture_reuse": {
+    "intended_for": [
+      "dynamic_gates",
+      "route_decisions"
+    ],
+    "purpose": "prove non-two-storey expected facts reach later gates"
+  },
+  "required_relationships": {
+    "containment": {
+      "doors": 3,
+      "spaces": 3,
+      "storeys": 3,
+      "windows": 3
+    },
+    "opening_fill": {
+      "doors": 3,
+      "windows": 3
+    }
+  },
+  "roof": null,
+  "schema_version": "text2ifc/expected-facts/1.0",
+  "sidecar_role": "orchestration_expectations_not_bim_json_schema",
+  "slabs": [],
+  "source": {
+    "design_brief_schema_version": "text2ifc/design-brief/2.0",
+    "language": "zh-CN",
+    "status": "ready"
+  },
+  "source_paths": {
+    "/known_facts/storeys": [
+      "turn-user-001"
+    ]
+  },
+  "space_counts_by_storey": {
+    "storey-1": 1,
+    "storey-2": 1,
+    "storey-3": 1
+  },
+  "spaces": [
+    {
+      "id": "level-1-room",
+      "storey": "storey-1"
+    },
+    {
+      "id": "level-2-room",
+      "storey": "storey-2"
+    },
+    {
+      "id": "level-3-room",
+      "storey": "storey-3"
+    }
+  ],
+  "stairs": [],
+  "storey_count": 3,
+  "storeys": [
+    {
+      "elevation_mm": 0,
+      "id": "storey-1"
+    },
+    {
+      "elevation_mm": 3150,
+      "id": "storey-2"
+    },
+    {
+      "elevation_mm": 6300,
+      "id": "storey-3"
+    }
+  ],
+  "total_counts": {
+    "IfcBuildingStorey": 3,
+    "IfcDoor": 3,
+    "IfcSpace": 3,
+    "IfcWindow": 3
+  },
+  "unresolved_expectations": [],
+  "window_counts_by_storey": {
+    "storey-1": 1,
+    "storey-2": 1,
+    "storey-3": 1
+  },
+  "windows": [
+    {
+      "host_wall": "level-1-north-wall",
+      "id": "level-1-window",
+      "storey": "storey-1"
+    },
+    {
+      "host_wall": "level-2-north-wall",
+      "id": "level-2-window",
+      "storey": "storey-2"
+    },
+    {
+      "host_wall": "level-3-north-wall",
+      "id": "level-3-window",
+      "storey": "storey-3"
+    }
+  ]
+}

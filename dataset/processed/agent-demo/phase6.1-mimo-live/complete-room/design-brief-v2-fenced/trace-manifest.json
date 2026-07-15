@@ -1,0 +1,137 @@
+{
+  "artifacts": {
+    "context_selection": "context-selection.json",
+    "conversation": "conversation.json",
+    "design_brief": "design-brief.json",
+    "input": "input.txt",
+    "metrics": "metrics.json",
+    "model_text": "model-text.txt",
+    "parsed_output": "parsed-output.json",
+    "rendered_prompt": "prompt-rendered.md",
+    "renderer_inputs": "prompt-render-input.json",
+    "validation": "validation.json"
+  },
+  "case_id": "complete-room",
+  "few_shot_ids": [
+    "design-brief-v2.complete-room-openings",
+    "design-brief-v2.incomplete-room",
+    "design-brief-v2.explicit-unsupported-window-style"
+  ],
+  "provider": {
+    "artifacts": {
+      "events": "events.jsonl",
+      "metadata": "response-metadata.json",
+      "request": "request.redacted.json",
+      "response": "response.raw.json",
+      "text": "model-text.txt"
+    },
+    "evidence_class": "live",
+    "provider": "mimo",
+    "response_id": "msg_7dde25fbe8314bc29de5487d",
+    "session_id": "phase6.1-complete-room-design-brief-v2",
+    "stop_reason": "end_turn"
+  },
+  "request_sha256": "sha256:03d242568a38c6b31bf8b54f828e09a0d61a69b01f07e2aeb3ff6b6f015f7d23",
+  "schema_version": "text2ifc/live-stage-trace/1.0",
+  "selected_evidence": [
+    {
+      "evidence_id": "schema:bim-json-v2:root",
+      "json_pointer": "/",
+      "source_path": "schemas/bim-json/2.0/schema.json",
+      "source_sha256": "sha256:c4f6b38a29f5d10459770b7bec2e30400fc7cebb47d46b7cb8041dc5b44789e0"
+    },
+    {
+      "evidence_id": "schema:bim-json-v2:entity",
+      "json_pointer": "/$defs/entity",
+      "source_path": "schemas/bim-json/2.0/schema.json",
+      "source_sha256": "sha256:c4f6b38a29f5d10459770b7bec2e30400fc7cebb47d46b7cb8041dc5b44789e0"
+    },
+    {
+      "evidence_id": "schema:bim-json-v2:attributes",
+      "json_pointer": "/$defs/attributes",
+      "source_path": "schemas/bim-json/2.0/schema.json",
+      "source_sha256": "sha256:c4f6b38a29f5d10459770b7bec2e30400fc7cebb47d46b7cb8041dc5b44789e0"
+    },
+    {
+      "evidence_id": "schema:bim-json-v2:representation",
+      "json_pointer": "/$defs/representation",
+      "source_path": "schemas/bim-json/2.0/schema.json",
+      "source_sha256": "sha256:c4f6b38a29f5d10459770b7bec2e30400fc7cebb47d46b7cb8041dc5b44789e0"
+    },
+    {
+      "evidence_id": "schema:bim-json-v2:profile",
+      "json_pointer": "/$defs/profile",
+      "source_path": "schemas/bim-json/2.0/schema.json",
+      "source_sha256": "sha256:c4f6b38a29f5d10459770b7bec2e30400fc7cebb47d46b7cb8041dc5b44789e0"
+    },
+    {
+      "evidence_id": "schema:bim-json-v2:object-placement",
+      "json_pointer": "/$defs/objectPlacement",
+      "source_path": "schemas/bim-json/2.0/schema.json",
+      "source_sha256": "sha256:c4f6b38a29f5d10459770b7bec2e30400fc7cebb47d46b7cb8041dc5b44789e0"
+    },
+    {
+      "evidence_id": "schema:bim-json-v2:relationship",
+      "json_pointer": "/$defs/relationship",
+      "source_path": "schemas/bim-json/2.0/schema.json",
+      "source_sha256": "sha256:c4f6b38a29f5d10459770b7bec2e30400fc7cebb47d46b7cb8041dc5b44789e0"
+    },
+    {
+      "evidence_id": "capability:IFC2X3:IfcSpace",
+      "json_pointer": "/entities/IfcSpace",
+      "source_path": "schemas/ifc/capabilities/IFC2X3.json",
+      "source_sha256": "sha256:494f6bf5bd459171a13abe771ba654b60812d6ee9e6b3caff974488456e47eb7"
+    },
+    {
+      "evidence_id": "capability:IFC2X3:IfcWall",
+      "json_pointer": "/entities/IfcWall",
+      "source_path": "schemas/ifc/capabilities/IFC2X3.json",
+      "source_sha256": "sha256:494f6bf5bd459171a13abe771ba654b60812d6ee9e6b3caff974488456e47eb7"
+    },
+    {
+      "evidence_id": "capability:IFC2X3:IfcDoor",
+      "json_pointer": "/entities/IfcDoor",
+      "source_path": "schemas/ifc/capabilities/IFC2X3.json",
+      "source_sha256": "sha256:494f6bf5bd459171a13abe771ba654b60812d6ee9e6b3caff974488456e47eb7"
+    },
+    {
+      "evidence_id": "capability:IFC2X3:IfcWindow",
+      "json_pointer": "/entities/IfcWindow",
+      "source_path": "schemas/ifc/capabilities/IFC2X3.json",
+      "source_sha256": "sha256:494f6bf5bd459171a13abe771ba654b60812d6ee9e6b3caff974488456e47eb7"
+    },
+    {
+      "evidence_id": "capability:IFC2X3:IfcBuildingStorey",
+      "json_pointer": "/entities/IfcBuildingStorey",
+      "source_path": "schemas/ifc/capabilities/IFC2X3.json",
+      "source_sha256": "sha256:494f6bf5bd459171a13abe771ba654b60812d6ee9e6b3caff974488456e47eb7"
+    },
+    {
+      "evidence_id": "capability:IFC2X3:IfcOpeningElement",
+      "json_pointer": "/entities/IfcOpeningElement",
+      "source_path": "schemas/ifc/capabilities/IFC2X3.json",
+      "source_sha256": "sha256:494f6bf5bd459171a13abe771ba654b60812d6ee9e6b3caff974488456e47eb7"
+    },
+    {
+      "evidence_id": "capability:IFC2X3:IfcRelVoidsElement",
+      "json_pointer": "/entities/IfcRelVoidsElement",
+      "source_path": "schemas/ifc/capabilities/IFC2X3.json",
+      "source_sha256": "sha256:494f6bf5bd459171a13abe771ba654b60812d6ee9e6b3caff974488456e47eb7"
+    },
+    {
+      "evidence_id": "capability:IFC2X3:IfcRelFillsElement",
+      "json_pointer": "/entities/IfcRelFillsElement",
+      "source_path": "schemas/ifc/capabilities/IFC2X3.json",
+      "source_sha256": "sha256:494f6bf5bd459171a13abe771ba654b60812d6ee9e6b3caff974488456e47eb7"
+    },
+    {
+      "evidence_id": "registry:IFC2X3:manifest",
+      "json_pointer": "/",
+      "source_path": "schemas/ifc/generated/IFC2X3/registry-manifest.json",
+      "source_sha256": "sha256:9b7f6b038235377b7dd451abaec2ab7410e83de25a59bb390ba15d811e2e8871"
+    }
+  ],
+  "stage": "design-brief",
+  "template_hash": "sha256:338baa65b301ebef566c8fc0761c44de836c7f42bc1adf951ba39ff4ff4dacdf",
+  "template_id": "design-brief.v2"
+}

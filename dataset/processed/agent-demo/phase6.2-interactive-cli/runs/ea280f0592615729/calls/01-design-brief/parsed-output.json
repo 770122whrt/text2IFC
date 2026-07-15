@@ -1,0 +1,88 @@
+{
+  "ambiguities": [],
+  "clarification_questions": [
+    {
+      "evidence_refs": [
+        "capability:IFC2X3:IfcWall"
+      ],
+      "id": "q-wall-thickness",
+      "reason": "墙体厚度是生成封闭墙体所必需的阻塞事实。",
+      "targets": [
+        "mf-wall-thickness"
+      ],
+      "text": "墙体厚度是多少？如果暂时不知道，可以直接告诉我不知道。"
+    }
+  ],
+  "fact_sources": [
+    {
+      "evidence_refs": [
+        "schema:bim-json-v2:entity",
+        "schema:bim-json-v2:representation"
+      ],
+      "path": "/known_facts",
+      "source_turns": [
+        "turn-user-001"
+      ]
+    }
+  ],
+  "known_facts": {
+    "door": {
+      "alignment": "host_centerline",
+      "height_mm": 2100,
+      "host": "south_wall",
+      "width_mm": 900
+    },
+    "space": {
+      "height_mm": 3000,
+      "length_mm": 6000,
+      "shape": "rectangle",
+      "width_mm": 4000
+    },
+    "walls": {},
+    "window": {
+      "alignment": "host_centerline",
+      "height_mm": 1500,
+      "host": "north_wall",
+      "sill_height_mm": 900,
+      "width_mm": 1200
+    }
+  },
+  "language": "zh-CN",
+  "missing_facts": [
+    {
+      "blocking": true,
+      "code": "WALL_THICKNESS_MISSING",
+      "evidence_refs": [
+        "capability:IFC2X3:IfcWall"
+      ],
+      "id": "mf-wall-thickness",
+      "message": "墙体厚度尚未确定。",
+      "path": "/known_facts/walls/thickness_mm",
+      "reason": "用户要求创建房间和墙上的门窗，但未提供墙体厚度；该事实是生成墙所必需的阻塞事实。",
+      "source_turns": [
+        "turn-user-001"
+      ]
+    }
+  ],
+  "original_request": "创建一个长6米、宽4米、高3米的房间，南墙中间有一扇900mm宽、2100mm高的门，北墙中间有一扇1200mm宽、1500mm高、窗台900mm高的窗。",
+  "provenance": {
+    "few_shot_ids": [
+      "design-brief-v2.incomplete-room"
+    ],
+    "selected_evidence_ids": [
+      "schema:bim-json-v2:entity",
+      "schema:bim-json-v2:representation",
+      "capability:IFC2X3:IfcSpace",
+      "capability:IFC2X3:IfcWall",
+      "capability:IFC2X3:IfcDoor",
+      "capability:IFC2X3:IfcWindow"
+    ],
+    "source_turns": [
+      "turn-user-001"
+    ]
+  },
+  "schema_version": "text2ifc/design-brief/2.0",
+  "status": "needs_clarification",
+  "unsupported_requests": [],
+  "user_corrections": []
+}

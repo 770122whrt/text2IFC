@@ -1,0 +1,212 @@
+{
+  "agent_calls": [
+    {
+      "created_at": "2026-06-25T15:21:04+00:00",
+      "payload": {
+        "artifact_dir": "dataset\\processed\\agent-demo\\phase6.2-interactive-cli\\runs\\85f4e383da86eede\\calls\\01-design-brief",
+        "call_index": 1,
+        "prompt_template_hash": "sha256:4025542ba84b2eb39dc0c2c3f73859a51ac55bf67d8aae42f35e7f4b9c051131",
+        "prompt_template_id": "design-brief.v2.1",
+        "response_id": "cbba6670148d48e289c571167c6baac8",
+        "role": "design_brief",
+        "status": "needs_clarification"
+      }
+    },
+    {
+      "created_at": "2026-06-25T15:21:17+00:00",
+      "payload": {
+        "artifact_dir": "dataset\\processed\\agent-demo\\phase6.2-interactive-cli\\runs\\85f4e383da86eede\\calls\\02-design-brief",
+        "call_index": 2,
+        "prompt_template_hash": "sha256:4025542ba84b2eb39dc0c2c3f73859a51ac55bf67d8aae42f35e7f4b9c051131",
+        "prompt_template_id": "design-brief.v2.1",
+        "response_id": "f1c5d4e7da3746dd83f268302484de13",
+        "role": "design_brief",
+        "status": "ready"
+      }
+    }
+  ],
+  "artifacts": [
+    {
+      "created_at": "2026-06-25T15:21:17+00:00",
+      "kind": "design_brief",
+      "path": "runs/85f4e383da86eede/design-brief.json"
+    },
+    {
+      "created_at": "2026-06-25T15:22:01+00:00",
+      "kind": "candidate",
+      "path": "runs/85f4e383da86eede/candidate.json"
+    },
+    {
+      "created_at": "2026-06-25T15:22:17+00:00",
+      "kind": "ifc",
+      "path": "runs/85f4e383da86eede/output.ifc"
+    },
+    {
+      "created_at": "2026-06-25T15:22:17+00:00",
+      "kind": "report",
+      "path": "runs/85f4e383da86eede/report.md"
+    },
+    {
+      "created_at": "2026-06-25T15:22:17+00:00",
+      "kind": "session_export",
+      "path": "runs/85f4e383da86eede/session-export.json"
+    }
+  ],
+  "events": [
+    {
+      "created_at": "2026-06-25T15:22:01+00:00",
+      "event_index": 0,
+      "event_type": "generator_completed",
+      "payload": {
+        "case_id": "85f4e383da86eede",
+        "classification": "formal",
+        "contract_valid": true,
+        "evidence_class": "live",
+        "output_dir": "dataset/processed/agent-demo/phase6.2-interactive-cli/runs/85f4e383da86eede/generator",
+        "response_id": "e32d6f0f1fe14f5886a31452db7044c2",
+        "stage": "generate",
+        "status": "formal",
+        "strict_output_contract_valid": true,
+        "valid": true
+      }
+    },
+    {
+      "created_at": "2026-06-25T15:22:01+00:00",
+      "event_index": 1,
+      "event_type": "repair_completed",
+      "payload": {
+        "case_id": "85f4e383da86eede",
+        "evidence_class": "live-derived-no-call",
+        "output_dir": "dataset/processed/agent-demo/phase6.2-interactive-cli/runs/85f4e383da86eede/repair",
+        "provider_call_count": 0,
+        "repair_attempts": [],
+        "route": "no_repair_needed",
+        "source_generator_response_id": "e32d6f0f1fe14f5886a31452db7044c2",
+        "stage": "repair",
+        "valid": true
+      }
+    },
+    {
+      "created_at": "2026-06-25T15:22:14+00:00",
+      "event_index": 2,
+      "event_type": "audit_completed",
+      "payload": {
+        "case_id": "85f4e383da86eede",
+        "evidence_class": "live",
+        "output_dir": "dataset/processed/agent-demo/phase6.2-interactive-cli/runs/85f4e383da86eede",
+        "report_path": "dataset/processed/agent-demo/phase6.2-interactive-cli/runs/85f4e383da86eede/report.md",
+        "response_id": "d243462573964f2fb76c1c2aba785cd7",
+        "stage": "audit-report",
+        "status": "accepted",
+        "valid": true
+      }
+    },
+    {
+      "created_at": "2026-06-25T15:22:17+00:00",
+      "event_index": 3,
+      "event_type": "final_acceptance_completed",
+      "payload": {
+        "case_id": "85f4e383da86eede",
+        "compile_reopen_success": true,
+        "geometry_success": true,
+        "ifc_path": "dataset\\processed\\agent-demo\\phase6.2-interactive-cli\\runs\\85f4e383da86eede\\output.ifc",
+        "output_dir": "dataset\\processed\\agent-demo\\phase6.2-interactive-cli\\runs\\85f4e383da86eede",
+        "report_path": "dataset\\processed\\agent-demo\\phase6.2-interactive-cli\\runs\\85f4e383da86eede\\report.md",
+        "secret_finding_count": 0,
+        "stage": "final-acceptance",
+        "valid": true
+      }
+    }
+  ],
+  "gates": [],
+  "metrics": [
+    {
+      "created_at": "2026-06-25T15:22:01+00:00",
+      "payload": {
+        "case_id": "85f4e383da86eede",
+        "classification": "formal",
+        "contract_valid": true,
+        "evidence_class": "live",
+        "output_dir": "dataset/processed/agent-demo/phase6.2-interactive-cli/runs/85f4e383da86eede/generator",
+        "response_id": "e32d6f0f1fe14f5886a31452db7044c2",
+        "stage": "generate",
+        "status": "formal",
+        "strict_output_contract_valid": true,
+        "valid": true
+      }
+    },
+    {
+      "created_at": "2026-06-25T15:22:01+00:00",
+      "payload": {
+        "case_id": "85f4e383da86eede",
+        "evidence_class": "live-derived-no-call",
+        "output_dir": "dataset/processed/agent-demo/phase6.2-interactive-cli/runs/85f4e383da86eede/repair",
+        "provider_call_count": 0,
+        "repair_attempts": [],
+        "route": "no_repair_needed",
+        "source_generator_response_id": "e32d6f0f1fe14f5886a31452db7044c2",
+        "stage": "repair",
+        "valid": true
+      }
+    },
+    {
+      "created_at": "2026-06-25T15:22:14+00:00",
+      "payload": {
+        "case_id": "85f4e383da86eede",
+        "evidence_class": "live",
+        "output_dir": "dataset/processed/agent-demo/phase6.2-interactive-cli/runs/85f4e383da86eede",
+        "report_path": "dataset/processed/agent-demo/phase6.2-interactive-cli/runs/85f4e383da86eede/report.md",
+        "response_id": "d243462573964f2fb76c1c2aba785cd7",
+        "stage": "audit-report",
+        "status": "accepted",
+        "valid": true
+      }
+    },
+    {
+      "created_at": "2026-06-25T15:22:17+00:00",
+      "payload": {
+        "case_id": "85f4e383da86eede",
+        "compile_reopen_success": true,
+        "geometry_success": true,
+        "ifc_path": "dataset\\processed\\agent-demo\\phase6.2-interactive-cli\\runs\\85f4e383da86eede\\output.ifc",
+        "output_dir": "dataset\\processed\\agent-demo\\phase6.2-interactive-cli\\runs\\85f4e383da86eede",
+        "report_path": "dataset\\processed\\agent-demo\\phase6.2-interactive-cli\\runs\\85f4e383da86eede\\report.md",
+        "secret_finding_count": 0,
+        "stage": "final-acceptance",
+        "valid": true
+      }
+    }
+  ],
+  "prompts": [],
+  "responses": [],
+  "schema_version": "text2ifc/phase6.2-session-export-v1",
+  "session": {
+    "created_at": "2026-06-25T15:20:47+00:00",
+    "original_input": "创建一个长6米、宽4米、高3米的房间，南墙中间有一扇900mm宽、2100mm高的门，北墙中间有一扇1200mm宽、1500mm高、窗台900mm高的窗。",
+    "run_dir": "dataset\\processed\\agent-demo\\phase6.2-interactive-cli\\runs\\85f4e383da86eede",
+    "session_hash": "85f4e383da86eede",
+    "session_id": "phase6.2-73127d9ccd61451e99c78978a00d9f19",
+    "status": "compiled",
+    "updated_at": "2026-06-25T15:22:17+00:00"
+  },
+  "turns": [
+    {
+      "created_at": "2026-06-25T15:20:47+00:00",
+      "role": "user",
+      "text": "创建一个长6米、宽4米、高3米的房间，南墙中间有一扇900mm宽、2100mm高的门，北墙中间有一扇1200mm宽、1500mm高、窗台900mm高的窗。",
+      "turn_index": 0
+    },
+    {
+      "created_at": "2026-06-25T15:21:04+00:00",
+      "role": "assistant",
+      "text": "墙体厚度是多少？如果暂时不知道，可以直接告诉我不知道。",
+      "turn_index": 1
+    },
+    {
+      "created_at": "2026-06-25T15:21:17+00:00",
+      "role": "user",
+      "text": "墙体厚度为300mm。",
+      "turn_index": 2
+    }
+  ]
+}

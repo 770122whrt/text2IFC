@@ -105,10 +105,11 @@ connection topology preservation, and explicit loss reports.
 Ask targeted questions when a natural-language request cannot satisfy BIM JSON
 requirements.
 
-### Phase 6: Data Expansion, Fine-tuning, and Deployment
+### Phase 6: Multi-agent Prompt Reliability, Data Expansion, Fine-tuning, and Deployment
 
-Expand license-reviewed data, compare prompting and fine-tuning, and deploy the
-selected complete pipeline.
+Create a registry-backed multi-agent prompt system, compare prompt-only,
+repair-mode, optional RAG, and fine-tune approaches using measured reliability,
+then deploy the selected supported-scope pipeline.
 
 ## Architectural Principle
 

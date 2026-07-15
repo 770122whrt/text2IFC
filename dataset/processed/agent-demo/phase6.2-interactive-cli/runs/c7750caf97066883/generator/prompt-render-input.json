@@ -1,0 +1,1236 @@
+{
+  "CAPABILITY_PROFILE": [
+    {
+      "content": "generate",
+      "evidence_id": "capability:IFC2X3:IfcSpace",
+      "json_pointer": "/entities/IfcSpace",
+      "kind": "ifc_generation_capability",
+      "source_path": "schemas/ifc/capabilities/IFC2X3.json",
+      "source_sha256": "sha256:494f6bf5bd459171a13abe771ba654b60812d6ee9e6b3caff974488456e47eb7"
+    },
+    {
+      "content": "generate",
+      "evidence_id": "capability:IFC2X3:IfcWall",
+      "json_pointer": "/entities/IfcWall",
+      "kind": "ifc_generation_capability",
+      "source_path": "schemas/ifc/capabilities/IFC2X3.json",
+      "source_sha256": "sha256:494f6bf5bd459171a13abe771ba654b60812d6ee9e6b3caff974488456e47eb7"
+    },
+    {
+      "content": "generate",
+      "evidence_id": "capability:IFC2X3:IfcDoor",
+      "json_pointer": "/entities/IfcDoor",
+      "kind": "ifc_generation_capability",
+      "source_path": "schemas/ifc/capabilities/IFC2X3.json",
+      "source_sha256": "sha256:494f6bf5bd459171a13abe771ba654b60812d6ee9e6b3caff974488456e47eb7"
+    },
+    {
+      "content": "generate",
+      "evidence_id": "capability:IFC2X3:IfcWindow",
+      "json_pointer": "/entities/IfcWindow",
+      "kind": "ifc_generation_capability",
+      "source_path": "schemas/ifc/capabilities/IFC2X3.json",
+      "source_sha256": "sha256:494f6bf5bd459171a13abe771ba654b60812d6ee9e6b3caff974488456e47eb7"
+    },
+    {
+      "content": "generate",
+      "evidence_id": "capability:IFC2X3:IfcOpeningElement",
+      "json_pointer": "/entities/IfcOpeningElement",
+      "kind": "ifc_generation_capability",
+      "source_path": "schemas/ifc/capabilities/IFC2X3.json",
+      "source_sha256": "sha256:494f6bf5bd459171a13abe771ba654b60812d6ee9e6b3caff974488456e47eb7"
+    },
+    {
+      "content": "generate",
+      "evidence_id": "capability:IFC2X3:IfcRelVoidsElement",
+      "json_pointer": "/entities/IfcRelVoidsElement",
+      "kind": "ifc_generation_capability",
+      "source_path": "schemas/ifc/capabilities/IFC2X3.json",
+      "source_sha256": "sha256:494f6bf5bd459171a13abe771ba654b60812d6ee9e6b3caff974488456e47eb7"
+    },
+    {
+      "content": "generate",
+      "evidence_id": "capability:IFC2X3:IfcRelFillsElement",
+      "json_pointer": "/entities/IfcRelFillsElement",
+      "kind": "ifc_generation_capability",
+      "source_path": "schemas/ifc/capabilities/IFC2X3.json",
+      "source_sha256": "sha256:494f6bf5bd459171a13abe771ba654b60812d6ee9e6b3caff974488456e47eb7"
+    }
+  ],
+  "CONVERSATION": [
+    {
+      "content": "创建一个长6米、宽4米、高3米的房间，南墙中间有一扇900mm宽、2100mm高的门，北墙中间有一扇1200mm宽、1500mm高、窗台900mm高的窗。",
+      "question_ids": [],
+      "role": "user",
+      "turn_id": "turn-user-001"
+    },
+    {
+      "content": "墙体厚度是多少？如果暂时不知道，可以直接告诉我不知道。",
+      "question_ids": [
+        "q-wall-thickness"
+      ],
+      "role": "assistant",
+      "turn_id": "turn-assistant-002"
+    },
+    {
+      "content": "墙体厚度为300mm。",
+      "question_ids": [
+        "q-wall-thickness"
+      ],
+      "role": "user",
+      "turn_id": "turn-user-003"
+    }
+  ],
+  "DESIGN_BRIEF": {
+    "ambiguities": [],
+    "clarification_questions": [],
+    "fact_sources": [
+      {
+        "evidence_refs": [
+          "schema:bim-json-v2:entity",
+          "schema:bim-json-v2:representation",
+          "capability:IFC2X3:IfcSpace",
+          "capability:IFC2X3:IfcWall",
+          "capability:IFC2X3:IfcDoor",
+          "capability:IFC2X3:IfcWindow"
+        ],
+        "path": "/known_facts",
+        "source_turns": [
+          "turn-user-001",
+          "turn-user-003"
+        ]
+      }
+    ],
+    "known_facts": {
+      "door": {
+        "alignment": "host_centerline",
+        "height_mm": 2100,
+        "host": "south_wall",
+        "width_mm": 900
+      },
+      "space": {
+        "height_mm": 3000,
+        "length_mm": 6000,
+        "shape": "rectangle",
+        "width_mm": 4000
+      },
+      "walls": {
+        "count": 4,
+        "enclosure": "closed",
+        "thickness_mm": 300
+      },
+      "window": {
+        "alignment": "host_centerline",
+        "height_mm": 1500,
+        "host": "north_wall",
+        "sill_height_mm": 900,
+        "width_mm": 1200
+      }
+    },
+    "language": "zh-CN",
+    "missing_facts": [],
+    "original_request": "创建一个长6米、宽4米、高3米的房间，南墙中间有一扇900mm宽、2100mm高的门，北墙中间有一扇1200mm宽、1500mm高、窗台900mm高的窗。",
+    "provenance": {
+      "few_shot_ids": [
+        "design-brief-v2.complete-room-openings"
+      ],
+      "selected_evidence_ids": [
+        "schema:bim-json-v2:entity",
+        "schema:bim-json-v2:representation",
+        "capability:IFC2X3:IfcSpace",
+        "capability:IFC2X3:IfcWall",
+        "capability:IFC2X3:IfcDoor",
+        "capability:IFC2X3:IfcWindow"
+      ],
+      "source_turns": [
+        "turn-user-001",
+        "turn-user-003"
+      ]
+    },
+    "schema_version": "text2ifc/design-brief/2.0",
+    "status": "ready",
+    "unsupported_requests": [],
+    "user_corrections": []
+  },
+  "DRAFT_SCHEMA": {
+    "$defs": {
+      "clarification": {
+        "additionalProperties": false,
+        "properties": {
+          "entity_id": {
+            "$ref": "#/$defs/nonEmptyString"
+          },
+          "path": {
+            "pattern": "^/",
+            "type": "string"
+          },
+          "question": {
+            "$ref": "#/$defs/nonEmptyString"
+          }
+        },
+        "required": [
+          "entity_id",
+          "path",
+          "question"
+        ],
+        "type": "object"
+      },
+      "loss": {
+        "additionalProperties": false,
+        "properties": {
+          "kind": {
+            "$ref": "#/$defs/nonEmptyString"
+          },
+          "message": {
+            "$ref": "#/$defs/nonEmptyString"
+          },
+          "path": {
+            "pattern": "^/",
+            "type": "string"
+          },
+          "source_capability": {
+            "enum": [
+              "extract-only",
+              "compiler-only",
+              "unsupported"
+            ]
+          },
+          "source_item_class": {
+            "$ref": "#/$defs/nonEmptyString"
+          },
+          "source_ref": {
+            "$ref": "#/$defs/nonEmptyString"
+          },
+          "substitution": {
+            "enum": [
+              "none"
+            ]
+          }
+        },
+        "required": [
+          "source_ref",
+          "path",
+          "kind",
+          "message"
+        ],
+        "type": "object"
+      },
+      "missingFact": {
+        "additionalProperties": false,
+        "properties": {
+          "code": {
+            "$ref": "#/$defs/nonEmptyString"
+          },
+          "entity_id": {
+            "$ref": "#/$defs/nonEmptyString"
+          },
+          "message": {
+            "$ref": "#/$defs/nonEmptyString"
+          },
+          "path": {
+            "pattern": "^/",
+            "type": "string"
+          }
+        },
+        "required": [
+          "entity_id",
+          "path",
+          "code",
+          "message"
+        ],
+        "type": "object"
+      },
+      "nonEmptyString": {
+        "minLength": 1,
+        "type": "string"
+      }
+    },
+    "$id": "https://text2ifc.local/schemas/bim-json/draft/1.0/schema.json",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "additionalProperties": false,
+    "properties": {
+      "clarification_targets": {
+        "items": {
+          "$ref": "#/$defs/clarification"
+        },
+        "type": "array"
+      },
+      "draft_version": {
+        "const": "bim-json-draft/1.0"
+      },
+      "losses": {
+        "items": {
+          "$ref": "#/$defs/loss"
+        },
+        "type": "array"
+      },
+      "missing_facts": {
+        "items": {
+          "$ref": "#/$defs/missingFact"
+        },
+        "type": "array"
+      },
+      "partial_document": {
+        "description": "A deliberately incomplete BIM JSON 2.0 document; omissions must be listed in missing_facts or losses.",
+        "type": "object"
+      },
+      "provenance": {
+        "minProperties": 1,
+        "type": "object"
+      },
+      "target_schema_version": {
+        "const": "bim-json/2.0"
+      }
+    },
+    "required": [
+      "draft_version",
+      "target_schema_version",
+      "partial_document",
+      "missing_facts",
+      "losses",
+      "clarification_targets",
+      "provenance"
+    ],
+    "title": "text2IFC BIM JSON Draft Envelope 1.0",
+    "type": "object"
+  },
+  "FEW_SHOTS": [
+    {
+      "condition": "A complete rectangular room request needs a Formal semantic graph; example values are not defaults and must not be copied.",
+      "few_shot_id": "generator-v2.formal-rectangular-room",
+      "output": {
+        "entities": [
+          {
+            "attributes": {
+              "Name": "Text2IFC Geometry Gate"
+            },
+            "id": "project-1",
+            "ifc_class": "IfcProject",
+            "property_sets": {},
+            "provenance": {
+              "source": "phase-4-geometry-gate"
+            }
+          },
+          {
+            "attributes": {
+              "Name": "Site",
+              "ObjectPlacement": {
+                "axis": [
+                  0,
+                  0,
+                  1
+                ],
+                "origin": [
+                  0,
+                  0,
+                  0
+                ],
+                "ref_direction": [
+                  1,
+                  0,
+                  0
+                ],
+                "relative_to": "project-1"
+              }
+            },
+            "id": "site-1",
+            "ifc_class": "IfcSite",
+            "property_sets": {},
+            "provenance": {
+              "source": "phase-4-geometry-gate"
+            }
+          },
+          {
+            "attributes": {
+              "Name": "Building",
+              "ObjectPlacement": {
+                "axis": [
+                  0,
+                  0,
+                  1
+                ],
+                "origin": [
+                  0,
+                  0,
+                  0
+                ],
+                "ref_direction": [
+                  1,
+                  0,
+                  0
+                ],
+                "relative_to": "site-1"
+              }
+            },
+            "id": "building-1",
+            "ifc_class": "IfcBuilding",
+            "property_sets": {},
+            "provenance": {
+              "source": "phase-4-geometry-gate"
+            }
+          },
+          {
+            "attributes": {
+              "Elevation": 0,
+              "Name": "Level 1",
+              "ObjectPlacement": {
+                "axis": [
+                  0,
+                  0,
+                  1
+                ],
+                "origin": [
+                  0,
+                  0,
+                  0
+                ],
+                "ref_direction": [
+                  1,
+                  0,
+                  0
+                ],
+                "relative_to": "building-1"
+              }
+            },
+            "id": "storey-1",
+            "ifc_class": "IfcBuildingStorey",
+            "property_sets": {},
+            "provenance": {
+              "source": "phase-4-geometry-gate"
+            }
+          },
+          {
+            "attributes": {
+              "InteriorOrExteriorSpace": "INTERNAL",
+              "Name": "Room",
+              "ObjectPlacement": {
+                "axis": [
+                  0,
+                  0,
+                  1
+                ],
+                "origin": [
+                  0,
+                  0,
+                  0
+                ],
+                "ref_direction": [
+                  1,
+                  0,
+                  0
+                ],
+                "relative_to": "storey-1"
+              },
+              "Representation": {
+                "depth": 3000,
+                "direction": [
+                  0,
+                  0,
+                  1
+                ],
+                "kind": "extruded_profile",
+                "profile": {
+                  "kind": "polygon",
+                  "points": [
+                    [
+                      0,
+                      0
+                    ],
+                    [
+                      6000,
+                      0
+                    ],
+                    [
+                      6000,
+                      4000
+                    ],
+                    [
+                      0,
+                      4000
+                    ],
+                    [
+                      0,
+                      0
+                    ]
+                  ]
+                }
+              }
+            },
+            "id": "space-1",
+            "ifc_class": "IfcSpace",
+            "property_sets": {},
+            "provenance": {
+              "source": "phase-4-geometry-gate"
+            }
+          },
+          {
+            "attributes": {
+              "Name": "wall-south",
+              "ObjectPlacement": {
+                "axis": [
+                  0,
+                  0,
+                  1
+                ],
+                "origin": [
+                  3000,
+                  0,
+                  0
+                ],
+                "ref_direction": [
+                  1,
+                  0,
+                  0
+                ],
+                "relative_to": "storey-1"
+              },
+              "Representation": {
+                "depth": 3000,
+                "direction": [
+                  0,
+                  0,
+                  1
+                ],
+                "kind": "extruded_profile",
+                "profile": {
+                  "kind": "rectangle",
+                  "x": 6000,
+                  "y": 200
+                }
+              }
+            },
+            "id": "wall-south",
+            "ifc_class": "IfcWall",
+            "property_sets": {},
+            "provenance": {
+              "source": "phase-4-geometry-gate"
+            }
+          },
+          {
+            "attributes": {
+              "Name": "wall-north",
+              "ObjectPlacement": {
+                "axis": [
+                  0,
+                  0,
+                  1
+                ],
+                "origin": [
+                  3000,
+                  4000,
+                  0
+                ],
+                "ref_direction": [
+                  1,
+                  0,
+                  0
+                ],
+                "relative_to": "storey-1"
+              },
+              "Representation": {
+                "depth": 3000,
+                "direction": [
+                  0,
+                  0,
+                  1
+                ],
+                "kind": "extruded_profile",
+                "profile": {
+                  "kind": "rectangle",
+                  "x": 6000,
+                  "y": 200
+                }
+              }
+            },
+            "id": "wall-north",
+            "ifc_class": "IfcWall",
+            "property_sets": {},
+            "provenance": {
+              "source": "phase-4-geometry-gate"
+            }
+          },
+          {
+            "attributes": {
+              "Name": "wall-west",
+              "ObjectPlacement": {
+                "axis": [
+                  0,
+                  0,
+                  1
+                ],
+                "origin": [
+                  0,
+                  2000,
+                  0
+                ],
+                "ref_direction": [
+                  0,
+                  1,
+                  0
+                ],
+                "relative_to": "storey-1"
+              },
+              "Representation": {
+                "depth": 3000,
+                "direction": [
+                  0,
+                  0,
+                  1
+                ],
+                "kind": "extruded_profile",
+                "profile": {
+                  "kind": "rectangle",
+                  "x": 4000,
+                  "y": 200
+                }
+              }
+            },
+            "id": "wall-west",
+            "ifc_class": "IfcWall",
+            "property_sets": {},
+            "provenance": {
+              "source": "phase-4-geometry-gate"
+            }
+          },
+          {
+            "attributes": {
+              "Name": "wall-east",
+              "ObjectPlacement": {
+                "axis": [
+                  0,
+                  0,
+                  1
+                ],
+                "origin": [
+                  6000,
+                  2000,
+                  0
+                ],
+                "ref_direction": [
+                  0,
+                  1,
+                  0
+                ],
+                "relative_to": "storey-1"
+              },
+              "Representation": {
+                "depth": 3000,
+                "direction": [
+                  0,
+                  0,
+                  1
+                ],
+                "kind": "extruded_profile",
+                "profile": {
+                  "kind": "rectangle",
+                  "x": 4000,
+                  "y": 200
+                }
+              }
+            },
+            "id": "wall-east",
+            "ifc_class": "IfcWall",
+            "property_sets": {},
+            "provenance": {
+              "source": "phase-4-geometry-gate"
+            }
+          },
+          {
+            "attributes": {
+              "Name": "opening-door-1",
+              "ObjectPlacement": {
+                "axis": [
+                  0,
+                  0,
+                  1
+                ],
+                "origin": [
+                  0,
+                  0,
+                  0
+                ],
+                "ref_direction": [
+                  1,
+                  0,
+                  0
+                ],
+                "relative_to": "wall-south"
+              },
+              "Representation": {
+                "depth": 2100,
+                "direction": [
+                  0,
+                  0,
+                  1
+                ],
+                "kind": "extruded_profile",
+                "profile": {
+                  "kind": "rectangle",
+                  "x": 900,
+                  "y": 200
+                }
+              }
+            },
+            "id": "opening-door-1",
+            "ifc_class": "IfcOpeningElement",
+            "property_sets": {},
+            "provenance": {
+              "source": "phase-4-geometry-gate"
+            }
+          },
+          {
+            "attributes": {
+              "Name": "Door",
+              "ObjectPlacement": {
+                "axis": [
+                  0,
+                  0,
+                  1
+                ],
+                "origin": [
+                  0,
+                  0,
+                  0
+                ],
+                "ref_direction": [
+                  1,
+                  0,
+                  0
+                ],
+                "relative_to": "opening-door-1"
+              },
+              "OverallHeight": 2100,
+              "OverallWidth": 900,
+              "Representation": {
+                "depth": 2100,
+                "direction": [
+                  0,
+                  0,
+                  1
+                ],
+                "kind": "extruded_profile",
+                "profile": {
+                  "kind": "rectangle",
+                  "x": 900,
+                  "y": 100
+                }
+              }
+            },
+            "id": "door-1",
+            "ifc_class": "IfcDoor",
+            "property_sets": {},
+            "provenance": {
+              "source": "phase-4-geometry-gate"
+            }
+          },
+          {
+            "attributes": {
+              "Name": "opening-window-1",
+              "ObjectPlacement": {
+                "axis": [
+                  0,
+                  0,
+                  1
+                ],
+                "origin": [
+                  0,
+                  0,
+                  900
+                ],
+                "ref_direction": [
+                  1,
+                  0,
+                  0
+                ],
+                "relative_to": "wall-north"
+              },
+              "Representation": {
+                "depth": 1500,
+                "direction": [
+                  0,
+                  0,
+                  1
+                ],
+                "kind": "extruded_profile",
+                "profile": {
+                  "kind": "rectangle",
+                  "x": 1200,
+                  "y": 200
+                }
+              }
+            },
+            "id": "opening-window-1",
+            "ifc_class": "IfcOpeningElement",
+            "property_sets": {},
+            "provenance": {
+              "source": "phase-4-geometry-gate"
+            }
+          },
+          {
+            "attributes": {
+              "Name": "Window",
+              "ObjectPlacement": {
+                "axis": [
+                  0,
+                  0,
+                  1
+                ],
+                "origin": [
+                  0,
+                  0,
+                  0
+                ],
+                "ref_direction": [
+                  1,
+                  0,
+                  0
+                ],
+                "relative_to": "opening-window-1"
+              },
+              "OverallHeight": 1500,
+              "OverallWidth": 1200,
+              "Representation": {
+                "depth": 1500,
+                "direction": [
+                  0,
+                  0,
+                  1
+                ],
+                "kind": "extruded_profile",
+                "profile": {
+                  "kind": "rectangle",
+                  "x": 1200,
+                  "y": 100
+                }
+              }
+            },
+            "id": "window-1",
+            "ifc_class": "IfcWindow",
+            "property_sets": {},
+            "provenance": {
+              "source": "phase-4-geometry-gate"
+            }
+          }
+        ],
+        "ifc_schema": "IFC2X3",
+        "provenance": {
+          "source": "phase-4-geometry-gate"
+        },
+        "relationships": [
+          {
+            "attributes": {
+              "RelatedOpeningElement": "opening-door-1",
+              "RelatingBuildingElement": "wall-south"
+            },
+            "id": "void-door-1",
+            "ifc_class": "IfcRelVoidsElement",
+            "provenance": {
+              "source": "phase-4-geometry-gate"
+            }
+          },
+          {
+            "attributes": {
+              "RelatedBuildingElement": "door-1",
+              "RelatingOpeningElement": "opening-door-1"
+            },
+            "id": "fill-door-1",
+            "ifc_class": "IfcRelFillsElement",
+            "provenance": {
+              "source": "phase-4-geometry-gate"
+            }
+          },
+          {
+            "attributes": {
+              "RelatedOpeningElement": "opening-window-1",
+              "RelatingBuildingElement": "wall-north"
+            },
+            "id": "void-window-1",
+            "ifc_class": "IfcRelVoidsElement",
+            "provenance": {
+              "source": "phase-4-geometry-gate"
+            }
+          },
+          {
+            "attributes": {
+              "RelatedBuildingElement": "window-1",
+              "RelatingOpeningElement": "opening-window-1"
+            },
+            "id": "fill-window-1",
+            "ifc_class": "IfcRelFillsElement",
+            "provenance": {
+              "source": "phase-4-geometry-gate"
+            }
+          }
+        ],
+        "schema_version": "bim-json/2.0",
+        "units": {
+          "length": "MILLIMETRE"
+        }
+      },
+      "source_path": "dataset/processed/agent-demo/geometry-gate/simple-room-fixed/candidate.json",
+      "source_sha256": "sha256:18921776407a2799dd5b22abe30e8e55e513e7f970d0f9e2469ea5855ad86299"
+    }
+  ],
+  "FORMAL_SCHEMA": {
+    "$defs": {
+      "attributes": {
+        "properties": {
+          "ObjectPlacement": {
+            "$ref": "#/$defs/objectPlacement"
+          },
+          "Representation": {
+            "$ref": "#/$defs/representation"
+          }
+        },
+        "type": "object"
+      },
+      "entity": {
+        "additionalProperties": false,
+        "properties": {
+          "attributes": {
+            "$ref": "#/$defs/attributes"
+          },
+          "global_id": {},
+          "id": {
+            "$ref": "#/$defs/nonEmptyString"
+          },
+          "ifc_class": {
+            "$ref": "#/$defs/nonEmptyString"
+          },
+          "materials": {
+            "items": {
+              "$ref": "#/$defs/materialAssignment"
+            },
+            "type": "array"
+          },
+          "property_sets": {
+            "additionalProperties": {
+              "type": "object"
+            },
+            "type": "object"
+          },
+          "provenance": {
+            "$ref": "#/$defs/provenance"
+          }
+        },
+        "required": [
+          "id",
+          "ifc_class",
+          "attributes",
+          "property_sets",
+          "provenance"
+        ],
+        "type": "object"
+      },
+      "localPosition": {
+        "additionalProperties": false,
+        "properties": {
+          "axis": {
+            "$ref": "#/$defs/vector3"
+          },
+          "origin": {
+            "$ref": "#/$defs/vector3"
+          },
+          "ref_direction": {
+            "$ref": "#/$defs/vector3"
+          }
+        },
+        "required": [
+          "origin",
+          "axis",
+          "ref_direction"
+        ],
+        "type": "object"
+      },
+      "materialAssignment": {
+        "additionalProperties": false,
+        "properties": {
+          "direction": {
+            "enum": [
+              "AXIS1",
+              "AXIS2",
+              "AXIS3"
+            ]
+          },
+          "direction_sense": {
+            "enum": [
+              "POSITIVE",
+              "NEGATIVE"
+            ]
+          },
+          "kind": {
+            "const": "material_layer_set_usage"
+          },
+          "layer_set_name": {
+            "$ref": "#/$defs/nonEmptyString"
+          },
+          "layers": {
+            "items": {
+              "$ref": "#/$defs/materialLayer"
+            },
+            "minItems": 1,
+            "type": "array"
+          },
+          "offset_from_reference_line": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "kind",
+          "layer_set_name",
+          "direction",
+          "direction_sense",
+          "offset_from_reference_line",
+          "layers"
+        ],
+        "type": "object"
+      },
+      "materialLayer": {
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "$ref": "#/$defs/nonEmptyString"
+          },
+          "thickness": {
+            "exclusiveMinimum": 0,
+            "type": "number"
+          }
+        },
+        "required": [
+          "name",
+          "thickness"
+        ],
+        "type": "object"
+      },
+      "nonEmptyString": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "objectPlacement": {
+        "additionalProperties": false,
+        "properties": {
+          "axis": {
+            "$ref": "#/$defs/vector3"
+          },
+          "origin": {
+            "$ref": "#/$defs/vector3"
+          },
+          "ref_direction": {
+            "$ref": "#/$defs/vector3"
+          },
+          "relative_to": {
+            "$ref": "#/$defs/nonEmptyString"
+          }
+        },
+        "required": [
+          "relative_to",
+          "origin",
+          "axis",
+          "ref_direction"
+        ],
+        "type": "object"
+      },
+      "point2": {
+        "items": {
+          "type": "number"
+        },
+        "maxItems": 2,
+        "minItems": 2,
+        "type": "array"
+      },
+      "profile": {
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "kind": {
+                  "const": "rectangle"
+                }
+              },
+              "required": [
+                "kind"
+              ]
+            },
+            "then": {
+              "required": [
+                "x",
+                "y"
+              ]
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "kind": {
+                  "const": "polygon"
+                }
+              },
+              "required": [
+                "kind"
+              ]
+            },
+            "then": {
+              "required": [
+                "points"
+              ]
+            }
+          }
+        ],
+        "properties": {
+          "kind": {
+            "type": "string"
+          },
+          "points": {
+            "items": {
+              "$ref": "#/$defs/point2"
+            },
+            "type": "array"
+          },
+          "x": {
+            "type": "number"
+          },
+          "y": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "kind"
+        ],
+        "type": "object"
+      },
+      "provenance": {
+        "minProperties": 1,
+        "type": "object"
+      },
+      "relationship": {
+        "additionalProperties": false,
+        "properties": {
+          "attributes": {
+            "type": "object"
+          },
+          "global_id": {},
+          "id": {
+            "$ref": "#/$defs/nonEmptyString"
+          },
+          "ifc_class": {
+            "$ref": "#/$defs/nonEmptyString"
+          },
+          "provenance": {
+            "$ref": "#/$defs/provenance"
+          }
+        },
+        "required": [
+          "id",
+          "ifc_class",
+          "attributes",
+          "provenance"
+        ],
+        "type": "object"
+      },
+      "representation": {
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "kind": {
+                  "const": "extruded_profile"
+                }
+              },
+              "required": [
+                "kind"
+              ]
+            },
+            "then": {
+              "required": [
+                "profile",
+                "depth",
+                "direction"
+              ]
+            }
+          }
+        ],
+        "properties": {
+          "depth": {
+            "type": "number"
+          },
+          "direction": {
+            "$ref": "#/$defs/vector3"
+          },
+          "kind": {
+            "type": "string"
+          },
+          "position": {
+            "$ref": "#/$defs/localPosition"
+          },
+          "profile": {
+            "$ref": "#/$defs/profile"
+          }
+        },
+        "required": [
+          "kind"
+        ],
+        "type": "object"
+      },
+      "units": {
+        "additionalProperties": false,
+        "properties": {
+          "length": {
+            "const": "MILLIMETRE"
+          }
+        },
+        "required": [
+          "length"
+        ],
+        "type": "object"
+      },
+      "vector3": {
+        "items": {
+          "type": "number"
+        },
+        "maxItems": 3,
+        "minItems": 3,
+        "type": "array"
+      }
+    },
+    "$id": "https://text2ifc.local/schemas/bim-json/2.0/schema.json",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "additionalProperties": false,
+    "properties": {
+      "entities": {
+        "items": {
+          "$ref": "#/$defs/entity"
+        },
+        "type": "array"
+      },
+      "ifc_schema": {
+        "const": "IFC2X3"
+      },
+      "provenance": {
+        "$ref": "#/$defs/provenance"
+      },
+      "relationships": {
+        "items": {
+          "$ref": "#/$defs/relationship"
+        },
+        "type": "array"
+      },
+      "schema_version": {
+        "const": "bim-json/2.0"
+      },
+      "units": {
+        "$ref": "#/$defs/units"
+      }
+    },
+    "required": [
+      "schema_version",
+      "ifc_schema",
+      "units",
+      "entities",
+      "relationships",
+      "provenance"
+    ],
+    "title": "text2IFC BIM JSON 2.0",
+    "type": "object"
+  },
+  "USER_REQUEST": "创建一个长6米、宽4米、高3米的房间，南墙中间有一扇900mm宽、2100mm高的门，北墙中间有一扇1200mm宽、1500mm高、窗台900mm高的窗。"
+}

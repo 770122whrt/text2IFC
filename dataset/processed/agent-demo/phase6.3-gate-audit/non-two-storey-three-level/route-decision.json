@@ -1,0 +1,204 @@
+{
+  "allowed_next_action": "rerun_generator_with_gate_feedback",
+  "attempt_index": 0,
+  "candidate_hash": "efe4d5f1907b5d1355d00d3581a121991f56beb73964e7a69ed1491bb5d6a85d",
+  "expected_facts_hash": "217182b129d0ba03f8e9f2d7b83407623001d0eafeafab1d38cb2ade9b713b61",
+  "gate_summary_hash": "f9607ae6dafce02a6de9fdbd1c274e3d245ee2f1fe4204965f48ad8acd4bd0cf",
+  "input_issue_count": 14,
+  "issue_delta": null,
+  "max_attempts": 1,
+  "output_issue_count": 14,
+  "owner_stage": "generator",
+  "route": "generator_regeneration_required",
+  "route_basis": {
+    "audit_blocking": false,
+    "audit_recommendation": "accept",
+    "gate_summary_overall_status": "failed",
+    "non_two_storey_evidence": true
+  },
+  "schema_version": "text2ifc/route-decision/1.0",
+  "source_gates": [
+    {
+      "issue_codes": [],
+      "name": "bim_json_validation",
+      "status": "passed"
+    },
+    {
+      "issue_codes": [
+        "EXPECTED_ENTITY_MISSING"
+      ],
+      "name": "dynamic_entity_completeness",
+      "status": "failed"
+    },
+    {
+      "issue_codes": [
+        "EXPECTED_ENTITY_MISSING",
+        "STOREY_CONTAINMENT_MISMATCH"
+      ],
+      "name": "dynamic_storey_containment",
+      "status": "failed"
+    },
+    {
+      "issue_codes": [
+        "OPENING_FILL_RELATIONSHIP_MISSING",
+        "VOID_RELATIONSHIP_MISSING"
+      ],
+      "name": "dynamic_opening_fill",
+      "status": "failed"
+    },
+    {
+      "issue_codes": [],
+      "name": "semantic_coverage",
+      "status": "skipped"
+    },
+    {
+      "issue_codes": [],
+      "name": "ifc_compile_reopen",
+      "status": "passed"
+    },
+    {
+      "issue_codes": [],
+      "name": "geometry",
+      "status": "passed"
+    },
+    {
+      "issue_codes": [],
+      "name": "repair_route",
+      "status": "passed"
+    }
+  ],
+  "source_issue_codes": [
+    "EXPECTED_ENTITY_MISSING",
+    "OPENING_FILL_RELATIONSHIP_MISSING",
+    "STOREY_CONTAINMENT_MISMATCH",
+    "VOID_RELATIONSHIP_MISSING"
+  ],
+  "source_issues": [
+    {
+      "actual": 2,
+      "code": "EXPECTED_ENTITY_MISSING",
+      "expected": 3,
+      "gate": "dynamic_entity_completeness",
+      "ifc_class": "IfcBuildingStorey",
+      "path": "/storeys",
+      "status": "failed"
+    },
+    {
+      "actual": 2,
+      "code": "EXPECTED_ENTITY_MISSING",
+      "expected": 3,
+      "gate": "dynamic_entity_completeness",
+      "ifc_class": "IfcDoor",
+      "path": "/doors",
+      "status": "failed"
+    },
+    {
+      "actual": 2,
+      "code": "EXPECTED_ENTITY_MISSING",
+      "expected": 3,
+      "gate": "dynamic_entity_completeness",
+      "ifc_class": "IfcSpace",
+      "path": "/spaces",
+      "status": "failed"
+    },
+    {
+      "actual": 2,
+      "code": "EXPECTED_ENTITY_MISSING",
+      "expected": 3,
+      "gate": "dynamic_entity_completeness",
+      "ifc_class": "IfcWindow",
+      "path": "/windows",
+      "status": "failed"
+    },
+    {
+      "actual": 0,
+      "code": "STOREY_CONTAINMENT_MISMATCH",
+      "expected": 1,
+      "expected_storey": "storey-3",
+      "gate": "dynamic_storey_containment",
+      "ifc_class": "IfcDoor",
+      "path": "/doors/storey-3",
+      "status": "failed"
+    },
+    {
+      "actual": 0,
+      "code": "STOREY_CONTAINMENT_MISMATCH",
+      "expected": 1,
+      "expected_storey": "storey-3",
+      "gate": "dynamic_storey_containment",
+      "ifc_class": "IfcSpace",
+      "path": "/spaces/storey-3",
+      "status": "failed"
+    },
+    {
+      "actual": 0,
+      "code": "STOREY_CONTAINMENT_MISMATCH",
+      "expected": 1,
+      "expected_storey": "storey-3",
+      "gate": "dynamic_storey_containment",
+      "ifc_class": "IfcWindow",
+      "path": "/windows/storey-3",
+      "status": "failed"
+    },
+    {
+      "actual_storey": null,
+      "code": "EXPECTED_ENTITY_MISSING",
+      "expected_storey": "storey-3",
+      "gate": "dynamic_storey_containment",
+      "path": "/doors/level-3-door",
+      "status": "failed"
+    },
+    {
+      "actual_storey": null,
+      "code": "EXPECTED_ENTITY_MISSING",
+      "expected_storey": "storey-3",
+      "gate": "dynamic_storey_containment",
+      "path": "/spaces/level-3-room",
+      "status": "failed"
+    },
+    {
+      "actual_storey": null,
+      "code": "EXPECTED_ENTITY_MISSING",
+      "expected_storey": "storey-3",
+      "gate": "dynamic_storey_containment",
+      "path": "/windows/level-3-window",
+      "status": "failed"
+    },
+    {
+      "actual": 2,
+      "code": "OPENING_FILL_RELATIONSHIP_MISSING",
+      "expected": 3,
+      "gate": "dynamic_opening_fill",
+      "ifc_class": "IfcDoor",
+      "path": "/doors/fills",
+      "status": "failed"
+    },
+    {
+      "actual": 2,
+      "code": "VOID_RELATIONSHIP_MISSING",
+      "expected": 3,
+      "gate": "dynamic_opening_fill",
+      "ifc_class": "IfcDoor",
+      "path": "/doors/voids",
+      "status": "failed"
+    },
+    {
+      "actual": 2,
+      "code": "OPENING_FILL_RELATIONSHIP_MISSING",
+      "expected": 3,
+      "gate": "dynamic_opening_fill",
+      "ifc_class": "IfcWindow",
+      "path": "/windows/fills",
+      "status": "failed"
+    },
+    {
+      "actual": 2,
+      "code": "VOID_RELATIONSHIP_MISSING",
+      "expected": 3,
+      "gate": "dynamic_opening_fill",
+      "ifc_class": "IfcWindow",
+      "path": "/windows/voids",
+      "status": "failed"
+    }
+  ]
+}

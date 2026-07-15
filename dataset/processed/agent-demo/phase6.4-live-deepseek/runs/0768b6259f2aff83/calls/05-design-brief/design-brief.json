@@ -1,0 +1,152 @@
+{
+  "ambiguities": [],
+  "clarification_questions": [],
+  "fact_sources": [
+    {
+      "evidence_refs": [
+        "capability:IFC2X3:IfcWall"
+      ],
+      "path": "/known_facts/walls/thickness_mm",
+      "source_turns": [
+        "turn-user-005"
+      ]
+    },
+    {
+      "evidence_refs": [
+        "capability:IFC2X3:IfcSlab"
+      ],
+      "path": "/known_facts/slabs/thickness_mm",
+      "source_turns": [
+        "turn-user-009"
+      ]
+    },
+    {
+      "evidence_refs": [
+        "capability:IFC2X3:IfcWindow"
+      ],
+      "path": "/known_facts/windows",
+      "source_turns": [
+        "turn-user-013",
+        "turn-user-017"
+      ]
+    }
+  ],
+  "known_facts": {
+    "slabs": {
+      "thickness_mm": 150
+    },
+    "walls": {
+      "thickness_mm": 200
+    },
+    "windows": {
+      "height_mm": 1000,
+      "sill_height_mm": 900,
+      "width_mm": 1200
+    }
+  },
+  "language": "zh-CN",
+  "missing_facts": [
+    {
+      "blocking": true,
+      "code": "FLOOR_PLAN_DIMENSIONS_MISSING",
+      "evidence_refs": [
+        "schema:bim-json-v2:representation",
+        "capability:IFC2X3:IfcSpace"
+      ],
+      "id": "mf-floor-plan-dimensions",
+      "message": "一层住宅平面尺寸（长度和宽度）尚未确定。",
+      "path": "/known_facts/space/floor_plan",
+      "reason": "用户要求创建两层住宅但未提供一层平面尺寸，无法定义空间轮廓。",
+      "source_turns": [
+        "turn-user-001"
+      ]
+    },
+    {
+      "blocking": true,
+      "code": "STOREY_HEIGHT_MISSING",
+      "evidence_refs": [
+        "schema:bim-json-v2:representation",
+        "capability:IFC2X3:IfcBuildingStorey"
+      ],
+      "id": "mf-storey-height",
+      "message": "层高尚未确定。",
+      "path": "/known_facts/space/height_mm",
+      "reason": "用户要求两层住宅但未提供层高，无法定义楼层高度。",
+      "source_turns": [
+        "turn-user-001"
+      ]
+    },
+    {
+      "blocking": true,
+      "code": "STAIR_LOCATION_MISSING",
+      "evidence_refs": [
+        "capability:IFC2X3:IfcStair"
+      ],
+      "id": "mf-stair-location",
+      "message": "楼梯位置尚未确定。",
+      "path": "/known_facts/stair/location",
+      "reason": "用户在原始请求中明确说还不知道楼梯位置。",
+      "source_turns": [
+        "turn-user-001"
+      ]
+    },
+    {
+      "blocking": true,
+      "code": "DOOR_INFO_MISSING",
+      "evidence_refs": [
+        "capability:IFC2X3:IfcDoor"
+      ],
+      "id": "mf-door-info",
+      "message": "门的尺寸和位置尚未确定。",
+      "path": "/known_facts/doors",
+      "reason": "用户在原始请求中明确说还不知道门窗尺寸，且未提供任何门信息。",
+      "source_turns": [
+        "turn-user-001"
+      ]
+    },
+    {
+      "blocking": true,
+      "code": "WINDOW_LOCATION_MISSING",
+      "evidence_refs": [
+        "capability:IFC2X3:IfcWindow",
+        "capability:IFC2X3:IfcOpeningElement"
+      ],
+      "id": "mf-window-location",
+      "message": "窗的具体位置（所在墙面）尚未确定。",
+      "path": "/known_facts/windows/location",
+      "reason": "用户仅提供了窗的尺寸但未指定窗的位置，无法放置。",
+      "source_turns": [
+        "turn-user-001"
+      ]
+    }
+  ],
+  "original_request": "创建一个两层住宅，但我还不知道楼梯位置、墙厚、楼板厚度和门窗尺寸。",
+  "provenance": {
+    "few_shot_ids": [
+      "design-brief-v2.answered-unknown-wall-thickness"
+    ],
+    "selected_evidence_ids": [
+      "schema:bim-json-v2:representation",
+      "schema:bim-json-v2:entity",
+      "capability:IFC2X3:IfcSpace",
+      "capability:IFC2X3:IfcWall",
+      "capability:IFC2X3:IfcSlab",
+      "capability:IFC2X3:IfcStair",
+      "capability:IFC2X3:IfcDoor",
+      "capability:IFC2X3:IfcWindow",
+      "capability:IFC2X3:IfcBuildingStorey",
+      "capability:IFC2X3:IfcOpeningElement"
+    ],
+    "source_turns": [
+      "turn-user-001",
+      "turn-user-005",
+      "turn-user-009",
+      "turn-user-013",
+      "turn-user-017"
+    ]
+  },
+  "schema_version": "text2ifc/design-brief/2.0",
+  "status": "draft_required",
+  "unsupported_requests": [],
+  "user_corrections": []
+}

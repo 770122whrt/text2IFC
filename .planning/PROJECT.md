@@ -36,10 +36,15 @@ explicit user requirements instead of generating fragile IFC text directly.
 - [x] Build a Text-to-JSON dataset pipeline and measurable baseline.
 - [x] Complete the first Text-to-JSON-to-IFC end-to-end loop.
 - [x] Complete the first multi-turn clarification Agent demo to IFC.
-- [ ] Establish generated-IFC correctness gates for spatial, content,
+- [x] Establish generated-IFC correctness gates for spatial, content,
   attribute, relationship, and IFC-structure quality.
-- [ ] Preserve high-fidelity IFC material/type/topology/geometry details.
-- [ ] Expand approved data, compare fine-tuning, and package deployment.
+- [x] Preserve selected high-fidelity IFC material/type/topology details and
+  report unsupported complex geometry as explicit losses.
+- [ ] Build multi-agent prompt traceability, then expand approved data, compare
+  model approaches, and package deployment.
+- [ ] Build a true interactive Chinese-first REPL CLI that lets the user
+  participate in the real Mimo multi-agent clarification loop and produces a
+  traceable IFC without relying on scripted stdin for final acceptance.
 
 ### Out of Scope
 
@@ -92,7 +97,11 @@ explicit user requirements instead of generating fragile IFC text directly.
 | Build multi-turn clarification in Phase 5 | Missing natural-language facts should produce questions, not fabrication | Complete |
 | Start Phase 4 with generated-IFC correctness gates | A reopenable IFC can still be spatially wrong; high-fidelity work needs a reliable text-json-ifc gate first | Adopted |
 | Defer materials, complex geometry, and topology to Phase 4 | Keep generated correctness separate from full IFC source fidelity | Adopted |
+| Start Phase 6 with prompt registry and multi-agent traceability | Fine-tuning and deployment decisions need reproducible prompt inputs, repair attempts, metrics, and audits | Adopted |
+| Insert Phase 6.2 for interactive CLI before service/API work | The user needs to participate in clarification turns and inspect intermediate inputs/outputs before API packaging | Adopted |
+| Insert Phase 6.2-fix for real REPL acceptance | Phase 6.2 built the DB-backed Mimo pipeline but did not deliver the one-command human-facing question/answer REPL expected by the user | Adopted |
+| Insert Phase 6.5 for component-scoped ChangeSets | Phase 6.4 proved the loop but full-document regeneration can damage already-passing components; stable-ID incremental composition is required before broader IFC editing or Phase 7 | Adopted |
 | Use TDD and GSD phase artifacts | Keep behavior and planning traceable | Adopted |
 
 ---
-*Last updated: 2026-06-15 after Phase 4 specification and planning*
+*Last updated: 2026-06-26 after Phase 6.2-fix REPL acceptance planning*

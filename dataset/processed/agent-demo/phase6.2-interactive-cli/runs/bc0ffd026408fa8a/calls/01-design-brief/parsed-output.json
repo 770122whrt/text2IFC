@@ -1,0 +1,158 @@
+{
+  "ambiguities": [],
+  "clarification_questions": [
+    {
+      "evidence_refs": [
+        "capability:IFC2X3:IfcWall"
+      ],
+      "id": "q-wall-thickness",
+      "reason": "该问题只询问当前墙体模型生成所缺少的阻塞事实。",
+      "targets": [
+        "mf-wall-thickness"
+      ],
+      "text": "请提供墙体厚度（例如：200mm 或 300mm）。"
+    },
+    {
+      "evidence_refs": [
+        "capability:IFC2X3:IfcWall"
+      ],
+      "id": "q-wall-enclosure",
+      "reason": "该问题确认墙体是否应连接成封闭回路。",
+      "targets": [
+        "mf-wall-enclosure"
+      ],
+      "text": "这四面墙是否首尾相连形成闭合围护？"
+    }
+  ],
+  "fact_sources": [
+    {
+      "evidence_refs": [
+        "schema:bim-json-v2:representation"
+      ],
+      "path": "/known_facts/space/shape",
+      "source_turns": [
+        "turn-user-001"
+      ]
+    },
+    {
+      "evidence_refs": [
+        "schema:bim-json-v2:representation"
+      ],
+      "path": "/known_facts/space/length_mm",
+      "source_turns": [
+        "turn-user-001"
+      ]
+    },
+    {
+      "evidence_refs": [
+        "schema:bim-json-v2:representation"
+      ],
+      "path": "/known_facts/space/width_mm",
+      "source_turns": [
+        "turn-user-001"
+      ]
+    },
+    {
+      "evidence_refs": [
+        "schema:bim-json-v2:representation"
+      ],
+      "path": "/known_facts/space/height_mm",
+      "source_turns": [
+        "turn-user-001"
+      ]
+    },
+    {
+      "evidence_refs": [
+        "capability:IFC2X3:IfcDoor"
+      ],
+      "path": "/known_facts/door",
+      "source_turns": [
+        "turn-user-001"
+      ]
+    },
+    {
+      "evidence_refs": [
+        "capability:IFC2X3:IfcWindow"
+      ],
+      "path": "/known_facts/window",
+      "source_turns": [
+        "turn-user-001"
+      ]
+    }
+  ],
+  "known_facts": {
+    "door": {
+      "alignment": "host_centerline",
+      "height_mm": 2100,
+      "host": "south_wall",
+      "width_mm": 900
+    },
+    "space": {
+      "height_mm": 3000,
+      "length_mm": 6000,
+      "shape": "rectangle",
+      "width_mm": 4000
+    },
+    "window": {
+      "alignment": "host_centerline",
+      "height_mm": 1500,
+      "host": "north_wall",
+      "sill_height_mm": 900,
+      "width_mm": 1200
+    }
+  },
+  "language": "zh-CN",
+  "missing_facts": [
+    {
+      "blocking": true,
+      "code": "WALL_THICKNESS_MISSING",
+      "evidence_refs": [
+        "capability:IFC2X3:IfcWall"
+      ],
+      "id": "mf-wall-thickness",
+      "message": "墙体厚度尚未确定。",
+      "path": "/known_facts/walls/thickness_mm",
+      "reason": "用户要求创建四面墙体，但未指定墙体厚度；该数值是定义墙体几何体所必需的阻塞事实。",
+      "source_turns": [
+        "turn-user-001"
+      ]
+    },
+    {
+      "blocking": true,
+      "code": "WALL_ENCLOSURE_MISSING",
+      "evidence_refs": [
+        "capability:IFC2X3:IfcWall"
+      ],
+      "id": "mf-wall-enclosure",
+      "message": "墙体是否闭合尚未确定。",
+      "path": "/known_facts/walls/enclosure",
+      "reason": "用户描述了四面墙，但未明确说明墙体是否首尾相连形成闭合围护。该语义用于确定墙体数量和布局。",
+      "source_turns": [
+        "turn-user-001"
+      ]
+    }
+  ],
+  "original_request": "﻿创建一个长6米、宽4米、高3米的房间，南墙中间有一扇900mm宽、2100mm高的门，北墙中间有一扇1200mm宽、1500mm高、窗台900mm高的窗。",
+  "provenance": {
+    "few_shot_ids": [
+      "design-brief-v2.complete-room-openings"
+    ],
+    "selected_evidence_ids": [
+      "schema:bim-json-v2:representation",
+      "capability:IFC2X3:IfcSpace",
+      "capability:IFC2X3:IfcWall",
+      "capability:IFC2X3:IfcDoor",
+      "capability:IFC2X3:IfcWindow",
+      "capability:IFC2X3:IfcOpeningElement",
+      "capability:IFC2X3:IfcRelVoidsElement",
+      "capability:IFC2X3:IfcRelFillsElement"
+    ],
+    "source_turns": [
+      "turn-user-001"
+    ]
+  },
+  "schema_version": "text2ifc/design-brief/2.0",
+  "status": "needs_clarification",
+  "unsupported_requests": [],
+  "user_corrections": []
+}

@@ -1,0 +1,47 @@
+{
+  "case_id": "two-storey-accepted",
+  "input": "创建一个两层矩形建筑，单位毫米。建筑外轮廓为X方向8000、Y方向6000，西南角为原点，X向东、Y向北、Z向上。首层标高0，二层标高3150，每层净高3000，墙厚200，楼板厚150。每层必须分别生成南、东、北、西四面独立外墙，不得跨楼层复用。首层有办公室和楼梯间：办公室范围x=0..6000、y=0..6000，楼梯间范围x=6000..8000、y=0..6000。二层有办公室和楼梯平台：办公室范围x=0..6000、y=0..6000，楼梯平台范围x=6000..8000、y=0..1000；二层楼梯洞口范围x=6000..8000、y=1000..6000，该洞口不是IfcSpace。生成首层地板，顶面标高0；生成二层楼板，顶面标高3150、并保留上述楼梯洞口；生成屋面板，底标高6150、厚150。生成一段宽1000的直跑楼梯，平面范围x=6500..7500、y=1500..5000，沿+Y方向上升，从首层Z=150连接到二层Z=3150，楼梯属于首层并连接二层。首层南外墙和二层南外墙各设置一扇900宽、2100高的门，门在各自宿主墙上水平居中；首层北外墙和二层北外墙各设置一扇1200宽、1000高、窗台高900的窗，窗在各自宿主墙上水平居中。门窗必须嵌入同一楼层的宿主墙，洞口与填充构件必须重合。生成IfcBuilding、两个IfcBuildingStorey、四个IfcSpace、各层墙体、楼板、屋面、楼梯、门、窗、洞口及关系；所有构件必须归属正确楼层。",
+  "design_brief": {
+    "schema_version": "text2ifc/design-brief/2.0",
+    "status": "ready",
+    "language": "zh-CN",
+    "original_request": "创建一个两层矩形建筑，每层包含两个明确定位的空间，并生成楼板、屋面、楼梯、门窗和正确楼层归属。",
+    "known_facts": {
+      "building": {
+        "width_x_mm": 8000,
+        "depth_y_mm": 6000,
+        "storey_height_mm": 3000,
+        "wall_thickness_mm": 200,
+        "slab_thickness_mm": 150
+      },
+      "storeys": [
+        {"id": "storey-1", "name": "首层", "elevation_mm": 0},
+        {"id": "storey-2", "name": "二层", "elevation_mm": 3150}
+      ],
+      "spaces": [
+        {"id": "space-storey-1-west", "storey": "storey-1", "name": "首层西室", "origin_mm": [0, 0, 0], "dimensions_mm": [4000, 6000], "height_mm": 3000},
+        {"id": "space-storey-1-east", "storey": "storey-1", "name": "首层东室", "origin_mm": [4000, 0, 0], "dimensions_mm": [4000, 6000], "height_mm": 3000},
+        {"id": "space-storey-2-west", "storey": "storey-2", "name": "二层西室", "origin_mm": [0, 0, 0], "dimensions_mm": [4000, 6000], "height_mm": 3000},
+        {"id": "space-storey-2-east", "storey": "storey-2", "name": "二层东室", "origin_mm": [4000, 0, 0], "dimensions_mm": [4000, 6000], "height_mm": 3000}
+      ],
+      "slabs": [
+        {"id": "slab-ground", "storey": "storey-1", "elevation_mm": 0, "thickness_mm": 150},
+        {"id": "slab-storey-2", "storey": "storey-2", "elevation_mm": 3150, "thickness_mm": 150}
+      ],
+      "roof": {"id": "roof-main", "elevation_mm": 6150, "thickness_mm": 150},
+      "stair": {"id": "stair-1-2", "storey": "storey-1", "start_elevation_mm": 150, "end_elevation_mm": 3150, "width_mm": 1000},
+      "doors": [
+        {"id": "door-storey-1", "storey": "storey-1", "host_wall": "storey-1-south", "width_mm": 900, "height_mm": 2100},
+        {"id": "door-storey-2", "storey": "storey-2", "host_wall": "storey-2-south", "width_mm": 900, "height_mm": 2100}
+      ],
+      "windows": [
+        {"id": "window-storey-1", "storey": "storey-1", "host_wall": "storey-1-north", "width_mm": 1200, "height_mm": 1000, "sill_height_mm": 900},
+        {"id": "window-storey-2", "storey": "storey-2", "host_wall": "storey-2-north", "width_mm": 1200, "height_mm": 1000, "sill_height_mm": 900}
+      ]
+    },
+    "fact_sources": [],
+    "missing_facts": [],
+    "ambiguities": [],
+    "unsupported_requests": []
+  }
+}

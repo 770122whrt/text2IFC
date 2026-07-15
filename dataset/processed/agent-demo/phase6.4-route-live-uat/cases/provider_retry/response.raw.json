@@ -1,0 +1,35 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "message": {
+        "annotations": null,
+        "audio": null,
+        "content": "{\n  \"route\": \"provider_retry\",\n  \"target_stage\": \"retry_control_live\",\n  \"resolution_status\": \"provider_retry_ready\",\n  \"action_summary\": \"Retry the provider request with increased max_tokens or adjusted parameters to avoid truncation.\",\n  \"should_continue_pipeline\": true,\n  \"should_ask_user\": false,\n  \"should_block\": false\n}",
+        "function_call": null,
+        "reasoning_content": "We are given: route = \"provider_retry\", expected status = \"retry_control_live\". Issue feedback indicates provider truncation (finish_reason=length). This is a route that attempts to retry the provider. The UAT agent should output a JSON with fields as specified. The resolution_status must be \"provider_retry_ready\". Since it's an auto-fix route (provider_retry is an auto-fix route that retries the provider), we need to describe the correction action. The action_summary should explain that we are retrying the provider with adjusted parameters to avoid truncation. should_continue_pipeline might be true because after retry we can continue. should_ask_user false, should_block false. Therefore, generate JSON.\n\nJSON fields:\n- route: \"provider_retry\"\n- target_stage: \"retry_control_live\" (given)\n- resolution_status: \"provider_retry_ready\"\n- action_summary: \"Retry the provider request with increased max_tokens or adjusted parameters to avoid truncation.\"\n- should_continue_pipeline: true\n- should_ask_user: false\n- should_block: false",
+        "refusal": null,
+        "role": "assistant",
+        "tool_calls": null
+      }
+    }
+  ],
+  "created": 1783569910,
+  "id": "0b068773-0c12-4a4d-9c59-fcf1b4d3244f",
+  "model": "deepseek-v4-flash",
+  "moderation": null,
+  "object": "chat.completion",
+  "service_tier": null,
+  "system_fingerprint": "fp_8b330d02d0_prod0820_fp8_kvcache_20260402",
+  "usage": {
+    "completion_tokens": 337,
+    "completion_tokens_details": "[REDACTED]",
+    "prompt_cache_hit_tokens": "[REDACTED]",
+    "prompt_cache_miss_tokens": "[REDACTED]",
+    "prompt_tokens": 237,
+    "prompt_tokens_details": "[REDACTED]",
+    "total_tokens": 574
+  }
+}

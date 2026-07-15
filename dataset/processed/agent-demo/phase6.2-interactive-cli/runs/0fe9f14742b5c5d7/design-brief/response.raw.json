@@ -1,0 +1,40 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "message": {
+        "annotations": null,
+        "audio": null,
+        "content": "{\"schema_version\":\"text2ifc/design-brief/2.0\",\"language\":\"zh-CN\",\"original_request\":\"创建一个长6米、宽4米、高3米的房间，南墙中间有一扇900mm宽、2100mm高的门，北墙中间有一扇1200mm宽、1500mm高、窗台900mm高的窗。\",\"status\":\"ready\",\"known_facts\":{\"space\":{\"length_mm\":6000,\"width_mm\":4000,\"height_mm\":3000,\"shape\":\"rectangle\"},\"walls\":{\"count\":4,\"enclosure\":\"closed\",\"thickness_mm\":300},\"door\":{\"host\":\"south_wall\",\"width_mm\":900,\"height_mm\":2100,\"alignment\":\"host_centerline\"},\"window\":{\"host\":\"north_wall\",\"width_mm\":1200,\"height_mm\":1500,\"sill_height_mm\":900,\"alignment\":\"host_centerline\"}},\"fact_sources\":[{\"path\":\"/known_facts/space/length_mm\",\"source_turns\":[\"turn-user-001\"],\"evidence_refs\":[\"schema:bim-json-v2:representation\"]},{\"path\":\"/known_facts/space/width_mm\",\"source_turns\":[\"turn-user-001\"],\"evidence_refs\":[\"schema:bim-json-v2:representation\"]},{\"path\":\"/known_facts/space/height_mm\",\"source_turns\":[\"turn-user-001\"],\"evidence_refs\":[\"schema:bim-json-v2:representation\"]},{\"path\":\"/known_facts/space/shape\",\"source_turns\":[\"turn-user-001\"],\"evidence_refs\":[\"schema:bim-json-v2:representation\"]},{\"path\":\"/known_facts/walls/thickness_mm\",\"source_turns\":[\"turn-user-003\"],\"evidence_refs\":[\"capability:IFC2X3:IfcWall\"]},{\"path\":\"/known_facts/door\",\"source_turns\":[\"turn-user-001\"],\"evidence_refs\":[\"capability:IFC2X3:IfcDoor\",\"capability:IFC2X3:IfcOpeningElement\"]},{\"path\":\"/known_facts/window\",\"source_turns\":[\"turn-user-001\"],\"evidence_refs\":[\"capability:IFC2X3:IfcWindow\",\"capability:IFC2X3:IfcOpeningElement\"]}],\"missing_facts\":[],\"ambiguities\":[],\"unsupported_requests\":[],\"user_corrections\":[],\"clarification_questions\":[],\"provenance\":{\"source_turns\":[\"turn-user-001\",\"turn-user-003\"],\"selected_evidence_ids\":[\"schema:bim-json-v2:representation\",\"capability:IFC2X3:IfcSpace\",\"capability:IFC2X3:IfcWall\",\"capability:IFC2X3:IfcDoor\",\"capability:IFC2X3:IfcWindow\",\"capability:IFC2X3:IfcOpeningElement\"],\"few_shot_ids\":[\"design-brief-v2.complete-room-openings\",\"design-brief-v2.answered-unknown-wall-thickness\"]}}",
+        "function_call": null,
+        "refusal": null,
+        "role": "assistant",
+        "tool_calls": null
+      }
+    }
+  ],
+  "created": 1782445287,
+  "id": "a286bbc4bfc645ef9b4486c874eba2fc",
+  "model": "mimo-v2.5-pro",
+  "moderation": null,
+  "object": "chat.completion",
+  "service_tier": null,
+  "system_fingerprint": null,
+  "usage": {
+    "completion_tokens": 643,
+    "completion_tokens_details": {
+      "accepted_prediction_tokens": null,
+      "audio_tokens": null,
+      "reasoning_tokens": 0,
+      "rejected_prediction_tokens": null
+    },
+    "prompt_tokens": 9680,
+    "prompt_tokens_details": {
+      "audio_tokens": null,
+      "cached_tokens": 512
+    },
+    "total_tokens": 10323
+  }
+}

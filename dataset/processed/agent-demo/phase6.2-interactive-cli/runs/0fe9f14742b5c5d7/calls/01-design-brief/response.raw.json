@@ -1,0 +1,40 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "message": {
+        "annotations": null,
+        "audio": null,
+        "content": "{\"schema_version\": \"text2ifc/design-brief/2.0\", \"language\": \"zh-CN\", \"original_request\": \"创建一个长6米、宽4米、高3米的房间，南墙中间有一扇900mm宽、2100mm高的门，北墙中间有一扇1200mm宽、1500mm高、窗台900mm高的窗。\", \"status\": \"needs_clarification\", \"known_facts\": {\"space\": {\"shape\": \"rectangle\", \"length_mm\": 6000, \"width_mm\": 4000, \"height_mm\": 3000}, \"walls\": {\"count\": 4, \"enclosure\": \"closed\"}, \"door\": {\"host\": \"south_wall\", \"width_mm\": 900, \"height_mm\": 2100, \"alignment\": \"host_centerline\"}, \"window\": {\"host\": \"north_wall\", \"width_mm\": 1200, \"height_mm\": 1500, \"sill_height_mm\": 900, \"alignment\": \"host_centerline\"}}, \"fact_sources\": [{\"path\": \"/known_facts/space\", \"source_turns\": [\"turn-user-001\"], \"evidence_refs\": [\"schema:bim-json-v2:representation\"]}, {\"path\": \"/known_facts/door\", \"source_turns\": [\"turn-user-001\"], \"evidence_refs\": [\"schema:bim-json-v2:entity\"]}, {\"path\": \"/known_facts/window\", \"source_turns\": [\"turn-user-001\"], \"evidence_refs\": [\"schema:bim-json-v2:entity\"]}, {\"path\": \"/known_facts/walls\", \"source_turns\": [\"turn-user-001\"], \"evidence_refs\": [\"schema:bim-json-v2:entity\"]}], \"missing_facts\": [{\"id\": \"mf-wall-thickness\", \"code\": \"WALL_THICKNESS_MISSING\", \"path\": \"/known_facts/walls/thickness_mm\", \"message\": \"墙体厚度尚未确定。\", \"reason\": \"用户描述了闭合的四面墙体，但未说明墙体厚度；BIM实体建模依赖具体墙体构造尺寸，必须由用户提供。\", \"blocking\": true, \"source_turns\": [\"turn-user-001\"], \"evidence_refs\": [\"capability:IFC2X3:IfcWall\"]}], \"ambiguities\": [], \"unsupported_requests\": [], \"user_corrections\": [], \"clarification_questions\": [{\"id\": \"q-wall-thickness\", \"text\": \"墙体厚度是多少？如果暂时不知道，可以直接告诉我不知道。\", \"targets\": [\"mf-wall-thickness\"], \"reason\": \"当前请求缺少墙体厚度这一阻塞事实，需用户确认。\", \"evidence_refs\": [\"capability:IFC2X3:IfcWall\"]}], \"provenance\": {\"source_turns\": [\"turn-user-001\"], \"selected_evidence_ids\": [\"schema:bim-json-v2:entity\", \"schema:bim-json-v2:representation\", \"capability:IFC2X3:IfcSpace\", \"capability:IFC2X3:IfcWall\", \"capability:IFC2X3:IfcDoor\", \"capability:IFC2X3:IfcWindow\", \"capability:IFC2X3:IfcOpeningElement\", \"capability:IFC2X3:IfcRelVoidsElement\", \"capability:IFC2X3:IfcRelFillsElement\"], \"few_shot_ids\": [\"design-brief-v2.complete-room-openings\", \"design-brief-v2.answered-unknown-wall-thickness\"]}}",
+        "function_call": null,
+        "refusal": null,
+        "role": "assistant",
+        "tool_calls": null
+      }
+    }
+  ],
+  "created": 1782445274,
+  "id": "16449095bbf04d0f885f2e1293665d4c",
+  "model": "mimo-v2.5-pro",
+  "moderation": null,
+  "object": "chat.completion",
+  "service_tier": null,
+  "system_fingerprint": null,
+  "usage": {
+    "completion_tokens": 798,
+    "completion_tokens_details": {
+      "accepted_prediction_tokens": null,
+      "audio_tokens": null,
+      "reasoning_tokens": 0,
+      "rejected_prediction_tokens": null
+    },
+    "prompt_tokens": 9593,
+    "prompt_tokens_details": {
+      "audio_tokens": null,
+      "cached_tokens": 9344
+    },
+    "total_tokens": 10391
+  }
+}

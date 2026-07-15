@@ -1,0 +1,25 @@
+{
+  "case_id": "blocked_as_unsupported",
+  "evidence_paths": [
+    "cases/blocked_as_unsupported/request.redacted.json",
+    "cases/blocked_as_unsupported/response.raw.json",
+    "cases/blocked_as_unsupported/parsed-output.json"
+  ],
+  "finish_reason": "stop",
+  "model": "deepseek-v4-flash",
+  "model_output": {
+    "action_summary": "Blocking pipeline: unsupported feature; no automated fix available.",
+    "resolution_status": "unsupported_blocked",
+    "route": "blocked_as_unsupported",
+    "should_ask_user": false,
+    "should_block": true,
+    "should_continue_pipeline": false,
+    "target_stage": "block"
+  },
+  "model_output_valid": true,
+  "provider": "deepseek-openai-compatible",
+  "response_id": "02661331-a39d-47b5-b2a6-e09729c12c10",
+  "route": "blocked_as_unsupported",
+  "schema_version": "text2ifc/phase6.4-route-live-uat-case/1.0",
+  "status": "correct_terminal_live"
+}

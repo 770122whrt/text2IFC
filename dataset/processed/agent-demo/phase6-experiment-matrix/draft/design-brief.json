@@ -1,0 +1,39 @@
+{
+  "ambiguities": [],
+  "clarification_questions": [],
+  "known_facts": {
+    "door": {
+      "host": "south_wall",
+      "position": "center"
+    },
+    "room": {
+      "height_mm": 3000,
+      "length_mm": 6000
+    },
+    "storey_count": 1,
+    "walls": {
+      "count": 4,
+      "enclosure": "closed"
+    },
+    "window": {
+      "host": "north_wall",
+      "position": "center"
+    }
+  },
+  "language": "zh-CN",
+  "missing_facts": [
+    {
+      "code": "ROOM_WIDTH_MISSING",
+      "id": "room-width",
+      "message": "缺少房间宽度。",
+      "path": "/room/width_mm",
+      "source": "user_request"
+    }
+  ],
+  "original_request": "创建一个房间，但我不知道宽度。",
+  "provenance": {
+    "source": "user_request"
+  },
+  "schema_version": "text2ifc/design-brief/1.0",
+  "user_corrections": []
+}

@@ -1,0 +1,134 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://text2ifc.local/schemas/agent/bim-json-changeset-1.0.schema.json",
+  "title": "text2IFC BIM JSON ChangeSet 1.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "changeset_id",
+    "base_revision_id",
+    "base_candidate_hash",
+    "expected_facts_hash",
+    "source_issue_ids",
+    "scope_id",
+    "operations"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "text2ifc/bim-json-changeset/1.0"
+    },
+    "changeset_id": {
+      "$ref": "#/$defs/stableId"
+    },
+    "base_revision_id": {
+      "$ref": "#/$defs/stableId"
+    },
+    "base_candidate_hash": {
+      "$ref": "#/$defs/sha256"
+    },
+    "expected_facts_hash": {
+      "$ref": "#/$defs/sha256"
+    },
+    "source_issue_ids": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/stableId"
+      }
+    },
+    "scope_id": {
+      "$ref": "#/$defs/stableId"
+    },
+    "operations": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "oneOf": [
+          {"$ref": "#/$defs/addOperation"},
+          {"$ref": "#/$defs/updateOperation"},
+          {"$ref": "#/$defs/removeOperation"}
+        ]
+      }
+    }
+  },
+  "$defs": {
+    "stableId": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^[A-Za-z][A-Za-z0-9._:-]*$"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "evidenceRefs": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^[A-Za-z][A-Za-z0-9._:-]*:/.*$"
+      }
+    },
+    "changes": {
+      "type": "object",
+      "minProperties": 1,
+      "patternProperties": {
+        "^/(?![0-9]+(?:/|$)).+": true
+      },
+      "additionalProperties": false
+    },
+    "addOperation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["operation_id", "op", "target_id", "value", "evidence_refs"],
+      "properties": {
+        "operation_id": {"$ref": "#/$defs/stableId"},
+        "op": {"enum": ["add_entity", "add_relationship"]},
+        "target_id": {"$ref": "#/$defs/stableId"},
+        "value": {"type": "object"},
+        "evidence_refs": {"$ref": "#/$defs/evidenceRefs"}
+      }
+    },
+    "updateOperation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "operation_id",
+        "op",
+        "target_id",
+        "target_component_hash",
+        "changes",
+        "evidence_refs"
+      ],
+      "properties": {
+        "operation_id": {"$ref": "#/$defs/stableId"},
+        "op": {"enum": ["update_entity", "update_relationship"]},
+        "target_id": {"$ref": "#/$defs/stableId"},
+        "target_component_hash": {"$ref": "#/$defs/sha256"},
+        "changes": {"$ref": "#/$defs/changes"},
+        "evidence_refs": {"$ref": "#/$defs/evidenceRefs"}
+      }
+    },
+    "removeOperation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "operation_id",
+        "op",
+        "target_id",
+        "target_component_hash",
+        "evidence_refs"
+      ],
+      "properties": {
+        "operation_id": {"$ref": "#/$defs/stableId"},
+        "op": {"enum": ["remove_entity", "remove_relationship"]},
+        "target_id": {"$ref": "#/$defs/stableId"},
+        "target_component_hash": {"$ref": "#/$defs/sha256"},
+        "evidence_refs": {"$ref": "#/$defs/evidenceRefs"}
+      }
+    }
+  }
+}

@@ -1,0 +1,35 @@
+创建一个受控的两层住宅测试模型，单位为毫米。建筑外轮廓为 x=0..10000、y=0..8000；西南角为原点，X 向东，Y 向北，Z 向上。首层墙从 Z=0 到 Z=3000；二层墙从 Z=3150 到 Z=6150；墙厚 200，首层地板、二层楼板和屋面板厚度均为 150，屋面板厚度 150 mm，底标高为 Z=6150。每层必须有独立的南、东、北、西四面外墙，二层不得复用首层墙作为宿主。
+
+CONTROL_LAYOUT_V2
+以下坐标是精确控制事实，不得改写、补全或用近似位置替代。相同楼层的 IfcSpace 只能在边界接触，不能有正面积重叠。
+storey-1.living_room: x=0..4000, y=0..4000
+storey-1.kitchen: x=6000..10000, y=0..4000
+storey-1.stairwell: x=0..2000, y=4000..8000
+storey-1.utility: x=2000..4000, y=4000..8000
+storey-1.bathroom: x=6000..10000, y=4000..8000
+storey-1.corridor: x=4000..6000, y=0..8000
+storey-2.master_bedroom: x=0..4000, y=0..4000
+storey-2.bedroom_2: x=6000..10000, y=0..4000
+storey-2.stair_landing: x=2000..4000, y=4000..8000
+storey-2.study: x=6000..10000, y=4000..8000
+storey-2.corridor: x=4000..6000, y=0..8000
+stair-opening: x=0..2000, y=4000..8000
+首层地板顶面标高为 Z=0，地板实体向下延伸至 Z=-150。
+楼梯水平投影长度为 3900 mm，宽度为 1000 mm，平面范围为 x=500..1500、y=4050..7950；楼梯沿 +Y 方向上升，从 Z=150 到 Z=3150。该范围必须保持在 storey-1.stairwell 和 stair-opening 内。
+
+首层和二层都生成上述 IfcSpace。二层楼板在 stair-opening 范围必须生成可通行洞口；该洞口不是 IfcSpace，不能与任何二层空间重叠。生成宽 1000 的直跑 IfcStair：它位于首层 stairwell，连接到二层 stair_landing，并从 Z=150 上升到 Z=3150。
+
+门的宿主和中心如下。每扇门必须位于列出的共享墙段中，宽度沿墙长方向测量。
+door-living-corridor: host=storey-1-wall-living-corridor, segment=x=4000,y=0..4000, center=(4000,2000), width=900,height=2100
+door-kitchen-corridor: host=storey-1-wall-kitchen-corridor, segment=x=6000,y=0..4000, center=(6000,2000), width=900,height=2100
+door-stairwell-utility: host=storey-1-wall-stairwell-utility, segment=x=2000,y=4000..8000, center=(2000,6000), width=900,height=2100
+door-utility-corridor: host=storey-1-wall-utility-corridor, segment=x=4000,y=4000..8000, center=(4000,6000), width=900,height=2100
+door-bathroom-corridor: host=storey-1-wall-bathroom-corridor, segment=x=6000,y=4000..8000, center=(6000,6000), width=750,height=2100
+door-master-corridor: host=storey-2-wall-master-corridor, segment=x=4000,y=0..4000, center=(4000,2000), width=900,height=2100
+door-bedroom2-corridor: host=storey-2-wall-bedroom2-corridor, segment=x=6000,y=0..4000, center=(6000,2000), width=900,height=2100
+door-landing-corridor: host=storey-2-wall-landing-corridor, segment=x=4000,y=4000..8000, center=(4000,6000), width=900,height=2100
+door-study-corridor: host=storey-2-wall-study-corridor, segment=x=6000,y=4000..8000, center=(6000,6000), width=900,height=2100
+
+窗的宿主与全局中心如下：首层客厅南墙 window-living-south 的中心为 (2000,0)，宽 1500、高 1200、窗台高 900；首层厨房东墙 window-kitchen-east 的中心为 (10000,2000)，宽 1200、高 1000、窗台高 1000；首层卫生间北墙 window-bathroom-north 的中心为 (8000,8000)，宽 800、高 600、窗台高 1600。二层主卧南墙 window-master-south 的中心为 (2000,0)，宽 1500、高 1200、窗台高 900；二层次卧东墙 window-bedroom2-east 的中心为 (10000,2000)，宽 1400、高 1200、窗台高 900；二层书房北墙 window-study-north 的中心为 (8000,8000)，宽 1200、高 1000、窗台高 900。
+
+生成 IfcBuilding、两个 IfcBuildingStorey、上述空间、外墙、内墙、楼板、屋面板、IfcStair、门、窗和门窗洞口。所有门窗必须使用本楼层的宿主墙；洞口相对宿主墙使用局部坐标，门窗相对洞口对齐。输出可验证的 BIM JSON 2.0；若任何明确控制事实互相矛盾，返回 Draft 并列出矛盾，不得静默修改坐标。

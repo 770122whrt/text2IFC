@@ -25,6 +25,26 @@ Use this page as the stable entry point for project documentation.
 - [Text-to-JSON RAG, Fine-tune, and Agent Decision](architecture/text2json-rag-finetune-decision.md)
   - Metric-backed routing for RAG, fine-tuning, multi-turn Agent, and Phase 4
     fidelity work
+- [Phase 4 High-fidelity IFC Round Trip Summary](architecture/phase-4-summary.md)
+  - Generated IFC correctness gate, all-25 fidelity accounting, and Phase 6
+    readiness boundary
+- [Phase 5 Multi-turn Clarification Agent Summary](architecture/phase-5-summary.md)
+  - Chinese-first clarification Agent, provider boundary, and simple-room IFC
+    artifact
+- [Phase 6 Multi-agent Design](architecture/phase-6-multiagent-design.md)
+  - Prompt registry, Design Brief Agent, BIM JSON Generator, repair mode,
+    Audit Agent, and Observer Loop
+- [Phase 6 Acceptance and Trace Report](architecture/phase-6-acceptance-and-trace-report.md)
+  - Final acceptance criteria, intermediate input/output artifacts, gates, and
+    stop-and-report rules
+- [Phase 6 phase-local acceptance report](../.planning/phases/06-multiagent-prompt-reliability-data-expansion-and-deployment/06-ACCEPTANCE-TRACE-REPORT.md)
+  - Same Phase 6 acceptance topic placed inside the Phase 6 planning folder for
+    faster review
+- [Phase 6.2 Interactive CLI specification](../.planning/phases/06.2-interactive-cli-with-openai-compatible-mimo-agent-orchestration/06.2-SPEC.md)
+  - CLI clarification, OpenAI-compatible Mimo checkpoint, trace/report, and
+    final IFC acceptance boundary
+- [Phase 6.2 plan outline](../.planning/phases/06.2-interactive-cli-with-openai-compatible-mimo-agent-orchestration/06.2-PLAN-OUTLINE.md)
+  - Wave order and checkpoints for the interactive CLI implementation
 
 ## Project Planning
 
@@ -44,6 +64,8 @@ Use this page as the stable entry point for project documentation.
 - [BIM JSON 2.0 semantic contract reference](reference/bim-json-2.0.md)
 - [IFC2X3 generation profile](reference/ifc2x3-generation-profile.md)
 - [IFC2X3 knowledge sources and no-fabrication policy](reference/ifc2x3-knowledge-sources.md)
+- [MiMo Anthropic API compatibility reference](reference/mimo-anthropic-api.md)
+- [MiMo OpenAI API compatibility reference](reference/mimo-openai-api.md)
 - [Dataset organization](../dataset/data_organization.md)
 - [External data source catalog](../dataset/sources/CATALOG.md)
 - [Dataset manifest format](../dataset/manifests/README.md)

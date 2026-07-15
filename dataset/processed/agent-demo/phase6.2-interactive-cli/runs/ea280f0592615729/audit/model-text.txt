@@ -1,0 +1,17 @@
+{
+  "schema_version": "text2ifc/audit/2.0",
+  "recommendation": "revise",
+  "blocking": true,
+  "deterministic_gate_status": "passed",
+  "findings": [
+    {
+      "evidence_path": "design-brief/design-brief.json",
+      "description": "Design Brief specifies door and window alignment as 'host_centerline', meaning centered on their respective walls (south and north)."
+    },
+    {
+      "evidence_path": "generator/candidate.json",
+      "description": "In the BIM JSON, opening-door-1 is placed at origin [0,0,0] relative to wall-south, and opening-window-1 is placed at origin [0,0,900] relative to wall-north, without explicit centering calculations, so door and window are not positioned at the center of the walls as required."
+    }
+  ],
+  "evidence_paths": ["design-brief/input.txt", "design-brief/conversation.json", "design-brief/design-brief.json", "design-brief/response.raw.json", "generator/candidate.json", "generator/validation.json", "generator/metrics.json", "repair/route.json", "repair/metrics.json"]
+}

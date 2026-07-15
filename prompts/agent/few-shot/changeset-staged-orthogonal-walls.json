@@ -1,0 +1,62 @@
+{
+  "few_shot_id": "changeset.staged-orthogonal-walls",
+  "description": "Generate two independent axis-aligned straight walls that share one endpoint and form a 90-degree turn.",
+  "input": {
+    "expected_facts": {
+      "storey": {"id": "level-a", "name": "Level A", "elevation_mm": 0},
+      "walls": [
+        {"id": "wall-segment-a", "start_mm": [0, 0], "end_mm": [4000, 0], "thickness_mm": 200, "height_mm": 3000},
+        {"id": "wall-segment-b", "start_mm": [4000, 0], "end_mm": [4000, 3000], "thickness_mm": 200, "height_mm": 3000}
+      ]
+    },
+    "change_scope": {
+      "entity_ids": ["wall-segment-a", "wall-segment-b"],
+      "relationship_ids": []
+    }
+  },
+  "output": {
+    "schema_version": "text2ifc/bim-json-changeset/1.0",
+    "changeset_id": "changeset-orthogonal-wall-segments",
+    "base_revision_id": "revision-base",
+    "base_candidate_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "expected_facts_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "source_issue_ids": ["issue-package-level-a"],
+    "scope_id": "scope-package-level-a",
+    "operations": [
+      {
+        "operation_id": "operation-add-wall-segment-a",
+        "op": "add_entity",
+        "target_id": "wall-segment-a",
+        "value": {
+          "id": "wall-segment-a",
+          "ifc_class": "IfcWall",
+          "attributes": {
+            "Name": "Wall segment A",
+            "ObjectPlacement": {"relative_to": "level-a", "origin": [2000, 0, 0], "axis": [0, 0, 1], "ref_direction": [1, 0, 0]},
+            "Representation": {"kind": "extruded_profile", "profile": {"kind": "rectangle", "x": 4000, "y": 200}, "depth": 3000, "direction": [0, 0, 1]}
+          },
+          "property_sets": {},
+          "provenance": {"source": "issue-package-level-a"}
+        },
+        "evidence_refs": ["issue-package-level-a:/expected"]
+      },
+      {
+        "operation_id": "operation-add-wall-segment-b",
+        "op": "add_entity",
+        "target_id": "wall-segment-b",
+        "value": {
+          "id": "wall-segment-b",
+          "ifc_class": "IfcWall",
+          "attributes": {
+            "Name": "Wall segment B",
+            "ObjectPlacement": {"relative_to": "level-a", "origin": [4000, 1500, 0], "axis": [0, 0, 1], "ref_direction": [0, 1, 0]},
+            "Representation": {"kind": "extruded_profile", "profile": {"kind": "rectangle", "x": 3000, "y": 200}, "depth": 3000, "direction": [0, 0, 1]}
+          },
+          "property_sets": {},
+          "provenance": {"source": "issue-package-level-a"}
+        },
+        "evidence_refs": ["issue-package-level-a:/expected"]
+      }
+    ]
+  }
+}

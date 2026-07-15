@@ -1,0 +1,67 @@
+{
+  "schema_version": "text2ifc/design-brief/2.0",
+  "language": "zh-CN",
+  "original_request": "请创建一个单层矩形房间，长6米、宽4米、高3米；四面墙闭合，南墙中央设置一扇宽0.9米、高2.1米的门，北墙中央设置一扇宽1.2米、高1.5米、窗台高0.9米的窗。",
+  "status": "needs_clarification",
+  "known_facts": {
+    "space": {
+      "shape": "rectangle",
+      "length_mm": 6000,
+      "width_mm": 4000,
+      "height_mm": 3000
+    },
+    "walls": {
+      "count": 4,
+      "enclosure": "closed"
+    },
+    "door": {
+      "host": "south_wall",
+      "width_mm": 900,
+      "height_mm": 2100,
+      "alignment": "host_centerline"
+    },
+    "window": {
+      "host": "north_wall",
+      "width_mm": 1200,
+      "height_mm": 1500,
+      "sill_height_mm": 900,
+      "alignment": "host_centerline"
+    }
+  },
+  "fact_sources": [
+    {
+      "path": "/known_facts",
+      "source_turns": ["turn-user-001"],
+      "evidence_refs": ["schema:bim-json-v2:entity", "schema:bim-json-v2:representation"]
+    }
+  ],
+  "missing_facts": [
+    {
+      "id": "mf-wall-thickness",
+      "code": "WALL_THICKNESS_MISSING",
+      "path": "/known_facts/walls/thickness_mm",
+      "message": "墙体厚度尚未确定。",
+      "reason": "用户要求闭合墙体，但未提供墙体厚度；该事实是生成 IfcWall 的阻塞条件。",
+      "blocking": true,
+      "evidence_refs": ["capability:IFC2X3:IfcWall"],
+      "source_turns": ["turn-user-001"]
+    }
+  ],
+  "ambiguities": [],
+  "unsupported_requests": [],
+  "user_corrections": [],
+  "clarification_questions": [
+    {
+      "id": "q-wall-thickness",
+      "text": "墙体厚度是多少？如果暂时不知道，可以直接告诉我不知道。",
+      "targets": ["mf-wall-thickness"],
+      "reason": "该问题询问当前闭合墙体生成所缺少的阻塞事实。",
+      "evidence_refs": ["capability:IFC2X3:IfcWall"]
+    }
+  ],
+  "provenance": {
+    "source_turns": ["turn-user-001"],
+    "selected_evidence_ids": ["schema:bim-json-v2:entity", "schema:bim-json-v2:representation", "capability:IFC2X3:IfcSpace", "capability:IFC2X3:IfcWall", "capability:IFC2X3:IfcDoor", "capability:IFC2X3:IfcWindow"],
+    "few_shot_ids": ["design-brief-v2.incomplete-room"]
+  }
+}
