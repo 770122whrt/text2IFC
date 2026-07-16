@@ -1118,11 +1118,16 @@ geometry Gates, prompt/few-shot coverage, and a provenance-linked Difficult
 successor.
 
 **Status:** Machine acceptance is 3 / 3. Easy session `d2f86855a9738b50`,
-Medium session `8c8ef9a111e326d7`, and Difficult successor session
-`53df7ac99abf41e8` all produced accepted, reopenable IFC2X3 artifacts. The
-Difficult artifact contains two verified `IfcRailing` entities, two slab
-openings, and one straight stair system; all deterministic Gates, Audit, and
-secret scan passed. Human visual review of the Difficult IFC remains required
-before checking `STABLE-01`. This is bounded cross-case evidence, not a
-repeated-run statistical rate. Double-leaf `IfcDoorStyle` semantics remain
+Medium session `8c8ef9a111e326d7`, and revised Difficult session
+`ba2277d8363bce69` produced accepted, reopenable IFC2X3 artifacts. Human review
+of the prior Difficult IFC found a stair crossing two walls; Plan `06.6-02`
+added deterministic `STAIR_WALL_INTERSECTION` rejection. `STD-D-MUL-03` then
+correctly stopped in Draft because eight door hosts remained implicit, while
+`STD-D-MUL-04` explicitly enumerated 15 interior walls and all 10 door hosts.
+The revised IFC contains five verified `IfcRailing` entities, two independent
+slab openings, one straight stair system, 23 walls, and zero stair-wall
+positive-volume intersections. Gates, Audit, compile/reopen, EXPRESS
+validation, and secret scan pass. Human visual review of this revised IFC is
+required before checking `STABLE-01`. This is bounded cross-case evidence, not
+a repeated-run statistical rate. Double-leaf `IfcDoorStyle` semantics remain
 unsupported.

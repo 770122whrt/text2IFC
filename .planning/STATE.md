@@ -7,14 +7,14 @@ See: `.planning/PROJECT.md` (updated 2026-06-11)
 **Core value:** Produce valid, inspectable IFC models from explicit user
 requirements.
 
-**Current focus:** Phase 6.6 cross-case stability testing; Difficult machine
-checks passed but human review found a stair-wall collision, so Step 02 owns a
-deterministic Gate repair and provenance-linked rerun.
+**Current focus:** Phase 6.6 cross-case stability testing; the stair-wall Gate
+repair and explicit-host Difficult successor pass machine verification, while
+human visual review of the revised IFC remains pending.
 
 ## Status
 
 - Phase: 6.6
-- Stage: machine 3 / 3, human 2 / 3; Difficult successor repair approved
+- Stage: machine 3 / 3, human 2 / 3; revised Difficult IFC awaiting UAT
 - State: Phase 6.2-fix Waves 0-2 are implemented and automatically verified.
   Wave 3 real UAT
   produced useful live evidence and fixed defects 001/002, then exposed defect
@@ -571,10 +571,11 @@ deterministic Gate repair and provenance-linked rerun.
 
 ## Next Action
 
-Execute `06.6-02-PLAN.md`: reproduce the stair-wall collision with a RED Gate
-test, implement deterministic rejection, freeze `STD-D-MUL-03` with an
-explicit wall passage and exterior clearance, then run one real-provider
-Text-to-IFC observation and repeat human visual review.
+Open and visually review
+`dataset/processed/agent-demo/phase6.6-difficult-stair-fix-live-64k-explicit-hosts/runs/ba2277d8363bce69/output.ifc`.
+Confirm the open stair passage, north-wall clearance, two separate slab
+openings, stair arrival, five guard segments, wall enclosure, door hosts, and
+storey placement. Record any defect before approving further repair.
 
 ## Accumulated Context
 
