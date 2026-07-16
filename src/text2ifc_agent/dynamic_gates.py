@@ -59,7 +59,7 @@ def _entity_completeness_gate(
             continue
         actual_count = graph.count_by_class(ifc_class)
         if actual_count < expected_count:
-            collection = _EXPECTED_COLLECTIONS.get(ifc_class, ifc_class)
+            collection = _collection_for_ifc_class(expected_facts, ifc_class)
             issues.append(
                 {
                     "code": "EXPECTED_ENTITY_MISSING",
@@ -276,7 +276,9 @@ def _resolve_expected_entity(
     expected_tokens = set(_entity_id_tokens(expected_id))
     if not expected_tokens:
         return None
-    ifc_class = _CLASS_BY_COLLECTION[collection]
+    ifc_class = _expected_record_ifc_class(collection, record)
+    if ifc_class is None:
+        return None
     matching_ids = [
         candidate_id
         for candidate_id in graph.ids_by_class(ifc_class)
@@ -787,7 +789,9 @@ def _expected_total_counts(expected_facts: Mapping[str, Any]) -> dict[str, int]:
     counts = {
         ifc_class: int(value)
         for ifc_class, value in raw_counts.items()
-        if ifc_class in _EXPECTED_COLLECTIONS and _is_non_negative_int(value)
+        if isinstance(ifc_class, str)
+        and re.fullmatch(r"Ifc[A-Za-z0-9_]+", ifc_class)
+        and _is_non_negative_int(value)
     } if isinstance(raw_counts, Mapping) else {}
     for ifc_class, collection in _EXPECTED_COLLECTIONS.items():
         if ifc_class not in counts:
@@ -833,7 +837,7 @@ def _expected_opening_fill_counts(expected_facts: Mapping[str, Any]) -> dict[str
 
 def _exact_expected_records(expected_facts: Mapping[str, Any]) -> dict[str, list[Mapping[str, Any]]]:
     result: dict[str, list[Mapping[str, Any]]] = {}
-    for collection in ("walls", "spaces", "doors", "windows"):
+    for collection in ("walls", "spaces", "doors", "windows", "products"):
         records = [
             record
             for record in _records(expected_facts.get(collection))
@@ -842,6 +846,30 @@ def _exact_expected_records(expected_facts: Mapping[str, Any]) -> dict[str, list
         if records:
             result[collection] = records
     return result
+
+
+def _expected_record_ifc_class(
+    collection: str,
+    record: Mapping[str, Any],
+) -> str | None:
+    if collection == "products":
+        return _string(record.get("ifc_class"))
+    return _CLASS_BY_COLLECTION.get(collection)
+
+
+def _collection_for_ifc_class(
+    expected_facts: Mapping[str, Any],
+    ifc_class: str,
+) -> str:
+    collection = _EXPECTED_COLLECTIONS.get(ifc_class)
+    if collection is not None:
+        return collection
+    if any(
+        _string(record.get("ifc_class")) == ifc_class
+        for record in _records(expected_facts.get("products"))
+    ):
+        return "products"
+    return ifc_class
 
 
 def _records(value: Any) -> list[Mapping[str, Any]]:

@@ -137,6 +137,15 @@ def _check_roof_stairs_and_openings(
         path_prefix="floor_openings",
         issues=issues,
     )
+    metrics["products"] = _check_component_bboxes(
+        products_by_id=products_by_id,
+        expected_components=expectation.get("products"),
+        tolerance=tolerance,
+        missing_code="MISSING_EXPECTED_PRODUCT",
+        mismatch_code="LINEAR_PRODUCT_BBOX_MISMATCH",
+        path_prefix="products",
+        issues=issues,
+    )
     stair_metrics: dict[str, Any] = {}
     expected_stairs = expectation.get("stairs")
     if isinstance(expected_stairs, Mapping):
