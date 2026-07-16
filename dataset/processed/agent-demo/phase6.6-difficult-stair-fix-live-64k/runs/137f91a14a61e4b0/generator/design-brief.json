@@ -1,0 +1,802 @@
+{
+  "ambiguities": [],
+  "clarification_questions": [],
+  "fact_sources": [
+    {
+      "evidence_refs": [
+        "schema:bim-json-v2:entity",
+        "schema:bim-json-v2:representation",
+        "schema:bim-json-v2:profile",
+        "schema:bim-json-v2:object-placement",
+        "schema:bim-json-v2:relationship",
+        "capability:IFC2X3:IfcBuilding",
+        "capability:IFC2X3:IfcBuildingStorey",
+        "capability:IFC2X3:IfcSpace",
+        "capability:IFC2X3:IfcWall",
+        "capability:IFC2X3:IfcDoor",
+        "capability:IFC2X3:IfcWindow",
+        "capability:IFC2X3:IfcOpeningElement",
+        "capability:IFC2X3:IfcSlab",
+        "capability:IFC2X3:IfcStair",
+        "capability:IFC2X3:IfcRailing",
+        "capability:IFC2X3:IfcRelVoidsElement",
+        "capability:IFC2X3:IfcRelFillsElement",
+        "registry:IFC2X3:manifest"
+      ],
+      "path": "/known_facts",
+      "source_turns": [
+        "turn-user-001"
+      ]
+    }
+  ],
+  "known_facts": {
+    "building": {
+      "outline": {
+        "x_max": 12000,
+        "x_min": 0,
+        "y_max": 8000,
+        "y_min": 0
+      }
+    },
+    "floor_slabs": [
+      {
+        "id": "ground-floor-slab",
+        "polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            12000,
+            0
+          ],
+          [
+            12000,
+            8000
+          ],
+          [
+            0,
+            8000
+          ],
+          [
+            0,
+            0
+          ]
+        ],
+        "storey": "storey-1",
+        "thickness_mm": 300,
+        "top_elevation_mm": 0
+      },
+      {
+        "id": "first-floor-slab",
+        "openings": [
+          {
+            "bounds": {
+              "x": [
+                6000,
+                12000
+              ],
+              "y": [
+                0,
+                3000
+              ]
+            },
+            "id": "opening-first-floor-slab-atrium"
+          },
+          {
+            "bounds": {
+              "x": [
+                9900,
+                11100
+              ],
+              "y": [
+                4000,
+                7750
+              ]
+            },
+            "id": "opening-first-floor-slab-stair"
+          }
+        ],
+        "polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            12000,
+            0
+          ],
+          [
+            12000,
+            8000
+          ],
+          [
+            0,
+            8000
+          ],
+          [
+            0,
+            0
+          ]
+        ],
+        "storey": "storey-2",
+        "thickness_mm": 300,
+        "top_elevation_mm": 3300
+      }
+    ],
+    "railings": [
+      {
+        "end_mm": [
+          12000,
+          3000,
+          3300
+        ],
+        "height_mm": 1100,
+        "id": "railing-atrium-north",
+        "start_mm": [
+          6000,
+          3000,
+          3300
+        ],
+        "storey": "storey-2",
+        "thickness_mm": 50
+      },
+      {
+        "end_mm": [
+          6000,
+          3000,
+          3300
+        ],
+        "height_mm": 1100,
+        "id": "railing-atrium-west",
+        "start_mm": [
+          6000,
+          0,
+          3300
+        ],
+        "storey": "storey-2",
+        "thickness_mm": 50
+      },
+      {
+        "end_mm": [
+          9900,
+          7750,
+          3300
+        ],
+        "height_mm": 1100,
+        "id": "railing-stair-opening-west",
+        "start_mm": [
+          9900,
+          4000,
+          3300
+        ],
+        "storey": "storey-2",
+        "thickness_mm": 50
+      },
+      {
+        "end_mm": [
+          11100,
+          7750,
+          3300
+        ],
+        "height_mm": 1100,
+        "id": "railing-stair-opening-east",
+        "start_mm": [
+          11100,
+          4000,
+          3300
+        ],
+        "storey": "storey-2",
+        "thickness_mm": 50
+      },
+      {
+        "end_mm": [
+          11100,
+          7750,
+          3300
+        ],
+        "height_mm": 1100,
+        "id": "railing-stair-opening-north",
+        "start_mm": [
+          9900,
+          7750,
+          3300
+        ],
+        "storey": "storey-2",
+        "thickness_mm": 50
+      }
+    ],
+    "stairs": [
+      {
+        "bounds": {
+          "x": [
+            10000,
+            11000
+          ],
+          "y": [
+            4000,
+            7750
+          ]
+        },
+        "end_elevation_mm": 3300,
+        "from_storey": "storey-1",
+        "id": "stair-1",
+        "number_of_risers": 18,
+        "number_of_treads": 17,
+        "opening_bounds": {
+          "x": [
+            9900,
+            11100
+          ],
+          "y": [
+            4000,
+            7750
+          ]
+        },
+        "riser_height_mm": 183.333333,
+        "run_direction": "-Y",
+        "start_elevation_mm": 0,
+        "to_storey": "storey-2",
+        "tread_depth_mm": 220.588235,
+        "width_mm": 1000
+      }
+    ],
+    "storeys": [
+      {
+        "doors": [
+          {
+            "center_global_mm": [
+              3500,
+              3000
+            ],
+            "height_mm": 2100,
+            "id": "door-living-corridor-storey1",
+            "width_mm": 900
+          },
+          {
+            "center_global_mm": [
+              8500,
+              3000
+            ],
+            "height_mm": 2100,
+            "id": "door-dining-corridor-storey1",
+            "width_mm": 900
+          },
+          {
+            "center_global_mm": [
+              2500,
+              5000
+            ],
+            "height_mm": 2100,
+            "id": "door-kitchen-corridor-storey1",
+            "width_mm": 900
+          },
+          {
+            "center_global_mm": [
+              6000,
+              5000
+            ],
+            "height_mm": 2100,
+            "id": "door-bathroom-corridor-storey1",
+            "width_mm": 800
+          },
+          {
+            "center_global_mm": [
+              8500,
+              5000
+            ],
+            "height_mm": 2100,
+            "host_wall": "wall-stairhall-corridor-west-storey1",
+            "id": "door-stairhall-corridor-storey1",
+            "width_mm": 900
+          },
+          {
+            "center_global_mm": [
+              0,
+              4000
+            ],
+            "height_mm": 2100,
+            "host_wall": "storey-1-wall-west",
+            "id": "door-main-entrance",
+            "width_mm": 1000
+          }
+        ],
+        "elevation_mm": 0,
+        "id": "storey-1",
+        "name": "首层",
+        "net_height_mm": 3000,
+        "spaces": [
+          {
+            "bounds": {
+              "x": [
+                0,
+                7000
+              ],
+              "y": [
+                0,
+                3000
+              ]
+            },
+            "id": "space-storey-1-living"
+          },
+          {
+            "bounds": {
+              "x": [
+                7000,
+                12000
+              ],
+              "y": [
+                0,
+                3000
+              ]
+            },
+            "id": "space-storey-1-dining"
+          },
+          {
+            "bounds": {
+              "x": [
+                0,
+                10000
+              ],
+              "y": [
+                3000,
+                5000
+              ]
+            },
+            "id": "space-storey-1-corridor"
+          },
+          {
+            "bounds": {
+              "x": [
+                0,
+                5000
+              ],
+              "y": [
+                5000,
+                8000
+              ]
+            },
+            "id": "space-storey-1-kitchen"
+          },
+          {
+            "bounds": {
+              "x": [
+                5000,
+                7000
+              ],
+              "y": [
+                5000,
+                8000
+              ]
+            },
+            "id": "space-storey-1-bathroom"
+          },
+          {
+            "bounds": {
+              "x": [
+                7000,
+                12000
+              ],
+              "y": [
+                5000,
+                8000
+              ]
+            },
+            "id": "space-storey-1-stair-hall"
+          }
+        ],
+        "walls": {
+          "exterior": [
+            {
+              "end_mm": [
+                12000,
+                0
+              ],
+              "height_mm": 3000,
+              "id": "storey-1-wall-south",
+              "start_mm": [
+                0,
+                0
+              ],
+              "thickness_mm": 200
+            },
+            {
+              "end_mm": [
+                12000,
+                8000
+              ],
+              "height_mm": 3000,
+              "id": "storey-1-wall-north",
+              "start_mm": [
+                0,
+                8000
+              ],
+              "thickness_mm": 200
+            },
+            {
+              "end_mm": [
+                0,
+                8000
+              ],
+              "height_mm": 3000,
+              "id": "storey-1-wall-west",
+              "start_mm": [
+                0,
+                0
+              ],
+              "thickness_mm": 200
+            },
+            {
+              "end_mm": [
+                12000,
+                8000
+              ],
+              "height_mm": 3000,
+              "id": "storey-1-wall-east",
+              "start_mm": [
+                12000,
+                0
+              ],
+              "thickness_mm": 200
+            }
+          ],
+          "interior": [
+            {
+              "connects": [
+                "space-storey-1-corridor",
+                "space-storey-1-stair-hall"
+              ],
+              "end_mm": [
+                9900,
+                5000
+              ],
+              "height_mm": 3000,
+              "id": "wall-stairhall-corridor-west-storey1",
+              "start_mm": [
+                7000,
+                5000
+              ],
+              "thickness_mm": 200
+            },
+            {
+              "connects": [
+                "space-storey-1-corridor",
+                "space-storey-1-stair-hall"
+              ],
+              "end_mm": [
+                12000,
+                5000
+              ],
+              "height_mm": 3000,
+              "id": "wall-stairhall-corridor-east-storey1",
+              "start_mm": [
+                11100,
+                5000
+              ],
+              "thickness_mm": 200
+            }
+          ]
+        },
+        "windows": [
+          {
+            "center_global_mm": [
+              2333,
+              0
+            ],
+            "height_mm": 1200,
+            "host_wall": "storey-1-wall-south",
+            "id": "window-living-south-1-storey1",
+            "sill_height_mm": 900,
+            "width_mm": 1500
+          },
+          {
+            "center_global_mm": [
+              4667,
+              0
+            ],
+            "height_mm": 1200,
+            "host_wall": "storey-1-wall-south",
+            "id": "window-living-south-2-storey1",
+            "sill_height_mm": 900,
+            "width_mm": 1500
+          },
+          {
+            "center_global_mm": [
+              8250,
+              0
+            ],
+            "height_mm": 1200,
+            "host_wall": "storey-1-wall-south",
+            "id": "window-dining-south-1-storey1",
+            "sill_height_mm": 900,
+            "width_mm": 1500
+          },
+          {
+            "center_global_mm": [
+              10750,
+              0
+            ],
+            "height_mm": 1200,
+            "host_wall": "storey-1-wall-south",
+            "id": "window-dining-south-2-storey1",
+            "sill_height_mm": 900,
+            "width_mm": 1500
+          },
+          {
+            "center_global_mm": [
+              2500,
+              8000
+            ],
+            "height_mm": 1200,
+            "host_wall": "storey-1-wall-north",
+            "id": "window-kitchen-north-storey1",
+            "sill_height_mm": 900,
+            "width_mm": 1500
+          },
+          {
+            "center_global_mm": [
+              6000,
+              8000
+            ],
+            "height_mm": 600,
+            "host_wall": "storey-1-wall-north",
+            "id": "window-bathroom-north-storey1",
+            "sill_height_mm": 1600,
+            "width_mm": 800
+          }
+        ]
+      },
+      {
+        "doors": [
+          {
+            "center_global_mm": [
+              2500,
+              5000
+            ],
+            "height_mm": 2100,
+            "id": "door-bedroom1-corridor-storey2",
+            "width_mm": 900
+          },
+          {
+            "center_global_mm": [
+              6000,
+              5000
+            ],
+            "height_mm": 2100,
+            "id": "door-bathroom-corridor-storey2",
+            "width_mm": 800
+          },
+          {
+            "center_global_mm": [
+              8450,
+              5000
+            ],
+            "height_mm": 2100,
+            "id": "door-bedroom2-corridor-storey2",
+            "width_mm": 900
+          },
+          {
+            "center_global_mm": [
+              3000,
+              3000
+            ],
+            "height_mm": 2100,
+            "id": "door-bedroom3-corridor-storey2",
+            "width_mm": 900
+          }
+        ],
+        "elevation_mm": 3300,
+        "id": "storey-2",
+        "name": "二层",
+        "net_height_mm": 3000,
+        "spaces": [
+          {
+            "bounds": {
+              "x": [
+                0,
+                9900
+              ],
+              "y": [
+                3000,
+                5000
+              ]
+            },
+            "id": "space-storey-2-corridor"
+          },
+          {
+            "bounds": {
+              "x": [
+                0,
+                5000
+              ],
+              "y": [
+                5000,
+                8000
+              ]
+            },
+            "id": "space-storey-2-bedroom-1"
+          },
+          {
+            "bounds": {
+              "x": [
+                5000,
+                7000
+              ],
+              "y": [
+                5000,
+                8000
+              ]
+            },
+            "id": "space-storey-2-bathroom"
+          },
+          {
+            "bounds": {
+              "x": [
+                7000,
+                9900
+              ],
+              "y": [
+                5000,
+                8000
+              ]
+            },
+            "id": "space-storey-2-bedroom-2"
+          },
+          {
+            "bounds": {
+              "x": [
+                0,
+                6000
+              ],
+              "y": [
+                0,
+                3000
+              ]
+            },
+            "id": "space-storey-2-bedroom-3"
+          }
+        ],
+        "walls": {
+          "exterior": [
+            {
+              "end_mm": [
+                12000,
+                0
+              ],
+              "height_mm": 3000,
+              "id": "storey-2-wall-south",
+              "start_mm": [
+                0,
+                0
+              ],
+              "thickness_mm": 200
+            },
+            {
+              "end_mm": [
+                12000,
+                8000
+              ],
+              "height_mm": 3000,
+              "id": "storey-2-wall-north",
+              "start_mm": [
+                0,
+                8000
+              ],
+              "thickness_mm": 200
+            },
+            {
+              "end_mm": [
+                0,
+                8000
+              ],
+              "height_mm": 3000,
+              "id": "storey-2-wall-west",
+              "start_mm": [
+                0,
+                0
+              ],
+              "thickness_mm": 200
+            },
+            {
+              "end_mm": [
+                12000,
+                8000
+              ],
+              "height_mm": 3000,
+              "id": "storey-2-wall-east",
+              "start_mm": [
+                12000,
+                0
+              ],
+              "thickness_mm": 200
+            }
+          ],
+          "interior": []
+        },
+        "windows": [
+          {
+            "center_global_mm": [
+              2500,
+              8000
+            ],
+            "height_mm": 1200,
+            "host_wall": "storey-2-wall-north",
+            "id": "window-bedroom1-north-storey2",
+            "sill_height_mm": 900,
+            "width_mm": 1500
+          },
+          {
+            "center_global_mm": [
+              8450,
+              8000
+            ],
+            "height_mm": 1200,
+            "host_wall": "storey-2-wall-north",
+            "id": "window-bedroom2-north-storey2",
+            "sill_height_mm": 900,
+            "width_mm": 1500
+          },
+          {
+            "center_global_mm": [
+              3000,
+              0
+            ],
+            "height_mm": 1200,
+            "host_wall": "storey-2-wall-south",
+            "id": "window-bedroom3-south-storey2",
+            "sill_height_mm": 900,
+            "width_mm": 1500
+          },
+          {
+            "center_global_mm": [
+              6000,
+              8000
+            ],
+            "height_mm": 600,
+            "host_wall": "storey-2-wall-north",
+            "id": "window-bathroom-north-storey2",
+            "sill_height_mm": 1600,
+            "width_mm": 800
+          }
+        ]
+      }
+    ]
+  },
+  "language": "zh-CN",
+  "missing_facts": [],
+  "original_request": "## 4.4.11 Difficult 修订输入：无穿墙楼梯与双洞口防护栏杆\n\n创建一栋两层住宅。采用毫米和右手坐标系：X 轴向东，Y 轴向北，Z 轴向上。室内净轮廓为 `x=0..12000, y=0..8000`。\n\n### 4.4.11.1 建筑与楼层\n\n- 首层 `storey-1` 标高为 0，二层 `storey-2` 标高为 3300；\n- 两层净高均为 3000；\n- 所有普通墙厚 200、高 3000；\n- 两层均使用连续的南、北、西、东四段外墙封闭外轮廓，转角直接相接；\n- 首层和二层墙分别归属对应楼层，不得跨层或重复。\n\n### 4.4.11.2 楼板和两个独立开口\n\n生成两块 `IfcSlab`：\n\n- `ground-floor-slab` 归属 `storey-1`，顶标高 0，厚 300，平面为 `[[0,0],[12000,0],[12000,8000],[0,8000],[0,0]]`；\n- `first-floor-slab` 归属 `storey-2`，顶标高 3300，厚 300，平面同上。\n\n`first-floor-slab` 必须有两个彼此独立的开口，不得合并：\n\n- 中庭开口 `opening-first-floor-slab-atrium`：`x=6000..12000, y=0..3000`；\n- 楼梯开口 `opening-first-floor-slab-stair`：`x=9900..11100, y=4000..7750`。\n\n每个开口分别生成 `IfcOpeningElement` 和各自的 `IfcRelVoidsElement`。开口范围内不得生成楼板实体。\n\n### 4.4.11.3 首层空间与楼梯通道\n\n为以下每个矩形生成独立 `IfcSpace`：\n\n- 客厅 `space-storey-1-living`：`x=0..7000, y=0..3000`；\n- 餐厅 `space-storey-1-dining`：`x=7000..12000, y=0..3000`；\n- 走廊 `space-storey-1-corridor`：`x=0..10000, y=3000..5000`；\n- 厨房 `space-storey-1-kitchen`：`x=0..5000, y=5000..8000`；\n- 卫生间 `space-storey-1-bathroom`：`x=5000..7000, y=5000..8000`；\n- 楼梯厅 `space-storey-1-stair-hall`：`x=7000..12000, y=5000..8000`。\n\n走廊与楼梯厅在 `y=5000` 的公共边界不得生成一段连续墙。只生成以下两段墙：\n\n- `wall-stairhall-corridor-west-storey1`：从 `[7000,5000]` 到 `[9900,5000]`；\n- `wall-stairhall-corridor-east-storey1`：从 `[11100,5000]` 到 `[12000,5000]`。\n\n两段墙之间的 `x=9900..11100` 是宽 1200 的开放楼梯通道。该通道内不得生成墙、门、填充构件或其他封堵实体。相邻空间的其他公共边界各只生成一段共享墙。\n\n### 4.4.11.4 二层空间、中庭和到达区\n\n为以下每个矩形生成独立 `IfcSpace`：\n\n- 走廊 `space-storey-2-corridor`：`x=0..9900, y=3000..5000`；\n- 卧室一 `space-storey-2-bedroom-1`：`x=0..5000, y=5000..8000`；\n- 卫生间 `space-storey-2-bathroom`：`x=5000..7000, y=5000..8000`；\n- 卧室二 `space-storey-2-bedroom-2`：`x=7000..9900, y=5000..8000`；\n- 卧室三 `space-storey-2-bedroom-3`：`x=0..6000, y=0..3000`。\n\n中庭挑空范围为 `x=6000..12000, y=0..3000`。楼梯开口范围为 `x=9900..11100, y=4000..7750`。这两个区域均不得生成二层 `IfcSpace`。`x=9900..11100, y=3000..4000` 保留为二层楼梯到达区，必须保留楼板实体，不得被楼梯开口切除。中庭北边和西边不得生成普通封闭墙。\n\n### 4.4.11.5 不穿墙的直跑楼梯\n\n生成一部由 `IfcStair` 和一个 `IfcStairFlight` 组成的直跑楼梯，不使用双跑、平台或转折：\n\n- `stair-1` 从 `storey-1` 连接到 `storey-2`；\n- 平面 bounds 为 `x=10000..11000, y=4000..7750`；\n- 起跑点为全局 `[11000,7750,0]`，沿 `-Y` 方向运行，梯段宽度向西展开 1000；\n- 起点标高 0，终点标高 3300，总高差 3300；\n- 18 个踢面、17 个踏面；\n- 踢面高为 `3300/18` 毫米，踏面深为 `3750/17` 毫米，总水平投影长 3750 毫米；\n- 楼梯必须完整位于楼梯开口平面范围内，并在东西两侧各保留 100 毫米净空；\n- 楼梯北端到北外墙内表面至少保留 150 毫米净空；\n- 楼梯不得与任何普通内墙或外墙产生正体积相交，必须从上述 1200 毫米开放通道穿过。\n\n### 4.4.11.6 五段洞口防护栏杆\n\n生成且只生成以下五段简化实体 `IfcRailing`，均归属 `storey-2`：\n\n- `railing-atrium-north`：从 `[6000,3000,3300]` 到 `[12000,3000,3300]`；\n- `railing-atrium-west`：从 `[6000,0,3300]` 到 `[6000,3000,3300]`；\n- `railing-stair-opening-west`：从 `[9900,4000,3300]` 到 `[9900,7750,3300]`；\n- `railing-stair-opening-east`：从 `[11100,4000,3300]` 到 `[11100,7750,3300]`；\n- `railing-stair-opening-north`：从 `[9900,7750,3300]` 到 `[11100,7750,3300]`。\n\n五段栏杆高度均为 1100，简化实体厚度均为 50，底标高均为 3300。前三条楼梯洞口边缘中，西、东、北边必须受防护；南边 `y=4000` 是楼梯到达口，必须保持开放，不得增加横向栏杆封堵。不得把栏杆改成普通墙，也不得自行增加立柱、材料或栏杆类型。本阶段不要求生成沿梯段倾斜的扶手。\n\n### 4.4.11.7 门\n\n所有普通室内门高 2100；卫生间门宽 800，其余室内门宽 900。门中心使用下列全局 XY 坐标：\n\n- 首层客厅到走廊 `[3500,3000]`；\n- 首层餐厅到走廊 `[8500,3000]`；\n- 首层厨房到走廊 `[2500,5000]`；\n- 首层卫生间到走廊 `[6000,5000]`；\n- 首层楼梯厅到走廊 `[8500,5000]`，宿主必须为 `wall-stairhall-corridor-west-storey1`；\n- 二层卧室一到走廊 `[2500,5000]`；\n- 二层卫生间到走廊 `[6000,5000]`；\n- 二层卧室二到走廊 `[8450,5000]`；\n- 二层卧室三到走廊 `[3000,3000]`。\n\n住宅主入口门位于首层西外墙，中心 `[0,4000]`，宽 1000、高 2100。每扇门分别生成自己的开口、`IfcRelVoidsElement` 和 `IfcRelFillsElement`，不得共用开口。\n\n### 4.4.11.8 窗\n\n普通窗宽 1500、高 1200、窗台高 900：\n\n- 首层客厅南外墙中心 `[2333,0]` 和 `[4667,0]`；\n- 首层餐厅南外墙中心 `[8250,0]` 和 `[10750,0]`；\n- 首层厨房北外墙中心 `[2500,8000]`；\n- 二层卧室一北外墙中心 `[2500,8000]`；\n- 二层卧室二北外墙中心 `[8450,8000]`；\n- 二层卧室三南外墙中心 `[3000,0]`。\n\n两个卫生间各有一扇高窗，宽 800、高 600、窗台高 1600：首层中心 `[6000,8000]`，二层中心 `[6000,8000]`，分别宿主于对应楼层北外墙。每扇窗分别生成自己的开口和填充关系，同一宿主墙上的多个窗不得重叠。\n\n### 4.4.11.9 IFC 验收要求\n\n- BIM JSON 2.0 必须通过正式 Schema 校验后才编译；\n- IFC2X3 必须可编译、可重开且无 EXPRESS 错误；\n- 必须有 2 个 `IfcBuildingStorey`、11 个 `IfcSpace`、2 个 `IfcSlab`、1 个 `IfcStair`、1 个 `IfcStairFlight` 和 5 个 `IfcRailing`；\n- 两个楼板开口必须独立存在且范围正确；\n- 五段栏杆必须归属二层，并匹配明确中心线、1100 高度和 50 厚度；\n- 楼梯与全部普通墙的正体积相交数量必须为 0；\n- 楼梯必须通过 `x=9900..11100` 的开放通道，且不得进入北外墙；\n- 中庭、楼梯开口和到达区不得互相合并或错误切除；\n- 门窗必须位于指定中心、绑定正确宿主，并具有独立开口和填充关系；\n- 共享墙不得重复，外墙转角不得留缝，所有构件必须归属正确楼层。",
+  "provenance": {
+    "few_shot_ids": [
+      "design-brief-v2.standard-two-storey-building",
+      "design-brief-v2.complete-room-openings",
+      "design-brief-v2.linear-railings"
+    ],
+    "selected_evidence_ids": [
+      "schema:bim-json-v2:entity",
+      "schema:bim-json-v2:representation",
+      "schema:bim-json-v2:profile",
+      "schema:bim-json-v2:object-placement",
+      "schema:bim-json-v2:relationship",
+      "capability:IFC2X3:IfcBuilding",
+      "capability:IFC2X3:IfcBuildingStorey",
+      "capability:IFC2X3:IfcSpace",
+      "capability:IFC2X3:IfcWall",
+      "capability:IFC2X3:IfcDoor",
+      "capability:IFC2X3:IfcWindow",
+      "capability:IFC2X3:IfcOpeningElement",
+      "capability:IFC2X3:IfcSlab",
+      "capability:IFC2X3:IfcStair",
+      "capability:IFC2X3:IfcRailing",
+      "capability:IFC2X3:IfcRelVoidsElement",
+      "capability:IFC2X3:IfcRelFillsElement",
+      "registry:IFC2X3:manifest"
+    ],
+    "source_turns": [
+      "turn-user-001"
+    ]
+  },
+  "schema_version": "text2ifc/design-brief/2.0",
+  "status": "ready",
+  "unsupported_requests": [],
+  "user_corrections": []
+}

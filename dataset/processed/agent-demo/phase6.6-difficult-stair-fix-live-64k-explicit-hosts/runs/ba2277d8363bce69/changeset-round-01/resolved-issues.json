@@ -1,0 +1,52 @@
+{
+  "issues": [
+    {
+      "actual_ref": "entity:opening-door-main-entrance#/attributes",
+      "evidence": "OPENING_HOST_LOCAL_BOUNDS_MISMATCH: Opening transformed local bounds must remain inside the host wall bounds. Check placement and representation axes. Evidence: {\"coordinate_contract\": {\"local_x\": \"opening width along the host wall\", \"local_y\": \"opening thickness through the host wall\", \"local_z\": \"opening height\"}, \"correction_constraints\": {\"extrusion\": \"Use depth=semantic height and direction=[0,0,1].\", \"forbidden\": \"Do not swap width, thickness, and height to chase one bounds check.\", \"placement\": \"Place and orient the opening in the host wall local frame before adjusting its filling.\", \"profile\": \"Use profile.x=semantic width and profile.y=host-wall thickness.\"}, \"element_id\": \"door-main-entrance\", \"expected_object_placement_ref_direction\": [1, 0, 0], \"expected_representation_direction\": [0, 0, 1], \"host_bounds\": {\"max\": [4000.0, 100.0, 3000.0], \"min\": [-4000.0, -100.0, 0.0], \"size\": [8000.0, 200.0, 3000.0]}, \"host_profile\": {\"x\": 8000.0, \"y\": 200.0}, \"host_wall\": \"storey-1-wall-west\", \"opening_bounds\": {\"max\": [100.0, 500.0, 2100.0], \"min\": [-100.0, -500.0, 0.0], \"size\": [200.0, 1000.0, 2100.0]}, \"opening_id\": \"opening-door-main-entrance\", \"opening_origin\": [0, 0, 0], \"opening_profile\": {\"x\": 1000.0, \"y\": 200.0}, \"path\": \"/entities/opening-door-main-entrance/attributes/Representation\", \"recommended_action\": \"align_opening_frame_to_host\", \"target_entity_ids\": [\"opening-door-main-entrance\"]}",
+      "expected_fact_ref": null,
+      "issue_id": "issue_deterministic_gate_0001",
+      "issue_type": "geometry_invalid",
+      "owner": "generator",
+      "retryable": true,
+      "severity": "blocking",
+      "source": "deterministic_gate",
+      "suggested_route": "regenerate_json"
+    },
+    {
+      "actual_ref": "entity:opening-door-main-entrance#/attributes",
+      "evidence": "GATE_DISPUTE: Dynamic opening-fill gate failed for door-main-entrance with code OPENING_HOST_LOCAL_BOUNDS_MISMATCH, but the candidate BIM JSON correctly represents the opening placement (origin [0,0,0] relative to storey-1-wall-west, profile.x=1000, profile.y=200, ref_direction [0,1,0]) matching the design brief (center [0,4000], host wall west, width 1000). The gate analysis appears to have swapped the local X and Y axes, causing the bounds mismatch. This is a gate tool error, not a candidate issue. Evidence: {\"component_ids\": [\"opening-door-main-entrance\", \"door-main-entrance\", \"storey-1-wall-west\"], \"evidence_paths\": [\"design-brief/design-brief.json:/known_facts/storeys/0/doors/5\", \"generator/candidate.json:/entities/opening-door-main-entrance\", \"gate-summary.json:/gate_results/gates/5/issues/0\"], \"recommended_action\": \"Review gate logic for opening orientation; candidate is correct as per design brief.\", \"severity\": \"high\"}",
+      "expected_fact_ref": null,
+      "issue_id": "issue_audit_0001_01",
+      "issue_type": "semantic_mismatch",
+      "owner": "audit",
+      "retryable": true,
+      "severity": "blocking",
+      "source": "audit",
+      "suggested_route": "revise_design_brief"
+    },
+    {
+      "actual_ref": "entity:door-main-entrance#/attributes",
+      "evidence": "GATE_DISPUTE: Dynamic opening-fill gate failed for door-main-entrance with code OPENING_HOST_LOCAL_BOUNDS_MISMATCH, but the candidate BIM JSON correctly represents the opening placement (origin [0,0,0] relative to storey-1-wall-west, profile.x=1000, profile.y=200, ref_direction [0,1,0]) matching the design brief (center [0,4000], host wall west, width 1000). The gate analysis appears to have swapped the local X and Y axes, causing the bounds mismatch. This is a gate tool error, not a candidate issue. Evidence: {\"component_ids\": [\"opening-door-main-entrance\", \"door-main-entrance\", \"storey-1-wall-west\"], \"evidence_paths\": [\"design-brief/design-brief.json:/known_facts/storeys/0/doors/5\", \"generator/candidate.json:/entities/opening-door-main-entrance\", \"gate-summary.json:/gate_results/gates/5/issues/0\"], \"recommended_action\": \"Review gate logic for opening orientation; candidate is correct as per design brief.\", \"severity\": \"high\"}",
+      "expected_fact_ref": null,
+      "issue_id": "issue_audit_0001_02",
+      "issue_type": "semantic_mismatch",
+      "owner": "audit",
+      "retryable": true,
+      "severity": "blocking",
+      "source": "audit",
+      "suggested_route": "revise_design_brief"
+    },
+    {
+      "actual_ref": "entity:storey-1-wall-west#/attributes",
+      "evidence": "GATE_DISPUTE: Dynamic opening-fill gate failed for door-main-entrance with code OPENING_HOST_LOCAL_BOUNDS_MISMATCH, but the candidate BIM JSON correctly represents the opening placement (origin [0,0,0] relative to storey-1-wall-west, profile.x=1000, profile.y=200, ref_direction [0,1,0]) matching the design brief (center [0,4000], host wall west, width 1000). The gate analysis appears to have swapped the local X and Y axes, causing the bounds mismatch. This is a gate tool error, not a candidate issue. Evidence: {\"component_ids\": [\"opening-door-main-entrance\", \"door-main-entrance\", \"storey-1-wall-west\"], \"evidence_paths\": [\"design-brief/design-brief.json:/known_facts/storeys/0/doors/5\", \"generator/candidate.json:/entities/opening-door-main-entrance\", \"gate-summary.json:/gate_results/gates/5/issues/0\"], \"recommended_action\": \"Review gate logic for opening orientation; candidate is correct as per design brief.\", \"severity\": \"high\"}",
+      "expected_fact_ref": null,
+      "issue_id": "issue_audit_0001_03",
+      "issue_type": "semantic_mismatch",
+      "owner": "audit",
+      "retryable": true,
+      "severity": "blocking",
+      "source": "audit",
+      "suggested_route": "revise_design_brief"
+    }
+  ]
+}
