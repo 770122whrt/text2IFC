@@ -1154,10 +1154,19 @@ def _slab_records(known_facts: Mapping[str, Any]) -> list[Mapping[str, Any]]:
 def _product_records(known_facts: Mapping[str, Any]) -> list[dict[str, Any]]:
     products: list[dict[str, Any]] = []
     for collection, spec in _PRODUCT_FAMILY_SPECS.items():
-        for item in _records(known_facts.get(collection)):
+        expected_class = str(spec["ifc_class"])
+        for index, item in enumerate(_records(known_facts.get(collection))):
+            declared_class = item.get("ifc_class")
+            if declared_class is not None and declared_class != expected_class:
+                raise ExpectedFactsError(
+                    "DESIGN_BRIEF_PRODUCT_CLASS_CONFLICT: "
+                    f"known_facts.{collection}[{index}] declares "
+                    f"{declared_class!r}, but the family requires "
+                    f"{expected_class!r}."
+                )
             record: dict[str, Any] = {
                 "id": item.get("id"),
-                "ifc_class": item.get("ifc_class") or spec["ifc_class"],
+                "ifc_class": expected_class,
                 "storey": item.get("storey"),
                 "geometry": _linear_product_geometry(
                     item,
