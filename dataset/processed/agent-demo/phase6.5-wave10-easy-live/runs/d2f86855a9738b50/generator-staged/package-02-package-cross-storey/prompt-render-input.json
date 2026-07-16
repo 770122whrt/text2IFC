@@ -1,0 +1,1968 @@
+{
+  "BASE_REVISION": {
+    "artifacts": {
+      "candidate": "package-01-package-storey-1/attempt-02/workspace-after.json"
+    },
+    "candidate_hash": "sha256:f5647d469ca56fbb75d62adbe47d0a652dbd9be921cebff7a15639f3d28cc33d",
+    "component_hashes": {
+      "aggregate-building-storeys": "sha256:65533f589d3960284939c18a5b6948d97fecb2094dc0b461825c0f40d57076bf",
+      "aggregate-project-site": "sha256:456b0a2ec791c6c20d7efdda199726d8f9df127fd2739962aceb07dacb1f2567",
+      "aggregate-site-building": "sha256:9ccdeec022f78745ceb756d48903226706f909c0db1992457f23fffca5da02d4",
+      "building-main": "sha256:d2fac45e699944c2dd75aeb376ce156232c45dac25ab318fdc2a4593028a14ad",
+      "door-south": "sha256:cd3ef8d3ab43dd411bc7eaa1f63d84753f921d7c6a6dc323e9051fcc3c3a7e89",
+      "opening-door-south": "sha256:1bfccd452b93c0c92834df19e74b288c6f099c8c03a184334a9620f85266cd23",
+      "opening-window-north": "sha256:79243a6f57d9a39ed2a8302eeb37d9d51b87aea9dbece4b21101ecf16808e5d8",
+      "project-main": "sha256:9b165163ddbb7d9c4ae8832db8391cf20e41cb9bdd4b1d99f6a3e6cb78a071d1",
+      "rel-fills-door-south": "sha256:fb8c5dc2b880e30945a0965c911fbf2290bc19907b0114fd2fbbb22012a54b9a",
+      "rel-fills-window-north": "sha256:e5cc66d77501af1a246a3a723ff3da27852e0fd42a439c3aef74f32f0b05bff4",
+      "rel-voids-door-south": "sha256:5d149f44c626c166d22b16192398235b6c04353293400df95f35bd3d8f22674f",
+      "rel-voids-window-north": "sha256:402de016bb29e433bce72b826a29a032540b58281a950868803565277eb09049",
+      "site-main": "sha256:d5dfa3ad348be9625c631e2a45e4f77a67a485791c961139b0c18d37314ff3e5",
+      "space-room": "sha256:acb65519d35ac4ede89770d8513a26e87d151193166dbe4327f6ba83a412d398",
+      "storey-1": "sha256:445101f943e94fa6b4db23df291698553632cc8a788eb9273420c21e3fa05f9d",
+      "wall-east": "sha256:510e31a3e231894a85f204176ef374317be1352df4d6443e1bca76fa30f49d0c",
+      "wall-north": "sha256:27381bd118cd4443b66f18e3165f93c1326357eef1e93923937d8dd183a65763",
+      "wall-south": "sha256:1f362fd1c4addda65f3b878629f27a17e2adc4d74e7cbe0263d9b0381145a4b7",
+      "wall-west": "sha256:06b2360f522c082675810746553adf1e33efd1f1c9e6dc2352b0585fb74465ba",
+      "window-north": "sha256:460b1bf9cff1cc445728f49442c45ed5737b40087f7e0f4196a9e0aef48a2291"
+    },
+    "expected_facts_hash": "sha256:6dcfd1caa280cbc5ab0c125125d2b001f23fc7983f6d560a3e1cd8a41c605fe2",
+    "parent_revision_id": "revision-00",
+    "revision_id": "revision-01",
+    "schema_version": "text2ifc/bim-json-revision/1.0",
+    "sequence": 1,
+    "source_route": "staged_composition"
+  },
+  "CHANGESET_SCHEMA": {
+    "$defs": {
+      "addOperation": {
+        "additionalProperties": false,
+        "properties": {
+          "evidence_refs": {
+            "$ref": "#/$defs/evidenceRefs"
+          },
+          "op": {
+            "enum": [
+              "add_entity",
+              "add_relationship"
+            ]
+          },
+          "operation_id": {
+            "$ref": "#/$defs/stableId"
+          },
+          "target_id": {
+            "$ref": "#/$defs/stableId"
+          },
+          "value": {
+            "type": "object"
+          }
+        },
+        "required": [
+          "operation_id",
+          "op",
+          "target_id",
+          "value",
+          "evidence_refs"
+        ],
+        "type": "object"
+      },
+      "changes": {
+        "additionalProperties": false,
+        "minProperties": 1,
+        "patternProperties": {
+          "^/(?![0-9]+(?:/|$)).+": true
+        },
+        "type": "object"
+      },
+      "evidenceRefs": {
+        "items": {
+          "pattern": "^[A-Za-z][A-Za-z0-9._:-]*:/.*$",
+          "type": "string"
+        },
+        "minItems": 1,
+        "type": "array",
+        "uniqueItems": true
+      },
+      "removeOperation": {
+        "additionalProperties": false,
+        "properties": {
+          "evidence_refs": {
+            "$ref": "#/$defs/evidenceRefs"
+          },
+          "op": {
+            "enum": [
+              "remove_entity",
+              "remove_relationship"
+            ]
+          },
+          "operation_id": {
+            "$ref": "#/$defs/stableId"
+          },
+          "target_component_hash": {
+            "$ref": "#/$defs/sha256"
+          },
+          "target_id": {
+            "$ref": "#/$defs/stableId"
+          }
+        },
+        "required": [
+          "operation_id",
+          "op",
+          "target_id",
+          "target_component_hash",
+          "evidence_refs"
+        ],
+        "type": "object"
+      },
+      "sha256": {
+        "pattern": "^sha256:[0-9a-f]{64}$",
+        "type": "string"
+      },
+      "stableId": {
+        "minLength": 1,
+        "pattern": "^[A-Za-z][A-Za-z0-9._:-]*$",
+        "type": "string"
+      },
+      "updateOperation": {
+        "additionalProperties": false,
+        "properties": {
+          "changes": {
+            "$ref": "#/$defs/changes"
+          },
+          "evidence_refs": {
+            "$ref": "#/$defs/evidenceRefs"
+          },
+          "op": {
+            "enum": [
+              "update_entity",
+              "update_relationship"
+            ]
+          },
+          "operation_id": {
+            "$ref": "#/$defs/stableId"
+          },
+          "target_component_hash": {
+            "$ref": "#/$defs/sha256"
+          },
+          "target_id": {
+            "$ref": "#/$defs/stableId"
+          }
+        },
+        "required": [
+          "operation_id",
+          "op",
+          "target_id",
+          "target_component_hash",
+          "changes",
+          "evidence_refs"
+        ],
+        "type": "object"
+      }
+    },
+    "$id": "https://text2ifc.local/schemas/agent/bim-json-changeset-1.0.schema.json",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "additionalProperties": false,
+    "properties": {
+      "base_candidate_hash": {
+        "$ref": "#/$defs/sha256"
+      },
+      "base_revision_id": {
+        "$ref": "#/$defs/stableId"
+      },
+      "changeset_id": {
+        "$ref": "#/$defs/stableId"
+      },
+      "expected_facts_hash": {
+        "$ref": "#/$defs/sha256"
+      },
+      "operations": {
+        "items": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/addOperation"
+            },
+            {
+              "$ref": "#/$defs/updateOperation"
+            },
+            {
+              "$ref": "#/$defs/removeOperation"
+            }
+          ]
+        },
+        "minItems": 1,
+        "type": "array"
+      },
+      "schema_version": {
+        "const": "text2ifc/bim-json-changeset/1.0"
+      },
+      "scope_id": {
+        "$ref": "#/$defs/stableId"
+      },
+      "source_issue_ids": {
+        "items": {
+          "$ref": "#/$defs/stableId"
+        },
+        "minItems": 1,
+        "type": "array",
+        "uniqueItems": true
+      }
+    },
+    "required": [
+      "schema_version",
+      "changeset_id",
+      "base_revision_id",
+      "base_candidate_hash",
+      "expected_facts_hash",
+      "source_issue_ids",
+      "scope_id",
+      "operations"
+    ],
+    "title": "text2IFC BIM JSON ChangeSet 1.0",
+    "type": "object"
+  },
+  "CHANGE_SCOPE": {
+    "allowed_paths": {
+      "floor-slab-1": [
+        "/"
+      ]
+    },
+    "base_revision_id": "revision-01",
+    "dependencies": [],
+    "entity_ids": [
+      "floor-slab-1"
+    ],
+    "forbidden_ids": [
+      "aggregate-building-storeys",
+      "aggregate-project-site",
+      "aggregate-site-building",
+      "building-main",
+      "door-south",
+      "opening-door-south",
+      "opening-window-north",
+      "project-main",
+      "rel-fills-door-south",
+      "rel-fills-window-north",
+      "rel-voids-door-south",
+      "rel-voids-window-north",
+      "site-main",
+      "space-room",
+      "storey-1",
+      "wall-east",
+      "wall-north",
+      "wall-south",
+      "wall-west",
+      "window-north"
+    ],
+    "relationship_ids": [],
+    "schema_version": "text2ifc/change-scope/1.0",
+    "scope_id": "scope-package-2",
+    "source_issue_ids": [
+      "issue-package-cross-storey"
+    ]
+  },
+  "CONTEXT_ISSUES": [],
+  "CONVERSATION": [
+    {
+      "content": "## 2.2 Easy：单个矩形房间\n\n创建一个单层矩形房间，房间净尺寸为东西方向 6 米、南北方向 4 米，净高 3 米。\n\n墙厚 200 毫米，地板厚 150 毫米。\n\n在南侧外墙中央设置一樘外门，门宽 0.9 米、高 2.1 米，向室内开启。\n\n在北侧外墙中央设置一扇窗，窗宽 1.5 米、高 1.2 米，窗台距地面 0.9 米。\n\n生成楼层、房间空间、四面墙、地板、门和窗，并确保门窗正确依附在对应墙体中。房间应生成对应的 `IfcSpace`。",
+      "question_ids": [],
+      "role": "user",
+      "turn_id": "turn-user-001"
+    }
+  ],
+  "DESIGN_BRIEF": {
+    "ambiguities": [],
+    "clarification_questions": [],
+    "fact_sources": [
+      {
+        "evidence_refs": [
+          "schema:bim-json-v2:entity",
+          "schema:bim-json-v2:representation",
+          "capability:IFC2X3:IfcSpace",
+          "capability:IFC2X3:IfcWall",
+          "capability:IFC2X3:IfcDoor",
+          "capability:IFC2X3:IfcWindow",
+          "capability:IFC2X3:IfcBuildingStorey",
+          "capability:IFC2X3:IfcSlab",
+          "capability:IFC2X3:IfcOpeningElement",
+          "capability:IFC2X3:IfcRelVoidsElement",
+          "capability:IFC2X3:IfcRelFillsElement"
+        ],
+        "path": "/known_facts",
+        "source_turns": [
+          "turn-user-001"
+        ]
+      }
+    ],
+    "known_facts": {
+      "floor_slabs": [
+        {
+          "id": "floor-slab-1",
+          "owning_storey": "storey-1",
+          "thickness_mm": 150,
+          "top_elevation_mm": 0
+        }
+      ],
+      "storeys": [
+        {
+          "doors": [
+            {
+              "alignment": "host_centerline",
+              "height_mm": 2100,
+              "host_wall": "wall-south",
+              "id": "door-south",
+              "open_direction": "inside",
+              "width_mm": 900
+            }
+          ],
+          "elevation_mm": 0,
+          "id": "storey-1",
+          "net_height_mm": 3000,
+          "spaces": [
+            {
+              "bounds": {
+                "x": [
+                  0,
+                  6000
+                ],
+                "y": [
+                  0,
+                  4000
+                ]
+              },
+              "id": "space-room",
+              "shape": "rectangle"
+            }
+          ],
+          "walls": {
+            "exterior": [
+              {
+                "height_mm": 3000,
+                "id": "wall-south",
+                "side": "south",
+                "thickness_mm": 200
+              },
+              {
+                "height_mm": 3000,
+                "id": "wall-north",
+                "side": "north",
+                "thickness_mm": 200
+              },
+              {
+                "height_mm": 3000,
+                "id": "wall-west",
+                "side": "west",
+                "thickness_mm": 200
+              },
+              {
+                "height_mm": 3000,
+                "id": "wall-east",
+                "side": "east",
+                "thickness_mm": 200
+              }
+            ],
+            "interior": []
+          },
+          "windows": [
+            {
+              "alignment": "host_centerline",
+              "height_mm": 1200,
+              "host_wall": "wall-north",
+              "id": "window-north",
+              "sill_height_mm": 900,
+              "width_mm": 1500
+            }
+          ]
+        }
+      ]
+    },
+    "language": "zh-CN",
+    "missing_facts": [],
+    "original_request": "## 2.2 Easy：单个矩形房间\n\n创建一个单层矩形房间，房间净尺寸为东西方向 6 米、南北方向 4 米，净高 3 米。\n\n墙厚 200 毫米，地板厚 150 毫米。\n\n在南侧外墙中央设置一樘外门，门宽 0.9 米、高 2.1 米，向室内开启。\n\n在北侧外墙中央设置一扇窗，窗宽 1.5 米、高 1.2 米，窗台距地面 0.9 米。\n\n生成楼层、房间空间、四面墙、地板、门和窗，并确保门窗正确依附在对应墙体中。房间应生成对应的 `IfcSpace`。",
+    "provenance": {
+      "few_shot_ids": [
+        "design-brief-v2.complete-room-openings"
+      ],
+      "selected_evidence_ids": [
+        "schema:bim-json-v2:entity",
+        "schema:bim-json-v2:representation",
+        "capability:IFC2X3:IfcSpace",
+        "capability:IFC2X3:IfcWall",
+        "capability:IFC2X3:IfcDoor",
+        "capability:IFC2X3:IfcWindow",
+        "capability:IFC2X3:IfcBuildingStorey",
+        "capability:IFC2X3:IfcSlab",
+        "capability:IFC2X3:IfcOpeningElement",
+        "capability:IFC2X3:IfcRelVoidsElement",
+        "capability:IFC2X3:IfcRelFillsElement"
+      ],
+      "source_turns": [
+        "turn-user-001"
+      ]
+    },
+    "schema_version": "text2ifc/design-brief/2.0",
+    "status": "ready",
+    "unsupported_requests": [],
+    "user_corrections": []
+  },
+  "DRAFT_SCHEMA": {
+    "$defs": {
+      "clarification": {
+        "additionalProperties": false,
+        "properties": {
+          "entity_id": {
+            "$ref": "#/$defs/nonEmptyString"
+          },
+          "path": {
+            "pattern": "^/",
+            "type": "string"
+          },
+          "question": {
+            "$ref": "#/$defs/nonEmptyString"
+          }
+        },
+        "required": [
+          "entity_id",
+          "path",
+          "question"
+        ],
+        "type": "object"
+      },
+      "loss": {
+        "additionalProperties": false,
+        "properties": {
+          "kind": {
+            "$ref": "#/$defs/nonEmptyString"
+          },
+          "message": {
+            "$ref": "#/$defs/nonEmptyString"
+          },
+          "path": {
+            "pattern": "^/",
+            "type": "string"
+          },
+          "source_capability": {
+            "enum": [
+              "extract-only",
+              "compiler-only",
+              "unsupported"
+            ]
+          },
+          "source_item_class": {
+            "$ref": "#/$defs/nonEmptyString"
+          },
+          "source_ref": {
+            "$ref": "#/$defs/nonEmptyString"
+          },
+          "substitution": {
+            "enum": [
+              "none"
+            ]
+          }
+        },
+        "required": [
+          "source_ref",
+          "path",
+          "kind",
+          "message"
+        ],
+        "type": "object"
+      },
+      "missingFact": {
+        "additionalProperties": false,
+        "properties": {
+          "code": {
+            "$ref": "#/$defs/nonEmptyString"
+          },
+          "entity_id": {
+            "$ref": "#/$defs/nonEmptyString"
+          },
+          "message": {
+            "$ref": "#/$defs/nonEmptyString"
+          },
+          "path": {
+            "pattern": "^/",
+            "type": "string"
+          }
+        },
+        "required": [
+          "entity_id",
+          "path",
+          "code",
+          "message"
+        ],
+        "type": "object"
+      },
+      "nonEmptyString": {
+        "minLength": 1,
+        "type": "string"
+      }
+    },
+    "$id": "https://text2ifc.local/schemas/bim-json/draft/1.0/schema.json",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "additionalProperties": false,
+    "properties": {
+      "clarification_targets": {
+        "items": {
+          "$ref": "#/$defs/clarification"
+        },
+        "type": "array"
+      },
+      "draft_version": {
+        "const": "bim-json-draft/1.0"
+      },
+      "losses": {
+        "items": {
+          "$ref": "#/$defs/loss"
+        },
+        "type": "array"
+      },
+      "missing_facts": {
+        "items": {
+          "$ref": "#/$defs/missingFact"
+        },
+        "type": "array"
+      },
+      "partial_document": {
+        "description": "A deliberately incomplete BIM JSON 2.0 document; omissions must be listed in missing_facts or losses.",
+        "type": "object"
+      },
+      "provenance": {
+        "minProperties": 1,
+        "type": "object"
+      },
+      "target_schema_version": {
+        "const": "bim-json/2.0"
+      }
+    },
+    "required": [
+      "draft_version",
+      "target_schema_version",
+      "partial_document",
+      "missing_facts",
+      "losses",
+      "clarification_targets",
+      "provenance"
+    ],
+    "title": "text2IFC BIM JSON Draft Envelope 1.0",
+    "type": "object"
+  },
+  "EXPECTED_FACTS": {
+    "case_id": "d2f86855a9738b50",
+    "door_counts_by_storey": {
+      "storey-1": 1
+    },
+    "doors": [
+      {
+        "alignment": "host_centerline",
+        "height_mm": 2100,
+        "host_wall": "wall-south",
+        "id": "door-south",
+        "open_direction": "inside",
+        "source_key": "storey-1.door[1]",
+        "storey": "storey-1",
+        "width_mm": 900
+      }
+    ],
+    "entity_id_contract": {
+      "doors": [
+        {
+          "brief_id": "door-south",
+          "entity_id": "door-storey-1-door-south",
+          "storey": "storey-1"
+        }
+      ],
+      "spaces": [
+        {
+          "brief_id": "space-room",
+          "entity_id": "space-storey-1-space-room",
+          "storey": "storey-1"
+        }
+      ],
+      "walls": [
+        {
+          "brief_id": "wall-south",
+          "entity_id": "wall-storey-1-wall-south",
+          "storey": "storey-1"
+        },
+        {
+          "brief_id": "wall-north",
+          "entity_id": "wall-storey-1-wall-north",
+          "storey": "storey-1"
+        },
+        {
+          "brief_id": "wall-west",
+          "entity_id": "wall-storey-1-wall-west",
+          "storey": "storey-1"
+        },
+        {
+          "brief_id": "wall-east",
+          "entity_id": "wall-storey-1-wall-east",
+          "storey": "storey-1"
+        }
+      ],
+      "windows": [
+        {
+          "brief_id": "window-north",
+          "entity_id": "window-storey-1-window-north",
+          "storey": "storey-1"
+        }
+      ]
+    },
+    "generation_package_manifest": {
+      "issues": [],
+      "packages": [
+        {
+          "allowed_reference_ids": [],
+          "kind": "skeleton",
+          "owned_component_ids": [
+            "project-main",
+            "site-main",
+            "building-main",
+            "storey-1"
+          ],
+          "owned_relationship_ids": [
+            "aggregate-project-site",
+            "aggregate-site-building",
+            "aggregate-building-storeys"
+          ],
+          "package_id": "package-skeleton",
+          "storey_id": null
+        },
+        {
+          "allowed_reference_ids": [
+            "storey-1",
+            "wall-north",
+            "wall-south"
+          ],
+          "kind": "storey_local",
+          "owned_component_ids": [
+            "wall-south",
+            "wall-north",
+            "wall-west",
+            "wall-east",
+            "space-room",
+            "door-south",
+            "opening-door-south",
+            "window-north",
+            "opening-window-north"
+          ],
+          "owned_relationship_ids": [
+            "rel-voids-door-south",
+            "rel-fills-door-south",
+            "rel-voids-window-north",
+            "rel-fills-window-north"
+          ],
+          "package_id": "package-storey-1",
+          "storey_id": "storey-1"
+        },
+        {
+          "allowed_reference_ids": [
+            "storey-1"
+          ],
+          "kind": "cross_storey",
+          "owned_component_ids": [
+            "floor-slab-1"
+          ],
+          "owned_relationship_ids": [],
+          "package_id": "package-cross-storey",
+          "storey_id": null
+        }
+      ],
+      "schema_version": "text2ifc/generation-package-manifest/1.0",
+      "status": "ready",
+      "storey_count": 1
+    },
+    "required_relationships": {
+      "containment": {
+        "doors": 1,
+        "spaces": 1,
+        "storeys": 1,
+        "walls": 4,
+        "windows": 1
+      },
+      "opening_fill": {
+        "doors": 1,
+        "windows": 1
+      }
+    },
+    "roof": null,
+    "schema_version": "text2ifc/expected-facts/1.0",
+    "sidecar_role": "orchestration_expectations_not_bim_json_schema",
+    "slabs": [
+      {
+        "id": "floor-slab-1",
+        "owning_storey": "storey-1",
+        "thickness_mm": 150,
+        "top_elevation_mm": 0
+      }
+    ],
+    "source": {
+      "design_brief_schema_version": "text2ifc/design-brief/2.0",
+      "language": "zh-CN",
+      "status": "ready"
+    },
+    "source_paths": {
+      "/known_facts": [
+        "turn-user-001"
+      ]
+    },
+    "space_counts_by_storey": {
+      "storey-1": 1
+    },
+    "spaces": [
+      {
+        "bounds": {
+          "x": [
+            0,
+            6000
+          ],
+          "y": [
+            0,
+            4000
+          ]
+        },
+        "id": "space-room",
+        "shape": "rectangle",
+        "source_key": "storey-1.spaces[1]",
+        "storey": "storey-1"
+      }
+    ],
+    "stairs": [],
+    "storey_count": 1,
+    "storeys": [
+      {
+        "elevation_mm": 0,
+        "id": "storey-1",
+        "source_key": "storey-1"
+      }
+    ],
+    "total_counts": {
+      "IfcBuildingStorey": 1,
+      "IfcDoor": 1,
+      "IfcSpace": 1,
+      "IfcWall": 4,
+      "IfcWindow": 1
+    },
+    "unresolved_expectations": [],
+    "walls": [
+      {
+        "height_mm": 3000,
+        "id": "wall-south",
+        "side": "south",
+        "source_key": "storey-1.walls.exterior[1]",
+        "storey": "storey-1",
+        "thickness_mm": 200
+      },
+      {
+        "height_mm": 3000,
+        "id": "wall-north",
+        "side": "north",
+        "source_key": "storey-1.walls.exterior[2]",
+        "storey": "storey-1",
+        "thickness_mm": 200
+      },
+      {
+        "height_mm": 3000,
+        "id": "wall-west",
+        "side": "west",
+        "source_key": "storey-1.walls.exterior[3]",
+        "storey": "storey-1",
+        "thickness_mm": 200
+      },
+      {
+        "height_mm": 3000,
+        "id": "wall-east",
+        "side": "east",
+        "source_key": "storey-1.walls.exterior[4]",
+        "storey": "storey-1",
+        "thickness_mm": 200
+      }
+    ],
+    "window_counts_by_storey": {
+      "storey-1": 1
+    },
+    "windows": [
+      {
+        "alignment": "host_centerline",
+        "height_mm": 1200,
+        "host_wall": "wall-north",
+        "id": "window-north",
+        "sill_height_mm": 900,
+        "source_key": "storey-1.window[1]",
+        "storey": "storey-1",
+        "width_mm": 1500
+      }
+    ]
+  },
+  "FEW_SHOTS": [
+    {
+      "description": "Correct one named wall field while preserving every unrelated component.",
+      "few_shot_id": "changeset.single-component",
+      "input": {
+        "allowed_paths": {
+          "wall-a": [
+            "/attributes/Representation/depth"
+          ]
+        },
+        "issue": {
+          "actual": 3000,
+          "actual_ref": "entity:wall-a#/attributes/Representation/depth",
+          "expected": 3200,
+          "issue_id": "issue-wall-a-depth"
+        }
+      },
+      "output": {
+        "base_candidate_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "base_revision_id": "revision-base",
+        "changeset_id": "changeset-wall-a",
+        "expected_facts_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "operations": [
+          {
+            "changes": {
+              "/attributes/Representation/depth": 3200
+            },
+            "evidence_refs": [
+              "issue-wall-a-depth:/expected"
+            ],
+            "op": "update_entity",
+            "operation_id": "operation-wall-a-depth",
+            "target_component_hash": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+            "target_id": "wall-a"
+          }
+        ],
+        "schema_version": "text2ifc/bim-json-changeset/1.0",
+        "scope_id": "scope-wall-a",
+        "source_issue_ids": [
+          "issue-wall-a-depth"
+        ]
+      }
+    },
+    {
+      "description": "Align an opening and filling through explicitly authorized coupled operations.",
+      "few_shot_id": "changeset.coupled-dependency",
+      "input": {
+        "issues": [
+          {
+            "actual": {
+              "origin": [
+                0,
+                2400,
+                900
+              ]
+            },
+            "actual_ref": "entity:opening-a#/attributes/ObjectPlacement",
+            "expected": {
+              "origin": [
+                2400,
+                0,
+                900
+              ]
+            },
+            "issue_id": "issue-opening-placement"
+          },
+          {
+            "actual": {
+              "origin": [
+                0,
+                0,
+                900
+              ]
+            },
+            "actual_ref": "entity:window-a#/attributes/ObjectPlacement",
+            "expected": {
+              "origin": [
+                0,
+                0,
+                0
+              ]
+            },
+            "issue_id": "issue-filling-placement"
+          }
+        ]
+      },
+      "output": {
+        "base_candidate_hash": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+        "base_revision_id": "revision-base",
+        "changeset_id": "changeset-opening-window-a",
+        "expected_facts_hash": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+        "operations": [
+          {
+            "changes": {
+              "/attributes/ObjectPlacement/origin": [
+                2400,
+                0,
+                900
+              ]
+            },
+            "evidence_refs": [
+              "issue-opening-placement:/expected"
+            ],
+            "op": "update_entity",
+            "operation_id": "operation-opening-a-placement",
+            "target_component_hash": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+            "target_id": "opening-a"
+          },
+          {
+            "changes": {
+              "/attributes/ObjectPlacement/origin": [
+                0,
+                0,
+                0
+              ]
+            },
+            "evidence_refs": [
+              "issue-filling-placement:/expected"
+            ],
+            "op": "update_entity",
+            "operation_id": "operation-window-a-placement",
+            "target_component_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+            "target_id": "window-a"
+          }
+        ],
+        "schema_version": "text2ifc/bim-json-changeset/1.0",
+        "scope_id": "scope-opening-window-a",
+        "source_issue_ids": [
+          "issue-opening-placement",
+          "issue-filling-placement"
+        ]
+      }
+    },
+    {
+      "description": "Add one storey-local wall, space, opening, filling, containment, void, and fill relationship from explicit semantic facts.",
+      "few_shot_id": "changeset.staged-package-add",
+      "input": {
+        "change_scope": {
+          "entity_ids": [
+            "wall-a",
+            "space-a",
+            "opening-window-a",
+            "window-a"
+          ],
+          "relationship_ids": [
+            "rel-voids-window-a",
+            "rel-fills-window-a"
+          ]
+        },
+        "expected_facts": {
+          "space": {
+            "bounds": {
+              "x": [
+                0,
+                6000
+              ],
+              "y": [
+                0,
+                6000
+              ]
+            },
+            "height_mm": 3000,
+            "id": "space-a"
+          },
+          "storey": {
+            "elevation_mm": 0,
+            "id": "level-a"
+          },
+          "wall": {
+            "height_mm": 3000,
+            "id": "wall-a",
+            "length_mm": 8000,
+            "thickness_mm": 200
+          },
+          "window": {
+            "height_mm": 1000,
+            "host_wall": "wall-a",
+            "id": "window-a",
+            "sill_height_mm": 900,
+            "width_mm": 1200
+          }
+        }
+      },
+      "output": {
+        "base_candidate_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "base_revision_id": "revision-base",
+        "changeset_id": "changeset-package-level-a",
+        "expected_facts_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "operations": [
+          {
+            "evidence_refs": [
+              "issue-package-level-a:/expected"
+            ],
+            "op": "add_entity",
+            "operation_id": "operation-add-wall-a",
+            "target_id": "wall-a",
+            "value": {
+              "attributes": {
+                "Name": "Wall A",
+                "ObjectPlacement": {
+                  "axis": [
+                    0,
+                    0,
+                    1
+                  ],
+                  "origin": [
+                    4000,
+                    0,
+                    0
+                  ],
+                  "ref_direction": [
+                    1,
+                    0,
+                    0
+                  ],
+                  "relative_to": "level-a"
+                },
+                "Representation": {
+                  "depth": 3000,
+                  "direction": [
+                    0,
+                    0,
+                    1
+                  ],
+                  "kind": "extruded_profile",
+                  "profile": {
+                    "kind": "rectangle",
+                    "x": 8000,
+                    "y": 200
+                  }
+                }
+              },
+              "id": "wall-a",
+              "ifc_class": "IfcWall",
+              "property_sets": {},
+              "provenance": {
+                "source": "issue-package-level-a"
+              }
+            }
+          },
+          {
+            "evidence_refs": [
+              "issue-package-level-a:/expected"
+            ],
+            "op": "add_entity",
+            "operation_id": "operation-add-space-a",
+            "target_id": "space-a",
+            "value": {
+              "attributes": {
+                "InteriorOrExteriorSpace": "INTERNAL",
+                "Name": "Space A",
+                "ObjectPlacement": {
+                  "axis": [
+                    0,
+                    0,
+                    1
+                  ],
+                  "origin": [
+                    3000,
+                    3000,
+                    0
+                  ],
+                  "ref_direction": [
+                    1,
+                    0,
+                    0
+                  ],
+                  "relative_to": "level-a"
+                },
+                "Representation": {
+                  "depth": 3000,
+                  "direction": [
+                    0,
+                    0,
+                    1
+                  ],
+                  "kind": "extruded_profile",
+                  "profile": {
+                    "kind": "rectangle",
+                    "x": 6000,
+                    "y": 6000
+                  }
+                }
+              },
+              "id": "space-a",
+              "ifc_class": "IfcSpace",
+              "property_sets": {},
+              "provenance": {
+                "source": "issue-package-level-a"
+              }
+            }
+          },
+          {
+            "evidence_refs": [
+              "issue-package-level-a:/expected"
+            ],
+            "op": "add_entity",
+            "operation_id": "operation-add-opening-window-a",
+            "target_id": "opening-window-a",
+            "value": {
+              "attributes": {
+                "Name": "Opening for Window A",
+                "ObjectPlacement": {
+                  "axis": [
+                    0,
+                    0,
+                    1
+                  ],
+                  "origin": [
+                    3400,
+                    0,
+                    900
+                  ],
+                  "ref_direction": [
+                    1,
+                    0,
+                    0
+                  ],
+                  "relative_to": "wall-a"
+                },
+                "Representation": {
+                  "depth": 1000,
+                  "direction": [
+                    0,
+                    0,
+                    1
+                  ],
+                  "kind": "extruded_profile",
+                  "profile": {
+                    "kind": "rectangle",
+                    "x": 1200,
+                    "y": 200
+                  }
+                }
+              },
+              "id": "opening-window-a",
+              "ifc_class": "IfcOpeningElement",
+              "property_sets": {},
+              "provenance": {
+                "source": "issue-package-level-a"
+              }
+            }
+          },
+          {
+            "evidence_refs": [
+              "issue-package-level-a:/expected"
+            ],
+            "op": "add_entity",
+            "operation_id": "operation-add-window-a",
+            "target_id": "window-a",
+            "value": {
+              "attributes": {
+                "Name": "Window A",
+                "ObjectPlacement": {
+                  "axis": [
+                    0,
+                    0,
+                    1
+                  ],
+                  "origin": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "ref_direction": [
+                    1,
+                    0,
+                    0
+                  ],
+                  "relative_to": "opening-window-a"
+                },
+                "OverallHeight": 1000,
+                "OverallWidth": 1200,
+                "Representation": {
+                  "depth": 1000,
+                  "direction": [
+                    0,
+                    0,
+                    1
+                  ],
+                  "kind": "extruded_profile",
+                  "profile": {
+                    "kind": "rectangle",
+                    "x": 1200,
+                    "y": 100
+                  }
+                }
+              },
+              "id": "window-a",
+              "ifc_class": "IfcWindow",
+              "property_sets": {},
+              "provenance": {
+                "source": "issue-package-level-a"
+              }
+            }
+          },
+          {
+            "evidence_refs": [
+              "issue-package-level-a:/expected"
+            ],
+            "op": "add_relationship",
+            "operation_id": "operation-add-void-window-a",
+            "target_id": "rel-voids-window-a",
+            "value": {
+              "attributes": {
+                "RelatedOpeningElement": "opening-window-a",
+                "RelatingBuildingElement": "wall-a"
+              },
+              "id": "rel-voids-window-a",
+              "ifc_class": "IfcRelVoidsElement",
+              "provenance": {
+                "source": "issue-package-level-a"
+              }
+            }
+          },
+          {
+            "evidence_refs": [
+              "issue-package-level-a:/expected"
+            ],
+            "op": "add_relationship",
+            "operation_id": "operation-add-fill-window-a",
+            "target_id": "rel-fills-window-a",
+            "value": {
+              "attributes": {
+                "RelatedBuildingElement": "window-a",
+                "RelatingOpeningElement": "opening-window-a"
+              },
+              "id": "rel-fills-window-a",
+              "ifc_class": "IfcRelFillsElement",
+              "provenance": {
+                "source": "issue-package-level-a"
+              }
+            }
+          }
+        ],
+        "schema_version": "text2ifc/bim-json-changeset/1.0",
+        "scope_id": "scope-package-level-a",
+        "source_issue_ids": [
+          "issue-package-level-a"
+        ]
+      }
+    },
+    {
+      "description": "Generate two independent axis-aligned straight walls that share one endpoint and form a 90-degree turn.",
+      "few_shot_id": "changeset.staged-orthogonal-walls",
+      "input": {
+        "change_scope": {
+          "entity_ids": [
+            "wall-segment-a",
+            "wall-segment-b"
+          ],
+          "relationship_ids": []
+        },
+        "expected_facts": {
+          "storey": {
+            "elevation_mm": 0,
+            "id": "level-a",
+            "name": "Level A"
+          },
+          "walls": [
+            {
+              "end_mm": [
+                4000,
+                0
+              ],
+              "height_mm": 3000,
+              "id": "wall-segment-a",
+              "start_mm": [
+                0,
+                0
+              ],
+              "thickness_mm": 200
+            },
+            {
+              "end_mm": [
+                4000,
+                3000
+              ],
+              "height_mm": 3000,
+              "id": "wall-segment-b",
+              "start_mm": [
+                4000,
+                0
+              ],
+              "thickness_mm": 200
+            }
+          ]
+        }
+      },
+      "output": {
+        "base_candidate_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "base_revision_id": "revision-base",
+        "changeset_id": "changeset-orthogonal-wall-segments",
+        "expected_facts_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "operations": [
+          {
+            "evidence_refs": [
+              "issue-package-level-a:/expected"
+            ],
+            "op": "add_entity",
+            "operation_id": "operation-add-wall-segment-a",
+            "target_id": "wall-segment-a",
+            "value": {
+              "attributes": {
+                "Name": "Wall segment A",
+                "ObjectPlacement": {
+                  "axis": [
+                    0,
+                    0,
+                    1
+                  ],
+                  "origin": [
+                    2000,
+                    0,
+                    0
+                  ],
+                  "ref_direction": [
+                    1,
+                    0,
+                    0
+                  ],
+                  "relative_to": "level-a"
+                },
+                "Representation": {
+                  "depth": 3000,
+                  "direction": [
+                    0,
+                    0,
+                    1
+                  ],
+                  "kind": "extruded_profile",
+                  "profile": {
+                    "kind": "rectangle",
+                    "x": 4000,
+                    "y": 200
+                  }
+                }
+              },
+              "id": "wall-segment-a",
+              "ifc_class": "IfcWall",
+              "property_sets": {},
+              "provenance": {
+                "source": "issue-package-level-a"
+              }
+            }
+          },
+          {
+            "evidence_refs": [
+              "issue-package-level-a:/expected"
+            ],
+            "op": "add_entity",
+            "operation_id": "operation-add-wall-segment-b",
+            "target_id": "wall-segment-b",
+            "value": {
+              "attributes": {
+                "Name": "Wall segment B",
+                "ObjectPlacement": {
+                  "axis": [
+                    0,
+                    0,
+                    1
+                  ],
+                  "origin": [
+                    4000,
+                    1500,
+                    0
+                  ],
+                  "ref_direction": [
+                    0,
+                    1,
+                    0
+                  ],
+                  "relative_to": "level-a"
+                },
+                "Representation": {
+                  "depth": 3000,
+                  "direction": [
+                    0,
+                    0,
+                    1
+                  ],
+                  "kind": "extruded_profile",
+                  "profile": {
+                    "kind": "rectangle",
+                    "x": 3000,
+                    "y": 200
+                  }
+                }
+              },
+              "id": "wall-segment-b",
+              "ifc_class": "IfcWall",
+              "property_sets": {},
+              "provenance": {
+                "source": "issue-package-level-a"
+              }
+            }
+          }
+        ],
+        "schema_version": "text2ifc/bim-json-changeset/1.0",
+        "scope_id": "scope-package-level-a",
+        "source_issue_ids": [
+          "issue-package-level-a"
+        ]
+      }
+    },
+    {
+      "description": "Add a parent-relative upper slab, stair opening, stair, stepped flight, and their explicit void and aggregate relationships.",
+      "few_shot_id": "changeset.staged-cross-storey",
+      "input": {
+        "change_scope": {
+          "entity_ids": [
+            "slab-upper",
+            "opening-stair",
+            "stair-a",
+            "stair-flight-a"
+          ],
+          "relationship_ids": [
+            "rel-voids-slab-upper",
+            "aggregate-stair-flight"
+          ]
+        },
+        "expected_facts": {
+          "lower_storey": {
+            "elevation_mm": 0,
+            "id": "level-lower"
+          },
+          "opening": {
+            "bounds": {
+              "x": [
+                6000,
+                8000
+              ],
+              "y": [
+                1000,
+                6000
+              ]
+            },
+            "host_slab": "slab-upper",
+            "id": "opening-stair"
+          },
+          "slab": {
+            "bounds": {
+              "x": [
+                0,
+                8000
+              ],
+              "y": [
+                0,
+                6000
+              ]
+            },
+            "id": "slab-upper",
+            "thickness_mm": 150,
+            "top_elevation_mm": 3150
+          },
+          "stair": {
+            "bounds": {
+              "x": [
+                6500,
+                7500
+              ],
+              "y": [
+                1500,
+                5100
+              ]
+            },
+            "end_elevation_mm": 3150,
+            "flight_ids": [
+              "stair-flight-a"
+            ],
+            "id": "stair-a",
+            "number_of_risers": 3,
+            "number_of_treads": 3,
+            "riser_height": 1000,
+            "run_direction": "+Y",
+            "start_elevation_mm": 150,
+            "tread_depth": 1200,
+            "width": 1000,
+            "width_direction": "+X"
+          },
+          "upper_storey": {
+            "elevation_mm": 3150,
+            "id": "level-upper"
+          }
+        }
+      },
+      "output": {
+        "base_candidate_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "base_revision_id": "revision-base",
+        "changeset_id": "changeset-cross-storey",
+        "expected_facts_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "operations": [
+          {
+            "evidence_refs": [
+              "issue-package-cross-storey:/expected"
+            ],
+            "op": "add_entity",
+            "operation_id": "add-slab-upper",
+            "target_id": "slab-upper",
+            "value": {
+              "attributes": {
+                "Name": "Upper slab",
+                "ObjectPlacement": {
+                  "axis": [
+                    0,
+                    0,
+                    1
+                  ],
+                  "origin": [
+                    4000,
+                    3000,
+                    -150
+                  ],
+                  "ref_direction": [
+                    1,
+                    0,
+                    0
+                  ],
+                  "relative_to": "level-upper"
+                },
+                "Representation": {
+                  "depth": 150,
+                  "direction": [
+                    0,
+                    0,
+                    1
+                  ],
+                  "kind": "extruded_profile",
+                  "profile": {
+                    "kind": "rectangle",
+                    "x": 8000,
+                    "y": 6000
+                  }
+                }
+              },
+              "id": "slab-upper",
+              "ifc_class": "IfcSlab",
+              "property_sets": {},
+              "provenance": {
+                "source": "issue-package-cross-storey"
+              }
+            }
+          },
+          {
+            "evidence_refs": [
+              "issue-package-cross-storey:/expected"
+            ],
+            "op": "add_entity",
+            "operation_id": "add-opening-stair",
+            "target_id": "opening-stair",
+            "value": {
+              "attributes": {
+                "Name": "Stair opening",
+                "ObjectPlacement": {
+                  "axis": [
+                    0,
+                    0,
+                    1
+                  ],
+                  "origin": [
+                    3000,
+                    500,
+                    0
+                  ],
+                  "ref_direction": [
+                    1,
+                    0,
+                    0
+                  ],
+                  "relative_to": "slab-upper"
+                },
+                "Representation": {
+                  "depth": 150,
+                  "direction": [
+                    0,
+                    0,
+                    1
+                  ],
+                  "kind": "extruded_profile",
+                  "profile": {
+                    "kind": "rectangle",
+                    "x": 2000,
+                    "y": 5000
+                  }
+                }
+              },
+              "id": "opening-stair",
+              "ifc_class": "IfcOpeningElement",
+              "property_sets": {},
+              "provenance": {
+                "source": "issue-package-cross-storey"
+              }
+            }
+          },
+          {
+            "evidence_refs": [
+              "issue-package-cross-storey:/expected"
+            ],
+            "op": "add_entity",
+            "operation_id": "add-stair-a",
+            "target_id": "stair-a",
+            "value": {
+              "attributes": {
+                "Name": "Main stair",
+                "ObjectPlacement": {
+                  "axis": [
+                    0,
+                    0,
+                    1
+                  ],
+                  "origin": [
+                    6500,
+                    1500,
+                    150
+                  ],
+                  "ref_direction": [
+                    1,
+                    0,
+                    0
+                  ],
+                  "relative_to": "level-lower"
+                },
+                "ShapeType": "STRAIGHT_RUN_STAIR"
+              },
+              "id": "stair-a",
+              "ifc_class": "IfcStair",
+              "property_sets": {},
+              "provenance": {
+                "source": "issue-package-cross-storey"
+              }
+            }
+          },
+          {
+            "evidence_refs": [
+              "issue-package-cross-storey:/expected"
+            ],
+            "op": "add_entity",
+            "operation_id": "add-stair-flight-a",
+            "target_id": "stair-flight-a",
+            "value": {
+              "attributes": {
+                "Name": "Stepped flight",
+                "ObjectPlacement": {
+                  "axis": [
+                    0,
+                    0,
+                    1
+                  ],
+                  "origin": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "ref_direction": [
+                    1,
+                    0,
+                    0
+                  ],
+                  "relative_to": "stair-a"
+                },
+                "Representation": {
+                  "depth": 1000,
+                  "direction": [
+                    1,
+                    0,
+                    0
+                  ],
+                  "kind": "extruded_profile",
+                  "profile": {
+                    "kind": "polygon",
+                    "points": [
+                      [
+                        0,
+                        0
+                      ],
+                      [
+                        3600,
+                        0
+                      ],
+                      [
+                        3600,
+                        3000
+                      ],
+                      [
+                        2400,
+                        3000
+                      ],
+                      [
+                        2400,
+                        2000
+                      ],
+                      [
+                        1200,
+                        2000
+                      ],
+                      [
+                        1200,
+                        1000
+                      ],
+                      [
+                        0,
+                        1000
+                      ],
+                      [
+                        0,
+                        0
+                      ]
+                    ]
+                  }
+                }
+              },
+              "id": "stair-flight-a",
+              "ifc_class": "IfcStairFlight",
+              "property_sets": {},
+              "provenance": {
+                "source": "issue-package-cross-storey"
+              }
+            }
+          },
+          {
+            "evidence_refs": [
+              "issue-package-cross-storey:/expected"
+            ],
+            "op": "add_relationship",
+            "operation_id": "add-void-slab-upper",
+            "target_id": "rel-voids-slab-upper",
+            "value": {
+              "attributes": {
+                "RelatedOpeningElement": "opening-stair",
+                "RelatingBuildingElement": "slab-upper"
+              },
+              "id": "rel-voids-slab-upper",
+              "ifc_class": "IfcRelVoidsElement",
+              "provenance": {
+                "source": "issue-package-cross-storey"
+              }
+            }
+          },
+          {
+            "evidence_refs": [
+              "issue-package-cross-storey:/expected"
+            ],
+            "op": "add_relationship",
+            "operation_id": "add-aggregate-stair-flight",
+            "target_id": "aggregate-stair-flight",
+            "value": {
+              "attributes": {
+                "RelatedObjects": [
+                  "stair-flight-a"
+                ],
+                "RelatingObject": "stair-a"
+              },
+              "id": "aggregate-stair-flight",
+              "ifc_class": "IfcRelAggregates",
+              "provenance": {
+                "source": "issue-package-cross-storey"
+              }
+            }
+          }
+        ],
+        "schema_version": "text2ifc/bim-json-changeset/1.0",
+        "scope_id": "scope-package-cross-storey",
+        "source_issue_ids": [
+          "issue-package-cross-storey"
+        ]
+      }
+    },
+    {
+      "few_shot_id": "changeset.staged-negative-y-stair",
+      "input": {
+        "change_scope": {
+          "entity_ids": [
+            "stair-negative-y",
+            "stair-flight-negative-y"
+          ],
+          "relationship_ids": [
+            "aggregate-negative-y-stair-flight"
+          ],
+          "scope_id": "scope-negative-y-stair"
+        },
+        "expected_facts": {
+          "stair": {
+            "bounds": {
+              "x": [
+                4300,
+                5300
+              ],
+              "y": [
+                4300,
+                7500
+              ]
+            },
+            "end_elevation_mm": 6500,
+            "flight_ids": [
+              "stair-flight-negative-y"
+            ],
+            "id": "stair-negative-y",
+            "number_of_risers": 2,
+            "number_of_treads": 2,
+            "riser_height": 1675,
+            "run_direction": "-Y",
+            "start_elevation_mm": 3150,
+            "tread_depth": 1600,
+            "width": 1000,
+            "width_direction": "+X"
+          }
+        }
+      },
+      "output": {
+        "base_candidate_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "base_revision_id": "revision-base",
+        "changeset_id": "changeset-negative-y-stair",
+        "expected_facts_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "operations": [
+          {
+            "evidence_refs": [
+              "issue-negative-y-stair:/expected"
+            ],
+            "op": "add_entity",
+            "operation_id": "add-negative-y-stair",
+            "target_id": "stair-negative-y",
+            "value": {
+              "attributes": {
+                "Name": "Negative Y stair",
+                "ObjectPlacement": {
+                  "axis": [
+                    0,
+                    0,
+                    1
+                  ],
+                  "origin": [
+                    5300,
+                    7500,
+                    0
+                  ],
+                  "ref_direction": [
+                    -1,
+                    0,
+                    0
+                  ],
+                  "relative_to": "storey-lower"
+                },
+                "ShapeType": "STRAIGHT_RUN_STAIR"
+              },
+              "id": "stair-negative-y",
+              "ifc_class": "IfcStair",
+              "property_sets": {},
+              "provenance": {
+                "source": "issue-negative-y-stair"
+              }
+            }
+          },
+          {
+            "evidence_refs": [
+              "issue-negative-y-stair:/expected"
+            ],
+            "op": "add_entity",
+            "operation_id": "add-negative-y-stair-flight",
+            "target_id": "stair-flight-negative-y",
+            "value": {
+              "attributes": {
+                "Name": "Negative Y stepped flight",
+                "ObjectPlacement": {
+                  "axis": [
+                    0,
+                    0,
+                    1
+                  ],
+                  "origin": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "ref_direction": [
+                    1,
+                    0,
+                    0
+                  ],
+                  "relative_to": "stair-negative-y"
+                },
+                "Representation": {
+                  "depth": 1000,
+                  "direction": [
+                    1,
+                    0,
+                    0
+                  ],
+                  "kind": "extruded_profile",
+                  "profile": {
+                    "kind": "polygon",
+                    "points": [
+                      [
+                        0,
+                        0
+                      ],
+                      [
+                        3200,
+                        0
+                      ],
+                      [
+                        3200,
+                        3350
+                      ],
+                      [
+                        1600,
+                        3350
+                      ],
+                      [
+                        1600,
+                        1675
+                      ],
+                      [
+                        0,
+                        1675
+                      ],
+                      [
+                        0,
+                        0
+                      ]
+                    ]
+                  }
+                }
+              },
+              "id": "stair-flight-negative-y",
+              "ifc_class": "IfcStairFlight",
+              "property_sets": {},
+              "provenance": {
+                "source": "issue-negative-y-stair"
+              }
+            }
+          },
+          {
+            "evidence_refs": [
+              "issue-negative-y-stair:/expected"
+            ],
+            "op": "add_relationship",
+            "operation_id": "aggregate-negative-y-stair-flight",
+            "target_id": "aggregate-negative-y-stair-flight",
+            "value": {
+              "attributes": {
+                "RelatedObjects": [
+                  "stair-flight-negative-y"
+                ],
+                "RelatingObject": "stair-negative-y"
+              },
+              "id": "aggregate-negative-y-stair-flight",
+              "ifc_class": "IfcRelAggregates",
+              "provenance": {
+                "source": "issue-negative-y-stair"
+              }
+            }
+          }
+        ],
+        "schema_version": "text2ifc/bim-json-changeset/1.0",
+        "scope_id": "scope-negative-y-stair",
+        "source_issue_ids": [
+          "issue-negative-y-stair"
+        ]
+      }
+    }
+  ],
+  "ISSUES": [
+    {
+      "actual_ref": "entity:floor-slab-1#/",
+      "evidence": "Generate only components owned by package-cross-storey.",
+      "expected_fact_ref": "expected-facts:/generation_package_manifest/packages/2",
+      "issue_id": "issue-package-cross-storey"
+    }
+  ],
+  "SCOPED_COMPONENTS": {},
+  "USER_REQUEST": "## 2.2 Easy：单个矩形房间\n\n创建一个单层矩形房间，房间净尺寸为东西方向 6 米、南北方向 4 米，净高 3 米。\n\n墙厚 200 毫米，地板厚 150 毫米。\n\n在南侧外墙中央设置一樘外门，门宽 0.9 米、高 2.1 米，向室内开启。\n\n在北侧外墙中央设置一扇窗，窗宽 1.5 米、高 1.2 米，窗台距地面 0.9 米。\n\n生成楼层、房间空间、四面墙、地板、门和窗，并确保门窗正确依附在对应墙体中。房间应生成对应的 `IfcSpace`。"
+}

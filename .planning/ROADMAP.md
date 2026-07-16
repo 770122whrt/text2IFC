@@ -1058,7 +1058,9 @@ is reserved for a later phase that may reuse the ChangeSet revision interface.
 - [x] `06.5-10-PLAN.md` - Canonicalize single-storey Design Brief facts,
   reject empty ready projections, and preserve a bounded historical migration.
 - [x] `06.5-10-SUMMARY.md` - Offline Easy projection passes exact 1/1/4/1/1
-  inventory and full Agent regression; no real-provider rerun is claimed.
+  inventory and full Agent regression. Follow-up live session
+  `d2f86855a9738b50` compiled and reopened the frozen Easy case; Medium successor
+  `STD-M-OFF-02` now makes its enclosure explicit without rewriting old evidence.
 
 **Cross-cutting constraints:**
 
@@ -1080,8 +1082,9 @@ is reserved for a later phase that may reuse the ChangeSet revision interface.
 **Status:** Historical Phase 6.5 graded acceptance is complete. Wave 9 resolved
 the Prompt Registry portability blocker and all three frozen cases reached the
 real provider. Wave 10 resolved the deterministic Easy projection defect
-`P65-UAT-004`; revised `STABLE-01` remains incomplete at 0 / 3 accepted IFC
-artifacts because no live rerun was claimed. `P65-UAT-005` through `P65-UAT-007`
-remain open. Existing Easy, Medium, and Hard artifacts remain valid historical
-evidence but do not substitute for these inputs. No repeated-run statistical
-rate is claimed.
+`P65-UAT-004`; the follow-up frozen Easy rerun is accepted, so revised
+`STABLE-01` is 1 / 3. `P65-UAT-005` is resolved at the input-contract layer by
+successor `STD-M-OFF-02`, but its live verification remains pending.
+`P65-UAT-006` and `P65-UAT-007` remain open. Existing Easy, Medium, and Hard
+artifacts remain valid historical evidence. No repeated-run statistical rate is
+claimed.

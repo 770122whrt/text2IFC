@@ -7,13 +7,13 @@ See: `.planning/PROJECT.md` (updated 2026-06-11)
 **Core value:** Produce valid, inspectable IFC models from explicit user
 requirements.
 
-**Current focus:** Phase 6.5 Wave 10 Easy projection repair; P65-UAT-004 is
-resolved deterministically, while live STABLE-01 remains 0 / 3.
+**Current focus:** Phase 6.5 standard-input acceptance; Easy is accepted and
+reopenable, Medium has an explicit successor input, and live STABLE-01 is 1 / 3.
 
 ## Status
 
 - Phase: 6.5
-- Stage: Prompt identity repaired; three frozen provider runs complete; 0 / 3 IFC accepted
+- Stage: Easy real-provider IFC accepted; corrected Medium input ready; 1 / 3 IFC accepted
 - State: Phase 6.2-fix Waves 0-2 are implemented and automatically verified.
   Wave 3 real UAT
   produced useful live evidence and fixed defects 001/002, then exposed defect
@@ -570,12 +570,11 @@ resolved deterministically, while live STABLE-01 remains 0 / 3.
 
 ## Next Action
 
-Keep the live acceptance boundary honest: do not count the offline Wave 10
-projection as a provider acceptance. The next executable work is the separate
-triage of `P65-UAT-005` through `P65-UAT-007`: decide Medium corridor
-enclosure policy, then plan bounded Difficult-response truncation handling and
-failure-result persistence. `STABLE-01` remains incomplete until all three
-frozen inputs produce accepted reopenable IFC artifacts.
+Run explicit successor `STD-M-OFF-02` through the real provider and retain the
+original `STD-M-OFF-01` Draft as historical ambiguity evidence. Then plan
+bounded Difficult-response truncation handling and failure-result persistence
+for `P65-UAT-006` and `P65-UAT-007`. `STABLE-01` remains incomplete until Easy,
+Medium, and Difficult each produce accepted reopenable IFC artifacts.
 
 ## Accumulated Context
 
@@ -776,10 +775,10 @@ frozen inputs produce accepted reopenable IFC artifacts.
   responses.
 
 ---
-*Last activity: 2026-07-16 - completed Phase 6.5 Wave 10. The canonical
-single-storey Prompt/few-shot contract, bounded legacy room migration, and
-fail-closed empty projection guard are implemented. Offline Easy projection
-reports 1 storey, 1 space, 4 walls, 1 door, and 1 window; focused tests passed
-36 and the full Agent regression passed 546. No live provider rerun occurred,
-so STABLE-01 remains 0 / 3 and is not reported as a statistical stability
-rate. P65-UAT-004 is resolved; P65-UAT-005 through P65-UAT-007 remain open.*
+*Last activity: 2026-07-16 - reran frozen Easy `STD-E-RES-01` through the real
+DeepSeek-compatible provider. Session `d2f86855a9738b50` compiled and reopened
+as IFC2X3 with 1 storey, 1 space, 4 walls, 1 slab, 1 door, 1 window, and 2
+openings; all applicable gates passed and preservation rate was 1.0. Added
+successor Medium input `STD-M-OFF-02` with an explicit closed perimeter while
+preserving the original Draft evidence. STABLE-01 is 1 / 3; corrected Medium
+live verification and Difficult truncation/reporting work remain.*

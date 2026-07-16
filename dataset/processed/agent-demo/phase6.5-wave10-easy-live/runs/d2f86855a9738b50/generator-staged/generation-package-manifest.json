@@ -1,0 +1,64 @@
+{
+  "issues": [],
+  "packages": [
+    {
+      "allowed_reference_ids": [],
+      "kind": "skeleton",
+      "owned_component_ids": [
+        "project-main",
+        "site-main",
+        "building-main",
+        "storey-1"
+      ],
+      "owned_relationship_ids": [
+        "aggregate-project-site",
+        "aggregate-site-building",
+        "aggregate-building-storeys"
+      ],
+      "package_id": "package-skeleton",
+      "storey_id": null
+    },
+    {
+      "allowed_reference_ids": [
+        "storey-1",
+        "wall-north",
+        "wall-south"
+      ],
+      "kind": "storey_local",
+      "owned_component_ids": [
+        "wall-south",
+        "wall-north",
+        "wall-west",
+        "wall-east",
+        "space-room",
+        "door-south",
+        "opening-door-south",
+        "window-north",
+        "opening-window-north"
+      ],
+      "owned_relationship_ids": [
+        "rel-voids-door-south",
+        "rel-fills-door-south",
+        "rel-voids-window-north",
+        "rel-fills-window-north"
+      ],
+      "package_id": "package-storey-1",
+      "storey_id": "storey-1"
+    },
+    {
+      "allowed_reference_ids": [
+        "storey-1"
+      ],
+      "kind": "cross_storey",
+      "owned_component_ids": [
+        "floor-slab-1"
+      ],
+      "owned_relationship_ids": [],
+      "package_id": "package-cross-storey",
+      "storey_id": null
+    }
+  ],
+  "schema_version": "text2ifc/generation-package-manifest/1.0",
+  "status": "ready",
+  "storey_count": 1
+}

@@ -1,0 +1,381 @@
+{
+  "schema_version": "text2ifc/bim-json-changeset/1.0",
+  "changeset_id": "changeset-package-storey-1",
+  "base_revision_id": "revision-00",
+  "base_candidate_hash": "sha256:ebbb45d31d9bc12dac7461354eda814be9582943be4a2e6c486852199057a379",
+  "expected_facts_hash": "sha256:6dcfd1caa280cbc5ab0c125125d2b001f23fc7983f6d560a3e1cd8a41c605fe2",
+  "source_issue_ids": ["issue-package-storey-1"],
+  "scope_id": "scope-package-1",
+  "operations": [
+    {
+      "op": "add_entity",
+      "operation_id": "add-wall-south",
+      "target_id": "wall-south",
+      "value": {
+        "id": "wall-south",
+        "ifc_class": "IfcWall",
+        "attributes": {
+          "Name": "South wall",
+          "ObjectPlacement": {
+            "origin": [3000, -100, 0],
+            "axis": [0, 0, 1],
+            "ref_direction": [1, 0, 0],
+            "relative_to": "storey-1"
+          },
+          "Representation": {
+            "kind": "extruded_profile",
+            "profile": {
+              "kind": "rectangle",
+              "x": 6000,
+              "y": 200
+            },
+            "depth": 3000,
+            "direction": [0, 0, 1]
+          }
+        },
+        "property_sets": {},
+        "provenance": {
+          "source": "issue-package-storey-1"
+        }
+      },
+      "evidence_refs": ["issue-package-storey-1:/expected"]
+    },
+    {
+      "op": "add_entity",
+      "operation_id": "add-wall-north",
+      "target_id": "wall-north",
+      "value": {
+        "id": "wall-north",
+        "ifc_class": "IfcWall",
+        "attributes": {
+          "Name": "North wall",
+          "ObjectPlacement": {
+            "origin": [3000, 4100, 0],
+            "axis": [0, 0, 1],
+            "ref_direction": [1, 0, 0],
+            "relative_to": "storey-1"
+          },
+          "Representation": {
+            "kind": "extruded_profile",
+            "profile": {
+              "kind": "rectangle",
+              "x": 6000,
+              "y": 200
+            },
+            "depth": 3000,
+            "direction": [0, 0, 1]
+          }
+        },
+        "property_sets": {},
+        "provenance": {
+          "source": "issue-package-storey-1"
+        }
+      },
+      "evidence_refs": ["issue-package-storey-1:/expected"]
+    },
+    {
+      "op": "add_entity",
+      "operation_id": "add-wall-west",
+      "target_id": "wall-west",
+      "value": {
+        "id": "wall-west",
+        "ifc_class": "IfcWall",
+        "attributes": {
+          "Name": "West wall",
+          "ObjectPlacement": {
+            "origin": [-100, 2000, 0],
+            "axis": [0, 0, 1],
+            "ref_direction": [0, 1, 0],
+            "relative_to": "storey-1"
+          },
+          "Representation": {
+            "kind": "extruded_profile",
+            "profile": {
+              "kind": "rectangle",
+              "x": 4000,
+              "y": 200
+            },
+            "depth": 3000,
+            "direction": [0, 0, 1]
+          }
+        },
+        "property_sets": {},
+        "provenance": {
+          "source": "issue-package-storey-1"
+        }
+      },
+      "evidence_refs": ["issue-package-storey-1:/expected"]
+    },
+    {
+      "op": "add_entity",
+      "operation_id": "add-wall-east",
+      "target_id": "wall-east",
+      "value": {
+        "id": "wall-east",
+        "ifc_class": "IfcWall",
+        "attributes": {
+          "Name": "East wall",
+          "ObjectPlacement": {
+            "origin": [6100, 2000, 0],
+            "axis": [0, 0, 1],
+            "ref_direction": [0, 1, 0],
+            "relative_to": "storey-1"
+          },
+          "Representation": {
+            "kind": "extruded_profile",
+            "profile": {
+              "kind": "rectangle",
+              "x": 4000,
+              "y": 200
+            },
+            "depth": 3000,
+            "direction": [0, 0, 1]
+          }
+        },
+        "property_sets": {},
+        "provenance": {
+          "source": "issue-package-storey-1"
+        }
+      },
+      "evidence_refs": ["issue-package-storey-1:/expected"]
+    },
+    {
+      "op": "add_entity",
+      "operation_id": "add-space-room",
+      "target_id": "space-room",
+      "value": {
+        "id": "space-room",
+        "ifc_class": "IfcSpace",
+        "attributes": {
+          "Name": "Room",
+          "InteriorOrExteriorSpace": "INTERNAL",
+          "ObjectPlacement": {
+            "origin": [3000, 2000, 0],
+            "axis": [0, 0, 1],
+            "ref_direction": [1, 0, 0],
+            "relative_to": "storey-1"
+          },
+          "Representation": {
+            "kind": "extruded_profile",
+            "profile": {
+              "kind": "rectangle",
+              "x": 6000,
+              "y": 4000
+            },
+            "depth": 3000,
+            "direction": [0, 0, 1]
+          }
+        },
+        "property_sets": {},
+        "provenance": {
+          "source": "issue-package-storey-1"
+        }
+      },
+      "evidence_refs": ["issue-package-storey-1:/expected"]
+    },
+    {
+      "op": "add_entity",
+      "operation_id": "add-opening-door-south",
+      "target_id": "opening-door-south",
+      "value": {
+        "id": "opening-door-south",
+        "ifc_class": "IfcOpeningElement",
+        "attributes": {
+          "Name": "Door opening",
+          "ObjectPlacement": {
+            "origin": [0, 0, 0],
+            "axis": [0, 0, 1],
+            "ref_direction": [1, 0, 0],
+            "relative_to": "wall-south"
+          },
+          "Representation": {
+            "kind": "extruded_profile",
+            "profile": {
+              "kind": "rectangle",
+              "x": 900,
+              "y": 200
+            },
+            "depth": 2100,
+            "direction": [0, 0, 1]
+          }
+        },
+        "property_sets": {},
+        "provenance": {
+          "source": "issue-package-storey-1"
+        }
+      },
+      "evidence_refs": ["issue-package-storey-1:/expected"]
+    },
+    {
+      "op": "add_entity",
+      "operation_id": "add-door-south",
+      "target_id": "door-south",
+      "value": {
+        "id": "door-south",
+        "ifc_class": "IfcDoor",
+        "attributes": {
+          "Name": "South door",
+          "OverallHeight": 2100,
+          "OverallWidth": 900,
+          "ObjectPlacement": {
+            "origin": [0, 0, 0],
+            "axis": [0, 0, 1],
+            "ref_direction": [1, 0, 0],
+            "relative_to": "opening-door-south"
+          },
+          "Representation": {
+            "kind": "extruded_profile",
+            "profile": {
+              "kind": "rectangle",
+              "x": 900,
+              "y": 200
+            },
+            "depth": 2100,
+            "direction": [0, 0, 1]
+          }
+        },
+        "property_sets": {},
+        "provenance": {
+          "source": "issue-package-storey-1"
+        }
+      },
+      "evidence_refs": ["issue-package-storey-1:/expected"]
+    },
+    {
+      "op": "add_entity",
+      "operation_id": "add-opening-window-north",
+      "target_id": "opening-window-north",
+      "value": {
+        "id": "opening-window-north",
+        "ifc_class": "IfcOpeningElement",
+        "attributes": {
+          "Name": "Window opening",
+          "ObjectPlacement": {
+            "origin": [0, 0, 900],
+            "axis": [0, 0, 1],
+            "ref_direction": [1, 0, 0],
+            "relative_to": "wall-north"
+          },
+          "Representation": {
+            "kind": "extruded_profile",
+            "profile": {
+              "kind": "rectangle",
+              "x": 1500,
+              "y": 200
+            },
+            "depth": 1200,
+            "direction": [0, 0, 1]
+          }
+        },
+        "property_sets": {},
+        "provenance": {
+          "source": "issue-package-storey-1"
+        }
+      },
+      "evidence_refs": ["issue-package-storey-1:/expected"]
+    },
+    {
+      "op": "add_entity",
+      "operation_id": "add-window-north",
+      "target_id": "window-north",
+      "value": {
+        "id": "window-north",
+        "ifc_class": "IfcWindow",
+        "attributes": {
+          "Name": "North window",
+          "OverallHeight": 1200,
+          "OverallWidth": 1500,
+          "ObjectPlacement": {
+            "origin": [0, 0, 0],
+            "axis": [0, 0, 1],
+            "ref_direction": [1, 0, 0],
+            "relative_to": "opening-window-north"
+          },
+          "Representation": {
+            "kind": "extruded_profile",
+            "profile": {
+              "kind": "rectangle",
+              "x": 1500,
+              "y": 200
+            },
+            "depth": 1200,
+            "direction": [0, 0, 1]
+          }
+        },
+        "property_sets": {},
+        "provenance": {
+          "source": "issue-package-storey-1"
+        }
+      },
+      "evidence_refs": ["issue-package-storey-1:/expected"]
+    },
+    {
+      "op": "add_relationship",
+      "operation_id": "add-rel-voids-door-south",
+      "target_id": "rel-voids-door-south",
+      "value": {
+        "id": "rel-voids-door-south",
+        "ifc_class": "IfcRelVoidsElement",
+        "attributes": {
+          "RelatingBuildingElement": "wall-south",
+          "RelatedOpeningElement": "opening-door-south"
+        },
+        "provenance": {
+          "source": "issue-package-storey-1"
+        }
+      },
+      "evidence_refs": ["issue-package-storey-1:/expected"]
+    },
+    {
+      "op": "add_relationship",
+      "operation_id": "add-rel-fills-door-south",
+      "target_id": "rel-fills-door-south",
+      "value": {
+        "id": "rel-fills-door-south",
+        "ifc_class": "IfcRelFillsElement",
+        "attributes": {
+          "RelatingOpeningElement": "opening-door-south",
+          "RelatedBuildingElement": "door-south"
+        },
+        "provenance": {
+          "source": "issue-package-storey-1"
+        }
+      },
+      "evidence_refs": ["issue-package-storey-1:/expected"]
+    },
+    {
+      "op": "add_relationship",
+      "operation_id": "add-rel-voids-window-north",
+      "target_id": "rel-voids-window-north",
+      "value": {
+        "id": "rel-voids-window-north",
+        "ifc_class": "IfcRelVoidsElement",
+        "attributes": {
+          "RelatingBuildingElement": "wall-north",
+          "RelatedOpeningElement": "opening-window-north"
+        },
+        "provenance": {
+          "source": "issue-package-storey-1"
+        }
+      },
+      "evidence_refs": ["issue-package-storey-1:/expected"]
+    },
+    {
+      "op": "add_relationship",
+      "operation_id": "add-rel-fills-window-north",
+      "target_id": "rel-fills-window-north",
+      "value": {
+        "id": "rel-fills-window-north",
+        "ifc_class": "IfcRelFillsElement",
+        "attributes": {
+          "RelatingOpeningElement": "opening-window-north",
+          "RelatedBuildingElement": "window-north"
+        },
+        "provenance": {
+          "source": "issue-package-storey-1"
+        }
+      },
+      "evidence_refs": ["issue-package-storey-1:/expected"]
+    }
+  ]
+}

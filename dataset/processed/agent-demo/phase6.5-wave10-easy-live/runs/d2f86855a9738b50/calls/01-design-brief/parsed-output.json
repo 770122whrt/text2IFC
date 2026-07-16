@@ -1,0 +1,135 @@
+{
+  "ambiguities": [],
+  "clarification_questions": [],
+  "fact_sources": [
+    {
+      "evidence_refs": [
+        "schema:bim-json-v2:entity",
+        "schema:bim-json-v2:representation",
+        "capability:IFC2X3:IfcSpace",
+        "capability:IFC2X3:IfcWall",
+        "capability:IFC2X3:IfcDoor",
+        "capability:IFC2X3:IfcWindow",
+        "capability:IFC2X3:IfcBuildingStorey",
+        "capability:IFC2X3:IfcSlab",
+        "capability:IFC2X3:IfcOpeningElement",
+        "capability:IFC2X3:IfcRelVoidsElement",
+        "capability:IFC2X3:IfcRelFillsElement"
+      ],
+      "path": "/known_facts",
+      "source_turns": [
+        "turn-user-001"
+      ]
+    }
+  ],
+  "known_facts": {
+    "floor_slabs": [
+      {
+        "id": "floor-slab-1",
+        "owning_storey": "storey-1",
+        "thickness_mm": 150,
+        "top_elevation_mm": 0
+      }
+    ],
+    "storeys": [
+      {
+        "doors": [
+          {
+            "alignment": "host_centerline",
+            "height_mm": 2100,
+            "host_wall": "wall-south",
+            "id": "door-south",
+            "open_direction": "inside",
+            "width_mm": 900
+          }
+        ],
+        "elevation_mm": 0,
+        "id": "storey-1",
+        "net_height_mm": 3000,
+        "spaces": [
+          {
+            "bounds": {
+              "x": [
+                0,
+                6000
+              ],
+              "y": [
+                0,
+                4000
+              ]
+            },
+            "id": "space-room",
+            "shape": "rectangle"
+          }
+        ],
+        "walls": {
+          "exterior": [
+            {
+              "height_mm": 3000,
+              "id": "wall-south",
+              "side": "south",
+              "thickness_mm": 200
+            },
+            {
+              "height_mm": 3000,
+              "id": "wall-north",
+              "side": "north",
+              "thickness_mm": 200
+            },
+            {
+              "height_mm": 3000,
+              "id": "wall-west",
+              "side": "west",
+              "thickness_mm": 200
+            },
+            {
+              "height_mm": 3000,
+              "id": "wall-east",
+              "side": "east",
+              "thickness_mm": 200
+            }
+          ],
+          "interior": []
+        },
+        "windows": [
+          {
+            "alignment": "host_centerline",
+            "height_mm": 1200,
+            "host_wall": "wall-north",
+            "id": "window-north",
+            "sill_height_mm": 900,
+            "width_mm": 1500
+          }
+        ]
+      }
+    ]
+  },
+  "language": "zh-CN",
+  "missing_facts": [],
+  "original_request": "## 2.2 Easy：单个矩形房间\n\n创建一个单层矩形房间，房间净尺寸为东西方向 6 米、南北方向 4 米，净高 3 米。\n\n墙厚 200 毫米，地板厚 150 毫米。\n\n在南侧外墙中央设置一樘外门，门宽 0.9 米、高 2.1 米，向室内开启。\n\n在北侧外墙中央设置一扇窗，窗宽 1.5 米、高 1.2 米，窗台距地面 0.9 米。\n\n生成楼层、房间空间、四面墙、地板、门和窗，并确保门窗正确依附在对应墙体中。房间应生成对应的 `IfcSpace`。",
+  "provenance": {
+    "few_shot_ids": [
+      "design-brief-v2.complete-room-openings"
+    ],
+    "selected_evidence_ids": [
+      "schema:bim-json-v2:entity",
+      "schema:bim-json-v2:representation",
+      "capability:IFC2X3:IfcSpace",
+      "capability:IFC2X3:IfcWall",
+      "capability:IFC2X3:IfcDoor",
+      "capability:IFC2X3:IfcWindow",
+      "capability:IFC2X3:IfcBuildingStorey",
+      "capability:IFC2X3:IfcSlab",
+      "capability:IFC2X3:IfcOpeningElement",
+      "capability:IFC2X3:IfcRelVoidsElement",
+      "capability:IFC2X3:IfcRelFillsElement"
+    ],
+    "source_turns": [
+      "turn-user-001"
+    ]
+  },
+  "schema_version": "text2ifc/design-brief/2.0",
+  "status": "ready",
+  "unsupported_requests": [],
+  "user_corrections": []
+}
