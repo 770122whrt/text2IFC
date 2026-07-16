@@ -115,6 +115,30 @@ def test_frozen_manifest_loader_preserves_input_and_rejects_hash_drift(tmp_path)
         run_phase6_5_live_stability.load_frozen_manifest(manifest_path)
 
 
+def test_difficult_successor_freezes_wall_passage_and_five_opening_guards():
+    manifest_path = Path(
+        "dataset/processed/agent-demo/phase6.5-wave8-observation/manifests/"
+        "STD-D-MUL-03.json"
+    )
+
+    payload = run_phase6_5_live_stability.load_frozen_manifest(manifest_path)
+    text = payload["input"]
+
+    assert payload["case_id"] == "STD-D-MUL-03"
+    assert payload["supersedes"] == "STD-D-MUL-02"
+    assert payload["model_output"] is None
+    assert "x=9900..11100, y=4000..7750" in text
+    assert "[11000,7750,0]" in text
+    assert "x=7000..9900" in text
+    assert "[11100,5000]` 到 `[12000,5000]" in text
+    assert text.count("railing-stair-opening-") == 3
+    assert "5 个 `IfcRailing`" in text
+    source_path = Path(payload["source_path"])
+    assert hashlib.sha256(source_path.read_bytes()).hexdigest() == payload[
+        "source_sha256"
+    ]
+
+
 def test_live_harness_exposes_graded_cases_with_single_run_defaults():
     parser = run_phase6_5_live_stability.build_parser()
     case_action = next(action for action in parser._actions if action.dest == "case")
