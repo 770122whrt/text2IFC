@@ -5,6 +5,7 @@ import pytest
 
 from text2ifc_agent.gate_audit_bundle import hash_json_file
 from text2ifc_agent.expected_facts import (
+    ExpectedFactsError,
     build_expected_facts,
     write_expected_facts,
 )
@@ -190,6 +191,30 @@ def test_expected_facts_projects_explicit_railings_as_linear_products():
     assert {"railing-atrium-north", "railing-atrium-west"} <= set(
         storey_package["owned_component_ids"]
     )
+
+
+def test_expected_facts_rejects_product_family_class_override():
+    design_brief = {
+        "schema_version": "text2ifc/design-brief/2.0",
+        "status": "ready",
+        "known_facts": {
+            "storeys": [{"id": "storey-2", "elevation_mm": 3300}],
+            "railings": [
+                {
+                    "id": "railing-atrium-north",
+                    "ifc_class": "IfcWall",
+                    "storey": "storey-2",
+                    "start_mm": [6000, 3000, 3300],
+                    "end_mm": [12000, 3000, 3300],
+                    "height_mm": 1100,
+                    "thickness_mm": 50,
+                }
+            ],
+        },
+    }
+
+    with pytest.raises(ExpectedFactsError, match="DESIGN_BRIEF_PRODUCT_CLASS_CONFLICT"):
+        build_expected_facts(case_id="railing-class-conflict", design_brief=design_brief)
 
 
 def test_incomplete_railing_product_blocks_package_generation():
