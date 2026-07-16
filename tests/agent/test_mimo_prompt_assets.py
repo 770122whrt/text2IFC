@@ -132,6 +132,7 @@ def test_design_brief_v21_defines_canonical_multistorey_structure():
     assert "Canonical Design Brief storey structure" in text
     assert "including a single-storey building" in text
     assert "Use `elevation_mm`; do not use `level` as a substitute" in text
+    assert "Do not create singular top-level `storey`, `space`, `door`, or `window` keys" in text
     assert "Do not create top-level `storey_1`, `storey_2`, `spaces_ground`, `spaces_first`, or generic `openings`" in text
     assert "Put doors and windows inside the storey that owns their host wall" in text
     assert "Use exactly `host_wall`" in text
@@ -179,7 +180,17 @@ def test_design_brief_few_shots_include_valid_standard_two_storey_contract():
             "thickness_mm": 150,
         },
     ]
+    assert known["roof_slab"] == {
+        "id": "roof-slab",
+        "bottom_elevation_mm": 6150,
+        "thickness_mm": 150,
+    }
 
+    evidence_catalog = [
+        {"evidence_id": evidence_id}
+        for evidence_id in output["provenance"]["selected_evidence_ids"]
+    ]
+    assert validate_design_brief(output, evidence_catalog=evidence_catalog) == []
 
 def test_design_brief_few_shot_complete_room_uses_canonical_single_storey_contract():
     payload = json.loads(DESIGN_BRIEF_FEW_SHOTS.read_text(encoding="utf-8"))
@@ -201,18 +212,7 @@ def test_design_brief_few_shot_complete_room_uses_canonical_single_storey_contra
     assert storey["walls"].get("interior") == []
     assert len(storey["doors"]) == 1
     assert len(storey["windows"]) == 1
-    assert known["roof_slab"] == {
-        "id": "roof-slab",
-        "bottom_elevation_mm": 6150,
-        "thickness_mm": 150,
-    }
 
-    evidence_catalog = [
-        {"evidence_id": evidence_id}
-        for evidence_id in output["provenance"]["selected_evidence_ids"]
-    ]
-    assert validate_design_brief(output, evidence_catalog=evidence_catalog) == []
- 
 def test_audit_v2_understands_parent_relative_centered_openings():
     text = AUDIT_V2.read_text(encoding="utf-8")
 

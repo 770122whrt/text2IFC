@@ -989,7 +989,7 @@ IFC5/IFCX, import or edit existing IFC, add RAG/fine-tuning, redesign the Formal
 BIM JSON schema, or package a service. Existing-IFC natural-language completion
 is reserved for a later phase that may reuse the ChangeSet revision interface.
 
-**Plans:** 11 plans including supplemental Waves 7, 7.1, 8, and 9
+**Plans:** 12 plans including supplemental Waves 7, 7.1, 8, 9, and 10
 
 **Wave 0**
 
@@ -1053,6 +1053,13 @@ is reserved for a later phase that may reuse the ChangeSet revision interface.
   corridor enclosure, and Difficult truncated during Design Brief. Zero IFC
   artifacts were accepted.
 
+**Easy projection contract repair**
+
+- [x] `06.5-10-PLAN.md` - Canonicalize single-storey Design Brief facts,
+  reject empty ready projections, and preserve a bounded historical migration.
+- [x] `06.5-10-SUMMARY.md` - Offline Easy projection passes exact 1/1/4/1/1
+  inventory and full Agent regression; no real-provider rerun is claimed.
+
 **Cross-cutting constraints:**
 
 - Formal BIM JSON 2.0 JSON Schema remains the single model truth.
@@ -1072,8 +1079,9 @@ is reserved for a later phase that may reuse the ChangeSet revision interface.
 
 **Status:** Historical Phase 6.5 graded acceptance is complete. Wave 9 resolved
 the Prompt Registry portability blocker and all three frozen cases reached the
-real provider, but revised `STABLE-01` remains incomplete at 0 / 3 accepted IFC
-artifacts. Downstream issues `P65-UAT-004` through `P65-UAT-007` await separate
-triage. Existing Easy, Medium, and Hard artifacts remain valid historical
+real provider. Wave 10 resolved the deterministic Easy projection defect
+`P65-UAT-004`; revised `STABLE-01` remains incomplete at 0 / 3 accepted IFC
+artifacts because no live rerun was claimed. `P65-UAT-005` through `P65-UAT-007`
+remain open. Existing Easy, Medium, and Hard artifacts remain valid historical
 evidence but do not substitute for these inputs. No repeated-run statistical
 rate is claimed.

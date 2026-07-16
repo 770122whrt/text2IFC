@@ -7,7 +7,8 @@ See: `.planning/PROJECT.md` (updated 2026-06-11)
 **Core value:** Produce valid, inspectable IFC models from explicit user
 requirements.
 
-**Current focus:** Phase 6.5 Wave 9 downstream triage after registry repair
+**Current focus:** Phase 6.5 Wave 10 Easy projection repair; P65-UAT-004 is
+resolved deterministically, while live STABLE-01 remains 0 / 3.
 
 ## Status
 
@@ -569,12 +570,12 @@ requirements.
 
 ## Next Action
 
-Triage `P65-UAT-004` through `P65-UAT-007` as one downstream batch. Decide the
-semantic policy for implied corridor enclosure before implementation. Then
-plan deterministic Design Brief fact-shape normalization, provider truncation
-handling, and failure-result persistence without tuning Prompt content against
-one case. `STABLE-01` remains incomplete until all three frozen inputs produce
-accepted reopenable IFC artifacts.
+Keep the live acceptance boundary honest: do not count the offline Wave 10
+projection as a provider acceptance. The next executable work is the separate
+triage of `P65-UAT-005` through `P65-UAT-007`: decide Medium corridor
+enclosure policy, then plan bounded Difficult-response truncation handling and
+failure-result persistence. `STABLE-01` remains incomplete until all three
+frozen inputs produce accepted reopenable IFC artifacts.
 
 ## Accumulated Context
 
@@ -775,12 +776,10 @@ accepted reopenable IFC artifacts.
   responses.
 
 ---
-*Last activity: 2026-07-16 - completed Phase 6.5 Wave 9. Prompt identity is now
-portable across CRLF/LF checkouts, the frozen-manifest live runner is tested,
-and all three standard inputs reached the real DeepSeek-compatible provider.
-Easy stopped on empty generation authorization, Medium remained Draft on one
-enclosure clarification, and Difficult failed closed on a truncated Design
-Brief response. No IFC was produced; the zero-finding secret scan covered 106
-artifact files. Issues `P65-UAT-004` through `P65-UAT-007` are awaiting triage;
-one accepted case per historical difficulty is not
-reported as a statistical stability rate.*
+*Last activity: 2026-07-16 - completed Phase 6.5 Wave 10. The canonical
+single-storey Prompt/few-shot contract, bounded legacy room migration, and
+fail-closed empty projection guard are implemented. Offline Easy projection
+reports 1 storey, 1 space, 4 walls, 1 door, and 1 window; focused tests passed
+35 and the full Agent regression passed 546. No live provider rerun occurred,
+so STABLE-01 remains 0 / 3 and is not reported as a statistical stability
+rate. P65-UAT-004 is resolved; P65-UAT-005 through P65-UAT-007 remain open.*

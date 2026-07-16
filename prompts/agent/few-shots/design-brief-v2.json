@@ -16,10 +16,21 @@
         "language": "zh-CN",
         "original_request": "创建一个矩形房间，但我还不知道宽度。",
         "status": "needs_clarification",
-        "known_facts": {"space": {"shape": "rectangle"}},
+        "known_facts": {
+          "storeys": [
+            {
+              "id": "storey-1",
+              "elevation_mm": 0,
+              "spaces": [{"id": "space-room", "shape": "rectangle"}],
+              "walls": {"exterior": [], "interior": []},
+              "doors": [],
+              "windows": []
+            }
+          ]
+        },
         "fact_sources": [
           {
-            "path": "/known_facts/space/shape",
+            "path": "/known_facts/storeys/0/spaces/0/shape",
             "source_turns": ["turn-user-001"],
             "evidence_refs": ["schema:bim-json-v2:representation"]
           }
@@ -28,7 +39,7 @@
           {
             "id": "mf-space-width",
             "code": "SPACE_WIDTH_MISSING",
-            "path": "/known_facts/space/width_mm",
+            "path": "/known_facts/storeys/0/spaces/0/width_mm",
             "message": "矩形房间宽度尚未确定。",
             "reason": "用户要求生成矩形房间，矩形轮廓需要宽度；用户明确表示该值未知。",
             "blocking": true,
@@ -71,10 +82,31 @@
         "original_request": "创建一个6米乘4米、高3米的矩形房间，墙厚300毫米；南墙中央有一扇0.9米乘2.1米的门，北墙中央有一扇1.2米乘1.5米、窗台高0.9米的窗。",
         "status": "ready",
         "known_facts": {
-          "space": {"shape": "rectangle", "length_mm": 6000, "width_mm": 4000, "height_mm": 3000},
-          "walls": {"count": 4, "enclosure": "closed", "thickness_mm": 300},
-          "door": {"host": "south_wall", "alignment": "host_centerline", "width_mm": 900, "height_mm": 2100},
-          "window": {"host": "north_wall", "alignment": "host_centerline", "width_mm": 1200, "height_mm": 1500, "sill_height_mm": 900}
+          "storeys": [
+            {
+              "id": "storey-1",
+              "elevation_mm": 0,
+              "net_height_mm": 3000,
+              "spaces": [
+                {"id": "space-room", "shape": "rectangle", "bounds": {"x": [0, 6000], "y": [0, 4000]}}
+              ],
+              "walls": {
+                "exterior": [
+                  {"id": "wall-south", "side": "south", "thickness_mm": 300, "height_mm": 3000},
+                  {"id": "wall-north", "side": "north", "thickness_mm": 300, "height_mm": 3000},
+                  {"id": "wall-west", "side": "west", "thickness_mm": 300, "height_mm": 3000},
+                  {"id": "wall-east", "side": "east", "thickness_mm": 300, "height_mm": 3000}
+                ],
+                "interior": []
+              },
+              "doors": [
+                {"id": "door-south", "host_wall": "wall-south", "alignment": "host_centerline", "width_mm": 900, "height_mm": 2100}
+              ],
+              "windows": [
+                {"id": "window-north", "host_wall": "wall-north", "alignment": "host_centerline", "width_mm": 1200, "height_mm": 1500, "sill_height_mm": 900}
+              ]
+            }
+          ]
         },
         "fact_sources": [
           {
@@ -120,10 +152,31 @@
         "original_request": "请创建一个单层矩形房间，长6米、宽4米、高3米；四面墙闭合，南墙中央设置一扇宽0.9米、高2.1米的门，北墙中央设置一扇宽1.2米、高1.5米、窗台高0.9米的窗。",
         "status": "draft_required",
         "known_facts": {
-          "space": {"shape": "rectangle", "length_mm": 6000, "width_mm": 4000, "height_mm": 3000},
-          "walls": {"count": 4, "enclosure": "closed"},
-          "door": {"host": "south_wall", "alignment": "host_centerline", "width_mm": 900, "height_mm": 2100},
-          "window": {"host": "north_wall", "alignment": "host_centerline", "width_mm": 1200, "height_mm": 1500, "sill_height_mm": 900}
+          "storeys": [
+            {
+              "id": "storey-1",
+              "elevation_mm": 0,
+              "net_height_mm": 3000,
+              "spaces": [
+                {"id": "space-room", "shape": "rectangle", "bounds": {"x": [0, 6000], "y": [0, 4000]}}
+              ],
+              "walls": {
+                "exterior": [
+                  {"id": "wall-south", "side": "south"},
+                  {"id": "wall-north", "side": "north"},
+                  {"id": "wall-west", "side": "west"},
+                  {"id": "wall-east", "side": "east"}
+                ],
+                "interior": []
+              },
+              "doors": [
+                {"id": "door-south", "host_wall": "wall-south", "alignment": "host_centerline", "width_mm": 900, "height_mm": 2100}
+              ],
+              "windows": [
+                {"id": "window-north", "host_wall": "wall-north", "alignment": "host_centerline", "width_mm": 1200, "height_mm": 1500, "sill_height_mm": 900}
+              ]
+            }
+          ]
         },
         "fact_sources": [
           {
@@ -136,7 +189,7 @@
           {
             "id": "mf-wall-thickness",
             "code": "WALL_THICKNESS_MISSING",
-            "path": "/known_facts/walls/thickness_mm",
+            "path": "/known_facts/storeys/0/walls/exterior/0/thickness_mm",
             "message": "墙体厚度尚未确定。",
             "reason": "用户要求闭合墙体，但在追问后明确表示不知道墙体厚度；该阻塞事实不能由系统默认补齐。",
             "blocking": true,
@@ -177,10 +230,20 @@
         "language": "zh-CN",
         "original_request": "创建一扇复杂联动上悬窗，并保留完整窗扇开启机构语义。",
         "status": "draft_required",
-        "known_facts": {"window": {"operation_semantics": "复杂联动上悬"}},
+        "known_facts": {
+          "storeys": [
+            {
+              "id": "storey-1",
+              "elevation_mm": 0,
+              "windows": [
+                {"id": "window-1", "operation_semantics": "复杂联动上悬"}
+              ]
+            }
+          ]
+        },
         "fact_sources": [
           {
-            "path": "/known_facts/window/operation_semantics",
+            "path": "/known_facts/storeys/0/windows/0/operation_semantics",
             "source_turns": ["turn-user-001"],
             "evidence_refs": ["capability:IFC2X3:IfcWindow"]
           }
@@ -190,7 +253,7 @@
         "unsupported_requests": [
           {
             "id": "unsupported-window-style",
-            "path": "/known_facts/window/operation_semantics",
+            "path": "/known_facts/storeys/0/windows/0/operation_semantics",
             "message": "当前生成能力不能保真表达所要求的完整窗扇开启机构。",
             "reason": "用户明确要求该语义，且 IfcWindowStyle 能力记录为 unsupported。",
             "blocking": true,

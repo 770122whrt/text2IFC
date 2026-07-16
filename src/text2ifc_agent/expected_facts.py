@@ -14,6 +14,10 @@ from .generation_packages import build_generation_package_manifest
 EXPECTED_FACTS_SCHEMA_VERSION = "text2ifc/expected-facts/1.0"
 
 
+class ExpectedFactsError(ValueError):
+    """Raised when a Design Brief cannot be projected safely."""
+
+
 def build_expected_facts(
     *,
     case_id: str,
@@ -22,6 +26,7 @@ def build_expected_facts(
     """Build dynamic expected facts without mutating the Design Brief."""
     known = design_brief.get("known_facts", {})
     known_facts = known if isinstance(known, Mapping) else {}
+    known_facts = _migrate_legacy_single_storey_facts(known_facts)
     nested_storeys = _nested_storeys(known_facts.get("storeys"))
     if nested_storeys:
         storeys = _storey_records_from_nested(nested_storeys)
@@ -155,6 +160,11 @@ def build_expected_facts(
         or _stair_records_from_nested(nested_storeys, storeys)
     )
     roof = _roof_record(known_facts)
+    if design_brief.get("status") == "ready" and not storeys:
+        raise ExpectedFactsError(
+            "DESIGN_BRIEF_PROJECTION_EMPTY: ready Design Brief has no canonical "
+            "known_facts.storeys[] and cannot enter generation."
+        )
     entity_id_contract = _build_entity_id_contract(
         walls=walls,
         spaces=spaces,
@@ -214,6 +224,95 @@ def build_expected_facts(
         payload["fixture_reuse"] = deepcopy(dict(fixture_reuse))
     payload["generation_package_manifest"] = build_generation_package_manifest(payload)
     return payload
+
+
+def _migrate_legacy_single_storey_facts(
+    known_facts: Mapping[str, Any],
+) -> Mapping[str, Any]:
+    """Normalize the bounded historical complete-room dialect for projection.
+
+    This is intentionally a one-shape migration, not a general alias layer. It
+    only runs when the legacy brief explicitly contains a complete rectangular
+    room, four closed walls, and a wall thickness.
+    """
+
+    if known_facts.get("storeys") is not None:
+        return known_facts
+    space = known_facts.get("space")
+    walls = known_facts.get("walls")
+    if not isinstance(space, Mapping) or not isinstance(walls, Mapping):
+        return known_facts
+    length = _number_alias(space, ("length_mm", "length"))
+    width = _number_alias(space, ("width_mm", "width"))
+    height = _number_alias(space, ("height_mm", "height"))
+    wall_count = _number_alias(walls, ("count", "quantity"))
+    wall_thickness = _number_alias(walls, ("thickness_mm", "thickness"))
+    if (
+        any(value is None or value <= 0 for value in (length, width, height, wall_thickness))
+        or wall_count != 4
+        or walls.get("enclosure") != "closed"
+    ):
+        return known_facts
+
+    storey_id = "storey-1"
+    space_record = _copy_payload(space)
+    space_record["id"] = _string(space_record.get("id")) or "space-1"
+    wall_records: list[dict[str, Any]] = []
+    for side in ("south", "north", "west", "east"):
+        wall_record = _copy_payload(walls)
+        wall_record.pop("count", None)
+        wall_record.pop("quantity", None)
+        wall_record.pop("enclosure", None)
+        wall_record["id"] = f"wall-{side}"
+        wall_record["side"] = side
+        wall_record.setdefault("height_mm", height)
+        wall_records.append(wall_record)
+
+    storey: dict[str, Any] = {
+        "id": storey_id,
+        "elevation_mm": 0,
+        "net_height_mm": height,
+        "spaces": [space_record],
+        "walls": {"exterior": wall_records, "interior": []},
+        "doors": _migrate_legacy_opening(known_facts.get("door"), "door", "wall-south"),
+        "windows": _migrate_legacy_opening(
+            known_facts.get("window"), "window", "wall-north"
+        ),
+    }
+    normalized = dict(known_facts)
+    for legacy_key in ("space", "walls", "door", "window"):
+        normalized.pop(legacy_key, None)
+    normalized["storeys"] = [storey]
+    return normalized
+
+
+def _migrate_legacy_opening(
+    value: Any,
+    opening_type: str,
+    fallback_host_wall: str,
+) -> list[dict[str, Any]]:
+    if not isinstance(value, Mapping):
+        return []
+    record = _copy_payload(value)
+    record["id"] = _string(record.get("id")) or f"{opening_type}-1"
+    host = _first_present(record, ("host_wall", "host_wall_id", "host", "wall"))
+    record["host_wall"] = _legacy_host_wall_id(host) or fallback_host_wall
+    return [record]
+
+
+def _legacy_host_wall_id(value: Any) -> str | None:
+    if not isinstance(value, str) or not value:
+        return None
+    normalized = value.lower().replace(" ", "_")
+    if normalized in {"south", "south_wall"}:
+        return "wall-south"
+    if normalized in {"north", "north_wall"}:
+        return "wall-north"
+    if normalized in {"west", "west_wall"}:
+        return "wall-west"
+    if normalized in {"east", "east_wall"}:
+        return "wall-east"
+    return value
 
 
 def _build_entity_id_contract(
