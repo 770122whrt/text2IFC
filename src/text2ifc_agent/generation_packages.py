@@ -52,6 +52,7 @@ def build_generation_package_manifest(
         )
 
     local_components = {storey_id: [] for storey_id in storey_ids}
+    local_component_classes = {storey_id: {} for storey_id in storey_ids}
     local_relationships = {storey_id: [] for storey_id in storey_ids}
     local_refs = {storey_id: set() for storey_id in storey_ids}
     for collection in ("walls", "spaces", "doors", "windows"):
@@ -89,6 +90,8 @@ def build_generation_package_manifest(
 
     for index, record in enumerate(_records(expected_facts.get("products"))):
         storey_id = _non_empty(record.get("storey"))
+        component_id = _component_id(record, f"product-{storey_id}-{index + 1}")
+        ifc_class = _non_empty(record.get("ifc_class"))
         if storey_id not in local_components:
             issues.append(
                 _issue(
@@ -98,9 +101,17 @@ def build_generation_package_manifest(
                 )
             )
         else:
-            local_components[storey_id].append(
-                _component_id(record, f"product-{storey_id}-{index + 1}")
-            )
+            local_components[storey_id].append(component_id)
+            if ifc_class is None:
+                issues.append(
+                    _issue(
+                        "PACKAGE_PRODUCT_CLASS_INCOMPLETE",
+                        f"/products/{index}/ifc_class",
+                        "A product requires an explicit expected IFC class.",
+                    )
+                )
+            else:
+                local_component_classes[storey_id][component_id] = ifc_class
         if not _valid_linear_product_geometry(record.get("geometry")):
             issues.append(
                 _issue(
@@ -191,6 +202,9 @@ def build_generation_package_manifest(
             "kind": "storey_local",
             "storey_id": storey_id,
             "owned_component_ids": _ordered_unique(local_components[storey_id]),
+            "owned_component_classes": dict(
+                sorted(local_component_classes[storey_id].items())
+            ),
             "owned_relationship_ids": _ordered_unique(local_relationships[storey_id]),
             "allowed_reference_ids": sorted({storey_id, *local_refs[storey_id]}),
         }
