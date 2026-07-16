@@ -1,0 +1,104 @@
+{
+  "few_shot_id": "changeset.staged-linear-railing",
+  "description": "Generate two independent storey-local straight railing solids from explicit centerline segments.",
+  "input": {
+    "expected_facts": {
+      "storey": {"id": "storey-2", "name": "Second storey", "elevation_mm": 3300},
+      "products": [
+        {
+          "id": "railing-atrium-north",
+          "ifc_class": "IfcRailing",
+          "storey": "storey-2",
+          "geometry": {
+            "kind": "linear_segment",
+            "start_mm": [6000, 3000, 3300],
+            "end_mm": [12000, 3000, 3300],
+            "height_mm": 1100,
+            "thickness_mm": 50
+          }
+        },
+        {
+          "id": "railing-atrium-west",
+          "ifc_class": "IfcRailing",
+          "storey": "storey-2",
+          "geometry": {
+            "kind": "linear_segment",
+            "start_mm": [6000, 0, 3300],
+            "end_mm": [6000, 3000, 3300],
+            "height_mm": 1100,
+            "thickness_mm": 50
+          }
+        }
+      ]
+    },
+    "change_scope": {
+      "entity_ids": ["railing-atrium-north", "railing-atrium-west"],
+      "relationship_ids": []
+    }
+  },
+  "output": {
+    "schema_version": "text2ifc/bim-json-changeset/1.0",
+    "changeset_id": "changeset-linear-railings",
+    "base_revision_id": "revision-base",
+    "base_candidate_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "expected_facts_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "source_issue_ids": ["issue-package-storey-2"],
+    "scope_id": "scope-package-storey-2",
+    "operations": [
+      {
+        "operation_id": "operation-add-railing-atrium-north",
+        "op": "add_entity",
+        "target_id": "railing-atrium-north",
+        "value": {
+          "id": "railing-atrium-north",
+          "ifc_class": "IfcRailing",
+          "attributes": {
+            "Name": "Atrium north guard",
+            "ObjectPlacement": {
+              "relative_to": "storey-2",
+              "origin": [9000, 3000, 0],
+              "axis": [0, 0, 1],
+              "ref_direction": [1, 0, 0]
+            },
+            "Representation": {
+              "kind": "extruded_profile",
+              "profile": {"kind": "rectangle", "x": 6000, "y": 50},
+              "depth": 1100,
+              "direction": [0, 0, 1]
+            }
+          },
+          "property_sets": {},
+          "provenance": {"source": "issue-package-storey-2"}
+        },
+        "evidence_refs": ["issue-package-storey-2:/expected"]
+      },
+      {
+        "operation_id": "operation-add-railing-atrium-west",
+        "op": "add_entity",
+        "target_id": "railing-atrium-west",
+        "value": {
+          "id": "railing-atrium-west",
+          "ifc_class": "IfcRailing",
+          "attributes": {
+            "Name": "Atrium west guard",
+            "ObjectPlacement": {
+              "relative_to": "storey-2",
+              "origin": [6000, 1500, 0],
+              "axis": [0, 0, 1],
+              "ref_direction": [0, 1, 0]
+            },
+            "Representation": {
+              "kind": "extruded_profile",
+              "profile": {"kind": "rectangle", "x": 3000, "y": 50},
+              "depth": 1100,
+              "direction": [0, 0, 1]
+            }
+          },
+          "property_sets": {},
+          "provenance": {"source": "issue-package-storey-2"}
+        },
+        "evidence_refs": ["issue-package-storey-2:/expected"]
+      }
+    ]
+  }
+}

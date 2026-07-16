@@ -45,6 +45,7 @@ Staged package add mode
 10. Design Brief and expected-facts fields such as `connected_spaces`, adjacency, room ownership, or host descriptions are semantic evidence. They must not be emitted as an IFC entity attribute unless that exact attribute is allowed by the supplied BIM JSON Schema for the selected IFC class. Preserve such facts through allowed relationships, allowed property-set fields, or evidence references; never invent pseudo IFC attributes.
 11. For every add operation, copy an authorized ID character-for-character from CHANGE_SCOPE.entity_ids or CHANGE_SCOPE.relationship_ids. target_id and value.id must be identical. Do not add, remove, translate, normalize, or duplicate prefixes or suffixes, even during a retry.
 12. Never copy a display-name storey label from a sibling package. For every storey-owned component, use the current package storey name or a storey-neutral Name. A component placed under storey 2 must not be named as a storey-1 component, and the same rule applies dynamically to any number of storeys.
+13. Door opening origin.z is the opening bottom elevation in the host-wall local frame. For an ordinary door without a confirmed sill, threshold, or raised base, use local z=0 unless an explicit threshold or raised base is confirmed. Never use half the door height as origin.z. Window openings use the confirmed sill height as their local z origin.
 
 Canonical geometry authoring contract
 
@@ -55,6 +56,7 @@ Canonical geometry authoring contract
 5. For a stepped IfcStairFlight, profile coordinate 1 is run and coordinate 2 is rise. The horizontal Representation.direction is the width vector. Keep child ObjectPlacement neutral relative to the stair and encode stair plan orientation exactly once. Do not rotate both the parent stair and the child flight for the same direction change.
 6. For an axis-aligned flight with neutral child placement and width extrusion `[1,0,0]`, a `+Y` run starts at `(x_min,y_min)` with parent `ref_direction=[1,0,0]`; a `-Y` run starts at `(x_max,y_max)` with parent `ref_direction=[-1,0,0]`. Do not encode `-Y` by rotating the child or changing the width extrusion direction.
 7. Do not silently repair or translate geometry. Use only confirmed facts and scoped Issue evidence; otherwise return Draft.
+8. For any supported storey-local linear product, including `IfcRailing`, place the product at the midpoint of the confirmed start and end points in the owning storey's local frame. Align local +X with the axis-aligned segment, set rectangle `profile.x` to the segment length and `profile.y` to the confirmed thickness, and use the confirmed height with vertical Representation.direction `[0,0,1]`. Do not invent endpoints, base elevation, height, or thickness, and do not emit an `IfcRailingType` unless a separate supported contract explicitly authorizes it.
 
 输入
 

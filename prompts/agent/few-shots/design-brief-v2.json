@@ -513,6 +513,158 @@
           "few_shot_ids": ["design-brief-v2.coordinate-controlled-two-storey"]
         }
       }
+    },
+    {
+      "few_shot_id": "design-brief-v2.single-storey-floor-slab",
+      "selection_terms": [
+        "单层",
+        "地板厚",
+        "楼板厚",
+        "floor slab",
+        "slab"
+      ],
+      "input": {
+        "user_request": "创建一个单层矩形房间，净尺寸6米乘4米，楼层标高0毫米，地板厚150毫米。",
+        "conversation": [
+          {
+            "turn_id": "turn-user-001",
+            "role": "user",
+            "content": "创建一个单层矩形房间，净尺寸6米乘4米，楼层标高0毫米，地板厚150毫米。"
+          }
+        ]
+      },
+      "reasoning_summary": "地板厚度是显式楼板生成要求。楼层本身保留在 storeys 中，但楼板实例必须放在顶层 known_facts.floor_slabs，并绑定所属楼层、板顶标高、厚度和已确认平面范围。",
+      "output": {
+        "schema_version": "text2ifc/design-brief/2.0",
+        "language": "zh-CN",
+        "status": "ready",
+        "original_request": "创建一个单层矩形房间，净尺寸6米乘4米，楼层标高0毫米，地板厚150毫米。",
+        "known_facts": {
+          "building": {
+            "storey_count": 1,
+            "outline": {
+              "x_min": 0,
+              "x_max": 6000,
+              "y_min": 0,
+              "y_max": 4000
+            }
+          },
+          "storeys": [
+            {
+              "id": "storey-1",
+              "name": "首层",
+              "elevation_mm": 0,
+              "spaces": [
+                {
+                  "id": "space-room",
+                  "bounds": {"x": [0, 6000], "y": [0, 4000]}
+                }
+              ],
+              "walls": {"exterior": [], "interior": []},
+              "doors": [],
+              "windows": []
+            }
+          ],
+          "floor_slabs": [
+            {
+              "id": "ground-floor-slab",
+              "storey": "storey-1",
+              "top_elevation_mm": 0,
+              "thickness_mm": 150,
+              "polygon": [[0, 0], [6000, 0], [6000, 4000], [0, 4000], [0, 0]]
+            }
+          ]
+        },
+        "fact_sources": [
+          {
+            "path": "/known_facts",
+            "source_turns": ["turn-user-001"],
+            "evidence_refs": ["schema:bim-json-v2:entity", "capability:IFC2X3:IfcSlab"]
+          }
+        ],
+        "missing_facts": [],
+        "ambiguities": [],
+        "unsupported_requests": [],
+        "user_corrections": [],
+        "clarification_questions": [],
+        "provenance": {
+          "source_turns": ["turn-user-001"],
+          "selected_evidence_ids": ["schema:bim-json-v2:entity", "capability:IFC2X3:IfcSlab"],
+          "few_shot_ids": ["design-brief-v2.single-storey-floor-slab"]
+        }
+      }
+    },
+    {
+      "few_shot_id": "design-brief-v2.linear-railings",
+      "selection_terms": [
+        "栏杆",
+        "护栏",
+        "中庭",
+        "railing",
+        "guardrail",
+        "start_mm",
+        "end_mm"
+      ],
+      "input": {
+        "user_request": "二层中庭北边和西边各设一段直线栏杆。北栏杆从(6000,3000,3300)到(12000,3000,3300)，西栏杆从(6000,0,3300)到(6000,3000,3300)，栏杆高1100毫米，简化实体厚50毫米。",
+        "conversation": [
+          {
+            "turn_id": "turn-user-001",
+            "role": "user",
+            "content": "二层中庭北边和西边各设一段直线栏杆。北栏杆从(6000,3000,3300)到(12000,3000,3300)，西栏杆从(6000,0,3300)到(6000,3000,3300)，栏杆高1100毫米，简化实体厚50毫米。"
+          }
+        ]
+      },
+      "reasoning_summary": "栏杆的楼层、三维中心线端点、高度和简化实体厚度均为用户显式事实，可以保留为顶层 known_facts.railings，不需要让用户编写 ObjectPlacement 或 Representation。",
+      "output": {
+        "schema_version": "text2ifc/design-brief/2.0",
+        "language": "zh-CN",
+        "status": "ready",
+        "original_request": "二层中庭北边和西边各设一段直线栏杆。北栏杆从(6000,3000,3300)到(12000,3000,3300)，西栏杆从(6000,0,3300)到(6000,3000,3300)，栏杆高1100毫米，简化实体厚50毫米。",
+        "known_facts": {
+          "storeys": [
+            {"id": "storey-1", "elevation_mm": 0},
+            {"id": "storey-2", "elevation_mm": 3300}
+          ],
+          "railings": [
+            {
+              "id": "railing-atrium-north",
+              "storey": "storey-2",
+              "start_mm": [6000, 3000, 3300],
+              "end_mm": [12000, 3000, 3300],
+              "height_mm": 1100,
+              "thickness_mm": 50,
+              "alignment_target": "void-atrium:north-edge"
+            },
+            {
+              "id": "railing-atrium-west",
+              "storey": "storey-2",
+              "start_mm": [6000, 0, 3300],
+              "end_mm": [6000, 3000, 3300],
+              "height_mm": 1100,
+              "thickness_mm": 50,
+              "alignment_target": "void-atrium:west-edge"
+            }
+          ]
+        },
+        "fact_sources": [
+          {
+            "path": "/known_facts/railings",
+            "source_turns": ["turn-user-001"],
+            "evidence_refs": ["schema:bim-json-v2:entity", "schema:bim-json-v2:representation", "capability:IFC2X3:IfcRailing"]
+          }
+        ],
+        "missing_facts": [],
+        "ambiguities": [],
+        "unsupported_requests": [],
+        "user_corrections": [],
+        "clarification_questions": [],
+        "provenance": {
+          "source_turns": ["turn-user-001"],
+          "selected_evidence_ids": ["schema:bim-json-v2:entity", "schema:bim-json-v2:representation", "capability:IFC2X3:IfcRailing"],
+          "few_shot_ids": ["design-brief-v2.linear-railings"]
+        }
+      }
     }
   ]
 }
