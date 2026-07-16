@@ -232,6 +232,14 @@ def test_design_brief_prompt_preserves_explicit_linear_railing_facts():
     assert "Do not invent railing endpoints, elevation, height, or thickness" in text
 
 
+def test_design_brief_prompt_preserves_multiple_slab_openings_separately():
+    text = DESIGN_BRIEF_V21.read_text(encoding="utf-8")
+
+    assert "Use `openings` as an array when a slab has more than one confirmed opening" in text
+    assert "Do not merge separate opening rectangles into one union rectangle" in text
+    assert "stable opening `id`" in text
+
+
 def test_design_brief_few_shot_preserves_two_storey_local_linear_railings():
     payload = json.loads(DESIGN_BRIEF_FEW_SHOTS.read_text(encoding="utf-8"))
     shot = next(

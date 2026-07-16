@@ -375,3 +375,14 @@ def test_changeset_prompt_defines_generic_linear_segment_authoring_contract():
     assert "segment length" in text
     assert "vertical Representation.direction `[0,0,1]`" in text
     assert "Do not invent endpoints, base elevation, height, or thickness" in text
+
+
+def test_changeset_prompt_generates_each_confirmed_slab_opening_independently():
+    text = render_prompt(template_id="bim-json-changeset.v1", inputs=_inputs())[
+        "text"
+    ]
+
+    assert "For multiple confirmed slab openings" in text
+    assert "one independently authorized `IfcOpeningElement`" in text
+    assert "one `IfcRelVoidsElement` per opening" in text
+    assert "Never replace separate rectangles with their union bounding box" in text
