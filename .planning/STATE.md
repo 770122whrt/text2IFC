@@ -7,13 +7,13 @@ See: `.planning/PROJECT.md` (updated 2026-06-11)
 **Core value:** Produce valid, inspectable IFC models from explicit user
 requirements.
 
-**Current focus:** Phase 6.5 standard-input acceptance; Easy is accepted and
-reopenable, Medium has an explicit successor input, and live STABLE-01 is 1 / 3.
+**Current focus:** Phase 6.6 cross-case stability testing; Easy and Medium are
+accepted, frozen Difficult is classified as Draft, and live STABLE-01 is 2 / 3.
 
 ## Status
 
-- Phase: 6.5
-- Stage: Easy real-provider IFC accepted; corrected Medium input ready; 1 / 3 IFC accepted
+- Phase: 6.6
+- Stage: Easy and Medium accepted; Difficult input decision required; 2 / 3 IFC accepted
 - State: Phase 6.2-fix Waves 0-2 are implemented and automatically verified.
   Wave 3 real UAT
   produced useful live evidence and fixed defects 001/002, then exposed defect
@@ -570,15 +570,20 @@ reopenable, Medium has an explicit successor input, and live STABLE-01 is 1 / 3.
 
 ## Next Action
 
-Run explicit successor `STD-M-OFF-02` through the real provider and retain the
-original `STD-M-OFF-01` Draft as historical ambiguity evidence. Then plan
-bounded Difficult-response truncation handling and failure-result persistence
-for `P65-UAT-006` and `P65-UAT-007`. `STABLE-01` remains incomplete until Easy,
-Medium, and Difficult each produce accepted reopenable IFC artifacts.
+Execute Phase 6.6 Step 01 to project, generate, Gate, compile, and reopen
+straight `IfcRailing` segments through a declarative linear-product contract.
+Then resolve the remaining Difficult input contract: reserve a non-space
+second-storey stair-arrival/opening zone, decide door/window placement policy,
+and explicitly authorize supported stair geometry. Preserve frozen
+`STD-D-MUL-01`; `STABLE-01` remains incomplete until the successor produces an
+accepted, reopenable IFC artifact and passes human review.
 
 ## Accumulated Context
 
 ### Roadmap Evolution
+
+- Phase 6.6 inserted after Phase 6.5 on 2026-07-16: cross-case stability testing
+  and failure attribution across fixed Easy, Medium, and Difficult inputs.
 
 - Phase 2.5 inserted after Phase 2 on 2026-06-11: BIM JSON 1.0 cannot represent
   the spatial ground truth required for Text-to-JSON training.
@@ -775,10 +780,11 @@ Medium, and Difficult each produce accepted reopenable IFC artifacts.
   responses.
 
 ---
-*Last activity: 2026-07-16 - reran frozen Easy `STD-E-RES-01` through the real
-DeepSeek-compatible provider. Session `d2f86855a9738b50` compiled and reopened
-as IFC2X3 with 1 storey, 1 space, 4 walls, 1 slab, 1 door, 1 window, and 2
-openings; all applicable gates passed and preservation rate was 1.0. Added
-successor Medium input `STD-M-OFF-02` with an explicit closed perimeter while
-preserving the original Draft evidence. STABLE-01 is 1 / 3; corrected Medium
-live verification and Difficult truncation/reporting work remain.*
+*Last activity: 2026-07-16 - Ran unchanged `STD-D-MUL-01` once through the real
+64K DeepSeek workflow. Session `1524fc3a5071c348` produced two complete Design
+Brief responses without truncation and correctly stopped at `draft_required`;
+no IFC was generated. The input lacks door/window offsets and exact stair
+geometry, and its second-storey bedroom/corridor allocation leaves no non-space
+stair-arrival/opening zone. The Agent also contradicted itself on void/slab
+opening bounds. Evidence is classified in the Phase 6.6 issue register;
+STABLE-01 remains 2 / 3 pending explicit Difficult input decisions.*

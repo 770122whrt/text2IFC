@@ -1088,3 +1088,39 @@ successor `STD-M-OFF-02`, but its live verification remains pending.
 `P65-UAT-006` and `P65-UAT-007` remain open. Existing Easy, Medium, and Hard
 artifacts remain valid historical evidence. No repeated-run statistical rate is
 claimed.
+
+## Phase 6.6: Cross-case Stability Testing and Failure Attribution (INSERTED)
+
+**Goal:** Establish bounded operational stability across one fixed Easy, one
+fixed Medium, and one fixed Difficult Chinese Text-to-IFC input; classify each
+failure at its true input, provider, workflow, geometry, compile, Audit, or
+evidence owner before approving a repair.
+
+**Requirements:** STABLE-01
+
+**Depends on:** Phase 6.5
+
+**Canonical ref:**
+
+- `.planning/phases/06.6-cross-case-stability-testing/06.6-SPEC.md`
+
+**Explicit boundary:** Phase 6.6 measures and repairs the existing real-provider
+workflow. It does not add RAG, fine-tuning, deployment, a second BIM JSON model,
+or silent BIM defaults. Three different difficulty cases form the primary
+stability gate; repeated runs are secondary evidence after cross-case coverage.
+
+**Plans:** The first stabilization batch TDD-fixed deterministic empty-package
+handling, workflow-owned Draft-path attribution, canonical floor-slab facts,
+shared-wall centerline conflicts, and door-opening bottom elevation. The fixed
+Difficult observation is complete and classified; the next plan requires an
+`IfcRailing` orchestration repair through `06.6-01-PLAN.md`, followed by an
+explicit Difficult successor input decision and rerun.
+
+**Status:** Active observation. Easy and Medium are accepted and reopenable.
+Medium successor `STD-M-OFF-03` passed the real 64K workflow in session
+`8c8ef9a111e326d7`, including canonical slab generation, all applicable Gates,
+Audit, compile/reopen, and secret scan. Frozen Difficult session
+`1524fc3a5071c348` reached the real provider without truncation and correctly
+stopped at Draft because placement facts and a non-conflicting second-storey
+stair-arrival zone are missing. Cross-case acceptance remains 2 / 3;
+double-leaf `IfcDoorStyle` semantics remain unsupported.
