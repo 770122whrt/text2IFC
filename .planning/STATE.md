@@ -7,12 +7,12 @@ See: `.planning/PROJECT.md` (updated 2026-06-11)
 **Core value:** Produce valid, inspectable IFC models from explicit user
 requirements.
 
-**Current focus:** Phase 6.5 accepted Hard IFC handoff and next-phase selection
+**Current focus:** Phase 6.5 Wave 8 registry-drift triage after blocked observation
 
 ## Status
 
 - Phase: 6.5
-- Stage: Phase 6.5 graded Easy/Medium/Hard acceptance complete
+- Stage: Three-case observation complete; coverage acceptance blocked before provider calls
 - State: Phase 6.2-fix Waves 0-2 are implemented and automatically verified.
   Wave 3 real UAT
   produced useful live evidence and fixed defects 001/002, then exposed defect
@@ -569,10 +569,11 @@ requirements.
 
 ## Next Action
 
-Execute Phase 6.5 Wave 6: build and test the live stability harness, then run
-independent real DeepSeek two-/three-storey sessions. Require three consecutive
-accepted runs per case; retain and classify every failed run without weakening
-correct Gates or using prewritten model answers.
+Review blocking issue `P65-UAT-003`. The three frozen Wave 8 cases created
+sessions but made zero provider calls because 10 / 10 Prompt registry hashes
+do not match their templates. Decide separately whether to approve a bounded
+registry repair and rerun the same input hashes. Do not edit prompts or weaken
+the registry check as part of the observation batch.
 
 ## Accumulated Context
 

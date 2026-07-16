@@ -255,10 +255,14 @@ requirements.
 - [ ] **MULTI-02**: Package ownership prevents duplicate IDs, cross-storey host
   mismatch, orphan opening/filling relations, and ambiguous ownership of
   stairs, intermediate slabs, roofs, and vertical connections.
-- [ ] **STABLE-01**: One canonical two-storey and one canonical three-storey
-  Chinese Text2IFC case each achieve three consecutive accepted real DeepSeek
-  runs with unrelated-component preservation rate 1.0 and complete IFC/report
-  evidence.
+- [ ] **STABLE-01**: A frozen, coverage-oriented Chinese Text2IFC acceptance
+  set contains three distinct standard inputs at Easy, Medium, and Difficult
+  levels. Each input must complete one real-provider Text -> BIM JSON 2.0 ->
+  IFC2X3 run and pass schema, semantic coverage, deterministic Gates,
+  compile/reopen, postcompile geometry, Audit, report, and secret-scan checks.
+  Any scoped correction must preserve unrelated components at rate 1.0. This
+  establishes bounded cross-case operational stability, not a statistical
+  repeated-run success rate.
 
 ## Out of Scope
 

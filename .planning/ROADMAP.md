@@ -980,6 +980,8 @@ MULTI-02, STABLE-01
 - `.planning/phases/06.5-component-scoped-changesets-and-multistorey-stability/06.5-CONTEXT.md`
 - `.planning/phases/06.5-component-scoped-changesets-and-multistorey-stability/06.5-AI-SPEC.md`
 - `.planning/phases/06.5-component-scoped-changesets-and-multistorey-stability/06.5-PLAN-OUTLINE.md`
+- `.planning/phases/06.5-component-scoped-changesets-and-multistorey-stability/06.5-STANDARD-INPUT-ACCEPTANCE.md`
+- `.planning/phases/06.5-component-scoped-changesets-and-multistorey-stability/06.5-ISSUE-REGISTER.md`
 
 **Explicit boundary:** Phase 6.5 remains a Text2IFC generation phase. It uses
 IFC5 development ideas only as architectural inspiration and does not adopt
@@ -987,7 +989,7 @@ IFC5/IFCX, import or edit existing IFC, add RAG/fine-tuning, redesign the Formal
 BIM JSON schema, or package a service. Existing-IFC natural-language completion
 is reserved for a later phase that may reuse the ChangeSet revision interface.
 
-**Plans:** 7 plans in 7 waves
+**Plans:** 10 plans including supplemental Waves 7, 7.1, and 8
 
 **Wave 0**
 
@@ -1033,6 +1035,15 @@ is reserved for a later phase that may reuse the ChangeSet revision interface.
   global Gates, compile/reopen, geometry, final Audit, and secret scan after two
   evidence-driven ChangeSet rounds
 
+**Coverage-based standard-input UAT**
+
+- [x] `06.5-08-PLAN.md` - Freeze one Easy, one Medium, and one Difficult input
+  from `tests/text2ifc_basic_test_inputs.md`, execute each once, and record all
+  failures in one issue register before approving any TDD fix
+- [x] `06.5-08-SUMMARY.md` - Three frozen sessions were observed; all stopped
+  before provider calls because 10 / 10 registered Prompt hashes drifted. No
+  BIM JSON or IFC was produced, and no automatic fix was started.
+
 **Cross-cutting constraints:**
 
 - Formal BIM JSON 2.0 JSON Schema remains the single model truth.
@@ -1045,11 +1056,14 @@ is reserved for a later phase that may reuse the ChangeSet revision interface.
   global Gates, compile/reopen, postcompile geometry checks, and Audit.
 - Deterministic tests precede real DeepSeek calls, and live evidence cannot be
   satisfied by fake/file/replay providers or prewritten model responses.
-- All work remains in the C-drive `multiagent-design` worktree.
+- Waves 0-7.1 were implemented in the historical C-drive
+  `multiagent-design` worktree. Wave 8 planning and UAT use the current
+  E-drive repository selected by the user; artifacts must record the exact
+  branch and commit used for each run.
 
-**Status:** Phase 6.5 graded acceptance is complete. Easy, Medium, and Hard each
-have an accepted review artifact. The Hard three-storey real DeepSeek session
-`999d210c233b1c34` reached `revision-07` after three bounded ChangeSet rounds,
-then passed global Gates, compile/reopen, postcompile geometry, final Audit,
-preservation 1.0, and a zero-finding secret scan. This is one accepted run per
-difficulty, not a statistical stability-rate claim.
+**Status:** Historical Phase 6.5 graded acceptance is complete. Wave 8's
+coverage-based observation batch is also complete, but revised `STABLE-01`
+remains blocked: all three frozen cases stopped before provider generation due
+to 10 / 10 Prompt registry hash mismatches. Existing Easy, Medium, and Hard
+artifacts remain valid historical evidence but do not substitute for these
+inputs. No repeated-run statistical rate is claimed.
