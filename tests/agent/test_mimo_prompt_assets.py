@@ -129,7 +129,8 @@ def test_design_brief_v21_enforces_question_target_consistency():
 def test_design_brief_v21_defines_canonical_multistorey_structure():
     text = DESIGN_BRIEF_V21.read_text(encoding="utf-8")
 
-    assert "Canonical multi-storey Design Brief structure" in text
+    assert "Canonical Design Brief storey structure" in text
+    assert "including a single-storey building" in text
     assert "Use `elevation_mm`; do not use `level` as a substitute" in text
     assert "Do not create top-level `storey_1`, `storey_2`, `spaces_ground`, `spaces_first`, or generic `openings`" in text
     assert "Put doors and windows inside the storey that owns their host wall" in text
@@ -178,6 +179,28 @@ def test_design_brief_few_shots_include_valid_standard_two_storey_contract():
             "thickness_mm": 150,
         },
     ]
+
+
+def test_design_brief_few_shot_complete_room_uses_canonical_single_storey_contract():
+    payload = json.loads(DESIGN_BRIEF_FEW_SHOTS.read_text(encoding="utf-8"))
+    shot = next(
+        item
+        for item in payload["few_shots"]
+        if item["few_shot_id"] == "design-brief-v2.complete-room-openings"
+    )
+
+    known = shot["output"]["known_facts"]
+    assert "storey" not in known
+    assert "space" not in known
+    assert "door" not in known
+    assert "window" not in known
+    assert [storey["id"] for storey in known["storeys"]] == ["storey-1"]
+    storey = known["storeys"][0]
+    assert len(storey["spaces"]) == 1
+    assert len(storey["walls"]["exterior"]) == 4
+    assert storey["walls"].get("interior") == []
+    assert len(storey["doors"]) == 1
+    assert len(storey["windows"]) == 1
     assert known["roof_slab"] == {
         "id": "roof-slab",
         "bottom_elevation_mm": 6150,

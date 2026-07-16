@@ -1,6 +1,8 @@
 import json
 from pathlib import Path
 
+import pytest
+
 from text2ifc_agent.gate_audit_bundle import hash_json_file
 from text2ifc_agent.expected_facts import (
     build_expected_facts,
@@ -108,6 +110,89 @@ def test_expected_facts_reads_canonical_floor_slabs_and_vertical_datums():
         },
     ]
     assert expected["roof"]["bottom_elevation_mm"] == 6150
+
+
+def test_expected_facts_projects_complete_single_storey_room_inventory():
+    expected = build_expected_facts(
+        case_id="easy-complete-room",
+        design_brief={
+            "schema_version": "text2ifc/design-brief/2.0",
+            "status": "ready",
+            "known_facts": {
+                "storeys": [
+                    {
+                        "id": "storey-1",
+                        "name": "一层",
+                        "elevation_mm": 0,
+                        "net_height_mm": 3000,
+                        "spaces": [
+                            {
+                                "id": "space-room",
+                                "name": "房间",
+                                "bounds": {"x": [0, 6000], "y": [0, 4000]},
+                            }
+                        ],
+                        "walls": {
+                            "exterior": [
+                                {"id": "wall-south", "side": "south", "thickness_mm": 300},
+                                {"id": "wall-north", "side": "north", "thickness_mm": 300},
+                                {"id": "wall-west", "side": "west", "thickness_mm": 300},
+                                {"id": "wall-east", "side": "east", "thickness_mm": 300},
+                            ],
+                            "interior": [],
+                        },
+                        "doors": [
+                            {"id": "door-south", "host_wall": "wall-south", "width_mm": 900}
+                        ],
+                        "windows": [
+                            {"id": "window-north", "host_wall": "wall-north", "width_mm": 1200}
+                        ],
+                    }
+                ]
+            },
+        },
+    )
+
+    assert expected["storey_count"] == 1
+    assert expected["total_counts"] == {
+        "IfcBuildingStorey": 1,
+        "IfcSpace": 1,
+        "IfcWall": 4,
+        "IfcDoor": 1,
+        "IfcWindow": 1,
+    }
+    local_package = next(
+        package
+        for package in expected["generation_package_manifest"]["packages"]
+        if package["package_id"] == "package-storey-1"
+    )
+    assert set(local_package["owned_component_ids"]) >= {
+        "wall-south",
+        "wall-north",
+        "wall-west",
+        "wall-east",
+        "space-room",
+        "door-south",
+        "window-north",
+    }
+    assert local_package["owned_relationship_ids"]
+
+
+def test_ready_design_brief_cannot_silently_project_to_zero_storeys():
+    with pytest.raises(ValueError, match="DESIGN_BRIEF_PROJECTION_EMPTY"):
+        build_expected_facts(
+            case_id="easy-singular-dialect-regression",
+            design_brief={
+                "schema_version": "text2ifc/design-brief/2.0",
+                "status": "ready",
+                "known_facts": {
+                    "space": {"shape": "rectangle", "length_mm": 6000, "width_mm": 4000},
+                    "walls": {"count": 4, "enclosure": "closed", "thickness_mm": 300},
+                    "door": {"host": "south_wall", "width_mm": 900, "height_mm": 2100},
+                    "window": {"host": "north_wall", "width_mm": 1200, "height_mm": 1500},
+                },
+            },
+        )
 
 
 def test_expected_facts_three_storey_fixture_is_data_driven_and_reusable():
