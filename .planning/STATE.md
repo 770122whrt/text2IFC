@@ -7,13 +7,14 @@ See: `.planning/PROJECT.md` (updated 2026-06-11)
 **Core value:** Produce valid, inspectable IFC models from explicit user
 requirements.
 
-**Current focus:** Phase 6.6 cross-case stability testing; Easy and Medium are
-accepted, frozen Difficult is classified as Draft, and live STABLE-01 is 2 / 3.
+**Current focus:** Phase 6.6 cross-case stability testing; Easy, Medium, and the
+Difficult successor are machine-accepted, while Difficult visual review keeps
+`STABLE-01` open.
 
 ## Status
 
 - Phase: 6.6
-- Stage: Easy and Medium accepted; Difficult input decision required; 2 / 3 IFC accepted
+- Stage: 3 / 3 machine-accepted and reopenable; Difficult visual review pending
 - State: Phase 6.2-fix Waves 0-2 are implemented and automatically verified.
   Wave 3 real UAT
   produced useful live evidence and fixed defects 001/002, then exposed defect
@@ -76,7 +77,7 @@ accepted, frozen Difficult is classified as Draft, and live STABLE-01 is 2 / 3.
   seven waves; Waves 0-6 implemented and verified; Phase 6.4 Waves 0-6
   implemented and verified; Phase 6.4 Waves 7-8 complete with a real accepted
   two-storey DeepSeek IFC after two bounded Generator regenerations
-- Branch: `multiagent-design` in C-drive worktree
+- Branch: `codex/workflow-dataset-links` in `E:\code for project\bimnet`
 - Remote: `https://github.com/770122whrt/text2IFC`
 
 ## Completed Foundation
@@ -570,13 +571,10 @@ accepted, frozen Difficult is classified as Draft, and live STABLE-01 is 2 / 3.
 
 ## Next Action
 
-Execute Phase 6.6 Step 01 to project, generate, Gate, compile, and reopen
-straight `IfcRailing` segments through a declarative linear-product contract.
-Then resolve the remaining Difficult input contract: reserve a non-space
-second-storey stair-arrival/opening zone, decide door/window placement policy,
-and explicitly authorize supported stair geometry. Preserve frozen
-`STD-D-MUL-01`; `STABLE-01` remains incomplete until the successor produces an
-accepted, reopenable IFC artifact and passes human review.
+Open the accepted Difficult IFC and complete human visual review of the two
+atrium railings, two slab openings, stair, enclosures, and storey placement.
+Session `53df7ac99abf41e8` already passes machine acceptance and reopen checks;
+`STABLE-01` remains open only until visual review confirms no obvious defect.
 
 ## Accumulated Context
 
@@ -780,11 +778,9 @@ accepted, reopenable IFC artifact and passes human review.
   responses.
 
 ---
-*Last activity: 2026-07-16 - Ran unchanged `STD-D-MUL-01` once through the real
-64K DeepSeek workflow. Session `1524fc3a5071c348` produced two complete Design
-Brief responses without truncation and correctly stopped at `draft_required`;
-no IFC was generated. The input lacks door/window offsets and exact stair
-geometry, and its second-storey bedroom/corridor allocation leaves no non-space
-stair-arrival/opening zone. The Agent also contradicted itself on void/slab
-opening bounds. Evidence is classified in the Phase 6.6 issue register;
-STABLE-01 remains 2 / 3 pending explicit Difficult input decisions.*
+*Last activity: 2026-07-16 - Completed Phase 6.6 Step 01 TDD for declarative
+straight `IfcRailing` support. The provenance-linked `STD-D-MUL-02` successor
+resolved the frozen Difficult input gaps, and real-provider session
+`53df7ac99abf41e8` passed Formal validation, Gates, Audit, IFC2X3
+compile/reopen, geometry checks, and secret scan. STABLE-01 is 3 / 3 at machine
+level and remains open pending human visual review.*

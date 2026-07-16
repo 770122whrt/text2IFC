@@ -1111,16 +1111,18 @@ stability gate; repeated runs are secondary evidence after cross-case coverage.
 
 **Plans:** The first stabilization batch TDD-fixed deterministic empty-package
 handling, workflow-owned Draft-path attribution, canonical floor-slab facts,
-shared-wall centerline conflicts, and door-opening bottom elevation. The fixed
-Difficult observation is complete and classified; the next plan requires an
-`IfcRailing` orchestration repair through `06.6-01-PLAN.md`, followed by an
-explicit Difficult successor input decision and rerun.
+shared-wall centerline conflicts, and door-opening bottom elevation. Plan
+`06.6-01` added declarative straight linear products with `IfcRailing` as the
+first family, exact manifest-bound package classes, generic containment and
+geometry Gates, prompt/few-shot coverage, and a provenance-linked Difficult
+successor.
 
-**Status:** Active observation. Easy and Medium are accepted and reopenable.
-Medium successor `STD-M-OFF-03` passed the real 64K workflow in session
-`8c8ef9a111e326d7`, including canonical slab generation, all applicable Gates,
-Audit, compile/reopen, and secret scan. Frozen Difficult session
-`1524fc3a5071c348` reached the real provider without truncation and correctly
-stopped at Draft because placement facts and a non-conflicting second-storey
-stair-arrival zone are missing. Cross-case acceptance remains 2 / 3;
-double-leaf `IfcDoorStyle` semantics remain unsupported.
+**Status:** Machine acceptance is 3 / 3. Easy session `d2f86855a9738b50`,
+Medium session `8c8ef9a111e326d7`, and Difficult successor session
+`53df7ac99abf41e8` all produced accepted, reopenable IFC2X3 artifacts. The
+Difficult artifact contains two verified `IfcRailing` entities, two slab
+openings, and one straight stair system; all deterministic Gates, Audit, and
+secret scan passed. Human visual review of the Difficult IFC remains required
+before checking `STABLE-01`. This is bounded cross-case evidence, not a
+repeated-run statistical rate. Double-leaf `IfcDoorStyle` semantics remain
+unsupported.
