@@ -7,14 +7,13 @@ See: `.planning/PROJECT.md` (updated 2026-06-11)
 **Core value:** Produce valid, inspectable IFC models from explicit user
 requirements.
 
-**Current focus:** Phase 6.6 cross-case stability testing; the stair-wall Gate
-repair and explicit-host Difficult successor pass machine verification, while
-human visual review of the revised IFC remains pending.
+**Current focus:** Phase 6.6 cross-case stability testing is complete at
+machine 3 / 3 and human 3 / 3. The project is ready for milestone audit.
 
 ## Status
 
 - Phase: 6.6
-- Stage: machine 3 / 3, human 2 / 3; revised Difficult IFC awaiting UAT
+- Stage: Phase 6.6 complete; machine 3 / 3 and human 3 / 3
 - State: Phase 6.2-fix Waves 0-2 are implemented and automatically verified.
   Wave 3 real UAT
   produced useful live evidence and fixed defects 001/002, then exposed defect
@@ -571,11 +570,10 @@ human visual review of the revised IFC remains pending.
 
 ## Next Action
 
-Open and visually review
-`dataset/processed/agent-demo/phase6.6-difficult-stair-fix-live-64k-explicit-hosts/runs/ba2277d8363bce69/output.ifc`.
-Confirm the open stair passage, north-wall clearance, two separate slab
-openings, stair arrival, five guard segments, wall enclosure, door hosts, and
-storey placement. Record any defect before approving further repair.
+Run the milestone audit before archival. Resolve or explicitly classify the
+two historical plans without matching summaries and any requirements not
+actually delivered. Do not use `--force`; repeated stability runs are optional
+next-milestone work rather than a blocker for `STABLE-01`.
 
 ## Accumulated Context
 
@@ -783,5 +781,5 @@ storey placement. Record any defect before approving further repair.
 straight `IfcRailing` support. The provenance-linked `STD-D-MUL-02` successor
 resolved the frozen Difficult input gaps, and real-provider session
 `53df7ac99abf41e8` passed Formal validation, Gates, Audit, IFC2X3
-compile/reopen, geometry checks, and secret scan. STABLE-01 is 3 / 3 at machine
-level and remains open pending human visual review.*
+compile/reopen, geometry checks, and secret scan. Phase 6.6 later completed
+`STABLE-01` at machine 3 / 3 and human 3 / 3.*

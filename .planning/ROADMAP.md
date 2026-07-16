@@ -1127,7 +1127,8 @@ correctly stopped in Draft because eight door hosts remained implicit, while
 The revised IFC contains five verified `IfcRailing` entities, two independent
 slab openings, one straight stair system, 23 walls, and zero stair-wall
 positive-volume intersections. Gates, Audit, compile/reopen, EXPRESS
-validation, and secret scan pass. Human visual review of this revised IFC is
-required before checking `STABLE-01`. This is bounded cross-case evidence, not
-a repeated-run statistical rate. Double-leaf `IfcDoorStyle` semantics remain
-unsupported.
+validation, secret scan, and final human visual review pass. `STABLE-01` is
+complete at machine 3 / 3 and human 3 / 3. This is bounded cross-case evidence,
+not a repeated-run statistical rate. Double-leaf `IfcDoorStyle` semantics
+remain unsupported. The next routing action is milestone audit, not additional
+mandatory Phase 6.6 runs.

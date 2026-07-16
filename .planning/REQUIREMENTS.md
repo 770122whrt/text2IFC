@@ -255,7 +255,7 @@ requirements.
 - [ ] **MULTI-02**: Package ownership prevents duplicate IDs, cross-storey host
   mismatch, orphan opening/filling relations, and ambiguous ownership of
   stairs, intermediate slabs, roofs, and vertical connections.
-- [ ] **STABLE-01**: A frozen, coverage-oriented Chinese Text2IFC acceptance
+- [x] **STABLE-01**: A frozen, coverage-oriented Chinese Text2IFC acceptance
   set contains three distinct standard inputs at Easy, Medium, and Difficult
   levels. Each input must complete one real-provider Text -> BIM JSON 2.0 ->
   IFC2X3 run and pass schema, semantic coverage, deterministic Gates,
