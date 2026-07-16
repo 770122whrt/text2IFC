@@ -1,0 +1,77 @@
+{
+  "schema_version": "text2ifc/audit/2.0",
+  "recommendation": "revise",
+  "blocking": true,
+  "deterministic_gate_status": "failed",
+  "findings": [
+    {
+      "code": "FLOOR_OPENING_BBOX_MISMATCH",
+      "message": "Floor opening 'opening-first-floor-slab-atrium' world bounding box is [12.0,18.0] x [4.0,7.0] x [3.0,3.3] (metres), expected [6.0,12.0] x [0.0,3.0] x [3.0,3.3]. The opening is placed in the wrong quadrant of the slab.",
+      "component_ids": ["opening-first-floor-slab-atrium"],
+      "evidence_paths": ["geometry-feedback.json", "generator/candidate.json"]
+    },
+    {
+      "code": "FLOOR_OPENING_BBOX_MISMATCH",
+      "message": "Floor opening 'opening-first-floor-slab-stair' world bounding box is [16.0,17.0] x [7.5,12.0] x [3.0,3.3] (metres), expected [10.0,11.0] x [3.5,8.0] x [3.0,3.3]. The opening is placed in the wrong quadrant of the slab.",
+      "component_ids": ["opening-first-floor-slab-stair"],
+      "evidence_paths": ["geometry-feedback.json", "generator/candidate.json"]
+    },
+    {
+      "code": "OPENING_HOST_LOCAL_BOUNDS_MISMATCH",
+      "message": "Door opening 'opening-door-bathroom-corridor-storey2' has local origin [1000,0,0] in host wall 'wall-corridor-bathroom-storey2', placing bounds outside the wall. Expected origin in range x:[-600,600].",
+      "component_ids": ["opening-door-bathroom-corridor-storey2"],
+      "evidence_paths": ["gate-summary.json"]
+    },
+    {
+      "code": "OPENING_HOST_LOCAL_BOUNDS_MISMATCH",
+      "message": "Door opening 'opening-door-bedroom1-corridor-storey2' has local origin [2500,0,0] in host wall 'wall-corridor-bedroom1-storey2', placing bounds outside the wall. Expected origin in range x:[-2050,2050].",
+      "component_ids": ["opening-door-bedroom1-corridor-storey2"],
+      "evidence_paths": ["gate-summary.json"]
+    },
+    {
+      "code": "OPENING_HOST_LOCAL_BOUNDS_MISMATCH",
+      "message": "Door opening 'opening-door-bedroom2-corridor-storey2' has local origin [1500,0,0] in host wall 'wall-corridor-bedroom2-storey2', placing bounds outside the wall. Expected origin in range x:[-1050,1050].",
+      "component_ids": ["opening-door-bedroom2-corridor-storey2"],
+      "evidence_paths": ["gate-summary.json"]
+    },
+    {
+      "code": "OPENING_HOST_LOCAL_BOUNDS_MISMATCH",
+      "message": "Door opening 'opening-door-bedroom3-corridor-storey2' has local origin [3000,0,0] in host wall 'wall-corridor-bedroom3-storey2', placing bounds outside the wall. Expected origin in range x:[-2550,2550].",
+      "component_ids": ["opening-door-bedroom3-corridor-storey2"],
+      "evidence_paths": ["gate-summary.json"]
+    },
+    {
+      "code": "OPENING_HOST_LOCAL_BOUNDS_MISMATCH",
+      "message": "Door opening 'opening-door-main-entry' has representation profile [1000,200] with direction[0,0,1] but host wall 'wall-storey-1-west' expects profile y=200 and direction[0,0,1]; current orientation swaps width and thickness.",
+      "component_ids": ["opening-door-main-entry"],
+      "evidence_paths": ["gate-summary.json"]
+    },
+    {
+      "code": "FILLING_RELATIVE_ROTATION_MISMATCH",
+      "message": "Filling 'door-main-entry' has ref_direction [0,1,0] but expected [1,0,0] relative to its host wall.",
+      "component_ids": ["door-main-entry"],
+      "evidence_paths": ["gate-summary.json"]
+    },
+    {
+      "code": "OPENING_HOST_LOCAL_BOUNDS_MISMATCH",
+      "message": "Window opening 'opening-window-bathroom-north-high-storey2' has local origin [6000,0,1600] in host wall 'wall-storey-2-north', placing bounds outside the wall. Expected origin in range x:[-5600,5600].",
+      "component_ids": ["opening-window-bathroom-north-high-storey2"],
+      "evidence_paths": ["gate-summary.json"]
+    },
+    {
+      "code": "OPENING_HOST_LOCAL_BOUNDS_MISMATCH",
+      "message": "Window opening 'opening-window-bedroom2-north' has local origin [8500,0,900] in host wall 'wall-storey-2-north', placing bounds outside the wall. Expected origin in range x:[-5250,5250].",
+      "component_ids": ["opening-window-bedroom2-north"],
+      "evidence_paths": ["gate-summary.json"]
+    }
+  ],
+  "evidence_paths": [
+    "gate-summary.json",
+    "geometry-feedback.json",
+    "generator/candidate.json",
+    "ifc-verification.json",
+    "repair/route.json",
+    "design-brief/design-brief.json",
+    "semantic-coverage.json"
+  ]
+}

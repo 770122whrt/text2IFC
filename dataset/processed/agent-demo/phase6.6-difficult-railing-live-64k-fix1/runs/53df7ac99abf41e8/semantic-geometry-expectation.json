@@ -1,0 +1,891 @@
+{
+  "case_id": "53df7ac99abf41e8",
+  "complete": true,
+  "floor_openings": {
+    "opening-first-floor-slab-atrium": {
+      "bbox": {
+        "x": [
+          6.0,
+          12.0
+        ],
+        "y": [
+          0.0,
+          3.0
+        ],
+        "z": [
+          3.0,
+          3.3
+        ]
+      },
+      "bbox_issue_code": "FLOOR_OPENING_BBOX_MISMATCH",
+      "host_slab_id": "first-floor-slab",
+      "source_fact_refs": [
+        "/known_facts/floor_slabs/1/openings/0"
+      ]
+    },
+    "opening-first-floor-slab-stair": {
+      "bbox": {
+        "x": [
+          10.0,
+          11.0
+        ],
+        "y": [
+          3.5,
+          8.0
+        ],
+        "z": [
+          3.0,
+          3.3
+        ]
+      },
+      "bbox_issue_code": "FLOOR_OPENING_BBOX_MISMATCH",
+      "host_slab_id": "first-floor-slab",
+      "source_fact_refs": [
+        "/known_facts/floor_slabs/1/openings/1"
+      ]
+    }
+  },
+  "products": {
+    "railing-atrium-north": {
+      "bbox": {
+        "x": [
+          6.0,
+          12.0
+        ],
+        "y": [
+          2.975,
+          3.025
+        ],
+        "z": [
+          3.3,
+          4.4
+        ]
+      },
+      "bbox_issue_code": "LINEAR_PRODUCT_BBOX_MISMATCH",
+      "geometry_kind": "linear_segment",
+      "ifc_class": "IfcRailing",
+      "source_fact_refs": [
+        "/products/0/geometry"
+      ]
+    },
+    "railing-atrium-west": {
+      "bbox": {
+        "x": [
+          5.975,
+          6.025
+        ],
+        "y": [
+          0.0,
+          3.0
+        ],
+        "z": [
+          3.3,
+          4.4
+        ]
+      },
+      "bbox_issue_code": "LINEAR_PRODUCT_BBOX_MISMATCH",
+      "geometry_kind": "linear_segment",
+      "ifc_class": "IfcRailing",
+      "source_fact_refs": [
+        "/products/1/geometry"
+      ]
+    }
+  },
+  "roof": {},
+  "schema_version": "text2ifc/design-geometry-expectation/1.0",
+  "slabs": {
+    "first-floor-slab": {
+      "bbox": {
+        "x": [
+          0.0,
+          12.0
+        ],
+        "y": [
+          0.0,
+          8.0
+        ],
+        "z": [
+          3.0,
+          3.3
+        ]
+      },
+      "datum": "slab_top",
+      "must_touch_walls": [
+        "wall-bathroom-corridor-storey1",
+        "wall-bathroom-stairhall-storey1",
+        "wall-dining-corridor-storey1",
+        "wall-kitchen-bathroom-storey1",
+        "wall-kitchen-corridor-storey1",
+        "wall-living-corridor-storey1",
+        "wall-living-dining-storey1",
+        "wall-stairhall-corridor-storey1",
+        "wall-storey-1-east",
+        "wall-storey-1-north",
+        "wall-storey-1-south",
+        "wall-storey-1-west"
+      ],
+      "source_fact_refs": [
+        "/known_facts/floor_slabs/1"
+      ]
+    },
+    "ground-floor-slab": {
+      "bbox": {
+        "x": [
+          0.0,
+          12.0
+        ],
+        "y": [
+          0.0,
+          8.0
+        ],
+        "z": [
+          -0.3,
+          0.0
+        ]
+      },
+      "datum": "slab_top",
+      "must_touch_walls": [],
+      "source_fact_refs": [
+        "/known_facts/floor_slabs/0"
+      ]
+    }
+  },
+  "source": "design_brief_expected_facts",
+  "spaces": {
+    "space-storey-1-bathroom": {
+      "bbox": {
+        "x": [
+          5.0,
+          7.0
+        ],
+        "y": [
+          5.0,
+          8.0
+        ],
+        "z": [
+          0.0,
+          3.0
+        ]
+      },
+      "source_fact_refs": [
+        "/known_facts/storeys/0/spaces/4"
+      ],
+      "storey_id": "storey-1"
+    },
+    "space-storey-1-corridor": {
+      "bbox": {
+        "x": [
+          0.0,
+          10.0
+        ],
+        "y": [
+          3.0,
+          5.0
+        ],
+        "z": [
+          0.0,
+          3.0
+        ]
+      },
+      "source_fact_refs": [
+        "/known_facts/storeys/0/spaces/2"
+      ],
+      "storey_id": "storey-1"
+    },
+    "space-storey-1-dining": {
+      "bbox": {
+        "x": [
+          7.0,
+          12.0
+        ],
+        "y": [
+          0.0,
+          3.0
+        ],
+        "z": [
+          0.0,
+          3.0
+        ]
+      },
+      "source_fact_refs": [
+        "/known_facts/storeys/0/spaces/1"
+      ],
+      "storey_id": "storey-1"
+    },
+    "space-storey-1-kitchen": {
+      "bbox": {
+        "x": [
+          0.0,
+          5.0
+        ],
+        "y": [
+          5.0,
+          8.0
+        ],
+        "z": [
+          0.0,
+          3.0
+        ]
+      },
+      "source_fact_refs": [
+        "/known_facts/storeys/0/spaces/3"
+      ],
+      "storey_id": "storey-1"
+    },
+    "space-storey-1-living": {
+      "bbox": {
+        "x": [
+          0.0,
+          7.0
+        ],
+        "y": [
+          0.0,
+          3.0
+        ],
+        "z": [
+          0.0,
+          3.0
+        ]
+      },
+      "source_fact_refs": [
+        "/known_facts/storeys/0/spaces/0"
+      ],
+      "storey_id": "storey-1"
+    },
+    "space-storey-1-stair-hall": {
+      "bbox": {
+        "x": [
+          7.0,
+          12.0
+        ],
+        "y": [
+          5.0,
+          8.0
+        ],
+        "z": [
+          0.0,
+          3.0
+        ]
+      },
+      "source_fact_refs": [
+        "/known_facts/storeys/0/spaces/5"
+      ],
+      "storey_id": "storey-1"
+    },
+    "space-storey-2-bathroom": {
+      "bbox": {
+        "x": [
+          5.0,
+          7.0
+        ],
+        "y": [
+          5.0,
+          8.0
+        ],
+        "z": [
+          3.3,
+          6.3
+        ]
+      },
+      "source_fact_refs": [
+        "/known_facts/storeys/1/spaces/2"
+      ],
+      "storey_id": "storey-2"
+    },
+    "space-storey-2-bedroom-1": {
+      "bbox": {
+        "x": [
+          0.0,
+          5.0
+        ],
+        "y": [
+          5.0,
+          8.0
+        ],
+        "z": [
+          3.3,
+          6.3
+        ]
+      },
+      "source_fact_refs": [
+        "/known_facts/storeys/1/spaces/1"
+      ],
+      "storey_id": "storey-2"
+    },
+    "space-storey-2-bedroom-2": {
+      "bbox": {
+        "x": [
+          7.0,
+          10.0
+        ],
+        "y": [
+          5.0,
+          8.0
+        ],
+        "z": [
+          3.3,
+          6.3
+        ]
+      },
+      "source_fact_refs": [
+        "/known_facts/storeys/1/spaces/3"
+      ],
+      "storey_id": "storey-2"
+    },
+    "space-storey-2-bedroom-3": {
+      "bbox": {
+        "x": [
+          0.0,
+          6.0
+        ],
+        "y": [
+          0.0,
+          3.0
+        ],
+        "z": [
+          3.3,
+          6.3
+        ]
+      },
+      "source_fact_refs": [
+        "/known_facts/storeys/1/spaces/4"
+      ],
+      "storey_id": "storey-2"
+    },
+    "space-storey-2-corridor": {
+      "bbox": {
+        "x": [
+          0.0,
+          10.0
+        ],
+        "y": [
+          3.0,
+          5.0
+        ],
+        "z": [
+          3.3,
+          6.3
+        ]
+      },
+      "source_fact_refs": [
+        "/known_facts/storeys/1/spaces/0"
+      ],
+      "storey_id": "storey-2"
+    }
+  },
+  "stairs": {
+    "stair-1": {
+      "bbox": {
+        "x": [
+          10.0,
+          11.0
+        ],
+        "y": [
+          3.75,
+          8.0
+        ],
+        "z": [
+          0.0,
+          3.3
+        ]
+      },
+      "bbox_issue_code": "STAIR_BBOX_MISMATCH",
+      "flight_ids": [
+        "stair-flight-1"
+      ],
+      "require_steps": true,
+      "source_fact_refs": [
+        "/known_facts/stairs/0"
+      ]
+    }
+  },
+  "tolerance": 0.05,
+  "units": "METRE",
+  "unresolved": [],
+  "walls": {
+    "wall-bathroom-bedroom2-storey2": {
+      "axis": "y",
+      "bbox": {
+        "x": [
+          6.9,
+          7.1
+        ],
+        "y": [
+          5.0,
+          8.0
+        ],
+        "z": [
+          3.3,
+          6.3
+        ]
+      },
+      "bbox_issue_code": "WALL_SEGMENT_MISMATCH",
+      "bbox_issue_path": "/walls/wall-bathroom-bedroom2-storey2",
+      "source_fact_refs": [
+        "/known_facts/storeys/1/walls/interior/5"
+      ]
+    },
+    "wall-bathroom-corridor-storey1": {
+      "axis": "x",
+      "bbox": {
+        "x": [
+          5.0,
+          7.0
+        ],
+        "y": [
+          4.9,
+          5.1
+        ],
+        "z": [
+          0.0,
+          3.0
+        ]
+      },
+      "bbox_issue_code": "WALL_SEGMENT_MISMATCH",
+      "bbox_issue_path": "/walls/wall-bathroom-corridor-storey1",
+      "source_fact_refs": [
+        "/known_facts/storeys/0/walls/interior/3"
+      ]
+    },
+    "wall-bathroom-stairhall-storey1": {
+      "axis": "y",
+      "bbox": {
+        "x": [
+          6.9,
+          7.1
+        ],
+        "y": [
+          5.0,
+          8.0
+        ],
+        "z": [
+          0.0,
+          3.0
+        ]
+      },
+      "bbox_issue_code": "WALL_SEGMENT_MISMATCH",
+      "bbox_issue_path": "/walls/wall-bathroom-stairhall-storey1",
+      "source_fact_refs": [
+        "/known_facts/storeys/0/walls/interior/7"
+      ]
+    },
+    "wall-bedroom1-bathroom-storey2": {
+      "axis": "y",
+      "bbox": {
+        "x": [
+          4.9,
+          5.1
+        ],
+        "y": [
+          5.0,
+          8.0
+        ],
+        "z": [
+          3.3,
+          6.3
+        ]
+      },
+      "bbox_issue_code": "WALL_SEGMENT_MISMATCH",
+      "bbox_issue_path": "/walls/wall-bedroom1-bathroom-storey2",
+      "source_fact_refs": [
+        "/known_facts/storeys/1/walls/interior/4"
+      ]
+    },
+    "wall-corridor-bathroom-storey2": {
+      "axis": "x",
+      "bbox": {
+        "x": [
+          5.0,
+          7.0
+        ],
+        "y": [
+          4.9,
+          5.1
+        ],
+        "z": [
+          3.3,
+          6.3
+        ]
+      },
+      "bbox_issue_code": "WALL_SEGMENT_MISMATCH",
+      "bbox_issue_path": "/walls/wall-corridor-bathroom-storey2",
+      "source_fact_refs": [
+        "/known_facts/storeys/1/walls/interior/1"
+      ]
+    },
+    "wall-corridor-bedroom1-storey2": {
+      "axis": "x",
+      "bbox": {
+        "x": [
+          0.0,
+          5.0
+        ],
+        "y": [
+          4.9,
+          5.1
+        ],
+        "z": [
+          3.3,
+          6.3
+        ]
+      },
+      "bbox_issue_code": "WALL_SEGMENT_MISMATCH",
+      "bbox_issue_path": "/walls/wall-corridor-bedroom1-storey2",
+      "source_fact_refs": [
+        "/known_facts/storeys/1/walls/interior/0"
+      ]
+    },
+    "wall-corridor-bedroom2-storey2": {
+      "axis": "x",
+      "bbox": {
+        "x": [
+          7.0,
+          10.0
+        ],
+        "y": [
+          4.9,
+          5.1
+        ],
+        "z": [
+          3.3,
+          6.3
+        ]
+      },
+      "bbox_issue_code": "WALL_SEGMENT_MISMATCH",
+      "bbox_issue_path": "/walls/wall-corridor-bedroom2-storey2",
+      "source_fact_refs": [
+        "/known_facts/storeys/1/walls/interior/2"
+      ]
+    },
+    "wall-corridor-bedroom3-storey2": {
+      "axis": "x",
+      "bbox": {
+        "x": [
+          0.0,
+          6.0
+        ],
+        "y": [
+          2.9,
+          3.1
+        ],
+        "z": [
+          3.3,
+          6.3
+        ]
+      },
+      "bbox_issue_code": "WALL_SEGMENT_MISMATCH",
+      "bbox_issue_path": "/walls/wall-corridor-bedroom3-storey2",
+      "source_fact_refs": [
+        "/known_facts/storeys/1/walls/interior/3"
+      ]
+    },
+    "wall-dining-corridor-storey1": {
+      "axis": "x",
+      "bbox": {
+        "x": [
+          7.0,
+          12.0
+        ],
+        "y": [
+          2.9,
+          3.1
+        ],
+        "z": [
+          0.0,
+          3.0
+        ]
+      },
+      "bbox_issue_code": "WALL_SEGMENT_MISMATCH",
+      "bbox_issue_path": "/walls/wall-dining-corridor-storey1",
+      "source_fact_refs": [
+        "/known_facts/storeys/0/walls/interior/1"
+      ]
+    },
+    "wall-kitchen-bathroom-storey1": {
+      "axis": "y",
+      "bbox": {
+        "x": [
+          4.9,
+          5.1
+        ],
+        "y": [
+          5.0,
+          8.0
+        ],
+        "z": [
+          0.0,
+          3.0
+        ]
+      },
+      "bbox_issue_code": "WALL_SEGMENT_MISMATCH",
+      "bbox_issue_path": "/walls/wall-kitchen-bathroom-storey1",
+      "source_fact_refs": [
+        "/known_facts/storeys/0/walls/interior/6"
+      ]
+    },
+    "wall-kitchen-corridor-storey1": {
+      "axis": "x",
+      "bbox": {
+        "x": [
+          0.0,
+          5.0
+        ],
+        "y": [
+          4.9,
+          5.1
+        ],
+        "z": [
+          0.0,
+          3.0
+        ]
+      },
+      "bbox_issue_code": "WALL_SEGMENT_MISMATCH",
+      "bbox_issue_path": "/walls/wall-kitchen-corridor-storey1",
+      "source_fact_refs": [
+        "/known_facts/storeys/0/walls/interior/2"
+      ]
+    },
+    "wall-living-corridor-storey1": {
+      "axis": "x",
+      "bbox": {
+        "x": [
+          0.0,
+          7.0
+        ],
+        "y": [
+          2.9,
+          3.1
+        ],
+        "z": [
+          0.0,
+          3.0
+        ]
+      },
+      "bbox_issue_code": "WALL_SEGMENT_MISMATCH",
+      "bbox_issue_path": "/walls/wall-living-corridor-storey1",
+      "source_fact_refs": [
+        "/known_facts/storeys/0/walls/interior/0"
+      ]
+    },
+    "wall-living-dining-storey1": {
+      "axis": "y",
+      "bbox": {
+        "x": [
+          6.9,
+          7.1
+        ],
+        "y": [
+          0.0,
+          3.0
+        ],
+        "z": [
+          0.0,
+          3.0
+        ]
+      },
+      "bbox_issue_code": "WALL_SEGMENT_MISMATCH",
+      "bbox_issue_path": "/walls/wall-living-dining-storey1",
+      "source_fact_refs": [
+        "/known_facts/storeys/0/walls/interior/5"
+      ]
+    },
+    "wall-stairhall-corridor-storey1": {
+      "axis": "x",
+      "bbox": {
+        "x": [
+          7.0,
+          12.0
+        ],
+        "y": [
+          4.9,
+          5.1
+        ],
+        "z": [
+          0.0,
+          3.0
+        ]
+      },
+      "bbox_issue_code": "WALL_SEGMENT_MISMATCH",
+      "bbox_issue_path": "/walls/wall-stairhall-corridor-storey1",
+      "source_fact_refs": [
+        "/known_facts/storeys/0/walls/interior/4"
+      ]
+    },
+    "wall-storey-1-east": {
+      "axis": "y",
+      "bbox": {
+        "x": [
+          11.9,
+          12.1
+        ],
+        "y": [
+          0.0,
+          8.0
+        ],
+        "z": [
+          0.0,
+          3.0
+        ]
+      },
+      "bbox_issue_code": "WALL_SEGMENT_MISMATCH",
+      "bbox_issue_path": "/walls/wall-storey-1-east",
+      "source_fact_refs": [
+        "/known_facts/walls/3"
+      ]
+    },
+    "wall-storey-1-north": {
+      "axis": "x",
+      "bbox": {
+        "x": [
+          0.0,
+          12.0
+        ],
+        "y": [
+          7.9,
+          8.1
+        ],
+        "z": [
+          0.0,
+          3.0
+        ]
+      },
+      "bbox_issue_code": "WALL_SEGMENT_MISMATCH",
+      "bbox_issue_path": "/walls/wall-storey-1-north",
+      "source_fact_refs": [
+        "/known_facts/walls/1"
+      ]
+    },
+    "wall-storey-1-south": {
+      "axis": "x",
+      "bbox": {
+        "x": [
+          0.0,
+          12.0
+        ],
+        "y": [
+          -0.1,
+          0.1
+        ],
+        "z": [
+          0.0,
+          3.0
+        ]
+      },
+      "bbox_issue_code": "WALL_SEGMENT_MISMATCH",
+      "bbox_issue_path": "/walls/wall-storey-1-south",
+      "source_fact_refs": [
+        "/known_facts/walls/0"
+      ]
+    },
+    "wall-storey-1-west": {
+      "axis": "y",
+      "bbox": {
+        "x": [
+          -0.1,
+          0.1
+        ],
+        "y": [
+          0.0,
+          8.0
+        ],
+        "z": [
+          0.0,
+          3.0
+        ]
+      },
+      "bbox_issue_code": "WALL_SEGMENT_MISMATCH",
+      "bbox_issue_path": "/walls/wall-storey-1-west",
+      "source_fact_refs": [
+        "/known_facts/walls/2"
+      ]
+    },
+    "wall-storey-2-east": {
+      "axis": "y",
+      "bbox": {
+        "x": [
+          11.9,
+          12.1
+        ],
+        "y": [
+          0.0,
+          8.0
+        ],
+        "z": [
+          3.3,
+          6.3
+        ]
+      },
+      "bbox_issue_code": "WALL_SEGMENT_MISMATCH",
+      "bbox_issue_path": "/walls/wall-storey-2-east",
+      "source_fact_refs": [
+        "/known_facts/walls/15"
+      ]
+    },
+    "wall-storey-2-north": {
+      "axis": "x",
+      "bbox": {
+        "x": [
+          0.0,
+          12.0
+        ],
+        "y": [
+          7.9,
+          8.1
+        ],
+        "z": [
+          3.3,
+          6.3
+        ]
+      },
+      "bbox_issue_code": "WALL_SEGMENT_MISMATCH",
+      "bbox_issue_path": "/walls/wall-storey-2-north",
+      "source_fact_refs": [
+        "/known_facts/walls/13"
+      ]
+    },
+    "wall-storey-2-south": {
+      "axis": "x",
+      "bbox": {
+        "x": [
+          0.0,
+          12.0
+        ],
+        "y": [
+          -0.1,
+          0.1
+        ],
+        "z": [
+          3.3,
+          6.3
+        ]
+      },
+      "bbox_issue_code": "WALL_SEGMENT_MISMATCH",
+      "bbox_issue_path": "/walls/wall-storey-2-south",
+      "source_fact_refs": [
+        "/known_facts/walls/12"
+      ]
+    },
+    "wall-storey-2-west": {
+      "axis": "y",
+      "bbox": {
+        "x": [
+          -0.1,
+          0.1
+        ],
+        "y": [
+          0.0,
+          8.0
+        ],
+        "z": [
+          3.3,
+          6.3
+        ]
+      },
+      "bbox_issue_code": "WALL_SEGMENT_MISMATCH",
+      "bbox_issue_path": "/walls/wall-storey-2-west",
+      "source_fact_refs": [
+        "/known_facts/walls/14"
+      ]
+    }
+  }
+}

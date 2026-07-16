@@ -1,0 +1,25 @@
+{
+  "blocking": true,
+  "deterministic_gate_status": "failed",
+  "evidence_paths": [
+    "gate-summary.json",
+    "generator/candidate.json"
+  ],
+  "findings": [
+    {
+      "code": "OPENING_HOST_LOCAL_BOUNDS_MISMATCH",
+      "component_ids": [
+        "opening-door-main-entry",
+        "door-main-entry"
+      ],
+      "evidence_paths": [
+        "gate-summary.json",
+        "generator/candidate.json"
+      ],
+      "message": "Opening for main entry door has incorrect placement orientation and profile dimensions. The host wall 'wall-storey-1-west' runs along global Y, so the opening's local X should align with the wall direction (ref_direction [0,1,0]) and its profile width (door width) should be 1000 mm along that direction, with thickness 200 mm. Current ref_direction is [1,0,0] and profile is {x:200, y:1000}, which transposes width and thickness and misaligns the opening.",
+      "severity": "error"
+    }
+  ],
+  "recommendation": "revise",
+  "schema_version": "text2ifc/audit/2.0"
+}

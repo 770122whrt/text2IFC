@@ -1,0 +1,40 @@
+{
+  "issues": [
+    {
+      "actual_ref": "entity:opening-door-main-entry#/attributes",
+      "evidence": "OPENING_HOST_LOCAL_BOUNDS_MISMATCH: Opening transformed local bounds must remain inside the host wall bounds. Check placement and representation axes. Evidence: {\"coordinate_contract\": {\"local_x\": \"opening width along the host wall\", \"local_y\": \"opening thickness through the host wall\", \"local_z\": \"opening height\"}, \"correction_constraints\": {\"extrusion\": \"Use depth=semantic height and direction=[0,0,1].\", \"forbidden\": \"Do not swap width, thickness, and height to chase one bounds check.\", \"placement\": \"Place and orient the opening in the host wall local frame before adjusting its filling.\", \"profile\": \"Use profile.x=semantic width and profile.y=host-wall thickness.\"}, \"element_id\": \"door-main-entry\", \"expected_object_placement_ref_direction\": [1, 0, 0], \"expected_representation_direction\": [0, 0, 1], \"host_bounds\": {\"max\": [4000.0, 100.0, 3000.0], \"min\": [-4000.0, -100.0, 0.0], \"size\": [8000.0, 200.0, 3000.0]}, \"host_profile\": {\"x\": 8000.0, \"y\": 200.0}, \"host_wall\": \"wall-storey-1-west\", \"opening_bounds\": {\"max\": [100.0, 500.0, 2100.0], \"min\": [-100.0, -500.0, 0.0], \"size\": [200.0, 1000.0, 2100.0]}, \"opening_id\": \"opening-door-main-entry\", \"opening_origin\": [0, 0, 0], \"opening_profile\": {\"x\": 200.0, \"y\": 1000.0}, \"path\": \"/entities/opening-door-main-entry/attributes/Representation\", \"recommended_action\": \"align_opening_frame_to_host\", \"target_entity_ids\": [\"opening-door-main-entry\"]}",
+      "expected_fact_ref": null,
+      "issue_id": "issue_deterministic_gate_0001",
+      "issue_type": "geometry_invalid",
+      "owner": "generator",
+      "retryable": true,
+      "severity": "blocking",
+      "source": "deterministic_gate",
+      "suggested_route": "regenerate_json"
+    },
+    {
+      "actual_ref": "entity:opening-door-main-entry#/attributes",
+      "evidence": "OPENING_HOST_LOCAL_BOUNDS_MISMATCH: Opening for main entry door has incorrect placement orientation and profile dimensions. The host wall 'wall-storey-1-west' runs along global Y, so the opening's local X should align with the wall direction (ref_direction [0,1,0]) and its profile width (door width) should be 1000 mm along that direction, with thickness 200 mm. Current ref_direction is [1,0,0] and profile is {x:200, y:1000}, which transposes width and thickness and misaligns the opening. Evidence: {\"component_ids\": [\"opening-door-main-entry\", \"door-main-entry\"], \"evidence_paths\": [\"gate-summary.json\", \"generator/candidate.json\"], \"severity\": \"error\"}",
+      "expected_fact_ref": null,
+      "issue_id": "issue_audit_0001_01",
+      "issue_type": "geometry_invalid",
+      "owner": "generator",
+      "retryable": true,
+      "severity": "blocking",
+      "source": "audit",
+      "suggested_route": "regenerate_json"
+    },
+    {
+      "actual_ref": "entity:door-main-entry#/attributes",
+      "evidence": "OPENING_HOST_LOCAL_BOUNDS_MISMATCH: Opening for main entry door has incorrect placement orientation and profile dimensions. The host wall 'wall-storey-1-west' runs along global Y, so the opening's local X should align with the wall direction (ref_direction [0,1,0]) and its profile width (door width) should be 1000 mm along that direction, with thickness 200 mm. Current ref_direction is [1,0,0] and profile is {x:200, y:1000}, which transposes width and thickness and misaligns the opening. Evidence: {\"component_ids\": [\"opening-door-main-entry\", \"door-main-entry\"], \"evidence_paths\": [\"gate-summary.json\", \"generator/candidate.json\"], \"severity\": \"error\"}",
+      "expected_fact_ref": null,
+      "issue_id": "issue_audit_0001_02",
+      "issue_type": "geometry_invalid",
+      "owner": "generator",
+      "retryable": true,
+      "severity": "blocking",
+      "source": "audit",
+      "suggested_route": "regenerate_json"
+    }
+  ]
+}

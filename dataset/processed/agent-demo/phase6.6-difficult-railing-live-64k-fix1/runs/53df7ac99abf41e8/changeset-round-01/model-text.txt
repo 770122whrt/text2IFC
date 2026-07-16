@@ -1,0 +1,133 @@
+{
+  "schema_version": "text2ifc/bim-json-changeset/1.0",
+  "changeset_id": "changeset-revision-04",
+  "base_revision_id": "revision-03",
+  "base_candidate_hash": "sha256:97b52a34db075bf1362d3df76a44a8a74343a9ce7ef10bf5aabf45512fd6ff17",
+  "expected_facts_hash": "sha256:4e54b604e3a94e586911bbc68ee29003e951361f1f512016581ba057b3925ea0",
+  "source_issue_ids": [
+    "issue_geometry_gate_0001",
+    "issue_geometry_gate_0002",
+    "issue_deterministic_gate_0001",
+    "issue_deterministic_gate_0002",
+    "issue_deterministic_gate_0003",
+    "issue_deterministic_gate_0004",
+    "issue_deterministic_gate_0005",
+    "issue_deterministic_gate_0006",
+    "issue_deterministic_gate_0007",
+    "issue_deterministic_gate_0008",
+    "issue_audit_0001",
+    "issue_audit_0002",
+    "issue_audit_0003",
+    "issue_audit_0004",
+    "issue_audit_0005",
+    "issue_audit_0006",
+    "issue_audit_0007",
+    "issue_audit_0008",
+    "issue_audit_0009",
+    "issue_audit_0010"
+  ],
+  "scope_id": "scope-revision-04",
+  "operations": [
+    {
+      "op": "update_entity",
+      "operation_id": "update-opening-first-floor-slab-atrium",
+      "target_id": "opening-first-floor-slab-atrium",
+      "target_component_hash": "sha256:97b6d85b836b76d0458783f18d351cfa07099ef2a7c8c5d3171c0ee0be302040",
+      "changes": {
+        "/attributes/ObjectPlacement/origin": [3000, -2500, 0]
+      },
+      "evidence_refs": ["issue_geometry_gate_0001:/evidence", "issue_audit_0001:/evidence"]
+    },
+    {
+      "op": "update_entity",
+      "operation_id": "update-opening-first-floor-slab-stair",
+      "target_id": "opening-first-floor-slab-stair",
+      "target_component_hash": "sha256:82e9d6f336dd03fc7e9e0bf4863ac0f780bd9d963af0c5c00e42852cb74cdfb5",
+      "changes": {
+        "/attributes/ObjectPlacement/origin": [4500, 1750, 0]
+      },
+      "evidence_refs": ["issue_geometry_gate_0002:/evidence", "issue_audit_0002:/evidence"]
+    },
+    {
+      "op": "update_entity",
+      "operation_id": "update-opening-door-bathroom-corridor-storey2",
+      "target_id": "opening-door-bathroom-corridor-storey2",
+      "target_component_hash": "sha256:80e9d4db5cb1a43715de43b5b4597924800063dab56627eb0d6871f0fdcd970b",
+      "changes": {
+        "/attributes/ObjectPlacement/origin": [0, 0, 0]
+      },
+      "evidence_refs": ["issue_deterministic_gate_0001:/evidence", "issue_audit_0003:/evidence"]
+    },
+    {
+      "op": "update_entity",
+      "operation_id": "update-opening-door-bedroom1-corridor-storey2",
+      "target_id": "opening-door-bedroom1-corridor-storey2",
+      "target_component_hash": "sha256:ab4a0430eaad6d3c497d4c4856f618e30a4950bde43fa07b24d24b1072545e91",
+      "changes": {
+        "/attributes/ObjectPlacement/origin": [0, 0, 0]
+      },
+      "evidence_refs": ["issue_deterministic_gate_0002:/evidence", "issue_audit_0004:/evidence"]
+    },
+    {
+      "op": "update_entity",
+      "operation_id": "update-opening-door-bedroom2-corridor-storey2",
+      "target_id": "opening-door-bedroom2-corridor-storey2",
+      "target_component_hash": "sha256:f17fd8403bba124bb788e2924eff81303433ea90bca72e250ca27dfa4a6b6bde",
+      "changes": {
+        "/attributes/ObjectPlacement/origin": [0, 0, 0]
+      },
+      "evidence_refs": ["issue_deterministic_gate_0003:/evidence", "issue_audit_0005:/evidence"]
+    },
+    {
+      "op": "update_entity",
+      "operation_id": "update-opening-door-bedroom3-corridor-storey2",
+      "target_id": "opening-door-bedroom3-corridor-storey2",
+      "target_component_hash": "sha256:408930a0655906f38550f11c47538253f8524fecc657fbb5bac697cf6c48267c",
+      "changes": {
+        "/attributes/ObjectPlacement/origin": [0, 0, 0]
+      },
+      "evidence_refs": ["issue_deterministic_gate_0004:/evidence", "issue_audit_0006:/evidence"]
+    },
+    {
+      "op": "update_entity",
+      "operation_id": "update-opening-door-main-entry",
+      "target_id": "opening-door-main-entry",
+      "target_component_hash": "sha256:12c6df84aab9667137240b5b3303625c8f5697ec34e96ec5b4d7c47f5135e2cc",
+      "changes": {
+        "/attributes/ObjectPlacement/ref_direction": [1, 0, 0],
+        "/attributes/Representation/profile": {"kind": "rectangle", "x": 200, "y": 1000}
+      },
+      "evidence_refs": ["issue_deterministic_gate_0005:/evidence", "issue_audit_0007:/evidence"]
+    },
+    {
+      "op": "update_entity",
+      "operation_id": "update-door-main-entry",
+      "target_id": "door-main-entry",
+      "target_component_hash": "sha256:d0675cf43edd4c9d99295976ca96f5870ecd664dd1866bc69612f0fc69095221",
+      "changes": {
+        "/attributes/ObjectPlacement/ref_direction": [1, 0, 0]
+      },
+      "evidence_refs": ["issue_deterministic_gate_0006:/evidence", "issue_audit_0008:/evidence"]
+    },
+    {
+      "op": "update_entity",
+      "operation_id": "update-opening-window-bathroom-north-high-storey2",
+      "target_id": "opening-window-bathroom-north-high-storey2",
+      "target_component_hash": "sha256:8c933a3e926399c4ab716514d5d9c32d8c63446219360f94dc368fc1fb3ee2ed",
+      "changes": {
+        "/attributes/ObjectPlacement/origin": [0, 0, 1600]
+      },
+      "evidence_refs": ["issue_deterministic_gate_0007:/evidence", "issue_audit_0009:/evidence"]
+    },
+    {
+      "op": "update_entity",
+      "operation_id": "update-opening-window-bedroom2-north",
+      "target_id": "opening-window-bedroom2-north",
+      "target_component_hash": "sha256:3db50bedd9161e08726743749f114ed5f7819f67f74ceb84e42b7103ad55ddb6",
+      "changes": {
+        "/attributes/ObjectPlacement/origin": [2500, 0, 900]
+      },
+      "evidence_refs": ["issue_deterministic_gate_0008:/evidence", "issue_audit_0010:/evidence"]
+    }
+  ]
+}
