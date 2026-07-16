@@ -780,6 +780,6 @@ frozen inputs produce accepted reopenable IFC artifacts.
 single-storey Prompt/few-shot contract, bounded legacy room migration, and
 fail-closed empty projection guard are implemented. Offline Easy projection
 reports 1 storey, 1 space, 4 walls, 1 door, and 1 window; focused tests passed
-35 and the full Agent regression passed 546. No live provider rerun occurred,
+36 and the full Agent regression passed 546. No live provider rerun occurred,
 so STABLE-01 remains 0 / 3 and is not reported as a statistical stability
 rate. P65-UAT-004 is resolved; P65-UAT-005 through P65-UAT-007 remain open.*
