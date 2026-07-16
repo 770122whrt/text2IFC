@@ -1,5 +1,8 @@
+import hashlib
 import json
 from pathlib import Path
+
+import pytest
 
 from scripts.agent import run_phase6_5_live_stability
 
@@ -80,8 +83,36 @@ def test_live_harness_has_no_scripted_model_answer_option():
     assert "--output-root" in option_strings
     assert "--timeout-seconds" in option_strings
     assert "--trace-level" in option_strings
+    assert "--manifest" in option_strings
     assert "--scripted-stdin" not in option_strings
     assert "--answers-json" not in option_strings
+
+
+def test_frozen_manifest_loader_preserves_input_and_rejects_hash_drift(tmp_path):
+    text = "创建一个六米乘四米的单层房间。"
+    manifest_path = tmp_path / "case.json"
+    payload = {
+        "case_id": "STD-E-RES-01",
+        "difficulty": "easy",
+        "input": text,
+        "input_sha256": hashlib.sha256(text.encode("utf-8")).hexdigest(),
+        "model_output": None,
+    }
+    manifest_path.write_text(
+        json.dumps(payload, ensure_ascii=False), encoding="utf-8"
+    )
+
+    loaded = run_phase6_5_live_stability.load_frozen_manifest(manifest_path)
+
+    assert loaded["case_id"] == "STD-E-RES-01"
+    assert loaded["input"] == text
+
+    payload["input"] += "不要改变原文。"
+    manifest_path.write_text(
+        json.dumps(payload, ensure_ascii=False), encoding="utf-8"
+    )
+    with pytest.raises(ValueError, match="input_sha256"):
+        run_phase6_5_live_stability.load_frozen_manifest(manifest_path)
 
 
 def test_live_harness_exposes_graded_cases_with_single_run_defaults():
