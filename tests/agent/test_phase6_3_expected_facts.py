@@ -47,6 +47,7 @@ def test_expected_facts_extracts_complex_multi_storey_obligations(tmp_path):
         "IfcSpace": 9,
         "IfcDoor": 9,
         "IfcWindow": 9,
+        "IfcSlab": 2,
     }
     assert expected["slabs"] == [
         {"id": "ground-floor-slab", "storey": "storey-1"},
@@ -110,6 +111,117 @@ def test_expected_facts_reads_canonical_floor_slabs_and_vertical_datums():
         },
     ]
     assert expected["roof"]["bottom_elevation_mm"] == 6150
+
+
+def test_expected_facts_projects_explicit_railings_as_linear_products():
+    expected = build_expected_facts(
+        case_id="difficult-railing-products",
+        design_brief={
+            "schema_version": "text2ifc/design-brief/2.0",
+            "status": "ready",
+            "known_facts": {
+                "storeys": [
+                    {"id": "storey-1", "elevation_mm": 0},
+                    {"id": "storey-2", "elevation_mm": 3300},
+                ],
+                "railings": [
+                    {
+                        "id": "railing-atrium-north",
+                        "ifc_class": "IfcRailing",
+                        "storey": "storey-2",
+                        "start_mm": [6000, 3000],
+                        "end_mm": [12000, 3000],
+                        "base_elevation_mm": 3300,
+                        "height_mm": 1100,
+                        "thickness_mm": 50,
+                        "alignment_target": "void-atrium:north-edge",
+                    },
+                    {
+                        "id": "railing-atrium-west",
+                        "ifc_class": "IfcRailing",
+                        "storey": "storey-2",
+                        "start_mm": [6000, 0],
+                        "end_mm": [6000, 3000],
+                        "base_elevation_mm": 3300,
+                        "height_mm": 1100,
+                        "thickness_mm": 50,
+                        "alignment_target": "void-atrium:west-edge",
+                    },
+                ],
+            },
+        },
+    )
+
+    assert expected["products"] == [
+        {
+            "id": "railing-atrium-north",
+            "ifc_class": "IfcRailing",
+            "storey": "storey-2",
+            "geometry": {
+                "kind": "linear_segment",
+                "start_mm": [6000, 3000, 3300],
+                "end_mm": [12000, 3000, 3300],
+                "height_mm": 1100,
+                "thickness_mm": 50,
+            },
+            "alignment_target": "void-atrium:north-edge",
+        },
+        {
+            "id": "railing-atrium-west",
+            "ifc_class": "IfcRailing",
+            "storey": "storey-2",
+            "geometry": {
+                "kind": "linear_segment",
+                "start_mm": [6000, 0, 3300],
+                "end_mm": [6000, 3000, 3300],
+                "height_mm": 1100,
+                "thickness_mm": 50,
+            },
+            "alignment_target": "void-atrium:west-edge",
+        },
+    ]
+    assert expected["total_counts"]["IfcRailing"] == 2
+    assert expected["required_relationships"]["containment"]["products"] == 2
+    storey_package = next(
+        package
+        for package in expected["generation_package_manifest"]["packages"]
+        if package["package_id"] == "package-storey-2"
+    )
+    assert {"railing-atrium-north", "railing-atrium-west"} <= set(
+        storey_package["owned_component_ids"]
+    )
+
+
+def test_incomplete_railing_product_blocks_package_generation():
+    expected = build_expected_facts(
+        case_id="incomplete-railing-product",
+        design_brief={
+            "schema_version": "text2ifc/design-brief/2.0",
+            "status": "ready",
+            "known_facts": {
+                "storeys": [{"id": "storey-1", "elevation_mm": 0}],
+                "railings": [
+                    {
+                        "id": "railing-incomplete",
+                        "ifc_class": "IfcRailing",
+                        "storey": "storey-missing",
+                        "start_mm": [0, 0],
+                        "height_mm": 1100,
+                    }
+                ],
+            },
+        },
+    )
+
+    manifest = expected["generation_package_manifest"]
+    assert manifest["status"] == "draft_required"
+    assert {
+        (issue["code"], issue["path"])
+        for issue in manifest["issues"]
+    } >= {
+        ("PACKAGE_COMPONENT_OWNER_UNRESOLVED", "/products/0/storey"),
+        ("PACKAGE_PRODUCT_GEOMETRY_INCOMPLETE", "/products/0/geometry"),
+    }
 
 
 def test_expected_facts_projects_complete_single_storey_room_inventory():
