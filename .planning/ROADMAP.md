@@ -1158,4 +1158,5 @@ and human UAT. Run at most one focused human-facing REPL acceptance only if
 existing evidence cannot prove CLI-08. Do not add model features, weaken Gates,
 or repeat Easy/Medium/Difficult stability runs in this phase.
 
-**Status:** Context captured; planning pending.
+**Status:** Complete. Verification evidence is backfilled, 76 requirements have
+explicit outcomes, current regression passed, and the v1.0 audit may be rerun.

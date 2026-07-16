@@ -570,9 +570,9 @@ machine 3 / 3 and human 3 / 3. The project is ready for milestone audit.
 
 ## Next Action
 
-Plan Phase 6.7, the single v1.0 gap-closure phase. It backfills missing
-VERIFICATION artifacts, explicitly closes CLI-08/CLI-09, and reruns the audit.
-Repeated stability runs remain optional next-milestone work.
+Rerun the v1.0 milestone audit using Phase 6.7 evidence. If it passes with the
+five explicit deferred/debt requirements, archive and tag v1.0. Repeated
+stability runs remain optional next-milestone work.
 
 ## Accumulated Context
 

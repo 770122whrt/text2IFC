@@ -91,53 +91,53 @@ requirements.
 
 ### Geometric and Relational Fidelity
 
-- **GEN-01**: Generated text-to-BIM-JSON-to-IFC demos preserve correct spatial
+- [x] **GEN-01**: Generated text-to-BIM-JSON-to-IFC demos preserve correct spatial
   relationships, user-visible content, supported attributes, IFC hierarchy,
   containment, and opening/filling relationships under automated checks.
-- **GEN-02**: Text-to-BIM-JSON-to-IFC experiments record quantitative metrics,
+- [x] **GEN-02**: Text-to-BIM-JSON-to-IFC experiments record quantitative metrics,
   error classes, prompt/provider versions, repair iterations, and durable
   artifacts, including a generated human-readable `report.md` that exposes
   critical intermediate inputs and outputs, so reliability can improve through
   measured iteration.
-- **GEO-03**: Preserve material assignments and layer details.
-- **GEO-04**: Preserve supported topology and connection relationships.
-- **GEO-05**: Preserve supported arbitrary profiles, BReps, tessellation, and
+- [ ] **GEO-03**: Preserve material assignments and layer details.
+- [ ] **GEO-04**: Preserve supported topology and connection relationships.
+- [ ] **GEO-05**: Preserve supported arbitrary profiles, BReps, tessellation, and
   reusable mapped geometry.
-- **IFC-06**: Expand beyond the Phase 2.5 architectural generation profile
+- [ ] **IFC-06**: Expand beyond the Phase 2.5 architectural generation profile
   with schema-aware support for selected structural, furnishing, and MEP
   classes.
 
 ### Natural-language Agent
 
-- **AGENT-01**: Convert natural language into valid BIM JSON.
-- **AGENT-02**: Ask targeted questions for missing required values.
-- **AGENT-03**: Maintain multi-turn clarification state.
-- **PROMPT-01**: Every provider-backed prompt run is rendered from a versioned
+- [x] **AGENT-01**: Convert natural language into valid BIM JSON.
+- [x] **AGENT-02**: Ask targeted questions for missing required values.
+- [x] **AGENT-03**: Maintain multi-turn clarification state.
+- [x] **PROMPT-01**: Every provider-backed prompt run is rendered from a versioned
   prompt registry and records template ID, template hash, structured inputs,
   rendered prompt, raw output, parsed output, feedback, repair attempts,
   metrics, and artifact paths.
-- **AGENT-04**: A Design Brief Agent converts raw user text into explicit known
+- [x] **AGENT-04**: A Design Brief Agent converts raw user text into explicit known
   facts, missing facts, ambiguities, corrections, and clarification targets
   without outputting BIM JSON or IFC.
-- **AGENT-05**: An Audit Agent reviews user intent coverage against the Design
+- [x] **AGENT-05**: An Audit Agent reviews user intent coverage against the Design
   Brief, BIM JSON, validator diagnostics, generated IFC metrics, and artifacts,
   but cannot override deterministic failures.
-- **REPAIR-01**: Failure handling distinguishes no-repair success, conditional
+- [x] **REPAIR-01**: Failure handling distinguishes no-repair success, conditional
   repair attempts, Draft clarification, and blocking failures. Repair is not
   required for every successful run; when attempted, it uses validation and
   geometry feedback, records before/after issue deltas, and returns Draft
   questions instead of inventing missing facts.
-- **OBS-01**: Prompt and Agent iteration uses an Observer Loop that records
+- [x] **OBS-01**: Prompt and Agent iteration uses an Observer Loop that records
   failure classes, metrics, prompt/provider versions, repair attempts, and
   experiment evidence before prompt changes are accepted. Each run must also
   produce a generated Markdown report that lets a human review the input,
   prompt, raw output, parsed BIM JSON or Draft, validation feedback, geometry
   feedback, audit result, metrics, and final artifacts from one file.
-- **MODEL-01**: Evaluate fine-tuning against prompt-only and structured-output
+- [x] **MODEL-01**: Evaluate fine-tuning against prompt-only and structured-output
   baselines.
-- **MODEL-02**: Expand training data only from license-reviewed sources with
+- [x] **MODEL-02**: Expand training data only from license-reviewed sources with
   provenance manifests.
-- **DEPLOY-01**: Package the selected model and deterministic compiler behind
+- [x] **DEPLOY-01**: Package the selected model and deterministic compiler behind
   a repeatable deployment interface.
 
 ### Live Mimo Multi-agent Acceptance
@@ -168,27 +168,27 @@ requirements.
 
 ### Interactive CLI and OpenAI-Compatible Orchestration
 
-- [ ] **CLI-01**: The project verifies Mimo OpenAI-compatible Chat Completions
+- [x] **CLI-01**: The project verifies Mimo OpenAI-compatible Chat Completions
   and OpenAI Agents SDK feasibility with redacted live evidence before any SDK
   adoption claim.
-- [ ] **CLI-02**: A Chinese-first CLI accepts user request and answer turns from
+- [x] **CLI-02**: A Chinese-first CLI accepts user request and answer turns from
   stdin, persists append-only session records in a shared SQLite database keyed
   by `session_id` and `session_hash`, and supports safe status/help/quit
   behavior.
-- [ ] **CLI-03**: The interactive Design Brief loop asks one to three Chinese
+- [x] **CLI-03**: The interactive Design Brief loop asks one to three Chinese
   Agent-authored clarification questions per turn and records user answers as
   real transcript turns rather than prewritten `answers.json` facts.
-- [ ] **CLI-04**: The CLI executes the role-isolated Design Brief, Generator,
+- [x] **CLI-04**: The CLI executes the role-isolated Design Brief, Generator,
   deterministic validation, IFC compile/reopen, geometry gates, conditional
   repair, and Audit route to a terminal Formal, Draft, or blocked outcome.
-- [ ] **CLI-05**: Every CLI run generates a human-review `report.md` from
+- [x] **CLI-05**: Every CLI run generates a human-review `report.md` from
   session DB records and linked artifact references containing the original
   input, transcript, prompts, raw outputs, parsed outputs, gate feedback,
   route, metrics, audit result, and final artifact paths.
-- [ ] **CLI-06**: Live CLI claims require real Mimo provider IDs, finish
+- [x] **CLI-06**: Live CLI claims require real Mimo provider IDs, finish
   reasons, usage, raw output, artifact secret scan, and evidence-class labels;
   fake/file/replay output cannot satisfy live acceptance.
-- [ ] **CLI-07**: The shared session store exposes query, resume, and export
+- [x] **CLI-07**: The shared session store exposes query, resume, and export
   interfaces so users and later APIs can list sessions, inspect turns, inspect
   agent calls, inspect artifacts, resume incomplete sessions, and export one
   session's review bundle by `session_id` or `session_hash`.
@@ -197,7 +197,7 @@ requirements.
   is read, the accepted session is marked as terminal/live interaction, and
   scripted stdin, prewritten answer files, fake providers, or replay evidence
   cannot satisfy final acceptance.
-- [ ] **CLI-09**: Deterministic generated-IFC feedback is available to Audit
+- [x] **CLI-09**: Deterministic generated-IFC feedback is available to Audit
   before final acceptance. Audit can classify failed schema, compile, reopen,
   geometry, report, verifier, or secret-scan gates, but cannot override them;
   true candidate geometry failures route to bounded repair/generation, and
@@ -206,29 +206,29 @@ requirements.
 
 ### Scalable Gate-Audit and Complex-building Reliability
 
-- [ ] **GEN-03**: Complex multi-storey natural-language requests must not be
+- [x] **GEN-03**: Complex multi-storey natural-language requests must not be
   accepted merely because BIM JSON validates and IFC reopens. The system must
   either produce an accepted IFC whose applicable explicit facts are covered,
   or block with a precise route and evidence.
-- [ ] **GATE-01**: Deterministic gates and Audit operate on one shared evidence
+- [x] **GATE-01**: Deterministic gates and Audit operate on one shared evidence
   bundle for the same candidate. Audit can classify, dispute applicability, or
   route failures, but cannot override failed applicable gates. The shared
   evidence must bind gate summary, Audit input, route decision, report, and
   manifest through matching candidate and evidence hashes.
-- [ ] **GATE-02**: Expected facts and gate checks are dynamically derived from
+- [x] **GATE-02**: Expected facts and gate checks are dynamically derived from
   Design Brief and transcript evidence. Production logic must not hard-code
   storey count, room count, wall count, door/window count, or the two-storey
   benchmark shape, and non-two-storey coverage must exercise dynamic gates and
   route decisions rather than expected-fact extraction only.
-- [ ] **GATE-03**: Formal acceptance checks dynamic completeness, storey/space
+- [x] **GATE-03**: Formal acceptance checks dynamic completeness, storey/space
   containment, host-wall obligations, and door/window opening/fill
   relationships when those facts are explicit and currently supported.
-- [ ] **ROUTE-01**: Failed Gate-Audit review records a route decision that
+- [x] **ROUTE-01**: Failed Gate-Audit review records a route decision that
   identifies the owning next stage: Design Brief revision, Generator
   regeneration, local repair, Draft/clarification, gate dispute, or blocked
   failure. Bounded retry loops stop when issue counts do not improve, and
   stale/mismatched evidence hashes block acceptance.
-- [ ] **TRACE-02**: Live REPL generation supports compact/debug/full trace
+- [x] **TRACE-02**: Live REPL generation supports compact/debug/full trace
   levels. Compact is the default to reduce normal generation file writes and
   review noise, while debug/full preserves complete prompt/provider evidence
   for audits. Compact non-accept routes must preserve or link recoverable
@@ -303,16 +303,16 @@ requirements.
 | DRAFT-01 | Phase 2.5 | Complete |
 | EXTRACT-01 | Phase 2.5 | Complete |
 | COMPAT-01 | Phase 2.5 | Complete |
-| TEXT-01 | Phase 6.7 verification closure | Pending |
-| TEXT-02 | Phase 6.7 verification closure | Pending |
-| TEXT-03 | Phase 6.7 verification closure | Pending |
-| E2E-01 | Phase 6.7 verification closure | Pending |
-| GEN-01 | Phase 4 | Planned |
-| GEN-02 | Phase 4 | Planned |
-| GEO-03 | Phase 4 | Planned |
-| GEO-04 | Phase 4 | Planned |
-| GEO-05 | Phase 4 | Planned |
-| IFC-06 | Phase 4 | Planned |
+| TEXT-01 | Phase 3 / 6.7 verification closure | Complete |
+| TEXT-02 | Phase 3 / 6.7 verification closure | Complete |
+| TEXT-03 | Phase 3 / 6.7 verification closure | Complete |
+| E2E-01 | Phase 3 / 6.7 verification closure | Complete |
+| GEN-01 | Phase 4 | Complete |
+| GEN-02 | Phase 4 | Complete |
+| GEO-03 | Future high-fidelity milestone | Deferred |
+| GEO-04 | Future high-fidelity milestone | Deferred |
+| GEO-05 | Future high-fidelity milestone | Deferred |
+| IFC-06 | Future capability-expansion milestone | Deferred |
 | AGENT-01 | Phase 5 | Complete |
 | AGENT-02 | Phase 5 | Complete |
 | AGENT-03 | Phase 5 | Complete |
@@ -324,22 +324,22 @@ requirements.
 | MODEL-01 | Phase 6 | Complete |
 | MODEL-02 | Phase 6 | Complete |
 | DEPLOY-01 | Phase 6 | Complete |
-| LIVE-01 | Phase 6.7 verification closure | Pending |
-| LIVE-02 | Phase 6.7 verification closure | Pending |
-| LIVE-03 | Phase 6.7 verification closure | Pending |
-| LIVE-04 | Phase 6.7 verification closure | Pending |
-| LIVE-05 | Phase 6.7 verification closure | Pending |
-| LIVE-06 | Phase 6.7 verification closure | Pending |
-| OBS-02 | Phase 6.7 verification closure | Pending |
-| CLI-01 | Phase 6.7 verification closure | Pending |
-| CLI-02 | Phase 6.7 verification closure | Pending |
-| CLI-03 | Phase 6.7 verification closure | Pending |
-| CLI-04 | Phase 6.7 verification closure | Pending |
-| CLI-05 | Phase 6.7 verification closure | Pending |
-| CLI-06 | Phase 6.7 verification closure | Pending |
-| CLI-07 | Phase 6.7 verification closure | Pending |
-| CLI-08 | Phase 6.7 verification closure | Pending |
-| CLI-09 | Phase 6.7 verification closure | Pending |
+| LIVE-01 | Phase 6.1 / 6.7 verification closure | Complete |
+| LIVE-02 | Phase 6.1 / 6.7 verification closure | Complete |
+| LIVE-03 | Phase 6.1 / 6.7 verification closure | Complete |
+| LIVE-04 | Phase 6.1 / 6.7 verification closure | Complete |
+| LIVE-05 | Phase 6.1 / 6.7 verification closure | Complete |
+| LIVE-06 | Phase 6.1 / 6.7 verification closure | Complete |
+| OBS-02 | Phase 6.1 / 6.7 verification closure | Complete |
+| CLI-01 | Phase 6.2 / 6.7 verification closure | Complete |
+| CLI-02 | Phase 6.2 / 6.7 verification closure | Complete |
+| CLI-03 | Phase 6.2 / 6.7 verification closure | Complete |
+| CLI-04 | Phase 6.2 / 6.7 verification closure | Complete |
+| CLI-05 | Phase 6.2 / 6.7 verification closure | Complete |
+| CLI-06 | Phase 6.2 / 6.7 verification closure | Complete |
+| CLI-07 | Phase 6.2 / 6.7 verification closure | Complete |
+| CLI-08 | Future human-REPL acceptance milestone | Deferred technical debt |
+| CLI-09 | Phase 6.2-fix / 6.7 verification closure | Complete |
 | GEN-03 | Phase 6.3 | Complete |
 | GATE-01 | Phase 6.3 | Complete |
 | GATE-02 | Phase 6.3 | Complete |
@@ -348,10 +348,10 @@ requirements.
 | TRACE-02 | Phase 6.3 | Complete |
 
 **Coverage:**
-- tracked requirements: 68 total
-- Mapped to phases: 68
+- tracked requirements: 76 total
+- Mapped to phases or explicit future scope: 76
 - Unmapped: 0
 
 ---
 *Requirements defined: 2026-06-11*
-*Last updated: 2026-07-02 after Phase 6.3 Wave 6 matrix verification*
+*Last updated: 2026-07-16 after Phase 6.7 milestone verification closure*
