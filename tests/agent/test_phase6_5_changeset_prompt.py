@@ -120,6 +120,29 @@ def test_staged_package_prompt_teaches_add_operations_are_generator_owned():
     }
 
 
+def test_staged_door_few_shot_uses_bottom_elevation_not_half_height():
+    rendered = render_prompt(template_id="bim-json-changeset.v1", inputs=_inputs())
+    text = rendered["text"]
+
+    assert "Door opening origin.z is the opening bottom elevation" in text
+    assert "use local z=0 unless an explicit threshold or raised base is confirmed" in text
+    assert "Never use half the door height as origin.z" in text
+    assert "changeset-staged-door-opening" in {path.stem for path in FEW_SHOT_PATHS}
+    example = json.loads(
+        open(
+            "prompts/agent/few-shot/changeset-staged-door-opening.json",
+            encoding="utf-8",
+        ).read()
+    )
+    opening = next(
+        operation["value"]
+        for operation in example["output"]["operations"]
+        if operation.get("value", {}).get("ifc_class") == "IfcOpeningElement"
+    )
+    assert opening["attributes"]["ObjectPlacement"]["origin"][2] == 0
+    assert opening["attributes"]["Representation"]["depth"] == 2200
+
+
 def test_staged_package_prompt_requires_exact_authorized_ids_without_rewriting():
     rendered = render_prompt(template_id="bim-json-changeset.v1", inputs=_inputs())
     text = rendered["text"]
@@ -290,3 +313,65 @@ def test_cross_storey_few_shot_uses_canonical_bounds_and_single_orientation():
     assert stair["attributes"]["ObjectPlacement"]["ref_direction"] == [1, 0, 0]
     assert flight["attributes"]["ObjectPlacement"]["ref_direction"] == [1, 0, 0]
     assert flight["attributes"]["Representation"]["direction"] == [1, 0, 0]
+
+
+def test_linear_railing_few_shot_uses_storey_local_centered_segments():
+    assert "changeset-staged-linear-railing" in {
+        path.stem for path in FEW_SHOT_PATHS
+    }
+    example = json.loads(
+        open(
+            "prompts/agent/few-shot/changeset-staged-linear-railing.json",
+            encoding="utf-8",
+        ).read()
+    )
+
+    products = example["input"]["expected_facts"]["products"]
+    operations = {
+        operation["target_id"]: operation["value"]
+        for operation in example["output"]["operations"]
+    }
+    assert {product["ifc_class"] for product in products} == {"IfcRailing"}
+    assert set(operations) == {"railing-atrium-north", "railing-atrium-west"}
+    assert all(value["ifc_class"] == "IfcRailing" for value in operations.values())
+    assert all(
+        value["attributes"]["ObjectPlacement"]["relative_to"] == "storey-2"
+        for value in operations.values()
+    )
+    assert operations["railing-atrium-north"]["attributes"]["ObjectPlacement"] == {
+        "relative_to": "storey-2",
+        "origin": [9000, 3000, 0],
+        "axis": [0, 0, 1],
+        "ref_direction": [1, 0, 0],
+    }
+    assert operations["railing-atrium-west"]["attributes"]["ObjectPlacement"] == {
+        "relative_to": "storey-2",
+        "origin": [6000, 1500, 0],
+        "axis": [0, 0, 1],
+        "ref_direction": [0, 1, 0],
+    }
+    assert all(
+        value["attributes"]["Representation"]
+        == {
+            "kind": "extruded_profile",
+            "profile": {"kind": "rectangle", "x": 6000 if key.endswith("north") else 3000, "y": 50},
+            "depth": 1100,
+            "direction": [0, 0, 1],
+        }
+        for key, value in operations.items()
+    )
+    serialized = json.dumps(example, ensure_ascii=False)
+    assert "IfcRailingType" not in serialized
+    assert "default" not in serialized.lower()
+
+
+def test_changeset_prompt_defines_generic_linear_segment_authoring_contract():
+    text = render_prompt(template_id="bim-json-changeset.v1", inputs=_inputs())[
+        "text"
+    ]
+
+    assert "storey-local linear product" in text
+    assert "midpoint of the confirmed start and end points" in text
+    assert "segment length" in text
+    assert "vertical Representation.direction `[0,0,1]`" in text
+    assert "Do not invent endpoints, base elevation, height, or thickness" in text
