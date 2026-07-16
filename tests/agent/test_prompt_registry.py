@@ -1,8 +1,43 @@
+import hashlib
 import importlib
 import importlib.util
 import json
 
 import pytest
+
+
+def test_registry_hash_is_invariant_to_windows_line_endings(tmp_path):
+    prompt_registry = importlib.import_module("text2ifc_agent.prompt_registry")
+    template_path = tmp_path / "portable-prompt.md"
+    template_path.write_bytes(b"line one\r\nline two\r\n")
+    canonical_hash = "sha256:" + hashlib.sha256(
+        b"line one\nline two\n"
+    ).hexdigest()
+    registry_path = tmp_path / "registry.json"
+    registry_path.write_text(
+        json.dumps(
+            {
+                "templates": [
+                    {
+                        "template_id": "portable.v1",
+                        "role": "test",
+                        "mode": "test",
+                        "path": template_path.relative_to(
+                            prompt_registry.PROJECT_ROOT
+                        ).as_posix(),
+                        "sha256": canonical_hash,
+                        "required_inputs": [],
+                        "forbidden_outputs": [],
+                    }
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    registry = prompt_registry.load_prompt_registry(registry_path)
+
+    assert registry["portable.v1"]["sha256"] == canonical_hash
 
 
 def test_prompt_trace_requires_template_identity():
