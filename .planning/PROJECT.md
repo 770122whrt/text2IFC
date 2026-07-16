@@ -2,106 +2,91 @@
 
 ## What This Is
 
-text2IFC is a research and engineering project that converts natural-language
-building requirements into valid IFC building models. The system uses a
-validated BIM JSON representation and deterministic IfcOpenShell generation,
-with a first multi-turn clarification Agent for missing information.
+text2IFC converts Chinese-first natural-language building requirements into a
+validated BIM JSON 2.0 semantic model and then deterministically compiles that
+model to inspectable IFC2X3. Missing required facts remain Draft and may be
+clarified over multiple turns instead of being silently invented.
 
 ## Core Value
 
-Produce IFC models that are structurally valid, inspectable, and traceable to
-explicit user requirements instead of generating fragile IFC text directly.
+Produce IFC models that are structurally valid, spatially checkable, and
+traceable to explicit user requirements rather than generating fragile IFC
+STEP text directly.
 
-## Requirements
+## Current State
 
-### Validated
+**v1.0 Supported Text2IFC Baseline shipped on 2026-07-16.**
 
-- IFC2X3 source files can be opened with IfcOpenShell.
-- Existing structured JSON can generate IFC2X3 files.
-- Storey elevation, selected wall properties, and door/window dimensions have
-  automated tests.
-- Large IFC and research files are published through Git LFS.
-- The Phase 3 Text-to-JSON-to-IFC baseline loop is complete.
-- The Phase 5 Chinese-first clarification Agent demo writes a reopenable IFC2X3
-  file.
+The shipped supported-scope chain is:
 
-### Active
+```text
+Chinese natural language
+-> Design Brief / clarification state
+-> Formal BIM JSON 2.0 or explicit Draft
+-> deterministic validation and Gates
+-> IFC2X3 compile/reopen
+-> Audit, report, and review artifacts
+```
 
-- [x] Define and validate BIM JSON 1.0.
-- [x] Build a minimum IFC2X3 compiler from the validated contract.
-- [x] Define BIM JSON 2.0 as an IFC2X3-aligned semantic entity graph.
-- [x] Build deterministic IFC2X3 declaration and property-set registries from
-  official buildingSMART sources.
-- [x] Extract supported ground truth from authorized IFC with explicit losses.
-- [x] Build a Text-to-JSON dataset pipeline and measurable baseline.
-- [x] Complete the first Text-to-JSON-to-IFC end-to-end loop.
-- [x] Complete the first multi-turn clarification Agent demo to IFC.
-- [x] Establish generated-IFC correctness gates for spatial, content,
-  attribute, relationship, and IFC-structure quality.
-- [x] Preserve selected high-fidelity IFC material/type/topology details and
-  report unsupported complex geometry as explicit losses.
-- [ ] Build multi-agent prompt traceability, then expand approved data, compare
-  model approaches, and package deployment.
-- [ ] Build a true interactive Chinese-first REPL CLI that lets the user
-  participate in the real Mimo multi-agent clarification loop and produces a
-  traceable IFC without relying on scripted stdin for final acceptance.
+The milestone contains 15 phases and 94 plans. Its final current-state
+verification passed 722 focused regression tests, static compilation, seven
+representative IFC2X3 reopen checks, a zero-finding planning secret scan, and
+human review of all three frozen stability cases.
 
-### Out of Scope
+## Validated Capabilities
 
-- IFC generation in Phase 1 - Phase 1 only defines and validates the contract.
-- Precise local placement and global coordinates were outside completed
-  Phase 2 and are now assigned to inserted Phase 2.5.
-- Opening and filling relationships were outside completed Phase 2 and are
-  now assigned to inserted Phase 2.5.
-- Direct natural-language-to-IFC generation - BIM JSON remains the contract.
-- Fine-tuning before the deterministic compiler and evaluation contract are
-  stable.
+- One JSON Schema-backed BIM JSON contract with explicit Draft semantics.
+- Official-source IFC2X3 schema/property knowledge and authorized IFC
+  extraction with complete loss accounting.
+- Scene-family-isolated Text/BIM JSON data and structured-output evaluation.
+- Chinese multi-turn clarification, versioned prompts, provider traces, and
+  bounded generation/repair routes.
+- Gate-authoritative Audit, component-scoped ChangeSets, preservation checks,
+  and multi-storey generation within the supported profile.
+- Real-provider Easy/Medium/Difficult Text -> BIM JSON -> IFC2X3 cases with
+  machine and human acceptance at 3/3.
 
-## Context
+## Accepted Boundaries
 
-- Dataset: 25 authorized BIMNet IFC2X3 models. Existing 18/7 file folders are
-  source organization only; model splits must be rebuilt by scene family.
-- External fixtures: 10 CC BY 4.0 buildingSMART IFC4/IFC4X3 samples for
-  cross-schema and relationship testing.
-- IFC schema: `schemas/ifc/IFC2X3_TC1.exp`.
-- Current prototype: `scripts/ifc_pipeline/roundtrip.py`.
-- Current tests: `tests/test_json_to_ifc.py`.
-- IfcOpenShell 0.8.5 is available through the project-local dependency path
-  `.deps/python312` in the current development environment.
-- Existing scripts and Chinese documentation contain encoding inconsistencies
-  and should not be treated as authoritative contracts.
+- v1.0 does not claim general material, topology, BRep, tessellation,
+  furnishing, structural, or MEP generation.
+- A final successful true-human REPL acceptance remains technical debt; later
+  successful live runs used adaptive/automated drivers.
+- Three-case stability is coverage-oriented and is not a repeated-run success
+  probability.
+- Current stair-wall collision checks are bounded to the documented supported
+  geometry subset; double-leaf door style semantics remain future work.
 
 ## Constraints
 
-- **Compatibility**: Phase 1 targets IFC2X3 because all current dataset files
-  declare IFC2X3.
-- **Reliability**: New behavior follows TDD with a demonstrated failing test
-  before implementation.
-- **Data**: The current 25 models are insufficient for reliable end-to-end
-  model fine-tuning.
-- **Generation**: IFC output is created through IfcOpenShell, not raw string
-  concatenation.
-- **Publishing**: IFC, PDF, and ZIP files remain under Git LFS.
+- IFC output remains IFC2X3 until a later milestone explicitly adopts another
+  schema.
+- JSON Schema is the only BIM JSON structural truth.
+- IFC is generated through IfcOpenShell, never by model-authored STEP text.
+- Required facts are not silently invented, overwritten, or discarded.
+- Dataset training/evaluation splits remain isolated by scene family and
+  linked to license/provenance evidence.
+- New behavioral work follows TDD and deterministic acceptance Gates.
 
 ## Key Decisions
 
-| Decision | Rationale | Outcome |
-|---|---|---|
-| Use BIM JSON between text and IFC | Validation and debugging are possible before IFC generation | Adopted |
-| Target IFC2X3 first | Matches all current BIMNet source models | Adopted |
-| Make JSON Schema the unique BIM JSON structural truth | Stabilize the boundary before compiler and model work | Adopted |
-| Build the minimum compiler in Phase 2 | Establish deterministic output before Text-to-JSON | Complete |
-| Make Phase 2.5 a breaking BIM JSON 2.0 contract | IFC class identity, placement, relationships, and Draft semantics cannot be added safely as a minor revision | Adopted |
-| Build official-source IFC2X3 knowledge first | Schema correctness cannot depend on model memory or retrieval | Adopted |
-| Build Text-to-JSON in Phase 3 | Reach an early end-to-end text2IFC baseline | Complete |
-| Build multi-turn clarification in Phase 5 | Missing natural-language facts should produce questions, not fabrication | Complete |
-| Start Phase 4 with generated-IFC correctness gates | A reopenable IFC can still be spatially wrong; high-fidelity work needs a reliable text-json-ifc gate first | Adopted |
-| Defer materials, complex geometry, and topology to Phase 4 | Keep generated correctness separate from full IFC source fidelity | Adopted |
-| Start Phase 6 with prompt registry and multi-agent traceability | Fine-tuning and deployment decisions need reproducible prompt inputs, repair attempts, metrics, and audits | Adopted |
-| Insert Phase 6.2 for interactive CLI before service/API work | The user needs to participate in clarification turns and inspect intermediate inputs/outputs before API packaging | Adopted |
-| Insert Phase 6.2-fix for real REPL acceptance | Phase 6.2 built the DB-backed Mimo pipeline but did not deliver the one-command human-facing question/answer REPL expected by the user | Adopted |
-| Insert Phase 6.5 for component-scoped ChangeSets | Phase 6.4 proved the loop but full-document regeneration can damage already-passing components; stable-ID incremental composition is required before broader IFC editing or Phase 7 | Adopted |
-| Use TDD and GSD phase artifacts | Keep behavior and planning traceable | Adopted |
+| Decision | Outcome |
+|---|---|
+| Natural language -> BIM JSON -> IFC | Validated; retained as the architecture |
+| IFC2X3-first compiler | Validated against the authorized source set |
+| Official schema knowledge before retrieval/model memory | Validated and offline-reproducible |
+| Draft plus clarification for missing facts | Validated; no default template in v1.0 |
+| Audit subordinate to deterministic Gates | Validated; override attempts block |
+| Prompt-only structured generation before fine-tuning | Retained until larger reviewed data proves need |
+| Component-scoped ChangeSets for corrections | Validated with preservation rate 1.0 |
+| Coverage-based three-case stability | Accepted for v1.0; statistical reliability deferred |
+
+## History
+
+- [v1.0 roadmap](milestones/v1.0-ROADMAP.md)
+- [v1.0 requirements](milestones/v1.0-REQUIREMENTS.md)
+- [v1.0 milestone audit](milestones/v1.0-MILESTONE-AUDIT.md)
+- [milestone register](MILESTONES.md)
 
 ---
-*Last updated: 2026-06-26 after Phase 6.2-fix REPL acceptance planning*
+*Last updated: 2026-07-16 after v1.0 milestone archival*
