@@ -6,7 +6,7 @@ from text2ifc_agent.package_gates import validate_package_changeset
 def _entity(entity_id, ifc_class, **attributes):
     if ifc_class in {
         "IfcWall", "IfcSpace", "IfcOpeningElement", "IfcDoor", "IfcWindow",
-        "IfcSlab", "IfcStair", "IfcStairFlight", "IfcRoof",
+        "IfcSlab", "IfcStair", "IfcStairFlight", "IfcRoof", "IfcRailing",
     } and "Representation" not in attributes:
         attributes["Representation"] = {
             "kind": "extruded_profile",
@@ -134,6 +134,70 @@ def test_package_gate_accepts_owned_storey_local_graph():
     )
 
     assert result == {"valid": True, "issues": []}
+
+
+def test_package_gate_accepts_manifest_bound_generic_local_products():
+    manifest = _manifest()
+    package = next(
+        item for item in manifest["packages"] if item["package_id"] == "package-storey-2"
+    )
+    package["owned_component_ids"] = [
+        "railing-atrium-north",
+        "railing-atrium-west",
+    ]
+    package["owned_component_classes"] = {
+        "railing-atrium-north": "IfcRailing",
+        "railing-atrium-west": "IfcRailing",
+    }
+    values = [
+        _entity("railing-atrium-north", "IfcRailing"),
+        _entity("railing-atrium-west", "IfcRailing"),
+    ]
+
+    result = validate_package_changeset(
+        manifest=manifest,
+        package_id="package-storey-2",
+        workspace=_workspace(),
+        changeset=_changeset("package-storey-2", values),
+    )
+
+    assert result == {"valid": True, "issues": []}
+
+
+@pytest.mark.parametrize(
+    ("mutate", "code"),
+    [
+        (
+            lambda railing: railing.update({"ifc_class": "IfcWall"}),
+            "PACKAGE_COMPONENT_CLASS_MISMATCH",
+        ),
+        (
+            lambda railing: railing["attributes"].pop("Representation"),
+            "PACKAGE_REPRESENTATION_MISSING",
+        ),
+    ],
+)
+def test_package_gate_rejects_generic_product_class_or_geometry_drift(mutate, code):
+    manifest = _manifest()
+    package = next(
+        item for item in manifest["packages"] if item["package_id"] == "package-storey-2"
+    )
+    package["owned_component_ids"] = ["railing-atrium-north"]
+    package["owned_component_classes"] = {
+        "railing-atrium-north": "IfcRailing",
+    }
+    railing = _entity("railing-atrium-north", "IfcRailing")
+    mutate(railing)
+
+    result = validate_package_changeset(
+        manifest=manifest,
+        package_id="package-storey-2",
+        workspace=_workspace(),
+        changeset=_changeset("package-storey-2", [railing]),
+    )
+
+    assert result["valid"] is False
+    assert code in {issue["code"] for issue in result["issues"]}
 
 
 @pytest.mark.parametrize(
