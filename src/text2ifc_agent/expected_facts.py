@@ -13,6 +13,13 @@ from .generation_packages import build_generation_package_manifest
 
 EXPECTED_FACTS_SCHEMA_VERSION = "text2ifc/expected-facts/1.0"
 
+_PRODUCT_FAMILY_SPECS = {
+    "railings": {
+        "ifc_class": "IfcRailing",
+        "geometry_kind": "linear_segment",
+    },
+}
+
 
 class ExpectedFactsError(ValueError):
     """Raised when a Design Brief cannot be projected safely."""
@@ -159,6 +166,7 @@ def build_expected_facts(
         or _singular_stair_record(known_facts, storeys)
         or _stair_records_from_nested(nested_storeys, storeys)
     )
+    products = _product_records(known_facts)
     roof = _roof_record(known_facts)
     if design_brief.get("status") == "ready" and not storeys:
         raise ExpectedFactsError(
@@ -190,6 +198,7 @@ def build_expected_facts(
         "slabs": _copy_records(slabs),
         "roof": deepcopy(dict(roof)) if roof is not None else None,
         "stairs": _copy_records(stairs),
+        "products": _copy_records(products),
         "entity_id_contract": entity_id_contract,
         "space_counts_by_storey": _counts_by_storey(spaces),
         "door_counts_by_storey": _counts_by_storey(doors),
@@ -206,6 +215,7 @@ def build_expected_facts(
                 "spaces": len(spaces),
                 "doors": len(doors),
                 "windows": len(windows),
+                "products": len(products),
             },
             "opening_fill": {
                 "doors": len(doors),
@@ -220,6 +230,15 @@ def build_expected_facts(
     if walls:
         payload["total_counts"]["IfcWall"] = len(walls)
         payload["required_relationships"]["containment"]["walls"] = len(walls)
+    if slabs:
+        payload["total_counts"]["IfcSlab"] = len(slabs)
+        payload["required_relationships"]["containment"]["slabs"] = len(slabs)
+    for product in products:
+        ifc_class = _string(product.get("ifc_class"))
+        if ifc_class is not None:
+            payload["total_counts"][ifc_class] = (
+                payload["total_counts"].get(ifc_class, 0) + 1
+            )
     if isinstance(fixture_reuse, Mapping):
         payload["fixture_reuse"] = deepcopy(dict(fixture_reuse))
     payload["generation_package_manifest"] = build_generation_package_manifest(payload)
@@ -1130,6 +1149,66 @@ def _slab_records(known_facts: Mapping[str, Any]) -> list[Mapping[str, Any]]:
         records.append(record)
     records.sort(key=lambda record: record.get("elevation_mm", 1_000_000))
     return records
+
+
+def _product_records(known_facts: Mapping[str, Any]) -> list[dict[str, Any]]:
+    products: list[dict[str, Any]] = []
+    for collection, spec in _PRODUCT_FAMILY_SPECS.items():
+        for item in _records(known_facts.get(collection)):
+            record: dict[str, Any] = {
+                "id": item.get("id"),
+                "ifc_class": item.get("ifc_class") or spec["ifc_class"],
+                "storey": item.get("storey"),
+                "geometry": _linear_product_geometry(
+                    item,
+                    geometry_kind=str(spec["geometry_kind"]),
+                ),
+            }
+            alignment_target = item.get("alignment_target")
+            if isinstance(alignment_target, str) and alignment_target:
+                record["alignment_target"] = alignment_target
+            products.append(record)
+    return products
+
+
+def _linear_product_geometry(
+    item: Mapping[str, Any],
+    *,
+    geometry_kind: str,
+) -> dict[str, Any]:
+    base_elevation = _number_alias(item, ("base_elevation_mm",))
+    start = _point_with_elevation(item.get("start_mm"), base_elevation)
+    end = _point_with_elevation(item.get("end_mm"), base_elevation)
+    geometry: dict[str, Any] = {"kind": geometry_kind}
+    if start is not None:
+        geometry["start_mm"] = start
+    if end is not None:
+        geometry["end_mm"] = end
+    height = _number_alias(item, ("height_mm",))
+    if height is not None:
+        geometry["height_mm"] = height
+    thickness = _number_alias(item, ("thickness_mm",))
+    if thickness is not None:
+        geometry["thickness_mm"] = thickness
+    return geometry
+
+
+def _point_with_elevation(value: Any, elevation: int | float | None) -> list[Any] | None:
+    if not isinstance(value, list):
+        return None
+    if len(value) == 3 and all(_is_number(item) for item in value):
+        return list(value)
+    if (
+        len(value) == 2
+        and elevation is not None
+        and all(_is_number(item) for item in value)
+    ):
+        return [value[0], value[1], elevation]
+    return None
+
+
+def _is_number(value: Any) -> bool:
+    return isinstance(value, (int, float)) and not isinstance(value, bool)
 
 
 def _roof_record(known_facts: Mapping[str, Any]) -> dict[str, Any] | None:

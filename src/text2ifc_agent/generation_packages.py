@@ -87,6 +87,29 @@ def build_generation_package_manifest(
                         [f"rel-voids-{component_id}", f"rel-fills-{component_id}"]
                     )
 
+    for index, record in enumerate(_records(expected_facts.get("products"))):
+        storey_id = _non_empty(record.get("storey"))
+        if storey_id not in local_components:
+            issues.append(
+                _issue(
+                    "PACKAGE_COMPONENT_OWNER_UNRESOLVED",
+                    f"/products/{index}/storey",
+                    "Product does not identify an existing storey.",
+                )
+            )
+        else:
+            local_components[storey_id].append(
+                _component_id(record, f"product-{storey_id}-{index + 1}")
+            )
+        if not _valid_linear_product_geometry(record.get("geometry")):
+            issues.append(
+                _issue(
+                    "PACKAGE_PRODUCT_GEOMETRY_INCOMPLETE",
+                    f"/products/{index}/geometry",
+                    "A linear product requires axis-aligned non-zero endpoints, height, and thickness.",
+                )
+            )
+
     cross_components: list[str] = []
     cross_relationships: list[str] = []
     cross_refs: set[str] = set()
@@ -173,16 +196,17 @@ def build_generation_package_manifest(
         }
         for storey_id in storey_ids
     )
-    packages.append(
-        {
-            "package_id": "package-cross-storey",
-            "kind": "cross_storey",
-            "storey_id": None,
-            "owned_component_ids": _ordered_unique(cross_components),
-            "owned_relationship_ids": _ordered_unique(cross_relationships),
-            "allowed_reference_ids": sorted({*storey_ids, *cross_refs}),
-        }
-    )
+    if cross_components or cross_relationships:
+        packages.append(
+            {
+                "package_id": "package-cross-storey",
+                "kind": "cross_storey",
+                "storey_id": None,
+                "owned_component_ids": _ordered_unique(cross_components),
+                "owned_relationship_ids": _ordered_unique(cross_relationships),
+                "allowed_reference_ids": sorted({*storey_ids, *cross_refs}),
+            }
+        )
     return {
         "schema_version": MANIFEST_VERSION,
         "status": "ready",
@@ -209,6 +233,34 @@ def _stair_flight_ids(record: Mapping[str, Any], stair_id: str) -> list[str]:
     if isinstance(explicit, list) and explicit:
         return _ordered_unique([str(item) for item in explicit if str(item)])
     return [stair_id.replace("stair-", "stair-flight-", 1)]
+
+
+def _valid_linear_product_geometry(value: Any) -> bool:
+    if not isinstance(value, Mapping) or value.get("kind") != "linear_segment":
+        return False
+    start = value.get("start_mm")
+    end = value.get("end_mm")
+    if not (_numeric_point(start) and _numeric_point(end)):
+        return False
+    if start[2] != end[2] or (start[0] != end[0] and start[1] != end[1]):
+        return False
+    if start == end:
+        return False
+    return _positive_number(value.get("height_mm")) and _positive_number(
+        value.get("thickness_mm")
+    )
+
+
+def _numeric_point(value: Any) -> bool:
+    return (
+        isinstance(value, list)
+        and len(value) == 3
+        and all(isinstance(item, (int, float)) and not isinstance(item, bool) for item in value)
+    )
+
+
+def _positive_number(value: Any) -> bool:
+    return isinstance(value, (int, float)) and not isinstance(value, bool) and value > 0
 
 
 def _component_id(record: Mapping[str, Any], fallback: str) -> str:
