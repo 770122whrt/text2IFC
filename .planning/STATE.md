@@ -7,14 +7,14 @@ See: `.planning/PROJECT.md` (updated 2026-06-11)
 **Core value:** Produce valid, inspectable IFC models from explicit user
 requirements.
 
-**Current focus:** Phase 6.6 cross-case stability testing; Easy, Medium, and the
-Difficult successor are machine-accepted, while Difficult visual review keeps
-`STABLE-01` open.
+**Current focus:** Phase 6.6 cross-case stability testing; Difficult machine
+checks passed but human review found a stair-wall collision, so Step 02 owns a
+deterministic Gate repair and provenance-linked rerun.
 
 ## Status
 
 - Phase: 6.6
-- Stage: 3 / 3 machine-accepted and reopenable; Difficult visual review pending
+- Stage: machine 3 / 3, human 2 / 3; Difficult successor repair approved
 - State: Phase 6.2-fix Waves 0-2 are implemented and automatically verified.
   Wave 3 real UAT
   produced useful live evidence and fixed defects 001/002, then exposed defect
@@ -571,10 +571,10 @@ Difficult successor are machine-accepted, while Difficult visual review keeps
 
 ## Next Action
 
-Open the accepted Difficult IFC and complete human visual review of the two
-atrium railings, two slab openings, stair, enclosures, and storey placement.
-Session `53df7ac99abf41e8` already passes machine acceptance and reopen checks;
-`STABLE-01` remains open only until visual review confirms no obvious defect.
+Execute `06.6-02-PLAN.md`: reproduce the stair-wall collision with a RED Gate
+test, implement deterministic rejection, freeze `STD-D-MUL-03` with an
+explicit wall passage and exterior clearance, then run one real-provider
+Text-to-IFC observation and repeat human visual review.
 
 ## Accumulated Context
 
