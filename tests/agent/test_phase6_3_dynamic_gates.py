@@ -179,6 +179,84 @@ def test_dynamic_gates_require_all_expected_walls_on_their_declared_storeys():
     )
 
 
+def test_dynamic_gates_count_generic_railing_products():
+    expected = _expected_facts(
+        storeys=["storey-1", "storey-2"], doors=[], windows=[]
+    )
+    expected["products"] = [
+        {
+            "id": "railing-atrium-north",
+            "ifc_class": "IfcRailing",
+            "storey": "storey-2",
+        },
+        {
+            "id": "railing-atrium-west",
+            "ifc_class": "IfcRailing",
+            "storey": "storey-2",
+        },
+    ]
+    expected["total_counts"]["IfcRailing"] = 2
+    expected["required_relationships"]["containment"]["products"] = 2
+    candidate = _candidate(
+        storeys=["storey-1", "storey-2"],
+        walls=[],
+        doors=[],
+        windows=[],
+        include_opening_relationships=True,
+    )
+    candidate["entities"].append(
+        _entity("railing-atrium-north", "IfcRailing", "storey-2")
+    )
+
+    gates = _by_name(evaluate_dynamic_gates(candidate=candidate, expected_facts=expected))
+
+    gate = gates["dynamic_entity_completeness"]
+    assert gate["status"] == "failed"
+    assert {
+        "code": "EXPECTED_ENTITY_MISSING",
+        "path": "/products",
+        "ifc_class": "IfcRailing",
+        "expected": 2,
+        "actual": 1,
+    } in gate["issues"]
+
+
+def test_dynamic_gates_require_generic_product_on_declared_storey():
+    expected = _expected_facts(
+        storeys=["storey-1", "storey-2"], doors=[], windows=[]
+    )
+    expected["products"] = [
+        {
+            "id": "railing-atrium-north",
+            "ifc_class": "IfcRailing",
+            "storey": "storey-2",
+        }
+    ]
+    expected["total_counts"]["IfcRailing"] = 1
+    expected["required_relationships"]["containment"]["products"] = 1
+    candidate = _candidate(
+        storeys=["storey-1", "storey-2"],
+        walls=[],
+        doors=[],
+        windows=[],
+        include_opening_relationships=True,
+    )
+    candidate["entities"].append(
+        _entity("railing-atrium-north", "IfcRailing", "storey-1")
+    )
+
+    gates = _by_name(evaluate_dynamic_gates(candidate=candidate, expected_facts=expected))
+
+    gate = gates["dynamic_storey_containment"]
+    assert gate["status"] == "failed"
+    assert {
+        "code": "STOREY_CONTAINMENT_MISMATCH",
+        "path": "/products/railing-atrium-north/storey",
+        "expected_storey": "storey-2",
+        "actual_storey": "storey-1",
+    } in gate["issues"]
+
+
 def test_dynamic_gates_fail_windows_without_void_fill_relationships():
     expected = _expected_facts(
         storeys=["storey-1"],
