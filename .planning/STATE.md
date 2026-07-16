@@ -7,12 +7,12 @@ See: `.planning/PROJECT.md` (updated 2026-06-11)
 **Core value:** Produce valid, inspectable IFC models from explicit user
 requirements.
 
-**Current focus:** Phase 6.5 Wave 8 registry-drift triage after blocked observation
+**Current focus:** Phase 6.5 Wave 9 downstream triage after registry repair
 
 ## Status
 
 - Phase: 6.5
-- Stage: Three-case observation complete; coverage acceptance blocked before provider calls
+- Stage: Prompt identity repaired; three frozen provider runs complete; 0 / 3 IFC accepted
 - State: Phase 6.2-fix Waves 0-2 are implemented and automatically verified.
   Wave 3 real UAT
   produced useful live evidence and fixed defects 001/002, then exposed defect
@@ -569,11 +569,12 @@ requirements.
 
 ## Next Action
 
-Review blocking issue `P65-UAT-003`. The three frozen Wave 8 cases created
-sessions but made zero provider calls because 10 / 10 Prompt registry hashes
-do not match their templates. Decide separately whether to approve a bounded
-registry repair and rerun the same input hashes. Do not edit prompts or weaken
-the registry check as part of the observation batch.
+Triage `P65-UAT-004` through `P65-UAT-007` as one downstream batch. Decide the
+semantic policy for implied corridor enclosure before implementation. Then
+plan deterministic Design Brief fact-shape normalization, provider truncation
+handling, and failure-result persistence without tuning Prompt content against
+one case. `STABLE-01` remains incomplete until all three frozen inputs produce
+accepted reopenable IFC artifacts.
 
 ## Accumulated Context
 
@@ -774,14 +775,12 @@ the registry check as part of the observation batch.
   responses.
 
 ---
-*Last activity: 2026-07-14 - completed Phase 6.5 graded acceptance. Real
-DeepSeek Hard session `999d210c233b1c34` generated a non-uniform three-storey
-L-shaped building through staged packages and three bounded scoped ChangeSet
-rounds. Revision `revision-07` passed schema, semantic coverage, global Gates,
-compile/reopen, postcompile geometry, final Audit, preservation 1.0, and a
-zero-finding 296-file secret scan. Independent IfcOpenShell inspection confirmed
-3 storeys, 18 spaces, 48 walls, 12 doors, 9 windows, 2 stepped stairs, and
-complete door/window void-fill relationships. Agent/compiler/IFC-quality
-regression passed 600 tests and compileall passed. The accepted IFC is ready
-for separate user visual review; one accepted case per difficulty is not
+*Last activity: 2026-07-16 - completed Phase 6.5 Wave 9. Prompt identity is now
+portable across CRLF/LF checkouts, the frozen-manifest live runner is tested,
+and all three standard inputs reached the real DeepSeek-compatible provider.
+Easy stopped on empty generation authorization, Medium remained Draft on one
+enclosure clarification, and Difficult failed closed on a truncated Design
+Brief response. No IFC was produced; the zero-finding secret scan covered 106
+artifact files. Issues `P65-UAT-004` through `P65-UAT-007` are awaiting triage;
+one accepted case per historical difficulty is not
 reported as a statistical stability rate.*

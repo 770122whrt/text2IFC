@@ -1,0 +1,44 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "message": {
+        "annotations": null,
+        "audio": null,
+        "content": "{\n  \"draft_version\": \"bim-json-draft/1.0\",\n  \"target_schema_version\": \"bim-json/2.0\",\n  \"partial_document\": {},\n  \"missing_facts\": [\n    {\n      \"entity_id\": \"scope-package-1\",\n      \"path\": \"/entity_ids\",\n      \"code\": \"missing_authorization\",\n      \"message\": \"CHANGE_SCOPE does not authorize any entity or relationship IDs needed to fulfill package-cross-storey.\"\n    }\n  ],\n  \"losses\": [],\n  \"clarification_targets\": [],\n  \"provenance\": {\n    \"source_issue_ids\": [\"issue-package-cross-storey\"]\n  }\n}",
+        "function_call": null,
+        "reasoning_content": "我们根据输入生成ChangeSet。当前CHANGE_SCOPE中entity_ids和relationship_ids都为空，但ISSUES要求生成package-cross-storey的构件。然而，CHANGE_SCOPE没有授权任何ID。根据规则，当SCOPED_COMPONENTS为空且CHANGE_SCOPE未授权新ID时，无法添加。需要返回Draft。因为无法在Scope内完成修复。但是，注意输入中Expected Facts显示generation_package_manifest中有两个package，但CHANGE_SCOPE来自scope-package-1，没有授权ID。所以返回Draft。",
+        "refusal": null,
+        "role": "assistant",
+        "tool_calls": null
+      }
+    }
+  ],
+  "created": 1784182408,
+  "id": "813d9227-2f93-43be-a0a0-0c6804051bed",
+  "model": "deepseek-v4-flash",
+  "moderation": null,
+  "object": "chat.completion",
+  "service_tier": null,
+  "stop_reason": "stop",
+  "system_fingerprint": "fp_8b330d02d0_prod0820_fp8_kvcache_20260402",
+  "usage": {
+    "completion_tokens": 278,
+    "completion_tokens_details": {
+      "accepted_prediction_tokens": null,
+      "audio_tokens": null,
+      "reasoning_tokens": 126,
+      "rejected_prediction_tokens": null
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 11226,
+    "prompt_tokens": 11226,
+    "prompt_tokens_details": {
+      "audio_tokens": null,
+      "cached_tokens": 0
+    },
+    "total_tokens": 11504
+  }
+}

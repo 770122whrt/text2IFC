@@ -989,7 +989,7 @@ IFC5/IFCX, import or edit existing IFC, add RAG/fine-tuning, redesign the Formal
 BIM JSON schema, or package a service. Existing-IFC natural-language completion
 is reserved for a later phase that may reuse the ChangeSet revision interface.
 
-**Plans:** 10 plans including supplemental Waves 7, 7.1, and 8
+**Plans:** 11 plans including supplemental Waves 7, 7.1, 8, and 9
 
 **Wave 0**
 
@@ -1044,6 +1044,15 @@ is reserved for a later phase that may reuse the ChangeSet revision interface.
   before provider calls because 10 / 10 registered Prompt hashes drifted. No
   BIM JSON or IFC was produced, and no automatic fix was started.
 
+**Prompt portability repair and exact-input rerun**
+
+- [x] `06.5-09-PLAN.md` - Repair mixed CRLF/LF Prompt identities through TDD,
+  add a hash-verifying manifest runner, and rerun the same three inputs.
+- [x] `06.5-09-SUMMARY.md` - Registry repair passed and all three cases reached
+  the provider. Easy failed generation authorization, Medium remained Draft on
+  corridor enclosure, and Difficult truncated during Design Brief. Zero IFC
+  artifacts were accepted.
+
 **Cross-cutting constraints:**
 
 - Formal BIM JSON 2.0 JSON Schema remains the single model truth.
@@ -1061,9 +1070,10 @@ is reserved for a later phase that may reuse the ChangeSet revision interface.
   E-drive repository selected by the user; artifacts must record the exact
   branch and commit used for each run.
 
-**Status:** Historical Phase 6.5 graded acceptance is complete. Wave 8's
-coverage-based observation batch is also complete, but revised `STABLE-01`
-remains blocked: all three frozen cases stopped before provider generation due
-to 10 / 10 Prompt registry hash mismatches. Existing Easy, Medium, and Hard
-artifacts remain valid historical evidence but do not substitute for these
-inputs. No repeated-run statistical rate is claimed.
+**Status:** Historical Phase 6.5 graded acceptance is complete. Wave 9 resolved
+the Prompt Registry portability blocker and all three frozen cases reached the
+real provider, but revised `STABLE-01` remains incomplete at 0 / 3 accepted IFC
+artifacts. Downstream issues `P65-UAT-004` through `P65-UAT-007` await separate
+triage. Existing Easy, Medium, and Hard artifacts remain valid historical
+evidence but do not substitute for these inputs. No repeated-run statistical
+rate is claimed.

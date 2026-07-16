@@ -1,0 +1,269 @@
+{
+  "ambiguities": [],
+  "clarification_questions": [],
+  "fact_sources": [
+    {
+      "evidence_refs": [
+        "schema:bim-json-v2:entity",
+        "schema:bim-json-v2:representation"
+      ],
+      "path": "/known_facts",
+      "source_turns": [
+        "turn-user-001"
+      ]
+    }
+  ],
+  "known_facts": {
+    "building": {
+      "floor_thickness_mm": 150,
+      "net_height_mm": 3200,
+      "wall_thickness_mm": 200
+    },
+    "doors": [
+      {
+        "alignment": "host_centerline",
+        "height_mm": 2100,
+        "host_wall": "wall_corridor_north",
+        "id": "door_office_a",
+        "position_on_host": 2000,
+        "width_mm": 900
+      },
+      {
+        "alignment": "host_centerline",
+        "height_mm": 2100,
+        "host_wall": "wall_corridor_north",
+        "id": "door_office_b",
+        "position_on_host": 6000,
+        "width_mm": 900
+      },
+      {
+        "alignment": "host_centerline",
+        "height_mm": 2100,
+        "host_wall": "wall_corridor_north",
+        "id": "door_office_c",
+        "position_on_host": 10000,
+        "width_mm": 900
+      },
+      {
+        "alignment": "host_centerline",
+        "height_mm": 2200,
+        "host_wall": "wall_corridor_south",
+        "id": "door_main_entrance",
+        "position_on_host": 6000,
+        "type": "double_door",
+        "width_mm": 1600
+      }
+    ],
+    "spaces": {
+      "corridor": {
+        "bounds": {
+          "x": [
+            0,
+            12000
+          ],
+          "y": [
+            0,
+            2000
+          ]
+        },
+        "height_mm": 3200,
+        "shape": "rectangle"
+      },
+      "office_a": {
+        "bounds": {
+          "x": [
+            0,
+            4000
+          ],
+          "y": [
+            2000,
+            6000
+          ]
+        },
+        "height_mm": 3200,
+        "shape": "rectangle"
+      },
+      "office_b": {
+        "bounds": {
+          "x": [
+            4000,
+            8000
+          ],
+          "y": [
+            2000,
+            6000
+          ]
+        },
+        "height_mm": 3200,
+        "shape": "rectangle"
+      },
+      "office_c": {
+        "bounds": {
+          "x": [
+            8000,
+            12000
+          ],
+          "y": [
+            2000,
+            6000
+          ]
+        },
+        "height_mm": 3200,
+        "shape": "rectangle"
+      }
+    },
+    "walls": {
+      "exterior": [
+        {
+          "end_mm": [
+            12000,
+            0
+          ],
+          "height_mm": 3200,
+          "id": "wall_corridor_south",
+          "start_mm": [
+            0,
+            0
+          ],
+          "thickness_mm": 200
+        },
+        {
+          "end_mm": [
+            12000,
+            6000
+          ],
+          "height_mm": 3200,
+          "id": "wall_office_north",
+          "start_mm": [
+            0,
+            6000
+          ],
+          "thickness_mm": 200
+        }
+      ],
+      "interior": [
+        {
+          "connects": [
+            "corridor",
+            "office_a",
+            "office_b",
+            "office_c"
+          ],
+          "end_mm": [
+            12000,
+            2000
+          ],
+          "height_mm": 3200,
+          "id": "wall_corridor_north",
+          "start_mm": [
+            0,
+            2000
+          ],
+          "thickness_mm": 200
+        },
+        {
+          "connects": [
+            "office_a",
+            "office_b"
+          ],
+          "end_mm": [
+            4000,
+            6000
+          ],
+          "height_mm": 3200,
+          "id": "wall_office_ab",
+          "start_mm": [
+            4000,
+            2000
+          ],
+          "thickness_mm": 200
+        },
+        {
+          "connects": [
+            "office_b",
+            "office_c"
+          ],
+          "end_mm": [
+            8000,
+            6000
+          ],
+          "height_mm": 3200,
+          "id": "wall_office_bc",
+          "start_mm": [
+            8000,
+            2000
+          ],
+          "thickness_mm": 200
+        }
+      ]
+    },
+    "windows": [
+      {
+        "alignment": "host_centerline",
+        "height_mm": 1200,
+        "host_wall": "wall_office_north",
+        "id": "window_office_a",
+        "position_on_host": 2000,
+        "sill_height_mm": 900,
+        "width_mm": 1800
+      },
+      {
+        "alignment": "host_centerline",
+        "height_mm": 1200,
+        "host_wall": "wall_office_north",
+        "id": "window_office_b",
+        "position_on_host": 6000,
+        "sill_height_mm": 900,
+        "width_mm": 1800
+      },
+      {
+        "alignment": "host_centerline",
+        "height_mm": 1200,
+        "host_wall": "wall_office_north",
+        "id": "window_office_c",
+        "position_on_host": 10000,
+        "sill_height_mm": 900,
+        "width_mm": 1800
+      }
+    ]
+  },
+  "language": "zh-CN",
+  "missing_facts": [
+    {
+      "blocking": true,
+      "code": "CORRIDOR_END_WALLS_MISSING",
+      "evidence_refs": [
+        "capability:IFC2X3:IfcWall"
+      ],
+      "id": "mf-corridor-end-walls",
+      "message": "走廊东西两端是否需要设置外墙？",
+      "path": "/known_facts/corridor/end_walls",
+      "reason": "用户未提供该事实，且在追问后表示未提供，不能假设默认值。",
+      "source_turns": [
+        "turn-user-003"
+      ]
+    }
+  ],
+  "original_request": "## 3.3 Medium：三间办公室与公共走廊\n\n创建一个单层小型办公区。\n\n南侧设置一条东西向公共走廊，净尺寸为 12 米 × 2 米。\n\n走廊北侧从西向东依次设置：\n\n- 办公室 A：4 米 × 4 米；\n- 办公室 B：4 米 × 4 米；\n- 办公室 C：4 米 × 4 米。\n\n办公区净高为 3.2 米，墙厚为 200 毫米，地板厚为 150 毫米。\n\n每间办公室与走廊之间设置一樘门，门位于对应共用墙中央，门宽 0.9 米、高 2.1 米。\n\n在走廊南侧外墙中央设置一樘主入口双扇门，总宽 1.6 米、高 2.2 米。\n\n每间办公室北侧外墙各设置一扇窗，窗宽 1.8 米、高 1.2 米，窗台高 0.9 米。\n\n分别为走廊和三间办公室生成 `IfcSpace`。\n\n相邻办公室之间以及办公室与走廊之间必须共用墙体，不得生成重叠墙。",
+  "provenance": {
+    "few_shot_ids": [
+      "design-brief-v2.answered-unknown-wall-thickness"
+    ],
+    "selected_evidence_ids": [
+      "schema:bim-json-v2:entity",
+      "schema:bim-json-v2:representation",
+      "capability:IFC2X3:IfcSpace",
+      "capability:IFC2X3:IfcWall",
+      "capability:IFC2X3:IfcDoor",
+      "capability:IFC2X3:IfcWindow"
+    ],
+    "source_turns": [
+      "turn-user-001",
+      "turn-user-003"
+    ]
+  },
+  "schema_version": "text2ifc/design-brief/2.0",
+  "status": "draft_required",
+  "unsupported_requests": [],
+  "user_corrections": []
+}

@@ -1,0 +1,120 @@
+{
+  "entities": [
+    {
+      "attributes": {
+        "Name": "Project"
+      },
+      "id": "project-main",
+      "ifc_class": "IfcProject",
+      "property_sets": {},
+      "provenance": {
+        "source": "text2ifc/staged-skeleton"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "Site",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            0,
+            0,
+            0
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ],
+          "relative_to": "project-main"
+        }
+      },
+      "id": "site-main",
+      "ifc_class": "IfcSite",
+      "property_sets": {},
+      "provenance": {
+        "source": "text2ifc/staged-skeleton"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "Building",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            0,
+            0,
+            0
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ],
+          "relative_to": "site-main"
+        }
+      },
+      "id": "building-main",
+      "ifc_class": "IfcBuilding",
+      "property_sets": {},
+      "provenance": {
+        "source": "text2ifc/staged-skeleton"
+      }
+    }
+  ],
+  "ifc_schema": "IFC2X3",
+  "provenance": {
+    "source": "text2ifc/staged-skeleton"
+  },
+  "relationships": [
+    {
+      "attributes": {
+        "RelatedObjects": [
+          "site-main"
+        ],
+        "RelatingObject": "project-main"
+      },
+      "id": "aggregate-project-site",
+      "ifc_class": "IfcRelAggregates",
+      "provenance": {
+        "source": "text2ifc/staged-skeleton"
+      }
+    },
+    {
+      "attributes": {
+        "RelatedObjects": [
+          "building-main"
+        ],
+        "RelatingObject": "site-main"
+      },
+      "id": "aggregate-site-building",
+      "ifc_class": "IfcRelAggregates",
+      "provenance": {
+        "source": "text2ifc/staged-skeleton"
+      }
+    },
+    {
+      "attributes": {
+        "RelatedObjects": [],
+        "RelatingObject": "building-main"
+      },
+      "id": "aggregate-building-storeys",
+      "ifc_class": "IfcRelAggregates",
+      "provenance": {
+        "source": "text2ifc/staged-skeleton"
+      }
+    }
+  ],
+  "schema_version": "bim-json/2.0",
+  "units": {
+    "length": "MILLIMETRE"
+  }
+}

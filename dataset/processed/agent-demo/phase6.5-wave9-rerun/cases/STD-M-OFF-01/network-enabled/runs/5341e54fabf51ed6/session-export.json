@@ -1,0 +1,122 @@
+{
+  "agent_calls": [
+    {
+      "created_at": "2026-07-16T06:15:45+00:00",
+      "payload": {
+        "artifact_dir": "dataset\\processed\\agent-demo\\phase6.5-wave9-rerun\\cases\\STD-M-OFF-01\\network-enabled\\runs\\5341e54fabf51ed6\\calls\\01-design-brief",
+        "call_index": 1,
+        "prompt_template_hash": "sha256:1c543bc7d636b71fbe29842d566d294789a03797f860bb2ef2df757a38ee582f",
+        "prompt_template_id": "design-brief.v2.1",
+        "response_id": "25a375b4-4ec2-4da3-8147-5f6af718df5e",
+        "role": "design_brief",
+        "status": "needs_clarification"
+      }
+    },
+    {
+      "created_at": "2026-07-16T06:16:40+00:00",
+      "payload": {
+        "artifact_dir": "dataset\\processed\\agent-demo\\phase6.5-wave9-rerun\\cases\\STD-M-OFF-01\\network-enabled\\runs\\5341e54fabf51ed6\\calls\\02-design-brief",
+        "call_index": 2,
+        "prompt_template_hash": "sha256:1c543bc7d636b71fbe29842d566d294789a03797f860bb2ef2df757a38ee582f",
+        "prompt_template_id": "design-brief.v2.1",
+        "response_id": "3c1d6130-d255-42a5-9a8e-7fa5f005b6e8",
+        "role": "design_brief",
+        "status": "draft_required"
+      }
+    }
+  ],
+  "artifacts": [
+    {
+      "created_at": "2026-07-16T06:16:40+00:00",
+      "kind": "design_brief",
+      "path": "runs/5341e54fabf51ed6/design-brief.json"
+    },
+    {
+      "created_at": "2026-07-16T06:16:40+00:00",
+      "kind": "session_export",
+      "path": "runs/5341e54fabf51ed6/session-export.json"
+    }
+  ],
+  "events": [
+    {
+      "created_at": "2026-07-16T06:14:44+00:00",
+      "event_index": 0,
+      "event_type": "repl_session_started",
+      "payload": {
+        "input_source": "terminal",
+        "interaction_mode": "human_repl_live",
+        "terminal_encoding": {
+          "stderr_encoding": "utf-8",
+          "stdin_encoding": "utf-8",
+          "stdout_encoding": null
+        }
+      }
+    },
+    {
+      "created_at": "2026-07-16T06:15:45+00:00",
+      "event_index": 1,
+      "event_type": "assistant_question_displayed",
+      "payload": {
+        "question_ids": [
+          "q-corridor-end-walls"
+        ],
+        "text": "走廊东西两端是否需要设置外墙？请确认。",
+        "turn_id": "turn-assistant-002"
+      }
+    },
+    {
+      "created_at": "2026-07-16T06:15:45+00:00",
+      "event_index": 2,
+      "event_type": "user_answer_requested",
+      "payload": {
+        "question_ids": [
+          "q-corridor-end-walls"
+        ]
+      }
+    },
+    {
+      "created_at": "2026-07-16T06:15:45+00:00",
+      "event_index": 3,
+      "event_type": "user_answer_received",
+      "payload": {
+        "question_ids": [
+          "q-corridor-end-walls"
+        ]
+      }
+    }
+  ],
+  "gates": [],
+  "metrics": [],
+  "prompts": [],
+  "responses": [],
+  "schema_version": "text2ifc/phase6.2-session-export-v1",
+  "session": {
+    "created_at": "2026-07-16T06:14:42+00:00",
+    "original_input": "## 3.3 Medium：三间办公室与公共走廊\n\n创建一个单层小型办公区。\n\n南侧设置一条东西向公共走廊，净尺寸为 12 米 × 2 米。\n\n走廊北侧从西向东依次设置：\n\n- 办公室 A：4 米 × 4 米；\n- 办公室 B：4 米 × 4 米；\n- 办公室 C：4 米 × 4 米。\n\n办公区净高为 3.2 米，墙厚为 200 毫米，地板厚为 150 毫米。\n\n每间办公室与走廊之间设置一樘门，门位于对应共用墙中央，门宽 0.9 米、高 2.1 米。\n\n在走廊南侧外墙中央设置一樘主入口双扇门，总宽 1.6 米、高 2.2 米。\n\n每间办公室北侧外墙各设置一扇窗，窗宽 1.8 米、高 1.2 米，窗台高 0.9 米。\n\n分别为走廊和三间办公室生成 `IfcSpace`。\n\n相邻办公室之间以及办公室与走廊之间必须共用墙体，不得生成重叠墙。",
+    "run_dir": "dataset\\processed\\agent-demo\\phase6.5-wave9-rerun\\cases\\STD-M-OFF-01\\network-enabled\\runs\\5341e54fabf51ed6",
+    "session_hash": "5341e54fabf51ed6",
+    "session_id": "phase6.2-c1171c46e56d432ead666b2c8dadc694",
+    "status": "draft_required",
+    "updated_at": "2026-07-16T06:16:40+00:00"
+  },
+  "turns": [
+    {
+      "created_at": "2026-07-16T06:14:42+00:00",
+      "role": "user",
+      "text": "## 3.3 Medium：三间办公室与公共走廊\n\n创建一个单层小型办公区。\n\n南侧设置一条东西向公共走廊，净尺寸为 12 米 × 2 米。\n\n走廊北侧从西向东依次设置：\n\n- 办公室 A：4 米 × 4 米；\n- 办公室 B：4 米 × 4 米；\n- 办公室 C：4 米 × 4 米。\n\n办公区净高为 3.2 米，墙厚为 200 毫米，地板厚为 150 毫米。\n\n每间办公室与走廊之间设置一樘门，门位于对应共用墙中央，门宽 0.9 米、高 2.1 米。\n\n在走廊南侧外墙中央设置一樘主入口双扇门，总宽 1.6 米、高 2.2 米。\n\n每间办公室北侧外墙各设置一扇窗，窗宽 1.8 米、高 1.2 米，窗台高 0.9 米。\n\n分别为走廊和三间办公室生成 `IfcSpace`。\n\n相邻办公室之间以及办公室与走廊之间必须共用墙体，不得生成重叠墙。",
+      "turn_index": 0
+    },
+    {
+      "created_at": "2026-07-16T06:15:45+00:00",
+      "role": "assistant",
+      "text": "走廊东西两端是否需要设置外墙？请确认。",
+      "turn_index": 1
+    },
+    {
+      "created_at": "2026-07-16T06:16:40+00:00",
+      "role": "user",
+      "text": "当前输入未提供该事实，请保持 Draft 并明确列出缺失项，不要编造。",
+      "turn_index": 2
+    }
+  ]
+}
