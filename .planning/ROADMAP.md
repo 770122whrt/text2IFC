@@ -1132,3 +1132,30 @@ complete at machine 3 / 3 and human 3 / 3. This is bounded cross-case evidence,
 not a repeated-run statistical rate. Double-leaf `IfcDoorStyle` semantics
 remain unsupported. The next routing action is milestone audit, not additional
 mandatory Phase 6.6 runs.
+
+**Milestone audit:** `v1.0-MILESTONE-AUDIT.md` reports `gaps_found`. The
+remaining blockers are milestone-wide verification backfill and explicit
+CLI-08/CLI-09 closure, not additional Phase 6.6 stability cases.
+
+## Phase 6.7: Milestone Verification and CLI Closure (GAP CLOSURE)
+
+**Goal:** Close v1.0 audit evidence gaps without expanding product scope:
+backfill milestone-style phase verification, explicitly prove or reject
+CLI-08/CLI-09, and rerun the milestone audit until archival readiness is
+truthfully established.
+
+**Requirements:** TEXT-01, TEXT-02, TEXT-03, E2E-01, LIVE-01, LIVE-02,
+LIVE-03, LIVE-04, LIVE-05, LIVE-06, OBS-02, CLI-01, CLI-02, CLI-03, CLI-04,
+CLI-05, CLI-06, CLI-07, CLI-08, CLI-09
+
+**Depends on:** Phase 6.6
+
+**Gap closure:** Closes requirement, integration, flow, and Nyquist evidence
+gaps in `.planning/v1.0-MILESTONE-AUDIT.md`.
+
+**Boundary:** Reuse existing tests, summaries, provider traces, accepted IFCs,
+and human UAT. Run at most one focused human-facing REPL acceptance only if
+existing evidence cannot prove CLI-08. Do not add model features, weaken Gates,
+or repeat Easy/Medium/Difficult stability runs in this phase.
+
+**Status:** Context captured; planning pending.

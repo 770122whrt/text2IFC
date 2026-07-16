@@ -236,23 +236,23 @@ requirements.
 
 ### Component-scoped Generation and Multi-storey Stability
 
-- [ ] **PATCH-01**: Generator-owned feedback rounds return a versioned,
+- [x] **PATCH-01**: Generator-owned feedback rounds return a versioned,
   schema-validated, stable-ID-addressed ChangeSet or canonical Draft instead of
   replacing the complete BIM JSON candidate.
-- [ ] **PATCH-02**: Every ChangeSet is bound to the exact base candidate,
+- [x] **PATCH-02**: Every ChangeSet is bound to the exact base candidate,
   expected facts, source Issues, allowed IDs/paths, and dependency closure;
   stale, unsupported, evidence-free, or out-of-scope operations are rejected
   before candidate promotion.
-- [ ] **PATCH-03**: A deterministic applicator creates an immutable complete
+- [x] **PATCH-03**: A deterministic applicator creates an immutable complete
   BIM JSON 2.0 revision and proves that every entity and relationship outside
   the declared dependency closure retains the same semantic hash.
-- [ ] **PATCH-04**: Scoped revision candidates rerun relevant local Gates and
+- [x] **PATCH-04**: Scoped revision candidates rerun relevant local Gates and
   all final global schema, semantic, relationship, compiler, reopen, geometry,
   and Audit checks before acceptance.
-- [ ] **MULTI-01**: Initial complex-building generation can compose a dynamic
+- [x] **MULTI-01**: Initial complex-building generation can compose a dynamic
   building/storey skeleton, one package per explicit storey, and a cross-storey
   package without fixed storey counts or a second Formal BIM model contract.
-- [ ] **MULTI-02**: Package ownership prevents duplicate IDs, cross-storey host
+- [x] **MULTI-02**: Package ownership prevents duplicate IDs, cross-storey host
   mismatch, orphan opening/filling relations, and ambiguous ownership of
   stairs, intermediate slabs, roofs, and vertical connections.
 - [x] **STABLE-01**: A frozen, coverage-oriented Chinese Text2IFC acceptance
@@ -303,10 +303,10 @@ requirements.
 | DRAFT-01 | Phase 2.5 | Complete |
 | EXTRACT-01 | Phase 2.5 | Complete |
 | COMPAT-01 | Phase 2.5 | Complete |
-| TEXT-01 | Phase 3 | Complete |
-| TEXT-02 | Phase 3 | Complete |
-| TEXT-03 | Phase 3 | Complete |
-| E2E-01 | Phase 3 | Complete |
+| TEXT-01 | Phase 6.7 verification closure | Pending |
+| TEXT-02 | Phase 6.7 verification closure | Pending |
+| TEXT-03 | Phase 6.7 verification closure | Pending |
+| E2E-01 | Phase 6.7 verification closure | Pending |
 | GEN-01 | Phase 4 | Planned |
 | GEN-02 | Phase 4 | Planned |
 | GEO-03 | Phase 4 | Planned |
@@ -324,22 +324,22 @@ requirements.
 | MODEL-01 | Phase 6 | Complete |
 | MODEL-02 | Phase 6 | Complete |
 | DEPLOY-01 | Phase 6 | Complete |
-| LIVE-01 | Phase 6.1 | Complete |
-| LIVE-02 | Phase 6.1 | Complete |
-| LIVE-03 | Phase 6.1 | Complete |
-| LIVE-04 | Phase 6.1 | Complete |
-| LIVE-05 | Phase 6.1 | Complete |
-| LIVE-06 | Phase 6.1 | Complete |
-| OBS-02 | Phase 6.1 | Complete |
-| CLI-01 | Phase 6.2 | Complete |
-| CLI-02 | Phase 6.2-fix | Planned |
-| CLI-03 | Phase 6.2-fix | Planned |
-| CLI-04 | Phase 6.2-fix | Planned |
-| CLI-05 | Phase 6.2-fix | Planned |
-| CLI-06 | Phase 6.2-fix | Planned |
-| CLI-07 | Phase 6.2-fix | Planned |
-| CLI-08 | Phase 6.2-fix | Planned |
-| CLI-09 | Phase 6.2-fix | Planned |
+| LIVE-01 | Phase 6.7 verification closure | Pending |
+| LIVE-02 | Phase 6.7 verification closure | Pending |
+| LIVE-03 | Phase 6.7 verification closure | Pending |
+| LIVE-04 | Phase 6.7 verification closure | Pending |
+| LIVE-05 | Phase 6.7 verification closure | Pending |
+| LIVE-06 | Phase 6.7 verification closure | Pending |
+| OBS-02 | Phase 6.7 verification closure | Pending |
+| CLI-01 | Phase 6.7 verification closure | Pending |
+| CLI-02 | Phase 6.7 verification closure | Pending |
+| CLI-03 | Phase 6.7 verification closure | Pending |
+| CLI-04 | Phase 6.7 verification closure | Pending |
+| CLI-05 | Phase 6.7 verification closure | Pending |
+| CLI-06 | Phase 6.7 verification closure | Pending |
+| CLI-07 | Phase 6.7 verification closure | Pending |
+| CLI-08 | Phase 6.7 verification closure | Pending |
+| CLI-09 | Phase 6.7 verification closure | Pending |
 | GEN-03 | Phase 6.3 | Complete |
 | GATE-01 | Phase 6.3 | Complete |
 | GATE-02 | Phase 6.3 | Complete |

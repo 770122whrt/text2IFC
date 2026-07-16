@@ -570,10 +570,9 @@ machine 3 / 3 and human 3 / 3. The project is ready for milestone audit.
 
 ## Next Action
 
-Run the milestone audit before archival. Resolve or explicitly classify the
-two historical plans without matching summaries and any requirements not
-actually delivered. Do not use `--force`; repeated stability runs are optional
-next-milestone work rather than a blocker for `STABLE-01`.
+Plan Phase 6.7, the single v1.0 gap-closure phase. It backfills missing
+VERIFICATION artifacts, explicitly closes CLI-08/CLI-09, and reruns the audit.
+Repeated stability runs remain optional next-milestone work.
 
 ## Accumulated Context
 
