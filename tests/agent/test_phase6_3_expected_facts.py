@@ -186,13 +186,34 @@ def test_ready_design_brief_cannot_silently_project_to_zero_storeys():
                 "schema_version": "text2ifc/design-brief/2.0",
                 "status": "ready",
                 "known_facts": {
-                    "space": {"shape": "rectangle", "length_mm": 6000, "width_mm": 4000},
-                    "walls": {"count": 4, "enclosure": "closed", "thickness_mm": 300},
-                    "door": {"host": "south_wall", "width_mm": 900, "height_mm": 2100},
-                    "window": {"host": "north_wall", "width_mm": 1200, "height_mm": 1500},
+                    "space": {"shape": "rectangle"},
                 },
             },
         )
+
+
+def test_expected_facts_migrates_complete_legacy_single_storey_room():
+    design_brief = json.loads(
+        (PHASE6_1_COMPLETE / "design-brief" / "design-brief.json").read_text(
+            encoding="utf-8"
+        )
+    )
+
+    expected = build_expected_facts(
+        case_id="legacy-easy-complete-room",
+        design_brief=design_brief,
+    )
+
+    assert expected["storey_count"] == 1
+    assert expected["total_counts"] == {
+        "IfcBuildingStorey": 1,
+        "IfcSpace": 1,
+        "IfcWall": 4,
+        "IfcDoor": 1,
+        "IfcWindow": 1,
+    }
+    assert expected["doors"][0]["host_wall"] == "wall-south"
+    assert expected["windows"][0]["host_wall"] == "wall-north"
 
 
 def test_expected_facts_three_storey_fixture_is_data_driven_and_reusable():
