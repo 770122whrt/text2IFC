@@ -139,6 +139,31 @@ def test_difficult_successor_freezes_wall_passage_and_five_opening_guards():
     ]
 
 
+def test_explicit_host_difficult_manifest_freezes_walls_and_door_hosts():
+    manifest_path = Path(
+        "dataset/processed/agent-demo/phase6.5-wave8-observation/manifests/"
+        "STD-D-MUL-04.json"
+    )
+
+    payload = run_phase6_5_live_stability.load_frozen_manifest(manifest_path)
+    text = payload["input"]
+
+    assert payload["case_id"] == "STD-D-MUL-04"
+    assert payload["supersedes"] == "STD-D-MUL-03"
+    assert payload["model_output"] is None
+    assert "首层只生成以下九段室内墙" in text
+    assert "二层只生成以下六段室内墙" in text
+    assert "十扇门及其明确宿主" in text
+    assert text.count("宿主 `wall-") == 9
+    assert text.count("railing-stair-opening-") == 3
+    assert "23 个 `IfcWall`" in text
+    assert "正体积相交数量必须为 0" in text
+    source_path = Path(payload["source_path"])
+    assert hashlib.sha256(source_path.read_bytes()).hexdigest() == payload[
+        "source_sha256"
+    ]
+
+
 def test_live_harness_exposes_graded_cases_with_single_run_defaults():
     parser = run_phase6_5_live_stability.build_parser()
     case_action = next(action for action in parser._actions if action.dest == "case")
