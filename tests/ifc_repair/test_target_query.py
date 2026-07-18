@@ -16,7 +16,7 @@ ROOT = Path(__file__).resolve().parents[2]
 
 def _api() -> dict[str, object]:
     try:
-        from text2ifc_ifc_repair.retrievers import CandidateRetriever, VectorRetriever, VectorRetrieverError
+        from text2ifc_ifc_repair.retrievers import CandidateRetriever, RetrievedCandidate, VectorRetriever, VectorRetrieverError
         from text2ifc_ifc_repair.target_query import TargetQuery, resolve_target
     except ModuleNotFoundError:
         pytest.fail("Phase 7 target query API is not implemented yet")
@@ -134,6 +134,41 @@ def test_vector_boundary_is_disabled_without_embedding_dependency() -> None:
     with pytest.raises(api["VectorRetrieverError"]) as captured:
         retriever.retrieve(None, [])
     assert captured.value.code == "VECTOR_RETRIEVER_DISABLED"
+
+
+def test_candidate_retriever_protocol_accepts_future_bounded_sources() -> None:
+    api = _api()
+
+    class FakeRetriever:
+        name = "fixture"
+        version = "fixture/0.1"
+
+        def retrieve(self, query: object, candidates: object) -> list[object]:
+            return []
+
+    assert isinstance(FakeRetriever(), api["CandidateRetriever"])
+
+
+def test_near_tie_respects_configured_margin_and_evidence_states(tmp_path: Path) -> None:
+    api = _api()
+    exact_name = _record("0AAAAAAAAAAAAAAAAAAAAA", "target")
+    type_name = _record("0BBBBBBBBBBBBBBBBBBBBB", "other", type_name="target")
+    database = _repository(tmp_path, [exact_name, type_name])
+    query = api["TargetQuery"](
+        allowed_ifc_classes=("IfcWall",), names=("target",), winner_margin=40
+    )
+    conflict = api["TargetQuery"](
+        allowed_ifc_classes=("IfcWall",),
+        global_id=exact_name.ifc_global_id,
+        names=("different",),
+    )
+    with SQLiteIndexRepository.open(database) as repository:
+        ambiguous = api["resolve_target"](repository, query)
+        conflicting = api["resolve_target"](repository, conflict)
+    assert ambiguous.status == "ambiguous"
+    assert ambiguous.candidates[0].fused_score - ambiguous.candidates[1].fused_score == 30
+    states = {item.state for item in conflicting.candidates[0].evidence}
+    assert {"matched", "mismatched", "unavailable"} <= states
 
 
 def test_resolution_is_repeatable_and_does_not_mutate_query(tmp_path: Path) -> None:
