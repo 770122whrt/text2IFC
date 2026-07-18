@@ -4,37 +4,44 @@
 
 See `.planning/PROJECT.md`.
 
-**Core value:** Produce valid, inspectable IFC models from explicit user
-requirements through validated BIM JSON rather than raw STEP generation.
+**Core value:** Given an IFC file and an explicit user request, produce a
+traceable semantic ChangeSet and an L1/L2-validated IFC result.
 
-**Current focus:** Planning the milestone after v1.0.
+**Current focus:** Phase 7 — IFC Retrieval Index and Target Resolution.
 
-## Status
+## Current Position
 
-- Milestone: v1.0 Supported Text2IFC Baseline
-- State: shipped and archived on 2026-07-16
-- Phases: 15 / 15 complete
-- Plans: 94 / 94 complete
-- Audit: passed
-- Requirement outcomes: 71 validated, 4 deferred later-scope, 1 accepted
-  technical debt, 0 orphaned
-- Verification: 722 tests passed; compileall passed; 7/7 IFC2X3 files reopened;
-  planning secret scan 0/292 findings
-- Branch at archival: `codex/workflow-dataset-links`
+- Milestone: v1.1 IFC ChangeSet Repair Pipeline
+- Phase: 7 (not planned yet)
+- Plan: —
+- Status: Roadmap drafted; ready for phase discussion/planning
+- Progress: 0 / 7 phases complete
+- Requirements: 22 pending, 22 mapped, 0 unmapped
+- Last activity: 2026-07-18 — v1.1 requirements and roadmap drafted
 
-## Accepted Debt
+## Carried Context
 
-- `CLI-08`: no final successful true-human REPL acceptance bundle.
-- `GEO-03`, `GEO-04`, `GEO-05`, `IFC-06`: future high-fidelity and capability
-  expansion.
-- Repeated-run statistical reliability, generalized stair collision, and
-  double-leaf door semantics remain future candidates.
+- v1.0 shipped and remains archived with 722-test verification.
+- One LargeBuilding Window repair has passed real DeepSeek L1 UAT.
+- Direct original-vs-repaired comparison found L2 gaps in instance Psets,
+  quantities, material/classification and `IsExternal`.
+- L1 and L2 are mandatory for v1.1 repair success.
+- L3 authoring/identity exactness is recorded but not supported in v1.1.
+- GUID, Name/Tag/type, storey, direction, grid/space, relationships and geometry
+  are complementary target evidence; `Name` is not a universal key.
+- Current DeepSeek input/output guard remains 65,536 tokens; 128k is a later
+  near-limit experiment, not a current capability claim.
+
+## Accepted Debt / Deferred
+
+- `CLI-08` final true-human REPL acceptance from v1.0 remains carried debt.
+- Curved/free-form wall repair is deferred.
+- L3 exactness is deferred without a compatibility commitment.
 
 ## Next Action
 
-Run `$gsd-new-milestone` to choose the next version, define fresh requirements,
-and create a roadmap beginning with Phase 7. Do not infer that the candidate
-scope in ROADMAP is already committed.
+Run `$gsd-discuss-phase 7` to freeze the element index, `TargetQuery`, scoring,
+ambiguity and context-budget contracts before writing Phase 7 plans.
 
 ---
-*Last activity: 2026-07-16 - archived v1.0 after passed milestone audit.*
+*Last updated: 2026-07-18 after drafting milestone v1.1*

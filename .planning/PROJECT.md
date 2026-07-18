@@ -2,20 +2,22 @@
 
 ## What This Is
 
-text2IFC converts Chinese-first natural-language building requirements into a
-validated BIM JSON 2.0 semantic model and then deterministically compiles that
-model to inspectable IFC2X3. Missing required facts remain Draft and may be
-clarified over multiple turns instead of being silently invented.
+text2IFC converts Chinese-first natural-language building requirements into
+validated semantic changes and deterministically compiles them to inspectable
+IFC2X3. It supports both new-model generation through BIM JSON and the emerging
+existing/damaged-IFC repair path through a unified semantic ChangeSet; missing
+or ambiguous target facts must be clarified instead of silently invented.
 
 ## Core Value
 
-Produce IFC models that are structurally valid, spatially checkable, and
-traceable to explicit user requirements rather than generating fragile IFC
-STEP text directly.
+Given an IFC file and an explicit user request, produce a traceable semantic
+ChangeSet and an L1/L2-validated IFC result without model-authored STEP text.
 
 ## Current State
 
 **v1.0 Supported Text2IFC Baseline shipped on 2026-07-16.**
+
+**v1.1 IFC ChangeSet Repair Pipeline is now being planned.**
 
 The shipped supported-scope chain is:
 
@@ -32,6 +34,22 @@ The milestone contains 15 phases and 94 plans. Its final current-state
 verification passed 722 focused regression tests, static compilation, seven
 representative IFC2X3 reopen checks, a zero-finding planning secret scan, and
 human review of all three frozen stability cases.
+
+## Current Milestone: v1.1 IFC ChangeSet Repair Pipeline
+
+**Goal:** A user can provide an existing or damaged IFC2X3 file plus a natural-
+language modification request, run one program, and receive a validated
+semantic ChangeSet, a repaired/modified IFC, and auditable evidence.
+
+**Target features:**
+
+- Deterministic IFC retrieval index and hybrid target resolution using GUID,
+  Name/Tag/type aliases, storey, grid/space context, direction and geometry.
+- Mandatory L1 geometry/relationship and L2 BIM semantic-fidelity evaluation.
+- One public CLI/API orchestration path from IFC + text to ChangeSet + IFC.
+- Window semantic-fidelity closure followed by Opening, Door, Beam and Column
+  operation expansion.
+- Large-IFC bounded context and a separate 128k near-limit experiment.
 
 ## Validated Capabilities
 
@@ -67,6 +85,8 @@ human review of all three frozen stability cases.
 - Dataset training/evaluation splits remain isolated by scene family and
   linked to license/provenance evidence.
 - New behavioral work follows TDD and deterministic acceptance Gates.
+- L1 and L2 are mandatory repair gates; L3 authoring/identity exactness is
+  recorded but excluded from the v1.1 compatibility target.
 
 ## Key Decisions
 
@@ -80,6 +100,19 @@ human review of all three frozen stability cases.
 | Prompt-only structured generation before fine-tuning | Retained until larger reviewed data proves need |
 | Component-scoped ChangeSets for corrections | Validated with preservation rate 1.0 |
 | Coverage-based three-case stability | Accepted for v1.0; statistical reliability deferred |
+| Hybrid target selectors | GUID, Name/Tag/type, storey, direction, grid/space and geometry contribute evidence; no single human-facing field is the universal key |
+| Repair completion levels | L1 geometry/relationship and L2 semantic fidelity are required; L3 authoring exactness is deferred |
+| Original IFC in benchmark evaluation | Private ground truth may score L2 after repair but must never enter Provider input |
+| 128k context | Deferred until a dedicated near-limit Provider/tokenizer test; current repair default remains 64k input |
+
+## Evolution
+
+This document evolves at phase transitions and milestone boundaries.
+
+After each phase, validated requirements move to completed traceability,
+invalidated assumptions move out of scope with reasons, and new decisions are
+recorded before implementation drifts. Milestone completion requires a full
+review of scope, evidence and deferred L3 exactness.
 
 ## History
 
@@ -89,4 +122,4 @@ human review of all three frozen stability cases.
 - [milestone register](MILESTONES.md)
 
 ---
-*Last updated: 2026-07-16 after v1.0 milestone archival*
+*Last updated: 2026-07-18 after opening the proposed v1.1 repair milestone*
