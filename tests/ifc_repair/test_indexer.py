@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from collections import Counter
+from dataclasses import replace
 from pathlib import Path
 
 import ifcopenshell
@@ -150,3 +151,22 @@ def test_registry_adds_a_new_family_without_changing_common_index_loop(
         record = repository.get_by_global_id("0BBBBBBBBBBBBBBBBBBBBB")
         assert record is not None
         assert record.facets["fixture"]["registered"] is True
+
+
+def test_repeat_build_is_deterministic_except_for_build_timestamp(tmp_path: Path) -> None:
+    build_ifc_index = _api()["build_ifc_index"]
+    first_database = tmp_path / "first.sqlite"
+    second_database = tmp_path / "second.sqlite"
+    build_ifc_index(LARGE_BUILDING, first_database)
+    build_ifc_index(LARGE_BUILDING, second_database)
+
+    with SQLiteIndexRepository.open(first_database) as first:
+        first_metadata = first.metadata
+        first_records = list(first.iter_records())
+        first_diagnostics = first.diagnostics()
+    with SQLiteIndexRepository.open(second_database) as second:
+        assert second.metadata == replace(
+            first_metadata, created_at=second.metadata.created_at
+        )
+        assert list(second.iter_records()) == first_records
+        assert second.diagnostics() == first_diagnostics
