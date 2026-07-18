@@ -1,6 +1,6 @@
 # IFC Target Retrieval and Context Design
 
-> Status: proposed contract for v1.1 Phase 7  
+> Status: implemented and verified for v1.1 Phase 7 on 2026-07-19  
 > Goal: existing/damaged IFC + natural-language request -> explainable target
 > candidates -> semantic ChangeSet -> deterministic IFC.
 
@@ -226,3 +226,30 @@ program --ifc model.ifc --request "..."
 
 L1 and L2 are required. L3 authoring/identity exactness is recorded as a future
 problem and is not a v1.1 compatibility claim.
+
+## 7. Phase 7 verified implementation
+
+The implemented contract uses these versioned boundaries:
+
+- index: `text2ifc/ifc-index/0.1`;
+- query: `text2ifc/ifc-target-query/0.1`;
+- deterministic score: `text2ifc/target-score/0.1`;
+- resolution: `text2ifc/ifc-target-resolution/0.1`;
+- bounded context: `text2ifc/ifc-target-context/0.1`.
+
+The CLI is now available as:
+
+```text
+python scripts/ifc_repair/index.py build SOURCE --database INDEX.sqlite
+python scripts/ifc_repair/index.py query INDEX.sqlite --query query.json
+```
+
+This CLI stops after deterministic resolution and context projection. It does
+not call a Provider, generate a ChangeSet, or mutate the source IFC. Normal
+context is capped at five candidates; diagnostic context is capped at ten.
+Only explicitly requested property evidence is projected from the broader
+typed local property index.
+
+LargeBuilding acceptance and exact measurements are recorded in
+`phase7-validation-report.md`. These results validate functional behavior for
+the selected fixture; they are not a large-scale performance claim.
