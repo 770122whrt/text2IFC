@@ -6,7 +6,8 @@
   2026-07-16. See [archived roadmap](milestones/v1.0-ROADMAP.md),
   [requirements](milestones/v1.0-REQUIREMENTS.md), and
   [audit](milestones/v1.0-MILESTONE-AUDIT.md).
-- [ ] **v1.1 IFC ChangeSet Repair Pipeline** - Phases 7 through 13, planning.
+- [ ] **v1.1 IFC ChangeSet Repair Pipeline** - Phases 7 through 13, in progress
+  (1 / 7 phases complete).
 
 ## Current Cycle: v1.1 IFC ChangeSet Repair Pipeline
 
@@ -15,6 +16,8 @@ request, produce a bound semantic ChangeSet, deterministically apply it, and
 publish an IFC result with mandatory L1 and L2 evidence.
 
 ### Phase 7: IFC Retrieval Index and Target Resolution
+
+**Status:** Complete — 2026-07-19
 
 **Goal:** Resolve human target descriptions to unique IFC entities using
 deterministic, explainable evidence rather than relying on `Name` alone.
@@ -32,6 +35,8 @@ deterministic, explainable evidence rather than relying on `Name` alone.
 3. Candidate rankings include field-level evidence and never silently resolve
    zero-match, ambiguous or conflicting selectors.
 4. Compact top-K context remains deterministic and token-budgeted.
+
+**Evidence:** [Phase 7 validation report](../docs/validation/ifc2x3-changeset/phase7-validation-report.md)
 
 ### Phase 8: L1/L2 Evaluation Contract
 

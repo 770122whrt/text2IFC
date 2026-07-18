@@ -8,16 +8,16 @@ semantic ChangeSet and an L1/L2-validated IFC result.
 
 ### Target Retrieval
 
-- [ ] **TGT-01**: User can index an IFC2X3 file into stable element records
+- [x] **TGT-01**: User can index an IFC2X3 file into stable element records
   containing GUID, class, Name/LongName/Tag/ObjectType/type aliases and storey.
-- [ ] **TGT-02**: User requests can identify targets using any compatible
+- [x] **TGT-02**: User requests can identify targets using any compatible
   combination of exact GUID, project label/name/type, storey, grid/space,
   direction/position, relationship and geometry constraints.
-- [ ] **TGT-03**: The system produces a versioned structured `TargetQuery`
+- [x] **TGT-03**: The system produces a versioned structured `TargetQuery`
   before ChangeSet generation instead of asking the Generator to search raw IFC.
-- [ ] **TGT-04**: Candidate results include deterministic scores and field-level
+- [x] **TGT-04**: Candidate results include deterministic scores and field-level
   evidence, and zero/multiple/conflicting matches stop or request clarification.
-- [ ] **TGT-05**: The system packages deterministic top-K candidates within an
+- [x] **TGT-05**: The system packages deterministic top-K candidates within an
   explicit context byte/token budget without dropping the best exact match.
 
 ### Repair Pipeline
@@ -91,11 +91,11 @@ semantic ChangeSet and an L1/L2-validated IFC result.
 
 | Requirement | Phase | Status |
 |---|---:|---|
-| TGT-01 | 7 | Pending |
-| TGT-02 | 7 | Pending |
-| TGT-03 | 7 | Pending |
-| TGT-04 | 7 | Pending |
-| TGT-05 | 7 | Pending |
+| TGT-01 | 7 | Complete |
+| TGT-02 | 7 | Complete |
+| TGT-03 | 7 | Complete |
+| TGT-04 | 7 | Complete |
+| TGT-05 | 7 | Complete |
 | VAL-01 | 8 | Pending |
 | VAL-02 | 8 | Pending |
 | VAL-03 | 8 | Pending |
@@ -118,4 +118,3 @@ semantic ChangeSet and an L1/L2-validated IFC result.
 
 ---
 *Last updated: 2026-07-18 after v1.1 roadmap creation*
-

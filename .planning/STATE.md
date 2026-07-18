@@ -7,17 +7,17 @@ See `.planning/PROJECT.md`.
 **Core value:** Given an IFC file and an explicit user request, produce a
 traceable semantic ChangeSet and an L1/L2-validated IFC result.
 
-**Current focus:** Phase 7 — IFC Retrieval Index and Target Resolution.
+**Current focus:** Phase 8 — L1/L2 Evaluation Contract.
 
 ## Current Position
 
 - Milestone: v1.1 IFC ChangeSet Repair Pipeline
-- Phase: 7 (not planned yet)
+- Phase: 8 (not planned yet)
 - Plan: —
-- Status: Roadmap drafted; ready for phase discussion/planning
-- Progress: 0 / 7 phases complete
-- Requirements: 22 pending, 22 mapped, 0 unmapped
-- Last activity: 2026-07-18 — v1.1 requirements and roadmap drafted
+- Status: Phase 7 verified; ready for Phase 8 discussion/planning
+- Progress: 1 / 7 phases complete
+- Requirements: 17 pending, 5 complete, 22 mapped, 0 unmapped
+- Last activity: 2026-07-19 — Phase 7 retrieval index and target resolution verified
 
 ## Carried Context
 
@@ -31,6 +31,9 @@ traceable semantic ChangeSet and an L1/L2-validated IFC result.
   are complementary target evidence; `Name` is not a universal key.
 - Current DeepSeek input/output guard remains 65,536 tokens; 128k is a later
   near-limit experiment, not a current capability claim.
+- Phase 7 indexes Wall, Door, Window, and contextual Space records in SQLite;
+  structured retrieval and bounded context are Provider-independent.
+- Vector retrieval remains disabled behind an extension interface.
 
 ## Accepted Debt / Deferred
 
@@ -40,8 +43,8 @@ traceable semantic ChangeSet and an L1/L2-validated IFC result.
 
 ## Next Action
 
-Run `$gsd-discuss-phase 7` to freeze the element index, `TargetQuery`, scoring,
-ambiguity and context-budget contracts before writing Phase 7 plans.
+Run `$gsd-discuss-phase 8` to freeze the L1/L2 evaluation contract before
+writing Phase 8 plans.
 
 ---
-*Last updated: 2026-07-18 after drafting milestone v1.1*
+*Last updated: 2026-07-19 after completing Phase 7*

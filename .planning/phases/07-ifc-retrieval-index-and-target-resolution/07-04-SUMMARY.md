@@ -29,10 +29,12 @@ completed: 2026-07-19
 - RED `300b58a6`: five tests failed because context and CLI APIs were absent.
 - GREEN `5db89a71`: focused context and CLI tests passed.
 - Acceptance `718ee32e`: LargeBuilding end-to-end tests passed.
+- Final audit RED `bfef5305` and GREEN `c96fe5d5`: unreadable SQLite indexes
+  now return stable `INVALID_INDEX` errors instead of uncaught tracebacks.
 
 ## Final Verification
 
-- Full `tests/ifc_repair`: `64 passed in 147.51s`.
+- Full `tests/ifc_repair`: `65 passed in 149.29s`.
 - `compileall`: passed.
 - CLI LargeBuilding build/query: passed; 86 records and resolved frozen Wall.
 - Provider calls: 0. Vector retrieval: disabled.

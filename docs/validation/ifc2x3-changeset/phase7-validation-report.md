@@ -37,7 +37,7 @@ git diff --check
 
 Observed results:
 
-- full IFC repair regression: `64 passed in 147.51s`;
+- full IFC repair regression: `65 passed in 149.29s`;
 - compileall: passed;
 - schema validation: passed through focused query/resolution/context tests;
 - CLI build/query smoke: exit code 0, resolution `resolved`;
@@ -57,6 +57,8 @@ place for scale, latency, and incremental-index claims.
 - SQL values are parameter-bound, including quote/SQL-shaped alias fixtures.
 - Failed builds do not replace a published database.
 - Source hash and index-schema mismatches fail explicitly.
+- Missing, unreadable, or malformed SQLite indexes return stable
+  `INVALID_INDEX` JSON errors instead of tracebacks.
 - Duplicate or malformed IFC GlobalIds remain diagnostic-only identities.
 - GUID conflicts with class, storey, or name return `conflict`.
 - zero matches return `not_found`; ties and near ties return `ambiguous`;

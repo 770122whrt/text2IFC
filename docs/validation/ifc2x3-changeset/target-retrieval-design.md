@@ -1,6 +1,6 @@
 # IFC Target Retrieval and Context Design
 
-> Status: implemented and verified for v1.1 Phase 7 on 2026-07-19  
+> Status: implemented and verified for v1.1 Phase 7 on 2026-07-19
 > Goal: existing/damaged IFC + natural-language request -> explainable target
 > candidates -> semantic ChangeSet -> deterministic IFC.
 
