@@ -5,7 +5,7 @@ import os
 import sqlite3
 import uuid
 from pathlib import Path
-from typing import Any, Iterator
+from typing import Any, ContextManager, Iterable, Iterator, Protocol
 
 from .index_models import (
     INDEX_SCHEMA_VERSION,
@@ -22,6 +22,40 @@ class IndexStoreError(RuntimeError):
     def __init__(self, code: str, message: str) -> None:
         super().__init__(message)
         self.code = code
+
+
+class IndexRepository(Protocol):
+    """Storage boundary consumed by indexers and target resolvers."""
+
+    metadata: IndexMetadata
+
+    def put_record(self, record: ElementRecord) -> None: ...
+
+    def put_diagnostic(self, diagnostic: IndexDiagnostic) -> None: ...
+
+    def publish(self) -> None: ...
+
+    def get_by_global_id(self, global_id: str) -> ElementRecord | None: ...
+
+    def iter_records(self) -> Iterable[ElementRecord]: ...
+
+    def find_aliases(self, normalized_value: str) -> list[ElementRecord]: ...
+
+    def properties_for(self, record_id: str) -> list[PropertyFact]: ...
+
+    def relationships_from(self, record_id: str) -> list[RelationshipFact]: ...
+
+    def diagnostics(self) -> list[IndexDiagnostic]: ...
+
+    def __enter__(self) -> IndexRepository: ...
+
+    def __exit__(self, exc_type: object, exc: object, traceback: object) -> None: ...
+
+
+class IndexRepositoryFactory(Protocol):
+    def create(
+        self, database: str | Path, metadata: IndexMetadata
+    ) -> ContextManager[IndexRepository]: ...
 
 
 def _json_dump(value: Any) -> str:
@@ -156,6 +190,8 @@ class SQLiteIndexRepository:
             );
             CREATE UNIQUE INDEX reliable_global_id
                 ON elements(ifc_global_id) WHERE identity_reliable = 1;
+            CREATE INDEX element_class ON elements(ifc_class, record_id);
+            CREATE INDEX element_storey ON elements(storey_global_id, record_id);
             CREATE TABLE aliases (
                 record_id TEXT NOT NULL REFERENCES elements(record_id) ON DELETE CASCADE,
                 ordinal INTEGER NOT NULL,
@@ -174,6 +210,10 @@ class SQLiteIndexRepository:
                 provenance TEXT NOT NULL,
                 PRIMARY KEY (record_id, ordinal)
             );
+            CREATE INDEX relationship_kind_source
+                ON relationships(kind, record_id, ordinal);
+            CREATE INDEX relationship_target
+                ON relationships(target_global_id, kind, record_id);
             CREATE TABLE properties (
                 record_id TEXT NOT NULL REFERENCES elements(record_id) ON DELETE CASCADE,
                 ordinal INTEGER NOT NULL,
@@ -187,6 +227,8 @@ class SQLiteIndexRepository:
                 provenance TEXT NOT NULL,
                 PRIMARY KEY (record_id, ordinal)
             );
+            CREATE INDEX property_lookup
+                ON properties(set_kind, set_name, property_name, record_id);
             CREATE TABLE diagnostics (
                 diagnostic_id INTEGER PRIMARY KEY AUTOINCREMENT,
                 code TEXT NOT NULL,
@@ -423,6 +465,8 @@ class SQLiteIndexRepository:
 
 __all__ = [
     "INDEX_SCHEMA_VERSION",
+    "IndexRepository",
+    "IndexRepositoryFactory",
     "IndexStoreError",
     "SQLiteIndexRepository",
 ]
