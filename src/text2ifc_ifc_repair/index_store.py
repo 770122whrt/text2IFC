@@ -124,7 +124,12 @@ class SQLiteIndexRepository:
         expected_index_schema_version: str | None = None,
     ) -> SQLiteIndexRepository:
         target = Path(database)
-        connection = sqlite3.connect(f"file:{target.as_posix()}?mode=ro", uri=True)
+        try:
+            connection = sqlite3.connect(f"file:{target.as_posix()}?mode=ro", uri=True)
+        except sqlite3.Error as error:
+            raise IndexStoreError(
+                "INVALID_INDEX", f"Unable to open SQLite index: {error}"
+            ) from error
         connection.row_factory = sqlite3.Row
         try:
             row = connection.execute("SELECT * FROM index_metadata WHERE singleton = 1").fetchone()
@@ -152,9 +157,14 @@ class SQLiteIndexRepository:
                     "INDEX_SCHEMA_VERSION_MISMATCH",
                     "The index schema version does not match the requested version",
                 )
-        except Exception:
+        except IndexStoreError:
             connection.close()
             raise
+        except sqlite3.Error as error:
+            connection.close()
+            raise IndexStoreError(
+                "INVALID_INDEX", f"Unable to read SQLite index: {error}"
+            ) from error
         return cls(connection, target, metadata)
 
     @staticmethod
