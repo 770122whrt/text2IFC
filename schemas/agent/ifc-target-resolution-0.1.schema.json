@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "text2ifc/ifc-target-resolution/0.1",
+  "title": "IFC Target Resolution 0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "score_version", "status", "resolved_target_id", "candidates", "attribute_intents"],
+  "properties": {
+    "schema_version": {"const": "text2ifc/ifc-target-resolution/0.1"},
+    "score_version": {"const": "text2ifc/target-score/0.1"},
+    "status": {"enum": ["resolved", "ambiguous", "not_found", "conflict", "unsupported"]},
+    "resolved_target_id": {"type": ["string", "null"]},
+    "attribute_intents": {"type": "array", "items": {"type": "object"}},
+    "candidates": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["record_id", "ifc_global_id", "retriever", "retriever_version", "source_score", "fused_score", "matched_fields", "evidence"],
+        "properties": {
+          "record_id": {"type": "string"},
+          "ifc_global_id": {"type": ["string", "null"]},
+          "retriever": {"type": "string"},
+          "retriever_version": {"type": "string"},
+          "source_score": {"type": "integer"},
+          "fused_score": {"type": "integer"},
+          "matched_fields": {"type": "array", "items": {"type": "string"}},
+          "evidence": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["field", "state", "query_value", "candidate_value", "provenance"],
+              "properties": {
+                "field": {"type": "string"},
+                "state": {"enum": ["matched", "mismatched", "unavailable"]},
+                "query_value": {},
+                "candidate_value": {},
+                "provenance": {"type": "string"}
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
