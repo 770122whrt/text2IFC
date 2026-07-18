@@ -42,3 +42,24 @@ def test_cli_uses_stable_nonzero_codes_for_invalid_query_and_nonresolution(tmp_p
     missing = tmp_path / "missing.json"; missing.write_text(json.dumps({"schema_version": "text2ifc/ifc-target-query/0.1", "allowed_ifc_classes": ["IfcDoor"]}), encoding="utf-8")
     assert cli.main(["query", str(database), "--query", str(missing)]) == 3
     assert json.loads(capsys.readouterr().out)["resolution"]["status"] == "not_found"
+
+
+def test_cli_reports_unreadable_index_as_stable_json_error(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    cli = _api()
+    query_path = tmp_path / "query.json"
+    query_path.write_text(
+        json.dumps(
+            {
+                "schema_version": "text2ifc/ifc-target-query/0.1",
+                "allowed_ifc_classes": ["IfcWall"],
+            }
+        ),
+        encoding="utf-8",
+    )
+    exit_code = cli.main(
+        ["query", str(tmp_path / "missing.sqlite"), "--query", str(query_path)]
+    )
+    assert exit_code == 1
+    assert json.loads(capsys.readouterr().out)["code"] == "INVALID_INDEX"
