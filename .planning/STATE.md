@@ -13,11 +13,11 @@ traceable semantic ChangeSet and an L1/L2-validated IFC result.
 
 - Milestone: v1.1 IFC ChangeSet Repair Pipeline
 - Phase: 8
-- Plan: 3 of 4 (08-03)
-- Status: Executing Phase 8 — independent L1 authorization
+- Plan: 4 of 4 (08-04)
+- Status: Executing Phase 8 — benchmark privacy and LargeBuilding acceptance
 - Progress: 1 / 7 phases complete
 - Requirements: 17 pending, 5 complete, 22 mapped, 0 unmapped
-- Last activity: 2026-07-19 — Plan 08-02 completed (46 policy + 9 regression tests passed)
+- Last activity: 2026-07-19 — Plan 08-03 completed (independent L1 tests passed)
 
 ## Carried Context
 
@@ -43,7 +43,7 @@ traceable semantic ChangeSet and an L1/L2-validated IFC result.
 
 ## Next Action
 
-Execute plan `08-03` for independent actual-diff L1 authorization.
+Execute plan `08-04` for private/public benchmark projection and acceptance.
 
 ---
-*Last updated: 2026-07-19 after completing Phase 8 plan 08-02*
+*Last updated: 2026-07-19 after completing Phase 8 plan 08-03*
