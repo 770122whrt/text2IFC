@@ -9,6 +9,7 @@ import ifcopenshell.guid
 import pytest
 
 from text2ifc_ifc_repair.apply import apply_changeset
+from text2ifc_ifc_repair.compare import evaluate_repair_application
 from text2ifc_ifc_repair import evaluation as evaluation_module
 from text2ifc_ifc_repair.evaluation_models import EvaluationStatus, LevelResult
 from text2ifc_ifc_repair.mutation import remove_window_and_opening
@@ -30,6 +31,8 @@ SOURCE = (
     / "LargeBuilding.ifc"
 )
 WALL_ID = "1F6umJ5H50aeL3A1As_wTm"
+OTHER_WALL_ID = "0AAAAAAAAAAAAAAAAAAAAA"
+PSET_ID = "0BBBBBBBBBBBBBBBBBBBBB"
 
 
 def _sha256(path: Path) -> str:
@@ -57,10 +60,41 @@ def _case(root: Path) -> tuple[Path, Path, dict[str, Any], dict[str, Any], str]:
         "spec:/target/local_reference",
         "context:/candidate_targets/0",
     ]
+    damaged = case_dir / "damaged.ifc"
+    compact_damaged = root / "compact-damaged.ifc"
+    source_model = ifcopenshell.open(str(damaged))
+    compact = ifcopenshell.file(schema="IFC2X3")
+    compact.add(source_model.by_type("IfcProject")[0])
+    source_wall = source_model.by_guid(WALL_ID)
+    source_storey = source_wall.ContainedInStructure[0].RelatingStructure
+    storey = compact.add(source_storey)
+    wall = compact.add(source_wall)
+    compact.create_entity(
+        "IfcRelContainedInSpatialStructure",
+        GlobalId=ifcopenshell.guid.new(),
+        OwnerHistory=wall.OwnerHistory,
+        RelatedElements=[wall],
+        RelatingStructure=storey,
+    )
+    compact.create_entity(
+        "IfcWall",
+        GlobalId=OTHER_WALL_ID,
+        OwnerHistory=wall.OwnerHistory,
+        Name="out-of-scope wall",
+    )
+    compact.create_entity(
+        "IfcPropertySet",
+        GlobalId=PSET_ID,
+        OwnerHistory=wall.OwnerHistory,
+        Name="preserved root",
+        HasProperties=[],
+    )
+    compact.write(str(compact_damaged))
+    compact_fingerprint = _sha256(compact_damaged)
     changeset = {
         "schema_version": "text2ifc/ifc-repair-changeset/0.1",
         "changeset_id": "changeset-l1-window-repair-001",
-        "base_model_fingerprint": "sha256:" + mutation["damaged_sha256"],
+        "base_model_fingerprint": "sha256:" + compact_fingerprint,
         "source_request_hash": "sha256:"
         + hashlib.sha256(request.encode("utf-8")).hexdigest(),
         "scope": {"target_ids": [WALL_ID], "forbidden_ids": []},
@@ -88,17 +122,16 @@ def _case(root: Path) -> tuple[Path, Path, dict[str, Any], dict[str, Any], str]:
             }
         ],
     }
-    damaged = case_dir / "damaged.ifc"
     repaired = root / "repaired.ifc"
     application = apply_changeset(
-        damaged_ifc_path=damaged,
+        damaged_ifc_path=compact_damaged,
         repair_request=request,
         changeset=changeset,
         output_path=repaired,
         registry=create_default_registry(),
     )
     assert application["valid"] is True
-    return damaged, repaired, changeset, application, _sha256(damaged)
+    return compact_damaged, repaired, changeset, application, compact_fingerprint
 
 
 @pytest.fixture(scope="module")
@@ -159,7 +192,7 @@ def _created(application: dict[str, Any]) -> dict[str, str]:
 
 
 def _other_wall(model: Any) -> Any:
-    return next(wall for wall in model.by_type("IfcWall") if wall.GlobalId != WALL_ID)
+    return model.by_guid(OTHER_WALL_ID)
 
 
 def test_valid_window_l1_passes_from_reopened_ifc_and_preserves_source(l1_case) -> None:
@@ -217,6 +250,16 @@ def test_applicator_self_report_cannot_authorize_collateral_wall_drift(
         for fact in evidence
         if isinstance(fact.actual_value, dict)
     )
+    compatibility = evaluate_repair_application(
+        damaged_ifc_path=damaged,
+        repaired_ifc_path=output,
+        changeset=changeset,
+        application_result=claimed,
+        registry=create_default_registry(),
+    )
+    assert compatibility["complete_repair_success"] is False
+    assert compatibility["successful_artifact_publishable"] is False
+    assert compatibility["l1"]["status"] == "failed"
 
 
 def test_undeclared_extra_root_is_a_named_failure(l1_case, tmp_path: Path) -> None:
@@ -239,8 +282,7 @@ def test_unexpected_root_deletion_is_a_named_failure(l1_case, tmp_path: Path) ->
     damaged, repaired, changeset, application, _ = l1_case
 
     def delete_root(model: Any) -> None:
-        pset = next(item for item in model.by_type("IfcPropertySet") if item.GlobalId)
-        model.remove(pset)
+        model.remove(model.by_guid(PSET_ID))
 
     output = _write_mutation(repaired, tmp_path / "deleted-root.ifc", delete_root)
     result = _evaluate(damaged, output, changeset, application)
@@ -333,13 +375,17 @@ def test_out_of_tolerance_window_measurements_are_not_silently_passed(
             coordinates[0] += 10.0
             point.Coordinates = tuple(coordinates)
             return
-        profiles = [
+        polyline = next(
             entity
             for entity in model.traverse(opening.Representation)
-            if entity.is_a("IfcRectangleProfileDef")
-        ]
-        profile = max(profiles, key=lambda item: float(item.XDim))
-        profile.XDim = float(profile.XDim) + 10.0
+            if entity.is_a("IfcPolyline")
+        )
+        maximum_x = max(float(point.Coordinates[0]) for point in polyline.Points)
+        for point in polyline.Points:
+            coordinates = list(point.Coordinates)
+            if float(coordinates[0]) == maximum_x:
+                coordinates[0] += 10.0
+                point.Coordinates = tuple(coordinates)
 
     output = _write_mutation(repaired, tmp_path / f"{fault}-drift.ifc", drift)
     result = _evaluate(damaged, output, changeset, application)
@@ -352,7 +398,6 @@ def test_unreadable_output_is_not_evaluable_and_non_passing(
 ) -> None:
     damaged, _, changeset, application, _ = l1_case
     output = tmp_path / "unreadable.ifc"
-    output.write_text("not an IFC file", encoding="utf-8")
 
     result = _evaluate(damaged, output, changeset, application)
 

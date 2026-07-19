@@ -2,12 +2,16 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 from collections.abc import Iterable, Mapping
 from pathlib import Path
 from typing import Any
 
+import ifcopenshell
 from jsonschema import Draft202012Validator
+
+from .compare import normalized_model_diff
 
 from .evaluation_models import (
     CheckResult,
@@ -34,6 +38,462 @@ _STATUS_PRECEDENCE = {
     EvaluationStatus.PARTIAL: 2,
     EvaluationStatus.FAILED: 3,
 }
+
+_COMMON_L1_POLICY_ID = "l1.common"
+
+
+def evaluate_independent_l1(
+    *,
+    damaged_ifc_path: Path | str,
+    repaired_ifc_path: Path | str,
+    changeset: Mapping[str, Any],
+    application_result: Mapping[str, Any],
+    registry: Any,
+) -> LevelResult:
+    """Evaluate actual reopened IFC effects against policy and declared intent."""
+
+    damaged_path = Path(damaged_ifc_path)
+    repaired_path = Path(repaired_ifc_path)
+    source_hash_before = _path_sha256(damaged_path)
+    before_model, before_error = _open_ifc(damaged_path)
+    after_model, after_error = _open_ifc(repaired_path)
+    readable = before_model is not None and after_model is not None
+    readability_status = (
+        EvaluationStatus.PASSED if readable else EvaluationStatus.NOT_EVALUABLE
+    )
+    checks = [
+        _l1_check(
+            check_id="l1.output.readable",
+            policy_id=_COMMON_L1_POLICY_ID,
+            status=readability_status,
+            reason="Both source and repaired IFC artifacts must reopen independently.",
+            expected={"before_readable": True, "after_readable": True},
+            actual={
+                "before_readable": before_model is not None,
+                "after_readable": after_model is not None,
+                "before_error": before_error,
+                "after_error": after_error,
+            },
+            source_kind="ifc_reopen",
+            source_ref="repaired-ifc",
+        )
+    ]
+    checks.append(_source_immutability_check(damaged_path, changeset, source_hash_before))
+    if not readable:
+        checks.append(
+            _l1_check(
+                check_id="l1.output.schema",
+                policy_id=_COMMON_L1_POLICY_ID,
+                status=EvaluationStatus.NOT_EVALUABLE,
+                reason="Schema cannot be measured until both IFC artifacts reopen.",
+                expected="matching IFC schema",
+                actual="unavailable",
+                source_kind="ifc_reopen",
+                source_ref="repaired-ifc",
+            )
+        )
+        return _l1_level(checks, readable=False)
+
+    assert before_model is not None and after_model is not None
+    schema_matches = before_model.schema == after_model.schema
+    checks.append(
+        _l1_check(
+            check_id="l1.output.schema",
+            policy_id=_COMMON_L1_POLICY_ID,
+            status=(
+                EvaluationStatus.PASSED
+                if schema_matches
+                else EvaluationStatus.FAILED
+            ),
+            reason="The repaired IFC schema must match the source IFC schema.",
+            expected=before_model.schema,
+            actual=after_model.schema,
+            source_kind="ifc_schema",
+            source_ref="repaired-ifc",
+        )
+    )
+    if not schema_matches:
+        return _l1_level(checks, readable=True)
+
+    actual_changes = normalized_model_diff(before_model, after_model)
+    operation_contexts = _operation_l1_contexts(
+        before_model=before_model,
+        after_model=after_model,
+        changeset=changeset,
+        application_result=application_result,
+        registry=registry,
+    )
+    checks.extend(
+        _scope_checks(
+            actual_changes=actual_changes,
+            changeset=changeset,
+            operation_contexts=operation_contexts,
+            before_model=before_model,
+            after_model=after_model,
+        )
+    )
+    for context in operation_contexts:
+        checks.extend(_operation_measurement_checks(context))
+    return _l1_level(checks, readable=True)
+
+
+def _open_ifc(path: Path) -> tuple[Any | None, str | None]:
+    try:
+        return ifcopenshell.open(str(path)), None
+    except Exception as error:
+        return None, f"{type(error).__name__}: {error}"
+
+
+def _path_sha256(path: Path) -> str | None:
+    try:
+        return "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest()
+    except OSError:
+        return None
+
+
+def _source_immutability_check(
+    damaged_path: Path,
+    changeset: Mapping[str, Any],
+    source_hash_before: str | None,
+) -> CheckResult:
+    source_hash_after = _path_sha256(damaged_path)
+    expected = str(changeset.get("base_model_fingerprint", ""))
+    passed = bool(expected) and source_hash_before == expected == source_hash_after
+    return _l1_check(
+        check_id="l1.source.immutable",
+        policy_id=_COMMON_L1_POLICY_ID,
+        status=EvaluationStatus.PASSED if passed else EvaluationStatus.FAILED,
+        reason="The source IFC must remain bound to the declared base fingerprint.",
+        expected=expected,
+        actual={"before": source_hash_before, "after": source_hash_after},
+        source_kind="source_fingerprint",
+        source_ref=str(damaged_path),
+    )
+
+
+def _operation_l1_contexts(
+    *,
+    before_model: Any,
+    after_model: Any,
+    changeset: Mapping[str, Any],
+    application_result: Mapping[str, Any],
+    registry: Any,
+) -> list[dict[str, Any]]:
+    applications = {
+        str(item.get("operation_id")): item
+        for item in application_result.get("operations", ())
+    }
+    contexts = []
+    for operation in changeset.get("operations", ()):
+        application = applications.get(str(operation.get("operation_id")), {})
+        changes = application.get("changes", {})
+        report = registry.dispatch(
+            "comparison_adapter",
+            operation,
+            before_model=before_model,
+            after_model=after_model,
+            application=changes,
+        )
+        role_ids: dict[str, str] = {}
+        id_roles: dict[str, list[str]] = {}
+        for change_kind in ("created", "modified", "removed"):
+            for item in changes.get(change_kind, ()):
+                role = str(item.get("role", ""))
+                global_id = str(item.get("global_id", ""))
+                if role and global_id:
+                    role_ids[role] = global_id
+                    id_roles.setdefault(global_id, []).append(role)
+        target_ids = {
+            str(value)
+            for key, value in operation.get("target", {}).items()
+            if key.endswith("global_id") and value
+        }
+        contexts.append(
+            {
+                "operation": operation,
+                "report": report,
+                "authorization": report.get("authorization", {}),
+                "role_ids": role_ids,
+                "id_roles": id_roles,
+                "target_ids": target_ids,
+            }
+        )
+    return contexts
+
+
+def _scope_checks(
+    *,
+    actual_changes: Mapping[str, list[dict[str, Any]]],
+    changeset: Mapping[str, Any],
+    operation_contexts: list[dict[str, Any]],
+    before_model: Any,
+    after_model: Any,
+) -> list[CheckResult]:
+    decisions: dict[tuple[str, str], tuple[bool, str]] = {}
+    for change_kind in ("created", "modified", "removed"):
+        for fact in actual_changes[change_kind]:
+            decisions[(change_kind, fact["global_id"])] = _authorize_actual_change(
+                fact=fact,
+                changeset=changeset,
+                operation_contexts=operation_contexts,
+                before_model=before_model,
+                after_model=after_model,
+            )
+
+    root_groups = {
+        "l1.scope.created-roots": [
+            item for item in actual_changes["created"] if not item["is_relationship"]
+        ],
+        "l1.scope.modified-roots": [
+            item for item in actual_changes["modified"] if not item["is_relationship"]
+        ],
+        "l1.scope.removed-roots": [
+            item for item in actual_changes["removed"] if not item["is_relationship"]
+        ],
+        "l1.scope.relations": [
+            item
+            for kind in ("created", "modified", "removed")
+            for item in actual_changes[kind]
+            if item["is_relationship"]
+        ],
+    }
+    checks = []
+    for check_id, facts in root_groups.items():
+        evidence = _actual_change_evidence(check_id, facts, decisions)
+        unauthorized = [
+            fact
+            for fact in facts
+            if not decisions[(fact["change_kind"], fact["global_id"])][0]
+        ]
+        checks.append(
+            CheckResult(
+                check_id=check_id,
+                policy_id=_COMMON_L1_POLICY_ID,
+                applicability="required",
+                mandatory=True,
+                status=(
+                    EvaluationStatus.FAILED
+                    if unauthorized
+                    else EvaluationStatus.PASSED
+                ),
+                reason="Every actual IFC effect must be authorized by policy and declared scope.",
+                evidence=evidence,
+            )
+        )
+    return checks
+
+
+def _authorize_actual_change(
+    *,
+    fact: Mapping[str, Any],
+    changeset: Mapping[str, Any],
+    operation_contexts: list[dict[str, Any]],
+    before_model: Any,
+    after_model: Any,
+) -> tuple[bool, str]:
+    global_id = str(fact["global_id"])
+    if global_id in {str(item) for item in changeset.get("scope", {}).get("forbidden_ids", ())}:
+        return False, "actual effect touches a forbidden GlobalId"
+    candidates = [
+        context for context in operation_contexts if global_id in context["id_roles"]
+    ]
+    if len(candidates) != 1:
+        return False, "actual effect has no unique Applicator role binding"
+    context = candidates[0]
+    declared_targets = {
+        str(item) for item in changeset.get("scope", {}).get("target_ids", ())
+    }
+    if not context["target_ids"] or not context["target_ids"].issubset(declared_targets):
+        return False, "operation target is outside the ChangeSet declared scope"
+    roles = sorted(set(context["id_roles"][global_id]))
+    if len(roles) != 1:
+        return False, "Applicator assigned multiple roles to one actual effect"
+    role = roles[0]
+    allowed = context["authorization"].get(str(fact["change_kind"]), {})
+    if allowed.get(role) != fact["ifc_class"]:
+        return False, "Registry policy does not authorize this role/class/effect"
+    if fact["is_relationship"]:
+        return _authorize_relation(
+            fact=fact,
+            role=role,
+            context=context,
+            before_model=before_model,
+            after_model=after_model,
+        )
+    return True, "authorized by Registry policy and ChangeSet operation scope"
+
+
+def _authorize_relation(
+    *,
+    fact: Mapping[str, Any],
+    role: str,
+    context: Mapping[str, Any],
+    before_model: Any,
+    after_model: Any,
+) -> tuple[bool, str]:
+    specification = context["authorization"].get("relations", {}).get(role)
+    if not specification or specification.get("ifc_class") != fact["ifc_class"]:
+        return False, "Registry policy does not authorize the relationship role"
+    model = before_model if fact["change_kind"] == "removed" else after_model
+    try:
+        relation = model.by_guid(str(fact["global_id"]))
+    except RuntimeError:
+        return False, "actual relationship cannot be reopened by GlobalId"
+    for attribute, endpoint_role in specification.get("endpoints", {}).items():
+        endpoint = getattr(relation, attribute, None)
+        actual_id = str(getattr(endpoint, "GlobalId", ""))
+        expected_id = (
+            next(iter(context["target_ids"]), "")
+            if endpoint_role == "target"
+            else context["role_ids"].get(endpoint_role, "")
+        )
+        if not expected_id or actual_id != expected_id:
+            return False, f"relationship endpoint {attribute} is outside declared roles"
+    added_roles = tuple(specification.get("added_endpoint_roles", ()))
+    if added_roles:
+        expected_added = {context["role_ids"].get(role_name, "") for role_name in added_roles}
+        expected_added.discard("")
+        after_ids = _direct_root_ids(relation)
+        if fact["change_kind"] == "modified":
+            before_relation = before_model.by_guid(str(fact["global_id"]))
+            actual_added = after_ids - _direct_root_ids(before_relation)
+            if actual_added != expected_added:
+                return False, "relationship endpoint delta exceeds declared generated roles"
+        elif not expected_added.issubset(after_ids):
+            return False, "created relationship omits a declared generated role"
+    return True, "authorized relationship role and endpoints"
+
+
+def _direct_root_ids(entity: Any) -> set[str]:
+    identifiers: set[str] = set()
+    for index in range(len(entity)):
+        value = entity[index]
+        children = value if isinstance(value, (tuple, list)) else (value,)
+        for child in children:
+            global_id = getattr(child, "GlobalId", None)
+            if global_id:
+                identifiers.add(str(global_id))
+    return identifiers
+
+
+def _actual_change_evidence(
+    check_id: str,
+    facts: list[dict[str, Any]],
+    decisions: Mapping[tuple[str, str], tuple[bool, str]],
+) -> tuple[EvidenceFact, ...]:
+    if not facts:
+        return (
+            _evidence(
+                fact_id=f"{check_id}.evidence",
+                source_kind="ifc_actual_diff",
+                source_ref="reopened-ifc",
+                expected="no unexplained effects",
+                actual={"changes": []},
+            ),
+        )
+    return tuple(
+        _evidence(
+            fact_id=f"{check_id}.{index:04d}",
+            source_kind="ifc_actual_diff",
+            source_ref=f"ifc-guid:{fact['global_id']}",
+            expected="policy-and-scope-authorized effect",
+            actual={
+                **fact,
+                "authorized": decisions[(fact["change_kind"], fact["global_id"])][0],
+                "authorization_reason": decisions[(fact["change_kind"], fact["global_id"])][1],
+            },
+        )
+        for index, fact in enumerate(facts)
+    )
+
+
+def _operation_measurement_checks(context: Mapping[str, Any]) -> list[CheckResult]:
+    authorization = context["authorization"]
+    policy_id = str(authorization.get("policy_id", "l1.operation"))
+    operation_id = str(context["operation"].get("operation_id", "operation"))
+    checks = []
+    for check_id, measurement in sorted(context["report"].get("l1_checks", {}).items()):
+        checks.append(
+            _l1_check(
+                check_id=str(check_id),
+                policy_id=policy_id,
+                status=EvaluationStatus(str(measurement["status"])),
+                reason=str(measurement["reason"]),
+                expected=measurement.get("expected"),
+                actual=measurement.get("actual"),
+                source_kind="operation_measurement",
+                source_ref=f"operation:{operation_id}",
+            )
+        )
+    return checks
+
+
+def _l1_check(
+    *,
+    check_id: str,
+    policy_id: str,
+    status: EvaluationStatus,
+    reason: str,
+    expected: Any,
+    actual: Any,
+    source_kind: str,
+    source_ref: str,
+) -> CheckResult:
+    return CheckResult(
+        check_id=check_id,
+        policy_id=policy_id,
+        applicability="required",
+        mandatory=True,
+        status=status,
+        reason=reason,
+        evidence=(
+            _evidence(
+                fact_id=f"{check_id}.evidence",
+                source_kind=source_kind,
+                source_ref=source_ref,
+                expected=expected,
+                actual=actual,
+            ),
+        ),
+    )
+
+
+def _evidence(
+    *,
+    fact_id: str,
+    source_kind: str,
+    source_ref: str,
+    expected: Any,
+    actual: Any,
+) -> EvidenceFact:
+    return EvidenceFact(
+        fact_id=fact_id,
+        source_kind=source_kind,
+        source_ref=source_ref,
+        expected_state="available",
+        actual_state="available",
+        expected_value=expected,
+        actual_value=actual,
+        provenance=(source_kind, source_ref),
+    )
+
+
+def _l1_level(checks: Iterable[CheckResult], *, readable: bool) -> LevelResult:
+    ordered = tuple(sorted(checks, key=lambda item: item.check_id))
+    return aggregate_level(
+        level="L1",
+        checks=ordered,
+        reason="Independent reopened IFC L1 authorization and measurement.",
+        evidence=(
+            _evidence(
+                fact_id="l1.summary",
+                source_kind="ifc_actual_diff",
+                source_ref="reopened-ifc",
+                expected="readable policy-authorized physical repair",
+                actual={"readable": readable, "check_count": len(ordered)},
+            ),
+        ),
+    )
 
 
 def aggregate_status(

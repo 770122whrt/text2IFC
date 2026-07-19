@@ -139,6 +139,49 @@ WINDOW_EVALUATION_POLICY = OperationEvaluationPolicy(
     ),
 )
 
+WINDOW_L1_POLICY_ID = "window.add-with-opening.l1"
+WINDOW_L1_POLICY_VERSION = "0.1"
+WINDOW_L1_AUTHORIZATION = {
+    "policy_id": WINDOW_L1_POLICY_ID,
+    "policy_version": WINDOW_L1_POLICY_VERSION,
+    "created": {
+        "opening": "IfcOpeningElement",
+        "window": "IfcWindow",
+        "voids_relationship": "IfcRelVoidsElement",
+        "fills_relationship": "IfcRelFillsElement",
+        "window_type_relationship": "IfcRelDefinesByType",
+    },
+    "modified": {
+        "window_type_relationship": "IfcRelDefinesByType",
+        "spatial_containment": "IfcRelContainedInSpatialStructure",
+    },
+    "removed": {},
+    "relations": {
+        "voids_relationship": {
+            "ifc_class": "IfcRelVoidsElement",
+            "endpoints": {
+                "RelatingBuildingElement": "target",
+                "RelatedOpeningElement": "opening",
+            },
+        },
+        "fills_relationship": {
+            "ifc_class": "IfcRelFillsElement",
+            "endpoints": {
+                "RelatingOpeningElement": "opening",
+                "RelatedBuildingElement": "window",
+            },
+        },
+        "window_type_relationship": {
+            "ifc_class": "IfcRelDefinesByType",
+            "added_endpoint_roles": ("window",),
+        },
+        "spatial_containment": {
+            "ifc_class": "IfcRelContainedInSpatialStructure",
+            "added_endpoint_roles": ("window",),
+        },
+    },
+}
+
 
 def window_operation_definition() -> OperationDefinition:
     return OperationDefinition(
@@ -594,6 +637,16 @@ def _comparison_adapter(
             "valid": False,
             "checks": {"created_chain_resolved": False},
             "metrics": {},
+            "authorization": WINDOW_L1_AUTHORIZATION,
+            "l1_checks": {
+                check_id: {
+                    "status": "not_evaluable",
+                    "reason": "The generated Window chain could not be resolved.",
+                    "expected": "measurable generated role",
+                    "actual": str(error),
+                }
+                for check_id in _WINDOW_L1_MEASUREMENT_CHECK_IDS
+            },
             "issues": [
                 {
                     "code": "CREATED_CHAIN_NOT_FOUND",
@@ -699,7 +752,147 @@ def _comparison_adapter(
         for code, passed in checks.items()
         if not passed
     ]
-    return {"valid": not issues, "checks": checks, "metrics": metrics, "issues": issues}
+    l1_checks = _window_l1_checks(
+        checks=checks,
+        metrics=metrics,
+        linear_tolerance=linear_tolerance,
+        angle_tolerance=angle_tolerance,
+        volume_tolerance=volume_tolerance,
+    )
+    return {
+        "valid": not issues,
+        "checks": checks,
+        "metrics": metrics,
+        "issues": issues,
+        "authorization": WINDOW_L1_AUTHORIZATION,
+        "l1_checks": l1_checks,
+    }
+
+
+_WINDOW_L1_MEASUREMENT_CHECK_IDS = (
+    "l1.window.containment",
+    "l1.window.dimensions",
+    "l1.window.duplicate-chain",
+    "l1.window.filling-topology",
+    "l1.window.geometry-fit",
+    "l1.window.host-topology",
+    "l1.window.placement",
+    "l1.window.tolerances",
+    "l1.window.volume-preservation",
+)
+
+
+def _window_l1_checks(
+    *,
+    checks: Mapping[str, bool],
+    metrics: Mapping[str, float | int],
+    linear_tolerance: float,
+    angle_tolerance: float,
+    volume_tolerance: float,
+) -> dict[str, dict[str, Any]]:
+    dimension_errors = {
+        key: metrics[key]
+        for key in ("width_error_mm", "height_error_mm", "depth_error_mm")
+    }
+    placement_errors = {
+        key: metrics[key]
+        for key in (
+            "center_error_mm",
+            "sill_error_mm",
+            "orientation_error_degrees",
+        )
+    }
+    dimension_ok = max(float(value) for value in dimension_errors.values()) <= linear_tolerance
+    placement_ok = (
+        max(
+            float(placement_errors["center_error_mm"]),
+            float(placement_errors["sill_error_mm"]),
+        )
+        <= linear_tolerance
+        and float(placement_errors["orientation_error_degrees"]) <= angle_tolerance
+    )
+    volume_error = abs(
+        float(metrics["restored_void_volume_m3"])
+        - float(metrics["expected_void_volume_m3"])
+    )
+    volume_ok = volume_error <= volume_tolerance
+
+    def measured(
+        passed: bool,
+        reason: str,
+        expected: Any,
+        actual: Any,
+    ) -> dict[str, Any]:
+        return {
+            "status": "passed" if passed else "failed",
+            "reason": reason,
+            "expected": expected,
+            "actual": actual,
+        }
+
+    return {
+        "l1.window.containment": measured(
+            checks["storey_consistent"],
+            "Window and Host must have identical spatial containment.",
+            "same non-empty storey set",
+            checks["storey_consistent"],
+        ),
+        "l1.window.dimensions": measured(
+            dimension_ok,
+            "Opening dimensions must match the declared dimensions.",
+            {"linear_tolerance_mm": linear_tolerance},
+            dimension_errors,
+        ),
+        "l1.window.duplicate-chain": measured(
+            checks["duplicate_chain_absent"],
+            "Exactly one matching Opening chain must exist.",
+            {"matching_chain_count": 1},
+            {"matching_chain_count": metrics["matching_chain_count"]},
+        ),
+        "l1.window.filling-topology": measured(
+            checks["window_fills_opening"],
+            "The generated Window must fill exactly the generated Opening.",
+            True,
+            checks["window_fills_opening"],
+        ),
+        "l1.window.geometry-fit": measured(
+            checks["window_geometry_fits_opening"],
+            "Window geometry bounds must fit the Opening geometry bounds.",
+            True,
+            checks["window_geometry_fits_opening"],
+        ),
+        "l1.window.host-topology": measured(
+            checks["correct_host_wall"] and checks["opening_voids_wall"],
+            "The generated Opening must void exactly the declared Host Wall.",
+            True,
+            checks["correct_host_wall"] and checks["opening_voids_wall"],
+        ),
+        "l1.window.placement": measured(
+            placement_ok,
+            "Opening placement and orientation must match the declared placement.",
+            {
+                "linear_tolerance_mm": linear_tolerance,
+                "orientation_tolerance_degrees": angle_tolerance,
+            },
+            placement_errors,
+        ),
+        "l1.window.tolerances": measured(
+            dimension_ok and placement_ok and volume_ok,
+            "All linear, orientation, and volume measurements must be within policy tolerances.",
+            {
+                "linear_mm": linear_tolerance,
+                "orientation_degrees": angle_tolerance,
+                "volume_m3": volume_tolerance,
+            },
+            {**dimension_errors, **placement_errors, "volume_error_m3": round(volume_error, 6)},
+        ),
+        "l1.window.volume-preservation": measured(
+            volume_ok,
+            "Host volume change must equal the requested Opening void volume.",
+            {"absolute_tolerance_m3": volume_tolerance},
+            {"volume_error_m3": round(volume_error, 6)},
+        ),
+    }
 
 
 def _opening_orientation_error_degrees(opening: Any, wall: Any) -> float:
