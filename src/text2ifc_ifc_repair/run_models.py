@@ -152,6 +152,23 @@ class Clarification:
 
     @property
     def answer_schema(self) -> dict[str, Any]:
+        conditions: list[dict[str, Any]] = []
+        required_by_mode = {
+            "select_candidate": ("candidate_token",),
+            "add_detail": ("detail",),
+            "authorize_prototype": ("candidate_token", "authorized"),
+        }
+        for mode in self.answer_modes:
+            required = required_by_mode.get(mode, ())
+            conditions.append(
+                {
+                    "if": {"properties": {"kind": {"const": mode}}},
+                    "then": {
+                        "required": ["kind", *required],
+                        "maxProperties": 1 + len(required),
+                    },
+                }
+            )
         return {
             "$schema": "https://json-schema.org/draft/2020-12/schema",
             "type": "object",
@@ -163,6 +180,7 @@ class Clarification:
                 "detail": {"type": "string", "minLength": 1, "maxLength": 4096},
                 "authorized": {"const": True},
             },
+            "allOf": conditions,
         }
 
     def to_dict(self) -> dict[str, Any]:

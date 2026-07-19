@@ -114,6 +114,12 @@ def test_one_clarification_contract_covers_every_reason(
     assert public["operation_id"] == "operation-001"
     assert public["answer_schema"]["properties"]["kind"]["enum"] == list(modes)
     assert public["candidates"][0]["evidence"] == ["名称匹配", "楼层匹配"]
+    answer_validator = Draft202012Validator(public["answer_schema"])
+    if "select_candidate" in modes:
+        assert not answer_validator.is_valid({"kind": "select_candidate"})
+        assert answer_validator.is_valid(
+            {"kind": "select_candidate", "candidate_token": "candidate-a"}
+        )
 
 
 @pytest.mark.parametrize(

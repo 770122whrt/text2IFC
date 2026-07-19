@@ -15,8 +15,6 @@ from types import MappingProxyType
 from typing import Any, Iterator, Mapping
 
 from jsonschema import Draft202012Validator, ValidationError
-from referencing import Registry, Resource
-
 from .run_models import (
     CLARIFICATION_SCHEMA_PATH,
     RESULT_SCHEMA_PATH,
@@ -204,7 +202,7 @@ class RunStore:
                     RunStoreCode.PUBLIC_RECORD_INVALID,
                     "clarification is only valid for clarification_required",
                 )
-            artifacts = self._validate_artifacts(result_artifacts or {})
+            artifacts = self._validate_artifacts(run_dir, result_artifacts or {})
             payload = {} if stage_payload is None else thaw_json(freeze_json(stage_payload))
             if len(canonical_json(payload).encode("utf-8")) > _STAGE_PAYLOAD_LIMIT:
                 raise RunStoreError(
@@ -428,6 +426,11 @@ class RunStore:
         except (TypeError, ValueError) as error:
             raise RunStoreError(RunStoreCode.ANSWER_INVALID, "answer is not JSON") from error
         kind = clean.get("kind")
+        if kind != "eof":
+            try:
+                Draft202012Validator(clarification.answer_schema).validate(clean)
+            except ValidationError as error:
+                raise RunStoreError(RunStoreCode.ANSWER_INVALID, error.message) from error
         allowed_keys = {
             "select_candidate": {"kind", "candidate_token"},
             "add_detail": {"kind", "detail"},
@@ -452,7 +455,9 @@ class RunStore:
         return clean
 
     @staticmethod
-    def _validate_artifacts(value: Mapping[str, str]) -> Mapping[str, str]:
+    def _validate_artifacts(
+        run_dir: Path, value: Mapping[str, str]
+    ) -> Mapping[str, str]:
         clean: dict[str, str] = {}
         for key, raw_path in value.items():
             if not key or len(key) > 128:
@@ -461,6 +466,21 @@ class RunStore:
             path = PurePosixPath(normalized)
             if path.is_absolute() or ".." in path.parts or normalized in {"", "."}:
                 raise RunStoreError(RunStoreCode.PATH_ESCAPE, "artifact path is unsafe")
+            disk_path = run_dir.joinpath(*path.parts)
+            current = run_dir
+            for part in path.parts:
+                current = current / part
+                if current.exists() and current.is_symlink():
+                    raise RunStoreError(
+                        RunStoreCode.PATH_ESCAPE, "artifact path follows a symlink"
+                    )
+            if disk_path.exists():
+                try:
+                    disk_path.resolve().relative_to(run_dir.resolve())
+                except ValueError as error:
+                    raise RunStoreError(
+                        RunStoreCode.PATH_ESCAPE, "artifact path escapes run directory"
+                    ) from error
             clean[str(key)] = normalized
         return MappingProxyType(clean)
 
@@ -534,8 +554,32 @@ class RunStore:
     def _write_transition(self, run_dir: Path, transition: RunTransition) -> None:
         target = run_dir / "transitions" / f"{transition.transition_id:06d}.json"
         if target.exists():
-            raise RunStoreError(RunStoreCode.STATE_CONFLICT, "transition already exists")
+            self._discard_uncommitted_tail(target, transition)
         self._atomic_write_json(target, transition.to_dict(), replace_existing=False)
+
+    @staticmethod
+    def _discard_uncommitted_tail(target: Path, replacement: RunTransition) -> None:
+        """Remove only a validated tail not referenced by the committed state head."""
+
+        try:
+            document = json.loads(target.read_text(encoding="utf-8"))
+            orphan = RunTransition.from_dict(document)
+        except (OSError, json.JSONDecodeError, KeyError, TypeError, ValueError) as error:
+            raise RunStoreError(
+                RunStoreCode.TAMPER_DETECTED, "uncommitted transition tail is invalid"
+            ) from error
+        same_chain_position = (
+            orphan.transition_id == replacement.transition_id
+            and orphan.state_version == replacement.state_version
+            and orphan.from_stage is replacement.from_stage
+            and orphan.previous_hash == replacement.previous_hash
+        )
+        if not same_chain_position or hash_json(orphan.hash_payload()) != orphan.record_hash:
+            raise RunStoreError(
+                RunStoreCode.TAMPER_DETECTED, "unexpected transition already occupies next version"
+            )
+        target.unlink()
+        RunStore._fsync_directory(target.parent)
 
     @staticmethod
     def _atomic_write_json(
@@ -587,20 +631,9 @@ class RunStore:
         except OSError:
             pass
 
-    @staticmethod
-    def _schema_registry() -> Registry:
-        clarification = load_run_schema(CLARIFICATION_SCHEMA_PATH)
-        return Registry().with_resource(
-            clarification["$id"], Resource.from_contents(clarification)
-        ).with_resource(
-            "ifc-repair-clarification-0.1.schema.json", Resource.from_contents(clarification)
-        )
-
     @classmethod
     def _state_validator(cls) -> Draft202012Validator:
-        return Draft202012Validator(
-            load_run_schema(RUN_STATE_SCHEMA_PATH), registry=cls._schema_registry()
-        )
+        return Draft202012Validator(load_run_schema(RUN_STATE_SCHEMA_PATH))
 
     @classmethod
     def _clarification_validator(cls) -> Draft202012Validator:
@@ -608,9 +641,7 @@ class RunStore:
 
     @classmethod
     def _result_validator(cls) -> Draft202012Validator:
-        return Draft202012Validator(
-            load_run_schema(RESULT_SCHEMA_PATH), registry=cls._schema_registry()
-        )
+        return Draft202012Validator(load_run_schema(RESULT_SCHEMA_PATH))
 
 
 __all__ = ["RunStore"]

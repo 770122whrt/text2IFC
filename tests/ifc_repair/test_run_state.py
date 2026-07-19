@@ -238,6 +238,52 @@ def test_interrupted_temp_file_is_ignored_on_restart(
     assert restarted.state_version == 0
 
 
+def test_restart_recovers_last_committed_state_after_interrupted_state_replace(
+    store: RunStore, source: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    state = _start(store, source)
+    atomic_write = store._atomic_write_json
+
+    def interrupt_state_replace(
+        target: Path, payload: dict[str, object], *, replace_existing: bool = True
+    ) -> None:
+        if target.name == "state.json" and target.exists():
+            raise OSError("simulated interruption before state commit")
+        atomic_write(target, payload, replace_existing=replace_existing)
+
+    monkeypatch.setattr(store, "_atomic_write_json", interrupt_state_replace)
+    with pytest.raises(OSError, match="simulated interruption"):
+        store.transition(
+            state.run_id,
+            to_stage=RunStage.SOURCE_VALIDATED,
+            expected_state_version=state.state_version,
+        )
+
+    restarted = RunStore(store.root)
+    assert restarted.load(state.run_id) == state
+    recovered = restarted.transition(
+        state.run_id,
+        to_stage=RunStage.SOURCE_VALIDATED,
+        expected_state_version=state.state_version,
+    )
+    assert recovered.state_version == 1
+    assert recovered.stage is RunStage.SOURCE_VALIDATED
+    assert [item.transition_id for item in recovered.transitions] == [0, 1]
+
+
+def test_artifact_reference_rejects_path_traversal(store: RunStore, source: Path) -> None:
+    state = _start(store, source)
+    with pytest.raises(RunStoreError) as escaped:
+        store.transition(
+            state.run_id,
+            to_stage=RunStage.INVALID_INPUT,
+            expected_state_version=0,
+            result_artifacts={"manifest": "../outside.json"},
+        )
+    assert escaped.value.code == RunStoreCode.PATH_ESCAPE.value
+    assert store.load(state.run_id) == state
+
+
 def test_lock_contention_rejects_racing_mutation_without_history_loss(
     store: RunStore, source: Path
 ) -> None:
