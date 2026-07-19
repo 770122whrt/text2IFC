@@ -73,11 +73,11 @@ ChangeSet + IFC + evidence.
 
 **Plans:** 5 plans in 5 sequential waves
 
-- **Wave 1:** `09-01` - Versioned RepairIntent and public request-understanding stage.
-- **Wave 2** *(blocked on Wave 1)*: `09-02` - Durable run and clarification state machine.
-- **Wave 3** *(blocked on Waves 1-2)*: `09-03` - Deterministic resolution and bound unified ChangeSet orchestration.
-- **Wave 4** *(blocked on Waves 1-3)*: `09-04` - Production semantic authority, atomic application, and publication.
-- **Wave 5** *(blocked on Waves 1-4)*: `09-05` - Interactive CLI, offline acceptance, and opt-in live UAT.
+- [x] **Wave 1:** `09-01` - Versioned RepairIntent and public request-understanding stage.
+- [ ] **Wave 2** *(blocked on Wave 1)*: `09-02` - Durable run and clarification state machine.
+- [ ] **Wave 3** *(blocked on Waves 1-2)*: `09-03` - Deterministic resolution and bound unified ChangeSet orchestration.
+- [ ] **Wave 4** *(blocked on Waves 1-3)*: `09-04` - Production semantic authority, atomic application, and publication.
+- [ ] **Wave 5** *(blocked on Waves 1-4)*: `09-05` - Interactive CLI, offline acceptance, and opt-in live UAT.
 
 **Cross-cutting constraints:**
 
