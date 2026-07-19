@@ -25,10 +25,9 @@ def evaluate_repair_application(
     application_result: Mapping[str, Any],
     registry: OperationRegistry,
 ) -> dict[str, Any]:
-    """Retain the 0.1 dictionary surface while gating it with independent L1."""
+    """Retain the 0.1 surface while disclosing unavailable L2 assurance."""
 
     from .evaluation import evaluate_independent_l1
-    from .evaluation_models import EvaluationStatus
 
     allowed_changed_ids = {
         str(item["global_id"])
@@ -75,18 +74,10 @@ def evaluate_repair_application(
         application_result=application_result,
         registry=registry,
     )
-    complete = (
-        bool(application_result.get("valid"))
-        and bool(application_result.get("published"))
-        and application_postconditions_valid
-        and common["complete_preservation_success"]
-        and all(item.get("valid", False) for item in operation_evaluations)
-        and l1_result.status is EvaluationStatus.PASSED
-    )
     return {
         "schema_version": "text2ifc/ifc-repair-evaluation/0.1",
-        "complete_repair_success": complete,
-        "successful_artifact_publishable": complete,
+        "complete_repair_success": False,
+        "successful_artifact_publishable": False,
         "application_postconditions_valid": application_postconditions_valid,
         "tolerances": {
             "linear_mm": 0.1,
@@ -96,6 +87,13 @@ def evaluate_repair_application(
         "common": common,
         "operations": operation_evaluations,
         "l1": _l1_compatibility_projection(l1_result),
+        "l2": {
+            "status": "not_evaluable",
+            "reason": (
+                "Legacy Evaluation 0.1 has no authoritative L2 semantic assurance."
+            ),
+            "assurance_error_code": "legacy_assurance_unavailable",
+        },
     }
 
 
