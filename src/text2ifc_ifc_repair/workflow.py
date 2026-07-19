@@ -225,6 +225,7 @@ def _run_window_repair_case(
                     operation_type=failure_policy.operation_type,
                     policy_id=failure_policy.policy_id,
                     policy_version=failure_policy.version,
+                    provider_calls=provider_calls,
                 )
                 _finalize_evidence_bundle(stage, output, evaluation)
                 return evaluation
@@ -239,6 +240,7 @@ def _run_window_repair_case(
                 operation_type=failure_policy.operation_type,
                 policy_id=failure_policy.policy_id,
                 policy_version=failure_policy.version,
+                provider_calls=provider_calls,
             )
             _finalize_evidence_bundle(stage, output, evaluation)
             return evaluation
@@ -268,6 +270,7 @@ def _run_window_repair_case(
                 operation_type=failure_policy.operation_type,
                 policy_id=failure_policy.policy_id,
                 policy_version=failure_policy.version,
+                provider_calls=provider_calls,
             )
             _finalize_evidence_bundle(stage, output, evaluation)
             return evaluation
@@ -435,6 +438,7 @@ def _failure_evaluation(
     operation_type: str,
     policy_id: str,
     policy_version: str,
+    provider_calls: int = 0,
     prompt: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     frozen_issues = list(issues)
@@ -516,7 +520,7 @@ def _failure_evaluation(
         metadata={
             "case_id": case_id,
             "evidence_class": evidence_class,
-            "provider_calls": int((prompt or {}).get("provider_calls", 0)),
+            "provider_calls": provider_calls,
             "failure_stage": failure_stage,
             "issues": frozen_issues,
             "prompt": dict(prompt or {}),
