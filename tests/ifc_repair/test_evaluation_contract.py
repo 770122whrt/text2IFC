@@ -2,7 +2,8 @@ from __future__ import annotations
 
 import importlib
 import json
-from dataclasses import FrozenInstanceError
+from dataclasses import FrozenInstanceError, replace
+from itertools import product
 from pathlib import Path
 from typing import Any
 
@@ -18,6 +19,22 @@ ALL_STATUSES = {
     "not_required",
     "not_evaluable",
 }
+STATUS_PRECEDENCE = {
+    "passed": 0,
+    "not_required": 0,
+    "not_evaluable": 1,
+    "partial": 2,
+    "failed": 3,
+}
+STATUS_TRUTH_TABLE = [
+    (
+        (left, right),
+        max((left, right), key=STATUS_PRECEDENCE.__getitem__).replace(
+            "not_required", "passed"
+        ),
+    )
+    for left, right in product(sorted(ALL_STATUSES), repeat=2)
+]
 
 
 def _api() -> Any:
@@ -162,6 +179,18 @@ def test_evaluation_status_is_closed_to_exactly_five_values() -> None:
         api.models.EvaluationStatus("unknown")
 
 
+def test_domain_rejects_unknown_status_and_unstable_policy_ids() -> None:
+    api = _api()
+
+    with pytest.raises(api.models.EvaluationContractError) as status_error:
+        replace(_check(api, "passed"), status="unknown")
+    with pytest.raises(api.models.EvaluationContractError) as id_error:
+        replace(_check(api, "passed"), policy_id="unstable policy id")
+
+    assert status_error.value.code == "invalid_schema"
+    assert id_error.value.code == "invalid_schema"
+
+
 @pytest.mark.parametrize(
     "record_factory",
     [
@@ -267,19 +296,17 @@ def test_not_required_is_allowed_only_for_a_non_mandatory_policy_check() -> None
 
 @pytest.mark.parametrize(
     ("statuses", "expected"),
-    [
-        (("passed", "passed"), "passed"),
-        (("passed", "failed"), "failed"),
-        (("partial", "not_evaluable"), "partial"),
-        (("not_evaluable", "failed"), "failed"),
-    ],
+    STATUS_TRUTH_TABLE,
 )
 def test_status_precedence_is_total_and_deterministic(
     statuses: tuple[str, str],
     expected: str,
 ) -> None:
     api = _api()
-    checks = tuple(_check(api, status) for status in statuses)
+    checks = tuple(
+        _check(api, status, mandatory=status != "not_required")
+        for status in statuses
+    )
 
     assert api.evaluation.aggregate_status(checks) is api.models.EvaluationStatus(
         expected
@@ -287,6 +314,12 @@ def test_status_precedence_is_total_and_deterministic(
     assert api.evaluation.aggregate_status(reversed(checks)) is api.models.EvaluationStatus(
         expected
     )
+
+
+def test_empty_optional_aggregate_is_satisfied_but_disclosed_by_children() -> None:
+    api = _api()
+
+    assert api.evaluation.aggregate_status(()) is api.models.EvaluationStatus.PASSED
 
 
 @pytest.mark.parametrize("observation_status", sorted(ALL_STATUSES - {"not_required"}))
@@ -363,6 +396,24 @@ def test_canonical_serialization_round_trips_in_deterministic_order() -> None:
     assert round_tripped == evaluation
     assert second == first
     assert first.index('"L1"') < first.index('"L2"') < first.index('"L3"')
+
+
+def test_canonical_serialization_normalizes_nested_evidence_key_order() -> None:
+    api = _api()
+    evaluation = _repair(api)
+    evidence = evaluation.evidence[0]
+    first = replace(
+        evaluation,
+        evidence=(replace(evidence, expected_value={"b": 2, "a": 1}),),
+    )
+    second = replace(
+        evaluation,
+        evidence=(replace(evidence, expected_value={"a": 1, "b": 2}),),
+    )
+
+    assert api.evaluation.evaluation_to_json(first) == api.evaluation.evaluation_to_json(
+        second
+    )
 
 
 def test_frozen_legacy_0_1_fixture_is_read_without_inferred_l2_assurance(

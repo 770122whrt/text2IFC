@@ -165,6 +165,7 @@ def evaluation_to_json(value: RepairEvaluation) -> str:
     return json.dumps(
         evaluation_to_dict(value),
         ensure_ascii=False,
+        sort_keys=True,
         separators=(",", ":"),
         allow_nan=False,
     )
@@ -255,8 +256,8 @@ def _evidence_to_dict(value: EvidenceFact) -> dict[str, Any]:
         "source_ref": value.source_ref,
         "expected_state": value.expected_state,
         "actual_state": value.actual_state,
-        "expected_value": value.expected_value,
-        "actual_value": value.actual_value,
+        "expected_value": _json_safe_copy(value.expected_value),
+        "actual_value": _json_safe_copy(value.actual_value),
         "provenance": list(value.provenance),
     }
 
@@ -337,10 +338,7 @@ def _level_from_dict(value: Mapping[str, Any]) -> LevelResult:
             reason=str(value["reason"]),
             evidence=tuple(_evidence_from_dict(item) for item in value["evidence"]),
         )
-    if result.status.value != value["status"]:
-        raise EvaluationContractError(
-            "invalid_status_transition", "level status does not match its checks"
-        )
+    _require_aggregate_match(result.status, value["status"], scope="level")
     return result
 
 
@@ -355,11 +353,32 @@ def _operation_from_dict(value: Mapping[str, Any]) -> OperationEvaluation:
         reason=str(value["reason"]),
         evidence=tuple(_evidence_from_dict(item) for item in value["evidence"]),
     )
-    if result.status.value != value["status"]:
-        raise EvaluationContractError(
-            "invalid_status_transition", "operation status does not match L1/L2"
-        )
+    _require_aggregate_match(result.status, value["status"], scope="operation")
     return result
+
+
+def _require_aggregate_match(
+    actual: EvaluationStatus, serialized: Any, *, scope: str
+) -> None:
+    if actual.value != serialized:
+        raise EvaluationContractError(
+            "invalid_status_transition",
+            f"{scope} status does not match its mandatory children",
+        )
+
+
+def _json_safe_copy(value: Any) -> Any:
+    """Detach arbitrary evidence values while retaining canonical JSON types."""
+
+    return json.loads(
+        json.dumps(
+            value,
+            ensure_ascii=False,
+            sort_keys=True,
+            separators=(",", ":"),
+            allow_nan=False,
+        )
+    )
 
 
 __all__ = [

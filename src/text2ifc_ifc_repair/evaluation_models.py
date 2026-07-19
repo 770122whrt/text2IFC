@@ -4,11 +4,13 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from enum import Enum
+import re
 from typing import Any, Mapping
 
 
 EVALUATION_SCHEMA_VERSION = "text2ifc/ifc-repair-evaluation/0.2"
 LEGACY_EVALUATION_SCHEMA_VERSION = "text2ifc/ifc-repair-evaluation/0.1"
+_STABLE_ID = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._:/-]*$")
 
 
 class EvaluationStatus(str, Enum):
@@ -35,6 +37,20 @@ def _require_text(value: str, *, field_name: str) -> None:
         raise EvaluationContractError(code, f"{field_name} must be non-empty")
 
 
+def _require_stable_id(value: str, *, field_name: str) -> None:
+    if not _STABLE_ID.fullmatch(value):
+        raise EvaluationContractError(
+            "invalid_schema", f"{field_name} is not a stable identifier"
+        )
+
+
+def _require_status(value: Any) -> None:
+    if not isinstance(value, EvaluationStatus):
+        raise EvaluationContractError(
+            "invalid_schema", f"unknown evaluation status: {value!r}"
+        )
+
+
 def _require_evidence(evidence: tuple[EvidenceFact, ...]) -> None:
     if not evidence:
         raise EvaluationContractError(
@@ -54,8 +70,9 @@ class EvidenceFact:
     provenance: tuple[str, ...]
 
     def __post_init__(self) -> None:
-        for name in ("fact_id", "source_kind", "source_ref"):
-            _require_text(str(getattr(self, name)), field_name=name)
+        _require_stable_id(self.fact_id, field_name="fact_id")
+        _require_stable_id(self.source_kind, field_name="source_kind")
+        _require_text(self.source_ref, field_name="source_ref")
         if self.expected_state not in {"available", "unavailable", "not_applicable"}:
             raise EvaluationContractError(
                 "invalid_schema", f"invalid expected_state: {self.expected_state}"
@@ -64,7 +81,9 @@ class EvidenceFact:
             raise EvaluationContractError(
                 "invalid_schema", f"invalid actual_state: {self.actual_state}"
             )
-        if not self.provenance or any(not item.strip() for item in self.provenance):
+        if not self.provenance or any(
+            not isinstance(item, str) or not item.strip() for item in self.provenance
+        ):
             raise EvaluationContractError(
                 "missing_evidence", "evidence provenance must be non-empty"
             )
@@ -81,8 +100,9 @@ class CheckResult:
     evidence: tuple[EvidenceFact, ...]
 
     def __post_init__(self) -> None:
-        _require_text(self.check_id, field_name="check_id")
-        _require_text(self.policy_id, field_name="policy_id")
+        _require_stable_id(self.check_id, field_name="check_id")
+        _require_stable_id(self.policy_id, field_name="policy_id")
+        _require_status(self.status)
         _require_text(self.reason, field_name="reason")
         _require_evidence(self.evidence)
         if self.applicability not in {
@@ -109,6 +129,7 @@ class LevelResult:
     checks: tuple[CheckResult, ...]
 
     def __post_init__(self) -> None:
+        _require_status(self.status)
         if self.level not in {"L1", "L2", "L3"}:
             raise EvaluationContractError(
                 "invalid_schema", f"invalid evaluation level: {self.level}"
@@ -139,9 +160,10 @@ class OperationEvaluation:
             "operation_type",
             "policy_id",
             "policy_version",
-            "reason",
         ):
-            _require_text(str(getattr(self, name)), field_name=name)
+            _require_stable_id(str(getattr(self, name)), field_name=name)
+        _require_status(self.status)
+        _require_text(self.reason, field_name="reason")
         _require_evidence(self.evidence)
         if tuple(level.level for level in self.levels) != ("L1", "L2", "L3"):
             raise EvaluationContractError(
@@ -170,11 +192,12 @@ class RepairEvaluation:
     diagnostic_artifact_retained: bool
 
     def __post_init__(self) -> None:
+        _require_status(self.status)
         if self.schema_version != EVALUATION_SCHEMA_VERSION:
             raise EvaluationContractError(
                 "invalid_schema", f"unsupported schema version: {self.schema_version}"
             )
-        _require_text(self.policy_version, field_name="policy_version")
+        _require_stable_id(self.policy_version, field_name="policy_version")
         _require_text(self.reason, field_name="reason")
         _require_evidence(self.evidence)
         if not self.operations:
