@@ -23,6 +23,40 @@
       ]
     },
     {
+      "template_id": "ifc-repair-changeset.v0.2",
+      "role": "ifc_repair_generator",
+      "mode": "bound_changeset",
+      "path": "prompts/agent/ifc-repair-changeset-v0.2.md",
+      "sha256": "sha256:958f7f38be22d7c89a90112dcd811620c706a209ec4dc506b4980e395693de44",
+      "required_inputs": [
+        "REPAIR_REQUEST",
+        "SOURCE_REQUEST_HASH",
+        "MODEL_FINGERPRINT",
+        "RESOLVED_OPERATIONS",
+        "SUPPORTED_OPERATIONS",
+        "CHANGESET_SCHEMA",
+        "VALIDATION_FEEDBACK"
+      ],
+      "forbidden_outputs": [
+        "raw_ifc",
+        "step_text",
+        "step_id",
+        "generated_global_id",
+        "candidate_search",
+        "target_reselection",
+        "prototype_selection",
+        "private_original_ifc",
+        "benchmark_gold",
+        "IfcLocalPlacement",
+        "IfcAxis2Placement3D",
+        "IfcCartesianPoint",
+        "IfcDirection",
+        "IfcOwnerHistory",
+        "representation_topology",
+        "unregistered_operation"
+      ]
+    },
+    {
       "template_id": "design-brief.v1",
       "role": "design_brief",
       "mode": "extract_or_clarify",

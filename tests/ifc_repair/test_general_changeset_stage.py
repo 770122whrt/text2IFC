@@ -8,6 +8,7 @@ from pathlib import Path
 import pytest
 
 from text2ifc_agent.providers import ProviderOutput
+from text2ifc_agent.prompt_registry import load_prompt_registry
 from text2ifc_ifc_repair.registry import OperationDefinition, OperationRegistry
 
 
@@ -152,12 +153,18 @@ def test_multiple_resolved_operations_produce_one_fully_bound_changeset(tmp_path
 
     assert result["valid"] is True
     assert result["changeset"] == _changeset()
+    assert result["prompt"] == {
+        "template_id": "ifc-repair-changeset.v0.2",
+        "template_hash": load_prompt_registry()["ifc-repair-changeset.v0.2"]["sha256"],
+    }
     assert len(provider.calls) == 1
     request = provider.calls[0]
     serialized = json.dumps(request, sort_keys=True)
     assert "candidate search" not in serialized.lower()
     assert "PRIVATE_ORIGINAL" not in serialized
     assert request["state"]["stage"] == "ifc_repair_bound_changeset"
+    assert "Single-operation shape" in request["prompt"]
+    assert "Multiple-operation shape" in request["prompt"]
 
 
 @pytest.mark.parametrize(
@@ -225,4 +232,3 @@ def test_invalid_output_has_one_finite_corrected_attempt(tmp_path: Path) -> None
     assert len(provider.calls) == 2
     assert (tmp_path / "attempt-001" / "diagnostics.json").is_file()
     assert (tmp_path / "attempt-002" / "diagnostics.json").is_file()
-
