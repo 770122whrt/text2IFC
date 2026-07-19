@@ -101,6 +101,7 @@ class OperationEvaluationPolicy:
     version: str
     operation_type: str
     semantic_facts: tuple[SemanticFactSpec, ...]
+    semantic_role: str = "target"
 
     def __post_init__(self) -> None:
         if not _STABLE_ID.fullmatch(self.policy_id):
@@ -112,6 +113,10 @@ class OperationEvaluationPolicy:
         if not _STABLE_ID.fullmatch(self.operation_type):
             raise PolicyContractError(
                 "INVALID_EVALUATION_OPERATION_TYPE", self.operation_type
+            )
+        if not _STABLE_ID.fullmatch(self.semantic_role):
+            raise PolicyContractError(
+                "INVALID_EVALUATION_SEMANTIC_ROLE", self.semantic_role
             )
         if not self.semantic_facts:
             raise PolicyContractError(

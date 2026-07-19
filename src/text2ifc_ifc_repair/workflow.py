@@ -260,8 +260,11 @@ def _run_window_repair_case(
                 ),
                 private_original_ifc_path=source,
                 private_mutation_mapping={
-                    role: str(private_manifest["target"][role]["global_id"])
-                    for role in ("wall", "opening", "window")
+                    str(operation["operation_id"]): {
+                        role: str(private_manifest["target"][role]["global_id"])
+                        for role in ("wall", "opening", "window")
+                    }
+                    for operation in changeset["operations"]
                 },
             )
         )

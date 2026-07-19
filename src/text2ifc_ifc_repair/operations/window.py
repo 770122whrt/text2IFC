@@ -110,6 +110,7 @@ WINDOW_EVALUATION_POLICY = OperationEvaluationPolicy(
     policy_id="window.add-with-opening.l2",
     version="0.1",
     operation_type=OPERATION_TYPE,
+    semantic_role="window",
     semantic_facts=(
         _semantic_spec("window.type", "relationship:type", SemanticApplicability.REQUIRED),
         _semantic_spec("window.host", "relationship:host", SemanticApplicability.REQUIRED),

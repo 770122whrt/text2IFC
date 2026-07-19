@@ -34,6 +34,16 @@ from .semantic_facts import (
 
 
 BENCHMARK_POLICY_VERSION = "phase8.1"
+PRODUCTION_EXPECTED_SOURCE_KINDS = frozenset(
+    {
+        EvidenceSourceKind.EXPLICIT_REQUEST,
+        EvidenceSourceKind.SURVIVING_TARGET,
+        EvidenceSourceKind.SURVIVING_HOST,
+        EvidenceSourceKind.SURVIVING_TYPE,
+        EvidenceSourceKind.APPROVED_PROTOTYPE,
+        EvidenceSourceKind.DETERMINISTIC_POLICY,
+    }
+)
 
 
 @dataclass(frozen=True)
@@ -50,6 +60,7 @@ class ProductionEvaluationInputs:
     )
 
     def __post_init__(self) -> None:
+        _validate_production_expected_facts(self.expected_facts_by_operation)
         object.__setattr__(
             self,
             "expected_facts_by_operation",
@@ -68,14 +79,22 @@ class BenchmarkEvaluationInputs:
 
     production: ProductionEvaluationInputs
     private_original_ifc_path: Path | str
-    private_mutation_mapping: Mapping[str, str]
+    private_mutation_mapping: Mapping[str, Mapping[str, str]]
 
     def __post_init__(self) -> None:
         object.__setattr__(
             self,
             "private_mutation_mapping",
             MappingProxyType(
-                {str(role): str(global_id) for role, global_id in self.private_mutation_mapping.items()}
+                {
+                    str(operation_id): MappingProxyType(
+                        {
+                            str(role): str(global_id)
+                            for role, global_id in role_mapping.items()
+                        }
+                    )
+                    for operation_id, role_mapping in self.private_mutation_mapping.items()
+                }
             ),
         )
 
@@ -124,6 +143,7 @@ def evaluate_mapped_role_semantics(
 def evaluate_production(inputs: ProductionEvaluationInputs) -> RepairEvaluation:
     """Evaluate only public/authorized expectations after application."""
 
+    _validate_production_expected_facts(inputs.expected_facts_by_operation)
     return _evaluate(inputs, private_original_path=None, private_mapping={})
 
 
@@ -138,7 +158,10 @@ def evaluate_benchmark(inputs: BenchmarkEvaluationInputs) -> BenchmarkEvaluation
     private = evaluation_to_dict(evaluation)
     private["benchmark_private"] = {
         "original_ifc_path": Path(inputs.private_original_ifc_path).as_posix(),
-        "mutation_role_mapping": dict(inputs.private_mutation_mapping),
+        "mutation_role_mapping": {
+            operation_id: dict(role_mapping)
+            for operation_id, role_mapping in inputs.private_mutation_mapping.items()
+        },
         "application_role_mapping": _application_role_mapping(
             inputs.production.application_result
         ),
@@ -155,7 +178,7 @@ def _evaluate(
     inputs: ProductionEvaluationInputs,
     *,
     private_original_path: Path | None,
-    private_mapping: Mapping[str, str],
+    private_mapping: Mapping[str, Mapping[str, str]],
 ) -> RepairEvaluation:
     l1 = evaluate_independent_l1(
         damaged_ifc_path=inputs.damaged_ifc_path,
@@ -170,15 +193,17 @@ def _evaluate(
         if private_original_path is not None
         else None
     )
-    applied_roles = _application_role_mapping(inputs.application_result)
+    applied_roles_by_operation = _application_role_mapping(inputs.application_result)
     operations = []
     for operation in inputs.changeset.get("operations", ()):
         operation_id = str(operation["operation_id"])
         operation_type = str(operation["operation_type"])
         policy = inputs.registry.require_evaluation_policy(operation_type)
+        semantic_role = policy.semantic_role
         expected = list(inputs.expected_facts_by_operation.get(operation_id, ()))
         repaired_facts: tuple[SemanticFact, ...] = ()
-        repaired_id = applied_roles.get("window")
+        applied_roles = applied_roles_by_operation.get(operation_id, {})
+        repaired_id = applied_roles.get(semantic_role)
         if repaired_id:
             repaired = repaired_model.by_guid(repaired_id)
             repaired_facts = _extract_benchmark_semantic_facts(
@@ -186,9 +211,10 @@ def _evaluate(
                 policy=policy,
                 source_kind=EvidenceSourceKind.REPAIRED_OUTPUT,
                 source_ref=repaired_id,
-                provenance=(f"application-role:window:{operation_id}",),
+                provenance=(f"application-role:{semantic_role}:{operation_id}",),
             )
-        original_id = private_mapping.get("window")
+        private_roles = private_mapping.get(operation_id, {})
+        original_id = private_roles.get(semantic_role)
         if original_model is not None and original_id:
             original = original_model.by_guid(original_id)
             expected.extend(
@@ -197,7 +223,7 @@ def _evaluate(
                     policy=policy,
                     source_kind=EvidenceSourceKind.PRIVATE_ORIGINAL,
                     source_ref=original_id,
-                    provenance=(f"private-mutation-role:window:{operation_id}",),
+                    provenance=(f"private-mutation-role:{semantic_role}:{operation_id}",),
                 )
             )
         l2_checks = inputs.registry.evaluate_semantics(
@@ -392,14 +418,44 @@ def _fact_key_token(value: str) -> str:
     return re.sub(r"[^A-Za-z0-9._/-]+", "-", value).strip("-") or "unnamed"
 
 
-def _application_role_mapping(application_result: Mapping[str, Any]) -> dict[str, str]:
-    return {
-        str(item["role"]): str(item["global_id"])
-        for operation in application_result.get("operations", ())
-        for kind in ("created", "modified", "removed")
-        for item in operation.get("changes", {}).get(kind, ())
-        if item.get("role") and item.get("global_id")
-    }
+def _application_role_mapping(
+    application_result: Mapping[str, Any],
+) -> dict[str, dict[str, str]]:
+    mappings: dict[str, dict[str, str]] = {}
+    for operation in application_result.get("operations", ()):
+        operation_id = str(operation.get("operation_id", ""))
+        if not operation_id or operation_id in mappings:
+            raise ValueError(f"APPLICATION_OPERATION_ROLE_MAPPING_INVALID:{operation_id}")
+        roles: dict[str, str] = {}
+        for kind in ("created", "modified", "removed"):
+            for item in operation.get("changes", {}).get(kind, ()):
+                role = str(item.get("role", ""))
+                global_id = str(item.get("global_id", ""))
+                if not role or not global_id:
+                    continue
+                if role in roles:
+                    raise ValueError(
+                        f"APPLICATION_ROLE_CARDINALITY_INVALID:{operation_id}:{role}"
+                    )
+                roles[role] = global_id
+        mappings[operation_id] = roles
+    return {operation_id: mappings[operation_id] for operation_id in sorted(mappings)}
+
+
+def _validate_production_expected_facts(
+    expected_facts_by_operation: Mapping[str, tuple[SemanticFact, ...]],
+) -> None:
+    for operation_id, facts in expected_facts_by_operation.items():
+        for fact in facts:
+            if fact.source_kind is EvidenceSourceKind.PRIVATE_ORIGINAL:
+                raise ValueError(
+                    f"PRODUCTION_PRIVATE_ORIGINAL_FORBIDDEN:{operation_id}:{fact.fact_key}"
+                )
+            if fact.source_kind not in PRODUCTION_EXPECTED_SOURCE_KINDS:
+                raise ValueError(
+                    f"PRODUCTION_EVIDENCE_SOURCE_FORBIDDEN:{operation_id}:"
+                    f"{fact.source_kind.value}"
+                )
 
 
 def _required_check(
@@ -451,6 +507,7 @@ __all__ = [
     "BenchmarkEvaluationInputs",
     "BenchmarkEvaluationResult",
     "ProductionEvaluationInputs",
+    "PRODUCTION_EXPECTED_SOURCE_KINDS",
     "evaluate_benchmark",
     "evaluate_mapped_role_semantics",
     "evaluate_production",

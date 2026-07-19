@@ -7,6 +7,8 @@ import pytest
 from text2ifc_ifc_repair.benchmark_evaluation import (
     BenchmarkEvaluationInputs,
     ProductionEvaluationInputs,
+    _application_role_mapping,
+    evaluate_production,
     evaluate_mapped_role_semantics,
 )
 from text2ifc_ifc_repair.evaluation_policy import EvidenceSourceKind
@@ -140,6 +142,82 @@ def test_production_inputs_cannot_accept_gold_original_or_mutation_mapping() -> 
         ProductionEvaluationInputs(  # type: ignore[call-arg]
             original_ifc_path=Path(PRIVATE_CANARIES[2]),
         )
+
+
+def test_production_inputs_reject_private_original_semantic_fact_immediately() -> None:
+    private_fact = _fact(
+        fact_key="material:CANARY",
+        value=PRIVATE_CANARIES[1],
+        source_kind=EvidenceSourceKind.PRIVATE_ORIGINAL,
+        source_ref=PRIVATE_CANARIES[0],
+    )
+
+    with pytest.raises(ValueError, match="PRODUCTION_PRIVATE_ORIGINAL_FORBIDDEN"):
+        ProductionEvaluationInputs(
+            damaged_ifc_path="missing-damaged.ifc",
+            repaired_ifc_path="missing-repaired.ifc",
+            changeset={"operations": []},
+            application_result={"operations": []},
+            registry=None,
+            expected_facts_by_operation={"operation-1": (private_fact,)},
+        )
+
+
+def test_production_evaluator_rechecks_fact_sources_before_opening_ifc() -> None:
+    public_fact = _fact(
+        fact_key="material:public",
+        value="public",
+        source_kind=EvidenceSourceKind.EXPLICIT_REQUEST,
+        source_ref="request:/material",
+    )
+    inputs = ProductionEvaluationInputs(
+        damaged_ifc_path="missing-damaged.ifc",
+        repaired_ifc_path="missing-repaired.ifc",
+        changeset={"operations": []},
+        application_result={"operations": []},
+        registry=None,
+        expected_facts_by_operation={"operation-1": (public_fact,)},
+    )
+    private_fact = _fact(
+        fact_key="material:CANARY",
+        value=PRIVATE_CANARIES[1],
+        source_kind=EvidenceSourceKind.PRIVATE_ORIGINAL,
+        source_ref=PRIVATE_CANARIES[0],
+    )
+    object.__setattr__(
+        inputs,
+        "expected_facts_by_operation",
+        {"operation-1": (private_fact,)},
+    )
+
+    with pytest.raises(ValueError, match="PRODUCTION_PRIVATE_ORIGINAL_FORBIDDEN"):
+        evaluate_production(inputs)
+
+
+def test_application_role_mapping_is_owned_by_operation_id() -> None:
+    mapping = _application_role_mapping(
+        {
+            "operations": [
+                {
+                    "operation_id": "operation-2",
+                    "changes": {
+                        "created": [{"role": "window", "global_id": "window-2"}]
+                    },
+                },
+                {
+                    "operation_id": "operation-1",
+                    "changes": {
+                        "created": [{"role": "window", "global_id": "window-1"}]
+                    },
+                },
+            ]
+        }
+    )
+
+    assert mapping == {
+        "operation-1": {"window": "window-1"},
+        "operation-2": {"window": "window-2"},
+    }
 
 
 def test_private_role_mapping_compares_semantics_without_gold_guid_reuse() -> None:
