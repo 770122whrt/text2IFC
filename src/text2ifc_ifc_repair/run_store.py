@@ -1,0 +1,616 @@
+"""Atomic, append-only persistence for repair-scoped orchestration runs."""
+
+from __future__ import annotations
+
+import hashlib
+import json
+import os
+import re
+import uuid
+from contextlib import contextmanager
+from dataclasses import replace
+from datetime import datetime, timezone
+from pathlib import Path, PurePosixPath
+from types import MappingProxyType
+from typing import Any, Iterator, Mapping
+
+from jsonschema import Draft202012Validator, ValidationError
+from referencing import Registry, Resource
+
+from .run_models import (
+    CLARIFICATION_SCHEMA_PATH,
+    RESULT_SCHEMA_PATH,
+    RUN_STATE_SCHEMA_PATH,
+    TERMINAL_STAGES,
+    Clarification,
+    RunResult,
+    RunStage,
+    RunState,
+    RunStoreCode,
+    RunStoreError,
+    RunTransition,
+    SourceBinding,
+    canonical_json,
+    freeze_json,
+    hash_json,
+    load_run_schema,
+    thaw_json,
+)
+
+
+_RUN_ID = re.compile(r"^repair-[a-z0-9][a-z0-9-]{0,95}$")
+_PUBLIC_RECORD_LIMIT = 16 * 1024
+_STAGE_PAYLOAD_LIMIT = 256 * 1024
+_PRIVATE_CANARIES = (
+    "private_original_ifc",
+    "mutation_manifest.private.json",
+    "mutation_mapping",
+    "benchmark_gold",
+    "provider_secret",
+    "api_key",
+)
+_PROGRESS = (
+    RunStage.CREATED,
+    RunStage.SOURCE_VALIDATED,
+    RunStage.INDEX_READY,
+    RunStage.INTENT_READY,
+    RunStage.TARGETS_RESOLVED,
+    RunStage.CHANGESET_READY,
+    RunStage.APPLICATION_READY,
+    RunStage.EVALUATED,
+)
+_FAILURES = TERMINAL_STAGES - {RunStage.SUCCEEDED}
+
+
+class RunStore:
+    """Filesystem store with one exclusive mutation lock per generated run."""
+
+    def __init__(self, root: Path | str) -> None:
+        requested = Path(root)
+        if requested.exists() and requested.is_symlink():
+            raise RunStoreError(RunStoreCode.SYMLINK_REJECTED, "output root is a symlink")
+        requested.mkdir(parents=True, exist_ok=True)
+        self.root = requested.resolve()
+        self.runs_root = self.root / "runs"
+        if self.runs_root.exists() and self.runs_root.is_symlink():
+            raise RunStoreError(RunStoreCode.SYMLINK_REJECTED, "runs root is a symlink")
+        self.runs_root.mkdir(parents=True, exist_ok=True)
+
+    def start_run(
+        self,
+        *,
+        source_path: Path | str,
+        request_id: str,
+        request_text: str | None = None,
+        source_request_hash: str | None = None,
+        run_id: str | None = None,
+    ) -> RunState:
+        active_id = self._new_run_id() if run_id is None else run_id
+        self._validate_run_id(active_id)
+        if not request_id or len(request_id) > 128:
+            raise RunStoreError(RunStoreCode.PUBLIC_RECORD_INVALID, "request_id is invalid")
+        if (request_text is None) == (source_request_hash is None):
+            raise RunStoreError(
+                RunStoreCode.PUBLIC_RECORD_INVALID,
+                "provide exactly one of request_text or source_request_hash",
+            )
+        request_hash = (
+            self._hash_bytes(request_text.encode("utf-8"))
+            if request_text is not None
+            else str(source_request_hash)
+        )
+        if not re.fullmatch(r"sha256:[0-9a-f]{64}", request_hash):
+            raise RunStoreError(RunStoreCode.PUBLIC_RECORD_INVALID, "request hash is invalid")
+
+        source_input = Path(source_path)
+        if source_input.is_symlink():
+            raise RunStoreError(RunStoreCode.SYMLINK_REJECTED, "source IFC is a symlink")
+        source = source_input.resolve(strict=True)
+        if not source.is_file():
+            raise RunStoreError(RunStoreCode.SOURCE_INVALID, "source IFC is not a file")
+        source_bytes = source.read_bytes()
+        if not source_bytes:
+            raise RunStoreError(RunStoreCode.SOURCE_INVALID, "source IFC is empty")
+        binding = SourceBinding(
+            reference=str(source),
+            sha256=self._hash_bytes(source_bytes),
+            size_bytes=len(source_bytes),
+        )
+
+        run_dir = self._run_dir(active_id, require_exists=False)
+        try:
+            run_dir.mkdir(exist_ok=False)
+        except FileExistsError as error:
+            raise RunStoreError(
+                RunStoreCode.RUN_ALREADY_EXISTS, f"run already exists: {active_id}"
+            ) from error
+        (run_dir / "transitions").mkdir(exist_ok=False)
+        try:
+            initial = self._build_transition(
+                transition_id=0,
+                from_stage=None,
+                to_stage=RunStage.CREATED,
+                previous_hash=None,
+                stage_payload={
+                    "request_hash": request_hash,
+                    "source_sha256": binding.sha256,
+                },
+            )
+            state = RunState(
+                run_id=active_id,
+                state_version=0,
+                request_id=request_id,
+                request_hash=request_hash,
+                source=binding,
+                stage=RunStage.CREATED,
+                transitions=(initial,),
+            )
+            self._validate_state(state)
+            self._write_transition(run_dir, initial)
+            self._atomic_write_json(run_dir / "state.json", state.to_dict())
+            return state
+        except Exception:
+            # A newly-created run that never obtained a committed state is not a run.
+            self._remove_empty_start(run_dir)
+            raise
+
+    def load(self, run_id: str) -> RunState:
+        run_dir = self._run_dir(run_id, require_exists=True)
+        state_path = run_dir / "state.json"
+        try:
+            document = json.loads(state_path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as error:
+            raise RunStoreError(RunStoreCode.TAMPER_DETECTED, "state.json is unreadable") from error
+        try:
+            self._state_validator().validate(document)
+            state = RunState.from_dict(document)
+        except (ValidationError, KeyError, TypeError, ValueError) as error:
+            raise RunStoreError(RunStoreCode.SCHEMA_INVALID, str(error)) from error
+        self._validate_loaded_state(run_dir, state)
+        self._validate_source(state.source)
+        return state
+
+    def transition(
+        self,
+        run_id: str,
+        *,
+        to_stage: RunStage,
+        expected_state_version: int,
+        stage_payload: Mapping[str, Any] | None = None,
+        clarification: Clarification | None = None,
+        answer: Mapping[str, Any] | None = None,
+        reason_code: str | None = None,
+        result_artifacts: Mapping[str, str] | None = None,
+    ) -> RunState:
+        run_dir = self._run_dir(run_id, require_exists=True)
+        with self._exclusive_lock(run_dir):
+            current = self.load(run_id)
+            if current.state_version != expected_state_version:
+                raise RunStoreError(
+                    RunStoreCode.STATE_CONFLICT,
+                    f"expected version {expected_state_version}, found {current.state_version}",
+                )
+            self._validate_transition(current.stage, to_stage)
+            new_version = current.state_version + 1
+            if to_stage is RunStage.CLARIFICATION_REQUIRED:
+                if clarification is None:
+                    raise RunStoreError(
+                        RunStoreCode.PUBLIC_RECORD_INVALID,
+                        "clarification_required needs a clarification record",
+                    )
+                self._validate_clarification(clarification, current.run_id, new_version)
+            elif clarification is not None:
+                raise RunStoreError(
+                    RunStoreCode.PUBLIC_RECORD_INVALID,
+                    "clarification is only valid for clarification_required",
+                )
+            artifacts = self._validate_artifacts(result_artifacts or {})
+            payload = {} if stage_payload is None else thaw_json(freeze_json(stage_payload))
+            if len(canonical_json(payload).encode("utf-8")) > _STAGE_PAYLOAD_LIMIT:
+                raise RunStoreError(
+                    RunStoreCode.PUBLIC_RECORD_TOO_LARGE, "stage payload exceeds limit"
+                )
+            transition = self._build_transition(
+                transition_id=new_version,
+                from_stage=current.stage,
+                to_stage=to_stage,
+                previous_hash=current.transitions[-1].record_hash,
+                stage_payload=payload,
+                clarification=clarification,
+                answer=answer,
+                reason_code=reason_code,
+                result_artifacts=artifacts,
+            )
+            state = replace(
+                current,
+                state_version=new_version,
+                stage=to_stage,
+                transitions=(*current.transitions, transition),
+                clarification=clarification,
+                reason_code=reason_code,
+                result_artifacts=artifacts,
+            )
+            self._validate_state(state)
+            self._write_transition(run_dir, transition)
+            self._atomic_write_json(run_dir / "state.json", state.to_dict())
+            return state
+
+    def continue_with_answer(
+        self,
+        run_id: str,
+        *,
+        clarification_id: str,
+        expected_state_version: int,
+        answer: Mapping[str, Any],
+    ) -> RunState:
+        run_dir = self._run_dir(run_id, require_exists=True)
+        with self._exclusive_lock(run_dir):
+            current = self.load(run_id)
+            if current.state_version != expected_state_version:
+                raise RunStoreError(
+                    RunStoreCode.STATE_CONFLICT,
+                    f"expected version {expected_state_version}, found {current.state_version}",
+                )
+            clarification = current.clarification
+            if current.stage is not RunStage.CLARIFICATION_REQUIRED or clarification is None:
+                raise RunStoreError(RunStoreCode.STATE_CONFLICT, "run is not awaiting an answer")
+            if clarification.clarification_id != clarification_id:
+                raise RunStoreError(RunStoreCode.STATE_CONFLICT, "clarification token is stale")
+            clean_answer = self._validate_answer(clarification, answer)
+            target = (
+                RunStage.CANCELLED
+                if clean_answer["kind"] in {"cancel", "eof"}
+                else clarification.resume_stage
+            )
+            # The lock is already held, so append directly instead of recursively locking.
+            self._validate_transition(current.stage, target, resume_stage=clarification.resume_stage)
+            new_version = current.state_version + 1
+            transition = self._build_transition(
+                transition_id=new_version,
+                from_stage=current.stage,
+                to_stage=target,
+                previous_hash=current.transitions[-1].record_hash,
+                stage_payload={"clarification_id": clarification_id},
+                answer=clean_answer,
+                reason_code=("USER_CANCELLED" if target is RunStage.CANCELLED else None),
+            )
+            state = replace(
+                current,
+                state_version=new_version,
+                stage=target,
+                transitions=(*current.transitions, transition),
+                clarification=None,
+                reason_code=transition.reason_code,
+                result_artifacts=MappingProxyType({}),
+            )
+            self._validate_state(state)
+            self._write_transition(run_dir, transition)
+            self._atomic_write_json(run_dir / "state.json", state.to_dict())
+            return state
+
+    def read_result(self, run_id: str) -> RunResult:
+        state = self.load(run_id)
+        success = state.stage is RunStage.SUCCEEDED
+        result = RunResult(
+            run_id=state.run_id,
+            state_version=state.state_version,
+            status=state.stage.value,
+            reason_code=state.reason_code,
+            complete_repair_success=success,
+            successful_artifact_publishable=success,
+            run_directory=f"runs/{state.run_id}",
+            artifacts=state.result_artifacts,
+            clarification=state.clarification,
+        )
+        payload = result.to_dict()
+        try:
+            self._result_validator().validate(payload)
+        except ValidationError as error:
+            raise RunStoreError(RunStoreCode.SCHEMA_INVALID, error.message) from error
+        if len(canonical_json(payload).encode("utf-8")) > _PUBLIC_RECORD_LIMIT:
+            raise RunStoreError(RunStoreCode.PUBLIC_RECORD_TOO_LARGE, "result exceeds limit")
+        return result
+
+    @staticmethod
+    def _new_run_id() -> str:
+        return f"repair-{uuid.uuid4().hex}"
+
+    def _run_dir(self, run_id: str, *, require_exists: bool) -> Path:
+        self._validate_run_id(run_id)
+        candidate = self.runs_root / run_id
+        if candidate.exists() and candidate.is_symlink():
+            if require_exists:
+                raise RunStoreError(RunStoreCode.PATH_ESCAPE, "run directory is a symlink")
+            return candidate
+        resolved = candidate.resolve(strict=require_exists)
+        try:
+            resolved.relative_to(self.runs_root.resolve())
+        except ValueError as error:
+            raise RunStoreError(RunStoreCode.PATH_ESCAPE, "run path escapes root") from error
+        if require_exists and (not resolved.is_dir() or resolved.is_symlink()):
+            raise RunStoreError(RunStoreCode.RUN_NOT_FOUND, f"unknown run: {run_id}")
+        return resolved
+
+    @staticmethod
+    def _validate_run_id(run_id: str) -> None:
+        if not _RUN_ID.fullmatch(run_id):
+            raise RunStoreError(RunStoreCode.INVALID_RUN_ID, f"unsafe run ID: {run_id!r}")
+
+    @staticmethod
+    def _hash_bytes(value: bytes) -> str:
+        return "sha256:" + hashlib.sha256(value).hexdigest()
+
+    @staticmethod
+    def _utc_now() -> str:
+        return datetime.now(timezone.utc).isoformat(timespec="microseconds")
+
+    def _build_transition(
+        self,
+        *,
+        transition_id: int,
+        from_stage: RunStage | None,
+        to_stage: RunStage,
+        previous_hash: str | None,
+        stage_payload: Mapping[str, Any],
+        clarification: Clarification | None = None,
+        answer: Mapping[str, Any] | None = None,
+        reason_code: str | None = None,
+        result_artifacts: Mapping[str, str] | None = None,
+    ) -> RunTransition:
+        frozen_payload = freeze_json(stage_payload)
+        stage_hash = hash_json({"stage": to_stage.value, "payload": stage_payload})
+        base = RunTransition(
+            transition_id=transition_id,
+            state_version=transition_id,
+            from_stage=from_stage,
+            to_stage=to_stage,
+            created_at=self._utc_now(),
+            previous_hash=previous_hash,
+            stage_hash=stage_hash,
+            record_hash="sha256:" + "0" * 64,
+            stage_payload=frozen_payload,
+            clarification=clarification,
+            answer=None if answer is None else freeze_json(answer),
+            reason_code=reason_code,
+            result_artifacts=MappingProxyType(dict(result_artifacts or {})),
+        )
+        return replace(base, record_hash=hash_json(base.hash_payload()))
+
+    @staticmethod
+    def _validate_transition(
+        current: RunStage, target: RunStage, *, resume_stage: RunStage | None = None
+    ) -> None:
+        if current in TERMINAL_STAGES:
+            raise RunStoreError(RunStoreCode.TERMINAL_IMMUTABLE, current.value)
+        if current is RunStage.CLARIFICATION_REQUIRED:
+            if target not in {resume_stage, RunStage.CANCELLED}:
+                raise RunStoreError(RunStoreCode.INVALID_TRANSITION, f"{current.value}->{target.value}")
+            return
+        allowed: set[RunStage] = set(_FAILURES) | {RunStage.CLARIFICATION_REQUIRED}
+        index = _PROGRESS.index(current)
+        if index + 1 < len(_PROGRESS):
+            allowed.add(_PROGRESS[index + 1])
+        elif current is RunStage.EVALUATED:
+            allowed.update({RunStage.SUCCEEDED, RunStage.NOT_PUBLISHABLE})
+        if target not in allowed:
+            raise RunStoreError(RunStoreCode.INVALID_TRANSITION, f"{current.value}->{target.value}")
+
+    def _validate_clarification(
+        self, clarification: Clarification, run_id: str, state_version: int
+    ) -> None:
+        payload = clarification.to_dict()
+        if clarification.run_id != run_id or clarification.state_version != state_version:
+            raise RunStoreError(
+                RunStoreCode.PUBLIC_RECORD_INVALID, "clarification run/version binding mismatch"
+            )
+        if clarification.resume_stage in TERMINAL_STAGES or clarification.resume_stage is RunStage.CLARIFICATION_REQUIRED:
+            raise RunStoreError(RunStoreCode.PUBLIC_RECORD_INVALID, "invalid resume stage")
+        tokens = [candidate.token for candidate in clarification.candidates]
+        if len(tokens) != len(set(tokens)):
+            raise RunStoreError(RunStoreCode.PUBLIC_RECORD_INVALID, "candidate tokens must be unique")
+        encoded = canonical_json(payload).encode("utf-8")
+        if len(encoded) > _PUBLIC_RECORD_LIMIT:
+            raise RunStoreError(RunStoreCode.PUBLIC_RECORD_TOO_LARGE, "clarification exceeds limit")
+        lowered = encoded.decode("utf-8").casefold()
+        if any(canary in lowered for canary in _PRIVATE_CANARIES):
+            raise RunStoreError(RunStoreCode.PUBLIC_RECORD_INVALID, "private authority in public record")
+        try:
+            self._clarification_validator().validate(payload)
+        except ValidationError as error:
+            raise RunStoreError(RunStoreCode.PUBLIC_RECORD_INVALID, error.message) from error
+
+    @staticmethod
+    def _validate_answer(
+        clarification: Clarification, answer: Mapping[str, Any]
+    ) -> dict[str, Any]:
+        try:
+            clean = json.loads(canonical_json(answer))
+        except (TypeError, ValueError) as error:
+            raise RunStoreError(RunStoreCode.ANSWER_INVALID, "answer is not JSON") from error
+        kind = clean.get("kind")
+        allowed_keys = {
+            "select_candidate": {"kind", "candidate_token"},
+            "add_detail": {"kind", "detail"},
+            "authorize_prototype": {"kind", "candidate_token", "authorized"},
+            "cancel": {"kind"},
+            "eof": {"kind"},
+        }
+        if kind not in allowed_keys or set(clean) != allowed_keys[kind]:
+            raise RunStoreError(RunStoreCode.ANSWER_INVALID, "answer shape is invalid")
+        if kind not in clarification.answer_modes and kind != "eof":
+            raise RunStoreError(RunStoreCode.ANSWER_INVALID, "answer mode is not allowed")
+        if kind in {"select_candidate", "authorize_prototype"}:
+            tokens = {candidate.token for candidate in clarification.candidates}
+            if clean.get("candidate_token") not in tokens:
+                raise RunStoreError(RunStoreCode.ANSWER_INVALID, "candidate is not in stored set")
+        if kind == "authorize_prototype" and clean.get("authorized") is not True:
+            raise RunStoreError(RunStoreCode.ANSWER_INVALID, "prototype needs explicit authorization")
+        if kind == "add_detail":
+            detail = clean.get("detail")
+            if not isinstance(detail, str) or not detail.strip() or len(detail) > 4096:
+                raise RunStoreError(RunStoreCode.ANSWER_INVALID, "detail is invalid")
+        return clean
+
+    @staticmethod
+    def _validate_artifacts(value: Mapping[str, str]) -> Mapping[str, str]:
+        clean: dict[str, str] = {}
+        for key, raw_path in value.items():
+            if not key or len(key) > 128:
+                raise RunStoreError(RunStoreCode.PUBLIC_RECORD_INVALID, "artifact key is invalid")
+            normalized = str(raw_path).replace("\\", "/")
+            path = PurePosixPath(normalized)
+            if path.is_absolute() or ".." in path.parts or normalized in {"", "."}:
+                raise RunStoreError(RunStoreCode.PATH_ESCAPE, "artifact path is unsafe")
+            clean[str(key)] = normalized
+        return MappingProxyType(clean)
+
+    def _validate_state(self, state: RunState) -> None:
+        try:
+            self._state_validator().validate(state.to_dict())
+        except ValidationError as error:
+            raise RunStoreError(RunStoreCode.SCHEMA_INVALID, error.message) from error
+
+    def _validate_loaded_state(self, run_dir: Path, state: RunState) -> None:
+        if state.run_id != run_dir.name or state.state_version != len(state.transitions) - 1:
+            raise RunStoreError(RunStoreCode.TAMPER_DETECTED, "state identity/version mismatch")
+        if not state.transitions or state.stage is not state.transitions[-1].to_stage:
+            raise RunStoreError(RunStoreCode.TAMPER_DETECTED, "state head mismatch")
+        head = state.transitions[-1]
+        if state.clarification != head.clarification or state.reason_code != head.reason_code:
+            raise RunStoreError(RunStoreCode.TAMPER_DETECTED, "state metadata differs from head")
+        if dict(state.result_artifacts) != dict(head.result_artifacts):
+            raise RunStoreError(RunStoreCode.TAMPER_DETECTED, "artifact state differs from head")
+        previous: str | None = None
+        for index, transition in enumerate(state.transitions):
+            if transition.transition_id != index or transition.state_version != index:
+                raise RunStoreError(RunStoreCode.TAMPER_DETECTED, "transition sequence is invalid")
+            expected_from = None if index == 0 else state.transitions[index - 1].to_stage
+            if transition.from_stage is not expected_from or transition.previous_hash != previous:
+                raise RunStoreError(RunStoreCode.TAMPER_DETECTED, "transition chain is invalid")
+            if hash_json(transition.hash_payload()) != transition.record_hash:
+                raise RunStoreError(RunStoreCode.TAMPER_DETECTED, "transition hash is invalid")
+            if hash_json(
+                {"stage": transition.to_stage.value, "payload": thaw_json(transition.stage_payload)}
+            ) != transition.stage_hash:
+                raise RunStoreError(RunStoreCode.TAMPER_DETECTED, "stage hash is invalid")
+            transition_path = run_dir / "transitions" / f"{index:06d}.json"
+            try:
+                stored = json.loads(transition_path.read_text(encoding="utf-8"))
+            except (OSError, json.JSONDecodeError) as error:
+                raise RunStoreError(RunStoreCode.TAMPER_DETECTED, "transition is unreadable") from error
+            if stored != transition.to_dict():
+                raise RunStoreError(RunStoreCode.TAMPER_DETECTED, "transition copy differs")
+            previous = transition.record_hash
+
+    def _validate_source(self, binding: SourceBinding) -> None:
+        path = Path(binding.reference)
+        if path.is_symlink() or not path.is_file():
+            raise RunStoreError(RunStoreCode.SOURCE_CHANGED, "bound source is unavailable")
+        data = path.read_bytes()
+        if len(data) != binding.size_bytes or self._hash_bytes(data) != binding.sha256:
+            raise RunStoreError(RunStoreCode.SOURCE_CHANGED, "bound source changed")
+
+    @contextmanager
+    def _exclusive_lock(self, run_dir: Path) -> Iterator[None]:
+        lock_path = run_dir / ".transition.lock"
+        try:
+            descriptor = os.open(lock_path, os.O_CREAT | os.O_EXCL | os.O_WRONLY)
+        except FileExistsError as error:
+            raise RunStoreError(RunStoreCode.LOCKED, "run mutation lock is held") from error
+        try:
+            os.write(descriptor, f"pid={os.getpid()}\n".encode("ascii"))
+            os.fsync(descriptor)
+            os.close(descriptor)
+            descriptor = -1
+            yield
+        finally:
+            if descriptor >= 0:
+                os.close(descriptor)
+            try:
+                lock_path.unlink()
+            except FileNotFoundError:
+                pass
+
+    def _write_transition(self, run_dir: Path, transition: RunTransition) -> None:
+        target = run_dir / "transitions" / f"{transition.transition_id:06d}.json"
+        if target.exists():
+            raise RunStoreError(RunStoreCode.STATE_CONFLICT, "transition already exists")
+        self._atomic_write_json(target, transition.to_dict(), replace_existing=False)
+
+    @staticmethod
+    def _atomic_write_json(
+        target: Path, payload: Mapping[str, Any], *, replace_existing: bool = True
+    ) -> None:
+        target.parent.mkdir(parents=True, exist_ok=True)
+        temporary = target.parent / f".{target.name}.{uuid.uuid4().hex}.tmp"
+        data = (json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True) + "\n").encode(
+            "utf-8"
+        )
+        try:
+            with temporary.open("xb") as stream:
+                stream.write(data)
+                stream.flush()
+                os.fsync(stream.fileno())
+            if not replace_existing and target.exists():
+                raise RunStoreError(RunStoreCode.STATE_CONFLICT, "target already exists")
+            os.replace(temporary, target)
+            RunStore._fsync_directory(target.parent)
+        finally:
+            temporary.unlink(missing_ok=True)
+
+    @staticmethod
+    def _fsync_directory(directory: Path) -> None:
+        if os.name == "nt":
+            return
+        descriptor = os.open(directory, os.O_RDONLY)
+        try:
+            os.fsync(descriptor)
+        finally:
+            os.close(descriptor)
+
+    @staticmethod
+    def _remove_empty_start(run_dir: Path) -> None:
+        # Cleanup is tightly bounded to the just-created run and known filenames.
+        transitions = run_dir / "transitions"
+        if transitions.exists():
+            for path in transitions.iterdir():
+                if path.name.startswith(".") and path.suffix == ".tmp":
+                    path.unlink(missing_ok=True)
+            try:
+                transitions.rmdir()
+            except OSError:
+                return
+        for name in ("state.json", ".transition.lock"):
+            (run_dir / name).unlink(missing_ok=True)
+        try:
+            run_dir.rmdir()
+        except OSError:
+            pass
+
+    @staticmethod
+    def _schema_registry() -> Registry:
+        clarification = load_run_schema(CLARIFICATION_SCHEMA_PATH)
+        return Registry().with_resource(
+            clarification["$id"], Resource.from_contents(clarification)
+        ).with_resource(
+            "ifc-repair-clarification-0.1.schema.json", Resource.from_contents(clarification)
+        )
+
+    @classmethod
+    def _state_validator(cls) -> Draft202012Validator:
+        return Draft202012Validator(
+            load_run_schema(RUN_STATE_SCHEMA_PATH), registry=cls._schema_registry()
+        )
+
+    @classmethod
+    def _clarification_validator(cls) -> Draft202012Validator:
+        return Draft202012Validator(load_run_schema(CLARIFICATION_SCHEMA_PATH))
+
+    @classmethod
+    def _result_validator(cls) -> Draft202012Validator:
+        return Draft202012Validator(
+            load_run_schema(RESULT_SCHEMA_PATH), registry=cls._schema_registry()
+        )
+
+
+__all__ = ["RunStore"]

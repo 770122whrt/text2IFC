@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "text2ifc/ifc-repair-clarification/0.1",
+  "title": "IFC Repair Clarification 0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "clarification_id", "run_id", "state_version",
+    "operation_id", "stage", "resume_stage", "reason_code", "question",
+    "answer_modes", "answer_schema", "candidates"
+  ],
+  "properties": {
+    "schema_version": {"const": "text2ifc/ifc-repair-clarification/0.1"},
+    "clarification_id": {"type": "string", "minLength": 1, "maxLength": 128},
+    "run_id": {"type": "string", "pattern": "^repair-[a-z0-9][a-z0-9-]{0,95}$"},
+    "state_version": {"type": "integer", "minimum": 1},
+    "operation_id": {"type": "string", "minLength": 1, "maxLength": 128},
+    "stage": {"type": "string", "minLength": 1, "maxLength": 64},
+    "resume_stage": {"type": "string", "minLength": 1, "maxLength": 64},
+    "reason_code": {
+      "enum": [
+        "ambiguous_target", "selector_conflict", "missing_required_parameter",
+        "prototype_selection", "additional_target_detail"
+      ]
+    },
+    "question": {"type": "string", "minLength": 1, "maxLength": 4096},
+    "answer_modes": {
+      "type": "array", "minItems": 1, "uniqueItems": true,
+      "items": {"enum": ["select_candidate", "add_detail", "authorize_prototype", "cancel"]}
+    },
+    "answer_schema": {"type": "object"},
+    "candidates": {
+      "type": "array", "maxItems": 20,
+      "items": {"$ref": "#/$defs/candidate"}
+    }
+  },
+  "$defs": {
+    "candidate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["token", "public_id", "ifc_class", "name", "storey", "position", "evidence"],
+      "properties": {
+        "token": {"type": "string", "minLength": 1, "maxLength": 128},
+        "public_id": {"type": "string", "minLength": 1, "maxLength": 128},
+        "ifc_class": {"type": "string", "pattern": "^Ifc[A-Za-z0-9]+$"},
+        "name": {"type": ["string", "null"], "maxLength": 512},
+        "storey": {"type": ["string", "null"], "maxLength": 512},
+        "position": {"type": ["string", "null"], "maxLength": 1024},
+        "evidence": {
+          "type": "array", "minItems": 1, "maxItems": 16,
+          "items": {"type": "string", "minLength": 1, "maxLength": 512}
+        }
+      }
+    }
+  }
+}

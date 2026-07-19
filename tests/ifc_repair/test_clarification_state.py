@@ -21,6 +21,7 @@ from text2ifc_ifc_repair.run_store import RunStore
 
 
 def _start(tmp_path: Path):
+    tmp_path.mkdir(parents=True, exist_ok=True)
     source = tmp_path / "source.ifc"
     source.write_bytes(b"ISO-10303-21;\nHEADER;\nENDSEC;\nDATA;\nENDSEC;\nEND-ISO-10303-21;\n")
     store = RunStore(tmp_path / "output")
@@ -262,4 +263,3 @@ def test_question_and_candidates_reject_private_or_oversized_payloads(tmp_path: 
             clarification=oversized,
         )
     assert bounded.value.code == RunStoreCode.PUBLIC_RECORD_TOO_LARGE.value
-

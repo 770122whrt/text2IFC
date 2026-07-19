@@ -124,7 +124,7 @@ def test_symlink_run_escape_is_rejected(store: RunStore, source: Path, tmp_path:
         pytest.skip("symlinks unavailable")
     outside = tmp_path / "outside"
     outside.mkdir()
-    store.runs_root.mkdir(parents=True)
+    store.runs_root.mkdir(parents=True, exist_ok=True)
     link = store.runs_root / "repair-linked-run"
     try:
         link.symlink_to(outside, target_is_directory=True)
@@ -325,4 +325,3 @@ def test_completed_stage_hash_is_not_replaced_or_rerun_after_clarification(
     assert resumed.stage is RunStage.INTENT_READY
     assert resumed.state_version == paused.state_version + 1
     assert len(resumed.transitions) == len(paused.transitions) + 1
-

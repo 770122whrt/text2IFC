@@ -1,0 +1,85 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "text2ifc/ifc-repair-run-state/0.1",
+  "title": "IFC Repair Run State 0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "orchestrator_version", "run_id", "state_version",
+    "request_id", "request_hash", "source", "stage", "transitions",
+    "clarification", "reason_code", "result_artifacts"
+  ],
+  "properties": {
+    "schema_version": {"const": "text2ifc/ifc-repair-run-state/0.1"},
+    "orchestrator_version": {"const": "0.1"},
+    "run_id": {"type": "string", "pattern": "^repair-[a-z0-9][a-z0-9-]{0,95}$"},
+    "state_version": {"type": "integer", "minimum": 0},
+    "request_id": {"type": "string", "minLength": 1, "maxLength": 128},
+    "request_hash": {"$ref": "#/$defs/sha256"},
+    "source": {"$ref": "#/$defs/source"},
+    "stage": {"$ref": "#/$defs/stage"},
+    "transitions": {
+      "type": "array", "minItems": 1,
+      "items": {"$ref": "#/$defs/transition"}
+    },
+    "clarification": {
+      "oneOf": [
+        {"type": "null"},
+        {"type": "object"}
+      ]
+    },
+    "reason_code": {"type": ["string", "null"], "maxLength": 256},
+    "result_artifacts": {
+      "type": "object", "maxProperties": 32,
+      "additionalProperties": {"type": "string", "minLength": 1, "maxLength": 1024}
+    }
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "stage": {
+      "enum": [
+        "created", "source_validated", "index_ready", "intent_ready",
+        "targets_resolved", "changeset_ready", "application_ready", "evaluated",
+        "clarification_required", "succeeded", "not_publishable", "unsupported",
+        "invalid_input", "provider_failed", "audit_failed", "application_failed",
+        "cancelled"
+      ]
+    },
+    "source": {
+      "type": "object", "additionalProperties": false,
+      "required": ["reference", "sha256", "size_bytes"],
+      "properties": {
+        "reference": {"type": "string", "minLength": 1, "maxLength": 4096},
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "size_bytes": {"type": "integer", "minimum": 1}
+      }
+    },
+    "transition": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "schema_version", "transition_id", "state_version", "from_stage", "to_stage",
+        "created_at", "previous_hash", "stage_hash", "record_hash", "stage_payload",
+        "clarification", "answer", "reason_code", "result_artifacts"
+      ],
+      "properties": {
+        "schema_version": {"const": "text2ifc/ifc-repair-transition/0.1"},
+        "transition_id": {"type": "integer", "minimum": 0},
+        "state_version": {"type": "integer", "minimum": 0},
+        "from_stage": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/stage"}]},
+        "to_stage": {"$ref": "#/$defs/stage"},
+        "created_at": {"type": "string", "format": "date-time"},
+        "previous_hash": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/sha256"}]},
+        "stage_hash": {"$ref": "#/$defs/sha256"},
+        "record_hash": {"$ref": "#/$defs/sha256"},
+        "stage_payload": {"type": "object", "maxProperties": 128},
+        "clarification": {"type": ["object", "null"]},
+        "answer": {"type": ["object", "null"]},
+        "reason_code": {"type": ["string", "null"], "maxLength": 256},
+        "result_artifacts": {
+          "type": "object", "maxProperties": 32,
+          "additionalProperties": {"type": "string", "minLength": 1, "maxLength": 1024}
+        }
+      }
+    }
+  }
+}
