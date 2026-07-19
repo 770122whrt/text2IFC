@@ -17,7 +17,14 @@ _ROOT_FIELDS = (
     "successful_artifact_publishable",
     "diagnostic_artifact_retained",
 )
-_PUBLIC_METADATA_FIELDS = ("case_id", "evidence_class", "provider_calls")
+_PUBLIC_METADATA_FIELDS = (
+    "case_id",
+    "evidence_class",
+    "provider_calls",
+    "failure_stage",
+    "issues",
+    "prompt",
+)
 
 
 class PrivateCanaryLeakError(ValueError):

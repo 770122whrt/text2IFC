@@ -29,6 +29,14 @@ from .evaluation_projection import (
     assert_public_bundle_has_no_canaries,
     project_public_evaluation,
 )
+from .evaluation import (
+    aggregate_level,
+    aggregate_operation,
+    aggregate_repair,
+    evaluation_to_dict,
+    make_l3_not_required,
+)
+from .evaluation_models import CheckResult, EvaluationStatus, EvidenceFact
 
 
 LARGE_BUILDING_SHA256 = (
@@ -137,6 +145,9 @@ def _run_window_repair_case(
             repair_request.encode("utf-8")
         ).hexdigest()
         registry = create_default_registry()
+        failure_policy = registry.require_evaluation_policy(
+            str(public_spec["requested_operation_type"])
+        )
         public_context = build_repair_context(
             mutation_dir / "damaged.ifc",
             public_spec,
@@ -210,6 +221,10 @@ def _run_window_repair_case(
                             "message": f"{type(error).__name__}: {error}",
                         }
                     ],
+                    operation_id=f"operation-{case_id}",
+                    operation_type=failure_policy.operation_type,
+                    policy_id=failure_policy.policy_id,
+                    policy_version=failure_policy.version,
                 )
                 _finalize_evidence_bundle(stage, output, evaluation)
                 return evaluation
@@ -220,6 +235,10 @@ def _run_window_repair_case(
                 failure_stage="provider",
                 issues=provider_result["issues"],
                 prompt=provider_result.get("prompt", {}),
+                operation_id=f"operation-{case_id}",
+                operation_type=failure_policy.operation_type,
+                policy_id=failure_policy.policy_id,
+                policy_version=failure_policy.version,
             )
             _finalize_evidence_bundle(stage, output, evaluation)
             return evaluation
@@ -245,6 +264,10 @@ def _run_window_repair_case(
                 failure_stage="application",
                 issues=application["issues"],
                 prompt=provider_result["prompt"],
+                operation_id=f"operation-{case_id}",
+                operation_type=failure_policy.operation_type,
+                policy_id=failure_policy.policy_id,
+                policy_version=failure_policy.version,
             )
             _finalize_evidence_bundle(stage, output, evaluation)
             return evaluation
@@ -294,7 +317,10 @@ def _run_window_repair_case(
             evaluation,
             private_evaluation=private_evaluation,
             public_prompt=provider_result["prompt"],
-            canaries=_private_boundary_canaries(private_manifest),
+            canaries=_private_boundary_canaries(
+                private_manifest,
+                private_evaluation=private_evaluation,
+            ),
         )
     except BaseException:
         if stage.exists():
@@ -405,18 +431,127 @@ def _failure_evaluation(
     evidence_class: str,
     failure_stage: str,
     issues: Any,
+    operation_id: str,
+    operation_type: str,
+    policy_id: str,
+    policy_version: str,
     prompt: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
-    return {
-        "schema_version": "text2ifc/ifc-repair-evaluation/0.1",
-        "case_id": case_id,
-        "evidence_class": evidence_class,
-        "complete_repair_success": False,
-        "failure_stage": failure_stage,
-        "issues": list(issues),
-        "prompt": dict(prompt or {}),
-        "operations": [],
-    }
+    frozen_issues = list(issues)
+    application = _terminal_failure_check(
+        check_id="application.valid",
+        status=EvaluationStatus.FAILED,
+        reason="Repair application could not reach a valid published candidate.",
+        failure_stage=failure_stage,
+        issues=frozen_issues,
+    )
+    preservation = _terminal_failure_check(
+        check_id="preservation.valid",
+        status=EvaluationStatus.NOT_EVALUABLE,
+        reason="Preservation cannot be evaluated before a repaired candidate exists.",
+        failure_stage=failure_stage,
+        issues=frozen_issues,
+    )
+    l1_check = _terminal_failure_check(
+        check_id="l1.pre-application",
+        status=EvaluationStatus.NOT_EVALUABLE,
+        reason="L1 cannot be evaluated before a repaired candidate exists.",
+        failure_stage=failure_stage,
+        issues=frozen_issues,
+    )
+    l2_check = _terminal_failure_check(
+        check_id="l2.pre-application",
+        status=EvaluationStatus.NOT_EVALUABLE,
+        reason="L2 cannot be evaluated before a repaired candidate exists.",
+        failure_stage=failure_stage,
+        issues=frozen_issues,
+    )
+    l1 = aggregate_level(
+        level="L1",
+        checks=(l1_check,),
+        reason="No candidate was available for independent L1 evaluation.",
+        evidence=l1_check.evidence,
+    )
+    l2 = aggregate_level(
+        level="L2",
+        checks=(l2_check,),
+        reason="No candidate was available for semantic L2 evaluation.",
+        evidence=l2_check.evidence,
+    )
+    l3_observation = CheckResult(
+        check_id="l3.pre-application",
+        policy_id="l3.v1.1-observation",
+        applicability="informational",
+        mandatory=False,
+        status=EvaluationStatus.NOT_EVALUABLE,
+        reason="No authoring identity exists before application.",
+        evidence=l2_check.evidence,
+    )
+    l3 = make_l3_not_required(
+        checks=(l3_observation,),
+        reason="L3 authoring and identity exactness is not required in v1.1.",
+        evidence=l3_observation.evidence,
+    )
+    operation = aggregate_operation(
+        operation_id=operation_id,
+        operation_type=operation_type,
+        mandatory=True,
+        policy_id=policy_id,
+        policy_version=policy_version,
+        levels=(l1, l2, l3),
+        reason="The requested operation did not reach evaluable application output.",
+        evidence=application.evidence,
+    )
+    terminal = aggregate_repair(
+        policy_version="phase8.1",
+        application=application,
+        preservation=preservation,
+        operations=(operation,),
+        reason="Workflow terminated before a publishable repaired candidate existed.",
+        evidence=application.evidence,
+        diagnostic_artifact_retained=False,
+    )
+    return project_public_evaluation(
+        evaluation_to_dict(terminal),
+        metadata={
+            "case_id": case_id,
+            "evidence_class": evidence_class,
+            "provider_calls": int((prompt or {}).get("provider_calls", 0)),
+            "failure_stage": failure_stage,
+            "issues": frozen_issues,
+            "prompt": dict(prompt or {}),
+        },
+    )
+
+
+def _terminal_failure_check(
+    *,
+    check_id: str,
+    status: EvaluationStatus,
+    reason: str,
+    failure_stage: str,
+    issues: list[Any],
+) -> CheckResult:
+    return CheckResult(
+        check_id=check_id,
+        policy_id="evaluation.phase8",
+        applicability="required",
+        mandatory=True,
+        status=status,
+        reason=reason,
+        evidence=(
+            EvidenceFact(
+                fact_id=f"{check_id}.evidence",
+                source_kind="workflow_failure",
+                source_ref=f"workflow:{failure_stage}",
+                expected_state="available",
+                actual_state="unavailable",
+                expected_value="valid publishable repaired candidate",
+                actual_value={"failure_stage": failure_stage, "issues": issues},
+                provenance=("workflow-terminal-failure",),
+            ),
+        ),
+    )
 
 
 def _finalize_evidence_bundle(
@@ -522,13 +657,74 @@ def _json(payload: Any) -> str:
 
 def _private_boundary_canaries(
     private_manifest: Mapping[str, Any],
+    *,
+    private_evaluation: Mapping[str, Any],
 ) -> tuple[str, ...]:
     target = private_manifest["target"]
     source_path = str(private_manifest["source"]["path"])
-    return (
+    identifiers = (
         str(target["opening"]["global_id"]),
         str(target["window"]["global_id"]),
         source_path,
         f"private-mutation-role:opening:{target['opening']['global_id']}",
         f"private-mutation-role:window:{target['window']['global_id']}",
     )
+    return tuple(sorted(set((*identifiers, *_private_semantic_canaries(private_evaluation)))))
+
+
+def _private_semantic_canaries(
+    private_evaluation: Mapping[str, Any],
+) -> tuple[str, ...]:
+    """Derive Gold-only semantic values and identifiers from private L2 evidence."""
+
+    tokens: set[str] = set()
+    semantic_prefixes = (
+        "window.material",
+        "window.classification",
+        "window.pset",
+        "window.quantity",
+        "window.name",
+        "window.tag",
+        "window.instance",
+        "window.is-external",
+    )
+    for operation in private_evaluation.get("operations", ()):
+        for level in operation.get("levels", ()):
+            if level.get("level") != "L2":
+                continue
+            for check in level.get("checks", ()):
+                if not str(check.get("check_id", "")).startswith(semantic_prefixes):
+                    continue
+                for evidence in check.get("evidence", ()):
+                    if evidence.get("source_kind") != "private_original":
+                        continue
+                    tokens.update(_private_canary_scalars(evidence.get("expected_value")))
+                    source_ref = str(evidence.get("source_ref", ""))
+                    if source_ref:
+                        tokens.add(source_ref)
+    return tuple(sorted(token for token in tokens if len(token.encode("utf-8")) >= 4))
+
+
+def _private_canary_scalars(value: Any) -> set[str]:
+    if isinstance(value, Mapping):
+        children = (
+            (
+                value.get("value"),
+                value.get("entity_source"),
+                value.get("pset_path"),
+            )
+            if "value" in value
+            else tuple(value.values())
+        )
+        tokens: set[str] = set()
+        for child in children:
+            tokens.update(_private_canary_scalars(child))
+        return tokens
+    if isinstance(value, (list, tuple)):
+        tokens = set()
+        for child in value:
+            tokens.update(_private_canary_scalars(child))
+        return tokens
+    if isinstance(value, str) and value:
+        return {value}
+    return set()

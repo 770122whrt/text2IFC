@@ -4,6 +4,7 @@ from pathlib import Path
 
 from text2ifc_agent.providers import ProviderOutput
 from text2ifc_ifc_repair.workflow import (
+    _failure_evaluation,
     run_live_window_repair_case,
     run_offline_window_repair_case,
 )
@@ -91,6 +92,30 @@ def test_fake_provider_e2e_writes_a_complete_publicly_bound_evidence_bundle(
     assert "未冒充" in report
 
 
+def test_pre_application_failure_uses_terminal_0_2_hierarchy() -> None:
+    result = _failure_evaluation(
+        case_id="failure-contract-001",
+        evidence_class="offline_fake",
+        failure_stage="provider",
+        issues=[{"code": "PROVIDER_INVALID", "path": "/provider"}],
+        operation_id="operation-failure-contract-001",
+        operation_type="add_window_with_opening_to_wall",
+        policy_id="window.add-with-opening.l2",
+        policy_version="0.1",
+    )
+
+    assert result["schema_version"] == "text2ifc/ifc-repair-evaluation-public/0.2"
+    assert result["status"] == "failed"
+    assert result["complete_repair_success"] is False
+    assert result["successful_artifact_publishable"] is False
+    assert result["application"]["status"] == "failed"
+    assert result["preservation"]["status"] == "not_evaluable"
+    levels = {level["level"]: level for level in result["operations"][0]["levels"]}
+    assert levels["L1"]["status"] == "not_evaluable"
+    assert levels["L2"]["status"] == "not_evaluable"
+    assert levels["L3"]["status"] == "not_required"
+
+
 class _InvalidLiveProvider:
     def generate_candidate(self, **kwargs) -> ProviderOutput:
         del kwargs
@@ -114,6 +139,9 @@ def test_live_uat_failure_is_preserved_as_failure_evidence(tmp_path: Path) -> No
     )
 
     assert result["complete_repair_success"] is False
+    assert result["schema_version"] == "text2ifc/ifc-repair-evaluation-public/0.2"
+    assert result["status"] == "failed"
+    assert result["successful_artifact_publishable"] is False
     assert result["evidence_class"] == "live_provider_uat"
     assert result["failure_stage"] == "provider"
     assert (output / "provider" / "raw-response.txt").is_file()

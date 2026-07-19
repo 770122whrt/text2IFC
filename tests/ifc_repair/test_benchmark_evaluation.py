@@ -22,6 +22,7 @@ from text2ifc_ifc_repair.evaluation_projection import (
     assert_public_bundle_has_no_canaries,
     project_public_evaluation,
 )
+from text2ifc_ifc_repair.workflow import _private_semantic_canaries
 
 
 PRIVATE_CANARIES = (
@@ -364,6 +365,22 @@ def test_whole_provider_and_public_bundle_canary_scan_fails_closed(tmp_path: Pat
     with pytest.raises(PrivateCanaryLeakError) as error:
         assert_public_bundle_has_no_canaries(leaking, PRIVATE_CANARIES)
     assert PRIVATE_CANARIES[3] not in str(error.value)
+
+
+def test_private_semantic_values_are_included_in_whole_bundle_canaries(
+    tmp_path: Path,
+) -> None:
+    private = _private_report()
+    canaries = _private_semantic_canaries(private)
+    public_path = tmp_path / "runtime-artifact.json"
+    public_path.write_text(
+        json.dumps({"material": PRIVATE_CANARIES[1]}),
+        encoding="utf-8",
+    )
+
+    assert PRIVATE_CANARIES[1] in canaries
+    with pytest.raises(PrivateCanaryLeakError):
+        assert_public_bundle_has_no_canaries((public_path,), canaries)
 
 
 @pytest.mark.parametrize("status", ["failed", "partial", "not_evaluable"])
