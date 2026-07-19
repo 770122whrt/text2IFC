@@ -154,6 +154,7 @@ def test_multi_operation_output_retains_provider_order(tmp_path: Path) -> None:
     second["operation_id"] = "intent-op-north"
     second["target_query"]["names"] = ["North wall"]
     response["operations"][0]["target_query"]["names"] = ["West wall"]
+    response["operations"].append(second)
     result = _run(tmp_path, SequentialProvider([response]), request_text)
     assert [item.operation_id for item in result["intent"].operations] == [
         "intent-op-west",
