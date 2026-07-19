@@ -7,17 +7,17 @@ See `.planning/PROJECT.md`.
 **Core value:** Given an IFC file and an explicit user request, produce a
 traceable semantic ChangeSet and an L1/L2-validated IFC result.
 
-**Current focus:** Phase 8 — L1/L2 Evaluation Contract.
+**Current focus:** Phase 9 — General IFC + Text Repair Orchestrator.
 
 ## Current Position
 
 - Milestone: v1.1 IFC ChangeSet Repair Pipeline
-- Phase: 8
-- Plan: 4 of 4 (08-04)
-- Status: Executing Phase 8 — benchmark privacy and LargeBuilding acceptance
-- Progress: 1 / 7 phases complete
-- Requirements: 17 pending, 5 complete, 22 mapped, 0 unmapped
-- Last activity: 2026-07-19 — Plan 08-03 completed (independent L1 tests passed)
+- Phase: 9
+- Plan: Not planned
+- Status: Phase 8 complete; ready to discuss/plan Phase 9
+- Progress: 2 / 7 phases complete
+- Requirements: 12 pending, 10 complete, 22 mapped, 0 unmapped
+- Last activity: 2026-07-20 — Phase 8 passed 11/11 goal verification and 12/12 threat audit
 
 ## Carried Context
 
@@ -34,6 +34,12 @@ traceable semantic ChangeSet and an L1/L2-validated IFC result.
 - Phase 7 indexes Wall, Door, Window, and contextual Space records in SQLite;
   structured retrieval and bounded context are Provider-independent.
 - Vector retrieval remains disabled behind an extension interface.
+- Phase 8 defines Evaluation 0.2 with mandatory independent L1/L2 gates,
+  evaluator-only benchmark Gold, public allowlist projection, and a fail-closed
+  legacy Evaluation 0.1 boundary.
+- Frozen LargeBuilding offline evidence is intentionally L1 `passed`, L2
+  `failed`, L3 `not_required`, non-publishable, and zero-Provider; Window L2
+  authoring closure remains Phase 10 work.
 
 ## Accepted Debt / Deferred
 
@@ -43,7 +49,9 @@ traceable semantic ChangeSet and an L1/L2-validated IFC result.
 
 ## Next Action
 
-Execute plan `08-04` for private/public benchmark projection and acceptance.
+Discuss and plan Phase 9: one supported IFC + natural-language request entrypoint
+that produces a bound ChangeSet, deterministic IFC application, Evaluation 0.2
+evidence, and an honest terminal publication status.
 
 ---
-*Last updated: 2026-07-19 after completing Phase 8 plan 08-03*
+*Last updated: 2026-07-20 after completing Phase 8*

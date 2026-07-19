@@ -17,7 +17,8 @@ ChangeSet and an L1/L2-validated IFC result without model-authored STEP text.
 
 **v1.0 Supported Text2IFC Baseline shipped on 2026-07-16.**
 
-**v1.1 IFC ChangeSet Repair Pipeline is now being planned.**
+**v1.1 IFC ChangeSet Repair Pipeline is in implementation; Phases 7 and 8 are
+complete.**
 
 The shipped supported-scope chain is:
 
@@ -63,6 +64,13 @@ semantic ChangeSet, a repaired/modified IFC, and auditable evidence.
   and multi-storey generation within the supported profile.
 - Real-provider Easy/Medium/Difficult Text -> BIM JSON -> IFC2X3 cases with
   machine and human acceptance at 3/3.
+- Deterministic IFC2X3 retrieval index and explainable target resolution for
+  Wall, Door, Window and contextual Space records.
+- Evaluation 0.2 with independent mandatory L1/L2 gates, conditional
+  Material/Pset semantics, evaluator-only benchmark Gold, and privacy-safe
+  public evidence projection.
+- LargeBuilding offline acceptance with honest L1-pass/L2-fail diagnostic
+  retention and zero Provider calls.
 
 ## Accepted Boundaries
 
@@ -122,4 +130,4 @@ review of scope, evidence and deferred L3 exactness.
 - [milestone register](MILESTONES.md)
 
 ---
-*Last updated: 2026-07-18 after opening the proposed v1.1 repair milestone*
+*Last updated: 2026-07-20 after Phase 8 completion*

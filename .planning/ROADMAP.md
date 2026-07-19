@@ -7,7 +7,7 @@
   [requirements](milestones/v1.0-REQUIREMENTS.md), and
   [audit](milestones/v1.0-MILESTONE-AUDIT.md).
 - [ ] **v1.1 IFC ChangeSet Repair Pipeline** - Phases 7 through 13, in progress
-  (1 / 7 phases complete).
+  (2 / 7 phases complete).
 
 ## Current Cycle: v1.1 IFC ChangeSet Repair Pipeline
 
@@ -40,6 +40,8 @@ deterministic, explainable evidence rather than relying on `Name` alone.
 
 ### Phase 8: L1/L2 Evaluation Contract
 
+**Status:** Complete — 2026-07-20
+
 **Goal:** Make repair success mean both physical correctness and required BIM
 semantic fidelity, while explicitly deferring L3 exactness.
 
@@ -57,6 +59,8 @@ semantic fidelity, while explicitly deferring L3 exactness.
 4. Benchmark ground truth is private evaluator-only; production evaluation can
    use request, surviving model facts and prototypes without gold leakage.
 5. L3 remains documented and `not_required` for v1.1.
+
+**Evidence:** [Phase 8 validation report](../docs/validation/ifc2x3-changeset/phase8-validation-report.md), [goal verification](phases/08-l1-l2-evaluation-contract/08-VERIFICATION.md), and [security audit](phases/08-l1-l2-evaluation-contract/08-SECURITY.md)
 
 ### Phase 9: General IFC + Text Repair Orchestrator
 

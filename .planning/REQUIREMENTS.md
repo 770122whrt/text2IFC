@@ -33,15 +33,15 @@ semantic ChangeSet and an L1/L2-validated IFC result.
 
 ### Validation
 
-- [ ] **VAL-01**: Every repair report exposes mandatory L1 geometry/
+- [x] **VAL-01**: Every repair report exposes mandatory L1 geometry/
   relationship status with structured evidence.
-- [ ] **VAL-02**: Every supported operation defines a mandatory L2 semantic-
+- [x] **VAL-02**: Every supported operation defines a mandatory L2 semantic-
   fidelity allowlist with structured matched/mismatched/unavailable facts.
-- [ ] **VAL-03**: Evaluation statuses support `passed`, `failed`, `partial`,
+- [x] **VAL-03**: Evaluation statuses support `passed`, `failed`, `partial`,
   `not_required` and `not_evaluable` rather than forcing unknown facts to pass.
-- [ ] **VAL-04**: Synthetic benchmark runs compare repaired IFC with private
+- [x] **VAL-04**: Synthetic benchmark runs compare repaired IFC with private
   original ground truth without exposing that ground truth to the Provider.
-- [ ] **VAL-05**: Production runs evaluate L2 from request, surviving IFC facts
+- [x] **VAL-05**: Production runs evaluate L2 from request, surviving IFC facts
   and approved prototypes and disclose facts that cannot be evaluated.
 
 ### Window Fidelity
@@ -96,11 +96,11 @@ semantic ChangeSet and an L1/L2-validated IFC result.
 | TGT-03 | 7 | Complete |
 | TGT-04 | 7 | Complete |
 | TGT-05 | 7 | Complete |
-| VAL-01 | 8 | Pending |
-| VAL-02 | 8 | Pending |
-| VAL-03 | 8 | Pending |
-| VAL-04 | 8 | Pending |
-| VAL-05 | 8 | Pending |
+| VAL-01 | 8 | Complete |
+| VAL-02 | 8 | Complete |
+| VAL-03 | 8 | Complete |
+| VAL-04 | 8 | Complete |
+| VAL-05 | 8 | Complete |
 | PIPE-01 | 9 | Pending |
 | PIPE-02 | 9 | Pending |
 | PIPE-03 | 9 | Pending |
@@ -117,4 +117,4 @@ semantic ChangeSet and an L1/L2-validated IFC result.
 **Coverage:** 22 requirements, 22 mapped, 0 unmapped.
 
 ---
-*Last updated: 2026-07-18 after v1.1 roadmap creation*
+*Last updated: 2026-07-20 after Phase 8 completion*

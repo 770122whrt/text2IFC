@@ -81,5 +81,5 @@ These are forward-looking hardening opportunities, not open Phase 8 threats:
 
 ---
 
-_Audited: 2026-07-20_  
+_Audited: 2026-07-20_
 _Auditor: Codex (GSD secure-phase workflow)_
