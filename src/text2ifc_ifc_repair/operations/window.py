@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import copy
 import json
 import math
 import uuid
@@ -615,6 +616,28 @@ def _comparison_adapter(
     application: Mapping[str, Any],
     **kwargs: Any,
 ) -> dict[str, Any]:
+    """Return structured non-evaluable evidence when IFC geometry cannot measure."""
+
+    try:
+        return _measure_comparison_adapter(
+            operation=operation,
+            before_model=before_model,
+            after_model=after_model,
+            application=application,
+            **kwargs,
+        )
+    except Exception as error:
+        return _unmeasurable_l1_result(error)
+
+
+def _measure_comparison_adapter(
+    *,
+    operation: Mapping[str, Any],
+    before_model: Any,
+    after_model: Any,
+    application: Mapping[str, Any],
+    **kwargs: Any,
+) -> dict[str, Any]:
     """Measure repair geometry independently from the authoring path."""
 
     del kwargs
@@ -633,28 +656,7 @@ def _comparison_adapter(
             after_model, created["window"]["global_id"], "IfcWindow"
         )
     except (KeyError, OperationRegistryError) as error:
-        return {
-            "valid": False,
-            "checks": {"created_chain_resolved": False},
-            "metrics": {},
-            "authorization": WINDOW_L1_AUTHORIZATION,
-            "l1_checks": {
-                check_id: {
-                    "status": "not_evaluable",
-                    "reason": "The generated Window chain could not be resolved.",
-                    "expected": "measurable generated role",
-                    "actual": str(error),
-                }
-                for check_id in _WINDOW_L1_MEASUREMENT_CHECK_IDS
-            },
-            "issues": [
-                {
-                    "code": "CREATED_CHAIN_NOT_FOUND",
-                    "path": "/application/created",
-                    "message": str(error),
-                }
-            ],
-        }
+        return _unmeasurable_l1_result(error)
 
     parameters = operation["parameters"]
     expected_opening = parameters["opening"]
@@ -764,12 +766,12 @@ def _comparison_adapter(
         "checks": checks,
         "metrics": metrics,
         "issues": issues,
-        "authorization": WINDOW_L1_AUTHORIZATION,
+        "authorization": copy.deepcopy(WINDOW_L1_AUTHORIZATION),
         "l1_checks": l1_checks,
     }
 
 
-_WINDOW_L1_MEASUREMENT_CHECK_IDS = (
+WINDOW_L1_CHECK_IDS = (
     "l1.window.containment",
     "l1.window.dimensions",
     "l1.window.duplicate-chain",
@@ -780,6 +782,32 @@ _WINDOW_L1_MEASUREMENT_CHECK_IDS = (
     "l1.window.tolerances",
     "l1.window.volume-preservation",
 )
+
+
+def _unmeasurable_l1_result(error: Exception) -> dict[str, Any]:
+    detail = f"{type(error).__name__}: {error}"
+    return {
+        "valid": False,
+        "checks": {"created_chain_resolved": False},
+        "metrics": {},
+        "authorization": copy.deepcopy(WINDOW_L1_AUTHORIZATION),
+        "l1_checks": {
+            check_id: {
+                "status": "not_evaluable",
+                "reason": "Mandatory Window geometry or topology could not be measured.",
+                "expected": "measurable reopened IFC evidence",
+                "actual": detail,
+            }
+            for check_id in WINDOW_L1_CHECK_IDS
+        },
+        "issues": [
+            {
+                "code": "WINDOW_L1_NOT_EVALUABLE",
+                "path": "/evaluation/L1",
+                "message": detail,
+            }
+        ],
+    }
 
 
 def _window_l1_checks(

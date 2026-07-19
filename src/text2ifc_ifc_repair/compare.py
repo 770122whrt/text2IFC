@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
-import json
 import hashlib
+import json
 from collections.abc import Iterable, Mapping
 from pathlib import Path
 from typing import Any
@@ -25,7 +25,7 @@ def evaluate_repair_application(
     application_result: Mapping[str, Any],
     registry: OperationRegistry,
 ) -> dict[str, Any]:
-    """Independently evaluate a published repair and its preservation scope."""
+    """Retain the 0.1 dictionary surface while gating it with independent L1."""
 
     from .evaluation import evaluate_independent_l1
     from .evaluation_models import EvaluationStatus
@@ -95,18 +95,24 @@ def evaluate_repair_application(
         },
         "common": common,
         "operations": operation_evaluations,
-        "l1": {
-            "status": l1_result.status.value,
-            "reason": l1_result.reason,
-            "checks": [
-                {
-                    "check_id": check.check_id,
-                    "status": check.status.value,
-                    "reason": check.reason,
-                }
-                for check in l1_result.checks
-            ],
-        },
+        "l1": _l1_compatibility_projection(l1_result),
+    }
+
+
+def _l1_compatibility_projection(level: Any) -> dict[str, Any]:
+    """Project Evaluation 0.2 checks without changing legacy comparator fields."""
+
+    return {
+        "status": level.status.value,
+        "reason": level.reason,
+        "checks": [
+            {
+                "check_id": check.check_id,
+                "status": check.status.value,
+                "reason": check.reason,
+            }
+            for check in level.checks
+        ],
     }
 
 

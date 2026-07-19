@@ -40,6 +40,17 @@ _STATUS_PRECEDENCE = {
 }
 
 _COMMON_L1_POLICY_ID = "l1.common"
+_L1_EVIDENCE_VALUE_MAX_BYTES = 4096
+COMMON_L1_CHECK_IDS = (
+    "l1.output.readable",
+    "l1.output.schema",
+    "l1.source.immutable",
+    "l1.scope.created-roots",
+    "l1.scope.modified-roots",
+    "l1.scope.removed-roots",
+    "l1.scope.relations",
+)
+_SCOPE_L1_CHECK_IDS = COMMON_L1_CHECK_IDS[3:]
 
 
 def evaluate_independent_l1(
@@ -241,16 +252,16 @@ def _scope_checks(
             )
 
     root_groups = {
-        "l1.scope.created-roots": [
+        _SCOPE_L1_CHECK_IDS[0]: [
             item for item in actual_changes["created"] if not item["is_relationship"]
         ],
-        "l1.scope.modified-roots": [
+        _SCOPE_L1_CHECK_IDS[1]: [
             item for item in actual_changes["modified"] if not item["is_relationship"]
         ],
-        "l1.scope.removed-roots": [
+        _SCOPE_L1_CHECK_IDS[2]: [
             item for item in actual_changes["removed"] if not item["is_relationship"]
         ],
-        "l1.scope.relations": [
+        _SCOPE_L1_CHECK_IDS[3]: [
             item
             for kind in ("created", "modified", "removed")
             for item in actual_changes[kind]
@@ -266,11 +277,9 @@ def _scope_checks(
             if not decisions[(fact["change_kind"], fact["global_id"])][0]
         ]
         checks.append(
-            CheckResult(
+            _required_check(
                 check_id=check_id,
                 policy_id=_COMMON_L1_POLICY_ID,
-                applicability="required",
-                mandatory=True,
                 status=(
                     EvaluationStatus.FAILED
                     if unauthorized
@@ -398,13 +407,54 @@ def _actual_change_evidence(
             source_ref=f"ifc-guid:{fact['global_id']}",
             expected="policy-and-scope-authorized effect",
             actual={
-                **fact,
+                **_compact_actual_change(fact),
                 "authorized": decisions[(fact["change_kind"], fact["global_id"])][0],
                 "authorization_reason": decisions[(fact["change_kind"], fact["global_id"])][1],
             },
         )
         for index, fact in enumerate(facts)
     )
+
+
+def _compact_actual_change(fact: Mapping[str, Any]) -> dict[str, Any]:
+    return {
+        "change_kind": fact["change_kind"],
+        "global_id": fact["global_id"],
+        "ifc_class": fact["ifc_class"],
+        "is_relationship": fact["is_relationship"],
+        "before": _compact_snapshot(fact.get("before")),
+        "after": _compact_snapshot(fact.get("after")),
+    }
+
+
+def _compact_snapshot(snapshot: Any) -> dict[str, Any] | None:
+    if snapshot is None:
+        return None
+    canonical = json.dumps(
+        snapshot,
+        ensure_ascii=False,
+        sort_keys=True,
+        separators=(",", ":"),
+        allow_nan=False,
+    ).encode("utf-8")
+    attributes = snapshot.get("attributes", {})
+    attribute_bytes = json.dumps(
+        attributes,
+        ensure_ascii=False,
+        sort_keys=True,
+        separators=(",", ":"),
+        allow_nan=False,
+    ).encode("utf-8")
+    return {
+        "ifc_class": snapshot.get("ifc_class"),
+        "name": snapshot.get("name"),
+        "placement": snapshot.get("placement"),
+        "containers": snapshot.get("containers"),
+        "types": snapshot.get("types"),
+        "geometry": snapshot.get("geometry"),
+        "attribute_sha256": "sha256:" + hashlib.sha256(attribute_bytes).hexdigest(),
+        "snapshot_sha256": "sha256:" + hashlib.sha256(canonical).hexdigest(),
+    }
 
 
 def _operation_measurement_checks(context: Mapping[str, Any]) -> list[CheckResult]:
@@ -439,11 +489,9 @@ def _l1_check(
     source_kind: str,
     source_ref: str,
 ) -> CheckResult:
-    return CheckResult(
+    return _required_check(
         check_id=check_id,
         policy_id=policy_id,
-        applicability="required",
-        mandatory=True,
         status=status,
         reason=reason,
         evidence=(
@@ -458,6 +506,25 @@ def _l1_check(
     )
 
 
+def _required_check(
+    *,
+    check_id: str,
+    policy_id: str,
+    status: EvaluationStatus,
+    reason: str,
+    evidence: tuple[EvidenceFact, ...],
+) -> CheckResult:
+    return CheckResult(
+        check_id=check_id,
+        policy_id=policy_id,
+        applicability="required",
+        mandatory=True,
+        status=status,
+        reason=reason,
+        evidence=evidence,
+    )
+
+
 def _evidence(
     *,
     fact_id: str,
@@ -466,6 +533,20 @@ def _evidence(
     expected: Any,
     actual: Any,
 ) -> EvidenceFact:
+    evidence_size = len(
+        json.dumps(
+            {"expected": expected, "actual": actual},
+            ensure_ascii=False,
+            sort_keys=True,
+            separators=(",", ":"),
+            allow_nan=False,
+        ).encode("utf-8")
+    )
+    if evidence_size > _L1_EVIDENCE_VALUE_MAX_BYTES:
+        raise EvaluationContractError(
+            "invalid_schema",
+            f"L1 evidence {fact_id} exceeds {_L1_EVIDENCE_VALUE_MAX_BYTES} bytes",
+        )
     return EvidenceFact(
         fact_id=fact_id,
         source_kind=source_kind,
@@ -480,6 +561,8 @@ def _evidence(
 
 def _l1_level(checks: Iterable[CheckResult], *, readable: bool) -> LevelResult:
     ordered = tuple(sorted(checks, key=lambda item: item.check_id))
+    if len({check.check_id for check in ordered}) != len(ordered):
+        raise EvaluationContractError("invalid_schema", "duplicate L1 check identifier")
     return aggregate_level(
         level="L1",
         checks=ordered,
@@ -842,11 +925,13 @@ def _json_safe_copy(value: Any) -> Any:
 
 
 __all__ = [
+    "COMMON_L1_CHECK_IDS",
     "aggregate_level",
     "aggregate_operation",
     "aggregate_repair",
     "aggregate_status",
     "evaluation_from_dict",
+    "evaluate_independent_l1",
     "evaluation_to_dict",
     "evaluation_to_json",
     "make_l3_not_required",

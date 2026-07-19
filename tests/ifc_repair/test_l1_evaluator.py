@@ -33,6 +33,24 @@ SOURCE = (
 WALL_ID = "1F6umJ5H50aeL3A1As_wTm"
 OTHER_WALL_ID = "0AAAAAAAAAAAAAAAAAAAAA"
 PSET_ID = "0BBBBBBBBBBBBBBBBBBBBB"
+EXPECTED_L1_CHECK_IDS = {
+    "l1.output.readable",
+    "l1.output.schema",
+    "l1.source.immutable",
+    "l1.scope.created-roots",
+    "l1.scope.modified-roots",
+    "l1.scope.removed-roots",
+    "l1.scope.relations",
+    "l1.window.containment",
+    "l1.window.dimensions",
+    "l1.window.duplicate-chain",
+    "l1.window.filling-topology",
+    "l1.window.geometry-fit",
+    "l1.window.host-topology",
+    "l1.window.placement",
+    "l1.window.tolerances",
+    "l1.window.volume-preservation",
+}
 
 
 def _sha256(path: Path) -> str:
@@ -206,24 +224,20 @@ def test_valid_window_l1_passes_from_reopened_ifc_and_preserves_source(l1_case) 
     assert [check.check_id for check in result.checks] == sorted(
         check.check_id for check in result.checks
     )
-    for check_id in (
-        "l1.output.readable",
-        "l1.output.schema",
-        "l1.source.immutable",
-        "l1.scope.created-roots",
-        "l1.scope.modified-roots",
-        "l1.scope.removed-roots",
-        "l1.scope.relations",
-        "l1.window.dimensions",
-        "l1.window.placement",
-        "l1.window.geometry-fit",
-        "l1.window.host-topology",
-        "l1.window.filling-topology",
-        "l1.window.containment",
-        "l1.window.duplicate-chain",
-        "l1.window.tolerances",
-    ):
+    assert {check.check_id for check in result.checks} == EXPECTED_L1_CHECK_IDS
+    for check_id in EXPECTED_L1_CHECK_IDS:
         assert _check(result, check_id).status is EvaluationStatus.PASSED
+    scope_evidence = [
+        fact.actual_value
+        for check in result.checks
+        if check.check_id.startswith("l1.scope.")
+        for fact in check.evidence
+    ]
+    canonical_scope_evidence = json.dumps(
+        scope_evidence, ensure_ascii=False, sort_keys=True, separators=(",", ":")
+    )
+    assert len(canonical_scope_evidence.encode("utf-8")) < 8192
+    assert '"attributes":' not in canonical_scope_evidence
 
 
 def test_applicator_self_report_cannot_authorize_collateral_wall_drift(
@@ -391,6 +405,23 @@ def test_out_of_tolerance_window_measurements_are_not_silently_passed(
     result = _evaluate(damaged, output, changeset, application)
     _assert_failed(result, check_id)
     _assert_failed(result, "l1.window.tolerances")
+
+
+def test_unmeasurable_mandatory_geometry_is_not_evaluable(
+    l1_case, tmp_path: Path
+) -> None:
+    damaged, repaired, changeset, application, _ = l1_case
+    ids = _created(application)
+    output = _write_mutation(
+        repaired,
+        tmp_path / "unmeasurable-geometry.ifc",
+        lambda model: setattr(model.by_guid(ids["opening"]), "Representation", None),
+    )
+
+    result = _evaluate(damaged, output, changeset, application)
+
+    assert _check(result, "l1.window.dimensions").status is EvaluationStatus.NOT_EVALUABLE
+    assert result.status is EvaluationStatus.NOT_EVALUABLE
 
 
 def test_unreadable_output_is_not_evaluable_and_non_passing(
