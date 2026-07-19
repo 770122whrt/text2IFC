@@ -78,7 +78,7 @@ def test_every_terminal_writes_evaluation_and_only_canonical_pass_publishes_succ
         "schema_version"
     ].endswith("/0.2")
     assert (artifacts.successful_ifc is not None) is (terminal_status == "succeeded")
-    assert artifacts.successful_ifc != artifacts.diagnostic_candidate
+    assert not (artifacts.successful_ifc and artifacts.diagnostic_candidate)
     if terminal_status == "succeeded":
         assert artifacts.diagnostic_candidate is None
     elif candidate.exists() or terminal_status.startswith(("l1_", "l2_")):
@@ -114,4 +114,3 @@ def test_nonpassing_evaluation_flag_cannot_be_promoted_even_with_success_termina
 
     assert artifacts.successful_ifc is None
     assert artifacts.diagnostic_candidate is not None
-

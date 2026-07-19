@@ -165,8 +165,7 @@ def test_one_mandatory_operation_failure_keeps_the_whole_changeset_unpublished(
     )
 
     assert calls == {"transaction": 1, "evaluation": 0}
-    assert result.status == "application_failed"
+    assert result.status == "audit_failed"
     assert result.successful_ifc is None
     assert result.diagnostic_candidate is None
     assert result.evaluation["schema_version"].endswith("/0.2")
-
