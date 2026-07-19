@@ -124,7 +124,14 @@ def _intent(*, operation_id: str = "operation-1", request_value: object = "reque
         ),
         prototype_intent=None,
         provenance=(_provenance(),),
-        _target_query_document=MappingProxyType(query.to_dict()),
+        _target_query_document=MappingProxyType(
+            {
+                "schema_version": query.schema_version,
+                "allowed_ifc_classes": list(query.allowed_ifc_classes),
+                "global_id": query.global_id,
+                "host_global_id": query.host_global_id,
+            }
+        ),
     )
     return RepairIntent(
         request_id="request-1",
