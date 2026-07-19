@@ -295,6 +295,94 @@ def test_not_required_is_allowed_only_for_a_non_mandatory_policy_check() -> None
 
 
 @pytest.mark.parametrize(
+    ("applicability", "mandatory", "status"),
+    [
+        ("required", False, "failed"),
+        ("informational", True, "passed"),
+        ("conditional", False, "failed"),
+        ("conditional", True, "not_required"),
+    ],
+)
+def test_check_applicability_controls_mandatory_state(
+    applicability: str,
+    mandatory: bool,
+    status: str,
+) -> None:
+    api = _api()
+
+    with pytest.raises(api.models.EvaluationContractError) as error:
+        api.models.CheckResult(
+            check_id="l2.window.fixture",
+            policy_id="ifc-repair.window/0.2",
+            applicability=applicability,
+            mandatory=mandatory,
+            status=api.models.EvaluationStatus(status),
+            reason="invalid applicability/mandatory fixture",
+            evidence=(_evidence(api),),
+        )
+
+    assert error.value.code == "invalid_status_transition"
+
+
+@pytest.mark.parametrize(
+    "gate_name",
+    ["application", "preservation"],
+)
+def test_repair_aggregation_rejects_non_mandatory_run_gates(gate_name: str) -> None:
+    api = _api()
+    gate = _check(api, "passed", mandatory=False, check_id=f"{gate_name}.valid")
+    kwargs = {
+        "policy_version": "ifc-repair-aggregation/0.2",
+        "application": _check(api, "passed", check_id="application.valid"),
+        "preservation": _check(api, "passed", check_id="preservation.valid"),
+        "operations": (_operation(api),),
+        "reason": "repair fixture aggregate",
+        "evidence": (_evidence(api, "fact.run"),),
+        "diagnostic_artifact_retained": False,
+    }
+    kwargs[gate_name] = gate
+
+    with pytest.raises(api.models.EvaluationContractError) as error:
+        api.evaluation.aggregate_repair(**kwargs)
+
+    assert error.value.code == "invalid_status_transition"
+
+
+def test_schema_rejects_failed_required_check_marked_non_mandatory() -> None:
+    api = _api()
+    report = api.evaluation.evaluation_to_dict(_repair(api, application_status="failed"))
+    report["application"]["mandatory"] = False
+    report["status"] = "passed"
+    report["complete_repair_success"] = True
+    report["successful_artifact_publishable"] = True
+
+    with pytest.raises(api.models.EvaluationContractError) as error:
+        api.evaluation.validate_evaluation_report(report)
+
+    assert error.value.code == "invalid_status_transition"
+
+
+def test_nested_evidence_is_deeply_immutable_and_detached_from_input() -> None:
+    api = _api()
+    expected = {"outer": {"items": [1, {"value": "before"}]}}
+    evidence = api.models.EvidenceFact(
+        fact_id="fact.window.nested",
+        source_kind="independent_measurement",
+        source_ref="repaired.ifc#window",
+        expected_state="available",
+        actual_state="available",
+        expected_value=expected,
+        actual_value={"ok": True},
+        provenance=("sha256:repaired",),
+    )
+    expected["outer"]["items"][1]["value"] = "after"
+
+    assert evidence.expected_value["outer"]["items"][1]["value"] == "before"
+    with pytest.raises(TypeError):
+        evidence.expected_value["outer"]["items"][1]["value"] = "mutated"
+
+
+@pytest.mark.parametrize(
     ("statuses", "expected"),
     STATUS_TRUTH_TABLE,
 )

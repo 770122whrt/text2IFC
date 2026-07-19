@@ -4,7 +4,9 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from enum import Enum
+import json
 import re
+from types import MappingProxyType
 from typing import Any, Mapping
 
 
@@ -58,6 +60,36 @@ def _require_evidence(evidence: tuple[EvidenceFact, ...]) -> None:
         )
 
 
+def _deep_freeze_json(value: Any) -> Any:
+    """Detach JSON evidence and make every nested container immutable."""
+
+    def thaw(item: Any) -> Any:
+        if isinstance(item, Mapping):
+            return {str(key): thaw(child) for key, child in item.items()}
+        if isinstance(item, (list, tuple)):
+            return [thaw(child) for child in item]
+        return item
+
+    detached = json.loads(
+        json.dumps(
+            thaw(value),
+            ensure_ascii=False,
+            sort_keys=True,
+            separators=(",", ":"),
+            allow_nan=False,
+        )
+    )
+
+    def freeze(item: Any) -> Any:
+        if isinstance(item, dict):
+            return MappingProxyType({key: freeze(child) for key, child in item.items()})
+        if isinstance(item, list):
+            return tuple(freeze(child) for child in item)
+        return item
+
+    return freeze(detached)
+
+
 @dataclass(frozen=True)
 class EvidenceFact:
     fact_id: str
@@ -87,6 +119,13 @@ class EvidenceFact:
             raise EvaluationContractError(
                 "missing_evidence", "evidence provenance must be non-empty"
             )
+        try:
+            object.__setattr__(self, "expected_value", _deep_freeze_json(self.expected_value))
+            object.__setattr__(self, "actual_value", _deep_freeze_json(self.actual_value))
+        except (TypeError, ValueError) as error:
+            raise EvaluationContractError(
+                "invalid_schema", "evidence values must be canonical JSON"
+            ) from error
 
 
 @dataclass(frozen=True)
@@ -113,10 +152,20 @@ class CheckResult:
             raise EvaluationContractError(
                 "invalid_schema", f"invalid applicability: {self.applicability}"
             )
-        if self.mandatory and self.status is EvaluationStatus.NOT_REQUIRED:
+        invalid_mandatory = (
+            (self.mandatory and self.status is EvaluationStatus.NOT_REQUIRED)
+            or
+            (self.applicability == "required" and not self.mandatory)
+            or (self.applicability == "informational" and self.mandatory)
+            or (
+                self.applicability == "conditional"
+                and self.mandatory != (self.status is not EvaluationStatus.NOT_REQUIRED)
+            )
+        )
+        if invalid_mandatory:
             raise EvaluationContractError(
                 "invalid_status_transition",
-                "a mandatory check cannot be not_required",
+                "check mandatory state does not match applicability and status",
             )
 
 

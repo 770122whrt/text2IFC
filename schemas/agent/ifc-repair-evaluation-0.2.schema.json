@@ -80,6 +80,34 @@
     "check": {
       "type": "object",
       "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {"properties": {"applicability": {"const": "required"}}},
+          "then": {"properties": {"mandatory": {"const": true}}}
+        },
+        {
+          "if": {"properties": {"applicability": {"const": "informational"}}},
+          "then": {"properties": {"mandatory": {"const": false}}}
+        },
+        {
+          "if": {
+            "properties": {
+              "applicability": {"const": "conditional"},
+              "status": {"const": "not_required"}
+            },
+            "required": ["applicability", "status"]
+          },
+          "then": {"properties": {"mandatory": {"const": false}}}
+        },
+        {
+          "if": {
+            "properties": {"applicability": {"const": "conditional"}},
+            "required": ["applicability"],
+            "not": {"properties": {"status": {"const": "not_required"}}}
+          },
+          "then": {"properties": {"mandatory": {"const": true}}}
+        }
+      ],
       "required": [
         "check_id",
         "policy_id",

@@ -670,6 +670,12 @@ def aggregate_repair(
     evidence: Iterable[EvidenceFact],
     diagnostic_artifact_retained: bool,
 ) -> RepairEvaluation:
+    for gate_name, gate in (("application", application), ("preservation", preservation)):
+        if not gate.mandatory or gate.applicability != "required":
+            raise EvaluationContractError(
+                "invalid_status_transition",
+                f"{gate_name} must be a mandatory required check",
+            )
     frozen_operations = tuple(operations)
     status = aggregate_status((application, preservation, *frozen_operations))
     complete = status is EvaluationStatus.PASSED
@@ -741,6 +747,7 @@ def validate_evaluation_report(
     value: Mapping[str, Any], *, semantic: bool = True
 ) -> None:
     payload = dict(value)
+    _validate_mandatory_invariants(payload)
     if _contains_empty_evidence(payload):
         raise EvaluationContractError(
             "missing_evidence", "report contains an empty evidence collection"
@@ -790,6 +797,46 @@ def _contains_empty_evidence(value: Any) -> bool:
     if isinstance(value, list):
         return any(_contains_empty_evidence(child) for child in value)
     return False
+
+
+def _validate_mandatory_invariants(payload: Mapping[str, Any]) -> None:
+    gates = (payload.get("application"), payload.get("preservation"))
+    for gate in gates:
+        if isinstance(gate, Mapping) and (
+            gate.get("applicability") != "required" or gate.get("mandatory") is not True
+        ):
+            raise EvaluationContractError(
+                "invalid_status_transition",
+                "application and preservation must be mandatory required checks",
+            )
+    checks = [gate for gate in gates if isinstance(gate, Mapping)]
+    for operation in payload.get("operations", ()):
+        if not isinstance(operation, Mapping):
+            continue
+        for level in operation.get("levels", ()):
+            if isinstance(level, Mapping):
+                checks.extend(
+                    check
+                    for check in level.get("checks", ())
+                    if isinstance(check, Mapping)
+                )
+    for check in checks:
+        applicability = check.get("applicability")
+        mandatory = check.get("mandatory")
+        status = check.get("status")
+        valid = (
+            (applicability == "required" and mandatory is True)
+            or (applicability == "informational" and mandatory is False)
+            or (
+                applicability == "conditional"
+                and mandatory is (status != EvaluationStatus.NOT_REQUIRED.value)
+            )
+        )
+        if not valid:
+            raise EvaluationContractError(
+                "invalid_status_transition",
+                "check mandatory state does not match applicability and status",
+            )
 
 
 def _evidence_to_dict(value: EvidenceFact) -> dict[str, Any]:
@@ -913,15 +960,11 @@ def _require_aggregate_match(
 def _json_safe_copy(value: Any) -> Any:
     """Detach arbitrary evidence values while retaining canonical JSON types."""
 
-    return json.loads(
-        json.dumps(
-            value,
-            ensure_ascii=False,
-            sort_keys=True,
-            separators=(",", ":"),
-            allow_nan=False,
-        )
-    )
+    if isinstance(value, Mapping):
+        return {str(key): _json_safe_copy(child) for key, child in value.items()}
+    if isinstance(value, tuple):
+        return [_json_safe_copy(child) for child in value]
+    return value
 
 
 __all__ = [
