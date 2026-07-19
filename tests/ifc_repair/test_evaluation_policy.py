@@ -128,30 +128,18 @@ def test_policy_records_are_immutable_and_versioned() -> None:
         policy.version = "0.2"  # type: ignore[misc]
 
 
-@pytest.mark.parametrize(
-    ("facts", "code"),
-    [
-        (
-            (_spec(), _spec(fact_pattern="instance:Other")),
-            "DUPLICATE_EVALUATION_CHECK_ID",
-        ),
-        (
-            (
-                SemanticFactSpec(
-                    **{**_spec().__dict__, "version": "latest"},
-                ),
-            ),
-            "INVALID_EVALUATION_CHECK_VERSION",
-        ),
-    ],
-)
-def test_policy_rejects_duplicate_check_ids_and_invalid_check_versions(
-    facts: tuple[SemanticFactSpec, ...], code: str
-) -> None:
+def test_policy_rejects_duplicate_check_ids() -> None:
     with pytest.raises(PolicyContractError) as caught:
-        _policy(facts=facts)
+        _policy(facts=(_spec(), _spec(fact_pattern="instance:Other")))
 
-    assert caught.value.code == code
+    assert caught.value.code == "DUPLICATE_EVALUATION_CHECK_ID"
+
+
+def test_policy_rejects_invalid_check_version() -> None:
+    with pytest.raises(PolicyContractError) as caught:
+        SemanticFactSpec(**{**_spec().__dict__, "version": "latest"})
+
+    assert caught.value.code == "INVALID_EVALUATION_CHECK_VERSION"
 
 
 def test_policy_rejects_invalid_policy_version_with_stable_code() -> None:
