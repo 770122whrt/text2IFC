@@ -198,22 +198,20 @@ def _operation_l1_contexts(
     for operation in changeset.get("operations", ()):
         application = applications.get(str(operation.get("operation_id")), {})
         changes = application.get("changes", {})
+        role_ids, id_roles, role_entries = _application_role_bindings(changes)
         report = registry.dispatch(
             "comparison_adapter",
             operation,
             before_model=before_model,
             after_model=after_model,
             application=changes,
+            role_mapping=role_ids,
         )
-        role_ids: dict[str, str] = {}
-        id_roles: dict[str, list[str]] = {}
-        for change_kind in ("created", "modified", "removed"):
-            for item in changes.get(change_kind, ()):
-                role = str(item.get("role", ""))
-                global_id = str(item.get("global_id", ""))
-                if role and global_id:
-                    role_ids[role] = global_id
-                    id_roles.setdefault(global_id, []).append(role)
+        binding_errors = _application_role_binding_errors(
+            role_entries=role_entries,
+            id_roles=id_roles,
+            authorization=report.get("authorization", {}),
+        )
         target_ids = {
             str(value)
             for key, value in operation.get("target", {}).items()
@@ -226,10 +224,68 @@ def _operation_l1_contexts(
                 "authorization": report.get("authorization", {}),
                 "role_ids": role_ids,
                 "id_roles": id_roles,
+                "binding_errors": binding_errors,
                 "target_ids": target_ids,
             }
         )
     return contexts
+
+
+def _application_role_bindings(
+    changes: Mapping[str, Any],
+) -> tuple[dict[str, str], dict[str, list[str]], dict[tuple[str, str], list[str]]]:
+    role_entries: dict[tuple[str, str], list[str]] = {}
+    id_roles: dict[str, list[str]] = {}
+    for change_kind in ("created", "modified", "removed"):
+        for item in changes.get(change_kind, ()):
+            role = str(item.get("role", ""))
+            global_id = str(item.get("global_id", ""))
+            if role and global_id:
+                role_entries.setdefault((change_kind, role), []).append(global_id)
+                id_roles.setdefault(global_id, []).append(role)
+    identifiers_by_role: dict[str, list[str]] = {}
+    for (_, role), identifiers in role_entries.items():
+        identifiers_by_role.setdefault(role, []).extend(identifiers)
+    role_ids = {
+        role: identifiers[0]
+        for role, identifiers in identifiers_by_role.items()
+        if len(identifiers) == 1
+    }
+    return role_ids, id_roles, role_entries
+
+
+def _application_role_binding_errors(
+    *,
+    role_entries: Mapping[tuple[str, str], list[str]],
+    id_roles: Mapping[str, list[str]],
+    authorization: Mapping[str, Any],
+) -> tuple[str, ...]:
+    errors = [
+        f"role {change_kind}.{role} has {len(identifiers)} bindings"
+        for (change_kind, role), identifiers in role_entries.items()
+        if len(identifiers) != 1
+    ]
+    identifiers_by_role: dict[str, list[str]] = {}
+    for (_, role), identifiers in role_entries.items():
+        identifiers_by_role.setdefault(role, []).extend(identifiers)
+    errors.extend(
+        f"role {role} has {len(identifiers)} operation bindings"
+        for role, identifiers in identifiers_by_role.items()
+        if len(identifiers) != 1
+    )
+    errors.extend(
+        f"GlobalId {global_id} has multiple roles"
+        for global_id, roles in id_roles.items()
+        if len(set(roles)) != 1
+    )
+    for change_kind, roles in authorization.get("required_roles", {}).items():
+        for role in roles:
+            identifiers = role_entries.get((str(change_kind), str(role)), ())
+            if len(identifiers) != 1:
+                errors.append(
+                    f"required role {change_kind}.{role} has {len(identifiers)} bindings"
+                )
+    return tuple(sorted(set(errors)))
 
 
 def _scope_checks(
@@ -309,6 +365,8 @@ def _authorize_actual_change(
     if len(candidates) != 1:
         return False, "actual effect has no unique Applicator role binding"
     context = candidates[0]
+    if context["binding_errors"]:
+        return False, "; ".join(context["binding_errors"])
     declared_targets = {
         str(item) for item in changeset.get("scope", {}).get("target_ids", ())
     }

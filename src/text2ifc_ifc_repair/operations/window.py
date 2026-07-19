@@ -157,6 +157,15 @@ WINDOW_L1_AUTHORIZATION = {
         "spatial_containment": "IfcRelContainedInSpatialStructure",
     },
     "removed": {},
+    "required_roles": {
+        "created": (
+            "opening",
+            "window",
+            "voids_relationship",
+            "fills_relationship",
+        ),
+        "modified": ("spatial_containment",),
+    },
     "relations": {
         "voids_relationship": {
             "ifc_class": "IfcRelVoidsElement",
@@ -640,11 +649,16 @@ def _measure_comparison_adapter(
 ) -> dict[str, Any]:
     """Measure repair geometry independently from the authoring path."""
 
+    role_mapping = kwargs.pop("role_mapping", None)
     del kwargs
     linear_tolerance = 0.1
     angle_tolerance = 0.1
     volume_tolerance = 1e-5
-    created = {item["role"]: item for item in application.get("created", [])}
+    created = (
+        {str(role): {"global_id": str(global_id)} for role, global_id in role_mapping.items()}
+        if role_mapping is not None
+        else {item["role"]: item for item in application.get("created", [])}
+    )
     try:
         wall_id = str(operation["target"]["wall_global_id"])
         wall_before = _require_guid(before_model, wall_id, "IfcWall")

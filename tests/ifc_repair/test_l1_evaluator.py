@@ -292,6 +292,43 @@ def test_undeclared_extra_root_is_a_named_failure(l1_case, tmp_path: Path) -> No
     _assert_failed(result, "l1.scope.created-roots")
 
 
+def test_duplicate_same_role_root_is_rejected_regardless_of_report_order(
+    l1_case, tmp_path: Path
+) -> None:
+    damaged, repaired, changeset, application, _ = l1_case
+    extra_window_id = ifcopenshell.guid.new()
+
+    def add_extra_window(model: Any) -> None:
+        legitimate = model.by_guid(_created(application)["window"])
+        model.create_entity(
+            "IfcWindow",
+            GlobalId=extra_window_id,
+            OwnerHistory=legitimate.OwnerHistory,
+            Name="collateral same-role window",
+            OverallHeight=legitimate.OverallHeight,
+            OverallWidth=legitimate.OverallWidth,
+        )
+
+    output = _write_mutation(
+        repaired,
+        tmp_path / "duplicate-window-role.ifc",
+        add_extra_window,
+    )
+    claimed = copy.deepcopy(application)
+    created = claimed["operations"][0]["changes"]["created"]
+    legitimate_index = next(
+        index for index, item in enumerate(created) if item["role"] == "window"
+    )
+    created.insert(
+        legitimate_index,
+        {"role": "window", "ifc_class": "IfcWindow", "global_id": extra_window_id},
+    )
+
+    result = _evaluate(damaged, output, changeset, claimed)
+
+    _assert_failed(result, "l1.scope.created-roots")
+
+
 def test_unexpected_root_deletion_is_a_named_failure(l1_case, tmp_path: Path) -> None:
     damaged, repaired, changeset, application, _ = l1_case
 
