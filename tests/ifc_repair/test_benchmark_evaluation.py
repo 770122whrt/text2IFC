@@ -94,7 +94,7 @@ def _private_report(*, status: str = "failed") -> dict[str, object]:
                         "reason": "Material differs.",
                         "checks": [
                             {
-                                "check_id": "window.material:material:gold",
+                                "check_id": f"window.material:material:{PRIVATE_CANARIES[1]}",
                                 "policy_id": "window.add-with-opening.l2",
                                 "applicability": "conditional",
                                 "mandatory": True,
@@ -184,7 +184,7 @@ def test_public_projection_is_useful_positive_allowlist_and_contains_no_gold() -
     assert public["successful_artifact_publishable"] is False
     assert public["diagnostic_artifact_retained"] is True
     l2_check = public["operations"][0]["levels"][1]["checks"][0]
-    assert l2_check["check_id"] == "window.material:material:gold"
+    assert l2_check["check_id"] == "window.material"
     assert l2_check["status"] == "failed"
     assert l2_check["difference_category"] == "material"
     assert l2_check["remediation_required"] is True
@@ -231,4 +231,3 @@ def test_non_passing_publication_is_diagnostic_only(status: str) -> None:
     assert public["diagnostic_artifact_retained"] is True
     assert "successful_output_path" not in public
     assert public["operations"][0]["levels"][2]["status"] == "not_required"
-

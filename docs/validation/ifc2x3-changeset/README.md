@@ -1,5 +1,7 @@
 # IFC2X3 Local ChangeSet 验证索引
 
+Phase 8 验证报告：[Evaluation 0.2、Benchmark Gold 隔离与 LargeBuilding 零 Provider 基线](phase8-validation-report.md)（2026-07-19 通过）。
+
 本目录只维护同一项验证工作的权威设计、实施约束与可追溯证据，避免 Window
 首个案例和后续墙洞、门、梁、柱能力分散到不同文档后发生语义漂移。
 

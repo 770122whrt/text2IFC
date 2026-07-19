@@ -17,13 +17,18 @@ _ROOT_FIELDS = (
     "successful_artifact_publishable",
     "diagnostic_artifact_retained",
 )
+_PUBLIC_METADATA_FIELDS = ("case_id", "evidence_class", "provider_calls")
 
 
 class PrivateCanaryLeakError(ValueError):
     """A private token crossed into a Provider/public artifact."""
 
 
-def project_public_evaluation(private_report: Mapping[str, Any]) -> dict[str, Any]:
+def project_public_evaluation(
+    private_report: Mapping[str, Any],
+    *,
+    metadata: Mapping[str, Any] | None = None,
+) -> dict[str, Any]:
     """Construct public evidence exclusively from explicitly safe fields."""
 
     public: dict[str, Any] = {"schema_version": PUBLIC_EVALUATION_SCHEMA_VERSION}
@@ -34,6 +39,9 @@ def project_public_evaluation(private_report: Mapping[str, Any]) -> dict[str, An
     public["operations"] = [
         _project_operation(operation) for operation in private_report["operations"]
     ]
+    for field in _PUBLIC_METADATA_FIELDS:
+        if metadata is not None and field in metadata:
+            public[field] = metadata[field]
     return public
 
 
@@ -46,42 +54,33 @@ def assert_public_bundle_has_no_canaries(
     tokens = tuple(token.encode("utf-8") for token in canaries if token)
     if not tokens:
         raise ValueError("PRIVATE_CANARY_SET_EMPTY")
-    payload = _bundle_bytes(bundle)
+    payload = b"\0".join(_bundle_chunks(bundle))
     if any(token in payload for token in tokens):
         raise PrivateCanaryLeakError("PRIVATE_CANARY_DETECTED_IN_PUBLIC_BOUNDARY")
 
 
-def _bundle_bytes(value: Any) -> bytes:
+def _bundle_chunks(value: Any) -> list[bytes]:
     if isinstance(value, Path):
         try:
-            return value.read_bytes()
+            return [value.as_posix().encode("utf-8"), value.read_bytes()]
         except OSError as error:
             raise PrivateCanaryLeakError("PUBLIC_BOUNDARY_FILE_UNREADABLE") from error
     if isinstance(value, Mapping):
-        return json.dumps(
-            {str(key): _json_value(child) for key, child in value.items()},
-            ensure_ascii=False,
-            sort_keys=True,
-            separators=(",", ":"),
-            default=str,
-        ).encode("utf-8")
-    return json.dumps(
-        _json_value(value),
-        ensure_ascii=False,
-        sort_keys=True,
-        separators=(",", ":"),
-        default=str,
-    ).encode("utf-8")
-
-
-def _json_value(value: Any) -> Any:
-    if isinstance(value, Path):
-        return {"path": value.as_posix(), "content": value.read_bytes().decode("latin1")}
-    if isinstance(value, Mapping):
-        return {str(key): _json_value(child) for key, child in value.items()}
+        chunks: list[bytes] = []
+        for key in sorted(value, key=str):
+            chunks.append(str(key).encode("utf-8"))
+            chunks.extend(_bundle_chunks(value[key]))
+        return chunks
     if isinstance(value, (list, tuple, set)):
-        return [_json_value(child) for child in value]
-    return value
+        chunks = []
+        for child in value:
+            chunks.extend(_bundle_chunks(child))
+        return chunks
+    return [
+        json.dumps(value, ensure_ascii=False, sort_keys=True, default=str).encode(
+            "utf-8"
+        )
+    ]
 
 
 def _project_gate(gate: Mapping[str, Any]) -> dict[str, Any]:
@@ -123,7 +122,7 @@ def _project_check(check: Mapping[str, Any]) -> dict[str, Any]:
     )
     status = str(check["status"])
     return {
-        "check_id": check["check_id"],
+        "check_id": _public_check_id(str(check["check_id"])),
         "policy_id": check["policy_id"],
         "applicability": check["applicability"],
         "mandatory": check["mandatory"],
@@ -142,8 +141,11 @@ def _difference_category(check_id: str) -> str:
         ("is-external", "is_external"),
         ("material", "material"),
         ("classification", "classification"),
+        ("quantities", "quantity"),
         ("quantity", "quantity"),
         ("pset", "pset"),
+        ("name", "label"),
+        ("tag", "label"),
         ("type", "type"),
         ("host", "host"),
         ("storey", "storey"),
@@ -153,6 +155,12 @@ def _difference_category(check_id: str) -> str:
         if token in normalized:
             return category
     return "physical" if normalized.startswith("l1.") else "other"
+
+
+def _public_check_id(check_id: str) -> str:
+    """Drop fact-key suffixes that can contain Gold-only semantic identifiers."""
+
+    return check_id.split(":", 1)[0]
 
 
 __all__ = [

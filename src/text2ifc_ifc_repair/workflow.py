@@ -20,13 +20,15 @@ from .benchmark_evaluation import (
     ProductionEvaluationInputs,
     evaluate_benchmark,
 )
-from .compare import evaluate_repair_application
 from .context import build_repair_context
 from .mutation import remove_window_and_opening
 from .operations import create_default_registry
 from .projection import project_public_repair_spec, render_repair_request
 from .provider_stage import generate_repair_changeset
-from .evaluation_projection import assert_public_bundle_has_no_canaries
+from .evaluation_projection import (
+    assert_public_bundle_has_no_canaries,
+    project_public_evaluation,
+)
 
 
 LARGE_BUILDING_SHA256 = (
@@ -267,11 +269,14 @@ def _run_window_repair_case(
         private_evaluation["case_id"] = case_id
         private_evaluation["evidence_class"] = evidence_class
         private_evaluation["prompt"] = provider_result["prompt"]
-        evaluation = dict(benchmark.public_report)
-        evaluation["case_id"] = case_id
-        evaluation["evidence_class"] = evidence_class
-        evaluation["prompt"] = provider_result["prompt"]
-        evaluation["provider_calls"] = provider_calls
+        evaluation = project_public_evaluation(
+            private_evaluation,
+            metadata={
+                "case_id": case_id,
+                "evidence_class": evidence_class,
+                "provider_calls": provider_calls,
+            },
+        )
         if not evaluation["successful_artifact_publishable"]:
             diagnostic = stage / "diagnostic" / "repaired-candidate.ifc"
             diagnostic.parent.mkdir(parents=True, exist_ok=True)
@@ -285,6 +290,7 @@ def _run_window_repair_case(
             output,
             evaluation,
             private_evaluation=private_evaluation,
+            public_prompt=provider_result["prompt"],
             canaries=_private_boundary_canaries(private_manifest),
         )
     except BaseException:
@@ -363,18 +369,12 @@ def _artifact_manifest(
         relative = path.relative_to(root).as_posix()
         if relative.startswith("private/") or relative.endswith(".private.json"):
             continue
-        visibility = (
-            "private"
-            if relative.startswith("mutation/")
-            and relative.endswith(".private.json")
-            else "public_or_runtime"
-        )
         artifacts.append(
             {
                 "path": relative,
                 "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
                 "size_bytes": path.stat().st_size,
-                "visibility": visibility,
+                "visibility": "public_or_runtime",
             }
         )
     return {
@@ -422,6 +422,7 @@ def _finalize_evidence_bundle(
     evaluation: Mapping[str, Any],
     *,
     private_evaluation: Mapping[str, Any] | None = None,
+    public_prompt: Mapping[str, Any] | None = None,
     canaries: tuple[str, ...] = (),
 ) -> None:
     atomic_write_text(stage / "evaluation_report.json", _json(evaluation))
@@ -437,7 +438,7 @@ def _finalize_evidence_bundle(
         stage,
         case_id=str(evaluation["case_id"]),
         evidence_class=str(evaluation["evidence_class"]),
-        prompt=evaluation.get("prompt", {}),
+        prompt=public_prompt or evaluation.get("prompt", {}),
     )
     atomic_write_text(stage / "artifact-manifest.json", _json(manifest))
     if canaries:
