@@ -66,6 +66,20 @@ def assert_public_bundle_has_no_canaries(
         raise PrivateCanaryLeakError("PRIVATE_CANARY_DETECTED_IN_PUBLIC_BOUNDARY")
 
 
+def filter_gold_only_canaries(
+    canaries: Iterable[str],
+    authorized_public_bundle: Any,
+) -> tuple[str, ...]:
+    """Remove tokens already authorized by pre-evaluator public/runtime inputs."""
+
+    payload = b"\0".join(_bundle_chunks(authorized_public_bundle))
+    return tuple(
+        token
+        for token in canaries
+        if token and token.encode("utf-8") not in payload
+    )
+
+
 def _bundle_chunks(value: Any) -> list[bytes]:
     if isinstance(value, Path):
         try:
@@ -174,5 +188,6 @@ __all__ = [
     "PUBLIC_EVALUATION_SCHEMA_VERSION",
     "PrivateCanaryLeakError",
     "assert_public_bundle_has_no_canaries",
+    "filter_gold_only_canaries",
     "project_public_evaluation",
 ]

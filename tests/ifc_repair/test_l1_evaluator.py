@@ -1,6 +1,7 @@
 import copy
 import hashlib
 import json
+from collections.abc import Mapping
 from pathlib import Path
 from typing import Any, Callable
 
@@ -228,7 +229,7 @@ def test_valid_window_l1_passes_from_reopened_ifc_and_preserves_source(l1_case) 
     for check_id in EXPECTED_L1_CHECK_IDS:
         assert _check(result, check_id).status is EvaluationStatus.PASSED
     scope_evidence = [
-        fact.actual_value
+        evaluation_module._json_safe_copy(fact.actual_value)
         for check in result.checks
         if check.check_id.startswith("l1.scope.")
         for fact in check.evidence
@@ -262,7 +263,7 @@ def test_applicator_self_report_cannot_authorize_collateral_wall_drift(
         fact.actual_value.get("global_id") == WALL_ID
         and fact.actual_value.get("before") != fact.actual_value.get("after")
         for fact in evidence
-        if isinstance(fact.actual_value, dict)
+        if isinstance(fact.actual_value, Mapping)
     )
     compatibility = evaluate_repair_application(
         damaged_ifc_path=damaged,

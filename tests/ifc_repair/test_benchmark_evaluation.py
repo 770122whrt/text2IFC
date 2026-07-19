@@ -22,7 +22,10 @@ from text2ifc_ifc_repair.evaluation_projection import (
     assert_public_bundle_has_no_canaries,
     project_public_evaluation,
 )
-from text2ifc_ifc_repair.workflow import _private_semantic_canaries
+from text2ifc_ifc_repair.workflow import (
+    _private_boundary_canaries,
+    _private_semantic_canaries,
+)
 
 
 PRIVATE_CANARIES = (
@@ -381,6 +384,39 @@ def test_private_semantic_values_are_included_in_whole_bundle_canaries(
     assert PRIVATE_CANARIES[1] in canaries
     with pytest.raises(PrivateCanaryLeakError):
         assert_public_bundle_has_no_canaries((public_path,), canaries)
+
+
+def test_public_mutation_inputs_are_not_misclassified_as_gold_canaries() -> None:
+    manifest = {
+        "source": {"path": "C:/authorized/run-input.ifc"},
+        "target": {
+            "opening": {"global_id": "PUBLIC-OPENING-ID"},
+            "window": {"global_id": "PRIVATE-WINDOW-ID"},
+        },
+    }
+
+    canaries = _private_boundary_canaries(
+        manifest,
+        private_evaluation=_private_report(),
+    )
+
+    assert "PUBLIC-OPENING-ID" not in canaries
+    assert "C:/authorized/run-input.ifc" not in canaries
+    assert PRIVATE_CANARIES[0] in canaries
+    assert PRIVATE_CANARIES[1] in canaries
+
+
+def test_pre_evaluator_public_values_are_removed_from_gold_only_canaries() -> None:
+    canaries = _private_boundary_canaries(
+        {"source": {}, "target": {}},
+        private_evaluation=_private_report(),
+        authorized_public_bundle={
+            "public_context": {"approved_type_value": PRIVATE_CANARIES[1]}
+        },
+    )
+
+    assert PRIVATE_CANARIES[1] not in canaries
+    assert PRIVATE_CANARIES[0] in canaries
 
 
 @pytest.mark.parametrize("status", ["failed", "partial", "not_evaluable"])

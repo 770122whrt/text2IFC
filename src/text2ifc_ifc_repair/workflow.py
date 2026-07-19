@@ -27,6 +27,7 @@ from .projection import project_public_repair_spec, render_repair_request
 from .provider_stage import generate_repair_changeset
 from .evaluation_projection import (
     assert_public_bundle_has_no_canaries,
+    filter_gold_only_canaries,
     project_public_evaluation,
 )
 from .evaluation import (
@@ -323,6 +324,14 @@ def _run_window_repair_case(
             canaries=_private_boundary_canaries(
                 private_manifest,
                 private_evaluation=private_evaluation,
+                authorized_public_bundle={
+                    "damaged_ifc": mutation_dir / "damaged.ifc",
+                    "application_output": (
+                        stage / "repaired.ifc"
+                        if (stage / "repaired.ifc").is_file()
+                        else stage / "diagnostic" / "repaired-candidate.ifc"
+                    ),
+                },
             ),
         )
     except BaseException:
@@ -663,17 +672,16 @@ def _private_boundary_canaries(
     private_manifest: Mapping[str, Any],
     *,
     private_evaluation: Mapping[str, Any],
+    authorized_public_bundle: Any | None = None,
 ) -> tuple[str, ...]:
-    target = private_manifest["target"]
-    source_path = str(private_manifest["source"]["path"])
-    identifiers = (
-        str(target["opening"]["global_id"]),
-        str(target["window"]["global_id"]),
-        source_path,
-        f"private-mutation-role:opening:{target['opening']['global_id']}",
-        f"private-mutation-role:window:{target['window']['global_id']}",
-    )
-    return tuple(sorted(set((*identifiers, *_private_semantic_canaries(private_evaluation)))))
+    # Mutation inputs such as the Host/Opening IDs and source path can also be
+    # authorized public workflow inputs. Only evaluator-private semantic Gold
+    # facts are valid whole-bundle canaries.
+    del private_manifest
+    canaries = _private_semantic_canaries(private_evaluation)
+    if authorized_public_bundle is None:
+        return canaries
+    return filter_gold_only_canaries(canaries, authorized_public_bundle)
 
 
 def _private_semantic_canaries(
