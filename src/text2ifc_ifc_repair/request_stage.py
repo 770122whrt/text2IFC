@@ -16,7 +16,9 @@ from text2ifc_text.splits import atomic_write_text
 
 from .registry import OperationRegistry
 from .repair_intent import (
+    DEFAULT_REPAIR_INTENT_LIMITS,
     RepairIntent,
+    RepairIntentCode,
     RepairIntentError,
     fingerprint_text,
     hash_request,
@@ -25,16 +27,11 @@ from .repair_intent import (
 
 
 TEMPLATE_ID = "ifc-repair-intent.v0.1"
-MAX_REQUEST_BYTES = 16 * 1024
-MAX_PROVIDER_RESPONSE_BYTES = 256 * 1024
-MAX_CORRECTION_ATTEMPTS = 2
-PRIVATE_CANARY_TERMS = (
-    "mutation_manifest.private.json",
-    "private_original_ifc",
-    "mutation_mapping",
-    "benchmark_gold",
-    "gold_ifc",
+MAX_REQUEST_BYTES = DEFAULT_REPAIR_INTENT_LIMITS.max_request_bytes
+MAX_PROVIDER_RESPONSE_BYTES = (
+    DEFAULT_REPAIR_INTENT_LIMITS.max_provider_response_bytes
 )
+MAX_CORRECTION_ATTEMPTS = DEFAULT_REPAIR_INTENT_LIMITS.max_correction_attempts
 
 
 def generate_repair_intent(
@@ -51,9 +48,9 @@ def generate_repair_intent(
     output = Path(output_dir)
     output.mkdir(parents=True, exist_ok=True)
     if len(repair_request.encode("utf-8")) > MAX_REQUEST_BYTES:
-        return _failure("REPAIR_REQUEST_TOO_LARGE", attempts=())
+        return _failure(RepairIntentCode.REQUEST_TOO_LARGE, attempts=())
     if not 1 <= max_attempts <= MAX_CORRECTION_ATTEMPTS:
-        return _failure("REPAIR_INTENT_ATTEMPT_BUDGET_INVALID", attempts=())
+        return _failure(RepairIntentCode.ATTEMPT_BUDGET_INVALID, attempts=())
 
     schema = load_repair_intent_schema()
     source_request_hash = hash_request(repair_request)
@@ -92,14 +89,37 @@ def generate_repair_intent(
                 "attempt": attempt_number,
             },
         }
-        provider_output, live_evidence = _call_provider(provider, provider_arguments)
+        try:
+            provider_output, live_evidence = _call_provider(
+                provider, provider_arguments
+            )
+        except ProviderOutputError as error:
+            issues = [
+                _issue(
+                    RepairIntentCode.PROVIDER_REQUEST_FAILED,
+                    type(error).__name__,
+                )
+            ]
+            attempt = _attempt_record(
+                attempt_number=attempt_number,
+                issues=issues,
+                provider_metadata={},
+                raw_text="",
+            )
+            attempts.append(attempt)
+            atomic_write_text(
+                output / f"attempt-{attempt_number:03d}.json",
+                _pretty_json(attempt),
+            )
+            feedback = issues
+            continue
         issues: list[dict[str, str]] = []
         intent: RepairIntent | None = None
         raw_text = provider_output.text
         if len(raw_text.encode("utf-8")) > MAX_PROVIDER_RESPONSE_BYTES:
             issues.append(
                 _issue(
-                    "PROVIDER_RESPONSE_TOO_LARGE",
+                    RepairIntentCode.PROVIDER_RESPONSE_TOO_LARGE,
                     "Provider response exceeds the public Stage 1 byte limit.",
                 )
             )
@@ -128,15 +148,13 @@ def generate_repair_intent(
             issues,
             key=lambda item: (item["code"], item["path"], item["message"]),
         )
-        attempt = {
-            "attempt": attempt_number,
-            "status": "valid" if intent is not None and not issues else "invalid",
-            "issues": issues,
-            "provider_metadata": _redact_private(
-                redact_provider_payload(provider_output.metadata)
-            ),
-            "response_excerpt": _bounded_redacted_excerpt(raw_text),
-        }
+        attempt = _attempt_record(
+            attempt_number=attempt_number,
+            issues=issues,
+            provider_metadata=provider_output.metadata,
+            raw_text=raw_text,
+            valid=intent is not None and not issues,
+        )
         attempts.append(attempt)
         atomic_write_text(
             output / f"attempt-{attempt_number:03d}.json",
@@ -158,7 +176,7 @@ def generate_repair_intent(
         feedback = issues
 
     return _failure(
-        "REPAIR_INTENT_RETRY_EXHAUSTED",
+        RepairIntentCode.RETRY_EXHAUSTED,
         attempts=tuple(attempts),
         prompt=_prompt_identity(rendered),
     )
@@ -168,20 +186,17 @@ def _call_provider(
     provider: Any, provider_arguments: Mapping[str, Any]
 ) -> tuple[Any, Mapping[str, Any] | None]:
     generate_live = getattr(provider, "generate_live", None)
-    try:
-        if callable(generate_live):
-            live_result = generate_live(**provider_arguments)
-            return validate_provider_output(live_result.output), {
-                "request": live_result.request,
-                "response": live_result.response,
-                "events": list(live_result.events),
-            }
-        return (
-            validate_provider_output(provider.generate_candidate(**provider_arguments)),
-            None,
-        )
-    except ProviderOutputError:
-        raise
+    if callable(generate_live):
+        live_result = generate_live(**provider_arguments)
+        return validate_provider_output(live_result.output), {
+            "request": live_result.request,
+            "response": live_result.response,
+            "events": list(live_result.events),
+        }
+    return (
+        validate_provider_output(provider.generate_candidate(**provider_arguments)),
+        None,
+    )
 
 
 def _validate_bindings(
@@ -193,18 +208,18 @@ def _validate_bindings(
     model: str,
 ) -> None:
     checks = (
-        (intent.request_id == request_id, "REPAIR_INTENT_REQUEST_ID_MISMATCH"),
+        (intent.request_id == request_id, RepairIntentCode.REQUEST_ID_MISMATCH),
         (
             intent.source_request_hash == source_request_hash,
-            "REPAIR_INTENT_REQUEST_HASH_MISMATCH",
+            RepairIntentCode.REQUEST_HASH_MISMATCH,
         ),
         (
             intent.prompt_fingerprint == prompt_fingerprint,
-            "REPAIR_INTENT_PROMPT_FINGERPRINT_MISMATCH",
+            RepairIntentCode.PROMPT_FINGERPRINT_MISMATCH,
         ),
         (
             bool(model) and intent.model_fingerprint == fingerprint_text(model),
-            "REPAIR_INTENT_MODEL_FINGERPRINT_MISMATCH",
+            RepairIntentCode.MODEL_FINGERPRINT_MISMATCH,
         ),
     )
     for passed, code in checks:
@@ -247,12 +262,15 @@ def _normalize_issues(values: list[dict[str, Any]]) -> list[dict[str, str]]:
     ]
 
 
-def _issue(code: str, message: str, *, path: str = "") -> dict[str, str]:
-    return {"code": code, "path": path, "message": message[:1000]}
+def _issue(
+    code: RepairIntentCode | str, message: str, *, path: str = ""
+) -> dict[str, str]:
+    stable_code = code.value if isinstance(code, RepairIntentCode) else code
+    return {"code": stable_code, "path": path, "message": message[:1000]}
 
 
 def _failure(
-    error_code: str,
+    error_code: RepairIntentCode | str,
     *,
     attempts: tuple[dict[str, Any], ...],
     prompt: Mapping[str, str] | None = None,
@@ -263,7 +281,11 @@ def _failure(
         "intent": None,
         "prompt": dict(prompt or {}),
         "attempts": list(attempts),
-        "error_code": error_code,
+        "error_code": (
+            error_code.value
+            if isinstance(error_code, RepairIntentCode)
+            else error_code
+        ),
     }
 
 
@@ -277,13 +299,13 @@ def _prompt_identity(rendered: Mapping[str, Any]) -> dict[str, str]:
 
 def _bounded_redacted_excerpt(value: str) -> str:
     redacted = str(_redact_private(value))
-    return redacted[:4096]
+    return redacted[: DEFAULT_REPAIR_INTENT_LIMITS.max_attempt_excerpt_chars]
 
 
 def _redact_private(value: Any) -> Any:
     if isinstance(value, str):
         redacted = value
-        for term in PRIVATE_CANARY_TERMS:
+        for term in DEFAULT_REPAIR_INTENT_LIMITS.private_canary_terms:
             redacted = redacted.replace(term, "[REDACTED_PRIVATE]")
         return redacted
     if isinstance(value, Mapping):
@@ -291,6 +313,25 @@ def _redact_private(value: Any) -> Any:
     if isinstance(value, (list, tuple)):
         return [_redact_private(item) for item in value]
     return value
+
+
+def _attempt_record(
+    *,
+    attempt_number: int,
+    issues: list[dict[str, str]],
+    provider_metadata: Mapping[str, Any],
+    raw_text: str,
+    valid: bool = False,
+) -> dict[str, Any]:
+    return {
+        "attempt": attempt_number,
+        "status": "valid" if valid else "invalid",
+        "issues": issues,
+        "provider_metadata": _redact_private(
+            redact_provider_payload(provider_metadata)
+        ),
+        "response_excerpt": _bounded_redacted_excerpt(raw_text),
+    }
 
 
 def _write_live_evidence(

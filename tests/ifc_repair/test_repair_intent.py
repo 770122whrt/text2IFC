@@ -120,6 +120,24 @@ def test_single_operation_round_trips_with_canonical_hash_and_evidence() -> None
     assert intent.intent_hash == "sha256:" + hashlib.sha256(
         intent.canonical_json().encode("utf-8")
     ).hexdigest()
+    with pytest.raises(TypeError):
+        intent.operations[0].parameters["invented"] = True
+    with pytest.raises(TypeError):
+        intent.operations[0].parameters["opening"]["width_mm"] = 1.0
+
+
+def test_public_source_kinds_and_all_stage_limits_have_one_authority() -> None:
+    repair_intent = _module()
+    limits = repair_intent.DEFAULT_REPAIR_INTENT_LIMITS
+    assert limits.public_source_kinds == (
+        "user_request",
+        "public_capability",
+        "public_clarification",
+    )
+    assert repair_intent.MAX_OPERATIONS == limits.max_operations
+    assert repair_intent.MAX_PROVENANCE_EXCERPT_CHARS == (
+        limits.max_provenance_excerpt_chars
+    )
 
 
 def test_multiple_operations_preserve_declared_order_and_stable_ids() -> None:

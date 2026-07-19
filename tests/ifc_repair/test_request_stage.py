@@ -4,8 +4,10 @@ import inspect
 import json
 from pathlib import Path
 
+import pytest
+
 from text2ifc_agent.prompt_registry import load_prompt_registry
-from text2ifc_agent.providers import ProviderOutput
+from text2ifc_agent.providers import ProviderOutput, ProviderOutputError
 from text2ifc_ifc_repair.operations import create_default_registry
 
 
@@ -33,6 +35,16 @@ class SequentialProvider:
             text=text,
             metadata={"provider": "recording", "model": "recording-model-v1"},
         )
+
+
+class FailingProvider:
+    def __init__(self) -> None:
+        self.calls = 0
+
+    def generate_candidate(self, **kwargs) -> ProviderOutput:
+        del kwargs
+        self.calls += 1
+        raise ProviderOutputError("private provider failure")
 
 
 def _source(excerpt: str = "add a window") -> dict:
@@ -246,3 +258,26 @@ def test_request_text_and_attempt_counts_are_bounded_before_provider_call(
     assert result["valid"] is False
     assert result["error_code"] == "REPAIR_REQUEST_TOO_LARGE"
     assert provider.calls == []
+
+
+def test_provider_failures_use_the_same_bounded_typed_attempt_protocol(
+    tmp_path: Path,
+) -> None:
+    stage = _stage_module()
+    provider = FailingProvider()
+    result = stage.generate_repair_intent(
+        provider=provider,
+        request_id="request-public-001",
+        repair_request="Add a window to North wall.",
+        registry=create_default_registry(),
+        output_dir=tmp_path,
+    )
+    assert result["error_code"] == "REPAIR_INTENT_RETRY_EXHAUSTED"
+    assert provider.calls == stage.MAX_CORRECTION_ATTEMPTS
+    assert [attempt["issues"][0]["code"] for attempt in result["attempts"]] == [
+        "REPAIR_INTENT_PROVIDER_FAILED",
+        "REPAIR_INTENT_PROVIDER_FAILED",
+    ]
+    assert "private provider failure" not in (
+        tmp_path / "attempt-001.json"
+    ).read_text(encoding="utf-8")

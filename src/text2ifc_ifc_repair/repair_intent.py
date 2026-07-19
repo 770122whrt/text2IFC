@@ -5,7 +5,9 @@ from __future__ import annotations
 import hashlib
 import json
 from dataclasses import dataclass
+from enum import Enum
 from pathlib import Path
+from types import MappingProxyType
 from typing import Any, Mapping
 
 from jsonschema import Draft202012Validator
@@ -17,15 +19,64 @@ from .target_query import TargetQuery
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 REPAIR_INTENT_SCHEMA_VERSION = "text2ifc/ifc-repair-intent/0.1"
 REPAIR_INTENT_SCHEMA_PATH = Path("schemas/agent/ifc-repair-intent-0.1.schema.json")
-MAX_OPERATIONS = 16
-MAX_PROVENANCE_EXCERPT_CHARS = 2048
+
+
+@dataclass(frozen=True)
+class RepairIntentLimits:
+    """Single authority for public Stage 1 content and retry bounds."""
+
+    max_operations: int = 16
+    max_provenance_excerpt_chars: int = 2048
+    max_request_bytes: int = 16 * 1024
+    max_provider_response_bytes: int = 256 * 1024
+    max_correction_attempts: int = 2
+    max_attempt_excerpt_chars: int = 4096
+    public_source_kinds: tuple[str, ...] = (
+        "user_request",
+        "public_capability",
+        "public_clarification",
+    )
+    private_canary_terms: tuple[str, ...] = (
+        "mutation_manifest.private.json",
+        "private_original_ifc",
+        "mutation_mapping",
+        "benchmark_gold",
+        "gold_ifc",
+    )
+
+
+DEFAULT_REPAIR_INTENT_LIMITS = RepairIntentLimits()
+MAX_OPERATIONS = DEFAULT_REPAIR_INTENT_LIMITS.max_operations
+MAX_PROVENANCE_EXCERPT_CHARS = (
+    DEFAULT_REPAIR_INTENT_LIMITS.max_provenance_excerpt_chars
+)
+
+
+class RepairIntentCode(str, Enum):
+    SCHEMA_INVALID = "REPAIR_INTENT_SCHEMA_INVALID"
+    DUPLICATE_OPERATION_ID = "REPAIR_INTENT_DUPLICATE_OPERATION_ID"
+    UNSUPPORTED_OPERATION = "REPAIR_INTENT_UNSUPPORTED_OPERATION"
+    TARGET_SELECTOR_REQUIRED = "REPAIR_INTENT_TARGET_SELECTOR_REQUIRED"
+    TARGET_CLASS_NOT_ALLOWED = "REPAIR_INTENT_TARGET_CLASS_NOT_ALLOWED"
+    PARAMETER_SCHEMA_INVALID = "REPAIR_INTENT_PARAMETER_SCHEMA_INVALID"
+    REQUEST_ID_MISMATCH = "REPAIR_INTENT_REQUEST_ID_MISMATCH"
+    REQUEST_HASH_MISMATCH = "REPAIR_INTENT_REQUEST_HASH_MISMATCH"
+    PROMPT_FINGERPRINT_MISMATCH = "REPAIR_INTENT_PROMPT_FINGERPRINT_MISMATCH"
+    MODEL_FINGERPRINT_MISMATCH = "REPAIR_INTENT_MODEL_FINGERPRINT_MISMATCH"
+    REQUEST_TOO_LARGE = "REPAIR_REQUEST_TOO_LARGE"
+    ATTEMPT_BUDGET_INVALID = "REPAIR_INTENT_ATTEMPT_BUDGET_INVALID"
+    PROVIDER_RESPONSE_TOO_LARGE = "PROVIDER_RESPONSE_TOO_LARGE"
+    PROVIDER_REQUEST_FAILED = "REPAIR_INTENT_PROVIDER_FAILED"
+    RETRY_EXHAUSTED = "REPAIR_INTENT_RETRY_EXHAUSTED"
 
 
 class RepairIntentError(ValueError):
     """Stable fail-closed RepairIntent validation failure."""
 
-    def __init__(self, code: str, detail: str, *, path: str = "") -> None:
-        self.code = code
+    def __init__(
+        self, code: RepairIntentCode | str, detail: str, *, path: str = ""
+    ) -> None:
+        self.code = code.value if isinstance(code, RepairIntentCode) else code
         self.detail = detail
         self.path = path
         super().__init__(f"{code}: {detail}")
@@ -113,13 +164,13 @@ class OperationIntent:
 
     @classmethod
     def from_dict(cls, value: Mapping[str, Any]) -> "OperationIntent":
-        target_document = _json_copy(value["target_query"])
+        target_document = _freeze_json(value["target_query"])
         prototype = value["prototype_intent"]
         return cls(
             operation_id=str(value["operation_id"]),
             operation_type=str(value["operation_type"]),
-            target_query=TargetQuery.from_dict(target_document),
-            parameters=_json_copy(value["parameters"]),
+            target_query=TargetQuery.from_dict(_thaw_json(target_document)),
+            parameters=_freeze_json(value["parameters"]),
             attribute_intents=tuple(
                 AttributeIntent.from_dict(item) for item in value["attribute_intents"]
             ),
@@ -136,8 +187,8 @@ class OperationIntent:
         return {
             "operation_id": self.operation_id,
             "operation_type": self.operation_type,
-            "target_query": _json_copy(self._target_query_document),
-            "parameters": _json_copy(self.parameters),
+            "target_query": _thaw_json(self._target_query_document),
+            "parameters": _thaw_json(self.parameters),
             "attribute_intents": [item.to_dict() for item in self.attribute_intents],
             "prototype_intent": (
                 None if self.prototype_intent is None else self.prototype_intent.to_dict()
@@ -171,7 +222,7 @@ class RepairIntent:
         if errors:
             error = errors[0]
             raise RepairIntentError(
-                "REPAIR_INTENT_SCHEMA_INVALID",
+                RepairIntentCode.SCHEMA_INVALID,
                 error.message,
                 path=_pointer(error.absolute_path),
             )
@@ -179,7 +230,7 @@ class RepairIntent:
         operation_ids = [str(item["operation_id"]) for item in payload["operations"]]
         if len(operation_ids) != len(set(operation_ids)):
             raise RepairIntentError(
-                "REPAIR_INTENT_DUPLICATE_OPERATION_ID",
+                RepairIntentCode.DUPLICATE_OPERATION_ID,
                 "Operation IDs must be unique within one RepairIntent.",
                 path="/operations",
             )
@@ -191,14 +242,14 @@ class RepairIntent:
                 definition = registry.require(operation_type)
             except OperationRegistryError as error:
                 raise RepairIntentError(
-                    "REPAIR_INTENT_UNSUPPORTED_OPERATION",
+                    RepairIntentCode.UNSUPPORTED_OPERATION,
                     error.detail,
                     path=f"/operations/{index}/operation_type",
                 ) from error
             query = raw_operation["target_query"]
             if not _has_target_selector(query):
                 raise RepairIntentError(
-                    "REPAIR_INTENT_TARGET_SELECTOR_REQUIRED",
+                    RepairIntentCode.TARGET_SELECTOR_REQUIRED,
                     "At least one public target selector is required.",
                     path=f"/operations/{index}/target_query",
                 )
@@ -206,7 +257,7 @@ class RepairIntent:
                 definition.target_ifc_classes
             ):
                 raise RepairIntentError(
-                    "REPAIR_INTENT_TARGET_CLASS_NOT_ALLOWED",
+                    RepairIntentCode.TARGET_CLASS_NOT_ALLOWED,
                     operation_type,
                     path=f"/operations/{index}/target_query/allowed_ifc_classes",
                 )
@@ -214,7 +265,7 @@ class RepairIntent:
             if parameter_issues:
                 issue = parameter_issues[0]
                 raise RepairIntentError(
-                    "REPAIR_INTENT_PARAMETER_SCHEMA_INVALID",
+                    RepairIntentCode.PARAMETER_SCHEMA_INVALID,
                     issue.message,
                     path=f"/operations/{index}{issue.path}",
                 )
@@ -297,6 +348,24 @@ def _json_copy(value: Any) -> Any:
     return json.loads(_canonical_json(value))
 
 
+def _freeze_json(value: Any) -> Any:
+    if isinstance(value, Mapping):
+        return MappingProxyType(
+            {str(key): _freeze_json(item) for key, item in value.items()}
+        )
+    if isinstance(value, (list, tuple)):
+        return tuple(_freeze_json(item) for item in value)
+    return value
+
+
+def _thaw_json(value: Any) -> Any:
+    if isinstance(value, Mapping):
+        return {str(key): _thaw_json(item) for key, item in value.items()}
+    if isinstance(value, tuple):
+        return [_thaw_json(item) for item in value]
+    return value
+
+
 def _pointer(parts: Any) -> str:
     tokens = [str(part).replace("~", "~0").replace("/", "~1") for part in parts]
     return "/" + "/".join(tokens) if tokens else ""
@@ -304,6 +373,7 @@ def _pointer(parts: Any) -> str:
 
 __all__ = [
     "AttributeIntent",
+    "DEFAULT_REPAIR_INTENT_LIMITS",
     "MAX_OPERATIONS",
     "MAX_PROVENANCE_EXCERPT_CHARS",
     "OperationIntent",
@@ -312,7 +382,9 @@ __all__ = [
     "REPAIR_INTENT_SCHEMA_PATH",
     "REPAIR_INTENT_SCHEMA_VERSION",
     "RepairIntent",
+    "RepairIntentCode",
     "RepairIntentError",
+    "RepairIntentLimits",
     "fingerprint_text",
     "hash_request",
     "load_repair_intent_schema",
