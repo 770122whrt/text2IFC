@@ -35,7 +35,7 @@ def test_fake_provider_e2e_writes_a_complete_publicly_bound_evidence_bundle(
         window_global_id="2cXV28XOjE6f6irgi0CO4t",
     )
 
-    assert result["schema_version"] == "text2ifc/ifc-repair-evaluation/0.2"
+    assert result["schema_version"] == "text2ifc/ifc-repair-evaluation-public/0.2"
     assert result["complete_repair_success"] is False
     assert result["successful_artifact_publishable"] is False
     assert result["diagnostic_artifact_retained"] is True
@@ -49,7 +49,6 @@ def test_fake_provider_e2e_writes_a_complete_publicly_bound_evidence_bundle(
         "provider/predicted-changeset.json",
         "audit-report.json",
         "application-report.json",
-        "repaired.ifc",
         "diagnostic/repaired-candidate.ifc",
         "evaluation_report.json",
         "evaluation-public.json",
@@ -64,6 +63,7 @@ def test_fake_provider_e2e_writes_a_complete_publicly_bound_evidence_bundle(
             if path.is_file()
         }
     )
+    assert not (output / "repaired.ifc").exists()
     assert not (output / "successful-repaired.ifc").exists()
 
     renderer_input = (output / "provider" / "renderer-input.json").read_text(
