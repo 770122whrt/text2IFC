@@ -12,12 +12,12 @@ traceable semantic ChangeSet and an L1/L2-validated IFC result.
 ## Current Position
 
 - Milestone: v1.1 IFC ChangeSet Repair Pipeline
-- Phase: 8 (not planned yet)
-- Plan: —
-- Status: Phase 7 verified; ready for Phase 8 discussion/planning
+- Phase: 8
+- Plan: 1 of 4 (08-01)
+- Status: Executing Phase 8 — Evaluation 0.2 contract
 - Progress: 1 / 7 phases complete
 - Requirements: 17 pending, 5 complete, 22 mapped, 0 unmapped
-- Last activity: 2026-07-19 — Phase 7 retrieval index and target resolution verified
+- Last activity: 2026-07-19 — Phase 8 execution started
 
 ## Carried Context
 
@@ -43,8 +43,7 @@ traceable semantic ChangeSet and an L1/L2-validated IFC result.
 
 ## Next Action
 
-Run `$gsd-discuss-phase 8` to freeze the L1/L2 evaluation contract before
-writing Phase 8 plans.
+Execute plan `08-01` and preserve RED/GREEN/REFACTOR evidence.
 
 ---
-*Last updated: 2026-07-19 after completing Phase 7*
+*Last updated: 2026-07-19 after starting Phase 8 execution*
