@@ -58,7 +58,23 @@ def run_offline_window_repair_case(
     """Run the Window case with a public-only deterministic fake Provider."""
 
     return _run_window_repair_case(
-        **kwargs, provider=None, evidence_class="offline_fake"
+        **kwargs,
+        provider=None,
+        evidence_class="offline_fake",
+        bypass_provider=False,
+    )
+
+
+def run_offline_window_benchmark_case(
+    **kwargs: Any,
+) -> dict[str, Any]:
+    """Run frozen deterministic ChangeSet evidence with zero Provider calls."""
+
+    return _run_window_repair_case(
+        **kwargs,
+        provider=None,
+        evidence_class="offline_benchmark",
+        bypass_provider=True,
     )
 
 
@@ -70,7 +86,10 @@ def run_live_window_repair_case(
     """Run the same public contract with a configured real Provider."""
 
     return _run_window_repair_case(
-        **kwargs, provider=provider, evidence_class="live_provider_uat"
+        **kwargs,
+        provider=provider,
+        evidence_class="live_provider_uat",
+        bypass_provider=False,
     )
 
 
@@ -85,6 +104,7 @@ def _run_window_repair_case(
     expected_source_sha256: str = LARGE_BUILDING_SHA256,
     provider: Any | None,
     evidence_class: str,
+    bypass_provider: bool,
 ) -> dict[str, Any]:
     """Execute one immutable evidence run using a selected Provider."""
 
@@ -126,52 +146,71 @@ def _run_window_repair_case(
         )
         atomic_write_text(stage / "public-context.json", _json(public_context))
 
+        provider_calls = 0
         selected_provider = provider
-        if selected_provider is None:
+        if bypass_provider:
             fake_changeset = _public_rule_changeset(
                 case_id=case_id,
                 request_hash=request_hash,
                 public_spec=public_spec,
                 public_context=public_context,
             )
-            selected_provider = DeterministicPublicRuleProvider(fake_changeset)
-        try:
-            provider_result = generate_repair_changeset(
-                provider=selected_provider,
-                case_id=case_id,
-                repair_request=repair_request,
-                source_request_hash=request_hash,
-                public_spec=public_spec,
-                public_context=public_context,
-                registry=registry,
-                output_dir=stage / "provider",
-            )
-        except Exception as error:
-            if evidence_class != "live_provider_uat":
-                raise
-            atomic_write_text(
-                stage / "provider" / "provider-exception.json",
-                _json(
-                    {
-                        "error_type": type(error).__name__,
-                        "message": str(error),
-                    }
-                ),
-            )
-            evaluation = _failure_evaluation(
-                case_id=case_id,
-                evidence_class=evidence_class,
-                failure_stage="provider",
-                issues=[
-                    {
-                        "code": "PROVIDER_EXECUTION_FAILED",
-                        "path": "/provider",
-                        "message": f"{type(error).__name__}: {error}",
-                    }
-                ],
-            )
-            _finalize_evidence_bundle(stage, output, evaluation)
-            return evaluation
+            provider_result = {
+                "valid": True,
+                "changeset": fake_changeset,
+                "issues": [],
+                "prompt": {
+                    "provider_calls": 0,
+                    "evidence_source": "frozen-deterministic-changeset",
+                },
+            }
+        else:
+            if selected_provider is None:
+                fake_changeset = _public_rule_changeset(
+                    case_id=case_id,
+                    request_hash=request_hash,
+                    public_spec=public_spec,
+                    public_context=public_context,
+                )
+                selected_provider = DeterministicPublicRuleProvider(fake_changeset)
+            try:
+                provider_calls += 1
+                provider_result = generate_repair_changeset(
+                    provider=selected_provider,
+                    case_id=case_id,
+                    repair_request=repair_request,
+                    source_request_hash=request_hash,
+                    public_spec=public_spec,
+                    public_context=public_context,
+                    registry=registry,
+                    output_dir=stage / "provider",
+                )
+            except Exception as error:
+                if evidence_class != "live_provider_uat":
+                    raise
+                atomic_write_text(
+                    stage / "provider" / "provider-exception.json",
+                    _json(
+                        {
+                            "error_type": type(error).__name__,
+                            "message": str(error),
+                        }
+                    ),
+                )
+                evaluation = _failure_evaluation(
+                    case_id=case_id,
+                    evidence_class=evidence_class,
+                    failure_stage="provider",
+                    issues=[
+                        {
+                            "code": "PROVIDER_EXECUTION_FAILED",
+                            "path": "/provider",
+                            "message": f"{type(error).__name__}: {error}",
+                        }
+                    ],
+                )
+                _finalize_evidence_bundle(stage, output, evaluation)
+                return evaluation
         if not provider_result["valid"] or provider_result["changeset"] is None:
             evaluation = _failure_evaluation(
                 case_id=case_id,
@@ -232,6 +271,7 @@ def _run_window_repair_case(
         evaluation["case_id"] = case_id
         evaluation["evidence_class"] = evidence_class
         evaluation["prompt"] = provider_result["prompt"]
+        evaluation["provider_calls"] = provider_calls
         if not evaluation["successful_artifact_publishable"]:
             diagnostic = stage / "diagnostic" / "repaired-candidate.ifc"
             diagnostic.parent.mkdir(parents=True, exist_ok=True)
