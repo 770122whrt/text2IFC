@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from dataclasses import FrozenInstanceError
 
+import ifcopenshell
 import pytest
 
 from text2ifc_ifc_repair.evaluation_models import EvaluationStatus
@@ -13,7 +14,7 @@ from text2ifc_ifc_repair.evaluation_policy import (
     SemanticApplicability,
     SemanticFactSpec,
 )
-from text2ifc_ifc_repair.index_models import PropertyFact
+from text2ifc_ifc_repair.index_models import ElementRecord, PropertyFact
 from text2ifc_ifc_repair.operations.window import window_operation_definition
 from text2ifc_ifc_repair.registry import (
     OperationDefinition,
@@ -24,7 +25,9 @@ from text2ifc_ifc_repair.semantic_facts import (
     SemanticFact,
     SemanticFactError,
     evaluate_operation_semantics,
+    extract_ifc_semantic_facts,
     semantic_fact_from_property_fact,
+    semantic_facts_from_element_record,
 )
 
 
@@ -423,3 +426,122 @@ def test_phase7_property_fact_conversion_preserves_typed_value_and_provenance() 
         "sha256:index",
         "ifcopenshell.util.element.get_psets",
     )
+
+
+def test_phase7_record_and_future_family_share_the_generic_fact_conversion() -> None:
+    record = ElementRecord(
+        record_id="ifc:future-01",
+        ifc_global_id="future-01",
+        identity_reliable=True,
+        ifc_class="IfcDoor",
+        name="D-01",
+        long_name=None,
+        tag="DOOR-01",
+        object_type=None,
+        type_name="Door Type A",
+        type_global_id="door-type-01",
+        storey_name="Level 1",
+        storey_global_id="storey-01",
+        geometry_capability="bbox",
+        properties=(
+            PropertyFact(
+                set_kind="quantity",
+                set_name="Qto_DoorBaseQuantities",
+                property_name="Height",
+                value=2100.0,
+                value_type="IfcLengthMeasure",
+                unit="mm",
+                inherited=False,
+                provenance="ifcopenshell.util.element.get_psets",
+            ),
+        ),
+    )
+
+    facts = semantic_facts_from_element_record(
+        record,
+        source_kind=EvidenceSourceKind.SURVIVING_TARGET,
+        source_ref="index/future-01",
+    )
+
+    assert {fact.fact_key for fact in facts} == {
+        "label:Name",
+        "label:Tag",
+        "quantity:Qto_DoorBaseQuantities.Height",
+        "relationship:storey",
+        "relationship:type",
+    }
+    quantity = next(fact for fact in facts if fact.fact_key.startswith("quantity:"))
+    assert quantity.value == 2100.0
+    assert quantity.value_type == "IfcLengthMeasure"
+    assert quantity.unit == "mm"
+    assert quantity.provenance == (
+        "index:ifc:future-01",
+        "ifcopenshell.util.element.get_psets",
+    )
+
+
+def test_repaired_ifc_extraction_uses_inheritance_aware_official_utilities() -> None:
+    model = ifcopenshell.file(schema="IFC2X3")
+    window = model.create_entity(
+        "IfcWindow",
+        GlobalId="0000000000000000000001",
+        Name="W-01",
+        OverallHeight=1200.0,
+        OverallWidth=1000.0,
+    )
+    material = model.create_entity("IfcMaterial", Name="Aluminium")
+    model.create_entity(
+        "IfcRelAssociatesMaterial",
+        GlobalId="0000000000000000000002",
+        RelatedObjects=[window],
+        RelatingMaterial=material,
+    )
+    classification = model.create_entity(
+        "IfcClassification", Source="NBS", Edition="2025", Name="Uniclass"
+    )
+    reference = model.create_entity(
+        "IfcClassificationReference",
+        ItemReference="Ss_25_30_95",
+        Name="Windows",
+        ReferencedSource=classification,
+    )
+    model.create_entity(
+        "IfcRelAssociatesClassification",
+        GlobalId="0000000000000000000003",
+        RelatedObjects=[window],
+        RelatingClassification=reference,
+    )
+    property_value = model.create_entity("IfcBoolean", True)
+    prop = model.create_entity(
+        "IfcPropertySingleValue", Name="IsExternal", NominalValue=property_value
+    )
+    pset = model.create_entity(
+        "IfcPropertySet",
+        GlobalId="0000000000000000000004",
+        Name="Pset_WindowCommon",
+        HasProperties=[prop],
+    )
+    model.create_entity(
+        "IfcRelDefinesByProperties",
+        GlobalId="0000000000000000000005",
+        RelatedObjects=[window],
+        RelatingPropertyDefinition=pset,
+    )
+
+    facts = extract_ifc_semantic_facts(
+        window,
+        policy=window_operation_definition().evaluation_policy,
+        source_kind=EvidenceSourceKind.REPAIRED_OUTPUT,
+        source_ref="repaired.ifc",
+        provenance=("sha256:repaired",),
+    )
+
+    by_key = {fact.fact_key: fact for fact in facts}
+    assert by_key["pset:Pset_WindowCommon.IsExternal"].value is True
+    assert by_key["pset:Pset_WindowCommon.IsExternal"].inherited is False
+    assert by_key["material:Aluminium"].value == "Aluminium"
+    assert by_key["classification:Uniclass:Ss_25_30_95"].value == {
+        "system": "Uniclass",
+        "identification": "Ss_25_30_95",
+        "name": "Windows",
+    }

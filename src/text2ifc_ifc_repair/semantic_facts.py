@@ -5,7 +5,11 @@ from __future__ import annotations
 from dataclasses import dataclass
 from fnmatch import fnmatchcase
 import math
+import re
 from typing import Any, Iterable
+
+import ifcopenshell.util.classification
+import ifcopenshell.util.element
 
 from .evaluation_models import CheckResult, EvaluationStatus, EvidenceFact
 from .evaluation_policy import (
@@ -16,7 +20,7 @@ from .evaluation_policy import (
     SemanticApplicability,
     SemanticFactSpec,
 )
-from .index_models import PropertyFact
+from .index_models import ElementRecord, PropertyFact
 
 
 class SemanticFactError(ValueError):
@@ -80,6 +84,127 @@ def semantic_fact_from_property_fact(
         provenance=(*provenance, fact.provenance),
         compatible=compatible,
     )
+
+
+def semantic_facts_from_element_record(
+    record: ElementRecord,
+    *,
+    source_kind: EvidenceSourceKind,
+    source_ref: str,
+    compatible: bool = True,
+) -> tuple[SemanticFact, ...]:
+    """Convert a Phase 7 record through the same typed semantic fact seam."""
+
+    entity_source = f"{record.ifc_class}:{record.ifc_global_id or record.record_id}"
+    provenance = (f"index:{record.record_id}",)
+    facts = [
+        semantic_fact_from_property_fact(
+            fact,
+            source_kind=source_kind,
+            source_ref=source_ref,
+            entity_source=entity_source,
+            provenance=provenance,
+            compatible=compatible,
+        )
+        for fact in record.properties
+    ]
+    facts.extend(
+        _record_scalar_facts(
+            record,
+            source_kind=source_kind,
+            source_ref=source_ref,
+            entity_source=entity_source,
+            provenance=provenance,
+            compatible=compatible,
+        )
+    )
+    return tuple(sorted(facts, key=lambda fact: fact.fact_key))
+
+
+def extract_ifc_semantic_facts(
+    element: Any,
+    *,
+    policy: OperationEvaluationPolicy,
+    source_kind: EvidenceSourceKind,
+    source_ref: str,
+    provenance: tuple[str, ...],
+    compatible: bool = True,
+) -> tuple[SemanticFact, ...]:
+    """Extract inheritance-aware semantic facts from an IFC occurrence."""
+
+    entity_source = _entity_ref(element)
+    facts: list[SemanticFact] = []
+    inherited_sets = _get_psets(element, should_inherit=True)
+    direct_sets = _get_psets(element, should_inherit=False)
+    for set_name, members in inherited_sets.items():
+        if not isinstance(members, dict):
+            continue
+        direct_members = direct_sets.get(set_name, {})
+        for property_name, payload in members.items():
+            if property_name == "id" or not isinstance(payload, dict) or "value" not in payload:
+                continue
+            property_class = str(payload.get("class") or "")
+            property_fact = PropertyFact(
+                set_kind=(
+                    "quantity" if property_class.startswith("IfcQuantity") else "pset"
+                ),
+                set_name=str(set_name),
+                property_name=str(property_name),
+                value=payload.get("value"),
+                value_type=_optional_text(payload.get("value_type") or property_class),
+                unit=_optional_text(payload.get("unit")),
+                inherited=not (
+                    isinstance(direct_members, dict)
+                    and property_name in direct_members
+                ),
+                provenance="ifcopenshell.util.element.get_psets",
+            )
+            semantic = semantic_fact_from_property_fact(
+                property_fact,
+                source_kind=source_kind,
+                source_ref=source_ref,
+                entity_source=entity_source,
+                provenance=provenance,
+                compatible=compatible,
+            )
+            if _policy_accepts_key(policy, semantic.fact_key):
+                facts.append(semantic)
+
+    facts.extend(
+        _ifc_relationship_and_attribute_facts(
+            element,
+            policy=policy,
+            source_kind=source_kind,
+            source_ref=source_ref,
+            entity_source=entity_source,
+            provenance=provenance,
+            compatible=compatible,
+        )
+    )
+    if _policy_accepts_key(policy, "material:probe"):
+        facts.extend(
+            _ifc_material_facts(
+                element,
+                source_kind=source_kind,
+                source_ref=source_ref,
+                entity_source=entity_source,
+                provenance=provenance,
+                compatible=compatible,
+            )
+        )
+    if _policy_accepts_key(policy, "classification:probe"):
+        facts.extend(
+            _ifc_classification_facts(
+                element,
+                source_kind=source_kind,
+                source_ref=source_ref,
+                entity_source=entity_source,
+                provenance=provenance,
+                compatible=compatible,
+            )
+        )
+    unique = {(fact.fact_key, repr(fact.value)): fact for fact in facts}
+    return tuple(unique[key] for key in sorted(unique))
 
 
 def resolve_expected_facts(
@@ -291,10 +416,212 @@ def _result_check_id(spec: SemanticFactSpec, fact_key: str) -> str:
     return spec.check_id if "*" not in spec.fact_pattern else f"{spec.check_id}:{fact_key}"
 
 
+def _record_scalar_facts(
+    record: ElementRecord,
+    **source: Any,
+) -> tuple[SemanticFact, ...]:
+    values = (
+        ("relationship:type", record.type_global_id, "IfcGloballyUniqueId"),
+        ("relationship:storey", record.storey_global_id, "IfcGloballyUniqueId"),
+        ("label:Name", record.name, "IfcLabel"),
+        ("label:Tag", record.tag, "IfcIdentifier"),
+    )
+    return tuple(
+        SemanticFact(
+            fact_key=fact_key,
+            value=value,
+            value_type=value_type,
+            unit=None,
+            inherited=False,
+            pset_path=None,
+            **source,
+        )
+        for fact_key, value, value_type in values
+        if value is not None
+    )
+
+
+def _ifc_relationship_and_attribute_facts(
+    element: Any,
+    *,
+    policy: OperationEvaluationPolicy,
+    **source: Any,
+) -> tuple[SemanticFact, ...]:
+    values: list[tuple[str, Any, str]] = []
+    element_type = (
+        ifcopenshell.util.element.get_type(element)
+        if _policy_accepts_key(policy, "relationship:type")
+        else None
+    )
+    if element_type is not None:
+        values.append(
+            ("relationship:type", _root_identity(element_type), element_type.is_a())
+        )
+    storey = (
+        ifcopenshell.util.element.get_container(
+            element, ifc_class="IfcBuildingStorey"
+        )
+        if _policy_accepts_key(policy, "relationship:storey")
+        else None
+    )
+    if storey is not None:
+        values.append(("relationship:storey", _root_identity(storey), storey.is_a()))
+    host = (
+        _filled_element_host(element)
+        if _policy_accepts_key(policy, "relationship:host")
+        else None
+    )
+    if host is not None:
+        values.append(("relationship:host", _root_identity(host), host.is_a()))
+    requested_attributes = sorted(
+        spec.fact_pattern
+        for spec in policy.semantic_facts
+        if spec.fact_pattern.startswith(("attribute:", "label:"))
+        and "*" not in spec.fact_pattern
+    )
+    for fact_key in requested_attributes:
+        category, attribute = fact_key.split(":", 1)
+        value = getattr(element, attribute, None)
+        if value is not None:
+            values.append((fact_key, value, _python_value_type(value, category)))
+    return tuple(
+        SemanticFact(
+            fact_key=fact_key,
+            value=value,
+            value_type=value_type,
+            unit=None,
+            inherited=False,
+            pset_path=None,
+            **source,
+        )
+        for fact_key, value, value_type in values
+    )
+
+
+def _ifc_material_facts(element: Any, **source: Any) -> tuple[SemanticFact, ...]:
+    facts = []
+    base_provenance = source.pop("provenance")
+    for material in ifcopenshell.util.element.get_materials(
+        element, should_inherit=True
+    ):
+        name = _optional_text(getattr(material, "Name", None)) or _root_identity(material)
+        facts.append(
+            SemanticFact(
+                fact_key=f"material:{_key_token(name)}",
+                value=name,
+                value_type=material.is_a(),
+                unit=None,
+                inherited=False,
+                pset_path=None,
+                provenance=(
+                    *base_provenance,
+                    "ifcopenshell.util.element.get_materials",
+                ),
+                **source,
+            )
+        )
+    return tuple(facts)
+
+
+def _ifc_classification_facts(element: Any, **source: Any) -> tuple[SemanticFact, ...]:
+    facts = []
+    base_provenance = source.pop("provenance")
+    references = ifcopenshell.util.classification.get_references(
+        element, should_inherit=True
+    )
+    for reference in sorted(references, key=_root_identity):
+        identification = _optional_text(
+            getattr(reference, "Identification", None)
+            or getattr(reference, "ItemReference", None)
+        )
+        name = _optional_text(getattr(reference, "Name", None))
+        try:
+            classification = ifcopenshell.util.classification.get_classification(reference)
+        except Exception:
+            classification = None
+        system = _optional_text(getattr(classification, "Name", None)) or "unspecified"
+        token = identification or name or _root_identity(reference)
+        facts.append(
+            SemanticFact(
+                fact_key=f"classification:{_key_token(system)}:{_key_token(token)}",
+                value={
+                    "system": system,
+                    "identification": identification,
+                    "name": name,
+                },
+                value_type=reference.is_a(),
+                unit=None,
+                inherited=False,
+                pset_path=None,
+                provenance=(
+                    *base_provenance,
+                    "ifcopenshell.util.classification.get_references",
+                ),
+                **source,
+            )
+        )
+    return tuple(facts)
+
+
+def _get_psets(element: Any, *, should_inherit: bool) -> dict[str, Any]:
+    try:
+        return ifcopenshell.util.element.get_psets(
+            element,
+            psets_only=False,
+            qtos_only=False,
+            should_inherit=should_inherit,
+            verbose=True,
+        )
+    except Exception:
+        return {}
+
+
+def _filled_element_host(element: Any) -> Any | None:
+    for fill in getattr(element, "FillsVoids", ()):
+        opening = fill.RelatingOpeningElement
+        for void in getattr(opening, "VoidsElements", ()):
+            return void.RelatingBuildingElement
+    return None
+
+
+def _entity_ref(entity: Any) -> str:
+    return f"{entity.is_a()}:{_root_identity(entity)}"
+
+
+def _root_identity(entity: Any) -> str:
+    return str(getattr(entity, "GlobalId", None) or f"#{entity.id()}")
+
+
+def _key_token(value: str) -> str:
+    return re.sub(r"[^A-Za-z0-9._/-]+", "-", value).strip("-") or "unnamed"
+
+
+def _optional_text(value: Any) -> str | None:
+    return None if value is None else str(value)
+
+
+def _policy_accepts_key(policy: OperationEvaluationPolicy, fact_key: str) -> bool:
+    return any(
+        fnmatchcase(fact_key, spec.fact_pattern) for spec in policy.semantic_facts
+    )
+
+
+def _python_value_type(value: Any, category: str) -> str:
+    if category == "label":
+        return "IfcLabel"
+    if isinstance(value, bool):
+        return "IfcBoolean"
+    if isinstance(value, (int, float)):
+        return "IfcReal"
+    return type(value).__name__
+
+
 __all__ = [
     "SemanticFact",
     "SemanticFactError",
     "evaluate_operation_semantics",
+    "extract_ifc_semantic_facts",
     "resolve_expected_facts",
     "semantic_fact_from_property_fact",
+    "semantic_facts_from_element_record",
 ]
