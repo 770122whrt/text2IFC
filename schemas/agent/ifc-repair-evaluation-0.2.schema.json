@@ -1,0 +1,155 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "text2ifc/ifc-repair-evaluation/0.2",
+  "title": "IFC Repair Evaluation 0.2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "policy_version",
+    "status",
+    "reason",
+    "evidence",
+    "application",
+    "preservation",
+    "operations",
+    "complete_repair_success",
+    "successful_artifact_publishable",
+    "diagnostic_artifact_retained"
+  ],
+  "properties": {
+    "schema_version": {"const": "text2ifc/ifc-repair-evaluation/0.2"},
+    "policy_version": {"$ref": "#/$defs/stableId"},
+    "status": {"$ref": "#/$defs/status"},
+    "reason": {"$ref": "#/$defs/nonEmptyString"},
+    "evidence": {"$ref": "#/$defs/evidenceList"},
+    "application": {"$ref": "#/$defs/check"},
+    "preservation": {"$ref": "#/$defs/check"},
+    "operations": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/operation"}
+    },
+    "complete_repair_success": {"type": "boolean"},
+    "successful_artifact_publishable": {"type": "boolean"},
+    "diagnostic_artifact_retained": {"type": "boolean"}
+  },
+  "$defs": {
+    "nonEmptyString": {"type": "string", "minLength": 1, "pattern": "\\S"},
+    "stableId": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]*$"
+    },
+    "status": {
+      "enum": ["passed", "failed", "partial", "not_required", "not_evaluable"]
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "fact_id",
+        "source_kind",
+        "source_ref",
+        "expected_state",
+        "actual_state",
+        "expected_value",
+        "actual_value",
+        "provenance"
+      ],
+      "properties": {
+        "fact_id": {"$ref": "#/$defs/stableId"},
+        "source_kind": {"$ref": "#/$defs/stableId"},
+        "source_ref": {"$ref": "#/$defs/nonEmptyString"},
+        "expected_state": {"enum": ["available", "unavailable", "not_applicable"]},
+        "actual_state": {"enum": ["available", "unavailable", "not_applicable"]},
+        "expected_value": {},
+        "actual_value": {},
+        "provenance": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/nonEmptyString"}
+        }
+      }
+    },
+    "evidenceList": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/evidence"}
+    },
+    "check": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "check_id",
+        "policy_id",
+        "applicability",
+        "mandatory",
+        "status",
+        "reason",
+        "evidence"
+      ],
+      "properties": {
+        "check_id": {"$ref": "#/$defs/stableId"},
+        "policy_id": {"$ref": "#/$defs/stableId"},
+        "applicability": {"enum": ["required", "conditional", "informational"]},
+        "mandatory": {"type": "boolean"},
+        "status": {"$ref": "#/$defs/status"},
+        "reason": {"$ref": "#/$defs/nonEmptyString"},
+        "evidence": {"$ref": "#/$defs/evidenceList"}
+      }
+    },
+    "level": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["level", "status", "reason", "evidence", "checks"],
+      "properties": {
+        "level": {"enum": ["L1", "L2", "L3"]},
+        "status": {"$ref": "#/$defs/status"},
+        "reason": {"$ref": "#/$defs/nonEmptyString"},
+        "evidence": {"$ref": "#/$defs/evidenceList"},
+        "checks": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/check"}
+        }
+      }
+    },
+    "operation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "operation_id",
+        "operation_type",
+        "mandatory",
+        "policy_id",
+        "policy_version",
+        "status",
+        "reason",
+        "evidence",
+        "levels"
+      ],
+      "properties": {
+        "operation_id": {"$ref": "#/$defs/stableId"},
+        "operation_type": {"$ref": "#/$defs/stableId"},
+        "mandatory": {"type": "boolean"},
+        "policy_id": {"$ref": "#/$defs/stableId"},
+        "policy_version": {"$ref": "#/$defs/stableId"},
+        "status": {"$ref": "#/$defs/status"},
+        "reason": {"$ref": "#/$defs/nonEmptyString"},
+        "evidence": {"$ref": "#/$defs/evidenceList"},
+        "levels": {
+          "type": "array",
+          "prefixItems": [
+            {"allOf": [{"$ref": "#/$defs/level"}, {"properties": {"level": {"const": "L1"}}}]},
+            {"allOf": [{"$ref": "#/$defs/level"}, {"properties": {"level": {"const": "L2"}}}]},
+            {"allOf": [{"$ref": "#/$defs/level"}, {"properties": {"level": {"const": "L3"}, "status": {"const": "not_required"}}}]}
+          ],
+          "items": false,
+          "minItems": 3,
+          "maxItems": 3
+        }
+      }
+    }
+  }
+}
