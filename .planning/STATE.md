@@ -13,11 +13,11 @@ traceable semantic ChangeSet and an L1/L2-validated IFC result.
 
 - Milestone: v1.1 IFC ChangeSet Repair Pipeline
 - Phase: 9
-- Plan: Not planned
-- Status: Phase 8 complete; ready to discuss/plan Phase 9
+- Plan: 5 plans in 5 sequential waves
+- Status: Ready to execute Phase 9
 - Progress: 2 / 7 phases complete
 - Requirements: 12 pending, 10 complete, 22 mapped, 0 unmapped
-- Last activity: 2026-07-20 — Phase 8 passed 11/11 goal verification and 12/12 threat audit
+- Last activity: 2026-07-20 — Phase 9 planning passed requirement, decision, frontmatter, and Nyquist coverage checks
 
 ## Carried Context
 
@@ -49,9 +49,9 @@ traceable semantic ChangeSet and an L1/L2-validated IFC result.
 
 ## Next Action
 
-Discuss and plan Phase 9: one supported IFC + natural-language request entrypoint
-that produces a bound ChangeSet, deterministic IFC application, Evaluation 0.2
-evidence, and an honest terminal publication status.
+Execute Phase 9 Plan 09-01: implement the versioned RepairIntent and public
+request-understanding contract using TDD, then advance through the five
+dependency-ordered plans.
 
 ---
-*Last updated: 2026-07-20 after completing Phase 8*
+*Last updated: 2026-07-20 after planning Phase 9*

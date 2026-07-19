@@ -71,6 +71,24 @@ ChangeSet + IFC + evidence.
 
 **Depends on:** Phases 7 and 8
 
+**Plans:** 5 plans in 5 sequential waves
+
+- **Wave 1:** `09-01` - Versioned RepairIntent and public request-understanding stage.
+- **Wave 2** *(blocked on Wave 1)*: `09-02` - Durable run and clarification state machine.
+- **Wave 3** *(blocked on Waves 1-2)*: `09-03` - Deterministic resolution and bound unified ChangeSet orchestration.
+- **Wave 4** *(blocked on Waves 1-3)*: `09-04` - Production semantic authority, atomic application, and publication.
+- **Wave 5** *(blocked on Waves 1-4)*: `09-05` - Interactive CLI, offline acceptance, and opt-in live UAT.
+
+**Cross-cutting constraints:**
+
+- Both Agent stages and every public artifact are bounded and Gold-free.
+- One run owns one unified, all-or-nothing ChangeSet transaction.
+- Source IFC bytes remain unchanged; run transitions and detailed evidence are
+  versioned, immutable, and resumable.
+- Evaluation 0.2 is the only successful-artifact publication authority.
+- Window L2 authoring remains Phase 10; later entity operations and vector/128k
+  expansion remain outside Phase 9.
+
 **Success criteria:**
 
 1. CLI/API accepts an IFC path and natural-language request and returns a
