@@ -572,8 +572,11 @@ def _get_psets(element: Any, *, should_inherit: bool) -> dict[str, Any]:
             should_inherit=should_inherit,
             verbose=True,
         )
-    except Exception:
-        return {}
+    except Exception as error:
+        raise SemanticFactError(
+            "IFC_PSET_EXTRACTION_FAILED",
+            f"{_entity_ref(element)}:{type(error).__name__}:{error}",
+        ) from error
 
 
 def _filled_element_host(element: Any) -> Any | None:

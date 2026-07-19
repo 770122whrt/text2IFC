@@ -22,7 +22,11 @@ from .evaluation import (
     make_l3_not_required,
 )
 from .evaluation_models import CheckResult, EvaluationStatus, EvidenceFact, RepairEvaluation
-from .evaluation_policy import EvidenceSourceKind, OperationEvaluationPolicy
+from .evaluation_policy import (
+    EvidenceSourceKind,
+    OperationEvaluationPolicy,
+    SemanticApplicability,
+)
 from .evaluation_projection import project_public_evaluation
 from .semantic_facts import (
     SemanticFact,
@@ -187,11 +191,13 @@ def _evaluate(
         application_result=inputs.application_result,
         registry=inputs.registry,
     )
-    repaired_model = ifcopenshell.open(str(Path(inputs.repaired_ifc_path)))
-    original_model = (
-        ifcopenshell.open(str(private_original_path))
+    repaired_model, repaired_open_error = _open_evaluation_model(
+        Path(inputs.repaired_ifc_path), label="repaired"
+    )
+    original_model, original_open_error = (
+        _open_evaluation_model(private_original_path, label="private-original")
         if private_original_path is not None
-        else None
+        else (None, None)
     )
     applied_roles_by_operation = _application_role_mapping(inputs.application_result)
     operations = []
@@ -202,34 +208,72 @@ def _evaluate(
         semantic_role = policy.semantic_role
         expected = list(inputs.expected_facts_by_operation.get(operation_id, ()))
         repaired_facts: tuple[SemanticFact, ...] = ()
+        extraction_errors: list[str] = []
         applied_roles = applied_roles_by_operation.get(operation_id, {})
         repaired_id = applied_roles.get(semantic_role)
-        if repaired_id:
-            repaired = repaired_model.by_guid(repaired_id)
-            repaired_facts = _extract_benchmark_semantic_facts(
-                repaired,
-                policy=policy,
-                source_kind=EvidenceSourceKind.REPAIRED_OUTPUT,
-                source_ref=repaired_id,
-                provenance=(f"application-role:{semantic_role}:{operation_id}",),
+        if repaired_open_error:
+            extraction_errors.append(repaired_open_error)
+        elif not repaired_id:
+            extraction_errors.append(
+                f"APPLICATION_SEMANTIC_ROLE_UNRESOLVED:{operation_id}:{semantic_role}"
             )
+        else:
+            try:
+                repaired = _require_role_entity(
+                    repaired_model,
+                    repaired_id,
+                    operation_id=operation_id,
+                    semantic_role=semantic_role,
+                    label="repaired",
+                )
+                repaired_facts = _extract_benchmark_semantic_facts(
+                    repaired,
+                    policy=policy,
+                    source_kind=EvidenceSourceKind.REPAIRED_OUTPUT,
+                    source_ref=repaired_id,
+                    provenance=(f"application-role:{semantic_role}:{operation_id}",),
+                )
+            except Exception as error:
+                extraction_errors.append(_evaluator_input_error(error))
         private_roles = private_mapping.get(operation_id, {})
         original_id = private_roles.get(semantic_role)
-        if original_model is not None and original_id:
-            original = original_model.by_guid(original_id)
-            expected.extend(
-                _extract_benchmark_semantic_facts(
-                    original,
-                    policy=policy,
-                    source_kind=EvidenceSourceKind.PRIVATE_ORIGINAL,
-                    source_ref=original_id,
-                    provenance=(f"private-mutation-role:{semantic_role}:{operation_id}",),
+        if private_original_path is not None:
+            if original_open_error:
+                extraction_errors.append(original_open_error)
+            elif not original_id:
+                extraction_errors.append(
+                    f"PRIVATE_SEMANTIC_ROLE_UNRESOLVED:{operation_id}:{semantic_role}"
                 )
+            else:
+                try:
+                    original = _require_role_entity(
+                        original_model,
+                        original_id,
+                        operation_id=operation_id,
+                        semantic_role=semantic_role,
+                        label="private-original",
+                    )
+                    expected.extend(
+                        _extract_benchmark_semantic_facts(
+                            original,
+                            policy=policy,
+                            source_kind=EvidenceSourceKind.PRIVATE_ORIGINAL,
+                            source_ref=original_id,
+                            provenance=(
+                                f"private-mutation-role:{semantic_role}:{operation_id}",
+                            ),
+                        )
+                    )
+                except Exception as error:
+                    extraction_errors.append(_evaluator_input_error(error))
+        l2_checks = (
+            _not_evaluable_semantic_checks(policy, errors=tuple(extraction_errors))
+            if extraction_errors
+            else inputs.registry.evaluate_semantics(
+                operation_type,
+                expected_facts=tuple(expected),
+                repaired_facts=repaired_facts,
             )
-        l2_checks = inputs.registry.evaluate_semantics(
-            operation_type,
-            expected_facts=tuple(expected),
-            repaired_facts=repaired_facts,
         )
         l2 = aggregate_level(
             level="L2",
@@ -410,8 +454,75 @@ def _get_psets(element: Any, *, should_inherit: bool) -> Mapping[str, Any]:
             should_inherit=should_inherit,
             verbose=True,
         )
-    except Exception:
-        return {}
+    except Exception as error:
+        raise RuntimeError(
+            f"IFC_PSET_EXTRACTION_FAILED:{type(error).__name__}:{error}"
+        ) from error
+
+
+def _open_evaluation_model(path: Path, *, label: str) -> tuple[Any | None, str | None]:
+    try:
+        return ifcopenshell.open(str(path)), None
+    except Exception as error:
+        return None, f"IFC_MODEL_OPEN_FAILED:{label}:{type(error).__name__}:{error}"
+
+
+def _require_role_entity(
+    model: Any,
+    global_id: str,
+    *,
+    operation_id: str,
+    semantic_role: str,
+    label: str,
+) -> Any:
+    try:
+        entity = model.by_guid(global_id)
+    except Exception as error:
+        raise RuntimeError(
+            f"IFC_ROLE_ENTITY_UNRESOLVED:{label}:{operation_id}:"
+            f"{semantic_role}:{global_id}"
+        ) from error
+    if entity is None:
+        raise RuntimeError(
+            f"IFC_ROLE_ENTITY_UNRESOLVED:{label}:{operation_id}:"
+            f"{semantic_role}:{global_id}"
+        )
+    return entity
+
+
+def _evaluator_input_error(error: Exception) -> str:
+    return f"{type(error).__name__}:{error}"
+
+
+def _not_evaluable_semantic_checks(
+    policy: OperationEvaluationPolicy,
+    *,
+    errors: tuple[str, ...],
+) -> tuple[CheckResult, ...]:
+    evidence_errors = tuple(sorted(set(errors)))
+    return tuple(
+        CheckResult(
+            check_id=spec.check_id,
+            policy_id=policy.policy_id,
+            applicability=spec.applicability.value,
+            mandatory=spec.applicability is not SemanticApplicability.INFORMATIONAL,
+            status=EvaluationStatus.NOT_EVALUABLE,
+            reason="Semantic evaluator inputs were unavailable or extraction failed.",
+            evidence=(
+                EvidenceFact(
+                    fact_id=spec.check_id,
+                    source_kind="evaluator_input_error",
+                    source_ref=f"{policy.policy_id}/{spec.check_id}",
+                    expected_state="unavailable",
+                    actual_state="unavailable",
+                    expected_value="measurable authorized semantic evidence",
+                    actual_value={"errors": evidence_errors},
+                    provenance=("evaluator-input-validation",),
+                ),
+            ),
+        )
+        for spec in policy.semantic_facts
+    )
 
 
 def _fact_key_token(value: str) -> str:

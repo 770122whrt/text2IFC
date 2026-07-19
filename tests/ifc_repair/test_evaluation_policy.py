@@ -545,3 +545,35 @@ def test_repaired_ifc_extraction_uses_inheritance_aware_official_utilities() -> 
         "identification": "Ss_25_30_95",
         "name": "Windows",
     }
+
+
+def test_pset_extraction_failure_is_not_treated_as_verified_absence(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    model = ifcopenshell.file(schema="IFC2X3")
+    window = model.create_entity(
+        "IfcWindow",
+        GlobalId="0000000000000000000099",
+        OverallHeight=1200.0,
+        OverallWidth=1000.0,
+    )
+
+    def fail_get_psets(*args: object, **kwargs: object) -> object:
+        del args, kwargs
+        raise RuntimeError("pset extractor unavailable")
+
+    monkeypatch.setattr(
+        "text2ifc_ifc_repair.semantic_facts.ifcopenshell.util.element.get_psets",
+        fail_get_psets,
+    )
+
+    with pytest.raises(SemanticFactError) as error:
+        extract_ifc_semantic_facts(
+            window,
+            policy=window_operation_definition().evaluation_policy,
+            source_kind=EvidenceSourceKind.REPAIRED_OUTPUT,
+            source_ref="repaired.ifc",
+            provenance=("sha256:repaired",),
+        )
+
+    assert error.value.code == "IFC_PSET_EXTRACTION_FAILED"

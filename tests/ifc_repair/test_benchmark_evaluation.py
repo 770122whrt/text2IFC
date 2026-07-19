@@ -8,11 +8,14 @@ from text2ifc_ifc_repair.benchmark_evaluation import (
     BenchmarkEvaluationInputs,
     ProductionEvaluationInputs,
     _application_role_mapping,
+    _not_evaluable_semantic_checks,
+    evaluate_benchmark,
     evaluate_production,
     evaluate_mapped_role_semantics,
 )
 from text2ifc_ifc_repair.evaluation_policy import EvidenceSourceKind
 from text2ifc_ifc_repair.operations.window import WINDOW_EVALUATION_POLICY
+from text2ifc_ifc_repair.operations import create_default_registry
 from text2ifc_ifc_repair.semantic_facts import SemanticFact
 from text2ifc_ifc_repair.evaluation_projection import (
     PrivateCanaryLeakError,
@@ -218,6 +221,70 @@ def test_application_role_mapping_is_owned_by_operation_id() -> None:
         "operation-1": {"window": "window-1"},
         "operation-2": {"window": "window-2"},
     }
+
+
+def _missing_ifc_inputs() -> ProductionEvaluationInputs:
+    operation_id = "operation-missing-ifc"
+    return ProductionEvaluationInputs(
+        damaged_ifc_path="missing-damaged.ifc",
+        repaired_ifc_path="missing-repaired.ifc",
+        changeset={
+            "base_model_fingerprint": "sha256:missing",
+            "scope": {"target_ids": ["wall-missing"], "forbidden_ids": []},
+            "operations": [
+                {
+                    "operation_id": operation_id,
+                    "operation_type": "add_window_with_opening_to_wall",
+                    "target": {"wall_global_id": "wall-missing"},
+                    "parameters": {},
+                }
+            ],
+        },
+        application_result={
+            "valid": True,
+            "published": True,
+            "operations": [
+                {
+                    "operation_id": operation_id,
+                    "changes": {"created": [], "modified": [], "removed": []},
+                }
+            ],
+        },
+        registry=create_default_registry(),
+    )
+
+
+def test_missing_repaired_ifc_returns_non_evaluable_report_for_both_entrypoints() -> None:
+    production = evaluate_production(_missing_ifc_inputs())
+    benchmark = evaluate_benchmark(
+        BenchmarkEvaluationInputs(
+            production=_missing_ifc_inputs(),
+            private_original_ifc_path="missing-original.ifc",
+            private_mutation_mapping={"operation-missing-ifc": {"window": "missing"}},
+        )
+    ).evaluation
+
+    for evaluation in (production, benchmark):
+        assert evaluation.complete_repair_success is False
+        assert evaluation.successful_artifact_publishable is False
+        assert evaluation.operations[0].level("L1").status.value != "passed"
+        assert evaluation.operations[0].level("L2").status.value == "not_evaluable"
+
+
+def test_extraction_error_makes_conditional_pset_and_quantity_not_evaluable() -> None:
+    checks = _not_evaluable_semantic_checks(
+        WINDOW_EVALUATION_POLICY,
+        errors=("IFC_PSET_EXTRACTION_FAILED:boom",),
+    )
+    affected = [
+        check
+        for check in checks
+        if check.check_id in {"window.pset", "window.quantity"}
+    ]
+
+    assert len(affected) == 2
+    assert all(check.status.value == "not_evaluable" for check in affected)
+    assert all(check.mandatory is True for check in affected)
 
 
 def test_private_role_mapping_compares_semantics_without_gold_guid_reuse() -> None:
