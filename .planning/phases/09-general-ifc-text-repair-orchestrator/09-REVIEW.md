@@ -1,150 +1,83 @@
 ---
 phase: 09-general-ifc-text-repair-orchestrator
-reviewed: 2026-07-20T01:50:39Z
+reviewed: 2026-07-20T02:03:29Z
 depth: standard
-iteration: 3
-files_reviewed: 10
+iteration: 4
+files_reviewed: 8
 files_reviewed_list:
   - src/text2ifc_ifc_repair/api.py
-  - src/text2ifc_ifc_repair/orchestrator.py
   - src/text2ifc_ifc_repair/production_evidence.py
   - src/text2ifc_ifc_repair/resolution_flow.py
-  - src/text2ifc_ifc_repair/run_artifacts.py
   - src/text2ifc_ifc_repair/run_store.py
   - tests/ifc_repair/test_phase9_offline_e2e.py
   - tests/ifc_repair/test_production_evidence.py
   - tests/ifc_repair/test_resolution_flow.py
   - tests/ifc_repair/test_run_state.py
 findings:
-  critical: 2
-  warning: 2
+  critical: 0
+  warning: 0
   info: 0
-  total: 4
-status: issues_found
+  total: 0
+status: clean
 ---
 
-# Phase 09: Code Review Report (Iteration 3)
+# Phase 09: Code Review Report (Iteration 4)
 
-**Reviewed:** 2026-07-20T01:50:39Z
+**Reviewed:** 2026-07-20T02:03:29Z
 **Depth:** standard
-**Files Reviewed:** 10
-**Status:** issues_found
+**Files Reviewed:** 8
+**Status:** clean
 
 ## Summary
 
-The real `add_detail` continuation no longer references an uninitialized local,
-and the new two-round public-API test exercises the repaired branch. The
-terminal-publication fix also closes the original partial-commit window: a
-hidden prepared bundle, durable recovery journal, content-addressed promoted
-bundle, and state-authoritative read path recover the three tested crash points
-without exposing `published/`.
+All iteration-3 findings are closed in the reviewed implementation. No new
+correctness, security, or maintainability defects were found in the fix scope.
 
-The explicit Prototype fix is not complete for the normal IFC index shape.
-Type-name and Type-GlobalId resolution authorize the `IfcTypeObject` GlobalId,
-while production evidence looks up only product-keyed `ElementRecord` entries.
-The new unit test passes because it supplies a synthetic type-keyed record that
-the actual indexer does not create. A separate concurrent-resume race can also
-overwrite artifacts after another clarification answer has durably bound their
-hashes, making an otherwise successful run unreadable.
+The explicit Prototype boundary now distinguishes product GlobalIds from Type
+GlobalIds. Product references retain occurrence-record authority; type-name and
+Type-GlobalId references carry `prototype_lookup=type_global_id`, resolve
+through the product-keyed index, and admit only inherited Type facts plus the
+formal `relationship:type` identity. Conflicting Type values fail closed.
 
-Focused review tests report `56 passed, 1 skipped`; the parent orchestration run
-reports `371 passed, 1 skipped`. A direct production-evidence reproduction with
-the real product-keyed record shape fails with
-`MISSING_AUTHORIZED_RECORD: user_authorized_prototype:type-1`.
+Clarification attempts now write Provider intent and API-context artifacts to
+UUID-qualified immutable paths before the state compare-and-swap. A losing
+concurrent answer can leave an unreferenced attempt, but it cannot overwrite
+the winner's hash-bound artifacts or make the committed run unreadable. The
+barrier-based race test drives both attempts to the CAS boundary and verifies
+that one succeeds, one fails, and the winner remains loadable.
 
-## Iteration 2 Blocker Closure
+Deferred terminal publication is now an API-owned invariant, all four journal
+crash points are covered, and the Windows mutation lock preserves its locked
+byte while refreshing metadata.
 
-| Iteration 2 blocker | Result | Iteration 3 evidence |
+## Iteration 3 Finding Closure
+
+| Iteration 3 finding | Result | Iteration 4 evidence |
 |---|---|---|
-| BL-01 `add_detail` uninitialized `resumed` | Closed | `api.py:198-236` derives the resume directory from the caller-bound version and persists/binds the regenerated intent. `test_add_detail_can_span_two_real_api_clarification_rounds` traverses two real continuations and succeeds. |
-| BL-02 explicit Prototype production authority | **Open** | The authority kind and authorization value now pass the allowlist, but Type references still fail the actual product-keyed index boundary (BL-01 below). |
-| BL-03 terminal publication partial commit | Closed | `run_store.py:185-301` journals before promotion and recovers promotion/transition/state replacement. Fault-injection tests cover promotion and state-write boundaries and keep canonical `published/` absent. |
+| BL-01 Type-name/Type-GUID Prototype missing from production evidence | Closed | `resolution_flow.py:332-358` records lookup kind; `production_evidence.py:236-260,352-399` resolves Type facts through occurrence records without requiring a synthetic Type-keyed record. Tests cover type GUID, type name, and product GUID. |
+| BL-02 concurrent clarification artifacts could overwrite winner bindings | Closed | `api.py:181-247` uses one UUID-qualified intent/context path per attempt. The real two-thread test proves the losing CAS cannot corrupt the winner. |
+| WR-01 callers could disable deferred publication | Closed | `api.py:55-62` rejects explicit `False` and forces the invariant to `True`; constructor coverage verifies rejection. |
+| WR-02 `after_journal` crash point was untested | Closed | `test_run_state.py:389-448` now covers `after_journal`, `after_promotion`, `before_state_replace`, and `after_state_replace`. |
 
-## Blockers
+## Additional Regression Check
 
-### BL-01 [BLOCKER]: Type-name and Type-GlobalId Prototypes still fail production evidence
+The Windows lock metadata change at `run_store.py:887-927` no longer truncates
+the byte covered by `msvcrt.locking`. Initialization/open/write failures are
+normalized to stable `RUN_LOCKED` errors, and the descriptor is closed on every
+path.
 
-**Files:** `src/text2ifc_ifc_repair/resolution_flow.py:332-346`, `src/text2ifc_ifc_repair/production_evidence.py:227-245`
+Focused tests:
 
-**Issue:** `_explicit_prototype()` returns the matched `type_global_id` for a
-type-name reference (and for a request that names the type GUID). The production
-path builds `records_by_global_id` from `record.ifc_global_id`, because the index
-contains product records carrying `type_global_id`; it does not create a second
-record keyed by the `IfcTypeObject` GUID. `_operation_candidates()` nevertheless
-calls `_record(records_by_global_id, global_id)` for every
-`user_authorized_prototype`. Therefore a normal explicit type-name request still
-terminates as `MISSING_AUTHORIZED_RECORD`/`l2_not_evaluable`.
+- `10 passed` for the five repaired behavior groups.
+- `60 passed, 1 skipped` for the four changed Phase 09 test modules; the skip is
+  the existing platform-permission case.
+- Parent orchestration regression result: `375 passed, 1 skipped`.
 
-The added production test at
-`tests/ifc_repair/test_production_evidence.py:308-345` hides this by using
-`"prototype-1": _record("prototype-1", ...)`, which is not the type-name
-resolution shape. The existing resolution test explicitly demonstrates the
-mismatch: product `0BBBB...` carries type `0TYPE...`, and the authority stores
-`0TYPE...`.
-
-**Fix:** Preserve a product record identity alongside the explicitly requested
-type authority, or teach production evidence to resolve a type GUID through a
-uniquely matching product record's `type_global_id` and use only its inherited
-type facts. Add GUID and type-name public-API tests that traverse resolution,
-Stage 2, production evidence, evaluation, and terminal publication without a
-synthetic type-keyed record.
-
-### BL-02 [BLOCKER]: Concurrent clarification resumes can corrupt committed artifact bindings
-
-**Files:** `src/text2ifc_ifc_repair/api.py:161-258`
-
-**Issue:** The initial clarification ID/version check happens before Provider
-work and before any RunStore mutation lock. `add_detail` then writes to the
-deterministic `intent/resume-{version}` directory and all answer modes write the
-deterministic `api-context-v{version}.json` before
-`RunStore.continue_with_answer()` performs the compare-and-swap. Two callers can
-both pass the initial check. The faster caller can bind and commit its hashes;
-the slower caller can then overwrite the same files and lose the state CAS.
-Subsequent `load()` verifies the winner's stored hashes against the loser's
-bytes and raises `RUN_TAMPER_DETECTED`, corrupting a valid run.
-
-**Fix:** Write each resume attempt under a unique hidden attempt directory.
-Under one RunStore lock, revalidate clarification ID/version, validate the
-answer and generated intent, promote the winning attempt to a versioned
-immutable path, create its bindings, and append the resume transition. Losing
-attempts must never be able to mutate paths referenced by committed state. Add
-a two-thread/barrier test in which the stale Provider response completes after
-the winning state commit and prove the winner remains loadable.
-
-## Warnings
-
-### WR-01 [WARNING]: RepairAPI callers can disable its required deferred-publication invariant
-
-**Files:** `src/text2ifc_ifc_repair/api.py:57-58`, `src/text2ifc_ifc_repair/api.py:381-386`
-
-**Issue:** `defer_publication=True` is installed as a default and then overwritten
-by arbitrary `orchestrator_options`. A caller can pass
-`{"defer_publication": false}`; the orchestrator promotes immediately and returns
-no `prepared_root`, after which the API raises
-`TERMINAL_PUBLICATION_NOT_PREPARED`. This is a valid constructor input that
-defeats the new durability protocol.
-
-**Fix:** Make deferred publication an API-owned invariant: reject that key in
-`orchestrator_options`, or apply `defer_publication=True` after merging caller
-options. Add a constructor test proving callers cannot disable it.
-
-### WR-02 [WARNING]: The journal-before-promotion crash point is implemented but not tested
-
-**File:** `tests/ifc_repair/test_run_state.py:389-448`
-
-**Issue:** The production code exposes four fault points, including
-`after_journal`, but the test titled “every commit crash window” parametrizes
-only `after_promotion`, `before_state_replace`, and `after_state_replace`.
-Recovery from a durable journal while the bundle is still prepared is a
-distinct branch at `run_store.py:786-789`; a regression there would strand the
-run despite the current test name and coverage claim.
-
-**Fix:** Add `after_journal` to the parametrization and assert recovery promotes
-the prepared bundle once, commits the terminal state, removes the journal, and
-remains idempotent.
+All reviewed files meet the Phase 09 quality and safety requirements. No issues
+found.
 
 ---
 
-_Reviewed: 2026-07-20T01:50:39Z_
+_Reviewed: 2026-07-20T02:03:29Z_
 _Reviewer: the agent (gsd-code-reviewer)_
 _Depth: standard_
