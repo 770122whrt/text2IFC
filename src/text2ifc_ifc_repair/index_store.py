@@ -15,6 +15,7 @@ from .index_models import (
     IndexMetadata,
     PropertyFact,
     RelationshipFact,
+    TypeRecord,
 )
 
 
@@ -31,15 +32,25 @@ class IndexRepository(Protocol):
 
     def put_record(self, record: ElementRecord) -> None: ...
 
+    def put_type_record(self, record: TypeRecord) -> None: ...
+
     def put_diagnostic(self, diagnostic: IndexDiagnostic) -> None: ...
 
     def publish(self) -> None: ...
 
     def get_by_global_id(self, global_id: str) -> ElementRecord | None: ...
 
+    def get_type_by_global_id(self, global_id: str) -> TypeRecord | None: ...
+
     def iter_records(self) -> Iterable[ElementRecord]: ...
 
+    def iter_type_records(self) -> Iterable[TypeRecord]: ...
+
     def find_aliases(self, normalized_value: str) -> list[ElementRecord]: ...
+
+    def find_type_aliases(self, normalized_value: str) -> list[TypeRecord]: ...
+
+    def type_occurrence_summary(self, global_id: str) -> tuple[int, tuple[str, ...]]: ...
 
     def properties_for(self, record_id: str) -> list[PropertyFact]: ...
 
@@ -202,6 +213,46 @@ class SQLiteIndexRepository:
                 ON elements(ifc_global_id) WHERE identity_reliable = 1;
             CREATE INDEX element_class ON elements(ifc_class, record_id);
             CREATE INDEX element_storey ON elements(storey_global_id, record_id);
+            CREATE TABLE type_objects (
+                record_id TEXT PRIMARY KEY,
+                ifc_global_id TEXT,
+                identity_reliable INTEGER NOT NULL CHECK (identity_reliable IN (0, 1)),
+                ifc_class TEXT NOT NULL,
+                name TEXT,
+                applicable_occurrence TEXT,
+                predefined_type TEXT,
+                element_type TEXT,
+                provenance_json TEXT NOT NULL
+            );
+            CREATE UNIQUE INDEX reliable_type_global_id
+                ON type_objects(ifc_global_id) WHERE identity_reliable = 1;
+            CREATE INDEX type_class ON type_objects(ifc_class, record_id);
+            CREATE TABLE type_aliases (
+                record_id TEXT NOT NULL REFERENCES type_objects(record_id) ON DELETE CASCADE,
+                ordinal INTEGER NOT NULL,
+                normalized_value TEXT NOT NULL,
+                original_value TEXT NOT NULL,
+                field TEXT NOT NULL,
+                provenance TEXT NOT NULL,
+                PRIMARY KEY (record_id, ordinal)
+            );
+            CREATE INDEX type_alias_lookup
+                ON type_aliases(normalized_value, record_id);
+            CREATE TABLE type_properties (
+                record_id TEXT NOT NULL REFERENCES type_objects(record_id) ON DELETE CASCADE,
+                ordinal INTEGER NOT NULL,
+                set_kind TEXT NOT NULL,
+                set_name TEXT NOT NULL,
+                property_name TEXT NOT NULL,
+                value_json TEXT NOT NULL,
+                value_type TEXT,
+                unit TEXT,
+                inherited INTEGER NOT NULL CHECK (inherited IN (0, 1)),
+                provenance TEXT NOT NULL,
+                PRIMARY KEY (record_id, ordinal)
+            );
+            CREATE INDEX type_property_lookup
+                ON type_properties(set_kind, set_name, property_name, record_id);
             CREATE TABLE aliases (
                 record_id TEXT NOT NULL REFERENCES elements(record_id) ON DELETE CASCADE,
                 ordinal INTEGER NOT NULL,
@@ -342,6 +393,63 @@ class SQLiteIndexRepository:
             ),
         )
 
+    def put_type_record(self, record: TypeRecord) -> None:
+        self._require_build()
+        try:
+            self._connection.execute(
+                "INSERT INTO type_objects VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                (
+                    record.record_id,
+                    record.ifc_global_id,
+                    int(record.identity_reliable),
+                    record.ifc_class,
+                    record.name,
+                    record.applicable_occurrence,
+                    record.predefined_type,
+                    record.element_type,
+                    _json_dump(record.provenance),
+                ),
+            )
+            self._connection.executemany(
+                "INSERT INTO type_aliases VALUES (?, ?, ?, ?, ?, ?)",
+                [
+                    (
+                        record.record_id,
+                        ordinal,
+                        fact.normalized_value,
+                        fact.original_value,
+                        fact.field,
+                        fact.provenance,
+                    )
+                    for ordinal, fact in enumerate(record.aliases)
+                ],
+            )
+            self._connection.executemany(
+                "INSERT INTO type_properties VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                [
+                    (
+                        record.record_id,
+                        ordinal,
+                        fact.set_kind,
+                        fact.set_name,
+                        fact.property_name,
+                        _json_dump(fact.value),
+                        fact.value_type,
+                        fact.unit,
+                        int(fact.inherited),
+                        fact.provenance,
+                    )
+                    for ordinal, fact in enumerate(record.properties)
+                ],
+            )
+        except sqlite3.IntegrityError as exc:
+            if "type_objects.ifc_global_id" in str(exc):
+                raise IndexStoreError(
+                    "DUPLICATE_RELIABLE_TYPE_GLOBAL_ID",
+                    f"Reliable IFC Type GlobalId is duplicated: {record.ifc_global_id}",
+                ) from exc
+            raise
+
     def publish(self) -> None:
         self._require_build()
         assert self._build_path is not None
@@ -366,6 +474,18 @@ class SQLiteIndexRepository:
         for row in rows:
             yield self._record_from_row(row)
 
+    def get_type_by_global_id(self, global_id: str) -> TypeRecord | None:
+        row = self._connection.execute(
+            "SELECT * FROM type_objects WHERE ifc_global_id = ? AND identity_reliable = 1",
+            (global_id,),
+        ).fetchone()
+        return None if row is None else self._type_record_from_row(row)
+
+    def iter_type_records(self) -> Iterator[TypeRecord]:
+        rows = self._connection.execute("SELECT * FROM type_objects ORDER BY record_id")
+        for row in rows:
+            yield self._type_record_from_row(row)
+
     def find_aliases(self, normalized_value: str) -> list[ElementRecord]:
         rows = self._connection.execute(
             """SELECT DISTINCT e.* FROM elements e
@@ -375,6 +495,28 @@ class SQLiteIndexRepository:
             (normalized_value,),
         )
         return [self._record_from_row(row) for row in rows]
+
+    def find_type_aliases(self, normalized_value: str) -> list[TypeRecord]:
+        rows = self._connection.execute(
+            """SELECT DISTINCT t.* FROM type_objects t
+               JOIN type_aliases a ON a.record_id = t.record_id
+               WHERE a.normalized_value = ? AND t.identity_reliable = 1
+               ORDER BY t.record_id""",
+            (normalized_value,),
+        )
+        return [self._type_record_from_row(row) for row in rows]
+
+    def type_occurrence_summary(self, global_id: str) -> tuple[int, tuple[str, ...]]:
+        count = self._connection.execute(
+            "SELECT COUNT(*) FROM elements WHERE type_global_id = ?", (global_id,)
+        ).fetchone()[0]
+        rows = self._connection.execute(
+            """SELECT DISTINCT storey_name FROM elements
+               WHERE type_global_id = ? AND storey_name IS NOT NULL
+               ORDER BY storey_name""",
+            (global_id,),
+        )
+        return int(count), tuple(str(row[0]) for row in rows)
 
     def properties_for(self, record_id: str) -> list[PropertyFact]:
         rows = self._connection.execute(
@@ -451,6 +593,50 @@ class SQLiteIndexRepository:
             ),
             relationships=tuple(self.relationships_from(record_id)),
             properties=tuple(self.properties_for(record_id)),
+        )
+
+    def _type_record_from_row(self, row: sqlite3.Row) -> TypeRecord:
+        record_id = row["record_id"]
+        alias_rows = self._connection.execute(
+            "SELECT * FROM type_aliases WHERE record_id = ? ORDER BY ordinal",
+            (record_id,),
+        )
+        property_rows = self._connection.execute(
+            "SELECT * FROM type_properties WHERE record_id = ? ORDER BY ordinal",
+            (record_id,),
+        )
+        return TypeRecord(
+            record_id=record_id,
+            ifc_global_id=row["ifc_global_id"],
+            identity_reliable=bool(row["identity_reliable"]),
+            ifc_class=row["ifc_class"],
+            name=row["name"],
+            applicable_occurrence=row["applicable_occurrence"],
+            predefined_type=row["predefined_type"],
+            element_type=row["element_type"],
+            provenance=_json_load(row["provenance_json"]),
+            aliases=tuple(
+                AliasFact(
+                    item["normalized_value"],
+                    item["original_value"],
+                    item["field"],
+                    item["provenance"],
+                )
+                for item in alias_rows
+            ),
+            properties=tuple(
+                PropertyFact(
+                    set_kind=item["set_kind"],
+                    set_name=item["set_name"],
+                    property_name=item["property_name"],
+                    value=_json_load(item["value_json"]),
+                    value_type=item["value_type"],
+                    unit=item["unit"],
+                    inherited=bool(item["inherited"]),
+                    provenance=item["provenance"],
+                )
+                for item in property_rows
+            ),
         )
 
     def _require_build(self) -> None:

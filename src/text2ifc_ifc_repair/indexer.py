@@ -20,11 +20,13 @@ from .index_models import (
     IndexMetadata,
     PropertyFact,
     RelationshipFact,
+    TypeRecord,
 )
 from .index_store import SQLiteIndexRepository
+from .semantic_facts import extract_property_facts
 
 
-EXTRACTOR_VERSION = "text2ifc/ifc-indexer/0.1"
+EXTRACTOR_VERSION = "text2ifc/ifc-indexer/0.2"
 _IFC_GUID = re.compile(r"^[0-9A-Za-z_$]{22}$")
 
 
@@ -56,6 +58,13 @@ def build_ifc_index(
     duplicate_ids = {
         global_id for global_id, count in Counter(global_ids).items() if global_id and count > 1
     }
+    type_entities = _referenced_types(entities)
+    type_global_ids = [str(getattr(entity, "GlobalId", "") or "") for entity in type_entities]
+    duplicate_type_ids = {
+        global_id
+        for global_id, count in Counter(type_global_ids).items()
+        if global_id and count > 1
+    }
     metadata = IndexMetadata(
         source_ifc_sha256="sha256:" + hashlib.sha256(source.read_bytes()).hexdigest(),
         ifc_schema=model.schema,
@@ -65,6 +74,51 @@ def build_ifc_index(
     )
 
     with SQLiteIndexRepository.create(database_path, metadata) as repository:
+        for type_entity in type_entities:
+            global_id = str(getattr(type_entity, "GlobalId", "") or "")
+            identity_reliable = (
+                bool(_IFC_GUID.fullmatch(global_id))
+                and global_id not in duplicate_type_ids
+            )
+            record_id = (
+                f"type:{global_id}"
+                if identity_reliable
+                else f"diagnostic:type:{type_entity.id()}"
+            )
+            repository.put_type_record(
+                TypeRecord(
+                    record_id=record_id,
+                    ifc_global_id=global_id or None,
+                    identity_reliable=identity_reliable,
+                    ifc_class=type_entity.is_a(),
+                    name=_text(getattr(type_entity, "Name", None)),
+                    applicable_occurrence=_text(
+                        getattr(type_entity, "ApplicableOccurrence", None)
+                    ),
+                    predefined_type=_text(getattr(type_entity, "PredefinedType", None)),
+                    element_type=_text(getattr(type_entity, "ElementType", None)),
+                    provenance={"source": "current_ifc", "step_id": type_entity.id()},
+                    aliases=_type_aliases(type_entity),
+                    properties=_properties(type_entity, should_inherit=False),
+                )
+            )
+            if not identity_reliable:
+                code = (
+                    "DUPLICATE_IFC_TYPE_GLOBAL_ID"
+                    if global_id in duplicate_type_ids
+                    else "UNRELIABLE_IFC_TYPE_GLOBAL_ID"
+                )
+                repository.put_diagnostic(
+                    IndexDiagnostic(
+                        code=code,
+                        severity="error",
+                        message="IFC Type identity cannot be used as semantic authority",
+                        record_id=record_id,
+                        ifc_global_id=global_id or None,
+                        step_id=type_entity.id(),
+                        evidence={"ifc_class": type_entity.is_a()},
+                    )
+                )
         for entity in entities:
             adapter = active_registry.adapter_for(entity)
             assert adapter is not None
@@ -144,6 +198,15 @@ def _registered_entities(model: Any, registry: IndexAdapterRegistry) -> list[Any
     return [unique[step_id] for step_id in sorted(unique)]
 
 
+def _referenced_types(entities: list[Any]) -> list[Any]:
+    unique: dict[int, Any] = {}
+    for entity in entities:
+        type_entity = _element_type(entity)
+        if type_entity is not None:
+            unique[type_entity.id()] = type_entity
+    return [unique[step_id] for step_id in sorted(unique)]
+
+
 def _element_type(entity: Any) -> Any | None:
     try:
         return ifcopenshell.util.element.get_type(entity)
@@ -197,41 +260,52 @@ def _aliases(entity: Any, type_entity: Any | None, storey: Any | None) -> tuple[
     return tuple(facts[key] for key in sorted(facts))
 
 
+def _type_aliases(entity: Any) -> tuple[AliasFact, ...]:
+    values = (
+        ("name", getattr(entity, "Name", None), "IfcTypeObject.Name"),
+        (
+            "applicable_occurrence",
+            getattr(entity, "ApplicableOccurrence", None),
+            "IfcTypeObject.ApplicableOccurrence",
+        ),
+        ("element_type", getattr(entity, "ElementType", None), "IfcElementType.ElementType"),
+    )
+    facts: dict[tuple[str, str], AliasFact] = {}
+    for field, value, provenance in values:
+        original = _text(value)
+        if original:
+            normalized = normalize_alias(original)
+            facts[(field, normalized)] = AliasFact(
+                normalized, original, field, provenance
+            )
+    return tuple(facts[key] for key in sorted(facts))
+
+
 def normalize_alias(value: str) -> str:
     normalized = unicodedata.normalize("NFKC", value).casefold()
     normalized = re.sub(r"[_:/\\|]+", " ", normalized)
     return " ".join(normalized.split())
 
 
-def _properties(entity: Any) -> tuple[PropertyFact, ...]:
+def _properties(
+    entity: Any, *, should_inherit: bool = True
+) -> tuple[PropertyFact, ...]:
     try:
-        sets = ifcopenshell.util.element.get_psets(
-            entity, psets_only=False, qtos_only=False, should_inherit=True, verbose=True
-        )
+        facts = extract_property_facts(entity, should_inherit=should_inherit)
     except Exception:
         return ()
-    facts: list[PropertyFact] = []
-    for set_name, members in sets.items():
-        if not isinstance(members, dict):
-            continue
-        for property_name, payload in members.items():
-            if property_name == "id" or not isinstance(payload, dict) or "value" not in payload:
-                continue
-            property_class = str(payload.get("class") or "")
-            facts.append(
-                PropertyFact(
-                    set_kind="quantity" if property_class.startswith("IfcQuantity") else "pset",
-                    set_name=str(set_name),
-                    property_name=str(property_name),
-                    value=_json_safe(payload.get("value")),
-                    value_type=_text(payload.get("value_type") or property_class),
-                    unit=_text(payload.get("unit")),
-                    inherited=True,
-                    provenance="ifcopenshell.util.element.get_psets",
-                )
-            )
     return tuple(
-        sorted(facts, key=lambda fact: (fact.set_kind, fact.set_name, fact.property_name, repr(fact.value)))
+        PropertyFact(
+            set_kind=fact.set_kind,
+            set_name=fact.set_name,
+            property_name=fact.property_name,
+            value=_json_safe(fact.value),
+            value_type=fact.value_type,
+            unit=fact.unit,
+            inherited=fact.inherited,
+            provenance=fact.provenance,
+        )
+        for fact in facts
     )
 
 

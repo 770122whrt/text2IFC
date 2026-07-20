@@ -4,7 +4,7 @@ from dataclasses import dataclass, field
 from typing import Any
 
 
-INDEX_SCHEMA_VERSION = "text2ifc/ifc-index/0.1"
+INDEX_SCHEMA_VERSION = "text2ifc/ifc-index/0.2"
 
 
 @dataclass(frozen=True)
@@ -75,4 +75,21 @@ class ElementRecord:
     provenance: dict[str, Any] = field(default_factory=dict)
     aliases: tuple[AliasFact, ...] = ()
     relationships: tuple[RelationshipFact, ...] = ()
+    properties: tuple[PropertyFact, ...] = ()
+
+
+@dataclass(frozen=True)
+class TypeRecord:
+    """Non-editable IFC Type authority referenced by indexed occurrences."""
+
+    record_id: str
+    ifc_global_id: str | None
+    identity_reliable: bool
+    ifc_class: str
+    name: str | None
+    applicable_occurrence: str | None
+    predefined_type: str | None
+    element_type: str | None
+    provenance: dict[str, Any] = field(default_factory=dict)
+    aliases: tuple[AliasFact, ...] = ()
     properties: tuple[PropertyFact, ...] = ()

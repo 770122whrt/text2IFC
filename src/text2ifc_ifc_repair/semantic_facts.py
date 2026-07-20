@@ -134,31 +134,7 @@ def extract_ifc_semantic_facts(
 
     entity_source = _entity_ref(element)
     facts: list[SemanticFact] = []
-    inherited_sets = _get_psets(element, should_inherit=True)
-    direct_sets = _get_psets(element, should_inherit=False)
-    for set_name, members in inherited_sets.items():
-        if not isinstance(members, dict):
-            continue
-        direct_members = direct_sets.get(set_name, {})
-        for property_name, payload in members.items():
-            if property_name == "id" or not isinstance(payload, dict) or "value" not in payload:
-                continue
-            property_class = str(payload.get("class") or "")
-            property_fact = PropertyFact(
-                set_kind=(
-                    "quantity" if property_class.startswith("IfcQuantity") else "pset"
-                ),
-                set_name=str(set_name),
-                property_name=str(property_name),
-                value=payload.get("value"),
-                value_type=_optional_text(payload.get("value_type") or property_class),
-                unit=_optional_text(payload.get("unit")),
-                inherited=not (
-                    isinstance(direct_members, dict)
-                    and property_name in direct_members
-                ),
-                provenance="ifcopenshell.util.element.get_psets",
-            )
+    for property_fact in extract_property_facts(element):
             semantic = semantic_fact_from_property_fact(
                 property_fact,
                 source_kind=source_kind,
@@ -205,6 +181,60 @@ def extract_ifc_semantic_facts(
         )
     unique = {(fact.fact_key, repr(fact.value)): fact for fact in facts}
     return tuple(unique[key] for key in sorted(unique))
+
+
+def extract_property_facts(
+    element: Any, *, should_inherit: bool = True
+) -> tuple[PropertyFact, ...]:
+    """Extract deterministic Pset/Qto facts and classify their actual origin."""
+
+    merged_sets = _get_psets(element, should_inherit=should_inherit)
+    direct_sets = (
+        _get_psets(element, should_inherit=False) if should_inherit else merged_sets
+    )
+    facts: list[PropertyFact] = []
+    for set_name, members in merged_sets.items():
+        if not isinstance(members, dict):
+            continue
+        direct_members = direct_sets.get(set_name, {})
+        for property_name, payload in members.items():
+            if property_name == "id" or not isinstance(payload, dict) or "value" not in payload:
+                continue
+            property_class = str(payload.get("class") or "")
+            inherited = should_inherit and not (
+                isinstance(direct_members, dict) and property_name in direct_members
+            )
+            facts.append(
+                PropertyFact(
+                    set_kind=(
+                        "quantity"
+                        if property_class.startswith("IfcQuantity")
+                        else "pset"
+                    ),
+                    set_name=str(set_name),
+                    property_name=str(property_name),
+                    value=payload.get("value"),
+                    value_type=_optional_text(payload.get("value_type") or property_class),
+                    unit=_optional_text(payload.get("unit")),
+                    inherited=inherited,
+                    provenance=(
+                        "ifcopenshell.util.element.get_psets:inherited"
+                        if inherited
+                        else "ifcopenshell.util.element.get_psets:direct"
+                    ),
+                )
+            )
+    return tuple(
+        sorted(
+            facts,
+            key=lambda fact: (
+                fact.set_kind,
+                fact.set_name,
+                fact.property_name,
+                repr(fact.value),
+            ),
+        )
+    )
 
 
 def resolve_expected_facts(
@@ -623,6 +653,7 @@ __all__ = [
     "SemanticFact",
     "SemanticFactError",
     "evaluate_operation_semantics",
+    "extract_property_facts",
     "extract_ifc_semantic_facts",
     "resolve_expected_facts",
     "semantic_fact_from_property_fact",
