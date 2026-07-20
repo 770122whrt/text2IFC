@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import Enum
 from pathlib import Path
 from types import MappingProxyType
@@ -111,6 +111,12 @@ class ClarificationCandidate:
     storey: str | None
     position: str | None
     evidence: tuple[str, ...]
+    candidate_kind: str = "target"
+    dimensions: Mapping[str, Any] = field(
+        default_factory=lambda: MappingProxyType({})
+    )
+    occurrence_count: int = 0
+    storeys: tuple[str, ...] = ()
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -121,6 +127,10 @@ class ClarificationCandidate:
             "storey": self.storey,
             "position": self.position,
             "evidence": list(self.evidence),
+            "candidate_kind": self.candidate_kind,
+            "dimensions": thaw_json(self.dimensions),
+            "occurrence_count": self.occurrence_count,
+            "storeys": list(self.storeys),
         }
 
     @classmethod
@@ -133,6 +143,10 @@ class ClarificationCandidate:
             storey=None if value["storey"] is None else str(value["storey"]),
             position=None if value["position"] is None else str(value["position"]),
             evidence=tuple(str(item) for item in value["evidence"]),
+            candidate_kind=str(value.get("candidate_kind", "target")),
+            dimensions=MappingProxyType(dict(value.get("dimensions") or {})),
+            occurrence_count=int(value.get("occurrence_count", 0)),
+            storeys=tuple(str(item) for item in value.get("storeys", ())),
         )
 
 

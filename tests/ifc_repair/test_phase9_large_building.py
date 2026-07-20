@@ -59,7 +59,16 @@ def test_large_building_uses_public_api_and_keeps_current_l2_nonpublishable(tmp_
                             "opening": {"width_mm": float(window.OverallWidth), "height_mm": float(window.OverallHeight), "sill_height_mm": float(position["sill_height"])},
                             "window": {"fit_opening": True},
                         },
-                        "attribute_intents": [], "prototype_intent": None,
+                        "attribute_intents": [],
+                        "prototype_intent": {
+                            "reference_kind": "type_name",
+                            "reference": "M_Fixed:0915 x 1830mm",
+                            "source": {
+                                "source_kind": "user_request",
+                                "reference": "request:/prototype",
+                                "excerpt": "M_Fixed:0915 x 1830mm",
+                            },
+                        },
                         "provenance": [{"source_kind": "user_request", "reference": "request:/text", "excerpt": text}],
                     }],
                     "provenance": [{"source_kind": "user_request", "reference": "request:/text", "excerpt": text}],
@@ -104,7 +113,16 @@ def test_large_building_uses_public_api_and_keeps_current_l2_nonpublishable(tmp_
     assert "successful_ifc" not in result.artifacts
     assert "diagnostic_candidate" in result.artifacts
     run_dir = tmp_path / "output" / result.run_directory
+    resolution = json.loads((run_dir / "resolution.json").read_text(encoding="utf-8"))
+    prototype_authority = next(
+        item
+        for item in resolution["operations"][0]["authorized_semantics"]
+        if item["kind"] == "user_authorized_prototype"
+    )
+    assert prototype_authority["global_id"] == "2cXV28XOjE6f6irhu0CO_c"
+    assert prototype_authority["authorization"] == "explicit_request_reference"
     evaluation = json.loads((run_dir / result.artifacts["evaluation"]).read_text(encoding="utf-8"))
+    assert "PROTOTYPE_TYPE_FACT_CONFLICT" not in json.dumps(evaluation)
     levels = {item["level"]: item["status"] for item in evaluation["operations"][0]["levels"]}
     assert levels["L1"] == "passed"
     assert levels["L2"] in {"failed", "partial", "not_evaluable"}

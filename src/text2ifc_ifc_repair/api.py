@@ -502,6 +502,41 @@ def _clarification(run_id: str, version: int, resolution: Any) -> Clarification:
     )
 
 
+def _parameter_clarification(
+    run_id: str,
+    version: int,
+    missing_parameters: list[dict[str, Any]],
+) -> Clarification:
+    labels = {
+        "/opening/width_mm": "窗宽",
+        "/opening/height_mm": "窗高",
+        "/opening/sill_height_mm": "窗台高度",
+        "/position/center_offset_mm": "窗中心距墙局部起点的距离",
+    }
+    first = missing_parameters[0] if missing_parameters else {
+        "operation_id": "operation",
+        "paths": [],
+    }
+    paths = [str(path) for path in first.get("paths", ())]
+    fields = "、".join(labels.get(path, path) for path in paths)
+    question = (
+        f"操作 {first.get('operation_id', 'operation')} 还缺少：{fields}。"
+        "请补充这些数值及单位；系统不会猜测缺失的几何参数。"
+    )
+    return Clarification(
+        clarification_id=f"clarify-{version:03d}",
+        run_id=run_id,
+        state_version=version,
+        operation_id=str(first.get("operation_id") or "operation"),
+        stage=RunStage.INTENT_READY,
+        resume_stage=RunStage.INDEX_READY,
+        reason_code="missing_required_parameter",
+        question=question,
+        answer_modes=("add_detail", "cancel"),
+        candidates=(),
+    )
+
+
 def _artifact_references(run_dir: Path, result: OrchestrationResult) -> dict[str, str]:
     values = {
         "manifest": result.manifest,
