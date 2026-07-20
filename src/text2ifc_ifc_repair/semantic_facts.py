@@ -20,7 +20,7 @@ from .evaluation_policy import (
     SemanticApplicability,
     SemanticFactSpec,
 )
-from .index_models import ElementRecord, PropertyFact
+from .index_models import ElementRecord, PropertyFact, TypeRecord
 
 
 class SemanticFactError(ValueError):
@@ -119,6 +119,54 @@ def semantic_facts_from_element_record(
         )
     )
     return tuple(sorted(facts, key=lambda fact: fact.fact_key))
+
+
+def semantic_facts_from_type_record(
+    record: TypeRecord,
+    *,
+    source_kind: EvidenceSourceKind,
+    source_ref: str,
+    compatible: bool = True,
+) -> tuple[SemanticFact, ...]:
+    """Convert direct IFC Type authority without occurrence-derived facts."""
+
+    entity_source = f"{record.ifc_class}:{record.ifc_global_id or record.record_id}"
+    provenance = (f"type-index:{record.record_id}",)
+    facts = [
+        semantic_fact_from_property_fact(
+            fact,
+            source_kind=source_kind,
+            source_ref=source_ref,
+            entity_source=entity_source,
+            provenance=provenance,
+            compatible=compatible,
+        )
+        for fact in record.properties
+    ]
+    scalar_values = (
+        ("label:Name", record.name, "IfcLabel"),
+        ("attribute:ApplicableOccurrence", record.applicable_occurrence, "IfcLabel"),
+        ("attribute:PredefinedType", record.predefined_type, "IfcLabel"),
+        ("attribute:ElementType", record.element_type, "IfcLabel"),
+    )
+    facts.extend(
+        SemanticFact(
+            fact_key=fact_key,
+            value=value,
+            value_type=value_type,
+            unit=None,
+            inherited=False,
+            pset_path=None,
+            entity_source=entity_source,
+            source_kind=source_kind,
+            source_ref=source_ref,
+            provenance=provenance,
+            compatible=compatible,
+        )
+        for fact_key, value, value_type in scalar_values
+        if value is not None
+    )
+    return tuple(sorted(facts, key=lambda fact: (fact.fact_key, repr(fact.value))))
 
 
 def extract_ifc_semantic_facts(
@@ -658,4 +706,5 @@ __all__ = [
     "resolve_expected_facts",
     "semantic_fact_from_property_fact",
     "semantic_facts_from_element_record",
+    "semantic_facts_from_type_record",
 ]

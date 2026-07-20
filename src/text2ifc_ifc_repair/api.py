@@ -377,6 +377,11 @@ class RepairAPI:
                 for record in repository.iter_records()
                 if record.ifc_global_id
             }
+            type_records = {
+                record.ifc_global_id: record
+                for record in repository.iter_type_records()
+                if record.ifc_global_id and record.identity_reliable
+            }
             self.store.prepare_stage_directory(run_id, "staging")
             final = orchestrator.apply_and_evaluate(
                 source_ifc_path=Path(state.source.reference),
@@ -386,6 +391,7 @@ class RepairAPI:
                 changeset=outcome.changeset,
                 registry=self.registry,
                 records_by_global_id=records,
+                type_records_by_global_id=type_records,
             )
         terminal = {
             "succeeded": RunStage.SUCCEEDED,

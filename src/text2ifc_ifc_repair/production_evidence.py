@@ -13,11 +13,15 @@ from types import MappingProxyType
 from typing import Any, Mapping
 
 from .evaluation_policy import EvidenceSourceKind, SemanticApplicability
-from .index_models import ElementRecord
+from .index_models import ElementRecord, TypeRecord
 from .registry import OperationRegistry
 from .repair_intent import AttributeIntent, RepairIntent
 from .resolution_flow import ResolutionBatch, ResolvedOperation
-from .semantic_facts import SemanticFact, semantic_facts_from_element_record
+from .semantic_facts import (
+    SemanticFact,
+    semantic_facts_from_element_record,
+    semantic_facts_from_type_record,
+)
 
 
 _PRODUCTION_PRECEDENCE = (
@@ -80,6 +84,7 @@ def build_production_evidence(
     changeset: Mapping[str, Any],
     registry: OperationRegistry,
     records_by_global_id: Mapping[str, ElementRecord],
+    type_records_by_global_id: Mapping[str, TypeRecord],
     deterministic_policy_facts_by_operation: Mapping[
         str, tuple[SemanticFact, ...]
     ] | None = None,
@@ -138,6 +143,7 @@ def build_production_evidence(
             operation_intent=operation_intent,
             resolved_operation=resolved_operation,
             records_by_global_id=records_by_global_id,
+            type_records_by_global_id=type_records_by_global_id,
             deterministic_policy_facts=tuple(policy_facts.get(operation_id, ())),
             policy=policy,
         )
@@ -169,6 +175,7 @@ def _operation_candidates(
     operation_intent: Any,
     resolved_operation: ResolvedOperation,
     records_by_global_id: Mapping[str, ElementRecord],
+    type_records_by_global_id: Mapping[str, TypeRecord],
     deterministic_policy_facts: tuple[SemanticFact, ...],
     policy: Any,
 ) -> tuple[SemanticFact, ...]:
@@ -228,10 +235,6 @@ def _operation_candidates(
         if kind == "formal_type_binding":
             if target.type_global_id != global_id:
                 raise ProductionEvidenceError("FORMAL_TYPE_BINDING_MISMATCH", global_id)
-            # ElementRecord already carries the formally-related type facts; the
-            # index is keyed by product GlobalId and need not contain a second
-            # synthetic record keyed by the IfcTypeObject GlobalId.
-            record = target
             source_kind = EvidenceSourceKind.SURVIVING_TYPE
             source_ref = f"formal-type:{global_id}"
             provenance = f"formal_type_binding:{authority.get('provenance', '')}"
@@ -242,21 +245,12 @@ def _operation_candidates(
             source_kind = EvidenceSourceKind.APPROVED_PROTOTYPE
             source_ref = f"user-approved-prototype:{global_id}"
             provenance = f"user_authorization:{authorization}"
-            if authority.get("prototype_lookup") == "type_global_id":
-                facts.extend(
-                    _type_prototype_facts(
-                        records_by_global_id.values(),
-                        type_global_id=global_id,
-                        operation_id=operation_id,
-                        source_ref=source_ref,
-                        authority_provenance=provenance,
-                    )
-                )
-                continue
-            record = _record(records_by_global_id, global_id, role=kind)
+        type_record = _type_record(
+            type_records_by_global_id, global_id, role=kind
+        )
         facts.extend(
-            _record_facts(
-                record,
+            _type_record_facts(
+                type_record,
                 operation_id=operation_id,
                 source_kind=source_kind,
                 source_ref=source_ref,
@@ -349,36 +343,25 @@ def _record_facts(
     )
 
 
-def _type_prototype_facts(
-    records: Any,
+def _type_record_facts(
+    record: TypeRecord,
     *,
-    type_global_id: str,
     operation_id: str,
+    source_kind: EvidenceSourceKind,
     source_ref: str,
     authority_provenance: str,
 ) -> tuple[SemanticFact, ...]:
-    matches = tuple(
-        record for record in records if record.type_global_id == type_global_id
+    converted = semantic_facts_from_type_record(
+        record, source_kind=source_kind, source_ref=source_ref
     )
-    if not matches:
-        raise ProductionEvidenceError("PROTOTYPE_TYPE_NOT_INDEXED", type_global_id)
-    selected: dict[tuple[str, str], SemanticFact] = {}
     values_by_key: dict[str, set[str]] = {}
-    for record in matches:
-        for fact in semantic_facts_from_element_record(
-            record,
-            source_kind=EvidenceSourceKind.APPROVED_PROTOTYPE,
-            source_ref=source_ref,
-        ):
-            if not fact.inherited and fact.fact_key != "relationship:type":
-                continue
-            rendered = repr(fact.value)
-            values_by_key.setdefault(fact.fact_key, set()).add(rendered)
-            selected.setdefault((fact.fact_key, rendered), fact)
+    for fact in converted:
+        values_by_key.setdefault(fact.fact_key, set()).add(repr(fact.value))
     conflicting = sorted(key for key, values in values_by_key.items() if len(values) > 1)
     if conflicting:
         raise ProductionEvidenceError(
-            "PROTOTYPE_TYPE_FACT_CONFLICT", f"{type_global_id}:{conflicting[0]}"
+            "PROTOTYPE_TYPE_FACT_CONFLICT",
+            f"{record.ifc_global_id}:{conflicting[0]}",
         )
     return tuple(
         SemanticFact(
@@ -387,13 +370,13 @@ def _type_prototype_facts(
                 "source_ref": source_ref,
                 "provenance": (
                     *fact.provenance,
-                    f"explicit_type_binding:{type_global_id}",
+                    f"type_record:{record.ifc_global_id}",
                     authority_provenance,
                     f"operation:{operation_id}",
                 ),
             }
         )
-        for fact in sorted(selected.values(), key=_fact_key)
+        for fact in sorted(converted, key=_fact_key)
     )
 
 
@@ -483,6 +466,17 @@ def _record(
     record = records[global_id]
     if not record.identity_reliable or record.ifc_global_id != global_id:
         raise ProductionEvidenceError("UNRELIABLE_AUTHORIZED_RECORD", f"{role}:{global_id}")
+    return record
+
+
+def _type_record(
+    records: Mapping[str, TypeRecord], global_id: str, *, role: str
+) -> TypeRecord:
+    if not global_id or global_id not in records:
+        raise ProductionEvidenceError("PROTOTYPE_TYPE_NOT_INDEXED", f"{role}:{global_id}")
+    record = records[global_id]
+    if not record.identity_reliable or record.ifc_global_id != global_id:
+        raise ProductionEvidenceError("UNRELIABLE_AUTHORIZED_TYPE", f"{role}:{global_id}")
     return record
 
 

@@ -100,6 +100,7 @@ class RepairOrchestrator:
         changeset: Mapping[str, Any],
         registry: Any,
         records_by_global_id: Mapping[str, Any],
+        type_records_by_global_id: Mapping[str, Any],
         deterministic_policy_facts_by_operation: Mapping[str, tuple[Any, ...]] | None = None,
         verified_absent_categories_by_operation: Mapping[str, tuple[str, ...]] | None = None,
         private_canaries: tuple[str, ...] = (),
@@ -148,6 +149,7 @@ class RepairOrchestrator:
                 changeset=changeset,
                 registry=registry,
                 records_by_global_id=records_by_global_id,
+                type_records_by_global_id=type_records_by_global_id,
                 deterministic_policy_facts_by_operation=deterministic_policy_facts_by_operation or {},
                 verified_absent_categories_by_operation=verified_absent_categories_by_operation or {},
             )

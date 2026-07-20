@@ -101,6 +101,7 @@ def test_complete_multi_operation_transaction_runs_once_and_publishes_only_after
         changeset=changeset,
         registry=SimpleNamespace(),
         records_by_global_id={},
+        type_records_by_global_id={},
     )
 
     assert calls == {"transaction": 1, "evaluation": 1}
@@ -162,6 +163,7 @@ def test_one_mandatory_operation_failure_keeps_the_whole_changeset_unpublished(
         },
         registry=SimpleNamespace(),
         records_by_global_id={},
+        type_records_by_global_id={},
     )
 
     assert calls == {"transaction": 1, "evaluation": 0}
