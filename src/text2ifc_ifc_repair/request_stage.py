@@ -101,6 +101,8 @@ def generate_repair_intent(
                     "provider",
                     "failure_class",
                     "exception_type",
+                    "exception_chain",
+                    "transport_attempts",
                     "session_id",
                     "estimated_input_tokens",
                     "max_input_tokens",

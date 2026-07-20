@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import asyncio
+import time
 from dataclasses import dataclass
 from typing import Any, Callable
 
@@ -25,10 +26,16 @@ MIMO_MODEL_ENV = "TEXT2IFC_MIMO_MODEL"
 DEEPSEEK_MODEL_ENV = "TEXT2IFC_DEEPSEEK_MODEL"
 OPENAI_MAX_COMPLETION_TOKENS_ENV = "TEXT2IFC_MIMO_MAX_COMPLETION_TOKENS"
 DEEPSEEK_MAX_TOKENS_ENV = "TEXT2IFC_DEEPSEEK_MAX_TOKENS"
+DEEPSEEK_MAX_INPUT_TOKENS_ENV = "TEXT2IFC_DEEPSEEK_MAX_INPUT_TOKENS"
+OPENAI_MAX_INPUT_TOKENS_ENV = "TEXT2IFC_MIMO_MAX_INPUT_TOKENS"
 PROVIDER_TIMEOUT_SECONDS_ENV = "TEXT2IFC_PROVIDER_TIMEOUT_SECONDS"
 DEFAULT_OPENAI_MAX_COMPLETION_TOKENS = 131072
-DEFAULT_DEEPSEEK_MAX_TOKENS = 8192
+DEFAULT_OPENAI_MAX_INPUT_TOKENS = 131072
+DEFAULT_DEEPSEEK_MAX_TOKENS = 65536
+DEFAULT_DEEPSEEK_MAX_INPUT_TOKENS = 65536
 DEFAULT_PROVIDER_TIMEOUT_SECONDS = 1800.0
+DEFAULT_PROVIDER_CONNECTION_ATTEMPTS = 3
+DEFAULT_PROVIDER_RETRY_DELAY_SECONDS = 1.0
 
 
 @dataclass
@@ -53,6 +60,7 @@ class OpenAICompatRuntimeConfig:
     model: str
     model_env: str
     max_completion_tokens: int = DEFAULT_OPENAI_MAX_COMPLETION_TOKENS
+    max_input_tokens: int = DEFAULT_OPENAI_MAX_INPUT_TOKENS
     timeout_seconds: float = DEFAULT_PROVIDER_TIMEOUT_SECONDS
 
     def __repr__(self) -> str:
@@ -64,6 +72,7 @@ class OpenAICompatRuntimeConfig:
             f"model_env={self.model_env!r}, "
             f"model={self.model!r}, "
             f"max_completion_tokens={self.max_completion_tokens!r}, "
+            f"max_input_tokens={self.max_input_tokens!r}, "
             f"timeout_seconds={self.timeout_seconds!r}, "
             "api_key='[REDACTED]', base_url='[REDACTED]')"
         )
@@ -115,6 +124,7 @@ def load_openai_compatible_config(
         "model_env": model_env,
         "model": env.get(model_env, "") if model_env else None,
         "max_completion_tokens": _load_max_completion_tokens(env, provider=provider),
+        "max_input_tokens": _load_max_input_tokens(env, provider=provider),
         "timeout_seconds": _load_provider_timeout_seconds(env),
     }
 
@@ -153,6 +163,7 @@ def load_openai_compatible_runtime_config(
         model=str(env[model_env]),
         model_env=model_env,
         max_completion_tokens=_load_max_completion_tokens(env, provider=provider),
+        max_input_tokens=_load_max_input_tokens(env, provider=provider),
         timeout_seconds=_load_provider_timeout_seconds(env),
     )
 
@@ -202,8 +213,18 @@ class OpenAICompatibleLiveProvider:
         *,
         config: OpenAICompatRuntimeConfig,
         client_factory: Callable[..., Any] | None = None,
+        connection_max_attempts: int = DEFAULT_PROVIDER_CONNECTION_ATTEMPTS,
+        connection_retry_delay_seconds: float = DEFAULT_PROVIDER_RETRY_DELAY_SECONDS,
+        sleep: Callable[[float], None] = time.sleep,
     ) -> None:
+        if connection_max_attempts < 1:
+            raise ValueError("connection_max_attempts must be positive")
+        if connection_retry_delay_seconds < 0:
+            raise ValueError("connection_retry_delay_seconds cannot be negative")
         self.config = config
+        self.connection_max_attempts = connection_max_attempts
+        self.connection_retry_delay_seconds = connection_retry_delay_seconds
+        self._sleep = sleep
         self.client = _create_openai_client(
             config=config,
             client_factory=client_factory,
@@ -218,6 +239,19 @@ class OpenAICompatibleLiveProvider:
         state: dict[str, Any],
     ) -> LiveProviderResult:
         del schema, state
+        estimated_input_tokens = estimate_openai_compatible_input_tokens(prompt)
+        if estimated_input_tokens > self.config.max_input_tokens:
+            raise ProviderOutputError(
+                f"OpenAI-compatible input token budget exceeded for {session_id}",
+                details={
+                    "provider": self.config.provider_label,
+                    "failure_class": "input_token_budget_exceeded",
+                    "session_id": session_id,
+                    "estimated_input_tokens": estimated_input_tokens,
+                    "max_input_tokens": self.config.max_input_tokens,
+                    "token_estimator": "ascii/4+non_ascii",
+                },
+            )
         request = {
             "model": self.config.model,
             "messages": [{"role": "user", "content": prompt}],
@@ -225,19 +259,33 @@ class OpenAICompatibleLiveProvider:
             "response_format": {"type": "json_object"},
         }
         request.update(_token_limit_request(self.config))
-        try:
-            response = self.client.chat.completions.create(**request)
-        except Exception as exc:
-            raise ProviderOutputError(
-                f"OpenAI-compatible live request failed for {session_id}: {type(exc).__name__}",
-                details={
-                    "provider": self.config.provider_label,
-                    "failure_class": "provider_connection_error",
-                    "exception_type": type(exc).__name__,
-                    "session_id": session_id,
-                    "request": redact_provider_payload(request),
-                },
-            ) from exc
+        transport_attempts = 0
+        while True:
+            transport_attempts += 1
+            try:
+                response = self.client.chat.completions.create(**request)
+                break
+            except Exception as exc:
+                exception_chain = _exception_type_chain(exc)
+                retryable = _retryable_connection_error(exception_chain)
+                if retryable and transport_attempts < self.connection_max_attempts:
+                    delay = self.connection_retry_delay_seconds * (
+                        2 ** (transport_attempts - 1)
+                    )
+                    self._sleep(delay)
+                    continue
+                raise ProviderOutputError(
+                    f"OpenAI-compatible live request failed for {session_id}: {type(exc).__name__}",
+                    details={
+                        "provider": self.config.provider_label,
+                        "failure_class": "provider_connection_error",
+                        "exception_type": type(exc).__name__,
+                        "exception_chain": exception_chain,
+                        "transport_attempts": transport_attempts,
+                        "session_id": session_id,
+                        "request": redact_provider_payload(request),
+                    },
+                ) from exc
         payload = _object_to_dict(response)
         evidence = parse_chat_completion_evidence(
             payload,
@@ -256,6 +304,9 @@ class OpenAICompatibleLiveProvider:
                     "model": evidence["model"],
                     "stop_reason": evidence["finish_reason"],
                     "usage": evidence["usage"],
+                    "estimated_input_tokens": estimated_input_tokens,
+                    "max_input_tokens": self.config.max_input_tokens,
+                    "transport_attempts": transport_attempts,
                 },
             )
         )
@@ -279,6 +330,31 @@ class OpenAICompatibleLiveProvider:
             ),
             output=output,
         )
+
+
+def _exception_type_chain(error: BaseException) -> list[str]:
+    chain: list[str] = []
+    current: BaseException | None = error
+    while current is not None and len(chain) < 8:
+        chain.append(type(current).__name__)
+        current = current.__cause__ or current.__context__
+    return chain
+
+
+def _retryable_connection_error(exception_chain: list[str]) -> bool:
+    retryable = {
+        "APIConnectionError",
+        "APITimeoutError",
+        "ConnectError",
+        "ConnectTimeout",
+        "ReadError",
+        "ReadTimeout",
+        "RemoteProtocolError",
+        "TimeoutException",
+        "WriteError",
+        "WriteTimeout",
+    }
+    return any(name in retryable for name in exception_chain)
 
 
 class OpenAICompatibleMimoLiveProvider(OpenAICompatibleLiveProvider):
@@ -422,6 +498,14 @@ def token_limit_request(config: OpenAICompatRuntimeConfig) -> dict[str, int]:
     return {"max_completion_tokens": config.max_completion_tokens}
 
 
+def estimate_openai_compatible_input_tokens(text: str) -> int:
+    """Conservatively estimate mixed ASCII/CJK prompt tokens for a hard guard."""
+
+    ascii_count = sum(1 for character in text if ord(character) < 128)
+    non_ascii_count = len(text) - ascii_count
+    return non_ascii_count + (ascii_count + 3) // 4
+
+
 def _load_provider_timeout_seconds(env: dict[str, str]) -> float:
     raw = env.get(PROVIDER_TIMEOUT_SECONDS_ENV, "").strip()
     if not raw:
@@ -484,6 +568,42 @@ def _load_max_completion_tokens(env: dict[str, str], *, provider: str) -> int:
                 "provider": _provider_label(provider),
                 "parse_eligible": False,
                 "failure_class": "invalid_max_completion_tokens",
+                "env": env_name,
+            },
+        )
+    return value
+
+
+def _load_max_input_tokens(env: dict[str, str], *, provider: str) -> int:
+    env_name = (
+        DEEPSEEK_MAX_INPUT_TOKENS_ENV
+        if provider == PROVIDER_DEEPSEEK
+        else OPENAI_MAX_INPUT_TOKENS_ENV
+    )
+    raw_value = env.get(env_name)
+    if raw_value is None or raw_value.strip() == "":
+        if provider == PROVIDER_DEEPSEEK:
+            return DEFAULT_DEEPSEEK_MAX_INPUT_TOKENS
+        return DEFAULT_OPENAI_MAX_INPUT_TOKENS
+    try:
+        value = int(raw_value)
+    except ValueError as exc:
+        raise OpenAICompatError(
+            "OpenAI-compatible max input token setting must be an integer",
+            evidence={
+                "provider": _provider_label(provider),
+                "parse_eligible": False,
+                "failure_class": "invalid_max_input_tokens",
+                "env": env_name,
+            },
+        ) from exc
+    if value <= 0:
+        raise OpenAICompatError(
+            "OpenAI-compatible max input token setting must be positive",
+            evidence={
+                "provider": _provider_label(provider),
+                "parse_eligible": False,
+                "failure_class": "invalid_max_input_tokens",
                 "env": env_name,
             },
         )
