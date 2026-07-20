@@ -52,6 +52,18 @@ semantic ChangeSet and an L1/L2-validated IFC result.
 - [ ] **WIN-02**: The LargeBuilding Window case passes both L1 and L2 in
   deterministic and real-Provider evidence runs.
 
+### IFC Type Authority
+
+- [x] **TYPE-01**: The retrieval index distinguishes occurrence-direct facts
+  from Type-inherited facts and retains source provenance for IFC2X3 Type
+  objects such as `IfcWindowStyle`.
+- [ ] **TYPE-02**: Users can authorize a unique Prototype through a human-
+  readable Type name or an evidence-bearing deduplicated clarification choice
+  without being required to provide an IFC GUID.
+- [ ] **TYPE-03**: Production evidence reads only authorized Type facts and the
+  LargeBuilding shared Window Style no longer fails because occurrence-specific
+  storey/level values were aggregated as Type facts.
+
 ### Operation Expansion
 
 - [ ] **OPS-01**: User can add a wall opening without a filling element through
@@ -105,6 +117,9 @@ semantic ChangeSet and an L1/L2-validated IFC result.
 | PIPE-02 | 9 | Complete |
 | PIPE-03 | 9 | Complete |
 | PIPE-04 | 9 | Complete |
+| TYPE-01 | 09.1 | Complete |
+| TYPE-02 | 09.1 | Pending |
+| TYPE-03 | 09.1 | Pending |
 | WIN-01 | 10 | Pending |
 | WIN-02 | 10 | Pending |
 | OPS-01 | 11 | Pending |
@@ -114,7 +129,7 @@ semantic ChangeSet and an L1/L2-validated IFC result.
 | SCALE-01 | 13 | Pending |
 | SCALE-02 | 13 | Pending |
 
-**Coverage:** 22 requirements, 22 mapped, 0 unmapped.
+**Coverage:** 25 requirements, 25 mapped, 0 unmapped.
 
 ---
-*Last updated: 2026-07-20 after Phase 9 completion*
+*Last updated: 2026-07-20 after Phase 09.1 insertion*

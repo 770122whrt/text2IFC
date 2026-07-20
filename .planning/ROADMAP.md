@@ -103,13 +103,61 @@ ChangeSet + IFC + evidence.
 
 **Evidence:** [Phase 9 validation report](../docs/validation/ifc2x3-changeset/phase9-validation-report.md), [goal verification](phases/09-general-ifc-text-repair-orchestrator/09-VERIFICATION.md), [security audit](phases/09-general-ifc-text-repair-orchestrator/09-SECURITY.md), and [clean code review](phases/09-general-ifc-text-repair-orchestrator/09-REVIEW.md)
 
+### Phase 09.1: IFC Type Evidence and Prototype Resolution Correction (INSERTED)
+
+**Goal:** Correct IFC Type/occurrence semantic authority and make Prototype
+resolution human-readable before Window L2 authoring begins.
+
+**Requirements:** TYPE-01, TYPE-02, TYPE-03
+
+**Depends on:** Phases 7 and 9
+
+**Plans:** 1/4 plans executed
+
+Plans:
+
+**Wave 1:**
+
+- [x] **09.1-01** - Versioned TypeRecord index and inheritance-aware extraction.
+
+**Wave 2** *(blocked on Wave 1 completion; plans may run in parallel)*:
+
+- [ ] **09.1-02** - Human-readable and deduplicated Prototype resolution.
+- [ ] **09.1-03** - TypeRecord-backed production semantic authority.
+
+**Wave 3** *(blocked on both Wave 2 plans)*:
+
+- [ ] **09.1-04** - LargeBuilding closure, no-GUID UAT and Phase 10 handoff.
+
+**Cross-cutting constraints:**
+
+- Type objects remain separate from editable occurrence targets and every fact
+  retains explicit current-IFC provenance.
+- Similarity may retrieve candidates but cannot authorize a Type without an
+  explicit unique name or stored affirmative user answer.
+- Historical run evidence stays immutable; v0.2 indexes rebuild rather than
+  reinterpret v0.1 evidence.
+- Phase 09.1 cannot author Phase 10 Window semantics or weaken Evaluation 0.2
+  publication gates.
+
+**Success criteria:**
+
+1. Direct occurrence properties are never mislabeled as inherited Type facts,
+   and IFC2X3 `IfcWindowStyle` facts have explicit provenance.
+2. A user can authorize a unique Type by human-readable name or confirm a
+   deduplicated Type candidate without supplying a GUID; similarity alone does
+   not authorize selection.
+3. The LargeBuilding 41-occurrence Window Style case builds production
+   evidence without `PROTOTYPE_TYPE_FACT_CONFLICT`, reaches the real L2
+   comparator, and preserves fail-closed publication behavior.
+
 ### Phase 10: Window L2 Semantic Fidelity Closure
 
 **Goal:** Upgrade the proven Window repair from L1-only to required L1+L2.
 
 **Requirements:** WIN-01, WIN-02
 
-**Depends on:** Phases 8 and 9
+**Depends on:** Phases 8, 9 and 09.1
 
 **Success criteria:**
 
