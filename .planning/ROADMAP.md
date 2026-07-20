@@ -7,7 +7,7 @@
   [requirements](milestones/v1.0-REQUIREMENTS.md), and
   [audit](milestones/v1.0-MILESTONE-AUDIT.md).
 - [ ] **v1.1 IFC ChangeSet Repair Pipeline** - Phases 7 through 13, in progress
-  (2 / 7 phases complete).
+  (3 / 7 phases complete).
 
 ## Current Cycle: v1.1 IFC ChangeSet Repair Pipeline
 
@@ -64,6 +64,8 @@ semantic fidelity, while explicitly deferring L3 exactness.
 
 ### Phase 9: General IFC + Text Repair Orchestrator
 
+**Status:** Complete — 2026-07-20
+
 **Goal:** Provide one supported programmatic entry point from IFC + request to
 ChangeSet + IFC + evidence.
 
@@ -77,7 +79,7 @@ ChangeSet + IFC + evidence.
 - [x] **Wave 2** *(blocked on Wave 1)*: `09-02` - Durable run and clarification state machine.
 - [x] **Wave 3** *(blocked on Waves 1-2)*: `09-03` - Deterministic resolution and bound unified ChangeSet orchestration.
 - [x] **Wave 4** *(blocked on Waves 1-3)*: `09-04` - Production semantic authority, atomic application, and publication.
-- [ ] **Wave 5** *(blocked on Waves 1-4)*: `09-05` - Interactive CLI, offline acceptance, and opt-in live UAT.
+- [x] **Wave 5** *(blocked on Waves 1-4)*: `09-05` - Interactive CLI, offline acceptance, and opt-in live UAT.
 
 **Cross-cutting constraints:**
 
@@ -98,6 +100,8 @@ ChangeSet + IFC + evidence.
    success artifact.
 4. Successful runs publish ChangeSet, repaired/modified IFC, L1/L2 reports,
    provider trace and hash manifest.
+
+**Evidence:** [Phase 9 validation report](../docs/validation/ifc2x3-changeset/phase9-validation-report.md), [goal verification](phases/09-general-ifc-text-repair-orchestrator/09-VERIFICATION.md), [security audit](phases/09-general-ifc-text-repair-orchestrator/09-SECURITY.md), and [clean code review](phases/09-general-ifc-text-repair-orchestrator/09-REVIEW.md)
 
 ### Phase 10: Window L2 Semantic Fidelity Closure
 

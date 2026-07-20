@@ -17,8 +17,8 @@ ChangeSet and an L1/L2-validated IFC result without model-authored STEP text.
 
 **v1.0 Supported Text2IFC Baseline shipped on 2026-07-16.**
 
-**v1.1 IFC ChangeSet Repair Pipeline is in implementation; Phases 7 and 8 are
-complete.**
+**v1.1 IFC ChangeSet Repair Pipeline is in implementation; Phases 7, 8 and 9
+are complete.**
 
 The shipped supported-scope chain is:
 
@@ -71,6 +71,10 @@ semantic ChangeSet, a repaired/modified IFC, and auditable evidence.
   public evidence projection.
 - LargeBuilding offline acceptance with honest L1-pass/L2-fail diagnostic
   retention and zero Provider calls.
+- One public IFC-plus-text `RepairAPI`/CLI with two bounded Agent stages,
+  deterministic target resolution, resumable clarification, unified ChangeSet
+  application, production L2 authority, and crash-recoverable Evaluation 0.2
+  publication.
 
 ## Accepted Boundaries
 
@@ -130,4 +134,4 @@ review of scope, evidence and deferred L3 exactness.
 - [milestone register](MILESTONES.md)
 
 ---
-*Last updated: 2026-07-20 after Phase 8 completion*
+*Last updated: 2026-07-20 after Phase 9 completion*

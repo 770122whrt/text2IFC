@@ -22,13 +22,13 @@ semantic ChangeSet and an L1/L2-validated IFC result.
 
 ### Repair Pipeline
 
-- [ ] **PIPE-01**: User can run one CLI/API command with IFC path plus natural-
+- [x] **PIPE-01**: User can run one CLI/API command with IFC path plus natural-
   language request and receive a terminal result and evidence directory.
-- [ ] **PIPE-02**: A successful run publishes the semantic ChangeSet and the
+- [x] **PIPE-02**: A successful run publishes the semantic ChangeSet and the
   deterministically compiled IFC2X3 output.
-- [ ] **PIPE-03**: Provider input contains only public bounded request, spec,
+- [x] **PIPE-03**: Provider input contains only public bounded request, spec,
   target context and contracts, never raw private ground truth.
-- [ ] **PIPE-04**: Ambiguous, unsupported, Provider-invalid, Audit-failed or
+- [x] **PIPE-04**: Ambiguous, unsupported, Provider-invalid, Audit-failed or
   application-failed runs cannot publish an IFC as a successful repair.
 
 ### Validation
@@ -101,10 +101,10 @@ semantic ChangeSet and an L1/L2-validated IFC result.
 | VAL-03 | 8 | Complete |
 | VAL-04 | 8 | Complete |
 | VAL-05 | 8 | Complete |
-| PIPE-01 | 9 | Pending |
-| PIPE-02 | 9 | Pending |
-| PIPE-03 | 9 | Pending |
-| PIPE-04 | 9 | Pending |
+| PIPE-01 | 9 | Complete |
+| PIPE-02 | 9 | Complete |
+| PIPE-03 | 9 | Complete |
+| PIPE-04 | 9 | Complete |
 | WIN-01 | 10 | Pending |
 | WIN-02 | 10 | Pending |
 | OPS-01 | 11 | Pending |
@@ -117,4 +117,4 @@ semantic ChangeSet and an L1/L2-validated IFC result.
 **Coverage:** 22 requirements, 22 mapped, 0 unmapped.
 
 ---
-*Last updated: 2026-07-20 after Phase 8 completion*
+*Last updated: 2026-07-20 after Phase 9 completion*
