@@ -237,11 +237,12 @@ def _operation_candidates(
             provenance = f"formal_type_binding:{authority.get('provenance', '')}"
         else:
             record = _record(records_by_global_id, global_id, role=kind)
-            if authority.get("authorization") != "stored_user_answer":
+            authorization = str(authority.get("authorization", ""))
+            if authorization not in {"stored_user_answer", "explicit_request_reference"}:
                 raise ProductionEvidenceError("PROTOTYPE_NOT_USER_APPROVED", global_id)
             source_kind = EvidenceSourceKind.APPROVED_PROTOTYPE
             source_ref = f"user-approved-prototype:{global_id}"
-            provenance = "user_authorization:stored_user_answer"
+            provenance = f"user_authorization:{authorization}"
         facts.extend(
             _record_facts(
                 record,

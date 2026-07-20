@@ -15,6 +15,7 @@ from text2ifc_ifc_repair.run_models import (
     RunStoreCode,
     RunStoreError,
 )
+from text2ifc_ifc_repair.run_artifacts import publish_terminal_artifacts
 from text2ifc_ifc_repair.run_store import RunStore
 
 
@@ -384,6 +385,67 @@ def test_terminal_manifest_and_referenced_content_are_verified(store: RunStore, 
     with pytest.raises(RunStoreError) as tampered:
         store.read_result(state.run_id)
     assert tampered.value.code == RunStoreCode.TAMPER_DETECTED.value
+
+
+@pytest.mark.parametrize(
+    "fault_point",
+    ("after_promotion", "before_state_replace", "after_state_replace"),
+)
+def test_terminal_publication_recovers_across_every_commit_crash_window(
+    store: RunStore, source: Path, fault_point: str
+) -> None:
+    state = _start(store, source)
+    run_dir = store.runs_root / state.run_id
+    artifacts = publish_terminal_artifacts(
+        run_directory=run_dir,
+        terminal_status="invalid_input",
+        evaluation={
+            "schema_version": "text2ifc/ifc-repair-evaluation-public/0.2",
+            "policy_version": "phase9.test",
+            "status": "failed",
+            "reason": "fixture",
+            "complete_repair_success": False,
+            "successful_artifact_publishable": False,
+            "diagnostic_artifact_retained": False,
+            "application": {"check_id": "application.valid", "status": "failed", "reason": "fixture"},
+            "preservation": {"check_id": "preservation.valid", "status": "failed", "reason": "fixture"},
+            "operations": [],
+        },
+        candidate_ifc_path=None,
+        evidence={"safe": True},
+        promote=False,
+    )
+    assert artifacts.prepared_root is not None
+    references = {
+        "manifest": Path(artifacts.manifest_path).relative_to(run_dir).as_posix(),
+        "evaluation": Path(artifacts.evaluation_path).relative_to(run_dir).as_posix(),
+        "evidence": Path(artifacts.evidence_path).relative_to(run_dir).as_posix(),
+    }
+
+    def crash(point: str) -> None:
+        if point == fault_point:
+            raise RuntimeError(f"crash:{point}")
+
+    with pytest.raises(RuntimeError, match=fault_point):
+        store.commit_terminal_publication(
+            state.run_id,
+            prepared_root=Path(artifacts.prepared_root).relative_to(run_dir).as_posix(),
+            to_stage=RunStage.INVALID_INPUT,
+            expected_state_version=state.state_version,
+            reason_code="SOURCE_INVALID",
+            stage_payload={"reason_code": "SOURCE_INVALID"},
+            result_artifacts=references,
+            fault_injector=crash,
+        )
+
+    recovered_store = RunStore(store.root)
+    result = recovered_store.read_result(state.run_id)
+    assert result.status == "invalid_input"
+    assert result.state_version == state.state_version + 1
+    assert not (run_dir / ".terminal-publication.json").exists()
+    assert not (run_dir / "published").exists()
+    assert all((run_dir / relative).is_file() for relative in result.artifacts.values())
+    assert recovered_store.read_result(state.run_id) == result
 
 
 def test_stage_directory_rejects_real_reparse_or_symlink_without_privilege_skip(

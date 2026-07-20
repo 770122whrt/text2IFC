@@ -34,6 +34,7 @@ class TerminalArtifacts:
     manifest_path: str
     successful_ifc: str | None
     diagnostic_candidate: str | None
+    prepared_root: str | None = None
 
 
 def publish_terminal_artifacts(
@@ -45,8 +46,14 @@ def publish_terminal_artifacts(
     evidence: Mapping[str, Any],
     expected_candidate_sha256: str | None = None,
     private_canaries: tuple[str, ...] = (),
+    promote: bool = True,
 ) -> TerminalArtifacts:
-    """Write once and promote only when public Evaluation 0.2 says publishable."""
+    """Build a verified terminal bundle and optionally promote it immediately.
+
+    ``promote=False`` is the durable-run path.  It leaves the complete bundle
+    under a hidden prepared name so :class:`RunStore` can bind promotion and
+    the terminal state transition through its recovery journal.
+    """
 
     root = Path(run_directory).resolve()
     root.mkdir(parents=True, exist_ok=True)
@@ -69,10 +76,15 @@ def publish_terminal_artifacts(
             private_canaries,
         )
 
+    publication_id = uuid.uuid4().hex
     destination_root = root / "published"
-    if destination_root.exists():
+    if promote and destination_root.exists():
         raise RunArtifactError("ARTIFACT_ALREADY_EXISTS", "published")
-    stage_root = root / f".terminal-stage-{uuid.uuid4().hex}"
+    stage_root = root / (
+        f".terminal-stage-{publication_id}"
+        if promote
+        else f".terminal-prepared-{publication_id}"
+    )
     stage_root.mkdir(exist_ok=False)
     evaluation_path = stage_root / "evaluation" / "public-evaluation.json"
     evidence_path = stage_root / "terminal" / "evidence.json"
@@ -88,10 +100,22 @@ def publish_terminal_artifacts(
         shutil.copyfile(candidate, destination)
         successful, diagnostic = (destination, None) if publishable else (None, destination)
 
-    _write_json(manifest_path, _manifest(stage_root, prefix="published"))
+    manifest_prefix = (
+        "published" if promote else f".terminal-bundles/{publication_id}"
+    )
+    _write_json(manifest_path, _manifest(stage_root, prefix=manifest_prefix))
     if private_canaries:
         _scan_canaries(tuple(path for path in stage_root.rglob("*") if path.is_file()), private_canaries)
     _fsync_tree(stage_root)
+    if not promote:
+        return TerminalArtifacts(
+            evaluation_path=str(evaluation_path),
+            evidence_path=str(evidence_path),
+            manifest_path=str(manifest_path),
+            successful_ifc=None if successful is None else str(successful),
+            diagnostic_candidate=None if diagnostic is None else str(diagnostic),
+            prepared_root=str(stage_root),
+        )
     os.replace(stage_root, destination_root)
     evaluation_path = destination_root / "evaluation" / "public-evaluation.json"
     evidence_path = destination_root / "terminal" / "evidence.json"
@@ -104,6 +128,7 @@ def publish_terminal_artifacts(
         manifest_path=str(manifest_path),
         successful_ifc=None if successful is None else str(successful),
         diagnostic_candidate=None if diagnostic is None else str(diagnostic),
+        prepared_root=None,
     )
 
 

@@ -28,6 +28,7 @@ class OrchestrationResult:
     successful_ifc: str | None = None
     diagnostic_candidate: str | None = None
     manifest: str | None = None
+    prepared_root: str | None = None
 
 
 class RepairOrchestrator:
@@ -45,6 +46,7 @@ class RepairOrchestrator:
         evaluation_stage: Callable[..., Any] = evaluate_production,
         evidence_builder: Callable[..., Any] = build_production_evidence,
         artifact_publisher: Callable[..., Any] = publish_terminal_artifacts,
+        defer_publication: bool = False,
     ) -> None:
         self.run_directory = Path(run_directory)
         self.run_directory.mkdir(parents=True, exist_ok=True)
@@ -58,6 +60,7 @@ class RepairOrchestrator:
         self._evaluation_stage = evaluation_stage
         self._evidence_builder = evidence_builder
         self._artifact_publisher = artifact_publisher
+        self._defer_publication = defer_publication
         self._resolution: Any = None
 
     def start(self, *, intent: Any, repository: Any, expected_source_sha256: str) -> OrchestrationResult:
@@ -176,6 +179,7 @@ class RepairOrchestrator:
             expected_candidate_sha256=candidate_hash,
             evidence={**evidence, "production_applicability": _public_json(production_evidence.applicability_by_operation), "production_conflicts": _public_json(production_evidence.conflicts)},
             private_canaries=private_canaries,
+            promote=not self._defer_publication,
         )
         return OrchestrationResult(
             status="succeeded" if artifacts.successful_ifc else terminal_status,
@@ -183,6 +187,7 @@ class RepairOrchestrator:
             successful_ifc=artifacts.successful_ifc,
             diagnostic_candidate=artifacts.diagnostic_candidate,
             manifest=artifacts.manifest_path,
+            prepared_root=artifacts.prepared_root,
         )
 
     def _terminal_failure(
@@ -203,8 +208,16 @@ class RepairOrchestrator:
             candidate_ifc_path=candidate,
             evidence=evidence,
             private_canaries=private_canaries,
+            promote=not self._defer_publication,
         )
-        return OrchestrationResult(status=status, reason_code=reason_code, evaluation=evaluation, diagnostic_candidate=artifacts.diagnostic_candidate, manifest=artifacts.manifest_path)
+        return OrchestrationResult(
+            status=status,
+            reason_code=reason_code,
+            evaluation=evaluation,
+            diagnostic_candidate=artifacts.diagnostic_candidate,
+            manifest=artifacts.manifest_path,
+            prepared_root=artifacts.prepared_root,
+        )
 
 
 def _complete_transaction_valid(changeset: Mapping[str, Any], application: Mapping[str, Any]) -> bool:

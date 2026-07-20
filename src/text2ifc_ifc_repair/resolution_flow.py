@@ -339,9 +339,9 @@ def _explicit_prototype(repository: IndexRepository, prototype: Any) -> tuple[st
         prototype_ids = {str(item.type_global_id) for item in matches if item.type_global_id}
     if len(prototype_ids) == 1:
         return "resolved", {
-            "kind": "explicit_prototype_reference",
+            "kind": "user_authorized_prototype",
             "global_id": next(iter(prototype_ids)),
-            "reference_kind": prototype.reference_kind,
+            "authorization": "explicit_request_reference",
             "request_provenance": prototype.source.to_dict(),
         }
     if len(prototype_ids) > 1:

@@ -231,7 +231,8 @@ def test_explicit_named_prototype_is_resolved_with_request_provenance(
         result = _api().resolve_repair_intent(request, repository, expected_source_sha256=SOURCE_SHA)
     assert result.status == "resolved"
     semantic = result.operations[0].authorized_semantics[-1]
-    assert semantic["kind"] == "explicit_prototype_reference"
+    assert semantic["kind"] == "user_authorized_prototype"
+    assert semantic["authorization"] == "explicit_request_reference"
     assert semantic["global_id"] == "0TYPEAAAAAAAAAAAAAAAAA"
     assert semantic["request_provenance"]["reference"] == "request:/prototype"
 

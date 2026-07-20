@@ -198,6 +198,66 @@ def test_ambiguous_candidate_resume_validates_before_bound_state_commit(tmp_path
     assert "names" not in query and "exact_global_ids" not in query
 
 
+def test_add_detail_can_span_two_real_api_clarification_rounds(tmp_path: Path) -> None:
+    source = tmp_path / "ambiguous-detail.ifc"
+    selected_id = _source(source, name="same wall")
+    model = ifcopenshell.open(str(source))
+    model.create_entity("IfcWall", GlobalId="0000000000000000000003", Name="same wall")
+    model.write(str(source))
+    calls = {"stage1": 0, "stage2": 0, "apply": 0, "evaluation": 0}
+    api = _api(
+        tmp_path,
+        operation_count=1,
+        apply_ok=True,
+        publishable=True,
+        calls=calls,
+        target_names=["same wall"],
+    )
+
+    def intent_stage(**kwargs):
+        calls["stage1"] += 1
+        intent = _intent(
+            kwargs["request_id"],
+            kwargs["repair_request"],
+            ["same wall"],
+            kwargs["registry"],
+        )
+        if calls["stage1"] >= 3:
+            document = intent.to_dict()
+            document["operations"][0]["target_query"].pop("names", None)
+            document["operations"][0]["target_query"]["global_id"] = selected_id
+            intent = RepairIntent.from_dict(document, registry=kwargs["registry"])
+        return {"valid": True, "intent": intent}
+
+    api._intent_stage = intent_stage
+    first = api.start(source, "repair same wall")
+    assert first.status == "clarification_required" and first.clarification is not None
+    second = api.continue_with_answer(
+        first.run_id,
+        {"kind": "add_detail", "detail": "east side"},
+        clarification_id=first.clarification.clarification_id,
+        expected_state_version=first.state_version,
+    )
+    assert second.status == "clarification_required" and second.clarification is not None
+    result = api.continue_with_answer(
+        second.run_id,
+        {"kind": "add_detail", "detail": "GlobalId is " + selected_id},
+        clarification_id=second.clarification.clarification_id,
+        expected_state_version=second.state_version,
+    )
+
+    assert result.status == "succeeded"
+    assert calls["stage1"] == 3
+    state = api.store.load(result.run_id)
+    resume_bindings = [
+        transition.stage_payload["intent"]
+        for transition in state.transitions
+        if "intent" in transition.stage_payload
+        and str(transition.stage_payload["intent"]["path"]).startswith("intent/resume-")
+    ]
+    assert len(resume_bindings) == 2
+
+
 def test_public_api_reaches_explicit_prototype_authorization(tmp_path: Path) -> None:
     source = tmp_path / "prototype.ifc"
     _source(source)

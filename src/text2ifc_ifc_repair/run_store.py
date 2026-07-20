@@ -47,6 +47,7 @@ _PRIVATE_CANARIES = (
     "provider_secret",
     "api_key",
 )
+_PUBLICATION_JOURNAL = ".terminal-publication.json"
 _PROGRESS = (
     RunStage.CREATED,
     RunStage.SOURCE_VALIDATED,
@@ -162,6 +163,12 @@ class RunStore:
 
     def load(self, run_id: str) -> RunState:
         run_dir = self._run_dir(run_id, require_exists=True)
+        self._recover_terminal_publication(run_dir)
+        state = self._read_state(run_dir)
+        self._validate_source(state.source)
+        return state
+
+    def _read_state(self, run_dir: Path) -> RunState:
         state_path = run_dir / "state.json"
         try:
             document = json.loads(state_path.read_text(encoding="utf-8"))
@@ -173,8 +180,125 @@ class RunStore:
         except (ValidationError, KeyError, TypeError, ValueError) as error:
             raise RunStoreError(RunStoreCode.SCHEMA_INVALID, str(error)) from error
         self._validate_loaded_state(run_dir, state)
-        self._validate_source(state.source)
         return state
+
+    def commit_terminal_publication(
+        self,
+        run_id: str,
+        *,
+        prepared_root: str,
+        to_stage: RunStage,
+        expected_state_version: int,
+        reason_code: str | None,
+        stage_payload: Mapping[str, Any],
+        result_artifacts: Mapping[str, str],
+        answer: Mapping[str, Any] | None = None,
+        clarification_id: str | None = None,
+        fault_injector: Any | None = None,
+    ) -> RunState:
+        """Promote one hidden bundle and commit its terminal state recoverably."""
+
+        run_dir = self._run_dir(run_id, require_exists=True)
+        with self._exclusive_lock(run_dir):
+            current = self._read_state(run_dir)
+            self._validate_source(current.source)
+            if current.state_version != expected_state_version:
+                raise RunStoreError(
+                    RunStoreCode.STATE_CONFLICT,
+                    f"expected version {expected_state_version}, found {current.state_version}",
+                )
+            clean_answer = None
+            if answer is not None:
+                clarification = current.clarification
+                if (
+                    current.stage is not RunStage.CLARIFICATION_REQUIRED
+                    or clarification is None
+                    or clarification.clarification_id != clarification_id
+                ):
+                    raise RunStoreError(RunStoreCode.STATE_CONFLICT, "clarification binding is stale")
+                clean_answer = self._validate_answer(clarification, answer)
+                if clean_answer["kind"] not in {"cancel", "eof"} or to_stage is not RunStage.CANCELLED:
+                    raise RunStoreError(RunStoreCode.ANSWER_INVALID, "terminal answer must cancel")
+                self._validate_transition(
+                    current.stage, to_stage, resume_stage=clarification.resume_stage
+                )
+            else:
+                self._validate_transition(current.stage, to_stage)
+
+            prepared = self._safe_run_child(run_dir, prepared_root, require_exists=True, require_directory=True)
+            match = re.fullmatch(r"\.terminal-prepared-([0-9a-f]{32})", prepared.name)
+            if match is None or prepared.parent != run_dir:
+                raise RunStoreError(RunStoreCode.PATH_ESCAPE, "invalid prepared publication root")
+            bundle_rel = f".terminal-bundles/{match.group(1)}"
+            bundles_root = self._safe_run_child(
+                run_dir, ".terminal-bundles", require_exists=False
+            )
+            if bundles_root.exists() and _is_link_or_reparse(bundles_root):
+                raise RunStoreError(RunStoreCode.PATH_ESCAPE, "publication root follows a link")
+            bundles_root.mkdir(exist_ok=True)
+            destination = self._safe_run_child(run_dir, bundle_rel, require_exists=False)
+            if destination.exists():
+                raise RunStoreError(RunStoreCode.STATE_CONFLICT, "publication bundle already exists")
+
+            mapped = self._map_prepared_artifacts(
+                run_dir, prepared, bundle_rel, result_artifacts
+            )
+            self._verify_prepared_manifest(prepared, bundle_rel, mapped)
+            manifest = prepared / Path(mapped["manifest"]).relative_to(bundle_rel)
+            payload = thaw_json(freeze_json(stage_payload))
+            payload["manifest"] = {
+                "path": mapped["manifest"],
+                "sha256": self._hash_bytes(manifest.read_bytes()),
+                "schema_version": "text2ifc/ifc-repair-artifact-manifest/0.1",
+            }
+            new_version = current.state_version + 1
+            transition = self._build_transition(
+                transition_id=new_version,
+                from_stage=current.stage,
+                to_stage=to_stage,
+                previous_hash=current.transitions[-1].record_hash,
+                stage_payload=payload,
+                answer=clean_answer,
+                reason_code=reason_code,
+                result_artifacts=mapped,
+            )
+            state = replace(
+                current,
+                state_version=new_version,
+                stage=to_stage,
+                transitions=(*current.transitions, transition),
+                clarification=None,
+                reason_code=reason_code,
+                result_artifacts=mapped,
+            )
+            self._validate_state(state)
+            journal = {
+                "schema_version": "text2ifc/ifc-repair-terminal-publication/0.1",
+                "expected_state_version": expected_state_version,
+                "prepared_root": prepared.name,
+                "destination_root": bundle_rel,
+                "transition": transition.to_dict(),
+                "state": state.to_dict(),
+            }
+            journal_path = run_dir / _PUBLICATION_JOURNAL
+            if journal_path.exists():
+                raise RunStoreError(RunStoreCode.STATE_CONFLICT, "publication recovery pending")
+            self._atomic_write_json(journal_path, journal, replace_existing=False)
+            if fault_injector is not None:
+                fault_injector("after_journal")
+            os.replace(prepared, destination)
+            self._fsync_directory(destination.parent)
+            if fault_injector is not None:
+                fault_injector("after_promotion")
+            self._write_transition(run_dir, transition)
+            if fault_injector is not None:
+                fault_injector("before_state_replace")
+            self._atomic_write_json(run_dir / "state.json", state.to_dict())
+            if fault_injector is not None:
+                fault_injector("after_state_replace")
+            journal_path.unlink()
+            self._fsync_directory(run_dir)
+            return state
 
     def prepare_stage_directory(self, run_id: str, relative: str) -> Path:
         """Create or validate a no-follow stage directory below one run."""
@@ -621,6 +745,136 @@ class RunStore:
         for name, relative in state.result_artifacts.items():
             if name != "manifest" and relative not in declared:
                 raise RunStoreError(RunStoreCode.TAMPER_DETECTED, "terminal artifact is not manifest-bound")
+
+    def _recover_terminal_publication(self, run_dir: Path) -> None:
+        journal_path = run_dir / _PUBLICATION_JOURNAL
+        if not journal_path.exists():
+            return
+        with self._exclusive_lock(run_dir):
+            if not journal_path.exists():
+                return
+            try:
+                journal = json.loads(journal_path.read_text(encoding="utf-8"))
+                if journal.get("schema_version") != "text2ifc/ifc-repair-terminal-publication/0.1":
+                    raise ValueError("journal schema")
+                expected = int(journal["expected_state_version"])
+                prepared_name = str(journal["prepared_root"])
+                destination_rel = str(journal["destination_root"])
+                transition = RunTransition.from_dict(journal["transition"])
+                recovered = RunState.from_dict(journal["state"])
+            except (OSError, json.JSONDecodeError, KeyError, TypeError, ValueError) as error:
+                raise RunStoreError(
+                    RunStoreCode.TAMPER_DETECTED, "publication journal is invalid"
+                ) from error
+            current = self._read_state(run_dir)
+            if recovered.state_version != expected + 1 or transition != recovered.transitions[-1]:
+                raise RunStoreError(RunStoreCode.TAMPER_DETECTED, "publication journal chain mismatch")
+            if current.state_version == expected:
+                if current.transitions != recovered.transitions[:-1]:
+                    raise RunStoreError(RunStoreCode.TAMPER_DETECTED, "publication base state changed")
+                prepared = self._safe_run_child(
+                    run_dir, prepared_name, require_exists=False
+                )
+                destination = self._safe_run_child(
+                    run_dir, destination_rel, require_exists=False
+                )
+                if destination.exists():
+                    if prepared.exists():
+                        raise RunStoreError(
+                            RunStoreCode.TAMPER_DETECTED, "both prepared and promoted bundles exist"
+                        )
+                elif prepared.exists():
+                    destination.parent.mkdir(exist_ok=True)
+                    os.replace(prepared, destination)
+                    self._fsync_directory(destination.parent)
+                else:
+                    raise RunStoreError(RunStoreCode.TAMPER_DETECTED, "publication bundle is missing")
+                transition_path = run_dir / "transitions" / f"{transition.transition_id:06d}.json"
+                if transition_path.exists():
+                    try:
+                        stored = json.loads(transition_path.read_text(encoding="utf-8"))
+                    except (OSError, json.JSONDecodeError) as error:
+                        raise RunStoreError(
+                            RunStoreCode.TAMPER_DETECTED, "publication transition is unreadable"
+                        ) from error
+                    if stored != transition.to_dict():
+                        raise RunStoreError(
+                            RunStoreCode.TAMPER_DETECTED, "publication transition differs"
+                        )
+                else:
+                    self._write_transition(run_dir, transition)
+                self._atomic_write_json(run_dir / "state.json", recovered.to_dict())
+            elif current.state_version == recovered.state_version:
+                if current != recovered:
+                    raise RunStoreError(
+                        RunStoreCode.TAMPER_DETECTED, "committed publication differs from journal"
+                    )
+            else:
+                raise RunStoreError(
+                    RunStoreCode.STATE_CONFLICT, "publication recovery version conflict"
+                )
+            self._verify_terminal_artifacts(run_dir, recovered)
+            journal_path.unlink()
+            self._fsync_directory(run_dir)
+
+    def _map_prepared_artifacts(
+        self,
+        run_dir: Path,
+        prepared: Path,
+        bundle_rel: str,
+        artifacts: Mapping[str, str],
+    ) -> Mapping[str, str]:
+        mapped: dict[str, str] = {}
+        for name, raw in artifacts.items():
+            stage_path = self._safe_run_child(run_dir, str(raw), require_exists=True)
+            try:
+                within = stage_path.relative_to(prepared)
+            except ValueError as error:
+                raise RunStoreError(
+                    RunStoreCode.PATH_ESCAPE, "terminal artifact is outside prepared bundle"
+                ) from error
+            if not stage_path.is_file():
+                raise RunStoreError(RunStoreCode.TAMPER_DETECTED, "prepared artifact is not a file")
+            mapped[str(name)] = (PurePosixPath(bundle_rel) / PurePosixPath(within.as_posix())).as_posix()
+        if "manifest" not in mapped:
+            raise RunStoreError(RunStoreCode.PUBLIC_RECORD_INVALID, "terminal manifest missing")
+        return self._validate_artifacts(run_dir, mapped)
+
+    def _verify_prepared_manifest(
+        self,
+        prepared: Path,
+        bundle_rel: str,
+        artifacts: Mapping[str, str],
+    ) -> None:
+        manifest_relative = Path(artifacts["manifest"]).relative_to(bundle_rel)
+        manifest_path = prepared / manifest_relative
+        try:
+            document = json.loads(manifest_path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as error:
+            raise RunStoreError(RunStoreCode.TAMPER_DETECTED, "prepared manifest unreadable") from error
+        if document.get("schema_version") != "text2ifc/ifc-repair-artifact-manifest/0.1":
+            raise RunStoreError(RunStoreCode.TAMPER_DETECTED, "prepared manifest schema mismatch")
+        declared: set[str] = set()
+        prefix = PurePosixPath(bundle_rel)
+        for item in document.get("artifacts", ()):
+            relative = PurePosixPath(str(item.get("path", "")))
+            try:
+                within = relative.relative_to(prefix)
+            except ValueError as error:
+                raise RunStoreError(
+                    RunStoreCode.TAMPER_DETECTED, "prepared manifest path is outside bundle"
+                ) from error
+            disk_path = prepared.joinpath(*within.parts)
+            if not disk_path.is_file():
+                raise RunStoreError(RunStoreCode.TAMPER_DETECTED, "prepared artifact missing")
+            if hashlib.sha256(disk_path.read_bytes()).hexdigest() != str(item.get("sha256", "")):
+                raise RunStoreError(RunStoreCode.TAMPER_DETECTED, "prepared artifact hash mismatch")
+            declared.add(relative.as_posix())
+        for name, relative in artifacts.items():
+            if name != "manifest" and relative not in declared:
+                raise RunStoreError(
+                    RunStoreCode.TAMPER_DETECTED, "prepared terminal artifact is not manifest-bound"
+                )
 
     def _validate_source(self, binding: SourceBinding) -> None:
         path = Path(binding.reference)

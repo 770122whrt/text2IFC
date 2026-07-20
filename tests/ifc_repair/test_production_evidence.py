@@ -305,6 +305,46 @@ def test_formal_type_and_user_approved_prototype_have_distinct_auditable_sources
     assert "user_authorization:stored_user_answer" in prototype.provenance
 
 
+def test_explicit_request_prototype_is_authorized_with_distinct_provenance() -> None:
+    base = _resolution().operations[0]
+    explicit = ResolvedOperation(
+        operation_id=base.operation_id,
+        operation_type=base.operation_type,
+        target_global_id=base.target_global_id,
+        scope_ids=base.scope_ids,
+        evidence_pointers=base.evidence_pointers,
+        parameters=base.parameters,
+        context=base.context,
+        authorized_semantics=(
+            base.authorized_semantics[0],
+            {
+                "kind": "user_authorized_prototype",
+                "global_id": "prototype-1",
+                "authorization": "explicit_request_reference",
+                "request_provenance": {
+                    "source_kind": "user_request",
+                    "reference": "request:/prototype",
+                    "excerpt": "use prototype-1",
+                },
+            },
+        ),
+    )
+    resolution = ResolutionBatch(
+        status="resolved",
+        source_ifc_sha256="sha256:" + "4" * 64,
+        model_fingerprint="sha256:" + "2" * 64,
+        operations=(explicit,),
+    )
+
+    evidence = _build(resolution=resolution)
+    prototype = next(
+        fact
+        for fact in evidence.candidate_facts_by_operation["operation-1"]
+        if fact.source_kind is EvidenceSourceKind.APPROVED_PROTOTYPE
+    )
+    assert "user_authorization:explicit_request_reference" in prototype.provenance
+
+
 @pytest.mark.parametrize(
     "category,fact",
     [

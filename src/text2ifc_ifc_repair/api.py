@@ -54,7 +54,8 @@ class RepairAPI:
         self._index_stage = index_stage
         self._changeset_stage = changeset_stage
         self._orchestrator_factory = orchestrator_factory
-        self._orchestrator_options = dict(orchestrator_options or {})
+        self._orchestrator_options = {"defer_publication": True}
+        self._orchestrator_options.update(dict(orchestrator_options or {}))
 
     @classmethod
     def from_environment(
@@ -194,16 +195,31 @@ class RepairAPI:
                     operation["target_query"]["global_id"] = selected.public_id
         elif kind == "add_detail":
             repair_text = f"{repair_text}\n补充说明：{str(answer['detail']).strip()}"
+            resume_version = expected_state_version + 1
+            intent_root = self.store.prepare_stage_directory(run_id, "intent")
+            resume_dir = intent_root / f"resume-{resume_version:03d}"
             generated = self._intent_stage(
                 provider=self.provider,
                 request_id=str(intent_document["request_id"]),
                 repair_request=repair_text,
                 registry=self.registry,
-                output_dir=run_dir / "intent" / f"resume-{resumed.state_version:03d}",
+                output_dir=resume_dir,
             )
             if not generated.get("valid") or generated.get("intent") is None:
                 return self._fail(run_id, RunStage.PROVIDER_FAILED, "INTENT_RESUME_FAILED")
             intent_document = generated["intent"].to_dict()
+            resumed_intent_path = resume_dir / "repair-intent.json"
+            if not resumed_intent_path.exists():
+                atomic_write_text(
+                    resumed_intent_path,
+                    json.dumps(
+                        intent_document,
+                        ensure_ascii=False,
+                        sort_keys=True,
+                        separators=(",", ":"),
+                    )
+                    + "\n",
+                )
         intent = RepairIntent.from_dict(intent_document, registry=self.registry)
         context_ref = self._write_context(
             run_dir, repair_text=repair_text, intent=intent,
@@ -214,22 +230,34 @@ class RepairAPI:
                 run_id, context_ref, "text2ifc/ifc-repair-api-context/0.1"
             )
         }
-        cancel_artifacts: dict[str, str] | None = None
+        if kind == "add_detail":
+            resume_payload["intent"] = self.store.artifact_binding(
+                run_id,
+                f"intent/resume-{expected_state_version + 1:03d}/repair-intent.json",
+                "text2ifc/ifc-repair-intent/0.1",
+            )
         if kind in {"cancel", "eof"}:
-            cancel_artifacts = self._publish_failure_bundle(
+            cancel_artifacts, prepared_root = self._publish_failure_bundle(
                 run_id, RunStage.CANCELLED, "USER_CANCELLED", pending.stage.value
             )
-            resume_payload["manifest"] = self.store.artifact_binding(
-                run_id, cancel_artifacts["manifest"], "text2ifc/ifc-repair-artifact-manifest/0.1"
+            self.store.commit_terminal_publication(
+                run_id,
+                prepared_root=prepared_root,
+                to_stage=RunStage.CANCELLED,
+                expected_state_version=expected_state_version,
+                reason_code="USER_CANCELLED",
+                stage_payload=resume_payload,
+                result_artifacts=cancel_artifacts,
+                answer=answer,
+                clarification_id=clarification_id,
             )
+            return self.store.read_result(run_id)
         resumed = self.store.continue_with_answer(
             run_id, clarification_id=clarification_id,
             expected_state_version=expected_state_version, answer=answer,
             stage_payload=resume_payload,
-            result_artifacts=cancel_artifacts,
+            result_artifacts=None,
         )
-        if resumed.stage is RunStage.CANCELLED:
-            return self.store.read_result(run_id)
         prototype_answer = None
         if kind == "authorize_prototype":
             prototype_answer = {
@@ -353,53 +381,53 @@ class RepairAPI:
             "application_failed": RunStage.APPLICATION_FAILED,
         }.get(final.status, RunStage.NOT_PUBLISHABLE)
         artifacts = _artifact_references(run_dir, final)
-        self.store.transition(
+        if final.prepared_root is None:
+            raise ValueError("TERMINAL_PUBLICATION_NOT_PREPARED")
+        self.store.commit_terminal_publication(
             run_id,
+            prepared_root=Path(final.prepared_root).relative_to(run_dir).as_posix(),
             to_stage=terminal,
             expected_state_version=state.state_version,
             reason_code=final.reason_code,
-            stage_payload={
-                "status": final.status,
-                "manifest": self.store.artifact_binding(
-                    run_id, artifacts["manifest"], "text2ifc/ifc-repair-artifact-manifest/0.1"
-                ),
-            },
+            stage_payload={"status": final.status},
             result_artifacts=artifacts,
         )
         return self.store.read_result(run_id)
 
     def _fail(self, run_id: str, stage: RunStage, reason: str) -> RunResult:
         state = self.store.load(run_id)
-        artifacts = self._publish_failure_bundle(run_id, stage, reason[:128], state.stage.value)
-        self.store.transition(
+        artifacts, prepared_root = self._publish_failure_bundle(
+            run_id, stage, reason[:128], state.stage.value
+        )
+        self.store.commit_terminal_publication(
             run_id,
+            prepared_root=prepared_root,
             to_stage=stage,
             expected_state_version=state.state_version,
             reason_code=reason[:128],
-            stage_payload={
-                "reason_code": reason[:128],
-                "manifest": self.store.artifact_binding(
-                    run_id, artifacts["manifest"], "text2ifc/ifc-repair-artifact-manifest/0.1"
-                ),
-            },
+            stage_payload={"reason_code": reason[:128]},
             result_artifacts=artifacts,
         )
         return self.store.read_result(run_id)
 
     def _publish_failure_bundle(
         self, run_id: str, stage: RunStage, reason: str, from_stage: str,
-    ) -> dict[str, str]:
+    ) -> tuple[dict[str, str], str]:
         run_dir = self.store.runs_root / run_id
         published = publish_terminal_artifacts(
             run_directory=run_dir, terminal_status=stage.value,
             evaluation=_terminal_failure_evaluation(reason), candidate_ifc_path=None,
             evidence={"reason_code": reason, "stage": from_stage},
+            promote=False,
         )
-        return {
+        if published.prepared_root is None:
+            raise ValueError("TERMINAL_PUBLICATION_NOT_PREPARED")
+        artifacts = {
             "manifest": Path(published.manifest_path).relative_to(run_dir).as_posix(),
             "evaluation": Path(published.evaluation_path).relative_to(run_dir).as_posix(),
             "evidence": Path(published.evidence_path).relative_to(run_dir).as_posix(),
         }
+        return artifacts, Path(published.prepared_root).relative_to(run_dir).as_posix()
 
     @staticmethod
     def _write_context(
