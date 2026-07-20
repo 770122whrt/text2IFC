@@ -94,6 +94,19 @@ def generate_repair_intent(
                 provider, provider_arguments
             )
         except ProviderOutputError as error:
+            details = getattr(error, "details", {}) or {}
+            safe_details = {
+                key: details[key]
+                for key in (
+                    "provider",
+                    "failure_class",
+                    "exception_type",
+                    "session_id",
+                    "estimated_input_tokens",
+                    "max_input_tokens",
+                )
+                if key in details
+            }
             issues = [
                 _issue(
                     RepairIntentCode.PROVIDER_REQUEST_FAILED,
@@ -103,7 +116,7 @@ def generate_repair_intent(
             attempt = _attempt_record(
                 attempt_number=attempt_number,
                 issues=issues,
-                provider_metadata={},
+                provider_metadata={"provider_error": safe_details},
                 raw_text="",
             )
             attempts.append(attempt)
