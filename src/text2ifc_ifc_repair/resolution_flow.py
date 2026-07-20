@@ -93,6 +93,11 @@ def resolve_repair_intent(
         result = resolve_target(repository, operation.target_query)
         if result.status != "resolved":
             reason = result.status
+            if reason == "unsupported":
+                return _failure(
+                    intent, reason, operation_id=operation.operation_id,
+                    operations=completed, source_sha=expected_source_sha256,
+                )
             if reason == "not_found" and _has_unreliable_name_match(repository, operation):
                 reason = "missing_evidence"
             return ResolutionBatch(
@@ -173,7 +178,26 @@ def resolve_repair_intent(
         )
 
         prototype = operation.prototype_intent
-        if prototype is not None and prototype.reference_kind == "selection_required":
+        if prototype is not None and prototype.reference_kind in {"global_id", "type_name"}:
+            prototype_result = _explicit_prototype(repository, prototype)
+            if prototype_result[0] == "resolved":
+                completed[-1] = replace(
+                    completed[-1],
+                    authorized_semantics=(*completed[-1].authorized_semantics, prototype_result[1]),
+                )
+            elif prototype_result[0] == "ambiguous":
+                return ResolutionBatch(
+                    status="clarification_required", reason_code="prototype_selection",
+                    operation_id=operation.operation_id, operations=tuple(completed),
+                    candidates=prototype_result[1], source_ifc_sha256=expected_source_sha256,
+                    model_fingerprint=intent.model_fingerprint,
+                )
+            else:
+                return _failure(
+                    intent, "missing_evidence", operation_id=operation.operation_id,
+                    operations=completed, source_sha=expected_source_sha256,
+                )
+        elif prototype is not None and prototype.reference_kind == "selection_required":
             candidates = tuple(
                 _public_record(record_item, operation.operation_id)
                 for record_item in repository.iter_records()
@@ -244,7 +268,7 @@ def _failure(
     source_sha: str,
 ) -> ResolutionBatch:
     return ResolutionBatch(
-        status="clarification_required",
+        status="failed",
         reason_code=reason,
         operation_id=operation_id,
         operations=tuple(operations or ()),
@@ -303,6 +327,30 @@ def _public_record(record: ElementRecord, operation_id: str) -> dict[str, Any]:
 
 def _escape_json_pointer_token(value: str) -> str:
     return value.replace("~", "~0").replace("/", "~1")
+
+
+def _explicit_prototype(repository: IndexRepository, prototype: Any) -> tuple[str, Any]:
+    records = [item for item in repository.iter_records() if item.identity_reliable]
+    if prototype.reference_kind == "global_id":
+        matches = [item for item in records if prototype.reference in {item.ifc_global_id, item.type_global_id}]
+        prototype_ids = {prototype.reference} if matches else set()
+    else:
+        matches = [item for item in records if (item.type_name or "").casefold() == prototype.reference.casefold()]
+        prototype_ids = {str(item.type_global_id) for item in matches if item.type_global_id}
+    if len(prototype_ids) == 1:
+        return "resolved", {
+            "kind": "explicit_prototype_reference",
+            "global_id": next(iter(prototype_ids)),
+            "reference_kind": prototype.reference_kind,
+            "request_provenance": prototype.source.to_dict(),
+        }
+    if len(prototype_ids) > 1:
+        candidates = tuple(
+            _public_record(item, "prototype") for item in matches
+            if item.ifc_global_id and item.type_global_id in prototype_ids
+        )
+        return "ambiguous", candidates
+    return "not_found", ()
 
 
 __all__ = [

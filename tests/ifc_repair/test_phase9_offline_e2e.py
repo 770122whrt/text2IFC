@@ -1,11 +1,13 @@
 from __future__ import annotations
 
 import hashlib
+import json
 import shutil
 from pathlib import Path
 from types import SimpleNamespace
 
 import ifcopenshell
+import pytest
 
 from text2ifc_ifc_repair.api import RepairAPI
 from text2ifc_ifc_repair.repair_intent import RepairIntent, fingerprint_text, hash_request
@@ -24,7 +26,10 @@ def _sha(path: Path) -> str:
     return "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def _intent(request_id: str, text: str, names: list[str], registry, count: int = 1) -> RepairIntent:
+def _intent(
+    request_id: str, text: str, names: list[str], registry, count: int = 1,
+    prototype: dict[str, object] | None = None,
+) -> RepairIntent:
     operations = []
     for index in range(count):
         operations.append({
@@ -41,7 +46,7 @@ def _intent(request_id: str, text: str, names: list[str], registry, count: int =
                 "window": {"fit_opening": True},
             },
             "attribute_intents": [],
-            "prototype_intent": None,
+            "prototype_intent": prototype,
             "provenance": [{"source_kind": "user_request", "reference": "request:/text", "excerpt": text}],
         })
     return RepairIntent.from_dict({
@@ -71,10 +76,17 @@ def _evaluation(publishable: bool) -> dict[str, object]:
     }
 
 
-def _api(tmp_path: Path, *, operation_count: int, apply_ok: bool, publishable: bool, calls: dict[str, int], target_names: list[str] | None = None) -> RepairAPI:
+def _api(
+    tmp_path: Path, *, operation_count: int, apply_ok: bool, publishable: bool,
+    calls: dict[str, int], target_names: list[str] | None = None,
+    prototype: dict[str, object] | None = None,
+) -> RepairAPI:
     def intent_stage(**kwargs):
         calls["stage1"] += 1
-        return {"valid": True, "intent": _intent(kwargs["request_id"], kwargs["repair_request"], target_names or ["North wall"], kwargs["registry"], operation_count)}
+        return {"valid": True, "intent": _intent(
+            kwargs["request_id"], kwargs["repair_request"], target_names or ["North wall"],
+            kwargs["registry"], operation_count, prototype,
+        )}
 
     def changeset_stage(**kwargs):
         calls["stage2"] += 1
@@ -141,3 +153,77 @@ def test_multi_operation_failure_rolls_back_without_evaluation_or_success_path(t
     assert result.status == "not_publishable"
     assert result.successful_artifact_publishable is False
     assert "successful_ifc" not in result.artifacts
+
+
+def test_ambiguous_candidate_resume_validates_before_bound_state_commit(tmp_path: Path) -> None:
+    source = tmp_path / "ambiguous.ifc"
+    first_id = _source(source, name="same wall")
+    model = ifcopenshell.open(str(source))
+    model.create_entity("IfcWall", GlobalId="0000000000000000000003", Name="same wall")
+    model.write(str(source))
+    calls = {"stage1": 0, "stage2": 0, "apply": 0, "evaluation": 0}
+    api = _api(
+        tmp_path, operation_count=1, apply_ok=True, publishable=True,
+        calls=calls, target_names=["same wall"],
+    )
+    pending = api.start(source, "repair same wall")
+    assert pending.status == "clarification_required"
+    assert pending.clarification is not None
+    clarification = pending.clarification
+    selected = next(item for item in clarification.candidates if item.public_id == first_id)
+
+    with pytest.raises(Exception):
+        api.continue_with_answer(
+            pending.run_id, {"kind": "select_candidate", "candidate_token": selected.token},
+            clarification_id="stale-clarification", expected_state_version=pending.state_version,
+        )
+    assert api.store.load(pending.run_id).state_version == pending.state_version
+
+    result = api.continue_with_answer(
+        pending.run_id, {"kind": "select_candidate", "candidate_token": selected.token},
+        clarification_id=clarification.clarification_id,
+        expected_state_version=clarification.state_version,
+    )
+    assert result.status == "succeeded"
+    run_dir = tmp_path / "output" / result.run_directory
+    context = json.loads((run_dir / "api-context.json").read_text(encoding="utf-8"))
+    query = context["intent"]["operations"][0]["target_query"]
+    assert query["global_id"] == first_id
+    assert "names" not in query and "exact_global_ids" not in query
+
+
+def test_public_api_reaches_explicit_prototype_authorization(tmp_path: Path) -> None:
+    source = tmp_path / "prototype.ifc"
+    _source(source)
+    model = ifcopenshell.open(str(source))
+    model.create_entity("IfcWall", GlobalId="0000000000000000000003", Name="Prototype wall")
+    model.write(str(source))
+    calls = {"stage1": 0, "stage2": 0, "apply": 0, "evaluation": 0}
+    prototype = {
+        "reference_kind": "selection_required", "reference": "choose a prototype",
+        "source": {"source_kind": "user_request", "reference": "request:/prototype", "excerpt": "use that wall"},
+    }
+    api = _api(
+        tmp_path, operation_count=1, apply_ok=True, publishable=True,
+        calls=calls, prototype=prototype,
+    )
+    pending = api.start(source, "repair North wall using a prototype")
+    assert pending.status == "clarification_required"
+    clarification = pending.clarification
+    assert clarification is not None
+    assert clarification.reason_code == "prototype_selection"
+    assert clarification.answer_modes == ("authorize_prototype", "cancel")
+
+    result = api.continue_with_answer(
+        pending.run_id,
+        {"kind": "authorize_prototype", "candidate_token": clarification.candidates[0].token, "authorized": True},
+        clarification_id=clarification.clarification_id,
+        expected_state_version=clarification.state_version,
+    )
+    assert result.status == "succeeded"
+    state = api.store.load(pending.run_id)
+    assert any(
+        transition.answer is not None and transition.answer["kind"] == "authorize_prototype"
+        for transition in state.transitions
+    )
+    assert calls["stage2"] == 1

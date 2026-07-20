@@ -76,8 +76,8 @@ class FakeAPI:
         self.calls.append(("start", (Path(source_ifc_path), repair_text, run_id)))
         return self.first
 
-    def continue_with_answer(self, run_id: str, answer: dict[str, object]):
-        self.calls.append(("continue", (run_id, answer)))
+    def continue_with_answer(self, run_id: str, answer: dict[str, object], **bindings):
+        self.calls.append(("continue", (run_id, answer, bindings)))
         return self.resumed
 
     def read_result(self, run_id: str):
@@ -159,7 +159,8 @@ def test_interactive_candidate_selection_resumes_the_same_run(tmp_path: Path) ->
     assert "2cXV28XOjE6f6irgi0CO4t" in stdout and "name:二层东侧外窗" in stdout
     assert api.calls[-1] == (
         "continue",
-        ("repair-cli-fixture", {"kind": "select_candidate", "candidate_token": "candidate-east"}),
+        ("repair-cli-fixture", {"kind": "select_candidate", "candidate_token": "candidate-east"},
+         {"clarification_id": "clarify-001", "expected_state_version": 4}),
     )
 
 
@@ -179,21 +180,30 @@ def test_cancel_and_eof_fail_safe_without_selecting_a_target(tmp_path: Path, std
     )
 
     assert code == 8 and stderr == ""
-    assert api.calls[-1] == ("continue", ("repair-cli-fixture", {"kind": kind}))
+    assert api.calls[-1] == (
+        "continue", ("repair-cli-fixture", {"kind": kind},
+                     {"clarification_id": "clarify-001", "expected_state_version": 4}),
+    )
     assert "candidate-east" not in repr(api.calls[-1][1][1])
 
 
 def test_continue_and_result_are_thin_api_calls(tmp_path: Path) -> None:
     api = FakeAPI(_result("succeeded"))
     answer = json.dumps({"kind": "add_detail", "detail": "东侧"}, ensure_ascii=False)
-    continue_code, _, _ = _run(api, ["continue", "repair-cli-fixture", "--answer", answer, "--output-root", str(tmp_path)])
+    continue_code, _, _ = _run(api, [
+        "continue", "repair-cli-fixture", "--answer", answer,
+        "--clarification-id", "clarify-001", "--expected-state-version", "4",
+        "--output-root", str(tmp_path),
+    ])
     result_code, _, _ = _run(api, ["result", "repair-cli-fixture", "--output-root", str(tmp_path)])
 
     assert continue_code == result_code == 0
-    assert api.calls == [
-        ("continue", ("repair-cli-fixture", {"kind": "add_detail", "detail": "东侧"})),
-        ("result", "repair-cli-fixture"),
-    ]
+    assert api.calls[0][0] == "continue"
+    assert api.calls[0][1][0] == "repair-cli-fixture"
+    assert api.calls[0][1][2] == {
+        "clarification_id": "clarify-001", "expected_state_version": 4,
+    }
+    assert api.calls[1] == ("result", "repair-cli-fixture")
 
 
 @pytest.mark.parametrize(

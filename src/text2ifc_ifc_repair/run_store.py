@@ -240,6 +240,7 @@ class RunStore:
         clarification_id: str,
         expected_state_version: int,
         answer: Mapping[str, Any],
+        stage_payload: Mapping[str, Any] | None = None,
     ) -> RunState:
         run_dir = self._run_dir(run_id, require_exists=True)
         with self._exclusive_lock(run_dir):
@@ -268,7 +269,7 @@ class RunStore:
                 from_stage=current.stage,
                 to_stage=target,
                 previous_hash=current.transitions[-1].record_hash,
-                stage_payload={"clarification_id": clarification_id},
+                stage_payload={"clarification_id": clarification_id, **dict(stage_payload or {})},
                 answer=clean_answer,
                 reason_code=("USER_CANCELLED" if target is RunStage.CANCELLED else None),
             )

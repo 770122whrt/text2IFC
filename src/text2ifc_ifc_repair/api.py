@@ -24,6 +24,7 @@ from .run_models import (
     RunStoreError,
 )
 from .run_store import RunStore
+from text2ifc_text.splits import atomic_write_text
 
 
 class RepairAPI:
@@ -134,19 +135,20 @@ class RepairAPI:
         self._write_context(run_dir, repair_text=repair_text, intent=intent)
         return self._resolve_and_finish(state.run_id, intent, repair_text)
 
-    def continue_with_answer(self, run_id: str, answer: Mapping[str, Any]) -> RunResult:
+    def continue_with_answer(
+        self,
+        run_id: str,
+        answer: Mapping[str, Any],
+        *,
+        clarification_id: str,
+        expected_state_version: int,
+    ) -> RunResult:
         pending = self.store.load(run_id)
         clarification = pending.clarification
         if clarification is None:
             raise ValueError("CLARIFICATION_NOT_PENDING")
-        resumed = self.store.continue_with_answer(
-            run_id,
-            clarification_id=clarification.clarification_id,
-            expected_state_version=pending.state_version,
-            answer=answer,
-        )
-        if resumed.stage is RunStage.CANCELLED:
-            return self.store.read_result(run_id)
+        if clarification.clarification_id != clarification_id or pending.state_version != expected_state_version:
+            raise RunStoreError("RUN_STATE_CONFLICT", "clarification binding is stale")
         run_dir = self.store.runs_root / run_id
         context = json.loads((run_dir / "api-context.json").read_text(encoding="utf-8"))
         repair_text = str(context["repair_text"])
@@ -154,11 +156,20 @@ class RepairAPI:
         kind = str(answer.get("kind", ""))
         if kind == "select_candidate":
             token = str(answer.get("candidate_token", ""))
-            selected = next(item for item in clarification.candidates if item.token == token)
+            selected = next((item for item in clarification.candidates if item.token == token), None)
+            if selected is None:
+                raise ValueError("CLARIFICATION_CANDIDATE_NOT_OFFERED")
             for operation in intent_document["operations"]:
                 if operation["operation_id"] == clarification.operation_id:
-                    operation["target_query"]["exact_global_ids"] = [selected.public_id]
-                    operation["target_query"]["names"] = []
+                    query = operation["target_query"]
+                    # Candidate selection authorizes exactly one public identity;
+                    # retain only query controls and remove selectors that could
+                    # contradict that identity on resume.
+                    operation["target_query"] = {
+                        key: value for key, value in query.items()
+                        if key in {"schema_version", "allowed_ifc_classes", "max_candidates", "winner_margin"}
+                    }
+                    operation["target_query"]["global_id"] = selected.public_id
         elif kind == "add_detail":
             repair_text = f"{repair_text}\n补充说明：{str(answer['detail']).strip()}"
             generated = self._intent_stage(
@@ -172,13 +183,34 @@ class RepairAPI:
                 return self._fail(run_id, RunStage.PROVIDER_FAILED, "INTENT_RESUME_FAILED")
             intent_document = generated["intent"].to_dict()
         intent = RepairIntent.from_dict(intent_document, registry=self.registry)
+        context_ref = self._write_context(
+            run_dir, repair_text=repair_text, intent=intent,
+            name=f"api-context-v{expected_state_version + 1:03d}.json",
+        )
+        resumed = self.store.continue_with_answer(
+            run_id, clarification_id=clarification_id,
+            expected_state_version=expected_state_version, answer=answer,
+            stage_payload={"api_context": context_ref},
+        )
+        if resumed.stage is RunStage.CANCELLED:
+            return self.store.read_result(run_id)
         self._write_context(run_dir, repair_text=repair_text, intent=intent)
-        return self._resolve_and_finish(run_id, intent, repair_text)
+        prototype_answer = None
+        if kind == "authorize_prototype":
+            prototype_answer = {
+                "operation_id": clarification.operation_id,
+                "candidate_token": str(answer["candidate_token"]),
+                "authorized": True,
+            }
+        return self._resolve_and_finish(run_id, intent, repair_text, prototype_answer=prototype_answer)
 
     def read_result(self, run_id: str) -> RunResult:
         return self.store.read_result(run_id)
 
-    def _resolve_and_finish(self, run_id: str, intent: RepairIntent, repair_text: str) -> RunResult:
+    def _resolve_and_finish(
+        self, run_id: str, intent: RepairIntent, repair_text: str,
+        *, prototype_answer: Mapping[str, Any] | None = None,
+    ) -> RunResult:
         state = self.store.load(run_id)
         run_dir = self.store.runs_root / run_id
         with SQLiteIndexRepository.open(
@@ -215,6 +247,17 @@ class RepairAPI:
             except Exception as error:
                 return self._fail(run_id, RunStage.PROVIDER_FAILED, _safe_code(error, "CHANGESET_STAGE_FAILED"))
             resolution = orchestrator._resolution
+            if prototype_answer is not None and resolution.status == "clarification_required" and resolution.reason_code == "prototype_selection":
+                outcome = orchestrator.continue_with_answer(prototype_answer)
+                resolution = orchestrator._resolution
+            if resolution.status == "failed":
+                stage = {
+                    "unsupported": RunStage.UNSUPPORTED,
+                    "stale_index": RunStage.INVALID_INPUT,
+                    "context_budget_exceeded": RunStage.PROVIDER_FAILED,
+                    "missing_evidence": RunStage.INVALID_INPUT,
+                }.get(str(resolution.reason_code), RunStage.INVALID_INPUT)
+                return self._fail(run_id, stage, str(resolution.reason_code or "RESOLUTION_FAILED"))
             if outcome.status == "clarification_required":
                 clarification = _clarification(run_id, state.state_version + 1, resolution)
                 self.store.transition(
@@ -288,16 +331,20 @@ class RepairAPI:
         return self.store.read_result(run_id)
 
     @staticmethod
-    def _write_context(run_dir: Path, *, repair_text: str, intent: RepairIntent) -> None:
-        (run_dir / "api-context.json").write_text(
+    def _write_context(
+        run_dir: Path, *, repair_text: str, intent: RepairIntent,
+        name: str = "api-context.json",
+    ) -> str:
+        payload = (
             json.dumps(
                 {"schema_version": "text2ifc/ifc-repair-api-context/0.1", "repair_text": repair_text, "intent": intent.to_dict()},
                 ensure_ascii=False,
                 sort_keys=True,
                 separators=(",", ":"),
-            ) + "\n",
-            encoding="utf-8",
+            ) + "\n"
         )
+        atomic_write_text(run_dir / name, payload)
+        return name
 
 
 def _clarification(run_id: str, version: int, resolution: Any) -> Clarification:
@@ -313,7 +360,17 @@ def _clarification(run_id: str, version: int, resolution: Any) -> Clarification:
         )
         for item in resolution.candidates
     )
-    modes = ("select_candidate", "add_detail", "cancel") if candidates else ("add_detail", "cancel")
+    reason_map = {
+        "ambiguous": "ambiguous_target", "conflict": "selector_conflict",
+        "not_found": "additional_target_detail", "missing_evidence": "additional_target_detail",
+        "prototype_selection": "prototype_selection",
+    }
+    reason = reason_map.get(str(resolution.reason_code), "additional_target_detail")
+    modes = (
+        ("authorize_prototype", "cancel") if reason == "prototype_selection"
+        else ("select_candidate", "add_detail", "cancel") if candidates
+        else ("add_detail", "cancel")
+    )
     return Clarification(
         clarification_id=f"clarify-{version:03d}",
         run_id=run_id,
@@ -321,7 +378,7 @@ def _clarification(run_id: str, version: int, resolution: Any) -> Clarification:
         operation_id=str(resolution.operation_id or "operation"),
         stage=RunStage.TARGETS_RESOLVED,
         resume_stage=RunStage.INTENT_READY,
-        reason_code=str(resolution.reason_code or "additional_target_detail"),
+        reason_code=reason,
         question="目标不唯一或证据不足，请选择候选、补充说明或取消。",
         answer_modes=modes,
         candidates=candidates,

@@ -43,13 +43,27 @@ def main(
         if args.command == "start":
             result = api.start(args.source, args.request, run_id=args.run_id)
         elif args.command == "continue":
-            result = api.continue_with_answer(args.run_id, _answer(args.answer))
+            result = api.continue_with_answer(
+                args.run_id, _answer(args.answer),
+                clarification_id=args.clarification_id,
+                expected_state_version=args.expected_state_version,
+            )
         else:
             result = api.read_result(args.run_id)
-        if result.status == "clarification_required" and not args.non_interactive and not args.json and not args.quiet:
+        rounds = 0
+        while result.status == "clarification_required" and not args.non_interactive and not args.json and not args.quiet:
+            if rounds >= 8:
+                raise ValueError("CLARIFICATION_ROUND_LIMIT")
             _render_clarification(result, out)
             answer = _read_answer(result, source_in)
-            result = api.continue_with_answer(result.run_id, answer)
+            clarification = result.clarification
+            assert clarification is not None
+            result = api.continue_with_answer(
+                result.run_id, answer,
+                clarification_id=clarification.clarification_id,
+                expected_state_version=clarification.state_version,
+            )
+            rounds += 1
         _render(result, json_mode=args.json, quiet=args.quiet, out=out)
         return EXIT_CODES.get(result.status, 7)
     except SystemExit:
@@ -70,6 +84,8 @@ def _parser() -> argparse.ArgumentParser:
     cont = sub.add_parser("continue")
     cont.add_argument("run_id")
     cont.add_argument("--answer", required=True)
+    cont.add_argument("--clarification-id", required=True)
+    cont.add_argument("--expected-state-version", required=True, type=int)
     result = sub.add_parser("result")
     result.add_argument("run_id")
     for command in (start, cont, result):
@@ -104,7 +120,10 @@ def _read_answer(result: RunResult, stream: TextIO) -> dict[str, Any]:
     if value.isdigit():
         index = int(value) - 1
         if 0 <= index < len(clarification.candidates):
-            return {"kind": "select_candidate", "candidate_token": clarification.candidates[index].token}
+            token = clarification.candidates[index].token
+            if "authorize_prototype" in clarification.answer_modes:
+                return {"kind": "authorize_prototype", "candidate_token": token, "authorized": True}
+            return {"kind": "select_candidate", "candidate_token": token}
         raise ValueError("CLARIFICATION_ANSWER_INVALID")
     if "add_detail" in clarification.answer_modes and value:
         return {"kind": "add_detail", "detail": value}

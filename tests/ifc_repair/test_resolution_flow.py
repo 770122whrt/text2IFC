@@ -209,3 +209,29 @@ def test_similarity_never_authorizes_prototype_but_explicit_answer_does(tmp_path
     assert resumed.operations[0].authorized_semantics[-1]["kind"] == "user_authorized_prototype"
     assert resumed.operations[0].authorized_semantics[-1]["authorization"] == "stored_user_answer"
 
+
+@pytest.mark.parametrize(
+    ("reference_kind", "reference"),
+    [("global_id", "0TYPEAAAAAAAAAAAAAAAAA"), ("type_name", "Fixture Type")],
+)
+def test_explicit_named_prototype_is_resolved_with_request_provenance(
+    tmp_path: Path, reference_kind: str, reference: str,
+) -> None:
+    target = _record("0AAAAAAAAAAAAAAAAAAAAA", "target")
+    prototype = _record("0BBBBBBBBBBBBBBBBBBBBB", "prototype", type_guid="0TYPEAAAAAAAAAAAAAAAAA")
+    request = _intent(
+        {"global_id": target.ifc_global_id},
+        prototype={
+            "reference_kind": reference_kind,
+            "reference": reference,
+            "source": {"source_kind": "user_request", "reference": "request:/prototype", "excerpt": "use Fixture Type"},
+        },
+    )
+    with _repository(tmp_path, [target, prototype]) as repository:
+        result = _api().resolve_repair_intent(request, repository, expected_source_sha256=SOURCE_SHA)
+    assert result.status == "resolved"
+    semantic = result.operations[0].authorized_semantics[-1]
+    assert semantic["kind"] == "explicit_prototype_reference"
+    assert semantic["global_id"] == "0TYPEAAAAAAAAAAAAAAAAA"
+    assert semantic["request_provenance"]["reference"] == "request:/prototype"
+
