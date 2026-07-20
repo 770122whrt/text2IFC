@@ -474,6 +474,10 @@ def _clarification(run_id: str, version: int, resolution: Any) -> Clarification:
             storey=item.get("storey"),
             position=item.get("position"),
             evidence=tuple(str(value) for value in item.get("evidence", ())),
+            candidate_kind=str(item.get("candidate_kind", "target")),
+            dimensions=dict(item.get("dimensions") or {}),
+            occurrence_count=int(item.get("occurrence_count", 0)),
+            storeys=tuple(str(value) for value in item.get("storeys", ())),
         )
         for item in resolution.candidates
     )
