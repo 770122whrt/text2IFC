@@ -37,6 +37,7 @@ def generate_bound_changeset(
     source_request_hash: str,
     resolved_operations: Any,
     model_fingerprint: str,
+    base_model_fingerprint: str | None = None,
     registry: OperationRegistry,
     output_dir: Path | str,
     max_attempts: int = 2,
@@ -48,6 +49,7 @@ def generate_bound_changeset(
     if max_attempts not in (1, 2):
         raise ValueError("BOUND_CHANGESET_ATTEMPT_LIMIT_INVALID")
     operations = [_plain_operation(item) for item in resolved_operations]
+    base_fingerprint = base_model_fingerprint or model_fingerprint
     input_issues, resolved_document = _resolved_input_issues(
         operations, model_fingerprint=model_fingerprint, registry=registry
     )
@@ -65,7 +67,7 @@ def generate_bound_changeset(
         renderer_input = {
             "REPAIR_REQUEST": repair_request,
             "SOURCE_REQUEST_HASH": source_request_hash,
-            "MODEL_FINGERPRINT": model_fingerprint,
+            "MODEL_FINGERPRINT": base_fingerprint,
             "RESOLVED_OPERATIONS": resolved_document,
             "SUPPORTED_OPERATIONS": supported_operations,
             "CHANGESET_SCHEMA": load_changeset_schema(),
@@ -75,12 +77,12 @@ def generate_bound_changeset(
         atomic_write_text(attempt_dir / "renderer-input.json", _json(renderer_input))
         atomic_write_text(attempt_dir / "rendered-prompt.md", rendered["text"])
         try:
-            provider_output = validate_provider_output(provider.generate_candidate(
-                session_id=f"ifc-repair-{case_id}",
-                prompt=rendered["text"],
-                schema=load_changeset_schema(),
-                state={"case_id": case_id, "stage": "ifc_repair_bound_changeset", "attempt": attempt_index},
-            ))
+            provider_output = _call_bound_provider(provider, {
+                "session_id": f"ifc-repair-{case_id}",
+                "prompt": rendered["text"],
+                "schema": load_changeset_schema(),
+                "state": {"case_id": case_id, "stage": "ifc_repair_bound_changeset", "attempt": attempt_index},
+            }, attempt_dir)
         except ProviderOutputError:
             issues = [_issue("STEP_OR_PRIVATE_OUTPUT_FORBIDDEN", "/", "Provider output failed the public structured-output boundary")]
             atomic_write_text(
@@ -109,7 +111,7 @@ def generate_bound_changeset(
                         operations=operations,
                         resolved_document=resolved_document,
                         source_request_hash=source_request_hash,
-                        model_fingerprint=model_fingerprint,
+                        base_model_fingerprint=base_fingerprint,
                         registry=registry,
                     )
                 )
@@ -462,7 +464,7 @@ def _bound_binding_issues(
     operations: list[dict[str, Any]],
     resolved_document: Mapping[str, Any],
     source_request_hash: str,
-    model_fingerprint: str,
+    base_model_fingerprint: str,
     registry: OperationRegistry,
 ) -> list[dict[str, str]]:
     issues: list[dict[str, str]] = []
@@ -475,7 +477,7 @@ def _bound_binding_issues(
         issues.append(_issue("OPERATION_ID_SET_MISMATCH", "/operations", "ChangeSet operation IDs must exactly equal resolved IDs"))
     if changeset["source_request_hash"] != source_request_hash:
         issues.append(_issue("SOURCE_REQUEST_HASH_MISMATCH", "/source_request_hash", "stale request binding"))
-    if changeset["base_model_fingerprint"] != model_fingerprint:
+    if changeset["base_model_fingerprint"] != base_model_fingerprint:
         issues.append(_issue("BASE_MODEL_FINGERPRINT_MISMATCH", "/base_model_fingerprint", "stale model binding"))
 
     expected_scope = {str(scope_id) for item in operations for scope_id in item["scope_ids"]}
@@ -536,6 +538,23 @@ def _plain_operation(value: Any) -> dict[str, Any]:
     if not isinstance(value, Mapping):
         raise ValueError("RESOLVED_OPERATION_INVALID")
     return json.loads(json.dumps(dict(value), ensure_ascii=False, allow_nan=False))
+
+
+def _call_bound_provider(provider: Any, arguments: Mapping[str, Any], attempt_dir: Path):
+    generate_live = getattr(provider, "generate_live", None)
+    if callable(generate_live):
+        live_result = generate_live(**arguments)
+        atomic_write_text(attempt_dir / "live-request.json", _json(redact_provider_payload(live_result.request)))
+        atomic_write_text(attempt_dir / "live-response.json", _json(redact_provider_payload(live_result.response)))
+        atomic_write_text(
+            attempt_dir / "live-events.jsonl",
+            "".join(_json(redact_provider_payload(event)) for event in live_result.events),
+        )
+        return validate_provider_output(live_result.output)
+    generate_candidate = getattr(provider, "generate_candidate", None)
+    if not callable(generate_candidate):
+        raise ProviderOutputError("PROVIDER_INTERFACE_UNSUPPORTED")
+    return validate_provider_output(generate_candidate(**arguments))
 
 
 def _operation_contract(registry: OperationRegistry, operation_type: str) -> dict[str, Any]:

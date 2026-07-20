@@ -10,6 +10,10 @@ import pytest
 from text2ifc_agent.providers import ProviderOutput
 from text2ifc_agent.prompt_registry import load_prompt_registry
 from text2ifc_ifc_repair.registry import OperationDefinition, OperationRegistry
+from text2ifc_ifc_repair.index_models import AliasFact, ElementRecord, IndexMetadata
+from text2ifc_ifc_repair.index_store import SQLiteIndexRepository
+from text2ifc_ifc_repair.repair_intent import RepairIntent
+from text2ifc_ifc_repair.resolution_flow import resolve_repair_intent
 
 
 MODEL = "sha256:" + "a" * 64
@@ -35,6 +39,24 @@ class Provider:
         return ProviderOutput(text=text, metadata={"provider": "fixture"})
 
 
+class _LiveResult:
+    def __init__(self, output: ProviderOutput) -> None:
+        self.output = output
+        self.request = {"model": "fixture-live"}
+        self.response = {"status": 200}
+        self.events = ({"event": "response.completed"},)
+
+
+class LiveOnlyProvider:
+    def __init__(self, response: dict) -> None:
+        self.response = response
+        self.calls: list[dict] = []
+
+    def generate_live(self, **kwargs) -> _LiveResult:
+        self.calls.append(kwargs)
+        return _LiveResult(ProviderOutput(text=json.dumps(self.response), metadata={"provider": "live-fixture"}))
+
+
 def _definition(operation_type: str) -> OperationDefinition:
     return OperationDefinition(
         operation_type=operation_type,
@@ -43,7 +65,10 @@ def _definition(operation_type: str) -> OperationDefinition:
             "type": "object",
             "additionalProperties": False,
             "required": ["marker"],
-            "properties": {"marker": {"type": "string"}},
+            "properties": {
+                "marker": {"type": "string"},
+                "nested": {"type": "object", "additionalProperties": True},
+            },
         },
         target_schema={
             "type": "object",
@@ -232,3 +257,61 @@ def test_invalid_output_has_one_finite_corrected_attempt(tmp_path: Path) -> None
     assert len(provider.calls) == 2
     assert (tmp_path / "attempt-001" / "diagnostics.json").is_file()
     assert (tmp_path / "attempt-002" / "diagnostics.json").is_file()
+
+
+def test_real_intent_resolution_flows_into_live_only_bound_stage(tmp_path: Path) -> None:
+    registry = _registry()
+    guid = "0AAAAAAAAAAAAAAAAAAAAA"
+    source_sha = "sha256:" + "e" * 64
+    database = tmp_path / "targets.sqlite"
+    metadata = IndexMetadata(source_sha, "IFC2X3", "text2ifc/ifc-indexer/0.1", 1, "2026-07-20T00:00:00Z")
+    record = ElementRecord(
+        record_id=f"ifc:{guid}", ifc_global_id=guid, identity_reliable=True,
+        ifc_class="IfcWall", name="east wall", long_name=None, tag=None,
+        object_type="Basic Wall", type_name=None, type_global_id=None,
+        storey_name="Level 1", storey_global_id="0STOREYAAAAAAAAAAAAAAA",
+        geometry_capability="straight_wall", geometry_summary={"length_mm": 4000},
+        facets={"editable_target": True}, provenance={"source": "fixture"},
+        aliases=(AliasFact("east wall", "east wall", "name", "fixture"),),
+    )
+    with SQLiteIndexRepository.create(database, metadata) as writer:
+        writer.put_record(record)
+        writer.publish()
+    intent = RepairIntent.from_dict({
+        "schema_version": "text2ifc/ifc-repair-intent/0.1",
+        "request_id": "request-real-seam", "source_request_hash": REQUEST,
+        "model_fingerprint": MODEL, "prompt_fingerprint": "sha256:" + "d" * 64,
+        "operations": [{
+            "operation_id": "intent-a", "operation_type": "fixture_move",
+            "target_query": {"schema_version": "text2ifc/ifc-target-query/0.1", "allowed_ifc_classes": ["IfcWall"], "global_id": guid},
+            "parameters": {"marker": "move", "nested": {"source": ["user"]}},
+            "attribute_intents": [], "prototype_intent": None,
+            "provenance": [{"source_kind": "user_request", "reference": "request:/operations/0", "excerpt": "move wall"}],
+        }],
+        "provenance": [{"source_kind": "user_request", "reference": "request:/text", "excerpt": "move wall"}],
+    }, registry=registry)
+    with SQLiteIndexRepository.open(database) as repository:
+        resolution = resolve_repair_intent(intent, repository, expected_source_sha256=source_sha)
+    assert resolution.status == "resolved"
+    pointer = "resolved:/operations/intent-a/context/candidate_targets/0"
+    assert resolution.operations[0].evidence_pointers == (pointer,)
+    response = {
+        "schema_version": "text2ifc/ifc-repair-changeset/0.1",
+        "changeset_id": "changeset-real-seam", "base_model_fingerprint": source_sha,
+        "source_request_hash": REQUEST,
+        "scope": {"target_ids": [guid], "forbidden_ids": []},
+        "evidence_refs": [pointer], "preconditions": ["target_exists"], "postconditions": ["target_updated"],
+        "operations": [{"operation_id": "intent-a", "operation_type": "fixture_move", "target": {"wall_global_id": guid},
+                        "parameters": {"marker": "move", "nested": {"source": ["user"]}}, "evidence_refs": [pointer]}],
+    }
+    provider = LiveOnlyProvider(response)
+    result = _api().generate_bound_changeset(
+        provider=provider, case_id="real-seam", repair_request="move wall",
+        source_request_hash=REQUEST, resolved_operations=resolution.operations,
+        model_fingerprint=MODEL, base_model_fingerprint=source_sha,
+        registry=registry, output_dir=tmp_path / "stage2", max_attempts=1,
+    )
+    assert result["valid"] is True, result
+    assert len(provider.calls) == 1
+    assert (tmp_path / "stage2" / "attempt-001" / "live-request.json").is_file()
+    assert (tmp_path / "stage2" / "attempt-001" / "live-events.jsonl").is_file()

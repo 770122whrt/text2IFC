@@ -15,6 +15,7 @@ from typing import Any, Mapping
 from .index_models import INDEX_SCHEMA_VERSION, ElementRecord
 from .index_store import IndexRepository
 from .repair_intent import OperationIntent, RepairIntent
+from .run_models import thaw_json
 from .target_context import TargetContextError, build_target_context
 from .target_query import ResolutionResult, resolve_target
 
@@ -40,9 +41,9 @@ class ResolvedOperation:
             "target_global_id": self.target_global_id,
             "scope_ids": list(self.scope_ids),
             "evidence_pointers": list(self.evidence_pointers),
-            "parameters": dict(self.parameters),
-            "context": dict(self.context),
-            "authorized_semantics": [dict(item) for item in self.authorized_semantics],
+            "parameters": thaw_json(self.parameters),
+            "context": thaw_json(self.context),
+            "authorized_semantics": [thaw_json(item) for item in self.authorized_semantics],
         }
 
 
@@ -137,10 +138,10 @@ def resolve_repair_intent(
                 "source_ifc_sha256": expected_source_sha256,
             },
         }
-        evidence = tuple(
-            f"resolution:/{operation.operation_id}/candidates/0/evidence/{index}"
-            for index, _ in enumerate(result.candidates[0].evidence)
-        )
+        operation_token = _escape_json_pointer_token(operation.operation_id)
+        evidence = (
+            f"resolved:/operations/{operation_token}/context/candidate_targets/0",
+        ) if result.candidates[0].evidence else ()
         if not evidence:
             return _failure(
                 intent,
@@ -298,6 +299,10 @@ def _public_record(record: ElementRecord, operation_id: str) -> dict[str, Any]:
         "position": json.dumps(record.geometry_summary, ensure_ascii=False, sort_keys=True),
         "evidence": evidence,
     }
+
+
+def _escape_json_pointer_token(value: str) -> str:
+    return value.replace("~", "~0").replace("/", "~1")
 
 
 __all__ = [

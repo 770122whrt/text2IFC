@@ -193,6 +193,7 @@ class RepairAPI:
                     source_request_hash=intent.source_request_hash,
                     resolved_operations=resolution.operations,
                     model_fingerprint=intent.model_fingerprint,
+                    base_model_fingerprint=resolution.source_ifc_sha256,
                     registry=self.registry,
                     output_dir=run_dir / "changeset",
                 )
