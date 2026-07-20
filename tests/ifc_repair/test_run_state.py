@@ -3,6 +3,7 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import subprocess
 from pathlib import Path
 
 import pytest
@@ -288,18 +289,22 @@ def test_lock_contention_rejects_racing_mutation_without_history_loss(
     store: RunStore, source: Path
 ) -> None:
     state = _start(store, source)
-    lock_path = store.runs_root / state.run_id / ".transition.lock"
-    lock_path.write_text("held", encoding="ascii")
+    run_dir = store.runs_root / state.run_id
     before = (store.runs_root / state.run_id / "state.json").read_bytes()
 
-    with pytest.raises(RunStoreError) as locked:
-        store.transition(
-            state.run_id,
-            to_stage=RunStage.SOURCE_VALIDATED,
-            expected_state_version=0,
-        )
+    with store._exclusive_lock(run_dir):
+        with pytest.raises(RunStoreError) as locked:
+            store.transition(
+                state.run_id,
+                to_stage=RunStage.SOURCE_VALIDATED,
+                expected_state_version=0,
+            )
     assert locked.value.code == RunStoreCode.LOCKED.value
     assert (store.runs_root / state.run_id / "state.json").read_bytes() == before
+    recovered = store.transition(
+        state.run_id, to_stage=RunStage.SOURCE_VALIDATED, expected_state_version=0,
+    )
+    assert recovered.stage is RunStage.SOURCE_VALIDATED
 
 
 def test_terminal_reads_are_idempotent_and_compact(store: RunStore, source: Path) -> None:
@@ -309,12 +314,18 @@ def test_terminal_reads_are_idempotent_and_compact(store: RunStore, source: Path
         to_stage=RunStage.SOURCE_VALIDATED,
         expected_state_version=0,
     )
+    manifest = store.runs_root / state.run_id / "published" / "manifest.json"
+    manifest.parent.mkdir()
+    manifest.write_text(
+        '{"artifacts":[],"schema_version":"text2ifc/ifc-repair-artifact-manifest/0.1"}\n',
+        encoding="utf-8",
+    )
     terminal = store.transition(
         state.run_id,
         to_stage=RunStage.INVALID_INPUT,
         expected_state_version=validated.state_version,
         reason_code="SOURCE_INVALID",
-        result_artifacts={"manifest": "artifacts/manifest.json"},
+        result_artifacts={"manifest": "published/manifest.json"},
     )
 
     first = store.read_result(state.run_id)
@@ -322,11 +333,78 @@ def test_terminal_reads_are_idempotent_and_compact(store: RunStore, source: Path
     assert first == second
     assert first.state_version == terminal.state_version
     assert first.status == RunStage.INVALID_INPUT.value
-    assert first.artifacts == {"manifest": "artifacts/manifest.json"}
+    assert first.artifacts == {"manifest": "published/manifest.json"}
     encoded = json.dumps(first.to_dict(), ensure_ascii=False)
     assert len(encoded.encode("utf-8")) <= 16 * 1024
     assert "ISO-10303-21" not in encoded
     assert "evaluation" not in first.to_dict()
+
+
+def test_stage_artifact_hash_is_verified_on_every_resume(store: RunStore, source: Path) -> None:
+    state = _start(store, source)
+    stage = store.prepare_stage_directory(state.run_id, "index")
+    artifact = stage / "targets.sqlite"
+    artifact.write_bytes(b"immutable-index")
+    committed = store.transition(
+        state.run_id, to_stage=RunStage.SOURCE_VALIDATED,
+        expected_state_version=state.state_version,
+        stage_payload={"index": store.artifact_binding(
+            state.run_id, "index/targets.sqlite", "text2ifc/ifc-index/0.1"
+        )},
+    )
+    assert store.load(state.run_id) == committed
+    artifact.write_bytes(b"tampered-index")
+    with pytest.raises(RunStoreError) as tampered:
+        store.load(state.run_id)
+    assert tampered.value.code == RunStoreCode.TAMPER_DETECTED.value
+
+
+def test_terminal_manifest_and_referenced_content_are_verified(store: RunStore, source: Path) -> None:
+    state = _start(store, source)
+    published = store.runs_root / state.run_id / "published"
+    published.mkdir()
+    evaluation = published / "evaluation.json"
+    evaluation.write_text('{"status":"failed"}\n', encoding="utf-8")
+    digest = hashlib.sha256(evaluation.read_bytes()).hexdigest()
+    manifest = published / "manifest.json"
+    manifest.write_text(json.dumps({
+        "schema_version": "text2ifc/ifc-repair-artifact-manifest/0.1",
+        "artifacts": [{"path": "published/evaluation.json", "sha256": digest}],
+    }), encoding="utf-8")
+    store.transition(
+        state.run_id, to_stage=RunStage.INVALID_INPUT,
+        expected_state_version=state.state_version,
+        stage_payload={"manifest": store.artifact_binding(
+            state.run_id, "published/manifest.json", "text2ifc/ifc-repair-artifact-manifest/0.1"
+        )},
+        result_artifacts={"manifest": "published/manifest.json", "evaluation": "published/evaluation.json"},
+    )
+    assert store.read_result(state.run_id).status == "invalid_input"
+    evaluation.write_text('{"status":"passed"}\n', encoding="utf-8")
+    with pytest.raises(RunStoreError) as tampered:
+        store.read_result(state.run_id)
+    assert tampered.value.code == RunStoreCode.TAMPER_DETECTED.value
+
+
+def test_stage_directory_rejects_real_reparse_or_symlink_without_privilege_skip(
+    store: RunStore, source: Path, tmp_path: Path,
+) -> None:
+    state = _start(store, source)
+    run_dir = store.runs_root / state.run_id
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    stage = run_dir / "index"
+    if os.name == "nt":
+        created = subprocess.run(
+            ["cmd", "/c", "mklink", "/J", str(stage), str(outside)],
+            capture_output=True, text=True, check=False,
+        )
+        assert created.returncode == 0, created.stderr
+    else:
+        stage.symlink_to(outside, target_is_directory=True)
+    with pytest.raises(RunStoreError) as escaped:
+        store.prepare_stage_directory(state.run_id, "index")
+    assert escaped.value.code == RunStoreCode.PATH_ESCAPE.value
 
 
 def test_completed_stage_hash_is_not_replaced_or_rerun_after_clarification(

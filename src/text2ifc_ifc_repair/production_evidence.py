@@ -225,14 +225,18 @@ def _operation_candidates(
                 "UNAUTHORIZED_SEMANTIC_AUTHORITY", f"{operation_id}:{kind}"
             )
         global_id = str(authority.get("global_id", ""))
-        record = _record(records_by_global_id, global_id, role=kind)
         if kind == "formal_type_binding":
             if target.type_global_id != global_id:
                 raise ProductionEvidenceError("FORMAL_TYPE_BINDING_MISMATCH", global_id)
+            # ElementRecord already carries the formally-related type facts; the
+            # index is keyed by product GlobalId and need not contain a second
+            # synthetic record keyed by the IfcTypeObject GlobalId.
+            record = target
             source_kind = EvidenceSourceKind.SURVIVING_TYPE
             source_ref = f"formal-type:{global_id}"
             provenance = f"formal_type_binding:{authority.get('provenance', '')}"
         else:
+            record = _record(records_by_global_id, global_id, role=kind)
             if authority.get("authorization") != "stored_user_answer":
                 raise ProductionEvidenceError("PROTOTYPE_NOT_USER_APPROVED", global_id)
             source_kind = EvidenceSourceKind.APPROVED_PROTOTYPE

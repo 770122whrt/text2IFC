@@ -150,7 +150,7 @@ def test_multi_operation_failure_rolls_back_without_evaluation_or_success_path(t
 
     assert calls == {"stage1": 1, "stage2": 1, "apply": 1, "evaluation": 0}
     assert _sha(source) == before
-    assert result.status == "not_publishable"
+    assert result.status == "audit_failed"
     assert result.successful_artifact_publishable is False
     assert "successful_ifc" not in result.artifacts
 
@@ -186,7 +186,13 @@ def test_ambiguous_candidate_resume_validates_before_bound_state_commit(tmp_path
     )
     assert result.status == "succeeded"
     run_dir = tmp_path / "output" / result.run_directory
-    context = json.loads((run_dir / "api-context.json").read_text(encoding="utf-8"))
+    state = api.store.load(pending.run_id)
+    context_ref = next(
+        transition.stage_payload["api_context"]["path"]
+        for transition in reversed(state.transitions)
+        if "api_context" in transition.stage_payload
+    )
+    context = json.loads((run_dir / context_ref).read_text(encoding="utf-8"))
     query = context["intent"]["operations"][0]["target_query"]
     assert query["global_id"] == first_id
     assert "names" not in query and "exact_global_ids" not in query
@@ -227,3 +233,17 @@ def test_public_api_reaches_explicit_prototype_authorization(tmp_path: Path) -> 
         for transition in state.transitions
     )
     assert calls["stage2"] == 1
+
+
+def test_early_invalid_input_publishes_evaluation_and_hash_bound_manifest(tmp_path: Path) -> None:
+    source = tmp_path / "invalid.ifc"
+    ifcopenshell.file(schema="IFC4").write(str(source))
+    api = RepairAPI(tmp_path / "output", provider=object())
+    result = api.start(source, "repair invalid source")
+    assert result.status == "invalid_input"
+    assert {"manifest", "evaluation", "evidence"}.issubset(result.artifacts)
+    run_dir = tmp_path / "output" / result.run_directory
+    evaluation = json.loads((run_dir / result.artifacts["evaluation"]).read_text(encoding="utf-8"))
+    assert evaluation["schema_version"] == "text2ifc/ifc-repair-evaluation-public/0.2"
+    assert evaluation["successful_artifact_publishable"] is False
+    assert api.read_result(result.run_id) == result

@@ -5,6 +5,8 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import shutil
+import uuid
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Mapping
@@ -67,28 +69,35 @@ def publish_terminal_artifacts(
             private_canaries,
         )
 
-    evaluation_path = root / "evaluation" / "public-evaluation.json"
-    evidence_path = root / "terminal" / "evidence.json"
-    manifest_path = root / "manifest.json"
-    for path in (evaluation_path, evidence_path, manifest_path):
-        if path.exists():
-            raise RunArtifactError("ARTIFACT_ALREADY_EXISTS", path.relative_to(root).as_posix())
+    destination_root = root / "published"
+    if destination_root.exists():
+        raise RunArtifactError("ARTIFACT_ALREADY_EXISTS", "published")
+    stage_root = root / f".terminal-stage-{uuid.uuid4().hex}"
+    stage_root.mkdir(exist_ok=False)
+    evaluation_path = stage_root / "evaluation" / "public-evaluation.json"
+    evidence_path = stage_root / "terminal" / "evidence.json"
+    manifest_path = stage_root / "manifest.json"
     _write_json(evaluation_path, public_evaluation)
     _write_json(evidence_path, {"terminal_status": terminal_status, "evidence": public_evidence})
 
     successful: Path | None = None
     diagnostic: Path | None = None
     if candidate is not None:
-        destination = root / ("successful/repaired.ifc" if publishable else "diagnostic/repaired-candidate.ifc")
-        if destination.exists():
-            raise RunArtifactError("ARTIFACT_ALREADY_EXISTS", destination.name)
+        destination = stage_root / ("successful/repaired.ifc" if publishable else "diagnostic/repaired-candidate.ifc")
         destination.parent.mkdir(parents=True, exist_ok=True)
-        os.replace(candidate, destination)
+        shutil.copyfile(candidate, destination)
         successful, diagnostic = (destination, None) if publishable else (None, destination)
 
-    _write_json(manifest_path, _manifest(root))
+    _write_json(manifest_path, _manifest(stage_root, prefix="published"))
     if private_canaries:
-        _scan_canaries(tuple(path for path in root.rglob("*") if path.is_file()), private_canaries)
+        _scan_canaries(tuple(path for path in stage_root.rglob("*") if path.is_file()), private_canaries)
+    _fsync_tree(stage_root)
+    os.replace(stage_root, destination_root)
+    evaluation_path = destination_root / "evaluation" / "public-evaluation.json"
+    evidence_path = destination_root / "terminal" / "evidence.json"
+    manifest_path = destination_root / "manifest.json"
+    successful = None if successful is None else destination_root / successful.relative_to(stage_root)
+    diagnostic = None if diagnostic is None else destination_root / diagnostic.relative_to(stage_root)
     return TerminalArtifacts(
         evaluation_path=str(evaluation_path),
         evidence_path=str(evidence_path),
@@ -123,7 +132,7 @@ def _verify_candidate(candidate: Path, expected_sha256: str | None) -> None:
         raise RunArtifactError("CANDIDATE_SCHEMA_MISMATCH", reopened.schema)
 
 
-def _manifest(root: Path) -> dict[str, Any]:
+def _manifest(root: Path, *, prefix: str = "") -> dict[str, Any]:
     files = sorted(path for path in root.rglob("*") if path.is_file() and path.name != "manifest.json")
     if len(files) > MAX_MANIFEST_ARTIFACTS:
         raise RunArtifactError("ARTIFACT_LIMIT_EXCEEDED", str(len(files)))
@@ -140,7 +149,8 @@ def _manifest(root: Path) -> dict[str, Any]:
             role = "diagnostic_candidate"
         elif relative.parts[0] == "evaluation":
             role = "public_evaluation"
-        artifacts.append({"path": relative.as_posix(), "sha256": hashlib.sha256(payload).hexdigest(), "size_bytes": len(payload), "role": role})
+        public_path = (Path(prefix) / relative).as_posix() if prefix else relative.as_posix()
+        artifacts.append({"path": public_path, "sha256": hashlib.sha256(payload).hexdigest(), "size_bytes": len(payload), "role": role})
     return {"schema_version": ARTIFACT_MANIFEST_SCHEMA_VERSION, "artifacts": artifacts}
 
 
@@ -158,6 +168,12 @@ def _write_json(path: Path, value: Mapping[str, Any]) -> None:
         raise RunArtifactError("ARTIFACT_TEMP_ALREADY_EXISTS", temporary.name)
     temporary.write_text(json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"), allow_nan=False) + "\n", encoding="utf-8")
     os.replace(temporary, path)
+
+
+def _fsync_tree(root: Path) -> None:
+    for path in sorted(item for item in root.rglob("*") if item.is_file()):
+        with path.open("r+b") as stream:
+            os.fsync(stream.fileno())
 
 
 def _json_copy(value: Any) -> Any:

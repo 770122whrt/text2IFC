@@ -72,7 +72,7 @@ def semantic_fact_from_property_fact(
 
     pset_path = f"{fact.set_name}.{fact.property_name}"
     return SemanticFact(
-        fact_key=f"{fact.set_kind}:{pset_path}",
+        fact_key=f"{_key_token(fact.set_kind)}:{_key_token(pset_path)}",
         value=fact.value,
         value_type=fact.value_type,
         unit=fact.unit,

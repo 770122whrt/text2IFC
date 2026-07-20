@@ -3,15 +3,15 @@ from __future__ import annotations
 import hashlib
 import json
 from pathlib import Path
-from types import SimpleNamespace
 
 import ifcopenshell
 
 from text2ifc_ifc_repair.api import RepairAPI
 from text2ifc_ifc_repair.geometry import opening_position_in_wall_mm
 from text2ifc_ifc_repair.mutation import remove_window_and_opening
-from text2ifc_ifc_repair.run_models import thaw_json
-from tests.ifc_repair.test_phase9_offline_e2e import _intent
+from text2ifc_ifc_repair.repair_intent import fingerprint_text, hash_request
+from text2ifc_agent.prompt_registry import load_prompt_registry
+from text2ifc_agent.providers import ProviderOutput
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -38,53 +38,59 @@ def test_large_building_uses_public_api_and_keeps_current_l2_nonpublishable(tmp_
     caller_hash = "sha256:" + hashlib.sha256(caller_ifc.read_bytes()).hexdigest()
     text = f"请在 {wall.Name} 上恢复宽 {float(window.OverallWidth)} mm、高 {float(window.OverallHeight)} mm 的外窗"
     calls = {"stage1": 0, "stage2": 0}
+    evidence_ref = "resolved:/operations/operation-1/context/candidate_targets/0"
 
-    def intent_stage(**kwargs):
-        calls["stage1"] += 1
-        intent = _intent(kwargs["request_id"], kwargs["repair_request"], [str(wall.Name)], kwargs["registry"])
-        document = intent.to_dict()
-        parameters = document["operations"][0]["parameters"]
-        parameters["position"]["center_offset_mm"] = float(position["center_offset"])
-        parameters["opening"] = {
-            "width_mm": float(window.OverallWidth),
-            "height_mm": float(window.OverallHeight),
-            "sill_height_mm": float(position["sill_height"]),
-        }
-        return {"valid": True, "intent": type(intent).from_dict(document, registry=kwargs["registry"])}
-
-    def changeset_stage(**kwargs):
-        calls["stage2"] += 1
-        operation = kwargs["resolved_operations"][0]
-        evidence = list(operation.evidence_pointers)
-        return {"valid": True, "changeset": {
+    class RawProvider:
+        def generate_candidate(self, **kwargs):
+            stage = kwargs["state"]["stage"]
+            if stage == "ifc_repair_intent":
+                calls["stage1"] += 1
+                response = {
+                    "schema_version": "text2ifc/ifc-repair-intent/0.1",
+                    "request_id": kwargs["state"]["request_id"],
+                    "source_request_hash": hash_request(text),
+                    "model_fingerprint": fingerprint_text("raw-offline-model"),
+                    "prompt_fingerprint": load_prompt_registry()["ifc-repair-intent.v0.1"]["sha256"],
+                    "operations": [{
+                        "operation_id": "operation-1", "operation_type": "add_window_with_opening_to_wall",
+                        "target_query": {"schema_version": "text2ifc/ifc-target-query/0.1", "allowed_ifc_classes": ["IfcWall"], "global_id": str(wall.GlobalId)},
+                        "parameters": {
+                            "position": {"reference": "wall_local_start", "center_offset_mm": float(position["center_offset"])},
+                            "opening": {"width_mm": float(window.OverallWidth), "height_mm": float(window.OverallHeight), "sill_height_mm": float(position["sill_height"])},
+                            "window": {"fit_opening": True},
+                        },
+                        "attribute_intents": [], "prototype_intent": None,
+                        "provenance": [{"source_kind": "user_request", "reference": "request:/text", "excerpt": text}],
+                    }],
+                    "provenance": [{"source_kind": "user_request", "reference": "request:/text", "excerpt": text}],
+                }
+            else:
+                calls["stage2"] += 1
+                response = {
             "schema_version": "text2ifc/ifc-repair-changeset/0.1",
             "changeset_id": "changeset-phase9-large-building",
             "base_model_fingerprint": caller_hash,
-            "source_request_hash": kwargs["source_request_hash"],
-            "scope": {"target_ids": list(operation.scope_ids), "forbidden_ids": []},
-            "evidence_refs": evidence,
+            "source_request_hash": hash_request(text),
+            "scope": {"target_ids": [str(wall.GlobalId)], "forbidden_ids": []},
+            "evidence_refs": [evidence_ref],
             "preconditions": ["target_exists", "opening_interval_available"],
             "postconditions": ["opening_voids_wall", "window_fills_opening"],
             "operations": [{
-                "operation_id": operation.operation_id,
-                "operation_type": operation.operation_type,
-                "target": {"wall_global_id": operation.target_global_id},
-                "parameters": thaw_json(operation.parameters),
-                "evidence_refs": evidence,
+                "operation_id": "operation-1", "operation_type": "add_window_with_opening_to_wall",
+                "target": {"wall_global_id": str(wall.GlobalId)},
+                "parameters": {
+                    "position": {"reference": "wall_local_start", "center_offset_mm": float(position["center_offset"])},
+                    "opening": {"width_mm": float(window.OverallWidth), "height_mm": float(window.OverallHeight), "sill_height_mm": float(position["sill_height"])},
+                    "window": {"fit_opening": True},
+                },
+                "evidence_refs": [evidence_ref],
             }],
-        }}
+                }
+            return ProviderOutput(text=json.dumps(response), metadata={"provider": "offline-raw", "model": "raw-offline-model"})
 
-    evidence = SimpleNamespace(
-        expected_facts_by_operation={"operation-1": ()},
-        applicability_by_operation={"operation-1": {}},
-        conflicts=(),
-    )
     api = RepairAPI(
         tmp_path / "output",
-        provider=object(),
-        intent_stage=intent_stage,
-        changeset_stage=changeset_stage,
-        orchestrator_options={"evidence_builder": lambda **_: evidence},
+        provider=RawProvider(),
     )
 
     # The production caller supplies only the damaged IFC and natural text.

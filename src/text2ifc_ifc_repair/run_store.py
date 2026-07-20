@@ -60,6 +60,14 @@ _PROGRESS = (
 _FAILURES = TERMINAL_STAGES - {RunStage.SUCCEEDED}
 
 
+def _is_link_or_reparse(path: Path) -> bool:
+    if path.is_symlink():
+        return True
+    attributes = getattr(path.stat(follow_symlinks=False), "st_file_attributes", 0)
+    reparse_flag = getattr(__import__("stat"), "FILE_ATTRIBUTE_REPARSE_POINT", 0x400)
+    return bool(attributes & reparse_flag)
+
+
 class RunStore:
     """Filesystem store with one exclusive mutation lock per generated run."""
 
@@ -168,6 +176,29 @@ class RunStore:
         self._validate_source(state.source)
         return state
 
+    def prepare_stage_directory(self, run_id: str, relative: str) -> Path:
+        """Create or validate a no-follow stage directory below one run."""
+        run_dir = self._run_dir(run_id, require_exists=True)
+        path = self._safe_run_child(run_dir, relative, require_exists=False)
+        with self._exclusive_lock(run_dir):
+            if path.exists():
+                self._safe_run_child(run_dir, relative, require_exists=True, require_directory=True)
+            else:
+                path.mkdir(parents=False, exist_ok=False)
+                self._safe_run_child(run_dir, relative, require_exists=True, require_directory=True)
+        return path
+
+    def artifact_binding(self, run_id: str, relative: str, schema_version: str) -> dict[str, Any]:
+        run_dir = self._run_dir(run_id, require_exists=True)
+        path = self._safe_run_child(run_dir, relative, require_exists=True)
+        if not path.is_file():
+            raise RunStoreError(RunStoreCode.TAMPER_DETECTED, "bound artifact is not a file")
+        return {
+            "path": relative.replace("\\", "/"),
+            "sha256": self._hash_bytes(path.read_bytes()),
+            "schema_version": schema_version,
+        }
+
     def transition(
         self,
         run_id: str,
@@ -241,6 +272,7 @@ class RunStore:
         expected_state_version: int,
         answer: Mapping[str, Any],
         stage_payload: Mapping[str, Any] | None = None,
+        result_artifacts: Mapping[str, str] | None = None,
     ) -> RunState:
         run_dir = self._run_dir(run_id, require_exists=True)
         with self._exclusive_lock(run_dir):
@@ -272,6 +304,7 @@ class RunStore:
                 stage_payload={"clarification_id": clarification_id, **dict(stage_payload or {})},
                 answer=clean_answer,
                 reason_code=("USER_CANCELLED" if target is RunStage.CANCELLED else None),
+                result_artifacts=result_artifacts,
             )
             state = replace(
                 current,
@@ -280,7 +313,7 @@ class RunStore:
                 transitions=(*current.transitions, transition),
                 clarification=None,
                 reason_code=transition.reason_code,
-                result_artifacts=MappingProxyType({}),
+                result_artifacts=MappingProxyType(dict(result_artifacts or {})),
             )
             self._validate_state(state)
             self._write_transition(run_dir, transition)
@@ -289,6 +322,8 @@ class RunStore:
 
     def read_result(self, run_id: str) -> RunResult:
         state = self.load(run_id)
+        if state.stage in TERMINAL_STAGES and state.result_artifacts:
+            self._verify_terminal_artifacts(self.runs_root / run_id, state)
         success = state.stage is RunStage.SUCCEEDED
         result = RunResult(
             run_id=state.run_id,
@@ -329,6 +364,29 @@ class RunStore:
         if require_exists and (not resolved.is_dir() or resolved.is_symlink()):
             raise RunStoreError(RunStoreCode.RUN_NOT_FOUND, f"unknown run: {run_id}")
         return resolved
+
+    def _safe_run_child(
+        self, run_dir: Path, relative: str, *, require_exists: bool,
+        require_directory: bool = False,
+    ) -> Path:
+        normalized = relative.replace("\\", "/")
+        parts = PurePosixPath(normalized).parts
+        if not parts or PurePosixPath(normalized).is_absolute() or ".." in parts:
+            raise RunStoreError(RunStoreCode.PATH_ESCAPE, "unsafe run child")
+        current = run_dir
+        for part in parts:
+            current = current / part
+            if current.exists() and _is_link_or_reparse(current):
+                raise RunStoreError(RunStoreCode.PATH_ESCAPE, "run child follows link/reparse point")
+        if require_exists and not current.exists():
+            raise RunStoreError(RunStoreCode.TAMPER_DETECTED, "bound artifact is missing")
+        if require_directory and not current.is_dir():
+            raise RunStoreError(RunStoreCode.PATH_ESCAPE, "stage path is not a directory")
+        try:
+            current.resolve(strict=require_exists).relative_to(run_dir.resolve())
+        except ValueError as error:
+            raise RunStoreError(RunStoreCode.PATH_ESCAPE, "run child escapes run") from error
+        return current
 
     @staticmethod
     def _validate_run_id(run_id: str) -> None:
@@ -389,6 +447,8 @@ class RunStore:
         index = _PROGRESS.index(current)
         if index + 1 < len(_PROGRESS):
             allowed.add(_PROGRESS[index + 1])
+        if current is RunStage.CHANGESET_READY:
+            allowed.add(RunStage.SUCCEEDED)
         elif current is RunStage.EVALUATED:
             allowed.update({RunStage.SUCCEEDED, RunStage.NOT_PUBLISHABLE})
         if target not in allowed:
@@ -521,7 +581,46 @@ class RunStore:
                 raise RunStoreError(RunStoreCode.TAMPER_DETECTED, "transition is unreadable") from error
             if stored != transition.to_dict():
                 raise RunStoreError(RunStoreCode.TAMPER_DETECTED, "transition copy differs")
+            self._verify_stage_bindings(run_dir, thaw_json(transition.stage_payload))
             previous = transition.record_hash
+
+    def _verify_stage_bindings(self, run_dir: Path, value: Any) -> None:
+        if isinstance(value, Mapping):
+            if set(value) == {"path", "sha256", "schema_version"}:
+                path = self._safe_run_child(run_dir, str(value["path"]), require_exists=True)
+                if not path.is_file() or self._hash_bytes(path.read_bytes()) != str(value["sha256"]):
+                    raise RunStoreError(RunStoreCode.TAMPER_DETECTED, "stage artifact hash mismatch")
+                if not str(value["schema_version"]):
+                    raise RunStoreError(RunStoreCode.TAMPER_DETECTED, "stage artifact schema missing")
+                return
+            for item in value.values():
+                self._verify_stage_bindings(run_dir, item)
+        elif isinstance(value, (list, tuple)):
+            for item in value:
+                self._verify_stage_bindings(run_dir, item)
+
+    def _verify_terminal_artifacts(self, run_dir: Path, state: RunState) -> None:
+        manifest_ref = state.result_artifacts.get("manifest")
+        if not manifest_ref:
+            raise RunStoreError(RunStoreCode.TAMPER_DETECTED, "terminal manifest missing")
+        manifest_path = self._safe_run_child(run_dir, manifest_ref, require_exists=True)
+        try:
+            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as error:
+            raise RunStoreError(RunStoreCode.TAMPER_DETECTED, "terminal manifest unreadable") from error
+        if manifest.get("schema_version") != "text2ifc/ifc-repair-artifact-manifest/0.1":
+            raise RunStoreError(RunStoreCode.TAMPER_DETECTED, "terminal manifest schema mismatch")
+        declared: dict[str, str] = {}
+        for item in manifest.get("artifacts", ()):
+            relative = str(item.get("path", ""))
+            path = self._safe_run_child(run_dir, relative, require_exists=True)
+            actual = hashlib.sha256(path.read_bytes()).hexdigest()
+            if actual != str(item.get("sha256", "")):
+                raise RunStoreError(RunStoreCode.TAMPER_DETECTED, "terminal artifact hash mismatch")
+            declared[relative] = actual
+        for name, relative in state.result_artifacts.items():
+            if name != "manifest" and relative not in declared:
+                raise RunStoreError(RunStoreCode.TAMPER_DETECTED, "terminal artifact is not manifest-bound")
 
     def _validate_source(self, binding: SourceBinding) -> None:
         path = Path(binding.reference)
@@ -534,23 +633,30 @@ class RunStore:
     @contextmanager
     def _exclusive_lock(self, run_dir: Path) -> Iterator[None]:
         lock_path = run_dir / ".transition.lock"
+        descriptor = os.open(lock_path, os.O_CREAT | os.O_RDWR)
         try:
-            descriptor = os.open(lock_path, os.O_CREAT | os.O_EXCL | os.O_WRONLY)
-        except FileExistsError as error:
-            raise RunStoreError(RunStoreCode.LOCKED, "run mutation lock is held") from error
-        try:
-            os.write(descriptor, f"pid={os.getpid()}\n".encode("ascii"))
+            if os.name == "nt":
+                import msvcrt
+                os.lseek(descriptor, 0, os.SEEK_SET)
+                if os.fstat(descriptor).st_size == 0:
+                    os.write(descriptor, b"0")
+                os.lseek(descriptor, 0, os.SEEK_SET)
+                try:
+                    msvcrt.locking(descriptor, msvcrt.LK_NBLCK, 1)
+                except OSError as error:
+                    raise RunStoreError(RunStoreCode.LOCKED, "run mutation lock is held") from error
+            else:
+                import fcntl
+                try:
+                    fcntl.flock(descriptor, fcntl.LOCK_EX | fcntl.LOCK_NB)
+                except OSError as error:
+                    raise RunStoreError(RunStoreCode.LOCKED, "run mutation lock is held") from error
+            os.ftruncate(descriptor, 0)
+            os.write(descriptor, f"pid={os.getpid()} nonce={uuid.uuid4().hex}\n".encode("ascii"))
             os.fsync(descriptor)
-            os.close(descriptor)
-            descriptor = -1
             yield
         finally:
-            if descriptor >= 0:
-                os.close(descriptor)
-            try:
-                lock_path.unlink()
-            except FileNotFoundError:
-                pass
+            os.close(descriptor)
 
     def _write_transition(self, run_dir: Path, transition: RunTransition) -> None:
         target = run_dir / "transitions" / f"{transition.transition_id:06d}.json"

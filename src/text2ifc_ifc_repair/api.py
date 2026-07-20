@@ -24,6 +24,7 @@ from .run_models import (
     RunStoreError,
 )
 from .run_store import RunStore
+from .run_artifacts import publish_terminal_artifacts
 from text2ifc_text.splits import atomic_write_text
 
 
@@ -105,7 +106,8 @@ class RepairAPI:
             expected_state_version=state.state_version,
             stage_payload={"ifc_schema": "IFC2X3", "source_sha256": state.source.sha256},
         )
-        index_path = run_dir / "index" / "targets.sqlite"
+        index_dir = self.store.prepare_stage_directory(state.run_id, "index")
+        index_path = index_dir / "targets.sqlite"
         try:
             metadata = self._index_stage(source_ifc_path, index_path)
         except Exception as error:
@@ -114,25 +116,44 @@ class RepairAPI:
             state.run_id,
             to_stage=RunStage.INDEX_READY,
             expected_state_version=state.state_version,
-            stage_payload={"index": "index/targets.sqlite", "source_sha256": metadata.source_ifc_sha256},
+            stage_payload={
+                "index": self.store.artifact_binding(
+                    state.run_id, "index/targets.sqlite", "text2ifc/ifc-index/0.1"
+                ),
+                "source_sha256": metadata.source_ifc_sha256,
+            },
         )
+        intent_dir = self.store.prepare_stage_directory(state.run_id, "intent")
         intent_result = self._intent_stage(
             provider=self.provider,
             request_id=request_id,
             repair_request=repair_text,
             registry=self.registry,
-            output_dir=run_dir / "intent",
+            output_dir=intent_dir,
         )
         if not intent_result.get("valid") or intent_result.get("intent") is None:
             return self._fail(state.run_id, RunStage.PROVIDER_FAILED, str(intent_result.get("error_code") or "INTENT_STAGE_FAILED"))
         intent = intent_result["intent"]
+        intent_path = intent_dir / "repair-intent.json"
+        if not intent_path.exists():
+            atomic_write_text(
+                intent_path,
+                json.dumps(intent.to_dict(), ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n",
+            )
+        context_ref = self._write_context(run_dir, repair_text=repair_text, intent=intent)
         state = self.store.transition(
             state.run_id,
             to_stage=RunStage.INTENT_READY,
             expected_state_version=state.state_version,
-            stage_payload={"intent": "intent/repair-intent.json"},
+            stage_payload={
+                "intent": self.store.artifact_binding(
+                    state.run_id, "intent/repair-intent.json", "text2ifc/ifc-repair-intent/0.1"
+                ),
+                "api_context": self.store.artifact_binding(
+                    state.run_id, context_ref, "text2ifc/ifc-repair-api-context/0.1"
+                ),
+            },
         )
-        self._write_context(run_dir, repair_text=repair_text, intent=intent)
         return self._resolve_and_finish(state.run_id, intent, repair_text)
 
     def continue_with_answer(
@@ -150,7 +171,8 @@ class RepairAPI:
         if clarification.clarification_id != clarification_id or pending.state_version != expected_state_version:
             raise RunStoreError("RUN_STATE_CONFLICT", "clarification binding is stale")
         run_dir = self.store.runs_root / run_id
-        context = json.loads((run_dir / "api-context.json").read_text(encoding="utf-8"))
+        context_path = run_dir / _latest_api_context(pending)
+        context = json.loads(context_path.read_text(encoding="utf-8"))
         repair_text = str(context["repair_text"])
         intent_document = dict(context["intent"])
         kind = str(answer.get("kind", ""))
@@ -187,14 +209,27 @@ class RepairAPI:
             run_dir, repair_text=repair_text, intent=intent,
             name=f"api-context-v{expected_state_version + 1:03d}.json",
         )
+        resume_payload: dict[str, Any] = {
+            "api_context": self.store.artifact_binding(
+                run_id, context_ref, "text2ifc/ifc-repair-api-context/0.1"
+            )
+        }
+        cancel_artifacts: dict[str, str] | None = None
+        if kind in {"cancel", "eof"}:
+            cancel_artifacts = self._publish_failure_bundle(
+                run_id, RunStage.CANCELLED, "USER_CANCELLED", pending.stage.value
+            )
+            resume_payload["manifest"] = self.store.artifact_binding(
+                run_id, cancel_artifacts["manifest"], "text2ifc/ifc-repair-artifact-manifest/0.1"
+            )
         resumed = self.store.continue_with_answer(
             run_id, clarification_id=clarification_id,
             expected_state_version=expected_state_version, answer=answer,
-            stage_payload={"api_context": context_ref},
+            stage_payload=resume_payload,
+            result_artifacts=cancel_artifacts,
         )
         if resumed.stage is RunStage.CANCELLED:
             return self.store.read_result(run_id)
-        self._write_context(run_dir, repair_text=repair_text, intent=intent)
         prototype_answer = None
         if kind == "authorize_prototype":
             prototype_answer = {
@@ -218,6 +253,7 @@ class RepairAPI:
             expected_source_ifc_sha256=state.source.sha256,
         ) as repository:
             def stage2(resolution: Any) -> Mapping[str, Any]:
+                changeset_dir = self.store.prepare_stage_directory(run_id, "changeset")
                 generated = self._changeset_stage(
                     provider=self.provider,
                     case_id=run_id,
@@ -227,7 +263,7 @@ class RepairAPI:
                     model_fingerprint=intent.model_fingerprint,
                     base_model_fingerprint=resolution.source_ifc_sha256,
                     registry=self.registry,
-                    output_dir=run_dir / "changeset",
+                    output_dir=changeset_dir,
                 )
                 if not generated.get("valid") or generated.get("changeset") is None:
                     raise ValueError("CHANGESET_STAGE_FAILED")
@@ -260,32 +296,48 @@ class RepairAPI:
                 return self._fail(run_id, stage, str(resolution.reason_code or "RESOLUTION_FAILED"))
             if outcome.status == "clarification_required":
                 clarification = _clarification(run_id, state.state_version + 1, resolution)
+                resolution_ref = _snapshot_artifact(
+                    run_dir, "resolution.json", f"resolution-v{state.state_version + 1:03d}.json"
+                )
                 self.store.transition(
                     run_id,
                     to_stage=RunStage.CLARIFICATION_REQUIRED,
                     expected_state_version=state.state_version,
                     clarification=clarification,
                     reason_code=outcome.reason_code,
-                    stage_payload={"resolution": "resolution.json"},
+                    stage_payload={"resolution": self.store.artifact_binding(
+                        run_id, resolution_ref, "text2ifc/ifc-resolution-flow/0.1"
+                    )},
                 )
                 return self.store.read_result(run_id)
+            resolution_ref = _snapshot_artifact(
+                run_dir, "resolution.json", f"resolution-v{state.state_version + 1:03d}.json"
+            )
             state = self.store.transition(
                 run_id,
                 to_stage=RunStage.TARGETS_RESOLVED,
                 expected_state_version=state.state_version,
-                stage_payload={"resolution": "resolution.json"},
+                stage_payload={"resolution": self.store.artifact_binding(
+                    run_id, resolution_ref, "text2ifc/ifc-resolution-flow/0.1"
+                )},
+            )
+            changeset_ref = _snapshot_artifact(
+                run_dir, "changeset.json", f"changeset-v{state.state_version + 1:03d}.json"
             )
             state = self.store.transition(
                 run_id,
                 to_stage=RunStage.CHANGESET_READY,
                 expected_state_version=state.state_version,
-                stage_payload={"changeset": "changeset.json"},
+                stage_payload={"changeset": self.store.artifact_binding(
+                    run_id, changeset_ref, "text2ifc/ifc-repair-changeset/0.1"
+                )},
             )
             records = {
                 record.ifc_global_id: record
                 for record in repository.iter_records()
                 if record.ifc_global_id
             }
+            self.store.prepare_stage_directory(run_id, "staging")
             final = orchestrator.apply_and_evaluate(
                 source_ifc_path=Path(state.source.reference),
                 repair_request=repair_text,
@@ -295,40 +347,59 @@ class RepairAPI:
                 registry=self.registry,
                 records_by_global_id=records,
             )
-        state = self.store.transition(
-            run_id,
-            to_stage=RunStage.APPLICATION_READY,
-            expected_state_version=state.state_version,
-            stage_payload={"status": final.status},
-        )
-        state = self.store.transition(
-            run_id,
-            to_stage=RunStage.EVALUATED,
-            expected_state_version=state.state_version,
-            stage_payload={"status": final.status},
-        )
-        terminal = RunStage.SUCCEEDED if final.status == "succeeded" else RunStage.NOT_PUBLISHABLE
+        terminal = {
+            "succeeded": RunStage.SUCCEEDED,
+            "audit_failed": RunStage.AUDIT_FAILED,
+            "application_failed": RunStage.APPLICATION_FAILED,
+        }.get(final.status, RunStage.NOT_PUBLISHABLE)
         artifacts = _artifact_references(run_dir, final)
         self.store.transition(
             run_id,
             to_stage=terminal,
             expected_state_version=state.state_version,
             reason_code=final.reason_code,
-            stage_payload={"status": final.status},
+            stage_payload={
+                "status": final.status,
+                "manifest": self.store.artifact_binding(
+                    run_id, artifacts["manifest"], "text2ifc/ifc-repair-artifact-manifest/0.1"
+                ),
+            },
             result_artifacts=artifacts,
         )
         return self.store.read_result(run_id)
 
     def _fail(self, run_id: str, stage: RunStage, reason: str) -> RunResult:
         state = self.store.load(run_id)
+        artifacts = self._publish_failure_bundle(run_id, stage, reason[:128], state.stage.value)
         self.store.transition(
             run_id,
             to_stage=stage,
             expected_state_version=state.state_version,
             reason_code=reason[:128],
-            stage_payload={"reason_code": reason[:128]},
+            stage_payload={
+                "reason_code": reason[:128],
+                "manifest": self.store.artifact_binding(
+                    run_id, artifacts["manifest"], "text2ifc/ifc-repair-artifact-manifest/0.1"
+                ),
+            },
+            result_artifacts=artifacts,
         )
         return self.store.read_result(run_id)
+
+    def _publish_failure_bundle(
+        self, run_id: str, stage: RunStage, reason: str, from_stage: str,
+    ) -> dict[str, str]:
+        run_dir = self.store.runs_root / run_id
+        published = publish_terminal_artifacts(
+            run_directory=run_dir, terminal_status=stage.value,
+            evaluation=_terminal_failure_evaluation(reason), candidate_ifc_path=None,
+            evidence={"reason_code": reason, "stage": from_stage},
+        )
+        return {
+            "manifest": Path(published.manifest_path).relative_to(run_dir).as_posix(),
+            "evaluation": Path(published.evaluation_path).relative_to(run_dir).as_posix(),
+            "evidence": Path(published.evidence_path).relative_to(run_dir).as_posix(),
+        }
 
     @staticmethod
     def _write_context(
@@ -395,7 +466,10 @@ def _artifact_references(run_dir: Path, result: OrchestrationResult) -> dict[str
     for key, value in values.items():
         if value:
             references[key] = Path(value).resolve().relative_to(run_dir.resolve()).as_posix()
-    evaluation = run_dir / "evaluation" / "public-evaluation.json"
+    evaluation = (
+        Path(result.manifest).parent / "evaluation" / "public-evaluation.json"
+        if result.manifest else run_dir / "evaluation" / "public-evaluation.json"
+    )
     if evaluation.is_file():
         references["evaluation"] = evaluation.relative_to(run_dir).as_posix()
     return references
@@ -404,6 +478,32 @@ def _artifact_references(run_dir: Path, result: OrchestrationResult) -> dict[str
 def _safe_code(error: Exception, fallback: str) -> str:
     code = getattr(error, "code", None)
     return str(code or fallback).split(":", 1)[0][:128]
+
+
+def _latest_api_context(state: Any) -> str:
+    for transition in reversed(state.transitions):
+        payload = transition.stage_payload
+        binding = payload.get("api_context") if isinstance(payload, Mapping) else None
+        if isinstance(binding, Mapping) and binding.get("path"):
+            return str(binding["path"])
+    raise RunStoreError("RUN_TAMPER_DETECTED", "api context binding is missing")
+
+
+def _snapshot_artifact(run_dir: Path, source: str, destination: str) -> str:
+    atomic_write_text(run_dir / destination, (run_dir / source).read_text(encoding="utf-8"))
+    return destination
+
+
+def _terminal_failure_evaluation(reason: str) -> dict[str, Any]:
+    return {
+        "schema_version": "text2ifc/ifc-repair-evaluation-public/0.2",
+        "policy_version": "phase8.1", "status": "not_evaluable", "reason": reason,
+        "complete_repair_success": False, "successful_artifact_publishable": False,
+        "diagnostic_artifact_retained": False,
+        "application": {"check_id": "application.valid", "status": "not_evaluable", "reason": reason},
+        "preservation": {"check_id": "preservation.valid", "status": "not_evaluable", "reason": reason},
+        "operations": [],
+    }
 
 
 __all__ = ["RepairAPI", "RunStoreError"]

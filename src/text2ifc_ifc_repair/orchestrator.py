@@ -235,6 +235,9 @@ def _public_evaluation(evaluation: Any) -> dict[str, Any]:
 
 
 def _failure_public_evaluation(status: str, reason_code: str, changeset: Mapping[str, Any]) -> dict[str, Any]:
+    post_application = status.startswith("l2_")
+    application_status = "passed" if post_application else "failed" if status == "application_failed" else "not_evaluable"
+    preservation_status = "passed" if post_application else "not_evaluable"
     operations = [
         {
             "operation_id": str(item.get("operation_id", "operation")),
@@ -244,7 +247,16 @@ def _failure_public_evaluation(status: str, reason_code: str, changeset: Mapping
             "status": "not_evaluable",
             "reason": reason_code,
             "levels": [
-                {"level": level, "status": "not_required" if level == "L3" else "not_evaluable", "reason": reason_code, "checks": []}
+                {
+                    "level": level,
+                    "status": (
+                        "passed" if post_application and level == "L1"
+                        else "not_required" if level == "L3"
+                        else "not_evaluable"
+                    ),
+                    "reason": reason_code,
+                    "checks": [],
+                }
                 for level in ("L1", "L2", "L3")
             ],
         }
@@ -258,15 +270,26 @@ def _failure_public_evaluation(status: str, reason_code: str, changeset: Mapping
         "complete_repair_success": False,
         "successful_artifact_publishable": False,
         "diagnostic_artifact_retained": status.startswith(("l1_", "l2_")),
-        "application": {"check_id": "application.valid", "status": "failed", "reason": reason_code},
-        "preservation": {"check_id": "preservation.valid", "status": "not_evaluable", "reason": reason_code},
+        "application": {"check_id": "application.valid", "status": application_status, "reason": reason_code},
+        "preservation": {"check_id": "preservation.valid", "status": preservation_status, "reason": reason_code},
         "operations": operations,
     }
 
 
 def _evaluation_terminal_status(evaluation: Mapping[str, Any]) -> str:
-    status = str(evaluation.get("status", "not_evaluable"))
-    return "l2_not_evaluable" if status == "not_evaluable" else "l2_partial" if status == "partial" else "l2_failed"
+    levels = {
+        str(level.get("level")): str(level.get("status"))
+        for operation in evaluation.get("operations", ())
+        for level in operation.get("levels", ())
+    }
+    if levels.get("L1") == "failed":
+        return "l1_failed"
+    l2 = levels.get("L2", str(evaluation.get("status", "not_evaluable")))
+    if l2 == "not_evaluable":
+        return "l2_not_evaluable"
+    if l2 == "partial":
+        return "l2_partial"
+    return "l2_failed"
 
 
 def _path_sha256(path: Path) -> str:

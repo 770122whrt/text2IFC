@@ -126,3 +126,20 @@ def test_manifest_uses_relative_bounded_paths_and_is_signed_by_content(tmp_path:
     assert all(not Path(item["path"]).is_absolute() for item in manifest["artifacts"])
     assert all(".." not in Path(item["path"]).parts for item in manifest["artifacts"])
     assert all(len(item["sha256"]) == 64 for item in manifest["artifacts"])
+
+
+def test_manifest_failure_never_exposes_partial_success_bundle(tmp_path: Path, monkeypatch) -> None:
+    import text2ifc_ifc_repair.run_artifacts as module
+
+    run = tmp_path / "run"
+    run.mkdir()
+    candidate = run / "candidate.ifc"
+    _candidate(candidate)
+    monkeypatch.setattr(module, "MAX_MANIFEST_ARTIFACTS", 2)
+    with pytest.raises(RunArtifactError, match="ARTIFACT_LIMIT_EXCEEDED"):
+        publish_terminal_artifacts(
+            run_directory=run, terminal_status="succeeded",
+            evaluation=_evaluation(), candidate_ifc_path=candidate, evidence={"safe": True},
+        )
+    assert candidate.is_file()
+    assert not (run / "published").exists()
