@@ -1,7 +1,7 @@
 ---
 phase: 9
 slug: general-ifc-text-repair-orchestrator
-status: approved
+status: verified
 nyquist_compliant: true
 wave_0_complete: true
 created: 2026-07-20
@@ -33,17 +33,17 @@ created: 2026-07-20
 
 | Task ID | Plan | Wave | Requirement | Threat Ref | Secure behavior | Test type | Automated command | File exists | Status |
 |---|---:|---:|---|---|---|---|---|---|---|
-| 09-01-01 | 01 | 1 | PIPE-01, PIPE-03 | T-09-01 | Prompt injection and malformed intent cannot escape the exact public contract | schema/unit | `pytest tests/ifc_repair/test_repair_intent.py -q` | Wave 0 creates | pending |
-| 09-01-02 | 01 | 1 | PIPE-03 | T-09-01, T-09-05 | Stage 1 receives only public bounded inputs and retains redacted attempts | unit | `pytest tests/ifc_repair/test_request_stage.py -q` | Wave 0 creates | pending |
-| 09-02-01 | 02 | 2 | PIPE-01, PIPE-04 | T-09-02 | Run transitions are atomic, revision-bound, resumable, and tamper-evident | unit | `pytest tests/ifc_repair/test_repair_run_state.py -q` | Wave 0 creates | pending |
-| 09-02-02 | 02 | 2 | PIPE-01, PIPE-04 | T-09-02, T-09-03 | Clarification accepts only current offered answers and never repeats immutable stages | unit | `pytest tests/ifc_repair/test_repair_clarification.py -q` | Wave 0 creates | pending |
-| 09-03-01 | 03 | 3 | PIPE-03, PIPE-04 | T-09-03 | Every operation resolves before Stage 2; unresolved operations stop all application | integration | `pytest tests/ifc_repair/test_repair_resolution_flow.py -q` | Wave 0 creates | pending |
-| 09-03-02 | 03 | 3 | PIPE-02, PIPE-03 | T-09-03 | Intent/operation cardinality, target, scope, hashes and evidence pointers cannot cross operations | unit/integration | `pytest tests/ifc_repair/test_general_changeset_stage.py -q` | Wave 0 creates | pending |
-| 09-04-01 | 04 | 4 | PIPE-02, PIPE-04 | T-09-04 | Production facts use only request/surviving/bound-or-approved/policy authority | unit | `pytest tests/ifc_repair/test_production_evidence.py -q` | Wave 0 creates | pending |
-| 09-04-02 | 04 | 4 | PIPE-02, PIPE-04 | T-09-03, T-09-04 | Unified application is atomic and Evaluation 0.2 alone promotes success IFC | integration | `pytest tests/ifc_repair/test_general_orchestrator.py -q` | Wave 0 creates | pending |
-| 09-04-03 | 04 | 4 | PIPE-03, PIPE-04 | T-09-02, T-09-04, T-09-05 | Manifest/tamper/Gold canaries fail closed across both Agent stages and public bundle | adversarial | `pytest tests/ifc_repair/test_orchestrator_security.py -q` | Wave 0 creates | pending |
-| 09-05-01 | 05 | 5 | PIPE-01, PIPE-04 | T-09-02, T-09-05 | Human, non-interactive, JSON and quiet modes render one API result without secret leakage | CLI | `pytest tests/ifc_repair/test_repair_cli.py -q` | Wave 0 creates | pending |
-| 09-05-02 | 05 | 5 | PIPE-01..04 | T-09-01..05 | LargeBuilding exercises the real integration and honestly retains current L2 failure | real IFC/offline | `pytest tests/ifc_repair/test_phase9_large_building.py -q` | Wave 0 creates | pending |
+| 09-01-01 | 01 | 1 | PIPE-01, PIPE-03 | T-09-01 | Prompt injection and malformed intent cannot escape the exact public contract | schema/unit | `pytest tests/ifc_repair/test_repair_intent.py -q` | yes | passed |
+| 09-01-02 | 01 | 1 | PIPE-03 | T-09-01, T-09-05 | Stage 1 receives only public bounded inputs and retains redacted attempts | unit | `pytest tests/ifc_repair/test_request_stage.py -q` | yes | passed |
+| 09-02-01 | 02 | 2 | PIPE-01, PIPE-04 | T-09-02 | Run transitions are atomic, revision-bound, resumable, and tamper-evident | unit | `pytest tests/ifc_repair/test_run_state.py -q` | yes | passed |
+| 09-02-02 | 02 | 2 | PIPE-01, PIPE-04 | T-09-02, T-09-03 | Clarification accepts only current offered answers and never repeats immutable stages | unit | `pytest tests/ifc_repair/test_clarification_state.py -q` | yes | passed |
+| 09-03-01 | 03 | 3 | PIPE-03, PIPE-04 | T-09-03 | Every operation resolves before Stage 2; unresolved operations stop all application | integration | `pytest tests/ifc_repair/test_resolution_flow.py -q` | yes | passed |
+| 09-03-02 | 03 | 3 | PIPE-02, PIPE-03 | T-09-03 | Intent/operation cardinality, target, scope, hashes and evidence pointers cannot cross operations | unit/integration | `pytest tests/ifc_repair/test_general_changeset_stage.py -q` | yes | passed |
+| 09-04-01 | 04 | 4 | PIPE-02, PIPE-04 | T-09-04 | Production facts use only request/surviving/bound-or-approved/policy authority | unit | `pytest tests/ifc_repair/test_production_evidence.py -q` | yes | passed |
+| 09-04-02 | 04 | 4 | PIPE-02, PIPE-04 | T-09-03, T-09-04 | Unified application is atomic and Evaluation 0.2 alone promotes success IFC | integration | `pytest tests/ifc_repair/test_orchestrator_application.py tests/ifc_repair/test_orchestrator_terminal_matrix.py -q` | yes | passed |
+| 09-04-03 | 04 | 4 | PIPE-03, PIPE-04 | T-09-02, T-09-04, T-09-05 | Manifest/tamper/Gold canaries fail closed across both Agent stages and public bundle | adversarial | `pytest tests/ifc_repair/test_orchestrator_security.py -q` | yes | passed |
+| 09-05-01 | 05 | 5 | PIPE-01, PIPE-04 | T-09-02, T-09-05 | Human, non-interactive, JSON and quiet modes render one API result without secret leakage | CLI | `pytest tests/ifc_repair/test_repair_cli.py -q` | yes | passed |
+| 09-05-02 | 05 | 5 | PIPE-01..04 | T-09-01..05 | LargeBuilding exercises the real integration and honestly retains current L2 failure | real IFC/offline | `pytest tests/ifc_repair/test_phase9_large_building.py -q` | yes | passed |
 
 ## Wave 0 Requirements
 

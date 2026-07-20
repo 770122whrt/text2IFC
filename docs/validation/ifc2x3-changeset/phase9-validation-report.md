@@ -91,7 +91,7 @@ LargeBuilding 通过同一公共 API 接收测试准备阶段生成的 damaged I
 git diff --check
 ```
 
-最终 CLI/offline/LargeBuilding 聚焦结果为 `21 passed in 17.82s`；全套结果为 `356 passed, 1 skipped in 128.58s`；安全/Prompt 聚焦为 `45 passed in 3.36s`。`git diff --check` 退出 0，仅打印既有工作树文件的 CRLF 提示。
+初始 CLI/offline/LargeBuilding 聚焦结果为 `21 passed in 17.82s`。代码复审修复完成后的最终全套结果为 `375 passed, 1 skipped in 120.21s`，安全威胁聚焦套件为 `145 passed, 1 skipped in 23.95s`，四个修复模块为 `60 passed, 1 skipped`。7 份 Agent JSON Schema 通过 Draft 2020-12 自检，`compileall` 与 Phase 9 范围的 `git diff --check` 均退出 0。单个 skip 是既有 Windows symlink 权限分支；非跳过的 junction/reparse 测试覆盖相同路径边界。
 
 安全检查覆盖 public/private canary、路径逃逸、状态篡改、Provider 脱敏、bounded stdout、未知 run 与完整 manifest。详细 payload 始终在非覆盖 run 目录内，caller source 只读。
 
