@@ -14,6 +14,7 @@ from typing import Any, Mapping
 
 from .index_models import INDEX_SCHEMA_VERSION, ElementRecord
 from .index_store import IndexRepository
+from .indexer import EXTRACTOR_VERSION
 from .repair_intent import OperationIntent, RepairIntent
 from .run_models import thaw_json
 from .target_context import TargetContextError, build_target_context
@@ -84,7 +85,7 @@ def resolve_repair_intent(
     if (
         metadata.source_ifc_sha256 != expected_source_sha256
         or metadata.index_schema_version != INDEX_SCHEMA_VERSION
-        or metadata.extractor_version != "text2ifc/ifc-indexer/0.1"
+        or metadata.extractor_version != EXTRACTOR_VERSION
     ):
         return _failure(intent, "stale_index", source_sha=expected_source_sha256)
 

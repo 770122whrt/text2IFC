@@ -10,6 +10,7 @@ from typing import Any, Callable, Mapping
 
 import ifcopenshell
 
+from .index_models import INDEX_SCHEMA_VERSION
 from .index_store import SQLiteIndexRepository
 from .indexer import build_ifc_index
 from .operations import create_default_registry
@@ -123,7 +124,7 @@ class RepairAPI:
             expected_state_version=state.state_version,
             stage_payload={
                 "index": self.store.artifact_binding(
-                    state.run_id, "index/targets.sqlite", "text2ifc/ifc-index/0.1"
+                    state.run_id, "index/targets.sqlite", INDEX_SCHEMA_VERSION
                 ),
                 "source_sha256": metadata.source_ifc_sha256,
             },
