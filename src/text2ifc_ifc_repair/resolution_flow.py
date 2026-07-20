@@ -23,6 +23,12 @@ from .target_query import ResolutionResult, resolve_target
 
 
 RESOLUTION_FLOW_VERSION = "text2ifc/ifc-resolution-flow/0.1"
+TYPE_CANDIDATE_MAX = 5
+_PUBLIC_TYPE_DIMENSIONS = {
+    "width": "width_mm",
+    "height": "height_mm",
+    "default sill height": "sill_height_mm",
+}
 
 
 @dataclass(frozen=True)
@@ -373,7 +379,7 @@ def _explicit_prototype(
                 source_sha=source_sha,
                 model_fingerprint=model_fingerprint,
             )
-            for item in matches[:5]
+            for item in matches[:TYPE_CANDIDATE_MAX]
         )
         return "ambiguous", candidates
     return "not_found", ()
@@ -402,7 +408,7 @@ def _type_candidates(
             source_sha=source_sha,
             model_fingerprint=model_fingerprint,
         )
-        for item in records[:5]
+        for item in records[:TYPE_CANDIDATE_MAX]
     )
 
 
@@ -418,15 +424,10 @@ def _public_type_record(
     token_input = f"{operation_id}:{public_id}:{source_sha}:{model_fingerprint}"
     token = hashlib.sha256(token_input.encode("utf-8")).hexdigest()[:24]
     dimensions: dict[str, Any] = {}
-    dimension_names = {
-        "width": "width_mm",
-        "height": "height_mm",
-        "default sill height": "sill_height_mm",
-    }
     for fact in record.properties:
         if fact.set_kind != "pset" or fact.set_name.casefold() != "dimensions":
             continue
-        key = dimension_names.get(fact.property_name.casefold())
+        key = _PUBLIC_TYPE_DIMENSIONS.get(fact.property_name.casefold())
         if key is not None and isinstance(fact.value, (int, float)):
             dimensions[key] = fact.value
     occurrence_count, storeys = repository.type_occurrence_summary(public_id)

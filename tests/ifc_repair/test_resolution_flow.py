@@ -350,3 +350,22 @@ def test_prototype_authorization_rejects_negative_and_tampered_tokens(tmp_path: 
             pending, operation_id="intent-1", candidate_token="tampered", authorized=True,
         )
 
+
+def test_non_window_type_uses_the_same_human_readable_resolution(tmp_path: Path) -> None:
+    target = _record("0AAAAAAAAAAAAAAAAAAAAA", "target")
+    door_type = _type_record(
+        "0DOORAAAAAAAAAAAAAAAAA", "Office Door Type", ifc_class="IfcDoorStyle"
+    )
+    request = _intent(
+        {"global_id": target.ifc_global_id},
+        prototype={
+            "reference_kind": "type_name",
+            "reference": "office door type",
+            "source": {"source_kind": "user_request", "reference": "request:/prototype", "excerpt": "use Office Door Type"},
+        },
+    )
+    with _repository(tmp_path, [target], types=[door_type]) as repository:
+        result = _api().resolve_repair_intent(request, repository, expected_source_sha256=SOURCE_SHA)
+    assert result.status == "resolved"
+    assert result.operations[0].authorized_semantics[-1]["global_id"] == door_type.ifc_global_id
+
