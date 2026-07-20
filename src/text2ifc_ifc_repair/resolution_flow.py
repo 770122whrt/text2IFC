@@ -12,9 +12,10 @@ import json
 from dataclasses import dataclass, replace
 from typing import Any, Mapping
 
-from .index_models import INDEX_SCHEMA_VERSION, ElementRecord
+from .index_models import INDEX_SCHEMA_VERSION, ElementRecord, TypeRecord
 from .index_store import IndexRepository
 from .indexer import EXTRACTOR_VERSION
+from .indexer import normalize_alias
 from .repair_intent import OperationIntent, RepairIntent
 from .run_models import thaw_json
 from .target_context import TargetContextError, build_target_context
@@ -180,7 +181,13 @@ def resolve_repair_intent(
 
         prototype = operation.prototype_intent
         if prototype is not None and prototype.reference_kind in {"global_id", "type_name"}:
-            prototype_result = _explicit_prototype(repository, prototype)
+            prototype_result = _explicit_prototype(
+                repository,
+                prototype,
+                operation_id=operation.operation_id,
+                source_sha=expected_source_sha256,
+                model_fingerprint=intent.model_fingerprint,
+            )
             if prototype_result[0] == "resolved":
                 completed[-1] = replace(
                     completed[-1],
@@ -199,12 +206,11 @@ def resolve_repair_intent(
                     operations=completed, source_sha=expected_source_sha256,
                 )
         elif prototype is not None and prototype.reference_kind == "selection_required":
-            candidates = tuple(
-                _public_record(record_item, operation.operation_id)
-                for record_item in repository.iter_records()
-                if record_item.identity_reliable
-                and record_item.ifc_global_id
-                and record_item.ifc_global_id != record.ifc_global_id
+            candidates = _type_candidates(
+                repository,
+                operation_id=operation.operation_id,
+                source_sha=expected_source_sha256,
+                model_fingerprint=intent.model_fingerprint,
             )
             return ResolutionBatch(
                 status="clarification_required",
@@ -238,7 +244,11 @@ def authorize_prototype(
     if not authorized:
         raise ValueError("PROTOTYPE_AUTHORIZATION_REQUIRED")
     candidate = next((item for item in batch.candidates if item["token"] == candidate_token), None)
-    if candidate is None or operation_id != batch.operation_id:
+    if (
+        candidate is None
+        or candidate.get("candidate_kind") != "type"
+        or operation_id != batch.operation_id
+    ):
         raise ValueError("PROTOTYPE_CANDIDATE_NOT_OFFERED")
     updated: list[ResolvedOperation] = []
     for operation in batch.operations:
@@ -330,38 +340,114 @@ def _escape_json_pointer_token(value: str) -> str:
     return value.replace("~", "~0").replace("/", "~1")
 
 
-def _explicit_prototype(repository: IndexRepository, prototype: Any) -> tuple[str, Any]:
-    records = [item for item in repository.iter_records() if item.identity_reliable]
+def _explicit_prototype(
+    repository: IndexRepository,
+    prototype: Any,
+    *,
+    operation_id: str,
+    source_sha: str,
+    model_fingerprint: str,
+) -> tuple[str, Any]:
     if prototype.reference_kind == "global_id":
-        product_matches = [item for item in records if item.ifc_global_id == prototype.reference]
-        type_matches = [item for item in records if item.type_global_id == prototype.reference]
-        if product_matches:
-            matches = product_matches
-            prototype_ids = {prototype.reference}
-            lookup_kind = "ifc_global_id"
-        else:
-            matches = type_matches
-            prototype_ids = {prototype.reference} if type_matches else set()
-            lookup_kind = "type_global_id"
-    else:
-        matches = [item for item in records if (item.type_name or "").casefold() == prototype.reference.casefold()]
-        prototype_ids = {str(item.type_global_id) for item in matches if item.type_global_id}
+        match = repository.get_type_by_global_id(prototype.reference)
+        matches = [match] if match is not None else []
         lookup_kind = "type_global_id"
-    if len(prototype_ids) == 1:
+    else:
+        matches = repository.find_type_aliases(normalize_alias(prototype.reference))
+        lookup_kind = "type_name"
+    matches = [item for item in matches if item.identity_reliable and item.ifc_global_id]
+    if len(matches) == 1:
         return "resolved", {
             "kind": "user_authorized_prototype",
-            "global_id": next(iter(prototype_ids)),
+            "global_id": matches[0].ifc_global_id,
             "authorization": "explicit_request_reference",
             "prototype_lookup": lookup_kind,
             "request_provenance": prototype.source.to_dict(),
         }
-    if len(prototype_ids) > 1:
+    if len(matches) > 1:
         candidates = tuple(
-            _public_record(item, "prototype") for item in matches
-            if item.ifc_global_id and item.type_global_id in prototype_ids
+            _public_type_record(
+                repository,
+                item,
+                operation_id=operation_id,
+                source_sha=source_sha,
+                model_fingerprint=model_fingerprint,
+            )
+            for item in matches[:5]
         )
         return "ambiguous", candidates
     return "not_found", ()
+
+
+def _type_candidates(
+    repository: IndexRepository,
+    *,
+    operation_id: str,
+    source_sha: str,
+    model_fingerprint: str,
+) -> tuple[dict[str, Any], ...]:
+    records = sorted(
+        (
+            item
+            for item in repository.iter_type_records()
+            if item.identity_reliable and item.ifc_global_id
+        ),
+        key=lambda item: (item.ifc_class, item.name or "", item.ifc_global_id or ""),
+    )
+    return tuple(
+        _public_type_record(
+            repository,
+            item,
+            operation_id=operation_id,
+            source_sha=source_sha,
+            model_fingerprint=model_fingerprint,
+        )
+        for item in records[:5]
+    )
+
+
+def _public_type_record(
+    repository: IndexRepository,
+    record: TypeRecord,
+    *,
+    operation_id: str,
+    source_sha: str,
+    model_fingerprint: str,
+) -> dict[str, Any]:
+    public_id = str(record.ifc_global_id)
+    token_input = f"{operation_id}:{public_id}:{source_sha}:{model_fingerprint}"
+    token = hashlib.sha256(token_input.encode("utf-8")).hexdigest()[:24]
+    dimensions: dict[str, Any] = {}
+    dimension_names = {
+        "width": "width_mm",
+        "height": "height_mm",
+        "default sill height": "sill_height_mm",
+    }
+    for fact in record.properties:
+        if fact.set_kind != "pset" or fact.set_name.casefold() != "dimensions":
+            continue
+        key = dimension_names.get(fact.property_name.casefold())
+        if key is not None and isinstance(fact.value, (int, float)):
+            dimensions[key] = fact.value
+    occurrence_count, storeys = repository.type_occurrence_summary(public_id)
+    evidence = [f"identity:{public_id}", f"class:{record.ifc_class}"]
+    if record.name:
+        evidence.append(f"name:{record.name}")
+    for key in sorted(dimensions):
+        evidence.append(f"dimension:{key}:{dimensions[key]}")
+    evidence.append(f"occurrences:{occurrence_count}")
+    evidence.extend(f"storey:{storey}" for storey in storeys)
+    return {
+        "candidate_kind": "type",
+        "token": token,
+        "public_id": public_id,
+        "ifc_class": record.ifc_class,
+        "name": record.name,
+        "dimensions": {key: dimensions[key] for key in sorted(dimensions)},
+        "occurrence_count": occurrence_count,
+        "storeys": list(storeys),
+        "evidence": evidence,
+    }
 
 
 __all__ = [
