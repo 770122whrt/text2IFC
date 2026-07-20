@@ -112,7 +112,7 @@ resolution human-readable before Window L2 authoring begins.
 
 **Depends on:** Phases 7 and 9
 
-**Plans:** 2/4 plans executed
+**Plans:** 3/4 plans executed
 
 Plans:
 
@@ -123,7 +123,7 @@ Plans:
 **Wave 2** *(blocked on Wave 1 completion; plans may run in parallel)*:
 
 - [x] **09.1-02** - Human-readable and deduplicated Prototype resolution.
-- [ ] **09.1-03** - TypeRecord-backed production semantic authority.
+- [x] **09.1-03** - TypeRecord-backed production semantic authority.
 
 **Wave 3** *(blocked on both Wave 2 plans)*:
 

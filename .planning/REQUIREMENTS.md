@@ -60,7 +60,7 @@ semantic ChangeSet and an L1/L2-validated IFC result.
 - [x] **TYPE-02**: Users can authorize a unique Prototype through a human-
   readable Type name or an evidence-bearing deduplicated clarification choice
   without being required to provide an IFC GUID.
-- [ ] **TYPE-03**: Production evidence reads only authorized Type facts and the
+- [x] **TYPE-03**: Production evidence reads only authorized Type facts and the
   LargeBuilding shared Window Style no longer fails because occurrence-specific
   storey/level values were aggregated as Type facts.
 
@@ -119,7 +119,7 @@ semantic ChangeSet and an L1/L2-validated IFC result.
 | PIPE-04 | 9 | Complete |
 | TYPE-01 | 09.1 | Complete |
 | TYPE-02 | 09.1 | Complete |
-| TYPE-03 | 09.1 | Pending |
+| TYPE-03 | 09.1 | Complete |
 | WIN-01 | 10 | Pending |
 | WIN-02 | 10 | Pending |
 | OPS-01 | 11 | Pending |
