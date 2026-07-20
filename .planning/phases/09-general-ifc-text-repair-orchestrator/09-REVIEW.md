@@ -1,7 +1,8 @@
 ---
 phase: 09-general-ifc-text-repair-orchestrator
-reviewed: 2026-07-20T00:22:04Z
+reviewed: 2026-07-20T01:24:37Z
 depth: standard
+iteration: 2
 files_reviewed: 34
 files_reviewed_list:
   - prompts/agent/ifc-repair-changeset-v0.2.md
@@ -39,178 +40,143 @@ files_reviewed_list:
   - tests/ifc_repair/test_resolution_flow.py
   - tests/ifc_repair/test_run_state.py
 findings:
-  critical: 12
-  warning: 4
+  critical: 3
+  warning: 0
   info: 0
-  total: 16
+  total: 3
 status: issues_found
 ---
 
-# Phase 09: Code Review Report
+# Phase 09: Code Review Report (Iteration 2)
 
-**Reviewed:** 2026-07-20T00:22:04Z  
-**Depth:** standard  
-**Files Reviewed:** 34  
+**Reviewed:** 2026-07-20T01:24:37Z
+**Depth:** standard
+**Files Reviewed:** 34
 **Status:** issues_found
 
 ## Summary
 
-The submitted implementation does not provide a working default IFC + text -> terminal production path. Four independent defects prevent the real Stage 2 path from completing: real resolved parameters are not JSON serializable, resolver-produced evidence pointers do not address the Stage 2 authority document, the Provider-model fingerprint is reused as the IFC base fingerprint, and the bound Stage 2 does not support the production live Provider interface. Clarification/resume, immutable evidence, and atomic publication also have correctness and security gaps.
+The three fix groups close 13 of the original 16 findings, including the raw
+RepairIntent-to-live-only-Stage-2 seam, clarification reason normalization and
+caller binding, terminal artifact hash verification, truthful statuses,
+multi-round CLI behavior, OS-managed locking, reparse containment, and a raw
+LargeBuilding Provider path. Three BLOCKERs remain: the `add_detail` public
+resume path crashes, explicitly named Prototypes are rejected later by the
+production-evidence boundary, and terminal artifact promotion is still not
+atomic with the durable terminal state transition.
 
-The focused suite still reports `53 passed` because the offline and LargeBuilding tests inject hand-authored intents, ChangeSets, evaluation evidence, and application/evaluation stages. Two direct reproductions against the real seams produced:
+The complete focused suite reports `366 passed, 1 skipped`. Focused seam checks
+also report `25 passed`, and the LargeBuilding raw-provider test executes (not
+skips) and passes. Those results do not cover the three failing call chains
+below.
 
-- `RunStoreError PUBLIC_RECORD_INVALID: 'ambiguous' is not one of [...]` for a real ambiguous target.
-- `TypeError: Object of type mappingproxy is not JSON serializable` before the real Stage 2 Provider call; after manually thawing the operation, every resolver-produced evidence pointer was rejected as `EVIDENCE_POINTER_NOT_FOUND`.
+## Original Finding Closure
 
-The live UAT's `MODEL_FINGERPRINT_MISMATCH` is partly a model contract failure at Stage 1, but it masks deterministic implementation bugs that would prevent success even if the model returned a valid Stage 1 object.
+| Original | Result | Iteration 2 evidence |
+|---|---|---|
+| CR-01 | Closed | `ResolvedOperation.to_dict()` recursively thaws parameters/context before Stage 2 serialization; the real-intent seam exercises nested values. |
+| CR-02 | Closed | Resolver emits escaped pointers into the exact `/operations/{id}/context/candidate_targets/0` authority document and Stage 2 validates them. |
+| CR-03 | Closed | API passes `resolution.source_ifc_sha256` as `base_model_fingerprint`; Provider identity remains a separate input/context field. |
+| CR-04 | Closed | Bound Stage 2 dispatches `generate_live()` and persists redacted live request/response/events; a live-only fake reaches a valid ChangeSet. |
+| CR-05 | Closed | Resolver failures are split into terminal failures or mapped to schema-approved clarification reasons. |
+| CR-06 | **Open** | Candidate selection is validated before state commit and now writes singular `global_id`, but the other required resume mode, `add_detail`, crashes before validation/commit (BL-01). |
+| CR-07 | **Open** | Selection-required Prototype authorization reaches `authorize_prototype()`, but explicit GUID/type-name authorization uses an authority kind rejected by production evidence (BL-02). |
+| CR-08 | Closed | API and CLI require and forward `clarification_id` plus `expected_state_version`; stale bindings fail before mutation. |
+| CR-09 | Closed | Stage payloads bind immutable artifact hashes, load verifies every binding, and terminal reads verify manifest-declared content. |
+| CR-10 | Closed | `_fail()` and cancellation publish a non-publishable public Evaluation 0.2 bundle plus manifest/evidence before the terminal transition. |
+| CR-11 | **Open** | Bundle construction is staged, but canonical promotion still precedes and is outside the durable state transaction (BL-03). |
+| CR-12 | Closed | `prepare_stage_directory()` rejects symlink/junction/reparse components and is used for index, intent, changeset, and staging directories. |
+| WR-01 | Closed | Audit/application statuses are preserved and L1/L2 classification is derived from level results. |
+| WR-02 | Closed | Interactive CLI loops with current clarification ID/version and an eight-round bound. |
+| WR-03 | Closed | Mutation locking uses OS-managed file locks, so process death releases ownership. |
+| WR-04 | Closed | LargeBuilding now feeds raw Stage 1 and Stage 2 Provider JSON through the real parser, resolver, evidence builder, apply, and evaluator. |
 
 ## Blockers
 
-### CR-01 [BLOCKER]: Real resolved operations cannot be serialized for Stage 2
-
-**File:** `src/text2ifc_ifc_repair/provider_stage.py:50`  
-**Related:** `src/text2ifc_ifc_repair/provider_stage.py:533-538`, `src/text2ifc_ifc_repair/resolution_flow.py:43`, `src/text2ifc_ifc_repair/repair_intent.py:173`
-
-**Issue:** `RepairIntent` deep-freezes nested parameter objects as `MappingProxyType`. `ResolvedOperation.to_dict()` only shallow-copies `parameters`, and `_plain_operation()` then calls `json.dumps`, which raises on the nested mapping proxies. The default `RepairAPI` therefore returns `provider_failed` before making any Stage 2 call. This was reproduced with the real default Registry and resolver.
-
-**Fix:** Recursively thaw the resolved operation before serialization, for example by using the existing `thaw_json()` utility in `ResolvedOperation.to_dict()` or `_plain_operation()`. Add an integration test that passes an actual `RepairIntent.from_dict()` result through `resolve_repair_intent()` and `generate_bound_changeset()` without reconstructing plain fixture dictionaries.
-
-### CR-02 [BLOCKER]: Resolver evidence pointers can never validate against the Stage 2 document
-
-**File:** `src/text2ifc_ifc_repair/resolution_flow.py:140-143`  
-**Related:** `src/text2ifc_ifc_repair/provider_stage.py:449-453`, `src/text2ifc_ifc_repair/provider_stage.py:519-522`
-
-**Issue:** Resolution emits pointers such as `resolution:/operation-1/candidates/0/evidence/0`, but Stage 2 builds a document rooted at `/operations/{operation_id}` whose candidate data lives under `/context/candidate_targets`. The emitted path exists in neither representation. After manually thawing CR-01, a real one-operation run produced five `EVIDENCE_POINTER_NOT_FOUND` failures.
-
-**Fix:** Define one canonical resolved-authority JSON shape and generate pointers into that exact persisted shape, e.g. `resolved:/operations/{escaped_operation_id}/context/candidate_targets/0`. Validate every generated pointer inside `resolve_repair_intent()` before returning a resolved batch.
-
-### CR-03 [BLOCKER]: Provider model identity is confused with the IFC base fingerprint
-
-**File:** `src/text2ifc_ifc_repair/api.py:189-196`  
-**Related:** `src/text2ifc_ifc_repair/request_stage.py:220-223`, `src/text2ifc_ifc_repair/provider_stage.py:476-479`, `src/text2ifc_ifc_repair/orchestrator.py:106-109`
-
-**Issue:** Stage 1 correctly defines `RepairIntent.model_fingerprint` as the hash of the Provider model identifier. `RepairAPI` passes that value to Stage 2 as `MODEL_FINGERPRINT`, Stage 2 requires it in `ChangeSet.base_model_fingerprint`, and application then compares it to the source IFC SHA-256. Those are different domains, so a contract-compliant generated ChangeSet always terminates with `BASE_MODEL_FINGERPRINT_MISMATCH`. The offline/LargeBuilding tests bypass this by hand-authoring `base_model_fingerprint` from the source hash.
-
-**Fix:** Split the fields into `provider_model_fingerprint` and `base_model_fingerprint`. Bind Stage 2 and the ChangeSet base field to `resolution.source_ifc_sha256`/the persisted source binding; retain Provider model identity only as trace metadata.
-
-### CR-04 [BLOCKER]: Bound Stage 2 cannot call the production live Provider
-
-**File:** `src/text2ifc_ifc_repair/provider_stage.py:77-83`
-
-**Issue:** `generate_bound_changeset()` unconditionally calls `provider.generate_candidate()`. `RepairAPI.from_environment()` constructs `OpenAICompatibleLiveProvider`, whose public generation method is `generate_live()`. Stage 1 explicitly supports both interfaces, but Stage 2 does not. If the live UAT ever passes Stage 1, it will fail with `AttributeError` before Stage 2 evidence is recorded.
-
-**Fix:** Reuse the Stage 1 `_call_provider`-style dispatch for Stage 2, persist redacted live request/response/events per attempt, and test `RepairAPI.from_environment()` with a live-interface-only fake.
-
-### CR-05 [BLOCKER]: Actual resolver reason codes cannot be persisted as clarification
-
-**File:** `schemas/agent/ifc-repair-clarification-0.1.schema.json:20-24`  
-**Related:** `src/text2ifc_ifc_repair/resolution_flow.py:93-105`, `src/text2ifc_ifc_repair/resolution_flow.py:237-251`, `src/text2ifc_ifc_repair/api.py:317-325`
-
-**Issue:** The resolver returns `ambiguous`, `conflict`, `not_found`, `unsupported`, `stale_index`, `context_budget_exceeded`, and `missing_evidence`. `_clarification()` copies those values unchanged, but the schema only accepts `ambiguous_target`, `selector_conflict`, `missing_required_parameter`, `prototype_selection`, and `additional_target_detail`. A real ambiguous IFC reproduced an exception during the transition instead of a `clarification_required` result.
-
-**Fix:** Introduce an explicit total mapping from resolver outcomes to either schema-approved clarification reasons or terminal failure stages. Extend the schema only for genuinely user-answerable reasons; stale index, unsupported capability, and context failure should not be disguised as answerable clarification.
-
-### CR-06 [BLOCKER]: Candidate selection consumes the clarification and then creates an invalid RepairIntent
-
-**File:** `src/text2ifc_ifc_repair/api.py:137-160`  
-**Related:** `schemas/agent/ifc-repair-intent-0.1.schema.json:77-114`
-
-**Issue:** `continue_with_answer()` first commits the answer and moves the durable state back to `intent_ready`. It then writes `target_query.exact_global_ids`, a field forbidden by the exact RepairIntent schema (the contract uses singular `global_id`). `RepairIntent.from_dict()` raises after the clarification has already been consumed, leaving a nonterminal run that cannot be answered again.
-
-**Fix:** Validate and construct the resumed intent before committing the state transition, set `global_id` to the selected public ID, clear only conflicting selectors according to a documented policy, and make the state+artifact update one atomic commit.
-
-### CR-07 [BLOCKER]: Prototype authorization is unreachable and explicit named Prototypes are ignored
-
-**File:** `src/text2ifc_ifc_repair/api.py:154-176`  
-**Related:** `src/text2ifc_ifc_repair/api.py:315`, `src/text2ifc_ifc_repair/resolution_flow.py:174-191`, `src/text2ifc_ifc_repair/resolution_flow.py:201-234`
-
-**Issue:** `_clarification()` always exposes `select_candidate` for any candidate list, including `prototype_selection`. The API interprets that answer as a new target selector instead of calling `authorize_prototype()`. It has no `authorize_prototype` branch at all. Separately, `prototype_intent` values with `reference_kind=global_id` or `type_name` are never deterministically resolved or carried as authorized evidence. D-16 is therefore not implemented through the public API.
-
-**Fix:** Emit `authorize_prototype` only for prototype clarification, persist the affirmative authorization, and resume through `authorize_prototype()` with the stored operation ID/token. Resolve explicitly named GUID/type references deterministically (or clarify if ambiguous) and record distinct request provenance.
-
-### CR-08 [BLOCKER]: The public resume API bypasses clarification version/ID binding
-
-**File:** `src/text2ifc_ifc_repair/api.py:137-147`  
-**Related:** `src/text2ifc_ifc_repair/run_store.py:236-257`, `src/text2ifc_ifc_repair/cli.py:45-52`
-
-**Issue:** `RunStore` supports compare-and-append using caller-supplied clarification ID and expected state version, but `RepairAPI.continue_with_answer(run_id, answer)` discards both caller bindings and silently substitutes the latest stored values. A delayed answer from an older prompt can therefore be accepted against a newer clarification whenever its shape/token still matches. The CLI likewise sends only run ID and answer.
-
-**Fix:** Require `clarification_id` and `expected_state_version` in the public API/CLI continuation contract and pass them unchanged to `RunStore`. Reject stale responses rather than rebinding them to current state.
-
-### CR-09 [BLOCKER]: Persisted stage and terminal artifacts are not content-bound or verified
-
-**File:** `src/text2ifc_ifc_repair/api.py:128-135`  
-**Related:** `src/text2ifc_ifc_repair/api.py:150-175`, `src/text2ifc_ifc_repair/run_store.py:493-531`, `src/text2ifc_ifc_repair/run_store.py:289-310`
-
-**Issue:** Transitions hash small payloads containing path strings, not the content at those paths. `api-context.json` is written non-atomically and reloaded on resume without checking its hash, request hash, prompt/model bindings, or source binding. Final `read_result()` validates only the transition chain and source IFC; it never verifies the manifest or the hashes of evaluation/successful IFC artifacts. A modified context can alter resumed operations, and a modified successful IFC/evaluation remains reported as valid.
-
-**Fix:** Persist `{path, sha256, schema_version}` for every immutable stage artifact in the transition, verify all completed-stage hashes before resume, and verify the final manifest plus referenced artifacts on every terminal read. Write `api-context.json` atomically and bind it to the stored request/source/run/version.
-
-### CR-10 [BLOCKER]: Early terminal failures do not produce mandatory Evaluation 0.2 evidence
-
-**File:** `src/text2ifc_ifc_repair/api.py:278-287`  
-**Related:** `src/text2ifc_ifc_repair/api.py:95-126`, `src/text2ifc_ifc_repair/api.py:214-215`
-
-**Issue:** Invalid IFC, index failure, Stage 1 failure, and Stage 2 failure call `_fail()`, which only appends a state transition. It does not call the terminal artifact publisher, so there is no public Evaluation 0.2, manifest, or immutable failure evidence. The terminal-matrix test calls `publish_terminal_artifacts()` directly and does not exercise these API paths.
-
-**Fix:** Route every terminal outcome through one finalizer that creates a schema-valid non-publishable Evaluation 0.2, evidence, manifest, and result transition. Keep clarification nonterminal, but finalize cancel/unsupported/provider/audit/application failures uniformly.
-
-### CR-11 [BLOCKER]: Successful publication is a multi-step partial commit
-
-**File:** `src/text2ifc_ifc_repair/run_artifacts.py:70-91`  
-**Related:** `src/text2ifc_ifc_repair/api.py:254-275`
-
-**Issue:** The publisher writes evaluation, writes evidence, moves the candidate into the canonical `successful/` path, then builds the manifest and performs the whole-bundle canary scan. Manifest overflow, I/O failure, or a canary found in any earlier artifact raises after the canonical successful IFC already exists. The API then separately writes three state transitions without holding a transaction lock. A crash can therefore expose a success artifact while durable state remains `changeset_ready`, `application_ready`, or `evaluated`.
-
-**Fix:** Build and validate the entire terminal bundle in a unique staging directory, including manifest and final canary scan; fsync it, then atomically rename/publish it while holding the run mutation lock and commit one terminal state transition referencing the final hashes. On failure, retain only diagnostic staging evidence.
-
-### CR-12 [BLOCKER]: Intermediate run directories permit symlink/junction escape writes
-
-**File:** `src/text2ifc_ifc_repair/api.py:107-124`  
-**Related:** `src/text2ifc_ifc_repair/api.py:197`, `src/text2ifc_ifc_repair/orchestrator.py:110-121`, `src/text2ifc_ifc_repair/request_stage.py:48-49`
-
-**Issue:** `RunStore` validates the run directory and final artifact references, but the API directly uses `run_dir/index`, `run_dir/intent`, `run_dir/changeset`, and `run_dir/staging` without no-follow containment checks. If any child is replaced by a symlink or Windows junction/reparse point, Provider evidence, SQLite data, or the application candidate can be created/overwritten outside the output root before final containment notices. The Windows symlink test is skipped when link privilege is unavailable and does not cover junctions or these stage directories.
-
-**Fix:** Create every stage directory with create-new/no-follow semantics under a locked run, reject symlinks and Windows junction/reparse points for every path component, resolve-and-contain immediately before each open, and use descriptor-relative/no-follow file creation where supported.
-
-## Warnings
-
-### WR-01 [WARNING]: API terminal status and failure Evaluation diagnostics are not truthful
-
-**File:** `src/text2ifc_ifc_repair/api.py:266-275`  
-**Related:** `src/text2ifc_ifc_repair/orchestrator.py:237-269`
-
-**Issue:** Every non-success result after application is collapsed to `RunStage.NOT_PUBLISHABLE`, so `audit_failed` and `application_failed` never reach the public status/CLI exit classes defined for them. `_failure_public_evaluation()` also marks `application.valid` as failed even for post-application L2 evidence/evaluator failures, and `_evaluation_terminal_status()` maps any top-level `failed` report to `l2_failed`, including L1 failure.
-
-**Fix:** Map each orchestration status to its matching durable stage, preserve actual application/preservation outcomes in synthetic evaluations, and derive L1/L2 terminal classification from per-level results rather than the aggregate status alone.
-
-### WR-02 [WARNING]: Interactive CLI handles at most one clarification round
-
-**File:** `src/text2ifc_ifc_repair/cli.py:49-53`
-
-**Issue:** The CLI prompts once, calls continuation once, and renders whatever comes back. If added detail yields another ambiguity or a multi-operation run needs a later clarification, default interactive mode exits with `clarification_required` instead of continuing the same repair-scoped session to terminal state.
-
-**Fix:** Loop while status is `clarification_required`, rendering and submitting the exact current clarification binding each time, with an explicit bounded round count and safe EOF/cancel termination.
-
-### WR-03 [WARNING]: A crashed process can permanently brick a run with a stale lock
-
-**File:** `src/text2ifc_ifc_repair/run_store.py:533-552`
-
-**Issue:** The O_EXCL lock is removed only by the current process's `finally`. Process termination or host crash leaves `.transition.lock` forever, and every later resume returns `RUN_LOCKED`. The recorded PID is never used for stale-lock recovery.
-
-**Fix:** Store PID plus process-start/nonce metadata, detect demonstrably stale owners under a separate atomic recovery protocol, or use an OS-managed advisory lock whose ownership is released on process exit.
-
-### WR-04 [WARNING]: End-to-end and LargeBuilding tests are fixture self-proofs
-
-**File:** `tests/ifc_repair/test_phase9_offline_e2e.py:74-110`  
-**Related:** `tests/ifc_repair/test_phase9_large_building.py:42-87`, `tests/ifc_repair/test_general_changeset_stage.py:66-99`
-
-**Issue:** The advertised E2E tests inject a prebuilt `RepairIntent`, hand-authored ChangeSet with the correct source hash, fake evidence builder, and fake apply/evaluation stages. LargeBuilding also bypasses both real Agent stages and production evidence. The Stage 2 unit fixture manually supplies the pointer shape the validator expects instead of using `resolve_repair_intent()`. Consequently all 53 focused tests pass while CR-01 through CR-04 make the default production route impossible.
-
-**Fix:** Add at least one offline provider double whose raw Stage 1 and Stage 2 JSON travels through the real `generate_repair_intent`, real resolver/context, real `generate_bound_changeset`, real evidence builder, real apply, and real evaluator. Keep private damage creation outside the API, but do not inject post-boundary domain objects.
+### BL-01 [BLOCKER]: `add_detail` continuation always references an uninitialized local
+
+**File:** `src/text2ifc_ifc_repair/api.py:202`
+**Related:** `src/text2ifc_ifc_repair/api.py:195-207`, `src/text2ifc_ifc_repair/cli.py:128-129`
+
+**Issue:** The `add_detail` branch constructs its Stage 1 resume output path
+with `resumed.state_version`, but `resumed` is assigned only later at line 225.
+Python therefore raises `UnboundLocalError` before calling the Provider or
+committing the answer. This breaks a schema-advertised public answer mode and
+also breaks the CLI whenever a user types natural-language detail instead of a
+candidate number. Existing API E2E coverage exercises candidate selection and
+Prototype authorization, while CLI tests use a fake API, so the real branch is
+not executed.
+
+**Fix:** Derive the pre-commit attempt directory from the caller-bound version,
+for example:
+
+```python
+resume_version = expected_state_version + 1
+intent_dir = self.store.prepare_stage_directory(run_id, "intent")
+output_dir = intent_dir / f"resume-{resume_version:03d}"
+```
+
+Generate and validate the new `RepairIntent`, bind its immutable artifact, and
+only then commit the clarification answer. Add a real `RepairAPI` integration
+test for `add_detail`, including a second clarification round.
+
+### BL-02 [BLOCKER]: Explicitly named Prototype authority cannot reach production evaluation
+
+**File:** `src/text2ifc_ifc_repair/resolution_flow.py:341-346`
+**Related:** `src/text2ifc_ifc_repair/production_evidence.py:32-34`, `src/text2ifc_ifc_repair/production_evidence.py:221-242`
+
+**Issue:** Explicit `global_id`/`type_name` Prototype resolution records
+`kind="explicit_prototype_reference"`. The production-evidence boundary accepts
+only `formal_type_binding` and `user_authorized_prototype`, so the otherwise
+resolved run deterministically raises `UNAUTHORIZED_SEMANTIC_AUTHORITY` and is
+reported as `l2_not_evaluable`. The added test stops after resolution and never
+passes the result into `build_production_evidence()`. D-16's explicit named
+Prototype path is therefore still unusable end to end.
+
+**Fix:** Represent a successfully resolved explicit request as the same
+authorized Prototype contract consumed by production evidence, while retaining
+distinct request provenance, for example:
+
+```python
+{
+    "kind": "user_authorized_prototype",
+    "global_id": resolved_id,
+    "authorization": "explicit_request_reference",
+    "request_provenance": prototype.source.to_dict(),
+}
+```
+
+Then allow and verify that authorization value in `build_production_evidence()`
+and add GUID and type-name tests that traverse resolution, Stage 2, production
+evidence, and evaluation.
+
+### BL-03 [BLOCKER]: Canonical terminal publication and durable state remain a partial commit
+
+**File:** `src/text2ifc_ifc_repair/run_artifacts.py:91-100`
+**Related:** `src/text2ifc_ifc_repair/api.py:355-368`, `src/text2ifc_ifc_repair/api.py:371-387`
+
+**Issue:** The publisher now safely builds and scans a staging directory, but
+line 95 atomically renames it to canonical `published/` before returning. Only
+after that return does `RepairAPI` acquire the RunStore lock and append the
+terminal transition. A process exit, state conflict, or state-write I/O failure
+between these operations leaves a canonical successful IFC/evidence bundle
+while durable state remains `changeset_ready`. Retrying cannot recover through
+the normal path because the publisher rejects the existing directory with
+`ARTIFACT_ALREADY_EXISTS`. The new test proves only that a pre-promotion
+manifest failure leaves no bundle; it does not test failure after promotion and
+before state commit.
+
+**Fix:** Keep the complete bundle under a unique staged name, then add one
+RunStore terminal-commit operation that holds the run mutation lock, revalidates
+the expected state version and staged hashes, promotes the directory, and
+writes the terminal transition/state as one recoverable protocol. At minimum,
+persist an explicit prepared-publication record and implement deterministic
+startup recovery for either side of the rename/state-write boundary. Add
+fault-injection tests immediately after directory promotion and immediately
+before/after `state.json` replacement.
 
 ---
 
-_Reviewed: 2026-07-20T00:22:04Z_  
-_Reviewer: the agent (gsd-code-reviewer)_  
+_Reviewed: 2026-07-20T01:24:37Z_
+_Reviewer: the agent (gsd-code-reviewer)_
 _Depth: standard_
