@@ -538,9 +538,22 @@ def test_public_builder_signature_and_outputs_cannot_accept_gold_objects() -> No
 
 
 def test_operation_identity_and_registry_policy_drive_future_family_expansion() -> None:
-    evidence = _build()
+    evidence = _build(
+        type_records_by_global_id={
+            "type-1": _type_record("type-1", "type"),
+            "prototype-1": _type_record(
+                "prototype-1", "prototype", ifc_class="IfcDoorStyle"
+            ),
+        }
+    )
 
     assert tuple(evidence.expected_facts_by_operation) == ("operation-1",)
     assert evidence.operation_types == {"operation-1": OPERATION_TYPE}
     assert "Door" in _registry().require(OPERATION_TYPE).capability_constraints["future_families"]
     assert not hasattr(evidence, "window")
+    prototype = next(
+        fact
+        for fact in evidence.candidate_facts_by_operation["operation-1"]
+        if fact.source_kind is EvidenceSourceKind.APPROVED_PROTOTYPE
+    )
+    assert prototype.entity_source.startswith("IfcDoorStyle:")

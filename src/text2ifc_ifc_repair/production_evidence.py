@@ -249,7 +249,7 @@ def _operation_candidates(
             type_records_by_global_id, global_id, role=kind
         )
         facts.extend(
-            _type_record_facts(
+            _authorized_type_facts(
                 type_record,
                 operation_id=operation_id,
                 source_kind=source_kind,
@@ -343,7 +343,7 @@ def _record_facts(
     )
 
 
-def _type_record_facts(
+def _authorized_type_facts(
     record: TypeRecord,
     *,
     operation_id: str,
