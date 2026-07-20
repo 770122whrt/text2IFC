@@ -47,6 +47,7 @@ class RepairOrchestrator:
         evidence_builder: Callable[..., Any] = build_production_evidence,
         artifact_publisher: Callable[..., Any] = publish_terminal_artifacts,
         defer_publication: bool = False,
+        operation_registry: Any | None = None,
     ) -> None:
         self.run_directory = Path(run_directory)
         self.run_directory.mkdir(parents=True, exist_ok=True)
@@ -61,11 +62,15 @@ class RepairOrchestrator:
         self._evidence_builder = evidence_builder
         self._artifact_publisher = artifact_publisher
         self._defer_publication = defer_publication
+        self._operation_registry = operation_registry
         self._resolution: Any = None
 
     def start(self, *, intent: Any, repository: Any, expected_source_sha256: str) -> OrchestrationResult:
         self._write("intent.json", intent)
-        resolution = self._resolver(intent, repository, expected_source_sha256=expected_source_sha256)
+        resolver_kwargs = {"expected_source_sha256": expected_source_sha256}
+        if self._operation_registry is not None:
+            resolver_kwargs["operation_registry"] = self._operation_registry
+        resolution = self._resolver(intent, repository, **resolver_kwargs)
         self._resolution = resolution
         self._write("resolution.json", resolution)
         return self._advance_if_exact(resolution)

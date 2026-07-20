@@ -247,6 +247,15 @@ def _supported_operations(registry: OperationRegistry) -> list[dict[str, Any]]:
             "target_ifc_classes": list(
                 registry.require(operation_type).target_ifc_classes
             ),
+            "prototype_ifc_classes": list(
+                registry.require(operation_type).prototype_ifc_classes
+            ),
+            "prototype_dimension_paths": {
+                key: list(path)
+                for key, path in sorted(
+                    registry.require(operation_type).prototype_dimension_paths.items()
+                )
+            },
             "parameter_schema": dict(
                 registry.require(operation_type).parameter_schema
             ),

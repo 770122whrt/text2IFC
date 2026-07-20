@@ -12,6 +12,7 @@ from text2ifc_agent.prompt_registry import load_prompt_registry
 from text2ifc_ifc_repair.registry import OperationDefinition, OperationRegistry
 from text2ifc_ifc_repair.index_models import AliasFact, ElementRecord, IndexMetadata
 from text2ifc_ifc_repair.index_store import SQLiteIndexRepository
+from text2ifc_ifc_repair.indexer import EXTRACTOR_VERSION
 from text2ifc_ifc_repair.repair_intent import RepairIntent
 from text2ifc_ifc_repair.resolution_flow import resolve_repair_intent
 
@@ -264,7 +265,13 @@ def test_real_intent_resolution_flows_into_live_only_bound_stage(tmp_path: Path)
     guid = "0AAAAAAAAAAAAAAAAAAAAA"
     source_sha = "sha256:" + "e" * 64
     database = tmp_path / "targets.sqlite"
-    metadata = IndexMetadata(source_sha, "IFC2X3", "text2ifc/ifc-indexer/0.1", 1, "2026-07-20T00:00:00Z")
+    metadata = IndexMetadata(
+        source_sha,
+        "IFC2X3",
+        EXTRACTOR_VERSION,
+        1,
+        "2026-07-20T00:00:00Z",
+    )
     record = ElementRecord(
         record_id=f"ifc:{guid}", ifc_global_id=guid, identity_reliable=True,
         ifc_class="IfcWall", name="east wall", long_name=None, tag=None,

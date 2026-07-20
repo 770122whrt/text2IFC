@@ -312,6 +312,7 @@ class RepairAPI:
             orchestrator = self._orchestrator_factory(
                 run_directory=run_dir,
                 changeset_stage=stage2,
+                operation_registry=self.registry,
                 **self._orchestrator_options,
             )
             try:

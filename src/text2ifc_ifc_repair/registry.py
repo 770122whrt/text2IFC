@@ -2,7 +2,8 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+import copy
+from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, Any, Callable, Iterable, Mapping
 
 from jsonschema import Draft202012Validator
@@ -45,6 +46,10 @@ class OperationDefinition:
     postcondition_checker: OperationCallable
     comparison_adapter: OperationCallable
     capability_constraints: Mapping[str, Any]
+    prototype_ifc_classes: tuple[str, ...] = ()
+    prototype_dimension_paths: Mapping[str, tuple[str, ...]] = field(
+        default_factory=dict
+    )
     target_schema: Mapping[str, Any] | None = None
     precondition_names: tuple[str, ...] = ()
     postcondition_names: tuple[str, ...] = ()
@@ -54,6 +59,14 @@ class OperationDefinition:
         if not self.operation_type or not self.target_ifc_classes:
             raise OperationRegistryError(
                 "INVALID_OPERATION_DEFINITION", self.operation_type or "<empty>"
+            )
+        if any(not value for value in self.prototype_ifc_classes):
+            raise OperationRegistryError(
+                "INVALID_PROTOTYPE_IFC_CLASS", self.operation_type
+            )
+        if any(not key or not path for key, path in self.prototype_dimension_paths.items()):
+            raise OperationRegistryError(
+                "INVALID_PROTOTYPE_DIMENSION_PATH", self.operation_type
             )
         Draft202012Validator.check_schema(dict(self.parameter_schema))
         if self.target_schema is not None:

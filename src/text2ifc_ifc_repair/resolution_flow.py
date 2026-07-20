@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import math
 from dataclasses import dataclass, replace
 from typing import Any, Mapping
 
@@ -17,6 +18,7 @@ from .index_store import IndexRepository
 from .indexer import EXTRACTOR_VERSION
 from .indexer import normalize_alias
 from .repair_intent import OperationIntent, RepairIntent
+from .registry import OperationRegistry
 from .run_models import thaw_json
 from .target_context import TargetContextError, build_target_context
 from .target_query import ResolutionResult, resolve_target
@@ -85,6 +87,7 @@ def resolve_repair_intent(
     *,
     expected_source_sha256: str,
     context_max_bytes: int = 48_000,
+    operation_registry: OperationRegistry | None = None,
 ) -> ResolutionBatch:
     """Resolve all operations in stable order or return one fail-closed pause."""
 
@@ -186,6 +189,12 @@ def resolve_repair_intent(
         )
 
         prototype = operation.prototype_intent
+        prototype_classes: tuple[str, ...] = ()
+        prototype_dimension_paths: Mapping[str, tuple[str, ...]] = {}
+        if operation_registry is not None:
+            definition = operation_registry.require(operation.operation_type)
+            prototype_classes = definition.prototype_ifc_classes
+            prototype_dimension_paths = definition.prototype_dimension_paths
         if prototype is not None and prototype.reference_kind in {"global_id", "type_name"}:
             prototype_result = _explicit_prototype(
                 repository,
@@ -193,6 +202,7 @@ def resolve_repair_intent(
                 operation_id=operation.operation_id,
                 source_sha=expected_source_sha256,
                 model_fingerprint=intent.model_fingerprint,
+                allowed_ifc_classes=prototype_classes,
             )
             if prototype_result[0] == "resolved":
                 completed[-1] = replace(
@@ -212,12 +222,32 @@ def resolve_repair_intent(
                     operations=completed, source_sha=expected_source_sha256,
                 )
         elif prototype is not None and prototype.reference_kind == "selection_required":
+            if not prototype_classes:
+                return _failure(
+                    intent,
+                    "missing_evidence",
+                    operation_id=operation.operation_id,
+                    operations=completed,
+                    source_sha=expected_source_sha256,
+                )
             candidates = _type_candidates(
                 repository,
                 operation_id=operation.operation_id,
                 source_sha=expected_source_sha256,
                 model_fingerprint=intent.model_fingerprint,
+                allowed_ifc_classes=prototype_classes,
+                requested_dimensions=_requested_prototype_dimensions(
+                    operation.parameters, prototype_dimension_paths
+                ),
             )
+            if not candidates:
+                return _failure(
+                    intent,
+                    "missing_evidence",
+                    operation_id=operation.operation_id,
+                    operations=completed,
+                    source_sha=expected_source_sha256,
+                )
             return ResolutionBatch(
                 status="clarification_required",
                 reason_code="prototype_selection",
@@ -353,6 +383,7 @@ def _explicit_prototype(
     operation_id: str,
     source_sha: str,
     model_fingerprint: str,
+    allowed_ifc_classes: tuple[str, ...] = (),
 ) -> tuple[str, Any]:
     if prototype.reference_kind == "global_id":
         match = repository.get_type_by_global_id(prototype.reference)
@@ -361,7 +392,13 @@ def _explicit_prototype(
     else:
         matches = repository.find_type_aliases(normalize_alias(prototype.reference))
         lookup_kind = "type_name"
-    matches = [item for item in matches if item.identity_reliable and item.ifc_global_id]
+    matches = [
+        item
+        for item in matches
+        if item.identity_reliable
+        and item.ifc_global_id
+        and (not allowed_ifc_classes or item.ifc_class in allowed_ifc_classes)
+    ]
     if len(matches) == 1:
         return "resolved", {
             "kind": "user_authorized_prototype",
@@ -391,12 +428,18 @@ def _type_candidates(
     operation_id: str,
     source_sha: str,
     model_fingerprint: str,
+    allowed_ifc_classes: tuple[str, ...],
+    requested_dimensions: Mapping[str, float],
 ) -> tuple[dict[str, Any], ...]:
     records = sorted(
         (
             item
             for item in repository.iter_type_records()
             if item.identity_reliable and item.ifc_global_id
+            and item.ifc_class in allowed_ifc_classes
+            and _dimensions_match(
+                _type_dimensions(item), requested_dimensions
+            )
         ),
         key=lambda item: (item.ifc_class, item.name or "", item.ifc_global_id or ""),
     )
@@ -423,13 +466,7 @@ def _public_type_record(
     public_id = str(record.ifc_global_id)
     token_input = f"{operation_id}:{public_id}:{source_sha}:{model_fingerprint}"
     token = hashlib.sha256(token_input.encode("utf-8")).hexdigest()[:24]
-    dimensions: dict[str, Any] = {}
-    for fact in record.properties:
-        if fact.set_kind != "pset" or fact.set_name.casefold() != "dimensions":
-            continue
-        key = _PUBLIC_TYPE_DIMENSIONS.get(fact.property_name.casefold())
-        if key is not None and isinstance(fact.value, (int, float)):
-            dimensions[key] = fact.value
+    dimensions = _type_dimensions(record)
     occurrence_count, storeys = repository.type_occurrence_summary(public_id)
     evidence = [f"identity:{public_id}", f"class:{record.ifc_class}"]
     if record.name:
@@ -449,6 +486,44 @@ def _public_type_record(
         "storeys": list(storeys),
         "evidence": evidence,
     }
+
+
+def _requested_prototype_dimensions(
+    parameters: Mapping[str, Any],
+    paths: Mapping[str, tuple[str, ...]],
+) -> dict[str, float]:
+    dimensions: dict[str, float] = {}
+    for public_name, path in paths.items():
+        value: Any = parameters
+        for part in path:
+            if not isinstance(value, Mapping) or part not in value:
+                value = None
+                break
+            value = value[part]
+        if isinstance(value, (int, float)) and not isinstance(value, bool):
+            dimensions[public_name] = float(value)
+    return dimensions
+
+
+def _type_dimensions(record: TypeRecord) -> dict[str, float]:
+    dimensions: dict[str, float] = {}
+    for fact in record.properties:
+        if fact.set_kind != "pset" or fact.set_name.casefold() != "dimensions":
+            continue
+        key = _PUBLIC_TYPE_DIMENSIONS.get(fact.property_name.casefold())
+        if key is not None and isinstance(fact.value, (int, float)):
+            dimensions[key] = float(fact.value)
+    return dimensions
+
+
+def _dimensions_match(
+    candidate: Mapping[str, float], requested: Mapping[str, float]
+) -> bool:
+    return all(
+        key in candidate
+        and math.isclose(candidate[key], value, rel_tol=0.0, abs_tol=1e-6)
+        for key, value in requested.items()
+    )
 
 
 __all__ = [

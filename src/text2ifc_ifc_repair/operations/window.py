@@ -209,6 +209,11 @@ def window_operation_definition() -> OperationDefinition:
             "wall_geometry": ["straight_wall"],
             "length_unit": "millimetre",
         },
+        prototype_ifc_classes=("IfcWindowStyle", "IfcWindowType"),
+        prototype_dimension_paths={
+            "width_mm": ("opening", "width_mm"),
+            "height_mm": ("opening", "height_mm"),
+        },
         target_schema=TARGET_SCHEMA,
         precondition_names=(
             "base_model_fingerprint_matches",

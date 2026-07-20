@@ -159,6 +159,9 @@ def generate_repair_changeset(
             "target_ifc_classes": list(
                 registry.require(operation_type).target_ifc_classes
             ),
+            "prototype_ifc_classes": list(
+                registry.require(operation_type).prototype_ifc_classes
+            ),
             "target_schema": dict(
                 registry.require(operation_type).target_schema
                 or {"type": "object", "minProperties": 1}
@@ -451,6 +454,9 @@ def _resolved_input_issues(
         document_operations[operation_id] = {
             **operation,
             "registered_target_ifc_classes": list(definition.target_ifc_classes),
+            "registered_prototype_ifc_classes": list(
+                definition.prototype_ifc_classes
+            ),
         }
     document = {"operations": document_operations}
     if _contains_private_or_step(document):
@@ -562,6 +568,11 @@ def _operation_contract(registry: OperationRegistry, operation_type: str) -> dic
     return {
         "operation_type": operation_type,
         "target_ifc_classes": list(definition.target_ifc_classes),
+        "prototype_ifc_classes": list(definition.prototype_ifc_classes),
+        "prototype_dimension_paths": {
+            key: list(path)
+            for key, path in sorted(definition.prototype_dimension_paths.items())
+        },
         "target_schema": dict(definition.target_schema or {"type": "object", "minProperties": 1}),
         "parameter_schema": dict(definition.parameter_schema),
         "precondition_names": list(definition.precondition_names),

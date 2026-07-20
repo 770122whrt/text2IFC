@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import importlib
+from dataclasses import replace
 from pathlib import Path
 
 import pytest
@@ -30,7 +31,9 @@ def _api():
     return module
 
 
-def _registry() -> OperationRegistry:
+def _registry(
+    prototype_ifc_classes: tuple[str, ...] = ("IfcWindowStyle",),
+) -> OperationRegistry:
     registry = OperationRegistry()
     for operation_type in ("fixture_move", "fixture_resize"):
         registry.register(
@@ -41,7 +44,17 @@ def _registry() -> OperationRegistry:
                     "type": "object",
                     "additionalProperties": False,
                     "required": ["marker"],
-                    "properties": {"marker": {"type": "string"}},
+                    "properties": {
+                        "marker": {"type": "string"},
+                        "opening": {
+                            "type": "object",
+                            "additionalProperties": False,
+                            "properties": {
+                                "width_mm": {"type": "number"},
+                                "height_mm": {"type": "number"},
+                            },
+                        },
+                    },
                 },
                 context_adapter=lambda **kwargs: kwargs,
                 precondition_checker=lambda **kwargs: (),
@@ -49,12 +62,22 @@ def _registry() -> OperationRegistry:
                 postcondition_checker=lambda **kwargs: (),
                 comparison_adapter=lambda **kwargs: kwargs,
                 capability_constraints={"geometry": "straight_wall"},
+                prototype_ifc_classes=prototype_ifc_classes,
+                prototype_dimension_paths={
+                    "width_mm": ("opening", "width_mm"),
+                    "height_mm": ("opening", "height_mm"),
+                },
             )
         )
     return registry
 
 
-def _intent(*queries: dict, prototype: dict | None = None) -> RepairIntent:
+def _intent(
+    *queries: dict,
+    prototype: dict | None = None,
+    prototype_ifc_classes: tuple[str, ...] = ("IfcWindowStyle",),
+    parameters: dict | None = None,
+) -> RepairIntent:
     operations = []
     for index, query in enumerate(queries):
         operations.append(
@@ -68,7 +91,7 @@ def _intent(*queries: dict, prototype: dict | None = None) -> RepairIntent:
                     "winner_margin": 10,
                     **query,
                 },
-                "parameters": {"marker": f"m{index + 1}"},
+                "parameters": {"marker": f"m{index + 1}", **(parameters or {})},
                 "attribute_intents": [],
                 "prototype_intent": prototype,
                 "provenance": [
@@ -88,7 +111,7 @@ def _intent(*queries: dict, prototype: dict | None = None) -> RepairIntent:
                 {"source_kind": "user_request", "reference": "request:/text", "excerpt": "repair wall"}
             ],
         },
-        registry=_registry(),
+        registry=_registry(prototype_ifc_classes),
     )
 
 
@@ -241,7 +264,12 @@ def test_similarity_never_authorizes_prototype_but_explicit_answer_does(tmp_path
         },
     )
     with _repository(tmp_path, [target], types=[prototype]) as repository:
-        pending = api.resolve_repair_intent(request, repository, expected_source_sha256=SOURCE_SHA)
+        pending = api.resolve_repair_intent(
+            request,
+            repository,
+            expected_source_sha256=SOURCE_SHA,
+            operation_registry=_registry(),
+        )
         resumed = api.authorize_prototype(
             pending,
             operation_id="intent-1",
@@ -299,6 +327,7 @@ def test_selection_required_projects_one_bounded_candidate_per_type(tmp_path: Pa
     ]
     request = _intent(
         {"global_id": target.ifc_global_id},
+        parameters={"opening": {"width_mm": 915.0, "height_mm": 1830.0}},
         prototype={
             "reference_kind": "selection_required",
             "reference": "915 x 1830 window",
@@ -309,9 +338,38 @@ def test_selection_required_projects_one_bounded_candidate_per_type(tmp_path: Pa
             },
         },
     )
-    with _repository(tmp_path, [target, *occurrences], types=[shared_type]) as repository:
+    decoys = [
+        _type_record(
+            "0DOORAAAAAAAAAAAAAAAAA",
+            "Door with matching dimensions",
+            ifc_class="IfcDoorStyle",
+        ),
+        _type_record(
+            "0WINDOWBBBBBBBBBBBBBBBB",
+            "Window with different dimensions",
+        ),
+    ]
+    decoys[1] = TypeRecord(
+        **{
+            **decoys[1].__dict__,
+            "properties": tuple(
+                replace(fact, value=1200.0)
+                if fact.property_name == "Width"
+                else fact
+                for fact in decoys[1].properties
+            ),
+        }
+    )
+    with _repository(
+        tmp_path,
+        [target, *occurrences],
+        types=[shared_type, *decoys],
+    ) as repository:
         pending = _api().resolve_repair_intent(
-            request, repository, expected_source_sha256=SOURCE_SHA
+            request,
+            repository,
+            expected_source_sha256=SOURCE_SHA,
+            operation_registry=_registry(),
         )
 
     assert pending.status == "clarification_required"
@@ -339,7 +397,12 @@ def test_prototype_authorization_rejects_negative_and_tampered_tokens(tmp_path: 
         },
     )
     with _repository(tmp_path, [target], types=[_type_record()]) as repository:
-        pending = _api().resolve_repair_intent(request, repository, expected_source_sha256=SOURCE_SHA)
+        pending = _api().resolve_repair_intent(
+            request,
+            repository,
+            expected_source_sha256=SOURCE_SHA,
+            operation_registry=_registry(),
+        )
     with pytest.raises(ValueError, match="PROTOTYPE_AUTHORIZATION_REQUIRED"):
         _api().authorize_prototype(
             pending, operation_id="intent-1",
@@ -358,6 +421,7 @@ def test_non_window_type_uses_the_same_human_readable_resolution(tmp_path: Path)
     )
     request = _intent(
         {"global_id": target.ifc_global_id},
+        prototype_ifc_classes=("IfcDoorStyle",),
         prototype={
             "reference_kind": "type_name",
             "reference": "office door type",
@@ -365,7 +429,12 @@ def test_non_window_type_uses_the_same_human_readable_resolution(tmp_path: Path)
         },
     )
     with _repository(tmp_path, [target], types=[door_type]) as repository:
-        result = _api().resolve_repair_intent(request, repository, expected_source_sha256=SOURCE_SHA)
+        result = _api().resolve_repair_intent(
+            request,
+            repository,
+            expected_source_sha256=SOURCE_SHA,
+            operation_registry=_registry(("IfcDoorStyle",)),
+        )
     assert result.status == "resolved"
     assert result.operations[0].authorized_semantics[-1]["global_id"] == door_type.ifc_global_id
 

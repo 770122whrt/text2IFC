@@ -359,19 +359,39 @@ def test_public_api_reaches_explicit_prototype_authorization(tmp_path: Path) -> 
     source = tmp_path / "prototype.ifc"
     _source(source)
     model = ifcopenshell.open(str(source))
-    prototype_wall = model.create_entity(
-        "IfcWall", GlobalId="0000000000000000000003", Name="Prototype wall"
+    prototype_window = model.create_entity(
+        "IfcWindow", GlobalId="0000000000000000000003", Name="Prototype window"
     )
     prototype_type = model.create_entity(
-        "IfcWallType",
+        "IfcWindowStyle",
         GlobalId="0000000000000000000004",
-        Name="Prototype wall type",
-        PredefinedType="NOTDEFINED",
+        Name="Prototype window type",
+        ConstructionType="NOTDEFINED",
+        OperationType="NOTDEFINED",
+        ParameterTakesPrecedence=False,
+        Sizeable=True,
     )
+    width = model.create_entity(
+        "IfcPropertySingleValue",
+        Name="Width",
+        NominalValue=model.create_entity("IfcLengthMeasure", 900.0),
+    )
+    height = model.create_entity(
+        "IfcPropertySingleValue",
+        Name="Height",
+        NominalValue=model.create_entity("IfcLengthMeasure", 1800.0),
+    )
+    dimensions = model.create_entity(
+        "IfcPropertySet",
+        GlobalId="0000000000000000000006",
+        Name="Dimensions",
+        HasProperties=[width, height],
+    )
+    prototype_type.HasPropertySets = [dimensions]
     model.create_entity(
         "IfcRelDefinesByType",
         GlobalId="0000000000000000000005",
-        RelatedObjects=[prototype_wall],
+        RelatedObjects=[prototype_window],
         RelatingType=prototype_type,
     )
     model.write(str(source))

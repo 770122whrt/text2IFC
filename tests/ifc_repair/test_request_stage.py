@@ -152,6 +152,14 @@ def test_stage_signature_and_provider_request_are_public_only(tmp_path: Path) ->
     supported = renderer_input["SUPPORTED_OPERATIONS"][0]
     assert supported["operation_type"] == "add_window_with_opening_to_wall"
     assert supported["target_ifc_classes"] == ["IfcWall"]
+    assert supported["prototype_ifc_classes"] == [
+        "IfcWindowStyle",
+        "IfcWindowType",
+    ]
+    assert supported["prototype_dimension_paths"] == {
+        "height_mm": ["opening", "height_mm"],
+        "width_mm": ["opening", "width_mm"],
+    }
     assert supported["parameter_schema"]["required"] == [
         "position",
         "opening",
