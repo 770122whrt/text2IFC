@@ -4,6 +4,7 @@ from dataclasses import FrozenInstanceError
 
 import ifcopenshell
 import pytest
+import text2ifc_ifc_repair.semantic_facts as semantic_facts_module
 
 from text2ifc_ifc_repair.evaluation_models import EvaluationStatus
 from text2ifc_ifc_repair.evaluation_policy import (
@@ -545,6 +546,65 @@ def test_repaired_ifc_extraction_uses_inheritance_aware_official_utilities() -> 
         "identification": "Ss_25_30_95",
         "name": "Windows",
     }
+
+
+def test_shared_property_helper_marks_only_type_only_values_inherited() -> None:
+    helper = getattr(semantic_facts_module, "extract_property_facts", None)
+    assert helper is not None, "indexing and evaluation require one property helper"
+    model = ifcopenshell.file(schema="IFC2X3")
+    window = model.create_entity(
+        "IfcWindow", GlobalId="0000000000000000000010", Name="W-01"
+    )
+    style = model.create_entity(
+        "IfcWindowStyle",
+        GlobalId="0000000000000000000011",
+        Name="Style A",
+        ConstructionType="NOTDEFINED",
+        OperationType="NOTDEFINED",
+        ParameterTakesPrecedence=False,
+        Sizeable=True,
+    )
+    model.create_entity(
+        "IfcRelDefinesByType",
+        GlobalId="0000000000000000000012",
+        RelatedObjects=[window],
+        RelatingType=style,
+    )
+    direct_prop = model.create_entity(
+        "IfcPropertySingleValue",
+        Name="Level",
+        NominalValue=model.create_entity("IfcLabel", "Level 1"),
+    )
+    direct_pset = model.create_entity(
+        "IfcPropertySet",
+        GlobalId="0000000000000000000013",
+        Name="Constraints",
+        HasProperties=[direct_prop],
+    )
+    model.create_entity(
+        "IfcRelDefinesByProperties",
+        GlobalId="0000000000000000000014",
+        RelatedObjects=[window],
+        RelatingPropertyDefinition=direct_pset,
+    )
+    inherited_prop = model.create_entity(
+        "IfcPropertySingleValue",
+        Name="Width",
+        NominalValue=model.create_entity("IfcLengthMeasure", 915.0),
+    )
+    inherited_pset = model.create_entity(
+        "IfcPropertySet",
+        GlobalId="0000000000000000000015",
+        Name="Dimensions",
+        HasProperties=[inherited_prop],
+    )
+    style.HasPropertySets = [inherited_pset]
+
+    by_path = {
+        (fact.set_name, fact.property_name): fact for fact in helper(window)
+    }
+    assert by_path[("Constraints", "Level")].inherited is False
+    assert by_path[("Dimensions", "Width")].inherited is True
 
 
 def test_pset_extraction_failure_is_not_treated_as_verified_absence(

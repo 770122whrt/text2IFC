@@ -8,6 +8,7 @@ import ifcopenshell
 import pytest
 
 from text2ifc_ifc_repair.index_store import SQLiteIndexRepository
+from text2ifc_ifc_repair.mutation import remove_window_and_opening
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -29,7 +30,11 @@ def _api() -> dict[str, object]:
             IndexAdapterRegistry,
             default_index_adapter_registry,
         )
-        from text2ifc_ifc_repair.indexer import IndexBuildError, build_ifc_index
+        from text2ifc_ifc_repair.indexer import (
+            EXTRACTOR_VERSION,
+            IndexBuildError,
+            build_ifc_index,
+        )
     except ModuleNotFoundError:
         pytest.fail("Phase 7 IFC indexer API is not implemented yet")
     return locals()
@@ -50,6 +55,78 @@ def test_large_building_indexes_initial_scope_and_source_identity(tmp_path: Path
         assert repository.metadata.ifc_schema == "IFC2X3"
         assert repository.metadata.source_ifc_sha256.startswith("sha256:")
         assert len(repository.metadata.source_ifc_sha256) == 71
+        assert repository.metadata.extractor_version == "text2ifc/ifc-indexer/0.2"
+    assert _api()["EXTRACTOR_VERSION"] == "text2ifc/ifc-indexer/0.2"
+
+
+def test_damaged_large_building_indexes_one_shared_type_with_correct_provenance(
+    tmp_path: Path,
+) -> None:
+    mutation = remove_window_and_opening(
+        source_path=LARGE_BUILDING,
+        output_dir=tmp_path / "mutation",
+        wall_global_id="1F6umJ5H50aeL3A1As_wTm",
+        opening_global_id="2cXV28XOjE6f6irhW0CO4t",
+        window_global_id="2cXV28XOjE6f6irgi0CO4t",
+    )
+    database = tmp_path / "damaged.sqlite"
+    damaged_ifc = tmp_path / "mutation" / mutation["artifacts"]["damaged_ifc"]
+    _api()["build_ifc_index"](damaged_ifc, database)
+
+    type_global_id = "2cXV28XOjE6f6irhu0CO_c"
+    with SQLiteIndexRepository.open(database) as repository:
+        type_records = list(repository.iter_type_records())
+        window_style = repository.get_type_by_global_id(type_global_id)
+        assert window_style is not None
+        assert [record for record in type_records if record.ifc_global_id == type_global_id] == [
+            window_style
+        ]
+        assert window_style.record_id == f"type:{type_global_id}"
+        assert window_style.ifc_class == "IfcWindowStyle"
+        assert window_style.name == "M_Fixed:0915 x 1830mm"
+        assert window_style.identity_reliable is True
+        assert window_style.provenance["source"] == "current_ifc"
+        assert repository.type_occurrence_summary(type_global_id) == (
+            41,
+            ("Level 1", "Level 2"),
+        )
+
+        type_dimensions = {
+            fact.property_name: fact
+            for fact in window_style.properties
+            if fact.set_name == "Dimensions"
+        }
+        assert type_dimensions["Width"].value == pytest.approx(915.0)
+        assert type_dimensions["Height"].value == pytest.approx(1830.0)
+        assert all(not fact.inherited for fact in window_style.properties)
+
+        windows = [
+            record
+            for record in repository.iter_records()
+            if record.ifc_class == "IfcWindow" and record.type_global_id == type_global_id
+        ]
+        assert len(windows) == 41
+        levels = {
+            fact.value
+            for window in windows
+            for fact in window.properties
+            if fact.set_name == "Constraints" and fact.property_name == "Level"
+        }
+        assert levels == {"Level: Level 1", "Level: Level 2"}
+        assert all(
+            not fact.inherited
+            for window in windows
+            for fact in window.properties
+            if fact.set_name == "Constraints"
+            and fact.property_name in {"Level", "Sill Height"}
+        )
+        assert all(
+            fact.inherited
+            for window in windows
+            for fact in window.properties
+            if fact.set_name == "Dimensions"
+            and fact.property_name in {"Width", "Height", "Default Sill Height"}
+        )
 
 
 def test_large_building_retains_engineering_relationship_and_property_evidence(
@@ -106,6 +183,52 @@ def test_duplicate_global_ids_are_diagnostic_and_never_reliable(tmp_path: Path) 
             diagnostic.code == "DUPLICATE_IFC_GLOBAL_ID"
             for diagnostic in repository.diagnostics()
         )
+
+
+def test_duplicate_type_global_ids_are_diagnostic_and_never_authoritative(
+    tmp_path: Path,
+) -> None:
+    source = tmp_path / "duplicate-type.ifc"
+    model = ifcopenshell.file(schema="IFC2X3")
+    type_global_id = "0AAAAAAAAAAAAAAAAAAAAA"
+    for ordinal in (1, 2):
+        window = model.create_entity(
+            "IfcWindow",
+            GlobalId=f"{ordinal}BBBBBBBBBBBBBBBBBBBBB",
+            Name=f"window-{ordinal}",
+        )
+        style = model.create_entity(
+            "IfcWindowStyle",
+            GlobalId=type_global_id,
+            Name=f"style-{ordinal}",
+            ConstructionType="NOTDEFINED",
+            OperationType="NOTDEFINED",
+            ParameterTakesPrecedence=False,
+            Sizeable=True,
+        )
+        model.create_entity(
+            "IfcRelDefinesByType",
+            GlobalId=f"{ordinal}CCCCCCCCCCCCCCCCCCCCC",
+            RelatedObjects=[window],
+            RelatingType=style,
+        )
+    model.write(str(source))
+
+    database = tmp_path / "duplicate-type.sqlite"
+    _api()["build_ifc_index"](source, database)
+    with SQLiteIndexRepository.open(database) as repository:
+        assert repository.get_type_by_global_id(type_global_id) is None
+        matching = [
+            record
+            for record in repository.iter_type_records()
+            if record.ifc_global_id == type_global_id
+        ]
+        assert len(matching) == 2
+        assert all(not record.identity_reliable for record in matching)
+        assert sum(
+            diagnostic.code == "DUPLICATE_IFC_TYPE_GLOBAL_ID"
+            for diagnostic in repository.diagnostics()
+        ) == 2
 
 
 def test_non_ifc2x3_source_does_not_publish_database(tmp_path: Path) -> None:

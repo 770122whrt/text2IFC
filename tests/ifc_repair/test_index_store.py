@@ -11,6 +11,7 @@ SOURCE_HASH = "sha256:" + "1" * 64
 
 def _api() -> dict[str, object]:
     try:
+        import text2ifc_ifc_repair.index_models as index_models
         from text2ifc_ifc_repair.index_models import (
             INDEX_SCHEMA_VERSION,
             AliasFact,
@@ -26,6 +27,7 @@ def _api() -> dict[str, object]:
         )
     except ModuleNotFoundError:
         pytest.fail("Phase 7 index repository API is not implemented yet")
+    TypeRecord = getattr(index_models, "TypeRecord", None)
     return locals()
 
 
@@ -33,7 +35,7 @@ def _metadata(**changes: object) -> object:
     values = {
         "source_ifc_sha256": SOURCE_HASH,
         "ifc_schema": "IFC2X3",
-        "extractor_version": "text2ifc/ifc-indexer/0.1",
+        "extractor_version": "text2ifc/ifc-indexer/0.2",
         "source_size_bytes": 1234,
         "created_at": "2026-07-19T00:00:00Z",
     }
@@ -101,6 +103,48 @@ def _record(
     )
 
 
+def _type_record(
+    global_id: str = "0AAAAAAAAAAAAAAAAAAAAA",
+    *,
+    record_id: str | None = None,
+    reliable: bool = True,
+) -> object:
+    api = _api()
+    TypeRecord = api["TypeRecord"]
+    assert TypeRecord is not None, "TypeRecord must be a first-class index model"
+    return TypeRecord(
+        record_id=record_id or f"type:{global_id}",
+        ifc_global_id=global_id,
+        identity_reliable=reliable,
+        ifc_class="IfcWindowStyle",
+        name="M_Fixed:0915 x 1830mm",
+        applicable_occurrence=None,
+        predefined_type=None,
+        element_type=None,
+        provenance={"source": "current_ifc", "step_id": 13039},
+        aliases=(
+            api["AliasFact"](
+                normalized_value="m fixed 0915 x 1830mm",
+                original_value="M_Fixed:0915 x 1830mm",
+                field="name",
+                provenance="IfcTypeObject.Name",
+            ),
+        ),
+        properties=(
+            api["PropertyFact"](
+                set_kind="pset",
+                set_name="Dimensions",
+                property_name="Width",
+                value=915.0,
+                value_type="IfcLengthMeasure",
+                unit=None,
+                inherited=False,
+                provenance="ifcopenshell.util.element.get_psets:direct",
+            ),
+        ),
+    )
+
+
 def test_repository_round_trips_versioned_element_records(tmp_path: Path) -> None:
     api = _api()
     SQLiteIndexRepository = api["SQLiteIndexRepository"]
@@ -134,7 +178,64 @@ def test_repository_round_trips_versioned_element_records(tmp_path: Path) -> Non
         )
         assert repository.diagnostics()[0].code == "INDEX_GEOMETRY_UNAVAILABLE"
 
-    assert api["INDEX_SCHEMA_VERSION"] == "text2ifc/ifc-index/0.1"
+    assert api["INDEX_SCHEMA_VERSION"] == "text2ifc/ifc-index/0.2"
+
+
+def test_repository_round_trips_type_records_in_dedicated_tables(tmp_path: Path) -> None:
+    api = _api()
+    SQLiteIndexRepository = api["SQLiteIndexRepository"]
+    database = tmp_path / "types.sqlite"
+    type_record = _type_record()
+    level_2 = replace(
+        _record("2BBBBBBBBBBBBBBBBBBBBB"),
+        type_global_id=type_record.ifc_global_id,
+        storey_name="Level 2",
+    )
+    level_1 = replace(
+        _record("1AAAAAAAAAAAAAAAAAAAAA"),
+        type_global_id=type_record.ifc_global_id,
+        storey_name="Level 1",
+    )
+
+    with SQLiteIndexRepository.create(database, _metadata()) as repository:
+        repository.put_type_record(type_record)
+        repository.put_record(level_2)
+        repository.put_record(level_1)
+        repository.publish()
+
+    with SQLiteIndexRepository.open(database) as repository:
+        assert repository.get_type_by_global_id(type_record.ifc_global_id) == type_record
+        assert list(repository.iter_type_records()) == [type_record]
+        assert repository.find_type_aliases("m fixed 0915 x 1830mm") == [type_record]
+        assert repository.type_occurrence_summary(type_record.ifc_global_id) == (
+            2,
+            ("Level 1", "Level 2"),
+        )
+        assert list(repository.iter_records()) == [level_1, level_2]
+
+
+def test_repository_orders_type_records_and_denies_unreliable_lookup(tmp_path: Path) -> None:
+    SQLiteIndexRepository = _api()["SQLiteIndexRepository"]
+    database = tmp_path / "types.sqlite"
+    second = _type_record("2BBBBBBBBBBBBBBBBBBBBB")
+    first = _type_record("1AAAAAAAAAAAAAAAAAAAAA")
+    unreliable = _type_record(
+        "0CCCCCCCCCCCCCCCCCCCCC", record_id="diagnostic:type:42", reliable=False
+    )
+
+    with SQLiteIndexRepository.create(database, _metadata()) as repository:
+        repository.put_type_record(second)
+        repository.put_type_record(unreliable)
+        repository.put_type_record(first)
+        repository.publish()
+
+    with SQLiteIndexRepository.open(database) as repository:
+        assert [record.record_id for record in repository.iter_type_records()] == [
+            unreliable.record_id,
+            first.record_id,
+            second.record_id,
+        ]
+        assert repository.get_type_by_global_id(unreliable.ifc_global_id) is None
 
 
 def test_repository_orders_records_independent_of_insert_order(tmp_path: Path) -> None:
@@ -220,3 +321,21 @@ def test_open_rejects_source_and_schema_version_mismatch(tmp_path: Path) -> None
             database, expected_index_schema_version="text2ifc/ifc-index/9.9"
         )
     assert version_error.value.code == "INDEX_SCHEMA_VERSION_MISMATCH"
+
+
+def test_open_rejects_stale_v01_index_with_exact_failure_code(tmp_path: Path) -> None:
+    api = _api()
+    database = tmp_path / "stale.sqlite"
+    with api["SQLiteIndexRepository"].create(
+        database,
+        _metadata(index_schema_version="text2ifc/ifc-index/0.1"),
+    ) as repository:
+        repository.put_record(_record())
+        repository.publish()
+
+    with pytest.raises(api["IndexStoreError"]) as caught:
+        api["SQLiteIndexRepository"].open(
+            database,
+            expected_index_schema_version=api["INDEX_SCHEMA_VERSION"],
+        )
+    assert caught.value.code == "INDEX_SCHEMA_VERSION_MISMATCH"
