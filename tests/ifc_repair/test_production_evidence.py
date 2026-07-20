@@ -321,6 +321,7 @@ def test_explicit_request_prototype_is_authorized_with_distinct_provenance() -> 
                 "kind": "user_authorized_prototype",
                 "global_id": "prototype-1",
                 "authorization": "explicit_request_reference",
+                "prototype_lookup": "type_global_id",
                 "request_provenance": {
                     "source_kind": "user_request",
                     "reference": "request:/prototype",
@@ -336,13 +337,37 @@ def test_explicit_request_prototype_is_authorized_with_distinct_provenance() -> 
         operations=(explicit,),
     )
 
-    evidence = _build(resolution=resolution)
+    inherited = PropertyFact(
+        set_kind="pset",
+        set_name="Pset_Fixture",
+        property_name="Marker",
+        value="prototype",
+        value_type="IfcLabel",
+        unit=None,
+        inherited=True,
+        provenance="ifcopenshell.util.element.get_psets",
+    )
+    evidence = _build(
+        resolution=resolution,
+        records_by_global_id={
+            "target-1": _record("target-1", "target", type_global_id="type-1"),
+            "host-1": _record("host-1", "host"),
+            "prototype-occurrence-1": _record(
+                "prototype-occurrence-1",
+                "prototype-instance-value",
+                type_global_id="prototype-1",
+                properties=(inherited,),
+            ),
+        },
+    )
     prototype = next(
         fact
         for fact in evidence.candidate_facts_by_operation["operation-1"]
         if fact.source_kind is EvidenceSourceKind.APPROVED_PROTOTYPE
     )
     assert "user_authorization:explicit_request_reference" in prototype.provenance
+    assert "explicit_type_binding:prototype-1" in prototype.provenance
+    assert prototype.inherited is True
 
 
 @pytest.mark.parametrize(

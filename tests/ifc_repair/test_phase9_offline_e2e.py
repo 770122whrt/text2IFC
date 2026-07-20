@@ -3,6 +3,10 @@ from __future__ import annotations
 import hashlib
 import json
 import shutil
+import threading
+import time
+import traceback
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -11,6 +15,7 @@ import pytest
 
 from text2ifc_ifc_repair.api import RepairAPI
 from text2ifc_ifc_repair.repair_intent import RepairIntent, fingerprint_text, hash_request
+from text2ifc_ifc_repair.run_models import RunStage, RunStoreCode, RunStoreError
 
 
 def _source(path: Path, *, name: str = "North wall") -> str:
@@ -258,6 +263,98 @@ def test_add_detail_can_span_two_real_api_clarification_rounds(tmp_path: Path) -
     assert len(resume_bindings) == 2
 
 
+def test_concurrent_clarification_attempt_cannot_overwrite_winner_bindings(
+    tmp_path: Path,
+) -> None:
+    source = tmp_path / "ambiguous-race.ifc"
+    selected_id = _source(source, name="same wall")
+    model = ifcopenshell.open(str(source))
+    model.create_entity("IfcWall", GlobalId="0000000000000000000003", Name="same wall")
+    model.write(str(source))
+    calls = {"stage1": 0, "stage2": 0, "apply": 0, "evaluation": 0}
+    api = _api(
+        tmp_path,
+        operation_count=1,
+        apply_ok=True,
+        publishable=True,
+        calls=calls,
+        target_names=["same wall"],
+    )
+    call_lock = threading.Lock()
+
+    def intent_stage(**kwargs):
+        with call_lock:
+            calls["stage1"] += 1
+            call_number = calls["stage1"]
+        intent = _intent(
+            kwargs["request_id"], kwargs["repair_request"], ["same wall"], kwargs["registry"]
+        )
+        if call_number > 1:
+            document = intent.to_dict()
+            document["operations"][0]["target_query"].pop("names", None)
+            document["operations"][0]["target_query"]["global_id"] = selected_id
+            intent = RepairIntent.from_dict(document, registry=kwargs["registry"])
+        return {"valid": True, "intent": intent}
+
+    api._intent_stage = intent_stage
+    pending = api.start(source, "repair same wall")
+    assert pending.clarification is not None
+    original_prepare = api.store.prepare_stage_directory
+
+    def retrying_prepare(*args, **kwargs):
+        for _ in range(100):
+            try:
+                return original_prepare(*args, **kwargs)
+            except RunStoreError as error:
+                if error.code != RunStoreCode.LOCKED.value:
+                    raise
+                time.sleep(0.01)
+        raise AssertionError("stage preparation did not become available")
+
+    api.store.prepare_stage_directory = retrying_prepare
+    original_continue = api.store.continue_with_answer
+    at_compare_and_swap = threading.Barrier(2)
+
+    def synchronized_continue(*args, **kwargs):
+        at_compare_and_swap.wait(timeout=10)
+        return original_continue(*args, **kwargs)
+
+    api.store.continue_with_answer = synchronized_continue
+
+    def resume(detail: str):
+        return api.continue_with_answer(
+            pending.run_id,
+            {"kind": "add_detail", "detail": detail},
+            clarification_id=pending.clarification.clarification_id,
+            expected_state_version=pending.state_version,
+        )
+
+    with ThreadPoolExecutor(max_workers=2) as pool:
+        futures = [pool.submit(resume, "east side"), pool.submit(resume, "west side")]
+        outcomes = []
+        failures = []
+        for future in futures:
+            try:
+                outcomes.append(future.result(timeout=30))
+            except Exception as error:
+                failures.append(error)
+
+    assert len(outcomes) == 1 and outcomes[0].status == "succeeded", "\n".join(
+        "".join(traceback.format_exception(error)) for error in failures
+    )
+    assert len(failures) == 1
+    state = api.store.load(pending.run_id)
+    assert state.stage is not RunStage.CLARIFICATION_REQUIRED
+    run_dir = api.store.runs_root / pending.run_id
+    bound_contexts = [
+        transition.stage_payload["api_context"]["path"]
+        for transition in state.transitions
+        if "api_context" in transition.stage_payload
+    ]
+    assert len(bound_contexts) == len(set(bound_contexts))
+    assert all((run_dir / path).is_file() for path in bound_contexts)
+
+
 def test_public_api_reaches_explicit_prototype_authorization(tmp_path: Path) -> None:
     source = tmp_path / "prototype.ifc"
     _source(source)
@@ -307,3 +404,12 @@ def test_early_invalid_input_publishes_evaluation_and_hash_bound_manifest(tmp_pa
     assert evaluation["schema_version"] == "text2ifc/ifc-repair-evaluation-public/0.2"
     assert evaluation["successful_artifact_publishable"] is False
     assert api.read_result(result.run_id) == result
+
+
+def test_public_api_cannot_disable_durable_terminal_publication(tmp_path: Path) -> None:
+    with pytest.raises(ValueError, match="DURABLE_PUBLICATION_CANNOT_BE_DISABLED"):
+        RepairAPI(
+            tmp_path / "output",
+            provider=object(),
+            orchestrator_options={"defer_publication": False},
+        )

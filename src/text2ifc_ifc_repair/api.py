@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import uuid
 from pathlib import Path
 from typing import Any, Callable, Mapping
 
@@ -54,8 +55,11 @@ class RepairAPI:
         self._index_stage = index_stage
         self._changeset_stage = changeset_stage
         self._orchestrator_factory = orchestrator_factory
-        self._orchestrator_options = {"defer_publication": True}
-        self._orchestrator_options.update(dict(orchestrator_options or {}))
+        requested_options = dict(orchestrator_options or {})
+        if requested_options.get("defer_publication") is False:
+            raise ValueError("DURABLE_PUBLICATION_CANNOT_BE_DISABLED")
+        requested_options["defer_publication"] = True
+        self._orchestrator_options = requested_options
 
     @classmethod
     def from_environment(
@@ -177,6 +181,8 @@ class RepairAPI:
         repair_text = str(context["repair_text"])
         intent_document = dict(context["intent"])
         kind = str(answer.get("kind", ""))
+        attempt_id = uuid.uuid4().hex
+        resume_intent_ref: str | None = None
         if kind == "select_candidate":
             token = str(answer.get("candidate_token", ""))
             selected = next((item for item in clarification.candidates if item.token == token), None)
@@ -196,8 +202,12 @@ class RepairAPI:
         elif kind == "add_detail":
             repair_text = f"{repair_text}\n补充说明：{str(answer['detail']).strip()}"
             resume_version = expected_state_version + 1
-            intent_root = self.store.prepare_stage_directory(run_id, "intent")
-            resume_dir = intent_root / f"resume-{resume_version:03d}"
+            resume_intent_ref = (
+                f"intent/resume-{resume_version:03d}-{attempt_id}/repair-intent.json"
+            )
+            resume_dir = self.store.prepare_stage_directory(
+                run_id, str(Path(resume_intent_ref).parent).replace("\\", "/")
+            )
             generated = self._intent_stage(
                 provider=self.provider,
                 request_id=str(intent_document["request_id"]),
@@ -223,7 +233,7 @@ class RepairAPI:
         intent = RepairIntent.from_dict(intent_document, registry=self.registry)
         context_ref = self._write_context(
             run_dir, repair_text=repair_text, intent=intent,
-            name=f"api-context-v{expected_state_version + 1:03d}.json",
+            name=f"api-context-v{expected_state_version + 1:03d}-{attempt_id}.json",
         )
         resume_payload: dict[str, Any] = {
             "api_context": self.store.artifact_binding(
@@ -231,9 +241,10 @@ class RepairAPI:
             )
         }
         if kind == "add_detail":
+            assert resume_intent_ref is not None
             resume_payload["intent"] = self.store.artifact_binding(
                 run_id,
-                f"intent/resume-{expected_state_version + 1:03d}/repair-intent.json",
+                resume_intent_ref,
                 "text2ifc/ifc-repair-intent/0.1",
             )
         if kind in {"cancel", "eof"}:

@@ -887,13 +887,23 @@ class RunStore:
     @contextmanager
     def _exclusive_lock(self, run_dir: Path) -> Iterator[None]:
         lock_path = run_dir / ".transition.lock"
-        descriptor = os.open(lock_path, os.O_CREAT | os.O_RDWR)
+        try:
+            descriptor = os.open(lock_path, os.O_CREAT | os.O_RDWR)
+        except OSError as error:
+            raise RunStoreError(
+                RunStoreCode.LOCKED, "run mutation lock cannot be opened"
+            ) from error
         try:
             if os.name == "nt":
                 import msvcrt
                 os.lseek(descriptor, 0, os.SEEK_SET)
                 if os.fstat(descriptor).st_size == 0:
-                    os.write(descriptor, b"0")
+                    try:
+                        os.write(descriptor, b"0")
+                    except OSError as error:
+                        raise RunStoreError(
+                            RunStoreCode.LOCKED, "run mutation lock is being initialized"
+                        ) from error
                 os.lseek(descriptor, 0, os.SEEK_SET)
                 try:
                     msvcrt.locking(descriptor, msvcrt.LK_NBLCK, 1)
@@ -905,7 +915,11 @@ class RunStore:
                     fcntl.flock(descriptor, fcntl.LOCK_EX | fcntl.LOCK_NB)
                 except OSError as error:
                     raise RunStoreError(RunStoreCode.LOCKED, "run mutation lock is held") from error
-            os.ftruncate(descriptor, 0)
+            # Keep the byte used by Windows locking present while metadata is
+            # refreshed.  A transient zero-length file lets a racing opener
+            # attempt an unauthorized pre-lock write.
+            os.ftruncate(descriptor, 1)
+            os.lseek(descriptor, 1, os.SEEK_SET)
             os.write(descriptor, f"pid={os.getpid()} nonce={uuid.uuid4().hex}\n".encode("ascii"))
             os.fsync(descriptor)
             yield

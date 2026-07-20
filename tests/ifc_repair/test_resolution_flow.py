@@ -211,11 +211,19 @@ def test_similarity_never_authorizes_prototype_but_explicit_answer_does(tmp_path
 
 
 @pytest.mark.parametrize(
-    ("reference_kind", "reference"),
-    [("global_id", "0TYPEAAAAAAAAAAAAAAAAA"), ("type_name", "Fixture Type")],
+    ("reference_kind", "reference", "expected_id", "expected_lookup"),
+    [
+        ("global_id", "0TYPEAAAAAAAAAAAAAAAAA", "0TYPEAAAAAAAAAAAAAAAAA", "type_global_id"),
+        ("type_name", "Fixture Type", "0TYPEAAAAAAAAAAAAAAAAA", "type_global_id"),
+        ("global_id", "0BBBBBBBBBBBBBBBBBBBBB", "0BBBBBBBBBBBBBBBBBBBBB", "ifc_global_id"),
+    ],
 )
 def test_explicit_named_prototype_is_resolved_with_request_provenance(
-    tmp_path: Path, reference_kind: str, reference: str,
+    tmp_path: Path,
+    reference_kind: str,
+    reference: str,
+    expected_id: str,
+    expected_lookup: str,
 ) -> None:
     target = _record("0AAAAAAAAAAAAAAAAAAAAA", "target")
     prototype = _record("0BBBBBBBBBBBBBBBBBBBBB", "prototype", type_guid="0TYPEAAAAAAAAAAAAAAAAA")
@@ -233,6 +241,7 @@ def test_explicit_named_prototype_is_resolved_with_request_provenance(
     semantic = result.operations[0].authorized_semantics[-1]
     assert semantic["kind"] == "user_authorized_prototype"
     assert semantic["authorization"] == "explicit_request_reference"
-    assert semantic["global_id"] == "0TYPEAAAAAAAAAAAAAAAAA"
+    assert semantic["prototype_lookup"] == expected_lookup
+    assert semantic["global_id"] == expected_id
     assert semantic["request_provenance"]["reference"] == "request:/prototype"
 

@@ -236,13 +236,24 @@ def _operation_candidates(
             source_ref = f"formal-type:{global_id}"
             provenance = f"formal_type_binding:{authority.get('provenance', '')}"
         else:
-            record = _record(records_by_global_id, global_id, role=kind)
             authorization = str(authority.get("authorization", ""))
             if authorization not in {"stored_user_answer", "explicit_request_reference"}:
                 raise ProductionEvidenceError("PROTOTYPE_NOT_USER_APPROVED", global_id)
             source_kind = EvidenceSourceKind.APPROVED_PROTOTYPE
             source_ref = f"user-approved-prototype:{global_id}"
             provenance = f"user_authorization:{authorization}"
+            if authority.get("prototype_lookup") == "type_global_id":
+                facts.extend(
+                    _type_prototype_facts(
+                        records_by_global_id.values(),
+                        type_global_id=global_id,
+                        operation_id=operation_id,
+                        source_ref=source_ref,
+                        authority_provenance=provenance,
+                    )
+                )
+                continue
+            record = _record(records_by_global_id, global_id, role=kind)
         facts.extend(
             _record_facts(
                 record,
@@ -335,6 +346,54 @@ def _record_facts(
             source_kind=source_kind,
             source_ref=source_ref,
         )
+    )
+
+
+def _type_prototype_facts(
+    records: Any,
+    *,
+    type_global_id: str,
+    operation_id: str,
+    source_ref: str,
+    authority_provenance: str,
+) -> tuple[SemanticFact, ...]:
+    matches = tuple(
+        record for record in records if record.type_global_id == type_global_id
+    )
+    if not matches:
+        raise ProductionEvidenceError("PROTOTYPE_TYPE_NOT_INDEXED", type_global_id)
+    selected: dict[tuple[str, str], SemanticFact] = {}
+    values_by_key: dict[str, set[str]] = {}
+    for record in matches:
+        for fact in semantic_facts_from_element_record(
+            record,
+            source_kind=EvidenceSourceKind.APPROVED_PROTOTYPE,
+            source_ref=source_ref,
+        ):
+            if not fact.inherited and fact.fact_key != "relationship:type":
+                continue
+            rendered = repr(fact.value)
+            values_by_key.setdefault(fact.fact_key, set()).add(rendered)
+            selected.setdefault((fact.fact_key, rendered), fact)
+    conflicting = sorted(key for key, values in values_by_key.items() if len(values) > 1)
+    if conflicting:
+        raise ProductionEvidenceError(
+            "PROTOTYPE_TYPE_FACT_CONFLICT", f"{type_global_id}:{conflicting[0]}"
+        )
+    return tuple(
+        SemanticFact(
+            **{
+                **fact.__dict__,
+                "source_ref": source_ref,
+                "provenance": (
+                    *fact.provenance,
+                    f"explicit_type_binding:{type_global_id}",
+                    authority_provenance,
+                    f"operation:{operation_id}",
+                ),
+            }
+        )
+        for fact in sorted(selected.values(), key=_fact_key)
     )
 
 

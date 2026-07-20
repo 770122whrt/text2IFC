@@ -332,16 +332,26 @@ def _escape_json_pointer_token(value: str) -> str:
 def _explicit_prototype(repository: IndexRepository, prototype: Any) -> tuple[str, Any]:
     records = [item for item in repository.iter_records() if item.identity_reliable]
     if prototype.reference_kind == "global_id":
-        matches = [item for item in records if prototype.reference in {item.ifc_global_id, item.type_global_id}]
-        prototype_ids = {prototype.reference} if matches else set()
+        product_matches = [item for item in records if item.ifc_global_id == prototype.reference]
+        type_matches = [item for item in records if item.type_global_id == prototype.reference]
+        if product_matches:
+            matches = product_matches
+            prototype_ids = {prototype.reference}
+            lookup_kind = "ifc_global_id"
+        else:
+            matches = type_matches
+            prototype_ids = {prototype.reference} if type_matches else set()
+            lookup_kind = "type_global_id"
     else:
         matches = [item for item in records if (item.type_name or "").casefold() == prototype.reference.casefold()]
         prototype_ids = {str(item.type_global_id) for item in matches if item.type_global_id}
+        lookup_kind = "type_global_id"
     if len(prototype_ids) == 1:
         return "resolved", {
             "kind": "user_authorized_prototype",
             "global_id": next(iter(prototype_ids)),
             "authorization": "explicit_request_reference",
+            "prototype_lookup": lookup_kind,
             "request_provenance": prototype.source.to_dict(),
         }
     if len(prototype_ids) > 1:

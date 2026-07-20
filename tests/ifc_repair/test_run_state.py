@@ -389,7 +389,7 @@ def test_terminal_manifest_and_referenced_content_are_verified(store: RunStore, 
 
 @pytest.mark.parametrize(
     "fault_point",
-    ("after_promotion", "before_state_replace", "after_state_replace"),
+    ("after_journal", "after_promotion", "before_state_replace", "after_state_replace"),
 )
 def test_terminal_publication_recovers_across_every_commit_crash_window(
     store: RunStore, source: Path, fault_point: str
