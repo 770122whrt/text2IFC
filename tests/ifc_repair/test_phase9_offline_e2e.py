@@ -359,7 +359,21 @@ def test_public_api_reaches_explicit_prototype_authorization(tmp_path: Path) -> 
     source = tmp_path / "prototype.ifc"
     _source(source)
     model = ifcopenshell.open(str(source))
-    model.create_entity("IfcWall", GlobalId="0000000000000000000003", Name="Prototype wall")
+    prototype_wall = model.create_entity(
+        "IfcWall", GlobalId="0000000000000000000003", Name="Prototype wall"
+    )
+    prototype_type = model.create_entity(
+        "IfcWallType",
+        GlobalId="0000000000000000000004",
+        Name="Prototype wall type",
+        PredefinedType="NOTDEFINED",
+    )
+    model.create_entity(
+        "IfcRelDefinesByType",
+        GlobalId="0000000000000000000005",
+        RelatedObjects=[prototype_wall],
+        RelatingType=prototype_type,
+    )
     model.write(str(source))
     calls = {"stage1": 0, "stage2": 0, "apply": 0, "evaluation": 0}
     prototype = {
@@ -376,6 +390,11 @@ def test_public_api_reaches_explicit_prototype_authorization(tmp_path: Path) -> 
     assert clarification is not None
     assert clarification.reason_code == "prototype_selection"
     assert clarification.answer_modes == ("authorize_prototype", "cancel")
+    assert len(clarification.candidates) == 1
+    assert clarification.candidates[0].public_id == str(prototype_type.GlobalId)
+    assert clarification.candidates[0].candidate_kind == "type"
+    assert clarification.candidates[0].occurrence_count == 1
+    assert clarification.candidates[0].storeys == ()
 
     result = api.continue_with_answer(
         pending.run_id,
