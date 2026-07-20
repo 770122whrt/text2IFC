@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: IFC ChangeSet Repair Pipeline
-status: Ready to execute
-last_updated: "2026-07-20T16:04:18.788Z"
+status: Ready to plan
+last_updated: "2026-07-21T01:30:00+08:00"
 progress:
   total_phases: 8
-  completed_phases: 3
+  completed_phases: 4
   total_plans: 17
-  completed_plans: 16
-  percent: 94
+  completed_plans: 17
+  percent: 100
 ---
 
 # Project State
@@ -21,21 +21,21 @@ See `.planning/PROJECT.md`.
 **Core value:** Given an IFC file and an explicit user request, produce a
 traceable semantic ChangeSet and an L1/L2-validated IFC result.
 
-**Current focus:** Phase 09.1 — IFC Type Evidence and Prototype Resolution Correction
+**Current focus:** Phase 10 — Window L2 Semantic Fidelity Closure
 
 ## Current Position
 
-Phase: 09.1 (IFC Type Evidence and Prototype Resolution Correction) — EXECUTING
-Plan: 4 of 4
+Phase: 10 (Window L2 Semantic Fidelity Closure) — READY TO PLAN
+Plan: 0 of 0
 
 - Milestone: v1.1 IFC ChangeSet Repair Pipeline
-- Phase: 09.1
-- Plan: 3 of 4 plans complete; Wave 3 ready
-- Status: TypeRecord index, resolution and Production Evidence complete
-- Progress: 3 / 8 phases complete
+- Phase: 10
+- Plan: Phase planning not started
+- Status: Phase 09.1 complete; Window semantic authoring handoff ready
+- Progress: 4 / 8 phases complete
 - Requirements: 11 pending, 14 complete, 25 mapped, 0 unmapped
-- Last activity: 2026-07-20 — Phase 09.1 inserted after the post-Phase 9
-  production-evidence diagnosis
+- Last activity: 2026-07-21 — Phase 09.1 completed with four-path real
+  DeepSeek UAT and LargeBuilding Type evidence correction
 
 ## Carried Context
 
@@ -55,11 +55,14 @@ Plan: 4 of 4
 - The Phase 9 LargeBuilding offline path is intentionally L1 `passed`, L2
   `not_evaluable`, L3 `not_required`, non-publishable and diagnostic-only.
 
-- The first Phase 9 real DeepSeek attempt ended truthfully at Stage 1 as
-  `provider_failed`. After the Stage 1 contract repair, complete-input and
-  clarification-feedback UAT paths both reached Stage 2, application and L2;
-  both remain non-publishable because the current index misclassifies
-  occurrence `Constraints.Level` facts as inherited Window Style facts.
+- Phase 09.1 separates TypeRecord authority from occurrence-direct facts. The
+  41-occurrence LargeBuilding Window Style no longer raises a false
+  `PROTOTYPE_TYPE_FACT_CONFLICT`.
+
+- Four real DeepSeek paths now reach Stage 2 and L2, including exact Type name
+  without GUID and a one-candidate dimensions confirmation. All remain
+  correctly non-publishable because genuine Window semantic authoring is still
+  missing.
 
 - Current DeepSeek input/output guards remain 65,536 tokens. The 128k
   experiment remains Phase 13.
@@ -79,8 +82,8 @@ Plan: 4 of 4
 
 ## Next Action
 
-Execute Phase 09.1 Plan 04: run LargeBuilding/no-GUID regression and live UAT,
-then document the Phase 10 semantic-authoring handoff.
+Discuss and plan Phase 10 Window L2 semantic authoring for base quantities,
+classification, width/height, host/instance and conditional material facts.
 
 ---
-*Last updated: 2026-07-20 after Phase 09.1 Plan 01 completion*
+*Last updated: 2026-07-21 after Phase 09.1 completion*

@@ -112,7 +112,7 @@ resolution human-readable before Window L2 authoring begins.
 
 **Depends on:** Phases 7 and 9
 
-**Plans:** 3/4 plans executed
+**Plans:** 4/4 plans executed
 
 Plans:
 
@@ -127,7 +127,7 @@ Plans:
 
 **Wave 3** *(blocked on both Wave 2 plans)*:
 
-- [ ] **09.1-04** - LargeBuilding closure, no-GUID UAT and Phase 10 handoff.
+- [x] **09.1-04** - LargeBuilding closure, no-GUID UAT and Phase 10 handoff.
 
 **Cross-cutting constraints:**
 
