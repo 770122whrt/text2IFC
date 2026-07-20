@@ -57,7 +57,7 @@ semantic ChangeSet and an L1/L2-validated IFC result.
 - [x] **TYPE-01**: The retrieval index distinguishes occurrence-direct facts
   from Type-inherited facts and retains source provenance for IFC2X3 Type
   objects such as `IfcWindowStyle`.
-- [ ] **TYPE-02**: Users can authorize a unique Prototype through a human-
+- [x] **TYPE-02**: Users can authorize a unique Prototype through a human-
   readable Type name or an evidence-bearing deduplicated clarification choice
   without being required to provide an IFC GUID.
 - [ ] **TYPE-03**: Production evidence reads only authorized Type facts and the
@@ -118,7 +118,7 @@ semantic ChangeSet and an L1/L2-validated IFC result.
 | PIPE-03 | 9 | Complete |
 | PIPE-04 | 9 | Complete |
 | TYPE-01 | 09.1 | Complete |
-| TYPE-02 | 09.1 | Pending |
+| TYPE-02 | 09.1 | Complete |
 | TYPE-03 | 09.1 | Pending |
 | WIN-01 | 10 | Pending |
 | WIN-02 | 10 | Pending |
