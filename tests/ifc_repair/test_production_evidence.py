@@ -12,7 +12,7 @@ from text2ifc_ifc_repair.evaluation_policy import (
     SemanticApplicability,
     SemanticFactSpec,
 )
-from text2ifc_ifc_repair.index_models import ElementRecord, PropertyFact
+from text2ifc_ifc_repair.index_models import ElementRecord, PropertyFact, TypeRecord
 from text2ifc_ifc_repair.production_evidence import (
     ProductionEvidenceError,
     build_production_evidence,
@@ -188,6 +188,27 @@ def _record(
     )
 
 
+def _type_record(
+    global_id: str,
+    value: object,
+    *,
+    properties: tuple[PropertyFact, ...] | None = None,
+    ifc_class: str = "IfcBuildingElementType",
+) -> TypeRecord:
+    return TypeRecord(
+        record_id=f"type:{global_id}",
+        ifc_global_id=global_id,
+        identity_reliable=True,
+        ifc_class=ifc_class,
+        name=global_id,
+        applicable_occurrence=None,
+        predefined_type=None,
+        element_type=None,
+        provenance={"source": "current_ifc", "step_id": 42},
+        properties=properties if properties is not None else (_property(value),),
+    )
+
+
 def _resolution(*, operation_id: str = "operation-1") -> ResolutionBatch:
     return ResolutionBatch(
         status="resolved",
@@ -257,8 +278,10 @@ def _build(**overrides: object):
         "records_by_global_id": {
             "target-1": _record("target-1", "target", type_global_id="type-1"),
             "host-1": _record("host-1", "host"),
-            "type-1": _record("type-1", "type"),
-            "prototype-1": _record("prototype-1", "prototype"),
+        },
+        "type_records_by_global_id": {
+            "type-1": _type_record("type-1", "type"),
+            "prototype-1": _type_record("prototype-1", "prototype"),
         },
         "deterministic_policy_facts_by_operation": {"operation-1": (_policy_fact(),)},
         "verified_absent_categories_by_operation": {
@@ -337,16 +360,18 @@ def test_explicit_request_prototype_is_authorized_with_distinct_provenance() -> 
         operations=(explicit,),
     )
 
-    inherited = PropertyFact(
+    type_marker = PropertyFact(
         set_kind="pset",
         set_name="Pset_Fixture",
         property_name="Marker",
         value="prototype",
         value_type="IfcLabel",
         unit=None,
-        inherited=True,
-        provenance="ifcopenshell.util.element.get_psets",
+        inherited=False,
+        provenance="ifcopenshell.util.element.get_psets:direct",
     )
+    direct_level_1 = _property("Level 1", set_name="Constraints", property_name="Level")
+    direct_level_2 = _property("Level 2", set_name="Constraints", property_name="Level")
     evidence = _build(
         resolution=resolution,
         records_by_global_id={
@@ -356,7 +381,19 @@ def test_explicit_request_prototype_is_authorized_with_distinct_provenance() -> 
                 "prototype-occurrence-1",
                 "prototype-instance-value",
                 type_global_id="prototype-1",
-                properties=(inherited,),
+                properties=(direct_level_1,),
+            ),
+            "prototype-occurrence-2": _record(
+                "prototype-occurrence-2",
+                "prototype-instance-value",
+                type_global_id="prototype-1",
+                properties=(direct_level_2,),
+            ),
+        },
+        type_records_by_global_id={
+            "type-1": _type_record("type-1", "type"),
+            "prototype-1": _type_record(
+                "prototype-1", "prototype", properties=(type_marker,)
             ),
         },
     )
@@ -366,8 +403,29 @@ def test_explicit_request_prototype_is_authorized_with_distinct_provenance() -> 
         if fact.source_kind is EvidenceSourceKind.APPROVED_PROTOTYPE
     )
     assert "user_authorization:explicit_request_reference" in prototype.provenance
-    assert "explicit_type_binding:prototype-1" in prototype.provenance
-    assert prototype.inherited is True
+    assert "type_record:prototype-1" in prototype.provenance
+    assert prototype.inherited is False
+    assert not any(
+        fact.fact_key == "pset:Constraints.Level"
+        for fact in evidence.candidate_facts_by_operation["operation-1"]
+        if fact.source_kind is EvidenceSourceKind.APPROVED_PROTOTYPE
+    )
+
+
+def test_contradictory_direct_type_facts_fail_closed() -> None:
+    conflict_type = _type_record(
+        "prototype-1",
+        "prototype",
+        properties=(_property("A"), _property("B")),
+    )
+    with pytest.raises(ProductionEvidenceError) as caught:
+        _build(
+            type_records_by_global_id={
+                "type-1": _type_record("type-1", "type"),
+                "prototype-1": conflict_type,
+            }
+        )
+    assert caught.value.code == "PROTOTYPE_TYPE_FACT_CONFLICT"
 
 
 @pytest.mark.parametrize(
