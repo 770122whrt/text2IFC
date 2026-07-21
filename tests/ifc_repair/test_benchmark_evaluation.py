@@ -283,7 +283,7 @@ def test_extraction_error_makes_conditional_pset_and_quantity_not_evaluable() ->
     affected = [
         check
         for check in checks
-        if check.check_id in {"window.pset", "window.quantity"}
+        if check.check_id in {"window.reference", "window.material"}
     ]
 
     assert len(affected) == 2

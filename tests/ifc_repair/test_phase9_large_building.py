@@ -9,8 +9,7 @@ import ifcopenshell
 from text2ifc_ifc_repair.api import RepairAPI
 from text2ifc_ifc_repair.geometry import opening_position_in_wall_mm
 from text2ifc_ifc_repair.mutation import remove_window_and_opening
-from text2ifc_ifc_repair.repair_intent import fingerprint_text, hash_request
-from text2ifc_agent.prompt_registry import load_prompt_registry
+from text2ifc_ifc_repair.repair_intent import hash_request
 from text2ifc_agent.providers import ProviderOutput
 
 
@@ -19,7 +18,7 @@ SOURCE = ROOT / "dataset" / "external" / "bim-whale-ifc-samples" / "LargeBuildin
 SOURCE_SHA256 = "102f8123f85eae5e237d7f6a9dcbc364bd5f1c0cfb94b40a7eeb2d7eac9bb725"
 
 
-def test_large_building_uses_public_api_and_keeps_current_l2_nonpublishable(tmp_path: Path) -> None:
+def test_large_building_uses_public_api_and_phase10_closes_l2(tmp_path: Path) -> None:
     original = ifcopenshell.open(str(SOURCE))
     window = next(item for item in original.by_type("IfcWindow") if item.FillsVoids and item.FillsVoids[0].RelatingOpeningElement.VoidsElements)
     opening = window.FillsVoids[0].RelatingOpeningElement
@@ -46,11 +45,7 @@ def test_large_building_uses_public_api_and_keeps_current_l2_nonpublishable(tmp_
             if stage == "ifc_repair_intent":
                 calls["stage1"] += 1
                 response = {
-                    "schema_version": "text2ifc/ifc-repair-intent/0.1",
-                    "request_id": kwargs["state"]["request_id"],
-                    "source_request_hash": hash_request(text),
-                    "model_fingerprint": fingerprint_text("raw-offline-model"),
-                    "prompt_fingerprint": load_prompt_registry()["ifc-repair-intent.v0.1"]["sha256"],
+                    "schema_version": "text2ifc/ifc-repair-intent-body/0.1",
                     "operations": [{
                         "operation_id": "operation-1", "operation_type": "add_window_with_opening_to_wall",
                         "target_query": {"schema_version": "text2ifc/ifc-target-query/0.1", "allowed_ifc_classes": ["IfcWall"], "global_id": str(wall.GlobalId)},
@@ -108,10 +103,10 @@ def test_large_building_uses_public_api_and_keeps_current_l2_nonpublishable(tmp_
     assert calls == {"stage1": 1, "stage2": 1}
     assert hashlib.sha256(SOURCE.read_bytes()).hexdigest() == SOURCE_SHA256
     assert "sha256:" + hashlib.sha256(caller_ifc.read_bytes()).hexdigest() == caller_hash
-    assert result.complete_repair_success is False
-    assert result.successful_artifact_publishable is False
-    assert "successful_ifc" not in result.artifacts
-    assert "diagnostic_candidate" in result.artifacts
+    assert result.complete_repair_success is True
+    assert result.successful_artifact_publishable is True
+    assert "successful_ifc" in result.artifacts
+    assert "diagnostic_candidate" not in result.artifacts
     run_dir = tmp_path / "output" / result.run_directory
     resolution = json.loads((run_dir / "resolution.json").read_text(encoding="utf-8"))
     prototype_authority = next(
@@ -125,5 +120,5 @@ def test_large_building_uses_public_api_and_keeps_current_l2_nonpublishable(tmp_
     assert "PROTOTYPE_TYPE_FACT_CONFLICT" not in json.dumps(evaluation)
     levels = {item["level"]: item["status"] for item in evaluation["operations"][0]["levels"]}
     assert levels["L1"] == "passed"
-    assert levels["L2"] in {"failed", "partial", "not_evaluable"}
+    assert levels["L2"] == "passed"
     assert levels["L3"] == "not_required"

@@ -165,3 +165,53 @@ def test_window_applicator_builds_centered_ifc2x3_chain_deterministically(
     assert window_evaluation["metrics"]["restored_void_volume_m3"] == 0.33489
     assert window_evaluation["checks"]["duplicate_chain_absent"] is True
     assert window_evaluation["checks"]["window_geometry_fits_opening"] is True
+
+
+def test_bound_semantic_failure_rolls_back_without_output(tmp_path: Path) -> None:
+    damaged, request, legacy = _repair_case(tmp_path)
+    operation = legacy["operations"][0]
+    assignment = {
+        "operation_id": operation["operation_id"],
+        "fact_key": "material:Missing",
+        "source_fact_key": "material:Missing",
+        "value": "Missing",
+        "value_type": "IfcMaterial",
+        "unit": None,
+        "ownership": "occurrence_direct",
+        "applicability": "conditional",
+        "source_kind": "authorized_type_cohort",
+        "source_ref": "resource:step:999999999",
+        "provenance": ["test:missing-resource"],
+        "authoring_action": "reuse_material",
+    }
+    bound_operation = {
+        **operation,
+        "semantic_manifest": {
+            "manifest_id": "manifest-rollback",
+            "policy_id": "window.add-with-opening.l2",
+            "policy_version": "0.2",
+        },
+        "semantic_assignments": [assignment],
+    }
+    bound = {
+        **legacy,
+        "schema_version": "text2ifc/ifc-repair-changeset/0.2",
+        "binding_status": "bound",
+        "semantic_manifest_ref": "semantic-manifest.json",
+        "semantic_manifest_sha256": "sha256:" + "c" * 64,
+        "operations": [bound_operation],
+    }
+    output = tmp_path / "must-not-exist.ifc"
+
+    result = apply_changeset(
+        damaged_ifc_path=damaged,
+        repair_request=request,
+        changeset=bound,
+        output_path=output,
+        registry=create_default_registry(),
+    )
+
+    assert result["valid"] is False
+    assert result["published"] is False
+    assert result["issues"][0]["code"] == "OPERATION_APPLICATION_FAILED"
+    assert not output.exists()

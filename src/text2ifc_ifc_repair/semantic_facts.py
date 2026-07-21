@@ -581,7 +581,7 @@ def _ifc_relationship_and_attribute_facts(
         category, attribute = fact_key.split(":", 1)
         value = getattr(element, attribute, None)
         if value is not None:
-            values.append((fact_key, value, _python_value_type(value, category)))
+            values.append((fact_key, value, _python_value_type(value, category, fact_key)))
     return tuple(
         SemanticFact(
             fact_key=fact_key,
@@ -738,7 +738,7 @@ def _semantic_facts_from_association(
             SemanticFact(
                 fact_key=f"material:{_key_token(str(name))}",
                 value=str(name),
-                value_type=association.resource_ifc_class,
+                value_type="IfcMaterial",
                 **common,
             )
             for name in names
@@ -779,7 +779,9 @@ def _normalize_fact_for_policy(
     )
 
 
-def _python_value_type(value: Any, category: str) -> str:
+def _python_value_type(value: Any, category: str, fact_key: str = "") -> str:
+    if fact_key in {"attribute:OverallWidth", "attribute:OverallHeight"}:
+        return "IfcPositiveLengthMeasure"
     if category == "label":
         return "IfcLabel"
     if isinstance(value, bool):

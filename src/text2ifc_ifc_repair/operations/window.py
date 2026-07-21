@@ -142,11 +142,9 @@ WINDOW_EVALUATION_POLICY_0_1 = OperationEvaluationPolicy(
     ),
 )
 
-_WINDOW_PRODUCTION_SOURCES = tuple(
-    source
-    for source in _AUTHORIZED_SEMANTIC_SOURCES
-    if source is not EvidenceSourceKind.PRIVATE_ORIGINAL
-) + (EvidenceSourceKind.AUTHORIZED_TYPE_COHORT,)
+_WINDOW_PRODUCTION_SOURCES = _AUTHORIZED_SEMANTIC_SOURCES + (
+    EvidenceSourceKind.AUTHORIZED_TYPE_COHORT,
+)
 
 
 def _semantic_spec_0_2(
@@ -238,6 +236,12 @@ WINDOW_L1_AUTHORIZATION = {
         "voids_relationship": "IfcRelVoidsElement",
         "fills_relationship": "IfcRelFillsElement",
         "window_type_relationship": "IfcRelDefinesByType",
+        "semantic_pset": "IfcPropertySet",
+        "semantic_pset_relationship": "IfcRelDefinesByProperties",
+        "semantic_quantities": "IfcElementQuantity",
+        "semantic_quantity_relationship": "IfcRelDefinesByProperties",
+        "semantic_material_relationship": "IfcRelAssociatesMaterial",
+        "semantic_classification_relationship": "IfcRelAssociatesClassification",
     },
     "modified": {
         "window_type_relationship": "IfcRelDefinesByType",
@@ -274,6 +278,22 @@ WINDOW_L1_AUTHORIZATION = {
         },
         "spatial_containment": {
             "ifc_class": "IfcRelContainedInSpatialStructure",
+            "added_endpoint_roles": ("window",),
+        },
+        "semantic_pset_relationship": {
+            "ifc_class": "IfcRelDefinesByProperties",
+            "added_endpoint_roles": ("window",),
+        },
+        "semantic_quantity_relationship": {
+            "ifc_class": "IfcRelDefinesByProperties",
+            "added_endpoint_roles": ("window",),
+        },
+        "semantic_material_relationship": {
+            "ifc_class": "IfcRelAssociatesMaterial",
+            "added_endpoint_roles": ("window",),
+        },
+        "semantic_classification_relationship": {
+            "ifc_class": "IfcRelAssociatesClassification",
             "added_endpoint_roles": ("window",),
         },
     },
@@ -326,8 +346,8 @@ def _semantic_policy_facts(*, operation: Mapping[str, Any]) -> tuple[Any, ...]:
     width = float(opening["width_mm"])
     height = float(opening["height_mm"])
     values = (
-        ("attribute:OverallWidth", width, "IfcPositiveLengthMeasure", "mm"),
-        ("attribute:OverallHeight", height, "IfcPositiveLengthMeasure", "mm"),
+        ("attribute:OverallWidth", width, "IfcPositiveLengthMeasure", None),
+        ("attribute:OverallHeight", height, "IfcPositiveLengthMeasure", None),
         ("quantity:window-base.Width", width, "IfcLengthMeasure", "mm"),
         ("quantity:window-base.Height", height, "IfcLengthMeasure", "mm"),
         ("quantity:window-base.Area", width * height, "IfcAreaMeasure", "mm2"),
@@ -557,7 +577,19 @@ def _applicator(*, operation: Mapping[str, Any], model: Any) -> dict[str, Any]:
         sill_mm=sill,
     )
 
-    window_type = _find_compatible_window_type(model, width=width, height=height)
+    bound_type_id = next(
+        (
+            str(item["value"])
+            for item in operation.get("semantic_assignments", ())
+            if item.get("fact_key") == "relationship:type"
+        ),
+        None,
+    )
+    window_type = (
+        _require_guid(model, bound_type_id, "IfcTypeObject")
+        if bound_type_id
+        else _find_compatible_window_type(model, width=width, height=height)
+    )
     window = model.create_entity(
         "IfcWindow",
         GlobalId=ids["window"],

@@ -12,6 +12,9 @@ import json
 import math
 from pathlib import Path
 from typing import Any, Mapping, Sequence
+import uuid
+
+import ifcopenshell.guid
 
 from jsonschema import Draft202012Validator
 
@@ -319,6 +322,216 @@ def _authoring_action(
     }[category]
 
 
+def apply_semantic_assignments(
+    *,
+    model: Any,
+    operation: Mapping[str, Any],
+    application: Mapping[str, Any],
+    target_role: str,
+) -> dict[str, Any]:
+    """Apply bound assignments through operation-neutral IFC2X3 graph primitives."""
+
+    if operation.get("semantic_assignments") is None:
+        return {"created": [], "skipped": []}
+    created_roles = {
+        str(item.get("role")): str(item.get("global_id"))
+        for item in application.get("created", ())
+    }
+    target_id = created_roles.get(target_role)
+    if not target_id:
+        raise SemanticManifestError("SEMANTIC_TARGET_ROLE_MISSING", target_role)
+    target = model.by_guid(target_id)
+    assignments = tuple(operation["semantic_assignments"])
+    skipped: list[str] = []
+    created: list[dict[str, str]] = []
+
+    for item in assignments:
+        if item["ownership"] == SemanticOwnership.TYPE_INHERITED.value:
+            skipped.append(str(item["fact_key"]))
+            continue
+        if item["authoring_action"] != SemanticAuthoringAction.SET_ATTRIBUTE.value:
+            continue
+        attribute = str(item["fact_key"]).split(":", 1)[1]
+        if not hasattr(target, attribute):
+            raise SemanticManifestError("SEMANTIC_ATTRIBUTE_UNSUPPORTED", attribute)
+        setattr(target, attribute, item["value"])
+
+    psets: dict[str, list[Mapping[str, Any]]] = {}
+    quantities: dict[str, list[Mapping[str, Any]]] = {}
+    for item in assignments:
+        if item["ownership"] == SemanticOwnership.TYPE_INHERITED.value:
+            continue
+        category, path = str(item["fact_key"]).split(":", 1)
+        if category == "pset":
+            set_name, _ = path.rsplit(".", 1)
+            psets.setdefault(set_name, []).append(item)
+        elif category == "quantity":
+            set_name, _ = path.rsplit(".", 1)
+            quantities.setdefault(set_name, []).append(item)
+
+    owner_history = getattr(target, "OwnerHistory", None)
+    requires_owner_history = bool(psets or quantities) or any(
+        item["ownership"] != SemanticOwnership.TYPE_INHERITED.value
+        and str(item["authoring_action"])
+        in {
+            SemanticAuthoringAction.REUSE_MATERIAL.value,
+            SemanticAuthoringAction.REUSE_CLASSIFICATION.value,
+        }
+        for item in assignments
+    )
+    if requires_owner_history and owner_history is None:
+        raise SemanticManifestError("SEMANTIC_OWNER_HISTORY_MISSING", target_id)
+    for set_name, members in sorted(psets.items()):
+        role = "semantic_pset"
+        pset = model.create_entity(
+            "IfcPropertySet",
+            GlobalId=_semantic_global_id(operation, f"{role}:{set_name}"),
+            OwnerHistory=owner_history,
+            Name=set_name,
+            HasProperties=[
+                model.create_entity(
+                    "IfcPropertySingleValue",
+                    Name=str(item["fact_key"]).rsplit(".", 1)[1],
+                    NominalValue=_ifc_typed_value(model, item),
+                )
+                for item in sorted(members, key=lambda value: value["fact_key"])
+            ],
+        )
+        relation = model.create_entity(
+            "IfcRelDefinesByProperties",
+            GlobalId=_semantic_global_id(operation, f"{role}:relationship:{set_name}"),
+            OwnerHistory=owner_history,
+            RelatedObjects=[target],
+            RelatingPropertyDefinition=pset,
+        )
+        created.extend(
+            (
+                {"role": role, "ifc_class": pset.is_a(), "global_id": str(pset.GlobalId)},
+                {"role": "semantic_pset_relationship", "ifc_class": relation.is_a(), "global_id": str(relation.GlobalId)},
+            )
+        )
+
+    for set_name, members in sorted(quantities.items()):
+        role = "semantic_quantities"
+        quantity_set_name = "BaseQuantities" if set_name == "window-base" else set_name
+        quantity_entities = []
+        for item in sorted(members, key=lambda value: value["fact_key"]):
+            name = str(item["fact_key"]).rsplit(".", 1)[1]
+            if name == "Area":
+                quantity_entities.append(model.create_entity("IfcQuantityArea", Name=name, AreaValue=float(item["value"])))
+            else:
+                quantity_entities.append(model.create_entity("IfcQuantityLength", Name=name, LengthValue=float(item["value"])))
+        quantity_set = model.create_entity(
+            "IfcElementQuantity",
+            GlobalId=_semantic_global_id(operation, f"{role}:{quantity_set_name}"),
+            OwnerHistory=owner_history,
+            Name=quantity_set_name,
+            Quantities=quantity_entities,
+        )
+        relation = model.create_entity(
+            "IfcRelDefinesByProperties",
+            GlobalId=_semantic_global_id(operation, f"{role}:relationship:{quantity_set_name}"),
+            OwnerHistory=owner_history,
+            RelatedObjects=[target],
+            RelatingPropertyDefinition=quantity_set,
+        )
+        created.extend(
+            (
+                {"role": role, "ifc_class": quantity_set.is_a(), "global_id": str(quantity_set.GlobalId)},
+                {"role": "semantic_quantity_relationship", "ifc_class": relation.is_a(), "global_id": str(relation.GlobalId)},
+            )
+        )
+
+    association_actions = {
+        SemanticAuthoringAction.REUSE_MATERIAL.value: (
+            "IfcRelAssociatesMaterial", "RelatingMaterial", "semantic_material_relationship"
+        ),
+        SemanticAuthoringAction.REUSE_CLASSIFICATION.value: (
+            "IfcRelAssociatesClassification", "RelatingClassification", "semantic_classification_relationship"
+        ),
+    }
+    grouped: dict[tuple[str, str], list[Mapping[str, Any]]] = {}
+    for item in assignments:
+        action = str(item["authoring_action"])
+        if item["ownership"] != SemanticOwnership.TYPE_INHERITED.value and action in association_actions:
+            grouped.setdefault((action, str(item["source_ref"])), []).append(item)
+    role_counts: dict[str, int] = {}
+    for (action, source_ref), _ in sorted(grouped.items()):
+        ifc_class, attribute, base_role = association_actions[action]
+        role_counts[base_role] = role_counts.get(base_role, 0) + 1
+        role = (
+            base_role
+            if role_counts[base_role] == 1
+            else f"{base_role}_{role_counts[base_role]}"
+        )
+        resource = _resolve_public_resource(model, source_ref)
+        relation = model.create_entity(
+            ifc_class,
+            GlobalId=_semantic_global_id(operation, role),
+            OwnerHistory=owner_history,
+            RelatedObjects=[target],
+            **{attribute: resource},
+        )
+        created.append({"role": role, "ifc_class": relation.is_a(), "global_id": str(relation.GlobalId)})
+
+    _verify_bound_relationships(model=model, target=target, assignments=assignments)
+    return {"created": created, "skipped": skipped}
+
+
+def _ifc_typed_value(model: Any, assignment: Mapping[str, Any]) -> Any:
+    value_type = str(assignment.get("value_type") or "IfcLabel")
+    try:
+        return model.create_entity(value_type, assignment["value"])
+    except Exception as error:
+        raise SemanticManifestError("SEMANTIC_VALUE_TYPE_UNSUPPORTED", value_type) from error
+
+
+def _resolve_public_resource(model: Any, source_ref: str) -> Any:
+    reference = source_ref.removeprefix("resource:")
+    if reference.startswith("guid:"):
+        resource = model.by_guid(reference.removeprefix("guid:"))
+    elif reference.startswith("step:"):
+        resource = model.by_id(int(reference.removeprefix("step:")))
+    else:
+        raise SemanticManifestError("SEMANTIC_RESOURCE_REF_INVALID", source_ref)
+    if resource is None:
+        raise SemanticManifestError("SEMANTIC_RESOURCE_NOT_FOUND", source_ref)
+    return resource
+
+
+def _verify_bound_relationships(*, model: Any, target: Any, assignments: Sequence[Mapping[str, Any]]) -> None:
+    for item in assignments:
+        if item["authoring_action"] != SemanticAuthoringAction.BIND_RELATIONSHIP.value:
+            continue
+        role = str(item["fact_key"]).split(":", 1)[1]
+        expected = str(item["value"])
+        if role == "host":
+            actual = {
+                str(relation.RelatingBuildingElement.GlobalId)
+                for opening in target.FillsVoids
+                for relation in opening.RelatingOpeningElement.VoidsElements
+            }
+        elif role == "storey":
+            actual = {str(relation.RelatingStructure.GlobalId) for relation in target.ContainedInStructure}
+        elif role == "type":
+            actual = {
+                str(relation.RelatingType.GlobalId)
+                for relation in target.IsDefinedBy
+                if relation.is_a("IfcRelDefinesByType")
+            }
+        else:
+            raise SemanticManifestError("SEMANTIC_RELATIONSHIP_UNSUPPORTED", role)
+        if actual != {expected}:
+            raise SemanticManifestError("SEMANTIC_RELATIONSHIP_MISMATCH", f"{role}:{expected}")
+
+
+def _semantic_global_id(operation: Mapping[str, Any], role: str) -> str:
+    canonical = json.dumps(operation, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+    value = uuid.uuid5(uuid.NAMESPACE_URL, f"https://text2ifc.local/ifc-repair/semantic/{role}/{canonical}")
+    global_id = ifcopenshell.guid.compress(value.hex)
+    return global_id
+
+
 def _validate_assignment_semantics(payload: Any, *, operation_id: str, index: int) -> None:
     if not isinstance(payload, Mapping):
         raise SemanticManifestError("INVALID_SEMANTIC_ASSIGNMENT", str(index))
@@ -381,6 +594,7 @@ __all__ = [
     "SemanticOwnership",
     "load_semantic_manifest_schema",
     "build_semantic_manifest",
+    "apply_semantic_assignments",
     "order_semantic_assignments",
     "parse_semantic_manifest",
     "semantic_assignment_identity",
