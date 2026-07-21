@@ -224,6 +224,7 @@ WINDOW_EVALUATION_POLICY = OperationEvaluationPolicy(
         "material:*",
         "classification:*",
     ),
+    target_authority_mode="host_for_created_entity",
 )
 
 WINDOW_L1_POLICY_ID = "window.add-with-opening.l1"
@@ -313,6 +314,38 @@ def window_operation_definition() -> OperationDefinition:
             "requested_geometry_matches",
         ),
         evaluation_policy=WINDOW_EVALUATION_POLICY,
+        semantic_policy_fact_builder=_semantic_policy_facts,
+    )
+
+
+def _semantic_policy_facts(*, operation: Mapping[str, Any]) -> tuple[Any, ...]:
+    from text2ifc_ifc_repair.semantic_facts import SemanticFact
+
+    operation_id = str(operation["operation_id"])
+    opening = operation["parameters"]["opening"]
+    width = float(opening["width_mm"])
+    height = float(opening["height_mm"])
+    values = (
+        ("attribute:OverallWidth", width, "IfcPositiveLengthMeasure", "mm"),
+        ("attribute:OverallHeight", height, "IfcPositiveLengthMeasure", "mm"),
+        ("quantity:window-base.Width", width, "IfcLengthMeasure", "mm"),
+        ("quantity:window-base.Height", height, "IfcLengthMeasure", "mm"),
+        ("quantity:window-base.Area", width * height, "IfcAreaMeasure", "mm2"),
+    )
+    return tuple(
+        SemanticFact(
+            fact_key=fact_key,
+            value=value,
+            value_type=value_type,
+            unit=unit,
+            inherited=False,
+            pset_path=None,
+            entity_source=f"resolved-operation:{operation_id}",
+            source_kind=EvidenceSourceKind.DETERMINISTIC_POLICY,
+            source_ref=f"resolved:/operations/{operation_id}/parameters/opening",
+            provenance=(f"operation:{operation_id}", "registered-window-parameter-policy:0.2"),
+        )
+        for fact_key, value, value_type, unit in values
     )
 
 

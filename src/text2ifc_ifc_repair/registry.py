@@ -55,6 +55,7 @@ class OperationDefinition:
     postcondition_names: tuple[str, ...] = ()
     evaluation_policy: OperationEvaluationPolicy | None = None
     semantic_manifest_builder: OperationCallable | None = None
+    semantic_policy_fact_builder: OperationCallable | None = None
 
     def __post_init__(self) -> None:
         if not self.operation_type or not self.target_ifc_classes:
@@ -83,6 +84,12 @@ class OperationDefinition:
         ):
             raise OperationRegistryError(
                 "INVALID_SEMANTIC_MANIFEST_BUILDER", self.operation_type
+            )
+        if self.semantic_policy_fact_builder is not None and not callable(
+            self.semantic_policy_fact_builder
+        ):
+            raise OperationRegistryError(
+                "INVALID_SEMANTIC_POLICY_FACT_BUILDER", self.operation_type
             )
 
 
@@ -159,6 +166,14 @@ class OperationRegistry:
 
             builder = build_semantic_manifest
         return builder(registry=self, **kwargs)
+
+    def build_semantic_policy_facts(
+        self, operation_type: str, *, operation: Mapping[str, Any]
+    ) -> tuple[Any, ...]:
+        builder = self.require(operation_type).semantic_policy_fact_builder
+        if builder is None:
+            return ()
+        return tuple(builder(operation=operation))
 
     def validate_parameters(
         self,

@@ -189,15 +189,46 @@ def _operation_candidates(
     ]
     target_id = resolved_operation.target_global_id
     target = _record(records_by_global_id, target_id, role="target")
-    facts.extend(
-        _record_facts(
-            target,
-            operation_id=operation_id,
-            source_kind=EvidenceSourceKind.SURVIVING_TARGET,
-            source_ref=f"current-target:{target_id}",
-            authority_provenance="resolved_current_target",
+    if policy.target_authority_mode == "host_for_created_entity":
+        facts.append(
+            SemanticFact(
+                fact_key="relationship:host",
+                value=target_id,
+                value_type=target.ifc_class,
+                unit=None,
+                inherited=False,
+                pset_path=None,
+                entity_source=f"{target.ifc_class}:{target_id}",
+                source_kind=EvidenceSourceKind.SURVIVING_TARGET,
+                source_ref=f"current-target:{target_id}",
+                provenance=(f"resolved-host-target:{target_id}", f"operation:{operation_id}"),
+            )
         )
-    )
+        if target.storey_global_id:
+            facts.append(
+                SemanticFact(
+                    fact_key="relationship:storey",
+                    value=target.storey_global_id,
+                    value_type="IfcBuildingStorey",
+                    unit=None,
+                    inherited=False,
+                    pset_path=None,
+                    entity_source=f"{target.ifc_class}:{target_id}",
+                    source_kind=EvidenceSourceKind.SURVIVING_TARGET,
+                    source_ref=f"current-target-storey:{target.storey_global_id}",
+                    provenance=(f"resolved-host-target:{target_id}", f"operation:{operation_id}"),
+                )
+            )
+    else:
+        facts.extend(
+            _record_facts(
+                target,
+                operation_id=operation_id,
+                source_kind=EvidenceSourceKind.SURVIVING_TARGET,
+                source_ref=f"current-target:{target_id}",
+                authority_provenance="resolved_current_target",
+            )
+        )
 
     host_ids = _host_ids(operation_intent.target_query.host_global_id, target)
     for host_id in host_ids:
@@ -238,7 +269,10 @@ def _operation_candidates(
             )
         global_id = str(authority.get("global_id", ""))
         if kind == "formal_type_binding":
-            if target.type_global_id != global_id:
+            if (
+                policy.target_authority_mode == "edited_entity"
+                and target.type_global_id != global_id
+            ):
                 raise ProductionEvidenceError("FORMAL_TYPE_BINDING_MISMATCH", global_id)
             source_kind = EvidenceSourceKind.SURVIVING_TYPE
             source_ref = f"formal-type:{global_id}"
@@ -253,6 +287,18 @@ def _operation_candidates(
         type_record = _type_record(
             type_records_by_global_id, global_id, role=kind
         )
+        created_type_authority = (
+            policy.target_authority_mode == "host_for_created_entity"
+            and kind == "user_authorized_prototype"
+        ) or (
+            policy.target_authority_mode == "edited_entity"
+            and kind == "formal_type_binding"
+        )
+        if (
+            policy.target_authority_mode == "host_for_created_entity"
+            and kind == "formal_type_binding"
+        ):
+            continue
         facts.extend(
             _authorized_type_facts(
                 type_record,
@@ -262,7 +308,21 @@ def _operation_candidates(
                 authority_provenance=provenance,
             )
         )
-        if kind == "formal_type_binding":
+        if created_type_authority:
+            facts.append(
+                SemanticFact(
+                    fact_key="relationship:type",
+                    value=global_id,
+                    value_type=type_record.ifc_class,
+                    unit=None,
+                    inherited=True,
+                    pset_path=None,
+                    entity_source=f"{type_record.ifc_class}:{global_id}",
+                    source_kind=source_kind,
+                    source_ref=source_ref,
+                    provenance=(provenance, f"operation:{operation_id}"),
+                )
+            )
             facts.extend(
                 _authorized_type_cohort_facts(
                     type_global_id=global_id,
@@ -425,7 +485,10 @@ def _authorized_type_cohort_facts(
         ):
             if fact.inherited:
                 continue
-            normalization = normalize_policy_fact_key(policy, fact.fact_key)
+            try:
+                normalization = normalize_policy_fact_key(policy, fact.fact_key)
+            except ValueError:
+                continue
             normalized_key = normalization.fact_key
             if not any(fnmatchcase(normalized_key, pattern) for pattern in patterns):
                 continue
@@ -530,7 +593,11 @@ def _applicability(
     for spec in policy.semantic_facts:
         present = any(fnmatchcase(fact.fact_key, spec.fact_pattern) for fact in selected)
         category = spec.fact_pattern.split(":", 1)[0]
-        absence_verified = category in verified_absent
+        absence_verified = (
+            category in verified_absent
+            or spec.check_id in verified_absent
+            or spec.fact_pattern in verified_absent
+        )
         if present:
             outcome = "evaluable"
         elif spec.applicability is SemanticApplicability.REQUIRED:

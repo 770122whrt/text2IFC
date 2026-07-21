@@ -27,7 +27,7 @@
       "role": "ifc_repair_generator",
       "mode": "bound_changeset",
       "path": "prompts/agent/ifc-repair-changeset-v0.2.md",
-      "sha256": "sha256:958f7f38be22d7c89a90112dcd811620c706a209ec4dc506b4980e395693de44",
+      "sha256": "sha256:945d2741cc181e3ad1501ecc44e98c035dbbe2890b88adcc819e3c7dfcb68055",
       "required_inputs": [
         "REPAIR_REQUEST",
         "SOURCE_REQUEST_HASH",
@@ -35,7 +35,11 @@
         "RESOLVED_OPERATIONS",
         "SUPPORTED_OPERATIONS",
         "CHANGESET_SCHEMA",
-        "VALIDATION_FEEDBACK"
+        "VALIDATION_FEEDBACK",
+        "SEMANTIC_MANIFEST_REF",
+        "SEMANTIC_MANIFEST_SHA256",
+        "SEMANTIC_SUMMARY",
+        "EXPLICIT_REQUEST_SLOT_REFS"
       ],
       "forbidden_outputs": [
         "raw_ifc",
@@ -245,16 +249,41 @@
       ]
     },
     {
+      "template_id": "ifc-repair-changeset.v0.1",
+      "role": "ifc_repair_generator",
+      "mode": "changeset",
+      "path": "prompts/agent/ifc-repair-changeset-v0.1.md",
+      "sha256": "sha256:0929bf63e4361037d7cfefd1f5bc33758d7cafc24b2e20fddb7d44bb8991e9a5",
+      "required_inputs": [
+        "REPAIR_REQUEST",
+        "PUBLIC_REPAIR_SPEC",
+        "PUBLIC_CONTEXT",
+        "SOURCE_REQUEST_HASH",
+        "SUPPORTED_OPERATIONS",
+        "CHANGESET_SCHEMA"
+      ],
+      "forbidden_outputs": [
+        "raw_ifc",
+        "step_text",
+        "step_id",
+        "generated_global_id",
+        "IfcLocalPlacement",
+        "IfcAxis2Placement3D",
+        "IfcCartesianPoint",
+        "IfcDirection",
+        "IfcOwnerHistory",
+        "representation_topology",
+        "unregistered_operation"
+      ]
+    },
+    {
       "template_id": "ifc-repair-intent.v0.1",
       "role": "ifc_repair_request_understanding",
       "mode": "repair_intent",
       "path": "prompts/agent/ifc-repair-intent-v0.1.md",
-      "sha256": "sha256:d8e48fbdce5ecc7553329849aeaa015b47d92fc25a657e9837bd7a3200ea4e1c",
+      "sha256": "sha256:507796fcdcb2c238f40eaf4b60cea655aeeab0d51332cd04e30183f21bf308c7",
       "required_inputs": [
-        "REQUEST_ID",
         "REPAIR_REQUEST",
-        "SOURCE_REQUEST_HASH",
-        "PROMPT_FINGERPRINT",
         "SUPPORTED_OPERATIONS",
         "REPAIR_INTENT_SCHEMA",
         "VALIDATION_FEEDBACK"

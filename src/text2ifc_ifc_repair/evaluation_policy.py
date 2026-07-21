@@ -113,6 +113,7 @@ class OperationEvaluationPolicy:
     semantic_role: str = "target"
     fact_key_normalizer: Callable[[str], FactKeyNormalization] | None = None
     cohort_fact_patterns: tuple[str, ...] = ()
+    target_authority_mode: str = "edited_entity"
 
     def __post_init__(self) -> None:
         if not _STABLE_ID.fullmatch(self.policy_id):
@@ -144,6 +145,11 @@ class OperationEvaluationPolicy:
             for pattern in self.cohort_fact_patterns
         ):
             raise PolicyContractError("INVALID_COHORT_FACT_PATTERN", self.policy_id)
+        if self.target_authority_mode not in {
+            "edited_entity",
+            "host_for_created_entity",
+        }:
+            raise PolicyContractError("INVALID_TARGET_AUTHORITY_MODE", self.policy_id)
 
 
 def extend_policy_with_explicit_facts(
@@ -178,6 +184,7 @@ def extend_policy_with_explicit_facts(
         semantic_role=policy.semantic_role,
         fact_key_normalizer=policy.fact_key_normalizer,
         cohort_fact_patterns=policy.cohort_fact_patterns,
+        target_authority_mode=policy.target_authority_mode,
     )
 
 

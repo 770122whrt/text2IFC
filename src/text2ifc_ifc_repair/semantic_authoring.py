@@ -172,6 +172,37 @@ def parse_semantic_manifest(document: Any) -> SemanticManifest:
     )
 
 
+def semantic_manifest_to_dict(manifest: SemanticManifest) -> dict[str, Any]:
+    return {
+        "schema_version": manifest.schema_version,
+        "manifest_id": manifest.manifest_id,
+        "operation_id": manifest.operation_id,
+        "operation_type": manifest.operation_type,
+        "base_model_fingerprint": manifest.base_model_fingerprint,
+        "policy": {
+            "policy_id": manifest.policy_id,
+            "policy_version": manifest.policy_version,
+        },
+        "assignments": [
+            {
+                "operation_id": item.operation_id,
+                "fact_key": item.fact_key,
+                "source_fact_key": item.source_fact_key,
+                "value": copy.deepcopy(item.value),
+                "value_type": item.value_type,
+                "unit": item.unit,
+                "ownership": item.ownership.value,
+                "applicability": item.applicability.value,
+                "source_kind": item.source_kind.value,
+                "source_ref": item.source_ref,
+                "provenance": list(item.provenance),
+                "authoring_action": item.authoring_action.value,
+            }
+            for item in manifest.assignments
+        ],
+    }
+
+
 def build_semantic_manifest(
     *,
     production_evidence: ProductionEvidence,
@@ -353,4 +384,5 @@ __all__ = [
     "order_semantic_assignments",
     "parse_semantic_manifest",
     "semantic_assignment_identity",
+    "semantic_manifest_to_dict",
 ]

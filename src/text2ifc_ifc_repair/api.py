@@ -16,6 +16,8 @@ from .indexer import build_ifc_index
 from .operations import create_default_registry
 from .orchestrator import OrchestrationResult, RepairOrchestrator
 from .provider_stage import generate_bound_changeset
+from .production_evidence import build_production_evidence
+from .semantic_authoring import semantic_manifest_to_dict
 from .repair_intent import RepairIntent
 from .request_stage import generate_repair_intent
 from .run_models import (
@@ -147,6 +149,37 @@ class RepairAPI:
                 json.dumps(intent.to_dict(), ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n",
             )
         context_ref = self._write_context(run_dir, repair_text=repair_text, intent=intent)
+        missing_parameters = list(intent_result.get("missing_parameters") or ())
+        if (
+            intent_result.get("classification") == "clarification_required"
+            or missing_parameters
+        ):
+            clarification = _parameter_clarification(
+                state.run_id,
+                state.state_version + 1,
+                missing_parameters,
+            )
+            self.store.transition(
+                state.run_id,
+                to_stage=RunStage.CLARIFICATION_REQUIRED,
+                expected_state_version=state.state_version,
+                clarification=clarification,
+                reason_code="missing_required_parameter",
+                stage_payload={
+                    "intent": self.store.artifact_binding(
+                        state.run_id,
+                        "intent/repair-intent.json",
+                        "text2ifc/ifc-repair-intent/0.1",
+                    ),
+                    "api_context": self.store.artifact_binding(
+                        state.run_id,
+                        context_ref,
+                        "text2ifc/ifc-repair-api-context/0.1",
+                    ),
+                    "missing_parameters": missing_parameters,
+                },
+            )
+            return self.store.read_result(state.run_id)
         state = self.store.transition(
             state.run_id,
             to_stage=RunStage.INTENT_READY,
@@ -182,8 +215,25 @@ class RepairAPI:
         repair_text = str(context["repair_text"])
         intent_document = dict(context["intent"])
         kind = str(answer.get("kind", ""))
+        if kind in {"cancel", "eof"}:
+            cancel_artifacts, prepared_root = self._publish_failure_bundle(
+                run_id, RunStage.CANCELLED, "USER_CANCELLED", pending.stage.value
+            )
+            self.store.commit_terminal_publication(
+                run_id,
+                prepared_root=prepared_root,
+                to_stage=RunStage.CANCELLED,
+                expected_state_version=expected_state_version,
+                reason_code="USER_CANCELLED",
+                stage_payload={},
+                result_artifacts=cancel_artifacts,
+                answer=answer,
+                clarification_id=clarification_id,
+            )
+            return self.store.read_result(run_id)
         attempt_id = uuid.uuid4().hex
         resume_intent_ref: str | None = None
+        missing_parameters: list[dict[str, Any]] = []
         if kind == "select_candidate":
             token = str(answer.get("candidate_token", ""))
             selected = next((item for item in clarification.candidates if item.token == token), None)
@@ -219,6 +269,7 @@ class RepairAPI:
             if not generated.get("valid") or generated.get("intent") is None:
                 return self._fail(run_id, RunStage.PROVIDER_FAILED, "INTENT_RESUME_FAILED")
             intent_document = generated["intent"].to_dict()
+            missing_parameters = list(generated.get("missing_parameters") or ())
             resumed_intent_path = resume_dir / "repair-intent.json"
             if not resumed_intent_path.exists():
                 atomic_write_text(
@@ -231,7 +282,11 @@ class RepairAPI:
                     )
                     + "\n",
                 )
-        intent = RepairIntent.from_dict(intent_document, registry=self.registry)
+        intent = RepairIntent.from_dict(
+            intent_document,
+            registry=self.registry,
+            require_complete=not missing_parameters,
+        )
         context_ref = self._write_context(
             run_dir, repair_text=repair_text, intent=intent,
             name=f"api-context-v{expected_state_version + 1:03d}-{attempt_id}.json",
@@ -248,28 +303,37 @@ class RepairAPI:
                 resume_intent_ref,
                 "text2ifc/ifc-repair-intent/0.1",
             )
-        if kind in {"cancel", "eof"}:
-            cancel_artifacts, prepared_root = self._publish_failure_bundle(
-                run_id, RunStage.CANCELLED, "USER_CANCELLED", pending.stage.value
-            )
-            self.store.commit_terminal_publication(
-                run_id,
-                prepared_root=prepared_root,
-                to_stage=RunStage.CANCELLED,
-                expected_state_version=expected_state_version,
-                reason_code="USER_CANCELLED",
-                stage_payload=resume_payload,
-                result_artifacts=cancel_artifacts,
-                answer=answer,
-                clarification_id=clarification_id,
-            )
-            return self.store.read_result(run_id)
         resumed = self.store.continue_with_answer(
             run_id, clarification_id=clarification_id,
             expected_state_version=expected_state_version, answer=answer,
             stage_payload=resume_payload,
             result_artifacts=None,
         )
+        if missing_parameters:
+            next_clarification = _parameter_clarification(
+                run_id,
+                resumed.state_version + 1,
+                missing_parameters,
+            )
+            self.store.transition(
+                run_id,
+                to_stage=RunStage.CLARIFICATION_REQUIRED,
+                expected_state_version=resumed.state_version,
+                clarification=next_clarification,
+                reason_code="missing_required_parameter",
+                stage_payload={
+                    **resume_payload,
+                    "missing_parameters": missing_parameters,
+                },
+            )
+            return self.store.read_result(run_id)
+        if resumed.stage is RunStage.INDEX_READY:
+            resumed = self.store.transition(
+                run_id,
+                to_stage=RunStage.INTENT_READY,
+                expected_state_version=resumed.state_version,
+                stage_payload=resume_payload,
+            )
         prototype_answer = None
         if kind == "authorize_prototype":
             prototype_answer = {
@@ -292,8 +356,93 @@ class RepairAPI:
             run_dir / "index" / "targets.sqlite",
             expected_source_ifc_sha256=state.source.sha256,
         ) as repository:
+            records = {
+                record.ifc_global_id: record
+                for record in repository.iter_records()
+                if record.ifc_global_id
+            }
+            type_records = {
+                record.ifc_global_id: record
+                for record in repository.iter_type_records()
+                if record.ifc_global_id and record.identity_reliable
+            }
+            policy_facts: dict[str, tuple[Any, ...]] = {}
+            verified_absence: dict[str, tuple[str, ...]] = {}
+
             def stage2(resolution: Any) -> Mapping[str, Any]:
                 changeset_dir = self.store.prepare_stage_directory(run_id, "changeset")
+                if self._changeset_stage is not generate_bound_changeset:
+                    generated = self._changeset_stage(
+                        provider=self.provider,
+                        case_id=run_id,
+                        repair_request=repair_text,
+                        source_request_hash=intent.source_request_hash,
+                        resolved_operations=resolution.operations,
+                        model_fingerprint=intent.model_fingerprint,
+                        base_model_fingerprint=resolution.source_ifc_sha256,
+                        registry=self.registry,
+                        output_dir=changeset_dir,
+                    )
+                    if not generated.get("valid") or generated.get("changeset") is None:
+                        raise ValueError("CHANGESET_STAGE_FAILED")
+                    return generated["changeset"]
+                authority_changeset = {
+                    "operations": [
+                        {
+                            "operation_id": operation.operation_id,
+                            "operation_type": operation.operation_type,
+                        }
+                        for operation in resolution.operations
+                    ]
+                }
+                for operation in resolution.operations:
+                    policy_facts[operation.operation_id] = (
+                        self.registry.build_semantic_policy_facts(
+                            operation.operation_type,
+                            operation=operation.to_dict(),
+                        )
+                    )
+                    policy = self.registry.require_evaluation_policy(
+                        operation.operation_type
+                    )
+                    verified_absence[operation.operation_id] = tuple(
+                        spec.check_id
+                        for spec in policy.semantic_facts
+                        if spec.applicability.value == "conditional"
+                    )
+                production_evidence = build_production_evidence(
+                    intent=intent,
+                    resolution=resolution,
+                    changeset=authority_changeset,
+                    registry=self.registry,
+                    records_by_global_id=records,
+                    type_records_by_global_id=type_records,
+                    deterministic_policy_facts_by_operation=policy_facts,
+                    verified_absent_categories_by_operation=verified_absence,
+                )
+                manifests = tuple(
+                    self.registry.build_semantic_manifest(
+                        production_evidence.operation_types[operation_id],
+                        production_evidence=production_evidence,
+                        operation_id=operation_id,
+                        base_model_fingerprint=resolution.source_ifc_sha256,
+                    )
+                    for operation_id in sorted(production_evidence.operation_types)
+                )
+                manifest_hashes: dict[str, str] = {}
+                for manifest in manifests:
+                    payload = json.dumps(
+                        semantic_manifest_to_dict(manifest),
+                        ensure_ascii=False,
+                        sort_keys=True,
+                        separators=(",", ":"),
+                        allow_nan=False,
+                    ) + "\n"
+                    manifest_path = changeset_dir / f"semantic-manifest-{manifest.operation_id}.json"
+                    atomic_write_text(manifest_path, payload)
+                    manifest_hashes[manifest.operation_id] = (
+                        "sha256:" + hashlib.sha256(payload.encode("utf-8")).hexdigest()
+                    )
                 generated = self._changeset_stage(
                     provider=self.provider,
                     case_id=run_id,
@@ -304,6 +453,11 @@ class RepairAPI:
                     base_model_fingerprint=resolution.source_ifc_sha256,
                     registry=self.registry,
                     output_dir=changeset_dir,
+                    semantic_manifests=manifests,
+                    semantic_manifest_hashes=manifest_hashes,
+                    semantic_manifest_ref=(
+                        f"changeset/semantic-manifest-{manifests[0].operation_id}.json"
+                    ),
                 )
                 if not generated.get("valid") or generated.get("changeset") is None:
                     raise ValueError("CHANGESET_STAGE_FAILED")
@@ -322,7 +476,11 @@ class RepairAPI:
                     expected_source_sha256=state.source.sha256,
                 )
             except Exception as error:
-                return self._fail(run_id, RunStage.PROVIDER_FAILED, _safe_code(error, "CHANGESET_STAGE_FAILED"))
+                return self._fail(
+                    run_id,
+                    RunStage.PROVIDER_FAILED,
+                    _safe_code(error, type(error).__name__),
+                )
             resolution = orchestrator._resolution
             if prototype_answer is not None and resolution.status == "clarification_required" and resolution.reason_code == "prototype_selection":
                 outcome = orchestrator.continue_with_answer(prototype_answer)
@@ -373,16 +531,6 @@ class RepairAPI:
                     run_id, changeset_ref, "text2ifc/ifc-repair-changeset/0.1"
                 )},
             )
-            records = {
-                record.ifc_global_id: record
-                for record in repository.iter_records()
-                if record.ifc_global_id
-            }
-            type_records = {
-                record.ifc_global_id: record
-                for record in repository.iter_type_records()
-                if record.ifc_global_id and record.identity_reliable
-            }
             self.store.prepare_stage_directory(run_id, "staging")
             final = orchestrator.apply_and_evaluate(
                 source_ifc_path=Path(state.source.reference),
@@ -393,6 +541,8 @@ class RepairAPI:
                 registry=self.registry,
                 records_by_global_id=records,
                 type_records_by_global_id=type_records,
+                deterministic_policy_facts_by_operation=policy_facts,
+                verified_absent_categories_by_operation=verified_absence,
             )
         terminal = {
             "succeeded": RunStage.SUCCEEDED,
@@ -563,7 +713,8 @@ def _artifact_references(run_dir: Path, result: OrchestrationResult) -> dict[str
 
 def _safe_code(error: Exception, fallback: str) -> str:
     code = getattr(error, "code", None)
-    return str(code or fallback).split(":", 1)[0][:128]
+    detail = str(error).strip()
+    return str(code or detail or fallback).split(":", 1)[0][:128]
 
 
 def _latest_api_context(state: Any) -> str:

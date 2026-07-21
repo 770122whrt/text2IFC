@@ -15,7 +15,13 @@ from text2ifc_agent.providers import (
 )
 from text2ifc_text.splits import atomic_write_text
 
-from .changesets import load_changeset_schema, validate_changeset
+from .changesets import (
+    bind_repair_changeset,
+    load_changeset_draft_schema,
+    load_changeset_schema,
+    validate_changeset,
+    validate_changeset_draft,
+)
 from .registry import OperationRegistry, OperationRegistryError
 
 
@@ -41,6 +47,9 @@ def generate_bound_changeset(
     registry: OperationRegistry,
     output_dir: Path | str,
     max_attempts: int = 2,
+    semantic_manifests: Any = (),
+    semantic_manifest_hashes: Mapping[str, str] | None = None,
+    semantic_manifest_ref: str = "semantic-manifest.json",
 ) -> dict[str, Any]:
     """Generate one ChangeSet from complete operation-scoped public authority."""
 
@@ -59,6 +68,25 @@ def generate_bound_changeset(
         return result
 
     supported_operations = [_operation_contract(registry, name) for name in registry.operation_types]
+    manifests = tuple(semantic_manifests)
+    manifest_hashes = dict(semantic_manifest_hashes or {})
+    compact_mode = bool(manifests)
+    manifest_hash = (
+        manifest_hashes.get(manifests[0].operation_id, "") if compact_mode else ""
+    )
+    provider_schema = load_changeset_draft_schema() if compact_mode else load_changeset_schema()
+    prompt_operations = (
+        _compact_operation_projection(operations) if compact_mode else resolved_document
+    )
+    semantic_summary = _semantic_summary(manifests)
+    explicit_slot_refs = sorted(
+        {
+            assignment.source_fact_key
+            for manifest in manifests
+            for assignment in manifest.assignments
+            if assignment.source_kind.value == "explicit_request"
+        }
+    )
     feedback: list[dict[str, str]] = []
     last_result = _invalid_result([])
     for attempt_index in range(1, max_attempts + 1):
@@ -68,10 +96,14 @@ def generate_bound_changeset(
             "REPAIR_REQUEST": repair_request,
             "SOURCE_REQUEST_HASH": source_request_hash,
             "MODEL_FINGERPRINT": base_fingerprint,
-            "RESOLVED_OPERATIONS": resolved_document,
+            "RESOLVED_OPERATIONS": prompt_operations,
             "SUPPORTED_OPERATIONS": supported_operations,
-            "CHANGESET_SCHEMA": load_changeset_schema(),
+            "CHANGESET_SCHEMA": provider_schema,
             "VALIDATION_FEEDBACK": feedback,
+            "SEMANTIC_MANIFEST_REF": semantic_manifest_ref,
+            "SEMANTIC_MANIFEST_SHA256": manifest_hash,
+            "SEMANTIC_SUMMARY": semantic_summary,
+            "EXPLICIT_REQUEST_SLOT_REFS": explicit_slot_refs,
         }
         rendered = render_prompt(template_id=BOUND_TEMPLATE_ID, inputs=renderer_input)
         atomic_write_text(attempt_dir / "renderer-input.json", _json(renderer_input))
@@ -80,7 +112,7 @@ def generate_bound_changeset(
             provider_output = _call_bound_provider(provider, {
                 "session_id": f"ifc-repair-{case_id}",
                 "prompt": rendered["text"],
-                "schema": load_changeset_schema(),
+                "schema": provider_schema,
                 "state": {"case_id": case_id, "stage": "ifc_repair_bound_changeset", "attempt": attempt_index},
             }, attempt_dir)
         except ProviderOutputError:
@@ -100,13 +132,13 @@ def generate_bound_changeset(
         parse_status, parsed, parse_issues = provider_output.parse_json()
         issues = [dict(issue) for issue in parse_issues]
         if parse_status == "ok" and parsed is not None:
-            issues.extend(
-                {"code": issue.code, "path": issue.path, "message": issue.message}
-                for issue in validate_changeset(parsed)
-            )
-            if not issues:
-                issues.extend(
-                    _bound_binding_issues(
+            if compact_mode and parsed.get("schema_version") == "text2ifc/ifc-repair-changeset/0.1":
+                legacy_issues = [
+                    {"code": issue.code, "path": issue.path, "message": issue.message}
+                    for issue in validate_changeset(parsed)
+                ]
+                if not legacy_issues:
+                    legacy_issues = _bound_binding_issues(
                         parsed,
                         operations=operations,
                         resolved_document=resolved_document,
@@ -114,7 +146,46 @@ def generate_bound_changeset(
                         base_model_fingerprint=base_fingerprint,
                         registry=registry,
                     )
-                )
+                issues.extend(legacy_issues)
+                if not issues:
+                    parsed = _upgrade_legacy_draft(
+                        parsed,
+                        semantic_manifest_ref=semantic_manifest_ref,
+                        semantic_manifest_hash=manifest_hash,
+                        semantic_summary=semantic_summary,
+                    )
+            contract_issues = (
+                validate_changeset_draft(parsed)
+                if compact_mode
+                else validate_changeset(parsed)
+            )
+            issues.extend(
+                {"code": issue.code, "path": issue.path, "message": issue.message}
+                for issue in contract_issues
+            )
+            if not issues:
+                if compact_mode:
+                    try:
+                        bound = bind_repair_changeset(
+                            draft=parsed,
+                            semantic_manifests=manifests,
+                            semantic_manifest_hashes=manifest_hashes,
+                            source_request_hash=source_request_hash,
+                            base_model_fingerprint=base_fingerprint,
+                        )
+                    except ValueError as error:
+                        issues.append(_issue(str(error).split(":", 1)[0], "/", str(error)))
+                else:
+                    issues.extend(
+                        _bound_binding_issues(
+                            parsed,
+                            operations=operations,
+                            resolved_document=resolved_document,
+                            source_request_hash=source_request_hash,
+                            base_model_fingerprint=base_fingerprint,
+                            registry=registry,
+                        )
+                    )
         issues = _sort_issue_dicts(issues)
         diagnostics = {
             "schema_version": "text2ifc/ifc-repair-provider-stage/0.2",
@@ -124,17 +195,74 @@ def generate_bound_changeset(
         }
         atomic_write_text(attempt_dir / "diagnostics.json", _json(diagnostics))
         if parsed is not None and not issues:
-            atomic_write_text(output / "predicted-changeset.json", _json(parsed))
+            if compact_mode:
+                atomic_write_text(output / "provider-draft.json", _json(parsed))
+                atomic_write_text(output / "bound-changeset.json", _json(bound))
+                result_changeset = bound
+                classification = "bound_changeset"
+            else:
+                atomic_write_text(output / "predicted-changeset.json", _json(parsed))
+                result_changeset = parsed
+                classification = "changeset"
             return {
                 "valid": True,
-                "classification": "changeset",
-                "changeset": parsed,
+                "classification": classification,
+                "changeset": result_changeset,
+                "draft": parsed if compact_mode else None,
                 "prompt": _prompt_identity(rendered),
                 "issues": [],
             }
         feedback = issues
         last_result = _invalid_result(issues, prompt=_prompt_identity(rendered))
     return last_result
+
+
+def _compact_operation_projection(operations: list[dict[str, Any]]) -> dict[str, Any]:
+    allowed = {
+        "operation_id", "operation_type", "target_global_id", "scope_ids",
+        "parameters", "evidence_pointers",
+    }
+    return {
+        "operations": {
+            str(operation["operation_id"]): {
+                key: operation[key] for key in sorted(allowed) if key in operation
+            }
+            for operation in operations
+        }
+    }
+
+
+def _semantic_summary(manifests: tuple[Any, ...]) -> dict[str, int]:
+    values = {"required": 0, "conditional": 0, "not_required": 0}
+    for manifest in manifests:
+        for assignment in manifest.assignments:
+            values[assignment.applicability.value] += 1
+    return values
+
+
+def _upgrade_legacy_draft(
+    changeset: Mapping[str, Any],
+    *,
+    semantic_manifest_ref: str,
+    semantic_manifest_hash: str,
+    semantic_summary: Mapping[str, int],
+) -> dict[str, Any]:
+    """Explicit 0.1 compatibility: retain geometry, strip authority, mark draft."""
+
+    return {
+        "schema_version": "text2ifc/ifc-repair-changeset-draft/0.2",
+        "draft_id": str(changeset["changeset_id"]).replace("changeset", "draft", 1),
+        "base_model_fingerprint": changeset["base_model_fingerprint"],
+        "source_request_hash": changeset["source_request_hash"],
+        "semantic_manifest_ref": semantic_manifest_ref,
+        "semantic_manifest_sha256": semantic_manifest_hash,
+        "semantic_summary": dict(semantic_summary),
+        "scope": changeset["scope"],
+        "evidence_refs": changeset["evidence_refs"],
+        "preconditions": changeset["preconditions"],
+        "postconditions": changeset["postconditions"],
+        "operations": changeset["operations"],
+    }
 
 
 def generate_repair_changeset(

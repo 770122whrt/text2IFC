@@ -193,6 +193,60 @@ def test_multiple_resolved_operations_produce_one_fully_bound_changeset(tmp_path
     assert "Multiple-operation shape" in request["prompt"]
 
 
+def test_compact_stage2_never_receives_expanded_semantic_values(tmp_path: Path) -> None:
+    from text2ifc_ifc_repair.semantic_authoring import parse_semantic_manifest
+
+    manifest = parse_semantic_manifest({
+        "schema_version": "text2ifc/ifc-repair-semantic-manifest/0.1",
+        "manifest_id": "manifest-fixture-a",
+        "operation_id": "intent-a",
+        "operation_type": "fixture_move",
+        "base_model_fingerprint": MODEL,
+        "policy": {"policy_id": "fixture.l2", "policy_version": "0.2"},
+        "assignments": [{
+            "operation_id": "intent-a", "fact_key": "pset:Secret.Visible",
+            "source_fact_key": "request:/secret", "value": "EXPANDED-SEMANTIC-CANARY",
+            "value_type": "IfcLabel", "unit": None,
+            "ownership": "occurrence_direct", "applicability": "conditional",
+            "source_kind": "explicit_request", "source_ref": "request:/secret",
+            "provenance": ["request:fixture"], "authoring_action": "set_occurrence_pset",
+        }],
+    })
+    draft = {
+        "schema_version": "text2ifc/ifc-repair-changeset-draft/0.2",
+        "draft_id": "draft-fixture-a", "base_model_fingerprint": MODEL,
+        "source_request_hash": REQUEST,
+        "semantic_manifest_ref": "semantic-manifest.json",
+        "semantic_manifest_sha256": "sha256:" + "c" * 64,
+        "semantic_summary": {"required": 0, "conditional": 1, "not_required": 0},
+        "scope": {"target_ids": ["0AAAAAAAAAAAAAAAAAAAAA"], "forbidden_ids": []},
+        "evidence_refs": ["resolved:/operations/intent-a/context/candidate_targets/0"],
+        "preconditions": ["target_exists"], "postconditions": ["target_updated"],
+        "operations": [{
+            "operation_id": "intent-a", "operation_type": "fixture_move",
+            "target": {"wall_global_id": "0AAAAAAAAAAAAAAAAAAAAA"},
+            "parameters": {"marker": "move"},
+            "evidence_refs": ["resolved:/operations/intent-a/context/candidate_targets/0"],
+        }],
+    }
+    provider = Provider([draft])
+    result = _api().generate_bound_changeset(
+        provider=provider, case_id="compact", repair_request="repair",
+        source_request_hash=REQUEST, resolved_operations=(_resolved()[0],),
+        model_fingerprint=MODEL, registry=_registry(), output_dir=tmp_path,
+        max_attempts=1, semantic_manifests=(manifest,),
+        semantic_manifest_hashes={"intent-a": "sha256:" + "c" * 64},
+    )
+
+    assert result["valid"] is True
+    assert result["classification"] == "bound_changeset"
+    assert result["changeset"]["binding_status"] == "bound"
+    assert result["changeset"]["operations"][0]["semantic_assignments"][0]["value"] == "EXPANDED-SEMANTIC-CANARY"
+    provider_input = json.dumps(provider.calls[0], sort_keys=True)
+    assert "EXPANDED-SEMANTIC-CANARY" not in provider_input
+    assert "semantic_assignments" not in provider_input
+
+
 @pytest.mark.parametrize(
     ("case", "mutate"),
     [
