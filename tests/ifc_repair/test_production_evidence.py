@@ -89,6 +89,7 @@ def _registry() -> OperationRegistry:
                         applicability=SemanticApplicability.REQUIRED,
                     ),
                 ),
+                cohort_fact_patterns=("pset:Pset_Fixture.IsExternal",),
             ),
         )
     )
@@ -535,6 +536,105 @@ def test_public_builder_signature_and_outputs_cannot_accept_gold_objects() -> No
         _build(
             deterministic_policy_facts_by_operation={"operation-1": (private_fact,)}
         )
+
+
+def test_authorized_type_cohort_is_distinct_from_type_record_authority() -> None:
+    external = _property(
+        True, set_name="Pset_Fixture", property_name="IsExternal"
+    )
+    evidence = _build(
+        records_by_global_id={
+            "target-1": _record("target-1", "target", type_global_id="type-1"),
+            "host-1": _record("host-1", "host"),
+            "cohort-1": _record(
+                "cohort-1", "ignored", type_global_id="type-1", properties=(external,)
+            ),
+            "unrelated-same-size": _record(
+                "unrelated-same-size",
+                "ignored",
+                type_global_id="other-type",
+                properties=(external,),
+            ),
+        }
+    )
+    cohort = [
+        fact
+        for fact in evidence.candidate_facts_by_operation["operation-1"]
+        if fact.fact_key == "pset:Pset_Fixture.IsExternal"
+    ]
+
+    assert len(cohort) == 1
+    assert cohort[0].source_kind.value == "authorized_type_cohort"
+    assert "cohort-type:type-1" in cohort[0].provenance
+    assert cohort[0].source_ref == "type-cohort:type-1"
+    assert not any("unrelated-same-size" in item for item in cohort[0].provenance)
+
+
+def test_conflicting_authorized_type_cohort_fails_closed() -> None:
+    true_fact = _property(True, set_name="Pset_Fixture", property_name="IsExternal")
+    false_fact = _property(False, set_name="Pset_Fixture", property_name="IsExternal")
+
+    with pytest.raises(ProductionEvidenceError) as caught:
+        _build(
+            records_by_global_id={
+                "target-1": _record("target-1", "target", type_global_id="type-1"),
+                "host-1": _record("host-1", "host"),
+                "cohort-1": _record(
+                    "cohort-1", "ignored", type_global_id="type-1", properties=(true_fact,)
+                ),
+                "cohort-2": _record(
+                    "cohort-2", "ignored", type_global_id="type-1", properties=(false_fact,)
+                ),
+            }
+        )
+
+    assert caught.value.code == "AUTHORIZED_TYPE_COHORT_CONFLICT"
+
+
+def test_one_authority_result_builds_manifest_and_identical_l2_facts() -> None:
+    from text2ifc_ifc_repair.semantic_authoring import build_semantic_manifest
+
+    evidence = _build()
+    manifest = build_semantic_manifest(
+        production_evidence=evidence,
+        operation_id="operation-1",
+        base_model_fingerprint="sha256:" + "2" * 64,
+        registry=_registry(),
+    )
+    expected = evidence.expected_facts_by_operation["operation-1"]
+    by_key = {fact.fact_key: fact for fact in expected}
+
+    assert manifest.operation_id == "operation-1"
+    assert manifest.policy_id == "fixture.production.l2"
+    assert {
+        (
+            item.fact_key,
+            item.value,
+            item.value_type,
+            item.unit,
+            item.source_kind,
+            item.source_ref,
+        )
+        for item in manifest.assignments
+    } == {
+        (
+            fact.fact_key,
+            fact.value,
+            fact.value_type,
+            fact.unit,
+            fact.source_kind,
+            fact.source_ref,
+        )
+        for fact in expected
+    }
+    forbidden = {
+        "original_ifc_path",
+        "mutation_mapping",
+        "similarity_score",
+        "embedding",
+        "provider_facts",
+    }
+    assert forbidden.isdisjoint(inspect.signature(build_semantic_manifest).parameters)
 
 
 def test_operation_identity_and_registry_policy_drive_future_family_expansion() -> None:

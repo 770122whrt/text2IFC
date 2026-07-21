@@ -55,8 +55,75 @@ def test_large_building_indexes_initial_scope_and_source_identity(tmp_path: Path
         assert repository.metadata.ifc_schema == "IFC2X3"
         assert repository.metadata.source_ifc_sha256.startswith("sha256:")
         assert len(repository.metadata.source_ifc_sha256) == 71
-        assert repository.metadata.extractor_version == "text2ifc/ifc-indexer/0.2"
-    assert _api()["EXTRACTOR_VERSION"] == "text2ifc/ifc-indexer/0.2"
+        assert repository.metadata.extractor_version == "text2ifc/ifc-indexer/0.3"
+    assert _api()["EXTRACTOR_VERSION"] == "text2ifc/ifc-indexer/0.3"
+
+
+def test_indexer_retains_direct_and_type_owned_association_provenance(
+    tmp_path: Path,
+) -> None:
+    source = tmp_path / "associations.ifc"
+    model = ifcopenshell.file(schema="IFC2X3")
+    window = model.create_entity(
+        "IfcWindow", GlobalId="0AAAAAAAAAAAAAAAAAAAAA", Name="W-01"
+    )
+    style = model.create_entity(
+        "IfcWindowStyle",
+        GlobalId="0BBBBBBBBBBBBBBBBBBBBB",
+        Name="Style A",
+        ConstructionType="NOTDEFINED",
+        OperationType="NOTDEFINED",
+        ParameterTakesPrecedence=False,
+        Sizeable=True,
+    )
+    model.create_entity(
+        "IfcRelDefinesByType",
+        GlobalId="0CCCCCCCCCCCCCCCCCCCCC",
+        RelatedObjects=[window],
+        RelatingType=style,
+    )
+    glass = model.create_entity("IfcMaterial", Name="Glass")
+    model.create_entity(
+        "IfcRelAssociatesMaterial",
+        GlobalId="0DDDDDDDDDDDDDDDDDDDDD",
+        RelatedObjects=[window],
+        RelatingMaterial=glass,
+    )
+    classification = model.create_entity(
+        "IfcClassification", Source="NBS", Edition="2025", Name="Uniclass"
+    )
+    reference = model.create_entity(
+        "IfcClassificationReference",
+        ItemReference="Ss_25_30_95",
+        Name="Windows",
+        ReferencedSource=classification,
+    )
+    model.create_entity(
+        "IfcRelAssociatesClassification",
+        GlobalId="0EEEEEEEEEEEEEEEEEEEEE",
+        RelatedObjects=[style],
+        RelatingClassification=reference,
+    )
+    model.write(str(source))
+
+    database = tmp_path / "associations.sqlite"
+    _api()["build_ifc_index"](source, database)
+
+    with SQLiteIndexRepository.open(database) as repository:
+        occurrence = repository.get_by_global_id(window.GlobalId)
+        type_record = repository.get_type_by_global_id(style.GlobalId)
+        assert occurrence is not None and type_record is not None
+        by_kind = {fact.association_kind: fact for fact in occurrence.associations}
+        assert by_kind["material"].inherited is False
+        assert by_kind["material"].relationship_ref == f"guid:{'0DDDDDDDDDDDDDDDDDDDDD'}"
+        assert by_kind["material"].resource_name == "Glass"
+        assert by_kind["classification"].inherited is True
+        assert by_kind["classification"].occurrence_type_global_id == style.GlobalId
+        assert by_kind["classification"].semantic_value["system"] == "Uniclass"
+        assert all(fact.provenance for fact in occurrence.associations)
+        assert len(type_record.associations) == 1
+        assert type_record.associations[0].association_kind == "classification"
+        assert type_record.associations[0].inherited is False
 
 
 def test_damaged_large_building_indexes_one_shared_type_with_correct_provenance(

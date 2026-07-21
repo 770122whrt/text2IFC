@@ -28,6 +28,7 @@ def _api() -> dict[str, object]:
     except ModuleNotFoundError:
         pytest.fail("Phase 7 index repository API is not implemented yet")
     TypeRecord = getattr(index_models, "TypeRecord", None)
+    AssociationFact = getattr(index_models, "AssociationFact", None)
     return locals()
 
 
@@ -178,7 +179,38 @@ def test_repository_round_trips_versioned_element_records(tmp_path: Path) -> Non
         )
         assert repository.diagnostics()[0].code == "INDEX_GEOMETRY_UNAVAILABLE"
 
-    assert api["INDEX_SCHEMA_VERSION"] == "text2ifc/ifc-index/0.2"
+    assert api["INDEX_SCHEMA_VERSION"] == "text2ifc/ifc-index/0.3"
+
+
+def test_repository_round_trips_first_class_association_facts(tmp_path: Path) -> None:
+    api = _api()
+    AssociationFact = api["AssociationFact"]
+    assert AssociationFact is not None, "association evidence must be first-class"
+    association = AssociationFact(
+        association_kind="material",
+        relationship_ref="guid:0CCCCCCCCCCCCCCCCCCCCC",
+        relationship_ifc_class="IfcRelAssociatesMaterial",
+        resource_ref="step:81",
+        resource_ifc_class="IfcMaterial",
+        resource_name="Glass",
+        semantic_value={"name": "Glass"},
+        inherited=False,
+        occurrence_global_id="1F6umJ5H50aeL3A1As_wTm",
+        occurrence_type_global_id="0AAAAAAAAAAAAAAAAAAAAA",
+        provenance=("current_ifc:#81", "IfcRelAssociatesMaterial:#82"),
+    )
+    record = replace(_record(), associations=(association,))
+    database = tmp_path / "associations.sqlite"
+
+    with api["SQLiteIndexRepository"].create(database, _metadata()) as repository:
+        repository.put_record(record)
+        repository.publish()
+
+    with api["SQLiteIndexRepository"].open(database) as repository:
+        assert repository.associations_for(record.record_id) == [association]
+        assert repository.get_by_global_id(record.ifc_global_id).associations == (
+            association,
+        )
 
 
 def test_repository_round_trips_type_records_in_dedicated_tables(tmp_path: Path) -> None:
