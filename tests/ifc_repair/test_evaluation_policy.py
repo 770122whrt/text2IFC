@@ -206,6 +206,8 @@ def test_window_and_future_operation_dispatch_through_one_registry_seam() -> Non
 def test_window_policy_declares_required_and_conditional_semantic_contract() -> None:
     policy = window_operation_definition().evaluation_policy
     assert policy is not None
+    assert policy.policy_id == "window.add-with-opening.l2"
+    assert policy.version == "0.2"
     specs = {spec.fact_pattern: spec for spec in policy.semantic_facts}
 
     for required_pattern in (
@@ -215,22 +217,35 @@ def test_window_policy_declares_required_and_conditional_semantic_contract() -> 
         "pset:Pset_WindowCommon.IsExternal",
         "attribute:OverallWidth",
         "attribute:OverallHeight",
-        "quantity:Qto_WindowBaseQuantities.*",
+        "quantity:window-base.Width",
+        "quantity:window-base.Height",
+        "quantity:window-base.Area",
     ):
         assert specs[required_pattern].applicability is SemanticApplicability.REQUIRED
     for conditional_pattern in (
         "material:*",
         "classification:*",
-        "pset:*",
-        "quantity:*",
-        "label:Name",
-        "label:Tag",
-        "instance:*",
+        "pset:Pset_WindowCommon.Reference",
+        "pset:Pset_WindowCommon.ThermalTransmittance",
     ):
         assert (
             specs[conditional_pattern].applicability
             is SemanticApplicability.CONDITIONAL
         )
+    assert not any(spec.fact_pattern == "instance:*" for spec in policy.semantic_facts)
+    assert not any(
+        spec.fact_pattern in {"label:Name", "label:Tag", "label:Mark"}
+        for spec in policy.semantic_facts
+    )
+
+
+def test_window_policy_0_1_is_frozen_as_historical_contract() -> None:
+    from text2ifc_ifc_repair.operations.window import WINDOW_EVALUATION_POLICY_0_1
+
+    assert WINDOW_EVALUATION_POLICY_0_1.version == "0.1"
+    patterns = {spec.fact_pattern for spec in WINDOW_EVALUATION_POLICY_0_1.semantic_facts}
+    assert "quantity:Qto_WindowBaseQuantities.*" in patterns
+    assert "instance:*" in patterns
 
 
 def test_explicit_request_wins_fixed_source_precedence() -> None:
