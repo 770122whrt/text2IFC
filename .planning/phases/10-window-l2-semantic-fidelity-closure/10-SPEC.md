@@ -3,6 +3,7 @@
 **Created:** 2026-07-21
 **Ambiguity score:** 0.05 (gate: <= 0.20)
 **Requirements:** 10 locked
+**Roadmap requirements:** WIN-01, WIN-02
 
 ## Goal
 
