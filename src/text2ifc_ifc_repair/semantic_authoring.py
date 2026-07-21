@@ -5,7 +5,9 @@ from __future__ import annotations
 import copy
 from dataclasses import dataclass
 from enum import Enum
+from fnmatch import fnmatchcase
 from functools import lru_cache
+import hashlib
 import json
 import math
 from pathlib import Path
@@ -14,6 +16,8 @@ from typing import Any, Mapping, Sequence
 from jsonschema import Draft202012Validator
 
 from .evaluation_policy import EvidenceSourceKind, SemanticApplicability
+from .production_evidence import ProductionEvidence
+from .registry import OperationRegistry
 
 
 SEMANTIC_MANIFEST_SCHEMA_VERSION = "text2ifc/ifc-repair-semantic-manifest/0.1"
@@ -30,6 +34,7 @@ _AUTHORIZED_SOURCES = frozenset(
         EvidenceSourceKind.SURVIVING_TARGET,
         EvidenceSourceKind.SURVIVING_HOST,
         EvidenceSourceKind.SURVIVING_TYPE,
+        EvidenceSourceKind.AUTHORIZED_TYPE_COHORT,
         EvidenceSourceKind.APPROVED_PROTOTYPE,
         EvidenceSourceKind.DETERMINISTIC_POLICY,
     }
@@ -167,6 +172,122 @@ def parse_semantic_manifest(document: Any) -> SemanticManifest:
     )
 
 
+def build_semantic_manifest(
+    *,
+    production_evidence: ProductionEvidence,
+    operation_id: str,
+    base_model_fingerprint: str,
+    registry: OperationRegistry,
+) -> SemanticManifest:
+    """Compile the same authoritative facts used by L2 into authoring input."""
+
+    try:
+        operation_type = production_evidence.operation_types[operation_id]
+        facts = production_evidence.expected_facts_by_operation[operation_id]
+        decisions = production_evidence.applicability_by_operation[operation_id]
+    except KeyError as error:
+        raise SemanticManifestError(
+            "SEMANTIC_MANIFEST_OPERATION_NOT_FOUND", operation_id
+        ) from error
+    policy = registry.require_evaluation_policy(operation_type)
+    assignments: list[dict[str, Any]] = []
+    for fact in facts:
+        spec = next(
+            (
+                candidate
+                for candidate in policy.semantic_facts
+                if fnmatchcase(fact.fact_key, candidate.fact_pattern)
+            ),
+            None,
+        )
+        if spec is None:
+            applicability = SemanticApplicability.CONDITIONAL
+        else:
+            decision = decisions[spec.check_id]
+            if decision.outcome != "evaluable":
+                continue
+            applicability = spec.applicability
+        source_fact_key = next(
+            (
+                item.partition(":")[2]
+                for item in fact.provenance
+                if item.startswith("source_fact_key:")
+            ),
+            fact.fact_key,
+        )
+        ownership = (
+            SemanticOwnership.TYPE_INHERITED
+            if fact.source_kind
+            in {
+                EvidenceSourceKind.SURVIVING_TYPE,
+                EvidenceSourceKind.APPROVED_PROTOTYPE,
+            }
+            else SemanticOwnership.OCCURRENCE_DIRECT
+        )
+        assignments.append(
+            {
+                "operation_id": operation_id,
+                "fact_key": fact.fact_key,
+                "source_fact_key": source_fact_key,
+                "value": copy.deepcopy(fact.value),
+                "value_type": fact.value_type or "IfcValue",
+                "unit": fact.unit,
+                "ownership": ownership.value,
+                "applicability": applicability.value,
+                "source_kind": fact.source_kind.value,
+                "source_ref": fact.source_ref,
+                "provenance": list(fact.provenance),
+                "authoring_action": _authoring_action(
+                    fact.fact_key, ownership
+                ).value,
+            }
+        )
+    identity = json.dumps(
+        {
+            "operation_id": operation_id,
+            "operation_type": operation_type,
+            "base_model_fingerprint": base_model_fingerprint,
+            "policy_id": policy.policy_id,
+            "policy_version": policy.version,
+            "assignments": assignments,
+        },
+        sort_keys=True,
+        separators=(",", ":"),
+        ensure_ascii=False,
+    ).encode("utf-8")
+    return parse_semantic_manifest(
+        {
+            "schema_version": SEMANTIC_MANIFEST_SCHEMA_VERSION,
+            "manifest_id": f"semantic-manifest-{hashlib.sha256(identity).hexdigest()[:24]}",
+            "operation_id": operation_id,
+            "operation_type": operation_type,
+            "base_model_fingerprint": base_model_fingerprint,
+            "policy": {
+                "policy_id": policy.policy_id,
+                "policy_version": policy.version,
+            },
+            "assignments": assignments,
+        }
+    )
+
+
+def _authoring_action(
+    fact_key: str, ownership: SemanticOwnership
+) -> SemanticAuthoringAction:
+    if ownership is SemanticOwnership.TYPE_INHERITED:
+        return SemanticAuthoringAction.INHERIT_FROM_TYPE
+    category = fact_key.partition(":")[0]
+    return {
+        "relationship": SemanticAuthoringAction.BIND_RELATIONSHIP,
+        "attribute": SemanticAuthoringAction.SET_ATTRIBUTE,
+        "label": SemanticAuthoringAction.SET_ATTRIBUTE,
+        "pset": SemanticAuthoringAction.SET_OCCURRENCE_PSET,
+        "quantity": SemanticAuthoringAction.SET_QUANTITY,
+        "material": SemanticAuthoringAction.REUSE_MATERIAL,
+        "classification": SemanticAuthoringAction.REUSE_CLASSIFICATION,
+    }[category]
+
+
 def _validate_assignment_semantics(payload: Any, *, operation_id: str, index: int) -> None:
     if not isinstance(payload, Mapping):
         raise SemanticManifestError("INVALID_SEMANTIC_ASSIGNMENT", str(index))
@@ -228,6 +349,7 @@ __all__ = [
     "SemanticManifestError",
     "SemanticOwnership",
     "load_semantic_manifest_schema",
+    "build_semantic_manifest",
     "order_semantic_assignments",
     "parse_semantic_manifest",
     "semantic_assignment_identity",

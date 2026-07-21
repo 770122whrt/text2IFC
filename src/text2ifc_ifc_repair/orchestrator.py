@@ -5,6 +5,7 @@ from __future__ import annotations
 import hashlib
 import json
 from dataclasses import asdict, dataclass, is_dataclass
+from enum import Enum
 from pathlib import Path
 from typing import Any, Callable, Mapping
 
@@ -116,6 +117,53 @@ class RepairOrchestrator:
         source_hash = _path_sha256(source)
         if source_hash != str(changeset.get("base_model_fingerprint", "")):
             return self._terminal_failure("audit_failed", "BASE_MODEL_FINGERPRINT_MISMATCH", changeset, {"source_hash": source_hash}, private_canaries=private_canaries)
+        try:
+            production_evidence = self._evidence_builder(
+                intent=intent,
+                resolution=resolution,
+                changeset=changeset,
+                registry=registry,
+                records_by_global_id=records_by_global_id,
+                type_records_by_global_id=type_records_by_global_id,
+                deterministic_policy_facts_by_operation=deterministic_policy_facts_by_operation or {},
+                verified_absent_categories_by_operation=verified_absent_categories_by_operation or {},
+            )
+            missing = _missing_authority_decisions(production_evidence)
+            if missing:
+                return self._terminal_failure(
+                    "l2_not_evaluable",
+                    "MANDATORY_SEMANTIC_AUTHORITY_MISSING",
+                    changeset,
+                    {"source_hash": source_hash, "not_evaluable": missing},
+                    private_canaries=private_canaries,
+                )
+            manifests = tuple(
+                registry.build_semantic_manifest(
+                    production_evidence=production_evidence,
+                    operation_id=operation_id,
+                    base_model_fingerprint=source_hash,
+                )
+                for operation_id in sorted(production_evidence.operation_types)
+            )
+            manifest_name = (
+                "semantic-manifest.json"
+                if len(manifests) == 1
+                else "semantic-manifests.json"
+            )
+            self._write(manifest_name, manifests[0] if len(manifests) == 1 else manifests)
+            manifest_path = self.run_directory / manifest_name
+            semantic_manifest_evidence = {
+                "semantic_manifest": manifest_name,
+                "semantic_manifest_sha256": _path_sha256(manifest_path),
+            }
+        except Exception as error:
+            return self._terminal_failure(
+                "l2_not_evaluable",
+                "PRODUCTION_EVIDENCE_FAILED",
+                changeset,
+                {"source_hash": source_hash, "error_type": type(error).__name__},
+                private_canaries=private_canaries,
+            )
         candidate = self.run_directory / "staging" / "application-candidate.ifc"
         candidate.parent.mkdir(parents=True, exist_ok=True)
         if candidate.exists():
@@ -135,6 +183,7 @@ class RepairOrchestrator:
             "application": _public_json(application),
             "source_sha256_before": source_hash,
             "source_sha256_after": _path_sha256(source),
+            **semantic_manifest_evidence,
         }
         if not _complete_transaction_valid(changeset, application):
             status = "audit_failed" if not bool((application.get("audit") or {}).get("valid")) else "application_failed"
@@ -147,22 +196,6 @@ class RepairOrchestrator:
         candidate_hash = _path_sha256(candidate)
         if candidate_hash != _normalize_sha256(str(output.get("sha256", ""))) or not _is_ifc2x3(candidate):
             return self._terminal_failure("application_failed", "CANDIDATE_REOPEN_OR_HASH_FAILED", changeset, evidence, candidate=candidate, private_canaries=private_canaries)
-        try:
-            production_evidence = self._evidence_builder(
-                intent=intent,
-                resolution=resolution,
-                changeset=changeset,
-                registry=registry,
-                records_by_global_id=records_by_global_id,
-                type_records_by_global_id=type_records_by_global_id,
-                deterministic_policy_facts_by_operation=deterministic_policy_facts_by_operation or {},
-                verified_absent_categories_by_operation=verified_absent_categories_by_operation or {},
-            )
-        except Exception as error:
-            return self._terminal_failure("l2_not_evaluable", "PRODUCTION_EVIDENCE_FAILED", changeset, {**evidence, "error_type": type(error).__name__}, candidate=candidate, private_canaries=private_canaries)
-        missing = _missing_authority_decisions(production_evidence)
-        if missing:
-            return self._terminal_failure("l2_not_evaluable", "MANDATORY_SEMANTIC_AUTHORITY_MISSING", changeset, {**evidence, "not_evaluable": missing}, candidate=candidate, private_canaries=private_canaries)
         try:
             evaluation = self._evaluation_stage(
                 ProductionEvaluationInputs(
@@ -336,6 +369,8 @@ def _public_json(value: Any) -> Any:
         return {str(key): _public_json(item) for key, item in value.items()}
     if isinstance(value, (list, tuple)):
         return [_public_json(item) for item in value]
+    if isinstance(value, Enum):
+        return value.value
     if value is None or isinstance(value, (str, int, float, bool)):
         return value
     return {"type": type(value).__name__}

@@ -146,7 +146,7 @@ _WINDOW_PRODUCTION_SOURCES = tuple(
     source
     for source in _AUTHORIZED_SEMANTIC_SOURCES
     if source is not EvidenceSourceKind.PRIVATE_ORIGINAL
-)
+) + (EvidenceSourceKind.AUTHORIZED_TYPE_COHORT,)
 
 
 def _semantic_spec_0_2(
@@ -216,6 +216,14 @@ WINDOW_EVALUATION_POLICY = OperationEvaluationPolicy(
         ),
     ),
     fact_key_normalizer=canonicalize_window_fact_key,
+    cohort_fact_patterns=(
+        "pset:Pset_WindowCommon.IsExternal",
+        "pset:Pset_WindowCommon.Reference",
+        "pset:Pset_WindowCommon.ThermalTransmittance",
+        "quantity:window-base.*",
+        "material:*",
+        "classification:*",
+    ),
 )
 
 WINDOW_L1_POLICY_ID = "window.add-with-opening.l1"

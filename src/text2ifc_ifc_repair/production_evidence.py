@@ -7,12 +7,16 @@ and registered operation policy into operation-owned expected facts.
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from fnmatch import fnmatchcase
 from types import MappingProxyType
 from typing import Any, Mapping
 
-from .evaluation_policy import EvidenceSourceKind, SemanticApplicability
+from .evaluation_policy import (
+    EvidenceSourceKind,
+    SemanticApplicability,
+    normalize_policy_fact_key,
+)
 from .index_models import ElementRecord, TypeRecord
 from .registry import OperationRegistry
 from .repair_intent import AttributeIntent, RepairIntent
@@ -29,6 +33,7 @@ _PRODUCTION_PRECEDENCE = (
     EvidenceSourceKind.SURVIVING_TARGET,
     EvidenceSourceKind.SURVIVING_HOST,
     EvidenceSourceKind.SURVIVING_TYPE,
+    EvidenceSourceKind.AUTHORIZED_TYPE_COHORT,
     EvidenceSourceKind.APPROVED_PROTOTYPE,
     EvidenceSourceKind.DETERMINISTIC_POLICY,
 )
@@ -257,6 +262,15 @@ def _operation_candidates(
                 authority_provenance=provenance,
             )
         )
+        if kind == "formal_type_binding":
+            facts.extend(
+                _authorized_type_cohort_facts(
+                    type_global_id=global_id,
+                    records_by_global_id=records_by_global_id,
+                    operation_id=operation_id,
+                    policy=policy,
+                )
+            )
 
     for fact in deterministic_policy_facts:
         if fact.source_kind is EvidenceSourceKind.PRIVATE_ORIGINAL:
@@ -327,7 +341,11 @@ def _record_facts(
         SemanticFact(
             **{
                 **fact.__dict__,
-                "source_ref": source_ref,
+                "source_ref": (
+                    fact.source_ref
+                    if fact.fact_key.startswith(("material:", "classification:"))
+                    else source_ref
+                ),
                 "provenance": (
                     *fact.provenance,
                     authority_provenance,
@@ -367,7 +385,11 @@ def _authorized_type_facts(
         SemanticFact(
             **{
                 **fact.__dict__,
-                "source_ref": source_ref,
+                "source_ref": (
+                    fact.source_ref
+                    if fact.fact_key.startswith(("material:", "classification:"))
+                    else source_ref
+                ),
                 "provenance": (
                     *fact.provenance,
                     f"type_record:{record.ifc_global_id}",
@@ -378,6 +400,79 @@ def _authorized_type_facts(
         )
         for fact in sorted(converted, key=_fact_key)
     )
+
+
+def _authorized_type_cohort_facts(
+    *,
+    type_global_id: str,
+    records_by_global_id: Mapping[str, ElementRecord],
+    operation_id: str,
+    policy: Any,
+) -> tuple[SemanticFact, ...]:
+    """Promote only conflict-free, policy-authorized facts from the bound Type cohort."""
+
+    patterns = tuple(policy.cohort_fact_patterns)
+    if not patterns:
+        return ()
+    candidates: list[SemanticFact] = []
+    for record in sorted(records_by_global_id.values(), key=lambda item: item.record_id):
+        if record.type_global_id != type_global_id:
+            continue
+        for fact in semantic_facts_from_element_record(
+            record,
+            source_kind=EvidenceSourceKind.AUTHORIZED_TYPE_COHORT,
+            source_ref=f"type-cohort:{type_global_id}",
+        ):
+            if fact.inherited:
+                continue
+            normalization = normalize_policy_fact_key(policy, fact.fact_key)
+            normalized_key = normalization.fact_key
+            if not any(fnmatchcase(normalized_key, pattern) for pattern in patterns):
+                continue
+            candidates.append(
+                replace(
+                    fact,
+                    fact_key=normalized_key,
+                    provenance=(
+                        *fact.provenance,
+                        f"source_fact_key:{normalization.source_fact_key}",
+                        f"cohort-type:{type_global_id}",
+                        f"cohort-record:{record.record_id}",
+                        f"operation:{operation_id}",
+                    ),
+                )
+            )
+
+    by_key: dict[str, list[SemanticFact]] = {}
+    for fact in candidates:
+        by_key.setdefault(fact.fact_key, []).append(fact)
+    selected: list[SemanticFact] = []
+    for fact_key in sorted(by_key):
+        values = {
+            (repr(fact.value), fact.value_type, fact.unit)
+            for fact in by_key[fact_key]
+        }
+        if len(values) > 1:
+            raise ProductionEvidenceError(
+                "AUTHORIZED_TYPE_COHORT_CONFLICT",
+                f"{type_global_id}:{fact_key}",
+            )
+        representative = sorted(by_key[fact_key], key=_fact_key)[0]
+        selected.append(
+            replace(
+                representative,
+                provenance=tuple(
+                    sorted(
+                        {
+                            item
+                            for fact in by_key[fact_key]
+                            for item in fact.provenance
+                        }
+                    )
+                ),
+            )
+        )
+    return tuple(selected)
 
 
 def _scope_fact(fact: SemanticFact, operation_id: str) -> SemanticFact:

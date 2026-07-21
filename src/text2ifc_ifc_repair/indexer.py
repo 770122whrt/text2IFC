@@ -10,11 +10,13 @@ from pathlib import Path
 from typing import Any
 
 import ifcopenshell
+import ifcopenshell.util.classification
 import ifcopenshell.util.element
 
 from .index_adapters import IndexAdapterRegistry, default_index_adapter_registry
 from .index_models import (
     AliasFact,
+    AssociationFact,
     ElementRecord,
     IndexDiagnostic,
     IndexMetadata,
@@ -26,7 +28,7 @@ from .index_store import SQLiteIndexRepository
 from .semantic_facts import extract_property_facts
 
 
-EXTRACTOR_VERSION = "text2ifc/ifc-indexer/0.2"
+EXTRACTOR_VERSION = "text2ifc/ifc-indexer/0.3"
 _IFC_GUID = re.compile(r"^[0-9A-Za-z_$]{22}$")
 
 
@@ -100,6 +102,12 @@ def build_ifc_index(
                     provenance={"source": "current_ifc", "step_id": type_entity.id()},
                     aliases=_type_aliases(type_entity),
                     properties=_properties(type_entity, should_inherit=False),
+                    associations=_direct_associations(
+                        type_entity,
+                        occurrence_global_id=None,
+                        occurrence_type_global_id=global_id or None,
+                        inherited=False,
+                    ),
                 )
             )
             if not identity_reliable:
@@ -159,6 +167,7 @@ def build_ifc_index(
                     sorted(relationships, key=lambda fact: (fact.kind, fact.target_global_id, fact.provenance))
                 ),
                 properties=_properties(entity),
+                associations=_element_associations(entity, type_entity),
             )
             repository.put_record(record)
             if not identity_reliable:
@@ -307,6 +316,129 @@ def _properties(
         )
         for fact in facts
     )
+
+
+def _element_associations(
+    entity: Any, type_entity: Any | None
+) -> tuple[AssociationFact, ...]:
+    occurrence_global_id = _text(getattr(entity, "GlobalId", None))
+    type_global_id = _text(getattr(type_entity, "GlobalId", None))
+    facts = list(
+        _direct_associations(
+            entity,
+            occurrence_global_id=occurrence_global_id,
+            occurrence_type_global_id=type_global_id,
+            inherited=False,
+        )
+    )
+    if type_entity is not None:
+        facts.extend(
+            _direct_associations(
+                type_entity,
+                occurrence_global_id=occurrence_global_id,
+                occurrence_type_global_id=type_global_id,
+                inherited=True,
+            )
+        )
+    unique = {
+        (
+            fact.association_kind,
+            fact.relationship_ref,
+            fact.resource_ref,
+            fact.inherited,
+        ): fact
+        for fact in facts
+    }
+    return tuple(unique[key] for key in sorted(unique))
+
+
+def _direct_associations(
+    entity: Any,
+    *,
+    occurrence_global_id: str | None,
+    occurrence_type_global_id: str | None,
+    inherited: bool,
+) -> tuple[AssociationFact, ...]:
+    facts: list[AssociationFact] = []
+    for relationship in sorted(
+        getattr(entity, "HasAssociations", ()), key=lambda item: item.id()
+    ):
+        if relationship.is_a("IfcRelAssociatesMaterial"):
+            resource = relationship.RelatingMaterial
+            kind = "material"
+            names = _material_names(resource)
+            semantic_value = {
+                "names": list(names),
+                "resource_class": resource.is_a(),
+            }
+            resource_name = names[0] if len(names) == 1 else None
+        elif relationship.is_a("IfcRelAssociatesClassification"):
+            resource = relationship.RelatingClassification
+            kind = "classification"
+            try:
+                classification = ifcopenshell.util.classification.get_classification(
+                    resource
+                )
+            except Exception:
+                classification = None
+            system = _text(getattr(classification, "Name", None)) or "unspecified"
+            identification = _text(
+                getattr(resource, "Identification", None)
+                or getattr(resource, "ItemReference", None)
+            )
+            resource_name = _text(getattr(resource, "Name", None))
+            semantic_value = {
+                "system": system,
+                "identification": identification,
+                "name": resource_name,
+            }
+        else:
+            continue
+        facts.append(
+            AssociationFact(
+                association_kind=kind,
+                relationship_ref=_entity_public_ref(relationship),
+                relationship_ifc_class=relationship.is_a(),
+                resource_ref=_entity_public_ref(resource),
+                resource_ifc_class=resource.is_a(),
+                resource_name=resource_name,
+                semantic_value=_json_safe(semantic_value),
+                inherited=inherited,
+                occurrence_global_id=occurrence_global_id,
+                occurrence_type_global_id=occurrence_type_global_id,
+                provenance=(
+                    f"current_ifc:#{entity.id()}",
+                    f"{relationship.is_a()}:#{relationship.id()}",
+                    f"{resource.is_a()}:#{resource.id()}",
+                ),
+            )
+        )
+    return tuple(facts)
+
+
+def _material_names(resource: Any) -> tuple[str, ...]:
+    names: set[str] = set()
+    name = _text(getattr(resource, "Name", None))
+    if name:
+        names.add(name)
+    for attribute in (
+        "Materials",
+        "MaterialLayers",
+        "MaterialProfiles",
+        "MaterialConstituents",
+    ):
+        for child in getattr(resource, attribute, ()) or ():
+            nested = getattr(child, "Material", child)
+            names.update(_material_names(nested))
+    nested_set = getattr(resource, "ForLayerSet", None)
+    if nested_set is not None:
+        names.update(_material_names(nested_set))
+    return tuple(sorted(names))
+
+
+def _entity_public_ref(entity: Any) -> str:
+    global_id = _text(getattr(entity, "GlobalId", None))
+    return f"guid:{global_id}" if global_id else f"step:{entity.id()}"
 
 
 def _json_safe(value: Any) -> Any:

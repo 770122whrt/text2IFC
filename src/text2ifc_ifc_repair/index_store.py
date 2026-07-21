@@ -10,6 +10,7 @@ from typing import Any, ContextManager, Iterable, Iterator, Protocol
 from .index_models import (
     INDEX_SCHEMA_VERSION,
     AliasFact,
+    AssociationFact,
     ElementRecord,
     IndexDiagnostic,
     IndexMetadata,
@@ -55,6 +56,8 @@ class IndexRepository(Protocol):
     def properties_for(self, record_id: str) -> list[PropertyFact]: ...
 
     def relationships_from(self, record_id: str) -> list[RelationshipFact]: ...
+
+    def associations_for(self, record_id: str) -> list[AssociationFact]: ...
 
     def diagnostics(self) -> list[IndexDiagnostic]: ...
 
@@ -290,6 +293,40 @@ class SQLiteIndexRepository:
             );
             CREATE INDEX property_lookup
                 ON properties(set_kind, set_name, property_name, record_id);
+            CREATE TABLE associations (
+                record_id TEXT NOT NULL REFERENCES elements(record_id) ON DELETE CASCADE,
+                ordinal INTEGER NOT NULL,
+                association_kind TEXT NOT NULL,
+                relationship_ref TEXT NOT NULL,
+                relationship_ifc_class TEXT NOT NULL,
+                resource_ref TEXT NOT NULL,
+                resource_ifc_class TEXT NOT NULL,
+                resource_name TEXT,
+                semantic_value_json TEXT NOT NULL,
+                inherited INTEGER NOT NULL CHECK (inherited IN (0, 1)),
+                occurrence_global_id TEXT,
+                occurrence_type_global_id TEXT,
+                provenance_json TEXT NOT NULL,
+                PRIMARY KEY (record_id, ordinal)
+            );
+            CREATE INDEX association_kind_source
+                ON associations(association_kind, record_id, ordinal);
+            CREATE TABLE type_associations (
+                record_id TEXT NOT NULL REFERENCES type_objects(record_id) ON DELETE CASCADE,
+                ordinal INTEGER NOT NULL,
+                association_kind TEXT NOT NULL,
+                relationship_ref TEXT NOT NULL,
+                relationship_ifc_class TEXT NOT NULL,
+                resource_ref TEXT NOT NULL,
+                resource_ifc_class TEXT NOT NULL,
+                resource_name TEXT,
+                semantic_value_json TEXT NOT NULL,
+                inherited INTEGER NOT NULL CHECK (inherited IN (0, 1)),
+                occurrence_global_id TEXT,
+                occurrence_type_global_id TEXT,
+                provenance_json TEXT NOT NULL,
+                PRIMARY KEY (record_id, ordinal)
+            );
             CREATE TABLE diagnostics (
                 diagnostic_id INTEGER PRIMARY KEY AUTOINCREMENT,
                 code TEXT NOT NULL,
@@ -368,6 +405,7 @@ class SQLiteIndexRepository:
                     for ordinal, fact in enumerate(record.properties)
                 ],
             )
+            self._put_associations("associations", record.record_id, record.associations)
         except sqlite3.IntegrityError as exc:
             if "elements.ifc_global_id" in str(exc):
                 raise IndexStoreError(
@@ -441,6 +479,9 @@ class SQLiteIndexRepository:
                     )
                     for ordinal, fact in enumerate(record.properties)
                 ],
+            )
+            self._put_associations(
+                "type_associations", record.record_id, record.associations
             )
         except sqlite3.IntegrityError as exc:
             if "type_objects.ifc_global_id" in str(exc):
@@ -545,6 +586,9 @@ class SQLiteIndexRepository:
             for row in rows
         ]
 
+    def associations_for(self, record_id: str) -> list[AssociationFact]:
+        return self._associations_from_table("associations", record_id)
+
     def diagnostics(self) -> list[IndexDiagnostic]:
         rows = self._connection.execute("SELECT * FROM diagnostics ORDER BY diagnostic_id")
         return [
@@ -593,6 +637,7 @@ class SQLiteIndexRepository:
             ),
             relationships=tuple(self.relationships_from(record_id)),
             properties=tuple(self.properties_for(record_id)),
+            associations=tuple(self.associations_for(record_id)),
         )
 
     def _type_record_from_row(self, row: sqlite3.Row) -> TypeRecord:
@@ -637,7 +682,66 @@ class SQLiteIndexRepository:
                 )
                 for item in property_rows
             ),
+            associations=tuple(
+                self._associations_from_table("type_associations", record_id)
+            ),
         )
+
+    def _put_associations(
+        self,
+        table: str,
+        record_id: str,
+        associations: tuple[AssociationFact, ...],
+    ) -> None:
+        if table not in {"associations", "type_associations"}:
+            raise IndexStoreError("INVALID_ASSOCIATION_TABLE", table)
+        self._connection.executemany(
+            f"INSERT INTO {table} VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            [
+                (
+                    record_id,
+                    ordinal,
+                    fact.association_kind,
+                    fact.relationship_ref,
+                    fact.relationship_ifc_class,
+                    fact.resource_ref,
+                    fact.resource_ifc_class,
+                    fact.resource_name,
+                    _json_dump(fact.semantic_value),
+                    int(fact.inherited),
+                    fact.occurrence_global_id,
+                    fact.occurrence_type_global_id,
+                    _json_dump(fact.provenance),
+                )
+                for ordinal, fact in enumerate(associations)
+            ],
+        )
+
+    def _associations_from_table(
+        self, table: str, record_id: str
+    ) -> list[AssociationFact]:
+        if table not in {"associations", "type_associations"}:
+            raise IndexStoreError("INVALID_ASSOCIATION_TABLE", table)
+        rows = self._connection.execute(
+            f"SELECT * FROM {table} WHERE record_id = ? ORDER BY ordinal",
+            (record_id,),
+        )
+        return [
+            AssociationFact(
+                association_kind=row["association_kind"],
+                relationship_ref=row["relationship_ref"],
+                relationship_ifc_class=row["relationship_ifc_class"],
+                resource_ref=row["resource_ref"],
+                resource_ifc_class=row["resource_ifc_class"],
+                resource_name=row["resource_name"],
+                semantic_value=_json_load(row["semantic_value_json"]),
+                inherited=bool(row["inherited"]),
+                occurrence_global_id=row["occurrence_global_id"],
+                occurrence_type_global_id=row["occurrence_type_global_id"],
+                provenance=tuple(_json_load(row["provenance_json"])),
+            )
+            for row in rows
+        ]
 
     def _require_build(self) -> None:
         if self._build_path is None or self._published:

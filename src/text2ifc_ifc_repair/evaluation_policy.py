@@ -35,6 +35,7 @@ class EvidenceSourceKind(str, Enum):
     SURVIVING_TARGET = "surviving_target"
     SURVIVING_HOST = "surviving_host"
     SURVIVING_TYPE = "surviving_type"
+    AUTHORIZED_TYPE_COHORT = "authorized_type_cohort"
     APPROVED_PROTOTYPE = "approved_prototype"
     DETERMINISTIC_POLICY = "deterministic_policy"
     REPAIRED_OUTPUT = "repaired_output"
@@ -56,6 +57,7 @@ SOURCE_PRECEDENCE = (
     EvidenceSourceKind.SURVIVING_TARGET,
     EvidenceSourceKind.SURVIVING_HOST,
     EvidenceSourceKind.SURVIVING_TYPE,
+    EvidenceSourceKind.AUTHORIZED_TYPE_COHORT,
     EvidenceSourceKind.APPROVED_PROTOTYPE,
     EvidenceSourceKind.DETERMINISTIC_POLICY,
 )
@@ -110,6 +112,7 @@ class OperationEvaluationPolicy:
     semantic_facts: tuple[SemanticFactSpec, ...]
     semantic_role: str = "target"
     fact_key_normalizer: Callable[[str], FactKeyNormalization] | None = None
+    cohort_fact_patterns: tuple[str, ...] = ()
 
     def __post_init__(self) -> None:
         if not _STABLE_ID.fullmatch(self.policy_id):
@@ -136,6 +139,11 @@ class OperationEvaluationPolicy:
                 check_id for check_id in check_ids if check_ids.count(check_id) > 1
             )
             raise PolicyContractError("DUPLICATE_EVALUATION_CHECK_ID", duplicate)
+        if any(
+            not pattern or any(char.isspace() for char in pattern)
+            for pattern in self.cohort_fact_patterns
+        ):
+            raise PolicyContractError("INVALID_COHORT_FACT_PATTERN", self.policy_id)
 
 
 def extend_policy_with_explicit_facts(
@@ -169,6 +177,7 @@ def extend_policy_with_explicit_facts(
         semantic_facts=(*policy.semantic_facts, *additions),
         semantic_role=policy.semantic_role,
         fact_key_normalizer=policy.fact_key_normalizer,
+        cohort_fact_patterns=policy.cohort_fact_patterns,
     )
 
 

@@ -49,6 +49,7 @@ def _spec(
             EvidenceSourceKind.SURVIVING_TARGET,
             EvidenceSourceKind.SURVIVING_HOST,
             EvidenceSourceKind.SURVIVING_TYPE,
+            EvidenceSourceKind.AUTHORIZED_TYPE_COHORT,
             EvidenceSourceKind.APPROVED_PROTOTYPE,
             EvidenceSourceKind.DETERMINISTIC_POLICY,
         ),

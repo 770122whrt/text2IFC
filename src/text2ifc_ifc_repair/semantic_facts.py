@@ -21,7 +21,7 @@ from .evaluation_policy import (
     SemanticFactSpec,
     normalize_policy_fact_key,
 )
-from .index_models import ElementRecord, PropertyFact, TypeRecord
+from .index_models import AssociationFact, ElementRecord, PropertyFact, TypeRecord
 
 
 class SemanticFactError(ValueError):
@@ -119,6 +119,15 @@ def semantic_facts_from_element_record(
             compatible=compatible,
         )
     )
+    for association in record.associations:
+        facts.extend(
+            _semantic_facts_from_association(
+                association,
+                source_kind=source_kind,
+                authority_source_ref=source_ref,
+                compatible=compatible,
+            )
+        )
     return tuple(sorted(facts, key=lambda fact: fact.fact_key))
 
 
@@ -167,6 +176,15 @@ def semantic_facts_from_type_record(
         for fact_key, value, value_type in scalar_values
         if value is not None
     )
+    for association in record.associations:
+        facts.extend(
+            _semantic_facts_from_association(
+                association,
+                source_kind=source_kind,
+                authority_source_ref=source_ref,
+                compatible=compatible,
+            )
+        )
     return tuple(sorted(facts, key=lambda fact: (fact.fact_key, repr(fact.value))))
 
 
@@ -687,6 +705,64 @@ def _policy_accepts_key(policy: OperationEvaluationPolicy, fact_key: str) -> boo
     return any(
         fnmatchcase(fact_key, spec.fact_pattern) for spec in policy.semantic_facts
     )
+
+
+def _semantic_facts_from_association(
+    association: AssociationFact,
+    *,
+    source_kind: EvidenceSourceKind,
+    authority_source_ref: str,
+    compatible: bool,
+) -> tuple[SemanticFact, ...]:
+    """Lift public IFC association facts while retaining reusable resource identity."""
+
+    provenance = (
+        *association.provenance,
+        f"authority-source:{authority_source_ref}",
+        f"relationship:{association.relationship_ref}",
+        f"resource:{association.resource_ref}",
+    )
+    common = {
+        "unit": None,
+        "inherited": association.inherited,
+        "pset_path": None,
+        "entity_source": association.resource_ref,
+        "source_kind": source_kind,
+        "source_ref": f"resource:{association.resource_ref}",
+        "provenance": provenance,
+        "compatible": compatible,
+    }
+    if association.association_kind == "material":
+        names = association.semantic_value.get("names", ())
+        return tuple(
+            SemanticFact(
+                fact_key=f"material:{_key_token(str(name))}",
+                value=str(name),
+                value_type=association.resource_ifc_class,
+                **common,
+            )
+            for name in names
+            if str(name).strip()
+        )
+    if association.association_kind == "classification":
+        system = str(association.semantic_value.get("system") or "unspecified")
+        identification = str(
+            association.semantic_value.get("identification")
+            or association.semantic_value.get("name")
+            or association.resource_ref
+        )
+        return (
+            SemanticFact(
+                fact_key=(
+                    f"classification:{_key_token(system)}:"
+                    f"{_key_token(identification)}"
+                ),
+                value=dict(association.semantic_value),
+                value_type=association.resource_ifc_class,
+                **common,
+            ),
+        )
+    return ()
 
 
 def _normalize_fact_for_policy(

@@ -4,7 +4,7 @@ from dataclasses import dataclass, field
 from typing import Any
 
 
-INDEX_SCHEMA_VERSION = "text2ifc/ifc-index/0.2"
+INDEX_SCHEMA_VERSION = "text2ifc/ifc-index/0.3"
 
 
 @dataclass(frozen=True)
@@ -45,6 +45,21 @@ class PropertyFact:
 
 
 @dataclass(frozen=True)
+class AssociationFact:
+    association_kind: str
+    relationship_ref: str
+    relationship_ifc_class: str
+    resource_ref: str
+    resource_ifc_class: str
+    resource_name: str | None
+    semantic_value: dict[str, Any]
+    inherited: bool
+    occurrence_global_id: str | None
+    occurrence_type_global_id: str | None
+    provenance: tuple[str, ...]
+
+
+@dataclass(frozen=True)
 class IndexDiagnostic:
     code: str
     severity: str
@@ -76,6 +91,7 @@ class ElementRecord:
     aliases: tuple[AliasFact, ...] = ()
     relationships: tuple[RelationshipFact, ...] = ()
     properties: tuple[PropertyFact, ...] = ()
+    associations: tuple[AssociationFact, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -93,3 +109,4 @@ class TypeRecord:
     provenance: dict[str, Any] = field(default_factory=dict)
     aliases: tuple[AliasFact, ...] = ()
     properties: tuple[PropertyFact, ...] = ()
+    associations: tuple[AssociationFact, ...] = ()

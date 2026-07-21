@@ -54,6 +54,7 @@ class OperationDefinition:
     precondition_names: tuple[str, ...] = ()
     postcondition_names: tuple[str, ...] = ()
     evaluation_policy: OperationEvaluationPolicy | None = None
+    semantic_manifest_builder: OperationCallable | None = None
 
     def __post_init__(self) -> None:
         if not self.operation_type or not self.target_ifc_classes:
@@ -77,6 +78,12 @@ class OperationDefinition:
                     "INVALID_OPERATION_CAPABILITY",
                     f"{self.operation_type}.{capability_name}",
                 )
+        if self.semantic_manifest_builder is not None and not callable(
+            self.semantic_manifest_builder
+        ):
+            raise OperationRegistryError(
+                "INVALID_SEMANTIC_MANIFEST_BUILDER", self.operation_type
+            )
 
 
 class OperationRegistry:
@@ -144,6 +151,15 @@ class OperationRegistry:
             repaired_facts=repaired_facts,
         )
 
+    def build_semantic_manifest(self, operation_type: str, **kwargs: Any) -> Any:
+        definition = self.require(operation_type)
+        builder = definition.semantic_manifest_builder
+        if builder is None:
+            from .semantic_authoring import build_semantic_manifest
+
+            builder = build_semantic_manifest
+        return builder(registry=self, **kwargs)
+
     def validate_parameters(
         self,
         operation: Mapping[str, Any],
@@ -155,6 +171,48 @@ class OperationRegistry:
             code="OPERATION_PARAMETER_SCHEMA_ERROR",
             path_prefix="/parameters",
         )
+
+    def prepare_partial_parameters(
+        self,
+        operation: Mapping[str, Any],
+    ) -> dict[str, Any]:
+        """Copy partial parameters and add only schema-declared constants.
+
+        Constants such as the Window operation's local-coordinate convention
+        are deterministic compiler policy, not project facts authored by the
+        Provider.
+        """
+
+        definition = self.require(str(operation.get("operation_type", "")))
+        raw = operation.get("parameters")
+        value = copy.deepcopy(raw if isinstance(raw, Mapping) else {})
+        _inject_schema_constants(value, definition.parameter_schema)
+        return value
+
+    def validate_partial_parameters(
+        self,
+        operation: Mapping[str, Any],
+    ) -> list[ValidationIssue]:
+        """Validate supplied values without treating absent required facts as errors."""
+
+        definition = self.require(str(operation.get("operation_type", "")))
+        return _schema_issues(
+            value=operation.get("parameters"),
+            schema=_without_required(definition.parameter_schema),
+            code="OPERATION_PARAMETER_SCHEMA_ERROR",
+            path_prefix="/parameters",
+        )
+
+    def missing_required_parameters(
+        self,
+        operation: Mapping[str, Any],
+    ) -> tuple[str, ...]:
+        """Return stable JSON pointers for executable facts still absent."""
+
+        definition = self.require(str(operation.get("operation_type", "")))
+        parameters = operation.get("parameters")
+        value = parameters if isinstance(parameters, Mapping) else {}
+        return tuple(sorted(_missing_required(value, definition.parameter_schema)))
 
     def validate_target(
         self,
@@ -202,6 +260,75 @@ def _schema_issues(
         for error in validator.iter_errors(value)
     ]
     return sorted(set(issues), key=lambda issue: (issue.path, issue.message))
+
+
+def _without_required(schema: Mapping[str, Any]) -> dict[str, Any]:
+    relaxed: dict[str, Any] = {}
+    for key, value in schema.items():
+        if key == "required":
+            continue
+        if isinstance(value, Mapping):
+            relaxed[key] = _without_required(value)
+        elif isinstance(value, list):
+            relaxed[key] = [
+                _without_required(item) if isinstance(item, Mapping) else copy.deepcopy(item)
+                for item in value
+            ]
+        else:
+            relaxed[key] = copy.deepcopy(value)
+    return relaxed
+
+
+def _inject_schema_constants(value: dict[str, Any], schema: Mapping[str, Any]) -> None:
+    properties = schema.get("properties")
+    if not isinstance(properties, Mapping):
+        return
+    for name, raw_child in properties.items():
+        if not isinstance(raw_child, Mapping):
+            continue
+        child = dict(raw_child)
+        if name not in value and "const" in child:
+            value[str(name)] = copy.deepcopy(child["const"])
+            continue
+        if child.get("type") != "object":
+            continue
+        existing = value.get(name)
+        nested: dict[str, Any]
+        if isinstance(existing, Mapping):
+            nested = copy.deepcopy(dict(existing))
+        elif existing is None:
+            nested = {}
+        else:
+            continue
+        _inject_schema_constants(nested, child)
+        if nested:
+            value[str(name)] = nested
+
+
+def _missing_required(
+    value: Mapping[str, Any],
+    schema: Mapping[str, Any],
+    prefix: str = "",
+) -> list[str]:
+    required = schema.get("required", ())
+    properties = schema.get("properties", {})
+    if not isinstance(required, (list, tuple)) or not isinstance(properties, Mapping):
+        return []
+    missing: list[str] = []
+    for raw_name in required:
+        name = str(raw_name)
+        child = properties.get(name, {})
+        child_schema = child if isinstance(child, Mapping) else {}
+        path = f"{prefix}/{name}"
+        present = name in value
+        if not present:
+            nested = _missing_required({}, child_schema, path)
+            missing.extend(nested or [path])
+            continue
+        child_value = value[name]
+        if isinstance(child_value, Mapping):
+            missing.extend(_missing_required(child_value, child_schema, path))
+    return missing
 
 
 def _pointer(parts: Any, *, prefix: str) -> str:
