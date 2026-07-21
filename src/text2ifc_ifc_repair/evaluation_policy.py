@@ -5,6 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from enum import Enum
 import re
+from typing import Callable
 
 
 _STABLE_ID = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._:/-]*$")
@@ -41,6 +42,12 @@ class EvidenceSourceKind(str, Enum):
 
 class ComparisonRule(str, Enum):
     TYPED_EQUIVALENCE = "typed_equivalence"
+
+
+@dataclass(frozen=True)
+class FactKeyNormalization:
+    fact_key: str
+    source_fact_key: str
 
 
 SOURCE_PRECEDENCE = (
@@ -102,6 +109,7 @@ class OperationEvaluationPolicy:
     operation_type: str
     semantic_facts: tuple[SemanticFactSpec, ...]
     semantic_role: str = "target"
+    fact_key_normalizer: Callable[[str], FactKeyNormalization] | None = None
 
     def __post_init__(self) -> None:
         if not _STABLE_ID.fullmatch(self.policy_id):
@@ -130,12 +138,48 @@ class OperationEvaluationPolicy:
             raise PolicyContractError("DUPLICATE_EVALUATION_CHECK_ID", duplicate)
 
 
+def extend_policy_with_explicit_facts(
+    policy: OperationEvaluationPolicy,
+    fact_keys: tuple[str, ...],
+) -> OperationEvaluationPolicy:
+    """Return an exact explicit-request extension without global wildcards."""
+
+    existing = {spec.fact_pattern for spec in policy.semantic_facts}
+    additions: list[SemanticFactSpec] = []
+    for fact_key in sorted(set(fact_keys)):
+        if not fact_key or "*" in fact_key or any(char.isspace() for char in fact_key):
+            raise PolicyContractError("INVALID_EXPLICIT_SEMANTIC_FACT", fact_key)
+        if fact_key in existing:
+            continue
+        token = re.sub(r"[^A-Za-z0-9._/-]+", "-", fact_key).strip("-")
+        additions.append(
+            SemanticFactSpec(
+                check_id=f"explicit.{token}",
+                version=policy.version,
+                fact_pattern=fact_key,
+                applicability=SemanticApplicability.CONDITIONAL,
+                allowed_sources=(EvidenceSourceKind.EXPLICIT_REQUEST,),
+                comparison=ComparisonRule.TYPED_EQUIVALENCE,
+            )
+        )
+    return OperationEvaluationPolicy(
+        policy_id=policy.policy_id,
+        version=policy.version,
+        operation_type=policy.operation_type,
+        semantic_facts=(*policy.semantic_facts, *additions),
+        semantic_role=policy.semantic_role,
+        fact_key_normalizer=policy.fact_key_normalizer,
+    )
+
+
 __all__ = [
     "ComparisonRule",
     "EvidenceSourceKind",
+    "FactKeyNormalization",
     "OperationEvaluationPolicy",
     "PolicyContractError",
     "SOURCE_PRECEDENCE",
     "SemanticApplicability",
     "SemanticFactSpec",
+    "extend_policy_with_explicit_facts",
 ]

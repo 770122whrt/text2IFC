@@ -26,6 +26,7 @@ from text2ifc_ifc_repair.geometry import (
 from text2ifc_ifc_repair.evaluation_policy import (
     ComparisonRule,
     EvidenceSourceKind,
+    FactKeyNormalization,
     OperationEvaluationPolicy,
     SemanticApplicability,
     SemanticFactSpec,
@@ -90,7 +91,7 @@ _AUTHORIZED_SEMANTIC_SOURCES = (
 )
 
 
-def _semantic_spec(
+def _semantic_spec_0_1(
     check_id: str,
     fact_pattern: str,
     applicability: SemanticApplicability,
@@ -106,39 +107,115 @@ def _semantic_spec(
     )
 
 
-WINDOW_EVALUATION_POLICY = OperationEvaluationPolicy(
+WINDOW_EVALUATION_POLICY_0_1 = OperationEvaluationPolicy(
     policy_id="window.add-with-opening.l2",
     version="0.1",
     operation_type=OPERATION_TYPE,
     semantic_role="window",
     semantic_facts=(
-        _semantic_spec("window.type", "relationship:type", SemanticApplicability.REQUIRED),
-        _semantic_spec("window.host", "relationship:host", SemanticApplicability.REQUIRED),
-        _semantic_spec("window.storey", "relationship:storey", SemanticApplicability.REQUIRED),
-        _semantic_spec(
+        _semantic_spec_0_1("window.type", "relationship:type", SemanticApplicability.REQUIRED),
+        _semantic_spec_0_1("window.host", "relationship:host", SemanticApplicability.REQUIRED),
+        _semantic_spec_0_1("window.storey", "relationship:storey", SemanticApplicability.REQUIRED),
+        _semantic_spec_0_1(
             "window.is-external",
             "pset:Pset_WindowCommon.IsExternal",
             SemanticApplicability.REQUIRED,
         ),
-        _semantic_spec("window.width", "attribute:OverallWidth", SemanticApplicability.REQUIRED),
-        _semantic_spec("window.height", "attribute:OverallHeight", SemanticApplicability.REQUIRED),
-        _semantic_spec(
+        _semantic_spec_0_1("window.width", "attribute:OverallWidth", SemanticApplicability.REQUIRED),
+        _semantic_spec_0_1("window.height", "attribute:OverallHeight", SemanticApplicability.REQUIRED),
+        _semantic_spec_0_1(
             "window.base-quantities",
             "quantity:Qto_WindowBaseQuantities.*",
             SemanticApplicability.REQUIRED,
         ),
-        _semantic_spec("window.material", "material:*", SemanticApplicability.CONDITIONAL),
-        _semantic_spec(
+        _semantic_spec_0_1("window.material", "material:*", SemanticApplicability.CONDITIONAL),
+        _semantic_spec_0_1(
             "window.classification",
             "classification:*",
             SemanticApplicability.CONDITIONAL,
         ),
-        _semantic_spec("window.pset", "pset:*", SemanticApplicability.CONDITIONAL),
-        _semantic_spec("window.quantity", "quantity:*", SemanticApplicability.CONDITIONAL),
-        _semantic_spec("window.name", "label:Name", SemanticApplicability.CONDITIONAL),
-        _semantic_spec("window.tag", "label:Tag", SemanticApplicability.CONDITIONAL),
-        _semantic_spec("window.instance", "instance:*", SemanticApplicability.CONDITIONAL),
+        _semantic_spec_0_1("window.pset", "pset:*", SemanticApplicability.CONDITIONAL),
+        _semantic_spec_0_1("window.quantity", "quantity:*", SemanticApplicability.CONDITIONAL),
+        _semantic_spec_0_1("window.name", "label:Name", SemanticApplicability.CONDITIONAL),
+        _semantic_spec_0_1("window.tag", "label:Tag", SemanticApplicability.CONDITIONAL),
+        _semantic_spec_0_1("window.instance", "instance:*", SemanticApplicability.CONDITIONAL),
     ),
+)
+
+_WINDOW_PRODUCTION_SOURCES = tuple(
+    source
+    for source in _AUTHORIZED_SEMANTIC_SOURCES
+    if source is not EvidenceSourceKind.PRIVATE_ORIGINAL
+)
+
+
+def _semantic_spec_0_2(
+    check_id: str,
+    fact_pattern: str,
+    applicability: SemanticApplicability,
+) -> SemanticFactSpec:
+    return SemanticFactSpec(
+        check_id=check_id,
+        version="0.2",
+        fact_pattern=fact_pattern,
+        applicability=applicability,
+        allowed_sources=_WINDOW_PRODUCTION_SOURCES,
+        comparison=ComparisonRule.TYPED_EQUIVALENCE,
+        absolute_tolerance=1e-6,
+    )
+
+
+_WINDOW_QUANTITY_ALIASES = {
+    f"quantity:{set_name}.{quantity}": f"quantity:window-base.{quantity}"
+    for set_name in ("BaseQuantities", "Qto_WindowBaseQuantities")
+    for quantity in ("Width", "Height", "Area")
+}
+
+
+def canonicalize_window_fact_key(fact_key: str) -> FactKeyNormalization:
+    canonical = _WINDOW_QUANTITY_ALIASES.get(fact_key)
+    if canonical is not None:
+        return FactKeyNormalization(canonical, fact_key)
+    if fact_key.startswith("quantity:") and (
+        "BaseQuantities." in fact_key or fact_key.startswith("quantity:Qto_")
+    ):
+        raise ValueError(f"UNSUPPORTED_WINDOW_QUANTITY_ALIAS: {fact_key}")
+    return FactKeyNormalization(fact_key, fact_key)
+
+
+WINDOW_EVALUATION_POLICY = OperationEvaluationPolicy(
+    policy_id="window.add-with-opening.l2",
+    version="0.2",
+    operation_type=OPERATION_TYPE,
+    semantic_role="window",
+    semantic_facts=(
+        _semantic_spec_0_2("window.type", "relationship:type", SemanticApplicability.REQUIRED),
+        _semantic_spec_0_2("window.host", "relationship:host", SemanticApplicability.REQUIRED),
+        _semantic_spec_0_2("window.storey", "relationship:storey", SemanticApplicability.REQUIRED),
+        _semantic_spec_0_2("window.width", "attribute:OverallWidth", SemanticApplicability.REQUIRED),
+        _semantic_spec_0_2("window.height", "attribute:OverallHeight", SemanticApplicability.REQUIRED),
+        _semantic_spec_0_2(
+            "window.is-external",
+            "pset:Pset_WindowCommon.IsExternal",
+            SemanticApplicability.REQUIRED,
+        ),
+        _semantic_spec_0_2("window.quantity.width", "quantity:window-base.Width", SemanticApplicability.REQUIRED),
+        _semantic_spec_0_2("window.quantity.height", "quantity:window-base.Height", SemanticApplicability.REQUIRED),
+        _semantic_spec_0_2("window.quantity.area", "quantity:window-base.Area", SemanticApplicability.REQUIRED),
+        _semantic_spec_0_2("window.material", "material:*", SemanticApplicability.CONDITIONAL),
+        _semantic_spec_0_2("window.classification", "classification:*", SemanticApplicability.CONDITIONAL),
+        _semantic_spec_0_2(
+            "window.reference",
+            "pset:Pset_WindowCommon.Reference",
+            SemanticApplicability.CONDITIONAL,
+        ),
+        _semantic_spec_0_2(
+            "window.thermal-transmittance",
+            "pset:Pset_WindowCommon.ThermalTransmittance",
+            SemanticApplicability.CONDITIONAL,
+        ),
+    ),
+    fact_key_normalizer=canonicalize_window_fact_key,
 )
 
 WINDOW_L1_POLICY_ID = "window.add-with-opening.l1"

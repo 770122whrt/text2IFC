@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from fnmatch import fnmatchcase
 import math
 import re
@@ -191,6 +191,7 @@ def extract_ifc_semantic_facts(
                 provenance=provenance,
                 compatible=compatible,
             )
+            semantic = _normalize_fact_for_policy(policy, semantic)
             if _policy_accepts_key(policy, semantic.fact_key):
                 facts.append(semantic)
 
@@ -331,8 +332,8 @@ def evaluate_operation_semantics(
 ) -> tuple[CheckResult, ...]:
     """Evaluate any operation policy without operation-family field branches."""
 
-    expected = tuple(expected_facts)
-    repaired = tuple(repaired_facts)
+    expected = tuple(_normalize_fact_for_policy(policy, fact) for fact in expected_facts)
+    repaired = tuple(_normalize_fact_for_policy(policy, fact) for fact in repaired_facts)
     if any(fact.source_kind is not EvidenceSourceKind.REPAIRED_OUTPUT for fact in repaired):
         raise SemanticFactError(
             "INVALID_REPAIRED_FACT_SOURCE", "repaired facts must come from repaired_output"
@@ -684,6 +685,22 @@ def _optional_text(value: Any) -> str | None:
 def _policy_accepts_key(policy: OperationEvaluationPolicy, fact_key: str) -> bool:
     return any(
         fnmatchcase(fact_key, spec.fact_pattern) for spec in policy.semantic_facts
+    )
+
+
+def _normalize_fact_for_policy(
+    policy: OperationEvaluationPolicy,
+    fact: SemanticFact,
+) -> SemanticFact:
+    if policy.fact_key_normalizer is None:
+        return fact
+    normalized = policy.fact_key_normalizer(fact.fact_key)
+    if normalized.fact_key == fact.fact_key:
+        return fact
+    return replace(
+        fact,
+        fact_key=normalized.fact_key,
+        provenance=(*fact.provenance, f"source_fact_key:{normalized.source_fact_key}"),
     )
 
 
