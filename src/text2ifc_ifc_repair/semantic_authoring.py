@@ -88,6 +88,36 @@ class SemanticManifest:
     assignments: tuple[SemanticAssignment, ...]
 
 
+def semantic_assignment_identity(
+    assignment: SemanticAssignment,
+) -> tuple[str, str, str, str]:
+    """Return the operation-neutral deterministic assignment identity."""
+
+    return (
+        assignment.operation_id,
+        assignment.fact_key,
+        assignment.ownership.value,
+        assignment.authoring_action.value,
+    )
+
+
+def order_semantic_assignments(
+    assignments: Sequence[SemanticAssignment],
+) -> tuple[SemanticAssignment, ...]:
+    """Deduplicate identical assignments, reject conflicts, and sort stably."""
+
+    by_slot: dict[tuple[str, str], SemanticAssignment] = {}
+    for assignment in assignments:
+        slot = (assignment.operation_id, assignment.fact_key)
+        previous = by_slot.get(slot)
+        if previous is not None and previous != assignment:
+            raise SemanticManifestError(
+                "CONFLICTING_SEMANTIC_ASSIGNMENT", assignment.fact_key
+            )
+        by_slot[slot] = assignment
+    return tuple(sorted(by_slot.values(), key=semantic_assignment_identity))
+
+
 @lru_cache(maxsize=1)
 def _cached_schema() -> dict[str, Any]:
     schema = json.loads(SEMANTIC_MANIFEST_SCHEMA_PATH.read_text(encoding="utf-8"))
@@ -121,15 +151,9 @@ def parse_semantic_manifest(document: Any) -> SemanticManifest:
         error = structural[0]
         raise SemanticManifestError("SEMANTIC_MANIFEST_SCHEMA_INVALID", error.message)
 
-    parsed = tuple(_parse_assignment(payload) for payload in assignments)
-    by_key: dict[str, SemanticAssignment] = {}
-    for assignment in parsed:
-        previous = by_key.get(assignment.fact_key)
-        if previous is not None and previous != assignment:
-            raise SemanticManifestError(
-                "CONFLICTING_SEMANTIC_ASSIGNMENT", assignment.fact_key
-            )
-        by_key[assignment.fact_key] = assignment
+    parsed = order_semantic_assignments(
+        tuple(_parse_assignment(payload) for payload in assignments)
+    )
     policy = document["policy"]
     return SemanticManifest(
         schema_version=SEMANTIC_MANIFEST_SCHEMA_VERSION,
@@ -139,7 +163,7 @@ def parse_semantic_manifest(document: Any) -> SemanticManifest:
         base_model_fingerprint=str(document["base_model_fingerprint"]),
         policy_id=str(policy["policy_id"]),
         policy_version=str(policy["policy_version"]),
-        assignments=tuple(by_key[key] for key in sorted(by_key)),
+        assignments=parsed,
     )
 
 
@@ -204,5 +228,7 @@ __all__ = [
     "SemanticManifestError",
     "SemanticOwnership",
     "load_semantic_manifest_schema",
+    "order_semantic_assignments",
     "parse_semantic_manifest",
+    "semantic_assignment_identity",
 ]

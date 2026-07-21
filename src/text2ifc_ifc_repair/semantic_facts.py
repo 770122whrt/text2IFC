@@ -19,6 +19,7 @@ from .evaluation_policy import (
     SOURCE_PRECEDENCE,
     SemanticApplicability,
     SemanticFactSpec,
+    normalize_policy_fact_key,
 )
 from .index_models import ElementRecord, PropertyFact, TypeRecord
 
@@ -692,9 +693,7 @@ def _normalize_fact_for_policy(
     policy: OperationEvaluationPolicy,
     fact: SemanticFact,
 ) -> SemanticFact:
-    if policy.fact_key_normalizer is None:
-        return fact
-    normalized = policy.fact_key_normalizer(fact.fact_key)
+    normalized = normalize_policy_fact_key(policy, fact.fact_key)
     if normalized.fact_key == fact.fact_key:
         return fact
     return replace(

@@ -172,6 +172,24 @@ def extend_policy_with_explicit_facts(
     )
 
 
+def normalize_policy_fact_key(
+    policy: OperationEvaluationPolicy,
+    fact_key: str,
+) -> FactKeyNormalization:
+    """Apply an operation-owned canonicalizer through one common seam."""
+
+    normalized = (
+        FactKeyNormalization(fact_key, fact_key)
+        if policy.fact_key_normalizer is None
+        else policy.fact_key_normalizer(fact_key)
+    )
+    if not isinstance(normalized, FactKeyNormalization):
+        raise PolicyContractError("INVALID_FACT_KEY_NORMALIZATION", fact_key)
+    if not normalized.fact_key or not normalized.source_fact_key:
+        raise PolicyContractError("INVALID_FACT_KEY_NORMALIZATION", fact_key)
+    return normalized
+
+
 __all__ = [
     "ComparisonRule",
     "EvidenceSourceKind",
@@ -182,4 +200,5 @@ __all__ = [
     "SemanticApplicability",
     "SemanticFactSpec",
     "extend_policy_with_explicit_facts",
+    "normalize_policy_fact_key",
 ]

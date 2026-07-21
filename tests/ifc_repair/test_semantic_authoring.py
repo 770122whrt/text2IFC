@@ -175,3 +175,74 @@ def test_explicit_request_extension_is_exact_not_a_global_wildcard() -> None:
     assert "pset:*" not in extensions
     assert "instance:*" not in extensions
 
+
+def test_assignment_identity_and_sorting_are_operation_neutral() -> None:
+    api = _api()
+    manifest = api.parse_semantic_manifest(valid_manifest())
+
+    identities = [api.semantic_assignment_identity(item) for item in manifest.assignments]
+
+    assert identities == sorted(identities)
+    assert identities[0] == (
+        "operation-window-001",
+        "attribute:OverallWidth",
+        "occurrence_direct",
+        "set_attribute",
+    )
+
+
+def test_future_operation_registers_its_own_fact_key_normalizer() -> None:
+    from text2ifc_ifc_repair.evaluation_policy import (
+        ComparisonRule,
+        EvidenceSourceKind,
+        FactKeyNormalization,
+        OperationEvaluationPolicy,
+        SemanticApplicability,
+        SemanticFactSpec,
+        normalize_policy_fact_key,
+    )
+    from text2ifc_ifc_repair.registry import OperationDefinition, OperationRegistry
+
+    def normalize_fixture(fact_key: str) -> FactKeyNormalization:
+        canonical = fact_key.replace("quantity:FixtureBaseQuantities.", "quantity:fixture-base.")
+        return FactKeyNormalization(canonical, fact_key)
+
+    policy = OperationEvaluationPolicy(
+        policy_id="fixture.add-component.l2",
+        version="0.1",
+        operation_type="fixture_add_component",
+        semantic_facts=(
+            SemanticFactSpec(
+                check_id="fixture.height",
+                version="0.1",
+                fact_pattern="quantity:fixture-base.Height",
+                applicability=SemanticApplicability.REQUIRED,
+                allowed_sources=(EvidenceSourceKind.EXPLICIT_REQUEST,),
+                comparison=ComparisonRule.TYPED_EQUIVALENCE,
+            ),
+        ),
+        fact_key_normalizer=normalize_fixture,
+    )
+    registry = OperationRegistry()
+    registry.register(
+        OperationDefinition(
+            operation_type="fixture_add_component",
+            target_ifc_classes=("IfcBuildingElement",),
+            parameter_schema={"type": "object"},
+            context_adapter=lambda **kwargs: kwargs,
+            precondition_checker=lambda **kwargs: kwargs,
+            applicator=lambda **kwargs: kwargs,
+            postcondition_checker=lambda **kwargs: kwargs,
+            comparison_adapter=lambda **kwargs: kwargs,
+            capability_constraints={"fixture": True},
+            evaluation_policy=policy,
+        )
+    )
+
+    registered = registry.require_evaluation_policy("fixture_add_component")
+    normalized = normalize_policy_fact_key(
+        registered, "quantity:FixtureBaseQuantities.Height"
+    )
+
+    assert normalized.fact_key == "quantity:fixture-base.Height"
+    assert normalized.source_fact_key == "quantity:FixtureBaseQuantities.Height"
