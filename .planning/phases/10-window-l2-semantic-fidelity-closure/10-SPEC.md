@@ -211,24 +211,24 @@ additional entity-family expansion begins.
 
 ## Acceptance Criteria
 
-- [ ] Window semantic manifests and bound ChangeSets validate against exact
+- [x] Window semantic manifests and bound ChangeSets validate against exact
   schema versions and reject unauthorized/private facts.
-- [ ] Stage 2 prompt captures contain only the manifest reference/summary and
+- [x] Stage 2 prompt captures contain only the manifest reference/summary and
   explicit user slots, never the expanded semantic list or Ground Truth.
-- [ ] Policy 0.2 accepts normalized IFC2X3 Base Quantities and contains no
+- [x] Policy 0.2 accepts normalized IFC2X3 Base Quantities and contains no
   undefined `instance:*` success gate; policy 0.1 evidence remains readable.
-- [ ] Reopened repaired Windows contain matching Type, Host, Storey,
+- [x] Reopened repaired Windows contain matching Type, Host, Storey,
   OverallWidth/Height, IsExternal, and required Base Quantities.
-- [ ] Authorized selected Psets, Material, and Classification are present and
+- [x] Authorized selected Psets, Material, and Classification are present and
   L2-equivalent; verified absence is `not_required`.
-- [ ] A semantic authoring failure rolls back atomically and cannot expose a
+- [x] A semantic authoring failure rolls back atomically and cannot expose a
   successful IFC artifact.
-- [ ] Production artifacts and Provider prompts pass private-Gold canary scans.
-- [ ] LargeBuilding damaged-IFC-plus-text offline integration passes Production
+- [x] Production artifacts and Provider prompts pass private-Gold canary scans.
+- [x] LargeBuilding damaged-IFC-plus-text offline integration passes Production
   L1/L2 and private benchmark L1/L2.
-- [ ] All four configured real DeepSeek Window UAT paths pass L1/L2 and publish
+- [x] All four configured real DeepSeek Window UAT paths pass L1/L2 and publish
   successful IFCs, or retain honest provider/application failure evidence.
-- [ ] Full `tests/ifc_repair`, provider compatibility tests, `compileall`, and
+- [x] Full `tests/ifc_repair`, provider compatibility tests, `compileall`, and
   `git diff --check` pass.
 
 ## Ambiguity Report
@@ -255,4 +255,4 @@ additional entity-family expansion begins.
 
 *Phase: 10-window-l2-semantic-fidelity-closure*
 *Spec created: 2026-07-21*
-*Next step: execute the Phase 10 plans after review*
+*Completed 2026-07-22. See `10-VERIFICATION.md` and the Phase 10 validation report.*
