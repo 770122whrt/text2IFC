@@ -256,6 +256,14 @@ def _provider_attempts(root: Path) -> dict[str, int]:
 
 def _provider_metadata(root: Path) -> list[dict[str, Any]]:
     result = []
+    for path in sorted(root.rglob("intent/attempt-*.json")):
+        payload = _read_json(path).get("provider_metadata", {})
+        if payload.get("provider") or payload.get("model"):
+            result.append({
+                "stage": "stage1",
+                "provider": payload.get("provider"),
+                "model": payload.get("model"),
+            })
     for path in sorted(root.rglob("provider-metadata.json")):
         payload = _read_json(path)
         result.append({
@@ -316,4 +324,3 @@ def _write(path: Path, value: Any) -> None:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

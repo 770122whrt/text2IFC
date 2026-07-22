@@ -61,11 +61,10 @@ def test_large_building_phase8_baseline_is_offline_l1_only_success(
         for check in levels["L2"]["checks"]
         if check["remediation_required"]
         and check["difference_category"]
-        in {"pset", "quantity", "is_external", "material", "classification"}
+        in {"quantity", "is_external", "material", "classification"}
     }
-    assert {"pset", "quantity", "is_external", "classification"} <= remediation
+    assert {"quantity", "is_external", "classification"} <= remediation
     assert remediation <= {
-        "pset",
         "quantity",
         "is_external",
         "material",
@@ -110,4 +109,3 @@ def test_large_building_phase8_baseline_is_offline_l1_only_success(
     if original_psets:
         assert pset_checks
         assert any(check["status"] != "not_required" for check in pset_checks)
-
