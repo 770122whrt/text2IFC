@@ -28,4 +28,3 @@ used. The earlier sandbox-denied attempt remains immutable failed evidence.
 Final verification: 422 IFC repair tests passed with one Windows symlink skip,
 31 Provider compatibility tests passed, compileall passed, and the live runner
 exited 0 with four `contract_pass=true` cases.
-
