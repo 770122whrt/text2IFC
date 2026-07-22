@@ -159,6 +159,14 @@ Plans:
 
 **Depends on:** Phases 8, 9 and 09.1
 
+**Plans:** 5/5 plans executed
+
+- [x] **10-01** - Frozen Window semantic manifest and L2 policy contract.
+- [x] **10-02** - Production semantic authority from surviving IFC evidence.
+- [x] **10-03** - Compact Provider draft and deterministic Bound ChangeSet 0.2.
+- [x] **10-04** - Atomic IFC2X3 semantic authoring and independent reopen/L1/L2.
+- [x] **10-05** - LargeBuilding offline and four-path real DeepSeek acceptance.
+
 **Success criteria:**
 
 1. Window repair restores required `IsExternal`, selected instance Psets,
@@ -166,6 +174,8 @@ Plans:
 2. The LargeBuilding benchmark passes both L1 and the frozen Window L2
    allowlist in offline and real-Provider UAT.
 3. Historical v0.1 L1 evidence remains versioned rather than relabelled.
+
+**Evidence:** [Phase 10 validation report](../docs/validation/ifc2x3-changeset/phase10-validation-report.md) and [goal verification](phases/10-window-l2-semantic-fidelity-closure/10-VERIFICATION.md)
 
 ### Phase 11: Wall Opening and Door Operations
 

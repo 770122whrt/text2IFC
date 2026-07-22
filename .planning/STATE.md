@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: IFC ChangeSet Repair Pipeline
-status: Ready to execute
-last_updated: "2026-07-21T09:03:41.330Z"
+status: Ready to plan
+last_updated: "2026-07-22T09:30:00+08:00"
 progress:
   total_phases: 8
-  completed_phases: 4
+  completed_phases: 5
   total_plans: 22
-  completed_plans: 18
-  percent: 82
+  completed_plans: 22
+  percent: 100
 ---
 
 # Project State
@@ -21,21 +21,21 @@ See `.planning/PROJECT.md`.
 **Core value:** Given an IFC file and an explicit user request, produce a
 traceable semantic ChangeSet and an L1/L2-validated IFC result.
 
-**Current focus:** Phase 10 — Window L2 Semantic Fidelity Closure
+**Current focus:** Phase 10 complete; Phase 10.1 property retrieval design remains deferred
 
 ## Current Position
 
-Phase: 10 (Window L2 Semantic Fidelity Closure) — EXECUTING
-Plan: 2 of 5
+Phase: 10 (Window L2 Semantic Fidelity Closure) — COMPLETE
+Plan: 5 of 5
 
 - Milestone: v1.1 IFC ChangeSet Repair Pipeline
 - Phase: 10
-- Plan: Phase planning not started
-- Status: Phase 09.1 complete; Window semantic authoring handoff ready
-- Progress: 4 / 8 phases complete
-- Requirements: 11 pending, 14 complete, 25 mapped, 0 unmapped
-- Last activity: 2026-07-21 — Phase 09.1 completed with four-path real
-  DeepSeek UAT and LargeBuilding Type evidence correction
+- Plan: 5 of 5 complete
+- Status: Window L2 semantic fidelity closure verified
+- Progress: 5 / 8 phases complete
+- Requirements: 6 pending, 19 complete, 25 mapped, 0 unmapped
+- Last activity: 2026-07-22 — LargeBuilding offline and four-path real
+  DeepSeek UAT passed Production and private benchmark L1/L2
 
 ## Carried Context
 
@@ -52,17 +52,16 @@ Plan: 2 of 5
   ChangeSet generation, production semantic authority, all-or-nothing apply,
   and crash-recoverable terminal publication.
 
-- The Phase 9 LargeBuilding offline path is intentionally L1 `passed`, L2
-  `not_evaluable`, L3 `not_required`, non-publishable and diagnostic-only.
+- Phase 10 upgrades the LargeBuilding Window path to a bound ChangeSet 0.2,
+  atomic semantic authoring, Production L1/L2 pass and successful publication.
 
 - Phase 09.1 separates TypeRecord authority from occurrence-direct facts. The
   41-occurrence LargeBuilding Window Style no longer raises a false
   `PROTOTYPE_TYPE_FACT_CONFLICT`.
 
-- Four real DeepSeek paths now reach Stage 2 and L2, including exact Type name
-  without GUID and a one-candidate dimensions confirmation. All remain
-  correctly non-publishable because genuine Window semantic authoring is still
-  missing.
+- Four real DeepSeek paths publish validated IFC results, including exact Type
+  name without GUID and a one-candidate dimensions confirmation. All four pass
+  Production and private benchmark L1/L2 with no synthetic fallback.
 
 - Current DeepSeek input/output guards remain 65,536 tokens. The 128k
   experiment remains Phase 13.
@@ -82,8 +81,8 @@ Plan: 2 of 5
 
 ## Next Action
 
-Discuss and plan Phase 10 Window L2 semantic authoring for base quantities,
-classification, width/height, host/instance and conditional material facts.
+Discuss whether Phase 10.1 property knowledge/retrieval should precede Phase 11,
+then write its own SPEC/PLAN without weakening the completed Window pipeline.
 
 ---
-*Last updated: 2026-07-21 after Phase 09.1 completion*
+*Last updated: 2026-07-22 after Phase 10 completion*

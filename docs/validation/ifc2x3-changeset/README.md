@@ -7,6 +7,7 @@ Phase 8 验证报告：[Evaluation 0.2、Benchmark Gold 隔离与 LargeBuilding 
 
 | 文档 | 职责 | 当前状态 |
 |---|---|---|
+| [phase10-validation-report.md](phase10-validation-report.md) | Window 语义 manifest/Bound ChangeSet、原子写回、LargeBuilding 离线与四路径 DeepSeek L1/L2 | 2026-07-22 通过；Phase 10.1 RAG 与自定义属性明确延后 |
 | [phase9.1-validation-report.md](phase9.1-validation-report.md) | Type/Occurrence 证据修正、无 GUID Prototype 解析、LargeBuilding 与四路径 DeepSeek UAT | 2026-07-21 通过；真实 L2 缺口交接 Phase 10 |
 | [phase9-stage1-contract-repair-report.md](phase9-stage1-contract-repair-report.md) | Stage 1 partial intent、系统指纹封装、缺参 feedback 与双路径 DeepSeek UAT | 2026-07-20 两组 Stage 1 合同通过；整体因既有 L2 evidence conflict 未发布 |
 | [phase9-validation-report.md](phase9-validation-report.md) | 单一 IFC + 文本 RepairAPI、薄 CLI、离线/LargeBuilding 与真实 DeepSeek UAT | 2026-07-20 确定性验收通过；Stage 1 修复后 live 双路径已进入 Stage 2 |

@@ -46,10 +46,10 @@ semantic ChangeSet and an L1/L2-validated IFC result.
 
 ### Window Fidelity
 
-- [ ] **WIN-01**: Window repair restores the frozen Window L2 facts including
+- [x] **WIN-01**: Window repair restores the frozen Window L2 facts including
   type, host/storey, `IsExternal`, selected Psets/quantities, material and
   classification when resolvable from non-gold evidence.
-- [ ] **WIN-02**: The LargeBuilding Window case passes both L1 and L2 in
+- [x] **WIN-02**: The LargeBuilding Window case passes both L1 and L2 in
   deterministic and real-Provider evidence runs.
 
 ### IFC Type Authority
@@ -120,8 +120,8 @@ semantic ChangeSet and an L1/L2-validated IFC result.
 | TYPE-01 | 09.1 | Complete |
 | TYPE-02 | 09.1 | Complete |
 | TYPE-03 | 09.1 | Complete |
-| WIN-01 | 10 | Pending |
-| WIN-02 | 10 | Pending |
+| WIN-01 | 10 | Complete |
+| WIN-02 | 10 | Complete |
 | OPS-01 | 11 | Pending |
 | OPS-02 | 11 | Pending |
 | OPS-03 | 12 | Pending |
@@ -132,4 +132,4 @@ semantic ChangeSet and an L1/L2-validated IFC result.
 **Coverage:** 25 requirements, 25 mapped, 0 unmapped.
 
 ---
-*Last updated: 2026-07-20 after Phase 09.1 insertion*
+*Last updated: 2026-07-22 after Phase 10 completion*
