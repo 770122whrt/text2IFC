@@ -191,7 +191,7 @@ publish only after independent reopened-IFC L2 validation.
 
 **Depends on:** Phase 10
 
-**Plans:** 2/4 plans executed
+**Plans:** 3/4 plans executed
 
 - [ ] **Wave 1:** `10.1-01` - Versioned exact-property intent and deterministic resolution contract.
 - [ ] **Wave 2** *(blocked on Wave 1)*: `10.1-02` - Clarification, custom-property confirmation and scope safety.

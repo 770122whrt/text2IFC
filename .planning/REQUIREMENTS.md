@@ -65,11 +65,11 @@ semantic ChangeSet and an L1/L2-validated IFC result.
   candidate confirmation; uncertainty asks the user, no Type intent creates a
   deterministic dedicated system-template Type, and direct shared-Type
   mutation is deferred.
-- [ ] **PROP-04**: The unified ChangeSet atomically creates or updates the
+- [x] **PROP-04**: The unified ChangeSet atomically creates or updates the
   authorized direct Pset/property and any required dedicated template Type
   without duplicate relationships; any authoring/reopen failure publishes no
   successful IFC.
-- [ ] **PROP-05**: Every explicitly requested property becomes a mandatory
+- [x] **PROP-05**: Every explicitly requested property becomes a mandatory
   dynamic L2 fact and the Window LargeBuilding path passes offline and real-
   Provider exact-property acceptance without RAG or private Ground Truth.
 
@@ -160,8 +160,8 @@ semantic ChangeSet and an L1/L2-validated IFC result.
 | PROP-01 | 10.1 | Complete |
 | PROP-02 | 10.1 | Complete |
 | PROP-03 | 10.1 | Complete |
-| PROP-04 | 10.1 | Pending |
-| PROP-05 | 10.1 | Pending |
+| PROP-04 | 10.1 | Complete |
+| PROP-05 | 10.1 | Complete |
 | RAG-01 | 10.2 | Pending |
 | RAG-02 | 10.2 | Pending |
 | RAG-03 | 10.2 | Pending |
