@@ -182,11 +182,11 @@ class OperationIntent:
     target_query: TargetQuery
     parameters: Mapping[str, Any]
     attribute_intents: tuple[AttributeIntent, ...]
-    property_intents: tuple[ExactPropertyIntent, ...]
     prototype_intent: PrototypeIntent | None
     provenance: tuple[PublicProvenance, ...]
     _target_query_document: Mapping[str, Any]
-    _has_property_intents_field: bool
+    property_intents: tuple[ExactPropertyIntent, ...] = ()
+    _has_property_intents_field: bool = False
 
     @classmethod
     def from_dict(cls, value: Mapping[str, Any]) -> "OperationIntent":

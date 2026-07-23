@@ -15,8 +15,10 @@ from typing import Any, Mapping
 from .evaluation_policy import (
     EvidenceSourceKind,
     SemanticApplicability,
+    extend_policy_with_explicit_facts,
     normalize_policy_fact_key,
 )
+from .run_models import hash_json
 from .index_models import ElementRecord, TypeRecord
 from .registry import OperationRegistry
 from .repair_intent import AttributeIntent, RepairIntent
@@ -39,7 +41,12 @@ _PRODUCTION_PRECEDENCE = (
 )
 _PRODUCTION_SOURCES = frozenset(_PRODUCTION_PRECEDENCE)
 _AUTHORIZED_SEMANTIC_KINDS = frozenset(
-    {"formal_type_binding", "user_authorized_prototype"}
+    {
+        "formal_type_binding",
+        "user_authorized_prototype",
+        "system_generated_type",
+        "authorized_property_fact",
+    }
 )
 
 
@@ -151,8 +158,19 @@ def build_production_evidence(
             type_records_by_global_id=type_records_by_global_id,
             deterministic_policy_facts=tuple(policy_facts.get(operation_id, ())),
             policy=policy,
+            request_hash=intent.source_request_hash,
+            model_fingerprint=intent.model_fingerprint,
         )
         selected, operation_conflicts = _select_authority(operation_id, candidates)
+        policy = extend_policy_with_explicit_facts(
+            policy,
+            tuple(
+                fact.fact_key
+                for fact in selected
+                if fact.source_kind is EvidenceSourceKind.EXPLICIT_REQUEST
+            ),
+            applicability=SemanticApplicability.REQUIRED,
+        )
         candidates_by_operation[operation_id] = candidates
         expected_by_operation[operation_id] = selected
         conflicts.extend(operation_conflicts)
@@ -183,6 +201,8 @@ def _operation_candidates(
     type_records_by_global_id: Mapping[str, TypeRecord],
     deterministic_policy_facts: tuple[SemanticFact, ...],
     policy: Any,
+    request_hash: str,
+    model_fingerprint: str,
 ) -> tuple[SemanticFact, ...]:
     facts: list[SemanticFact] = [
         _request_fact(operation_id, item) for item in operation_intent.attribute_intents
@@ -267,7 +287,46 @@ def _operation_candidates(
             raise ProductionEvidenceError(
                 "UNAUTHORIZED_SEMANTIC_AUTHORITY", f"{operation_id}:{kind}"
             )
+        if kind == "authorized_property_fact":
+            facts.append(
+                _authorized_property_fact(
+                    authority,
+                    operation_id=operation_id,
+                    operation_intent=operation_intent,
+                    resolved_operation=resolved_operation,
+                    request_hash=request_hash,
+                    model_fingerprint=model_fingerprint,
+                )
+            )
+            continue
         global_id = str(authority.get("global_id", ""))
+        if kind == "system_generated_type":
+            if (
+                authority.get("authorization") != "deterministic_policy"
+                or authority.get("operation_id") != operation_id
+                or not global_id
+            ):
+                raise ProductionEvidenceError(
+                    "GENERATED_TYPE_AUTHORITY_INVALID", operation_id
+                )
+            facts.append(
+                SemanticFact(
+                    fact_key="relationship:type",
+                    value=global_id,
+                    value_type=str(authority.get("ifc_class") or "IfcTypeObject"),
+                    unit=None,
+                    inherited=True,
+                    pset_path=None,
+                    entity_source=f"generated-type:{global_id}",
+                    source_kind=EvidenceSourceKind.DETERMINISTIC_POLICY,
+                    source_ref=f"generated-type:{global_id}",
+                    provenance=(
+                        f"operation:{operation_id}",
+                        f"generated-type-template:{authority.get('template_version')}",
+                    ),
+                )
+            )
+            continue
         if kind == "formal_type_binding":
             if (
                 policy.target_authority_mode == "edited_entity"
@@ -357,6 +416,74 @@ def _operation_candidates(
                 "UNAUTHORIZED_PRODUCTION_SOURCE", fact.source_kind.value
             )
     return tuple(sorted(facts, key=_fact_key))
+
+
+def _authorized_property_fact(
+    authority: Mapping[str, Any],
+    *,
+    operation_id: str,
+    operation_intent: Any,
+    resolved_operation: ResolvedOperation,
+    request_hash: str,
+    model_fingerprint: str,
+) -> SemanticFact:
+    supplied_hash = str(authority.get("property_hash", ""))
+    expected_hash = hash_json(
+        {
+            str(key): value
+            for key, value in authority.items()
+            if key != "property_hash"
+        }
+    )
+    if supplied_hash != expected_hash:
+        raise ProductionEvidenceError(
+            "AUTHORIZED_PROPERTY_HASH_MISMATCH", operation_id
+        )
+    if (
+        authority.get("operation_id") != operation_id
+        or authority.get("target_global_id") != resolved_operation.target_global_id
+        or authority.get("ownership") != "occurrence_direct"
+        or authority.get("request_hash") != request_hash
+        or authority.get("model_fingerprint") != model_fingerprint
+    ):
+        raise ProductionEvidenceError(
+            "AUTHORIZED_PROPERTY_BINDING_MISMATCH", operation_id
+        )
+    matching = [
+        claim
+        for claim in operation_intent.property_intents
+        if claim.set_name == authority.get("set_name")
+        and claim.property_name == authority.get("property_name")
+        and claim.value == authority.get("value")
+        and (claim.scope or "occurrence_direct") == authority.get("ownership")
+    ]
+    if len(matching) != 1:
+        raise ProductionEvidenceError(
+            "AUTHORIZED_PROPERTY_CLAIM_MISMATCH", operation_id
+        )
+    claim = matching[0]
+    return SemanticFact(
+        fact_key=f"pset:{authority['set_name']}.{authority['property_name']}",
+        value=authority["value"],
+        value_type=str(authority["value_type"]),
+        unit=None if authority.get("unit") is None else str(authority["unit"]),
+        inherited=False,
+        pset_path=f"{authority['set_name']}.{authority['property_name']}",
+        entity_source=f"request-operation:{operation_id}",
+        source_kind=EvidenceSourceKind.EXPLICIT_REQUEST,
+        source_ref=claim.source.reference,
+        provenance=(
+            f"request-source:{claim.source.source_kind}",
+            f"request-evidence:{claim.source.reference}",
+            f"operation:{operation_id}",
+            f"property-hash:{supplied_hash}",
+            *(
+                (f"confirmation:{authority['confirmation_ref']}",)
+                if authority.get("confirmation_ref")
+                else ()
+            ),
+        ),
+    )
 
 
 def _request_fact(operation_id: str, intent: AttributeIntent) -> SemanticFact:

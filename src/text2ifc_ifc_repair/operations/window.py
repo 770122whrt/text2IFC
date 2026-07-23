@@ -32,6 +32,7 @@ from text2ifc_ifc_repair.evaluation_policy import (
     SemanticFactSpec,
 )
 from text2ifc_ifc_repair.registry import OperationDefinition, OperationRegistryError
+from text2ifc_ifc_repair.type_templates import ensure_bound_type
 
 
 OPERATION_TYPE = "add_window_with_opening_to_wall"
@@ -236,6 +237,7 @@ WINDOW_L1_AUTHORIZATION = {
         "voids_relationship": "IfcRelVoidsElement",
         "fills_relationship": "IfcRelFillsElement",
         "window_type_relationship": "IfcRelDefinesByType",
+        "generated_window_type": "IfcWindowStyle",
         "semantic_pset": "IfcPropertySet",
         "semantic_pset_relationship": "IfcRelDefinesByProperties",
         "semantic_quantities": "IfcElementQuantity",
@@ -598,19 +600,24 @@ def _applicator(*, operation: Mapping[str, Any], model: Any) -> dict[str, Any]:
         sill_mm=sill,
     )
 
-    bound_type_id = next(
+    bound_type_assignment = next(
         (
-            str(item["value"])
+            item
             for item in operation.get("semantic_assignments", ())
             if item.get("fact_key") == "relationship:type"
         ),
         None,
     )
-    window_type = (
-        _require_guid(model, bound_type_id, "IfcTypeObject")
-        if bound_type_id
-        else None
-    )
+    generated_type_created = False
+    if bound_type_assignment is not None:
+        window_type, generated_type_created = ensure_bound_type(
+            model,
+            bound_type_assignment,
+            owner_history=owner_history,
+            operation_id=str(operation["operation_id"]),
+        )
+    else:
+        window_type = None
     window = model.create_entity(
         "IfcWindow",
         GlobalId=ids["window"],
@@ -691,6 +698,17 @@ def _applicator(*, operation: Mapping[str, Any], model: Any) -> dict[str, Any]:
 
     return {
         "created": [
+            *(
+                [
+                    {
+                        "role": "generated_window_type",
+                        "ifc_class": window_type.is_a(),
+                        "global_id": str(window_type.GlobalId),
+                    }
+                ]
+                if generated_type_created
+                else []
+            ),
             {"role": "opening", "ifc_class": opening.is_a(), "global_id": ids["opening"]},
             {"role": "window", "ifc_class": window.is_a(), "global_id": ids["window"]},
             {"role": "voids_relationship", "ifc_class": voids.is_a(), "global_id": ids["voids_relationship"]},

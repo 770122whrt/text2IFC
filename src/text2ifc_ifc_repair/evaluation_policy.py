@@ -155,6 +155,8 @@ class OperationEvaluationPolicy:
 def extend_policy_with_explicit_facts(
     policy: OperationEvaluationPolicy,
     fact_keys: tuple[str, ...],
+    *,
+    applicability: SemanticApplicability = SemanticApplicability.CONDITIONAL,
 ) -> OperationEvaluationPolicy:
     """Return an exact explicit-request extension without global wildcards."""
 
@@ -171,7 +173,7 @@ def extend_policy_with_explicit_facts(
                 check_id=f"explicit.{token}",
                 version=policy.version,
                 fact_pattern=fact_key,
-                applicability=SemanticApplicability.CONDITIONAL,
+                applicability=applicability,
                 allowed_sources=(EvidenceSourceKind.EXPLICIT_REQUEST,),
                 comparison=ComparisonRule.TYPED_EQUIVALENCE,
             )

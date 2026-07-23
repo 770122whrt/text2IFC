@@ -26,6 +26,7 @@ from .evaluation_policy import (
     EvidenceSourceKind,
     OperationEvaluationPolicy,
     SemanticApplicability,
+    extend_policy_with_explicit_facts,
 )
 from .evaluation_projection import project_public_evaluation
 from .semantic_facts import (
@@ -208,6 +209,15 @@ def _evaluate(
         policy = inputs.registry.require_evaluation_policy(operation_type)
         semantic_role = policy.semantic_role
         expected = list(inputs.expected_facts_by_operation.get(operation_id, ()))
+        policy = extend_policy_with_explicit_facts(
+            policy,
+            tuple(
+                fact.fact_key
+                for fact in expected
+                if fact.source_kind is EvidenceSourceKind.EXPLICIT_REQUEST
+            ),
+            applicability=SemanticApplicability.REQUIRED,
+        )
         repaired_facts: tuple[SemanticFact, ...] = ()
         extraction_errors: list[str] = []
         applied_roles = applied_roles_by_operation.get(operation_id, {})

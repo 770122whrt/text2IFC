@@ -480,7 +480,11 @@ def _semantically_equivalent(
 ) -> bool:
     if spec.comparison is not ComparisonRule.TYPED_EQUIVALENCE:
         return False
-    if expected.value_type != actual.value_type or expected.unit != actual.unit:
+    if (
+        expected.value_type != actual.value_type
+        or expected.unit != actual.unit
+        or expected.inherited != actual.inherited
+    ):
         return False
     if (
         isinstance(expected.value, (int, float))

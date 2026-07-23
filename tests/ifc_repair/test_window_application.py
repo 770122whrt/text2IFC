@@ -215,3 +215,91 @@ def test_bound_semantic_failure_rolls_back_without_output(tmp_path: Path) -> Non
     assert result["published"] is False
     assert result["issues"][0]["code"] == "OPERATION_APPLICATION_FAILED"
     assert not output.exists()
+
+
+def test_bound_generated_type_and_requested_property_apply_atomically(
+    tmp_path: Path,
+) -> None:
+    damaged, request, legacy = _repair_case(tmp_path)
+    source_hash = _sha256(damaged)
+    operation = legacy["operations"][0]
+    generated_type_id = "3Z0ygjfFP4QvY$10Test01"
+    assignments = [
+        {
+            "operation_id": operation["operation_id"],
+            "fact_key": "relationship:type",
+            "source_fact_key": "relationship:type",
+            "value": generated_type_id,
+            "value_type": "IfcWindowStyle",
+            "unit": None,
+            "ownership": "type_inherited",
+            "applicability": "required",
+            "source_kind": "deterministic_policy",
+            "source_ref": f"generated-type:{generated_type_id}",
+            "provenance": ["generated-type-template:0.1"],
+            "authoring_action": "inherit_from_type",
+        },
+        {
+            "operation_id": operation["operation_id"],
+            "fact_key": "pset:Custom_Asset.AssetCode",
+            "source_fact_key": "pset:Custom_Asset.AssetCode",
+            "value": "W-007",
+            "value_type": "IfcLabel",
+            "unit": None,
+            "ownership": "occurrence_direct",
+            "applicability": "required",
+            "source_kind": "explicit_request",
+            "source_ref": "request:/properties/0",
+            "provenance": ["property-hash:sha256:fixture"],
+            "authoring_action": "set_occurrence_pset",
+        },
+    ]
+    bound = {
+        **legacy,
+        "schema_version": "text2ifc/ifc-repair-changeset/0.2",
+        "binding_status": "bound",
+        "semantic_manifest_ref": "semantic-manifest.json",
+        "semantic_manifest_sha256": "sha256:" + "c" * 64,
+        "operations": [
+            {
+                **operation,
+                "semantic_manifest": {
+                    "manifest_id": "manifest-generated-type",
+                    "policy_id": "window.add-with-opening.l2",
+                    "policy_version": "0.2",
+                },
+                "semantic_assignments": assignments,
+            }
+        ],
+    }
+    output = tmp_path / "generated-type-property.ifc"
+    result = apply_changeset(
+        damaged_ifc_path=damaged,
+        repair_request=request,
+        changeset=bound,
+        output_path=output,
+        registry=create_default_registry(),
+    )
+
+    assert result["valid"] and result["published"]
+    assert _sha256(damaged) == source_hash
+    reopened = ifcopenshell.open(str(output))
+    style = reopened.by_guid(generated_type_id)
+    created = result["operations"][0]["changes"]["created"]
+    window_id = next(item["global_id"] for item in created if item["role"] == "window")
+    window = reopened.by_guid(window_id)
+    assert style.is_a("IfcWindowStyle")
+    assert {
+        str(rel.RelatingType.GlobalId)
+        for rel in window.IsDefinedBy
+        if rel.is_a("IfcRelDefinesByType")
+    } == {generated_type_id}
+    psets = [
+        rel.RelatingPropertyDefinition
+        for rel in window.IsDefinedBy
+        if rel.is_a("IfcRelDefinesByProperties")
+        and rel.RelatingPropertyDefinition.is_a("IfcPropertySet")
+        and rel.RelatingPropertyDefinition.Name == "Custom_Asset"
+    ]
+    assert len(psets) == 1
+    assert psets[0].HasProperties[0].NominalValue.wrappedValue == "W-007"

@@ -242,7 +242,7 @@ class AuthorizedPropertyFact:
             raise ValueError("PROPERTY_OWNERSHIP_NOT_AUTHORIZED")
 
     def to_dict(self) -> dict[str, Any]:
-        return {
+        payload = {
             "kind": "authorized_property_fact",
             "operation_id": self.operation_id,
             "target_global_id": self.target_global_id,
@@ -259,6 +259,10 @@ class AuthorizedPropertyFact:
             "confirmation_hash": self.confirmation_hash,
             "classification": self.classification,
         }
+        payload["property_hash"] = hash_json(
+            {key: value for key, value in payload.items() if key != "property_hash"}
+        )
+        return payload
 
 
 def authorize_custom_property(

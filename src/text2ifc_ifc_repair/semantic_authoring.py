@@ -235,7 +235,11 @@ def build_semantic_manifest(
             None,
         )
         if spec is None:
-            applicability = SemanticApplicability.CONDITIONAL
+            applicability = (
+                SemanticApplicability.REQUIRED
+                if fact.source_kind is EvidenceSourceKind.EXPLICIT_REQUEST
+                else SemanticApplicability.CONDITIONAL
+            )
         else:
             decision = decisions[spec.check_id]
             if decision.outcome != "evaluable":
@@ -344,6 +348,9 @@ def apply_semantic_assignments(
     assignments = tuple(operation["semantic_assignments"])
     skipped: list[str] = []
     created: list[dict[str, str]] = []
+    updated: list[dict[str, str]] = []
+
+    _preflight_direct_psets(target, assignments)
 
     for item in assignments:
         if item["ownership"] == SemanticOwnership.TYPE_INHERITED.value:
@@ -382,6 +389,48 @@ def apply_semantic_assignments(
     if requires_owner_history and owner_history is None:
         raise SemanticManifestError("SEMANTIC_OWNER_HISTORY_MISSING", target_id)
     for set_name, members in sorted(psets.items()):
+        direct = _direct_psets(target, set_name)
+        if not direct and all(
+            _inherited_property_matches(target, item) for item in members
+        ):
+            skipped.extend(str(item["fact_key"]) for item in members)
+            continue
+        if direct:
+            pset = direct[0]
+            by_name = {
+                str(prop.Name): prop
+                for prop in pset.HasProperties
+            }
+            appended = list(pset.HasProperties)
+            for item in sorted(members, key=lambda value: value["fact_key"]):
+                property_name = str(item["fact_key"]).rsplit(".", 1)[1]
+                existing = by_name.get(property_name)
+                if existing is None:
+                    existing = model.create_entity(
+                        "IfcPropertySingleValue",
+                        Name=property_name,
+                        NominalValue=_ifc_typed_value(model, item),
+                    )
+                    appended.append(existing)
+                    by_name[property_name] = existing
+                    updated.append(
+                        {
+                            "role": "semantic_pset_property_appended",
+                            "ifc_class": existing.is_a(),
+                            "global_id": f"step:{existing.id()}",
+                        }
+                    )
+                else:
+                    existing.NominalValue = _ifc_typed_value(model, item)
+                    updated.append(
+                        {
+                            "role": "semantic_pset_property_updated",
+                            "ifc_class": existing.is_a(),
+                            "global_id": f"step:{existing.id()}",
+                        }
+                    )
+            pset.HasProperties = appended
+            continue
         role = "semantic_pset"
         pset = model.create_entity(
             "IfcPropertySet",
@@ -475,7 +524,70 @@ def apply_semantic_assignments(
         created.append({"role": role, "ifc_class": relation.is_a(), "global_id": str(relation.GlobalId)})
 
     _verify_bound_relationships(model=model, target=target, assignments=assignments)
-    return {"created": created, "skipped": skipped}
+    return {"created": created, "updated": updated, "skipped": skipped}
+
+
+def _preflight_direct_psets(
+    target: Any, assignments: Sequence[Mapping[str, Any]]
+) -> None:
+    set_names = {
+        str(item["fact_key"]).split(":", 1)[1].rsplit(".", 1)[0]
+        for item in assignments
+        if item["ownership"] == SemanticOwnership.OCCURRENCE_DIRECT.value
+        and str(item["fact_key"]).startswith("pset:")
+    }
+    for set_name in sorted(set_names):
+        direct = _direct_psets(target, set_name)
+        if len(direct) > 1:
+            raise SemanticManifestError(
+                "DUPLICATE_DIRECT_PROPERTY_SET", set_name
+            )
+        if not direct:
+            continue
+        names = [str(prop.Name) for prop in direct[0].HasProperties]
+        duplicates = sorted({name for name in names if names.count(name) > 1})
+        if duplicates:
+            raise SemanticManifestError(
+                "DUPLICATE_DIRECT_PROPERTY", f"{set_name}.{duplicates[0]}"
+            )
+
+
+def _direct_psets(target: Any, set_name: str) -> list[Any]:
+    return [
+        relation.RelatingPropertyDefinition
+        for relation in getattr(target, "IsDefinedBy", ())
+        if relation.is_a("IfcRelDefinesByProperties")
+        and relation.RelatingPropertyDefinition.is_a("IfcPropertySet")
+        and str(relation.RelatingPropertyDefinition.Name) == set_name
+    ]
+
+
+def _inherited_property_matches(
+    target: Any, assignment: Mapping[str, Any]
+) -> bool:
+    path = str(assignment["fact_key"]).split(":", 1)[1]
+    set_name, property_name = path.rsplit(".", 1)
+    matches: list[Any] = []
+    for relation in getattr(target, "IsDefinedBy", ()):
+        if not relation.is_a("IfcRelDefinesByType"):
+            continue
+        for pset in getattr(relation.RelatingType, "HasPropertySets", ()) or ():
+            if not pset.is_a("IfcPropertySet") or str(pset.Name) != set_name:
+                continue
+            matches.extend(
+                prop
+                for prop in pset.HasProperties
+                if str(prop.Name) == property_name
+            )
+    if len(matches) != 1:
+        return False
+    nominal = matches[0].NominalValue
+    actual = None if nominal is None else nominal.wrappedValue
+    actual_type = None if nominal is None else nominal.is_a()
+    return (
+        actual == assignment["value"]
+        and actual_type == assignment["value_type"]
+    )
 
 
 def _ifc_typed_value(model: Any, assignment: Mapping[str, Any]) -> Any:
@@ -556,6 +668,26 @@ def _validate_assignment_semantics(payload: Any, *, operation_id: str, index: in
         raise SemanticManifestError("UNSUPPORTED_SEMANTIC_FACT_KIND", fact_key)
     if _contains_non_finite(payload.get("value")):
         raise SemanticManifestError("NON_FINITE_SEMANTIC_VALUE", fact_key)
+    ownership = str(payload.get("ownership") or "")
+    action = str(payload.get("authoring_action") or "")
+    if (
+        action == SemanticAuthoringAction.SET_OCCURRENCE_PSET.value
+        and ownership != SemanticOwnership.OCCURRENCE_DIRECT.value
+    ):
+        raise SemanticManifestError(
+            "SEMANTIC_OWNERSHIP_ACTION_MISMATCH", fact_key
+        )
+    if (
+        source is EvidenceSourceKind.EXPLICIT_REQUEST
+        and fact_kind == "pset"
+        and (
+            ownership != SemanticOwnership.OCCURRENCE_DIRECT.value
+            or action != SemanticAuthoringAction.SET_OCCURRENCE_PSET.value
+        )
+    ):
+        raise SemanticManifestError(
+            "SEMANTIC_OWNERSHIP_ACTION_MISMATCH", fact_key
+        )
 
 
 def _parse_assignment(payload: Mapping[str, Any]) -> SemanticAssignment:
