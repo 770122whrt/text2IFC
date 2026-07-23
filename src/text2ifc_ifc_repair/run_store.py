@@ -620,6 +620,8 @@ class RunStore:
             "select_candidate": {"kind", "candidate_token"},
             "add_detail": {"kind", "detail"},
             "authorize_prototype": {"kind", "candidate_token", "authorized"},
+            "confirm_property": {"kind", "preview_hash"},
+            "reject_property": {"kind", "preview_hash"},
             "cancel": {"kind"},
             "eof": {"kind"},
         }
@@ -633,6 +635,14 @@ class RunStore:
                 raise RunStoreError(RunStoreCode.ANSWER_INVALID, "candidate is not in stored set")
         if kind == "authorize_prototype" and clean.get("authorized") is not True:
             raise RunStoreError(RunStoreCode.ANSWER_INVALID, "prototype needs explicit authorization")
+        if kind in {"confirm_property", "reject_property"}:
+            preview = clarification.property_preview
+            expected = None if preview is None else preview.get("preview_hash")
+            if clean.get("preview_hash") != expected:
+                raise RunStoreError(
+                    RunStoreCode.ANSWER_INVALID,
+                    "property preview hash does not match stored question",
+                )
         if kind == "add_detail":
             detail = clean.get("detail")
             if not isinstance(detail, str) or not detail.strip() or len(detail) > 4096:

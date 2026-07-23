@@ -335,13 +335,29 @@ class RepairAPI:
                 stage_payload=resume_payload,
             )
         prototype_answer = None
+        property_answer = None
         if kind == "authorize_prototype":
             prototype_answer = {
                 "operation_id": clarification.operation_id,
                 "candidate_token": str(answer["candidate_token"]),
                 "authorized": True,
             }
-        return self._resolve_and_finish(run_id, intent, repair_text, prototype_answer=prototype_answer)
+        elif kind in {"confirm_property", "reject_property"}:
+            property_answer = {
+                "operation_id": clarification.operation_id,
+                "answer_kind": kind,
+                "preview_hash": str(answer["preview_hash"]),
+                "confirmation_ref": (
+                    f"run:{run_id}/{clarification.clarification_id}"
+                ),
+            }
+        return self._resolve_and_finish(
+            run_id,
+            intent,
+            repair_text,
+            prototype_answer=prototype_answer,
+            property_answer=property_answer,
+        )
 
     def read_result(self, run_id: str) -> RunResult:
         return self.store.read_result(run_id)
@@ -349,6 +365,7 @@ class RepairAPI:
     def _resolve_and_finish(
         self, run_id: str, intent: RepairIntent, repair_text: str,
         *, prototype_answer: Mapping[str, Any] | None = None,
+        property_answer: Mapping[str, Any] | None = None,
     ) -> RunResult:
         state = self.store.load(run_id)
         run_dir = self.store.runs_root / run_id
@@ -484,6 +501,13 @@ class RepairAPI:
             resolution = orchestrator._resolution
             if prototype_answer is not None and resolution.status == "clarification_required" and resolution.reason_code == "prototype_selection":
                 outcome = orchestrator.continue_with_answer(prototype_answer)
+                resolution = orchestrator._resolution
+            if (
+                property_answer is not None
+                and resolution.status == "clarification_required"
+                and resolution.reason_code == "property_confirmation"
+            ):
+                outcome = orchestrator.continue_with_answer(property_answer)
                 resolution = orchestrator._resolution
             if resolution.status == "failed":
                 stage = {
@@ -636,10 +660,13 @@ def _clarification(run_id: str, version: int, resolution: Any) -> Clarification:
         "ambiguous": "ambiguous_target", "conflict": "selector_conflict",
         "not_found": "additional_target_detail", "missing_evidence": "additional_target_detail",
         "prototype_selection": "prototype_selection",
+        "property_confirmation": "property_confirmation",
     }
     reason = reason_map.get(str(resolution.reason_code), "additional_target_detail")
     modes = (
         ("authorize_prototype", "cancel") if reason == "prototype_selection"
+        else ("confirm_property", "reject_property", "cancel")
+        if reason == "property_confirmation"
         else ("select_candidate", "add_detail", "cancel") if candidates
         else ("add_detail", "cancel")
     )
@@ -654,6 +681,11 @@ def _clarification(run_id: str, version: int, resolution: Any) -> Clarification:
         question="目标不唯一或证据不足，请选择候选、补充说明或取消。",
         answer_modes=modes,
         candidates=candidates,
+        property_preview=(
+            None
+            if getattr(resolution, "property_preview", None) is None
+            else dict(resolution.property_preview)
+        ),
     )
 
 

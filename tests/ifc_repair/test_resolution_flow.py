@@ -67,6 +67,7 @@ def _registry(
                     "width_mm": ("opening", "width_mm"),
                     "height_mm": ("opening", "height_mm"),
                 },
+                editable_occurrence_ifc_class="IfcWindow",
             )
         )
     return registry
@@ -77,11 +78,11 @@ def _intent(
     prototype: dict | None = None,
     prototype_ifc_classes: tuple[str, ...] = ("IfcWindowStyle",),
     parameters: dict | None = None,
+    properties: list[dict] | None = None,
 ) -> RepairIntent:
     operations = []
     for index, query in enumerate(queries):
-        operations.append(
-            {
+        operation = {
                 "operation_id": f"intent-{index + 1}",
                 "operation_type": ("fixture_move", "fixture_resize")[index % 2],
                 "target_query": {
@@ -98,10 +99,17 @@ def _intent(
                     {"source_kind": "user_request", "reference": f"request:/operations/{index}", "excerpt": "repair wall"}
                 ],
             }
-        )
+        if properties is not None:
+            operation["property_intents"] = properties
+        operations.append(operation)
+    schema_version = (
+        "text2ifc/ifc-repair-intent/0.2"
+        if properties is not None
+        else "text2ifc/ifc-repair-intent/0.1"
+    )
     return RepairIntent.from_dict(
         {
-            "schema_version": "text2ifc/ifc-repair-intent/0.1",
+            "schema_version": schema_version,
             "request_id": "request-1",
             "source_request_hash": "sha256:" + "c" * 64,
             "model_fingerprint": MODEL_FINGERPRINT,
@@ -437,4 +445,107 @@ def test_non_window_type_uses_the_same_human_readable_resolution(tmp_path: Path)
         )
     assert result.status == "resolved"
     assert result.operations[0].authorized_semantics[-1]["global_id"] == door_type.ifc_global_id
+
+
+def _property_claim(
+    set_name: str,
+    property_name: str,
+    value: object,
+    *,
+    scope: str | None = None,
+) -> dict:
+    return {
+        "intent_kind": "pset_property",
+        "set_name": set_name,
+        "property_name": property_name,
+        "value": value,
+        "requested_value_type": None,
+        "requested_unit": None,
+        "scope": scope,
+        "source": {
+            "source_kind": "user_request",
+            "reference": "request:/properties/0",
+            "excerpt": f"set {set_name}.{property_name}",
+        },
+    }
+
+
+def test_standard_property_resolves_and_custom_property_requires_exact_confirmation(
+    tmp_path: Path,
+) -> None:
+    api = _api()
+    target = _record("0AAAAAAAAAAAAAAAAAAAAA", "target")
+    with _repository(tmp_path / "standard", [target]) as repository:
+        standard = api.resolve_repair_intent(
+            _intent(
+                {"global_id": target.ifc_global_id},
+                properties=[
+                    _property_claim("Pset_WindowCommon", "FireRating", "EI30")
+                ],
+            ),
+            repository,
+            expected_source_sha256=SOURCE_SHA,
+            operation_registry=_registry(),
+        )
+    assert standard.status == "resolved"
+    fact = standard.operations[0].authorized_semantics[-1]
+    assert fact["kind"] == "authorized_property_fact"
+    assert fact["classification"] == "standard"
+    assert fact["ownership"] == "occurrence_direct"
+
+    with _repository(tmp_path / "custom", [target]) as repository:
+        custom = api.resolve_repair_intent(
+            _intent(
+                {"global_id": target.ifc_global_id},
+                properties=[
+                    _property_claim("Custom_Asset", "AssetCode", "W-007")
+                ],
+            ),
+            repository,
+            expected_source_sha256=SOURCE_SHA,
+            operation_registry=_registry(),
+        )
+    assert custom.status == "clarification_required"
+    assert custom.reason_code == "property_confirmation"
+    assert custom.property_preview["scope"] == "occurrence_direct"
+
+    authorized = api.authorize_property_confirmation(
+        custom,
+        operation_id="intent-1",
+        answer_kind="confirm_property",
+        preview_hash=custom.property_preview["preview_hash"],
+        confirmation_ref="run:repair-1/property-confirmation-4",
+    )
+    confirmed = authorized.operations[0].authorized_semantics[-1]
+    assert authorized.status == "resolved"
+    assert confirmed["classification"] == "custom_confirmed"
+    assert confirmed["confirmation_hash"] == custom.property_preview["preview_hash"]
+
+
+def test_type_owned_property_is_deferred_before_authorization(tmp_path: Path) -> None:
+    target = _record("0AAAAAAAAAAAAAAAAAAAAA", "target")
+    with _repository(tmp_path, [target]) as repository:
+        result = _api().resolve_repair_intent(
+            _intent(
+                {"global_id": target.ifc_global_id},
+                properties=[
+                    _property_claim(
+                        "Pset_WindowCommon",
+                        "FireRating",
+                        "EI30",
+                        scope="type_owned",
+                    )
+                ],
+            ),
+            repository,
+            expected_source_sha256=SOURCE_SHA,
+            operation_registry=_registry(),
+        )
+    assert result.status == "failed"
+    assert result.reason_code == "TYPE_PROPERTY_MUTATION_DEFERRED"
+    assert not any(
+        item.get("kind") == "authorized_property_fact"
+        for operation in result.operations
+        for item in operation.authorized_semantics
+    )
 

@@ -335,7 +335,28 @@ def window_operation_definition() -> OperationDefinition:
         ),
         evaluation_policy=WINDOW_EVALUATION_POLICY,
         semantic_policy_fact_builder=_semantic_policy_facts,
+        editable_occurrence_ifc_class="IfcWindow",
+        inherited_type_evidence_role="IfcWindowStyle",
+        generated_type_template=_generated_window_type_template,
     )
+
+
+def _generated_window_type_template(
+    *,
+    operation_id: str,
+    request_hash: str,
+    model_fingerprint: str,
+) -> dict[str, Any]:
+    del request_hash, model_fingerprint
+    return {
+        "template_version": "0.1",
+        "ifc_class": "IfcWindowStyle",
+        "name": f"Text2IFC generated window type {operation_id}",
+        "construction_type": "NOTDEFINED",
+        "operation_type": "NOTDEFINED",
+        "parameter_takes_precedence": False,
+        "sizeable": False,
+    }
 
 
 def _semantic_policy_facts(*, operation: Mapping[str, Any]) -> tuple[Any, ...]:
@@ -588,7 +609,7 @@ def _applicator(*, operation: Mapping[str, Any], model: Any) -> dict[str, Any]:
     window_type = (
         _require_guid(model, bound_type_id, "IfcTypeObject")
         if bound_type_id
-        else _find_compatible_window_type(model, width=width, height=height)
+        else None
     )
     window = model.create_entity(
         "IfcWindow",
@@ -1180,21 +1201,6 @@ def _body_context(model: Any) -> Any:
     if not contexts:
         raise OperationRegistryError("BODY_CONTEXT_NOT_FOUND", "Body/MODEL_VIEW")
     return min(contexts, key=lambda context: context.id())
-
-
-def _find_compatible_window_type(model: Any, *, width: float, height: float) -> Any | None:
-    candidates = []
-    for window in model.by_type("IfcWindow"):
-        if not (
-            math.isclose(float(window.OverallWidth or 0.0), width, abs_tol=1e-4)
-            and math.isclose(float(window.OverallHeight or 0.0), height, abs_tol=1e-4)
-        ):
-            continue
-        for relationship in window.IsDefinedBy:
-            if relationship.is_a("IfcRelDefinesByType"):
-                candidates.append(relationship.RelatingType)
-    unique = {str(candidate.GlobalId): candidate for candidate in candidates}
-    return unique[min(unique)] if unique else None
 
 
 def _wall_containment(wall: Any) -> Any:

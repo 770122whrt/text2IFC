@@ -12,6 +12,7 @@ from text2ifc_knowledge.registry import (
     RegistryDriftError,
     check_registry_files,
 )
+from .run_models import hash_json
 
 if TYPE_CHECKING:
     from .index_models import PropertyFact
@@ -115,6 +116,221 @@ class PropertyResolution:
             "reason_code": self.reason_code,
             "evidence": list(self.evidence),
         }
+
+
+@dataclass(frozen=True)
+class PropertyConfirmationPreview:
+    operation_id: str
+    target_global_id: str
+    request_hash: str
+    model_fingerprint: str
+    set_name: str
+    property_name: str
+    value: Any
+    value_type: str
+    unit: str | None
+    scope: str
+    source: "PublicProvenance"
+    preview_hash: str
+
+    @classmethod
+    def create(
+        cls,
+        resolution: PropertyResolution,
+        *,
+        operation_id: str,
+        target_global_id: str,
+        request_hash: str,
+        model_fingerprint: str,
+        source: "PublicProvenance",
+    ) -> "PropertyConfirmationPreview":
+        if (
+            resolution.status is not PropertyResolutionStatus.CUSTOM_CONFIRMATION_REQUIRED
+            or resolution.set_name is None
+            or resolution.property_name is None
+            or resolution.value_type is None
+            or resolution.scope != "occurrence_direct"
+        ):
+            raise ValueError("PROPERTY_CONFIRMATION_PREVIEW_NOT_ALLOWED")
+        payload = {
+            "operation_id": operation_id,
+            "target_global_id": target_global_id,
+            "request_hash": request_hash,
+            "model_fingerprint": model_fingerprint,
+            "set_name": resolution.set_name,
+            "property_name": resolution.property_name,
+            "value": resolution.value,
+            "value_type": resolution.value_type,
+            "unit": resolution.unit,
+            "scope": resolution.scope,
+            "source": source.to_dict(),
+        }
+        return cls(
+            operation_id=operation_id,
+            target_global_id=target_global_id,
+            request_hash=request_hash,
+            model_fingerprint=model_fingerprint,
+            set_name=resolution.set_name,
+            property_name=resolution.property_name,
+            value=resolution.value,
+            value_type=resolution.value_type,
+            unit=resolution.unit,
+            scope=resolution.scope,
+            source=source,
+            preview_hash=hash_json(payload),
+        )
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "operation_id": self.operation_id,
+            "target_global_id": self.target_global_id,
+            "request_hash": self.request_hash,
+            "model_fingerprint": self.model_fingerprint,
+            "set_name": self.set_name,
+            "property_name": self.property_name,
+            "value": self.value,
+            "value_type": self.value_type,
+            "unit": self.unit,
+            "scope": self.scope,
+            "source": self.source.to_dict(),
+            "preview_hash": self.preview_hash,
+        }
+
+    @classmethod
+    def from_dict(cls, value: Mapping[str, Any]) -> "PropertyConfirmationPreview":
+        from .repair_intent import PublicProvenance
+
+        preview = cls(
+            operation_id=str(value["operation_id"]),
+            target_global_id=str(value["target_global_id"]),
+            request_hash=str(value["request_hash"]),
+            model_fingerprint=str(value["model_fingerprint"]),
+            set_name=str(value["set_name"]),
+            property_name=str(value["property_name"]),
+            value=value["value"],
+            value_type=str(value["value_type"]),
+            unit=None if value["unit"] is None else str(value["unit"]),
+            scope=str(value["scope"]),
+            source=PublicProvenance.from_dict(value["source"]),
+            preview_hash=str(value["preview_hash"]),
+        )
+        expected = hash_json({key: item for key, item in preview.to_dict().items() if key != "preview_hash"})
+        if preview.preview_hash != expected:
+            raise ValueError("PROPERTY_CONFIRMATION_PREVIEW_HASH_MISMATCH")
+        return preview
+
+
+@dataclass(frozen=True)
+class AuthorizedPropertyFact:
+    operation_id: str
+    target_global_id: str
+    request_hash: str
+    model_fingerprint: str
+    set_name: str
+    property_name: str
+    value: Any
+    value_type: str
+    unit: str | None
+    ownership: str
+    source: "PublicProvenance"
+    confirmation_ref: str | None
+    confirmation_hash: str | None
+    classification: str
+
+    def __post_init__(self) -> None:
+        if self.ownership != "occurrence_direct":
+            raise ValueError("PROPERTY_OWNERSHIP_NOT_AUTHORIZED")
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "kind": "authorized_property_fact",
+            "operation_id": self.operation_id,
+            "target_global_id": self.target_global_id,
+            "request_hash": self.request_hash,
+            "model_fingerprint": self.model_fingerprint,
+            "set_name": self.set_name,
+            "property_name": self.property_name,
+            "value": self.value,
+            "value_type": self.value_type,
+            "unit": self.unit,
+            "ownership": self.ownership,
+            "source": self.source.to_dict(),
+            "confirmation_ref": self.confirmation_ref,
+            "confirmation_hash": self.confirmation_hash,
+            "classification": self.classification,
+        }
+
+
+def authorize_custom_property(
+    preview: PropertyConfirmationPreview,
+    *,
+    answer_kind: str,
+    preview_hash: str,
+    confirmation_ref: str,
+) -> AuthorizedPropertyFact:
+    if preview_hash != preview.preview_hash:
+        raise ValueError("PROPERTY_CONFIRMATION_HASH_MISMATCH")
+    if answer_kind != "confirm_property":
+        raise ValueError("PROPERTY_CONFIRMATION_REQUIRED")
+    return AuthorizedPropertyFact(
+        operation_id=preview.operation_id,
+        target_global_id=preview.target_global_id,
+        request_hash=preview.request_hash,
+        model_fingerprint=preview.model_fingerprint,
+        set_name=preview.set_name,
+        property_name=preview.property_name,
+        value=preview.value,
+        value_type=preview.value_type,
+        unit=preview.unit,
+        ownership=preview.scope,
+        source=preview.source,
+        confirmation_ref=confirmation_ref,
+        confirmation_hash=preview.preview_hash,
+        classification="custom_confirmed",
+    )
+
+
+def authorize_standard_property(
+    resolution: PropertyResolution,
+    *,
+    operation_id: str,
+    target_global_id: str,
+    request_hash: str,
+    model_fingerprint: str,
+    source: "PublicProvenance",
+) -> AuthorizedPropertyFact:
+    if (
+        resolution.status is not PropertyResolutionStatus.STANDARD_RESOLVED
+        or resolution.set_name is None
+        or resolution.property_name is None
+        or resolution.value_type is None
+    ):
+        raise ValueError("STANDARD_PROPERTY_NOT_RESOLVED")
+    return AuthorizedPropertyFact(
+        operation_id=operation_id,
+        target_global_id=target_global_id,
+        request_hash=request_hash,
+        model_fingerprint=model_fingerprint,
+        set_name=resolution.set_name,
+        property_name=resolution.property_name,
+        value=resolution.value,
+        value_type=resolution.value_type,
+        unit=resolution.unit,
+        ownership=resolution.scope,
+        source=source,
+        confirmation_ref=None,
+        confirmation_hash=None,
+        classification="standard",
+    )
+
+
+def normalize_property_scope(scope: str | None) -> str:
+    normalized = scope or "occurrence_direct"
+    if normalized == "type_owned":
+        raise ValueError("TYPE_PROPERTY_MUTATION_DEFERRED")
+    if normalized != "occurrence_direct":
+        raise ValueError("PROPERTY_SCOPE_UNSUPPORTED")
+    return normalized
 
 
 def resolve_exact_property_intent(
@@ -346,8 +562,13 @@ def _optional_text(value: Any) -> str | None:
 
 
 __all__ = [
+    "AuthorizedPropertyFact",
     "ExactPropertyIntent",
+    "PropertyConfirmationPreview",
     "PropertyResolution",
     "PropertyResolutionStatus",
+    "authorize_custom_property",
+    "authorize_standard_property",
+    "normalize_property_scope",
     "resolve_exact_property_intent",
 ]

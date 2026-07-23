@@ -162,6 +162,7 @@ class Clarification:
     question: str
     answer_modes: tuple[str, ...]
     candidates: tuple[ClarificationCandidate, ...] = ()
+    property_preview: Mapping[str, Any] | None = None
     schema_version: str = CLARIFICATION_SCHEMA_VERSION
 
     @property
@@ -171,6 +172,8 @@ class Clarification:
             "select_candidate": ("candidate_token",),
             "add_detail": ("detail",),
             "authorize_prototype": ("candidate_token", "authorized"),
+            "confirm_property": ("preview_hash",),
+            "reject_property": ("preview_hash",),
         }
         for mode in self.answer_modes:
             required = required_by_mode.get(mode, ())
@@ -193,6 +196,10 @@ class Clarification:
                 "candidate_token": {"type": "string", "minLength": 1, "maxLength": 128},
                 "detail": {"type": "string", "minLength": 1, "maxLength": 4096},
                 "authorized": {"const": True},
+                "preview_hash": {
+                    "type": "string",
+                    "pattern": "^sha256:[0-9a-f]{64}$",
+                },
             },
             "allOf": conditions,
         }
@@ -211,6 +218,9 @@ class Clarification:
             "answer_modes": list(self.answer_modes),
             "answer_schema": self.answer_schema,
             "candidates": [candidate.to_dict() for candidate in self.candidates],
+            "property_preview": (
+                None if self.property_preview is None else thaw_json(self.property_preview)
+            ),
         }
 
     @classmethod
@@ -227,6 +237,11 @@ class Clarification:
             answer_modes=tuple(str(item) for item in value["answer_modes"]),
             candidates=tuple(
                 ClarificationCandidate.from_dict(item) for item in value["candidates"]
+            ),
+            property_preview=(
+                None
+                if value.get("property_preview") is None
+                else freeze_json(value["property_preview"])
             ),
         )
 

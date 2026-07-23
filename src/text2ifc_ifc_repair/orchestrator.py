@@ -16,7 +16,11 @@ from .benchmark_evaluation import ProductionEvaluationInputs, evaluate_productio
 from .evaluation import evaluation_to_dict
 from .evaluation_projection import project_public_evaluation
 from .production_evidence import build_production_evidence
-from .resolution_flow import authorize_prototype, resolve_repair_intent
+from .resolution_flow import (
+    authorize_property_confirmation,
+    authorize_prototype,
+    resolve_repair_intent,
+)
 from .run_artifacts import publish_terminal_artifacts
 
 
@@ -41,6 +45,7 @@ class RepairOrchestrator:
         run_directory: Path | str,
         resolver: Callable[..., Any] = resolve_repair_intent,
         prototype_authorizer: Callable[..., Any] = authorize_prototype,
+        property_authorizer: Callable[..., Any] = authorize_property_confirmation,
         changeset_stage: Callable[..., Any],
         audit_stage: Callable[..., Any] | None = None,
         apply_stage: Callable[..., Any] | None = None,
@@ -54,6 +59,7 @@ class RepairOrchestrator:
         self.run_directory.mkdir(parents=True, exist_ok=True)
         self._resolver = resolver
         self._prototype_authorizer = prototype_authorizer
+        self._property_authorizer = property_authorizer
         self._changeset_stage = changeset_stage
         # apply_changeset owns the single complete Audit call.  Retaining this
         # compatibility seam must never cause a second audit.
@@ -79,7 +85,10 @@ class RepairOrchestrator:
     def continue_with_answer(self, answer: Mapping[str, Any]) -> OrchestrationResult:
         if self._resolution is None:
             raise ValueError("REPAIR_RESOLUTION_NOT_STARTED")
-        resolution = self._prototype_authorizer(self._resolution, **dict(answer))
+        if self._resolution.reason_code == "property_confirmation":
+            resolution = self._property_authorizer(self._resolution, **dict(answer))
+        else:
+            resolution = self._prototype_authorizer(self._resolution, **dict(answer))
         self._resolution = resolution
         self._write("resolution.json", resolution)
         self._write("clarification-answer.json", dict(answer))

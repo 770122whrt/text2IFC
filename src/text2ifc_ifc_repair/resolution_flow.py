@@ -10,18 +10,30 @@ from __future__ import annotations
 import hashlib
 import json
 import math
+import uuid
 from dataclasses import dataclass, replace
 from typing import Any, Mapping
+
+import ifcopenshell.guid
 
 from .index_models import INDEX_SCHEMA_VERSION, ElementRecord, TypeRecord
 from .index_store import IndexRepository
 from .indexer import EXTRACTOR_VERSION
 from .indexer import normalize_alias
 from .repair_intent import OperationIntent, RepairIntent
+from .property_intent import (
+    PropertyConfirmationPreview,
+    PropertyResolutionStatus,
+    authorize_custom_property,
+    authorize_standard_property,
+    normalize_property_scope,
+    resolve_exact_property_intent,
+)
 from .registry import OperationRegistry
 from .run_models import thaw_json
 from .target_context import TargetContextError, build_target_context
 from .target_query import ResolutionResult, resolve_target
+from text2ifc_knowledge.registry import IfcKnowledgeRegistry, load_ifc2x3_registry
 
 
 RESOLUTION_FLOW_VERSION = "text2ifc/ifc-resolution-flow/0.1"
@@ -66,6 +78,7 @@ class ResolutionBatch:
     candidates: tuple[dict[str, Any], ...] = ()
     source_ifc_sha256: str | None = None
     model_fingerprint: str | None = None
+    property_preview: Mapping[str, Any] | None = None
     schema_version: str = RESOLUTION_FLOW_VERSION
 
     def to_dict(self) -> dict[str, Any]:
@@ -78,6 +91,9 @@ class ResolutionBatch:
             "model_fingerprint": self.model_fingerprint,
             "operations": [item.to_dict() for item in self.operations],
             "candidates": [dict(item) for item in self.candidates],
+            "property_preview": (
+                None if self.property_preview is None else dict(self.property_preview)
+            ),
         }
 
 
@@ -88,6 +104,7 @@ def resolve_repair_intent(
     expected_source_sha256: str,
     context_max_bytes: int = 48_000,
     operation_registry: OperationRegistry | None = None,
+    property_registry: IfcKnowledgeRegistry | None = None,
 ) -> ResolutionBatch:
     """Resolve all operations in stable order or return one fail-closed pause."""
 
@@ -257,6 +274,111 @@ def resolve_repair_intent(
                 source_ifc_sha256=expected_source_sha256,
                 model_fingerprint=intent.model_fingerprint,
             )
+        elif (
+            prototype is None
+            and operation_registry is not None
+            and operation_registry.require(operation.operation_type).generated_type_template
+            is not None
+        ):
+            authority = generated_type_authority(
+                operation_registry.require(operation.operation_type),
+                operation_id=operation.operation_id,
+                request_hash=intent.source_request_hash,
+                model_fingerprint=intent.model_fingerprint,
+            )
+            completed[-1] = replace(
+                completed[-1],
+                authorized_semantics=(
+                    *completed[-1].authorized_semantics,
+                    authority,
+                ),
+            )
+
+        if operation.property_intents:
+            if operation_registry is None:
+                return _failure(
+                    intent,
+                    "PROPERTY_ADAPTER_UNAVAILABLE",
+                    operation_id=operation.operation_id,
+                    operations=completed,
+                    source_sha=expected_source_sha256,
+                )
+            definition = operation_registry.require(operation.operation_type)
+            property_target_class = definition.editable_occurrence_ifc_class
+            if not property_target_class:
+                return _failure(
+                    intent,
+                    "PROPERTY_ADAPTER_UNAVAILABLE",
+                    operation_id=operation.operation_id,
+                    operations=completed,
+                    source_sha=expected_source_sha256,
+                )
+            knowledge = property_registry or load_ifc2x3_registry()
+            for property_intent in operation.property_intents:
+                try:
+                    normalize_property_scope(property_intent.scope)
+                except ValueError as error:
+                    return _failure(
+                        intent,
+                        str(error),
+                        operation_id=operation.operation_id,
+                        operations=completed,
+                        source_sha=expected_source_sha256,
+                    )
+                property_resolution = resolve_exact_property_intent(
+                    property_intent,
+                    target_ifc_class=property_target_class,
+                    existing_facts=(),
+                    registry=knowledge,
+                )
+                if (
+                    property_resolution.status
+                    is PropertyResolutionStatus.CLARIFICATION_REQUIRED
+                ):
+                    return ResolutionBatch(
+                        status="clarification_required",
+                        reason_code=str(property_resolution.reason_code),
+                        operation_id=operation.operation_id,
+                        operations=tuple(completed),
+                        source_ifc_sha256=expected_source_sha256,
+                        model_fingerprint=intent.model_fingerprint,
+                    )
+                if (
+                    property_resolution.status
+                    is PropertyResolutionStatus.CUSTOM_CONFIRMATION_REQUIRED
+                ):
+                    preview = PropertyConfirmationPreview.create(
+                        property_resolution,
+                        operation_id=operation.operation_id,
+                        target_global_id=record.ifc_global_id,
+                        request_hash=intent.source_request_hash,
+                        model_fingerprint=intent.model_fingerprint,
+                        source=property_intent.source,
+                    )
+                    return ResolutionBatch(
+                        status="clarification_required",
+                        reason_code="property_confirmation",
+                        operation_id=operation.operation_id,
+                        operations=tuple(completed),
+                        source_ifc_sha256=expected_source_sha256,
+                        model_fingerprint=intent.model_fingerprint,
+                        property_preview=preview.to_dict(),
+                    )
+                fact = authorize_standard_property(
+                    property_resolution,
+                    operation_id=operation.operation_id,
+                    target_global_id=record.ifc_global_id,
+                    request_hash=intent.source_request_hash,
+                    model_fingerprint=intent.model_fingerprint,
+                    source=property_intent.source,
+                )
+                completed[-1] = replace(
+                    completed[-1],
+                    authorized_semantics=(
+                        *completed[-1].authorized_semantics,
+                        fact.to_dict(),
+                    ),
+                )
 
     return ResolutionBatch(
         status="resolved",
@@ -455,6 +577,96 @@ def _type_candidates(
     )
 
 
+def authorize_property_confirmation(
+    batch: ResolutionBatch,
+    *,
+    operation_id: str,
+    answer_kind: str,
+    preview_hash: str,
+    confirmation_ref: str,
+) -> ResolutionBatch:
+    if (
+        batch.status != "clarification_required"
+        or batch.reason_code != "property_confirmation"
+        or batch.property_preview is None
+        or operation_id != batch.operation_id
+    ):
+        raise ValueError("PROPERTY_CONFIRMATION_NOT_PENDING")
+    preview = PropertyConfirmationPreview.from_dict(batch.property_preview)
+    fact = authorize_custom_property(
+        preview,
+        answer_kind=answer_kind,
+        preview_hash=preview_hash,
+        confirmation_ref=confirmation_ref,
+    )
+    operations = tuple(
+        replace(
+            operation,
+            authorized_semantics=(*operation.authorized_semantics, fact.to_dict()),
+        )
+        if operation.operation_id == operation_id
+        else operation
+        for operation in batch.operations
+    )
+    return replace(
+        batch,
+        status="resolved",
+        reason_code=None,
+        operation_id=None,
+        operations=operations,
+        property_preview=None,
+    )
+
+
+def generated_type_authority(
+    definition: Any,
+    *,
+    operation_id: str,
+    request_hash: str,
+    model_fingerprint: str,
+) -> dict[str, Any]:
+    """Create operation-bound authority without inspecting project Types."""
+
+    builder = getattr(definition, "generated_type_template", None)
+    if builder is None:
+        raise ValueError("GENERATED_TYPE_TEMPLATE_UNAVAILABLE")
+    template = dict(
+        builder(
+            operation_id=operation_id,
+            request_hash=request_hash,
+            model_fingerprint=model_fingerprint,
+        )
+    )
+    template_version = str(template.pop("template_version"))
+    ifc_class = str(template.pop("ifc_class"))
+    canonical = json.dumps(
+        {
+            "operation_id": operation_id,
+            "request_hash": request_hash,
+            "model_fingerprint": model_fingerprint,
+            "template_version": template_version,
+            "ifc_class": ifc_class,
+            "template": template,
+        },
+        ensure_ascii=False,
+        sort_keys=True,
+        separators=(",", ":"),
+    )
+    value = uuid.uuid5(
+        uuid.NAMESPACE_URL,
+        f"https://text2ifc.local/ifc-repair/generated-type/{canonical}",
+    )
+    return {
+        "kind": "system_generated_type",
+        "global_id": ifcopenshell.guid.compress(value.hex),
+        "ifc_class": ifc_class,
+        "template_version": template_version,
+        "authorization": "deterministic_policy",
+        "operation_id": operation_id,
+        "template": template,
+    }
+
+
 def _public_type_record(
     repository: IndexRepository,
     record: TypeRecord,
@@ -531,5 +743,7 @@ __all__ = [
     "ResolutionBatch",
     "ResolvedOperation",
     "authorize_prototype",
+    "authorize_property_confirmation",
+    "generated_type_authority",
     "resolve_repair_intent",
 ]

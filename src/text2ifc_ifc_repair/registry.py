@@ -56,6 +56,9 @@ class OperationDefinition:
     evaluation_policy: OperationEvaluationPolicy | None = None
     semantic_manifest_builder: OperationCallable | None = None
     semantic_policy_fact_builder: OperationCallable | None = None
+    editable_occurrence_ifc_class: str | None = None
+    inherited_type_evidence_role: str | None = None
+    generated_type_template: OperationCallable | None = None
 
     def __post_init__(self) -> None:
         if not self.operation_type or not self.target_ifc_classes:
@@ -90,6 +93,12 @@ class OperationDefinition:
         ):
             raise OperationRegistryError(
                 "INVALID_SEMANTIC_POLICY_FACT_BUILDER", self.operation_type
+            )
+        if self.generated_type_template is not None and not callable(
+            self.generated_type_template
+        ):
+            raise OperationRegistryError(
+                "INVALID_GENERATED_TYPE_TEMPLATE", self.operation_type
             )
 
 

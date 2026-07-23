@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import inspect
+
 import pytest
 
 from text2ifc_ifc_repair.property_intent import (
@@ -97,3 +99,24 @@ def test_fixture_operation_registers_generic_property_adapter_hooks() -> None:
     assert definition.editable_occurrence_ifc_class == "IfcFixtureElement"
     assert definition.inherited_type_evidence_role == "IfcFixtureElementType"
     assert callable(definition.generated_type_template)
+
+
+def test_common_property_flow_has_no_window_class_branch_and_window_owns_adapter() -> None:
+    import text2ifc_ifc_repair.property_intent as property_module
+    import text2ifc_ifc_repair.resolution_flow as resolution_module
+    from text2ifc_ifc_repair.operations.window import window_operation_definition
+
+    assert "IfcWindow" not in inspect.getsource(property_module)
+    assert "IfcWindow" not in inspect.getsource(resolution_module)
+
+    definition = window_operation_definition()
+    assert definition.editable_occurrence_ifc_class == "IfcWindow"
+    assert definition.inherited_type_evidence_role == "IfcWindowStyle"
+    authority = generated_type_authority(
+        definition,
+        operation_id="window-1",
+        request_hash="sha256:" + "a" * 64,
+        model_fingerprint="sha256:" + "b" * 64,
+    )
+    assert authority["ifc_class"] == "IfcWindowStyle"
+    assert authority["template_version"] == "0.1"
