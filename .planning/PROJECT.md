@@ -17,8 +17,8 @@ ChangeSet and an L1/L2-validated IFC result without model-authored STEP text.
 
 **v1.0 Supported Text2IFC Baseline shipped on 2026-07-16.**
 
-**v1.1 IFC ChangeSet Repair Pipeline is in implementation; Phases 7, 8 and 9
-are complete.**
+**v1.1 IFC ChangeSet Repair Pipeline is in implementation; Phases 7 through 10,
+including inserted Phase 09.1, are complete and Phase 10.1 is planned.**
 
 The shipped supported-scope chain is:
 
@@ -50,6 +50,8 @@ semantic ChangeSet, a repaired/modified IFC, and auditable evidence.
 - One public CLI/API orchestration path from IFC + text to ChangeSet + IFC.
 - Window semantic-fidelity closure followed by Opening, Door, Beam and Column
   operation expansion.
+- Exact user-requested scalar Pset authoring and L2 validation before a
+  separate property knowledge retrieval/RAG phase.
 - Large-IFC bounded context and a separate 128k near-limit experiment.
 
 ## Validated Capabilities
@@ -116,6 +118,8 @@ semantic ChangeSet, a repaired/modified IFC, and auditable evidence.
 | Repair completion levels | L1 geometry/relationship and L2 semantic fidelity are required; L3 authoring exactness is deferred |
 | Original IFC in benchmark evaluation | Private ground truth may score L2 after repair but must never enter Provider input |
 | 128k context | Deferred until a dedicated near-limit Provider/tokenizer test; current repair default remains 64k input |
+| Explicit property authoring vs retrieval | Exact Pset/property/value authoring is Phase 10.1; non-exact property discovery and optional RAG are isolated in Phase 10.2 |
+| Property mutation scope | Occurrence is the default; shared Type changes require explicit scope and confirmed impact |
 
 ## Evolution
 
@@ -134,4 +138,4 @@ review of scope, evidence and deferred L3 exactness.
 - [milestone register](MILESTONES.md)
 
 ---
-*Last updated: 2026-07-20 after Phase 9 completion*
+*Last updated: 2026-07-23 after Phase 10.1 planning*

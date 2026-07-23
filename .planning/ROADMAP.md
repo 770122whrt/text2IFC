@@ -6,8 +6,8 @@
   2026-07-16. See [archived roadmap](milestones/v1.0-ROADMAP.md),
   [requirements](milestones/v1.0-REQUIREMENTS.md), and
   [audit](milestones/v1.0-MILESTONE-AUDIT.md).
-- [ ] **v1.1 IFC ChangeSet Repair Pipeline** - Phases 7 through 13, in progress
-  (3 / 7 phases complete).
+- [ ] **v1.1 IFC ChangeSet Repair Pipeline** - Phases 7 through 13, including
+  inserted Phases 09.1, 10.1 and 10.2, in progress (5 / 10 phases complete).
 
 ## Current Cycle: v1.1 IFC ChangeSet Repair Pipeline
 
@@ -177,6 +177,78 @@ Plans:
 
 **Evidence:** [Phase 10 validation report](../docs/validation/ifc2x3-changeset/phase10-validation-report.md) and [goal verification](phases/10-window-l2-semantic-fidelity-closure/10-VERIFICATION.md)
 
+### Phase 10.1: Explicit IFC Property Authoring and Validation (INSERTED)
+
+**Status:** Planned
+
+**Goal:** When a user explicitly supplies an exact Pset name, property name and
+value, deterministically create or update that typed property on the intended
+Window occurrence or explicitly confirmed shared Type, and publish only after
+the requested property passes independent reopened-IFC L2 validation.
+
+**Requirements:** PROP-01, PROP-02, PROP-03, PROP-04, PROP-05
+
+**Depends on:** Phase 10
+
+**Plans:** 4 plans in 4 sequential waves
+
+- [ ] **Wave 1:** `10.1-01` - Versioned exact-property intent and deterministic resolution contract.
+- [ ] **Wave 2** *(blocked on Wave 1)*: `10.1-02` - Clarification, custom-property confirmation and scope safety.
+- [ ] **Wave 3** *(blocked on Waves 1-2)*: `10.1-03` - Atomic Pset authoring, manifest binding and dynamic L2 enforcement.
+- [ ] **Wave 4** *(blocked on Waves 1-3)*: `10.1-04` - LargeBuilding offline/live acceptance, regression and handoff evidence.
+
+**Cross-cutting constraints:**
+
+- Phase 10.1 performs exact lookup only; it does not search aliases, embeddings
+  or semantically similar properties.
+- Occurrence is the default scope. Shared Type mutation requires an explicit
+  Type-scoped request, an impact preview and affirmative confirmation.
+- Every custom property requires confirmation of exact Pset/property, value,
+  IFC value type, unit and scope before it becomes authorized.
+- Provider output remains a draft. Only deterministic resolution, Binder,
+  atomic application, reopen and L1/L2 gates can publish an IFC.
+- Initial acceptance covers scalar `IfcPropertySingleValue` properties on the
+  Window pipeline while keeping operation-neutral interfaces for later entity
+  families.
+
+**Success criteria:**
+
+1. Exact standard `Pset.Property` requests resolve offline against the checked-
+   in IFC2X3 property registry and enforce applicable class, template type,
+   IFC value type and unit requirements.
+2. Unknown/custom properties never crash or silently pass: they require a
+   durable confirmation and then enter the same typed manifest and L2 path.
+3. Occurrence edits cannot mutate other occurrences sharing a Type; confirmed
+   Type edits disclose and verify their full affected occurrence set.
+4. The applicator creates or updates one direct Pset/property without duplicate
+   relationships, rolls back atomically on failure, and independently reopens
+   the IFC before requested-property L2.
+5. LargeBuilding passes deterministic acceptance and an opt-in real DeepSeek
+   exact-property UAT without RAG, Gold leakage or synthetic fallback.
+
+### Phase 10.2: IFC2X3 Property Knowledge Retrieval and Resolution (INSERTED)
+
+**Status:** Deferred until Phase 10.1 acceptance
+
+**Goal:** Resolve non-exact multilingual property requests to evidence-bearing
+standard or project-property candidates, clarify uncertainty, and emit only the
+exact typed property contract already proven by Phase 10.1.
+
+**Requirements:** RAG-01, RAG-02, RAG-03, RAG-04
+
+**Depends on:** Phase 10.1
+
+**Success criteria:**
+
+1. IFC2X3 official properties and current-project properties have versioned,
+   provenance-bearing searchable records with exact applicability and types.
+2. Exact/keyword/alias retrieval is measured before vector retrieval; a hybrid
+   candidate path is enabled only when it improves held-out resolution metrics.
+3. Low-confidence, low-margin, conflicting and custom candidates produce
+   bounded clarification instead of automatic authorization.
+4. Retrieval output is candidate evidence only and cannot bypass Phase 10.1
+   confirmation, Binder, atomic authoring, reopened L2 or publication gates.
+
 ### Phase 11: Wall Opening and Door Operations
 
 **Goal:** Extend the Registry with opening-only and Door+Opening operations
@@ -184,7 +256,7 @@ without copying the Window pipeline.
 
 **Requirements:** OPS-01, OPS-02
 
-**Depends on:** Phase 10
+**Depends on:** Phases 10.1 and 10.2
 
 **Success criteria:**
 
@@ -201,7 +273,8 @@ elements.
 
 **Requirements:** OPS-03, OPS-04
 
-**Depends on:** Phases 8 and 9; uses Registry patterns validated in Phase 11
+**Depends on:** Phases 8, 9 and 11; uses the property contract proven in Phase
+10.1 and the optional retrieval interface evaluated in Phase 10.2
 
 **Success criteria:**
 
@@ -218,7 +291,8 @@ changing the default input budget.
 
 **Requirements:** SCALE-01, SCALE-02
 
-**Depends on:** Phases 7 through 12
+**Depends on:** Phases 7 through 12, including inserted Phases 09.1, 10.1 and
+10.2
 
 **Success criteria:**
 
@@ -236,9 +310,32 @@ changing the default input budget.
 | 7 | TGT-01..05 |
 | 8 | VAL-01..05 |
 | 9 | PIPE-01..04 |
+| 09.1 | TYPE-01..03 |
 | 10 | WIN-01..02 |
+| 10.1 | PROP-01..05 |
+| 10.2 | RAG-01..04 |
 | 11 | OPS-01..02 |
 | 12 | OPS-03..04 |
 | 13 | SCALE-01..02 |
 
-**Coverage:** 22 committed requirements, 22 mapped, 0 unmapped.
+**Coverage:** 34 committed requirements, 34 mapped, 0 unmapped.
+
+## Delivery Sequence and Deferred Horizon
+
+The v1.1 sequence is intentionally layered:
+
+1. Phases 7-09.1 established target/Type evidence and public orchestration.
+2. Phase 10 proved one complete Window L1/L2 repair.
+3. Phase 10.1 adds exact user-requested scalar Psets without retrieval.
+4. Phase 10.2 evaluates property knowledge retrieval/RAG against the exact
+   Phase 10.1 output contract.
+5. Phases 11-12 expand the same Registry/ChangeSet/evaluation architecture to
+   Opening, Door, Beam and Column operations.
+6. Phase 13 measures large-IFC context and 128k behavior before changing the
+   bounded 64k default.
+
+Post-v1.1 work remains explicitly uncommitted: existing Wall mutation beyond
+straight-wall openings, Space/room editing, curved/free-form walls, additional
+MEP/structural families, and L3 authoring/identity exactness. Each requires its
+own operation and evaluation contract rather than an implicit extension of the
+Window path.

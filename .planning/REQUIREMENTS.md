@@ -52,6 +52,38 @@ semantic ChangeSet and an L1/L2-validated IFC result.
 - [x] **WIN-02**: The LargeBuilding Window case passes both L1 and L2 in
   deterministic and real-Provider evidence runs.
 
+### Explicit Property Authoring
+
+- [ ] **PROP-01**: A user can explicitly provide an exact Pset name, property
+  name and scalar value that Stage 1 preserves as a versioned, provenance-
+  bearing typed property intent instead of flattening it into free text.
+- [ ] **PROP-02**: Exact standard properties are validated offline against the
+  checked-in IFC2X3 registry, while every unknown/custom property requires
+  confirmation of its exact name, value, IFC value type, unit and scope.
+- [ ] **PROP-03**: Property scope defaults to the target occurrence; a shared
+  Type can be changed only after the user explicitly requests Type scope and
+  confirms an impact preview of all affected occurrences.
+- [ ] **PROP-04**: The unified ChangeSet atomically creates or updates the
+  authorized direct Pset/property without duplicate direct sets/relationships,
+  and any authoring/reopen failure publishes no successful IFC.
+- [ ] **PROP-05**: Every explicitly requested property becomes a mandatory
+  dynamic L2 fact and the Window LargeBuilding path passes offline and real-
+  Provider exact-property acceptance without RAG or private Ground Truth.
+
+### Property Knowledge Retrieval
+
+- [ ] **RAG-01**: IFC2X3 official properties and current-project properties are
+  available as versioned searchable records with provenance, applicability,
+  value type, unit/template metadata and standard/custom identity.
+- [ ] **RAG-02**: Non-exact Chinese/English property phrases produce bounded,
+  ranked candidates using measured exact/keyword/alias baselines before any
+  optional vector/hybrid retrieval is enabled.
+- [ ] **RAG-03**: Low-confidence, low-margin, conflicting and custom candidates
+  require user clarification/confirmation and cannot be silently selected.
+- [ ] **RAG-04**: Retrieval supplies candidates only; the exact Phase 10.1
+  property contract, Binder, atomic authoring and reopened L2 remain the sole
+  authorization and publication path.
+
 ### IFC Type Authority
 
 - [x] **TYPE-01**: The retrieval index distinguishes occurrence-direct facts
@@ -122,6 +154,15 @@ semantic ChangeSet and an L1/L2-validated IFC result.
 | TYPE-03 | 09.1 | Complete |
 | WIN-01 | 10 | Complete |
 | WIN-02 | 10 | Complete |
+| PROP-01 | 10.1 | Pending |
+| PROP-02 | 10.1 | Pending |
+| PROP-03 | 10.1 | Pending |
+| PROP-04 | 10.1 | Pending |
+| PROP-05 | 10.1 | Pending |
+| RAG-01 | 10.2 | Pending |
+| RAG-02 | 10.2 | Pending |
+| RAG-03 | 10.2 | Pending |
+| RAG-04 | 10.2 | Pending |
 | OPS-01 | 11 | Pending |
 | OPS-02 | 11 | Pending |
 | OPS-03 | 12 | Pending |
@@ -129,7 +170,7 @@ semantic ChangeSet and an L1/L2-validated IFC result.
 | SCALE-01 | 13 | Pending |
 | SCALE-02 | 13 | Pending |
 
-**Coverage:** 25 requirements, 25 mapped, 0 unmapped.
+**Coverage:** 34 requirements, 34 mapped, 0 unmapped.
 
 ---
-*Last updated: 2026-07-22 after Phase 10 completion*
+*Last updated: 2026-07-23 after Phase 10.1/10.2 roadmap split*
