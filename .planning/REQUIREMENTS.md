@@ -79,10 +79,13 @@ semantic ChangeSet and an L1/L2-validated IFC result.
   available as versioned searchable records with provenance, applicability,
   value type, unit/template metadata and standard/custom identity.
 - [ ] **RAG-02**: Non-exact Chinese/English property phrases produce bounded,
-  ranked candidates using measured exact/keyword/alias baselines before any
-  optional vector/hybrid retrieval is enabled.
-- [ ] **RAG-03**: Low-confidence, low-margin, conflicting and custom candidates
-  require user clarification/confirmation and cannot be silently selected.
+  ranked candidates through exact, reviewed-alias, keyword and rebuildable
+  local vector retrieval; vector evidence improves recall but is never the
+  authoritative source.
+- [ ] **RAG-03**: Unique applicable exact/reviewed-alias matches and measured
+  keyword/vector consensus may resolve locally. Low-confidence, low-margin,
+  conflicting and custom candidates require bounded clarification/
+  confirmation and cannot be silently selected.
 - [ ] **RAG-04**: Retrieval supplies candidates only; the exact Phase 10.1
   property contract, Binder, atomic authoring and reopened L2 remain the sole
   authorization and publication path.

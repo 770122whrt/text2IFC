@@ -237,11 +237,12 @@ publish only after independent reopened-IFC L2 validation.
 
 ### Phase 10.2: IFC2X3 Property Knowledge Retrieval and Resolution (INSERTED)
 
-**Status:** Ready for discussion and planning after Phase 10.1 acceptance
+**Status:** Design approved; written specification awaiting user review
 
 **Goal:** Resolve non-exact multilingual property requests to evidence-bearing
-standard or project-property candidates, clarify uncertainty, and emit only the
-exact typed property contract already proven by Phase 10.1.
+standard or project-property candidates, authorize only deterministic standard
+matches, clarify genuine uncertainty/custom facts, and emit only the exact
+typed property contract already proven by Phase 10.1.
 
 **Requirements:** RAG-01, RAG-02, RAG-03, RAG-04
 
@@ -251,12 +252,16 @@ exact typed property contract already proven by Phase 10.1.
 
 1. IFC2X3 official properties and current-project properties have versioned,
    provenance-bearing searchable records with exact applicability and types.
-2. Exact/keyword/alias retrieval is measured before vector retrieval; a hybrid
-   candidate path is enabled only when it improves held-out resolution metrics.
-3. Low-confidence, low-margin, conflicting and custom candidates produce
-   bounded clarification instead of automatic authorization.
+2. Exact, reviewed-alias, keyword and local Qdrant/BGE-M3 retrieval produce
+   bounded evidence; vectors improve recall but are never an authority.
+3. Unique exact/reviewed-alias matches and measured keyword/vector consensus
+   may resolve locally; low-confidence, conflicting and custom candidates
+   produce bounded clarification/confirmation.
 4. Retrieval output is candidate evidence only and cannot bypass Phase 10.1
    confirmation, Binder, atomic authoring, reopened L2 or publication gates.
+5. One generic occurrence-property operation supports Wall, WallStandardCase,
+   Door and Window scalar properties with target-local copy-on-write, while one
+   real LargeBuilding Window DeepSeek UAT passes with knowledge health ready.
 
 ### Phase 11: Wall Opening and Door Operations
 
