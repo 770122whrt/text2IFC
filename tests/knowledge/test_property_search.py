@@ -242,6 +242,42 @@ def test_project_records_aggregate_metadata_without_embedding_values() -> None:
     assert "SECRET" not in records[0].search_text
 
 
+def test_project_store_reuses_records_by_source_ifc_hash(tmp_path: Path) -> None:
+    project_records = build_project_property_records(
+        (
+            SimpleNamespace(
+                ifc_class="IfcDoor",
+                ifc_global_id="door-1",
+                properties=(
+                    SimpleNamespace(
+                        kind="pset",
+                        set_name="Custom_Door",
+                        property_name="MaintenanceTeam",
+                        value="Team A",
+                        value_type="IfcLabel",
+                        inherited=False,
+                    ),
+                ),
+            ),
+        ),
+        source_ifc_sha256="sha256:door-project",
+    )
+    store = PropertyKnowledgeStore(tmp_path / "knowledge.sqlite")
+
+    first = store.ensure_project_corpus(
+        source_ifc_sha256="sha256:door-project",
+        records=project_records,
+    )
+    second = store.ensure_project_corpus(
+        source_ifc_sha256="sha256:door-project",
+        records=(),
+    )
+
+    assert first.status == "built"
+    assert second.status == "reused"
+    assert store.load_project_records("sha256:door-project") == project_records
+
+
 def test_chinese_length_units_normalize_to_project_units() -> None:
     assert normalize_property_value(
         250,
@@ -249,6 +285,17 @@ def test_chinese_length_units_normalize_to_project_units() -> None:
         value_type="IfcLengthMeasure",
         project_length_unit="m",
     ) == (0.25, "m")
+
+
+def test_unsupported_measure_family_cannot_be_normalized_for_authoring() -> None:
+    import pytest
+
+    with pytest.raises(ValueError, match="PROPERTY_VALUE_TYPE_UNSUPPORTED"):
+        normalize_property_value(
+            3.6,
+            raw_unit=None,
+            value_type="IfcThermalTransmittanceMeasure",
+        )
     assert normalize_property_value(
         25,
         raw_unit="厘米",

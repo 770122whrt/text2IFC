@@ -15,7 +15,12 @@ from text2ifc_ifc_repair.evaluation_policy import (
 from text2ifc_ifc_repair.index_models import ElementRecord, PropertyFact, TypeRecord
 from text2ifc_ifc_repair.production_evidence import (
     ProductionEvidenceError,
+    _property_claim_matches_authority,
     build_production_evidence,
+)
+from text2ifc_ifc_repair.property_intent import (
+    ExactPropertyIntent,
+    NaturalLanguagePropertyIntent,
 )
 from text2ifc_ifc_repair.registry import OperationDefinition, OperationRegistry
 from text2ifc_ifc_repair.repair_intent import (
@@ -31,6 +36,54 @@ from text2ifc_ifc_repair.target_query import TargetQuery
 
 OPERATION_TYPE = "fixture_add_component"
 FACT_KEY = "pset:Pset_Fixture.Marker"
+
+
+def test_natural_language_property_claim_binds_by_immutable_source() -> None:
+    source = PublicProvenance(
+        source_kind="user_request",
+        reference="request:/text",
+        excerpt="标记为外窗",
+    )
+    authority = {
+        "set_name": "Pset_WindowCommon",
+        "property_name": "IsExternal",
+        "value": True,
+        "ownership": "occurrence_direct",
+        "source": source.to_dict(),
+    }
+    natural = NaturalLanguagePropertyIntent(
+        property_phrase="外窗",
+        raw_value=True,
+        raw_unit=None,
+        scope=None,
+        source=source,
+    )
+    exact = ExactPropertyIntent(
+        set_name="Pset_WindowCommon",
+        property_name="IsExternal",
+        value=True,
+        requested_value_type=None,
+        requested_unit=None,
+        scope=None,
+        source=source,
+    )
+
+    assert _property_claim_matches_authority(natural, authority)
+    assert _property_claim_matches_authority(exact, authority)
+    assert not _property_claim_matches_authority(
+        NaturalLanguagePropertyIntent(
+            property_phrase="外窗",
+            raw_value=True,
+            raw_unit=None,
+            scope=None,
+            source=PublicProvenance(
+                source_kind="user_request",
+                reference="request:/other",
+                excerpt="标记为外窗",
+            ),
+        ),
+        authority,
+    )
 
 
 def _spec(

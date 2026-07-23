@@ -82,6 +82,10 @@ def test_default_registry_exposes_generic_occurrence_property_operation() -> Non
     assert definition.editable_occurrence_ifc_classes == definition.target_ifc_classes
     assert definition.parameter_schema["maxProperties"] == 0
     assert definition.evaluation_policy.semantic_role == "target"
+    assert (
+        definition.capability_constraints["semantic_authoring_scope"]
+        == "explicit_request_only"
+    )
 
 
 @pytest.mark.parametrize(

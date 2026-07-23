@@ -33,6 +33,7 @@ from .run_artifacts import publish_terminal_artifacts
 from text2ifc_text.splits import atomic_write_text
 from text2ifc_knowledge.property_search import (
     PropertyKnowledgeResolver,
+    PropertyKnowledgeStore,
     build_project_property_records,
     create_default_property_resolver,
 )
@@ -634,7 +635,7 @@ class RepairAPI:
             for record in resolver.records
             if record.authority == "ifc2x3_psd"
         }
-        project = tuple(
+        extracted_project = tuple(
             record
             for record in build_project_property_records(
                 repository.iter_records(),
@@ -642,6 +643,14 @@ class RepairAPI:
             )
             if (record.set_name, record.property_name) not in standard_paths
         )
+        store = PropertyKnowledgeStore(
+            self.store.root / "knowledge" / "property-knowledge.sqlite"
+        )
+        store.ensure_project_corpus(
+            source_ifc_sha256=source_ifc_sha256,
+            records=extracted_project,
+        )
+        project = store.load_project_records(source_ifc_sha256)
         return PropertyKnowledgeResolver(
             registry=resolver.registry,
             records=(*resolver.records, *project),

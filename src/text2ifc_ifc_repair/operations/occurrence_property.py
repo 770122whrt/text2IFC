@@ -75,6 +75,7 @@ def occurrence_property_operation_definition() -> OperationDefinition:
             "ifc_schemas": ["IFC2X3"],
             "property_templates": ["IfcPropertySingleValue"],
             "mutation_scope": "occurrence_only",
+            "semantic_authoring_scope": "explicit_request_only",
             "geometry_mutation": False,
             "shared_type_mutation": False,
         },

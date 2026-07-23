@@ -22,9 +22,11 @@ from .run_models import hash_json
 from .index_models import ElementRecord, TypeRecord
 from .registry import OperationRegistry
 from .repair_intent import AttributeIntent, RepairIntent
+from .property_intent import ExactPropertyIntent, NaturalLanguagePropertyIntent
 from .resolution_flow import ResolutionBatch, ResolvedOperation
 from .semantic_facts import (
     SemanticFact,
+    semantic_fact_key_token,
     semantic_facts_from_element_record,
     semantic_facts_from_type_record,
 )
@@ -162,6 +164,17 @@ def build_production_evidence(
             request_hash=intent.source_request_hash,
             model_fingerprint=intent.model_fingerprint,
         )
+        if (
+            registry.require(operation_type).capability_constraints.get(
+                "semantic_authoring_scope"
+            )
+            == "explicit_request_only"
+        ):
+            candidates = tuple(
+                fact
+                for fact in candidates
+                if fact.source_kind is EvidenceSourceKind.EXPLICIT_REQUEST
+            )
         selected, operation_conflicts = _select_authority(operation_id, candidates)
         policy = extend_policy_with_explicit_facts(
             policy,
@@ -482,23 +495,21 @@ def _authorized_property_fact(
     matching = [
         claim
         for claim in operation_intent.property_intents
-        if claim.set_name == authority.get("set_name")
-        and claim.property_name == authority.get("property_name")
-        and claim.value == authority.get("value")
-        and (claim.scope or "occurrence_direct") == authority.get("ownership")
+        if _property_claim_matches_authority(claim, authority)
     ]
     if len(matching) != 1:
         raise ProductionEvidenceError(
             "AUTHORIZED_PROPERTY_CLAIM_MISMATCH", operation_id
         )
     claim = matching[0]
+    exact_path = f"{authority['set_name']}.{authority['property_name']}"
     return SemanticFact(
-        fact_key=f"pset:{authority['set_name']}.{authority['property_name']}",
+        fact_key=f"pset:{semantic_fact_key_token(exact_path)}",
         value=authority["value"],
         value_type=str(authority["value_type"]),
         unit=None if authority.get("unit") is None else str(authority["unit"]),
         inherited=False,
-        pset_path=f"{authority['set_name']}.{authority['property_name']}",
+        pset_path=exact_path,
         entity_source=f"request-operation:{operation_id}",
         source_kind=EvidenceSourceKind.EXPLICIT_REQUEST,
         source_ref=claim.source.reference,
@@ -507,12 +518,30 @@ def _authorized_property_fact(
             f"request-evidence:{claim.source.reference}",
             f"operation:{operation_id}",
             f"property-hash:{supplied_hash}",
+            f"source_fact_key:pset:{exact_path}",
             *(
                 (f"confirmation:{authority['confirmation_ref']}",)
                 if authority.get("confirmation_ref")
                 else ()
             ),
         ),
+    )
+
+
+def _property_claim_matches_authority(
+    claim: ExactPropertyIntent | NaturalLanguagePropertyIntent,
+    authority: Mapping[str, Any],
+) -> bool:
+    if claim.source.to_dict() != authority.get("source"):
+        return False
+    if (claim.scope or "occurrence_direct") != authority.get("ownership"):
+        return False
+    if isinstance(claim, NaturalLanguagePropertyIntent):
+        return True
+    return (
+        claim.set_name == authority.get("set_name")
+        and claim.property_name == authority.get("property_name")
+        and claim.value == authority.get("value")
     )
 
 

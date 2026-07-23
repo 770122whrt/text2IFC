@@ -38,6 +38,7 @@ from text2ifc_knowledge.registry import load_ifc2x3_registry  # noqa: E402
 
 SOURCE = ROOT / "dataset/external/bim-whale-ifc-samples/LargeBuilding/IFC/LargeBuilding.ifc"
 DEFAULT_OUTPUT = ROOT / "dataset/processed/ifc-repair/phase10.2-live-uat"
+DEFAULT_MODEL_PATH = ROOT / ".cache/models/BAAI-bge-m3"
 WINDOW_ID = "2cXV28XOjE6f6irgi0CO4t"
 TOKEN_GUARD = 65_536
 REQUEST = (
@@ -98,12 +99,20 @@ def _run(
     )
     aliases = load_reviewed_aliases()
     embedding = BgeM3EmbeddingProvider(
-        local_files_only=not allow_model_download
+        model_path=(
+            str(DEFAULT_MODEL_PATH)
+            if (DEFAULT_MODEL_PATH / "pytorch_model.bin").is_file()
+            else "BAAI/bge-m3"
+        ),
+        local_files_only=(
+            (DEFAULT_MODEL_PATH / "pytorch_model.bin").is_file()
+            or not allow_model_download
+        ),
     )
     vector = QdrantVectorIndex(
         embedding,
         collection_name="text2ifc_ifc2x3_properties_v01",
-        path=output / "qdrant",
+        path=output.parent / "_knowledge" / "qdrant",
     )
     fingerprint = collection_fingerprint(
         corpus_fingerprint=corpus_fingerprint,
@@ -116,6 +125,7 @@ def _run(
             collection_fingerprint=fingerprint,
         )
     except Exception as error:
+        vector.close()
         return {
             "schema_version": "text2ifc/phase10.2-live-uat/0.1",
             "status": "failed",
@@ -150,6 +160,18 @@ def _run(
             for path in (run_dir / "property-resolution").rglob("*.json")
         ) if (run_dir / "property-resolution").is_dir() else []
         actual = None
+        evaluation = {}
+        if "evaluation" in final.artifacts:
+            evaluation = json.loads(
+                (run_dir / final.artifacts["evaluation"]).read_text(
+                    encoding="utf-8"
+                )
+            )
+        production_levels = {
+            str(item["level"]): str(item["status"])
+            for operation in evaluation.get("operations", ())
+            for item in operation.get("levels", ())
+        }
         if "successful_ifc" in final.artifacts:
             repaired = ifcopenshell.open(
                 str(run_dir / final.artifacts["successful_ifc"])
@@ -174,9 +196,11 @@ def _run(
                 "value_type": "IfcBoolean",
                 "ownership": "occurrence_direct",
             }
+            and production_levels
+            == {"L1": "passed", "L2": "passed", "L3": "not_required"}
             and len(evidence_paths) == 3
         )
-        return {
+        result = {
             "schema_version": "text2ifc/phase10.2-live-uat/0.1",
             "status": "passed" if passed else "failed",
             "reason_code": final.reason_code,
@@ -197,6 +221,7 @@ def _run(
             },
             "property_resolution_evidence": evidence_paths,
             "requested_property_actual": actual,
+            "production_levels": production_levels,
             "successful_ifc": final.artifacts.get("successful_ifc"),
             "successful_ifc_sha256": (
                 _sha256(run_dir / final.artifacts["successful_ifc"])
@@ -205,8 +230,10 @@ def _run(
             ),
             "synthetic_fallback": False,
         }
+        vector.close()
+        return result
     except Exception as error:
-        return {
+        result = {
             "schema_version": "text2ifc/phase10.2-live-uat/0.1",
             "status": "failed",
             "reason_code": str(
@@ -220,6 +247,8 @@ def _run(
             },
             "synthetic_fallback": False,
         }
+        vector.close()
+        return result
 
 
 def _remove_direct_property(source: Path, output: Path) -> None:

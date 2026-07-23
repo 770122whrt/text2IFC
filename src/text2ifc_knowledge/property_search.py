@@ -17,6 +17,18 @@ from .registry import IfcKnowledgeRegistry, check_registry_files, load_ifc2x3_re
 PROPERTY_RECORD_SCHEMA_VERSION = "text2ifc/property-knowledge-record/0.1"
 PROPERTY_QUERY_SCHEMA_VERSION = "text2ifc/property-knowledge-query/0.1"
 PROPERTY_DECISION_SCHEMA_VERSION = "text2ifc/property-resolution-decision/0.1"
+SUPPORTED_AUTHORABLE_VALUE_TYPES = frozenset(
+    {
+        "IfcBoolean",
+        "IfcIdentifier",
+        "IfcInteger",
+        "IfcLabel",
+        "IfcLengthMeasure",
+        "IfcLogical",
+        "IfcReal",
+        "IfcText",
+    }
+)
 
 
 def _stable_hash(value: object) -> str:
@@ -141,7 +153,7 @@ def build_standard_property_records(
                     source_hash=corpus_fingerprint,
                     authorable=(
                         template_type == "TypePropertySingleValue"
-                        and value_type is not None
+                        and value_type in SUPPORTED_AUTHORABLE_VALUE_TYPES
                     ),
                 )
             )
@@ -204,7 +216,7 @@ def build_project_property_records(
                 ),
                 source_ref=f"ifc:{source_ifc_sha256}",
                 source_hash=source_ifc_sha256,
-                authorable=value_type is not None,
+                authorable=value_type in SUPPORTED_AUTHORABLE_VALUE_TYPES,
             )
         )
     return tuple(records)
@@ -241,6 +253,12 @@ class PropertyKnowledgeStore:
                 CREATE TABLE IF NOT EXISTS property_records (
                     record_id TEXT PRIMARY KEY,
                     payload_json TEXT NOT NULL
+                );
+                CREATE TABLE IF NOT EXISTS project_property_records (
+                    source_ifc_sha256 TEXT NOT NULL,
+                    record_id TEXT NOT NULL,
+                    payload_json TEXT NOT NULL,
+                    PRIMARY KEY(source_ifc_sha256, record_id)
                 );
                 """
             )
@@ -301,6 +319,69 @@ class PropertyKnowledgeStore:
             ).fetchall()
         return tuple(
             PropertyKnowledgeRecord.from_dict(json.loads(str(row[0]))) for row in rows
+        )
+
+    def ensure_project_corpus(
+        self,
+        *,
+        source_ifc_sha256: str,
+        records: Iterable[PropertyKnowledgeRecord],
+    ) -> CorpusBuildResult:
+        materialized = tuple(records)
+        with self._connect() as connection:
+            existing = int(
+                connection.execute(
+                    """
+                    SELECT COUNT(*) FROM project_property_records
+                    WHERE source_ifc_sha256=?
+                    """,
+                    (source_ifc_sha256,),
+                ).fetchone()[0]
+            )
+            if existing:
+                return CorpusBuildResult(
+                    "reused", source_ifc_sha256, existing
+                )
+            connection.executemany(
+                """
+                INSERT INTO project_property_records(
+                    source_ifc_sha256, record_id, payload_json
+                ) VALUES (?, ?, ?)
+                """,
+                (
+                    (
+                        source_ifc_sha256,
+                        record.record_id,
+                        json.dumps(
+                            record.to_dict(),
+                            ensure_ascii=False,
+                            sort_keys=True,
+                            separators=(",", ":"),
+                        ),
+                    )
+                    for record in materialized
+                ),
+            )
+        return CorpusBuildResult(
+            "built", source_ifc_sha256, len(materialized)
+        )
+
+    def load_project_records(
+        self,
+        source_ifc_sha256: str,
+    ) -> tuple[PropertyKnowledgeRecord, ...]:
+        with self._connect() as connection:
+            rows = connection.execute(
+                """
+                SELECT payload_json FROM project_property_records
+                WHERE source_ifc_sha256=?
+                ORDER BY record_id
+                """,
+                (source_ifc_sha256,),
+            ).fetchall()
+        return tuple(
+            PropertyKnowledgeRecord.from_dict(json.loads(str(row[0])))
+            for row in rows
         )
 
 
@@ -499,9 +580,7 @@ class BgeM3EmbeddingProvider:
         self.device = device
         self.local_files_only = local_files_only
         self._model: Any | None = None
-        self.model_fingerprint = _stable_hash(
-            {"adapter": "sentence-transformers", "model_path": model_path}
-        )
+        self.model_fingerprint = _embedding_model_fingerprint(model_path)
 
     def _load(self) -> Any:
         if self._model is None:
@@ -627,6 +706,9 @@ class QdrantVectorIndex:
             if item.payload and item.payload.get("record_id")
         )
 
+    def close(self) -> None:
+        self._client.close()
+
 
 def collection_fingerprint(
     *,
@@ -652,6 +734,37 @@ def collection_fingerprint(
             ],
             "embedding_model_id": embedding_provider.model_id,
             "embedding_model_fingerprint": embedding_provider.model_fingerprint,
+        }
+    )
+
+
+def _embedding_model_fingerprint(model_path: str) -> str:
+    path = Path(model_path)
+    if path.is_dir():
+        digest = hashlib.sha256()
+        files = [
+            candidate
+            for name in (
+                "config.json",
+                "modules.json",
+                "pytorch_model.bin",
+                "model.safetensors",
+            )
+            if (candidate := path / name).is_file()
+        ]
+        if not any(item.name in {"pytorch_model.bin", "model.safetensors"} for item in files):
+            raise ValueError("BGE_M3_WEIGHT_FILE_MISSING")
+        for item in files:
+            digest.update(item.name.encode("utf-8"))
+            with item.open("rb") as stream:
+                for chunk in iter(lambda: stream.read(4 * 1024 * 1024), b""):
+                    digest.update(chunk)
+        return "sha256:" + digest.hexdigest()
+    return _stable_hash(
+        {
+            "adapter": "sentence-transformers",
+            "model_id": BgeM3EmbeddingProvider.model_id,
+            "remote_revision": model_path,
         }
     )
 
@@ -949,7 +1062,7 @@ def normalize_property_value(
         metres = float(raw_value) * _LENGTH_FACTORS_TO_METRES[source]
         normalized = metres / _LENGTH_FACTORS_TO_METRES[project_length_unit]
         return normalized, project_length_unit
-    if value_type == "IfcReal" or value_type.endswith("Measure"):
+    if value_type == "IfcReal":
         if not isinstance(raw_value, (int, float)) or isinstance(raw_value, bool):
             raise ValueError("PROPERTY_VALUE_TYPE_INCOMPATIBLE")
         if isinstance(raw_value, float) and not math.isfinite(raw_value):
@@ -957,9 +1070,7 @@ def normalize_property_value(
         if raw_unit is not None:
             raise ValueError("PROPERTY_UNIT_FAMILY_UNSUPPORTED")
         return raw_value, None
-    if isinstance(raw_value, (str, bool, int, float)):
-        return raw_value, raw_unit
-    raise ValueError("PROPERTY_VALUE_TYPE_INCOMPATIBLE")
+    raise ValueError("PROPERTY_VALUE_TYPE_UNSUPPORTED")
 
 
 def _split_exact_path(value: str) -> tuple[str, str] | None:
@@ -988,6 +1099,7 @@ def _cosine(first: Sequence[float], second: Sequence[float]) -> float:
 
 
 __all__ = [
+    "BgeM3EmbeddingProvider",
     "CorpusBuildResult",
     "EmbeddingProvider",
     "InMemoryVectorIndex",
@@ -998,8 +1110,16 @@ __all__ = [
     "PropertyKnowledgeResolver",
     "PropertyKnowledgeStore",
     "PropertyResolutionDecision",
+    "PropertyResolutionPolicy",
+    "QdrantVectorIndex",
     "ResolvedExactProperty",
     "VectorHit",
+    "build_project_property_records",
     "build_standard_property_records",
+    "collection_fingerprint",
+    "create_default_property_resolver",
+    "default_standard_corpus_fingerprint",
+    "load_property_resolution_policy",
+    "load_reviewed_aliases",
     "normalize_property_value",
 ]
