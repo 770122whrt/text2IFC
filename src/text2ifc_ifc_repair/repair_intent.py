@@ -12,7 +12,7 @@ from typing import Any, Mapping
 
 from jsonschema import Draft202012Validator
 
-from .property_intent import ExactPropertyIntent
+from .property_intent import ExactPropertyIntent, NaturalLanguagePropertyIntent
 from .registry import OperationRegistry, OperationRegistryError
 from .target_query import TargetQuery
 
@@ -34,13 +34,25 @@ REPAIR_INTENT_BODY_SCHEMA_VERSION_0_2 = (
 REPAIR_INTENT_BODY_SCHEMA_PATH_0_2 = Path(
     "schemas/agent/ifc-repair-intent-body-0.2.schema.json"
 )
+REPAIR_INTENT_SCHEMA_VERSION_0_3 = "text2ifc/ifc-repair-intent/0.3"
+REPAIR_INTENT_SCHEMA_PATH_0_3 = Path(
+    "schemas/agent/ifc-repair-intent-0.3.schema.json"
+)
+REPAIR_INTENT_BODY_SCHEMA_VERSION_0_3 = (
+    "text2ifc/ifc-repair-intent-body/0.3"
+)
+REPAIR_INTENT_BODY_SCHEMA_PATH_0_3 = Path(
+    "schemas/agent/ifc-repair-intent-body-0.3.schema.json"
+)
 _SCHEMA_PATHS = {
     REPAIR_INTENT_SCHEMA_VERSION: REPAIR_INTENT_SCHEMA_PATH,
     REPAIR_INTENT_SCHEMA_VERSION_0_2: REPAIR_INTENT_SCHEMA_PATH_0_2,
+    REPAIR_INTENT_SCHEMA_VERSION_0_3: REPAIR_INTENT_SCHEMA_PATH_0_3,
 }
 _BODY_SCHEMA_PATHS = {
     REPAIR_INTENT_BODY_SCHEMA_VERSION: REPAIR_INTENT_BODY_SCHEMA_PATH,
     REPAIR_INTENT_BODY_SCHEMA_VERSION_0_2: REPAIR_INTENT_BODY_SCHEMA_PATH_0_2,
+    REPAIR_INTENT_BODY_SCHEMA_VERSION_0_3: REPAIR_INTENT_BODY_SCHEMA_PATH_0_3,
 }
 
 
@@ -185,7 +197,9 @@ class OperationIntent:
     prototype_intent: PrototypeIntent | None
     provenance: tuple[PublicProvenance, ...]
     _target_query_document: Mapping[str, Any]
-    property_intents: tuple[ExactPropertyIntent, ...] = ()
+    property_intents: tuple[
+        ExactPropertyIntent | NaturalLanguagePropertyIntent, ...
+    ] = ()
     _has_property_intents_field: bool = False
 
     @classmethod
@@ -201,7 +215,7 @@ class OperationIntent:
                 AttributeIntent.from_dict(item) for item in value["attribute_intents"]
             ),
             property_intents=tuple(
-                ExactPropertyIntent.from_dict(item)
+                _property_intent_from_dict(item)
                 for item in value.get("property_intents", ())
             ),
             prototype_intent=(
@@ -315,9 +329,7 @@ class RepairIntent:
                 for property_index, property_intent in enumerate(
                     raw_operation.get("property_intents", ())
                 ):
-                    missing = ExactPropertyIntent.from_dict(
-                        property_intent
-                    ).missing_fields
+                    missing = _property_intent_from_dict(property_intent).missing_fields
                     if missing:
                         raise RepairIntentError(
                             RepairIntentCode.PROPERTY_INCOMPLETE,
@@ -402,6 +414,14 @@ def _validator(version: str) -> Draft202012Validator:
     return Draft202012Validator(load_repair_intent_schema(version))
 
 
+def _property_intent_from_dict(
+    value: Mapping[str, Any],
+) -> ExactPropertyIntent | NaturalLanguagePropertyIntent:
+    if value.get("intent_kind") == "natural_language_property":
+        return NaturalLanguagePropertyIntent.from_dict(value)
+    return ExactPropertyIntent.from_dict(value)
+
+
 def _has_target_selector(query: Mapping[str, Any]) -> bool:
     scalar_fields = (
         "global_id",
@@ -466,10 +486,14 @@ __all__ = [
     "REPAIR_INTENT_BODY_SCHEMA_PATH_0_2",
     "REPAIR_INTENT_BODY_SCHEMA_VERSION",
     "REPAIR_INTENT_BODY_SCHEMA_VERSION_0_2",
+    "REPAIR_INTENT_BODY_SCHEMA_PATH_0_3",
+    "REPAIR_INTENT_BODY_SCHEMA_VERSION_0_3",
     "REPAIR_INTENT_SCHEMA_PATH",
     "REPAIR_INTENT_SCHEMA_PATH_0_2",
     "REPAIR_INTENT_SCHEMA_VERSION",
     "REPAIR_INTENT_SCHEMA_VERSION_0_2",
+    "REPAIR_INTENT_SCHEMA_PATH_0_3",
+    "REPAIR_INTENT_SCHEMA_VERSION_0_3",
     "RepairIntent",
     "RepairIntentCode",
     "RepairIntentError",

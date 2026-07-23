@@ -5,7 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from enum import Enum
 import math
-from typing import Any, Iterable, Mapping, TYPE_CHECKING
+from typing import Any, Iterable, Mapping, Sequence, TYPE_CHECKING
 
 from text2ifc_knowledge.registry import (
     IfcKnowledgeRegistry,
@@ -44,14 +44,19 @@ class ExactPropertyIntent:
     def from_dict(cls, value: Mapping[str, Any]) -> "ExactPropertyIntent":
         from .repair_intent import PublicProvenance
 
+        intent_kind = str(value.get("intent_kind", "pset_property"))
+        is_v03 = intent_kind == "exact_property"
         return cls(
             set_name=_optional_text(value["set_name"]),
             property_name=_optional_text(value["property_name"]),
-            value=value["value"],
+            value=value["raw_value"] if is_v03 else value["value"],
             requested_value_type=_optional_text(value["requested_value_type"]),
-            requested_unit=_optional_text(value["requested_unit"]),
+            requested_unit=_optional_text(
+                value["raw_unit"] if is_v03 else value["requested_unit"]
+            ),
             scope=_optional_text(value["scope"]),
             source=PublicProvenance.from_dict(value["source"]),
+            intent_kind=intent_kind,
         )
 
     @property
@@ -66,6 +71,17 @@ class ExactPropertyIntent:
         return tuple(missing)
 
     def to_dict(self) -> dict[str, Any]:
+        if self.intent_kind == "exact_property":
+            return {
+                "intent_kind": self.intent_kind,
+                "set_name": self.set_name,
+                "property_name": self.property_name,
+                "raw_value": self.value,
+                "raw_unit": self.requested_unit,
+                "requested_value_type": self.requested_value_type,
+                "scope": self.scope,
+                "source": self.source.to_dict(),
+            }
         return {
             "intent_kind": self.intent_kind,
             "set_name": self.set_name,
@@ -73,6 +89,51 @@ class ExactPropertyIntent:
             "value": self.value,
             "requested_value_type": self.requested_value_type,
             "requested_unit": self.requested_unit,
+            "scope": self.scope,
+            "source": self.source.to_dict(),
+        }
+
+
+@dataclass(frozen=True)
+class NaturalLanguagePropertyIntent:
+    """A raw multilingual property claim awaiting local knowledge resolution."""
+
+    property_phrase: str | None
+    raw_value: Any
+    raw_unit: str | None
+    scope: str | None
+    source: "PublicProvenance"
+    intent_kind: str = "natural_language_property"
+
+    @classmethod
+    def from_dict(
+        cls, value: Mapping[str, Any]
+    ) -> "NaturalLanguagePropertyIntent":
+        from .repair_intent import PublicProvenance
+
+        return cls(
+            property_phrase=_optional_text(value["property_phrase"]),
+            raw_value=value["raw_value"],
+            raw_unit=_optional_text(value["raw_unit"]),
+            scope=_optional_text(value["scope"]),
+            source=PublicProvenance.from_dict(value["source"]),
+        )
+
+    @property
+    def missing_fields(self) -> tuple[str, ...]:
+        missing: list[str] = []
+        if self.property_phrase is None:
+            missing.append("property_phrase")
+        if self.raw_value is None:
+            missing.append("raw_value")
+        return tuple(missing)
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "intent_kind": self.intent_kind,
+            "property_phrase": self.property_phrase,
+            "raw_value": self.raw_value,
+            "raw_unit": self.raw_unit,
             "scope": self.scope,
             "source": self.source.to_dict(),
         }
@@ -214,10 +275,100 @@ class PropertyConfirmationPreview:
             source=PublicProvenance.from_dict(value["source"]),
             preview_hash=str(value["preview_hash"]),
         )
-        expected = hash_json({key: item for key, item in preview.to_dict().items() if key != "preview_hash"})
+        expected = hash_json(
+            {
+                key: item
+                for key, item in preview.to_dict().items()
+                if key != "preview_hash"
+            }
+        )
         if preview.preview_hash != expected:
             raise ValueError("PROPERTY_CONFIRMATION_PREVIEW_HASH_MISMATCH")
         return preview
+
+
+@dataclass(frozen=True)
+class PropertyConfirmationBatch:
+    """One affirmative answer bound to an exact ordered set of custom facts."""
+
+    operation_id: str
+    target_global_id: str
+    request_hash: str
+    model_fingerprint: str
+    items: tuple[PropertyConfirmationPreview, ...]
+    preview_hash: str
+    preview_kind: str = "property_batch"
+
+    @classmethod
+    def create(
+        cls,
+        previews: Sequence[PropertyConfirmationPreview],
+    ) -> "PropertyConfirmationBatch":
+        items = tuple(previews)
+        if not items or len(items) > 64:
+            raise ValueError("PROPERTY_BATCH_SIZE_INVALID")
+        first = items[0]
+        binding = (
+            first.operation_id,
+            first.target_global_id,
+            first.request_hash,
+            first.model_fingerprint,
+        )
+        if any(
+            (
+                item.operation_id,
+                item.target_global_id,
+                item.request_hash,
+                item.model_fingerprint,
+            )
+            != binding
+            for item in items
+        ):
+            raise ValueError("PROPERTY_BATCH_BINDING_MISMATCH")
+        identities = tuple((item.set_name, item.property_name) for item in items)
+        if len(identities) != len(set(identities)):
+            raise ValueError("PROPERTY_BATCH_DUPLICATE")
+        canonical = {
+            "preview_kind": "property_batch",
+            "operation_id": first.operation_id,
+            "target_global_id": first.target_global_id,
+            "request_hash": first.request_hash,
+            "model_fingerprint": first.model_fingerprint,
+            "item_hashes": [item.preview_hash for item in items],
+        }
+        return cls(
+            operation_id=first.operation_id,
+            target_global_id=first.target_global_id,
+            request_hash=first.request_hash,
+            model_fingerprint=first.model_fingerprint,
+            items=items,
+            preview_hash=hash_json(canonical),
+        )
+
+    @classmethod
+    def from_dict(cls, value: Mapping[str, Any]) -> "PropertyConfirmationBatch":
+        if value.get("preview_kind") != "property_batch":
+            raise ValueError("PROPERTY_BATCH_KIND_INVALID")
+        items = tuple(
+            PropertyConfirmationPreview.from_dict(item)
+            for item in value.get("items", ())
+        )
+        rebuilt = cls.create(items)
+        expected = rebuilt.to_dict()
+        if dict(value) != expected:
+            raise ValueError("PROPERTY_BATCH_HASH_MISMATCH")
+        return rebuilt
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "preview_kind": self.preview_kind,
+            "operation_id": self.operation_id,
+            "target_global_id": self.target_global_id,
+            "request_hash": self.request_hash,
+            "model_fingerprint": self.model_fingerprint,
+            "items": [item.to_dict() for item in self.items],
+            "preview_hash": self.preview_hash,
+        }
 
 
 @dataclass(frozen=True)
@@ -568,7 +719,9 @@ def _optional_text(value: Any) -> str | None:
 __all__ = [
     "AuthorizedPropertyFact",
     "ExactPropertyIntent",
+    "NaturalLanguagePropertyIntent",
     "PropertyConfirmationPreview",
+    "PropertyConfirmationBatch",
     "PropertyResolution",
     "PropertyResolutionStatus",
     "authorize_custom_property",

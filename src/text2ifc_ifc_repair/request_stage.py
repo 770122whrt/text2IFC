@@ -24,8 +24,10 @@ from .repair_intent import (
     RepairIntentError,
     REPAIR_INTENT_BODY_SCHEMA_VERSION,
     REPAIR_INTENT_BODY_SCHEMA_VERSION_0_2,
+    REPAIR_INTENT_BODY_SCHEMA_VERSION_0_3,
     REPAIR_INTENT_SCHEMA_VERSION,
     REPAIR_INTENT_SCHEMA_VERSION_0_2,
+    REPAIR_INTENT_SCHEMA_VERSION_0_3,
     fingerprint_text,
     hash_request,
     load_repair_intent_body_schema,
@@ -35,6 +37,7 @@ from .repair_intent import (
 
 TEMPLATE_ID = "ifc-repair-intent.v0.1"
 TEMPLATE_ID_0_2 = "ifc-repair-intent.v0.2"
+TEMPLATE_ID_0_3 = "ifc-repair-intent.v0.3"
 _INTENT_CONTRACTS = {
     REPAIR_INTENT_SCHEMA_VERSION: (
         REPAIR_INTENT_BODY_SCHEMA_VERSION,
@@ -43,6 +46,10 @@ _INTENT_CONTRACTS = {
     REPAIR_INTENT_SCHEMA_VERSION_0_2: (
         REPAIR_INTENT_BODY_SCHEMA_VERSION_0_2,
         TEMPLATE_ID_0_2,
+    ),
+    REPAIR_INTENT_SCHEMA_VERSION_0_3: (
+        REPAIR_INTENT_BODY_SCHEMA_VERSION_0_3,
+        TEMPLATE_ID_0_3,
     ),
 }
 MAX_REQUEST_BYTES = DEFAULT_REPAIR_INTENT_LIMITS.max_request_bytes
@@ -471,5 +478,6 @@ __all__ = [
     "MAX_REQUEST_BYTES",
     "TEMPLATE_ID",
     "TEMPLATE_ID_0_2",
+    "TEMPLATE_ID_0_3",
     "generate_repair_intent",
 ]
