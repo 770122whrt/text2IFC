@@ -12,7 +12,7 @@ import json
 import math
 import uuid
 from dataclasses import dataclass, replace
-from typing import Any, Mapping
+from typing import Any, Mapping, Protocol
 
 import ifcopenshell.guid
 
@@ -22,6 +22,9 @@ from .indexer import EXTRACTOR_VERSION
 from .indexer import normalize_alias
 from .repair_intent import OperationIntent, RepairIntent
 from .property_intent import (
+    ExactPropertyIntent,
+    NaturalLanguagePropertyIntent,
+    PropertyConfirmationBatch,
     PropertyConfirmationPreview,
     PropertyResolutionStatus,
     authorize_custom_property,
@@ -34,6 +37,10 @@ from .run_models import thaw_json
 from .target_context import TargetContextError, build_target_context
 from .target_query import ResolutionResult, resolve_target
 from text2ifc_knowledge.registry import IfcKnowledgeRegistry, load_ifc2x3_registry
+from text2ifc_knowledge.property_search import (
+    PropertyKnowledgeQuery,
+    PropertyResolutionDecision,
+)
 
 
 RESOLUTION_FLOW_VERSION = "text2ifc/ifc-resolution-flow/0.1"
@@ -43,6 +50,12 @@ _PUBLIC_TYPE_DIMENSIONS = {
     "height": "height_mm",
     "default sill height": "sill_height_mm",
 }
+
+
+class PropertyKnowledgeResolverProtocol(Protocol):
+    def resolve(
+        self, query: PropertyKnowledgeQuery
+    ) -> PropertyResolutionDecision: ...
 
 
 @dataclass(frozen=True)
@@ -79,6 +92,7 @@ class ResolutionBatch:
     source_ifc_sha256: str | None = None
     model_fingerprint: str | None = None
     property_preview: Mapping[str, Any] | None = None
+    property_resolutions: tuple[Mapping[str, Any], ...] = ()
     schema_version: str = RESOLUTION_FLOW_VERSION
 
     def to_dict(self) -> dict[str, Any]:
@@ -94,6 +108,9 @@ class ResolutionBatch:
             "property_preview": (
                 None if self.property_preview is None else dict(self.property_preview)
             ),
+            "property_resolutions": [
+                thaw_json(item) for item in self.property_resolutions
+            ],
         }
 
 
@@ -105,6 +122,7 @@ def resolve_repair_intent(
     context_max_bytes: int = 48_000,
     operation_registry: OperationRegistry | None = None,
     property_registry: IfcKnowledgeRegistry | None = None,
+    property_knowledge_resolver: PropertyKnowledgeResolverProtocol | None = None,
 ) -> ResolutionBatch:
     """Resolve all operations in stable order or return one fail-closed pause."""
 
@@ -117,6 +135,7 @@ def resolve_repair_intent(
         return _failure(intent, "stale_index", source_sha=expected_source_sha256)
 
     completed: list[ResolvedOperation] = []
+    property_evidence: list[Mapping[str, Any]] = []
     for operation in intent.operations:
         result = resolve_target(repository, operation.target_query)
         if result.status != "resolved":
@@ -318,7 +337,12 @@ def resolve_repair_intent(
                 )
             definition = operation_registry.require(operation.operation_type)
             property_target_class = definition.editable_occurrence_ifc_class
-            if not property_target_class:
+            if (
+                property_target_class is None
+                and record.ifc_class in definition.editable_occurrence_ifc_classes
+            ):
+                property_target_class = record.ifc_class
+            if property_target_class is None:
                 return _failure(
                     intent,
                     "PROPERTY_ADAPTER_UNAVAILABLE",
@@ -327,6 +351,7 @@ def resolve_repair_intent(
                     source_sha=expected_source_sha256,
                 )
             knowledge = property_registry or load_ifc2x3_registry()
+            custom_previews: list[PropertyConfirmationPreview] = []
             for property_intent in operation.property_intents:
                 try:
                     normalize_property_scope(property_intent.scope)
@@ -338,8 +363,55 @@ def resolve_repair_intent(
                         operations=completed,
                         source_sha=expected_source_sha256,
                     )
+                exact_intent = property_intent
+                if isinstance(property_intent, NaturalLanguagePropertyIntent):
+                    if property_knowledge_resolver is None:
+                        return _failure(
+                            intent,
+                            "PROPERTY_KNOWLEDGE_RESOLVER_UNAVAILABLE",
+                            operation_id=operation.operation_id,
+                            operations=completed,
+                            source_sha=expected_source_sha256,
+                        )
+                    knowledge_decision = property_knowledge_resolver.resolve(
+                        PropertyKnowledgeQuery(
+                            target_ifc_class=property_target_class,
+                            phrase=str(property_intent.property_phrase),
+                            raw_value=property_intent.raw_value,
+                            raw_unit=property_intent.raw_unit,
+                            scope=property_intent.scope,
+                        )
+                    )
+                    evidence_document = _property_resolution_evidence(
+                        operation.operation_id,
+                        property_intent,
+                        property_target_class,
+                        knowledge_decision,
+                    )
+                    property_evidence.append(evidence_document)
+                    if knowledge_decision.exact_intent is None:
+                        return ResolutionBatch(
+                            status="clarification_required",
+                            reason_code=knowledge_decision.reason_code,
+                            operation_id=operation.operation_id,
+                            operations=tuple(completed),
+                            source_ifc_sha256=expected_source_sha256,
+                            model_fingerprint=intent.model_fingerprint,
+                            property_resolutions=tuple(property_evidence),
+                        )
+                    resolved = knowledge_decision.exact_intent
+                    exact_intent = ExactPropertyIntent(
+                        set_name=resolved.set_name,
+                        property_name=resolved.property_name,
+                        value=resolved.value,
+                        requested_value_type=resolved.requested_value_type,
+                        requested_unit=resolved.requested_unit,
+                        scope=resolved.scope,
+                        source=property_intent.source,
+                        intent_kind="exact_property",
+                    )
                 property_resolution = resolve_exact_property_intent(
-                    property_intent,
+                    exact_intent,
                     target_ifc_class=property_target_class,
                     existing_facts=(),
                     registry=knowledge,
@@ -360,30 +432,24 @@ def resolve_repair_intent(
                     property_resolution.status
                     is PropertyResolutionStatus.CUSTOM_CONFIRMATION_REQUIRED
                 ):
-                    preview = PropertyConfirmationPreview.create(
-                        property_resolution,
-                        operation_id=operation.operation_id,
-                        target_global_id=record.ifc_global_id,
-                        request_hash=intent.source_request_hash,
-                        model_fingerprint=intent.model_fingerprint,
-                        source=property_intent.source,
+                    custom_previews.append(
+                        PropertyConfirmationPreview.create(
+                            property_resolution,
+                            operation_id=operation.operation_id,
+                            target_global_id=record.ifc_global_id,
+                            request_hash=intent.source_request_hash,
+                            model_fingerprint=intent.model_fingerprint,
+                            source=exact_intent.source,
+                        )
                     )
-                    return ResolutionBatch(
-                        status="clarification_required",
-                        reason_code="property_confirmation",
-                        operation_id=operation.operation_id,
-                        operations=tuple(completed),
-                        source_ifc_sha256=expected_source_sha256,
-                        model_fingerprint=intent.model_fingerprint,
-                        property_preview=preview.to_dict(),
-                    )
+                    continue
                 fact = authorize_standard_property(
                     property_resolution,
                     operation_id=operation.operation_id,
                     target_global_id=record.ifc_global_id,
                     request_hash=intent.source_request_hash,
                     model_fingerprint=intent.model_fingerprint,
-                    source=property_intent.source,
+                    source=exact_intent.source,
                 )
                 completed[-1] = replace(
                     completed[-1],
@@ -392,13 +458,81 @@ def resolve_repair_intent(
                         fact.to_dict(),
                     ),
                 )
+            if custom_previews:
+                preview_document = (
+                    custom_previews[0].to_dict()
+                    if len(custom_previews) == 1
+                    else PropertyConfirmationBatch.create(custom_previews).to_dict()
+                )
+                return ResolutionBatch(
+                    status="clarification_required",
+                    reason_code="property_confirmation",
+                    operation_id=operation.operation_id,
+                    operations=tuple(completed),
+                    source_ifc_sha256=expected_source_sha256,
+                    model_fingerprint=intent.model_fingerprint,
+                    property_preview=preview_document,
+                )
 
     return ResolutionBatch(
         status="resolved",
         operations=tuple(completed),
         source_ifc_sha256=expected_source_sha256,
         model_fingerprint=intent.model_fingerprint,
+        property_resolutions=tuple(property_evidence),
     )
+
+
+def _property_resolution_evidence(
+    operation_id: str,
+    claim: NaturalLanguagePropertyIntent,
+    target_ifc_class: str,
+    decision: PropertyResolutionDecision,
+) -> dict[str, Any]:
+    return {
+        "operation_id": operation_id,
+        "query": {
+            "schema_version": "text2ifc/property-knowledge-query/0.1",
+            "target_ifc_class": target_ifc_class,
+            "property_phrase": claim.property_phrase,
+            "raw_value": claim.raw_value,
+            "raw_unit": claim.raw_unit,
+            "scope": claim.scope,
+            "source": claim.source.to_dict(),
+        },
+        "candidates": [
+            {
+                "record_id": item.record.record_id,
+                "authority": item.record.authority,
+                "canonical_path": item.record.canonical_path,
+                "retrieval_paths": list(item.retrieval_paths),
+                "keyword_score": item.keyword_score,
+                "vector_score": item.vector_score,
+                "source_ref": item.record.source_ref,
+                "source_hash": item.record.source_hash,
+            }
+            for item in decision.candidates
+        ],
+        "decision": {
+            "schema_version": decision.schema_version,
+            "status": decision.status,
+            "reason_code": decision.reason_code,
+            "exact_intent": (
+                None
+                if decision.exact_intent is None
+                else {
+                    "set_name": decision.exact_intent.set_name,
+                    "property_name": decision.exact_intent.property_name,
+                    "value": decision.exact_intent.value,
+                    "requested_value_type": (
+                        decision.exact_intent.requested_value_type
+                    ),
+                    "requested_unit": decision.exact_intent.requested_unit,
+                    "scope": decision.exact_intent.scope,
+                }
+            ),
+        },
+    }
 
 
 def authorize_prototype(
@@ -605,17 +739,38 @@ def authorize_property_confirmation(
         or operation_id != batch.operation_id
     ):
         raise ValueError("PROPERTY_CONFIRMATION_NOT_PENDING")
-    preview = PropertyConfirmationPreview.from_dict(batch.property_preview)
-    fact = authorize_custom_property(
-        preview,
-        answer_kind=answer_kind,
-        preview_hash=preview_hash,
-        confirmation_ref=confirmation_ref,
-    )
+    if batch.property_preview.get("preview_kind") == "property_batch":
+        preview_batch = PropertyConfirmationBatch.from_dict(batch.property_preview)
+        if answer_kind != "confirm_property":
+            raise ValueError("PROPERTY_CONFIRMATION_REQUIRED")
+        if preview_hash != preview_batch.preview_hash:
+            raise ValueError("PROPERTY_CONFIRMATION_HASH_MISMATCH")
+        facts = tuple(
+            authorize_custom_property(
+                preview,
+                answer_kind=answer_kind,
+                preview_hash=preview.preview_hash,
+                confirmation_ref=confirmation_ref,
+            )
+            for preview in preview_batch.items
+        )
+    else:
+        preview = PropertyConfirmationPreview.from_dict(batch.property_preview)
+        facts = (
+            authorize_custom_property(
+                preview,
+                answer_kind=answer_kind,
+                preview_hash=preview_hash,
+                confirmation_ref=confirmation_ref,
+            ),
+        )
     operations = tuple(
         replace(
             operation,
-            authorized_semantics=(*operation.authorized_semantics, fact.to_dict()),
+            authorized_semantics=(
+                *operation.authorized_semantics,
+                *(fact.to_dict() for fact in facts),
+            ),
         )
         if operation.operation_id == operation_id
         else operation

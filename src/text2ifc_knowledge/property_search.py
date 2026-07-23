@@ -9,9 +9,9 @@ import math
 from pathlib import Path
 import re
 import sqlite3
-from typing import Iterable, Protocol, Sequence
+from typing import Any, Iterable, Mapping, Protocol, Sequence
 
-from .registry import IfcKnowledgeRegistry
+from .registry import IfcKnowledgeRegistry, check_registry_files, load_ifc2x3_registry
 
 
 PROPERTY_RECORD_SCHEMA_VERSION = "text2ifc/property-knowledge-record/0.1"
@@ -148,6 +148,68 @@ def build_standard_property_records(
     return tuple(records)
 
 
+def build_project_property_records(
+    element_records: Iterable[Any],
+    *,
+    source_ifc_sha256: str,
+) -> tuple[PropertyKnowledgeRecord, ...]:
+    """Aggregate observed project paths without embedding their values."""
+
+    grouped: dict[
+        tuple[str, str, str, str | None, bool],
+        set[str],
+    ] = {}
+    for element in element_records:
+        target_class = str(element.ifc_class)
+        for fact in getattr(element, "properties", ()):
+            if getattr(fact, "kind", None) != "pset":
+                continue
+            key = (
+                str(fact.set_name),
+                str(fact.property_name),
+                target_class,
+                (
+                    None
+                    if getattr(fact, "value_type", None) is None
+                    else str(fact.value_type)
+                ),
+                bool(getattr(fact, "inherited", False)),
+            )
+            grouped.setdefault(key, set()).add(str(element.ifc_global_id))
+    records: list[PropertyKnowledgeRecord] = []
+    for (set_name, property_name, target_class, value_type, inherited), ids in sorted(
+        grouped.items()
+    ):
+        identity = {
+            "source_ifc_sha256": source_ifc_sha256,
+            "set_name": set_name,
+            "property_name": property_name,
+            "target_ifc_class": target_class,
+            "value_type": value_type,
+            "inherited": inherited,
+        }
+        records.append(
+            PropertyKnowledgeRecord(
+                record_id=_stable_hash(identity),
+                authority="current_ifc_project",
+                set_name=set_name,
+                property_name=property_name,
+                applicable_classes=(target_class,),
+                template_type="TypePropertySingleValue",
+                value_type=value_type,
+                unit_types=(),
+                definition=(
+                    f"Observed on {len(ids)} {target_class} occurrence(s); "
+                    f"ownership={'type_inherited' if inherited else 'occurrence_direct'}."
+                ),
+                source_ref=f"ifc:{source_ifc_sha256}",
+                source_hash=source_ifc_sha256,
+                authorable=value_type is not None,
+            )
+        )
+    return tuple(records)
+
+
 @dataclass(frozen=True)
 class CorpusBuildResult:
     status: str
@@ -252,6 +314,93 @@ class PropertyAlias:
 
 
 @dataclass(frozen=True)
+class PropertyResolutionPolicy:
+    policy_id: str
+    version: str
+    max_candidates: int
+    vector_min_score: float
+    vector_min_margin: float
+
+
+def load_property_resolution_policy(
+    path: Path | str | None = None,
+) -> PropertyResolutionPolicy:
+    policy_path = (
+        Path(path)
+        if path is not None
+        else Path(__file__).resolve().parents[2]
+        / "schemas"
+        / "ifc"
+        / "knowledge"
+        / "property_resolution_policy.json"
+    )
+    payload = json.loads(policy_path.read_text(encoding="utf-8"))
+    return PropertyResolutionPolicy(
+        policy_id=str(payload["policy_id"]),
+        version=str(payload["version"]),
+        max_candidates=int(payload["max_candidates"]),
+        vector_min_score=float(payload["vector_min_score"]),
+        vector_min_margin=float(payload["vector_min_margin"]),
+    )
+
+
+def load_reviewed_aliases(
+    path: Path | str | None = None,
+) -> tuple[PropertyAlias, ...]:
+    alias_path = (
+        Path(path)
+        if path is not None
+        else Path(__file__).resolve().parents[2]
+        / "schemas"
+        / "ifc"
+        / "knowledge"
+        / "property_aliases.json"
+    )
+    payload = json.loads(alias_path.read_text(encoding="utf-8"))
+    aliases = tuple(
+        PropertyAlias(
+            alias=str(item["alias"]),
+            set_name=str(item["set_name"]),
+            property_name=str(item["property_name"]),
+            language=str(item["language"]),
+            review_status=str(item["review_status"]),
+        )
+        for item in payload["aliases"]
+    )
+    keys: set[tuple[str, str]] = set()
+    for alias in aliases:
+        key = (alias.language, _normalize(alias.alias))
+        if key in keys:
+            raise ValueError("PROPERTY_ALIAS_DUPLICATE")
+        keys.add(key)
+    return aliases
+
+
+def default_standard_corpus_fingerprint() -> str:
+    return _stable_hash(check_registry_files())
+
+
+def create_default_property_resolver(
+    *,
+    vector_index: InMemoryVectorIndex | None = None,
+) -> "PropertyKnowledgeResolver":
+    registry = load_ifc2x3_registry()
+    policy = load_property_resolution_policy()
+    return PropertyKnowledgeResolver(
+        registry=registry,
+        records=build_standard_property_records(
+            registry,
+            corpus_fingerprint=default_standard_corpus_fingerprint(),
+        ),
+        aliases=load_reviewed_aliases(),
+        vector_index=vector_index,
+        max_candidates=policy.max_candidates,
+        vector_min_score=policy.vector_min_score,
+        vector_min_margin=policy.vector_min_margin,
+    )
+
+
+@dataclass(frozen=True)
 class PropertyKnowledgeQuery:
     target_ifc_class: str
     phrase: str
@@ -334,6 +483,179 @@ class InMemoryVectorIndex:
         )[:limit]
 
 
+class BgeM3EmbeddingProvider:
+    """Lazy local BGE-M3 adapter; importing this module never loads Torch."""
+
+    model_id = "BAAI/bge-m3"
+
+    def __init__(
+        self,
+        *,
+        model_path: str = "BAAI/bge-m3",
+        device: str | None = None,
+        local_files_only: bool = True,
+    ) -> None:
+        self.model_path = model_path
+        self.device = device
+        self.local_files_only = local_files_only
+        self._model: Any | None = None
+        self.model_fingerprint = _stable_hash(
+            {"adapter": "sentence-transformers", "model_path": model_path}
+        )
+
+    def _load(self) -> Any:
+        if self._model is None:
+            try:
+                from sentence_transformers import SentenceTransformer
+            except ImportError as error:
+                raise RuntimeError("BGE_M3_DEPENDENCY_UNAVAILABLE") from error
+            self._model = SentenceTransformer(
+                self.model_path,
+                device=self.device,
+                local_files_only=self.local_files_only,
+            )
+        return self._model
+
+    def embed(self, texts: Sequence[str]) -> Sequence[Sequence[float]]:
+        vectors = self._load().encode(
+            list(texts),
+            normalize_embeddings=True,
+            show_progress_bar=False,
+        )
+        return [tuple(float(value) for value in vector) for vector in vectors]
+
+
+class QdrantVectorIndex:
+    """Rebuildable vector index backed by Qdrant local storage or service."""
+
+    def __init__(
+        self,
+        embedding_provider: EmbeddingProvider,
+        *,
+        collection_name: str,
+        path: Path | str | None = None,
+        url: str | None = None,
+    ) -> None:
+        if (path is None) == (url is None):
+            raise ValueError("QDRANT_EXACTLY_ONE_LOCATION_REQUIRED")
+        try:
+            from qdrant_client import QdrantClient
+        except ImportError as error:
+            raise RuntimeError("QDRANT_DEPENDENCY_UNAVAILABLE") from error
+        self.embedding_provider = embedding_provider
+        self.collection_name = collection_name
+        self._client = (
+            QdrantClient(path=str(path)) if path is not None else QdrantClient(url=url)
+        )
+
+    def ensure(
+        self,
+        records: Iterable[PropertyKnowledgeRecord],
+        *,
+        collection_fingerprint: str,
+    ) -> str:
+        from qdrant_client.models import (
+            Distance,
+            PointStruct,
+            VectorParams,
+        )
+
+        materialized = tuple(records)
+        if not materialized:
+            raise ValueError("PROPERTY_CORPUS_EMPTY")
+        collections = {
+            item.name for item in self._client.get_collections().collections
+        }
+        if self.collection_name in collections:
+            info = self._client.get_collection(self.collection_name)
+            payload = getattr(info, "config", None)
+            del payload
+            sample = self._client.scroll(
+                self.collection_name,
+                limit=1,
+                with_payload=True,
+                with_vectors=False,
+            )[0]
+            if (
+                sample
+                and sample[0].payload
+                and sample[0].payload.get("collection_fingerprint")
+                == collection_fingerprint
+            ):
+                return "reused"
+            self._client.delete_collection(self.collection_name)
+        vectors = self.embedding_provider.embed(
+            [record.search_text for record in materialized]
+        )
+        size = len(vectors[0])
+        self._client.create_collection(
+            self.collection_name,
+            vectors_config=VectorParams(size=size, distance=Distance.COSINE),
+        )
+        points = [
+            PointStruct(
+                id=index,
+                vector=list(vector),
+                payload={
+                    "record_id": record.record_id,
+                    "collection_fingerprint": collection_fingerprint,
+                },
+            )
+            for index, (record, vector) in enumerate(
+                zip(materialized, vectors, strict=True)
+            )
+        ]
+        for offset in range(0, len(points), 128):
+            self._client.upsert(
+                collection_name=self.collection_name,
+                points=points[offset : offset + 128],
+                wait=True,
+            )
+        return "built"
+
+    def search(self, text: str, *, limit: int = 10) -> tuple[VectorHit, ...]:
+        vector = list(self.embedding_provider.embed([text])[0])
+        response = self._client.query_points(
+            collection_name=self.collection_name,
+            query=vector,
+            limit=limit,
+            with_payload=True,
+        )
+        return tuple(
+            VectorHit(str(item.payload["record_id"]), float(item.score))
+            for item in response.points
+            if item.payload and item.payload.get("record_id")
+        )
+
+
+def collection_fingerprint(
+    *,
+    corpus_fingerprint: str,
+    aliases: Iterable[PropertyAlias],
+    embedding_provider: EmbeddingProvider,
+) -> str:
+    return _stable_hash(
+        {
+            "record_schema_version": PROPERTY_RECORD_SCHEMA_VERSION,
+            "corpus_fingerprint": corpus_fingerprint,
+            "aliases": [
+                asdict(item)
+                for item in sorted(
+                    aliases,
+                    key=lambda value: (
+                        value.language,
+                        _normalize(value.alias),
+                        value.set_name,
+                        value.property_name,
+                    ),
+                )
+            ],
+            "embedding_model_id": embedding_provider.model_id,
+            "embedding_model_fingerprint": embedding_provider.model_fingerprint,
+        }
+    )
+
+
 class PropertyKnowledgeResolver:
     def __init__(
         self,
@@ -341,9 +663,10 @@ class PropertyKnowledgeResolver:
         registry: IfcKnowledgeRegistry,
         records: Iterable[PropertyKnowledgeRecord],
         aliases: Iterable[PropertyAlias],
-        vector_index: InMemoryVectorIndex | None = None,
+        vector_index: Any | None = None,
         max_candidates: int = 5,
         vector_min_score: float = 0.50,
+        vector_min_margin: float = 0.03,
     ) -> None:
         self.registry = registry
         self.records = tuple(records)
@@ -351,6 +674,7 @@ class PropertyKnowledgeResolver:
         self.vector_index = vector_index
         self.max_candidates = max_candidates
         self.vector_min_score = vector_min_score
+        self.vector_min_margin = vector_min_margin
         self._by_path = {
             (record.set_name, record.property_name): record for record in self.records
         }
@@ -379,7 +703,15 @@ class PropertyKnowledgeResolver:
         if keyword and vector and keyword[0][0].record_id == vector[0][0].record_id:
             top_record, keyword_score = keyword[0]
             vector_score = vector[0][1]
-            if vector_score >= self.vector_min_score:
+            vector_margin = (
+                vector_score - vector[1][1]
+                if len(vector) > 1
+                else 1.0
+            )
+            if (
+                vector_score >= self.vector_min_score
+                and vector_margin >= self.vector_min_margin
+            ):
                 return self._resolved(
                     query,
                     top_record,
@@ -554,8 +886,13 @@ class PropertyKnowledgeResolver:
             keyword_score=keyword_score,
             vector_score=vector_score,
         )
+        status = (
+            "standard_resolved"
+            if record.authority == "ifc2x3_psd"
+            else "custom_confirmation_required"
+        )
         return PropertyResolutionDecision(
-            status="standard_resolved",
+            status=status,
             reason_code=reason_code,
             exact_intent=ResolvedExactProperty(
                 set_name=record.set_name,
@@ -577,6 +914,9 @@ _LENGTH_FACTORS_TO_METRES = {
     "m": 1.0,
     "米": 1.0,
 }
+_LENGTH_FACTORS_TO_METRES.update(
+    {"毫米": 0.001, "厘米": 0.01, "米": 1.0}
+)
 
 
 def normalize_property_value(

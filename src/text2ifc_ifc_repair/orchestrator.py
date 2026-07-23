@@ -54,6 +54,7 @@ class RepairOrchestrator:
         artifact_publisher: Callable[..., Any] = publish_terminal_artifacts,
         defer_publication: bool = False,
         operation_registry: Any | None = None,
+        resolver_options: Mapping[str, Any] | None = None,
     ) -> None:
         self.run_directory = Path(run_directory)
         self.run_directory.mkdir(parents=True, exist_ok=True)
@@ -70,16 +71,21 @@ class RepairOrchestrator:
         self._artifact_publisher = artifact_publisher
         self._defer_publication = defer_publication
         self._operation_registry = operation_registry
+        self._resolver_options = dict(resolver_options or {})
         self._resolution: Any = None
 
     def start(self, *, intent: Any, repository: Any, expected_source_sha256: str) -> OrchestrationResult:
         self._write("intent.json", intent)
-        resolver_kwargs = {"expected_source_sha256": expected_source_sha256}
+        resolver_kwargs = {
+            "expected_source_sha256": expected_source_sha256,
+            **self._resolver_options,
+        }
         if self._operation_registry is not None:
             resolver_kwargs["operation_registry"] = self._operation_registry
         resolution = self._resolver(intent, repository, **resolver_kwargs)
         self._resolution = resolution
         self._write("resolution.json", resolution)
+        self._write_property_resolution_evidence(resolution)
         return self._advance_if_exact(resolution)
 
     def continue_with_answer(self, answer: Mapping[str, Any]) -> OrchestrationResult:
@@ -104,6 +110,26 @@ class RepairOrchestrator:
     def _write(self, name: str, value: Any) -> None:
         rendered = json.dumps(_public_json(value), ensure_ascii=False, sort_keys=True, separators=(",", ":"), allow_nan=False)
         (self.run_directory / name).write_text(rendered + "\n", encoding="utf-8")
+
+    def _write_property_resolution_evidence(self, resolution: Any) -> None:
+        for index, evidence in enumerate(
+            getattr(resolution, "property_resolutions", ()), start=1
+        ):
+            claim_dir = (
+                self.run_directory
+                / "property-resolution"
+                / f"claim-{index:03d}"
+            )
+            claim_dir.mkdir(parents=True, exist_ok=True)
+            for name in ("query", "candidates", "decision"):
+                self._write(
+                    (
+                        Path("property-resolution")
+                        / f"claim-{index:03d}"
+                        / f"{name}.json"
+                    ).as_posix(),
+                    evidence[name],
+                )
 
     def apply_and_evaluate(
         self,

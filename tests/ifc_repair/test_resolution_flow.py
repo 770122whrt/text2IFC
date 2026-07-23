@@ -17,6 +17,7 @@ from text2ifc_ifc_repair.index_store import SQLiteIndexRepository
 from text2ifc_ifc_repair.indexer import EXTRACTOR_VERSION
 from text2ifc_ifc_repair.repair_intent import RepairIntent
 from text2ifc_ifc_repair.registry import OperationDefinition, OperationRegistry
+from text2ifc_knowledge.property_search import create_default_property_resolver
 
 
 SOURCE_SHA = "sha256:" + "a" * 64
@@ -79,6 +80,7 @@ def _intent(
     prototype_ifc_classes: tuple[str, ...] = ("IfcWindowStyle",),
     parameters: dict | None = None,
     properties: list[dict] | None = None,
+    schema_version_override: str | None = None,
 ) -> RepairIntent:
     operations = []
     for index, query in enumerate(queries):
@@ -102,7 +104,7 @@ def _intent(
         if properties is not None:
             operation["property_intents"] = properties
         operations.append(operation)
-    schema_version = (
+    schema_version = schema_version_override or (
         "text2ifc/ifc-repair-intent/0.2"
         if properties is not None
         else "text2ifc/ifc-repair-intent/0.1"
@@ -123,6 +125,46 @@ def _intent(
     )
 
 
+def test_natural_language_property_uses_local_reviewed_alias_and_records_evidence(
+    tmp_path: Path,
+) -> None:
+    target = _record("0AAAAAAAAAAAAAAAAAAAAA", "target")
+    property_claim = {
+        "intent_kind": "natural_language_property",
+        "property_phrase": "外窗",
+        "raw_value": True,
+        "raw_unit": None,
+        "scope": None,
+        "source": {
+            "source_kind": "user_request",
+            "reference": "request:/properties/0",
+            "excerpt": "把这个窗户标记为外窗",
+        },
+    }
+    with _repository(tmp_path, [target]) as repository:
+        result = _api().resolve_repair_intent(
+            _intent(
+                {"global_id": target.ifc_global_id},
+                properties=[property_claim],
+                schema_version_override="text2ifc/ifc-repair-intent/0.3",
+            ),
+            repository,
+            expected_source_sha256=SOURCE_SHA,
+            operation_registry=_registry(),
+            property_knowledge_resolver=create_default_property_resolver(),
+        )
+
+    assert result.status == "resolved"
+    fact = result.operations[0].authorized_semantics[-1]
+    assert (fact["set_name"], fact["property_name"], fact["value"]) == (
+        "Pset_WindowCommon",
+        "IsExternal",
+        True,
+    )
+    assert result.property_resolutions[0]["decision"]["reason_code"] == (
+        "REVIEWED_ALIAS_EXACT"
+    )
+    assert "property_resolution_evidence" not in result.operations[0].context
 def _record(guid: str, name: str, *, type_guid: str | None = None) -> ElementRecord:
     return ElementRecord(
         record_id=f"ifc:{guid}",
@@ -453,14 +495,16 @@ def _property_claim(
     value: object,
     *,
     scope: str | None = None,
+    value_type: str | None = None,
+    unit: str | None = None,
 ) -> dict:
     return {
         "intent_kind": "pset_property",
         "set_name": set_name,
         "property_name": property_name,
         "value": value,
-        "requested_value_type": None,
-        "requested_unit": None,
+        "requested_value_type": value_type,
+        "requested_unit": unit,
         "scope": scope,
         "source": {
             "source_kind": "user_request",
@@ -520,6 +564,60 @@ def test_standard_property_resolves_and_custom_property_requires_exact_confirmat
     assert authorized.status == "resolved"
     assert confirmed["classification"] == "custom_confirmed"
     assert confirmed["confirmation_hash"] == custom.property_preview["preview_hash"]
+
+
+def test_multiple_custom_properties_pause_once_and_confirm_as_one_bound_batch(
+    tmp_path: Path,
+) -> None:
+    api = _api()
+    target = _record("0AAAAAAAAAAAAAAAAAAAAA", "target")
+    properties = [
+        _property_claim("Custom_Asset", "AssetCode", "W-007"),
+        _property_claim("Constraints", "Level", "Level: Level 1"),
+        _property_claim(
+            "Dimensions",
+            "Volume",
+            0.05611467,
+            value_type="IfcVolumeMeasure",
+            unit="m3",
+        ),
+    ]
+    with _repository(tmp_path, [target]) as repository:
+        pending = api.resolve_repair_intent(
+            _intent(
+                {"global_id": target.ifc_global_id},
+                properties=properties,
+            ),
+            repository,
+            expected_source_sha256=SOURCE_SHA,
+            operation_registry=_registry(),
+        )
+
+    assert pending.status == "clarification_required"
+    assert pending.reason_code == "property_confirmation"
+    assert pending.property_preview["preview_kind"] == "property_batch"
+    assert len(pending.property_preview["items"]) == 3
+
+    confirmed = api.authorize_property_confirmation(
+        pending,
+        operation_id="intent-1",
+        answer_kind="confirm_property",
+        preview_hash=pending.property_preview["preview_hash"],
+        confirmation_ref="run:repair-1/property-batch-4",
+    )
+    property_facts = [
+        item
+        for item in confirmed.operations[0].authorized_semantics
+        if item.get("kind") == "authorized_property_fact"
+    ]
+    assert confirmed.status == "resolved"
+    assert {
+        (item["set_name"], item["property_name"]) for item in property_facts
+    } == {
+        ("Custom_Asset", "AssetCode"),
+        ("Constraints", "Level"),
+        ("Dimensions", "Volume"),
+    }
 
 
 def test_type_owned_property_is_deferred_before_authorization(tmp_path: Path) -> None:

@@ -10,6 +10,12 @@ dependencies = [
   "jsonschema>=4.19,<5",
 ]
 
+[project.optional-dependencies]
+knowledge-live = [
+  "qdrant-client>=1.12,<2",
+  "sentence-transformers>=3.3,<6",
+]
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["src", ".deps/python312"]

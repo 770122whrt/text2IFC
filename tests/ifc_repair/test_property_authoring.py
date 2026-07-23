@@ -73,6 +73,20 @@ def _apply(model, window, *assignments):
     )
 
 
+def _apply_to_modified_target(model, window, *assignments):
+    return apply_semantic_assignments(
+        model=model,
+        operation={
+            "operation_id": "window-1",
+            "semantic_assignments": list(assignments),
+        },
+        application={
+            "modified": [{"role": "target", "global_id": str(window.GlobalId)}]
+        },
+        target_role="target",
+    )
+
+
 def _direct_psets(window, name):
     return [
         rel.RelatingPropertyDefinition
@@ -112,6 +126,25 @@ def test_create_append_and_update_reuse_one_direct_exact_pset(tmp_path) -> None:
         "semantic_pset_relationship",
     }
     assert updated["updated"][0]["role"] == "semantic_pset_property_updated"
+
+
+def test_normalized_fact_key_preserves_exact_ifc_names_with_spaces() -> None:
+    model, _, window = _model_and_window()
+    assignment = {
+        **_assignment(305.0),
+        "fact_key": "pset:Constraints.Sill-Height",
+        "source_fact_key": "pset:Constraints.Sill Height",
+        "value_type": "IfcLengthMeasure",
+        "unit": "mm",
+    }
+
+    _apply(model, window, assignment)
+
+    pset = _direct_psets(window, "Constraints")[0]
+    assert pset.Name == "Constraints"
+    assert pset.HasProperties[0].Name == "Sill Height"
+    assert pset.HasProperties[0].NominalValue.is_a() == "IfcLengthMeasure"
+    assert pset.HasProperties[0].NominalValue.wrappedValue == 305.0
 
 
 def test_duplicate_direct_set_and_duplicate_property_fail_before_mutation() -> None:
@@ -189,3 +222,69 @@ def test_exact_inherited_match_skips_direct_duplicate_but_mismatch_overrides() -
     assert len(direct) == 1
     assert direct[0].HasProperties[0].NominalValue.wrappedValue == "EI60"
     assert inherited.HasProperties[0].NominalValue.wrappedValue == "EI30"
+
+
+def test_existing_occurrence_target_can_be_resolved_from_modified_role() -> None:
+    model, _, window = _model_and_window()
+
+    result = _apply_to_modified_target(model, window, _assignment("EI30"))
+
+    assert result["created"][0]["role"] == "semantic_pset"
+    assert _direct_psets(window, "Pset_WindowCommon")
+
+
+def test_shared_occurrence_pset_uses_copy_on_write_for_one_target() -> None:
+    model, history, first = _model_and_window()
+    second = model.create_entity(
+        "IfcWindow",
+        GlobalId="0000000000000000000020",
+        OwnerHistory=history,
+        OverallWidth=915.0,
+        OverallHeight=1830.0,
+    )
+    shared = model.create_entity(
+        "IfcPropertySet",
+        GlobalId="0000000000000000000021",
+        OwnerHistory=history,
+        Name="Pset_WindowCommon",
+        HasProperties=[
+            model.create_entity(
+                "IfcPropertySingleValue",
+                Name="FireRating",
+                NominalValue=model.create_entity("IfcLabel", "EI30"),
+            ),
+            model.create_entity(
+                "IfcPropertySingleValue",
+                Name="Reference",
+                NominalValue=model.create_entity("IfcIdentifier", "SHARED"),
+            ),
+        ],
+    )
+    relation = model.create_entity(
+        "IfcRelDefinesByProperties",
+        GlobalId="0000000000000000000022",
+        OwnerHistory=history,
+        RelatedObjects=[first, second],
+        RelatingPropertyDefinition=shared,
+    )
+
+    result = _apply_to_modified_target(model, first, _assignment("EI60"))
+
+    first_pset = _direct_psets(first, "Pset_WindowCommon")[0]
+    second_pset = _direct_psets(second, "Pset_WindowCommon")[0]
+    first_values = {
+        prop.Name: prop.NominalValue.wrappedValue
+        for prop in first_pset.HasProperties
+    }
+    second_values = {
+        prop.Name: prop.NominalValue.wrappedValue
+        for prop in second_pset.HasProperties
+    }
+    assert first_pset != second_pset
+    assert first_values == {"FireRating": "EI60", "Reference": "SHARED"}
+    assert second_values == {"FireRating": "EI30", "Reference": "SHARED"}
+    assert tuple(relation.RelatedObjects) == (second,)
+    assert any(
+        item["role"] == "semantic_pset_copy_on_write"
+        for item in result["created"]
+    )

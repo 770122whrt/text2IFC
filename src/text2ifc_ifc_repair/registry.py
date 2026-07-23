@@ -57,6 +57,7 @@ class OperationDefinition:
     semantic_manifest_builder: OperationCallable | None = None
     semantic_policy_fact_builder: OperationCallable | None = None
     editable_occurrence_ifc_class: str | None = None
+    editable_occurrence_ifc_classes: tuple[str, ...] = ()
     inherited_type_evidence_role: str | None = None
     generated_type_template: OperationCallable | None = None
     generated_occurrence_facts: OperationCallable | None = None
@@ -69,6 +70,10 @@ class OperationDefinition:
         if any(not value for value in self.prototype_ifc_classes):
             raise OperationRegistryError(
                 "INVALID_PROTOTYPE_IFC_CLASS", self.operation_type
+            )
+        if any(not value for value in self.editable_occurrence_ifc_classes):
+            raise OperationRegistryError(
+                "INVALID_EDITABLE_OCCURRENCE_IFC_CLASS", self.operation_type
             )
         if any(not key or not path for key, path in self.prototype_dimension_paths.items()):
             raise OperationRegistryError(

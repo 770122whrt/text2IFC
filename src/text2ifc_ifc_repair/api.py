@@ -31,6 +31,11 @@ from .run_models import (
 from .run_store import RunStore
 from .run_artifacts import publish_terminal_artifacts
 from text2ifc_text.splits import atomic_write_text
+from text2ifc_knowledge.property_search import (
+    PropertyKnowledgeResolver,
+    build_project_property_records,
+    create_default_property_resolver,
+)
 
 
 class RepairAPI:
@@ -52,6 +57,7 @@ class RepairAPI:
         orchestrator_factory: Callable[..., RepairOrchestrator] = RepairOrchestrator,
         orchestrator_options: Mapping[str, Any] | None = None,
         intent_schema_version: str = REPAIR_INTENT_SCHEMA_VERSION,
+        property_knowledge_resolver: Any | None = None,
     ) -> None:
         self.store = RunStore(output_root)
         self.provider = provider
@@ -61,10 +67,17 @@ class RepairAPI:
         self._changeset_stage = changeset_stage
         self._orchestrator_factory = orchestrator_factory
         self._intent_schema_version = intent_schema_version
+        self._property_knowledge_resolver = property_knowledge_resolver
         requested_options = dict(orchestrator_options or {})
         if requested_options.get("defer_publication") is False:
             raise ValueError("DURABLE_PUBLICATION_CANNOT_BE_DISABLED")
         requested_options["defer_publication"] = True
+        if property_knowledge_resolver is not None:
+            resolver_options = dict(requested_options.get("resolver_options") or {})
+            resolver_options["property_knowledge_resolver"] = (
+                property_knowledge_resolver
+            )
+            requested_options["resolver_options"] = resolver_options
         self._orchestrator_options = requested_options
 
     @classmethod
@@ -83,9 +96,12 @@ class RepairAPI:
         config = load_openai_compatible_runtime_config(
             dict(os.environ) if environment is None else dict(environment)
         )
+        intent_schema_version = "text2ifc/ifc-repair-intent/0.3"
         return cls(
             output_root,
             provider=OpenAICompatibleLiveProvider(config=config),
+            intent_schema_version=intent_schema_version,
+            property_knowledge_resolver=create_default_property_resolver(),
         )
 
     def start(
@@ -485,11 +501,22 @@ class RepairAPI:
                     raise ValueError("CHANGESET_STAGE_FAILED")
                 return generated["changeset"]
 
+            orchestrator_options = dict(self._orchestrator_options)
+            resolver_options = dict(
+                orchestrator_options.get("resolver_options") or {}
+            )
+            resolver_options["property_knowledge_resolver"] = (
+                self._resolver_with_project_facts(
+                    repository,
+                    state.source.sha256,
+                )
+            )
+            orchestrator_options["resolver_options"] = resolver_options
             orchestrator = self._orchestrator_factory(
                 run_directory=run_dir,
                 changeset_stage=stage2,
                 operation_registry=self.registry,
-                **self._orchestrator_options,
+                **orchestrator_options,
             )
             try:
                 outcome = orchestrator.start(
@@ -591,6 +618,39 @@ class RepairAPI:
             result_artifacts=artifacts,
         )
         return self.store.read_result(run_id)
+
+    def _resolver_with_project_facts(
+        self,
+        repository: Any,
+        source_ifc_sha256: str,
+    ) -> Any:
+        resolver = self._property_knowledge_resolver
+        if resolver is None:
+            return None
+        if not isinstance(resolver, PropertyKnowledgeResolver):
+            return resolver
+        standard_paths = {
+            (record.set_name, record.property_name)
+            for record in resolver.records
+            if record.authority == "ifc2x3_psd"
+        }
+        project = tuple(
+            record
+            for record in build_project_property_records(
+                repository.iter_records(),
+                source_ifc_sha256=source_ifc_sha256,
+            )
+            if (record.set_name, record.property_name) not in standard_paths
+        )
+        return PropertyKnowledgeResolver(
+            registry=resolver.registry,
+            records=(*resolver.records, *project),
+            aliases=resolver.aliases,
+            vector_index=resolver.vector_index,
+            max_candidates=resolver.max_candidates,
+            vector_min_score=resolver.vector_min_score,
+            vector_min_margin=resolver.vector_min_margin,
+        )
 
     def _fail(self, run_id: str, stage: RunStage, reason: str) -> RunResult:
         state = self.store.load(run_id)

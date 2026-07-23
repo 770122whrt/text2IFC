@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+from types import SimpleNamespace
 
 from text2ifc_knowledge.property_search import (
     InMemoryVectorIndex,
@@ -8,7 +9,9 @@ from text2ifc_knowledge.property_search import (
     PropertyKnowledgeQuery,
     PropertyKnowledgeResolver,
     PropertyKnowledgeStore,
+    build_project_property_records,
     build_standard_property_records,
+    normalize_property_value,
 )
 from text2ifc_knowledge.registry import load_ifc2x3_registry
 
@@ -28,6 +31,7 @@ class SemanticFixtureEmbedding:
                     float("load" in normalized or "承重" in normalized),
                 ]
             )
+            vectors[-1].append(float("shading" in normalized))
         return vectors
 
 
@@ -195,3 +199,59 @@ def test_custom_project_candidate_always_requires_confirmation(
 
     assert result.status == "custom_confirmation_required"
     assert result.reason_code == "UNKNOWN_PROPERTY"
+
+
+def test_project_records_aggregate_metadata_without_embedding_values() -> None:
+    records = build_project_property_records(
+        (
+            SimpleNamespace(
+                ifc_class="IfcWindow",
+                ifc_global_id="window-1",
+                properties=(
+                    SimpleNamespace(
+                        kind="pset",
+                        set_name="Custom_Asset",
+                        property_name="AssetCode",
+                        value="SECRET-001",
+                        value_type="IfcLabel",
+                        inherited=False,
+                    ),
+                ),
+            ),
+            SimpleNamespace(
+                ifc_class="IfcWindow",
+                ifc_global_id="window-2",
+                properties=(
+                    SimpleNamespace(
+                        kind="pset",
+                        set_name="Custom_Asset",
+                        property_name="AssetCode",
+                        value="SECRET-002",
+                        value_type="IfcLabel",
+                        inherited=False,
+                    ),
+                ),
+            ),
+        ),
+        source_ifc_sha256="sha256:project",
+    )
+
+    assert len(records) == 1
+    assert records[0].authority == "current_ifc_project"
+    assert "2 IfcWindow" in records[0].definition
+    assert "SECRET" not in records[0].search_text
+
+
+def test_chinese_length_units_normalize_to_project_units() -> None:
+    assert normalize_property_value(
+        250,
+        raw_unit="毫米",
+        value_type="IfcLengthMeasure",
+        project_length_unit="m",
+    ) == (0.25, "m")
+    assert normalize_property_value(
+        25,
+        raw_unit="厘米",
+        value_type="IfcLengthMeasure",
+        project_length_unit="m",
+    ) == (0.25, "m")

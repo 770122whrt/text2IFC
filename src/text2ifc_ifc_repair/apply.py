@@ -84,6 +84,10 @@ def apply_changeset(
                     *changes.get("created", ()),
                     *semantic["created"],
                 ]
+                changes["modified"] = [
+                    *changes.get("modified", ()),
+                    *semantic.get("modified", ()),
+                ]
                 changes["semantic"] = semantic
         except Exception as error:  # operation boundary becomes structured evidence
             return _failure(

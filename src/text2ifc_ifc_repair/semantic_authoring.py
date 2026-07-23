@@ -15,6 +15,7 @@ from typing import Any, Mapping, Sequence
 import uuid
 
 import ifcopenshell.guid
+import ifcopenshell.util.element
 
 from jsonschema import Draft202012Validator
 
@@ -341,7 +342,11 @@ def apply_semantic_assignments(
         str(item.get("role")): str(item.get("global_id"))
         for item in application.get("created", ())
     }
-    target_id = created_roles.get(target_role)
+    modified_roles = {
+        str(item.get("role")): str(item.get("global_id"))
+        for item in application.get("modified", ())
+    }
+    target_id = created_roles.get(target_role) or modified_roles.get(target_role)
     if not target_id:
         raise SemanticManifestError("SEMANTIC_TARGET_ROLE_MISSING", target_role)
     target = model.by_guid(target_id)
@@ -349,6 +354,7 @@ def apply_semantic_assignments(
     skipped: list[str] = []
     created: list[dict[str, str]] = []
     updated: list[dict[str, str]] = []
+    modified: list[dict[str, str]] = []
 
     _preflight_direct_psets(target, assignments)
 
@@ -370,7 +376,7 @@ def apply_semantic_assignments(
             continue
         category, path = str(item["fact_key"]).split(":", 1)
         if category == "pset":
-            set_name, _ = path.rsplit(".", 1)
+            set_name, _ = _assignment_pset_path(item)
             psets.setdefault(set_name, []).append(item)
         elif category == "quantity":
             set_name, _ = path.rsplit(".", 1)
@@ -398,13 +404,68 @@ def apply_semantic_assignments(
             continue
         if direct:
             pset = direct[0]
+            relations = _direct_pset_relations(target, set_name)
+            relation = relations[0]
+            if len(relation.RelatedObjects) > 1:
+                pset = ifcopenshell.util.element.copy_deep(
+                    model,
+                    pset,
+                    exclude=("OwnerHistory",),
+                )
+                pset.GlobalId = _semantic_global_id(
+                    operation,
+                    f"semantic_pset_copy_on_write:{set_name}",
+                )
+                pset.OwnerHistory = owner_history
+                relation.RelatedObjects = [
+                    item for item in relation.RelatedObjects if item != target
+                ]
+                modified.append(
+                    {
+                        "role": "semantic_shared_pset_relationship",
+                        "ifc_class": relation.is_a(),
+                        "global_id": str(relation.GlobalId),
+                    }
+                )
+                copied_relation = model.create_entity(
+                    "IfcRelDefinesByProperties",
+                    GlobalId=_semantic_global_id(
+                        operation,
+                        f"semantic_pset_relationship_copy_on_write:{set_name}",
+                    ),
+                    OwnerHistory=owner_history,
+                    RelatedObjects=[target],
+                    RelatingPropertyDefinition=pset,
+                )
+                created.extend(
+                    (
+                        {
+                            "role": "semantic_pset_copy_on_write",
+                            "ifc_class": pset.is_a(),
+                            "global_id": str(pset.GlobalId),
+                        },
+                        {
+                            "role": "semantic_pset_relationship_copy_on_write",
+                            "ifc_class": copied_relation.is_a(),
+                            "global_id": str(copied_relation.GlobalId),
+                        },
+                    )
+                )
+            else:
+                modified.append(
+                    {
+                        "role": "semantic_pset_updated",
+                        "ifc_class": pset.is_a(),
+                        "global_id": str(pset.GlobalId),
+                    }
+                )
             by_name = {
                 str(prop.Name): prop
                 for prop in pset.HasProperties
             }
             appended = list(pset.HasProperties)
             for item in sorted(members, key=lambda value: value["fact_key"]):
-                property_name = str(item["fact_key"]).rsplit(".", 1)[1]
+                _, property_name = _assignment_pset_path(item)
                 existing = by_name.get(property_name)
                 if existing is None:
                     existing = model.create_entity(
@@ -451,7 +512,7 @@ def apply_semantic_assignments(
             HasProperties=[
                 model.create_entity(
                     "IfcPropertySingleValue",
-                    Name=str(item["fact_key"]).rsplit(".", 1)[1],
+                    Name=_assignment_pset_path(item)[1],
                     NominalValue=_ifc_typed_value(model, item),
                 )
                 for item in sorted(members, key=lambda value: value["fact_key"])
@@ -537,14 +598,19 @@ def apply_semantic_assignments(
         created.append({"role": role, "ifc_class": relation.is_a(), "global_id": str(relation.GlobalId)})
 
     _verify_bound_relationships(model=model, target=target, assignments=assignments)
-    return {"created": created, "updated": updated, "skipped": skipped}
+    return {
+        "created": created,
+        "modified": modified,
+        "updated": updated,
+        "skipped": skipped,
+    }
 
 
 def _preflight_direct_psets(
     target: Any, assignments: Sequence[Mapping[str, Any]]
 ) -> None:
     set_names = {
-        str(item["fact_key"]).split(":", 1)[1].rsplit(".", 1)[0]
+        _assignment_pset_path(item)[0]
         for item in assignments
         if item["ownership"] == SemanticOwnership.OCCURRENCE_DIRECT.value
         and str(item["fact_key"]).startswith("pset:")
@@ -568,6 +634,13 @@ def _preflight_direct_psets(
 def _direct_psets(target: Any, set_name: str) -> list[Any]:
     return [
         relation.RelatingPropertyDefinition
+        for relation in _direct_pset_relations(target, set_name)
+    ]
+
+
+def _direct_pset_relations(target: Any, set_name: str) -> list[Any]:
+    return [
+        relation
         for relation in getattr(target, "IsDefinedBy", ())
         if relation.is_a("IfcRelDefinesByProperties")
         and relation.RelatingPropertyDefinition.is_a("IfcPropertySet")
@@ -578,8 +651,7 @@ def _direct_psets(target: Any, set_name: str) -> list[Any]:
 def _inherited_property_matches(
     target: Any, assignment: Mapping[str, Any]
 ) -> bool:
-    path = str(assignment["fact_key"]).split(":", 1)[1]
-    set_name, property_name = path.rsplit(".", 1)
+    set_name, property_name = _assignment_pset_path(assignment)
     matches: list[Any] = []
     for relation in getattr(target, "IsDefinedBy", ()):
         if not relation.is_a("IfcRelDefinesByType"):
@@ -601,6 +673,24 @@ def _inherited_property_matches(
         actual == assignment["value"]
         and actual_type == assignment["value_type"]
     )
+
+
+def _assignment_pset_path(
+    assignment: Mapping[str, Any],
+) -> tuple[str, str]:
+    """Recover exact IFC names while keeping the comparison key normalized."""
+
+    source_key = str(assignment.get("source_fact_key") or "")
+    if (
+        assignment.get("source_kind") == EvidenceSourceKind.EXPLICIT_REQUEST.value
+        and source_key.startswith("pset:")
+    ):
+        path = source_key.removeprefix("pset:")
+    else:
+        path = str(assignment["fact_key"]).removeprefix("pset:")
+    if "." not in path:
+        raise SemanticManifestError("SEMANTIC_PSET_PATH_INVALID", path)
+    return tuple(path.rsplit(".", 1))  # type: ignore[return-value]
 
 
 def _ifc_typed_value(model: Any, assignment: Mapping[str, Any]) -> Any:
