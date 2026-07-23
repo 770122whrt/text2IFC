@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: IFC ChangeSet Repair Pipeline
-status: Ready to plan
-last_updated: "2026-07-22T09:30:00+08:00"
+status: Ready to execute
+last_updated: "2026-07-23T18:00:00+08:00"
 progress:
-  total_phases: 8
+  total_phases: 10
   completed_phases: 5
-  total_plans: 22
+  total_plans: 26
   completed_plans: 22
-  percent: 100
+  percent: 50
 ---
 
 # Project State
@@ -21,21 +21,23 @@ See `.planning/PROJECT.md`.
 **Core value:** Given an IFC file and an explicit user request, produce a
 traceable semantic ChangeSet and an L1/L2-validated IFC result.
 
-**Current focus:** Phase 10 complete; Phase 10.1 property retrieval design remains deferred
+**Current focus:** Phase 10.1 exact IFC property authoring is planned; Phase
+10.2 property retrieval/RAG remains separate and deferred
 
 ## Current Position
 
-Phase: 10 (Window L2 Semantic Fidelity Closure) — COMPLETE
-Plan: 5 of 5
+Phase: 10.1 (Explicit IFC Property Authoring and Validation) — PLANNED
+Plan: 0 of 4 executed
 
 - Milestone: v1.1 IFC ChangeSet Repair Pipeline
-- Phase: 10
-- Plan: 5 of 5 complete
-- Status: Window L2 semantic fidelity closure verified
-- Progress: 5 / 8 phases complete
-- Requirements: 6 pending, 19 complete, 25 mapped, 0 unmapped
-- Last activity: 2026-07-22 — LargeBuilding offline and four-path real
-  DeepSeek UAT passed Production and private benchmark L1/L2
+- Phase: 10.1
+- Plan: 4 plans ready in 4 sequential waves
+- Status: Ready to execute exact-property contract first
+- Progress: 5 / 10 phases complete
+- Requirements: 15 pending, 19 complete, 34 mapped, 0 unmapped
+- Last activity: 2026-07-23 — split exact property authoring (10.1) from
+  property knowledge retrieval/RAG (10.2) and wrote SPEC/CONTEXT/RESEARCH/
+  VALIDATION plus four executable plans
 
 ## Carried Context
 
@@ -66,6 +68,14 @@ Plan: 5 of 5
 - Current DeepSeek input/output guards remain 65,536 tokens. The 128k
   experiment remains Phase 13.
 
+- Phase 10.1 uses the existing checked-in IFC2X3 official property registry for
+  case-sensitive exact lookup only. It does not implement aliases, embeddings,
+  vector search or RAG.
+
+- Exact property scope defaults to the target occurrence. Shared Type mutation
+  requires an explicit Type request, an affected-occurrence preview and an
+  affirmative hash-bound confirmation.
+
 ## Accepted Debt / Deferred
 
 - `CLI-08` final true-human REPL acceptance from v1.0 remains carried debt.
@@ -81,8 +91,9 @@ Plan: 5 of 5
 
 ## Next Action
 
-Discuss whether Phase 10.1 property knowledge/retrieval should precede Phase 11,
-then write its own SPEC/PLAN without weakening the completed Window pipeline.
+Review the three highlighted Phase 10.1 defaults with the user, then execute
+plans 10.1-01 through 10.1-04. Phase 10.2 retrieval/RAG begins only after the
+exact-property offline and real-Provider Window acceptance is evidenced.
 
 ---
-*Last updated: 2026-07-22 after Phase 10 completion*
+*Last updated: 2026-07-23 after Phase 10.1 planning*
