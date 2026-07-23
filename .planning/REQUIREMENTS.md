@@ -75,18 +75,18 @@ semantic ChangeSet and an L1/L2-validated IFC result.
 
 ### Property Knowledge Retrieval
 
-- [ ] **RAG-01**: IFC2X3 official properties and current-project properties are
+- [x] **RAG-01**: IFC2X3 official properties and current-project properties are
   available as versioned searchable records with provenance, applicability,
   value type, unit/template metadata and standard/custom identity.
-- [ ] **RAG-02**: Non-exact Chinese/English property phrases produce bounded,
+- [x] **RAG-02**: Non-exact Chinese/English property phrases produce bounded,
   ranked candidates through exact, reviewed-alias, keyword and rebuildable
   local vector retrieval; vector evidence improves recall but is never the
   authoritative source.
-- [ ] **RAG-03**: Unique applicable exact/reviewed-alias matches and measured
+- [x] **RAG-03**: Unique applicable exact/reviewed-alias matches and measured
   keyword/vector consensus may resolve locally. Low-confidence, low-margin,
   conflicting and custom candidates require bounded clarification/
   confirmation and cannot be silently selected.
-- [ ] **RAG-04**: Retrieval supplies candidates only; the exact Phase 10.1
+- [x] **RAG-04**: Retrieval supplies candidates only; the exact Phase 10.1
   property contract, Binder, atomic authoring and reopened L2 remain the sole
   authorization and publication path.
 
@@ -165,10 +165,10 @@ semantic ChangeSet and an L1/L2-validated IFC result.
 | PROP-03 | 10.1 | Complete |
 | PROP-04 | 10.1 | Complete |
 | PROP-05 | 10.1 | Complete |
-| RAG-01 | 10.2 | Pending |
-| RAG-02 | 10.2 | Pending |
-| RAG-03 | 10.2 | Pending |
-| RAG-04 | 10.2 | Pending |
+| RAG-01 | 10.2 | Complete |
+| RAG-02 | 10.2 | Complete |
+| RAG-03 | 10.2 | Complete |
+| RAG-04 | 10.2 | Complete |
 | OPS-01 | 11 | Pending |
 | OPS-02 | 11 | Pending |
 | OPS-03 | 12 | Pending |
@@ -179,4 +179,4 @@ semantic ChangeSet and an L1/L2-validated IFC result.
 **Coverage:** 34 requirements, 34 mapped, 0 unmapped.
 
 ---
-*Last updated: 2026-07-23 after Phase 10.1/10.2 roadmap split*
+*Last updated: 2026-07-24 after Phase 10.2 validation*

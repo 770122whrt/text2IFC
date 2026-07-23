@@ -7,7 +7,7 @@
   [requirements](milestones/v1.0-REQUIREMENTS.md), and
   [audit](milestones/v1.0-MILESTONE-AUDIT.md).
 - [ ] **v1.1 IFC ChangeSet Repair Pipeline** - Phases 7 through 13, including
-  inserted Phases 09.1, 10.1 and 10.2, in progress (5 / 10 phases complete).
+  inserted Phases 09.1, 10.1 and 10.2, in progress (6 / 10 phases complete).
 
 ## Current Cycle: v1.1 IFC ChangeSet Repair Pipeline
 
@@ -237,7 +237,7 @@ publish only after independent reopened-IFC L2 validation.
 
 ### Phase 10.2: IFC2X3 Property Knowledge Retrieval and Resolution (INSERTED)
 
-**Status:** Design approved; written specification awaiting user review
+**Status:** Complete — 2026-07-24
 
 **Goal:** Resolve non-exact multilingual property requests to evidence-bearing
 standard or project-property candidates, authorize only deterministic standard

@@ -1,9 +1,14 @@
 # IFC2X3 Local ChangeSet 验证索引
 
-最新验收：[Phase 10.1 显式 IFC 属性写入与验证报告](phase10.1-validation-report.md)。
-它覆盖标准属性、自定义属性确认、Type 精确复用/系统模板 fallback、
-LargeBuilding 离线验收与真实 DeepSeek 双案例 UAT，并冻结 Phase 10.2 的
-检索输出边界。
+最新验收：[Phase 10.2 属性知识检索与完整链路验证报告](phase10.2-property-knowledge-validation-report.md)。
+它覆盖 IFC2X3 标准/项目属性知识、 reviewed alias、BGE-M3/Qdrant、
+通用 occurrence 属性写入，以及 LargeBuilding 真实 DeepSeek Stage 1/2、
+L1/L2 和成功 IFC 发布。
+
+人工属性核验：
+[LargeBuilding 真实修复 Window 属性对比](phase10.1-largebuilding-window-property-comparison.md)。
+它逐项区分 occurrence-direct、Type-inherited、用户新增和缺失属性，避免将
+当前 L2 通过误解为完整 authoring metadata 复刻。
 
 Phase 8 验证报告：[Evaluation 0.2、Benchmark Gold 隔离与 LargeBuilding 零 Provider 基线](phase8-validation-report.md)（2026-07-19 通过）。
 
@@ -12,6 +17,7 @@ Phase 8 验证报告：[Evaluation 0.2、Benchmark Gold 隔离与 LargeBuilding 
 
 | 文档 | 职责 | 当前状态 |
 |---|---|---|
+| [phase10.2-property-knowledge-validation-report.md](phase10.2-property-knowledge-validation-report.md) | 自然语言属性解析、token 边界、BGE-M3/Qdrant、通用 occurrence 写入和真实 DeepSeek UAT | 2026-07-24 通过；L1/L2 passed |
 | [phase10-single-pipeline-input-output.md](phase10-single-pipeline-input-output.md) | 单个真实案例的全链路 Input/Output、各 Part 作用、产物位置和最终 IFC 效果 | 2026-07-22；面向工程理解与复现 |
 | [phase10-validation-report.md](phase10-validation-report.md) | Window 语义 manifest/Bound ChangeSet、原子写回、LargeBuilding 离线与四路径 DeepSeek L1/L2 | 2026-07-22 通过；后续细分为 10.1 精确属性写入和 10.2 检索/RAG |
 | [phase9.1-validation-report.md](phase9.1-validation-report.md) | Type/Occurrence 证据修正、无 GUID Prototype 解析、LargeBuilding 与四路径 DeepSeek UAT | 2026-07-21 通过；真实 L2 缺口交接 Phase 10 |
@@ -30,6 +36,9 @@ Phase 8 验证报告：[Evaluation 0.2、Benchmark Gold 隔离与 LargeBuilding 
 - 构建并查询本地 IFC 目标索引：
   `.venv\Scripts\python scripts\ifc_repair\index.py build <source.ifc> --database <index.sqlite>`
   `.venv\Scripts\python scripts\ifc_repair\index.py query <index.sqlite> --query <query.json>`
+
+Phase 10.1 additional validation:
+[Window effective-property full replication and IfcDiff report](phase10.1-full-window-replication-and-ifcdiff-report.md).
 - 运行离线确定性案例：
   `.venv\Scripts\python scripts\ifc_repair\run_case.py <output> --mode fake`
 - 检查真实 Provider 配置：
