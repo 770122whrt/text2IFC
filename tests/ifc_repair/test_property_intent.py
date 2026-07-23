@@ -7,6 +7,7 @@ import pytest
 from jsonschema import Draft202012Validator
 
 from text2ifc_agent.providers import ProviderOutput
+from text2ifc_agent.prompt_registry import load_prompt_registry
 from text2ifc_ifc_repair.operations import create_default_registry
 
 
@@ -133,7 +134,7 @@ def test_v02_complete_standard_and_custom_properties_round_trip_immutably() -> N
     assert intent.schema_version == INTENT_VERSION
     assert intent.operations[0].property_intents[0].set_name == "Pset_WindowCommon"
     assert intent.operations[0].property_intents[1].property_name == "AssetCode"
-    with pytest.raises(TypeError):
+    with pytest.raises(AttributeError):
         intent.operations[0].property_intents[0].source.excerpt = "changed"
 
 
@@ -248,3 +249,25 @@ def test_historical_v01_payload_still_uses_original_model_and_schema() -> None:
     schema = module.load_repair_intent_schema()
     assert schema["$id"] == "text2ifc/ifc-repair-intent/0.1"
     assert module.REPAIR_INTENT_SCHEMA_VERSION == "text2ifc/ifc-repair-intent/0.1"
+
+
+def test_v02_prompt_is_registered_bounded_and_covers_frozen_examples() -> None:
+    project_root = Path(__file__).resolve().parents[2]
+    registry = load_prompt_registry()
+    prompt = (
+        project_root / "prompts/agent/ifc-repair-intent-v0.2.md"
+    ).read_text(encoding="utf-8")
+    assert registry["ifc-repair-intent.v0.2"]["path"].endswith(
+        "ifc-repair-intent-v0.2.md"
+    )
+    for value in (
+        "Pset_WindowCommon",
+        "FireRating",
+        "Custom_Asset",
+        "AssetCode",
+        '"set_name": null',
+        "prototype_intent=null",
+    ):
+        assert value in prompt
+    assert "317 official Psets" not in prompt
+    assert "property_sets.json" not in prompt

@@ -6,6 +6,8 @@ import json
 from pathlib import Path
 from typing import Any, Mapping
 
+from jsonschema import Draft202012Validator
+
 from text2ifc_agent.prompt_registry import render_prompt
 from text2ifc_agent.providers import (
     ProviderOutputError,
@@ -14,19 +16,35 @@ from text2ifc_agent.providers import (
 )
 from text2ifc_text.splits import atomic_write_text
 
-from .registry import OperationRegistry
+from .registry import OperationRegistry, OperationRegistryError
 from .repair_intent import (
     DEFAULT_REPAIR_INTENT_LIMITS,
     RepairIntent,
     RepairIntentCode,
     RepairIntentError,
+    REPAIR_INTENT_BODY_SCHEMA_VERSION,
+    REPAIR_INTENT_BODY_SCHEMA_VERSION_0_2,
+    REPAIR_INTENT_SCHEMA_VERSION,
+    REPAIR_INTENT_SCHEMA_VERSION_0_2,
     fingerprint_text,
     hash_request,
+    load_repair_intent_body_schema,
     load_repair_intent_schema,
 )
 
 
 TEMPLATE_ID = "ifc-repair-intent.v0.1"
+TEMPLATE_ID_0_2 = "ifc-repair-intent.v0.2"
+_INTENT_CONTRACTS = {
+    REPAIR_INTENT_SCHEMA_VERSION: (
+        REPAIR_INTENT_BODY_SCHEMA_VERSION,
+        TEMPLATE_ID,
+    ),
+    REPAIR_INTENT_SCHEMA_VERSION_0_2: (
+        REPAIR_INTENT_BODY_SCHEMA_VERSION_0_2,
+        TEMPLATE_ID_0_2,
+    ),
+}
 MAX_REQUEST_BYTES = DEFAULT_REPAIR_INTENT_LIMITS.max_request_bytes
 MAX_PROVIDER_RESPONSE_BYTES = (
     DEFAULT_REPAIR_INTENT_LIMITS.max_provider_response_bytes
@@ -42,6 +60,7 @@ def generate_repair_intent(
     registry: OperationRegistry,
     output_dir: Path | str,
     max_attempts: int = MAX_CORRECTION_ATTEMPTS,
+    intent_schema_version: str = REPAIR_INTENT_SCHEMA_VERSION,
 ) -> dict[str, Any]:
     """Generate one Registry-bound RepairIntent from bounded public data."""
 
@@ -52,17 +71,19 @@ def generate_repair_intent(
     if not 1 <= max_attempts <= MAX_CORRECTION_ATTEMPTS:
         return _failure(RepairIntentCode.ATTEMPT_BUDGET_INVALID, attempts=())
 
-    schema = load_repair_intent_schema()
+    contract = _INTENT_CONTRACTS.get(intent_schema_version)
+    if contract is None:
+        return _failure(RepairIntentCode.SCHEMA_INVALID, attempts=())
+    body_schema_version, template_id = contract
+    envelope_schema = load_repair_intent_schema(intent_schema_version)
+    schema = load_repair_intent_body_schema(body_schema_version)
     source_request_hash = hash_request(repair_request)
     supported_operations = _supported_operations(registry)
     feedback: list[dict[str, str]] = []
     rendered = render_prompt(
-        template_id=TEMPLATE_ID,
+        template_id=template_id,
         inputs={
-            "REQUEST_ID": request_id,
             "REPAIR_REQUEST": repair_request,
-            "SOURCE_REQUEST_HASH": source_request_hash,
-            "PROMPT_FINGERPRINT": _registered_prompt_hash(),
             "SUPPORTED_OPERATIONS": supported_operations,
             "REPAIR_INTENT_SCHEMA": schema,
             "VALIDATION_FEEDBACK": feedback,
@@ -76,7 +97,7 @@ def generate_repair_intent(
     for attempt_number in range(1, max_attempts + 1):
         if attempt_number > 1:
             rendered = render_prompt(
-                template_id=TEMPLATE_ID,
+                template_id=template_id,
                 inputs={**renderer_input, "VALIDATION_FEEDBACK": feedback},
             )
         provider_arguments = {
@@ -146,15 +167,55 @@ def generate_repair_intent(
                 issues.extend(_normalize_issues(parse_issues))
             else:
                 try:
-                    intent = RepairIntent.from_dict(parsed, registry=registry)
-                    _validate_bindings(
-                        intent,
-                        request_id=request_id,
-                        source_request_hash=source_request_hash,
-                        prompt_fingerprint=str(
+                    body_errors = sorted(
+                        Draft202012Validator(schema).iter_errors(parsed),
+                        key=lambda error: tuple(
+                            str(part) for part in error.absolute_path
+                        ),
+                    )
+                    if body_errors:
+                        error = body_errors[0]
+                        raise RepairIntentError(
+                            RepairIntentCode.SCHEMA_INVALID,
+                            error.message,
+                            path=_pointer(error.absolute_path),
+                        )
+                    model = str(provider_output.metadata.get("model", ""))
+                    if not model:
+                        raise RepairIntentError(
+                            RepairIntentCode.MODEL_FINGERPRINT_MISMATCH,
+                            "Provider response metadata does not identify the model.",
+                        )
+                    operations = []
+                    for raw_operation in parsed["operations"]:
+                        operation = json.loads(json.dumps(raw_operation))
+                        operation["parameters"] = registry.prepare_partial_parameters(
+                            operation
+                        )
+                        operations.append(operation)
+                    envelope = {
+                        "schema_version": envelope_schema["$id"],
+                        "request_id": request_id,
+                        "source_request_hash": source_request_hash,
+                        "model_fingerprint": fingerprint_text(model),
+                        "prompt_fingerprint": str(
                             rendered["metadata"]["template_hash"]
                         ),
-                        model=str(provider_output.metadata.get("model", "")),
+                        "operations": operations,
+                        "provenance": parsed["provenance"],
+                    }
+                    intent = RepairIntent.from_dict(
+                        envelope,
+                        registry=registry,
+                        require_complete=False,
+                    )
+                except OperationRegistryError as error:
+                    issues.append(
+                        _issue(
+                            RepairIntentCode.UNSUPPORTED_OPERATION,
+                            error.detail,
+                            path="/operations",
+                        )
                     )
                 except RepairIntentError as error:
                     issues.append(_issue(error.code, error.detail, path=error.path))
@@ -177,13 +238,34 @@ def generate_repair_intent(
         )
         _write_live_evidence(output, attempt_number, live_evidence)
         if intent is not None and not issues:
+            missing_parameters = _missing_parameters(intent, registry)
+            missing_properties = _missing_properties(intent)
+            if not missing_parameters and not missing_properties:
+                intent = RepairIntent.from_dict(intent.to_dict(), registry=registry)
+            classification = (
+                "clarification_required"
+                if missing_parameters or missing_properties
+                else "repair_intent"
+            )
             atomic_write_text(
                 output / "repair-intent.json", _pretty_json(intent.to_dict())
             )
+            completeness = {
+                "schema_version": "text2ifc/ifc-repair-intent-completeness/0.1",
+                "status": classification,
+                "missing_parameters": missing_parameters,
+                "missing_properties": missing_properties,
+            }
+            atomic_write_text(
+                output / "repair-intent-completeness.json",
+                _pretty_json(completeness),
+            )
             return {
                 "valid": True,
-                "classification": "repair_intent",
+                "classification": classification,
                 "intent": intent,
+                "missing_parameters": missing_parameters,
+                "missing_properties": missing_properties,
                 "prompt": _prompt_identity(rendered),
                 "attempts": attempts,
                 "error_code": None,
@@ -214,32 +296,40 @@ def _call_provider(
     )
 
 
-def _validate_bindings(
+def _missing_parameters(
     intent: RepairIntent,
-    *,
-    request_id: str,
-    source_request_hash: str,
-    prompt_fingerprint: str,
-    model: str,
-) -> None:
-    checks = (
-        (intent.request_id == request_id, RepairIntentCode.REQUEST_ID_MISMATCH),
-        (
-            intent.source_request_hash == source_request_hash,
-            RepairIntentCode.REQUEST_HASH_MISMATCH,
-        ),
-        (
-            intent.prompt_fingerprint == prompt_fingerprint,
-            RepairIntentCode.PROMPT_FINGERPRINT_MISMATCH,
-        ),
-        (
-            bool(model) and intent.model_fingerprint == fingerprint_text(model),
-            RepairIntentCode.MODEL_FINGERPRINT_MISMATCH,
-        ),
-    )
-    for passed, code in checks:
-        if not passed:
-            raise RepairIntentError(code, code)
+    registry: OperationRegistry,
+) -> list[dict[str, Any]]:
+    missing: list[dict[str, Any]] = []
+    for operation in intent.operations:
+        paths = registry.missing_required_parameters(operation.to_dict())
+        if paths:
+            missing.append(
+                {"operation_id": operation.operation_id, "paths": list(paths)}
+            )
+    return missing
+
+
+def _missing_properties(intent: RepairIntent) -> list[dict[str, Any]]:
+    missing: list[dict[str, Any]] = []
+    for operation in intent.operations:
+        for property_index, property_intent in enumerate(
+            operation.property_intents
+        ):
+            if property_intent.missing_fields:
+                missing.append(
+                    {
+                        "operation_id": operation.operation_id,
+                        "property_index": property_index,
+                        "fields": list(property_intent.missing_fields),
+                    }
+                )
+    return missing
+
+
+def _pointer(parts: Any) -> str:
+    tokens = [str(part).replace("~", "~0").replace("/", "~1") for part in parts]
+    return "/" + "/".join(tokens) if tokens else ""
 
 
 def _supported_operations(registry: OperationRegistry) -> list[dict[str, Any]]:
@@ -267,12 +357,6 @@ def _supported_operations(registry: OperationRegistry) -> list[dict[str, Any]]:
         }
         for operation_type in registry.operation_types
     ]
-
-
-def _registered_prompt_hash() -> str:
-    from text2ifc_agent.prompt_registry import load_prompt_registry
-
-    return str(load_prompt_registry()[TEMPLATE_ID]["sha256"])
 
 
 def _normalize_issues(values: list[dict[str, Any]]) -> list[dict[str, str]]:
@@ -386,5 +470,6 @@ __all__ = [
     "MAX_PROVIDER_RESPONSE_BYTES",
     "MAX_REQUEST_BYTES",
     "TEMPLATE_ID",
+    "TEMPLATE_ID_0_2",
     "generate_repair_intent",
 ]

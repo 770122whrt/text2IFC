@@ -12,6 +12,7 @@ from typing import Any, Mapping
 
 from jsonschema import Draft202012Validator
 
+from .property_intent import ExactPropertyIntent
 from .registry import OperationRegistry, OperationRegistryError
 from .target_query import TargetQuery
 
@@ -19,6 +20,28 @@ from .target_query import TargetQuery
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 REPAIR_INTENT_SCHEMA_VERSION = "text2ifc/ifc-repair-intent/0.1"
 REPAIR_INTENT_SCHEMA_PATH = Path("schemas/agent/ifc-repair-intent-0.1.schema.json")
+REPAIR_INTENT_BODY_SCHEMA_VERSION = "text2ifc/ifc-repair-intent-body/0.1"
+REPAIR_INTENT_BODY_SCHEMA_PATH = Path(
+    "schemas/agent/ifc-repair-intent-body-0.1.schema.json"
+)
+REPAIR_INTENT_SCHEMA_VERSION_0_2 = "text2ifc/ifc-repair-intent/0.2"
+REPAIR_INTENT_SCHEMA_PATH_0_2 = Path(
+    "schemas/agent/ifc-repair-intent-0.2.schema.json"
+)
+REPAIR_INTENT_BODY_SCHEMA_VERSION_0_2 = (
+    "text2ifc/ifc-repair-intent-body/0.2"
+)
+REPAIR_INTENT_BODY_SCHEMA_PATH_0_2 = Path(
+    "schemas/agent/ifc-repair-intent-body-0.2.schema.json"
+)
+_SCHEMA_PATHS = {
+    REPAIR_INTENT_SCHEMA_VERSION: REPAIR_INTENT_SCHEMA_PATH,
+    REPAIR_INTENT_SCHEMA_VERSION_0_2: REPAIR_INTENT_SCHEMA_PATH_0_2,
+}
+_BODY_SCHEMA_PATHS = {
+    REPAIR_INTENT_BODY_SCHEMA_VERSION: REPAIR_INTENT_BODY_SCHEMA_PATH,
+    REPAIR_INTENT_BODY_SCHEMA_VERSION_0_2: REPAIR_INTENT_BODY_SCHEMA_PATH_0_2,
+}
 
 
 @dataclass(frozen=True)
@@ -68,6 +91,7 @@ class RepairIntentCode(str, Enum):
     PROVIDER_RESPONSE_TOO_LARGE = "PROVIDER_RESPONSE_TOO_LARGE"
     PROVIDER_REQUEST_FAILED = "REPAIR_INTENT_PROVIDER_FAILED"
     RETRY_EXHAUSTED = "REPAIR_INTENT_RETRY_EXHAUSTED"
+    PROPERTY_INCOMPLETE = "REPAIR_INTENT_PROPERTY_INCOMPLETE"
 
 
 class RepairIntentError(ValueError):
@@ -158,9 +182,11 @@ class OperationIntent:
     target_query: TargetQuery
     parameters: Mapping[str, Any]
     attribute_intents: tuple[AttributeIntent, ...]
+    property_intents: tuple[ExactPropertyIntent, ...]
     prototype_intent: PrototypeIntent | None
     provenance: tuple[PublicProvenance, ...]
     _target_query_document: Mapping[str, Any]
+    _has_property_intents_field: bool
 
     @classmethod
     def from_dict(cls, value: Mapping[str, Any]) -> "OperationIntent":
@@ -174,6 +200,10 @@ class OperationIntent:
             attribute_intents=tuple(
                 AttributeIntent.from_dict(item) for item in value["attribute_intents"]
             ),
+            property_intents=tuple(
+                ExactPropertyIntent.from_dict(item)
+                for item in value.get("property_intents", ())
+            ),
             prototype_intent=(
                 None if prototype is None else PrototypeIntent.from_dict(prototype)
             ),
@@ -181,10 +211,11 @@ class OperationIntent:
                 PublicProvenance.from_dict(item) for item in value["provenance"]
             ),
             _target_query_document=target_document,
+            _has_property_intents_field="property_intents" in value,
         )
 
     def to_dict(self) -> dict[str, Any]:
-        return {
+        payload = {
             "operation_id": self.operation_id,
             "operation_type": self.operation_type,
             "target_query": _thaw_json(self._target_query_document),
@@ -195,6 +226,11 @@ class OperationIntent:
             ),
             "provenance": [item.to_dict() for item in self.provenance],
         }
+        if self._has_property_intents_field:
+            payload["property_intents"] = [
+                item.to_dict() for item in self.property_intents
+            ]
+        return payload
 
 
 @dataclass(frozen=True)
@@ -213,10 +249,12 @@ class RepairIntent:
         value: Mapping[str, Any],
         *,
         registry: OperationRegistry,
+        require_complete: bool = True,
     ) -> "RepairIntent":
         payload = _json_copy(value)
+        schema_version = str(payload.get("schema_version", ""))
         errors = sorted(
-            _validator().iter_errors(payload),
+            _validator(schema_version).iter_errors(payload),
             key=lambda error: tuple(str(part) for part in error.absolute_path),
         )
         if errors:
@@ -261,7 +299,11 @@ class RepairIntent:
                     operation_type,
                     path=f"/operations/{index}/target_query/allowed_ifc_classes",
                 )
-            parameter_issues = registry.validate_parameters(raw_operation)
+            parameter_issues = (
+                registry.validate_parameters(raw_operation)
+                if require_complete
+                else registry.validate_partial_parameters(raw_operation)
+            )
             if parameter_issues:
                 issue = parameter_issues[0]
                 raise RepairIntentError(
@@ -269,6 +311,22 @@ class RepairIntent:
                     issue.message,
                     path=f"/operations/{index}{issue.path}",
                 )
+            if require_complete:
+                for property_index, property_intent in enumerate(
+                    raw_operation.get("property_intents", ())
+                ):
+                    missing = ExactPropertyIntent.from_dict(
+                        property_intent
+                    ).missing_fields
+                    if missing:
+                        raise RepairIntentError(
+                            RepairIntentCode.PROPERTY_INCOMPLETE,
+                            ",".join(missing),
+                            path=(
+                                f"/operations/{index}/property_intents/"
+                                f"{property_index}"
+                            ),
+                        )
             operations.append(OperationIntent.from_dict(raw_operation))
 
         return cls(
@@ -280,6 +338,7 @@ class RepairIntent:
             provenance=tuple(
                 PublicProvenance.from_dict(item) for item in payload["provenance"]
             ),
+            schema_version=schema_version,
         )
 
     def to_dict(self) -> dict[str, Any]:
@@ -301,9 +360,33 @@ class RepairIntent:
         return fingerprint_text(self.canonical_json())
 
 
-def load_repair_intent_schema() -> dict[str, Any]:
+def load_repair_intent_schema(
+    version: str = REPAIR_INTENT_SCHEMA_VERSION,
+) -> dict[str, Any]:
+    path = _SCHEMA_PATHS.get(version)
+    if path is None:
+        raise RepairIntentError(
+            RepairIntentCode.SCHEMA_INVALID,
+            f"Unsupported RepairIntent schema version: {version}",
+            path="/schema_version",
+        )
     return json.loads(
-        (PROJECT_ROOT / REPAIR_INTENT_SCHEMA_PATH).read_text(encoding="utf-8")
+        (PROJECT_ROOT / path).read_text(encoding="utf-8")
+    )
+
+
+def load_repair_intent_body_schema(
+    version: str = REPAIR_INTENT_BODY_SCHEMA_VERSION,
+) -> dict[str, Any]:
+    path = _BODY_SCHEMA_PATHS.get(version)
+    if path is None:
+        raise RepairIntentError(
+            RepairIntentCode.SCHEMA_INVALID,
+            f"Unsupported RepairIntent body schema version: {version}",
+            path="/schema_version",
+        )
+    return json.loads(
+        (PROJECT_ROOT / path).read_text(encoding="utf-8")
     )
 
 
@@ -315,8 +398,8 @@ def fingerprint_text(value: str) -> str:
     return "sha256:" + hashlib.sha256(value.encode("utf-8")).hexdigest()
 
 
-def _validator() -> Draft202012Validator:
-    return Draft202012Validator(load_repair_intent_schema())
+def _validator(version: str) -> Draft202012Validator:
+    return Draft202012Validator(load_repair_intent_schema(version))
 
 
 def _has_target_selector(query: Mapping[str, Any]) -> bool:
@@ -379,8 +462,14 @@ __all__ = [
     "OperationIntent",
     "PrototypeIntent",
     "PublicProvenance",
+    "REPAIR_INTENT_BODY_SCHEMA_PATH",
+    "REPAIR_INTENT_BODY_SCHEMA_PATH_0_2",
+    "REPAIR_INTENT_BODY_SCHEMA_VERSION",
+    "REPAIR_INTENT_BODY_SCHEMA_VERSION_0_2",
     "REPAIR_INTENT_SCHEMA_PATH",
+    "REPAIR_INTENT_SCHEMA_PATH_0_2",
     "REPAIR_INTENT_SCHEMA_VERSION",
+    "REPAIR_INTENT_SCHEMA_VERSION_0_2",
     "RepairIntent",
     "RepairIntentCode",
     "RepairIntentError",
@@ -388,4 +477,5 @@ __all__ = [
     "fingerprint_text",
     "hash_request",
     "load_repair_intent_schema",
+    "load_repair_intent_body_schema",
 ]
