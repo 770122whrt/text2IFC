@@ -1,5 +1,10 @@
 # IFC2X3 Local ChangeSet 验证索引
 
+最新验收：[Phase 10.1 显式 IFC 属性写入与验证报告](phase10.1-validation-report.md)。
+它覆盖标准属性、自定义属性确认、Type 精确复用/系统模板 fallback、
+LargeBuilding 离线验收与真实 DeepSeek 双案例 UAT，并冻结 Phase 10.2 的
+检索输出边界。
+
 Phase 8 验证报告：[Evaluation 0.2、Benchmark Gold 隔离与 LargeBuilding 零 Provider 基线](phase8-validation-report.md)（2026-07-19 通过）。
 
 本目录只维护同一项验证工作的权威设计、实施约束与可追溯证据，避免 Window
@@ -7,7 +12,8 @@ Phase 8 验证报告：[Evaluation 0.2、Benchmark Gold 隔离与 LargeBuilding 
 
 | 文档 | 职责 | 当前状态 |
 |---|---|---|
-| [phase10-validation-report.md](phase10-validation-report.md) | Window 语义 manifest/Bound ChangeSet、原子写回、LargeBuilding 离线与四路径 DeepSeek L1/L2 | 2026-07-22 通过；Phase 10.1 RAG 与自定义属性明确延后 |
+| [phase10-single-pipeline-input-output.md](phase10-single-pipeline-input-output.md) | 单个真实案例的全链路 Input/Output、各 Part 作用、产物位置和最终 IFC 效果 | 2026-07-22；面向工程理解与复现 |
+| [phase10-validation-report.md](phase10-validation-report.md) | Window 语义 manifest/Bound ChangeSet、原子写回、LargeBuilding 离线与四路径 DeepSeek L1/L2 | 2026-07-22 通过；后续细分为 10.1 精确属性写入和 10.2 检索/RAG |
 | [phase9.1-validation-report.md](phase9.1-validation-report.md) | Type/Occurrence 证据修正、无 GUID Prototype 解析、LargeBuilding 与四路径 DeepSeek UAT | 2026-07-21 通过；真实 L2 缺口交接 Phase 10 |
 | [phase9-stage1-contract-repair-report.md](phase9-stage1-contract-repair-report.md) | Stage 1 partial intent、系统指纹封装、缺参 feedback 与双路径 DeepSeek UAT | 2026-07-20 两组 Stage 1 合同通过；整体因既有 L2 evidence conflict 未发布 |
 | [phase9-validation-report.md](phase9-validation-report.md) | 单一 IFC + 文本 RepairAPI、薄 CLI、离线/LargeBuilding 与真实 DeepSeek UAT | 2026-07-20 确定性验收通过；Stage 1 修复后 live 双路径已进入 Stage 2 |

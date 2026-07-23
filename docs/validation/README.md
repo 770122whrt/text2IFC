@@ -1,5 +1,9 @@
 # Validation and Evaluation Documentation
 
+最新报告：[Phase 10.1 显式 IFC 属性写入与验证](ifc2x3-changeset/phase10.1-validation-report.md)。
+本阶段完成精确标量 Pset authoring、occurrence scope 保护、Type 复用/模板
+fallback 和 reopened L2；属性检索/RAG 仍属于独立的 Phase 10.2。
+
 本目录集中保存可执行的验证设计、评估协议、样例冻结规则和配套实施指令。
 
 ## IFC2X3 Local ChangeSet
@@ -17,7 +21,9 @@
 - [实施发现记录](ifc2x3-changeset/implementation-findings.md)
   - 保存实现证据、待审设计冲突及其最终处理决定。
 - [Phase 10 Window L2 验证报告](ifc2x3-changeset/phase10-validation-report.md)
-  - LargeBuilding 离线与真实 DeepSeek 四路径、Production/private L1/L2、发布证据和 Phase 10.1 边界。
+  - LargeBuilding 离线与真实 DeepSeek 四路径、Production/private L1/L2、发布证据，以及 10.1 精确属性写入/10.2 检索 RAG 的拆分边界。
+- [Phase 10 单链路输入输出说明](ifc2x3-changeset/phase10-single-pipeline-input-output.md)
+  - 用一个真实 `complete-request` 案例逐段说明 damaged IFC、Agent、Bound ChangeSet、IFC 写回、L1/L2 和最终发布产物。
 
 ## 相关验证资料
 

@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: IFC ChangeSet Repair Pipeline
-status: Ready to execute
-last_updated: "2026-07-23T05:04:41.226Z"
+status: Phase complete — ready for verification
+last_updated: "2026-07-23T06:02:10.897Z"
 progress:
   total_phases: 10
-  completed_phases: 5
+  completed_phases: 6
   total_plans: 26
-  completed_plans: 25
-  percent: 96
+  completed_plans: 26
+  percent: 100
 ---
 
 # Project State
@@ -21,23 +21,22 @@ See `.planning/PROJECT.md`.
 **Core value:** Given an IFC file and an explicit user request, produce a
 traceable semantic ChangeSet and an L1/L2-validated IFC result.
 
-**Current focus:** Phase 10.1 — explicit-ifc-property-authoring-and-validation
-10.2 property retrieval/RAG remains separate and deferred
+**Current focus:** Phase 10.1 complete; Phase 10.2 property retrieval/RAG is
+the next separately scoped discussion and planning target.
 
 ## Current Position
 
-Phase: 10.1 (explicit-ifc-property-authoring-and-validation) — EXECUTING
+Phase: 10.1 (explicit-ifc-property-authoring-and-validation) — COMPLETE
 Plan: 4 of 4
 
 - Milestone: v1.1 IFC ChangeSet Repair Pipeline
 - Phase: 10.1
-- Plan: 4 plans ready in 4 sequential waves
-- Status: Ready to execute exact-property contract first
-- Progress: 5 / 10 phases complete
-- Requirements: 15 pending, 19 complete, 34 mapped, 0 unmapped
-- Last activity: 2026-07-23 — split exact property authoring (10.1) from
-  property knowledge retrieval/RAG (10.2) and wrote SPEC/CONTEXT/RESEARCH/
-  VALIDATION plus four executable plans
+- Plan: 4 / 4 plans complete
+- Status: Phase complete; offline and real-Provider evidence passed
+- Progress: 6 / 10 phases complete
+- Requirements: PROP-01 through PROP-05 complete
+- Last activity: 2026-07-23 — completed exact property authoring, LargeBuilding
+  offline acceptance and two-case real DeepSeek UAT
 
 ## Carried Context
 
@@ -78,6 +77,15 @@ Plan: 4 of 4
   Type intent creates a deterministic dedicated system-template Type; ambiguous
   Type intent asks the user; shared-Type mutation is deferred.
 
+- Phase 10.1 real DeepSeek UAT passed both the exact standard property and
+  confirmed custom property paths with no synthetic fallback. Production L1/L2
+  passed for both.
+
+- Private Gold remains evaluator-only. It passes L2 for exact original Type
+  reuse and intentionally reports an authoring difference for a no-Type
+  system-template fallback; this does not override the Production publication
+  contract.
+
 ## Accepted Debt / Deferred
 
 - `CLI-08` final true-human REPL acceptance from v1.0 remains carried debt.
@@ -93,9 +101,9 @@ Plan: 4 of 4
 
 ## Next Action
 
-Review the three highlighted Phase 10.1 defaults with the user, then execute
-plans 10.1-01 through 10.1-04. Phase 10.2 retrieval/RAG begins only after the
-exact-property offline and real-Provider Window acceptance is evidenced.
+Discuss and plan Phase 10.2 property knowledge retrieval. Its output must be a
+ranked exact property tuple consumed by the completed Phase 10.1 contract; it
+cannot bypass confirmation, Binder, atomic authoring, reopened L2 or publication.
 
 ---
 *Last updated: 2026-07-23 after Phase 10.1 planning*

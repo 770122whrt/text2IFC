@@ -179,7 +179,7 @@ Plans:
 
 ### Phase 10.1: Explicit IFC Property Authoring and Validation (INSERTED)
 
-**Status:** Planned
+**Status:** Complete — 2026-07-23
 
 **Goal:** When a user explicitly supplies an exact Pset name, property name and
 value, deterministically ensure that typed effective property on the intended
@@ -191,12 +191,12 @@ publish only after independent reopened-IFC L2 validation.
 
 **Depends on:** Phase 10
 
-**Plans:** 3/4 plans executed
+**Plans:** 4/4 plans complete
 
-- [ ] **Wave 1:** `10.1-01` - Versioned exact-property intent and deterministic resolution contract.
-- [ ] **Wave 2** *(blocked on Wave 1)*: `10.1-02` - Clarification, custom-property confirmation and scope safety.
-- [ ] **Wave 3** *(blocked on Waves 1-2)*: `10.1-03` - Atomic Pset authoring, manifest binding and dynamic L2 enforcement.
-- [ ] **Wave 4** *(blocked on Waves 1-3)*: `10.1-04` - LargeBuilding offline/live acceptance, regression and handoff evidence.
+- [x] **Wave 1:** `10.1-01` - Versioned exact-property intent and deterministic resolution contract.
+- [x] **Wave 2** *(blocked on Wave 1)*: `10.1-02` - Clarification, custom-property confirmation and scope safety.
+- [x] **Wave 3** *(blocked on Waves 1-2)*: `10.1-03` - Atomic Pset authoring, manifest binding and dynamic L2 enforcement.
+- [x] **Wave 4** *(blocked on Waves 1-3)*: `10.1-04` - LargeBuilding offline/live acceptance, regression and handoff evidence.
 
 **Cross-cutting constraints:**
 
@@ -237,7 +237,7 @@ publish only after independent reopened-IFC L2 validation.
 
 ### Phase 10.2: IFC2X3 Property Knowledge Retrieval and Resolution (INSERTED)
 
-**Status:** Deferred until Phase 10.1 acceptance
+**Status:** Ready for discussion and planning after Phase 10.1 acceptance
 
 **Goal:** Resolve non-exact multilingual property requests to evidence-bearing
 standard or project-property candidates, clarify uncertainty, and emit only the
