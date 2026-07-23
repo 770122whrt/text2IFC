@@ -60,7 +60,7 @@ semantic ChangeSet and an L1/L2-validated IFC result.
 - [x] **PROP-02**: Exact standard properties are validated offline against the
   checked-in IFC2X3 registry, while every unknown/custom property requires
   confirmation of its exact name, value, IFC value type, unit and scope.
-- [ ] **PROP-03**: Property mutation is limited to the target occurrence.
+- [x] **PROP-03**: Property mutation is limited to the target occurrence.
   Existing Type reuse requires an exact unique user reference or affirmative
   candidate confirmation; uncertainty asks the user, no Type intent creates a
   deterministic dedicated system-template Type, and direct shared-Type
@@ -159,7 +159,7 @@ semantic ChangeSet and an L1/L2-validated IFC result.
 | WIN-02 | 10 | Complete |
 | PROP-01 | 10.1 | Complete |
 | PROP-02 | 10.1 | Complete |
-| PROP-03 | 10.1 | Pending |
+| PROP-03 | 10.1 | Complete |
 | PROP-04 | 10.1 | Pending |
 | PROP-05 | 10.1 | Pending |
 | RAG-01 | 10.2 | Pending |
