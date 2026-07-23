@@ -171,7 +171,13 @@ class RepairOrchestrator:
             except Exception as error:
                 return self._terminal_failure(
                     "l2_not_evaluable", "PRODUCTION_EVIDENCE_FAILED", changeset,
-                    {"source_hash": source_hash, "error_type": type(error).__name__},
+                    {
+                        "source_hash": source_hash,
+                        "error_type": type(error).__name__,
+                        "error_code": str(
+                            getattr(error, "code", type(error).__name__)
+                        )[:128],
+                    },
                     private_canaries=private_canaries,
                 )
             missing = _missing_authority_decisions(production_evidence)

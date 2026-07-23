@@ -19,6 +19,7 @@ from .provider_stage import generate_bound_changeset
 from .production_evidence import build_production_evidence
 from .semantic_authoring import semantic_manifest_to_dict
 from .repair_intent import RepairIntent
+from .repair_intent import REPAIR_INTENT_SCHEMA_VERSION
 from .request_stage import generate_repair_intent
 from .run_models import (
     Clarification,
@@ -50,6 +51,7 @@ class RepairAPI:
         changeset_stage: Callable[..., Mapping[str, Any]] = generate_bound_changeset,
         orchestrator_factory: Callable[..., RepairOrchestrator] = RepairOrchestrator,
         orchestrator_options: Mapping[str, Any] | None = None,
+        intent_schema_version: str = REPAIR_INTENT_SCHEMA_VERSION,
     ) -> None:
         self.store = RunStore(output_root)
         self.provider = provider
@@ -58,6 +60,7 @@ class RepairAPI:
         self._index_stage = index_stage
         self._changeset_stage = changeset_stage
         self._orchestrator_factory = orchestrator_factory
+        self._intent_schema_version = intent_schema_version
         requested_options = dict(orchestrator_options or {})
         if requested_options.get("defer_publication") is False:
             raise ValueError("DURABLE_PUBLICATION_CANNOT_BE_DISABLED")
@@ -138,6 +141,7 @@ class RepairAPI:
             repair_request=repair_text,
             registry=self.registry,
             output_dir=intent_dir,
+            intent_schema_version=self._intent_schema_version,
         )
         if not intent_result.get("valid") or intent_result.get("intent") is None:
             return self._fail(state.run_id, RunStage.PROVIDER_FAILED, str(intent_result.get("error_code") or "INTENT_STAGE_FAILED"))
@@ -169,7 +173,7 @@ class RepairAPI:
                     "intent": self.store.artifact_binding(
                         state.run_id,
                         "intent/repair-intent.json",
-                        "text2ifc/ifc-repair-intent/0.1",
+                        self._intent_schema_version,
                     ),
                     "api_context": self.store.artifact_binding(
                         state.run_id,
@@ -186,7 +190,7 @@ class RepairAPI:
             expected_state_version=state.state_version,
             stage_payload={
                 "intent": self.store.artifact_binding(
-                    state.run_id, "intent/repair-intent.json", "text2ifc/ifc-repair-intent/0.1"
+                    state.run_id, "intent/repair-intent.json", self._intent_schema_version
                 ),
                 "api_context": self.store.artifact_binding(
                     state.run_id, context_ref, "text2ifc/ifc-repair-api-context/0.1"
@@ -265,6 +269,7 @@ class RepairAPI:
                 repair_request=repair_text,
                 registry=self.registry,
                 output_dir=resume_dir,
+                intent_schema_version=self._intent_schema_version,
             )
             if not generated.get("valid") or generated.get("intent") is None:
                 return self._fail(run_id, RunStage.PROVIDER_FAILED, "INTENT_RESUME_FAILED")
@@ -301,7 +306,7 @@ class RepairAPI:
             resume_payload["intent"] = self.store.artifact_binding(
                 run_id,
                 resume_intent_ref,
-                "text2ifc/ifc-repair-intent/0.1",
+                self._intent_schema_version,
             )
         resumed = self.store.continue_with_answer(
             run_id, clarification_id=clarification_id,

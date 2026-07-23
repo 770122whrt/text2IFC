@@ -46,6 +46,7 @@ _AUTHORIZED_SEMANTIC_KINDS = frozenset(
         "user_authorized_prototype",
         "system_generated_type",
         "authorized_property_fact",
+        "deterministic_occurrence_property",
     }
 )
 
@@ -296,6 +297,35 @@ def _operation_candidates(
                     resolved_operation=resolved_operation,
                     request_hash=request_hash,
                     model_fingerprint=model_fingerprint,
+                )
+            )
+            continue
+        if kind == "deterministic_occurrence_property":
+            facts.append(
+                SemanticFact(
+                    fact_key=(
+                        f"pset:{authority['set_name']}."
+                        f"{authority['property_name']}"
+                    ),
+                    value=authority["value"],
+                    value_type=str(authority["value_type"]),
+                    unit=(
+                        None
+                        if authority.get("unit") is None
+                        else str(authority["unit"])
+                    ),
+                    inherited=False,
+                    pset_path=(
+                        f"{authority['set_name']}."
+                        f"{authority['property_name']}"
+                    ),
+                    entity_source=f"generated-operation:{operation_id}",
+                    source_kind=EvidenceSourceKind.DETERMINISTIC_POLICY,
+                    source_ref=str(authority["source_ref"]),
+                    provenance=(
+                        f"operation:{operation_id}",
+                        *tuple(str(item) for item in authority["provenance"]),
+                    ),
                 )
             )
             continue

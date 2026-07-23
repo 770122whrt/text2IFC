@@ -244,6 +244,14 @@ WINDOW_L1_AUTHORIZATION = {
         "semantic_quantity_relationship": "IfcRelDefinesByProperties",
         "semantic_material_relationship": "IfcRelAssociatesMaterial",
         "semantic_classification_relationship": "IfcRelAssociatesClassification",
+        **{
+            f"semantic_pset_{index}": "IfcPropertySet"
+            for index in range(2, 65)
+        },
+        **{
+            f"semantic_pset_relationship_{index}": "IfcRelDefinesByProperties"
+            for index in range(2, 65)
+        },
     },
     "modified": {
         "window_type_relationship": "IfcRelDefinesByType",
@@ -298,6 +306,13 @@ WINDOW_L1_AUTHORIZATION = {
             "ifc_class": "IfcRelAssociatesClassification",
             "added_endpoint_roles": ("window",),
         },
+        **{
+            f"semantic_pset_relationship_{index}": {
+                "ifc_class": "IfcRelDefinesByProperties",
+                "added_endpoint_roles": ("window",),
+            }
+            for index in range(2, 65)
+        },
     },
 }
 
@@ -340,6 +355,7 @@ def window_operation_definition() -> OperationDefinition:
         editable_occurrence_ifc_class="IfcWindow",
         inherited_type_evidence_role="IfcWindowStyle",
         generated_type_template=_generated_window_type_template,
+        generated_occurrence_facts=_generated_window_occurrence_facts,
     )
 
 
@@ -361,6 +377,37 @@ def _generated_window_type_template(
     }
 
 
+def _generated_window_occurrence_facts(*, target_record: Any) -> tuple[dict[str, Any], ...]:
+    wall_external = next(
+        (
+            fact
+            for fact in target_record.properties
+            if fact.set_kind == "pset"
+            and fact.set_name == "Pset_WallCommon"
+            and fact.property_name == "IsExternal"
+            and isinstance(fact.value, bool)
+        ),
+        None,
+    )
+    if wall_external is None:
+        return ()
+    return (
+        {
+            "kind": "deterministic_occurrence_property",
+            "set_name": "Pset_WindowCommon",
+            "property_name": "IsExternal",
+            "value": wall_external.value,
+            "value_type": "IfcBoolean",
+            "unit": None,
+            "source_ref": f"current-host:{target_record.ifc_global_id}",
+            "provenance": (
+                f"host-wall-property:{wall_external.provenance}",
+                "window-adapter:generated-template-0.1",
+            ),
+        },
+    )
+
+
 def _semantic_policy_facts(*, operation: Mapping[str, Any]) -> tuple[Any, ...]:
     from text2ifc_ifc_repair.semantic_facts import SemanticFact
 
@@ -371,9 +418,9 @@ def _semantic_policy_facts(*, operation: Mapping[str, Any]) -> tuple[Any, ...]:
     values = (
         ("attribute:OverallWidth", width, "IfcPositiveLengthMeasure", None),
         ("attribute:OverallHeight", height, "IfcPositiveLengthMeasure", None),
-        ("quantity:window-base.Width", width, "IfcLengthMeasure", "mm"),
-        ("quantity:window-base.Height", height, "IfcLengthMeasure", "mm"),
-        ("quantity:window-base.Area", width * height, "IfcAreaMeasure", "mm2"),
+        ("quantity:window-base.Width", width, "IfcQuantityLength", None),
+        ("quantity:window-base.Height", height, "IfcQuantityLength", None),
+        ("quantity:window-base.Area", width * height, "IfcQuantityArea", None),
     )
     return tuple(
         SemanticFact(
@@ -650,10 +697,13 @@ def _applicator(*, operation: Mapping[str, Any], model: Any) -> dict[str, Any]:
         window.Representation = model.create_entity(
             "IfcProductDefinitionShape", Representations=[window_representation]
         )
+    uses_mapped_representation = bool(
+        window_type is not None and window_type.RepresentationMaps
+    )
     window.ObjectPlacement = _local_placement(
         model,
         relative_to=opening.ObjectPlacement,
-        location=(0.0, -thickness / 2.0 if window_type is not None else 0.0, 0.0),
+        location=(0.0, -thickness / 2.0 if uses_mapped_representation else 0.0, 0.0),
     )
 
     voids = model.create_entity(

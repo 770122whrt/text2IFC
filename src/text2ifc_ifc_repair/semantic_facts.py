@@ -480,10 +480,11 @@ def _semantically_equivalent(
 ) -> bool:
     if spec.comparison is not ComparisonRule.TYPED_EQUIVALENCE:
         return False
+    ownership_sensitive = expected.fact_key.startswith("pset:")
     if (
         expected.value_type != actual.value_type
         or expected.unit != actual.unit
-        or expected.inherited != actual.inherited
+        or (ownership_sensitive and expected.inherited != actual.inherited)
     ):
         return False
     if (

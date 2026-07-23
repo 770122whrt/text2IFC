@@ -293,6 +293,19 @@ def resolve_repair_intent(
                     authority,
                 ),
             )
+            generated_facts = (
+                operation_registry.require(
+                    operation.operation_type
+                ).generated_occurrence_facts
+            )
+            if generated_facts is not None:
+                completed[-1] = replace(
+                    completed[-1],
+                    authorized_semantics=(
+                        *completed[-1].authorized_semantics,
+                        *tuple(generated_facts(target_record=record)),
+                    ),
+                )
 
         if operation.property_intents:
             if operation_registry is None:

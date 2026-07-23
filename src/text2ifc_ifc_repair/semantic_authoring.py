@@ -388,6 +388,7 @@ def apply_semantic_assignments(
     )
     if requires_owner_history and owner_history is None:
         raise SemanticManifestError("SEMANTIC_OWNER_HISTORY_MISSING", target_id)
+    pset_role_count = 0
     for set_name, members in sorted(psets.items()):
         direct = _direct_psets(target, set_name)
         if not direct and all(
@@ -431,7 +432,17 @@ def apply_semantic_assignments(
                     )
             pset.HasProperties = appended
             continue
-        role = "semantic_pset"
+        pset_role_count += 1
+        role = (
+            "semantic_pset"
+            if pset_role_count == 1
+            else f"semantic_pset_{pset_role_count}"
+        )
+        relationship_role = (
+            "semantic_pset_relationship"
+            if pset_role_count == 1
+            else f"semantic_pset_relationship_{pset_role_count}"
+        )
         pset = model.create_entity(
             "IfcPropertySet",
             GlobalId=_semantic_global_id(operation, f"{role}:{set_name}"),
@@ -448,7 +459,9 @@ def apply_semantic_assignments(
         )
         relation = model.create_entity(
             "IfcRelDefinesByProperties",
-            GlobalId=_semantic_global_id(operation, f"{role}:relationship:{set_name}"),
+            GlobalId=_semantic_global_id(
+                operation, f"{relationship_role}:{set_name}"
+            ),
             OwnerHistory=owner_history,
             RelatedObjects=[target],
             RelatingPropertyDefinition=pset,
@@ -456,7 +469,7 @@ def apply_semantic_assignments(
         created.extend(
             (
                 {"role": role, "ifc_class": pset.is_a(), "global_id": str(pset.GlobalId)},
-                {"role": "semantic_pset_relationship", "ifc_class": relation.is_a(), "global_id": str(relation.GlobalId)},
+                {"role": relationship_role, "ifc_class": relation.is_a(), "global_id": str(relation.GlobalId)},
             )
         )
 

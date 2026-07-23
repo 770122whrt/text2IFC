@@ -59,6 +59,7 @@ class OperationDefinition:
     editable_occurrence_ifc_class: str | None = None
     inherited_type_evidence_role: str | None = None
     generated_type_template: OperationCallable | None = None
+    generated_occurrence_facts: OperationCallable | None = None
 
     def __post_init__(self) -> None:
         if not self.operation_type or not self.target_ifc_classes:
@@ -99,6 +100,12 @@ class OperationDefinition:
         ):
             raise OperationRegistryError(
                 "INVALID_GENERATED_TYPE_TEMPLATE", self.operation_type
+            )
+        if self.generated_occurrence_facts is not None and not callable(
+            self.generated_occurrence_facts
+        ):
+            raise OperationRegistryError(
+                "INVALID_GENERATED_OCCURRENCE_FACTS", self.operation_type
             )
 
 
