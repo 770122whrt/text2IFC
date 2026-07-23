@@ -23,10 +23,20 @@ flowchart TD
     Q --> H["[HUMAN] 用户回答"]
     H --> D
     V -->|"Ready"| E["[CODE] 投影 Expected Facts"]
-    E --> S["[CODE] 建立 Skeleton、稳定 ID 与生成包"]
-    S --> G["[LLM] Generator / Package ChangeSet"]
-    G --> P["[CODE] JSON 解析、Schema、引用与包级 Gate"]
-    P --> C["[CODE] 合并 Formal BIM JSON 2.0"]
+    E --> S["[CODE] 建立 Skeleton<br/>Project / Site / Building / Storeys"]
+    S --> PM["[CODE] 生成 Package Manifest<br/>按楼层声明实体、关系和稳定 ID"]
+    PM --> G["[LLM] 生成当前 package-storey-N<br/>空间、墙、门窗、洞口和楼层关系"]
+    G --> P["[CODE] 当前楼层 Package Gate<br/>Schema、归属、引用、位置和几何"]
+    P -->|"失败，当前包最多重试 3 次"| G
+    P -->|"通过"| W["[CODE] 合入 Workspace<br/>产生 Revision 并冻结已完成构件"]
+    W --> MORE{"[CODE] 还有未生成楼层？"}
+    MORE -->|"是"| G
+    MORE -->|"否"| CROSS{"[CODE] 存在跨楼层包？"}
+    CROSS -->|"是"| CG["[LLM] 生成 package-cross-storey<br/>楼板、楼梯、竖向洞口和屋面"]
+    CG --> CPG["[CODE] 跨楼层 Package Gate"]
+    CPG -->|"失败，当前包最多重试 3 次"| CG
+    CPG -->|"通过"| C["[CODE] 组合并验证 Formal BIM JSON 2.0"]
+    CROSS -->|"否"| C
     C --> B["[CODE] 全局语义与几何 Gate"]
     B --> A["[LLM] Audit Agent"]
     A --> R{"[CODE] Gate + Audit 路由"}
@@ -86,6 +96,15 @@ flowchart TD
 - `staged` 路径下只针对当前包的结构化 ChangeSet。
 
 模型不能返回原始 STEP 文本，也不能生成 `IfcCartesianPoint`、`IfcDirection`、`IfcOwnerHistory` 等编译器级实体。
+
+真实 Stable 测试使用 `staged`，不会要求模型一次性生成整栋多层建筑。Provider 会按照代码生成的 Package Manifest 被多次调用：
+
+1. 先调用一次生成第一层本地包；
+2. 第一层通过 Package Gate 并合入 Workspace 后，再调用下一层；
+3. 所有楼层本地包完成后，再调用跨楼层包；
+4. 每次调用只允许生成清单分配给当前包的实体与关系。
+
+因此，多层建筑不是一次 LLM 请求。它是一组有顺序、有范围、有独立 Gate 的 LLM 请求。
 
 ### 3.3 Audit Agent
 
@@ -158,6 +177,104 @@ Ready Design Brief 被确定性投影为 Expected Facts，例如楼层数量、�
 **执行者：** `[CODE]`
 
 代码建立项目、场地、建筑、楼层等稳定骨架，为实体分配可追踪 ID，并根据楼层或跨楼层关系建立生成包。LLM 只能在指定包和指定 ID 边界内补充语义构件。
+
+#### 4.4.1 为什么先建立 Skeleton
+
+Skeleton 由代码创建，至少包含：
+
+- `IfcProject`；
+- `IfcSite`；
+- `IfcBuilding`；
+- 输入中明确存在的全部 `IfcBuildingStorey`；
+- Project -> Site -> Building -> Storeys 的聚合关系。
+
+这些实体的稳定 ID、楼层顺序和楼层标高在分包生成前确定。后续任意楼层包都只能引用这些骨架实体，不能重新命名楼层、创建额外楼层或改写已经确认的标高。
+
+#### 4.4.2 Package Manifest 如何划分工作
+
+Expected Facts 被代码转换为 `generation-package-manifest.json`。Manifest 明确每个包：
+
+- 拥有哪些实体 ID；
+- 拥有哪些关系 ID；
+- 可以引用哪些已经存在的 ID；
+- 属于哪个楼层；
+- 是 `storey_local` 还是 `cross_storey`。
+
+典型的两层建筑会得到：
+
+```text
+package-skeleton
+package-storey-1
+package-storey-2
+package-cross-storey
+```
+
+包的数量来自输入中实际存在的楼层和构件，不固定为两层，也不依赖某一个测试模板。不存在跨楼层构件时，可以省略 `package-cross-storey`。
+
+#### 4.4.3 每个楼层包生成什么
+
+**LLM 负责生成：**
+
+- 本层 `IfcSpace`；
+- 本层 `IfcWall` 或 `IfcWallStandardCase`；
+- 本层门、窗及对应洞口；
+- 本层构件的局部位置与受支持几何；
+- 构件属于本楼层、门窗填充洞口、洞口宿主墙等关系。
+
+**代码负责约束：**
+
+- 当前包只能创建 Manifest 授权的实体和关系；
+- 本层构件必须归属当前 `storey_id`；
+- 门窗不能引用另一层的墙；
+- 引用必须指向 Skeleton、当前包或 Manifest 允许的已存在实体；
+- 当前包不能生成楼梯、屋面等跨楼层专属构件；
+- 已经由前序楼层生成的构件不得被修改。
+
+每个楼层包通过后，代码将其 ChangeSet 应用到内部 Workspace，创建新的 revision，并冻结此前所有构件。下一层看到的是已经通过验证的 Workspace，而不是一份可以任意重写的完整 JSON。
+
+#### 4.4.4 跨楼层包生成什么
+
+所有楼层本地包完成后，系统处理 `package-cross-storey`。该包主要负责：
+
+- `IfcSlab` 和层间楼板；
+- `IfcStair`、`IfcStairFlight` 及其聚合关系；
+- 楼板上的楼梯洞口和其他竖向洞口；
+- `IfcRoof`；
+- 连接多个楼层的引用和关系。
+
+楼板虽然通常归属于某一楼层，但它会影响上下楼层边界、楼梯和竖向洞口，因此当前实现将楼板放入跨楼层包统一协调，而不是让两个楼层包分别生成可能冲突的楼板。
+
+#### 4.4.5 一个包失败时会发生什么
+
+每个包最多尝试三次。失败反馈只回到当前包：
+
+```text
+LLM 生成当前包
+  -> Package Gate
+  -> 失败：把结构化 Issue 返回当前包，有限重试
+  -> 通过：合入 Workspace，继续下一包
+```
+
+如果当前包返回 Draft、三次仍未通过或试图修改冻结构件，分阶段生成立即阻断。系统不会删除已经生成的楼层，也不会为了修一个楼层让模型整份重写其他楼层。
+
+#### 4.4.6 什么时候才成为 Formal BIM JSON
+
+Skeleton 和任意中间 Workspace 都只是内部组合状态，标记为 `partial_not_formal`。只有满足以下条件时，系统才产生一个 Formal Candidate：
+
+1. 所有楼层本地包通过；
+2. 必要的跨楼层包通过；
+3. 所有包已经按顺序合并；
+4. 完整文档再次通过 BIM JSON 2.0 Schema 和全局语义验证。
+
+因此，每一层不会单独生成一个 IFC。系统最终只将组合完成并通过全局验证的整栋 BIM JSON 编译成 IFC。
+
+#### 4.4.7 分楼层生成解决什么问题
+
+- 限制每次 LLM 调用的上下文和输出规模；
+- 防止模型在生成第二层时覆盖第一层；
+- 让错误可以定位到具体楼层或跨楼层包；
+- 让每个包都有独立 Prompt、response ID、ChangeSet、Gate 和重试记录；
+- 最终仍通过整栋建筑的全局 Gate，避免“每层单独正确，但组合后关系错误”。
 
 ### 4.5 BIM JSON Schema 与语义验证
 
