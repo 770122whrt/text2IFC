@@ -58,6 +58,10 @@ class IfcKnowledgeRegistry:
     def declarations(self):
         return self._declarations
 
+    @property
+    def property_sets(self):
+        return self._property_sets
+
     def declaration(self, name: str):
         return self._declarations.get(name)
 
