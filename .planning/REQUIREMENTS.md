@@ -60,9 +60,9 @@ semantic ChangeSet and an L1/L2-validated IFC result.
 - [ ] **PROP-02**: Exact standard properties are validated offline against the
   checked-in IFC2X3 registry, while every unknown/custom property requires
   confirmation of its exact name, value, IFC value type, unit and scope.
-- [ ] **PROP-03**: Property scope defaults to the target occurrence; a shared
-  Type can be changed only after the user explicitly requests Type scope and
-  confirms an impact preview of all affected occurrences.
+- [ ] **PROP-03**: Property mutation is limited to the target occurrence.
+  Existing authorized Type facts remain inherited without Type mutation, while
+  an explicit request to modify a shared Type is deferred and writes nothing.
 - [ ] **PROP-04**: The unified ChangeSet atomically creates or updates the
   authorized direct Pset/property without duplicate direct sets/relationships,
   and any authoring/reopen failure publishes no successful IFC.

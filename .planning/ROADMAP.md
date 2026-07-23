@@ -183,8 +183,9 @@ Plans:
 
 **Goal:** When a user explicitly supplies an exact Pset name, property name and
 value, deterministically create or update that typed property on the intended
-Window occurrence or explicitly confirmed shared Type, and publish only after
-the requested property passes independent reopened-IFC L2 validation.
+Window occurrence without modifying shared Type state, preserve already
+authorized Type inheritance, and publish only after the requested property
+passes independent reopened-IFC L2 validation.
 
 **Requirements:** PROP-01, PROP-02, PROP-03, PROP-04, PROP-05
 
@@ -201,8 +202,9 @@ the requested property passes independent reopened-IFC L2 validation.
 
 - Phase 10.1 performs exact lookup only; it does not search aliases, embeddings
   or semantically similar properties.
-- Occurrence is the default scope. Shared Type mutation requires an explicit
-  Type-scoped request, an impact preview and affirmative confirmation.
+- Property mutation is occurrence-only. Binding an already authorized existing
+  Type and reading its inherited facts remain allowed; modifying a shared Type
+  is explicitly deferred and fails closed in this phase.
 - Every custom property requires confirmation of exact Pset/property, value,
   IFC value type, unit and scope before it becomes authorized.
 - Provider output remains a draft. Only deterministic resolution, Binder,
@@ -218,8 +220,8 @@ the requested property passes independent reopened-IFC L2 validation.
    IFC value type and unit requirements.
 2. Unknown/custom properties never crash or silently pass: they require a
    durable confirmation and then enter the same typed manifest and L2 path.
-3. Occurrence edits cannot mutate other occurrences sharing a Type; confirmed
-   Type edits disclose and verify their full affected occurrence set.
+3. Occurrence edits cannot mutate other occurrences sharing a Type; an explicit
+   shared-Type mutation request is reported as deferred and writes nothing.
 4. The applicator creates or updates one direct Pset/property without duplicate
    relationships, rolls back atomically on failure, and independently reopens
    the IFC before requested-property L2.

@@ -72,9 +72,9 @@ Plan: 0 of 4 executed
   case-sensitive exact lookup only. It does not implement aliases, embeddings,
   vector search or RAG.
 
-- Exact property scope defaults to the target occurrence. Shared Type mutation
-  requires an explicit Type request, an affected-occurrence preview and an
-  affirmative hash-bound confirmation.
+- Exact property mutation is limited to the target occurrence. Existing
+  authorized Type facts may be inherited, but Phase 10.1 does not modify shared
+  Types; an explicit Type-mutation request fails closed and is deferred.
 
 ## Accepted Debt / Deferred
 
