@@ -182,10 +182,10 @@ Plans:
 **Status:** Planned
 
 **Goal:** When a user explicitly supplies an exact Pset name, property name and
-value, deterministically create or update that typed property on the intended
-Window occurrence without modifying shared Type state, preserve already
-authorized Type inheritance, and publish only after the requested property
-passes independent reopened-IFC L2 validation.
+value, deterministically ensure that typed effective property on the intended
+Window occurrence, reuse only an explicitly resolved/confirmed existing Type
+or create a deterministic system-template Type when none was requested, and
+publish only after independent reopened-IFC L2 validation.
 
 **Requirements:** PROP-01, PROP-02, PROP-03, PROP-04, PROP-05
 
@@ -205,6 +205,10 @@ passes independent reopened-IFC L2 validation.
 - Property mutation is occurrence-only. Binding an already authorized existing
   Type and reading its inherited facts remain allowed; modifying a shared Type
   is explicitly deferred and fails closed in this phase.
+- Existing Types are never selected by a hard-coded GUID or silent same-size/
+  similarity fallback. Exact unique references resolve directly, uncertainty
+  asks the user, and absence of Type intent creates a dedicated versioned
+  system-template Type.
 - Every custom property requires confirmation of exact Pset/property, value,
   IFC value type, unit and scope before it becomes authorized.
 - Provider output remains a draft. Only deterministic resolution, Binder,
@@ -220,12 +224,15 @@ passes independent reopened-IFC L2 validation.
    IFC value type and unit requirements.
 2. Unknown/custom properties never crash or silently pass: they require a
    durable confirmation and then enter the same typed manifest and L2 path.
-3. Occurrence edits cannot mutate other occurrences sharing a Type; an explicit
+3. Existing Type reuse is explicit or user-confirmed; a request with no Type
+   creates and binds a deterministic dedicated Window Type, while an ambiguous
+   Type pauses instead of silently selecting a neighbor Type.
+4. Occurrence edits cannot mutate other occurrences sharing a Type; an explicit
    shared-Type mutation request is reported as deferred and writes nothing.
-4. The applicator creates or updates one direct Pset/property without duplicate
+5. The applicator creates or updates one direct Pset/property without duplicate
    relationships, rolls back atomically on failure, and independently reopens
    the IFC before requested-property L2.
-5. LargeBuilding passes deterministic acceptance and an opt-in real DeepSeek
+6. LargeBuilding passes deterministic acceptance and an opt-in real DeepSeek
    exact-property UAT without RAG, Gold leakage or synthetic fallback.
 
 ### Phase 10.2: IFC2X3 Property Knowledge Retrieval and Resolution (INSERTED)

@@ -61,11 +61,14 @@ semantic ChangeSet and an L1/L2-validated IFC result.
   checked-in IFC2X3 registry, while every unknown/custom property requires
   confirmation of its exact name, value, IFC value type, unit and scope.
 - [ ] **PROP-03**: Property mutation is limited to the target occurrence.
-  Existing authorized Type facts remain inherited without Type mutation, while
-  an explicit request to modify a shared Type is deferred and writes nothing.
+  Existing Type reuse requires an exact unique user reference or affirmative
+  candidate confirmation; uncertainty asks the user, no Type intent creates a
+  deterministic dedicated system-template Type, and direct shared-Type
+  mutation is deferred.
 - [ ] **PROP-04**: The unified ChangeSet atomically creates or updates the
-  authorized direct Pset/property without duplicate direct sets/relationships,
-  and any authoring/reopen failure publishes no successful IFC.
+  authorized direct Pset/property and any required dedicated template Type
+  without duplicate relationships; any authoring/reopen failure publishes no
+  successful IFC.
 - [ ] **PROP-05**: Every explicitly requested property becomes a mandatory
   dynamic L2 fact and the Window LargeBuilding path passes offline and real-
   Provider exact-property acceptance without RAG or private Ground Truth.

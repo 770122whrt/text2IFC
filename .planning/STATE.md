@@ -73,8 +73,10 @@ Plan: 0 of 4 executed
   vector search or RAG.
 
 - Exact property mutation is limited to the target occurrence. Existing
-  authorized Type facts may be inherited, but Phase 10.1 does not modify shared
-  Types; an explicit Type-mutation request fails closed and is deferred.
+  authorized Type facts may be inherited, but existing Types are reused only
+  after exact unique resolution or affirmative candidate confirmation. Missing
+  Type intent creates a deterministic dedicated system-template Type; ambiguous
+  Type intent asks the user; shared-Type mutation is deferred.
 
 ## Accepted Debt / Deferred
 
