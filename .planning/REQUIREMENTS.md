@@ -90,6 +90,29 @@ semantic ChangeSet and an L1/L2-validated IFC result.
   property contract, Binder, atomic authoring and reopened L2 remain the sole
   authorization and publication path.
 
+### Batch Repair and Dataset Hygiene
+
+- [ ] **DATA-01**: User can run a read-only deterministic audit that validates
+  dataset manifest paths, hashes, IFC schemas and duplicate identities and
+  classifies processed artifacts without deleting or moving files.
+- [ ] **DATA-02**: A versioned benchmark manifest binds selected larger IFC2X3
+  files to source hashes, reproducible model/chain metrics, project splits,
+  roles and suitability evidence.
+- [ ] **BATCH-01**: One source IFC can be damaged in a single deterministic
+  mutation by removing exactly five valid Window/Opening chains while
+  preserving source bytes, host walls and closed target regions.
+- [ ] **BATCH-02**: One bounded natural-language request produces one ordered
+  RepairIntent and one unified ChangeSet containing exactly five Window repair
+  operations without private Ground Truth in Provider input.
+- [ ] **BATCH-03**: Five operations apply as one all-or-nothing IFC
+  transaction; one invalid operation or failed mandatory evaluation suppresses
+  the successful IFC artifact.
+- [ ] **BATCH-04**: Every operation has independent L1/L2 evidence and the
+  aggregate publication decision passes only when all five operations pass.
+- [ ] **BATCH-05**: The `vvo.ifc` five-Window chain passes deterministic
+  end-to-end acceptance, larger IFC compatibility is measured, and a real
+  DeepSeek batch UAT records success or honest failure without fallback.
+
 ### IFC Type Authority
 
 - [x] **TYPE-01**: The retrieval index distinguishes occurrence-direct facts
@@ -169,6 +192,13 @@ semantic ChangeSet and an L1/L2-validated IFC result.
 | RAG-02 | 10.2 | Complete |
 | RAG-03 | 10.2 | Complete |
 | RAG-04 | 10.2 | Complete |
+| DATA-01 | 10.3 | Pending |
+| DATA-02 | 10.3 | Pending |
+| BATCH-01 | 10.3 | Pending |
+| BATCH-02 | 10.3 | Pending |
+| BATCH-03 | 10.3 | Pending |
+| BATCH-04 | 10.3 | Pending |
+| BATCH-05 | 10.3 | Pending |
 | OPS-01 | 11 | Pending |
 | OPS-02 | 11 | Pending |
 | OPS-03 | 12 | Pending |
@@ -176,7 +206,7 @@ semantic ChangeSet and an L1/L2-validated IFC result.
 | SCALE-01 | 13 | Pending |
 | SCALE-02 | 13 | Pending |
 
-**Coverage:** 34 requirements, 34 mapped, 0 unmapped.
+**Coverage:** 41 requirements, 41 mapped, 0 unmapped.
 
 ---
-*Last updated: 2026-07-24 after Phase 10.2 validation*
+*Last updated: 2026-07-24 after Phase 10.3 planning*

@@ -7,7 +7,8 @@
   [requirements](milestones/v1.0-REQUIREMENTS.md), and
   [audit](milestones/v1.0-MILESTONE-AUDIT.md).
 - [ ] **v1.1 IFC ChangeSet Repair Pipeline** - Phases 7 through 13, including
-  inserted Phases 09.1, 10.1 and 10.2, in progress (6 / 10 phases complete).
+  inserted Phases 09.1, 10.1, 10.2 and 10.3, in progress
+  (7 / 11 phases complete).
 
 ## Current Cycle: v1.1 IFC ChangeSet Repair Pipeline
 
@@ -263,6 +264,40 @@ typed property contract already proven by Phase 10.1.
    Door and Window scalar properties with target-local copy-on-write, while one
    real LargeBuilding Window DeepSeek UAT passes with knowledge health ready.
 
+**Evidence:** [Phase 10.2 validation](phases/10.2-ifc2x3-property-knowledge-retrieval-and-resolution/10.2-VALIDATION.md)
+
+### Phase 10.3: Batch Window Repair and Dataset Benchmark Hygiene (INSERTED)
+
+**Status:** In progress — 2026-07-24
+
+**Goal:** Prove a genuine five-Window transaction on a larger IFC while making
+dataset and benchmark identities reproducible and non-destructive.
+
+**Requirements:** DATA-01, DATA-02, BATCH-01, BATCH-02, BATCH-03, BATCH-04,
+BATCH-05
+
+**Depends on:** Phases 10, 10.1 and 10.2
+
+**Plans:** 1 plan in 4 waves
+
+- [ ] **Wave 1:** Dataset audit, inventory classification and benchmark manifest.
+- [ ] **Wave 2:** Five-chain mutation and Gold-free batch public projection.
+- [ ] **Wave 3:** Unified atomic ChangeSet, per-operation L1/L2 and rollback.
+- [ ] **Wave 4:** Larger IFC compatibility matrix, real DeepSeek UAT and closure.
+
+**Success criteria:**
+
+1. Dataset manifests are hash/schema/path validated without moving or deleting
+   existing files, and processed outputs receive an explicit review class.
+2. One mutation of `vvo.ifc` removes five valid Window/Opening chains and
+   produces one source-bound damaged IFC while preserving all host walls.
+3. One bounded user request produces one RepairIntent and one unified,
+   five-operation ChangeSet with no private Ground Truth in Provider input.
+4. One atomic apply publishes a reopened IFC only when all five operations pass
+   independent L1 and L2; any failure suppresses partial success.
+5. Larger BIMNet IFC compatibility and a real DeepSeek five-Window UAT are
+   recorded with prompt size, timing and honest success/failure evidence.
+
 ### Phase 11: Wall Opening and Door Operations
 
 **Goal:** Extend the Registry with opening-only and Door+Opening operations
@@ -328,11 +363,12 @@ changing the default input budget.
 | 10 | WIN-01..02 |
 | 10.1 | PROP-01..05 |
 | 10.2 | RAG-01..04 |
+| 10.3 | DATA-01..02, BATCH-01..05 |
 | 11 | OPS-01..02 |
 | 12 | OPS-03..04 |
 | 13 | SCALE-01..02 |
 
-**Coverage:** 34 committed requirements, 34 mapped, 0 unmapped.
+**Coverage:** 41 committed requirements, 41 mapped, 0 unmapped.
 
 ## Delivery Sequence and Deferred Horizon
 
@@ -343,9 +379,11 @@ The v1.1 sequence is intentionally layered:
 3. Phase 10.1 adds exact user-requested scalar Psets without retrieval.
 4. Phase 10.2 evaluates property knowledge retrieval/RAG against the exact
    Phase 10.1 output contract.
-5. Phases 11-12 expand the same Registry/ChangeSet/evaluation architecture to
+5. Phase 10.3 proves that the same bounded contract remains atomic and
+   verifiable for five Window operations on larger IFC2X3 files.
+6. Phases 11-12 expand the same Registry/ChangeSet/evaluation architecture to
    Opening, Door, Beam and Column operations.
-6. Phase 13 measures large-IFC context and 128k behavior before changing the
+7. Phase 13 measures near-limit context and 128k behavior before changing the
    bounded 64k default.
 
 Post-v1.1 work remains explicitly uncommitted: existing Wall mutation beyond

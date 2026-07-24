@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: IFC ChangeSet Repair Pipeline
-status: Phase complete — ready for verification
-last_updated: "2026-07-23T06:02:10.897Z"
+status: Phase 10.3 execution in progress
+last_updated: "2026-07-24T06:00:38.696Z"
 progress:
-  total_phases: 10
-  completed_phases: 6
-  total_plans: 26
+  total_phases: 11
+  completed_phases: 7
+  total_plans: 28
   completed_plans: 26
-  percent: 100
+  percent: 93
 ---
 
 # Project State
@@ -21,22 +21,22 @@ See `.planning/PROJECT.md`.
 **Core value:** Given an IFC file and an explicit user request, produce a
 traceable semantic ChangeSet and an L1/L2-validated IFC result.
 
-**Current focus:** Phase 10.1 complete; Phase 10.2 property retrieval/RAG is
-the next separately scoped discussion and planning target.
+**Current focus:** Phase 10.3 dataset benchmark hygiene and five-Window batch
+repair.
 
 ## Current Position
 
-Phase: 10.1 (explicit-ifc-property-authoring-and-validation) — COMPLETE
-Plan: 4 of 4
+Phase: 10.3 (batch-window-repair-and-dataset-benchmark-hygiene) - EXECUTING
+Plan: 0 of 1
 
 - Milestone: v1.1 IFC ChangeSet Repair Pipeline
-- Phase: 10.1
-- Plan: 4 / 4 plans complete
-- Status: Phase complete; offline and real-Provider evidence passed
-- Progress: 6 / 10 phases complete
-- Requirements: PROP-01 through PROP-05 complete
-- Last activity: 2026-07-23 — completed exact property authoring, LargeBuilding
-  offline acceptance and two-case real DeepSeek UAT
+- Phase: 10.3
+- Plan: implementation plan approved; execution in progress
+- Status: dataset audit and five-Window batch repair
+- Progress: 7 / 11 phases complete
+- Requirements: DATA-01..02 and BATCH-01..05 pending
+- Last activity: 2026-07-24 — completed Phase 10.2 property knowledge
+  retrieval, occurrence authoring and real DeepSeek validation
 
 ## Carried Context
 
@@ -81,6 +81,11 @@ Plan: 4 of 4
   confirmed custom property paths with no synthetic fallback. Production L1/L2
   passed for both.
 
+- Phase 10.2 adds bounded IFC2X3 property knowledge retrieval. Qdrant/BGE-M3
+  improve recall but do not authorize writes; Stage 2 receives only exact typed
+  facts. The LargeBuilding natural-language `IsExternal` UAT passed real
+  Stage 1/2, reopen, L1 and L2.
+
 - Private Gold remains evaluator-only. It passes L2 for exact original Type
   reuse and intentionally reports an authoring difference for a no-Type
   system-template fallback; this does not override the Production publication
@@ -101,9 +106,15 @@ Plan: 4 of 4
 
 ## Next Action
 
-Discuss and plan Phase 10.2 property knowledge retrieval. Its output must be a
-ranked exact property tuple consumed by the completed Phase 10.1 contract; it
-cannot bypass confirmation, Binder, atomic authoring, reopened L2 or publication.
+Execute Phase 10.3: audit dataset/manifests without deletion, build one
+five-Window `vvo.ifc` damaged fixture, generate one unified five-operation
+ChangeSet, enforce atomic per-operation L1/L2, and record larger IFC evidence.
 
 ---
-*Last updated: 2026-07-23 after Phase 10.1 planning*
+*Last updated: 2026-07-24 during Phase 10.3 execution*
+
+## Accumulated Context
+
+### Roadmap Evolution
+
+- Phase 10.3 inserted after Phase 10: Batch Window Repair and Dataset Benchmark Hygiene (URGENT)
