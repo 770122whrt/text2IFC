@@ -44,3 +44,37 @@ source paths, not text2IFC model split assignments. Phase 3 must split by
 `scene_family` before generating text or augmented variants. The canonical
 family map is `dataset/processed/bim-json-2.0/scene-families.json`, whose
 `split_assignment` remains `null` until that work begins.
+
+## `ifc-repair-benchmarks.jsonl`
+
+Phase 10.3 repair benchmarks. Each record binds one admitted IFC to its current
+SHA-256, IFC schema, byte/entity/Window/valid-chain/wall capability metrics,
+project split when applicable, execution role and a human-readable suitability
+reason.
+
+The manifest does not redefine the historical `dataset/ifc/train` and
+`dataset/ifc/test` folders. For example, `vvo.ifc` remains physically under the
+historical `train` source path while its project split is `test`, as determined
+by `dataset/splits/bimnet-scene-splits.json`.
+
+Regenerate candidate records with:
+
+```powershell
+.venv\Scripts\python scripts\dataset\build_ifc_repair_benchmarks.py
+```
+
+The command prints canonical JSONL for review; it does not overwrite the
+checked-in manifest.
+
+## Read-only dataset audit
+
+Run:
+
+```powershell
+.venv\Scripts\python scripts\dataset\audit_dataset.py
+```
+
+The audit validates file paths, hashes, IFC schema declarations, duplicate
+identities and linked-corpus counts, then inventories `dataset/processed`
+roots as `retain`, `regenerable` or `review_before_delete`. It never moves,
+deletes or rewrites dataset content. Classification is review evidence only.
