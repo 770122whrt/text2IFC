@@ -552,6 +552,16 @@ def _create_door(
         "created": created,
         "modified": [
             {"role": "host_wall", "global_id": str(wall.GlobalId)},
+            *(
+                [
+                    {
+                        "role": "opening",
+                        "global_id": str(opening.GlobalId),
+                    }
+                ]
+                if created_opening is None
+                else []
+            ),
             *modified,
         ],
         "removed": [],
@@ -827,6 +837,7 @@ def _l1_authorization(*, creates_opening: bool) -> dict[str, Any]:
         "policy_version": "0.1",
         "created": created,
         "modified": {
+            "opening": "IfcOpeningElement",
             "door_type_relationship": "IfcRelDefinesByType",
             "spatial_containment": "IfcRelContainedInSpatialStructure",
         },

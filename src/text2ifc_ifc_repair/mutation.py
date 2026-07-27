@@ -26,6 +26,7 @@ MUTATION_SCHEMA_VERSION = "text2ifc/ifc-repair-mutation-private/0.1"
 MUTATION_TYPE = "remove_window_and_opening"
 BATCH_MUTATION_SCHEMA_VERSION = "text2ifc/ifc-repair-mutation-private/0.2"
 BATCH_MUTATION_TYPE = "remove_windows_and_openings_batch"
+DOOR_MUTATION_SCHEMA_VERSION = "text2ifc/ifc-repair-door-mutation-private/0.1"
 
 
 def remove_window_and_opening(
@@ -394,6 +395,210 @@ def remove_windows_and_openings_batch(
             "report": "mutation_report.json",
         },
     }
+
+
+def remove_door(
+    *,
+    source_path: Path | str,
+    output_dir: Path | str,
+    door_global_id: str,
+    preserve_opening: bool,
+    expected_source_sha256: str | None = None,
+) -> dict[str, Any]:
+    """Remove one valid Door fill chain, optionally retaining its Opening/void."""
+
+    source = Path(source_path).resolve()
+    output = Path(output_dir).resolve()
+    source_sha256 = _sha256(source)
+    if expected_source_sha256 is not None and source_sha256 != expected_source_sha256:
+        raise ValueError("SOURCE_IFC_FINGERPRINT_MISMATCH")
+    if output.exists():
+        raise FileExistsError(f"mutation output already exists: {output}")
+    model = ifcopenshell.open(str(source))
+    if model.schema != "IFC2X3":
+        raise ValueError("UNSUPPORTED_IFC_SCHEMA")
+    try:
+        door = model.by_guid(door_global_id)
+    except RuntimeError as error:
+        raise ValueError("DOOR_NOT_FOUND") from error
+    if door is None or not door.is_a("IfcDoor"):
+        raise ValueError("DOOR_NOT_FOUND")
+    if len(door.FillsVoids) != 1:
+        raise ValueError("DOOR_FILL_CHAIN_INVALID")
+    opening = door.FillsVoids[0].RelatingOpeningElement
+    if len(opening.VoidsElements) != 1:
+        raise ValueError("DOOR_OPENING_HOST_INVALID")
+    wall = opening.VoidsElements[0].RelatingBuildingElement
+    if not wall.is_a("IfcWall"):
+        raise ValueError("DOOR_HOST_UNSUPPORTED")
+    snapshot = _door_snapshot(door, opening, wall)
+    opening_global_id = str(opening.GlobalId)
+    before_counts = _counts(model)
+    owner_history_snapshot = _snapshot_owner_history(model)
+    remove_product(model, product=door)
+    if not preserve_opening:
+        remove_product(model, product=opening)
+    _restore_owner_history(model, owner_history_snapshot)
+    _canonicalize_modified_relationship_sets(model)
+
+    output.parent.mkdir(parents=True, exist_ok=True)
+    stage = Path(tempfile.mkdtemp(prefix=f".{output.name}-", dir=output.parent))
+    try:
+        damaged_path = stage / "damaged.ifc"
+        model.write(str(damaged_path))
+        reopened = ifcopenshell.open(str(damaged_path))
+        if _optional_guid(reopened, door_global_id) is not None:
+            raise ValueError("DOOR_MUTATION_REMOVE_FAILED")
+        surviving_opening = _optional_guid(reopened, opening_global_id)
+        if preserve_opening:
+            if surviving_opening is None:
+                raise ValueError("DOOR_MUTATION_OPENING_NOT_PRESERVED")
+            if len(surviving_opening.HasFillings) != 0:
+                raise ValueError("DOOR_MUTATION_OPENING_NOT_EMPTY")
+            if len(surviving_opening.VoidsElements) != 1:
+                raise ValueError("DOOR_MUTATION_VOID_NOT_PRESERVED")
+        elif surviving_opening is not None:
+            raise ValueError("DOOR_MUTATION_OPENING_REMOVE_FAILED")
+        after_counts = _counts(reopened)
+        damaged_sha256 = _sha256(damaged_path)
+        mode = (
+            "remove_door_preserve_opening"
+            if preserve_opening
+            else "remove_door_and_opening"
+        )
+        manifest = {
+            "schema_version": DOOR_MUTATION_SCHEMA_VERSION,
+            "mutation_type": mode,
+            "source": {
+                "path": source.as_posix(),
+                "schema": "IFC2X3",
+                "size_bytes": source.stat().st_size,
+                "sha256": source_sha256,
+            },
+            "target": snapshot,
+            "counts": {"before": before_counts, "after": after_counts},
+            "damaged_ifc": {"path": "damaged.ifc", "sha256": damaged_sha256},
+        }
+        report = {
+            "schema_version": "text2ifc/ifc-repair-door-mutation-report/0.1",
+            "valid": True,
+            "mutation_type": mode,
+            "source_sha256": source_sha256,
+            "damaged_sha256": damaged_sha256,
+            "removed_doors": [
+                {
+                    "global_id": snapshot["door"]["global_id"],
+                    "name": snapshot["door"]["name"],
+                    "type_global_id": snapshot["door"]["type_global_id"],
+                    "type_name": snapshot["door"]["type_name"],
+                    "operation_type": snapshot["door"]["operation_type"],
+                }
+            ],
+            "damage_scope": {
+                "door_removed": True,
+                "fill_removed": True,
+                "opening_removed": not preserve_opening,
+                "void_removed": not preserve_opening,
+            },
+            "counts": {"before": before_counts, "after": after_counts},
+            "checks": {
+                "schema_preserved": reopened.schema == "IFC2X3",
+                "source_unchanged": _sha256(source) == source_sha256,
+                "door_removed": _optional_guid(reopened, door_global_id) is None,
+                "opening_preservation_matches_mode": (
+                    (surviving_opening is not None) == preserve_opening
+                ),
+            },
+        }
+        atomic_write_text(
+            stage / "mutation_manifest.private.json", _render_json(manifest)
+        )
+        atomic_write_text(stage / "mutation_report.json", _render_json(report))
+        os.replace(stage, output)
+    except BaseException:
+        if stage.exists():
+            shutil.rmtree(stage)
+        raise
+    return {
+        "valid": True,
+        "mutation_type": mode,
+        "source_sha256": source_sha256,
+        "damaged_sha256": damaged_sha256,
+        "door": snapshot["door"],
+        "opening": snapshot["opening"],
+        "wall": snapshot["wall"],
+        "artifacts": {
+            "damaged_ifc": "damaged.ifc",
+            "private_manifest": "mutation_manifest.private.json",
+            "report": "mutation_report.json",
+        },
+    }
+
+
+def _door_snapshot(door: Any, opening: Any, wall: Any) -> dict[str, Any]:
+    types = [
+        relation.RelatingType
+        for relation in door.IsDefinedBy
+        if relation.is_a("IfcRelDefinesByType")
+    ]
+    if len(types) > 1:
+        raise ValueError("DOOR_TYPE_MAPPING_AMBIGUOUS")
+    door_type = types[0] if types else None
+    storeys = [
+        relation.RelatingStructure
+        for relation in door.ContainedInStructure
+        if relation.RelatingStructure.is_a("IfcBuildingStorey")
+    ]
+    return {
+        "door": {
+            "global_id": str(door.GlobalId),
+            "name": None if door.Name is None else str(door.Name),
+            "overall_width_mm": (
+                None if door.OverallWidth is None else float(door.OverallWidth)
+            ),
+            "overall_height_mm": (
+                None if door.OverallHeight is None else float(door.OverallHeight)
+            ),
+            "type_global_id": (
+                None if door_type is None else str(door_type.GlobalId)
+            ),
+            "type_name": (
+                None
+                if door_type is None or door_type.Name is None
+                else str(door_type.Name)
+            ),
+            "operation_type": (
+                None
+                if door_type is None
+                else str(getattr(door_type, "OperationType", None))
+            ),
+        },
+        "opening": {
+            "global_id": str(opening.GlobalId),
+            "name": None if opening.Name is None else str(opening.Name),
+            "dimensions_mm": _opening_representation_summary(opening),
+        },
+        "wall": {
+            "global_id": str(wall.GlobalId),
+            "name": None if wall.Name is None else str(wall.Name),
+            "ifc_class": wall.is_a(),
+        },
+        "storey": {
+            "global_id": str(storeys[0].GlobalId) if len(storeys) == 1 else None,
+            "name": (
+                None
+                if len(storeys) != 1 or storeys[0].Name is None
+                else str(storeys[0].Name)
+            ),
+        },
+    }
+
+
+def _optional_guid(model: Any, global_id: str) -> Any | None:
+    try:
+        return model.by_guid(global_id)
+    except RuntimeError:
+        return None
 
 
 def _counts(model: Any) -> dict[str, int]:
