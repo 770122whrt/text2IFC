@@ -55,8 +55,8 @@ def test_large_building_indexes_initial_scope_and_source_identity(tmp_path: Path
         assert repository.metadata.ifc_schema == "IFC2X3"
         assert repository.metadata.source_ifc_sha256.startswith("sha256:")
         assert len(repository.metadata.source_ifc_sha256) == 71
-        assert repository.metadata.extractor_version == "text2ifc/ifc-indexer/0.3"
-    assert _api()["EXTRACTOR_VERSION"] == "text2ifc/ifc-indexer/0.3"
+        assert repository.metadata.extractor_version == "text2ifc/ifc-indexer/0.4"
+    assert _api()["EXTRACTOR_VERSION"] == "text2ifc/ifc-indexer/0.4"
 
 
 def test_indexer_retains_direct_and_type_owned_association_provenance(

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import hashlib
+import json
 import math
 import re
 import unicodedata
@@ -28,7 +29,7 @@ from .index_store import SQLiteIndexRepository
 from .semantic_facts import extract_property_facts
 
 
-EXTRACTOR_VERSION = "text2ifc/ifc-indexer/0.3"
+EXTRACTOR_VERSION = "text2ifc/ifc-indexer/0.4"
 _IFC_GUID = re.compile(r"^[0-9A-Za-z_$]{22}$")
 
 
@@ -99,6 +100,8 @@ def build_ifc_index(
                     ),
                     predefined_type=_text(getattr(type_entity, "PredefinedType", None)),
                     element_type=_text(getattr(type_entity, "ElementType", None)),
+                    formal_attributes=_type_formal_attributes(type_entity),
+                    representation_summary=_type_representation_summary(type_entity),
                     provenance={"source": "current_ifc", "step_id": type_entity.id()},
                     aliases=_type_aliases(type_entity),
                     properties=_properties(type_entity, should_inherit=False),
@@ -242,6 +245,10 @@ def _element_storey(entity: Any) -> Any | None:
             host_storey = _element_storey(void.RelatingBuildingElement)
             if host_storey is not None:
                 return host_storey
+    for void in getattr(entity, "VoidsElements", ()):
+        host_storey = _element_storey(void.RelatingBuildingElement)
+        if host_storey is not None:
+            return host_storey
     return None
 
 
@@ -291,6 +298,48 @@ def _type_aliases(entity: Any) -> tuple[AliasFact, ...]:
                 normalized, original, field, provenance
             )
     return tuple(facts[key] for key in sorted(facts))
+
+
+def _type_formal_attributes(entity: Any) -> dict[str, Any]:
+    if not entity.is_a("IfcDoorStyle"):
+        return {}
+    return {
+        "OperationType": _text(getattr(entity, "OperationType", None)),
+        "ConstructionType": _text(getattr(entity, "ConstructionType", None)),
+        "ParameterTakesPrecedence": bool(
+            getattr(entity, "ParameterTakesPrecedence", False)
+        ),
+        "Sizeable": bool(getattr(entity, "Sizeable", False)),
+    }
+
+
+def _type_representation_summary(entity: Any) -> dict[str, Any]:
+    maps = tuple(getattr(entity, "RepresentationMaps", ()) or ())
+    signatures = [
+        {
+            "mapping_origin_class": item.MappingOrigin.is_a(),
+            "mapped_representation_identifier": _text(
+                item.MappedRepresentation.RepresentationIdentifier
+            ),
+            "mapped_representation_type": _text(
+                item.MappedRepresentation.RepresentationType
+            ),
+            "item_classes": sorted(
+                child.is_a() for child in item.MappedRepresentation.Items
+            )[:64],
+        }
+        for item in maps[:16]
+    ]
+    canonical = json.dumps(
+        signatures, sort_keys=True, separators=(",", ":"), ensure_ascii=False
+    )
+    return {
+        "representation_map_count": len(maps),
+        "fingerprint": "sha256:"
+        + hashlib.sha256(canonical.encode("utf-8")).hexdigest(),
+        "maps": signatures,
+        "measurement_status": "not_measured" if maps else "not_applicable",
+    }
 
 
 def normalize_alias(value: str) -> str:

@@ -4,7 +4,7 @@ from dataclasses import dataclass, field
 from typing import Any
 
 
-INDEX_SCHEMA_VERSION = "text2ifc/ifc-index/0.3"
+INDEX_SCHEMA_VERSION = "text2ifc/ifc-index/0.4"
 
 
 @dataclass(frozen=True)
@@ -106,6 +106,8 @@ class TypeRecord:
     applicable_occurrence: str | None
     predefined_type: str | None
     element_type: str | None
+    formal_attributes: dict[str, Any] = field(default_factory=dict)
+    representation_summary: dict[str, Any] = field(default_factory=dict)
     provenance: dict[str, Any] = field(default_factory=dict)
     aliases: tuple[AliasFact, ...] = ()
     properties: tuple[PropertyFact, ...] = ()

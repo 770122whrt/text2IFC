@@ -225,6 +225,8 @@ class SQLiteIndexRepository:
                 applicable_occurrence TEXT,
                 predefined_type TEXT,
                 element_type TEXT,
+                formal_attributes_json TEXT NOT NULL,
+                representation_summary_json TEXT NOT NULL,
                 provenance_json TEXT NOT NULL
             );
             CREATE UNIQUE INDEX reliable_type_global_id
@@ -435,7 +437,7 @@ class SQLiteIndexRepository:
         self._require_build()
         try:
             self._connection.execute(
-                "INSERT INTO type_objects VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                "INSERT INTO type_objects VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                 (
                     record.record_id,
                     record.ifc_global_id,
@@ -445,6 +447,8 @@ class SQLiteIndexRepository:
                     record.applicable_occurrence,
                     record.predefined_type,
                     record.element_type,
+                    _json_dump(record.formal_attributes),
+                    _json_dump(record.representation_summary),
                     _json_dump(record.provenance),
                 ),
             )
@@ -659,6 +663,8 @@ class SQLiteIndexRepository:
             applicable_occurrence=row["applicable_occurrence"],
             predefined_type=row["predefined_type"],
             element_type=row["element_type"],
+            formal_attributes=_json_load(row["formal_attributes_json"]),
+            representation_summary=_json_load(row["representation_summary_json"]),
             provenance=_json_load(row["provenance_json"]),
             aliases=tuple(
                 AliasFact(

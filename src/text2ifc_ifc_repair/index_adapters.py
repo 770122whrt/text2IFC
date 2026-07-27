@@ -4,7 +4,13 @@ import math
 from dataclasses import dataclass, field
 from typing import Any, Protocol
 
-from .geometry import UNSUPPORTED_WALL_GEOMETRY, straight_wall_axis, wall_dimensions_mm
+from .geometry import (
+    UNSUPPORTED_WALL_GEOMETRY,
+    opening_dimensions_mm,
+    opening_position_in_wall_mm,
+    straight_wall_axis,
+    wall_dimensions_mm,
+)
 from .index_models import RelationshipFact
 
 
@@ -157,6 +163,94 @@ class WindowIndexAdapter(FillingIndexAdapter):
     ifc_classes = ("IfcWindow",)
 
 
+class OpeningIndexAdapter:
+    ifc_classes = ("IfcOpeningElement",)
+
+    def extract(self, entity: Any) -> AdapterResult:
+        voids = tuple(getattr(entity, "VoidsElements", ()))
+        fills = tuple(getattr(entity, "HasFillings", ()))
+        relationships: list[RelationshipFact] = []
+        host_ids: list[str] = []
+        filling_ids: list[str] = []
+        for relation in voids:
+            host_id = getattr(relation.RelatingBuildingElement, "GlobalId", None)
+            if host_id:
+                host_ids.append(str(host_id))
+                relationships.append(
+                    RelationshipFact(
+                        "hosted_by_wall", str(host_id), "IfcRelVoidsElement"
+                    )
+                )
+        for relation in fills:
+            filling_id = getattr(relation.RelatedBuildingElement, "GlobalId", None)
+            if filling_id:
+                filling_ids.append(str(filling_id))
+                relationships.append(
+                    RelationshipFact(
+                        "filled_by", str(filling_id), "IfcRelFillsElement"
+                    )
+                )
+        facets = {
+            "editable_target": len(host_ids) == 1,
+            "host_wall_global_ids": sorted(set(host_ids)),
+            "filling_global_ids": sorted(set(filling_ids)),
+            "fill_state": "empty" if not filling_ids else "filled",
+        }
+        warnings: list[tuple[str, str, dict[str, Any]]] = []
+        summary: dict[str, Any] = {}
+        if len(host_ids) != 1:
+            warnings.append(
+                (
+                    "INDEX_OPENING_HOST_INVALID",
+                    "Opening must have exactly one reliable host relationship.",
+                    {"host_count": len(host_ids)},
+                )
+            )
+            return AdapterResult(
+                geometry_capability="opening_topology_invalid",
+                geometry_summary=summary,
+                facets={**facets, "editable_target": False},
+                relationships=tuple(relationships),
+                warnings=tuple(warnings),
+            )
+        host = voids[0].RelatingBuildingElement
+        try:
+            summary["dimensions_mm"] = opening_dimensions_mm(entity)
+            position = opening_position_in_wall_mm(entity, host)
+            summary["wall_local_position_mm"] = {
+                "reference": "wall_local_start",
+                "center_offset_mm": position["center_offset"],
+                "sill_height_mm": position["sill_height"],
+                "normal_offset_mm": position["normal_offset"],
+            }
+            summary["geometry_bounds_in_host_mm"] = position[
+                "geometry_bounds_mm"
+            ]
+            capability = "measured_hosted_opening"
+        except Exception as error:
+            capability = "opening_geometry_unmeasurable"
+            facets["editable_target"] = False
+            warnings.append(
+                (
+                    "INDEX_OPENING_GEOMETRY_UNAVAILABLE",
+                    str(error),
+                    {"host_global_id": host_ids[0]},
+                )
+            )
+        return AdapterResult(
+            geometry_capability=capability,
+            geometry_summary=summary,
+            facets=facets,
+            relationships=tuple(
+                sorted(
+                    relationships,
+                    key=lambda fact: (fact.kind, fact.target_global_id),
+                )
+            ),
+            warnings=tuple(warnings),
+        )
+
+
 class SpaceIndexAdapter:
     ifc_classes = ("IfcSpace",)
 
@@ -187,6 +281,7 @@ def default_index_adapter_registry() -> IndexAdapterRegistry:
     registry = IndexAdapterRegistry()
     for adapter in (
         WallIndexAdapter(),
+        OpeningIndexAdapter(),
         DoorIndexAdapter(),
         WindowIndexAdapter(),
         SpaceIndexAdapter(),
@@ -209,5 +304,6 @@ __all__ = [
     "AdapterResult",
     "ElementIndexAdapter",
     "IndexAdapterRegistry",
+    "OpeningIndexAdapter",
     "default_index_adapter_registry",
 ]
