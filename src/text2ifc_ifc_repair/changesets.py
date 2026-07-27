@@ -21,6 +21,7 @@ from text2ifc_contract.validation import ValidationIssue
 CHANGESET_SCHEMA_VERSION = "text2ifc/ifc-repair-changeset/0.1"
 BOUND_CHANGESET_SCHEMA_VERSION = "text2ifc/ifc-repair-changeset/0.2"
 BOUND_CHANGESET_SCHEMA_VERSION_0_3 = "text2ifc/ifc-repair-changeset/0.3"
+BOUND_CHANGESET_SCHEMA_VERSION_0_4 = "text2ifc/ifc-repair-changeset/0.4"
 DRAFT_CHANGESET_SCHEMA_VERSION = "text2ifc/ifc-repair-changeset-draft/0.2"
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 CHANGESET_SCHEMA_PATH = (
@@ -28,6 +29,7 @@ CHANGESET_SCHEMA_PATH = (
 )
 BOUND_CHANGESET_SCHEMA_PATH = PROJECT_ROOT / "schemas" / "agent" / "ifc-repair-changeset-0.2.schema.json"
 BOUND_CHANGESET_SCHEMA_PATH_0_3 = PROJECT_ROOT / "schemas" / "agent" / "ifc-repair-changeset-0.3.schema.json"
+BOUND_CHANGESET_SCHEMA_PATH_0_4 = PROJECT_ROOT / "schemas" / "agent" / "ifc-repair-changeset-0.4.schema.json"
 DRAFT_CHANGESET_SCHEMA_PATH = PROJECT_ROOT / "schemas" / "agent" / "ifc-repair-changeset-draft-0.2.schema.json"
 
 
@@ -45,7 +47,7 @@ def load_changeset_schema() -> dict[str, Any]:
     return copy.deepcopy(_cached_changeset_schema())
 
 
-@lru_cache(maxsize=2)
+@lru_cache(maxsize=4)
 def _cached_schema(path: str) -> dict[str, Any]:
     schema = json.loads(Path(path).read_text(encoding="utf-8"))
     _assert_local_references(schema)
@@ -60,11 +62,13 @@ def load_changeset_draft_schema() -> dict[str, Any]:
 def load_bound_changeset_schema(
     version: str = BOUND_CHANGESET_SCHEMA_VERSION,
 ) -> dict[str, Any]:
-    path = (
-        BOUND_CHANGESET_SCHEMA_PATH_0_3
-        if version == BOUND_CHANGESET_SCHEMA_VERSION_0_3
-        else BOUND_CHANGESET_SCHEMA_PATH
-    )
+    path = {
+        BOUND_CHANGESET_SCHEMA_VERSION: BOUND_CHANGESET_SCHEMA_PATH,
+        BOUND_CHANGESET_SCHEMA_VERSION_0_3: BOUND_CHANGESET_SCHEMA_PATH_0_3,
+        BOUND_CHANGESET_SCHEMA_VERSION_0_4: BOUND_CHANGESET_SCHEMA_PATH_0_4,
+    }.get(version)
+    if path is None:
+        raise ValueError(f"unsupported bound ChangeSet schema: {version}")
     return copy.deepcopy(_cached_schema(str(path)))
 
 
@@ -76,6 +80,8 @@ def validate_changeset(document: Any) -> list[ValidationIssue]:
         schema = _cached_schema(str(BOUND_CHANGESET_SCHEMA_PATH))
     elif version == BOUND_CHANGESET_SCHEMA_VERSION_0_3:
         schema = _cached_schema(str(BOUND_CHANGESET_SCHEMA_PATH_0_3))
+    elif version == BOUND_CHANGESET_SCHEMA_VERSION_0_4:
+        schema = _cached_schema(str(BOUND_CHANGESET_SCHEMA_PATH_0_4))
     else:
         schema = _cached_changeset_schema()
     validator = Draft202012Validator(schema)

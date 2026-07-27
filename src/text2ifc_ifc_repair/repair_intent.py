@@ -54,17 +54,29 @@ REPAIR_INTENT_BODY_SCHEMA_VERSION_0_4 = (
 REPAIR_INTENT_BODY_SCHEMA_PATH_0_4 = Path(
     "schemas/agent/ifc-repair-intent-body-0.4.schema.json"
 )
+REPAIR_INTENT_SCHEMA_VERSION_0_5 = "text2ifc/ifc-repair-intent/0.5"
+REPAIR_INTENT_SCHEMA_PATH_0_5 = Path(
+    "schemas/agent/ifc-repair-intent-0.5.schema.json"
+)
+REPAIR_INTENT_BODY_SCHEMA_VERSION_0_5 = (
+    "text2ifc/ifc-repair-intent-body/0.5"
+)
+REPAIR_INTENT_BODY_SCHEMA_PATH_0_5 = Path(
+    "schemas/agent/ifc-repair-intent-body-0.5.schema.json"
+)
 _SCHEMA_PATHS = {
     REPAIR_INTENT_SCHEMA_VERSION: REPAIR_INTENT_SCHEMA_PATH,
     REPAIR_INTENT_SCHEMA_VERSION_0_2: REPAIR_INTENT_SCHEMA_PATH_0_2,
     REPAIR_INTENT_SCHEMA_VERSION_0_3: REPAIR_INTENT_SCHEMA_PATH_0_3,
     REPAIR_INTENT_SCHEMA_VERSION_0_4: REPAIR_INTENT_SCHEMA_PATH_0_4,
+    REPAIR_INTENT_SCHEMA_VERSION_0_5: REPAIR_INTENT_SCHEMA_PATH_0_5,
 }
 _BODY_SCHEMA_PATHS = {
     REPAIR_INTENT_BODY_SCHEMA_VERSION: REPAIR_INTENT_BODY_SCHEMA_PATH,
     REPAIR_INTENT_BODY_SCHEMA_VERSION_0_2: REPAIR_INTENT_BODY_SCHEMA_PATH_0_2,
     REPAIR_INTENT_BODY_SCHEMA_VERSION_0_3: REPAIR_INTENT_BODY_SCHEMA_PATH_0_3,
     REPAIR_INTENT_BODY_SCHEMA_VERSION_0_4: REPAIR_INTENT_BODY_SCHEMA_PATH_0_4,
+    REPAIR_INTENT_BODY_SCHEMA_VERSION_0_5: REPAIR_INTENT_BODY_SCHEMA_PATH_0_5,
 }
 
 
@@ -116,6 +128,7 @@ class RepairIntentCode(str, Enum):
     PROVIDER_REQUEST_FAILED = "REPAIR_INTENT_PROVIDER_FAILED"
     RETRY_EXHAUSTED = "REPAIR_INTENT_RETRY_EXHAUSTED"
     PROPERTY_INCOMPLETE = "REPAIR_INTENT_PROPERTY_INCOMPLETE"
+    OPERATION_PROFILE_MISMATCH = "OPERATION_PROFILE_MISMATCH"
 
 
 class RepairIntentError(ValueError):
@@ -149,6 +162,33 @@ class PublicProvenance:
             "source_kind": self.source_kind,
             "reference": self.reference,
             "excerpt": self.excerpt,
+        }
+
+
+@dataclass(frozen=True)
+class RoutingIntent:
+    """Provider-extracted classification bound to checked-in operation metadata."""
+
+    component_family: str
+    action: str
+    operation_profile: str
+    source: PublicProvenance
+
+    @classmethod
+    def from_dict(cls, value: Mapping[str, Any]) -> "RoutingIntent":
+        return cls(
+            component_family=str(value["component_family"]),
+            action=str(value["action"]),
+            operation_profile=str(value["operation_profile"]),
+            source=PublicProvenance.from_dict(value["source"]),
+        )
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "component_family": self.component_family,
+            "action": self.action,
+            "operation_profile": self.operation_profile,
+            "source": self.source.to_dict(),
         }
 
 
@@ -313,6 +353,7 @@ class OperationIntent:
     quantity_intents: tuple[QuantityIntent, ...] = ()
     occurrence_reuse_intent: OccurrenceReuseIntent | None = None
     _has_occurrence_semantics_fields: bool = False
+    routing_intent: RoutingIntent | None = None
 
     @classmethod
     def from_dict(cls, value: Mapping[str, Any]) -> "OperationIntent":
@@ -354,6 +395,11 @@ class OperationIntent:
                 or "quantity_intents" in value
                 or "occurrence_reuse_intent" in value
             ),
+            routing_intent=(
+                None
+                if value.get("routing_intent") is None
+                else RoutingIntent.from_dict(value["routing_intent"])
+            ),
         )
 
     def to_dict(self) -> dict[str, Any]:
@@ -382,6 +428,8 @@ class OperationIntent:
                 if self.occurrence_reuse_intent is None
                 else self.occurrence_reuse_intent.to_dict()
             )
+        if self.routing_intent is not None:
+            payload["routing_intent"] = self.routing_intent.to_dict()
         return payload
 
 
@@ -666,6 +714,8 @@ __all__ = [
     "REPAIR_INTENT_BODY_SCHEMA_VERSION_0_3",
     "REPAIR_INTENT_BODY_SCHEMA_PATH_0_4",
     "REPAIR_INTENT_BODY_SCHEMA_VERSION_0_4",
+    "REPAIR_INTENT_BODY_SCHEMA_PATH_0_5",
+    "REPAIR_INTENT_BODY_SCHEMA_VERSION_0_5",
     "REPAIR_INTENT_SCHEMA_PATH",
     "REPAIR_INTENT_SCHEMA_PATH_0_2",
     "REPAIR_INTENT_SCHEMA_VERSION",
@@ -674,10 +724,13 @@ __all__ = [
     "REPAIR_INTENT_SCHEMA_VERSION_0_3",
     "REPAIR_INTENT_SCHEMA_PATH_0_4",
     "REPAIR_INTENT_SCHEMA_VERSION_0_4",
+    "REPAIR_INTENT_SCHEMA_PATH_0_5",
+    "REPAIR_INTENT_SCHEMA_VERSION_0_5",
     "RepairIntent",
     "RepairIntentCode",
     "RepairIntentError",
     "RepairIntentLimits",
+    "RoutingIntent",
     "fingerprint_text",
     "hash_request",
     "load_repair_intent_schema",

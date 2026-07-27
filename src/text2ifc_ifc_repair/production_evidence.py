@@ -355,10 +355,25 @@ def _operation_candidates(
             continue
         global_id = str(authority.get("global_id", ""))
         if kind == "system_generated_type":
+            template = authority.get("template")
+            formal_attributes = authority.get("formal_attributes")
+            expected_digest = hash_json(
+                {
+                    "template_id": authority.get("template_id"),
+                    "template_version": authority.get("template_version"),
+                    "ifc_class": authority.get("ifc_class"),
+                    "formal_attributes": formal_attributes,
+                    "template": template,
+                }
+            )
             if (
                 authority.get("authorization") != "deterministic_policy"
                 or authority.get("operation_id") != operation_id
                 or not global_id
+                or not authority.get("template_id")
+                or authority.get("template_digest") != expected_digest
+                or not isinstance(template, Mapping)
+                or not isinstance(formal_attributes, Mapping)
             ):
                 raise ProductionEvidenceError(
                     "GENERATED_TYPE_AUTHORITY_INVALID", operation_id
@@ -378,6 +393,13 @@ def _operation_candidates(
                         f"operation:{operation_id}",
                         f"generated-type-template:{authority.get('template_version')}",
                     ),
+                    derivation={
+                        "template_id": authority["template_id"],
+                        "template_version": authority["template_version"],
+                        "ifc_class": authority["ifc_class"],
+                        "formal_attributes": dict(formal_attributes),
+                        "template_digest": authority["template_digest"],
+                    },
                 )
             )
             continue

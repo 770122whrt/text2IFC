@@ -985,15 +985,43 @@ def generated_type_authority(
             model_fingerprint=model_fingerprint,
         )
     )
+    template_id = str(
+        template.pop(
+            "template_id",
+            f"{definition.operation_type}.generated-type",
+        )
+    )
     template_version = str(template.pop("template_version"))
     ifc_class = str(template.pop("ifc_class"))
+    formal_attributes = {
+        str(key): template[key]
+        for key in sorted(template)
+        if key
+        in {
+            "construction_type",
+            "operation_type",
+            "parameter_takes_precedence",
+            "sizeable",
+        }
+    }
+    template_digest = hash_json(
+        {
+            "template_id": template_id,
+            "template_version": template_version,
+            "ifc_class": ifc_class,
+            "formal_attributes": formal_attributes,
+            "template": template,
+        }
+    )
     canonical = json.dumps(
         {
             "operation_id": operation_id,
             "request_hash": request_hash,
             "model_fingerprint": model_fingerprint,
             "template_version": template_version,
+            "template_id": template_id,
             "ifc_class": ifc_class,
+            "template_digest": template_digest,
             "template": template,
         },
         ensure_ascii=False,
@@ -1008,7 +1036,10 @@ def generated_type_authority(
         "kind": "system_generated_type",
         "global_id": ifcopenshell.guid.compress(value.hex),
         "ifc_class": ifc_class,
+        "template_id": template_id,
         "template_version": template_version,
+        "template_digest": template_digest,
+        "formal_attributes": formal_attributes,
         "authorization": "deterministic_policy",
         "operation_id": operation_id,
         "template": template,

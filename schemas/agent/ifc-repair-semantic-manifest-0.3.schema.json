@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "text2ifc/ifc-repair-semantic-manifest/0.3",
+  "title": "IFC Repair Semantic Authoring Manifest 0.3",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "manifest_id", "operation_id", "operation_type", "base_model_fingerprint", "policy", "assignments"],
+  "properties": {
+    "schema_version": {"const": "text2ifc/ifc-repair-semantic-manifest/0.3"},
+    "manifest_id": {"$ref": "#/$defs/id"},
+    "operation_id": {"$ref": "#/$defs/id"},
+    "operation_type": {"$ref": "#/$defs/id"},
+    "base_model_fingerprint": {"$ref": "#/$defs/hash"},
+    "policy": {"type": "object", "additionalProperties": false, "required": ["policy_id", "policy_version"], "properties": {"policy_id": {"$ref": "#/$defs/id"}, "policy_version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+$"}}},
+    "assignments": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/assignment"}}
+  },
+  "$defs": {
+    "id": {"type": "string", "minLength": 1, "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]*$"},
+    "text": {"type": "string", "minLength": 1, "pattern": "\\S"},
+    "hash": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "strings": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/text"}},
+    "assignment": {
+      "type": "object", "additionalProperties": false,
+      "required": ["operation_id", "scope", "fact_key", "source_fact_key", "value", "value_type", "unit", "ownership", "applicability", "source_kind", "source_ref", "provenance", "authoring_action"],
+      "properties": {
+        "operation_id": {"$ref": "#/$defs/id"},
+        "scope": {"enum": ["window_occurrence", "door_occurrence", "opening_occurrence"]},
+        "fact_key": {"$ref": "#/$defs/text"},
+        "source_fact_key": {"$ref": "#/$defs/text"},
+        "value": {},
+        "value_type": {"$ref": "#/$defs/text"},
+        "unit": {"type": ["string", "null"]},
+        "ownership": {"enum": ["occurrence_direct", "type_inherited"]},
+        "applicability": {"enum": ["required", "conditional"]},
+        "source_kind": {"enum": ["explicit_value", "deterministic_derived", "type_inherited", "approved_occurrence_prototype", "authorized_type_cohort"]},
+        "source_ref": {"$ref": "#/$defs/text"},
+        "provenance": {"$ref": "#/$defs/strings"},
+        "derivation": {"type": ["object", "null"], "maxProperties": 16},
+        "authoring_action": {"enum": ["set_attribute", "set_occurrence_pset", "set_quantity", "reuse_material", "reuse_classification", "bind_relationship", "inherit_from_type"]}
+      }
+    }
+  }
+}

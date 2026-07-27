@@ -28,12 +28,16 @@ from .semantic_facts import SemanticFact, apply_effective_material_precedence
 
 SEMANTIC_MANIFEST_SCHEMA_VERSION = "text2ifc/ifc-repair-semantic-manifest/0.1"
 SEMANTIC_MANIFEST_SCHEMA_VERSION_0_2 = "text2ifc/ifc-repair-semantic-manifest/0.2"
+SEMANTIC_MANIFEST_SCHEMA_VERSION_0_3 = "text2ifc/ifc-repair-semantic-manifest/0.3"
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 SEMANTIC_MANIFEST_SCHEMA_PATH = (
     PROJECT_ROOT / "schemas" / "agent" / "ifc-repair-semantic-manifest-0.1.schema.json"
 )
 SEMANTIC_MANIFEST_SCHEMA_PATH_0_2 = (
     PROJECT_ROOT / "schemas" / "agent" / "ifc-repair-semantic-manifest-0.2.schema.json"
+)
+SEMANTIC_MANIFEST_SCHEMA_PATH_0_3 = (
+    PROJECT_ROOT / "schemas" / "agent" / "ifc-repair-semantic-manifest-0.3.schema.json"
 )
 _SUPPORTED_FACT_KINDS = frozenset(
     {"relationship", "attribute", "pset", "quantity", "material", "classification", "label"}
@@ -148,13 +152,17 @@ def order_semantic_assignments(
     return tuple(sorted(by_slot.values(), key=semantic_assignment_identity))
 
 
-@lru_cache(maxsize=2)
+@lru_cache(maxsize=3)
 def _cached_schema(version: str = SEMANTIC_MANIFEST_SCHEMA_VERSION) -> dict[str, Any]:
-    path = (
-        SEMANTIC_MANIFEST_SCHEMA_PATH_0_2
-        if version == SEMANTIC_MANIFEST_SCHEMA_VERSION_0_2
-        else SEMANTIC_MANIFEST_SCHEMA_PATH
-    )
+    path = {
+        SEMANTIC_MANIFEST_SCHEMA_VERSION: SEMANTIC_MANIFEST_SCHEMA_PATH,
+        SEMANTIC_MANIFEST_SCHEMA_VERSION_0_2: SEMANTIC_MANIFEST_SCHEMA_PATH_0_2,
+        SEMANTIC_MANIFEST_SCHEMA_VERSION_0_3: SEMANTIC_MANIFEST_SCHEMA_PATH_0_3,
+    }.get(version)
+    if path is None:
+        raise SemanticManifestError(
+            "SEMANTIC_MANIFEST_SCHEMA_VERSION_MISMATCH", version
+        )
     schema = json.loads(path.read_text(encoding="utf-8"))
     Draft202012Validator.check_schema(schema)
     return schema
@@ -173,6 +181,7 @@ def parse_semantic_manifest(document: Any) -> SemanticManifest:
     if version not in {
         SEMANTIC_MANIFEST_SCHEMA_VERSION,
         SEMANTIC_MANIFEST_SCHEMA_VERSION_0_2,
+        SEMANTIC_MANIFEST_SCHEMA_VERSION_0_3,
     }:
         raise SemanticManifestError(
             "SEMANTIC_MANIFEST_SCHEMA_VERSION_MISMATCH",
@@ -229,7 +238,10 @@ def semantic_manifest_to_dict(manifest: SemanticManifest) -> dict[str, Any]:
                 "operation_id": item.operation_id,
                 **(
                     {"scope": item.scope}
-                    if manifest.schema_version == SEMANTIC_MANIFEST_SCHEMA_VERSION_0_2
+                    if manifest.schema_version in {
+                        SEMANTIC_MANIFEST_SCHEMA_VERSION_0_2,
+                        SEMANTIC_MANIFEST_SCHEMA_VERSION_0_3,
+                    }
                     else {}
                 ),
                 "fact_key": item.fact_key,
@@ -245,7 +257,10 @@ def semantic_manifest_to_dict(manifest: SemanticManifest) -> dict[str, Any]:
                 "authoring_action": item.authoring_action.value,
                 **(
                     {"derivation": None if item.derivation is None else dict(item.derivation)}
-                    if manifest.schema_version == SEMANTIC_MANIFEST_SCHEMA_VERSION_0_2
+                    if manifest.schema_version in {
+                        SEMANTIC_MANIFEST_SCHEMA_VERSION_0_2,
+                        SEMANTIC_MANIFEST_SCHEMA_VERSION_0_3,
+                    }
                     else {}
                 ),
             }
@@ -307,6 +322,9 @@ def build_semantic_manifest(
     policy = registry.require_evaluation_policy(operation_type)
     use_v02 = any(
         fact.canonical_source_kind is not None for fact in facts
+    )
+    use_v03 = use_v02 and any(
+        fact.occurrence_scope == "door_occurrence" for fact in facts
     )
     assignments: list[dict[str, Any]] = []
     for fact in facts:
@@ -404,7 +422,9 @@ def build_semantic_manifest(
     return parse_semantic_manifest(
         {
             "schema_version": (
-                SEMANTIC_MANIFEST_SCHEMA_VERSION_0_2
+                SEMANTIC_MANIFEST_SCHEMA_VERSION_0_3
+                if use_v03
+                else SEMANTIC_MANIFEST_SCHEMA_VERSION_0_2
                 if use_v02
                 else SEMANTIC_MANIFEST_SCHEMA_VERSION
             ),
@@ -1023,7 +1043,10 @@ def _validate_assignment_semantics(
     try:
         source: EvidenceSourceKind | CanonicalSemanticSource = (
             CanonicalSemanticSource(source_value)
-            if schema_version == SEMANTIC_MANIFEST_SCHEMA_VERSION_0_2
+            if schema_version in {
+                SEMANTIC_MANIFEST_SCHEMA_VERSION_0_2,
+                SEMANTIC_MANIFEST_SCHEMA_VERSION_0_3,
+            }
             else EvidenceSourceKind(source_value)
         )
     except ValueError as error:
@@ -1080,7 +1103,10 @@ def _parse_assignment(
         applicability=SemanticApplicability(str(payload["applicability"])),
         source_kind=(
             CanonicalSemanticSource(source_value)
-            if schema_version == SEMANTIC_MANIFEST_SCHEMA_VERSION_0_2
+            if schema_version in {
+                SEMANTIC_MANIFEST_SCHEMA_VERSION_0_2,
+                SEMANTIC_MANIFEST_SCHEMA_VERSION_0_3,
+            }
             else EvidenceSourceKind(source_value)
         ),
         source_ref=str(payload["source_ref"]),
@@ -1142,6 +1168,8 @@ def _contains_non_finite(value: Any) -> bool:
 __all__ = [
     "CanonicalSemanticSource",
     "SEMANTIC_MANIFEST_SCHEMA_VERSION",
+    "SEMANTIC_MANIFEST_SCHEMA_VERSION_0_2",
+    "SEMANTIC_MANIFEST_SCHEMA_VERSION_0_3",
     "SemanticAssignment",
     "SemanticAuthoringAction",
     "SemanticManifest",
