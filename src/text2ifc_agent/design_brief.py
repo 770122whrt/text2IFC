@@ -200,6 +200,65 @@ def _validate_v2_semantics(
                 code="READINESS_CONFLICT",
                 path="/status",
                 message=f"A {status} Design Brief must identify a blocking item.",
+                )
             )
-        )
+    issues.extend(_validate_canonical_known_facts(document.get("known_facts")))
+    return issues
+
+
+def _validate_canonical_known_facts(known_facts: Any) -> list[ValidationIssue]:
+    if not isinstance(known_facts, dict):
+        return []
+    storeys = known_facts.get("storeys")
+    if not isinstance(storeys, list):
+        return []
+
+    issues: list[ValidationIssue] = []
+    for storey_index, storey in enumerate(storeys):
+        if not isinstance(storey, dict):
+            continue
+        for field in ("floor_thickness_mm", "floor_slabs"):
+            if field in storey:
+                issues.append(
+                    ValidationIssue(
+                        code="NON_CANONICAL_FLOOR_SLAB_LOCATION",
+                        path=f"/known_facts/storeys/{storey_index}/{field}",
+                        message=(
+                            "Floor slabs must be records in "
+                            "known_facts.floor_slabs with id, storey, "
+                            "top_elevation_mm, and thickness_mm."
+                        ),
+                    )
+                )
+
+        centered_hosts: set[str] = set()
+        for collection in ("doors", "windows"):
+            records = storey.get(collection)
+            if not isinstance(records, list):
+                continue
+            for record_index, record in enumerate(records):
+                if not isinstance(record, dict):
+                    continue
+                host = record.get("host_wall")
+                if record.get("alignment") != "host_centerline" or not isinstance(
+                    host, str
+                ):
+                    continue
+                if host in centered_hosts:
+                    issues.append(
+                        ValidationIssue(
+                            code="AMBIGUOUS_HOST_CENTERLINE",
+                            path=(
+                                f"/known_facts/storeys/{storey_index}/"
+                                f"{collection}/{record_index}/alignment"
+                            ),
+                            message=(
+                                "Multiple openings cannot all use host_centerline "
+                                f"on the same host wall {host!r}. Use distinct touching "
+                                "wall segments or explicit center_global_mm positions."
+                            ),
+                        )
+                    )
+                else:
+                    centered_hosts.add(host)
     return issues

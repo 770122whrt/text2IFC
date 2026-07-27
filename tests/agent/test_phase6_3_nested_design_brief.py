@@ -158,6 +158,7 @@ def test_expected_facts_normalizes_nested_storey_design_brief_without_fabricated
         "IfcSpace": 3,
         "IfcDoor": 2,
         "IfcWindow": 3,
+        "IfcSlab": 2,
     }
     assert expected["required_relationships"]["opening_fill"] == {
         "doors": 2,
@@ -314,6 +315,7 @@ def test_expected_facts_normalizes_live_deepseek_flat_multistorey_dialect():
         "IfcSpace": 5,
         "IfcDoor": 2,
         "IfcWindow": 4,
+        "IfcSlab": 3,
     }
     assert expected["doors"][0]["host_wall"] == "客厅南墙"
     assert expected["doors"][0]["width_mm"] == 1200

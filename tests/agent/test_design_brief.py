@@ -125,6 +125,85 @@ def test_v2_ready_brief_is_schema_and_evidence_valid():
     assert issues == []
 
 
+def test_v2_rejects_storey_local_floor_slab_dialects():
+    design_brief = _module()
+    document = _brief_v2(
+        known_facts={
+            "storeys": [
+                {
+                    "id": "storey-1",
+                    "elevation_mm": 0,
+                    "floor_thickness_mm": 150,
+                },
+                {
+                    "id": "storey-2",
+                    "elevation_mm": 3150,
+                    "floor_slabs": [
+                        {
+                            "id": "slab-storey-2",
+                            "storey": "storey-2",
+                            "top_elevation_mm": 3150,
+                            "thickness_mm": 150,
+                        }
+                    ],
+                },
+            ]
+        }
+    )
+
+    issues = design_brief.validate_design_brief(
+        document, evidence_catalog=_v2_evidence_catalog()
+    )
+
+    slab_issues = [
+        issue for issue in issues if issue.code == "NON_CANONICAL_FLOOR_SLAB_LOCATION"
+    ]
+    assert [issue.path for issue in slab_issues] == [
+        "/known_facts/storeys/0/floor_thickness_mm",
+        "/known_facts/storeys/1/floor_slabs",
+    ]
+
+
+def test_v2_rejects_multiple_host_centerline_openings_on_one_wall():
+    design_brief = _module()
+    document = _brief_v2(
+        known_facts={
+            "storeys": [
+                {
+                    "id": "storey-1",
+                    "elevation_mm": 0,
+                    "walls": {
+                        "exterior": [{"id": "wall-north"}],
+                        "interior": [],
+                    },
+                    "doors": [],
+                    "windows": [
+                        {
+                            "id": "window-a",
+                            "host_wall": "wall-north",
+                            "alignment": "host_centerline",
+                        },
+                        {
+                            "id": "window-b",
+                            "host_wall": "wall-north",
+                            "alignment": "host_centerline",
+                        },
+                    ],
+                }
+            ]
+        }
+    )
+
+    issues = design_brief.validate_design_brief(
+        document, evidence_catalog=_v2_evidence_catalog()
+    )
+
+    conflict = next(
+        issue for issue in issues if issue.code == "AMBIGUOUS_HOST_CENTERLINE"
+    )
+    assert conflict.path == "/known_facts/storeys/0/windows/1/alignment"
+
+
 def test_v2_rejects_question_evidence_not_supplied_to_model():
     design_brief = _module()
     document = _brief_v2(
