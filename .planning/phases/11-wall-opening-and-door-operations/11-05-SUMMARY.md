@@ -1,0 +1,49 @@
+---
+phase: 11-wall-opening-and-door-operations
+plan: "05"
+status: blocked_external
+completed: false
+updated: 2026-07-28
+commits:
+  - 29daa793
+---
+
+# Phase 11 Plan 05 Progress
+
+## Completed
+
+- Added deterministic `remove_door_and_opening` and
+  `remove_door_preserve_opening` damage modes. Reports include Door name,
+  GlobalId, Type GlobalId/name, formal OperationType and exact damage scope.
+- Added an offline acceptance runner and frozen tests.
+- LargeBuilding exact-Type, surviving-Opening repair passed IFC reopen, L1,
+  L2 and global preservation.
+- vvo exact-Type, surviving-Opening repair passed the same gates. The source
+  Door's occurrence Storey conflicts with its host Wall; the repaired Door
+  correctly follows the host Wall instead of reproducing that error.
+- Added a real no-fallback DeepSeek runner for complete, clarification and
+  unsupported-complex-Door cases.
+- Provider configuration checks as ready with 65,536 input and completion
+  guards and redacted secrets.
+
+## External blocker
+
+The authorized live command was rejected by the Codex execution quota before
+the process or Provider started. The tool reported that usage is exhausted and
+suggested retrying after 2026-08-03 10:34.
+
+Actual evidence:
+
+- Stage 1 calls: 0
+- Stage 2 calls: 0
+- synthetic fallback: false
+- Provider result: not executed
+
+This is not recorded as a DeepSeek failure or success.
+
+## Remaining
+
+- Run `scripts/ifc_repair/run_phase11_live_uat.py --live` when execution quota
+  is available.
+- Independently validate and curate only actual successful live artifacts.
+- Mark OPS-01/OPS-02 and Phase 11 complete and create the final checkpoint.

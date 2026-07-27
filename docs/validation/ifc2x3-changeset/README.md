@@ -1,5 +1,11 @@
 # IFC2X3 Local ChangeSet 验证索引
 
+Phase 11 当前状态见
+[Door / Opening 验证报告](phase11-door-validation-report.md)：合同、索引、
+确定性解析、IFC 写入、L1/L2、occurrence comparator 以及 LargeBuilding/vvo
+离线链路已经通过；真实 DeepSeek 命令在进入 Provider 前被外部执行额度阻塞，
+实际 Stage 1/Stage 2 调用数均为 0，因此 Phase 11 尚未最终关闭。
+
 下一阶段设计：
 [Phase 11 Wall Opening 与 Door Operations SPEC](../../../.planning/phases/11-wall-opening-and-door-operations/11-SPEC.md)。
 它冻结 Opening-only、Door+Opening、Door 填入既有 Opening、DoorStyle

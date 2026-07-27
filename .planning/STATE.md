@@ -2,7 +2,7 @@
 gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: IFC ChangeSet Repair Pipeline
-status: Phase 10.5 complete; Phase 11 specification drafted for review
+status: Phase 11 implementation and offline validation complete; live UAT externally blocked
 last_updated: "2026-07-28T00:00:00+08:00"
 progress:
   total_phases: 13
@@ -21,8 +21,8 @@ See `.planning/PROJECT.md`.
 **Core value:** Given an IFC file and an explicit user request, produce a
 traceable semantic ChangeSet and an L1/L2-validated IFC result.
 
-**Current focus:** Await Goal-mode authorization to execute the five approved
-Phase 11 Wall Opening and Door plans.
+**Current focus:** Finish Phase 11 real DeepSeek UAT and curate Door Proof after
+the external Codex execution quota permits the already-authorized network run.
 
 ## Current Position
 
@@ -30,10 +30,12 @@ Phase: 10.5 (Window Occurrence Fidelity and Validation Acceleration) — COMPLET
 Plan: 3 of 3 complete
 
 - Milestone: v1.1 IFC ChangeSet Repair Pipeline
-- Phase: 10.5 complete; next Phase 11
-- Plan: Phase 11 has five executable plans; none has started
-- Status: Phase 11 design/research/validation/planning complete; awaiting
-  explicit Goal execution authorization
+- Phase: 11 in progress
+- Plan: 11-01 through 11-04 complete; 11-05 offline work complete, live UAT pending
+- Status: Opening/Door contracts, indexing, deterministic resolution, IFC
+  authoring, L1/L2 and occurrence fidelity are implemented. LargeBuilding and
+  vvo source-bound offline runs pass. The live command was rejected before any
+  Provider call because the Codex execution quota was exhausted.
 - Progress: 10 / 13 phases complete
 - Requirements: WFID-01..06 complete
 - Last activity: 2026-07-26 - 583 IFC repair tests passed; AdvancedProject
@@ -42,8 +44,9 @@ Plan: 3 of 3 complete
   ChangeSet 0.3, Production/private L1/L2 and occurrence fidelity
 - Phase 11 design decisions were confirmed on 2026-07-28 and are frozen in
   `11-CONTEXT.md` and `11-SPEC.md`. Five sequential implementation plans,
-  research, pattern map and validation strategy are complete; implementation
-  has not started.
+  research, pattern map and validation strategy are complete. Plans 11-01
+  through 11-04 are implemented and committed; Plan 11-05 awaits only real
+  DeepSeek evidence and final Proof/checkpoint closure.
 
 - Phase 11 uses additive RepairIntent 0.5, Prompt Profile 0.1, IFC Index 0.4,
   Semantic Manifest 0.3 and Bound ChangeSet 0.4 contracts. Historical
