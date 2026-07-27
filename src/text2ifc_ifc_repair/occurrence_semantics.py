@@ -204,7 +204,11 @@ def resolve_occurrence_reuse(
                 scope=(
                     "opening_occurrence"
                     if record.ifc_class == "IfcOpeningElement"
-                    else "window_occurrence"
+                    else (
+                        "door_occurrence"
+                        if record.ifc_class == "IfcDoor"
+                        else "window_occurrence"
+                    )
                 ),
                 fact_key=f"pset:{path}",
                 value=fact.value,
@@ -260,7 +264,8 @@ def resolve_type_cohort_consensus(
         for record in repository.iter_records()
         if record.identity_reliable
         and record.type_global_id == type_ids[0]
-        and record.ifc_class in {"IfcWindow", "IfcOpeningElement"}
+        and record.ifc_class
+        in {"IfcWindow", "IfcDoor", "IfcOpeningElement"}
     )
     if not cohort:
         return OccurrenceSemanticResult(
@@ -303,7 +308,15 @@ def resolve_type_cohort_consensus(
         assignments.append(
             OccurrenceSemanticAssignment(
                 operation_id=operation_id,
-                scope="window_occurrence",
+                scope=(
+                    "door_occurrence"
+                    if cohort[0].ifc_class == "IfcDoor"
+                    else (
+                        "opening_occurrence"
+                        if cohort[0].ifc_class == "IfcOpeningElement"
+                        else "window_occurrence"
+                    )
+                ),
                 fact_key=f"pset:{path}",
                 value=fact.value,
                 value_type=fact.value_type or "IfcLabel",
@@ -340,7 +353,7 @@ def explicit_assignments(
         result.append(
             OccurrenceSemanticAssignment(
                 operation_id=operation.operation_id,
-                scope="window_occurrence",
+                scope=_primary_occurrence_scope(operation),
                 fact_key=f"pset:{path}",
                 value=intent.value,
                 value_type=intent.requested_value_type or _primitive_type(intent.value),
@@ -399,10 +412,12 @@ def derive_geometry_assignments(
     width = opening.get("width_mm")
     height = opening.get("height_mm")
     derived: list[OccurrenceSemanticAssignment] = []
-    values = (
-        ("Width", width, "window_occurrence"),
-        ("Height", height, "window_occurrence"),
-    )
+    scope = _primary_occurrence_scope(operation)
+    base_name = {
+        "door_occurrence": "door-base",
+        "opening_occurrence": "opening-base",
+    }.get(scope, "window-base")
+    values = (("Width", width, scope), ("Height", height, scope))
     for name, millimetres, scope in values:
         if millimetres is None:
             continue
@@ -416,7 +431,7 @@ def derive_geometry_assignments(
                 scope=scope,
                 # Keep the authority slot canonical. The IFC writer maps
                 # window-base back to the IFC2X3 BaseQuantities set.
-                fact_key=f"quantity:window-base.{name}",
+                fact_key=f"quantity:{base_name}.{name}",
                 value=float(millimetres),
                 value_type="IfcQuantityLength",
                 unit="mm",
@@ -431,8 +446,8 @@ def derive_geometry_assignments(
         derived.append(
             OccurrenceSemanticAssignment(
                 operation_id=operation.operation_id,
-                scope="window_occurrence",
-                fact_key="quantity:window-base.Area",
+                scope=scope,
+                fact_key=f"quantity:{base_name}.Area",
                 value=float(width) * float(height),
                 value_type="IfcQuantityArea",
                 unit="mm2",
@@ -447,6 +462,14 @@ def derive_geometry_assignments(
             )
         )
     return tuple(derived)
+
+
+def _primary_occurrence_scope(operation: OperationIntent) -> str:
+    if "door" in str(operation.operation_type):
+        return "door_occurrence"
+    if str(operation.operation_type) == "add_opening_to_wall":
+        return "opening_occurrence"
+    return "window_occurrence"
 
 
 def _property_slot(

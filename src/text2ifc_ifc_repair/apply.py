@@ -84,6 +84,16 @@ def apply_changeset(
                         "window_occurrence": policy.semantic_role,
                         "opening_occurrence": "opening",
                     }
+                assignment_scopes = {
+                    str(item.get("scope", "window_occurrence"))
+                    for item in operation["semantic_assignments"]
+                }
+                unknown_scopes = assignment_scopes - set(scope_roles)
+                if unknown_scopes:
+                    raise ValueError(
+                        "SEMANTIC_SCOPE_UNDECLARED:"
+                        + ",".join(sorted(unknown_scopes))
+                    )
                 scoped_semantics = []
                 for scope, target_role in scope_roles.items():
                     scoped_assignments = [

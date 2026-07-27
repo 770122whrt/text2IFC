@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from pathlib import Path
 from types import MappingProxyType
 from collections.abc import Mapping
@@ -399,8 +399,14 @@ def _evaluate(
     for operation in inputs.changeset.get("operations", ()):
         operation_id = str(operation["operation_id"])
         operation_type = str(operation["operation_type"])
+        definition = inputs.registry.require(operation_type)
         policy = inputs.registry.require_evaluation_policy(operation_type)
         semantic_role = policy.semantic_role
+        primary_scope = str(
+            definition.semantic_scope_roles.get(
+                semantic_role, "window_occurrence"
+            )
+        )
         public_expected = tuple(
             inputs.expected_facts_by_operation.get(operation_id, ())
         )
@@ -410,7 +416,7 @@ def _evaluate(
             if str(
                 getattr(fact, "occurrence_scope", "window_occurrence")
             )
-            == "window_occurrence"
+            == primary_scope
         ]
         policy = extend_policy_with_explicit_facts(
             policy,
@@ -443,6 +449,7 @@ def _evaluate(
                 repaired_facts = _extract_benchmark_semantic_facts(
                     repaired,
                     policy=policy,
+                    occurrence_scope=primary_scope,
                     source_kind=EvidenceSourceKind.REPAIRED_OUTPUT,
                     source_ref=repaired_id,
                     provenance=(f"application-role:{semantic_role}:{operation_id}",),
@@ -471,6 +478,7 @@ def _evaluate(
                         _extract_benchmark_semantic_facts(
                             original,
                             policy=policy,
+                            occurrence_scope=primary_scope,
                             source_kind=EvidenceSourceKind.PRIVATE_ORIGINAL,
                             source_ref=original_id,
                             provenance=(
@@ -613,6 +621,7 @@ def _extract_benchmark_semantic_facts(
     element: Any,
     *,
     policy: OperationEvaluationPolicy,
+    occurrence_scope: str = "window_occurrence",
     source_kind: EvidenceSourceKind,
     source_ref: str,
     provenance: tuple[str, ...],
@@ -657,7 +666,13 @@ def _extract_benchmark_semantic_facts(
             continue
         facts.append(fact)
         known.add(fact.fact_key)
-    return tuple(sorted(facts, key=lambda fact: (fact.fact_key, repr(fact.value))))
+    scoped = (
+        replace(fact, occurrence_scope=occurrence_scope)
+        for fact in facts
+    )
+    return tuple(
+        sorted(scoped, key=lambda fact: (fact.fact_key, repr(fact.value)))
+    )
 
 
 def _get_psets(element: Any, *, should_inherit: bool) -> Mapping[str, Any]:

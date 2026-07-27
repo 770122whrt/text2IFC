@@ -18,6 +18,7 @@ from .semantic_facts import semantic_fact_key_token
 
 
 SCHEMA_VERSION = "text2ifc/ifc-window-occurrence-comparison/0.1"
+GENERIC_SCHEMA_VERSION = "text2ifc/ifc-occurrence-comparison/0.2"
 CLASSIFICATIONS = (
     "matched",
     "not_in_user_text",
@@ -62,6 +63,27 @@ class OccurrenceSnapshot:
             "window_name": self.window_name,
             "opening_global_id": self.opening_global_id,
             "opening_name": self.opening_name,
+        }
+
+
+@dataclass(frozen=True)
+class GenericOccurrenceSnapshot:
+    entity_global_id: str
+    entity_name: str | None
+    ifc_class: str
+    scope: str
+    role: str
+    related_opening_global_id: str | None
+    facts: Mapping[str, OccurrenceFact]
+
+    def identity_dict(self) -> dict[str, Any]:
+        return {
+            "entity_global_id": self.entity_global_id,
+            "entity_name": self.entity_name,
+            "ifc_class": self.ifc_class,
+            "scope": self.scope,
+            "role": self.role,
+            "related_opening_global_id": self.related_opening_global_id,
         }
 
 
@@ -116,6 +138,81 @@ def snapshot_window_occurrence(
     )
 
 
+def snapshot_ifc_occurrence(
+    model: Any,
+    entity_global_id: str,
+    *,
+    scope: str,
+    role: str,
+) -> GenericOccurrenceSnapshot:
+    """Snapshot one supported IFC occurrence without family-specific dispatch."""
+
+    entity = model.by_guid(entity_global_id)
+    if entity is None or entity.is_a() not in {
+        "IfcWindow",
+        "IfcDoor",
+        "IfcOpeningElement",
+    }:
+        raise ValueError(f"OCCURRENCE_MAPPING_INVALID:{entity_global_id}")
+    facts: dict[str, OccurrenceFact] = {}
+    _snapshot_attributes(entity, scope, facts)
+    _snapshot_effective_properties(entity, scope, facts)
+    _snapshot_quantities(entity, scope, facts)
+    opening = None
+    if entity.is_a() in {"IfcWindow", "IfcDoor"}:
+        openings = {
+            fill.RelatingOpeningElement.id(): fill.RelatingOpeningElement
+            for fill in getattr(entity, "FillsVoids", ())
+        }
+        if len(openings) > 1:
+            raise ValueError(
+                f"OCCURRENCE_OPENING_MAPPING_AMBIGUOUS:{entity_global_id}"
+            )
+        opening = next(iter(openings.values()), None)
+        if opening is not None:
+            hosts = {
+                str(relation.RelatingBuildingElement.GlobalId)
+                for relation in getattr(opening, "VoidsElements", ())
+            }
+            if len(hosts) == 1:
+                _put(
+                    facts,
+                    f"{scope}:relationship:host",
+                    next(iter(hosts)),
+                    "IfcGloballyUniqueId",
+                    None,
+                    "derived_relationship",
+                    f"guid:{opening.GlobalId}",
+                )
+    elif entity.is_a("IfcOpeningElement"):
+        opening = entity
+        hosts = {
+            str(relation.RelatingBuildingElement.GlobalId)
+            for relation in getattr(entity, "VoidsElements", ())
+        }
+        if len(hosts) == 1:
+            _put(
+                facts,
+                f"{scope}:relationship:host",
+                next(iter(hosts)),
+                "IfcGloballyUniqueId",
+                None,
+                "derived_relationship",
+                f"guid:{entity.GlobalId}",
+            )
+    return GenericOccurrenceSnapshot(
+        entity_global_id=str(entity.GlobalId),
+        entity_name=_text(getattr(entity, "Name", None)),
+        ifc_class=entity.is_a(),
+        scope=scope,
+        role=role,
+        related_opening_global_id=(
+            None if opening is None else str(opening.GlobalId)
+        ),
+        facts=dict(sorted(facts.items())),
+    )
+
+
 def compare_occurrence_snapshots(
     *,
     expected: OccurrenceSnapshot,
@@ -127,6 +224,7 @@ def compare_occurrence_snapshots(
     geometry_relationship_success: bool = True,
     source_hashes: Mapping[str, str | None] | None = None,
     detail_limit: int = DEFAULT_DETAIL_LIMIT,
+    schema_version: str = SCHEMA_VERSION,
 ) -> dict[str, Any]:
     """Classify effective facts without treating identity as semantic truth."""
 
@@ -205,7 +303,7 @@ def compare_occurrence_snapshots(
         not complete_replication or "not_in_user_text" not in blocking
     )
     report = {
-        "schema_version": SCHEMA_VERSION,
+        "schema_version": schema_version,
         "source_hashes": dict(source_hashes or {}),
         "mapping": {
             "expected": expected.identity_dict(),
@@ -292,14 +390,30 @@ def snapshot_from_semantic_facts(
             key = f"attribute:{path}"
         elif category not in {"attribute", "pset", "quantity"}:
             continue
-        if key.startswith("quantity:window-base."):
-            key = key.replace(
+        if key.startswith(
+            (
                 "quantity:window-base.",
+                "quantity:door-base.",
+                "quantity:opening-base.",
+            )
+        ):
+            key = key.replace(
+                key.split(".", 1)[0] + ".",
                 "quantity:BaseQuantities.",
                 1,
             )
         scope = str(getattr(fact, "occurrence_scope", "window_occurrence"))
-        scoped_key = key if key.startswith(("window_occurrence:", "opening_occurrence:")) else f"{scope}:{key}"
+        scoped_key = (
+            key
+            if key.startswith(
+                (
+                    "window_occurrence:",
+                    "door_occurrence:",
+                    "opening_occurrence:",
+                )
+            )
+            else f"{scope}:{key}"
+        )
         source_kind = getattr(
             getattr(fact, "source_kind", None),
             "value",
@@ -645,10 +759,15 @@ def _sha256(path: Path) -> str:
 
 
 def _validate_report(report: Mapping[str, Any]) -> None:
+    schema_name = (
+        "ifc-occurrence-comparison-0.2.schema.json"
+        if report.get("schema_version") == GENERIC_SCHEMA_VERSION
+        else "ifc-window-occurrence-comparison-0.1.schema.json"
+    )
     schema = json.loads(
         (
             ROOT
-            / "schemas/agent/ifc-window-occurrence-comparison-0.1.schema.json"
+            / f"schemas/agent/{schema_name}"
         ).read_text(encoding="utf-8")
     )
     errors = list(Draft202012Validator(schema).iter_errors(report))
@@ -659,10 +778,13 @@ def _validate_report(report: Mapping[str, Any]) -> None:
 __all__ = [
     "CLASSIFICATIONS",
     "OccurrenceFact",
+    "GenericOccurrenceSnapshot",
     "OccurrenceSnapshot",
+    "GENERIC_SCHEMA_VERSION",
     "SCHEMA_VERSION",
     "compare_occurrence_snapshots",
     "compare_window_occurrences",
     "snapshot_window_occurrence",
+    "snapshot_ifc_occurrence",
     "snapshot_from_semantic_facts",
 ]

@@ -3,9 +3,15 @@ import json
 from pathlib import Path
 
 import ifcopenshell
+import ifcopenshell.util.element
 from ifcopenshell.api.root.remove_product import remove_product
 
 from text2ifc_ifc_repair.apply import apply_changeset
+from text2ifc_ifc_repair.benchmark_evaluation import (
+    ProductionEvaluationInputs,
+    evaluate_production,
+)
+from text2ifc_ifc_repair.compare import evaluate_repair_application
 from text2ifc_ifc_repair.mutation import remove_window_and_opening
 from text2ifc_ifc_repair.operations import create_default_registry
 from text2ifc_ifc_repair.operations.door import (
@@ -17,6 +23,8 @@ from text2ifc_ifc_repair.resolution_flow import (
     ResolvedOperation,
     generated_type_authority,
 )
+from text2ifc_ifc_repair.evaluation_policy import EvidenceSourceKind
+from text2ifc_ifc_repair.semantic_facts import SemanticFact
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -224,6 +232,113 @@ def test_add_door_builds_reopenable_hosted_typed_ifc2x3_chain(
         for relation in door.IsDefinedBy
     )
     assert result["postconditions"][0]["valid"] is True
+    evaluation = evaluate_repair_application(
+        damaged_ifc_path=damaged,
+        repaired_ifc_path=output,
+        changeset=changeset,
+        application_result=result,
+        registry=create_default_registry(),
+    )
+    assert evaluation["l1"]["status"] == "passed", json.dumps(
+        evaluation, ensure_ascii=False, default=str
+    )
+    assert evaluation["l2"]["status"] == "not_evaluable"
+    expected_facts = (
+        SemanticFact(
+            fact_key="relationship:type",
+            value=str(style.GlobalId),
+            value_type="IfcDoorStyle",
+            unit=None,
+            inherited=True,
+            pset_path=None,
+            entity_source="resolved:door",
+            source_kind=EvidenceSourceKind.DETERMINISTIC_POLICY,
+            source_ref=f"generated-type:{style.GlobalId}",
+            provenance=("test:door-authority",),
+            occurrence_scope="door_occurrence",
+            canonical_source_kind="deterministic_derived",
+        ),
+        SemanticFact(
+            fact_key="relationship:host",
+            value=WALL_ID,
+            value_type="IfcWallStandardCase",
+            unit=None,
+            inherited=False,
+            pset_path=None,
+            entity_source="resolved:door",
+            source_kind=EvidenceSourceKind.SURVIVING_HOST,
+            source_ref=f"guid:{WALL_ID}",
+            provenance=("test:door-authority",),
+            occurrence_scope="door_occurrence",
+        ),
+        SemanticFact(
+            fact_key="relationship:storey",
+            value=str(
+                door.ContainedInStructure[0].RelatingStructure.GlobalId
+            ),
+            value_type="IfcBuildingStorey",
+            unit=None,
+            inherited=False,
+            pset_path=None,
+            entity_source="resolved:door",
+            source_kind=EvidenceSourceKind.SURVIVING_HOST,
+            source_ref=f"guid:{WALL_ID}",
+            provenance=("test:door-authority",),
+            occurrence_scope="door_occurrence",
+        ),
+        SemanticFact(
+            fact_key="attribute:OverallWidth",
+            value=915.0,
+            value_type="IfcPositiveLengthMeasure",
+            unit=None,
+            inherited=False,
+            pset_path=None,
+            entity_source="resolved:door",
+            source_kind=EvidenceSourceKind.DETERMINISTIC_POLICY,
+            source_ref="resolved:/door/overall_width_mm",
+            provenance=("test:door-authority",),
+            occurrence_scope="door_occurrence",
+        ),
+        SemanticFact(
+            fact_key="attribute:OverallHeight",
+            value=1830.0,
+            value_type="IfcPositiveLengthMeasure",
+            unit=None,
+            inherited=False,
+            pset_path=None,
+            entity_source="resolved:door",
+            source_kind=EvidenceSourceKind.DETERMINISTIC_POLICY,
+            source_ref="resolved:/door/overall_height_mm",
+            provenance=("test:door-authority",),
+            occurrence_scope="door_occurrence",
+        ),
+    )
+    production = evaluate_production(
+        ProductionEvaluationInputs(
+            damaged_ifc_path=damaged,
+            repaired_ifc_path=output,
+            changeset=changeset,
+            application_result=result,
+            registry=create_default_registry(),
+            expected_facts_by_operation={
+                "operation-door-real-001": expected_facts
+            },
+        )
+    )
+    assert production.operations[0].levels[0].status.value == "passed"
+    assert production.operations[0].levels[1].status.value == "passed", [
+        (
+            item.check_id,
+            item.status.value,
+            item.reason,
+            [
+                (fact.expected_value, fact.actual_value)
+                for fact in item.evidence
+            ],
+        )
+        for item in production.operations[0].levels[1].checks
+        if item.status.value == "failed"
+    ]
 
 
 def test_fill_surviving_opening_reuses_exact_door_type_without_mutating_it(
@@ -397,3 +512,89 @@ def test_generated_door_type_tamper_fails_closed_without_output(
         "message"
     ]
     assert not output.exists()
+
+
+def test_door_and_opening_semantics_dispatch_to_declared_occurrences(
+    tmp_path: Path,
+) -> None:
+    case_dir = tmp_path / "semantic-scope-case"
+    remove_window_and_opening(
+        source_path=SOURCE,
+        output_dir=case_dir,
+        wall_global_id=WALL_ID,
+        opening_global_id=OPENING_ID,
+        window_global_id=WINDOW_ID,
+    )
+    damaged = case_dir / "damaged.ifc"
+    request = "安装门，并把资产编号写到门实例、洞口宽度写到洞口数量集。"
+    changeset = _changeset(
+        damaged=damaged,
+        request=request,
+        operation_id="operation-door-semantics-001",
+        target={"wall_global_id": WALL_ID},
+        parameters=_parameters(),
+    )
+    assignments = changeset["operations"][0]["semantic_assignments"]
+    assignments.extend(
+        [
+            {
+                "operation_id": "operation-door-semantics-001",
+                "scope": "door_occurrence",
+                "fact_key": "pset:Custom_Asset.AssetCode",
+                "source_fact_key": "request:/properties/0",
+                "value": "D-001",
+                "value_type": "IfcLabel",
+                "unit": None,
+                "ownership": "occurrence_direct",
+                "applicability": "required",
+                "source_kind": "explicit_value",
+                "source_ref": "request:/properties/0",
+                "provenance": ["request:test"],
+                "authoring_action": "set_occurrence_pset",
+            },
+            {
+                "operation_id": "operation-door-semantics-001",
+                "scope": "opening_occurrence",
+                "fact_key": "quantity:BaseQuantities.Width",
+                "source_fact_key": "request:/opening/width_mm",
+                "value": 915.0,
+                "value_type": "IfcQuantityLength",
+                "unit": "mm",
+                "ownership": "occurrence_direct",
+                "applicability": "required",
+                "source_kind": "deterministic_derived",
+                "source_ref": "resolved:/opening/width_mm",
+                "provenance": ["formula:identity_mm"],
+                "derivation": {
+                    "formula": "identity_mm",
+                    "input_digest": "sha256:" + "a" * 64,
+                },
+                "authoring_action": "set_quantity",
+            },
+        ]
+    )
+    output = tmp_path / "semantic-scope-door.ifc"
+
+    result = apply_changeset(
+        damaged_ifc_path=damaged,
+        repair_request=request,
+        changeset=changeset,
+        output_path=output,
+        registry=create_default_registry(),
+    )
+
+    assert result["valid"] and result["published"], json.dumps(
+        result["issues"], ensure_ascii=False
+    )
+    repaired = ifcopenshell.open(str(output))
+    created = {
+        item["role"]: repaired.by_guid(item["global_id"])
+        for item in result["operations"][0]["changes"]["created"]
+        if item["role"] in {"door", "opening"}
+    }
+    door_psets = ifcopenshell.util.element.get_psets(created["door"])
+    opening_psets = ifcopenshell.util.element.get_psets(created["opening"])
+    assert door_psets["Custom_Asset"]["AssetCode"] == "D-001"
+    assert "Custom_Asset" not in opening_psets
+    assert opening_psets["BaseQuantities"]["Width"] == 915.0
+    assert "BaseQuantities" not in door_psets

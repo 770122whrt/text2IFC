@@ -465,6 +465,7 @@ def _create_door(
         RelatedBuildingElement=door,
     )
     modified = []
+    created_type_relation = None
     if door_style is not None:
         relation = next(iter(door_style.ObjectTypeOf), None)
         if relation is None:
@@ -477,16 +478,18 @@ def _create_door(
                 RelatedObjects=[door],
                 RelatingType=door_style,
             )
+            created_type_relation = relation
         else:
             relation.RelatedObjects = sorted_roots(
                 [*relation.RelatedObjects, door]
             )
-        modified.append(
-            {
-                "role": "door_type_relationship",
-                "global_id": str(relation.GlobalId),
-            }
-        )
+        if created_type_relation is None:
+            modified.append(
+                {
+                    "role": "door_type_relationship",
+                    "global_id": str(relation.GlobalId),
+                }
+            )
     containment = wall_containment(wall)
     add_to_containment(containment, door)
     modified.append(
@@ -525,6 +528,17 @@ def _create_door(
                 }
             ]
             if generated
+            else []
+        ),
+        *(
+            [
+                {
+                    "role": "door_type_relationship",
+                    "ifc_class": created_type_relation.is_a(),
+                    "global_id": str(created_type_relation.GlobalId),
+                }
+            ]
+            if created_type_relation is not None
             else []
         ),
         {"role": "door", "ifc_class": door.is_a(), "global_id": door_id},
@@ -799,6 +813,7 @@ def _l1_authorization(*, creates_opening: bool) -> dict[str, Any]:
         "door": "IfcDoor",
         "fills_relationship": "IfcRelFillsElement",
         "generated_door_type": "IfcDoorStyle",
+        "door_type_relationship": "IfcRelDefinesByType",
     }
     if creates_opening:
         created.update(

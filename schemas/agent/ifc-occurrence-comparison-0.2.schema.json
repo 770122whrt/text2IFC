@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "text2ifc/ifc-occurrence-comparison/0.2",
+  "title": "Family-neutral IFC Occurrence Comparison 0.2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "source_hashes", "mapping", "counts", "details", "truncated", "geometry_relationship_success", "semantic_fidelity_success", "occurrence_fidelity_success", "authoring_exactness"],
+  "properties": {
+    "schema_version": {"const": "text2ifc/ifc-occurrence-comparison/0.2"},
+    "source_hashes": {"type": "object", "additionalProperties": {"type": ["string", "null"]}},
+    "mapping": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["expected", "actual"],
+      "properties": {
+        "expected": {"$ref": "#/$defs/identity"},
+        "actual": {"$ref": "#/$defs/identity"}
+      }
+    },
+    "counts": {
+      "type": "object",
+      "required": ["matched", "not_in_user_text", "unsupported_authoring", "wrong_value", "ownership_only"],
+      "additionalProperties": false,
+      "properties": {
+        "matched": {"type": "integer", "minimum": 0},
+        "not_in_user_text": {"type": "integer", "minimum": 0},
+        "unsupported_authoring": {"type": "integer", "minimum": 0},
+        "wrong_value": {"type": "integer", "minimum": 0},
+        "ownership_only": {"type": "integer", "minimum": 0}
+      }
+    },
+    "details": {"type": "array", "items": {"$ref": "#/$defs/detail"}},
+    "truncated": {"type": "boolean"},
+    "detail_total": {"type": "integer", "minimum": 0},
+    "geometry_relationship_success": {"type": "boolean"},
+    "semantic_fidelity_success": {"type": "boolean"},
+    "occurrence_fidelity_success": {"type": "boolean"},
+    "authoring_exactness": {"type": "boolean"}
+  },
+  "$defs": {
+    "identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["entity_global_id", "entity_name", "ifc_class", "scope", "role", "related_opening_global_id"],
+      "properties": {
+        "entity_global_id": {"type": "string", "minLength": 1},
+        "entity_name": {"type": ["string", "null"]},
+        "ifc_class": {"enum": ["IfcWindow", "IfcDoor", "IfcOpeningElement"]},
+        "scope": {"enum": ["window_occurrence", "door_occurrence", "opening_occurrence"]},
+        "role": {"type": "string", "minLength": 1},
+        "related_opening_global_id": {"type": ["string", "null"]}
+      }
+    },
+    "detail": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["fact_key", "classification", "required", "expected", "actual"],
+      "properties": {
+        "fact_key": {"type": "string", "minLength": 1},
+        "classification": {"enum": ["matched", "not_in_user_text", "unsupported_authoring", "wrong_value", "ownership_only"]},
+        "required": {"type": "boolean"},
+        "expected": {"type": ["object", "null"]},
+        "actual": {"type": ["object", "null"]}
+      }
+    }
+  }
+}

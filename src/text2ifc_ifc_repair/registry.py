@@ -133,6 +133,12 @@ class OperationDefinition:
             raise OperationRegistryError(
                 "INVALID_SEMANTIC_SCOPE_ROLE", self.operation_type
             )
+        if len(set(self.semantic_scope_roles.values())) != len(
+            self.semantic_scope_roles
+        ):
+            raise OperationRegistryError(
+                "DUPLICATE_SEMANTIC_SCOPE", self.operation_type
+            )
         if self.conflict_domain is not None and not self.conflict_domain:
             raise OperationRegistryError(
                 "INVALID_CONFLICT_DOMAIN", self.operation_type

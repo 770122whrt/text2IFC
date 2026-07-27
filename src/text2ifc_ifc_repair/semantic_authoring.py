@@ -523,7 +523,9 @@ def apply_semantic_assignments(
         elif category == "quantity":
             set_name, _ = path.rsplit(".", 1)
             canonical_set_name = (
-                "BaseQuantities" if set_name == "window-base" else set_name
+                "BaseQuantities"
+                if set_name in {"window-base", "door-base", "opening-base"}
+                else set_name
             )
             quantity_name = path.rsplit(".", 1)[1]
             members = quantities.setdefault(canonical_set_name, {})
@@ -1020,6 +1022,10 @@ def _scoped_semantic_role(role: str, scope: str) -> str:
         prefix = "semantic_"
         suffix = role[len(prefix):] if role.startswith(prefix) else role
         return f"semantic_opening_{suffix}"
+    if scope == "door_occurrence":
+        prefix = "semantic_"
+        suffix = role[len(prefix):] if role.startswith(prefix) else role
+        return f"semantic_door_{suffix}"
     raise SemanticManifestError("SEMANTIC_SCOPE_UNSUPPORTED", scope)
 
 
