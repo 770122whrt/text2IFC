@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "text2ifc/ifc-repair-prompt-profile/0.1",
+  "title": "IFC Repair Operation Prompt Profile 0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "profile_id", "profile_version", "component_family",
+    "action", "operation_type", "target_ifc_classes", "classification_terms",
+    "slot_summary", "required_slots", "conditional_slots", "optional_slots",
+    "program_derived_slots", "forbidden_inferences", "supported_capabilities",
+    "unsupported_capabilities", "stage2_projection_fields", "few_shots"
+  ],
+  "properties": {
+    "schema_version": {"const": "text2ifc/ifc-repair-prompt-profile/0.1"},
+    "profile_id": {"type": "string", "pattern": "^[a-z][a-z0-9._-]*$", "maxLength": 128},
+    "profile_version": {"const": "0.1"},
+    "component_family": {"type": "string", "pattern": "^[a-z][a-z0-9_-]*$", "maxLength": 64},
+    "action": {"type": "string", "pattern": "^[a-z][a-z0-9_-]*$", "maxLength": 64},
+    "operation_type": {"type": "string", "minLength": 1, "maxLength": 128},
+    "target_ifc_classes": {"$ref": "#/$defs/strings"},
+    "classification_terms": {"type": "array", "minItems": 1, "maxItems": 32, "uniqueItems": true, "items": {"type": "string", "minLength": 1, "maxLength": 64}},
+    "slot_summary": {"type": "string", "minLength": 1, "maxLength": 1024},
+    "required_slots": {"$ref": "#/$defs/strings"},
+    "conditional_slots": {"$ref": "#/$defs/strings0"},
+    "optional_slots": {"$ref": "#/$defs/strings0"},
+    "program_derived_slots": {"$ref": "#/$defs/strings0"},
+    "forbidden_inferences": {"$ref": "#/$defs/strings"},
+    "supported_capabilities": {"$ref": "#/$defs/strings"},
+    "unsupported_capabilities": {"$ref": "#/$defs/strings0"},
+    "stage2_projection_fields": {"$ref": "#/$defs/strings"},
+    "few_shots": {
+      "type": "array", "maxItems": 8, "uniqueItems": true,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["example_id", "path", "sha256"],
+        "properties": {
+          "example_id": {"type": "string", "minLength": 1, "maxLength": 128},
+          "path": {"type": "string", "pattern": "^prompts/agent/ifc-repair-few-shots/[A-Za-z0-9._/-]+\\.json$"},
+          "sha256": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}
+        }
+      }
+    }
+  },
+  "$defs": {
+    "strings": {"type": "array", "minItems": 1, "maxItems": 64, "uniqueItems": true, "items": {"type": "string", "minLength": 1, "maxLength": 256}},
+    "strings0": {"type": "array", "maxItems": 64, "uniqueItems": true, "items": {"type": "string", "minLength": 1, "maxLength": 256}}
+  }
+}

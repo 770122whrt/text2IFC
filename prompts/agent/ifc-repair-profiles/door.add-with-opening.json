@@ -1,0 +1,25 @@
+{
+  "schema_version": "text2ifc/ifc-repair-prompt-profile/0.1",
+  "profile_id": "door.add-with-opening",
+  "profile_version": "0.1",
+  "component_family": "door",
+  "action": "add_with_opening",
+  "operation_type": "add_door_with_opening_to_wall",
+  "target_ifc_classes": ["IfcWall"],
+  "classification_terms": ["door", "门", "add door", "repair door", "single swing"],
+  "slot_summary": "Target Wall; wall-local position; overall opening width and height; optional exact DoorStyle or explicit single-swing operation with viewpoint.",
+  "required_slots": ["/target_query", "/parameters/position", "/parameters/opening/width_mm", "/parameters/opening/height_mm"],
+  "conditional_slots": ["/parameters/door/operation_type", "/parameters/door/viewpoint", "/prototype_intent"],
+  "optional_slots": ["/property_intents", "/quantity_intents", "/occurrence_reuse_intent"],
+  "program_derived_slots": ["/parameters/opening/sill_height_mm", "opening depth", "GlobalIds", "storey containment", "door visual representation"],
+  "forbidden_inferences": ["clear width from nominal width", "left or right swing without viewpoint", "prototype similarity", "material or transom"],
+  "supported_capabilities": ["straight_wall", "SINGLE_SWING_LEFT", "SINGLE_SWING_RIGHT", "NOTDEFINED", "exact_type_reuse", "generated_type"],
+  "unsupported_capabilities": ["REVOLVING", "FOLDING", "SLIDING", "DOUBLE_DOOR", "curved_wall"],
+  "stage2_projection_fields": ["operation_id", "operation_type", "target", "parameters", "evidence_refs"],
+  "few_shots": [
+    {"example_id":"door.add.complete","path":"prompts/agent/ifc-repair-few-shots/door-add-complete.json","sha256":"sha256:73bdffe592df1d3015cc8e6e06e03dfda36abd9a582cb150bef8b5c1a9d75dc9"},
+    {"example_id":"door.add.clarification","path":"prompts/agent/ifc-repair-few-shots/door-add-clarification.json","sha256":"sha256:059ae585e397766dcc17575f23f29a45812449782b1dc1f4ea9ee96c5d2254fe"},
+    {"example_id":"door.add.type-reuse","path":"prompts/agent/ifc-repair-few-shots/door-add-type-reuse.json","sha256":"sha256:7391c7550716d63830ac7b65f1926f6bf48803c0d0f76fde589e9cee485d2e87"},
+    {"example_id":"door.add.unsupported","path":"prompts/agent/ifc-repair-few-shots/door-add-unsupported.json","sha256":"sha256:a249b65958b5562f0f19ff22ac84767e8bfbd427e180486ef0a74e05f69c7186"}
+  ]
+}

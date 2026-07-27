@@ -1,0 +1,20 @@
+{
+  "schema_version": "text2ifc/ifc-repair-prompt-profile/0.1",
+  "profile_id": "occurrence.set-properties",
+  "profile_version": "0.1",
+  "component_family": "occurrence",
+  "action": "set_properties",
+  "operation_type": "set_occurrence_properties",
+  "target_ifc_classes": ["IfcDoor", "IfcWall", "IfcWallStandardCase", "IfcWindow"],
+  "classification_terms": ["property", "pset", "属性", "set property"],
+  "slot_summary": "Existing occurrence target and one or more explicit scalar property values.",
+  "required_slots": ["/target_query", "/property_intents"],
+  "conditional_slots": [],
+  "optional_slots": [],
+  "program_derived_slots": ["canonical property typing after knowledge resolution"],
+  "forbidden_inferences": ["property value", "shared Type mutation", "custom property confirmation"],
+  "supported_capabilities": ["IfcPropertySingleValue", "occurrence_direct"],
+  "unsupported_capabilities": ["enumerated_value", "list_value", "table_value", "complex_property", "type_owned"],
+  "stage2_projection_fields": ["operation_id", "operation_type", "target", "parameters", "evidence_refs"],
+  "few_shots": []
+}

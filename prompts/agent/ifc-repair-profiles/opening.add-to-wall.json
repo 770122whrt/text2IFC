@@ -1,0 +1,20 @@
+{
+  "schema_version": "text2ifc/ifc-repair-prompt-profile/0.1",
+  "profile_id": "opening.add-to-wall",
+  "profile_version": "0.1",
+  "component_family": "opening",
+  "action": "add_to_wall",
+  "operation_type": "add_opening_to_wall",
+  "target_ifc_classes": ["IfcWall"],
+  "classification_terms": ["opening", "void", "洞口", "开洞", "挖墙"],
+  "slot_summary": "Target Wall; wall-local position; opening width, height and sill. No filling element is created.",
+  "required_slots": ["/target_query", "/parameters/position", "/parameters/opening/width_mm", "/parameters/opening/height_mm", "/parameters/opening/sill_height_mm"],
+  "conditional_slots": [],
+  "optional_slots": ["/property_intents", "/quantity_intents"],
+  "program_derived_slots": ["opening depth", "GlobalIds"],
+  "forbidden_inferences": ["missing geometry", "filling element", "project coordinates"],
+  "supported_capabilities": ["straight_wall", "wall_local_position"],
+  "unsupported_capabilities": ["curved_wall", "arbitrary_profile"],
+  "stage2_projection_fields": ["operation_id", "operation_type", "target", "parameters", "evidence_refs"],
+  "few_shots": []
+}

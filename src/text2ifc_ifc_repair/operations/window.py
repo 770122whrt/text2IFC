@@ -368,6 +368,12 @@ def window_operation_definition() -> OperationDefinition:
         generated_type_template=_generated_window_type_template,
         generated_occurrence_facts=_generated_window_occurrence_facts,
         operation_conflict_checker=_operation_conflict_checker,
+        prompt_profile_id="window.add-with-opening",
+        semantic_scope_roles={
+            "window": "window_occurrence",
+            "opening": "opening_occurrence",
+        },
+        conflict_domain="hosted_opening",
     )
 
 

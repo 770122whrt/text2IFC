@@ -91,6 +91,9 @@ def occurrence_property_operation_definition() -> OperationDefinition:
         ),
         evaluation_policy=PROPERTY_EVALUATION_POLICY,
         editable_occurrence_ifc_classes=TARGET_IFC_CLASSES,
+        prompt_profile_id="occurrence.set-properties",
+        semantic_scope_roles={"target": "occurrence_direct"},
+        conflict_domain="occurrence_property",
     )
 
 

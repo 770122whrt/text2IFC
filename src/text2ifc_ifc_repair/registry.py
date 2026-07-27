@@ -62,6 +62,12 @@ class OperationDefinition:
     generated_type_template: OperationCallable | None = None
     generated_occurrence_facts: OperationCallable | None = None
     operation_conflict_checker: OperationCallable | None = None
+    prompt_profile_id: str | None = None
+    semantic_scope_roles: Mapping[str, str] = field(default_factory=dict)
+    conflict_domain: str | None = None
+    intent_policy_checker: OperationCallable | None = None
+    parameter_resolver: OperationCallable | None = None
+    generated_type_factory: OperationCallable | None = None
 
     def __post_init__(self) -> None:
         if not self.operation_type or not self.target_ifc_classes:
@@ -118,6 +124,34 @@ class OperationDefinition:
         ):
             raise OperationRegistryError(
                 "INVALID_OPERATION_CONFLICT_CHECKER", self.operation_type
+            )
+        if self.prompt_profile_id is not None and not self.prompt_profile_id:
+            raise OperationRegistryError(
+                "INVALID_PROMPT_PROFILE_ID", self.operation_type
+            )
+        if any(not role or not scope for role, scope in self.semantic_scope_roles.items()):
+            raise OperationRegistryError(
+                "INVALID_SEMANTIC_SCOPE_ROLE", self.operation_type
+            )
+        if self.conflict_domain is not None and not self.conflict_domain:
+            raise OperationRegistryError(
+                "INVALID_CONFLICT_DOMAIN", self.operation_type
+            )
+        for hook_name in (
+            "intent_policy_checker",
+            "parameter_resolver",
+            "generated_type_factory",
+        ):
+            hook = getattr(self, hook_name)
+            if hook is not None and not callable(hook):
+                raise OperationRegistryError(
+                    f"INVALID_{hook_name.upper()}", self.operation_type
+                )
+        if self.generated_type_factory is not None and (
+            self.generated_type_template is None
+        ):
+            raise OperationRegistryError(
+                "GENERATED_TYPE_FACTORY_TEMPLATE_REQUIRED", self.operation_type
             )
 
 
