@@ -124,6 +124,28 @@ def test_normalizes_draft_unresolved_paths_as_user_owned_ask_user():
     assert payload["retryable"] is True
 
 
+def test_internal_generation_package_draft_is_not_attributed_to_user():
+    issues = normalize_validation_issues(
+        [
+            {
+                "code": "UNRESOLVED_DRAFT_PATH",
+                "path": "/generation_package_manifest/packages/2/owned_component_ids",
+                "message": "The generator could not satisfy an internal package scope.",
+            }
+        ],
+        source="schema_validation",
+    )
+
+    payload = _assert_valid(
+        issues[0],
+        source="schema_validation",
+        owner="generator",
+        issue_type="missing_entity",
+        route="regenerate_json",
+    )
+    assert payload["retryable"] is True
+
+
 def test_normalizes_generator_draft_missing_entities_as_generator_regeneration():
     issues = normalize_generator_draft_issues(
         {

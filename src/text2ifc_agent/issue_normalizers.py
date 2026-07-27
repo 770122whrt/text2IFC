@@ -31,6 +31,15 @@ def normalize_validation_issues(
             issue_type = "unsupported_schema_capability"
             route = "blocked_as_unsupported"
             retryable = False
+        elif (
+            source == "schema_validation"
+            and path is not None
+            and path.startswith("/generation_package_manifest/")
+        ):
+            owner = "generator"
+            issue_type = "missing_entity"
+            route = "regenerate_json"
+            retryable = True
         elif "DRAFT" in code or "UNRESOLVED" in code:
             if source == "schema_validation" and (
                 "PLACEMENT_PARENT" in code or "RELATIONSHIP_ENDPOINT" in code
