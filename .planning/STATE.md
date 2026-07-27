@@ -21,7 +21,8 @@ See `.planning/PROJECT.md`.
 **Core value:** Given an IFC file and an explicit user request, produce a
 traceable semantic ChangeSet and an L1/L2-validated IFC result.
 
-**Current focus:** Review and plan Phase 11 — Wall Opening and Door Operations.
+**Current focus:** Await Goal-mode authorization to execute the five approved
+Phase 11 Wall Opening and Door plans.
 
 ## Current Position
 
@@ -30,8 +31,9 @@ Plan: 3 of 3 complete
 
 - Milestone: v1.1 IFC ChangeSet Repair Pipeline
 - Phase: 10.5 complete; next Phase 11
-- Plan: all three implementation plans complete
-- Status: offline, AdvancedProject performance and real DeepSeek accepted
+- Plan: Phase 11 has five executable plans; none has started
+- Status: Phase 11 design/research/validation/planning complete; awaiting
+  explicit Goal execution authorization
 - Progress: 10 / 13 phases complete
 - Requirements: WFID-01..06 complete
 - Last activity: 2026-07-26 - 583 IFC repair tests passed; AdvancedProject
@@ -39,7 +41,14 @@ Plan: 3 of 3 complete
   2.24/2.25 GB peak RSS; real DeepSeek r21 passed RepairIntent 0.4,
   ChangeSet 0.3, Production/private L1/L2 and occurrence fidelity
 - Phase 11 design decisions were confirmed on 2026-07-28 and are frozen in
-  `11-CONTEXT.md` and `11-SPEC.md`; implementation has not started.
+  `11-CONTEXT.md` and `11-SPEC.md`. Five sequential implementation plans,
+  research, pattern map and validation strategy are complete; implementation
+  has not started.
+
+- Phase 11 uses additive RepairIntent 0.5, Prompt Profile 0.1, IFC Index 0.4,
+  Semantic Manifest 0.3 and Bound ChangeSet 0.4 contracts. Historical
+  RepairIntent, Manifest and ChangeSet schema files remain immutable;
+  Provider draft remains 0.2.
 
 ## Carried Context
 
@@ -159,12 +168,13 @@ Plan: 3 of 3 complete
 
 ## Next Action
 
-Review the Phase 11 specification, then create the executable implementation
-plans for opening-only, Door+Opening, Door-into-existing-Opening, operation
-prompt profiles, L1/L2 and dataset/live acceptance.
+After the user confirms the Chinese execution summary and Goal authorization,
+create one Phase 11 Goal and execute plans 11-01 through 11-05 sequentially.
+Run the real DeepSeek UAT only after the complete offline matrix is green;
+report any Provider or dataset blocker honestly without fallback.
 
 ---
-*Last updated: 2026-07-28 after Phase 11 design discussion*
+*Last updated: 2026-07-28 after Phase 11 planning and historical-change checkpoint*
 
 ## Accumulated Context
 

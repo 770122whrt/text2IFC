@@ -1,10 +1,64 @@
 # Phase 11: Wall Opening and Door Operations - Specification
 
-**Status:** Draft for user review
+**Status:** Plan-ready; awaiting Goal-mode execution authorization
 **Date:** 2026-07-28
 **Depends on:** Phases 7, 8, 9, 09.1 and 10 through 10.5
 **Requirements:** OPS-01, OPS-02
 **Decision record:** [11-CONTEXT.md](11-CONTEXT.md)
+**Execution plans:** [11-01](11-01-PLAN.md) →
+[11-02](11-02-PLAN.md) → [11-03](11-03-PLAN.md) →
+[11-04](11-04-PLAN.md) → [11-05](11-05-PLAN.md)
+**Validation:** [11-VALIDATION.md](11-VALIDATION.md)
+
+## 0. 中文执行摘要
+
+Phase 11 不是把现有 Window 代码中的类名替换成 Door，而是验证统一
+ChangeSet 架构能否安全扩展到新的构件族。本阶段只增加三种几何操作：
+
+1. 在直墙上新增一个不带填充构件的 Opening；
+2. 在直墙上同时新增 Door 和 Opening；
+3. 向一个已存在且尚未被填充的 Opening 中新增 Door。
+
+完整输入仍然是“一个 IFC2X3 文件 + 一段自然语言”，完整输出仍然是：
+一个统一的、已绑定的原子 ChangeSet，以及通过重开、L1、L2、occurrence
+fidelity 和全模型 preservation 后才发布的 IFC 文件与证据目录。
+
+关键边界如下：
+
+- Stage 1 在每个 RepairIntent operation 中记录“构件族 / 动作 /
+  prompt profile”，不增加一次额外的 Provider 分类调用；
+- Stage 1 只接收紧凑的路由与 slot 摘要；程序在路由完成后只加载本次操作
+  需要的 operation contract 和 few-shot，Door 请求不会携带未来 Beam、
+  Column 的完整示例；
+- “门宽/门高”若没有说明是洞口、净通行、门扇还是预留洞口尺寸，必须澄清；
+  已明确的含义不重复确认，也不编造换算；
+- 左开/右开只有在观察方向明确时才成立；精确复用的 `IfcDoorStyle`
+  可以提供正式 OperationType，否则缺失信息必须澄清，用户也可明确接受
+  `NOTDEFINED`；
+- “复用 Type”只复用并绑定原 `IfcDoorStyle`，不会改动共享 Type，也不会
+  自动复制 occurrence Pset/Quantity；
+- 未指定 Type 时，程序只生成单扇左开、单扇右开或用户明确接受的
+  `NOTDEFINED` Type；复杂门型只能精确复用，第一版不自动生成；
+- 材料、上亮、门槛、五金等未提及的可选事实直接省略；用户要求且系统支持
+  的事实进入确定性 authoring 和 L2，用户要求但尚不支持的事实由程序返回
+  稳定 capability error，不能交给 LLM 自由发挥；
+- 所有 Door、Window、Opening 混合操作仍在一个 ChangeSet 中原子执行，
+  任一操作失败则不发布任何 repaired IFC。
+
+本阶段采用新增版本而不修改历史契约：
+
+| Contract | Phase 11 version | 原因 |
+|---|---|---|
+| RepairIntent / body | `0.5` | 增加逐 operation 的 routing intent，并增加 Door occurrence scope |
+| Prompt profile | `0.1` | 固化分类摘要、slot、禁止推断、支持范围和 few-shot 指纹 |
+| IFC index / indexer | `0.4` | 索引 Opening、空/已填充状态及 DoorStyle 正式属性 |
+| Semantic Manifest | `0.3` | 增加 `door_occurrence`，并保留生成 Type 模板的派生证据 |
+| Bound ChangeSet | `0.4` | 绑定 Manifest 0.3 的新 scope 和生成 DoorStyle 模板证据 |
+| Provider draft | 保持 `0.2` | Provider 仍只提交非权威草案，不直接写 semantic assignments |
+
+`0.1`–`0.4` RepairIntent、Semantic Manifest 0.1/0.2、Bound ChangeSet
+0.2/0.3 都保持只读兼容。旧索引是可重建缓存；打开版本不匹配的索引时
+fail closed 并要求重建，不做有损的就地迁移。
 
 ## 1. Problem
 
@@ -98,7 +152,7 @@ to `IfcDoor`; it is not reimplemented as a Door-only property operation.
 
 ### 4.1 RepairIntent routing field
 
-RepairIntent advances to a version after 0.4 and adds one required
+RepairIntent advances to version 0.5 and adds one required
 `routing_intent` to every operation:
 
 ```json

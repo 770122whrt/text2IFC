@@ -4,8 +4,9 @@
 [Phase 11 Wall Opening 与 Door Operations SPEC](../../../.planning/phases/11-wall-opening-and-door-operations/11-SPEC.md)。
 它冻结 Opening-only、Door+Opening、Door 填入既有 Opening、DoorStyle
 复用/生成、开启方向澄清、RepairIntent 路由、按 operation 加载 few-shot，
-以及单门/五门/混合构件/大型 IFC/真实 DeepSeek 的验收边界。当前仅完成设计，
-不得宣称 Door 生产能力已经实现。
+以及单门/五门/混合构件/大型 IFC/真实 DeepSeek 的验收边界。五份执行计划、
+实现研究和验证策略已经完成，但代码尚未开始，因此不得宣称 Door 生产能力
+已经实现。
 
 最新验收：[Phase 10.5 Window Occurrence Fidelity 与验证加速报告](phase10.5-window-fidelity-validation-report.md)。
   它记录 occurrence 属性/Quantity 输入与授权复用、Ground Truth Comparator、
@@ -29,7 +30,10 @@ Phase 8 验证报告：[Evaluation 0.2、Benchmark Gold 隔离与 LargeBuilding 
 
 | 文档 | 职责 | 当前状态 |
 |---|---|---|
-| [Phase 11 SPEC](../../../.planning/phases/11-wall-opening-and-door-operations/11-SPEC.md) | Opening/Door operation、Type/swing/position/属性边界、Prompt Profile、L1/L2 和验收矩阵 | 2026-07-28 设计已确认；等待用户文档审阅和实施计划 |
+| [Phase 11 SPEC](../../../.planning/phases/11-wall-opening-and-door-operations/11-SPEC.md) | Opening/Door operation、Type/swing/position/属性边界、Prompt Profile、L1/L2 和验收矩阵 | 2026-07-28 设计已确认；等待 Goal 执行授权 |
+| [Phase 11 RESEARCH](../../../.planning/phases/11-wall-opening-and-door-operations/11-RESEARCH.md) | 当前 Window 专用耦合、IFC2X3 DoorStyle/Openings 事实、版本升级和推荐扩展缝 | 2026-07-28 规划研究完成 |
+| [Phase 11 VALIDATION](../../../.planning/phases/11-wall-opening-and-door-operations/11-VALIDATION.md) | schema、索引、authoring、L1/L2、批量/混合、大型 IFC、真实 DeepSeek 和 Proof 验收 | 2026-07-28 验证矩阵完成 |
+| [Phase 11 执行计划](../../../.planning/phases/11-wall-opening-and-door-operations/11-01-PLAN.md) | 五步顺序入口：契约/Prompt → 索引/解析 → IFC 写入 → 评估 → 数据集/live UAT | 五份计划已完成；尚未实施 |
 | [phase10.5-window-fidelity-validation-report.md](phase10.5-window-fidelity-validation-report.md) | occurrence 属性输入/授权复用、Ground Truth Comparator、validation cache、冷/热大型 IFC 性能与真实 DeepSeek UAT | 2026-07-26 全部通过；Production/private L1/L2 与 occurrence fidelity passed |
 | [phase10.4-comparator-0.2-validation-report.md](phase10.4-comparator-0.2-validation-report.md) | 大型 IFC 全局保全门禁、fail-closed 指纹、三次性能/内存基准与完整 Production 重放 | 2026-07-25 Comparator 与 AdvancedProject 五窗 L1/L2/发布闭环通过 |
 | [phase10.3-five-window-batch-validation-report.md](phase10.3-five-window-batch-validation-report.md) | dataset 审计、五窗 damage/repair、统一 ChangeSet、原子回滚、逐项 L1/L2、真实 DeepSeek 与大型 IFC 矩阵 | 2026-07-24 通过；五项 L1/L2 passed |

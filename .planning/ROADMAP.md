@@ -409,7 +409,7 @@ seconds.
 
 ### Phase 11: Wall Opening and Door Operations
 
-**Status:** Specification drafted — 2026-07-28
+**Status:** Planned; awaiting Goal-mode execution authorization — 2026-07-28
 
 **Goal:** Extend the Registry with opening-only, Door+Opening and
 Door-into-existing-Opening operations without copying the Window pipeline,
@@ -421,6 +421,28 @@ profiles.
 **Depends on:** Phases 10.1, 10.2 and 10.5
 
 **Specification:** [Phase 11 SPEC](phases/11-wall-opening-and-door-operations/11-SPEC.md)
+
+**Implementation research:** [Phase 11 RESEARCH](phases/11-wall-opening-and-door-operations/11-RESEARCH.md)
+
+**Validation strategy:** [Phase 11 VALIDATION](phases/11-wall-opening-and-door-operations/11-VALIDATION.md)
+
+**Plans:** 5 sequential plans
+
+1. [11-01 — Versioned routing, prompt profiles and authority contracts](phases/11-wall-opening-and-door-operations/11-01-PLAN.md)
+2. [11-02 — Opening/DoorStyle index and deterministic Door resolution](phases/11-wall-opening-and-door-operations/11-02-PLAN.md)
+3. [11-03 — Shared hosted-opening core and deterministic IFC authoring](phases/11-wall-opening-and-door-operations/11-03-PLAN.md)
+4. [11-04 — Door/Opening L1, L2 and occurrence fidelity](phases/11-wall-opening-and-door-operations/11-04-PLAN.md)
+5. [11-05 — Dataset matrix, real DeepSeek UAT and Proof publication](phases/11-wall-opening-and-door-operations/11-05-PLAN.md)
+
+**Execution sequence:**
+
+| Wave | Plan | Blocking outcome |
+|---:|---|---|
+| 1 | 11-01 | RepairIntent 0.5, Prompt Profile 0.1, Manifest 0.3 and ChangeSet 0.4 are frozen and selected-profile prompts work |
+| 2 | 11-02 | Opening/Type evidence and all blocking Door facts resolve or clarify deterministically |
+| 3 | 11-03 | Opening-only and both Door IFC operations apply atomically on the shared hosted-opening core |
+| 4 | 11-04 | Independent L1/L2/occurrence/global gates pass for single, batch and mixed operations |
+| 5 | 11-05 | Real datasets, AdvancedProject and real DeepSeek produce reproducible accepted evidence |
 
 **Cross-cutting constraints:**
 
