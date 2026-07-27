@@ -399,6 +399,7 @@ def _operation_candidates(
                         "ifc_class": authority["ifc_class"],
                         "formal_attributes": dict(formal_attributes),
                         "template_digest": authority["template_digest"],
+                        "template": dict(template),
                     },
                 )
             )

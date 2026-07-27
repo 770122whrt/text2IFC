@@ -71,14 +71,21 @@ def apply_changeset(
                 "applicator", operation, model=model
             )
             if operation.get("semantic_assignments") is not None:
-                policy = registry.require_evaluation_policy(
-                    str(operation["operation_type"])
-                )
+                definition = registry.require(str(operation["operation_type"]))
+                scope_roles = {
+                    scope: role
+                    for role, scope in definition.semantic_scope_roles.items()
+                }
+                if not scope_roles:
+                    policy = registry.require_evaluation_policy(
+                        str(operation["operation_type"])
+                    )
+                    scope_roles = {
+                        "window_occurrence": policy.semantic_role,
+                        "opening_occurrence": "opening",
+                    }
                 scoped_semantics = []
-                for scope, target_role in (
-                    ("window_occurrence", policy.semantic_role),
-                    ("opening_occurrence", "opening"),
-                ):
+                for scope, target_role in scope_roles.items():
                     scoped_assignments = [
                         item
                         for item in operation["semantic_assignments"]

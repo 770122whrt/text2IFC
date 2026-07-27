@@ -184,7 +184,7 @@ def test_audit_rejects_stale_base_fingerprint(tmp_path: Path) -> None:
 
 def test_audit_rejects_unregistered_operation(tmp_path: Path) -> None:
     damaged_ifc, request, changeset = _case(tmp_path)
-    changeset["operations"][0]["operation_type"] = "add_door_with_opening_to_wall"
+    changeset["operations"][0]["operation_type"] = "unsupported_test_operation"
 
     audit = audit_changeset(
         damaged_ifc_path=damaged_ifc,

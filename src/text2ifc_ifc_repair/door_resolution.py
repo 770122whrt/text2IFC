@@ -275,6 +275,11 @@ def canonicalize_door_intent(
             ),
         },
     }
+    if operation_type == FILL_DOOR_OPERATION:
+        host_ids = target_record.facets.get("host_wall_global_ids", ())
+        if len(host_ids) != 1:
+            return _unsupported("OPENING_TARGET_INVALID")
+        canonical["host_wall_global_id"] = str(host_ids[0])
     authorized = (
         {
             "kind": "door_canonicalization",

@@ -430,6 +430,7 @@ def resolve_repair_intent(
                 operation_id=operation.operation_id,
                 request_hash=intent.source_request_hash,
                 model_fingerprint=intent.model_fingerprint,
+                resolved_operation=completed[-1],
             )
             completed[-1] = replace(
                 completed[-1],
@@ -1029,19 +1030,24 @@ def generated_type_authority(
     operation_id: str,
     request_hash: str,
     model_fingerprint: str,
+    resolved_operation: ResolvedOperation | None = None,
 ) -> dict[str, Any]:
     """Create operation-bound authority without inspecting project Types."""
 
     builder = getattr(definition, "generated_type_template", None)
     if builder is None:
         raise ValueError("GENERATED_TYPE_TEMPLATE_UNAVAILABLE")
-    template = dict(
-        builder(
-            operation_id=operation_id,
-            request_hash=request_hash,
-            model_fingerprint=model_fingerprint,
-        )
-    )
+    arguments = {
+        "operation_id": operation_id,
+        "request_hash": request_hash,
+        "model_fingerprint": model_fingerprint,
+    }
+    if (
+        getattr(definition, "generated_type_factory", None) is not None
+        and resolved_operation is not None
+    ):
+        arguments["resolved_operation"] = resolved_operation
+    template = dict(builder(**arguments))
     template_id = str(
         template.pop(
             "template_id",
