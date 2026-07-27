@@ -33,6 +33,14 @@ from text2ifc_ifc_repair.evaluation_policy import (
 )
 from text2ifc_ifc_repair.registry import OperationDefinition, OperationRegistryError
 from text2ifc_ifc_repair.type_templates import ensure_bound_type
+from text2ifc_ifc_repair.operations.hosted_opening import (
+    body_context as hosted_body_context,
+    deterministic_global_id as hosted_deterministic_global_id,
+    hosted_opening_conflict_checker,
+    local_placement as hosted_local_placement,
+    opening_placement as hosted_opening_placement,
+    wall_containment as hosted_wall_containment,
+)
 
 
 OPERATION_TYPE = "add_window_with_opening_to_wall"
@@ -381,52 +389,7 @@ def _operation_conflict_checker(
     previous: Mapping[str, Any],
     current: Mapping[str, Any],
 ) -> list[dict[str, str]]:
-    """Reject overlapping sibling openings while allowing one wall to host a batch."""
-
-    previous_opening = previous["parameters"]["opening"]
-    current_opening = current["parameters"]["opening"]
-    previous_center = float(previous["parameters"]["position"]["center_offset_mm"])
-    current_center = float(current["parameters"]["position"]["center_offset_mm"])
-    previous_horizontal = (
-        previous_center - float(previous_opening["width_mm"]) / 2.0,
-        previous_center + float(previous_opening["width_mm"]) / 2.0,
-    )
-    current_horizontal = (
-        current_center - float(current_opening["width_mm"]) / 2.0,
-        current_center + float(current_opening["width_mm"]) / 2.0,
-    )
-    previous_vertical = (
-        float(previous_opening["sill_height_mm"]),
-        float(previous_opening["sill_height_mm"])
-        + float(previous_opening["height_mm"]),
-    )
-    current_vertical = (
-        float(current_opening["sill_height_mm"]),
-        float(current_opening["sill_height_mm"])
-        + float(current_opening["height_mm"]),
-    )
-    horizontal_overlap = (
-        min(previous_horizontal[1], current_horizontal[1])
-        - max(previous_horizontal[0], current_horizontal[0])
-        > 1e-6
-    )
-    vertical_overlap = (
-        min(previous_vertical[1], current_vertical[1])
-        - max(previous_vertical[0], current_vertical[0])
-        > 1e-6
-    )
-    if not (horizontal_overlap and vertical_overlap):
-        return []
-    return [
-        {
-            "code": "BATCH_OPENING_OVERLAP",
-            "path": "/parameters/position/center_offset_mm",
-            "message": (
-                "Opening overlaps another operation on the same target wall: "
-                f"{previous['operation_id']}."
-            ),
-        }
-    ]
+    return hosted_opening_conflict_checker(previous, current)
 
 
 def _generated_window_type_template(
@@ -1423,22 +1386,12 @@ def _opening_placement(
     width_mm: float,
     sill_mm: float,
 ) -> Any:
-    start, end = straight_wall_axis(wall)
-    dx = end[0] - start[0]
-    dy = end[1] - start[1]
-    length = math.hypot(dx, dy)
-    direction = (dx / length, dy / length, 0.0)
-    left = center_mm - width_mm / 2.0
-    location = (
-        start[0] + direction[0] * left,
-        start[1] + direction[1] * left,
-        start[2] + sill_mm,
-    )
-    return _local_placement(
+    return hosted_opening_placement(
         model,
-        relative_to=wall.ObjectPlacement,
-        location=location,
-        ref_direction=direction,
+        wall=wall,
+        center_mm=center_mm,
+        width_mm=width_mm,
+        sill_mm=sill_mm,
     )
 
 
@@ -1449,39 +1402,20 @@ def _local_placement(
     location: tuple[float, float, float],
     ref_direction: tuple[float, float, float] = (1.0, 0.0, 0.0),
 ) -> Any:
-    point = model.create_entity("IfcCartesianPoint", Coordinates=location)
-    axis = model.create_entity("IfcDirection", DirectionRatios=(0.0, 0.0, 1.0))
-    direction = model.create_entity("IfcDirection", DirectionRatios=ref_direction)
-    placement = model.create_entity(
-        "IfcAxis2Placement3D", Location=point, Axis=axis, RefDirection=direction
-    )
-    return model.create_entity(
-        "IfcLocalPlacement", PlacementRelTo=relative_to, RelativePlacement=placement
+    return hosted_local_placement(
+        model,
+        relative_to=relative_to,
+        location=location,
+        ref_direction=ref_direction,
     )
 
 
 def _body_context(model: Any) -> Any:
-    contexts = [
-        context
-        for context in model.by_type("IfcGeometricRepresentationSubContext")
-        if context.ContextIdentifier == "Body" and context.TargetView == "MODEL_VIEW"
-    ]
-    if not contexts:
-        raise OperationRegistryError("BODY_CONTEXT_NOT_FOUND", "Body/MODEL_VIEW")
-    return min(contexts, key=lambda context: context.id())
+    return hosted_body_context(model)
 
 
 def _wall_containment(wall: Any) -> Any:
-    relationships = [
-        relationship
-        for relationship in wall.ContainedInStructure
-        if relationship.RelatingStructure.is_a("IfcBuildingStorey")
-    ]
-    if len(relationships) != 1:
-        raise OperationRegistryError(
-            "TARGET_WALL_STOREY_AMBIGUOUS", str(wall.GlobalId)
-        )
-    return relationships[0]
+    return hosted_wall_containment(wall)
 
 
 def _sorted_roots(entities: list[Any]) -> list[Any]:
@@ -1493,14 +1427,7 @@ def _sorted_roots(entities: list[Any]) -> list[Any]:
 
 
 def _deterministic_global_id(operation: Mapping[str, Any], role: str) -> str:
-    canonical = json.dumps(
-        operation, ensure_ascii=False, sort_keys=True, separators=(",", ":")
-    )
-    value = uuid.uuid5(
-        uuid.NAMESPACE_URL,
-        f"https://text2ifc.local/ifc-repair/{role}/{canonical}",
-    )
-    return ifcopenshell.guid.compress(value.hex)
+    return hosted_deterministic_global_id(operation, role)
 
 
 def _require_guid(model: Any, global_id: str, ifc_class: str) -> Any:
