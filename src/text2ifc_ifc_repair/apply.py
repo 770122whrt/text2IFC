@@ -84,9 +84,19 @@ def apply_changeset(
                         "window_occurrence": policy.semantic_role,
                         "opening_occurrence": "opening",
                     }
-                assignment_scopes = {
-                    str(item.get("scope", "window_occurrence"))
+                explicit_assignment_scopes = {
+                    str(item["scope"])
                     for item in operation["semantic_assignments"]
+                    if item.get("scope") is not None
+                }
+                legacy_scope = (
+                    next(iter(scope_roles))
+                    if not explicit_assignment_scopes
+                    and len(scope_roles) == 1
+                    else "window_occurrence"
+                )
+                assignment_scopes = explicit_assignment_scopes or {
+                    legacy_scope
                 }
                 unknown_scopes = assignment_scopes - set(scope_roles)
                 if unknown_scopes:
@@ -99,7 +109,7 @@ def apply_changeset(
                     scoped_assignments = [
                         item
                         for item in operation["semantic_assignments"]
-                        if item.get("scope", "window_occurrence") == scope
+                        if item.get("scope", legacy_scope) == scope
                     ]
                     if not scoped_assignments:
                         continue

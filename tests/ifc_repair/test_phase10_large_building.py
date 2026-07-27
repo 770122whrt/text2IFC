@@ -72,10 +72,20 @@ def test_large_building_damaged_ifc_plus_text_passes_production_and_private_l2(t
             if stage == "ifc_repair_intent":
                 calls["stage1"] += 1
                 payload = {
-                    "schema_version": "text2ifc/ifc-repair-intent-body/0.1",
-                    "operations": [{
+                        "schema_version": "text2ifc/ifc-repair-intent-body/0.5",
+                        "operations": [{
                         "operation_id": "operation-1",
-                        "operation_type": "add_window_with_opening_to_wall",
+                            "operation_type": "add_window_with_opening_to_wall",
+                            "routing_intent": {
+                                "component_family": "window",
+                                "action": "add_with_opening",
+                                "operation_profile": "window.add-with-opening",
+                                "source": {
+                                    "source_kind": "public_capability",
+                                    "reference": "capability:/window.add-with-opening",
+                                    "excerpt": "window add with opening",
+                                },
+                            },
                         "target_query": {
                             "schema_version": "text2ifc/ifc-target-query/0.1",
                             "allowed_ifc_classes": ["IfcWall"],
@@ -90,15 +100,20 @@ def test_large_building_damaged_ifc_plus_text_passes_production_and_private_l2(t
                             },
                             "window": {"fit_opening": True},
                         },
-                        "attribute_intents": [],
+                            "attribute_intents": [],
+                            "property_intents": [],
+                            "semantic_bundle_refs": [],
+                            "quantity_intents": [],
+                            "occurrence_reuse_intent": None,
                         "prototype_intent": {
                             "reference_kind": "type_name",
                             "reference": WINDOW_TYPE_NAME,
                             "source": {"source_kind": "user_request", "reference": "request:/prototype", "excerpt": WINDOW_TYPE_NAME},
                         },
+                            "provenance": [{"source_kind": "user_request", "reference": "request:/text", "excerpt": request}],
+                        }],
+                        "semantic_bundles": [],
                         "provenance": [{"source_kind": "user_request", "reference": "request:/text", "excerpt": request}],
-                    }],
-                    "provenance": [{"source_kind": "user_request", "reference": "request:/text", "excerpt": request}],
                 }
             else:
                 calls["stage2"] += 1

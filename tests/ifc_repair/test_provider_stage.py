@@ -130,7 +130,11 @@ def test_provider_stage_receives_only_public_artifacts(tmp_path: Path) -> None:
     renderer_input = json.loads(
         (tmp_path / "renderer-input.json").read_text(encoding="utf-8")
     )
-    supported = renderer_input["SUPPORTED_OPERATIONS"][0]
+    supported = next(
+        item
+        for item in renderer_input["SUPPORTED_OPERATIONS"]
+        if item["operation_type"] == "add_window_with_opening_to_wall"
+    )
     assert supported["target_schema"]["required"] == ["wall_global_id"]
     assert "opening_interval_available" in supported["precondition_names"]
     assert "window_fills_opening" in supported["postcondition_names"]

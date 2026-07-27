@@ -207,7 +207,11 @@ def test_stage_signature_and_provider_request_are_public_only(tmp_path: Path) ->
     renderer_input = json.loads(
         (tmp_path / "renderer-input.json").read_text(encoding="utf-8")
     )
-    supported = renderer_input["SUPPORTED_OPERATIONS"][0]
+    supported = next(
+        item
+        for item in renderer_input["SUPPORTED_OPERATIONS"]
+        if item["operation_type"] == "add_window_with_opening_to_wall"
+    )
     assert supported["operation_type"] == "add_window_with_opening_to_wall"
     assert supported["target_ifc_classes"] == ["IfcWall"]
     assert supported["prototype_ifc_classes"] == [

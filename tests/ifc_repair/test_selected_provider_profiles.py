@@ -94,6 +94,9 @@ def test_stage1_routes_and_extracts_in_exactly_one_provider_call(
     catalog = renderer_input["SUPPORTED_OPERATIONS"]
     assert {item["profile_id"] for item in catalog} == {
         "window.add-with-opening",
+        "opening.add-to-wall",
+        "door.add-with-opening",
+        "door.fill-existing-opening",
         "occurrence.set-properties",
     }
     serialized = json.dumps(catalog)
