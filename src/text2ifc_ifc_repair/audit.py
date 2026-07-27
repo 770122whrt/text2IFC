@@ -81,6 +81,9 @@ def audit_changeset(
     )
 
     seen_targets: dict[tuple[str, str], list[Mapping[str, Any]]] = {}
+    seen_conflict_domains: dict[
+        tuple[str, str], list[Mapping[str, Any]]
+    ] = {}
     for index, operation in enumerate(changeset["operations"]):
         operation_path = f"/operations/{index}"
         try:
@@ -139,7 +142,20 @@ def audit_changeset(
             continue
         target_id = target_ids[0]
         operation_key = (definition.operation_type, target_id)
-        previous_operations = seen_targets.get(operation_key, [])
+        domain_host_id = str(
+            operation["target"].get("wall_global_id")
+            or operation.get("parameters", {}).get("host_wall_global_id")
+            or target_id
+        )
+        domain_key = (
+            str(definition.conflict_domain),
+            domain_host_id,
+        )
+        previous_operations = (
+            seen_conflict_domains.get(domain_key, [])
+            if definition.conflict_domain is not None
+            else seen_targets.get(operation_key, [])
+        )
         conflict_issues = []
         if previous_operations and definition.operation_conflict_checker is None:
             conflict_issues.append(
@@ -165,6 +181,8 @@ def audit_changeset(
             issues.extend(conflict_issues)
             continue
         seen_targets.setdefault(operation_key, []).append(operation)
+        if definition.conflict_domain is not None:
+            seen_conflict_domains.setdefault(domain_key, []).append(operation)
         common_operation_issues = _target_issues(
             model=model,
             target_id=target_id,
