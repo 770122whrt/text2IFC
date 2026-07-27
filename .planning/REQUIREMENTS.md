@@ -178,8 +178,10 @@ semantic ChangeSet and an L1/L2-validated IFC result.
 
 - [ ] **OPS-01**: User can add a wall opening without a filling element through
   a registered opening-specific ChangeSet operation.
-- [ ] **OPS-02**: User can add a Door with its wall Opening and required L1/L2
-  semantics through a registered Door-specific operation.
+- [ ] **OPS-02**: User can add a Door with a new wall Opening or restore a Door
+  into one surviving empty Opening, with exact/generated Type policy,
+  viewpoint-aware operation semantics and required L1/L2 evidence through
+  registered Door-specific operations.
 - [ ] **OPS-03**: User can add a Beam with operation-specific placement,
   containment, type/material and L1/L2 semantics.
 - [ ] **OPS-04**: User can add a Column with operation-specific placement,

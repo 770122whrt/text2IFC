@@ -1,5 +1,12 @@
 # IFC2X3 Local ChangeSet 验证索引
 
+下一阶段设计：
+[Phase 11 Wall Opening 与 Door Operations SPEC](../../../.planning/phases/11-wall-opening-and-door-operations/11-SPEC.md)。
+它冻结 Opening-only、Door+Opening、Door 填入既有 Opening、DoorStyle
+复用/生成、开启方向澄清、RepairIntent 路由、按 operation 加载 few-shot，
+以及单门/五门/混合构件/大型 IFC/真实 DeepSeek 的验收边界。当前仅完成设计，
+不得宣称 Door 生产能力已经实现。
+
 最新验收：[Phase 10.5 Window Occurrence Fidelity 与验证加速报告](phase10.5-window-fidelity-validation-report.md)。
   它记录 occurrence 属性/Quantity 输入与授权复用、Ground Truth Comparator、
   不可变 validation cache，以及 AdvancedProject 冷启动 62.687 秒、热缓存
@@ -22,6 +29,7 @@ Phase 8 验证报告：[Evaluation 0.2、Benchmark Gold 隔离与 LargeBuilding 
 
 | 文档 | 职责 | 当前状态 |
 |---|---|---|
+| [Phase 11 SPEC](../../../.planning/phases/11-wall-opening-and-door-operations/11-SPEC.md) | Opening/Door operation、Type/swing/position/属性边界、Prompt Profile、L1/L2 和验收矩阵 | 2026-07-28 设计已确认；等待用户文档审阅和实施计划 |
 | [phase10.5-window-fidelity-validation-report.md](phase10.5-window-fidelity-validation-report.md) | occurrence 属性输入/授权复用、Ground Truth Comparator、validation cache、冷/热大型 IFC 性能与真实 DeepSeek UAT | 2026-07-26 全部通过；Production/private L1/L2 与 occurrence fidelity passed |
 | [phase10.4-comparator-0.2-validation-report.md](phase10.4-comparator-0.2-validation-report.md) | 大型 IFC 全局保全门禁、fail-closed 指纹、三次性能/内存基准与完整 Production 重放 | 2026-07-25 Comparator 与 AdvancedProject 五窗 L1/L2/发布闭环通过 |
 | [phase10.3-five-window-batch-validation-report.md](phase10.3-five-window-batch-validation-report.md) | dataset 审计、五窗 damage/repair、统一 ChangeSet、原子回滚、逐项 L1/L2、真实 DeepSeek 与大型 IFC 矩阵 | 2026-07-24 通过；五项 L1/L2 passed |
@@ -64,6 +72,7 @@ Phase 10.1 additional validation:
 ## 能力边界
 
 当前生产 handler 只支持 `add_window_with_opening_to_wall` 与 IFC2X3 直线墙。
+Phase 11 Door/Opening 仍是已确认但未实施的设计。
 公共 ChangeSet envelope、Operation Registry、Audit、事务应用与 Comparator 已为
 异构 operation 留出并测试接口。以下仍是后续能力，不得宣称已实现：
 

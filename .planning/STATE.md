@@ -2,8 +2,8 @@
 gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: IFC ChangeSet Repair Pipeline
-status: Phase 10.5 complete; ready for Phase 11
-last_updated: "2026-07-26T18:00:00+08:00"
+status: Phase 10.5 complete; Phase 11 specification drafted for review
+last_updated: "2026-07-28T00:00:00+08:00"
 progress:
   total_phases: 13
   completed_phases: 10
@@ -21,7 +21,7 @@ See `.planning/PROJECT.md`.
 **Core value:** Given an IFC file and an explicit user request, produce a
 traceable semantic ChangeSet and an L1/L2-validated IFC result.
 
-**Current focus:** Phase 11 planning — Wall Opening and Door Operations.
+**Current focus:** Review and plan Phase 11 — Wall Opening and Door Operations.
 
 ## Current Position
 
@@ -38,6 +38,8 @@ Plan: 3 of 3 complete
   cold/warm full validation passed at 62.687/23.562 seconds and about
   2.24/2.25 GB peak RSS; real DeepSeek r21 passed RepairIntent 0.4,
   ChangeSet 0.3, Production/private L1/L2 and occurrence fidelity
+- Phase 11 design decisions were confirmed on 2026-07-28 and are frozen in
+  `11-CONTEXT.md` and `11-SPEC.md`; implementation has not started.
 
 ## Carried Context
 
@@ -157,12 +159,12 @@ Plan: 3 of 3 complete
 
 ## Next Action
 
-Discuss and plan Phase 11 opening-only and Door+Opening operation contracts,
-reusing the completed scoped authoring, unified ChangeSet, L1/L2 and validation
-interfaces.
+Review the Phase 11 specification, then create the executable implementation
+plans for opening-only, Door+Opening, Door-into-existing-Opening, operation
+prompt profiles, L1/L2 and dataset/live acceptance.
 
 ---
-*Last updated: 2026-07-26 after Phase 10.5 complete acceptance*
+*Last updated: 2026-07-28 after Phase 11 design discussion*
 
 ## Accumulated Context
 

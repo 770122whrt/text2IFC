@@ -409,20 +409,48 @@ seconds.
 
 ### Phase 11: Wall Opening and Door Operations
 
-**Goal:** Extend the Registry with opening-only and Door+Opening operations
-without copying the Window pipeline.
+**Status:** Specification drafted — 2026-07-28
+
+**Goal:** Extend the Registry with opening-only, Door+Opening and
+Door-into-existing-Opening operations without copying the Window pipeline,
+while adding per-operation RepairIntent routing and token-bounded prompt
+profiles.
 
 **Requirements:** OPS-01, OPS-02
 
 **Depends on:** Phases 10.1, 10.2 and 10.5
 
+**Specification:** [Phase 11 SPEC](phases/11-wall-opening-and-door-operations/11-SPEC.md)
+
+**Cross-cutting constraints:**
+
+- Stage 1 records component/action routing in each RepairIntent operation; the
+  runtime then loads only referenced operation contracts and few-shots.
+- Exact `IfcDoorStyle` reuse preserves that Type unchanged. Without reuse, the
+  compiler creates only a supported dedicated single-swing/explicitly
+  `NOTDEFINED` style.
+- Missing optional Door features are omitted; missing blocking facts clarify;
+  requested unsupported features fail in deterministic capability code.
+- Space may resolve target/viewpoint but Phase 11 does not author
+  `IfcRelSpaceBoundary`.
+- Existing Door replacement/deletion, project-coordinate placement, complex
+  generated Door styles and curved walls remain deferred.
+
 **Success criteria:**
 
 1. `add_opening_to_wall` has its own target/parameter/L1/L2 contracts.
-2. `add_door_with_opening_to_wall` restores host, opening, door type, swing/
-   operation semantics and required L2 facts.
-3. Mixed Window/Door cases remain transactionally scoped and independently
-   evaluated.
+2. `add_door_with_opening_to_wall` and
+   `fill_existing_opening_with_door` restore host/opening/filling topology,
+   exact or generated Door Type, viewpoint-aware operation semantics and
+   required L2 facts.
+3. Family/action routing selects only relevant operation prompt profiles and
+   few-shots; unsupported capability is rejected by program logic rather than
+   improvised by the Provider.
+4. Five-Door and mixed Window/Door cases remain one transaction with
+   independently evaluated L1/L2 and all-or-nothing publication.
+5. LargeBuilding, vvo and AdvancedProject offline cases plus complete and
+   clarification-driven real DeepSeek paths pass reopened-IFC validation,
+   occurrence fidelity and full-model preservation.
 
 ### Phase 12: Beam and Column Operations
 
