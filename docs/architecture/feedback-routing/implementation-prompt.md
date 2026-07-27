@@ -1,5 +1,7 @@
 # Codex Prompt: Implement Language Policy and Feedback Routing for Text2IFC
 
+> Document type: implementation prompt. The sibling `design.md` owns the architecture decisions.
+
 You are working inside the Text2IFC repository.
 
 The current project has already implemented a basic natural-language-to-BIM-JSON-to-IFC workflow, including BIM JSON schemas, Draft Envelope, IFC2X3 compiler, deterministic gates, Audit Agent, prompt registry, report generation, CLI/session DB, and several simple-room or two-room demos.

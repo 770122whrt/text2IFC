@@ -1,5 +1,7 @@
 # Multi-storey Prompt and Input Hardening Implementation Plan
 
+> Historical plan: retained for traceability. Current architecture and phase state are authoritative elsewhere.
+
 > **For agentic workers:** Execute the tasks in order. Use TDD: record the RED
 > result before changing a production asset, then verify GREEN.
 

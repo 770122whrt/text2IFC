@@ -1,5 +1,7 @@
 # Text2IFC Workflow Language Policy and Feedback Routing Design
 
+> 文档类型：架构专题设计；配套实施指令见同目录 `implementation-prompt.md`。
+
 ## 1. 文档目的
 
 本文档用于记录 Text2IFC 项目下一阶段的 workflow 设计调整。
