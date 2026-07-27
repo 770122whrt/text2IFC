@@ -5,6 +5,16 @@
 .pytest-tmp/
 .pytest-tmp*/
 tmp_ifc_*/
+.tmp/
+
+# Local experiment/UAT output. Reproducible, reviewable success bundles belong
+# under dataset/processed/proof/ and are committed separately.
+/dataset/processed/jsonfix/
+/dataset/processed/ifc-repair/*
+/dataset/processed/agent-demo/phase6.5-live-stability/
+/dataset/processed/agent-demo/phase6.6-difficult-live-64k-observation/
+/dataset/processed/agent-demo/phase6.6-medium-live*/
+
 # One sandbox-created evidence directory lost its inherited Windows ACL before
 # it could be normalized. The readable, verified bundle uses the -v1 suffix.
 /dataset/processed/ifc-repair/cases/large-building-window-repair-001-offline/
