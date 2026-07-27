@@ -1,0 +1,120 @@
+{
+  "schema_version": "text2ifc/ifc-repair-success-case-files/0.1",
+  "case_id": "advancedproject-five-window",
+  "copy_policy": "copy",
+  "provider_evidence_mode": "saved_live_output_deterministic_replay",
+  "files": [
+    {
+      "path": "01-original.ifc",
+      "role": "original_ground_truth",
+      "visibility": "evaluator_only",
+      "size_bytes": 44337371,
+      "sha256": "86b068a7ca6947e398c1daaa8bede9d31048c3990adc308429faeb56ee01db94",
+      "source": "dataset/external/bim-whale-ifc-samples/AdvancedProject/IFC/AdvancedProject.ifc"
+    },
+    {
+      "path": "02-damaged.ifc",
+      "role": "repair_input_ifc",
+      "visibility": "agent_input",
+      "size_bytes": 44228167,
+      "sha256": "65b576a99174d413eeed9c0517592a0f31a9b6f5fb68bd4d006d94ed18a4adcb",
+      "source": "dataset/processed/ifc-repair/phase10.4-comparator-0.2/replay-input-minimal-fix/fixture/damaged.ifc"
+    },
+    {
+      "path": "03-repaired.ifc",
+      "role": "published_repair_output",
+      "visibility": "public_artifact",
+      "size_bytes": 44242439,
+      "sha256": "91e5295b0487389546bc575d294038c2669f052d41edef3813734234638c3a2a",
+      "source": "dataset/processed/ifc-repair/phase10.4-comparator-0.2/preflight-production-006-minimal-fix/repaired.ifc"
+    },
+    {
+      "path": "input/request.txt",
+      "role": "user_request",
+      "visibility": "agent_input",
+      "size_bytes": 2833,
+      "sha256": "84d139182480491227e3c1060a5aecbca054ead590184d0497d81017a1a500be",
+      "source": "dataset/processed/ifc-repair/phase10.4-comparator-0.2/replay-input-minimal-fix/request.txt"
+    },
+    {
+      "path": "agent/repair-intent.json",
+      "role": "stage1_repair_intent",
+      "visibility": "agent_output",
+      "size_bytes": 16617,
+      "sha256": "8f0090c2c94de558f6e41bd392c16ac295f14c788d2fbf47eb284feb1dcaf9f3",
+      "source": "dataset/processed/ifc-repair/phase10.3-advanced-project-five-window-deepseek-uat/runs/repair-291e0bde96974f62b37efc8ffeeab961/intent/repair-intent.json"
+    },
+    {
+      "path": "agent/provider-draft.json",
+      "role": "stage2_changeset_draft",
+      "visibility": "agent_output",
+      "size_bytes": 4559,
+      "sha256": "4a51e8b52d4c5548003945ab6fabdaed0356a3dc2a4f8229794f16a6c71e8baa",
+      "source": "dataset/processed/ifc-repair/phase10.3-advanced-project-five-window-deepseek-uat/runs/repair-291e0bde96974f62b37efc8ffeeab961/changeset/provider-draft.json"
+    },
+    {
+      "path": "agent/provider-metadata-stage2.json",
+      "role": "stage2_provider_metadata",
+      "visibility": "audit",
+      "size_bytes": 646,
+      "sha256": "846f136b29b1efd6a27766a45f6fd79a67c0b95ca4254c137bd78ea2e83e0b83",
+      "source": "dataset/processed/ifc-repair/phase10.3-advanced-project-five-window-deepseek-uat/runs/repair-291e0bde96974f62b37efc8ffeeab961/changeset/attempt-001/provider-metadata.json"
+    },
+    {
+      "path": "changeset/bound-changeset.json",
+      "role": "bound_changeset_replayed",
+      "visibility": "execution_contract",
+      "size_bytes": 330884,
+      "sha256": "f2d38413df4d4d9adfacd2fbd4bcd72ead3b93b3292651e17834e2125468582b",
+      "source": "dataset/processed/ifc-repair/phase10.4-comparator-0.2/replay-input-minimal-fix/runs/repair-291e0bde96974f62b37efc8ffeeab961/changeset.json"
+    },
+    {
+      "path": "changeset/semantic-manifests.json",
+      "role": "semantic_authoring_authority",
+      "visibility": "execution_contract",
+      "size_bytes": 329263,
+      "sha256": "394adc6174f0485d417eef26331f1615f158cb5f6c657c0f705a99bfc402a849",
+      "source": "dataset/processed/ifc-repair/phase10.3-advanced-project-five-window-deepseek-uat/runs/repair-291e0bde96974f62b37efc8ffeeab961/changeset/semantic-manifests.json"
+    },
+    {
+      "path": "validation/mutation-manifest.private.json",
+      "role": "damage_ground_truth",
+      "visibility": "evaluator_only",
+      "size_bytes": 14358,
+      "sha256": "4623d1096125523d6b021d9bf99c8a285e8b0fb47af5320ac10c59bb1c81dd45",
+      "source": "dataset/processed/ifc-repair/phase10.4-comparator-0.2/replay-input-minimal-fix/fixture/mutation_manifest.private.json"
+    },
+    {
+      "path": "validation/mutation-report.json",
+      "role": "damage_report",
+      "visibility": "audit",
+      "size_bytes": 3485,
+      "sha256": "6b1d3c1b7abc958a53f7707e78419150622ea5606a36b62204b3745618f6227f",
+      "source": "dataset/processed/ifc-repair/phase10.4-comparator-0.2/replay-input-minimal-fix/fixture/mutation_report.json"
+    },
+    {
+      "path": "validation/application.json",
+      "role": "deterministic_application_evidence",
+      "visibility": "evaluation",
+      "size_bytes": 56875,
+      "sha256": "09fb48f4753f65f7070c00975250f24a043edd221f1f3b20930e188f1c21b186",
+      "source": "dataset/processed/ifc-repair/phase10.4-comparator-0.2/preflight-production-006-minimal-fix/application.json"
+    },
+    {
+      "path": "validation/production-evaluation.json",
+      "role": "production_publication_evidence",
+      "visibility": "public_evaluation",
+      "size_bytes": 948017,
+      "sha256": "efcf4a9c8f5755605f0cee45716baa0e05182ad5c3a27046789d982560124816",
+      "source": "dataset/processed/ifc-repair/phase10.4-comparator-0.2/preflight-production-006-minimal-fix/production-evaluation.json"
+    },
+    {
+      "path": "validation/comparator-benchmark.json",
+      "role": "large_model_comparator_benchmark",
+      "visibility": "evaluation",
+      "size_bytes": 5681,
+      "sha256": "97bcd454480359fd4e068244ada07783dac5e0bd512d55989d8a702d6ba233f0",
+      "source": "dataset/processed/ifc-repair/phase10.4-comparator-0.2/advanced-project-comparator-benchmark.json"
+    }
+  ]
+}

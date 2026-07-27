@@ -7,8 +7,8 @@
   [requirements](milestones/v1.0-REQUIREMENTS.md), and
   [audit](milestones/v1.0-MILESTONE-AUDIT.md).
 - [ ] **v1.1 IFC ChangeSet Repair Pipeline** - Phases 7 through 13, including
-  inserted Phases 09.1, 10.1, 10.2 and 10.3, in progress
-  (7 / 11 phases complete).
+  inserted Phases 09.1 and 10.1 through 10.5, in progress
+  (10 / 13 phases complete).
 
 ## Current Cycle: v1.1 IFC ChangeSet Repair Pipeline
 
@@ -268,7 +268,7 @@ typed property contract already proven by Phase 10.1.
 
 ### Phase 10.3: Batch Window Repair and Dataset Benchmark Hygiene (INSERTED)
 
-**Status:** In progress — 2026-07-24
+**Status:** Complete — 2026-07-24
 
 **Goal:** Prove a genuine five-Window transaction on a larger IFC while making
 dataset and benchmark identities reproducible and non-destructive.
@@ -280,10 +280,10 @@ BATCH-05
 
 **Plans:** 1 plan in 4 waves
 
-- [ ] **Wave 1:** Dataset audit, inventory classification and benchmark manifest.
-- [ ] **Wave 2:** Five-chain mutation and Gold-free batch public projection.
-- [ ] **Wave 3:** Unified atomic ChangeSet, per-operation L1/L2 and rollback.
-- [ ] **Wave 4:** Larger IFC compatibility matrix, real DeepSeek UAT and closure.
+- [x] **Wave 1:** Dataset audit, inventory classification and benchmark manifest.
+- [x] **Wave 2:** Five-chain mutation and Gold-free batch public projection.
+- [x] **Wave 3:** Unified atomic ChangeSet, per-operation L1/L2 and rollback.
+- [x] **Wave 4:** Larger IFC compatibility matrix, real DeepSeek UAT and closure.
 
 **Success criteria:**
 
@@ -298,6 +298,115 @@ BATCH-05
 5. Larger BIMNet IFC compatibility and a real DeepSeek five-Window UAT are
    recorded with prompt size, timing and honest success/failure evidence.
 
+**Evidence:** [Phase 10.3 validation report](../docs/validation/ifc2x3-changeset/phase10.3-five-window-batch-validation-report.md)
+
+### Phase 10.4: Comparator 0.2 Scalable Preservation Gate (INSERTED)
+
+**Status:** Complete - 2026-07-24
+
+**Goal:** Make Evaluation 0.2 complete on BIMNet-scale IFC2X3 files without
+weakening the blocking global preservation guarantee or changing L1/L2
+publication semantics.
+
+**Requirements:** CMP-01, CMP-02, CMP-03, CMP-04, CMP-05
+
+**Depends on:** Phases 8 and 10.3
+
+**Plans:** 1 plan in 5 sequential waves
+
+- [x] **Wave 1:** Baseline instrumentation and fail-closed RED contracts.
+- [x] **Wave 2:** Complete cycle-safe, memoized root fingerprint engine.
+- [x] **Wave 3:** Production integration and authorized-neighborhood caches.
+- [x] **Wave 4:** Legacy equivalence, security and performance regression.
+- [x] **Wave 5:** Fresh AdvancedProject comparator and Production acceptance.
+
+**Cross-cutting constraints:**
+
+- Global preservation remains blocking; timeout or incomplete evidence never
+  passes.
+- Evaluation 0.2 statuses, check identifiers, report shape and L2 rules remain
+  compatible.
+- Full IfcDiff is diagnostic by default; a known pre-publication contradiction
+  fails closed.
+- This phase adds no new IFC operation family.
+
+**Success criteria:**
+
+1. Complete global root fingerprints detect the unauthorized-change fault
+   corpus while reusing shared subgraph calculations.
+2. Policy-derived target/host neighborhoods retain deep structural and geometry
+   checks while shared representation subgraphs use per-run memoization.
+3. vvo and LargeBuilding produce equivalent comparison/evaluation outcomes;
+   vvo runtime regresses by no more than 20%.
+4. Three fresh AdvancedProject comparator runs have median preservation time at
+   most 120 seconds and peak RSS at most 4 GiB; one fresh full Production replay
+   completes within 180 seconds.
+5. The saved real DeepSeek ChangeSet is reapplied in a new directory and
+   reaches an honest publication decision.
+
+**Evidence:** [Phase 10.4 validation report](../docs/validation/ifc2x3-changeset/phase10.4-comparator-0.2-validation-report.md)
+
+### Phase 10.5: Window Occurrence Fidelity and Validation Acceleration (INSERTED)
+
+**Status:** Complete — 2026-07-26
+
+**Goal:** Given a complete authorized natural-language request and a damaged
+IFC2X3 model, restore the selected Window/Opening geometry, relationships,
+effective occurrence scalar properties and relevant quantities to Ground Truth
+semantic equivalence, while keeping full Production evaluation within 180
+seconds.
+
+**Requirements:** WFID-01, WFID-02, WFID-03, WFID-04, WFID-05, WFID-06
+
+**Depends on:** Phases 7, 8, 9, 09.1 and 10 through 10.4
+
+**Plans:** 3/3 plans executed
+
+- [x] **Wave 1:** `10.5-01` - Complete occurrence input, authorized
+  exact-occurrence/cohort reuse, reusable bundles, and atomic Window/Opening
+  semantic authoring.
+- [x] **Wave 2** *(blocked on Wave 1)*: `10.5-02` - Ground Truth occurrence
+  comparator, blocking fidelity integration, and human-readable IFC comparison.
+- [x] **Wave 3** *(blocked on Waves 1-2)*: `10.5-03` - Validation cache,
+  bounded parallel evaluation, offline acceptance matrix, AdvancedProject
+  performance gates and real DeepSeek no-fallback UAT.
+
+**Cross-cutting constraints:**
+
+- Every authored fact is explicit, deterministically derived, Type-inherited,
+  copied from an explicitly authorized occurrence, or taken from an explicitly
+  authorized unanimous Type cohort. Retrieval never invents a value.
+- Contextual/identity facts are recomputed or explicitly overridden and are
+  never copied blindly.
+- Window/Opening effective semantic equivalence is blocking; GUID, STEP,
+  serialization, ownership-graph and low-level geometry-node differences remain
+  diagnostic `authoring_exactness`.
+- Global preservation and IfcOpenShell validation remain complete and
+  fail-closed. Acceleration may change scheduling/reuse only.
+- Private Ground Truth remains evaluator-only and never enters either Provider
+  prompt.
+
+**Success criteria:**
+
+1. One bounded request can express exact scalar Psets, Window/Opening
+   quantities, one reusable bundle, per-operation overrides, and an explicitly
+   authorized exact occurrence or unanimous same-Type cohort.
+2. Exact-reference ambiguity, empty/conflicting cohorts, missing values,
+   unsupported authoring, timeout, cache corruption and worker failure clarify
+   or fail closed and publish no successful IFC.
+3. A private comparator classifies every supported Ground Truth fact as
+   `matched`, `not_in_user_text`, `unsupported_authoring`, `wrong_value`, or
+   `ownership_only` and reports independent geometry, L2 semantic, occurrence
+   fidelity and authoring-exactness statuses.
+4. Single complete-input, exact-reference, cohort, and five-Window shared-bundle
+   offline cases pass reopened IFC2X3, global preservation, L1/L2 and occurrence
+   fidelity; the five-Window path remains one atomic ChangeSet.
+5. AdvancedProject cold and warm full Production runs each complete within 180
+   seconds and 4 GiB without reducing checks, and one real DeepSeek run records
+   honest success or failure with no fallback.
+
+**Evidence:** [Phase 10.5 validation report](../docs/validation/ifc2x3-changeset/phase10.5-window-fidelity-validation-report.md)
+
 ### Phase 11: Wall Opening and Door Operations
 
 **Goal:** Extend the Registry with opening-only and Door+Opening operations
@@ -305,7 +414,7 @@ without copying the Window pipeline.
 
 **Requirements:** OPS-01, OPS-02
 
-**Depends on:** Phases 10.1 and 10.2
+**Depends on:** Phases 10.1, 10.2 and 10.5
 
 **Success criteria:**
 
@@ -364,11 +473,13 @@ changing the default input budget.
 | 10.1 | PROP-01..05 |
 | 10.2 | RAG-01..04 |
 | 10.3 | DATA-01..02, BATCH-01..05 |
+| 10.4 | CMP-01..05 |
+| 10.5 | WFID-01..06 |
 | 11 | OPS-01..02 |
 | 12 | OPS-03..04 |
 | 13 | SCALE-01..02 |
 
-**Coverage:** 41 committed requirements, 41 mapped, 0 unmapped.
+**Coverage:** 52 committed requirements, 52 mapped, 0 unmapped.
 
 ## Delivery Sequence and Deferred Horizon
 
@@ -381,9 +492,13 @@ The v1.1 sequence is intentionally layered:
    Phase 10.1 output contract.
 5. Phase 10.3 proves that the same bounded contract remains atomic and
    verifiable for five Window operations on larger IFC2X3 files.
-6. Phases 11-12 expand the same Registry/ChangeSet/evaluation architecture to
+6. Phase 10.4 makes the unchanged blocking preservation contract practical on
+   BIMNet-scale files before operation expansion.
+7. Phase 10.5 closes Window/Opening occurrence-fact coverage and full
+   validation runtime before the Window reference implementation is reused.
+8. Phases 11-12 expand the same Registry/ChangeSet/evaluation architecture to
    Opening, Door, Beam and Column operations.
-7. Phase 13 measures near-limit context and 128k behavior before changing the
+9. Phase 13 measures near-limit context and 128k behavior before changing the
    bounded 64k default.
 
 Post-v1.1 work remains explicitly uncommitted: existing Wall mutation beyond

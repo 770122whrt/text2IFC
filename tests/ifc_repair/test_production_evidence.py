@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import inspect
+from dataclasses import replace
 from types import MappingProxyType
 
 import pytest
@@ -12,7 +13,12 @@ from text2ifc_ifc_repair.evaluation_policy import (
     SemanticApplicability,
     SemanticFactSpec,
 )
-from text2ifc_ifc_repair.index_models import ElementRecord, PropertyFact, TypeRecord
+from text2ifc_ifc_repair.index_models import (
+    AssociationFact,
+    ElementRecord,
+    PropertyFact,
+    TypeRecord,
+)
 from text2ifc_ifc_repair.production_evidence import (
     ProductionEvidenceError,
     _property_claim_matches_authority,
@@ -38,7 +44,7 @@ OPERATION_TYPE = "fixture_add_component"
 FACT_KEY = "pset:Pset_Fixture.Marker"
 
 
-def test_natural_language_property_claim_binds_by_immutable_source() -> None:
+def test_property_claim_binds_by_source_identity_not_display_excerpt() -> None:
     source = PublicProvenance(
         source_kind="user_request",
         reference="request:/text",
@@ -70,6 +76,14 @@ def test_natural_language_property_claim_binds_by_immutable_source() -> None:
 
     assert _property_claim_matches_authority(natural, authority)
     assert _property_claim_matches_authority(exact, authority)
+    compact_authority = {
+        **authority,
+        "source": {
+            **authority["source"],
+            "excerpt": "bounded confirmation excerpt",
+        },
+    }
+    assert _property_claim_matches_authority(natural, compact_authority)
     assert not _property_claim_matches_authority(
         NaturalLanguagePropertyIntent(
             property_phrase="外窗",
@@ -143,7 +157,10 @@ def _registry() -> OperationRegistry:
                         applicability=SemanticApplicability.REQUIRED,
                     ),
                 ),
-                cohort_fact_patterns=("pset:Pset_Fixture.IsExternal",),
+                cohort_fact_patterns=(
+                    "pset:Pset_Fixture.IsExternal",
+                    "material:*",
+                ),
             ),
         )
     )
@@ -264,6 +281,28 @@ def _type_record(
     )
 
 
+def _material_association(
+    name: str,
+    *,
+    occurrence_global_id: str | None,
+    occurrence_type_global_id: str,
+) -> AssociationFact:
+    token = name.replace(" ", "-")
+    return AssociationFact(
+        association_kind="material",
+        relationship_ref=f"guid:material-{token}",
+        relationship_ifc_class="IfcRelAssociatesMaterial",
+        resource_ref=f"step:material-{token}",
+        resource_ifc_class="IfcMaterialList",
+        resource_name=None,
+        semantic_value={"names": [name], "resource_class": "IfcMaterialList"},
+        inherited=False,
+        occurrence_global_id=occurrence_global_id,
+        occurrence_type_global_id=occurrence_type_global_id,
+        provenance=(f"IfcRelAssociatesMaterial:{token}",),
+    )
+
+
 def _resolution(*, operation_id: str = "operation-1") -> ResolutionBatch:
     return ResolutionBatch(
         status="resolved",
@@ -367,6 +406,36 @@ def test_explicit_request_wins_all_lower_authority_and_records_conflicts() -> No
         "deterministic_policy",
     }
     assert all(conflict.reason == "lower_authority_conflict" for conflict in evidence.conflicts)
+
+
+def test_pre_scoped_policy_provenance_remains_unique_for_manifest_02() -> None:
+    policy_fact = SemanticFact(
+        **{
+            **_policy_fact().__dict__,
+            "provenance": (
+                "operation:operation-1",
+                "registered-policy:fixture.production.l2@0.1",
+            ),
+        }
+    )
+
+    evidence = _build(
+        deterministic_policy_facts_by_operation={
+            "operation-1": (policy_fact,)
+        }
+    )
+    candidate = next(
+        fact
+        for fact in evidence.candidate_facts_by_operation["operation-1"]
+        if fact.source_kind is EvidenceSourceKind.DETERMINISTIC_POLICY
+        and fact.fact_key == FACT_KEY
+    )
+
+    assert candidate.provenance == (
+        "operation:operation-1",
+        "registered-policy:fixture.production.l2@0.1",
+    )
+    assert len(candidate.provenance) == len(set(candidate.provenance))
 
 
 def test_formal_type_and_user_approved_prototype_have_distinct_auditable_sources() -> None:
@@ -622,6 +691,73 @@ def test_authorized_type_cohort_is_distinct_from_type_record_authority() -> None
     assert "cohort-type:type-1" in cohort[0].provenance
     assert cohort[0].source_ref == "type-cohort:type-1"
     assert not any("unrelated-same-size" in item for item in cohort[0].provenance)
+
+
+def test_occurrence_direct_materials_override_bound_type_materials() -> None:
+    type_material = _material_association(
+        "Anodic Brown",
+        occurrence_global_id=None,
+        occurrence_type_global_id="type-1",
+    )
+    direct_material = _material_association(
+        "Glass",
+        occurrence_global_id="cohort-1",
+        occurrence_type_global_id="type-1",
+    )
+
+    evidence = _build(
+        records_by_global_id={
+            "target-1": _record("target-1", "target", type_global_id="type-1"),
+            "host-1": _record("host-1", "host"),
+            "cohort-1": replace(
+                _record("cohort-1", "ignored", type_global_id="type-1"),
+                associations=(direct_material,),
+            ),
+        },
+        type_records_by_global_id={
+            "type-1": replace(
+                _type_record("type-1", "type"),
+                associations=(type_material,),
+            ),
+            "prototype-1": _type_record("prototype-1", "prototype"),
+        },
+    )
+
+    materials = [
+        fact
+        for fact in evidence.expected_facts_by_operation["operation-1"]
+        if fact.fact_key.startswith("material:")
+    ]
+    assert [(fact.fact_key, fact.source_kind.value) for fact in materials] == [
+        ("material:Glass", "authorized_type_cohort")
+    ]
+
+
+def test_bound_type_material_remains_effective_without_direct_material() -> None:
+    type_material = _material_association(
+        "Anodic Brown",
+        occurrence_global_id=None,
+        occurrence_type_global_id="type-1",
+    )
+
+    evidence = _build(
+        type_records_by_global_id={
+            "type-1": replace(
+                _type_record("type-1", "type"),
+                associations=(type_material,),
+            ),
+            "prototype-1": _type_record("prototype-1", "prototype"),
+        },
+    )
+
+    materials = [
+        fact
+        for fact in evidence.expected_facts_by_operation["operation-1"]
+        if fact.fact_key.startswith("material:")
+    ]
+    assert [(fact.fact_key, fact.source_kind.value) for fact in materials] == [
+        ("material:Anodic-Brown", "surviving_type")
+    ]
 
 
 def test_conflicting_authorized_type_cohort_fails_closed() -> None:

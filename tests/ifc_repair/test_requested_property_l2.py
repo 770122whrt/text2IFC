@@ -70,7 +70,6 @@ def test_requested_property_is_one_stable_mandatory_dynamic_l2_check() -> None:
         None,
         _fact(value="W-008", source_kind=EvidenceSourceKind.REPAIRED_OUTPUT),
         _fact(value_type="IfcIdentifier", source_kind=EvidenceSourceKind.REPAIRED_OUTPUT),
-        _fact(unit="custom-unit", source_kind=EvidenceSourceKind.REPAIRED_OUTPUT),
         _fact(inherited=True, source_kind=EvidenceSourceKind.REPAIRED_OUTPUT),
     ],
 )
@@ -84,3 +83,41 @@ def test_missing_value_type_unit_or_ownership_mismatch_fails(actual) -> None:
     requested = next(item for item in results if item.check_id == "explicit.pset-Custom_Asset.AssetCode")
     assert requested.status is EvaluationStatus.FAILED
     assert requested.mandatory is True
+
+
+def test_unspecified_unit_is_not_a_unit_constraint() -> None:
+    results = evaluate_operation_semantics(
+        _policy(),
+        expected_facts=(_fact(unit=None),),
+        repaired_facts=(
+            _fact(
+                unit="project-resolved-unit",
+                source_kind=EvidenceSourceKind.REPAIRED_OUTPUT,
+            ),
+        ),
+    )
+    requested = next(
+        item
+        for item in results
+        if item.check_id == "explicit.pset-Custom_Asset.AssetCode"
+    )
+    assert requested.status is EvaluationStatus.PASSED
+
+
+def test_explicit_unit_mismatch_remains_blocking() -> None:
+    results = evaluate_operation_semantics(
+        _policy(),
+        expected_facts=(_fact(unit="mm"),),
+        repaired_facts=(
+            _fact(
+                unit="custom-unit",
+                source_kind=EvidenceSourceKind.REPAIRED_OUTPUT,
+            ),
+        ),
+    )
+    requested = next(
+        item
+        for item in results
+        if item.check_id == "explicit.pset-Custom_Asset.AssetCode"
+    )
+    assert requested.status is EvaluationStatus.FAILED

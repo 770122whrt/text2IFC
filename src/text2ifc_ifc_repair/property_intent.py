@@ -541,10 +541,16 @@ def resolve_exact_property_intent(
         "evidence": evidence + (f"registry-property:{intent.set_name}.{intent.property_name}",),
     }
     if target_ifc_class not in applicable_classes:
-        return PropertyResolution(
-            status=PropertyResolutionStatus.CLARIFICATION_REQUIRED,
-            reason_code="STANDARD_PROPERTY_INAPPLICABLE",
-            **base,
+        return _resolve_custom(
+            intent,
+            registry,
+            existing_facts,
+            evidence
+            + (
+                "registry-standard-inapplicable:"
+                f"{intent.set_name}.{intent.property_name}:{target_ifc_class}",
+            ),
+            reason_code="STANDARD_PROPERTY_INAPPLICABLE_REQUIRES_CONFIRMATION",
         )
     if template_type != "TypePropertySingleValue":
         return PropertyResolution(
@@ -585,6 +591,8 @@ def _resolve_custom(
     registry: IfcKnowledgeRegistry,
     existing_facts: Iterable["PropertyFact"],
     evidence: tuple[str, ...],
+    *,
+    reason_code: str = "UNKNOWN_EXACT_PROPERTY",
 ) -> PropertyResolution:
     value_type = intent.requested_value_type or _safe_primitive_ifc_type(intent.value)
     matching_facts = tuple(
@@ -645,7 +653,7 @@ def _resolve_custom(
         unit=unit,
         scope=intent.scope or "occurrence_direct",
         classification="custom",
-        reason_code="UNKNOWN_EXACT_PROPERTY",
+        reason_code=reason_code,
         evidence=evidence + fact_evidence,
     )
 

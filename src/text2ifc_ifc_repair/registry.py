@@ -61,6 +61,7 @@ class OperationDefinition:
     inherited_type_evidence_role: str | None = None
     generated_type_template: OperationCallable | None = None
     generated_occurrence_facts: OperationCallable | None = None
+    operation_conflict_checker: OperationCallable | None = None
 
     def __post_init__(self) -> None:
         if not self.operation_type or not self.target_ifc_classes:
@@ -111,6 +112,12 @@ class OperationDefinition:
         ):
             raise OperationRegistryError(
                 "INVALID_GENERATED_OCCURRENCE_FACTS", self.operation_type
+            )
+        if self.operation_conflict_checker is not None and not callable(
+            self.operation_conflict_checker
+        ):
+            raise OperationRegistryError(
+                "INVALID_OPERATION_CONFLICT_CHECKER", self.operation_type
             )
 
 

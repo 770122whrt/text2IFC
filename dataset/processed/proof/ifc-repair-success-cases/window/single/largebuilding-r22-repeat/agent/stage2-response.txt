@@ -1,0 +1,96 @@
+{
+  "schema_version": "text2ifc/ifc-repair-changeset-draft/0.2",
+  "draft_id": "draft_add_window_1F6umJ5H50aeL3A1As_wTm",
+  "base_model_fingerprint": "sha256:ca703845ddf4a434eea0317498fb29893877f87d66047cf6c890a61cd2844933",
+  "source_request_hash": "sha256:774c569f28173084cd694c4994ad319ba8663709d0042b0b7d54e1afdd067727",
+  "semantic_manifest_ref": "changeset/semantic-manifest-op-1.json",
+  "semantic_manifest_sha256": "sha256:5108bfc4624840985401f5830731489983994cbc950c96e9f8d1b9d4acc5344e",
+  "semantic_summary": {
+    "required": 28,
+    "conditional": 44,
+    "not_required": 0
+  },
+  "scope": {
+    "target_ids": ["1F6umJ5H50aeL3A1As_wTm"],
+    "forbidden_ids": []
+  },
+  "evidence_refs": [
+    "pset:Constraints.Level",
+    "pset:Constraints.Sill Height",
+    "pset:Custom_Pset.NetArea",
+    "pset:Custom_Pset.SillHeight",
+    "pset:Custom_Pset.StatusConstruction",
+    "pset:Custom_Pset.StoreyName",
+    "pset:Dimensions.Area",
+    "pset:Dimensions.Volume",
+    "pset:Identity Data.Mark",
+    "pset:Other.Family",
+    "pset:Other.Family and Type",
+    "pset:Other.Head Height",
+    "pset:Other.Host Id",
+    "pset:Other.Type",
+    "pset:Other.Type Id",
+    "pset:Phasing.Phase Created",
+    "quantity:BaseQuantities.Depth",
+    "quantity:BaseQuantities.Height",
+    "quantity:BaseQuantities.Width",
+    "resolved:/operations/op-1/context/candidate_targets/0"
+  ],
+  "preconditions": [
+    "base_model_fingerprint_matches",
+    "source_request_hash_matches",
+    "target_exists",
+    "opening_within_wall",
+    "opening_interval_available"
+  ],
+  "postconditions": [
+    "opening_voids_wall",
+    "window_fills_opening",
+    "requested_geometry_matches"
+  ],
+  "operations": [
+    {
+      "operation_id": "op-1",
+      "operation_type": "add_window_with_opening_to_wall",
+      "target": {
+        "wall_global_id": "1F6umJ5H50aeL3A1As_wTm"
+      },
+      "parameters": {
+        "opening": {
+          "height_mm": 1830,
+          "sill_height_mm": 305,
+          "width_mm": 915
+        },
+        "position": {
+          "center_offset_mm": 3042.5,
+          "reference": "wall_local_start"
+        },
+        "window": {
+          "fit_opening": true
+        }
+      },
+      "evidence_refs": [
+        "pset:Constraints.Level",
+        "pset:Constraints.Sill Height",
+        "pset:Custom_Pset.NetArea",
+        "pset:Custom_Pset.SillHeight",
+        "pset:Custom_Pset.StatusConstruction",
+        "pset:Custom_Pset.StoreyName",
+        "pset:Dimensions.Area",
+        "pset:Dimensions.Volume",
+        "pset:Identity Data.Mark",
+        "pset:Other.Family",
+        "pset:Other.Family and Type",
+        "pset:Other.Head Height",
+        "pset:Other.Host Id",
+        "pset:Other.Type",
+        "pset:Other.Type Id",
+        "pset:Phasing.Phase Created",
+        "quantity:BaseQuantities.Depth",
+        "quantity:BaseQuantities.Height",
+        "quantity:BaseQuantities.Width",
+        "resolved:/operations/op-1/context/candidate_targets/0"
+      ]
+    }
+  ]
+}

@@ -214,8 +214,10 @@ def test_exact_inherited_match_skips_direct_duplicate_but_mismatch_overrides() -
     )
 
     same = _apply(model, window, _assignment("EI30"))
-    assert not _direct_psets(window, "Pset_WindowCommon")
-    assert same["skipped"] == ["pset:Pset_WindowCommon.FireRating"]
+    direct = _direct_psets(window, "Pset_WindowCommon")
+    assert len(direct) == 1
+    assert direct[0].HasProperties[0].NominalValue.wrappedValue == "EI30"
+    assert same["skipped"] == []
 
     _apply(model, window, _assignment("EI60"))
     direct = _direct_psets(window, "Pset_WindowCommon")

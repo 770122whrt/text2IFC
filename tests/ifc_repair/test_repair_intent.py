@@ -97,6 +97,10 @@ def test_schema_is_exact_draft_2020_12_contract() -> None:
     Draft202012Validator.check_schema(schema)
     assert schema["$id"] == SCHEMA_VERSION
     assert schema["additionalProperties"] is False
+    body_schema = repair_intent.load_repair_intent_body_schema()
+    Draft202012Validator.check_schema(body_schema)
+    assert body_schema["$id"] == "text2ifc/ifc-repair-intent-body/0.1"
+    assert body_schema["additionalProperties"] is False
 
 
 def test_single_operation_round_trips_with_canonical_hash_and_evidence() -> None:
@@ -246,4 +250,7 @@ def test_schema_file_lives_at_the_versioned_public_path() -> None:
     repair_intent = _module()
     assert repair_intent.REPAIR_INTENT_SCHEMA_PATH == Path(
         "schemas/agent/ifc-repair-intent-0.1.schema.json"
+    )
+    assert repair_intent.REPAIR_INTENT_BODY_SCHEMA_PATH == Path(
+        "schemas/agent/ifc-repair-intent-body-0.1.schema.json"
     )

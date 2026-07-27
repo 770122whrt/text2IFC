@@ -1,0 +1,173 @@
+{
+  "schema_version": "text2ifc/comparator-0.2-benchmark/0.1",
+  "status": "passed",
+  "before": {
+    "path": "E:\\code for project\\bimnet\\dataset\\processed\\ifc-repair\\phase10.3-advanced-project-five-window-deepseek-uat\\fixture\\damaged.ifc",
+    "sha256": "sha256:65b576a99174d413eeed9c0517592a0f31a9b6f5fb68bd4d006d94ed18a4adcb"
+  },
+  "after": {
+    "path": "E:\\code for project\\bimnet\\dataset\\processed\\ifc-repair\\phase10.4-comparator-0.2\\preflight-production-003\\repaired.ifc",
+    "sha256": "sha256:91e5295b0487389546bc575d294038c2669f052d41edef3813734234638c3a2a"
+  },
+  "budgets": {
+    "comparison_seconds": 120.0,
+    "peak_rss_bytes": 4294967296
+  },
+  "summary": {
+    "successful_runs": 3,
+    "requested_runs": 3,
+    "consistent_change_counts": true,
+    "median_comparison_seconds": 39.637528,
+    "median_wall_seconds": 50.877606,
+    "peak_rss_bytes": 1082695680
+  },
+  "runs": [
+    {
+      "status": "passed",
+      "open_seconds": 11.611496,
+      "wall_seconds": 51.763933,
+      "peak_rss_bytes": 1082695680,
+      "change_counts": {
+        "created": 42,
+        "modified": 5,
+        "removed": 0
+      },
+      "metrics": {
+        "algorithm_version": "text2ifc/ifc-root-fingerprint/0.2",
+        "strategy": "aligned_step_certificate",
+        "timeout_seconds": 120.0,
+        "before_root_count": 47072,
+        "after_root_count": 47114,
+        "before_entity_count": 769814,
+        "after_entity_count": 770044,
+        "dirty_before_record_count": 5,
+        "dirty_after_record_count": 235,
+        "candidate_root_count": 5,
+        "before_propagated_entity_count": 5,
+        "after_propagated_entity_count": 235,
+        "root_index_seconds": 1.176424,
+        "record_scan_seconds": 31.040047,
+        "propagation_seconds": 0.008316,
+        "before_fingerprint_seconds": 0.075872,
+        "after_fingerprint_seconds": 7.727323,
+        "detail_seconds": 0.065003,
+        "total_seconds": 40.096557,
+        "before": {
+          "hashed_non_root_entities": 6,
+          "shared_entity_cache_hits": 4,
+          "cached_non_root_entities": 6,
+          "cycle_edges": 0,
+          "root_count": 5,
+          "schema_declaration_count": 7
+        },
+        "after": {
+          "hashed_non_root_entities": 42116,
+          "shared_entity_cache_hits": 30903,
+          "cached_non_root_entities": 42116,
+          "cycle_edges": 0,
+          "root_count": 47,
+          "schema_declaration_count": 42
+        }
+      },
+      "run": 1
+    },
+    {
+      "status": "passed",
+      "open_seconds": 11.177342,
+      "wall_seconds": 50.877606,
+      "peak_rss_bytes": 1081180160,
+      "change_counts": {
+        "created": 42,
+        "modified": 5,
+        "removed": 0
+      },
+      "metrics": {
+        "algorithm_version": "text2ifc/ifc-root-fingerprint/0.2",
+        "strategy": "aligned_step_certificate",
+        "timeout_seconds": 120.0,
+        "before_root_count": 47072,
+        "after_root_count": 47114,
+        "before_entity_count": 769814,
+        "after_entity_count": 770044,
+        "dirty_before_record_count": 5,
+        "dirty_after_record_count": 235,
+        "candidate_root_count": 5,
+        "before_propagated_entity_count": 5,
+        "after_propagated_entity_count": 235,
+        "root_index_seconds": 1.24615,
+        "record_scan_seconds": 30.605045,
+        "propagation_seconds": 0.005077,
+        "before_fingerprint_seconds": 0.066612,
+        "after_fingerprint_seconds": 7.647775,
+        "detail_seconds": 0.062643,
+        "total_seconds": 39.637528,
+        "before": {
+          "hashed_non_root_entities": 6,
+          "shared_entity_cache_hits": 4,
+          "cached_non_root_entities": 6,
+          "cycle_edges": 0,
+          "root_count": 5,
+          "schema_declaration_count": 7
+        },
+        "after": {
+          "hashed_non_root_entities": 42116,
+          "shared_entity_cache_hits": 30903,
+          "cached_non_root_entities": 42116,
+          "cycle_edges": 0,
+          "root_count": 47,
+          "schema_declaration_count": 42
+        }
+      },
+      "run": 2
+    },
+    {
+      "status": "passed",
+      "open_seconds": 11.384611,
+      "wall_seconds": 50.682705,
+      "peak_rss_bytes": 1081655296,
+      "change_counts": {
+        "created": 42,
+        "modified": 5,
+        "removed": 0
+      },
+      "metrics": {
+        "algorithm_version": "text2ifc/ifc-root-fingerprint/0.2",
+        "strategy": "aligned_step_certificate",
+        "timeout_seconds": 120.0,
+        "before_root_count": 47072,
+        "after_root_count": 47114,
+        "before_entity_count": 769814,
+        "after_entity_count": 770044,
+        "dirty_before_record_count": 5,
+        "dirty_after_record_count": 235,
+        "candidate_root_count": 5,
+        "before_propagated_entity_count": 5,
+        "after_propagated_entity_count": 235,
+        "root_index_seconds": 1.149014,
+        "record_scan_seconds": 30.398689,
+        "propagation_seconds": 0.005458,
+        "before_fingerprint_seconds": 0.060308,
+        "after_fingerprint_seconds": 7.554442,
+        "detail_seconds": 0.062801,
+        "total_seconds": 39.233929,
+        "before": {
+          "hashed_non_root_entities": 6,
+          "shared_entity_cache_hits": 4,
+          "cached_non_root_entities": 6,
+          "cycle_edges": 0,
+          "root_count": 5,
+          "schema_declaration_count": 7
+        },
+        "after": {
+          "hashed_non_root_entities": 42116,
+          "shared_entity_cache_hits": 30903,
+          "cached_non_root_entities": 42116,
+          "cycle_edges": 0,
+          "root_count": 47,
+          "schema_declaration_count": 42
+        }
+      },
+      "run": 3
+    }
+  ]
+}

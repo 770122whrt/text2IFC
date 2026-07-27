@@ -34,8 +34,14 @@ requirement, emit `prototype_intent=null`.
 
 Use only operation types, target IFC classes and parameter shapes declared in
 SUPPORTED_OPERATIONS. Preserve operation order. Each target query must contain
-at least one user-requested selector. Include only stated parameter values;
-partial parameters are valid clarification input. Output JSON only.
+at least one user-requested selector. A GUID is optional. For each target,
+preserve every compatible selector explicitly stated by the user instead of
+discarding names, storeys, spaces, grids or directions after seeing a GUID.
+Selectors may be combined so the deterministic resolver can narrow the target.
+Do not invent a selector or choose one candidate when the supplied selectors
+remain ambiguous; preserve the claims and let the runtime request target
+clarification. Include only stated parameter values; partial parameters are
+valid clarification input. Output JSON only.
 
 ## Frozen examples
 
@@ -72,6 +78,18 @@ Natural-language property claim:
     "reference": "request:/text",
     "excerpt": "把这个窗户标记为外窗"
   }
+}
+```
+
+Target query without a GUID:
+
+```json
+{
+  "schema_version": "text2ifc/ifc-target-query/0.1",
+  "allowed_ifc_classes": ["IfcWall"],
+  "names": ["North wall"],
+  "storey_name": "Level 1",
+  "direction": "east"
 }
 ```
 

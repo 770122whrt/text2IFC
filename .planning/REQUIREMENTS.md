@@ -92,24 +92,24 @@ semantic ChangeSet and an L1/L2-validated IFC result.
 
 ### Batch Repair and Dataset Hygiene
 
-- [ ] **DATA-01**: User can run a read-only deterministic audit that validates
+- [x] **DATA-01**: User can run a read-only deterministic audit that validates
   dataset manifest paths, hashes, IFC schemas and duplicate identities and
   classifies processed artifacts without deleting or moving files.
-- [ ] **DATA-02**: A versioned benchmark manifest binds selected larger IFC2X3
+- [x] **DATA-02**: A versioned benchmark manifest binds selected larger IFC2X3
   files to source hashes, reproducible model/chain metrics, project splits,
   roles and suitability evidence.
-- [ ] **BATCH-01**: One source IFC can be damaged in a single deterministic
+- [x] **BATCH-01**: One source IFC can be damaged in a single deterministic
   mutation by removing exactly five valid Window/Opening chains while
   preserving source bytes, host walls and closed target regions.
-- [ ] **BATCH-02**: One bounded natural-language request produces one ordered
+- [x] **BATCH-02**: One bounded natural-language request produces one ordered
   RepairIntent and one unified ChangeSet containing exactly five Window repair
   operations without private Ground Truth in Provider input.
-- [ ] **BATCH-03**: Five operations apply as one all-or-nothing IFC
+- [x] **BATCH-03**: Five operations apply as one all-or-nothing IFC
   transaction; one invalid operation or failed mandatory evaluation suppresses
   the successful IFC artifact.
-- [ ] **BATCH-04**: Every operation has independent L1/L2 evidence and the
+- [x] **BATCH-04**: Every operation has independent L1/L2 evidence and the
   aggregate publication decision passes only when all five operations pass.
-- [ ] **BATCH-05**: The `vvo.ifc` five-Window chain passes deterministic
+- [x] **BATCH-05**: The `vvo.ifc` five-Window chain passes deterministic
   end-to-end acceptance, larger IFC compatibility is measured, and a real
   DeepSeek batch UAT records success or honest failure without fallback.
 
@@ -124,6 +124,55 @@ semantic ChangeSet and an L1/L2-validated IFC result.
 - [x] **TYPE-03**: Production evidence reads only authorized Type facts and the
   LargeBuilding shared Window Style no longer fails because occurrence-specific
   storey/level values were aggregated as Type facts.
+
+### Scalable Preservation Comparator
+
+- [x] **CMP-01**: Evaluation 0.2 public statuses, check identifiers, report
+  shape and fail-closed publication behavior remain compatible while the
+  comparator implementation is optimized.
+- [x] **CMP-02**: The blocking global preservation gate compares every IFC root
+  through complete cycle-safe fingerprints, reuses shared subgraph work, and
+  rejects duplicate or empty root GUIDs.
+- [x] **CMP-03**: Policy-derived authorized repair neighborhoods retain deep
+  structural, geometry, wall and volume checks, while per-run memoization
+  prevents repeated expansion of shared representation subgraphs.
+- [x] **CMP-04**: STEP reorder, unauthorized attribute/placement/geometry/Pset/
+  relationship mutations, cache contamination and timeout tests prove
+  semantic equivalence or fail closed; Full IfcDiff remains diagnostic by
+  default.
+- [x] **CMP-05**: Three fresh AdvancedProject comparator evaluations meet the
+  120-second preservation and 4-GiB peak-RSS budgets; one fresh full Production
+  replay completes within 180 seconds and honestly evaluates the saved real
+  DeepSeek ChangeSet.
+
+### Window Occurrence Fidelity and Validation Acceleration
+
+- [x] **WFID-01**: One bounded public request can express complete supported
+  Window/Opening occurrence semantics through exact/natural scalar property
+  intents, scalar quantity intents, reusable bundles and per-operation
+  overrides with public provenance.
+- [x] **WFID-02**: An exact surviving occurrence or explicitly authorized
+  unanimous same-Type cohort can supply occurrence-direct values; ambiguous,
+  missing or conflicting evidence clarifies rather than guesses, and contextual
+  facts are recomputed or explicitly overridden.
+- [x] **WFID-03**: One shared semantic bundle expands into isolated
+  operation-local assignments for a unified five-Window ChangeSet; one invalid
+  member rolls back the transaction and neither shared Types nor surviving
+  occurrences are modified.
+- [x] **WFID-04**: A private Window/Opening Ground Truth comparator classifies
+  every supported fact as `matched`, `not_in_user_text`,
+  `unsupported_authoring`, `wrong_value` or `ownership_only`, and exposes
+  independent geometry/relationship, L2 semantic, occurrence-fidelity and
+  authoring-exactness results.
+- [x] **WFID-05**: Content-addressed validation reuse and bounded parallel
+  evaluation produce evidence identical to sequential execution and make
+  AdvancedProject cold and warm full Production runs complete within 180
+  seconds and 4 GiB without reducing comparison or validation scope.
+- [x] **WFID-06**: Reproducible explicit-input, exact-reference, cohort,
+  conflict and atomic five-Window cases plus one real DeepSeek UAT record
+  source/damaged/repaired hashes, Window names/GUIDs, public input, Agent and
+  ChangeSet artifacts, comparison results, timing/RSS and honest no-fallback
+  outcomes.
 
 ### Operation Expansion
 
@@ -192,13 +241,24 @@ semantic ChangeSet and an L1/L2-validated IFC result.
 | RAG-02 | 10.2 | Complete |
 | RAG-03 | 10.2 | Complete |
 | RAG-04 | 10.2 | Complete |
-| DATA-01 | 10.3 | Pending |
-| DATA-02 | 10.3 | Pending |
-| BATCH-01 | 10.3 | Pending |
-| BATCH-02 | 10.3 | Pending |
-| BATCH-03 | 10.3 | Pending |
-| BATCH-04 | 10.3 | Pending |
-| BATCH-05 | 10.3 | Pending |
+| DATA-01 | 10.3 | Complete |
+| DATA-02 | 10.3 | Complete |
+| BATCH-01 | 10.3 | Complete |
+| BATCH-02 | 10.3 | Complete |
+| BATCH-03 | 10.3 | Complete |
+| BATCH-04 | 10.3 | Complete |
+| BATCH-05 | 10.3 | Complete |
+| CMP-01 | 10.4 | Complete |
+| CMP-02 | 10.4 | Complete |
+| CMP-03 | 10.4 | Complete |
+| CMP-04 | 10.4 | Complete |
+| CMP-05 | 10.4 | Complete |
+| WFID-01 | 10.5 | Complete |
+| WFID-02 | 10.5 | Complete |
+| WFID-03 | 10.5 | Complete |
+| WFID-04 | 10.5 | Complete |
+| WFID-05 | 10.5 | Complete |
+| WFID-06 | 10.5 | Complete |
 | OPS-01 | 11 | Pending |
 | OPS-02 | 11 | Pending |
 | OPS-03 | 12 | Pending |
@@ -206,7 +266,7 @@ semantic ChangeSet and an L1/L2-validated IFC result.
 | SCALE-01 | 13 | Pending |
 | SCALE-02 | 13 | Pending |
 
-**Coverage:** 41 requirements, 41 mapped, 0 unmapped.
+**Coverage:** 52 requirements, 52 mapped, 0 unmapped.
 
 ---
-*Last updated: 2026-07-24 after Phase 10.3 planning*
+*Last updated: 2026-07-26 after Phase 10.5 offline, performance and real DeepSeek acceptance*

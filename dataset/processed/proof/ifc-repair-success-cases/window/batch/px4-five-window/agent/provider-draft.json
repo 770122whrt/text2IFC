@@ -1,0 +1,159 @@
+{
+  "base_model_fingerprint": "sha256:0630c9bd509bde693c3c3368bcea9e041a3af8d5d1c34d6f797c0f41fb7d0e6c",
+  "draft_id": "draft-px4-1-five-window-001-offline-001",
+  "evidence_refs": [
+    "resolved:/operations/window-repair-001/context/candidate_targets/0",
+    "resolved:/operations/window-repair-002/context/candidate_targets/0",
+    "resolved:/operations/window-repair-003/context/candidate_targets/0",
+    "resolved:/operations/window-repair-004/context/candidate_targets/0",
+    "resolved:/operations/window-repair-005/context/candidate_targets/0"
+  ],
+  "operations": [
+    {
+      "evidence_refs": [
+        "resolved:/operations/window-repair-001/context/candidate_targets/0"
+      ],
+      "operation_id": "window-repair-001",
+      "operation_type": "add_window_with_opening_to_wall",
+      "parameters": {
+        "opening": {
+          "height_mm": 1775.0,
+          "sill_height_mm": 345.0,
+          "width_mm": 839.999999999999
+        },
+        "position": {
+          "center_offset_mm": 758.104857,
+          "reference": "wall_local_start"
+        },
+        "window": {
+          "fit_opening": true
+        }
+      },
+      "target": {
+        "wall_global_id": "03SCVysybE5QR$e8dtXVfQ"
+      }
+    },
+    {
+      "evidence_refs": [
+        "resolved:/operations/window-repair-002/context/candidate_targets/0"
+      ],
+      "operation_id": "window-repair-002",
+      "operation_type": "add_window_with_opening_to_wall",
+      "parameters": {
+        "opening": {
+          "height_mm": 369.999999999999,
+          "sill_height_mm": 1939.760488,
+          "width_mm": 370.0
+        },
+        "position": {
+          "center_offset_mm": 605.0,
+          "reference": "wall_local_start"
+        },
+        "window": {
+          "fit_opening": true
+        }
+      },
+      "target": {
+        "wall_global_id": "1aUf$RNz1A_AvssKHMHdxj"
+      }
+    },
+    {
+      "evidence_refs": [
+        "resolved:/operations/window-repair-003/context/candidate_targets/0"
+      ],
+      "operation_id": "window-repair-003",
+      "operation_type": "add_window_with_opening_to_wall",
+      "parameters": {
+        "opening": {
+          "height_mm": 369.999999999999,
+          "sill_height_mm": 1339.760488,
+          "width_mm": 370.0
+        },
+        "position": {
+          "center_offset_mm": 605.0,
+          "reference": "wall_local_start"
+        },
+        "window": {
+          "fit_opening": true
+        }
+      },
+      "target": {
+        "wall_global_id": "1aUf$RNz1A_AvssKHMHdxj"
+      }
+    },
+    {
+      "evidence_refs": [
+        "resolved:/operations/window-repair-004/context/candidate_targets/0"
+      ],
+      "operation_id": "window-repair-004",
+      "operation_type": "add_window_with_opening_to_wall",
+      "parameters": {
+        "opening": {
+          "height_mm": 2360.0,
+          "sill_height_mm": 280.0,
+          "width_mm": 3600.0
+        },
+        "position": {
+          "center_offset_mm": 2118.788678,
+          "reference": "wall_local_start"
+        },
+        "window": {
+          "fit_opening": true
+        }
+      },
+      "target": {
+        "wall_global_id": "03SCVysybE5QR$e8dtXS08"
+      }
+    },
+    {
+      "evidence_refs": [
+        "resolved:/operations/window-repair-005/context/candidate_targets/0"
+      ],
+      "operation_id": "window-repair-005",
+      "operation_type": "add_window_with_opening_to_wall",
+      "parameters": {
+        "opening": {
+          "height_mm": 1875.0,
+          "sill_height_mm": 412.716165,
+          "width_mm": 1100.0
+        },
+        "position": {
+          "center_offset_mm": 573.823529,
+          "reference": "wall_local_start"
+        },
+        "window": {
+          "fit_opening": true
+        }
+      },
+      "target": {
+        "wall_global_id": "03SCVysybE5QR$e8dtXVs8"
+      }
+    }
+  ],
+  "postconditions": [
+    "opening_voids_wall",
+    "window_fills_opening"
+  ],
+  "preconditions": [
+    "target_exists",
+    "opening_interval_available"
+  ],
+  "schema_version": "text2ifc/ifc-repair-changeset-draft/0.2",
+  "scope": {
+    "forbidden_ids": [],
+    "target_ids": [
+      "03SCVysybE5QR$e8dtXVfQ",
+      "1aUf$RNz1A_AvssKHMHdxj",
+      "03SCVysybE5QR$e8dtXS08",
+      "03SCVysybE5QR$e8dtXVs8"
+    ]
+  },
+  "semantic_manifest_ref": "changeset/semantic-manifests.json",
+  "semantic_manifest_sha256": "sha256:0aedcf0d6f137a9656648d996ecfbfffae48d801ccd355ab7f1ea64e7a306050",
+  "semantic_summary": {
+    "conditional": 23,
+    "not_required": 0,
+    "required": 50
+  },
+  "source_request_hash": "sha256:3ef8696edc8f1d191af153dae3f09f44eb2eb1e78e8b6cdcd7dae91552639f71"
+}

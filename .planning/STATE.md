@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: IFC ChangeSet Repair Pipeline
-status: Phase 10.3 execution in progress
-last_updated: "2026-07-24T06:00:38.696Z"
+status: Phase 10.5 complete; ready for Phase 11
+last_updated: "2026-07-26T18:00:00+08:00"
 progress:
-  total_phases: 11
-  completed_phases: 7
-  total_plans: 28
-  completed_plans: 26
-  percent: 93
+  total_phases: 13
+  completed_phases: 10
+  total_plans: 32
+  completed_plans: 31
+  percent: 97
 ---
 
 # Project State
@@ -21,22 +21,23 @@ See `.planning/PROJECT.md`.
 **Core value:** Given an IFC file and an explicit user request, produce a
 traceable semantic ChangeSet and an L1/L2-validated IFC result.
 
-**Current focus:** Phase 10.3 dataset benchmark hygiene and five-Window batch
-repair.
+**Current focus:** Phase 11 planning — Wall Opening and Door Operations.
 
 ## Current Position
 
-Phase: 10.3 (batch-window-repair-and-dataset-benchmark-hygiene) - EXECUTING
-Plan: 0 of 1
+Phase: 10.5 (Window Occurrence Fidelity and Validation Acceleration) — COMPLETE
+Plan: 3 of 3 complete
 
 - Milestone: v1.1 IFC ChangeSet Repair Pipeline
-- Phase: 10.3
-- Plan: implementation plan approved; execution in progress
-- Status: dataset audit and five-Window batch repair
-- Progress: 7 / 11 phases complete
-- Requirements: DATA-01..02 and BATCH-01..05 pending
-- Last activity: 2026-07-24 — completed Phase 10.2 property knowledge
-  retrieval, occurrence authoring and real DeepSeek validation
+- Phase: 10.5 complete; next Phase 11
+- Plan: all three implementation plans complete
+- Status: offline, AdvancedProject performance and real DeepSeek accepted
+- Progress: 10 / 13 phases complete
+- Requirements: WFID-01..06 complete
+- Last activity: 2026-07-26 - 583 IFC repair tests passed; AdvancedProject
+  cold/warm full validation passed at 62.687/23.562 seconds and about
+  2.24/2.25 GB peak RSS; real DeepSeek r21 passed RepairIntent 0.4,
+  ChangeSet 0.3, Production/private L1/L2 and occurrence fidelity
 
 ## Carried Context
 
@@ -91,6 +92,56 @@ Plan: 0 of 1
   system-template fallback; this does not override the Production publication
   contract.
 
+- Phase 10.3 adds source-bound dataset/benchmark manifests and proves one
+  five-Window request can become one unified, all-or-nothing ChangeSet. Both
+  deterministic and real DeepSeek runs passed five independent L1/L2 gates.
+
+- The same-wall two-Window case is supported through operation-specific
+  overlap checks and aggregate host-wall volume evaluation. An injected
+  overlap rejects the entire transaction.
+
+- Phase 10.4 replaces repeated whole-model representation expansion with a
+  fail-closed, memoized candidate-certificate plus semantic-fingerprint
+  comparator. AdvancedProject now completes global preservation in a
+  39.638-second median with 1.083-GB peak RSS.
+
+- A minimal evaluator-alignment follow-up closed the AdvancedProject replay.
+  Approved mapped Window frames may be centred and contained within the
+  opening while retaining nominal dimensions; occurrence-direct material
+  associations take precedence over Type materials. The unchanged saved
+  DeepSeek ChangeSet now passes application, global preservation, five
+  independent L1/L2 gates and publication.
+
+- The Window success Proof collection now freezes three complementary accepted
+  baselines: LargeBuilding single-Window effective semantic replication, vvo
+  five-Window atomic repair, and AdvancedProject five-Window large-model
+  preservation. Nine IFC copies reopen as IFC2X3, and every copied artifact is
+  source- and SHA-256-bound.
+
+- Phase 10.5 treats Window/Opening effective occurrence scalar properties and
+  relevant quantities as blocking repair fidelity while keeping GUID, STEP,
+  serialization, ownership-graph and geometry-node differences diagnostic.
+
+- Missing occurrence values may be supplied directly, deterministically
+  derived, copied from one explicitly authorized occurrence, or taken from an
+  explicitly authorized unanimous same-Type cohort. An explicitly authorized
+  reused Type may satisfy an effective inherited value; a difference from
+  Ground Truth occurrence-direct ownership remains an L3 diagnostic.
+
+- Phase 10.5 retains the complete Production evaluator and requires
+  AdvancedProject request-to-publication time at or below 180 seconds and peak
+  RSS at or below 4 GiB. Cache/parallel acceleration may not reduce evidence
+  scope and fails closed.
+
+- Phase 10.5 real DeepSeek r21 passed with one Stage 1 and one Stage 2 call,
+  RepairIntent 0.4, Bound ChangeSet 0.3, Production/private L1/L2 and
+  occurrence fidelity. The repaired IFC reopens as IFC2X3 and no synthetic
+  fallback was used.
+
+- AdvancedProject final cold/warm full evaluation completed in 62.687/23.562
+  seconds with approximately 2.24/2.25 GB process-tree peak RSS. Cold cache
+  was miss/miss; warm cache was hit/hit; both runs repeated the full diff.
+
 ## Accepted Debt / Deferred
 
 - `CLI-08` final true-human REPL acceptance from v1.0 remains carried debt.
@@ -106,15 +157,17 @@ Plan: 0 of 1
 
 ## Next Action
 
-Execute Phase 10.3: audit dataset/manifests without deletion, build one
-five-Window `vvo.ifc` damaged fixture, generate one unified five-operation
-ChangeSet, enforce atomic per-operation L1/L2, and record larger IFC evidence.
+Discuss and plan Phase 11 opening-only and Door+Opening operation contracts,
+reusing the completed scoped authoring, unified ChangeSet, L1/L2 and validation
+interfaces.
 
 ---
-*Last updated: 2026-07-24 during Phase 10.3 execution*
+*Last updated: 2026-07-26 after Phase 10.5 complete acceptance*
 
 ## Accumulated Context
 
 ### Roadmap Evolution
 
 - Phase 10.3 inserted after Phase 10: Batch Window Repair and Dataset Benchmark Hygiene (URGENT)
+- Phase 10.4 inserted after Phase 10.3: Comparator 0.2 Scalable Preservation Gate
+- Phase 10.5 inserted after Phase 10.4: Window Occurrence Fidelity and Validation Acceleration

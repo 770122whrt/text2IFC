@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
-from dataclasses import asdict, dataclass, is_dataclass
+from dataclasses import asdict, dataclass, is_dataclass, replace
 from enum import Enum
 from pathlib import Path
 from typing import Any, Callable, Mapping
@@ -22,6 +22,10 @@ from .resolution_flow import (
     resolve_repair_intent,
 )
 from .run_artifacts import publish_terminal_artifacts
+from .semantic_authoring import (
+    semantic_manifest_expected_facts,
+    semantic_manifest_to_dict,
+)
 
 
 @dataclass(frozen=True)
@@ -181,8 +185,31 @@ class RepairOrchestrator:
                     if len(manifests) == 1
                     else "semantic-manifests.json"
                 )
-                self._write(manifest_name, manifests[0] if len(manifests) == 1 else manifests)
+                manifest_documents = tuple(
+                    semantic_manifest_to_dict(manifest)
+                    for manifest in manifests
+                )
+                self._write(
+                    manifest_name,
+                    (
+                        manifest_documents[0]
+                        if len(manifest_documents) == 1
+                        else manifest_documents
+                    ),
+                )
                 manifest_path = self.run_directory / manifest_name
+                # Authoring and Evaluation must consume one canonical
+                # authority contract. Rehydrate the facts from the exact
+                # manifests written for application instead of retaining the
+                # pre-normalization ProductionEvidence projection.
+                built = replace(
+                    built,
+                    expected_facts_by_operation={
+                        manifest.operation_id:
+                        semantic_manifest_expected_facts(manifest)
+                        for manifest in manifests
+                    },
+                )
                 manifest_evidence = {
                     "semantic_manifest": manifest_name,
                     "semantic_manifest_sha256": _path_sha256(manifest_path),

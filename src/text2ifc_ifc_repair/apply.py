@@ -74,12 +74,58 @@ def apply_changeset(
                 policy = registry.require_evaluation_policy(
                     str(operation["operation_type"])
                 )
-                semantic = apply_semantic_assignments(
-                    model=model,
-                    operation=operation,
-                    application=changes,
-                    target_role=policy.semantic_role,
-                )
+                scoped_semantics = []
+                for scope, target_role in (
+                    ("window_occurrence", policy.semantic_role),
+                    ("opening_occurrence", "opening"),
+                ):
+                    scoped_assignments = [
+                        item
+                        for item in operation["semantic_assignments"]
+                        if item.get("scope", "window_occurrence") == scope
+                    ]
+                    if not scoped_assignments:
+                        continue
+                    scoped_operation = {
+                        **operation,
+                        "semantic_assignments": scoped_assignments,
+                    }
+                    scoped_semantics.append(
+                        (
+                            scope,
+                            apply_semantic_assignments(
+                                model=model,
+                                operation=scoped_operation,
+                                application=changes,
+                                target_role=target_role,
+                            ),
+                        )
+                    )
+                semantic = {
+                    "created": [
+                        item
+                        for _, result in scoped_semantics
+                        for item in result["created"]
+                    ],
+                    "modified": [
+                        item
+                        for _, result in scoped_semantics
+                        for item in result.get("modified", ())
+                    ],
+                    "updated": [
+                        item
+                        for _, result in scoped_semantics
+                        for item in result.get("updated", ())
+                    ],
+                    "skipped": [
+                        item
+                        for _, result in scoped_semantics
+                        for item in result.get("skipped", ())
+                    ],
+                    "scopes": {
+                        scope: result for scope, result in scoped_semantics
+                    },
+                }
                 changes["created"] = [
                     *changes.get("created", ()),
                     *semantic["created"],

@@ -16,6 +16,7 @@ from text2ifc_agent.providers import (
 from text2ifc_text.splits import atomic_write_text
 
 from .changesets import (
+    BOUND_CHANGESET_SCHEMA_VERSION_0_3,
     bind_repair_changeset,
     load_changeset_draft_schema,
     load_changeset_schema,
@@ -27,6 +28,7 @@ from .registry import OperationRegistry, OperationRegistryError
 
 TEMPLATE_ID = "ifc-repair-changeset.v0.1"
 BOUND_TEMPLATE_ID = "ifc-repair-changeset.v0.2"
+BOUND_TEMPLATE_ID_0_3 = "ifc-repair-changeset.v0.3"
 _PRIVATE_CANARIES = (
     "private_original",
     "mutation_manifest",
@@ -71,6 +73,14 @@ def generate_bound_changeset(
     manifests = tuple(semantic_manifests)
     manifest_hashes = dict(semantic_manifest_hashes or {})
     compact_mode = bool(manifests)
+    semantic_contract_v02 = bool(
+        manifests
+        and all(
+            item.schema_version
+            == "text2ifc/ifc-repair-semantic-manifest/0.2"
+            for item in manifests
+        )
+    )
     manifest_hash = (
         manifest_hashes.get(manifests[0].operation_id, "") if compact_mode else ""
     )
@@ -84,7 +94,7 @@ def generate_bound_changeset(
             assignment.source_fact_key
             for manifest in manifests
             for assignment in manifest.assignments
-            if assignment.source_kind.value == "explicit_request"
+            if assignment.source_kind.value in {"explicit_request", "explicit_value"}
         }
     )
     feedback: list[dict[str, str]] = []
@@ -105,7 +115,14 @@ def generate_bound_changeset(
             "SEMANTIC_SUMMARY": semantic_summary,
             "EXPLICIT_REQUEST_SLOT_REFS": explicit_slot_refs,
         }
-        rendered = render_prompt(template_id=BOUND_TEMPLATE_ID, inputs=renderer_input)
+        rendered = render_prompt(
+            template_id=(
+                BOUND_TEMPLATE_ID_0_3
+                if semantic_contract_v02
+                else BOUND_TEMPLATE_ID
+            ),
+            inputs=renderer_input,
+        )
         atomic_write_text(attempt_dir / "renderer-input.json", _json(renderer_input))
         atomic_write_text(attempt_dir / "rendered-prompt.md", rendered["text"])
         try:
@@ -172,6 +189,11 @@ def generate_bound_changeset(
                             semantic_manifest_hashes=manifest_hashes,
                             source_request_hash=source_request_hash,
                             base_model_fingerprint=base_fingerprint,
+                            bound_schema_version=(
+                                BOUND_CHANGESET_SCHEMA_VERSION_0_3
+                                if semantic_contract_v02
+                                else "text2ifc/ifc-repair-changeset/0.2"
+                            ),
                         )
                     except ValueError as error:
                         issues.append(_issue(str(error).split(":", 1)[0], "/", str(error)))

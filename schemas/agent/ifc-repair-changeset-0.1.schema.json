@@ -1,0 +1,100 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://text2ifc.local/schemas/agent/ifc-repair-changeset-0.1.schema.json",
+  "title": "text2IFC IFC Repair ChangeSet 0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "changeset_id",
+    "base_model_fingerprint",
+    "source_request_hash",
+    "scope",
+    "evidence_refs",
+    "preconditions",
+    "postconditions",
+    "operations"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "text2ifc/ifc-repair-changeset/0.1"
+    },
+    "changeset_id": {"$ref": "#/$defs/stableId"},
+    "base_model_fingerprint": {"$ref": "#/$defs/sha256"},
+    "source_request_hash": {"$ref": "#/$defs/sha256"},
+    "scope": {"$ref": "#/$defs/scope"},
+    "evidence_refs": {"$ref": "#/$defs/evidenceRefs"},
+    "preconditions": {"$ref": "#/$defs/conditionNames"},
+    "postconditions": {"$ref": "#/$defs/conditionNames"},
+    "operations": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/operation"}
+    }
+  },
+  "$defs": {
+    "stableId": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^[A-Za-z][A-Za-z0-9._:-]*$"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "evidenceRefs": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^[A-Za-z][A-Za-z0-9._-]*:/.*$"
+      }
+    },
+    "conditionNames": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/stableId"}
+    },
+    "scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["target_ids", "forbidden_ids"],
+      "properties": {
+        "target_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "forbidden_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "operation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "operation_id",
+        "operation_type",
+        "target",
+        "parameters",
+        "evidence_refs"
+      ],
+      "properties": {
+        "operation_id": {"$ref": "#/$defs/stableId"},
+        "operation_type": {"$ref": "#/$defs/stableId"},
+        "target": {
+          "type": "object",
+          "minProperties": 1
+        },
+        "parameters": {"type": "object"},
+        "evidence_refs": {"$ref": "#/$defs/evidenceRefs"}
+      }
+    }
+  }
+}

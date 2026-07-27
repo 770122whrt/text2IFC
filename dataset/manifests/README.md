@@ -66,6 +66,21 @@ Regenerate candidate records with:
 The command prints canonical JSONL for review; it does not overwrite the
 checked-in manifest.
 
+## `ifc-repair-cases/*.private.json`
+
+Evaluator-only target mappings for reproducible mutation cases. These records
+contain original Window and Opening identifiers and therefore must never enter
+Provider prompts or public run bundles.
+
+## `ifc-repair-cases/phase10.5-window-fidelity-cases.json`
+
+Phase 10.5 public acceptance matrix for complete explicit occurrence facts,
+exact-occurrence reuse, authorized same-Type cohort reuse, deliberate cohort
+conflict, and an atomic five-Window bundle. Every admitted source, damaged and
+reference repaired IFC is SHA-256-bound, and each case lists the exact public
+facts that may be projected to the Agent. Private mutation mappings and Ground
+Truth comparator Gold remain outside this manifest and outside Provider input.
+
 ## Read-only dataset audit
 
 Run:
@@ -78,3 +93,18 @@ The audit validates file paths, hashes, IFC schema declarations, duplicate
 identities and linked-corpus counts, then inventories `dataset/processed`
 roots as `retain`, `regenerable` or `review_before_delete`. It never moves,
 deletes or rewrites dataset content. Classification is review evidence only.
+
+## IFC repair success proof
+
+`dataset/processed/proof/ifc-repair-success-cases/manifest.json` indexes
+human-reviewable repair successes. Each admitted case contains:
+
+- original, damaged and published repaired IFC copies;
+- the exact user request;
+- structured Agent output and a bound ChangeSet;
+- Production L1/L2 and optional private Ground Truth evidence;
+- a human-readable report and per-file SHA-256 manifest.
+
+The proof manifest is an accepted-results index, not a training split and not
+a replacement for `ifc-repair-benchmarks.jsonl`. Private mutation manifests
+remain evaluator-only and must never be projected into Provider context.

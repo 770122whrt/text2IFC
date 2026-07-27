@@ -20,7 +20,8 @@ LargeBuilding 通过同一公共 API 接收测试准备阶段生成的 damaged I
 | ChangeSet | `text2ifc/ifc-repair-changeset/0.1` |
 | Public Evaluation | `text2ifc/ifc-repair-evaluation-public/0.2` |
 | Evaluation policy | `phase8.1` |
-| Stage 1 prompt | `ifc-repair-intent.v0.1` / `sha256:d8e48fbdce5ecc7553329849aeaa015b47d92fc25a657e9837bd7a3200ea4e1c` |
+| Stage 1 semantic body | `text2ifc/ifc-repair-intent-body/0.1` |
+| Stage 1 prompt | `ifc-repair-intent.v0.1` / `sha256:507796fcdcb2c238f40eaf4b60cea655aeeab0d51332cd04e30183f21bf308c7` |
 | Stage 2 prompt | `ifc-repair-changeset.v0.2` / `sha256:958f7f38be22d7c89a90112dcd811620c706a209ec4dc506b4980e395693de44` |
 | DeepSeek guards | input `65536`, completion `65536` |
 
@@ -65,6 +66,8 @@ LargeBuilding 通过同一公共 API 接收测试准备阶段生成的 damaged I
 
 ## 真实 DeepSeek UAT
 
+### 首次 UAT（Stage 1 合同修复前，历史证据）
+
 ```powershell
 .venv\Scripts\python scripts\ifc_repair\run_phase9_live_uat.py --check-config
 # exit 0; status=ready; max_input_tokens=65536; max_completion_tokens=65536
@@ -76,6 +79,34 @@ LargeBuilding 通过同一公共 API 接收测试准备阶段生成的 damaged I
 证据目录：`dataset/processed/ifc-repair/phase9-live-uat/uat-20260719T235252588248Z/`。
 
 实际 Provider 尝试为 Stage 1 `2`、Stage 2 `0`。第一次 Stage 1 输出缺少必需 `opening` 参数；纠正尝试因 `REPAIR_INTENT_MODEL_FINGERPRINT_MISMATCH` 被确定性绑定拒绝。Stage 2、application 与 L1/L2 Evaluation 均未到达，因此本次 UAT 不构成“两阶段成功”，也没有 L1/L2 成功声明。结构化结果为 `provider_failed`、complete/publishable `false/false`，没有成功 IFC；响应 ID、usage 与脱敏尝试均保存在 run evidence 中，密钥和 base URL 未输出。
+
+### Stage 1 合同修复后双路径 UAT
+
+证据目录：
+
+```text
+dataset/processed/ifc-repair/phase9-live-uat/uat-20260720T110750461060Z/
+```
+
+| 案例 | 初次 Stage 1 | feedback | Stage 1 总调用 | Stage 2 | L1 / L2 | 终态 |
+|---|---|---|---:|---:|---|---|
+| 完整输入 | complete，issues 0 | 无 | 1 | 1 | passed / not_evaluable | not_publishable |
+| 不完整输入 | `missing_required_parameter`，issues 0 | 补充宽高、窗台和位置 | 2 | 1 | passed / not_evaluable | not_publishable |
+
+两组 Stage 1 合同都通过；不完整输入没有被当成 Provider 错误或触发纠错重试，
+而是生成结构化 clarification 并在同一 run 中补全。两组 application candidate
+SHA-256 相同，证明两条输入路径收敛到同一确定性 IFC。
+
+整体未发布的直接原因是既有 L2 Production Evidence 冲突：
+
+```text
+PROTOTYPE_TYPE_FACT_CONFLICT:
+2cXV28XOjE6f6irhu0CO_c:pset:Constraints.Level
+```
+
+application、preservation 与 L1 均通过；L2 fail closed 为 `not_evaluable`，因此只保留
+diagnostic candidate。详细设计、输入、feedback 和逐阶段证据见
+[phase9-stage1-contract-repair-report.md](phase9-stage1-contract-repair-report.md)。
 
 ## 可复现命令
 
@@ -91,7 +122,7 @@ LargeBuilding 通过同一公共 API 接收测试准备阶段生成的 damaged I
 git diff --check
 ```
 
-初始 CLI/offline/LargeBuilding 聚焦结果为 `21 passed in 17.82s`。代码复审修复完成后的最终全套结果为 `375 passed, 1 skipped in 120.21s`，安全威胁聚焦套件为 `145 passed, 1 skipped in 23.95s`，四个修复模块为 `60 passed, 1 skipped`。7 份 Agent JSON Schema 通过 Draft 2020-12 自检，`compileall` 与 Phase 9 范围的 `git diff --check` 均退出 0。单个 skip 是既有 Windows symlink 权限分支；非跳过的 junction/reparse 测试覆盖相同路径边界。
+初始 CLI/offline/LargeBuilding 聚焦结果为 `21 passed in 17.82s`。代码复审修复完成后的全套结果为 `375 passed, 1 skipped in 120.21s`；本次 Stage 1 合同修复后的 IFC repair 全套结果为 `378 passed, 1 skipped in 158.08s`。安全威胁聚焦套件为 `145 passed, 1 skipped in 23.95s`，四个修复模块为 `60 passed, 1 skipped`。7 份 Agent JSON Schema 通过 Draft 2020-12 自检，`compileall` 与 Phase 9 范围的 `git diff --check` 均退出 0。单个 skip 是既有 Windows symlink 权限分支；非跳过的 junction/reparse 测试覆盖相同路径边界。
 
 安全检查覆盖 public/private canary、路径逃逸、状态篡改、Provider 脱敏、bounded stdout、未知 run 与完整 manifest。详细 payload 始终在非覆盖 run 目录内，caller source 只读。
 

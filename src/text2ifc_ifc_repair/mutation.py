@@ -12,7 +12,9 @@ from typing import Any
 
 import ifcopenshell
 import ifcopenshell.geom
+import ifcopenshell.util.element
 import ifcopenshell.util.shape
+import ifcopenshell.util.unit
 from ifcopenshell.api.root.remove_product import remove_product
 
 from text2ifc_text.splits import atomic_write_text
@@ -119,6 +121,12 @@ def remove_window_and_opening(
                 "IfcOpeningElement",
                 "IfcRelVoidsElement",
             ],
+            "removed_windows": [
+                {
+                    "target_id": "window-repair-001",
+                    "name": target["window"]["name"],
+                }
+            ],
             "counts": {"before": before_counts, "after": after_counts},
             "checks": {
                 "schema_preserved": True,
@@ -191,7 +199,7 @@ def remove_windows_and_openings_batch(
             )
         except KeyError as error:
             raise ValueError("BATCH_TARGET_INVALID") from error
-    for field in ("wall_global_id", "opening_global_id", "window_global_id"):
+    for field in ("opening_global_id", "window_global_id"):
         values = [target[field] for target in normalized_targets]
         if len(set(values)) != len(values):
             raise ValueError(f"BATCH_DUPLICATE_{field.upper()}")
@@ -220,6 +228,11 @@ def remove_windows_and_openings_batch(
                 "expected_closed_void_volume_m3": _element_volume_m3(opening),
                 "opening_representation": _opening_representation_summary(opening),
                 "prototype": _window_type_snapshot(window),
+                "requested_properties": _window_repair_properties(window),
+                "requested_quantities": [
+                    *_window_repair_quantities(window),
+                    *_opening_repair_quantities(opening),
+                ],
             }
         )
 
@@ -244,17 +257,39 @@ def remove_windows_and_openings_batch(
                 window_global_id=target["window_global_id"],
             )
         after_counts = _counts(reopened)
+        wall_closure: dict[str, dict[str, float | bool]] = {}
+        for snapshot in snapshots:
+            wall_global_id = str(snapshot["target"]["wall"]["global_id"])
+            closure = wall_closure.setdefault(
+                wall_global_id,
+                {
+                    "wall_volume_before_m3": snapshot["wall_volume_before_m3"],
+                    "expected_closed_void_volume_m3": 0.0,
+                },
+            )
+            closure["expected_closed_void_volume_m3"] = float(
+                closure["expected_closed_void_volume_m3"]
+            ) + float(snapshot["expected_closed_void_volume_m3"])
+        for wall_global_id, closure in wall_closure.items():
+            wall_volume_after = _element_volume_m3(reopened.by_guid(wall_global_id))
+            wall_volume_delta = wall_volume_after - float(
+                closure["wall_volume_before_m3"]
+            )
+            expected = float(closure["expected_closed_void_volume_m3"])
+            closure.update(
+                {
+                    "wall_volume_after_m3": wall_volume_after,
+                    "wall_volume_delta_m3": wall_volume_delta,
+                    "closed": abs(wall_volume_delta - expected) <= 1e-5,
+                }
+            )
+
         target_records: list[dict[str, Any]] = []
         geometry_records: list[dict[str, Any]] = []
         for snapshot in snapshots:
             target = snapshot["target"]
-            wall = reopened.by_guid(target["wall"]["global_id"])
-            wall_volume_after = _element_volume_m3(wall)
-            wall_volume_delta = (
-                wall_volume_after - snapshot["wall_volume_before_m3"]
-            )
-            expected = snapshot["expected_closed_void_volume_m3"]
-            closed = abs(wall_volume_delta - expected) <= 1e-5
+            closure = wall_closure[str(target["wall"]["global_id"])]
+            closed = bool(closure["closed"])
             if not closed:
                 raise ValueError("MUTATION_TARGET_REGION_NOT_CLOSED")
             prototype_evidence = _surviving_type_evidence(
@@ -269,18 +304,25 @@ def remove_windows_and_openings_batch(
                         "opening_representation"
                     ],
                     "prototype_evidence": prototype_evidence,
+                    "requested_properties": snapshot["requested_properties"],
+                    "requested_quantities": snapshot["requested_quantities"],
                 }
             )
             geometry_records.append(
                 {
                     "target_id": snapshot["target_id"],
                     "wall_global_id": target["wall"]["global_id"],
-                    "host_wall_volume_before_m3": snapshot[
+                    "host_wall_volume_before_m3": closure[
                         "wall_volume_before_m3"
                     ],
-                    "host_wall_volume_after_m3": wall_volume_after,
-                    "host_wall_volume_delta_m3": wall_volume_delta,
-                    "expected_closed_void_volume_m3": expected,
+                    "host_wall_volume_after_m3": closure["wall_volume_after_m3"],
+                    "host_wall_volume_delta_m3": closure["wall_volume_delta_m3"],
+                    "target_expected_closed_void_volume_m3": snapshot[
+                        "expected_closed_void_volume_m3"
+                    ],
+                    "wall_expected_closed_void_volume_m3": closure[
+                        "expected_closed_void_volume_m3"
+                    ],
                     "target_region_closed": closed,
                 }
             )
@@ -307,6 +349,13 @@ def remove_windows_and_openings_batch(
             "valid": True,
             "mutation_type": BATCH_MUTATION_TYPE,
             "target_count": len(target_records),
+            "removed_windows": [
+                {
+                    "target_id": str(target["target_id"]),
+                    "name": target["window"]["name"],
+                }
+                for target in target_records
+            ],
             "source_sha256": source_sha256,
             "damaged_sha256": damaged_sha256,
             "counts": {"before": before_counts, "after": after_counts},
@@ -422,6 +471,145 @@ def _window_type_snapshot(window: Any) -> dict[str, Any]:
     }
 
 
+def _window_repair_properties(window: Any) -> list[dict[str, Any]]:
+    """Expose every supported occurrence-direct scalar fact for user authorization.
+
+    Type inheritance cannot recover occurrence-only facts.  The private mutation
+    fixture therefore projects each ``IfcPropertySingleValue`` into the public
+    request, while deliberately excluding inherited Type properties and
+    unsupported complex/list/table values.
+    """
+
+    properties: list[dict[str, Any]] = []
+    for relation in getattr(window, "IsDefinedBy", ()):
+        if not relation.is_a("IfcRelDefinesByProperties"):
+            continue
+        property_set = relation.RelatingPropertyDefinition
+        if not property_set.is_a("IfcPropertySet"):
+            continue
+        for prop in property_set.HasProperties:
+            if (
+                not prop.is_a("IfcPropertySingleValue")
+                or prop.NominalValue is None
+            ):
+                continue
+            properties.append(
+                {
+                    "set_name": str(property_set.Name),
+                    "property_name": str(prop.Name),
+                    "value": prop.NominalValue.wrappedValue,
+                    "requested_value_type": prop.NominalValue.is_a(),
+                    "unit": _property_unit_token(window, prop),
+                }
+            )
+    return sorted(
+        properties,
+        key=lambda item: (item["set_name"], item["property_name"]),
+    )
+
+
+def _window_repair_quantities(window: Any) -> list[dict[str, Any]]:
+    """Expose occurrence-direct quantities so the rendered request can authorize them."""
+
+    return _occurrence_repair_quantities(
+        window,
+        scope="window_occurrence",
+    )
+
+
+def _opening_repair_quantities(opening: Any) -> list[dict[str, Any]]:
+    """Expose the damaged Opening quantities required for full replication."""
+
+    return _occurrence_repair_quantities(
+        opening,
+        scope="opening_occurrence",
+    )
+
+
+def _occurrence_repair_quantities(
+    entity: Any,
+    *,
+    scope: str,
+) -> list[dict[str, Any]]:
+    unit_tokens = {
+        "IfcQuantityLength": _project_unit_token(entity.file, "LENGTHUNIT"),
+        "IfcQuantityArea": _project_unit_token(entity.file, "AREAUNIT"),
+    }
+    quantities: list[dict[str, Any]] = []
+    for relation in getattr(entity, "IsDefinedBy", ()):
+        if not relation.is_a("IfcRelDefinesByProperties"):
+            continue
+        quantity_set = relation.RelatingPropertyDefinition
+        if not quantity_set.is_a("IfcElementQuantity"):
+            continue
+        for quantity in quantity_set.Quantities:
+            if quantity.is_a("IfcQuantityLength"):
+                value = quantity.LengthValue
+            elif quantity.is_a("IfcQuantityArea"):
+                value = quantity.AreaValue
+            else:
+                continue
+            quantities.append(
+                {
+                    "set_name": str(quantity_set.Name),
+                    "quantity_name": str(quantity.Name),
+                    "value": float(value),
+                    "value_type": quantity.is_a(),
+                    "unit": unit_tokens[quantity.is_a()],
+                    "scope": scope,
+                }
+            )
+    return sorted(
+        quantities,
+        key=lambda item: (item["set_name"], item["quantity_name"]),
+    )
+
+
+def _project_unit_token(model: Any, unit_type: str) -> str | None:
+    scale = float(ifcopenshell.util.unit.calculate_unit_scale(model, unit_type))
+    candidates = {
+        "LENGTHUNIT": ((1.0, "m"), (1e-2, "cm"), (1e-3, "mm")),
+        "AREAUNIT": ((1.0, "m2"), (1e-4, "cm2"), (1e-6, "mm2")),
+        "VOLUMEUNIT": ((1.0, "m3"), (1e-6, "cm3"), (1e-9, "mm3")),
+    }[unit_type]
+    return next(
+        (
+            token
+            for expected, token in candidates
+            if abs(scale - expected) <= 1e-12
+        ),
+        None,
+    )
+
+
+def _property_unit_token(window: Any, prop: Any) -> str | None:
+    explicit = getattr(prop, "Unit", None)
+    if explicit is not None and explicit.is_a("IfcSIUnit"):
+        name = str(explicit.Name)
+        prefix = None if explicit.Prefix is None else str(explicit.Prefix)
+        return {
+            ("METRE", None): "m",
+            ("METRE", "CENTI"): "cm",
+            ("METRE", "MILLI"): "mm",
+            ("SQUARE_METRE", None): "m2",
+            ("SQUARE_METRE", "CENTI"): "cm2",
+            ("SQUARE_METRE", "MILLI"): "mm2",
+            ("CUBIC_METRE", None): "m3",
+            ("CUBIC_METRE", "CENTI"): "cm3",
+            ("CUBIC_METRE", "MILLI"): "mm3",
+        }.get((name, prefix))
+    unit_type = {
+        "IfcLengthMeasure": "LENGTHUNIT",
+        "IfcAreaMeasure": "AREAUNIT",
+        "IfcVolumeMeasure": "VOLUMEUNIT",
+    }.get(prop.NominalValue.is_a())
+    return (
+        None
+        if unit_type is None
+        else _project_unit_token(window.file, unit_type)
+    )
+
+
 def _surviving_type_evidence(
     model: Any,
     prototype: dict[str, Any],
@@ -435,8 +623,6 @@ def _surviving_type_evidence(
         for item in relation.RelatedObjects
         if item.is_a("IfcWindow")
     )
-    if occurrence_count < 1:
-        raise ValueError("BATCH_PROTOTYPE_OCCURRENCE_NOT_SURVIVING")
     return {
         "source": "damaged_ifc_surviving_type",
         "ifc_class": relating_type.is_a(),

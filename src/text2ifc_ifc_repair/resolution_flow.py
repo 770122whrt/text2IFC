@@ -20,7 +20,13 @@ from .index_models import INDEX_SCHEMA_VERSION, ElementRecord, TypeRecord
 from .index_store import IndexRepository
 from .indexer import EXTRACTOR_VERSION
 from .indexer import normalize_alias
-from .repair_intent import OperationIntent, RepairIntent
+from .repair_intent import OperationIntent, PublicProvenance, RepairIntent
+from .occurrence_semantics import (
+    derive_geometry_assignments,
+    expand_semantic_bundles,
+    quantity_assignments,
+    resolve_occurrence_reuse,
+)
 from .property_intent import (
     ExactPropertyIntent,
     NaturalLanguagePropertyIntent,
@@ -29,6 +35,7 @@ from .property_intent import (
     PropertyResolutionStatus,
     authorize_custom_property,
     authorize_standard_property,
+    hash_json,
     normalize_property_scope,
     resolve_exact_property_intent,
 )
@@ -45,6 +52,7 @@ from text2ifc_knowledge.property_search import (
 
 RESOLUTION_FLOW_VERSION = "text2ifc/ifc-resolution-flow/0.1"
 TYPE_CANDIDATE_MAX = 5
+PROPERTY_CONFIRMATION_EXCERPT_MAX = 160
 _PUBLIC_TYPE_DIMENSIONS = {
     "width": "width_mm",
     "height": "height_mm",
@@ -136,7 +144,25 @@ def resolve_repair_intent(
 
     completed: list[ResolvedOperation] = []
     property_evidence: list[Mapping[str, Any]] = []
+    pending_property_batches: list[PropertyConfirmationBatch] = []
     for operation in intent.operations:
+        try:
+            expanded_properties, expanded_quantities = expand_semantic_bundles(
+                operation, intent.semantic_bundles
+            )
+        except ValueError as error:
+            return _failure(
+                intent,
+                str(error),
+                operation_id=operation.operation_id,
+                operations=completed,
+                source_sha=expected_source_sha256,
+            )
+        operation = replace(
+            operation,
+            property_intents=expanded_properties,
+            quantity_intents=expanded_quantities,
+        )
         result = resolve_target(repository, operation.target_query)
         if result.status != "resolved":
             reason = result.status
@@ -223,6 +249,49 @@ def resolve_repair_intent(
                 authorized_semantics=semantics,
             )
         )
+
+        if intent.schema_version == "text2ifc/ifc-repair-intent/0.4":
+            explicit_quantity_assignments = quantity_assignments(
+                operation.operation_id, operation.quantity_intents
+            )
+            explicit_quantity_slots = {
+                item.fact_key for item in explicit_quantity_assignments
+            }
+            occurrence_assignments = [
+                *explicit_quantity_assignments,
+                *(
+                    item
+                    for item in derive_geometry_assignments(operation)
+                    if item.fact_key not in explicit_quantity_slots
+                ),
+            ]
+            if operation.occurrence_reuse_intent is not None:
+                reuse_result = resolve_occurrence_reuse(
+                    repository,
+                    operation.occurrence_reuse_intent,
+                    operation_id=operation.operation_id,
+                )
+                if reuse_result.status != "resolved":
+                    return ResolutionBatch(
+                        status="clarification_required",
+                        reason_code=reuse_result.reason_code,
+                        operation_id=operation.operation_id,
+                        operations=tuple(completed),
+                        candidates=tuple(
+                            dict(item) for item in reuse_result.candidates
+                        ),
+                        source_ifc_sha256=expected_source_sha256,
+                        model_fingerprint=intent.model_fingerprint,
+                    )
+                occurrence_assignments.extend(reuse_result.assignments)
+            if occurrence_assignments:
+                completed[-1] = replace(
+                    completed[-1],
+                    authorized_semantics=(
+                        *completed[-1].authorized_semantics,
+                        *(item.to_dict() for item in occurrence_assignments),
+                    ),
+                )
 
         prototype = operation.prototype_intent
         prototype_classes: tuple[str, ...] = ()
@@ -439,7 +508,9 @@ def resolve_repair_intent(
                             target_global_id=record.ifc_global_id,
                             request_hash=intent.source_request_hash,
                             model_fingerprint=intent.model_fingerprint,
-                            source=exact_intent.source,
+                            source=_bounded_confirmation_source(
+                                exact_intent.source
+                            ),
                         )
                     )
                     continue
@@ -459,20 +530,32 @@ def resolve_repair_intent(
                     ),
                 )
             if custom_previews:
-                preview_document = (
-                    custom_previews[0].to_dict()
-                    if len(custom_previews) == 1
-                    else PropertyConfirmationBatch.create(custom_previews).to_dict()
+                pending_property_batches.append(
+                    PropertyConfirmationBatch.create(custom_previews)
                 )
-                return ResolutionBatch(
-                    status="clarification_required",
-                    reason_code="property_confirmation",
-                    operation_id=operation.operation_id,
-                    operations=tuple(completed),
-                    source_ifc_sha256=expected_source_sha256,
-                    model_fingerprint=intent.model_fingerprint,
-                    property_preview=preview_document,
-                )
+
+    if pending_property_batches:
+        if len(pending_property_batches) == 1:
+            batch = pending_property_batches[0]
+            preview_document = (
+                batch.items[0].to_dict()
+                if len(batch.items) == 1
+                else batch.to_dict()
+            )
+        else:
+            preview_document = _property_transaction_preview(
+                pending_property_batches
+            )
+        return ResolutionBatch(
+            status="clarification_required",
+            reason_code="property_confirmation",
+            operation_id=pending_property_batches[0].operation_id,
+            operations=tuple(completed),
+            source_ifc_sha256=expected_source_sha256,
+            model_fingerprint=intent.model_fingerprint,
+            property_preview=preview_document,
+            property_resolutions=tuple(property_evidence),
+        )
 
     return ResolutionBatch(
         status="resolved",
@@ -645,6 +728,21 @@ def _escape_json_pointer_token(value: str) -> str:
     return value.replace("~", "~0").replace("/", "~1")
 
 
+def _bounded_confirmation_source(
+    source: PublicProvenance,
+) -> PublicProvenance:
+    """Bound repeated UI excerpts while retaining immutable source identity."""
+
+    excerpt = " ".join(source.excerpt.split())
+    if len(excerpt) > PROPERTY_CONFIRMATION_EXCERPT_MAX:
+        excerpt = excerpt[: PROPERTY_CONFIRMATION_EXCERPT_MAX - 1].rstrip() + "…"
+    return PublicProvenance(
+        source_kind=source.source_kind,
+        reference=source.reference,
+        excerpt=excerpt,
+    )
+
+
 def _explicit_prototype(
     repository: IndexRepository,
     prototype: Any,
@@ -739,6 +837,48 @@ def authorize_property_confirmation(
         or operation_id != batch.operation_id
     ):
         raise ValueError("PROPERTY_CONFIRMATION_NOT_PENDING")
+    if batch.property_preview.get("preview_kind") == "property_transaction":
+        transaction = _validate_property_transaction_preview(
+            batch.property_preview
+        )
+        if answer_kind != "confirm_property":
+            raise ValueError("PROPERTY_CONFIRMATION_REQUIRED")
+        if preview_hash != transaction["preview_hash"]:
+            raise ValueError("PROPERTY_CONFIRMATION_HASH_MISMATCH")
+        facts_by_operation: dict[str, tuple[Any, ...]] = {}
+        for preview_batch in transaction["batches"]:
+            facts_by_operation[preview_batch.operation_id] = tuple(
+                authorize_custom_property(
+                    preview,
+                    answer_kind=answer_kind,
+                    preview_hash=preview.preview_hash,
+                    confirmation_ref=confirmation_ref,
+                )
+                for preview in preview_batch.items
+            )
+        operations = tuple(
+            replace(
+                operation,
+                authorized_semantics=(
+                    *operation.authorized_semantics,
+                    *(
+                        fact.to_dict()
+                        for fact in facts_by_operation.get(
+                            operation.operation_id, ()
+                        )
+                    ),
+                ),
+            )
+            for operation in batch.operations
+        )
+        return replace(
+            batch,
+            status="resolved",
+            reason_code=None,
+            operation_id=None,
+            operations=operations,
+            property_preview=None,
+        )
     if batch.property_preview.get("preview_kind") == "property_batch":
         preview_batch = PropertyConfirmationBatch.from_dict(batch.property_preview)
         if answer_kind != "confirm_property":
@@ -784,6 +924,46 @@ def authorize_property_confirmation(
         operations=operations,
         property_preview=None,
     )
+
+
+def _property_transaction_preview(
+    batches: list[PropertyConfirmationBatch],
+) -> dict[str, Any]:
+    if not 2 <= len(batches) <= 16:
+        raise ValueError("PROPERTY_TRANSACTION_SIZE_INVALID")
+    operation_ids = [item.operation_id for item in batches]
+    if len(operation_ids) != len(set(operation_ids)):
+        raise ValueError("PROPERTY_TRANSACTION_DUPLICATE_OPERATION")
+    request_hashes = {item.request_hash for item in batches}
+    model_fingerprints = {item.model_fingerprint for item in batches}
+    if len(request_hashes) != 1 or len(model_fingerprints) != 1:
+        raise ValueError("PROPERTY_TRANSACTION_BINDING_MISMATCH")
+    canonical = {
+        "preview_kind": "property_transaction",
+        "request_hash": next(iter(request_hashes)),
+        "model_fingerprint": next(iter(model_fingerprints)),
+        "batch_hashes": [item.preview_hash for item in batches],
+    }
+    return {
+        **canonical,
+        "batches": [item.to_dict() for item in batches],
+        "preview_hash": hash_json(canonical),
+    }
+
+
+def _validate_property_transaction_preview(
+    value: Mapping[str, Any],
+) -> dict[str, Any]:
+    if value.get("preview_kind") != "property_transaction":
+        raise ValueError("PROPERTY_TRANSACTION_KIND_INVALID")
+    batches = [
+        PropertyConfirmationBatch.from_dict(item)
+        for item in value.get("batches", ())
+    ]
+    rebuilt = _property_transaction_preview(batches)
+    if dict(value) != rebuilt:
+        raise ValueError("PROPERTY_TRANSACTION_HASH_MISMATCH")
+    return {**rebuilt, "batches": batches}
 
 
 def generated_type_authority(

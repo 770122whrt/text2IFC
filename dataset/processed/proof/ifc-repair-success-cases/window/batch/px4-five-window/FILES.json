@@ -1,0 +1,21 @@
+{
+  "schema_version": "text2ifc/ifc-repair-success-case-files/0.1",
+  "case_id": "px4-five-window",
+  "copy_policy": "copy",
+  "source_run": "dataset/processed/ifc-repair/verification-20260727/px4-five-window-r8",
+  "files": [
+    {"path":"01-original.ifc","role":"original_ground_truth","visibility":"evaluator_only","size_bytes":24868218,"sha256":"8c336ee9af66a55fb4cac26b608bef11ace5a3a0a490931205045e4f87b4c46d"},
+    {"path":"02-damaged.ifc","role":"repair_input_ifc","visibility":"agent_input","size_bytes":25255202,"sha256":"0630c9bd509bde693c3c3368bcea9e041a3af8d5d1c34d6f797c0f41fb7d0e6c"},
+    {"path":"03-repaired.ifc","role":"published_repair_output","visibility":"public_artifact","size_bytes":25270886,"sha256":"7f5cc6c61b0007ff1616a9f567c545762a593f0df5b764c230337e514de0eb4a"},
+    {"path":"input/request.txt","role":"user_request","visibility":"agent_input","size_bytes":3361,"sha256":"430c29d42b302bcb49c00f50c8caf9525f5391e97ea786b8765b0c7eeec99815"},
+    {"path":"agent/repair-intent.json","role":"stage1_repair_intent","visibility":"agent_output","size_bytes":20915,"sha256":"35e33950fe046008314f026dd1392915704ea30713c182c4d2add6376fe399b4"},
+    {"path":"agent/provider-draft.json","role":"stage2_changeset_draft","visibility":"agent_output","size_bytes":4588,"sha256":"c0a5fa6a612d3dfc339dedca2ec80e274ce825fbb66bdd9ecc00f9b76cd1f4a9"},
+    {"path":"changeset/bound-changeset.json","role":"bound_changeset","visibility":"execution_contract","size_bytes":71854,"sha256":"fce2fabb431f18377353210ec6b55573e01efa637ed705a2b723e94989da0f03"},
+    {"path":"changeset/semantic-manifests.json","role":"semantic_authoring_authority","visibility":"execution_contract","size_bytes":49205,"sha256":"0aedcf0d6f137a9656648d996ecfbfffae48d801ccd355ab7f1ea64e7a306050"},
+    {"path":"validation/mutation-manifest.private.json","role":"damage_ground_truth","visibility":"evaluator_only","size_bytes":16996,"sha256":"11b28604bc252433ee8e5b7bef82ddf6673861a80275849649bb65b50ed909f6"},
+    {"path":"validation/mutation-report.json","role":"damage_report","visibility":"audit","size_bytes":3961,"sha256":"8aff5941e66e3e7b53b89f66ddae8a219a056f27e46fa552de9eb4cfea86e116"},
+    {"path":"validation/production-evaluation.json","role":"production_publication_evidence","visibility":"public_evidence","size_bytes":121959,"sha256":"04b2c7f00e5d1ca909423c35476a2bad90c94cc4c3c95b90f6f8c9b5aa4806bb"},
+    {"path":"validation/private-ground-truth-evaluation.json","role":"private_ground_truth_evaluation","visibility":"evaluator_only","size_bytes":1133215,"sha256":"e0fc854e8ec8ff4cd4f3ec1778a4cbb47dd4ac1f543fc8c91ebc7174128ea1a4"},
+    {"path":"validation/benchmark-result.json","role":"offline_benchmark_summary","visibility":"public_evidence","size_bytes":901,"sha256":"2a790898c143553348aae8422115f2172034bdcd679187704413896619a5d377"}
+  ]
+}

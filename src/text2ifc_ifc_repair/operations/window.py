@@ -167,7 +167,7 @@ def _semantic_spec_0_2(
 _WINDOW_QUANTITY_ALIASES = {
     f"quantity:{set_name}.{quantity}": f"quantity:window-base.{quantity}"
     for set_name in ("BaseQuantities", "Qto_WindowBaseQuantities")
-    for quantity in ("Width", "Height", "Area")
+    for quantity in ("Width", "Height", "Area", "SillHeight")
 }
 
 
@@ -201,6 +201,11 @@ WINDOW_EVALUATION_POLICY = OperationEvaluationPolicy(
         _semantic_spec_0_2("window.quantity.width", "quantity:window-base.Width", SemanticApplicability.REQUIRED),
         _semantic_spec_0_2("window.quantity.height", "quantity:window-base.Height", SemanticApplicability.REQUIRED),
         _semantic_spec_0_2("window.quantity.area", "quantity:window-base.Area", SemanticApplicability.REQUIRED),
+        _semantic_spec_0_2(
+            "window.quantity.sill-height",
+            "quantity:window-base.SillHeight",
+            SemanticApplicability.CONDITIONAL,
+        ),
         _semantic_spec_0_2("window.material", "material:*", SemanticApplicability.CONDITIONAL),
         _semantic_spec_0_2("window.classification", "classification:*", SemanticApplicability.CONDITIONAL),
         _semantic_spec_0_2(
@@ -227,7 +232,7 @@ WINDOW_EVALUATION_POLICY = OperationEvaluationPolicy(
 )
 
 WINDOW_L1_POLICY_ID = "window.add-with-opening.l1"
-WINDOW_L1_POLICY_VERSION = "0.1"
+WINDOW_L1_POLICY_VERSION = "0.2"
 WINDOW_L1_AUTHORIZATION = {
     "policy_id": WINDOW_L1_POLICY_ID,
     "policy_version": WINDOW_L1_POLICY_VERSION,
@@ -242,6 +247,8 @@ WINDOW_L1_AUTHORIZATION = {
         "semantic_pset_relationship": "IfcRelDefinesByProperties",
         "semantic_quantities": "IfcElementQuantity",
         "semantic_quantity_relationship": "IfcRelDefinesByProperties",
+        "semantic_opening_quantities": "IfcElementQuantity",
+        "semantic_opening_quantity_relationship": "IfcRelDefinesByProperties",
         "semantic_material_relationship": "IfcRelAssociatesMaterial",
         "semantic_classification_relationship": "IfcRelAssociatesClassification",
         **{
@@ -297,6 +304,10 @@ WINDOW_L1_AUTHORIZATION = {
         "semantic_quantity_relationship": {
             "ifc_class": "IfcRelDefinesByProperties",
             "added_endpoint_roles": ("window",),
+        },
+        "semantic_opening_quantity_relationship": {
+            "ifc_class": "IfcRelDefinesByProperties",
+            "added_endpoint_roles": ("opening",),
         },
         "semantic_material_relationship": {
             "ifc_class": "IfcRelAssociatesMaterial",
@@ -356,7 +367,60 @@ def window_operation_definition() -> OperationDefinition:
         inherited_type_evidence_role="IfcWindowStyle",
         generated_type_template=_generated_window_type_template,
         generated_occurrence_facts=_generated_window_occurrence_facts,
+        operation_conflict_checker=_operation_conflict_checker,
     )
+
+
+def _operation_conflict_checker(
+    previous: Mapping[str, Any],
+    current: Mapping[str, Any],
+) -> list[dict[str, str]]:
+    """Reject overlapping sibling openings while allowing one wall to host a batch."""
+
+    previous_opening = previous["parameters"]["opening"]
+    current_opening = current["parameters"]["opening"]
+    previous_center = float(previous["parameters"]["position"]["center_offset_mm"])
+    current_center = float(current["parameters"]["position"]["center_offset_mm"])
+    previous_horizontal = (
+        previous_center - float(previous_opening["width_mm"]) / 2.0,
+        previous_center + float(previous_opening["width_mm"]) / 2.0,
+    )
+    current_horizontal = (
+        current_center - float(current_opening["width_mm"]) / 2.0,
+        current_center + float(current_opening["width_mm"]) / 2.0,
+    )
+    previous_vertical = (
+        float(previous_opening["sill_height_mm"]),
+        float(previous_opening["sill_height_mm"])
+        + float(previous_opening["height_mm"]),
+    )
+    current_vertical = (
+        float(current_opening["sill_height_mm"]),
+        float(current_opening["sill_height_mm"])
+        + float(current_opening["height_mm"]),
+    )
+    horizontal_overlap = (
+        min(previous_horizontal[1], current_horizontal[1])
+        - max(previous_horizontal[0], current_horizontal[0])
+        > 1e-6
+    )
+    vertical_overlap = (
+        min(previous_vertical[1], current_vertical[1])
+        - max(previous_vertical[0], current_vertical[0])
+        > 1e-6
+    )
+    if not (horizontal_overlap and vertical_overlap):
+        return []
+    return [
+        {
+            "code": "BATCH_OPENING_OVERLAP",
+            "path": "/parameters/position/center_offset_mm",
+            "message": (
+                "Opening overlaps another operation on the same target wall: "
+                f"{previous['operation_id']}."
+            ),
+        }
+    ]
 
 
 def _generated_window_type_template(
@@ -412,16 +476,43 @@ def _semantic_policy_facts(*, operation: Mapping[str, Any]) -> tuple[Any, ...]:
     from text2ifc_ifc_repair.semantic_facts import SemanticFact
 
     operation_id = str(operation["operation_id"])
+    canonical_occurrence_contract = any(
+        isinstance(item, Mapping)
+        and item.get("kind") == "authorized_occurrence_assignment"
+        for item in operation.get("authorized_semantics", ())
+    )
     opening = operation["parameters"]["opening"]
     width = float(opening["width_mm"])
     height = float(opening["height_mm"])
-    values = (
+    values = [
         ("attribute:OverallWidth", width, "IfcPositiveLengthMeasure", None),
         ("attribute:OverallHeight", height, "IfcPositiveLengthMeasure", None),
+    ]
+    managed_quantity_aliases = {
+        "quantity:window-base.Width": "quantity:window-base.Width",
+        "quantity:window-base.Height": "quantity:window-base.Height",
+        "quantity:window-base.Area": "quantity:window-base.Area",
+        "quantity:BaseQuantities.Width": "quantity:window-base.Width",
+        "quantity:BaseQuantities.Height": "quantity:window-base.Height",
+        "quantity:BaseQuantities.Area": "quantity:window-base.Area",
+        "quantity:Qto_WindowBaseQuantities.Width": "quantity:window-base.Width",
+        "quantity:Qto_WindowBaseQuantities.Height": "quantity:window-base.Height",
+        "quantity:Qto_WindowBaseQuantities.Area": "quantity:window-base.Area",
+    }
+    authorized_quantity_keys = {
+        managed_quantity_aliases[str(item.get("fact_key"))]
+        for item in operation.get("authorized_semantics", ())
+        if isinstance(item, Mapping)
+        and item.get("kind") == "authorized_occurrence_assignment"
+        and str(item.get("fact_key")) in managed_quantity_aliases
+    }
+    for value in (
         ("quantity:window-base.Width", width, "IfcQuantityLength", None),
         ("quantity:window-base.Height", height, "IfcQuantityLength", None),
         ("quantity:window-base.Area", width * height, "IfcQuantityArea", None),
-    )
+    ):
+        if value[0] not in authorized_quantity_keys:
+            values.append(value)
     return tuple(
         SemanticFact(
             fact_key=fact_key,
@@ -434,6 +525,11 @@ def _semantic_policy_facts(*, operation: Mapping[str, Any]) -> tuple[Any, ...]:
             source_kind=EvidenceSourceKind.DETERMINISTIC_POLICY,
             source_ref=f"resolved:/operations/{operation_id}/parameters/opening",
             provenance=(f"operation:{operation_id}", "registered-window-parameter-policy:0.2"),
+            canonical_source_kind=(
+                "deterministic_derived"
+                if canonical_occurrence_contract
+                else None
+            ),
         )
         for fact_key, value, value_type, unit in values
     )
@@ -488,6 +584,7 @@ def _precondition_checker(
         "requested_interval_mm": requested_interval,
         "requested_vertical_interval_mm": [sill, sill + height],
         "existing_opening_intervals_mm": [],
+        "existing_opening_regions_mm": [],
     }
     checks: list[dict[str, Any]] = []
     issues: list[dict[str, str]] = []
@@ -531,12 +628,31 @@ def _precondition_checker(
             existing_center - existing_width / 2.0,
             existing_center + existing_width / 2.0,
         ]
+        vertical_interval = [
+            float(existing_position["sill_height"]),
+            float(existing_position["sill_height"]) + float(existing_dimensions["height"]),
+        ]
         evidence["existing_opening_intervals_mm"].append(interval)
-        if max(requested_interval[0], interval[0]) < min(
+        region = {
+            "horizontal_interval_mm": interval,
+            "vertical_interval_mm": vertical_interval,
+        }
+        evidence["existing_opening_regions_mm"].append(region)
+        horizontal_overlap = max(requested_interval[0], interval[0]) < min(
             requested_interval[1], interval[1]
-        ):
-            overlap = interval
+        )
+        vertical_overlap = max(sill, vertical_interval[0]) < min(
+            sill + height, vertical_interval[1]
+        )
+        if horizontal_overlap and vertical_overlap:
+            overlap = region
     evidence["existing_opening_intervals_mm"].sort(key=lambda item: item[0])
+    evidence["existing_opening_regions_mm"].sort(
+        key=lambda item: (
+            item["horizontal_interval_mm"][0],
+            item["vertical_interval_mm"][0],
+        )
+    )
     _record_check(
         checks,
         issues,
@@ -544,7 +660,7 @@ def _precondition_checker(
         passed=overlap is None,
         failure_code="OPENING_OVERLAP",
         path="/parameters/position/center_offset_mm",
-        evidence={"overlapping_interval_mm": overlap},
+        evidence={"overlapping_region_mm": overlap},
     )
     return {"checks": checks, "issues": issues, "evidence": evidence}
 
@@ -895,6 +1011,8 @@ def _measure_comparison_adapter(
     """Measure repair geometry independently from the authoring path."""
 
     role_mapping = kwargs.pop("role_mapping", None)
+    batch_operations = tuple(kwargs.pop("batch_operations", (operation,)))
+    batch_applications = kwargs.pop("batch_applications", {})
     del kwargs
     linear_tolerance = 0.1
     angle_tolerance = 0.1
@@ -938,9 +1056,28 @@ def _measure_comparison_adapter(
     before_volume = _element_volume_m3(wall_before)
     after_volume = _element_volume_m3(wall_after)
     restored_void_volume = before_volume - after_volume
-    expected_void_volume = (
-        expected_width * expected_height * expected_depth / 1_000_000_000.0
-    )
+    expected_void_volume = 0.0
+    for sibling in batch_operations:
+        if sibling.get("operation_type") != OPERATION_TYPE:
+            continue
+        if sibling.get("target", {}).get("wall_global_id") != wall_id:
+            continue
+        sibling_opening = sibling["parameters"]["opening"]
+        sibling_application = batch_applications.get(
+            str(sibling.get("operation_id")),
+            {},
+        )
+        sibling_depth = float(
+            sibling_application.get("changes", {})
+            .get("resolved", {})
+            .get("opening_depth_mm", expected_depth)
+        )
+        expected_void_volume += (
+            float(sibling_opening["width_mm"])
+            * float(sibling_opening["height_mm"])
+            * sibling_depth
+            / 1_000_000_000.0
+        )
 
     voids_correct = (
         len(opening.VoidsElements) == 1
@@ -949,6 +1086,55 @@ def _measure_comparison_adapter(
     fills_correct = (
         len(window.FillsVoids) == 1
         and window.FillsVoids[0].RelatingOpeningElement == opening
+    )
+    window_geometry_contained = all(
+        float(window_bounds[axis][0])
+        >= float(opening_bounds[axis][0]) - linear_tolerance
+        and float(window_bounds[axis][1])
+        <= float(opening_bounds[axis][1]) + linear_tolerance
+        for axis in ("x", "z")
+    )
+    # A frame may legitimately project beyond both faces of its wall Opening.
+    # Require its depth midpoint to remain inside the Opening interval instead
+    # of requiring the whole frame depth to be contained by the wall void.
+    window_depth_midpoint = sum(
+        float(value) for value in window_bounds["y"]
+    ) / 2.0
+    window_depth_aligned = (
+        float(opening_bounds["y"][0]) - linear_tolerance
+        <= window_depth_midpoint
+        <= float(opening_bounds["y"][1]) + linear_tolerance
+    )
+    window_geometry_matches_opening_edges = all(
+        abs(float(window_bounds[axis][bound]) - float(opening_bounds[axis][bound]))
+        <= linear_tolerance
+        for axis in ("x", "z")
+        for bound in (0, 1)
+    )
+    window_geometry_centered = all(
+        abs(
+            sum(float(value) for value in window_bounds[axis])
+            - sum(float(value) for value in opening_bounds[axis])
+        )
+        <= 2.0 * linear_tolerance
+        for axis in ("x", "z")
+    )
+    window_nominal_dimensions_match = (
+        math.isclose(
+            float(window.OverallWidth),
+            expected_width,
+            abs_tol=linear_tolerance,
+        )
+        and math.isclose(
+            float(window.OverallHeight),
+            expected_height,
+            abs_tol=linear_tolerance,
+        )
+    )
+    uses_mapped_representation = any(
+        str(getattr(representation, "RepresentationType", ""))
+        == "MappedRepresentation"
+        for representation in getattr(window.Representation, "Representations", ())
     )
     wall_storeys = {
         str(relation.RelatingStructure.GlobalId)
@@ -966,6 +1152,8 @@ def _measure_comparison_adapter(
         if (
             abs(float(candidate_position["center_offset"]) - expected_center)
             <= linear_tolerance
+            and abs(float(candidate_position["sill_height"]) - expected_sill)
+            <= linear_tolerance
             and abs(float(candidate_dimensions["width"]) - expected_width)
             <= linear_tolerance
             and abs(float(candidate_dimensions["height"]) - expected_height)
@@ -977,11 +1165,17 @@ def _measure_comparison_adapter(
         "correct_host_wall": voids_correct,
         "opening_voids_wall": voids_correct,
         "window_fills_opening": fills_correct,
-        "window_geometry_fits_opening": all(
-            abs(float(window_bounds[axis][bound]) - float(opening_bounds[axis][bound]))
-            <= linear_tolerance
-            for axis in ("x", "y", "z")
-            for bound in (0, 1)
+        "window_geometry_fits_opening": (
+            window_geometry_contained
+            and window_depth_aligned
+            and (
+                window_geometry_matches_opening_edges
+                or (
+                    uses_mapped_representation
+                    and window_geometry_centered
+                    and window_nominal_dimensions_match
+                )
+            )
         ),
         "storey_consistent": bool(wall_storeys) and wall_storeys == window_storeys,
         "linear_geometry_within_tolerance": max(

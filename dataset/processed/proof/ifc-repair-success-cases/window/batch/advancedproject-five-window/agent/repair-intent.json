@@ -1,0 +1,367 @@
+{
+  "model_fingerprint": "sha256:f61ff5cf8e1cc88da6944d6bcd3e2e7da5ff27dd3288a8781908018cb8240cd6",
+  "operations": [
+    {
+      "attribute_intents": [],
+      "operation_id": "add_window_1",
+      "operation_type": "add_window_with_opening_to_wall",
+      "parameters": {
+        "opening": {
+          "height_mm": 2200,
+          "sill_height_mm": 0,
+          "width_mm": 1000
+        },
+        "position": {
+          "center_offset_mm": 886.886,
+          "reference": "wall_local_start"
+        },
+        "window": {
+          "fit_opening": true
+        }
+      },
+      "property_intents": [],
+      "prototype_intent": {
+        "reference": "0t7TVxPGL1fBrLXVTrUtp6",
+        "reference_kind": "global_id",
+        "source": {
+          "excerpt": "复用损伤 IFC 中仍存在的窗型“BALANS Fixed Single Window:BALANS 10M FLOOR (SH = 0)”（GlobalId: 0t7TVxPGL1fBrLXVTrUtp6）",
+          "reference": "request:/text",
+          "source_kind": "user_request"
+        }
+      },
+      "provenance": [
+        {
+          "excerpt": "在 Level 1 的墙“Basic Wall:MockUp Exterior Ground Floor:526491”（GlobalId: 31F6eMknj99vYl9fb0Qb7F）上，以wall_local_start 为基准，沿墙 Axis 正方向 886.886 mm 处设置洞口中心；洞口宽 1000 mm、高 2200 mm，窗台高 0 mm；复用损伤 IFC 中仍存在的窗型“BALANS Fixed Single Window:BALANS 10M FLOOR (SH = 0)”（GlobalId: 0t7TVxPGL1fBrLXVTrUtp6），窗完整填充洞口。",
+          "reference": "request:/text",
+          "source_kind": "user_request"
+        }
+      ],
+      "target_query": {
+        "allowed_ifc_classes": [
+          "IfcWall"
+        ],
+        "global_id": "31F6eMknj99vYl9fb0Qb7F",
+        "names": [
+          "Basic Wall:MockUp Exterior Ground Floor:526491"
+        ],
+        "schema_version": "text2ifc/ifc-target-query/0.1",
+        "storey_name": "Level 1"
+      }
+    },
+    {
+      "attribute_intents": [],
+      "operation_id": "add_window_2",
+      "operation_type": "add_window_with_opening_to_wall",
+      "parameters": {
+        "opening": {
+          "height_mm": 2200,
+          "sill_height_mm": 0,
+          "width_mm": 1000
+        },
+        "position": {
+          "center_offset_mm": 1027.89,
+          "reference": "wall_local_start"
+        },
+        "window": {
+          "fit_opening": true
+        }
+      },
+      "property_intents": [
+        {
+          "intent_kind": "exact_property",
+          "property_name": "IsExternal",
+          "raw_unit": null,
+          "raw_value": true,
+          "requested_value_type": null,
+          "scope": "occurrence_direct",
+          "set_name": "Pset_WindowCommon",
+          "source": {
+            "excerpt": "Pset_WindowCommon.IsExternal=true",
+            "reference": "request:/text",
+            "source_kind": "user_request"
+          }
+        },
+        {
+          "intent_kind": "exact_property",
+          "property_name": "Reference",
+          "raw_unit": null,
+          "raw_value": "BALANS 10M FLOOR (SH = 0)",
+          "requested_value_type": null,
+          "scope": "occurrence_direct",
+          "set_name": "Pset_WindowCommon",
+          "source": {
+            "excerpt": "Pset_WindowCommon.Reference=\"BALANS 10M FLOOR (SH = 0)\"",
+            "reference": "request:/text",
+            "source_kind": "user_request"
+          }
+        }
+      ],
+      "prototype_intent": {
+        "reference": "0t7TVxPGL1fBrLXVTrUtp6",
+        "reference_kind": "global_id",
+        "source": {
+          "excerpt": "复用损伤 IFC 中仍存在的窗型“BALANS Fixed Single Window:BALANS 10M FLOOR (SH = 0)”（GlobalId: 0t7TVxPGL1fBrLXVTrUtp6）",
+          "reference": "request:/text",
+          "source_kind": "user_request"
+        }
+      },
+      "provenance": [
+        {
+          "excerpt": "在 Level 1 的墙“Basic Wall:MockUp Exterior Ground Floor:581328”（GlobalId: 0MOEoDTm9EnO9yKsXjjie3）上，以wall_local_start 为基准，沿墙 Axis 正方向 1027.89 mm 处设置洞口中心；洞口宽 1000 mm、高 2200 mm，窗台高 0 mm；复用损伤 IFC 中仍存在的窗型“BALANS Fixed Single Window:BALANS 10M FLOOR (SH = 0)”（GlobalId: 0t7TVxPGL1fBrLXVTrUtp6），窗完整填充洞口。属性要求：Pset_WindowCommon.IsExternal=true、Pset_WindowCommon.Reference=\"BALANS 10M FLOOR (SH = 0)\"",
+          "reference": "request:/text",
+          "source_kind": "user_request"
+        }
+      ],
+      "target_query": {
+        "allowed_ifc_classes": [
+          "IfcWall"
+        ],
+        "global_id": "0MOEoDTm9EnO9yKsXjjie3",
+        "names": [
+          "Basic Wall:MockUp Exterior Ground Floor:581328"
+        ],
+        "schema_version": "text2ifc/ifc-target-query/0.1",
+        "storey_name": "Level 1"
+      }
+    },
+    {
+      "attribute_intents": [],
+      "operation_id": "add_window_3",
+      "operation_type": "add_window_with_opening_to_wall",
+      "parameters": {
+        "opening": {
+          "height_mm": 600,
+          "sill_height_mm": 1200,
+          "width_mm": 1000
+        },
+        "position": {
+          "center_offset_mm": 5389.16,
+          "reference": "wall_local_start"
+        },
+        "window": {
+          "fit_opening": true
+        }
+      },
+      "property_intents": [
+        {
+          "intent_kind": "exact_property",
+          "property_name": "IsExternal",
+          "raw_unit": null,
+          "raw_value": true,
+          "requested_value_type": null,
+          "scope": "occurrence_direct",
+          "set_name": "Pset_WindowCommon",
+          "source": {
+            "excerpt": "Pset_WindowCommon.IsExternal=true",
+            "reference": "request:/text",
+            "source_kind": "user_request"
+          }
+        },
+        {
+          "intent_kind": "exact_property",
+          "property_name": "Reference",
+          "raw_unit": null,
+          "raw_value": "BALANS 10M BATHROOM",
+          "requested_value_type": null,
+          "scope": "occurrence_direct",
+          "set_name": "Pset_WindowCommon",
+          "source": {
+            "excerpt": "Pset_WindowCommon.Reference=\"BALANS 10M BATHROOM\"",
+            "reference": "request:/text",
+            "source_kind": "user_request"
+          }
+        }
+      ],
+      "prototype_intent": {
+        "reference": "0ifV7awIzBlRVUTZ41zp$1",
+        "reference_kind": "global_id",
+        "source": {
+          "excerpt": "复用损伤 IFC 中仍存在的窗型“BALANS Fixed Single Window:BALANS 10M BATHROOM”（GlobalId: 0ifV7awIzBlRVUTZ41zp$1）",
+          "reference": "request:/text",
+          "source_kind": "user_request"
+        }
+      },
+      "provenance": [
+        {
+          "excerpt": "在 6 - Sixth Floor 的墙“Basic Wall:MockUp Roof Wall:945627”（GlobalId: 3ktY1kg3rAwgNBX_XWRSTN）上，以wall_local_start 为基准，沿墙 Axis 正方向 5389.16 mm 处设置洞口中心；洞口宽 1000 mm、高 600 mm，窗台高 1200 mm；复用损伤 IFC 中仍存在的窗型“BALANS Fixed Single Window:BALANS 10M BATHROOM”（GlobalId: 0ifV7awIzBlRVUTZ41zp$1），窗完整填充洞口。属性要求：Pset_WindowCommon.IsExternal=true、Pset_WindowCommon.Reference=\"BALANS 10M BATHROOM\"",
+          "reference": "request:/text",
+          "source_kind": "user_request"
+        }
+      ],
+      "target_query": {
+        "allowed_ifc_classes": [
+          "IfcWall"
+        ],
+        "global_id": "3ktY1kg3rAwgNBX_XWRSTN",
+        "names": [
+          "Basic Wall:MockUp Roof Wall:945627"
+        ],
+        "schema_version": "text2ifc/ifc-target-query/0.1",
+        "storey_name": "6 - Sixth Floor"
+      }
+    },
+    {
+      "attribute_intents": [],
+      "operation_id": "add_window_4",
+      "operation_type": "add_window_with_opening_to_wall",
+      "parameters": {
+        "opening": {
+          "height_mm": 2200,
+          "sill_height_mm": 0,
+          "width_mm": 2000
+        },
+        "position": {
+          "center_offset_mm": 1619.45,
+          "reference": "wall_local_start"
+        },
+        "window": {
+          "fit_opening": true
+        }
+      },
+      "property_intents": [
+        {
+          "intent_kind": "exact_property",
+          "property_name": "IsExternal",
+          "raw_unit": null,
+          "raw_value": true,
+          "requested_value_type": null,
+          "scope": "occurrence_direct",
+          "set_name": "Pset_WindowCommon",
+          "source": {
+            "excerpt": "Pset_WindowCommon.IsExternal=true",
+            "reference": "request:/text",
+            "source_kind": "user_request"
+          }
+        },
+        {
+          "intent_kind": "exact_property",
+          "property_name": "Reference",
+          "raw_unit": null,
+          "raw_value": "BALANS 20M FLOOR (SH = 0)",
+          "requested_value_type": null,
+          "scope": "occurrence_direct",
+          "set_name": "Pset_WindowCommon",
+          "source": {
+            "excerpt": "Pset_WindowCommon.Reference=\"BALANS 20M FLOOR (SH = 0)\"",
+            "reference": "request:/text",
+            "source_kind": "user_request"
+          }
+        }
+      ],
+      "prototype_intent": {
+        "reference": "0t7TVxPGL1fBrLXVTrUtwx",
+        "reference_kind": "global_id",
+        "source": {
+          "excerpt": "复用损伤 IFC 中仍存在的窗型“BALANS Fixed Single Window:BALANS 20M FLOOR (SH = 0)”（GlobalId: 0t7TVxPGL1fBrLXVTrUtwx）",
+          "reference": "request:/text",
+          "source_kind": "user_request"
+        }
+      },
+      "provenance": [
+        {
+          "excerpt": "在 Level 1 的墙“Basic Wall:MockUp Exterior Ground Floor:525446”（GlobalId: 0qPq0uZ5vABQlKT8FAVXQn）上，以wall_local_start 为基准，沿墙 Axis 正方向 1619.45 mm 处设置洞口中心；洞口宽 2000 mm、高 2200 mm，窗台高 0 mm；复用损伤 IFC 中仍存在的窗型“BALANS Fixed Single Window:BALANS 20M FLOOR (SH = 0)”（GlobalId: 0t7TVxPGL1fBrLXVTrUtwx），窗完整填充洞口。属性要求：Pset_WindowCommon.IsExternal=true、Pset_WindowCommon.Reference=\"BALANS 20M FLOOR (SH = 0)\"",
+          "reference": "request:/text",
+          "source_kind": "user_request"
+        }
+      ],
+      "target_query": {
+        "allowed_ifc_classes": [
+          "IfcWall"
+        ],
+        "global_id": "0qPq0uZ5vABQlKT8FAVXQn",
+        "names": [
+          "Basic Wall:MockUp Exterior Ground Floor:525446"
+        ],
+        "schema_version": "text2ifc/ifc-target-query/0.1",
+        "storey_name": "Level 1"
+      }
+    },
+    {
+      "attribute_intents": [],
+      "operation_id": "add_window_5",
+      "operation_type": "add_window_with_opening_to_wall",
+      "parameters": {
+        "opening": {
+          "height_mm": 2200,
+          "sill_height_mm": 0,
+          "width_mm": 3000
+        },
+        "position": {
+          "center_offset_mm": 11030,
+          "reference": "wall_local_start"
+        },
+        "window": {
+          "fit_opening": true
+        }
+      },
+      "property_intents": [
+        {
+          "intent_kind": "exact_property",
+          "property_name": "IsExternal",
+          "raw_unit": null,
+          "raw_value": true,
+          "requested_value_type": null,
+          "scope": "occurrence_direct",
+          "set_name": "Pset_WindowCommon",
+          "source": {
+            "excerpt": "Pset_WindowCommon.IsExternal=true",
+            "reference": "request:/text",
+            "source_kind": "user_request"
+          }
+        },
+        {
+          "intent_kind": "exact_property",
+          "property_name": "Reference",
+          "raw_unit": null,
+          "raw_value": "BALANS 30M FLOOR (SH = 0)",
+          "requested_value_type": null,
+          "scope": "occurrence_direct",
+          "set_name": "Pset_WindowCommon",
+          "source": {
+            "excerpt": "Pset_WindowCommon.Reference=\"BALANS 30M FLOOR (SH = 0)\"",
+            "reference": "request:/text",
+            "source_kind": "user_request"
+          }
+        }
+      ],
+      "prototype_intent": {
+        "reference": "0t7TVxPGL1fBrLXVTrUtsB",
+        "reference_kind": "global_id",
+        "source": {
+          "excerpt": "复用损伤 IFC 中仍存在的窗型“BALANS Fixed Single Window:BALANS 30M FLOOR (SH = 0)”（GlobalId: 0t7TVxPGL1fBrLXVTrUtsB）",
+          "reference": "request:/text",
+          "source_kind": "user_request"
+        }
+      },
+      "provenance": [
+        {
+          "excerpt": "在 Level 1 的墙“Basic Wall:MockUp Exterior Ground Floor:451915”（GlobalId: 2V6UQJFc92sfDYeuDKgYFi）上，以wall_local_start 为基准，沿墙 Axis 正方向 11030 mm 处设置洞口中心；洞口宽 3000 mm、高 2200 mm，窗台高 0 mm；复用损伤 IFC 中仍存在的窗型“BALANS Fixed Single Window:BALANS 30M FLOOR (SH = 0)”（GlobalId: 0t7TVxPGL1fBrLXVTrUtsB），窗完整填充洞口。属性要求：Pset_WindowCommon.IsExternal=true、Pset_WindowCommon.Reference=\"BALANS 30M FLOOR (SH = 0)\"",
+          "reference": "request:/text",
+          "source_kind": "user_request"
+        }
+      ],
+      "target_query": {
+        "allowed_ifc_classes": [
+          "IfcWall"
+        ],
+        "global_id": "2V6UQJFc92sfDYeuDKgYFi",
+        "names": [
+          "Basic Wall:MockUp Exterior Ground Floor:451915"
+        ],
+        "schema_version": "text2ifc/ifc-target-query/0.1",
+        "storey_name": "Level 1"
+      }
+    }
+  ],
+  "prompt_fingerprint": "sha256:e37e1ab998bb9a0b60bb0eca50b4456e076c98f579766e23a6ef40f23a65ad78",
+  "provenance": [
+    {
+      "excerpt": "请一次性修复以下共 5 扇窗，并作为一个统一 ChangeSet 原子执行：\n1. 在 Level 1 的墙“Basic Wall:MockUp Exterior Ground Floor:526491”（GlobalId: 31F6eMknj99vYl9fb0Qb7F）上，以wall_local_start 为基准，沿墙 Axis 正方向 886.886 mm 处设置洞口中心；洞口宽 1000 mm、高 2200 mm，窗台高 0 mm；复用损伤 IFC 中仍存在的窗型“BALANS Fixed Single Window:BALANS 10M FLOOR (SH = 0)”（GlobalId: 0t7TVxPGL1fBrLXVTrUtp6），窗完整填充洞口。\n2. 在 Level 1 的墙“Basic Wall:MockUp Exterior Ground Floor:581328”（GlobalId: 0MOEoDTm9EnO9yKsXjjie3）上，以wall_local_start 为基准，沿墙 Axis 正方向 1027.89 mm 处设置洞口中心；洞口宽 1000 mm、高 2200 mm，窗台高 0 mm；复用损伤 IFC 中仍存在的窗型“BALANS Fixed Single Window:BALANS 10M FLOOR (SH = 0)”（GlobalId: 0t7TVxPGL1fBrLXVTrUtp6），窗完整填充洞口。\n   属性要求：Pset_WindowCommon.IsExternal=true、Pset_WindowCommon.Reference=\"BALANS 10M FLOOR (SH = 0)\"\n3. 在 6 - Sixth Floor 的墙“Basic Wall:MockUp Roof Wall:945627”（GlobalId: 3ktY1kg3rAwgNBX_XWRSTN）上，以wall_local_start 为基准，沿墙 Axis 正方向 5389.16 mm 处设置洞口中心；洞口宽 1000 mm、高 600 mm，窗台高 1200 mm；复用损伤 IFC 中仍存在的窗型“BALANS Fixed Single Window:BALANS 10M BATHROOM”（GlobalId: 0ifV7awIzBlRVUTZ41zp$1），窗完整填充洞口。\n   属性要求：Pset_WindowCommon.IsExternal=true、Pset_WindowCommon.Reference=\"BALANS 10M BATHROOM\"\n4. 在 Level 1 的墙“Basic Wall:MockUp Exterior Ground Floor:525446”（GlobalId: 0qPq0uZ5vABQlKT8FAVXQn）上，以wall_local_start 为基准，沿墙 Axis 正方向 1619.45 mm 处设置洞口中心；洞口宽 2000 mm、高 2200 mm，窗台高 0 mm；复用损伤 IFC 中仍存在的窗型“BALANS Fixed Single Window:BALANS 20M FLOOR (SH = 0)”（GlobalId: 0t7TVxPGL1fBrLXVTrUtwx），窗完整填充洞口。\n   属性要求：Pset_WindowCommon.IsExternal=true、Pset_WindowCommon.Reference=\"BALANS 20M FLOOR (SH = 0)\"\n5. 在 Level 1 的墙“Basic Wall:MockUp Exterior Ground Floor:451915”（GlobalId: 2V6UQJFc92sfDYeuDKgYFi）上，以wall_local_start 为基准，沿墙 Axis 正方向 11030 mm 处设置洞口中心；洞口宽 3000 mm、高 2200 mm，窗台高 0 mm；复用损伤 IFC 中仍存在的窗型“BALANS Fixed Single Window:BALANS 30M FLOOR (SH = 0)”（GlobalId: 0t7TVxPGL1fBrLXVTrUtsB），窗完整填充洞口。\n   属性要求：Pset_WindowCommon.IsExternal=true、Pset_WindowCommon.Reference=\"BALANS 30M FLOOR (SH = 0)\"\n约束：\n- 保持五面宿主墙的身份、放置、材质、类型和既有属性不变\n- 保持楼层、空间布局和所有非目标构件不变\n- 任何一项不能安全完成时整批失败，不发布部分成功 IFC",
+      "reference": "request:/text",
+      "source_kind": "user_request"
+    }
+  ],
+  "request_id": "request-84d1391824804912",
+  "schema_version": "text2ifc/ifc-repair-intent/0.3",
+  "source_request_hash": "sha256:84d139182480491227e3c1060a5aecbca054ead590184d0497d81017a1a500be"
+}

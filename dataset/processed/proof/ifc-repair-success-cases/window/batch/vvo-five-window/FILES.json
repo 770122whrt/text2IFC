@@ -1,0 +1,111 @@
+{
+  "schema_version": "text2ifc/ifc-repair-success-case-files/0.1",
+  "case_id": "vvo-five-window",
+  "copy_policy": "copy",
+  "files": [
+    {
+      "path": "01-original.ifc",
+      "role": "original_ground_truth",
+      "visibility": "evaluator_only",
+      "size_bytes": 2409268,
+      "sha256": "b6c435be955aeb6b2998f42a62f4ebf8c3f91eb7d373ca71a2dcedfeb95b3fdc",
+      "source": "dataset/processed/ifc-repair/phase10.3-vvo-five-window-review-bundle/01-original-vvo.ifc"
+    },
+    {
+      "path": "02-damaged.ifc",
+      "role": "repair_input_ifc",
+      "visibility": "agent_input",
+      "size_bytes": 2428418,
+      "sha256": "7e0d474840ae2313fe4bdb56a903c8d04a2edca9f42c7591f212f8b7114aa904",
+      "source": "dataset/processed/ifc-repair/phase10.3-vvo-five-window-review-bundle/02-damaged-vvo-five-windows.ifc"
+    },
+    {
+      "path": "03-repaired.ifc",
+      "role": "published_repair_output",
+      "visibility": "public_artifact",
+      "size_bytes": 2441976,
+      "sha256": "e24e7f1b0f34bad45cd8160799a28589d03eb954793d5c353fa1c3ce5420ef93",
+      "source": "dataset/processed/ifc-repair/phase10.3-vvo-five-window-review-bundle/03-repaired-vvo-five-windows-deepseek.ifc"
+    },
+    {
+      "path": "input/request.txt",
+      "role": "user_request",
+      "visibility": "agent_input",
+      "size_bytes": 2543,
+      "sha256": "3943cec87601175556944deb7f6d0d5f3cc07585adaa96295c70a25400203545",
+      "source": "dataset/processed/ifc-repair/phase10.3-vvo-five-window-deepseek-uat-network/request.txt"
+    },
+    {
+      "path": "agent/repair-intent.json",
+      "role": "stage1_repair_intent",
+      "visibility": "agent_output",
+      "size_bytes": 16338,
+      "sha256": "af7ee7934ea32058a146b33666fa9399ae782ca91c02d7789528d4cd1cf9e33a",
+      "source": "dataset/processed/ifc-repair/phase10.3-vvo-five-window-deepseek-uat-network/runs/repair-15bc4fc2b7684efdad37bdd02a0acf31/intent/repair-intent.json"
+    },
+    {
+      "path": "agent/provider-draft.json",
+      "role": "stage2_changeset_draft",
+      "visibility": "agent_output",
+      "size_bytes": 4411,
+      "sha256": "dcd4ef54af888dd89df724d1d77d68d2b3eefc61f1673870049bc1f7204052a8",
+      "source": "dataset/processed/ifc-repair/phase10.3-vvo-five-window-deepseek-uat-network/runs/repair-15bc4fc2b7684efdad37bdd02a0acf31/changeset/provider-draft.json"
+    },
+    {
+      "path": "agent/provider-metadata-stage2.json",
+      "role": "stage2_provider_metadata",
+      "visibility": "audit",
+      "size_bytes": 646,
+      "sha256": "532f9696ba4bf27a90d6667c0c15ab373df4cc636396136ed99cea2733d18490",
+      "source": "dataset/processed/ifc-repair/phase10.3-vvo-five-window-deepseek-uat-network/runs/repair-15bc4fc2b7684efdad37bdd02a0acf31/changeset/attempt-001/provider-metadata.json"
+    },
+    {
+      "path": "changeset/bound-changeset.json",
+      "role": "bound_changeset",
+      "visibility": "execution_contract",
+      "size_bytes": 55083,
+      "sha256": "4ab3b451796f4f3f796f4ea18adf803f423c66e003ccbb71e00d75331cc0b90f",
+      "source": "dataset/processed/ifc-repair/phase10.3-vvo-five-window-deepseek-uat-network/runs/repair-15bc4fc2b7684efdad37bdd02a0acf31/changeset/bound-changeset.json"
+    },
+    {
+      "path": "validation/mutation-manifest.private.json",
+      "role": "damage_ground_truth",
+      "visibility": "evaluator_only",
+      "size_bytes": 14007,
+      "sha256": "970786e1dd16f6ad9b0cc8fdb3d25d2ba671966c7ccdd49b9f63eddf0f967340",
+      "source": "dataset/processed/ifc-repair/phase10.3-vvo-five-window-deepseek-uat-network/fixture/mutation_manifest.private.json"
+    },
+    {
+      "path": "validation/mutation-report.json",
+      "role": "damage_report",
+      "visibility": "audit",
+      "size_bytes": 3412,
+      "sha256": "ad7c870eb7cd537002c7e9663ada2c39ebd9be4509694312ccc2e1dd48330aa0",
+      "source": "dataset/processed/ifc-repair/phase10.3-vvo-five-window-deepseek-uat-network/fixture/mutation_report.json"
+    },
+    {
+      "path": "validation/production-evaluation.json",
+      "role": "production_publication_evidence",
+      "visibility": "public_evaluation",
+      "size_bytes": 113654,
+      "sha256": "1b8b42237238268c91bb1e0f0c8464070f20b0c72beb56d4982bf62efe7571d4",
+      "source": "dataset/processed/ifc-repair/phase10.3-vvo-five-window-deepseek-uat-network/runs/repair-15bc4fc2b7684efdad37bdd02a0acf31/.terminal-bundles/166ef01e80864897b2c9e254b8718a94/evaluation/public-evaluation.json"
+    },
+    {
+      "path": "validation/ifc-comparison.json",
+      "role": "ground_truth_and_ifcdiff_comparison",
+      "visibility": "evaluation",
+      "size_bytes": 35810,
+      "sha256": "4c6c67a299e55bb4abb448353016bd218173112557a4e4bcff85d364713b7755",
+      "source": "dataset/processed/ifc-repair/phase10.3-vvo-five-window-review-bundle/04-ifc-comparison.json"
+    },
+    {
+      "path": "validation/run-summary.json",
+      "role": "uat_summary",
+      "visibility": "audit",
+      "size_bytes": 691,
+      "sha256": "9a448f611f22e92b5835def4145d29ab9da33ffa02aabb2edb16fbf6cadf0084",
+      "source": "dataset/processed/ifc-repair/phase10.3-vvo-five-window-deepseek-uat-network/uat-result.json"
+    }
+  ]
+}

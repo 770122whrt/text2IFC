@@ -1,0 +1,376 @@
+{
+  "model_fingerprint": "sha256:f61ff5cf8e1cc88da6944d6bcd3e2e7da5ff27dd3288a8781908018cb8240cd6",
+  "operations": [
+    {
+      "attribute_intents": [],
+      "operation_id": "op1",
+      "operation_type": "add_window_with_opening_to_wall",
+      "parameters": {
+        "opening": {
+          "height_mm": 500,
+          "sill_height_mm": 2670.83,
+          "width_mm": 1180
+        },
+        "position": {
+          "center_offset_mm": 4701.96,
+          "reference": "wall_local_start"
+        },
+        "window": {
+          "fit_opening": true
+        }
+      },
+      "property_intents": [
+        {
+          "intent_kind": "exact_property",
+          "property_name": "IsExternal",
+          "raw_unit": null,
+          "raw_value": true,
+          "requested_value_type": null,
+          "scope": null,
+          "set_name": "Pset_WindowCommon",
+          "source": {
+            "excerpt": "Pset_WindowCommon.IsExternal=true",
+            "reference": "request:/text",
+            "source_kind": "user_request"
+          }
+        },
+        {
+          "intent_kind": "exact_property",
+          "property_name": "Reference",
+          "raw_unit": null,
+          "raw_value": "500x1180",
+          "requested_value_type": null,
+          "scope": null,
+          "set_name": "Pset_WindowCommon",
+          "source": {
+            "excerpt": "Pset_WindowCommon.Reference=\"500x1180\"",
+            "reference": "request:/text",
+            "source_kind": "user_request"
+          }
+        }
+      ],
+      "prototype_intent": {
+        "reference": "2dYMXn0_5AKRbD_1eUIAtb",
+        "reference_kind": "global_id",
+        "source": {
+          "excerpt": "复用损伤 IFC 中仍存在的窗型“500x1180”（GlobalId: 2dYMXn0_5AKRbD_1eUIAtb）",
+          "reference": "request:/text",
+          "source_kind": "user_request"
+        }
+      },
+      "provenance": [
+        {
+          "excerpt": "请一次性修复以下共 5 扇窗，并作为一个统一 ChangeSet 原子执行：\n1. 在 标高2 的墙“基本墙:240:224905”（GlobalId: 2CsmzAChHF6O6maGXlo6yJ）上，以wall_local_start 为基准，沿墙 Axis 正方向 4701.96 mm 处设置洞口中心；洞口宽 1180 mm、高 500 mm，窗台高 2670.83 mm；复用损伤 IFC 中仍存在的窗型“500x1180”（GlobalId: 2dYMXn0_5AKRbD_1eUIAtb），窗完整填充洞口。\n   属性要求：Pset_WindowCommon.IsExternal=true、Pset_WindowCommon.Reference=\"500x1180\"",
+          "reference": "request:/text",
+          "source_kind": "user_request"
+        }
+      ],
+      "target_query": {
+        "allowed_ifc_classes": [
+          "IfcWall"
+        ],
+        "global_id": "2CsmzAChHF6O6maGXlo6yJ",
+        "schema_version": "text2ifc/ifc-target-query/0.1"
+      }
+    },
+    {
+      "attribute_intents": [],
+      "operation_id": "op2",
+      "operation_type": "add_window_with_opening_to_wall",
+      "parameters": {
+        "opening": {
+          "height_mm": 2370,
+          "sill_height_mm": 610,
+          "width_mm": 870
+        },
+        "position": {
+          "center_offset_mm": 9315.56,
+          "reference": "wall_local_start"
+        },
+        "window": {
+          "fit_opening": true
+        }
+      },
+      "property_intents": [
+        {
+          "intent_kind": "exact_property",
+          "property_name": "IsExternal",
+          "raw_unit": null,
+          "raw_value": true,
+          "requested_value_type": null,
+          "scope": null,
+          "set_name": "Pset_WindowCommon",
+          "source": {
+            "excerpt": "Pset_WindowCommon.IsExternal=true",
+            "reference": "request:/text",
+            "source_kind": "user_request"
+          }
+        },
+        {
+          "intent_kind": "exact_property",
+          "property_name": "Reference",
+          "raw_unit": null,
+          "raw_value": "870x2370",
+          "requested_value_type": null,
+          "scope": null,
+          "set_name": "Pset_WindowCommon",
+          "source": {
+            "excerpt": "Pset_WindowCommon.Reference=\"870x2370\"",
+            "reference": "request:/text",
+            "source_kind": "user_request"
+          }
+        }
+      ],
+      "prototype_intent": {
+        "reference": "08xWVL$9z6JRwr3pqJHoru",
+        "reference_kind": "global_id",
+        "source": {
+          "excerpt": "复用损伤 IFC 中仍存在的窗型“870x2370”（GlobalId: 08xWVL$9z6JRwr3pqJHoru）",
+          "reference": "request:/text",
+          "source_kind": "user_request"
+        }
+      },
+      "provenance": [
+        {
+          "excerpt": "请一次性修复以下共 5 扇窗，并作为一个统一 ChangeSet 原子执行：\n2. 在 标高2 的墙“基本墙:240:226415”（GlobalId: 0jltRti3rFigAmdXYhXxqI）上，以wall_local_start 为基准，沿墙 Axis 正方向 9315.56 mm 处设置洞口中心；洞口宽 870 mm、高 2370 mm，窗台高 610 mm；复用损伤 IFC 中仍存在的窗型“870x2370”（GlobalId: 08xWVL$9z6JRwr3pqJHoru），窗完整填充洞口。\n   属性要求：Pset_WindowCommon.IsExternal=true、Pset_WindowCommon.Reference=\"870x2370\"",
+          "reference": "request:/text",
+          "source_kind": "user_request"
+        }
+      ],
+      "target_query": {
+        "allowed_ifc_classes": [
+          "IfcWall"
+        ],
+        "global_id": "0jltRti3rFigAmdXYhXxqI",
+        "schema_version": "text2ifc/ifc-target-query/0.1"
+      }
+    },
+    {
+      "attribute_intents": [],
+      "operation_id": "op3",
+      "operation_type": "add_window_with_opening_to_wall",
+      "parameters": {
+        "opening": {
+          "height_mm": 2950,
+          "sill_height_mm": 131.397,
+          "width_mm": 4500
+        },
+        "position": {
+          "center_offset_mm": 4280,
+          "reference": "wall_local_start"
+        },
+        "window": {
+          "fit_opening": true
+        }
+      },
+      "property_intents": [
+        {
+          "intent_kind": "exact_property",
+          "property_name": "IsExternal",
+          "raw_unit": null,
+          "raw_value": true,
+          "requested_value_type": null,
+          "scope": null,
+          "set_name": "Pset_WindowCommon",
+          "source": {
+            "excerpt": "Pset_WindowCommon.IsExternal=true",
+            "reference": "request:/text",
+            "source_kind": "user_request"
+          }
+        },
+        {
+          "intent_kind": "exact_property",
+          "property_name": "Reference",
+          "raw_unit": null,
+          "raw_value": "4500x2950",
+          "requested_value_type": null,
+          "scope": null,
+          "set_name": "Pset_WindowCommon",
+          "source": {
+            "excerpt": "Pset_WindowCommon.Reference=\"4500x2950\"",
+            "reference": "request:/text",
+            "source_kind": "user_request"
+          }
+        }
+      ],
+      "prototype_intent": {
+        "reference": "3xYoUsotL2OPYJwoKd43pe",
+        "reference_kind": "global_id",
+        "source": {
+          "excerpt": "复用损伤 IFC 中仍存在的窗型“4500x2950”（GlobalId: 3xYoUsotL2OPYJwoKd43pe）",
+          "reference": "request:/text",
+          "source_kind": "user_request"
+        }
+      },
+      "provenance": [
+        {
+          "excerpt": "请一次性修复以下共 5 扇窗，并作为一个统一 ChangeSet 原子执行：\n3. 在 标高0 的墙“基本墙:600:239145”（GlobalId: 1boalssSHBYut0JHgwRsGf）上，以wall_local_start 为基准，沿墙 Axis 正方向 4280 mm 处设置洞口中心；洞口宽 4500 mm、高 2950 mm，窗台高 131.397 mm；复用损伤 IFC 中仍存在的窗型“4500x2950”（GlobalId: 3xYoUsotL2OPYJwoKd43pe），窗完整填充洞口。\n   属性要求：Pset_WindowCommon.IsExternal=true、Pset_WindowCommon.Reference=\"4500x2950\"",
+          "reference": "request:/text",
+          "source_kind": "user_request"
+        }
+      ],
+      "target_query": {
+        "allowed_ifc_classes": [
+          "IfcWall"
+        ],
+        "global_id": "1boalssSHBYut0JHgwRsGf",
+        "schema_version": "text2ifc/ifc-target-query/0.1"
+      }
+    },
+    {
+      "attribute_intents": [],
+      "operation_id": "op4",
+      "operation_type": "add_window_with_opening_to_wall",
+      "parameters": {
+        "opening": {
+          "height_mm": 1600,
+          "sill_height_mm": 532.987,
+          "width_mm": 600
+        },
+        "position": {
+          "center_offset_mm": 3283.66,
+          "reference": "wall_local_start"
+        },
+        "window": {
+          "fit_opening": true
+        }
+      },
+      "property_intents": [
+        {
+          "intent_kind": "exact_property",
+          "property_name": "IsExternal",
+          "raw_unit": null,
+          "raw_value": true,
+          "requested_value_type": null,
+          "scope": null,
+          "set_name": "Pset_WindowCommon",
+          "source": {
+            "excerpt": "Pset_WindowCommon.IsExternal=true",
+            "reference": "request:/text",
+            "source_kind": "user_request"
+          }
+        },
+        {
+          "intent_kind": "exact_property",
+          "property_name": "Reference",
+          "raw_unit": null,
+          "raw_value": "1600x600",
+          "requested_value_type": null,
+          "scope": null,
+          "set_name": "Pset_WindowCommon",
+          "source": {
+            "excerpt": "Pset_WindowCommon.Reference=\"1600x600\"",
+            "reference": "request:/text",
+            "source_kind": "user_request"
+          }
+        }
+      ],
+      "prototype_intent": {
+        "reference": "0ZHc4SjhnChed_CMGdKBu8",
+        "reference_kind": "global_id",
+        "source": {
+          "excerpt": "复用损伤 IFC 中仍存在的窗型“1600x600”（GlobalId: 0ZHc4SjhnChed_CMGdKBu8）",
+          "reference": "request:/text",
+          "source_kind": "user_request"
+        }
+      },
+      "provenance": [
+        {
+          "excerpt": "请一次性修复以下共 5 扇窗，并作为一个统一 ChangeSet 原子执行：\n4. 在 标高2 的墙“基本墙:240:227677”（GlobalId: 0jltRti3rFigAmdXYhXx0W）上，以wall_local_start 为基准，沿墙 Axis 正方向 3283.66 mm 处设置洞口中心；洞口宽 600 mm、高 1600 mm，窗台高 532.987 mm；复用损伤 IFC 中仍存在的窗型“1600x600”（GlobalId: 0ZHc4SjhnChed_CMGdKBu8），窗完整填充洞口。\n   属性要求：Pset_WindowCommon.IsExternal=true、Pset_WindowCommon.Reference=\"1600x600\"",
+          "reference": "request:/text",
+          "source_kind": "user_request"
+        }
+      ],
+      "target_query": {
+        "allowed_ifc_classes": [
+          "IfcWall"
+        ],
+        "global_id": "0jltRti3rFigAmdXYhXx0W",
+        "schema_version": "text2ifc/ifc-target-query/0.1"
+      }
+    },
+    {
+      "attribute_intents": [],
+      "operation_id": "op5",
+      "operation_type": "add_window_with_opening_to_wall",
+      "parameters": {
+        "opening": {
+          "height_mm": 1600,
+          "sill_height_mm": 533.5,
+          "width_mm": 600
+        },
+        "position": {
+          "center_offset_mm": 1078.66,
+          "reference": "wall_local_start"
+        },
+        "window": {
+          "fit_opening": true
+        }
+      },
+      "property_intents": [
+        {
+          "intent_kind": "exact_property",
+          "property_name": "IsExternal",
+          "raw_unit": null,
+          "raw_value": true,
+          "requested_value_type": null,
+          "scope": null,
+          "set_name": "Pset_WindowCommon",
+          "source": {
+            "excerpt": "Pset_WindowCommon.IsExternal=true",
+            "reference": "request:/text",
+            "source_kind": "user_request"
+          }
+        },
+        {
+          "intent_kind": "exact_property",
+          "property_name": "Reference",
+          "raw_unit": null,
+          "raw_value": "1600x600",
+          "requested_value_type": null,
+          "scope": null,
+          "set_name": "Pset_WindowCommon",
+          "source": {
+            "excerpt": "Pset_WindowCommon.Reference=\"1600x600\"",
+            "reference": "request:/text",
+            "source_kind": "user_request"
+          }
+        }
+      ],
+      "prototype_intent": {
+        "reference": "0ZHc4SjhnChed_CMGdKBu8",
+        "reference_kind": "global_id",
+        "source": {
+          "excerpt": "复用损伤 IFC 中仍存在的窗型“1600x600”（GlobalId: 0ZHc4SjhnChed_CMGdKBu8）",
+          "reference": "request:/text",
+          "source_kind": "user_request"
+        }
+      },
+      "provenance": [
+        {
+          "excerpt": "请一次性修复以下共 5 扇窗，并作为一个统一 ChangeSet 原子执行：\n5. 在 标高2 的墙“基本墙:240:227677”（GlobalId: 0jltRti3rFigAmdXYhXx0W）上，以wall_local_start 为基准，沿墙 Axis 正方向 1078.66 mm 处设置洞口中心；洞口宽 600 mm、高 1600 mm，窗台高 533.5 mm；复用损伤 IFC 中仍存在的窗型“1600x600”（GlobalId: 0ZHc4SjhnChed_CMGdKBu8），窗完整填充洞口。\n   属性要求：Pset_WindowCommon.IsExternal=true、Pset_WindowCommon.Reference=\"1600x600\"",
+          "reference": "request:/text",
+          "source_kind": "user_request"
+        }
+      ],
+      "target_query": {
+        "allowed_ifc_classes": [
+          "IfcWall"
+        ],
+        "global_id": "0jltRti3rFigAmdXYhXx0W",
+        "schema_version": "text2ifc/ifc-target-query/0.1"
+      }
+    }
+  ],
+  "prompt_fingerprint": "sha256:e37e1ab998bb9a0b60bb0eca50b4456e076c98f579766e23a6ef40f23a65ad78",
+  "provenance": [
+    {
+      "excerpt": "请一次性修复以下共 5 扇窗，并作为一个统一 ChangeSet 原子执行：\n1. 在 标高2 的墙“基本墙:240:224905”（GlobalId: 2CsmzAChHF6O6maGXlo6yJ）上，以wall_local_start 为基准，沿墙 Axis 正方向 4701.96 mm 处设置洞口中心；洞口宽 1180 mm、高 500 mm，窗台高 2670.83 mm；复用损伤 IFC 中仍存在的窗型“500x1180”（GlobalId: 2dYMXn0_5AKRbD_1eUIAtb），窗完整填充洞口。\n   属性要求：Pset_WindowCommon.IsExternal=true、Pset_WindowCommon.Reference=\"500x1180\"\n2. 在 标高2 的墙“基本墙:240:226415”（GlobalId: 0jltRti3rFigAmdXYhXxqI）上，以wall_local_start 为基准，沿墙 Axis 正方向 9315.56 mm 处设置洞口中心；洞口宽 870 mm、高 2370 mm，窗台高 610 mm；复用损伤 IFC 中仍存在的窗型“870x2370”（GlobalId: 08xWVL$9z6JRwr3pqJHoru），窗完整填充洞口。\n   属性要求：Pset_WindowCommon.IsExternal=true、Pset_WindowCommon.Reference=\"870x2370\"\n3. 在 标高0 的墙“基本墙:600:239145”（GlobalId: 1boalssSHBYut0JHgwRsGf）上，以wall_local_start 为基准，沿墙 Axis 正方向 4280 mm 处设置洞口中心；洞口宽 4500 mm、高 2950 mm，窗台高 131.397 mm；复用损伤 IFC 中仍存在的窗型“4500x2950”（GlobalId: 3xYoUsotL2OPYJwoKd43pe），窗完整填充洞口。\n   属性要求：Pset_WindowCommon.IsExternal=true、Pset_WindowCommon.Reference=\"4500x2950\"\n4. 在 标高2 的墙“基本墙:240:227677”（GlobalId: 0jltRti3rFigAmdXYhXx0W）上，以wall_local_start 为基准，沿墙 Axis 正方向 3283.66 mm 处设置洞口中心；洞口宽 600 mm、高 1600 mm，窗台高 532.987 mm；复用损伤 IFC 中仍存在的窗型“1600x600”（GlobalId: 0ZHc4SjhnChed_CMGdKBu8），窗完整填充洞口。\n   属性要求：Pset_WindowCommon.IsExternal=true、Pset_WindowCommon.Reference=\"1600x600\"\n5. 在 标高2 的墙“基本墙:240:227677”（GlobalId: 0jltRti3rFigAmdXYhXx0W）上，以wall_local_start 为基准，沿墙 Axis 正方向 1078.66 mm 处设置洞口中心；洞口宽 600 mm、高 1600 mm，窗台高 533.5 mm；复用损伤 IFC 中仍存在的窗型“1600x600”（GlobalId: 0ZHc4SjhnChed_CMGdKBu8），窗完整填充洞口。\n   属性要求：Pset_WindowCommon.IsExternal=true、Pset_WindowCommon.Reference=\"1600x600\"\n约束：\n- 保持五面宿主墙的身份、放置、材质、类型和既有属性不变\n- 保持楼层、空间布局和所有非目标构件不变\n- 任何一项不能安全完成时整批失败，不发布部分成功 IFC",
+      "reference": "request:/text",
+      "source_kind": "user_request"
+    }
+  ],
+  "request_id": "request-3943cec876011755",
+  "schema_version": "text2ifc/ifc-repair-intent/0.3",
+  "source_request_hash": "sha256:3943cec87601175556944deb7f6d0d5f3cc07585adaa96295c70a25400203545"
+}

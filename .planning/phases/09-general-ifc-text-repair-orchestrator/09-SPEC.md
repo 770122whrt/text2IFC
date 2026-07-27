@@ -28,6 +28,16 @@ Provider stage only generates a ChangeSet after public spec/context already
 exist. There is no versioned RepairIntent, persistent clarification state,
 general production orchestrator, or shared human/machine terminal contract.
 
+### Stage 1 contract repair addendum (2026-07-20)
+
+The Provider owns only the semantic RepairIntent body. Request ID, source
+request hash, prompt fingerprint, and Provider-model fingerprint are
+deterministically attached by the runtime. A structurally valid operation may
+carry partial parameters; the Operation Registry validates supplied values,
+injects only schema-declared constants, and derives missing executable paths.
+Missing facts produce `clarification_required/missing_required_parameter`
+before target resolution and do not consume a Provider correction retry.
+
 ## Requirements
 
 1. **General production start contract**: A public API and CLI accept a source
@@ -50,13 +60,15 @@ general production orchestrator, or shared human/machine terminal contract.
    and provenance.
    - Current: Phase 7 accepts structured TargetQuery JSON, but no production
      natural-language request-understanding contract exists.
-   - Target: Provider output is parsed against an exact JSON Schema and
-     Registry capabilities before any target is resolved. Unsupported operation
-     types, malformed intent, and missing required intent fields become
-     structured non-publishable states.
-   - Acceptance: Contract and Provider-stage tests cover valid single/multiple
-     operation intent, invalid schema, unsupported operation, target selectors,
-     parameters, attribute intent, request hash, and public-only trace evidence.
+   - Target: Provider semantic-body output is parsed against an exact JSON
+     Schema and Registry capabilities before any target is resolved. Unsupported
+     operation types and malformed supplied values are Provider-output errors;
+     absent executable facts are a valid partial intent and request user
+     clarification. The runtime, not the Provider, attaches all binding hashes.
+   - Acceptance: Contract and Provider-stage tests cover valid complete and
+     partial single/multiple operation intent, invalid schema, unsupported
+     operation, target selectors, parameters, attribute intent, deterministic
+     request/model/prompt bindings, and public-only trace evidence.
 
 3. **Deterministic target resolution before ChangeSet**: Every operation intent
    is resolved through the Phase 7 index/query/context contracts before the

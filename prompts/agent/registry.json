@@ -61,6 +61,37 @@
       ]
     },
     {
+      "template_id": "ifc-repair-changeset.v0.3",
+      "role": "ifc_repair_generator",
+      "mode": "bound_changeset",
+      "path": "prompts/agent/ifc-repair-changeset-v0.3.md",
+      "sha256": "sha256:548c793a3c758fe291d27ac3b33ee85e366d3477c1d46272021bb77a444fc271",
+      "required_inputs": [
+        "REPAIR_REQUEST",
+        "SOURCE_REQUEST_HASH",
+        "MODEL_FINGERPRINT",
+        "RESOLVED_OPERATIONS",
+        "SUPPORTED_OPERATIONS",
+        "CHANGESET_SCHEMA",
+        "VALIDATION_FEEDBACK",
+        "SEMANTIC_MANIFEST_REF",
+        "SEMANTIC_MANIFEST_SHA256",
+        "SEMANTIC_SUMMARY",
+        "EXPLICIT_REQUEST_SLOT_REFS"
+      ],
+      "forbidden_outputs": [
+        "raw_ifc",
+        "step_text",
+        "step_id",
+        "raw_cohort_candidates",
+        "private_original_ifc",
+        "benchmark_gold",
+        "mutation_mapping",
+        "semantic_assignments",
+        "unregistered_operation"
+      ]
+    },
+    {
       "template_id": "design-brief.v1",
       "role": "design_brief",
       "mode": "extract_or_clarify",
@@ -336,7 +367,7 @@
       "role": "ifc_repair_request_understanding",
       "mode": "repair_intent",
       "path": "prompts/agent/ifc-repair-intent-v0.3.md",
-      "sha256": "sha256:e37e1ab998bb9a0b60bb0eca50b4456e076c98f579766e23a6ef40f23a65ad78",
+      "sha256": "sha256:9c59ab60eebe1ded70b6e9c1a66a6a7e3de3da08056e9217bb68a9d423bbbdee",
       "required_inputs": [
         "REPAIR_REQUEST",
         "SUPPORTED_OPERATIONS",
@@ -356,6 +387,35 @@
         "applicable",
         "confirmed",
         "authorized",
+        "mutation_mapping",
+        "private_original_ifc",
+        "benchmark_gold",
+        "guessed_project_fact",
+        "repair_changeset"
+      ]
+    },
+    {
+      "template_id": "ifc-repair-intent.v0.4",
+      "role": "ifc_repair_request_understanding",
+      "mode": "repair_intent",
+      "path": "prompts/agent/ifc-repair-intent-v0.4.md",
+      "sha256": "sha256:6d711cf3ca881945313c6180902d52e43a5416d5e86e07d866ff682839fc902c",
+      "required_inputs": [
+        "REPAIR_REQUEST",
+        "SUPPORTED_OPERATIONS",
+        "REPAIR_INTENT_SCHEMA",
+        "VALIDATION_FEEDBACK"
+      ],
+      "forbidden_outputs": [
+        "raw_ifc",
+        "step_text",
+        "step_id",
+        "resolved_target_id",
+        "resolved_target_guid",
+        "resolved_type_id",
+        "canonical_property_name",
+        "canonical_pset_name",
+        "inferred_occurrence_reuse",
         "mutation_mapping",
         "private_original_ifc",
         "benchmark_gold",

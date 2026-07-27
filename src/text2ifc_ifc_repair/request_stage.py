@@ -25,9 +25,11 @@ from .repair_intent import (
     REPAIR_INTENT_BODY_SCHEMA_VERSION,
     REPAIR_INTENT_BODY_SCHEMA_VERSION_0_2,
     REPAIR_INTENT_BODY_SCHEMA_VERSION_0_3,
+    REPAIR_INTENT_BODY_SCHEMA_VERSION_0_4,
     REPAIR_INTENT_SCHEMA_VERSION,
     REPAIR_INTENT_SCHEMA_VERSION_0_2,
     REPAIR_INTENT_SCHEMA_VERSION_0_3,
+    REPAIR_INTENT_SCHEMA_VERSION_0_4,
     fingerprint_text,
     hash_request,
     load_repair_intent_body_schema,
@@ -38,6 +40,7 @@ from .repair_intent import (
 TEMPLATE_ID = "ifc-repair-intent.v0.1"
 TEMPLATE_ID_0_2 = "ifc-repair-intent.v0.2"
 TEMPLATE_ID_0_3 = "ifc-repair-intent.v0.3"
+TEMPLATE_ID_0_4 = "ifc-repair-intent.v0.4"
 _INTENT_CONTRACTS = {
     REPAIR_INTENT_SCHEMA_VERSION: (
         REPAIR_INTENT_BODY_SCHEMA_VERSION,
@@ -50,6 +53,10 @@ _INTENT_CONTRACTS = {
     REPAIR_INTENT_SCHEMA_VERSION_0_3: (
         REPAIR_INTENT_BODY_SCHEMA_VERSION_0_3,
         TEMPLATE_ID_0_3,
+    ),
+    REPAIR_INTENT_SCHEMA_VERSION_0_4: (
+        REPAIR_INTENT_BODY_SCHEMA_VERSION_0_4,
+        TEMPLATE_ID_0_4,
     ),
 }
 MAX_REQUEST_BYTES = DEFAULT_REPAIR_INTENT_LIMITS.max_request_bytes
@@ -102,6 +109,7 @@ def generate_repair_intent(
 
     attempts: list[dict[str, Any]] = []
     for attempt_number in range(1, max_attempts + 1):
+        normalizations: list[str] = []
         if attempt_number > 1:
             rendered = render_prompt(
                 template_id=template_id,
@@ -148,6 +156,7 @@ def generate_repair_intent(
                 issues=issues,
                 provider_metadata={"provider_error": safe_details},
                 raw_text="",
+                normalizations=normalizations,
             )
             attempts.append(attempt)
             atomic_write_text(
@@ -187,6 +196,9 @@ def generate_repair_intent(
                             error.message,
                             path=_pointer(error.absolute_path),
                         )
+                    parsed, normalizations = (
+                        _fold_created_window_property_operations(parsed)
+                    )
                     model = str(provider_output.metadata.get("model", ""))
                     if not model:
                         raise RepairIntentError(
@@ -211,6 +223,8 @@ def generate_repair_intent(
                         "operations": operations,
                         "provenance": parsed["provenance"],
                     }
+                    if "semantic_bundles" in parsed:
+                        envelope["semantic_bundles"] = parsed["semantic_bundles"]
                     intent = RepairIntent.from_dict(
                         envelope,
                         registry=registry,
@@ -237,6 +251,7 @@ def generate_repair_intent(
             provider_metadata=provider_output.metadata,
             raw_text=raw_text,
             valid=intent is not None and not issues,
+            normalizations=normalizations,
         )
         attempts.append(attempt)
         atomic_write_text(
@@ -366,6 +381,188 @@ def _supported_operations(registry: OperationRegistry) -> list[dict[str, Any]]:
     ]
 
 
+def _fold_created_window_property_operations(
+    document: Mapping[str, Any],
+) -> tuple[dict[str, Any], list[str]]:
+    """Fold an unbound property-only operation into its unique new Window.
+
+    A Provider may express one user action as ``add Window`` followed by
+    ``set properties on the Window hosted by that wall``.  The second operation
+    cannot safely resolve before the new occurrence exists and could otherwise
+    select a surviving Window.  Normalize only the narrow, lossless case where
+    the host wall identifies exactly one add operation and the property
+    operation carries no independent target or semantic side effects.
+    """
+
+    normalized = json.loads(json.dumps(document))
+    if normalized.get("schema_version") != REPAIR_INTENT_BODY_SCHEMA_VERSION_0_4:
+        return normalized, []
+
+    operations = normalized.get("operations")
+    if not isinstance(operations, list):
+        return normalized, []
+
+    additions_by_wall: dict[str, list[dict[str, Any]]] = {}
+    for operation in operations:
+        if operation.get("operation_type") != "add_window_with_opening_to_wall":
+            continue
+        target = operation.get("target_query")
+        if not isinstance(target, Mapping):
+            continue
+        wall_global_id = target.get("global_id")
+        if isinstance(wall_global_id, str) and wall_global_id:
+            additions_by_wall.setdefault(wall_global_id, []).append(operation)
+
+    removed_ids: set[int] = set()
+    normalization_codes: list[str] = []
+    for property_operation in operations:
+        if not _is_foldable_created_window_property_operation(property_operation):
+            continue
+        target = property_operation["target_query"]
+        matches = additions_by_wall.get(str(target["host_global_id"]), [])
+        if len(matches) != 1:
+            continue
+        addition = matches[0]
+        if not _merge_created_window_properties(addition, property_operation):
+            continue
+        removed_ids.add(id(property_operation))
+        normalization_codes.append(
+            "FOLD_CREATED_WINDOW_OCCURRENCE_PROPERTIES:"
+            f"{property_operation.get('operation_id', '')}->"
+            f"{addition.get('operation_id', '')}"
+        )
+
+    if removed_ids:
+        normalized["operations"] = [
+            operation for operation in operations if id(operation) not in removed_ids
+        ]
+    return normalized, normalization_codes
+
+
+def _is_foldable_created_window_property_operation(
+    operation: Mapping[str, Any],
+) -> bool:
+    if operation.get("operation_type") != "set_occurrence_properties":
+        return False
+    target = operation.get("target_query")
+    if not isinstance(target, Mapping):
+        return False
+    if target.get("global_id"):
+        return False
+    if set(target.get("allowed_ifc_classes", ())) != {"IfcWindow"}:
+        return False
+    if not target.get("host_global_id"):
+        return False
+    if operation.get("parameters"):
+        return False
+    for field in (
+        "attribute_intents",
+        "semantic_bundle_refs",
+    ):
+        if operation.get(field):
+            return False
+    if operation.get("occurrence_reuse_intent") is not None:
+        return False
+    return bool(
+        operation.get("property_intents")
+        or operation.get("quantity_intents")
+    )
+
+
+def _merge_created_window_properties(
+    addition: dict[str, Any],
+    property_operation: Mapping[str, Any],
+) -> bool:
+    addition_prototype = addition.get("prototype_intent")
+    property_prototype = property_operation.get("prototype_intent")
+    if (
+        addition_prototype is not None
+        and property_prototype is not None
+        and addition_prototype != property_prototype
+    ):
+        return False
+    if addition_prototype is None and property_prototype is not None:
+        addition["prototype_intent"] = property_prototype
+
+    existing = list(addition.get("property_intents", ()))
+    by_slot: dict[tuple[str, str, str], Mapping[str, Any]] = {}
+    for property_intent in existing:
+        slot = _property_intent_slot(property_intent)
+        if slot is not None:
+            by_slot[slot] = property_intent
+    for property_intent in property_operation.get("property_intents", ()):
+        slot = _property_intent_slot(property_intent)
+        if slot is not None and slot in by_slot:
+            if by_slot[slot] != property_intent:
+                return False
+            continue
+        existing.append(property_intent)
+        if slot is not None:
+            by_slot[slot] = property_intent
+    addition["property_intents"] = existing
+
+    existing_quantities = list(addition.get("quantity_intents", ()))
+    quantities_by_slot: dict[
+        tuple[str, str, str], Mapping[str, Any]
+    ] = {}
+    for quantity_intent in existing_quantities:
+        slot = _quantity_intent_slot(quantity_intent)
+        if slot is not None:
+            quantities_by_slot[slot] = quantity_intent
+    for quantity_intent in property_operation.get("quantity_intents", ()):
+        slot = _quantity_intent_slot(quantity_intent)
+        if slot is not None and slot in quantities_by_slot:
+            if quantities_by_slot[slot] != quantity_intent:
+                return False
+            continue
+        existing_quantities.append(quantity_intent)
+        if slot is not None:
+            quantities_by_slot[slot] = quantity_intent
+    addition["quantity_intents"] = existing_quantities
+
+    provenance = list(addition.get("provenance", ()))
+    seen = {_canonical_json(item) for item in provenance}
+    for source in property_operation.get("provenance", ()):
+        key = _canonical_json(source)
+        if key not in seen:
+            provenance.append(source)
+            seen.add(key)
+    addition["provenance"] = provenance
+    return True
+
+
+def _property_intent_slot(
+    property_intent: Mapping[str, Any],
+) -> tuple[str, str, str] | None:
+    set_name = property_intent.get("set_name")
+    property_name = property_intent.get("property_name")
+    if not isinstance(set_name, str) or not isinstance(property_name, str):
+        return None
+    return (
+        set_name,
+        property_name,
+        str(property_intent.get("scope", "occurrence_direct")),
+    )
+
+
+def _quantity_intent_slot(
+    quantity_intent: Mapping[str, Any],
+) -> tuple[str, str, str] | None:
+    scope = quantity_intent.get("scope")
+    set_name = quantity_intent.get("set_name")
+    quantity_name = quantity_intent.get("quantity_name")
+    if not all(
+        isinstance(item, str)
+        for item in (scope, set_name, quantity_name)
+    ):
+        return None
+    return str(scope), str(set_name), str(quantity_name)
+
+
+def _canonical_json(value: Any) -> str:
+    return json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+
+
 def _normalize_issues(values: list[dict[str, Any]]) -> list[dict[str, str]]:
     return [
         _issue(
@@ -437,6 +634,7 @@ def _attempt_record(
     provider_metadata: Mapping[str, Any],
     raw_text: str,
     valid: bool = False,
+    normalizations: list[str] | None = None,
 ) -> dict[str, Any]:
     return {
         "attempt": attempt_number,
@@ -445,7 +643,9 @@ def _attempt_record(
         "provider_metadata": _redact_private(
             redact_provider_payload(provider_metadata)
         ),
+        "response_sha256": fingerprint_text(raw_text),
         "response_excerpt": _bounded_redacted_excerpt(raw_text),
+        "normalizations": list(normalizations or ()),
     }
 
 
@@ -479,5 +679,6 @@ __all__ = [
     "TEMPLATE_ID",
     "TEMPLATE_ID_0_2",
     "TEMPLATE_ID_0_3",
+    "TEMPLATE_ID_0_4",
     "generate_repair_intent",
 ]

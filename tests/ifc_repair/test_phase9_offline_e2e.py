@@ -145,6 +145,92 @@ def test_caller_ifc_and_text_reach_publishable_success_with_exact_call_counts(tm
     assert (run_dir / result.artifacts["manifest"]).is_file()
 
 
+def test_missing_stage1_parameters_pause_then_feedback_completes_same_run(
+    tmp_path: Path,
+) -> None:
+    source = tmp_path / "caller-partial.ifc"
+    _source(source)
+    calls = {"stage1": 0, "stage2": 0, "apply": 0, "evaluation": 0}
+    api = _api(
+        tmp_path,
+        operation_count=1,
+        apply_ok=True,
+        publishable=True,
+        calls=calls,
+    )
+
+    def intent_stage(**kwargs):
+        calls["stage1"] += 1
+        complete = _intent(
+            kwargs["request_id"],
+            kwargs["repair_request"],
+            ["North wall"],
+            kwargs["registry"],
+        )
+        if calls["stage1"] > 1:
+            return {
+                "valid": True,
+                "classification": "repair_intent",
+                "intent": complete,
+                "missing_parameters": [],
+            }
+        document = complete.to_dict()
+        document["operations"][0]["parameters"] = {
+            "position": {"reference": "wall_local_start"},
+            "window": {"fit_opening": True},
+        }
+        partial = RepairIntent.from_dict(
+            document,
+            registry=kwargs["registry"],
+            require_complete=False,
+        )
+        return {
+            "valid": True,
+            "classification": "clarification_required",
+            "intent": partial,
+            "missing_parameters": [
+                {
+                    "operation_id": "operation-1",
+                    "paths": [
+                        "/opening/height_mm",
+                        "/opening/sill_height_mm",
+                        "/opening/width_mm",
+                        "/position/center_offset_mm",
+                    ],
+                }
+            ],
+        }
+
+    api._intent_stage = intent_stage
+    pending = api.start(source, "在 North wall 上新增一扇窗。")
+
+    assert pending.status == "clarification_required"
+    assert pending.reason_code == "missing_required_parameter"
+    assert pending.clarification is not None
+    assert pending.clarification.answer_modes == ("add_detail", "cancel")
+    assert "窗宽" in pending.clarification.question
+    assert calls == {"stage1": 1, "stage2": 0, "apply": 0, "evaluation": 0}
+
+    result = api.continue_with_answer(
+        pending.run_id,
+        {
+            "kind": "add_detail",
+            "detail": "窗宽900毫米，窗高1800毫米，窗台高300毫米，墙起点起1000毫米处为窗中心。",
+        },
+        clarification_id=pending.clarification.clarification_id,
+        expected_state_version=pending.state_version,
+    )
+
+    assert result.status == "succeeded"
+    assert calls == {"stage1": 2, "stage2": 1, "apply": 1, "evaluation": 1}
+    state = api.store.load(result.run_id)
+    assert any(
+        transition.answer is not None
+        and transition.answer["kind"] == "add_detail"
+        for transition in state.transitions
+    )
+
+
 def test_multi_operation_failure_rolls_back_without_evaluation_or_success_path(tmp_path: Path) -> None:
     source = tmp_path / "caller.ifc"
     _source(source)

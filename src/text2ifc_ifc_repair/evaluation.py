@@ -4,6 +4,15 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
+from collections import Counter
+from concurrent.futures import (
+    ProcessPoolExecutor,
+    ThreadPoolExecutor,
+    TimeoutError as FuturesTimeoutError,
+)
+from dataclasses import dataclass
+import time
 from collections.abc import Iterable, Mapping
 from pathlib import Path
 from typing import Any
@@ -11,7 +20,14 @@ from typing import Any
 import ifcopenshell
 from jsonschema import Draft202012Validator
 
-from .compare import normalized_model_diff
+from .compare import ComparisonIntegrityError, normalized_model_diff
+from .ifc_validation import (
+    DIAGNOSTIC_NORMALIZATION_VERSION,
+    VALIDATION_POLICY_VERSION,
+    compare_validation_models,
+    normalized_validation_result,
+)
+from .validation_cache import ValidationCache
 
 from .evaluation_models import (
     CheckResult,
@@ -44,13 +60,448 @@ _L1_EVIDENCE_VALUE_MAX_BYTES = 4096
 COMMON_L1_CHECK_IDS = (
     "l1.output.readable",
     "l1.output.schema",
+    "l1.output.validation",
     "l1.source.immutable",
     "l1.scope.created-roots",
     "l1.scope.modified-roots",
     "l1.scope.removed-roots",
     "l1.scope.relations",
 )
-_SCOPE_L1_CHECK_IDS = COMMON_L1_CHECK_IDS[3:]
+_SCOPE_L1_CHECK_IDS = COMMON_L1_CHECK_IDS[4:]
+
+
+@dataclass(frozen=True)
+class EvaluationExecutionPolicy:
+    mode: str = "accelerated"
+    deadline_seconds: float = 180.0
+    max_workers: int = 2
+    rss_limit_bytes: int = 4 * 1024**3
+    cache_mode: str = "read_write"
+
+    def __post_init__(self) -> None:
+        if self.mode not in {"sequential", "accelerated"}:
+            raise ValueError("EVALUATION_EXECUTION_MODE_INVALID")
+        if self.deadline_seconds <= 0:
+            raise ValueError("EVALUATION_DEADLINE_INVALID")
+        if not 1 <= self.max_workers <= 2:
+            raise ValueError("EVALUATION_WORKER_COUNT_INVALID")
+        if self.rss_limit_bytes <= 0:
+            raise ValueError("EVALUATION_RSS_LIMIT_INVALID")
+
+
+def execute_validation_and_diff(
+    *,
+    damaged_ifc_path: Path | str,
+    repaired_ifc_path: Path | str,
+    cache_dir: Path | str,
+    policy: EvaluationExecutionPolicy,
+    validation_worker: Any | None = None,
+    diff_worker: Any | None = None,
+    rss_reader: Any | None = None,
+) -> dict[str, Any]:
+    """Schedule unchanged validation and full diff with a fail-closed deadline."""
+
+    started = time.monotonic()
+    if (
+        policy.mode == "accelerated"
+        and validation_worker is None
+        and diff_worker is None
+    ):
+        return _execute_default_accelerated(
+            damaged_path=Path(damaged_ifc_path),
+            repaired_path=Path(repaired_ifc_path),
+            cache_dir=Path(cache_dir),
+            policy=policy,
+            started=started,
+            rss_reader=rss_reader or _process_tree_rss,
+        )
+    validate = validation_worker or _cached_validation_worker
+    compare = diff_worker or _path_diff_worker
+    rss = rss_reader or _process_tree_rss
+    tasks = {
+        "validation": lambda: validate(
+            Path(damaged_ifc_path),
+            Path(repaired_ifc_path),
+            Path(cache_dir),
+            policy.cache_mode,
+        ),
+        "diff": lambda: compare(
+            Path(damaged_ifc_path), Path(repaired_ifc_path)
+        ),
+    }
+    results: dict[str, Any] = {}
+    stage_seconds: dict[str, float] = {}
+
+    def timed(name: str):
+        stage_started = time.monotonic()
+        value = tasks[name]()
+        return value, time.monotonic() - stage_started
+
+    try:
+        if policy.mode == "sequential":
+            for name in ("validation", "diff"):
+                remaining = policy.deadline_seconds - (
+                    time.monotonic() - started
+                )
+                if remaining <= 0:
+                    raise TimeoutError("EVALUATION_DEADLINE_EXCEEDED")
+                value, elapsed = timed(name)
+                results[name] = value
+                stage_seconds[name] = elapsed
+        else:
+            executor = ThreadPoolExecutor(
+                max_workers=min(policy.max_workers, 2),
+                thread_name_prefix="ifc-evaluation",
+            )
+            try:
+                futures = {
+                    name: executor.submit(timed, name) for name in tasks
+                }
+                for name in ("validation", "diff"):
+                    remaining = policy.deadline_seconds - (
+                        time.monotonic() - started
+                    )
+                    if remaining <= 0:
+                        raise TimeoutError("EVALUATION_DEADLINE_EXCEEDED")
+                    try:
+                        value, elapsed = futures[name].result(timeout=remaining)
+                    except FuturesTimeoutError as error:
+                        raise TimeoutError(
+                            "EVALUATION_DEADLINE_EXCEEDED"
+                        ) from error
+                    results[name] = value
+                    stage_seconds[name] = elapsed
+            finally:
+                executor.shutdown(wait=False, cancel_futures=True)
+    except Exception as error:
+        return {
+            "status": "failed",
+            "reason_code": (
+                str(error)
+                if isinstance(error, TimeoutError)
+                else "EVALUATION_WORKER_FAILED"
+            ),
+            "error": f"{type(error).__name__}:{error}"[:1000],
+            "results": {},
+            "metrics": {
+                "mode": policy.mode,
+                "worker_count": (
+                    1 if policy.mode == "sequential" else policy.max_workers
+                ),
+                "wall_seconds": time.monotonic() - started,
+                "stage_seconds": stage_seconds,
+                "peak_rss_bytes": rss(),
+            },
+        }
+    if set(results) != {"validation", "diff"} or any(
+        value is None for value in results.values()
+    ):
+        return {
+            "status": "failed",
+            "reason_code": "EVALUATION_WORKER_RESULT_MISSING",
+            "results": results,
+            "metrics": {},
+        }
+    peak_rss = int(rss())
+    if peak_rss > policy.rss_limit_bytes:
+        return {
+            "status": "failed",
+            "reason_code": "EVALUATION_RSS_LIMIT_EXCEEDED",
+            "results": {},
+            "metrics": {
+                "peak_rss_bytes": peak_rss,
+                "rss_limit_bytes": policy.rss_limit_bytes,
+            },
+        }
+    return {
+        "status": "passed",
+        "reason_code": None,
+        "results": results,
+        "metrics": {
+            "mode": policy.mode,
+            "worker_count": (
+                1 if policy.mode == "sequential" else policy.max_workers
+            ),
+            "wall_seconds": time.monotonic() - started,
+            "stage_seconds": stage_seconds,
+            "peak_rss_bytes": peak_rss,
+            "rss_limit_bytes": policy.rss_limit_bytes,
+        },
+    }
+
+
+def _execute_default_accelerated(
+    *,
+    damaged_path: Path,
+    repaired_path: Path,
+    cache_dir: Path,
+    policy: EvaluationExecutionPolicy,
+    started: float,
+    rss_reader: Any,
+) -> dict[str, Any]:
+    """Validate both files concurrently, then run the dependent full diff."""
+
+    executor = ProcessPoolExecutor(max_workers=2)
+    futures = {
+        role: executor.submit(
+            _cached_single_validation,
+            path,
+            cache_dir,
+            policy.cache_mode,
+        )
+        for role, path in (
+            ("baseline", damaged_path),
+            ("candidate", repaired_path),
+        )
+    }
+    normalized: dict[str, dict[str, Any]] = {}
+    cache_evidence: dict[str, Any] = {}
+    worker_peak_rss: dict[str, int] = {}
+    stage_seconds: dict[str, float] = {}
+    try:
+        validation_started = time.monotonic()
+        for role in ("baseline", "candidate"):
+            remaining = policy.deadline_seconds - (time.monotonic() - started)
+            if remaining <= 0:
+                raise TimeoutError("EVALUATION_DEADLINE_EXCEEDED")
+            try:
+                result, evidence, worker_peak = futures[role].result(
+                    timeout=remaining
+                )
+            except FuturesTimeoutError as error:
+                raise TimeoutError("EVALUATION_DEADLINE_EXCEEDED") from error
+            normalized[role] = result
+            cache_evidence[role] = evidence
+            worker_peak_rss[role] = worker_peak
+        stage_seconds["validation"] = time.monotonic() - validation_started
+    except Exception as error:
+        executor.shutdown(wait=False, cancel_futures=True)
+        return _execution_failure(
+            error, policy=policy, started=started, rss_reader=rss_reader
+        )
+    executor.shutdown(wait=False, cancel_futures=True)
+    remaining = policy.deadline_seconds - (time.monotonic() - started)
+    if remaining <= 0:
+        return _execution_failure(
+            TimeoutError("EVALUATION_DEADLINE_EXCEEDED"),
+            policy=policy,
+            started=started,
+            rss_reader=rss_reader,
+        )
+    try:
+        baseline = ifcopenshell.open(str(damaged_path))
+        candidate = ifcopenshell.open(str(repaired_path))
+        validation = compare_validation_models(
+            baseline,
+            candidate,
+            baseline_result=normalized["baseline"],
+            candidate_result=normalized["candidate"],
+        )
+        diff_started = time.monotonic()
+        diff = normalized_model_diff(baseline, candidate)
+        stage_seconds["diff"] = time.monotonic() - diff_started
+    except Exception as error:
+        return _execution_failure(
+            error, policy=policy, started=started, rss_reader=rss_reader
+        )
+    wall = time.monotonic() - started
+    if wall > policy.deadline_seconds:
+        return _execution_failure(
+            TimeoutError("EVALUATION_DEADLINE_EXCEEDED"),
+            policy=policy,
+            started=started,
+            rss_reader=rss_reader,
+        )
+    peak_rss = max(
+        int(rss_reader()),
+        _current_process_peak_rss() + sum(worker_peak_rss.values()),
+    )
+    if peak_rss > policy.rss_limit_bytes:
+        return {
+            "status": "failed",
+            "reason_code": "EVALUATION_RSS_LIMIT_EXCEEDED",
+            "results": {},
+            "metrics": {
+                "wall_seconds": wall,
+                "peak_rss_bytes": peak_rss,
+                "rss_limit_bytes": policy.rss_limit_bytes,
+            },
+        }
+    return {
+        "status": "passed",
+        "reason_code": None,
+        "results": {
+            "validation": {
+                "comparison": validation,
+                "cache": cache_evidence,
+            },
+            "diff": diff,
+        },
+        "metrics": {
+            "mode": "accelerated",
+            "worker_count": 2,
+            "wall_seconds": wall,
+            "stage_seconds": stage_seconds,
+            "peak_rss_bytes": peak_rss,
+            "rss_limit_bytes": policy.rss_limit_bytes,
+            "worker_peak_rss_bytes": worker_peak_rss,
+        },
+    }
+
+
+def _execution_failure(
+    error: Exception,
+    *,
+    policy: EvaluationExecutionPolicy,
+    started: float,
+    rss_reader: Any,
+) -> dict[str, Any]:
+    return {
+        "status": "failed",
+        "reason_code": (
+            str(error)
+            if isinstance(error, TimeoutError)
+            else "EVALUATION_WORKER_FAILED"
+        ),
+        "error": f"{type(error).__name__}:{error}"[:1000],
+        "results": {},
+        "metrics": {
+            "mode": policy.mode,
+            "worker_count": policy.max_workers,
+            "wall_seconds": time.monotonic() - started,
+            "peak_rss_bytes": int(rss_reader()),
+        },
+    }
+
+
+def _cached_validation_worker(
+    damaged_path: Path,
+    repaired_path: Path,
+    cache_dir: Path,
+    cache_mode: str,
+) -> dict[str, Any]:
+    cache = ValidationCache(cache_dir, mode=cache_mode)
+    evidence: dict[str, Any] = {}
+    normalized: dict[str, dict[str, Any]] = {}
+    for role, path in (
+        ("baseline", damaged_path),
+        ("candidate", repaired_path),
+    ):
+        key = cache.build_key(
+            path,
+            validation_policy_version=VALIDATION_POLICY_VERSION,
+            diagnostic_normalization_version=DIAGNOSTIC_NORMALIZATION_VERSION,
+        )
+        result, cache_evidence = cache.get_or_compute(
+            key,
+            lambda path=path: normalized_validation_result(
+                ifcopenshell.open(str(path))
+            ),
+        )
+        normalized[role] = result
+        evidence[role] = cache_evidence
+    baseline = ifcopenshell.open(str(damaged_path))
+    candidate = ifcopenshell.open(str(repaired_path))
+    return {
+        "comparison": compare_validation_models(
+            baseline,
+            candidate,
+            baseline_result=normalized["baseline"],
+            candidate_result=normalized["candidate"],
+        ),
+        "cache": evidence,
+    }
+
+
+def _cached_single_validation(
+    path: Path,
+    cache_dir: Path,
+    cache_mode: str,
+) -> tuple[dict[str, Any], dict[str, Any], int]:
+    cache = ValidationCache(cache_dir, mode=cache_mode)
+    key = cache.build_key(
+        path,
+        validation_policy_version=VALIDATION_POLICY_VERSION,
+        diagnostic_normalization_version=DIAGNOSTIC_NORMALIZATION_VERSION,
+    )
+    result, evidence = cache.get_or_compute(
+        key,
+        lambda: normalized_validation_result(ifcopenshell.open(str(path))),
+    )
+    return result, evidence, _current_process_peak_rss()
+
+
+def _path_diff_worker(
+    damaged_path: Path,
+    repaired_path: Path,
+) -> dict[str, Any]:
+    return normalized_model_diff(
+        ifcopenshell.open(str(damaged_path)),
+        ifcopenshell.open(str(repaired_path)),
+    )
+
+
+def _process_tree_rss() -> int:
+    try:
+        import psutil
+
+        process = psutil.Process()
+        return int(
+            process.memory_info().rss
+            + sum(
+                child.memory_info().rss
+                for child in process.children(recursive=True)
+                if child.is_running()
+            )
+        )
+    except Exception:
+        return _current_process_peak_rss()
+
+
+def _current_process_peak_rss() -> int:
+    try:
+        if os.name == "nt":
+            import ctypes
+            from ctypes import wintypes
+
+            class ProcessMemoryCounters(ctypes.Structure):
+                _fields_ = [
+                    ("cb", wintypes.DWORD),
+                    ("PageFaultCount", wintypes.DWORD),
+                    ("PeakWorkingSetSize", ctypes.c_size_t),
+                    ("WorkingSetSize", ctypes.c_size_t),
+                    ("QuotaPeakPagedPoolUsage", ctypes.c_size_t),
+                    ("QuotaPagedPoolUsage", ctypes.c_size_t),
+                    ("QuotaPeakNonPagedPoolUsage", ctypes.c_size_t),
+                    ("QuotaNonPagedPoolUsage", ctypes.c_size_t),
+                    ("PagefileUsage", ctypes.c_size_t),
+                    ("PeakPagefileUsage", ctypes.c_size_t),
+                ]
+
+            counters = ProcessMemoryCounters()
+            counters.cb = ctypes.sizeof(counters)
+            get_current_process = ctypes.windll.kernel32.GetCurrentProcess
+            get_current_process.restype = wintypes.HANDLE
+            process = get_current_process()
+            get_memory = ctypes.windll.psapi.GetProcessMemoryInfo
+            get_memory.argtypes = [
+                wintypes.HANDLE,
+                ctypes.POINTER(ProcessMemoryCounters),
+                wintypes.DWORD,
+            ]
+            get_memory.restype = wintypes.BOOL
+            if get_memory(
+                process, ctypes.byref(counters), counters.cb
+            ):
+                return int(counters.PeakWorkingSetSize)
+        else:
+            import resource
+
+            value = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
+            return int(value * 1024)
+    except Exception:
+        pass
+    return 0
 
 
 def evaluate_independent_l1(
@@ -60,6 +511,8 @@ def evaluate_independent_l1(
     changeset: Mapping[str, Any],
     application_result: Mapping[str, Any],
     registry: Any,
+    execution_policy: EvaluationExecutionPolicy | None = None,
+    validation_cache_dir: Path | str | None = None,
 ) -> LevelResult:
     """Evaluate actual reopened IFC effects against policy and declared intent."""
 
@@ -126,7 +579,110 @@ def evaluate_independent_l1(
     if not schema_matches:
         return _l1_level(checks, readable=True)
 
-    actual_changes = normalized_model_diff(before_model, after_model)
+    validation = None
+    actual_changes = None
+    execution_metrics = None
+    if execution_policy is not None:
+        accelerated = execute_validation_and_diff(
+            damaged_ifc_path=damaged_path,
+            repaired_ifc_path=repaired_path,
+            cache_dir=(
+                Path(validation_cache_dir)
+                if validation_cache_dir is not None
+                else repaired_path.parent / ".validation-cache"
+            ),
+            policy=execution_policy,
+        )
+        execution_metrics = accelerated.get("metrics")
+        if accelerated["status"] == "passed":
+            validation = accelerated["results"]["validation"]["comparison"]
+            validation = {
+                **validation,
+                "cache": accelerated["results"]["validation"]["cache"],
+            }
+            actual_changes = accelerated["results"]["diff"]
+        else:
+            checks.append(
+                _l1_check(
+                    check_id="l1.output.validation",
+                    policy_id=_COMMON_L1_POLICY_ID,
+                    status=EvaluationStatus.NOT_EVALUABLE,
+                    reason="Accelerated validation/diff must complete within resource bounds.",
+                    expected={"status": "passed"},
+                    actual=accelerated,
+                    source_kind="evaluation_execution",
+                    source_ref="damaged-to-repaired",
+                )
+            )
+            checks.extend(
+                _comparison_not_evaluable_checks(
+                    ComparisonIntegrityError(
+                        f"{accelerated['reason_code']}: accelerated evaluation failed"
+                    )
+                )
+            )
+            return _l1_level(checks, readable=True)
+    try:
+        if validation is None:
+            validation = compare_validation_models(before_model, after_model)
+    except Exception as error:
+        checks.append(
+            _l1_check(
+                check_id="l1.output.validation",
+                policy_id=_COMMON_L1_POLICY_ID,
+                status=EvaluationStatus.NOT_EVALUABLE,
+                reason=(
+                    "IfcOpenShell validation must complete before the repaired "
+                    "IFC can be published."
+                ),
+                expected={"new_diagnostic_count": 0},
+                actual={
+                    "error_type": type(error).__name__,
+                    "error": str(error)[:512],
+                },
+                source_kind="ifcopenshell_validation",
+                source_ref="damaged-to-repaired",
+            )
+        )
+    else:
+        checks.append(
+            _l1_check(
+                check_id="l1.output.validation",
+                policy_id=_COMMON_L1_POLICY_ID,
+                status=(
+                    EvaluationStatus.PASSED
+                    if validation["status"] == "passed"
+                    else EvaluationStatus.FAILED
+                ),
+                reason=(
+                    "The repaired IFC must not introduce IfcOpenShell "
+                    "validation diagnostics beyond the damaged baseline."
+                ),
+                expected={"new_diagnostic_count": 0},
+                actual={
+                    **_bounded_validation_evidence(validation),
+                    **(
+                        {"execution": execution_metrics}
+                        if execution_metrics is not None
+                        else {}
+                    ),
+                    **(
+                        {"cache": validation["cache"]}
+                        if "cache" in validation
+                        else {}
+                    ),
+                },
+                source_kind="ifcopenshell_validation",
+                source_ref="damaged-to-repaired",
+            )
+        )
+
+    try:
+        if actual_changes is None:
+            actual_changes = normalized_model_diff(before_model, after_model)
+    except ComparisonIntegrityError as error:
+        checks.extend(_comparison_not_evaluable_checks(error))
+        return _l1_level(checks, readable=True)
     operation_contexts = _operation_l1_contexts(
         before_model=before_model,
         after_model=after_model,
@@ -143,9 +699,47 @@ def evaluate_independent_l1(
             after_model=after_model,
         )
     )
+    measurement_id_counts = Counter(
+        str(check_id)
+        for context in operation_contexts
+        for check_id in context["report"].get("l1_checks", {})
+    )
+    duplicate_measurement_ids = frozenset(
+        check_id
+        for check_id, count in measurement_id_counts.items()
+        if count > 1
+    )
     for context in operation_contexts:
-        checks.extend(_operation_measurement_checks(context))
+        checks.extend(
+            _operation_measurement_checks(
+                context,
+                qualified_check_ids=duplicate_measurement_ids,
+            )
+        )
     return _l1_level(checks, readable=True)
+
+
+def _comparison_not_evaluable_checks(
+    error: ComparisonIntegrityError,
+) -> list[CheckResult]:
+    error_text = str(error)
+    error_code = error_text.split(":", 1)[0] or type(error).__name__
+    return [
+        _l1_check(
+            check_id=check_id,
+            policy_id=_COMMON_L1_POLICY_ID,
+            status=EvaluationStatus.NOT_EVALUABLE,
+            reason=(
+                "The blocking global preservation comparator did not produce "
+                "complete trustworthy evidence."
+            ),
+            expected="complete fail-closed global preservation evidence",
+            actual={"error_code": error_code, "error": error_text},
+            source_kind="ifc_actual_diff",
+            source_ref="reopened-ifc",
+        )
+        for check_id in _SCOPE_L1_CHECK_IDS
+    ]
 
 
 def _open_ifc(path: Path) -> tuple[Any | None, str | None]:
@@ -160,6 +754,38 @@ def _path_sha256(path: Path) -> str | None:
         return "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest()
     except OSError:
         return None
+
+
+def _bounded_validation_evidence(
+    validation: Mapping[str, Any],
+) -> dict[str, Any]:
+    return {
+        "schema_version": validation.get("schema_version"),
+        "status": validation.get("status"),
+        "baseline_status": validation.get("baseline_status"),
+        "baseline_diagnostic_count": validation.get(
+            "baseline_diagnostic_count"
+        ),
+        "candidate_diagnostic_count": validation.get(
+            "candidate_diagnostic_count"
+        ),
+        "new_diagnostic_count": validation.get("new_diagnostic_count"),
+        "resolved_diagnostic_count": validation.get(
+            "resolved_diagnostic_count"
+        ),
+        "new_diagnostics": [
+            {
+                "signature": item.get("signature"),
+                "attribute": item.get("attribute"),
+                "instance_class": item.get("instance_class"),
+                "instance_identity": item.get("instance_identity"),
+            }
+            for item in tuple(validation.get("new_diagnostics", ()))[:8]
+        ],
+        "new_diagnostics_truncated": validation.get(
+            "new_diagnostics_truncated"
+        ),
+    }
 
 
 def _source_immutability_check(
@@ -205,6 +831,8 @@ def _operation_l1_contexts(
             before_model=before_model,
             after_model=after_model,
             application=changes,
+            batch_operations=tuple(changeset.get("operations", ())),
+            batch_applications=applications,
             role_mapping=role_ids,
         )
         binding_errors = _application_role_binding_errors(
@@ -363,6 +991,20 @@ def _authorize_actual_change(
         context for context in operation_contexts if global_id in context["id_roles"]
     ]
     if len(candidates) != 1:
+        if fact["is_relationship"] and candidates:
+            return _authorize_shared_relation(
+                fact=fact,
+                contexts=candidates,
+                changeset=changeset,
+                before_model=before_model,
+                after_model=after_model,
+            )
+        if fact["change_kind"] == "modified" and candidates:
+            return _authorize_shared_modified_root(
+                fact=fact,
+                contexts=candidates,
+                changeset=changeset,
+            )
         return False, "actual effect has no unique Applicator role binding"
     context = candidates[0]
     if context["binding_errors"]:
@@ -388,6 +1030,107 @@ def _authorize_actual_change(
             after_model=after_model,
         )
     return True, "authorized by Registry policy and ChangeSet operation scope"
+
+
+def _authorize_shared_modified_root(
+    *,
+    fact: Mapping[str, Any],
+    contexts: list[dict[str, Any]],
+    changeset: Mapping[str, Any],
+) -> tuple[bool, str]:
+    declared_targets = {
+        str(item) for item in changeset.get("scope", {}).get("target_ids", ())
+    }
+    roles = set()
+    for context in contexts:
+        if context["binding_errors"]:
+            return False, "; ".join(context["binding_errors"])
+        if not context["target_ids"] or not context["target_ids"].issubset(
+            declared_targets
+        ):
+            return False, "operation target is outside the ChangeSet declared scope"
+        context_roles = sorted(set(context["id_roles"][str(fact["global_id"])]))
+        if len(context_roles) != 1:
+            return False, "Applicator assigned multiple roles to one actual effect"
+        role = context_roles[0]
+        roles.add(role)
+        allowed = context["authorization"].get("modified", {})
+        if allowed.get(role) != fact["ifc_class"]:
+            return False, "Registry policy does not authorize this role/class/effect"
+    if len(roles) != 1:
+        return False, "shared modified root has inconsistent operation roles"
+    return True, "authorized shared modified root across declared operations"
+
+
+def _authorize_shared_relation(
+    *,
+    fact: Mapping[str, Any],
+    contexts: list[dict[str, Any]],
+    changeset: Mapping[str, Any],
+    before_model: Any,
+    after_model: Any,
+) -> tuple[bool, str]:
+    """Authorize one IFC relationship changed by multiple declared operations."""
+
+    declared_targets = {
+        str(item) for item in changeset.get("scope", {}).get("target_ids", ())
+    }
+    specifications = []
+    roles = set()
+    for context in contexts:
+        if context["binding_errors"]:
+            return False, "; ".join(context["binding_errors"])
+        if not context["target_ids"] or not context["target_ids"].issubset(
+            declared_targets
+        ):
+            return False, "operation target is outside the ChangeSet declared scope"
+        context_roles = sorted(set(context["id_roles"][str(fact["global_id"])]))
+        if len(context_roles) != 1:
+            return False, "Applicator assigned multiple roles to one actual effect"
+        role = context_roles[0]
+        roles.add(role)
+        allowed = context["authorization"].get(str(fact["change_kind"]), {})
+        if allowed.get(role) != fact["ifc_class"]:
+            return False, "Registry policy does not authorize this role/class/effect"
+        specification = context["authorization"].get("relations", {}).get(role)
+        if not specification or specification.get("ifc_class") != fact["ifc_class"]:
+            return False, "Registry policy does not authorize the relationship role"
+        specifications.append((context, specification))
+    if len(roles) != 1:
+        return False, "shared relationship is assigned inconsistent operation roles"
+
+    model = before_model if fact["change_kind"] == "removed" else after_model
+    try:
+        relation = model.by_guid(str(fact["global_id"]))
+    except RuntimeError:
+        return False, "actual relationship cannot be reopened by GlobalId"
+
+    expected_added: set[str] = set()
+    for context, specification in specifications:
+        for attribute, endpoint_role in specification.get("endpoints", {}).items():
+            endpoint = getattr(relation, attribute, None)
+            actual_id = str(getattr(endpoint, "GlobalId", ""))
+            expected_id = (
+                next(iter(context["target_ids"]), "")
+                if endpoint_role == "target"
+                else context["role_ids"].get(endpoint_role, "")
+            )
+            if not expected_id or actual_id != expected_id:
+                return False, f"relationship endpoint {attribute} is outside declared roles"
+        for role_name in specification.get("added_endpoint_roles", ()):
+            expected_id = context["role_ids"].get(role_name, "")
+            if expected_id:
+                expected_added.add(expected_id)
+
+    after_ids = _direct_root_ids(relation)
+    if fact["change_kind"] == "modified":
+        before_relation = before_model.by_guid(str(fact["global_id"]))
+        actual_added = after_ids - _direct_root_ids(before_relation)
+        if actual_added != expected_added:
+            return False, "shared relationship endpoint delta exceeds declared operations"
+    elif fact["change_kind"] == "created" and not expected_added.issubset(after_ids):
+        return False, "created relationship omits declared generated roles"
+    return True, "authorized shared relationship delta across declared operations"
 
 
 def _authorize_relation(
@@ -515,15 +1258,22 @@ def _compact_snapshot(snapshot: Any) -> dict[str, Any] | None:
     }
 
 
-def _operation_measurement_checks(context: Mapping[str, Any]) -> list[CheckResult]:
+def _operation_measurement_checks(
+    context: Mapping[str, Any],
+    *,
+    qualified_check_ids: frozenset[str] = frozenset(),
+) -> list[CheckResult]:
     authorization = context["authorization"]
     policy_id = str(authorization.get("policy_id", "l1.operation"))
     operation_id = str(context["operation"].get("operation_id", "operation"))
     checks = []
     for check_id, measurement in sorted(context["report"].get("l1_checks", {}).items()):
+        effective_check_id = str(check_id)
+        if effective_check_id in qualified_check_ids:
+            effective_check_id = f"{effective_check_id}.{operation_id}"
         checks.append(
             _l1_check(
-                check_id=str(check_id),
+                check_id=effective_check_id,
                 policy_id=policy_id,
                 status=EvaluationStatus(str(measurement["status"])),
                 reason=str(measurement["reason"]),

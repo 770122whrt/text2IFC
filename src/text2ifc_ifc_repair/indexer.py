@@ -60,7 +60,7 @@ def build_ifc_index(
     duplicate_ids = {
         global_id for global_id, count in Counter(global_ids).items() if global_id and count > 1
     }
-    type_entities = _referenced_types(entities)
+    type_entities = _indexed_types(model, entities)
     type_global_ids = [str(getattr(entity, "GlobalId", "") or "") for entity in type_entities]
     duplicate_type_ids = {
         global_id
@@ -207,11 +207,14 @@ def _registered_entities(model: Any, registry: IndexAdapterRegistry) -> list[Any
     return [unique[step_id] for step_id in sorted(unique)]
 
 
-def _referenced_types(entities: list[Any]) -> list[Any]:
+def _indexed_types(model: Any, entities: list[Any]) -> list[Any]:
     unique: dict[int, Any] = {}
     for entity in entities:
         type_entity = _element_type(entity)
         if type_entity is not None:
+            unique[type_entity.id()] = type_entity
+    for ifc_class in ("IfcWallType", "IfcWindowStyle", "IfcDoorStyle"):
+        for type_entity in model.by_type(ifc_class):
             unique[type_entity.id()] = type_entity
     return [unique[step_id] for step_id in sorted(unique)]
 

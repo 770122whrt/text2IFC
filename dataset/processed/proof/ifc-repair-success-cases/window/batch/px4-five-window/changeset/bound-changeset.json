@@ -1,0 +1,1790 @@
+{
+  "base_model_fingerprint": "sha256:0630c9bd509bde693c3c3368bcea9e041a3af8d5d1c34d6f797c0f41fb7d0e6c",
+  "binding_status": "bound",
+  "changeset_id": "changeset-px4-1-five-window-001-offline-001",
+  "evidence_refs": [
+    "resolved:/operations/window-repair-001/context/candidate_targets/0",
+    "resolved:/operations/window-repair-002/context/candidate_targets/0",
+    "resolved:/operations/window-repair-003/context/candidate_targets/0",
+    "resolved:/operations/window-repair-004/context/candidate_targets/0",
+    "resolved:/operations/window-repair-005/context/candidate_targets/0"
+  ],
+  "operations": [
+    {
+      "evidence_refs": [
+        "resolved:/operations/window-repair-001/context/candidate_targets/0"
+      ],
+      "operation_id": "window-repair-001",
+      "operation_type": "add_window_with_opening_to_wall",
+      "parameters": {
+        "opening": {
+          "height_mm": 1775.0,
+          "sill_height_mm": 345.0,
+          "width_mm": 839.999999999999
+        },
+        "position": {
+          "center_offset_mm": 758.104857,
+          "reference": "wall_local_start"
+        },
+        "window": {
+          "fit_opening": true
+        }
+      },
+      "semantic_assignments": [
+        {
+          "applicability": "required",
+          "authoring_action": "set_attribute",
+          "derivation": null,
+          "fact_key": "attribute:OverallHeight",
+          "operation_id": "window-repair-001",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "operation:window-repair-001",
+            "registered-window-parameter-policy:0.2"
+          ],
+          "scope": "window_occurrence",
+          "source_fact_key": "attribute:OverallHeight",
+          "source_kind": "deterministic_derived",
+          "source_ref": "resolved:/operations/window-repair-001/parameters/opening",
+          "unit": null,
+          "value": 1775.0,
+          "value_type": "IfcPositiveLengthMeasure"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "set_attribute",
+          "derivation": null,
+          "fact_key": "attribute:OverallWidth",
+          "operation_id": "window-repair-001",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "operation:window-repair-001",
+            "registered-window-parameter-policy:0.2"
+          ],
+          "scope": "window_occurrence",
+          "source_fact_key": "attribute:OverallWidth",
+          "source_kind": "deterministic_derived",
+          "source_ref": "resolved:/operations/window-repair-001/parameters/opening",
+          "unit": null,
+          "value": 839.999999999999,
+          "value_type": "IfcPositiveLengthMeasure"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "inherit_from_type",
+          "derivation": null,
+          "fact_key": "label:Name",
+          "operation_id": "window-repair-001",
+          "ownership": "type_inherited",
+          "provenance": [
+            "type-index:type:1F2LRTmm9Cq8Zp5i$s9Iwy",
+            "type_record:1F2LRTmm9Cq8Zp5i$s9Iwy",
+            "user_authorization:explicit_request_reference",
+            "operation:window-repair-001"
+          ],
+          "scope": "window_occurrence",
+          "source_fact_key": "label:Name",
+          "source_kind": "type_inherited",
+          "source_ref": "user-approved-prototype:1F2LRTmm9Cq8Zp5i$s9Iwy",
+          "unit": null,
+          "value": "840x1775",
+          "value_type": "IfcLabel"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "reuse_material",
+          "derivation": null,
+          "fact_key": "material:u-1cf9f76e181da84d",
+          "operation_id": "window-repair-001",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "IfcMaterialList:#744444",
+            "IfcRelAssociatesMaterial:#866088",
+            "authority-source:type-cohort:1F2LRTmm9Cq8Zp5i$s9Iwy",
+            "cohort-record:ifc:0k_GWa30P01vUfZ3YLomu6",
+            "cohort-type:1F2LRTmm9Cq8Zp5i$s9Iwy",
+            "current_ifc:#744441",
+            "operation:window-repair-001",
+            "relationship:guid:3pKPOpFZ9CPQjDn4ykH8O8",
+            "resource:step:744444",
+            "source_fact_key:material:u-1cf9f76e181da84d"
+          ],
+          "scope": "window_occurrence",
+          "source_fact_key": "material:u-1cf9f76e181da84d",
+          "source_kind": "authorized_type_cohort",
+          "source_ref": "resource:step:744444",
+          "unit": null,
+          "value": "玻璃",
+          "value_type": "IfcMaterial"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "reuse_material",
+          "derivation": null,
+          "fact_key": "material:u-c752b8d2b4c1bea9",
+          "operation_id": "window-repair-001",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "IfcMaterialList:#744444",
+            "IfcRelAssociatesMaterial:#866088",
+            "authority-source:type-cohort:1F2LRTmm9Cq8Zp5i$s9Iwy",
+            "cohort-record:ifc:0k_GWa30P01vUfZ3YLomu6",
+            "cohort-type:1F2LRTmm9Cq8Zp5i$s9Iwy",
+            "current_ifc:#744441",
+            "operation:window-repair-001",
+            "relationship:guid:3pKPOpFZ9CPQjDn4ykH8O8",
+            "resource:step:744444",
+            "source_fact_key:material:u-c752b8d2b4c1bea9"
+          ],
+          "scope": "window_occurrence",
+          "source_fact_key": "material:u-c752b8d2b4c1bea9",
+          "source_kind": "authorized_type_cohort",
+          "source_ref": "resource:step:744444",
+          "unit": null,
+          "value": "窗扇",
+          "value_type": "IfcMaterial"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "set_occurrence_pset",
+          "derivation": null,
+          "fact_key": "pset:Pset_QuantityTakeOff.Reference",
+          "operation_id": "window-repair-001",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "request-source:user_request",
+            "request-evidence:request:/operations/window-repair-001/properties/0",
+            "operation:window-repair-001",
+            "property-hash:sha256:e1ada64c8a29aec508a3d335ec5548b9502d3cc8e0c388796d1d5a671bc22bf6",
+            "source_fact_key:pset:Pset_QuantityTakeOff.Reference",
+            "confirmation:run:repair-02d5ba1635284e84bed5f1db43db044b/clarify-004"
+          ],
+          "scope": "window_occurrence",
+          "source_fact_key": "pset:Pset_QuantityTakeOff.Reference",
+          "source_kind": "explicit_value",
+          "source_ref": "request:/operations/window-repair-001/properties/0",
+          "unit": null,
+          "value": "840x1775",
+          "value_type": "IfcIdentifier"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "set_occurrence_pset",
+          "derivation": null,
+          "fact_key": "pset:Pset_WindowCommon.IsExternal",
+          "operation_id": "window-repair-001",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "request-source:user_request",
+            "request-evidence:request:/operations/window-repair-001/properties/1",
+            "operation:window-repair-001",
+            "property-hash:sha256:9245403034d960f0f55124713ba0ba2cebaaf819f27dafae32778d15e03dfff1",
+            "source_fact_key:pset:Pset_WindowCommon.IsExternal"
+          ],
+          "scope": "window_occurrence",
+          "source_fact_key": "pset:Pset_WindowCommon.IsExternal",
+          "source_kind": "explicit_value",
+          "source_ref": "request:/operations/window-repair-001/properties/1",
+          "unit": null,
+          "value": true,
+          "value_type": "IfcBoolean"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "set_occurrence_pset",
+          "derivation": null,
+          "fact_key": "pset:Pset_WindowCommon.Reference",
+          "operation_id": "window-repair-001",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "request-source:user_request",
+            "request-evidence:request:/operations/window-repair-001/properties/2",
+            "operation:window-repair-001",
+            "property-hash:sha256:4001e6a44412e9288490559e27f8f6edf23edaebc656a601760ade2bd4a952c1",
+            "source_fact_key:pset:Pset_WindowCommon.Reference"
+          ],
+          "scope": "window_occurrence",
+          "source_fact_key": "pset:Pset_WindowCommon.Reference",
+          "source_kind": "explicit_value",
+          "source_ref": "request:/operations/window-repair-001/properties/2",
+          "unit": null,
+          "value": "840x1775",
+          "value_type": "IfcIdentifier"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "set_occurrence_pset",
+          "derivation": null,
+          "fact_key": "pset:Pset_WindowCommon.ThermalTransmittance",
+          "operation_id": "window-repair-001",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "request-source:user_request",
+            "request-evidence:request:/operations/window-repair-001/properties/3",
+            "operation:window-repair-001",
+            "property-hash:sha256:db2f2bdf3994a12e9d464eda0795be5bc813ed19b4105efc742379188cf73de5",
+            "source_fact_key:pset:Pset_WindowCommon.ThermalTransmittance"
+          ],
+          "scope": "window_occurrence",
+          "source_fact_key": "pset:Pset_WindowCommon.ThermalTransmittance",
+          "source_kind": "explicit_value",
+          "source_ref": "request:/operations/window-repair-001/properties/3",
+          "unit": null,
+          "value": 3.6886,
+          "value_type": "IfcThermalTransmittanceMeasure"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "set_quantity",
+          "derivation": {
+            "formula": "width_mm * height_mm",
+            "input_digest": "sha256:bd81647e5a95bcc2338a0cff770130545c767a575c78574d6ade6d1f6fd24d8e"
+          },
+          "fact_key": "quantity:window-base.Area",
+          "operation_id": "window-repair-001",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "operation:window-repair-001",
+            "resolved-operation:window-repair-001"
+          ],
+          "scope": "window_occurrence",
+          "source_fact_key": "quantity:window-base.Area",
+          "source_kind": "deterministic_derived",
+          "source_ref": "operation:window-repair-001:parameters/opening",
+          "unit": "mm2",
+          "value": 1490999.9999999981,
+          "value_type": "IfcQuantityArea"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "set_quantity",
+          "derivation": {
+            "formula": "identity_mm",
+            "input_digest": "sha256:b5bcee45972023132d55cf6b50cbd1d46db47d87c66583fc1d5851d5ddb1c2e9"
+          },
+          "fact_key": "quantity:window-base.Height",
+          "operation_id": "window-repair-001",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "operation:window-repair-001",
+            "resolved-operation:window-repair-001"
+          ],
+          "scope": "window_occurrence",
+          "source_fact_key": "quantity:window-base.Height",
+          "source_kind": "deterministic_derived",
+          "source_ref": "operation:window-repair-001:parameters/opening",
+          "unit": "mm",
+          "value": 1775.0,
+          "value_type": "IfcQuantityLength"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "set_quantity",
+          "derivation": {
+            "formula": "identity_mm",
+            "input_digest": "sha256:55a35adeb8eb86f01d9decfb4b2fc4358885e28e7fe818a2b1029e32e18a67bc"
+          },
+          "fact_key": "quantity:window-base.Width",
+          "operation_id": "window-repair-001",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "operation:window-repair-001",
+            "resolved-operation:window-repair-001"
+          ],
+          "scope": "window_occurrence",
+          "source_fact_key": "quantity:window-base.Width",
+          "source_kind": "deterministic_derived",
+          "source_ref": "operation:window-repair-001:parameters/opening",
+          "unit": "mm",
+          "value": 839.999999999999,
+          "value_type": "IfcQuantityLength"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "bind_relationship",
+          "derivation": null,
+          "fact_key": "relationship:host",
+          "operation_id": "window-repair-001",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "resolved-host-target:03SCVysybE5QR$e8dtXVfQ",
+            "operation:window-repair-001"
+          ],
+          "scope": "window_occurrence",
+          "source_fact_key": "relationship:host",
+          "source_kind": "deterministic_derived",
+          "source_ref": "current-target:03SCVysybE5QR$e8dtXVfQ",
+          "unit": null,
+          "value": "03SCVysybE5QR$e8dtXVfQ",
+          "value_type": "IfcWallStandardCase"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "bind_relationship",
+          "derivation": null,
+          "fact_key": "relationship:storey",
+          "operation_id": "window-repair-001",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "resolved-host-target:03SCVysybE5QR$e8dtXVfQ",
+            "operation:window-repair-001"
+          ],
+          "scope": "window_occurrence",
+          "source_fact_key": "relationship:storey",
+          "source_kind": "deterministic_derived",
+          "source_ref": "current-target-storey:2IgkfNfkr4KOw1lcX_rAoA",
+          "unit": null,
+          "value": "2IgkfNfkr4KOw1lcX_rAoA",
+          "value_type": "IfcBuildingStorey"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "inherit_from_type",
+          "derivation": null,
+          "fact_key": "relationship:type",
+          "operation_id": "window-repair-001",
+          "ownership": "type_inherited",
+          "provenance": [
+            "user_authorization:explicit_request_reference",
+            "operation:window-repair-001"
+          ],
+          "scope": "window_occurrence",
+          "source_fact_key": "relationship:type",
+          "source_kind": "type_inherited",
+          "source_ref": "user-approved-prototype:1F2LRTmm9Cq8Zp5i$s9Iwy",
+          "unit": null,
+          "value": "1F2LRTmm9Cq8Zp5i$s9Iwy",
+          "value_type": "IfcWindowStyle"
+        }
+      ],
+      "semantic_manifest": {
+        "manifest_id": "semantic-manifest-8f974e69dee04a141205ba64",
+        "policy_id": "window.add-with-opening.l2",
+        "policy_version": "0.2"
+      },
+      "target": {
+        "wall_global_id": "03SCVysybE5QR$e8dtXVfQ"
+      }
+    },
+    {
+      "evidence_refs": [
+        "resolved:/operations/window-repair-002/context/candidate_targets/0"
+      ],
+      "operation_id": "window-repair-002",
+      "operation_type": "add_window_with_opening_to_wall",
+      "parameters": {
+        "opening": {
+          "height_mm": 369.999999999999,
+          "sill_height_mm": 1939.760488,
+          "width_mm": 370.0
+        },
+        "position": {
+          "center_offset_mm": 605.0,
+          "reference": "wall_local_start"
+        },
+        "window": {
+          "fit_opening": true
+        }
+      },
+      "semantic_assignments": [
+        {
+          "applicability": "required",
+          "authoring_action": "set_attribute",
+          "derivation": null,
+          "fact_key": "attribute:OverallHeight",
+          "operation_id": "window-repair-002",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "operation:window-repair-002",
+            "registered-window-parameter-policy:0.2"
+          ],
+          "scope": "window_occurrence",
+          "source_fact_key": "attribute:OverallHeight",
+          "source_kind": "deterministic_derived",
+          "source_ref": "resolved:/operations/window-repair-002/parameters/opening",
+          "unit": null,
+          "value": 369.999999999999,
+          "value_type": "IfcPositiveLengthMeasure"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "set_attribute",
+          "derivation": null,
+          "fact_key": "attribute:OverallWidth",
+          "operation_id": "window-repair-002",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "operation:window-repair-002",
+            "registered-window-parameter-policy:0.2"
+          ],
+          "scope": "window_occurrence",
+          "source_fact_key": "attribute:OverallWidth",
+          "source_kind": "deterministic_derived",
+          "source_ref": "resolved:/operations/window-repair-002/parameters/opening",
+          "unit": null,
+          "value": 370.0,
+          "value_type": "IfcPositiveLengthMeasure"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "inherit_from_type",
+          "derivation": null,
+          "fact_key": "label:Name",
+          "operation_id": "window-repair-002",
+          "ownership": "type_inherited",
+          "provenance": [
+            "type-index:type:0k_GWa30P01vUfZ2sLomsk",
+            "type_record:0k_GWa30P01vUfZ2sLomsk",
+            "user_authorization:explicit_request_reference",
+            "operation:window-repair-002"
+          ],
+          "scope": "window_occurrence",
+          "source_fact_key": "label:Name",
+          "source_kind": "type_inherited",
+          "source_ref": "user-approved-prototype:0k_GWa30P01vUfZ2sLomsk",
+          "unit": null,
+          "value": "370x370",
+          "value_type": "IfcLabel"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "reuse_material",
+          "derivation": null,
+          "fact_key": "material:u-1cf9f76e181da84d",
+          "operation_id": "window-repair-002",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "IfcMaterialList:#744634",
+            "IfcRelAssociatesMaterial:#866100",
+            "authority-source:type-cohort:0k_GWa30P01vUfZ2sLomsk",
+            "cohort-record:ifc:0k_GWa30P01vUfZ3YLomm4",
+            "cohort-type:0k_GWa30P01vUfZ2sLomsk",
+            "current_ifc:#744631",
+            "operation:window-repair-002",
+            "relationship:guid:28kCkLJy9F2e5Ew3PlplKn",
+            "resource:step:744634",
+            "source_fact_key:material:u-1cf9f76e181da84d"
+          ],
+          "scope": "window_occurrence",
+          "source_fact_key": "material:u-1cf9f76e181da84d",
+          "source_kind": "authorized_type_cohort",
+          "source_ref": "resource:step:744634",
+          "unit": null,
+          "value": "玻璃",
+          "value_type": "IfcMaterial"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "reuse_material",
+          "derivation": null,
+          "fact_key": "material:u-c752b8d2b4c1bea9",
+          "operation_id": "window-repair-002",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "IfcMaterialList:#744634",
+            "IfcRelAssociatesMaterial:#866100",
+            "authority-source:type-cohort:0k_GWa30P01vUfZ2sLomsk",
+            "cohort-record:ifc:0k_GWa30P01vUfZ3YLomm4",
+            "cohort-type:0k_GWa30P01vUfZ2sLomsk",
+            "current_ifc:#744631",
+            "operation:window-repair-002",
+            "relationship:guid:28kCkLJy9F2e5Ew3PlplKn",
+            "resource:step:744634",
+            "source_fact_key:material:u-c752b8d2b4c1bea9"
+          ],
+          "scope": "window_occurrence",
+          "source_fact_key": "material:u-c752b8d2b4c1bea9",
+          "source_kind": "authorized_type_cohort",
+          "source_ref": "resource:step:744634",
+          "unit": null,
+          "value": "窗扇",
+          "value_type": "IfcMaterial"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "set_occurrence_pset",
+          "derivation": null,
+          "fact_key": "pset:Pset_QuantityTakeOff.Reference",
+          "operation_id": "window-repair-002",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "request-source:user_request",
+            "request-evidence:request:/operations/window-repair-002/properties/0",
+            "operation:window-repair-002",
+            "property-hash:sha256:1ea73f94a1b21894bf60d03252d56f8c3666a952b30da9376745b94915e1b7f3",
+            "source_fact_key:pset:Pset_QuantityTakeOff.Reference",
+            "confirmation:run:repair-02d5ba1635284e84bed5f1db43db044b/clarify-004"
+          ],
+          "scope": "window_occurrence",
+          "source_fact_key": "pset:Pset_QuantityTakeOff.Reference",
+          "source_kind": "explicit_value",
+          "source_ref": "request:/operations/window-repair-002/properties/0",
+          "unit": null,
+          "value": "370x370",
+          "value_type": "IfcIdentifier"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "set_occurrence_pset",
+          "derivation": null,
+          "fact_key": "pset:Pset_WindowCommon.IsExternal",
+          "operation_id": "window-repair-002",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "request-source:user_request",
+            "request-evidence:request:/operations/window-repair-002/properties/1",
+            "operation:window-repair-002",
+            "property-hash:sha256:dcd8f619b9e63dd28d489d3de632b7e94fb33760c8974374578fa1c30510515e",
+            "source_fact_key:pset:Pset_WindowCommon.IsExternal"
+          ],
+          "scope": "window_occurrence",
+          "source_fact_key": "pset:Pset_WindowCommon.IsExternal",
+          "source_kind": "explicit_value",
+          "source_ref": "request:/operations/window-repair-002/properties/1",
+          "unit": null,
+          "value": true,
+          "value_type": "IfcBoolean"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "set_occurrence_pset",
+          "derivation": null,
+          "fact_key": "pset:Pset_WindowCommon.Reference",
+          "operation_id": "window-repair-002",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "request-source:user_request",
+            "request-evidence:request:/operations/window-repair-002/properties/2",
+            "operation:window-repair-002",
+            "property-hash:sha256:05a68df339e67b151d017228d6874badc7010bf139157d93e99ea907b01f16cf",
+            "source_fact_key:pset:Pset_WindowCommon.Reference"
+          ],
+          "scope": "window_occurrence",
+          "source_fact_key": "pset:Pset_WindowCommon.Reference",
+          "source_kind": "explicit_value",
+          "source_ref": "request:/operations/window-repair-002/properties/2",
+          "unit": null,
+          "value": "370x370",
+          "value_type": "IfcIdentifier"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "set_occurrence_pset",
+          "derivation": null,
+          "fact_key": "pset:Pset_WindowCommon.ThermalTransmittance",
+          "operation_id": "window-repair-002",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "request-source:user_request",
+            "request-evidence:request:/operations/window-repair-002/properties/3",
+            "operation:window-repair-002",
+            "property-hash:sha256:f5421c2ee4c234bc7fdd67497aaf86d8679a3edff0f902962531e085c50d930c",
+            "source_fact_key:pset:Pset_WindowCommon.ThermalTransmittance"
+          ],
+          "scope": "window_occurrence",
+          "source_fact_key": "pset:Pset_WindowCommon.ThermalTransmittance",
+          "source_kind": "explicit_value",
+          "source_ref": "request:/operations/window-repair-002/properties/3",
+          "unit": null,
+          "value": 3.6886,
+          "value_type": "IfcThermalTransmittanceMeasure"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "set_quantity",
+          "derivation": {
+            "formula": "width_mm * height_mm",
+            "input_digest": "sha256:da33956399e247cbfd1c54def4ed780b4522417c7f0a32ce41dab1c718ca8aa2"
+          },
+          "fact_key": "quantity:window-base.Area",
+          "operation_id": "window-repair-002",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "operation:window-repair-002",
+            "resolved-operation:window-repair-002"
+          ],
+          "scope": "window_occurrence",
+          "source_fact_key": "quantity:window-base.Area",
+          "source_kind": "deterministic_derived",
+          "source_ref": "operation:window-repair-002:parameters/opening",
+          "unit": "mm2",
+          "value": 136899.99999999962,
+          "value_type": "IfcQuantityArea"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "set_quantity",
+          "derivation": {
+            "formula": "identity_mm",
+            "input_digest": "sha256:f178e8d7a019b5e78ceb251e12021826d77e7fa5bf53303a98646d9582c81aac"
+          },
+          "fact_key": "quantity:window-base.Height",
+          "operation_id": "window-repair-002",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "operation:window-repair-002",
+            "resolved-operation:window-repair-002"
+          ],
+          "scope": "window_occurrence",
+          "source_fact_key": "quantity:window-base.Height",
+          "source_kind": "deterministic_derived",
+          "source_ref": "operation:window-repair-002:parameters/opening",
+          "unit": "mm",
+          "value": 369.999999999999,
+          "value_type": "IfcQuantityLength"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "set_quantity",
+          "derivation": {
+            "formula": "identity_mm",
+            "input_digest": "sha256:14034f36e59dc5db0c7f8b89830b76d05e1ef9b316894d961a9b3e28c11be246"
+          },
+          "fact_key": "quantity:window-base.Width",
+          "operation_id": "window-repair-002",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "operation:window-repair-002",
+            "resolved-operation:window-repair-002"
+          ],
+          "scope": "window_occurrence",
+          "source_fact_key": "quantity:window-base.Width",
+          "source_kind": "deterministic_derived",
+          "source_ref": "operation:window-repair-002:parameters/opening",
+          "unit": "mm",
+          "value": 370.0,
+          "value_type": "IfcQuantityLength"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "bind_relationship",
+          "derivation": null,
+          "fact_key": "relationship:host",
+          "operation_id": "window-repair-002",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "resolved-host-target:1aUf$RNz1A_AvssKHMHdxj",
+            "operation:window-repair-002"
+          ],
+          "scope": "window_occurrence",
+          "source_fact_key": "relationship:host",
+          "source_kind": "deterministic_derived",
+          "source_ref": "current-target:1aUf$RNz1A_AvssKHMHdxj",
+          "unit": null,
+          "value": "1aUf$RNz1A_AvssKHMHdxj",
+          "value_type": "IfcWallStandardCase"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "bind_relationship",
+          "derivation": null,
+          "fact_key": "relationship:storey",
+          "operation_id": "window-repair-002",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "resolved-host-target:1aUf$RNz1A_AvssKHMHdxj",
+            "operation:window-repair-002"
+          ],
+          "scope": "window_occurrence",
+          "source_fact_key": "relationship:storey",
+          "source_kind": "deterministic_derived",
+          "source_ref": "current-target-storey:2IgkfNfkr4KOw1lcX_rAoA",
+          "unit": null,
+          "value": "2IgkfNfkr4KOw1lcX_rAoA",
+          "value_type": "IfcBuildingStorey"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "inherit_from_type",
+          "derivation": null,
+          "fact_key": "relationship:type",
+          "operation_id": "window-repair-002",
+          "ownership": "type_inherited",
+          "provenance": [
+            "user_authorization:explicit_request_reference",
+            "operation:window-repair-002"
+          ],
+          "scope": "window_occurrence",
+          "source_fact_key": "relationship:type",
+          "source_kind": "type_inherited",
+          "source_ref": "user-approved-prototype:0k_GWa30P01vUfZ2sLomsk",
+          "unit": null,
+          "value": "0k_GWa30P01vUfZ2sLomsk",
+          "value_type": "IfcWindowStyle"
+        }
+      ],
+      "semantic_manifest": {
+        "manifest_id": "semantic-manifest-8ef8ae0241b1586f4c163c62",
+        "policy_id": "window.add-with-opening.l2",
+        "policy_version": "0.2"
+      },
+      "target": {
+        "wall_global_id": "1aUf$RNz1A_AvssKHMHdxj"
+      }
+    },
+    {
+      "evidence_refs": [
+        "resolved:/operations/window-repair-003/context/candidate_targets/0"
+      ],
+      "operation_id": "window-repair-003",
+      "operation_type": "add_window_with_opening_to_wall",
+      "parameters": {
+        "opening": {
+          "height_mm": 369.999999999999,
+          "sill_height_mm": 1339.760488,
+          "width_mm": 370.0
+        },
+        "position": {
+          "center_offset_mm": 605.0,
+          "reference": "wall_local_start"
+        },
+        "window": {
+          "fit_opening": true
+        }
+      },
+      "semantic_assignments": [
+        {
+          "applicability": "required",
+          "authoring_action": "set_attribute",
+          "derivation": null,
+          "fact_key": "attribute:OverallHeight",
+          "operation_id": "window-repair-003",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "operation:window-repair-003",
+            "registered-window-parameter-policy:0.2"
+          ],
+          "scope": "window_occurrence",
+          "source_fact_key": "attribute:OverallHeight",
+          "source_kind": "deterministic_derived",
+          "source_ref": "resolved:/operations/window-repair-003/parameters/opening",
+          "unit": null,
+          "value": 369.999999999999,
+          "value_type": "IfcPositiveLengthMeasure"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "set_attribute",
+          "derivation": null,
+          "fact_key": "attribute:OverallWidth",
+          "operation_id": "window-repair-003",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "operation:window-repair-003",
+            "registered-window-parameter-policy:0.2"
+          ],
+          "scope": "window_occurrence",
+          "source_fact_key": "attribute:OverallWidth",
+          "source_kind": "deterministic_derived",
+          "source_ref": "resolved:/operations/window-repair-003/parameters/opening",
+          "unit": null,
+          "value": 370.0,
+          "value_type": "IfcPositiveLengthMeasure"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "inherit_from_type",
+          "derivation": null,
+          "fact_key": "label:Name",
+          "operation_id": "window-repair-003",
+          "ownership": "type_inherited",
+          "provenance": [
+            "type-index:type:0k_GWa30P01vUfZ2sLomsk",
+            "type_record:0k_GWa30P01vUfZ2sLomsk",
+            "user_authorization:explicit_request_reference",
+            "operation:window-repair-003"
+          ],
+          "scope": "window_occurrence",
+          "source_fact_key": "label:Name",
+          "source_kind": "type_inherited",
+          "source_ref": "user-approved-prototype:0k_GWa30P01vUfZ2sLomsk",
+          "unit": null,
+          "value": "370x370",
+          "value_type": "IfcLabel"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "reuse_material",
+          "derivation": null,
+          "fact_key": "material:u-1cf9f76e181da84d",
+          "operation_id": "window-repair-003",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "IfcMaterialList:#744634",
+            "IfcRelAssociatesMaterial:#866100",
+            "authority-source:type-cohort:0k_GWa30P01vUfZ2sLomsk",
+            "cohort-record:ifc:0k_GWa30P01vUfZ3YLomm4",
+            "cohort-type:0k_GWa30P01vUfZ2sLomsk",
+            "current_ifc:#744631",
+            "operation:window-repair-003",
+            "relationship:guid:28kCkLJy9F2e5Ew3PlplKn",
+            "resource:step:744634",
+            "source_fact_key:material:u-1cf9f76e181da84d"
+          ],
+          "scope": "window_occurrence",
+          "source_fact_key": "material:u-1cf9f76e181da84d",
+          "source_kind": "authorized_type_cohort",
+          "source_ref": "resource:step:744634",
+          "unit": null,
+          "value": "玻璃",
+          "value_type": "IfcMaterial"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "reuse_material",
+          "derivation": null,
+          "fact_key": "material:u-c752b8d2b4c1bea9",
+          "operation_id": "window-repair-003",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "IfcMaterialList:#744634",
+            "IfcRelAssociatesMaterial:#866100",
+            "authority-source:type-cohort:0k_GWa30P01vUfZ2sLomsk",
+            "cohort-record:ifc:0k_GWa30P01vUfZ3YLomm4",
+            "cohort-type:0k_GWa30P01vUfZ2sLomsk",
+            "current_ifc:#744631",
+            "operation:window-repair-003",
+            "relationship:guid:28kCkLJy9F2e5Ew3PlplKn",
+            "resource:step:744634",
+            "source_fact_key:material:u-c752b8d2b4c1bea9"
+          ],
+          "scope": "window_occurrence",
+          "source_fact_key": "material:u-c752b8d2b4c1bea9",
+          "source_kind": "authorized_type_cohort",
+          "source_ref": "resource:step:744634",
+          "unit": null,
+          "value": "窗扇",
+          "value_type": "IfcMaterial"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "set_occurrence_pset",
+          "derivation": null,
+          "fact_key": "pset:Pset_QuantityTakeOff.Reference",
+          "operation_id": "window-repair-003",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "request-source:user_request",
+            "request-evidence:request:/operations/window-repair-003/properties/0",
+            "operation:window-repair-003",
+            "property-hash:sha256:913a7d14a8f2107c6a69f37a03446f17b1cde6c2f3bd11ee2274998590eea3ae",
+            "source_fact_key:pset:Pset_QuantityTakeOff.Reference",
+            "confirmation:run:repair-02d5ba1635284e84bed5f1db43db044b/clarify-004"
+          ],
+          "scope": "window_occurrence",
+          "source_fact_key": "pset:Pset_QuantityTakeOff.Reference",
+          "source_kind": "explicit_value",
+          "source_ref": "request:/operations/window-repair-003/properties/0",
+          "unit": null,
+          "value": "370x370",
+          "value_type": "IfcIdentifier"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "set_occurrence_pset",
+          "derivation": null,
+          "fact_key": "pset:Pset_WindowCommon.IsExternal",
+          "operation_id": "window-repair-003",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "request-source:user_request",
+            "request-evidence:request:/operations/window-repair-003/properties/1",
+            "operation:window-repair-003",
+            "property-hash:sha256:785bfccfbb46c2cc9ed50f0df4942515f41fd374c06db2e64deb55ad4c5ab825",
+            "source_fact_key:pset:Pset_WindowCommon.IsExternal"
+          ],
+          "scope": "window_occurrence",
+          "source_fact_key": "pset:Pset_WindowCommon.IsExternal",
+          "source_kind": "explicit_value",
+          "source_ref": "request:/operations/window-repair-003/properties/1",
+          "unit": null,
+          "value": true,
+          "value_type": "IfcBoolean"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "set_occurrence_pset",
+          "derivation": null,
+          "fact_key": "pset:Pset_WindowCommon.Reference",
+          "operation_id": "window-repair-003",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "request-source:user_request",
+            "request-evidence:request:/operations/window-repair-003/properties/2",
+            "operation:window-repair-003",
+            "property-hash:sha256:8f80e1d8deb27e3b52ac23367e4b902dc746d155dd497fb75ac5bacda8ba87a7",
+            "source_fact_key:pset:Pset_WindowCommon.Reference"
+          ],
+          "scope": "window_occurrence",
+          "source_fact_key": "pset:Pset_WindowCommon.Reference",
+          "source_kind": "explicit_value",
+          "source_ref": "request:/operations/window-repair-003/properties/2",
+          "unit": null,
+          "value": "370x370",
+          "value_type": "IfcIdentifier"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "set_occurrence_pset",
+          "derivation": null,
+          "fact_key": "pset:Pset_WindowCommon.ThermalTransmittance",
+          "operation_id": "window-repair-003",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "request-source:user_request",
+            "request-evidence:request:/operations/window-repair-003/properties/3",
+            "operation:window-repair-003",
+            "property-hash:sha256:f9fb73f24c3e14d1fd22a2dd3c8274989ff09d9a27ea4e6d21f1e5c824f024c5",
+            "source_fact_key:pset:Pset_WindowCommon.ThermalTransmittance"
+          ],
+          "scope": "window_occurrence",
+          "source_fact_key": "pset:Pset_WindowCommon.ThermalTransmittance",
+          "source_kind": "explicit_value",
+          "source_ref": "request:/operations/window-repair-003/properties/3",
+          "unit": null,
+          "value": 3.6886,
+          "value_type": "IfcThermalTransmittanceMeasure"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "set_quantity",
+          "derivation": {
+            "formula": "width_mm * height_mm",
+            "input_digest": "sha256:da33956399e247cbfd1c54def4ed780b4522417c7f0a32ce41dab1c718ca8aa2"
+          },
+          "fact_key": "quantity:window-base.Area",
+          "operation_id": "window-repair-003",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "operation:window-repair-003",
+            "resolved-operation:window-repair-003"
+          ],
+          "scope": "window_occurrence",
+          "source_fact_key": "quantity:window-base.Area",
+          "source_kind": "deterministic_derived",
+          "source_ref": "operation:window-repair-003:parameters/opening",
+          "unit": "mm2",
+          "value": 136899.99999999962,
+          "value_type": "IfcQuantityArea"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "set_quantity",
+          "derivation": {
+            "formula": "identity_mm",
+            "input_digest": "sha256:f178e8d7a019b5e78ceb251e12021826d77e7fa5bf53303a98646d9582c81aac"
+          },
+          "fact_key": "quantity:window-base.Height",
+          "operation_id": "window-repair-003",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "operation:window-repair-003",
+            "resolved-operation:window-repair-003"
+          ],
+          "scope": "window_occurrence",
+          "source_fact_key": "quantity:window-base.Height",
+          "source_kind": "deterministic_derived",
+          "source_ref": "operation:window-repair-003:parameters/opening",
+          "unit": "mm",
+          "value": 369.999999999999,
+          "value_type": "IfcQuantityLength"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "set_quantity",
+          "derivation": {
+            "formula": "identity_mm",
+            "input_digest": "sha256:14034f36e59dc5db0c7f8b89830b76d05e1ef9b316894d961a9b3e28c11be246"
+          },
+          "fact_key": "quantity:window-base.Width",
+          "operation_id": "window-repair-003",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "operation:window-repair-003",
+            "resolved-operation:window-repair-003"
+          ],
+          "scope": "window_occurrence",
+          "source_fact_key": "quantity:window-base.Width",
+          "source_kind": "deterministic_derived",
+          "source_ref": "operation:window-repair-003:parameters/opening",
+          "unit": "mm",
+          "value": 370.0,
+          "value_type": "IfcQuantityLength"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "bind_relationship",
+          "derivation": null,
+          "fact_key": "relationship:host",
+          "operation_id": "window-repair-003",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "resolved-host-target:1aUf$RNz1A_AvssKHMHdxj",
+            "operation:window-repair-003"
+          ],
+          "scope": "window_occurrence",
+          "source_fact_key": "relationship:host",
+          "source_kind": "deterministic_derived",
+          "source_ref": "current-target:1aUf$RNz1A_AvssKHMHdxj",
+          "unit": null,
+          "value": "1aUf$RNz1A_AvssKHMHdxj",
+          "value_type": "IfcWallStandardCase"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "bind_relationship",
+          "derivation": null,
+          "fact_key": "relationship:storey",
+          "operation_id": "window-repair-003",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "resolved-host-target:1aUf$RNz1A_AvssKHMHdxj",
+            "operation:window-repair-003"
+          ],
+          "scope": "window_occurrence",
+          "source_fact_key": "relationship:storey",
+          "source_kind": "deterministic_derived",
+          "source_ref": "current-target-storey:2IgkfNfkr4KOw1lcX_rAoA",
+          "unit": null,
+          "value": "2IgkfNfkr4KOw1lcX_rAoA",
+          "value_type": "IfcBuildingStorey"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "inherit_from_type",
+          "derivation": null,
+          "fact_key": "relationship:type",
+          "operation_id": "window-repair-003",
+          "ownership": "type_inherited",
+          "provenance": [
+            "user_authorization:explicit_request_reference",
+            "operation:window-repair-003"
+          ],
+          "scope": "window_occurrence",
+          "source_fact_key": "relationship:type",
+          "source_kind": "type_inherited",
+          "source_ref": "user-approved-prototype:0k_GWa30P01vUfZ2sLomsk",
+          "unit": null,
+          "value": "0k_GWa30P01vUfZ2sLomsk",
+          "value_type": "IfcWindowStyle"
+        }
+      ],
+      "semantic_manifest": {
+        "manifest_id": "semantic-manifest-18d04cd5b45ab7aef2e72b8f",
+        "policy_id": "window.add-with-opening.l2",
+        "policy_version": "0.2"
+      },
+      "target": {
+        "wall_global_id": "1aUf$RNz1A_AvssKHMHdxj"
+      }
+    },
+    {
+      "evidence_refs": [
+        "resolved:/operations/window-repair-004/context/candidate_targets/0"
+      ],
+      "operation_id": "window-repair-004",
+      "operation_type": "add_window_with_opening_to_wall",
+      "parameters": {
+        "opening": {
+          "height_mm": 2360.0,
+          "sill_height_mm": 280.0,
+          "width_mm": 3600.0
+        },
+        "position": {
+          "center_offset_mm": 2118.788678,
+          "reference": "wall_local_start"
+        },
+        "window": {
+          "fit_opening": true
+        }
+      },
+      "semantic_assignments": [
+        {
+          "applicability": "required",
+          "authoring_action": "set_attribute",
+          "derivation": null,
+          "fact_key": "attribute:OverallHeight",
+          "operation_id": "window-repair-004",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "operation:window-repair-004",
+            "registered-window-parameter-policy:0.2"
+          ],
+          "scope": "window_occurrence",
+          "source_fact_key": "attribute:OverallHeight",
+          "source_kind": "deterministic_derived",
+          "source_ref": "resolved:/operations/window-repair-004/parameters/opening",
+          "unit": null,
+          "value": 2360.0,
+          "value_type": "IfcPositiveLengthMeasure"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "set_attribute",
+          "derivation": null,
+          "fact_key": "attribute:OverallWidth",
+          "operation_id": "window-repair-004",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "operation:window-repair-004",
+            "registered-window-parameter-policy:0.2"
+          ],
+          "scope": "window_occurrence",
+          "source_fact_key": "attribute:OverallWidth",
+          "source_kind": "deterministic_derived",
+          "source_ref": "resolved:/operations/window-repair-004/parameters/opening",
+          "unit": null,
+          "value": 3600.0,
+          "value_type": "IfcPositiveLengthMeasure"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "inherit_from_type",
+          "derivation": null,
+          "fact_key": "label:Name",
+          "operation_id": "window-repair-004",
+          "ownership": "type_inherited",
+          "provenance": [
+            "type-index:type:0k_GWa30P01vUfZ2sLp9En",
+            "type_record:0k_GWa30P01vUfZ2sLp9En",
+            "user_authorization:explicit_request_reference",
+            "operation:window-repair-004"
+          ],
+          "scope": "window_occurrence",
+          "source_fact_key": "label:Name",
+          "source_kind": "type_inherited",
+          "source_ref": "user-approved-prototype:0k_GWa30P01vUfZ2sLp9En",
+          "unit": null,
+          "value": "DSC2415",
+          "value_type": "IfcLabel"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "reuse_material",
+          "derivation": null,
+          "fact_key": "material:u-1cf9f76e181da84d",
+          "operation_id": "window-repair-004",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "IfcMaterial:#43468",
+            "IfcRelAssociatesMaterial:#866103",
+            "authority-source:type-cohort:0k_GWa30P01vUfZ2sLp9En",
+            "cohort-record:ifc:0k_GWa30P01vUfZ3YLpCou",
+            "cohort-type:0k_GWa30P01vUfZ2sLp9En",
+            "current_ifc:#744842",
+            "operation:window-repair-004",
+            "relationship:guid:390I5vgu1FBRU58KFqp4rh",
+            "resource:step:43468",
+            "source_fact_key:material:u-1cf9f76e181da84d"
+          ],
+          "scope": "window_occurrence",
+          "source_fact_key": "material:u-1cf9f76e181da84d",
+          "source_kind": "authorized_type_cohort",
+          "source_ref": "resource:step:43468",
+          "unit": null,
+          "value": "玻璃",
+          "value_type": "IfcMaterial"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "set_occurrence_pset",
+          "derivation": null,
+          "fact_key": "pset:Pset_QuantityTakeOff.Reference",
+          "operation_id": "window-repair-004",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "request-source:user_request",
+            "request-evidence:request:/operations/window-repair-004/properties/0",
+            "operation:window-repair-004",
+            "property-hash:sha256:c5b2b7bbe78000d2b8128288deca73b2f9fbb538b8b0cd4e194b96b22cdc4523",
+            "source_fact_key:pset:Pset_QuantityTakeOff.Reference",
+            "confirmation:run:repair-02d5ba1635284e84bed5f1db43db044b/clarify-004"
+          ],
+          "scope": "window_occurrence",
+          "source_fact_key": "pset:Pset_QuantityTakeOff.Reference",
+          "source_kind": "explicit_value",
+          "source_ref": "request:/operations/window-repair-004/properties/0",
+          "unit": null,
+          "value": "DSC2415",
+          "value_type": "IfcIdentifier"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "set_occurrence_pset",
+          "derivation": null,
+          "fact_key": "pset:Pset_WindowCommon.IsExternal",
+          "operation_id": "window-repair-004",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "request-source:user_request",
+            "request-evidence:request:/operations/window-repair-004/properties/1",
+            "operation:window-repair-004",
+            "property-hash:sha256:1566216d0261930f3da016169cbd3ea791911a017ce0e8a9c8321a87f2f3eb82",
+            "source_fact_key:pset:Pset_WindowCommon.IsExternal"
+          ],
+          "scope": "window_occurrence",
+          "source_fact_key": "pset:Pset_WindowCommon.IsExternal",
+          "source_kind": "explicit_value",
+          "source_ref": "request:/operations/window-repair-004/properties/1",
+          "unit": null,
+          "value": true,
+          "value_type": "IfcBoolean"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "set_occurrence_pset",
+          "derivation": null,
+          "fact_key": "pset:Pset_WindowCommon.Reference",
+          "operation_id": "window-repair-004",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "request-source:user_request",
+            "request-evidence:request:/operations/window-repair-004/properties/2",
+            "operation:window-repair-004",
+            "property-hash:sha256:b4727adadb43d1d1fb52090d1ed9198d3625388d0b62bebe0d0c3d30d1796c24",
+            "source_fact_key:pset:Pset_WindowCommon.Reference"
+          ],
+          "scope": "window_occurrence",
+          "source_fact_key": "pset:Pset_WindowCommon.Reference",
+          "source_kind": "explicit_value",
+          "source_ref": "request:/operations/window-repair-004/properties/2",
+          "unit": null,
+          "value": "DSC2415",
+          "value_type": "IfcIdentifier"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "set_quantity",
+          "derivation": {
+            "formula": "width_mm * height_mm",
+            "input_digest": "sha256:e74798e21d2c6bd2604fb9b9d0d49bcfc5d866b09c7da746695d37639e2ae54d"
+          },
+          "fact_key": "quantity:window-base.Area",
+          "operation_id": "window-repair-004",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "operation:window-repair-004",
+            "resolved-operation:window-repair-004"
+          ],
+          "scope": "window_occurrence",
+          "source_fact_key": "quantity:window-base.Area",
+          "source_kind": "deterministic_derived",
+          "source_ref": "operation:window-repair-004:parameters/opening",
+          "unit": "mm2",
+          "value": 8496000.0,
+          "value_type": "IfcQuantityArea"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "set_quantity",
+          "derivation": {
+            "formula": "identity_mm",
+            "input_digest": "sha256:95f1888d8980c4fcd89c47b054e54b7e9d5b16ea24bfe5f3c6aedf2d7c01ccc3"
+          },
+          "fact_key": "quantity:window-base.Height",
+          "operation_id": "window-repair-004",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "operation:window-repair-004",
+            "resolved-operation:window-repair-004"
+          ],
+          "scope": "window_occurrence",
+          "source_fact_key": "quantity:window-base.Height",
+          "source_kind": "deterministic_derived",
+          "source_ref": "operation:window-repair-004:parameters/opening",
+          "unit": "mm",
+          "value": 2360.0,
+          "value_type": "IfcQuantityLength"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "set_quantity",
+          "derivation": {
+            "formula": "identity_mm",
+            "input_digest": "sha256:b40c84e0e3e41e474f162a0e43a0113a8bcbdc26a26313b06ad69345b253c2dc"
+          },
+          "fact_key": "quantity:window-base.Width",
+          "operation_id": "window-repair-004",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "operation:window-repair-004",
+            "resolved-operation:window-repair-004"
+          ],
+          "scope": "window_occurrence",
+          "source_fact_key": "quantity:window-base.Width",
+          "source_kind": "deterministic_derived",
+          "source_ref": "operation:window-repair-004:parameters/opening",
+          "unit": "mm",
+          "value": 3600.0,
+          "value_type": "IfcQuantityLength"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "bind_relationship",
+          "derivation": null,
+          "fact_key": "relationship:host",
+          "operation_id": "window-repair-004",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "resolved-host-target:03SCVysybE5QR$e8dtXS08",
+            "operation:window-repair-004"
+          ],
+          "scope": "window_occurrence",
+          "source_fact_key": "relationship:host",
+          "source_kind": "deterministic_derived",
+          "source_ref": "current-target:03SCVysybE5QR$e8dtXS08",
+          "unit": null,
+          "value": "03SCVysybE5QR$e8dtXS08",
+          "value_type": "IfcWallStandardCase"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "bind_relationship",
+          "derivation": null,
+          "fact_key": "relationship:storey",
+          "operation_id": "window-repair-004",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "resolved-host-target:03SCVysybE5QR$e8dtXS08",
+            "operation:window-repair-004"
+          ],
+          "scope": "window_occurrence",
+          "source_fact_key": "relationship:storey",
+          "source_kind": "deterministic_derived",
+          "source_ref": "current-target-storey:2IgkfNfkr4KOw1lcX_rAoA",
+          "unit": null,
+          "value": "2IgkfNfkr4KOw1lcX_rAoA",
+          "value_type": "IfcBuildingStorey"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "inherit_from_type",
+          "derivation": null,
+          "fact_key": "relationship:type",
+          "operation_id": "window-repair-004",
+          "ownership": "type_inherited",
+          "provenance": [
+            "user_authorization:explicit_request_reference",
+            "operation:window-repair-004"
+          ],
+          "scope": "window_occurrence",
+          "source_fact_key": "relationship:type",
+          "source_kind": "type_inherited",
+          "source_ref": "user-approved-prototype:0k_GWa30P01vUfZ2sLp9En",
+          "unit": null,
+          "value": "0k_GWa30P01vUfZ2sLp9En",
+          "value_type": "IfcWindowStyle"
+        }
+      ],
+      "semantic_manifest": {
+        "manifest_id": "semantic-manifest-4bc90d96a4bd085d876c7822",
+        "policy_id": "window.add-with-opening.l2",
+        "policy_version": "0.2"
+      },
+      "target": {
+        "wall_global_id": "03SCVysybE5QR$e8dtXS08"
+      }
+    },
+    {
+      "evidence_refs": [
+        "resolved:/operations/window-repair-005/context/candidate_targets/0"
+      ],
+      "operation_id": "window-repair-005",
+      "operation_type": "add_window_with_opening_to_wall",
+      "parameters": {
+        "opening": {
+          "height_mm": 1875.0,
+          "sill_height_mm": 412.716165,
+          "width_mm": 1100.0
+        },
+        "position": {
+          "center_offset_mm": 573.823529,
+          "reference": "wall_local_start"
+        },
+        "window": {
+          "fit_opening": true
+        }
+      },
+      "semantic_assignments": [
+        {
+          "applicability": "required",
+          "authoring_action": "set_attribute",
+          "derivation": null,
+          "fact_key": "attribute:OverallHeight",
+          "operation_id": "window-repair-005",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "operation:window-repair-005",
+            "registered-window-parameter-policy:0.2"
+          ],
+          "scope": "window_occurrence",
+          "source_fact_key": "attribute:OverallHeight",
+          "source_kind": "deterministic_derived",
+          "source_ref": "resolved:/operations/window-repair-005/parameters/opening",
+          "unit": null,
+          "value": 1875.0,
+          "value_type": "IfcPositiveLengthMeasure"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "set_attribute",
+          "derivation": null,
+          "fact_key": "attribute:OverallWidth",
+          "operation_id": "window-repair-005",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "operation:window-repair-005",
+            "registered-window-parameter-policy:0.2"
+          ],
+          "scope": "window_occurrence",
+          "source_fact_key": "attribute:OverallWidth",
+          "source_kind": "deterministic_derived",
+          "source_ref": "resolved:/operations/window-repair-005/parameters/opening",
+          "unit": null,
+          "value": 1100.0,
+          "value_type": "IfcPositiveLengthMeasure"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "inherit_from_type",
+          "derivation": null,
+          "fact_key": "label:Name",
+          "operation_id": "window-repair-005",
+          "ownership": "type_inherited",
+          "provenance": [
+            "type-index:type:380TAK7Qb3SBeU4fuddWHf",
+            "type_record:380TAK7Qb3SBeU4fuddWHf",
+            "user_authorization:explicit_request_reference",
+            "operation:window-repair-005"
+          ],
+          "scope": "window_occurrence",
+          "source_fact_key": "label:Name",
+          "source_kind": "type_inherited",
+          "source_ref": "user-approved-prototype:380TAK7Qb3SBeU4fuddWHf",
+          "unit": null,
+          "value": "1100x1875",
+          "value_type": "IfcLabel"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "reuse_material",
+          "derivation": null,
+          "fact_key": "material:u-1cf9f76e181da84d",
+          "operation_id": "window-repair-005",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "IfcMaterialList:#864142",
+            "IfcMaterialList:#864168",
+            "IfcMaterialList:#864194",
+            "IfcRelAssociatesMaterial:#866152",
+            "IfcRelAssociatesMaterial:#866155",
+            "IfcRelAssociatesMaterial:#866158",
+            "authority-source:type-cohort:380TAK7Qb3SBeU4fuddWHf",
+            "cohort-record:ifc:380TAK7Qb3SBeU4eiddW9c",
+            "cohort-record:ifc:380TAK7Qb3SBeU4eiddWJN",
+            "cohort-record:ifc:380TAK7Qb3SBeU4eiddWKB",
+            "cohort-type:380TAK7Qb3SBeU4fuddWHf",
+            "current_ifc:#864139",
+            "current_ifc:#864165",
+            "current_ifc:#864191",
+            "operation:window-repair-005",
+            "relationship:guid:05QZaO1zrC6fTApE$Fm5I_",
+            "relationship:guid:1BSJA3B_H5G9_HL8XxPVbZ",
+            "relationship:guid:24d6qKei929PPUBZUuwpaM",
+            "resource:step:864142",
+            "resource:step:864168",
+            "resource:step:864194",
+            "source_fact_key:material:u-1cf9f76e181da84d"
+          ],
+          "scope": "window_occurrence",
+          "source_fact_key": "material:u-1cf9f76e181da84d",
+          "source_kind": "authorized_type_cohort",
+          "source_ref": "resource:step:864142",
+          "unit": null,
+          "value": "玻璃",
+          "value_type": "IfcMaterial"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "reuse_material",
+          "derivation": null,
+          "fact_key": "material:u-c752b8d2b4c1bea9",
+          "operation_id": "window-repair-005",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "IfcMaterialList:#864142",
+            "IfcMaterialList:#864168",
+            "IfcMaterialList:#864194",
+            "IfcRelAssociatesMaterial:#866152",
+            "IfcRelAssociatesMaterial:#866155",
+            "IfcRelAssociatesMaterial:#866158",
+            "authority-source:type-cohort:380TAK7Qb3SBeU4fuddWHf",
+            "cohort-record:ifc:380TAK7Qb3SBeU4eiddW9c",
+            "cohort-record:ifc:380TAK7Qb3SBeU4eiddWJN",
+            "cohort-record:ifc:380TAK7Qb3SBeU4eiddWKB",
+            "cohort-type:380TAK7Qb3SBeU4fuddWHf",
+            "current_ifc:#864139",
+            "current_ifc:#864165",
+            "current_ifc:#864191",
+            "operation:window-repair-005",
+            "relationship:guid:05QZaO1zrC6fTApE$Fm5I_",
+            "relationship:guid:1BSJA3B_H5G9_HL8XxPVbZ",
+            "relationship:guid:24d6qKei929PPUBZUuwpaM",
+            "resource:step:864142",
+            "resource:step:864168",
+            "resource:step:864194",
+            "source_fact_key:material:u-c752b8d2b4c1bea9"
+          ],
+          "scope": "window_occurrence",
+          "source_fact_key": "material:u-c752b8d2b4c1bea9",
+          "source_kind": "authorized_type_cohort",
+          "source_ref": "resource:step:864142",
+          "unit": null,
+          "value": "窗扇",
+          "value_type": "IfcMaterial"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "set_occurrence_pset",
+          "derivation": null,
+          "fact_key": "pset:Pset_QuantityTakeOff.Reference",
+          "operation_id": "window-repair-005",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "request-source:user_request",
+            "request-evidence:request:/operations/window-repair-005/properties/0",
+            "operation:window-repair-005",
+            "property-hash:sha256:1a220b400106c7a92d577b569d4825c6bdc29db8f828aea76a2b7e03aa8325ee",
+            "source_fact_key:pset:Pset_QuantityTakeOff.Reference",
+            "confirmation:run:repair-02d5ba1635284e84bed5f1db43db044b/clarify-004"
+          ],
+          "scope": "window_occurrence",
+          "source_fact_key": "pset:Pset_QuantityTakeOff.Reference",
+          "source_kind": "explicit_value",
+          "source_ref": "request:/operations/window-repair-005/properties/0",
+          "unit": null,
+          "value": "1100x1875",
+          "value_type": "IfcIdentifier"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "set_occurrence_pset",
+          "derivation": null,
+          "fact_key": "pset:Pset_WindowCommon.IsExternal",
+          "operation_id": "window-repair-005",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "request-source:user_request",
+            "request-evidence:request:/operations/window-repair-005/properties/1",
+            "operation:window-repair-005",
+            "property-hash:sha256:752da9406cab2f1cabe5583e82fcf9d1a36f2de26b05125d2329938edd3f7b08",
+            "source_fact_key:pset:Pset_WindowCommon.IsExternal"
+          ],
+          "scope": "window_occurrence",
+          "source_fact_key": "pset:Pset_WindowCommon.IsExternal",
+          "source_kind": "explicit_value",
+          "source_ref": "request:/operations/window-repair-005/properties/1",
+          "unit": null,
+          "value": true,
+          "value_type": "IfcBoolean"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "set_occurrence_pset",
+          "derivation": null,
+          "fact_key": "pset:Pset_WindowCommon.Reference",
+          "operation_id": "window-repair-005",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "request-source:user_request",
+            "request-evidence:request:/operations/window-repair-005/properties/2",
+            "operation:window-repair-005",
+            "property-hash:sha256:1f46046aeaaa88b2b124458fa1d58d25ec2f6a223a1366d9ace11dd66718733d",
+            "source_fact_key:pset:Pset_WindowCommon.Reference"
+          ],
+          "scope": "window_occurrence",
+          "source_fact_key": "pset:Pset_WindowCommon.Reference",
+          "source_kind": "explicit_value",
+          "source_ref": "request:/operations/window-repair-005/properties/2",
+          "unit": null,
+          "value": "1100x1875",
+          "value_type": "IfcIdentifier"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "set_occurrence_pset",
+          "derivation": null,
+          "fact_key": "pset:Pset_WindowCommon.ThermalTransmittance",
+          "operation_id": "window-repair-005",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "request-source:user_request",
+            "request-evidence:request:/operations/window-repair-005/properties/3",
+            "operation:window-repair-005",
+            "property-hash:sha256:2118cf446fe7e29df2ad7f35959a4922dbb5c3e7585adf1a5136273df8409c48",
+            "source_fact_key:pset:Pset_WindowCommon.ThermalTransmittance"
+          ],
+          "scope": "window_occurrence",
+          "source_fact_key": "pset:Pset_WindowCommon.ThermalTransmittance",
+          "source_kind": "explicit_value",
+          "source_ref": "request:/operations/window-repair-005/properties/3",
+          "unit": null,
+          "value": 3.6886,
+          "value_type": "IfcThermalTransmittanceMeasure"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "set_quantity",
+          "derivation": {
+            "formula": "width_mm * height_mm",
+            "input_digest": "sha256:048679afff24b96c297a00d7b78ea8bd0444163203891fd3fcd5211afc16225d"
+          },
+          "fact_key": "quantity:window-base.Area",
+          "operation_id": "window-repair-005",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "operation:window-repair-005",
+            "resolved-operation:window-repair-005"
+          ],
+          "scope": "window_occurrence",
+          "source_fact_key": "quantity:window-base.Area",
+          "source_kind": "deterministic_derived",
+          "source_ref": "operation:window-repair-005:parameters/opening",
+          "unit": "mm2",
+          "value": 2062500.0,
+          "value_type": "IfcQuantityArea"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "set_quantity",
+          "derivation": {
+            "formula": "identity_mm",
+            "input_digest": "sha256:6923cfb7674566375e7897cc48abf1d7e98c4e52f2f4a0a38702af89ba1379c9"
+          },
+          "fact_key": "quantity:window-base.Height",
+          "operation_id": "window-repair-005",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "operation:window-repair-005",
+            "resolved-operation:window-repair-005"
+          ],
+          "scope": "window_occurrence",
+          "source_fact_key": "quantity:window-base.Height",
+          "source_kind": "deterministic_derived",
+          "source_ref": "operation:window-repair-005:parameters/opening",
+          "unit": "mm",
+          "value": 1875.0,
+          "value_type": "IfcQuantityLength"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "set_quantity",
+          "derivation": {
+            "formula": "identity_mm",
+            "input_digest": "sha256:3e2d7ad67e2fbf9f7caa49677069e000902a7798df912ed2a7b5c00027c41822"
+          },
+          "fact_key": "quantity:window-base.Width",
+          "operation_id": "window-repair-005",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "operation:window-repair-005",
+            "resolved-operation:window-repair-005"
+          ],
+          "scope": "window_occurrence",
+          "source_fact_key": "quantity:window-base.Width",
+          "source_kind": "deterministic_derived",
+          "source_ref": "operation:window-repair-005:parameters/opening",
+          "unit": "mm",
+          "value": 1100.0,
+          "value_type": "IfcQuantityLength"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "bind_relationship",
+          "derivation": null,
+          "fact_key": "relationship:host",
+          "operation_id": "window-repair-005",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "resolved-host-target:03SCVysybE5QR$e8dtXVs8",
+            "operation:window-repair-005"
+          ],
+          "scope": "window_occurrence",
+          "source_fact_key": "relationship:host",
+          "source_kind": "deterministic_derived",
+          "source_ref": "current-target:03SCVysybE5QR$e8dtXVs8",
+          "unit": null,
+          "value": "03SCVysybE5QR$e8dtXVs8",
+          "value_type": "IfcWallStandardCase"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "bind_relationship",
+          "derivation": null,
+          "fact_key": "relationship:storey",
+          "operation_id": "window-repair-005",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "resolved-host-target:03SCVysybE5QR$e8dtXVs8",
+            "operation:window-repair-005"
+          ],
+          "scope": "window_occurrence",
+          "source_fact_key": "relationship:storey",
+          "source_kind": "deterministic_derived",
+          "source_ref": "current-target-storey:2IgkfNfkr4KOw1lcX_rAoA",
+          "unit": null,
+          "value": "2IgkfNfkr4KOw1lcX_rAoA",
+          "value_type": "IfcBuildingStorey"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "inherit_from_type",
+          "derivation": null,
+          "fact_key": "relationship:type",
+          "operation_id": "window-repair-005",
+          "ownership": "type_inherited",
+          "provenance": [
+            "user_authorization:explicit_request_reference",
+            "operation:window-repair-005"
+          ],
+          "scope": "window_occurrence",
+          "source_fact_key": "relationship:type",
+          "source_kind": "type_inherited",
+          "source_ref": "user-approved-prototype:380TAK7Qb3SBeU4fuddWHf",
+          "unit": null,
+          "value": "380TAK7Qb3SBeU4fuddWHf",
+          "value_type": "IfcWindowStyle"
+        }
+      ],
+      "semantic_manifest": {
+        "manifest_id": "semantic-manifest-855c83546cd600e0d376e656",
+        "policy_id": "window.add-with-opening.l2",
+        "policy_version": "0.2"
+      },
+      "target": {
+        "wall_global_id": "03SCVysybE5QR$e8dtXVs8"
+      }
+    }
+  ],
+  "postconditions": [
+    "opening_voids_wall",
+    "window_fills_opening"
+  ],
+  "preconditions": [
+    "target_exists",
+    "opening_interval_available"
+  ],
+  "schema_version": "text2ifc/ifc-repair-changeset/0.3",
+  "scope": {
+    "forbidden_ids": [],
+    "target_ids": [
+      "03SCVysybE5QR$e8dtXVfQ",
+      "1aUf$RNz1A_AvssKHMHdxj",
+      "03SCVysybE5QR$e8dtXS08",
+      "03SCVysybE5QR$e8dtXVs8"
+    ]
+  },
+  "semantic_manifest_ref": "changeset/semantic-manifests.json",
+  "semantic_manifest_sha256": "sha256:0aedcf0d6f137a9656648d996ecfbfffae48d801ccd355ab7f1ea64e7a306050",
+  "source_request_hash": "sha256:3ef8696edc8f1d191af153dae3f09f44eb2eb1e78e8b6cdcd7dae91552639f71"
+}

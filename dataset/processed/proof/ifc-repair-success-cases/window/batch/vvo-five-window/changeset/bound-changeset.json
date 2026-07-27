@@ -1,0 +1,1477 @@
+{
+  "base_model_fingerprint": "sha256:7e0d474840ae2313fe4bdb56a903c8d04a2edca9f42c7591f212f8b7114aa904",
+  "binding_status": "bound",
+  "changeset_id": "cs_changeset_001",
+  "evidence_refs": [
+    "resolved:/operations/op1/context/candidate_targets/0",
+    "resolved:/operations/op2/context/candidate_targets/0",
+    "resolved:/operations/op3/context/candidate_targets/0",
+    "resolved:/operations/op4/context/candidate_targets/0",
+    "resolved:/operations/op5/context/candidate_targets/0"
+  ],
+  "operations": [
+    {
+      "evidence_refs": [
+        "resolved:/operations/op1/context/candidate_targets/0"
+      ],
+      "operation_id": "op1",
+      "operation_type": "add_window_with_opening_to_wall",
+      "parameters": {
+        "opening": {
+          "height_mm": 500,
+          "sill_height_mm": 2670.83,
+          "width_mm": 1180
+        },
+        "position": {
+          "center_offset_mm": 4701.96,
+          "reference": "wall_local_start"
+        },
+        "window": {
+          "fit_opening": true
+        }
+      },
+      "semantic_assignments": [
+        {
+          "applicability": "required",
+          "authoring_action": "set_attribute",
+          "fact_key": "attribute:OverallHeight",
+          "operation_id": "op1",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "operation:op1",
+            "registered-window-parameter-policy:0.2"
+          ],
+          "source_fact_key": "attribute:OverallHeight",
+          "source_kind": "deterministic_policy",
+          "source_ref": "resolved:/operations/op1/parameters/opening",
+          "unit": null,
+          "value": 500.0,
+          "value_type": "IfcPositiveLengthMeasure"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "set_attribute",
+          "fact_key": "attribute:OverallWidth",
+          "operation_id": "op1",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "operation:op1",
+            "registered-window-parameter-policy:0.2"
+          ],
+          "source_fact_key": "attribute:OverallWidth",
+          "source_kind": "deterministic_policy",
+          "source_ref": "resolved:/operations/op1/parameters/opening",
+          "unit": null,
+          "value": 1180.0,
+          "value_type": "IfcPositiveLengthMeasure"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "inherit_from_type",
+          "fact_key": "label:Name",
+          "operation_id": "op1",
+          "ownership": "type_inherited",
+          "provenance": [
+            "type-index:type:2dYMXn0_5AKRbD_1eUIAtb",
+            "type_record:2dYMXn0_5AKRbD_1eUIAtb",
+            "user_authorization:explicit_request_reference",
+            "operation:op1"
+          ],
+          "source_fact_key": "label:Name",
+          "source_kind": "approved_prototype",
+          "source_ref": "user-approved-prototype:2dYMXn0_5AKRbD_1eUIAtb",
+          "unit": null,
+          "value": "500x1180",
+          "value_type": "IfcLabel"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "reuse_material",
+          "fact_key": "material:u-1cf9f76e181da84d",
+          "operation_id": "op1",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "IfcMaterialList:#68247",
+            "IfcRelAssociatesMaterial:#84857",
+            "authority-source:type-cohort:2dYMXn0_5AKRbD_1eUIAtb",
+            "cohort-record:ifc:2dYMXn0_5AKRbD_0yUIAtG",
+            "cohort-type:2dYMXn0_5AKRbD_1eUIAtb",
+            "current_ifc:#68244",
+            "operation:op1",
+            "relationship:guid:2lrzkZslXA88hXOxBjbnCV",
+            "resource:step:68247",
+            "source_fact_key:material:u-1cf9f76e181da84d"
+          ],
+          "source_fact_key": "material:u-1cf9f76e181da84d",
+          "source_kind": "authorized_type_cohort",
+          "source_ref": "resource:step:68247",
+          "unit": null,
+          "value": "玻璃",
+          "value_type": "IfcMaterial"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "reuse_material",
+          "fact_key": "material:u-c752b8d2b4c1bea9",
+          "operation_id": "op1",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "IfcMaterialList:#68247",
+            "IfcRelAssociatesMaterial:#84857",
+            "authority-source:type-cohort:2dYMXn0_5AKRbD_1eUIAtb",
+            "cohort-record:ifc:2dYMXn0_5AKRbD_0yUIAtG",
+            "cohort-type:2dYMXn0_5AKRbD_1eUIAtb",
+            "current_ifc:#68244",
+            "operation:op1",
+            "relationship:guid:2lrzkZslXA88hXOxBjbnCV",
+            "resource:step:68247",
+            "source_fact_key:material:u-c752b8d2b4c1bea9"
+          ],
+          "source_fact_key": "material:u-c752b8d2b4c1bea9",
+          "source_kind": "authorized_type_cohort",
+          "source_ref": "resource:step:68247",
+          "unit": null,
+          "value": "窗扇",
+          "value_type": "IfcMaterial"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "set_occurrence_pset",
+          "fact_key": "pset:Pset_WindowCommon.IsExternal",
+          "operation_id": "op1",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "request-source:user_request",
+            "request-evidence:request:/text",
+            "operation:op1",
+            "property-hash:sha256:5046e68d88c938bff5feea838b23e43cf6372aad9a593ff74b26072815459033",
+            "source_fact_key:pset:Pset_WindowCommon.IsExternal"
+          ],
+          "source_fact_key": "pset:Pset_WindowCommon.IsExternal",
+          "source_kind": "explicit_request",
+          "source_ref": "request:/text",
+          "unit": null,
+          "value": true,
+          "value_type": "IfcBoolean"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "set_occurrence_pset",
+          "fact_key": "pset:Pset_WindowCommon.Reference",
+          "operation_id": "op1",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "request-source:user_request",
+            "request-evidence:request:/text",
+            "operation:op1",
+            "property-hash:sha256:b9ac4c57cd75078c49365e5296792d2672cea1391e303c0b52c2c7cc882a17d2",
+            "source_fact_key:pset:Pset_WindowCommon.Reference"
+          ],
+          "source_fact_key": "pset:Pset_WindowCommon.Reference",
+          "source_kind": "explicit_request",
+          "source_ref": "request:/text",
+          "unit": null,
+          "value": "500x1180",
+          "value_type": "IfcIdentifier"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "set_occurrence_pset",
+          "fact_key": "pset:Pset_WindowCommon.ThermalTransmittance",
+          "operation_id": "op1",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "cohort-record:ifc:2dYMXn0_5AKRbD_0yUIAtG",
+            "cohort-type:2dYMXn0_5AKRbD_1eUIAtb",
+            "ifcopenshell.util.element.get_psets:direct",
+            "index:ifc:2dYMXn0_5AKRbD_0yUIAtG",
+            "operation:op1",
+            "source_fact_key:pset:Pset_WindowCommon.ThermalTransmittance"
+          ],
+          "source_fact_key": "pset:Pset_WindowCommon.ThermalTransmittance",
+          "source_kind": "authorized_type_cohort",
+          "source_ref": "type-cohort:2dYMXn0_5AKRbD_1eUIAtb",
+          "unit": null,
+          "value": 3.6886,
+          "value_type": "IfcThermalTransmittanceMeasure"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "set_quantity",
+          "fact_key": "quantity:window-base.Area",
+          "operation_id": "op1",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "operation:op1",
+            "registered-window-parameter-policy:0.2"
+          ],
+          "source_fact_key": "quantity:window-base.Area",
+          "source_kind": "deterministic_policy",
+          "source_ref": "resolved:/operations/op1/parameters/opening",
+          "unit": null,
+          "value": 590000.0,
+          "value_type": "IfcQuantityArea"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "set_quantity",
+          "fact_key": "quantity:window-base.Height",
+          "operation_id": "op1",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "operation:op1",
+            "registered-window-parameter-policy:0.2"
+          ],
+          "source_fact_key": "quantity:window-base.Height",
+          "source_kind": "deterministic_policy",
+          "source_ref": "resolved:/operations/op1/parameters/opening",
+          "unit": null,
+          "value": 500.0,
+          "value_type": "IfcQuantityLength"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "set_quantity",
+          "fact_key": "quantity:window-base.Width",
+          "operation_id": "op1",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "operation:op1",
+            "registered-window-parameter-policy:0.2"
+          ],
+          "source_fact_key": "quantity:window-base.Width",
+          "source_kind": "deterministic_policy",
+          "source_ref": "resolved:/operations/op1/parameters/opening",
+          "unit": null,
+          "value": 1180.0,
+          "value_type": "IfcQuantityLength"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "bind_relationship",
+          "fact_key": "relationship:host",
+          "operation_id": "op1",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "resolved-host-target:2CsmzAChHF6O6maGXlo6yJ",
+            "operation:op1"
+          ],
+          "source_fact_key": "relationship:host",
+          "source_kind": "surviving_target",
+          "source_ref": "current-target:2CsmzAChHF6O6maGXlo6yJ",
+          "unit": null,
+          "value": "2CsmzAChHF6O6maGXlo6yJ",
+          "value_type": "IfcWallStandardCase"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "bind_relationship",
+          "fact_key": "relationship:storey",
+          "operation_id": "op1",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "resolved-host-target:2CsmzAChHF6O6maGXlo6yJ",
+            "operation:op1"
+          ],
+          "source_fact_key": "relationship:storey",
+          "source_kind": "surviving_target",
+          "source_ref": "current-target-storey:1vTeahUkP60PdWqwCTjSGJ",
+          "unit": null,
+          "value": "1vTeahUkP60PdWqwCTjSGJ",
+          "value_type": "IfcBuildingStorey"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "inherit_from_type",
+          "fact_key": "relationship:type",
+          "operation_id": "op1",
+          "ownership": "type_inherited",
+          "provenance": [
+            "user_authorization:explicit_request_reference",
+            "operation:op1"
+          ],
+          "source_fact_key": "relationship:type",
+          "source_kind": "approved_prototype",
+          "source_ref": "user-approved-prototype:2dYMXn0_5AKRbD_1eUIAtb",
+          "unit": null,
+          "value": "2dYMXn0_5AKRbD_1eUIAtb",
+          "value_type": "IfcWindowStyle"
+        }
+      ],
+      "semantic_manifest": {
+        "manifest_id": "semantic-manifest-080949601d8fe68204b8549a",
+        "policy_id": "window.add-with-opening.l2",
+        "policy_version": "0.2"
+      },
+      "target": {
+        "wall_global_id": "2CsmzAChHF6O6maGXlo6yJ"
+      }
+    },
+    {
+      "evidence_refs": [
+        "resolved:/operations/op2/context/candidate_targets/0"
+      ],
+      "operation_id": "op2",
+      "operation_type": "add_window_with_opening_to_wall",
+      "parameters": {
+        "opening": {
+          "height_mm": 2370,
+          "sill_height_mm": 610,
+          "width_mm": 870
+        },
+        "position": {
+          "center_offset_mm": 9315.56,
+          "reference": "wall_local_start"
+        },
+        "window": {
+          "fit_opening": true
+        }
+      },
+      "semantic_assignments": [
+        {
+          "applicability": "required",
+          "authoring_action": "set_attribute",
+          "fact_key": "attribute:OverallHeight",
+          "operation_id": "op2",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "operation:op2",
+            "registered-window-parameter-policy:0.2"
+          ],
+          "source_fact_key": "attribute:OverallHeight",
+          "source_kind": "deterministic_policy",
+          "source_ref": "resolved:/operations/op2/parameters/opening",
+          "unit": null,
+          "value": 2370.0,
+          "value_type": "IfcPositiveLengthMeasure"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "set_attribute",
+          "fact_key": "attribute:OverallWidth",
+          "operation_id": "op2",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "operation:op2",
+            "registered-window-parameter-policy:0.2"
+          ],
+          "source_fact_key": "attribute:OverallWidth",
+          "source_kind": "deterministic_policy",
+          "source_ref": "resolved:/operations/op2/parameters/opening",
+          "unit": null,
+          "value": 870.0,
+          "value_type": "IfcPositiveLengthMeasure"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "inherit_from_type",
+          "fact_key": "label:Name",
+          "operation_id": "op2",
+          "ownership": "type_inherited",
+          "provenance": [
+            "type-index:type:08xWVL$9z6JRwr3pqJHoru",
+            "type_record:08xWVL$9z6JRwr3pqJHoru",
+            "user_authorization:explicit_request_reference",
+            "operation:op2"
+          ],
+          "source_fact_key": "label:Name",
+          "source_kind": "approved_prototype",
+          "source_ref": "user-approved-prototype:08xWVL$9z6JRwr3pqJHoru",
+          "unit": null,
+          "value": "870x2370",
+          "value_type": "IfcLabel"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "reuse_material",
+          "fact_key": "material:u-1cf9f76e181da84d",
+          "operation_id": "op2",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "IfcMaterialList:#59650",
+            "IfcRelAssociatesMaterial:#84758",
+            "authority-source:type-cohort:08xWVL$9z6JRwr3pqJHoru",
+            "cohort-record:ifc:08xWVL$9z6JRwr3oWJHorc",
+            "cohort-type:08xWVL$9z6JRwr3pqJHoru",
+            "current_ifc:#59647",
+            "operation:op2",
+            "relationship:guid:20Fyz5h01DZfWjozeGU2DY",
+            "resource:step:59650",
+            "source_fact_key:material:u-1cf9f76e181da84d"
+          ],
+          "source_fact_key": "material:u-1cf9f76e181da84d",
+          "source_kind": "authorized_type_cohort",
+          "source_ref": "resource:step:59650",
+          "unit": null,
+          "value": "玻璃",
+          "value_type": "IfcMaterial"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "reuse_material",
+          "fact_key": "material:u-c752b8d2b4c1bea9",
+          "operation_id": "op2",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "IfcMaterialList:#59650",
+            "IfcRelAssociatesMaterial:#84758",
+            "authority-source:type-cohort:08xWVL$9z6JRwr3pqJHoru",
+            "cohort-record:ifc:08xWVL$9z6JRwr3oWJHorc",
+            "cohort-type:08xWVL$9z6JRwr3pqJHoru",
+            "current_ifc:#59647",
+            "operation:op2",
+            "relationship:guid:20Fyz5h01DZfWjozeGU2DY",
+            "resource:step:59650",
+            "source_fact_key:material:u-c752b8d2b4c1bea9"
+          ],
+          "source_fact_key": "material:u-c752b8d2b4c1bea9",
+          "source_kind": "authorized_type_cohort",
+          "source_ref": "resource:step:59650",
+          "unit": null,
+          "value": "窗扇",
+          "value_type": "IfcMaterial"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "set_occurrence_pset",
+          "fact_key": "pset:Pset_WindowCommon.IsExternal",
+          "operation_id": "op2",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "request-source:user_request",
+            "request-evidence:request:/text",
+            "operation:op2",
+            "property-hash:sha256:e82bd23e6ba464344a41809b5845852cd2a9110728c6034b1b32394f3612090b",
+            "source_fact_key:pset:Pset_WindowCommon.IsExternal"
+          ],
+          "source_fact_key": "pset:Pset_WindowCommon.IsExternal",
+          "source_kind": "explicit_request",
+          "source_ref": "request:/text",
+          "unit": null,
+          "value": true,
+          "value_type": "IfcBoolean"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "set_occurrence_pset",
+          "fact_key": "pset:Pset_WindowCommon.Reference",
+          "operation_id": "op2",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "request-source:user_request",
+            "request-evidence:request:/text",
+            "operation:op2",
+            "property-hash:sha256:2d3121e5c08173a67239755a22323a69d44a39821f2ccd0a5ccd2cfa4976453c",
+            "source_fact_key:pset:Pset_WindowCommon.Reference"
+          ],
+          "source_fact_key": "pset:Pset_WindowCommon.Reference",
+          "source_kind": "explicit_request",
+          "source_ref": "request:/text",
+          "unit": null,
+          "value": "870x2370",
+          "value_type": "IfcIdentifier"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "set_occurrence_pset",
+          "fact_key": "pset:Pset_WindowCommon.ThermalTransmittance",
+          "operation_id": "op2",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "cohort-record:ifc:08xWVL$9z6JRwr3oWJHorc",
+            "cohort-type:08xWVL$9z6JRwr3pqJHoru",
+            "ifcopenshell.util.element.get_psets:direct",
+            "index:ifc:08xWVL$9z6JRwr3oWJHorc",
+            "operation:op2",
+            "source_fact_key:pset:Pset_WindowCommon.ThermalTransmittance"
+          ],
+          "source_fact_key": "pset:Pset_WindowCommon.ThermalTransmittance",
+          "source_kind": "authorized_type_cohort",
+          "source_ref": "type-cohort:08xWVL$9z6JRwr3pqJHoru",
+          "unit": null,
+          "value": 3.6886,
+          "value_type": "IfcThermalTransmittanceMeasure"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "set_quantity",
+          "fact_key": "quantity:window-base.Area",
+          "operation_id": "op2",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "operation:op2",
+            "registered-window-parameter-policy:0.2"
+          ],
+          "source_fact_key": "quantity:window-base.Area",
+          "source_kind": "deterministic_policy",
+          "source_ref": "resolved:/operations/op2/parameters/opening",
+          "unit": null,
+          "value": 2061900.0,
+          "value_type": "IfcQuantityArea"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "set_quantity",
+          "fact_key": "quantity:window-base.Height",
+          "operation_id": "op2",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "operation:op2",
+            "registered-window-parameter-policy:0.2"
+          ],
+          "source_fact_key": "quantity:window-base.Height",
+          "source_kind": "deterministic_policy",
+          "source_ref": "resolved:/operations/op2/parameters/opening",
+          "unit": null,
+          "value": 2370.0,
+          "value_type": "IfcQuantityLength"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "set_quantity",
+          "fact_key": "quantity:window-base.Width",
+          "operation_id": "op2",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "operation:op2",
+            "registered-window-parameter-policy:0.2"
+          ],
+          "source_fact_key": "quantity:window-base.Width",
+          "source_kind": "deterministic_policy",
+          "source_ref": "resolved:/operations/op2/parameters/opening",
+          "unit": null,
+          "value": 870.0,
+          "value_type": "IfcQuantityLength"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "bind_relationship",
+          "fact_key": "relationship:host",
+          "operation_id": "op2",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "resolved-host-target:0jltRti3rFigAmdXYhXxqI",
+            "operation:op2"
+          ],
+          "source_fact_key": "relationship:host",
+          "source_kind": "surviving_target",
+          "source_ref": "current-target:0jltRti3rFigAmdXYhXxqI",
+          "unit": null,
+          "value": "0jltRti3rFigAmdXYhXxqI",
+          "value_type": "IfcWallStandardCase"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "bind_relationship",
+          "fact_key": "relationship:storey",
+          "operation_id": "op2",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "resolved-host-target:0jltRti3rFigAmdXYhXxqI",
+            "operation:op2"
+          ],
+          "source_fact_key": "relationship:storey",
+          "source_kind": "surviving_target",
+          "source_ref": "current-target-storey:1vTeahUkP60PdWqwCTjSGJ",
+          "unit": null,
+          "value": "1vTeahUkP60PdWqwCTjSGJ",
+          "value_type": "IfcBuildingStorey"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "inherit_from_type",
+          "fact_key": "relationship:type",
+          "operation_id": "op2",
+          "ownership": "type_inherited",
+          "provenance": [
+            "user_authorization:explicit_request_reference",
+            "operation:op2"
+          ],
+          "source_fact_key": "relationship:type",
+          "source_kind": "approved_prototype",
+          "source_ref": "user-approved-prototype:08xWVL$9z6JRwr3pqJHoru",
+          "unit": null,
+          "value": "08xWVL$9z6JRwr3pqJHoru",
+          "value_type": "IfcWindowStyle"
+        }
+      ],
+      "semantic_manifest": {
+        "manifest_id": "semantic-manifest-af655a7363d71175067cbc20",
+        "policy_id": "window.add-with-opening.l2",
+        "policy_version": "0.2"
+      },
+      "target": {
+        "wall_global_id": "0jltRti3rFigAmdXYhXxqI"
+      }
+    },
+    {
+      "evidence_refs": [
+        "resolved:/operations/op3/context/candidate_targets/0"
+      ],
+      "operation_id": "op3",
+      "operation_type": "add_window_with_opening_to_wall",
+      "parameters": {
+        "opening": {
+          "height_mm": 2950,
+          "sill_height_mm": 131.397,
+          "width_mm": 4500
+        },
+        "position": {
+          "center_offset_mm": 4280,
+          "reference": "wall_local_start"
+        },
+        "window": {
+          "fit_opening": true
+        }
+      },
+      "semantic_assignments": [
+        {
+          "applicability": "required",
+          "authoring_action": "set_attribute",
+          "fact_key": "attribute:OverallHeight",
+          "operation_id": "op3",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "operation:op3",
+            "registered-window-parameter-policy:0.2"
+          ],
+          "source_fact_key": "attribute:OverallHeight",
+          "source_kind": "deterministic_policy",
+          "source_ref": "resolved:/operations/op3/parameters/opening",
+          "unit": null,
+          "value": 2950.0,
+          "value_type": "IfcPositiveLengthMeasure"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "set_attribute",
+          "fact_key": "attribute:OverallWidth",
+          "operation_id": "op3",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "operation:op3",
+            "registered-window-parameter-policy:0.2"
+          ],
+          "source_fact_key": "attribute:OverallWidth",
+          "source_kind": "deterministic_policy",
+          "source_ref": "resolved:/operations/op3/parameters/opening",
+          "unit": null,
+          "value": 4500.0,
+          "value_type": "IfcPositiveLengthMeasure"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "inherit_from_type",
+          "fact_key": "label:Name",
+          "operation_id": "op3",
+          "ownership": "type_inherited",
+          "provenance": [
+            "type-index:type:3xYoUsotL2OPYJwoKd43pe",
+            "type_record:3xYoUsotL2OPYJwoKd43pe",
+            "user_authorization:explicit_request_reference",
+            "operation:op3"
+          ],
+          "source_fact_key": "label:Name",
+          "source_kind": "approved_prototype",
+          "source_ref": "user-approved-prototype:3xYoUsotL2OPYJwoKd43pe",
+          "unit": null,
+          "value": "4500x2950",
+          "value_type": "IfcLabel"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "inherit_from_type",
+          "fact_key": "material:u-1cf9f76e181da84d",
+          "operation_id": "op3",
+          "ownership": "type_inherited",
+          "provenance": [
+            "current_ifc:#52728",
+            "IfcRelAssociatesMaterial:#84715",
+            "IfcMaterial:#52732",
+            "authority-source:user-approved-prototype:3xYoUsotL2OPYJwoKd43pe",
+            "relationship:guid:0zgLajXf1FzRYzb07M5zdL",
+            "resource:step:52732",
+            "type_record:3xYoUsotL2OPYJwoKd43pe",
+            "user_authorization:explicit_request_reference",
+            "operation:op3"
+          ],
+          "source_fact_key": "material:u-1cf9f76e181da84d",
+          "source_kind": "approved_prototype",
+          "source_ref": "resource:step:52732",
+          "unit": null,
+          "value": "玻璃",
+          "value_type": "IfcMaterial"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "set_occurrence_pset",
+          "fact_key": "pset:Pset_WindowCommon.IsExternal",
+          "operation_id": "op3",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "request-source:user_request",
+            "request-evidence:request:/text",
+            "operation:op3",
+            "property-hash:sha256:f015bf2ab00f0a4c279db2b7e6fabbe06428415776344eb73164c61bfd900bdc",
+            "source_fact_key:pset:Pset_WindowCommon.IsExternal"
+          ],
+          "source_fact_key": "pset:Pset_WindowCommon.IsExternal",
+          "source_kind": "explicit_request",
+          "source_ref": "request:/text",
+          "unit": null,
+          "value": true,
+          "value_type": "IfcBoolean"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "set_occurrence_pset",
+          "fact_key": "pset:Pset_WindowCommon.Reference",
+          "operation_id": "op3",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "request-source:user_request",
+            "request-evidence:request:/text",
+            "operation:op3",
+            "property-hash:sha256:1ea03898f4c53bff947314e031a9eee4de68df6d4144dc6639f56c793a8c17da",
+            "source_fact_key:pset:Pset_WindowCommon.Reference"
+          ],
+          "source_fact_key": "pset:Pset_WindowCommon.Reference",
+          "source_kind": "explicit_request",
+          "source_ref": "request:/text",
+          "unit": null,
+          "value": "4500x2950",
+          "value_type": "IfcIdentifier"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "set_quantity",
+          "fact_key": "quantity:window-base.Area",
+          "operation_id": "op3",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "operation:op3",
+            "registered-window-parameter-policy:0.2"
+          ],
+          "source_fact_key": "quantity:window-base.Area",
+          "source_kind": "deterministic_policy",
+          "source_ref": "resolved:/operations/op3/parameters/opening",
+          "unit": null,
+          "value": 13275000.0,
+          "value_type": "IfcQuantityArea"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "set_quantity",
+          "fact_key": "quantity:window-base.Height",
+          "operation_id": "op3",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "operation:op3",
+            "registered-window-parameter-policy:0.2"
+          ],
+          "source_fact_key": "quantity:window-base.Height",
+          "source_kind": "deterministic_policy",
+          "source_ref": "resolved:/operations/op3/parameters/opening",
+          "unit": null,
+          "value": 2950.0,
+          "value_type": "IfcQuantityLength"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "set_quantity",
+          "fact_key": "quantity:window-base.Width",
+          "operation_id": "op3",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "operation:op3",
+            "registered-window-parameter-policy:0.2"
+          ],
+          "source_fact_key": "quantity:window-base.Width",
+          "source_kind": "deterministic_policy",
+          "source_ref": "resolved:/operations/op3/parameters/opening",
+          "unit": null,
+          "value": 4500.0,
+          "value_type": "IfcQuantityLength"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "bind_relationship",
+          "fact_key": "relationship:host",
+          "operation_id": "op3",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "resolved-host-target:1boalssSHBYut0JHgwRsGf",
+            "operation:op3"
+          ],
+          "source_fact_key": "relationship:host",
+          "source_kind": "surviving_target",
+          "source_ref": "current-target:1boalssSHBYut0JHgwRsGf",
+          "unit": null,
+          "value": "1boalssSHBYut0JHgwRsGf",
+          "value_type": "IfcWallStandardCase"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "bind_relationship",
+          "fact_key": "relationship:storey",
+          "operation_id": "op3",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "resolved-host-target:1boalssSHBYut0JHgwRsGf",
+            "operation:op3"
+          ],
+          "source_fact_key": "relationship:storey",
+          "source_kind": "surviving_target",
+          "source_ref": "current-target-storey:1vTeahUkP60PdWqwCTjeRs",
+          "unit": null,
+          "value": "1vTeahUkP60PdWqwCTjeRs",
+          "value_type": "IfcBuildingStorey"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "inherit_from_type",
+          "fact_key": "relationship:type",
+          "operation_id": "op3",
+          "ownership": "type_inherited",
+          "provenance": [
+            "user_authorization:explicit_request_reference",
+            "operation:op3"
+          ],
+          "source_fact_key": "relationship:type",
+          "source_kind": "approved_prototype",
+          "source_ref": "user-approved-prototype:3xYoUsotL2OPYJwoKd43pe",
+          "unit": null,
+          "value": "3xYoUsotL2OPYJwoKd43pe",
+          "value_type": "IfcWindowStyle"
+        }
+      ],
+      "semantic_manifest": {
+        "manifest_id": "semantic-manifest-9318a72c3aa9197ab005a12a",
+        "policy_id": "window.add-with-opening.l2",
+        "policy_version": "0.2"
+      },
+      "target": {
+        "wall_global_id": "1boalssSHBYut0JHgwRsGf"
+      }
+    },
+    {
+      "evidence_refs": [
+        "resolved:/operations/op4/context/candidate_targets/0"
+      ],
+      "operation_id": "op4",
+      "operation_type": "add_window_with_opening_to_wall",
+      "parameters": {
+        "opening": {
+          "height_mm": 1600,
+          "sill_height_mm": 532.987,
+          "width_mm": 600
+        },
+        "position": {
+          "center_offset_mm": 3283.66,
+          "reference": "wall_local_start"
+        },
+        "window": {
+          "fit_opening": true
+        }
+      },
+      "semantic_assignments": [
+        {
+          "applicability": "required",
+          "authoring_action": "set_attribute",
+          "fact_key": "attribute:OverallHeight",
+          "operation_id": "op4",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "operation:op4",
+            "registered-window-parameter-policy:0.2"
+          ],
+          "source_fact_key": "attribute:OverallHeight",
+          "source_kind": "deterministic_policy",
+          "source_ref": "resolved:/operations/op4/parameters/opening",
+          "unit": null,
+          "value": 1600.0,
+          "value_type": "IfcPositiveLengthMeasure"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "set_attribute",
+          "fact_key": "attribute:OverallWidth",
+          "operation_id": "op4",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "operation:op4",
+            "registered-window-parameter-policy:0.2"
+          ],
+          "source_fact_key": "attribute:OverallWidth",
+          "source_kind": "deterministic_policy",
+          "source_ref": "resolved:/operations/op4/parameters/opening",
+          "unit": null,
+          "value": 600.0,
+          "value_type": "IfcPositiveLengthMeasure"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "inherit_from_type",
+          "fact_key": "label:Name",
+          "operation_id": "op4",
+          "ownership": "type_inherited",
+          "provenance": [
+            "type-index:type:0ZHc4SjhnChed_CMGdKBu8",
+            "type_record:0ZHc4SjhnChed_CMGdKBu8",
+            "user_authorization:explicit_request_reference",
+            "operation:op4"
+          ],
+          "source_fact_key": "label:Name",
+          "source_kind": "approved_prototype",
+          "source_ref": "user-approved-prototype:0ZHc4SjhnChed_CMGdKBu8",
+          "unit": null,
+          "value": "1600x600",
+          "value_type": "IfcLabel"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "reuse_material",
+          "fact_key": "material:u-1cf9f76e181da84d",
+          "operation_id": "op4",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "IfcMaterialList:#82368",
+            "IfcRelAssociatesMaterial:#84936",
+            "authority-source:type-cohort:0ZHc4SjhnChed_CMGdKBu8",
+            "cohort-record:ifc:0ZHc4SjhnChed_CN4dKBuQ",
+            "cohort-type:0ZHc4SjhnChed_CMGdKBu8",
+            "current_ifc:#82365",
+            "operation:op4",
+            "relationship:guid:1PJem7uEr55vahGlusep19",
+            "resource:step:82368",
+            "source_fact_key:material:u-1cf9f76e181da84d"
+          ],
+          "source_fact_key": "material:u-1cf9f76e181da84d",
+          "source_kind": "authorized_type_cohort",
+          "source_ref": "resource:step:82368",
+          "unit": null,
+          "value": "玻璃",
+          "value_type": "IfcMaterial"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "reuse_material",
+          "fact_key": "material:u-c752b8d2b4c1bea9",
+          "operation_id": "op4",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "IfcMaterialList:#82368",
+            "IfcRelAssociatesMaterial:#84936",
+            "authority-source:type-cohort:0ZHc4SjhnChed_CMGdKBu8",
+            "cohort-record:ifc:0ZHc4SjhnChed_CN4dKBuQ",
+            "cohort-type:0ZHc4SjhnChed_CMGdKBu8",
+            "current_ifc:#82365",
+            "operation:op4",
+            "relationship:guid:1PJem7uEr55vahGlusep19",
+            "resource:step:82368",
+            "source_fact_key:material:u-c752b8d2b4c1bea9"
+          ],
+          "source_fact_key": "material:u-c752b8d2b4c1bea9",
+          "source_kind": "authorized_type_cohort",
+          "source_ref": "resource:step:82368",
+          "unit": null,
+          "value": "窗扇",
+          "value_type": "IfcMaterial"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "set_occurrence_pset",
+          "fact_key": "pset:Pset_WindowCommon.IsExternal",
+          "operation_id": "op4",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "request-source:user_request",
+            "request-evidence:request:/text",
+            "operation:op4",
+            "property-hash:sha256:a3f669f788d47dd72476e7b89584b059f5abd554916eb3c66edfb2e5fbef3760",
+            "source_fact_key:pset:Pset_WindowCommon.IsExternal"
+          ],
+          "source_fact_key": "pset:Pset_WindowCommon.IsExternal",
+          "source_kind": "explicit_request",
+          "source_ref": "request:/text",
+          "unit": null,
+          "value": true,
+          "value_type": "IfcBoolean"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "set_occurrence_pset",
+          "fact_key": "pset:Pset_WindowCommon.Reference",
+          "operation_id": "op4",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "request-source:user_request",
+            "request-evidence:request:/text",
+            "operation:op4",
+            "property-hash:sha256:5fcc7495be2f72ef7b98f7ddc3abdc43e222dfd25f989af9661ec00f8c54626b",
+            "source_fact_key:pset:Pset_WindowCommon.Reference"
+          ],
+          "source_fact_key": "pset:Pset_WindowCommon.Reference",
+          "source_kind": "explicit_request",
+          "source_ref": "request:/text",
+          "unit": null,
+          "value": "1600x600",
+          "value_type": "IfcIdentifier"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "set_occurrence_pset",
+          "fact_key": "pset:Pset_WindowCommon.ThermalTransmittance",
+          "operation_id": "op4",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "cohort-record:ifc:0ZHc4SjhnChed_CN4dKBuQ",
+            "cohort-type:0ZHc4SjhnChed_CMGdKBu8",
+            "ifcopenshell.util.element.get_psets:direct",
+            "index:ifc:0ZHc4SjhnChed_CN4dKBuQ",
+            "operation:op4",
+            "source_fact_key:pset:Pset_WindowCommon.ThermalTransmittance"
+          ],
+          "source_fact_key": "pset:Pset_WindowCommon.ThermalTransmittance",
+          "source_kind": "authorized_type_cohort",
+          "source_ref": "type-cohort:0ZHc4SjhnChed_CMGdKBu8",
+          "unit": null,
+          "value": 3.6886,
+          "value_type": "IfcThermalTransmittanceMeasure"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "set_quantity",
+          "fact_key": "quantity:window-base.Area",
+          "operation_id": "op4",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "operation:op4",
+            "registered-window-parameter-policy:0.2"
+          ],
+          "source_fact_key": "quantity:window-base.Area",
+          "source_kind": "deterministic_policy",
+          "source_ref": "resolved:/operations/op4/parameters/opening",
+          "unit": null,
+          "value": 960000.0,
+          "value_type": "IfcQuantityArea"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "set_quantity",
+          "fact_key": "quantity:window-base.Height",
+          "operation_id": "op4",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "operation:op4",
+            "registered-window-parameter-policy:0.2"
+          ],
+          "source_fact_key": "quantity:window-base.Height",
+          "source_kind": "deterministic_policy",
+          "source_ref": "resolved:/operations/op4/parameters/opening",
+          "unit": null,
+          "value": 1600.0,
+          "value_type": "IfcQuantityLength"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "set_quantity",
+          "fact_key": "quantity:window-base.Width",
+          "operation_id": "op4",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "operation:op4",
+            "registered-window-parameter-policy:0.2"
+          ],
+          "source_fact_key": "quantity:window-base.Width",
+          "source_kind": "deterministic_policy",
+          "source_ref": "resolved:/operations/op4/parameters/opening",
+          "unit": null,
+          "value": 600.0,
+          "value_type": "IfcQuantityLength"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "bind_relationship",
+          "fact_key": "relationship:host",
+          "operation_id": "op4",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "resolved-host-target:0jltRti3rFigAmdXYhXx0W",
+            "operation:op4"
+          ],
+          "source_fact_key": "relationship:host",
+          "source_kind": "surviving_target",
+          "source_ref": "current-target:0jltRti3rFigAmdXYhXx0W",
+          "unit": null,
+          "value": "0jltRti3rFigAmdXYhXx0W",
+          "value_type": "IfcWallStandardCase"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "bind_relationship",
+          "fact_key": "relationship:storey",
+          "operation_id": "op4",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "resolved-host-target:0jltRti3rFigAmdXYhXx0W",
+            "operation:op4"
+          ],
+          "source_fact_key": "relationship:storey",
+          "source_kind": "surviving_target",
+          "source_ref": "current-target-storey:1vTeahUkP60PdWqwCTjSGJ",
+          "unit": null,
+          "value": "1vTeahUkP60PdWqwCTjSGJ",
+          "value_type": "IfcBuildingStorey"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "inherit_from_type",
+          "fact_key": "relationship:type",
+          "operation_id": "op4",
+          "ownership": "type_inherited",
+          "provenance": [
+            "user_authorization:explicit_request_reference",
+            "operation:op4"
+          ],
+          "source_fact_key": "relationship:type",
+          "source_kind": "approved_prototype",
+          "source_ref": "user-approved-prototype:0ZHc4SjhnChed_CMGdKBu8",
+          "unit": null,
+          "value": "0ZHc4SjhnChed_CMGdKBu8",
+          "value_type": "IfcWindowStyle"
+        }
+      ],
+      "semantic_manifest": {
+        "manifest_id": "semantic-manifest-60a01dc8790967e5a87aedf4",
+        "policy_id": "window.add-with-opening.l2",
+        "policy_version": "0.2"
+      },
+      "target": {
+        "wall_global_id": "0jltRti3rFigAmdXYhXx0W"
+      }
+    },
+    {
+      "evidence_refs": [
+        "resolved:/operations/op5/context/candidate_targets/0"
+      ],
+      "operation_id": "op5",
+      "operation_type": "add_window_with_opening_to_wall",
+      "parameters": {
+        "opening": {
+          "height_mm": 1600,
+          "sill_height_mm": 533.5,
+          "width_mm": 600
+        },
+        "position": {
+          "center_offset_mm": 1078.66,
+          "reference": "wall_local_start"
+        },
+        "window": {
+          "fit_opening": true
+        }
+      },
+      "semantic_assignments": [
+        {
+          "applicability": "required",
+          "authoring_action": "set_attribute",
+          "fact_key": "attribute:OverallHeight",
+          "operation_id": "op5",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "operation:op5",
+            "registered-window-parameter-policy:0.2"
+          ],
+          "source_fact_key": "attribute:OverallHeight",
+          "source_kind": "deterministic_policy",
+          "source_ref": "resolved:/operations/op5/parameters/opening",
+          "unit": null,
+          "value": 1600.0,
+          "value_type": "IfcPositiveLengthMeasure"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "set_attribute",
+          "fact_key": "attribute:OverallWidth",
+          "operation_id": "op5",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "operation:op5",
+            "registered-window-parameter-policy:0.2"
+          ],
+          "source_fact_key": "attribute:OverallWidth",
+          "source_kind": "deterministic_policy",
+          "source_ref": "resolved:/operations/op5/parameters/opening",
+          "unit": null,
+          "value": 600.0,
+          "value_type": "IfcPositiveLengthMeasure"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "inherit_from_type",
+          "fact_key": "label:Name",
+          "operation_id": "op5",
+          "ownership": "type_inherited",
+          "provenance": [
+            "type-index:type:0ZHc4SjhnChed_CMGdKBu8",
+            "type_record:0ZHc4SjhnChed_CMGdKBu8",
+            "user_authorization:explicit_request_reference",
+            "operation:op5"
+          ],
+          "source_fact_key": "label:Name",
+          "source_kind": "approved_prototype",
+          "source_ref": "user-approved-prototype:0ZHc4SjhnChed_CMGdKBu8",
+          "unit": null,
+          "value": "1600x600",
+          "value_type": "IfcLabel"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "reuse_material",
+          "fact_key": "material:u-1cf9f76e181da84d",
+          "operation_id": "op5",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "IfcMaterialList:#82368",
+            "IfcRelAssociatesMaterial:#84936",
+            "authority-source:type-cohort:0ZHc4SjhnChed_CMGdKBu8",
+            "cohort-record:ifc:0ZHc4SjhnChed_CN4dKBuQ",
+            "cohort-type:0ZHc4SjhnChed_CMGdKBu8",
+            "current_ifc:#82365",
+            "operation:op5",
+            "relationship:guid:1PJem7uEr55vahGlusep19",
+            "resource:step:82368",
+            "source_fact_key:material:u-1cf9f76e181da84d"
+          ],
+          "source_fact_key": "material:u-1cf9f76e181da84d",
+          "source_kind": "authorized_type_cohort",
+          "source_ref": "resource:step:82368",
+          "unit": null,
+          "value": "玻璃",
+          "value_type": "IfcMaterial"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "reuse_material",
+          "fact_key": "material:u-c752b8d2b4c1bea9",
+          "operation_id": "op5",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "IfcMaterialList:#82368",
+            "IfcRelAssociatesMaterial:#84936",
+            "authority-source:type-cohort:0ZHc4SjhnChed_CMGdKBu8",
+            "cohort-record:ifc:0ZHc4SjhnChed_CN4dKBuQ",
+            "cohort-type:0ZHc4SjhnChed_CMGdKBu8",
+            "current_ifc:#82365",
+            "operation:op5",
+            "relationship:guid:1PJem7uEr55vahGlusep19",
+            "resource:step:82368",
+            "source_fact_key:material:u-c752b8d2b4c1bea9"
+          ],
+          "source_fact_key": "material:u-c752b8d2b4c1bea9",
+          "source_kind": "authorized_type_cohort",
+          "source_ref": "resource:step:82368",
+          "unit": null,
+          "value": "窗扇",
+          "value_type": "IfcMaterial"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "set_occurrence_pset",
+          "fact_key": "pset:Pset_WindowCommon.IsExternal",
+          "operation_id": "op5",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "request-source:user_request",
+            "request-evidence:request:/text",
+            "operation:op5",
+            "property-hash:sha256:fd97b905725ead60754ebad211c0884a97cfda5a924b8cb7e769dcde9d8f22d1",
+            "source_fact_key:pset:Pset_WindowCommon.IsExternal"
+          ],
+          "source_fact_key": "pset:Pset_WindowCommon.IsExternal",
+          "source_kind": "explicit_request",
+          "source_ref": "request:/text",
+          "unit": null,
+          "value": true,
+          "value_type": "IfcBoolean"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "set_occurrence_pset",
+          "fact_key": "pset:Pset_WindowCommon.Reference",
+          "operation_id": "op5",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "request-source:user_request",
+            "request-evidence:request:/text",
+            "operation:op5",
+            "property-hash:sha256:5c2964af5c449ac61f57c5bc55135560a4fb6bd6ee7b0b1a79896033dd622120",
+            "source_fact_key:pset:Pset_WindowCommon.Reference"
+          ],
+          "source_fact_key": "pset:Pset_WindowCommon.Reference",
+          "source_kind": "explicit_request",
+          "source_ref": "request:/text",
+          "unit": null,
+          "value": "1600x600",
+          "value_type": "IfcIdentifier"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "set_occurrence_pset",
+          "fact_key": "pset:Pset_WindowCommon.ThermalTransmittance",
+          "operation_id": "op5",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "cohort-record:ifc:0ZHc4SjhnChed_CN4dKBuQ",
+            "cohort-type:0ZHc4SjhnChed_CMGdKBu8",
+            "ifcopenshell.util.element.get_psets:direct",
+            "index:ifc:0ZHc4SjhnChed_CN4dKBuQ",
+            "operation:op5",
+            "source_fact_key:pset:Pset_WindowCommon.ThermalTransmittance"
+          ],
+          "source_fact_key": "pset:Pset_WindowCommon.ThermalTransmittance",
+          "source_kind": "authorized_type_cohort",
+          "source_ref": "type-cohort:0ZHc4SjhnChed_CMGdKBu8",
+          "unit": null,
+          "value": 3.6886,
+          "value_type": "IfcThermalTransmittanceMeasure"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "set_quantity",
+          "fact_key": "quantity:window-base.Area",
+          "operation_id": "op5",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "operation:op5",
+            "registered-window-parameter-policy:0.2"
+          ],
+          "source_fact_key": "quantity:window-base.Area",
+          "source_kind": "deterministic_policy",
+          "source_ref": "resolved:/operations/op5/parameters/opening",
+          "unit": null,
+          "value": 960000.0,
+          "value_type": "IfcQuantityArea"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "set_quantity",
+          "fact_key": "quantity:window-base.Height",
+          "operation_id": "op5",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "operation:op5",
+            "registered-window-parameter-policy:0.2"
+          ],
+          "source_fact_key": "quantity:window-base.Height",
+          "source_kind": "deterministic_policy",
+          "source_ref": "resolved:/operations/op5/parameters/opening",
+          "unit": null,
+          "value": 1600.0,
+          "value_type": "IfcQuantityLength"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "set_quantity",
+          "fact_key": "quantity:window-base.Width",
+          "operation_id": "op5",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "operation:op5",
+            "registered-window-parameter-policy:0.2"
+          ],
+          "source_fact_key": "quantity:window-base.Width",
+          "source_kind": "deterministic_policy",
+          "source_ref": "resolved:/operations/op5/parameters/opening",
+          "unit": null,
+          "value": 600.0,
+          "value_type": "IfcQuantityLength"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "bind_relationship",
+          "fact_key": "relationship:host",
+          "operation_id": "op5",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "resolved-host-target:0jltRti3rFigAmdXYhXx0W",
+            "operation:op5"
+          ],
+          "source_fact_key": "relationship:host",
+          "source_kind": "surviving_target",
+          "source_ref": "current-target:0jltRti3rFigAmdXYhXx0W",
+          "unit": null,
+          "value": "0jltRti3rFigAmdXYhXx0W",
+          "value_type": "IfcWallStandardCase"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "bind_relationship",
+          "fact_key": "relationship:storey",
+          "operation_id": "op5",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "resolved-host-target:0jltRti3rFigAmdXYhXx0W",
+            "operation:op5"
+          ],
+          "source_fact_key": "relationship:storey",
+          "source_kind": "surviving_target",
+          "source_ref": "current-target-storey:1vTeahUkP60PdWqwCTjSGJ",
+          "unit": null,
+          "value": "1vTeahUkP60PdWqwCTjSGJ",
+          "value_type": "IfcBuildingStorey"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "inherit_from_type",
+          "fact_key": "relationship:type",
+          "operation_id": "op5",
+          "ownership": "type_inherited",
+          "provenance": [
+            "user_authorization:explicit_request_reference",
+            "operation:op5"
+          ],
+          "source_fact_key": "relationship:type",
+          "source_kind": "approved_prototype",
+          "source_ref": "user-approved-prototype:0ZHc4SjhnChed_CMGdKBu8",
+          "unit": null,
+          "value": "0ZHc4SjhnChed_CMGdKBu8",
+          "value_type": "IfcWindowStyle"
+        }
+      ],
+      "semantic_manifest": {
+        "manifest_id": "semantic-manifest-a34c37a0b0b813650ecb93a5",
+        "policy_id": "window.add-with-opening.l2",
+        "policy_version": "0.2"
+      },
+      "target": {
+        "wall_global_id": "0jltRti3rFigAmdXYhXx0W"
+      }
+    }
+  ],
+  "postconditions": [
+    "opening_voids_wall",
+    "window_fills_opening",
+    "requested_geometry_matches"
+  ],
+  "preconditions": [
+    "base_model_fingerprint_matches",
+    "source_request_hash_matches",
+    "target_exists",
+    "opening_within_wall",
+    "opening_interval_available"
+  ],
+  "schema_version": "text2ifc/ifc-repair-changeset/0.2",
+  "scope": {
+    "forbidden_ids": [],
+    "target_ids": [
+      "2CsmzAChHF6O6maGXlo6yJ",
+      "0jltRti3rFigAmdXYhXxqI",
+      "1boalssSHBYut0JHgwRsGf",
+      "0jltRti3rFigAmdXYhXx0W"
+    ]
+  },
+  "semantic_manifest_ref": "changeset/semantic-manifests.json",
+  "semantic_manifest_sha256": "sha256:4a2a53f164ba25185bdc190cd134d7dc9ccdd54241c6e60e304c43651355d0e6",
+  "source_request_hash": "sha256:3943cec87601175556944deb7f6d0d5f3cc07585adaa96295c70a25400203545"
+}

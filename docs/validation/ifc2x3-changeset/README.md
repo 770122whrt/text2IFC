@@ -1,9 +1,14 @@
 # IFC2X3 Local ChangeSet 验证索引
 
-最新验收：[Phase 10.2 属性知识检索与完整链路验证报告](phase10.2-property-knowledge-validation-report.md)。
-它覆盖 IFC2X3 标准/项目属性知识、 reviewed alias、BGE-M3/Qdrant、
-通用 occurrence 属性写入，以及 LargeBuilding 真实 DeepSeek Stage 1/2、
-L1/L2 和成功 IFC 发布。
+最新验收：[Phase 10.5 Window Occurrence Fidelity 与验证加速报告](phase10.5-window-fidelity-validation-report.md)。
+  它记录 occurrence 属性/Quantity 输入与授权复用、Ground Truth Comparator、
+  不可变 validation cache，以及 AdvancedProject 冷启动 62.687 秒、热缓存
+  23.562 秒的完整验证。真实 DeepSeek r21 no-fallback UAT 已通过。
+
+当前可直接人工检查的单窗/多窗成功产物集中在
+[IFC Repair 成功案例集](../../../dataset/processed/proof/ifc-repair-success-cases/README.md)。
+每个案例都包含 original、damaged、repaired IFC、用户输入、Agent 输出、
+Bound ChangeSet、验证证据和独立报告。
 
 人工属性核验：
 [LargeBuilding 真实修复 Window 属性对比](phase10.1-largebuilding-window-property-comparison.md)。
@@ -17,6 +22,9 @@ Phase 8 验证报告：[Evaluation 0.2、Benchmark Gold 隔离与 LargeBuilding 
 
 | 文档 | 职责 | 当前状态 |
 |---|---|---|
+| [phase10.5-window-fidelity-validation-report.md](phase10.5-window-fidelity-validation-report.md) | occurrence 属性输入/授权复用、Ground Truth Comparator、validation cache、冷/热大型 IFC 性能与真实 DeepSeek UAT | 2026-07-26 全部通过；Production/private L1/L2 与 occurrence fidelity passed |
+| [phase10.4-comparator-0.2-validation-report.md](phase10.4-comparator-0.2-validation-report.md) | 大型 IFC 全局保全门禁、fail-closed 指纹、三次性能/内存基准与完整 Production 重放 | 2026-07-25 Comparator 与 AdvancedProject 五窗 L1/L2/发布闭环通过 |
+| [phase10.3-five-window-batch-validation-report.md](phase10.3-five-window-batch-validation-report.md) | dataset 审计、五窗 damage/repair、统一 ChangeSet、原子回滚、逐项 L1/L2、真实 DeepSeek 与大型 IFC 矩阵 | 2026-07-24 通过；五项 L1/L2 passed |
 | [phase10.2-property-knowledge-validation-report.md](phase10.2-property-knowledge-validation-report.md) | 自然语言属性解析、token 边界、BGE-M3/Qdrant、通用 occurrence 写入和真实 DeepSeek UAT | 2026-07-24 通过；L1/L2 passed |
 | [phase10-single-pipeline-input-output.md](phase10-single-pipeline-input-output.md) | 单个真实案例的全链路 Input/Output、各 Part 作用、产物位置和最终 IFC 效果 | 2026-07-22；面向工程理解与复现 |
 | [phase10-validation-report.md](phase10-validation-report.md) | Window 语义 manifest/Bound ChangeSet、原子写回、LargeBuilding 离线与四路径 DeepSeek L1/L2 | 2026-07-22 通过；后续细分为 10.1 精确属性写入和 10.2 检索/RAG |

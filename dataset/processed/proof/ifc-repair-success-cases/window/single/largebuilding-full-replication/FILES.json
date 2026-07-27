@@ -1,0 +1,127 @@
+{
+  "schema_version": "text2ifc/ifc-repair-success-case-files/0.1",
+  "case_id": "largebuilding-full-replication",
+  "copy_policy": "copy",
+  "files": [
+    {
+      "path": "01-original.ifc",
+      "role": "original_ground_truth",
+      "visibility": "evaluator_only",
+      "size_bytes": 1292595,
+      "sha256": "102f8123f85eae5e237d7f6a9dcbc364bd5f1c0cfb94b40a7eeb2d7eac9bb725",
+      "source": "dataset/processed/ifc-repair/phase10.1-full-property-replication/uat-20260723T065334162570Z/original-ground-truth.ifc"
+    },
+    {
+      "path": "02-damaged.ifc",
+      "role": "repair_input_ifc",
+      "visibility": "agent_input",
+      "size_bytes": 1287030,
+      "sha256": "ca703845ddf4a434eea0317498fb29893877f87d66047cf6c890a61cd2844933",
+      "source": "dataset/processed/ifc-repair/phase10.1-full-property-replication/uat-20260723T065334162570Z/damaged.ifc"
+    },
+    {
+      "path": "03-repaired.ifc",
+      "role": "published_repair_output",
+      "visibility": "public_artifact",
+      "size_bytes": 1292245,
+      "sha256": "2f26f1801ce666d61244fde7337aed2e7b3c0a835e768ac15a34e30fc5123b00",
+      "source": "dataset/processed/ifc-repair/phase10.1-full-property-replication/uat-20260723T065334162570Z/repaired.ifc"
+    },
+    {
+      "path": "input/request.json",
+      "role": "user_request",
+      "visibility": "agent_input",
+      "size_bytes": 3442,
+      "sha256": "2c6d548d7b706a9485565fa662ffad477a00b2f5c79ed668fff506bd6eefddc5",
+      "source": "dataset/processed/ifc-repair/phase10.1-full-property-replication/uat-20260723T065334162570Z/user-request.json"
+    },
+    {
+      "path": "agent/repair-intent.json",
+      "role": "stage1_repair_intent",
+      "visibility": "agent_output",
+      "size_bytes": 12298,
+      "sha256": "b02b57b416b24d9ad2ab202df6ee4bcc1b1e18e85fa148058bfcb01f39b6b69a",
+      "source": "dataset/processed/ifc-repair/phase10.1-full-property-replication/uat-20260723T065334162570Z/runtime/runs/repair-c709a79ddfe143f1abb2248c9230ebd9/intent/repair-intent.json"
+    },
+    {
+      "path": "agent/provider-draft.json",
+      "role": "stage2_changeset_draft",
+      "visibility": "agent_output",
+      "size_bytes": 1688,
+      "sha256": "3f68b0e00b501e2cae9520d35d96cd6772bffb242f7d8cad0bd8d8fe7a42db63",
+      "source": "dataset/processed/ifc-repair/phase10.1-full-property-replication/uat-20260723T065334162570Z/runtime/runs/repair-c709a79ddfe143f1abb2248c9230ebd9/changeset/provider-draft.json"
+    },
+    {
+      "path": "agent/provider-metadata-stage2.json",
+      "role": "stage2_provider_metadata",
+      "visibility": "audit",
+      "size_bytes": 646,
+      "sha256": "a1fbc1f5e93797ad69085ee77575159ac5911053fded587806732e8fed9a3efa",
+      "source": "dataset/processed/ifc-repair/phase10.1-full-property-replication/uat-20260723T065334162570Z/runtime/runs/repair-c709a79ddfe143f1abb2248c9230ebd9/changeset/attempt-001/provider-metadata.json"
+    },
+    {
+      "path": "changeset/bound-changeset.json",
+      "role": "bound_changeset",
+      "visibility": "execution_contract",
+      "size_bytes": 109508,
+      "sha256": "bf44900693720869c35937e06b9bce1d155c1a74716f585bef653baf09ccdcb0",
+      "source": "dataset/processed/ifc-repair/phase10.1-full-property-replication/uat-20260723T065334162570Z/runtime/runs/repair-c709a79ddfe143f1abb2248c9230ebd9/changeset/bound-changeset.json"
+    },
+    {
+      "path": "validation/mutation-manifest.private.json",
+      "role": "damage_ground_truth",
+      "visibility": "evaluator_only",
+      "size_bytes": 2905,
+      "sha256": "c65b02ce0f87311d75369e8cd2f11ec88cb56a0a6e7d84f667eb78a217468dcf",
+      "source": "dataset/processed/ifc-repair/phase10.1-full-property-replication/uat-20260723T065334162570Z/fixture/mutation_manifest.private.json"
+    },
+    {
+      "path": "validation/mutation-report.json",
+      "role": "damage_report",
+      "visibility": "audit",
+      "size_bytes": 1458,
+      "sha256": "2523790f7d71d22cf0ee6fd8dea0e44cb88e08196c4811d653988cdaeee5662c",
+      "source": "dataset/processed/ifc-repair/phase10.1-full-property-replication/uat-20260723T065334162570Z/fixture/mutation_report.json"
+    },
+    {
+      "path": "validation/production-evaluation.json",
+      "role": "production_publication_evidence",
+      "visibility": "public_evaluation",
+      "size_bytes": 11292,
+      "sha256": "f52deb4e273d39abd8321f505a0c390d2dc8a8bd3a8b327b480605ba926da7da",
+      "source": "dataset/processed/ifc-repair/phase10.1-full-property-replication/uat-20260723T065334162570Z/runtime/runs/repair-c709a79ddfe143f1abb2248c9230ebd9/.terminal-bundles/a9cf43ad6bec47a999ad4843e0c1bbfc/evaluation/public-evaluation.json"
+    },
+    {
+      "path": "validation/private-ground-truth-evaluation.json",
+      "role": "private_ground_truth_evaluation",
+      "visibility": "evaluator_only",
+      "size_bytes": 49184,
+      "sha256": "efa9fddcc9a761da9b8d4ad0703c65a3caaf8998038d0e0bcaf8b9387e5b6619",
+      "source": "dataset/processed/ifc-repair/phase10.1-full-property-replication/uat-20260723T065334162570Z/private-benchmark-evaluation.json"
+    },
+    {
+      "path": "validation/ifc-comparison.json",
+      "role": "full_model_ifcdiff",
+      "visibility": "evaluation",
+      "size_bytes": 6957,
+      "sha256": "102aa5a7b93304d7946977ac57bc42020d2b392aa116a22f2b0b0619372da786",
+      "source": "dataset/processed/ifc-repair/phase10.1-full-property-replication/uat-20260723T065334162570Z/official-ifcdiff.json"
+    },
+    {
+      "path": "validation/window-comparison.json",
+      "role": "cross_guid_window_comparison",
+      "visibility": "evaluation",
+      "size_bytes": 1589,
+      "sha256": "0811fa2ebfbb6248d6653ef74a26ab24546201af88013cc14699a6588c22b7da",
+      "source": "dataset/processed/ifc-repair/phase10.1-full-property-replication/uat-20260723T065334162570Z/mapped-window-comparison.json"
+    },
+    {
+      "path": "validation/run-summary.json",
+      "role": "uat_summary",
+      "visibility": "audit",
+      "size_bytes": 1335,
+      "sha256": "8d4d3c18f2f2253756281ef5684cdc173b91dccc953704628829bd53f3fb6ba9",
+      "source": "dataset/processed/ifc-repair/phase10.1-full-property-replication/uat-20260723T065334162570Z/result.json"
+    }
+  ]
+}

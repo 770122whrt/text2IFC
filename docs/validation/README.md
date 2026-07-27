@@ -1,8 +1,13 @@
 # Validation and Evaluation Documentation
 
-最新报告：[Phase 10.1 显式 IFC 属性写入与验证](ifc2x3-changeset/phase10.1-validation-report.md)。
-本阶段完成精确标量 Pset authoring、occurrence scope 保护、Type 复用/模板
-fallback 和 reopened L2；属性检索/RAG 仍属于独立的 Phase 10.2。
+最新报告：[Phase 10.5 Window Occurrence Fidelity 与验证加速](ifc2x3-changeset/phase10.5-window-fidelity-validation-report.md)。
+本阶段增加 occurrence 属性输入/授权复用、Ground Truth Comparator 和不可变
+validation cache；AdvancedProject 冷/热完整验证均进入 180 秒 / 4 GiB
+门槛。真实 DeepSeek r21 已通过 RepairIntent 0.4、Bound ChangeSet 0.3、
+Production/private L1/L2 与 occurrence fidelity，且没有 synthetic fallback。
+
+用于汇报和人工检查的 original/damaged/repaired IFC、Agent 输出和验证报告见
+[IFC Repair 成功案例集](../../dataset/processed/proof/ifc-repair-success-cases/README.md)。
 
 本目录集中保存可执行的验证设计、评估协议、样例冻结规则和配套实施指令。
 

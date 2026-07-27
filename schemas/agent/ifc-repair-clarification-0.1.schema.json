@@ -36,42 +36,96 @@
     "property_preview": {
       "oneOf": [
         {"type": "null"},
-        {
-          "type": "object",
-          "additionalProperties": false,
-          "required": [
-            "operation_id", "target_global_id", "request_hash", "model_fingerprint",
-            "set_name", "property_name", "value", "value_type", "unit", "scope",
-            "source", "preview_hash"
-          ],
-          "properties": {
-            "operation_id": {"type": "string", "minLength": 1, "maxLength": 128},
-            "target_global_id": {"type": "string", "minLength": 1, "maxLength": 128},
-            "request_hash": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
-            "model_fingerprint": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
-            "set_name": {"type": "string", "minLength": 1, "maxLength": 512},
-            "property_name": {"type": "string", "minLength": 1, "maxLength": 512},
-            "value": {"type": ["string", "number", "integer", "boolean"]},
-            "value_type": {"type": "string", "pattern": "^Ifc[A-Za-z0-9]+$"},
-            "unit": {"type": ["string", "null"], "maxLength": 128},
-            "scope": {"const": "occurrence_direct"},
-            "source": {
-              "type": "object",
-              "additionalProperties": false,
-              "required": ["source_kind", "reference", "excerpt"],
-              "properties": {
-                "source_kind": {"type": "string", "minLength": 1},
-                "reference": {"type": "string", "minLength": 1},
-                "excerpt": {"type": "string", "minLength": 1, "maxLength": 4096}
-              }
-            },
-            "preview_hash": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}
-          }
-        }
+        {"$ref": "#/$defs/property_preview_item"},
+        {"$ref": "#/$defs/property_preview_batch"},
+        {"$ref": "#/$defs/property_preview_transaction"}
       ]
     }
   },
   "$defs": {
+    "property_preview_batch": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "preview_kind", "operation_id", "target_global_id", "request_hash",
+        "model_fingerprint", "items", "preview_hash"
+      ],
+      "properties": {
+        "preview_kind": {"const": "property_batch"},
+        "operation_id": {"type": "string", "minLength": 1, "maxLength": 128},
+        "target_global_id": {"type": "string", "minLength": 1, "maxLength": 128},
+        "request_hash": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+        "model_fingerprint": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+        "items": {
+          "type": "array", "minItems": 1, "maxItems": 64,
+          "items": {"$ref": "#/$defs/property_preview_item"}
+        },
+        "preview_hash": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}
+      }
+    },
+    "property_preview_transaction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "preview_kind", "request_hash", "model_fingerprint", "batches",
+        "total_item_count", "preview_hash"
+      ],
+      "properties": {
+        "preview_kind": {"const": "property_transaction"},
+        "request_hash": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+        "model_fingerprint": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+        "batches": {
+          "type": "array", "minItems": 2, "maxItems": 16,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "operation_id", "target_global_id", "item_count", "batch_hash"
+            ],
+            "properties": {
+              "operation_id": {"type": "string", "minLength": 1, "maxLength": 128},
+              "target_global_id": {"type": "string", "minLength": 1, "maxLength": 128},
+              "item_count": {"type": "integer", "minimum": 1, "maximum": 64},
+              "batch_hash": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}
+            }
+          }
+        },
+        "total_item_count": {"type": "integer", "minimum": 2, "maximum": 1024},
+        "preview_hash": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}
+      }
+    },
+    "property_preview_item": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "operation_id", "target_global_id", "request_hash", "model_fingerprint",
+        "set_name", "property_name", "value", "value_type", "unit", "scope",
+        "source", "preview_hash"
+      ],
+      "properties": {
+        "operation_id": {"type": "string", "minLength": 1, "maxLength": 128},
+        "target_global_id": {"type": "string", "minLength": 1, "maxLength": 128},
+        "request_hash": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+        "model_fingerprint": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+        "set_name": {"type": "string", "minLength": 1, "maxLength": 512},
+        "property_name": {"type": "string", "minLength": 1, "maxLength": 512},
+        "value": {"type": ["string", "number", "integer", "boolean"]},
+        "value_type": {"type": "string", "pattern": "^Ifc[A-Za-z0-9]+$"},
+        "unit": {"type": ["string", "null"], "maxLength": 128},
+        "scope": {"const": "occurrence_direct"},
+        "source": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["source_kind", "reference", "excerpt"],
+          "properties": {
+            "source_kind": {"type": "string", "minLength": 1},
+            "reference": {"type": "string", "minLength": 1},
+            "excerpt": {"type": "string", "minLength": 1, "maxLength": 4096}
+          }
+        },
+        "preview_hash": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}
+      }
+    },
     "candidate": {
       "type": "object",
       "additionalProperties": false,

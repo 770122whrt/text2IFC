@@ -10,33 +10,16 @@ from text2ifc_ifc_repair.mutation import remove_windows_and_openings_batch
 ROOT = Path(__file__).resolve().parents[2]
 SOURCE = ROOT / "dataset" / "ifc" / "train" / "vvo.ifc"
 SOURCE_SHA256 = "b6c435be955aeb6b2998f42a62f4ebf8c3f91eb7d373ca71a2dcedfeb95b3fdc"
-TARGETS = (
-    {
-        "wall_global_id": "0jltRti3rFigAmdXYhXxuZ",
-        "opening_global_id": "2IUEnGd5v4Yfg1ZkLtd0Yb",
-        "window_global_id": "2IUEnGd5v4Yfg1ZlPtd0Yb",
-    },
-    {
-        "wall_global_id": "0jltRti3rFigAmdXYhXxqI",
-        "opening_global_id": "08xWVL$9z6JRwr3piJHoAz",
-        "window_global_id": "08xWVL$9z6JRwr3oWJHoAz",
-    },
-    {
-        "wall_global_id": "2HNE4WMQ1CXebZMaih8Xi_",
-        "opening_global_id": "1B$rgWypT66viEf30I1iSa",
-        "window_global_id": "1B$rgWypT66viEf2CI1iSa",
-    },
-    {
-        "wall_global_id": "2CsmzAChHF6O6maGXlo6yJ",
-        "opening_global_id": "2dYMXn0_5AKRbD_1mUIAqJ",
-        "window_global_id": "2dYMXn0_5AKRbD_0yUIAqJ",
-    },
-    {
-        "wall_global_id": "1cbLGwmrv8LAj2u11O6kyr",
-        "opening_global_id": "3CUgKOb6T3Vgk4LBnR_Z8F",
-        "window_global_id": "3CUgKOb6T3Vgk4LAzR_Z8F",
-    },
+CASE = json.loads(
+    (
+        ROOT
+        / "dataset"
+        / "manifests"
+        / "ifc-repair-cases"
+        / "vvo-five-window-001.private.json"
+    ).read_text(encoding="utf-8")
 )
+TARGETS = tuple(CASE["targets"])
 
 
 def _sha256(path: Path) -> str:
@@ -88,13 +71,38 @@ def test_batch_mutation_removes_five_chains_in_one_damaged_ifc(
     assert all(
         target["prototype_evidence"]["source"]
         == "damaged_ifc_surviving_type"
-        and target["prototype_evidence"]["surviving_occurrence_count"] >= 1
         for target in manifest["targets"]
     )
+    assert sum(
+        target["prototype_evidence"]["surviving_occurrence_count"] == 0
+        for target in manifest["targets"]
+    ) == 1
 
     report = json.loads(
         (output / "mutation_report.json").read_text(encoding="utf-8")
     )
+    assert report["removed_windows"] == [
+        {
+            "target_id": "window-repair-001",
+            "name": "固定:500x1180:279940",
+        },
+        {
+            "target_id": "window-repair-002",
+            "name": "固定:870x2370:255906",
+        },
+        {
+            "target_id": "window-repair-003",
+            "name": "四开落地窗:4500x2950:253321",
+        },
+        {
+            "target_id": "window-repair-004",
+            "name": "固定:1600x600:287667",
+        },
+        {
+            "target_id": "window-repair-005",
+            "name": "固定:1600x600:287848",
+        },
+    ]
     assert report["checks"]["all_target_regions_closed"] is True
     assert report["checks"]["all_host_walls_preserved"] is True
     assert len(report["geometry"]["targets"]) == 5

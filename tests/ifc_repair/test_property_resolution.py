@@ -111,7 +111,7 @@ def test_case_mismatch_is_not_corrected_and_becomes_custom_candidate() -> None:
         (
             _registry_with_property(template_type="TypePropertySingleValue"),
             "IfcDoor",
-            "STANDARD_PROPERTY_INAPPLICABLE",
+            "STANDARD_PROPERTY_INAPPLICABLE_REQUIRES_CONFIRMATION",
         ),
         (
             _registry_with_property(template_type="TypePropertyEnumeratedValue"),
@@ -131,7 +131,12 @@ def test_inapplicable_and_non_single_standard_properties_fail_closed(
         existing_facts=(),
         registry=registry,
     )
-    assert result.status is PropertyResolutionStatus.CLARIFICATION_REQUIRED
+    expected_status = (
+        PropertyResolutionStatus.CUSTOM_CONFIRMATION_REQUIRED
+        if reason == "STANDARD_PROPERTY_INAPPLICABLE_REQUIRES_CONFIRMATION"
+        else PropertyResolutionStatus.CLARIFICATION_REQUIRED
+    )
+    assert result.status is expected_status
     assert result.reason_code == reason
     assert result.requires_confirmation is True
 
@@ -258,4 +263,3 @@ def test_requested_type_conflict_does_not_override_official_metadata() -> None:
     assert result.status is PropertyResolutionStatus.CLARIFICATION_REQUIRED
     assert result.reason_code == "REQUESTED_VALUE_TYPE_CONFLICT"
     assert result.value_type == "IfcLabel"
-

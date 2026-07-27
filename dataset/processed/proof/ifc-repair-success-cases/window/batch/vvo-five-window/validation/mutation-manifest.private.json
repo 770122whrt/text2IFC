@@ -1,0 +1,544 @@
+{
+  "counts": {
+    "after": {
+      "IfcBuilding": 1,
+      "IfcBuildingStorey": 7,
+      "IfcDoor": 26,
+      "IfcOpeningElement": 52,
+      "IfcProject": 1,
+      "IfcRelFillsElement": 44,
+      "IfcRelVoidsElement": 52,
+      "IfcSite": 1,
+      "IfcSpace": 0,
+      "IfcWall": 77,
+      "IfcWindow": 18
+    },
+    "before": {
+      "IfcBuilding": 1,
+      "IfcBuildingStorey": 7,
+      "IfcDoor": 26,
+      "IfcOpeningElement": 57,
+      "IfcProject": 1,
+      "IfcRelFillsElement": 49,
+      "IfcRelVoidsElement": 57,
+      "IfcSite": 1,
+      "IfcSpace": 0,
+      "IfcWall": 77,
+      "IfcWindow": 23
+    }
+  },
+  "damaged_ifc": {
+    "path": "damaged.ifc",
+    "sha256": "7e0d474840ae2313fe4bdb56a903c8d04a2edca9f42c7591f212f8b7114aa904"
+  },
+  "mutation_type": "remove_windows_and_openings_batch",
+  "schema_version": "text2ifc/ifc-repair-mutation-private/0.2",
+  "source": {
+    "path": "E:/code for project/bimnet/dataset/ifc/train/vvo.ifc",
+    "schema": "IFC2X3",
+    "sha256": "b6c435be955aeb6b2998f42a62f4ebf8c3f91eb7d373ca71a2dcedfeb95b3fdc",
+    "size_bytes": 2409268
+  },
+  "targets": [
+    {
+      "opening": {
+        "geometric_center_offset_mm": 4701.96137,
+        "global_id": "2dYMXn0_5AKRbD_1mUIAqJ",
+        "ifc_class": "IfcOpeningElement",
+        "sill_height_mm": 2670.827827,
+        "step_id": 85742,
+        "wall_local_geometry_bounds_mm": {
+          "x": [
+            4111.96137,
+            5291.96137
+          ],
+          "y": [
+            -120.0,
+            120.0
+          ],
+          "z": [
+            2670.827827,
+            3170.827827
+          ]
+        },
+        "wall_local_origin_mm": [
+          5291.96137021794,
+          120.0,
+          2670.82782651313
+        ]
+      },
+      "opening_representation": [
+        {
+          "identifier": "Body",
+          "items": [
+            {
+              "depth": 240.0,
+              "extruded_direction": [
+                0.0,
+                0.0,
+                1.0
+              ],
+              "ifc_class": "IfcExtrudedAreaSolid",
+              "profile_ifc_class": "IfcRectangleProfileDef",
+              "profile_x_dim": 499.999999999999,
+              "profile_y_dim": 1180.0
+            }
+          ],
+          "type": "SweptSolid"
+        }
+      ],
+      "prototype_evidence": {
+        "global_id": "2dYMXn0_5AKRbD_1eUIAtb",
+        "ifc_class": "IfcWindowStyle",
+        "name": "500x1180",
+        "source": "damaged_ifc_surviving_type",
+        "surviving_occurrence_count": 1
+      },
+      "relationships": {
+        "fills_step_id": 85747,
+        "voids_step_id": 85745
+      },
+      "requested_properties": [
+        {
+          "property_name": "IsExternal",
+          "set_name": "Pset_WindowCommon",
+          "value": true
+        },
+        {
+          "property_name": "Reference",
+          "set_name": "Pset_WindowCommon",
+          "value": "500x1180"
+        }
+      ],
+      "target_id": "window-repair-001",
+      "wall": {
+        "axis_end_mm": [
+          17765.2918896498,
+          0.0,
+          0.0
+        ],
+        "axis_start_mm": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "geometry_capability": "straight_wall",
+        "global_id": "2CsmzAChHF6O6maGXlo6yJ",
+        "ifc_class": "IfcWallStandardCase",
+        "length_mm": 17765.2918896498,
+        "local_reference": "wall_local_start",
+        "name": "基本墙:240:224905",
+        "step_id": 713,
+        "storey": "标高2"
+      },
+      "window": {
+        "global_id": "2dYMXn0_5AKRbD_0yUIAqJ",
+        "height_mm": 499.999999999999,
+        "ifc_class": "IfcWindow",
+        "name": "固定:500x1180:279940",
+        "step_id": 68272,
+        "width_mm": 1180.0
+      }
+    },
+    {
+      "opening": {
+        "geometric_center_offset_mm": 9315.560798,
+        "global_id": "08xWVL$9z6JRwr3piJHoAz",
+        "ifc_class": "IfcOpeningElement",
+        "sill_height_mm": 610.0,
+        "step_id": 85848,
+        "wall_local_geometry_bounds_mm": {
+          "x": [
+            8880.560798,
+            9750.560798
+          ],
+          "y": [
+            -120.0,
+            120.0
+          ],
+          "z": [
+            610.0,
+            2980.0
+          ]
+        },
+        "wall_local_origin_mm": [
+          9750.56079796939,
+          120.0,
+          610.0
+        ]
+      },
+      "opening_representation": [
+        {
+          "identifier": "Body",
+          "items": [
+            {
+              "depth": 240.0,
+              "extruded_direction": [
+                0.0,
+                0.0,
+                1.0
+              ],
+              "ifc_class": "IfcExtrudedAreaSolid",
+              "profile_ifc_class": "IfcRectangleProfileDef",
+              "profile_x_dim": 2370.0,
+              "profile_y_dim": 869.999999999999
+            }
+          ],
+          "type": "SweptSolid"
+        }
+      ],
+      "prototype_evidence": {
+        "global_id": "08xWVL$9z6JRwr3pqJHoru",
+        "ifc_class": "IfcWindowStyle",
+        "name": "870x2370",
+        "source": "damaged_ifc_surviving_type",
+        "surviving_occurrence_count": 1
+      },
+      "relationships": {
+        "fills_step_id": 85853,
+        "voids_step_id": 85851
+      },
+      "requested_properties": [
+        {
+          "property_name": "IsExternal",
+          "set_name": "Pset_WindowCommon",
+          "value": true
+        },
+        {
+          "property_name": "Reference",
+          "set_name": "Pset_WindowCommon",
+          "value": "870x2370"
+        }
+      ],
+      "target_id": "window-repair-002",
+      "wall": {
+        "axis_end_mm": [
+          13455.5607979694,
+          0.0,
+          0.0
+        ],
+        "axis_start_mm": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "geometry_capability": "straight_wall",
+        "global_id": "0jltRti3rFigAmdXYhXxqI",
+        "ifc_class": "IfcWallStandardCase",
+        "length_mm": 13455.5607979694,
+        "local_reference": "wall_local_start",
+        "name": "基本墙:240:226415",
+        "step_id": 977,
+        "storey": "标高2"
+      },
+      "window": {
+        "global_id": "08xWVL$9z6JRwr3oWJHoAz",
+        "height_mm": 2370.0,
+        "ifc_class": "IfcWindow",
+        "name": "固定:870x2370:255906",
+        "step_id": 59619,
+        "width_mm": 869.999999999999
+      }
+    },
+    {
+      "opening": {
+        "geometric_center_offset_mm": 4280.0,
+        "global_id": "3xYoUsotL2OPYJwoCd43$o",
+        "ifc_class": "IfcOpeningElement",
+        "sill_height_mm": 131.396744,
+        "step_id": 86853,
+        "wall_local_geometry_bounds_mm": {
+          "x": [
+            2030.0,
+            6530.0
+          ],
+          "y": [
+            -300.0,
+            300.0
+          ],
+          "z": [
+            131.396744,
+            3081.396744
+          ]
+        },
+        "wall_local_origin_mm": [
+          6530.0,
+          300.0,
+          131.396743710457
+        ]
+      },
+      "opening_representation": [
+        {
+          "identifier": "Body",
+          "items": [
+            {
+              "depth": 600.0,
+              "extruded_direction": [
+                0.0,
+                0.0,
+                1.0
+              ],
+              "ifc_class": "IfcExtrudedAreaSolid",
+              "profile_ifc_class": "IfcRectangleProfileDef",
+              "profile_x_dim": 2950.0,
+              "profile_y_dim": 4500.0
+            }
+          ],
+          "type": "SweptSolid"
+        }
+      ],
+      "prototype_evidence": {
+        "global_id": "3xYoUsotL2OPYJwoKd43pe",
+        "ifc_class": "IfcWindowStyle",
+        "name": "4500x2950",
+        "source": "damaged_ifc_surviving_type",
+        "surviving_occurrence_count": 0
+      },
+      "relationships": {
+        "fills_step_id": 86859,
+        "voids_step_id": 86856
+      },
+      "requested_properties": [
+        {
+          "property_name": "IsExternal",
+          "set_name": "Pset_WindowCommon",
+          "value": true
+        },
+        {
+          "property_name": "Reference",
+          "set_name": "Pset_WindowCommon",
+          "value": "4500x2950"
+        }
+      ],
+      "target_id": "window-repair-003",
+      "wall": {
+        "axis_end_mm": [
+          8445.0,
+          -0.0,
+          0.0
+        ],
+        "axis_start_mm": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "geometry_capability": "straight_wall",
+        "global_id": "1boalssSHBYut0JHgwRsGf",
+        "ifc_class": "IfcWallStandardCase",
+        "length_mm": 8445.0,
+        "local_reference": "wall_local_start",
+        "name": "基本墙:600:239145",
+        "step_id": 3626,
+        "storey": "标高0"
+      },
+      "window": {
+        "global_id": "3xYoUsotL2OPYJwp0d43$o",
+        "height_mm": 2950.0,
+        "ifc_class": "IfcWindow",
+        "name": "四开落地窗:4500x2950:253321",
+        "step_id": 52752,
+        "width_mm": 4500.0
+      }
+    },
+    {
+      "opening": {
+        "geometric_center_offset_mm": 3283.663136,
+        "global_id": "0ZHc4SjhnChed_CM8dKBvN",
+        "ifc_class": "IfcOpeningElement",
+        "sill_height_mm": 532.987271,
+        "step_id": 86062,
+        "wall_local_geometry_bounds_mm": {
+          "x": [
+            2983.663136,
+            3583.663136
+          ],
+          "y": [
+            -120.0,
+            120.0
+          ],
+          "z": [
+            532.987271,
+            2132.987271
+          ]
+        },
+        "wall_local_origin_mm": [
+          3583.6631359055,
+          120.0,
+          532.987270802022
+        ]
+      },
+      "opening_representation": [
+        {
+          "identifier": "Body",
+          "items": [
+            {
+              "depth": 240.0,
+              "extruded_direction": [
+                0.0,
+                0.0,
+                1.0
+              ],
+              "ifc_class": "IfcExtrudedAreaSolid",
+              "profile_ifc_class": "IfcRectangleProfileDef",
+              "profile_x_dim": 1600.0,
+              "profile_y_dim": 600.0
+            }
+          ],
+          "type": "SweptSolid"
+        }
+      ],
+      "prototype_evidence": {
+        "global_id": "0ZHc4SjhnChed_CMGdKBu8",
+        "ifc_class": "IfcWindowStyle",
+        "name": "1600x600",
+        "source": "damaged_ifc_surviving_type",
+        "surviving_occurrence_count": 1
+      },
+      "relationships": {
+        "fills_step_id": 86067,
+        "voids_step_id": 86065
+      },
+      "requested_properties": [
+        {
+          "property_name": "IsExternal",
+          "set_name": "Pset_WindowCommon",
+          "value": true
+        },
+        {
+          "property_name": "Reference",
+          "set_name": "Pset_WindowCommon",
+          "value": "1600x600"
+        }
+      ],
+      "target_id": "window-repair-004",
+      "wall": {
+        "axis_end_mm": [
+          9270.0,
+          0.0,
+          0.0
+        ],
+        "axis_start_mm": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "geometry_capability": "straight_wall",
+        "global_id": "0jltRti3rFigAmdXYhXx0W",
+        "ifc_class": "IfcWallStandardCase",
+        "length_mm": 9270.0,
+        "local_reference": "wall_local_start",
+        "name": "基本墙:240:227677",
+        "step_id": 1406,
+        "storey": "标高2"
+      },
+      "window": {
+        "global_id": "0ZHc4SjhnChed_CN4dKBvN",
+        "height_mm": 1600.0,
+        "ifc_class": "IfcWindow",
+        "name": "固定:1600x600:287667",
+        "step_id": 82337,
+        "width_mm": 600.0
+      }
+    },
+    {
+      "opening": {
+        "geometric_center_offset_mm": 1078.663136,
+        "global_id": "0ZHc4SjhnChed_CM8dKBcC",
+        "ifc_class": "IfcOpeningElement",
+        "sill_height_mm": 533.499689,
+        "step_id": 86114,
+        "wall_local_geometry_bounds_mm": {
+          "x": [
+            778.663136,
+            1378.663136
+          ],
+          "y": [
+            -120.0,
+            120.0
+          ],
+          "z": [
+            533.499689,
+            2133.499689
+          ]
+        },
+        "wall_local_origin_mm": [
+          1378.6631359055,
+          120.0,
+          533.499689482789
+        ]
+      },
+      "opening_representation": [
+        {
+          "identifier": "Body",
+          "items": [
+            {
+              "depth": 240.0,
+              "extruded_direction": [
+                0.0,
+                0.0,
+                1.0
+              ],
+              "ifc_class": "IfcExtrudedAreaSolid",
+              "profile_ifc_class": "IfcRectangleProfileDef",
+              "profile_x_dim": 1600.0,
+              "profile_y_dim": 600.0
+            }
+          ],
+          "type": "SweptSolid"
+        }
+      ],
+      "prototype_evidence": {
+        "global_id": "0ZHc4SjhnChed_CMGdKBu8",
+        "ifc_class": "IfcWindowStyle",
+        "name": "1600x600",
+        "source": "damaged_ifc_surviving_type",
+        "surviving_occurrence_count": 1
+      },
+      "relationships": {
+        "fills_step_id": 86119,
+        "voids_step_id": 86117
+      },
+      "requested_properties": [
+        {
+          "property_name": "IsExternal",
+          "set_name": "Pset_WindowCommon",
+          "value": true
+        },
+        {
+          "property_name": "Reference",
+          "set_name": "Pset_WindowCommon",
+          "value": "1600x600"
+        }
+      ],
+      "target_id": "window-repair-005",
+      "wall": {
+        "axis_end_mm": [
+          9270.0,
+          0.0,
+          0.0
+        ],
+        "axis_start_mm": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "geometry_capability": "straight_wall",
+        "global_id": "0jltRti3rFigAmdXYhXx0W",
+        "ifc_class": "IfcWallStandardCase",
+        "length_mm": 9270.0,
+        "local_reference": "wall_local_start",
+        "name": "基本墙:240:227677",
+        "step_id": 1406,
+        "storey": "标高2"
+      },
+      "window": {
+        "global_id": "0ZHc4SjhnChed_CN4dKBcC",
+        "height_mm": 1600.0,
+        "ifc_class": "IfcWindow",
+        "name": "固定:1600x600:287848",
+        "step_id": 82391,
+        "width_mm": 600.0
+      }
+    }
+  ]
+}

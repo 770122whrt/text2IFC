@@ -468,7 +468,7 @@ class RepairAPI:
                     )
                     for operation_id in sorted(production_evidence.operation_types)
                 )
-                manifest_hashes: dict[str, str] = {}
+                manifest_payloads: dict[str, str] = {}
                 for manifest in manifests:
                     payload = json.dumps(
                         semantic_manifest_to_dict(manifest),
@@ -479,9 +479,52 @@ class RepairAPI:
                     ) + "\n"
                     manifest_path = changeset_dir / f"semantic-manifest-{manifest.operation_id}.json"
                     atomic_write_text(manifest_path, payload)
-                    manifest_hashes[manifest.operation_id] = (
-                        "sha256:" + hashlib.sha256(payload.encode("utf-8")).hexdigest()
+                    manifest_payloads[manifest.operation_id] = payload
+                if len(manifests) == 1:
+                    only = manifests[0]
+                    semantic_manifest_ref = (
+                        f"changeset/semantic-manifest-{only.operation_id}.json"
                     )
+                    semantic_manifest_hash = (
+                        "sha256:"
+                        + hashlib.sha256(
+                            manifest_payloads[only.operation_id].encode("utf-8")
+                        ).hexdigest()
+                    )
+                else:
+                    bundle_payload = (
+                        json.dumps(
+                            {
+                                "schema_version": (
+                                    "text2ifc/ifc-repair-semantic-manifest-bundle/0.1"
+                                ),
+                                "manifests": [
+                                    semantic_manifest_to_dict(manifest)
+                                    for manifest in manifests
+                                ],
+                            },
+                            ensure_ascii=False,
+                            sort_keys=True,
+                            separators=(",", ":"),
+                            allow_nan=False,
+                        )
+                        + "\n"
+                    )
+                    atomic_write_text(
+                        changeset_dir / "semantic-manifests.json",
+                        bundle_payload,
+                    )
+                    semantic_manifest_ref = "changeset/semantic-manifests.json"
+                    semantic_manifest_hash = (
+                        "sha256:"
+                        + hashlib.sha256(bundle_payload.encode("utf-8")).hexdigest()
+                    )
+                # ChangeSet 0.2 binds one immutable semantic-authority artifact.
+                # For a batch, that artifact is the ordered manifest bundle.
+                manifest_hashes = {
+                    manifest.operation_id: semantic_manifest_hash
+                    for manifest in manifests
+                }
                 generated = self._changeset_stage(
                     provider=self.provider,
                     case_id=run_id,
@@ -494,9 +537,7 @@ class RepairAPI:
                     output_dir=changeset_dir,
                     semantic_manifests=manifests,
                     semantic_manifest_hashes=manifest_hashes,
-                    semantic_manifest_ref=(
-                        f"changeset/semantic-manifest-{manifests[0].operation_id}.json"
-                    ),
+                    semantic_manifest_ref=semantic_manifest_ref,
                 )
                 if not generated.get("valid") or generated.get("changeset") is None:
                     raise ValueError("CHANGESET_STAGE_FAILED")
@@ -758,9 +799,33 @@ def _clarification(run_id: str, version: int, resolution: Any) -> Clarification:
         property_preview=(
             None
             if getattr(resolution, "property_preview", None) is None
-            else dict(resolution.property_preview)
+            else _public_property_preview(resolution.property_preview)
         ),
     )
+
+
+def _public_property_preview(preview: Mapping[str, Any]) -> dict[str, Any]:
+    """Keep multi-operation confirmation public records bounded and readable."""
+
+    if preview.get("preview_kind") != "property_transaction":
+        return dict(preview)
+    batches = [
+        {
+            "operation_id": str(item["operation_id"]),
+            "target_global_id": str(item["target_global_id"]),
+            "item_count": len(item.get("items", ())),
+            "batch_hash": str(item["preview_hash"]),
+        }
+        for item in preview.get("batches", ())
+    ]
+    return {
+        "preview_kind": "property_transaction",
+        "request_hash": str(preview["request_hash"]),
+        "model_fingerprint": str(preview["model_fingerprint"]),
+        "batches": batches,
+        "total_item_count": sum(item["item_count"] for item in batches),
+        "preview_hash": str(preview["preview_hash"]),
+    }
 
 
 def _parameter_clarification(

@@ -94,9 +94,14 @@ Prototype 确认案例的 IFC 文件哈希与其余三例不同，不影响 L1/L
 
 唯一 skip 是既有 Windows symlink 权限分支；其他 reparse/junction 安全测试仍覆盖相同边界。
 
-## Phase 10.1 交接
+## Phase 10.1 / 10.2 交接（2026-07-23 细化）
 
-后续 Phase 10.1 再设计 IFC2X3 属性标准知识源、项目属性索引、关键词与向量混合
-检索、置信度/候选间隔校准、歧义候选澄清，以及每个自定义属性的强制用户确认。
-这些能力只能向现有通用 semantic slot、manifest 与 operation registry 接口提供候选
-事实，不能绕过授权、Binder、L1/L2 或发布门槛。
+后续范围已拆成两个独立阶段，避免把 IFC authoring 问题和检索准确率混在一起：
+
+- Phase 10.1：用户已经明确给出 Pset、Property 和标量值时，使用现有离线
+  IFC2X3 官方 registry 做精确校验，完成自定义属性确认、Occurrence/Type 作用域
+  防护、原子写回和 requested-property L2；不使用 RAG。
+- Phase 10.2：再设计项目属性索引、多语言别名、关键词/向量混合检索、置信度与
+  候选间隔、歧义澄清。它的输出只能是 Phase 10.1 已验证的精确属性合同。
+
+两个阶段都不能绕过授权、Binder、重新打开 IFC、L1/L2 或发布门槛。

@@ -140,7 +140,11 @@ def test_manifest_rejects_non_finite_values(value: float) -> None:
 
 @pytest.mark.parametrize(
     "source_key",
-    ["quantity:BaseQuantities.Width", "quantity:Qto_WindowBaseQuantities.Width"],
+    [
+        "quantity:BaseQuantities.Width",
+        "quantity:Qto_WindowBaseQuantities.Width",
+        "quantity:BaseQuantities.SillHeight",
+    ],
 )
 def test_window_quantity_aliases_share_one_role_and_keep_source_key(
     source_key: str,
@@ -149,7 +153,8 @@ def test_window_quantity_aliases_share_one_role_and_keep_source_key(
 
     normalized = canonicalize_window_fact_key(source_key)
 
-    assert normalized.fact_key == "quantity:window-base.Width"
+    quantity_name = source_key.rsplit(".", 1)[-1]
+    assert normalized.fact_key == f"quantity:window-base.{quantity_name}"
     assert normalized.source_fact_key == source_key
 
 
@@ -185,10 +190,52 @@ def test_assignment_identity_and_sorting_are_operation_neutral() -> None:
     assert identities == sorted(identities)
     assert identities[0] == (
         "operation-window-001",
+        "window_occurrence",
         "attribute:OverallWidth",
         "occurrence_direct",
         "set_attribute",
     )
+
+
+def test_manifest_effective_materials_prefer_occurrence_direct_over_type() -> None:
+    api = _api()
+    payload = valid_manifest()
+    payload["assignments"] = [
+        {
+            "operation_id": "operation-window-001",
+            "fact_key": "material:Anodic-Brown",
+            "source_fact_key": "material:Anodic-Brown",
+            "value": "Anodic Brown",
+            "value_type": "IfcMaterial",
+            "unit": None,
+            "ownership": "type_inherited",
+            "applicability": "conditional",
+            "source_kind": "approved_prototype",
+            "source_ref": "resource:step:100",
+            "provenance": ["type_record:window-style-001"],
+            "authoring_action": "inherit_from_type",
+        },
+        {
+            "operation_id": "operation-window-001",
+            "fact_key": "material:Glass",
+            "source_fact_key": "material:Glass",
+            "value": "Glass",
+            "value_type": "IfcMaterial",
+            "unit": None,
+            "ownership": "occurrence_direct",
+            "applicability": "conditional",
+            "source_kind": "authorized_type_cohort",
+            "source_ref": "resource:step:200",
+            "provenance": ["cohort-record:window-001"],
+            "authoring_action": "reuse_material",
+        },
+    ]
+
+    expected = api.semantic_manifest_expected_facts(
+        api.parse_semantic_manifest(payload)
+    )
+
+    assert [fact.fact_key for fact in expected] == ["material:Glass"]
 
 
 def test_future_operation_registers_its_own_fact_key_normalizer() -> None:

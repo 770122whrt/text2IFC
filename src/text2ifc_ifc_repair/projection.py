@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 from collections.abc import Mapping
 from typing import Any
 
@@ -89,10 +90,7 @@ def project_public_batch_repair_spec(
         opening = target["opening"]
         window = target["window"]
         prototype = target["prototype_evidence"]
-        if (
-            prototype.get("source") != "damaged_ifc_surviving_type"
-            or int(prototype.get("surviving_occurrence_count", 0)) < 1
-        ):
+        if prototype.get("source") != "damaged_ifc_surviving_type":
             raise ValueError("BATCH_PROTOTYPE_EVIDENCE_INVALID")
         operations.append(
             {
@@ -125,6 +123,39 @@ def project_public_batch_repair_spec(
                         "evidence": "damaged_ifc_surviving_type",
                     },
                 },
+                "requested_properties": [
+                    {
+                        "set_name": str(item["set_name"]),
+                        "property_name": str(item["property_name"]),
+                        "value": item["value"],
+                        "requested_value_type": str(
+                            item["requested_value_type"]
+                        ),
+                        "unit": (
+                            None
+                            if item.get("unit") is None
+                            else str(item["unit"])
+                        ),
+                    }
+                    for item in target.get("requested_properties", ())
+                ],
+                "requested_quantities": [
+                    {
+                        "set_name": str(item["set_name"]),
+                        "quantity_name": str(item["quantity_name"]),
+                        "value": float(item["value"]),
+                        "value_type": str(item["value_type"]),
+                        "scope": str(
+                            item.get("scope", "window_occurrence")
+                        ),
+                        "unit": (
+                            None
+                            if item.get("unit") is None
+                            else str(item["unit"])
+                        ),
+                    }
+                    for item in target.get("requested_quantities", ())
+                ],
             }
         )
     return {
@@ -167,6 +198,28 @@ def render_batch_repair_request(public_spec: Mapping[str, Any]) -> str:
             f"窗型“{prototype['name']}”（GlobalId: {prototype['global_id']}），"
             "窗完整填充洞口。"
         )
+        if operation.get("requested_properties"):
+            lines.append(
+                "   属性要求："
+                + "、".join(
+                    f"{item['set_name']}.{item['property_name']}="
+                    f"{json.dumps(item['value'], ensure_ascii=False)}"
+                    f" ({item['requested_value_type']})"
+                    f"{'' if item.get('unit') is None else ' ' + item['unit']}"
+                    for item in operation["requested_properties"]
+                )
+            )
+        if operation.get("requested_quantities"):
+            lines.append(
+                "   窗口 occurrence 数量要求："
+                + "、".join(
+                    f"{item['scope']}:{item['set_name']}."
+                    f"{item['quantity_name']}="
+                    f"{item['value']:g}"
+                    f"{'' if item.get('unit') is None else ' ' + item['unit']}"
+                    for item in operation["requested_quantities"]
+                )
+            )
     lines.extend(
         [
             "约束：",

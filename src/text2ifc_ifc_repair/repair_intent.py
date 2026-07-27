@@ -44,15 +44,27 @@ REPAIR_INTENT_BODY_SCHEMA_VERSION_0_3 = (
 REPAIR_INTENT_BODY_SCHEMA_PATH_0_3 = Path(
     "schemas/agent/ifc-repair-intent-body-0.3.schema.json"
 )
+REPAIR_INTENT_SCHEMA_VERSION_0_4 = "text2ifc/ifc-repair-intent/0.4"
+REPAIR_INTENT_SCHEMA_PATH_0_4 = Path(
+    "schemas/agent/ifc-repair-intent-0.4.schema.json"
+)
+REPAIR_INTENT_BODY_SCHEMA_VERSION_0_4 = (
+    "text2ifc/ifc-repair-intent-body/0.4"
+)
+REPAIR_INTENT_BODY_SCHEMA_PATH_0_4 = Path(
+    "schemas/agent/ifc-repair-intent-body-0.4.schema.json"
+)
 _SCHEMA_PATHS = {
     REPAIR_INTENT_SCHEMA_VERSION: REPAIR_INTENT_SCHEMA_PATH,
     REPAIR_INTENT_SCHEMA_VERSION_0_2: REPAIR_INTENT_SCHEMA_PATH_0_2,
     REPAIR_INTENT_SCHEMA_VERSION_0_3: REPAIR_INTENT_SCHEMA_PATH_0_3,
+    REPAIR_INTENT_SCHEMA_VERSION_0_4: REPAIR_INTENT_SCHEMA_PATH_0_4,
 }
 _BODY_SCHEMA_PATHS = {
     REPAIR_INTENT_BODY_SCHEMA_VERSION: REPAIR_INTENT_BODY_SCHEMA_PATH,
     REPAIR_INTENT_BODY_SCHEMA_VERSION_0_2: REPAIR_INTENT_BODY_SCHEMA_PATH_0_2,
     REPAIR_INTENT_BODY_SCHEMA_VERSION_0_3: REPAIR_INTENT_BODY_SCHEMA_PATH_0_3,
+    REPAIR_INTENT_BODY_SCHEMA_VERSION_0_4: REPAIR_INTENT_BODY_SCHEMA_PATH_0_4,
 }
 
 
@@ -188,6 +200,102 @@ class PrototypeIntent:
 
 
 @dataclass(frozen=True)
+class QuantityIntent:
+    scope: str
+    set_name: str
+    quantity_name: str
+    value: Any
+    value_type: str
+    unit: str | None
+    source: PublicProvenance
+
+    @classmethod
+    def from_dict(cls, value: Mapping[str, Any]) -> "QuantityIntent":
+        return cls(
+            scope=str(value["scope"]),
+            set_name=str(value["set_name"]),
+            quantity_name=str(value["quantity_name"]),
+            value=value["value"],
+            value_type=str(value["value_type"]),
+            unit=None if value["unit"] is None else str(value["unit"]),
+            source=PublicProvenance.from_dict(value["source"]),
+        )
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "scope": self.scope,
+            "set_name": self.set_name,
+            "quantity_name": self.quantity_name,
+            "value": self.value,
+            "value_type": self.value_type,
+            "unit": self.unit,
+            "source": self.source.to_dict(),
+        }
+
+
+@dataclass(frozen=True)
+class OccurrenceReuseIntent:
+    mode: str
+    reference_kind: str
+    reference: str
+    include_patterns: tuple[str, ...]
+    source: PublicProvenance
+
+    @classmethod
+    def from_dict(cls, value: Mapping[str, Any]) -> "OccurrenceReuseIntent":
+        return cls(
+            mode=str(value["mode"]),
+            reference_kind=str(value["reference_kind"]),
+            reference=str(value["reference"]),
+            include_patterns=tuple(str(item) for item in value["include_patterns"]),
+            source=PublicProvenance.from_dict(value["source"]),
+        )
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "mode": self.mode,
+            "reference_kind": self.reference_kind,
+            "reference": self.reference,
+            "include_patterns": list(self.include_patterns),
+            "source": self.source.to_dict(),
+        }
+
+
+@dataclass(frozen=True)
+class OccurrenceSemanticBundle:
+    bundle_id: str
+    property_intents: tuple[
+        ExactPropertyIntent | NaturalLanguagePropertyIntent, ...
+    ]
+    quantity_intents: tuple[QuantityIntent, ...]
+    provenance: tuple[PublicProvenance, ...]
+
+    @classmethod
+    def from_dict(cls, value: Mapping[str, Any]) -> "OccurrenceSemanticBundle":
+        return cls(
+            bundle_id=str(value["bundle_id"]),
+            property_intents=tuple(
+                _property_intent_from_dict(item)
+                for item in value["property_intents"]
+            ),
+            quantity_intents=tuple(
+                QuantityIntent.from_dict(item) for item in value["quantity_intents"]
+            ),
+            provenance=tuple(
+                PublicProvenance.from_dict(item) for item in value["provenance"]
+            ),
+        )
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "bundle_id": self.bundle_id,
+            "property_intents": [item.to_dict() for item in self.property_intents],
+            "quantity_intents": [item.to_dict() for item in self.quantity_intents],
+            "provenance": [item.to_dict() for item in self.provenance],
+        }
+
+
+@dataclass(frozen=True)
 class OperationIntent:
     operation_id: str
     operation_type: str
@@ -201,11 +309,16 @@ class OperationIntent:
         ExactPropertyIntent | NaturalLanguagePropertyIntent, ...
     ] = ()
     _has_property_intents_field: bool = False
+    semantic_bundle_refs: tuple[str, ...] = ()
+    quantity_intents: tuple[QuantityIntent, ...] = ()
+    occurrence_reuse_intent: OccurrenceReuseIntent | None = None
+    _has_occurrence_semantics_fields: bool = False
 
     @classmethod
     def from_dict(cls, value: Mapping[str, Any]) -> "OperationIntent":
         target_document = _freeze_json(value["target_query"])
         prototype = value["prototype_intent"]
+        reuse = value.get("occurrence_reuse_intent")
         return cls(
             operation_id=str(value["operation_id"]),
             operation_type=str(value["operation_type"]),
@@ -226,6 +339,21 @@ class OperationIntent:
             ),
             _target_query_document=target_document,
             _has_property_intents_field="property_intents" in value,
+            semantic_bundle_refs=tuple(
+                str(item) for item in value.get("semantic_bundle_refs", ())
+            ),
+            quantity_intents=tuple(
+                QuantityIntent.from_dict(item)
+                for item in value.get("quantity_intents", ())
+            ),
+            occurrence_reuse_intent=(
+                None if reuse is None else OccurrenceReuseIntent.from_dict(reuse)
+            ),
+            _has_occurrence_semantics_fields=(
+                "semantic_bundle_refs" in value
+                or "quantity_intents" in value
+                or "occurrence_reuse_intent" in value
+            ),
         )
 
     def to_dict(self) -> dict[str, Any]:
@@ -244,6 +372,16 @@ class OperationIntent:
             payload["property_intents"] = [
                 item.to_dict() for item in self.property_intents
             ]
+        if self._has_occurrence_semantics_fields:
+            payload["semantic_bundle_refs"] = list(self.semantic_bundle_refs)
+            payload["quantity_intents"] = [
+                item.to_dict() for item in self.quantity_intents
+            ]
+            payload["occurrence_reuse_intent"] = (
+                None
+                if self.occurrence_reuse_intent is None
+                else self.occurrence_reuse_intent.to_dict()
+            )
         return payload
 
 
@@ -256,6 +394,8 @@ class RepairIntent:
     operations: tuple[OperationIntent, ...]
     provenance: tuple[PublicProvenance, ...]
     schema_version: str = REPAIR_INTENT_SCHEMA_VERSION
+    semantic_bundles: tuple[OccurrenceSemanticBundle, ...] = ()
+    _has_semantic_bundles_field: bool = False
 
     @classmethod
     def from_dict(
@@ -286,6 +426,29 @@ class RepairIntent:
                 "Operation IDs must be unique within one RepairIntent.",
                 path="/operations",
             )
+        bundle_ids = [
+            str(item["bundle_id"]) for item in payload.get("semantic_bundles", ())
+        ]
+        if len(bundle_ids) != len(set(bundle_ids)):
+            raise RepairIntentError(
+                RepairIntentCode.SCHEMA_INVALID,
+                "Semantic bundle IDs must be unique within one RepairIntent.",
+                path="/semantic_bundles",
+            )
+        declared_bundle_ids = set(bundle_ids)
+        for operation_index, operation in enumerate(payload["operations"]):
+            for ref_index, bundle_ref in enumerate(
+                operation.get("semantic_bundle_refs", ())
+            ):
+                if bundle_ref not in declared_bundle_ids:
+                    raise RepairIntentError(
+                        RepairIntentCode.SCHEMA_INVALID,
+                        f"Unknown semantic bundle reference: {bundle_ref}",
+                        path=(
+                            f"/operations/{operation_index}/"
+                            f"semantic_bundle_refs/{ref_index}"
+                        ),
+                    )
 
         operations: list[OperationIntent] = []
         for index, raw_operation in enumerate(payload["operations"]):
@@ -351,10 +514,15 @@ class RepairIntent:
                 PublicProvenance.from_dict(item) for item in payload["provenance"]
             ),
             schema_version=schema_version,
+            semantic_bundles=tuple(
+                OccurrenceSemanticBundle.from_dict(item)
+                for item in payload.get("semantic_bundles", ())
+            ),
+            _has_semantic_bundles_field="semantic_bundles" in payload,
         )
 
     def to_dict(self) -> dict[str, Any]:
-        return {
+        payload = {
             "schema_version": self.schema_version,
             "request_id": self.request_id,
             "source_request_hash": self.source_request_hash,
@@ -363,6 +531,11 @@ class RepairIntent:
             "operations": [operation.to_dict() for operation in self.operations],
             "provenance": [item.to_dict() for item in self.provenance],
         }
+        if self._has_semantic_bundles_field:
+            payload["semantic_bundles"] = [
+                item.to_dict() for item in self.semantic_bundles
+            ]
+        return payload
 
     def canonical_json(self) -> str:
         return _canonical_json(self.to_dict())
@@ -480,20 +653,27 @@ __all__ = [
     "MAX_OPERATIONS",
     "MAX_PROVENANCE_EXCERPT_CHARS",
     "OperationIntent",
+    "OccurrenceReuseIntent",
+    "OccurrenceSemanticBundle",
     "PrototypeIntent",
     "PublicProvenance",
+    "QuantityIntent",
     "REPAIR_INTENT_BODY_SCHEMA_PATH",
     "REPAIR_INTENT_BODY_SCHEMA_PATH_0_2",
     "REPAIR_INTENT_BODY_SCHEMA_VERSION",
     "REPAIR_INTENT_BODY_SCHEMA_VERSION_0_2",
     "REPAIR_INTENT_BODY_SCHEMA_PATH_0_3",
     "REPAIR_INTENT_BODY_SCHEMA_VERSION_0_3",
+    "REPAIR_INTENT_BODY_SCHEMA_PATH_0_4",
+    "REPAIR_INTENT_BODY_SCHEMA_VERSION_0_4",
     "REPAIR_INTENT_SCHEMA_PATH",
     "REPAIR_INTENT_SCHEMA_PATH_0_2",
     "REPAIR_INTENT_SCHEMA_VERSION",
     "REPAIR_INTENT_SCHEMA_VERSION_0_2",
     "REPAIR_INTENT_SCHEMA_PATH_0_3",
     "REPAIR_INTENT_SCHEMA_VERSION_0_3",
+    "REPAIR_INTENT_SCHEMA_PATH_0_4",
+    "REPAIR_INTENT_SCHEMA_VERSION_0_4",
     "RepairIntent",
     "RepairIntentCode",
     "RepairIntentError",

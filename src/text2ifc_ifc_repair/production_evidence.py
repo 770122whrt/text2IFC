@@ -26,6 +26,7 @@ from .property_intent import ExactPropertyIntent, NaturalLanguagePropertyIntent
 from .resolution_flow import ResolutionBatch, ResolvedOperation
 from .semantic_facts import (
     SemanticFact,
+    apply_effective_material_precedence,
     semantic_fact_key_token,
     semantic_facts_from_element_record,
     semantic_facts_from_type_record,
@@ -48,6 +49,7 @@ _AUTHORIZED_SEMANTIC_KINDS = frozenset(
         "user_authorized_prototype",
         "system_generated_type",
         "authorized_property_fact",
+        "authorized_occurrence_assignment",
         "deterministic_occurrence_property",
     }
 )
@@ -175,6 +177,7 @@ def build_production_evidence(
                 for fact in candidates
                 if fact.source_kind is EvidenceSourceKind.EXPLICIT_REQUEST
             )
+        candidates = apply_effective_material_precedence(candidates)
         selected, operation_conflicts = _select_authority(operation_id, candidates)
         policy = extend_policy_with_explicit_facts(
             policy,
@@ -310,6 +313,14 @@ def _operation_candidates(
                     resolved_operation=resolved_operation,
                     request_hash=request_hash,
                     model_fingerprint=model_fingerprint,
+                )
+            )
+            continue
+        if kind == "authorized_occurrence_assignment":
+            facts.append(
+                _authorized_occurrence_assignment(
+                    authority,
+                    operation_id=operation_id,
                 )
             )
             continue
@@ -528,11 +539,72 @@ def _authorized_property_fact(
     )
 
 
+def _authorized_occurrence_assignment(
+    authority: Mapping[str, Any],
+    *,
+    operation_id: str,
+) -> SemanticFact:
+    source_map = {
+        "explicit_value": EvidenceSourceKind.EXPLICIT_REQUEST,
+        "deterministic_derived": EvidenceSourceKind.DETERMINISTIC_POLICY,
+        "type_inherited": EvidenceSourceKind.SURVIVING_TYPE,
+        "approved_occurrence_prototype": EvidenceSourceKind.APPROVED_PROTOTYPE,
+        "authorized_type_cohort": EvidenceSourceKind.AUTHORIZED_TYPE_COHORT,
+    }
+    if authority.get("operation_id") != operation_id:
+        raise ProductionEvidenceError(
+            "OCCURRENCE_ASSIGNMENT_BINDING_MISMATCH", operation_id
+        )
+    source_kind = source_map.get(str(authority.get("source_kind", "")))
+    source_ref = str(authority.get("source_ref", ""))
+    provenance = tuple(str(item) for item in authority.get("provenance", ()))
+    fact_key = str(authority.get("fact_key", ""))
+    if (
+        source_kind is None
+        or not source_ref
+        or not provenance
+        or not fact_key.startswith(("pset:", "quantity:", "relationship:"))
+    ):
+        raise ProductionEvidenceError(
+            "OCCURRENCE_ASSIGNMENT_INVALID", operation_id
+        )
+    return SemanticFact(
+        fact_key=fact_key,
+        value=authority.get("value"),
+        value_type=str(authority.get("value_type", "")),
+        unit=(
+            None
+            if authority.get("unit") is None
+            else str(authority.get("unit"))
+        ),
+        inherited=source_kind is EvidenceSourceKind.SURVIVING_TYPE,
+        pset_path=fact_key.removeprefix("pset:") if fact_key.startswith("pset:") else None,
+        entity_source=f"occurrence-assignment:{operation_id}",
+        source_kind=source_kind,
+        source_ref=source_ref,
+        provenance=(f"operation:{operation_id}", *provenance),
+        occurrence_scope=str(authority.get("scope", "window_occurrence")),
+        canonical_source_kind=str(authority.get("source_kind")),
+        derivation=(
+            None
+            if authority.get("derivation") is None
+            else dict(authority["derivation"])
+        ),
+    )
+
+
 def _property_claim_matches_authority(
     claim: ExactPropertyIntent | NaturalLanguagePropertyIntent,
     authority: Mapping[str, Any],
 ) -> bool:
-    if claim.source.to_dict() != authority.get("source"):
+    authority_source = authority.get("source")
+    if not isinstance(authority_source, Mapping) or (
+        claim.source.source_kind,
+        claim.source.reference,
+    ) != (
+        str(authority_source.get("source_kind", "")),
+        str(authority_source.get("reference", "")),
+    ):
         return False
     if (claim.scope or "occurrence_direct") != authority.get("ownership"):
         return False
@@ -692,9 +764,21 @@ def _authorized_type_cohort_facts(
                 )
             )
 
-    by_key: dict[str, list[SemanticFact]] = {}
+    by_key: dict[tuple[str, str], list[SemanticFact]] = {}
     for fact in candidates:
-        by_key.setdefault(fact.fact_key, []).append(fact)
+        by_key.setdefault(
+            (
+                str(
+                    getattr(
+                        fact,
+                        "occurrence_scope",
+                        "window_occurrence",
+                    )
+                ),
+                fact.fact_key,
+            ),
+            [],
+        ).append(fact)
     selected: list[SemanticFact] = []
     for fact_key in sorted(by_key):
         values = {
@@ -725,10 +809,16 @@ def _authorized_type_cohort_facts(
 
 
 def _scope_fact(fact: SemanticFact, operation_id: str) -> SemanticFact:
+    operation_marker = f"operation:{operation_id}"
     return SemanticFact(
         **{
             **fact.__dict__,
-            "provenance": (*fact.provenance, f"operation:{operation_id}"),
+            # Registry policy builders may already bind the operation. Keep
+            # provenance ordered but unique because Manifest 0.2 intentionally
+            # enforces uniqueItems.
+            "provenance": tuple(
+                dict.fromkeys((*fact.provenance, operation_marker))
+            ),
         }
     )
 
@@ -737,14 +827,25 @@ def _select_authority(
     operation_id: str, candidates: tuple[SemanticFact, ...]
 ) -> tuple[tuple[SemanticFact, ...], tuple[EvidenceConflict, ...]]:
     precedence = {kind: index for index, kind in enumerate(_PRODUCTION_PRECEDENCE)}
-    by_key: dict[str, list[SemanticFact]] = {}
+    by_key: dict[tuple[str, str], list[SemanticFact]] = {}
     for fact in candidates:
-        by_key.setdefault(fact.fact_key, []).append(fact)
+        key = (
+            str(
+                getattr(
+                    fact,
+                    "occurrence_scope",
+                    "window_occurrence",
+                )
+            ),
+            fact.fact_key,
+        )
+        by_key.setdefault(key, []).append(fact)
     selected: list[SemanticFact] = []
     conflicts: list[EvidenceConflict] = []
-    for fact_key in sorted(by_key):
+    for scope_and_key in sorted(by_key):
+        occurrence_scope, fact_key = scope_and_key
         ordered = sorted(
-            by_key[fact_key],
+            by_key[scope_and_key],
             key=lambda fact: (
                 precedence[fact.source_kind],
                 fact.source_ref,
@@ -758,7 +859,7 @@ def _select_authority(
                 conflicts.append(
                     EvidenceConflict(
                         operation_id=operation_id,
-                        fact_key=fact_key,
+                        fact_key=f"{occurrence_scope}:{fact_key}",
                         selected_source=winner.source_kind,
                         rejected_source=rejected.source_kind,
                         selected_ref=winner.source_ref,

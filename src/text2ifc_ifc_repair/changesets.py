@@ -20,12 +20,14 @@ from text2ifc_contract.validation import ValidationIssue
 
 CHANGESET_SCHEMA_VERSION = "text2ifc/ifc-repair-changeset/0.1"
 BOUND_CHANGESET_SCHEMA_VERSION = "text2ifc/ifc-repair-changeset/0.2"
+BOUND_CHANGESET_SCHEMA_VERSION_0_3 = "text2ifc/ifc-repair-changeset/0.3"
 DRAFT_CHANGESET_SCHEMA_VERSION = "text2ifc/ifc-repair-changeset-draft/0.2"
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 CHANGESET_SCHEMA_PATH = (
     PROJECT_ROOT / "schemas" / "agent" / "ifc-repair-changeset-0.1.schema.json"
 )
 BOUND_CHANGESET_SCHEMA_PATH = PROJECT_ROOT / "schemas" / "agent" / "ifc-repair-changeset-0.2.schema.json"
+BOUND_CHANGESET_SCHEMA_PATH_0_3 = PROJECT_ROOT / "schemas" / "agent" / "ifc-repair-changeset-0.3.schema.json"
 DRAFT_CHANGESET_SCHEMA_PATH = PROJECT_ROOT / "schemas" / "agent" / "ifc-repair-changeset-draft-0.2.schema.json"
 
 
@@ -55,19 +57,27 @@ def load_changeset_draft_schema() -> dict[str, Any]:
     return copy.deepcopy(_cached_schema(str(DRAFT_CHANGESET_SCHEMA_PATH)))
 
 
-def load_bound_changeset_schema() -> dict[str, Any]:
-    return copy.deepcopy(_cached_schema(str(BOUND_CHANGESET_SCHEMA_PATH)))
+def load_bound_changeset_schema(
+    version: str = BOUND_CHANGESET_SCHEMA_VERSION,
+) -> dict[str, Any]:
+    path = (
+        BOUND_CHANGESET_SCHEMA_PATH_0_3
+        if version == BOUND_CHANGESET_SCHEMA_VERSION_0_3
+        else BOUND_CHANGESET_SCHEMA_PATH
+    )
+    return copy.deepcopy(_cached_schema(str(path)))
 
 
 def validate_changeset(document: Any) -> list[ValidationIssue]:
     """Return stable structural and envelope-level semantic diagnostics."""
 
     version = document.get("schema_version") if isinstance(document, Mapping) else None
-    schema = (
-        _cached_schema(str(BOUND_CHANGESET_SCHEMA_PATH))
-        if version == BOUND_CHANGESET_SCHEMA_VERSION
-        else _cached_changeset_schema()
-    )
+    if version == BOUND_CHANGESET_SCHEMA_VERSION:
+        schema = _cached_schema(str(BOUND_CHANGESET_SCHEMA_PATH))
+    elif version == BOUND_CHANGESET_SCHEMA_VERSION_0_3:
+        schema = _cached_schema(str(BOUND_CHANGESET_SCHEMA_PATH_0_3))
+    else:
+        schema = _cached_changeset_schema()
     validator = Draft202012Validator(schema)
     issues = [
         ValidationIssue(
@@ -105,6 +115,7 @@ def bind_repair_changeset(
     semantic_manifest_hashes: Mapping[str, str],
     source_request_hash: str,
     base_model_fingerprint: str,
+    bound_schema_version: str = BOUND_CHANGESET_SCHEMA_VERSION,
 ) -> dict[str, Any]:
     """Bind a non-authoritative Provider draft to immutable semantic manifests."""
 
@@ -139,7 +150,10 @@ def bind_repair_changeset(
                     "policy_version": manifest.policy_version,
                 },
                 "semantic_assignments": [
-                    _assignment_payload(assignment)
+                    _assignment_payload(
+                        assignment,
+                        bound_schema_version=bound_schema_version,
+                    )
                     for assignment in manifest.assignments
                 ],
             }
@@ -147,7 +161,7 @@ def bind_repair_changeset(
     if manifests:
         raise ValueError("SEMANTIC_MANIFEST_SET_MISMATCH")
     bound = {
-        "schema_version": BOUND_CHANGESET_SCHEMA_VERSION,
+        "schema_version": bound_schema_version,
         "changeset_id": str(draft["draft_id"]).replace("draft", "changeset", 1),
         "binding_status": "bound",
         "base_model_fingerprint": base_model_fingerprint,
@@ -178,9 +192,16 @@ def _plain_json(value: Any) -> Any:
     return copy.deepcopy(value)
 
 
-def _assignment_payload(value: Any) -> dict[str, Any]:
+def _assignment_payload(
+    value: Any,
+    *,
+    bound_schema_version: str,
+) -> dict[str, Any]:
     payload = _plain_json(value)
     payload["provenance"] = list(dict.fromkeys(payload["provenance"]))
+    if bound_schema_version == BOUND_CHANGESET_SCHEMA_VERSION:
+        payload.pop("scope", None)
+        payload.pop("derivation", None)
     return payload
 
 

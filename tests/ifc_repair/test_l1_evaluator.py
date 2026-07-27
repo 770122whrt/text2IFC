@@ -31,12 +31,22 @@ SOURCE = (
     / "IFC"
     / "LargeBuilding.ifc"
 )
+ADVANCED_SOURCE = (
+    ROOT
+    / "dataset"
+    / "external"
+    / "bim-whale-ifc-samples"
+    / "AdvancedProject"
+    / "IFC"
+    / "AdvancedProject.ifc"
+)
 WALL_ID = "1F6umJ5H50aeL3A1As_wTm"
 OTHER_WALL_ID = "0AAAAAAAAAAAAAAAAAAAAA"
 PSET_ID = "0BBBBBBBBBBBBBBBBBBBBB"
 EXPECTED_L1_CHECK_IDS = {
     "l1.output.readable",
     "l1.output.schema",
+    "l1.output.validation",
     "l1.source.immutable",
     "l1.scope.created-roots",
     "l1.scope.modified-roots",
@@ -51,6 +61,12 @@ EXPECTED_L1_CHECK_IDS = {
     "l1.window.placement",
     "l1.window.tolerances",
     "l1.window.volume-preservation",
+}
+_SCOPE_CHECK_IDS = {
+    "l1.scope.created-roots",
+    "l1.scope.modified-roots",
+    "l1.scope.removed-roots",
+    "l1.scope.relations",
 }
 
 
@@ -153,6 +169,67 @@ def _case(root: Path) -> tuple[Path, Path, dict[str, Any], dict[str, Any], str]:
     return compact_damaged, repaired, changeset, application, compact_fingerprint
 
 
+def _mapped_type_case(
+    root: Path,
+) -> tuple[Path, Path, dict[str, Any], dict[str, Any]]:
+    damaged, _, changeset, _, _ = _case(root)
+    typed_damaged = root / "mapped-type-damaged.ifc"
+    model = ifcopenshell.open(str(damaged))
+    source_model = ifcopenshell.open(str(ADVANCED_SOURCE))
+    source_type = source_model.by_guid("0t7TVxPGL1fBrLXVTrUtp6")
+    assert source_type is not None and source_type.RepresentationMaps
+    window_type = model.add(source_type)
+    model.write(str(typed_damaged))
+
+    bound = copy.deepcopy(changeset)
+    bound["schema_version"] = "text2ifc/ifc-repair-changeset/0.2"
+    bound["binding_status"] = "bound"
+    bound["base_model_fingerprint"] = "sha256:" + _sha256(typed_damaged)
+    bound["semantic_manifest_ref"] = "test:semantic-manifests"
+    bound["semantic_manifest_sha256"] = "sha256:" + "0" * 64
+    operation = bound["operations"][0]
+    operation["parameters"]["opening"] = {
+        "width_mm": 1000.0,
+        "height_mm": 2200.0,
+        "sill_height_mm": 305.0,
+    }
+    operation["semantic_manifest"] = {
+        "manifest_id": "semantic-manifest-mapped-window",
+        "policy_id": "window.add-with-opening.l2",
+        "policy_version": "0.2",
+    }
+    operation["semantic_assignments"] = [
+        {
+            "applicability": "required",
+            "authoring_action": "inherit_from_type",
+            "fact_key": "relationship:type",
+            "operation_id": operation["operation_id"],
+            "ownership": "type_inherited",
+            "provenance": ["test:user-approved-prototype"],
+            "source_fact_key": "relationship:type",
+            "source_kind": "approved_prototype",
+            "source_ref": f"user-approved-prototype:{window_type.GlobalId}",
+            "unit": None,
+            "value": str(window_type.GlobalId),
+            "value_type": window_type.is_a(),
+        }
+    ]
+    repaired = root / "mapped-type-repaired.ifc"
+    repair_request = "Add the requested window with the approved mapped Type."
+    bound["source_request_hash"] = "sha256:" + hashlib.sha256(
+        repair_request.encode("utf-8")
+    ).hexdigest()
+    application = apply_changeset(
+        damaged_ifc_path=typed_damaged,
+        repair_request=repair_request,
+        changeset=bound,
+        output_path=repaired,
+        registry=create_default_registry(),
+    )
+    assert application["valid"] is True, application["issues"]
+    return typed_damaged, repaired, bound, application
+
+
 @pytest.fixture(scope="module")
 def l1_case(tmp_path_factory: pytest.TempPathFactory):
     return _case(tmp_path_factory.mktemp("l1-evaluator"))
@@ -239,6 +316,36 @@ def test_valid_window_l1_passes_from_reopened_ifc_and_preserves_source(l1_case) 
     )
     assert len(canonical_scope_evidence.encode("utf-8")) < 8192
     assert '"attributes":' not in canonical_scope_evidence
+
+
+def test_user_approved_mapped_window_frame_can_be_inset_inside_opening(
+    tmp_path: Path,
+) -> None:
+    damaged, repaired, changeset, application = _mapped_type_case(tmp_path)
+
+    result = _evaluate(damaged, repaired, changeset, application)
+
+    geometry_fit = _check(result, "l1.window.geometry-fit")
+    assert geometry_fit.status is EvaluationStatus.PASSED
+
+
+def test_candidate_with_new_ifc_validation_error_fails_l1(
+    l1_case,
+    tmp_path: Path,
+) -> None:
+    damaged, repaired, changeset, application, _ = l1_case
+    output = _write_mutation(
+        repaired,
+        tmp_path / "invalid-orphan-direction.ifc",
+        lambda model: model.create_entity("IfcDirection"),
+    )
+
+    result = _evaluate(damaged, output, changeset, application)
+
+    validation = _check(result, "l1.output.validation")
+    assert validation.status is EvaluationStatus.FAILED
+    assert result.status is EvaluationStatus.FAILED
+    assert validation.evidence[0].actual_value["new_diagnostic_count"] == 1
 
 
 def test_applicator_self_report_cannot_authorize_collateral_wall_drift(
@@ -459,7 +566,8 @@ def test_unmeasurable_mandatory_geometry_is_not_evaluable(
     result = _evaluate(damaged, output, changeset, application)
 
     assert _check(result, "l1.window.dimensions").status is EvaluationStatus.NOT_EVALUABLE
-    assert result.status is EvaluationStatus.NOT_EVALUABLE
+    assert _check(result, "l1.output.validation").status is EvaluationStatus.FAILED
+    assert result.status is EvaluationStatus.FAILED
 
 
 def test_unreadable_output_is_not_evaluable_and_non_passing(
@@ -497,3 +605,30 @@ def test_step_order_and_guid_identity_do_not_create_false_drift(
 
     assert first == second
     assert first.status is EvaluationStatus.PASSED
+
+
+def test_comparator_integrity_error_is_not_evaluable_and_never_passes(
+    l1_case, tmp_path: Path
+) -> None:
+    damaged, repaired, changeset, application, _ = l1_case
+
+    def duplicate_root_guid(model: Any) -> None:
+        model.create_entity(
+            "IfcPropertySet",
+            GlobalId=PSET_ID,
+            Name="duplicate root identity",
+            HasProperties=[],
+        )
+
+    output = _write_mutation(
+        repaired,
+        tmp_path / "duplicate-root-guid.ifc",
+        duplicate_root_guid,
+    )
+
+    result = _evaluate(damaged, output, changeset, application)
+
+    assert _check(result, "l1.output.validation").status is EvaluationStatus.FAILED
+    assert result.status is EvaluationStatus.FAILED
+    for check_id in _SCOPE_CHECK_IDS:
+        assert _check(result, check_id).status is EvaluationStatus.NOT_EVALUABLE

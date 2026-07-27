@@ -497,6 +497,7 @@ def _property_claim(
     scope: str | None = None,
     value_type: str | None = None,
     unit: str | None = None,
+    excerpt: str | None = None,
 ) -> dict:
     return {
         "intent_kind": "pset_property",
@@ -509,7 +510,7 @@ def _property_claim(
         "source": {
             "source_kind": "user_request",
             "reference": "request:/properties/0",
-            "excerpt": f"set {set_name}.{property_name}",
+            "excerpt": excerpt or f"set {set_name}.{property_name}",
         },
     }
 
@@ -618,6 +619,50 @@ def test_multiple_custom_properties_pause_once_and_confirm_as_one_bound_batch(
         ("Constraints", "Level"),
         ("Dimensions", "Volume"),
     }
+
+
+def test_large_property_batch_uses_bounded_confirmation_excerpts(
+    tmp_path: Path,
+) -> None:
+    from text2ifc_ifc_repair.property_intent import PropertyConfirmationBatch
+    from text2ifc_ifc_repair.resolution_flow import (
+        PROPERTY_CONFIRMATION_EXCERPT_MAX,
+    )
+
+    target = _record("0AAAAAAAAAAAAAAAAAAAAA", "target")
+    long_excerpt = "restore this exact occurrence property " * 12
+    properties = [
+        _property_claim(
+            f"Custom_Set_{index}",
+            f"Property_{index}",
+            f"value-{index}",
+            excerpt=long_excerpt,
+        )
+        for index in range(16)
+    ]
+    with _repository(tmp_path, [target]) as repository:
+        pending = _api().resolve_repair_intent(
+            _intent(
+                {"global_id": target.ifc_global_id},
+                properties=properties,
+            ),
+            repository,
+            expected_source_sha256=SOURCE_SHA,
+            operation_registry=_registry(),
+        )
+
+    preview = pending.property_preview
+    assert pending.reason_code == "property_confirmation"
+    assert preview["preview_kind"] == "property_batch"
+    assert len(preview["items"]) == 16
+    assert all(
+        len(item["source"]["excerpt"])
+        <= PROPERTY_CONFIRMATION_EXCERPT_MAX
+        for item in preview["items"]
+    )
+    assert PropertyConfirmationBatch.from_dict(preview).preview_hash == (
+        preview["preview_hash"]
+    )
 
 
 def test_type_owned_property_is_deferred_before_authorization(tmp_path: Path) -> None:

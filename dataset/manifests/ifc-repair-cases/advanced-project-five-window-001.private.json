@@ -1,0 +1,46 @@
+{
+  "schema_version": "text2ifc/ifc-repair-benchmark-case-private/0.1",
+  "case_id": "advanced-project-five-window-001",
+  "source": {
+    "local_path": "dataset/external/bim-whale-ifc-samples/AdvancedProject/IFC/AdvancedProject.ifc",
+    "sha256": "86b068a7ca6947e398c1daaa8bede9d31048c3990adc308429faeb56ee01db94"
+  },
+  "selection_policy": {
+    "operation_count": 5,
+    "source_schema": "IFC2X3",
+    "requirements": [
+      "five distinct supported straight host walls",
+      "valid Window-Opening-Wall relationship chain",
+      "window and host wall resolve to the same storey",
+      "three single-opening walls and two walls retaining neighbour openings",
+      "selected Window Type remains observable after damage"
+    ]
+  },
+  "targets": [
+    {
+      "wall_global_id": "31F6eMknj99vYl9fb0Qb7F",
+      "opening_global_id": "0HFJ4FEcn5UhECI0UyBBz0",
+      "window_global_id": "0HFJ4FEcn5UhECI1IyBBz0"
+    },
+    {
+      "wall_global_id": "0MOEoDTm9EnO9yKsXjjie3",
+      "opening_global_id": "1gdfXOIAf8ZBJUgB$$8ewJ",
+      "window_global_id": "1gdfXOIAf8ZBJUgAp$8ewJ"
+    },
+    {
+      "wall_global_id": "3ktY1kg3rAwgNBX_XWRSTN",
+      "opening_global_id": "0Um_J2ClP45uPRcQfJqhis",
+      "window_global_id": "0Um_J2ClP45uPRcRbJqhis"
+    },
+    {
+      "wall_global_id": "0qPq0uZ5vABQlKT8FAVXQn",
+      "opening_global_id": "1ebX2H7F12su$wtOfeYAIT",
+      "window_global_id": "1ebX2H7F12su$wtPbeYAIT"
+    },
+    {
+      "wall_global_id": "2V6UQJFc92sfDYeuDKgYFi",
+      "opening_global_id": "0xyFL4ySP5TexORjB8qDG5",
+      "window_global_id": "0xyFL4ySP5TexORi78qDG5"
+    }
+  ]
+}

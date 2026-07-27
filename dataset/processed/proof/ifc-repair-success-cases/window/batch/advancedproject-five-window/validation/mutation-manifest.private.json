@@ -1,0 +1,533 @@
+{
+  "counts": {
+    "after": {
+      "IfcBuilding": 1,
+      "IfcBuildingStorey": 10,
+      "IfcDoor": 126,
+      "IfcOpeningElement": 422,
+      "IfcProject": 1,
+      "IfcRelFillsElement": 384,
+      "IfcRelVoidsElement": 422,
+      "IfcSite": 18,
+      "IfcSpace": 8,
+      "IfcWall": 390,
+      "IfcWindow": 258
+    },
+    "before": {
+      "IfcBuilding": 1,
+      "IfcBuildingStorey": 10,
+      "IfcDoor": 126,
+      "IfcOpeningElement": 427,
+      "IfcProject": 1,
+      "IfcRelFillsElement": 389,
+      "IfcRelVoidsElement": 427,
+      "IfcSite": 18,
+      "IfcSpace": 8,
+      "IfcWall": 390,
+      "IfcWindow": 263
+    }
+  },
+  "damaged_ifc": {
+    "path": "damaged.ifc",
+    "sha256": "65b576a99174d413eeed9c0517592a0f31a9b6f5fb68bd4d006d94ed18a4adcb"
+  },
+  "mutation_type": "remove_windows_and_openings_batch",
+  "schema_version": "text2ifc/ifc-repair-mutation-private/0.2",
+  "source": {
+    "path": "E:/code for project/bimnet/dataset/external/bim-whale-ifc-samples/AdvancedProject/IFC/AdvancedProject.ifc",
+    "schema": "IFC2X3",
+    "sha256": "86b068a7ca6947e398c1daaa8bede9d31048c3990adc308429faeb56ee01db94",
+    "size_bytes": 44337371
+  },
+  "targets": [
+    {
+      "opening": {
+        "geometric_center_offset_mm": 886.885872,
+        "global_id": "0HFJ4FEcn5UhECI0UyBBz0",
+        "ifc_class": "IfcOpeningElement",
+        "sill_height_mm": 0.0,
+        "step_id": 1347374,
+        "wall_local_geometry_bounds_mm": {
+          "x": [
+            386.885872,
+            1386.885872
+          ],
+          "y": [
+            -315.0,
+            315.0
+          ],
+          "z": [
+            0.0,
+            2200.0
+          ]
+        },
+        "wall_local_origin_mm": [
+          1386.88587191066,
+          315.0,
+          0.0
+        ]
+      },
+      "opening_representation": [
+        {
+          "identifier": "Body",
+          "items": [
+            {
+              "depth": 630.0,
+              "extruded_direction": [
+                0.0,
+                0.0,
+                1.0
+              ],
+              "ifc_class": "IfcExtrudedAreaSolid",
+              "profile_ifc_class": "IfcRectangleProfileDef",
+              "profile_x_dim": 2200.0,
+              "profile_y_dim": 1000.0
+            }
+          ],
+          "type": "SweptSolid"
+        }
+      ],
+      "prototype_evidence": {
+        "global_id": "0t7TVxPGL1fBrLXVTrUtp6",
+        "ifc_class": "IfcWindowStyle",
+        "name": "BALANS Fixed Single Window:BALANS 10M FLOOR (SH = 0)",
+        "source": "damaged_ifc_surviving_type",
+        "surviving_occurrence_count": 0
+      },
+      "relationships": {
+        "fills_step_id": 1347389,
+        "voids_step_id": 1347377
+      },
+      "requested_properties": [],
+      "target_id": "window-repair-001",
+      "wall": {
+        "axis_end_mm": [
+          2403.7717438211,
+          0.0,
+          0.0
+        ],
+        "axis_start_mm": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "geometry_capability": "straight_wall",
+        "global_id": "31F6eMknj99vYl9fb0Qb7F",
+        "ifc_class": "IfcWallStandardCase",
+        "length_mm": 2403.7717438211,
+        "local_reference": "wall_local_start",
+        "name": "Basic Wall:MockUp Exterior Ground Floor:526491",
+        "step_id": 40153,
+        "storey": "Level 1"
+      },
+      "window": {
+        "global_id": "0HFJ4FEcn5UhECI1IyBBz0",
+        "height_mm": 2200.0,
+        "ifc_class": "IfcWindow",
+        "name": "BALANS Fixed Single Window:BALANS 10M FLOOR (SH = 0):916922",
+        "step_id": 866288,
+        "width_mm": 1000.0
+      }
+    },
+    {
+      "opening": {
+        "geometric_center_offset_mm": 1027.893741,
+        "global_id": "1gdfXOIAf8ZBJUgB$$8ewJ",
+        "ifc_class": "IfcOpeningElement",
+        "sill_height_mm": 0.0,
+        "step_id": 1347411,
+        "wall_local_geometry_bounds_mm": {
+          "x": [
+            527.893741,
+            1527.893741
+          ],
+          "y": [
+            -315.0,
+            315.0
+          ],
+          "z": [
+            0.0,
+            2200.0
+          ]
+        },
+        "wall_local_origin_mm": [
+          1527.89374087786,
+          315.0,
+          0.0
+        ]
+      },
+      "opening_representation": [
+        {
+          "identifier": "Body",
+          "items": [
+            {
+              "depth": 630.0,
+              "extruded_direction": [
+                0.0,
+                0.0,
+                1.0
+              ],
+              "ifc_class": "IfcExtrudedAreaSolid",
+              "profile_ifc_class": "IfcRectangleProfileDef",
+              "profile_x_dim": 2200.0,
+              "profile_y_dim": 1000.0
+            }
+          ],
+          "type": "SweptSolid"
+        }
+      ],
+      "prototype_evidence": {
+        "global_id": "0t7TVxPGL1fBrLXVTrUtp6",
+        "ifc_class": "IfcWindowStyle",
+        "name": "BALANS Fixed Single Window:BALANS 10M FLOOR (SH = 0)",
+        "source": "damaged_ifc_surviving_type",
+        "surviving_occurrence_count": 0
+      },
+      "relationships": {
+        "fills_step_id": 1347426,
+        "voids_step_id": 1347414
+      },
+      "requested_properties": [
+        {
+          "property_name": "IsExternal",
+          "set_name": "Pset_WindowCommon",
+          "value": true
+        },
+        {
+          "property_name": "Reference",
+          "set_name": "Pset_WindowCommon",
+          "value": "BALANS 10M FLOOR (SH = 0)"
+        }
+      ],
+      "target_id": "window-repair-002",
+      "wall": {
+        "axis_end_mm": [
+          2685.74038158856,
+          0.0,
+          0.0
+        ],
+        "axis_start_mm": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "geometry_capability": "straight_wall",
+        "global_id": "0MOEoDTm9EnO9yKsXjjie3",
+        "ifc_class": "IfcWallStandardCase",
+        "length_mm": 2685.74038158856,
+        "local_reference": "wall_local_start",
+        "name": "Basic Wall:MockUp Exterior Ground Floor:581328",
+        "step_id": 40661,
+        "storey": "Level 1"
+      },
+      "window": {
+        "global_id": "1gdfXOIAf8ZBJUgAp$8ewJ",
+        "height_mm": 2200.0,
+        "ifc_class": "IfcWindow",
+        "name": "BALANS Fixed Single Window:BALANS 10M FLOOR (SH = 0):919838",
+        "step_id": 867829,
+        "width_mm": 999.999999999999
+      }
+    },
+    {
+      "opening": {
+        "geometric_center_offset_mm": 5389.164621,
+        "global_id": "0Um_J2ClP45uPRcQfJqhis",
+        "ifc_class": "IfcOpeningElement",
+        "sill_height_mm": 1200.0,
+        "step_id": 1359806,
+        "wall_local_geometry_bounds_mm": {
+          "x": [
+            4889.164621,
+            5889.164621
+          ],
+          "y": [
+            -315.0,
+            315.0
+          ],
+          "z": [
+            1200.0,
+            1800.0
+          ]
+        },
+        "wall_local_origin_mm": [
+          5889.16462102456,
+          315.0,
+          1200.0
+        ]
+      },
+      "opening_representation": [
+        {
+          "identifier": "Body",
+          "items": [
+            {
+              "depth": 630.0,
+              "extruded_direction": [
+                0.0,
+                0.0,
+                1.0
+              ],
+              "ifc_class": "IfcExtrudedAreaSolid",
+              "profile_ifc_class": "IfcRectangleProfileDef",
+              "profile_x_dim": 600.0,
+              "profile_y_dim": 1000.0
+            }
+          ],
+          "type": "SweptSolid"
+        }
+      ],
+      "prototype_evidence": {
+        "global_id": "0ifV7awIzBlRVUTZ41zp$1",
+        "ifc_class": "IfcWindowStyle",
+        "name": "BALANS Fixed Single Window:BALANS 10M BATHROOM",
+        "source": "damaged_ifc_surviving_type",
+        "surviving_occurrence_count": 1
+      },
+      "relationships": {
+        "fills_step_id": 1359821,
+        "voids_step_id": 1359809
+      },
+      "requested_properties": [
+        {
+          "property_name": "IsExternal",
+          "set_name": "Pset_WindowCommon",
+          "value": true
+        },
+        {
+          "property_name": "Reference",
+          "set_name": "Pset_WindowCommon",
+          "value": "BALANS 10M BATHROOM"
+        }
+      ],
+      "target_id": "window-repair-003",
+      "wall": {
+        "axis_end_mm": [
+          7901.14175382493,
+          -0.0,
+          0.0
+        ],
+        "axis_start_mm": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "geometry_capability": "straight_wall",
+        "global_id": "3ktY1kg3rAwgNBX_XWRSTN",
+        "ifc_class": "IfcWallStandardCase",
+        "length_mm": 7901.14175382493,
+        "local_reference": "wall_local_start",
+        "name": "Basic Wall:MockUp Roof Wall:945627",
+        "step_id": 910192,
+        "storey": "6 - Sixth Floor"
+      },
+      "window": {
+        "global_id": "0Um_J2ClP45uPRcRbJqhis",
+        "height_mm": 600.000000000002,
+        "ifc_class": "IfcWindow",
+        "name": "BALANS Fixed Single Window:BALANS 10M BATHROOM:960189",
+        "step_id": 1206516,
+        "width_mm": 1000.0
+      }
+    },
+    {
+      "opening": {
+        "geometric_center_offset_mm": 1619.45192,
+        "global_id": "1ebX2H7F12su$wtOfeYAIT",
+        "ifc_class": "IfcOpeningElement",
+        "sill_height_mm": 0.0,
+        "step_id": 1347303,
+        "wall_local_geometry_bounds_mm": {
+          "x": [
+            619.45192,
+            2619.45192
+          ],
+          "y": [
+            -315.0,
+            315.0
+          ],
+          "z": [
+            0.0,
+            2200.0
+          ]
+        },
+        "wall_local_origin_mm": [
+          619.451920324687,
+          -315.0,
+          0.0
+        ]
+      },
+      "opening_representation": [
+        {
+          "identifier": "Body",
+          "items": [
+            {
+              "depth": 630.0,
+              "extruded_direction": [
+                0.0,
+                0.0,
+                1.0
+              ],
+              "ifc_class": "IfcExtrudedAreaSolid",
+              "profile_ifc_class": "IfcRectangleProfileDef",
+              "profile_x_dim": 2200.0,
+              "profile_y_dim": 2000.0
+            }
+          ],
+          "type": "SweptSolid"
+        }
+      ],
+      "prototype_evidence": {
+        "global_id": "0t7TVxPGL1fBrLXVTrUtwx",
+        "ifc_class": "IfcWindowStyle",
+        "name": "BALANS Fixed Single Window:BALANS 20M FLOOR (SH = 0)",
+        "source": "damaged_ifc_surviving_type",
+        "surviving_occurrence_count": 2
+      },
+      "relationships": {
+        "fills_step_id": 1347317,
+        "voids_step_id": 1347306
+      },
+      "requested_properties": [
+        {
+          "property_name": "IsExternal",
+          "set_name": "Pset_WindowCommon",
+          "value": true
+        },
+        {
+          "property_name": "Reference",
+          "set_name": "Pset_WindowCommon",
+          "value": "BALANS 20M FLOOR (SH = 0)"
+        }
+      ],
+      "target_id": "window-repair-004",
+      "wall": {
+        "axis_end_mm": [
+          8878.21963397023,
+          0.0,
+          0.0
+        ],
+        "axis_start_mm": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "geometry_capability": "straight_wall",
+        "global_id": "0qPq0uZ5vABQlKT8FAVXQn",
+        "ifc_class": "IfcWallStandardCase",
+        "length_mm": 8878.21963397023,
+        "local_reference": "wall_local_start",
+        "name": "Basic Wall:MockUp Exterior Ground Floor:525446",
+        "step_id": 40022,
+        "storey": "Level 1"
+      },
+      "window": {
+        "global_id": "1ebX2H7F12su$wtPbeYAIT",
+        "height_mm": 2200.0,
+        "ifc_class": "IfcWindow",
+        "name": "BALANS Fixed Single Window:BALANS 20M FLOOR (SH = 0):773593",
+        "step_id": 249928,
+        "width_mm": 1999.99999999999
+      }
+    },
+    {
+      "opening": {
+        "geometric_center_offset_mm": 11030.0,
+        "global_id": "0xyFL4ySP5TexORjB8qDG5",
+        "ifc_class": "IfcOpeningElement",
+        "sill_height_mm": 0.0,
+        "step_id": 1347160,
+        "wall_local_geometry_bounds_mm": {
+          "x": [
+            9530.0,
+            12530.0
+          ],
+          "y": [
+            -315.0,
+            315.0
+          ],
+          "z": [
+            0.0,
+            2200.0
+          ]
+        },
+        "wall_local_origin_mm": [
+          12530.0,
+          315.0,
+          0.0
+        ]
+      },
+      "opening_representation": [
+        {
+          "identifier": "Body",
+          "items": [
+            {
+              "depth": 630.0,
+              "extruded_direction": [
+                0.0,
+                0.0,
+                1.0
+              ],
+              "ifc_class": "IfcExtrudedAreaSolid",
+              "profile_ifc_class": "IfcRectangleProfileDef",
+              "profile_x_dim": 2200.0,
+              "profile_y_dim": 3000.0
+            }
+          ],
+          "type": "SweptSolid"
+        }
+      ],
+      "prototype_evidence": {
+        "global_id": "0t7TVxPGL1fBrLXVTrUtsB",
+        "ifc_class": "IfcWindowStyle",
+        "name": "BALANS Fixed Single Window:BALANS 30M FLOOR (SH = 0)",
+        "source": "damaged_ifc_surviving_type",
+        "surviving_occurrence_count": 8
+      },
+      "relationships": {
+        "fills_step_id": 1347175,
+        "voids_step_id": 1347163
+      },
+      "requested_properties": [
+        {
+          "property_name": "IsExternal",
+          "set_name": "Pset_WindowCommon",
+          "value": true
+        },
+        {
+          "property_name": "Reference",
+          "set_name": "Pset_WindowCommon",
+          "value": "BALANS 30M FLOOR (SH = 0)"
+        }
+      ],
+      "target_id": "window-repair-005",
+      "wall": {
+        "axis_end_mm": [
+          13600.0072445728,
+          0.0,
+          0.0
+        ],
+        "axis_start_mm": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "geometry_capability": "straight_wall",
+        "global_id": "2V6UQJFc92sfDYeuDKgYFi",
+        "ifc_class": "IfcWallStandardCase",
+        "length_mm": 13600.0072445728,
+        "local_reference": "wall_local_start",
+        "name": "Basic Wall:MockUp Exterior Ground Floor:451915",
+        "step_id": 26477,
+        "storey": "Level 1"
+      },
+      "window": {
+        "global_id": "0xyFL4ySP5TexORi78qDG5",
+        "height_mm": 2200.0,
+        "ifc_class": "IfcWindow",
+        "name": "BALANS Fixed Single Window:BALANS 30M FLOOR (SH = 0):781498",
+        "step_id": 345382,
+        "width_mm": 3000.00000000001
+      }
+    }
+  ]
+}

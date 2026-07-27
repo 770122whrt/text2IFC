@@ -1,0 +1,54 @@
+{
+  "checks": {
+    "host_wall_preserved": true,
+    "schema_preserved": true,
+    "source_unchanged": true,
+    "target_chain_removed": true
+  },
+  "counts": {
+    "after": {
+      "IfcBuilding": 1,
+      "IfcBuildingStorey": 2,
+      "IfcDoor": 18,
+      "IfcOpeningElement": 59,
+      "IfcProject": 1,
+      "IfcRelFillsElement": 59,
+      "IfcRelVoidsElement": 59,
+      "IfcSite": 1,
+      "IfcSpace": 8,
+      "IfcWall": 18,
+      "IfcWindow": 41
+    },
+    "before": {
+      "IfcBuilding": 1,
+      "IfcBuildingStorey": 2,
+      "IfcDoor": 18,
+      "IfcOpeningElement": 60,
+      "IfcProject": 1,
+      "IfcRelFillsElement": 60,
+      "IfcRelVoidsElement": 60,
+      "IfcSite": 1,
+      "IfcSpace": 8,
+      "IfcWall": 18,
+      "IfcWindow": 42
+    }
+  },
+  "damaged_sha256": "ca703845ddf4a434eea0317498fb29893877f87d66047cf6c890a61cd2844933",
+  "geometry": {
+    "expected_closed_void_volume_m3": 0.33488999999999974,
+    "host_wall_volume_after_m3": 5.97910999999994,
+    "host_wall_volume_before_m3": 5.644219999999943,
+    "host_wall_volume_delta_m3": 0.334889999999997,
+    "target_region_closed": true
+  },
+  "mutation_type": "remove_window_and_opening",
+  "removed_classes": [
+    "IfcWindow",
+    "IfcRelFillsElement",
+    "IfcOpeningElement",
+    "IfcRelVoidsElement"
+  ],
+  "schema_version": "text2ifc/ifc-repair-mutation-report/0.1",
+  "source_sha256": "102f8123f85eae5e237d7f6a9dcbc364bd5f1c0cfb94b40a7eeb2d7eac9bb725",
+  "valid": true
+}

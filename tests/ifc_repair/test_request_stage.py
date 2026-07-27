@@ -6,7 +6,6 @@ from pathlib import Path
 
 import pytest
 
-from text2ifc_agent.prompt_registry import load_prompt_registry
 from text2ifc_agent.providers import ProviderOutput, ProviderOutputError
 from text2ifc_ifc_repair.operations import create_default_registry
 
@@ -56,14 +55,8 @@ def _source(excerpt: str = "add a window") -> dict:
 
 
 def _valid_response(request_text: str, *, operation_id: str = "intent-op-001") -> dict:
-    repair_intent = _intent_module()
-    prompt_hash = load_prompt_registry()["ifc-repair-intent.v0.1"]["sha256"]
     return {
-        "schema_version": repair_intent.REPAIR_INTENT_SCHEMA_VERSION,
-        "request_id": "request-public-001",
-        "source_request_hash": repair_intent.hash_request(request_text),
-        "model_fingerprint": repair_intent.fingerprint_text("recording-model-v1"),
-        "prompt_fingerprint": prompt_hash,
+        "schema_version": "text2ifc/ifc-repair-intent-body/0.1",
         "operations": [
             {
                 "operation_id": operation_id,
@@ -105,6 +98,15 @@ def _valid_response(request_text: str, *, operation_id: str = "intent-op-001") -
     }
 
 
+def _semantic_body(request_text: str, *, parameters: dict | None = None) -> dict:
+    """Provider-authored content excludes system-owned envelope bindings."""
+
+    response = _valid_response(request_text)
+    if parameters is not None:
+        response["operations"][0]["parameters"] = parameters
+    return response
+
+
 def _run(tmp_path: Path, provider: SequentialProvider, request_text: str):
     return _stage_module().generate_repair_intent(
         provider=provider,
@@ -113,6 +115,62 @@ def _run(tmp_path: Path, provider: SequentialProvider, request_text: str):
         registry=create_default_registry(),
         output_dir=tmp_path,
     )
+
+
+def test_stage_wraps_semantic_body_with_system_owned_bindings(tmp_path: Path) -> None:
+    request_text = "Add a 915 x 1830 mm window to North wall."
+    provider = SequentialProvider([_semantic_body(request_text)])
+
+    result = _run(tmp_path, provider, request_text)
+
+    assert result["valid"] is True
+    assert result["classification"] == "repair_intent"
+    assert result["intent"].request_id == "request-public-001"
+    assert result["intent"].source_request_hash == _intent_module().hash_request(
+        request_text
+    )
+    assert result["intent"].model_fingerprint == _intent_module().fingerprint_text(
+        "recording-model-v1"
+    )
+    assert result["intent"].prompt_fingerprint == result["prompt"]["template_hash"]
+    assert provider.calls[0]["schema"]["$id"] == (
+        "text2ifc/ifc-repair-intent-body/0.1"
+    )
+    assert "model_fingerprint" not in provider.calls[0]["prompt"]
+
+
+def test_missing_window_parameters_are_valid_clarification_not_retry(
+    tmp_path: Path,
+) -> None:
+    request_text = "Add a window to North wall."
+    partial = _semantic_body(request_text, parameters={})
+    provider = SequentialProvider([partial, partial])
+
+    result = _run(tmp_path, provider, request_text)
+
+    assert result["valid"] is True
+    assert result["classification"] == "clarification_required"
+    assert len(provider.calls) == 1
+    assert result["missing_parameters"] == [
+        {
+            "operation_id": "intent-op-001",
+            "paths": [
+                "/opening/height_mm",
+                "/opening/sill_height_mm",
+                "/opening/width_mm",
+                "/position/center_offset_mm",
+            ],
+        }
+    ]
+    parameters = result["intent"].operations[0].to_dict()["parameters"]
+    assert parameters == {
+        "position": {"reference": "wall_local_start"},
+        "window": {"fit_opening": True},
+    }
+    completeness = json.loads(
+        (tmp_path / "repair-intent-completeness.json").read_text(encoding="utf-8")
+    )
+    assert completeness["status"] == "clarification_required"
 
 
 def test_stage_signature_and_provider_request_are_public_only(tmp_path: Path) -> None:
@@ -167,6 +225,43 @@ def test_stage_signature_and_provider_request_are_public_only(tmp_path: Path) ->
     ]
 
 
+def test_current_prompt_preserves_non_guid_target_selectors(tmp_path: Path) -> None:
+    request_text = (
+        "在 Level 1 东侧名为 North wall 的 IfcWall 上添加一个窗户。"
+    )
+    response = _valid_response(request_text)
+    response["schema_version"] = "text2ifc/ifc-repair-intent-body/0.3"
+    response["operations"][0]["target_query"] = {
+        "schema_version": "text2ifc/ifc-target-query/0.1",
+        "allowed_ifc_classes": ["IfcWall"],
+        "names": ["North wall"],
+        "storey_name": "Level 1",
+        "direction": "east",
+    }
+    response["operations"][0]["property_intents"] = []
+    provider = SequentialProvider([response])
+
+    result = _stage_module().generate_repair_intent(
+        provider=provider,
+        request_id="request-public-no-guid-001",
+        repair_request=request_text,
+        registry=create_default_registry(),
+        output_dir=tmp_path,
+        intent_schema_version="text2ifc/ifc-repair-intent/0.3",
+    )
+
+    assert result["valid"] is True
+    target = result["intent"].operations[0].target_query
+    assert target.global_id is None
+    assert target.names == ("North wall",)
+    assert target.storey_name == "Level 1"
+    assert target.direction == "east"
+    rendered_prompt = provider.calls[0]["prompt"]
+    assert "A GUID is optional" in rendered_prompt
+    assert "preserve every compatible selector" in rendered_prompt
+    assert '"storey_name": "Level 1"' in rendered_prompt
+
+
 def test_multi_operation_output_retains_provider_order(tmp_path: Path) -> None:
     request_text = "Add matching windows to West wall then North wall."
     response = _valid_response(request_text, operation_id="intent-op-west")
@@ -180,6 +275,118 @@ def test_multi_operation_output_retains_provider_order(tmp_path: Path) -> None:
         "intent-op-west",
         "intent-op-north",
     ]
+
+
+def _v04_split_created_window_response(request_text: str) -> dict:
+    response = _valid_response(request_text, operation_id="add-window-001")
+    response["schema_version"] = "text2ifc/ifc-repair-intent-body/0.4"
+    response["semantic_bundles"] = []
+    addition = response["operations"][0]
+    addition["target_query"] = {
+        "schema_version": "text2ifc/ifc-target-query/0.1",
+        "allowed_ifc_classes": ["IfcWall"],
+        "global_id": "1PublicWallGuid",
+    }
+    addition["property_intents"] = []
+    addition["semantic_bundle_refs"] = []
+    addition["quantity_intents"] = []
+    addition["occurrence_reuse_intent"] = None
+    property_operation = {
+        "operation_id": "set-window-properties-001",
+        "operation_type": "set_occurrence_properties",
+        "target_query": {
+            "schema_version": "text2ifc/ifc-target-query/0.1",
+            "allowed_ifc_classes": ["IfcWindow"],
+            "host_global_id": "1PublicWallGuid",
+        },
+        "parameters": {},
+        "attribute_intents": [],
+        "property_intents": [
+            {
+                "intent_kind": "exact_property",
+                "set_name": "Pset_WindowCommon",
+                "property_name": "AcousticRating",
+                "raw_value": "Rw 35",
+                "raw_unit": None,
+                "requested_value_type": "IfcLabel",
+                "scope": "occurrence_direct",
+                "source": _source("Pset_WindowCommon.AcousticRating is Rw 35"),
+            }
+        ],
+        "semantic_bundle_refs": [],
+        "quantity_intents": [
+            {
+                "scope": "opening_occurrence",
+                "set_name": "BaseQuantities",
+                "quantity_name": "Depth",
+                "value": 200.0,
+                "value_type": "IfcQuantityLength",
+                "unit": "mm",
+                "source": _source("Opening BaseQuantities.Depth is 200 mm"),
+            }
+        ],
+        "occurrence_reuse_intent": None,
+        "prototype_intent": copy.deepcopy(addition["prototype_intent"]),
+        "provenance": [_source("set the stated properties on the new window")],
+    }
+    response["operations"].append(property_operation)
+    return response
+
+
+def test_v04_folds_unbound_properties_into_unique_created_window(
+    tmp_path: Path,
+) -> None:
+    request_text = "Add one Window to wall 1PublicWallGuid and set its rating."
+    response = _v04_split_created_window_response(request_text)
+    provider = SequentialProvider([response, response])
+
+    result = _stage_module().generate_repair_intent(
+        provider=provider,
+        request_id="request-fold-created-window-001",
+        repair_request=request_text,
+        registry=create_default_registry(),
+        output_dir=tmp_path,
+        intent_schema_version="text2ifc/ifc-repair-intent/0.4",
+    )
+
+    assert result["valid"] is True, result
+    assert [item.operation_id for item in result["intent"].operations] == [
+        "add-window-001"
+    ]
+    assert (
+        result["intent"].operations[0].property_intents[0].property_name
+        == "AcousticRating"
+    )
+    assert (
+        result["intent"].operations[0].quantity_intents[0].quantity_name
+        == "Depth"
+    )
+    assert result["attempts"][0]["normalizations"] == [
+        "FOLD_CREATED_WINDOW_OCCURRENCE_PROPERTIES:"
+        "set-window-properties-001->add-window-001"
+    ]
+    stored = json.loads(
+        (tmp_path / "attempt-001.json").read_text(encoding="utf-8")
+    )
+    assert stored["normalizations"] == result["attempts"][0]["normalizations"]
+
+
+def test_v04_does_not_fold_explicit_or_ambiguous_window_property_target() -> None:
+    stage = _stage_module()
+    request_text = "Add one Window and update an existing Window."
+    explicit = _v04_split_created_window_response(request_text)
+    explicit["operations"][1]["target_query"]["global_id"] = "ExistingWindowGuid"
+    normalized, codes = stage._fold_created_window_property_operations(explicit)
+    assert len(normalized["operations"]) == 2
+    assert codes == []
+
+    ambiguous = _v04_split_created_window_response(request_text)
+    second_addition = copy.deepcopy(ambiguous["operations"][0])
+    second_addition["operation_id"] = "add-window-002"
+    ambiguous["operations"].insert(1, second_addition)
+    normalized, codes = stage._fold_created_window_property_operations(ambiguous)
+    assert len(normalized["operations"]) == 3
+    assert codes == []
 
 
 def test_invalid_output_is_corrected_once_with_bounded_redacted_evidence(

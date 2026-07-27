@@ -4,12 +4,14 @@ from __future__ import annotations
 
 from dataclasses import dataclass, replace
 from fnmatch import fnmatchcase
+import hashlib
 import math
 import re
-from typing import Any, Iterable
+from typing import Any, Iterable, Mapping
 
 import ifcopenshell.util.classification
 import ifcopenshell.util.element
+import ifcopenshell.util.unit
 
 from .evaluation_models import CheckResult, EvaluationStatus, EvidenceFact
 from .evaluation_policy import (
@@ -46,6 +48,9 @@ class SemanticFact:
     source_ref: str
     provenance: tuple[str, ...]
     compatible: bool = True
+    occurrence_scope: str = "window_occurrence"
+    canonical_source_kind: str | None = None
+    derivation: Mapping[str, Any] | None = None
 
     def __post_init__(self) -> None:
         if not self.fact_key or any(char.isspace() for char in self.fact_key):
@@ -84,6 +89,41 @@ def semantic_fact_from_property_fact(
         source_ref=source_ref,
         provenance=(*provenance, fact.provenance),
         compatible=compatible,
+    )
+
+
+def apply_effective_material_precedence(
+    facts: Iterable[SemanticFact],
+) -> tuple[SemanticFact, ...]:
+    ordered = tuple(facts)
+    occurrence_sources = {
+        EvidenceSourceKind.EXPLICIT_REQUEST,
+        EvidenceSourceKind.SURVIVING_TARGET,
+        EvidenceSourceKind.AUTHORIZED_TYPE_COHORT,
+        EvidenceSourceKind.DETERMINISTIC_POLICY,
+    }
+    type_sources = {
+        EvidenceSourceKind.SURVIVING_TYPE,
+        EvidenceSourceKind.APPROVED_PROTOTYPE,
+    }
+    has_direct_material = any(
+        fact.fact_key.startswith("material:")
+        and fact.source_kind in occurrence_sources
+        and not fact.inherited
+        for fact in ordered
+    )
+    if not has_direct_material:
+        return ordered
+    return tuple(
+        fact
+        for fact in ordered
+        if not (
+            fact.fact_key.startswith("material:")
+            and (
+                fact.source_kind in type_sources
+                or fact.inherited
+            )
+        )
     )
 
 
@@ -283,7 +323,11 @@ def extract_property_facts(
                     property_name=str(property_name),
                     value=payload.get("value"),
                     value_type=_optional_text(payload.get("value_type") or property_class),
-                    unit=_optional_text(payload.get("unit")),
+                    unit=_property_unit_token(
+                        element,
+                        payload,
+                        property_class,
+                    ),
                     inherited=inherited,
                     provenance=(
                         "ifcopenshell.util.element.get_psets:inherited"
@@ -483,7 +527,6 @@ def _semantically_equivalent(
     ownership_sensitive = expected.fact_key.startswith("pset:")
     if (
         expected.value_type != actual.value_type
-        or expected.unit != actual.unit
         or (ownership_sensitive and expected.inherited != actual.inherited)
     ):
         return False
@@ -493,13 +536,54 @@ def _semantically_equivalent(
         and isinstance(actual.value, (int, float))
         and not isinstance(actual.value, bool)
     ):
-        return math.isclose(
+        converted = _equivalent_numeric_values(
             float(expected.value),
+            expected.unit,
             float(actual.value),
+            actual.unit,
+        )
+        if converted is not None:
+            expected_value, actual_value = converted
+        elif expected.unit is not None and expected.unit != actual.unit:
+            return False
+        else:
+            expected_value, actual_value = (
+                float(expected.value),
+                float(actual.value),
+            )
+        return math.isclose(
+            expected_value,
+            actual_value,
             rel_tol=0.0,
             abs_tol=spec.absolute_tolerance,
         )
+    if expected.unit is not None and expected.unit != actual.unit:
+        return False
     return expected.value == actual.value
+
+
+def _equivalent_numeric_values(
+    expected_value: float,
+    expected_unit: str | None,
+    actual_value: float,
+    actual_unit: str | None,
+) -> tuple[float, float] | None:
+    scales = {
+        "mm": (1, 1e-3),
+        "cm": (1, 1e-2),
+        "m": (1, 1.0),
+        "mm2": (2, 1e-6),
+        "cm2": (2, 1e-4),
+        "m2": (2, 1.0),
+        "mm3": (3, 1e-9),
+        "cm3": (3, 1e-6),
+        "m3": (3, 1.0),
+    }
+    expected = scales.get(str(expected_unit))
+    actual = scales.get(str(actual_unit))
+    if expected is None or actual is None or expected[0] != actual[0]:
+        return None
+    return expected_value * expected[1], actual_value * actual[1]
 
 
 def _fact_value(fact: SemanticFact | None) -> dict[str, Any] | None:
@@ -682,6 +766,102 @@ def _get_psets(element: Any, *, should_inherit: bool) -> dict[str, Any]:
         ) from error
 
 
+def _property_unit_token(
+    element: Any,
+    payload: Mapping[str, Any],
+    property_class: str,
+) -> str | None:
+    entity_id = payload.get("id")
+    if isinstance(entity_id, int):
+        try:
+            entity = element.file.by_id(entity_id)
+            explicit = _ifc_unit_token(getattr(entity, "Unit", None))
+            if explicit is not None:
+                return explicit
+        except Exception:
+            pass
+    dimension = {
+        "IfcQuantityLength": 1,
+        "IfcLengthMeasure": 1,
+        "IfcPositiveLengthMeasure": 1,
+        "IfcQuantityArea": 2,
+        "IfcAreaMeasure": 2,
+        "IfcQuantityVolume": 3,
+        "IfcVolumeMeasure": 3,
+    }.get(property_class)
+    return (
+        None
+        if dimension is None
+        else _project_length_unit_token(element, dimension)
+    )
+
+
+def _project_length_unit_token(element: Any, dimension: int) -> str | None:
+    try:
+        unit_type = (
+            "LENGTHUNIT" if dimension == 1 else (
+                "AREAUNIT" if dimension == 2 else "VOLUMEUNIT"
+            )
+        )
+        has_explicit_unit = any(
+            str(getattr(unit, "UnitType", "")) == unit_type
+            for project in element.file.by_type("IfcProject")
+            if getattr(project, "UnitsInContext", None) is not None
+            for unit in project.UnitsInContext.Units
+        )
+        scale = float(
+            ifcopenshell.util.unit.calculate_unit_scale(
+                element.file,
+                unit_type,
+            )
+        )
+        if dimension > 1 and not has_explicit_unit:
+            scale = float(
+                ifcopenshell.util.unit.calculate_unit_scale(
+                    element.file,
+                    "LENGTHUNIT",
+                )
+            ) ** dimension
+    except Exception:
+        return None
+    base = next(
+        (
+            token
+            for value, token in ((1.0, "m"), (1e-2, "cm"), (1e-3, "mm"))
+            if math.isclose(
+                scale,
+                value**dimension,
+                rel_tol=0.0,
+                abs_tol=1e-12,
+            )
+        ),
+        None,
+    )
+    if base is None:
+        return None
+    return base if dimension == 1 else f"{base}{dimension}"
+
+
+def _ifc_unit_token(unit: Any) -> str | None:
+    if unit is None:
+        return None
+    prefix = _optional_text(getattr(unit, "Prefix", None))
+    name = _optional_text(getattr(unit, "Name", None))
+    base = {
+        "METRE": "m",
+        "SQUARE_METRE": "m2",
+        "CUBIC_METRE": "m3",
+    }.get(name or "")
+    if base is None:
+        return ":".join(item for item in (prefix, name) if item) or unit.is_a()
+    prefix_token = {"MILLI": "m", "CENTI": "c"}.get(prefix or "")
+    if prefix is None:
+        return base
+    if prefix_token is None:
+        return f"{prefix}:{base}"
+    return f"{prefix_token}{base}"
+
+
 def _filled_element_host(element: Any) -> Any | None:
     for fill in getattr(element, "FillsVoids", ()):
         opening = fill.RelatingOpeningElement
@@ -698,8 +878,23 @@ def _root_identity(entity: Any) -> str:
     return str(getattr(entity, "GlobalId", None) or f"#{entity.id()}")
 
 
+def semantic_fact_key_token(value: str) -> str:
+    """Encode display names into stable comparison keys without changing IFC names."""
+
+    tokens = []
+    for component in value.split("."):
+        token = re.sub(r"[^A-Za-z0-9_/-]+", "-", component).strip("-")
+        if not token:
+            # Multiple non-ASCII IFC names must not collapse to the same fact
+            # key. Keep the token ASCII/schema-safe and deterministic.
+            digest = hashlib.sha256(component.encode("utf-8")).hexdigest()[:16]
+            token = f"u-{digest}"
+        tokens.append(token)
+    return ".".join(tokens)
+
+
 def _key_token(value: str) -> str:
-    return re.sub(r"[^A-Za-z0-9._/-]+", "-", value).strip("-") or "unnamed"
+    return semantic_fact_key_token(value)
 
 
 def _optional_text(value: Any) -> str | None:
@@ -799,6 +994,7 @@ def _python_value_type(value: Any, category: str, fact_key: str = "") -> str:
 __all__ = [
     "SemanticFact",
     "SemanticFactError",
+    "apply_effective_material_precedence",
     "evaluate_operation_semantics",
     "extract_property_facts",
     "extract_ifc_semantic_facts",
@@ -806,4 +1002,5 @@ __all__ = [
     "semantic_fact_from_property_fact",
     "semantic_facts_from_element_record",
     "semantic_facts_from_type_record",
+    "semantic_fact_key_token",
 ]

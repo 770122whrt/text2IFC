@@ -17,6 +17,7 @@ from .evaluation import (
     aggregate_operation,
     aggregate_repair,
     aggregate_status,
+    EvaluationExecutionPolicy,
     evaluate_independent_l1,
     evaluation_to_dict,
     make_l3_not_required,
@@ -35,6 +36,13 @@ from .semantic_facts import (
     _ifc_material_facts,
     _ifc_relationship_and_attribute_facts,
     evaluate_operation_semantics,
+    extract_property_facts,
+    semantic_fact_from_property_fact,
+)
+from .occurrence_fidelity import (
+    compare_occurrence_snapshots,
+    snapshot_from_semantic_facts,
+    snapshot_window_occurrence,
 )
 
 
@@ -64,6 +72,10 @@ class ProductionEvaluationInputs:
     expected_facts_by_operation: Mapping[str, tuple[SemanticFact, ...]] = field(
         default_factory=dict
     )
+    execution_policy: EvaluationExecutionPolicy = field(
+        default_factory=EvaluationExecutionPolicy
+    )
+    validation_cache_dir: Path | str | None = None
 
     def __post_init__(self) -> None:
         _validate_production_expected_facts(self.expected_facts_by_operation)
@@ -171,6 +183,7 @@ def evaluate_benchmark(inputs: BenchmarkEvaluationInputs) -> BenchmarkEvaluation
         "application_role_mapping": _application_role_mapping(
             inputs.production.application_result
         ),
+        "occurrence_fidelity": _benchmark_occurrence_reports(inputs),
     }
     public = project_public_evaluation(private)
     return BenchmarkEvaluationResult(
@@ -178,6 +191,184 @@ def evaluate_benchmark(inputs: BenchmarkEvaluationInputs) -> BenchmarkEvaluation
         private_report=private,
         public_report=public,
     )
+
+
+def _occurrence_fidelity_check(
+    *,
+    operation_id: str,
+    repaired_model: Any,
+    repaired_id: str | None,
+    public_expected: tuple[SemanticFact, ...],
+    original_model: Any | None,
+    original_id: str | None,
+    complete_replication: bool,
+    extraction_errors: tuple[str, ...],
+) -> CheckResult:
+    if extraction_errors or repaired_model is None or not repaired_id:
+        return CheckResult(
+            check_id="l2.window-occurrence-fidelity",
+            policy_id="window-occurrence-fidelity.v0.1",
+            applicability="required",
+            mandatory=True,
+            status=EvaluationStatus.NOT_EVALUABLE,
+            reason="Occurrence fidelity could not read the mapped repaired Window.",
+            evidence=(
+                _evidence(
+                    "l2.window-occurrence-fidelity",
+                    "occurrence_fidelity_error",
+                    f"operation:{operation_id}",
+                    "readable mapped Window",
+                    list(extraction_errors) or "missing repaired Window mapping",
+                ),
+            ),
+        )
+    try:
+        actual = snapshot_window_occurrence(repaired_model, repaired_id)
+        ledger = snapshot_from_semantic_facts(
+            public_expected, window_global_id=repaired_id
+        )
+        authorized = tuple(ledger.facts)
+        if complete_replication:
+            if original_model is None or not original_id:
+                raise ValueError("PRIVATE_WINDOW_MAPPING_REQUIRED")
+            expected = snapshot_window_occurrence(original_model, original_id)
+            required = _complete_replication_required_fact_keys(expected)
+        else:
+            expected = ledger
+            required = authorized
+        report = compare_occurrence_snapshots(
+            expected=expected,
+            actual=actual,
+            authorization_ledger=authorized,
+            authorization_ownership={
+                key: fact.ownership
+                for key, fact in ledger.facts.items()
+            },
+            required_fact_keys=required,
+            complete_replication=complete_replication,
+        )
+    except Exception as error:
+        return CheckResult(
+            check_id="l2.window-occurrence-fidelity",
+            policy_id="window-occurrence-fidelity.v0.1",
+            applicability="required",
+            mandatory=True,
+            status=EvaluationStatus.NOT_EVALUABLE,
+            reason="Occurrence fidelity input or mapping is invalid.",
+            evidence=(
+                _evidence(
+                    "l2.window-occurrence-fidelity",
+                    "occurrence_fidelity_error",
+                    f"operation:{operation_id}",
+                    "valid occurrence comparison",
+                    f"{type(error).__name__}:{error}",
+                ),
+            ),
+        )
+    passed = bool(report["occurrence_fidelity_success"])
+    return CheckResult(
+        check_id="l2.window-occurrence-fidelity",
+        policy_id="window-occurrence-fidelity.v0.1",
+        applicability="required",
+        mandatory=True,
+        status=EvaluationStatus.PASSED if passed else EvaluationStatus.FAILED,
+        reason=(
+            "Authorized Window/Opening occurrence facts match."
+            if passed
+            else "Required Window/Opening occurrence facts are incomplete or wrong."
+        ),
+        evidence=(
+            _evidence(
+                "l2.window-occurrence-fidelity",
+                "occurrence_fidelity_report",
+                f"operation:{operation_id}",
+                {
+                    "occurrence_fidelity_success": True,
+                    "blocking_counts": {
+                        "unsupported_authoring": 0,
+                        "wrong_value": 0,
+                        "not_in_user_text": 0 if complete_replication else "informational",
+                    },
+                },
+                report,
+            ),
+        ),
+    )
+
+
+def _benchmark_occurrence_reports(
+    inputs: BenchmarkEvaluationInputs,
+) -> dict[str, Any]:
+    if (
+        inputs.production.changeset.get("schema_version")
+        != "text2ifc/ifc-repair-changeset/0.3"
+    ):
+        return {}
+    original = ifcopenshell.open(str(inputs.private_original_ifc_path))
+    repaired = ifcopenshell.open(str(inputs.production.repaired_ifc_path))
+    application = _application_role_mapping(
+        inputs.production.application_result
+    )
+    reports: dict[str, Any] = {}
+    seen_original: set[str] = set()
+    seen_repaired: set[str] = set()
+    for operation in inputs.production.changeset.get("operations", ()):
+        operation_id = str(operation["operation_id"])
+        if operation.get("operation_type") != "add_window_with_opening_to_wall":
+            continue
+        original_id = str(
+            inputs.private_mutation_mapping.get(operation_id, {}).get("window", "")
+        )
+        repaired_id = str(application.get(operation_id, {}).get("window", ""))
+        if not original_id or not repaired_id:
+            raise ValueError(f"BENCHMARK_WINDOW_MAPPING_MISSING:{operation_id}")
+        if original_id in seen_original or repaired_id in seen_repaired:
+            raise ValueError(f"BENCHMARK_WINDOW_MAPPING_DUPLICATE:{operation_id}")
+        seen_original.add(original_id)
+        seen_repaired.add(repaired_id)
+        ledger_snapshot = snapshot_from_semantic_facts(
+            inputs.production.expected_facts_by_operation.get(operation_id, ()),
+            window_global_id=repaired_id,
+        )
+        expected = snapshot_window_occurrence(original, original_id)
+        reports[operation_id] = compare_occurrence_snapshots(
+            expected=expected,
+            actual=snapshot_window_occurrence(repaired, repaired_id),
+            authorization_ledger=tuple(ledger_snapshot.facts),
+            authorization_ownership={
+                key: fact.ownership
+                for key, fact in ledger_snapshot.facts.items()
+            },
+            required_fact_keys=_complete_replication_required_fact_keys(expected),
+            complete_replication=True,
+        )
+    return reports
+
+
+def _complete_replication_required_fact_keys(
+    expected: Any,
+) -> tuple[str, ...]:
+    """Return the Phase 10.5 authorable semantic Ground Truth boundary."""
+
+    required = []
+    for key in expected.facts:
+        if key.startswith("window_occurrence:pset:"):
+            required.append(key)
+        elif key.startswith(
+            (
+                "window_occurrence:quantity:",
+                "opening_occurrence:quantity:",
+            )
+        ):
+            required.append(key)
+        elif key.endswith(
+            (
+                ":attribute:OverallWidth",
+                ":attribute:OverallHeight",
+            )
+        ):
+            required.append(key)
+    return tuple(sorted(required))
 
 
 def _evaluate(
@@ -192,6 +383,8 @@ def _evaluate(
         changeset=inputs.changeset,
         application_result=inputs.application_result,
         registry=inputs.registry,
+        execution_policy=inputs.execution_policy,
+        validation_cache_dir=inputs.validation_cache_dir,
     )
     repaired_model, repaired_open_error = _open_evaluation_model(
         Path(inputs.repaired_ifc_path), label="repaired"
@@ -208,7 +401,17 @@ def _evaluate(
         operation_type = str(operation["operation_type"])
         policy = inputs.registry.require_evaluation_policy(operation_type)
         semantic_role = policy.semantic_role
-        expected = list(inputs.expected_facts_by_operation.get(operation_id, ()))
+        public_expected = tuple(
+            inputs.expected_facts_by_operation.get(operation_id, ())
+        )
+        expected = [
+            fact
+            for fact in public_expected
+            if str(
+                getattr(fact, "occurrence_scope", "window_occurrence")
+            )
+            == "window_occurrence"
+        ]
         policy = extend_policy_with_explicit_facts(
             policy,
             tuple(
@@ -277,7 +480,7 @@ def _evaluate(
                     )
                 except Exception as error:
                     extraction_errors.append(_evaluator_input_error(error))
-        l2_checks = (
+        l2_checks = list(
             _not_evaluable_semantic_checks(policy, errors=tuple(extraction_errors))
             if extraction_errors
             else inputs.registry.evaluate_semantics(
@@ -286,6 +489,23 @@ def _evaluate(
                 repaired_facts=repaired_facts,
             )
         )
+        if (
+            operation_type == "add_window_with_opening_to_wall"
+            and inputs.changeset.get("schema_version")
+            == "text2ifc/ifc-repair-changeset/0.3"
+        ):
+            occurrence_check = _occurrence_fidelity_check(
+                operation_id=operation_id,
+                repaired_model=repaired_model,
+                repaired_id=repaired_id,
+                public_expected=public_expected,
+                original_model=original_model,
+                original_id=original_id,
+                complete_replication=private_original_path is not None,
+                extraction_errors=tuple(extraction_errors),
+            )
+            l2_checks.append(occurrence_check)
+        l2_checks = tuple(l2_checks)
         l2 = aggregate_level(
             level="L2",
             checks=l2_checks,
@@ -418,41 +638,25 @@ def _extract_benchmark_semantic_facts(
     if any(spec.fact_pattern.startswith("classification:") for spec in policy.semantic_facts):
         facts.extend(_ifc_classification_facts(element, **source))
     known = {fact.fact_key for fact in facts}
-    inherited_sets = _get_psets(element, should_inherit=True)
-    direct_sets = _get_psets(element, should_inherit=False)
-    for set_name, members in inherited_sets.items():
-        if not isinstance(members, dict):
+    for property_fact in extract_property_facts(
+        element,
+        should_inherit=True,
+    ):
+        fact = semantic_fact_from_property_fact(
+            property_fact,
+            source_kind=source_kind,
+            source_ref=source_ref,
+            entity_source=f"{element.is_a()}:{source_ref}",
+            provenance=(
+                *provenance,
+                "ifcopenshell.util.element.get_psets",
+                "normalized-private-evaluator-key",
+            ),
+        )
+        if fact.fact_key in known:
             continue
-        direct_members = direct_sets.get(set_name, {})
-        for property_name, payload in members.items():
-            if property_name == "id" or not isinstance(payload, dict) or "value" not in payload:
-                continue
-            property_class = str(payload.get("class") or "")
-            category = "quantity" if property_class.startswith("IfcQuantity") else "pset"
-            fact_key = (
-                f"{category}:{_fact_key_token(str(set_name))}."
-                f"{_fact_key_token(str(property_name))}"
-            )
-            if fact_key in known:
-                continue
-            facts.append(
-                SemanticFact(
-                    fact_key=fact_key,
-                    value=payload.get("value"),
-                    value_type=str(payload.get("value_type") or property_class or type(payload.get("value")).__name__),
-                    unit=(None if payload.get("unit") is None else str(payload.get("unit"))),
-                    inherited=not (
-                        isinstance(direct_members, dict)
-                        and property_name in direct_members
-                    ),
-                    pset_path=f"{set_name}.{property_name}",
-                    entity_source=f"{element.is_a()}:{source_ref}",
-                    source_kind=source_kind,
-                    source_ref=source_ref,
-                    provenance=(*provenance, "ifcopenshell.util.element.get_psets", "normalized-private-evaluator-key"),
-                )
-            )
-            known.add(fact_key)
+        facts.append(fact)
+        known.add(fact.fact_key)
     return tuple(sorted(facts, key=lambda fact: (fact.fact_key, repr(fact.value))))
 
 
