@@ -10,6 +10,7 @@ from dataclasses import dataclass
 from typing import Any, Mapping
 
 from .index_models import ElementRecord, TypeRecord
+from .indexer import normalize_alias
 
 
 ADD_DOOR_OPERATION = "add_door_with_opening_to_wall"
@@ -78,14 +79,103 @@ def resolve_door_parameters(
 ) -> dict[str, Any]:
     """Registry hook returning complete canonical parameters or one pause."""
 
-    del repository, context
+    del context
+    parameters = copy.deepcopy(dict(operation.get("parameters", {})))
+    type_record, type_decision = _resolve_exact_type(
+        operation.get("prototype_intent"), repository
+    )
+    if type_decision is not None:
+        return type_decision.to_dict()
+    viewpoint_decision = _enrich_space_viewpoint(
+        parameters=parameters,
+        target_record=target_record,
+        repository=repository,
+    )
+    if viewpoint_decision is not None:
+        return viewpoint_decision.to_dict()
     decision = canonicalize_door_intent(
         operation_type=str(operation.get("operation_type", "")),
-        parameters=operation.get("parameters", {}),
+        parameters=parameters,
         target_record=target_record,
         type_record=type_record,
     )
     return decision.to_dict()
+
+
+def resolve_space_viewpoint(
+    *,
+    wall_record: ElementRecord,
+    from_space: ElementRecord,
+    to_space: ElementRecord,
+    tolerance_mm: float = 1.0,
+) -> dict[str, Any]:
+    """Resolve the observer side from bounded indexed geometry evidence."""
+
+    basis = wall_record.geometry_summary.get("coordinate_basis", {})
+    start = basis.get("world_axis_start_mm", basis.get("axis_start_mm"))
+    direction = basis.get(
+        "world_axis_direction", basis.get("axis_direction")
+    )
+    from_center = from_space.geometry_summary.get("centroid_mm")
+    to_center = to_space.geometry_summary.get("centroid_mm")
+    if not all(
+        isinstance(item, (list, tuple)) and len(item) >= 2
+        for item in (start, direction, from_center, to_center)
+    ):
+        return {
+            "status": "clarification_required",
+            "reason_code": "SPACE_SIDE_UNRESOLVED",
+        }
+    normal = (-float(direction[1]), float(direction[0]))
+
+    def signed(center: Any) -> float:
+        return (
+            (float(center[0]) - float(start[0])) * normal[0]
+            + (float(center[1]) - float(start[1])) * normal[1]
+        )
+
+    from_sign = signed(from_center)
+    to_sign = signed(to_center)
+    if (
+        abs(from_sign) <= tolerance_mm
+        or abs(to_sign) <= tolerance_mm
+        or from_sign * to_sign >= 0
+    ):
+        return {
+            "status": "clarification_required",
+            "reason_code": "SPACE_SIDE_UNRESOLVED",
+            "evidence": {
+                "from_signed_distance_mm": from_sign,
+                "to_signed_distance_mm": to_sign,
+                "tolerance_mm": tolerance_mm,
+            },
+        }
+    formal_boundary = (
+        wall_record.ifc_global_id
+        in from_space.facets.get("boundary_wall_global_ids", ())
+        and wall_record.ifc_global_id
+        in to_space.facets.get("boundary_wall_global_ids", ())
+    )
+    return {
+        "status": "resolved",
+        "observation_side": (
+            "wall_positive" if from_sign > 0 else "wall_negative"
+        ),
+        "destination": to_space.name or to_space.ifc_global_id,
+        "evidence": {
+            "method": (
+                "formal_boundary_plus_geometry_side"
+                if formal_boundary
+                else "geometry_side"
+            ),
+            "wall_global_id": wall_record.ifc_global_id,
+            "from_space_global_id": from_space.ifc_global_id,
+            "to_space_global_id": to_space.ifc_global_id,
+            "from_signed_distance_mm": from_sign,
+            "to_signed_distance_mm": to_sign,
+            "tolerance_mm": tolerance_mm,
+        },
+    }
 
 
 def canonicalize_door_intent(
@@ -284,6 +374,162 @@ def _resolve_dimensions(
             "formula": "identity",
         },
     }
+
+
+def _resolve_exact_type(
+    prototype_intent: Any,
+    repository: Any,
+) -> tuple[TypeRecord | None, DoorResolutionDecision | None]:
+    if not isinstance(prototype_intent, Mapping):
+        return None, None
+    if repository is None:
+        return None, DoorResolutionDecision(
+            status="clarification_required",
+            reason_code="DOOR_TYPE_EVIDENCE_REQUIRED",
+            missing_slots=("/prototype_intent",),
+        )
+    kind = str(prototype_intent.get("reference_kind", ""))
+    reference = str(prototype_intent.get("reference", ""))
+    candidates: list[TypeRecord]
+    if kind == "global_id":
+        record = repository.get_type_by_global_id(reference)
+        candidates = [] if record is None else [record]
+    elif kind == "type_name":
+        candidates = [
+            item
+            for item in repository.find_type_aliases(normalize_alias(reference))
+            if item.ifc_class == "IfcDoorStyle"
+            and item.identity_reliable
+            and item.name is not None
+            and normalize_alias(item.name) == normalize_alias(reference)
+        ]
+    else:
+        return None, DoorResolutionDecision(
+            status="clarification_required",
+            reason_code="DOOR_TYPE_SELECTION_REQUIRED",
+            missing_slots=("/prototype_intent",),
+        )
+    candidates = [
+        item
+        for item in candidates
+        if item.ifc_class == "IfcDoorStyle" and item.identity_reliable
+    ]
+    if len(candidates) == 1:
+        return candidates[0], None
+    if not candidates:
+        return None, DoorResolutionDecision(
+            status="clarification_required",
+            reason_code="DOOR_TYPE_NOT_FOUND",
+            missing_slots=("/prototype_intent",),
+        )
+    return None, DoorResolutionDecision(
+        status="clarification_required",
+        reason_code="DOOR_TYPE_SELECTION_REQUIRED",
+        candidates=tuple(
+            {
+                "ifc_global_id": item.ifc_global_id,
+                "ifc_class": item.ifc_class,
+                "name": item.name,
+                "formal_operation_type": item.formal_attributes.get(
+                    "OperationType"
+                ),
+            }
+            for item in sorted(
+                candidates,
+                key=lambda item: (str(item.name), str(item.ifc_global_id)),
+            )[:5]
+        ),
+    )
+
+
+def _enrich_space_viewpoint(
+    *,
+    parameters: dict[str, Any],
+    target_record: ElementRecord,
+    repository: Any,
+) -> DoorResolutionDecision | None:
+    door = parameters.get("door")
+    if not isinstance(door, Mapping):
+        return None
+    viewpoint = door.get("viewpoint")
+    if not isinstance(viewpoint, Mapping) or viewpoint.get("observation_side"):
+        return None
+    from_name = viewpoint.get("from_space")
+    to_name = viewpoint.get("to_space")
+    if not from_name and not to_name:
+        return None
+    if not from_name or not to_name or repository is None:
+        return DoorResolutionDecision(
+            status="clarification_required",
+            reason_code="DOOR_VIEWPOINT_REQUIRED",
+            missing_slots=(
+                "/parameters/door/viewpoint/from_space",
+                "/parameters/door/viewpoint/to_space",
+            ),
+        )
+
+    def exact_space(name: Any) -> list[ElementRecord]:
+        return [
+            item
+            for item in repository.find_aliases(normalize_alias(str(name)))
+            if item.ifc_class == "IfcSpace"
+            and item.identity_reliable
+            and item.name is not None
+            and normalize_alias(item.name) == normalize_alias(str(name))
+        ]
+
+    from_spaces = exact_space(from_name)
+    to_spaces = exact_space(to_name)
+    if len(from_spaces) != 1 or len(to_spaces) != 1:
+        return DoorResolutionDecision(
+            status="clarification_required",
+            reason_code="SPACE_SIDE_UNRESOLVED",
+            candidates=tuple(
+                {
+                    "role": role,
+                    "ifc_global_id": item.ifc_global_id,
+                    "name": item.name,
+                    "storey_name": item.storey_name,
+                }
+                for role, values in (
+                    ("from_space", from_spaces),
+                    ("to_space", to_spaces),
+                )
+                for item in values[:5]
+            ),
+        )
+    wall = target_record
+    if target_record.ifc_class == "IfcOpeningElement":
+        host_ids = target_record.facets.get("host_wall_global_ids", ())
+        wall = (
+            repository.get_by_global_id(str(host_ids[0]))
+            if len(host_ids) == 1
+            else None
+        )
+    if wall is None:
+        return DoorResolutionDecision(
+            status="clarification_required",
+            reason_code="SPACE_SIDE_UNRESOLVED",
+        )
+    decision = resolve_space_viewpoint(
+        wall_record=wall,
+        from_space=from_spaces[0],
+        to_space=to_spaces[0],
+    )
+    if decision["status"] != "resolved":
+        return DoorResolutionDecision(
+            status="clarification_required",
+            reason_code=str(decision["reason_code"]),
+        )
+    updated_door = copy.deepcopy(dict(door))
+    updated_door["viewpoint"] = {
+        **copy.deepcopy(dict(viewpoint)),
+        "observation_side": decision["observation_side"],
+        "destination": decision["destination"],
+        "derivation": decision["evidence"],
+    }
+    parameters["door"] = updated_door
+    return None
 
 
 def _resolve_position(
@@ -562,5 +808,6 @@ __all__ = [
     "FILL_DOOR_OPERATION",
     "SUPPORTED_GENERATED_OPERATIONS",
     "canonicalize_door_intent",
+    "resolve_space_viewpoint",
     "resolve_door_parameters",
 ]

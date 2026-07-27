@@ -4,7 +4,11 @@ from dataclasses import replace
 
 import pytest
 
-from text2ifc_ifc_repair.door_resolution import canonicalize_door_intent
+from text2ifc_ifc_repair.door_resolution import (
+    canonicalize_door_intent,
+    resolve_door_parameters,
+    resolve_space_viewpoint,
+)
 from text2ifc_ifc_repair.index_models import ElementRecord, TypeRecord
 
 
@@ -23,7 +27,13 @@ def _wall() -> ElementRecord:
         storey_name="Level 1",
         storey_global_id="0STOREYAAAAAAAAAAAAAAA",
         geometry_capability="straight_wall",
-        geometry_summary={"dimensions_mm": {"length": 6000.0}},
+        geometry_summary={
+            "dimensions_mm": {"length": 6000.0},
+            "coordinate_basis": {
+                "world_axis_start_mm": [0.0, 0.0, 0.0],
+                "world_axis_direction": [1.0, 0.0, 0.0],
+            },
+        },
         facets={"editable_target": True},
     )
 
@@ -354,3 +364,91 @@ def test_optional_door_facts_are_not_invented_or_asked() -> None:
     serialized = str(decision.to_dict())
     for optional in ("material", "transom", "threshold", "hardware", "FireRating"):
         assert optional not in serialized
+
+
+def _space(name: str, guid: str, y: float) -> ElementRecord:
+    return ElementRecord(
+        record_id=f"ifc:{guid}",
+        ifc_global_id=guid,
+        identity_reliable=True,
+        ifc_class="IfcSpace",
+        name=name,
+        long_name=None,
+        tag=None,
+        object_type=None,
+        type_name=None,
+        type_global_id=None,
+        storey_name="Level 1",
+        storey_global_id="0STOREYAAAAAAAAAAAAAAA",
+        geometry_capability="spatial_context",
+        geometry_summary={"centroid_mm": [1000.0, y, 1000.0]},
+        facets={
+            "editable_target": False,
+            "boundary_wall_global_ids": ["0WALLAAAAAAAAAAAAAAAAA"],
+        },
+        aliases=(),
+    )
+
+
+def test_space_geometry_and_formal_boundaries_resolve_viewpoint_side() -> None:
+    corridor = _space("Corridor", "0CORRIDORAAAAAAAAAAAAA", 1000.0)
+    room = _space("Room 101", "0ROOM101AAAAAAAAAAAAAA", -1000.0)
+    decision = resolve_space_viewpoint(
+        wall_record=_wall(),
+        from_space=corridor,
+        to_space=room,
+    )
+    assert decision["status"] == "resolved"
+    assert decision["observation_side"] == "wall_positive"
+    assert decision["destination"] == "Room 101"
+    assert decision["evidence"]["method"] == (
+        "formal_boundary_plus_geometry_side"
+    )
+
+
+def test_spaces_on_same_side_do_not_invent_viewpoint() -> None:
+    decision = resolve_space_viewpoint(
+        wall_record=_wall(),
+        from_space=_space("A", "0SPACEAAAAAAAAAAAAAAAA", 1000.0),
+        to_space=_space("B", "0SPACEBBBBBBBBBBBBBBBB", 2000.0),
+    )
+    assert decision["status"] == "clarification_required"
+    assert decision["reason_code"] == "SPACE_SIDE_UNRESOLVED"
+
+
+class _Repository:
+    def __init__(self, style: TypeRecord) -> None:
+        self.style = style
+
+    def get_type_by_global_id(self, global_id: str):
+        return self.style if global_id == self.style.ifc_global_id else None
+
+    def find_type_aliases(self, normalized_value: str):
+        return [self.style] if normalized_value == self.style.name.casefold() else []
+
+    def find_aliases(self, normalized_value: str):
+        return []
+
+
+def test_registry_hook_reads_exact_door_style_formal_operation() -> None:
+    style = _style("SINGLE_SWING_RIGHT")
+    operation = {
+        "operation_type": "add_door_with_opening_to_wall",
+        "parameters": {
+            **_complete_parameters(),
+            "door": {},
+        },
+        "prototype_intent": {
+            "reference_kind": "global_id",
+            "reference": style.ifc_global_id,
+        },
+    }
+    result = resolve_door_parameters(
+        operation=operation,
+        target_record=_wall(),
+        repository=_Repository(style),
+    )
+    assert result["status"] == "resolved"
+    assert result["parameters"]["door"]["operation_type"] == (
+        "SINGLE_SWING_RIGHT"
+    )

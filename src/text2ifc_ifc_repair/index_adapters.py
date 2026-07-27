@@ -63,7 +63,7 @@ class WallIndexAdapter:
     ifc_classes = ("IfcWall",)
 
     def extract(self, entity: Any) -> AdapterResult:
-        relationships = tuple(
+        relationships = list(
             RelationshipFact(
                 kind="voids_opening",
                 target_global_id=str(relation.RelatedOpeningElement.GlobalId),
@@ -72,11 +72,64 @@ class WallIndexAdapter:
             for relation in getattr(entity, "HasOpenings", ())
             if getattr(relation.RelatedOpeningElement, "GlobalId", None)
         )
+        space_names: set[str] = set()
+        for boundary in getattr(entity, "ProvidesBoundaries", ()):
+            space = getattr(boundary, "RelatingSpace", None)
+            space_id = getattr(space, "GlobalId", None)
+            if space_id:
+                relationships.append(
+                    RelationshipFact(
+                        "bounds_space", str(space_id), "IfcRelSpaceBoundary"
+                    )
+                )
+            name = getattr(space, "Name", None)
+            if name:
+                space_names.add(str(name))
+        wall_facets = {
+            "editable_target": True,
+            "space_names": sorted(space_names),
+        }
         try:
             start, end = straight_wall_axis(entity)
             delta = [end[index] - start[index] for index in range(3)]
             length = math.sqrt(sum(value * value for value in delta))
             direction = [value / length for value in delta]
+            try:
+                import ifcopenshell.util.placement
+                import ifcopenshell.util.unit
+
+                matrix = ifcopenshell.util.placement.get_local_placement(
+                    entity.ObjectPlacement
+                )
+                millimetres_per_project_unit = (
+                    ifcopenshell.util.unit.calculate_unit_scale(entity.file)
+                    * 1000.0
+                )
+                world_start_raw = matrix @ [*start, 1.0]
+                world_end_raw = matrix @ [*end, 1.0]
+                world_start = [
+                    float(world_start_raw[index])
+                    * millimetres_per_project_unit
+                    for index in range(3)
+                ]
+                world_end = [
+                    float(world_end_raw[index])
+                    * millimetres_per_project_unit
+                    for index in range(3)
+                ]
+                world_delta = [
+                    world_end[index] - world_start[index]
+                    for index in range(3)
+                ]
+                world_length = math.sqrt(
+                    sum(value * value for value in world_delta)
+                )
+                world_direction = [
+                    value / world_length for value in world_delta
+                ]
+            except Exception:
+                world_start = start
+                world_direction = direction
             summary = {
                 "coordinate_basis": {
                     "reference": "wall_local_start",
@@ -84,8 +137,10 @@ class WallIndexAdapter:
                     "axis_end_mm": end,
                     "axis_direction": direction,
                     "vertical_direction": [0.0, 0.0, 1.0],
+                    "world_axis_start_mm": world_start,
+                    "world_axis_direction": world_direction,
                 },
-                "orientation": _readable_orientation(direction),
+                "orientation": _readable_orientation(world_direction),
             }
             try:
                 summary["dimensions_mm"] = wall_dimensions_mm(entity)
@@ -93,23 +148,23 @@ class WallIndexAdapter:
                 return AdapterResult(
                     geometry_capability="straight_wall",
                     geometry_summary=summary,
-                    facets={"editable_target": True},
-                    relationships=relationships,
+                    facets=wall_facets,
+                    relationships=tuple(relationships),
                     warnings=(("INDEX_WALL_DIMENSIONS_UNAVAILABLE", str(error), {}),),
                 )
             return AdapterResult(
                 geometry_capability="straight_wall",
                 geometry_summary=summary,
-                facets={"editable_target": True},
-                relationships=relationships,
+                facets=wall_facets,
+                relationships=tuple(relationships),
             )
         except ValueError as error:
             if str(error) != UNSUPPORTED_WALL_GEOMETRY:
                 raise
             return AdapterResult(
                 geometry_capability="unsupported_or_approximate",
-                facets={"editable_target": True},
-                relationships=relationships,
+                facets=wall_facets,
+                relationships=tuple(relationships),
                 warnings=((UNSUPPORTED_WALL_GEOMETRY, str(error), {}),),
             )
 
@@ -255,7 +310,7 @@ class SpaceIndexAdapter:
     ifc_classes = ("IfcSpace",)
 
     def extract(self, entity: Any) -> AdapterResult:
-        relationships = tuple(
+        relationships = list(
             RelationshipFact(
                 "decomposes_from",
                 str(relation.RelatingObject.GlobalId),
@@ -264,16 +319,61 @@ class SpaceIndexAdapter:
             for relation in getattr(entity, "Decomposes", ())
             if getattr(relation.RelatingObject, "GlobalId", None)
         )
+        boundary_wall_ids: set[str] = set()
+        for boundary in getattr(entity, "BoundedBy", ()):
+            wall = getattr(boundary, "RelatedBuildingElement", None)
+            wall_id = getattr(wall, "GlobalId", None)
+            if wall_id:
+                boundary_wall_ids.add(str(wall_id))
+                relationships.append(
+                    RelationshipFact(
+                        "bounded_by_wall",
+                        str(wall_id),
+                        "IfcRelSpaceBoundary",
+                    )
+                )
+        summary: dict[str, Any] = {}
+        warnings: tuple[tuple[str, str, dict[str, Any]], ...] = ()
+        try:
+            import ifcopenshell.geom
+
+            shape = ifcopenshell.geom.create_shape(
+                ifcopenshell.geom.settings(), entity
+            )
+            vertices = shape.geometry.verts
+            axes = [vertices[index::3] for index in range(3)]
+            summary["centroid_mm"] = [
+                (float(min(axis)) + float(max(axis))) * 500.0
+                for axis in axes
+            ]
+            summary["bounds_mm"] = {
+                axis_name: [
+                    float(min(axes[index])) * 1000.0,
+                    float(max(axes[index])) * 1000.0,
+                ]
+                for index, axis_name in enumerate(("x", "y", "z"))
+            }
+        except Exception as error:
+            warnings = (
+                (
+                    "INDEX_SPACE_GEOMETRY_UNAVAILABLE",
+                    str(error),
+                    {},
+                ),
+            )
         return AdapterResult(
             geometry_capability="spatial_context",
+            geometry_summary=summary,
             facets={
                 "editable_target": False,
                 "role": "room_context",
+                "boundary_wall_global_ids": sorted(boundary_wall_ids),
                 "boundary_evidence": "available"
                 if getattr(entity, "BoundedBy", ())
                 else "unavailable",
             },
-            relationships=relationships,
+            relationships=tuple(relationships),
+            warnings=warnings,
         )
 
 
