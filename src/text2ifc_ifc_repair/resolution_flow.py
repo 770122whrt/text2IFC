@@ -237,6 +237,63 @@ def resolve_repair_intent(
                     "provenance": "current_ifc",
                 },
             )
+        resolved_parameters: Mapping[str, Any] = operation.parameters
+        if operation_registry is not None:
+            definition = operation_registry.require(operation.operation_type)
+            for hook in (
+                definition.intent_policy_checker,
+                definition.parameter_resolver,
+            ):
+                if hook is None:
+                    continue
+                decision = hook(
+                    operation=operation.to_dict(),
+                    target_record=record,
+                    repository=repository,
+                    context=context,
+                )
+                if not isinstance(decision, Mapping):
+                    return _failure(
+                        intent,
+                        "OPERATION_RESOLUTION_HOOK_INVALID",
+                        operation_id=operation.operation_id,
+                        operations=completed,
+                        source_sha=expected_source_sha256,
+                    )
+                status = str(decision.get("status", "resolved"))
+                if status != "resolved":
+                    if status == "clarification_required":
+                        return ResolutionBatch(
+                            status=status,
+                            reason_code=str(
+                                decision.get("reason_code")
+                                or "missing_evidence"
+                            ),
+                            operation_id=operation.operation_id,
+                            operations=tuple(completed),
+                            candidates=tuple(
+                                dict(item)
+                                for item in decision.get("candidates", ())
+                            ),
+                            source_ifc_sha256=expected_source_sha256,
+                            model_fingerprint=intent.model_fingerprint,
+                        )
+                    return _failure(
+                        intent,
+                        str(decision.get("reason_code") or status),
+                        operation_id=operation.operation_id,
+                        operations=completed,
+                        source_sha=expected_source_sha256,
+                    )
+                if "parameters" in decision:
+                    resolved_parameters = dict(decision["parameters"])
+                semantics = (
+                    *semantics,
+                    *tuple(
+                        dict(item)
+                        for item in decision.get("authorized_semantics", ())
+                    ),
+                )
         completed.append(
             ResolvedOperation(
                 operation_id=operation.operation_id,
@@ -244,7 +301,7 @@ def resolve_repair_intent(
                 target_global_id=record.ifc_global_id,
                 scope_ids=(record.ifc_global_id,),
                 evidence_pointers=evidence,
-                parameters=operation.parameters,
+                parameters=resolved_parameters,
                 context=context,
                 authorized_semantics=semantics,
             )
