@@ -17,18 +17,21 @@ from text2ifc_text.splits import atomic_write_text
 
 from .changesets import (
     BOUND_CHANGESET_SCHEMA_VERSION_0_3,
+    BOUND_CHANGESET_SCHEMA_VERSION_0_4,
     bind_repair_changeset,
     load_changeset_draft_schema,
     load_changeset_schema,
     validate_changeset,
     validate_changeset_draft,
 )
+from .prompt_profiles import select_prompt_profiles
 from .registry import OperationRegistry, OperationRegistryError
 
 
 TEMPLATE_ID = "ifc-repair-changeset.v0.1"
 BOUND_TEMPLATE_ID = "ifc-repair-changeset.v0.2"
 BOUND_TEMPLATE_ID_0_3 = "ifc-repair-changeset.v0.3"
+BOUND_TEMPLATE_ID_0_4 = "ifc-repair-changeset.v0.4"
 _PRIVATE_CANARIES = (
     "private_original",
     "mutation_manifest",
@@ -69,7 +72,30 @@ def generate_bound_changeset(
         atomic_write_text(output / "diagnostics.json", _json({"valid": False, "issues": input_issues}))
         return result
 
-    supported_operations = [_operation_contract(registry, name) for name in registry.operation_types]
+    used_operation_types = tuple(
+        sorted({str(item["operation_type"]) for item in operations})
+    )
+    supported_operations: Any = [
+        _operation_contract(registry, name) for name in used_operation_types
+    ]
+    selected_profile_ids = [
+        registry.require(name).prompt_profile_id for name in used_operation_types
+    ]
+    profile_selection = None
+    if selected_profile_ids and all(selected_profile_ids):
+        profile_selection = select_prompt_profiles(
+            str(item) for item in selected_profile_ids
+        )
+        selection_document = profile_selection.to_dict()
+        supported_operations = {
+            "operation_contracts": supported_operations,
+            "selected_profiles": selection_document["profiles"],
+            "few_shots": selection_document["few_shots"],
+        }
+        atomic_write_text(
+            output / "prompt-profile-selection.json",
+            _json(selection_document),
+        )
     manifests = tuple(semantic_manifests)
     manifest_hashes = dict(semantic_manifest_hashes or {})
     compact_mode = bool(manifests)
@@ -78,6 +104,14 @@ def generate_bound_changeset(
         and all(
             item.schema_version
             == "text2ifc/ifc-repair-semantic-manifest/0.2"
+            for item in manifests
+        )
+    )
+    semantic_contract_v03 = bool(
+        manifests
+        and all(
+            item.schema_version
+            == "text2ifc/ifc-repair-semantic-manifest/0.3"
             for item in manifests
         )
     )
@@ -117,7 +151,9 @@ def generate_bound_changeset(
         }
         rendered = render_prompt(
             template_id=(
-                BOUND_TEMPLATE_ID_0_3
+                BOUND_TEMPLATE_ID_0_4
+                if semantic_contract_v03
+                else BOUND_TEMPLATE_ID_0_3
                 if semantic_contract_v02
                 else BOUND_TEMPLATE_ID
             ),
@@ -190,7 +226,9 @@ def generate_bound_changeset(
                             source_request_hash=source_request_hash,
                             base_model_fingerprint=base_fingerprint,
                             bound_schema_version=(
-                                BOUND_CHANGESET_SCHEMA_VERSION_0_3
+                                BOUND_CHANGESET_SCHEMA_VERSION_0_4
+                                if semantic_contract_v03
+                                else BOUND_CHANGESET_SCHEMA_VERSION_0_3
                                 if semantic_contract_v02
                                 else "text2ifc/ifc-repair-changeset/0.2"
                             ),

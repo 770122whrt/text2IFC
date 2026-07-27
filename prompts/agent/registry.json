@@ -424,6 +424,66 @@
       ]
     },
     {
+      "template_id": "ifc-repair-intent.v0.5",
+      "role": "ifc_repair_request_understanding",
+      "mode": "repair_intent",
+      "path": "prompts/agent/ifc-repair-intent-v0.5.md",
+      "sha256": "sha256:0e11750316bc2ca04381a478ebaac0ab2990c2ad6d7476d52a3c95bb0cbd7130",
+      "required_inputs": [
+        "REPAIR_REQUEST",
+        "SUPPORTED_OPERATIONS",
+        "REPAIR_INTENT_SCHEMA",
+        "VALIDATION_FEEDBACK"
+      ],
+      "forbidden_outputs": [
+        "raw_ifc",
+        "step_text",
+        "step_id",
+        "resolved_target_id",
+        "resolved_target_guid",
+        "resolved_type_id",
+        "unregistered_profile",
+        "inferred_occurrence_reuse",
+        "mutation_mapping",
+        "private_original_ifc",
+        "benchmark_gold",
+        "guessed_project_fact",
+        "repair_changeset"
+      ]
+    },
+    {
+      "template_id": "ifc-repair-changeset.v0.4",
+      "role": "ifc_repair_generator",
+      "mode": "bound_changeset",
+      "path": "prompts/agent/ifc-repair-changeset-v0.4.md",
+      "sha256": "sha256:9bb8866082df52fcaa9b064fb38fe5cf5f527e547a993f10d808bf6cb5901622",
+      "required_inputs": [
+        "REPAIR_REQUEST",
+        "SOURCE_REQUEST_HASH",
+        "MODEL_FINGERPRINT",
+        "RESOLVED_OPERATIONS",
+        "SUPPORTED_OPERATIONS",
+        "CHANGESET_SCHEMA",
+        "VALIDATION_FEEDBACK",
+        "SEMANTIC_MANIFEST_REF",
+        "SEMANTIC_MANIFEST_SHA256",
+        "SEMANTIC_SUMMARY",
+        "EXPLICIT_REQUEST_SLOT_REFS"
+      ],
+      "forbidden_outputs": [
+        "raw_ifc",
+        "step_text",
+        "step_id",
+        "raw_cohort_candidates",
+        "private_original_ifc",
+        "benchmark_gold",
+        "mutation_mapping",
+        "semantic_assignments",
+        "unregistered_operation",
+        "unselected_profile"
+      ]
+    },
+    {
       "template_id": "audit.v1",
       "role": "audit",
       "mode": "semantic_review",

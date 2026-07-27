@@ -17,6 +17,11 @@ from text2ifc_agent.providers import (
 from text2ifc_text.splits import atomic_write_text
 
 from .registry import OperationRegistry, OperationRegistryError
+from .prompt_profiles import (
+    PromptProfileError,
+    compact_profile_catalog,
+    load_prompt_profiles,
+)
 from .repair_intent import (
     DEFAULT_REPAIR_INTENT_LIMITS,
     RepairIntent,
@@ -26,10 +31,12 @@ from .repair_intent import (
     REPAIR_INTENT_BODY_SCHEMA_VERSION_0_2,
     REPAIR_INTENT_BODY_SCHEMA_VERSION_0_3,
     REPAIR_INTENT_BODY_SCHEMA_VERSION_0_4,
+    REPAIR_INTENT_BODY_SCHEMA_VERSION_0_5,
     REPAIR_INTENT_SCHEMA_VERSION,
     REPAIR_INTENT_SCHEMA_VERSION_0_2,
     REPAIR_INTENT_SCHEMA_VERSION_0_3,
     REPAIR_INTENT_SCHEMA_VERSION_0_4,
+    REPAIR_INTENT_SCHEMA_VERSION_0_5,
     fingerprint_text,
     hash_request,
     load_repair_intent_body_schema,
@@ -41,6 +48,7 @@ TEMPLATE_ID = "ifc-repair-intent.v0.1"
 TEMPLATE_ID_0_2 = "ifc-repair-intent.v0.2"
 TEMPLATE_ID_0_3 = "ifc-repair-intent.v0.3"
 TEMPLATE_ID_0_4 = "ifc-repair-intent.v0.4"
+TEMPLATE_ID_0_5 = "ifc-repair-intent.v0.5"
 _INTENT_CONTRACTS = {
     REPAIR_INTENT_SCHEMA_VERSION: (
         REPAIR_INTENT_BODY_SCHEMA_VERSION,
@@ -57,6 +65,10 @@ _INTENT_CONTRACTS = {
     REPAIR_INTENT_SCHEMA_VERSION_0_4: (
         REPAIR_INTENT_BODY_SCHEMA_VERSION_0_4,
         TEMPLATE_ID_0_4,
+    ),
+    REPAIR_INTENT_SCHEMA_VERSION_0_5: (
+        REPAIR_INTENT_BODY_SCHEMA_VERSION_0_5,
+        TEMPLATE_ID_0_5,
     ),
 }
 MAX_REQUEST_BYTES = DEFAULT_REPAIR_INTENT_LIMITS.max_request_bytes
@@ -92,7 +104,11 @@ def generate_repair_intent(
     envelope_schema = load_repair_intent_schema(intent_schema_version)
     schema = load_repair_intent_body_schema(body_schema_version)
     source_request_hash = hash_request(repair_request)
-    supported_operations = _supported_operations(registry)
+    supported_operations = (
+        _compact_supported_profiles(registry)
+        if intent_schema_version == REPAIR_INTENT_SCHEMA_VERSION_0_5
+        else _supported_operations(registry)
+    )
     feedback: list[dict[str, str]] = []
     rendered = render_prompt(
         template_id=template_id,
@@ -197,8 +213,15 @@ def generate_repair_intent(
                             path=_pointer(error.absolute_path),
                         )
                     parsed, normalizations = (
-                        _fold_created_window_property_operations(parsed)
+                        _fold_created_occurrence_property_operations(
+                            parsed, registry=registry
+                        )
                     )
+                    if (
+                        intent_schema_version
+                        == REPAIR_INTENT_SCHEMA_VERSION_0_5
+                    ):
+                        _validate_operation_routing(parsed, registry=registry)
                     model = str(provider_output.metadata.get("model", ""))
                     if not model:
                         raise RepairIntentError(
@@ -234,6 +257,14 @@ def generate_repair_intent(
                     issues.append(
                         _issue(
                             RepairIntentCode.UNSUPPORTED_OPERATION,
+                            error.detail,
+                            path="/operations",
+                        )
+                    )
+                except PromptProfileError as error:
+                    issues.append(
+                        _issue(
+                            RepairIntentCode.OPERATION_PROFILE_MISMATCH,
                             error.detail,
                             path="/operations",
                         )
@@ -381,8 +412,65 @@ def _supported_operations(registry: OperationRegistry) -> list[dict[str, Any]]:
     ]
 
 
-def _fold_created_window_property_operations(
+def _compact_supported_profiles(
+    registry: OperationRegistry,
+) -> list[dict[str, Any]]:
+    profile_ids = []
+    for operation_type in registry.operation_types:
+        profile_id = registry.require(operation_type).prompt_profile_id
+        if profile_id is None:
+            raise PromptProfileError(
+                "PROFILE_BINDING_MISSING", operation_type
+            )
+        profile_ids.append(profile_id)
+    return list(
+        compact_profile_catalog(
+            load_prompt_profiles(),
+            include_profile_ids=profile_ids,
+        )
+    )
+
+
+def _validate_operation_routing(
     document: Mapping[str, Any],
+    *,
+    registry: OperationRegistry,
+) -> None:
+    profiles = load_prompt_profiles()
+    for index, operation in enumerate(document.get("operations", ())):
+        operation_type = str(operation.get("operation_type", ""))
+        definition = registry.require(operation_type)
+        expected_profile_id = definition.prompt_profile_id
+        routing = operation.get("routing_intent")
+        if not isinstance(routing, Mapping) or expected_profile_id is None:
+            raise RepairIntentError(
+                RepairIntentCode.OPERATION_PROFILE_MISMATCH,
+                operation_type,
+                path=f"/operations/{index}/routing_intent",
+            )
+        profile = profiles.get(expected_profile_id)
+        actual = (
+            str(routing.get("component_family", "")),
+            str(routing.get("action", "")),
+            str(routing.get("operation_profile", "")),
+        )
+        expected = (
+            profile.component_family if profile else "",
+            profile.action if profile else "",
+            expected_profile_id,
+        )
+        if actual != expected or profile is None:
+            raise RepairIntentError(
+                RepairIntentCode.OPERATION_PROFILE_MISMATCH,
+                f"expected={expected!r} actual={actual!r}",
+                path=f"/operations/{index}/routing_intent",
+            )
+
+
+def _fold_created_occurrence_property_operations(
+    document: Mapping[str, Any],
+    *,
+    registry: OperationRegistry,
 ) -> tuple[dict[str, Any], list[str]]:
     """Fold an unbound property-only operation into its unique new Window.
 
@@ -395,7 +483,10 @@ def _fold_created_window_property_operations(
     """
 
     normalized = json.loads(json.dumps(document))
-    if normalized.get("schema_version") != REPAIR_INTENT_BODY_SCHEMA_VERSION_0_4:
+    if normalized.get("schema_version") not in {
+        REPAIR_INTENT_BODY_SCHEMA_VERSION_0_4,
+        REPAIR_INTENT_BODY_SCHEMA_VERSION_0_5,
+    }:
         return normalized, []
 
     operations = normalized.get("operations")
@@ -404,22 +495,34 @@ def _fold_created_window_property_operations(
 
     additions_by_wall: dict[str, list[dict[str, Any]]] = {}
     for operation in operations:
-        if operation.get("operation_type") != "add_window_with_opening_to_wall":
+        try:
+            definition = registry.require(str(operation.get("operation_type", "")))
+        except OperationRegistryError:
+            continue
+        created_class = definition.editable_occurrence_ifc_class
+        if created_class is None:
             continue
         target = operation.get("target_query")
         if not isinstance(target, Mapping):
             continue
         wall_global_id = target.get("global_id")
         if isinstance(wall_global_id, str) and wall_global_id:
+            operation["_created_occurrence_class"] = created_class
             additions_by_wall.setdefault(wall_global_id, []).append(operation)
 
     removed_ids: set[int] = set()
     normalization_codes: list[str] = []
     for property_operation in operations:
-        if not _is_foldable_created_window_property_operation(property_operation):
+        if not _is_foldable_created_occurrence_property_operation(property_operation):
             continue
         target = property_operation["target_query"]
         matches = additions_by_wall.get(str(target["host_global_id"]), [])
+        matches = [
+            item
+            for item in matches
+            if set(target.get("allowed_ifc_classes", ()))
+            == {item.get("_created_occurrence_class")}
+        ]
         if len(matches) != 1:
             continue
         addition = matches[0]
@@ -436,10 +539,12 @@ def _fold_created_window_property_operations(
         normalized["operations"] = [
             operation for operation in operations if id(operation) not in removed_ids
         ]
+    for operation in normalized.get("operations", ()):
+        operation.pop("_created_occurrence_class", None)
     return normalized, normalization_codes
 
 
-def _is_foldable_created_window_property_operation(
+def _is_foldable_created_occurrence_property_operation(
     operation: Mapping[str, Any],
 ) -> bool:
     if operation.get("operation_type") != "set_occurrence_properties":
@@ -449,7 +554,7 @@ def _is_foldable_created_window_property_operation(
         return False
     if target.get("global_id"):
         return False
-    if set(target.get("allowed_ifc_classes", ())) != {"IfcWindow"}:
+    if len(set(target.get("allowed_ifc_classes", ()))) != 1:
         return False
     if not target.get("host_global_id"):
         return False
@@ -466,6 +571,18 @@ def _is_foldable_created_window_property_operation(
     return bool(
         operation.get("property_intents")
         or operation.get("quantity_intents")
+    )
+
+
+def _fold_created_window_property_operations(
+    document: Mapping[str, Any],
+) -> tuple[dict[str, Any], list[str]]:
+    """Backward-compatible private test seam for the v0.4 Window path."""
+
+    from .operations import create_default_registry
+
+    return _fold_created_occurrence_property_operations(
+        document, registry=create_default_registry()
     )
 
 
