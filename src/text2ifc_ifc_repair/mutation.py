@@ -27,6 +27,9 @@ MUTATION_TYPE = "remove_window_and_opening"
 BATCH_MUTATION_SCHEMA_VERSION = "text2ifc/ifc-repair-mutation-private/0.2"
 BATCH_MUTATION_TYPE = "remove_windows_and_openings_batch"
 DOOR_MUTATION_SCHEMA_VERSION = "text2ifc/ifc-repair-door-mutation-private/0.1"
+DOOR_BATCH_MUTATION_SCHEMA_VERSION = (
+    "text2ifc/ifc-repair-door-mutation-private/0.2"
+)
 
 
 def remove_window_and_opening(
@@ -527,6 +530,186 @@ def remove_door(
         "door": snapshot["door"],
         "opening": snapshot["opening"],
         "wall": snapshot["wall"],
+        "artifacts": {
+            "damaged_ifc": "damaged.ifc",
+            "private_manifest": "mutation_manifest.private.json",
+            "report": "mutation_report.json",
+        },
+    }
+
+
+def remove_doors_batch(
+    *,
+    source_path: Path | str,
+    output_dir: Path | str,
+    door_global_ids: list[str] | tuple[str, ...],
+    preserve_openings: bool = True,
+    expected_source_sha256: str | None = None,
+) -> dict[str, Any]:
+    """Remove several Door fill chains in one in-memory mutation and one write."""
+
+    source = Path(source_path).resolve()
+    output = Path(output_dir).resolve()
+    source_sha256 = _sha256(source)
+    if expected_source_sha256 is not None and source_sha256 != expected_source_sha256:
+        raise ValueError("SOURCE_IFC_FINGERPRINT_MISMATCH")
+    if output.exists():
+        raise FileExistsError(f"mutation output already exists: {output}")
+    normalized_ids = tuple(str(value) for value in door_global_ids)
+    if not normalized_ids:
+        raise ValueError("DOOR_BATCH_EMPTY")
+    if len(set(normalized_ids)) != len(normalized_ids):
+        raise ValueError("DOOR_BATCH_DUPLICATE_TARGET")
+
+    model = ifcopenshell.open(str(source))
+    if model.schema != "IFC2X3":
+        raise ValueError("UNSUPPORTED_IFC_SCHEMA")
+    records: list[dict[str, Any]] = []
+    opening_ids: set[str] = set()
+    doors: list[Any] = []
+    openings: list[Any] = []
+    for door_global_id in normalized_ids:
+        door = _optional_guid(model, door_global_id)
+        if door is None or not door.is_a("IfcDoor"):
+            raise ValueError(f"DOOR_NOT_FOUND:{door_global_id}")
+        if len(door.FillsVoids) != 1:
+            raise ValueError(f"DOOR_FILL_CHAIN_INVALID:{door_global_id}")
+        opening = door.FillsVoids[0].RelatingOpeningElement
+        if len(opening.VoidsElements) != 1:
+            raise ValueError(f"DOOR_OPENING_HOST_INVALID:{door_global_id}")
+        wall = opening.VoidsElements[0].RelatingBuildingElement
+        if not wall.is_a("IfcWall"):
+            raise ValueError(f"DOOR_HOST_UNSUPPORTED:{door_global_id}")
+        opening_id = str(opening.GlobalId)
+        if opening_id in opening_ids:
+            raise ValueError(f"DOOR_BATCH_SHARED_OPENING:{opening_id}")
+        opening_ids.add(opening_id)
+        doors.append(door)
+        openings.append(opening)
+        records.append(_door_snapshot(door, opening, wall))
+
+    before_counts = _counts(model)
+    owner_history_snapshot = _snapshot_owner_history(model)
+    for door in doors:
+        remove_product(model, product=door)
+    if not preserve_openings:
+        for opening in openings:
+            remove_product(model, product=opening)
+    _restore_owner_history(model, owner_history_snapshot)
+    _canonicalize_modified_relationship_sets(model)
+
+    output.parent.mkdir(parents=True, exist_ok=True)
+    stage = Path(tempfile.mkdtemp(prefix=f".{output.name}-", dir=output.parent))
+    try:
+        damaged_path = stage / "damaged.ifc"
+        model.write(str(damaged_path))
+        reopened = ifcopenshell.open(str(damaged_path))
+        for record in records:
+            door_id = record["door"]["global_id"]
+            opening_id = record["opening"]["global_id"]
+            if _optional_guid(reopened, door_id) is not None:
+                raise ValueError(f"DOOR_MUTATION_REMOVE_FAILED:{door_id}")
+            surviving_opening = _optional_guid(reopened, opening_id)
+            if preserve_openings:
+                if surviving_opening is None:
+                    raise ValueError(
+                        f"DOOR_MUTATION_OPENING_NOT_PRESERVED:{opening_id}"
+                    )
+                if len(surviving_opening.HasFillings) != 0:
+                    raise ValueError(
+                        f"DOOR_MUTATION_OPENING_NOT_EMPTY:{opening_id}"
+                    )
+                if len(surviving_opening.VoidsElements) != 1:
+                    raise ValueError(
+                        f"DOOR_MUTATION_VOID_NOT_PRESERVED:{opening_id}"
+                    )
+            elif surviving_opening is not None:
+                raise ValueError(
+                    f"DOOR_MUTATION_OPENING_REMOVE_FAILED:{opening_id}"
+                )
+        after_counts = _counts(reopened)
+        damaged_sha256 = _sha256(damaged_path)
+        mode = (
+            "remove_doors_preserve_openings_batch"
+            if preserve_openings
+            else "remove_doors_and_openings_batch"
+        )
+        manifest = {
+            "schema_version": DOOR_BATCH_MUTATION_SCHEMA_VERSION,
+            "mutation_type": mode,
+            "source": {
+                "path": source.as_posix(),
+                "schema": "IFC2X3",
+                "size_bytes": source.stat().st_size,
+                "sha256": source_sha256,
+            },
+            "targets": records,
+            "counts": {"before": before_counts, "after": after_counts},
+            "damaged_ifc": {"path": "damaged.ifc", "sha256": damaged_sha256},
+        }
+        report = {
+            "schema_version": (
+                "text2ifc/ifc-repair-door-mutation-report/0.2"
+            ),
+            "valid": True,
+            "mutation_type": mode,
+            "source_sha256": source_sha256,
+            "damaged_sha256": damaged_sha256,
+            "removed_doors": [
+                {
+                    "global_id": item["door"]["global_id"],
+                    "name": item["door"]["name"],
+                    "type_global_id": item["door"]["type_global_id"],
+                    "type_name": item["door"]["type_name"],
+                    "operation_type": item["door"]["operation_type"],
+                }
+                for item in records
+            ],
+            "damage_scope": {
+                "door_count": len(records),
+                "doors_removed": True,
+                "fills_removed": True,
+                "openings_removed": not preserve_openings,
+                "voids_removed": not preserve_openings,
+            },
+            "counts": {"before": before_counts, "after": after_counts},
+            "checks": {
+                "schema_preserved": reopened.schema == "IFC2X3",
+                "source_unchanged": _sha256(source) == source_sha256,
+                "all_doors_removed": all(
+                    _optional_guid(reopened, item["door"]["global_id"]) is None
+                    for item in records
+                ),
+                "opening_preservation_matches_mode": all(
+                    (
+                        _optional_guid(
+                            reopened, item["opening"]["global_id"]
+                        )
+                        is not None
+                    )
+                    == preserve_openings
+                    for item in records
+                ),
+                "single_model_write": True,
+            },
+        }
+        atomic_write_text(
+            stage / "mutation_manifest.private.json", _render_json(manifest)
+        )
+        atomic_write_text(stage / "mutation_report.json", _render_json(report))
+        os.replace(stage, output)
+    except BaseException:
+        if stage.exists():
+            shutil.rmtree(stage)
+        raise
+
+    return {
+        "valid": True,
+        "mutation_type": mode,
+        "target_count": len(records),
+        "source_sha256": source_sha256,
+        "damaged_sha256": damaged_sha256,
+        "targets": records,
         "artifacts": {
             "damaged_ifc": "damaged.ifc",
             "private_manifest": "mutation_manifest.private.json",

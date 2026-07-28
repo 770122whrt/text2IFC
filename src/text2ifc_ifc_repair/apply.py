@@ -12,6 +12,7 @@ from typing import Any
 import ifcopenshell
 
 from .audit import audit_changeset
+from .changesets import validate_changeset
 from .registry import OperationRegistry
 from .semantic_authoring import apply_semantic_assignments
 
@@ -36,11 +37,18 @@ def apply_changeset(
     if output.exists():
         return _failure("OUTPUT_ALREADY_EXISTS", "/output_path", str(output))
 
+    prepared_model = None
+    prepared_fingerprint = None
+    if not validate_changeset(changeset):
+        prepared_fingerprint = "sha256:" + _sha256(damaged)
+        prepared_model = ifcopenshell.open(str(damaged))
     audit = audit_changeset(
         damaged_ifc_path=damaged,
         repair_request=repair_request,
         changeset=changeset,
         registry=registry,
+        prepared_model=prepared_model,
+        prepared_fingerprint=prepared_fingerprint,
     )
     if not audit["valid"]:
         return {
@@ -54,7 +62,9 @@ def apply_changeset(
             "issues": audit["issues"],
         }
 
-    actual_fingerprint = "sha256:" + _sha256(damaged)
+    actual_fingerprint = (
+        prepared_fingerprint or "sha256:" + _sha256(damaged)
+    )
     if actual_fingerprint != changeset["base_model_fingerprint"]:
         return _failure(
             "BASE_MODEL_FINGERPRINT_MISMATCH",
@@ -63,7 +73,11 @@ def apply_changeset(
             audit=audit,
         )
 
-    model = ifcopenshell.open(str(damaged))
+    model = (
+        prepared_model
+        if prepared_model is not None
+        else ifcopenshell.open(str(damaged))
+    )
     operation_results: list[dict[str, Any]] = []
     for operation in changeset["operations"]:
         try:

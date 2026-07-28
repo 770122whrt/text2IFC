@@ -22,6 +22,8 @@ def audit_changeset(
     repair_request: str,
     changeset: Mapping[str, Any],
     registry: OperationRegistry,
+    prepared_model: Any | None = None,
+    prepared_fingerprint: str | None = None,
 ) -> dict[str, Any]:
     """Audit common bindings and dispatch operation-specific preconditions."""
 
@@ -47,7 +49,11 @@ def audit_changeset(
     )
 
     damaged = Path(damaged_ifc_path)
-    model = ifcopenshell.open(str(damaged))
+    model = (
+        prepared_model
+        if prepared_model is not None
+        else ifcopenshell.open(str(damaged))
+    )
     _check(
         checks,
         issues,
@@ -57,7 +63,11 @@ def audit_changeset(
         path="/base_model_fingerprint",
         evidence={"actual_schema": model.schema},
     )
-    actual_fingerprint = "sha256:" + hashlib.sha256(damaged.read_bytes()).hexdigest()
+    actual_fingerprint = (
+        prepared_fingerprint
+        if prepared_fingerprint is not None
+        else "sha256:" + hashlib.sha256(damaged.read_bytes()).hexdigest()
+    )
     _check(
         checks,
         issues,

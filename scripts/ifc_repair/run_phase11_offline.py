@@ -7,6 +7,7 @@ import hashlib
 import json
 import shutil
 import sys
+import time
 from pathlib import Path
 from typing import Any
 
@@ -29,8 +30,20 @@ from text2ifc_ifc_repair.geometry import (  # noqa: E402
     opening_dimensions_mm,
     opening_position_in_wall_mm,
 )
-from text2ifc_ifc_repair.mutation import remove_door  # noqa: E402
+from text2ifc_ifc_repair.mutation import (  # noqa: E402
+    remove_door,
+    remove_doors_batch,
+    remove_windows_and_openings_batch,
+)
 from text2ifc_ifc_repair.operations import create_default_registry  # noqa: E402
+from text2ifc_ifc_repair.operations.door import (  # noqa: E402
+    ADD_OPERATION_TYPE,
+    add_door_operation_definition,
+)
+from text2ifc_ifc_repair.resolution_flow import (  # noqa: E402
+    ResolvedOperation,
+    generated_type_authority,
+)
 from text2ifc_ifc_repair.semantic_facts import SemanticFact  # noqa: E402
 
 
@@ -47,7 +60,38 @@ CASES = (
         "source": ROOT / "dataset/ifc/train/vvo.ifc",
         "door_global_id": "2IUEnGd5v4Yfg1ZlPtd0qa",
     },
+    {
+        "case_id": "advancedproject-door-preserve-opening",
+        "source": ROOT
+        / "dataset/external/bim-whale-ifc-samples/AdvancedProject/IFC/AdvancedProject.ifc",
+        "door_global_id": "0MOEoDTm9EnO9yKsXjjkME",
+        "performance_gate": True,
+    },
 )
+VVO_FIVE_DOOR_CASE = {
+    "case_id": "vvo-five-door-preserve-opening",
+    "source": ROOT / "dataset/ifc/train/vvo.ifc",
+    "door_global_ids": (
+        "2IUEnGd5v4Yfg1ZlPtd0qa",
+        "2IUEnGd5v4Yfg1ZlPtd0tI",
+        "08xWVL$9z6JRwr3oWJHoYK",
+        "08xWVL$9z6JRwr3oWJHoYg",
+        "08xWVL$9z6JRwr3oWJHpOf",
+    ),
+}
+VVO_MIXED_CASE = {
+    "case_id": "vvo-two-door-two-window-mixed",
+    "source": ROOT / "dataset/ifc/train/vvo.ifc",
+    "door_global_ids": VVO_FIVE_DOOR_CASE["door_global_ids"][:2],
+    "window_case": ROOT
+    / "dataset/manifests/ifc-repair-cases/vvo-five-window-001.private.json",
+}
+GENERATED_DOOR_CASE = {
+    "case_id": "largebuilding-generated-door-type",
+    "source": ROOT
+    / "dataset/external/bim-whale-ifc-samples/LargeBuilding/IFC/LargeBuilding.ifc",
+    "door_global_id": "2cXV28XOjE6f6irgi0COhu",
+}
 
 
 def _sha256(path: Path) -> str:
@@ -251,6 +295,318 @@ def _expected_facts(chain: dict[str, Any]) -> tuple[SemanticFact, ...]:
     )
 
 
+def _window_operation(
+    target: dict[str, Any], *, operation_id: str
+) -> dict[str, Any]:
+    window = target["window"]
+    opening = target["opening"]
+    prototype = target["prototype_evidence"]
+    is_external = next(
+        (
+            item["value"]
+            for item in target.get("requested_properties", ())
+            if item["set_name"] == "Pset_WindowCommon"
+            and item["property_name"] == "IsExternal"
+        ),
+        None,
+    )
+    assignments = [
+        {
+            "operation_id": operation_id,
+            "scope": "window_occurrence",
+            "fact_key": "relationship:type",
+            "source_fact_key": "relationship:type",
+            "value": prototype["global_id"],
+            "value_type": "IfcWindowStyle",
+            "unit": None,
+            "ownership": "type_inherited",
+            "applicability": "required",
+            "source_kind": "type_inherited",
+            "source_ref": f"surviving-type:{prototype['global_id']}",
+            "provenance": ["explicit-type-reuse:request"],
+            "authoring_action": "inherit_from_type",
+        },
+        *(
+            [
+                {
+                    "operation_id": operation_id,
+                    "scope": "window_occurrence",
+                    "fact_key": "pset:Pset_WindowCommon.IsExternal",
+                    "source_fact_key": "pset:Pset_WindowCommon.IsExternal",
+                    "value": is_external,
+                    "value_type": "IfcBoolean",
+                    "unit": None,
+                    "ownership": "occurrence_direct",
+                    "applicability": "required",
+                    "source_kind": "explicit_value",
+                    "source_ref": "request:/operation/is-external",
+                    "provenance": ["explicit-property:request"],
+                    "authoring_action": "set_occurrence_pset",
+                }
+            ]
+            if is_external is not None
+            else []
+        ),
+    ]
+    for fact_key, value, value_type in (
+        (
+            "quantity:window-base.Width",
+            window["width_mm"],
+            "IfcQuantityLength",
+        ),
+        (
+            "quantity:window-base.Height",
+            window["height_mm"],
+            "IfcQuantityLength",
+        ),
+        (
+            "quantity:window-base.Area",
+            window["width_mm"] * window["height_mm"],
+            "IfcQuantityArea",
+        ),
+    ):
+        assignments.append(
+            {
+                "operation_id": operation_id,
+                "scope": "window_occurrence",
+                "fact_key": fact_key,
+                "source_fact_key": fact_key,
+                "value": value,
+                "value_type": value_type,
+                "unit": None,
+                "ownership": "occurrence_direct",
+                "applicability": "required",
+                "source_kind": "deterministic_derived",
+                "source_ref": "resolved:/operation/window-dimensions",
+                "provenance": ["registered-window-parameter-policy:0.2"],
+                "authoring_action": "set_quantity",
+            }
+        )
+    return {
+        "operation_id": operation_id,
+        "operation_type": "add_window_with_opening_to_wall",
+        "target": {"wall_global_id": target["wall"]["global_id"]},
+        "parameters": {
+            "position": {
+                "reference": "wall_local_start",
+                "center_offset_mm": opening["geometric_center_offset_mm"],
+            },
+            "opening": {
+                "width_mm": window["width_mm"],
+                "height_mm": window["height_mm"],
+                "sill_height_mm": opening["sill_height_mm"],
+            },
+            "window": {"fit_opening": True},
+        },
+        "evidence_refs": ["request:/operation"],
+        "semantic_manifest": {
+            "manifest_id": f"manifest-{operation_id}",
+            "policy_id": "window.add-with-opening.l2",
+            "policy_version": "0.2",
+        },
+        "semantic_assignments": assignments,
+    }
+
+
+def _expected_window_facts(
+    target: dict[str, Any], damaged: Path
+) -> tuple[SemanticFact, ...]:
+    model = ifcopenshell.open(str(damaged))
+    wall = model.by_guid(target["wall"]["global_id"])
+    storey = wall.ContainedInStructure[0].RelatingStructure
+    is_external = next(
+        (
+            item["value"]
+            for item in target.get("requested_properties", ())
+            if item["set_name"] == "Pset_WindowCommon"
+            and item["property_name"] == "IsExternal"
+        ),
+        None,
+    )
+    values = (
+        (
+            "relationship:type",
+            target["prototype_evidence"]["global_id"],
+            "IfcWindowStyle",
+            EvidenceSourceKind.SURVIVING_TYPE,
+            True,
+        ),
+        (
+            "relationship:host",
+            target["wall"]["global_id"],
+            target["wall"]["ifc_class"],
+            EvidenceSourceKind.SURVIVING_HOST,
+            False,
+        ),
+        (
+            "relationship:storey",
+            str(storey.GlobalId),
+            "IfcBuildingStorey",
+            EvidenceSourceKind.SURVIVING_HOST,
+            False,
+        ),
+        (
+            "attribute:OverallWidth",
+            target["window"]["width_mm"],
+            "IfcPositiveLengthMeasure",
+            EvidenceSourceKind.EXPLICIT_REQUEST,
+            False,
+        ),
+        (
+            "attribute:OverallHeight",
+            target["window"]["height_mm"],
+            "IfcPositiveLengthMeasure",
+            EvidenceSourceKind.EXPLICIT_REQUEST,
+            False,
+        ),
+        (
+            "pset:Pset_WindowCommon.IsExternal",
+            is_external,
+            "IfcBoolean",
+            EvidenceSourceKind.EXPLICIT_REQUEST,
+            False,
+        ),
+        (
+            "quantity:window-base.Width",
+            target["window"]["width_mm"],
+            "IfcQuantityLength",
+            EvidenceSourceKind.DETERMINISTIC_POLICY,
+            False,
+        ),
+        (
+            "quantity:window-base.Height",
+            target["window"]["height_mm"],
+            "IfcQuantityLength",
+            EvidenceSourceKind.DETERMINISTIC_POLICY,
+            False,
+        ),
+        (
+            "quantity:window-base.Area",
+            target["window"]["width_mm"] * target["window"]["height_mm"],
+            "IfcQuantityArea",
+            EvidenceSourceKind.DETERMINISTIC_POLICY,
+            False,
+        ),
+    )
+    return tuple(
+        SemanticFact(
+            fact_key=key,
+            value=value,
+            value_type=value_type,
+            unit=None,
+            inherited=inherited,
+            pset_path=None,
+            entity_source="public-request",
+            source_kind=source_kind,
+            source_ref="request:/operation",
+            provenance=("phase11-mixed-request",),
+            occurrence_scope="window_occurrence",
+        )
+        for key, value, value_type, source_kind, inherited in values
+    )
+
+
+def _generated_door_operation(
+    chain: dict[str, Any],
+    *,
+    operation_id: str,
+    request_hash: str,
+    model_hash: str,
+) -> tuple[dict[str, Any], str]:
+    parameters = {
+        "position": {
+            "reference": "wall_local_start",
+            "center_offset_mm": chain["opening"]["center_offset_mm"],
+        },
+        "opening": {
+            "width_mm": chain["opening"]["width_mm"],
+            "height_mm": chain["opening"]["height_mm"],
+            "sill_height_mm": chain["opening"]["sill_height_mm"],
+        },
+        "door": {
+            "overall_width_mm": chain["door"]["overall_width_mm"],
+            "overall_height_mm": chain["door"]["overall_height_mm"],
+            "operation_type": chain["style"]["operation_type"],
+        },
+    }
+    wall_id = chain["wall"]["global_id"]
+    resolved = ResolvedOperation(
+        operation_id=operation_id,
+        operation_type=ADD_OPERATION_TYPE,
+        target_global_id=wall_id,
+        scope_ids=(wall_id,),
+        evidence_pointers=("request:/operation",),
+        parameters=parameters,
+        context={},
+    )
+    authority = generated_type_authority(
+        add_door_operation_definition(),
+        operation_id=operation_id,
+        request_hash=request_hash,
+        model_fingerprint=model_hash,
+        resolved_operation=resolved,
+    )
+    assignment = {
+        "operation_id": operation_id,
+        "scope": "door_occurrence",
+        "fact_key": "relationship:type",
+        "source_fact_key": "relationship:type",
+        "value": authority["global_id"],
+        "value_type": "IfcDoorStyle",
+        "unit": None,
+        "ownership": "type_inherited",
+        "applicability": "required",
+        "source_kind": "deterministic_derived",
+        "source_ref": f"generated-type:{authority['global_id']}",
+        "provenance": ["generated-type-template:0.1"],
+        "derivation": {
+            "template_id": authority["template_id"],
+            "template_version": authority["template_version"],
+            "ifc_class": authority["ifc_class"],
+            "formal_attributes": authority["formal_attributes"],
+            "template_digest": authority["template_digest"],
+            "template": authority["template"],
+        },
+        "authoring_action": "inherit_from_type",
+    }
+    return (
+        {
+            "operation_id": operation_id,
+            "operation_type": ADD_OPERATION_TYPE,
+            "target": {"wall_global_id": wall_id},
+            "parameters": parameters,
+            "evidence_refs": ["request:/operation"],
+            "semantic_manifest": {
+                "manifest_id": f"manifest-{operation_id}",
+                "policy_id": "door.add-with-opening.l2",
+                "policy_version": "0.1",
+            },
+            "semantic_assignments": [assignment],
+        },
+        str(authority["global_id"]),
+    )
+
+
+def _expected_generated_door_facts(
+    chain: dict[str, Any], generated_type_id: str
+) -> tuple[SemanticFact, ...]:
+    facts = list(_expected_facts(chain))
+    facts[0] = SemanticFact(
+        fact_key="relationship:type",
+        value=generated_type_id,
+        value_type="IfcDoorStyle",
+        unit=None,
+        inherited=True,
+        pset_path=None,
+        entity_source="deterministic-policy",
+        source_kind=EvidenceSourceKind.DETERMINISTIC_POLICY,
+        source_ref="generated-type-template:0.1",
+        provenance=("phase11-generated-type",),
+        occurrence_scope="door_occurrence",
+    )
+    return tuple(facts)
+
+
 def run_case(case: dict[str, Any], output_root: Path) -> dict[str, Any]:
     case_dir = output_root / str(case["case_id"])
     if case_dir.exists():
@@ -259,6 +615,7 @@ def run_case(case: dict[str, Any], output_root: Path) -> dict[str, Any]:
     source = Path(case["source"])
     chain = _source_chain(source, str(case["door_global_id"]))
     fixture = case_dir / "fixture"
+    preparation_started = time.perf_counter()
     mutation = remove_door(
         source_path=source,
         output_dir=fixture,
@@ -288,6 +645,8 @@ def run_case(case: dict[str, Any], output_root: Path) -> dict[str, Any]:
     }
     repaired = case_dir / "repaired.ifc"
     registry = create_default_registry()
+    preparation_seconds = time.perf_counter() - preparation_started
+    application_started = time.perf_counter()
     application = apply_changeset(
         damaged_ifc_path=damaged,
         repair_request=request,
@@ -299,6 +658,8 @@ def run_case(case: dict[str, Any], output_root: Path) -> dict[str, Any]:
         raise RuntimeError(
             f"PHASE11_OFFLINE_APPLICATION_FAILED:{application['issues']}"
         )
+    application_seconds = time.perf_counter() - application_started
+    evaluation_started = time.perf_counter()
     production = evaluate_production(
         ProductionEvaluationInputs(
             damaged_ifc_path=damaged,
@@ -311,6 +672,7 @@ def run_case(case: dict[str, Any], output_root: Path) -> dict[str, Any]:
             },
         )
     )
+    evaluation_seconds = time.perf_counter() - evaluation_started
     evaluation = evaluation_to_dict(production)
     if not evaluation["complete_repair_success"]:
         raise RuntimeError(
@@ -325,6 +687,30 @@ def run_case(case: dict[str, Any], output_root: Path) -> dict[str, Any]:
                 default=str,
             )
         )
+    warm_evaluation = None
+    warm_evaluation_seconds = None
+    if case.get("performance_gate"):
+        warm_started = time.perf_counter()
+        warm_evaluation = evaluation_to_dict(
+            evaluate_production(
+                ProductionEvaluationInputs(
+                    damaged_ifc_path=damaged,
+                    repaired_ifc_path=repaired,
+                    changeset=changeset,
+                    application_result=application,
+                    registry=registry,
+                    expected_facts_by_operation={
+                        operation_id: _expected_facts(chain)
+                    },
+                )
+            )
+        )
+        warm_evaluation_seconds = time.perf_counter() - warm_started
+        if not warm_evaluation["complete_repair_success"]:
+            raise RuntimeError(
+                "PHASE11_WARM_EVALUATION_FAILED:"
+                f"{case['case_id']}"
+            )
     allowed = {
         str(item["global_id"])
         for result in application["operations"]
@@ -344,12 +730,204 @@ def run_case(case: dict[str, Any], output_root: Path) -> dict[str, Any]:
     _write(case_dir / "application.json", application)
     _write(case_dir / "evaluation.json", evaluation)
     _write(case_dir / "comparison.json", comparison)
+    if warm_evaluation is not None:
+        _write(case_dir / "evaluation-warm.json", warm_evaluation)
+    performance = {
+        "preparation_seconds": round(preparation_seconds, 3),
+        "application_seconds": round(application_seconds, 3),
+        "cold_evaluation_seconds": round(evaluation_seconds, 3),
+        "cold_request_to_publication_seconds": round(
+            application_seconds + evaluation_seconds, 3
+        ),
+        "warm_evaluation_seconds": (
+            None
+            if warm_evaluation_seconds is None
+            else round(warm_evaluation_seconds, 3)
+        ),
+        "deadline_seconds": 180.0 if case.get("performance_gate") else None,
+    }
+    if case.get("performance_gate") and (
+        performance["cold_request_to_publication_seconds"] >= 180.0
+        or performance["warm_evaluation_seconds"] >= 180.0
+    ):
+        raise RuntimeError(
+            "PHASE11_ADVANCED_PERFORMANCE_DEADLINE_EXCEEDED:"
+            + json.dumps(performance, ensure_ascii=False)
+        )
     manifest = {
         "schema_version": "text2ifc/phase11-door-proof/0.1",
         "case_id": case["case_id"],
         "status": "passed",
         "synthetic_fallback_used": False,
         "operation_count": 1,
+        "performance": performance,
+        "damage": {
+            "mode": mutation["mutation_type"],
+            "door": mutation["door"],
+            "opening": mutation["opening"],
+            "wall": mutation["wall"],
+        },
+        "artifacts": {
+            name: {
+                "path": name,
+                "sha256": _sha256(case_dir / name),
+                "bytes": (case_dir / name).stat().st_size,
+            }
+            for name in (
+                "original.ifc",
+                "damaged.ifc",
+                "repaired.ifc",
+                "request.txt",
+                "changeset.json",
+                "application.json",
+                "evaluation.json",
+                "comparison.json",
+                *(("evaluation-warm.json",) if warm_evaluation is not None else ()),
+            )
+        },
+    }
+    _write(case_dir / "manifest.json", manifest)
+    _write(
+        case_dir / "README.md",
+        (
+            f"# {case['case_id']}\n\n"
+            f"- 删除门：`{chain['door']['name']}` (`{chain['door']['global_id']}`)\n"
+            f"- 保留洞口：`{chain['opening']['global_id']}`\n"
+            f"- 复用 Type：`{chain['style']['name']}` "
+            f"(`{chain['style']['global_id']}`)\n"
+            f"- OperationType：`{chain['style']['operation_type']}`\n"
+            "- 结果：IFC2X3 重开、L1、L2 与全局 preservation 全部通过。\n"
+        ),
+    )
+    return manifest
+
+
+def run_generated_type_case(
+    case: dict[str, Any], output_root: Path
+) -> dict[str, Any]:
+    """Rebuild one full Door/Opening chain with a controlled generated Type."""
+
+    case_dir = output_root / str(case["case_id"])
+    if case_dir.exists():
+        shutil.rmtree(case_dir)
+    case_dir.mkdir(parents=True)
+    source = Path(case["source"])
+    chain = _source_chain(source, str(case["door_global_id"]))
+    fixture = case_dir / "fixture"
+    mutation = remove_door(
+        source_path=source,
+        output_dir=fixture,
+        door_global_id=str(case["door_global_id"]),
+        preserve_opening=False,
+    )
+    damaged = fixture / "damaged.ifc"
+    request = (
+        f"在墙 {chain['wall']['name']}（GlobalId {chain['wall']['global_id']}）"
+        f"局部起点 {chain['opening']['center_offset_mm']} mm 处新建门洞和门。"
+        f"门洞宽 {chain['opening']['width_mm']} mm、高 "
+        f"{chain['opening']['height_mm']} mm、门槛 "
+        f"{chain['opening']['sill_height_mm']} mm；门宽 "
+        f"{chain['door']['overall_width_mm']} mm、高 "
+        f"{chain['door']['overall_height_mm']} mm，开启方式 "
+        f"{chain['style']['operation_type']}。不复用既有 Door Type，"
+        "使用系统受控单扇门模板生成新的 DoorStyle。"
+    )
+    operation_id = "operation-generated-door-001"
+    model_hash = _sha256(damaged)
+    request_hash = _text_hash(request)
+    operation, generated_type_id = _generated_door_operation(
+        chain,
+        operation_id=operation_id,
+        request_hash=request_hash,
+        model_hash=model_hash,
+    )
+    changeset = {
+        "schema_version": "text2ifc/ifc-repair-changeset/0.4",
+        "changeset_id": f"changeset-{case['case_id']}",
+        "binding_status": "bound",
+        "base_model_fingerprint": model_hash,
+        "source_request_hash": request_hash,
+        "semantic_manifest_ref": "semantic-manifest.json",
+        "semantic_manifest_sha256": "sha256:" + "c" * 64,
+        "scope": {
+            "target_ids": [chain["wall"]["global_id"]],
+            "forbidden_ids": [],
+        },
+        "evidence_refs": ["request:/operation"],
+        "preconditions": ["target_exists", "opening_interval_available"],
+        "postconditions": ["opening_voids_wall", "door_fills_opening"],
+        "operations": [operation],
+    }
+    repaired = case_dir / "repaired.ifc"
+    registry = create_default_registry()
+    application = apply_changeset(
+        damaged_ifc_path=damaged,
+        repair_request=request,
+        changeset=changeset,
+        output_path=repaired,
+        registry=registry,
+    )
+    if not application["valid"] or not application["published"]:
+        raise RuntimeError(
+            f"PHASE11_GENERATED_APPLICATION_FAILED:{application['issues']}"
+        )
+    evaluation = evaluation_to_dict(
+        evaluate_production(
+            ProductionEvaluationInputs(
+                damaged_ifc_path=damaged,
+                repaired_ifc_path=repaired,
+                changeset=changeset,
+                application_result=application,
+                registry=registry,
+                expected_facts_by_operation={
+                    operation_id: _expected_generated_door_facts(
+                        chain, generated_type_id
+                    )
+                },
+            )
+        )
+    )
+    if not evaluation["complete_repair_success"]:
+        raise RuntimeError(
+            "PHASE11_GENERATED_EVALUATION_FAILED:"
+            + json.dumps(evaluation.get("operations"), ensure_ascii=False)
+        )
+    reopened = ifcopenshell.open(str(repaired))
+    generated_type = reopened.by_guid(generated_type_id)
+    if (
+        generated_type is None
+        or not generated_type.is_a("IfcDoorStyle")
+        or str(generated_type.OperationType)
+        != chain["style"]["operation_type"]
+    ):
+        raise RuntimeError("PHASE11_GENERATED_TYPE_NOT_BOUND")
+    allowed = {
+        str(item["global_id"])
+        for result in application["operations"]
+        for kind in ("created", "modified", "removed")
+        for item in result["changes"].get(kind, ())
+        if item.get("global_id")
+    }
+    comparison = compare_ifc_models(
+        damaged, repaired, allowed_changed_ids=allowed
+    )
+    shutil.copy2(source, case_dir / "original.ifc")
+    shutil.copy2(damaged, case_dir / "damaged.ifc")
+    _write(case_dir / "request.txt", request)
+    _write(case_dir / "changeset.json", changeset)
+    _write(case_dir / "application.json", application)
+    _write(case_dir / "evaluation.json", evaluation)
+    _write(case_dir / "comparison.json", comparison)
+    manifest = {
+        "schema_version": "text2ifc/phase11-door-proof/0.2",
+        "case_id": case["case_id"],
+        "status": "passed",
+        "synthetic_fallback_used": False,
+        "operation_count": 1,
+        "generated_type_global_id": generated_type_id,
+        "generated_type_template": (
+            "text2ifc-door-single-swing-template/0.1"
+        ),
         "damage": {
             "mode": mutation["mutation_type"],
             "door": mutation["door"],
@@ -379,12 +957,419 @@ def run_case(case: dict[str, Any], output_root: Path) -> dict[str, Any]:
         case_dir / "README.md",
         (
             f"# {case['case_id']}\n\n"
-            f"- 删除门：`{chain['door']['name']}` (`{chain['door']['global_id']}`)\n"
-            f"- 保留洞口：`{chain['opening']['global_id']}`\n"
-            f"- 复用 Type：`{chain['style']['name']}` "
-            f"(`{chain['style']['global_id']}`)\n"
-            f"- OperationType：`{chain['style']['operation_type']}`\n"
-            "- 结果：IFC2X3 重开、L1、L2 与全局 preservation 全部通过。\n"
+            f"- 删除 Door：`{chain['door']['name']}`。\n"
+            "- 删除其 Opening，并以 Door+Opening operation 完整重建。\n"
+            f"- 新 DoorStyle：`{generated_type_id}`，由受控模板生成。\n"
+            "- IFC 重开、L1/L2 与 preservation 全部通过。\n"
+        ),
+    )
+    return manifest
+
+
+def run_five_door_case(
+    case: dict[str, Any], output_root: Path
+) -> dict[str, Any]:
+    """Repair five removed Doors in one atomic ChangeSet."""
+
+    case_dir = output_root / str(case["case_id"])
+    if case_dir.exists():
+        shutil.rmtree(case_dir)
+    case_dir.mkdir(parents=True)
+    source = Path(case["source"])
+    chains = [
+        _source_chain(source, str(door_id))
+        for door_id in case["door_global_ids"]
+    ]
+    fixture = case_dir / "fixture"
+    mutation = remove_doors_batch(
+        source_path=source,
+        output_dir=fixture,
+        door_global_ids=tuple(case["door_global_ids"]),
+        preserve_openings=True,
+    )
+    damaged = fixture / "damaged.ifc"
+    requests = [_request(chain) for chain in chains]
+    request = "\n".join(
+        ["请在同一个原子 ChangeSet 中完成以下五扇门修复："]
+        + [f"{index}. {text}" for index, text in enumerate(requests, 1)]
+    )
+    operations = [
+        _operation(chain, operation_id=f"operation-door-{index:03d}")
+        for index, chain in enumerate(chains, 1)
+    ]
+    changeset = {
+        "schema_version": "text2ifc/ifc-repair-changeset/0.4",
+        "changeset_id": f"changeset-{case['case_id']}",
+        "binding_status": "bound",
+        "base_model_fingerprint": _sha256(damaged),
+        "source_request_hash": _text_hash(request),
+        "semantic_manifest_ref": "semantic-manifest.json",
+        "semantic_manifest_sha256": "sha256:" + "e" * 64,
+        "scope": {
+            "target_ids": [
+                chain["opening"]["global_id"] for chain in chains
+            ],
+            "forbidden_ids": [],
+        },
+        "evidence_refs": ["request:/operations", "request:/operation"],
+        "preconditions": ["openings_available"],
+        "postconditions": ["doors_fill_openings"],
+        "operations": operations,
+    }
+    repaired = case_dir / "repaired.ifc"
+    registry = create_default_registry()
+    application = apply_changeset(
+        damaged_ifc_path=damaged,
+        repair_request=request,
+        changeset=changeset,
+        output_path=repaired,
+        registry=registry,
+    )
+    if not application["valid"] or not application["published"]:
+        raise RuntimeError(
+            f"PHASE11_FIVE_DOOR_APPLICATION_FAILED:{application['issues']}"
+        )
+    expected_by_operation = {
+        operation["operation_id"]: _expected_facts(chain)
+        for operation, chain in zip(operations, chains, strict=True)
+    }
+    evaluation = evaluation_to_dict(
+        evaluate_production(
+            ProductionEvaluationInputs(
+                damaged_ifc_path=damaged,
+                repaired_ifc_path=repaired,
+                changeset=changeset,
+                application_result=application,
+                registry=registry,
+                expected_facts_by_operation=expected_by_operation,
+            )
+        )
+    )
+    if not evaluation["complete_repair_success"]:
+        raise RuntimeError(
+            "PHASE11_FIVE_DOOR_EVALUATION_FAILED:"
+            + json.dumps(evaluation.get("operations"), ensure_ascii=False)
+        )
+    allowed = {
+        str(item["global_id"])
+        for result in application["operations"]
+        for kind in ("created", "modified", "removed")
+        for item in result["changes"].get(kind, ())
+        if item.get("global_id")
+    }
+    comparison = compare_ifc_models(
+        damaged, repaired, allowed_changed_ids=allowed
+    )
+
+    # Inject a duplicate target. Audit must reject the whole ChangeSet and no
+    # temporary or partially repaired IFC may be published.
+    failing = json.loads(json.dumps(changeset))
+    duplicate = json.loads(json.dumps(failing["operations"][0]))
+    duplicate["operation_id"] = "operation-door-injected-duplicate"
+    failing["operations"].append(duplicate)
+    failing["changeset_id"] += "-injected-failure"
+    failed_output = case_dir / "must-not-exist.ifc"
+    failed_application = apply_changeset(
+        damaged_ifc_path=damaged,
+        repair_request=request,
+        changeset=failing,
+        output_path=failed_output,
+        registry=registry,
+    )
+    if (
+        failed_application["valid"]
+        or failed_application["published"]
+        or failed_output.exists()
+    ):
+        raise RuntimeError("PHASE11_BATCH_ATOMIC_ROLLBACK_FAILED")
+
+    shutil.copy2(source, case_dir / "original.ifc")
+    shutil.copy2(damaged, case_dir / "damaged.ifc")
+    _write(case_dir / "request.txt", request)
+    _write(case_dir / "changeset.json", changeset)
+    _write(case_dir / "application.json", application)
+    _write(case_dir / "evaluation.json", evaluation)
+    _write(case_dir / "comparison.json", comparison)
+    _write(case_dir / "injected-failure-changeset.json", failing)
+    _write(case_dir / "injected-failure-application.json", failed_application)
+    manifest = {
+        "schema_version": "text2ifc/phase11-door-proof/0.2",
+        "case_id": case["case_id"],
+        "status": "passed",
+        "synthetic_fallback_used": False,
+        "operation_count": len(operations),
+        "one_atomic_changeset": True,
+        "injected_failure_published": False,
+        "damage": {
+            "mode": mutation["mutation_type"],
+            "removed_doors": [
+                target["door"] for target in mutation["targets"]
+            ],
+        },
+        "artifacts": {
+            name: {
+                "path": name,
+                "sha256": _sha256(case_dir / name),
+                "bytes": (case_dir / name).stat().st_size,
+            }
+            for name in (
+                "original.ifc",
+                "damaged.ifc",
+                "repaired.ifc",
+                "request.txt",
+                "changeset.json",
+                "application.json",
+                "evaluation.json",
+                "comparison.json",
+                "injected-failure-changeset.json",
+                "injected-failure-application.json",
+            )
+        },
+    }
+    _write(case_dir / "manifest.json", manifest)
+    _write(
+        case_dir / "README.md",
+        (
+            f"# {case['case_id']}\n\n"
+            "- 一个 ChangeSet、五个 Door operation。\n"
+            "- 五个 Door 分别通过 L1/L2，IFC 可重开。\n"
+            "- 注入重复 Opening 操作后审计失败，未生成任何 IFC。\n\n"
+            "被删除 Door：\n"
+            + "\n".join(
+                f"- `{chain['door']['name']}` (`{chain['door']['global_id']}`)"
+                for chain in chains
+            )
+            + "\n"
+        ),
+    )
+    return manifest
+
+
+def run_mixed_case(
+    case: dict[str, Any], output_root: Path
+) -> dict[str, Any]:
+    """Repair two Windows and two Doors in one mixed atomic ChangeSet."""
+
+    case_dir = output_root / str(case["case_id"])
+    if case_dir.exists():
+        shutil.rmtree(case_dir)
+    case_dir.mkdir(parents=True)
+    source = Path(case["source"])
+    private_window_case = json.loads(
+        Path(case["window_case"]).read_text(encoding="utf-8")
+    )
+    selected_windows = tuple(private_window_case["targets"][:2])
+    window_fixture = case_dir / "window-fixture"
+    remove_windows_and_openings_batch(
+        source_path=source,
+        output_dir=window_fixture,
+        targets=selected_windows,
+        expected_source_sha256=private_window_case["source"]["sha256"],
+    )
+    final_fixture = case_dir / "fixture"
+    door_mutation = remove_doors_batch(
+        source_path=window_fixture / "damaged.ifc",
+        output_dir=final_fixture,
+        door_global_ids=tuple(case["door_global_ids"]),
+        preserve_openings=True,
+    )
+    damaged = final_fixture / "damaged.ifc"
+    window_manifest = json.loads(
+        (window_fixture / "mutation_manifest.private.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    window_targets = window_manifest["targets"]
+    door_chains = [
+        _source_chain(source, str(door_id))
+        for door_id in case["door_global_ids"]
+    ]
+    window_operations = [
+        _window_operation(
+            target, operation_id=f"operation-window-{index:03d}"
+        )
+        for index, target in enumerate(window_targets, 1)
+    ]
+    door_operations = [
+        _operation(chain, operation_id=f"operation-door-{index:03d}")
+        for index, chain in enumerate(door_chains, 1)
+    ]
+    operations = [*window_operations, *door_operations]
+    request_lines = [
+        "请在一个原子 ChangeSet 中同时恢复以下两扇窗和两扇门。",
+        *[
+            (
+                f"窗 {target['window']['name']}：墙 "
+                f"{target['wall']['name']}（{target['wall']['global_id']}），"
+                f"中心 {target['opening']['geometric_center_offset_mm']} mm，"
+                f"宽 {target['window']['width_mm']} mm、高 "
+                f"{target['window']['height_mm']} mm、窗台 "
+                f"{target['opening']['sill_height_mm']} mm，复用 Window Type "
+                f"{target['prototype_evidence']['name']} "
+                f"（{target['prototype_evidence']['global_id']}）。"
+            )
+            for target in window_targets
+        ],
+        *[_request(chain) for chain in door_chains],
+    ]
+    request = "\n".join(request_lines)
+    target_ids = [
+        *[target["wall"]["global_id"] for target in window_targets],
+        *[chain["opening"]["global_id"] for chain in door_chains],
+    ]
+    changeset = {
+        "schema_version": "text2ifc/ifc-repair-changeset/0.4",
+        "changeset_id": f"changeset-{case['case_id']}",
+        "binding_status": "bound",
+        "base_model_fingerprint": _sha256(damaged),
+        "source_request_hash": _text_hash(request),
+        "semantic_manifest_ref": "semantic-manifest.json",
+        "semantic_manifest_sha256": "sha256:" + "d" * 64,
+        "scope": {
+            "target_ids": list(dict.fromkeys(target_ids)),
+            "forbidden_ids": [],
+        },
+        "evidence_refs": ["request:/operation"],
+        "preconditions": ["mixed_targets_available"],
+        "postconditions": ["windows_and_doors_hosted"],
+        "operations": operations,
+    }
+    repaired = case_dir / "repaired.ifc"
+    registry = create_default_registry()
+    application = apply_changeset(
+        damaged_ifc_path=damaged,
+        repair_request=request,
+        changeset=changeset,
+        output_path=repaired,
+        registry=registry,
+    )
+    if not application["valid"] or not application["published"]:
+        raise RuntimeError(
+            f"PHASE11_MIXED_APPLICATION_FAILED:{application['issues']}"
+        )
+    expected_by_operation = {
+        **{
+            operation["operation_id"]: _expected_window_facts(
+                target, damaged
+            )
+            for operation, target in zip(
+                window_operations, window_targets, strict=True
+            )
+        },
+        **{
+            operation["operation_id"]: _expected_facts(chain)
+            for operation, chain in zip(
+                door_operations, door_chains, strict=True
+            )
+        },
+    }
+    evaluation = evaluation_to_dict(
+        evaluate_production(
+            ProductionEvaluationInputs(
+                damaged_ifc_path=damaged,
+                repaired_ifc_path=repaired,
+                changeset=changeset,
+                application_result=application,
+                registry=registry,
+                expected_facts_by_operation=expected_by_operation,
+            )
+        )
+    )
+    if not evaluation["complete_repair_success"]:
+        failure_summary = [
+            {
+                "operation_id": item["operation_id"],
+                "status": item["status"],
+                "levels": [
+                    {
+                        "level": level["level"],
+                        "status": level["status"],
+                        "failed_checks": [
+                            {
+                                "check_id": check["check_id"],
+                                "status": check["status"],
+                                "reason": check["reason"],
+                            }
+                            for check in level.get("checks", ())
+                            if check["status"] not in {
+                                "passed",
+                                "not_required",
+                            }
+                        ],
+                    }
+                    for level in item["levels"]
+                ],
+            }
+            for item in evaluation.get("operations", ())
+        ]
+        raise RuntimeError(
+            "PHASE11_MIXED_EVALUATION_FAILED:"
+            + json.dumps(failure_summary, ensure_ascii=False)
+        )
+    allowed = {
+        str(item["global_id"])
+        for result in application["operations"]
+        for kind in ("created", "modified", "removed")
+        for item in result["changes"].get(kind, ())
+        if item.get("global_id")
+    }
+    comparison = compare_ifc_models(
+        damaged, repaired, allowed_changed_ids=allowed
+    )
+    shutil.copy2(source, case_dir / "original.ifc")
+    shutil.copy2(damaged, case_dir / "damaged.ifc")
+    _write(case_dir / "request.txt", request)
+    _write(case_dir / "changeset.json", changeset)
+    _write(case_dir / "application.json", application)
+    _write(case_dir / "evaluation.json", evaluation)
+    _write(case_dir / "comparison.json", comparison)
+    manifest = {
+        "schema_version": "text2ifc/phase11-door-proof/0.2",
+        "case_id": case["case_id"],
+        "status": "passed",
+        "synthetic_fallback_used": False,
+        "operation_count": 4,
+        "operation_families": {"window": 2, "door": 2},
+        "one_atomic_changeset": True,
+        "damage": {
+            "window_ids": [
+                target["window"]["global_id"] for target in window_targets
+            ],
+            "removed_doors": [
+                target["door"] for target in door_mutation["targets"]
+            ],
+        },
+        "artifacts": {
+            name: {
+                "path": name,
+                "sha256": _sha256(case_dir / name),
+                "bytes": (case_dir / name).stat().st_size,
+            }
+            for name in (
+                "original.ifc",
+                "damaged.ifc",
+                "repaired.ifc",
+                "request.txt",
+                "changeset.json",
+                "application.json",
+                "evaluation.json",
+                "comparison.json",
+            )
+        },
+    }
+    _write(case_dir / "manifest.json", manifest)
+    _write(
+        case_dir / "README.md",
+        (
+            f"# {case['case_id']}\n\n"
+            "- 一个 ChangeSet 同时包含两个 Window 和两个 Door operation。\n"
+            "- 四个 operation 分别通过 L1/L2，最终只发布一个 IFC。\n\n"
+            "被删除 Door：\n"
+            + "\n".join(
+                f"- `{chain['door']['name']}` (`{chain['door']['global_id']}`)"
+                for chain in door_chains
+            )
+            + "\n"
         ),
     )
     return manifest
@@ -396,6 +1381,11 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
     args.output_root.mkdir(parents=True, exist_ok=True)
     results = [run_case(case, args.output_root) for case in CASES]
+    results.append(
+        run_generated_type_case(GENERATED_DOOR_CASE, args.output_root)
+    )
+    results.append(run_five_door_case(VVO_FIVE_DOOR_CASE, args.output_root))
+    results.append(run_mixed_case(VVO_MIXED_CASE, args.output_root))
     summary = {
         "schema_version": "text2ifc/phase11-door-offline-run/0.1",
         "status": "passed",
