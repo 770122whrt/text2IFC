@@ -1,0 +1,901 @@
+{
+  "audit": {
+    "checks": [
+      {
+        "code": "CHANGESET_SCHEMA",
+        "evidence": {},
+        "status": "passed"
+      },
+      {
+        "code": "IFC_SCHEMA",
+        "evidence": {
+          "actual_schema": "IFC2X3"
+        },
+        "status": "passed"
+      },
+      {
+        "code": "BASE_MODEL_FINGERPRINT",
+        "evidence": {
+          "actual_fingerprint": "sha256:537b8d4d28ea073f820ea72e34a31c0c41723ca818382b3b3d46a78880156bdc"
+        },
+        "status": "passed"
+      },
+      {
+        "code": "SOURCE_REQUEST_HASH",
+        "evidence": {
+          "actual_request_hash": "sha256:441ac42966e353b82f3f95524483c656bd2d19769e54041447fcff8fff49a627"
+        },
+        "status": "passed"
+      },
+      {
+        "code": "OPERATION_REGISTRATION",
+        "evidence": {
+          "operation_type": "add_window_with_opening_to_wall"
+        },
+        "status": "passed"
+      },
+      {
+        "code": "OPERATION_REGISTRATION",
+        "evidence": {
+          "operation_type": "add_window_with_opening_to_wall"
+        },
+        "status": "passed"
+      },
+      {
+        "code": "OPERATION_REGISTRATION",
+        "evidence": {
+          "operation_type": "fill_existing_opening_with_door"
+        },
+        "status": "passed"
+      },
+      {
+        "code": "OPERATION_REGISTRATION",
+        "evidence": {
+          "operation_type": "fill_existing_opening_with_door"
+        },
+        "status": "passed"
+      }
+    ],
+    "issues": [],
+    "operation_audits": [
+      {
+        "checks": [
+          {
+            "code": "OPENING_WITHIN_WALL_HORIZONTAL",
+            "evidence": {
+              "requested_interval_mm": [
+                4111.96137,
+                5291.96137
+              ],
+              "wall_length_mm": 17765.29189
+            },
+            "status": "passed"
+          },
+          {
+            "code": "OPENING_WITHIN_WALL_VERTICAL",
+            "evidence": {
+              "requested_interval_mm": [
+                2670.827827,
+                3170.827826999999
+              ],
+              "wall_height_mm": 3581.700793
+            },
+            "status": "passed"
+          },
+          {
+            "code": "WALL_VOID_DEPTH_RESOLVED",
+            "evidence": {
+              "wall_thickness_mm": 240.0
+            },
+            "status": "passed"
+          },
+          {
+            "code": "OPENING_INTERVAL_AVAILABLE",
+            "evidence": {
+              "overlapping_region_mm": null
+            },
+            "status": "passed"
+          }
+        ],
+        "evidence": {
+          "existing_opening_intervals_mm": [
+            [
+              1041.29189,
+              2221.29189
+            ],
+            [
+              6661.29189,
+              7961.29189
+            ]
+          ],
+          "existing_opening_regions_mm": [
+            {
+              "horizontal_interval_mm": [
+                1041.29189,
+                2221.29189
+              ],
+              "vertical_interval_mm": [
+                2672.616472,
+                3172.616472
+              ]
+            },
+            {
+              "horizontal_interval_mm": [
+                6661.29189,
+                7961.29189
+              ],
+              "vertical_interval_mm": [
+                2069.376442,
+                2569.376442
+              ]
+            }
+          ],
+          "requested_interval_mm": [
+            4111.96137,
+            5291.96137
+          ],
+          "requested_vertical_interval_mm": [
+            2670.827827,
+            3170.827826999999
+          ],
+          "wall_dimensions_mm": {
+            "height": 3581.700793,
+            "length": 17765.29189,
+            "thickness": 240.0
+          },
+          "wall_global_id": "2CsmzAChHF6O6maGXlo6yJ"
+        },
+        "operation_id": "operation-window-001",
+        "operation_type": "add_window_with_opening_to_wall",
+        "valid": true
+      },
+      {
+        "checks": [
+          {
+            "code": "OPENING_WITHIN_WALL_HORIZONTAL",
+            "evidence": {
+              "requested_interval_mm": [
+                8880.560798,
+                9750.560798
+              ],
+              "wall_length_mm": 13455.560798
+            },
+            "status": "passed"
+          },
+          {
+            "code": "OPENING_WITHIN_WALL_VERTICAL",
+            "evidence": {
+              "requested_interval_mm": [
+                610.0,
+                2980.0
+              ],
+              "wall_height_mm": 4175.094268
+            },
+            "status": "passed"
+          },
+          {
+            "code": "WALL_VOID_DEPTH_RESOLVED",
+            "evidence": {
+              "wall_thickness_mm": 240.0
+            },
+            "status": "passed"
+          },
+          {
+            "code": "OPENING_INTERVAL_AVAILABLE",
+            "evidence": {
+              "overlapping_region_mm": null
+            },
+            "status": "passed"
+          }
+        ],
+        "evidence": {
+          "existing_opening_intervals_mm": [
+            [
+              3560.560798,
+              4430.560798
+            ],
+            [
+              5740.560798,
+              7580.560798
+            ],
+            [
+              5750.560798,
+              7550.560798
+            ],
+            [
+              12230.560798,
+              13055.560798
+            ]
+          ],
+          "existing_opening_regions_mm": [
+            {
+              "horizontal_interval_mm": [
+                3560.560798,
+                4430.560798
+              ],
+              "vertical_interval_mm": [
+                608.563584,
+                2978.563584
+              ]
+            },
+            {
+              "horizontal_interval_mm": [
+                5740.560798,
+                7580.560798
+              ],
+              "vertical_interval_mm": [
+                0.0,
+                2460.0
+              ]
+            },
+            {
+              "horizontal_interval_mm": [
+                5750.560798,
+                7550.560798
+              ],
+              "vertical_interval_mm": [
+                2783.268929,
+                3583.268929
+              ]
+            },
+            {
+              "horizontal_interval_mm": [
+                12230.560798,
+                13055.560798
+              ],
+              "vertical_interval_mm": [
+                -0.359199,
+                2975.094268
+              ]
+            }
+          ],
+          "requested_interval_mm": [
+            8880.560798,
+            9750.560798
+          ],
+          "requested_vertical_interval_mm": [
+            610.0,
+            2980.0
+          ],
+          "wall_dimensions_mm": {
+            "height": 4175.094268,
+            "length": 13455.560798,
+            "thickness": 240.0
+          },
+          "wall_global_id": "0jltRti3rFigAmdXYhXxqI"
+        },
+        "operation_id": "operation-window-002",
+        "operation_type": "add_window_with_opening_to_wall",
+        "valid": true
+      },
+      {
+        "checks": [
+          {
+            "code": "EMPTY_OPENING_AVAILABLE",
+            "evidence": {
+              "host_wall_global_id": "2HNE4WMQ1CXebZMaih8XoD",
+              "opening_global_id": "2IUEnGd5v4Yfg1ZkLtd0qa"
+            },
+            "status": "passed"
+          }
+        ],
+        "evidence": {
+          "opening_global_id": "2IUEnGd5v4Yfg1ZkLtd0qa"
+        },
+        "operation_id": "operation-door-001",
+        "operation_type": "fill_existing_opening_with_door",
+        "valid": true
+      },
+      {
+        "checks": [
+          {
+            "code": "EMPTY_OPENING_AVAILABLE",
+            "evidence": {
+              "host_wall_global_id": "1cbLGwmrv8LAj2u11O6kgh",
+              "opening_global_id": "2IUEnGd5v4Yfg1ZkLtd0tI"
+            },
+            "status": "passed"
+          }
+        ],
+        "evidence": {
+          "opening_global_id": "2IUEnGd5v4Yfg1ZkLtd0tI"
+        },
+        "operation_id": "operation-door-002",
+        "operation_type": "fill_existing_opening_with_door",
+        "valid": true
+      }
+    ],
+    "schema_version": "text2ifc/ifc-repair-audit/0.1",
+    "valid": true
+  },
+  "issues": [],
+  "operations": [
+    {
+      "changes": {
+        "created": [
+          {
+            "global_id": "2hTILGZGnMK8GieJqpRkxG",
+            "ifc_class": "IfcOpeningElement",
+            "role": "opening"
+          },
+          {
+            "global_id": "1qhH1VVtvML9xe3SEAwlAa",
+            "ifc_class": "IfcWindow",
+            "role": "window"
+          },
+          {
+            "global_id": "1I_gIkoEnUteV_jDE8HVFX",
+            "ifc_class": "IfcRelVoidsElement",
+            "role": "voids_relationship"
+          },
+          {
+            "global_id": "2Yy2zOu8TVv8hAHpWlKcAD",
+            "ifc_class": "IfcRelFillsElement",
+            "role": "fills_relationship"
+          },
+          {
+            "global_id": "2ePLlvlU5SReMWkwq9733j",
+            "ifc_class": "IfcPropertySet",
+            "role": "semantic_pset"
+          },
+          {
+            "global_id": "0lqi$FrfHR7gn3Swdez7JY",
+            "ifc_class": "IfcRelDefinesByProperties",
+            "role": "semantic_pset_relationship"
+          },
+          {
+            "global_id": "2o2F8D6H9Tcg87trSbQLDg",
+            "ifc_class": "IfcElementQuantity",
+            "role": "semantic_quantities"
+          },
+          {
+            "global_id": "2_Ys9s0ObPu94C1Pmnrklz",
+            "ifc_class": "IfcRelDefinesByProperties",
+            "role": "semantic_quantity_relationship"
+          }
+        ],
+        "modified": [
+          {
+            "global_id": "2CsmzAChHF6O6maGXlo6yJ",
+            "role": "host_wall"
+          },
+          {
+            "global_id": "35HppAua57efiv_qw28Vbd",
+            "role": "window_type_relationship"
+          },
+          {
+            "global_id": "2GYf8OOb51cRZoIdR_6VwO",
+            "role": "spatial_containment"
+          }
+        ],
+        "removed": [],
+        "resolved": {
+          "center_offset_mm": 4701.96137,
+          "opening_depth_mm": 240.0,
+          "window_type_global_id": "2dYMXn0_5AKRbD_1eUIAtb"
+        },
+        "semantic": {
+          "created": [
+            {
+              "global_id": "2ePLlvlU5SReMWkwq9733j",
+              "ifc_class": "IfcPropertySet",
+              "role": "semantic_pset"
+            },
+            {
+              "global_id": "0lqi$FrfHR7gn3Swdez7JY",
+              "ifc_class": "IfcRelDefinesByProperties",
+              "role": "semantic_pset_relationship"
+            },
+            {
+              "global_id": "2o2F8D6H9Tcg87trSbQLDg",
+              "ifc_class": "IfcElementQuantity",
+              "role": "semantic_quantities"
+            },
+            {
+              "global_id": "2_Ys9s0ObPu94C1Pmnrklz",
+              "ifc_class": "IfcRelDefinesByProperties",
+              "role": "semantic_quantity_relationship"
+            }
+          ],
+          "modified": [],
+          "scopes": {
+            "window_occurrence": {
+              "created": [
+                {
+                  "global_id": "2ePLlvlU5SReMWkwq9733j",
+                  "ifc_class": "IfcPropertySet",
+                  "role": "semantic_pset"
+                },
+                {
+                  "global_id": "0lqi$FrfHR7gn3Swdez7JY",
+                  "ifc_class": "IfcRelDefinesByProperties",
+                  "role": "semantic_pset_relationship"
+                },
+                {
+                  "global_id": "2o2F8D6H9Tcg87trSbQLDg",
+                  "ifc_class": "IfcElementQuantity",
+                  "role": "semantic_quantities"
+                },
+                {
+                  "global_id": "2_Ys9s0ObPu94C1Pmnrklz",
+                  "ifc_class": "IfcRelDefinesByProperties",
+                  "role": "semantic_quantity_relationship"
+                }
+              ],
+              "modified": [],
+              "skipped": [
+                "relationship:type"
+              ],
+              "updated": []
+            }
+          },
+          "skipped": [
+            "relationship:type"
+          ],
+          "updated": []
+        }
+      },
+      "operation_id": "operation-window-001",
+      "operation_type": "add_window_with_opening_to_wall"
+    },
+    {
+      "changes": {
+        "created": [
+          {
+            "global_id": "0ZFYFJ23DTGAfF4kZk1CwS",
+            "ifc_class": "IfcOpeningElement",
+            "role": "opening"
+          },
+          {
+            "global_id": "0A7XkNT3fHq9g0naCedxhI",
+            "ifc_class": "IfcWindow",
+            "role": "window"
+          },
+          {
+            "global_id": "0ui_oiDJrQLwV9_zvDicQi",
+            "ifc_class": "IfcRelVoidsElement",
+            "role": "voids_relationship"
+          },
+          {
+            "global_id": "0kGsaWZ_vPegQGn5OHtQTw",
+            "ifc_class": "IfcRelFillsElement",
+            "role": "fills_relationship"
+          },
+          {
+            "global_id": "3UXKN7rVLJv9oBKJ3RJHGV",
+            "ifc_class": "IfcPropertySet",
+            "role": "semantic_pset"
+          },
+          {
+            "global_id": "3WWu$yvKbTtOBMZOkgnsVP",
+            "ifc_class": "IfcRelDefinesByProperties",
+            "role": "semantic_pset_relationship"
+          },
+          {
+            "global_id": "2p8GZvGCPOUwDMkzTeJMaO",
+            "ifc_class": "IfcElementQuantity",
+            "role": "semantic_quantities"
+          },
+          {
+            "global_id": "0RMS1Sp$rOR8Sz2sAIYn1E",
+            "ifc_class": "IfcRelDefinesByProperties",
+            "role": "semantic_quantity_relationship"
+          }
+        ],
+        "modified": [
+          {
+            "global_id": "0jltRti3rFigAmdXYhXxqI",
+            "role": "host_wall"
+          },
+          {
+            "global_id": "3bC4EQjID0mBPDlww6QQTb",
+            "role": "window_type_relationship"
+          },
+          {
+            "global_id": "2GYf8OOb51cRZoIdR_6VwO",
+            "role": "spatial_containment"
+          }
+        ],
+        "removed": [],
+        "resolved": {
+          "center_offset_mm": 9315.560798,
+          "opening_depth_mm": 240.0,
+          "window_type_global_id": "08xWVL$9z6JRwr3pqJHoru"
+        },
+        "semantic": {
+          "created": [
+            {
+              "global_id": "3UXKN7rVLJv9oBKJ3RJHGV",
+              "ifc_class": "IfcPropertySet",
+              "role": "semantic_pset"
+            },
+            {
+              "global_id": "3WWu$yvKbTtOBMZOkgnsVP",
+              "ifc_class": "IfcRelDefinesByProperties",
+              "role": "semantic_pset_relationship"
+            },
+            {
+              "global_id": "2p8GZvGCPOUwDMkzTeJMaO",
+              "ifc_class": "IfcElementQuantity",
+              "role": "semantic_quantities"
+            },
+            {
+              "global_id": "0RMS1Sp$rOR8Sz2sAIYn1E",
+              "ifc_class": "IfcRelDefinesByProperties",
+              "role": "semantic_quantity_relationship"
+            }
+          ],
+          "modified": [],
+          "scopes": {
+            "window_occurrence": {
+              "created": [
+                {
+                  "global_id": "3UXKN7rVLJv9oBKJ3RJHGV",
+                  "ifc_class": "IfcPropertySet",
+                  "role": "semantic_pset"
+                },
+                {
+                  "global_id": "3WWu$yvKbTtOBMZOkgnsVP",
+                  "ifc_class": "IfcRelDefinesByProperties",
+                  "role": "semantic_pset_relationship"
+                },
+                {
+                  "global_id": "2p8GZvGCPOUwDMkzTeJMaO",
+                  "ifc_class": "IfcElementQuantity",
+                  "role": "semantic_quantities"
+                },
+                {
+                  "global_id": "0RMS1Sp$rOR8Sz2sAIYn1E",
+                  "ifc_class": "IfcRelDefinesByProperties",
+                  "role": "semantic_quantity_relationship"
+                }
+              ],
+              "modified": [],
+              "skipped": [
+                "relationship:type"
+              ],
+              "updated": []
+            }
+          },
+          "skipped": [
+            "relationship:type"
+          ],
+          "updated": []
+        }
+      },
+      "operation_id": "operation-window-002",
+      "operation_type": "add_window_with_opening_to_wall"
+    },
+    {
+      "changes": {
+        "created": [
+          {
+            "global_id": "1Dpef6FcfP5O8JLxjjzcEi",
+            "ifc_class": "IfcRelDefinesByType",
+            "role": "door_type_relationship"
+          },
+          {
+            "global_id": "0lc6MGNAHNCf6N2aTjlleA",
+            "ifc_class": "IfcDoor",
+            "role": "door"
+          },
+          {
+            "global_id": "28Vc7UHvfKuhZBPkSxUb1w",
+            "ifc_class": "IfcRelFillsElement",
+            "role": "fills_relationship"
+          }
+        ],
+        "modified": [
+          {
+            "global_id": "2HNE4WMQ1CXebZMaih8XoD",
+            "role": "host_wall"
+          },
+          {
+            "global_id": "2IUEnGd5v4Yfg1ZkLtd0qa",
+            "role": "opening"
+          },
+          {
+            "global_id": "3kSL0VGKv3gxJCujiqtuJj",
+            "role": "spatial_containment"
+          }
+        ],
+        "removed": [],
+        "resolved": {
+          "door_type_global_id": "2Bp10QP5H0qx3NLxP020qy",
+          "opening_depth_mm": 160.0,
+          "opening_global_id": "2IUEnGd5v4Yfg1ZkLtd0qa"
+        },
+        "semantic": {
+          "created": [],
+          "modified": [],
+          "scopes": {
+            "door_occurrence": {
+              "created": [],
+              "modified": [],
+              "skipped": [
+                "relationship:type"
+              ],
+              "updated": []
+            }
+          },
+          "skipped": [
+            "relationship:type"
+          ],
+          "updated": []
+        }
+      },
+      "operation_id": "operation-door-001",
+      "operation_type": "fill_existing_opening_with_door"
+    },
+    {
+      "changes": {
+        "created": [
+          {
+            "global_id": "1KHDT5MrrLKRRJwS145g0i",
+            "ifc_class": "IfcRelDefinesByType",
+            "role": "door_type_relationship"
+          },
+          {
+            "global_id": "0Q$pjCk85PMQ1TjP$MGwGD",
+            "ifc_class": "IfcDoor",
+            "role": "door"
+          },
+          {
+            "global_id": "2_XuMEVlXNzgrmslZwDkkY",
+            "ifc_class": "IfcRelFillsElement",
+            "role": "fills_relationship"
+          }
+        ],
+        "modified": [
+          {
+            "global_id": "1cbLGwmrv8LAj2u11O6kgh",
+            "role": "host_wall"
+          },
+          {
+            "global_id": "2IUEnGd5v4Yfg1ZkLtd0tI",
+            "role": "opening"
+          },
+          {
+            "global_id": "2GYf8OOb51cRZoIdR_6V5x",
+            "role": "spatial_containment"
+          }
+        ],
+        "removed": [],
+        "resolved": {
+          "door_type_global_id": "2IUEnGd5v4Yfg1ZkDtd0mJ",
+          "opening_depth_mm": 140.0,
+          "opening_global_id": "2IUEnGd5v4Yfg1ZkLtd0tI"
+        },
+        "semantic": {
+          "created": [],
+          "modified": [],
+          "scopes": {
+            "door_occurrence": {
+              "created": [],
+              "modified": [],
+              "skipped": [
+                "relationship:type"
+              ],
+              "updated": []
+            }
+          },
+          "skipped": [
+            "relationship:type"
+          ],
+          "updated": []
+        }
+      },
+      "operation_id": "operation-door-002",
+      "operation_type": "fill_existing_opening_with_door"
+    }
+  ],
+  "output": {
+    "path": "E:\\code for project\\bimnet\\dataset\\processed\\ifc-repair\\phase11-door-offline\\vvo-two-door-two-window-mixed\\repaired.ifc",
+    "sha256": "1a26a9b67ab4328c2fe4bfa4b89189cd0bfecb846682366889b8ebdc18a2dcac"
+  },
+  "postconditions": [
+    {
+      "checks": [
+        {
+          "code": "OPENING_VOIDS_TARGET_WALL",
+          "evidence": {
+            "center": 4701.96137,
+            "height": 500.0,
+            "sill": 2670.827827,
+            "width": 1180.0
+          },
+          "status": "passed"
+        },
+        {
+          "code": "WINDOW_FILLS_OPENING",
+          "evidence": {
+            "center": 4701.96137,
+            "height": 500.0,
+            "sill": 2670.827827,
+            "width": 1180.0
+          },
+          "status": "passed"
+        },
+        {
+          "code": "OPENING_GEOMETRY_MATCHES_PARAMETERS",
+          "evidence": {
+            "center": 4701.96137,
+            "height": 500.0,
+            "sill": 2670.827827,
+            "width": 1180.0
+          },
+          "status": "passed"
+        },
+        {
+          "code": "WINDOW_DIMENSIONS_MATCH_OPENING",
+          "evidence": {
+            "center": 4701.96137,
+            "height": 500.0,
+            "sill": 2670.827827,
+            "width": 1180.0
+          },
+          "status": "passed"
+        }
+      ],
+      "evidence": {
+        "expected": {
+          "center": 4701.96137,
+          "height": 499.999999999999,
+          "sill": 2670.827827,
+          "width": 1180.0
+        },
+        "measured": {
+          "center": 4701.96137,
+          "height": 500.0,
+          "sill": 2670.827827,
+          "width": 1180.0
+        },
+        "opening_global_id": "2hTILGZGnMK8GieJqpRkxG",
+        "window_global_id": "1qhH1VVtvML9xe3SEAwlAa"
+      },
+      "issues": [],
+      "operation_id": "operation-window-001",
+      "valid": true
+    },
+    {
+      "checks": [
+        {
+          "code": "OPENING_VOIDS_TARGET_WALL",
+          "evidence": {
+            "center": 9315.560798,
+            "height": 2370.0,
+            "sill": 610.0,
+            "width": 870.0
+          },
+          "status": "passed"
+        },
+        {
+          "code": "WINDOW_FILLS_OPENING",
+          "evidence": {
+            "center": 9315.560798,
+            "height": 2370.0,
+            "sill": 610.0,
+            "width": 870.0
+          },
+          "status": "passed"
+        },
+        {
+          "code": "OPENING_GEOMETRY_MATCHES_PARAMETERS",
+          "evidence": {
+            "center": 9315.560798,
+            "height": 2370.0,
+            "sill": 610.0,
+            "width": 870.0
+          },
+          "status": "passed"
+        },
+        {
+          "code": "WINDOW_DIMENSIONS_MATCH_OPENING",
+          "evidence": {
+            "center": 9315.560798,
+            "height": 2370.0,
+            "sill": 610.0,
+            "width": 870.0
+          },
+          "status": "passed"
+        }
+      ],
+      "evidence": {
+        "expected": {
+          "center": 9315.560798,
+          "height": 2370.0,
+          "sill": 610.0,
+          "width": 869.999999999999
+        },
+        "measured": {
+          "center": 9315.560798,
+          "height": 2370.0,
+          "sill": 610.0,
+          "width": 870.0
+        },
+        "opening_global_id": "0ZFYFJ23DTGAfF4kZk1CwS",
+        "window_global_id": "0A7XkNT3fHq9g0naCedxhI"
+      },
+      "issues": [],
+      "operation_id": "operation-window-002",
+      "valid": true
+    },
+    {
+      "checks": [
+        {
+          "code": "DOOR_FILLS_OPENING",
+          "evidence": {},
+          "status": "passed"
+        },
+        {
+          "code": "OPENING_VOIDS_WALL",
+          "evidence": {},
+          "status": "passed"
+        },
+        {
+          "code": "DOOR_DIMENSIONS_MATCH",
+          "evidence": {},
+          "status": "passed"
+        },
+        {
+          "code": "DOOR_STOREY_CONTAINMENT",
+          "evidence": {},
+          "status": "passed"
+        },
+        {
+          "code": "DOOR_TYPE_BOUND",
+          "evidence": {},
+          "status": "passed"
+        }
+      ],
+      "evidence": {
+        "door_global_id": "0lc6MGNAHNCf6N2aTjlleA",
+        "host_wall_global_id": "2HNE4WMQ1CXebZMaih8XoD",
+        "opening_global_id": "2IUEnGd5v4Yfg1ZkLtd0qa"
+      },
+      "issues": [],
+      "operation_id": "operation-door-001",
+      "valid": true
+    },
+    {
+      "checks": [
+        {
+          "code": "DOOR_FILLS_OPENING",
+          "evidence": {},
+          "status": "passed"
+        },
+        {
+          "code": "OPENING_VOIDS_WALL",
+          "evidence": {},
+          "status": "passed"
+        },
+        {
+          "code": "DOOR_DIMENSIONS_MATCH",
+          "evidence": {},
+          "status": "passed"
+        },
+        {
+          "code": "DOOR_STOREY_CONTAINMENT",
+          "evidence": {},
+          "status": "passed"
+        },
+        {
+          "code": "DOOR_TYPE_BOUND",
+          "evidence": {},
+          "status": "passed"
+        }
+      ],
+      "evidence": {
+        "door_global_id": "0Q$pjCk85PMQ1TjP$MGwGD",
+        "host_wall_global_id": "1cbLGwmrv8LAj2u11O6kgh",
+        "opening_global_id": "2IUEnGd5v4Yfg1ZkLtd0tI"
+      },
+      "issues": [],
+      "operation_id": "operation-door-002",
+      "valid": true
+    }
+  ],
+  "published": true,
+  "schema_version": "text2ifc/ifc-repair-application/0.1",
+  "valid": true
+}

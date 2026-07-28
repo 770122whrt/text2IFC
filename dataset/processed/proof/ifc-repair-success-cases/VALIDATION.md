@@ -1,6 +1,6 @@
 # IFC Repair 成功案例集自动验收
 
-**最新执行日期：** 2026-07-27
+**最新执行日期：** 2026-07-29
 **命令：**
 
 ```powershell
@@ -11,10 +11,10 @@
 
 ```text
 status: passed
-cases: 5
-operations: 17
-FILES artifacts checked: 72
-IFC reopened: 15
+cases: 11
+operations: 30
+FILES artifacts checked: 135
+IFC reopened: 33
 errors: 0
 ```
 
@@ -25,6 +25,12 @@ errors: 0
 - vvo 五窗批量修复
 - AdvancedProject 五窗大型模型修复
 - px4 五窗与上下叠窗修复
+- LargeBuilding Door 精确 Type 复用
+- vvo Door 精确 Type 复用
+- AdvancedProject Door 大模型完整门禁
+- LargeBuilding 受控生成 DoorStyle
+- vvo 五门原子修复与注入失败回滚
+- vvo 两门两窗混合原子修复
 
 ## 自动检查内容
 
@@ -36,8 +42,8 @@ errors: 0
 4. original、damaged、repaired 三份 IFC 均可由 IfcOpenShell 重开；
 5. 三份 IFC schema 均为 IFC2X3；
 6. Bound ChangeSet 的 `base_model_fingerprint` 等于 damaged IFC SHA-256；
-7. RepairIntent、Bound ChangeSet 与集合索引的 operation 数一致；
-8. 每项 operation type 与案例声明一致；
+7. RepairIntent；或离线 Prompt Profile/few-shot 指纹与 operation 绑定有效；
+8. Bound ChangeSet、集合索引与 evaluation 的 operation 数、类型一致；
 9. Production evaluation：
    - `status = passed`
    - `complete_repair_success = true`
@@ -45,6 +51,8 @@ errors: 0
    - application 与 preservation passed
    - 每项 L1/L2 passed
 10. 存在 Private Ground Truth evaluation 时，使用相同发布规则复核。
+11. 离线 Door Proof 的 `synthetic_fallback_used=false`；注入失败案例必须
+    `valid=false`、`published=false`。
 
 ## pytest 接入
 

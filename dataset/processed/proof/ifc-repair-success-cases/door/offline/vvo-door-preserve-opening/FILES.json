@@ -1,0 +1,66 @@
+{
+  "case_id": "vvo-door-preserve-opening",
+  "files": [
+    {
+      "path": "01-original.ifc",
+      "role": "original_ground_truth",
+      "sha256": "sha256:b6c435be955aeb6b2998f42a62f4ebf8c3f91eb7d373ca71a2dcedfeb95b3fdc",
+      "size_bytes": 2409268
+    },
+    {
+      "path": "02-damaged.ifc",
+      "role": "repair_input_ifc",
+      "sha256": "sha256:a8558c195d1dba8277e9bcd9b0ee047e145658d3d1068b9aea0f1affac0c68c6",
+      "size_bytes": 2436322
+    },
+    {
+      "path": "03-repaired.ifc",
+      "role": "published_repair_output",
+      "sha256": "sha256:5fc04f2cb4e68380fc7567f1a49be0b3683885bb04cfe6bed12a5f7bd8ced511",
+      "size_bytes": 2437242
+    },
+    {
+      "path": "agent/prompt-routing-evidence.json",
+      "role": "prompt_profile_evidence",
+      "sha256": "sha256:5873c411d4978bff39a629b16585ddf5260f31293cde0ae968baded6447cde31",
+      "size_bytes": 7071
+    },
+    {
+      "path": "changeset/bound-changeset.json",
+      "role": "bound_changeset",
+      "sha256": "sha256:2563f51c90863fa4d1e98b0adf8f0d64a10b4d020d743aef883e068a187b0e9a",
+      "size_bytes": 2500
+    },
+    {
+      "path": "input/request.txt",
+      "role": "user_request",
+      "sha256": "sha256:1803f6127c89bd43b8721b46a6cc54a7b752ca0f61eb9c8e853386ca204bf3ba",
+      "size_bytes": 387
+    },
+    {
+      "path": "validation/application.json",
+      "role": "application_result",
+      "sha256": "sha256:340a4998bad005fe478af6905a9d1c48583547874360ba65884d48afed1d5044",
+      "size_bytes": 4739
+    },
+    {
+      "path": "validation/ifc-comparison.json",
+      "role": "ifc_comparison",
+      "sha256": "sha256:afc228dc1917fdde2c1a7dee9db0f3df2f623aab2d465fe7f57d30c99e1961c6",
+      "size_bytes": 11465
+    },
+    {
+      "path": "validation/production-evaluation.json",
+      "role": "production_evaluation",
+      "sha256": "sha256:1f2c2648e840cbdeeebbe54a3a9370edf39683f051f70567be62a96a7e5bb253",
+      "size_bytes": 38429
+    },
+    {
+      "path": "validation/source-run-manifest.json",
+      "role": "source_run_manifest",
+      "sha256": "sha256:81e539a05fd62d1cd0ec25b398421ee330af37e14849386a3b24c16545ec9ca0",
+      "size_bytes": 3091
+    }
+  ],
+  "schema_version": "text2ifc/ifc-repair-proof-files/0.2"
+}

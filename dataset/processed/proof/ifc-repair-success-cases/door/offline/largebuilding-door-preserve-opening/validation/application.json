@@ -1,0 +1,171 @@
+{
+  "audit": {
+    "checks": [
+      {
+        "code": "CHANGESET_SCHEMA",
+        "evidence": {},
+        "status": "passed"
+      },
+      {
+        "code": "IFC_SCHEMA",
+        "evidence": {
+          "actual_schema": "IFC2X3"
+        },
+        "status": "passed"
+      },
+      {
+        "code": "BASE_MODEL_FINGERPRINT",
+        "evidence": {
+          "actual_fingerprint": "sha256:37c395b695f2efad78598811b643987e53a347fb0f33c07698eff29818629390"
+        },
+        "status": "passed"
+      },
+      {
+        "code": "SOURCE_REQUEST_HASH",
+        "evidence": {
+          "actual_request_hash": "sha256:fd4e025278d4f8442cecdc08d1d6a06b8ff5241170f40d4654ecb96d3f5c35b5"
+        },
+        "status": "passed"
+      },
+      {
+        "code": "OPERATION_REGISTRATION",
+        "evidence": {
+          "operation_type": "fill_existing_opening_with_door"
+        },
+        "status": "passed"
+      }
+    ],
+    "issues": [],
+    "operation_audits": [
+      {
+        "checks": [
+          {
+            "code": "EMPTY_OPENING_AVAILABLE",
+            "evidence": {
+              "host_wall_global_id": "2cXV28XOjE6f6irgi0COfF",
+              "opening_global_id": "2cXV28XOjE6f6irhW0COhu"
+            },
+            "status": "passed"
+          }
+        ],
+        "evidence": {
+          "opening_global_id": "2cXV28XOjE6f6irhW0COhu"
+        },
+        "operation_id": "operation-largebuilding-door-preserve-opening",
+        "operation_type": "fill_existing_opening_with_door",
+        "valid": true
+      }
+    ],
+    "schema_version": "text2ifc/ifc-repair-audit/0.1",
+    "valid": true
+  },
+  "issues": [],
+  "operations": [
+    {
+      "changes": {
+        "created": [
+          {
+            "global_id": "2slImfovnIovIQLJgZnU4z",
+            "ifc_class": "IfcDoor",
+            "role": "door"
+          },
+          {
+            "global_id": "2junD_RCPQjO9EjyXCbmGa",
+            "ifc_class": "IfcRelFillsElement",
+            "role": "fills_relationship"
+          }
+        ],
+        "modified": [
+          {
+            "global_id": "2cXV28XOjE6f6irgi0COfF",
+            "role": "host_wall"
+          },
+          {
+            "global_id": "2cXV28XOjE6f6irhW0COhu",
+            "role": "opening"
+          },
+          {
+            "global_id": "2AgyFd$QH9AO0Nm0$mTxVK",
+            "role": "door_type_relationship"
+          },
+          {
+            "global_id": "3Zu5Bv0LOHrPC10066FoQQ",
+            "role": "spatial_containment"
+          }
+        ],
+        "removed": [],
+        "resolved": {
+          "door_type_global_id": "2cXV28XOjE6f6irhu0COgZ",
+          "opening_depth_mm": 200.0,
+          "opening_global_id": "2cXV28XOjE6f6irhW0COhu"
+        },
+        "semantic": {
+          "created": [],
+          "modified": [],
+          "scopes": {
+            "door_occurrence": {
+              "created": [],
+              "modified": [],
+              "skipped": [
+                "relationship:type"
+              ],
+              "updated": []
+            }
+          },
+          "skipped": [
+            "relationship:type"
+          ],
+          "updated": []
+        }
+      },
+      "operation_id": "operation-largebuilding-door-preserve-opening",
+      "operation_type": "fill_existing_opening_with_door"
+    }
+  ],
+  "output": {
+    "path": "E:\\code for project\\bimnet\\dataset\\processed\\ifc-repair\\phase11-door-offline\\largebuilding-door-preserve-opening\\repaired.ifc",
+    "sha256": "0f5a1750a3ffe050220b9b07a5de4a249698c0e0bf5119475f869239c2809a53"
+  },
+  "postconditions": [
+    {
+      "checks": [
+        {
+          "code": "DOOR_FILLS_OPENING",
+          "evidence": {},
+          "status": "passed"
+        },
+        {
+          "code": "OPENING_VOIDS_WALL",
+          "evidence": {},
+          "status": "passed"
+        },
+        {
+          "code": "DOOR_DIMENSIONS_MATCH",
+          "evidence": {},
+          "status": "passed"
+        },
+        {
+          "code": "DOOR_STOREY_CONTAINMENT",
+          "evidence": {},
+          "status": "passed"
+        },
+        {
+          "code": "DOOR_TYPE_BOUND",
+          "evidence": {},
+          "status": "passed"
+        }
+      ],
+      "evidence": {
+        "door_global_id": "2slImfovnIovIQLJgZnU4z",
+        "host_wall_global_id": "2cXV28XOjE6f6irgi0COfF",
+        "opening_global_id": "2cXV28XOjE6f6irhW0COhu"
+      },
+      "issues": [],
+      "operation_id": "operation-largebuilding-door-preserve-opening",
+      "valid": true
+    }
+  ],
+  "published": true,
+  "schema_version": "text2ifc/ifc-repair-application/0.1",
+  "valid": true
+}

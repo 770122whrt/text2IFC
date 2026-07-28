@@ -16,6 +16,8 @@ from typing import Any, Iterable, Mapping
 
 import ifcopenshell
 
+from text2ifc_ifc_repair.prompt_profiles import load_prompt_profiles
+
 
 ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_COLLECTION = (
@@ -166,23 +168,62 @@ def _validate_case(root: Path, case: Mapping[str, Any]) -> dict[str, Any]:
     changeset = _read_json(changeset_path)
     if _normalize_sha256(str(changeset["base_model_fingerprint"])) != damaged_hash:
         raise ValueError("Bound ChangeSet base_model_fingerprint mismatch")
+    expected_operation_types = {
+        str(item)
+        for item in case.get(
+            "operation_types", (case.get("operation_type"),)
+        )
+        if item is not None
+    }
+    if not expected_operation_types:
+        raise ValueError("case operation types must be non-empty")
     _check_operations(
         changeset.get("operations"),
         operation_count=operation_count,
-        operation_type=str(case["operation_type"]),
+        operation_types=expected_operation_types,
         source="Bound ChangeSet",
     )
 
     intent_path = roles.get("stage1_repair_intent")
-    if intent_path is None:
+    if intent_path is not None:
+        intent = _read_json(intent_path)
+        _check_operations(
+            intent.get("operations"),
+            operation_count=operation_count,
+            operation_types=expected_operation_types,
+            source="RepairIntent",
+        )
+    elif case.get("provider_evidence_mode") == "offline_bound_deterministic":
+        _check_prompt_profile_evidence(
+            roles,
+            changeset=changeset,
+            operation_count=operation_count,
+        )
+    else:
         raise ValueError("missing stage1_repair_intent")
-    intent = _read_json(intent_path)
-    _check_operations(
-        intent.get("operations"),
-        operation_count=operation_count,
-        operation_type=str(case["operation_type"]),
-        source="RepairIntent",
-    )
+
+    application_path = roles.get("application_result")
+    if application_path is not None:
+        application = _read_json(application_path)
+        if (
+            application.get("valid") is not True
+            or application.get("published") is not True
+            or len(application.get("operations", ())) != operation_count
+        ):
+            raise ValueError("application_result is not a complete publication")
+    source_manifest_path = roles.get("source_run_manifest")
+    if source_manifest_path is not None:
+        source_manifest = _read_json(source_manifest_path)
+        if source_manifest.get("synthetic_fallback_used") is not False:
+            raise ValueError("source run used synthetic fallback")
+    injected_failure_path = roles.get("injected_failure_application")
+    if injected_failure_path is not None:
+        injected = _read_json(injected_failure_path)
+        if (
+            injected.get("valid") is not False
+            or injected.get("published") is not False
+        ):
+            raise ValueError("injected failure did not fail closed")
 
     production_path = _path_for_any_role(roles, PRODUCTION_EVALUATION_ROLES)
     production = _read_json(production_path)
@@ -209,14 +250,56 @@ def _check_operations(
     operations: Any,
     *,
     operation_count: int,
-    operation_type: str,
+    operation_types: set[str],
     source: str,
 ) -> None:
     if not isinstance(operations, list) or len(operations) != operation_count:
         raise ValueError(f"{source} operation count mismatch")
     actual_types = {str(item.get("operation_type")) for item in operations}
-    if actual_types != {operation_type}:
+    if actual_types != operation_types:
         raise ValueError(f"{source} operation_type mismatch: {sorted(actual_types)}")
+
+
+def _check_prompt_profile_evidence(
+    roles: Mapping[str, Path],
+    *,
+    changeset: Mapping[str, Any],
+    operation_count: int,
+) -> None:
+    path = roles.get("prompt_profile_evidence")
+    if path is None:
+        raise ValueError("missing prompt_profile_evidence")
+    evidence = _read_json(path)
+    if evidence.get("schema_version") != (
+        "text2ifc/phase11-prompt-routing-proof/0.1"
+    ):
+        raise ValueError("prompt profile evidence schema mismatch")
+    bindings = evidence.get("operation_bindings")
+    if not isinstance(bindings, list) or len(bindings) != operation_count:
+        raise ValueError("prompt profile operation binding count mismatch")
+    operations = {
+        str(item["operation_id"]): str(item["operation_type"])
+        for item in changeset["operations"]
+    }
+    profiles = load_prompt_profiles()
+    for binding in bindings:
+        operation_id = str(binding["operation_id"])
+        operation_type = str(binding["operation_type"])
+        profile_id = str(binding["profile_id"])
+        if operations.get(operation_id) != operation_type:
+            raise ValueError("prompt profile operation binding mismatch")
+        profile = profiles.get(profile_id)
+        if profile is None or profile.operation_type != operation_type:
+            raise ValueError("prompt profile registry binding mismatch")
+        if profile.profile_hash != str(binding["profile_hash"]):
+            raise ValueError("prompt profile hash mismatch")
+    selected = evidence.get("selected")
+    if not isinstance(selected, Mapping):
+        raise ValueError("prompt profile selected evidence missing")
+    if set(selected.get("profile_ids", ())) != {
+        str(item["profile_id"]) for item in bindings
+    }:
+        raise ValueError("selected prompt profile set mismatch")
 
 
 def _check_success_evaluation(

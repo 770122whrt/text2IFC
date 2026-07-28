@@ -6,9 +6,10 @@
 > 能通过真实 Agent 输出受约束 ChangeSet，并生成可重新打开、通过 L1/L2 的
 > 修复 IFC？
 
-当前版本只收录 `add_window_with_opening_to_wall`。Door、只挖 Opening、
-Beam、Column 等 operation 后续按照同一目录合同追加，不会混入现有 Window
-报告。
+当前版本收录 Window，以及 Phase 11 的 Door、生成 DoorStyle、五门批量和
+Door/Window 混合离线证据。离线确定性证据与真实 Provider 证据使用不同的
+`provider_evidence_mode`，不会互相冒充。只挖 Opening、Beam、Column 等
+operation 后续按照同一目录合同追加。
 
 ## 案例索引
 
@@ -19,8 +20,9 @@ Beam、Column 等 operation 后续按照同一目录合同追加，不会混入�
 | [vvo 五窗批量修复](window/batch/vvo-five-window/REPORT.md) | 48,935 entities | 5 | 一个文本、一个统一 ChangeSet、同墙多窗、原子发布 | 5 项 L1/L2 passed |
 | [AdvancedProject 五窗大型模型修复](window/batch/advancedproject-five-window/REPORT.md) | 770,172 entities | 5 | 大型 IFC、全模型 preservation、映射 Type | 5 项 L1/L2 passed |
 | [px4 五窗与上下叠窗修复](window/batch/px4-five-window/REPORT.md) | 501,401 entities | 5 | 二维 Opening 冲突、上下叠窗、原子回滚 | 5 项 L1/L2 passed |
+| [Phase 11 Door / 混合离线 Proof](door/README.md) | 20,735–770,172 entities | 13 | Type 复用/生成、五门原子、两门两窗混合、大模型 | 6 案例全部 passed |
 
-三个案例的横向解读见
+Window 案例的横向解读见
 [WINDOW-CASES-SUMMARY.md](WINDOW-CASES-SUMMARY.md)，机器可读总索引见
 [manifest.json](manifest.json)，本次集合验收见
 [VALIDATION.md](VALIDATION.md)。
@@ -55,8 +57,8 @@ Private mutation manifest 记录被移除对象的真实身份，因此标记为
 
 一个运行只有同时满足以下条件才进入本目录：
 
-1. 使用真实 Provider；或者明确保存真实 Provider 输出，并在修复后的代码上
-   确定性重放；
+1. 使用真实 Provider；明确保存真实 Provider 输出后确定性重放；或者明确标记
+   为 `offline_bound_deterministic` 的 operation-engine Proof；
 2. ChangeSet 已绑定 damaged IFC 指纹；
 3. IFC application 成功，输出可以用 IfcOpenShell 重新打开；
 4. 全局 preservation/scope gate 通过；
@@ -65,8 +67,8 @@ Private mutation manifest 记录被移除对象的真实身份，因此标记为
 7. `successful_artifact_publishable = true`；
 8. 原始、damaged、repaired、输入、ChangeSet 和验证证据均可追溯。
 
-仅写出一个 `.ifc`、仅离线 fake Provider 通过、历史失败或只有 diagnostic
-candidate 的运行都不属于成功案例。
+仅写出一个 `.ifc`、伪装成真实 Provider 的离线输出、历史失败或只有
+diagnostic candidate 的运行都不属于成功案例。
 
 ## 副本与来源
 
@@ -83,7 +85,7 @@ AND global_preservation_success
 ```
 
 L3 authoring exactness（原 GlobalId、Name、Tag、STEP 顺序和字节级相同）仍为
-观察项，不作为当前 Window 修复的发布门槛。
+观察项，不作为当前 Window/Door 修复的发布门槛。
 
 ## 一键校验
 
@@ -101,7 +103,8 @@ L3 authoring exactness（原 GlobalId、Name、Tag、STEP 顺序和字节级相�
 
 相同规则已由 `tests/ifc_repair/test_success_case_collection.py` 接入 pytest。校验会检查
 FILES 哈希与完整覆盖、三份 IFC 重开、IFC2X3 schema、ChangeSet damaged 指纹、
-RepairIntent/ChangeSet/evaluation operation 数，以及 Production 发布状态与 L1/L2。
+RepairIntent 或离线 Prompt Profile 指纹、ChangeSet/evaluation operation 数，
+以及 Production 发布状态与 L1/L2。
 
 ## 后续构件如何接入
 

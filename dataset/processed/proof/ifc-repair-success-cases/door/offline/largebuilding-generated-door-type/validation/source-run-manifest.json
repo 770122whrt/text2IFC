@@ -1,0 +1,92 @@
+{
+  "artifacts": {
+    "application.json": {
+      "bytes": 9577,
+      "path": "application.json",
+      "sha256": "sha256:80de2a8d624e9af8d1ec6646b525eafe22fefbc8a0a966bf7cb37cbee3c88cc7"
+    },
+    "changeset.json": {
+      "bytes": 3332,
+      "path": "changeset.json",
+      "sha256": "sha256:4ce1b1219898c4e3d90f8fd1728a0b91f66bb8a9f90f5d1cd3cdb05bf50b83bd"
+    },
+    "comparison.json": {
+      "bytes": 23302,
+      "path": "comparison.json",
+      "sha256": "sha256:65709fc7af3a1a560d414aef7f2dcf246f7b90c1ad2224d0dfc0282341902e0b"
+    },
+    "damaged.ifc": {
+      "bytes": 1286939,
+      "path": "damaged.ifc",
+      "sha256": "sha256:fed14afd7b68fa79afee817b4f73e3fe391415e2e515b7a329744ba78aeeb10f"
+    },
+    "evaluation.json": {
+      "bytes": 43959,
+      "path": "evaluation.json",
+      "sha256": "sha256:83f917c959b8d53be46aaa149d2ead28d9a3995bdacb623b8bb4d1f0ce198b3b"
+    },
+    "original.ifc": {
+      "bytes": 1292595,
+      "path": "original.ifc",
+      "sha256": "sha256:102f8123f85eae5e237d7f6a9dcbc364bd5f1c0cfb94b40a7eeb2d7eac9bb725"
+    },
+    "repaired.ifc": {
+      "bytes": 1290037,
+      "path": "repaired.ifc",
+      "sha256": "sha256:2af345dc8edd0b986b22b669ced51a8fd6812e1756f79dd76bb3e78ca0ba3858"
+    },
+    "request.txt": {
+      "bytes": 330,
+      "path": "request.txt",
+      "sha256": "sha256:d2b4160003bc95ace75f2f74a80ad302686ded595e1b2d63fdb4498ee61665cb"
+    }
+  },
+  "case_id": "largebuilding-generated-door-type",
+  "damage": {
+    "door": {
+      "global_id": "2cXV28XOjE6f6irgi0COhu",
+      "name": "M_Single-Flush:Inside Door:353172",
+      "operation_type": "SINGLE_SWING_RIGHT",
+      "overall_height_mm": 2134.0,
+      "overall_width_mm": 915.0,
+      "type_global_id": "2cXV28XOjE6f6irhu0COgZ",
+      "type_name": "M_Single-Flush:Inside Door"
+    },
+    "mode": "remove_door_and_opening",
+    "opening": {
+      "dimensions_mm": [
+        {
+          "identifier": "Body",
+          "items": [
+            {
+              "depth": 200.0,
+              "extruded_direction": [
+                0.0,
+                0.0,
+                1.0
+              ],
+              "ifc_class": "IfcExtrudedAreaSolid",
+              "profile_ifc_class": "IfcRectangleProfileDef",
+              "profile_x_dim": 915.0,
+              "profile_y_dim": 2134.0
+            }
+          ],
+          "type": "SweptSolid"
+        }
+      ],
+      "global_id": "2cXV28XOjE6f6irhW0COhu",
+      "name": "M_Single-Flush:Inside Door:353172:1"
+    },
+    "wall": {
+      "global_id": "2cXV28XOjE6f6irgi0COfF",
+      "ifc_class": "IfcWallStandardCase",
+      "name": "Basic Wall:Outside wall:353059"
+    }
+  },
+  "generated_type_global_id": "3B_xZ3LlPHr8sg9aigaebZ",
+  "generated_type_template": "text2ifc-door-single-swing-template/0.1",
+  "operation_count": 1,
+  "schema_version": "text2ifc/phase11-door-proof/0.2",
+  "status": "passed",
+  "synthetic_fallback_used": false
+}
