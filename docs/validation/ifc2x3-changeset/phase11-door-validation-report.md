@@ -190,7 +190,26 @@ quantities 与单位。Window 旧版 0.1 comparator 保持兼容。
 dataset/processed/ifc-repair/phase11-door-offline/
 ```
 
-### LargeBuilding
+### 六案例矩阵
+
+| 案例 | 操作 | operation 数 | 结果 |
+|---|---|---:|---|
+| LargeBuilding 保留 Opening | 精确复用 DoorStyle | 1 | 通过 |
+| vvo 保留 Opening | 精确复用 DoorStyle | 1 | 通过 |
+| AdvancedProject 保留 Opening | 大模型完整门禁 | 1 | 通过 |
+| LargeBuilding 完整重建 | 受控生成 DoorStyle | 1 | 通过 |
+| vvo 五门 | 一个 ChangeSet 批量修复 | 5 | 通过 |
+| vvo 两门两窗 | Door/Window 混合 ChangeSet | 4 | 通过 |
+
+五门案例还注入了一个重复 Opening operation。审计拒绝整个 ChangeSet，
+`published=false`，且目标 IFC 不存在，证明不是逐项提交或部分成功。
+
+混合案例在同一个 ChangeSet 中包含两个
+`add_window_with_opening_to_wall` 与两个
+`fill_existing_opening_with_door`，四个 operation 分别通过 L1/L2 后只发布
+一份 IFC。
+
+### LargeBuilding 单门
 
 | 项目 | 值 |
 |---|---|
@@ -202,7 +221,7 @@ dataset/processed/ifc-repair/phase11-door-offline/
 | Damage | 删除 Door/fill，保留 Opening/void |
 | 结果 | IFC2X3 重开、L1、L2、preservation 通过 |
 
-### vvo
+### vvo 单门
 
 | 项目 | 值 |
 |---|---|
@@ -220,6 +239,36 @@ vvo 原 Door occurrence 与宿主墙落在不同 Storey。修复器按宿主墙 
 每个案例包含 original、damaged、repaired IFC、request、ChangeSet、
 application、evaluation、comparison、manifest 和人工阅读 README。
 
+### AdvancedProject 性能
+
+AdvancedProject 保持完整 validation 与 full-model comparator 范围，没有使用
+抽样或缩小保全范围。固定 runner 的实测为：
+
+| 阶段 | 时间 |
+|---|---:|
+| application | 22.741 s |
+| cold evaluation | 118.064 s |
+| cold request-to-publication | 140.805 s |
+| warm evaluation | 50.037 s |
+| 冻结上限 | 180 s |
+
+application 的审计和写入现在共享同一个已打开 IFC 模型与基线指纹，消除了
+同一 44 MB 文件在 application 内部的重复打开与重复哈希；审计内容没有删减。
+
+### 独立 Proof
+
+离线案例通过以下命令独立收录：
+
+```powershell
+.venv\Scripts\python.exe scripts\ifc_repair\curate_phase11_door_proof.py
+.venv\Scripts\python.exe scripts\ifc_repair\validate_success_cases.py --json
+```
+
+当前成功案例集合共有 11 个案例、30 个 operation、135 个受哈希保护的文件，
+33 次 IFC2X3 独立重开，校验结果为 `passed`。其中 Phase 11 新增 6 个离线
+Door/混合案例、13 个 operation。离线证据明确标记
+`offline_bound_deterministic`，不会冒充真实 DeepSeek 证据。
+
 ## 10. 测试结果
 
 - Plan 11-01：60 个聚焦测试通过；
@@ -228,6 +277,7 @@ application、evaluation、comparison、manifest 和人工阅读 README。
 - Plan 11-04：218 个语义/评估回归通过；
 - Plan 11-04 最终矩阵：86 个测试通过；
 - Plan 11-05 mutation/dataset/live contract：9 个测试通过；
+- Phase 11 batch/mixed/AdvancedProject 聚焦矩阵：17 个测试通过；
 - 首次完整 IFC repair suite：632 passed、1 skipped、6 failed。
 
 6 个失败来自新增 operation 后的历史 fixture 假设：
@@ -239,7 +289,7 @@ application、evaluation、comparison、manifest 和人工阅读 README。
 这些兼容问题修复后，最终完整 IFC repair suite 为：
 
 ```text
-638 passed, 1 skipped in 429.04s
+643 passed, 1 skipped in 660.14s
 ```
 
 ## 11. 真实 DeepSeek UAT
@@ -278,7 +328,8 @@ synthetic fallback = false
 
 1. 额度恢复后运行三组真实 DeepSeek UAT；
 2. 对 live 产物执行独立重开、L1/L2、occurrence 与 proof 校验；
-3. 只把真实成功案例纳入 `ifc-repair-success-cases/door`；
+3. 将真实成功案例以 `live` 证据模式单独纳入
+   `ifc-repair-success-cases/door`；
 4. 更新 OPS-01/OPS-02、ROADMAP 和 STATE 为 complete；
 5. 创建 Phase 11 最终 Git checkpoint。
 
@@ -287,6 +338,8 @@ synthetic fallback = false
 ```powershell
 .venv\Scripts\python.exe -m pytest tests/ifc_repair/test_door_mutation.py -q
 .venv\Scripts\python.exe scripts/ifc_repair/run_phase11_offline.py
+.venv\Scripts\python.exe scripts/ifc_repair/curate_phase11_door_proof.py
+.venv\Scripts\python.exe scripts/ifc_repair/validate_success_cases.py --json
 .venv\Scripts\python.exe scripts/ifc_repair/run_phase11_live_uat.py --check-config
 .venv\Scripts\python.exe scripts/ifc_repair/run_phase11_live_uat.py --live
 ```
@@ -296,6 +349,7 @@ synthetic fallback = false
 Opening-only、Door+Opening、Door 填入已有 Opening 的合同、解析、IFC 写入、
 Type 策略、语义 scope、L1/L2 与通用 occurrence comparator 已实现。
 
-LargeBuilding 和 vvo 的 source-bound 离线链路已生成可重开的修复 IFC，并通过
-生产验证。真实 DeepSeek UAT 是当前唯一已知的外部阻塞证据；在实际调用完成前，
-本报告保持“实现通过、Phase 11 尚未最终关闭”的结论。
+LargeBuilding、vvo 与 AdvancedProject 的单门、生成 Type、五门批量和两门两窗
+混合链路均已生成可重开的修复 IFC，并通过生产与独立 Proof 验证。真实 DeepSeek
+UAT 是当前唯一已知的外部阻塞证据；在实际调用完成前，本报告保持“离线目标通过、
+Phase 11 尚未最终关闭”的结论。

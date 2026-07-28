@@ -3,7 +3,7 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: IFC ChangeSet Repair Pipeline
 status: Phase 11 implementation and offline validation complete; live UAT externally blocked
-last_updated: "2026-07-28T00:00:00+08:00"
+last_updated: "2026-07-29T00:00:00+08:00"
 progress:
   total_phases: 13
   completed_phases: 10
@@ -33,9 +33,11 @@ Plan: 3 of 3 complete
 - Phase: 11 in progress
 - Plan: 11-01 through 11-04 complete; 11-05 offline work complete, live UAT pending
 - Status: Opening/Door contracts, indexing, deterministic resolution, IFC
-  authoring, L1/L2 and occurrence fidelity are implemented. LargeBuilding and
-  vvo source-bound offline runs pass. The live command was rejected before any
-  Provider call because the Codex execution quota was exhausted.
+  authoring, L1/L2 and occurrence fidelity are implemented. Six offline cases
+  cover LargeBuilding, vvo, AdvancedProject, generated Type, five-Door atomic
+  repair and two-Door/two-Window mixed repair. All are independently curated
+  into Proof. The live command was rejected before any Provider call because
+  the Codex execution quota was exhausted.
 - Progress: 10 / 13 phases complete
 - Requirements: WFID-01..06 complete
 - Last activity: 2026-07-26 - 583 IFC repair tests passed; AdvancedProject

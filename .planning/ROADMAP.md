@@ -409,10 +409,13 @@ seconds.
 
 ### Phase 11: Wall Opening and Door Operations
 
-**Status:** In progress — Plans 11-01 through 11-04 and the 11-05 offline
-LargeBuilding/vvo matrix are complete. Real DeepSeek UAT was not executed
-because the external Codex execution quota rejected the network command before
-Stage 1; actual Stage 1/2 call counts are 0 — 2026-07-28.
+**Status:** In progress — Plans 11-01 through 11-04 and the complete 11-05
+offline matrix are implemented. LargeBuilding, vvo, AdvancedProject,
+generated-Type, five-Door atomic and two-Door/two-Window mixed cases pass and
+six independently validated offline Proof packages are curated. Real DeepSeek
+UAT was not executed because the external Codex execution quota rejected the
+network command before Stage 1; actual Stage 1/2 call counts are 0 —
+2026-07-29.
 
 **Goal:** Extend the Registry with opening-only, Door+Opening and
 Door-into-existing-Opening operations without copying the Window pipeline,

@@ -21,6 +21,17 @@ commits:
 - vvo exact-Type, surviving-Opening repair passed the same gates. The source
   Door's occurrence Storey conflicts with its host Wall; the repaired Door
   correctly follows the host Wall instead of reproducing that error.
+- Added a single-write five-Door damage fixture and a five-operation atomic
+  ChangeSet. Injected duplicate-target failure publishes no IFC.
+- Added a two-Door/two-Window mixed ChangeSet; all four operations pass
+  independent L1/L2 and publish one IFC.
+- Added a controlled generated-DoorStyle LargeBuilding case and an
+  AdvancedProject full-scope case. AdvancedProject cold request-to-publication
+  is 140.805 seconds and warm evaluation is 50.037 seconds.
+- Independently curated six offline Door/mixed Proof cases. The complete
+  success collection validates 11 cases, 30 operations, 135 hashed files and
+  33 IFC reopens.
+- Full IFC repair regression: 643 passed, 1 skipped.
 - Added a real no-fallback DeepSeek runner for complete, clarification and
   unsupported-complex-Door cases.
 - Provider configuration checks as ready with 65,536 input and completion
