@@ -20,7 +20,9 @@ operation 后续按照同一目录合同追加。
 | [vvo 五窗批量修复](window/batch/vvo-five-window/REPORT.md) | 48,935 entities | 5 | 一个文本、一个统一 ChangeSet、同墙多窗、原子发布 | 5 项 L1/L2 passed |
 | [AdvancedProject 五窗大型模型修复](window/batch/advancedproject-five-window/REPORT.md) | 770,172 entities | 5 | 大型 IFC、全模型 preservation、映射 Type | 5 项 L1/L2 passed |
 | [px4 五窗与上下叠窗修复](window/batch/px4-five-window/REPORT.md) | 501,401 entities | 5 | 二维 Opening 冲突、上下叠窗、原子回滚 | 5 项 L1/L2 passed |
-| [Phase 11 Door / 混合离线 Proof](door/README.md) | 20,735–770,172 entities | 13 | Type 复用/生成、五门原子、两门两窗混合、大模型 | 6 案例全部 passed |
+| [Phase 11 单门修复](door/README.md) | 20,735–770,172 entities | 4 | Type 复用、生成 DoorStyle、保留 Opening、大模型 | 4 案例全部 passed |
+| [vvo 五门批量修复](door/batch/vvo-five-door-preserve-opening/REPORT.md) | 48,935 entities | 5 | 一个文本、一个统一 ChangeSet、5 个 Door operation、原子发布 | 5 项 L1/L2 passed |
+| [vvo 两门两窗混合修复](mixed/door-window/vvo-two-door-two-window-mixed/REPORT.md) | 48,935 entities | 4 | 无 GUID 公开定位、Door/Window 分类路由、统一 ChangeSet | 4 项 L1/L2 passed |
 
 Window 案例的横向解读见
 [WINDOW-CASES-SUMMARY.md](WINDOW-CASES-SUMMARY.md)，机器可读总索引见
@@ -113,6 +115,7 @@ RepairIntent 或离线 Prompt Profile 指纹、ChangeSet/evaluation operation �
 ```text
 door/single/<case-id>/
 door/batch/<case-id>/
+mixed/door-window/<case-id>/
 opening/single/<case-id>/
 beam/single/<case-id>/
 column/single/<case-id>/

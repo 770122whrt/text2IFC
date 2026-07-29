@@ -33,6 +33,15 @@ PROFILE_BY_OPERATION = {
     "add_door_with_opening_to_wall": "door.add-with-opening",
     "fill_existing_opening_with_door": "door.fill-existing-opening",
 }
+FAMILY_BY_OPERATION = {
+    "add_window_with_opening_to_wall": "window",
+    "add_opening_to_wall": "opening",
+    "add_door_with_opening_to_wall": "door",
+    "fill_existing_opening_with_door": "door",
+}
+MIXED_BUCKET_BY_FAMILIES = {
+    frozenset({"door", "window"}): "mixed/door-window",
+}
 
 
 def _sha256(path: Path) -> str:
@@ -147,12 +156,52 @@ def _routing_evidence(changeset: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def _proof_classification(
+    changeset: dict[str, Any],
+    *,
+    operation_count: int,
+) -> tuple[str, str, str, list[str]]:
+    operation_types = sorted(
+        {str(item["operation_type"]) for item in changeset["operations"]}
+    )
+    try:
+        families = {
+            FAMILY_BY_OPERATION[operation_type]
+            for operation_type in operation_types
+        }
+    except KeyError as exc:
+        raise ValueError(f"UNSUPPORTED_PROOF_OPERATION:{exc.args[0]}") from exc
+
+    if len(families) == 1:
+        family = next(iter(families))
+        case_kind = "batch" if operation_count > 1 else "single"
+        return family, case_kind, f"{family}/{case_kind}", operation_types
+
+    family_key = frozenset(families)
+    try:
+        bucket = MIXED_BUCKET_BY_FAMILIES[family_key]
+    except KeyError as exc:
+        joined = ",".join(sorted(families))
+        raise ValueError(f"UNSUPPORTED_MIXED_PROOF_FAMILIES:{joined}") from exc
+    return "mixed", "mixed", bucket, operation_types
+
+
 def _copy_case(
     *,
     source_case: Path,
-    destination: Path,
+    collection_root: Path,
 ) -> dict[str, Any]:
     source_manifest = _validate_source_case(source_case)
+    changeset = _read(source_case / "changeset.json")
+    operation_count = int(source_manifest["operation_count"])
+    operation_family, case_kind, bucket, operation_types = (
+        _proof_classification(
+            changeset,
+            operation_count=operation_count,
+        )
+    )
+    relative_case = f"{bucket}/{source_manifest['case_id']}"
+    destination = collection_root / relative_case
     if destination.exists():
         shutil.rmtree(destination)
     destination.mkdir(parents=True)
@@ -212,7 +261,6 @@ def _copy_case(
         target.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(source_case / source_name, target)
 
-    changeset = _read(source_case / "changeset.json")
     routing_path = destination / "agent/prompt-routing-evidence.json"
     _write(routing_path, _routing_evidence(changeset))
     entries = [
@@ -238,9 +286,6 @@ def _copy_case(
         "files": sorted(entries, key=lambda item: item["path"]),
     }
     _write(destination / "FILES.json", files)
-    operation_types = sorted(
-        {str(item["operation_type"]) for item in changeset["operations"]}
-    )
     removed_doors = source_manifest.get("damage", {}).get(
         "removed_doors", ()
     )
@@ -277,41 +322,19 @@ def _copy_case(
     _write(destination / "REPORT.md", report)
     return {
         "case_id": source_manifest["case_id"],
-        "operation_family": (
-            "mixed"
-            if len(operation_types) > 1
-            else (
-                "window"
-                if operation_types[0] == "add_window_with_opening_to_wall"
-                else "door"
-            )
-        ),
-        "case_kind": (
-            "mixed"
-            if len(operation_types) > 1
-            else "batch"
-            if int(source_manifest["operation_count"]) > 1
-            else "single"
-        ),
+        "operation_family": operation_family,
+        "case_kind": case_kind,
         "operation_types": operation_types,
-        "operation_count": int(source_manifest["operation_count"]),
+        "operation_count": operation_count,
         "provider": "offline-deterministic",
         "model": "phase11-bound-fixture",
         "provider_evidence_mode": "offline_bound_deterministic",
         "status": "accepted",
-        "report": (
-            f"door/offline/{source_manifest['case_id']}/REPORT.md"
-        ),
-        "files": f"door/offline/{source_manifest['case_id']}/FILES.json",
-        "original_ifc": (
-            f"door/offline/{source_manifest['case_id']}/01-original.ifc"
-        ),
-        "damaged_ifc": (
-            f"door/offline/{source_manifest['case_id']}/02-damaged.ifc"
-        ),
-        "repaired_ifc": (
-            f"door/offline/{source_manifest['case_id']}/03-repaired.ifc"
-        ),
+        "report": f"{relative_case}/REPORT.md",
+        "files": f"{relative_case}/FILES.json",
+        "original_ifc": f"{relative_case}/01-original.ifc",
+        "damaged_ifc": f"{relative_case}/02-damaged.ifc",
+        "repaired_ifc": f"{relative_case}/03-repaired.ifc",
     }
 
 
@@ -328,15 +351,19 @@ def curate(
         case_entries.append(
             _copy_case(
                 source_case=source_root / case_id,
-                destination=collection_root / "door/offline" / case_id,
+                collection_root=collection_root,
             )
         )
+    curated_case_ids = {item["case_id"] for item in case_entries}
     collection = _read(collection_root / "manifest.json")
     retained = [
         item
         for item in collection["cases"]
-        if item.get("provider_evidence_mode") != "offline_bound_deterministic"
-        or not str(item.get("report", "")).startswith("door/offline/")
+        if not (
+            item.get("provider_evidence_mode")
+            == "offline_bound_deterministic"
+            and item.get("case_id") in curated_case_ids
+        )
     ]
     collection["cases"] = [*retained, *case_entries]
     collection["case_count"] = len(collection["cases"])
@@ -353,15 +380,13 @@ def curate(
         if item != "door"
     ]
     _write(collection_root / "manifest.json", collection)
-    _write(
-        collection_root / "door/README.md",
-        (
-            "# Phase 11 Door / Opening Proof\n\n"
-            "本目录保存通过独立哈希、IFC 重开、ChangeSet 绑定、L1/L2 和"
-            " preservation 校验的离线确定性证据。真实 DeepSeek 成功案例"
-            "将在 live UAT 成功后单独加入，绝不以离线证据冒充。\n"
-        ),
-    )
+    legacy_root = collection_root / "door/offline"
+    for case_id in curated_case_ids:
+        legacy_case = legacy_root / case_id
+        if legacy_case.exists():
+            shutil.rmtree(legacy_case)
+    if legacy_root.exists() and not any(legacy_root.iterdir()):
+        legacy_root.rmdir()
     return {
         "schema_version": "text2ifc/phase11-proof-curation/0.1",
         "status": "passed",
