@@ -33,6 +33,8 @@ from .hosted_opening import (
     deterministic_global_id,
     hosted_opening_conflict_checker,
     local_placement,
+    millimetres_to_project_units,
+    project_units_to_millimetres,
     require_guid,
     sorted_roots,
     wall_containment,
@@ -427,8 +429,8 @@ def _create_door(
             str(door_style.Name) if door_style is not None else "Text2IFC door"
         ),
         Tag=str(operation["operation_id"]),
-        OverallHeight=height,
-        OverallWidth=width,
+        OverallHeight=millimetres_to_project_units(model, height),
+        OverallWidth=millimetres_to_project_units(model, width),
     )
     if door_style is not None and door_style.RepresentationMaps:
         representations = [
@@ -745,12 +747,12 @@ def _postconditions(
         ),
         "DOOR_DIMENSIONS_MATCH": (
             math.isclose(
-                float(door.OverallWidth),
+                project_units_to_millimetres(model, door.OverallWidth),
                 float(expected["overall_width_mm"]),
                 abs_tol=1e-4,
             )
             and math.isclose(
-                float(door.OverallHeight),
+                project_units_to_millimetres(model, door.OverallHeight),
                 float(expected["overall_height_mm"]),
                 abs_tol=1e-4,
             )

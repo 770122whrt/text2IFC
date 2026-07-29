@@ -13,6 +13,7 @@ from typing import Any
 import ifcopenshell
 import ifcopenshell.util.classification
 import ifcopenshell.util.element
+import ifcopenshell.util.unit
 
 from .index_adapters import IndexAdapterRegistry, default_index_adapter_registry
 from .index_models import (
@@ -139,6 +140,11 @@ def build_ifc_index(
             result = adapter.extract(entity)
             type_entity = _element_type(entity)
             storey = _element_storey(entity)
+            facets = dict(result.facets)
+            if storey is not None and getattr(storey, "Elevation", None) is not None:
+                facets["storey_elevation_mm"] = float(storey.Elevation) * (
+                    ifcopenshell.util.unit.calculate_unit_scale(model) * 1000.0
+                )
             relationships = list(result.relationships)
             if storey is not None and getattr(storey, "GlobalId", None):
                 relationships.append(
@@ -163,7 +169,7 @@ def build_ifc_index(
                 storey_global_id=_text(getattr(storey, "GlobalId", None)),
                 geometry_capability=result.geometry_capability,
                 geometry_summary=_json_safe(result.geometry_summary),
-                facets=_json_safe(result.facets),
+                facets=_json_safe(facets),
                 provenance={"source": "current_ifc", "step_id": entity.id()},
                 aliases=_aliases(entity, type_entity, storey),
                 relationships=tuple(

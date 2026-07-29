@@ -23,6 +23,7 @@ operation 后续按照同一目录合同追加。
 | [Phase 11 单门修复](door/README.md) | 20,735–770,172 entities | 4 | Type 复用、生成 DoorStyle、保留 Opening、大模型 | 4 案例全部 passed |
 | [vvo 五门批量修复](door/batch/vvo-five-door-preserve-opening/REPORT.md) | 48,935 entities | 5 | 一个文本、一个统一 ChangeSet、5 个 Door operation、原子发布 | 5 项 L1/L2 passed |
 | [vvo 两门两窗混合修复](mixed/door-window/vvo-two-door-two-window-mixed/REPORT.md) | 48,935 entities | 4 | 无 GUID 公开定位、Door/Window 分类路由、统一 ChangeSet | 4 项 L1/L2 passed |
+| [Dental Clinic 两门两窗重开洞修复](mixed/door-window/dental-clinic-two-door-two-window-geometry-targeted/REPORT.md) | 209,148 entities | 4 | 无 GUID/Name 几何定位、旧 Opening 全删除、米制 IFC 边界换算、统一 ChangeSet | 4 项 L1/L2 passed |
 
 Window 案例的横向解读见
 [WINDOW-CASES-SUMMARY.md](WINDOW-CASES-SUMMARY.md)，机器可读总索引见

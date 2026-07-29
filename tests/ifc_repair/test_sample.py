@@ -1,5 +1,7 @@
 from pathlib import Path
 
+import pytest
+
 from text2ifc_ifc_repair.sample import (
     inspect_sample,
     inspect_sample_capabilities,
@@ -16,6 +18,15 @@ SOURCE = (
     / "LargeBuilding"
     / "IFC"
     / "LargeBuilding.ifc"
+)
+DENTAL_CLINIC = (
+    ROOT
+    / "dataset"
+    / "external"
+    / "ifc-bench"
+    / "projects"
+    / "dental_clinic"
+    / "arc.ifc"
 )
 
 
@@ -97,3 +108,18 @@ def test_large_building_has_only_supported_straight_walls() -> None:
         "unsupported_wall_count": 0,
         "valid_window_opening_wall_chain_count": 42,
     }
+
+
+def test_metric_ifc_target_chain_is_normalized_to_millimetres() -> None:
+    target = inspect_target_chain(
+        DENTAL_CLINIC,
+        wall_global_id="3LbNSBzHHBSuzhUUvuwARp",
+        opening_global_id="3eM8WbY_59RR5TDWs3waP5",
+        window_global_id="0otfaO0qPDAhynjJ6DmgEk",
+    )
+
+    assert target["wall"]["length_mm"] == pytest.approx(
+        40_577.438710, abs=0.001
+    )
+    assert target["window"]["width_mm"] == pytest.approx(1_000.0)
+    assert target["window"]["height_mm"] == pytest.approx(1_735.0)

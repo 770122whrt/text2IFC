@@ -670,6 +670,17 @@ def _ifc_relationship_and_attribute_facts(
         category, attribute = fact_key.split(":", 1)
         value = getattr(element, attribute, None)
         if value is not None:
+            if fact_key in {
+                "attribute:OverallWidth",
+                "attribute:OverallHeight",
+            }:
+                value = (
+                    float(value)
+                    * ifcopenshell.util.unit.calculate_unit_scale(
+                        element.file
+                    )
+                    * 1000.0
+                )
             values.append((fact_key, value, _python_value_type(value, category, fact_key)))
     return tuple(
         SemanticFact(

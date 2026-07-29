@@ -289,7 +289,11 @@ def _copy_case(
     removed_doors = source_manifest.get("damage", {}).get(
         "removed_doors", ()
     )
+    removed_windows = source_manifest.get("damage", {}).get(
+        "removed_windows", ()
+    )
     public_targeting = source_manifest.get("public_targeting", {})
+    damage = source_manifest.get("damage", {})
     if not removed_doors:
         door = source_manifest.get("damage", {}).get("door")
         removed_doors = [] if door is None else [door]
@@ -302,9 +306,21 @@ def _copy_case(
         "- application、L1、L2、preservation 与文件哈希均已重新验证。\n"
         "- Prompt Profile 与 few-shot 指纹由当前不可变目录重新计算。\n"
         + (
+            "- 用户请求和 RepairIntent 均不含 IFC GlobalId、对象 Name 或楼层"
+            " Name；宿主墙仅由楼层标高、朝向、墙体长高厚和墙局部位置经"
+            "确定性索引解析，GUID 只在内部 Bound ChangeSet 中出现。\n"
+            if public_targeting.get("name_free") is True
+            else
             "- 用户请求和 RepairIntent 均不含 IFC GlobalId；名称、楼层与墙局部位置"
             "经确定性索引解析后，才在内部 ChangeSet 绑定 GUID。\n"
             if public_targeting.get("guid_free") is True
+            else ""
+        )
+        + (
+            "- damage 同时删除 Door/Window occurrence 与原 Opening；修复从完整墙体"
+            "重新开洞，不复用残留 Opening。\n"
+            if damage.get("door_openings_removed") is True
+            and damage.get("window_openings_removed") is True
             else ""
         )
         + "- synthetic fallback：false。\n\n"
@@ -316,6 +332,16 @@ def _copy_case(
             )
             if removed_doors
             else "- 本案例不删除 Door occurrence。\n"
+        )
+        + "\n"
+        + "\n## 被删除 Window\n\n"
+        + (
+            "\n".join(
+                f"- `{item.get('name')}` (`{item.get('global_id')}`)"
+                for item in removed_windows
+            )
+            if removed_windows
+            else "- 本案例不删除 Window occurrence。\n"
         )
         + "\n"
     )

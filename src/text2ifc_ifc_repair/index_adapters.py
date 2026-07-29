@@ -4,6 +4,9 @@ import math
 from dataclasses import dataclass, field
 from typing import Any, Protocol
 
+import ifcopenshell.util.placement
+import ifcopenshell.util.unit
+
 from .geometry import (
     UNSUPPORTED_WALL_GEOMETRY,
     opening_dimensions_mm,
@@ -91,13 +94,20 @@ class WallIndexAdapter:
         }
         try:
             start, end = straight_wall_axis(entity)
+            millimetres_per_project_unit = (
+                ifcopenshell.util.unit.calculate_unit_scale(entity.file)
+                * 1000.0
+            )
+            start_mm = [
+                value * millimetres_per_project_unit for value in start
+            ]
+            end_mm = [
+                value * millimetres_per_project_unit for value in end
+            ]
             delta = [end[index] - start[index] for index in range(3)]
             length = math.sqrt(sum(value * value for value in delta))
             direction = [value / length for value in delta]
             try:
-                import ifcopenshell.util.placement
-                import ifcopenshell.util.unit
-
                 matrix = ifcopenshell.util.placement.get_local_placement(
                     entity.ObjectPlacement
                 )
@@ -133,8 +143,8 @@ class WallIndexAdapter:
             summary = {
                 "coordinate_basis": {
                     "reference": "wall_local_start",
-                    "axis_start_mm": start,
-                    "axis_end_mm": end,
+                    "axis_start_mm": start_mm,
+                    "axis_end_mm": end_mm,
                     "axis_direction": direction,
                     "vertical_direction": [0.0, 0.0, 1.0],
                     "world_axis_start_mm": world_start,
@@ -194,13 +204,24 @@ class FillingIndexAdapter:
                             "hosted_by_wall", str(host_id), "IfcRelVoidsElement"
                         )
                     )
+        millimetres_per_project_unit = (
+            ifcopenshell.util.unit.calculate_unit_scale(entity.file) * 1000.0
+        )
         dimensions = {
-            "overall_width": _number_or_none(getattr(entity, "OverallWidth", None)),
-            "overall_height": _number_or_none(getattr(entity, "OverallHeight", None)),
+            "overall_width": (
+                None
+                if getattr(entity, "OverallWidth", None) is None
+                else float(entity.OverallWidth) * millimetres_per_project_unit
+            ),
+            "overall_height": (
+                None
+                if getattr(entity, "OverallHeight", None) is None
+                else float(entity.OverallHeight) * millimetres_per_project_unit
+            ),
         }
         return AdapterResult(
             geometry_capability="opening_filling",
-            geometry_summary={"dimensions_project_units": dimensions},
+            geometry_summary={"dimensions_mm": dimensions},
             facets={
                 "editable_target": True,
                 "opening_global_ids": sorted(set(opening_ids)),

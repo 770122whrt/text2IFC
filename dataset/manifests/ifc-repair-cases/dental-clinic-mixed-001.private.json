@@ -1,0 +1,78 @@
+{
+  "schema_version": "text2ifc/ifc-repair-mixed-case-private/0.1",
+  "case_id": "dental-clinic-two-door-two-window-geometry-targeted",
+  "source": {
+    "local_path": "dataset/external/ifc-bench/projects/dental_clinic/arc.ifc",
+    "schema": "IFC2X3",
+    "size_bytes": 13208096,
+    "sha256": "b90fe57b8aa9329d762a564770e697d4f7357677484e3a78ede4ab6d2163c0c0"
+  },
+  "selection_policy": {
+    "operation_count": 4,
+    "window_count": 2,
+    "door_count": 2,
+    "requirements": [
+      "valid Window-Opening-Wall and Door-Opening-Wall chains",
+      "straight supported host walls",
+      "four distinct host walls",
+      "target wall geometry signature is unique in the source model",
+      "public request and RepairIntent target queries contain no IFC GlobalId or Name",
+      "Door and Window occurrences are removed together with their Openings",
+      "repair creates new Openings before adding generated Door and Window types"
+    ]
+  },
+  "targets": [
+    {
+      "target_id": "window-repair-001",
+      "wall_global_id": "3LbNSBzHHBSuzhUUvuwARp",
+      "opening_global_id": "3eM8WbY_59RR5TDWs3waP5",
+      "window_global_id": "0otfaO0qPDAhynjJ6DmgEk",
+      "wall_signature": {
+        "storey_elevation_mm": 4570.0,
+        "direction": "north",
+        "length_mm": 40577.439,
+        "height_mm": 5137.0,
+        "thickness_mm": 267.0,
+        "tolerance_mm": 1.0
+      }
+    },
+    {
+      "target_id": "window-repair-002",
+      "wall_global_id": "3LbNSBzHHBSuzhUUvuwBG4",
+      "opening_global_id": "3eM8WbY_59RR5TDWs3wbeF",
+      "window_global_id": "2g$QZpOGbBUxSNx_ZgxJoj",
+      "wall_signature": {
+        "storey_elevation_mm": 0.0,
+        "direction": "north",
+        "length_mm": 17081.456,
+        "height_mm": 5027.0,
+        "thickness_mm": 267.0,
+        "tolerance_mm": 1.0
+      }
+    }
+  ],
+  "door_targets": [
+    {
+      "door_global_id": "1byTDaqS91rBnWJlv$n$m2",
+      "wall_signature": {
+        "storey_elevation_mm": 0.0,
+        "direction": "east",
+        "length_mm": 3970.025,
+        "height_mm": 4468.0,
+        "thickness_mm": 124.0,
+        "tolerance_mm": 1.0
+      }
+    },
+    {
+      "door_global_id": "35QeWibpT4DfyH3NIf2nTY",
+      "wall_signature": {
+        "storey_elevation_mm": 4570.0,
+        "direction": "east",
+        "length_mm": 5640.0,
+        "height_mm": 4578.0,
+        "thickness_mm": 124.0,
+        "tolerance_mm": 1.0
+      }
+    }
+  ]
+}

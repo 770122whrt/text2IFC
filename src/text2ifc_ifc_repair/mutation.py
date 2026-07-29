@@ -719,6 +719,9 @@ def remove_doors_batch(
 
 
 def _door_snapshot(door: Any, opening: Any, wall: Any) -> dict[str, Any]:
+    millimetres_per_project_unit = (
+        ifcopenshell.util.unit.calculate_unit_scale(door.file) * 1000.0
+    )
     types = [
         relation.RelatingType
         for relation in door.IsDefinedBy
@@ -737,10 +740,16 @@ def _door_snapshot(door: Any, opening: Any, wall: Any) -> dict[str, Any]:
             "global_id": str(door.GlobalId),
             "name": None if door.Name is None else str(door.Name),
             "overall_width_mm": (
-                None if door.OverallWidth is None else float(door.OverallWidth)
+                None
+                if door.OverallWidth is None
+                else float(door.OverallWidth)
+                * millimetres_per_project_unit
             ),
             "overall_height_mm": (
-                None if door.OverallHeight is None else float(door.OverallHeight)
+                None
+                if door.OverallHeight is None
+                else float(door.OverallHeight)
+                * millimetres_per_project_unit
             ),
             "type_global_id": (
                 None if door_type is None else str(door_type.GlobalId)

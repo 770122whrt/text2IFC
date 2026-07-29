@@ -75,6 +75,15 @@ def inspect_target_chain(
         raise ValueError("TARGET_CHAIN_RELATIONSHIP_MISMATCH")
 
     axis_start, axis_end = straight_wall_axis(wall)
+    millimetres_per_project_unit = (
+        ifcopenshell.util.unit.calculate_unit_scale(model) * 1000.0
+    )
+    axis_start_mm = [
+        value * millimetres_per_project_unit for value in axis_start
+    ]
+    axis_end_mm = [
+        value * millimetres_per_project_unit for value in axis_end
+    ]
     storeys = [
         relation.RelatingStructure
         for relation in wall.ContainedInStructure
@@ -86,7 +95,10 @@ def inspect_target_chain(
     relative_placement = opening.ObjectPlacement
     if relative_placement is None or relative_placement.PlacementRelTo != wall.ObjectPlacement:
         raise ValueError("TARGET_OPENING_NOT_WALL_LOCAL")
-    local_origin = list(relative_placement.RelativePlacement.Location.Coordinates)
+    local_origin = [
+        float(value) * millimetres_per_project_unit
+        for value in relative_placement.RelativePlacement.Location.Coordinates
+    ]
     while len(local_origin) < 3:
         local_origin.append(0.0)
     opening_position = opening_position_in_wall_mm(opening, wall)
@@ -99,9 +111,9 @@ def inspect_target_chain(
             "name": wall.Name,
             "storey": storeys[0].Name,
             "geometry_capability": "straight_wall",
-            "axis_start_mm": axis_start,
-            "axis_end_mm": axis_end,
-            "length_mm": math.dist(axis_start, axis_end),
+            "axis_start_mm": axis_start_mm,
+            "axis_end_mm": axis_end_mm,
+            "length_mm": math.dist(axis_start_mm, axis_end_mm),
             "local_reference": "wall_local_start",
         },
         "opening": {
@@ -118,8 +130,12 @@ def inspect_target_chain(
             "step_id": window.id(),
             "global_id": window.GlobalId,
             "name": window.Name,
-            "width_mm": float(window.OverallWidth),
-            "height_mm": float(window.OverallHeight),
+            "width_mm": (
+                float(window.OverallWidth) * millimetres_per_project_unit
+            ),
+            "height_mm": (
+                float(window.OverallHeight) * millimetres_per_project_unit
+            ),
         },
         "relationships": {
             "fills_step_id": fills[0].id(),

@@ -11,10 +11,10 @@
 
 ```text
 status: passed
-cases: 11
-operations: 30
-FILES artifacts checked: 137
-IFC reopened: 33
+cases: 12
+operations: 34
+FILES artifacts checked: 149
+IFC reopened: 36
 errors: 0
 ```
 
@@ -31,6 +31,7 @@ errors: 0
 - LargeBuilding 受控生成 DoorStyle
 - vvo 五门原子修复与注入失败回滚
 - vvo 两门两窗混合原子修复
+- Dental Clinic 两门两窗无名称几何定位与完整墙体重开洞修复
 
 ## 自动检查内容
 
@@ -53,8 +54,9 @@ errors: 0
 10. 存在 Private Ground Truth evaluation 时，使用相同发布规则复核。
 11. 离线 Door Proof 的 `synthetic_fallback_used=false`；注入失败案例必须
     `valid=false`、`published=false`。
-12. 两门两窗混合案例的公开 request/RepairIntent 不含 IFC GlobalId，且保存
-    4 项确定性 target-resolution 与随后内部绑定的证据。
+12. 两门两窗混合案例的公开 request/RepairIntent 不含 IFC GlobalId；Dental
+    Clinic 案例还禁止对象和楼层 Name，只用标高、朝向、墙体长高厚与墙局部
+    位置完成 4 项确定性 target-resolution，并保存随后内部绑定的证据。
 
 ## pytest 接入
 

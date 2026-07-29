@@ -38,7 +38,9 @@ from text2ifc_ifc_repair.operations.hosted_opening import (
     deterministic_global_id as hosted_deterministic_global_id,
     hosted_opening_conflict_checker,
     local_placement as hosted_local_placement,
+    millimetres_to_project_units,
     opening_placement as hosted_opening_placement,
+    project_units_to_millimetres,
     wall_containment as hosted_wall_containment,
 )
 
@@ -757,8 +759,8 @@ def _applicator(*, operation: Mapping[str, Any], model: Any) -> dict[str, Any]:
         Name=f"Text2IFC window {operation['operation_id']}",
         ObjectType=str(window_type.Name) if window_type is not None else "Text2IFC fixed window",
         Tag=str(operation["operation_id"]),
-        OverallHeight=height,
-        OverallWidth=width,
+        OverallHeight=millimetres_to_project_units(model, height),
+        OverallWidth=millimetres_to_project_units(model, width),
     )
     if window_type is not None and window_type.RepresentationMaps:
         mapped_representations = [
@@ -788,7 +790,15 @@ def _applicator(*, operation: Mapping[str, Any], model: Any) -> dict[str, Any]:
     window.ObjectPlacement = _local_placement(
         model,
         relative_to=opening.ObjectPlacement,
-        location=(0.0, -thickness / 2.0 if uses_mapped_representation else 0.0, 0.0),
+        location=(
+            0.0,
+            (
+                -millimetres_to_project_units(model, thickness / 2.0)
+                if uses_mapped_representation
+                else 0.0
+            ),
+            0.0,
+        ),
     )
 
     voids = model.create_entity(
@@ -923,8 +933,16 @@ def _postcondition_checker(
         ),
         (
             "WINDOW_DIMENSIONS_MATCH_OPENING",
-            math.isclose(float(window.OverallWidth), expected["width"], abs_tol=1e-4)
-            and math.isclose(float(window.OverallHeight), expected["height"], abs_tol=1e-4),
+            math.isclose(
+                project_units_to_millimetres(model, window.OverallWidth),
+                expected["width"],
+                abs_tol=1e-4,
+            )
+            and math.isclose(
+                project_units_to_millimetres(model, window.OverallHeight),
+                expected["height"],
+                abs_tol=1e-4,
+            ),
             "/parameters/window",
         ),
     )
@@ -1090,12 +1108,12 @@ def _measure_comparison_adapter(
     )
     window_nominal_dimensions_match = (
         math.isclose(
-            float(window.OverallWidth),
+            project_units_to_millimetres(after_model, window.OverallWidth),
             expected_width,
             abs_tol=linear_tolerance,
         )
         and math.isclose(
-            float(window.OverallHeight),
+            project_units_to_millimetres(after_model, window.OverallHeight),
             expected_height,
             abs_tol=linear_tolerance,
         )

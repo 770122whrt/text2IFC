@@ -190,7 +190,7 @@ quantities 与单位。Window 旧版 0.1 comparator 保持兼容。
 dataset/processed/ifc-repair/phase11-door-offline/
 ```
 
-### 六案例矩阵
+### 七案例矩阵
 
 | 案例 | 操作 | operation 数 | 结果 |
 |---|---|---:|---|
@@ -200,6 +200,7 @@ dataset/processed/ifc-repair/phase11-door-offline/
 | LargeBuilding 完整重建 | 受控生成 DoorStyle | 1 | 通过 |
 | vvo 五门 | 一个 ChangeSet 批量修复 | 5 | 通过 |
 | vvo 两门两窗 | Door/Window 混合 ChangeSet | 4 | 通过 |
+| Dental Clinic 两门两窗 | 无 GUID/Name 几何定位、完整墙体重开洞 | 4 | 通过 |
 
 五门案例还注入了一个重复 Opening operation。审计拒绝整个 ChangeSet，
 `published=false`，且目标 IFC 不存在，证明不是逐项提交或部分成功。
@@ -233,6 +234,39 @@ GlobalId。任何目标或 Type 不能唯一解析时均停止并返回澄清，
 IFC GUID 正则扫描为 0 命中；解析结果为 4/4 resolved；最终一个 ChangeSet、
 4 个 operation、一个 repaired IFC，application、L1、L2、preservation 和 IFC
 重开全部通过。
+
+### Dental Clinic 无 GUID/Name、无残留 Opening 补充验收
+
+新增案例使用 `ifc-bench/projects/dental_clinic/arc.ifc`，模型包含 209,148 个
+实体。它不沿用 LargeBuilding、vvo 或 AdvancedProject，并进一步收紧公共定位
+边界：
+
+- request 和 RepairIntent 不包含 IFC GlobalId、Wall/Opening/Door/Window
+  Name、Type Name 或楼层 Name；
+- 四面宿主墙只由楼层标高、东/北朝向、墙长、墙高、墙厚组成的有界几何签名
+  唯一解析；开洞位置继续使用 `wall_local_start` 中心偏移；
+- damage 同时删除 2 个 Window、2 个 Door 及其 4 个 Opening，使宿主恢复为
+  不带目标洞口的正常墙体；
+- ChangeSet 只包含 2 个 `add_window_with_opening_to_wall` 和 2 个
+  `add_door_with_opening_to_wall`，不包含
+  `fill_existing_opening_with_door`；
+- 未指定复用 Type，因此使用受控生成的 WindowStyle/DoorStyle；Window 的
+  `IsExternal` 从 damaged IFC 中 surviving Wall 的 `Pset_WallCommon`
+  确定性派生，不由 LLM 猜测。
+
+Dental Clinic 使用米作为项目长度单位。ChangeSet 公共合同仍统一使用毫米；
+IFC 边界在写入 `OverallWidth`、`OverallHeight` 和 placement 时换算为项目单位，
+读取与 L1/L2 比较时再归一化为毫米。该模型也没有 `Body/MODEL_VIEW`
+SubContext，几何写入按确定性优先级回退到三维 `Model` Context。两项兼容均有
+回归测试，防止生成可打开但尺寸或位置放大 1000 倍的伪成功。
+
+本次删除并恢复的 Door 是：
+
+- `M_Single-Flush:0915 x 2134mm:0915 x 2134mm:229736`；
+- `M_Single-Flush:0915 x 2134mm:0915 x 2134mm:237881`。
+
+独立复跑和 Proof 校验均为 `passed`：4/4 target resolved、4/4 application、
+4/4 L1/L2、全局 preservation、三份 IFC2X3 重开和所有文件 SHA-256 均通过。
 
 ### LargeBuilding 单门
 
@@ -296,9 +330,9 @@ preservation 均通过，只有冻结的 180 s cold 性能门禁失败。因此�
 .venv\Scripts\python.exe scripts\ifc_repair\validate_success_cases.py --json
 ```
 
-当前成功案例集合共有 11 个案例、30 个 operation、137 个受哈希保护的文件，
-33 次 IFC2X3 独立重开，校验结果为 `passed`。其中 Phase 11 新增 6 个离线
-Door/混合案例、13 个 operation。离线证据明确标记
+当前成功案例集合共有 12 个案例、34 个 operation、149 个受哈希保护的文件，
+36 次 IFC2X3 独立重开，校验结果为 `passed`。其中 Phase 11 收录 7 个离线
+Door/混合案例、17 个 operation。离线证据明确标记
 `offline_bound_deterministic`，不会冒充真实 DeepSeek 证据。
 
 ## 10. 测试结果

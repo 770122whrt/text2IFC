@@ -46,8 +46,12 @@ def wall_dimensions_mm(wall: Any) -> dict[str, float]:
     start, end = straight_wall_axis(wall)
     dx = end[0] - start[0]
     dy = end[1] - start[1]
-    length = math.hypot(dx, dy)
-    direction = (dx / length, dy / length)
+    length_project_units = math.hypot(dx, dy)
+    millimetres_per_project_unit = (
+        ifcopenshell.util.unit.calculate_unit_scale(wall.file) * 1000.0
+    )
+    length = length_project_units * millimetres_per_project_unit
+    direction = (dx / length_project_units, dy / length_project_units)
     normal = (-direction[1], direction[0])
     shape = ifcopenshell.geom.create_shape(ifcopenshell.geom.settings(), wall)
     vertices = shape.geometry.verts
@@ -64,7 +68,7 @@ def wall_dimensions_mm(wall: Any) -> dict[str, float]:
     ]
     z_coordinates = [point[2] for point in points_mm]
     return {
-        "length": math.dist(start, end),
+        "length": length,
         "thickness": max(normal_coordinates) - min(normal_coordinates),
         "height": max(z_coordinates) - min(z_coordinates),
     }

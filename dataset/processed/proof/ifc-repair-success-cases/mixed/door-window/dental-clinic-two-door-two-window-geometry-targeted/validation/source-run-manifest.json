@@ -1,0 +1,122 @@
+{
+  "artifacts": {
+    "application.json": {
+      "bytes": 31051,
+      "path": "application.json",
+      "sha256": "sha256:cf47ac464f11527ba5fd1790ff035ca9611a581d0b28caa591e5b67829c2203d"
+    },
+    "changeset.json": {
+      "bytes": 17115,
+      "path": "changeset.json",
+      "sha256": "sha256:bdfc1e66ef9a2e269cdb221466f42eac6286a10258bbea62084790cbaa363b79"
+    },
+    "comparison.json": {
+      "bytes": 437065,
+      "path": "comparison.json",
+      "sha256": "sha256:5da0e64dc42400a5a92d51f4824c5583857699fcaea763da6bb43f2f306e1a64"
+    },
+    "damaged.ifc": {
+      "bytes": 13373985,
+      "path": "damaged.ifc",
+      "sha256": "sha256:c51b4dc754f7e4f462806c8f2579f791a064022976231e72077e6768c4eef878"
+    },
+    "evaluation.json": {
+      "bytes": 466914,
+      "path": "evaluation.json",
+      "sha256": "sha256:f7ba49540dfe1951986dbd9955187ff941435f6dcb4f0c8e1ca4e936f19591c8"
+    },
+    "original.ifc": {
+      "bytes": 13208096,
+      "path": "original.ifc",
+      "sha256": "sha256:b90fe57b8aa9329d762a564770e697d4f7357677484e3a78ede4ab6d2163c0c0"
+    },
+    "repair-intent.json": {
+      "bytes": 10577,
+      "path": "repair-intent.json",
+      "sha256": "sha256:ddfe46a2c21c6c0cde794134bcc65056a9e357d044a7c6539a75cd68ccc2ca50"
+    },
+    "repaired.ifc": {
+      "bytes": 13387418,
+      "path": "repaired.ifc",
+      "sha256": "sha256:7c5db7ccaaa57d1f44aa7ba664b3fe2487ace816ab5b36f4290f197f81c8be29"
+    },
+    "request.txt": {
+      "bytes": 1679,
+      "path": "request.txt",
+      "sha256": "sha256:b241ba0fcfdff94b2ef2c5137e4fce80f64aec690071abb364f7994c05328079"
+    },
+    "target-resolution.json": {
+      "bytes": 35938,
+      "path": "target-resolution.json",
+      "sha256": "sha256:1101c32aca7ca51115bb4fbc8e16480fc0881ffb734d8464966a176c2aaa36f9"
+    }
+  },
+  "case_id": "dental-clinic-two-door-two-window-geometry-targeted",
+  "damage": {
+    "door_openings_removed": true,
+    "removed_doors": [
+      {
+        "global_id": "1byTDaqS91rBnWJlv$n$m2",
+        "name": "M_Single-Flush:0915 x 2134mm:0915 x 2134mm:229736",
+        "operation_type": "SINGLE_SWING_LEFT",
+        "overall_height_mm": 2134.0,
+        "overall_width_mm": 914.9999999999999,
+        "type_global_id": "32P7ymuk1AoAxSJinuUtzt",
+        "type_name": "0915 x 2134mm"
+      },
+      {
+        "global_id": "35QeWibpT4DfyH3NIf2nTY",
+        "name": "M_Single-Flush:0915 x 2134mm:0915 x 2134mm:237881",
+        "operation_type": "SINGLE_SWING_LEFT",
+        "overall_height_mm": 2134.0,
+        "overall_width_mm": 914.9999999999999,
+        "type_global_id": "32P7ymuk1AoAxSJinuUtzt",
+        "type_name": "0915 x 2134mm"
+      }
+    ],
+    "removed_windows": [
+      {
+        "global_id": "0otfaO0qPDAhynjJ6DmgEk",
+        "height_mm": 1734.999999999995,
+        "ifc_class": "IfcWindow",
+        "name": "M_Fixed:1735 x 1000mm:1735 x 1000mm:261994",
+        "step_id": 1966,
+        "width_mm": 1000.0
+      },
+      {
+        "global_id": "2g$QZpOGbBUxSNx_ZgxJoj",
+        "height_mm": 1734.999999999995,
+        "ifc_class": "IfcWindow",
+        "name": "M_Fixed:1735 x 1000mm:1735 x 1000mm:254752",
+        "step_id": 2092,
+        "width_mm": 999.9999999999978
+      }
+    ],
+    "window_ids": [
+      "0otfaO0qPDAhynjJ6DmgEk",
+      "2g$QZpOGbBUxSNx_ZgxJoj"
+    ],
+    "window_openings_removed": true
+  },
+  "generated_type_ids": {
+    "operation-door-001": "37f8DLIO1TvgIgeJ5vejkx",
+    "operation-door-002": "37qTzNa5fLbOLQHBMHYsXE",
+    "operation-window-001": "2eZcTQ4YXLXuo7nkGd_LuE",
+    "operation-window-002": "1Kfo$PzFjQXeAnXsFw8aZK"
+  },
+  "one_atomic_changeset": true,
+  "operation_count": 4,
+  "operation_families": {
+    "door": 2,
+    "window": 2
+  },
+  "public_targeting": {
+    "guid_free": true,
+    "name_free": true,
+    "resolved_operation_count": 4,
+    "strategy": "storey_elevation_orientation_and_wall_dimensions"
+  },
+  "schema_version": "text2ifc/phase11-door-proof/0.2",
+  "status": "passed",
+  "synthetic_fallback_used": false
+}

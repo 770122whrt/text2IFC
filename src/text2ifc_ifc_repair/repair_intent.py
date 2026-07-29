@@ -654,7 +654,12 @@ def _has_target_selector(query: Mapping[str, Any]) -> bool:
         "direction",
     )
     return any(query.get(field) for field in scalar_fields) or any(
-        query.get(field) for field in ("names", "geometry_capabilities")
+        query.get(field)
+        for field in (
+            "names",
+            "geometry_capabilities",
+            "geometry_constraints",
+        )
     )
 
 

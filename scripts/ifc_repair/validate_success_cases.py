@@ -222,6 +222,12 @@ def _validate_case(root: Path, case: Mapping[str, Any]) -> dict[str, Any]:
                 roles,
                 operation_count=operation_count,
                 operation_types=expected_operation_types,
+                name_free=(
+                    source_manifest.get("public_targeting", {}).get(
+                        "name_free"
+                    )
+                    is True
+                ),
             )
     injected_failure_path = roles.get("injected_failure_application")
     if injected_failure_path is not None:
@@ -314,6 +320,7 @@ def _check_guid_free_targeting(
     *,
     operation_count: int,
     operation_types: set[str],
+    name_free: bool = False,
 ) -> None:
     request_path = roles.get("user_request")
     intent_path = roles.get("guid_free_repair_intent")
@@ -340,7 +347,21 @@ def _check_guid_free_targeting(
             for field in ("global_id", "storey_global_id", "host_global_id")
         ):
             raise ValueError("public target_query contains an IFC GlobalId")
-        if not query.get("names") or not query.get("storey_name"):
+        if name_free:
+            if query.get("names") or query.get("storey_name"):
+                raise ValueError(
+                    "name-free target_query contains a name selector"
+                )
+            constraints = query.get("geometry_constraints")
+            if (
+                not isinstance(constraints, list)
+                or len(constraints) < 2
+                or not query.get("direction")
+            ):
+                raise ValueError(
+                    "name-free target_query lacks bounded geometry selectors"
+                )
+        elif not query.get("names") or not query.get("storey_name"):
             raise ValueError("public target_query lacks name/storey selectors")
     resolution = _read_json(resolution_path)
     if resolution.get("status") != "resolved":

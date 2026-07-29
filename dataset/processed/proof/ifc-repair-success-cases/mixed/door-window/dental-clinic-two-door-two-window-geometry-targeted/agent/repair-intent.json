@@ -1,0 +1,268 @@
+{
+  "model_fingerprint": "sha256:c51b4dc754f7e4f462806c8f2579f791a064022976231e72077e6768c4eef878",
+  "operations": [
+    {
+      "attribute_intents": [],
+      "operation_id": "operation-window-001",
+      "operation_type": "add_window_with_opening_to_wall",
+      "parameters": {
+        "opening": {
+          "height_mm": 1734.999999999995,
+          "sill_height_mm": 905.0,
+          "width_mm": 1000.0
+        },
+        "position": {
+          "center_offset_mm": 4800.353891,
+          "reference": "wall_local_start"
+        },
+        "window": {
+          "fit_opening": true
+        }
+      },
+      "prototype_intent": null,
+      "provenance": [
+        {
+          "excerpt": "窗 1：在楼层标高 4570.000 mm、朝向 north、墙长 40577.439 mm、墙高 5137.000 mm、墙厚 267.000 mm 的直墙上开窗；以 wall_local_start 为基准，洞口中心偏移 4800.354 mm，宽 1000.000 mm、高 1735.000 mm、窗台高 905.000 mm；未指定复用类型，使用系统受控 WindowStyle 模板。",
+          "reference": "request:/operations/0",
+          "source_kind": "user_request"
+        }
+      ],
+      "target_query": {
+        "allowed_ifc_classes": [
+          "IfcWall"
+        ],
+        "direction": "north",
+        "geometry_capabilities": [
+          "straight_wall"
+        ],
+        "geometry_constraints": [
+          {
+            "field": "storey_elevation_mm",
+            "tolerance_mm": 1.0,
+            "value": 4570.0
+          },
+          {
+            "field": "wall_length_mm",
+            "tolerance_mm": 1.0,
+            "value": 40577.439
+          },
+          {
+            "field": "wall_height_mm",
+            "tolerance_mm": 1.0,
+            "value": 5137.0
+          },
+          {
+            "field": "wall_thickness_mm",
+            "tolerance_mm": 1.0,
+            "value": 267.0
+          }
+        ],
+        "max_candidates": 5,
+        "schema_version": "text2ifc/ifc-target-query/0.1",
+        "winner_margin": 10
+      }
+    },
+    {
+      "attribute_intents": [],
+      "operation_id": "operation-window-002",
+      "operation_type": "add_window_with_opening_to_wall",
+      "parameters": {
+        "opening": {
+          "height_mm": 1734.999999999995,
+          "sill_height_mm": 905.0,
+          "width_mm": 999.9999999999978
+        },
+        "position": {
+          "center_offset_mm": 15152.5,
+          "reference": "wall_local_start"
+        },
+        "window": {
+          "fit_opening": true
+        }
+      },
+      "prototype_intent": null,
+      "provenance": [
+        {
+          "excerpt": "窗 2：在楼层标高 0.000 mm、朝向 north、墙长 17081.456 mm、墙高 5027.000 mm、墙厚 267.000 mm 的直墙上开窗；以 wall_local_start 为基准，洞口中心偏移 15152.500 mm，宽 1000.000 mm、高 1735.000 mm、窗台高 905.000 mm；未指定复用类型，使用系统受控 WindowStyle 模板。",
+          "reference": "request:/operations/1",
+          "source_kind": "user_request"
+        }
+      ],
+      "target_query": {
+        "allowed_ifc_classes": [
+          "IfcWall"
+        ],
+        "direction": "north",
+        "geometry_capabilities": [
+          "straight_wall"
+        ],
+        "geometry_constraints": [
+          {
+            "field": "storey_elevation_mm",
+            "tolerance_mm": 1.0,
+            "value": 0.0
+          },
+          {
+            "field": "wall_length_mm",
+            "tolerance_mm": 1.0,
+            "value": 17081.456
+          },
+          {
+            "field": "wall_height_mm",
+            "tolerance_mm": 1.0,
+            "value": 5027.0
+          },
+          {
+            "field": "wall_thickness_mm",
+            "tolerance_mm": 1.0,
+            "value": 267.0
+          }
+        ],
+        "max_candidates": 5,
+        "schema_version": "text2ifc/ifc-target-query/0.1",
+        "winner_margin": 10
+      }
+    },
+    {
+      "attribute_intents": [],
+      "operation_id": "operation-door-001",
+      "operation_type": "add_door_with_opening_to_wall",
+      "parameters": {
+        "door": {
+          "formal_enum_explicit": true,
+          "operation_type": "SINGLE_SWING_LEFT",
+          "overall_height_mm": 2134.0,
+          "overall_width_mm": 914.9999999999999
+        },
+        "opening": {
+          "dimension_meaning": "overall_opening",
+          "height_mm": 2134.0,
+          "sill_height_mm": 0.0,
+          "width_mm": 915.0
+        },
+        "position": {
+          "center_offset_mm": 2118.499859,
+          "reference": "wall_local_start"
+        }
+      },
+      "prototype_intent": null,
+      "provenance": [
+        {
+          "excerpt": "门 1：在楼层标高 0.000 mm、朝向 east、墙长 3970.025 mm、墙高 4468.000 mm、墙厚 124.000 mm 的直墙上重新开洞并安装门；以 wall_local_start 为基准，洞口中心偏移 2118.500 mm，洞口宽 915.000 mm、高 2134.000 mm、门槛高 0.000 mm；门宽 915.000 mm、高 2134.000 mm，开启方式 SINGLE_SWING_LEFT；未指定复用类型，使用系统受控 DoorStyle 模板。",
+          "reference": "request:/operations/2",
+          "source_kind": "user_request"
+        }
+      ],
+      "target_query": {
+        "allowed_ifc_classes": [
+          "IfcWall"
+        ],
+        "direction": "east",
+        "geometry_capabilities": [
+          "straight_wall"
+        ],
+        "geometry_constraints": [
+          {
+            "field": "storey_elevation_mm",
+            "tolerance_mm": 1.0,
+            "value": 0.0
+          },
+          {
+            "field": "wall_length_mm",
+            "tolerance_mm": 1.0,
+            "value": 3970.025
+          },
+          {
+            "field": "wall_height_mm",
+            "tolerance_mm": 1.0,
+            "value": 4468.0
+          },
+          {
+            "field": "wall_thickness_mm",
+            "tolerance_mm": 1.0,
+            "value": 124.0
+          }
+        ],
+        "max_candidates": 5,
+        "schema_version": "text2ifc/ifc-target-query/0.1",
+        "winner_margin": 10
+      }
+    },
+    {
+      "attribute_intents": [],
+      "operation_id": "operation-door-002",
+      "operation_type": "add_door_with_opening_to_wall",
+      "parameters": {
+        "door": {
+          "formal_enum_explicit": true,
+          "operation_type": "SINGLE_SWING_LEFT",
+          "overall_height_mm": 2134.0,
+          "overall_width_mm": 914.9999999999999
+        },
+        "opening": {
+          "dimension_meaning": "overall_opening",
+          "height_mm": 2134.0,
+          "sill_height_mm": 0.0,
+          "width_mm": 915.0
+        },
+        "position": {
+          "center_offset_mm": 1838.5,
+          "reference": "wall_local_start"
+        }
+      },
+      "prototype_intent": null,
+      "provenance": [
+        {
+          "excerpt": "门 2：在楼层标高 4570.000 mm、朝向 east、墙长 5640.000 mm、墙高 4578.000 mm、墙厚 124.000 mm 的直墙上重新开洞并安装门；以 wall_local_start 为基准，洞口中心偏移 1838.500 mm，洞口宽 915.000 mm、高 2134.000 mm、门槛高 0.000 mm；门宽 915.000 mm、高 2134.000 mm，开启方式 SINGLE_SWING_LEFT；未指定复用类型，使用系统受控 DoorStyle 模板。",
+          "reference": "request:/operations/3",
+          "source_kind": "user_request"
+        }
+      ],
+      "target_query": {
+        "allowed_ifc_classes": [
+          "IfcWall"
+        ],
+        "direction": "east",
+        "geometry_capabilities": [
+          "straight_wall"
+        ],
+        "geometry_constraints": [
+          {
+            "field": "storey_elevation_mm",
+            "tolerance_mm": 1.0,
+            "value": 4570.0
+          },
+          {
+            "field": "wall_length_mm",
+            "tolerance_mm": 1.0,
+            "value": 5640.0
+          },
+          {
+            "field": "wall_height_mm",
+            "tolerance_mm": 1.0,
+            "value": 4578.0
+          },
+          {
+            "field": "wall_thickness_mm",
+            "tolerance_mm": 1.0,
+            "value": 124.0
+          }
+        ],
+        "max_candidates": 5,
+        "schema_version": "text2ifc/ifc-target-query/0.1",
+        "winner_margin": 10
+      }
+    }
+  ],
+  "prompt_fingerprint": "sha256:e8a514f364e281a21df3fc909330ced5a03ea0b9537e8241b96a14de6c9e9132",
+  "provenance": [
+    {
+      "excerpt": "请在一个原子 ChangeSet 中同时恢复以下两扇窗和两扇门；所有宿主墙只按楼层标高、朝向、墙体长高厚与墙局部位置定位，不使用 IFC 标识符或对象名称。\n窗 1：在楼层标高 4570.000 mm、朝向 north、墙长 40577.439 mm、墙高 5137.000 mm、墙厚 267.000 mm 的直墙上开窗；以 wall_local_start 为基准，洞口中心偏移 4800.354 mm，宽 1000.000 mm、高 1735.000 mm、窗台高 905.000 mm；未指定复用类型，使用系统受控 WindowStyle 模板。\n窗 2：在楼层标高 0.000 mm、朝向 north、墙长 17081.456 mm、墙高 5027.000 mm、墙厚 267.000 mm 的直墙上开窗；以 wall_local_start 为基准，洞口中心偏移 15152.500 mm，宽 1000.000 mm、高 1735.000 mm、窗台高 905.000 mm；未指定复用类型，使用系统受控 WindowStyle 模板。\n门 1：在楼层标高 0.000 mm、朝向 east、墙长 3970.025 mm、墙高 4468.000 mm、墙厚 124.000 mm 的直墙上重新开洞并安装门；以 wall_local_start 为基准，洞口中心偏移 2118.500 mm，洞口宽 915.000 mm、高 2134.000 mm、门槛高 0.000 mm；门宽 915.000 mm、高 2134.000 mm，开启方式 SINGLE_SWING_LEFT；未指定复用类型，使用系统受控 DoorStyle 模板。\n门 2：在楼层标高 4570.000 mm、朝向 east、墙长 5640.000 mm、墙高 4578.000 mm、墙厚 124.000 mm 的直墙上重新开洞并安装门；以 wall_local_start 为基准，洞口中心偏移 1838.500 mm，洞口宽 915.000 mm、高 2134.000 mm、门槛高 0.000 mm；门宽 915.000 mm、高 2134.000 mm，开启方式 SINGLE_SWING_LEFT；未指定复用类型，使用系统受控 DoorStyle 模板。",
+      "reference": "request:/text",
+      "source_kind": "user_request"
+    }
+  ],
+  "request_id": "request-dental-clinic-two-door-two-window-geometry-targeted",
+  "schema_version": "text2ifc/ifc-repair-intent/0.1",
+  "source_request_hash": "sha256:8371932fd1c49a08424379bacbfeed92367d3dca28d46b7493c061400b2a6549"
+}

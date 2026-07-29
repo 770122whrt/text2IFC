@@ -31,6 +31,7 @@ class TargetQuery:
     space: str | None = None
     direction: str | None = None
     geometry_capabilities: tuple[str, ...] = ()
+    geometry_constraints: tuple[dict[str, Any], ...] = ()
     attribute_intents: tuple[dict[str, Any], ...] = ()
     max_candidates: int = 5
     winner_margin: int = 10
@@ -51,6 +52,9 @@ class TargetQuery:
         for key in ("allowed_ifc_classes", "names", "geometry_capabilities"):
             if key in payload:
                 payload[key] = tuple(payload[key])
+        payload["geometry_constraints"] = tuple(
+            dict(item) for item in payload.get("geometry_constraints", ())
+        )
         payload["attribute_intents"] = tuple(dict(item) for item in payload.get("attribute_intents", ()))
         return cls(**payload)
 
@@ -219,6 +223,11 @@ def _hard_constraint_state(query: TargetQuery, record: ElementRecord) -> tuple[b
         return False, False
     if query.geometry_capabilities and record.geometry_capability not in query.geometry_capabilities:
         return False, True
+    if any(
+        not _geometry_constraint_matches(constraint, record)
+        for constraint in query.geometry_constraints
+    ):
+        return False, False
     if query.global_id and record.ifc_global_id != query.global_id:
         return False, False
     if query.global_id and query.names and normalized_name_score(query.names, record)[0] == 0:
@@ -236,9 +245,68 @@ def _candidate_evidence(query: TargetQuery, record: ElementRecord) -> tuple[Cand
         _evidence("ifc_class", list(query.allowed_ifc_classes), record.ifc_class, "IfcProduct.is_a", matched=_class_allowed(record.ifc_class, query.allowed_ifc_classes)),
         _evidence("name", list(query.names) if query.names else None, record.name, "aliases", matched=normalized_name_score(query.names, record)[0] > 0 if query.names else None),
         _evidence("storey", query.storey_name or query.storey_global_id, record.storey_name or record.storey_global_id, "spatial_relationship"),
-        _evidence("geometry_capability", list(query.geometry_capabilities) if query.geometry_capabilities else None, record.geometry_capability, "adapter"),
+        _evidence(
+            "geometry_capability",
+            (
+                list(query.geometry_capabilities)
+                if query.geometry_capabilities
+                else None
+            ),
+            record.geometry_capability,
+            "adapter",
+            matched=(
+                record.geometry_capability in query.geometry_capabilities
+                if query.geometry_capabilities
+                else None
+            ),
+        ),
     ]
+    entries.extend(
+        _evidence(
+            f"geometry:{constraint['field']}",
+            {
+                "value": constraint["value"],
+                "tolerance_mm": constraint["tolerance_mm"],
+            },
+            _geometry_constraint_value(str(constraint["field"]), record),
+            "ifc_geometry",
+            matched=_geometry_constraint_matches(constraint, record),
+        )
+        for constraint in query.geometry_constraints
+    )
     return tuple(entries)
+
+
+def _geometry_constraint_matches(
+    constraint: Mapping[str, Any], record: ElementRecord
+) -> bool:
+    actual = _geometry_constraint_value(str(constraint["field"]), record)
+    if actual is None:
+        return False
+    return abs(actual - float(constraint["value"])) <= float(
+        constraint["tolerance_mm"]
+    )
+
+
+def _geometry_constraint_value(
+    field_name: str, record: ElementRecord
+) -> float | None:
+    if field_name == "storey_elevation_mm":
+        value = record.facets.get("storey_elevation_mm")
+    else:
+        dimension_key = {
+            "wall_length_mm": "length",
+            "wall_height_mm": "height",
+            "wall_thickness_mm": "thickness",
+        }.get(field_name)
+        if dimension_key is None:
+            return None
+        value = record.geometry_summary.get("dimensions_mm", {}).get(
+            dimension_key
+        )
+    if isinstance(value, bool) or not isinstance(value, (int, float)):
+        return None
+    return float(value)
 
 
 def _evidence(field: str, requested: Any, actual: Any, provenance: str, matched: bool | None = None) -> CandidateEvidence:

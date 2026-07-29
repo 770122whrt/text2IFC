@@ -104,6 +104,28 @@
           "uniqueItems": true,
           "items": {"type": "string", "minLength": 1, "maxLength": 128}
         },
+        "geometry_constraints": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 8,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["field", "value", "tolerance_mm"],
+            "properties": {
+              "field": {
+                "enum": [
+                  "storey_elevation_mm",
+                  "wall_length_mm",
+                  "wall_height_mm",
+                  "wall_thickness_mm"
+                ]
+              },
+              "value": {"type": "number"},
+              "tolerance_mm": {"type": "number", "minimum": 0, "maximum": 1000}
+            }
+          }
+        },
         "attribute_intents": {
           "type": "array",
           "maxItems": 32,

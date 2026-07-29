@@ -12,6 +12,8 @@ from pathlib import Path
 from typing import Any
 
 import ifcopenshell
+import ifcopenshell.util.element
+import ifcopenshell.util.unit
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -98,6 +100,16 @@ VVO_MIXED_CASE = {
     "window_case": ROOT
     / "dataset/manifests/ifc-repair-cases/vvo-five-window-001.private.json",
 }
+DENTAL_CLINIC_MIXED_CASE = {
+    "case_id": "dental-clinic-two-door-two-window-geometry-targeted",
+    "source": ROOT
+    / "dataset/external/ifc-bench/projects/dental_clinic/arc.ifc",
+    "private_case": ROOT
+    / "dataset/manifests/ifc-repair-cases/dental-clinic-mixed-001.private.json",
+    "targeting_mode": "geometry_signature",
+    "remove_door_openings": True,
+    "generated_types": True,
+}
 GENERATED_DOOR_CASE = {
     "case_id": "largebuilding-generated-door-type",
     "source": ROOT
@@ -127,6 +139,9 @@ def _write(path: Path, value: Any) -> None:
 
 def _source_chain(source: Path, door_id: str) -> dict[str, Any]:
     model = ifcopenshell.open(str(source))
+    millimetres_per_project_unit = (
+        ifcopenshell.util.unit.calculate_unit_scale(model) * 1000.0
+    )
     door = model.by_guid(door_id)
     opening = door.FillsVoids[0].RelatingOpeningElement
     wall = opening.VoidsElements[0].RelatingBuildingElement
@@ -151,8 +166,12 @@ def _source_chain(source: Path, door_id: str) -> dict[str, Any]:
         "door": {
             "global_id": str(door.GlobalId),
             "name": None if door.Name is None else str(door.Name),
-            "overall_width_mm": float(door.OverallWidth),
-            "overall_height_mm": float(door.OverallHeight),
+            "overall_width_mm": (
+                float(door.OverallWidth) * millimetres_per_project_unit
+            ),
+            "overall_height_mm": (
+                float(door.OverallHeight) * millimetres_per_project_unit
+            ),
         },
         "opening": {
             "global_id": str(opening.GlobalId),
@@ -1199,6 +1218,231 @@ def _guid_free_door_request(chain: dict[str, Any]) -> str:
     )
 
 
+def _geometry_constraints(
+    signature: dict[str, Any],
+) -> list[dict[str, Any]]:
+    tolerance = float(signature["tolerance_mm"])
+    return [
+        {
+            "field": "storey_elevation_mm",
+            "value": float(signature["storey_elevation_mm"]),
+            "tolerance_mm": tolerance,
+        },
+        {
+            "field": "wall_length_mm",
+            "value": float(signature["length_mm"]),
+            "tolerance_mm": tolerance,
+        },
+        {
+            "field": "wall_height_mm",
+            "value": float(signature["height_mm"]),
+            "tolerance_mm": tolerance,
+        },
+        {
+            "field": "wall_thickness_mm",
+            "value": float(signature["thickness_mm"]),
+            "tolerance_mm": tolerance,
+        },
+    ]
+
+
+def _geometry_target_query(signature: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "schema_version": "text2ifc/ifc-target-query/0.1",
+        "allowed_ifc_classes": ["IfcWall"],
+        "direction": str(signature["direction"]),
+        "geometry_capabilities": ["straight_wall"],
+        "geometry_constraints": _geometry_constraints(signature),
+        "max_candidates": 5,
+        "winner_margin": 10,
+    }
+
+
+def _geometry_signature_text(signature: dict[str, Any]) -> str:
+    return (
+        f"楼层标高 {float(signature['storey_elevation_mm']):.3f} mm、"
+        f"朝向 {signature['direction']}、墙长 "
+        f"{float(signature['length_mm']):.3f} mm、墙高 "
+        f"{float(signature['height_mm']):.3f} mm、墙厚 "
+        f"{float(signature['thickness_mm']):.3f} mm 的直墙"
+    )
+
+
+def _geometry_window_request(
+    target: dict[str, Any],
+    signature: dict[str, Any],
+    *,
+    ordinal: int,
+) -> str:
+    return (
+        f"窗 {ordinal}：在{_geometry_signature_text(signature)}上开窗；"
+        "以 wall_local_start 为基准，洞口中心偏移 "
+        f"{float(target['opening']['geometric_center_offset_mm']):.3f} mm，"
+        f"宽 {float(target['window']['width_mm']):.3f} mm、高 "
+        f"{float(target['window']['height_mm']):.3f} mm、窗台高 "
+        f"{float(target['opening']['sill_height_mm']):.3f} mm；"
+        "未指定复用类型，使用系统受控 WindowStyle 模板。"
+    )
+
+
+def _geometry_door_request(
+    chain: dict[str, Any],
+    signature: dict[str, Any],
+    *,
+    ordinal: int,
+) -> str:
+    return (
+        f"门 {ordinal}：在{_geometry_signature_text(signature)}上重新开洞并安装门；"
+        "以 wall_local_start 为基准，洞口中心偏移 "
+        f"{float(chain['opening']['center_offset_mm']):.3f} mm，"
+        f"洞口宽 {float(chain['opening']['width_mm']):.3f} mm、高 "
+        f"{float(chain['opening']['height_mm']):.3f} mm、门槛高 "
+        f"{float(chain['opening']['sill_height_mm']):.3f} mm；门宽 "
+        f"{float(chain['door']['overall_width_mm']):.3f} mm、高 "
+        f"{float(chain['door']['overall_height_mm']):.3f} mm，开启方式 "
+        f"{chain['style']['operation_type']}；未指定复用类型，"
+        "使用系统受控 DoorStyle 模板。"
+    )
+
+
+def _geometry_targeted_mixed_intent(
+    *,
+    case_id: str,
+    request: str,
+    window_targets: list[dict[str, Any]],
+    window_signatures: list[dict[str, Any]],
+    door_chains: list[dict[str, Any]],
+    door_signatures: list[dict[str, Any]],
+    model_fingerprint: str,
+    registry: Any,
+) -> RepairIntent:
+    window_lines = [
+        _geometry_window_request(target, signature, ordinal=index)
+        for index, (target, signature) in enumerate(
+            zip(window_targets, window_signatures, strict=True), 1
+        )
+    ]
+    door_lines = [
+        _geometry_door_request(chain, signature, ordinal=index)
+        for index, (chain, signature) in enumerate(
+            zip(door_chains, door_signatures, strict=True), 1
+        )
+    ]
+    operations: list[dict[str, Any]] = []
+    for index, (target, signature, excerpt) in enumerate(
+        zip(
+            window_targets,
+            window_signatures,
+            window_lines,
+            strict=True,
+        ),
+        1,
+    ):
+        operation_id = f"operation-window-{index:03d}"
+        operations.append(
+            {
+                "operation_id": operation_id,
+                "operation_type": "add_window_with_opening_to_wall",
+                "target_query": _geometry_target_query(signature),
+                "parameters": {
+                    "position": {
+                        "reference": "wall_local_start",
+                        "center_offset_mm": target["opening"][
+                            "geometric_center_offset_mm"
+                        ],
+                    },
+                    "opening": {
+                        "width_mm": target["window"]["width_mm"],
+                        "height_mm": target["window"]["height_mm"],
+                        "sill_height_mm": target["opening"][
+                            "sill_height_mm"
+                        ],
+                    },
+                    "window": {"fit_opening": True},
+                },
+                "attribute_intents": [],
+                "prototype_intent": None,
+                "provenance": [
+                    _public_provenance(
+                        f"request:/operations/{index - 1}", excerpt
+                    )
+                ],
+            }
+        )
+    door_offset = len(operations)
+    for index, (chain, signature, excerpt) in enumerate(
+        zip(door_chains, door_signatures, door_lines, strict=True), 1
+    ):
+        operation_id = f"operation-door-{index:03d}"
+        operations.append(
+            {
+                "operation_id": operation_id,
+                "operation_type": ADD_OPERATION_TYPE,
+                "target_query": _geometry_target_query(signature),
+                "parameters": {
+                    "position": {
+                        "reference": "wall_local_start",
+                        "center_offset_mm": chain["opening"][
+                            "center_offset_mm"
+                        ],
+                    },
+                    "opening": {
+                        "width_mm": chain["opening"]["width_mm"],
+                        "height_mm": chain["opening"]["height_mm"],
+                        "sill_height_mm": chain["opening"][
+                            "sill_height_mm"
+                        ],
+                        "dimension_meaning": "overall_opening",
+                    },
+                    "door": {
+                        "overall_width_mm": chain["door"][
+                            "overall_width_mm"
+                        ],
+                        "overall_height_mm": chain["door"][
+                            "overall_height_mm"
+                        ],
+                        "operation_type": chain["style"][
+                            "operation_type"
+                        ],
+                        "formal_enum_explicit": True,
+                        **(
+                            {"notdefined_accepted": True}
+                            if chain["style"]["operation_type"]
+                            == "NOTDEFINED"
+                            else {}
+                        ),
+                    },
+                },
+                "attribute_intents": [],
+                "prototype_intent": None,
+                "provenance": [
+                    _public_provenance(
+                        f"request:/operations/{door_offset + index - 1}",
+                        excerpt,
+                    )
+                ],
+            }
+        )
+    document = {
+        "schema_version": "text2ifc/ifc-repair-intent/0.1",
+        "request_id": f"request-{case_id}",
+        "source_request_hash": _text_hash(request),
+        "model_fingerprint": model_fingerprint,
+        "prompt_fingerprint": _text_hash(
+            "phase11-geometry-signature-mixed-targeting/0.1"
+        ),
+        "operations": operations,
+        "provenance": [
+            _public_provenance("request:/text", request)
+        ],
+    }
+    return RepairIntent.from_dict(
+        document,
+        registry=registry,
+        require_complete=False,
+    )
+
+
 def _guid_free_mixed_intent(
     *,
     request: str,
@@ -1415,6 +1659,338 @@ def _bind_mixed_operations(
     return bound
 
 
+def _generated_type_semantic_assignment(
+    authority: dict[str, Any],
+    *,
+    operation_id: str,
+    scope: str,
+) -> dict[str, Any]:
+    return {
+        "operation_id": operation_id,
+        "scope": scope,
+        "fact_key": "relationship:type",
+        "source_fact_key": "relationship:type",
+        "value": authority["global_id"],
+        "value_type": authority["ifc_class"],
+        "unit": None,
+        "ownership": "type_inherited",
+        "applicability": "required",
+        "source_kind": "deterministic_derived",
+        "source_ref": f"generated-type:{authority['global_id']}",
+        "provenance": [
+            f"generated-type-template:{authority['template_version']}"
+        ],
+        "derivation": {
+            "template_id": authority["template_id"],
+            "template_version": authority["template_version"],
+            "ifc_class": authority["ifc_class"],
+            "formal_attributes": authority["formal_attributes"],
+            "template_digest": authority["template_digest"],
+            "template": authority["template"],
+        },
+        "authoring_action": "inherit_from_type",
+    }
+
+
+def _resolved_generated_type(
+    operation: ResolvedOperation,
+) -> dict[str, Any]:
+    matches = [
+        dict(item)
+        for item in operation.authorized_semantics
+        if item.get("kind") == "system_generated_type"
+    ]
+    if len(matches) != 1:
+        raise RuntimeError(
+            "PHASE11_GENERATED_TYPE_AUTHORITY_REQUIRED:"
+            f"{operation.operation_id}:{len(matches)}"
+        )
+    return matches[0]
+
+
+def _generated_window_operation(
+    target: dict[str, Any],
+    authority: ResolvedOperation,
+    *,
+    is_external: bool,
+) -> tuple[dict[str, Any], str]:
+    operation_id = authority.operation_id
+    generated_type = _resolved_generated_type(authority)
+    opening = authority.parameters["opening"]
+    assignments = [
+        _generated_type_semantic_assignment(
+            generated_type,
+            operation_id=operation_id,
+            scope="window_occurrence",
+        ),
+        {
+            "operation_id": operation_id,
+            "scope": "window_occurrence",
+            "fact_key": "pset:Pset_WindowCommon.IsExternal",
+            "source_fact_key": "pset:Pset_WindowCommon.IsExternal",
+            "value": is_external,
+            "value_type": "IfcBoolean",
+            "unit": None,
+            "ownership": "occurrence_direct",
+            "applicability": "required",
+            "source_kind": "deterministic_derived",
+            "source_ref": "damaged-ifc:/resolved-wall/Pset_WallCommon.IsExternal",
+            "provenance": [
+                "deterministic-host-externality-projection:0.1"
+            ],
+            "authoring_action": "set_occurrence_pset",
+        },
+    ]
+    for fact_key, value, value_type in (
+        (
+            "quantity:window-base.Width",
+            opening["width_mm"],
+            "IfcQuantityLength",
+        ),
+        (
+            "quantity:window-base.Height",
+            opening["height_mm"],
+            "IfcQuantityLength",
+        ),
+        (
+            "quantity:window-base.Area",
+            float(opening["width_mm"]) * float(opening["height_mm"]),
+            "IfcQuantityArea",
+        ),
+    ):
+        assignments.append(
+            {
+                "operation_id": operation_id,
+                "scope": "window_occurrence",
+                "fact_key": fact_key,
+                "source_fact_key": fact_key,
+                "value": value,
+                "value_type": value_type,
+                "unit": None,
+                "ownership": "occurrence_direct",
+                "applicability": "required",
+                "source_kind": "deterministic_derived",
+                "source_ref": (
+                    "resolved:/operation/window-dimensions"
+                ),
+                "provenance": [
+                    "registered-window-parameter-policy:0.2"
+                ],
+                "authoring_action": "set_quantity",
+            }
+        )
+    return (
+        {
+            "operation_id": operation_id,
+            "operation_type": "add_window_with_opening_to_wall",
+            "target": {"wall_global_id": authority.target_global_id},
+            "parameters": authority.to_dict()["parameters"],
+            "evidence_refs": ["request:/operation"],
+            "semantic_manifest": {
+                "manifest_id": f"manifest-{operation_id}",
+                "policy_id": "window.add-with-opening.l2",
+                "policy_version": "0.2",
+            },
+            "semantic_assignments": assignments,
+        },
+        str(generated_type["global_id"]),
+    )
+
+
+def _generated_door_bound_operation(
+    authority: ResolvedOperation,
+) -> tuple[dict[str, Any], str]:
+    operation_id = authority.operation_id
+    generated_type = _resolved_generated_type(authority)
+    return (
+        {
+            "operation_id": operation_id,
+            "operation_type": ADD_OPERATION_TYPE,
+            "target": {"wall_global_id": authority.target_global_id},
+            "parameters": authority.to_dict()["parameters"],
+            "evidence_refs": ["request:/operation"],
+            "semantic_manifest": {
+                "manifest_id": f"manifest-{operation_id}",
+                "policy_id": "door.add-with-opening.l2",
+                "policy_version": "0.1",
+            },
+            "semantic_assignments": [
+                _generated_type_semantic_assignment(
+                    generated_type,
+                    operation_id=operation_id,
+                    scope="door_occurrence",
+                )
+            ],
+        },
+        str(generated_type["global_id"]),
+    )
+
+
+def _bind_geometry_mixed_operations(
+    *,
+    resolution: Any,
+    window_targets: list[dict[str, Any]],
+    door_chains: list[dict[str, Any]],
+    damaged: Path,
+) -> tuple[list[dict[str, Any]], dict[str, str]]:
+    resolved = {
+        item.operation_id: item for item in resolution.operations
+    }
+    bound: list[dict[str, Any]] = []
+    generated_type_ids: dict[str, str] = {}
+    for index, target in enumerate(window_targets, 1):
+        operation_id = f"operation-window-{index:03d}"
+        authority = resolved[operation_id]
+        if authority.target_global_id != str(target["wall"]["global_id"]):
+            raise RuntimeError(
+                f"PHASE11_WINDOW_GEOMETRY_MISBOUND:{operation_id}"
+            )
+        operation, type_id = _generated_window_operation(
+            target,
+            authority,
+            is_external=_wall_is_external(
+                damaged, authority.target_global_id
+            ),
+        )
+        bound.append(operation)
+        generated_type_ids[operation_id] = type_id
+    for index, chain in enumerate(door_chains, 1):
+        operation_id = f"operation-door-{index:03d}"
+        authority = resolved[operation_id]
+        if authority.target_global_id != str(chain["wall"]["global_id"]):
+            raise RuntimeError(
+                f"PHASE11_DOOR_GEOMETRY_MISBOUND:{operation_id}"
+            )
+        operation, type_id = _generated_door_bound_operation(authority)
+        bound.append(operation)
+        generated_type_ids[operation_id] = type_id
+    return bound, generated_type_ids
+
+
+def _wall_is_external(ifc_path: Path, wall_global_id: str) -> bool:
+    model = ifcopenshell.open(str(ifc_path))
+    wall = model.by_guid(str(wall_global_id))
+    psets = ifcopenshell.util.element.get_psets(
+        wall,
+        psets_only=True,
+        should_inherit=True,
+    )
+    wall_common = next(
+        (
+            value
+            for name, value in psets.items()
+            if str(name).casefold() == "pset_wallcommon"
+        ),
+        None,
+    )
+    if not isinstance(wall_common, dict):
+        raise RuntimeError(
+            f"PHASE11_WALL_EXTERNALITY_UNAVAILABLE:{wall_global_id}"
+        )
+    value = wall_common.get("IsExternal")
+    if not isinstance(value, bool):
+        raise RuntimeError(
+            f"PHASE11_WALL_EXTERNALITY_UNAVAILABLE:{wall_global_id}"
+        )
+    return value
+
+
+def _expected_generated_window_facts(
+    target: dict[str, Any],
+    damaged: Path,
+    generated_type_id: str,
+) -> tuple[SemanticFact, ...]:
+    model = ifcopenshell.open(str(damaged))
+    wall = model.by_guid(target["wall"]["global_id"])
+    storey = wall.ContainedInStructure[0].RelatingStructure
+    width = float(target["window"]["width_mm"])
+    height = float(target["window"]["height_mm"])
+    is_external = _wall_is_external(
+        damaged, str(target["wall"]["global_id"])
+    )
+    values = (
+        (
+            "relationship:type",
+            generated_type_id,
+            "IfcWindowStyle",
+            EvidenceSourceKind.DETERMINISTIC_POLICY,
+            True,
+        ),
+        (
+            "relationship:host",
+            target["wall"]["global_id"],
+            target["wall"]["ifc_class"],
+            EvidenceSourceKind.SURVIVING_HOST,
+            False,
+        ),
+        (
+            "relationship:storey",
+            str(storey.GlobalId),
+            "IfcBuildingStorey",
+            EvidenceSourceKind.SURVIVING_HOST,
+            False,
+        ),
+        (
+            "attribute:OverallWidth",
+            width,
+            "IfcPositiveLengthMeasure",
+            EvidenceSourceKind.EXPLICIT_REQUEST,
+            False,
+        ),
+        (
+            "attribute:OverallHeight",
+            height,
+            "IfcPositiveLengthMeasure",
+            EvidenceSourceKind.EXPLICIT_REQUEST,
+            False,
+        ),
+        (
+            "pset:Pset_WindowCommon.IsExternal",
+            is_external,
+            "IfcBoolean",
+            EvidenceSourceKind.SURVIVING_HOST,
+            False,
+        ),
+        (
+            "quantity:window-base.Width",
+            width,
+            "IfcQuantityLength",
+            EvidenceSourceKind.DETERMINISTIC_POLICY,
+            False,
+        ),
+        (
+            "quantity:window-base.Height",
+            height,
+            "IfcQuantityLength",
+            EvidenceSourceKind.DETERMINISTIC_POLICY,
+            False,
+        ),
+        (
+            "quantity:window-base.Area",
+            width * height,
+            "IfcQuantityArea",
+            EvidenceSourceKind.DETERMINISTIC_POLICY,
+            False,
+        ),
+    )
+    return tuple(
+        SemanticFact(
+            fact_key=key,
+            value=value,
+            value_type=value_type,
+            unit=None,
+            inherited=inherited,
+            pset_path=None,
+            entity_source="public-request",
+            source_kind=source_kind,
+            source_ref="request:/operation",
+            provenance=("phase11-geometry-mixed-request",),
+            occurrence_scope="window_occurrence",
+        )
+        for key, value, value_type, source_kind, inherited in values
+    )
+
+
 def run_mixed_case(
     case: dict[str, Any], output_root: Path
 ) -> dict[str, Any]:
@@ -1425,10 +2001,28 @@ def run_mixed_case(
         shutil.rmtree(case_dir)
     case_dir.mkdir(parents=True)
     source = Path(case["source"])
+    geometry_targeting = (
+        case.get("targeting_mode") == "geometry_signature"
+    )
+    private_case_path = Path(
+        case.get("private_case") or case["window_case"]
+    )
     private_window_case = json.loads(
-        Path(case["window_case"]).read_text(encoding="utf-8")
+        private_case_path.read_text(encoding="utf-8")
     )
     selected_windows = tuple(private_window_case["targets"][:2])
+    window_signatures = [
+        dict(item["wall_signature"]) for item in selected_windows
+    ] if geometry_targeting else []
+    door_target_records = list(
+        private_window_case.get("door_targets", ())
+    )
+    door_global_ids = tuple(
+        str(item["door_global_id"]) for item in door_target_records
+    ) if geometry_targeting else tuple(case["door_global_ids"])
+    door_signatures = [
+        dict(item["wall_signature"]) for item in door_target_records
+    ] if geometry_targeting else []
     window_fixture = case_dir / "window-fixture"
     remove_windows_and_openings_batch(
         source_path=source,
@@ -1440,8 +2034,8 @@ def run_mixed_case(
     door_mutation = remove_doors_batch(
         source_path=window_fixture / "damaged.ifc",
         output_dir=final_fixture,
-        door_global_ids=tuple(case["door_global_ids"]),
-        preserve_openings=True,
+        door_global_ids=door_global_ids,
+        preserve_openings=not bool(case.get("remove_door_openings")),
     )
     damaged = final_fixture / "damaged.ifc"
     window_manifest = json.loads(
@@ -1450,29 +2044,81 @@ def run_mixed_case(
         )
     )
     window_targets = window_manifest["targets"]
+    if geometry_targeting:
+        for target, signature in zip(
+            window_targets, window_signatures, strict=True
+        ):
+            target["wall_signature"] = signature
     door_chains = [
         _source_chain(source, str(door_id))
-        for door_id in case["door_global_ids"]
+        for door_id in door_global_ids
     ]
-    request_lines = [
-        "请在一个原子 ChangeSet 中同时恢复以下两扇窗和两扇门；"
-        "所有目标均按名称、楼层和墙局部位置定位，不使用 GlobalId。",
-        *[
-            _guid_free_window_request(target)
-            for target in window_targets
-        ],
-        *[_guid_free_door_request(chain) for chain in door_chains],
-    ]
+    request_lines = (
+        [
+            "请在一个原子 ChangeSet 中同时恢复以下两扇窗和两扇门；"
+            "所有宿主墙只按楼层标高、朝向、墙体长高厚与墙局部位置定位，"
+            "不使用 IFC 标识符或对象名称。",
+            *[
+                _geometry_window_request(
+                    target, signature, ordinal=index
+                )
+                for index, (target, signature) in enumerate(
+                    zip(
+                        window_targets,
+                        window_signatures,
+                        strict=True,
+                    ),
+                    1,
+                )
+            ],
+            *[
+                _geometry_door_request(
+                    chain, signature, ordinal=index
+                )
+                for index, (chain, signature) in enumerate(
+                    zip(
+                        door_chains,
+                        door_signatures,
+                        strict=True,
+                    ),
+                    1,
+                )
+            ],
+        ]
+        if geometry_targeting
+        else [
+            "请在一个原子 ChangeSet 中同时恢复以下两扇窗和两扇门；"
+            "所有目标均按名称、楼层和墙局部位置定位，不使用 GlobalId。",
+            *[
+                _guid_free_window_request(target)
+                for target in window_targets
+            ],
+            *[_guid_free_door_request(chain) for chain in door_chains],
+        ]
+    )
     request = "\n".join(request_lines)
     registry = create_default_registry()
     index_path = case_dir / "target-index.sqlite"
     metadata = build_ifc_index(damaged, index_path)
-    intent = _guid_free_mixed_intent(
-        request=request,
-        window_targets=window_targets,
-        door_chains=door_chains,
-        model_fingerprint=_sha256(damaged),
-        registry=registry,
+    intent = (
+        _geometry_targeted_mixed_intent(
+            case_id=str(case["case_id"]),
+            request=request,
+            window_targets=window_targets,
+            window_signatures=window_signatures,
+            door_chains=door_chains,
+            door_signatures=door_signatures,
+            model_fingerprint=_sha256(damaged),
+            registry=registry,
+        )
+        if geometry_targeting
+        else _guid_free_mixed_intent(
+            request=request,
+            window_targets=window_targets,
+            door_chains=door_chains,
+            model_fingerprint=_sha256(damaged),
+            registry=registry,
+        )
     )
     with SQLiteIndexRepository.open(index_path) as repository:
         resolution = resolve_repair_intent(
@@ -1486,11 +2132,22 @@ def run_mixed_case(
             "PHASE11_GUID_FREE_TARGET_RESOLUTION_FAILED:"
             + json.dumps(resolution.to_dict(), ensure_ascii=False)
         )
-    operations = _bind_mixed_operations(
-        resolution=resolution,
-        window_targets=window_targets,
-        door_chains=door_chains,
-    )
+    generated_type_ids: dict[str, str] = {}
+    if geometry_targeting:
+        operations, generated_type_ids = (
+            _bind_geometry_mixed_operations(
+                resolution=resolution,
+                window_targets=window_targets,
+                door_chains=door_chains,
+                damaged=damaged,
+            )
+        )
+    else:
+        operations = _bind_mixed_operations(
+            resolution=resolution,
+            window_targets=window_targets,
+            door_chains=door_chains,
+        )
     window_operations = operations[: len(window_targets)]
     door_operations = operations[len(window_targets) :]
     target_ids = [
@@ -1525,22 +2182,50 @@ def run_mixed_case(
         raise RuntimeError(
             f"PHASE11_MIXED_APPLICATION_FAILED:{application['issues']}"
         )
-    expected_by_operation = {
-        **{
-            operation["operation_id"]: _expected_window_facts(
-                target, damaged
-            )
-            for operation, target in zip(
-                window_operations, window_targets, strict=True
-            )
-        },
-        **{
-            operation["operation_id"]: _expected_facts(chain)
-            for operation, chain in zip(
-                door_operations, door_chains, strict=True
-            )
-        },
-    }
+    expected_by_operation = (
+        {
+            **{
+                operation["operation_id"]: (
+                    _expected_generated_window_facts(
+                        target,
+                        damaged,
+                        generated_type_ids[operation["operation_id"]],
+                    )
+                )
+                for operation, target in zip(
+                    window_operations, window_targets, strict=True
+                )
+            },
+            **{
+                operation["operation_id"]: (
+                    _expected_generated_door_facts(
+                        chain,
+                        generated_type_ids[operation["operation_id"]],
+                    )
+                )
+                for operation, chain in zip(
+                    door_operations, door_chains, strict=True
+                )
+            },
+        }
+        if geometry_targeting
+        else {
+            **{
+                operation["operation_id"]: _expected_window_facts(
+                    target, damaged
+                )
+                for operation, target in zip(
+                    window_operations, window_targets, strict=True
+                )
+            },
+            **{
+                operation["operation_id"]: _expected_facts(chain)
+                for operation, chain in zip(
+                    door_operations, door_chains, strict=True
+                )
+            },
+        }
+    )
     evaluation = evaluation_to_dict(
         evaluate_production(
             ProductionEvaluationInputs(
@@ -1613,17 +2298,38 @@ def run_mixed_case(
         "one_atomic_changeset": True,
         "public_targeting": {
             "guid_free": True,
-            "strategy": "name_storey_and_wall_local_position",
+            **(
+                {
+                    "name_free": True,
+                    "strategy": (
+                        "storey_elevation_orientation_and_wall_dimensions"
+                    ),
+                }
+                if geometry_targeting
+                else {
+                    "strategy": (
+                        "name_storey_and_wall_local_position"
+                    )
+                }
+            ),
             "resolved_operation_count": len(resolution.operations),
         },
         "damage": {
             "window_ids": [
                 target["window"]["global_id"] for target in window_targets
             ],
+            "removed_windows": [
+                target["window"] for target in window_targets
+            ],
+            "window_openings_removed": True,
+            "door_openings_removed": bool(
+                case.get("remove_door_openings")
+            ),
             "removed_doors": [
                 target["door"] for target in door_mutation["targets"]
             ],
         },
+        "generated_type_ids": generated_type_ids,
         "artifacts": {
             name: {
                 "path": name,
@@ -1651,7 +2357,15 @@ def run_mixed_case(
             f"# {case['case_id']}\n\n"
             "- 一个 ChangeSet 同时包含两个 Window 和两个 Door operation。\n"
             "- 四个 operation 分别通过 L1/L2，最终只发布一个 IFC。\n\n"
-            "被删除 Door：\n"
+            + (
+                "- Door 与 Window 的原 Opening 均已在 damaged IFC 中删除；"
+                "修复从完整墙体重新开洞。\n"
+                "- 公开请求与 RepairIntent 不使用 GlobalId 或任何对象 Name；"
+                "宿主墙由楼层标高、朝向、墙体尺寸和墙局部位置解析。\n\n"
+                if geometry_targeting
+                else ""
+            )
+            + "被删除 Door：\n"
             + "\n".join(
                 f"- `{chain['door']['name']}` (`{chain['door']['global_id']}`)"
                 for chain in door_chains
@@ -1662,17 +2376,53 @@ def run_mixed_case(
     return manifest
 
 
+def _run_case_by_id(
+    case_id: str, output_root: Path
+) -> dict[str, Any]:
+    ordinary = next(
+        (case for case in CASES if case["case_id"] == case_id),
+        None,
+    )
+    if ordinary is not None:
+        return run_case(ordinary, output_root)
+    if case_id == GENERATED_DOOR_CASE["case_id"]:
+        return run_generated_type_case(GENERATED_DOOR_CASE, output_root)
+    if case_id == VVO_FIVE_DOOR_CASE["case_id"]:
+        return run_five_door_case(VVO_FIVE_DOOR_CASE, output_root)
+    if case_id == VVO_MIXED_CASE["case_id"]:
+        return run_mixed_case(VVO_MIXED_CASE, output_root)
+    if case_id == DENTAL_CLINIC_MIXED_CASE["case_id"]:
+        return run_mixed_case(DENTAL_CLINIC_MIXED_CASE, output_root)
+    raise ValueError(f"PHASE11_CASE_UNKNOWN:{case_id}")
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--output-root", type=Path, default=DEFAULT_OUTPUT)
+    parser.add_argument(
+        "--case-id",
+        action="append",
+        help="Run only the named case; may be repeated.",
+    )
     args = parser.parse_args(argv)
     args.output_root.mkdir(parents=True, exist_ok=True)
-    results = [run_case(case, args.output_root) for case in CASES]
-    results.append(
-        run_generated_type_case(GENERATED_DOOR_CASE, args.output_root)
-    )
-    results.append(run_five_door_case(VVO_FIVE_DOOR_CASE, args.output_root))
-    results.append(run_mixed_case(VVO_MIXED_CASE, args.output_root))
+    if args.case_id:
+        results = [
+            _run_case_by_id(case_id, args.output_root)
+            for case_id in args.case_id
+        ]
+    else:
+        results = [run_case(case, args.output_root) for case in CASES]
+        results.append(
+            run_generated_type_case(GENERATED_DOOR_CASE, args.output_root)
+        )
+        results.append(
+            run_five_door_case(VVO_FIVE_DOOR_CASE, args.output_root)
+        )
+        results.append(run_mixed_case(VVO_MIXED_CASE, args.output_root))
+        results.append(
+            run_mixed_case(DENTAL_CLINIC_MIXED_CASE, args.output_root)
+        )
     summary = {
         "schema_version": "text2ifc/phase11-door-offline-run/0.1",
         "status": "passed",

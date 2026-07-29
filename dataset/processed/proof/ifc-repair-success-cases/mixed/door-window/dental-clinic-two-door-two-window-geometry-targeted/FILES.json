@@ -1,0 +1,78 @@
+{
+  "case_id": "dental-clinic-two-door-two-window-geometry-targeted",
+  "files": [
+    {
+      "path": "01-original.ifc",
+      "role": "original_ground_truth",
+      "sha256": "sha256:b90fe57b8aa9329d762a564770e697d4f7357677484e3a78ede4ab6d2163c0c0",
+      "size_bytes": 13208096
+    },
+    {
+      "path": "02-damaged.ifc",
+      "role": "repair_input_ifc",
+      "sha256": "sha256:c51b4dc754f7e4f462806c8f2579f791a064022976231e72077e6768c4eef878",
+      "size_bytes": 13373985
+    },
+    {
+      "path": "03-repaired.ifc",
+      "role": "published_repair_output",
+      "sha256": "sha256:7c5db7ccaaa57d1f44aa7ba664b3fe2487ace816ab5b36f4290f197f81c8be29",
+      "size_bytes": 13387418
+    },
+    {
+      "path": "agent/prompt-routing-evidence.json",
+      "role": "prompt_profile_evidence",
+      "sha256": "sha256:6bcd5fff5c71ce509468e1a6961d7e9ab2dcdfb727900d6adbb4fdaab63e9542",
+      "size_bytes": 10027
+    },
+    {
+      "path": "agent/repair-intent.json",
+      "role": "guid_free_repair_intent",
+      "sha256": "sha256:ddfe46a2c21c6c0cde794134bcc65056a9e357d044a7c6539a75cd68ccc2ca50",
+      "size_bytes": 10577
+    },
+    {
+      "path": "agent/target-resolution.json",
+      "role": "deterministic_target_resolution",
+      "sha256": "sha256:1101c32aca7ca51115bb4fbc8e16480fc0881ffb734d8464966a176c2aaa36f9",
+      "size_bytes": 35938
+    },
+    {
+      "path": "changeset/bound-changeset.json",
+      "role": "bound_changeset",
+      "sha256": "sha256:bdfc1e66ef9a2e269cdb221466f42eac6286a10258bbea62084790cbaa363b79",
+      "size_bytes": 17115
+    },
+    {
+      "path": "input/request.txt",
+      "role": "user_request",
+      "sha256": "sha256:b241ba0fcfdff94b2ef2c5137e4fce80f64aec690071abb364f7994c05328079",
+      "size_bytes": 1679
+    },
+    {
+      "path": "validation/application.json",
+      "role": "application_result",
+      "sha256": "sha256:cf47ac464f11527ba5fd1790ff035ca9611a581d0b28caa591e5b67829c2203d",
+      "size_bytes": 31051
+    },
+    {
+      "path": "validation/ifc-comparison.json",
+      "role": "ifc_comparison",
+      "sha256": "sha256:5da0e64dc42400a5a92d51f4824c5583857699fcaea763da6bb43f2f306e1a64",
+      "size_bytes": 437065
+    },
+    {
+      "path": "validation/production-evaluation.json",
+      "role": "production_evaluation",
+      "sha256": "sha256:f7ba49540dfe1951986dbd9955187ff941435f6dcb4f0c8e1ca4e936f19591c8",
+      "size_bytes": 466914
+    },
+    {
+      "path": "validation/source-run-manifest.json",
+      "role": "source_run_manifest",
+      "sha256": "sha256:1abe6a674a207fdaefe43af7f57afe309db7a121e82844a5279183f498fa17a4",
+      "size_bytes": 4074
+    }
+  ],
+  "schema_version": "text2ifc/ifc-repair-proof-files/0.2"
+}

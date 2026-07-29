@@ -10,6 +10,7 @@ from typing import Any, Mapping
 
 import ifcopenshell.api.geometry
 import ifcopenshell.guid
+import ifcopenshell.util.unit
 
 from text2ifc_ifc_repair.geometry import (
     UNSUPPORTED_WALL_GEOMETRY,
@@ -296,15 +297,48 @@ def assert_ids_available(model: Any, global_ids: Any) -> None:
 
 
 def body_context(model: Any) -> Any:
-    contexts = [
+    preferred = [
         context
         for context in model.by_type("IfcGeometricRepresentationSubContext")
         if context.ContextIdentifier == "Body"
         and context.TargetView == "MODEL_VIEW"
     ]
-    if not contexts:
+    if preferred:
+        return min(preferred, key=lambda context: context.id())
+    body_contexts = [
+        context
+        for context in model.by_type("IfcGeometricRepresentationSubContext")
+        if context.ContextIdentifier == "Body"
+    ]
+    if body_contexts:
+        return min(body_contexts, key=lambda context: context.id())
+    model_contexts = [
+        context
+        for context in model.by_type("IfcGeometricRepresentationContext")
+        if context.is_a() == "IfcGeometricRepresentationContext"
+        and str(getattr(context, "ContextType", "")) == "Model"
+        and int(getattr(context, "CoordinateSpaceDimension", 0) or 0) == 3
+    ]
+    if not model_contexts:
         raise OperationRegistryError("BODY_CONTEXT_NOT_FOUND", "Body/MODEL_VIEW")
-    return min(contexts, key=lambda context: context.id())
+    return min(model_contexts, key=lambda context: context.id())
+
+
+def millimetres_to_project_units(model_or_entity: Any, value: float) -> float:
+    return float(value) / _millimetres_per_project_unit(model_or_entity)
+
+
+def project_units_to_millimetres(model_or_entity: Any, value: float) -> float:
+    return float(value) * _millimetres_per_project_unit(model_or_entity)
+
+
+def _millimetres_per_project_unit(model_or_entity: Any) -> float:
+    model = (
+        model_or_entity
+        if hasattr(model_or_entity, "by_type")
+        else model_or_entity.file
+    )
+    return float(ifcopenshell.util.unit.calculate_unit_scale(model)) * 1000.0
 
 
 def opening_placement(
@@ -320,11 +354,14 @@ def opening_placement(
     dy = end[1] - start[1]
     length = math.hypot(dx, dy)
     direction = (dx / length, dy / length, 0.0)
-    left = center_mm - width_mm / 2.0
+    left = millimetres_to_project_units(
+        model, center_mm - width_mm / 2.0
+    )
+    sill = millimetres_to_project_units(model, sill_mm)
     location = (
         start[0] + direction[0] * left,
         start[1] + direction[1] * left,
-        start[2] + sill_mm,
+        start[2] + sill,
     )
     return local_placement(
         model,

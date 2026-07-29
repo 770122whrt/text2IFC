@@ -32,9 +32,10 @@ def test_checked_in_success_case_collection_is_self_consistent() -> None:
             "largebuilding-generated-door-type",
             "vvo-five-door-preserve-opening",
             "vvo-two-door-two-window-mixed",
+            "dental-clinic-two-door-two-window-geometry-targeted",
         }
     }
-    assert len(phase11) == 6
+    assert len(phase11) == 7
 
 
 def test_phase11_proofs_follow_family_and_case_kind_directories() -> None:
@@ -63,12 +64,16 @@ def test_phase11_proofs_follow_family_and_case_kind_directories() -> None:
         "door/batch/vvo-five-door-preserve-opening/REPORT.md"
     )
 
-    mixed = cases["vvo-two-door-two-window-mixed"]
-    assert mixed["operation_family"] == "mixed"
-    assert mixed["case_kind"] == "mixed"
-    assert mixed["report"] == (
-        "mixed/door-window/vvo-two-door-two-window-mixed/REPORT.md"
-    )
+    for case_id in {
+        "vvo-two-door-two-window-mixed",
+        "dental-clinic-two-door-two-window-geometry-targeted",
+    }:
+        mixed = cases[case_id]
+        assert mixed["operation_family"] == "mixed"
+        assert mixed["case_kind"] == "mixed"
+        assert mixed["report"] == (
+            f"mixed/door-window/{case_id}/REPORT.md"
+        )
 
 
 def test_phase11_curation_routes_by_operation_family_not_operation_type() -> None:
@@ -121,3 +126,51 @@ def test_mixed_door_window_proof_preserves_guid_free_targeting_evidence() -> Non
     )
     assert resolution["status"] == "resolved"
     assert len(resolution["operations"]) == 4
+
+
+def test_dental_mixed_proof_uses_name_free_geometry_and_recreates_openings() -> None:
+    case = (
+        ROOT
+        / "dataset/processed/proof/ifc-repair-success-cases/mixed/door-window"
+        / "dental-clinic-two-door-two-window-geometry-targeted"
+    )
+    request = (case / "input/request.txt").read_text(encoding="utf-8")
+    assert re.findall(
+        r"(?<![0-9A-Za-z_$])[0-3][0-9A-Za-z_$]{21}(?![0-9A-Za-z_$])",
+        request,
+    ) == []
+
+    intent = json.loads(
+        (case / "agent/repair-intent.json").read_text(encoding="utf-8")
+    )
+    for operation in intent["operations"]:
+        query = operation["target_query"]
+        assert query.get("global_id") is None
+        assert query.get("names") in (None, [])
+        assert query.get("storey_name") is None
+        assert len(query["geometry_constraints"]) == 4
+
+    changeset = json.loads(
+        (case / "changeset/bound-changeset.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    operation_types = [
+        operation["operation_type"] for operation in changeset["operations"]
+    ]
+    assert operation_types.count("add_window_with_opening_to_wall") == 2
+    assert operation_types.count("add_door_with_opening_to_wall") == 2
+    assert "fill_existing_opening_with_door" not in operation_types
+
+    source_manifest = json.loads(
+        (case / "validation/source-run-manifest.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    assert source_manifest["damage"]["door_openings_removed"] is True
+    assert source_manifest["damage"]["window_openings_removed"] is True
+    assert len(source_manifest["damage"]["removed_windows"]) == 2
+    assert all(
+        item.get("name")
+        for item in source_manifest["damage"]["removed_windows"]
+    )

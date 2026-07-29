@@ -1,0 +1,1012 @@
+{
+  "candidates": [],
+  "model_fingerprint": "sha256:c51b4dc754f7e4f462806c8f2579f791a064022976231e72077e6768c4eef878",
+  "operation_id": null,
+  "operations": [
+    {
+      "authorized_semantics": [
+        {
+          "authorization": "deterministic_policy",
+          "formal_attributes": {
+            "construction_type": "NOTDEFINED",
+            "operation_type": "NOTDEFINED",
+            "parameter_takes_precedence": false,
+            "sizeable": false
+          },
+          "global_id": "2eZcTQ4YXLXuo7nkGd_LuE",
+          "ifc_class": "IfcWindowStyle",
+          "kind": "system_generated_type",
+          "operation_id": "operation-window-001",
+          "template": {
+            "construction_type": "NOTDEFINED",
+            "name": "Text2IFC generated window type operation-window-001",
+            "operation_type": "NOTDEFINED",
+            "parameter_takes_precedence": false,
+            "sizeable": false
+          },
+          "template_digest": "sha256:6b19eed64f590e18a846e25053d3cf9ee1a3d5ed21eed3cf97474f51e0f40105",
+          "template_id": "add_window_with_opening_to_wall.generated-type",
+          "template_version": "0.1"
+        },
+        {
+          "kind": "deterministic_occurrence_property",
+          "property_name": "IsExternal",
+          "provenance": [
+            "host-wall-property:ifcopenshell.util.element.get_psets:direct",
+            "window-adapter:generated-template-0.1"
+          ],
+          "set_name": "Pset_WindowCommon",
+          "source_ref": "current-host:3LbNSBzHHBSuzhUUvuwARp",
+          "unit": null,
+          "value": true,
+          "value_type": "IfcBoolean"
+        }
+      ],
+      "context": {
+        "base_model_fingerprint": "sha256:c51b4dc754f7e4f462806c8f2579f791a064022976231e72077e6768c4eef878",
+        "candidate_targets": [
+          {
+            "evidence": [
+              {
+                "candidate_value": "3LbNSBzHHBSuzhUUvuwARp",
+                "field": "global_id",
+                "provenance": "IfcRoot.GlobalId",
+                "query_value": null,
+                "state": "unavailable"
+              },
+              {
+                "candidate_value": "IfcWallStandardCase",
+                "field": "ifc_class",
+                "provenance": "IfcProduct.is_a",
+                "query_value": [
+                  "IfcWall"
+                ],
+                "state": "matched"
+              },
+              {
+                "candidate_value": "Basic Wall:Exterior - Insul Panel on Mtl. Stud:145481",
+                "field": "name",
+                "provenance": "aliases",
+                "query_value": null,
+                "state": "unavailable"
+              },
+              {
+                "candidate_value": "Second Floor",
+                "field": "storey",
+                "provenance": "spatial_relationship",
+                "query_value": null,
+                "state": "unavailable"
+              },
+              {
+                "candidate_value": "straight_wall",
+                "field": "geometry_capability",
+                "provenance": "adapter",
+                "query_value": [
+                  "straight_wall"
+                ],
+                "state": "matched"
+              },
+              {
+                "candidate_value": 4570.000000004098,
+                "field": "geometry:storey_elevation_mm",
+                "provenance": "ifc_geometry",
+                "query_value": {
+                  "tolerance_mm": 1.0,
+                  "value": 4570.0
+                },
+                "state": "matched"
+              },
+              {
+                "candidate_value": 40577.43871025994,
+                "field": "geometry:wall_length_mm",
+                "provenance": "ifc_geometry",
+                "query_value": {
+                  "tolerance_mm": 1.0,
+                  "value": 40577.439
+                },
+                "state": "matched"
+              },
+              {
+                "candidate_value": 5136.999999999984,
+                "field": "geometry:wall_height_mm",
+                "provenance": "ifc_geometry",
+                "query_value": {
+                  "tolerance_mm": 1.0,
+                  "value": 5137.0
+                },
+                "state": "matched"
+              },
+              {
+                "candidate_value": 267.00000000000864,
+                "field": "geometry:wall_thickness_mm",
+                "provenance": "ifc_geometry",
+                "query_value": {
+                  "tolerance_mm": 1.0,
+                  "value": 267.0
+                },
+                "state": "matched"
+              }
+            ],
+            "facets": {
+              "editable_target": true,
+              "space_names": [
+                "2C16",
+                "2C17",
+                "2D05",
+                "2D09",
+                "2D10",
+                "2D11",
+                "2R02"
+              ]
+            },
+            "geometry": {
+              "coordinate_basis": {
+                "axis_direction": [
+                  1.0,
+                  -0.0,
+                  0.0
+                ],
+                "axis_end_mm": [
+                  40577.43871025994,
+                  -0.0,
+                  0.0
+                ],
+                "axis_start_mm": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "reference": "wall_local_start",
+                "vertical_direction": [
+                  0.0,
+                  0.0,
+                  1.0
+                ],
+                "world_axis_direction": [
+                  0.0,
+                  1.0,
+                  0.0
+                ],
+                "world_axis_start_mm": [
+                  -47246.50000000064,
+                  9926.999999999378,
+                  4570.000000004098
+                ]
+              },
+              "dimensions_mm": {
+                "height": 5136.999999999984,
+                "length": 40577.43871025994,
+                "thickness": 267.00000000000864
+              },
+              "orientation": "north"
+            },
+            "geometry_capability": "straight_wall",
+            "ifc_class": "IfcWallStandardCase",
+            "ifc_global_id": "3LbNSBzHHBSuzhUUvuwARp",
+            "name": "Basic Wall:Exterior - Insul Panel on Mtl. Stud:145481",
+            "properties": [],
+            "retrieval": {
+              "fused_score": 0,
+              "matched_fields": [],
+              "retriever": "structured",
+              "retriever_version": "text2ifc/structured-retriever/0.1",
+              "source_score": 0
+            },
+            "storey_name": "Second Floor",
+            "target_id": "ifc:3LbNSBzHHBSuzhUUvuwARp",
+            "type_name": null
+          }
+        ],
+        "context_budget": {
+          "actual_bytes": 3196,
+          "estimated_tokens": 799,
+          "max_bytes": 48000,
+          "max_candidates": 5,
+          "mode": "normal",
+          "omitted_candidate_count": 0,
+          "selected_candidate_count": 1,
+          "token_estimator": "ceil(utf8_bytes/4)"
+        },
+        "model_constraints": {
+          "facts_source": "current_ifc_only",
+          "ifc_schema": "IFC2X3",
+          "index_schema_version": "text2ifc/ifc-index/0.4",
+          "source_ifc_sha256": "sha256:c51b4dc754f7e4f462806c8f2579f791a064022976231e72077e6768c4eef878",
+          "vector_retrieval": "disabled"
+        },
+        "model_fingerprint": "sha256:c51b4dc754f7e4f462806c8f2579f791a064022976231e72077e6768c4eef878",
+        "operation_hints": [
+          "add_window_with_opening_to_wall"
+        ],
+        "query_schema_version": "text2ifc/ifc-target-query/0.1",
+        "resolution_schema_version": "text2ifc/ifc-target-resolution/0.1",
+        "resolved_target_id": "ifc:3LbNSBzHHBSuzhUUvuwARp",
+        "schema_version": "text2ifc/ifc-target-context/0.1",
+        "score_version": "text2ifc/target-score/0.1",
+        "status": "resolved"
+      },
+      "evidence_pointers": [
+        "resolved:/operations/operation-window-001/context/candidate_targets/0"
+      ],
+      "operation_id": "operation-window-001",
+      "operation_type": "add_window_with_opening_to_wall",
+      "parameters": {
+        "opening": {
+          "height_mm": 1734.999999999995,
+          "sill_height_mm": 905.0,
+          "width_mm": 1000.0
+        },
+        "position": {
+          "center_offset_mm": 4800.353891,
+          "reference": "wall_local_start"
+        },
+        "window": {
+          "fit_opening": true
+        }
+      },
+      "scope_ids": [
+        "3LbNSBzHHBSuzhUUvuwARp"
+      ],
+      "target_global_id": "3LbNSBzHHBSuzhUUvuwARp"
+    },
+    {
+      "authorized_semantics": [
+        {
+          "authorization": "deterministic_policy",
+          "formal_attributes": {
+            "construction_type": "NOTDEFINED",
+            "operation_type": "NOTDEFINED",
+            "parameter_takes_precedence": false,
+            "sizeable": false
+          },
+          "global_id": "1Kfo$PzFjQXeAnXsFw8aZK",
+          "ifc_class": "IfcWindowStyle",
+          "kind": "system_generated_type",
+          "operation_id": "operation-window-002",
+          "template": {
+            "construction_type": "NOTDEFINED",
+            "name": "Text2IFC generated window type operation-window-002",
+            "operation_type": "NOTDEFINED",
+            "parameter_takes_precedence": false,
+            "sizeable": false
+          },
+          "template_digest": "sha256:122281efe6832eb23c1d459407c2956f118ad1d1333c22dd10d19e246a02a4fa",
+          "template_id": "add_window_with_opening_to_wall.generated-type",
+          "template_version": "0.1"
+        },
+        {
+          "kind": "deterministic_occurrence_property",
+          "property_name": "IsExternal",
+          "provenance": [
+            "host-wall-property:ifcopenshell.util.element.get_psets:direct",
+            "window-adapter:generated-template-0.1"
+          ],
+          "set_name": "Pset_WindowCommon",
+          "source_ref": "current-host:3LbNSBzHHBSuzhUUvuwBG4",
+          "unit": null,
+          "value": true,
+          "value_type": "IfcBoolean"
+        }
+      ],
+      "context": {
+        "base_model_fingerprint": "sha256:c51b4dc754f7e4f462806c8f2579f791a064022976231e72077e6768c4eef878",
+        "candidate_targets": [
+          {
+            "evidence": [
+              {
+                "candidate_value": "3LbNSBzHHBSuzhUUvuwBG4",
+                "field": "global_id",
+                "provenance": "IfcRoot.GlobalId",
+                "query_value": null,
+                "state": "unavailable"
+              },
+              {
+                "candidate_value": "IfcWallStandardCase",
+                "field": "ifc_class",
+                "provenance": "IfcProduct.is_a",
+                "query_value": [
+                  "IfcWall"
+                ],
+                "state": "matched"
+              },
+              {
+                "candidate_value": "Basic Wall:Exterior - Insul Panel on Mtl. Stud:142014",
+                "field": "name",
+                "provenance": "aliases",
+                "query_value": null,
+                "state": "unavailable"
+              },
+              {
+                "candidate_value": "First Floor",
+                "field": "storey",
+                "provenance": "spatial_relationship",
+                "query_value": null,
+                "state": "unavailable"
+              },
+              {
+                "candidate_value": "straight_wall",
+                "field": "geometry_capability",
+                "provenance": "adapter",
+                "query_value": [
+                  "straight_wall"
+                ],
+                "state": "matched"
+              },
+              {
+                "candidate_value": -3.5315004254243834e-10,
+                "field": "geometry:storey_elevation_mm",
+                "provenance": "ifc_geometry",
+                "query_value": {
+                  "tolerance_mm": 1.0,
+                  "value": 0.0
+                },
+                "state": "matched"
+              },
+              {
+                "candidate_value": 17081.455930000062,
+                "field": "geometry:wall_length_mm",
+                "provenance": "ifc_geometry",
+                "query_value": {
+                  "tolerance_mm": 1.0,
+                  "value": 17081.456
+                },
+                "state": "matched"
+              },
+              {
+                "candidate_value": 5027.00000000445,
+                "field": "geometry:wall_height_mm",
+                "provenance": "ifc_geometry",
+                "query_value": {
+                  "tolerance_mm": 1.0,
+                  "value": 5027.0
+                },
+                "state": "matched"
+              },
+              {
+                "candidate_value": 267.0,
+                "field": "geometry:wall_thickness_mm",
+                "provenance": "ifc_geometry",
+                "query_value": {
+                  "tolerance_mm": 1.0,
+                  "value": 267.0
+                },
+                "state": "matched"
+              }
+            ],
+            "facets": {
+              "editable_target": true,
+              "space_names": [
+                "1D22",
+                "1D23",
+                "1D25",
+                "1E15",
+                "1E15-A"
+              ]
+            },
+            "geometry": {
+              "coordinate_basis": {
+                "axis_direction": [
+                  1.0,
+                  0.0,
+                  0.0
+                ],
+                "axis_end_mm": [
+                  17081.455930000062,
+                  0.0,
+                  0.0
+                ],
+                "axis_start_mm": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "reference": "wall_local_start",
+                "vertical_direction": [
+                  0.0,
+                  0.0,
+                  1.0
+                ],
+                "world_axis_direction": [
+                  0.0,
+                  1.0,
+                  0.0
+                ],
+                "world_axis_start_mm": [
+                  -52146.50000000069,
+                  12113.499999999229,
+                  0.0
+                ]
+              },
+              "dimensions_mm": {
+                "height": 5027.00000000445,
+                "length": 17081.455930000062,
+                "thickness": 267.0
+              },
+              "orientation": "north"
+            },
+            "geometry_capability": "straight_wall",
+            "ifc_class": "IfcWallStandardCase",
+            "ifc_global_id": "3LbNSBzHHBSuzhUUvuwBG4",
+            "name": "Basic Wall:Exterior - Insul Panel on Mtl. Stud:142014",
+            "properties": [],
+            "retrieval": {
+              "fused_score": 0,
+              "matched_fields": [],
+              "retriever": "structured",
+              "retriever_version": "text2ifc/structured-retriever/0.1",
+              "source_score": 0
+            },
+            "storey_name": "First Floor",
+            "target_id": "ifc:3LbNSBzHHBSuzhUUvuwBG4",
+            "type_name": null
+          }
+        ],
+        "context_budget": {
+          "actual_bytes": 3145,
+          "estimated_tokens": 787,
+          "max_bytes": 48000,
+          "max_candidates": 5,
+          "mode": "normal",
+          "omitted_candidate_count": 0,
+          "selected_candidate_count": 1,
+          "token_estimator": "ceil(utf8_bytes/4)"
+        },
+        "model_constraints": {
+          "facts_source": "current_ifc_only",
+          "ifc_schema": "IFC2X3",
+          "index_schema_version": "text2ifc/ifc-index/0.4",
+          "source_ifc_sha256": "sha256:c51b4dc754f7e4f462806c8f2579f791a064022976231e72077e6768c4eef878",
+          "vector_retrieval": "disabled"
+        },
+        "model_fingerprint": "sha256:c51b4dc754f7e4f462806c8f2579f791a064022976231e72077e6768c4eef878",
+        "operation_hints": [
+          "add_window_with_opening_to_wall"
+        ],
+        "query_schema_version": "text2ifc/ifc-target-query/0.1",
+        "resolution_schema_version": "text2ifc/ifc-target-resolution/0.1",
+        "resolved_target_id": "ifc:3LbNSBzHHBSuzhUUvuwBG4",
+        "schema_version": "text2ifc/ifc-target-context/0.1",
+        "score_version": "text2ifc/target-score/0.1",
+        "status": "resolved"
+      },
+      "evidence_pointers": [
+        "resolved:/operations/operation-window-002/context/candidate_targets/0"
+      ],
+      "operation_id": "operation-window-002",
+      "operation_type": "add_window_with_opening_to_wall",
+      "parameters": {
+        "opening": {
+          "height_mm": 1734.999999999995,
+          "sill_height_mm": 905.0,
+          "width_mm": 999.9999999999978
+        },
+        "position": {
+          "center_offset_mm": 15152.5,
+          "reference": "wall_local_start"
+        },
+        "window": {
+          "fit_opening": true
+        }
+      },
+      "scope_ids": [
+        "3LbNSBzHHBSuzhUUvuwBG4"
+      ],
+      "target_global_id": "3LbNSBzHHBSuzhUUvuwBG4"
+    },
+    {
+      "authorized_semantics": [
+        {
+          "derivation_digest": "sha256:494cc4a27457740c4dbef87bfe28fbbd4f43f04b6d30d884787a6e90a3ccbe59",
+          "kind": "door_canonicalization",
+          "operation_type": "SINGLE_SWING_LEFT",
+          "source": "deterministic_policy"
+        },
+        {
+          "authorization": "deterministic_policy",
+          "formal_attributes": {
+            "construction_type": "NOTDEFINED",
+            "operation_type": "SINGLE_SWING_LEFT",
+            "parameter_takes_precedence": false,
+            "sizeable": false
+          },
+          "global_id": "37f8DLIO1TvgIgeJ5vejkx",
+          "ifc_class": "IfcDoorStyle",
+          "kind": "system_generated_type",
+          "operation_id": "operation-door-001",
+          "template": {
+            "construction_type": "NOTDEFINED",
+            "name": "Text2IFC generated door type operation-door-001",
+            "operation_type": "SINGLE_SWING_LEFT",
+            "parameter_takes_precedence": false,
+            "sizeable": false
+          },
+          "template_digest": "sha256:b0f96dba33cbbfca1be5ccd9a27e2fc442f70e06c6c17d7b5f85cc759669702a",
+          "template_id": "text2ifc-door-single-swing-template",
+          "template_version": "0.1"
+        }
+      ],
+      "context": {
+        "base_model_fingerprint": "sha256:c51b4dc754f7e4f462806c8f2579f791a064022976231e72077e6768c4eef878",
+        "candidate_targets": [
+          {
+            "evidence": [
+              {
+                "candidate_value": "2j55VthSj3Lu0J6fyrpN4I",
+                "field": "global_id",
+                "provenance": "IfcRoot.GlobalId",
+                "query_value": null,
+                "state": "unavailable"
+              },
+              {
+                "candidate_value": "IfcWallStandardCase",
+                "field": "ifc_class",
+                "provenance": "IfcProduct.is_a",
+                "query_value": [
+                  "IfcWall"
+                ],
+                "state": "matched"
+              },
+              {
+                "candidate_value": "Basic Wall:Interior - Partition (92mm Stud):369550",
+                "field": "name",
+                "provenance": "aliases",
+                "query_value": null,
+                "state": "unavailable"
+              },
+              {
+                "candidate_value": "First Floor",
+                "field": "storey",
+                "provenance": "spatial_relationship",
+                "query_value": null,
+                "state": "unavailable"
+              },
+              {
+                "candidate_value": "straight_wall",
+                "field": "geometry_capability",
+                "provenance": "adapter",
+                "query_value": [
+                  "straight_wall"
+                ],
+                "state": "matched"
+              },
+              {
+                "candidate_value": -3.5315004254243834e-10,
+                "field": "geometry:storey_elevation_mm",
+                "provenance": "ifc_geometry",
+                "query_value": {
+                  "tolerance_mm": 1.0,
+                  "value": 0.0
+                },
+                "state": "matched"
+              },
+              {
+                "candidate_value": 3970.024859296764,
+                "field": "geometry:wall_length_mm",
+                "provenance": "ifc_geometry",
+                "query_value": {
+                  "tolerance_mm": 1.0,
+                  "value": 3970.025
+                },
+                "state": "matched"
+              },
+              {
+                "candidate_value": 4468.000000004451,
+                "field": "geometry:wall_height_mm",
+                "provenance": "ifc_geometry",
+                "query_value": {
+                  "tolerance_mm": 1.0,
+                  "value": 4468.0
+                },
+                "state": "matched"
+              },
+              {
+                "candidate_value": 124.00000000000209,
+                "field": "geometry:wall_thickness_mm",
+                "provenance": "ifc_geometry",
+                "query_value": {
+                  "tolerance_mm": 1.0,
+                  "value": 124.0
+                },
+                "state": "matched"
+              }
+            ],
+            "facets": {
+              "editable_target": true,
+              "space_names": [
+                "1B12",
+                "1B14",
+                "1B16",
+                "1BC2",
+                "1BC3"
+              ]
+            },
+            "geometry": {
+              "coordinate_basis": {
+                "axis_direction": [
+                  1.0,
+                  0.0,
+                  0.0
+                ],
+                "axis_end_mm": [
+                  3970.024859296764,
+                  0.0,
+                  0.0
+                ],
+                "axis_start_mm": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "reference": "wall_local_start",
+                "vertical_direction": [
+                  0.0,
+                  0.0,
+                  1.0
+                ],
+                "world_axis_direction": [
+                  1.0,
+                  0.0,
+                  0.0
+                ],
+                "world_axis_start_mm": [
+                  -11549.99985929731,
+                  12717.99999999919,
+                  0.0
+                ]
+              },
+              "dimensions_mm": {
+                "height": 4468.000000004451,
+                "length": 3970.024859296764,
+                "thickness": 124.00000000000209
+              },
+              "orientation": "east"
+            },
+            "geometry_capability": "straight_wall",
+            "ifc_class": "IfcWallStandardCase",
+            "ifc_global_id": "2j55VthSj3Lu0J6fyrpN4I",
+            "name": "Basic Wall:Interior - Partition (92mm Stud):369550",
+            "properties": [],
+            "retrieval": {
+              "fused_score": 0,
+              "matched_fields": [],
+              "retriever": "structured",
+              "retriever_version": "text2ifc/structured-retriever/0.1",
+              "source_score": 0
+            },
+            "storey_name": "First Floor",
+            "target_id": "ifc:2j55VthSj3Lu0J6fyrpN4I",
+            "type_name": null
+          }
+        ],
+        "context_budget": {
+          "actual_bytes": 3157,
+          "estimated_tokens": 790,
+          "max_bytes": 48000,
+          "max_candidates": 5,
+          "mode": "normal",
+          "omitted_candidate_count": 0,
+          "selected_candidate_count": 1,
+          "token_estimator": "ceil(utf8_bytes/4)"
+        },
+        "model_constraints": {
+          "facts_source": "current_ifc_only",
+          "ifc_schema": "IFC2X3",
+          "index_schema_version": "text2ifc/ifc-index/0.4",
+          "source_ifc_sha256": "sha256:c51b4dc754f7e4f462806c8f2579f791a064022976231e72077e6768c4eef878",
+          "vector_retrieval": "disabled"
+        },
+        "model_fingerprint": "sha256:c51b4dc754f7e4f462806c8f2579f791a064022976231e72077e6768c4eef878",
+        "operation_hints": [
+          "add_door_with_opening_to_wall"
+        ],
+        "query_schema_version": "text2ifc/ifc-target-query/0.1",
+        "resolution_schema_version": "text2ifc/ifc-target-resolution/0.1",
+        "resolved_target_id": "ifc:2j55VthSj3Lu0J6fyrpN4I",
+        "schema_version": "text2ifc/ifc-target-context/0.1",
+        "score_version": "text2ifc/target-score/0.1",
+        "status": "resolved"
+      },
+      "evidence_pointers": [
+        "resolved:/operations/operation-door-001/context/candidate_targets/0"
+      ],
+      "operation_id": "operation-door-001",
+      "operation_type": "add_door_with_opening_to_wall",
+      "parameters": {
+        "derivation": {
+          "digest": "sha256:494cc4a27457740c4dbef87bfe28fbbd4f43f04b6d30d884787a6e90a3ccbe59",
+          "position": {
+            "formula": "identity",
+            "source_anchor": "wall_local_start"
+          }
+        },
+        "door": {
+          "operation_derivation": {
+            "source": "explicit_formal_enum"
+          },
+          "operation_type": "SINGLE_SWING_LEFT",
+          "overall_height_mm": 2134.0,
+          "overall_width_mm": 915.0
+        },
+        "opening": {
+          "derivation": {
+            "formula": "identity",
+            "meaning": "overall_opening",
+            "source": "explicit_request"
+          },
+          "dimension_meaning": "overall_opening",
+          "height_mm": 2134.0,
+          "sill_height_mm": 0.0,
+          "width_mm": 915.0
+        },
+        "position": {
+          "center_offset_mm": 2118.499859,
+          "reference": "wall_local_start"
+        }
+      },
+      "scope_ids": [
+        "2j55VthSj3Lu0J6fyrpN4I"
+      ],
+      "target_global_id": "2j55VthSj3Lu0J6fyrpN4I"
+    },
+    {
+      "authorized_semantics": [
+        {
+          "derivation_digest": "sha256:494cc4a27457740c4dbef87bfe28fbbd4f43f04b6d30d884787a6e90a3ccbe59",
+          "kind": "door_canonicalization",
+          "operation_type": "SINGLE_SWING_LEFT",
+          "source": "deterministic_policy"
+        },
+        {
+          "authorization": "deterministic_policy",
+          "formal_attributes": {
+            "construction_type": "NOTDEFINED",
+            "operation_type": "SINGLE_SWING_LEFT",
+            "parameter_takes_precedence": false,
+            "sizeable": false
+          },
+          "global_id": "37qTzNa5fLbOLQHBMHYsXE",
+          "ifc_class": "IfcDoorStyle",
+          "kind": "system_generated_type",
+          "operation_id": "operation-door-002",
+          "template": {
+            "construction_type": "NOTDEFINED",
+            "name": "Text2IFC generated door type operation-door-002",
+            "operation_type": "SINGLE_SWING_LEFT",
+            "parameter_takes_precedence": false,
+            "sizeable": false
+          },
+          "template_digest": "sha256:32c21a4bb0cc1e5c4748c9ba5526aa266d91e9b8f13c7aeb7cf05aaa900ad849",
+          "template_id": "text2ifc-door-single-swing-template",
+          "template_version": "0.1"
+        }
+      ],
+      "context": {
+        "base_model_fingerprint": "sha256:c51b4dc754f7e4f462806c8f2579f791a064022976231e72077e6768c4eef878",
+        "candidate_targets": [
+          {
+            "evidence": [
+              {
+                "candidate_value": "3Egy$LBd99weR14rW4btmg",
+                "field": "global_id",
+                "provenance": "IfcRoot.GlobalId",
+                "query_value": null,
+                "state": "unavailable"
+              },
+              {
+                "candidate_value": "IfcWallStandardCase",
+                "field": "ifc_class",
+                "provenance": "IfcProduct.is_a",
+                "query_value": [
+                  "IfcWall"
+                ],
+                "state": "matched"
+              },
+              {
+                "candidate_value": "Basic Wall:Interior - Partition (92mm Stud):194392",
+                "field": "name",
+                "provenance": "aliases",
+                "query_value": null,
+                "state": "unavailable"
+              },
+              {
+                "candidate_value": "Second Floor",
+                "field": "storey",
+                "provenance": "spatial_relationship",
+                "query_value": null,
+                "state": "unavailable"
+              },
+              {
+                "candidate_value": "straight_wall",
+                "field": "geometry_capability",
+                "provenance": "adapter",
+                "query_value": [
+                  "straight_wall"
+                ],
+                "state": "matched"
+              },
+              {
+                "candidate_value": 4570.000000004098,
+                "field": "geometry:storey_elevation_mm",
+                "provenance": "ifc_geometry",
+                "query_value": {
+                  "tolerance_mm": 1.0,
+                  "value": 4570.0
+                },
+                "state": "matched"
+              },
+              {
+                "candidate_value": 5639.999999999996,
+                "field": "geometry:wall_length_mm",
+                "provenance": "ifc_geometry",
+                "query_value": {
+                  "tolerance_mm": 1.0,
+                  "value": 5640.0
+                },
+                "state": "matched"
+              },
+              {
+                "candidate_value": 4577.9999999999845,
+                "field": "geometry:wall_height_mm",
+                "provenance": "ifc_geometry",
+                "query_value": {
+                  "tolerance_mm": 1.0,
+                  "value": 4578.0
+                },
+                "state": "matched"
+              },
+              {
+                "candidate_value": 124.0000000000065,
+                "field": "geometry:wall_thickness_mm",
+                "provenance": "ifc_geometry",
+                "query_value": {
+                  "tolerance_mm": 1.0,
+                  "value": 124.0
+                },
+                "state": "matched"
+              }
+            ],
+            "facets": {
+              "editable_target": true,
+              "space_names": [
+                "2C10",
+                "2C12",
+                "2CC3",
+                "2CC4"
+              ]
+            },
+            "geometry": {
+              "coordinate_basis": {
+                "axis_direction": [
+                  1.0,
+                  0.0,
+                  0.0
+                ],
+                "axis_end_mm": [
+                  5639.999999999996,
+                  0.0,
+                  0.0
+                ],
+                "axis_start_mm": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "reference": "wall_local_start",
+                "vertical_direction": [
+                  0.0,
+                  0.0,
+                  1.0
+                ],
+                "world_axis_direction": [
+                  1.0,
+                  0.0,
+                  0.0
+                ],
+                "world_axis_start_mm": [
+                  -38960.0000000006,
+                  44982.4387102593,
+                  4570.000000004098
+                ]
+              },
+              "dimensions_mm": {
+                "height": 4577.9999999999845,
+                "length": 5639.999999999996,
+                "thickness": 124.0000000000065
+              },
+              "orientation": "east"
+            },
+            "geometry_capability": "straight_wall",
+            "ifc_class": "IfcWallStandardCase",
+            "ifc_global_id": "3Egy$LBd99weR14rW4btmg",
+            "name": "Basic Wall:Interior - Partition (92mm Stud):194392",
+            "properties": [],
+            "retrieval": {
+              "fused_score": 0,
+              "matched_fields": [],
+              "retriever": "structured",
+              "retriever_version": "text2ifc/structured-retriever/0.1",
+              "source_score": 0
+            },
+            "storey_name": "Second Floor",
+            "target_id": "ifc:3Egy$LBd99weR14rW4btmg",
+            "type_name": null
+          }
+        ],
+        "context_budget": {
+          "actual_bytes": 3159,
+          "estimated_tokens": 790,
+          "max_bytes": 48000,
+          "max_candidates": 5,
+          "mode": "normal",
+          "omitted_candidate_count": 0,
+          "selected_candidate_count": 1,
+          "token_estimator": "ceil(utf8_bytes/4)"
+        },
+        "model_constraints": {
+          "facts_source": "current_ifc_only",
+          "ifc_schema": "IFC2X3",
+          "index_schema_version": "text2ifc/ifc-index/0.4",
+          "source_ifc_sha256": "sha256:c51b4dc754f7e4f462806c8f2579f791a064022976231e72077e6768c4eef878",
+          "vector_retrieval": "disabled"
+        },
+        "model_fingerprint": "sha256:c51b4dc754f7e4f462806c8f2579f791a064022976231e72077e6768c4eef878",
+        "operation_hints": [
+          "add_door_with_opening_to_wall"
+        ],
+        "query_schema_version": "text2ifc/ifc-target-query/0.1",
+        "resolution_schema_version": "text2ifc/ifc-target-resolution/0.1",
+        "resolved_target_id": "ifc:3Egy$LBd99weR14rW4btmg",
+        "schema_version": "text2ifc/ifc-target-context/0.1",
+        "score_version": "text2ifc/target-score/0.1",
+        "status": "resolved"
+      },
+      "evidence_pointers": [
+        "resolved:/operations/operation-door-002/context/candidate_targets/0"
+      ],
+      "operation_id": "operation-door-002",
+      "operation_type": "add_door_with_opening_to_wall",
+      "parameters": {
+        "derivation": {
+          "digest": "sha256:494cc4a27457740c4dbef87bfe28fbbd4f43f04b6d30d884787a6e90a3ccbe59",
+          "position": {
+            "formula": "identity",
+            "source_anchor": "wall_local_start"
+          }
+        },
+        "door": {
+          "operation_derivation": {
+            "source": "explicit_formal_enum"
+          },
+          "operation_type": "SINGLE_SWING_LEFT",
+          "overall_height_mm": 2134.0,
+          "overall_width_mm": 915.0
+        },
+        "opening": {
+          "derivation": {
+            "formula": "identity",
+            "meaning": "overall_opening",
+            "source": "explicit_request"
+          },
+          "dimension_meaning": "overall_opening",
+          "height_mm": 2134.0,
+          "sill_height_mm": 0.0,
+          "width_mm": 915.0
+        },
+        "position": {
+          "center_offset_mm": 1838.5,
+          "reference": "wall_local_start"
+        }
+      },
+      "scope_ids": [
+        "3Egy$LBd99weR14rW4btmg"
+      ],
+      "target_global_id": "3Egy$LBd99weR14rW4btmg"
+    }
+  ],
+  "property_preview": null,
+  "property_resolutions": [],
+  "reason_code": null,
+  "schema_version": "text2ifc/ifc-resolution-flow/0.1",
+  "source_ifc_sha256": "sha256:c51b4dc754f7e4f462806c8f2579f791a064022976231e72077e6768c4eef878",
+  "status": "resolved"
+}

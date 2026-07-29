@@ -4,6 +4,7 @@ import re
 from pathlib import Path
 
 import ifcopenshell
+import ifcopenshell.util.element
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -50,7 +51,27 @@ def test_vvo_five_door_case_is_one_changeset_and_rolls_back_on_failure(
     assert manifest["one_atomic_changeset"] is True
     assert manifest["injected_failure_published"] is False
     assert not (case_dir / "must-not-exist.ifc").exists()
-    assert ifcopenshell.open(str(case_dir / "repaired.ifc")).schema == "IFC2X3"
+    repaired = ifcopenshell.open(str(case_dir / "repaired.ifc"))
+    assert repaired.schema == "IFC2X3"
+    application = json.loads(
+        (case_dir / "application.json").read_text(encoding="utf-8")
+    )
+    created_window_ids = [
+        item["global_id"]
+        for operation in application["operations"]
+        for item in operation["changes"]["created"]
+        if item["role"] == "window"
+    ]
+    assert len(created_window_ids) == 2
+    for global_id in created_window_ids:
+        window = repaired.by_guid(global_id)
+        assert 0.1 < float(window.OverallWidth) < 10.0
+        assert (
+            ifcopenshell.util.element.get_psets(window)[
+                "Pset_WindowCommon"
+            ]["IsExternal"]
+            is True
+        )
 
 
 def test_vvo_mixed_case_publishes_two_windows_and_two_doors_atomically(
@@ -100,6 +121,55 @@ def test_vvo_mixed_case_public_targeting_is_guid_free_and_resolves_before_bindin
         "strategy": "name_storey_and_wall_local_position",
         "resolved_operation_count": 4,
     }
+
+
+def test_dental_clinic_mixed_case_recreates_openings_from_geometry_targeting(
+    tmp_path: Path,
+) -> None:
+    module = _module()
+    manifest = module.run_mixed_case(
+        module.DENTAL_CLINIC_MIXED_CASE, tmp_path
+    )
+    case_dir = tmp_path / manifest["case_id"]
+
+    assert manifest["status"] == "passed"
+    assert manifest["operation_families"] == {"window": 2, "door": 2}
+    assert manifest["damage"]["door_openings_removed"] is True
+    assert manifest["damage"]["window_openings_removed"] is True
+    assert manifest["public_targeting"] == {
+        "guid_free": True,
+        "name_free": True,
+        "strategy": "storey_elevation_orientation_and_wall_dimensions",
+        "resolved_operation_count": 4,
+    }
+
+    request = (case_dir / "request.txt").read_text(encoding="utf-8")
+    assert re.findall(
+        r"(?<![0-9A-Za-z_$])[0-3][0-9A-Za-z_$]{21}(?![0-9A-Za-z_$])",
+        request,
+    ) == []
+    intent = json.loads(
+        (case_dir / "repair-intent.json").read_text(encoding="utf-8")
+    )
+    for operation in intent["operations"]:
+        query = operation["target_query"]
+        assert query.get("global_id") is None
+        assert query.get("names") in (None, [])
+        assert query.get("storey_name") is None
+        assert query.get("storey_global_id") is None
+        assert query.get("host_global_id") is None
+        assert len(query["geometry_constraints"]) == 4
+
+    changeset = json.loads(
+        (case_dir / "changeset.json").read_text(encoding="utf-8")
+    )
+    operation_types = [
+        operation["operation_type"] for operation in changeset["operations"]
+    ]
+    assert operation_types.count("add_window_with_opening_to_wall") == 2
+    assert operation_types.count("add_door_with_opening_to_wall") == 2
+    assert "fill_existing_opening_with_door" not in operation_types
+    assert ifcopenshell.open(str(case_dir / "repaired.ifc")).schema == "IFC2X3"
 
 
 def test_largebuilding_generated_door_type_case_is_source_bound(

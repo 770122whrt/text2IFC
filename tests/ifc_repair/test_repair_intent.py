@@ -130,6 +130,38 @@ def test_single_operation_round_trips_with_canonical_hash_and_evidence() -> None
         intent.operations[0].parameters["opening"]["width_mm"] = 1.0
 
 
+def test_geometry_signature_is_a_valid_target_selector_without_names() -> None:
+    repair_intent = _module()
+    operation = _operation()
+    operation["target_query"] = {
+        "schema_version": "text2ifc/ifc-target-query/0.1",
+        "allowed_ifc_classes": ["IfcWall"],
+        "direction": "north",
+        "geometry_capabilities": ["straight_wall"],
+        "geometry_constraints": [
+            {
+                "field": "storey_elevation_mm",
+                "value": 4570.0,
+                "tolerance_mm": 1.0,
+            },
+            {
+                "field": "wall_length_mm",
+                "value": 40577.0,
+                "tolerance_mm": 1.0,
+            },
+        ],
+    }
+
+    intent = repair_intent.RepairIntent.from_dict(
+        _payload(operation), registry=create_default_registry()
+    )
+
+    query = intent.operations[0].target_query
+    assert query.global_id is None
+    assert query.names == ()
+    assert len(query.geometry_constraints) == 2
+
+
 def test_public_source_kinds_and_all_stage_limits_have_one_authority() -> None:
     repair_intent = _module()
     limits = repair_intent.DEFAULT_REPAIR_INTENT_LIMITS
