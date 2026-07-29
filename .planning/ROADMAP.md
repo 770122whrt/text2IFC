@@ -412,7 +412,9 @@ seconds.
 **Status:** In progress — Plans 11-01 through 11-04 and the complete 11-05
 offline matrix are implemented. LargeBuilding, vvo, AdvancedProject,
 generated-Type, five-Door atomic and two-Door/two-Window mixed cases pass and
-six independently validated offline Proof packages are curated. Real DeepSeek
+six independently validated offline Proof packages are curated. The mixed
+case now proves GUID-free public targeting: names, storeys and wall-local
+measurements resolve first, then the compiler binds internal GUIDs. Real DeepSeek
 UAT was not executed because the external Codex execution quota rejected the
 network command before Stage 1; actual Stage 1/2 call counts are 0 —
 2026-07-29.
@@ -457,6 +459,9 @@ profiles.
 - Exact `IfcDoorStyle` reuse preserves that Type unchanged. Without reuse, the
   compiler creates only a supported dedicated single-swing/explicitly
   `NOTDEFINED` style.
+- Public target selection must not require an IFC GlobalId. Descriptive
+  selectors resolve against the current IFC index; a duplicate DoorStyle name
+  may be narrowed by an explicit formal OperationType, otherwise it clarifies.
 - Missing optional Door features are omitted; missing blocking facts clarify;
   requested unsupported features fail in deterministic capability code.
 - Space may resolve target/viewpoint but Phase 11 does not author

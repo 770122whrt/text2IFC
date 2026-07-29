@@ -1,4 +1,6 @@
 import importlib.util
+import json
+import re
 from pathlib import Path
 
 import ifcopenshell
@@ -64,6 +66,40 @@ def test_vvo_mixed_case_publishes_two_windows_and_two_doors_atomically(
     assert manifest["one_atomic_changeset"] is True
     repaired = ifcopenshell.open(str(case_dir / "repaired.ifc"))
     assert repaired.schema == "IFC2X3"
+
+
+def test_vvo_mixed_case_public_targeting_is_guid_free_and_resolves_before_binding(
+    tmp_path: Path,
+) -> None:
+    module = _module()
+    manifest = module.run_mixed_case(module.VVO_MIXED_CASE, tmp_path)
+    case_dir = tmp_path / manifest["case_id"]
+
+    request = (case_dir / "request.txt").read_text(encoding="utf-8")
+    assert re.findall(r"(?<![0-9A-Za-z_$])[0-3][0-9A-Za-z_$]{21}(?![0-9A-Za-z_$])", request) == []
+
+    intent = json.loads((case_dir / "repair-intent.json").read_text(encoding="utf-8"))
+    for operation in intent["operations"]:
+        target_query = operation["target_query"]
+        assert target_query.get("global_id") is None
+        assert target_query.get("storey_global_id") is None
+        assert target_query.get("host_global_id") is None
+        assert target_query["names"]
+        prototype = operation.get("prototype_intent")
+        if prototype is not None:
+            assert prototype["reference_kind"] == "type_name"
+
+    resolution = json.loads(
+        (case_dir / "target-resolution.json").read_text(encoding="utf-8")
+    )
+    assert resolution["status"] == "resolved"
+    assert len(resolution["operations"]) == 4
+    assert all(item["target_global_id"] for item in resolution["operations"])
+    assert manifest["public_targeting"] == {
+        "guid_free": True,
+        "strategy": "name_storey_and_wall_local_position",
+        "resolved_operation_count": 4,
+    }
 
 
 def test_largebuilding_generated_door_type_case_is_source_bound(

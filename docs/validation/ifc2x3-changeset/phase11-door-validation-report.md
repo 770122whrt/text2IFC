@@ -1,6 +1,6 @@
 # Phase 11 Door / Opening 验证报告
 
-> 日期：2026-07-28  
+> 日期：2026-07-29
 > 当前结论：离线实现与真实 IFC 验证通过；真实 DeepSeek UAT 尚未执行。  
 > 外部阻塞：Codex 执行额度层拒绝网络命令，Provider 实际调用数为 0。
 
@@ -209,6 +209,31 @@ dataset/processed/ifc-repair/phase11-door-offline/
 `fill_existing_opening_with_door`，四个 operation 分别通过 L1/L2 后只发布
 一份 IFC。
 
+### 两门两窗无 GUID 定位补充验收
+
+该混合案例已改为更严格的公共输入边界：用户文本和 RepairIntent 都不包含
+Wall、Opening、Door、Window 或 Type 的 IFC GlobalId。四个 operation 使用：
+
+- Window：楼层名 + 墙名称 + `wall_local_start` 中心偏移 + 洞口尺寸；
+- Door：楼层名 + 墙名称 + 保留 Opening 名称 + 墙局部中心偏移 + 洞口尺寸；
+- Type：Type 名称；Door Type 同名时再使用用户已给出的 formal
+  `OperationType` 收窄，不要求用户输入 Type GlobalId。
+
+Stage 1 的公开 `target_query` 只保存 `names`、`storey_name` 和几何能力条件。
+程序先在 damaged IFC 的 SQLite 索引中解析出两面墙和两个空 Opening，并验证
+位置、尺寸与私有测试真值一致；只有解析成功后，内部 Bound ChangeSet 才写入
+GlobalId。任何目标或 Type 不能唯一解析时均停止并返回澄清，不会按候选顺序猜测。
+
+本次删除并恢复的 Door 是：
+
+- `单扇 - 与墙齐:800x2480:255008`；
+- `单扇 - 与墙齐:935x2400:275772`。
+
+新增可审计产物为 `repair-intent.json` 和 `target-resolution.json`。公开请求经过
+IFC GUID 正则扫描为 0 命中；解析结果为 4/4 resolved；最终一个 ChangeSet、
+4 个 operation、一个 repaired IFC，application、L1、L2、preservation 和 IFC
+重开全部通过。
+
 ### LargeBuilding 单门
 
 | 项目 | 值 |
@@ -255,6 +280,13 @@ AdvancedProject 保持完整 validation 与 full-model comparator 范围，没�
 application 的审计和写入现在共享同一个已打开 IFC 模型与基线指纹，消除了
 同一 44 MB 文件在 application 内部的重复打开与重复哈希；审计内容没有删减。
 
+2026-07-29 的无 GUID 混合补充验收没有修改 AdvancedProject evaluator，但
+同机完整回归连续两次测得 cold request-to-publication 为 225.665 s 和
+226.164 s，warm evaluation 为 78.529 s 和 75.317 s。两次功能、L1/L2 和
+preservation 均通过，只有冻结的 180 s cold 性能门禁失败。因此历史 140.805 s
+成功证据仍保留，同时新增一项独立性能回归待优化；本次无 GUID vvo 混合案例
+不把该性能问题误报为自身功能失败，也不通过提高阈值规避。
+
 ### 独立 Proof
 
 离线案例通过以下命令独立收录：
@@ -264,7 +296,7 @@ application 的审计和写入现在共享同一个已打开 IFC 模型与基线
 .venv\Scripts\python.exe scripts\ifc_repair\validate_success_cases.py --json
 ```
 
-当前成功案例集合共有 11 个案例、30 个 operation、135 个受哈希保护的文件，
+当前成功案例集合共有 11 个案例、30 个 operation、137 个受哈希保护的文件，
 33 次 IFC2X3 独立重开，校验结果为 `passed`。其中 Phase 11 新增 6 个离线
 Door/混合案例、13 个 operation。离线证据明确标记
 `offline_bound_deterministic`，不会冒充真实 DeepSeek 证据。
@@ -278,6 +310,9 @@ Door/混合案例、13 个 operation。离线证据明确标记
 - Plan 11-04 最终矩阵：86 个测试通过；
 - Plan 11-05 mutation/dataset/live contract：9 个测试通过；
 - Phase 11 batch/mixed/AdvancedProject 聚焦矩阵：17 个测试通过；
+- 无 GUID 门窗混合、Target/Type 解析与 Door 澄清回归：56 个测试通过；
+- 更新后的成功案例集合测试：2 个测试通过，11 个案例、137 个文件、33 次
+  IFC2X3 重开；
 - 首次完整 IFC repair suite：632 passed、1 skipped、6 failed。
 
 6 个失败来自新增 operation 后的历史 fixture 假设：

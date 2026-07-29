@@ -1,44 +1,54 @@
 {
   "artifacts": {
     "application.json": {
-      "bytes": 25759,
+      "bytes": 25762,
       "path": "application.json",
-      "sha256": "sha256:513f9cfab6290b892f2fb2379274561c292381470f98d83c7e44cd5d9dd9c365"
+      "sha256": "sha256:06a0b422a5a094371bd1ba7666633705be97a52f47d3b3b9598ddd7f0817a056"
     },
     "changeset.json": {
-      "bytes": 12580,
+      "bytes": 13886,
       "path": "changeset.json",
-      "sha256": "sha256:33d7276d1a4bad231ae0f522e131a2a05163364e43f077b77650e9866195fa2d"
+      "sha256": "sha256:5cffca696eb66fdf09956740e1bf44f303366f4f64f3567edef756af8581df0b"
     },
     "comparison.json": {
-      "bytes": 44608,
+      "bytes": 40979,
       "path": "comparison.json",
-      "sha256": "sha256:2269ba5438c6e7dad53c3a468c9bd5c1fd76ba28aa40ab9da2ba108b467d509a"
+      "sha256": "sha256:2a52a7afb2f05add4f65085952f38aa5609d58aa9dd3f65c7d7dff056c75265b"
     },
     "damaged.ifc": {
-      "bytes": 2431607,
+      "bytes": 2431536,
       "path": "damaged.ifc",
-      "sha256": "sha256:537b8d4d28ea073f820ea72e34a31c0c41723ca818382b3b3d46a78880156bdc"
+      "sha256": "sha256:6824086b4171cce034acaa23ad51c3020d87ed44c0aead62979a4b4ad17c4db3"
     },
     "evaluation.json": {
-      "bytes": 421796,
+      "bytes": 413276,
       "path": "evaluation.json",
-      "sha256": "sha256:fb9b9e9758e44182d526069229f7ee9f945bcfa3b85259b049baef85b7ddd6e1"
+      "sha256": "sha256:b791ee32e5eebb354c2db476435c8667025287ae5900a23a945caf939f9b8984"
     },
     "original.ifc": {
       "bytes": 2409268,
       "path": "original.ifc",
       "sha256": "sha256:b6c435be955aeb6b2998f42a62f4ebf8c3f91eb7d373ca71a2dcedfeb95b3fdc"
     },
+    "repair-intent.json": {
+      "bytes": 9884,
+      "path": "repair-intent.json",
+      "sha256": "sha256:9b46690917198315655d2525f4130e2988c0305a7a4abe38fea07e4b9571bbc6"
+    },
     "repaired.ifc": {
-      "bytes": 2438490,
+      "bytes": 2438419,
       "path": "repaired.ifc",
-      "sha256": "sha256:1a26a9b67ab4328c2fe4bfa4b89189cd0bfecb846682366889b8ebdc18a2dcac"
+      "sha256": "sha256:0d30005fa91360f186a6c539206aa1c229db03f69ac4d2e183a42c53db91a76e"
     },
     "request.txt": {
-      "bytes": 1308,
+      "bytes": 1501,
       "path": "request.txt",
-      "sha256": "sha256:9f323a2c1758fd130fba2a7979edb94a2ada1765f1f631a011fa28f37f74e6b0"
+      "sha256": "sha256:e1e37b6f39ab52c58aade1d33bf6c520baa9d1a68c535f5299681a9e7d66c819"
+    },
+    "target-resolution.json": {
+      "bytes": 27052,
+      "path": "target-resolution.json",
+      "sha256": "sha256:840691b8682b622490384ae7b3c3438d195085c025fd8b0b87f0f84242fabb52"
     }
   },
   "case_id": "vvo-two-door-two-window-mixed",
@@ -54,13 +64,13 @@
         "type_name": "800x2480"
       },
       {
-        "global_id": "2IUEnGd5v4Yfg1ZlPtd0tI",
-        "name": "单扇 - 与墙齐:800x2480:255190",
+        "global_id": "1B$rgWypT66viEf2CI1iIv",
+        "name": "单扇 - 与墙齐:935x2400:275772",
         "operation_type": "SINGLE_SWING_RIGHT",
-        "overall_height_mm": 2480.0,
-        "overall_width_mm": 800.0,
-        "type_global_id": "2IUEnGd5v4Yfg1ZkDtd0mJ",
-        "type_name": "800x2480"
+        "overall_height_mm": 2400.0,
+        "overall_width_mm": 935.0,
+        "type_global_id": "1B$rgWypT66viEf3OI1iU2",
+        "type_name": "935x2400"
       }
     ],
     "window_ids": [
@@ -73,6 +83,11 @@
   "operation_families": {
     "door": 2,
     "window": 2
+  },
+  "public_targeting": {
+    "guid_free": true,
+    "resolved_operation_count": 4,
+    "strategy": "name_storey_and_wall_local_position"
   },
   "schema_version": "text2ifc/phase11-door-proof/0.2",
   "status": "passed",

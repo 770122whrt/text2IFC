@@ -30,6 +30,10 @@ from text2ifc_ifc_repair.geometry import (  # noqa: E402
     opening_dimensions_mm,
     opening_position_in_wall_mm,
 )
+from text2ifc_ifc_repair.index_store import (  # noqa: E402
+    SQLiteIndexRepository,
+)
+from text2ifc_ifc_repair.indexer import build_ifc_index  # noqa: E402
 from text2ifc_ifc_repair.mutation import (  # noqa: E402
     remove_door,
     remove_doors_batch,
@@ -43,7 +47,9 @@ from text2ifc_ifc_repair.operations.door import (  # noqa: E402
 from text2ifc_ifc_repair.resolution_flow import (  # noqa: E402
     ResolvedOperation,
     generated_type_authority,
+    resolve_repair_intent,
 )
+from text2ifc_ifc_repair.repair_intent import RepairIntent  # noqa: E402
 from text2ifc_ifc_repair.semantic_facts import SemanticFact  # noqa: E402
 
 
@@ -82,7 +88,13 @@ VVO_FIVE_DOOR_CASE = {
 VVO_MIXED_CASE = {
     "case_id": "vvo-two-door-two-window-mixed",
     "source": ROOT / "dataset/ifc/train/vvo.ifc",
-    "door_global_ids": VVO_FIVE_DOOR_CASE["door_global_ids"][:2],
+    # These two occurrences resolve their surviving Door Styles from public
+    # Type name plus formal OperationType. Their private ids are fixture-only
+    # and never enter the public request or RepairIntent.
+    "door_global_ids": (
+        "2IUEnGd5v4Yfg1ZlPtd0qa",
+        "1B$rgWypT66viEf2CI1iIv",
+    ),
     "window_case": ROOT
     / "dataset/manifests/ifc-repair-cases/vvo-five-window-001.private.json",
 }
@@ -144,6 +156,7 @@ def _source_chain(source: Path, door_id: str) -> dict[str, Any]:
         },
         "opening": {
             "global_id": str(opening.GlobalId),
+            "name": None if opening.Name is None else str(opening.Name),
             "width_mm": float(dimensions["width"]),
             "height_mm": float(dimensions["height"]),
             "sill_height_mm": float(position["sill_height"]),
@@ -159,6 +172,9 @@ def _source_chain(source: Path, door_id: str) -> dict[str, Any]:
         # reproduce that occurrence-level authoring error.
         "storey_global_id": str(
             wall.ContainedInStructure[0].RelatingStructure.GlobalId
+        ),
+        "storey_name": str(
+            wall.ContainedInStructure[0].RelatingStructure.Name
         ),
         "style": {
             "global_id": str(style.GlobalId),
@@ -1145,6 +1161,260 @@ def run_five_door_case(
     return manifest
 
 
+def _public_provenance(reference: str, excerpt: str) -> dict[str, str]:
+    return {
+        "source_kind": "user_request",
+        "reference": reference,
+        "excerpt": excerpt,
+    }
+
+
+def _guid_free_window_request(
+    target: dict[str, Any],
+) -> str:
+    return (
+        f"窗 {target['window']['name']}：在楼层 {target['wall']['storey']} 的墙"
+        f"“{target['wall']['name']}”上开窗；以 wall_local_start 为基准，"
+        f"洞口中心偏移 {target['opening']['geometric_center_offset_mm']} mm，"
+        f"宽 {target['window']['width_mm']} mm、高 "
+        f"{target['window']['height_mm']} mm、窗台高 "
+        f"{target['opening']['sill_height_mm']} mm；复用现有 Window Type"
+        f"“{target['prototype_evidence']['name']}”。"
+    )
+
+
+def _guid_free_door_request(chain: dict[str, Any]) -> str:
+    return (
+        f"门 {chain['door']['name']}：在楼层 {chain['storey_name']} 的墙"
+        f"“{chain['wall']['name']}”上，向现有空洞"
+        f"“{chain['opening']['name']}”安装门；以 wall_local_start 为基准，"
+        f"洞口中心偏移 {chain['opening']['center_offset_mm']} mm，"
+        f"洞口宽 {chain['opening']['width_mm']} mm、高 "
+        f"{chain['opening']['height_mm']} mm、门槛高 "
+        f"{chain['opening']['sill_height_mm']} mm；门宽 "
+        f"{chain['door']['overall_width_mm']} mm、高 "
+        f"{chain['door']['overall_height_mm']} mm，开启方式 "
+        f"{chain['style']['operation_type']}，复用现有 Door Type"
+        f"“{chain['style']['name']}”。"
+    )
+
+
+def _guid_free_mixed_intent(
+    *,
+    request: str,
+    window_targets: list[dict[str, Any]],
+    door_chains: list[dict[str, Any]],
+    model_fingerprint: str,
+    registry: Any,
+) -> RepairIntent:
+    window_lines = [
+        _guid_free_window_request(target) for target in window_targets
+    ]
+    door_lines = [_guid_free_door_request(chain) for chain in door_chains]
+    operations: list[dict[str, Any]] = []
+    for index, (target, excerpt) in enumerate(
+        zip(window_targets, window_lines, strict=True), 1
+    ):
+        operation_id = f"operation-window-{index:03d}"
+        operations.append(
+            {
+                "operation_id": operation_id,
+                "operation_type": "add_window_with_opening_to_wall",
+                "target_query": {
+                    "schema_version": "text2ifc/ifc-target-query/0.1",
+                    "allowed_ifc_classes": ["IfcWall"],
+                    "names": [target["wall"]["name"]],
+                    "storey_name": target["wall"]["storey"],
+                    "geometry_capabilities": ["straight_wall"],
+                    "max_candidates": 5,
+                    "winner_margin": 10,
+                },
+                "parameters": {
+                    "position": {
+                        "reference": "wall_local_start",
+                        "center_offset_mm": target["opening"][
+                            "geometric_center_offset_mm"
+                        ],
+                    },
+                    "opening": {
+                        "width_mm": target["window"]["width_mm"],
+                        "height_mm": target["window"]["height_mm"],
+                        "sill_height_mm": target["opening"][
+                            "sill_height_mm"
+                        ],
+                    },
+                    "window": {"fit_opening": True},
+                },
+                "attribute_intents": [],
+                "prototype_intent": {
+                    "reference_kind": "type_name",
+                    "reference": target["prototype_evidence"]["name"],
+                    "source": _public_provenance(
+                        f"request:/operations/{index - 1}/prototype",
+                        excerpt,
+                    ),
+                },
+                "provenance": [
+                    _public_provenance(
+                        f"request:/operations/{index - 1}", excerpt
+                    )
+                ],
+            }
+        )
+    door_offset = len(operations)
+    for index, (chain, excerpt) in enumerate(
+        zip(door_chains, door_lines, strict=True), 1
+    ):
+        operation_id = f"operation-door-{index:03d}"
+        public_index = door_offset + index - 1
+        operations.append(
+            {
+                "operation_id": operation_id,
+                "operation_type": "fill_existing_opening_with_door",
+                "target_query": {
+                    "schema_version": "text2ifc/ifc-target-query/0.1",
+                    "allowed_ifc_classes": ["IfcOpeningElement"],
+                    "names": [chain["opening"]["name"]],
+                    "storey_name": chain["storey_name"],
+                    "geometry_capabilities": [
+                        "measured_hosted_opening"
+                    ],
+                    "max_candidates": 5,
+                    "winner_margin": 10,
+                },
+                "parameters": {
+                    "fit_existing_opening": True,
+                    "door": {
+                        "operation_type": chain["style"][
+                            "operation_type"
+                        ],
+                        "formal_enum_explicit": True,
+                        **(
+                            {"notdefined_accepted": True}
+                            if chain["style"]["operation_type"]
+                            == "NOTDEFINED"
+                            else {}
+                        ),
+                    },
+                },
+                "attribute_intents": [],
+                "prototype_intent": {
+                    "reference_kind": "type_name",
+                    "reference": chain["style"]["name"],
+                    "source": _public_provenance(
+                        f"request:/operations/{public_index}/prototype",
+                        excerpt,
+                    ),
+                },
+                "provenance": [
+                    _public_provenance(
+                        f"request:/operations/{public_index}", excerpt
+                    )
+                ],
+            }
+        )
+    document = {
+        "schema_version": "text2ifc/ifc-repair-intent/0.1",
+        "request_id": "request-vvo-guid-free-mixed",
+        "source_request_hash": _text_hash(request),
+        "model_fingerprint": model_fingerprint,
+        "prompt_fingerprint": _text_hash(
+            "phase11-guid-free-mixed-targeting/0.1"
+        ),
+        "operations": operations,
+        "provenance": [
+            _public_provenance("request:/text", request)
+        ],
+    }
+    return RepairIntent.from_dict(
+        document,
+        registry=registry,
+        require_complete=False,
+    )
+
+
+def _resolved_prototype_global_id(
+    operation: ResolvedOperation,
+) -> str:
+    matches = [
+        str(item["global_id"])
+        for item in operation.authorized_semantics
+        if item.get("kind") == "user_authorized_prototype"
+        and item.get("global_id")
+    ]
+    if len(matches) != 1:
+        raise RuntimeError(
+            f"PHASE11_EXACT_PROTOTYPE_BINDING_REQUIRED:"
+            f"{operation.operation_id}:{matches}"
+        )
+    return matches[0]
+
+
+def _bind_mixed_operations(
+    *,
+    resolution: Any,
+    window_targets: list[dict[str, Any]],
+    door_chains: list[dict[str, Any]],
+) -> list[dict[str, Any]]:
+    resolved = {
+        item.operation_id: item for item in resolution.operations
+    }
+    bound: list[dict[str, Any]] = []
+    for index, target in enumerate(window_targets, 1):
+        operation_id = f"operation-window-{index:03d}"
+        authority = resolved[operation_id]
+        expected_target = str(target["wall"]["global_id"])
+        if authority.target_global_id != expected_target:
+            raise RuntimeError(
+                f"PHASE11_WINDOW_DESCRIPTION_MISBOUND:{operation_id}"
+            )
+        operation = _window_operation(
+            target, operation_id=operation_id
+        )
+        operation["target"] = {
+            "wall_global_id": authority.target_global_id
+        }
+        operation["parameters"] = authority.to_dict()["parameters"]
+        type_id = _resolved_prototype_global_id(authority)
+        for assignment in operation["semantic_assignments"]:
+            if assignment["fact_key"] == "relationship:type":
+                assignment["value"] = type_id
+                assignment["source_ref"] = (
+                    f"resolved-prototype:{type_id}"
+                )
+        if type_id != str(target["prototype_evidence"]["global_id"]):
+            raise RuntimeError(
+                f"PHASE11_WINDOW_TYPE_NAME_MISBOUND:{operation_id}"
+            )
+        bound.append(operation)
+    for index, chain in enumerate(door_chains, 1):
+        operation_id = f"operation-door-{index:03d}"
+        authority = resolved[operation_id]
+        expected_target = str(chain["opening"]["global_id"])
+        if authority.target_global_id != expected_target:
+            raise RuntimeError(
+                f"PHASE11_DOOR_DESCRIPTION_MISBOUND:{operation_id}"
+            )
+        operation = _operation(chain, operation_id=operation_id)
+        operation["target"] = {
+            "opening_global_id": authority.target_global_id
+        }
+        operation["parameters"] = authority.to_dict()["parameters"]
+        type_id = _resolved_prototype_global_id(authority)
+        for assignment in operation["semantic_assignments"]:
+            if assignment["fact_key"] == "relationship:type":
+                assignment["value"] = type_id
+                assignment["source_ref"] = (
+                    f"resolved-prototype:{type_id}"
+                )
+        if type_id != str(chain["style"]["global_id"]):
+            raise RuntimeError(
+                f"PHASE11_DOOR_TYPE_NAME_MISBOUND:{operation_id}"
+            )
+        bound.append(operation)
+    return bound
+
+
 def run_mixed_case(
     case: dict[str, Any], output_root: Path
 ) -> dict[str, Any]:
@@ -1184,38 +1454,47 @@ def run_mixed_case(
         _source_chain(source, str(door_id))
         for door_id in case["door_global_ids"]
     ]
-    window_operations = [
-        _window_operation(
-            target, operation_id=f"operation-window-{index:03d}"
-        )
-        for index, target in enumerate(window_targets, 1)
-    ]
-    door_operations = [
-        _operation(chain, operation_id=f"operation-door-{index:03d}")
-        for index, chain in enumerate(door_chains, 1)
-    ]
-    operations = [*window_operations, *door_operations]
     request_lines = [
-        "请在一个原子 ChangeSet 中同时恢复以下两扇窗和两扇门。",
+        "请在一个原子 ChangeSet 中同时恢复以下两扇窗和两扇门；"
+        "所有目标均按名称、楼层和墙局部位置定位，不使用 GlobalId。",
         *[
-            (
-                f"窗 {target['window']['name']}：墙 "
-                f"{target['wall']['name']}（{target['wall']['global_id']}），"
-                f"中心 {target['opening']['geometric_center_offset_mm']} mm，"
-                f"宽 {target['window']['width_mm']} mm、高 "
-                f"{target['window']['height_mm']} mm、窗台 "
-                f"{target['opening']['sill_height_mm']} mm，复用 Window Type "
-                f"{target['prototype_evidence']['name']} "
-                f"（{target['prototype_evidence']['global_id']}）。"
-            )
+            _guid_free_window_request(target)
             for target in window_targets
         ],
-        *[_request(chain) for chain in door_chains],
+        *[_guid_free_door_request(chain) for chain in door_chains],
     ]
     request = "\n".join(request_lines)
+    registry = create_default_registry()
+    index_path = case_dir / "target-index.sqlite"
+    metadata = build_ifc_index(damaged, index_path)
+    intent = _guid_free_mixed_intent(
+        request=request,
+        window_targets=window_targets,
+        door_chains=door_chains,
+        model_fingerprint=_sha256(damaged),
+        registry=registry,
+    )
+    with SQLiteIndexRepository.open(index_path) as repository:
+        resolution = resolve_repair_intent(
+            intent,
+            repository,
+            expected_source_sha256=metadata.source_ifc_sha256,
+            operation_registry=registry,
+        )
+    if resolution.status != "resolved":
+        raise RuntimeError(
+            "PHASE11_GUID_FREE_TARGET_RESOLUTION_FAILED:"
+            + json.dumps(resolution.to_dict(), ensure_ascii=False)
+        )
+    operations = _bind_mixed_operations(
+        resolution=resolution,
+        window_targets=window_targets,
+        door_chains=door_chains,
+    )
+    window_operations = operations[: len(window_targets)]
+    door_operations = operations[len(window_targets) :]
     target_ids = [
-        *[target["wall"]["global_id"] for target in window_targets],
-        *[chain["opening"]["global_id"] for chain in door_chains],
+        str(item.target_global_id) for item in resolution.operations
     ]
     changeset = {
         "schema_version": "text2ifc/ifc-repair-changeset/0.4",
@@ -1235,7 +1514,6 @@ def run_mixed_case(
         "operations": operations,
     }
     repaired = case_dir / "repaired.ifc"
-    registry = create_default_registry()
     application = apply_changeset(
         damaged_ifc_path=damaged,
         repair_request=request,
@@ -1319,6 +1597,8 @@ def run_mixed_case(
     shutil.copy2(source, case_dir / "original.ifc")
     shutil.copy2(damaged, case_dir / "damaged.ifc")
     _write(case_dir / "request.txt", request)
+    _write(case_dir / "repair-intent.json", intent.to_dict())
+    _write(case_dir / "target-resolution.json", resolution.to_dict())
     _write(case_dir / "changeset.json", changeset)
     _write(case_dir / "application.json", application)
     _write(case_dir / "evaluation.json", evaluation)
@@ -1331,6 +1611,11 @@ def run_mixed_case(
         "operation_count": 4,
         "operation_families": {"window": 2, "door": 2},
         "one_atomic_changeset": True,
+        "public_targeting": {
+            "guid_free": True,
+            "strategy": "name_storey_and_wall_local_position",
+            "resolved_operation_count": len(resolution.operations),
+        },
         "damage": {
             "window_ids": [
                 target["window"]["global_id"] for target in window_targets
@@ -1350,6 +1635,8 @@ def run_mixed_case(
                 "damaged.ifc",
                 "repaired.ifc",
                 "request.txt",
+                "repair-intent.json",
+                "target-resolution.json",
                 "changeset.json",
                 "application.json",
                 "evaluation.json",

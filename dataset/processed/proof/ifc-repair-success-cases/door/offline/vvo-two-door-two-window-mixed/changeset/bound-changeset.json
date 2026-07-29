@@ -1,5 +1,5 @@
 {
-  "base_model_fingerprint": "sha256:537b8d4d28ea073f820ea72e34a31c0c41723ca818382b3b3d46a78880156bdc",
+  "base_model_fingerprint": "sha256:6824086b4171cce034acaa23ad51c3020d87ed44c0aead62979a4b4ad17c4db3",
   "binding_status": "bound",
   "changeset_id": "changeset-vvo-two-door-two-window-mixed",
   "evidence_refs": [
@@ -39,7 +39,7 @@
           "scope": "window_occurrence",
           "source_fact_key": "relationship:type",
           "source_kind": "type_inherited",
-          "source_ref": "surviving-type:2dYMXn0_5AKRbD_1eUIAtb",
+          "source_ref": "resolved-prototype:2dYMXn0_5AKRbD_1eUIAtb",
           "unit": null,
           "value": "2dYMXn0_5AKRbD_1eUIAtb",
           "value_type": "IfcWindowStyle"
@@ -155,7 +155,7 @@
           "scope": "window_occurrence",
           "source_fact_key": "relationship:type",
           "source_kind": "type_inherited",
-          "source_ref": "surviving-type:08xWVL$9z6JRwr3pqJHoru",
+          "source_ref": "resolved-prototype:08xWVL$9z6JRwr3pqJHoru",
           "unit": null,
           "value": "08xWVL$9z6JRwr3pqJHoru",
           "value_type": "IfcWindowStyle"
@@ -245,13 +245,29 @@
       "operation_id": "operation-door-001",
       "operation_type": "fill_existing_opening_with_door",
       "parameters": {
+        "derivation": {
+          "digest": "sha256:d772435071d3bf3c7b13a13150d38dd5f44b639f928d3a4f835b15d542412c18",
+          "position": {
+            "formula": "existing_opening_center",
+            "source_anchor": "opening:2IUEnGd5v4Yfg1ZkLtd0qa"
+          }
+        },
         "door": {
+          "operation_derivation": {
+            "formal_attribute": "OperationType",
+            "source": "door_style:2Bp10QP5H0qx3NLxP020qy"
+          },
           "operation_type": "SINGLE_SWING_LEFT",
           "overall_height_mm": 2480.0,
           "overall_width_mm": 800.0
         },
         "host_wall_global_id": "2HNE4WMQ1CXebZMaih8XoD",
         "opening": {
+          "derivation": {
+            "formula": "fit_existing_opening",
+            "source": "opening:2IUEnGd5v4Yfg1ZkLtd0qa"
+          },
+          "dimension_meaning": "overall_opening",
           "height_mm": 2480.0,
           "sill_height_mm": 130.359199,
           "width_mm": 800.0
@@ -274,7 +290,7 @@
           "scope": "door_occurrence",
           "source_fact_key": "relationship:type",
           "source_kind": "type_inherited",
-          "source_ref": "formal-type:2Bp10QP5H0qx3NLxP020qy",
+          "source_ref": "resolved-prototype:2Bp10QP5H0qx3NLxP020qy",
           "unit": null,
           "value": "2Bp10QP5H0qx3NLxP020qy",
           "value_type": "IfcDoorStyle"
@@ -296,19 +312,35 @@
       "operation_id": "operation-door-002",
       "operation_type": "fill_existing_opening_with_door",
       "parameters": {
-        "door": {
-          "operation_type": "SINGLE_SWING_RIGHT",
-          "overall_height_mm": 2480.0,
-          "overall_width_mm": 800.0
+        "derivation": {
+          "digest": "sha256:530f90444262c557ac60414151020357f4c13a3c688082dfe7e52e29f56a4911",
+          "position": {
+            "formula": "existing_opening_center",
+            "source_anchor": "opening:1B$rgWypT66viEf30I1iIv"
+          }
         },
-        "host_wall_global_id": "1cbLGwmrv8LAj2u11O6kgh",
+        "door": {
+          "operation_derivation": {
+            "formal_attribute": "OperationType",
+            "source": "door_style:1B$rgWypT66viEf3OI1iU2"
+          },
+          "operation_type": "SINGLE_SWING_RIGHT",
+          "overall_height_mm": 2400.0,
+          "overall_width_mm": 935.0
+        },
+        "host_wall_global_id": "2HNE4WMQ1CXebZMaih8Xi_",
         "opening": {
-          "height_mm": 2480.0,
-          "sill_height_mm": 80.359199,
-          "width_mm": 800.0
+          "derivation": {
+            "formula": "fit_existing_opening",
+            "source": "opening:1B$rgWypT66viEf30I1iIv"
+          },
+          "dimension_meaning": "overall_opening",
+          "height_mm": 2400.0,
+          "sill_height_mm": 110.359199,
+          "width_mm": 935.0
         },
         "position": {
-          "center_offset_mm": 849.0,
+          "center_offset_mm": 6507.5,
           "reference": "wall_local_start"
         }
       },
@@ -325,9 +357,9 @@
           "scope": "door_occurrence",
           "source_fact_key": "relationship:type",
           "source_kind": "type_inherited",
-          "source_ref": "formal-type:2IUEnGd5v4Yfg1ZkDtd0mJ",
+          "source_ref": "resolved-prototype:1B$rgWypT66viEf3OI1iU2",
           "unit": null,
-          "value": "2IUEnGd5v4Yfg1ZkDtd0mJ",
+          "value": "1B$rgWypT66viEf3OI1iU2",
           "value_type": "IfcDoorStyle"
         }
       ],
@@ -337,7 +369,7 @@
         "policy_version": "0.1"
       },
       "target": {
-        "opening_global_id": "2IUEnGd5v4Yfg1ZkLtd0tI"
+        "opening_global_id": "1B$rgWypT66viEf30I1iIv"
       }
     }
   ],
@@ -354,10 +386,10 @@
       "2CsmzAChHF6O6maGXlo6yJ",
       "0jltRti3rFigAmdXYhXxqI",
       "2IUEnGd5v4Yfg1ZkLtd0qa",
-      "2IUEnGd5v4Yfg1ZkLtd0tI"
+      "1B$rgWypT66viEf30I1iIv"
     ]
   },
   "semantic_manifest_ref": "semantic-manifest.json",
   "semantic_manifest_sha256": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
-  "source_request_hash": "sha256:441ac42966e353b82f3f95524483c656bd2d19769e54041447fcff8fff49a627"
+  "source_request_hash": "sha256:71e6f85443470f3ef85f54d84503dfa5684e2fd03a37fd55c5529fde6538bcd2"
 }

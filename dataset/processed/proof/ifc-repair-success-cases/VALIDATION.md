@@ -13,7 +13,7 @@
 status: passed
 cases: 11
 operations: 30
-FILES artifacts checked: 135
+FILES artifacts checked: 137
 IFC reopened: 33
 errors: 0
 ```
@@ -53,6 +53,8 @@ errors: 0
 10. 存在 Private Ground Truth evaluation 时，使用相同发布规则复核。
 11. 离线 Door Proof 的 `synthetic_fallback_used=false`；注入失败案例必须
     `valid=false`、`published=false`。
+12. 两门两窗混合案例的公开 request/RepairIntent 不含 IFC GlobalId，且保存
+    4 项确定性 target-resolution 与随后内部绑定的证据。
 
 ## pytest 接入
 

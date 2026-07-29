@@ -183,6 +183,14 @@ def _copy_case(
         ),
     }
     optional = {
+        "agent/repair-intent.json": (
+            "repair-intent.json",
+            "guid_free_repair_intent",
+        ),
+        "agent/target-resolution.json": (
+            "target-resolution.json",
+            "deterministic_target_resolution",
+        ),
         "validation/injected-failure-changeset.json": (
             "injected-failure-changeset.json",
             "injected_failure_changeset",
@@ -236,6 +244,7 @@ def _copy_case(
     removed_doors = source_manifest.get("damage", {}).get(
         "removed_doors", ()
     )
+    public_targeting = source_manifest.get("public_targeting", {})
     if not removed_doors:
         door = source_manifest.get("damage", {}).get("door")
         removed_doors = [] if door is None else [door]
@@ -247,8 +256,14 @@ def _copy_case(
         "- original、damaged、repaired IFC 均已独立重开为 IFC2X3。\n"
         "- application、L1、L2、preservation 与文件哈希均已重新验证。\n"
         "- Prompt Profile 与 few-shot 指纹由当前不可变目录重新计算。\n"
-        "- synthetic fallback：false。\n\n"
-        "## 被删除 Door\n\n"
+        + (
+            "- 用户请求和 RepairIntent 均不含 IFC GlobalId；名称、楼层与墙局部位置"
+            "经确定性索引解析后，才在内部 ChangeSet 绑定 GUID。\n"
+            if public_targeting.get("guid_free") is True
+            else ""
+        )
+        + "- synthetic fallback：false。\n\n"
+        + "## 被删除 Door\n\n"
         + (
             "\n".join(
                 f"- `{item.get('name')}` (`{item.get('global_id')}`)"

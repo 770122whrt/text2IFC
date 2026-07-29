@@ -365,6 +365,9 @@ def resolve_repair_intent(
                 source_sha=expected_source_sha256,
                 model_fingerprint=intent.model_fingerprint,
                 allowed_ifc_classes=prototype_classes,
+                formal_constraints=_prototype_formal_constraints(
+                    operation
+                ),
             )
             if prototype_result[0] == "resolved":
                 completed[-1] = replace(
@@ -809,6 +812,7 @@ def _explicit_prototype(
     source_sha: str,
     model_fingerprint: str,
     allowed_ifc_classes: tuple[str, ...] = (),
+    formal_constraints: Mapping[str, Any] | None = None,
 ) -> tuple[str, Any]:
     if prototype.reference_kind == "global_id":
         match = repository.get_type_by_global_id(prototype.reference)
@@ -824,12 +828,23 @@ def _explicit_prototype(
         and item.ifc_global_id
         and (not allowed_ifc_classes or item.ifc_class in allowed_ifc_classes)
     ]
+    constraints = dict(formal_constraints or {})
+    if constraints:
+        matches = [
+            item
+            for item in matches
+            if all(
+                str(item.formal_attributes.get(name)) == str(value)
+                for name, value in constraints.items()
+            )
+        ]
     if len(matches) == 1:
         return "resolved", {
             "kind": "user_authorized_prototype",
             "global_id": matches[0].ifc_global_id,
             "authorization": "explicit_request_reference",
             "prototype_lookup": lookup_kind,
+            "formal_constraints": constraints,
             "request_provenance": prototype.source.to_dict(),
         }
     if len(matches) > 1:
@@ -845,6 +860,23 @@ def _explicit_prototype(
         )
         return "ambiguous", candidates
     return "not_found", ()
+
+
+def _prototype_formal_constraints(
+    operation: OperationIntent,
+) -> dict[str, Any]:
+    if operation.operation_type not in {
+        "add_door_with_opening_to_wall",
+        "fill_existing_opening_with_door",
+    }:
+        return {}
+    door = operation.parameters.get("door")
+    if not isinstance(door, Mapping):
+        return {}
+    operation_type = door.get("operation_type")
+    if not operation_type:
+        return {}
+    return {"OperationType": str(operation_type)}
 
 
 def _type_candidates(

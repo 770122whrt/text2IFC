@@ -430,6 +430,29 @@ class _Repository:
         return []
 
 
+class _DuplicateNameRepository(_Repository):
+    def __init__(self, styles: list[TypeRecord]) -> None:
+        self.styles = styles
+
+    def get_type_by_global_id(self, global_id: str):
+        return next(
+            (
+                style
+                for style in self.styles
+                if style.ifc_global_id == global_id
+            ),
+            None,
+        )
+
+    def find_type_aliases(self, normalized_value: str):
+        return [
+            style
+            for style in self.styles
+            if style.name is not None
+            and style.name.casefold() == normalized_value
+        ]
+
+
 def test_registry_hook_reads_exact_door_style_formal_operation() -> None:
     style = _style("SINGLE_SWING_RIGHT")
     operation = {
@@ -451,4 +474,38 @@ def test_registry_hook_reads_exact_door_style_formal_operation() -> None:
     assert result["status"] == "resolved"
     assert result["parameters"]["door"]["operation_type"] == (
         "SINGLE_SWING_RIGHT"
+    )
+
+
+def test_duplicate_type_name_is_narrowed_by_explicit_formal_operation() -> None:
+    left = _style("SINGLE_SWING_LEFT", name="800x2480")
+    right = replace(
+        _style("SINGLE_SWING_RIGHT", name="800x2480"),
+        record_id="type:door-right",
+        ifc_global_id="0STYLERIGHTAAAAAAAAAAA",
+    )
+    operation = {
+        "operation_type": "fill_existing_opening_with_door",
+        "parameters": {
+            "fit_existing_opening": True,
+            "door": {
+                "operation_type": "SINGLE_SWING_LEFT",
+                "formal_enum_explicit": True,
+            },
+        },
+        "prototype_intent": {
+            "reference_kind": "type_name",
+            "reference": "800x2480",
+        },
+    }
+
+    result = resolve_door_parameters(
+        operation=operation,
+        target_record=_opening(),
+        repository=_DuplicateNameRepository([left, right]),
+    )
+
+    assert result["status"] == "resolved"
+    assert result["parameters"]["door"]["operation_type"] == (
+        "SINGLE_SWING_LEFT"
     )

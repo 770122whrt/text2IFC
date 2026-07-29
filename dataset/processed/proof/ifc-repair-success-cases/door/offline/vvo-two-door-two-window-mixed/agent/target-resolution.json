@@ -1,0 +1,729 @@
+{
+  "candidates": [],
+  "model_fingerprint": "sha256:6824086b4171cce034acaa23ad51c3020d87ed44c0aead62979a4b4ad17c4db3",
+  "operation_id": null,
+  "operations": [
+    {
+      "authorized_semantics": [
+        {
+          "global_id": "2CsmzAChHF6O6maGXlo6Tc",
+          "kind": "formal_type_binding",
+          "provenance": "current_ifc"
+        },
+        {
+          "authorization": "explicit_request_reference",
+          "formal_constraints": {},
+          "global_id": "2dYMXn0_5AKRbD_1eUIAtb",
+          "kind": "user_authorized_prototype",
+          "prototype_lookup": "type_name",
+          "request_provenance": {
+            "excerpt": "窗 固定:500x1180:279940：在楼层 标高2 的墙“基本墙:240:224905”上开窗；以 wall_local_start 为基准，洞口中心偏移 4701.96137 mm，宽 1180.0 mm、高 499.999999999999 mm、窗台高 2670.827827 mm；复用现有 Window Type“500x1180”。",
+            "reference": "request:/operations/0/prototype",
+            "source_kind": "user_request"
+          }
+        }
+      ],
+      "context": {
+        "base_model_fingerprint": "sha256:6824086b4171cce034acaa23ad51c3020d87ed44c0aead62979a4b4ad17c4db3",
+        "candidate_targets": [
+          {
+            "evidence": [
+              {
+                "candidate_value": "2CsmzAChHF6O6maGXlo6yJ",
+                "field": "global_id",
+                "provenance": "IfcRoot.GlobalId",
+                "query_value": null,
+                "state": "unavailable"
+              },
+              {
+                "candidate_value": "IfcWallStandardCase",
+                "field": "ifc_class",
+                "provenance": "IfcProduct.is_a",
+                "query_value": [
+                  "IfcWall"
+                ],
+                "state": "matched"
+              },
+              {
+                "candidate_value": "基本墙:240:224905",
+                "field": "name",
+                "provenance": "aliases",
+                "query_value": [
+                  "基本墙:240:224905"
+                ],
+                "state": "matched"
+              },
+              {
+                "candidate_value": "标高2",
+                "field": "storey",
+                "provenance": "spatial_relationship",
+                "query_value": "标高2",
+                "state": "matched"
+              },
+              {
+                "candidate_value": "straight_wall",
+                "field": "geometry_capability",
+                "provenance": "adapter",
+                "query_value": [
+                  "straight_wall"
+                ],
+                "state": "mismatched"
+              }
+            ],
+            "facets": {
+              "editable_target": true,
+              "space_names": []
+            },
+            "geometry": {
+              "coordinate_basis": {
+                "axis_direction": [
+                  1.0,
+                  0.0,
+                  0.0
+                ],
+                "axis_end_mm": [
+                  17765.2918896498,
+                  0.0,
+                  0.0
+                ],
+                "axis_start_mm": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "reference": "wall_local_start",
+                "vertical_direction": [
+                  0.0,
+                  0.0,
+                  1.0
+                ],
+                "world_axis_direction": [
+                  0.0,
+                  -1.0,
+                  0.0
+                ],
+                "world_axis_start_mm": [
+                  -12046.2246716065,
+                  3124.09271096872,
+                  -2213.70079330354
+                ]
+              },
+              "dimensions_mm": {
+                "height": 3581.70079330354,
+                "length": 17765.2918896498,
+                "thickness": 240.0
+              },
+              "orientation": "south"
+            },
+            "geometry_capability": "straight_wall",
+            "ifc_class": "IfcWallStandardCase",
+            "ifc_global_id": "2CsmzAChHF6O6maGXlo6yJ",
+            "name": "基本墙:240:224905",
+            "properties": [],
+            "retrieval": {
+              "fused_score": 100,
+              "matched_fields": [
+                "alias:name",
+                "name"
+              ],
+              "retriever": "structured",
+              "retriever_version": "text2ifc/structured-retriever/0.1",
+              "source_score": 100
+            },
+            "storey_name": "标高2",
+            "target_id": "ifc:2CsmzAChHF6O6maGXlo6yJ",
+            "type_name": "基本墙:240"
+          }
+        ],
+        "context_budget": {
+          "actual_bytes": 2424,
+          "estimated_tokens": 606,
+          "max_bytes": 48000,
+          "max_candidates": 5,
+          "mode": "normal",
+          "omitted_candidate_count": 0,
+          "selected_candidate_count": 1,
+          "token_estimator": "ceil(utf8_bytes/4)"
+        },
+        "model_constraints": {
+          "facts_source": "current_ifc_only",
+          "ifc_schema": "IFC2X3",
+          "index_schema_version": "text2ifc/ifc-index/0.4",
+          "source_ifc_sha256": "sha256:6824086b4171cce034acaa23ad51c3020d87ed44c0aead62979a4b4ad17c4db3",
+          "vector_retrieval": "disabled"
+        },
+        "model_fingerprint": "sha256:6824086b4171cce034acaa23ad51c3020d87ed44c0aead62979a4b4ad17c4db3",
+        "operation_hints": [
+          "add_window_with_opening_to_wall"
+        ],
+        "query_schema_version": "text2ifc/ifc-target-query/0.1",
+        "resolution_schema_version": "text2ifc/ifc-target-resolution/0.1",
+        "resolved_target_id": "ifc:2CsmzAChHF6O6maGXlo6yJ",
+        "schema_version": "text2ifc/ifc-target-context/0.1",
+        "score_version": "text2ifc/target-score/0.1",
+        "status": "resolved"
+      },
+      "evidence_pointers": [
+        "resolved:/operations/operation-window-001/context/candidate_targets/0"
+      ],
+      "operation_id": "operation-window-001",
+      "operation_type": "add_window_with_opening_to_wall",
+      "parameters": {
+        "opening": {
+          "height_mm": 499.999999999999,
+          "sill_height_mm": 2670.827827,
+          "width_mm": 1180.0
+        },
+        "position": {
+          "center_offset_mm": 4701.96137,
+          "reference": "wall_local_start"
+        },
+        "window": {
+          "fit_opening": true
+        }
+      },
+      "scope_ids": [
+        "2CsmzAChHF6O6maGXlo6yJ"
+      ],
+      "target_global_id": "2CsmzAChHF6O6maGXlo6yJ"
+    },
+    {
+      "authorized_semantics": [
+        {
+          "global_id": "2CsmzAChHF6O6maGXlo6Tc",
+          "kind": "formal_type_binding",
+          "provenance": "current_ifc"
+        },
+        {
+          "authorization": "explicit_request_reference",
+          "formal_constraints": {},
+          "global_id": "08xWVL$9z6JRwr3pqJHoru",
+          "kind": "user_authorized_prototype",
+          "prototype_lookup": "type_name",
+          "request_provenance": {
+            "excerpt": "窗 固定:870x2370:255906：在楼层 标高2 的墙“基本墙:240:226415”上开窗；以 wall_local_start 为基准，洞口中心偏移 9315.560798 mm，宽 869.999999999999 mm、高 2370.0 mm、窗台高 610.0 mm；复用现有 Window Type“870x2370”。",
+            "reference": "request:/operations/1/prototype",
+            "source_kind": "user_request"
+          }
+        }
+      ],
+      "context": {
+        "base_model_fingerprint": "sha256:6824086b4171cce034acaa23ad51c3020d87ed44c0aead62979a4b4ad17c4db3",
+        "candidate_targets": [
+          {
+            "evidence": [
+              {
+                "candidate_value": "0jltRti3rFigAmdXYhXxqI",
+                "field": "global_id",
+                "provenance": "IfcRoot.GlobalId",
+                "query_value": null,
+                "state": "unavailable"
+              },
+              {
+                "candidate_value": "IfcWallStandardCase",
+                "field": "ifc_class",
+                "provenance": "IfcProduct.is_a",
+                "query_value": [
+                  "IfcWall"
+                ],
+                "state": "matched"
+              },
+              {
+                "candidate_value": "基本墙:240:226415",
+                "field": "name",
+                "provenance": "aliases",
+                "query_value": [
+                  "基本墙:240:226415"
+                ],
+                "state": "matched"
+              },
+              {
+                "candidate_value": "标高2",
+                "field": "storey",
+                "provenance": "spatial_relationship",
+                "query_value": "标高2",
+                "state": "matched"
+              },
+              {
+                "candidate_value": "straight_wall",
+                "field": "geometry_capability",
+                "provenance": "adapter",
+                "query_value": [
+                  "straight_wall"
+                ],
+                "state": "mismatched"
+              }
+            ],
+            "facets": {
+              "editable_target": true,
+              "space_names": []
+            },
+            "geometry": {
+              "coordinate_basis": {
+                "axis_direction": [
+                  1.0,
+                  0.0,
+                  0.0
+                ],
+                "axis_end_mm": [
+                  13455.5607979694,
+                  0.0,
+                  0.0
+                ],
+                "axis_start_mm": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "reference": "wall_local_start",
+                "vertical_direction": [
+                  0.0,
+                  0.0,
+                  1.0
+                ],
+                "world_axis_direction": [
+                  1.0,
+                  0.0,
+                  0.0
+                ],
+                "world_axis_start_mm": [
+                  -5921.78546957593,
+                  3767.80082131895,
+                  -2213.70079330354
+                ]
+              },
+              "dimensions_mm": {
+                "height": 4175.094267883264,
+                "length": 13455.5607979694,
+                "thickness": 240.0
+              },
+              "orientation": "east"
+            },
+            "geometry_capability": "straight_wall",
+            "ifc_class": "IfcWallStandardCase",
+            "ifc_global_id": "0jltRti3rFigAmdXYhXxqI",
+            "name": "基本墙:240:226415",
+            "properties": [],
+            "retrieval": {
+              "fused_score": 100,
+              "matched_fields": [
+                "alias:name",
+                "name"
+              ],
+              "retriever": "structured",
+              "retriever_version": "text2ifc/structured-retriever/0.1",
+              "source_score": 100
+            },
+            "storey_name": "标高2",
+            "target_id": "ifc:0jltRti3rFigAmdXYhXxqI",
+            "type_name": "基本墙:240"
+          }
+        ],
+        "context_budget": {
+          "actual_bytes": 2423,
+          "estimated_tokens": 606,
+          "max_bytes": 48000,
+          "max_candidates": 5,
+          "mode": "normal",
+          "omitted_candidate_count": 0,
+          "selected_candidate_count": 1,
+          "token_estimator": "ceil(utf8_bytes/4)"
+        },
+        "model_constraints": {
+          "facts_source": "current_ifc_only",
+          "ifc_schema": "IFC2X3",
+          "index_schema_version": "text2ifc/ifc-index/0.4",
+          "source_ifc_sha256": "sha256:6824086b4171cce034acaa23ad51c3020d87ed44c0aead62979a4b4ad17c4db3",
+          "vector_retrieval": "disabled"
+        },
+        "model_fingerprint": "sha256:6824086b4171cce034acaa23ad51c3020d87ed44c0aead62979a4b4ad17c4db3",
+        "operation_hints": [
+          "add_window_with_opening_to_wall"
+        ],
+        "query_schema_version": "text2ifc/ifc-target-query/0.1",
+        "resolution_schema_version": "text2ifc/ifc-target-resolution/0.1",
+        "resolved_target_id": "ifc:0jltRti3rFigAmdXYhXxqI",
+        "schema_version": "text2ifc/ifc-target-context/0.1",
+        "score_version": "text2ifc/target-score/0.1",
+        "status": "resolved"
+      },
+      "evidence_pointers": [
+        "resolved:/operations/operation-window-002/context/candidate_targets/0"
+      ],
+      "operation_id": "operation-window-002",
+      "operation_type": "add_window_with_opening_to_wall",
+      "parameters": {
+        "opening": {
+          "height_mm": 2370.0,
+          "sill_height_mm": 610.0,
+          "width_mm": 869.999999999999
+        },
+        "position": {
+          "center_offset_mm": 9315.560798,
+          "reference": "wall_local_start"
+        },
+        "window": {
+          "fit_opening": true
+        }
+      },
+      "scope_ids": [
+        "0jltRti3rFigAmdXYhXxqI"
+      ],
+      "target_global_id": "0jltRti3rFigAmdXYhXxqI"
+    },
+    {
+      "authorized_semantics": [
+        {
+          "derivation_digest": "sha256:d772435071d3bf3c7b13a13150d38dd5f44b639f928d3a4f835b15d542412c18",
+          "kind": "door_canonicalization",
+          "operation_type": "SINGLE_SWING_LEFT",
+          "source": "deterministic_policy"
+        },
+        {
+          "authorization": "explicit_request_reference",
+          "formal_constraints": {
+            "OperationType": "SINGLE_SWING_LEFT"
+          },
+          "global_id": "2Bp10QP5H0qx3NLxP020qy",
+          "kind": "user_authorized_prototype",
+          "prototype_lookup": "type_name",
+          "request_provenance": {
+            "excerpt": "门 单扇 - 与墙齐:800x2480:255008：在楼层 标高0 的墙“基本墙:160:235553”上，向现有空洞“单扇 - 与墙齐:800x2480:255008:1”安装门；以 wall_local_start 为基准，洞口中心偏移 565.932051 mm，洞口宽 800.0 mm、高 2480.0 mm、门槛高 130.359199 mm；门宽 800.0 mm、高 2480.0 mm，开启方式 SINGLE_SWING_LEFT，复用现有 Door Type“800x2480”。",
+            "reference": "request:/operations/2/prototype",
+            "source_kind": "user_request"
+          }
+        }
+      ],
+      "context": {
+        "base_model_fingerprint": "sha256:6824086b4171cce034acaa23ad51c3020d87ed44c0aead62979a4b4ad17c4db3",
+        "candidate_targets": [
+          {
+            "evidence": [
+              {
+                "candidate_value": "2IUEnGd5v4Yfg1ZkLtd0qa",
+                "field": "global_id",
+                "provenance": "IfcRoot.GlobalId",
+                "query_value": null,
+                "state": "unavailable"
+              },
+              {
+                "candidate_value": "IfcOpeningElement",
+                "field": "ifc_class",
+                "provenance": "IfcProduct.is_a",
+                "query_value": [
+                  "IfcOpeningElement"
+                ],
+                "state": "matched"
+              },
+              {
+                "candidate_value": "单扇 - 与墙齐:800x2480:255008:1",
+                "field": "name",
+                "provenance": "aliases",
+                "query_value": [
+                  "单扇 - 与墙齐:800x2480:255008:1"
+                ],
+                "state": "matched"
+              },
+              {
+                "candidate_value": "标高0",
+                "field": "storey",
+                "provenance": "spatial_relationship",
+                "query_value": "标高0",
+                "state": "matched"
+              },
+              {
+                "candidate_value": "measured_hosted_opening",
+                "field": "geometry_capability",
+                "provenance": "adapter",
+                "query_value": [
+                  "measured_hosted_opening"
+                ],
+                "state": "mismatched"
+              }
+            ],
+            "facets": {
+              "editable_target": true,
+              "host_wall_global_ids": [
+                "2HNE4WMQ1CXebZMaih8XoD"
+              ]
+            },
+            "geometry": {
+              "dimensions_mm": {
+                "depth": 160.0,
+                "height": 2480.0,
+                "width": 800.0
+              }
+            },
+            "geometry_capability": "measured_hosted_opening",
+            "ifc_class": "IfcOpeningElement",
+            "ifc_global_id": "2IUEnGd5v4Yfg1ZkLtd0qa",
+            "name": "单扇 - 与墙齐:800x2480:255008:1",
+            "properties": [],
+            "retrieval": {
+              "fused_score": 100,
+              "matched_fields": [
+                "alias:name",
+                "name"
+              ],
+              "retriever": "structured",
+              "retriever_version": "text2ifc/structured-retriever/0.1",
+              "source_score": 100
+            },
+            "storey_name": "标高0",
+            "target_id": "ifc:2IUEnGd5v4Yfg1ZkLtd0qa",
+            "type_name": null
+          }
+        ],
+        "context_budget": {
+          "actual_bytes": 2178,
+          "estimated_tokens": 545,
+          "max_bytes": 48000,
+          "max_candidates": 5,
+          "mode": "normal",
+          "omitted_candidate_count": 0,
+          "selected_candidate_count": 1,
+          "token_estimator": "ceil(utf8_bytes/4)"
+        },
+        "model_constraints": {
+          "facts_source": "current_ifc_only",
+          "ifc_schema": "IFC2X3",
+          "index_schema_version": "text2ifc/ifc-index/0.4",
+          "source_ifc_sha256": "sha256:6824086b4171cce034acaa23ad51c3020d87ed44c0aead62979a4b4ad17c4db3",
+          "vector_retrieval": "disabled"
+        },
+        "model_fingerprint": "sha256:6824086b4171cce034acaa23ad51c3020d87ed44c0aead62979a4b4ad17c4db3",
+        "operation_hints": [
+          "fill_existing_opening_with_door"
+        ],
+        "query_schema_version": "text2ifc/ifc-target-query/0.1",
+        "resolution_schema_version": "text2ifc/ifc-target-resolution/0.1",
+        "resolved_target_id": "ifc:2IUEnGd5v4Yfg1ZkLtd0qa",
+        "schema_version": "text2ifc/ifc-target-context/0.1",
+        "score_version": "text2ifc/target-score/0.1",
+        "status": "resolved"
+      },
+      "evidence_pointers": [
+        "resolved:/operations/operation-door-001/context/candidate_targets/0"
+      ],
+      "operation_id": "operation-door-001",
+      "operation_type": "fill_existing_opening_with_door",
+      "parameters": {
+        "derivation": {
+          "digest": "sha256:d772435071d3bf3c7b13a13150d38dd5f44b639f928d3a4f835b15d542412c18",
+          "position": {
+            "formula": "existing_opening_center",
+            "source_anchor": "opening:2IUEnGd5v4Yfg1ZkLtd0qa"
+          }
+        },
+        "door": {
+          "operation_derivation": {
+            "formal_attribute": "OperationType",
+            "source": "door_style:2Bp10QP5H0qx3NLxP020qy"
+          },
+          "operation_type": "SINGLE_SWING_LEFT",
+          "overall_height_mm": 2480.0,
+          "overall_width_mm": 800.0
+        },
+        "host_wall_global_id": "2HNE4WMQ1CXebZMaih8XoD",
+        "opening": {
+          "derivation": {
+            "formula": "fit_existing_opening",
+            "source": "opening:2IUEnGd5v4Yfg1ZkLtd0qa"
+          },
+          "dimension_meaning": "overall_opening",
+          "height_mm": 2480.0,
+          "sill_height_mm": 130.359199,
+          "width_mm": 800.0
+        },
+        "position": {
+          "center_offset_mm": 565.932051,
+          "reference": "wall_local_start"
+        }
+      },
+      "scope_ids": [
+        "2IUEnGd5v4Yfg1ZkLtd0qa"
+      ],
+      "target_global_id": "2IUEnGd5v4Yfg1ZkLtd0qa"
+    },
+    {
+      "authorized_semantics": [
+        {
+          "derivation_digest": "sha256:530f90444262c557ac60414151020357f4c13a3c688082dfe7e52e29f56a4911",
+          "kind": "door_canonicalization",
+          "operation_type": "SINGLE_SWING_RIGHT",
+          "source": "deterministic_policy"
+        },
+        {
+          "authorization": "explicit_request_reference",
+          "formal_constraints": {
+            "OperationType": "SINGLE_SWING_RIGHT"
+          },
+          "global_id": "1B$rgWypT66viEf3OI1iU2",
+          "kind": "user_authorized_prototype",
+          "prototype_lookup": "type_name",
+          "request_provenance": {
+            "excerpt": "门 单扇 - 与墙齐:935x2400:275772：在楼层 标高0 的墙“基本墙:270:237458”上，向现有空洞“单扇 - 与墙齐:935x2400:275772:1”安装门；以 wall_local_start 为基准，洞口中心偏移 6507.5 mm，洞口宽 935.0 mm、高 2400.0 mm、门槛高 110.359199 mm；门宽 935.0 mm、高 2400.0 mm，开启方式 SINGLE_SWING_RIGHT，复用现有 Door Type“935x2400”。",
+            "reference": "request:/operations/3/prototype",
+            "source_kind": "user_request"
+          }
+        }
+      ],
+      "context": {
+        "base_model_fingerprint": "sha256:6824086b4171cce034acaa23ad51c3020d87ed44c0aead62979a4b4ad17c4db3",
+        "candidate_targets": [
+          {
+            "evidence": [
+              {
+                "candidate_value": "1B$rgWypT66viEf30I1iIv",
+                "field": "global_id",
+                "provenance": "IfcRoot.GlobalId",
+                "query_value": null,
+                "state": "unavailable"
+              },
+              {
+                "candidate_value": "IfcOpeningElement",
+                "field": "ifc_class",
+                "provenance": "IfcProduct.is_a",
+                "query_value": [
+                  "IfcOpeningElement"
+                ],
+                "state": "matched"
+              },
+              {
+                "candidate_value": "单扇 - 与墙齐:935x2400:275772:1",
+                "field": "name",
+                "provenance": "aliases",
+                "query_value": [
+                  "单扇 - 与墙齐:935x2400:275772:1"
+                ],
+                "state": "matched"
+              },
+              {
+                "candidate_value": "标高0",
+                "field": "storey",
+                "provenance": "spatial_relationship",
+                "query_value": "标高0",
+                "state": "matched"
+              },
+              {
+                "candidate_value": "measured_hosted_opening",
+                "field": "geometry_capability",
+                "provenance": "adapter",
+                "query_value": [
+                  "measured_hosted_opening"
+                ],
+                "state": "mismatched"
+              }
+            ],
+            "facets": {
+              "editable_target": true,
+              "host_wall_global_ids": [
+                "2HNE4WMQ1CXebZMaih8Xi_"
+              ]
+            },
+            "geometry": {
+              "dimensions_mm": {
+                "depth": 270.0,
+                "height": 2400.0,
+                "width": 935.0
+              }
+            },
+            "geometry_capability": "measured_hosted_opening",
+            "ifc_class": "IfcOpeningElement",
+            "ifc_global_id": "1B$rgWypT66viEf30I1iIv",
+            "name": "单扇 - 与墙齐:935x2400:275772:1",
+            "properties": [],
+            "retrieval": {
+              "fused_score": 100,
+              "matched_fields": [
+                "alias:name",
+                "name"
+              ],
+              "retriever": "structured",
+              "retriever_version": "text2ifc/structured-retriever/0.1",
+              "source_score": 100
+            },
+            "storey_name": "标高0",
+            "target_id": "ifc:1B$rgWypT66viEf30I1iIv",
+            "type_name": null
+          }
+        ],
+        "context_budget": {
+          "actual_bytes": 2178,
+          "estimated_tokens": 545,
+          "max_bytes": 48000,
+          "max_candidates": 5,
+          "mode": "normal",
+          "omitted_candidate_count": 0,
+          "selected_candidate_count": 1,
+          "token_estimator": "ceil(utf8_bytes/4)"
+        },
+        "model_constraints": {
+          "facts_source": "current_ifc_only",
+          "ifc_schema": "IFC2X3",
+          "index_schema_version": "text2ifc/ifc-index/0.4",
+          "source_ifc_sha256": "sha256:6824086b4171cce034acaa23ad51c3020d87ed44c0aead62979a4b4ad17c4db3",
+          "vector_retrieval": "disabled"
+        },
+        "model_fingerprint": "sha256:6824086b4171cce034acaa23ad51c3020d87ed44c0aead62979a4b4ad17c4db3",
+        "operation_hints": [
+          "fill_existing_opening_with_door"
+        ],
+        "query_schema_version": "text2ifc/ifc-target-query/0.1",
+        "resolution_schema_version": "text2ifc/ifc-target-resolution/0.1",
+        "resolved_target_id": "ifc:1B$rgWypT66viEf30I1iIv",
+        "schema_version": "text2ifc/ifc-target-context/0.1",
+        "score_version": "text2ifc/target-score/0.1",
+        "status": "resolved"
+      },
+      "evidence_pointers": [
+        "resolved:/operations/operation-door-002/context/candidate_targets/0"
+      ],
+      "operation_id": "operation-door-002",
+      "operation_type": "fill_existing_opening_with_door",
+      "parameters": {
+        "derivation": {
+          "digest": "sha256:530f90444262c557ac60414151020357f4c13a3c688082dfe7e52e29f56a4911",
+          "position": {
+            "formula": "existing_opening_center",
+            "source_anchor": "opening:1B$rgWypT66viEf30I1iIv"
+          }
+        },
+        "door": {
+          "operation_derivation": {
+            "formal_attribute": "OperationType",
+            "source": "door_style:1B$rgWypT66viEf3OI1iU2"
+          },
+          "operation_type": "SINGLE_SWING_RIGHT",
+          "overall_height_mm": 2400.0,
+          "overall_width_mm": 935.0
+        },
+        "host_wall_global_id": "2HNE4WMQ1CXebZMaih8Xi_",
+        "opening": {
+          "derivation": {
+            "formula": "fit_existing_opening",
+            "source": "opening:1B$rgWypT66viEf30I1iIv"
+          },
+          "dimension_meaning": "overall_opening",
+          "height_mm": 2400.0,
+          "sill_height_mm": 110.359199,
+          "width_mm": 935.0
+        },
+        "position": {
+          "center_offset_mm": 6507.5,
+          "reference": "wall_local_start"
+        }
+      },
+      "scope_ids": [
+        "1B$rgWypT66viEf30I1iIv"
+      ],
+      "target_global_id": "1B$rgWypT66viEf30I1iIv"
+    }
+  ],
+  "property_preview": null,
+  "property_resolutions": [],
+  "reason_code": null,
+  "schema_version": "text2ifc/ifc-resolution-flow/0.1",
+  "source_ifc_sha256": "sha256:6824086b4171cce034acaa23ad51c3020d87ed44c0aead62979a4b4ad17c4db3",
+  "status": "resolved"
+}

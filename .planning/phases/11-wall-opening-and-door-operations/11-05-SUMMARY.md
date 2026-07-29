@@ -3,7 +3,7 @@ phase: 11-wall-opening-and-door-operations
 plan: "05"
 status: blocked_external
 completed: false
-updated: 2026-07-28
+updated: 2026-07-29
 commits:
   - 29daa793
 ---
@@ -25,11 +25,17 @@ commits:
   ChangeSet. Injected duplicate-target failure publishes no IFC.
 - Added a two-Door/two-Window mixed ChangeSet; all four operations pass
   independent L1/L2 and publish one IFC.
+- Strengthened the mixed proof so its user request and RepairIntent contain no
+  IFC GlobalIds. Window walls and retained Door openings resolve from names,
+  storeys and wall-local measurements before the program binds internal GUIDs.
+  Exact Type reuse is name-based; duplicate DoorStyle names are narrowed by
+  the explicitly requested formal OperationType and still fail closed if more
+  than one candidate remains.
 - Added a controlled generated-DoorStyle LargeBuilding case and an
   AdvancedProject full-scope case. AdvancedProject cold request-to-publication
   is 140.805 seconds and warm evaluation is 50.037 seconds.
 - Independently curated six offline Door/mixed Proof cases. The complete
-  success collection validates 11 cases, 30 operations, 135 hashed files and
+  success collection validates 11 cases, 30 operations, 137 hashed files and
   33 IFC reopens.
 - Full IFC repair regression: 643 passed, 1 skipped.
 - Added a real no-fallback DeepSeek runner for complete, clarification and
@@ -54,6 +60,10 @@ This is not recorded as a DeepSeek failure or success.
 
 ## Remaining
 
+- Diagnose the 2026-07-29 AdvancedProject cold performance regression. Two
+  reruns passed functional/L1/L2/preservation gates but measured 225.665 s and
+  226.164 s against the frozen 180 s cold deadline; warm runs remained below
+  80 s. Do not raise the deadline to hide this regression.
 - Run `scripts/ifc_repair/run_phase11_live_uat.py --live` when execution quota
   is available.
 - Independently validate and curate only actual successful live artifacts.

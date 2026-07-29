@@ -81,8 +81,16 @@ def resolve_door_parameters(
 
     del context
     parameters = copy.deepcopy(dict(operation.get("parameters", {})))
+    door_parameters = parameters.get("door")
+    requested_operation_type = (
+        door_parameters.get("operation_type")
+        if isinstance(door_parameters, Mapping)
+        else None
+    )
     type_record, type_decision = _resolve_exact_type(
-        operation.get("prototype_intent"), repository
+        operation.get("prototype_intent"),
+        repository,
+        requested_operation_type=requested_operation_type,
     )
     if type_decision is not None:
         return type_decision.to_dict()
@@ -384,6 +392,8 @@ def _resolve_dimensions(
 def _resolve_exact_type(
     prototype_intent: Any,
     repository: Any,
+    *,
+    requested_operation_type: Any = None,
 ) -> tuple[TypeRecord | None, DoorResolutionDecision | None]:
     if not isinstance(prototype_intent, Mapping):
         return None, None
@@ -419,6 +429,13 @@ def _resolve_exact_type(
         for item in candidates
         if item.ifc_class == "IfcDoorStyle" and item.identity_reliable
     ]
+    if requested_operation_type:
+        candidates = [
+            item
+            for item in candidates
+            if str(item.formal_attributes.get("OperationType"))
+            == str(requested_operation_type)
+        ]
     if len(candidates) == 1:
         return candidates[0], None
     if not candidates:

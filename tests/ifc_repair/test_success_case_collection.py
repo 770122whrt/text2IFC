@@ -1,6 +1,13 @@
+import json
+import re
+from pathlib import Path
+
 from scripts.ifc_repair.validate_success_cases import (
     validate_success_case_collection,
 )
+
+
+ROOT = Path(__file__).resolve().parents[2]
 
 
 def test_checked_in_success_case_collection_is_self_consistent() -> None:
@@ -25,3 +32,29 @@ def test_checked_in_success_case_collection_is_self_consistent() -> None:
         }
     }
     assert len(phase11) == 6
+
+
+def test_mixed_door_window_proof_preserves_guid_free_targeting_evidence() -> None:
+    case = (
+        ROOT
+        / "dataset/processed/proof/ifc-repair-success-cases/door/offline"
+        / "vvo-two-door-two-window-mixed"
+    )
+    request = (case / "input/request.txt").read_text(encoding="utf-8")
+    assert re.findall(
+        r"(?<![0-9A-Za-z_$])[0-3][0-9A-Za-z_$]{21}(?![0-9A-Za-z_$])",
+        request,
+    ) == []
+
+    intent = json.loads(
+        (case / "agent/repair-intent.json").read_text(encoding="utf-8")
+    )
+    assert all(
+        operation["target_query"].get("global_id") is None
+        for operation in intent["operations"]
+    )
+    resolution = json.loads(
+        (case / "agent/target-resolution.json").read_text(encoding="utf-8")
+    )
+    assert resolution["status"] == "resolved"
+    assert len(resolution["operations"]) == 4

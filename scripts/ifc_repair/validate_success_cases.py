@@ -10,6 +10,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import re
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Iterable, Mapping
@@ -216,6 +217,12 @@ def _validate_case(root: Path, case: Mapping[str, Any]) -> dict[str, Any]:
         source_manifest = _read_json(source_manifest_path)
         if source_manifest.get("synthetic_fallback_used") is not False:
             raise ValueError("source run used synthetic fallback")
+        if source_manifest.get("public_targeting", {}).get("guid_free") is True:
+            _check_guid_free_targeting(
+                roles,
+                operation_count=operation_count,
+                operation_types=expected_operation_types,
+            )
     injected_failure_path = roles.get("injected_failure_application")
     if injected_failure_path is not None:
         injected = _read_json(injected_failure_path)
@@ -300,6 +307,49 @@ def _check_prompt_profile_evidence(
         str(item["profile_id"]) for item in bindings
     }:
         raise ValueError("selected prompt profile set mismatch")
+
+
+def _check_guid_free_targeting(
+    roles: Mapping[str, Path],
+    *,
+    operation_count: int,
+    operation_types: set[str],
+) -> None:
+    request_path = roles.get("user_request")
+    intent_path = roles.get("guid_free_repair_intent")
+    resolution_path = roles.get("deterministic_target_resolution")
+    if request_path is None or intent_path is None or resolution_path is None:
+        raise ValueError("GUID-free targeting evidence is incomplete")
+    request = request_path.read_text(encoding="utf-8")
+    if re.search(
+        r"(?<![0-9A-Za-z_$])[0-3][0-9A-Za-z_$]{21}(?![0-9A-Za-z_$])",
+        request,
+    ):
+        raise ValueError("public request contains an IFC GlobalId")
+    intent = _read_json(intent_path)
+    _check_operations(
+        intent.get("operations"),
+        operation_count=operation_count,
+        operation_types=operation_types,
+        source="GUID-free RepairIntent",
+    )
+    for operation in intent["operations"]:
+        query = operation.get("target_query", {})
+        if any(
+            query.get(field) is not None
+            for field in ("global_id", "storey_global_id", "host_global_id")
+        ):
+            raise ValueError("public target_query contains an IFC GlobalId")
+        if not query.get("names") or not query.get("storey_name"):
+            raise ValueError("public target_query lacks name/storey selectors")
+    resolution = _read_json(resolution_path)
+    if resolution.get("status") != "resolved":
+        raise ValueError("deterministic target resolution did not resolve")
+    operations = resolution.get("operations")
+    if not isinstance(operations, list) or len(operations) != operation_count:
+        raise ValueError("target resolution operation count mismatch")
+    if any(not item.get("target_global_id") for item in operations):
+        raise ValueError("target resolution lacks an internal binding")
 
 
 def _check_success_evaluation(
