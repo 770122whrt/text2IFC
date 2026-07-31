@@ -5,6 +5,8 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import subprocess
+import sys
 from collections import Counter
 from concurrent.futures import (
     ProcessPoolExecutor,
@@ -27,7 +29,7 @@ from .ifc_validation import (
     compare_validation_models,
     normalized_validation_result,
 )
-from .validation_cache import ValidationCache
+from .validation_cache import ValidationCache, ValidationCacheKey
 
 from .evaluation_models import (
     CheckResult,
@@ -98,10 +100,27 @@ def execute_validation_and_diff(
     validation_worker: Any | None = None,
     diff_worker: Any | None = None,
     rss_reader: Any | None = None,
+    baseline_model: Any | None = None,
+    candidate_model: Any | None = None,
 ) -> dict[str, Any]:
     """Schedule unchanged validation and full diff with a fail-closed deadline."""
 
     started = time.monotonic()
+    if (baseline_model is None) != (candidate_model is None):
+        raise ValueError("EVALUATION_REUSED_MODEL_PAIR_REQUIRED")
+    if baseline_model is not None and candidate_model is not None:
+        if validation_worker is not None or diff_worker is not None:
+            raise ValueError("EVALUATION_REUSED_MODEL_CUSTOM_WORKER_UNSUPPORTED")
+        return _execute_reused_models(
+            damaged_path=Path(damaged_ifc_path),
+            repaired_path=Path(repaired_ifc_path),
+            cache_dir=Path(cache_dir),
+            policy=policy,
+            started=started,
+            rss_reader=rss_reader or _process_tree_rss,
+            baseline_model=baseline_model,
+            candidate_model=candidate_model,
+        )
     if (
         policy.mode == "accelerated"
         and validation_worker is None
@@ -223,6 +242,184 @@ def execute_validation_and_diff(
                 1 if policy.mode == "sequential" else policy.max_workers
             ),
             "wall_seconds": time.monotonic() - started,
+            "stage_seconds": stage_seconds,
+            "peak_rss_bytes": peak_rss,
+            "rss_limit_bytes": policy.rss_limit_bytes,
+        },
+    }
+
+
+def _execute_reused_models(
+    *,
+    damaged_path: Path,
+    repaired_path: Path,
+    cache_dir: Path,
+    policy: EvaluationExecutionPolicy,
+    started: float,
+    rss_reader: Any,
+    baseline_model: Any,
+    candidate_model: Any,
+) -> dict[str, Any]:
+    """Run complete evidence rules while overlapping validation and full diff."""
+
+    cache = ValidationCache(cache_dir, mode=policy.cache_mode)
+    normalized: dict[str, dict[str, Any]] = {}
+    cache_evidence: dict[str, Any] = {}
+    stage_seconds: dict[str, float] = {}
+    worker_peak_rss: dict[str, int] = {}
+    pending: dict[str, subprocess.Popen[str]] = {}
+    try:
+        validation_started = time.monotonic()
+        for role, path, model in (
+            ("baseline", damaged_path, baseline_model),
+            ("candidate", repaired_path, candidate_model),
+        ):
+            if time.monotonic() - started > policy.deadline_seconds:
+                raise TimeoutError("EVALUATION_DEADLINE_EXCEEDED")
+            path_hash = _path_sha256(path)
+            if path_hash is None:
+                raise OSError(f"EVALUATION_IFC_HASH_FAILED:{path}")
+            key = ValidationCacheKey(
+                ifc_sha256=path_hash,
+                ifc_schema=str(model.schema).upper(),
+                ifcopenshell_version=str(ifcopenshell.version),
+                validation_policy_version=VALIDATION_POLICY_VERSION,
+                diagnostic_normalization_version=(
+                    DIAGNOSTIC_NORMALIZATION_VERSION
+                ),
+            )
+            cached = None
+            if policy.cache_mode not in {"off", "refresh"}:
+                cached, _ = cache.read(key)
+            if cached is not None:
+                result, evidence = cache.get_or_compute(
+                    key,
+                    lambda cached=cached: cached,
+                )
+                normalized[role] = result
+                cache_evidence[role] = evidence
+                continue
+            pending[role] = _start_validation_subprocess(
+                path=path,
+                cache_dir=cache_dir,
+                cache_mode=policy.cache_mode,
+                key=key,
+            )
+        if time.monotonic() - started > policy.deadline_seconds:
+            raise TimeoutError("EVALUATION_DEADLINE_EXCEEDED")
+        diff_started = time.monotonic()
+        diff = normalized_model_diff(baseline_model, candidate_model)
+        stage_seconds["diff"] = time.monotonic() - diff_started
+        for role in ("baseline", "candidate"):
+            process = pending.get(role)
+            if process is None:
+                continue
+            remaining = policy.deadline_seconds - (
+                time.monotonic() - started
+            )
+            if remaining <= 0:
+                raise TimeoutError("EVALUATION_DEADLINE_EXCEEDED")
+            try:
+                stdout, stderr = process.communicate(
+                    timeout=remaining
+                )
+            except subprocess.TimeoutExpired as error:
+                process.kill()
+                process.communicate()
+                raise TimeoutError(
+                    "EVALUATION_DEADLINE_EXCEEDED"
+                ) from error
+            if process.returncode != 0:
+                raise RuntimeError(
+                    "VALIDATION_SUBPROCESS_FAILED:"
+                    + stderr.strip()[:800]
+                )
+            payload = json.loads(stdout)
+            result = payload.get("result")
+            if result is None:
+                result, cache_reason = cache.read(
+                    ValidationCacheKey(
+                        **payload["key"]
+                    )
+                )
+                if result is None:
+                    raise RuntimeError(
+                        "VALIDATION_SUBPROCESS_CACHE_RESULT_MISSING:"
+                        + cache_reason
+                    )
+            evidence = payload["evidence"]
+            worker_peak = int(payload["peak_rss_bytes"])
+            normalized[role] = result
+            cache_evidence[role] = evidence
+            worker_peak_rss[role] = worker_peak
+        stage_seconds["validation"] = (
+            time.monotonic() - validation_started
+        )
+        validation = compare_validation_models(
+            baseline_model,
+            candidate_model,
+            baseline_result=normalized["baseline"],
+            candidate_result=normalized["candidate"],
+        )
+    except Exception as error:
+        for process in pending.values():
+            if process.poll() is None:
+                process.kill()
+                process.communicate()
+        failed = _execution_failure(
+            error,
+            policy=policy,
+            started=started,
+            rss_reader=rss_reader,
+        )
+        failed["metrics"]["mode"] = "reused_models"
+        failed["metrics"]["worker_count"] = 1 + len(pending)
+        failed["metrics"]["stage_seconds"] = stage_seconds
+        return failed
+    wall = time.monotonic() - started
+    if wall > policy.deadline_seconds:
+        failed = _execution_failure(
+            TimeoutError("EVALUATION_DEADLINE_EXCEEDED"),
+            policy=policy,
+            started=started,
+            rss_reader=rss_reader,
+        )
+        failed["metrics"]["mode"] = "reused_models"
+        failed["metrics"]["worker_count"] = 1 + len(pending)
+        failed["metrics"]["stage_seconds"] = stage_seconds
+        return failed
+    peak_rss = max(
+        int(rss_reader()),
+        _current_process_peak_rss() + sum(worker_peak_rss.values()),
+    )
+    if peak_rss > policy.rss_limit_bytes:
+        return {
+            "status": "failed",
+            "reason_code": "EVALUATION_RSS_LIMIT_EXCEEDED",
+            "results": {},
+            "metrics": {
+                "mode": "reused_models",
+                "worker_count": 1 + len(pending),
+                "wall_seconds": wall,
+                "stage_seconds": stage_seconds,
+                "peak_rss_bytes": peak_rss,
+                "rss_limit_bytes": policy.rss_limit_bytes,
+            },
+        }
+    return {
+        "status": "passed",
+        "reason_code": None,
+        "results": {
+            "validation": {
+                "comparison": validation,
+                "cache": cache_evidence,
+            },
+            "diff": diff,
+        },
+        "metrics": {
+            "mode": "reused_models",
+            "worker_count": 1 + len(pending),
+            "wall_seconds": wall,
             "stage_seconds": stage_seconds,
             "peak_rss_bytes": peak_rss,
             "rss_limit_bytes": policy.rss_limit_bytes,
@@ -431,6 +628,55 @@ def _cached_single_validation(
     return result, evidence, _current_process_peak_rss()
 
 
+def _cached_single_validation_for_key(
+    path: Path,
+    cache_dir: Path,
+    cache_mode: str,
+    key: ValidationCacheKey,
+) -> tuple[dict[str, Any], dict[str, Any], int]:
+    cache = ValidationCache(cache_dir, mode=cache_mode)
+    result, evidence = cache.get_or_compute(
+        key,
+        lambda: normalized_validation_result(ifcopenshell.open(str(path))),
+    )
+    return result, evidence, _current_process_peak_rss()
+
+
+def _start_validation_subprocess(
+    *,
+    path: Path,
+    cache_dir: Path,
+    cache_mode: str,
+    key: ValidationCacheKey,
+) -> subprocess.Popen[str]:
+    """Start an isolated validator without multiprocessing spawn/pickle state."""
+
+    return subprocess.Popen(
+        [
+            sys.executable,
+            "-m",
+            "text2ifc_ifc_repair.validation_worker",
+            "--ifc",
+            str(path),
+            "--cache-dir",
+            str(cache_dir),
+            "--cache-mode",
+            cache_mode,
+            "--key-json",
+            json.dumps(
+                key.to_dict(),
+                ensure_ascii=True,
+                sort_keys=True,
+                separators=(",", ":"),
+            ),
+        ],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+        encoding="utf-8",
+    )
+
+
 def _path_diff_worker(
     damaged_path: Path,
     repaired_path: Path,
@@ -513,14 +759,29 @@ def evaluate_independent_l1(
     registry: Any,
     execution_policy: EvaluationExecutionPolicy | None = None,
     validation_cache_dir: Path | str | None = None,
+    reopened_models: (
+        tuple[
+            tuple[Any | None, str | None],
+            tuple[Any | None, str | None],
+        ]
+        | None
+    ) = None,
 ) -> LevelResult:
     """Evaluate actual reopened IFC effects against policy and declared intent."""
 
     damaged_path = Path(damaged_ifc_path)
     repaired_path = Path(repaired_ifc_path)
     source_hash_before = _path_sha256(damaged_path)
-    before_model, before_error = _open_ifc(damaged_path)
-    after_model, after_error = _open_ifc(repaired_path)
+    if reopened_models is None:
+        reopened_models = _open_ifc_pair(
+            damaged_path,
+            repaired_path,
+            accelerated=(
+                execution_policy is not None
+                and execution_policy.mode == "accelerated"
+            ),
+        )
+    (before_model, before_error), (after_model, after_error) = reopened_models
     readable = before_model is not None and after_model is not None
     readability_status = (
         EvaluationStatus.PASSED if readable else EvaluationStatus.NOT_EVALUABLE
@@ -592,6 +853,12 @@ def evaluate_independent_l1(
                 else repaired_path.parent / ".validation-cache"
             ),
             policy=execution_policy,
+            baseline_model=(
+                before_model if validation_cache_dir is not None else None
+            ),
+            candidate_model=(
+                after_model if validation_cache_dir is not None else None
+            ),
         )
         execution_metrics = accelerated.get("metrics")
         if accelerated["status"] == "passed":
@@ -747,6 +1014,23 @@ def _open_ifc(path: Path) -> tuple[Any | None, str | None]:
         return ifcopenshell.open(str(path)), None
     except Exception as error:
         return None, f"{type(error).__name__}: {error}"
+
+
+def _open_ifc_pair(
+    damaged_path: Path,
+    repaired_path: Path,
+    *,
+    accelerated: bool,
+) -> tuple[tuple[Any | None, str | None], tuple[Any | None, str | None]]:
+    if not accelerated:
+        return _open_ifc(damaged_path), _open_ifc(repaired_path)
+    with ThreadPoolExecutor(
+        max_workers=2,
+        thread_name_prefix="ifc-reopen",
+    ) as executor:
+        baseline = executor.submit(_open_ifc, damaged_path)
+        candidate = executor.submit(_open_ifc, repaired_path)
+        return baseline.result(), candidate.result()
 
 
 def _path_sha256(path: Path) -> str | None:

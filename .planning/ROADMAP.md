@@ -409,15 +409,18 @@ seconds.
 
 ### Phase 11: Wall Opening and Door Operations
 
-**Status:** In progress — Plans 11-01 through 11-04 and the complete 11-05
-offline matrix are implemented. LargeBuilding, vvo, AdvancedProject,
-generated-Type, five-Door atomic and two-Door/two-Window mixed cases pass and
-six independently validated offline Proof packages are curated. The mixed
-case now proves GUID-free public targeting: names, storeys and wall-local
-measurements resolve first, then the compiler binds internal GUIDs. Real DeepSeek
+**Status:** In progress — all five plans are implemented for the offline
+deterministic path. The 2026-07-29 correction rejects relationship-only false
+positives: Door geometry must overlap its Opening, use the contextual
+Opening-elevation Storey and satisfy exact fill/void/type topology. The
+2026-07-30 authority rerun additionally separates production into a process
+whose only inputs are damaged IFC plus a geometry-only public request bundle.
+One two-Window/two-Door case and one five-Door retained-Opening case pass
+strict three-way L0/L1/L2 with no private Ground Truth available during repair;
+the five Doors each have projected Opening overlap 1.0 and create no second
+Opening. Public targeting resolves before internal GUID binding. Real DeepSeek
 UAT was not executed because the external Codex execution quota rejected the
-network command before Stage 1; actual Stage 1/2 call counts are 0 —
-2026-07-29.
+network command before Stage 1; actual Stage 1/2 call counts are 0.
 
 **Goal:** Extend the Registry with opening-only, Door+Opening and
 Door-into-existing-Opening operations without copying the Window pipeline,
@@ -468,6 +471,11 @@ profiles.
   `IfcRelSpaceBoundary`.
 - Existing Door replacement/deletion, project-coordinate placement, complex
   generated Door styles and curved walls remain deferred.
+- For vvo multi-storey host walls, direct wall containment may be a base
+  Storey while the retained Opening world elevation belongs to an upper
+  Storey. Phase 11 records this as an IFC authoring exception and uses the
+  unique contextual Opening-elevation Storey; missing, conflicting or
+  equidistant candidates fail closed.
 
 **Success criteria:**
 

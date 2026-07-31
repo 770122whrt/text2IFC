@@ -5,6 +5,7 @@ from pathlib import Path
 
 import ifcopenshell
 import ifcopenshell.util.element
+import ifcopenshell.util.unit
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -56,22 +57,23 @@ def test_vvo_five_door_case_is_one_changeset_and_rolls_back_on_failure(
     application = json.loads(
         (case_dir / "application.json").read_text(encoding="utf-8")
     )
-    created_window_ids = [
+    created_door_ids = [
         item["global_id"]
         for operation in application["operations"]
         for item in operation["changes"]["created"]
-        if item["role"] == "window"
+        if item["role"] == "door"
     ]
-    assert len(created_window_ids) == 2
-    for global_id in created_window_ids:
-        window = repaired.by_guid(global_id)
-        assert 0.1 < float(window.OverallWidth) < 10.0
-        assert (
-            ifcopenshell.util.element.get_psets(window)[
-                "Pset_WindowCommon"
-            ]["IsExternal"]
-            is True
+    assert len(created_door_ids) == 5
+    millimetres_per_project_unit = (
+        ifcopenshell.util.unit.calculate_unit_scale(repaired) * 1000.0
+    )
+    for global_id in created_door_ids:
+        door = repaired.by_guid(global_id)
+        width_mm = (
+            float(door.OverallWidth) * millimetres_per_project_unit
         )
+        assert 100.0 <= width_mm <= 5000.0
+        assert len(door.FillsVoids) == 1
 
 
 def test_vvo_mixed_case_publishes_two_windows_and_two_doors_atomically(
@@ -169,7 +171,42 @@ def test_dental_clinic_mixed_case_recreates_openings_from_geometry_targeting(
     assert operation_types.count("add_window_with_opening_to_wall") == 2
     assert operation_types.count("add_door_with_opening_to_wall") == 2
     assert "fill_existing_opening_with_door" not in operation_types
-    assert ifcopenshell.open(str(case_dir / "repaired.ifc")).schema == "IFC2X3"
+    damaged_model = ifcopenshell.open(str(case_dir / "damaged.ifc"))
+    repaired_model = ifcopenshell.open(str(case_dir / "repaired.ifc"))
+    assert repaired_model.schema == "IFC2X3"
+    application = json.loads(
+        (case_dir / "application.json").read_text(encoding="utf-8")
+    )
+    window_results = [
+        item
+        for item in application["operations"]
+        if item["operation_id"].startswith("operation-window-")
+    ]
+    assert all(
+        len(
+            [
+                change
+                for change in item["changes"]["created"]
+                if change["role"] == "window_type_relationship"
+            ]
+        )
+        == 1
+        for item in window_results
+    )
+    declared_created = {
+        change["global_id"]
+        for item in application["operations"]
+        for change in item["changes"]["created"]
+    }
+    damaged_roots = {
+        str(item.GlobalId)
+        for item in damaged_model.by_type("IfcRoot")
+    }
+    repaired_roots = {
+        str(item.GlobalId)
+        for item in repaired_model.by_type("IfcRoot")
+    }
+    assert repaired_roots - damaged_roots == declared_created
 
 
 def test_largebuilding_generated_door_type_case_is_source_bound(

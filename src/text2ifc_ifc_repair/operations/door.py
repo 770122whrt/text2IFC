@@ -8,6 +8,10 @@ from typing import Any, Mapping
 
 import ifcopenshell.api.geometry
 
+from text2ifc_ifc_repair.door_geometry import (
+    measure_door_opening_alignment,
+    select_door_placement_in_opening,
+)
 from text2ifc_ifc_repair.door_resolution import resolve_door_parameters
 from text2ifc_ifc_repair.evaluation_policy import (
     ComparisonRule,
@@ -34,10 +38,11 @@ from .hosted_opening import (
     hosted_opening_conflict_checker,
     local_placement,
     millimetres_to_project_units,
+    opening_storey,
+    opening_storey_containment,
     project_units_to_millimetres,
     require_guid,
     sorted_roots,
-    wall_containment,
 )
 
 
@@ -454,10 +459,12 @@ def _create_door(
     door.Representation = model.create_entity(
         "IfcProductDefinitionShape", Representations=representations
     )
+    selected_placement = select_door_placement_in_opening(door, opening)
     door.ObjectPlacement = local_placement(
         model,
         relative_to=opening.ObjectPlacement,
-        location=(0.0, 0.0, 0.0),
+        location=selected_placement["location"],
+        ref_direction=selected_placement["ref_direction"],
     )
     fill = model.create_entity(
         "IfcRelFillsElement",
@@ -492,7 +499,7 @@ def _create_door(
                     "global_id": str(relation.GlobalId),
                 }
             )
-    containment = wall_containment(wall)
+    containment = opening_storey_containment(opening, wall)
     add_to_containment(containment, door)
     modified.append(
         {
@@ -573,6 +580,20 @@ def _create_door(
                 None if door_style is None else str(door_style.GlobalId)
             ),
             "opening_depth_mm": opening_depth_mm,
+            "door_placement": {
+                "relative_location": [
+                    float(value)
+                    for value in selected_placement["location"]
+                ],
+                "relative_ref_direction": [
+                    float(value)
+                    for value in selected_placement["ref_direction"]
+                ],
+                "selection_evidence": selected_placement["diagnostics"],
+            },
+            "storey_global_id": str(
+                containment.RelatingStructure.GlobalId
+            ),
         },
     }
 
@@ -736,10 +757,37 @@ def _postconditions(
             "evidence": {},
         }
     expected = operation["parameters"]["door"]
+    try:
+        alignment = measure_door_opening_alignment(door, opening)
+    except Exception as error:
+        alignment = {
+            "valid": False,
+            "measurement_error": f"{type(error).__name__}:{error}",
+        }
+    try:
+        expected_storey = opening_storey(opening, wall)
+        door_storeys = [
+            relation.RelatingStructure
+            for relation in door.ContainedInStructure
+            if relation.RelatingStructure.is_a("IfcBuildingStorey")
+        ]
+        storey_matches = (
+            len(door_storeys) == 1
+            and door_storeys[0] == expected_storey
+        )
+    except (OperationRegistryError, ValueError) as error:
+        expected_storey = None
+        door_storeys = []
+        storey_matches = False
+        storey_error = f"{type(error).__name__}:{error}"
+    else:
+        storey_error = None
     predicates = {
         "DOOR_FILLS_OPENING": (
             len(door.FillsVoids) == 1
             and door.FillsVoids[0].RelatingOpeningElement == opening
+            and len(opening.HasFillings) == 1
+            and opening.HasFillings[0].RelatedBuildingElement == door
         ),
         "OPENING_VOIDS_WALL": (
             len(opening.VoidsElements) == 1
@@ -757,11 +805,18 @@ def _postconditions(
                 abs_tol=1e-4,
             )
         ),
-        "DOOR_STOREY_CONTAINMENT": bool(door.ContainedInStructure),
-        "DOOR_TYPE_BOUND": any(
-            relation.is_a("IfcRelDefinesByType")
-            for relation in door.IsDefinedBy
+        "DOOR_GEOMETRY_ALIGNED_WITH_OPENING": bool(
+            alignment["valid"]
         ),
+        "DOOR_STOREY_MATCHES_HOST": storey_matches,
+        "DOOR_TYPE_BOUND": len(
+            [
+                relation
+                for relation in door.IsDefinedBy
+                if relation.is_a("IfcRelDefinesByType")
+            ]
+        )
+        == 1,
     }
     issues = [
         {
@@ -778,7 +833,26 @@ def _postconditions(
             {
                 "code": code,
                 "status": "passed" if passed else "failed",
-                "evidence": {},
+                "evidence": (
+                    alignment
+                    if code == "DOOR_GEOMETRY_ALIGNED_WITH_OPENING"
+                    else (
+                        {
+                            "expected_storey_global_id": (
+                                None
+                                if expected_storey is None
+                                else str(expected_storey.GlobalId)
+                            ),
+                            "actual_storey_global_ids": [
+                                str(storey.GlobalId)
+                                for storey in door_storeys
+                            ],
+                            "resolution_error": storey_error,
+                        }
+                        if code == "DOOR_STOREY_MATCHES_HOST"
+                        else {}
+                    )
+                ),
             }
             for code, passed in predicates.items()
         ],
@@ -787,6 +861,15 @@ def _postconditions(
             "door_global_id": str(door.GlobalId),
             "opening_global_id": str(opening.GlobalId),
             "host_wall_global_id": str(wall.GlobalId),
+            "geometry_alignment": alignment,
+            "expected_storey_global_id": (
+                None
+                if expected_storey is None
+                else str(expected_storey.GlobalId)
+            ),
+            "actual_storey_global_ids": [
+                str(storey.GlobalId) for storey in door_storeys
+            ],
         },
     }
 
@@ -804,18 +887,66 @@ def _comparison_adapter(
         model=after_model,
         application=application,
     )
+    checks = {item["code"]: item for item in result["checks"]}
+
+    def l1_check(*codes: str, reason: str) -> dict[str, Any]:
+        passed = all(
+            checks.get(code, {}).get("status") == "passed"
+            for code in codes
+        )
+        return {
+            "status": "passed" if passed else "failed",
+            "reason": reason,
+            "expected": {code: "passed" for code in codes},
+            "actual": {
+                code: checks.get(code, {}).get("status", "missing")
+                for code in codes
+            },
+            "evidence": {
+                code: checks.get(code, {}).get("evidence", {})
+                for code in codes
+            },
+        }
+
     return {
         **result,
         "authorization": _l1_authorization(
             creates_opening=operation["operation_type"] == ADD_OPERATION_TYPE
         ),
         "l1_checks": {
-            "l1.door.topology": {
-                "status": "passed" if result["valid"] else "failed",
-                "reason": "Door must fill one hosted Opening and be contained and typed.",
-                "expected": True,
-                "actual": result["valid"],
-            }
+            "l1.door.fill-topology": l1_check(
+                "DOOR_FILLS_OPENING",
+                "OPENING_VOIDS_WALL",
+                reason=(
+                    "Door and retained Opening must form one exact "
+                    "fill/void chain."
+                ),
+            ),
+            "l1.door.opening-alignment": l1_check(
+                "DOOR_GEOMETRY_ALIGNED_WITH_OPENING",
+                reason=(
+                    "Door geometry and nominal envelope must align with "
+                    "the retained Opening."
+                ),
+            ),
+            "l1.door.dimensions": l1_check(
+                "DOOR_DIMENSIONS_MATCH",
+                reason=(
+                    "Door formal width and height must match the bound "
+                    "ChangeSet."
+                ),
+            ),
+            "l1.door.storey": l1_check(
+                "DOOR_STOREY_MATCHES_HOST",
+                reason=(
+                    "Door must use the Storey resolved from the retained "
+                    "Opening spatial context."
+                ),
+            ),
+            "l1.door.type": l1_check(
+                "DOOR_TYPE_BOUND",
+                reason="Door must have exactly one IfcDoorStyle binding.",
+            ),
         },
     }
 
@@ -836,7 +967,7 @@ def _l1_authorization(*, creates_opening: bool) -> dict[str, Any]:
         )
     return {
         "policy_id": "door.hosted-opening.l1",
-        "policy_version": "0.1",
+        "policy_version": "0.2",
         "created": created,
         "modified": {
             "opening": "IfcOpeningElement",

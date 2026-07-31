@@ -10,7 +10,7 @@
     "preservation": "passed",
     "successful_artifact_publishable": true
   },
-  "case_count": 12,
+  "case_count": 14,
   "cases": [
     {
       "case_id": "largebuilding-full-replication",
@@ -216,6 +216,43 @@
       "provider_evidence_mode": "offline_bound_deterministic",
       "repaired_ifc": "mixed/door-window/dental-clinic-two-door-two-window-geometry-targeted/03-repaired.ifc",
       "report": "mixed/door-window/dental-clinic-two-door-two-window-geometry-targeted/REPORT.md",
+      "status": "accepted"
+    },
+    {
+      "case_id": "vvo-authority-triplet-public-repair",
+      "case_kind": "mixed",
+      "damaged_ifc": "mixed/door-window/vvo-authority-triplet-public-repair/02-damaged.ifc",
+      "files": "mixed/door-window/vvo-authority-triplet-public-repair/FILES.json",
+      "model": "phase11-bound-fixture",
+      "operation_count": 4,
+      "operation_family": "mixed",
+      "operation_types": [
+        "add_window_with_opening_to_wall",
+        "fill_existing_opening_with_door"
+      ],
+      "original_ifc": "mixed/door-window/vvo-authority-triplet-public-repair/01-original.ifc",
+      "provider": "offline-deterministic",
+      "provider_evidence_mode": "offline_bound_deterministic",
+      "repaired_ifc": "mixed/door-window/vvo-authority-triplet-public-repair/03-repaired.ifc",
+      "report": "mixed/door-window/vvo-authority-triplet-public-repair/REPORT.md",
+      "status": "accepted"
+    },
+    {
+      "case_id": "vvo-five-door-authority-public-repair",
+      "case_kind": "batch",
+      "damaged_ifc": "door/batch/vvo-five-door-authority-public-repair/02-damaged.ifc",
+      "files": "door/batch/vvo-five-door-authority-public-repair/FILES.json",
+      "model": "phase11-bound-fixture",
+      "operation_count": 5,
+      "operation_family": "door",
+      "operation_types": [
+        "fill_existing_opening_with_door"
+      ],
+      "original_ifc": "door/batch/vvo-five-door-authority-public-repair/01-original.ifc",
+      "provider": "offline-deterministic",
+      "provider_evidence_mode": "offline_bound_deterministic",
+      "repaired_ifc": "door/batch/vvo-five-door-authority-public-repair/03-repaired.ifc",
+      "report": "door/batch/vvo-five-door-authority-public-repair/REPORT.md",
       "status": "accepted"
     }
   ],

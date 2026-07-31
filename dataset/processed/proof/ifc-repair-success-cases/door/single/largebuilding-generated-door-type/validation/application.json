@@ -259,9 +259,80 @@
         ],
         "removed": [],
         "resolved": {
+          "door_placement": {
+            "relative_location": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "relative_ref_direction": [
+              1.0,
+              0.0,
+              0.0
+            ],
+            "selection_evidence": {
+              "axis_deviation_degrees": 0.0,
+              "door_bounds_in_opening_mm": {
+                "x": [
+                  0.0,
+                  915.0
+                ],
+                "y": [
+                  -25.0,
+                  25.0
+                ],
+                "z": [
+                  0.0,
+                  2134.0
+                ]
+              },
+              "geometry_center_deviation_mm": 0.0,
+              "height_deviation_mm": 0.0,
+              "nominal_center_deviation_mm": 0.0,
+              "nominal_door_bounds_mm": {
+                "x": [
+                  0.0,
+                  915.0
+                ],
+                "y": [
+                  0.0,
+                  0.0
+                ],
+                "z": [
+                  0.0,
+                  2134.0
+                ]
+              },
+              "normal_axis_intersection_mm": 50.0,
+              "opening_bounds_mm": {
+                "x": [
+                  0.0,
+                  915.0
+                ],
+                "y": [
+                  -100.0,
+                  100.0
+                ],
+                "z": [
+                  0.0,
+                  2134.0
+                ]
+              },
+              "projected_overlap_ratio": 1.0,
+              "thresholds": {
+                "maximum_axis_deviation_degrees": 0.1,
+                "maximum_center_deviation_mm": 5.0,
+                "maximum_dimension_deviation_mm": 1.0,
+                "minimum_projected_overlap_ratio": 0.95
+              },
+              "valid": true,
+              "width_deviation_mm": 0.0
+            }
+          },
           "door_type_global_id": "3B_xZ3LlPHr8sg9aigaebZ",
           "opening_depth_mm": 200.0,
-          "opening_global_id": "2LPFqTp2DNNxh5k_iYF5k6"
+          "opening_global_id": "2LPFqTp2DNNxh5k_iYF5k6",
+          "storey_global_id": "2nxdYR2RHCDBiKJuiQr1XP"
         },
         "semantic": {
           "created": [],
@@ -287,7 +358,7 @@
     }
   ],
   "output": {
-    "path": "E:\\code for project\\bimnet\\dataset\\processed\\ifc-repair\\phase11-door-offline\\largebuilding-generated-door-type\\repaired.ifc",
+    "path": "E:\\code for project\\bimnet\\dataset\\processed\\ifc-repair\\phase11-door-audit-fix-final-2\\largebuilding-generated-door-type\\repaired.ifc",
     "sha256": "2af345dc8edd0b986b22b669ced51a8fd6812e1756f79dd76bb3e78ca0ba3858"
   },
   "postconditions": [
@@ -309,8 +380,76 @@
           "status": "passed"
         },
         {
-          "code": "DOOR_STOREY_CONTAINMENT",
-          "evidence": {},
+          "code": "DOOR_GEOMETRY_ALIGNED_WITH_OPENING",
+          "evidence": {
+            "axis_deviation_degrees": 0.0,
+            "door_bounds_in_opening_mm": {
+              "x": [
+                0.0,
+                915.0
+              ],
+              "y": [
+                -25.0,
+                25.0
+              ],
+              "z": [
+                0.0,
+                2134.0
+              ]
+            },
+            "geometry_center_deviation_mm": 0.0,
+            "height_deviation_mm": 0.0,
+            "nominal_center_deviation_mm": 0.0,
+            "nominal_door_bounds_mm": {
+              "x": [
+                0.0,
+                915.0
+              ],
+              "y": [
+                0.0,
+                0.0
+              ],
+              "z": [
+                0.0,
+                2134.0
+              ]
+            },
+            "normal_axis_intersection_mm": 50.0,
+            "opening_bounds_mm": {
+              "x": [
+                0.0,
+                915.0
+              ],
+              "y": [
+                -100.0,
+                100.0
+              ],
+              "z": [
+                0.0,
+                2134.0
+              ]
+            },
+            "projected_overlap_ratio": 1.0,
+            "thresholds": {
+              "maximum_axis_deviation_degrees": 0.1,
+              "maximum_center_deviation_mm": 5.0,
+              "maximum_dimension_deviation_mm": 1.0,
+              "minimum_projected_overlap_ratio": 0.95
+            },
+            "valid": true,
+            "width_deviation_mm": 0.0
+          },
+          "status": "passed"
+        },
+        {
+          "code": "DOOR_STOREY_MATCHES_HOST",
+          "evidence": {
+            "actual_storey_global_ids": [
+              "2nxdYR2RHCDBiKJuiQr1XP"
+            ],
+            "expected_storey_global_id": "2nxdYR2RHCDBiKJuiQr1XP",
+            "resolution_error": null
+          },
           "status": "passed"
         },
         {
@@ -320,7 +459,69 @@
         }
       ],
       "evidence": {
+        "actual_storey_global_ids": [
+          "2nxdYR2RHCDBiKJuiQr1XP"
+        ],
         "door_global_id": "3WGF1dkUzHkung2ItzKtYu",
+        "expected_storey_global_id": "2nxdYR2RHCDBiKJuiQr1XP",
+        "geometry_alignment": {
+          "axis_deviation_degrees": 0.0,
+          "door_bounds_in_opening_mm": {
+            "x": [
+              0.0,
+              915.0
+            ],
+            "y": [
+              -25.0,
+              25.0
+            ],
+            "z": [
+              0.0,
+              2134.0
+            ]
+          },
+          "geometry_center_deviation_mm": 0.0,
+          "height_deviation_mm": 0.0,
+          "nominal_center_deviation_mm": 0.0,
+          "nominal_door_bounds_mm": {
+            "x": [
+              0.0,
+              915.0
+            ],
+            "y": [
+              0.0,
+              0.0
+            ],
+            "z": [
+              0.0,
+              2134.0
+            ]
+          },
+          "normal_axis_intersection_mm": 50.0,
+          "opening_bounds_mm": {
+            "x": [
+              0.0,
+              915.0
+            ],
+            "y": [
+              -100.0,
+              100.0
+            ],
+            "z": [
+              0.0,
+              2134.0
+            ]
+          },
+          "projected_overlap_ratio": 1.0,
+          "thresholds": {
+            "maximum_axis_deviation_degrees": 0.1,
+            "maximum_center_deviation_mm": 5.0,
+            "maximum_dimension_deviation_mm": 1.0,
+            "minimum_projected_overlap_ratio": 0.95
+          },
+          "valid": true,
+          "width_deviation_mm": 0.0
+        },
         "host_wall_global_id": "2cXV28XOjE6f6irgi0COfF",
         "opening_global_id": "2LPFqTp2DNNxh5k_iYF5k6"
       },

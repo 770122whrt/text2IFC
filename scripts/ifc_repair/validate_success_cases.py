@@ -247,6 +247,23 @@ def _validate_case(root: Path, case: Mapping[str, Any]) -> dict[str, Any]:
             _read_json(private_path),
             operation_count=operation_count,
         )
+    release_path = roles.get("l0_l1_l2_release_decision")
+    audit_path = roles.get("three_way_l0_l1_l2_audit")
+    if release_path is not None or audit_path is not None:
+        if release_path is None or audit_path is None:
+            raise ValueError("three-way audit artifact set is incomplete")
+        release = _read_json(release_path)
+        if (
+            release.get("l0_pass") is not True
+            or release.get("l1_pass") is not True
+            or release.get("l2_pass") is not True
+            or release.get("publishable") is not True
+            or release.get("blocking_findings")
+        ):
+            raise ValueError("L0/L1/L2 release decision is not publishable")
+        audit = _read_json(audit_path)
+        if audit.get("release_decision") != release:
+            raise ValueError("three-way audit release decision mismatch")
 
     return {
         "case_id": case_id,
@@ -353,10 +370,20 @@ def _check_guid_free_targeting(
                     "name-free target_query contains a name selector"
                 )
             constraints = query.get("geometry_constraints")
+            allowed_classes = set(query.get("allowed_ifc_classes", ()))
+            has_bounded_geometry = (
+                isinstance(constraints, list)
+                and len(constraints) >= 2
+                and (
+                    bool(query.get("direction"))
+                    or (
+                        allowed_classes == {"IfcOpeningElement"}
+                        and len(constraints) >= 4
+                    )
+                )
+            )
             if (
-                not isinstance(constraints, list)
-                or len(constraints) < 2
-                or not query.get("direction")
+                not has_bounded_geometry
             ):
                 raise ValueError(
                     "name-free target_query lacks bounded geometry selectors"

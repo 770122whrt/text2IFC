@@ -7,6 +7,7 @@ import ifcopenshell
 
 from text2ifc_ifc_repair.evaluation import (
     EvaluationExecutionPolicy,
+    _open_ifc_pair,
     execute_validation_and_diff,
 )
 
@@ -82,6 +83,59 @@ def test_cache_cold_then_warm_preserves_diagnostic_signatures(
         cold["results"]["validation"]["comparison"]
         == warm["results"]["validation"]["comparison"]
     )
+
+
+def test_reopened_model_reuse_preserves_full_validation_and_diff(
+    tmp_path: Path,
+) -> None:
+    baseline = tmp_path / "baseline.ifc"
+    candidate = tmp_path / "candidate.ifc"
+    _write(baseline)
+    _write(candidate, extra_error=True)
+    policy = EvaluationExecutionPolicy(
+        mode="accelerated",
+        deadline_seconds=10.0,
+    )
+    expected = execute_validation_and_diff(
+        damaged_ifc_path=baseline,
+        repaired_ifc_path=candidate,
+        cache_dir=tmp_path / "expected-cache",
+        policy=policy,
+    )
+    reused = execute_validation_and_diff(
+        damaged_ifc_path=baseline,
+        repaired_ifc_path=candidate,
+        cache_dir=tmp_path / "reused-cache",
+        policy=policy,
+        baseline_model=ifcopenshell.open(str(baseline)),
+        candidate_model=ifcopenshell.open(str(candidate)),
+    )
+
+    assert expected["status"] == reused["status"] == "passed"
+    assert expected["results"]["validation"]["comparison"] == (
+        reused["results"]["validation"]["comparison"]
+    )
+    assert expected["results"]["diff"] == reused["results"]["diff"]
+    assert reused["metrics"]["mode"] == "reused_models"
+    assert reused["metrics"]["worker_count"] == 3
+
+
+def test_accelerated_reopen_loads_the_independent_pair_concurrently(
+    tmp_path: Path,
+) -> None:
+    baseline = tmp_path / "baseline.ifc"
+    candidate = tmp_path / "candidate.ifc"
+    _write(baseline)
+    _write(candidate, extra_error=True)
+
+    before, after = _open_ifc_pair(
+        baseline,
+        candidate,
+        accelerated=True,
+    )
+
+    assert before[0] is not None and before[1] is None
+    assert after[0] is not None and after[1] is None
 
 
 def test_worker_exception_fails_closed(tmp_path: Path) -> None:

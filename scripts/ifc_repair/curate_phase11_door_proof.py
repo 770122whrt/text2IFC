@@ -121,6 +121,26 @@ def _validate_source_case(case_dir: Path) -> dict[str, Any]:
     comparison = _read(case_dir / "comparison.json")
     if comparison.get("complete_preservation_success") is not True:
         raise ValueError("SOURCE_COMPARISON_NOT_PRESERVED")
+    release_path = case_dir / "release-decision.json"
+    audit_path = case_dir / "three-way-audit.json"
+    if release_path.is_file() or audit_path.is_file():
+        if not release_path.is_file() or not audit_path.is_file():
+            raise ValueError("SOURCE_DOOR_AUDIT_INCOMPLETE")
+        release = _read(release_path)
+        if (
+            release.get("l0_pass") is not True
+            or release.get("l1_pass") is not True
+            or release.get("l2_pass") is not True
+            or release.get("publishable") is not True
+            or release.get("blocking_findings")
+        ):
+            raise ValueError("SOURCE_RELEASE_DECISION_NOT_PUBLISHABLE")
+        audit = _read(audit_path)
+        if (
+            audit.get("release_decision", {}).get("publishable")
+            is not True
+        ):
+            raise ValueError("SOURCE_THREE_WAY_AUDIT_NOT_PUBLISHABLE")
     return manifest
 
 
@@ -252,6 +272,26 @@ def _copy_case(
             "evaluation-warm.json",
             "production_evaluation_warm",
         ),
+        "validation/three-way-audit.json": (
+            "three-way-audit.json",
+            "three_way_l0_l1_l2_audit",
+        ),
+        "validation/release-decision.json": (
+            "release-decision.json",
+            "l0_l1_l2_release_decision",
+        ),
+        "validation/AUDIT-REPORT.md": (
+            "AUDIT-REPORT.md",
+            "human_readable_three_way_audit",
+        ),
+        "validation/production-boundary.json": (
+            "production-boundary.json",
+            "production_input_boundary",
+        ),
+        "private-evaluation/benchmark-mapping.json": (
+            "private-benchmark-mapping.json",
+            "private_post_repair_benchmark_mapping",
+        ),
     }
     for relative, pair in optional.items():
         if (source_case / pair[0]).is_file():
@@ -299,15 +339,20 @@ def _copy_case(
         removed_doors = [] if door is None else [door]
     report = (
         f"# {source_manifest['case_id']}\n\n"
-        "- 证据模式：offline deterministic bound ChangeSet。\n"
+        "本目录是可复核的离线确定性修复证据；Ground Truth 仅供修复后的"
+        "私有 benchmark comparator 使用。\n\n"
+        "- 生产修复 IFC 输入：02-damaged.ifc。\n"
         f"- operation 数量：{source_manifest['operation_count']}。\n"
         f"- operation 类型：{', '.join(operation_types)}。\n"
         "- original、damaged、repaired IFC 均已独立重开为 IFC2X3。\n"
-        "- application、L1、L2、preservation 与文件哈希均已重新验证。\n"
+        "- L0、L1、L2、preservation 与文件哈希均已重新验证；发布结论见"
+        " `validation/release-decision.json`。\n"
+        "- 完整三方差异与非阻塞 fidelity warning 见"
+        " `validation/AUDIT-REPORT.md`。\n"
         "- Prompt Profile 与 few-shot 指纹由当前不可变目录重新计算。\n"
         + (
             "- 用户请求和 RepairIntent 均不含 IFC GlobalId、对象 Name 或楼层"
-            " Name；宿主墙仅由楼层标高、朝向、墙体长高厚和墙局部位置经"
+            " Name；Wall 或既有 Opening 仅由用户给出的有界几何约束经"
             "确定性索引解析，GUID 只在内部 Bound ChangeSet 中出现。\n"
             if public_targeting.get("name_free") is True
             else
@@ -324,7 +369,7 @@ def _copy_case(
             else ""
         )
         + "- synthetic fallback：false。\n\n"
-        + "## 被删除 Door\n\n"
+        + "## 被删除 Door（私有 benchmark 信息）\n\n"
         + (
             "\n".join(
                 f"- `{item.get('name')}` (`{item.get('global_id')}`)"
@@ -334,7 +379,7 @@ def _copy_case(
             else "- 本案例不删除 Door occurrence。\n"
         )
         + "\n"
-        + "\n## 被删除 Window\n\n"
+        + "\n## 被删除 Window（私有 benchmark 信息）\n\n"
         + (
             "\n".join(
                 f"- `{item.get('name')}` (`{item.get('global_id')}`)"

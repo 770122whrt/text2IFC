@@ -337,12 +337,20 @@ must:
 - expose measurable position and dimensions;
 - belong to the resolved Storey through its host.
 
+An empty Opening may also be resolved without identity or names through the
+bounded conjunction of measured width, height, depth, wall-local center,
+sill height and optional normal offset. Zero or multiple geometry matches
+clarify; the runtime never selects the first candidate.
+
 Zero or multiple candidates clarify. An already-filled Opening fails with
 `OPENING_ALREADY_FILLED`; the system does not replace its element.
 
-Space is evidence for target and viewpoint only. The new Door is contained in
-the host Wall's `IfcBuildingStorey`. Phase 11 does not create or modify
-`IfcRelSpaceBoundary`.
+Space is evidence for target and viewpoint only. For an ordinary one-Storey
+host, the new Door uses the host Wall's direct `IfcBuildingStorey`. For a
+multi-Storey spanning Wall whose direct containment is a base Storey, the
+retained Opening world-base elevation must uniquely resolve the contextual
+Storey in the same Building. Missing, conflicting or equidistant context fails
+closed. Phase 11 does not create or modify `IfcRelSpaceBoundary`.
 
 ## 7. Door Type policy
 
@@ -489,9 +497,13 @@ Door operations require, as applicable:
 - correct created/existing Opening identity;
 - one Wall–Opening void relationship;
 - one Opening–Door fill relationship;
-- Door containment in the correct Storey;
+- Door containment in the Storey resolved from the Opening world-base
+  elevation within the same Building;
 - requested overall dimensions and placement;
-- compatible mapped/generated geometry within the Opening;
+- mapped/generated Door geometry with projected Opening overlap `>= 0.95`,
+  authorized nominal-envelope center deviation `<= 5 mm`, axis deviation
+  `<= 0.1°` and nominal dimension deviation `<= 1 mm`; actual Type geometry
+  bounds remain separate evidence;
 - correct Door local orientation and swing evidence;
 - no overlapping sibling Opening;
 - no unauthorized Wall, Opening, Type or unrelated-model mutation.

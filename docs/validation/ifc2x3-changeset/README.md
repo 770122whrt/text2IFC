@@ -3,16 +3,20 @@
 Phase 11 当前状态见
 [Door / Opening 验证报告](phase11-door-validation-report.md)：合同、索引、
 确定性解析、IFC 写入、L1/L2、occurrence comparator 以及 LargeBuilding/vvo
-离线链路已经通过；真实 DeepSeek 命令在进入 Provider 前被外部执行额度阻塞，
-实际 Stage 1/Stage 2 调用数均为 0，因此 Phase 11 尚未最终关闭。
+离线链路已经通过。2026-07-29 至 2026-07-30 的严格复审修复了“关系存在但
+Door 几何未填入 Opening”的假阳性。最终权威复跑采用独立 damaged-only
+生产进程，通过纯几何签名完成一组两窗两门和一组五门修复；original 与
+mutation mapping 只在 repaired IFC 生成后的私有 comparator 中出现。
+真实 DeepSeek 命令此前在进入 Provider 前被外部执行额度阻塞，实际
+Stage 1/Stage 2 调用数均为 0，因此 Phase 11 尚未最终关闭。
 
 下一阶段设计：
 [Phase 11 Wall Opening 与 Door Operations SPEC](../../../.planning/phases/11-wall-opening-and-door-operations/11-SPEC.md)。
 它冻结 Opening-only、Door+Opening、Door 填入既有 Opening、DoorStyle
 复用/生成、开启方向澄清、RepairIntent 路由、按 operation 加载 few-shot，
 以及单门/五门/混合构件/大型 IFC/真实 DeepSeek 的验收边界。五份执行计划、
-实现研究和验证策略已经完成，但代码尚未开始，因此不得宣称 Door 生产能力
-已经实现。
+实现研究和验证策略已经落地；当前可宣称离线确定性 Door 修复能力，但不得把
+尚未执行的真实 Provider UAT 说成成功。
 
 最新验收：[Phase 10.5 Window Occurrence Fidelity 与验证加速报告](phase10.5-window-fidelity-validation-report.md)。
   它记录 occurrence 属性/Quantity 输入与授权复用、Ground Truth Comparator、
@@ -23,6 +27,9 @@ Phase 11 当前状态见
 [IFC Repair 成功案例集](../../../dataset/processed/proof/ifc-repair-success-cases/README.md)。
 每个案例都包含 original、damaged、repaired IFC、用户输入、Agent 输出、
 Bound ChangeSet、验证证据和独立报告。
+
+审计前的 Door 假阳性没有留在成功案例中；原始失败二进制、哈希和缺陷说明保存在
+[Phase 11 Door known-failure fixture](../../../tests/fixtures/ifc_repair/phase11-door-known-failure/README.md)。
 
 人工属性核验：
 [LargeBuilding 真实修复 Window 属性对比](phase10.1-largebuilding-window-property-comparison.md)。
@@ -36,10 +43,11 @@ Phase 8 验证报告：[Evaluation 0.2、Benchmark Gold 隔离与 LargeBuilding 
 
 | 文档 | 职责 | 当前状态 |
 |---|---|---|
-| [Phase 11 SPEC](../../../.planning/phases/11-wall-opening-and-door-operations/11-SPEC.md) | Opening/Door operation、Type/swing/position/属性边界、Prompt Profile、L1/L2 和验收矩阵 | 2026-07-28 设计已确认；等待 Goal 执行授权 |
+| [Phase 11 SPEC](../../../.planning/phases/11-wall-opening-and-door-operations/11-SPEC.md) | Opening/Door operation、Type/swing/position/属性边界、Prompt Profile、L1/L2 和验收矩阵 | 已实现；2026-07-29 严格 Door 几何/Storey 审计通过 |
 | [Phase 11 RESEARCH](../../../.planning/phases/11-wall-opening-and-door-operations/11-RESEARCH.md) | 当前 Window 专用耦合、IFC2X3 DoorStyle/Openings 事实、版本升级和推荐扩展缝 | 2026-07-28 规划研究完成 |
 | [Phase 11 VALIDATION](../../../.planning/phases/11-wall-opening-and-door-operations/11-VALIDATION.md) | schema、索引、authoring、L1/L2、批量/混合、大型 IFC、真实 DeepSeek 和 Proof 验收 | 2026-07-28 验证矩阵完成 |
-| [Phase 11 执行计划](../../../.planning/phases/11-wall-opening-and-door-operations/11-01-PLAN.md) | 五步顺序入口：契约/Prompt → 索引/解析 → IFC 写入 → 评估 → 数据集/live UAT | 五份计划已完成；尚未实施 |
+| [Phase 11 Door Storey Policy Erratum](phase11-door-storey-policy-erratum.md) | 多楼层贯通墙中 direct containment 与 Opening 高度上下文冲突时的正式 Storey 决策 | 2026-07-30 已冻结并有 fail-closed 回归 |
+| [Phase 11 执行计划](../../../.planning/phases/11-wall-opening-and-door-operations/11-01-PLAN.md) | 五步顺序入口：契约/Prompt → 索引/解析 → IFC 写入 → 评估 → 数据集/live UAT | 离线实现与 Proof 完成；真实 Provider UAT 待执行 |
 | [phase10.5-window-fidelity-validation-report.md](phase10.5-window-fidelity-validation-report.md) | occurrence 属性输入/授权复用、Ground Truth Comparator、validation cache、冷/热大型 IFC 性能与真实 DeepSeek UAT | 2026-07-26 全部通过；Production/private L1/L2 与 occurrence fidelity passed |
 | [phase10.4-comparator-0.2-validation-report.md](phase10.4-comparator-0.2-validation-report.md) | 大型 IFC 全局保全门禁、fail-closed 指纹、三次性能/内存基准与完整 Production 重放 | 2026-07-25 Comparator 与 AdvancedProject 五窗 L1/L2/发布闭环通过 |
 | [phase10.3-five-window-batch-validation-report.md](phase10.3-five-window-batch-validation-report.md) | dataset 审计、五窗 damage/repair、统一 ChangeSet、原子回滚、逐项 L1/L2、真实 DeepSeek 与大型 IFC 矩阵 | 2026-07-24 通过；五项 L1/L2 passed |
@@ -81,13 +89,12 @@ Phase 10.1 additional validation:
 
 ## 能力边界
 
-当前生产 handler 只支持 `add_window_with_opening_to_wall` 与 IFC2X3 直线墙。
-Phase 11 Door/Opening 仍是已确认但未实施的设计。
+当前生产 Registry 支持 Window、Opening-only、Door+Opening 和 Door 填入既有
+Opening 的 IFC2X3 直线墙操作。Door 必须通过实际洞口几何、fill/void 拓扑、
+Opening 实际标高楼层、Type 与 L2 必需事实的联合门禁。
 公共 ChangeSet envelope、Operation Registry、Audit、事务应用与 Comparator 已为
 异构 operation 留出并测试接口。以下仍是后续能力，不得宣称已实现：
 
-- 仅挖墙洞；
-- 门及其洞口；
 - 梁与柱；
 - 删除构件和更新 placement；
 - BIMNet 大样本适配；

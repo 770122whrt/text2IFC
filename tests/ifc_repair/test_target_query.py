@@ -199,6 +199,111 @@ def test_geometry_signature_resolves_without_names_or_identity_fields(
     assert evidence["geometry:storey_elevation_mm"].state == "matched"
 
 
+def test_opening_geometry_signature_resolves_without_name_guid_or_host_guid(
+    tmp_path: Path,
+) -> None:
+    api = _api()
+    base = {
+        "ifc_class": "IfcOpeningElement",
+        "type_name": None,
+        "type_global_id": None,
+        "storey_name": "must-not-be-used",
+        "geometry_capability": "measured_hosted_opening",
+        "facets": {
+            "editable_target": True,
+            "fill_state": "empty",
+            "storey_elevation_mm": -2213.701,
+        },
+    }
+    right = _record(
+        "0AAAAAAAAAAAAAAAAAAAAA",
+        "must-not-be-used",
+        **base,
+        geometry_summary={
+            "dimensions_mm": {
+                "width": 800.0,
+                "height": 2480.0,
+                "depth": 160.0,
+            },
+            "wall_local_position_mm": {
+                "center_offset_mm": 565.932,
+                "sill_height_mm": 130.359,
+                "normal_offset_mm": 0.0,
+            },
+        },
+    )
+    wrong = _record(
+        "0BBBBBBBBBBBBBBBBBBBBB",
+        "also-must-not-be-used",
+        **base,
+        geometry_summary={
+            "dimensions_mm": {
+                "width": 935.0,
+                "height": 2400.0,
+                "depth": 270.0,
+            },
+            "wall_local_position_mm": {
+                "center_offset_mm": 6507.5,
+                "sill_height_mm": 110.359,
+                "normal_offset_mm": 0.0,
+            },
+        },
+    )
+    database = _repository(tmp_path, [wrong, right])
+    query_document = {
+        "schema_version": "text2ifc/ifc-target-query/0.1",
+        "allowed_ifc_classes": ["IfcOpeningElement"],
+        "geometry_capabilities": ["measured_hosted_opening"],
+        "geometry_constraints": [
+            {
+                "field": "storey_elevation_mm",
+                "value": -2213.701,
+                "tolerance_mm": 1.0,
+            },
+            {
+                "field": "opening_width_mm",
+                "value": 800.0,
+                "tolerance_mm": 1.0,
+            },
+            {
+                "field": "opening_height_mm",
+                "value": 2480.0,
+                "tolerance_mm": 1.0,
+            },
+            {
+                "field": "opening_depth_mm",
+                "value": 160.0,
+                "tolerance_mm": 1.0,
+            },
+            {
+                "field": "opening_center_offset_mm",
+                "value": 565.932,
+                "tolerance_mm": 1.0,
+            },
+            {
+                "field": "opening_sill_height_mm",
+                "value": 130.359,
+                "tolerance_mm": 1.0,
+            },
+        ],
+    }
+    query = api["TargetQuery"].from_dict(query_document)
+
+    assert query.global_id is None
+    assert query.names == ()
+    assert query.host_global_id is None
+    with SQLiteIndexRepository.open(database) as repository:
+        result = api["resolve_target"](repository, query)
+
+    assert result.status == "resolved"
+    assert result.resolved_target_id == right.record_id
+    evidence = {
+        item.field: item for item in result.candidates[0].evidence
+    }
+    assert evidence["geometry:opening_width_mm"].state == "matched"
+    assert evidence["geometry:opening_center_offset_mm"].state == "matched"
+
+
 def test_attribute_intent_is_preserved_and_evidence_has_all_states(tmp_path: Path) -> None:
     api = _api(); target = _record("0AAAAAAAAAAAAAAAAAAAAA", "outside wall", storey_name=None)
     database = _repository(tmp_path, [target])

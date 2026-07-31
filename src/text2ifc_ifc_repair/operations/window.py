@@ -816,6 +816,7 @@ def _applicator(*, operation: Mapping[str, Any], model: Any) -> dict[str, Any]:
         RelatedBuildingElement=window,
     )
 
+    created_type_relationship = None
     modified = [{"role": "host_wall", "global_id": str(wall.GlobalId)}]
     if window_type is not None:
         type_relation = next(iter(window_type.ObjectTypeOf), None)
@@ -827,13 +828,17 @@ def _applicator(*, operation: Mapping[str, Any], model: Any) -> dict[str, Any]:
                 RelatedObjects=[window],
                 RelatingType=window_type,
             )
+            created_type_relationship = type_relation
         else:
             type_relation.RelatedObjects = _sorted_roots(
                 [*type_relation.RelatedObjects, window]
             )
-        modified.append(
-            {"role": "window_type_relationship", "global_id": str(type_relation.GlobalId)}
-        )
+            modified.append(
+                {
+                    "role": "window_type_relationship",
+                    "global_id": str(type_relation.GlobalId),
+                }
+            )
 
     containment = _wall_containment(wall)
     containment.RelatedElements = _sorted_roots([*containment.RelatedElements, window])
@@ -852,6 +857,19 @@ def _applicator(*, operation: Mapping[str, Any], model: Any) -> dict[str, Any]:
                     }
                 ]
                 if generated_type_created
+                else []
+            ),
+            *(
+                [
+                    {
+                        "role": "window_type_relationship",
+                        "ifc_class": created_type_relationship.is_a(),
+                        "global_id": str(
+                            created_type_relationship.GlobalId
+                        ),
+                    }
+                ]
+                if created_type_relationship is not None
                 else []
             ),
             {"role": "opening", "ifc_class": opening.is_a(), "global_id": ids["opening"]},

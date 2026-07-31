@@ -67,14 +67,18 @@
           "checks": [
             {
               "applicability": "required",
-              "check_id": "l1.door.topology",
+              "check_id": "l1.door.dimensions",
               "evidence": [
                 {
                   "actual_state": "available",
-                  "actual_value": true,
+                  "actual_value": {
+                    "DOOR_DIMENSIONS_MATCH": "passed"
+                  },
                   "expected_state": "available",
-                  "expected_value": true,
-                  "fact_id": "l1.door.topology.evidence",
+                  "expected_value": {
+                    "DOOR_DIMENSIONS_MATCH": "passed"
+                  },
+                  "fact_id": "l1.door.dimensions.evidence",
                   "provenance": [
                     "operation_measurement",
                     "operation:operation-largebuilding-door-preserve-opening"
@@ -85,7 +89,117 @@
               ],
               "mandatory": true,
               "policy_id": "door.hosted-opening.l1",
-              "reason": "Door must fill one hosted Opening and be contained and typed.",
+              "reason": "Door formal width and height must match the bound ChangeSet.",
+              "status": "passed"
+            },
+            {
+              "applicability": "required",
+              "check_id": "l1.door.fill-topology",
+              "evidence": [
+                {
+                  "actual_state": "available",
+                  "actual_value": {
+                    "DOOR_FILLS_OPENING": "passed",
+                    "OPENING_VOIDS_WALL": "passed"
+                  },
+                  "expected_state": "available",
+                  "expected_value": {
+                    "DOOR_FILLS_OPENING": "passed",
+                    "OPENING_VOIDS_WALL": "passed"
+                  },
+                  "fact_id": "l1.door.fill-topology.evidence",
+                  "provenance": [
+                    "operation_measurement",
+                    "operation:operation-largebuilding-door-preserve-opening"
+                  ],
+                  "source_kind": "operation_measurement",
+                  "source_ref": "operation:operation-largebuilding-door-preserve-opening"
+                }
+              ],
+              "mandatory": true,
+              "policy_id": "door.hosted-opening.l1",
+              "reason": "Door and retained Opening must form one exact fill/void chain.",
+              "status": "passed"
+            },
+            {
+              "applicability": "required",
+              "check_id": "l1.door.opening-alignment",
+              "evidence": [
+                {
+                  "actual_state": "available",
+                  "actual_value": {
+                    "DOOR_GEOMETRY_ALIGNED_WITH_OPENING": "passed"
+                  },
+                  "expected_state": "available",
+                  "expected_value": {
+                    "DOOR_GEOMETRY_ALIGNED_WITH_OPENING": "passed"
+                  },
+                  "fact_id": "l1.door.opening-alignment.evidence",
+                  "provenance": [
+                    "operation_measurement",
+                    "operation:operation-largebuilding-door-preserve-opening"
+                  ],
+                  "source_kind": "operation_measurement",
+                  "source_ref": "operation:operation-largebuilding-door-preserve-opening"
+                }
+              ],
+              "mandatory": true,
+              "policy_id": "door.hosted-opening.l1",
+              "reason": "Door geometry and nominal envelope must align with the retained Opening.",
+              "status": "passed"
+            },
+            {
+              "applicability": "required",
+              "check_id": "l1.door.storey",
+              "evidence": [
+                {
+                  "actual_state": "available",
+                  "actual_value": {
+                    "DOOR_STOREY_MATCHES_HOST": "passed"
+                  },
+                  "expected_state": "available",
+                  "expected_value": {
+                    "DOOR_STOREY_MATCHES_HOST": "passed"
+                  },
+                  "fact_id": "l1.door.storey.evidence",
+                  "provenance": [
+                    "operation_measurement",
+                    "operation:operation-largebuilding-door-preserve-opening"
+                  ],
+                  "source_kind": "operation_measurement",
+                  "source_ref": "operation:operation-largebuilding-door-preserve-opening"
+                }
+              ],
+              "mandatory": true,
+              "policy_id": "door.hosted-opening.l1",
+              "reason": "Door must use the Storey resolved from the retained Opening spatial context.",
+              "status": "passed"
+            },
+            {
+              "applicability": "required",
+              "check_id": "l1.door.type",
+              "evidence": [
+                {
+                  "actual_state": "available",
+                  "actual_value": {
+                    "DOOR_TYPE_BOUND": "passed"
+                  },
+                  "expected_state": "available",
+                  "expected_value": {
+                    "DOOR_TYPE_BOUND": "passed"
+                  },
+                  "fact_id": "l1.door.type.evidence",
+                  "provenance": [
+                    "operation_measurement",
+                    "operation:operation-largebuilding-door-preserve-opening"
+                  ],
+                  "source_kind": "operation_measurement",
+                  "source_ref": "operation:operation-largebuilding-door-preserve-opening"
+                }
+              ],
+              "mandatory": true,
+              "policy_id": "door.hosted-opening.l1",
+              "reason": "Door must have exactly one IfcDoorStyle binding.",
               "status": "passed"
             },
             {
@@ -170,11 +284,11 @@
                         "key": {
                           "diagnostic_normalization_version": "ifc-diagnostic-signature/0.1",
                           "ifc_schema": "IFC2X3",
-                          "ifc_sha256": "sha256:0f5a1750a3ffe050220b9b07a5de4a249698c0e0bf5119475f869239c2809a53",
+                          "ifc_sha256": "sha256:8afaaaf28769909b5b865a89fc8eb9dac2ab907ac851bfb47776d3d5261cced9",
                           "ifcopenshell_version": "0.8.5",
                           "validation_policy_version": "ifcopenshell-schema-no-express/0.1"
                         },
-                        "key_digest": "sha256:1c59e23d1d5dcdbca1016cbdaa9c3d49d392ea9e34dd3efcd7a8ae8ffc543627",
+                        "key_digest": "sha256:469cf31f2ae35e2f40bd1fbac7c061be087ddd3a31a260bd49c5fb9d5ef6149d",
                         "mode": "read_write",
                         "reason": "entry_missing",
                         "schema_version": "text2ifc/ifc-validation-cache/0.1",
@@ -183,19 +297,15 @@
                     },
                     "candidate_diagnostic_count": 20,
                     "execution": {
-                      "mode": "accelerated",
-                      "peak_rss_bytes": 357429248,
+                      "mode": "reused_models",
+                      "peak_rss_bytes": 131637248,
                       "rss_limit_bytes": 4294967296,
                       "stage_seconds": {
-                        "diff": 0.48399999999674037,
-                        "validation": 4.094000000004598
+                        "diff": 1.2189999999827705,
+                        "validation": 4.297000000020489
                       },
-                      "wall_seconds": 4.875,
-                      "worker_count": 2,
-                      "worker_peak_rss_bytes": {
-                        "baseline": 106201088,
-                        "candidate": 106610688
-                      }
+                      "wall_seconds": 4.297000000020489,
+                      "worker_count": 3
                     },
                     "new_diagnostic_count": 0,
                     "new_diagnostics": [],
@@ -245,13 +355,13 @@
                           0.0,
                           -1.0,
                           0.0,
-                          -6782.667854
+                          -6582.667854
                         ],
                         [
                           1.0,
                           0.0,
                           0.0,
-                          -8333.298445
+                          -9248.298445
                         ],
                         [
                           0.0,
@@ -266,7 +376,7 @@
                           1.0
                         ]
                       ],
-                      "snapshot_sha256": "sha256:0d6f5993458b7bca423efffd92475042867a3560ce84ae993a2f60f8d3b6a7a9",
+                      "snapshot_sha256": "sha256:d29121bfc4dd930d276a0ee6ed7f49d8810d5cc828827b327c9eb80e5585db0b",
                       "types": [
                         "2cXV28XOjE6f6irhu0COgZ"
                       ]
@@ -481,10 +591,10 @@
                   "fact_id": "l1.source.immutable.evidence",
                   "provenance": [
                     "source_fingerprint",
-                    "E:\\code for project\\bimnet\\dataset\\processed\\ifc-repair\\phase11-door-offline\\largebuilding-door-preserve-opening\\fixture\\damaged.ifc"
+                    "dataset\\processed\\ifc-repair\\phase11-door-audit-fix-final-2\\largebuilding-door-preserve-opening\\fixture\\damaged.ifc"
                   ],
                   "source_kind": "source_fingerprint",
-                  "source_ref": "E:\\code for project\\bimnet\\dataset\\processed\\ifc-repair\\phase11-door-offline\\largebuilding-door-preserve-opening\\fixture\\damaged.ifc"
+                  "source_ref": "dataset\\processed\\ifc-repair\\phase11-door-audit-fix-final-2\\largebuilding-door-preserve-opening\\fixture\\damaged.ifc"
                 }
               ],
               "mandatory": true,
@@ -497,7 +607,7 @@
             {
               "actual_state": "available",
               "actual_value": {
-                "check_count": 9,
+                "check_count": 13,
                 "readable": true
               },
               "expected_state": "available",
@@ -533,7 +643,7 @@
                   },
                   "expected_state": "available",
                   "expected_value": {
-                    "entity_source": "public-request",
+                    "entity_source": "public-damaged-ifc-and-bound-changeset",
                     "inherited": true,
                     "pset_path": null,
                     "unit": null,
@@ -542,11 +652,12 @@
                   },
                   "fact_id": "relationship:type",
                   "provenance": [
-                    "phase11-offline-request",
+                    "phase11-public-production-authority",
+                    "operation:operation-largebuilding-door-preserve-opening",
                     "repaired:application-role:door:operation-largebuilding-door-preserve-opening"
                   ],
                   "source_kind": "surviving_type",
-                  "source_ref": "request:/operation"
+                  "source_ref": "current-ifc:2cXV28XOjE6f6irhu0COgZ"
                 }
               ],
               "mandatory": true,
@@ -570,7 +681,7 @@
                   },
                   "expected_state": "available",
                   "expected_value": {
-                    "entity_source": "public-request",
+                    "entity_source": "public-damaged-ifc-and-bound-changeset",
                     "inherited": false,
                     "pset_path": null,
                     "unit": null,
@@ -579,11 +690,12 @@
                   },
                   "fact_id": "relationship:host",
                   "provenance": [
-                    "phase11-offline-request",
+                    "phase11-public-production-authority",
+                    "operation:operation-largebuilding-door-preserve-opening",
                     "repaired:application-role:door:operation-largebuilding-door-preserve-opening"
                   ],
                   "source_kind": "surviving_host",
-                  "source_ref": "request:/operation"
+                  "source_ref": "current-ifc:2cXV28XOjE6f6irgi0COfF"
                 }
               ],
               "mandatory": true,
@@ -607,7 +719,7 @@
                   },
                   "expected_state": "available",
                   "expected_value": {
-                    "entity_source": "public-request",
+                    "entity_source": "public-damaged-ifc-and-bound-changeset",
                     "inherited": false,
                     "pset_path": null,
                     "unit": null,
@@ -616,11 +728,12 @@
                   },
                   "fact_id": "relationship:storey",
                   "provenance": [
-                    "phase11-offline-request",
+                    "phase11-public-production-authority",
+                    "operation:operation-largebuilding-door-preserve-opening",
                     "repaired:application-role:door:operation-largebuilding-door-preserve-opening"
                   ],
                   "source_kind": "surviving_host",
-                  "source_ref": "request:/operation"
+                  "source_ref": "current-ifc:2nxdYR2RHCDBiKJuiQr1XP"
                 }
               ],
               "mandatory": true,
@@ -644,7 +757,7 @@
                   },
                   "expected_state": "available",
                   "expected_value": {
-                    "entity_source": "public-request",
+                    "entity_source": "public-damaged-ifc-and-bound-changeset",
                     "inherited": false,
                     "pset_path": null,
                     "unit": null,
@@ -653,7 +766,8 @@
                   },
                   "fact_id": "attribute:OverallWidth",
                   "provenance": [
-                    "phase11-offline-request",
+                    "phase11-public-production-authority",
+                    "operation:operation-largebuilding-door-preserve-opening",
                     "repaired:application-role:door:operation-largebuilding-door-preserve-opening"
                   ],
                   "source_kind": "explicit_request",
@@ -681,7 +795,7 @@
                   },
                   "expected_state": "available",
                   "expected_value": {
-                    "entity_source": "public-request",
+                    "entity_source": "public-damaged-ifc-and-bound-changeset",
                     "inherited": false,
                     "pset_path": null,
                     "unit": null,
@@ -690,7 +804,8 @@
                   },
                   "fact_id": "attribute:OverallHeight",
                   "provenance": [
-                    "phase11-offline-request",
+                    "phase11-public-production-authority",
+                    "operation:operation-largebuilding-door-preserve-opening",
                     "repaired:application-role:door:operation-largebuilding-door-preserve-opening"
                   ],
                   "source_kind": "explicit_request",

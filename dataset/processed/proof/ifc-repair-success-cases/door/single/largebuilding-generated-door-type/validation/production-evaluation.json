@@ -67,14 +67,18 @@
           "checks": [
             {
               "applicability": "required",
-              "check_id": "l1.door.topology",
+              "check_id": "l1.door.dimensions",
               "evidence": [
                 {
                   "actual_state": "available",
-                  "actual_value": true,
+                  "actual_value": {
+                    "DOOR_DIMENSIONS_MATCH": "passed"
+                  },
                   "expected_state": "available",
-                  "expected_value": true,
-                  "fact_id": "l1.door.topology.evidence",
+                  "expected_value": {
+                    "DOOR_DIMENSIONS_MATCH": "passed"
+                  },
+                  "fact_id": "l1.door.dimensions.evidence",
                   "provenance": [
                     "operation_measurement",
                     "operation:operation-generated-door-001"
@@ -85,7 +89,117 @@
               ],
               "mandatory": true,
               "policy_id": "door.hosted-opening.l1",
-              "reason": "Door must fill one hosted Opening and be contained and typed.",
+              "reason": "Door formal width and height must match the bound ChangeSet.",
+              "status": "passed"
+            },
+            {
+              "applicability": "required",
+              "check_id": "l1.door.fill-topology",
+              "evidence": [
+                {
+                  "actual_state": "available",
+                  "actual_value": {
+                    "DOOR_FILLS_OPENING": "passed",
+                    "OPENING_VOIDS_WALL": "passed"
+                  },
+                  "expected_state": "available",
+                  "expected_value": {
+                    "DOOR_FILLS_OPENING": "passed",
+                    "OPENING_VOIDS_WALL": "passed"
+                  },
+                  "fact_id": "l1.door.fill-topology.evidence",
+                  "provenance": [
+                    "operation_measurement",
+                    "operation:operation-generated-door-001"
+                  ],
+                  "source_kind": "operation_measurement",
+                  "source_ref": "operation:operation-generated-door-001"
+                }
+              ],
+              "mandatory": true,
+              "policy_id": "door.hosted-opening.l1",
+              "reason": "Door and retained Opening must form one exact fill/void chain.",
+              "status": "passed"
+            },
+            {
+              "applicability": "required",
+              "check_id": "l1.door.opening-alignment",
+              "evidence": [
+                {
+                  "actual_state": "available",
+                  "actual_value": {
+                    "DOOR_GEOMETRY_ALIGNED_WITH_OPENING": "passed"
+                  },
+                  "expected_state": "available",
+                  "expected_value": {
+                    "DOOR_GEOMETRY_ALIGNED_WITH_OPENING": "passed"
+                  },
+                  "fact_id": "l1.door.opening-alignment.evidence",
+                  "provenance": [
+                    "operation_measurement",
+                    "operation:operation-generated-door-001"
+                  ],
+                  "source_kind": "operation_measurement",
+                  "source_ref": "operation:operation-generated-door-001"
+                }
+              ],
+              "mandatory": true,
+              "policy_id": "door.hosted-opening.l1",
+              "reason": "Door geometry and nominal envelope must align with the retained Opening.",
+              "status": "passed"
+            },
+            {
+              "applicability": "required",
+              "check_id": "l1.door.storey",
+              "evidence": [
+                {
+                  "actual_state": "available",
+                  "actual_value": {
+                    "DOOR_STOREY_MATCHES_HOST": "passed"
+                  },
+                  "expected_state": "available",
+                  "expected_value": {
+                    "DOOR_STOREY_MATCHES_HOST": "passed"
+                  },
+                  "fact_id": "l1.door.storey.evidence",
+                  "provenance": [
+                    "operation_measurement",
+                    "operation:operation-generated-door-001"
+                  ],
+                  "source_kind": "operation_measurement",
+                  "source_ref": "operation:operation-generated-door-001"
+                }
+              ],
+              "mandatory": true,
+              "policy_id": "door.hosted-opening.l1",
+              "reason": "Door must use the Storey resolved from the retained Opening spatial context.",
+              "status": "passed"
+            },
+            {
+              "applicability": "required",
+              "check_id": "l1.door.type",
+              "evidence": [
+                {
+                  "actual_state": "available",
+                  "actual_value": {
+                    "DOOR_TYPE_BOUND": "passed"
+                  },
+                  "expected_state": "available",
+                  "expected_value": {
+                    "DOOR_TYPE_BOUND": "passed"
+                  },
+                  "fact_id": "l1.door.type.evidence",
+                  "provenance": [
+                    "operation_measurement",
+                    "operation:operation-generated-door-001"
+                  ],
+                  "source_kind": "operation_measurement",
+                  "source_ref": "operation:operation-generated-door-001"
+                }
+              ],
+              "mandatory": true,
+              "policy_id": "door.hosted-opening.l1",
+              "reason": "Door must have exactly one IfcDoorStyle binding.",
               "status": "passed"
             },
             {
@@ -184,17 +298,17 @@
                     "candidate_diagnostic_count": 20,
                     "execution": {
                       "mode": "accelerated",
-                      "peak_rss_bytes": 1971224576,
+                      "peak_rss_bytes": 1455423488,
                       "rss_limit_bytes": 4294967296,
                       "stage_seconds": {
-                        "diff": 0.46899999999732245,
-                        "validation": 4.3289999999979045
+                        "diff": 1.062999999994645,
+                        "validation": 6.467999999993481
                       },
-                      "wall_seconds": 5.110000000000582,
+                      "wall_seconds": 8.01600000000326,
                       "worker_count": 2,
                       "worker_peak_rss_bytes": {
-                        "baseline": 106803200,
-                        "candidate": 106647552
+                        "baseline": 106389504,
+                        "candidate": 106598400
                       }
                     },
                     "new_diagnostic_count": 0,
@@ -593,10 +707,10 @@
                   "fact_id": "l1.source.immutable.evidence",
                   "provenance": [
                     "source_fingerprint",
-                    "E:\\code for project\\bimnet\\dataset\\processed\\ifc-repair\\phase11-door-offline\\largebuilding-generated-door-type\\fixture\\damaged.ifc"
+                    "dataset\\processed\\ifc-repair\\phase11-door-audit-fix-final-2\\largebuilding-generated-door-type\\fixture\\damaged.ifc"
                   ],
                   "source_kind": "source_fingerprint",
-                  "source_ref": "E:\\code for project\\bimnet\\dataset\\processed\\ifc-repair\\phase11-door-offline\\largebuilding-generated-door-type\\fixture\\damaged.ifc"
+                  "source_ref": "dataset\\processed\\ifc-repair\\phase11-door-audit-fix-final-2\\largebuilding-generated-door-type\\fixture\\damaged.ifc"
                 }
               ],
               "mandatory": true,
@@ -609,7 +723,7 @@
             {
               "actual_state": "available",
               "actual_value": {
-                "check_count": 9,
+                "check_count": 13,
                 "readable": true
               },
               "expected_state": "available",
@@ -645,7 +759,7 @@
                   },
                   "expected_state": "available",
                   "expected_value": {
-                    "entity_source": "deterministic-policy",
+                    "entity_source": "public-damaged-ifc-and-bound-changeset",
                     "inherited": true,
                     "pset_path": null,
                     "unit": null,
@@ -654,11 +768,12 @@
                   },
                   "fact_id": "relationship:type",
                   "provenance": [
-                    "phase11-generated-type",
+                    "phase11-public-production-authority",
+                    "operation:operation-generated-door-001",
                     "repaired:application-role:door:operation-generated-door-001"
                   ],
                   "source_kind": "deterministic_policy",
-                  "source_ref": "generated-type-template:0.1"
+                  "source_ref": "current-ifc:3B_xZ3LlPHr8sg9aigaebZ"
                 }
               ],
               "mandatory": true,
@@ -682,7 +797,7 @@
                   },
                   "expected_state": "available",
                   "expected_value": {
-                    "entity_source": "public-request",
+                    "entity_source": "public-damaged-ifc-and-bound-changeset",
                     "inherited": false,
                     "pset_path": null,
                     "unit": null,
@@ -691,11 +806,12 @@
                   },
                   "fact_id": "relationship:host",
                   "provenance": [
-                    "phase11-offline-request",
+                    "phase11-public-production-authority",
+                    "operation:operation-generated-door-001",
                     "repaired:application-role:door:operation-generated-door-001"
                   ],
                   "source_kind": "surviving_host",
-                  "source_ref": "request:/operation"
+                  "source_ref": "current-ifc:2cXV28XOjE6f6irgi0COfF"
                 }
               ],
               "mandatory": true,
@@ -719,7 +835,7 @@
                   },
                   "expected_state": "available",
                   "expected_value": {
-                    "entity_source": "public-request",
+                    "entity_source": "public-damaged-ifc-and-bound-changeset",
                     "inherited": false,
                     "pset_path": null,
                     "unit": null,
@@ -728,11 +844,12 @@
                   },
                   "fact_id": "relationship:storey",
                   "provenance": [
-                    "phase11-offline-request",
+                    "phase11-public-production-authority",
+                    "operation:operation-generated-door-001",
                     "repaired:application-role:door:operation-generated-door-001"
                   ],
                   "source_kind": "surviving_host",
-                  "source_ref": "request:/operation"
+                  "source_ref": "current-ifc:2nxdYR2RHCDBiKJuiQr1XP"
                 }
               ],
               "mandatory": true,
@@ -756,7 +873,7 @@
                   },
                   "expected_state": "available",
                   "expected_value": {
-                    "entity_source": "public-request",
+                    "entity_source": "public-damaged-ifc-and-bound-changeset",
                     "inherited": false,
                     "pset_path": null,
                     "unit": null,
@@ -765,7 +882,8 @@
                   },
                   "fact_id": "attribute:OverallWidth",
                   "provenance": [
-                    "phase11-offline-request",
+                    "phase11-public-production-authority",
+                    "operation:operation-generated-door-001",
                     "repaired:application-role:door:operation-generated-door-001"
                   ],
                   "source_kind": "explicit_request",
@@ -793,7 +911,7 @@
                   },
                   "expected_state": "available",
                   "expected_value": {
-                    "entity_source": "public-request",
+                    "entity_source": "public-damaged-ifc-and-bound-changeset",
                     "inherited": false,
                     "pset_path": null,
                     "unit": null,
@@ -802,7 +920,8 @@
                   },
                   "fact_id": "attribute:OverallHeight",
                   "provenance": [
-                    "phase11-offline-request",
+                    "phase11-public-production-authority",
+                    "operation:operation-generated-door-001",
                     "repaired:application-role:door:operation-generated-door-001"
                   ],
                   "source_kind": "explicit_request",

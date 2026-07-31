@@ -1,6 +1,6 @@
 # Phase 11 Door / Opening 验证报告
 
-> 日期：2026-07-29
+> 日期：2026-07-30
 > 当前结论：离线实现与真实 IFC 验证通过；真实 DeepSeek UAT 尚未执行。  
 > 外部阻塞：Codex 执行额度层拒绝网络命令，Provider 实际调用数为 0。
 
@@ -157,11 +157,24 @@ Door L1 检查：
 - Door 恰好填充一个 Opening；
 - Opening 恰好 void 一个 Wall；
 - Door 宽高与授权参数一致；
-- Door 进入宿主墙的 Storey；
+- Door 进入 Opening 实际基准标高对应的 Storey；多楼层贯通墙不得用墙体
+  direct containment 的基准楼层替代；
 - Door 绑定 DoorStyle；
 - 实际 IFC Root 变化均在授权角色内；
 - IFC 可重开且不新增 validation diagnostics；
 - damaged IFC 指纹保持不变。
+
+关系存在本身不能证明 Door 填入洞口。Door L1 还必须以 Opening 局部坐标系
+测量实际几何，并同时满足：
+
+- 投影重叠率不低于 `0.95`；
+- 授权名义宽高包络中心偏差不超过 `5 mm`；
+- 轴向角偏差不超过 `0.1°`；
+- 宽高偏差不超过 `1 mm`；
+- Door 与 Opening 各自恰好参与一条互相一致的
+  `IfcRelFillsElement`，Opening 恰好 void 一个 Wall。
+
+任一几何测量不可用、关系重复或 Storey 不一致均 fail closed。
 
 ### L2
 
@@ -187,7 +200,7 @@ quantities 与单位。Window 旧版 0.1 comparator 保持兼容。
 结果目录：
 
 ```text
-dataset/processed/ifc-repair/phase11-door-offline/
+dataset/processed/ifc-repair/phase11-door-audit-fix-final-2/
 ```
 
 ### 七案例矩阵
@@ -201,6 +214,13 @@ dataset/processed/ifc-repair/phase11-door-offline/
 | vvo 五门 | 一个 ChangeSet 批量修复 | 5 | 通过 |
 | vvo 两门两窗 | Door/Window 混合 ChangeSet | 4 | 通过 |
 | Dental Clinic 两门两窗 | 无 GUID/Name 几何定位、完整墙体重开洞 | 4 | 通过 |
+
+审计前的 supplied vvo 失败 candidate 没有被删除或覆盖为“成功”。它固定保存在
+`tests/fixtures/ifc_repair/phase11-door-known-failure/`，SHA-256 为
+`0d30005fa91360f186a6c539206aa1c229db03f69ac4d2e183a42c53db91a76e`。
+回归测试直接重开该二进制，复现 800×2480 Door 的
+`[+800,+160,0] mm` 世界几何偏移和两个 Door 的 `标高2→标高0` 错误，并确认
+新严格 L1 将它判为不可发布。
 
 五门案例还注入了一个重复 Opening operation。审计拒绝整个 ChangeSet，
 `published=false`，且目标 IFC 不存在，证明不是逐项提交或部分成功。
@@ -292,8 +312,10 @@ SubContext，几何写入按确定性优先级回退到三维 `Model` Context。
 | Damage | 删除 Door/fill，保留 Opening/void |
 | 结果 | IFC2X3 重开、L1、L2、preservation 通过 |
 
-vvo 原 Door occurrence 与宿主墙落在不同 Storey。修复器按宿主墙 Storey 写入，
-没有为了追求 authoring identity 而复刻这个错误关系。Type 仍精确复用。
+vvo 的宿主墙跨越多个楼层，墙体 direct containment 在标高 0，但目标 Opening
+基准标高和原 Door 都在标高 2。旧 Applicator 错把墙体基准楼层赋给新 Door；
+现实现依据 retained Opening 的实际世界标高，在同一 Building 内唯一解析到
+标高 2。Type 仍精确复用。
 
 每个案例包含 original、damaged、repaired IFC、request、ChangeSet、
 application、evaluation、comparison、manifest 和人工阅读 README。
@@ -301,25 +323,21 @@ application、evaluation、comparison、manifest 和人工阅读 README。
 ### AdvancedProject 性能
 
 AdvancedProject 保持完整 validation 与 full-model comparator 范围，没有使用
-抽样或缩小保全范围。固定 runner 的实测为：
+抽样、放宽容差或缩小保全范围。修复器和 Evaluator 复用已经独立重开的模型，
+并行执行候选 schema validation 与 full diff；缓存键仍包含 IFC SHA-256、
+Schema、IfcOpenShell 版本和验证策略。全新缓存目录的最终冷启动实测为：
 
 | 阶段 | 时间 |
 |---|---:|
-| application | 22.741 s |
-| cold evaluation | 118.064 s |
-| cold request-to-publication | 140.805 s |
-| warm evaluation | 50.037 s |
+| application | 36.876 s |
+| cold evaluation | 129.931 s |
+| cold request-to-publication | 166.807 s |
+| warm evaluation | 43.516 s |
 | 冻结上限 | 180 s |
 
-application 的审计和写入现在共享同一个已打开 IFC 模型与基线指纹，消除了
-同一 44 MB 文件在 application 内部的重复打开与重复哈希；审计内容没有删减。
-
-2026-07-29 的无 GUID 混合补充验收没有修改 AdvancedProject evaluator，但
-同机完整回归连续两次测得 cold request-to-publication 为 225.665 s 和
-226.164 s，warm evaluation 为 78.529 s 和 75.317 s。两次功能、L1/L2 和
-preservation 均通过，只有冻结的 180 s cold 性能门禁失败。因此历史 140.805 s
-成功证据仍保留，同时新增一项独立性能回归待优化；本次无 GUID vvo 混合案例
-不把该性能问题误报为自身功能失败，也不通过提高阈值规避。
+优化过程中两个全新冷启动曾诚实失败于 `216.671 s` 和 `181.776 s`。最终结果
+通过消除重复 IFC 打开、并行独立重开与并行执行完整 validation/diff 获得，
+180 秒门槛和所有验证范围均未改变。
 
 ### 独立 Proof
 
@@ -330,10 +348,20 @@ preservation 均通过，只有冻结的 180 s cold 性能门禁失败。因此�
 .venv\Scripts\python.exe scripts\ifc_repair\validate_success_cases.py --json
 ```
 
-当前成功案例集合共有 12 个案例、34 个 operation、149 个受哈希保护的文件，
-36 次 IFC2X3 独立重开，校验结果为 `passed`。其中 Phase 11 收录 7 个离线
-Door/混合案例、17 个 operation。离线证据明确标记
+当前成功案例集合共有 14 个案例、43 个 operation、211 个受哈希保护的文件，
+42 次 IFC2X3 独立重开，校验结果为 `passed`。其中本轮权威复审新增 2 个
+生产隔离案例、9 个 operation。离线证据明确标记
 `offline_bound_deterministic`，不会冒充真实 DeepSeek 证据。
+
+每个 Phase 11 案例新增：
+
+- `validation/three-way-audit.json`；
+- `validation/release-decision.json`；
+- `validation/AUDIT-REPORT.md`。
+
+三方审计分别保存 original→damaged 私有 mutation audit、
+damaged→repaired production evidence 和 original→repaired 私有 comparator，
+三者不得互相充当事实来源。
 
 ## 10. 测试结果
 
@@ -360,6 +388,92 @@ Door/混合案例、17 个 operation。离线证据明确标记
 ```text
 643 passed, 1 skipped in 660.14s
 ```
+
+2026-07-30 Door 严格几何/Storey 修复后，新增的几何回归、三方审计、
+release decision 与 validation acceleration 聚焦测试共 243 项通过；成功案例
+集合独立校验为
+`14 cases / 43 operations / 211 files / 42 IFC reopened`。
+
+全部修改收敛后的最终完整 IFC repair suite 为：
+
+```text
+681 passed, 1 skipped in 1005.60s
+```
+
+其中耗时最大的 Dental Clinic 与 AdvancedProject 端到端测试均在未降低
+几何阈值、preservation 范围或发布标准的前提下通过。
+完整命令、stdout、stderr 与退出结果保存在
+[phase11-door-final-test-output.txt](phase11-door-final-test-output.txt)。
+
+### 独立审阅发现与处理
+
+首次独立审阅没有直接接受修复，而是提出四项问题：
+
+1. benchmark runner 中私有 Ground Truth 准备与生产执行仍处于同一进程路径；
+2. 大模型并行验证曾出现 `BrokenProcessPool`；
+3. 多楼层贯通墙的 Door Storey 规则与旧规范文字冲突；
+4. 旋转、镜像/180° placement convention、墙厚变化和左右 DoorStyle 的
+   几何回归覆盖不足。
+
+仅增加 `_execute_public_production` helper 后，独立审阅仍正确地拒绝放行：
+外层 benchmark runner 会在修复前读取 original 和删除对象信息来生成请求，
+helper 内部的干净签名不能证明完整调用链隔离。最终实现新增独立
+`run_phase11_public_triplet_repair.py` 进程；其命令行和函数签名只接收
+damaged IFC、冻结的公开请求包与输出目录。该进程生成 repaired IFC 并完成
+Production L1/L2 后，私有审计命令才复制/打开 original 和 mutation mapping。
+
+其余问题分别通过 `production-boundary.json`、独立 validation worker 子进程、冻结的
+[Door Storey policy erratum](phase11-door-storey-policy-erratum.md) 和新增
+C2 几何回归解决。生产边界仅接收 damaged IFC、用户请求、规范化
+ChangeSet 和由 damaged IFC 推导的 expected facts；original IFC、删除对象
+GUID 与 mutation ground truth 只能出现在边界之外的私有 benchmark
+comparator 中，并且只能在 repaired IFC 已经生成并完成 Production
+L1/L2 后读取。独立复审结论记录在本报告最终验收部分。
+
+复跑新链路时还发现生成 WindowStyle 的新 `IfcRelDefinesByType` 被 Applicator
+错误标成 `modified`，导致两个新增 Root 未被声明。当前 Applicator 将新关系
+报告为 `created.window_type_relationship`；三方审计也新增
+`UNDECLARED_ADDED_ROOTS` 阻塞项，不能再靠遗漏角色通过 preservation。
+
+权威复审的两个最终案例为：
+
+- `vvo-authority-triplet-public-repair`：两窗两门、4 个纯几何目标；
+- `vvo-five-door-authority-public-repair`：5 个保留 Opening，5/5 Door
+  `projected_overlap_ratio = 1.0`，Opening 数量变化为 0。
+
+两案均不在公开请求或 RepairIntent 中使用 GlobalId、对象 Name、楼层 Name
+或 host GUID；Door Opening 由宽、高、深度、墙局部中心和门槛高度的联合
+几何签名唯一解析。
+
+最终独立复审实际重跑两案三方 audit 与 30 项聚焦回归，结论为：
+
+- 新入口已关闭 Ground Truth 泄漏 Blocker；
+- 两案均为 `L0=true / L1=true / L2=true / publishable=true`；
+- 未声明 Root、旧 Door 错位和 Storey 错配均没有剩余发布 Blocker；
+- 没有通过放宽几何容差、削减 full-model preservation 或降低 L2 门禁获得
+  通过。
+
+Storey 合同保留一项已采用的 IFC authoring 例外/合同风险：vvo 宿主墙的
+direct containment 客观上是 `标高0`，但 retained Opening 与 original Door
+的世界基准对应 `标高2`。本实现将 B3 的 host context 解释为多楼层贯通墙下
+的 Opening-height contextual Storey，因此选择 `标高2`；不得声称宿主墙
+direct container 本身是 `标高2`。缺失、冲突与等距候选仍 fail closed。
+
+### 权威审计任务交付物对照
+
+| 要求 | 权威证据 |
+|---|---|
+| 旧假阳性复现与根因 | `tests/fixtures/ifc_repair/phase11-door-known-failure/README.md`、`failure-evidence.json` |
+| Comparator / Evaluator 设计与实现 | 本报告第 8 节、`benchmark_evaluation.py`、`evaluation.py`、`release_decision.py` |
+| Door placement / containment 修复 | `door_geometry.py`、`operations/door.py`、`spatial.py` |
+| 失败优先回归与 fail-closed 测试 | `test_door_geometry_regression.py`、`test_door_triplet_audit.py`、`test_release_decision.py` |
+| 完整测试命令与输出 | `phase11-door-final-test-output.txt` |
+| 新 repaired IFC | `vvo-five-door-authority-public-repair/03-repaired.ifc`，SHA-256 `a7e085…0270e03` |
+| 三方机器/人工报告 | `validation/three-way-audit.json`、`validation/AUDIT-REPORT.md` |
+| L0/L1/L2 发布判定 | `validation/release-decision.json` |
+| 非目标 preservation | `three-way-audit.json.production_damaged_to_repaired.model_diff`，未声明新增 Root 为 0 |
+| Roadmap / 状态 | `.planning/ROADMAP.md`、`.planning/STATE.md`、`11-SPEC.md`、`11-VALIDATION.md` |
+| 独立复审 | 本节“独立审阅发现与处理”及最终复审结论 |
 
 ## 11. 真实 DeepSeek UAT
 
@@ -407,6 +521,8 @@ synthetic fallback = false
 ```powershell
 .venv\Scripts\python.exe -m pytest tests/ifc_repair/test_door_mutation.py -q
 .venv\Scripts\python.exe scripts/ifc_repair/run_phase11_offline.py
+.venv\Scripts\python.exe scripts/ifc_repair/run_phase11_public_triplet_repair.py --damaged-ifc <02-damaged.ifc> --public-request-bundle <public-request.json> --output-root <production-output>
+.venv\Scripts\python.exe scripts/ifc_repair/audit_door_repair_triplet.py <post-repair-private-audit-root>
 .venv\Scripts\python.exe scripts/ifc_repair/curate_phase11_door_proof.py
 .venv\Scripts\python.exe scripts/ifc_repair/validate_success_cases.py --json
 .venv\Scripts\python.exe scripts/ifc_repair/run_phase11_live_uat.py --check-config
@@ -419,6 +535,8 @@ Opening-only、Door+Opening、Door 填入已有 Opening 的合同、解析、IFC
 Type 策略、语义 scope、L1/L2 与通用 occurrence comparator 已实现。
 
 LargeBuilding、vvo 与 AdvancedProject 的单门、生成 Type、五门批量和两门两窗
-混合链路均已生成可重开的修复 IFC，并通过生产与独立 Proof 验证。真实 DeepSeek
-UAT 是当前唯一已知的外部阻塞证据；在实际调用完成前，本报告保持“离线目标通过、
-Phase 11 尚未最终关闭”的结论。
+混合链路均已重新生成可重开的修复 IFC，并通过严格几何、Opening 实际楼层、
+生产 L1/L2 和三方独立 Proof 验证。旧 repaired IFC 的
+“有 fill 关系但门板未填入洞口”现在必定被 L1 拒绝。真实 DeepSeek UAT 仍是
+Phase 11 最终关闭前的独立外部证据；本报告结论为“Door 离线确定性目标通过，
+live UAT 尚未关闭”。

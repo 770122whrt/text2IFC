@@ -254,7 +254,14 @@ For every applicable case:
 
 - exactly one host Wall;
 - exactly one fill relation for a Door;
-- dimensions and position within tolerance;
+- Door geometry projected into Opening-local coordinates overlaps the Opening
+  by at least `0.95`;
+- authorized nominal Door-envelope/Opening center deviation is at most
+  `5 mm`, axis deviation at most `0.1°`, and nominal width/height deviation at
+  most `1 mm`; the actual Type geometry is reported separately because valid
+  frames may extend beyond the nominal opening envelope;
+- Door Storey is resolved from the Opening world-base elevation within the
+  same Building, not copied from a multi-storey Wall's direct containment;
 - wall-local 2D region within the Wall;
 - sibling regions do not overlap;
 - local placement/orientation survives reopen;
@@ -347,6 +354,18 @@ Required:
 - Door operation/viewpoint correct;
 - exact/generated Type policy honored;
 - production and private comparison pass or report precise unsupported facts.
+
+Authority addendum (2026-07-30):
+
+- production executes in a separate process that cannot accept original IFC,
+  mutation manifest or deleted-object identity;
+- the public request and RepairIntent may identify an empty Opening through a
+  bounded width/height/depth/wall-local-center/sill geometry signature;
+- five retained Openings resolve without GlobalId, object Name, Storey Name or
+  host GUID and receive exactly one Door/fill each;
+- original IFC and private mutation mapping are introduced only after the
+  repaired IFC exists, for the private comparator;
+- any undeclared added IFC Root is a blocking preservation failure.
 
 ## 9.3 Generated Type case
 

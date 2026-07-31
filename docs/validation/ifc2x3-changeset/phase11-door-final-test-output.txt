@@ -1,0 +1,42 @@
+Phase 11 Door strict audit — final command evidence
+Recorded: 2026-07-30/31 Asia/Shanghai
+
+COMMAND
+.venv\Scripts\python.exe -m pytest tests\ifc_repair -q --basetemp .pytest-phase11-full-authority-final
+
+COMPLETE STDOUT
+........................................................................ [ 10%]
+........................................................................ [ 21%]
+........................................................................ [ 31%]
+........................................................................ [ 42%]
+........................................................................ [ 52%]
+........................................................................ [ 63%]
+........................................................................ [ 73%]
+........................................................................ [ 84%]
+.....................s.................................................. [ 95%]
+..................................                                       [100%]
+681 passed, 1 skipped in 1005.60s (0:16:45)
+
+STDERR
+(empty)
+
+COMMAND
+.venv\Scripts\python.exe scripts\ifc_repair\validate_success_cases.py --collection-root dataset\processed\proof\ifc-repair-success-cases
+
+COMPLETE STDOUT
+status=passed cases=14 operations=43 files=211 ifc_reopened=42
+
+STDERR
+(empty)
+
+COMMAND
+.venv\Scripts\python.exe -m compileall -q src scripts\ifc_repair tests\ifc_repair
+
+RESULT
+exit code 0; stdout and stderr empty
+
+COMMAND
+git diff --check
+
+RESULT
+exit code 0; only Git line-ending conversion warnings, no whitespace error

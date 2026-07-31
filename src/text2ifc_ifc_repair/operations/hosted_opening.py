@@ -20,6 +20,7 @@ from text2ifc_ifc_repair.geometry import (
     wall_dimensions_mm,
 )
 from text2ifc_ifc_repair.registry import OperationRegistryError
+from text2ifc_ifc_repair.spatial import resolve_opening_storey
 
 
 @dataclass(frozen=True)
@@ -407,6 +408,35 @@ def wall_containment(wall: Any) -> Any:
     if len(relationships) != 1:
         raise OperationRegistryError(
             "TARGET_WALL_STOREY_AMBIGUOUS", str(wall.GlobalId)
+        )
+    return relationships[0]
+
+
+def opening_storey(opening: Any, wall: Any) -> Any:
+    """Resolve the retained Opening's spatial level from surviving geometry.
+
+    Multi-storey walls may be contained at their base level while hosted doors
+    belong to a higher level.  The closest storey elevation to the Opening
+    base is the deterministic public fact available after the Door is removed.
+    """
+
+    try:
+        return resolve_opening_storey(opening, wall)
+    except ValueError as error:
+        code, _, detail = str(error).partition(":")
+        raise OperationRegistryError(
+            code or "OPENING_STOREY_NOT_FOUND",
+            detail or str(opening.GlobalId),
+        ) from error
+
+
+def opening_storey_containment(opening: Any, wall: Any) -> Any:
+    storey = opening_storey(opening, wall)
+    relationships = list(storey.ContainsElements)
+    if len(relationships) != 1:
+        raise OperationRegistryError(
+            "OPENING_STOREY_CONTAINMENT_AMBIGUOUS",
+            str(storey.GlobalId),
         )
     return relationships[0]
 

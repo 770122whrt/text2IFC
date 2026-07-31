@@ -13,6 +13,7 @@ import ifcopenshell
 import ifcopenshell.util.element
 
 from .evaluation import (
+    _open_ifc_pair,
     aggregate_level,
     aggregate_operation,
     aggregate_repair,
@@ -377,6 +378,11 @@ def _evaluate(
     private_original_path: Path | None,
     private_mapping: Mapping[str, Mapping[str, str]],
 ) -> RepairEvaluation:
+    reopened_models = _open_ifc_pair(
+        Path(inputs.damaged_ifc_path),
+        Path(inputs.repaired_ifc_path),
+        accelerated=inputs.execution_policy.mode == "accelerated",
+    )
     l1 = evaluate_independent_l1(
         damaged_ifc_path=inputs.damaged_ifc_path,
         repaired_ifc_path=inputs.repaired_ifc_path,
@@ -385,10 +391,9 @@ def _evaluate(
         registry=inputs.registry,
         execution_policy=inputs.execution_policy,
         validation_cache_dir=inputs.validation_cache_dir,
+        reopened_models=reopened_models,
     )
-    repaired_model, repaired_open_error = _open_evaluation_model(
-        Path(inputs.repaired_ifc_path), label="repaired"
-    )
+    repaired_model, repaired_open_error = reopened_models[1]
     original_model, original_open_error = (
         _open_evaluation_model(private_original_path, label="private-original")
         if private_original_path is not None

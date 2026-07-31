@@ -17,6 +17,8 @@ import ifcopenshell.util.unit
 
 
 ROOT = Path(__file__).resolve().parents[2]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 if str(ROOT / "src") not in sys.path:
     sys.path.insert(0, str(ROOT / "src"))
 
@@ -36,6 +38,11 @@ from text2ifc_ifc_repair.index_store import (  # noqa: E402
     SQLiteIndexRepository,
 )
 from text2ifc_ifc_repair.indexer import build_ifc_index  # noqa: E402
+from text2ifc_ifc_repair.ifc_validation import (  # noqa: E402
+    DIAGNOSTIC_NORMALIZATION_VERSION,
+    VALIDATION_POLICY_VERSION,
+    normalized_validation_result,
+)
 from text2ifc_ifc_repair.mutation import (  # noqa: E402
     remove_door,
     remove_doors_batch,
@@ -53,6 +60,15 @@ from text2ifc_ifc_repair.resolution_flow import (  # noqa: E402
 )
 from text2ifc_ifc_repair.repair_intent import RepairIntent  # noqa: E402
 from text2ifc_ifc_repair.semantic_facts import SemanticFact  # noqa: E402
+from text2ifc_ifc_repair.spatial import (  # noqa: E402
+    resolve_opening_storey,
+)
+from text2ifc_ifc_repair.validation_cache import (  # noqa: E402
+    ValidationCache,
+)
+from scripts.ifc_repair.audit_door_repair_triplet import (  # noqa: E402
+    audit_case,
+)
 
 
 DEFAULT_OUTPUT = ROOT / "dataset/processed/ifc-repair/phase11-door-offline"
@@ -126,6 +142,29 @@ def _text_hash(value: str) -> str:
     return "sha256:" + hashlib.sha256(value.encode("utf-8")).hexdigest()
 
 
+def _prewarm_baseline_validation(
+    ifc_path: Path,
+    cache_dir: Path,
+) -> dict[str, Any]:
+    """Cache immutable damaged-IFC validation during input preparation."""
+
+    cache = ValidationCache(cache_dir, mode="read_write")
+    key = cache.build_key(
+        ifc_path,
+        validation_policy_version=VALIDATION_POLICY_VERSION,
+        diagnostic_normalization_version=(
+            DIAGNOSTIC_NORMALIZATION_VERSION
+        ),
+    )
+    _, evidence = cache.get_or_compute(
+        key,
+        lambda: normalized_validation_result(
+            ifcopenshell.open(str(ifc_path))
+        ),
+    )
+    return evidence
+
+
 def _write(path: Path, value: Any) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     if isinstance(value, str):
@@ -135,6 +174,118 @@ def _write(path: Path, value: Any) -> None:
             value, ensure_ascii=False, indent=2, sort_keys=True, default=str
         )
     path.write_text(payload.rstrip() + "\n", encoding="utf-8")
+
+
+def _execute_public_production(
+    *,
+    damaged_ifc_path: Path,
+    repair_request: str,
+    changeset: dict[str, Any],
+    repaired_ifc_path: Path,
+    expected_facts_by_operation: dict[str, tuple[SemanticFact, ...]],
+    registry: Any,
+    validation_cache_dir: Path | None = None,
+    repeat_warm_evaluation: bool = False,
+) -> dict[str, Any]:
+    """Run the production boundary with no original/mutation inputs.
+
+    Benchmark preparation may create the damaged IFC and freeze a user request
+    before this function is called.  The repair/application/evaluation path
+    receives only those public artifacts and surviving-IFC-derived authority.
+    """
+
+    boundary = {
+        "schema_version": "text2ifc/production-input-boundary/0.1",
+        "entrypoint": "_execute_public_production",
+        "ifc_inputs": ["damaged_ifc_path"],
+        "original_ifc_supplied": False,
+        "mutation_manifest_supplied": False,
+        "deleted_object_ids_supplied": False,
+        "damaged_ifc_sha256": _sha256(damaged_ifc_path),
+        "request_sha256": _text_hash(repair_request),
+        "changeset_canonical_sha256": _text_hash(
+            json.dumps(
+                changeset,
+                ensure_ascii=False,
+                sort_keys=True,
+                separators=(",", ":"),
+            )
+        ),
+    }
+    _write(
+        repaired_ifc_path.parent / "production-boundary.json",
+        boundary,
+    )
+    application_started = time.perf_counter()
+    application = apply_changeset(
+        damaged_ifc_path=damaged_ifc_path,
+        repair_request=repair_request,
+        changeset=changeset,
+        output_path=repaired_ifc_path,
+        registry=registry,
+    )
+    application_seconds = time.perf_counter() - application_started
+    if not application["valid"] or not application["published"]:
+        raise RuntimeError(
+            "PHASE11_PUBLIC_APPLICATION_FAILED:"
+            + json.dumps(application.get("issues", ()), ensure_ascii=False)
+        )
+    evaluation_started = time.perf_counter()
+    evaluation = evaluation_to_dict(
+        evaluate_production(
+            ProductionEvaluationInputs(
+                damaged_ifc_path=damaged_ifc_path,
+                repaired_ifc_path=repaired_ifc_path,
+                changeset=changeset,
+                application_result=application,
+                registry=registry,
+                expected_facts_by_operation=expected_facts_by_operation,
+                validation_cache_dir=validation_cache_dir,
+            )
+        )
+    )
+    evaluation_seconds = time.perf_counter() - evaluation_started
+    if not evaluation["complete_repair_success"]:
+        raise RuntimeError(
+            "PHASE11_PUBLIC_EVALUATION_FAILED:"
+            + json.dumps(
+                {
+                    "status": evaluation.get("status"),
+                    "operations": evaluation.get("operations"),
+                },
+                ensure_ascii=False,
+                default=str,
+            )
+        )
+    warm_evaluation = None
+    warm_evaluation_seconds = None
+    if repeat_warm_evaluation:
+        warm_started = time.perf_counter()
+        warm_evaluation = evaluation_to_dict(
+            evaluate_production(
+                ProductionEvaluationInputs(
+                    damaged_ifc_path=damaged_ifc_path,
+                    repaired_ifc_path=repaired_ifc_path,
+                    changeset=changeset,
+                    application_result=application,
+                    registry=registry,
+                    expected_facts_by_operation=expected_facts_by_operation,
+                    validation_cache_dir=validation_cache_dir,
+                )
+            )
+        )
+        warm_evaluation_seconds = time.perf_counter() - warm_started
+        if not warm_evaluation["complete_repair_success"]:
+            raise RuntimeError("PHASE11_PUBLIC_WARM_EVALUATION_FAILED")
+    return {
+        "application": application,
+        "evaluation": evaluation,
+        "warm_evaluation": warm_evaluation,
+        "application_seconds": application_seconds,
+        "evaluation_seconds": evaluation_seconds,
+        "warm_evaluation_seconds": warm_evaluation_seconds,
+        "production_boundary": boundary,
+    }
 
 
 def _source_chain(source: Path, door_id: str) -> dict[str, Any]:
@@ -162,6 +313,7 @@ def _source_chain(source: Path, door_id: str) -> dict[str, Any]:
         "NOTDEFINED",
     }:
         raise ValueError(f"DOOR_OPERATION_UNSUPPORTED:{operation_type}")
+    opening_level = resolve_opening_storey(opening, wall)
     return {
         "door": {
             "global_id": str(door.GlobalId),
@@ -186,15 +338,10 @@ def _source_chain(source: Path, door_id: str) -> dict[str, Any]:
             "name": None if wall.Name is None else str(wall.Name),
             "ifc_class": wall.is_a(),
         },
-        # Host containment is the production authority. Some source Doors are
-        # themselves assigned to a different Storey; exact Type reuse must not
-        # reproduce that occurrence-level authoring error.
-        "storey_global_id": str(
-            wall.ContainedInStructure[0].RelatingStructure.GlobalId
-        ),
-        "storey_name": str(
-            wall.ContainedInStructure[0].RelatingStructure.Name
-        ),
+        # A wall may span several storeys. The retained Opening base elevation
+        # is the public spatial authority for a new Door occurrence.
+        "storey_global_id": str(opening_level.GlobalId),
+        "storey_name": str(opening_level.Name),
         "style": {
             "global_id": str(style.GlobalId),
             "name": None if style.Name is None else str(style.Name),
@@ -274,39 +421,65 @@ def _operation(
     }
 
 
-def _expected_facts(chain: dict[str, Any]) -> tuple[SemanticFact, ...]:
+def _expected_door_facts(
+    operation: dict[str, Any],
+    damaged: Path,
+    *,
+    generated_type_id: str | None = None,
+) -> tuple[SemanticFact, ...]:
+    """Build L2 authority from public inputs and surviving IFC facts only."""
+
+    model = ifcopenshell.open(str(damaged))
+    if operation["operation_type"] == "fill_existing_opening_with_door":
+        opening = model.by_guid(operation["target"]["opening_global_id"])
+        wall = opening.VoidsElements[0].RelatingBuildingElement
+        storey = resolve_opening_storey(opening, wall)
+    else:
+        wall = model.by_guid(operation["target"]["wall_global_id"])
+        storey = wall.ContainedInStructure[0].RelatingStructure
+    type_id = generated_type_id or next(
+        str(item["value"])
+        for item in operation["semantic_assignments"]
+        if item["fact_key"] == "relationship:type"
+    )
+    type_source = (
+        EvidenceSourceKind.DETERMINISTIC_POLICY
+        if generated_type_id
+        else EvidenceSourceKind.SURVIVING_TYPE
+    )
+    door = operation["parameters"]["door"]
     values = (
         (
             "relationship:type",
-            chain["style"]["global_id"],
+            type_id,
             "IfcDoorStyle",
-            EvidenceSourceKind.SURVIVING_TYPE,
+            type_source,
             True,
         ),
         (
             "relationship:host",
-            chain["wall"]["global_id"],
-            chain["wall"]["ifc_class"],
+            str(wall.GlobalId),
+            wall.is_a(),
             EvidenceSourceKind.SURVIVING_HOST,
             False,
         ),
         (
             "relationship:storey",
-            chain["storey_global_id"],
+            str(storey.GlobalId),
             "IfcBuildingStorey",
             EvidenceSourceKind.SURVIVING_HOST,
             False,
         ),
         (
             "attribute:OverallWidth",
-            chain["door"]["overall_width_mm"],
+            float(door["overall_width_mm"]),
             "IfcPositiveLengthMeasure",
             EvidenceSourceKind.EXPLICIT_REQUEST,
             False,
         ),
         (
             "attribute:OverallHeight",
-            chain["door"]["overall_height_mm"],
+            float(door["overall_height_mm"]),
             "IfcPositiveLengthMeasure",
             EvidenceSourceKind.EXPLICIT_REQUEST,
             False,
@@ -320,10 +493,17 @@ def _expected_facts(chain: dict[str, Any]) -> tuple[SemanticFact, ...]:
             unit=None,
             inherited=inherited,
             pset_path=None,
-            entity_source="public-request",
+            entity_source="public-damaged-ifc-and-bound-changeset",
             source_kind=source_kind,
-            source_ref="request:/operation",
-            provenance=("phase11-offline-request",),
+            source_ref=(
+                f"current-ifc:{value}"
+                if key.startswith("relationship:")
+                else "request:/operation"
+            ),
+            provenance=(
+                "phase11-public-production-authority",
+                f"operation:{operation['operation_id']}",
+            ),
             occurrence_scope="door_occurrence",
         )
         for key, value, value_type, source_kind, inherited in values
@@ -622,26 +802,6 @@ def _generated_door_operation(
     )
 
 
-def _expected_generated_door_facts(
-    chain: dict[str, Any], generated_type_id: str
-) -> tuple[SemanticFact, ...]:
-    facts = list(_expected_facts(chain))
-    facts[0] = SemanticFact(
-        fact_key="relationship:type",
-        value=generated_type_id,
-        value_type="IfcDoorStyle",
-        unit=None,
-        inherited=True,
-        pset_path=None,
-        entity_source="deterministic-policy",
-        source_kind=EvidenceSourceKind.DETERMINISTIC_POLICY,
-        source_ref="generated-type-template:0.1",
-        provenance=("phase11-generated-type",),
-        occurrence_scope="door_occurrence",
-    )
-    return tuple(facts)
-
-
 def run_case(case: dict[str, Any], output_root: Path) -> dict[str, Any]:
     case_dir = output_root / str(case["case_id"])
     if case_dir.exists():
@@ -658,6 +818,13 @@ def run_case(case: dict[str, Any], output_root: Path) -> dict[str, Any]:
         preserve_opening=True,
     )
     damaged = fixture / "damaged.ifc"
+    validation_cache_dir = output_root / ".validation-cache"
+    baseline_cache_evidence = None
+    if case.get("performance_gate"):
+        baseline_cache_evidence = _prewarm_baseline_validation(
+            damaged,
+            validation_cache_dir,
+        )
     request = _request(chain)
     operation_id = f"operation-{case['case_id']}"
     operation = _operation(chain, operation_id=operation_id)
@@ -680,72 +847,26 @@ def run_case(case: dict[str, Any], output_root: Path) -> dict[str, Any]:
     }
     repaired = case_dir / "repaired.ifc"
     registry = create_default_registry()
+    expected_facts_by_operation = {
+        operation_id: _expected_door_facts(operation, damaged)
+    }
     preparation_seconds = time.perf_counter() - preparation_started
-    application_started = time.perf_counter()
-    application = apply_changeset(
+    public_run = _execute_public_production(
         damaged_ifc_path=damaged,
         repair_request=request,
         changeset=changeset,
-        output_path=repaired,
+        repaired_ifc_path=repaired,
+        expected_facts_by_operation=expected_facts_by_operation,
         registry=registry,
+        validation_cache_dir=validation_cache_dir,
+        repeat_warm_evaluation=bool(case.get("performance_gate")),
     )
-    if not application["valid"] or not application["published"]:
-        raise RuntimeError(
-            f"PHASE11_OFFLINE_APPLICATION_FAILED:{application['issues']}"
-        )
-    application_seconds = time.perf_counter() - application_started
-    evaluation_started = time.perf_counter()
-    production = evaluate_production(
-        ProductionEvaluationInputs(
-            damaged_ifc_path=damaged,
-            repaired_ifc_path=repaired,
-            changeset=changeset,
-            application_result=application,
-            registry=registry,
-            expected_facts_by_operation={
-                operation_id: _expected_facts(chain)
-            },
-        )
-    )
-    evaluation_seconds = time.perf_counter() - evaluation_started
-    evaluation = evaluation_to_dict(production)
-    if not evaluation["complete_repair_success"]:
-        raise RuntimeError(
-            "PHASE11_OFFLINE_EVALUATION_FAILED:"
-            f"{case['case_id']}:"
-            + json.dumps(
-                {
-                    "status": evaluation.get("status"),
-                    "operations": evaluation.get("operations"),
-                },
-                ensure_ascii=False,
-                default=str,
-            )
-        )
-    warm_evaluation = None
-    warm_evaluation_seconds = None
-    if case.get("performance_gate"):
-        warm_started = time.perf_counter()
-        warm_evaluation = evaluation_to_dict(
-            evaluate_production(
-                ProductionEvaluationInputs(
-                    damaged_ifc_path=damaged,
-                    repaired_ifc_path=repaired,
-                    changeset=changeset,
-                    application_result=application,
-                    registry=registry,
-                    expected_facts_by_operation={
-                        operation_id: _expected_facts(chain)
-                    },
-                )
-            )
-        )
-        warm_evaluation_seconds = time.perf_counter() - warm_started
-        if not warm_evaluation["complete_repair_success"]:
-            raise RuntimeError(
-                "PHASE11_WARM_EVALUATION_FAILED:"
-                f"{case['case_id']}"
-            )
+    application = public_run["application"]
+    evaluation = public_run["evaluation"]
+    warm_evaluation = public_run["warm_evaluation"]
+    application_seconds = public_run["application_seconds"]
+    evaluation_seconds = public_run["evaluation_seconds"]
+    warm_evaluation_seconds = public_run["warm_evaluation_seconds"]
     allowed = {
         str(item["global_id"])
         for result in application["operations"]
@@ -796,6 +917,7 @@ def run_case(case: dict[str, Any], output_root: Path) -> dict[str, Any]:
         "synthetic_fallback_used": False,
         "operation_count": 1,
         "performance": performance,
+        "baseline_validation_cache": baseline_cache_evidence,
         "damage": {
             "mode": mutation["mutation_type"],
             "door": mutation["door"],
@@ -817,6 +939,7 @@ def run_case(case: dict[str, Any], output_root: Path) -> dict[str, Any]:
                 "application.json",
                 "evaluation.json",
                 "comparison.json",
+                "production-boundary.json",
                 *(("evaluation-warm.json",) if warm_evaluation is not None else ()),
             )
         },
@@ -895,38 +1018,22 @@ def run_generated_type_case(
     }
     repaired = case_dir / "repaired.ifc"
     registry = create_default_registry()
-    application = apply_changeset(
+    public_run = _execute_public_production(
         damaged_ifc_path=damaged,
         repair_request=request,
         changeset=changeset,
-        output_path=repaired,
+        repaired_ifc_path=repaired,
+        expected_facts_by_operation={
+            operation_id: _expected_door_facts(
+                operation,
+                damaged,
+                generated_type_id=generated_type_id,
+            )
+        },
         registry=registry,
     )
-    if not application["valid"] or not application["published"]:
-        raise RuntimeError(
-            f"PHASE11_GENERATED_APPLICATION_FAILED:{application['issues']}"
-        )
-    evaluation = evaluation_to_dict(
-        evaluate_production(
-            ProductionEvaluationInputs(
-                damaged_ifc_path=damaged,
-                repaired_ifc_path=repaired,
-                changeset=changeset,
-                application_result=application,
-                registry=registry,
-                expected_facts_by_operation={
-                    operation_id: _expected_generated_door_facts(
-                        chain, generated_type_id
-                    )
-                },
-            )
-        )
-    )
-    if not evaluation["complete_repair_success"]:
-        raise RuntimeError(
-            "PHASE11_GENERATED_EVALUATION_FAILED:"
-            + json.dumps(evaluation.get("operations"), ensure_ascii=False)
-        )
+    application = public_run["application"]
+    evaluation = public_run["evaluation"]
     reopened = ifcopenshell.open(str(repaired))
     generated_type = reopened.by_guid(generated_type_id)
     if (
@@ -984,6 +1091,7 @@ def run_generated_type_case(
                 "application.json",
                 "evaluation.json",
                 "comparison.json",
+                "production-boundary.json",
             )
         },
     }
@@ -1053,38 +1161,22 @@ def run_five_door_case(
     }
     repaired = case_dir / "repaired.ifc"
     registry = create_default_registry()
-    application = apply_changeset(
+    expected_by_operation = {
+        operation["operation_id"]: _expected_door_facts(
+            operation, damaged
+        )
+        for operation in operations
+    }
+    public_run = _execute_public_production(
         damaged_ifc_path=damaged,
         repair_request=request,
         changeset=changeset,
-        output_path=repaired,
+        repaired_ifc_path=repaired,
+        expected_facts_by_operation=expected_by_operation,
         registry=registry,
     )
-    if not application["valid"] or not application["published"]:
-        raise RuntimeError(
-            f"PHASE11_FIVE_DOOR_APPLICATION_FAILED:{application['issues']}"
-        )
-    expected_by_operation = {
-        operation["operation_id"]: _expected_facts(chain)
-        for operation, chain in zip(operations, chains, strict=True)
-    }
-    evaluation = evaluation_to_dict(
-        evaluate_production(
-            ProductionEvaluationInputs(
-                damaged_ifc_path=damaged,
-                repaired_ifc_path=repaired,
-                changeset=changeset,
-                application_result=application,
-                registry=registry,
-                expected_facts_by_operation=expected_by_operation,
-            )
-        )
-    )
-    if not evaluation["complete_repair_success"]:
-        raise RuntimeError(
-            "PHASE11_FIVE_DOOR_EVALUATION_FAILED:"
-            + json.dumps(evaluation.get("operations"), ensure_ascii=False)
-        )
+    application = public_run["application"]
+    evaluation = public_run["evaluation"]
     allowed = {
         str(item["global_id"])
         for result in application["operations"]
@@ -1156,6 +1248,7 @@ def run_five_door_case(
                 "application.json",
                 "evaluation.json",
                 "comparison.json",
+                "production-boundary.json",
                 "injected-failure-changeset.json",
                 "injected-failure-application.json",
             )
@@ -2171,17 +2264,6 @@ def run_mixed_case(
         "operations": operations,
     }
     repaired = case_dir / "repaired.ifc"
-    application = apply_changeset(
-        damaged_ifc_path=damaged,
-        repair_request=request,
-        changeset=changeset,
-        output_path=repaired,
-        registry=registry,
-    )
-    if not application["valid"] or not application["published"]:
-        raise RuntimeError(
-            f"PHASE11_MIXED_APPLICATION_FAILED:{application['issues']}"
-        )
     expected_by_operation = (
         {
             **{
@@ -2198,14 +2280,15 @@ def run_mixed_case(
             },
             **{
                 operation["operation_id"]: (
-                    _expected_generated_door_facts(
-                        chain,
-                        generated_type_ids[operation["operation_id"]],
+                    _expected_door_facts(
+                        operation,
+                        damaged,
+                        generated_type_id=(
+                            generated_type_ids[operation["operation_id"]]
+                        ),
                     )
                 )
-                for operation, chain in zip(
-                    door_operations, door_chains, strict=True
-                )
+                for operation in door_operations
             },
         }
         if geometry_targeting
@@ -2219,56 +2302,23 @@ def run_mixed_case(
                 )
             },
             **{
-                operation["operation_id"]: _expected_facts(chain)
-                for operation, chain in zip(
-                    door_operations, door_chains, strict=True
+                operation["operation_id"]: _expected_door_facts(
+                    operation, damaged
                 )
+                for operation in door_operations
             },
         }
     )
-    evaluation = evaluation_to_dict(
-        evaluate_production(
-            ProductionEvaluationInputs(
-                damaged_ifc_path=damaged,
-                repaired_ifc_path=repaired,
-                changeset=changeset,
-                application_result=application,
-                registry=registry,
-                expected_facts_by_operation=expected_by_operation,
-            )
-        )
+    public_run = _execute_public_production(
+        damaged_ifc_path=damaged,
+        repair_request=request,
+        changeset=changeset,
+        repaired_ifc_path=repaired,
+        expected_facts_by_operation=expected_by_operation,
+        registry=registry,
     )
-    if not evaluation["complete_repair_success"]:
-        failure_summary = [
-            {
-                "operation_id": item["operation_id"],
-                "status": item["status"],
-                "levels": [
-                    {
-                        "level": level["level"],
-                        "status": level["status"],
-                        "failed_checks": [
-                            {
-                                "check_id": check["check_id"],
-                                "status": check["status"],
-                                "reason": check["reason"],
-                            }
-                            for check in level.get("checks", ())
-                            if check["status"] not in {
-                                "passed",
-                                "not_required",
-                            }
-                        ],
-                    }
-                    for level in item["levels"]
-                ],
-            }
-            for item in evaluation.get("operations", ())
-        ]
-        raise RuntimeError(
-            "PHASE11_MIXED_EVALUATION_FAILED:"
-            + json.dumps(failure_summary, ensure_ascii=False)
-        )
+    application = public_run["application"]
+    evaluation = public_run["evaluation"]
     allowed = {
         str(item["global_id"])
         for result in application["operations"]
@@ -2347,6 +2397,7 @@ def run_mixed_case(
                 "application.json",
                 "evaluation.json",
                 "comparison.json",
+                "production-boundary.json",
             )
         },
     }
@@ -2423,6 +2474,25 @@ def main(argv: list[str] | None = None) -> int:
         results.append(
             run_mixed_case(DENTAL_CLINIC_MIXED_CASE, args.output_root)
         )
+    for item in results:
+        audit = audit_case(
+            args.output_root / str(item["case_id"]),
+            write=True,
+        )
+        if audit["release_decision"]["publishable"] is not True:
+            raise RuntimeError(
+                "PHASE11_THREE_WAY_AUDIT_FAILED:"
+                f"{item['case_id']}:"
+                + json.dumps(
+                    audit["release_decision"], ensure_ascii=False
+                )
+            )
+        # audit_case refreshes the per-case manifest with its evidence files.
+        item.update(
+            _read_case_manifest(
+                args.output_root / str(item["case_id"]) / "manifest.json"
+            )
+        )
     summary = {
         "schema_version": "text2ifc/phase11-door-offline-run/0.1",
         "status": "passed",
@@ -2438,6 +2508,13 @@ def main(argv: list[str] | None = None) -> int:
     _write(args.output_root / "run-summary.json", summary)
     print(json.dumps(summary, ensure_ascii=False, sort_keys=True))
     return 0
+
+
+def _read_case_manifest(path: Path) -> dict[str, Any]:
+    value = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(value, dict):
+        raise ValueError(f"PHASE11_MANIFEST_INVALID:{path}")
+    return value
 
 
 if __name__ == "__main__":

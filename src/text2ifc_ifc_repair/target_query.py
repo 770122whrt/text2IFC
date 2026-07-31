@@ -298,12 +298,25 @@ def _geometry_constraint_value(
             "wall_length_mm": "length",
             "wall_height_mm": "height",
             "wall_thickness_mm": "thickness",
+            "opening_width_mm": "width",
+            "opening_height_mm": "height",
+            "opening_depth_mm": "depth",
         }.get(field_name)
-        if dimension_key is None:
-            return None
-        value = record.geometry_summary.get("dimensions_mm", {}).get(
-            dimension_key
-        )
+        if dimension_key is not None:
+            value = record.geometry_summary.get("dimensions_mm", {}).get(
+                dimension_key
+            )
+        else:
+            position_key = {
+                "opening_center_offset_mm": "center_offset_mm",
+                "opening_sill_height_mm": "sill_height_mm",
+                "opening_normal_offset_mm": "normal_offset_mm",
+            }.get(field_name)
+            if position_key is None:
+                return None
+            value = record.geometry_summary.get(
+                "wall_local_position_mm", {}
+            ).get(position_key)
     if isinstance(value, bool) or not isinstance(value, (int, float)):
         return None
     return float(value)

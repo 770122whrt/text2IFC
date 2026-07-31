@@ -21,8 +21,8 @@ operation 后续按照同一目录合同追加。
 | [AdvancedProject 五窗大型模型修复](window/batch/advancedproject-five-window/REPORT.md) | 770,172 entities | 5 | 大型 IFC、全模型 preservation、映射 Type | 5 项 L1/L2 passed |
 | [px4 五窗与上下叠窗修复](window/batch/px4-five-window/REPORT.md) | 501,401 entities | 5 | 二维 Opening 冲突、上下叠窗、原子回滚 | 5 项 L1/L2 passed |
 | [Phase 11 单门修复](door/README.md) | 20,735–770,172 entities | 4 | Type 复用、生成 DoorStyle、保留 Opening、大模型 | 4 案例全部 passed |
-| [vvo 五门批量修复](door/batch/vvo-five-door-preserve-opening/REPORT.md) | 48,935 entities | 5 | 一个文本、一个统一 ChangeSet、5 个 Door operation、原子发布 | 5 项 L1/L2 passed |
-| [vvo 两门两窗混合修复](mixed/door-window/vvo-two-door-two-window-mixed/REPORT.md) | 48,935 entities | 4 | 无 GUID 公开定位、Door/Window 分类路由、统一 ChangeSet | 4 项 L1/L2 passed |
+| [vvo 五门权威复跑](door/batch/vvo-five-door-authority-public-repair/REPORT.md) | 48,935 entities | 5 | damaged-only 独立进程、无 GUID/Name Opening 几何定位、5 个保留 Opening | 5 项 L0/L1/L2 passed |
+| [vvo 两门两窗权威复跑](mixed/door-window/vvo-authority-triplet-public-repair/REPORT.md) | 48,935 entities | 4 | damaged-only 独立进程、无 GUID/Name 几何定位、修复后私有 comparator | 4 项 L0/L1/L2 passed |
 | [Dental Clinic 两门两窗重开洞修复](mixed/door-window/dental-clinic-two-door-two-window-geometry-targeted/REPORT.md) | 209,148 entities | 4 | 无 GUID/Name 几何定位、旧 Opening 全删除、米制 IFC 边界换算、统一 ChangeSet | 4 项 L1/L2 passed |
 
 Window 案例的横向解读见
@@ -55,6 +55,11 @@ FILES.json      文件角色、来源、大小和 SHA-256
 
 Private mutation manifest 记录被移除对象的真实身份，因此标记为
 `evaluator_only`。它不能进入 Stage 1 或 Stage 2 Prompt。
+
+2026-07-30 的 Door 权威复跑进一步要求 original IFC 和 private mutation
+mapping 在 repaired IFC 生成前根本不可供生产进程访问。此前 runner
+同进程准备 public input 的 Door 目录保留作历史对照，但不再作为本页推荐的
+Door 发布证据；上表只指向新的独立生产进程案例。
 
 ## 准入规则
 

@@ -165,6 +165,22 @@ def product_geometry_bounds_in_host_mm(product: Any, host: Any) -> dict[str, lis
     }
 
 
+def product_local_geometry_bounds_mm(product: Any) -> dict[str, list[float]]:
+    """Return tessellated product bounds before ObjectPlacement is applied."""
+
+    shape = ifcopenshell.geom.create_shape(ifcopenshell.geom.settings(), product)
+    vertices = shape.geometry.verts
+    if not vertices:
+        raise ValueError("PRODUCT_GEOMETRY_EMPTY")
+    return {
+        axis_name: [
+            _clean_mm(min(vertices[axis::3]) * 1000.0),
+            _clean_mm(max(vertices[axis::3]) * 1000.0),
+        ]
+        for axis, axis_name in enumerate(("x", "y", "z"))
+    }
+
+
 def _clean_mm(value: float) -> float:
     """Remove tessellation noise while preserving sub-millimetre coordinates."""
 

@@ -28,6 +28,7 @@ from .index_models import (
 )
 from .index_store import SQLiteIndexRepository
 from .semantic_facts import extract_property_facts
+from .spatial import resolve_opening_storey
 
 
 EXTRACTOR_VERSION = "text2ifc/ifc-indexer/0.4"
@@ -245,6 +246,15 @@ def _element_storey(entity: Any) -> Any | None:
             parent = relation.RelatingObject
             if parent.is_a("IfcBuildingStorey"):
                 return parent
+    if entity.is_a("IfcOpeningElement"):
+        voids = list(getattr(entity, "VoidsElements", ()))
+        if len(voids) == 1:
+            try:
+                return resolve_opening_storey(
+                    entity, voids[0].RelatingBuildingElement
+                )
+            except Exception:
+                return None
     for fill in getattr(entity, "FillsVoids", ()):
         opening = fill.RelatingOpeningElement
         for void in getattr(opening, "VoidsElements", ()):
@@ -263,6 +273,8 @@ def _storey_provenance(entity: Any) -> str:
         return "IfcRelAggregates"
     if getattr(entity, "ContainedInStructure", ()):
         return "IfcRelContainedInSpatialStructure"
+    if entity.is_a("IfcOpeningElement"):
+        return "hosted_opening_base_elevation"
     return "hosted_element_traversal"
 
 
