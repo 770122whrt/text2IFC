@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: IFC ChangeSet Repair Pipeline
-status: Phase 11 implementation and offline validation complete; live UAT pending
-last_updated: "2026-07-31T00:00:00+08:00"
+status: Phase 11 complete; real DeepSeek UAT and strict Proof validation passed
+last_updated: "2026-07-31T23:59:00+08:00"
 progress:
   total_phases: 13
-  completed_phases: 10
+  completed_phases: 11
   total_plans: 32
-  completed_plans: 31
-  percent: 97
+  completed_plans: 32
+  percent: 100
 ---
 
 # Project State
@@ -19,20 +19,22 @@ progress:
 ```text
 Mode: CHECKPOINT
 Class: EXPERIMENTAL
-Goal: Run the authorized Phase 11 real DeepSeek UAT and close Phase 11 only
-      if the live output independently reopens and passes strict L0/L1/L2.
-Phase: Phase 11 offline closeout → live Provider acceptance
-Routing: direct Phase 11 live-UAT workflow; use verification-before-completion
+Goal: Close Phase 11 only after real DeepSeek output independently reopens and
+      passes strict L0/L1/L2, with no synthetic fallback.
+Phase: Phase 11 COMPLETE
+Routing: direct Phase 11 live-UAT workflow; verification-before-completion
 State channel: .planning/STATE.md
-Context: HANDOFF - Phase 11 offline work is verified, the next acceptance
-         layer changes from deterministic L0/L1/L2 to live Provider L3, and
-         the originating conversation contains extensive audit history/logs.
-Acceptance: Offline PASS: 681 tests passed, 1 expected skip; Proof collection
-            PASS: 14 cases, 43 operations, 211 files, 42 IFC reopens;
-            independent Door audit PASS. Live DeepSeek L3 remains pending.
-Next: Start a fresh Codex conversation, read this checkpoint plus the Phase 11
-      SPEC/VALIDATION/report, run the existing live UAT without fallback, then
-      curate live Proof and create the Phase 11 Git checkpoint if it passes.
+Context: COMPLETE - prompt/profile contract repair, live Provider acceptance,
+         independent Proof recomputation and regression gates are complete.
+Acceptance: Real DeepSeek PASS: complete Stage 1/2 = 1/1; clarified total
+            Stage 1/2 = 2/1; unsupported Stage 1/2 = 1/0 with exact
+            DOOR_OPERATION_TYPE_UNSUPPORTED. Both published IFC files reopen
+            as IFC2X3 and pass strict L0/L1/L2. synthetic fallback = false.
+            Proof PASS: 16 cases, 45 operations, 247 files, 48 IFC reopens;
+            11 cases strictly recomputed and 5 historical Window cases
+            explicitly retained as legacy artifact-only evidence.
+Next: Preserve the Phase 11 checkpoint and await user direction. Do not begin
+      Phase 12 from this checkpoint.
 ```
 
 ### Handoff boundary
@@ -72,8 +74,8 @@ See `.planning/PROJECT.md`.
 **Core value:** Given an IFC file and an explicit user request, produce a
 traceable semantic ChangeSet and an L1/L2-validated IFC result.
 
-**Current focus:** Door offline L0/L1/L2 is strictly closed; execute the
-already-authorized real DeepSeek UAT before final Phase 11 closure.
+**Current focus:** Phase 11 Door/Opening is closed with real DeepSeek and
+independently recomputed Proof evidence. Await explicit user direction.
 
 ## Current Position
 
@@ -81,28 +83,44 @@ Phase: 10.5 (Window Occurrence Fidelity and Validation Acceleration) — COMPLET
 Plan: 3 of 3 complete
 
 - Milestone: v1.1 IFC ChangeSet Repair Pipeline
-- Phase: 11 in progress
-- Plan: 11-01 through 11-05 offline work complete; live UAT pending
+- Phase: 11 complete
+- Plan: 11-01 through 11-05 complete
 - Status: Opening/Door contracts, indexing, deterministic resolution, IFC
   authoring, strict geometry/Storey L1, L2 and occurrence fidelity are
   implemented. Seven offline cases
   cover LargeBuilding, vvo, AdvancedProject, generated Type, five-Door atomic
   repair and two-Door/two-Window mixed repair. All are independently curated
-  with three-way L0/L1/L2 release evidence. The live command was rejected
-  before any Provider call because the Codex execution quota was exhausted.
-- Progress: 10 / 13 phases complete
-- Requirements: WFID-01..06 complete
-- Last activity: 2026-07-30 - a separate damaged-only production process
-  repaired the supplied two-Window/two-Door triplet and a five-Door
-  retained-Opening case using only geometry selectors. Both passed three-way
-  L0/L1/L2; the curated proof collection passed as 14 cases, 43 operations,
-  211 hash-bound files and 42 independent IFC reopens. The final complete
-  `tests/ifc_repair` regression passed as 681 tests with 1 expected skip
+  with three-way L0/L1/L2 release evidence. Real DeepSeek then passed the
+  complete, clarification/resume and deterministic unsupported contracts with
+  no fallback; both publishable cases independently reopen and pass L0/L1/L2.
+- Progress: 11 / 13 phases complete
+- Requirements: WFID-01..06 and OPS-01..02 complete
+- Last activity: 2026-07-31 - accepted live run
+  `uat-20260731T224900289758Z` passed all three contracts. Two live successes
+  were curated into the Proof collection. The current independent verifier
+  passes 16 cases, 45 operations, 247 hash-bound files and 48 IFC reopens.
+  The complete `tests/ifc_repair` regression passes 688 tests with 1 expected
+  skip in 1099.76 seconds. A broader repository-wide 1599-test attempt produced
+  no failure before the 1204-second command limit, so that separate attempt is
+  recorded as a timeout rather than reported as a repository-wide pass.
 - Phase 11 design decisions were confirmed on 2026-07-28 and are frozen in
   `11-CONTEXT.md` and `11-SPEC.md`. Five sequential implementation plans,
   research, pattern map and validation strategy are complete. Plans 11-01
-  through 11-04 are implemented and committed; Plan 11-05 awaits only real
-  DeepSeek evidence and final Proof/checkpoint closure.
+  through 11-05 are implemented and validated; the final scoped checkpoint is
+  the only remaining repository bookkeeping step in this handoff record.
+
+- The live failure analysis changed the input contract, not the frozen Door
+  workflow. Stage 1 now receives exact intent schemas and is explicitly told
+  to omit program-derived and unknown fields. Immutable Door profile v0.2
+  few-shots demonstrate complete, clarification, Type reuse and unsupported
+  paths. No alias such as `center_offset_from_wall_start_mm` and no relocated
+  `door.threshold_height_mm` compatibility was added.
+
+- Real live execution also exposed two deterministic evidence bugs unrelated
+  to LLM wording: Door canonicalization metadata was incorrectly treated as
+  independent semantic authority, and the host relationship recorded the GUID
+  value type instead of `IfcWall`. Both boundaries were corrected and covered
+  by regression tests before the accepted rerun.
 
 - Phase 11 uses additive RepairIntent 0.5, Prompt Profile 0.1, IFC Index 0.4,
   Semantic Manifest 0.3 and Bound ChangeSet 0.4 contracts. Historical
@@ -250,12 +268,11 @@ Plan: 3 of 3 complete
 
 ## Next Action
 
-Run the already-authorized Phase 11 real DeepSeek UAT now that the complete
-strict offline matrix is green. Preserve no-fallback evidence and close Phase
-11 only if the live output independently reopens and passes production L1/L2.
+Phase 11 is closed. Preserve the accepted live Proof and scoped Git checkpoint,
+and await explicit user direction. Do not start Phase 12 from this task.
 
 ---
-*Last updated: 2026-07-31 at the Phase 11 offline-to-live handoff checkpoint*
+*Last updated: 2026-07-31 at the Phase 11 real-live closure checkpoint*
 
 ## Accumulated Context
 

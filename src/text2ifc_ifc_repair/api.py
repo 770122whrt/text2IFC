@@ -170,6 +170,12 @@ class RepairAPI:
                 json.dumps(intent.to_dict(), ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n",
             )
         context_ref = self._write_context(run_dir, repair_text=repair_text, intent=intent)
+        if intent_result.get("classification") == "unsupported":
+            return self._fail(
+                state.run_id,
+                RunStage.UNSUPPORTED,
+                str(intent_result.get("reason_code") or "OPERATION_UNSUPPORTED"),
+            )
         missing_parameters = list(intent_result.get("missing_parameters") or ())
         if (
             intent_result.get("classification") == "clarification_required"
@@ -755,6 +761,12 @@ class RepairAPI:
 
 
 def _clarification(run_id: str, version: int, resolution: Any) -> Clarification:
+    raw_candidates = tuple(resolution.candidates)
+    slots = tuple(
+        str(item["slot"])
+        for item in raw_candidates
+        if isinstance(item, Mapping) and item.get("slot")
+    )
     candidates = tuple(
         ClarificationCandidate(
             token=str(item["token"]),
@@ -769,7 +781,8 @@ def _clarification(run_id: str, version: int, resolution: Any) -> Clarification:
             occurrence_count=int(item.get("occurrence_count", 0)),
             storeys=tuple(str(value) for value in item.get("storeys", ())),
         )
-        for item in resolution.candidates
+        for item in raw_candidates
+        if not slots
     )
     reason_map = {
         "ambiguous": "ambiguous_target", "conflict": "selector_conflict",
@@ -777,13 +790,28 @@ def _clarification(run_id: str, version: int, resolution: Any) -> Clarification:
         "prototype_selection": "prototype_selection",
         "property_confirmation": "property_confirmation",
     }
-    reason = reason_map.get(str(resolution.reason_code), "additional_target_detail")
+    reason = (
+        "missing_required_parameter"
+        if slots
+        else reason_map.get(
+            str(resolution.reason_code), "additional_target_detail"
+        )
+    )
     modes = (
         ("authorize_prototype", "cancel") if reason == "prototype_selection"
         else ("confirm_property", "reject_property", "cancel")
         if reason == "property_confirmation"
         else ("select_candidate", "add_detail", "cancel") if candidates
         else ("add_detail", "cancel")
+    )
+    question = (
+        "操作仍需明确输入（"
+        + str(resolution.reason_code)
+        + "）："
+        + "、".join(slots)
+        + "。请补充说明或取消。"
+        if slots
+        else "目标不唯一或证据不足，请选择候选、补充说明或取消。"
     )
     return Clarification(
         clarification_id=f"clarify-{version:03d}",
@@ -793,7 +821,7 @@ def _clarification(run_id: str, version: int, resolution: Any) -> Clarification:
         stage=RunStage.TARGETS_RESOLVED,
         resume_stage=RunStage.INTENT_READY,
         reason_code=reason,
-        question="目标不唯一或证据不足，请选择候选、补充说明或取消。",
+        question=question,
         answer_modes=modes,
         candidates=candidates,
         property_preview=(

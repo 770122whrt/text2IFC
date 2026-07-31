@@ -525,7 +525,7 @@ class RepairIntent:
                     path=f"/operations/{index}/target_query/allowed_ifc_classes",
                 )
             parameter_issues = (
-                registry.validate_parameters(raw_operation)
+                registry.validate_intent_parameters(raw_operation)
                 if require_complete
                 else registry.validate_partial_parameters(raw_operation)
             )

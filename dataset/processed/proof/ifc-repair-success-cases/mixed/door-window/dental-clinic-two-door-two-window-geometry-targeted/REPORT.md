@@ -9,7 +9,7 @@
 - L0、L1、L2、preservation 与文件哈希均已重新验证；发布结论见 `validation/release-decision.json`。
 - 完整三方差异与非阻塞 fidelity warning 见 `validation/AUDIT-REPORT.md`。
 - Prompt Profile 与 few-shot 指纹由当前不可变目录重新计算。
-- 用户请求和 RepairIntent 均不含 IFC GlobalId、对象 Name 或楼层 Name；宿主墙仅由楼层标高、朝向、墙体长高厚和墙局部位置经确定性索引解析，GUID 只在内部 Bound ChangeSet 中出现。
+- 用户请求和 RepairIntent 均不含 IFC GlobalId、对象 Name 或楼层 Name；Wall 或既有 Opening 仅由用户给出的有界几何约束经确定性索引解析，GUID 只在内部 Bound ChangeSet 中出现。
 - damage 同时删除 Door/Window occurrence 与原 Opening；修复从完整墙体重新开洞，不复用残留 Opening。
 - synthetic fallback：false。
 

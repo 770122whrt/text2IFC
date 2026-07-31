@@ -291,12 +291,23 @@ def generate_repair_intent(
         )
         _write_live_evidence(output, attempt_number, live_evidence)
         if intent is not None and not issues:
-            missing_parameters = _missing_parameters(intent, registry)
+            unsupported_operations = _unsupported_operations(intent, registry)
+            missing_parameters = (
+                []
+                if unsupported_operations
+                else _missing_parameters(intent, registry)
+            )
             missing_properties = _missing_properties(intent)
-            if not missing_parameters and not missing_properties:
+            if (
+                not unsupported_operations
+                and not missing_parameters
+                and not missing_properties
+            ):
                 intent = RepairIntent.from_dict(intent.to_dict(), registry=registry)
             classification = (
-                "clarification_required"
+                "unsupported"
+                if unsupported_operations
+                else "clarification_required"
                 if missing_parameters or missing_properties
                 else "repair_intent"
             )
@@ -308,6 +319,7 @@ def generate_repair_intent(
                 "status": classification,
                 "missing_parameters": missing_parameters,
                 "missing_properties": missing_properties,
+                "unsupported_operations": unsupported_operations,
             }
             atomic_write_text(
                 output / "repair-intent-completeness.json",
@@ -319,6 +331,12 @@ def generate_repair_intent(
                 "intent": intent,
                 "missing_parameters": missing_parameters,
                 "missing_properties": missing_properties,
+                "unsupported_operations": unsupported_operations,
+                "reason_code": (
+                    unsupported_operations[0]["reason_code"]
+                    if unsupported_operations
+                    else None
+                ),
                 "prompt": _prompt_identity(rendered),
                 "attempts": attempts,
                 "error_code": None,
@@ -361,6 +379,26 @@ def _missing_parameters(
                 {"operation_id": operation.operation_id, "paths": list(paths)}
             )
     return missing
+
+
+def _unsupported_operations(
+    intent: RepairIntent,
+    registry: OperationRegistry,
+) -> list[dict[str, str]]:
+    unsupported: list[dict[str, str]] = []
+    for operation in intent.operations:
+        decision = registry.assess_intent_capability(operation.to_dict())
+        if str(decision.get("status")) != "unsupported":
+            continue
+        unsupported.append(
+            {
+                "operation_id": operation.operation_id,
+                "reason_code": str(
+                    decision.get("reason_code") or "OPERATION_UNSUPPORTED"
+                ),
+            }
+        )
+    return unsupported
 
 
 def _missing_properties(intent: RepairIntent) -> list[dict[str, Any]]:
@@ -423,12 +461,18 @@ def _compact_supported_profiles(
                 "PROFILE_BINDING_MISSING", operation_type
             )
         profile_ids.append(profile_id)
-    return list(
+    catalog = list(
         compact_profile_catalog(
             load_prompt_profiles(),
             include_profile_ids=profile_ids,
         )
     )
+    for item in catalog:
+        definition = registry.require(str(item["operation_type"]))
+        item["intent_parameter_schema"] = dict(
+            definition.intent_parameter_schema or definition.parameter_schema
+        )
+    return catalog
 
 
 def _validate_operation_routing(

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 from jsonschema import Draft202012Validator
@@ -18,6 +19,7 @@ from text2ifc_ifc_repair.run_models import (
     load_run_schema,
 )
 from text2ifc_ifc_repair.run_store import RunStore
+from text2ifc_ifc_repair.api import _clarification
 
 
 def _start(tmp_path: Path):
@@ -120,6 +122,29 @@ def test_one_clarification_contract_covers_every_reason(
         assert answer_validator.is_valid(
             {"kind": "select_candidate", "candidate_token": "candidate-a"}
         )
+
+
+def test_operation_slot_clarification_is_not_parsed_as_target_candidate() -> None:
+    clarification = _clarification(
+        "repair-door",
+        4,
+        SimpleNamespace(
+            operation_id="door-1",
+            reason_code="DOOR_OPERATION_REQUIRED",
+            candidates=(
+                {
+                    "slot": "/parameters/door/operation_type",
+                    "reason_code": "DOOR_OPERATION_REQUIRED",
+                },
+            ),
+            property_preview=None,
+        ),
+    )
+
+    assert clarification.reason_code == "missing_required_parameter"
+    assert clarification.answer_modes == ("add_detail", "cancel")
+    assert clarification.candidates == ()
+    assert "/parameters/door/operation_type" in clarification.question
 
 
 @pytest.mark.parametrize(

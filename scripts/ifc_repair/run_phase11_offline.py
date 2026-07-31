@@ -1488,12 +1488,6 @@ def _geometry_targeted_mixed_intent(
                         "dimension_meaning": "overall_opening",
                     },
                     "door": {
-                        "overall_width_mm": chain["door"][
-                            "overall_width_mm"
-                        ],
-                        "overall_height_mm": chain["door"][
-                            "overall_height_mm"
-                        ],
                         "operation_type": chain["style"][
                             "operation_type"
                         ],

@@ -36,6 +36,26 @@ def test_checked_in_success_case_collection_is_self_consistent() -> None:
         }
     }
     assert len(phase11) == 7
+    phase11_summaries = [
+        item
+        for item in result.cases
+        if "fill_existing_opening_with_door" in item["operation_types"]
+        or "add_door_with_opening_to_wall" in item["operation_types"]
+    ]
+    assert len(phase11_summaries) >= 7
+    assert all(
+        item["independent_triplet_audit_publishable"] is True
+        for item in phase11_summaries
+    )
+    assert all(
+        item["audit_coverage"] == "strict_recomputed"
+        and item["independent_l1_operation_count"] == item["operation_count"]
+        and item["independent_l2_operation_count"] == item["operation_count"]
+        for item in phase11_summaries
+    )
+    assert result.independently_recomputed_case_count >= len(phase11_summaries)
+    assert result.legacy_unverifiable_case_count == 5
+    assert len(result.limitations) == result.legacy_unverifiable_case_count
 
 
 def test_phase11_proofs_follow_family_and_case_kind_directories() -> None:

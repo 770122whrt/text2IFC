@@ -272,6 +272,7 @@ def test_exact_type_formal_operation_is_authority_and_name_is_not() -> None:
     assert decision.parameters["door"]["operation_derivation"][
         "formal_attribute"
     ] == "OperationType"
+    assert decision.authorized_semantics == ()
 
 
 def test_type_operation_conflict_clarifies_preserve_or_cancel_reuse() -> None:

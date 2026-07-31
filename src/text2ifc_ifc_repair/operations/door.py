@@ -12,7 +12,11 @@ from text2ifc_ifc_repair.door_geometry import (
     measure_door_opening_alignment,
     select_door_placement_in_opening,
 )
-from text2ifc_ifc_repair.door_resolution import resolve_door_parameters
+from text2ifc_ifc_repair.door_resolution import (
+    SUPPORTED_GENERATED_OPERATIONS,
+    UNSUPPORTED_COMPLEX_OPERATIONS,
+    resolve_door_parameters,
+)
 from text2ifc_ifc_repair.evaluation_policy import (
     ComparisonRule,
     EvidenceSourceKind,
@@ -115,6 +119,82 @@ _CANONICAL_PARAMETER_SCHEMA = {
         "host_wall_global_id": {"type": "string", "minLength": 1},
     },
 }
+_DOOR_INTENT_SCHEMA = {
+    "type": "object",
+    "additionalProperties": False,
+    "properties": {
+        "operation_type": {
+            "enum": sorted(
+                SUPPORTED_GENERATED_OPERATIONS | UNSUPPORTED_COMPLEX_OPERATIONS
+            )
+        },
+        "notdefined_accepted": {"type": "boolean"},
+        "formal_enum_explicit": {"type": "boolean"},
+        "hinge_side": {"enum": ["left", "right"]},
+        "viewpoint": {
+            "type": "object",
+            "additionalProperties": False,
+            "properties": {
+                "observation_side": {
+                    "enum": ["wall_positive", "wall_negative"]
+                },
+                "destination": {"type": "string", "minLength": 1},
+                "from_space": {"type": "string", "minLength": 1},
+                "to_space": {"type": "string", "minLength": 1},
+            },
+        },
+    },
+}
+_ADD_INTENT_PARAMETER_SCHEMA = {
+    "type": "object",
+    "additionalProperties": False,
+    "required": ["position", "opening"],
+    "properties": {
+        "position": {
+            "type": "object",
+            "additionalProperties": False,
+            "required": ["reference"],
+            "properties": {
+                "reference": {
+                    "enum": ["wall_local_start", "wall_midpoint", "wall_end"]
+                },
+                "center_offset_mm": {"type": "number", "minimum": 0},
+                "anchor": {"enum": ["start", "end"]},
+                "measure_to": {"enum": ["center", "nearest_edge"]},
+                "offset_mm": {"type": "number", "minimum": 0},
+            },
+        },
+        "opening": {
+            "type": "object",
+            "additionalProperties": False,
+            "required": ["width_mm", "height_mm", "dimension_meaning"],
+            "properties": {
+                "width_mm": {"type": "number", "exclusiveMinimum": 0},
+                "height_mm": {"type": "number", "exclusiveMinimum": 0},
+                "sill_height_mm": {"type": "number", "minimum": 0},
+                "dimension_meaning": {
+                    "enum": [
+                        "overall_opening",
+                        "clear_passage",
+                        "door_leaf",
+                        "rough_opening",
+                        "unknown",
+                    ]
+                },
+            },
+        },
+        "door": _DOOR_INTENT_SCHEMA,
+    },
+}
+_FILL_INTENT_PARAMETER_SCHEMA = {
+    "type": "object",
+    "additionalProperties": False,
+    "required": ["fit_existing_opening"],
+    "properties": {
+        "fit_existing_opening": {"const": True},
+        "door": _DOOR_INTENT_SCHEMA,
+    },
+}
 _SOURCES = (
     EvidenceSourceKind.EXPLICIT_REQUEST,
     EvidenceSourceKind.SURVIVING_TARGET,
@@ -179,7 +259,7 @@ def add_door_operation_definition() -> OperationDefinition:
         target_classes=("IfcWall",),
         target_schema=_ADD_TARGET_SCHEMA,
         evaluation_policy=ADD_DOOR_EVALUATION_POLICY,
-        prompt_profile_id="door.add-with-opening",
+        prompt_profile_id="door.add-with-opening.v0.2",
         applicator=_add_door_applicator,
         precondition_checker=_add_preconditions,
     )
@@ -191,7 +271,7 @@ def fill_door_operation_definition() -> OperationDefinition:
         target_classes=("IfcOpeningElement",),
         target_schema=_FILL_TARGET_SCHEMA,
         evaluation_policy=FILL_DOOR_EVALUATION_POLICY,
-        prompt_profile_id="door.fill-existing-opening",
+        prompt_profile_id="door.fill-existing-opening.v0.2",
         applicator=_fill_door_applicator,
         precondition_checker=_fill_preconditions,
     )
@@ -207,11 +287,18 @@ def _definition(
     applicator: Any,
     precondition_checker: Any,
 ) -> OperationDefinition:
+    intent_parameter_schema = (
+        _FILL_INTENT_PARAMETER_SCHEMA
+        if operation_type == FILL_OPERATION_TYPE
+        else _ADD_INTENT_PARAMETER_SCHEMA
+    )
     return OperationDefinition(
         operation_type=operation_type,
         target_ifc_classes=target_classes,
         parameter_schema=_CANONICAL_PARAMETER_SCHEMA,
         target_schema=target_schema,
+        intent_parameter_schema=intent_parameter_schema,
+        intent_capability_checker=_intent_capability_checker,
         context_adapter=_context_adapter,
         precondition_checker=precondition_checker,
         applicator=applicator,
@@ -279,6 +366,20 @@ def _context_adapter(
 def _intent_policy_checker(**kwargs: Any) -> dict[str, Any]:
     del kwargs
     return {"status": "resolved"}
+
+
+def _intent_capability_checker(
+    *, operation: Mapping[str, Any]
+) -> dict[str, Any]:
+    parameters = operation.get("parameters")
+    door = parameters.get("door") if isinstance(parameters, Mapping) else None
+    requested = door.get("operation_type") if isinstance(door, Mapping) else None
+    if requested in UNSUPPORTED_COMPLEX_OPERATIONS:
+        return {
+            "status": "unsupported",
+            "reason_code": "DOOR_OPERATION_TYPE_UNSUPPORTED",
+        }
+    return {"status": "supported"}
 
 
 def _add_preconditions(

@@ -16,8 +16,26 @@ from pathlib import Path
 from typing import Any, Iterable, Mapping
 
 import ifcopenshell
+import ifcopenshell.util.element
 
+try:
+    from scripts.ifc_repair.audit_door_repair_triplet import (
+        DOOR_OPERATION_TYPES,
+        audit_case,
+    )
+except ModuleNotFoundError:  # Direct script execution from scripts/ifc_repair.
+    from audit_door_repair_triplet import DOOR_OPERATION_TYPES, audit_case
+from text2ifc_ifc_repair.evaluation_policy import EvidenceSourceKind
+from text2ifc_ifc_repair.geometry import (
+    opening_dimensions_mm,
+    opening_position_in_wall_mm,
+)
+from text2ifc_ifc_repair.operations import create_default_registry
 from text2ifc_ifc_repair.prompt_profiles import load_prompt_profiles
+from text2ifc_ifc_repair.semantic_facts import (
+    SemanticFact,
+    extract_ifc_semantic_facts,
+)
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -40,7 +58,10 @@ class ProofValidationResult:
     operation_count: int = 0
     checked_file_count: int = 0
     reopened_ifc_count: int = 0
+    independently_recomputed_case_count: int = 0
+    legacy_unverifiable_case_count: int = 0
     errors: list[str] = field(default_factory=list)
+    limitations: list[str] = field(default_factory=list)
     cases: list[dict[str, Any]] = field(default_factory=list)
 
     def to_dict(self) -> dict[str, Any]:
@@ -52,7 +73,12 @@ class ProofValidationResult:
             "operation_count": self.operation_count,
             "checked_file_count": self.checked_file_count,
             "reopened_ifc_count": self.reopened_ifc_count,
+            "independently_recomputed_case_count": (
+                self.independently_recomputed_case_count
+            ),
+            "legacy_unverifiable_case_count": self.legacy_unverifiable_case_count,
             "errors": self.errors,
+            "limitations": self.limitations,
             "cases": self.cases,
         }
 
@@ -80,6 +106,13 @@ def validate_success_case_collection(
                 result.operation_count += summary["operation_count"]
                 result.checked_file_count += summary["checked_file_count"]
                 result.reopened_ifc_count += summary["reopened_ifc_count"]
+                if summary["audit_coverage"] == "strict_recomputed":
+                    result.independently_recomputed_case_count += 1
+                else:
+                    result.legacy_unverifiable_case_count += 1
+                    result.limitations.append(
+                        f"{summary['case_id']}: {summary['independent_reaudit_error']}"
+                    )
             except Exception as error:
                 case_id = str(case.get("case_id", "<unknown>"))
                 result.errors.append(f"{case_id}: {error}")
@@ -155,6 +188,7 @@ def _validate_case(root: Path, case: Mapping[str, Any]) -> dict[str, Any]:
         "published_repair_output": _safe_path(root, str(case["repaired_ifc"])),
     }
     reopened_ifc_count = 0
+    models: dict[str, Any] = {}
     for role, manifest_path in required_role_paths.items():
         artifact = roles.get(role)
         if artifact is None or artifact != manifest_path:
@@ -162,6 +196,7 @@ def _validate_case(root: Path, case: Mapping[str, Any]) -> dict[str, Any]:
         model = ifcopenshell.open(str(artifact))
         if model.schema != "IFC2X3":
             raise ValueError(f"{role} schema is {model.schema}, expected IFC2X3")
+        models[role] = model
         reopened_ifc_count += 1
 
     damaged_hash = _sha256(required_role_paths["repair_input_ifc"])
@@ -204,6 +239,8 @@ def _validate_case(root: Path, case: Mapping[str, Any]) -> dict[str, Any]:
         raise ValueError("missing stage1_repair_intent")
 
     application_path = roles.get("application_result")
+    independent = {"l1_operation_count": 0, "l2_operation_count": 0}
+    independent_reaudit_error: str | None = None
     if application_path is not None:
         application = _read_json(application_path)
         if (
@@ -212,6 +249,17 @@ def _validate_case(root: Path, case: Mapping[str, Any]) -> dict[str, Any]:
             or len(application.get("operations", ())) != operation_count
         ):
             raise ValueError("application_result is not a complete publication")
+        independent = audit_repaired_operations(
+            changeset=changeset,
+            application=application,
+            repaired_model=models["published_repair_output"],
+        )
+    else:
+        independent_reaudit_error = (
+            "legacy Proof does not retain application_result role mappings; "
+            "saved L1/L2 evidence was checked but cannot be independently "
+            "recomputed by the current operation registry"
+        )
     source_manifest_path = roles.get("source_run_manifest")
     if source_manifest_path is not None:
         source_manifest = _read_json(source_manifest_path)
@@ -265,15 +313,376 @@ def _validate_case(root: Path, case: Mapping[str, Any]) -> dict[str, Any]:
         if audit.get("release_decision") != release:
             raise ValueError("three-way audit release decision mismatch")
 
+    independent_triplet_audit_publishable: bool | None = None
+    if expected_operation_types & DOOR_OPERATION_TYPES:
+        triplet = audit_case(case_root, write=False)
+        triplet_release = triplet["release_decision"]
+        independent_triplet_audit_publishable = bool(
+            triplet_release.get("l0_pass") is True
+            and triplet_release.get("l1_pass") is True
+            and triplet_release.get("l2_pass") is True
+            and triplet_release.get("publishable") is True
+            and not triplet_release.get("blocking_findings")
+        )
+        if not independent_triplet_audit_publishable:
+            raise ValueError("independent three-way audit is not publishable")
+
     return {
         "case_id": case_id,
         "status": "passed",
         "operation_count": operation_count,
         "checked_file_count": checked_file_count,
         "reopened_ifc_count": reopened_ifc_count,
+        "operation_types": sorted(expected_operation_types),
+        "audit_coverage": (
+            "strict_recomputed"
+            if independent_reaudit_error is None
+            else "legacy_artifact_only"
+        ),
+        "independent_reaudit_error": independent_reaudit_error,
+        "independent_l1_operation_count": independent["l1_operation_count"],
+        "independent_l2_operation_count": independent["l2_operation_count"],
+        "independent_triplet_audit_publishable": (
+            independent_triplet_audit_publishable
+        ),
         "damaged_sha256": f"sha256:{damaged_hash}",
         "changeset_schema_version": changeset.get("schema_version"),
     }
+
+
+def audit_repaired_operations(
+    *,
+    changeset: Mapping[str, Any],
+    application: Mapping[str, Any],
+    repaired_model: Any,
+) -> dict[str, int]:
+    """Recompute operation L1/L2 from the repaired IFC, not saved verdicts."""
+
+    registry = create_default_registry()
+    application_by_id = {
+        str(item.get("operation_id")): item
+        for item in application.get("operations", ())
+        if isinstance(item, Mapping)
+    }
+    l1_count = 0
+    l2_count = 0
+    for operation in changeset.get("operations", ()):
+        operation_id = str(operation.get("operation_id"))
+        applied = application_by_id.get(operation_id)
+        if applied is None:
+            raise ValueError(f"independent audit missing application: {operation_id}")
+        changes = applied.get("changes")
+        if not isinstance(changes, Mapping):
+            raise ValueError(f"independent audit invalid application: {operation_id}")
+
+        l1 = registry.dispatch(
+            "postcondition_checker",
+            operation,
+            model=repaired_model,
+            application=changes,
+        )
+        if not isinstance(l1, Mapping) or l1.get("valid") is not True:
+            raise ValueError(f"independent L1 failed: {operation_id}")
+        l1_count += 1
+
+        definition = registry.require(str(operation.get("operation_type")))
+        policy = registry.require_evaluation_policy(definition.operation_type)
+        occurrence_role = _occurrence_role(definition)
+        occurrence_id = _application_role_id(changes, occurrence_role)
+        try:
+            occurrence = repaired_model.by_guid(occurrence_id)
+        except RuntimeError as error:
+            raise ValueError(
+                f"independent L2 occurrence missing: {operation_id}"
+            ) from error
+        actual = extract_ifc_semantic_facts(
+            occurrence,
+            policy=policy,
+            source_kind=EvidenceSourceKind.REPAIRED_OUTPUT,
+            source_ref=occurrence_id,
+            provenance=("independent-proof-audit", operation_id),
+        )
+        expected = _independent_expected_facts(
+            registry=registry,
+            operation=operation,
+            changes=changes,
+            actual=actual,
+            occurrence_role=occurrence_role,
+            repaired_model=repaired_model,
+        )
+        checks = registry.evaluate_semantics(
+            definition.operation_type,
+            expected_facts=expected,
+            repaired_facts=actual,
+        )
+        failed = [
+            check
+            for check in checks
+            if check.mandatory and check.status.value != "passed"
+        ]
+        if failed:
+            details = ",".join(
+                f"{item.check_id}:{item.status.value}" for item in failed
+            )
+            raise ValueError(f"independent L2 failed: {operation_id}:{details}")
+        l2_count += 1
+    return {"l1_operation_count": l1_count, "l2_operation_count": l2_count}
+
+
+def _occurrence_role(definition: Any) -> str:
+    expected_scope = f"{definition.evaluation_policy.semantic_role}_occurrence"
+    matches = [
+        role
+        for role, scope in definition.semantic_scope_roles.items()
+        if scope == expected_scope
+    ]
+    if len(matches) != 1:
+        raise ValueError(
+            f"independent audit occurrence role unresolved: {definition.operation_type}"
+        )
+    return str(matches[0])
+
+
+def _application_role_id(changes: Mapping[str, Any], role: str) -> str:
+    matches = [
+        str(item.get("global_id"))
+        for section in ("created", "modified")
+        for item in changes.get(section, ())
+        if isinstance(item, Mapping) and item.get("role") == role
+    ]
+    if len(matches) != 1:
+        raise ValueError(f"independent audit role mapping invalid: {role}")
+    return matches[0]
+
+
+def _independent_expected_facts(
+    *,
+    registry: Any,
+    operation: Mapping[str, Any],
+    changes: Mapping[str, Any],
+    actual: tuple[SemanticFact, ...],
+    occurrence_role: str,
+    repaired_model: Any,
+) -> tuple[SemanticFact, ...]:
+    operation_id = str(operation["operation_id"])
+    facts = list(
+        registry.build_semantic_policy_facts(
+            str(operation["operation_type"]), operation=operation
+        )
+    )
+    actual_by_key = {fact.fact_key: fact for fact in actual}
+
+    def add(
+        fact_key: str,
+        value: Any,
+        *,
+        value_type: str | None = None,
+        unit: str | None = None,
+        inherited: bool = False,
+        scope: str | None = None,
+    ) -> None:
+        if value is None or any(item.fact_key == fact_key for item in facts):
+            return
+        observed = actual_by_key.get(fact_key)
+        facts.append(
+            SemanticFact(
+                fact_key=fact_key,
+                value=value,
+                value_type=(
+                    value_type
+                    if value_type is not None
+                    else None if observed is None else observed.value_type
+                ),
+                unit=(unit if unit is not None else None if observed is None else observed.unit),
+                inherited=inherited,
+                pset_path=(
+                    fact_key.partition(":")[2]
+                    if fact_key.startswith(("pset:", "quantity:"))
+                    else None
+                ),
+                entity_source=f"independent-proof-audit:{operation_id}",
+                source_kind=EvidenceSourceKind.DETERMINISTIC_POLICY,
+                source_ref=f"changeset:/operations/{operation_id}",
+                provenance=("independent-proof-audit", operation_id),
+                occurrence_scope=scope or f"{occurrence_role}_occurrence",
+                canonical_source_kind="deterministic_derived",
+            )
+        )
+
+    for assignment in operation.get("semantic_assignments", ()):
+        if not isinstance(assignment, Mapping):
+            continue
+        add(
+            str(assignment.get("fact_key")),
+            assignment.get("value"),
+            value_type=str(assignment.get("value_type") or "") or None,
+            unit=(
+                None
+                if assignment.get("unit") is None
+                else str(assignment.get("unit"))
+            ),
+            inherited=assignment.get("ownership") == "type_inherited",
+            scope=str(assignment.get("scope") or f"{occurrence_role}_occurrence"),
+        )
+
+    resolved = changes.get("resolved")
+    resolved = resolved if isinstance(resolved, Mapping) else {}
+    target = operation.get("target")
+    target = target if isinstance(target, Mapping) else {}
+    parameters = operation.get("parameters")
+    parameters = parameters if isinstance(parameters, Mapping) else {}
+    host_id = (
+        parameters.get("host_wall_global_id")
+        or target.get("wall_global_id")
+        or _optional_application_role_id(changes, "host_wall")
+    )
+    add("relationship:host", host_id)
+    expected_storey_id = resolved.get("storey_global_id")
+    if expected_storey_id is None and host_id:
+        try:
+            host = repaired_model.by_guid(str(host_id))
+        except RuntimeError:
+            host = None
+        if host is not None:
+            storey = ifcopenshell.util.element.get_container(
+                host, ifc_class="IfcBuildingStorey"
+            )
+            expected_storey_id = (
+                None if storey is None else str(storey.GlobalId)
+            )
+    add("relationship:storey", expected_storey_id)
+    add(
+        "relationship:type",
+        resolved.get(f"{occurrence_role}_type_global_id")
+        or _optional_application_role_id(changes, f"{occurrence_role}_type")
+        or _optional_application_role_id(
+            changes, f"generated_{occurrence_role}_type"
+        )
+        or (
+            None
+            if actual_by_key.get("relationship:type") is None
+            else actual_by_key["relationship:type"].value
+        ),
+    )
+    unique = {
+        (fact.fact_key, repr(fact.value), fact.occurrence_scope): fact
+        for fact in facts
+    }
+    return tuple(unique[key] for key in sorted(unique))
+
+
+def _optional_application_role_id(
+    changes: Mapping[str, Any], role: str
+) -> str | None:
+    matches = [
+        str(item.get("global_id"))
+        for section in ("created", "modified")
+        for item in changes.get(section, ())
+        if isinstance(item, Mapping) and item.get("role") == role
+    ]
+    return matches[0] if len(matches) == 1 else None
+
+
+def _infer_application_from_ifc(
+    *,
+    changeset: Mapping[str, Any],
+    damaged_model: Any,
+    repaired_model: Any,
+) -> dict[str, Any]:
+    """Recover legacy Window application roles from the actual IFC graph."""
+
+    damaged_window_ids = {
+        str(item.GlobalId) for item in damaged_model.by_type("IfcWindow")
+    }
+    available = [
+        item
+        for item in repaired_model.by_type("IfcWindow")
+        if str(item.GlobalId) not in damaged_window_ids
+    ]
+    used: set[str] = set()
+    operations = []
+    for operation in changeset.get("operations", ()):
+        operation_id = str(operation.get("operation_id"))
+        if operation.get("operation_type") != "add_window_with_opening_to_wall":
+            raise ValueError(
+                f"legacy application inference unsupported: {operation_id}"
+            )
+        target = operation.get("target") or {}
+        parameters = operation.get("parameters") or {}
+        opening_parameters = parameters.get("opening") or {}
+        position_parameters = parameters.get("position") or {}
+        wall_id = str(target.get("wall_global_id"))
+        expected = {
+            "width": float(opening_parameters["width_mm"]),
+            "height": float(opening_parameters["height_mm"]),
+            "sill": float(opening_parameters["sill_height_mm"]),
+            "center": float(position_parameters["center_offset_mm"]),
+        }
+        matches = []
+        for window in available:
+            window_id = str(window.GlobalId)
+            if window_id in used or len(window.FillsVoids) != 1:
+                continue
+            opening = window.FillsVoids[0].RelatingOpeningElement
+            if len(opening.VoidsElements) != 1:
+                continue
+            wall = opening.VoidsElements[0].RelatingBuildingElement
+            if str(wall.GlobalId) != wall_id:
+                continue
+            dimensions = opening_dimensions_mm(opening)
+            position = opening_position_in_wall_mm(opening, wall)
+            actual = {
+                "width": float(dimensions["width"]),
+                "height": float(dimensions["height"]),
+                "sill": float(position["sill_height"]),
+                "center": float(position["center_offset"]),
+            }
+            if all(abs(actual[key] - expected[key]) <= 1.0 for key in expected):
+                matches.append((window, opening, wall))
+        if len(matches) != 1:
+            raise ValueError(
+                f"legacy application inference ambiguous: {operation_id}:{len(matches)}"
+            )
+        window, opening, wall = matches[0]
+        used.add(str(window.GlobalId))
+        fills = window.FillsVoids[0]
+        voids = opening.VoidsElements[0]
+        window_type = ifcopenshell.util.element.get_type(window)
+        storey = ifcopenshell.util.element.get_container(
+            window, ifc_class="IfcBuildingStorey"
+        )
+        created = [
+            {"role": "opening", "global_id": str(opening.GlobalId)},
+            {"role": "window", "global_id": str(window.GlobalId)},
+            {"role": "voids_relationship", "global_id": str(voids.GlobalId)},
+            {"role": "fills_relationship", "global_id": str(fills.GlobalId)},
+        ]
+        operations.append(
+            {
+                "operation_id": operation_id,
+                "operation_type": operation["operation_type"],
+                "changes": {
+                    "created": created,
+                    "modified": [
+                        {"role": "host_wall", "global_id": str(wall.GlobalId)}
+                    ],
+                    "removed": [],
+                    "resolved": {
+                        "window_type_global_id": (
+                            None
+                            if window_type is None
+                            else str(window_type.GlobalId)
+                        ),
+                        "storey_global_id": (
+                            None if storey is None else str(storey.GlobalId)
+                        ),
+                    },
+                },
+            }
+        )
+    if len(used) != len(operations):
+        raise ValueError("legacy application inference did not bind all operations")
+    return {"valid": True, "published": True, "operations": operations}
 
 
 def _check_operations(

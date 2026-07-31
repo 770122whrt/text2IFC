@@ -14,7 +14,7 @@
   "properties": {
     "schema_version": {"const": "text2ifc/ifc-repair-prompt-profile/0.1"},
     "profile_id": {"type": "string", "pattern": "^[a-z][a-z0-9._-]*$", "maxLength": 128},
-    "profile_version": {"const": "0.1"},
+    "profile_version": {"enum": ["0.1", "0.2"]},
     "component_family": {"type": "string", "pattern": "^[a-z][a-z0-9_-]*$", "maxLength": 64},
     "action": {"type": "string", "pattern": "^[a-z][a-z0-9_-]*$", "maxLength": 64},
     "operation_type": {"type": "string", "minLength": 1, "maxLength": 128},

@@ -39,3 +39,96 @@ def test_live_attempt_counter_distinguishes_stage1_and_stage2(
     (stage2 / "provider-metadata.json").write_text("{}", encoding="utf-8")
 
     assert module._attempts(tmp_path) == {"stage1": 2, "stage2": 1}
+
+
+def test_unsupported_contract_requires_exact_terminal_capability_rejection() -> None:
+    module = _module()
+    attempts = {"stage1": 1, "stage2": 0}
+
+    assert module._contract_pass(
+        final={
+            "status": "unsupported",
+            "reason_code": "DOOR_OPERATION_TYPE_UNSUPPORTED",
+            "complete_repair_success": False,
+            "successful_artifact_publishable": False,
+        },
+        attempts=attempts,
+        expectation={
+            "status": "unsupported",
+            "reason_code": "DOOR_OPERATION_TYPE_UNSUPPORTED",
+            "publish": False,
+            "stage2_attempts": 0,
+        },
+        feedback_expected=False,
+        feedback_applied=False,
+        strict_verification={"status": "not_applicable"},
+    ) is True
+
+    for wrong in (
+        {
+            "status": "provider_failed",
+            "reason_code": "REPAIR_INTENT_RETRY_EXHAUSTED",
+            "complete_repair_success": False,
+            "successful_artifact_publishable": False,
+        },
+        {
+            "status": "unsupported",
+            "reason_code": "DOOR_OPERATION_UNSUPPORTED",
+            "complete_repair_success": False,
+            "successful_artifact_publishable": False,
+        },
+    ):
+        assert module._contract_pass(
+            final=wrong,
+            attempts=attempts,
+            expectation={
+                "status": "unsupported",
+                "reason_code": "DOOR_OPERATION_TYPE_UNSUPPORTED",
+                "publish": False,
+                "stage2_attempts": 0,
+            },
+            feedback_expected=False,
+            feedback_applied=False,
+            strict_verification={"status": "not_applicable"},
+        ) is False
+
+
+def test_publish_contract_requires_independent_reopen_verification() -> None:
+    module = _module()
+    final = {
+        "status": "succeeded",
+        "complete_repair_success": True,
+        "successful_artifact_publishable": True,
+    }
+    expectation = {
+        "status": "succeeded",
+        "publish": True,
+        "stage2_attempts": 1,
+    }
+
+    assert module._contract_pass(
+        final=final,
+        attempts={"stage1": 1, "stage2": 1},
+        expectation=expectation,
+        feedback_expected=False,
+        feedback_applied=False,
+        strict_verification={
+            "status": "passed",
+            "l0_pass": True,
+            "l1_pass": True,
+            "l2_pass": True,
+        },
+    ) is True
+    assert module._contract_pass(
+        final=final,
+        attempts={"stage1": 1, "stage2": 1},
+        expectation=expectation,
+        feedback_expected=False,
+        feedback_applied=False,
+        strict_verification={
+            "status": "failed",
+            "l0_pass": True,
+            "l1_pass": False,
+            "l2_pass": True,
+        },
+    ) is False

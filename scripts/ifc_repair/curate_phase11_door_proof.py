@@ -30,8 +30,8 @@ DEFAULT_COLLECTION = (
 PROFILE_BY_OPERATION = {
     "add_window_with_opening_to_wall": "window.add-with-opening",
     "add_opening_to_wall": "opening.add-to-wall",
-    "add_door_with_opening_to_wall": "door.add-with-opening",
-    "fill_existing_opening_with_door": "door.fill-existing-opening",
+    "add_door_with_opening_to_wall": "door.add-with-opening.v0.2",
+    "fill_existing_opening_with_door": "door.fill-existing-opening.v0.2",
 }
 FAMILY_BY_OPERATION = {
     "add_window_with_opening_to_wall": "window",

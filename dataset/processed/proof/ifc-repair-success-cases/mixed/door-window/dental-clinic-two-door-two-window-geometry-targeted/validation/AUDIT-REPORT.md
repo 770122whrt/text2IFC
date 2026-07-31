@@ -27,7 +27,7 @@
 - L1 全部通过：`True`
 - L2 全部通过：`True`
 - Door/Window/Opening 数量变化：`2` / `2` / `4`
-- 未声明新增 Root：`2`
+- 未声明新增 Root：`0`
 - Ground Truth 泄漏检查：`True`
 
 ### L0 检查
@@ -97,9 +97,9 @@ Door production operation 还逐项验证恰好一条 fill、Opening 恰好 void
 ## 9. 非目标保全
 
 - damaged→repaired 新增 Root：`32`
-- 声明新增 Root：`30`
+- 声明新增 Root：`32`
 - damaged→repaired 删除 Root：`0`
-- 未声明新增 Root：`2`
+- 未声明新增 Root：`0`
 - 共享 Type 不可变性与其他 Root/关系保全由 production full-model comparator 和 operation scope gate 负责。
 
 ## 10. 阻塞项与警告
@@ -124,17 +124,17 @@ Door production operation 还逐项验证恰好一条 fill、Opening 恰好 void
 - `repaired_ifc_sha256`：`sha256:7c5db7ccaaa57d1f44aa7ba664b3fe2487ace816ab5b36f4290f197f81c8be29`
 - `request_sha256`：`sha256:8371932fd1c49a08424379bacbfeed92367d3dca28d46b7493c061400b2a6549`
 - `changeset_sha256`：`sha256:bdfc1e66ef9a2e269cdb221466f42eac6286a10258bbea62084790cbaa363b79`
-- `application_sha256`：`sha256:63409f21dc7ff848d9490f292264f3cf9cdc53c95225bf595b7bb49fb9e25e98`
-- `production_evaluation_sha256`：`sha256:124bf3d423a6edafe695cc5870eb5d89e9018adfc50d3b00726f197d35f8f545`
+- `application_sha256`：`sha256:e36390b692aaff47e566c7a612585428d63d5e4a025362c87cdc8ce805d86972`
+- `production_evaluation_sha256`：`sha256:42f6502cf0e914945e8010f245c306796ceabc03dbe0afd0c46cd93d575ecbf3`
 
 ### 输入产物
 
-- `original`：`E:/code for project/bimnet/dataset/processed/ifc-repair/phase11-door-audit-fix-final-2/dental-clinic-two-door-two-window-geometry-targeted/original.ifc`
-- `damaged`：`E:/code for project/bimnet/dataset/processed/ifc-repair/phase11-door-audit-fix-final-2/dental-clinic-two-door-two-window-geometry-targeted/damaged.ifc`
-- `repaired`：`E:/code for project/bimnet/dataset/processed/ifc-repair/phase11-door-audit-fix-final-2/dental-clinic-two-door-two-window-geometry-targeted/repaired.ifc`
-- `request`：`E:/code for project/bimnet/dataset/processed/ifc-repair/phase11-door-audit-fix-final-2/dental-clinic-two-door-two-window-geometry-targeted/request.txt`
-- `changeset`：`E:/code for project/bimnet/dataset/processed/ifc-repair/phase11-door-audit-fix-final-2/dental-clinic-two-door-two-window-geometry-targeted/changeset.json`
-- `application`：`E:/code for project/bimnet/dataset/processed/ifc-repair/phase11-door-audit-fix-final-2/dental-clinic-two-door-two-window-geometry-targeted/application.json`
-- `evaluation`：`E:/code for project/bimnet/dataset/processed/ifc-repair/phase11-door-audit-fix-final-2/dental-clinic-two-door-two-window-geometry-targeted/evaluation.json`
-- `manifest`：`E:/code for project/bimnet/dataset/processed/ifc-repair/phase11-door-audit-fix-final-2/dental-clinic-two-door-two-window-geometry-targeted/manifest.json`
-- `production_boundary`：`E:/code for project/bimnet/dataset/processed/ifc-repair/phase11-door-audit-fix-final-2/dental-clinic-two-door-two-window-geometry-targeted/production-boundary.json`
+- `original`：`E:/code for project/bimnet/dataset/processed/ifc-repair/phase11-proof-reaudit-fix-20260731-r2/dental-clinic-two-door-two-window-geometry-targeted/original.ifc`
+- `damaged`：`E:/code for project/bimnet/dataset/processed/ifc-repair/phase11-proof-reaudit-fix-20260731-r2/dental-clinic-two-door-two-window-geometry-targeted/damaged.ifc`
+- `repaired`：`E:/code for project/bimnet/dataset/processed/ifc-repair/phase11-proof-reaudit-fix-20260731-r2/dental-clinic-two-door-two-window-geometry-targeted/repaired.ifc`
+- `request`：`E:/code for project/bimnet/dataset/processed/ifc-repair/phase11-proof-reaudit-fix-20260731-r2/dental-clinic-two-door-two-window-geometry-targeted/request.txt`
+- `changeset`：`E:/code for project/bimnet/dataset/processed/ifc-repair/phase11-proof-reaudit-fix-20260731-r2/dental-clinic-two-door-two-window-geometry-targeted/changeset.json`
+- `application`：`E:/code for project/bimnet/dataset/processed/ifc-repair/phase11-proof-reaudit-fix-20260731-r2/dental-clinic-two-door-two-window-geometry-targeted/application.json`
+- `evaluation`：`E:/code for project/bimnet/dataset/processed/ifc-repair/phase11-proof-reaudit-fix-20260731-r2/dental-clinic-two-door-two-window-geometry-targeted/evaluation.json`
+- `manifest`：`E:/code for project/bimnet/dataset/processed/ifc-repair/phase11-proof-reaudit-fix-20260731-r2/dental-clinic-two-door-two-window-geometry-targeted/manifest.json`
+- `production_boundary`：`E:/code for project/bimnet/dataset/processed/ifc-repair/phase11-proof-reaudit-fix-20260731-r2/dental-clinic-two-door-two-window-geometry-targeted/production-boundary.json`

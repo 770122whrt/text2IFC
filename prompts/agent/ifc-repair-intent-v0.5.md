@@ -12,9 +12,11 @@ Do not emit a separate classification response or invent a profile.
 
 Record claims; do not resolve them. Never inspect private Ground Truth,
 benchmark Gold, mutation mappings, raw IFC STEP, or hidden project facts.
-Never invent a missing value. If a required property, quantity, reuse
-reference, or geometry parameter is absent, emit the schema's nullable/partial
-form where allowed so deterministic code can request clarification.
+Never invent a missing value. If a property, quantity, reuse reference, or
+geometry parameter is absent, omit that optional field or partial object; use
+`null` only where the exact schema explicitly permits it. Never use `null` as
+a placeholder for a number, enum, reference, or nested parameter. Deterministic
+code will request clarification for omitted required intent slots.
 
 Property knowledge retrieval may explain or map a user phrase, but it never
 supplies a property value. Use `exact_property` only when the user states the
@@ -32,10 +34,19 @@ Operation-local property and quantity intents are overrides. Do not mutate a
 shared Type unless the request explicitly authorizes Type mutation; this
 contract otherwise describes occurrence semantics.
 
-Use only operation types, target IFC classes, and parameter shapes in
-SUPPORTED_OPERATIONS. Preserve all stated GUID, name, storey, space, grid, and
-direction selectors. Partial geometry parameters are clarification input.
-Output JSON only.
+Use only operation types, target IFC classes, and exact
+`intent_parameter_schema` shapes in SUPPORTED_OPERATIONS. These are Stage 1
+user-intent shapes, not the final executable ChangeSet shapes. Never place a
+field under a different object and never emit a synonymous or explanatory key.
+Fields listed in `program_derived_slots` are resolved from the damaged IFC by
+deterministic code: do not copy, estimate, or invent them in `parameters`.
+Preserve all stated GUID, name, storey, space, grid, and direction selectors.
+Partial user-authored geometry parameters are clarification input. An operation
+type listed in `unsupported_capabilities` must still be preserved using its
+exact canonical enum so deterministic code can reject the capability; do not
+simplify it to a supported Door. For an exact unsupported capability, emit the
+canonical capability field and omit all unstated geometry objects entirely;
+capability rejection intentionally runs before completeness. Output JSON only.
 
 Before returning, verify every required field at all three levels:
 

@@ -9,13 +9,20 @@ import os
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any
+from typing import Any, Mapping
+
+import ifcopenshell
 
 
 ROOT = Path(__file__).resolve().parents[2]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 if str(ROOT / "src") not in sys.path:
     sys.path.insert(0, str(ROOT / "src"))
 
+from scripts.ifc_repair.validate_success_cases import (  # noqa: E402
+    audit_repaired_operations,
+)
 from text2ifc_agent.openai_compat import load_openai_compatible_config  # noqa: E402
 from text2ifc_ifc_repair.api import RepairAPI  # noqa: E402
 from text2ifc_ifc_repair.mutation import remove_door  # noqa: E402
@@ -32,18 +39,22 @@ TYPE_ID = "2cXV28XOjE6f6irhu0COgZ"
 TYPE_NAME = "M_Single-Flush:Inside Door"
 DEFAULT_OUTPUT = ROOT / "dataset/processed/ifc-repair/phase11-live-uat"
 TOKEN_GUARD = 65_536
-DETAIL = (
-    "门宽 915 mm、高 2134 mm，洞口宽 915 mm、高 2134 mm，"
-    "门槛高度 0 mm，洞口中心距墙局部起点 1657.5 mm，"
-    "门的 OperationType 为 SINGLE_SWING_RIGHT。"
+COMPLETE_REQUEST = (
+    f"在已有洞口 {OPENING_ID} 中安装一扇门。明确复用现有 DoorStyle “{TYPE_NAME}”"
+    f"（GlobalId {TYPE_ID}）。保留 damaged IFC 中可确定的洞口、墙和楼层关系，"
+    "不要猜测未提供的材料或五金。"
 )
-BASE = (
-    f"在已有洞口 {OPENING_ID} 中安装一扇门；该洞口位于墙 {WALL_ID}。"
-    f"明确复用现有 Door Type “{TYPE_NAME}”（GlobalId {TYPE_ID}），"
-    "保留当前 IFC 中可确定的洞口、墙和楼层关系，不猜测未提供的材料或五金。"
+INCOMPLETE_REQUEST = (
+    f"在已有洞口 {OPENING_ID} 中安装一扇门。保留 damaged IFC 中可确定的"
+    "洞口、墙和楼层关系；门的开启方式和 DoorStyle 尚未说明。"
 )
-
-
+CLARIFICATION_DETAIL = (
+    f"明确复用现有 DoorStyle “{TYPE_NAME}”（GlobalId {TYPE_ID}）。"
+)
+UNSUPPORTED_REQUEST = (
+    f"在墙 {WALL_ID} 上新开洞并生成一扇 OperationType 为 REVOLVING 的旋转门；"
+    "要求复杂门框、五金、上亮和两片不同开启轨迹。"
+)
 def _environment(path: Path) -> dict[str, str]:
     values = dict(os.environ)
     if path.is_file():
@@ -96,6 +107,221 @@ def _summary(result: Any) -> dict[str, Any]:
     }
 
 
+def _contract_pass(
+    *,
+    final: dict[str, Any],
+    attempts: dict[str, int],
+    expectation: dict[str, Any],
+    feedback_expected: bool,
+    feedback_applied: bool,
+    strict_verification: Mapping[str, Any],
+) -> bool:
+    published = bool(
+        final.get("complete_repair_success")
+        and final.get("successful_artifact_publishable")
+    )
+    checks = [
+        str(final.get("status")) == str(expectation["status"]),
+        published is bool(expectation["publish"]),
+        attempts.get("stage2") == expectation.get("stage2_attempts"),
+        (not feedback_expected or feedback_applied),
+    ]
+    if expectation["publish"]:
+        checks.extend(
+            (
+                strict_verification.get("status") == "passed",
+                strict_verification.get("l0_pass") is True,
+                strict_verification.get("l1_pass") is True,
+                strict_verification.get("l2_pass") is True,
+            )
+        )
+    else:
+        checks.append(strict_verification.get("status") == "not_applicable")
+    if "reason_code" in expectation:
+        checks.append(final.get("reason_code") == expectation["reason_code"])
+    return all(checks)
+
+
+def _strict_reopen_verification(
+    runtime: Path,
+    final: Mapping[str, Any],
+) -> dict[str, Any]:
+    """Reopen a published IFC and recompute L0/L1/L2 from run artifacts."""
+
+    if not final.get("successful_artifact_publishable"):
+        return {
+            "status": "not_applicable",
+            "l0_pass": None,
+            "l1_pass": None,
+            "l2_pass": None,
+        }
+    try:
+        run_id = str(final["run_id"])
+        run_root = (runtime / "runs" / run_id).resolve()
+        artifacts = final.get("artifacts")
+        if not isinstance(artifacts, Mapping):
+            raise ValueError("missing result artifacts")
+        required = ("manifest", "evaluation", "successful_ifc")
+        missing = [name for name in required if not artifacts.get(name)]
+        if missing:
+            raise ValueError(f"missing published artifacts: {','.join(missing)}")
+
+        manifest_path = _run_artifact_path(run_root, str(artifacts["manifest"]))
+        evaluation_path = _run_artifact_path(
+            run_root, str(artifacts["evaluation"])
+        )
+        repaired_path = _run_artifact_path(
+            run_root, str(artifacts["successful_ifc"])
+        )
+        manifest = _read_json(manifest_path)
+        _verify_published_manifest(run_root, manifest)
+        evaluation = _read_json(evaluation_path)
+        changeset_path = run_root / "changeset" / "bound-changeset.json"
+        if not changeset_path.is_file():
+            changeset_path = run_root / "changeset.json"
+        changeset = _read_json(changeset_path)
+        evidence_path = manifest_path.parent / "terminal" / "evidence.json"
+        evidence = _read_json(evidence_path).get("evidence")
+        if not isinstance(evidence, Mapping):
+            raise ValueError("terminal evidence payload is missing")
+        application = evidence.get("application")
+        if not isinstance(application, Mapping):
+            raise ValueError("terminal application evidence is missing")
+
+        repaired = ifcopenshell.open(str(repaired_path))
+        operations = changeset.get("operations")
+        if not isinstance(operations, list) or not operations:
+            raise ValueError("bound ChangeSet operations are missing")
+        _verify_l0(
+            run_root=run_root,
+            changeset=changeset,
+            application=application,
+            evaluation=evaluation,
+            repaired_schema=str(repaired.schema),
+            operation_count=len(operations),
+        )
+        recomputed = audit_repaired_operations(
+            changeset=changeset,
+            application=application,
+            repaired_model=repaired,
+        )
+        l1_pass = recomputed["l1_operation_count"] == len(operations)
+        l2_pass = recomputed["l2_operation_count"] == len(operations)
+        if not l1_pass or not l2_pass:
+            raise ValueError("independent operation count mismatch")
+        return {
+            "status": "passed",
+            "l0_pass": True,
+            "l1_pass": l1_pass,
+            "l2_pass": l2_pass,
+            "operation_count": len(operations),
+            "reopened_schema": str(repaired.schema),
+            "successful_ifc_sha256": "sha256:" + _sha256(repaired_path),
+            "changeset": changeset_path.relative_to(run_root).as_posix(),
+            "application_evidence": evidence_path.relative_to(run_root).as_posix(),
+            "evaluation": evaluation_path.relative_to(run_root).as_posix(),
+        }
+    except Exception as error:
+        return {
+            "status": "failed",
+            "l0_pass": False,
+            "l1_pass": False,
+            "l2_pass": False,
+            "reason": f"{type(error).__name__}: {error}"[:512],
+        }
+
+
+def _verify_l0(
+    *,
+    run_root: Path,
+    changeset: Mapping[str, Any],
+    application: Mapping[str, Any],
+    evaluation: Mapping[str, Any],
+    repaired_schema: str,
+    operation_count: int,
+) -> None:
+    state = _read_json(run_root / "state.json")
+    source = state.get("source")
+    if not isinstance(source, Mapping):
+        raise ValueError("run state source binding is missing")
+    if repaired_schema != "IFC2X3":
+        raise ValueError(f"repaired schema is {repaired_schema}")
+    if changeset.get("binding_status") != "bound":
+        raise ValueError("ChangeSet is not bound")
+    if changeset.get("base_model_fingerprint") != source.get("sha256"):
+        raise ValueError("ChangeSet base fingerprint does not match run source")
+    if application.get("valid") is not True or application.get("published") is not True:
+        raise ValueError("application evidence is not a valid publication")
+    applied = application.get("operations")
+    if not isinstance(applied, list) or len(applied) != operation_count:
+        raise ValueError("application operation count mismatch")
+    if evaluation.get("status") != "passed":
+        raise ValueError("public evaluation status is not passed")
+    if evaluation.get("complete_repair_success") is not True:
+        raise ValueError("public evaluation complete flag is false")
+    if evaluation.get("successful_artifact_publishable") is not True:
+        raise ValueError("public evaluation publishable flag is false")
+    for gate in ("application", "preservation"):
+        value = evaluation.get(gate)
+        if not isinstance(value, Mapping) or value.get("status") != "passed":
+            raise ValueError(f"public evaluation {gate} gate is not passed")
+    evaluated = evaluation.get("operations")
+    if not isinstance(evaluated, list) or len(evaluated) != operation_count:
+        raise ValueError("public evaluation operation count mismatch")
+    for operation in evaluated:
+        levels = {
+            str(item.get("level")): str(item.get("status"))
+            for item in operation.get("levels", ())
+            if isinstance(item, Mapping)
+        }
+        if levels.get("L1") != "passed" or levels.get("L2") != "passed":
+            raise ValueError(
+                f"saved evaluation failed for {operation.get('operation_id')}"
+            )
+
+
+def _run_artifact_path(run_root: Path, relative: str) -> Path:
+    path = (run_root / relative).resolve()
+    try:
+        path.relative_to(run_root)
+    except ValueError as error:
+        raise ValueError(f"artifact escapes run root: {relative}") from error
+    if not path.is_file():
+        raise FileNotFoundError(path)
+    return path
+
+
+def _verify_published_manifest(
+    run_root: Path, manifest: Mapping[str, Any]
+) -> None:
+    entries = manifest.get("artifacts")
+    if not isinstance(entries, list) or not entries:
+        raise ValueError("published manifest is empty")
+    for entry in entries:
+        if not isinstance(entry, Mapping):
+            raise ValueError("published manifest entry is invalid")
+        path = _run_artifact_path(run_root, str(entry.get("path")))
+        if path.stat().st_size != int(entry.get("size_bytes", -1)):
+            raise ValueError(f"published artifact size mismatch: {path.name}")
+        if _sha256(path) != str(entry.get("sha256")):
+            raise ValueError(f"published artifact hash mismatch: {path.name}")
+
+
+def _read_json(path: Path) -> dict[str, Any]:
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(payload, dict):
+        raise ValueError(f"JSON root is not an object: {path}")
+    return payload
+
+
+def _sha256(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as stream:
+        for chunk in iter(lambda: stream.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
 def _artifact_hashes(root: Path) -> dict[str, str]:
     result = {}
     for path in sorted(root.rglob("*.json")):
@@ -114,8 +340,7 @@ def _run_case(
     case_id: str,
     request: str,
     feedback: str | None,
-    expect_publish: bool,
-    expect_zero_stage2: bool = False,
+    expectation: dict[str, Any],
 ) -> dict[str, Any]:
     case_dir = root / case_id
     case_dir.mkdir(parents=True)
@@ -152,14 +377,27 @@ def _run_case(
             )
             feedback_applied = True
         attempts = _attempts(runtime)
-        published = bool(
-            final.complete_repair_success
-            and final.successful_artifact_publishable
+        final_summary = _summary(final)
+        strict_verification = _strict_reopen_verification(
+            runtime, final_summary
         )
-        contract_pass = (
-            published == expect_publish
-            and (not expect_zero_stage2 or attempts["stage2"] == 0)
-            and (feedback is None or feedback_applied)
+        (case_dir / "strict-reopen-verification.json").write_text(
+            json.dumps(
+                strict_verification,
+                ensure_ascii=False,
+                indent=2,
+                sort_keys=True,
+            )
+            + "\n",
+            encoding="utf-8",
+        )
+        contract_pass = _contract_pass(
+            final=final_summary,
+            attempts=attempts,
+            expectation=expectation,
+            feedback_expected=feedback is not None,
+            feedback_applied=feedback_applied,
+            strict_verification=strict_verification,
         )
         payload = {
             "case_id": case_id,
@@ -175,8 +413,9 @@ def _run_case(
             "initial": _summary(initial),
             "clarification": clarification_payload,
             "feedback_applied": feedback_applied,
-            "final": _summary(final),
+            "final": final_summary,
             "provider_attempts": attempts,
+            "strict_reopen_verification": strict_verification,
             "synthetic_fallback_used": False,
             "contract_pass": contract_pass,
             "artifact_hashes": _artifact_hashes(runtime),
@@ -225,29 +464,38 @@ def main(argv: list[str] | None = None) -> int:
             run_dir,
             environment,
             case_id="complete-door",
-            request=BASE + DETAIL,
+            request=COMPLETE_REQUEST,
             feedback=None,
-            expect_publish=True,
+            expectation={
+                "status": "succeeded",
+                "publish": True,
+                "stage2_attempts": 1,
+            },
         ),
         _run_case(
             run_dir,
             environment,
             case_id="incomplete-then-feedback",
-            request=BASE,
-            feedback=DETAIL,
-            expect_publish=True,
+            request=INCOMPLETE_REQUEST,
+            feedback=CLARIFICATION_DETAIL,
+            expectation={
+                "status": "succeeded",
+                "publish": True,
+                "stage2_attempts": 1,
+            },
         ),
         _run_case(
             run_dir,
             environment,
             case_id="unsupported-complex-door",
-            request=(
-                f"在墙 {WALL_ID} 新开洞并生成一扇双扇旋转门，"
-                "要求复杂门框、五金、上亮和两扇不同开启轨迹。"
-            ),
+            request=UNSUPPORTED_REQUEST,
             feedback=None,
-            expect_publish=False,
-            expect_zero_stage2=True,
+            expectation={
+                "status": "unsupported",
+                "reason_code": "DOOR_OPERATION_TYPE_UNSUPPORTED",
+                "publish": False,
+                "stage2_attempts": 0,
+            },
         ),
     ]
     passed = all(item["contract_pass"] for item in cases)

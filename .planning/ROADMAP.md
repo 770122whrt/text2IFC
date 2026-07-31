@@ -409,18 +409,19 @@ seconds.
 
 ### Phase 11: Wall Opening and Door Operations
 
-**Status:** In progress — all five plans are implemented for the offline
-deterministic path. The 2026-07-29 correction rejects relationship-only false
+**Status:** Complete — 2026-07-31. All five plans pass deterministic and real
+Provider acceptance. The 2026-07-29 correction rejects relationship-only false
 positives: Door geometry must overlap its Opening, use the contextual
 Opening-elevation Storey and satisfy exact fill/void/type topology. The
-2026-07-30 authority rerun additionally separates production into a process
-whose only inputs are damaged IFC plus a geometry-only public request bundle.
-One two-Window/two-Door case and one five-Door retained-Opening case pass
-strict three-way L0/L1/L2 with no private Ground Truth available during repair;
-the five Doors each have projected Opening overlap 1.0 and create no second
-Opening. Public targeting resolves before internal GUID binding. Real DeepSeek
-UAT was not executed because the external Codex execution quota rejected the
-network command before Stage 1; actual Stage 1/2 call counts are 0.
+damaged-only authority rerun proves that private Ground Truth is unavailable
+during repair. Real DeepSeek run `uat-20260731T224900289758Z` used no synthetic
+fallback: the complete case used Stage 1/2 = 1/1, the clarification/resume case
+used total Stage 1/2 = 2/1, and unsupported complex generation stopped at
+Stage 1/2 = 1/0 with exact `DOOR_OPERATION_TYPE_UNSUPPORTED`. Both published
+IFC files independently reopen as IFC2X3 and pass strict L0/L1/L2. The checked-
+in Proof collection passes as 16 cases, 45 operations, 247 files and 48 IFC
+reopens; 11 cases are independently recomputed and five older Window cases are
+explicitly identified as legacy artifact-only evidence.
 
 **Goal:** Extend the Registry with opening-only, Door+Opening and
 Door-into-existing-Opening operations without copying the Window pipeline,

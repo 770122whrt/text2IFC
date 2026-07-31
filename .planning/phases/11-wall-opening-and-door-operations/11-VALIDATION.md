@@ -1,7 +1,7 @@
 # Phase 11 Validation Strategy
 
 **Date:** 2026-07-28
-**Status:** Ready for execution
+**Status:** Complete — deterministic, real DeepSeek and independent Proof gates passed on 2026-07-31
 **Requirements:** OPS-01, OPS-02
 **Policy:** Offline deterministic closure first; real DeepSeek only after all
 offline blocking gates pass.
@@ -489,6 +489,30 @@ Phase 11 may be marked complete only when:
 - unsupported complex generation is rejected before Stage 2;
 - full test, compile and diff checks pass from a clean worktree;
 - Phase 11 changes are committed in a scoped Git checkpoint.
+
+### 12.1 Executed closure evidence
+
+| Gate | Result |
+|---|---|
+| Real Provider | PASS — `deepseek-openai-compatible` / `deepseek-v4-flash`; `synthetic_fallback_used=false` |
+| Complete Door | PASS — Stage 1/2 = 1/1; published IFC reopened as IFC2X3; strict L0/L1/L2 |
+| Clarification/resume | PASS — total Stage 1/2 = 2/1; one public `missing_required_parameter` clarification; strict L0/L1/L2 |
+| Unsupported capability | PASS — Stage 1/2 = 1/0; exact `DOOR_OPERATION_TYPE_UNSUPPORTED` |
+| Accepted live run | `dataset/processed/proof/phase11-live-uat/uat-20260731T224900289758Z/` |
+| Curated live success Proof | Two `provider_evidence_mode=live` surviving-Opening Door cases |
+| Collection verifier | PASS — 16 cases, 45 operations, 247 files, 48 IFC2X3 reopens |
+| Independent audit coverage | 11 cases strictly recomputed; 5 historical Window cases explicitly `legacy_artifact_only` |
+| Changed-surface regression | PASS — 78 tests |
+| Proof collection tests | PASS — 5 tests |
+| Complete IFC repair regression | PASS — 688 passed, 1 expected skip in 1099.76 seconds |
+| Repository-wide attempt | 1599 tests collected; no failure before the 1204-second command timeout. This is recorded as timeout, not as a full-suite pass. |
+
+The accepted live run followed three earlier rejected runs. Those failures were
+used to correct exact prompt/schema guidance and two deterministic evidence
+boundaries. No compatibility aliases were added for
+`center_offset_from_wall_start_mm`, relocated `opening.center_offset_mm`, or
+`door.threshold_height_mm`; the active Door v0.2 profiles instead require the
+frozen canonical paths and omit program-derived fields from Stage 1.
 
 ## 13. Pre-execution plan review
 

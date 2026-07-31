@@ -51,6 +51,8 @@ class OperationDefinition:
         default_factory=dict
     )
     target_schema: Mapping[str, Any] | None = None
+    intent_parameter_schema: Mapping[str, Any] | None = None
+    intent_capability_checker: OperationCallable | None = None
     precondition_names: tuple[str, ...] = ()
     postcondition_names: tuple[str, ...] = ()
     evaluation_policy: OperationEvaluationPolicy | None = None
@@ -89,6 +91,14 @@ class OperationDefinition:
         Draft202012Validator.check_schema(dict(self.parameter_schema))
         if self.target_schema is not None:
             Draft202012Validator.check_schema(dict(self.target_schema))
+        if self.intent_parameter_schema is not None:
+            Draft202012Validator.check_schema(dict(self.intent_parameter_schema))
+        if self.intent_capability_checker is not None and not callable(
+            self.intent_capability_checker
+        ):
+            raise OperationRegistryError(
+                "INVALID_INTENT_CAPABILITY_CHECKER", self.operation_type
+            )
         for capability_name in CAPABILITY_NAMES:
             if not callable(getattr(self, capability_name)):
                 raise OperationRegistryError(
@@ -269,7 +279,7 @@ class OperationRegistry:
         definition = self.require(str(operation.get("operation_type", "")))
         raw = operation.get("parameters")
         value = copy.deepcopy(raw if isinstance(raw, Mapping) else {})
-        _inject_schema_constants(value, definition.parameter_schema)
+        _inject_schema_constants(value, _intent_parameter_schema(definition))
         return value
 
     def validate_partial_parameters(
@@ -281,7 +291,21 @@ class OperationRegistry:
         definition = self.require(str(operation.get("operation_type", "")))
         return _schema_issues(
             value=operation.get("parameters"),
-            schema=_without_required(definition.parameter_schema),
+            schema=_without_required(_intent_parameter_schema(definition)),
+            code="OPERATION_PARAMETER_SCHEMA_ERROR",
+            path_prefix="/parameters",
+        )
+
+    def validate_intent_parameters(
+        self,
+        operation: Mapping[str, Any],
+    ) -> list[ValidationIssue]:
+        """Validate a complete Stage 1 intent without requiring execution facts."""
+
+        definition = self.require(str(operation.get("operation_type", "")))
+        return _schema_issues(
+            value=operation.get("parameters"),
+            schema=_intent_parameter_schema(definition),
             code="OPERATION_PARAMETER_SCHEMA_ERROR",
             path_prefix="/parameters",
         )
@@ -295,7 +319,26 @@ class OperationRegistry:
         definition = self.require(str(operation.get("operation_type", "")))
         parameters = operation.get("parameters")
         value = parameters if isinstance(parameters, Mapping) else {}
-        return tuple(sorted(_missing_required(value, definition.parameter_schema)))
+        return tuple(
+            sorted(_missing_required(value, _intent_parameter_schema(definition)))
+        )
+
+    def assess_intent_capability(
+        self,
+        operation: Mapping[str, Any],
+    ) -> Mapping[str, Any]:
+        """Classify deterministic Stage 1 capability before completeness."""
+
+        definition = self.require(str(operation.get("operation_type", "")))
+        checker = definition.intent_capability_checker
+        if checker is None:
+            return {"status": "supported"}
+        decision = checker(operation=operation)
+        if not isinstance(decision, Mapping):
+            raise OperationRegistryError(
+                "INTENT_CAPABILITY_DECISION_INVALID", definition.operation_type
+            )
+        return dict(decision)
 
     def validate_target(
         self,
@@ -343,6 +386,12 @@ def _schema_issues(
         for error in validator.iter_errors(value)
     ]
     return sorted(set(issues), key=lambda issue: (issue.path, issue.message))
+
+
+def _intent_parameter_schema(
+    definition: OperationDefinition,
+) -> Mapping[str, Any]:
+    return definition.intent_parameter_schema or definition.parameter_schema
 
 
 def _without_required(schema: Mapping[str, Any]) -> dict[str, Any]:

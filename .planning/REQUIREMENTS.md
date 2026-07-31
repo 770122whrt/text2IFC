@@ -176,9 +176,9 @@ semantic ChangeSet and an L1/L2-validated IFC result.
 
 ### Operation Expansion
 
-- [ ] **OPS-01**: User can add a wall opening without a filling element through
+- [x] **OPS-01**: User can add a wall opening without a filling element through
   a registered opening-specific ChangeSet operation.
-- [ ] **OPS-02**: User can add a Door with a new wall Opening or restore a Door
+- [x] **OPS-02**: User can add a Door with a new wall Opening or restore a Door
   into one surviving empty Opening, with exact/generated Type policy,
   viewpoint-aware operation semantics and required L1/L2 evidence through
   registered Door-specific operations.
@@ -261,8 +261,8 @@ semantic ChangeSet and an L1/L2-validated IFC result.
 | WFID-04 | 10.5 | Complete |
 | WFID-05 | 10.5 | Complete |
 | WFID-06 | 10.5 | Complete |
-| OPS-01 | 11 | Pending |
-| OPS-02 | 11 | Pending |
+| OPS-01 | 11 | Complete |
+| OPS-02 | 11 | Complete |
 | OPS-03 | 12 | Pending |
 | OPS-04 | 12 | Pending |
 | SCALE-01 | 13 | Pending |
@@ -271,4 +271,4 @@ semantic ChangeSet and an L1/L2-validated IFC result.
 **Coverage:** 52 requirements, 52 mapped, 0 unmapped.
 
 ---
-*Last updated: 2026-07-26 after Phase 10.5 offline, performance and real DeepSeek acceptance*
+*Last updated: 2026-07-31 after Phase 11 offline, real DeepSeek and independent Proof acceptance*

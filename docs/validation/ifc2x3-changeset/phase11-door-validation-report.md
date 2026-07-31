@@ -1,8 +1,8 @@
 # Phase 11 Door / Opening 验证报告
 
-> 日期：2026-07-30
-> 当前结论：离线实现与真实 IFC 验证通过；真实 DeepSeek UAT 尚未执行。  
-> 外部阻塞：Codex 执行额度层拒绝网络命令，Provider 实际调用数为 0。
+> 日期：2026-07-31
+> 当前结论：Phase 11 已完成。离线矩阵、真实 DeepSeek 三路径 UAT、发布后
+> IFC2X3 重开、严格 L0/L1/L2 与独立 Proof 复验全部通过；无 synthetic fallback。
 
 ## 1. 阶段目标
 
@@ -487,34 +487,97 @@ direct container 本身是 `标高2`。缺失、冲突与等距候选仍 fail cl
 | 最大输出 | 65,536 tokens |
 | Secret | 仅报告 redacted 状态 |
 
-计划用例是完整 Door 输入、不完整输入加一次合并澄清，以及复杂双扇门在
+执行用例是完整 Door 输入、不完整输入加一次合并澄清，以及复杂 Door 在
 Stage 2 前被能力层拒绝。
 
 ```powershell
 .venv\Scripts\python.exe scripts\ifc_repair\run_phase11_live_uat.py --live
 ```
 
-本次命令在进入 Provider 前被 Codex 执行额度层拒绝，提示最早可在
-2026-08-03 10:34 后重新尝试。因此本轮证据是：
+最终接受运行：
+
+`dataset/processed/proof/phase11-live-uat/uat-20260731T224900289758Z/`
+
+| 用例 | Stage 1 | Stage 2 | 终态 | 发布后严格验证 |
+|---|---:|---:|---|---|
+| complete-door | 1 | 1 | `succeeded` / publishable | IFC2X3 reopen；L0/L1/L2 PASS |
+| incomplete-then-feedback | 2（初始 + 续跑） | 1 | `succeeded` / publishable | IFC2X3 reopen；L0/L1/L2 PASS |
+| unsupported-complex-door | 1 | 0 | `unsupported` / `DOOR_OPERATION_TYPE_UNSUPPORTED` | Stage 2 未调用 |
+
+Provider 为 `deepseek-openai-compatible`，模型为 `deepseek-v4-flash`，输入/输出
+guard 均为 65,536 tokens，`synthetic_fallback_used=false`。两个发布结果的
+SHA-256 分别为：
+
+- complete：`sha256:2f6544e7eb9d8529705778851554565cc3bb20e33c6cc7d3fb1d4eb9c100dc71`；
+- clarification：`sha256:221224d1eca4cab303484c2d1c92b6d352301c7f42c2a8ade01fecbcbc0dadaa`。
+
+### 11.1 Stage 1 路由与错误字段复盘
+
+当前 workflow 的第一阶段确实先做 component/action/operation 分类，并把每个
+operation 绑定到对应 Prompt Profile；第二阶段只加载本次绑定的完整 profile
+和 few-shots。Stage 1 是意图与路由合同，Stage 2 才生成可执行 Bound ChangeSet。
+
+早期失败输出中的 `Stage 1=1 / Stage 2=0` 表示 Provider 已完成一次 Stage 1，
+但输出未通过进入 Stage 2 的能力、完整性或确定性绑定门禁；它不表示执行成功。
+澄清案曾出现 `Stage 1=3 / Stage 2=0`，表示初始调用、澄清续跑和 schema retry
+共三次 Stage 1 尝试，仍未生成任何 Stage 2 ChangeSet。最终接受运行将这两个
+合同分别收敛为 1/1 与 2/1。
+
+对 `opening.center_offset_mm`、
+`center_offset_from_wall_start_mm` 和 `door.threshold_height_mm` 的复盘结论是：
+修复前的通用提示虽然要求“遵守 schema”，但 Door v0.1 选择路径仍把最终执行
+schema 中由程序推导的 slot 暴露给 Stage 1，且 `null`/省略规则存在冲突；旧
+few-shot 也没有同时示范 canonical path、澄清省略和 unsupported 先行。因此输入
+合同不够清楚，不能把错误简单归因于模型。
+
+修复采用合同澄清而非 LLM feedback 兼容：
+
+- Stage 1 使用独立的 exact intent schema，最终 executable schema 仍由 Stage 2
+  校验；
+- active Door profile 升为不可变 v0.2，标出 `program_derived_slots`；
+- complete、clarification、Type reuse、unsupported 四组 few-shot 使用冻结字段；
+- 未知、可选、程序推导字段必须省略，不能用 `null` 占位；
+- exact unsupported capability 在 completeness 之前拒绝；
+- 没有添加上述同义键、搬移键或 threshold 别名 canonicalization。
+
+### 11.2 真实运行发现的确定性边界问题
+
+前三个未接受运行被保留为诊断证据，但不进入 success Proof：
+
+| 运行 | 发现 | 处理 |
+|---|---|---|
+| `uat-20260731T163702838344Z` | canonicalization metadata 被误判为独立语义授权；澄清 slot 被当作 target 解析 | 从授权语义集合移除确定性 metadata；分离 clarification slot 与 target candidate |
+| `uat-20260731T164245545446Z` | Door Type 绑定分类不一致；澄清公开记录不合法 | 修正 profile/绑定合同与公开 reason 映射 |
+| `uat-20260731T165333521808Z` | L2 `door.host` 把 GUID value type 当作 host IFC class；unsupported 输出受冲突 null 规则影响 | host 记录使用真实 `IfcWall`；消除提示冲突并补足 v0.2 few-shots |
+
+这些修复没有改变冻结的 Door workflow、几何阈值、Ground Truth 隔离或 Storey
+policy。
+
+## 12. Proof 独立复验与验收关闭
+
+两个 live 成功案以 `provider_evidence_mode=live` 纳入
+`ifc-repair-success-cases/door/surviving-opening/`。整理器复制原始、损坏和发布
+IFC、最终公开请求、RepairIntent、resolution、Bound ChangeSet、application、
+production evaluation、prompt selection、redacted provider attempts 与严格重开
+报告，并重新运行三方 Door audit 后才写入集合 manifest。
+
+独立集合验证器不信任保存的 success 字段，而是重开 IFC、验证文件大小/哈希和
+base fingerprint，使用当前 operation registry 重算 L1，并从 repaired IFC 重新
+提取语义事实重算 L2。最终结果为：
 
 ```text
-Stage 1 calls = 0
-Stage 2 calls = 0
-DeepSeek success = not executed
-synthetic fallback = false
+status=passed cases=16 operations=45 files=247 ifc_reopened=48
 ```
 
-这不是 Provider、Prompt 或 schema 失败；没有真实网络请求发生。Phase 11
-不会在该证据补齐前标记 complete。
+其中 11 案具备 application role mapping，可严格重算；5 个早期 Window Proof
+只保留保存的 L1/L2 artifact，明确标为 `legacy_artifact_only`，不冒充独立重算。
+验证器还发现并纠正了 Dental mixed Proof 中未声明 Window Type relationship 的
+旧假成功，重新生产和审计后才恢复为 accepted。
 
-## 12. 剩余验收
-
-1. 额度恢复后运行三组真实 DeepSeek UAT；
-2. 对 live 产物执行独立重开、L1/L2、occurrence 与 proof 校验；
-3. 将真实成功案例以 `live` 证据模式单独纳入
-   `ifc-repair-success-cases/door`；
-4. 更新 OPS-01/OPS-02、ROADMAP 和 STATE 为 complete；
-5. 创建 Phase 11 最终 Git checkpoint。
+回归结果：本次变更面 78 tests passed；Proof collection 5 tests passed；完整
+`tests/ifc_repair` 为 688 passed、1 expected skip，耗时 1099.76 秒。另一次
+仓库全量尝试收集到 1599 tests，运行 1204 秒后被命令时限终止，终止前无失败
+输出；该项诚实记录为 repository-wide timeout，不写成全仓通过。
 
 ## 13. 可复现命令
 
@@ -527,6 +590,7 @@ synthetic fallback = false
 .venv\Scripts\python.exe scripts/ifc_repair/validate_success_cases.py --json
 .venv\Scripts\python.exe scripts/ifc_repair/run_phase11_live_uat.py --check-config
 .venv\Scripts\python.exe scripts/ifc_repair/run_phase11_live_uat.py --live
+.venv\Scripts\python.exe scripts/ifc_repair/curate_phase11_live_proof.py dataset/processed/ifc-repair/phase11-live-uat/uat-20260731T224900289758Z
 ```
 
 ## 14. 结论
@@ -537,6 +601,8 @@ Type 策略、语义 scope、L1/L2 与通用 occurrence comparator 已实现。
 LargeBuilding、vvo 与 AdvancedProject 的单门、生成 Type、五门批量和两门两窗
 混合链路均已重新生成可重开的修复 IFC，并通过严格几何、Opening 实际楼层、
 生产 L1/L2 和三方独立 Proof 验证。旧 repaired IFC 的
-“有 fill 关系但门板未填入洞口”现在必定被 L1 拒绝。真实 DeepSeek UAT 仍是
-Phase 11 最终关闭前的独立外部证据；本报告结论为“Door 离线确定性目标通过，
-live UAT 尚未关闭”。
+“有 fill 关系但门板未填入洞口”现在必定被 L1 拒绝。
+
+真实 DeepSeek 完整、澄清续跑和 unsupported 三条路径均满足调用次数与终态
+合同；两个发布 IFC 又通过独立严格 L0/L1/L2。Phase 11 因此关闭。没有为模型
+错误字段增加兼容分支，也没有开始 Phase 12。

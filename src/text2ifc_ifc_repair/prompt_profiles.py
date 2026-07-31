@@ -63,6 +63,9 @@ class PromptProfile:
             "slot_summary": self.document["slot_summary"],
             "required_slots": list(self.document["required_slots"]),
             "conditional_slots": list(self.document["conditional_slots"]),
+            "program_derived_slots": list(
+                self.document["program_derived_slots"]
+            ),
             "supported_capabilities": list(
                 self.document["supported_capabilities"]
             ),
@@ -127,7 +130,6 @@ def load_prompt_profiles(
 
     validator = Draft202012Validator(_profile_schema())
     loaded: dict[str, PromptProfile] = {}
-    operation_ids: set[str] = set()
     for path in paths:
         raw = path.read_bytes()
         if len(raw) > MAX_PROFILE_BYTES:
@@ -150,9 +152,6 @@ def load_prompt_profiles(
         if profile_id in loaded:
             raise PromptProfileError("DUPLICATE_PROFILE_ID", profile_id)
         operation_type = str(document["operation_type"])
-        if operation_type in operation_ids:
-            raise PromptProfileError("DUPLICATE_PROFILE_OPERATION", operation_type)
-        operation_ids.add(operation_type)
         _validate_few_shots(document)
         loaded[profile_id] = PromptProfile(
             profile_id=profile_id,

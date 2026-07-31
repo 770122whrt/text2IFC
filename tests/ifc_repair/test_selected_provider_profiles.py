@@ -74,6 +74,69 @@ def _v05_body() -> dict:
     }
 
 
+def _v05_fill_body(*, parameters: dict | None = None) -> dict:
+    source = {
+        "source_kind": "user_request",
+        "reference": "request:/text",
+        "excerpt": "fill Opening OPENING-GUID using DoorStyle DOOR-TYPE-GUID",
+    }
+    return {
+        "schema_version": "text2ifc/ifc-repair-intent-body/0.5",
+        "operations": [
+            {
+                "operation_id": "door-fill-1",
+                "operation_type": "fill_existing_opening_with_door",
+                "routing_intent": {
+                    "component_family": "door",
+                    "action": "fill_existing_opening",
+                    "operation_profile": "door.fill-existing-opening.v0.2",
+                    "source": source,
+                },
+                "target_query": {
+                    "schema_version": "text2ifc/ifc-target-query/0.1",
+                    "allowed_ifc_classes": ["IfcOpeningElement"],
+                    "global_id": "OPENING-GUID",
+                },
+                "parameters": {} if parameters is None else parameters,
+                "attribute_intents": [],
+                "property_intents": [],
+                "semantic_bundle_refs": [],
+                "quantity_intents": [],
+                "occurrence_reuse_intent": None,
+                "prototype_intent": {
+                    "reference_kind": "global_id",
+                    "reference": "DOOR-TYPE-GUID",
+                    "source": source,
+                },
+                "provenance": [source],
+            }
+        ],
+        "semantic_bundles": [],
+        "provenance": [source],
+    }
+
+
+def _v05_unsupported_door_body() -> dict:
+    body = _v05_fill_body(
+        parameters={"door": {"operation_type": "REVOLVING"}}
+    )
+    operation = body["operations"][0]
+    operation["operation_type"] = "add_door_with_opening_to_wall"
+    operation["routing_intent"].update(
+        {
+            "action": "add_with_opening",
+            "operation_profile": "door.add-with-opening.v0.2",
+        }
+    )
+    operation["target_query"] = {
+        "schema_version": "text2ifc/ifc-target-query/0.1",
+        "allowed_ifc_classes": ["IfcWall"],
+        "global_id": "WALL-GUID",
+    }
+    operation["prototype_intent"] = None
+    return body
+
+
 def test_stage1_routes_and_extracts_in_exactly_one_provider_call(
     tmp_path: Path,
 ) -> None:
@@ -95,13 +158,104 @@ def test_stage1_routes_and_extracts_in_exactly_one_provider_call(
     assert {item["profile_id"] for item in catalog} == {
         "window.add-with-opening",
         "opening.add-to-wall",
-        "door.add-with-opening",
-        "door.fill-existing-opening",
+        "door.add-with-opening.v0.2",
+        "door.fill-existing-opening.v0.2",
         "occurrence.set-properties",
     }
     serialized = json.dumps(catalog)
     assert "EXAMPLE_ONLY" not in serialized
     assert "user_text" not in serialized
+
+
+def test_stage1_fill_uses_retained_opening_as_program_derived_geometry(
+    tmp_path: Path,
+) -> None:
+    provider = Provider(_v05_fill_body())
+
+    result = generate_repair_intent(
+        provider=provider,
+        request_id="profile-stage1-fill",
+        repair_request=(
+            "fill Opening OPENING-GUID using DoorStyle DOOR-TYPE-GUID"
+        ),
+        registry=create_default_registry(),
+        output_dir=tmp_path,
+        intent_schema_version="text2ifc/ifc-repair-intent/0.5",
+    )
+
+    assert result["valid"] is True
+    assert result["classification"] == "repair_intent"
+    assert result["missing_parameters"] == []
+    assert result["intent"].operations[0].to_dict()["parameters"] == {
+        "fit_existing_opening": True
+    }
+    catalog = json.loads(
+        (tmp_path / "renderer-input.json").read_text(encoding="utf-8")
+    )["SUPPORTED_OPERATIONS"]
+    fill = next(
+        item
+        for item in catalog
+        if item["operation_type"] == "fill_existing_opening_with_door"
+    )
+    assert fill["intent_parameter_schema"]["additionalProperties"] is False
+    assert fill["intent_parameter_schema"]["required"] == [
+        "fit_existing_opening"
+    ]
+    assert "/parameters/position" in fill["program_derived_slots"]
+    assert "/parameters/opening" in fill["program_derived_slots"]
+
+
+def test_stage1_fill_rejects_non_contract_door_parameter_aliases(
+    tmp_path: Path,
+) -> None:
+    body = _v05_fill_body(
+        parameters={
+            "opening": {"center_offset_from_wall_start_mm": 1657.5},
+            "door": {"threshold_height_mm": 0},
+        }
+    )
+
+    result = generate_repair_intent(
+        provider=Provider(body),
+        request_id="profile-stage1-fill-alias",
+        repair_request="fill the retained Opening with a Door",
+        registry=create_default_registry(),
+        output_dir=tmp_path,
+        max_attempts=1,
+        intent_schema_version="text2ifc/ifc-repair-intent/0.5",
+    )
+
+    assert result["valid"] is False
+    assert result["attempts"][0]["issues"][0]["code"] == (
+        "REPAIR_INTENT_PARAMETER_SCHEMA_INVALID"
+    )
+    assert "Additional properties are not allowed" in result["attempts"][0][
+        "issues"
+    ][0]["message"]
+
+
+def test_stage1_unsupported_door_capability_precedes_missing_geometry(
+    tmp_path: Path,
+) -> None:
+    result = generate_repair_intent(
+        provider=Provider(_v05_unsupported_door_body()),
+        request_id="profile-stage1-door-unsupported",
+        repair_request="add a REVOLVING door to WALL-GUID",
+        registry=create_default_registry(),
+        output_dir=tmp_path,
+        max_attempts=1,
+        intent_schema_version="text2ifc/ifc-repair-intent/0.5",
+    )
+
+    assert result["valid"] is True
+    assert result["classification"] == "unsupported"
+    assert result["reason_code"] == "DOOR_OPERATION_TYPE_UNSUPPORTED"
+    assert result["unsupported_operations"] == [
+        {
+            "operation_id": "door-fill-1",
+            "reason_code": "DOOR_OPERATION_TYPE_UNSUPPORTED",
+        }
+    ]
 
 
 def test_stage1_profile_mismatch_stops_without_a_second_stage(

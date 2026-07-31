@@ -288,18 +288,13 @@ def canonicalize_door_intent(
         if len(host_ids) != 1:
             return _unsupported("OPENING_TARGET_INVALID")
         canonical["host_wall_global_id"] = str(host_ids[0])
-    authorized = (
-        {
-            "kind": "door_canonicalization",
-            "operation_type": operation["operation_type"],
-            "derivation_digest": canonical["derivation"]["digest"],
-            "source": "deterministic_policy",
-        },
-    )
     return DoorResolutionDecision(
         status="resolved",
         parameters=canonical,
-        authorized_semantics=authorized,
+        # Canonicalization is deterministic execution metadata already bound
+        # in ``parameters.derivation``.  It is not an independent semantic
+        # authority; registered policy facts own that boundary.
+        authorized_semantics=(),
     )
 
 

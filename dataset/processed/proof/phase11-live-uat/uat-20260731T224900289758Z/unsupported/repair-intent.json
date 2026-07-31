@@ -1,0 +1,56 @@
+{
+  "model_fingerprint": "sha256:f61ff5cf8e1cc88da6944d6bcd3e2e7da5ff27dd3288a8781908018cb8240cd6",
+  "operations": [
+    {
+      "attribute_intents": [],
+      "occurrence_reuse_intent": null,
+      "operation_id": "door-1",
+      "operation_type": "add_door_with_opening_to_wall",
+      "parameters": {
+        "door": {
+          "operation_type": "REVOLVING"
+        }
+      },
+      "property_intents": [],
+      "prototype_intent": null,
+      "provenance": [
+        {
+          "excerpt": "在墙 2cXV28XOjE6f6irgi0COfF 上新开洞并生成一扇 OperationType 为 REVOLVING 的旋转门；要求复杂门框、五金、上亮和两片不同开启轨迹。",
+          "reference": "request:/text",
+          "source_kind": "user_request"
+        }
+      ],
+      "quantity_intents": [],
+      "routing_intent": {
+        "action": "add_with_opening",
+        "component_family": "door",
+        "operation_profile": "door.add-with-opening.v0.2",
+        "source": {
+          "excerpt": "在墙 2cXV28XOjE6f6irgi0COfF 上新开洞并生成一扇 OperationType 为 REVOLVING 的旋转门",
+          "reference": "request:/text",
+          "source_kind": "user_request"
+        }
+      },
+      "semantic_bundle_refs": [],
+      "target_query": {
+        "allowed_ifc_classes": [
+          "IfcWall"
+        ],
+        "global_id": "2cXV28XOjE6f6irgi0COfF",
+        "schema_version": "text2ifc/ifc-target-query/0.1"
+      }
+    }
+  ],
+  "prompt_fingerprint": "sha256:e04f5b4f66f3c566f0f8008767cdcb80ea7aae8655e9de0f7f7bfdd8bc1379ac",
+  "provenance": [
+    {
+      "excerpt": "在墙 2cXV28XOjE6f6irgi0COfF 上新开洞并生成一扇 OperationType 为 REVOLVING 的旋转门；要求复杂门框、五金、上亮和两片不同开启轨迹。",
+      "reference": "request:/text",
+      "source_kind": "user_request"
+    }
+  ],
+  "request_id": "request-2156b3de97de36ad",
+  "schema_version": "text2ifc/ifc-repair-intent/0.5",
+  "semantic_bundles": [],
+  "source_request_hash": "sha256:2156b3de97de36ad30306c035aedc2fb5fd05ff587b188ec062f2bc37ef732bf"
+}

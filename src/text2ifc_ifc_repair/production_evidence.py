@@ -226,19 +226,43 @@ def _operation_candidates(
     ]
     target_id = resolved_operation.target_global_id
     target = _record(records_by_global_id, target_id, role="target")
+    primary_scope = f"{policy.semantic_role}_occurrence"
     if policy.target_authority_mode == "host_for_created_entity":
+        created_host_id = str(
+            resolved_operation.parameters.get("host_wall_global_id")
+            or target_id
+        )
+        created_host = records_by_global_id.get(created_host_id)
+        created_host_class = (
+            target.ifc_class
+            if created_host_id == target_id
+            else (
+                "IfcGloballyUniqueId"
+                if created_host is None
+                else created_host.ifc_class
+            )
+        )
         facts.append(
             SemanticFact(
                 fact_key="relationship:host",
-                value=target_id,
-                value_type=target.ifc_class,
+                value=created_host_id,
+                value_type=created_host_class,
                 unit=None,
                 inherited=False,
                 pset_path=None,
                 entity_source=f"{target.ifc_class}:{target_id}",
-                source_kind=EvidenceSourceKind.SURVIVING_TARGET,
-                source_ref=f"current-target:{target_id}",
-                provenance=(f"resolved-host-target:{target_id}", f"operation:{operation_id}"),
+                source_kind=(
+                    EvidenceSourceKind.SURVIVING_TARGET
+                    if created_host_id == target_id
+                    else EvidenceSourceKind.SURVIVING_HOST
+                ),
+                source_ref=f"current-host-binding:{created_host_id}",
+                provenance=(
+                    f"resolved-host-target:{target_id}",
+                    f"resolved-host:{created_host_id}",
+                    f"operation:{operation_id}",
+                ),
+                occurrence_scope=primary_scope,
             )
         )
         if target.storey_global_id:
@@ -254,6 +278,7 @@ def _operation_candidates(
                     source_kind=EvidenceSourceKind.SURVIVING_TARGET,
                     source_ref=f"current-target-storey:{target.storey_global_id}",
                     provenance=(f"resolved-host-target:{target_id}", f"operation:{operation_id}"),
+                    occurrence_scope=primary_scope,
                 )
             )
     else:
@@ -274,7 +299,7 @@ def _operation_candidates(
             SemanticFact(
                 fact_key="relationship:host",
                 value=host_id,
-                value_type="IfcGloballyUniqueId",
+                value_type=host.ifc_class,
                 unit=None,
                 inherited=False,
                 pset_path=None,
@@ -286,17 +311,19 @@ def _operation_candidates(
                     f"resolved-target:{target_id}",
                     f"current-host-relationship:{host_id}",
                 ),
+                occurrence_scope=primary_scope,
             )
         )
-        facts.extend(
-            _record_facts(
-                host,
-                operation_id=operation_id,
-                source_kind=EvidenceSourceKind.SURVIVING_HOST,
-                source_ref=f"current-host:{host_id}",
-                authority_provenance=f"formal_host_relationship:{target_id}",
+        if policy.semantic_role != "door":
+            facts.extend(
+                _record_facts(
+                    host,
+                    operation_id=operation_id,
+                    source_kind=EvidenceSourceKind.SURVIVING_HOST,
+                    source_ref=f"current-host:{host_id}",
+                    authority_provenance=f"formal_host_relationship:{target_id}",
+                )
             )
-        )
 
     for authority in resolved_operation.authorized_semantics:
         kind = str(authority.get("kind", ""))
@@ -492,7 +519,25 @@ def _operation_candidates(
             raise ProductionEvidenceError(
                 "UNAUTHORIZED_PRODUCTION_SOURCE", fact.source_kind.value
             )
-    return tuple(sorted(facts, key=_fact_key))
+    scoped = tuple(
+        replace(fact, occurrence_scope=primary_scope)
+        if fact.occurrence_scope == "window_occurrence"
+        and primary_scope != "window_occurrence"
+        else fact
+        for fact in facts
+    )
+    if policy.target_authority_mode == "host_for_created_entity":
+        type_authorities = {
+            EvidenceSourceKind.APPROVED_PROTOTYPE,
+            EvidenceSourceKind.DETERMINISTIC_POLICY,
+        }
+        scoped = tuple(
+            fact
+            for fact in scoped
+            if fact.fact_key != "relationship:type"
+            or fact.source_kind in type_authorities
+        )
+    return tuple(sorted(scoped, key=_fact_key))
 
 
 def _authorized_property_fact(

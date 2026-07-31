@@ -10,7 +10,7 @@
     "preservation": "passed",
     "successful_artifact_publishable": true
   },
-  "case_count": 14,
+  "case_count": 16,
   "cases": [
     {
       "case_id": "largebuilding-full-replication",
@@ -200,25 +200,6 @@
       "status": "accepted"
     },
     {
-      "case_id": "dental-clinic-two-door-two-window-geometry-targeted",
-      "case_kind": "mixed",
-      "damaged_ifc": "mixed/door-window/dental-clinic-two-door-two-window-geometry-targeted/02-damaged.ifc",
-      "files": "mixed/door-window/dental-clinic-two-door-two-window-geometry-targeted/FILES.json",
-      "model": "phase11-bound-fixture",
-      "operation_count": 4,
-      "operation_family": "mixed",
-      "operation_types": [
-        "add_door_with_opening_to_wall",
-        "add_window_with_opening_to_wall"
-      ],
-      "original_ifc": "mixed/door-window/dental-clinic-two-door-two-window-geometry-targeted/01-original.ifc",
-      "provider": "offline-deterministic",
-      "provider_evidence_mode": "offline_bound_deterministic",
-      "repaired_ifc": "mixed/door-window/dental-clinic-two-door-two-window-geometry-targeted/03-repaired.ifc",
-      "report": "mixed/door-window/dental-clinic-two-door-two-window-geometry-targeted/REPORT.md",
-      "status": "accepted"
-    },
-    {
       "case_id": "vvo-authority-triplet-public-repair",
       "case_kind": "mixed",
       "damaged_ifc": "mixed/door-window/vvo-authority-triplet-public-repair/02-damaged.ifc",
@@ -254,6 +235,61 @@
       "repaired_ifc": "door/batch/vvo-five-door-authority-public-repair/03-repaired.ifc",
       "report": "door/batch/vvo-five-door-authority-public-repair/REPORT.md",
       "status": "accepted"
+    },
+    {
+      "case_id": "dental-clinic-two-door-two-window-geometry-targeted",
+      "case_kind": "mixed",
+      "damaged_ifc": "mixed/door-window/dental-clinic-two-door-two-window-geometry-targeted/02-damaged.ifc",
+      "files": "mixed/door-window/dental-clinic-two-door-two-window-geometry-targeted/FILES.json",
+      "model": "phase11-bound-fixture",
+      "operation_count": 4,
+      "operation_family": "mixed",
+      "operation_types": [
+        "add_door_with_opening_to_wall",
+        "add_window_with_opening_to_wall"
+      ],
+      "original_ifc": "mixed/door-window/dental-clinic-two-door-two-window-geometry-targeted/01-original.ifc",
+      "provider": "offline-deterministic",
+      "provider_evidence_mode": "offline_bound_deterministic",
+      "repaired_ifc": "mixed/door-window/dental-clinic-two-door-two-window-geometry-targeted/03-repaired.ifc",
+      "report": "mixed/door-window/dental-clinic-two-door-two-window-geometry-targeted/REPORT.md",
+      "status": "accepted"
+    },
+    {
+      "case_id": "largebuilding-live-deepseek-complete-door",
+      "case_kind": "live_surviving_opening",
+      "damaged_ifc": "door/surviving-opening/largebuilding-live-deepseek-complete-door/02-damaged.ifc",
+      "files": "door/surviving-opening/largebuilding-live-deepseek-complete-door/FILES.json",
+      "model": "deepseek-v4-flash",
+      "operation_count": 1,
+      "operation_family": "door",
+      "operation_types": [
+        "fill_existing_opening_with_door"
+      ],
+      "original_ifc": "door/surviving-opening/largebuilding-live-deepseek-complete-door/01-original.ifc",
+      "provider": "deepseek-openai-compatible",
+      "provider_evidence_mode": "live",
+      "repaired_ifc": "door/surviving-opening/largebuilding-live-deepseek-complete-door/03-repaired.ifc",
+      "report": "door/surviving-opening/largebuilding-live-deepseek-complete-door/REPORT.md",
+      "status": "accepted"
+    },
+    {
+      "case_id": "largebuilding-live-deepseek-clarified-door",
+      "case_kind": "live_surviving_opening",
+      "damaged_ifc": "door/surviving-opening/largebuilding-live-deepseek-clarified-door/02-damaged.ifc",
+      "files": "door/surviving-opening/largebuilding-live-deepseek-clarified-door/FILES.json",
+      "model": "deepseek-v4-flash",
+      "operation_count": 1,
+      "operation_family": "door",
+      "operation_types": [
+        "fill_existing_opening_with_door"
+      ],
+      "original_ifc": "door/surviving-opening/largebuilding-live-deepseek-clarified-door/01-original.ifc",
+      "provider": "deepseek-openai-compatible",
+      "provider_evidence_mode": "live",
+      "repaired_ifc": "door/surviving-opening/largebuilding-live-deepseek-clarified-door/03-repaired.ifc",
+      "report": "door/surviving-opening/largebuilding-live-deepseek-clarified-door/REPORT.md",
+      "status": "accepted"
     }
   ],
   "collection_id": "ifc-repair-success-cases",
@@ -263,7 +299,7 @@
     "beam",
     "column"
   ],
-  "generated_at": "2026-07-29",
+  "generated_at": "2026-07-31",
   "operation_families": [
     "door",
     "mixed",

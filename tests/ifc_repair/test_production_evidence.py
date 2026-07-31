@@ -24,6 +24,8 @@ from text2ifc_ifc_repair.production_evidence import (
     _property_claim_matches_authority,
     build_production_evidence,
 )
+from text2ifc_ifc_repair.operations import create_default_registry
+from text2ifc_ifc_repair.operations.door import FILL_OPERATION_TYPE
 from text2ifc_ifc_repair.property_intent import (
     ExactPropertyIntent,
     NaturalLanguagePropertyIntent,
@@ -33,6 +35,7 @@ from text2ifc_ifc_repair.repair_intent import (
     AttributeIntent,
     OperationIntent,
     PublicProvenance,
+    PrototypeIntent,
     RepairIntent,
 )
 from text2ifc_ifc_repair.resolution_flow import ResolutionBatch, ResolvedOperation
@@ -436,6 +439,140 @@ def test_pre_scoped_policy_provenance_remains_unique_for_manifest_02() -> None:
         "registered-policy:fixture.production.l2@0.1",
     )
     assert len(candidate.provenance) == len(set(candidate.provenance))
+
+
+def test_created_door_uses_door_scope_and_approved_door_type_authority() -> None:
+    registry = create_default_registry()
+    query = TargetQuery(
+        allowed_ifc_classes=("IfcOpeningElement",),
+        global_id="opening-1",
+    )
+    operation = OperationIntent(
+        operation_id="door-1",
+        operation_type=FILL_OPERATION_TYPE,
+        target_query=query,
+        parameters=MappingProxyType({"fit_existing_opening": True}),
+        attribute_intents=(),
+        prototype_intent=PrototypeIntent(
+            reference_kind="global_id",
+            reference="door-style-1",
+            source=_provenance("request:/prototype"),
+        ),
+        provenance=(_provenance(),),
+        _target_query_document=MappingProxyType(
+            {
+                "schema_version": query.schema_version,
+                "allowed_ifc_classes": ["IfcOpeningElement"],
+                "global_id": "opening-1",
+            }
+        ),
+    )
+    intent = RepairIntent(
+        request_id="request-door",
+        source_request_hash="sha256:" + "1" * 64,
+        model_fingerprint="sha256:" + "2" * 64,
+        prompt_fingerprint="sha256:" + "3" * 64,
+        operations=(operation,),
+        provenance=(_provenance("request:/"),),
+    )
+    parameters = {
+        "host_wall_global_id": "wall-1",
+        "position": {"reference": "wall_local_start", "center_offset_mm": 1000.0},
+        "opening": {
+            "width_mm": 900.0,
+            "height_mm": 2100.0,
+            "sill_height_mm": 0.0,
+            "dimension_meaning": "overall_opening",
+        },
+        "door": {
+            "overall_width_mm": 900.0,
+            "overall_height_mm": 2100.0,
+            "operation_type": "SINGLE_SWING_RIGHT",
+        },
+    }
+    resolution = ResolutionBatch(
+        status="resolved",
+        source_ifc_sha256="sha256:" + "4" * 64,
+        model_fingerprint="sha256:" + "2" * 64,
+        operations=(
+            ResolvedOperation(
+                operation_id="door-1",
+                operation_type=FILL_OPERATION_TYPE,
+                target_global_id="opening-1",
+                scope_ids=("opening-1",),
+                evidence_pointers=("resolution:/door-1/target",),
+                parameters=parameters,
+                context={"candidate_targets": [], "model_constraints": {}},
+                authorized_semantics=(
+                    {
+                        "kind": "user_authorized_prototype",
+                        "global_id": "door-style-1",
+                        "authorization": "explicit_request_reference",
+                    },
+                ),
+            ),
+        ),
+    )
+    changeset = {
+        "base_model_fingerprint": "sha256:" + "4" * 64,
+        "operations": [
+            {
+                "operation_id": "door-1",
+                "operation_type": FILL_OPERATION_TYPE,
+                "target": {"opening_global_id": "opening-1"},
+                "parameters": parameters,
+            }
+        ],
+    }
+    opening = replace(
+        _record("opening-1", "opening"),
+        ifc_class="IfcOpeningElement",
+        facets={"host_wall_global_ids": ["wall-1"]},
+    )
+    wall = replace(
+        _record("wall-1", "wall", type_global_id="wall-type-1"),
+        ifc_class="IfcWall",
+    )
+    policy_facts = registry.build_semantic_policy_facts(
+        FILL_OPERATION_TYPE,
+        operation=resolution.operations[0].to_dict(),
+    )
+    policy = registry.require_evaluation_policy(FILL_OPERATION_TYPE)
+    evidence = build_production_evidence(
+        intent=intent,
+        resolution=resolution,
+        changeset=changeset,
+        registry=registry,
+        records_by_global_id={"opening-1": opening, "wall-1": wall},
+        type_records_by_global_id={
+            "wall-type-1": _type_record("wall-type-1", "wall", ifc_class="IfcWallType"),
+            "door-style-1": _type_record(
+                "door-style-1", "door", ifc_class="IfcDoorStyle"
+            ),
+        },
+        deterministic_policy_facts_by_operation={"door-1": policy_facts},
+        verified_absent_categories_by_operation={
+            "door-1": tuple(
+                item.check_id
+                for item in policy.semantic_facts
+                if item.applicability is SemanticApplicability.CONDITIONAL
+            )
+        },
+    )
+    selected = evidence.expected_facts_by_operation["door-1"]
+    type_fact = next(item for item in selected if item.fact_key == "relationship:type")
+    host_fact = next(item for item in selected if item.fact_key == "relationship:host")
+
+    assert type_fact.value == "door-style-1"
+    assert type_fact.source_kind is EvidenceSourceKind.APPROVED_PROTOTYPE
+    assert host_fact.value == "wall-1"
+    assert host_fact.value_type == "IfcWall"
+    assert {item.occurrence_scope for item in selected} == {"door_occurrence"}
+    assert not any(
+        item.source_kind is EvidenceSourceKind.SURVIVING_HOST
+        and item.fact_key.startswith(("pset:", "material:", "classification:", "quantity:"))
+        for item in selected
+    )
 
 
 def test_formal_type_and_user_approved_prototype_have_distinct_auditable_sources() -> None:
