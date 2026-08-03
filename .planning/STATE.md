@@ -2,13 +2,13 @@
 gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: IFC ChangeSet Repair Pipeline
-status: Phase 11 complete; real DeepSeek UAT and strict Proof validation passed
-last_updated: "2026-07-31T23:59:00+08:00"
+status: Phase 12 context frozen; ready for research and planning
+last_updated: "2026-08-03T13:23:59.1465687+08:00"
 progress:
   total_phases: 13
   completed_phases: 11
-  total_plans: 32
-  completed_plans: 32
+  total_plans: 37
+  completed_plans: 37
   percent: 100
 ---
 
@@ -44,6 +44,7 @@ Next: Preserve the Phase 11 checkpoint and await user direction. Do not begin
 - The worktree is intentionally dirty with the completed Phase 11 Door audit,
   regenerated Proof artifacts, schemas, tests and documentation. Do not reset,
   clean or overwrite these changes.
+
 - Canonical implementation/validation documents:
   - `.planning/phases/11-wall-opening-and-door-operations/11-SPEC.md`
   - `.planning/phases/11-wall-opening-and-door-operations/11-VALIDATION.md`
@@ -54,11 +55,13 @@ Next: Preserve the Phase 11 checkpoint and await user direction. Do not begin
 - The known false-positive candidate is frozen only under
   `tests/fixtures/ifc_repair/phase11-door-known-failure/`; it is not a success
   artifact and must never enter production target resolution.
+
 - Do not revisit without new evidence:
   - the overall two-stage RepairIntent → Bound ChangeSet workflow;
   - retained-Opening geometry targeting without user-supplied GUID/Name;
   - Door L1 thresholds (0.95 overlap, 5 mm center, 0.1 degree axis,
     1 mm nominal dimension);
+
   - damaged-only production boundary and post-repair-only private comparator;
   - contextual Storey policy documented in the Phase 11 erratum.
 - Non-goals for the next conversation:
@@ -67,6 +70,27 @@ Next: Preserve the Phase 11 checkpoint and await user direction. Do not begin
   - tolerance relaxation or reduced preservation scope;
   - repository-wide cleanup unrelated to the Phase 11 checkpoint.
 
+## Phase 12 Context Checkpoint — 2026-08-03
+
+```text
+Mode: DISCUSSION COMPLETE
+Phase: Phase 12 Beam and Column Operations
+State: CONTEXT FROZEN; READY FOR RESEARCH AND PLANNING
+Requirements: OPS-03 Beam and OPS-04 Column remain pending implementation
+Canonical context:
+  .planning/phases/12-beam-and-column-operations/12-CONTEXT.md
+Scope: Straight horizontal rectangular Beam and straight vertical rectangular
+       Column; center-axis placement; exact or deterministic Type; optional
+       authorized material; Beam/Column completion of the existing IFC2X3 PSD
+       retrieval/index/semantic-authoring path.
+Acceptance: Real d7n/vvo IFC2X3 scenes, both structural families, mixed-family
+            atomicity, Beam and Column RAG evidence, real DeepSeek complete and
+            clarification paths, independent strict L0/L1/L2 Proof validation,
+            and no synthetic fallback.
+Next: Research and plan Phase 12 from the canonical context. Do not implement
+      Phase 12 or begin Phase 13 from this discussion checkpoint.
+```
+
 ## Project Reference
 
 See `.planning/PROJECT.md`.
@@ -74,13 +98,14 @@ See `.planning/PROJECT.md`.
 **Core value:** Given an IFC file and an explicit user request, produce a
 traceable semantic ChangeSet and an L1/L2-validated IFC result.
 
-**Current focus:** Phase 11 Door/Opening is closed with real DeepSeek and
-independently recomputed Proof evidence. Await explicit user direction.
+**Current focus:** Phase 12 Beam/Column decisions are frozen and ready for
+research and planning. Phase 11 remains closed with real DeepSeek and
+independently recomputed Proof evidence.
 
 ## Current Position
 
-Phase: 10.5 (Window Occurrence Fidelity and Validation Acceleration) — COMPLETE
-Plan: 3 of 3 complete
+Phase: 12 (Beam and Column Operations) — CONTEXT FROZEN
+Plan: not created
 
 - Milestone: v1.1 IFC ChangeSet Repair Pipeline
 - Phase: 11 complete
@@ -93,9 +118,14 @@ Plan: 3 of 3 complete
   with three-way L0/L1/L2 release evidence. Real DeepSeek then passed the
   complete, clarification/resume and deterministic unsupported contracts with
   no fallback; both publishable cases independently reopen and pass L0/L1/L2.
+
 - Progress: 11 / 13 phases complete
-- Requirements: WFID-01..06 and OPS-01..02 complete
-- Last activity: 2026-07-31 - accepted live run
+- Requirements: WFID-01..06 and OPS-01..02 complete; OPS-03..04 pending
+- Last activity: 2026-08-03 - Phase 12 geometry, placement, Type/material,
+  RAG/routing, failure policy and strict live-proof matrix were frozen in
+  `12-CONTEXT.md`. Material is optional unless explicitly requested or
+  inherited through explicitly authorized exact Type reuse.
+- Phase 11 closure evidence: accepted live run
   `uat-20260731T224900289758Z` passed all three contracts. Two live successes
   were curated into the Proof collection. The current independent verifier
   passes 16 cases, 45 operations, 247 hash-bound files and 48 IFC reopens.
@@ -103,6 +133,7 @@ Plan: 3 of 3 complete
   skip in 1099.76 seconds. A broader repository-wide 1599-test attempt produced
   no failure before the 1204-second command limit, so that separate attempt is
   recorded as a timeout rather than reported as a repository-wide pass.
+
 - Phase 11 design decisions were confirmed on 2026-07-28 and are frozen in
   `11-CONTEXT.md` and `11-SPEC.md`. Five sequential implementation plans,
   research, pattern map and validation strategy are complete. Plans 11-01
@@ -268,11 +299,13 @@ Plan: 3 of 3 complete
 
 ## Next Action
 
-Phase 11 is closed. Preserve the accepted live Proof and scoped Git checkpoint,
-and await explicit user direction. Do not start Phase 12 from this task.
+Phase 11 is closed and Phase 12 context is frozen. The next authorized workflow
+is Phase 12 research/planning from
+`.planning/phases/12-beam-and-column-operations/12-CONTEXT.md`. Do not begin
+implementation without a Phase 12 plan, and do not start Phase 13.
 
 ---
-*Last updated: 2026-07-31 at the Phase 11 real-live closure checkpoint*
+*Last updated: 2026-08-03 at the Phase 12 context-freeze checkpoint*
 
 ## Accumulated Context
 
