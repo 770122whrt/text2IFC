@@ -64,6 +64,12 @@ conflicts clarify. The existing IFC2X3 PSD corpus remains authoritative; Beam
 and Column need index, Type, occurrence-authoring and live-proof completion,
 not a new RAG.
 
+Follow-up on 2026-08-03 confirmed that missing Type reuse intent follows the
+existing Window/Door policy: create a dedicated deterministic
+`IfcBeamType`/`IfcColumnType` from authorized geometry rather than clarifying or
+selecting a neighboring Type. Only an explicit reuse request can trigger
+Type-candidate clarification.
+
 ---
 
 ## Validation and live proof
@@ -81,6 +87,11 @@ requested change.
 Column. `d7n.ifc` is the primary test-split scene and `vvo.ifc` supplies
 secondary mapped/swept and material-variation evidence. Both are BIMNet, so the
 phase may claim cross-scene but not cross-authoring-family validation.
+
+The user selected the established precision grade adapted to structural
+members: 5 mm axis endpoint/base/top tolerance, 0.1 degree direction/tilt
+tolerance and 1 mm section/member-dimension tolerance, with exact relationship
+cardinality and exact requested Material/Pset semantics.
 
 ---
 

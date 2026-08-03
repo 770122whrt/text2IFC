@@ -80,7 +80,9 @@ not start the Phase 13 large-context experiment.
   `IfcColumnType`.
 - **T-02:** A Type is either an explicitly authorized, uniquely resolved exact
   existing Type or a dedicated deterministic Type generated from authorized
-  parameters.
+  parameters. When no Type reuse is requested, the compiler creates the
+  dedicated deterministic Type without asking for clarification; the generated
+  Type identity and label are compiler policy, not inferred user facts.
 - **T-03:** Exact Type reuse preserves the Type unchanged. A mapped
   representation or size conflict is clarified or rejected; existing Type
   geometry is never silently scaled, rewritten or cloned into a guessed
@@ -151,9 +153,12 @@ not start the Phase 13 large-context experiment.
 
 ### Failure and clarification policy
 
-- **F-01:** Missing or ambiguous Storey, axis, rectangular dimensions,
-  non-square Column orientation or Type decision produces a structured
-  clarification. Missing optional material alone does not.
+- **F-01:** Missing or ambiguous Storey, axis, rectangular dimensions or
+  non-square Column orientation produces a structured clarification. An
+  explicit Type-reuse request that resolves to zero/multiple candidates or
+  conflicts with requested geometry also clarifies. Absence of Type-reuse
+  intent selects a dedicated deterministic Type; missing optional material
+  alone does not clarify.
 - **F-02:** Unsupported profiles, inclined/curved members, Grid placement and
   structural-connection requests return stable deterministic capability codes.
 - **F-03:** Unknown keys, synonymous keys and incorrect nesting fail the
@@ -186,6 +191,13 @@ not start the Phase 13 large-context experiment.
 - **V-06:** Live output must be reopened and independently pass strict L0, L1,
   L2 and global preservation. The result is not successful merely because the
   Provider returned valid JSON or the applicator wrote a file.
+- **V-06A:** Structural L1 uses the established precision grade adapted to
+  center-axis members: each axis endpoint/base/top is within 5 mm, axis
+  direction/horizontal-or-vertical tilt is within 0.1 degree, and section plus
+  member length/height dimensions are within 1 mm. Product, containment and
+  Type relationship cardinalities are exact. Requested Material/Pset facts
+  must match canonical name, IFC value type, value and semantic scope exactly.
+  Approximate volume agreement cannot substitute for these checks.
 - **V-07:** The Phase 11 proof curator/validator is evolved into a
   family-neutral validator that checks raw response, canonical intent, Bound
   ChangeSet, audit, repaired IFC, evaluation, prompt hashes, Provider/model
