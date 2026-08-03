@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: IFC ChangeSet Repair Pipeline
-status: Phase 12 context frozen; ready for research and planning
-last_updated: "2026-08-03T13:23:59.1465687+08:00"
+status: Phase 12 specification and 16-plan execution contract frozen; ready to execute
+last_updated: "2026-08-03T07:48:11.061Z"
 progress:
   total_phases: 13
   completed_phases: 11
-  total_plans: 37
+  total_plans: 53
   completed_plans: 37
-  percent: 100
+  percent: 70
 ---
 
 # Project State
@@ -91,6 +91,32 @@ Next: Research and plan Phase 12 from the canonical context. Do not implement
       Phase 12 or begin Phase 13 from this discussion checkpoint.
 ```
 
+## Phase 12 Planning Checkpoint - 2026-08-03
+
+```text
+Mode: PLAN COMPLETE
+Phase: Phase 12 Beam and Column Operations
+State: SPECIFICATION AND PLAN FROZEN; READY TO EXECUTE
+Requirements: OPS-03 Beam and OPS-04 Column remain pending implementation
+Canonical specification:
+  .planning/phases/12-beam-and-column-operations/12-SPEC.md
+Planning evidence:
+  .planning/phases/12-beam-and-column-operations/12-RESEARCH.md
+  .planning/phases/12-beam-and-column-operations/12-PATTERNS.md
+  .planning/phases/12-beam-and-column-operations/12-VALIDATION.md
+Plans: 12-01 through 12-16 in sixteen sequential waves
+TDD: 12-01 through 12-14 are one-feature canonical TDD plans;
+     12-15 performs real DeepSeek execution and independent curation;
+     12-16 performs regression, reporting and conditional state closure.
+Validation: Plan Checker PASS after two bounded revisions. All sixteen plans,
+            OPS-03/OPS-04, SPEC requirements 1-16, frozen G/P/T/R/O/F/V
+            decisions and threats T12-01..T12-14 are covered.
+Next: Execute Phase 12 only from 12-01 and only when explicitly authorized.
+      Do not start Phase 13 or reopen the frozen Door workflow, structural
+      geometry thresholds, Ground Truth isolation, Storey policy or RAG
+      authority model.
+```
+
 ## Project Reference
 
 See `.planning/PROJECT.md`.
@@ -98,14 +124,14 @@ See `.planning/PROJECT.md`.
 **Core value:** Given an IFC file and an explicit user request, produce a
 traceable semantic ChangeSet and an L1/L2-validated IFC result.
 
-**Current focus:** Phase 12 Beam/Column decisions are frozen and ready for
-research and planning. Phase 11 remains closed with real DeepSeek and
-independently recomputed Proof evidence.
+**Current focus:** Phase 12 Beam/Column specification and sixteen-plan
+execution contract are frozen and ready to execute. Phase 11 remains closed
+with real DeepSeek and independently recomputed Proof evidence.
 
 ## Current Position
 
-Phase: 12 (Beam and Column Operations) — CONTEXT FROZEN
-Plan: not created
+Phase: 12 (Beam and Column Operations) - PLANNED
+Plan: 12-01 through 12-16 created; none executed
 
 - Milestone: v1.1 IFC ChangeSet Repair Pipeline
 - Phase: 11 complete
@@ -121,10 +147,12 @@ Plan: not created
 
 - Progress: 11 / 13 phases complete
 - Requirements: WFID-01..06 and OPS-01..02 complete; OPS-03..04 pending
-- Last activity: 2026-08-03 - Phase 12 geometry, placement, Type/material,
-  RAG/routing, failure policy and strict live-proof matrix were frozen in
-  `12-CONTEXT.md`. Material is optional unless explicitly requested or
-  inherited through explicitly authorized exact Type reuse.
+- Last activity: 2026-08-03 - Phase 12 SPEC, research, pattern map, Nyquist
+  validation contract and sixteen sequential plans were frozen. Fourteen
+  one-feature TDD plans precede the standard real DeepSeek execution and
+  evidence-gated closure plans. Material is optional unless explicitly
+  requested or inherited through explicitly authorized exact Type reuse.
+
 - Phase 11 closure evidence: accepted live run
   `uat-20260731T224900289758Z` passed all three contracts. Two live successes
   were curated into the Proof collection. The current independent verifier
@@ -299,13 +327,14 @@ Plan: not created
 
 ## Next Action
 
-Phase 11 is closed and Phase 12 context is frozen. The next authorized workflow
-is Phase 12 research/planning from
-`.planning/phases/12-beam-and-column-operations/12-CONTEXT.md`. Do not begin
-implementation without a Phase 12 plan, and do not start Phase 13.
+Phase 11 is closed and Phase 12 is fully specified and planned. The next
+authorized workflow is execution of
+`.planning/phases/12-beam-and-column-operations/12-01-PLAN.md`, followed
+strictly by 12-02 through 12-16. Do not start execution without user direction,
+and do not start Phase 13.
 
 ---
-*Last updated: 2026-08-03 at the Phase 12 context-freeze checkpoint*
+*Last updated: 2026-08-03 at the Phase 12 specification-and-plan checkpoint*
 
 ## Accumulated Context
 

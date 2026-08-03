@@ -496,6 +496,10 @@ profiles.
 
 ### Phase 12: Beam and Column Operations
 
+**Status:** Planned - 2026-08-03. Specification, research, pattern mapping,
+Nyquist validation and sixteen sequential execution plans are frozen; no
+Phase 12 implementation has started.
+
 **Goal:** Prove the common ChangeSet architecture across non-opening structural
 elements.
 
@@ -503,6 +507,53 @@ elements.
 
 **Depends on:** Phases 8, 9 and 11; uses the property contract proven in Phase
 10.1 and the optional retrieval interface evaluated in Phase 10.2
+
+**Specification:** [Phase 12 SPEC](phases/12-beam-and-column-operations/12-SPEC.md)
+
+**Implementation research:** [Phase 12 RESEARCH](phases/12-beam-and-column-operations/12-RESEARCH.md)
+
+**Pattern map:** [Phase 12 PATTERNS](phases/12-beam-and-column-operations/12-PATTERNS.md)
+
+**Validation strategy:** [Phase 12 VALIDATION](phases/12-beam-and-column-operations/12-VALIDATION.md)
+
+**Plans:** 16 plans in 16 sequential waves
+
+- **Wave 1:** [12-01 - Structural prompt profiles and selected routing](phases/12-beam-and-column-operations/12-01-PLAN.md)
+- **Wave 2** *(blocked on Wave 1)*: [12-02 - Structural occurrence and Type index](phases/12-beam-and-column-operations/12-02-PLAN.md)
+- **Wave 3** *(blocked on Wave 2)*: [12-03 - Structural occurrence property and RAG authority integration](phases/12-beam-and-column-operations/12-03-PLAN.md)
+- **Wave 4** *(blocked on Wave 3)*: [12-04 - Deterministic structural Type factories](phases/12-beam-and-column-operations/12-04-PLAN.md)
+- **Wave 5** *(blocked on Wave 4)*: [12-05 - Repair-local straight rectangular member geometry](phases/12-beam-and-column-operations/12-05-PLAN.md)
+- **Wave 6** *(blocked on Wave 5)*: [12-06 - Exact-Type and optional material/Pset preservation](phases/12-beam-and-column-operations/12-06-PLAN.md)
+- **Wave 7** *(blocked on Wave 6)*: [12-07 - Registered add_beam resolution and application](phases/12-beam-and-column-operations/12-07-PLAN.md)
+- **Wave 8** *(blocked on Wave 7)*: [12-08 - Registered add_column resolution and application](phases/12-beam-and-column-operations/12-08-PLAN.md)
+- **Wave 9** *(blocked on Wave 8)*: [12-09 - Strict structural evaluation and mixed atomicity](phases/12-beam-and-column-operations/12-09-PLAN.md)
+- **Wave 10** *(blocked on Wave 9)*: [12-10 - Structural mutation and private-Gold isolation](phases/12-beam-and-column-operations/12-10-PLAN.md)
+- **Wave 11** *(blocked on Wave 10)*: [12-11 - Family-neutral strict independent Proof validator](phases/12-beam-and-column-operations/12-11-PLAN.md)
+- **Wave 12** *(blocked on Wave 11)*: [12-12 - d7n/vvo offline runner and curated strict Proof contract](phases/12-beam-and-column-operations/12-12-PLAN.md)
+- **Wave 13** *(blocked on Wave 12)*: [12-13 - Live transcript, preflight and no-fallback contract](phases/12-beam-and-column-operations/12-13-PLAN.md)
+- **Wave 14** *(blocked on Wave 13)*: [12-14 - Live Proof curation acceptance contract](phases/12-beam-and-column-operations/12-14-PLAN.md)
+- **Wave 15** *(blocked on Wave 14 and every offline gate)*: [12-15 - Execute and independently curate real DeepSeek structural UAT](phases/12-beam-and-column-operations/12-15-PLAN.md)
+- **Wave 16** *(blocked on Wave 15 accepted live evidence)*: [12-16 - Regress, report and conditionally close Phase 12](phases/12-beam-and-column-operations/12-16-PLAN.md)
+
+**Cross-cutting constraints:**
+
+- Stage 1 keeps the existing single compact classification/extraction call;
+  Stage 2 receives only selected full operation profiles and few-shots.
+- Noncanonical Provider fields fail closed. No compatibility aliases are
+  added to accommodate model output.
+- Missing Type-reuse intent creates one dedicated deterministic structural
+  Type; exact Type reuse remains unchanged. Material and Psets are optional
+  unless explicitly requested or exactly authorized.
+- Structural L1 requires axis endpoints/base/top within 5 mm,
+  direction/horizontal-or-vertical tilt within 0.1 degrees, section/member
+  dimensions within 1 mm, and exact containment/Type cardinality.
+- Vector/RAG recall remains discovery only; executable property values require
+  exact typed authority.
+- Damaged/public production input is isolated from original/private Gold.
+  `d7n` and `vvo` prove cross-scene BIMNet compatibility only.
+- Real DeepSeek starts only after all offline gates pass, never uses synthetic,
+  cached or prerecorded fallback, and cannot close the phase until a separate
+  validator reopens and recomputes strict Proof.
 
 **Success criteria:**
 

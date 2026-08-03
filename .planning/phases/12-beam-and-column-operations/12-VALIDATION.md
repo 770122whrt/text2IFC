@@ -1,8 +1,8 @@
 ---
 phase: 12
 slug: beam-and-column-operations
-status: draft
-nyquist_compliant: false
+status: approved
+nyquist_compliant: true
 wave_0_complete: false
 created: 2026-08-03
 ---
@@ -80,21 +80,22 @@ execution. `W0` means the task creates the named test first under TDD.
 
 | Task ID | Plan | Wave | Requirement | Threat Ref | Secure behavior | Test type | Automated command | File exists | Status |
 |---------|------|------|-------------|------------|-----------------|-----------|-------------------|-------------|--------|
-| 12-01-01 | 01 | 1 | OPS-03, OPS-04 | T12-01, T12-02 | only selected full structural profiles reach Stage 2; noncanonical fields fail | unit | `.\.venv\Scripts\python.exe -m pytest tests/ifc_repair/test_structural_prompt_profiles.py tests/ifc_repair/test_operation_prompt_profiles.py tests/ifc_repair/test_selected_provider_profiles.py -q` | W0 | pending |
-| 12-01-02 | 01 | 1 | OPS-03, OPS-04 | T12-03 | Beam/Column occurrence and Type facts round-trip without becoming authority | unit/integration | `.\.venv\Scripts\python.exe -m pytest tests/ifc_repair/test_structural_index.py tests/ifc_repair/test_indexer.py tests/ifc_repair/test_index_store.py -q` | W0 | pending |
-| 12-01-03 | 01 | 1 | OPS-03, OPS-04 | T12-04 | property retrieval requires exact typed value authority and supported scope | unit | `.\.venv\Scripts\python.exe -m pytest tests/ifc_repair/test_structural_property_authoring.py tests/ifc_repair/test_occurrence_property_operation.py tests/ifc_repair/test_property_binding_security.py -q` | W0 | pending |
-| 12-02-01 | 02 | 2 | OPS-03, OPS-04 | T12-05 | generated structural Type derivation/class/hash are compiler-owned | unit | `.\.venv\Scripts\python.exe -m pytest tests/ifc_repair/test_structural_type_authoring.py tests/ifc_repair/test_generated_type_authority.py -q` | W0 | pending |
-| 12-02-02 | 02 | 2 | OPS-03, OPS-04 | T12-06 | reopened straight-member axes and rectangular sections equal authorized inputs | unit/integration | `.\.venv\Scripts\python.exe -m pytest tests/ifc_repair/test_structural_geometry.py -q` | W0 | pending |
-| 12-02-03 | 02 | 2 | OPS-03, OPS-04 | T12-07 | exact Type is unchanged; generated Type cannot invent material/Pset facts | integration | `.\.venv\Scripts\python.exe -m pytest tests/ifc_repair/test_structural_type_authoring.py tests/ifc_repair/test_property_authoring.py tests/ifc_repair/test_apply_transaction.py -q` | W0 | pending |
-| 12-03-01 | 03 | 3 | OPS-03 | T12-01, T12-08 | Beam missing/ambiguous facts clarify; complete facts create one valid Beam | integration | `.\.venv\Scripts\python.exe -m pytest tests/ifc_repair/test_beam_resolution.py tests/ifc_repair/test_beam_application.py -q` | W0 | pending |
-| 12-03-02 | 03 | 3 | OPS-04 | T12-01, T12-08 | Column missing/ambiguous facts clarify; base-Storey policy creates one valid Column | integration | `.\.venv\Scripts\python.exe -m pytest tests/ifc_repair/test_column_resolution.py tests/ifc_repair/test_column_application.py -q` | W0 | pending |
-| 12-03-03 | 03 | 3 | OPS-03, OPS-04 | T12-09 | mixed structural application and semantic assignments publish all or none | integration | `.\.venv\Scripts\python.exe -m pytest tests/ifc_repair/test_structural_atomicity.py tests/ifc_repair/test_apply_transaction.py -q` | W0 | pending |
-| 12-04-01 | 04 | 4 | OPS-03, OPS-04 | T12-10 | deterministic damage keeps original/mapping private from production | integration/security | `.\.venv\Scripts\python.exe -m pytest tests/ifc_repair/test_structural_mutation.py tests/ifc_repair/test_phase12_ground_truth_isolation.py -q` | W0 | pending |
-| 12-04-02 | 04 | 4 | OPS-03, OPS-04 | T12-11 | reopened L0/L1/L2 uses exact axis/section/cardinality/semantic checks | integration | `.\.venv\Scripts\python.exe -m pytest tests/ifc_repair/test_structural_evaluation.py tests/ifc_repair/test_evaluation_policy.py tests/ifc_repair/test_requested_property_l2.py -q` | W0 | pending |
-| 12-04-03 | 04 | 4 | OPS-03, OPS-04 | T12-12, T12-13 | d7n/vvo offline artifacts pass preservation and independent strict validation | dataset E2E | `.\.venv\Scripts\python.exe -m pytest tests/ifc_repair/test_phase12_dataset_e2e.py tests/ifc_repair/test_phase12_success_cases.py tests/ifc_repair/test_success_case_collection.py -q` | W0 | pending |
-| 12-05-01 | 05 | 5 | OPS-03, OPS-04 | T12-02, T12-14 | live runner exposes actual calls/retries and forbids synthetic/cached fallback | integration | `.\.venv\Scripts\python.exe -m pytest tests/ifc_repair/test_phase12_live_uat.py -q` | W0 | pending |
-| 12-05-02 | 05 | 5 | OPS-03, OPS-04 | T12-11, T12-12 | live IFC and manifest are independently reopened, hashed and recomputed | live + independent | `.\.venv\Scripts\python.exe scripts/ifc_repair/validate_success_cases.py --help` plus the Phase 12 strict-validator command frozen by Plan 04 | existing/evolved | pending |
-| 12-05-03 | 05 | 5 | OPS-03, OPS-04 | all | complete regression and curated report match raw evidence | regression/report | `.\.venv\Scripts\python.exe -m pytest tests/ifc_repair -q` | existing | pending |
+| 12-01-01 | 01 | 1 | OPS-03, OPS-04 | T12-01, T12-02 | selected structural profiles only; canonical fields fail closed | unit | `.\.venv\Scripts\python.exe -m pytest tests/ifc_repair/test_structural_prompt_profiles.py tests/ifc_repair/test_operation_prompt_profiles.py tests/ifc_repair/test_selected_provider_profiles.py -q` | W0 | pending |
+| 12-02-01 | 02 | 2 | OPS-03, OPS-04 | T12-03 | structural occurrence/Type facts round-trip without authority escalation | unit/integration | `.\.venv\Scripts\python.exe -m pytest tests/ifc_repair/test_structural_index.py tests/ifc_repair/test_indexer.py tests/ifc_repair/test_index_store.py -q` | W0 | pending |
+| 12-03-01 | 03 | 3 | OPS-03, OPS-04 | T12-04 | exact typed applicable PSD facts are the sole property authority | unit | `.\.venv\Scripts\python.exe -m pytest tests/ifc_repair/test_structural_property_authoring.py tests/ifc_repair/test_occurrence_property_operation.py tests/ifc_repair/test_property_binding_security.py -q` | W0 | pending |
+| 12-04-01 | 04 | 4 | OPS-03, OPS-04 | T12-05 | generated structural Type derivation/class/hash are compiler-owned | unit | `.\.venv\Scripts\python.exe -m pytest tests/ifc_repair/test_structural_type_authoring.py tests/ifc_repair/test_generated_type_authority.py -q` | W0 | pending |
+| 12-05-01 | 05 | 5 | OPS-03, OPS-04 | T12-06 | reopened straight-member axes/sections equal authorized inputs | unit/integration | `.\.venv\Scripts\python.exe -m pytest tests/ifc_repair/test_structural_geometry.py -q` | W0 | pending |
+| 12-06-01 | 06 | 6 | OPS-03, OPS-04 | T12-07 | exact Type is unchanged and optional semantics are authority-bound | integration | `.\.venv\Scripts\python.exe -m pytest tests/ifc_repair/test_structural_type_authoring.py tests/ifc_repair/test_property_authoring.py tests/ifc_repair/test_apply_transaction.py -q` | evolved W0 | pending |
+| 12-07-01 | 07 | 7 | OPS-03 | T12-01, T12-08 | Beam complete/clarification/unsupported paths are deterministic | integration | `.\.venv\Scripts\python.exe -m pytest tests/ifc_repair/test_beam_resolution.py tests/ifc_repair/test_beam_application.py -q` | W0 | pending |
+| 12-08-01 | 08 | 8 | OPS-04 | T12-01, T12-08 | Column base-Storey/orientation paths are deterministic | integration | `.\.venv\Scripts\python.exe -m pytest tests/ifc_repair/test_column_resolution.py tests/ifc_repair/test_column_application.py -q` | W0 | pending |
+| 12-09-01 | 09 | 9 | OPS-03, OPS-04 | T12-09, T12-11 | strict thresholds and mixed all-or-none publication | integration | `.\.venv\Scripts\python.exe -m pytest tests/ifc_repair/test_structural_atomicity.py tests/ifc_repair/test_apply_transaction.py -q` | W0 | pending |
+| 12-10-01 | 10 | 10 | OPS-03, OPS-04 | T12-10 | deterministic damage keeps original/mapping private | integration/security | `.\.venv\Scripts\python.exe -m pytest tests/ifc_repair/test_structural_mutation.py tests/ifc_repair/test_phase12_ground_truth_isolation.py -q` | W0 | pending |
+| 12-11-01 | 11 | 11 | OPS-03, OPS-04 | T12-11, T12-12 | strict validator distrusts aggregate success and edited artifacts | integration/security | `.\.venv\Scripts\python.exe -m pytest tests/ifc_repair/test_structural_evaluation.py tests/ifc_repair/test_phase12_success_cases.py tests/ifc_repair/test_success_case_collection.py -q` | W0 | pending |
+| 12-12-01 | 12 | 12 | OPS-03, OPS-04 | T12-12, T12-13 | d7n/vvo/mixed offline artifacts curate only after strict validation | dataset E2E | `.\.venv\Scripts\python.exe -m pytest tests/ifc_repair/test_phase12_dataset_e2e.py tests/ifc_repair/test_phase12_success_cases.py tests/ifc_repair/test_success_case_collection.py -q` | evolved W0 | pending |
+| 12-13-01 | 13 | 13 | OPS-03, OPS-04 | T12-02, T12-14 | live runner exposes calls/retries and enforces preflight/no fallback | integration | `.\.venv\Scripts\python.exe -m pytest tests/ifc_repair/test_phase12_live_uat.py -q` | W0 | pending |
+| 12-14-01 | 14 | 14 | OPS-03, OPS-04 | T12-11, T12-12, T12-14 | curation requires real transcript and separate strict validation | integration/security | `.\.venv\Scripts\python.exe -m pytest tests/ifc_repair/test_phase12_live_uat.py tests/ifc_repair/test_phase12_success_cases.py -q` | evolved W0 | pending |
+| 12-15-01 | 15 | 15 | OPS-03, OPS-04 | T12-10, T12-11, T12-12, T12-14 | actual real Provider output is separately validated before curation | live + independent | `.\.venv\Scripts\python.exe scripts/ifc_repair/run_phase12_live_uat.py --provider deepseek --require-green-preflight; if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }; .\.venv\Scripts\python.exe scripts/ifc_repair/curate_phase12_live_proof.py --run-root dataset/processed/ifc-repair-runs/phase12-live --proof-root dataset/processed/proof/ifc-repair-success-cases; if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }; .\.venv\Scripts\python.exe scripts/ifc_repair/validate_success_cases.py --root dataset/processed/proof/ifc-repair-success-cases` | existing/evolved | pending |
+| 12-16-01 | 16 | 16 | OPS-03, OPS-04 | all | final regression/report/state closure matches raw evidence | regression/report | `.\.venv\Scripts\python.exe -m pytest tests/ifc_repair -q; if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }; .\.venv\Scripts\python.exe -m compileall -q src tests scripts; if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }; .\.venv\Scripts\python.exe scripts/ifc_repair/validate_success_cases.py --root dataset/processed/proof/ifc-repair-success-cases; if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }; git diff --check` | existing | pending |
 
 *Status: pending - green - red - flaky*
 
@@ -328,16 +329,16 @@ green.
 
 ## Validation Sign-Off
 
-- [ ] All plan tasks have focused automated verification or a Wave 0 test
+- [x] All plan tasks have focused automated verification or a Wave 0 test
       created first.
-- [ ] No three consecutive tasks lack an automated command.
-- [ ] Every Wave 0 file is created by its owning TDD task.
-- [ ] No watch-mode flag exists.
-- [ ] Focused feedback latency is at most 180 seconds.
-- [ ] OPS-03 and OPS-04 trace through plans, tests and Proof.
-- [ ] Offline gates precede the real DeepSeek gate.
-- [ ] Independent Proof validation distrusts runner aggregate success.
-- [ ] `nyquist_compliant: true` is set after the final plan/task map is
+- [x] No three consecutive tasks lack an automated command.
+- [x] Every Wave 0 file is assigned to its owning TDD task.
+- [x] No watch-mode flag exists.
+- [x] Focused feedback latency is at most 180 seconds.
+- [x] OPS-03 and OPS-04 trace through plans, tests and Proof.
+- [x] Offline gates precede the real DeepSeek gate.
+- [x] Independent Proof validation distrusts runner aggregate success.
+- [x] `nyquist_compliant: true` is set after the final plan/task map is
       reconciled.
 
-**Approval:** pending plan-checker convergence
+**Approval:** approved 2026-08-03 - Plan Checker PASS
