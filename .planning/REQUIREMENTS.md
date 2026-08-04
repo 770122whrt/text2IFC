@@ -182,9 +182,9 @@ semantic ChangeSet and an L1/L2-validated IFC result.
   into one surviving empty Opening, with exact/generated Type policy,
   viewpoint-aware operation semantics and required L1/L2 evidence through
   registered Door-specific operations.
-- [ ] **OPS-03**: User can add a Beam with operation-specific placement,
+- [x] **OPS-03**: User can add a Beam with operation-specific placement,
   containment, type/material and L1/L2 semantics.
-- [ ] **OPS-04**: User can add a Column with operation-specific placement,
+- [x] **OPS-04**: User can add a Column with operation-specific placement,
   containment, type/material and L1/L2 semantics.
 
 ### Scale and Context
@@ -263,8 +263,8 @@ semantic ChangeSet and an L1/L2-validated IFC result.
 | WFID-06 | 10.5 | Complete |
 | OPS-01 | 11 | Complete |
 | OPS-02 | 11 | Complete |
-| OPS-03 | 12 | Pending |
-| OPS-04 | 12 | Pending |
+| OPS-03 | 12 | Complete |
+| OPS-04 | 12 | Complete |
 | SCALE-01 | 13 | Pending |
 | SCALE-02 | 13 | Pending |
 

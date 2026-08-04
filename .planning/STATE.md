@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: IFC ChangeSet Repair Pipeline
 status: Phase 12 specification and 16-plan execution contract frozen; ready to execute
-last_updated: "2026-08-03T07:48:11.061Z"
+last_updated: "2026-08-04T16:56:55.355Z"
 progress:
   total_phases: 13
   completed_phases: 11
   total_plans: 53
-  completed_plans: 37
-  percent: 70
+  completed_plans: 38
+  percent: 72
 ---
 
 # Project State
@@ -124,14 +124,14 @@ See `.planning/PROJECT.md`.
 **Core value:** Given an IFC file and an explicit user request, produce a
 traceable semantic ChangeSet and an L1/L2-validated IFC result.
 
-**Current focus:** Phase 12 Beam/Column specification and sixteen-plan
+**Current focus:** Phase 12 — Beam and Column Operations
 execution contract are frozen and ready to execute. Phase 11 remains closed
 with real DeepSeek and independently recomputed Proof evidence.
 
 ## Current Position
 
-Phase: 12 (Beam and Column Operations) - PLANNED
-Plan: 12-01 through 12-16 created; none executed
+Phase: 12 (Beam and Column Operations) — EXECUTING
+Plan: 2 of 16
 
 - Milestone: v1.1 IFC ChangeSet Repair Pipeline
 - Phase: 11 complete
