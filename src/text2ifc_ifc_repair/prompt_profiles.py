@@ -12,6 +12,10 @@ from types import MappingProxyType
 from typing import Any, Iterable, Mapping
 
 from jsonschema import Draft202012Validator
+from text2ifc_agent.prompt_registry import (
+    PromptRegistryError,
+    load_prompt_registry,
+)
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -207,6 +211,7 @@ def select_prompt_profiles(
     total_bytes = 0
     for profile_id in selected_ids:
         profile = registry[profile_id]
+        _validate_profile_registry_binding(profile)
         full_profiles.append(profile.full_projection())
         profile_hashes.append(profile.profile_hash)
         total_bytes += profile.profile_bytes
@@ -257,6 +262,29 @@ def validate_profile_operation_binding(
             "PROFILE_TARGET_CLASS_MISMATCH",
             f"{profile.profile_id}:{sorted(target_ifc_classes)}",
         )
+
+
+def _validate_profile_registry_binding(profile: PromptProfile) -> None:
+    """Require selected full profiles to match their external hash record."""
+
+    try:
+        prompt_registry = load_prompt_registry()
+    except PromptRegistryError as error:
+        raise PromptProfileError("PROFILE_REGISTRY_INVALID", str(error)) from error
+    record = prompt_registry.get(profile.profile_id)
+    if record is None:
+        raise PromptProfileError(
+            "PROFILE_REGISTRY_ENTRY_MISSING", profile.profile_id
+        )
+    expected_path = (
+        f"prompts/agent/ifc-repair-profiles/{profile.profile_id}.json"
+    )
+    if str(record.get("path")) != expected_path:
+        raise PromptProfileError(
+            "PROFILE_REGISTRY_PATH_MISMATCH", profile.profile_id
+        )
+    if str(record.get("sha256")) != profile.profile_hash:
+        raise PromptProfileError("PROFILE_HASH_MISMATCH", profile.profile_id)
 
 
 def _validate_few_shots(document: Mapping[str, Any]) -> None:

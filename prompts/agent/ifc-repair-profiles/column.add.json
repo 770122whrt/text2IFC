@@ -1,0 +1,25 @@
+{
+  "schema_version": "text2ifc/ifc-repair-prompt-profile/0.1",
+  "profile_id": "column.add",
+  "profile_version": "0.1",
+  "component_family": "column",
+  "action": "add",
+  "operation_type": "add_column",
+  "target_ifc_classes": ["IfcBuildingStorey"],
+  "classification_terms": ["column", "structural column", "add column", "vertical member", "柱", "添加柱"],
+  "slot_summary": "Target base Storey; straight vertical center-axis base/top in Storey-local millimetres; rectangular width/depth and explicit orientation for a non-square section; optional exact Column Type reuse, explicit material and canonical requested Pset/quantity facts. Omit unstated facts instead of emitting aliases or null placeholders.",
+  "required_slots": ["/target_query", "/parameters/axis/base", "/parameters/axis/top", "/parameters/section/shape", "/parameters/section/width_mm", "/parameters/section/depth_mm"],
+  "conditional_slots": ["/parameters/section/orientation", "/prototype_intent", "/attribute_intents"],
+  "optional_slots": ["/property_intents", "/quantity_intents", "/semantic_bundle_refs"],
+  "program_derived_slots": ["axis height from base/top", "unit and placement matrices", "representation context and swept-solid topology", "occurrence and relationship GUIDs", "generated-template identity and label", "base-Storey containment relationship"],
+  "forbidden_inferences": ["profile-corner or support-face placement", "scalar height in conflict with or substituted for the center axis", "orientation for a non-square section without explicit or uniquely resolved evidence", "nearby Column or Type similarity", "material, strength, grade, property or quantity when absent", "aliases, wrong nesting or null placeholders", "Grid labels as coordinates"],
+  "supported_capabilities": ["straight_vertical", "rectangular_section", "center_axis_mm", "explicit_non_square_orientation", "exact_type_reuse", "generated_type", "optional_explicit_material", "Pset_ColumnCommon"],
+  "unsupported_capabilities": ["inclined", "curved", "round_section", "i_section", "h_section", "arbitrary_section", "variable_section", "automatic_storey_split", "grid_placement", "structural_analysis_connection"],
+  "stage2_projection_fields": ["operation_id", "operation_type", "target", "parameters", "evidence_refs"],
+  "few_shots": [
+    {"example_id": "column.add.complete", "path": "prompts/agent/ifc-repair-few-shots/column-add-complete.json", "sha256": "sha256:d6cf20273730eab11e38ea743a7a4495df82dc5b6d56deea88ead7929a97f24c"},
+    {"example_id": "column.add.clarification", "path": "prompts/agent/ifc-repair-few-shots/column-add-clarification.json", "sha256": "sha256:1e10f8f477ae714573fa3409ddb54fe9050e6f884b78ac5ded553e3be3f0db07"},
+    {"example_id": "column.add.type-reuse", "path": "prompts/agent/ifc-repair-few-shots/column-add-type-reuse.json", "sha256": "sha256:5e762d68a4fd09ef0b509b2024cdf97daf13abe03cf6e13d7e737866b4728b17"},
+    {"example_id": "column.add.unsupported", "path": "prompts/agent/ifc-repair-few-shots/column-add-unsupported.json", "sha256": "sha256:eef64e88d688ff3021d97357d2a39ac36b4f25bc8b9e204b74451e50eaa6b3d5"}
+  ]
+}

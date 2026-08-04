@@ -6,6 +6,7 @@ from pathlib import Path
 import pytest
 
 from text2ifc_agent.prompt_registry import load_prompt_registry
+from text2ifc_agent.providers import ProviderOutput
 from text2ifc_ifc_repair.operations import create_default_registry
 from text2ifc_ifc_repair.prompt_profiles import (
     DEFAULT_PROFILE_DIR,
@@ -15,9 +16,142 @@ from text2ifc_ifc_repair.prompt_profiles import (
     select_prompt_profiles,
     validate_profile_operation_binding,
 )
+from text2ifc_ifc_repair.registry import OperationDefinition, OperationRegistry
+from text2ifc_ifc_repair.request_stage import generate_repair_intent
 
 
 STRUCTURAL_PROFILE_IDS = ("beam.add", "column.add")
+
+
+class _Provider:
+    def __init__(self, response: dict) -> None:
+        self.response = response
+        self.calls: list[dict] = []
+
+    def generate_candidate(self, **kwargs) -> ProviderOutput:
+        self.calls.append(kwargs)
+        return ProviderOutput(
+            text=json.dumps(self.response, ensure_ascii=False),
+            metadata={"provider": "fixture", "model": "fixture-model"},
+        )
+
+
+def _noop(**_kwargs):
+    return None
+
+
+def _point_schema() -> dict:
+    return {
+        "type": "object",
+        "additionalProperties": False,
+        "required": ["x_mm", "y_mm", "z_mm"],
+        "properties": {
+            axis: {"type": "number"} for axis in ("x_mm", "y_mm", "z_mm")
+        },
+    }
+
+
+def _structural_registry() -> OperationRegistry:
+    registry = OperationRegistry()
+    for family in ("beam", "column"):
+        endpoints = ("start", "end") if family == "beam" else ("base", "top")
+        dimensions = (
+            ("width_mm", "height_mm")
+            if family == "beam"
+            else ("width_mm", "depth_mm")
+        )
+        parameter_schema = {
+            "type": "object",
+            "additionalProperties": False,
+            "required": ["axis", "section"],
+            "properties": {
+                "axis": {
+                    "type": "object",
+                    "additionalProperties": False,
+                    "required": list(endpoints),
+                    "properties": {
+                        endpoint: _point_schema() for endpoint in endpoints
+                    },
+                },
+                "section": {
+                    "type": "object",
+                    "additionalProperties": False,
+                    "required": ["shape", *dimensions],
+                    "properties": {
+                        "shape": {"const": "rectangle"},
+                        **{
+                            dimension: {"type": "number", "exclusiveMinimum": 0}
+                            for dimension in dimensions
+                        },
+                    },
+                },
+            },
+        }
+        registry.register(
+            OperationDefinition(
+                operation_type=f"add_{family}",
+                target_ifc_classes=("IfcBuildingStorey",),
+                parameter_schema=parameter_schema,
+                context_adapter=_noop,
+                precondition_checker=_noop,
+                applicator=_noop,
+                postcondition_checker=_noop,
+                comparison_adapter=_noop,
+                capability_constraints={},
+                prompt_profile_id=f"{family}.add",
+            )
+        )
+    return registry
+
+
+def _structural_intent_body(family: str) -> dict:
+    source = {
+        "source_kind": "user_request",
+        "reference": "request:/text",
+        "excerpt": f"add one {family} on Level 1",
+    }
+    if family == "beam":
+        axis = {
+            "start": {"x_mm": 0, "y_mm": 0, "z_mm": 3000},
+            "end": {"x_mm": 5000, "y_mm": 0, "z_mm": 3000},
+        }
+        section = {"shape": "rectangle", "width_mm": 300, "height_mm": 500}
+    else:
+        axis = {
+            "base": {"x_mm": 1000, "y_mm": 2000, "z_mm": 0},
+            "top": {"x_mm": 1000, "y_mm": 2000, "z_mm": 3000},
+        }
+        section = {"shape": "rectangle", "width_mm": 500, "depth_mm": 500}
+    return {
+        "schema_version": "text2ifc/ifc-repair-intent-body/0.5",
+        "operations": [
+            {
+                "operation_id": f"{family}-1",
+                "operation_type": f"add_{family}",
+                "routing_intent": {
+                    "component_family": family,
+                    "action": "add",
+                    "operation_profile": f"{family}.add",
+                    "source": source,
+                },
+                "target_query": {
+                    "schema_version": "text2ifc/ifc-target-query/0.1",
+                    "allowed_ifc_classes": ["IfcBuildingStorey"],
+                    "names": ["Level 1"],
+                },
+                "parameters": {"axis": axis, "section": section},
+                "attribute_intents": [],
+                "property_intents": [],
+                "semantic_bundle_refs": [],
+                "quantity_intents": [],
+                "occurrence_reuse_intent": None,
+                "prototype_intent": None,
+                "provenance": [source],
+            }
+        ],
+        "semantic_bundles": [],
+        "provenance": [source],
+    }
 
 
 def _structural_profile_path(profile_id: str) -> Path:
@@ -44,6 +178,34 @@ def test_structural_profiles_are_hash_bound_but_not_executable_yet() -> None:
             f"prompts/agent/ifc-repair-profiles/{profile_id}.json"
         )
         assert registry_record["sha256"] == profile.profile_hash
+
+
+@pytest.mark.parametrize("family", ("beam", "column"))
+def test_stage1_structural_routing_extracts_in_one_compact_call(
+    family: str,
+    tmp_path: Path,
+) -> None:
+    provider = _Provider(_structural_intent_body(family))
+    result = generate_repair_intent(
+        provider=provider,
+        request_id=f"structural-profile-{family}",
+        repair_request=f"add one {family} on Level 1",
+        registry=_structural_registry(),
+        output_dir=tmp_path,
+        max_attempts=1,
+        intent_schema_version="text2ifc/ifc-repair-intent/0.5",
+    )
+
+    assert result["valid"] is True
+    assert result["classification"] == "repair_intent"
+    assert len(provider.calls) == 1
+    catalog = json.loads(
+        (tmp_path / "renderer-input.json").read_text(encoding="utf-8")
+    )["SUPPORTED_OPERATIONS"]
+    assert [item["profile_id"] for item in catalog] == ["beam.add", "column.add"]
+    serialized = json.dumps(catalog, ensure_ascii=False)
+    assert "EXAMPLE_ONLY" not in serialized
+    assert "user_text" not in serialized
 
 
 def test_structural_compact_profiles_expose_only_canonical_public_slots() -> None:
