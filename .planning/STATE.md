@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: IFC ChangeSet Repair Pipeline
-status: Phase 12 executing; Plans 12-01 and 12-02 complete, 12-03 next
-last_updated: "2026-08-05T16:14:25.681Z"
+status: Phase 12 executing; Plans 12-01 through 12-03 complete, 12-04 next
+last_updated: "2026-08-05T16:27:33.421Z"
 progress:
   total_phases: 13
   completed_phases: 11
   total_plans: 53
-  completed_plans: 39
-  percent: 74
+  completed_plans: 40
+  percent: 75
 ---
 
 # Project State
@@ -131,7 +131,7 @@ with real DeepSeek and independently recomputed Proof evidence.
 ## Current Position
 
 Phase: 12 (Beam and Column Operations) — EXECUTING
-Plan: 3 of 16
+Plan: 4 of 16
 
 - Milestone: v1.1 IFC ChangeSet Repair Pipeline
 - Phase: 11 complete
@@ -147,12 +147,12 @@ Plan: 3 of 16
 
 - Progress: 11 / 13 phases complete
 - Requirements: WFID-01..06 and OPS-01..02 complete; OPS-03..04 pending
-- Last activity: 2026-08-06 - Plan 12-02 completed. Beam/Column occurrences
-  and Types now index separately with source provenance, exact Storey/Type
-  relationships and diagnostic-only geometry evidence. d7n inventories
-  10/15 Beam/Column and vvo inventories 6/5 after SQLite reopen. IFC Index and
-  Extractor 0.5 reject stale caches by default. OPS-03/OPS-04 remain pending
-  until the independent Plan 12-16 closure gate.
+- Last activity: 2026-08-06 - Plan 12-03 completed. Beam/Column now use the
+  generic occurrence-property and semantic-authoring path with exact
+  applicable PSD names, IFC value types and bounded scopes. Canonical
+  LoadBearing=true passes for both families; vector-only, cross-class,
+  noncanonical and mistyped evidence fails closed. OPS-03/OPS-04 remain
+  pending until the independent Plan 12-16 closure gate.
 
 - Phase 11 closure evidence: accepted live run
   `uat-20260731T224900289758Z` passed all three contracts. Two live successes
@@ -329,12 +329,12 @@ Plan: 3 of 16
 ## Next Action
 
 Phase 11 remains closed. Continue Phase 12 strictly with
-`.planning/phases/12-beam-and-column-operations/12-03-PLAN.md`, followed by
-12-04 through 12-16. OPS-03/OPS-04 remain pending until final independent
+`.planning/phases/12-beam-and-column-operations/12-04-PLAN.md`, followed by
+12-05 through 12-16. OPS-03/OPS-04 remain pending until final independent
 closure. Do not start Phase 13.
 
 ---
-*Last updated: 2026-08-06 after completing Phase 12 Plan 02*
+*Last updated: 2026-08-06 after completing Phase 12 Plan 03*
 
 ## Accumulated Context
 
