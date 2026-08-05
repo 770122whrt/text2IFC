@@ -496,9 +496,9 @@ profiles.
 
 ### Phase 12: Beam and Column Operations
 
-**Status:** Planned - 2026-08-03. Specification, research, pattern mapping,
-Nyquist validation and sixteen sequential execution plans are frozen; no
-Phase 12 implementation has started.
+**Status:** In progress - 2026-08-06. Specification, research, pattern mapping,
+Nyquist validation and sixteen sequential execution plans are frozen; Plans
+12-01 through 12-04 are complete and Plan 12-05 is next.
 
 **Goal:** Prove the common ChangeSet architecture across non-opening structural
 elements.
@@ -516,7 +516,7 @@ elements.
 
 **Validation strategy:** [Phase 12 VALIDATION](phases/12-beam-and-column-operations/12-VALIDATION.md)
 
-**Plans:** 3/16 plans executed
+**Plans:** 4/16 plans executed
 
 - **Wave 1:** [12-01 - Structural prompt profiles and selected routing](phases/12-beam-and-column-operations/12-01-PLAN.md)
 - **Wave 2** *(blocked on Wave 1)*: [12-02 - Structural occurrence and Type index](phases/12-beam-and-column-operations/12-02-PLAN.md)
