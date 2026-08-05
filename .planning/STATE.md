@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: IFC ChangeSet Repair Pipeline
-status: Phase 12 executing; Plans 12-01 through 12-08 complete, 12-09 next
-last_updated: "2026-08-05T17:40:30.372Z"
+status: Phase 12 executing; Plans 12-01 through 12-09 complete, 12-10 next
+last_updated: "2026-08-05T18:01:35.737Z"
 progress:
   total_phases: 13
   completed_phases: 11
   total_plans: 53
-  completed_plans: 45
-  percent: 85
+  completed_plans: 46
+  percent: 87
 ---
 
 # Project State
@@ -131,7 +131,7 @@ with real DeepSeek and independently recomputed Proof evidence.
 ## Current Position
 
 Phase: 12 (Beam and Column Operations) — EXECUTING
-Plan: 9 of 16
+Plan: 10 of 16
 
 - Milestone: v1.1 IFC ChangeSet Repair Pipeline
 - Phase: 11 complete
@@ -147,12 +147,12 @@ Plan: 9 of 16
 
 - Progress: 11 / 13 phases complete
 - Requirements: WFID-01..06 and OPS-01..02 complete; OPS-03..04 pending
-- Last activity: 2026-08-06 - Plan 12-08 completed. `add_column` is registered
-  through the same common lifecycle and reopens square and explicitly oriented
-  vertical IfcColumns with one IfcColumnType and exactly one base-Storey
-  containment even across upper Storeys. Non-square missing orientation
-  clarifies; inclined/Grid/round/analysis/split requests mutate no Roots.
-  Occurrence orientation is explicitly excluded from Type section authority.
+- Last activity: 2026-08-06 - Plan 12-09 completed. Beam and Column now emit
+  strict reopened L1 evidence at inclusive 5 mm axis-point, 0.1 degree
+  direction/tilt and 1 mm member/section limits, with exact product, Storey and
+  Type cardinality. Real d7n Beam+Column support contact and the existing vvo
+  Window+Door Proof extended with Beam+Column each publish as one atomic
+  transaction; injected audit/application/postcondition defects publish none.
   OPS-03/OPS-04 remain pending until Plan 12-16.
 
 - Phase 11 closure evidence: accepted live run
