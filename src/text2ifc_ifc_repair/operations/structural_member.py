@@ -8,6 +8,11 @@ import uuid
 
 import ifcopenshell.guid
 
+from text2ifc_ifc_repair.evaluation_policy import (
+    STRUCTURAL_L1_CHECK_IDS,
+    compare_structural_l1_measurement,
+    structural_l1_authorization,
+)
 from text2ifc_ifc_repair.run_models import hash_json
 from text2ifc_ifc_repair.geometry import measure_straight_rectangular_member
 from text2ifc_ifc_repair.operations.hosted_opening import (
@@ -86,6 +91,200 @@ def resolve_structural_member_frame(
         "orientation": orientation,
         "section": canonical_section,
     }
+
+
+def structural_l1_comparison_report(
+    *,
+    family: str,
+    operation: Mapping[str, Any],
+    after_model: Any,
+    application: Mapping[str, Any],
+    role_mapping: Mapping[str, str] | None = None,
+) -> dict[str, Any]:
+    """Measure one registered structural operation from reopened IFC only."""
+
+    authorization = structural_l1_authorization(family)
+    try:
+        occurrence_class = {
+            "beam": "IfcBeam",
+            "column": "IfcColumn",
+        }[family]
+        type_class = {
+            "beam": "IfcBeamType",
+            "column": "IfcColumnType",
+        }[family]
+        start_key, end_key = {
+            "beam": ("start", "end"),
+            "column": ("base", "top"),
+        }[family]
+        roles = (
+            {str(key): str(value) for key, value in role_mapping.items()}
+            if role_mapping is not None
+            else {
+                str(item["role"]): str(item["global_id"])
+                for change_kind in ("created", "modified", "removed")
+                for item in application.get(change_kind, ())
+                if item.get("role") and item.get("global_id")
+            }
+        )
+        occurrence_id = roles[family]
+        member = after_model.by_guid(occurrence_id)
+        if member is None or not member.is_a(occurrence_class):
+            raise ValueError("STRUCTURAL_L1_PRODUCT_UNRESOLVED")
+        storey_id = str(operation["target"]["storey_global_id"])
+        storey = after_model.by_guid(storey_id)
+        if storey is None or not storey.is_a("IfcBuildingStorey"):
+            raise ValueError("STRUCTURAL_L1_STOREY_UNRESOLVED")
+
+        axis = operation["parameters"]["axis"]
+        expected = resolve_structural_member_frame(
+            occurrence_class=occurrence_class,
+            axis_start_mm=_operation_point(axis[start_key]),
+            axis_end_mm=_operation_point(axis[end_key]),
+            section=operation["parameters"]["section"],
+        )
+        measured = measure_straight_rectangular_member(
+            member, relative_to=storey
+        )
+        geometry = compare_structural_l1_measurement(
+            family=family,
+            expected=expected,
+            measured=measured,
+        )
+        type_assignments = [
+            item
+            for item in operation.get("semantic_assignments", ())
+            if item.get("fact_key") == "relationship:type"
+        ]
+        expected_type_id = (
+            str(type_assignments[0]["value"])
+            if len(type_assignments) == 1
+            else ""
+        )
+        contained = [
+            relation.RelatingStructure
+            for relation in member.ContainedInStructure
+            if relation.RelatingStructure.is_a("IfcBuildingStorey")
+        ]
+        typed = [
+            relation.RelatingType
+            for relation in member.IsDefinedBy
+            if relation.is_a("IfcRelDefinesByType")
+        ]
+        product_ok = (
+            str(member.GlobalId) == occurrence_id
+            and member.is_a() == occurrence_class
+            and measured.get("representation_type") == "SweptSolid"
+            and not getattr(member, "HasStructuralMember", ())
+        )
+        relationships_ok = (
+            contained == [storey]
+            and len(typed) == 1
+            and typed[0].is_a(type_class)
+            and str(typed[0].GlobalId) == expected_type_id
+        )
+
+        def exact_check(
+            passed: bool,
+            reason: str,
+            expected_value: Any,
+            actual_value: Any,
+        ) -> dict[str, Any]:
+            return {
+                "status": "passed" if passed else "failed",
+                "reason": reason,
+                "expected": expected_value,
+                "actual": actual_value,
+            }
+
+        l1_checks = {
+            **geometry["l1_checks"],
+            "l1.structural.product": exact_check(
+                product_ok,
+                "The reopened product must be one physical member of the registered IFC class.",
+                {
+                    "global_id": occurrence_id,
+                    "ifc_class": occurrence_class,
+                    "representation_type": "SweptSolid",
+                    "analysis_relationship_count": 0,
+                },
+                {
+                    "global_id": str(member.GlobalId),
+                    "ifc_class": member.is_a(),
+                    "representation_type": measured.get("representation_type"),
+                    "analysis_relationship_count": len(
+                        getattr(member, "HasStructuralMember", ())
+                    ),
+                },
+            ),
+            "l1.structural.relationships": exact_check(
+                relationships_ok,
+                "The member must have exactly one declared Storey and one declared Type binding.",
+                {
+                    "storey_global_ids": [storey_id],
+                    "type_global_ids": [expected_type_id],
+                    "type_ifc_class": type_class,
+                },
+                {
+                    "storey_global_ids": [
+                        str(item.GlobalId) for item in contained
+                    ],
+                    "type_global_ids": [str(item.GlobalId) for item in typed],
+                    "type_ifc_classes": [item.is_a() for item in typed],
+                },
+            ),
+        }
+        issues = [
+            {
+                "code": check_id.upper().replace(".", "_"),
+                "path": "/evaluation/L1",
+                "message": str(check["reason"]),
+            }
+            for check_id, check in l1_checks.items()
+            if check["status"] != "passed"
+        ]
+        return {
+            "valid": not issues,
+            "checks": {
+                check_id: check["status"] == "passed"
+                for check_id, check in l1_checks.items()
+            },
+            "metrics": geometry["metrics"],
+            "measurement": measured,
+            "issues": issues,
+            "authorization": authorization,
+            "l1_checks": l1_checks,
+        }
+    except Exception as error:
+        detail = f"{type(error).__name__}: {error}"
+        return {
+            "valid": False,
+            "checks": {},
+            "metrics": {},
+            "issues": [
+                {
+                    "code": "STRUCTURAL_L1_NOT_EVALUABLE",
+                    "path": "/evaluation/L1",
+                    "message": detail,
+                }
+            ],
+            "authorization": authorization,
+            "l1_checks": {
+                check_id: {
+                    "status": "not_evaluable",
+                    "reason": "Mandatory structural geometry or relationships could not be measured from reopened IFC.",
+                    "expected": "measurable reopened structural evidence",
+                    "actual": detail,
+                }
+                for check_id in STRUCTURAL_L1_CHECK_IDS
+            },
+        }
+
+
+def _operation_point(value: Any) -> tuple[float, float, float]:
+    if not isinstance(value, Mapping):
+        raise ValueError("STRUCTURAL_AXIS_INVALID")
+    return tuple(float(value[key]) for key in ("x_mm", "y_mm", "z_mm"))
 
 
 def create_straight_rectangular_member(
@@ -657,4 +856,5 @@ __all__ = [
     "generated_beam_type_template",
     "generated_column_type_template",
     "resolve_structural_member_frame",
+    "structural_l1_comparison_report",
 ]

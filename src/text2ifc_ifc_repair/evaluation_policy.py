@@ -4,8 +4,9 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from enum import Enum
+import math
 import re
-from typing import Callable
+from typing import Any, Callable, Mapping
 
 
 _STABLE_ID = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._:/-]*$")
@@ -43,6 +44,49 @@ class EvidenceSourceKind(str, Enum):
 
 class ComparisonRule(str, Enum):
     TYPED_EQUIVALENCE = "typed_equivalence"
+
+
+@dataclass(frozen=True)
+class StructuralL1Thresholds:
+    """Frozen Phase 12 structural precision grade in public millimetres."""
+
+    axis_point_mm: float = 5.0
+    direction_degrees: float = 0.1
+    member_dimension_mm: float = 1.0
+    section_dimension_mm: float = 1.0
+
+    def __post_init__(self) -> None:
+        if any(
+            isinstance(value, bool)
+            or not isinstance(value, (int, float))
+            or not math.isfinite(float(value))
+            or float(value) < 0.0
+            for value in (
+                self.axis_point_mm,
+                self.direction_degrees,
+                self.member_dimension_mm,
+                self.section_dimension_mm,
+            )
+        ):
+            raise PolicyContractError(
+                "INVALID_STRUCTURAL_L1_THRESHOLD",
+                repr(self),
+            )
+
+
+STRUCTURAL_L1_THRESHOLDS = StructuralL1Thresholds()
+STRUCTURAL_GEOMETRY_L1_CHECK_IDS = (
+    "l1.structural.axis-points",
+    "l1.structural.axis-direction",
+    "l1.structural.member-dimension",
+    "l1.structural.section-dimensions",
+    "l1.structural.profile-orientation",
+)
+STRUCTURAL_L1_CHECK_IDS = (
+    *STRUCTURAL_GEOMETRY_L1_CHECK_IDS,
+    "l1.structural.product",
+    "l1.structural.relationships",
+)
 
 
 @dataclass(frozen=True)
@@ -208,6 +252,292 @@ def normalize_policy_fact_key(
     return normalized
 
 
+def compare_structural_l1_measurement(
+    *,
+    family: str,
+    expected: Mapping[str, Any],
+    measured: Mapping[str, Any],
+    thresholds: StructuralL1Thresholds = STRUCTURAL_L1_THRESHOLDS,
+) -> dict[str, Any]:
+    """Compare reopened member measurements without geometry proxies."""
+
+    dimension_keys = {
+        "beam": ("width_mm", "height_mm"),
+        "column": ("width_mm", "depth_mm"),
+    }.get(family)
+    if dimension_keys is None:
+        raise PolicyContractError("STRUCTURAL_FAMILY_UNSUPPORTED", family)
+
+    expected_start = _structural_point(expected.get("axis_start_mm"))
+    expected_end = _structural_point(expected.get("axis_end_mm"))
+    actual_start = _structural_point(measured.get("axis_start_mm"))
+    actual_end = _structural_point(measured.get("axis_end_mm"))
+    expected_direction = _structural_direction(
+        expected.get("axis_direction")
+    )
+    actual_direction = _structural_direction(
+        measured.get("axis_direction")
+    )
+    expected_extent = _structural_positive_number(
+        expected.get("axis_extent_mm")
+    )
+    actual_extent = _structural_positive_number(
+        measured.get("axis_extent_mm")
+    )
+    expected_section = expected.get("section")
+    actual_section = measured.get("section")
+    if not isinstance(expected_section, Mapping) or not isinstance(
+        actual_section, Mapping
+    ):
+        raise PolicyContractError(
+            "STRUCTURAL_L1_MEASUREMENT_INVALID", "section"
+        )
+    if (
+        expected_section.get("shape") != "rectangle"
+        or actual_section.get("shape") != "rectangle"
+    ):
+        raise PolicyContractError(
+            "STRUCTURAL_L1_MEASUREMENT_INVALID", "section.shape"
+        )
+
+    point_errors = {
+        "start_mm": math.dist(expected_start, actual_start),
+        "end_mm": math.dist(expected_end, actual_end),
+    }
+    direction_error = _direction_error_degrees(
+        expected_direction, actual_direction
+    )
+    member_error = abs(expected_extent - actual_extent)
+    section_errors = {
+        key: abs(
+            _structural_positive_number(expected_section.get(key))
+            - _structural_positive_number(actual_section.get(key))
+        )
+        for key in dimension_keys
+    }
+    profile_error: float | None
+    if family == "column":
+        orientation_declared = "orientation" in expected_section
+        actual_orientation = measured.get("orientation")
+        if not orientation_declared:
+            profile_error = None if actual_orientation is None else math.inf
+        elif actual_orientation is None:
+            profile_error = math.inf
+        else:
+            profile_error = _direction_error_degrees(
+                _structural_direction(expected.get("profile_x_direction")),
+                _structural_direction(actual_orientation),
+            )
+    else:
+        profile_error = None
+
+    metrics = {
+        "axis_point_errors_mm": point_errors,
+        "max_axis_point_error_mm": max(point_errors.values()),
+        "direction_error_degrees": direction_error,
+        "member_dimension_error_mm": member_error,
+        "section_dimension_errors_mm": section_errors,
+        "max_section_dimension_error_mm": max(section_errors.values()),
+        "profile_orientation_error_degrees": profile_error,
+        "representation_type": measured.get("representation_type"),
+    }
+    epsilon = 1e-9
+
+    def check(
+        passed: bool,
+        reason: str,
+        expected_value: Any,
+        actual_value: Any,
+    ) -> dict[str, Any]:
+        return {
+            "status": "passed" if passed else "failed",
+            "reason": reason,
+            "expected": expected_value,
+            "actual": actual_value,
+        }
+
+    return {
+        "metrics": metrics,
+        "l1_checks": {
+            "l1.structural.axis-points": check(
+                metrics["max_axis_point_error_mm"]
+                <= thresholds.axis_point_mm + epsilon,
+                "Each reopened structural axis endpoint must match the bound center axis.",
+                {"maximum_error_mm": thresholds.axis_point_mm},
+                point_errors,
+            ),
+            "l1.structural.axis-direction": check(
+                direction_error <= thresholds.direction_degrees + epsilon,
+                "Reopened member direction and horizontal/vertical tilt must match.",
+                {"maximum_error_degrees": thresholds.direction_degrees},
+                {"error_degrees": direction_error},
+            ),
+            "l1.structural.member-dimension": check(
+                member_error <= thresholds.member_dimension_mm + epsilon,
+                "Reopened member axis extent must match the bound length or height.",
+                {"maximum_error_mm": thresholds.member_dimension_mm},
+                {"error_mm": member_error},
+            ),
+            "l1.structural.section-dimensions": check(
+                metrics["max_section_dimension_error_mm"]
+                <= thresholds.section_dimension_mm + epsilon,
+                "Every reopened rectangular section dimension must match.",
+                {"maximum_error_mm": thresholds.section_dimension_mm},
+                section_errors,
+            ),
+            "l1.structural.profile-orientation": check(
+                profile_error is None
+                or profile_error <= thresholds.direction_degrees + epsilon,
+                "Column profile orientation must match when declared and stay omitted for a square section.",
+                {
+                    "maximum_error_degrees": thresholds.direction_degrees,
+                    "square_orientation": "omitted",
+                },
+                {"error_degrees": profile_error},
+            ),
+        },
+    }
+
+
+def structural_l1_authorization(family: str) -> dict[str, Any]:
+    """Return exact Registry-driven effect authorization for one family."""
+
+    occurrence_class = {
+        "beam": "IfcBeam",
+        "column": "IfcColumn",
+    }.get(family)
+    type_class = {
+        "beam": "IfcBeamType",
+        "column": "IfcColumnType",
+    }.get(family)
+    if occurrence_class is None or type_class is None:
+        raise PolicyContractError("STRUCTURAL_FAMILY_UNSUPPORTED", family)
+    semantic_prefix = f"semantic_{family}_"
+    created = {
+        family: occurrence_class,
+        "structural_type": type_class,
+        "structural_type_relationship": "IfcRelDefinesByType",
+        "spatial_containment": "IfcRelContainedInSpatialStructure",
+        f"{semantic_prefix}pset": "IfcPropertySet",
+        f"{semantic_prefix}pset_relationship": "IfcRelDefinesByProperties",
+        f"{semantic_prefix}quantities": "IfcElementQuantity",
+        f"{semantic_prefix}quantity_relationship": "IfcRelDefinesByProperties",
+        f"{semantic_prefix}material_relationship": "IfcRelAssociatesMaterial",
+        f"{semantic_prefix}classification_relationship": "IfcRelAssociatesClassification",
+    }
+    relations: dict[str, Any] = {
+        "structural_type_relationship": {
+            "ifc_class": "IfcRelDefinesByType",
+            "added_endpoint_roles": (family,),
+        },
+        "spatial_containment": {
+            "ifc_class": "IfcRelContainedInSpatialStructure",
+            "added_endpoint_roles": (family,),
+        },
+        f"{semantic_prefix}pset_relationship": {
+            "ifc_class": "IfcRelDefinesByProperties",
+            "added_endpoint_roles": (family,),
+        },
+        f"{semantic_prefix}quantity_relationship": {
+            "ifc_class": "IfcRelDefinesByProperties",
+            "added_endpoint_roles": (family,),
+        },
+        f"{semantic_prefix}material_relationship": {
+            "ifc_class": "IfcRelAssociatesMaterial",
+            "added_endpoint_roles": (family,),
+        },
+        f"{semantic_prefix}classification_relationship": {
+            "ifc_class": "IfcRelAssociatesClassification",
+            "added_endpoint_roles": (family,),
+        },
+    }
+    for index in range(2, 65):
+        pset_role = f"{semantic_prefix}pset_{index}"
+        pset_relation_role = f"{semantic_prefix}pset_relationship_{index}"
+        material_role = f"{semantic_prefix}material_relationship_{index}"
+        classification_role = (
+            f"{semantic_prefix}classification_relationship_{index}"
+        )
+        created[pset_role] = "IfcPropertySet"
+        created[pset_relation_role] = "IfcRelDefinesByProperties"
+        created[material_role] = "IfcRelAssociatesMaterial"
+        created[classification_role] = "IfcRelAssociatesClassification"
+        relations[pset_relation_role] = {
+            "ifc_class": "IfcRelDefinesByProperties",
+            "added_endpoint_roles": (family,),
+        }
+        relations[material_role] = {
+            "ifc_class": "IfcRelAssociatesMaterial",
+            "added_endpoint_roles": (family,),
+        }
+        relations[classification_role] = {
+            "ifc_class": "IfcRelAssociatesClassification",
+            "added_endpoint_roles": (family,),
+        }
+    return {
+        "policy_id": f"{family}.add.l1",
+        "policy_version": "0.1",
+        "created": created,
+        "modified": {
+            "spatial_containment": "IfcRelContainedInSpatialStructure",
+        },
+        "removed": {},
+        "required_roles": {
+            "created": (family, "structural_type_relationship"),
+        },
+        "relations": relations,
+    }
+
+
+def _structural_point(value: Any) -> tuple[float, float, float]:
+    if (
+        isinstance(value, (str, bytes, Mapping))
+        or not isinstance(value, (tuple, list))
+        or len(value) != 3
+    ):
+        raise PolicyContractError("STRUCTURAL_L1_MEASUREMENT_INVALID", "point")
+    return tuple(_structural_number(item) for item in value)  # type: ignore[return-value]
+
+
+def _structural_direction(value: Any) -> tuple[float, float, float]:
+    direction = _structural_point(value)
+    magnitude = math.sqrt(sum(item * item for item in direction))
+    if magnitude <= 0.0:
+        raise PolicyContractError(
+            "STRUCTURAL_L1_MEASUREMENT_INVALID", "direction"
+        )
+    return tuple(item / magnitude for item in direction)
+
+
+def _structural_number(value: Any) -> float:
+    if isinstance(value, bool) or not isinstance(value, (int, float)):
+        raise PolicyContractError("STRUCTURAL_L1_MEASUREMENT_INVALID", "number")
+    number = float(value)
+    if not math.isfinite(number):
+        raise PolicyContractError("STRUCTURAL_L1_MEASUREMENT_INVALID", "number")
+    return number
+
+
+def _structural_positive_number(value: Any) -> float:
+    number = _structural_number(value)
+    if number <= 0.0:
+        raise PolicyContractError(
+            "STRUCTURAL_L1_MEASUREMENT_INVALID", "positive_number"
+        )
+    return number
+
+
+def _direction_error_degrees(
+    expected: tuple[float, float, float],
+    actual: tuple[float, float, float],
+) -> float:
+    cosine = max(
+        -1.0,
+        min(1.0, sum(left * right for left, right in zip(expected, actual))),
+    )
+    return math.degrees(math.acos(cosine))
+
+
 __all__ = [
     "ComparisonRule",
     "EvidenceSourceKind",
@@ -215,8 +545,14 @@ __all__ = [
     "OperationEvaluationPolicy",
     "PolicyContractError",
     "SOURCE_PRECEDENCE",
+    "STRUCTURAL_GEOMETRY_L1_CHECK_IDS",
+    "STRUCTURAL_L1_CHECK_IDS",
+    "STRUCTURAL_L1_THRESHOLDS",
     "SemanticApplicability",
     "SemanticFactSpec",
+    "StructuralL1Thresholds",
+    "compare_structural_l1_measurement",
     "extend_policy_with_explicit_facts",
     "normalize_policy_fact_key",
+    "structural_l1_authorization",
 ]

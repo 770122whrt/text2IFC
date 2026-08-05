@@ -33,6 +33,7 @@ from .structural_member import (
     create_straight_rectangular_member,
     generated_beam_type_template,
     resolve_structural_member_frame,
+    structural_l1_comparison_report,
 )
 
 
@@ -532,19 +533,21 @@ def _postconditions(
 
 
 def _comparison_adapter(
-    *, operation: Mapping[str, Any], repaired: Any = None, **kwargs: Any
+    *,
+    operation: Mapping[str, Any],
+    after_model: Any,
+    application: Mapping[str, Any],
+    role_mapping: Mapping[str, str] | None = None,
+    **kwargs: Any,
 ) -> dict[str, Any]:
     del kwargs
-    measurement = (
-        None
-        if repaired is None
-        else measure_straight_rectangular_member(repaired)
+    return structural_l1_comparison_report(
+        family="beam",
+        operation=operation,
+        after_model=after_model,
+        application=application,
+        role_mapping=role_mapping,
     )
-    return {
-        "operation_type": OPERATION_TYPE,
-        "expected": dict(operation["parameters"]),
-        "measurement": measurement,
-    }
 
 
 def _semantic_policy_facts(

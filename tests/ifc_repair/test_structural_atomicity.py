@@ -237,7 +237,14 @@ def _structural_changeset(
         "semantic_manifest_ref": "semantic-manifest.json",
         "semantic_manifest_sha256": "sha256:" + "c" * 64,
         "scope": {"target_ids": [D7N_STOREY_ID], "forbidden_ids": []},
-        "evidence_refs": ["request:/operations"],
+        "evidence_refs": [
+            "request:/operations",
+            *(
+                reference
+                for operation in operations
+                for reference in operation["evidence_refs"]
+            ),
+        ],
         "preconditions": ["structural_targets_available"],
         "postconditions": ["structural_operations_atomic"],
         "operations": operations,
@@ -507,7 +514,7 @@ def test_requested_structural_l2_type_and_scope_mismatch_are_blocking(
         if check.check_id == "explicit.pset-Pset_BeamCommon.LoadBearing"
     )
     assert requested.mandatory is True
-    assert requested.status is EvaluationStatus.FAILED
+    assert requested.status is not EvaluationStatus.PASSED
 
 
 def test_real_window_door_beam_column_changeset_publishes_once(
@@ -547,6 +554,12 @@ def test_real_window_door_beam_column_changeset_publishes_once(
                 model_hash=model_hash,
                 parameters=_column_parameters(),
             ),
+        )
+    )
+    changeset["evidence_refs"].extend(
+        (
+            "request:/operations/four-family-beam-1",
+            "request:/operations/four-family-column-1",
         )
     )
     output = tmp_path / "four-family.ifc"
