@@ -12,7 +12,15 @@ from text2ifc_ifc_repair.resolution_flow import (
     generated_type_authority,
 )
 from text2ifc_ifc_repair.run_models import hash_json
-from text2ifc_ifc_repair.type_templates import ensure_bound_type
+from text2ifc_ifc_repair.semantic_authoring import (
+    SemanticManifestError,
+    apply_semantic_assignments,
+)
+from text2ifc_ifc_repair.type_templates import (
+    ensure_bound_type,
+    type_authority_fingerprint,
+)
+from text2ifc_ifc_repair.operations.structural_member import bind_structural_type
 
 
 def _api() -> dict[str, object]:
@@ -306,3 +314,352 @@ def test_exact_type_class_mismatch_fails_without_mutation() -> None:
 
     assert str(wrong) == before
     assert not model.by_type("IfcBeamType")
+
+
+def _direct_psets(element) -> list:
+    return [
+        relation.RelatingPropertyDefinition
+        for relation in element.IsDefinedBy
+        if relation.is_a("IfcRelDefinesByProperties")
+    ]
+
+
+def _direct_materials(element) -> list:
+    return [
+        relation.RelatingMaterial
+        for relation in element.HasAssociations
+        if relation.is_a("IfcRelAssociatesMaterial")
+    ]
+
+
+def _material_assignment(
+    family: str,
+    label: str,
+    *,
+    source_ref: str = "request:/materials/0",
+) -> dict:
+    return {
+        "operation_id": f"{family}-semantic-1",
+        "scope": f"{family}_occurrence",
+        "fact_key": f"material:{label}",
+        "source_fact_key": f"material:{label}",
+        "value": label,
+        "value_type": "IfcMaterial",
+        "unit": None,
+        "ownership": "occurrence_direct",
+        "applicability": "required",
+        "source_kind": "explicit_value",
+        "source_ref": source_ref,
+        "provenance": ["request:/materials/0"],
+        "authoring_action": "reuse_material",
+    }
+
+
+def _pset_assignment(family: str) -> dict:
+    set_name = "Pset_BeamCommon" if family == "beam" else "Pset_ColumnCommon"
+    return {
+        "operation_id": f"{family}-semantic-1",
+        "scope": f"{family}_occurrence",
+        "fact_key": f"pset:{set_name}.LoadBearing",
+        "source_fact_key": f"pset:{set_name}.LoadBearing",
+        "value": True,
+        "value_type": "IfcBoolean",
+        "unit": None,
+        "ownership": "occurrence_direct",
+        "applicability": "required",
+        "source_kind": "explicit_value",
+        "source_ref": "request:/properties/0",
+        "provenance": ["request:/properties/0"],
+        "authoring_action": "set_occurrence_pset",
+    }
+
+
+def _apply_semantics(model, occurrence, family: str, assignments: list[dict]):
+    return apply_semantic_assignments(
+        model=model,
+        operation={
+            "operation_id": f"{family}-semantic-1",
+            "semantic_assignments": assignments,
+        },
+        application={
+            "created": [
+                {
+                    "role": family,
+                    "ifc_class": occurrence.is_a(),
+                    "global_id": str(occurrence.GlobalId),
+                }
+            ]
+        },
+        target_role=family,
+    )
+
+
+def _type_preservation_fixture(family: str):
+    model, history = _model_and_history()
+    occurrence_class = "IfcBeam" if family == "beam" else "IfcColumn"
+    type_class = f"{occurrence_class}Type"
+    inherited_pset = model.create_entity(
+        "IfcPropertySet",
+        GlobalId="0TYPEPSETAAAAAAAAAAAAAA",
+        OwnerHistory=history,
+        Name="Compiler-owned type facts",
+        HasProperties=[
+            model.create_entity(
+                "IfcPropertySingleValue",
+                Name="Reference",
+                NominalValue=model.create_entity("IfcIdentifier", "TYPE-01"),
+            )
+        ],
+    )
+    world = model.create_entity(
+        "IfcAxis2Placement3D",
+        Location=model.create_entity(
+            "IfcCartesianPoint", Coordinates=(0.0, 0.0, 0.0)
+        ),
+    )
+    context = model.create_entity(
+        "IfcGeometricRepresentationContext",
+        ContextType="Model",
+        CoordinateSpaceDimension=3,
+        Precision=1e-5,
+        WorldCoordinateSystem=world,
+    )
+    representation = model.create_entity(
+        "IfcShapeRepresentation",
+        ContextOfItems=context,
+        RepresentationIdentifier="Body",
+        RepresentationType="SweptSolid",
+        Items=[],
+    )
+    representation_map = model.create_entity(
+        "IfcRepresentationMap",
+        MappingOrigin=world,
+        MappedRepresentation=representation,
+    )
+    reused_type = model.create_entity(
+        type_class,
+        GlobalId="0EXACTRICHAAAAAAAAAAAAA",
+        OwnerHistory=history,
+        Name="Authorized rich Type",
+        RepresentationMaps=[representation_map],
+        HasPropertySets=[inherited_pset],
+        PredefinedType="NOTDEFINED",
+    )
+    inherited_material = model.create_entity("IfcMaterial", Name="Steel")
+    model.create_entity(
+        "IfcRelAssociatesMaterial",
+        GlobalId="0TYPEMATERIALAAAAAAAAAA",
+        OwnerHistory=history,
+        RelatedObjects=[reused_type],
+        RelatingMaterial=inherited_material,
+    )
+    reference = model.create_entity(
+        occurrence_class,
+        GlobalId="0REFERENCEAAAAAAAAAAAAA",
+        OwnerHistory=history,
+        Name="Authorized reference occurrence",
+    )
+    direct_pset = model.create_entity(
+        "IfcPropertySet",
+        GlobalId="0DIRECTPSETAAAAAAAAAAAA",
+        OwnerHistory=history,
+        Name="Reference occurrence facts",
+        HasProperties=[],
+    )
+    model.create_entity(
+        "IfcRelDefinesByProperties",
+        GlobalId="0DIRECTPSETRELAAAAAAAAA",
+        OwnerHistory=history,
+        RelatedObjects=[reference],
+        RelatingPropertyDefinition=direct_pset,
+    )
+    direct_material = model.create_entity("IfcMaterial", Name="Occurrence-only")
+    model.create_entity(
+        "IfcRelAssociatesMaterial",
+        GlobalId="0DIRECTMATRELAAAAAAAAAA",
+        OwnerHistory=history,
+        RelatedObjects=[reference],
+        RelatingMaterial=direct_material,
+    )
+    relation = model.create_entity(
+        "IfcRelDefinesByType",
+        GlobalId="0EXACTTYPERELAAAAAAAAAA",
+        OwnerHistory=history,
+        RelatedObjects=[reference],
+        RelatingType=reused_type,
+    )
+    return model, history, reused_type, inherited_material, reference, relation
+
+
+@pytest.mark.parametrize("family", ("beam", "column"))
+def test_exact_type_binding_preserves_type_maps_psets_and_materials_without_copying_direct_facts(
+    family: str,
+) -> None:
+    model, history, reused_type, _, reference, relation = _type_preservation_fixture(
+        family
+    )
+    occurrence_class = "IfcBeam" if family == "beam" else "IfcColumn"
+    occurrence = model.create_entity(
+        occurrence_class,
+        GlobalId=f"0NEW{family.upper()}AAAAAAAAAAAAAA"[:22],
+        OwnerHistory=history,
+        Name="New structural occurrence",
+    )
+    before = type_authority_fingerprint(reused_type)
+
+    result = bind_structural_type(
+        model=model,
+        occurrence=occurrence,
+        assignment={
+            "value": str(reused_type.GlobalId),
+            "value_type": reused_type.is_a(),
+            "source_kind": "surviving_type",
+        },
+        owner_history=history,
+        operation_id=f"{family}-reuse-rich",
+        expected_ifc_class=reused_type.is_a(),
+        generated_type_factory=None,
+        factory_context={},
+    )
+
+    assert result["type"] == reused_type
+    assert result["generated"] is False
+    assert result["relationship"] == relation
+    assert set(relation.RelatedObjects) == {reference, occurrence}
+    assert type_authority_fingerprint(reused_type) == before
+    assert _direct_psets(occurrence) == []
+    assert _direct_materials(occurrence) == []
+    assert _direct_psets(reference)
+    assert {item.Name for item in _direct_materials(reference)} == {
+        "Occurrence-only"
+    }
+
+
+@pytest.mark.parametrize("family", ("beam", "column"))
+def test_omitted_structural_semantics_author_nothing_and_do_not_clarify(
+    family: str,
+) -> None:
+    model, history = _model_and_history()
+    occurrence_class = "IfcBeam" if family == "beam" else "IfcColumn"
+    occurrence = model.create_entity(
+        occurrence_class,
+        GlobalId=f"0EMPTY{family.upper()}AAAAAAAAAAAA"[:22],
+        OwnerHistory=history,
+    )
+    roots_before = len(model.by_type("IfcRoot"))
+
+    result = _apply_semantics(model, occurrence, family, [])
+
+    assert result == {"created": [], "modified": [], "updated": [], "skipped": []}
+    assert len(model.by_type("IfcRoot")) == roots_before
+    assert _direct_psets(occurrence) == []
+    assert _direct_materials(occurrence) == []
+
+
+@pytest.mark.parametrize("existing", (True, False))
+def test_explicit_material_reuses_unique_exact_label_or_creates_only_that_label(
+    existing: bool,
+) -> None:
+    model, history = _model_and_history()
+    occurrence = model.create_entity(
+        "IfcBeam",
+        GlobalId="0MATERIALBEAMAAAAAAAAAA",
+        OwnerHistory=history,
+    )
+    expected = model.create_entity("IfcMaterial", Name="C30") if existing else None
+
+    _apply_semantics(model, occurrence, "beam", [_material_assignment("beam", "C30")])
+
+    direct = _direct_materials(occurrence)
+    assert len(direct) == 1
+    assert direct[0].Name == "C30"
+    if existing:
+        assert direct[0] == expected
+    assert [item.Name for item in model.by_type("IfcMaterial")].count("C30") == 1
+    assert not model.by_type("IfcMaterialProperties")
+
+
+def test_explicit_pset_is_direct_but_type_inherited_material_stays_inherited() -> None:
+    model, history, reused_type, inherited_material, _, _ = _type_preservation_fixture(
+        "beam"
+    )
+    occurrence = model.create_entity(
+        "IfcBeam",
+        GlobalId="0SEMANTICBEAMAAAAAAAAAA",
+        OwnerHistory=history,
+    )
+    bind_structural_type(
+        model=model,
+        occurrence=occurrence,
+        assignment={
+            "value": str(reused_type.GlobalId),
+            "value_type": "IfcBeamType",
+            "source_kind": "surviving_type",
+        },
+        owner_history=history,
+        operation_id="beam-semantic-1",
+        expected_ifc_class="IfcBeamType",
+        generated_type_factory=None,
+        factory_context={},
+    )
+
+    result = _apply_semantics(
+        model,
+        occurrence,
+        "beam",
+        [_pset_assignment("beam"), _material_assignment("beam", "Steel")],
+    )
+
+    direct_psets = _direct_psets(occurrence)
+    assert len(direct_psets) == 1
+    assert direct_psets[0].Name == "Pset_BeamCommon"
+    assert direct_psets[0].HasProperties[0].Name == "LoadBearing"
+    assert direct_psets[0].HasProperties[0].NominalValue.wrappedValue is True
+    assert _direct_materials(occurrence) == []
+    assert inherited_material in [
+        relation.RelatingMaterial
+        for relation in reused_type.HasAssociations
+        if relation.is_a("IfcRelAssociatesMaterial")
+    ]
+    assert "material:Steel" in result["skipped"]
+
+
+def test_explicit_material_conflict_with_reused_type_fails_before_semantic_mutation() -> None:
+    model, history, reused_type, _, _, _ = _type_preservation_fixture("beam")
+    occurrence = model.create_entity(
+        "IfcBeam",
+        GlobalId="0CONFLICTBEAMAAAAAAAAAA",
+        OwnerHistory=history,
+    )
+    bind_structural_type(
+        model=model,
+        occurrence=occurrence,
+        assignment={
+            "value": str(reused_type.GlobalId),
+            "value_type": "IfcBeamType",
+            "source_kind": "surviving_type",
+        },
+        owner_history=history,
+        operation_id="beam-semantic-1",
+        expected_ifc_class="IfcBeamType",
+        generated_type_factory=None,
+        factory_context={},
+    )
+    fingerprint = type_authority_fingerprint(reused_type)
+    roots_before = len(model.by_type("IfcRoot"))
+
+    with pytest.raises(
+        SemanticManifestError, match="STRUCTURAL_MATERIAL_TYPE_CONFLICT"
+    ):
+        _apply_semantics(
+            model,
+            occurrence,
+            "beam",
+            [_pset_assignment("beam"), _material_assignment("beam", "C30")],
+        )
+
+    assert len(model.by_type("IfcRoot")) == roots_before
+    assert type_authority_fingerprint(reused_type) == fingerprint
+    assert _direct_psets(occurrence) == []
+    assert _direct_materials(occurrence) == []
+    assert not [item for item in model.by_type("IfcMaterial") if item.Name == "C30"]
