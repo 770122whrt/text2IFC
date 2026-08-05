@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: IFC ChangeSet Repair Pipeline
-status: Phase 12 executing; Plans 12-01 through 12-06 complete, 12-07 next
-last_updated: "2026-08-05T16:59:28.752Z"
+status: Phase 12 executing; Plans 12-01 through 12-07 complete, 12-08 next
+last_updated: "2026-08-05T17:25:24.623Z"
 progress:
   total_phases: 13
   completed_phases: 11
   total_plans: 53
-  completed_plans: 43
-  percent: 81
+  completed_plans: 44
+  percent: 83
 ---
 
 # Project State
@@ -131,7 +131,7 @@ with real DeepSeek and independently recomputed Proof evidence.
 ## Current Position
 
 Phase: 12 (Beam and Column Operations) — EXECUTING
-Plan: 7 of 16
+Plan: 8 of 16
 
 - Milestone: v1.1 IFC ChangeSet Repair Pipeline
 - Phase: 11 complete
@@ -147,13 +147,13 @@ Plan: 7 of 16
 
 - Progress: 11 / 13 phases complete
 - Requirements: WFID-01..06 and OPS-01..02 complete; OPS-03..04 pending
-- Last activity: 2026-08-06 - Plan 12-06 completed. Exact structural Type
-  binding preserves Type/maps/Psets/inherited-material fingerprints and never
-  copies reference occurrence-direct facts. Omitted semantics remain absent;
-  explicit exact material labels uniquely reuse or create only that label;
-  duplicate labels and reused-Type conflicts fail before semantic mutation.
-  Generated Types remain semantically empty. OPS-03/OPS-04 remain pending
-  until the independent Plan 12-16 closure gate.
+- Last activity: 2026-08-06 - Plan 12-07 completed. `add_beam` is registered
+  through common request/resolution/audit/apply dispatch and reopens one exact
+  horizontal rectangular IfcBeam with one Storey and one IfcBeamType. Exact
+  existing axis references derive Storey-local endpoints; ambiguous references
+  clarify; unsupported and same-axis overlap paths mutate no Roots. Minimal
+  Storey indexing and current structural scope enums close required contract
+  links. OPS-03/OPS-04 remain pending until Plan 12-16.
 
 - Phase 11 closure evidence: accepted live run
   `uat-20260731T224900289758Z` passed all three contracts. Two live successes
@@ -330,12 +330,12 @@ Plan: 7 of 16
 ## Next Action
 
 Phase 11 remains closed. Continue Phase 12 strictly with
-`.planning/phases/12-beam-and-column-operations/12-07-PLAN.md`, followed by
-12-08 through 12-16. OPS-03/OPS-04 remain pending until final independent
+`.planning/phases/12-beam-and-column-operations/12-08-PLAN.md`, followed by
+12-09 through 12-16. OPS-03/OPS-04 remain pending until final independent
 closure. Do not start Phase 13.
 
 ---
-*Last updated: 2026-08-06 after completing Phase 12 Plan 06*
+*Last updated: 2026-08-06 after completing Phase 12 Plan 07*
 
 ## Accumulated Context
 
