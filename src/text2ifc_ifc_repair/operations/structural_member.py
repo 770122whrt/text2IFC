@@ -501,7 +501,10 @@ def _generated_structural_type_template(
     contract = _contract(family)
     section = _canonical_section(
         family,
-        getattr(resolved_operation, "parameters", {}).get("section"),
+        _type_section_input(
+            family,
+            getattr(resolved_operation, "parameters", {}).get("section"),
+        ),
     )
     return {
         "template_id": contract["template_id"],
@@ -536,7 +539,10 @@ def _create_generated_structural_type(
     if dict(derivation.get("formal_attributes", {})):
         raise ValueError("GENERATED_STRUCTURAL_TEMPLATE_MISMATCH")
 
-    section = _canonical_section(family, context.get("section"))
+    section = _canonical_section(
+        family,
+        _type_section_input(family, context.get("section")),
+    )
     template = derivation.get("template")
     if not isinstance(template, Mapping):
         raise ValueError("GENERATED_STRUCTURAL_TEMPLATE_MISMATCH")
@@ -603,6 +609,36 @@ def _canonical_section(family: str, value: Any) -> dict[str, Any]:
             raise ValueError("GENERATED_STRUCTURAL_SECTION_INVALID")
         result[key] = number
     return result
+
+
+def _type_section_input(family: str, value: Any) -> Mapping[str, Any]:
+    """Project canonical occurrence geometry onto the frozen Type section."""
+
+    contract = _contract(family)
+    if not isinstance(value, Mapping):
+        raise ValueError("GENERATED_STRUCTURAL_SECTION_REQUIRED")
+    expected_keys = set(contract["section_keys"])
+    actual_keys = {str(key) for key in value}
+    if actual_keys == expected_keys:
+        return value
+    if family != "column" or actual_keys != expected_keys | {"orientation"}:
+        raise ValueError("GENERATED_STRUCTURAL_SECTION_INVALID")
+
+    orientation = value.get("orientation")
+    if not isinstance(orientation, Mapping) or set(orientation) != {"x", "y"}:
+        raise ValueError("GENERATED_STRUCTURAL_SECTION_INVALID")
+    components: list[float] = []
+    for key in ("x", "y"):
+        raw = orientation.get(key)
+        if isinstance(raw, bool) or not isinstance(raw, (int, float)):
+            raise ValueError("GENERATED_STRUCTURAL_SECTION_INVALID")
+        number = float(raw)
+        if not math.isfinite(number):
+            raise ValueError("GENERATED_STRUCTURAL_SECTION_INVALID")
+        components.append(number)
+    if math.hypot(*components) <= 0.0:
+        raise ValueError("GENERATED_STRUCTURAL_SECTION_INVALID")
+    return {key: value[key] for key in contract["section_keys"]}
 
 
 def _contract(family: str) -> Mapping[str, Any]:

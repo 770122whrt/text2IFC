@@ -161,6 +161,8 @@ def test_stage1_routes_and_extracts_in_exactly_one_provider_call(
         "door.add-with-opening.v0.2",
         "door.fill-existing-opening.v0.2",
         "occurrence.set-properties",
+        "beam.add",
+        "column.add",
     }
     serialized = json.dumps(catalog)
     assert "EXAMPLE_ONLY" not in serialized

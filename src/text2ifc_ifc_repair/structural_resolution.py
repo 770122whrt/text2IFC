@@ -27,6 +27,11 @@ def structural_intent_capability(
             "status": "unsupported",
             "reason_code": "STRUCTURAL_ANALYSIS_UNSUPPORTED",
         }
+    if parameters.get("split_at_storeys"):
+        return {
+            "status": "unsupported",
+            "reason_code": "STRUCTURAL_STOREY_SPLIT_UNSUPPORTED",
+        }
     if any(key in parameters for key in ("length_mm", "height_mm")):
         return {
             "status": "unsupported",
@@ -74,6 +79,8 @@ def structural_intent_capability(
                 section=section,
             )
         except ValueError as error:
+            if str(error) == "STRUCTURAL_COLUMN_ORIENTATION_REQUIRED":
+                return {"status": "supported"}
             return {"status": "unsupported", "reason_code": str(error)}
     return {"status": "supported"}
 
@@ -133,6 +140,17 @@ def resolve_structural_parameters(
                 section=section,
             )
         except ValueError as error:
+            if str(error) == "STRUCTURAL_COLUMN_ORIENTATION_REQUIRED":
+                return {
+                    "status": "clarification_required",
+                    "reason_code": "STRUCTURAL_COLUMN_ORIENTATION_REQUIRED",
+                    "candidates": (
+                        {
+                            "path": "/parameters/section/orientation",
+                            "fact": "required_for_non_square_column",
+                        },
+                    ),
+                }
             return {"status": "unsupported", "reason_code": str(error)}
         return {
             "status": "resolved",
@@ -209,6 +227,17 @@ def resolve_structural_parameters(
             section=section,
         )
     except ValueError as error:
+        if str(error) == "STRUCTURAL_COLUMN_ORIENTATION_REQUIRED":
+            return {
+                "status": "clarification_required",
+                "reason_code": "STRUCTURAL_COLUMN_ORIENTATION_REQUIRED",
+                "candidates": (
+                    {
+                        "path": "/parameters/section/orientation",
+                        "fact": "required_for_non_square_column",
+                    },
+                ),
+            }
         return {"status": "unsupported", "reason_code": str(error)}
     return {
         "status": "resolved",
