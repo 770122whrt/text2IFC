@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: IFC ChangeSet Repair Pipeline
-status: Phase 12 executing; Plans 12-01 through 12-07 complete, 12-08 next
-last_updated: "2026-08-05T17:25:24.623Z"
+status: Phase 12 executing; Plans 12-01 through 12-08 complete, 12-09 next
+last_updated: "2026-08-05T17:40:30.372Z"
 progress:
   total_phases: 13
   completed_phases: 11
   total_plans: 53
-  completed_plans: 44
-  percent: 83
+  completed_plans: 45
+  percent: 85
 ---
 
 # Project State
@@ -131,7 +131,7 @@ with real DeepSeek and independently recomputed Proof evidence.
 ## Current Position
 
 Phase: 12 (Beam and Column Operations) — EXECUTING
-Plan: 8 of 16
+Plan: 9 of 16
 
 - Milestone: v1.1 IFC ChangeSet Repair Pipeline
 - Phase: 11 complete
@@ -147,13 +147,13 @@ Plan: 8 of 16
 
 - Progress: 11 / 13 phases complete
 - Requirements: WFID-01..06 and OPS-01..02 complete; OPS-03..04 pending
-- Last activity: 2026-08-06 - Plan 12-07 completed. `add_beam` is registered
-  through common request/resolution/audit/apply dispatch and reopens one exact
-  horizontal rectangular IfcBeam with one Storey and one IfcBeamType. Exact
-  existing axis references derive Storey-local endpoints; ambiguous references
-  clarify; unsupported and same-axis overlap paths mutate no Roots. Minimal
-  Storey indexing and current structural scope enums close required contract
-  links. OPS-03/OPS-04 remain pending until Plan 12-16.
+- Last activity: 2026-08-06 - Plan 12-08 completed. `add_column` is registered
+  through the same common lifecycle and reopens square and explicitly oriented
+  vertical IfcColumns with one IfcColumnType and exactly one base-Storey
+  containment even across upper Storeys. Non-square missing orientation
+  clarifies; inclined/Grid/round/analysis/split requests mutate no Roots.
+  Occurrence orientation is explicitly excluded from Type section authority.
+  OPS-03/OPS-04 remain pending until Plan 12-16.
 
 - Phase 11 closure evidence: accepted live run
   `uat-20260731T224900289758Z` passed all three contracts. Two live successes
