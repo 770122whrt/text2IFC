@@ -498,6 +498,17 @@ def apply_semantic_assignments(
     updated: list[dict[str, str]] = []
     modified: list[dict[str, str]] = []
 
+    material_plans = _preflight_material_assignments(
+        model=model,
+        target=target,
+        assignments=assignments,
+    )
+    skipped.extend(
+        fact_key
+        for plan in material_plans.values()
+        if plan["skip"]
+        for fact_key in plan["fact_keys"]
+    )
     _preflight_direct_psets(target, assignments)
 
     for item in assignments:
@@ -772,6 +783,17 @@ def apply_semantic_assignments(
     role_counts: dict[str, int] = {}
     for (action, source_ref), _ in sorted(grouped.items()):
         ifc_class, attribute, base_role = association_actions[action]
+        if action == SemanticAuthoringAction.REUSE_MATERIAL.value:
+            plan = material_plans[source_ref]
+            if plan["skip"]:
+                continue
+            resource = plan["resource"]
+            if resource is None:
+                resource = model.create_entity(
+                    "IfcMaterial", Name=plan["create_label"]
+                )
+        else:
+            resource = _resolve_public_resource(model, source_ref)
         scoped_base_role = scoped_role(base_role)
         role_counts[scoped_base_role] = role_counts.get(scoped_base_role, 0) + 1
         role = (
@@ -779,7 +801,6 @@ def apply_semantic_assignments(
             if role_counts[scoped_base_role] == 1
             else f"{scoped_base_role}_{role_counts[scoped_base_role]}"
         )
-        resource = _resolve_public_resource(model, source_ref)
         relation = model.create_entity(
             ifc_class,
             GlobalId=_semantic_global_id(operation, role),
@@ -821,6 +842,143 @@ def _preflight_direct_psets(
             raise SemanticManifestError(
                 "DUPLICATE_DIRECT_PROPERTY", f"{set_name}.{duplicates[0]}"
             )
+
+
+def _preflight_material_assignments(
+    *,
+    model: Any,
+    target: Any,
+    assignments: Sequence[Mapping[str, Any]],
+) -> dict[str, dict[str, Any]]:
+    grouped: dict[str, list[Mapping[str, Any]]] = {}
+    for item in assignments:
+        if (
+            item["ownership"] == SemanticOwnership.OCCURRENCE_DIRECT.value
+            and item["authoring_action"]
+            == SemanticAuthoringAction.REUSE_MATERIAL.value
+        ):
+            grouped.setdefault(str(item["source_ref"]), []).append(item)
+    if len(grouped) > 1:
+        raise SemanticManifestError(
+            "STRUCTURAL_MATERIAL_CARDINALITY_INVALID",
+            ",".join(sorted(grouped)),
+        )
+    if not grouped:
+        return {}
+
+    direct = [
+        relation.RelatingMaterial
+        for relation in getattr(target, "HasAssociations", ())
+        if relation.is_a("IfcRelAssociatesMaterial")
+    ]
+    if len(direct) > 1:
+        raise SemanticManifestError(
+            "STRUCTURAL_DIRECT_MATERIAL_AMBIGUOUS", str(target.GlobalId)
+        )
+    type_relations = [
+        relation
+        for relation in getattr(target, "IsDefinedBy", ())
+        if relation.is_a("IfcRelDefinesByType")
+    ]
+    if len(type_relations) > 1:
+        raise SemanticManifestError(
+            "STRUCTURAL_TYPE_RELATIONSHIP_AMBIGUOUS", str(target.GlobalId)
+        )
+    inherited = []
+    if type_relations:
+        inherited = [
+            relation.RelatingMaterial
+            for relation in type_relations[0].RelatingType.HasAssociations
+            if relation.is_a("IfcRelAssociatesMaterial")
+        ]
+    if len(inherited) > 1:
+        raise SemanticManifestError(
+            "STRUCTURAL_TYPE_MATERIAL_AMBIGUOUS",
+            str(type_relations[0].RelatingType.GlobalId),
+        )
+
+    plans: dict[str, dict[str, Any]] = {}
+    for source_ref, members in grouped.items():
+        facts = {str(item["fact_key"]) for item in members}
+        values = {str(item["value"]) for item in members}
+        if len(values) != 1:
+            raise SemanticManifestError(
+                "STRUCTURAL_MATERIAL_ASSIGNMENT_CONFLICT", source_ref
+            )
+        sample = members[0]
+        resource, create_label = _resolve_exact_material_authority(
+            model=model,
+            assignment=sample,
+        )
+        plan = {
+            "resource": resource,
+            "create_label": create_label,
+            "fact_keys": sorted(facts),
+            "skip": False,
+        }
+        if direct:
+            if _material_plan_matches(direct[0], plan):
+                plan["skip"] = True
+            else:
+                raise SemanticManifestError(
+                    "STRUCTURAL_MATERIAL_DIRECT_CONFLICT", source_ref
+                )
+        elif inherited:
+            if _material_plan_matches(inherited[0], plan):
+                plan["skip"] = True
+            else:
+                raise SemanticManifestError(
+                    "STRUCTURAL_MATERIAL_TYPE_CONFLICT", source_ref
+                )
+        plans[source_ref] = plan
+    return plans
+
+
+def _resolve_exact_material_authority(
+    *,
+    model: Any,
+    assignment: Mapping[str, Any],
+) -> tuple[Any | None, str | None]:
+    source_ref = str(assignment["source_ref"])
+    if source_ref.startswith("resource:"):
+        return _resolve_public_resource(model, source_ref), None
+    if (
+        str(assignment.get("source_kind"))
+        not in {
+            EvidenceSourceKind.EXPLICIT_REQUEST.value,
+            CanonicalSemanticSource.EXPLICIT_VALUE.value,
+        }
+        or not source_ref.startswith("request:/")
+        or str(assignment.get("value_type")) != "IfcMaterial"
+        or not str(assignment.get("fact_key", "")).startswith("material:")
+    ):
+        raise SemanticManifestError(
+            "SEMANTIC_MATERIAL_AUTHORITY_INVALID", source_ref
+        )
+    value = assignment.get("value")
+    if not isinstance(value, str) or not value or value.strip() != value:
+        raise SemanticManifestError(
+            "SEMANTIC_MATERIAL_LABEL_INVALID", repr(value)
+        )
+    matches = [
+        material
+        for material in model.by_type("IfcMaterial")
+        if str(getattr(material, "Name", "")) == value
+    ]
+    if len(matches) > 1:
+        raise SemanticManifestError(
+            "SEMANTIC_MATERIAL_LABEL_AMBIGUOUS", value
+        )
+    return (matches[0], None) if matches else (None, value)
+
+
+def _material_plan_matches(resource: Any, plan: Mapping[str, Any]) -> bool:
+    if plan["resource"] is not None:
+        return resource == plan["resource"]
+    return (
+        resource.is_a("IfcMaterial")
+        and str(getattr(resource, "Name", "")) == plan["create_label"]
+    )
 
 
 def _direct_psets(target: Any, set_name: str) -> list[Any]:

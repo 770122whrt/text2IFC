@@ -4,12 +4,17 @@ from __future__ import annotations
 
 import math
 from typing import Any, Mapping, Sequence
+import uuid
+
+import ifcopenshell.guid
 
 from text2ifc_ifc_repair.run_models import hash_json
 from text2ifc_ifc_repair.geometry import measure_straight_rectangular_member
 from text2ifc_ifc_repair.operations.hosted_opening import (
     millimetres_to_project_units,
+    sorted_roots,
 )
+from text2ifc_ifc_repair.type_templates import ensure_bound_type
 
 
 STRUCTURAL_TYPE_TEMPLATE_VERSION = "0.1"
@@ -188,6 +193,110 @@ def create_straight_rectangular_member(
         "representation": representation,
         "measurement": measurement,
     }
+
+
+def bind_structural_type(
+    *,
+    model: Any,
+    occurrence: Any,
+    assignment: Mapping[str, Any],
+    owner_history: Any,
+    operation_id: str,
+    expected_ifc_class: str,
+    generated_type_factory: Any,
+    factory_context: Mapping[str, Any],
+) -> dict[str, Any]:
+    """Bind one exact/generated structural Type without copying semantics.
+
+    Material and Pset assignments remain in the common semantic-authoring
+    stage.  This function creates or extends only `IfcRelDefinesByType`.
+    """
+
+    expected_occurrence_class = expected_ifc_class.removesuffix("Type")
+    if expected_ifc_class not in {"IfcBeamType", "IfcColumnType"}:
+        raise ValueError("STRUCTURAL_TYPE_CLASS_UNSUPPORTED")
+    if not occurrence.is_a(expected_occurrence_class):
+        raise ValueError("STRUCTURAL_TYPE_OCCURRENCE_CLASS_MISMATCH")
+    bound_type, generated = ensure_bound_type(
+        model,
+        assignment,
+        owner_history=owner_history,
+        operation_id=operation_id,
+        expected_ifc_class=expected_ifc_class,
+        generated_type_factory=generated_type_factory,
+        factory_context=factory_context,
+    )
+    relations = [
+        relation
+        for relation in bound_type.ObjectTypeOf
+        if relation.is_a("IfcRelDefinesByType")
+    ]
+    if len(relations) > 1:
+        raise ValueError("STRUCTURAL_TYPE_RELATIONSHIP_AMBIGUOUS")
+    created: list[dict[str, str]] = []
+    modified: list[dict[str, str]] = []
+    if relations:
+        relationship = relations[0]
+        relationship.RelatedObjects = sorted_roots(
+            [*relationship.RelatedObjects, occurrence]
+        )
+        modified.append(
+            {
+                "role": "structural_type_relationship",
+                "ifc_class": relationship.is_a(),
+                "global_id": str(relationship.GlobalId),
+            }
+        )
+    else:
+        relationship = model.create_entity(
+            "IfcRelDefinesByType",
+            GlobalId=_structural_relationship_global_id(
+                operation_id=operation_id,
+                occurrence_global_id=str(occurrence.GlobalId),
+                type_global_id=str(bound_type.GlobalId),
+            ),
+            OwnerHistory=owner_history,
+            RelatedObjects=[occurrence],
+            RelatingType=bound_type,
+        )
+        created.append(
+            {
+                "role": "structural_type_relationship",
+                "ifc_class": relationship.is_a(),
+                "global_id": str(relationship.GlobalId),
+            }
+        )
+    if generated:
+        created.insert(
+            0,
+            {
+                "role": "structural_type",
+                "ifc_class": bound_type.is_a(),
+                "global_id": str(bound_type.GlobalId),
+            },
+        )
+    return {
+        "type": bound_type,
+        "relationship": relationship,
+        "generated": generated,
+        "created": created,
+        "modified": modified,
+        "semantic_target_role": expected_occurrence_class.removeprefix("Ifc").lower(),
+    }
+
+
+def _structural_relationship_global_id(
+    *,
+    operation_id: str,
+    occurrence_global_id: str,
+    type_global_id: str,
+) -> str:
+    value = uuid.uuid5(
+        uuid.NAMESPACE_URL,
+        "https://text2ifc.local/ifc-repair/structural-type/"
+        f"{operation_id}/{occurrence_global_id}/{type_global_id}",
+    )
+    return ifcopenshell.guid.compress(value.hex)
 
 
 def _point3(value: Any) -> tuple[float, float, float]:
@@ -505,6 +614,7 @@ def _contract(family: str) -> Mapping[str, Any]:
 
 __all__ = [
     "STRUCTURAL_TYPE_TEMPLATE_VERSION",
+    "bind_structural_type",
     "create_straight_rectangular_member",
     "create_generated_beam_type",
     "create_generated_column_type",

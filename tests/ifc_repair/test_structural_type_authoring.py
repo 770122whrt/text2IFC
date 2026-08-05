@@ -663,3 +663,64 @@ def test_explicit_material_conflict_with_reused_type_fails_before_semantic_mutat
     assert _direct_psets(occurrence) == []
     assert _direct_materials(occurrence) == []
     assert not [item for item in model.by_type("IfcMaterial") if item.Name == "C30"]
+
+
+def test_explicit_material_label_must_resolve_uniquely_before_mutation() -> None:
+    model, history = _model_and_history()
+    occurrence = model.create_entity(
+        "IfcColumn",
+        GlobalId="0AMBIGUOUSCOLUMNAAAAAAA",
+        OwnerHistory=history,
+    )
+    model.create_entity("IfcMaterial", Name="Steel")
+    model.create_entity("IfcMaterial", Name="Steel")
+    roots_before = len(model.by_type("IfcRoot"))
+
+    with pytest.raises(
+        SemanticManifestError, match="SEMANTIC_MATERIAL_LABEL_AMBIGUOUS"
+    ):
+        _apply_semantics(
+            model,
+            occurrence,
+            "column",
+            [_material_assignment("column", "Steel")],
+        )
+
+    assert len(model.by_type("IfcRoot")) == roots_before
+    assert _direct_materials(occurrence) == []
+
+
+def test_generated_type_does_not_absorb_explicit_occurrence_semantics() -> None:
+    api = _api()
+    assignment, _ = _assignment("beam")
+    model, history = _model_and_history()
+    occurrence = model.create_entity(
+        "IfcBeam",
+        GlobalId="0GENERATEDBEAMAAAAAAAAA",
+        OwnerHistory=history,
+    )
+    binding = bind_structural_type(
+        model=model,
+        occurrence=occurrence,
+        assignment=assignment,
+        owner_history=history,
+        operation_id="beam-1",
+        expected_ifc_class="IfcBeamType",
+        generated_type_factory=api["create_generated_beam_type"],
+        factory_context=_factory_context("beam"),
+    )
+    generated_type = binding["type"]
+    before = type_authority_fingerprint(generated_type)
+
+    _apply_semantics(
+        model,
+        occurrence,
+        "beam",
+        [_pset_assignment("beam"), _material_assignment("beam", "C30")],
+    )
+
+    assert type_authority_fingerprint(generated_type) == before
+    assert not generated_type.HasPropertySets
+    assert not generated_type.HasAssociations
+    assert len(_direct_psets(occurrence)) == 1
+    assert {item.Name for item in _direct_materials(occurrence)} == {"C30"}

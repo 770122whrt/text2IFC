@@ -89,6 +89,60 @@ def ensure_bound_type(
     return created, True
 
 
+def type_authority_fingerprint(type_object: Any) -> str:
+    """Hash the Type-owned forward graph and associated material resources.
+
+    `IfcRelDefinesByType.RelatedObjects` is intentionally excluded: binding a
+    new occurrence may extend that inverse relationship, but it must not alter
+    the selected Type, its maps, property sets or inherited materials.
+    """
+
+    if not type_object.is_a("IfcTypeObject"):
+        raise ValueError("TYPE_AUTHORITY_FINGERPRINT_CLASS_INVALID")
+    material_resources = [
+        relation.RelatingMaterial
+        for relation in getattr(type_object, "HasAssociations", ())
+        if relation.is_a("IfcRelAssociatesMaterial")
+    ]
+    payload = {
+        "type_forward_graph": _forward_entity_payload(type_object, seen=set()),
+        "associated_materials": sorted(
+            (
+                _forward_entity_payload(resource, seen=set())
+                for resource in material_resources
+            ),
+            key=lambda item: hash_json(item),
+        ),
+    }
+    return hash_json(payload)
+
+
+def _forward_entity_payload(value: Any, *, seen: set[int]) -> Any:
+    if hasattr(value, "is_a") and hasattr(value, "get_info"):
+        identifier = int(value.id())
+        if identifier in seen:
+            return {
+                "ifc_class": value.is_a(),
+                "global_id": str(getattr(value, "GlobalId", "")),
+                "cycle": True,
+            }
+        nested_seen = {*seen, identifier}
+        info = value.get_info(include_identifier=False, recursive=False)
+        return {
+            str(key): _forward_entity_payload(item, seen=nested_seen)
+            for key, item in sorted(info.items())
+            if key != "type"
+        } | {"ifc_class": value.is_a()}
+    if isinstance(value, Mapping):
+        return {
+            str(key): _forward_entity_payload(item, seen=seen)
+            for key, item in sorted(value.items(), key=lambda pair: str(pair[0]))
+        }
+    if isinstance(value, (list, tuple)):
+        return [_forward_entity_payload(item, seen=seen) for item in value]
+    return value
+
+
 def _validate_generated_derivation(
     derivation: Mapping[str, Any],
     *,
@@ -133,4 +187,5 @@ __all__ = [
     "DOOR_STYLE_TEMPLATE_VERSION",
     "WINDOW_STYLE_TEMPLATE_VERSION",
     "ensure_bound_type",
+    "type_authority_fingerprint",
 ]
