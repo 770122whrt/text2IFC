@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: IFC ChangeSet Repair Pipeline
-status: Phase 12 specification and 16-plan execution contract frozen; ready to execute
-last_updated: "2026-08-04T16:56:55.355Z"
+status: Phase 12 executing; Plans 12-01 and 12-02 complete, 12-03 next
+last_updated: "2026-08-05T16:14:25.681Z"
 progress:
   total_phases: 13
   completed_phases: 11
   total_plans: 53
-  completed_plans: 38
-  percent: 72
+  completed_plans: 39
+  percent: 74
 ---
 
 # Project State
@@ -131,7 +131,7 @@ with real DeepSeek and independently recomputed Proof evidence.
 ## Current Position
 
 Phase: 12 (Beam and Column Operations) — EXECUTING
-Plan: 2 of 16
+Plan: 3 of 16
 
 - Milestone: v1.1 IFC ChangeSet Repair Pipeline
 - Phase: 11 complete
@@ -147,11 +147,12 @@ Plan: 2 of 16
 
 - Progress: 11 / 13 phases complete
 - Requirements: WFID-01..06 and OPS-01..02 complete; OPS-03..04 pending
-- Last activity: 2026-08-03 - Phase 12 SPEC, research, pattern map, Nyquist
-  validation contract and sixteen sequential plans were frozen. Fourteen
-  one-feature TDD plans precede the standard real DeepSeek execution and
-  evidence-gated closure plans. Material is optional unless explicitly
-  requested or inherited through explicitly authorized exact Type reuse.
+- Last activity: 2026-08-06 - Plan 12-02 completed. Beam/Column occurrences
+  and Types now index separately with source provenance, exact Storey/Type
+  relationships and diagnostic-only geometry evidence. d7n inventories
+  10/15 Beam/Column and vvo inventories 6/5 after SQLite reopen. IFC Index and
+  Extractor 0.5 reject stale caches by default. OPS-03/OPS-04 remain pending
+  until the independent Plan 12-16 closure gate.
 
 - Phase 11 closure evidence: accepted live run
   `uat-20260731T224900289758Z` passed all three contracts. Two live successes
@@ -327,14 +328,13 @@ Plan: 2 of 16
 
 ## Next Action
 
-Phase 11 is closed and Phase 12 is fully specified and planned. The next
-authorized workflow is execution of
-`.planning/phases/12-beam-and-column-operations/12-01-PLAN.md`, followed
-strictly by 12-02 through 12-16. Do not start execution without user direction,
-and do not start Phase 13.
+Phase 11 remains closed. Continue Phase 12 strictly with
+`.planning/phases/12-beam-and-column-operations/12-03-PLAN.md`, followed by
+12-04 through 12-16. OPS-03/OPS-04 remain pending until final independent
+closure. Do not start Phase 13.
 
 ---
-*Last updated: 2026-08-03 at the Phase 12 specification-and-plan checkpoint*
+*Last updated: 2026-08-06 after completing Phase 12 Plan 02*
 
 ## Accumulated Context
 
