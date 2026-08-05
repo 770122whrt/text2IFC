@@ -42,7 +42,12 @@ def ensure_bound_type(
     value_type = str(assignment.get("value_type"))
     if expected_ifc_class is not None and value_type != expected_ifc_class:
         raise ValueError("GENERATED_TYPE_TEMPLATE_UNSUPPORTED")
-    if value_type not in {"IfcWindowStyle", "IfcDoorStyle"}:
+    if value_type not in {
+        "IfcWindowStyle",
+        "IfcDoorStyle",
+        "IfcBeamType",
+        "IfcColumnType",
+    }:
         raise ValueError("GENERATED_TYPE_TEMPLATE_UNSUPPORTED")
     derivation = assignment.get("derivation")
     legacy_window_template = (
