@@ -165,8 +165,8 @@ class SQLiteIndexRepository:
                     "INDEX_SOURCE_FINGERPRINT_MISMATCH",
                     "The index was built from a different IFC source",
                 )
-            expected_version = expected_index_schema_version
-            if expected_version is not None and metadata.index_schema_version != expected_version:
+            expected_version = expected_index_schema_version or INDEX_SCHEMA_VERSION
+            if metadata.index_schema_version != expected_version:
                 raise IndexStoreError(
                     "INDEX_SCHEMA_VERSION_MISMATCH",
                     "The index schema version does not match the requested version",

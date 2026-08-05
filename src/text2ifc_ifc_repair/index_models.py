@@ -4,7 +4,7 @@ from dataclasses import dataclass, field
 from typing import Any
 
 
-INDEX_SCHEMA_VERSION = "text2ifc/ifc-index/0.4"
+INDEX_SCHEMA_VERSION = "text2ifc/ifc-index/0.5"
 
 
 @dataclass(frozen=True)

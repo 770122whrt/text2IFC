@@ -239,6 +239,67 @@ class WindowIndexAdapter(FillingIndexAdapter):
     ifc_classes = ("IfcWindow",)
 
 
+class _StructuralIndexAdapter:
+    ifc_classes: tuple[str, ...]
+    structural_family: str
+
+    def extract(self, entity: Any) -> AdapterResult:
+        axis = _structural_axis_capability(entity)
+        section = _structural_section_capability(entity)
+        measured = "measured_current_ifc"
+        measured_count = sum(
+            capability["status"] == measured for capability in (axis, section)
+        )
+        if measured_count == 2:
+            geometry_capability = "measured_structural_member"
+        elif measured_count == 1:
+            geometry_capability = "structural_geometry_partial"
+        else:
+            geometry_capability = "structural_geometry_unmeasurable"
+
+        warnings: tuple[tuple[str, str, dict[str, Any]], ...] = ()
+        if measured_count != 2:
+            warnings = (
+                (
+                    "INDEX_STRUCTURAL_GEOMETRY_UNAVAILABLE",
+                    "Structural axis or rectangular section could not be measured "
+                    "from explicit current-IFC representation evidence.",
+                    {
+                        "axis_status": axis["status"],
+                        "section_status": section["status"],
+                    },
+                ),
+            )
+
+        return AdapterResult(
+            geometry_capability=geometry_capability,
+            geometry_summary={
+                "axis_capability": axis,
+                "section_capability": section,
+                "representation_summary": _structural_representation_summary(
+                    entity
+                ),
+            },
+            facets={
+                "editable_target": False,
+                "structural_family": self.structural_family,
+                "structural_evidence_authority": "diagnostic_only",
+                "reference_resolution": "exact_identity_required",
+            },
+            warnings=warnings,
+        )
+
+
+class BeamIndexAdapter(_StructuralIndexAdapter):
+    ifc_classes = ("IfcBeam",)
+    structural_family = "beam"
+
+
+class ColumnIndexAdapter(_StructuralIndexAdapter):
+    ifc_classes = ("IfcColumn",)
+    structural_family = "column"
+
+
 class OpeningIndexAdapter:
     ifc_classes = ("IfcOpeningElement",)
 
@@ -405,6 +466,8 @@ def default_index_adapter_registry() -> IndexAdapterRegistry:
         OpeningIndexAdapter(),
         DoorIndexAdapter(),
         WindowIndexAdapter(),
+        BeamIndexAdapter(),
+        ColumnIndexAdapter(),
         SpaceIndexAdapter(),
     ):
         registry.register(adapter)
@@ -421,8 +484,170 @@ def _number_or_none(value: Any) -> float | None:
     return None if value is None else float(value)
 
 
+def _structural_axis_capability(entity: Any) -> dict[str, Any]:
+    representation = getattr(entity, "Representation", None)
+    candidates: list[Any] = []
+    for shape in getattr(representation, "Representations", ()) or ():
+        if str(getattr(shape, "RepresentationIdentifier", "")) != "Axis":
+            continue
+        candidates.extend(
+            item
+            for item in getattr(shape, "Items", ()) or ()
+            if item.is_a("IfcPolyline")
+        )
+    if len(candidates) != 1:
+        return {
+            "status": "unavailable",
+            "reason": "explicit_single_axis_polyline_required",
+            "candidate_count": len(candidates),
+            "authority": "diagnostic_only",
+        }
+
+    points = tuple(getattr(candidates[0], "Points", ()) or ())
+    if len(points) != 2:
+        return {
+            "status": "unavailable",
+            "reason": "axis_polyline_must_have_two_points",
+            "candidate_count": 1,
+            "point_count": len(points),
+            "authority": "diagnostic_only",
+        }
+    try:
+        millimetres_per_project_unit = (
+            ifcopenshell.util.unit.calculate_unit_scale(entity.file) * 1000.0
+        )
+        placement = getattr(entity, "ObjectPlacement", None)
+        matrix = (
+            ifcopenshell.util.placement.get_local_placement(placement)
+            if placement is not None
+            else None
+        )
+        local_points = [
+            [
+                float(coordinate)
+                for coordinate in tuple(point.Coordinates) + (0.0,) * (3 - len(point.Coordinates))
+            ][:3]
+            for point in points
+        ]
+        world_points: list[list[float]] = []
+        for point in local_points:
+            transformed = [*point, 1.0] if matrix is None else matrix @ [*point, 1.0]
+            world_points.append(
+                [
+                    float(transformed[index]) * millimetres_per_project_unit
+                    for index in range(3)
+                ]
+            )
+        delta = [
+            world_points[1][index] - world_points[0][index]
+            for index in range(3)
+        ]
+        length_mm = math.sqrt(sum(value * value for value in delta))
+        if length_mm <= 0.0:
+            raise ValueError("zero_length_axis")
+        return {
+            "status": "measured_current_ifc",
+            "world_start_mm": world_points[0],
+            "world_end_mm": world_points[1],
+            "world_direction": [value / length_mm for value in delta],
+            "length_mm": length_mm,
+            "provenance": "IfcShapeRepresentation.Axis/IfcPolyline",
+            "authority": "diagnostic_only",
+        }
+    except Exception as error:
+        return {
+            "status": "unavailable",
+            "reason": "axis_measurement_failed",
+            "error": str(error),
+            "authority": "diagnostic_only",
+        }
+
+
+def _structural_section_capability(entity: Any) -> dict[str, Any]:
+    solids = [
+        item
+        for item in _structural_representation_items(entity)
+        if item.is_a("IfcExtrudedAreaSolid")
+        and getattr(item, "SweptArea", None) is not None
+        and item.SweptArea.is_a("IfcRectangleProfileDef")
+    ]
+    if len(solids) != 1:
+        return {
+            "status": "unavailable",
+            "reason": "explicit_single_rectangular_extrusion_required",
+            "candidate_count": len(solids),
+            "authority": "diagnostic_only",
+        }
+    try:
+        solid = solids[0]
+        scale = ifcopenshell.util.unit.calculate_unit_scale(entity.file) * 1000.0
+        return {
+            "status": "measured_current_ifc",
+            "shape": "rectangle",
+            "profile_x_mm": float(solid.SweptArea.XDim) * scale,
+            "profile_y_mm": float(solid.SweptArea.YDim) * scale,
+            "extrusion_depth_mm": float(solid.Depth) * scale,
+            "provenance": "IfcExtrudedAreaSolid/IfcRectangleProfileDef",
+            "authority": "diagnostic_only",
+        }
+    except Exception as error:
+        return {
+            "status": "unavailable",
+            "reason": "section_measurement_failed",
+            "error": str(error),
+            "authority": "diagnostic_only",
+        }
+
+
+def _structural_representation_items(entity: Any) -> tuple[Any, ...]:
+    representation = getattr(entity, "Representation", None)
+    pending = [
+        item
+        for shape in getattr(representation, "Representations", ()) or ()
+        for item in getattr(shape, "Items", ()) or ()
+    ]
+    results: dict[int, Any] = {}
+    visited: set[int] = set()
+    while pending:
+        item = pending.pop()
+        step_id = int(item.id())
+        if step_id in visited:
+            continue
+        visited.add(step_id)
+        if item.is_a("IfcMappedItem"):
+            mapped = item.MappingSource.MappedRepresentation
+            pending.extend(getattr(mapped, "Items", ()) or ())
+        elif item.is_a("IfcBooleanResult"):
+            pending.extend((item.FirstOperand, item.SecondOperand))
+        else:
+            results[step_id] = item
+    return tuple(results[step_id] for step_id in sorted(results))
+
+
+def _structural_representation_summary(entity: Any) -> dict[str, Any]:
+    representation = getattr(entity, "Representation", None)
+    shapes = tuple(getattr(representation, "Representations", ()) or ())
+    return {
+        "representations": [
+            {
+                "identifier": str(getattr(shape, "RepresentationIdentifier", None)),
+                "type": str(getattr(shape, "RepresentationType", None)),
+                "item_classes": sorted(item.is_a() for item in shape.Items),
+            }
+            for shape in shapes
+        ],
+        "resolved_item_classes": sorted(
+            item.is_a() for item in _structural_representation_items(entity)
+        ),
+        "provenance": "current_ifc_representation",
+        "authority": "diagnostic_only",
+    }
+
+
 __all__ = [
     "AdapterResult",
+    "BeamIndexAdapter",
+    "ColumnIndexAdapter",
     "ElementIndexAdapter",
     "IndexAdapterRegistry",
     "OpeningIndexAdapter",

@@ -179,7 +179,7 @@ def test_repository_round_trips_versioned_element_records(tmp_path: Path) -> Non
         )
         assert repository.diagnostics()[0].code == "INDEX_GEOMETRY_UNAVAILABLE"
 
-    assert api["INDEX_SCHEMA_VERSION"] == "text2ifc/ifc-index/0.4"
+    assert api["INDEX_SCHEMA_VERSION"] == "text2ifc/ifc-index/0.5"
 
 
 def test_repository_round_trips_first_class_association_facts(tmp_path: Path) -> None:

@@ -31,7 +31,7 @@ from .semantic_facts import extract_property_facts
 from .spatial import resolve_opening_storey
 
 
-EXTRACTOR_VERSION = "text2ifc/ifc-indexer/0.4"
+EXTRACTOR_VERSION = "text2ifc/ifc-indexer/0.5"
 _IFC_GUID = re.compile(r"^[0-9A-Za-z_$]{22}$")
 
 
@@ -155,6 +155,14 @@ def build_ifc_index(
                         _storey_provenance(entity),
                     )
                 )
+            if type_entity is not None and getattr(type_entity, "GlobalId", None):
+                relationships.append(
+                    RelationshipFact(
+                        "defined_by_type",
+                        str(type_entity.GlobalId),
+                        "IfcRelDefinesByType",
+                    )
+                )
             record = ElementRecord(
                 record_id=record_id,
                 ifc_global_id=global_id or None,
@@ -223,7 +231,13 @@ def _indexed_types(model: Any, entities: list[Any]) -> list[Any]:
         type_entity = _element_type(entity)
         if type_entity is not None:
             unique[type_entity.id()] = type_entity
-    for ifc_class in ("IfcWallType", "IfcWindowStyle", "IfcDoorStyle"):
+    for ifc_class in (
+        "IfcWallType",
+        "IfcWindowStyle",
+        "IfcDoorStyle",
+        "IfcBeamType",
+        "IfcColumnType",
+    ):
         for type_entity in model.by_type(ifc_class):
             unique[type_entity.id()] = type_entity
     return [unique[step_id] for step_id in sorted(unique)]
