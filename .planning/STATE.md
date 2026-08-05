@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: IFC ChangeSet Repair Pipeline
-status: Phase 12 executing; Plans 12-01 through 12-04 complete, 12-05 next
-last_updated: "2026-08-05T16:37:34.257Z"
+status: Phase 12 executing; Plans 12-01 through 12-05 complete, 12-06 next
+last_updated: "2026-08-05T16:48:18.960Z"
 progress:
   total_phases: 13
   completed_phases: 11
   total_plans: 53
-  completed_plans: 41
-  percent: 77
+  completed_plans: 42
+  percent: 79
 ---
 
 # Project State
@@ -131,7 +131,7 @@ with real DeepSeek and independently recomputed Proof evidence.
 ## Current Position
 
 Phase: 12 (Beam and Column Operations) — EXECUTING
-Plan: 5 of 16
+Plan: 6 of 16
 
 - Milestone: v1.1 IFC ChangeSet Repair Pipeline
 - Phase: 11 complete
@@ -147,13 +147,13 @@ Plan: 5 of 16
 
 - Progress: 11 / 13 phases complete
 - Requirements: WFID-01..06 and OPS-01..02 complete; OPS-03..04 pending
-- Last activity: 2026-08-06 - Plan 12-04 completed. Dedicated deterministic
-  IfcBeamType and IfcColumnType factories now bind exact rectangular sections
-  to separate compiler-owned templates. Nearby project Types are ignored when
-  reuse is absent; exact reuse preserves identity; class/template/version/
-  digest/section/content tampering fails before mutation. No material, Pset or
-  representation map is inferred. OPS-03/OPS-04 remain pending until the
-  independent Plan 12-16 closure gate.
+- Last activity: 2026-08-06 - Plan 12-05 completed. Repair-local IFC2X3
+  straight rectangular geometry now preserves Beam end-face center axes and
+  Column base/top axes through Storey-relative placements. Reopened
+  IfcExtrudedAreaSolid/IfcRectangleProfileDef measurements prove dimensions
+  and orientation; inclined, rotated, Grid-like, scalar-extent and ambiguous
+  non-square inputs fail before any Root mutation. OPS-03/OPS-04 remain
+  pending until the independent Plan 12-16 closure gate.
 
 - Phase 11 closure evidence: accepted live run
   `uat-20260731T224900289758Z` passed all three contracts. Two live successes
@@ -330,12 +330,12 @@ Plan: 5 of 16
 ## Next Action
 
 Phase 11 remains closed. Continue Phase 12 strictly with
-`.planning/phases/12-beam-and-column-operations/12-05-PLAN.md`, followed by
-12-06 through 12-16. OPS-03/OPS-04 remain pending until final independent
+`.planning/phases/12-beam-and-column-operations/12-06-PLAN.md`, followed by
+12-07 through 12-16. OPS-03/OPS-04 remain pending until final independent
 closure. Do not start Phase 13.
 
 ---
-*Last updated: 2026-08-06 after completing Phase 12 Plan 04*
+*Last updated: 2026-08-06 after completing Phase 12 Plan 05*
 
 ## Accumulated Context
 
