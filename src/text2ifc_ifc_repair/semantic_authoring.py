@@ -1016,17 +1016,22 @@ def _semantic_global_id(operation: Mapping[str, Any], role: str) -> str:
 
 
 def _scoped_semantic_role(role: str, scope: str) -> str:
-    if scope == "window_occurrence":
+    prefixes = {
+        "target_occurrence": None,
+        "window_occurrence": None,
+        "opening_occurrence": "opening",
+        "door_occurrence": "door",
+        "beam_occurrence": "beam",
+        "column_occurrence": "column",
+    }
+    if scope not in prefixes:
+        raise SemanticManifestError("SEMANTIC_SCOPE_UNSUPPORTED", scope)
+    family = prefixes[scope]
+    if family is None:
         return role
-    if scope == "opening_occurrence":
-        prefix = "semantic_"
-        suffix = role[len(prefix):] if role.startswith(prefix) else role
-        return f"semantic_opening_{suffix}"
-    if scope == "door_occurrence":
-        prefix = "semantic_"
-        suffix = role[len(prefix):] if role.startswith(prefix) else role
-        return f"semantic_door_{suffix}"
-    raise SemanticManifestError("SEMANTIC_SCOPE_UNSUPPORTED", scope)
+    prefix = "semantic_"
+    suffix = role[len(prefix):] if role.startswith(prefix) else role
+    return f"semantic_{family}_{suffix}"
 
 
 def _validate_assignment_semantics(

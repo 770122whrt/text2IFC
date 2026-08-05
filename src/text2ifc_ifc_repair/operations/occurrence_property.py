@@ -15,10 +15,13 @@ from text2ifc_ifc_repair.evaluation_policy import (
 )
 from text2ifc_ifc_repair.registry import OperationDefinition
 from text2ifc_ifc_repair.semantic_facts import extract_property_facts
+from text2ifc_knowledge.registry import load_ifc2x3_registry
 
 
 OPERATION_TYPE = "set_occurrence_properties"
 TARGET_IFC_CLASSES = (
+    "IfcBeam",
+    "IfcColumn",
     "IfcDoor",
     "IfcWall",
     "IfcWallStandardCase",
@@ -156,6 +159,18 @@ def _precondition_checker(
             "PROPERTY_ASSIGNMENT_UNSUPPORTED",
             "/semantic_assignments",
         )
+    for index, assignment in enumerate(assignments):
+        issue = _assignment_authority_issue(
+            target_ifc_class=target.is_a(),
+            assignment=assignment,
+        )
+        if issue is not None:
+            code, actual = issue
+            return _check_failure(
+                code,
+                f"/semantic_assignments/{index}",
+                actual=actual,
+            )
     return {
         "checks": [
             {
@@ -190,6 +205,58 @@ def _check_failure(
         "issues": [{"code": code, "path": path, "message": code}],
         "evidence": {},
     }
+
+
+def _assignment_authority_issue(
+    *,
+    target_ifc_class: str,
+    assignment: Mapping[str, Any],
+) -> tuple[str, str] | None:
+    fact_key = str(assignment.get("fact_key") or "")
+    source_fact_key = str(assignment.get("source_fact_key") or "")
+    if fact_key != source_fact_key or not fact_key.startswith("pset:"):
+        return "PROPERTY_ASSIGNMENT_NONCANONICAL", source_fact_key
+    path = fact_key.removeprefix("pset:")
+    if path.count(".") != 1:
+        return "PROPERTY_ASSIGNMENT_NONCANONICAL", path
+    set_name, property_name = path.split(".", 1)
+
+    registry = load_ifc2x3_registry()
+    property_set = registry.property_set(set_name)
+    if property_set is None or property_name not in property_set["properties"]:
+        return "PROPERTY_ASSIGNMENT_NONCANONICAL", path
+    applicable_classes = tuple(
+        str(value) for value in property_set.get("applicable_classes", ())
+    )
+    declaration = registry.entity(target_ifc_class)
+    supertypes = (
+        ()
+        if declaration is None
+        else tuple(str(value) for value in declaration.get("supertypes", ()))
+    )
+    if target_ifc_class not in applicable_classes and not any(
+        value in applicable_classes for value in supertypes
+    ):
+        return "PROPERTY_PSET_NOT_APPLICABLE", set_name
+
+    expected_type = str(property_set["properties"][property_name]["data_type"])
+    actual_type = str(assignment.get("value_type") or "")
+    if actual_type != expected_type:
+        return "PROPERTY_VALUE_TYPE_MISMATCH", actual_type
+
+    class_scope = {
+        "IfcBeam": "beam_occurrence",
+        "IfcColumn": "column_occurrence",
+        "IfcDoor": "door_occurrence",
+        "IfcWindow": "window_occurrence",
+    }.get(target_ifc_class)
+    allowed_scopes = {"target_occurrence"}
+    if class_scope is not None:
+        allowed_scopes.add(class_scope)
+    scope = str(assignment.get("scope") or "target_occurrence")
+    if scope not in allowed_scopes:
+        return "PROPERTY_ASSIGNMENT_SCOPE_UNSUPPORTED", scope
+    return None
 
 
 def _applicator(*, operation: Mapping[str, Any], model: Any) -> dict[str, Any]:

@@ -46,6 +46,20 @@ def _model_and_element(ifc_class: str):
 
 
 def _operation(element, *, value=True):
+    set_name = {
+        "IfcBeam": "Pset_BeamCommon",
+        "IfcColumn": "Pset_ColumnCommon",
+        "IfcDoor": "Pset_DoorCommon",
+        "IfcWall": "Pset_WallCommon",
+        "IfcWallStandardCase": "Pset_WallCommon",
+        "IfcWindow": "Pset_WindowCommon",
+    }.get(element.is_a(), "Pset_WindowCommon")
+    property_name = (
+        "LoadBearing"
+        if element.is_a() in {"IfcBeam", "IfcColumn"}
+        else "IsExternal"
+    )
+    fact_key = f"pset:{set_name}.{property_name}"
     return {
         "operation_id": "property-operation-1",
         "operation_type": OPERATION_TYPE,
@@ -54,8 +68,8 @@ def _operation(element, *, value=True):
         "semantic_assignments": [
             {
                 "operation_id": "property-operation-1",
-                "fact_key": "pset:Pset_WindowCommon.IsExternal",
-                "source_fact_key": "pset:Pset_WindowCommon.IsExternal",
+                "fact_key": fact_key,
+                "source_fact_key": fact_key,
                 "value": value,
                 "value_type": "IfcBoolean",
                 "unit": None,
@@ -74,6 +88,8 @@ def test_default_registry_exposes_generic_occurrence_property_operation() -> Non
     definition = create_default_registry().require(OPERATION_TYPE)
 
     assert definition.target_ifc_classes == (
+        "IfcBeam",
+        "IfcColumn",
         "IfcDoor",
         "IfcWall",
         "IfcWallStandardCase",
@@ -90,7 +106,14 @@ def test_default_registry_exposes_generic_occurrence_property_operation() -> Non
 
 @pytest.mark.parametrize(
     "ifc_class",
-    ["IfcWall", "IfcWallStandardCase", "IfcDoor", "IfcWindow"],
+    [
+        "IfcWall",
+        "IfcWallStandardCase",
+        "IfcDoor",
+        "IfcWindow",
+        "IfcBeam",
+        "IfcColumn",
+    ],
 )
 def test_generic_operation_modifies_only_selected_supported_occurrence(
     ifc_class: str,
@@ -132,7 +155,7 @@ def test_generic_operation_modifies_only_selected_supported_occurrence(
 
 
 def test_generic_operation_rejects_unsupported_target_class() -> None:
-    model, column = _model_and_element("IfcColumn")
+    model, column = _model_and_element("IfcSlab")
     registry = create_default_registry()
 
     result = registry.dispatch(
