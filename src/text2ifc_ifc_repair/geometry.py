@@ -181,10 +181,110 @@ def product_local_geometry_bounds_mm(product: Any) -> dict[str, list[float]]:
     }
 
 
+def measure_straight_rectangular_member(
+    member: Any,
+    *,
+    relative_to: Any | None = None,
+) -> dict[str, Any]:
+    """Measure an authored Beam/Column swept solid from IFC entities.
+
+    The returned axis is the rectangle centre line: its points are the centres
+    of the two end faces.  Placement and swept-solid nodes are recomputed from
+    the model instead of trusting requested values or tessellated bounds.
+    """
+
+    if not member.is_a() in {"IfcBeam", "IfcColumn"}:
+        raise ValueError("STRUCTURAL_MEMBER_CLASS_UNSUPPORTED")
+    representations = list(
+        getattr(getattr(member, "Representation", None), "Representations", ())
+    )
+    bodies = [
+        representation
+        for representation in representations
+        if representation.RepresentationIdentifier == "Body"
+    ]
+    if len(bodies) != 1 or len(bodies[0].Items) != 1:
+        raise ValueError("STRUCTURAL_MEMBER_GEOMETRY_INVALID")
+    solid = bodies[0].Items[0]
+    if not solid.is_a("IfcExtrudedAreaSolid"):
+        raise ValueError("STRUCTURAL_MEMBER_GEOMETRY_INVALID")
+    profile = solid.SweptArea
+    if not profile.is_a("IfcRectangleProfileDef"):
+        raise ValueError("STRUCTURAL_MEMBER_GEOMETRY_INVALID")
+
+    member_matrix = ifcopenshell.util.placement.get_local_placement(
+        member.ObjectPlacement
+    )
+    if relative_to is not None:
+        reference_matrix = ifcopenshell.util.placement.get_local_placement(
+            relative_to.ObjectPlacement
+        )
+        member_matrix = _inverse_rigid_transform(reference_matrix) @ member_matrix
+    solid_matrix = ifcopenshell.util.placement.get_axis2placement(solid.Position)
+    frame = member_matrix @ solid_matrix
+    direction = [float(value) for value in solid.ExtrudedDirection.DirectionRatios]
+    magnitude = math.sqrt(sum(value * value for value in direction))
+    if magnitude <= 0.0:
+        raise ValueError("STRUCTURAL_MEMBER_GEOMETRY_INVALID")
+    local_direction = [value / magnitude for value in direction]
+    axis_direction = frame[:3, :3] @ local_direction
+    axis_start = frame[:3, 3]
+    axis_end = axis_start + axis_direction * float(solid.Depth)
+    millimetres_per_project_unit = (
+        ifcopenshell.util.unit.calculate_unit_scale(member.file) * 1000.0
+    )
+    start_mm = tuple(
+        _clean_mm(float(value) * millimetres_per_project_unit)
+        for value in axis_start
+    )
+    end_mm = tuple(
+        _clean_mm(float(value) * millimetres_per_project_unit)
+        for value in axis_end
+    )
+    normalized_axis = tuple(_clean_direction(float(value)) for value in axis_direction)
+    section = {
+        "shape": "rectangle",
+        "width_mm": _clean_mm(
+            float(profile.XDim) * millimetres_per_project_unit
+        ),
+    }
+    if member.is_a("IfcBeam"):
+        section["height_mm"] = _clean_mm(
+            float(profile.YDim) * millimetres_per_project_unit
+        )
+        orientation: tuple[float, float, float] | None = normalized_axis
+    else:
+        section["depth_mm"] = _clean_mm(
+            float(profile.YDim) * millimetres_per_project_unit
+        )
+        relative_placement = member.ObjectPlacement.RelativePlacement
+        if relative_placement.RefDirection is None:
+            orientation = None
+        else:
+            x_direction = member_matrix[:3, 0]
+            orientation = tuple(
+                _clean_direction(float(value)) for value in x_direction
+            )
+    return {
+        "axis_start_mm": start_mm,
+        "axis_end_mm": end_mm,
+        "axis_direction": normalized_axis,
+        "axis_extent_mm": _clean_mm(math.dist(start_mm, end_mm)),
+        "section": section,
+        "orientation": orientation,
+        "representation_type": str(bodies[0].RepresentationType),
+    }
+
+
 def _clean_mm(value: float) -> float:
     """Remove tessellation noise while preserving sub-millimetre coordinates."""
 
     rounded = round(float(value), 6)
+    return 0.0 if rounded == -0.0 else rounded
+
+
+def _clean_direction(value: float) -> float:
+    rounded = round(float(value), 12)
     return 0.0 if rounded == -0.0 else rounded
 
 
