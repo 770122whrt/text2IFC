@@ -24,7 +24,7 @@
       "required": ["operation_id", "scope", "fact_key", "source_fact_key", "value", "value_type", "unit", "ownership", "applicability", "source_kind", "source_ref", "provenance", "authoring_action"],
       "properties": {
         "operation_id": {"$ref": "#/$defs/id"},
-        "scope": {"enum": ["window_occurrence", "door_occurrence", "opening_occurrence"]},
+        "scope": {"enum": ["window_occurrence", "door_occurrence", "opening_occurrence", "beam_occurrence", "column_occurrence"]},
         "fact_key": {"$ref": "#/$defs/text"},
         "source_fact_key": {"$ref": "#/$defs/text"},
         "value": {},

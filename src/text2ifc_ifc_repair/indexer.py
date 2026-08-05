@@ -31,7 +31,7 @@ from .semantic_facts import extract_property_facts
 from .spatial import resolve_opening_storey
 
 
-EXTRACTOR_VERSION = "text2ifc/ifc-indexer/0.5"
+EXTRACTOR_VERSION = "text2ifc/ifc-indexer/0.6"
 _IFC_GUID = re.compile(r"^[0-9A-Za-z_$]{22}$")
 
 

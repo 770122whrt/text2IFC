@@ -28,7 +28,7 @@
       "type": "object", "additionalProperties": false,
       "required": ["operation_id", "scope", "fact_key", "source_fact_key", "value", "value_type", "unit", "ownership", "applicability", "source_kind", "source_ref", "provenance", "authoring_action"],
       "properties": {
-        "operation_id": {"$ref": "#/$defs/id"}, "scope": {"enum": ["window_occurrence", "door_occurrence", "opening_occurrence"]}, "fact_key": {"type": "string", "minLength": 1}, "source_fact_key": {"type": "string", "minLength": 1}, "value": {}, "value_type": {"type": "string", "minLength": 1}, "unit": {"type": ["string", "null"]},
+        "operation_id": {"$ref": "#/$defs/id"}, "scope": {"enum": ["window_occurrence", "door_occurrence", "opening_occurrence", "beam_occurrence", "column_occurrence"]}, "fact_key": {"type": "string", "minLength": 1}, "source_fact_key": {"type": "string", "minLength": 1}, "value": {}, "value_type": {"type": "string", "minLength": 1}, "unit": {"type": ["string", "null"]},
         "ownership": {"enum": ["occurrence_direct", "type_inherited"]}, "applicability": {"enum": ["required", "conditional"]},
         "source_kind": {"enum": ["explicit_value", "deterministic_derived", "type_inherited", "approved_occurrence_prototype", "authorized_type_cohort"]},
         "source_ref": {"type": "string", "minLength": 1}, "provenance": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},

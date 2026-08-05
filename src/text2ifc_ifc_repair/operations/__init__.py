@@ -11,6 +11,7 @@ from .door import (
     add_door_operation_definition,
     fill_door_operation_definition,
 )
+from .beam import beam_operation_definition
 
 
 def create_default_registry() -> OperationRegistry:
@@ -20,4 +21,5 @@ def create_default_registry() -> OperationRegistry:
     registry.register(opening_operation_definition())
     registry.register(add_door_operation_definition())
     registry.register(fill_door_operation_definition())
+    registry.register(beam_operation_definition())
     return registry

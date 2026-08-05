@@ -160,7 +160,7 @@ def _structural_profile_path(profile_id: str) -> Path:
     return path
 
 
-def test_structural_profiles_are_hash_bound_but_not_executable_yet() -> None:
+def test_structural_profiles_are_hash_bound_and_only_completed_family_is_executable() -> None:
     for profile_id in STRUCTURAL_PROFILE_IDS:
         _structural_profile_path(profile_id)
 
@@ -170,7 +170,8 @@ def test_structural_profiles_are_hash_bound_but_not_executable_yet() -> None:
 
     assert set(STRUCTURAL_PROFILE_IDS).issubset(profiles)
     assert set(STRUCTURAL_PROFILE_IDS).issubset(prompt_registry)
-    assert {"add_beam", "add_column"}.isdisjoint(executable_operations)
+    assert "add_beam" in executable_operations
+    assert "add_column" not in executable_operations
     for profile_id in STRUCTURAL_PROFILE_IDS:
         profile = profiles[profile_id]
         registry_record = prompt_registry[profile_id]

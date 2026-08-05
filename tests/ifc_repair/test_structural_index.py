@@ -183,5 +183,5 @@ def test_stale_structural_index_is_rejected_by_default_then_atomically_rebuilt(
         assert counts["IfcColumn"] == 15
 
     assert INDEX_SCHEMA_VERSION == "text2ifc/ifc-index/0.5"
-    assert EXTRACTOR_VERSION == "text2ifc/ifc-indexer/0.5"
+    assert EXTRACTOR_VERSION == "text2ifc/ifc-indexer/0.6"
     assert not list(tmp_path.glob("*.building-*"))

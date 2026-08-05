@@ -300,6 +300,30 @@ class ColumnIndexAdapter(_StructuralIndexAdapter):
     structural_family = "column"
 
 
+class StoreyIndexAdapter:
+    """Expose public Storey identity as the structural placement target."""
+
+    ifc_classes = ("IfcBuildingStorey",)
+
+    def extract(self, entity: Any) -> AdapterResult:
+        scale = ifcopenshell.util.unit.calculate_unit_scale(entity.file) * 1000.0
+        elevation = getattr(entity, "Elevation", None)
+        return AdapterResult(
+            geometry_capability="structural_storey_target",
+            geometry_summary={
+                "placement_reference": "storey_local",
+                "authority": "current_ifc_spatial_identity",
+            },
+            facets={
+                "editable_target": False,
+                "structural_placement_target": True,
+                "storey_elevation_mm": (
+                    None if elevation is None else float(elevation) * scale
+                ),
+            },
+        )
+
+
 class OpeningIndexAdapter:
     ifc_classes = ("IfcOpeningElement",)
 
@@ -468,6 +492,7 @@ def default_index_adapter_registry() -> IndexAdapterRegistry:
         WindowIndexAdapter(),
         BeamIndexAdapter(),
         ColumnIndexAdapter(),
+        StoreyIndexAdapter(),
         SpaceIndexAdapter(),
     ):
         registry.register(adapter)
@@ -538,6 +563,36 @@ def _structural_axis_capability(entity: Any) -> dict[str, Any]:
                     for index in range(3)
                 ]
             )
+        storeys = [
+            relation.RelatingStructure
+            for relation in getattr(entity, "ContainedInStructure", ())
+            if relation.RelatingStructure.is_a("IfcBuildingStorey")
+        ]
+        storey_local_points: list[list[float]] | None = None
+        storey_global_id: str | None = None
+        if len(storeys) == 1:
+            storey = storeys[0]
+            storey_global_id = str(storey.GlobalId)
+            storey_matrix = ifcopenshell.util.placement.get_local_placement(
+                storey.ObjectPlacement
+            )
+            inverse = storey_matrix.copy()
+            rotation = storey_matrix[:3, :3]
+            inverse[:3, :3] = rotation.T
+            inverse[:3, 3] = -(rotation.T @ storey_matrix[:3, 3])
+            inverse[3, :] = (0.0, 0.0, 0.0, 1.0)
+            storey_local_points = []
+            for world_point in world_points:
+                project_point = [
+                    value / millimetres_per_project_unit for value in world_point
+                ]
+                transformed = inverse @ [*project_point, 1.0]
+                storey_local_points.append(
+                    [
+                        float(transformed[index]) * millimetres_per_project_unit
+                        for index in range(3)
+                    ]
+                )
         delta = [
             world_points[1][index] - world_points[0][index]
             for index in range(3)
@@ -545,7 +600,7 @@ def _structural_axis_capability(entity: Any) -> dict[str, Any]:
         length_mm = math.sqrt(sum(value * value for value in delta))
         if length_mm <= 0.0:
             raise ValueError("zero_length_axis")
-        return {
+        result = {
             "status": "measured_current_ifc",
             "world_start_mm": world_points[0],
             "world_end_mm": world_points[1],
@@ -554,6 +609,15 @@ def _structural_axis_capability(entity: Any) -> dict[str, Any]:
             "provenance": "IfcShapeRepresentation.Axis/IfcPolyline",
             "authority": "diagnostic_only",
         }
+        if storey_local_points is not None:
+            result.update(
+                {
+                    "storey_global_id": storey_global_id,
+                    "storey_local_start_mm": storey_local_points[0],
+                    "storey_local_end_mm": storey_local_points[1],
+                }
+            )
+        return result
     except Exception as error:
         return {
             "status": "unavailable",
@@ -651,5 +715,6 @@ __all__ = [
     "ElementIndexAdapter",
     "IndexAdapterRegistry",
     "OpeningIndexAdapter",
+    "StoreyIndexAdapter",
     "default_index_adapter_registry",
 ]

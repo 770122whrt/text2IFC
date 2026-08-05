@@ -64,7 +64,7 @@
       "type": "object", "additionalProperties": false,
       "required": ["scope", "set_name", "quantity_name", "value", "value_type", "unit", "source"],
       "properties": {
-        "scope": {"enum": ["window_occurrence", "door_occurrence", "opening_occurrence"]},
+        "scope": {"enum": ["window_occurrence", "door_occurrence", "opening_occurrence", "beam_occurrence", "column_occurrence"]},
         "set_name": {"type": "string", "minLength": 1, "maxLength": 256},
         "quantity_name": {"type": "string", "minLength": 1, "maxLength": 256},
         "value": {"type": ["number", "integer", "boolean", "string"]},

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import hashlib
+from copy import deepcopy
 from pathlib import Path
 
 import ifcopenshell
@@ -213,3 +214,33 @@ def test_unsupported_inclined_beam_is_rejected_without_publication_or_source_mut
         issue["code"] == "STRUCTURAL_BEAM_NOT_HORIZONTAL"
         for issue in result["issues"]
     )
+
+
+def test_existing_same_axis_overlap_is_rejected_before_root_mutation(
+    tmp_path: Path,
+) -> None:
+    request = "add the first beam"
+    changeset = _changeset(request=request, parameters=_parameters())
+    output = tmp_path / "first-beam.ifc"
+    first = apply_changeset(
+        damaged_ifc_path=D7N,
+        repair_request=request,
+        changeset=changeset,
+        output_path=output,
+        registry=create_default_registry(),
+    )
+    assert first["valid"] and first["published"]
+    model = ifcopenshell.open(str(output))
+    roots_before = len(model.by_type("IfcRoot"))
+    second = deepcopy(changeset["operations"][0])
+    second["operation_id"] = "beam-overlap-2"
+    second["semantic_assignments"][0]["operation_id"] = "beam-overlap-2"
+
+    precondition = create_default_registry().dispatch(
+        "precondition_checker", second, model=model
+    )
+
+    assert [issue["code"] for issue in precondition["issues"]] == [
+        "STRUCTURAL_EXISTING_SAME_AXIS_OVERLAP"
+    ]
+    assert len(model.by_type("IfcRoot")) == roots_before
