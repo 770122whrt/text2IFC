@@ -496,9 +496,9 @@ profiles.
 
 ### Phase 12: Beam and Column Operations
 
-**Status:** In progress - 2026-08-06. Specification, research, pattern mapping,
+**Status:** In progress - 2026-08-09. Specification, research, pattern mapping,
 Nyquist validation and sixteen sequential execution plans are frozen; Plans
-12-01 through 12-09 are complete and Plan 12-10 is next.
+12-01 through 12-10 are complete and Plan 12-11 is next.
 
 **Goal:** Prove the common ChangeSet architecture across non-opening structural
 elements.
@@ -516,18 +516,18 @@ elements.
 
 **Validation strategy:** [Phase 12 VALIDATION](phases/12-beam-and-column-operations/12-VALIDATION.md)
 
-**Plans:** 9/16 plans executed
+**Plans:** 10/16 plans executed
 
-- **Wave 1:** [12-01 - Structural prompt profiles and selected routing](phases/12-beam-and-column-operations/12-01-PLAN.md)
-- **Wave 2** *(blocked on Wave 1)*: [12-02 - Structural occurrence and Type index](phases/12-beam-and-column-operations/12-02-PLAN.md)
-- **Wave 3** *(blocked on Wave 2)*: [12-03 - Structural occurrence property and RAG authority integration](phases/12-beam-and-column-operations/12-03-PLAN.md)
-- **Wave 4** *(blocked on Wave 3)*: [12-04 - Deterministic structural Type factories](phases/12-beam-and-column-operations/12-04-PLAN.md)
-- **Wave 5** *(blocked on Wave 4)*: [12-05 - Repair-local straight rectangular member geometry](phases/12-beam-and-column-operations/12-05-PLAN.md)
-- **Wave 6** *(blocked on Wave 5)*: [12-06 - Exact-Type and optional material/Pset preservation](phases/12-beam-and-column-operations/12-06-PLAN.md)
-- **Wave 7** *(blocked on Wave 6)*: [12-07 - Registered add_beam resolution and application](phases/12-beam-and-column-operations/12-07-PLAN.md)
-- **Wave 8** *(blocked on Wave 7)*: [12-08 - Registered add_column resolution and application](phases/12-beam-and-column-operations/12-08-PLAN.md)
-- **Wave 9** *(blocked on Wave 8)*: [12-09 - Strict structural evaluation and mixed atomicity](phases/12-beam-and-column-operations/12-09-PLAN.md)
-- **Wave 10** *(blocked on Wave 9)*: [12-10 - Structural mutation and private-Gold isolation](phases/12-beam-and-column-operations/12-10-PLAN.md)
+- [x] **Wave 1:** [12-01 - Structural prompt profiles and selected routing](phases/12-beam-and-column-operations/12-01-PLAN.md)
+- [x] **Wave 2** *(blocked on Wave 1)*: [12-02 - Structural occurrence and Type index](phases/12-beam-and-column-operations/12-02-PLAN.md)
+- [x] **Wave 3** *(blocked on Wave 2)*: [12-03 - Structural occurrence property and RAG authority integration](phases/12-beam-and-column-operations/12-03-PLAN.md)
+- [x] **Wave 4** *(blocked on Wave 3)*: [12-04 - Deterministic structural Type factories](phases/12-beam-and-column-operations/12-04-PLAN.md)
+- [x] **Wave 5** *(blocked on Wave 4)*: [12-05 - Repair-local straight rectangular member geometry](phases/12-beam-and-column-operations/12-05-PLAN.md)
+- [x] **Wave 6** *(blocked on Wave 5)*: [12-06 - Exact-Type and optional material/Pset preservation](phases/12-beam-and-column-operations/12-06-PLAN.md)
+- [x] **Wave 7** *(blocked on Wave 6)*: [12-07 - Registered add_beam resolution and application](phases/12-beam-and-column-operations/12-07-PLAN.md)
+- [x] **Wave 8** *(blocked on Wave 7)*: [12-08 - Registered add_column resolution and application](phases/12-beam-and-column-operations/12-08-PLAN.md)
+- [x] **Wave 9** *(blocked on Wave 8)*: [12-09 - Strict structural evaluation and mixed atomicity](phases/12-beam-and-column-operations/12-09-PLAN.md)
+- [x] **Wave 10** *(blocked on Wave 9)*: [12-10 - Structural mutation and private-Gold isolation](phases/12-beam-and-column-operations/12-10-PLAN.md)
 - **Wave 11** *(blocked on Wave 10)*: [12-11 - Family-neutral strict independent Proof validator](phases/12-beam-and-column-operations/12-11-PLAN.md)
 - **Wave 12** *(blocked on Wave 11)*: [12-12 - d7n/vvo offline runner and curated strict Proof contract](phases/12-beam-and-column-operations/12-12-PLAN.md)
 - **Wave 13** *(blocked on Wave 12)*: [12-13 - Live transcript, preflight and no-fallback contract](phases/12-beam-and-column-operations/12-13-PLAN.md)

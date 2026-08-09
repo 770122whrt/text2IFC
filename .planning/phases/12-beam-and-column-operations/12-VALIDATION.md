@@ -80,16 +80,16 @@ execution. `W0` means the task creates the named test first under TDD.
 
 | Task ID | Plan | Wave | Requirement | Threat Ref | Secure behavior | Test type | Automated command | File exists | Status |
 |---------|------|------|-------------|------------|-----------------|-----------|-------------------|-------------|--------|
-| 12-01-01 | 01 | 1 | OPS-03, OPS-04 | T12-01, T12-02 | selected structural profiles only; canonical fields fail closed | unit | `.\.venv\Scripts\python.exe -m pytest tests/ifc_repair/test_structural_prompt_profiles.py tests/ifc_repair/test_operation_prompt_profiles.py tests/ifc_repair/test_selected_provider_profiles.py -q` | W0 | pending |
-| 12-02-01 | 02 | 2 | OPS-03, OPS-04 | T12-03 | structural occurrence/Type facts round-trip without authority escalation | unit/integration | `.\.venv\Scripts\python.exe -m pytest tests/ifc_repair/test_structural_index.py tests/ifc_repair/test_indexer.py tests/ifc_repair/test_index_store.py -q` | W0 | pending |
-| 12-03-01 | 03 | 3 | OPS-03, OPS-04 | T12-04 | exact typed applicable PSD facts are the sole property authority | unit | `.\.venv\Scripts\python.exe -m pytest tests/ifc_repair/test_structural_property_authoring.py tests/ifc_repair/test_occurrence_property_operation.py tests/ifc_repair/test_property_binding_security.py -q` | W0 | pending |
-| 12-04-01 | 04 | 4 | OPS-03, OPS-04 | T12-05 | generated structural Type derivation/class/hash are compiler-owned | unit | `.\.venv\Scripts\python.exe -m pytest tests/ifc_repair/test_structural_type_authoring.py tests/ifc_repair/test_generated_type_authority.py -q` | W0 | pending |
-| 12-05-01 | 05 | 5 | OPS-03, OPS-04 | T12-06 | reopened straight-member axes/sections equal authorized inputs | unit/integration | `.\.venv\Scripts\python.exe -m pytest tests/ifc_repair/test_structural_geometry.py -q` | W0 | pending |
-| 12-06-01 | 06 | 6 | OPS-03, OPS-04 | T12-07 | exact Type is unchanged and optional semantics are authority-bound | integration | `.\.venv\Scripts\python.exe -m pytest tests/ifc_repair/test_structural_type_authoring.py tests/ifc_repair/test_property_authoring.py tests/ifc_repair/test_apply_transaction.py -q` | evolved W0 | pending |
-| 12-07-01 | 07 | 7 | OPS-03 | T12-01, T12-08 | Beam complete/clarification/unsupported paths are deterministic | integration | `.\.venv\Scripts\python.exe -m pytest tests/ifc_repair/test_beam_resolution.py tests/ifc_repair/test_beam_application.py -q` | W0 | pending |
-| 12-08-01 | 08 | 8 | OPS-04 | T12-01, T12-08 | Column base-Storey/orientation paths are deterministic | integration | `.\.venv\Scripts\python.exe -m pytest tests/ifc_repair/test_column_resolution.py tests/ifc_repair/test_column_application.py -q` | W0 | pending |
-| 12-09-01 | 09 | 9 | OPS-03, OPS-04 | T12-09, T12-11 | strict thresholds and mixed all-or-none publication | integration | `.\.venv\Scripts\python.exe -m pytest tests/ifc_repair/test_structural_atomicity.py tests/ifc_repair/test_apply_transaction.py -q` | W0 | pending |
-| 12-10-01 | 10 | 10 | OPS-03, OPS-04 | T12-10 | deterministic damage keeps original/mapping private | integration/security | `.\.venv\Scripts\python.exe -m pytest tests/ifc_repair/test_structural_mutation.py tests/ifc_repair/test_phase12_ground_truth_isolation.py -q` | W0 | pending |
+| 12-01-01 | 01 | 1 | OPS-03, OPS-04 | T12-01, T12-02 | selected structural profiles only; canonical fields fail closed | unit | `.\.venv\Scripts\python.exe -m pytest tests/ifc_repair/test_structural_prompt_profiles.py tests/ifc_repair/test_operation_prompt_profiles.py tests/ifc_repair/test_selected_provider_profiles.py -q` | W0 | green |
+| 12-02-01 | 02 | 2 | OPS-03, OPS-04 | T12-03 | structural occurrence/Type facts round-trip without authority escalation | unit/integration | `.\.venv\Scripts\python.exe -m pytest tests/ifc_repair/test_structural_index.py tests/ifc_repair/test_indexer.py tests/ifc_repair/test_index_store.py -q` | W0 | green |
+| 12-03-01 | 03 | 3 | OPS-03, OPS-04 | T12-04 | exact typed applicable PSD facts are the sole property authority | unit | `.\.venv\Scripts\python.exe -m pytest tests/ifc_repair/test_structural_property_authoring.py tests/ifc_repair/test_occurrence_property_operation.py tests/ifc_repair/test_property_binding_security.py -q` | W0 | green |
+| 12-04-01 | 04 | 4 | OPS-03, OPS-04 | T12-05 | generated structural Type derivation/class/hash are compiler-owned | unit | `.\.venv\Scripts\python.exe -m pytest tests/ifc_repair/test_structural_type_authoring.py tests/ifc_repair/test_generated_type_authority.py -q` | W0 | green |
+| 12-05-01 | 05 | 5 | OPS-03, OPS-04 | T12-06 | reopened straight-member axes/sections equal authorized inputs | unit/integration | `.\.venv\Scripts\python.exe -m pytest tests/ifc_repair/test_structural_geometry.py -q` | W0 | green |
+| 12-06-01 | 06 | 6 | OPS-03, OPS-04 | T12-07 | exact Type is unchanged and optional semantics are authority-bound | integration | `.\.venv\Scripts\python.exe -m pytest tests/ifc_repair/test_structural_type_authoring.py tests/ifc_repair/test_property_authoring.py tests/ifc_repair/test_apply_transaction.py -q` | evolved W0 | green |
+| 12-07-01 | 07 | 7 | OPS-03 | T12-01, T12-08 | Beam complete/clarification/unsupported paths are deterministic | integration | `.\.venv\Scripts\python.exe -m pytest tests/ifc_repair/test_beam_resolution.py tests/ifc_repair/test_beam_application.py -q` | W0 | green |
+| 12-08-01 | 08 | 8 | OPS-04 | T12-01, T12-08 | Column base-Storey/orientation paths are deterministic | integration | `.\.venv\Scripts\python.exe -m pytest tests/ifc_repair/test_column_resolution.py tests/ifc_repair/test_column_application.py -q` | W0 | green |
+| 12-09-01 | 09 | 9 | OPS-03, OPS-04 | T12-09, T12-11 | strict thresholds and mixed all-or-none publication | integration | `.\.venv\Scripts\python.exe -m pytest tests/ifc_repair/test_structural_atomicity.py tests/ifc_repair/test_apply_transaction.py -q` | W0 | green |
+| 12-10-01 | 10 | 10 | OPS-03, OPS-04 | T12-10 | deterministic damage keeps original/mapping private | integration/security | `.\.venv\Scripts\python.exe -m pytest tests/ifc_repair/test_structural_mutation.py tests/ifc_repair/test_phase12_ground_truth_isolation.py -q` | W0 | green |
 | 12-11-01 | 11 | 11 | OPS-03, OPS-04 | T12-11, T12-12 | strict validator distrusts aggregate success and edited artifacts | integration/security | `.\.venv\Scripts\python.exe -m pytest tests/ifc_repair/test_structural_evaluation.py tests/ifc_repair/test_phase12_success_cases.py tests/ifc_repair/test_success_case_collection.py -q` | W0 | pending |
 | 12-12-01 | 12 | 12 | OPS-03, OPS-04 | T12-12, T12-13 | d7n/vvo/mixed offline artifacts curate only after strict validation | dataset E2E | `.\.venv\Scripts\python.exe -m pytest tests/ifc_repair/test_phase12_dataset_e2e.py tests/ifc_repair/test_phase12_success_cases.py tests/ifc_repair/test_success_case_collection.py -q` | evolved W0 | pending |
 | 12-13-01 | 13 | 13 | OPS-03, OPS-04 | T12-02, T12-14 | live runner exposes calls/retries and enforces preflight/no fallback | integration | `.\.venv\Scripts\python.exe -m pytest tests/ifc_repair/test_phase12_live_uat.py -q` | W0 | pending |
@@ -106,18 +106,18 @@ execution. `W0` means the task creates the named test first under TDD.
 Existing pytest infrastructure is sufficient. Each implementation task must
 create or extend its test file before production code.
 
-- [ ] `tests/ifc_repair/test_structural_prompt_profiles.py`
-- [ ] `tests/ifc_repair/test_structural_index.py`
-- [ ] `tests/ifc_repair/test_structural_property_authoring.py`
-- [ ] `tests/ifc_repair/test_structural_type_authoring.py`
-- [ ] `tests/ifc_repair/test_structural_geometry.py`
-- [ ] `tests/ifc_repair/test_beam_resolution.py`
-- [ ] `tests/ifc_repair/test_beam_application.py`
-- [ ] `tests/ifc_repair/test_column_resolution.py`
-- [ ] `tests/ifc_repair/test_column_application.py`
-- [ ] `tests/ifc_repair/test_structural_atomicity.py`
-- [ ] `tests/ifc_repair/test_structural_mutation.py`
-- [ ] `tests/ifc_repair/test_phase12_ground_truth_isolation.py`
+- [x] `tests/ifc_repair/test_structural_prompt_profiles.py`
+- [x] `tests/ifc_repair/test_structural_index.py`
+- [x] `tests/ifc_repair/test_structural_property_authoring.py`
+- [x] `tests/ifc_repair/test_structural_type_authoring.py`
+- [x] `tests/ifc_repair/test_structural_geometry.py`
+- [x] `tests/ifc_repair/test_beam_resolution.py`
+- [x] `tests/ifc_repair/test_beam_application.py`
+- [x] `tests/ifc_repair/test_column_resolution.py`
+- [x] `tests/ifc_repair/test_column_application.py`
+- [x] `tests/ifc_repair/test_structural_atomicity.py`
+- [x] `tests/ifc_repair/test_structural_mutation.py`
+- [x] `tests/ifc_repair/test_phase12_ground_truth_isolation.py`
 - [ ] `tests/ifc_repair/test_structural_evaluation.py`
 - [ ] `tests/ifc_repair/test_phase12_dataset_e2e.py`
 - [ ] `tests/ifc_repair/test_phase12_success_cases.py`
