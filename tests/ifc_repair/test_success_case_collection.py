@@ -51,11 +51,20 @@ def test_checked_in_success_case_collection_is_self_consistent() -> None:
         item["audit_coverage"] == "strict_recomputed"
         and item["independent_l1_operation_count"] == item["operation_count"]
         and item["independent_l2_operation_count"] == item["operation_count"]
+        and item["structural_audit_coverage"] == "not_applicable"
         for item in phase11_summaries
     )
     assert result.independently_recomputed_case_count >= len(phase11_summaries)
     assert result.legacy_unverifiable_case_count == 5
     assert len(result.limitations) == result.legacy_unverifiable_case_count
+    legacy_windows = [
+        item for item in result.cases if item["audit_coverage"] == "legacy_artifact_only"
+    ]
+    assert legacy_windows
+    assert all(
+        item["structural_audit_coverage"] == "not_applicable"
+        for item in legacy_windows
+    )
 
 
 def test_phase11_proofs_follow_family_and_case_kind_directories() -> None:
