@@ -47,6 +47,13 @@ def _root_ids(model: object) -> set[str]:
     return {str(item.GlobalId) for item in model.by_type("IfcRoot")}
 
 
+def _optional_guid(model: object, global_id: str) -> object | None:
+    try:
+        return model.by_guid(global_id)
+    except RuntimeError:
+        return None
+
+
 def _authorized_changed_roots(model: object, target_ids: tuple[str, ...]) -> set[str]:
     allowed = set(target_ids)
     for target_id in target_ids:
@@ -149,8 +156,8 @@ def test_real_structural_damage_is_deterministic_source_bound_and_private(
 
     damaged = ifcopenshell.open(str(outputs[0] / "damaged.ifc"))
     assert damaged.schema == "IFC2X3"
-    assert damaged.by_guid(beam_id) is None
-    assert damaged.by_guid(column_id) is None
+    assert _optional_guid(damaged, beam_id) is None
+    assert _optional_guid(damaged, column_id) is None
     for surviving_id in (
         beam_type_id,
         column_type_id,
@@ -206,4 +213,3 @@ def test_structural_mutation_rejects_empty_duplicate_and_wrong_family_targets(
             output_dir=tmp_path / "wrong-family",
             beam_global_ids=("3dldEzenf9LvnDJYNNzLsH",),
         )
-

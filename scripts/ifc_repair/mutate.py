@@ -6,7 +6,11 @@ import argparse
 import json
 from pathlib import Path
 
-from text2ifc_ifc_repair.mutation import remove_door, remove_window_and_opening
+from text2ifc_ifc_repair.mutation import (
+    remove_door,
+    remove_structural_members,
+    remove_window_and_opening,
+)
 
 
 def main() -> int:
@@ -19,6 +23,7 @@ def main() -> int:
             "window-full-chain",
             "door-full-chain",
             "door-preserve-opening",
+            "structural-members",
         ),
         default="window-full-chain",
     )
@@ -26,6 +31,8 @@ def main() -> int:
     parser.add_argument("--opening-id")
     parser.add_argument("--window-id")
     parser.add_argument("--door-id")
+    parser.add_argument("--beam-id", action="append", default=[])
+    parser.add_argument("--column-id", action="append", default=[])
     parser.add_argument("--expected-source-sha256")
     arguments = parser.parse_args()
     if arguments.mode == "window-full-chain":
@@ -43,7 +50,7 @@ def main() -> int:
             window_global_id=arguments.window_id,
             expected_source_sha256=arguments.expected_source_sha256,
         )
-    else:
+    elif arguments.mode in {"door-full-chain", "door-preserve-opening"}:
         if not arguments.door_id:
             parser.error("Door modes require --door-id")
         result = remove_door(
@@ -51,6 +58,18 @@ def main() -> int:
             output_dir=arguments.output,
             door_global_id=arguments.door_id,
             preserve_opening=arguments.mode == "door-preserve-opening",
+            expected_source_sha256=arguments.expected_source_sha256,
+        )
+    else:
+        if not arguments.beam_id and not arguments.column_id:
+            parser.error(
+                "structural-members requires at least one --beam-id or --column-id"
+            )
+        result = remove_structural_members(
+            source_path=arguments.source,
+            output_dir=arguments.output,
+            beam_global_ids=tuple(arguments.beam_id),
+            column_global_ids=tuple(arguments.column_id),
             expected_source_sha256=arguments.expected_source_sha256,
         )
     print(json.dumps(result, ensure_ascii=False, indent=2, sort_keys=True))

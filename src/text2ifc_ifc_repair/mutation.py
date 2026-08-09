@@ -19,6 +19,7 @@ from ifcopenshell.api.root.remove_product import remove_product
 
 from text2ifc_text.splits import atomic_write_text
 
+from .index_adapters import BeamIndexAdapter, ColumnIndexAdapter
 from .sample import FROZEN_COUNT_CLASSES, inspect_target_chain
 
 
@@ -30,6 +31,158 @@ DOOR_MUTATION_SCHEMA_VERSION = "text2ifc/ifc-repair-door-mutation-private/0.1"
 DOOR_BATCH_MUTATION_SCHEMA_VERSION = (
     "text2ifc/ifc-repair-door-mutation-private/0.2"
 )
+STRUCTURAL_MUTATION_SCHEMA_VERSION = (
+    "text2ifc/ifc-repair-structural-mutation-private/0.1"
+)
+STRUCTURAL_MUTATION_TYPE = "remove_structural_members"
+
+
+def remove_structural_members(
+    *,
+    source_path: Path | str,
+    output_dir: Path | str,
+    beam_global_ids: tuple[str, ...] = (),
+    column_global_ids: tuple[str, ...] = (),
+    expected_source_sha256: str | None = None,
+) -> dict[str, Any]:
+    """Create a deterministic private structural damage case.
+
+    The public report deliberately contains only damage scope and hashes.  The
+    identity, geometry, and semantic snapshots needed for post-production Gold
+    comparison live exclusively in ``mutation_manifest.private.json``.
+    """
+
+    source = Path(source_path).resolve()
+    output = Path(output_dir).resolve()
+    source_sha256 = _sha256(source)
+    if expected_source_sha256 is not None and source_sha256 != expected_source_sha256:
+        raise ValueError("SOURCE_IFC_FINGERPRINT_MISMATCH")
+    if output.exists():
+        raise FileExistsError(f"mutation output already exists: {output}")
+
+    targets = _structural_targets(
+        beam_global_ids=beam_global_ids,
+        column_global_ids=column_global_ids,
+    )
+    model = ifcopenshell.open(str(source))
+    if model.schema != "IFC2X3":
+        raise ValueError("UNSUPPORTED_IFC_SCHEMA")
+
+    snapshots: list[dict[str, Any]] = []
+    modified_relationship_ids: set[int] = set()
+    entities: list[Any] = []
+    for role, expected_class, global_id in targets:
+        entity = _optional_guid(model, global_id)
+        if entity is None or not entity.is_a(expected_class):
+            raise ValueError("STRUCTURAL_MUTATION_TARGET_INVALID")
+        snapshots.append(_structural_target_snapshot(entity, role=role))
+        entities.append(entity)
+        modified_relationship_ids.update(
+            relation.id()
+            for relation in model.get_inverse(entity)
+            if relation.is_a("IfcRelationship")
+        )
+
+    before_counts = _structural_counts(model)
+    owner_history_snapshot = _snapshot_owner_history(model)
+    for entity in entities:
+        remove_product(model, product=entity)
+    _restore_owner_history(model, owner_history_snapshot)
+    _canonicalize_structural_relationship_sets(model, modified_relationship_ids)
+
+    output.parent.mkdir(parents=True, exist_ok=True)
+    stage = Path(tempfile.mkdtemp(prefix=f".{output.name}-", dir=output.parent))
+    try:
+        damaged_path = stage / "damaged.ifc"
+        model.write(str(damaged_path))
+        reopened = ifcopenshell.open(str(damaged_path))
+        if reopened.schema != "IFC2X3":
+            raise ValueError("MUTATED_IFC_SCHEMA_MISMATCH")
+        for snapshot in snapshots:
+            entity = snapshot["entity"]
+            if _optional_guid(reopened, str(entity["global_id"])) is not None:
+                raise ValueError("STRUCTURAL_MUTATION_REMOVE_FAILED")
+            if _optional_guid(reopened, str(snapshot["type"]["global_id"])) is None:
+                raise ValueError("STRUCTURAL_MUTATION_TYPE_NOT_PRESERVED")
+            if _optional_guid(reopened, str(snapshot["storey"]["global_id"])) is None:
+                raise ValueError("STRUCTURAL_MUTATION_STOREY_NOT_PRESERVED")
+
+        after_counts = _structural_counts(reopened)
+        damaged_sha256 = _sha256(damaged_path)
+        private_manifest = {
+            "schema_version": STRUCTURAL_MUTATION_SCHEMA_VERSION,
+            "mutation_type": STRUCTURAL_MUTATION_TYPE,
+            "source": {
+                "path": source.as_posix(),
+                "schema": "IFC2X3",
+                "size_bytes": source.stat().st_size,
+                "sha256": source_sha256,
+            },
+            "targets": snapshots,
+            "role_mapping": {
+                snapshot["role"]: snapshot["entity"]["global_id"]
+                for snapshot in snapshots
+            },
+            "counts": {"before": before_counts, "after": after_counts},
+            "damaged_ifc": {"path": "damaged.ifc", "sha256": damaged_sha256},
+        }
+        public_family_counts = {
+            "beam": sum(
+                snapshot["role"] == "beam"
+                or str(snapshot["role"]).startswith("beam-")
+                for snapshot in snapshots
+            ),
+            "column": sum(
+                snapshot["role"] == "column"
+                or str(snapshot["role"]).startswith("column-")
+                for snapshot in snapshots
+            ),
+        }
+        report = {
+            "schema_version": "text2ifc/ifc-repair-structural-mutation-report/0.1",
+            "valid": True,
+            "mutation_type": STRUCTURAL_MUTATION_TYPE,
+            "source_sha256": source_sha256,
+            "damaged_sha256": damaged_sha256,
+            "damage_scope": {
+                "occurrence_count": len(snapshots),
+                "family_counts": public_family_counts,
+                "removed_families": [
+                    family
+                    for family, count in public_family_counts.items()
+                    if count
+                ],
+            },
+            "counts": {"before": before_counts, "after": after_counts},
+            "checks": {
+                "schema_preserved": True,
+                "source_unchanged": _sha256(source) == source_sha256,
+                "all_requested_members_removed": True,
+                "shared_type_and_storey_preserved": True,
+            },
+        }
+        atomic_write_text(
+            stage / "mutation_manifest.private.json", _render_json(private_manifest)
+        )
+        atomic_write_text(stage / "mutation_report.json", _render_json(report))
+        os.replace(stage, output)
+    except BaseException:
+        if stage.exists():
+            shutil.rmtree(stage)
+        raise
+
+    return {
+        "valid": True,
+        "mutation_type": STRUCTURAL_MUTATION_TYPE,
+        "source_sha256": source_sha256,
+        "damaged_sha256": damaged_sha256,
+        "family_counts": public_family_counts,
+        "artifacts": {
+            "damaged_ifc": "damaged.ifc",
+            "private_manifest": "mutation_manifest.private.json",
+            "report": "mutation_report.json",
+        },
+    }
 
 
 def remove_window_and_opening(
@@ -716,6 +869,220 @@ def remove_doors_batch(
             "report": "mutation_report.json",
         },
     }
+
+
+def _structural_targets(
+    *,
+    beam_global_ids: tuple[str, ...],
+    column_global_ids: tuple[str, ...],
+) -> tuple[tuple[str, str, str], ...]:
+    def normalize(values: tuple[str, ...]) -> tuple[str, ...]:
+        if isinstance(values, (str, bytes)):
+            values = (str(values),)
+        normalized = tuple(str(value) for value in values)
+        if any(not value for value in normalized):
+            raise ValueError("STRUCTURAL_MUTATION_TARGET_INVALID")
+        return tuple(sorted(normalized))
+
+    beams = normalize(beam_global_ids)
+    columns = normalize(column_global_ids)
+    all_ids = (*beams, *columns)
+    if not all_ids:
+        raise ValueError("STRUCTURAL_MUTATION_EMPTY")
+    if len(set(all_ids)) != len(all_ids):
+        raise ValueError("STRUCTURAL_MUTATION_DUPLICATE_TARGET")
+
+    result: list[tuple[str, str, str]] = []
+    for family, ifc_class, global_ids in (
+        ("beam", "IfcBeam", beams),
+        ("column", "IfcColumn", columns),
+    ):
+        for index, global_id in enumerate(global_ids, start=1):
+            role = family if len(global_ids) == 1 else f"{family}-{index:03d}"
+            result.append((role, ifc_class, global_id))
+    return tuple(result)
+
+
+def _structural_target_snapshot(entity: Any, *, role: str) -> dict[str, Any]:
+    family = "beam" if entity.is_a("IfcBeam") else "column"
+    expected_type_class = "IfcBeamType" if family == "beam" else "IfcColumnType"
+    type_relations = [
+        relation
+        for relation in getattr(entity, "IsDefinedBy", ())
+        if relation.is_a("IfcRelDefinesByType")
+    ]
+    if len(type_relations) != 1:
+        raise ValueError("STRUCTURAL_MUTATION_TYPE_AMBIGUOUS")
+    relating_type = type_relations[0].RelatingType
+    if relating_type is None or not relating_type.is_a(expected_type_class):
+        raise ValueError("STRUCTURAL_MUTATION_TYPE_INVALID")
+
+    storey_relations = [
+        relation
+        for relation in getattr(entity, "ContainedInStructure", ())
+        if relation.RelatingStructure.is_a("IfcBuildingStorey")
+    ]
+    if len(storey_relations) != 1:
+        raise ValueError("STRUCTURAL_MUTATION_STOREY_AMBIGUOUS")
+    storey = storey_relations[0].RelatingStructure
+
+    adapter = BeamIndexAdapter() if family == "beam" else ColumnIndexAdapter()
+    geometry_summary = dict(adapter.extract(entity).geometry_summary)
+    return {
+        "role": role,
+        "entity": _private_entity_identity(entity),
+        "type": _private_entity_identity(relating_type),
+        "storey": _private_entity_identity(storey),
+        "geometry": {
+            "axis_capability": geometry_summary.get("axis_capability"),
+            "section_capability": geometry_summary.get("section_capability"),
+            "representation_summary": geometry_summary.get(
+                "representation_summary"
+            ),
+        },
+        "semantics": {
+            "property_sets": _direct_property_set_snapshot(entity),
+            "material_associations": _direct_material_association_snapshot(entity),
+        },
+    }
+
+
+def _private_entity_identity(entity: Any) -> dict[str, Any]:
+    result = {
+        "ifc_class": entity.is_a(),
+        "step_id": int(entity.id()),
+    }
+    global_id = getattr(entity, "GlobalId", None)
+    if global_id is not None:
+        result["global_id"] = str(global_id)
+    name = getattr(entity, "Name", None)
+    if name is not None:
+        result["name"] = str(name)
+    return result
+
+
+def _direct_property_set_snapshot(entity: Any) -> list[dict[str, Any]]:
+    records: list[dict[str, Any]] = []
+    for relation in sorted(
+        (
+            item
+            for item in getattr(entity, "IsDefinedBy", ())
+            if item.is_a("IfcRelDefinesByProperties")
+        ),
+        key=_entity_sort_key,
+    ):
+        definition = relation.RelatingPropertyDefinition
+        values = getattr(definition, "HasProperties", None)
+        if values is None:
+            values = getattr(definition, "Quantities", ())
+        records.append(
+            {
+                "relationship": _private_entity_identity(relation),
+                "definition": _private_entity_identity(definition),
+                "properties": [
+                    _private_property_value(item)
+                    for item in sorted(values or (), key=_entity_sort_key)
+                ],
+            }
+        )
+    return records
+
+
+def _private_property_value(item: Any) -> dict[str, Any]:
+    result = _private_entity_identity(item)
+    nominal = getattr(item, "NominalValue", None)
+    if nominal is not None:
+        result["value_type"] = nominal.is_a()
+        result["value"] = _private_value(getattr(nominal, "wrappedValue", nominal))
+        return result
+    for attribute in (
+        "LengthValue",
+        "AreaValue",
+        "VolumeValue",
+        "CountValue",
+        "WeightValue",
+        "TimeValue",
+    ):
+        value = getattr(item, attribute, None)
+        if value is not None:
+            result["value_attribute"] = attribute
+            result["value"] = _private_value(value)
+            break
+    return result
+
+
+def _direct_material_association_snapshot(entity: Any) -> list[dict[str, Any]]:
+    records: list[dict[str, Any]] = []
+    for relation in sorted(
+        (
+            item
+            for item in getattr(entity, "HasAssociations", ())
+            if item.is_a("IfcRelAssociatesMaterial")
+        ),
+        key=_entity_sort_key,
+    ):
+        material = relation.RelatingMaterial
+        records.append(
+            {
+                "relationship": _private_entity_identity(relation),
+                "material": _private_entity_identity(material),
+            }
+        )
+    return records
+
+
+def _private_value(value: Any) -> Any:
+    if value is None or isinstance(value, (str, bool, int, float)):
+        return value
+    if isinstance(value, (tuple, list)):
+        return [_private_value(item) for item in value]
+    if hasattr(value, "is_a") and hasattr(value, "id"):
+        return _private_entity_identity(value)
+    return str(value)
+
+
+def _structural_counts(model: Any) -> dict[str, int]:
+    classes = (
+        *FROZEN_COUNT_CLASSES,
+        "IfcBeam",
+        "IfcColumn",
+        "IfcBeamType",
+        "IfcColumnType",
+        "IfcRelDefinesByType",
+        "IfcRelAssociatesMaterial",
+        "IfcRelContainedInSpatialStructure",
+    )
+    return {ifc_class: len(model.by_type(ifc_class)) for ifc_class in classes}
+
+
+def _entity_sort_key(entity: Any) -> tuple[str, int]:
+    return (str(getattr(entity, "GlobalId", "")), int(entity.id()))
+
+
+def _canonicalize_structural_relationship_sets(
+    model: Any,
+    relationship_ids: set[int],
+) -> None:
+    """Stabilize every surviving modified relationship SET after deletion."""
+
+    for relationship_id in sorted(relationship_ids):
+        try:
+            relationship = model.by_id(relationship_id)
+        except RuntimeError:
+            continue
+        for attribute in (
+            "RelatedObjects",
+            "RelatedElements",
+            "RelatedControlElements",
+        ):
+            members = getattr(relationship, attribute, None)
+            if members is None:
+                continue
+            setattr(
+                relationship,
+                attribute,
+                tuple(sorted(members, key=_entity_sort_key)),
+            )
 
 
 def _door_snapshot(door: Any, opening: Any, wall: Any) -> dict[str, Any]:

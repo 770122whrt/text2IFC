@@ -86,6 +86,12 @@ def apply_changeset(
             )
             if operation.get("semantic_assignments") is not None:
                 definition = registry.require(str(operation["operation_type"]))
+                handler_owned_facts = frozenset(
+                    str(item)
+                    for item in definition.capability_constraints.get(
+                        "handler_owned_semantic_facts", ()
+                    )
+                )
                 scope_roles = {
                     scope: role
                     for role, scope in definition.semantic_scope_roles.items()
@@ -124,6 +130,7 @@ def apply_changeset(
                         item
                         for item in operation["semantic_assignments"]
                         if item.get("scope", legacy_scope) == scope
+                        and str(item.get("fact_key")) not in handler_owned_facts
                     ]
                     if not scoped_assignments:
                         continue

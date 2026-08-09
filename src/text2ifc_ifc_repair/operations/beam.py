@@ -204,6 +204,10 @@ def beam_operation_definition() -> OperationDefinition:
             "section": "rectangle_unrotated",
             "grid_placement": False,
             "structural_analysis": False,
+            "handler_owned_semantic_facts": [
+                "relationship:host",
+                "relationship:storey",
+            ],
         },
         prototype_ifc_classes=("IfcBeamType",),
         prototype_dimension_paths={

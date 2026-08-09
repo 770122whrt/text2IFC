@@ -324,7 +324,9 @@ def build_semantic_manifest(
         fact.canonical_source_kind is not None for fact in facts
     )
     use_v03 = use_v02 and any(
-        fact.occurrence_scope == "door_occurrence" for fact in facts
+        fact.occurrence_scope
+        in {"door_occurrence", "beam_occurrence", "column_occurrence"}
+        for fact in facts
     )
     assignments: list[dict[str, Any]] = []
     for fact in facts:
@@ -357,14 +359,15 @@ def build_semantic_manifest(
         )
         ownership = (
             SemanticOwnership.TYPE_INHERITED
-            if fact.source_kind
+            if fact.fact_key == "relationship:type"
+            or fact.source_kind
             in {
                 EvidenceSourceKind.SURVIVING_TYPE,
                 EvidenceSourceKind.APPROVED_PROTOTYPE,
             }
             else SemanticOwnership.OCCURRENCE_DIRECT
         )
-        if fact.canonical_source_kind in {
+        if fact.fact_key != "relationship:type" and fact.canonical_source_kind in {
             CanonicalSemanticSource.EXPLICIT_VALUE.value,
             CanonicalSemanticSource.DETERMINISTIC_DERIVED.value,
             CanonicalSemanticSource.APPROVED_OCCURRENCE_PROTOTYPE.value,
@@ -1307,6 +1310,12 @@ def _legacy_source_kind(
 def _canonical_source_kind(fact: SemanticFact) -> str:
     if fact.canonical_source_kind is not None:
         return CanonicalSemanticSource(fact.canonical_source_kind).value
+    if (
+        fact.fact_key == "relationship:type"
+        and fact.source_kind is EvidenceSourceKind.DETERMINISTIC_POLICY
+        and fact.derivation is not None
+    ):
+        return CanonicalSemanticSource.DETERMINISTIC_DERIVED.value
     if fact.inherited or fact.source_kind in {
         EvidenceSourceKind.SURVIVING_TYPE,
         EvidenceSourceKind.APPROVED_PROTOTYPE,

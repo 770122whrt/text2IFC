@@ -210,6 +210,10 @@ def column_operation_definition() -> OperationDefinition:
             "automatic_storey_split": False,
             "grid_placement": False,
             "structural_analysis": False,
+            "handler_owned_semantic_facts": [
+                "relationship:host",
+                "relationship:storey",
+            ],
         },
         prototype_ifc_classes=("IfcColumnType",),
         prototype_dimension_paths={

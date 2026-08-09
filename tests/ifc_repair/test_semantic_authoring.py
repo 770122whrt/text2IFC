@@ -238,6 +238,81 @@ def test_manifest_effective_materials_prefer_occurrence_direct_over_type() -> No
     assert [fact.fact_key for fact in expected] == ["material:Glass"]
 
 
+def test_generated_structural_type_remains_inherited_in_v03_manifest() -> None:
+    from text2ifc_ifc_repair.evaluation_policy import EvidenceSourceKind
+    from text2ifc_ifc_repair.operations import create_default_registry
+    from text2ifc_ifc_repair.production_evidence import (
+        ApplicabilityDecision,
+        ProductionEvidence,
+    )
+    from text2ifc_ifc_repair.semantic_facts import SemanticFact
+
+    operation_id = "beam-generated-type-1"
+    type_fact = SemanticFact(
+        fact_key="relationship:type",
+        value="0BEAMTYPEAAAAAAAAAAAAA",
+        value_type="IfcBeamType",
+        unit=None,
+        inherited=False,
+        pset_path=None,
+        entity_source=f"generated-operation:{operation_id}",
+        source_kind=EvidenceSourceKind.DETERMINISTIC_POLICY,
+        source_ref="generated-type:0BEAMTYPEAAAAAAAAAAAAA",
+        provenance=(f"operation:{operation_id}", "generated-type-template:0.1"),
+        occurrence_scope="beam_occurrence",
+        canonical_source_kind="deterministic_derived",
+        derivation={"template_id": "beam.rectangle.ifc2x3"},
+    )
+    storey_fact = SemanticFact(
+        fact_key="relationship:storey",
+        value="0STOREYAAAAAAAAAAAAAAA",
+        value_type="IfcBuildingStorey",
+        unit=None,
+        inherited=False,
+        pset_path=None,
+        entity_source=f"generated-operation:{operation_id}",
+        source_kind=EvidenceSourceKind.DETERMINISTIC_POLICY,
+        source_ref=f"resolved:/operations/{operation_id}/target",
+        provenance=(f"operation:{operation_id}", "registered-beam-storey-policy:0.1"),
+        occurrence_scope="beam_occurrence",
+        canonical_source_kind="deterministic_derived",
+    )
+    evidence = ProductionEvidence(
+        expected_facts_by_operation={operation_id: (type_fact, storey_fact)},
+        candidate_facts_by_operation={operation_id: (type_fact, storey_fact)},
+        applicability_by_operation={
+            operation_id: {
+                check_id: ApplicabilityDecision(
+                    check_id=check_id,
+                    applicability="required",
+                    mandatory=True,
+                    outcome="evaluable",
+                    verified_absence=False,
+                    evidence_pointer=f"policy:{check_id}",
+                )
+                for check_id in ("beam.type", "beam.storey")
+            }
+        },
+        operation_types={operation_id: "add_beam"},
+        conflicts=(),
+    )
+
+    manifest = _api().build_semantic_manifest(
+        production_evidence=evidence,
+        operation_id=operation_id,
+        base_model_fingerprint="sha256:" + "a" * 64,
+        registry=create_default_registry(),
+    )
+    assignment = next(
+        item for item in manifest.assignments if item.fact_key == "relationship:type"
+    )
+
+    assert manifest.schema_version == "text2ifc/ifc-repair-semantic-manifest/0.3"
+    assert assignment.ownership.value == "type_inherited"
+    assert assignment.source_kind.value == "deterministic_derived"
+    assert assignment.authoring_action.value == "inherit_from_type"
+
+
 def test_future_operation_registers_its_own_fact_key_normalizer() -> None:
     from text2ifc_ifc_repair.evaluation_policy import (
         ComparisonRule,

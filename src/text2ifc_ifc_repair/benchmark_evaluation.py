@@ -166,13 +166,50 @@ def evaluate_production(inputs: ProductionEvaluationInputs) -> RepairEvaluation:
     return _evaluate(inputs, private_original_path=None, private_mapping={})
 
 
+def assert_benchmark_cannot_promote_failed_production(
+    production_evaluation: Any,
+    benchmark_evaluation: Any,
+) -> None:
+    """Prevent evaluator-only Gold from changing a failed production outcome.
+
+    Benchmark-only comparison is useful as a stricter diagnostic, but it must
+    never make an unsuccessful public production result publishable.
+    """
+
+    production_passed = (
+        getattr(production_evaluation, "complete_repair_success", None) is True
+        and getattr(
+            production_evaluation,
+            "successful_artifact_publishable",
+            None,
+        )
+        is True
+    )
+    benchmark_promotes = (
+        getattr(benchmark_evaluation, "complete_repair_success", None) is True
+        or getattr(
+            benchmark_evaluation,
+            "successful_artifact_publishable",
+            None,
+        )
+        is True
+    )
+    if not production_passed and benchmark_promotes:
+        raise ValueError("BENCHMARK_CANNOT_PROMOTE_FAILED_PRODUCTION")
+
+
 def evaluate_benchmark(inputs: BenchmarkEvaluationInputs) -> BenchmarkEvaluationResult:
     """Consume original/mutation truth only at the private evaluator boundary."""
 
+    production_evaluation = evaluate_production(inputs.production)
     evaluation = _evaluate(
         inputs.production,
         private_original_path=Path(inputs.private_original_ifc_path),
         private_mapping=inputs.private_mutation_mapping,
+    )
+    assert_benchmark_cannot_promote_failed_production(
+        production_evaluation,
+        evaluation,
     )
     private = evaluation_to_dict(evaluation)
     private["benchmark_private"] = {
@@ -854,6 +891,7 @@ __all__ = [
     "BenchmarkEvaluationResult",
     "ProductionEvaluationInputs",
     "PRODUCTION_EXPECTED_SOURCE_KINDS",
+    "assert_benchmark_cannot_promote_failed_production",
     "evaluate_benchmark",
     "evaluate_mapped_role_semantics",
     "evaluate_production",

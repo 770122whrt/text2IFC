@@ -190,6 +190,60 @@ def test_default_registry_add_beam_publishes_one_reopened_contained_typed_occurr
     assert result["postconditions"][0]["valid"] is True
 
 
+def test_handler_owned_structural_relationships_are_not_rebound_by_semantic_authoring(
+    tmp_path: Path,
+) -> None:
+    request = "add a beam whose storey containment is owned by the beam handler"
+    changeset = _changeset(request=request, parameters=_parameters())
+    operation = changeset["operations"][0]
+    operation["semantic_assignments"].extend(
+        {
+            "operation_id": operation["operation_id"],
+            "scope": "beam_occurrence",
+            "fact_key": fact_key,
+            "source_fact_key": fact_key,
+            "value": STOREY_ID,
+            "value_type": "IfcBuildingStorey",
+            "unit": None,
+            "ownership": "occurrence_direct",
+            "applicability": applicability,
+            "source_kind": "deterministic_derived",
+            "source_ref": f"resolved:/operations/{operation['operation_id']}/target",
+            "provenance": [
+                f"operation:{operation['operation_id']}",
+                "registered-beam-storey-policy:0.1",
+            ],
+            "derivation": None,
+            "authoring_action": "bind_relationship",
+        }
+        for fact_key, applicability in (
+            ("relationship:host", "conditional"),
+            ("relationship:storey", "required"),
+        )
+    )
+    output = tmp_path / "beam-handler-owned-relationships.ifc"
+
+    result = apply_changeset(
+        damaged_ifc_path=D7N,
+        repair_request=request,
+        changeset=changeset,
+        output_path=output,
+        registry=create_default_registry(),
+    )
+
+    assert result["valid"] and result["published"]
+    reopened = ifcopenshell.open(str(output))
+    beam_id = next(
+        item["global_id"]
+        for item in result["operations"][0]["changes"]["created"]
+        if item["role"] == "beam"
+    )
+    beam = reopened.by_guid(beam_id)
+    assert [relation.RelatingStructure.GlobalId for relation in beam.ContainedInStructure] == [
+        STOREY_ID
+    ]
+
+
 def test_unsupported_inclined_beam_is_rejected_without_publication_or_source_mutation(
     tmp_path: Path,
 ) -> None:
