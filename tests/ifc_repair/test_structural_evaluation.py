@@ -1,3 +1,4 @@
+import inspect
 import math
 from dataclasses import dataclass
 from types import SimpleNamespace
@@ -8,6 +9,7 @@ import pytest
 from scripts.ifc_repair import validate_success_cases
 from text2ifc_ifc_repair.evaluation_models import EvaluationStatus
 from text2ifc_ifc_repair.evaluation_policy import (
+    STRUCTURAL_L1_CHECK_IDS,
     STRUCTURAL_L1_THRESHOLDS,
     compare_structural_l1_measurement,
 )
@@ -159,9 +161,11 @@ def test_column_profile_orientation_passes_at_point_one_degree_and_fails_beyond(
 @dataclass(frozen=True)
 class _Product:
     GlobalId: str
+    ifc_class: str = "IfcBeam"
+    fingerprint: str = ""
 
     def is_a(self, ifc_class: str | None = None) -> str | bool:
-        return "IfcBeam" if ifc_class is None else ifc_class == "IfcBeam"
+        return self.ifc_class if ifc_class is None else ifc_class == self.ifc_class
 
 
 class _Model:
@@ -198,8 +202,8 @@ class _Registry:
         return {
             "valid": True,
             "l1_checks": {
-                "l1.structural.product": {"status": "passed"},
-                "l1.structural.relationships": {"status": "passed"},
+                check_id: {"status": "passed"}
+                for check_id in STRUCTURAL_L1_CHECK_IDS
             },
         }
 
@@ -302,3 +306,102 @@ def test_independent_structural_audit_derives_new_member_without_application_rol
     assert registry.l1_occurrence_ids == [occurrence_id]
     assert occurrence_id in repaired_model.by_guid_calls
     assert "beam-existing" not in repaired_model.by_guid_calls
+
+
+def test_independent_structural_authority_rejects_reused_type_fingerprint_drift(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    operation = {
+        "operation_id": "beam-reuse-1",
+        "operation_type": "add_beam",
+        "target": {"storey_global_id": "storey-1"},
+        "parameters": {
+            "axis": {
+                "start": {"x_mm": 0, "y_mm": 0, "z_mm": 3000},
+                "end": {"x_mm": 1000, "y_mm": 0, "z_mm": 3000},
+            },
+            "section": {
+                "shape": "rectangle",
+                "width_mm": 100,
+                "height_mm": 200,
+            },
+        },
+        "semantic_assignments": [
+            {
+                "fact_key": "relationship:type",
+                "value": "reused-beam-type",
+                "value_type": "IfcBeamType",
+                "ownership": "type_inherited",
+                "scope": "beam_occurrence",
+                "source_kind": "surviving_type",
+            }
+        ],
+    }
+    occurrence_id = deterministic_global_id(operation, "beam")
+    before_type = _Product(
+        "reused-beam-type", ifc_class="IfcBeamType", fingerprint="before"
+    )
+    after_type = _Product(
+        "reused-beam-type", ifc_class="IfcBeamType", fingerprint="after"
+    )
+    damaged_model = _Model((before_type,))
+    repaired_model = _Model((_Product(occurrence_id), after_type))
+    monkeypatch.setattr(
+        validate_success_cases,
+        "type_authority_fingerprint",
+        lambda entity: entity.fingerprint,
+    )
+
+    with pytest.raises(ValueError, match="reused_type_fingerprint"):
+        validate_success_cases._audit_structural_type_and_semantic_authority(
+            changeset={"operations": [operation]},
+            damaged_model=damaged_model,
+            repaired_model=repaired_model,
+        )
+
+
+def test_preservation_authority_cannot_be_supplied_by_application_claims(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    assert "application" not in inspect.signature(
+        validate_success_cases._audit_structural_preservation
+    ).parameters
+    damaged_model = _Model(())
+    repaired_model = _Model((_Product("beam-created"),))
+    monkeypatch.setattr(
+        validate_success_cases,
+        "profile_normalized_model_diff",
+        lambda before, after: {
+            "changes": {
+                "created": [
+                    {"global_id": "beam-created"},
+                    {"global_id": "forged-unrelated-root"},
+                ],
+                "modified": [],
+                "removed": [],
+            }
+        },
+    )
+    monkeypatch.setattr(
+        validate_success_cases,
+        "_independent_created_product_contract",
+        lambda operations: {
+            "beam-created": (
+                "IfcBeam",
+                {"operation_id": "beam-1", "operation_type": "add_beam"},
+                "beam",
+            )
+        },
+    )
+    monkeypatch.setattr(
+        validate_success_cases,
+        "_collect_created_product_root_authority",
+        lambda **kwargs: None,
+    )
+
+    with pytest.raises(ValueError, match="undeclared_root:forged-unrelated-root"):
+        validate_success_cases._audit_structural_preservation(
+            changeset={"operations": []},
+            damaged_model=damaged_model,
+            repaired_model=repaired_model,
+        )

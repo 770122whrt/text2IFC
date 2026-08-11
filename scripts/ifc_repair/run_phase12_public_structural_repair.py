@@ -541,6 +541,7 @@ def run_public_repair(
         "schema_version": SCHEMA_VERSION,
         "case_id": str(bundle.get("case_id") or "phase12-public-structural"),
         "status": "passed",
+        "provider_evidence_mode": "offline_bound_deterministic",
         "synthetic_fallback_used": False,
         "operation_count": len(resolution.operations),
         "operation_families": {
