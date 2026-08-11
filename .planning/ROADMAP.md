@@ -496,9 +496,9 @@ profiles.
 
 ### Phase 12: Beam and Column Operations
 
-**Status:** In progress - 2026-08-11. Specification, research, pattern mapping,
+**Status:** In progress - 2026-08-12. Specification, research, pattern mapping,
 Nyquist validation and sixteen sequential execution plans are frozen; Plans
-12-01 through 12-11 are complete and Plan 12-12 is next.
+12-01 through 12-12 are complete and Plan 12-13 is next.
 
 **Goal:** Prove the common ChangeSet architecture across non-opening structural
 elements.
@@ -516,7 +516,7 @@ elements.
 
 **Validation strategy:** [Phase 12 VALIDATION](phases/12-beam-and-column-operations/12-VALIDATION.md)
 
-**Plans:** 11/16 plans executed
+**Plans:** 12/16 plans executed
 
 - [x] **Wave 1:** [12-01 - Structural prompt profiles and selected routing](phases/12-beam-and-column-operations/12-01-PLAN.md)
 - [x] **Wave 2** *(blocked on Wave 1)*: [12-02 - Structural occurrence and Type index](phases/12-beam-and-column-operations/12-02-PLAN.md)
@@ -529,7 +529,7 @@ elements.
 - [x] **Wave 9** *(blocked on Wave 8)*: [12-09 - Strict structural evaluation and mixed atomicity](phases/12-beam-and-column-operations/12-09-PLAN.md)
 - [x] **Wave 10** *(blocked on Wave 9)*: [12-10 - Structural mutation and private-Gold isolation](phases/12-beam-and-column-operations/12-10-PLAN.md)
 - [x] **Wave 11** *(blocked on Wave 10)*: [12-11 - Family-neutral strict independent Proof validator](phases/12-beam-and-column-operations/12-11-PLAN.md)
-- **Wave 12** *(blocked on Wave 11)*: [12-12 - d7n/vvo offline runner and curated strict Proof contract](phases/12-beam-and-column-operations/12-12-PLAN.md)
+- [x] **Wave 12** *(blocked on Wave 11)*: [12-12 - d7n/vvo offline runner and curated strict Proof contract](phases/12-beam-and-column-operations/12-12-PLAN.md)
 - **Wave 13** *(blocked on Wave 12)*: [12-13 - Live transcript, preflight and no-fallback contract](phases/12-beam-and-column-operations/12-13-PLAN.md)
 - **Wave 14** *(blocked on Wave 13)*: [12-14 - Live Proof curation acceptance contract](phases/12-beam-and-column-operations/12-14-PLAN.md)
 - **Wave 15** *(blocked on Wave 14 and every offline gate)*: [12-15 - Execute and independently curate real DeepSeek structural UAT](phases/12-beam-and-column-operations/12-15-PLAN.md)
