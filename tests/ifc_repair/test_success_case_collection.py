@@ -41,6 +41,7 @@ def test_checked_in_success_case_collection_is_self_consistent() -> None:
         for item in result.cases
         if "fill_existing_opening_with_door" in item["operation_types"]
         or "add_door_with_opening_to_wall" in item["operation_types"]
+        if not item["case_id"].startswith("phase12-")
     ]
     assert len(phase11_summaries) >= 7
     assert all(

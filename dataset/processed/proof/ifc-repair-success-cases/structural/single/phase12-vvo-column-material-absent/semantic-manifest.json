@@ -1,0 +1,87 @@
+{
+  "assignments": [
+    {
+      "applicability": "conditional",
+      "authoring_action": "bind_relationship",
+      "derivation": null,
+      "fact_key": "relationship:host",
+      "operation_id": "phase12-vvo-column-material-absent-column-1",
+      "ownership": "occurrence_direct",
+      "provenance": [
+        "resolved-host-target:1vTeahUkP60PdWqwCTjeRs",
+        "resolved-host:1vTeahUkP60PdWqwCTjeRs",
+        "operation:phase12-vvo-column-material-absent-column-1"
+      ],
+      "scope": "column_occurrence",
+      "source_fact_key": "relationship:host",
+      "source_kind": "deterministic_derived",
+      "source_ref": "current-host-binding:1vTeahUkP60PdWqwCTjeRs",
+      "unit": null,
+      "value": "1vTeahUkP60PdWqwCTjeRs",
+      "value_type": "IfcBuildingStorey"
+    },
+    {
+      "applicability": "required",
+      "authoring_action": "bind_relationship",
+      "derivation": null,
+      "fact_key": "relationship:storey",
+      "operation_id": "phase12-vvo-column-material-absent-column-1",
+      "ownership": "occurrence_direct",
+      "provenance": [
+        "operation:phase12-vvo-column-material-absent-column-1",
+        "registered-column-base-storey-policy:0.1"
+      ],
+      "scope": "column_occurrence",
+      "source_fact_key": "relationship:storey",
+      "source_kind": "deterministic_derived",
+      "source_ref": "resolved:/operations/phase12-vvo-column-material-absent-column-1/target",
+      "unit": null,
+      "value": "1vTeahUkP60PdWqwCTjeRs",
+      "value_type": "IfcBuildingStorey"
+    },
+    {
+      "applicability": "required",
+      "authoring_action": "inherit_from_type",
+      "derivation": {
+        "formal_attributes": {},
+        "ifc_class": "IfcColumnType",
+        "template": {
+          "name": "Text2IFC generated column type phase12-vvo-column-material-absent-column-1",
+          "predefined_type": "NOTDEFINED",
+          "section": {
+            "depth_mm": 600.0,
+            "shape": "rectangle",
+            "width_mm": 400.0
+          },
+          "section_digest": "sha256:e43ab32a66ab3e17d637a6299e8714efdf1265e8e0e50097c7112727d5d39c57"
+        },
+        "template_digest": "sha256:4231cc6c8572ad44a23926dbc65facabef8f4f2f260fa7233ad0956f16b5c623",
+        "template_id": "text2ifc-rectangular-column-type",
+        "template_version": "0.1"
+      },
+      "fact_key": "relationship:type",
+      "operation_id": "phase12-vvo-column-material-absent-column-1",
+      "ownership": "type_inherited",
+      "provenance": [
+        "operation:phase12-vvo-column-material-absent-column-1",
+        "generated-type-template:0.1"
+      ],
+      "scope": "column_occurrence",
+      "source_fact_key": "relationship:type",
+      "source_kind": "deterministic_derived",
+      "source_ref": "generated-type:3n8N5ysmfGAg58bUg2JBi$",
+      "unit": null,
+      "value": "3n8N5ysmfGAg58bUg2JBi$",
+      "value_type": "IfcColumnType"
+    }
+  ],
+  "base_model_fingerprint": "sha256:0e36ffb6747fca2dfc65c0038be775b610bdcaeb28a0189786af29a697522f89",
+  "manifest_id": "semantic-manifest-149030c668597e5ff8da0d16",
+  "operation_id": "phase12-vvo-column-material-absent-column-1",
+  "operation_type": "add_column",
+  "policy": {
+    "policy_id": "column.add.l2",
+    "policy_version": "0.1"
+  },
+  "schema_version": "text2ifc/ifc-repair-semantic-manifest/0.3"
+}

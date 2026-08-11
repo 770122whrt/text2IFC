@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import shutil
 import sys
 from collections.abc import Mapping
@@ -37,6 +38,9 @@ from text2ifc_ifc_repair.resolution_flow import (  # noqa: E402
 from text2ifc_ifc_repair.semantic_authoring import (  # noqa: E402
     semantic_manifest_expected_facts,
     semantic_manifest_to_dict,
+)
+from text2ifc_knowledge.property_search import (  # noqa: E402
+    create_default_property_resolver,
 )
 
 
@@ -112,6 +116,8 @@ def validate_public_request_bundle(bundle: Any) -> None:
         bundle["request"]
     ).strip():
         raise ValueError("PUBLIC_STRUCTURAL_REQUEST_REQUIRED")
+    if str(bundle["request"]) != str(bundle["request"]).strip():
+        raise ValueError("PUBLIC_STRUCTURAL_REQUEST_NOT_CANONICAL")
     if not isinstance(bundle.get("operations"), list):
         raise ValueError("PUBLIC_STRUCTURAL_OPERATIONS_REQUIRED")
 
@@ -190,6 +196,26 @@ def _intent_document(
     }
 
 
+def _bound_target(operation_type: str, target_global_id: str | None) -> dict[str, str]:
+    field_by_operation = {
+        "add_beam": "storey_global_id",
+        "add_column": "storey_global_id",
+        "add_window_with_opening_to_wall": "wall_global_id",
+        "add_opening_to_wall": "wall_global_id",
+        "add_door_with_opening_to_wall": "wall_global_id",
+        "fill_existing_opening_with_door": "opening_global_id",
+    }
+    try:
+        field = field_by_operation[operation_type]
+    except KeyError as error:
+        raise ValueError(
+            f"PUBLIC_BOUND_TARGET_OPERATION_UNSUPPORTED:{operation_type}"
+        ) from error
+    if not target_global_id:
+        raise ValueError(f"PUBLIC_BOUND_TARGET_MISSING:{operation_type}")
+    return {field: str(target_global_id)}
+
+
 def _build_authority(
     *,
     intent: RepairIntent,
@@ -214,7 +240,10 @@ def _build_authority(
         bound_operation = {
             "operation_id": operation.operation_id,
             "operation_type": operation.operation_type,
-            "target": {"storey_global_id": operation.target_global_id},
+            "target": _bound_target(
+                operation.operation_type,
+                operation.target_global_id,
+            ),
             "parameters": operation.to_dict()["parameters"],
         }
         policy_facts[operation.operation_id] = (
@@ -346,9 +375,10 @@ def _bound_changeset(
             {
                 "operation_id": resolved.operation_id,
                 "operation_type": resolved.operation_type,
-                "target": {
-                    "storey_global_id": resolved.target_global_id,
-                },
+                "target": _bound_target(
+                    resolved.operation_type,
+                    resolved.target_global_id,
+                ),
                 "parameters": resolved.to_dict()["parameters"],
                 "evidence_refs": list(resolved.evidence_pointers),
                 "semantic_manifest": {
@@ -416,6 +446,7 @@ def run_public_repair(
     damaged_hash = _sha256(damaged_copy)
     request = str(bundle["request"])
     registry = create_default_registry()
+    property_resolver = create_default_property_resolver()
     intent = RepairIntent.from_dict(
         _intent_document(bundle, damaged_hash=damaged_hash),
         registry=registry,
@@ -431,6 +462,7 @@ def run_public_repair(
             repository,
             expected_source_sha256=metadata.source_ifc_sha256,
             operation_registry=registry,
+            property_knowledge_resolver=property_resolver,
         )
         records = {
             item.ifc_global_id: item for item in repository.iter_records()
@@ -468,54 +500,100 @@ def run_public_repair(
         damaged_hash=damaged_hash,
     )
     _write(output_root / manifest_name, manifest_payload)
-    repaired = output_root / "repaired.ifc"
-    application = apply_changeset(
-        damaged_ifc_path=damaged_copy,
-        repair_request=request,
-        changeset=changeset,
-        output_path=repaired,
-        registry=registry,
+    _write(output_root / "request.txt", request)
+    _write(output_root / "repair-intent.json", intent.to_dict())
+    _write(output_root / "target-resolution.json", resolution.to_dict())
+    _write(
+        output_root / "production-evidence.json",
+        _production_evidence_document(evidence),
     )
-    if not application.get("valid") or not application.get("published"):
-        raise RuntimeError(
-            "PUBLIC_STRUCTURAL_APPLICATION_FAILED:"
-            + json.dumps(application.get("issues"), ensure_ascii=False)
+    _write(output_root / "changeset.json", changeset)
+    repaired = output_root / "repaired.ifc"
+    candidate = output_root / "repaired.candidate.ifc"
+    application: dict[str, Any] | None = None
+    try:
+        application = apply_changeset(
+            damaged_ifc_path=damaged_copy,
+            repair_request=request,
+            changeset=changeset,
+            output_path=candidate,
+            registry=registry,
         )
-    expected = {
-        manifest.operation_id: semantic_manifest_expected_facts(manifest)
-        for manifest in manifests
-    }
-    evaluation = evaluation_to_dict(
-        evaluate_production(
-            ProductionEvaluationInputs(
-                damaged_ifc_path=damaged_copy,
-                repaired_ifc_path=repaired,
-                changeset=changeset,
-                application_result=application,
-                registry=registry,
-                expected_facts_by_operation=expected,
+        _write(output_root / "application.json", application)
+        if not application.get("valid") or not application.get("published"):
+            raise RuntimeError(
+                "PUBLIC_STRUCTURAL_APPLICATION_FAILED:"
+                + json.dumps(application.get("issues"), ensure_ascii=False)
+            )
+        expected = {
+            manifest.operation_id: semantic_manifest_expected_facts(manifest)
+            for manifest in manifests
+        }
+        evaluation = evaluation_to_dict(
+            evaluate_production(
+                ProductionEvaluationInputs(
+                    damaged_ifc_path=damaged_copy,
+                    repaired_ifc_path=candidate,
+                    changeset=changeset,
+                    application_result=application,
+                    registry=registry,
+                    expected_facts_by_operation=expected,
+                )
             )
         )
-    )
-    if not evaluation["complete_repair_success"]:
-        raise RuntimeError(
-            "PUBLIC_STRUCTURAL_EVALUATION_FAILED:"
-            + json.dumps(evaluation, ensure_ascii=False, default=str)
+        if not evaluation["complete_repair_success"]:
+            raise RuntimeError(
+                "PUBLIC_STRUCTURAL_EVALUATION_FAILED:"
+                + json.dumps(evaluation, ensure_ascii=False, default=str)
+            )
+        allowed = {
+            str(item["global_id"])
+            for result in application["operations"]
+            for kind in ("created", "modified", "removed")
+            for item in result["changes"].get(kind, ())
+            if item.get("global_id")
+        }
+        comparison = compare_ifc_models(
+            damaged_copy,
+            candidate,
+            allowed_changed_ids=allowed,
         )
-    allowed = {
-        str(item["global_id"])
-        for result in application["operations"]
-        for kind in ("created", "modified", "removed")
-        for item in result["changes"].get(kind, ())
-        if item.get("global_id")
-    }
-    comparison = compare_ifc_models(
-        damaged_copy,
-        repaired,
-        allowed_changed_ids=allowed,
-    )
-    if not comparison["complete_preservation_success"]:
-        raise RuntimeError("PUBLIC_STRUCTURAL_PRESERVATION_FAILED")
+        if not comparison["complete_preservation_success"]:
+            raise RuntimeError("PUBLIC_STRUCTURAL_PRESERVATION_FAILED")
+        application["output"]["path"] = str(repaired)
+        _write(output_root / "application.json", application)
+        os.replace(candidate, repaired)
+    except Exception as error:
+        if application is not None and application.get("published") is True:
+            blocking_code = (
+                str(error).split(":", 1)[0]
+                if isinstance(error, RuntimeError)
+                else "PUBLIC_STRUCTURAL_FINALIZATION_FAILED"
+            )
+            candidate_output = application.get("output")
+            application["published"] = False
+            application["output"] = None
+            application["issues"] = [
+                {
+                    "code": blocking_code,
+                    "path": "/publication_gate",
+                    "message": "Final publication gate rejected the candidate IFC.",
+                }
+            ]
+            application["publication_gate"] = {
+                "status": "blocked",
+                "blocking_code": blocking_code,
+                "candidate_sha256": (
+                    candidate_output.get("sha256")
+                    if isinstance(candidate_output, Mapping)
+                    else None
+                ),
+            }
+            _write(output_root / "application.json", application)
+        raise
+    finally:
+        if candidate.exists():
+            candidate.unlink()
     boundary = {
         "schema_version": "text2ifc/production-input-boundary/0.2",
         "entrypoint": "run_phase12_public_structural_repair.py",
@@ -551,15 +629,6 @@ def run_public_repair(
         "production_input_boundary": boundary,
         "artifacts": {},
     }
-    _write(output_root / "request.txt", request)
-    _write(output_root / "repair-intent.json", intent.to_dict())
-    _write(output_root / "target-resolution.json", resolution.to_dict())
-    _write(
-        output_root / "production-evidence.json",
-        _production_evidence_document(evidence),
-    )
-    _write(output_root / "changeset.json", changeset)
-    _write(output_root / "application.json", application)
     _write(output_root / "evaluation.json", evaluation)
     _write(output_root / "comparison.json", comparison)
     _write(output_root / "production-boundary.json", boundary)

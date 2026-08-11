@@ -130,3 +130,19 @@ column/single/<case-id>/
 新增案例必须继续使用相同的三份 IFC、输入、Agent、ChangeSet、验证报告和
 `FILES.json` 合同。Door 等构件拥有自己的 L1/L2 policy，不得通过重命名
 Window 字段伪装成新能力。
+
+Cross-scene, same-family BIMNet evidence only; not cross-dataset generalization.
+
+## Phase 12 structural Proof
+
+Phase 12 adds five strict offline Beam/Column cases and one atomic
+Door/Window/Beam/Column case, covering 12 accepted operations. These are
+`offline_bound_deterministic` operation-engine Proof cases, not live Provider
+evidence. Their current layout supersedes the legacy Beam/Column examples
+above:
+
+```text
+structural/single/<case-id>/
+structural/batch/<case-id>/
+mixed/door-window-beam-column/<case-id>/
+```

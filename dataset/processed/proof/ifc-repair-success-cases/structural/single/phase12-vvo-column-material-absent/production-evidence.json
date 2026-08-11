@@ -1,0 +1,83 @@
+{
+  "applicability_by_operation": {
+    "phase12-vvo-column-material-absent-column-1": {
+      "column.material": {
+        "applicability": "conditional",
+        "evidence_pointer": "production-evidence:/phase12-vvo-column-material-absent-column-1/column.material",
+        "mandatory": false,
+        "outcome": "not_required",
+        "verified_absence": true
+      },
+      "column.pset": {
+        "applicability": "conditional",
+        "evidence_pointer": "production-evidence:/phase12-vvo-column-material-absent-column-1/column.pset",
+        "mandatory": false,
+        "outcome": "not_required",
+        "verified_absence": true
+      },
+      "column.storey": {
+        "applicability": "required",
+        "evidence_pointer": "production-evidence:/phase12-vvo-column-material-absent-column-1/column.storey",
+        "mandatory": true,
+        "outcome": "evaluable",
+        "verified_absence": false
+      },
+      "column.type": {
+        "applicability": "required",
+        "evidence_pointer": "production-evidence:/phase12-vvo-column-material-absent-column-1/column.type",
+        "mandatory": true,
+        "outcome": "evaluable",
+        "verified_absence": false
+      }
+    }
+  },
+  "conflicts": [],
+  "expected_facts_by_operation": {
+    "phase12-vvo-column-material-absent-column-1": [
+      {
+        "fact_key": "relationship:host",
+        "inherited": false,
+        "provenance": [
+          "resolved-host-target:1vTeahUkP60PdWqwCTjeRs",
+          "resolved-host:1vTeahUkP60PdWqwCTjeRs",
+          "operation:phase12-vvo-column-material-absent-column-1"
+        ],
+        "source_kind": "surviving_target",
+        "source_ref": "current-host-binding:1vTeahUkP60PdWqwCTjeRs",
+        "unit": null,
+        "value": "1vTeahUkP60PdWqwCTjeRs",
+        "value_type": "IfcBuildingStorey"
+      },
+      {
+        "fact_key": "relationship:storey",
+        "inherited": false,
+        "provenance": [
+          "operation:phase12-vvo-column-material-absent-column-1",
+          "registered-column-base-storey-policy:0.1"
+        ],
+        "source_kind": "deterministic_policy",
+        "source_ref": "resolved:/operations/phase12-vvo-column-material-absent-column-1/target",
+        "unit": null,
+        "value": "1vTeahUkP60PdWqwCTjeRs",
+        "value_type": "IfcBuildingStorey"
+      },
+      {
+        "fact_key": "relationship:type",
+        "inherited": true,
+        "provenance": [
+          "operation:phase12-vvo-column-material-absent-column-1",
+          "generated-type-template:0.1"
+        ],
+        "source_kind": "deterministic_policy",
+        "source_ref": "generated-type:3n8N5ysmfGAg58bUg2JBi$",
+        "unit": null,
+        "value": "3n8N5ysmfGAg58bUg2JBi$",
+        "value_type": "IfcColumnType"
+      }
+    ]
+  },
+  "operation_types": {
+    "phase12-vvo-column-material-absent-column-1": "add_column"
+  },
+  "schema_version": "text2ifc/phase12-production-evidence/0.1"
+}

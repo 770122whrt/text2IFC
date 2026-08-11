@@ -1,0 +1,273 @@
+{
+  "audit": {
+    "checks": [
+      {
+        "code": "CHANGESET_SCHEMA",
+        "evidence": {},
+        "status": "passed"
+      },
+      {
+        "code": "IFC_SCHEMA",
+        "evidence": {
+          "actual_schema": "IFC2X3"
+        },
+        "status": "passed"
+      },
+      {
+        "code": "BASE_MODEL_FINGERPRINT",
+        "evidence": {
+          "actual_fingerprint": "sha256:a611a682c79a79ace18a16bf5f1497bf32fe43a9447b92af22168149b36d20e4"
+        },
+        "status": "passed"
+      },
+      {
+        "code": "SOURCE_REQUEST_HASH",
+        "evidence": {
+          "actual_request_hash": "sha256:d4ba296603fac50d404d94be093da14ecb767b3f72463378c54456100c415d77"
+        },
+        "status": "passed"
+      },
+      {
+        "code": "OPERATION_REGISTRATION",
+        "evidence": {
+          "operation_type": "add_beam"
+        },
+        "status": "passed"
+      }
+    ],
+    "issues": [],
+    "operation_audits": [
+      {
+        "checks": [
+          {
+            "code": "STRUCTURAL_STOREY_AVAILABLE",
+            "evidence": {
+              "storey_global_id": "1vTeahUkP60PdWqwCTjUuM"
+            },
+            "status": "passed"
+          },
+          {
+            "code": "STRUCTURAL_AXIS_AVAILABLE",
+            "evidence": {
+              "axis_extent_mm": 5000.0
+            },
+            "status": "passed"
+          },
+          {
+            "code": "STRUCTURAL_TYPE_AUTHORIZED",
+            "evidence": {
+              "assignment_count": 1
+            },
+            "status": "passed"
+          }
+        ],
+        "evidence": {
+          "axis_extent_mm": 5000.0,
+          "storey_global_id": "1vTeahUkP60PdWqwCTjUuM"
+        },
+        "operation_id": "phase12-vvo-beam-material-present-beam-1",
+        "operation_type": "add_beam",
+        "valid": true
+      }
+    ],
+    "schema_version": "text2ifc/ifc-repair-audit/0.1",
+    "valid": true
+  },
+  "issues": [],
+  "operations": [
+    {
+      "changes": {
+        "created": [
+          {
+            "global_id": "08jDyS27rM09JE$U4B2rZv",
+            "ifc_class": "IfcBeam",
+            "role": "beam"
+          },
+          {
+            "global_id": "3OTyrjcWLGox2IwRtpSoBs",
+            "ifc_class": "IfcBeamType",
+            "role": "structural_type"
+          },
+          {
+            "global_id": "1r7oAAqRTIee_WnnncIhkk",
+            "ifc_class": "IfcRelDefinesByType",
+            "role": "structural_type_relationship"
+          },
+          {
+            "global_id": "3H9QckZKzOM9YimMuSNBid",
+            "ifc_class": "IfcRelAssociatesMaterial",
+            "role": "semantic_beam_material_relationship"
+          }
+        ],
+        "modified": [
+          {
+            "global_id": "2CsmzAChHF6O6maGblo6DL",
+            "ifc_class": "IfcRelContainedInSpatialStructure",
+            "role": "spatial_containment"
+          }
+        ],
+        "removed": [],
+        "resolved": {
+          "geometry": {
+            "axis_direction": [
+              0.6,
+              0.8,
+              0.0
+            ],
+            "axis_end_mm": [
+              203000.0,
+              204000.0,
+              0.0
+            ],
+            "axis_extent_mm": 5000.0,
+            "axis_start_mm": [
+              200000.0,
+              200000.0,
+              0.0
+            ],
+            "orientation": [
+              0.6,
+              0.8,
+              0.0
+            ],
+            "representation_type": "SweptSolid",
+            "section": {
+              "height_mm": 500.0,
+              "shape": "rectangle",
+              "width_mm": 300.0
+            }
+          },
+          "storey_global_id": "1vTeahUkP60PdWqwCTjUuM",
+          "type_global_id": "3OTyrjcWLGox2IwRtpSoBs"
+        },
+        "semantic": {
+          "created": [
+            {
+              "global_id": "3H9QckZKzOM9YimMuSNBid",
+              "ifc_class": "IfcRelAssociatesMaterial",
+              "role": "semantic_beam_material_relationship"
+            }
+          ],
+          "modified": [],
+          "scopes": {
+            "beam_occurrence": {
+              "created": [
+                {
+                  "global_id": "3H9QckZKzOM9YimMuSNBid",
+                  "ifc_class": "IfcRelAssociatesMaterial",
+                  "role": "semantic_beam_material_relationship"
+                }
+              ],
+              "modified": [],
+              "skipped": [
+                "relationship:type"
+              ],
+              "updated": []
+            }
+          },
+          "skipped": [
+            "relationship:type"
+          ],
+          "updated": []
+        }
+      },
+      "operation_id": "phase12-vvo-beam-material-present-beam-1",
+      "operation_type": "add_beam"
+    }
+  ],
+  "output": {
+    "path": "E:\\code for project\\bimnet\\dataset\\processed\\ifc-repair\\phase12-offline\\accepted\\phase12-vvo-beam-material-present\\repaired.ifc",
+    "sha256": "37b3763482ad004a0af5490a54b3cf99a664dc75e5e92cd0b0f0d5d515fd9a41"
+  },
+  "postconditions": [
+    {
+      "checks": [
+        {
+          "code": "BEAM_GEOMETRY_MATCHES",
+          "evidence": {
+            "axis_direction": [
+              0.6,
+              0.8,
+              0.0
+            ],
+            "axis_end_mm": [
+              203000.0,
+              204000.0,
+              0.0
+            ],
+            "axis_extent_mm": 5000.0,
+            "axis_start_mm": [
+              200000.0,
+              200000.0,
+              0.0
+            ],
+            "orientation": [
+              0.6,
+              0.8,
+              0.0
+            ],
+            "representation_type": "SweptSolid",
+            "section": {
+              "height_mm": 500.0,
+              "shape": "rectangle",
+              "width_mm": 300.0
+            }
+          },
+          "status": "passed"
+        },
+        {
+          "code": "BEAM_CONTAINED_IN_STOREY",
+          "evidence": {},
+          "status": "passed"
+        },
+        {
+          "code": "BEAM_TYPE_BOUND",
+          "evidence": {},
+          "status": "passed"
+        },
+        {
+          "code": "BEAM_ANALYSIS_RELATIONSHIPS_ABSENT",
+          "evidence": {},
+          "status": "passed"
+        }
+      ],
+      "evidence": {
+        "measurement": {
+          "axis_direction": [
+            0.6,
+            0.8,
+            0.0
+          ],
+          "axis_end_mm": [
+            203000.0,
+            204000.0,
+            0.0
+          ],
+          "axis_extent_mm": 5000.0,
+          "axis_start_mm": [
+            200000.0,
+            200000.0,
+            0.0
+          ],
+          "orientation": [
+            0.6,
+            0.8,
+            0.0
+          ],
+          "representation_type": "SweptSolid",
+          "section": {
+            "height_mm": 500.0,
+            "shape": "rectangle",
+            "width_mm": 300.0
+          }
+        }
+      },
+      "issues": [],
+      "operation_id": "phase12-vvo-beam-material-present-beam-1",
+      "valid": true
+    }
+  ],
+  "published": true,
+  "schema_version": "text2ifc/ifc-repair-application/0.1",
+  "valid": true
+}

@@ -39,6 +39,7 @@ from text2ifc_ifc_repair.geometry import (
 )
 from text2ifc_ifc_repair.index_store import SQLiteIndexRepository
 from text2ifc_ifc_repair.indexer import build_ifc_index
+from text2ifc_ifc_repair.mutation import remove_structural_members
 from text2ifc_ifc_repair.operations import create_default_registry
 from text2ifc_ifc_repair.operations.hosted_opening import deterministic_global_id
 from text2ifc_ifc_repair.prompt_profiles import load_prompt_profiles
@@ -53,6 +54,7 @@ from text2ifc_ifc_repair.semantic_facts import (
     extract_property_facts,
 )
 from text2ifc_ifc_repair.type_templates import type_authority_fingerprint
+from text2ifc_knowledge.property_search import create_default_property_resolver
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -78,6 +80,37 @@ STRUCTURAL_TYPE_CLASS = {
     "beam": "IfcBeamType",
     "column": "IfcColumnType",
 }
+_PHASE12_SOURCE_CONTRACTS = {
+    "dataset/ifc/test/d7n.ifc": (
+        "43b6756b88874f9525f6a511d7dc718844dac59b638a11e3fbc36b321e0ab8b7",
+        3_293_724,
+    ),
+    "dataset/ifc/train/vvo.ifc": (
+        "b6c435be955aeb6b2998f42a62f4ebf8c3f91eb7d373ca71a2dcedfeb95b3fdc",
+        2_409_268,
+    ),
+}
+_PHASE12_DAMAGE_TARGET_IDS = {
+    "phase12-d7n-beam-loadbearing": {"1RnWak0Kr6GxkeYF4Sd_bw"},
+    "phase12-d7n-column-loadbearing": {"3dldEzenf9LvnDJYNNzLsH"},
+    "phase12-d7n-beam-column-atomic": {
+        "1RnWak0Kr6GxkeYF4Sd_bw",
+        "3dldEzenf9LvnDJYNNzLsH",
+    },
+    "phase12-vvo-beam-material-present": {"17tPjyQtf2L9JnbXXmcTUF"},
+    "phase12-vvo-column-material-absent": {"1rsYNObuDC4euALdw6WUK4"},
+    "phase12-vvo-door-window-beam-column-atomic": {
+        "2IUEnGd5v4Yfg1ZlPtd0qa",
+        "1B$rgWypT66viEf2CI1iIv",
+        "2dYMXn0_5AKRbD_0yUIAqJ",
+        "08xWVL$9z6JRwr3oWJHoAz",
+        "2dYMXn0_5AKRbD_1mUIAqJ",
+        "08xWVL$9z6JRwr3piJHoAz",
+    },
+}
+_PHASE12_MIXED_DAMAGED_SHA256 = (
+    "6824086b4171cce034acaa23ad51c3020d87ed44c0aead62979a4b4ad17c4db3"
+)
 _STRUCTURAL_PRIVATE_CANARY_MARKERS = (
     "canary-structural",
     "private-gold",
@@ -403,6 +436,20 @@ def _validate_case(root: Path, case: Mapping[str, Any]) -> dict[str, Any]:
             source_manifest_path=source_manifest_path,
             case_root=case_root,
         )
+        if case.get("phase") == "12":
+            if source_manifest.get("schema_version") != (
+                "text2ifc/phase12-offline-case/0.1"
+            ):
+                raise ValueError("l0.structural.damage:source_manifest_schema")
+            _audit_phase12_damage_provenance(
+                case=case,
+                roles=roles,
+                source_manifest=source_manifest,
+                original_model=models["original_ground_truth"],
+                damaged_model=models["repair_input_ifc"],
+                original_ifc_path=required_role_paths["original_ground_truth"],
+                damaged_ifc_path=required_role_paths["repair_input_ifc"],
+            )
         _audit_structural_preservation(
             changeset=changeset,
             damaged_model=models["repair_input_ifc"],
@@ -1016,6 +1063,7 @@ def _audit_structural_provenance_chain(
         damaged_ifc_path=damaged_ifc_path,
         damaged_sha256=damaged_sha256,
         intent=intent,
+        changeset=changeset,
         retained_resolution=resolution,
         retained_manifest=bundle,
     )
@@ -1042,6 +1090,7 @@ def _audit_structural_authority_replay(
     damaged_ifc_path: Path,
     damaged_sha256: str,
     intent: Mapping[str, Any],
+    changeset: Mapping[str, Any],
     retained_resolution: Mapping[str, Any],
     retained_manifest: Mapping[str, Any],
 ) -> None:
@@ -1062,6 +1111,7 @@ def _audit_structural_authority_replay(
                 repository,
                 expected_source_sha256=metadata.source_ifc_sha256,
                 operation_registry=registry,
+                property_knowledge_resolver=create_default_property_resolver(),
             )
             records = {
                 item.ifc_global_id: item for item in repository.iter_records()
@@ -1075,6 +1125,11 @@ def _audit_structural_authority_replay(
     ):
         raise ValueError("l0.structural.provenance:resolution_replay")
 
+    bound_operations = {
+        str(item.get("operation_id")): item
+        for item in changeset.get("operations", ())
+        if isinstance(item, Mapping) and item.get("operation_id")
+    }
     operation_headers = {
         "operations": [
             {
@@ -1087,12 +1142,17 @@ def _audit_structural_authority_replay(
     policy_facts: dict[str, tuple[Any, ...]] = {}
     verified_absence: dict[str, tuple[str, ...]] = {}
     for operation in replayed.operations:
-        bound_operation = {
-            "operation_id": operation.operation_id,
-            "operation_type": operation.operation_type,
-            "target": {"storey_global_id": operation.target_global_id},
-            "parameters": operation.to_dict()["parameters"],
-        }
+        bound_operation = bound_operations.get(operation.operation_id)
+        if not isinstance(bound_operation, Mapping):
+            raise ValueError("l0.structural.provenance:changeset_replay_binding")
+        if (
+            bound_operation.get("operation_type") != operation.operation_type
+            or bound_operation.get("parameters")
+            != operation.to_dict()["parameters"]
+            or _bound_target_global_id(bound_operation)
+            != str(operation.target_global_id)
+        ):
+            raise ValueError("l0.structural.provenance:changeset_replay_binding")
         policy_facts[operation.operation_id] = (
             registry.build_semantic_policy_facts(
                 operation.operation_type,
@@ -1123,20 +1183,42 @@ def _audit_structural_authority_replay(
             base_model_fingerprint=f"sha256:{damaged_sha256}",
         )
         for operation_id in sorted(evidence.operation_types)
+        if evidence.operation_types[operation_id] in STRUCTURAL_OPERATION_TYPES
     )
     documents = [semantic_manifest_to_dict(item) for item in manifests]
-    expected_manifest: Mapping[str, Any]
-    if len(documents) == 1:
-        expected_manifest = documents[0]
-    else:
-        expected_manifest = {
-            "schema_version": (
-                "text2ifc/ifc-repair-semantic-manifest-bundle/0.1"
-            ),
-            "manifests": documents,
-        }
-    if dict(retained_manifest) != dict(expected_manifest):
+    raw_retained = retained_manifest.get("manifests")
+    retained_documents = (
+        list(raw_retained)
+        if isinstance(raw_retained, list)
+        else [retained_manifest]
+    )
+    retained_by_operation = {
+        str(item.get("operation_id")): item
+        for item in retained_documents
+        if isinstance(item, Mapping) and item.get("operation_id")
+    }
+    if set(retained_by_operation) != set(bound_operations):
+        raise ValueError("l0.structural.provenance:semantic_manifest_operation_set")
+    if any(
+        retained_by_operation.get(str(document.get("operation_id"))) != document
+        for document in documents
+    ):
         raise ValueError("l0.structural.provenance:semantic_authority_replay")
+
+
+def _bound_target_global_id(operation: Mapping[str, Any]) -> str:
+    operation_type = str(operation.get("operation_type") or "")
+    field = {
+        "add_beam": "storey_global_id",
+        "add_column": "storey_global_id",
+        "add_window_with_opening_to_wall": "wall_global_id",
+        "add_opening_to_wall": "wall_global_id",
+        "add_door_with_opening_to_wall": "wall_global_id",
+        "fill_existing_opening_with_door": "opening_global_id",
+    }.get(operation_type)
+    target = operation.get("target")
+    target = target if isinstance(target, Mapping) else {}
+    return "" if field is None else str(target.get(field) or "")
 
 
 def _retained_request_text(path: Path) -> str:
@@ -1591,6 +1673,235 @@ def _audit_structural_source_manifest(
             raise ValueError(f"proof.hash.source-manifest-sha256:{relative}")
 
 
+def _audit_phase12_damage_provenance(
+    *,
+    case: Mapping[str, Any],
+    roles: Mapping[str, Path],
+    source_manifest: Mapping[str, Any],
+    original_model: Any,
+    damaged_model: Any,
+    original_ifc_path: Path,
+    damaged_ifc_path: Path,
+) -> None:
+    if case.get("phase") != "12":
+        raise ValueError("l0.structural.damage:phase_binding")
+    expected_scope = "cross_scene_same_family_bimnet"
+    if (
+        case.get("evidence_scope") != expected_scope
+        or source_manifest.get("evidence_scope") != expected_scope
+    ):
+        raise ValueError("l0.structural.damage:evidence_scope")
+
+    case_id = str(case.get("case_id") or "")
+    expected_target_ids = _PHASE12_DAMAGE_TARGET_IDS.get(case_id)
+    if expected_target_ids is None:
+        raise ValueError("l0.structural.damage:case_contract")
+    source_record = source_manifest.get("source")
+    source_record = source_record if isinstance(source_record, Mapping) else {}
+    source_relative = str(source_record.get("path") or "").replace("\\", "/")
+    frozen_contract = _PHASE12_SOURCE_CONTRACTS.get(source_relative)
+    if frozen_contract is None:
+        raise ValueError("l0.structural.damage:frozen_source_path")
+    frozen_hash, frozen_size = frozen_contract
+    frozen_source_path = ROOT / source_relative
+    if (
+        not frozen_source_path.is_file()
+        or _sha256(frozen_source_path) != frozen_hash
+        or frozen_source_path.stat().st_size != frozen_size
+    ):
+        raise ValueError("l0.structural.damage:frozen_source_drift")
+
+    private_path = roles.get("mutation_manifest_private")
+    if private_path is None:
+        raise ValueError("l0.structural.damage:private_manifest_missing")
+    private = _read_json(private_path)
+    if private.get("visibility") not in {
+        None,
+        "evaluator_only_after_production",
+    }:
+        raise ValueError("l0.structural.damage:visibility")
+
+    original_hash = _sha256(original_ifc_path)
+    damaged_hash = _sha256(damaged_ifc_path)
+    for label, source in (
+        ("source_manifest", source_manifest.get("source")),
+        ("private_manifest", private.get("source")),
+    ):
+        if not isinstance(source, Mapping):
+            raise ValueError(f"l0.structural.damage:{label}_source")
+        if source.get("schema") != "IFC2X3":
+            raise ValueError(f"l0.structural.damage:{label}_schema")
+        if _normalize_sha256(str(source.get("sha256"))) != original_hash:
+            raise ValueError("l0.structural.damage:source_hash")
+        if int(source.get("size_bytes", -1)) != original_ifc_path.stat().st_size:
+            raise ValueError("l0.structural.damage:source_size")
+    if original_hash != frozen_hash or original_ifc_path.stat().st_size != frozen_size:
+        raise ValueError("l0.structural.damage:frozen_source_binding")
+
+    damaged_record = private.get("damaged_ifc")
+    if (
+        not isinstance(damaged_record, Mapping)
+        or _normalize_sha256(str(damaged_record.get("sha256"))) != damaged_hash
+    ):
+        raise ValueError("l0.structural.damage:damaged_hash")
+
+    targets = private.get("targets")
+    if not isinstance(targets, list) or not targets:
+        raise ValueError("l0.structural.damage:targets")
+    target_ids: set[str] = set()
+    target_classes: dict[str, str] = {}
+    authorized_root_ids: set[str] = set()
+    for target in targets:
+        if not isinstance(target, Mapping):
+            raise ValueError("l0.structural.damage:target_record")
+        entity_record = target.get("entity")
+        if not isinstance(entity_record, Mapping):
+            raise ValueError("l0.structural.damage:target_entity")
+        global_id = str(entity_record.get("global_id") or "")
+        if not global_id or global_id in target_ids:
+            raise ValueError("l0.structural.damage:target_identity")
+        target_ids.add(global_id)
+        target_classes[global_id] = str(entity_record.get("ifc_class") or "")
+        original = _optional_guid(original_model, global_id)
+        if (
+            original is None
+            or original.is_a() != str(entity_record.get("ifc_class"))
+            or _optional_guid(damaged_model, global_id) is not None
+        ):
+            raise ValueError(f"l0.structural.damage:target_state:{global_id}")
+        authorized_root_ids.add(global_id)
+        for relationship in original_model.get_inverse(original):
+            if relationship.is_a("IfcRelationship"):
+                authorized_root_ids.add(str(relationship.GlobalId))
+        for relationship in getattr(original, "IsDefinedBy", ()):
+            if relationship.is_a("IfcRelDefinesByProperties"):
+                definition = relationship.RelatingPropertyDefinition
+                if definition is not None and definition.is_a("IfcRoot"):
+                    authorized_root_ids.add(str(definition.GlobalId))
+        for survivor_role in ("type", "storey"):
+            survivor = target.get(survivor_role)
+            if not isinstance(survivor, Mapping) or not survivor.get("global_id"):
+                continue
+            survivor_id = str(survivor["global_id"])
+            if _optional_guid(damaged_model, survivor_id) is None:
+                raise ValueError(
+                    f"l0.structural.damage:{survivor_role}_removed:{survivor_id}"
+                )
+
+    if target_ids != expected_target_ids:
+        raise ValueError("l0.structural.damage:frozen_target_set")
+    damage = source_manifest.get("damage")
+    if not isinstance(damage, Mapping):
+        raise ValueError("l0.structural.damage:public_damage_record")
+    private_schema = str(private.get("schema_version") or "")
+    if private_schema == (
+        "text2ifc/ifc-repair-structural-mutation-private/0.1"
+    ):
+        if (
+            private.get("mutation_type") != "remove_structural_members"
+            or damage.get("schema_version")
+            != "text2ifc/ifc-repair-structural-mutation-report/0.1"
+            or damage.get("mutation_type") != "remove_structural_members"
+            or damage.get("valid") is not True
+            or _normalize_sha256(str(damage.get("source_sha256")))
+            != original_hash
+            or _normalize_sha256(str(damage.get("damaged_sha256")))
+            != damaged_hash
+            or damage.get("counts") != private.get("counts")
+        ):
+            raise ValueError("l0.structural.damage:mutation_report_binding")
+        beam_ids = tuple(
+            sorted(
+                global_id
+                for global_id, ifc_class in target_classes.items()
+                if ifc_class == "IfcBeam"
+            )
+        )
+        column_ids = tuple(
+            sorted(
+                global_id
+                for global_id, ifc_class in target_classes.items()
+                if ifc_class == "IfcColumn"
+            )
+        )
+        if len(beam_ids) + len(column_ids) != len(target_ids):
+            raise ValueError("l0.structural.damage:structural_target_class")
+        with tempfile.TemporaryDirectory(
+            prefix="phase12-proof-damage-"
+        ) as temporary:
+            replay_root = Path(temporary) / "mutation"
+            replay = remove_structural_members(
+                source_path=frozen_source_path,
+                output_dir=replay_root,
+                beam_global_ids=beam_ids,
+                column_global_ids=column_ids,
+                expected_source_sha256=frozen_hash,
+            )
+            if (
+                _normalize_sha256(str(replay.get("damaged_sha256")))
+                != damaged_hash
+                or _sha256(replay_root / "damaged.ifc") != damaged_hash
+            ):
+                raise ValueError("l0.structural.damage:deterministic_replay")
+    elif private_schema == "text2ifc/phase12-private-damage-manifest/0.1":
+        expected_mixed_targets = {
+            (str(item.get("global_id") or ""), "IfcDoor")
+            for item in damage.get("removed_doors", ())
+            if isinstance(item, Mapping)
+        }
+        for item in damage.get("removed_windows", ()):
+            if isinstance(item, Mapping):
+                expected_mixed_targets.add(
+                    (str(item.get("global_id") or ""), "IfcWindow")
+                )
+                expected_mixed_targets.add(
+                    (
+                        str(item.get("opening_global_id") or ""),
+                        "IfcOpeningElement",
+                    )
+                )
+        if (
+            damage.get("door_openings_removed") is not False
+            or damage.get("window_openings_removed") is not True
+            or {
+                (global_id, ifc_class)
+                for global_id, ifc_class in target_classes.items()
+            }
+            != expected_mixed_targets
+            or damaged_hash != _PHASE12_MIXED_DAMAGED_SHA256
+        ):
+            raise ValueError("l0.structural.damage:mixed_damage_binding")
+    else:
+        raise ValueError("l0.structural.damage:private_manifest_schema")
+
+    try:
+        changes = profile_normalized_model_diff(
+            original_model,
+            damaged_model,
+        )["changes"]
+    except Exception as error:
+        raise ValueError(
+            f"l0.structural.damage:not_evaluable:{type(error).__name__}"
+        ) from error
+    if changes.get("created"):
+        raise ValueError("l0.structural.damage:created_root")
+    actual_changed = {
+        str(item["global_id"])
+        for section in ("modified", "removed")
+        for item in changes.get(section, ())
+    }
+    removed_ids = {
+        str(item["global_id"]) for item in changes.get("removed", ())
+    }
+    if not target_ids <= removed_ids:
+        raise ValueError("l0.structural.damage:target_diff")
+    unexpected = sorted(actual_changed - authorized_root_ids)
+    if unexpected:
+        raise ValueError(
+            "l0.structural.damage:undeclared_root:" + ",".join(unexpected)
+        )
+
+
 def _audit_structural_preservation(
     *,
     changeset: Mapping[str, Any],
@@ -1804,7 +2115,8 @@ def _collect_created_product_root_authority(
                 }
             }
             if (
-                str(relation.RelatingOpening.GlobalId) != expected_opening_id
+                str(relation.RelatingOpeningElement.GlobalId)
+                != expected_opening_id
                 or str(relation.RelatedBuildingElement.GlobalId)
                 not in expected_filling_ids
             ):
@@ -1870,7 +2182,7 @@ def _audit_created_product_relation_cardinality(
     )
     expected = Counter(
         {
-            "IfcRelContainedInSpatialStructure": 1,
+            "IfcRelContainedInSpatialStructure": 0 if role == "opening" else 1,
             "IfcRelDefinesByType": len(expected_types),
             "IfcRelDefinesByProperties": len(expected_sets),
             "IfcRelAssociatesMaterial": len(expected_materials),
@@ -1971,7 +2283,12 @@ def _expected_direct_set_names(
         if fact_key.startswith("pset:"):
             names.add(fact_key.removeprefix("pset:").partition(".")[0])
         elif fact_key.startswith("quantity:"):
-            names.add(fact_key.removeprefix("quantity:").partition(".")[0])
+            set_name = fact_key.removeprefix("quantity:").partition(".")[0]
+            names.add(
+                "BaseQuantities"
+                if set_name in {"window-base", "door-base", "opening-base"}
+                else set_name
+            )
     return names
 
 

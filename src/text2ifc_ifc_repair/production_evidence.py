@@ -690,7 +690,7 @@ def _request_fact(operation_id: str, intent: AttributeIntent) -> SemanticFact:
         fact_key = f"pset:{intent.name.removeprefix('pset:')}"
         pset_path = intent.name.removeprefix("pset:")
     elif intent.intent_kind == "material":
-        fact_key = f"material:{intent.name.removeprefix('material:')}"
+        fact_key = f"material:{semantic_fact_key_token(str(intent.value))}"
         pset_path = None
     elif intent.intent_kind == "attribute":
         fact_key = f"attribute:{intent.name.removeprefix('attribute:')}"
@@ -700,7 +700,11 @@ def _request_fact(operation_id: str, intent: AttributeIntent) -> SemanticFact:
     return SemanticFact(
         fact_key=fact_key,
         value=intent.value,
-        value_type=_value_type(intent.value),
+        value_type=(
+            "IfcMaterial"
+            if intent.intent_kind == "material"
+            else _value_type(intent.value)
+        ),
         unit=None,
         inherited=False,
         pset_path=pset_path,

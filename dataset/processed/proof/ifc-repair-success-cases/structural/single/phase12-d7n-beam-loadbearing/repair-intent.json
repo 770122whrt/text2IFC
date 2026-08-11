@@ -1,0 +1,83 @@
+{
+  "model_fingerprint": "sha256:d2a9c507c437974209c1713fc994929f890c445ad6b4c2cdbf839dbd78ebfab2",
+  "operations": [
+    {
+      "attribute_intents": [],
+      "occurrence_reuse_intent": null,
+      "operation_id": "phase12-d7n-beam-loadbearing-beam-1",
+      "operation_type": "add_beam",
+      "parameters": {
+        "axis": {
+          "end": {
+            "x_mm": 103000,
+            "y_mm": 104000,
+            "z_mm": 0
+          },
+          "start": {
+            "x_mm": 100000,
+            "y_mm": 100000,
+            "z_mm": 0
+          }
+        },
+        "section": {
+          "height_mm": 500,
+          "shape": "rectangle",
+          "width_mm": 300
+        }
+      },
+      "property_intents": [
+        {
+          "intent_kind": "natural_language_property",
+          "property_phrase": "beam is load bearing",
+          "raw_unit": null,
+          "raw_value": true,
+          "scope": "occurrence_direct",
+          "source": {
+            "excerpt": "beam is load bearing",
+            "reference": "request:/operations/0/properties/0",
+            "source_kind": "user_request"
+          }
+        }
+      ],
+      "prototype_intent": null,
+      "provenance": [
+        {
+          "excerpt": "Add one horizontal rectangular Beam and make the Beam load bearing.",
+          "reference": "request:/operations/0",
+          "source_kind": "user_request"
+        }
+      ],
+      "quantity_intents": [],
+      "routing_intent": {
+        "action": "add",
+        "component_family": "beam",
+        "operation_profile": "beam.add",
+        "source": {
+          "excerpt": "Add one horizontal rectangular Beam and make the Beam load bearing.",
+          "reference": "request:/operations/0",
+          "source_kind": "user_request"
+        }
+      },
+      "semantic_bundle_refs": [],
+      "target_query": {
+        "allowed_ifc_classes": [
+          "IfcBuildingStorey"
+        ],
+        "global_id": "0K_MqVdrL0JOCMi_Gblgiw",
+        "schema_version": "text2ifc/ifc-target-query/0.1"
+      }
+    }
+  ],
+  "prompt_fingerprint": "sha256:7fefcd7f537f4ee5086c4be3cc95d75f18be99da23e568c150f11a78a4042cf3",
+  "provenance": [
+    {
+      "excerpt": "Add one horizontal rectangular Beam and make the Beam load bearing.",
+      "reference": "request:/text",
+      "source_kind": "user_request"
+    }
+  ],
+  "request_id": "request-phase12-d7n-beam-loadbearing",
+  "schema_version": "text2ifc/ifc-repair-intent/0.5",
+  "semantic_bundles": [],
+  "source_request_hash": "sha256:6ed8264a6c230f73c3277f039d50b79a33a74e4a589b8d12519d46ab6707c808"
+}

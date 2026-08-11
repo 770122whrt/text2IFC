@@ -1,0 +1,464 @@
+{
+  "audit": {
+    "checks": [
+      {
+        "code": "CHANGESET_SCHEMA",
+        "evidence": {},
+        "status": "passed"
+      },
+      {
+        "code": "IFC_SCHEMA",
+        "evidence": {
+          "actual_schema": "IFC2X3"
+        },
+        "status": "passed"
+      },
+      {
+        "code": "BASE_MODEL_FINGERPRINT",
+        "evidence": {
+          "actual_fingerprint": "sha256:25240558bcbe23c1bbf4916d0b9a0fbbde8202d63dbc7a488ef633ab40eb6127"
+        },
+        "status": "passed"
+      },
+      {
+        "code": "SOURCE_REQUEST_HASH",
+        "evidence": {
+          "actual_request_hash": "sha256:ac36fea1483a4dcdc654efc7d55a9856c3dd07ff7d85b0af7f41323772587fc4"
+        },
+        "status": "passed"
+      },
+      {
+        "code": "OPERATION_REGISTRATION",
+        "evidence": {
+          "operation_type": "add_beam"
+        },
+        "status": "passed"
+      },
+      {
+        "code": "OPERATION_REGISTRATION",
+        "evidence": {
+          "operation_type": "add_column"
+        },
+        "status": "passed"
+      }
+    ],
+    "issues": [],
+    "operation_audits": [
+      {
+        "checks": [
+          {
+            "code": "STRUCTURAL_STOREY_AVAILABLE",
+            "evidence": {
+              "storey_global_id": "0K_MqVdrL0JOCMi_GblRwJ"
+            },
+            "status": "passed"
+          },
+          {
+            "code": "STRUCTURAL_AXIS_AVAILABLE",
+            "evidence": {
+              "axis_extent_mm": 5000.0
+            },
+            "status": "passed"
+          },
+          {
+            "code": "STRUCTURAL_TYPE_AUTHORIZED",
+            "evidence": {
+              "assignment_count": 1
+            },
+            "status": "passed"
+          }
+        ],
+        "evidence": {
+          "axis_extent_mm": 5000.0,
+          "storey_global_id": "0K_MqVdrL0JOCMi_GblRwJ"
+        },
+        "operation_id": "phase12-d7n-beam-column-atomic-beam-1",
+        "operation_type": "add_beam",
+        "valid": true
+      },
+      {
+        "checks": [
+          {
+            "code": "STRUCTURAL_STOREY_AVAILABLE",
+            "evidence": {
+              "storey_global_id": "0K_MqVdrL0JOCMi_GblRwJ"
+            },
+            "status": "passed"
+          },
+          {
+            "code": "STRUCTURAL_AXIS_AVAILABLE",
+            "evidence": {
+              "axis_extent_mm": 6000.0
+            },
+            "status": "passed"
+          },
+          {
+            "code": "STRUCTURAL_TYPE_AUTHORIZED",
+            "evidence": {
+              "assignment_count": 1
+            },
+            "status": "passed"
+          }
+        ],
+        "evidence": {
+          "axis_extent_mm": 6000.0,
+          "storey_global_id": "0K_MqVdrL0JOCMi_GblRwJ"
+        },
+        "operation_id": "phase12-d7n-beam-column-atomic-column-2",
+        "operation_type": "add_column",
+        "valid": true
+      }
+    ],
+    "schema_version": "text2ifc/ifc-repair-audit/0.1",
+    "valid": true
+  },
+  "issues": [],
+  "operations": [
+    {
+      "changes": {
+        "created": [
+          {
+            "global_id": "3KWgoUaIHPbe_ZhXcTFaEf",
+            "ifc_class": "IfcBeam",
+            "role": "beam"
+          },
+          {
+            "global_id": "1edbVJsHzGJu4tKx1bEBKt",
+            "ifc_class": "IfcBeamType",
+            "role": "structural_type"
+          },
+          {
+            "global_id": "24ebnhTVfT6O6BiRDnBoOM",
+            "ifc_class": "IfcRelDefinesByType",
+            "role": "structural_type_relationship"
+          }
+        ],
+        "modified": [
+          {
+            "global_id": "1vK3KfqgSHqv5Y0066FnIY",
+            "ifc_class": "IfcRelContainedInSpatialStructure",
+            "role": "spatial_containment"
+          }
+        ],
+        "removed": [],
+        "resolved": {
+          "geometry": {
+            "axis_direction": [
+              0.6,
+              0.8,
+              0.0
+            ],
+            "axis_end_mm": [
+              123000.0,
+              124000.0,
+              3000.0
+            ],
+            "axis_extent_mm": 5000.0,
+            "axis_start_mm": [
+              120000.0,
+              120000.0,
+              3000.0
+            ],
+            "orientation": [
+              0.6,
+              0.8,
+              0.0
+            ],
+            "representation_type": "SweptSolid",
+            "section": {
+              "height_mm": 500.0,
+              "shape": "rectangle",
+              "width_mm": 300.0
+            }
+          },
+          "storey_global_id": "0K_MqVdrL0JOCMi_GblRwJ",
+          "type_global_id": "1edbVJsHzGJu4tKx1bEBKt"
+        },
+        "semantic": {
+          "created": [],
+          "modified": [],
+          "scopes": {
+            "beam_occurrence": {
+              "created": [],
+              "modified": [],
+              "skipped": [
+                "relationship:type"
+              ],
+              "updated": []
+            }
+          },
+          "skipped": [
+            "relationship:type"
+          ],
+          "updated": []
+        }
+      },
+      "operation_id": "phase12-d7n-beam-column-atomic-beam-1",
+      "operation_type": "add_beam"
+    },
+    {
+      "changes": {
+        "created": [
+          {
+            "global_id": "3T7G5o3erNXAEfOI5MOa9F",
+            "ifc_class": "IfcColumn",
+            "role": "column"
+          },
+          {
+            "global_id": "2Fye8O5nPNFP0dkgYO3SX0",
+            "ifc_class": "IfcColumnType",
+            "role": "structural_type"
+          },
+          {
+            "global_id": "15baSDtMDRIPsJX0b7Mgd2",
+            "ifc_class": "IfcRelDefinesByType",
+            "role": "structural_type_relationship"
+          }
+        ],
+        "modified": [
+          {
+            "global_id": "1vK3KfqgSHqv5Y0066FnIY",
+            "ifc_class": "IfcRelContainedInSpatialStructure",
+            "role": "spatial_containment"
+          }
+        ],
+        "removed": [],
+        "resolved": {
+          "containment_policy": "axis_base_storey_only",
+          "geometry": {
+            "axis_direction": [
+              0.0,
+              0.0,
+              1.0
+            ],
+            "axis_end_mm": [
+              123000.0,
+              124000.0,
+              6000.0
+            ],
+            "axis_extent_mm": 6000.0,
+            "axis_start_mm": [
+              123000.0,
+              124000.0,
+              0.0
+            ],
+            "orientation": [
+              0.0,
+              1.0,
+              0.0
+            ],
+            "representation_type": "SweptSolid",
+            "section": {
+              "depth_mm": 600.0,
+              "shape": "rectangle",
+              "width_mm": 400.0
+            }
+          },
+          "storey_global_id": "0K_MqVdrL0JOCMi_GblRwJ",
+          "type_global_id": "2Fye8O5nPNFP0dkgYO3SX0"
+        },
+        "semantic": {
+          "created": [],
+          "modified": [],
+          "scopes": {
+            "column_occurrence": {
+              "created": [],
+              "modified": [],
+              "skipped": [
+                "relationship:type"
+              ],
+              "updated": []
+            }
+          },
+          "skipped": [
+            "relationship:type"
+          ],
+          "updated": []
+        }
+      },
+      "operation_id": "phase12-d7n-beam-column-atomic-column-2",
+      "operation_type": "add_column"
+    }
+  ],
+  "output": {
+    "path": "E:\\code for project\\bimnet\\dataset\\processed\\ifc-repair\\phase12-offline\\accepted\\phase12-d7n-beam-column-atomic\\repaired.ifc",
+    "sha256": "223f4205138c9b8eb324c5776a9b2ccbbc3cb298a5ba4477d80277b89e907130"
+  },
+  "postconditions": [
+    {
+      "checks": [
+        {
+          "code": "BEAM_GEOMETRY_MATCHES",
+          "evidence": {
+            "axis_direction": [
+              0.6,
+              0.8,
+              0.0
+            ],
+            "axis_end_mm": [
+              123000.0,
+              124000.0,
+              3000.0
+            ],
+            "axis_extent_mm": 5000.0,
+            "axis_start_mm": [
+              120000.0,
+              120000.0,
+              3000.0
+            ],
+            "orientation": [
+              0.6,
+              0.8,
+              0.0
+            ],
+            "representation_type": "SweptSolid",
+            "section": {
+              "height_mm": 500.0,
+              "shape": "rectangle",
+              "width_mm": 300.0
+            }
+          },
+          "status": "passed"
+        },
+        {
+          "code": "BEAM_CONTAINED_IN_STOREY",
+          "evidence": {},
+          "status": "passed"
+        },
+        {
+          "code": "BEAM_TYPE_BOUND",
+          "evidence": {},
+          "status": "passed"
+        },
+        {
+          "code": "BEAM_ANALYSIS_RELATIONSHIPS_ABSENT",
+          "evidence": {},
+          "status": "passed"
+        }
+      ],
+      "evidence": {
+        "measurement": {
+          "axis_direction": [
+            0.6,
+            0.8,
+            0.0
+          ],
+          "axis_end_mm": [
+            123000.0,
+            124000.0,
+            3000.0
+          ],
+          "axis_extent_mm": 5000.0,
+          "axis_start_mm": [
+            120000.0,
+            120000.0,
+            3000.0
+          ],
+          "orientation": [
+            0.6,
+            0.8,
+            0.0
+          ],
+          "representation_type": "SweptSolid",
+          "section": {
+            "height_mm": 500.0,
+            "shape": "rectangle",
+            "width_mm": 300.0
+          }
+        }
+      },
+      "issues": [],
+      "operation_id": "phase12-d7n-beam-column-atomic-beam-1",
+      "valid": true
+    },
+    {
+      "checks": [
+        {
+          "code": "COLUMN_GEOMETRY_MATCHES",
+          "evidence": {
+            "axis_direction": [
+              0.0,
+              0.0,
+              1.0
+            ],
+            "axis_end_mm": [
+              123000.0,
+              124000.0,
+              6000.0
+            ],
+            "axis_extent_mm": 6000.0,
+            "axis_start_mm": [
+              123000.0,
+              124000.0,
+              0.0
+            ],
+            "orientation": [
+              0.0,
+              1.0,
+              0.0
+            ],
+            "representation_type": "SweptSolid",
+            "section": {
+              "depth_mm": 600.0,
+              "shape": "rectangle",
+              "width_mm": 400.0
+            }
+          },
+          "status": "passed"
+        },
+        {
+          "code": "COLUMN_CONTAINED_IN_BASE_STOREY",
+          "evidence": {},
+          "status": "passed"
+        },
+        {
+          "code": "COLUMN_TYPE_BOUND",
+          "evidence": {},
+          "status": "passed"
+        },
+        {
+          "code": "COLUMN_ANALYSIS_RELATIONSHIPS_ABSENT",
+          "evidence": {},
+          "status": "passed"
+        }
+      ],
+      "evidence": {
+        "measurement": {
+          "axis_direction": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "axis_end_mm": [
+            123000.0,
+            124000.0,
+            6000.0
+          ],
+          "axis_extent_mm": 6000.0,
+          "axis_start_mm": [
+            123000.0,
+            124000.0,
+            0.0
+          ],
+          "orientation": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "representation_type": "SweptSolid",
+          "section": {
+            "depth_mm": 600.0,
+            "shape": "rectangle",
+            "width_mm": 400.0
+          }
+        }
+      },
+      "issues": [],
+      "operation_id": "phase12-d7n-beam-column-atomic-column-2",
+      "valid": true
+    }
+  ],
+  "published": true,
+  "schema_version": "text2ifc/ifc-repair-application/0.1",
+  "valid": true
+}
