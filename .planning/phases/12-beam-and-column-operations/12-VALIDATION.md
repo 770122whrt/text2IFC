@@ -90,7 +90,7 @@ execution. `W0` means the task creates the named test first under TDD.
 | 12-08-01 | 08 | 8 | OPS-04 | T12-01, T12-08 | Column base-Storey/orientation paths are deterministic | integration | `.\.venv\Scripts\python.exe -m pytest tests/ifc_repair/test_column_resolution.py tests/ifc_repair/test_column_application.py -q` | W0 | green |
 | 12-09-01 | 09 | 9 | OPS-03, OPS-04 | T12-09, T12-11 | strict thresholds and mixed all-or-none publication | integration | `.\.venv\Scripts\python.exe -m pytest tests/ifc_repair/test_structural_atomicity.py tests/ifc_repair/test_apply_transaction.py -q` | W0 | green |
 | 12-10-01 | 10 | 10 | OPS-03, OPS-04 | T12-10 | deterministic damage keeps original/mapping private | integration/security | `.\.venv\Scripts\python.exe -m pytest tests/ifc_repair/test_structural_mutation.py tests/ifc_repair/test_phase12_ground_truth_isolation.py -q` | W0 | green |
-| 12-11-01 | 11 | 11 | OPS-03, OPS-04 | T12-11, T12-12 | strict validator distrusts aggregate success and edited artifacts | integration/security | `.\.venv\Scripts\python.exe -m pytest tests/ifc_repair/test_structural_evaluation.py tests/ifc_repair/test_phase12_success_cases.py tests/ifc_repair/test_success_case_collection.py -q` | W0 | pending |
+| 12-11-01 | 11 | 11 | OPS-03, OPS-04 | T12-11, T12-12 | strict validator distrusts aggregate success and edited artifacts | integration/security | `.\.venv\Scripts\python.exe -m pytest tests/ifc_repair/test_structural_evaluation.py tests/ifc_repair/test_phase12_success_cases.py tests/ifc_repair/test_success_case_collection.py -q` | W0 | green |
 | 12-12-01 | 12 | 12 | OPS-03, OPS-04 | T12-12, T12-13 | d7n/vvo/mixed offline artifacts curate only after strict validation | dataset E2E | `.\.venv\Scripts\python.exe -m pytest tests/ifc_repair/test_phase12_dataset_e2e.py tests/ifc_repair/test_phase12_success_cases.py tests/ifc_repair/test_success_case_collection.py -q` | evolved W0 | pending |
 | 12-13-01 | 13 | 13 | OPS-03, OPS-04 | T12-02, T12-14 | live runner exposes calls/retries and enforces preflight/no fallback | integration | `.\.venv\Scripts\python.exe -m pytest tests/ifc_repair/test_phase12_live_uat.py -q` | W0 | pending |
 | 12-14-01 | 14 | 14 | OPS-03, OPS-04 | T12-11, T12-12, T12-14 | curation requires real transcript and separate strict validation | integration/security | `.\.venv\Scripts\python.exe -m pytest tests/ifc_repair/test_phase12_live_uat.py tests/ifc_repair/test_phase12_success_cases.py -q` | evolved W0 | pending |
@@ -118,9 +118,9 @@ create or extend its test file before production code.
 - [x] `tests/ifc_repair/test_structural_atomicity.py`
 - [x] `tests/ifc_repair/test_structural_mutation.py`
 - [x] `tests/ifc_repair/test_phase12_ground_truth_isolation.py`
-- [ ] `tests/ifc_repair/test_structural_evaluation.py`
+- [x] `tests/ifc_repair/test_structural_evaluation.py`
 - [ ] `tests/ifc_repair/test_phase12_dataset_e2e.py`
-- [ ] `tests/ifc_repair/test_phase12_success_cases.py`
+- [x] `tests/ifc_repair/test_phase12_success_cases.py`
 - [ ] `tests/ifc_repair/test_phase12_live_uat.py`
 
 No dependency installation or new test framework is required.

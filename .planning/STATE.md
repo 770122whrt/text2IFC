@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: IFC ChangeSet Repair Pipeline
-status: Phase 12 executing; Plans 12-01 through 12-10 complete, 12-11 next
-last_updated: "2026-08-09T07:43:52.000Z"
+status: Phase 12 executing; Plans 12-01 through 12-11 complete, 12-12 next
+last_updated: "2026-08-11T13:41:35.511Z"
 progress:
   total_phases: 13
   completed_phases: 11
   total_plans: 53
-  completed_plans: 47
-  percent: 89
+  completed_plans: 48
+  percent: 91
 ---
 
 # Project State
@@ -131,7 +131,7 @@ with real DeepSeek and independently recomputed Proof evidence.
 ## Current Position
 
 Phase: 12 (Beam and Column Operations) — EXECUTING
-Plan: 11 of 16
+Plan: 12 of 16
 
 - Milestone: v1.1 IFC ChangeSet Repair Pipeline
 - Phase: 11 complete
@@ -147,14 +147,13 @@ Plan: 11 of 16
 
 - Progress: 11 / 13 phases complete
 - Requirements: WFID-01..06 and OPS-01..02 complete; OPS-03..04 pending
-- Last activity: 2026-08-09 - Plan 12-10 completed. Deterministic d7n/vvo
-  Beam/Column mutation now preserves shared Types, Storeys and unrelated Roots
-  while keeping removed identity, STEP, geometry and semantic Gold private.
-  The public structural runner accepts only damaged IFC, public bundle and
-  output root; benchmark-only Gold cannot promote failed production. A fresh
-  standard-manifest d7n Beam+Column smoke reopened as IFC2X3 and passed strict
-  L1/L2 with no fallback or unexpected normalized change. OPS-03/OPS-04 remain
-  pending until Plan 12-16.
+- Last activity: 2026-08-11 - Plan 12-11 completed. Structural Proof now
+  verifies every hash, reopens IFC2X3 and independently replays public request,
+  target resolution, semantic authority, strict L1/L2 and exact preservation.
+  Saved success/application role claims cannot authorize acceptance. Source and
+  collection evidence modes are exactly bound; live remains fail-closed until
+  Plan 12-14. The frozen gate passed 36 tests. OPS-03/OPS-04 remain pending
+  until Plan 12-16.
 
 - Phase 11 closure evidence: accepted live run
   `uat-20260731T224900289758Z` passed all three contracts. Two live successes
@@ -331,12 +330,12 @@ Plan: 11 of 16
 ## Next Action
 
 Phase 11 remains closed. Continue Phase 12 strictly with
-`.planning/phases/12-beam-and-column-operations/12-08-PLAN.md`, followed by
-12-09 through 12-16. OPS-03/OPS-04 remain pending until final independent
+`.planning/phases/12-beam-and-column-operations/12-12-PLAN.md`, followed by
+12-13 through 12-16. OPS-03/OPS-04 remain pending until final independent
 closure. Do not start Phase 13.
 
 ---
-*Last updated: 2026-08-06 after completing Phase 12 Plan 07*
+*Last updated: 2026-08-11 after completing Phase 12 Plan 11*
 
 ## Accumulated Context
 
