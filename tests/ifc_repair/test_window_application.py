@@ -217,6 +217,79 @@ def test_bound_semantic_failure_rolls_back_without_output(tmp_path: Path) -> Non
     assert not output.exists()
 
 
+def test_bound_multiple_window_materials_pass_application_audit(
+    tmp_path: Path,
+) -> None:
+    damaged, request, legacy = _repair_case(tmp_path)
+    operation = legacy["operations"][0]
+    damaged_model = ifcopenshell.open(str(damaged))
+    materials = {
+        str(material.Name): material
+        for material in damaged_model.by_type("IfcMaterial")
+        if str(material.Name) in {"Glass", "Sash"}
+    }
+    assert set(materials) == {"Glass", "Sash"}
+    assignments = [
+        {
+            "operation_id": operation["operation_id"],
+            "fact_key": f"material:{name}",
+            "source_fact_key": f"material:{name}",
+            "value": name,
+            "value_type": "IfcMaterial",
+            "unit": None,
+            "ownership": "occurrence_direct",
+            "applicability": "conditional",
+            "source_kind": "authorized_type_cohort",
+            "source_ref": f"resource:step:{materials[name].id()}",
+            "provenance": ["test:authorized-window-material"],
+            "authoring_action": "reuse_material",
+        }
+        for name in ("Glass", "Sash")
+    ]
+    bound = {
+        **legacy,
+        "schema_version": "text2ifc/ifc-repair-changeset/0.2",
+        "binding_status": "bound",
+        "semantic_manifest_ref": "semantic-manifest.json",
+        "semantic_manifest_sha256": "sha256:" + "c" * 64,
+        "operations": [
+            {
+                **operation,
+                "semantic_manifest": {
+                    "manifest_id": "manifest-two-window-materials",
+                    "policy_id": "window.add-with-opening.l2",
+                    "policy_version": "0.2",
+                },
+                "semantic_assignments": assignments,
+            }
+        ],
+    }
+    output = tmp_path / "two-window-materials.ifc"
+
+    result = apply_changeset(
+        damaged_ifc_path=damaged,
+        repair_request=request,
+        changeset=bound,
+        output_path=output,
+        registry=create_default_registry(),
+    )
+
+    assert result["valid"] and result["published"]
+    assert result["audit"]["valid"] is True
+    repaired = ifcopenshell.open(str(output))
+    window_id = next(
+        item["global_id"]
+        for item in result["operations"][0]["changes"]["created"]
+        if item["role"] == "window"
+    )
+    window = repaired.by_guid(window_id)
+    assert {
+        str(relation.RelatingMaterial.Name)
+        for relation in window.HasAssociations
+        if relation.is_a("IfcRelAssociatesMaterial")
+    } == {"Glass", "Sash"}
+
+
 def test_bound_generated_type_and_requested_property_apply_atomically(
     tmp_path: Path,
 ) -> None:

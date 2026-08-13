@@ -441,10 +441,17 @@ class RepairAPI:
                     ]
                 }
                 for operation in resolution.operations:
+                    policy_operation = operation.to_dict()
+                    policy_operation["target"] = (
+                        self.registry.bind_resolved_target(
+                            operation.operation_type,
+                            operation.target_global_id,
+                        )
+                    )
                     policy_facts[operation.operation_id] = (
                         self.registry.build_semantic_policy_facts(
                             operation.operation_type,
-                            operation=operation.to_dict(),
+                            operation=policy_operation,
                         )
                     )
                     policy = self.registry.require_evaluation_policy(

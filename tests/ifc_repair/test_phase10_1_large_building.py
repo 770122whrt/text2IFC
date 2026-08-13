@@ -19,6 +19,10 @@ from text2ifc_ifc_repair.benchmark_evaluation import (
 from text2ifc_ifc_repair.geometry import opening_position_in_wall_mm
 from text2ifc_ifc_repair.mutation import remove_window_and_opening
 from text2ifc_ifc_repair.repair_intent import hash_request
+from text2ifc_ifc_repair.semantic_authoring import (
+    parse_semantic_manifest,
+    semantic_manifest_expected_facts,
+)
 from text2ifc_ifc_repair.semantic_facts import (
     EvidenceSourceKind,
     extract_ifc_semantic_facts,
@@ -470,6 +474,17 @@ def test_large_building_exact_property_public_pipeline(
         == same_type_before
     )
     changeset = json.loads((run_dir / "changeset.json").read_text(encoding="utf-8"))
+    expected_facts = semantic_manifest_expected_facts(
+        parse_semantic_manifest(
+            json.loads(
+                (
+                    run_dir
+                    / "changeset"
+                    / "semantic-manifest-operation-1.json"
+                ).read_text(encoding="utf-8")
+            )
+        )
+    )
     benchmark = evaluate_benchmark(
         BenchmarkEvaluationInputs(
             production=ProductionEvaluationInputs(
@@ -478,6 +493,7 @@ def test_large_building_exact_property_public_pipeline(
                 changeset=changeset,
                 application_result=application,
                 registry=api.registry,
+                expected_facts_by_operation={"operation-1": expected_facts},
             ),
             private_original_ifc_path=SOURCE,
             private_mutation_mapping={

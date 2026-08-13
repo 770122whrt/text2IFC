@@ -16,6 +16,10 @@ from text2ifc_ifc_repair.benchmark_evaluation import (
 from text2ifc_ifc_repair.geometry import opening_position_in_wall_mm
 from text2ifc_ifc_repair.mutation import remove_window_and_opening
 from text2ifc_ifc_repair.repair_intent import hash_request
+from text2ifc_ifc_repair.semantic_authoring import (
+    parse_semantic_manifest,
+    semantic_manifest_expected_facts,
+)
 from text2ifc_agent.providers import ProviderOutput
 
 
@@ -169,6 +173,17 @@ def test_large_building_damaged_ifc_plus_text_passes_production_and_private_l2(t
     assert changeset["schema_version"] == "text2ifc/ifc-repair-changeset/0.2"
     assert changeset["binding_status"] == "bound"
     assert changeset["operations"][0]["semantic_assignments"]
+    expected_facts = semantic_manifest_expected_facts(
+        parse_semantic_manifest(
+            json.loads(
+                (
+                    run_dir
+                    / "changeset"
+                    / "semantic-manifest-operation-1.json"
+                ).read_text(encoding="utf-8")
+            )
+        )
+    )
 
     benchmark = evaluate_benchmark(
         BenchmarkEvaluationInputs(
@@ -178,6 +193,7 @@ def test_large_building_damaged_ifc_plus_text_passes_production_and_private_l2(t
                 changeset=changeset,
                 application_result=captured["application"],
                 registry=api.registry,
+                expected_facts_by_operation={"operation-1": expected_facts},
             ),
             private_original_ifc_path=SOURCE,
             private_mutation_mapping={

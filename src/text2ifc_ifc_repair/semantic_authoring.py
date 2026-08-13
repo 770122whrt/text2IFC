@@ -505,6 +505,8 @@ def apply_semantic_assignments(
         model=model,
         target=target,
         assignments=assignments,
+        enforce_structural_cardinality=scope
+        in {"beam_occurrence", "column_occurrence"},
     )
     skipped.extend(
         fact_key
@@ -852,6 +854,7 @@ def _preflight_material_assignments(
     model: Any,
     target: Any,
     assignments: Sequence[Mapping[str, Any]],
+    enforce_structural_cardinality: bool,
 ) -> dict[str, dict[str, Any]]:
     grouped: dict[str, list[Mapping[str, Any]]] = {}
     for item in assignments:
@@ -861,6 +864,22 @@ def _preflight_material_assignments(
             == SemanticAuthoringAction.REUSE_MATERIAL.value
         ):
             grouped.setdefault(str(item["source_ref"]), []).append(item)
+    if not enforce_structural_cardinality:
+        plans = {}
+        for source_ref, members in grouped.items():
+            resource, create_label = _resolve_exact_material_authority(
+                model=model,
+                assignment=members[0],
+            )
+            plans[source_ref] = {
+                "resource": resource,
+                "create_label": create_label,
+                "fact_keys": sorted(
+                    {str(item["fact_key"]) for item in members}
+                ),
+                "skip": False,
+            }
+        return plans
     if len(grouped) > 1:
         raise SemanticManifestError(
             "STRUCTURAL_MATERIAL_CARDINALITY_INVALID",

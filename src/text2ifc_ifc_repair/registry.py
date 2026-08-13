@@ -253,6 +253,42 @@ class OperationRegistry:
             return ()
         return tuple(builder(operation=operation))
 
+    def bind_resolved_target(
+        self,
+        operation_type: str,
+        target_global_id: str | None,
+    ) -> dict[str, str]:
+        """Project one resolved identity through the registered target contract."""
+
+        definition = self.require(operation_type)
+        schema = definition.target_schema
+        required = () if schema is None else schema.get("required", ())
+        identity_fields = [
+            str(name)
+            for name in required
+            if str(name).endswith("_global_id")
+        ]
+        if len(identity_fields) != 1:
+            raise OperationRegistryError(
+                "RESOLVED_TARGET_CONTRACT_INVALID",
+                operation_type,
+            )
+        if not target_global_id:
+            raise OperationRegistryError(
+                "RESOLVED_TARGET_ID_REQUIRED",
+                operation_type,
+            )
+        target = {identity_fields[0]: str(target_global_id)}
+        issues = self.validate_target(
+            {"operation_type": operation_type, "target": target}
+        )
+        if issues:
+            raise OperationRegistryError(
+                "RESOLVED_TARGET_CONTRACT_INVALID",
+                f"{operation_type}:{issues[0].path}",
+            )
+        return target
+
     def validate_parameters(
         self,
         operation: Mapping[str, Any],
@@ -415,6 +451,9 @@ def _inject_schema_constants(value: dict[str, Any], schema: Mapping[str, Any]) -
     properties = schema.get("properties")
     if not isinstance(properties, Mapping):
         return
+    required = {
+        str(name) for name in schema.get("required", ())
+    }
     for name, raw_child in properties.items():
         if not isinstance(raw_child, Mapping):
             continue
@@ -428,7 +467,7 @@ def _inject_schema_constants(value: dict[str, Any], schema: Mapping[str, Any]) -
         nested: dict[str, Any]
         if isinstance(existing, Mapping):
             nested = copy.deepcopy(dict(existing))
-        elif existing is None:
+        elif existing is None and str(name) in required:
             nested = {}
         else:
             continue

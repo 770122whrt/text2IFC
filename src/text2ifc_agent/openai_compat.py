@@ -225,6 +225,7 @@ class OpenAICompatibleLiveProvider:
         self.connection_max_attempts = connection_max_attempts
         self.connection_retry_delay_seconds = connection_retry_delay_seconds
         self._sleep = sleep
+        self.uses_default_sdk_client = client_factory is None
         self.client = _create_openai_client(
             config=config,
             client_factory=client_factory,

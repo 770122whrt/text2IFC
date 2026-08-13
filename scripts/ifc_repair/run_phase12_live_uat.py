@@ -18,6 +18,7 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Callable, Iterable, Mapping, Sequence
+from urllib.parse import urlsplit
 
 import ifcopenshell
 
@@ -54,9 +55,18 @@ DEFAULT_OUTPUT = ROOT / "dataset/processed/ifc-repair-runs/phase12-live"
 DEFAULT_PROOF_ROOT = (
     ROOT / "dataset/processed/proof/ifc-repair-success-cases"
 )
-SOURCE = ROOT / "dataset/ifc/test/d7n.ifc"
+SOURCE = (
+    DEFAULT_PROOF_ROOT
+    / "structural/batch/phase12-d7n-beam-column-atomic/damaged.ifc"
+)
+FROZEN_SOURCE_SHA256 = (
+    "sha256:25240558bcbe23c1bbf4916d0b9a0fbb"
+    "de8202d63dbc7a488ef633ab40eb6127"
+)
 TOKEN_GUARD = 65_536
 LIVE_EVIDENCE_MODE = "live"
+PROOF_VALIDATION_PENDING = "pending_plan_12_14"
+APPROVED_DEEPSEEK_ENDPOINT = ("https", "api.deepseek.com", None, ("", "/"))
 FORBIDDEN_EVIDENCE_MODES = frozenset(
     {"synthetic", "cached", "prerecorded", "hand-authored"}
 )
@@ -70,26 +80,33 @@ PREFLIGHT_NAMES = (
 )
 
 COMPLETE_REQUEST = (
-    "Add one horizontal straight rectangular Beam and one vertical straight "
-    "rectangular Column in one atomic ChangeSet. Use only explicit Storey-local "
-    "center-axis millimetre coordinates, generate dedicated structural Types, "
-    "and set canonical LoadBearing=true on both occurrences."
+    'On the IFC Building Storey named "Level 1", add one horizontal straight '
+    "rectangular Beam with center axis from (120000, 120000, 3000) mm to "
+    "(126000, 120000, 3000) mm and a rectangular section 300 mm wide and "
+    "500 mm high. On the same Storey, add one vertical straight rectangular "
+    "Column with center-axis base (123000, 124000, 0) mm and top "
+    "(123000, 124000, 3000) mm, a section 400 mm wide and 600 mm deep, and "
+    "local width direction (0, 1). Create both in one atomic ChangeSet, "
+    "generate dedicated structural Types, state that the Beam is load "
+    "bearing, and state that the Column is load bearing."
 )
 CLARIFICATION_REQUEST = (
-    "Add one straight rectangular structural member. The member family, exact "
-    "Storey, complete center axis and rectangular section orientation still "
-    "need to be clarified; do not infer them."
+    'On the IFC Building Storey named "Level 1", add one vertical rectangular '
+    "Column. The complete center axis, rectangular section dimensions, and "
+    "local width direction are not specified; do not infer them."
 )
 CLARIFICATION_ANSWER = (
-    "Use a vertical Column on the explicitly selected public Storey. Its "
+    'Use a vertical Column on the IFC Building Storey named "Level 1". Its '
     "center axis is base (120000, 120000, 0) mm to top "
-    "(120000, 120000, 6000) mm; its rectangular section is 400 by 600 mm "
-    "with local width direction (0, 1)."
+    "(120000, 120000, 6000) mm; its rectangular section is 400 mm wide and "
+    "600 mm deep, with local width direction (0, 1)."
 )
 PROGRAM_GUARD_REQUEST = (
-    "Add an inclined curved Beam with a variable circular profile and attach "
-    "a structural analysis node."
+    'On the IFC Building Storey named "Level 1", add a straight rectangular '
+    "Beam and attach a structural analysis node; structural analysis "
+    "relationships are outside this operation contract."
 )
+PROGRAM_GUARD_REASON = "STRUCTURAL_ANALYSIS_UNSUPPORTED"
 
 
 class LiveCase:
@@ -120,6 +137,11 @@ DEFAULT_CASES = (
     ),
     LiveCase(case_id="program-guard", request=PROGRAM_GUARD_REQUEST),
 )
+REQUIRED_CASE_IDS = tuple(case.case_id for case in DEFAULT_CASES)
+FROZEN_CASE_MATRIX_SHA256 = (
+    "sha256:1b9b181f42ca9eccdda5cffac323cb5c"
+    "ec67633bf4859c1000e9f7324681fd2b"
+)
 
 
 def _sha256_bytes(value: bytes) -> str:
@@ -147,6 +169,53 @@ def _canonical_sha256(value: Any) -> str:
         allow_nan=False,
     )
     return _text_sha256(rendered)
+
+
+def _transport_payload_sha256(value: Any) -> str:
+    try:
+        return _canonical_sha256(value)
+    except (TypeError, ValueError):
+        return _text_sha256(repr(value))
+
+
+def _case_matrix_sha256(cases: Sequence[LiveCase]) -> str:
+    return _canonical_sha256(
+        [
+            {
+                "case_id": case.case_id,
+                "request": case.request,
+                "feedback": case.feedback,
+            }
+            for case in cases
+        ]
+    )
+
+
+def _approved_deepseek_transport(transport: Any) -> bool:
+    if type(transport) is not OpenAICompatibleLiveProvider:
+        return False
+    config = getattr(transport, "config", None)
+    try:
+        endpoint = urlsplit(str(config.base_url))
+        port = endpoint.port
+    except (AttributeError, TypeError, ValueError):
+        return False
+    approved_scheme, approved_host, approved_port, approved_paths = (
+        APPROVED_DEEPSEEK_ENDPOINT
+    )
+    return (
+        getattr(transport, "uses_default_sdk_client", False) is True
+        and config.provider == "deepseek"
+        and config.provider_label == "deepseek-openai-compatible"
+        and endpoint.scheme.casefold() == approved_scheme
+        and (endpoint.hostname or "").casefold() == approved_host
+        and port == approved_port
+        and endpoint.path in approved_paths
+        and not endpoint.username
+        and not endpoint.password
+        and not endpoint.query
+        and not endpoint.fragment
+    )
 
 
 def _write_json(path: Path, value: Any) -> None:
@@ -186,6 +255,26 @@ _PRIVATE_VALUE_PATTERNS = (
     re.compile(r"gold[-_ ]?changeset", re.IGNORECASE),
     re.compile(r"mutation_manifest\.private", re.IGNORECASE),
 )
+
+
+def _private_evidence_detected(value: Any, *, key: str = "") -> bool:
+    normalized_key = key.casefold().replace("-", "_")
+    compact_key = normalized_key.replace("_", "")
+    if any(
+        part in normalized_key or part.replace("_", "") in compact_key
+        for part in _PRIVATE_KEY_PARTS
+    ):
+        return True
+    if isinstance(value, Mapping):
+        return any(
+            _private_evidence_detected(child, key=str(raw_key))
+            for raw_key, child in value.items()
+        )
+    if isinstance(value, (list, tuple)):
+        return any(_private_evidence_detected(item) for item in value)
+    return isinstance(value, str) and any(
+        pattern.search(value) for pattern in _PRIVATE_VALUE_PATTERNS
+    )
 
 
 def _redact_for_evidence(value: Any, *, key: str = "") -> Any:
@@ -336,6 +425,8 @@ class TranscriptProvider:
                 stage=stage,
                 ordinal=ordinal,
                 stage_attempt=stage_attempt,
+                evidence_class=getattr(live_result, "evidence_class", None),
+                http_status=getattr(live_result, "http_status", None),
                 request=request,
                 response=response,
                 metadata=metadata,
@@ -351,6 +442,8 @@ class TranscriptProvider:
             stage=stage,
             ordinal=ordinal,
             stage_attempt=stage_attempt,
+            evidence_class=getattr(live_result, "evidence_class", None),
+            http_status=getattr(live_result, "http_status", None),
             request=getattr(live_result, "request", request_arguments),
             response=getattr(live_result, "response", {}),
             metadata=metadata,
@@ -367,6 +460,8 @@ class TranscriptProvider:
         stage: str,
         ordinal: int,
         stage_attempt: int,
+        evidence_class: Any,
+        http_status: Any,
         request: Any,
         response: Any,
         metadata: Mapping[str, Any],
@@ -374,6 +469,12 @@ class TranscriptProvider:
         error: str | None,
     ) -> None:
         assert self._case_id is not None
+        raw_request_sha256 = _transport_payload_sha256(request)
+        raw_response_sha256 = _transport_payload_sha256(response)
+        private_evidence = any(
+            _private_evidence_detected(value)
+            for value in (request, response, metadata)
+        )
         safe_request = _redact_for_evidence(request)
         safe_response = _redact_for_evidence(response)
         safe_metadata = _redact_for_evidence(dict(metadata))
@@ -382,6 +483,11 @@ class TranscriptProvider:
             usage = safe_response.get("usage")
         usage = dict(usage) if isinstance(usage, Mapping) else {}
         identities = _prompt_identities(prompt)
+        normalized_evidence_class = str(evidence_class or "")
+        fallback_flags = {
+            mode.replace("-", "_"): normalized_evidence_class == mode
+            for mode in sorted(FORBIDDEN_EVIDENCE_MODES)
+        }
         record = {
             "attempt_id": attempt_id,
             "parent_attempt_id": parent_attempt_id,
@@ -391,9 +497,15 @@ class TranscriptProvider:
             "ordinal": ordinal,
             "stage_attempt": stage_attempt,
             "correction_reason": _correction_reason(prompt, stage_attempt),
+            "evidence_class": normalized_evidence_class or None,
+            "http_status": http_status,
+            "fallback_flags": fallback_flags,
+            "private_evidence_detected": private_evidence,
             "provider": safe_metadata.get("provider"),
             "model": safe_metadata.get("model"),
             "usage": usage,
+            "raw_request_sha256": raw_request_sha256,
+            "raw_response_sha256": raw_response_sha256,
             "request_sha256": _canonical_sha256(safe_request),
             "response_sha256": _canonical_sha256(safe_response),
             "request": safe_request,
@@ -411,6 +523,14 @@ def _default_command_runner(
     *,
     cwd: Path,
 ) -> subprocess.CompletedProcess[str]:
+    rendered = " ".join(command).replace("\\", "/")
+    timeout_seconds = 1_500
+    if "test_phase12_live_uat.py" in rendered:
+        timeout_seconds = 180
+    elif "-m compileall" in rendered:
+        timeout_seconds = 300
+    elif rendered.startswith("git diff --check"):
+        timeout_seconds = 60
     return subprocess.run(
         list(command),
         cwd=cwd,
@@ -419,6 +539,7 @@ def _default_command_runner(
         encoding="utf-8",
         errors="replace",
         check=False,
+        timeout=timeout_seconds,
     )
 
 
@@ -556,9 +677,19 @@ def run_preflight(
     logs.mkdir()
     checks: list[dict[str, Any]] = []
     for name, command in _preflight_commands(preflight_root, proof_root):
+        execution_reason: str | None = None
         try:
             completed = command_runner(command, cwd=ROOT)
+        except subprocess.TimeoutExpired as error:
+            execution_reason = "COMMAND_TIMEOUT"
+            completed = subprocess.CompletedProcess(
+                command,
+                124,
+                str(error.stdout or ""),
+                str(error.stderr or f"TimeoutExpired: {error}")[:512],
+            )
         except Exception as error:
+            execution_reason = "COMMAND_EXECUTION_ERROR"
             completed = subprocess.CompletedProcess(
                 command,
                 255,
@@ -571,13 +702,16 @@ def run_preflight(
         stderr_path = logs / f"{name}.stderr.txt"
         stdout_path.write_text(stdout, encoding="utf-8")
         stderr_path.write_text(stderr, encoding="utf-8")
-        reason, semantic_artifacts = _verify_preflight_semantics(
-            name=name,
-            command=command,
-            completed=completed,
-            preflight_root=preflight_root,
-            proof_root=proof_root,
-        )
+        if execution_reason is None:
+            reason, semantic_artifacts = _verify_preflight_semantics(
+                name=name,
+                command=command,
+                completed=completed,
+                preflight_root=preflight_root,
+                proof_root=proof_root,
+            )
+        else:
+            reason, semantic_artifacts = execution_reason, []
         artifact_paths = [
             path
             for path in (stdout_path, stderr_path, *semantic_artifacts)
@@ -639,9 +773,14 @@ def _strict_reopen_verification(
             "l0_pass": None,
             "l1_pass": None,
             "l2_pass": None,
+            "preservation_status": PROOF_VALIDATION_PENDING,
+            "ground_truth_isolation_status": PROOF_VALIDATION_PENDING,
+            "proof_validation_status": PROOF_VALIDATION_PENDING,
         }
     try:
-        run_root = (runtime / "runs" / str(final["run_id"])).resolve()
+        runs_root = (runtime / "runs").resolve()
+        run_root = (runs_root / str(final["run_id"])).resolve()
+        run_root.relative_to(runs_root)
         artifacts = final.get("artifacts")
         if not isinstance(artifacts, Mapping):
             raise ValueError("LIVE_RESULT_ARTIFACTS_MISSING")
@@ -668,7 +807,16 @@ def _strict_reopen_verification(
         source = state.get("source")
         if not isinstance(source, Mapping):
             raise ValueError("LIVE_SOURCE_BINDING_MISSING")
-        source_path = Path(str(source["reference"]))
+        source_path = Path(str(source["reference"])).resolve()
+        if source_path != SOURCE.resolve():
+            raise ValueError("LIVE_SOURCE_PATH_MISMATCH")
+        if not source_path.is_file():
+            raise ValueError("LIVE_SOURCE_MISSING")
+        if (
+            _path_sha256(source_path) != FROZEN_SOURCE_SHA256
+            or str(source.get("sha256")) != FROZEN_SOURCE_SHA256
+        ):
+            raise ValueError("LIVE_SOURCE_HASH_MISMATCH")
         damaged = ifcopenshell.open(str(source_path))
         repaired = ifcopenshell.open(str(repaired_path))
         if str(repaired.schema) != "IFC2X3":
@@ -715,6 +863,9 @@ def _strict_reopen_verification(
             "l0_pass": True,
             "l1_pass": l1,
             "l2_pass": l2,
+            "preservation_status": PROOF_VALIDATION_PENDING,
+            "ground_truth_isolation_status": PROOF_VALIDATION_PENDING,
+            "proof_validation_status": PROOF_VALIDATION_PENDING,
             "operation_count": len(operations),
             "reopened_schema": str(repaired.schema),
             "successful_ifc_sha256": _path_sha256(repaired_path),
@@ -727,6 +878,9 @@ def _strict_reopen_verification(
             "l0_pass": False,
             "l1_pass": False,
             "l2_pass": False,
+            "preservation_status": PROOF_VALIDATION_PENDING,
+            "ground_truth_isolation_status": PROOF_VALIDATION_PENDING,
+            "proof_validation_status": PROOF_VALIDATION_PENDING,
             "reason_code": str(error).split(":", 1)[0][:128],
         }
 
@@ -737,6 +891,9 @@ def _production_case_executor(
     case_root: Path,
 ) -> dict[str, Any]:
     runtime = case_root / "runtime"
+    source_sha256_before = _path_sha256(SOURCE)
+    if source_sha256_before != FROZEN_SOURCE_SHA256:
+        raise ValueError("LIVE_SOURCE_HASH_MISMATCH")
     api = RepairAPI(
         runtime,
         provider=provider,
@@ -768,6 +925,29 @@ def _production_case_executor(
         )
         answer_applied = True
     final_summary = _result_summary(final)
+    candidate_output_paths = sorted(
+        str(value)
+        for key, value in final_summary.get("artifacts", {}).items()
+        if key in {"successful_ifc", "diagnostic_candidate"} and value
+    )
+    program_guard_evidence = None
+    if case.case_id == "program-guard":
+        source_sha256_after = _path_sha256(SOURCE)
+        stage2_attempts = sum(
+            1
+            for attempt in provider.attempts
+            if attempt.get("case_id") == case.case_id
+            and attempt.get("stage") == "stage2"
+        )
+        program_guard_evidence = {
+            "source_reference": str(SOURCE.resolve()),
+            "source_sha256_before": source_sha256_before,
+            "source_sha256_after": source_sha256_after,
+            "source_unchanged": source_sha256_before == source_sha256_after,
+            "stage2_attempts": stage2_attempts,
+            "candidate_output_paths": candidate_output_paths,
+            "mutation_attempted": bool(stage2_attempts or candidate_output_paths),
+        }
     return {
         **final_summary,
         "initial": _result_summary(initial),
@@ -777,6 +957,7 @@ def _production_case_executor(
         "feedback_sha256": (
             None if case.feedback is None else _text_sha256(case.feedback)
         ),
+        "program_guard_evidence": program_guard_evidence,
         "strict_reopen_verification": _strict_reopen_verification(
             runtime,
             final_summary,
@@ -793,6 +974,62 @@ def _counts(attempts: Iterable[Mapping[str, Any]]) -> dict[str, int]:
     return result
 
 
+def _live_attempt_evidence_pass(
+    attempts: Sequence[Mapping[str, Any]],
+) -> bool:
+    if not attempts:
+        return False
+    for attempt in attempts:
+        metadata = attempt.get("metadata")
+        usage = attempt.get("usage")
+        fallback_flags = attempt.get("fallback_flags")
+        profile_ids = attempt.get("profile_ids")
+        profile_versions = attempt.get("profile_versions")
+        profile_hashes = attempt.get("profile_hashes")
+        few_shot_ids = attempt.get("few_shot_ids")
+        few_shot_hashes = attempt.get("few_shot_hashes")
+        if not isinstance(metadata, Mapping):
+            return False
+        if not isinstance(usage, Mapping) or not usage:
+            return False
+        if not isinstance(fallback_flags, Mapping):
+            return False
+        if (
+            not isinstance(profile_ids, list)
+            or not profile_ids
+            or not isinstance(profile_versions, list)
+            or not profile_versions
+            or not isinstance(profile_hashes, list)
+            or not profile_hashes
+        ):
+            return False
+        if attempt.get("stage") == "stage2" and (
+            not isinstance(few_shot_ids, list)
+            or not few_shot_ids
+            or not isinstance(few_shot_hashes, list)
+            or not few_shot_hashes
+        ):
+            return False
+        if (
+            attempt.get("evidence_class") != LIVE_EVIDENCE_MODE
+            or metadata.get("evidence_class") != LIVE_EVIDENCE_MODE
+            or attempt.get("http_status") != 200
+            or attempt.get("error") is not None
+            or attempt.get("private_evidence_detected") is not False
+            or not isinstance(attempt.get("provider"), str)
+            or not str(attempt.get("provider")).strip()
+            or not isinstance(attempt.get("model"), str)
+            or not str(attempt.get("model")).strip()
+            or not isinstance(metadata.get("response_id"), str)
+            or not str(metadata.get("response_id")).strip()
+            or not isinstance(metadata.get("transport_attempts"), int)
+            or int(metadata.get("transport_attempts", 0)) < 1
+            or any(value is not False for value in fallback_flags.values())
+        ):
+            return False
+    return True
+
+
 def _case_contract_pass(
     case: LiveCase,
     final: Mapping[str, Any],
@@ -805,9 +1042,7 @@ def _case_contract_pass(
     if case.case_id == "complete":
         strict = final.get("strict_reopen_verification")
         strict_ok = (
-            True
-            if strict is None
-            else isinstance(strict, Mapping)
+            isinstance(strict, Mapping)
             and strict.get("status") == "passed"
             and strict.get("l0_pass") is True
             and strict.get("l1_pass") is True
@@ -822,11 +1057,29 @@ def _case_contract_pass(
         )
     if case.case_id == "clarification-resume":
         strict = final.get("strict_reopen_verification")
+        initial = final.get("initial")
+        clarification = final.get("clarification")
         strict_ok = (
-            True
-            if strict is None
-            else isinstance(strict, Mapping)
+            isinstance(strict, Mapping)
             and strict.get("status") == "passed"
+            and strict.get("l0_pass") is True
+            and strict.get("l1_pass") is True
+            and strict.get("l2_pass") is True
+        )
+        initial_stop_ok = (
+            isinstance(initial, Mapping)
+            and initial.get("status") == "clarification_required"
+            and initial.get("complete_repair_success") is False
+            and initial.get("successful_artifact_publishable") is False
+            and isinstance(clarification, Mapping)
+            and isinstance(clarification.get("clarification_id"), str)
+            and bool(str(clarification.get("clarification_id")).strip())
+            and isinstance(clarification.get("reason_code"), str)
+            and bool(str(clarification.get("reason_code")).strip())
+            and isinstance(clarification.get("question"), str)
+            and bool(str(clarification.get("question")).strip())
+            and isinstance(clarification.get("answer_modes"), list)
+            and bool(clarification.get("answer_modes"))
         )
         return (
             final.get("status") == "succeeded"
@@ -835,14 +1088,27 @@ def _case_contract_pass(
             and counts.get("stage1") == 2
             and counts.get("stage2") == 1
             and strict_ok
+            and initial_stop_ok
         )
     if case.case_id == "program-guard":
+        guard = final.get("program_guard_evidence")
+        guard_ok = (
+            isinstance(guard, Mapping)
+            and guard.get("source_reference") == str(SOURCE.resolve())
+            and guard.get("source_sha256_before") == FROZEN_SOURCE_SHA256
+            and guard.get("source_sha256_after") == FROZEN_SOURCE_SHA256
+            and guard.get("source_unchanged") is True
+            and guard.get("stage2_attempts") == 0
+            and guard.get("candidate_output_paths") == []
+            and guard.get("mutation_attempted") is False
+        )
         return (
             final.get("status") == "unsupported"
-            and bool(final.get("reason_code"))
+            and final.get("reason_code") == PROGRAM_GUARD_REASON
             and not published
             and counts.get("stage1") == 1
             and counts.get("stage2") == 0
+            and guard_ok
         )
     return True
 
@@ -893,6 +1159,38 @@ def run_live_uat(
         _write_json(output / "live-uat-result.json", result)
         return result
 
+    injected_preflight = command_runner is not _default_command_runner
+    injected_executor = case_executor is not _production_case_executor
+    if injected_preflight != injected_executor:
+        result.update(
+            {
+                "status": "blocked",
+                "reason_code": "LIVE_TEST_SEAMS_MUST_BE_PAIRED",
+                "preflight": {"status": "not_run", "checks": []},
+            }
+        )
+        _write_json(output / "live-uat-result.json", result)
+        return result
+
+    test_injected = injected_preflight and injected_executor
+    result.update(
+        {
+            "execution_mode": (
+                "test_injected" if test_injected else "production_live"
+            ),
+            "provider_evidence_mode": (
+                "test_injected" if test_injected else LIVE_EVIDENCE_MODE
+            ),
+            "runner_contract_eligible": not test_injected,
+            # The live runner proves the Plan 12-13 transcript contract only.
+            # Plan 12-14 separately recomputes preservation and Ground Truth
+            # isolation before any run can enter accepted Proof.
+            "acceptance_eligible": False,
+            "proof_acceptance_eligible": False,
+            "proof_validation_status": PROOF_VALIDATION_PENDING,
+        }
+    )
+
     preflight = run_preflight(
         output / "preflight",
         proof_root=Path(proof_root).resolve(),
@@ -909,12 +1207,45 @@ def run_live_uat(
         _write_json(output / "live-uat-result.json", result)
         return result
 
-    if not cases:
-        result.update({"status": "passed", "reason_code": None})
+    case_ids = tuple(case.case_id for case in cases)
+    required_case_matrix_sha256 = FROZEN_CASE_MATRIX_SHA256
+    current_default_case_matrix_sha256 = _case_matrix_sha256(DEFAULT_CASES)
+    provided_case_matrix_sha256 = _case_matrix_sha256(cases)
+    if (
+        case_ids != REQUIRED_CASE_IDS
+        or current_default_case_matrix_sha256 != required_case_matrix_sha256
+        or provided_case_matrix_sha256 != required_case_matrix_sha256
+    ):
+        result.update(
+            {
+                "status": "blocked",
+                "reason_code": "LIVE_CASE_MATRIX_REQUIRED",
+                "required_case_ids": list(REQUIRED_CASE_IDS),
+                "provided_case_ids": list(case_ids),
+                "required_case_matrix_sha256": required_case_matrix_sha256,
+                "current_default_case_matrix_sha256": (
+                    current_default_case_matrix_sha256
+                ),
+                "provided_case_matrix_sha256": provided_case_matrix_sha256,
+            }
+        )
         _write_json(output / "live-uat-result.json", result)
         return result
 
-    provider = TranscriptProvider(transport_factory())
+    transport = transport_factory()
+    production_transport_valid = _approved_deepseek_transport(transport)
+    if not test_injected and not production_transport_valid:
+        result.update(
+            {
+                "status": "blocked",
+                "reason_code": "LIVE_DEEPSEEK_TRANSPORT_REQUIRED",
+                "runner_contract_eligible": False,
+                "acceptance_eligible": False,
+            }
+        )
+        _write_json(output / "live-uat-result.json", result)
+        return result
+    provider = TranscriptProvider(transport)
     case_results: list[dict[str, Any]] = []
     for case in cases:
         provider.set_case(case.case_id)
@@ -934,10 +1265,20 @@ def run_live_uat(
                 "complete_repair_success": False,
                 "successful_artifact_publishable": False,
             }
+        final_private_evidence = _private_evidence_detected(final)
         final = _redact_for_evidence(final)
         attempts = provider.attempts[before:]
         call_counts = _counts(attempts)
-        contract_pass = _case_contract_pass(case, final, call_counts)
+        live_evidence_pass = _live_attempt_evidence_pass(attempts)
+        contract_pass = (
+            live_evidence_pass
+            and not final_private_evidence
+            and _case_contract_pass(
+                case,
+                final,
+                call_counts,
+            )
+        )
         case_result = {
             "case_id": case.case_id,
             "status": "passed" if contract_pass else "failed",
@@ -950,7 +1291,11 @@ def run_live_uat(
             "transport_calls": len(attempts),
             "transport_calls_by_stage": call_counts,
             "synthetic_fallback_used": False,
+            "live_evidence_pass": live_evidence_pass,
+            "private_evidence_detected": final_private_evidence,
             "contract_pass": contract_pass,
+            "proof_acceptance_eligible": False,
+            "proof_validation_status": PROOF_VALIDATION_PENDING,
         }
         _write_json(case_root / "case-result.json", case_result)
         case_results.append(case_result)
@@ -966,7 +1311,7 @@ def run_live_uat(
     result.update(
         {
             "status": (
-                "passed"
+                ("test_passed" if test_injected else "passed")
                 if all(item["contract_pass"] for item in case_results)
                 else "failed"
             ),
@@ -1010,6 +1355,7 @@ def _config(environment: Mapping[str, str]) -> dict[str, Any]:
     return {
         "status": "ready" if ready else "not_configured",
         "provider": value.get("provider"),
+        "provider_key": value.get("provider_key"),
         "model": value.get("model"),
         "max_input_tokens": value.get("max_input_tokens"),
         "max_completion_tokens": value.get("max_completion_tokens"),
@@ -1020,7 +1366,7 @@ def _config(environment: Mapping[str, str]) -> dict[str, Any]:
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--check-config", action="store_true")
-    parser.add_argument("--provider", default="deepseek")
+    parser.add_argument("--provider", choices=("deepseek",), default="deepseek")
     parser.add_argument("--require-green-preflight", action="store_true")
     parser.add_argument("--env-file", type=Path, default=ROOT / ".env")
     parser.add_argument("--output-root", type=Path, default=DEFAULT_OUTPUT)
@@ -1034,7 +1380,10 @@ def main(argv: list[str] | None = None) -> int:
         return 0 if config["status"] == "ready" else 2
     if not args.require_green_preflight:
         parser.error("--require-green-preflight is mandatory for live execution")
-    if config["status"] != "ready" or config.get("provider") != args.provider:
+    if (
+        config["status"] != "ready"
+        or config.get("provider_key") != args.provider
+    ):
         print(json.dumps(config, ensure_ascii=False, sort_keys=True))
         return 2
     run_dir = args.output_root / datetime.now(timezone.utc).strftime(

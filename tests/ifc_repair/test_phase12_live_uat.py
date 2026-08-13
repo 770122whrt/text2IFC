@@ -1,7 +1,10 @@
 from __future__ import annotations
 
 import importlib.util
+import hashlib
 import json
+import re
+import shutil
 import subprocess
 from collections import deque
 from pathlib import Path
@@ -9,6 +12,10 @@ from typing import Any
 
 import pytest
 
+from text2ifc_agent.openai_compat import (
+    OpenAICompatibleLiveProvider,
+    OpenAICompatRuntimeConfig,
+)
 from text2ifc_agent.providers import LiveProviderResult, ProviderOutput
 
 
@@ -45,8 +52,16 @@ def _module():
 
 
 class _MockTransport:
-    def __init__(self, responses: list[dict[str, Any]] | None = None) -> None:
+    def __init__(
+        self,
+        responses: list[dict[str, Any]] | None = None,
+        *,
+        evidence_class: str = "live",
+        include_private_gold: bool = False,
+    ) -> None:
         self.responses = deque(responses or [])
+        self.evidence_class = evidence_class
+        self.include_private_gold = include_private_gold
         self.calls: list[dict[str, Any]] = []
 
     def generate_live(
@@ -69,7 +84,10 @@ class _MockTransport:
         text = json.dumps(response["content"], ensure_ascii=False, sort_keys=True)
         metadata = {
             "provider": "mock-deepseek",
+            "evidence_class": self.evidence_class,
+            "response_id": f"response-{len(self.calls)}",
             "model": "mock-reasoner",
+            "transport_attempts": 1,
             "usage": {
                 "prompt_tokens": response.get("prompt_tokens", 101),
                 "completion_tokens": response.get("completion_tokens", 37),
@@ -82,11 +100,12 @@ class _MockTransport:
             "model": "mock-reasoner",
             "usage": metadata["usage"],
             "content": text,
-            "private_gold": "CANARY-PRIVATE-GOLD-12-13",
         }
+        if self.include_private_gold:
+            raw_response["private_gold"] = "CANARY-PRIVATE-GOLD-12-13"
         return LiveProviderResult(
             session_id=session_id,
-            evidence_class="live",
+            evidence_class=self.evidence_class,
             http_status=200,
             request={
                 "model": "mock-reasoner",
@@ -103,6 +122,233 @@ class _MockTransport:
             ),
             output=ProviderOutput(text=text, metadata=metadata),
         )
+
+
+def _public_source(excerpt: str) -> dict[str, str]:
+    return {
+        "source_kind": "user_request",
+        "reference": "request:/text",
+        "excerpt": excerpt,
+    }
+
+
+def _structural_intent_operation(
+    *,
+    operation_id: str,
+    family: str,
+    parameters: dict[str, Any],
+    excerpt: str,
+    load_bearing: bool = False,
+) -> dict[str, Any]:
+    source = _public_source(excerpt)
+    properties = []
+    if load_bearing:
+        properties.append(
+            {
+                "intent_kind": "natural_language_property",
+                "property_phrase": f"{family} is load bearing",
+                "raw_value": True,
+                "raw_unit": None,
+                "scope": "occurrence_direct",
+                "source": _public_source(f"{family} is load bearing"),
+            }
+        )
+    return {
+        "operation_id": operation_id,
+        "operation_type": f"add_{family}",
+        "routing_intent": {
+            "component_family": family,
+            "action": "add",
+            "operation_profile": f"{family}.add",
+            "source": source,
+        },
+        "target_query": {
+            "schema_version": "text2ifc/ifc-target-query/0.1",
+            "allowed_ifc_classes": ["IfcBuildingStorey"],
+            "names": ["Level 1"],
+        },
+        "parameters": parameters,
+        "attribute_intents": [],
+        "property_intents": properties,
+        "semantic_bundle_refs": [],
+        "quantity_intents": [],
+        "occurrence_reuse_intent": None,
+        "prototype_intent": None,
+        "provenance": [source],
+    }
+
+
+def _intent_body(*operations: dict[str, Any], excerpt: str) -> dict[str, Any]:
+    return {
+        "schema_version": "text2ifc/ifc-repair-intent-body/0.5",
+        "operations": list(operations),
+        "semantic_bundles": [],
+        "provenance": [_public_source(excerpt)],
+    }
+
+
+def _prompt_json(prompt: str, heading: str) -> Any:
+    marker = f"## {heading}"
+    start = prompt.index(marker) + len(marker)
+    payload = prompt[start:].lstrip()
+    value, _end = json.JSONDecoder().raw_decode(payload)
+    return value
+
+
+class _ProductionPathTransport(_MockTransport):
+    """Mock only the external Provider transport; exercise the real API."""
+
+    def __init__(self) -> None:
+        super().__init__([])
+
+    def generate_live(
+        self,
+        *,
+        session_id: str,
+        prompt: str,
+        schema: dict[str, Any],
+        state: dict[str, Any],
+    ) -> LiveProviderResult:
+        stage = str(state["stage"])
+        if stage == "ifc_repair_intent":
+            content = self._intent_response(prompt)
+        elif stage == "ifc_repair_bound_changeset":
+            content = self._changeset_response(prompt)
+        else:
+            raise AssertionError(stage)
+        self.responses.append({"content": content})
+        return super().generate_live(
+            session_id=session_id,
+            prompt=prompt,
+            schema=schema,
+            state=state,
+        )
+
+    @staticmethod
+    def _intent_response(prompt: str) -> dict[str, Any]:
+        lowered = prompt.casefold()
+        if "structural analysis node" in lowered:
+            excerpt = "add a Beam and attach a structural analysis node"
+            beam = _structural_intent_operation(
+                operation_id="live-guard-beam-1",
+                family="beam",
+                parameters={"analysis_member": True},
+                excerpt=excerpt,
+            )
+            return _intent_body(beam, excerpt=excerpt)
+        if "(120000, 120000, 6000)" in prompt:
+            excerpt = "vertical Column on Level 1 with complete axis and section"
+            column = _structural_intent_operation(
+                operation_id="live-clarification-column-1",
+                family="column",
+                parameters={
+                    "axis": {
+                        "base": {"x_mm": 120000, "y_mm": 120000, "z_mm": 0},
+                        "top": {"x_mm": 120000, "y_mm": 120000, "z_mm": 6000},
+                    },
+                    "section": {
+                        "shape": "rectangle",
+                        "width_mm": 400,
+                        "depth_mm": 600,
+                        "orientation": {"x": 0, "y": 1},
+                    },
+                },
+                excerpt=excerpt,
+            )
+            return _intent_body(column, excerpt=excerpt)
+        if "complete center axis" in lowered:
+            excerpt = "add a Column on Level 1 without axis or section facts"
+            column = _structural_intent_operation(
+                operation_id="live-clarification-column-1",
+                family="column",
+                parameters={},
+                excerpt=excerpt,
+            )
+            return _intent_body(column, excerpt=excerpt)
+        if "beam is load bearing" in lowered:
+            excerpt = "create Beam and Column; beam is load bearing; column is load bearing"
+            beam = _structural_intent_operation(
+                operation_id="live-complete-beam-1",
+                family="beam",
+                parameters={
+                    "axis": {
+                        "start": {"x_mm": 120000, "y_mm": 120000, "z_mm": 3000},
+                        "end": {"x_mm": 126000, "y_mm": 120000, "z_mm": 3000},
+                    },
+                    "section": {
+                        "shape": "rectangle",
+                        "width_mm": 300,
+                        "height_mm": 500,
+                    },
+                },
+                excerpt=excerpt,
+                load_bearing=True,
+            )
+            column = _structural_intent_operation(
+                operation_id="live-complete-column-2",
+                family="column",
+                parameters={
+                    "axis": {
+                        "base": {"x_mm": 123000, "y_mm": 124000, "z_mm": 0},
+                        "top": {"x_mm": 123000, "y_mm": 124000, "z_mm": 3000},
+                    },
+                    "section": {
+                        "shape": "rectangle",
+                        "width_mm": 400,
+                        "depth_mm": 600,
+                        "orientation": {"x": 0, "y": 1},
+                    },
+                },
+                excerpt=excerpt,
+                load_bearing=True,
+            )
+            return _intent_body(beam, column, excerpt=excerpt)
+        raise AssertionError("unexpected Stage 1 request")
+
+    @staticmethod
+    def _changeset_response(prompt: str) -> dict[str, Any]:
+        projection = _prompt_json(prompt, "Resolved operation projection")
+        semantic_summary = _prompt_json(prompt, "Semantic group counts")
+        operations = []
+        scope: list[str] = []
+        evidence: list[str] = []
+        for operation_id, operation in projection["operations"].items():
+            target_id = str(operation["target_global_id"])
+            operation_evidence = list(operation["evidence_pointers"])
+            operations.append(
+                {
+                    "operation_id": operation_id,
+                    "operation_type": operation["operation_type"],
+                    "target": {"storey_global_id": target_id},
+                    "parameters": operation["parameters"],
+                    "evidence_refs": operation_evidence,
+                }
+            )
+            scope.extend(str(value) for value in operation["scope_ids"])
+            evidence.extend(str(value) for value in operation_evidence)
+        binding_lines = prompt.split("## Immutable bindings", 1)[1].split(
+            "## Resolved operation projection", 1
+        )[0]
+        bindings = dict(
+            re.findall(r"^- ([^:]+): (.+)$", binding_lines, flags=re.MULTILINE)
+        )
+        return {
+            "schema_version": "text2ifc/ifc-repair-changeset-draft/0.2",
+            "draft_id": "draft-live-production-path",
+            "base_model_fingerprint": bindings["model"],
+            "source_request_hash": bindings["source request"],
+            "semantic_manifest_ref": bindings["semantic manifest ref"],
+            "semantic_manifest_sha256": bindings["semantic manifest hash"],
+            "semantic_summary": semantic_summary,
+            "scope": {
+                "target_ids": list(dict.fromkeys(scope)),
+                "forbidden_ids": [],
+            },
+            "evidence_refs": list(dict.fromkeys(evidence)),
+            "preconditions": [],
+            "postconditions": [],
+            "operations": operations,
+        }
 
 
 class _GreenCommandRunner:
@@ -184,11 +430,38 @@ def _proof_root(tmp_path: Path) -> Path:
 
 
 def _case(module: Any, case_id: str, *, feedback: str | None = None):
+    frozen = next(
+        (case for case in module.DEFAULT_CASES if case.case_id == case_id),
+        None,
+    )
     return module.LiveCase(
         case_id=case_id,
-        request=f"public request for {case_id}",
-        feedback=feedback,
+        request=(
+            frozen.request
+            if frozen is not None
+            else f"public request for {case_id}"
+        ),
+        feedback=(
+            frozen.feedback
+            if frozen is not None and feedback is None
+            else feedback
+        ),
     )
+
+
+def _guard_evidence(module: Any, **overrides: Any) -> dict[str, Any]:
+    digest = "sha256:" + hashlib.sha256(module.SOURCE.read_bytes()).hexdigest()
+    evidence = {
+        "source_reference": str(module.SOURCE.resolve()),
+        "source_sha256_before": digest,
+        "source_sha256_after": digest,
+        "source_unchanged": True,
+        "stage2_attempts": 0,
+        "candidate_output_paths": [],
+        "mutation_attempted": False,
+    }
+    evidence.update(overrides)
+    return evidence
 
 
 def _run(
@@ -210,6 +483,524 @@ def _run(
         proof_root=_proof_root(tmp_path),
         evidence_mode=evidence_mode,
     )
+
+
+def test_cli_accepts_the_frozen_deepseek_provider_key(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    module = _module()
+    invoked = False
+
+    monkeypatch.setattr(module, "_environment", lambda _path: {})
+    monkeypatch.setattr(
+        module,
+        "_config",
+        lambda _environment: {
+            "status": "ready",
+            "provider": "deepseek-openai-compatible",
+            "provider_key": "deepseek",
+            "model": "deepseek-chat",
+            "max_input_tokens": 65_536,
+            "max_completion_tokens": 65_536,
+            "secret_redacted": True,
+        },
+    )
+
+    def fake_run_live_uat(*_args: Any, **_kwargs: Any) -> dict[str, Any]:
+        nonlocal invoked
+        invoked = True
+        return {"status": "passed", "transport_calls": 1}
+
+    monkeypatch.setattr(module, "run_live_uat", fake_run_live_uat)
+
+    exit_code = module.main(
+        [
+            "--provider",
+            "deepseek",
+            "--require-green-preflight",
+            "--output-root",
+            str(tmp_path),
+        ]
+    )
+
+    assert exit_code == 0
+    assert invoked is True
+
+
+def test_cli_rejects_every_non_deepseek_provider_before_configuration(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    module = _module()
+    monkeypatch.setattr(
+        module,
+        "_environment",
+        lambda _path: pytest.fail("configuration must not be read"),
+    )
+
+    with pytest.raises(SystemExit) as error:
+        module.main(
+            [
+                "--provider",
+                "mimo",
+                "--require-green-preflight",
+            ]
+        )
+
+    assert error.value.code == 2
+
+
+def test_fixed_live_requests_have_exact_public_structural_authority() -> None:
+    module = _module()
+
+    assert 'Storey named "Level 1"' in module.COMPLETE_REQUEST
+    assert "(120000, 120000, 3000)" in module.COMPLETE_REQUEST
+    assert "(126000, 120000, 3000)" in module.COMPLETE_REQUEST
+    assert "300 mm wide and 500 mm high" in module.COMPLETE_REQUEST
+    assert "(123000, 124000, 0)" in module.COMPLETE_REQUEST
+    assert "(123000, 124000, 3000)" in module.COMPLETE_REQUEST
+    assert "400 mm wide and 600 mm deep" in module.COMPLETE_REQUEST
+    assert "the Beam is load bearing" in module.COMPLETE_REQUEST
+    assert "the Column is load bearing" in module.COMPLETE_REQUEST
+    assert "LoadBearing" not in module.COMPLETE_REQUEST
+
+    assert "Column" in module.CLARIFICATION_REQUEST
+    assert "member family" not in module.CLARIFICATION_REQUEST
+    assert 'Storey named "Level 1"' in module.CLARIFICATION_REQUEST
+    assert "center axis is base" not in module.CLARIFICATION_REQUEST
+    assert 'Storey named "Level 1"' in module.PROGRAM_GUARD_REQUEST
+    assert 'Storey named "Level 1"' in module.CLARIFICATION_ANSWER
+    assert "(120000, 120000, 0)" in module.CLARIFICATION_ANSWER
+    assert "(120000, 120000, 6000)" in module.CLARIFICATION_ANSWER
+    assert "400 mm wide and 600 mm deep" in module.CLARIFICATION_ANSWER
+
+
+def test_live_runner_uses_only_the_curated_public_damaged_d7n_input() -> None:
+    module = _module()
+
+    expected = (
+        ROOT
+        / "dataset/processed/proof/ifc-repair-success-cases"
+        / "structural/batch/phase12-d7n-beam-column-atomic/damaged.ifc"
+    ).resolve()
+    assert module.SOURCE.resolve() == expected
+    assert module.SOURCE.name == "damaged.ifc"
+    assert module.SOURCE.is_file()
+    assert module.FROZEN_SOURCE_SHA256 == (
+        "sha256:25240558bcbe23c1bbf4916d0b9a0fbb"
+        "de8202d63dbc7a488ef633ab40eb6127"
+    )
+    assert "sha256:" + hashlib.sha256(module.SOURCE.read_bytes()).hexdigest() == (
+        module.FROZEN_SOURCE_SHA256
+    )
+
+
+def test_fixed_live_matrix_is_bound_to_an_independent_reviewed_digest() -> None:
+    module = _module()
+
+    assert module.FROZEN_CASE_MATRIX_SHA256 == (
+        "sha256:1b9b181f42ca9eccdda5cffac323cb5c"
+        "ec67633bf4859c1000e9f7324681fd2b"
+    )
+    assert module._case_matrix_sha256(module.DEFAULT_CASES) == (
+        module.FROZEN_CASE_MATRIX_SHA256
+    )
+
+
+def test_live_runner_cannot_claim_independent_proof_before_plan_12_14(
+    tmp_path: Path,
+) -> None:
+    module = _module()
+    transport = _MockTransport(
+        [{"content": {"ok": True}} for _ in range(6)]
+    )
+
+    def call(provider: Any, *, stage: str) -> None:
+        provider.generate_live(
+            session_id=f"mock-{stage}",
+            prompt=PROFILE_PROMPT,
+            schema={"type": "object"},
+            state={"stage": stage, "attempt": 1},
+        )
+
+    strict = {
+        "status": "passed",
+        "l0_pass": True,
+        "l1_pass": True,
+        "l2_pass": True,
+        "proof_validation_status": "pending_plan_12_14",
+    }
+
+    def executor(case: Any, provider: Any, _case_root: Path) -> dict[str, Any]:
+        call(provider, stage="ifc_repair_intent")
+        if case.case_id == "clarification-resume":
+            provider.set_lineage("clarification-resume")
+            call(provider, stage="ifc_repair_intent")
+        if case.case_id != "program-guard":
+            call(provider, stage="ifc_repair_bound_changeset")
+            result = {
+                "status": "succeeded",
+                "complete_repair_success": True,
+                "successful_artifact_publishable": True,
+                "clarification_answer_applied": (
+                    case.case_id == "clarification-resume"
+                ),
+                "strict_reopen_verification": strict,
+            }
+            if case.case_id == "clarification-resume":
+                result.update(
+                    {
+                        "initial": {
+                            "status": "clarification_required",
+                            "complete_repair_success": False,
+                            "successful_artifact_publishable": False,
+                        },
+                        "clarification": {
+                            "clarification_id": "clarification-001",
+                            "reason_code": "STRUCTURAL_REQUIRED_FIELDS_MISSING",
+                            "question": "Provide the grouped structural details.",
+                            "answer_modes": ["add_detail"],
+                        },
+                    }
+                )
+            return result
+        return {
+            "status": "unsupported",
+            "reason_code": module.PROGRAM_GUARD_REASON,
+            "complete_repair_success": False,
+            "successful_artifact_publishable": False,
+            "program_guard_evidence": _guard_evidence(module),
+        }
+
+    result = _run(
+        module,
+        tmp_path,
+        transport=transport,
+        runner=_GreenCommandRunner(),
+        executor=executor,
+        cases=module.DEFAULT_CASES,
+    )
+
+    assert result["status"] == "test_passed"
+    assert result["runner_contract_eligible"] is False
+    assert result["acceptance_eligible"] is False
+    assert result["proof_acceptance_eligible"] is False
+    assert result["proof_validation_status"] == "pending_plan_12_14"
+    for case in result["cases"]:
+        assert case["proof_acceptance_eligible"] is False
+        assert case["proof_validation_status"] == "pending_plan_12_14"
+
+
+def test_complete_transport_drives_the_real_repair_api_and_reopens_ifc2x3(
+    tmp_path: Path,
+) -> None:
+    module = _module()
+    transport = _ProductionPathTransport()
+    provider = module.TranscriptProvider(transport)
+    case = module.DEFAULT_CASES[0]
+    provider.set_case(case.case_id)
+
+    final = module._production_case_executor(
+        case,
+        provider,
+        tmp_path / "complete",
+    )
+
+    assert final["status"] == "succeeded", (
+        final["status"],
+        final["reason_code"],
+        final.get("clarification"),
+    )
+    assert final["complete_repair_success"] is True
+    assert final["successful_artifact_publishable"] is True
+    assert final["strict_reopen_verification"]["status"] == "passed"
+    assert final["strict_reopen_verification"]["reopened_schema"] == "IFC2X3"
+    assert final["strict_reopen_verification"]["operation_count"] == 2
+    assert final["strict_reopen_verification"]["preservation_status"] == (
+        "pending_plan_12_14"
+    )
+    assert final["strict_reopen_verification"][
+        "ground_truth_isolation_status"
+    ] == "pending_plan_12_14"
+    assert [item["stage"] for item in provider.attempts] == [
+        "stage1",
+        "stage2",
+    ]
+    run_root = (
+        tmp_path / "complete" / "runtime" / "runs" / final["run_id"]
+    )
+    intent = json.loads(
+        (run_root / "intent" / "repair-intent.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    assert [item["routing_intent"]["operation_profile"] for item in intent["operations"]] == [
+        "beam.add",
+        "column.add",
+    ]
+    assert [
+        item["property_intents"][0]["property_phrase"]
+        for item in intent["operations"]
+    ] == ["beam is load bearing", "column is load bearing"]
+
+
+def test_clarification_transport_drives_real_api_resume_and_publication(
+    tmp_path: Path,
+) -> None:
+    module = _module()
+    transport = _ProductionPathTransport()
+    provider = module.TranscriptProvider(transport)
+    case = module.DEFAULT_CASES[1]
+    provider.set_case(case.case_id)
+
+    final = module._production_case_executor(
+        case,
+        provider,
+        tmp_path / "clarification",
+    )
+
+    assert final["initial"]["status"] == "clarification_required"
+    assert final["initial"]["successful_artifact_publishable"] is False
+    assert final["clarification"]["reason_code"] == "missing_required_parameter"
+    assert final["clarification"]["answer_modes"] == ["add_detail", "cancel"]
+    assert final["clarification_answer_applied"] is True
+    assert final["status"] == "succeeded", (
+        final["status"],
+        final["reason_code"],
+    )
+    assert final["strict_reopen_verification"]["operation_count"] == 1
+    assert [item["stage"] for item in provider.attempts] == [
+        "stage1",
+        "stage1",
+        "stage2",
+    ]
+    assert [item["lineage"] for item in provider.attempts] == [
+        "initial",
+        "clarification-resume",
+        "clarification-resume",
+    ]
+
+
+def test_program_guard_transport_stops_real_api_before_stage2_or_mutation(
+    tmp_path: Path,
+) -> None:
+    module = _module()
+    transport = _ProductionPathTransport()
+    provider = module.TranscriptProvider(transport)
+    case = module.DEFAULT_CASES[2]
+    provider.set_case(case.case_id)
+
+    final = module._production_case_executor(
+        case,
+        provider,
+        tmp_path / "guard",
+    )
+
+    assert final["status"] == "unsupported", (
+        final["status"],
+        final["reason_code"],
+    )
+    assert final["reason_code"] == module.PROGRAM_GUARD_REASON
+    assert final["complete_repair_success"] is False
+    assert final["successful_artifact_publishable"] is False
+    assert [item["stage"] for item in provider.attempts] == ["stage1"]
+    assert final["program_guard_evidence"] == _guard_evidence(module)
+
+
+def test_structural_normalizer_never_invents_an_optional_axis_reference() -> None:
+    from text2ifc_ifc_repair.operations import create_default_registry
+
+    parameters = {
+        "axis": {
+            "start": {"x_mm": 0, "y_mm": 0, "z_mm": 3000},
+            "end": {"x_mm": 6000, "y_mm": 0, "z_mm": 3000},
+        },
+        "section": {
+            "shape": "rectangle",
+            "width_mm": 300,
+            "height_mm": 500,
+        },
+    }
+    prepared = create_default_registry().prepare_partial_parameters(
+        {"operation_type": "add_beam", "parameters": parameters}
+    )
+
+    assert prepared == parameters
+    assert "reference" not in prepared["axis"]
+
+
+def test_registry_projects_structural_target_without_family_branching() -> None:
+    from text2ifc_ifc_repair.operations import create_default_registry
+
+    registry = create_default_registry()
+    assert registry.bind_resolved_target("add_beam", "storey-a") == {
+        "storey_global_id": "storey-a"
+    }
+    assert registry.bind_resolved_target("add_column", "storey-b") == {
+        "storey_global_id": "storey-b"
+    }
+
+
+def test_default_preflight_runner_applies_a_bounded_timeout(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    module = _module()
+    captured: dict[str, Any] = {}
+
+    def fake_run(*_args: Any, **kwargs: Any) -> subprocess.CompletedProcess[str]:
+        captured.update(kwargs)
+        return subprocess.CompletedProcess(("git", "diff", "--check"), 0, "", "")
+
+    monkeypatch.setattr(module.subprocess, "run", fake_run)
+    module._default_command_runner(("git", "diff", "--check"), cwd=ROOT)
+
+    assert captured["timeout"] == 60
+
+
+def test_preflight_timeout_has_a_distinct_blocking_reason_and_zero_transport(
+    tmp_path: Path,
+) -> None:
+    module = _module()
+    transport = _MockTransport()
+
+    def timeout_runner(
+        command: tuple[str, ...],
+        *,
+        cwd: Path,
+    ) -> subprocess.CompletedProcess[str]:
+        del cwd
+        raise subprocess.TimeoutExpired(command, 180)
+
+    result = module.run_live_uat(
+        tmp_path / "run",
+        transport_factory=lambda: transport,
+        command_runner=timeout_runner,
+        case_executor=lambda *_args: pytest.fail("executor must not run"),
+        cases=module.DEFAULT_CASES,
+        proof_root=_proof_root(tmp_path),
+    )
+
+    assert result["status"] == "preflight_failed"
+    assert {
+        check["reason_code"] for check in result["preflight"]["checks"]
+    } == {"COMMAND_TIMEOUT"}
+    assert result["transport_calls"] == 0
+    assert transport.calls == []
+
+
+def test_strict_reopen_rejects_a_stale_source_hash(tmp_path: Path) -> None:
+    module = _module()
+    runtime = tmp_path / "runtime"
+    run_root = runtime / "runs" / "run-001"
+    run_root.mkdir(parents=True)
+    evaluation = run_root / "evaluation.json"
+    evaluation.write_text("{}", encoding="utf-8")
+    repaired = run_root / "repaired.ifc"
+    shutil.copy2(module.SOURCE, repaired)
+
+    def artifact(path: Path) -> dict[str, Any]:
+        payload = path.read_bytes()
+        return {
+            "path": path.relative_to(run_root).as_posix(),
+            "size_bytes": len(payload),
+            "sha256": hashlib.sha256(payload).hexdigest(),
+        }
+
+    (run_root / "manifest.json").write_text(
+        json.dumps(
+            {"artifacts": [artifact(evaluation), artifact(repaired)]},
+            sort_keys=True,
+        ),
+        encoding="utf-8",
+    )
+    (run_root / "state.json").write_text(
+        json.dumps(
+            {
+                "source": {
+                    "reference": str(module.SOURCE),
+                    "sha256": "sha256:" + "0" * 64,
+                }
+            },
+            sort_keys=True,
+        ),
+        encoding="utf-8",
+    )
+
+    result = module._strict_reopen_verification(
+        runtime,
+        {
+            "run_id": "run-001",
+            "successful_artifact_publishable": True,
+            "artifacts": {
+                "manifest": "manifest.json",
+                "evaluation": "evaluation.json",
+                "successful_ifc": "repaired.ifc",
+            },
+        },
+    )
+
+    assert result["status"] == "failed"
+    assert result["reason_code"] == "LIVE_SOURCE_HASH_MISMATCH"
+
+
+def test_strict_reopen_rejects_a_self_consistent_substitute_source(
+    tmp_path: Path,
+) -> None:
+    module = _module()
+    runtime = tmp_path / "runtime"
+    run_root = runtime / "runs" / "run-001"
+    run_root.mkdir(parents=True)
+    evaluation = run_root / "evaluation.json"
+    evaluation.write_text("{}", encoding="utf-8")
+    repaired = run_root / "repaired.ifc"
+    substitute = tmp_path / "substitute-damaged.ifc"
+    shutil.copy2(module.SOURCE, repaired)
+    shutil.copy2(module.SOURCE, substitute)
+
+    def artifact(path: Path) -> dict[str, Any]:
+        payload = path.read_bytes()
+        return {
+            "path": path.relative_to(run_root).as_posix(),
+            "size_bytes": len(payload),
+            "sha256": hashlib.sha256(payload).hexdigest(),
+        }
+
+    (run_root / "manifest.json").write_text(
+        json.dumps(
+            {"artifacts": [artifact(evaluation), artifact(repaired)]},
+            sort_keys=True,
+        ),
+        encoding="utf-8",
+    )
+    (run_root / "state.json").write_text(
+        json.dumps(
+            {
+                "source": {
+                    "reference": str(substitute),
+                    "sha256": "sha256:"
+                    + hashlib.sha256(substitute.read_bytes()).hexdigest(),
+                }
+            },
+            sort_keys=True,
+        ),
+        encoding="utf-8",
+    )
+
+    result = module._strict_reopen_verification(
+        runtime,
+        {
+            "run_id": "run-001",
+            "successful_artifact_publishable": True,
+            "artifacts": {
+                "manifest": "manifest.json",
+                "evaluation": "evaluation.json",
+                "successful_ifc": "repaired.ifc",
+            },
+        },
+    )
+
+    assert result["status"] == "failed"
+    assert result["reason_code"] == "LIVE_SOURCE_PATH_MISMATCH"
 
 
 @pytest.mark.parametrize(
@@ -269,6 +1060,31 @@ def test_caller_claimed_green_without_machine_artifact_is_rejected(
     assert result["transport_calls"] == 0
 
 
+def test_injected_preflight_cannot_unlock_the_production_executor(
+    tmp_path: Path,
+) -> None:
+    module = _module()
+    transport_constructed = False
+
+    def factory() -> _MockTransport:
+        nonlocal transport_constructed
+        transport_constructed = True
+        return _MockTransport()
+
+    result = module.run_live_uat(
+        tmp_path / "run",
+        transport_factory=factory,
+        command_runner=_GreenCommandRunner(),
+        proof_root=_proof_root(tmp_path),
+    )
+
+    assert result["status"] == "blocked"
+    assert result["reason_code"] == "LIVE_TEST_SEAMS_MUST_BE_PAIRED"
+    assert result["preflight"]["status"] == "not_run"
+    assert result["transport_calls"] == 0
+    assert transport_constructed is False
+
+
 @pytest.mark.parametrize(
     "evidence_mode",
     ("synthetic", "cached", "prerecorded", "hand-authored"),
@@ -311,7 +1127,7 @@ def test_green_preflight_binds_commands_results_and_artifact_hashes(
         runner=_GreenCommandRunner(),
         executor=lambda *_args: {
             "status": "unsupported",
-            "reason_code": "STRUCTURAL_PROFILE_UNSUPPORTED",
+            "reason_code": module.PROGRAM_GUARD_REASON,
             "successful_artifact_publishable": False,
         },
         cases=(),
@@ -339,6 +1155,665 @@ def test_green_preflight_binds_commands_results_and_artifact_hashes(
         for artifact in check["artifacts"]:
             assert artifact["sha256"].startswith("sha256:")
             assert artifact["size_bytes"] > 0
+
+    assert result["status"] == "blocked"
+    assert result["reason_code"] == "LIVE_CASE_MATRIX_REQUIRED"
+    assert result["transport_calls"] == 0
+
+
+def test_green_preflight_rejects_a_partial_or_substituted_live_matrix(
+    tmp_path: Path,
+) -> None:
+    module = _module()
+    transport = _MockTransport()
+
+    result = _run(
+        module,
+        tmp_path,
+        transport=transport,
+        runner=_GreenCommandRunner(),
+        executor=lambda *_args: pytest.fail("executor must not run"),
+        cases=(
+            _case(module, "complete"),
+            _case(module, "program-guard"),
+            _case(module, "substitute"),
+        ),
+    )
+
+    assert result["status"] == "blocked"
+    assert result["reason_code"] == "LIVE_CASE_MATRIX_REQUIRED"
+    assert result["transport_calls"] == 0
+    assert transport.calls == []
+
+
+def test_green_preflight_rejects_tampered_text_in_the_fixed_live_matrix(
+    tmp_path: Path,
+) -> None:
+    module = _module()
+    transport = _MockTransport()
+    tampered_complete = module.LiveCase(
+        case_id="complete",
+        request=module.COMPLETE_REQUEST + " Silently choose any nearby Type.",
+    )
+
+    result = _run(
+        module,
+        tmp_path,
+        transport=transport,
+        runner=_GreenCommandRunner(),
+        executor=lambda *_args: pytest.fail("executor must not run"),
+        cases=(
+            tampered_complete,
+            _case(module, "clarification-resume"),
+            _case(module, "program-guard"),
+        ),
+    )
+
+    assert result["status"] == "blocked"
+    assert result["reason_code"] == "LIVE_CASE_MATRIX_REQUIRED"
+    assert result["transport_calls"] == 0
+    assert transport.calls == []
+
+
+def test_paired_test_seams_are_explicitly_ineligible_as_live_acceptance(
+    tmp_path: Path,
+) -> None:
+    module = _module()
+    transport = _MockTransport()
+
+    def executor(case: Any, provider: Any, _case_root: Path) -> dict[str, Any]:
+        provider.generate_live(
+            session_id=f"mock-{case.case_id}",
+            prompt=PROFILE_PROMPT,
+            schema={"type": "object"},
+            state={"stage": "ifc_repair_intent", "attempt": 1},
+        )
+        if case.case_id == "program-guard":
+            return {
+                "status": "unsupported",
+                "reason_code": module.PROGRAM_GUARD_REASON,
+                "complete_repair_success": False,
+                "successful_artifact_publishable": False,
+                "program_guard_evidence": _guard_evidence(module),
+            }
+        return {
+            "status": "provider_failed",
+            "complete_repair_success": False,
+            "successful_artifact_publishable": False,
+        }
+
+    result = _run(
+        module,
+        tmp_path,
+        transport=transport,
+        runner=_GreenCommandRunner(),
+        executor=executor,
+        cases=module.DEFAULT_CASES,
+    )
+
+    assert result["execution_mode"] == "test_injected"
+    assert result["provider_evidence_mode"] == "test_injected"
+    assert result["acceptance_eligible"] is False
+    assert result["status"] != "passed"
+
+
+def test_production_runner_rejects_exact_transport_class_with_mimo_config(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    module = _module()
+    runner = _GreenCommandRunner()
+    executor_called = False
+
+    def production_executor(*_args: Any) -> dict[str, Any]:
+        nonlocal executor_called
+        executor_called = True
+        return {}
+
+    config = OpenAICompatRuntimeConfig(
+        provider="mimo",
+        provider_label="mimo-openai-compatible",
+        api_key="not-used",
+        api_key_env="MIMO_API_KEY",
+        base_url="https://example.invalid/v1",
+        base_url_env="OPENAI_BASE_URL",
+        model="mimo-model",
+        model_env="TEXT2IFC_MIMO_MODEL",
+        max_completion_tokens=65_536,
+        max_input_tokens=65_536,
+    )
+    transport = OpenAICompatibleLiveProvider(
+        config=config,
+        client_factory=lambda **_kwargs: object(),
+    )
+    monkeypatch.setattr(module, "_default_command_runner", runner)
+    monkeypatch.setattr(module, "_production_case_executor", production_executor)
+
+    result = module.run_live_uat(
+        tmp_path / "run",
+        transport_factory=lambda: transport,
+        command_runner=runner,
+        case_executor=production_executor,
+        cases=module.DEFAULT_CASES,
+        proof_root=_proof_root(tmp_path),
+    )
+
+    assert result["status"] == "blocked"
+    assert result["reason_code"] == "LIVE_DEEPSEEK_TRANSPORT_REQUIRED"
+    assert result["acceptance_eligible"] is False
+    assert result["transport_calls"] == 0
+    assert executor_called is False
+
+
+def test_production_runner_rejects_deepseek_labels_on_a_replay_endpoint(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    module = _module()
+    runner = _GreenCommandRunner()
+    executor_called = False
+
+    def production_executor(*_args: Any) -> dict[str, Any]:
+        nonlocal executor_called
+        executor_called = True
+        return {}
+
+    config = OpenAICompatRuntimeConfig(
+        provider="deepseek",
+        provider_label="deepseek-openai-compatible",
+        api_key="not-used",
+        api_key_env="DEEPSEEK_API_KEY",
+        base_url="http://127.0.0.1:8080/replay",
+        base_url_env="OPENAI_BASE_URL",
+        model="deepseek-chat",
+        model_env="TEXT2IFC_DEEPSEEK_MODEL",
+        max_completion_tokens=65_536,
+        max_input_tokens=65_536,
+    )
+    transport = OpenAICompatibleLiveProvider(
+        config=config,
+        client_factory=lambda **_kwargs: object(),
+    )
+    monkeypatch.setattr(module, "_default_command_runner", runner)
+    monkeypatch.setattr(module, "_production_case_executor", production_executor)
+
+    result = module.run_live_uat(
+        tmp_path / "run",
+        transport_factory=lambda: transport,
+        command_runner=runner,
+        case_executor=production_executor,
+        cases=module.DEFAULT_CASES,
+        proof_root=_proof_root(tmp_path),
+    )
+
+    assert result["status"] == "blocked"
+    assert result["reason_code"] == "LIVE_DEEPSEEK_TRANSPORT_REQUIRED"
+    assert result["transport_calls"] == 0
+    assert executor_called is False
+
+
+def test_production_runner_rejects_an_injected_client_on_the_official_endpoint(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    module = _module()
+    runner = _GreenCommandRunner()
+    executor_called = False
+
+    def production_executor(*_args: Any) -> dict[str, Any]:
+        nonlocal executor_called
+        executor_called = True
+        return {}
+
+    config = OpenAICompatRuntimeConfig(
+        provider="deepseek",
+        provider_label="deepseek-openai-compatible",
+        api_key="not-used",
+        api_key_env="DEEPSEEK_API_KEY",
+        base_url="https://api.deepseek.com",
+        base_url_env="DEEPSEEK_BASE_URL",
+        model="deepseek-chat",
+        model_env="TEXT2IFC_DEEPSEEK_MODEL",
+        max_completion_tokens=65_536,
+        max_input_tokens=65_536,
+    )
+    transport = OpenAICompatibleLiveProvider(
+        config=config,
+        client_factory=lambda **_kwargs: object(),
+    )
+    monkeypatch.setattr(module, "_default_command_runner", runner)
+    monkeypatch.setattr(module, "_production_case_executor", production_executor)
+
+    result = module.run_live_uat(
+        tmp_path / "run",
+        transport_factory=lambda: transport,
+        command_runner=runner,
+        case_executor=production_executor,
+        cases=module.DEFAULT_CASES,
+        proof_root=_proof_root(tmp_path),
+    )
+
+    assert result["status"] == "blocked"
+    assert result["reason_code"] == "LIVE_DEEPSEEK_TRANSPORT_REQUIRED"
+    assert result["transport_calls"] == 0
+    assert executor_called is False
+
+
+@pytest.mark.parametrize(
+    ("evidence_class", "include_private_gold"),
+    (("cached", False), ("live", True)),
+)
+def test_non_genuine_or_private_transport_cannot_pass_as_live(
+    tmp_path: Path,
+    evidence_class: str,
+    include_private_gold: bool,
+) -> None:
+    module = _module()
+    transport = _MockTransport(
+        [{"content": {"ok": True}} for _ in range(6)],
+        evidence_class=evidence_class,
+        include_private_gold=include_private_gold,
+    )
+
+    def call(provider: Any, *, stage: str) -> None:
+        provider.generate_live(
+            session_id=f"mock-{stage}",
+            prompt=PROFILE_PROMPT,
+            schema={"type": "object"},
+            state={"stage": stage, "attempt": 1},
+        )
+
+    strict = {
+        "status": "passed",
+        "l0_pass": True,
+        "l1_pass": True,
+        "l2_pass": True,
+    }
+
+    def executor(case: Any, provider: Any, _case_root: Path) -> dict[str, Any]:
+        call(provider, stage="ifc_repair_intent")
+        if case.case_id == "clarification-resume":
+            provider.set_lineage("clarification-resume")
+            call(provider, stage="ifc_repair_intent")
+        if case.case_id != "program-guard":
+            call(provider, stage="ifc_repair_bound_changeset")
+            final = {
+                "status": "succeeded",
+                "complete_repair_success": True,
+                "successful_artifact_publishable": True,
+                "clarification_answer_applied": (
+                    case.case_id == "clarification-resume"
+                ),
+                "strict_reopen_verification": strict,
+            }
+            if case.case_id == "clarification-resume":
+                final.update(
+                    {
+                        "initial": {
+                            "status": "clarification_required",
+                            "complete_repair_success": False,
+                            "successful_artifact_publishable": False,
+                        },
+                        "clarification": {
+                            "clarification_id": "clarification-001",
+                            "reason_code": "STRUCTURAL_REQUIRED_FIELDS_MISSING",
+                            "question": "Provide the grouped structural details.",
+                            "answer_modes": ["add_detail"],
+                        },
+                    }
+                )
+            return final
+        return {
+            "status": "unsupported",
+            "reason_code": module.PROGRAM_GUARD_REASON,
+            "complete_repair_success": False,
+            "successful_artifact_publishable": False,
+            "program_guard_evidence": _guard_evidence(module),
+        }
+
+    result = _run(
+        module,
+        tmp_path,
+        transport=transport,
+        runner=_GreenCommandRunner(),
+        executor=executor,
+        cases=(
+            _case(module, "complete"),
+            _case(module, "clarification-resume"),
+            _case(module, "program-guard"),
+        ),
+    )
+
+    assert result["status"] == "failed"
+    assert result["reason_code"] == "LIVE_CASE_CONTRACT_FAILED"
+    assert [
+        case["attempts"][0].get("evidence_class")
+        for case in result["cases"]
+    ] == [evidence_class, evidence_class, evidence_class]
+    if include_private_gold:
+        assert all(
+            case["attempts"][0]["private_evidence_detected"] is True
+            for case in result["cases"]
+        )
+        encoded = json.dumps(result, ensure_ascii=False, sort_keys=True)
+        assert "CANARY-PRIVATE-GOLD-12-13" not in encoded
+        assert "[REDACTED_PRIVATE]" in encoded
+    assert all(case["contract_pass"] is False for case in result["cases"])
+
+
+def test_published_case_without_strict_reopen_evidence_cannot_pass(
+    tmp_path: Path,
+) -> None:
+    module = _module()
+    transport = _MockTransport(
+        [{"content": {"ok": True}} for _ in range(6)]
+    )
+
+    def call(provider: Any, *, stage: str) -> None:
+        provider.generate_live(
+            session_id=f"mock-{stage}",
+            prompt=PROFILE_PROMPT,
+            schema={"type": "object"},
+            state={"stage": stage, "attempt": 1},
+        )
+
+    def executor(case: Any, provider: Any, _case_root: Path) -> dict[str, Any]:
+        call(provider, stage="ifc_repair_intent")
+        if case.case_id == "clarification-resume":
+            provider.set_lineage("clarification-resume")
+            call(provider, stage="ifc_repair_intent")
+        if case.case_id != "program-guard":
+            call(provider, stage="ifc_repair_bound_changeset")
+            return {
+                "status": "succeeded",
+                "complete_repair_success": True,
+                "successful_artifact_publishable": True,
+                "clarification_answer_applied": (
+                    case.case_id == "clarification-resume"
+                ),
+            }
+        return {
+            "status": "unsupported",
+            "reason_code": module.PROGRAM_GUARD_REASON,
+            "complete_repair_success": False,
+            "successful_artifact_publishable": False,
+            "program_guard_evidence": _guard_evidence(module),
+        }
+
+    result = _run(
+        module,
+        tmp_path,
+        transport=transport,
+        runner=_GreenCommandRunner(),
+        executor=executor,
+        cases=(
+            _case(module, "complete"),
+            _case(module, "clarification-resume"),
+            _case(module, "program-guard"),
+        ),
+    )
+
+    by_case = {item["case_id"]: item for item in result["cases"]}
+    assert result["status"] == "failed"
+    assert by_case["complete"]["contract_pass"] is False
+    assert by_case["clarification-resume"]["contract_pass"] is False
+    assert by_case["program-guard"]["contract_pass"] is True
+
+
+def test_clarification_success_requires_the_initial_grouped_stop(
+    tmp_path: Path,
+) -> None:
+    module = _module()
+    transport = _MockTransport(
+        [{"content": {"ok": True}} for _ in range(6)]
+    )
+
+    def call(provider: Any, *, stage: str) -> None:
+        provider.generate_live(
+            session_id=f"mock-{stage}",
+            prompt=PROFILE_PROMPT,
+            schema={"type": "object"},
+            state={"stage": stage, "attempt": 1},
+        )
+
+    strict = {
+        "status": "passed",
+        "l0_pass": True,
+        "l1_pass": True,
+        "l2_pass": True,
+    }
+
+    def executor(case: Any, provider: Any, _case_root: Path) -> dict[str, Any]:
+        call(provider, stage="ifc_repair_intent")
+        if case.case_id == "clarification-resume":
+            provider.set_lineage("clarification-resume")
+            call(provider, stage="ifc_repair_intent")
+        if case.case_id != "program-guard":
+            call(provider, stage="ifc_repair_bound_changeset")
+            final = {
+                "status": "succeeded",
+                "complete_repair_success": True,
+                "successful_artifact_publishable": True,
+                "clarification_answer_applied": (
+                    case.case_id == "clarification-resume"
+                ),
+                "strict_reopen_verification": strict,
+            }
+            if case.case_id == "clarification-resume":
+                final.update(
+                    {
+                        "initial": {
+                            "status": "succeeded",
+                            "complete_repair_success": True,
+                            "successful_artifact_publishable": True,
+                        },
+                        "clarification": None,
+                    }
+                )
+            return final
+        return {
+            "status": "unsupported",
+            "reason_code": module.PROGRAM_GUARD_REASON,
+            "complete_repair_success": False,
+            "successful_artifact_publishable": False,
+            "program_guard_evidence": _guard_evidence(module),
+        }
+
+    result = _run(
+        module,
+        tmp_path,
+        transport=transport,
+        runner=_GreenCommandRunner(),
+        executor=executor,
+        cases=(
+            _case(module, "complete"),
+            _case(module, "clarification-resume"),
+            _case(module, "program-guard"),
+        ),
+    )
+
+    by_case = {item["case_id"]: item for item in result["cases"]}
+    assert result["status"] == "failed"
+    assert by_case["complete"]["contract_pass"] is True
+    assert by_case["clarification-resume"]["contract_pass"] is False
+    assert by_case["program-guard"]["contract_pass"] is True
+
+
+def test_program_guard_requires_the_frozen_capability_reason(
+    tmp_path: Path,
+) -> None:
+    module = _module()
+    transport = _MockTransport(
+        [{"content": {"ok": True}} for _ in range(6)]
+    )
+
+    def call(provider: Any, *, stage: str) -> None:
+        provider.generate_live(
+            session_id=f"mock-{stage}",
+            prompt=PROFILE_PROMPT,
+            schema={"type": "object"},
+            state={"stage": stage, "attempt": 1},
+        )
+
+    strict = {
+        "status": "passed",
+        "l0_pass": True,
+        "l1_pass": True,
+        "l2_pass": True,
+    }
+    clarification = {
+        "clarification_id": "clarification-001",
+        "reason_code": "STRUCTURAL_REQUIRED_FIELDS_MISSING",
+        "question": "Provide the grouped structural details.",
+        "answer_modes": ["add_detail"],
+    }
+
+    def executor(case: Any, provider: Any, _case_root: Path) -> dict[str, Any]:
+        call(provider, stage="ifc_repair_intent")
+        if case.case_id == "clarification-resume":
+            provider.set_lineage("clarification-resume")
+            call(provider, stage="ifc_repair_intent")
+        if case.case_id != "program-guard":
+            call(provider, stage="ifc_repair_bound_changeset")
+            final = {
+                "status": "succeeded",
+                "complete_repair_success": True,
+                "successful_artifact_publishable": True,
+                "clarification_answer_applied": (
+                    case.case_id == "clarification-resume"
+                ),
+                "strict_reopen_verification": strict,
+            }
+            if case.case_id == "clarification-resume":
+                final.update(
+                    {
+                        "initial": {
+                            "status": "clarification_required",
+                            "complete_repair_success": False,
+                            "successful_artifact_publishable": False,
+                        },
+                        "clarification": clarification,
+                    }
+                )
+            return final
+        return {
+            "status": "unsupported",
+            "reason_code": "SOME_OTHER_UNSUPPORTED_REASON",
+            "complete_repair_success": False,
+            "successful_artifact_publishable": False,
+        }
+
+    result = _run(
+        module,
+        tmp_path,
+        transport=transport,
+        runner=_GreenCommandRunner(),
+        executor=executor,
+        cases=(
+            _case(module, "complete"),
+            _case(module, "clarification-resume"),
+            _case(module, "program-guard"),
+        ),
+    )
+
+    by_case = {item["case_id"]: item for item in result["cases"]}
+    assert result["status"] == "failed"
+    assert by_case["complete"]["contract_pass"] is True
+    assert by_case["clarification-resume"]["contract_pass"] is True
+    assert by_case["program-guard"]["contract_pass"] is False
+
+
+@pytest.mark.parametrize(
+    "guard_evidence",
+    (
+        {},
+        {"source_unchanged": False},
+        {"mutation_attempted": True},
+        {"candidate_output_paths": ["candidate.ifc"]},
+        {"source_sha256_after": "sha256:" + "f" * 64},
+    ),
+)
+def test_program_guard_requires_source_bound_zero_mutation_evidence(
+    tmp_path: Path,
+    guard_evidence: dict[str, Any],
+) -> None:
+    module = _module()
+    transport = _MockTransport(
+        [{"content": {"ok": True}} for _ in range(6)]
+    )
+
+    def call(provider: Any, *, stage: str) -> None:
+        provider.generate_live(
+            session_id=f"mock-{stage}",
+            prompt=PROFILE_PROMPT,
+            schema={"type": "object"},
+            state={"stage": stage, "attempt": 1},
+        )
+
+    strict = {
+        "status": "passed",
+        "l0_pass": True,
+        "l1_pass": True,
+        "l2_pass": True,
+    }
+    clarification = {
+        "clarification_id": "clarification-001",
+        "reason_code": "STRUCTURAL_REQUIRED_FIELDS_MISSING",
+        "question": "Provide the grouped structural details.",
+        "answer_modes": ["add_detail"],
+    }
+
+    def executor(case: Any, provider: Any, _case_root: Path) -> dict[str, Any]:
+        call(provider, stage="ifc_repair_intent")
+        if case.case_id == "clarification-resume":
+            provider.set_lineage("clarification-resume")
+            call(provider, stage="ifc_repair_intent")
+        if case.case_id != "program-guard":
+            call(provider, stage="ifc_repair_bound_changeset")
+            final = {
+                "status": "succeeded",
+                "complete_repair_success": True,
+                "successful_artifact_publishable": True,
+                "clarification_answer_applied": (
+                    case.case_id == "clarification-resume"
+                ),
+                "strict_reopen_verification": strict,
+            }
+            if case.case_id == "clarification-resume":
+                final.update(
+                    {
+                        "initial": {
+                            "status": "clarification_required",
+                            "complete_repair_success": False,
+                            "successful_artifact_publishable": False,
+                        },
+                        "clarification": clarification,
+                    }
+                )
+            return final
+        return {
+            "status": "unsupported",
+            "reason_code": module.PROGRAM_GUARD_REASON,
+            "complete_repair_success": False,
+            "successful_artifact_publishable": False,
+            "program_guard_evidence": (
+                guard_evidence
+                if not guard_evidence
+                else _guard_evidence(module, **guard_evidence)
+            ),
+        }
+
+    result = _run(
+        module,
+        tmp_path,
+        transport=transport,
+        runner=_GreenCommandRunner(),
+        executor=executor,
+        cases=module.DEFAULT_CASES,
+    )
+
+    by_case = {item["case_id"]: item for item in result["cases"]}
+    assert by_case["program-guard"]["contract_pass"] is False
 
 
 def test_complete_clarification_resume_and_program_guard_have_exact_lineage(
@@ -372,6 +1847,13 @@ def test_complete_clarification_resume_and_program_guard_have_exact_lineage(
             state={"stage": stage, "attempt": attempt},
         )
 
+    strict = {
+        "status": "passed",
+        "l0_pass": True,
+        "l1_pass": True,
+        "l2_pass": True,
+    }
+
     def executor(case: Any, provider: Any, _case_root: Path) -> dict[str, Any]:
         if case.case_id == "complete":
             provider.set_lineage("initial")
@@ -399,6 +1881,7 @@ def test_complete_clarification_resume_and_program_guard_have_exact_lineage(
                 "status": "succeeded",
                 "complete_repair_success": True,
                 "successful_artifact_publishable": True,
+                "strict_reopen_verification": strict,
             }
         if case.case_id == "clarification-resume":
             provider.set_lineage("initial")
@@ -411,15 +1894,28 @@ def test_complete_clarification_resume_and_program_guard_have_exact_lineage(
                 "complete_repair_success": True,
                 "successful_artifact_publishable": True,
                 "clarification_answer_applied": True,
+                "strict_reopen_verification": strict,
+                "initial": {
+                    "status": "clarification_required",
+                    "complete_repair_success": False,
+                    "successful_artifact_publishable": False,
+                },
+                "clarification": {
+                    "clarification_id": "clarification-001",
+                    "reason_code": "STRUCTURAL_REQUIRED_FIELDS_MISSING",
+                    "question": "Provide the grouped structural details.",
+                    "answer_modes": ["add_detail"],
+                },
             }
         if case.case_id == "program-guard":
             provider.set_lineage("initial")
             call(provider, stage="ifc_repair_intent", attempt=1, prompt=PROFILE_PROMPT)
             return {
                 "status": "unsupported",
-                "reason_code": "STRUCTURAL_PROFILE_UNSUPPORTED",
+                "reason_code": module.PROGRAM_GUARD_REASON,
                 "complete_repair_success": False,
                 "successful_artifact_publishable": False,
+                "program_guard_evidence": _guard_evidence(module),
             }
         raise AssertionError(case.case_id)
 
@@ -431,12 +1927,14 @@ def test_complete_clarification_resume_and_program_guard_have_exact_lineage(
         executor=executor,
         cases=(
             _case(module, "complete"),
-            _case(module, "clarification-resume", feedback="bounded answer"),
+            _case(module, "clarification-resume"),
             _case(module, "program-guard"),
         ),
     )
 
-    assert result["status"] == "passed"
+    assert result["status"] == "test_passed"
+    assert result["execution_mode"] == "test_injected"
+    assert result["acceptance_eligible"] is False
     assert result["transport_calls"] == 8
     assert result["transport_calls_by_stage"] == {"stage1": 5, "stage2": 3}
     by_case = {item["case_id"]: item for item in result["cases"]}
@@ -485,8 +1983,14 @@ def test_complete_clarification_resume_and_program_guard_have_exact_lineage(
     assert complete_attempts[0]["provider"] == "mock-deepseek"
     assert complete_attempts[0]["model"] == "mock-reasoner"
     assert complete_attempts[0]["usage"]["prompt_tokens"] == 101
+    assert complete_attempts[0]["raw_request_sha256"].startswith("sha256:")
+    assert complete_attempts[0]["raw_response_sha256"].startswith("sha256:")
     assert complete_attempts[0]["request_sha256"].startswith("sha256:")
     assert complete_attempts[0]["response_sha256"].startswith("sha256:")
+    assert (
+        complete_attempts[0]["raw_request_sha256"]
+        != complete_attempts[0]["request_sha256"]
+    )
     assert complete_attempts[0]["profile_hashes"] == [HASH_A]
     assert complete_attempts[0]["few_shot_hashes"] == [HASH_B]
     assert result["provider_models"] == [
@@ -498,5 +2002,3 @@ def test_complete_clarification_resume_and_program_guard_have_exact_lineage(
     assert "SECRET-TRANSPORT-TOKEN" not in encoded
     assert "CANARY-PRIVATE-GOLD-12-13" not in encoded
     assert "[REDACTED]" in encoded
-    assert "[REDACTED_PRIVATE]" in encoded
-

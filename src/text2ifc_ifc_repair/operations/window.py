@@ -262,6 +262,10 @@ WINDOW_L1_AUTHORIZATION = {
         "semantic_material_relationship": "IfcRelAssociatesMaterial",
         "semantic_classification_relationship": "IfcRelAssociatesClassification",
         **{
+            f"semantic_material_relationship_{index}": "IfcRelAssociatesMaterial"
+            for index in range(2, 65)
+        },
+        **{
             f"semantic_pset_{index}": "IfcPropertySet"
             for index in range(2, 65)
         },
@@ -322,6 +326,13 @@ WINDOW_L1_AUTHORIZATION = {
         "semantic_material_relationship": {
             "ifc_class": "IfcRelAssociatesMaterial",
             "added_endpoint_roles": ("window",),
+        },
+        **{
+            f"semantic_material_relationship_{index}": {
+                "ifc_class": "IfcRelAssociatesMaterial",
+                "added_endpoint_roles": ("window",),
+            }
+            for index in range(2, 65)
         },
         "semantic_classification_relationship": {
             "ifc_class": "IfcRelAssociatesClassification",

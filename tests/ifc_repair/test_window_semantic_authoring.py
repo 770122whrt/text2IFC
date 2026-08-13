@@ -8,7 +8,15 @@ from text2ifc_ifc_repair.semantic_authoring import apply_semantic_assignments
 from text2ifc_ifc_repair.semantic_facts import extract_ifc_semantic_facts
 
 
-def _assignment(fact_key, value, value_type, action, *, source_ref="request:/fixture"):
+def _assignment(
+    fact_key,
+    value,
+    value_type,
+    action,
+    *,
+    source_ref="request:/fixture",
+    source_kind="deterministic_policy",
+):
     return {
         "operation_id": "operation-window-001",
         "fact_key": fact_key,
@@ -18,7 +26,7 @@ def _assignment(fact_key, value, value_type, action, *, source_ref="request:/fix
         "unit": None,
         "ownership": "occurrence_direct",
         "applicability": "required" if fact_key.startswith(("attribute:", "quantity:", "pset:")) else "conditional",
-        "source_kind": "deterministic_policy",
+        "source_kind": source_kind,
         "source_ref": source_ref,
         "provenance": ["test:fixture"],
         "authoring_action": action,
@@ -111,3 +119,133 @@ def test_generic_semantic_dispatch_reopens_typed_window_facts(tmp_path) -> None:
         "semantic_quantity_relationship", "semantic_material_relationship",
         "semantic_classification_relationship",
     }
+
+
+def test_window_semantic_dispatch_preserves_multiple_authorized_materials() -> None:
+    model = ifcopenshell.file(schema="IFC2X3")
+    organization = model.create_entity("IfcOrganization", Name="Phase 12")
+    application = model.create_entity(
+        "IfcApplication",
+        ApplicationDeveloper=organization,
+        Version="0.1",
+        ApplicationFullName="text2ifc test",
+        ApplicationIdentifier="text2ifc",
+    )
+    person = model.create_entity("IfcPerson", FamilyName="Tester")
+    user = model.create_entity(
+        "IfcPersonAndOrganization",
+        ThePerson=person,
+        TheOrganization=organization,
+    )
+    owner_history = model.create_entity(
+        "IfcOwnerHistory",
+        OwningUser=user,
+        OwningApplication=application,
+        ChangeAction="ADDED",
+        CreationDate=0,
+    )
+    window = model.create_entity(
+        "IfcWindow",
+        GlobalId="0000000000000000000002",
+        OwnerHistory=owner_history,
+    )
+    glass = model.create_entity("IfcMaterial", Name="Glass")
+    sash = model.create_entity("IfcMaterial", Name="Sash")
+
+    result = apply_semantic_assignments(
+        model=model,
+        operation={
+            "operation_id": "operation-window-001",
+            "semantic_assignments": [
+                _assignment(
+                    "material:Glass",
+                    "Glass",
+                    "IfcMaterial",
+                    "reuse_material",
+                    source_ref=f"resource:step:{glass.id()}",
+                ),
+                _assignment(
+                    "material:Sash",
+                    "Sash",
+                    "IfcMaterial",
+                    "reuse_material",
+                    source_ref=f"resource:step:{sash.id()}",
+                ),
+            ],
+        },
+        application={
+            "created": [{"role": "window", "global_id": str(window.GlobalId)}]
+        },
+        target_role="window",
+    )
+
+    assert {
+        str(relation.RelatingMaterial.Name)
+        for relation in window.HasAssociations
+        if relation.is_a("IfcRelAssociatesMaterial")
+    } == {"Glass", "Sash"}
+    assert {
+        item["role"] for item in result["created"]
+    } == {
+        "semantic_material_relationship",
+        "semantic_material_relationship_2",
+    }
+
+
+def test_window_explicit_material_uses_the_exact_requested_label() -> None:
+    model = ifcopenshell.file(schema="IFC2X3")
+    organization = model.create_entity("IfcOrganization", Name="Phase 12")
+    application = model.create_entity(
+        "IfcApplication",
+        ApplicationDeveloper=organization,
+        Version="0.1",
+        ApplicationFullName="text2ifc test",
+        ApplicationIdentifier="text2ifc",
+    )
+    person = model.create_entity("IfcPerson", FamilyName="Tester")
+    user = model.create_entity(
+        "IfcPersonAndOrganization",
+        ThePerson=person,
+        TheOrganization=organization,
+    )
+    owner_history = model.create_entity(
+        "IfcOwnerHistory",
+        OwningUser=user,
+        OwningApplication=application,
+        ChangeAction="ADDED",
+        CreationDate=0,
+    )
+    window = model.create_entity(
+        "IfcWindow",
+        GlobalId="0000000000000000000003",
+        OwnerHistory=owner_history,
+    )
+
+    apply_semantic_assignments(
+        model=model,
+        operation={
+            "operation_id": "operation-window-001",
+            "semantic_assignments": [
+                _assignment(
+                    "material:Powder-coated-Aluminium",
+                    "Powder-coated Aluminium",
+                    "IfcMaterial",
+                    "reuse_material",
+                    source_ref="request:/materials/0",
+                    source_kind="explicit_request",
+                )
+            ],
+        },
+        application={
+            "created": [{"role": "window", "global_id": str(window.GlobalId)}]
+        },
+        target_role="window",
+    )
+
+    relations = [
+        relation
+        for relation in window.HasAssociations
+        if relation.is_a("IfcRelAssociatesMaterial")
+    ]
+    assert len(relations) == 1
+    assert relations[0].RelatingMaterial.Name == "Powder-coated Aluminium"
