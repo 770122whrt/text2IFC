@@ -2090,9 +2090,13 @@ def _curation_attempt(
         "profile_versions": ["0.1" for _profile in profiles],
         "profile_hashes": [HASH_A for _profile in profiles],
         "few_shot_ids": (
-            ["beam.add.complete"] if stage == "stage2" else []
+            [f"{profile}.complete" for profile in profiles]
+            if stage == "stage2"
+            else []
         ),
-        "few_shot_hashes": [HASH_B] if stage == "stage2" else [],
+        "few_shot_hashes": (
+            [HASH_B for _profile in profiles] if stage == "stage2" else []
+        ),
     }
 
 
@@ -2179,6 +2183,8 @@ def _curation_case(
         "live_evidence_pass": True,
         "private_evidence_detected": False,
         "contract_pass": True,
+        "proof_acceptance_eligible": False,
+        "proof_validation_status": "pending_plan_12_14",
     }
 
 
@@ -2208,6 +2214,8 @@ def _valid_live_curation_result() -> dict[str, Any]:
         "execution_mode": "production_live",
         "provider_evidence_mode": "live",
         "runner_contract_eligible": True,
+        "acceptance_eligible": False,
+        "proof_validation_status": "pending_plan_12_14",
         "synthetic_fallback_used": False,
         "transport_calls": 6,
         "transport_calls_by_stage": {"stage1": 4, "stage2": 2},
@@ -2242,6 +2250,7 @@ def test_live_curator_accepts_only_complete_and_resumed_success_transcripts() ->
         ("redacted_hash_mismatch", "LIVE_ATTEMPT_REDACTED_HASH_MISMATCH"),
         ("missing_profile_hash", "LIVE_ATTEMPT_PROFILE_HASH_REQUIRED"),
         ("missing_few_shot_hash", "LIVE_ATTEMPT_FEW_SHOT_HASH_REQUIRED"),
+        ("missing_profile_few_shot", "LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH"),
         ("fallback_true", "LIVE_ATTEMPT_FALLBACK_FLAG"),
         ("missing_response_id", "LIVE_ATTEMPT_RESPONSE_ID_REQUIRED"),
         ("wrong_profile", "LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH"),
@@ -2253,6 +2262,9 @@ def test_live_curator_accepts_only_complete_and_resumed_success_transcripts() ->
         ("case_count_mismatch", "LIVE_CASE_STAGE_COUNT_MISMATCH"),
         ("aggregate_count_mismatch", "LIVE_AGGREGATE_STAGE_COUNT_MISMATCH"),
         ("provider_model_aggregate", "LIVE_PROVIDER_MODEL_AGGREGATE_MISMATCH"),
+        ("usage_metadata_mismatch", "LIVE_ATTEMPT_METADATA_INVALID"),
+        ("provider_identity", "LIVE_ATTEMPT_PROVIDER_IDENTITY_INVALID"),
+        ("acceptance_self_claim", "LIVE_PROOF_ACCEPTANCE_SELF_CLAIM"),
         ("clarification_lineage", "LIVE_CLARIFICATION_LINEAGE_INVALID"),
         ("terminal_publication", "LIVE_SUCCESS_TERMINAL_INVALID"),
         ("synthetic_fallback", "LIVE_SYNTHETIC_FALLBACK_NOT_FALSE"),
@@ -2281,6 +2293,9 @@ def test_live_curator_rejects_each_single_transcript_defect(
         first["profile_hashes"] = []
     elif defect == "missing_few_shot_hash":
         stage2["few_shot_hashes"] = []
+    elif defect == "missing_profile_few_shot":
+        stage2["few_shot_ids"].pop()
+        stage2["few_shot_hashes"].pop()
     elif defect == "fallback_true":
         first["fallback_flags"]["cached"] = True
     elif defect == "missing_response_id":
@@ -2305,6 +2320,16 @@ def test_live_curator_rejects_each_single_transcript_defect(
         result["transport_calls_by_stage"]["stage1"] = 5
     elif defect == "provider_model_aggregate":
         result["provider_models"][0]["model"] = "unrelated-model"
+    elif defect == "usage_metadata_mismatch":
+        first["metadata"]["usage"]["total_tokens"] = 999
+    elif defect == "provider_identity":
+        first["provider"] = "fake-deepseek"
+        first["metadata"]["provider"] = "fake-deepseek"
+        result["provider_models"].append(
+            {"provider": "fake-deepseek", "model": "deepseek-chat"}
+        )
+    elif defect == "acceptance_self_claim":
+        result["acceptance_eligible"] = True
     elif defect == "clarification_lineage":
         result["cases"][1]["attempts"][1]["lineage"] = "initial"
     elif defect == "terminal_publication":

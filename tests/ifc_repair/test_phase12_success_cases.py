@@ -716,6 +716,11 @@ def _live_attempt(
         "completion_tokens": 50,
         "total_tokens": 150,
     }
+    profiles = {
+        "complete": ["beam.add", "column.add"],
+        "clarification-resume": ["column.add"],
+        "program-guard": ["beam.add"],
+    }[case_id]
     return {
         "attempt_id": attempt_id,
         "parent_attempt_id": parent,
@@ -752,12 +757,18 @@ def _live_attempt(
             "usage": usage,
         },
         "error": None,
-        "profile_ids": ["beam.add", "column.add"],
-        "profile_versions": ["0.1"],
-        "profile_hashes": ["sha256:" + "a" * 64],
-        "few_shot_ids": ["structural.complete"] if stage == "stage2" else [],
+        "profile_ids": profiles,
+        "profile_versions": ["0.1" for _profile in profiles],
+        "profile_hashes": ["sha256:" + "a" * 64 for _profile in profiles],
+        "few_shot_ids": (
+            [f"{profile}.complete" for profile in profiles]
+            if stage == "stage2"
+            else []
+        ),
         "few_shot_hashes": (
-            ["sha256:" + "b" * 64] if stage == "stage2" else []
+            ["sha256:" + "b" * 64 for _profile in profiles]
+            if stage == "stage2"
+            else []
         ),
     }
 
@@ -876,6 +887,8 @@ def _live_result(
             "live_evidence_pass": True,
             "private_evidence_detected": False,
             "contract_pass": True,
+            "proof_acceptance_eligible": False,
+            "proof_validation_status": "pending_plan_12_14",
         },
         {
             "case_id": "clarification-resume",
@@ -906,6 +919,8 @@ def _live_result(
             "live_evidence_pass": True,
             "private_evidence_detected": False,
             "contract_pass": True,
+            "proof_acceptance_eligible": False,
+            "proof_validation_status": "pending_plan_12_14",
         },
         {
             "case_id": "program-guard",
@@ -934,6 +949,8 @@ def _live_result(
             "live_evidence_pass": True,
             "private_evidence_detected": False,
             "contract_pass": True,
+            "proof_acceptance_eligible": False,
+            "proof_validation_status": "pending_plan_12_14",
         },
     ]
     return {
@@ -943,6 +960,8 @@ def _live_result(
         "execution_mode": "production_live",
         "provider_evidence_mode": "live",
         "runner_contract_eligible": True,
+        "acceptance_eligible": False,
+        "proof_validation_status": "pending_plan_12_14",
         "synthetic_fallback_used": False,
         "transport_calls": 6,
         "transport_calls_by_stage": {"stage1": 4, "stage2": 2},
