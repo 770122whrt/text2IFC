@@ -1,10 +1,13 @@
 from __future__ import annotations
 
 import hashlib
+import importlib.util
 import json
 import shutil
+import subprocess
+import sys
 from pathlib import Path
-from typing import Any, Mapping
+from typing import Any, Mapping, Sequence
 
 import ifcopenshell
 import ifcopenshell.guid
@@ -35,6 +38,17 @@ BASE_DAMAGE_CASE = (
 )
 LIVE_CASE_ID = "phase12-live-deepseek-complete"
 LIVE_CASE_PATH = Path("structural") / "live" / LIVE_CASE_ID
+CURATOR_SCRIPT = ROOT / "scripts/ifc_repair/curate_phase12_live_proof.py"
+
+
+def _curator_module():
+    spec = importlib.util.spec_from_file_location(
+        "phase12_live_curator_success_cases", CURATOR_SCRIPT
+    )
+    assert spec is not None and spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
 
 
 def _sha256(path: Path) -> str:
@@ -1137,3 +1151,203 @@ def test_validator_cli_accepts_the_frozen_root_option(
     assert captured["root"] == tmp_path
     payload = json.loads(capsys.readouterr().out)
     assert payload["status"] == "passed"
+
+
+def _curator_source_run(tmp_path: Path) -> Path:
+    source = tmp_path / "source-live-run"
+    source.mkdir()
+    intent = json.loads(
+        (BASE_DAMAGE_CASE / "repair-intent.json").read_text(encoding="utf-8")
+    )
+    changeset = json.loads(
+        (BASE_DAMAGE_CASE / "changeset.json").read_text(encoding="utf-8")
+    )
+    live_result = _live_result(
+        intent=intent,
+        changeset=changeset,
+        damaged_sha256=_sha256(BASE_DAMAGE_CASE / "damaged.ifc"),
+    )
+    for case in live_result["cases"]:
+        case_id = str(case["case_id"])
+        case_root = source / "cases" / case_id
+        case_root.mkdir(parents=True)
+        _write_json(case_root / "case-result.json", case)
+        if case_id == "program-guard":
+            continue
+        run_id = f"run-{case_id}"
+        case["final"]["run_id"] = run_id
+        run_root = case_root / "runtime" / "runs" / run_id
+        (run_root / "intent").mkdir(parents=True)
+        (run_root / "changeset" / "attempt-001").mkdir(parents=True)
+        (run_root / "publication" / "terminal").mkdir(parents=True)
+        shutil.copy2(
+            BASE_DAMAGE_CASE / "repair-intent.json",
+            run_root / "intent" / "repair-intent.json",
+        )
+        shutil.copy2(
+            BASE_DAMAGE_CASE / "target-resolution.json",
+            run_root / "resolution.json",
+        )
+        for destination in (
+            run_root / "changeset.json",
+            run_root / "changeset" / "bound-changeset.json",
+        ):
+            shutil.copy2(BASE_DAMAGE_CASE / "changeset.json", destination)
+        shutil.copy2(
+            BASE_DAMAGE_CASE / "semantic-manifests.json",
+            run_root / "changeset" / "semantic-manifests.json",
+        )
+        shutil.copy2(
+            BASE_DAMAGE_CASE / "evaluation.json",
+            run_root / "evaluation.json",
+        )
+        shutil.copy2(
+            BASE_DAMAGE_CASE / "repaired.ifc",
+            run_root / "repaired.ifc",
+        )
+        _write_json(
+            run_root / "publication" / "terminal" / "evidence.json",
+            {
+                "evidence": {
+                    "application": json.loads(
+                        (BASE_DAMAGE_CASE / "application.json").read_text(
+                            encoding="utf-8"
+                        )
+                    )
+                }
+            },
+        )
+        publication_artifacts = []
+        for artifact in (
+            run_root / "evaluation.json",
+            run_root / "repaired.ifc",
+            run_root / "publication" / "terminal" / "evidence.json",
+        ):
+            publication_artifacts.append(
+                {
+                    "path": artifact.relative_to(run_root).as_posix(),
+                    "size_bytes": artifact.stat().st_size,
+                    "sha256": _sha256(artifact),
+                }
+            )
+        _write_json(
+            run_root / "publication" / "manifest.json",
+            {"artifacts": publication_artifacts},
+        )
+        _write_json(
+            run_root / "state.json",
+            {
+                "run_id": run_id,
+                "source": {
+                    "reference": str((BASE_DAMAGE_CASE / "damaged.ifc").resolve()),
+                    "sha256": _sha256(BASE_DAMAGE_CASE / "damaged.ifc"),
+                },
+                "status": "succeeded",
+            },
+        )
+        _write_json(
+            run_root / "transitions.json",
+            {"run_id": run_id, "terminal_status": "succeeded"},
+        )
+        _write_json(
+            run_root / "changeset" / "prompt-profile-selection.json",
+            {
+                "profile_ids": ["beam.add", "column.add"],
+                "profile_hashes": ["sha256:" + "a" * 64],
+            },
+        )
+        for index, attempt in enumerate(case["attempts"], start=1):
+            _write_json(
+                run_root
+                / (
+                    f"intent/attempt-{index:03d}.json"
+                    if attempt["stage"] == "stage1"
+                    else "changeset/attempt-001/provider-metadata.json"
+                ),
+                attempt,
+            )
+        case["final"]["artifacts"] = {
+            "manifest": "publication/manifest.json",
+            "evaluation": "evaluation.json",
+            "successful_ifc": "repaired.ifc",
+        }
+        _write_json(case_root / "case-result.json", case)
+    _write_json(source / "live-uat-result.json", live_result)
+    preflight = {
+        "schema_version": "text2ifc/phase12-live-preflight/0.1",
+        "status": "passed",
+        "checks": [],
+    }
+    preflight["evidence_sha256"] = _canonical_transport_sha256(preflight)
+    (source / "preflight").mkdir()
+    _write_json(source / "preflight" / "preflight.json", preflight)
+    return source
+
+
+def _tree_bytes(root: Path) -> dict[str, bytes]:
+    return {
+        path.relative_to(root).as_posix(): path.read_bytes()
+        for path in root.rglob("*")
+        if path.is_file()
+    }
+
+
+def test_public_curate_runs_validator_in_a_separate_process_before_install(
+    tmp_path: Path,
+) -> None:
+    curator = _curator_module()
+    source = _curator_source_run(tmp_path)
+    proof = tmp_path / "proof"
+    proof.mkdir()
+    _write_json(
+        proof / "manifest.json",
+        {
+            "schema_version": "text2ifc/ifc-repair-success-collection/0.1",
+            "case_count": 0,
+            "cases": [],
+        },
+    )
+    (proof / "README.md").write_text("# Proof\n", encoding="utf-8")
+    before = _tree_bytes(proof)
+    calls: list[tuple[tuple[str, ...], Path]] = []
+
+    def failed_validator(
+        command: Sequence[str],
+        *,
+        cwd: Path,
+    ) -> subprocess.CompletedProcess[str]:
+        calls.append((tuple(str(item) for item in command), cwd))
+        return subprocess.CompletedProcess(
+            command,
+            1,
+            json.dumps(
+                {
+                    "schema_version": "text2ifc/ifc-repair-proof-validation/0.1",
+                    "status": "failed",
+                    "case_count": 2,
+                    "independently_recomputed_case_count": 0,
+                    "legacy_unverifiable_case_count": 0,
+                    "errors": ["injected independent failure"],
+                    "cases": [],
+                }
+            ),
+            "",
+        )
+
+    with pytest.raises(ValueError, match="LIVE_CANDIDATE_VALIDATION_FAILED"):
+        curator.curate(
+            source,
+            proof,
+            validator_runner=failed_validator,
+        )
+
+    assert len(calls) == 1
+    command, cwd = calls[0]
+    assert Path(command[0]).resolve() == Path(sys.executable).resolve()
+    assert Path(command[1]).resolve() == CURATOR_SCRIPT.with_name(
+        "validate_success_cases.py"
+    ).resolve()
+    assert "--root" in command
+    assert cwd == ROOT
+    assert _tree_bytes(proof) == before
+    assert not list(proof.glob("structural/live/*"))

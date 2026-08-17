@@ -8,7 +8,7 @@ import shutil
 import subprocess
 from collections import deque
 from pathlib import Path
-from typing import Any
+from typing import Any, Mapping
 
 import pytest
 
@@ -2037,6 +2037,11 @@ def _curation_attempt(
     ).hexdigest()
     prompt_hash = canonical(request)
     response_hash = canonical(response)
+    profiles = {
+        "complete": ["beam.add", "column.add"],
+        "clarification-resume": ["column.add"],
+        "program-guard": ["beam.add"],
+    }[case_id]
     return {
         "attempt_id": attempt_id,
         "parent_attempt_id": parent_attempt_id,
@@ -2081,9 +2086,9 @@ def _curation_attempt(
             },
         },
         "error": None,
-        "profile_ids": ["beam.add"],
-        "profile_versions": ["0.1"],
-        "profile_hashes": [HASH_A],
+        "profile_ids": profiles,
+        "profile_versions": ["0.1" for _profile in profiles],
+        "profile_hashes": [HASH_A for _profile in profiles],
         "few_shot_ids": (
             ["beam.add.complete"] if stage == "stage2" else []
         ),
@@ -2239,10 +2244,15 @@ def test_live_curator_accepts_only_complete_and_resumed_success_transcripts() ->
         ("missing_few_shot_hash", "LIVE_ATTEMPT_FEW_SHOT_HASH_REQUIRED"),
         ("fallback_true", "LIVE_ATTEMPT_FALLBACK_FLAG"),
         ("missing_response_id", "LIVE_ATTEMPT_RESPONSE_ID_REQUIRED"),
+        ("wrong_profile", "LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH"),
         ("ordinal_mismatch", "LIVE_ATTEMPT_ORDINAL_MISMATCH"),
+        ("broken_parent", "LIVE_ATTEMPT_PARENT_MISMATCH"),
+        ("duplicate_attempt", "LIVE_ATTEMPT_ID_MISMATCH"),
+        ("non_200", "LIVE_ATTEMPT_TRANSPORT_INVALID"),
         ("missing_correction_reason", "LIVE_ATTEMPT_CORRECTION_REASON_REQUIRED"),
         ("case_count_mismatch", "LIVE_CASE_STAGE_COUNT_MISMATCH"),
         ("aggregate_count_mismatch", "LIVE_AGGREGATE_STAGE_COUNT_MISMATCH"),
+        ("provider_model_aggregate", "LIVE_PROVIDER_MODEL_AGGREGATE_MISMATCH"),
         ("clarification_lineage", "LIVE_CLARIFICATION_LINEAGE_INVALID"),
         ("terminal_publication", "LIVE_SUCCESS_TERMINAL_INVALID"),
         ("synthetic_fallback", "LIVE_SYNTHETIC_FALLBACK_NOT_FALSE"),
@@ -2275,14 +2285,26 @@ def test_live_curator_rejects_each_single_transcript_defect(
         first["fallback_flags"]["cached"] = True
     elif defect == "missing_response_id":
         first["metadata"].pop("response_id")
+    elif defect == "wrong_profile":
+        first["profile_ids"].append("door.fill-existing-opening")
+        first["profile_versions"].append("0.1")
+        first["profile_hashes"].append(HASH_B)
     elif defect == "ordinal_mismatch":
         first["ordinal"] = 2
+    elif defect == "broken_parent":
+        stage2["parent_attempt_id"] = None
+    elif defect == "duplicate_attempt":
+        stage2["attempt_id"] = first["attempt_id"]
+    elif defect == "non_200":
+        first["http_status"] = 503
     elif defect == "missing_correction_reason":
         first["stage_attempt"] = 2
     elif defect == "case_count_mismatch":
         complete["transport_calls_by_stage"]["stage1"] = 2
     elif defect == "aggregate_count_mismatch":
         result["transport_calls_by_stage"]["stage1"] = 5
+    elif defect == "provider_model_aggregate":
+        result["provider_models"][0]["model"] = "unrelated-model"
     elif defect == "clarification_lineage":
         result["cases"][1]["attempts"][1]["lineage"] = "initial"
     elif defect == "terminal_publication":
@@ -2294,3 +2316,74 @@ def test_live_curator_rejects_each_single_transcript_defect(
 
     with pytest.raises(ValueError, match=expected_code):
         curator.audit_live_uat_result(result)
+
+
+def _set_curation_response_document(
+    attempt: dict[str, Any],
+    document: Mapping[str, Any],
+) -> None:
+    response = dict(attempt["response"])
+    response["content"] = json.dumps(
+        document,
+        ensure_ascii=False,
+        sort_keys=True,
+    )
+    attempt["response"] = response
+    attempt["response_sha256"] = "sha256:" + hashlib.sha256(
+        json.dumps(
+            response,
+            ensure_ascii=False,
+            sort_keys=True,
+            separators=(",", ":"),
+            allow_nan=False,
+        ).encode("utf-8")
+    ).hexdigest()
+
+
+@pytest.mark.parametrize(
+    ("artifact", "expected_code"),
+    (
+        ("intent", "LIVE_STAGE1_RESPONSE_ARTIFACT_MISMATCH"),
+        ("changeset", "LIVE_STAGE2_RESPONSE_ARTIFACT_MISMATCH"),
+    ),
+)
+def test_live_curator_binds_provider_responses_to_retained_runtime_artifacts(
+    artifact: str,
+    expected_code: str,
+) -> None:
+    curator = _curator_module()
+    result = _valid_live_curation_result()
+    complete = result["cases"][0]
+    intent = {
+        "operations": [],
+        "semantic_bundles": [],
+        "provenance": [],
+    }
+    changeset = {
+        "base_model_fingerprint": "sha256:" + "1" * 64,
+        "source_request_hash": "sha256:" + "2" * 64,
+        "semantic_manifest_ref": "semantic-manifests.json",
+        "semantic_manifest_sha256": "sha256:" + "3" * 64,
+        "scope": {"target_ids": [], "forbidden_ids": []},
+        "operations": [],
+    }
+    _set_curation_response_document(
+        complete["attempts"][0],
+        {
+            "schema_version": "text2ifc/ifc-repair-intent-body/0.5",
+            **intent,
+        },
+    )
+    _set_curation_response_document(complete["attempts"][1], changeset)
+    if artifact == "intent":
+        intent["operations"] = [{"operation_id": "unrelated-intent"}]
+    else:
+        changeset["base_model_fingerprint"] = "sha256:" + "9" * 64
+
+    with pytest.raises(ValueError, match=expected_code):
+        curator.audit_live_artifact_binding(
+            result,
+            case_id="complete",
+            intent=intent,
+            changeset=changeset,
+        )
