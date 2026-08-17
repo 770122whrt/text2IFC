@@ -121,17 +121,21 @@ def test_run_id_path_traversal_is_rejected(
     assert invalid.value.code == RunStoreCode.INVALID_RUN_ID.value
 
 
-def test_symlink_run_escape_is_rejected(store: RunStore, source: Path, tmp_path: Path) -> None:
-    if not hasattr(os, "symlink"):
-        pytest.skip("symlinks unavailable")
+def test_link_run_escape_is_rejected_without_privilege_skip(
+    store: RunStore, source: Path, tmp_path: Path,
+) -> None:
     outside = tmp_path / "outside"
     outside.mkdir()
     store.runs_root.mkdir(parents=True, exist_ok=True)
     link = store.runs_root / "repair-linked-run"
-    try:
+    if os.name == "nt":
+        created = subprocess.run(
+            ["cmd", "/c", "mklink", "/J", str(link), str(outside)],
+            capture_output=True, text=True, check=False,
+        )
+        assert created.returncode == 0, created.stderr
+    else:
         link.symlink_to(outside, target_is_directory=True)
-    except OSError:
-        pytest.skip("symlink creation is not permitted")
 
     with pytest.raises(RunStoreError) as escaped:
         _start(store, source, run_id="repair-linked-run")
