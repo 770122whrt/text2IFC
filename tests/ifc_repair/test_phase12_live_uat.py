@@ -17,6 +17,7 @@ from text2ifc_agent.openai_compat import (
     OpenAICompatRuntimeConfig,
 )
 from text2ifc_agent.providers import LiveProviderResult, ProviderOutput
+from scripts.ifc_repair.run_phase12_live_uat import DEFAULT_CASES as FROZEN_LIVE_CASES
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -2172,8 +2173,17 @@ def _curation_case(
                     },
                 }
             )
+    frozen = next(case for case in FROZEN_LIVE_CASES if case.case_id == case_id)
     return {
         "case_id": case_id,
+        "request_sha256": "sha256:"
+        + hashlib.sha256(frozen.request.encode("utf-8")).hexdigest(),
+        "feedback_sha256": (
+            None
+            if frozen.feedback is None
+            else "sha256:"
+            + hashlib.sha256(frozen.feedback.encode("utf-8")).hexdigest()
+        ),
         "status": "passed",
         "final": final,
         "attempts": attempts,

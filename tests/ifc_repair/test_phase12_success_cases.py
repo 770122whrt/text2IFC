@@ -1559,7 +1559,7 @@ def test_public_curate_resolves_the_latest_timestamped_runner_directory(
     live_root = tmp_path / "phase12-live"
     live_root.mkdir()
     timestamped = live_root / "uat-20260817T120000000000Z"
-    source.rename(timestamped)
+    shutil.copytree(source, timestamped)
     proof = _empty_proof(tmp_path / "proof")
 
     def passed_validator(

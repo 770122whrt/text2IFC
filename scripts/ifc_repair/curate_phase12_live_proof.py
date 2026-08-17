@@ -1,0 +1,1130 @@
+"""Validate and curate genuine Phase 12 live structural Proof.
+
+The runner's aggregate booleans are never curation authority.  This module
+reconciles the redacted attempt ledger, binds the last valid Provider
+documents to retained runtime artifacts, stages candidate Proof, and invokes
+the family-neutral validator in a separate Python process before installation.
+"""
+
+from __future__ import annotations
+
+import argparse
+import hashlib
+import json
+import os
+import shutil
+import subprocess
+import sys
+import tempfile
+from datetime import date
+from pathlib import Path
+from typing import Any, Callable, Mapping, Sequence
+
+
+ROOT = Path(__file__).resolve().parents[2]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+if str(ROOT / "src") not in sys.path:
+    sys.path.insert(0, str(ROOT / "src"))
+
+from scripts.ifc_repair.run_phase12_live_uat import (  # noqa: E402
+    DEFAULT_CASES,
+    DEFAULT_OUTPUT,
+    DEFAULT_PROOF_ROOT,
+    FROZEN_SOURCE_SHA256,
+    PROGRAM_GUARD_REASON,
+    SOURCE,
+)
+
+
+LIVE_SOURCE_SCHEMA = "text2ifc/phase12-live-proof-source/0.1"
+LIVE_UAT_SCHEMA = "text2ifc/phase12-live-uat/0.1"
+LIVE_EVIDENCE_MODE = "live"
+LIVE_PROVIDER = "deepseek-openai-compatible"
+BASE_EVIDENCE_MODE = "offline_bound_deterministic"
+EVIDENCE_SCOPE = "cross_scene_same_family_bimnet"
+BASE_DAMAGE_CASE_ID = "phase12-d7n-beam-column-atomic"
+BASE_DAMAGE_CASE = SOURCE.parent
+SUCCESS_CASE_IDS = ("complete", "clarification-resume")
+REQUIRED_CASE_IDS = (*SUCCESS_CASE_IDS, "program-guard")
+EXPECTED_PROFILES = {
+    "complete": frozenset({"beam.add", "column.add"}),
+    "clarification-resume": frozenset({"column.add"}),
+    "program-guard": frozenset({"beam.add"}),
+}
+PROOF_CASE_IDS = {
+    "complete": "phase12-live-deepseek-complete",
+    "clarification-resume": "phase12-live-deepseek-clarification-resume",
+}
+FORBIDDEN_FALLBACK_FLAGS = frozenset(
+    {"cached", "hand_authored", "prerecorded", "synthetic"}
+)
+VALIDATOR = ROOT / "scripts/ifc_repair/validate_success_cases.py"
+
+
+def _canonical_sha256(value: Any) -> str:
+    rendered = json.dumps(
+        value,
+        ensure_ascii=False,
+        sort_keys=True,
+        separators=(",", ":"),
+        allow_nan=False,
+    )
+    return "sha256:" + hashlib.sha256(rendered.encode("utf-8")).hexdigest()
+
+
+def _text_sha256(value: str) -> str:
+    return "sha256:" + hashlib.sha256(value.encode("utf-8")).hexdigest()
+
+
+def _path_sha256(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as stream:
+        for chunk in iter(lambda: stream.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return "sha256:" + digest.hexdigest()
+
+
+def _valid_sha256(value: Any) -> bool:
+    text = str(value or "")
+    normalized = text.removeprefix("sha256:").casefold()
+    return len(normalized) == 64 and all(
+        character in "0123456789abcdef" for character in normalized
+    )
+
+
+def _require_text(value: Any, code: str) -> str:
+    if not isinstance(value, str) or not value.strip():
+        raise ValueError(code)
+    return value
+
+
+def _read(path: Path) -> dict[str, Any]:
+    value = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(value, dict):
+        raise ValueError(f"JSON_OBJECT_REQUIRED:{path}")
+    return value
+
+
+def _write(path: Path, value: Any) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    payload = (
+        value
+        if isinstance(value, str)
+        else json.dumps(
+            value,
+            ensure_ascii=False,
+            indent=2,
+            sort_keys=True,
+            allow_nan=False,
+        )
+    )
+    path.write_text(payload.rstrip() + "\n", encoding="utf-8")
+
+
+def _safe_relative(root: Path, raw: Any) -> Path:
+    relative = Path(str(raw).replace("\\", "/"))
+    if not str(raw) or relative.is_absolute() or ".." in relative.parts:
+        raise ValueError(f"LIVE_ARTIFACT_PATH_UNSAFE:{raw}")
+    path = (root / relative).resolve()
+    path.relative_to(root.resolve())
+    if not path.is_file():
+        raise FileNotFoundError(path)
+    return path
+
+
+def _audit_attempts(
+    case_id: str,
+    raw_attempts: Any,
+) -> tuple[list[Mapping[str, Any]], dict[str, int], set[tuple[str, str]]]:
+    if not isinstance(raw_attempts, list) or not raw_attempts:
+        raise ValueError("LIVE_CASE_ATTEMPTS_REQUIRED")
+    attempts: list[Mapping[str, Any]] = []
+    ordinals = {"stage1": 0, "stage2": 0}
+    previous: str | None = None
+    provider_models: set[tuple[str, str]] = set()
+    seen_ids: set[str] = set()
+    for raw in raw_attempts:
+        if not isinstance(raw, Mapping):
+            raise ValueError("LIVE_ATTEMPT_OBJECT_REQUIRED")
+        stage = str(raw.get("stage") or "")
+        if stage not in ordinals:
+            raise ValueError("LIVE_ATTEMPT_STAGE_INVALID")
+        ordinals[stage] += 1
+        if raw.get("ordinal") != ordinals[stage]:
+            raise ValueError("LIVE_ATTEMPT_ORDINAL_MISMATCH")
+        attempt_id = str(raw.get("attempt_id") or "")
+        expected_id = f"{case_id}:{stage}:{ordinals[stage]:03d}"
+        if attempt_id != expected_id or attempt_id in seen_ids:
+            raise ValueError("LIVE_ATTEMPT_ID_MISMATCH")
+        seen_ids.add(attempt_id)
+        if raw.get("case_id") != case_id:
+            raise ValueError("LIVE_ATTEMPT_CASE_MISMATCH")
+        if raw.get("parent_attempt_id") != previous:
+            raise ValueError("LIVE_ATTEMPT_PARENT_MISMATCH")
+        previous = attempt_id
+        stage_attempt = raw.get("stage_attempt")
+        if not isinstance(stage_attempt, int) or stage_attempt < 1:
+            raise ValueError("LIVE_ATTEMPT_STAGE_ATTEMPT_INVALID")
+        correction = raw.get("correction_reason")
+        if stage_attempt > 1 and (
+            not isinstance(correction, str) or not correction.strip()
+        ):
+            raise ValueError("LIVE_ATTEMPT_CORRECTION_REASON_REQUIRED")
+        if (
+            raw.get("evidence_class") != LIVE_EVIDENCE_MODE
+            or raw.get("http_status") != 200
+            or raw.get("error") is not None
+            or raw.get("private_evidence_detected") is not False
+        ):
+            raise ValueError("LIVE_ATTEMPT_TRANSPORT_INVALID")
+        fallback = raw.get("fallback_flags")
+        if (
+            not isinstance(fallback, Mapping)
+            or set(fallback) != FORBIDDEN_FALLBACK_FLAGS
+            or any(fallback[key] is not False for key in FORBIDDEN_FALLBACK_FLAGS)
+        ):
+            raise ValueError("LIVE_ATTEMPT_FALLBACK_FLAG")
+        provider = _require_text(
+            raw.get("provider"), "LIVE_ATTEMPT_PROVIDER_REQUIRED"
+        )
+        if provider != LIVE_PROVIDER:
+            raise ValueError("LIVE_ATTEMPT_PROVIDER_IDENTITY_INVALID")
+        model = _require_text(raw.get("model"), "LIVE_ATTEMPT_MODEL_REQUIRED")
+        provider_models.add((provider, model))
+        usage = raw.get("usage")
+        if not isinstance(usage, Mapping) or not usage:
+            raise ValueError("LIVE_ATTEMPT_USAGE_REQUIRED")
+        if any(
+            not isinstance(usage.get(key), int) or int(usage[key]) < 0
+            for key in ("prompt_tokens", "completion_tokens", "total_tokens")
+        ) or int(usage["total_tokens"]) < 1:
+            raise ValueError("LIVE_ATTEMPT_USAGE_REQUIRED")
+        request = raw.get("request")
+        response = raw.get("response")
+        if request is None or response is None:
+            raise ValueError("LIVE_ATTEMPT_RAW_RESPONSE_REQUIRED")
+        if not _valid_sha256(raw.get("raw_request_sha256")) or not _valid_sha256(
+            raw.get("raw_response_sha256")
+        ):
+            raise ValueError("LIVE_ATTEMPT_RAW_HASH_REQUIRED")
+        try:
+            request_hash = _canonical_sha256(request)
+            response_hash = _canonical_sha256(response)
+        except (TypeError, ValueError) as error:
+            raise ValueError("LIVE_ATTEMPT_REDACTED_PAYLOAD_INVALID") from error
+        if (
+            raw.get("request_sha256") != request_hash
+            or raw.get("response_sha256") != response_hash
+        ):
+            raise ValueError("LIVE_ATTEMPT_REDACTED_HASH_MISMATCH")
+        metadata = raw.get("metadata")
+        if not isinstance(metadata, Mapping):
+            raise ValueError("LIVE_ATTEMPT_METADATA_REQUIRED")
+        _require_text(
+            metadata.get("response_id"), "LIVE_ATTEMPT_RESPONSE_ID_REQUIRED"
+        )
+        if (
+            metadata.get("provider") != provider
+            or metadata.get("model") != model
+            or metadata.get("evidence_class") != LIVE_EVIDENCE_MODE
+            or metadata.get("usage") != usage
+            or not isinstance(metadata.get("transport_attempts"), int)
+            or int(metadata["transport_attempts"]) < 1
+        ):
+            raise ValueError("LIVE_ATTEMPT_METADATA_INVALID")
+        profile_ids = raw.get("profile_ids")
+        profile_versions = raw.get("profile_versions")
+        profile_hashes = raw.get("profile_hashes")
+        if (
+            not isinstance(profile_ids, list)
+            or not profile_ids
+            or not isinstance(profile_versions, list)
+            or not profile_versions
+            or not isinstance(profile_hashes, list)
+            or not profile_hashes
+            or any(not _valid_sha256(value) for value in profile_hashes)
+        ):
+            raise ValueError("LIVE_ATTEMPT_PROFILE_HASH_REQUIRED")
+        if (
+            len(profile_ids) != len(profile_versions)
+            or len(profile_ids) != len(profile_hashes)
+            or len(set(map(str, profile_ids))) != len(profile_ids)
+            or frozenset(map(str, profile_ids)) != EXPECTED_PROFILES[case_id]
+        ):
+            raise ValueError("LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH")
+        if stage == "stage2":
+            few_shot_ids = raw.get("few_shot_ids")
+            few_shot_hashes = raw.get("few_shot_hashes")
+            if (
+                not isinstance(few_shot_ids, list)
+                or not few_shot_ids
+                or not isinstance(few_shot_hashes, list)
+                or not few_shot_hashes
+                or any(not _valid_sha256(value) for value in few_shot_hashes)
+            ):
+                raise ValueError("LIVE_ATTEMPT_FEW_SHOT_HASH_REQUIRED")
+            if (
+                len(few_shot_ids) != len(few_shot_hashes)
+                or len(set(map(str, few_shot_ids))) != len(few_shot_ids)
+                or any(
+                    not any(str(example).startswith(f"{profile}.") for profile in profile_ids)
+                    for example in few_shot_ids
+                )
+                or any(
+                    not any(str(example).startswith(f"{profile}.") for example in few_shot_ids)
+                    for profile in profile_ids
+                )
+            ):
+                raise ValueError("LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH")
+        attempts.append(raw)
+    return attempts, ordinals, provider_models
+
+
+def _strict_success(final: Any) -> bool:
+    if not isinstance(final, Mapping):
+        return False
+    strict = final.get("strict_reopen_verification")
+    return bool(
+        final.get("status") == "succeeded"
+        and final.get("complete_repair_success") is True
+        and final.get("successful_artifact_publishable") is True
+        and isinstance(strict, Mapping)
+        and strict.get("status") == "passed"
+        and strict.get("l0_pass") is True
+        and strict.get("l1_pass") is True
+        and strict.get("l2_pass") is True
+    )
+
+
+def audit_live_uat_result(result: Mapping[str, Any]) -> dict[str, Any]:
+    """Reconcile genuine live attempt evidence without trusting runner flags."""
+
+    if result.get("schema_version") != LIVE_UAT_SCHEMA:
+        raise ValueError("LIVE_UAT_SCHEMA_INVALID")
+    if (
+        result.get("status") != "passed"
+        or result.get("evidence_mode") != LIVE_EVIDENCE_MODE
+        or result.get("provider_evidence_mode") != LIVE_EVIDENCE_MODE
+        or result.get("execution_mode") != "production_live"
+        or result.get("runner_contract_eligible") is not True
+    ):
+        raise ValueError("LIVE_UAT_PRODUCTION_MODE_REQUIRED")
+    if result.get("synthetic_fallback_used") is not False:
+        raise ValueError("LIVE_SYNTHETIC_FALLBACK_NOT_FALSE")
+    if (
+        result.get("acceptance_eligible") is not False
+        or result.get("proof_validation_status") != "pending_plan_12_14"
+    ):
+        raise ValueError("LIVE_PROOF_ACCEPTANCE_SELF_CLAIM")
+    raw_cases = result.get("cases")
+    if not isinstance(raw_cases, list) or [
+        item.get("case_id") if isinstance(item, Mapping) else None
+        for item in raw_cases
+    ] != list(REQUIRED_CASE_IDS):
+        raise ValueError("LIVE_CASE_MATRIX_INVALID")
+    aggregate = {"stage1": 0, "stage2": 0}
+    transport_calls = 0
+    provider_models: set[tuple[str, str]] = set()
+    for case in raw_cases:
+        assert isinstance(case, Mapping)
+        case_id = str(case["case_id"])
+        if (
+            case.get("status") != "passed"
+            or case.get("contract_pass") is not True
+            or case.get("live_evidence_pass") is not True
+            or case.get("private_evidence_detected") is not False
+            or case.get("synthetic_fallback_used") is not False
+            or case.get("proof_acceptance_eligible") is not False
+            or case.get("proof_validation_status") != "pending_plan_12_14"
+        ):
+            raise ValueError("LIVE_PROOF_ACCEPTANCE_SELF_CLAIM")
+        frozen = _case_definition(case_id)
+        if case.get("request_sha256") != _text_sha256(frozen.request) or case.get(
+            "feedback_sha256"
+        ) != (None if frozen.feedback is None else _text_sha256(frozen.feedback)):
+            raise ValueError("LIVE_CASE_REQUEST_HASH_MISMATCH")
+        attempts, counts, case_models = _audit_attempts(
+            case_id, case.get("attempts")
+        )
+        if case.get("transport_calls") != len(attempts) or case.get(
+            "transport_calls_by_stage"
+        ) != counts:
+            raise ValueError("LIVE_CASE_STAGE_COUNT_MISMATCH")
+        transport_calls += len(attempts)
+        for stage in aggregate:
+            aggregate[stage] += counts[stage]
+        provider_models.update(case_models)
+        final = case.get("final")
+        if case_id == "complete":
+            if not _strict_success(final) or counts["stage1"] < 1 or counts[
+                "stage2"
+            ] < 1:
+                raise ValueError("LIVE_SUCCESS_TERMINAL_INVALID")
+            if any(item.get("lineage") != "initial" for item in attempts):
+                raise ValueError("LIVE_COMPLETE_LINEAGE_INVALID")
+        elif case_id == "clarification-resume":
+            assert isinstance(final, Mapping)
+            initial = final.get("initial")
+            clarification = final.get("clarification")
+            lineage = [item.get("lineage") for item in attempts]
+            if (
+                not _strict_success(final)
+                or counts != {"stage1": 2, "stage2": 1}
+                or lineage != [
+                    "initial",
+                    "clarification-resume",
+                    "clarification-resume",
+                ]
+                or final.get("clarification_answer_applied") is not True
+                or not isinstance(initial, Mapping)
+                or initial.get("status") != "clarification_required"
+                or initial.get("successful_artifact_publishable") is not False
+                or not isinstance(clarification, Mapping)
+                or not str(clarification.get("clarification_id") or "")
+                or not str(clarification.get("reason_code") or "")
+            ):
+                raise ValueError("LIVE_CLARIFICATION_LINEAGE_INVALID")
+        else:
+            assert isinstance(final, Mapping)
+            guard = final.get("program_guard_evidence")
+            if (
+                final.get("status") != "unsupported"
+                or final.get("reason_code") != PROGRAM_GUARD_REASON
+                or final.get("successful_artifact_publishable") is not False
+                or counts != {"stage1": 1, "stage2": 0}
+                or [item.get("lineage") for item in attempts] != ["initial"]
+                or not isinstance(guard, Mapping)
+                or guard.get("source_unchanged") is not True
+                or guard.get("stage2_attempts") != 0
+                or guard.get("candidate_output_paths") != []
+                or guard.get("mutation_attempted") is not False
+            ):
+                raise ValueError("LIVE_PROGRAM_GUARD_INVALID")
+    if result.get("transport_calls") != transport_calls or result.get(
+        "transport_calls_by_stage"
+    ) != aggregate:
+        raise ValueError("LIVE_AGGREGATE_STAGE_COUNT_MISMATCH")
+    expected_models = [
+        {"provider": provider, "model": model}
+        for provider, model in sorted(provider_models)
+    ]
+    if result.get("provider_models") != expected_models:
+        raise ValueError("LIVE_PROVIDER_MODEL_AGGREGATE_MISMATCH")
+    return {
+        "schema_version": "text2ifc/phase12-live-transcript-audit/0.1",
+        "status": "passed",
+        "success_case_ids": list(SUCCESS_CASE_IDS),
+        "program_guard_case_id": "program-guard",
+        "transport_calls": transport_calls,
+        "transport_calls_by_stage": aggregate,
+        "provider_models": expected_models,
+    }
+
+
+def _response_document(attempt: Mapping[str, Any]) -> dict[str, Any]:
+    response = attempt.get("response")
+    if not isinstance(response, Mapping):
+        raise ValueError("LIVE_RESPONSE_DOCUMENT_MISSING")
+    content: Any = response.get("content")
+    if content is None:
+        choices = response.get("choices")
+        if isinstance(choices, list) and len(choices) == 1:
+            choice = choices[0]
+            if isinstance(choice, Mapping):
+                message = choice.get("message")
+                if isinstance(message, Mapping):
+                    content = message.get("content")
+    if isinstance(content, str):
+        try:
+            content = json.loads(content)
+        except json.JSONDecodeError as error:
+            raise ValueError("LIVE_RESPONSE_DOCUMENT_INVALID") from error
+    if not isinstance(content, dict):
+        raise ValueError("LIVE_RESPONSE_DOCUMENT_MISSING")
+    return content
+
+
+def _bind_stage1(document: Mapping[str, Any], intent: Mapping[str, Any]) -> None:
+    expected = {
+        "operations": intent.get("operations", []),
+        "semantic_bundles": intent.get("semantic_bundles", []),
+        "provenance": intent.get("provenance", []),
+    }
+    actual = {key: document.get(key, []) for key in expected}
+    if actual != expected:
+        raise ValueError("LIVE_STAGE1_RESPONSE_ARTIFACT_MISMATCH")
+
+
+def _bind_stage2(
+    document: Mapping[str, Any], changeset: Mapping[str, Any]
+) -> None:
+    for key in (
+        "base_model_fingerprint",
+        "source_request_hash",
+        "semantic_manifest_ref",
+        "semantic_manifest_sha256",
+        "scope",
+    ):
+        if document.get(key) != changeset.get(key):
+            raise ValueError("LIVE_STAGE2_RESPONSE_ARTIFACT_MISMATCH")
+    actual_operations = document.get("operations")
+    expected_operations = changeset.get("operations")
+    if not isinstance(actual_operations, list) or not isinstance(
+        expected_operations, list
+    ) or len(actual_operations) != len(expected_operations):
+        raise ValueError("LIVE_STAGE2_RESPONSE_ARTIFACT_MISMATCH")
+    expected_by_id = {
+        str(item.get("operation_id")): item
+        for item in expected_operations
+        if isinstance(item, Mapping)
+    }
+    for actual in actual_operations:
+        if not isinstance(actual, Mapping):
+            raise ValueError("LIVE_STAGE2_RESPONSE_ARTIFACT_MISMATCH")
+        expected = expected_by_id.get(str(actual.get("operation_id")))
+        if expected is None or any(
+            actual.get(key) != expected.get(key)
+            for key in (
+                "operation_id",
+                "operation_type",
+                "target",
+                "parameters",
+                "evidence_refs",
+            )
+        ):
+            raise ValueError("LIVE_STAGE2_RESPONSE_ARTIFACT_MISMATCH")
+
+
+def audit_live_artifact_binding(
+    result: Mapping[str, Any],
+    *,
+    case_id: str,
+    intent: Mapping[str, Any],
+    provider_draft: Mapping[str, Any],
+    changeset: Mapping[str, Any],
+) -> dict[str, Any]:
+    """Bind final Provider response content to retained deterministic artifacts."""
+
+    audit_live_uat_result(result)
+    case = next(
+        (
+            item
+            for item in result["cases"]
+            if isinstance(item, Mapping) and item.get("case_id") == case_id
+        ),
+        None,
+    )
+    if case_id not in SUCCESS_CASE_IDS or not isinstance(case, Mapping):
+        raise ValueError("LIVE_SUCCESS_CASE_REQUIRED")
+    attempts = case.get("attempts")
+    assert isinstance(attempts, list)
+    stage1 = [item for item in attempts if item.get("stage") == "stage1"]
+    stage2 = [item for item in attempts if item.get("stage") == "stage2"]
+    if not stage1 or not stage2:
+        raise ValueError("LIVE_SUCCESS_STAGE_RESPONSE_MISSING")
+    _bind_stage1(_response_document(stage1[-1]), intent)
+    _bind_stage2(_response_document(stage2[-1]), provider_draft)
+    for key in (
+        "base_model_fingerprint",
+        "source_request_hash",
+        "semantic_manifest_ref",
+        "semantic_manifest_sha256",
+        "scope",
+    ):
+        if provider_draft.get(key) != changeset.get(key):
+            raise ValueError("LIVE_BOUND_CHANGESET_AUTHORITY_MISMATCH")
+    draft_operations = provider_draft.get("operations")
+    bound_operations = changeset.get("operations")
+    if not isinstance(draft_operations, list) or not isinstance(
+        bound_operations, list
+    ) or len(draft_operations) != len(bound_operations):
+        raise ValueError("LIVE_BOUND_CHANGESET_AUTHORITY_MISMATCH")
+    for draft, bound in zip(draft_operations, bound_operations, strict=True):
+        if not isinstance(draft, Mapping) or not isinstance(bound, Mapping) or any(
+            draft.get(key) != bound.get(key)
+            for key in (
+                "operation_id",
+                "operation_type",
+                "target",
+                "parameters",
+                "evidence_refs",
+            )
+        ):
+            raise ValueError("LIVE_BOUND_CHANGESET_AUTHORITY_MISMATCH")
+    return {
+        "status": "passed",
+        "case_id": case_id,
+        "stage1_attempt_id": stage1[-1]["attempt_id"],
+        "stage2_attempt_id": stage2[-1]["attempt_id"],
+    }
+
+
+def _case_definition(case_id: str) -> Any:
+    return next(case for case in DEFAULT_CASES if case.case_id == case_id)
+
+
+def _effective_request(case_id: str) -> tuple[str, str, str | None]:
+    case = _case_definition(case_id)
+    initial = str(case.request)
+    feedback = None if case.feedback is None else str(case.feedback)
+    effective = (
+        initial
+        if feedback is None
+        else f"{initial}\n补充说明：{feedback.strip()}"
+    )
+    return effective, initial, feedback
+
+
+def _case_from_result(result: Mapping[str, Any], case_id: str) -> Mapping[str, Any]:
+    case = next(
+        (
+            item
+            for item in result.get("cases", ())
+            if isinstance(item, Mapping) and item.get("case_id") == case_id
+        ),
+        None,
+    )
+    if not isinstance(case, Mapping):
+        raise ValueError(f"LIVE_CASE_MISSING:{case_id}")
+    return case
+
+
+def _copy_file(source: Path, destination: Path) -> None:
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copy2(source, destination)
+
+
+def _artifact_from_final(run_root: Path, final: Mapping[str, Any], name: str) -> Path:
+    artifacts = final.get("artifacts")
+    if not isinstance(artifacts, Mapping):
+        raise ValueError("LIVE_TERMINAL_ARTIFACTS_MISSING")
+    return _safe_relative(run_root, artifacts.get(name))
+
+
+def _application_from_terminal(path: Path) -> dict[str, Any]:
+    terminal = _read(path)
+    evidence = terminal.get("evidence")
+    application = evidence.get("application") if isinstance(evidence, Mapping) else None
+    if not isinstance(application, dict):
+        raise ValueError("LIVE_TERMINAL_APPLICATION_MISSING")
+    return application
+
+
+def _runtime_authority(
+    source_root: Path,
+    result: Mapping[str, Any],
+    case_id: str,
+) -> dict[str, Any]:
+    case = _case_from_result(result, case_id)
+    final = case.get("final")
+    if not _strict_success(final):
+        raise ValueError("LIVE_SUCCESS_TERMINAL_INVALID")
+    assert isinstance(final, Mapping)
+    run_id = _require_text(final.get("run_id"), "LIVE_RUN_ID_REQUIRED")
+    case_root = source_root / "cases" / case_id
+    retained_case = _read(case_root / "case-result.json")
+    if retained_case != case:
+        raise ValueError("LIVE_CASE_RESULT_BINDING_MISMATCH")
+    runtime_root = case_root / "runtime"
+    run_root = runtime_root / "runs" / run_id
+    if not run_root.is_dir():
+        raise ValueError("LIVE_RUNTIME_RUN_MISSING")
+    intent_path = _safe_relative(run_root, "intent/repair-intent.json")
+    resolution_path = _safe_relative(run_root, "resolution.json")
+    applied_changeset_path = _safe_relative(run_root, "changeset.json")
+    bound_changeset_path = _safe_relative(
+        run_root, "changeset/bound-changeset.json"
+    )
+    provider_draft_path = _safe_relative(run_root, "changeset/provider-draft.json")
+    profile_path = _safe_relative(
+        run_root, "changeset/prompt-profile-selection.json"
+    )
+    state_path = _safe_relative(run_root, "state.json")
+    transitions_path = _safe_relative(run_root, "transitions.json")
+    intent = _read(intent_path)
+    applied_changeset = _read(applied_changeset_path)
+    bound_changeset = _read(bound_changeset_path)
+    provider_draft = _read(provider_draft_path)
+    if _canonical_sha256(applied_changeset) != _canonical_sha256(bound_changeset):
+        raise ValueError("LIVE_RUNTIME_CHANGESET_BINDING_MISMATCH")
+    effective, initial, feedback = _effective_request(case_id)
+    if case.get("request_sha256") != _text_sha256(initial) or case.get(
+        "feedback_sha256"
+    ) != (None if feedback is None else _text_sha256(feedback)):
+        raise ValueError("LIVE_CASE_REQUEST_HASH_MISMATCH")
+    effective_hash = _text_sha256(effective)
+    if (
+        intent.get("source_request_hash") != effective_hash
+        or bound_changeset.get("source_request_hash") != effective_hash
+    ):
+        raise ValueError("LIVE_EFFECTIVE_REQUEST_BINDING_MISMATCH")
+    contexts = []
+    for path in run_root.glob("api-context*.json"):
+        document = _read(path)
+        context_intent = document.get("intent")
+        if (
+            document.get("repair_text") == effective
+            and isinstance(context_intent, Mapping)
+            and context_intent.get("source_request_hash") == effective_hash
+        ):
+            contexts.append(path)
+    if len(contexts) != 1:
+        raise ValueError("LIVE_EFFECTIVE_REQUEST_CONTEXT_MISMATCH")
+    profile = _read(profile_path)
+    if frozenset(map(str, profile.get("profile_ids", ()))) != EXPECTED_PROFILES[
+        case_id
+    ]:
+        raise ValueError("LIVE_RUNTIME_PROFILE_SELECTION_MISMATCH")
+    if _read(state_path).get("run_id") != run_id or _read(
+        transitions_path
+    ).get("run_id") != run_id:
+        raise ValueError("LIVE_RUNTIME_STATE_CHAIN_MISMATCH")
+    audit_live_artifact_binding(
+        result,
+        case_id=case_id,
+        intent=intent,
+        provider_draft=provider_draft,
+        changeset=bound_changeset,
+    )
+    manifest_path = _artifact_from_final(run_root, final, "manifest")
+    evaluation_path = _artifact_from_final(run_root, final, "evaluation")
+    repaired_path = _artifact_from_final(run_root, final, "successful_ifc")
+    publication = _read(manifest_path)
+    published = publication.get("artifacts")
+    if not isinstance(published, list) or not published:
+        raise ValueError("LIVE_PUBLICATION_MANIFEST_INVALID")
+    published_paths = {
+        str(item.get("path")): item
+        for item in published
+        if isinstance(item, Mapping)
+    }
+    for artifact in (evaluation_path, repaired_path):
+        relative = artifact.relative_to(run_root).as_posix()
+        record = published_paths.get(relative)
+        if (
+            not isinstance(record, Mapping)
+            or record.get("sha256") != _path_sha256(artifact)
+            or record.get("size_bytes") != artifact.stat().st_size
+        ):
+            raise ValueError("LIVE_PUBLICATION_ARTIFACT_BINDING_MISMATCH")
+    terminal_paths = [
+        run_root / str(relative)
+        for relative in published_paths
+        if str(relative).endswith("/evidence.json")
+        or str(relative) == "publication/terminal/evidence.json"
+    ]
+    terminal_paths = [path for path in terminal_paths if path.is_file()]
+    if len(terminal_paths) != 1:
+        raise ValueError("LIVE_TERMINAL_EVIDENCE_MISSING")
+    semantic_ref = str(bound_changeset.get("semantic_manifest_ref") or "")
+    semantic_path = _safe_relative(run_root / "changeset", semantic_ref)
+    return {
+        "case": case,
+        "run_id": run_id,
+        "runtime_root": runtime_root,
+        "run_root": run_root,
+        "intent_path": intent_path,
+        "resolution_path": resolution_path,
+        "changeset_path": applied_changeset_path,
+        "bound_changeset_path": bound_changeset_path,
+        "provider_draft_path": provider_draft_path,
+        "profile_path": profile_path,
+        "semantic_path": semantic_path,
+        "evaluation_path": evaluation_path,
+        "repaired_path": repaired_path,
+        "application": _application_from_terminal(terminal_paths[0]),
+        "effective_request": effective,
+        "initial_request": initial,
+        "feedback": feedback,
+        "changeset": bound_changeset,
+    }
+
+
+def _role_for_path(relative: str, fixed: Mapping[str, str], index: int) -> str:
+    return fixed.get(relative, f"live_retained_artifact_{index:04d}")
+
+
+def _write_case_files(case_root: Path, case_id: str) -> None:
+    fixed_roles = {
+        "manifest.json": "source_run_manifest",
+        "base-damage-source-manifest.json": "base_damage_source_manifest",
+        "original.ifc": "original_ground_truth",
+        "damaged.ifc": "repair_input_ifc",
+        "repaired.ifc": "published_repair_output",
+        "request.txt": "user_request",
+        "initial-request.txt": "initial_user_request",
+        "clarification-answer.txt": "clarification_answer",
+        "repair-intent.json": "stage1_repair_intent",
+        "target-resolution.json": "deterministic_target_resolution",
+        "semantic-manifests.json": "semantic_manifests",
+        "changeset.json": "bound_changeset",
+        "provider-draft.json": "live_provider_draft",
+        "prompt-profile-selection.json": "live_prompt_profile_selection",
+        "application.json": "application_result",
+        "evaluation.json": "production_evaluation",
+        "production-boundary.json": "production_input_boundary",
+        "mutation_manifest.private.json": "mutation_manifest_private",
+        "provider-evidence/live-uat-result.json": "live_provider_result",
+        "provider-evidence/case-result.json": "live_provider_case_result",
+    }
+    entries = []
+    for index, artifact in enumerate(sorted(case_root.rglob("*")), start=1):
+        if not artifact.is_file() or artifact.name in {"FILES.json", "REPORT.md"}:
+            continue
+        relative = artifact.relative_to(case_root).as_posix()
+        entries.append(
+            {
+                "path": relative,
+                "role": _role_for_path(relative, fixed_roles, index),
+                "sha256": _path_sha256(artifact),
+                "size_bytes": artifact.stat().st_size,
+            }
+        )
+    _write(
+        case_root / "FILES.json",
+        {
+            "schema_version": "text2ifc/ifc-repair-proof-files/0.1",
+            "case_id": case_id,
+            "files": entries,
+        },
+    )
+
+
+def _stage_case(
+    stage_root: Path,
+    source_root: Path,
+    result: Mapping[str, Any],
+    case_id: str,
+) -> dict[str, Any]:
+    authority = _runtime_authority(source_root, result, case_id)
+    proof_case_id = PROOF_CASE_IDS[case_id]
+    relative_root = Path("structural") / "live" / proof_case_id
+    case_root = stage_root / relative_root
+    case_root.mkdir(parents=True)
+    for name in ("original.ifc", "damaged.ifc", "mutation_manifest.private.json"):
+        _copy_file(BASE_DAMAGE_CASE / name, case_root / name)
+    _copy_file(SOURCE, case_root / "damaged.ifc")
+    base_manifest_path = BASE_DAMAGE_CASE / "manifest.json"
+    _copy_file(base_manifest_path, case_root / "base-damage-source-manifest.json")
+    _copy_file(authority["repaired_path"], case_root / "repaired.ifc")
+    _copy_file(authority["intent_path"], case_root / "repair-intent.json")
+    _copy_file(authority["resolution_path"], case_root / "target-resolution.json")
+    _copy_file(authority["semantic_path"], case_root / "semantic-manifests.json")
+    _copy_file(authority["changeset_path"], case_root / "changeset.json")
+    _copy_file(authority["provider_draft_path"], case_root / "provider-draft.json")
+    _copy_file(
+        authority["profile_path"], case_root / "prompt-profile-selection.json"
+    )
+    _copy_file(authority["evaluation_path"], case_root / "evaluation.json")
+    _write(case_root / "application.json", authority["application"])
+    _write(case_root / "request.txt", authority["effective_request"])
+    _write(case_root / "initial-request.txt", authority["initial_request"])
+    if authority["feedback"] is not None:
+        _write(case_root / "clarification-answer.txt", authority["feedback"])
+    shutil.copytree(authority["runtime_root"], case_root / "runtime")
+    provider_root = case_root / "provider-evidence"
+    _copy_file(source_root / "live-uat-result.json", provider_root / "live-uat-result.json")
+    _copy_file(
+        source_root / "cases" / case_id / "case-result.json",
+        provider_root / "case-result.json",
+    )
+    preflight_root = source_root / "preflight"
+    if not preflight_root.is_dir():
+        raise ValueError("LIVE_PREFLIGHT_EVIDENCE_MISSING")
+    preflight = _read(preflight_root / "preflight.json")
+    if preflight.get("status") != "passed":
+        raise ValueError("LIVE_PREFLIGHT_EVIDENCE_FAILED")
+    shutil.copytree(preflight_root, provider_root / "preflight")
+    changeset = authority["changeset"]
+    operation_count = len(changeset.get("operations", ()))
+    _write(
+        case_root / "production-boundary.json",
+        {
+            "schema_version": "text2ifc/production-input-boundary/0.2",
+            "entrypoint": "run_phase12_live_uat.py",
+            "ifc_inputs": ["damaged_ifc_path"],
+            "request_inputs": ["public_request_bundle"],
+            "original_ifc_supplied": False,
+            "mutation_manifest_supplied": False,
+            "deleted_object_ids_supplied": False,
+            "private_comparator_available_during_repair": False,
+            "damaged_ifc_sha256": _path_sha256(case_root / "damaged.ifc"),
+            "request_sha256": changeset.get("source_request_hash"),
+            "resolved_target_count": operation_count,
+        },
+    )
+    base_manifest = _read(base_manifest_path)
+    source_manifest = {
+        "schema_version": LIVE_SOURCE_SCHEMA,
+        "case_id": proof_case_id,
+        "status": "passed",
+        "provider": "deepseek-openai-compatible",
+        "model": "deepseek-chat",
+        "provider_evidence_mode": LIVE_EVIDENCE_MODE,
+        "synthetic_fallback_used": False,
+        "evidence_scope": EVIDENCE_SCOPE,
+        "operation_count": operation_count,
+        "source": base_manifest.get("source"),
+        "damage": base_manifest.get("damage"),
+        "base_damage_contract": {
+            "case_id": BASE_DAMAGE_CASE_ID,
+            "source_manifest_path": "base-damage-source-manifest.json",
+            "source_manifest_sha256": _path_sha256(
+                case_root / "base-damage-source-manifest.json"
+            ),
+            "mutation_manifest_path": "mutation_manifest.private.json",
+            "mutation_manifest_sha256": _path_sha256(
+                case_root / "mutation_manifest.private.json"
+            ),
+            "original_ifc_sha256": _path_sha256(case_root / "original.ifc"),
+            "damaged_ifc_sha256": _path_sha256(case_root / "damaged.ifc"),
+        },
+        "live_contract": {
+            "case_id": case_id,
+            "live_uat_result_path": "provider-evidence/live-uat-result.json",
+            "live_uat_result_sha256": _path_sha256(
+                provider_root / "live-uat-result.json"
+            ),
+            "provider_draft_path": "provider-draft.json",
+            "provider_draft_sha256": _path_sha256(case_root / "provider-draft.json"),
+            "prompt_profile_selection_path": "prompt-profile-selection.json",
+            "prompt_profile_selection_sha256": _path_sha256(
+                case_root / "prompt-profile-selection.json"
+            ),
+        },
+        "artifacts": {},
+    }
+    _write(case_root / "manifest.json", source_manifest)
+    artifacts = {}
+    for artifact in sorted(case_root.rglob("*")):
+        if not artifact.is_file() or artifact.name in {
+            "FILES.json",
+            "REPORT.md",
+            "manifest.json",
+        }:
+            continue
+        relative = artifact.relative_to(case_root).as_posix()
+        artifacts[relative] = {
+            "path": relative,
+            "bytes": artifact.stat().st_size,
+            "sha256": _path_sha256(artifact),
+        }
+    source_manifest["artifacts"] = artifacts
+    _write(case_root / "manifest.json", source_manifest)
+    _write(
+        case_root / "REPORT.md",
+        (
+            f"# Phase 12 live Proof: {case_id}\n\n"
+            "Genuine live transcript and its retained RepairAPI runtime were "
+            "strictly revalidated before installation.\n"
+        ),
+    )
+    _write_case_files(case_root, proof_case_id)
+    operation_types = sorted(
+        {
+            str(item.get("operation_type"))
+            for item in changeset.get("operations", ())
+            if isinstance(item, Mapping)
+        }
+    )
+    return {
+        "case_id": proof_case_id,
+        "phase": "12",
+        "status": "accepted",
+        "operation_family": "structural",
+        "case_kind": "live",
+        "provider": "deepseek-openai-compatible",
+        "model": "deepseek-chat",
+        "provider_evidence_mode": LIVE_EVIDENCE_MODE,
+        "evidence_scope": EVIDENCE_SCOPE,
+        "operation_count": operation_count,
+        "operation_types": operation_types,
+        "original_ifc": (relative_root / "original.ifc").as_posix(),
+        "damaged_ifc": (relative_root / "damaged.ifc").as_posix(),
+        "repaired_ifc": (relative_root / "repaired.ifc").as_posix(),
+        "report": (relative_root / "REPORT.md").as_posix(),
+        "files": (relative_root / "FILES.json").as_posix(),
+    }
+
+
+def _default_validator_runner(
+    command: Sequence[str], *, cwd: Path
+) -> subprocess.CompletedProcess[str]:
+    return subprocess.run(
+        command,
+        cwd=cwd,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+
+
+def _validate_subprocess(
+    collection_root: Path,
+    *,
+    validator_runner: Callable[..., subprocess.CompletedProcess[str]],
+    candidate_only: bool,
+) -> dict[str, Any]:
+    command = (sys.executable, str(VALIDATOR), "--root", str(collection_root), "--json")
+    completed = validator_runner(command, cwd=ROOT)
+    try:
+        payload = json.loads(completed.stdout)
+    except (json.JSONDecodeError, TypeError) as error:
+        raise ValueError("LIVE_CANDIDATE_VALIDATION_FAILED") from error
+    if not isinstance(payload, dict):
+        raise ValueError("LIVE_CANDIDATE_VALIDATION_FAILED")
+    cases = payload.get("cases")
+    case_ids = {
+        str(item.get("case_id"))
+        for item in cases or ()
+        if isinstance(item, Mapping)
+    }
+    common_pass = (
+        completed.returncode == 0
+        and payload.get("status") == "passed"
+        and payload.get("errors") == []
+        and isinstance(cases, list)
+    )
+    if candidate_only:
+        common_pass = bool(
+            common_pass
+            and payload.get("case_count") == 2
+            and payload.get("independently_recomputed_case_count") == 2
+            and payload.get("legacy_unverifiable_case_count") == 0
+            and case_ids == set(PROOF_CASE_IDS.values())
+            and len(cases) == 2
+            and all(
+                item.get("provider_evidence_mode") == LIVE_EVIDENCE_MODE
+                and item.get("live_transcript_status") == "strict_recomputed"
+                for item in cases
+            )
+        )
+    else:
+        manifest = _read(collection_root / "manifest.json")
+        common_pass = bool(
+            common_pass
+            and payload.get("case_count") == manifest.get("case_count")
+            and set(PROOF_CASE_IDS.values()).issubset(case_ids)
+        )
+    if not common_pass:
+        raise ValueError("LIVE_CANDIDATE_VALIDATION_FAILED")
+    return payload
+
+
+def _resolve_source_root(run_root: Path | str) -> Path:
+    requested = Path(run_root).resolve()
+    if (requested / "live-uat-result.json").is_file():
+        return requested
+    candidates = sorted(
+        path.parent
+        for path in requested.glob("uat-*/live-uat-result.json")
+        if path.is_file()
+    )
+    if not candidates:
+        raise FileNotFoundError(requested / "live-uat-result.json")
+    return candidates[-1]
+
+
+def curate(
+    run_root: Path | str = DEFAULT_OUTPUT,
+    proof_root: Path | str = DEFAULT_PROOF_ROOT,
+    *,
+    validator_runner: Callable[..., subprocess.CompletedProcess[str]] = _default_validator_runner,
+) -> dict[str, Any]:
+    """Stage, independently validate, then atomically install two live cases."""
+
+    source_root = _resolve_source_root(run_root)
+    destination = Path(proof_root).resolve()
+    live_result_path = source_root / "live-uat-result.json"
+    result = _read(live_result_path)
+    audit = audit_live_uat_result(result)
+    if _path_sha256(SOURCE) != FROZEN_SOURCE_SHA256:
+        raise ValueError("LIVE_FROZEN_SOURCE_DRIFT")
+    destination.mkdir(parents=True, exist_ok=True)
+    collection_path = destination / "manifest.json"
+    collection = _read(collection_path)
+    prior_cases = collection.get("cases")
+    if not isinstance(prior_cases, list):
+        raise ValueError("LIVE_PROOF_COLLECTION_INVALID")
+    prior_ids = {str(item.get("case_id")) for item in prior_cases if isinstance(item, Mapping)}
+    if prior_ids & set(PROOF_CASE_IDS.values()):
+        raise ValueError("LIVE_PROOF_CASE_ALREADY_EXISTS")
+    with tempfile.TemporaryDirectory(
+        prefix="phase12-live-proof-", dir=destination.parent
+    ) as temporary:
+        stage_root = Path(temporary) / "candidate"
+        stage_root.mkdir()
+        entries = [
+            _stage_case(stage_root, source_root, result, case_id)
+            for case_id in SUCCESS_CASE_IDS
+        ]
+        _write(
+            stage_root / "manifest.json",
+            {
+                "schema_version": "text2ifc/ifc-repair-success-collection/0.1",
+                "case_count": 2,
+                "cases": entries,
+            },
+        )
+        _validate_subprocess(
+            stage_root,
+            validator_runner=validator_runner,
+            candidate_only=True,
+        )
+        installed: list[Path] = []
+        original_manifest = collection_path.read_bytes()
+        try:
+            for entry in entries:
+                relative = Path(str(entry["files"])).parent
+                target = destination / relative
+                if target.exists():
+                    raise ValueError("LIVE_PROOF_CASE_ALREADY_EXISTS")
+                target.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copytree(stage_root / relative, target)
+                installed.append(target)
+            updated = dict(collection)
+            updated["cases"] = [*prior_cases, *entries]
+            updated["case_count"] = len(updated["cases"])
+            temporary_manifest = collection_path.with_suffix(".json.tmp")
+            _write(temporary_manifest, updated)
+            os.replace(temporary_manifest, collection_path)
+            _validate_subprocess(
+                destination,
+                validator_runner=validator_runner,
+                candidate_only=False,
+            )
+        except Exception:
+            for target in reversed(installed):
+                shutil.rmtree(target)
+            collection_path.write_bytes(original_manifest)
+            raise
+    return {
+        "schema_version": "text2ifc/phase12-live-proof-curation/0.1",
+        "status": "passed",
+        "proof_root": destination.as_posix(),
+        "source_run_root": source_root.as_posix(),
+        "case_ids": list(PROOF_CASE_IDS.values()),
+        "program_guard_curated": False,
+        "transcript_audit": audit,
+    }
+
+
+def main(argv: Sequence[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(
+        description="Curate genuine Phase 12 live structural Proof."
+    )
+    parser.add_argument("--run-root", type=Path, default=DEFAULT_OUTPUT)
+    parser.add_argument("--proof-root", type=Path, default=DEFAULT_PROOF_ROOT)
+    parser.add_argument("--json", action="store_true", dest="as_json")
+    args = parser.parse_args(argv)
+    payload = curate(args.run_root, args.proof_root)
+    if args.as_json:
+        print(json.dumps(payload, ensure_ascii=False, indent=2))
+    else:
+        print(f"status={payload['status']} cases={len(payload['case_ids'])}")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

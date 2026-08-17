@@ -42,7 +42,7 @@ from text2ifc_ifc_repair.indexer import build_ifc_index
 from text2ifc_ifc_repair.mutation import remove_structural_members
 from text2ifc_ifc_repair.operations import create_default_registry
 from text2ifc_ifc_repair.operations.hosted_opening import deterministic_global_id
-from text2ifc_ifc_repair.prompt_profiles import load_prompt_profiles
+from text2ifc_ifc_repair.prompt_profiles import load_prompt_profiles, select_prompt_profiles
 from text2ifc_ifc_repair.production_evidence import build_production_evidence
 from text2ifc_ifc_repair.repair_intent import RepairIntent
 from text2ifc_ifc_repair.resolution_flow import resolve_repair_intent
@@ -366,6 +366,7 @@ def _validate_case(root: Path, case: Mapping[str, Any]) -> dict[str, Any]:
     elif has_structural_operations:
         raise ValueError("l0.structural.no-fallback:source_run_manifest_missing")
 
+    live_authority: dict[str, Any] = {}
     if has_structural_operations:
         if intent is None:
             raise ValueError("l0.structural.provenance:intent_missing")
@@ -376,7 +377,7 @@ def _validate_case(root: Path, case: Mapping[str, Any]) -> dict[str, Any]:
             damaged_ifc_path=required_role_paths["repair_input_ifc"],
             changeset=changeset,
         )
-        _audit_structural_provenance_chain(
+        live_authority = _audit_structural_provenance_chain(
             case=case,
             roles=roles,
             intent=intent,
@@ -437,14 +438,30 @@ def _validate_case(root: Path, case: Mapping[str, Any]) -> dict[str, Any]:
             case_root=case_root,
         )
         if case.get("phase") == "12":
-            if source_manifest.get("schema_version") != (
+            evidence_mode = str(case.get("provider_evidence_mode") or "")
+            damage_manifest = source_manifest
+            damage_case_id = case_id
+            if evidence_mode == "live":
+                if source_manifest.get("schema_version") != (
+                    "text2ifc/phase12-live-proof-source/0.1"
+                ):
+                    raise ValueError("l0.structural.live:source_manifest_schema")
+                damage_manifest, damage_case_id = _audit_live_base_damage_authority(
+                    roles=roles,
+                    source_manifest=source_manifest,
+                    original_ifc_path=required_role_paths["original_ground_truth"],
+                    damaged_ifc_path=required_role_paths["repair_input_ifc"],
+                )
+                live_authority["base_damage_case_id"] = damage_case_id
+            elif source_manifest.get("schema_version") != (
                 "text2ifc/phase12-offline-case/0.1"
             ):
                 raise ValueError("l0.structural.damage:source_manifest_schema")
             _audit_phase12_damage_provenance(
                 case=case,
                 roles=roles,
-                source_manifest=source_manifest,
+                source_manifest=damage_manifest,
+                damage_case_id=damage_case_id,
                 original_model=models["original_ground_truth"],
                 damaged_model=models["repair_input_ifc"],
                 original_ifc_path=required_role_paths["original_ground_truth"],
@@ -531,6 +548,7 @@ def _validate_case(root: Path, case: Mapping[str, Any]) -> dict[str, Any]:
         "independent_structural_operation_count": structural_operation_count,
         "damaged_sha256": f"sha256:{damaged_hash}",
         "changeset_schema_version": changeset.get("schema_version"),
+        **live_authority,
     }
 
 
@@ -918,7 +936,7 @@ def _audit_structural_provenance_chain(
     damaged_sha256: str,
     damaged_ifc_path: Path,
     source_manifest: Mapping[str, Any],
-) -> None:
+) -> dict[str, Any]:
     request_path = roles.get("user_request")
     resolution_path = roles.get("deterministic_target_resolution")
     if request_path is None or resolution_path is None:
@@ -1077,11 +1095,15 @@ def _audit_structural_provenance_chain(
             "l0.structural.provenance:provider_evidence_mode_binding"
         )
     if evidence_mode == "offline_bound_deterministic":
-        return
+        return {}
     if evidence_mode != "live":
         raise ValueError("l0.structural.provenance:provider_evidence_mode")
-    raise ValueError(
-        "l0.structural.provenance:live_transcript_audit_pending_plan_12_14"
+    return _audit_live_transcript_authority(
+        case=case,
+        roles=roles,
+        source_manifest=source_manifest,
+        intent=intent,
+        changeset=changeset,
     )
 
 
@@ -1647,6 +1669,148 @@ def _assert_no_structural_private_keys(value: Any) -> None:
             pending.extend(item)
 
 
+def _audit_live_transcript_authority(
+    *,
+    case: Mapping[str, Any],
+    roles: Mapping[str, Path],
+    source_manifest: Mapping[str, Any],
+    intent: Mapping[str, Any],
+    changeset: Mapping[str, Any],
+) -> dict[str, Any]:
+    live_contract = source_manifest.get("live_contract")
+    if not isinstance(live_contract, Mapping):
+        raise ValueError("l0.structural.live:contract_missing")
+    result_path = roles.get("live_provider_result")
+    provider_draft_path = roles.get("live_provider_draft")
+    profile_path = roles.get("live_prompt_profile_selection")
+    if result_path is None or provider_draft_path is None or profile_path is None:
+        raise ValueError("l0.structural.live:retained_authority_missing")
+    case_root = roles["source_run_manifest"].parent
+    bindings = (
+        ("live_uat_result", result_path),
+        ("provider_draft", provider_draft_path),
+        ("prompt_profile_selection", profile_path),
+    )
+    for prefix, path in bindings:
+        relative = str(live_contract.get(f"{prefix}_path") or "")
+        if _safe_path(case_root, relative) != path or _normalize_sha256(
+            str(live_contract.get(f"{prefix}_sha256"))
+        ) != _sha256(path):
+            raise ValueError(f"l0.structural.live:{prefix}_binding")
+    live_result = _read_json(result_path)
+    provider_draft = _read_json(provider_draft_path)
+    try:
+        from scripts.ifc_repair.curate_phase12_live_proof import (
+            audit_live_artifact_binding,
+            audit_live_uat_result,
+        )
+    except ModuleNotFoundError:  # Direct script execution.
+        from curate_phase12_live_proof import (  # type: ignore[no-redef]
+            audit_live_artifact_binding,
+            audit_live_uat_result,
+        )
+    try:
+        transcript = audit_live_uat_result(live_result)
+        live_case_id = str(live_contract.get("case_id") or "")
+        if live_case_id not in transcript.get("success_case_ids", ()):
+            raise ValueError("live case is not a strict success")
+        audit_live_artifact_binding(
+            live_result,
+            case_id=live_case_id,
+            intent=intent,
+            provider_draft=provider_draft,
+            changeset=changeset,
+        )
+    except (KeyError, TypeError, ValueError) as error:
+        raise ValueError(f"l0.structural.live:transcript:{error}") from error
+    operation_types = {
+        str(item.get("operation_type"))
+        for item in changeset.get("operations", ())
+        if isinstance(item, Mapping)
+    }
+    registry = create_default_registry()
+    expected_profile_ids = sorted(
+        {
+            str(registry.require(operation_type).prompt_profile_id)
+            for operation_type in operation_types
+        }
+    )
+    expected_selection = select_prompt_profiles(expected_profile_ids).to_dict()
+    selection = _read_json(profile_path)
+    if selection != expected_selection:
+        raise ValueError("l0.structural.live:prompt_profile_registry_binding")
+    expected_versions = [
+        str(item["profile_version"]) for item in expected_selection["profiles"]
+    ]
+    result_case = next(
+        item
+        for item in live_result["cases"]
+        if isinstance(item, Mapping) and item.get("case_id") == live_case_id
+    )
+    for attempt in result_case.get("attempts", ()):
+        if not isinstance(attempt, Mapping) or (
+            attempt.get("profile_ids") != expected_selection["profile_ids"]
+            or attempt.get("profile_versions") != expected_versions
+            or attempt.get("profile_hashes") != expected_selection["profile_hashes"]
+            or attempt.get("few_shot_ids") != expected_selection["few_shot_ids"]
+            or attempt.get("few_shot_hashes") != expected_selection["few_shot_hashes"]
+        ):
+            raise ValueError("l0.structural.live:attempt_profile_binding")
+    return {
+        "provider_evidence_mode": "live",
+        "live_transcript_status": "strict_recomputed",
+    }
+
+
+def _audit_live_base_damage_authority(
+    *,
+    roles: Mapping[str, Path],
+    source_manifest: Mapping[str, Any],
+    original_ifc_path: Path,
+    damaged_ifc_path: Path,
+) -> tuple[Mapping[str, Any], str]:
+    contract = source_manifest.get("base_damage_contract")
+    if not isinstance(contract, Mapping):
+        raise ValueError("l0.structural.live:base_damage_contract_missing")
+    base_path = roles.get("base_damage_source_manifest")
+    private_path = roles.get("mutation_manifest_private")
+    if base_path is None or not base_path.is_file():
+        raise ValueError("l0.structural.live:base_damage_manifest_missing")
+    if private_path is None or not private_path.is_file():
+        raise ValueError("l0.structural.live:base_damage_evidence_missing")
+    case_root = roles["source_run_manifest"].parent
+    try:
+        base_bound = _safe_path(case_root, str(contract["source_manifest_path"]))
+        private_bound = _safe_path(case_root, str(contract["mutation_manifest_path"]))
+        bindings_pass = bool(
+            base_bound == base_path
+            and private_bound == private_path
+            and _normalize_sha256(str(contract["source_manifest_sha256"]))
+            == _sha256(base_path)
+            and _normalize_sha256(str(contract["mutation_manifest_sha256"]))
+            == _sha256(private_path)
+            and _normalize_sha256(str(contract["original_ifc_sha256"]))
+            == _sha256(original_ifc_path)
+            and _normalize_sha256(str(contract["damaged_ifc_sha256"]))
+            == _sha256(damaged_ifc_path)
+        )
+    except (KeyError, TypeError, ValueError):
+        bindings_pass = False
+    if not bindings_pass:
+        raise ValueError("l0.structural.live:base_damage_binding")
+    base = _read_json(base_path)
+    case_id = str(contract.get("case_id") or "")
+    if (
+        base.get("schema_version") != "text2ifc/phase12-offline-case/0.1"
+        or base.get("case_id") != case_id
+        or case_id not in _PHASE12_DAMAGE_TARGET_IDS
+        or base.get("source") != source_manifest.get("source")
+        or base.get("damage") != source_manifest.get("damage")
+    ):
+        raise ValueError("l0.structural.live:base_damage_contract")
+    return base, case_id
+
+
 def _audit_structural_source_manifest(
     *,
     source_manifest: Mapping[str, Any],
@@ -1678,6 +1842,7 @@ def _audit_phase12_damage_provenance(
     case: Mapping[str, Any],
     roles: Mapping[str, Path],
     source_manifest: Mapping[str, Any],
+    damage_case_id: str,
     original_model: Any,
     damaged_model: Any,
     original_ifc_path: Path,
@@ -1692,8 +1857,7 @@ def _audit_phase12_damage_provenance(
     ):
         raise ValueError("l0.structural.damage:evidence_scope")
 
-    case_id = str(case.get("case_id") or "")
-    expected_target_ids = _PHASE12_DAMAGE_TARGET_IDS.get(case_id)
+    expected_target_ids = _PHASE12_DAMAGE_TARGET_IDS.get(damage_case_id)
     if expected_target_ids is None:
         raise ValueError("l0.structural.damage:case_contract")
     source_record = source_manifest.get("source")
@@ -2691,17 +2855,19 @@ def _sha256(path: Path) -> str:
     return digest.hexdigest()
 
 
-def main() -> int:
+def main(argv: Iterable[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
         description="Validate frozen IFC repair proof cases."
     )
     parser.add_argument(
         "--collection-root",
+        "--root",
+        dest="collection_root",
         type=Path,
         default=DEFAULT_COLLECTION,
     )
     parser.add_argument("--json", action="store_true", dest="as_json")
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
     result = validate_success_case_collection(args.collection_root)
     if args.as_json:
         print(json.dumps(result.to_dict(), ensure_ascii=False, indent=2))
