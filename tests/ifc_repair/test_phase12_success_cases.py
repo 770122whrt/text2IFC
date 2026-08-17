@@ -13,10 +13,12 @@ import ifcopenshell
 import ifcopenshell.guid
 import ifcopenshell.util.unit
 import pytest
+from text2ifc_ifc_repair.prompt_profiles import select_prompt_profiles
 
 from scripts.ifc_repair.run_phase12_public_structural_repair import (
     run_public_repair,
 )
+from scripts.ifc_repair.run_phase12_live_uat import DEFAULT_CASES as FROZEN_LIVE_CASES
 from scripts.ifc_repair import validate_success_cases as success_validator
 from scripts.ifc_repair.validate_success_cases import (
     ProofValidationResult,
@@ -721,6 +723,7 @@ def _live_attempt(
         "clarification-resume": ["column.add"],
         "program-guard": ["beam.add"],
     }[case_id]
+    selection = select_prompt_profiles(profiles).to_dict()
     return {
         "attempt_id": attempt_id,
         "parent_attempt_id": parent,
@@ -757,19 +760,13 @@ def _live_attempt(
             "usage": usage,
         },
         "error": None,
-        "profile_ids": profiles,
-        "profile_versions": ["0.1" for _profile in profiles],
-        "profile_hashes": ["sha256:" + "a" * 64 for _profile in profiles],
-        "few_shot_ids": (
-            [f"{profile}.complete" for profile in profiles]
-            if stage == "stage2"
-            else []
-        ),
-        "few_shot_hashes": (
-            ["sha256:" + "b" * 64 for _profile in profiles]
-            if stage == "stage2"
-            else []
-        ),
+        "profile_ids": selection["profile_ids"],
+        "profile_versions": [
+            profile["profile_version"] for profile in selection["profiles"]
+        ],
+        "profile_hashes": selection["profile_hashes"],
+        "few_shot_ids": selection["few_shot_ids"],
+        "few_shot_hashes": selection["few_shot_hashes"],
     }
 
 
@@ -793,6 +790,15 @@ def _provider_draft(changeset: Mapping[str, Any]) -> dict[str, Any]:
             if key in changeset
         },
     }
+
+
+def _replace_live_response_document(
+    attempt: dict[str, Any], document: Mapping[str, Any]
+) -> None:
+    response = dict(attempt["response"])
+    response["content"] = json.dumps(document, ensure_ascii=False, sort_keys=True)
+    attempt["response"] = response
+    attempt["response_sha256"] = _canonical_transport_sha256(response)
 
 
 def _live_result(
@@ -875,9 +881,24 @@ def _live_result(
             "successful_ifc": "repaired.ifc",
         },
     }
+    frozen = {case.case_id: case for case in FROZEN_LIVE_CASES}
+    request_fields = {
+        case_id: {
+            "request_sha256": "sha256:"
+            + hashlib.sha256(case.request.encode("utf-8")).hexdigest(),
+            "feedback_sha256": (
+                None
+                if case.feedback is None
+                else "sha256:"
+                + hashlib.sha256(case.feedback.encode("utf-8")).hexdigest()
+            ),
+        }
+        for case_id, case in frozen.items()
+    }
     cases = [
         {
             "case_id": "complete",
+            **request_fields["complete"],
             "status": "passed",
             "final": published,
             "attempts": [complete_stage1, complete_stage2],
@@ -892,6 +913,7 @@ def _live_result(
         },
         {
             "case_id": "clarification-resume",
+            **request_fields["clarification-resume"],
             "status": "passed",
             "final": {
                 **published,
@@ -924,6 +946,7 @@ def _live_result(
         },
         {
             "case_id": "program-guard",
+            **request_fields["program-guard"],
             "status": "passed",
             "final": {
                 "status": "unsupported",
@@ -1006,6 +1029,8 @@ def _refresh_live_proof(case_root: Path, *, case_id: str = LIVE_CASE_ID) -> None
             "manifest.json": "source_run_manifest",
             "base-damage-source-manifest.json": "base_damage_source_manifest",
             "provider-evidence/live-uat-result.json": "live_provider_result",
+            "provider-draft.json": "live_provider_draft",
+            "prompt-profile-selection.json": "live_prompt_profile_selection",
         }.get(relative, prior_roles.get(relative, f"live_artifact_{artifact.stem}"))
         entries.append(
             {
@@ -1043,6 +1068,13 @@ def _live_proof_collection(tmp_path: Path) -> tuple[Path, Path]:
     provider_root.mkdir()
     live_result_path = provider_root / "live-uat-result.json"
     _write_json(live_result_path, live_result)
+    provider_draft_path = case_root / "provider-draft.json"
+    _write_json(provider_draft_path, _provider_draft(changeset))
+    profile_path = case_root / "prompt-profile-selection.json"
+    _write_json(
+        profile_path,
+        select_prompt_profiles(["beam.add", "column.add"]).to_dict(),
+    )
 
     base_manifest_sha256 = _sha256(base_manifest_path)
     private_path = case_root / "mutation_manifest.private.json"
@@ -1071,6 +1103,10 @@ def _live_proof_collection(tmp_path: Path) -> tuple[Path, Path]:
             "case_id": "complete",
             "live_uat_result_path": "provider-evidence/live-uat-result.json",
             "live_uat_result_sha256": _sha256(live_result_path),
+            "provider_draft_path": "provider-draft.json",
+            "provider_draft_sha256": _sha256(provider_draft_path),
+            "prompt_profile_selection_path": "prompt-profile-selection.json",
+            "prompt_profile_selection_sha256": _sha256(profile_path),
         },
         "artifacts": {},
     }
@@ -1213,19 +1249,48 @@ def _curator_source_run(tmp_path: Path) -> Path:
         case_id = str(case["case_id"])
         case_root = source / "cases" / case_id
         case_root.mkdir(parents=True)
-        _write_json(case_root / "case-result.json", case)
         if case_id == "program-guard":
+            _write_json(case_root / "case-result.json", case)
             continue
+        frozen = next(item for item in FROZEN_LIVE_CASES if item.case_id == case_id)
+        effective_request = (
+            frozen.request
+            if frozen.feedback is None
+            else f"{frozen.request}\n补充说明：{frozen.feedback.strip()}"
+        )
+        effective_hash = "sha256:" + hashlib.sha256(
+            effective_request.encode("utf-8")
+        ).hexdigest()
+        case_intent = json.loads(json.dumps(intent))
+        case_changeset = json.loads(json.dumps(changeset))
+        case_intent["source_request_hash"] = effective_hash
+        case_changeset["source_request_hash"] = effective_hash
+        successful_stage1 = [
+            attempt for attempt in case["attempts"] if attempt["stage"] == "stage1"
+        ][-1]
+        successful_stage2 = [
+            attempt for attempt in case["attempts"] if attempt["stage"] == "stage2"
+        ][-1]
+        _replace_live_response_document(
+            successful_stage1,
+            {
+                "schema_version": "text2ifc/ifc-repair-intent-body/0.5",
+                "operations": case_intent["operations"],
+                "semantic_bundles": case_intent.get("semantic_bundles", []),
+                "provenance": case_intent.get("provenance", []),
+            },
+        )
+        _replace_live_response_document(
+            successful_stage2,
+            _provider_draft(case_changeset),
+        )
         run_id = f"run-{case_id}"
         case["final"]["run_id"] = run_id
         run_root = case_root / "runtime" / "runs" / run_id
         (run_root / "intent").mkdir(parents=True)
         (run_root / "changeset" / "attempt-001").mkdir(parents=True)
         (run_root / "publication" / "terminal").mkdir(parents=True)
-        shutil.copy2(
-            BASE_DAMAGE_CASE / "repair-intent.json",
-            run_root / "intent" / "repair-intent.json",
-        )
+        _write_json(run_root / "intent" / "repair-intent.json", case_intent)
         shutil.copy2(
             BASE_DAMAGE_CASE / "target-resolution.json",
             run_root / "resolution.json",
@@ -1234,10 +1299,10 @@ def _curator_source_run(tmp_path: Path) -> Path:
             run_root / "changeset.json",
             run_root / "changeset" / "bound-changeset.json",
         ):
-            shutil.copy2(BASE_DAMAGE_CASE / "changeset.json", destination)
+            _write_json(destination, case_changeset)
         _write_json(
             run_root / "changeset" / "provider-draft.json",
-            _provider_draft(changeset),
+            _provider_draft(case_changeset),
         )
         shutil.copy2(
             BASE_DAMAGE_CASE / "semantic-manifests.json",
@@ -1296,11 +1361,21 @@ def _curator_source_run(tmp_path: Path) -> Path:
             {"run_id": run_id, "terminal_status": "succeeded"},
         )
         _write_json(
-            run_root / "changeset" / "prompt-profile-selection.json",
+            run_root / "api-context.json",
             {
-                "profile_ids": ["beam.add", "column.add"],
-                "profile_hashes": ["sha256:" + "a" * 64],
+                "schema_version": "text2ifc/ifc-repair-api-context/0.1",
+                "repair_text": effective_request,
+                "intent": case_intent,
             },
+        )
+        profiles = (
+            ["beam.add", "column.add"]
+            if case_id == "complete"
+            else ["column.add"]
+        )
+        _write_json(
+            run_root / "changeset" / "prompt-profile-selection.json",
+            select_prompt_profiles(profiles).to_dict(),
         )
         for index, attempt in enumerate(case["attempts"], start=1):
             _write_json(
@@ -1474,6 +1549,40 @@ def test_public_curate_installs_only_two_strict_success_cases_after_validation(
         assert (case_root / "runtime" / "runs").is_dir()
         assert (case_root / "provider-evidence" / "live-uat-result.json").is_file()
     assert not (proof / "structural" / "live" / "program-guard").exists()
+
+
+def test_public_curate_resolves_the_latest_timestamped_runner_directory(
+    tmp_path: Path,
+) -> None:
+    curator = _curator_module()
+    source = _curator_source_run(tmp_path)
+    live_root = tmp_path / "phase12-live"
+    live_root.mkdir()
+    timestamped = live_root / "uat-20260817T120000000000Z"
+    source.rename(timestamped)
+    proof = _empty_proof(tmp_path / "proof")
+
+    def passed_validator(
+        command: Sequence[str],
+        *,
+        cwd: Path,
+    ) -> subprocess.CompletedProcess[str]:
+        del cwd
+        return subprocess.CompletedProcess(
+            command,
+            0,
+            json.dumps(_strict_validator_payload()),
+            "",
+        )
+
+    result = curator.curate(
+        live_root,
+        proof,
+        validator_runner=passed_validator,
+    )
+
+    assert result["status"] == "passed"
+    assert result["source_run_root"] == timestamped.resolve().as_posix()
 
 
 @pytest.mark.parametrize(
