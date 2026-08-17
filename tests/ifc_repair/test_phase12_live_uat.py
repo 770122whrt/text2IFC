@@ -21,6 +21,7 @@ from text2ifc_agent.providers import LiveProviderResult, ProviderOutput
 
 ROOT = Path(__file__).resolve().parents[2]
 SCRIPT = ROOT / "scripts/ifc_repair/run_phase12_live_uat.py"
+CURATOR_SCRIPT = ROOT / "scripts/ifc_repair/curate_phase12_live_proof.py"
 HASH_A = "sha256:" + "a" * 64
 HASH_B = "sha256:" + "b" * 64
 PROFILE_PROMPT = json.dumps(
@@ -45,6 +46,16 @@ PROFILE_PROMPT = json.dumps(
 
 def _module():
     spec = importlib.util.spec_from_file_location("phase12_live", SCRIPT)
+    assert spec is not None and spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def _curator_module():
+    spec = importlib.util.spec_from_file_location(
+        "phase12_live_curator", CURATOR_SCRIPT
+    )
     assert spec is not None and spec.loader is not None
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
@@ -2002,3 +2013,284 @@ def test_complete_clarification_resume_and_program_guard_have_exact_lineage(
     assert "SECRET-TRANSPORT-TOKEN" not in encoded
     assert "CANARY-PRIVATE-GOLD-12-13" not in encoded
     assert "[REDACTED]" in encoded
+
+
+def _curation_attempt(
+    *,
+    case_id: str,
+    stage: str,
+    ordinal: int,
+    parent_attempt_id: str | None,
+    lineage: str,
+) -> dict[str, Any]:
+    attempt_id = f"{case_id}:{stage}:{ordinal:03d}"
+    request = {"model": "deepseek-chat", "messages": ["redacted"]}
+    response = {"id": f"response-{attempt_id}", "content": "{}"}
+    canonical = lambda value: "sha256:" + hashlib.sha256(
+        json.dumps(
+            value,
+            ensure_ascii=False,
+            sort_keys=True,
+            separators=(",", ":"),
+            allow_nan=False,
+        ).encode("utf-8")
+    ).hexdigest()
+    prompt_hash = canonical(request)
+    response_hash = canonical(response)
+    return {
+        "attempt_id": attempt_id,
+        "parent_attempt_id": parent_attempt_id,
+        "case_id": case_id,
+        "lineage": lineage,
+        "stage": stage,
+        "ordinal": ordinal,
+        "stage_attempt": 1,
+        "correction_reason": None,
+        "evidence_class": "live",
+        "http_status": 200,
+        "fallback_flags": {
+            "cached": False,
+            "hand_authored": False,
+            "prerecorded": False,
+            "synthetic": False,
+        },
+        "private_evidence_detected": False,
+        "provider": "deepseek-openai-compatible",
+        "model": "deepseek-chat",
+        "usage": {
+            "prompt_tokens": 101,
+            "completion_tokens": 37,
+            "total_tokens": 138,
+        },
+        "raw_request_sha256": prompt_hash,
+        "raw_response_sha256": response_hash,
+        "request_sha256": prompt_hash,
+        "response_sha256": response_hash,
+        "request": request,
+        "response": response,
+        "metadata": {
+            "provider": "deepseek-openai-compatible",
+            "model": "deepseek-chat",
+            "evidence_class": "live",
+            "response_id": f"response-{attempt_id}",
+            "transport_attempts": 1,
+            "usage": {
+                "prompt_tokens": 101,
+                "completion_tokens": 37,
+                "total_tokens": 138,
+            },
+        },
+        "error": None,
+        "profile_ids": ["beam.add"],
+        "profile_versions": ["0.1"],
+        "profile_hashes": [HASH_A],
+        "few_shot_ids": (
+            ["beam.add.complete"] if stage == "stage2" else []
+        ),
+        "few_shot_hashes": [HASH_B] if stage == "stage2" else [],
+    }
+
+
+def _curation_case(
+    *,
+    case_id: str,
+    stages: tuple[tuple[str, str], ...],
+) -> dict[str, Any]:
+    attempts: list[dict[str, Any]] = []
+    stage_ordinals = {"stage1": 0, "stage2": 0}
+    parent: str | None = None
+    for stage, lineage in stages:
+        stage_ordinals[stage] += 1
+        attempt = _curation_attempt(
+            case_id=case_id,
+            stage=stage,
+            ordinal=stage_ordinals[stage],
+            parent_attempt_id=parent,
+            lineage=lineage,
+        )
+        attempts.append(attempt)
+        parent = str(attempt["attempt_id"])
+    counts = {
+        "stage1": sum(item[0] == "stage1" for item in stages),
+        "stage2": sum(item[0] == "stage2" for item in stages),
+    }
+    if case_id == "program-guard":
+        final: dict[str, Any] = {
+            "status": "unsupported",
+            "reason_code": "STRUCTURAL_ANALYSIS_UNSUPPORTED",
+            "complete_repair_success": False,
+            "successful_artifact_publishable": False,
+            "program_guard_evidence": {
+                "source_unchanged": True,
+                "stage2_attempts": 0,
+                "candidate_output_paths": [],
+                "mutation_attempted": False,
+            },
+        }
+    else:
+        final = {
+            "status": "succeeded",
+            "reason_code": None,
+            "run_id": f"run-{case_id}",
+            "complete_repair_success": True,
+            "successful_artifact_publishable": True,
+            "artifacts": {
+                "manifest": "publication/manifest.json",
+                "evaluation": "evaluation.json",
+                "successful_ifc": "repaired.ifc",
+            },
+            "strict_reopen_verification": {
+                "status": "passed",
+                "l0_pass": True,
+                "l1_pass": True,
+                "l2_pass": True,
+            },
+        }
+        if case_id == "clarification-resume":
+            final.update(
+                {
+                    "clarification_answer_applied": True,
+                    "initial": {
+                        "status": "clarification_required",
+                        "complete_repair_success": False,
+                        "successful_artifact_publishable": False,
+                    },
+                    "clarification": {
+                        "clarification_id": "clarification-001",
+                        "reason_code": "missing_required_parameter",
+                        "question": "Provide the grouped structural facts.",
+                        "answer_modes": ["add_detail", "cancel"],
+                    },
+                }
+            )
+    return {
+        "case_id": case_id,
+        "status": "passed",
+        "final": final,
+        "attempts": attempts,
+        "transport_calls": len(attempts),
+        "transport_calls_by_stage": counts,
+        "synthetic_fallback_used": False,
+        "live_evidence_pass": True,
+        "private_evidence_detected": False,
+        "contract_pass": True,
+    }
+
+
+def _valid_live_curation_result() -> dict[str, Any]:
+    cases = [
+        _curation_case(
+            case_id="complete",
+            stages=(("stage1", "initial"), ("stage2", "initial")),
+        ),
+        _curation_case(
+            case_id="clarification-resume",
+            stages=(
+                ("stage1", "initial"),
+                ("stage1", "clarification-resume"),
+                ("stage2", "clarification-resume"),
+            ),
+        ),
+        _curation_case(
+            case_id="program-guard",
+            stages=(("stage1", "initial"),),
+        ),
+    ]
+    return {
+        "schema_version": "text2ifc/phase12-live-uat/0.1",
+        "status": "passed",
+        "evidence_mode": "live",
+        "execution_mode": "production_live",
+        "provider_evidence_mode": "live",
+        "runner_contract_eligible": True,
+        "synthetic_fallback_used": False,
+        "transport_calls": 6,
+        "transport_calls_by_stage": {"stage1": 4, "stage2": 2},
+        "provider_models": [
+            {
+                "provider": "deepseek-openai-compatible",
+                "model": "deepseek-chat",
+            }
+        ],
+        "cases": cases,
+    }
+
+
+def test_live_curator_accepts_only_complete_and_resumed_success_transcripts() -> None:
+    curator = _curator_module()
+
+    audit = curator.audit_live_uat_result(_valid_live_curation_result())
+
+    assert audit["status"] == "passed"
+    assert audit["success_case_ids"] == ["complete", "clarification-resume"]
+    assert audit["program_guard_case_id"] == "program-guard"
+    assert audit["transport_calls"] == 6
+
+
+@pytest.mark.parametrize(
+    ("defect", "expected_code"),
+    (
+        ("missing_provider", "LIVE_ATTEMPT_PROVIDER_REQUIRED"),
+        ("missing_model", "LIVE_ATTEMPT_MODEL_REQUIRED"),
+        ("missing_usage", "LIVE_ATTEMPT_USAGE_REQUIRED"),
+        ("missing_raw_response", "LIVE_ATTEMPT_RAW_RESPONSE_REQUIRED"),
+        ("redacted_hash_mismatch", "LIVE_ATTEMPT_REDACTED_HASH_MISMATCH"),
+        ("missing_profile_hash", "LIVE_ATTEMPT_PROFILE_HASH_REQUIRED"),
+        ("missing_few_shot_hash", "LIVE_ATTEMPT_FEW_SHOT_HASH_REQUIRED"),
+        ("fallback_true", "LIVE_ATTEMPT_FALLBACK_FLAG"),
+        ("missing_response_id", "LIVE_ATTEMPT_RESPONSE_ID_REQUIRED"),
+        ("ordinal_mismatch", "LIVE_ATTEMPT_ORDINAL_MISMATCH"),
+        ("missing_correction_reason", "LIVE_ATTEMPT_CORRECTION_REASON_REQUIRED"),
+        ("case_count_mismatch", "LIVE_CASE_STAGE_COUNT_MISMATCH"),
+        ("aggregate_count_mismatch", "LIVE_AGGREGATE_STAGE_COUNT_MISMATCH"),
+        ("clarification_lineage", "LIVE_CLARIFICATION_LINEAGE_INVALID"),
+        ("terminal_publication", "LIVE_SUCCESS_TERMINAL_INVALID"),
+        ("synthetic_fallback", "LIVE_SYNTHETIC_FALLBACK_NOT_FALSE"),
+    ),
+)
+def test_live_curator_rejects_each_single_transcript_defect(
+    defect: str,
+    expected_code: str,
+) -> None:
+    curator = _curator_module()
+    result = _valid_live_curation_result()
+    complete = result["cases"][0]
+    first = complete["attempts"][0]
+    stage2 = complete["attempts"][1]
+    if defect == "missing_provider":
+        first["provider"] = ""
+    elif defect == "missing_model":
+        first["model"] = ""
+    elif defect == "missing_usage":
+        first["usage"] = {}
+    elif defect == "missing_raw_response":
+        first.pop("response")
+    elif defect == "redacted_hash_mismatch":
+        first["response_sha256"] = "sha256:" + "0" * 64
+    elif defect == "missing_profile_hash":
+        first["profile_hashes"] = []
+    elif defect == "missing_few_shot_hash":
+        stage2["few_shot_hashes"] = []
+    elif defect == "fallback_true":
+        first["fallback_flags"]["cached"] = True
+    elif defect == "missing_response_id":
+        first["metadata"].pop("response_id")
+    elif defect == "ordinal_mismatch":
+        first["ordinal"] = 2
+    elif defect == "missing_correction_reason":
+        first["stage_attempt"] = 2
+    elif defect == "case_count_mismatch":
+        complete["transport_calls_by_stage"]["stage1"] = 2
+    elif defect == "aggregate_count_mismatch":
+        result["transport_calls_by_stage"]["stage1"] = 5
+    elif defect == "clarification_lineage":
+        result["cases"][1]["attempts"][1]["lineage"] = "initial"
+    elif defect == "terminal_publication":
+        complete["final"]["successful_artifact_publishable"] = False
+    elif defect == "synthetic_fallback":
+        result["synthetic_fallback_used"] = True
+    else:  # pragma: no cover - the parametrization is exhaustive.
+        raise AssertionError(defect)
+
+    with pytest.raises(ValueError, match=expected_code):
+        curator.audit_live_uat_result(result)

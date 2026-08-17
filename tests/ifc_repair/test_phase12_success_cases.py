@@ -4,7 +4,7 @@ import hashlib
 import json
 import shutil
 from pathlib import Path
-from typing import Any
+from typing import Any, Mapping
 
 import ifcopenshell
 import ifcopenshell.guid
@@ -14,7 +14,9 @@ import pytest
 from scripts.ifc_repair.run_phase12_public_structural_repair import (
     run_public_repair,
 )
+from scripts.ifc_repair import validate_success_cases as success_validator
 from scripts.ifc_repair.validate_success_cases import (
+    ProofValidationResult,
     validate_success_case_collection,
 )
 
@@ -24,6 +26,15 @@ D7N = ROOT / "dataset" / "ifc" / "test" / "d7n.ifc"
 STOREY_ID = "0K_MqVdrL0JOCMi_GblRwJ"
 CASE_ID = "phase12-d7n-beam-column-strict-proof"
 CASE_PATH = Path("structural") / "single" / CASE_ID
+BASE_DAMAGE_CASE_ID = "phase12-d7n-beam-column-atomic"
+BASE_DAMAGE_CASE = (
+    ROOT
+    / "dataset/processed/proof/ifc-repair-success-cases"
+    / "structural/batch"
+    / BASE_DAMAGE_CASE_ID
+)
+LIVE_CASE_ID = "phase12-live-deepseek-complete"
+LIVE_CASE_PATH = Path("structural") / "live" / LIVE_CASE_ID
 
 
 def _sha256(path: Path) -> str:
@@ -40,6 +51,17 @@ def _canonical_payload_sha256(value: Any) -> str:
             allow_nan=False,
         )
         + "\n"
+    )
+    return "sha256:" + hashlib.sha256(rendered.encode("utf-8")).hexdigest()
+
+
+def _canonical_transport_sha256(value: Any) -> str:
+    rendered = json.dumps(
+        value,
+        ensure_ascii=False,
+        sort_keys=True,
+        separators=(",", ":"),
+        allow_nan=False,
     )
     return "sha256:" + hashlib.sha256(rendered.encode("utf-8")).hexdigest()
 
@@ -654,3 +676,464 @@ def test_collection_cannot_relabel_live_source_run_as_offline(
         collection,
         "l0.structural.provenance:provider_evidence_mode_binding",
     )
+
+
+def _live_attempt(
+    *,
+    case_id: str,
+    stage: str,
+    ordinal: int,
+    parent: str | None,
+    lineage: str,
+    response_document: Mapping[str, Any],
+) -> dict[str, Any]:
+    attempt_id = f"{case_id}:{stage}:{ordinal:03d}"
+    request = {"model": "deepseek-chat", "messages": [f"{case_id}:{stage}"]}
+    response = {
+        "id": f"response-{case_id}-{stage}-{ordinal}",
+        "content": json.dumps(
+            response_document,
+            ensure_ascii=False,
+            sort_keys=True,
+        ),
+    }
+    usage = {
+        "prompt_tokens": 100,
+        "completion_tokens": 50,
+        "total_tokens": 150,
+    }
+    return {
+        "attempt_id": attempt_id,
+        "parent_attempt_id": parent,
+        "case_id": case_id,
+        "lineage": lineage,
+        "stage": stage,
+        "ordinal": ordinal,
+        "stage_attempt": 1,
+        "correction_reason": None,
+        "evidence_class": "live",
+        "http_status": 200,
+        "fallback_flags": {
+            "cached": False,
+            "hand_authored": False,
+            "prerecorded": False,
+            "synthetic": False,
+        },
+        "private_evidence_detected": False,
+        "provider": "deepseek-openai-compatible",
+        "model": "deepseek-chat",
+        "usage": usage,
+        "raw_request_sha256": _canonical_transport_sha256(request),
+        "raw_response_sha256": _canonical_transport_sha256(response),
+        "request_sha256": _canonical_transport_sha256(request),
+        "response_sha256": _canonical_transport_sha256(response),
+        "request": request,
+        "response": response,
+        "metadata": {
+            "provider": "deepseek-openai-compatible",
+            "model": "deepseek-chat",
+            "evidence_class": "live",
+            "response_id": response["id"],
+            "transport_attempts": 1,
+            "usage": usage,
+        },
+        "error": None,
+        "profile_ids": ["beam.add", "column.add"],
+        "profile_versions": ["0.1"],
+        "profile_hashes": ["sha256:" + "a" * 64],
+        "few_shot_ids": ["structural.complete"] if stage == "stage2" else [],
+        "few_shot_hashes": (
+            ["sha256:" + "b" * 64] if stage == "stage2" else []
+        ),
+    }
+
+
+def _live_result(
+    *,
+    intent: Mapping[str, Any],
+    changeset: Mapping[str, Any],
+    damaged_sha256: str,
+) -> dict[str, Any]:
+    intent_body = {
+        "schema_version": "text2ifc/ifc-repair-intent-body/0.5",
+        "operations": intent["operations"],
+        "semantic_bundles": intent.get("semantic_bundles", []),
+        "provenance": intent.get("provenance", []),
+    }
+    complete_stage1 = _live_attempt(
+        case_id="complete",
+        stage="stage1",
+        ordinal=1,
+        parent=None,
+        lineage="initial",
+        response_document=intent_body,
+    )
+    complete_stage2 = _live_attempt(
+        case_id="complete",
+        stage="stage2",
+        ordinal=1,
+        parent=complete_stage1["attempt_id"],
+        lineage="initial",
+        response_document=changeset,
+    )
+    clarification_stage1 = _live_attempt(
+        case_id="clarification-resume",
+        stage="stage1",
+        ordinal=1,
+        parent=None,
+        lineage="initial",
+        response_document={"classification": "clarification_required"},
+    )
+    resumed_stage1 = _live_attempt(
+        case_id="clarification-resume",
+        stage="stage1",
+        ordinal=2,
+        parent=clarification_stage1["attempt_id"],
+        lineage="clarification-resume",
+        response_document=intent_body,
+    )
+    resumed_stage2 = _live_attempt(
+        case_id="clarification-resume",
+        stage="stage2",
+        ordinal=1,
+        parent=resumed_stage1["attempt_id"],
+        lineage="clarification-resume",
+        response_document=changeset,
+    )
+    guard_stage1 = _live_attempt(
+        case_id="program-guard",
+        stage="stage1",
+        ordinal=1,
+        parent=None,
+        lineage="initial",
+        response_document={"classification": "unsupported"},
+    )
+    strict = {
+        "status": "passed",
+        "l0_pass": True,
+        "l1_pass": True,
+        "l2_pass": True,
+    }
+    published = {
+        "status": "succeeded",
+        "reason_code": None,
+        "run_id": "run-live-proof",
+        "complete_repair_success": True,
+        "successful_artifact_publishable": True,
+        "strict_reopen_verification": strict,
+        "artifacts": {
+            "manifest": "publication/manifest.json",
+            "evaluation": "evaluation.json",
+            "successful_ifc": "repaired.ifc",
+        },
+    }
+    cases = [
+        {
+            "case_id": "complete",
+            "status": "passed",
+            "final": published,
+            "attempts": [complete_stage1, complete_stage2],
+            "transport_calls": 2,
+            "transport_calls_by_stage": {"stage1": 1, "stage2": 1},
+            "synthetic_fallback_used": False,
+            "live_evidence_pass": True,
+            "private_evidence_detected": False,
+            "contract_pass": True,
+        },
+        {
+            "case_id": "clarification-resume",
+            "status": "passed",
+            "final": {
+                **published,
+                "clarification_answer_applied": True,
+                "initial": {
+                    "status": "clarification_required",
+                    "complete_repair_success": False,
+                    "successful_artifact_publishable": False,
+                },
+                "clarification": {
+                    "clarification_id": "clarification-001",
+                    "reason_code": "missing_required_parameter",
+                    "question": "Provide grouped facts.",
+                    "answer_modes": ["add_detail", "cancel"],
+                },
+            },
+            "attempts": [
+                clarification_stage1,
+                resumed_stage1,
+                resumed_stage2,
+            ],
+            "transport_calls": 3,
+            "transport_calls_by_stage": {"stage1": 2, "stage2": 1},
+            "synthetic_fallback_used": False,
+            "live_evidence_pass": True,
+            "private_evidence_detected": False,
+            "contract_pass": True,
+        },
+        {
+            "case_id": "program-guard",
+            "status": "passed",
+            "final": {
+                "status": "unsupported",
+                "reason_code": "STRUCTURAL_ANALYSIS_UNSUPPORTED",
+                "complete_repair_success": False,
+                "successful_artifact_publishable": False,
+                "program_guard_evidence": {
+                    "source_reference": str(
+                        BASE_DAMAGE_CASE / "damaged.ifc"
+                    ),
+                    "source_sha256_before": damaged_sha256,
+                    "source_sha256_after": damaged_sha256,
+                    "source_unchanged": True,
+                    "stage2_attempts": 0,
+                    "candidate_output_paths": [],
+                    "mutation_attempted": False,
+                },
+            },
+            "attempts": [guard_stage1],
+            "transport_calls": 1,
+            "transport_calls_by_stage": {"stage1": 1, "stage2": 0},
+            "synthetic_fallback_used": False,
+            "live_evidence_pass": True,
+            "private_evidence_detected": False,
+            "contract_pass": True,
+        },
+    ]
+    return {
+        "schema_version": "text2ifc/phase12-live-uat/0.1",
+        "status": "passed",
+        "evidence_mode": "live",
+        "execution_mode": "production_live",
+        "provider_evidence_mode": "live",
+        "runner_contract_eligible": True,
+        "synthetic_fallback_used": False,
+        "transport_calls": 6,
+        "transport_calls_by_stage": {"stage1": 4, "stage2": 2},
+        "provider_models": [
+            {
+                "provider": "deepseek-openai-compatible",
+                "model": "deepseek-chat",
+            }
+        ],
+        "cases": cases,
+    }
+
+
+def _refresh_live_proof(case_root: Path, *, case_id: str = LIVE_CASE_ID) -> None:
+    source_manifest_path = case_root / "manifest.json"
+    source_manifest = json.loads(source_manifest_path.read_text(encoding="utf-8"))
+    artifacts: dict[str, Any] = {}
+    for artifact in sorted(case_root.rglob("*")):
+        if not artifact.is_file() or artifact.name in {
+            "FILES.json",
+            "REPORT.md",
+            "manifest.json",
+        }:
+            continue
+        relative = artifact.relative_to(case_root).as_posix()
+        artifacts[relative] = {
+            "path": relative,
+            "bytes": artifact.stat().st_size,
+            "sha256": _sha256(artifact),
+        }
+    source_manifest["artifacts"] = artifacts
+    _write_json(source_manifest_path, source_manifest)
+
+    prior = json.loads((BASE_DAMAGE_CASE / "FILES.json").read_text(encoding="utf-8"))
+    prior_roles = {str(item["path"]): str(item["role"]) for item in prior["files"]}
+    entries = []
+    for artifact in sorted(case_root.rglob("*")):
+        if not artifact.is_file() or artifact.name in {"FILES.json", "REPORT.md"}:
+            continue
+        relative = artifact.relative_to(case_root).as_posix()
+        role = {
+            "manifest.json": "source_run_manifest",
+            "base-damage-source-manifest.json": "base_damage_source_manifest",
+            "provider-evidence/live-uat-result.json": "live_provider_result",
+        }.get(relative, prior_roles.get(relative, f"live_artifact_{artifact.stem}"))
+        entries.append(
+            {
+                "path": relative,
+                "role": role,
+                "sha256": _sha256(artifact),
+                "size_bytes": artifact.stat().st_size,
+            }
+        )
+    _write_json(
+        case_root / "FILES.json",
+        {
+            "schema_version": "text2ifc/ifc-repair-proof-files/0.2",
+            "case_id": case_id,
+            "files": entries,
+        },
+    )
+
+
+def _live_proof_collection(tmp_path: Path) -> tuple[Path, Path]:
+    collection = tmp_path / "live-proof"
+    case_root = collection / LIVE_CASE_PATH
+    shutil.copytree(BASE_DAMAGE_CASE, case_root)
+    base_manifest_path = case_root / "base-damage-source-manifest.json"
+    shutil.copy2(case_root / "manifest.json", base_manifest_path)
+    intent = json.loads((case_root / "repair-intent.json").read_text(encoding="utf-8"))
+    changeset = json.loads((case_root / "changeset.json").read_text(encoding="utf-8"))
+    damaged_sha256 = _sha256(case_root / "damaged.ifc")
+    live_result = _live_result(
+        intent=intent,
+        changeset=changeset,
+        damaged_sha256=damaged_sha256,
+    )
+    provider_root = case_root / "provider-evidence"
+    provider_root.mkdir()
+    live_result_path = provider_root / "live-uat-result.json"
+    _write_json(live_result_path, live_result)
+
+    base_manifest_sha256 = _sha256(base_manifest_path)
+    private_path = case_root / "mutation_manifest.private.json"
+    source_manifest = {
+        "schema_version": "text2ifc/phase12-live-proof-source/0.1",
+        "case_id": LIVE_CASE_ID,
+        "status": "passed",
+        "provider": "deepseek-openai-compatible",
+        "model": "deepseek-chat",
+        "provider_evidence_mode": "live",
+        "synthetic_fallback_used": False,
+        "evidence_scope": "cross_scene_same_family_bimnet",
+        "operation_count": len(changeset["operations"]),
+        "source": json.loads(base_manifest_path.read_text(encoding="utf-8"))["source"],
+        "damage": json.loads(base_manifest_path.read_text(encoding="utf-8"))["damage"],
+        "base_damage_contract": {
+            "case_id": BASE_DAMAGE_CASE_ID,
+            "source_manifest_path": "base-damage-source-manifest.json",
+            "source_manifest_sha256": base_manifest_sha256,
+            "mutation_manifest_path": "mutation_manifest.private.json",
+            "mutation_manifest_sha256": _sha256(private_path),
+            "original_ifc_sha256": _sha256(case_root / "original.ifc"),
+            "damaged_ifc_sha256": damaged_sha256,
+        },
+        "live_contract": {
+            "case_id": "complete",
+            "live_uat_result_path": "provider-evidence/live-uat-result.json",
+            "live_uat_result_sha256": _sha256(live_result_path),
+        },
+        "artifacts": {},
+    }
+    _write_json(case_root / "manifest.json", source_manifest)
+    boundary_path = case_root / "production-boundary.json"
+    boundary = json.loads(boundary_path.read_text(encoding="utf-8"))
+    boundary["entrypoint"] = "run_phase12_live_uat.py"
+    _write_json(boundary_path, boundary)
+    (case_root / "REPORT.md").write_text(
+        "# Phase 12 live strict proof\n",
+        encoding="utf-8",
+    )
+    _refresh_live_proof(case_root)
+    _write_json(
+        collection / "manifest.json",
+        {
+            "schema_version": "text2ifc/ifc-repair-success-collection/0.1",
+            "case_count": 1,
+            "cases": [
+                {
+                    "case_id": LIVE_CASE_ID,
+                    "phase": "12",
+                    "status": "accepted",
+                    "operation_family": "structural",
+                    "case_kind": "live",
+                    "provider": "deepseek-openai-compatible",
+                    "model": "deepseek-chat",
+                    "provider_evidence_mode": "live",
+                    "evidence_scope": "cross_scene_same_family_bimnet",
+                    "operation_count": len(changeset["operations"]),
+                    "operation_types": sorted(
+                        {item["operation_type"] for item in changeset["operations"]}
+                    ),
+                    "original_ifc": (LIVE_CASE_PATH / "original.ifc").as_posix(),
+                    "damaged_ifc": (LIVE_CASE_PATH / "damaged.ifc").as_posix(),
+                    "repaired_ifc": (LIVE_CASE_PATH / "repaired.ifc").as_posix(),
+                    "report": (LIVE_CASE_PATH / "REPORT.md").as_posix(),
+                    "files": (LIVE_CASE_PATH / "FILES.json").as_posix(),
+                }
+            ],
+        },
+    )
+    return collection, case_root
+
+
+def test_live_structural_proof_recomputes_transcript_and_base_damage_authority(
+    tmp_path: Path,
+) -> None:
+    collection, _case_root = _live_proof_collection(tmp_path)
+
+    result = validate_success_case_collection(collection)
+
+    assert result.status == "passed", result.errors
+    assert result.independently_recomputed_case_count == 1
+    assert result.cases[0]["provider_evidence_mode"] == "live"
+    assert result.cases[0]["live_transcript_status"] == "strict_recomputed"
+    assert result.cases[0]["base_damage_case_id"] == BASE_DAMAGE_CASE_ID
+
+
+@pytest.mark.parametrize(
+    ("defect", "check_id"),
+    (
+        ("schema_downgrade", "l0.structural.live:source_manifest_schema"),
+        ("missing_base", "l0.structural.live:base_damage_manifest_missing"),
+        ("base_binding", "l0.structural.live:base_damage_binding"),
+    ),
+)
+def test_live_proof_cannot_bypass_underlying_damage_authority(
+    tmp_path: Path,
+    defect: str,
+    check_id: str,
+) -> None:
+    collection, case_root = _live_proof_collection(tmp_path)
+    source_manifest_path = case_root / "manifest.json"
+    source_manifest = json.loads(source_manifest_path.read_text(encoding="utf-8"))
+    if defect == "schema_downgrade":
+        source_manifest["schema_version"] = "text2ifc/phase12-offline-case/0.1"
+    elif defect == "missing_base":
+        (case_root / "base-damage-source-manifest.json").unlink()
+    elif defect == "base_binding":
+        source_manifest["base_damage_contract"]["damaged_ifc_sha256"] = (
+            "sha256:" + "0" * 64
+        )
+    else:  # pragma: no cover - the parametrization is exhaustive.
+        raise AssertionError(defect)
+    _write_json(source_manifest_path, source_manifest)
+    _refresh_live_proof(case_root)
+
+    result = validate_success_case_collection(collection)
+
+    assert result.status == "failed"
+    assert any(check_id in error for error in result.errors), result.errors
+
+
+def test_validator_cli_accepts_the_frozen_root_option(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    captured: dict[str, Path] = {}
+
+    def fake_validate(root: Path) -> ProofValidationResult:
+        captured["root"] = Path(root)
+        return ProofValidationResult(
+            status="passed",
+            collection_root=Path(root).resolve().as_posix(),
+        )
+
+    monkeypatch.setattr(
+        success_validator,
+        "validate_success_case_collection",
+        fake_validate,
+    )
+
+    exit_code = success_validator.main(
+        ["--root", str(tmp_path), "--json"]
+    )
+
+    assert exit_code == 0
+    assert captured["root"] == tmp_path
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["status"] == "passed"
