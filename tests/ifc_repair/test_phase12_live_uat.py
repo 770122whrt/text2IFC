@@ -2359,13 +2359,22 @@ def test_live_curator_binds_provider_responses_to_retained_runtime_artifacts(
         "semantic_bundles": [],
         "provenance": [],
     }
-    changeset = {
+    provider_draft = {
+        "schema_version": "text2ifc/ifc-repair-changeset-draft/0.2",
+        "draft_id": "draft-complete",
         "base_model_fingerprint": "sha256:" + "1" * 64,
         "source_request_hash": "sha256:" + "2" * 64,
         "semantic_manifest_ref": "semantic-manifests.json",
         "semantic_manifest_sha256": "sha256:" + "3" * 64,
         "scope": {"target_ids": [], "forbidden_ids": []},
         "operations": [],
+    }
+    changeset = {
+        **provider_draft,
+        "schema_version": "text2ifc/ifc-repair-changeset/0.4",
+        "binding_status": "bound",
+        "changeset_id": "changeset-complete",
+        "binder_authority": {"semantic_registry": "registered"},
     }
     _set_curation_response_document(
         complete["attempts"][0],
@@ -2374,16 +2383,17 @@ def test_live_curator_binds_provider_responses_to_retained_runtime_artifacts(
             **intent,
         },
     )
-    _set_curation_response_document(complete["attempts"][1], changeset)
+    _set_curation_response_document(complete["attempts"][1], provider_draft)
     if artifact == "intent":
         intent["operations"] = [{"operation_id": "unrelated-intent"}]
     else:
-        changeset["base_model_fingerprint"] = "sha256:" + "9" * 64
+        provider_draft["base_model_fingerprint"] = "sha256:" + "9" * 64
 
     with pytest.raises(ValueError, match=expected_code):
         curator.audit_live_artifact_binding(
             result,
             case_id="complete",
             intent=intent,
+            provider_draft=provider_draft,
             changeset=changeset,
         )

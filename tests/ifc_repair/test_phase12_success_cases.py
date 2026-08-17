@@ -762,6 +762,28 @@ def _live_attempt(
     }
 
 
+def _provider_draft(changeset: Mapping[str, Any]) -> dict[str, Any]:
+    return {
+        "schema_version": "text2ifc/ifc-repair-changeset-draft/0.2",
+        "draft_id": "draft-live-proof",
+        **{
+            key: changeset[key]
+            for key in (
+                "base_model_fingerprint",
+                "source_request_hash",
+                "semantic_manifest_ref",
+                "semantic_manifest_sha256",
+                "scope",
+                "evidence_refs",
+                "preconditions",
+                "postconditions",
+                "operations",
+            )
+            if key in changeset
+        },
+    }
+
+
 def _live_result(
     *,
     intent: Mapping[str, Any],
@@ -782,13 +804,14 @@ def _live_result(
         lineage="initial",
         response_document=intent_body,
     )
+    draft = _provider_draft(changeset)
     complete_stage2 = _live_attempt(
         case_id="complete",
         stage="stage2",
         ordinal=1,
         parent=complete_stage1["attempt_id"],
         lineage="initial",
-        response_document=changeset,
+        response_document=draft,
     )
     clarification_stage1 = _live_attempt(
         case_id="clarification-resume",
@@ -812,7 +835,7 @@ def _live_result(
         ordinal=1,
         parent=resumed_stage1["attempt_id"],
         lineage="clarification-resume",
-        response_document=changeset,
+        response_document=draft,
     )
     guard_stage1 = _live_attempt(
         case_id="program-guard",
@@ -1193,6 +1216,10 @@ def _curator_source_run(tmp_path: Path) -> Path:
             run_root / "changeset" / "bound-changeset.json",
         ):
             shutil.copy2(BASE_DAMAGE_CASE / "changeset.json", destination)
+        _write_json(
+            run_root / "changeset" / "provider-draft.json",
+            _provider_draft(changeset),
+        )
         shutil.copy2(
             BASE_DAMAGE_CASE / "semantic-manifests.json",
             run_root / "changeset" / "semantic-manifests.json",
@@ -1292,22 +1319,54 @@ def _tree_bytes(root: Path) -> dict[str, bytes]:
     }
 
 
-def test_public_curate_runs_validator_in_a_separate_process_before_install(
-    tmp_path: Path,
-) -> None:
-    curator = _curator_module()
-    source = _curator_source_run(tmp_path)
-    proof = tmp_path / "proof"
-    proof.mkdir()
+def _empty_proof(root: Path) -> Path:
+    root.mkdir()
     _write_json(
-        proof / "manifest.json",
+        root / "manifest.json",
         {
             "schema_version": "text2ifc/ifc-repair-success-collection/0.1",
             "case_count": 0,
             "cases": [],
         },
     )
-    (proof / "README.md").write_text("# Proof\n", encoding="utf-8")
+    (root / "README.md").write_text("# Proof\n", encoding="utf-8")
+    return root
+
+
+def _strict_validator_payload(
+    *,
+    case_ids: Sequence[str] = (
+        "phase12-live-deepseek-complete",
+        "phase12-live-deepseek-clarification-resume",
+    ),
+    case_count: int = 2,
+    independently_recomputed: int = 2,
+    legacy_unverifiable: int = 0,
+) -> dict[str, Any]:
+    return {
+        "schema_version": "text2ifc/ifc-repair-proof-validation/0.1",
+        "status": "passed",
+        "case_count": case_count,
+        "independently_recomputed_case_count": independently_recomputed,
+        "legacy_unverifiable_case_count": legacy_unverifiable,
+        "errors": [],
+        "cases": [
+            {
+                "case_id": case_id,
+                "provider_evidence_mode": "live",
+                "live_transcript_status": "strict_recomputed",
+            }
+            for case_id in case_ids
+        ],
+    }
+
+
+def test_public_curate_runs_validator_in_a_separate_process_before_install(
+    tmp_path: Path,
+) -> None:
+    curator = _curator_module()
+    source = _curator_source_run(tmp_path)
+    proof = _empty_proof(tmp_path / "proof")
     before = _tree_bytes(proof)
     calls: list[tuple[tuple[str, ...], Path]] = []
 
@@ -1349,5 +1408,89 @@ def test_public_curate_runs_validator_in_a_separate_process_before_install(
     ).resolve()
     assert "--root" in command
     assert cwd == ROOT
+    assert _tree_bytes(proof) == before
+    assert not list(proof.glob("structural/live/*"))
+
+
+def test_public_curate_installs_only_two_strict_success_cases_after_validation(
+    tmp_path: Path,
+) -> None:
+    curator = _curator_module()
+    source = _curator_source_run(tmp_path)
+    proof = _empty_proof(tmp_path / "proof")
+    calls: list[tuple[tuple[str, ...], Path]] = []
+
+    def passed_validator(
+        command: Sequence[str],
+        *,
+        cwd: Path,
+    ) -> subprocess.CompletedProcess[str]:
+        calls.append((tuple(str(item) for item in command), cwd))
+        return subprocess.CompletedProcess(
+            command,
+            0,
+            json.dumps(_strict_validator_payload()),
+            "",
+        )
+
+    result = curator.curate(
+        source,
+        proof,
+        validator_runner=passed_validator,
+    )
+
+    assert result["status"] == "passed"
+    assert len(calls) == 2
+    manifest = json.loads((proof / "manifest.json").read_text(encoding="utf-8"))
+    assert manifest["case_count"] == 2
+    assert [case["case_id"] for case in manifest["cases"]] == list(
+        _strict_validator_payload()["cases"][index]["case_id"]
+        for index in range(2)
+    )
+    for case_id in (
+        "phase12-live-deepseek-complete",
+        "phase12-live-deepseek-clarification-resume",
+    ):
+        case_root = proof / "structural" / "live" / case_id
+        assert (case_root / "runtime" / "runs").is_dir()
+        assert (case_root / "provider-evidence" / "live-uat-result.json").is_file()
+    assert not (proof / "structural" / "live" / "program-guard").exists()
+
+
+@pytest.mark.parametrize(
+    "forged_payload",
+    (
+        _strict_validator_payload(case_ids=("wrong-complete", "wrong-resume")),
+        _strict_validator_payload(case_count=3),
+        _strict_validator_payload(independently_recomputed=1),
+        _strict_validator_payload(legacy_unverifiable=1),
+    ),
+    ids=("wrong-case-ids", "wrong-count", "not-recomputed", "legacy"),
+)
+def test_public_curate_rejects_forged_passed_validator_summary_without_install(
+    tmp_path: Path,
+    forged_payload: Mapping[str, Any],
+) -> None:
+    curator = _curator_module()
+    source = _curator_source_run(tmp_path)
+    proof = _empty_proof(tmp_path / "proof")
+    before = _tree_bytes(proof)
+
+    def forged_validator(
+        command: Sequence[str],
+        *,
+        cwd: Path,
+    ) -> subprocess.CompletedProcess[str]:
+        del cwd
+        return subprocess.CompletedProcess(
+            command,
+            0,
+            json.dumps(forged_payload),
+            "",
+        )
+
+    with pytest.raises(ValueError, match="LIVE_CANDIDATE_VALIDATION_FAILED"):
+        curator.curate(source, proof, validator_runner=forged_validator)
+
     assert _tree_bytes(proof) == before
     assert not list(proof.glob("structural/live/*"))
