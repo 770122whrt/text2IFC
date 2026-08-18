@@ -525,7 +525,9 @@ def _default_command_runner(
 ) -> subprocess.CompletedProcess[str]:
     rendered = " ".join(command).replace("\\", "/")
     timeout_seconds = 1_500
-    if "test_phase12_live_uat.py" in rendered:
+    if tuple(command[1:]) == ("-m", "pytest", "tests/ifc_repair", "-q"):
+        timeout_seconds = 7_200
+    elif "test_phase12_live_uat.py" in rendered:
         timeout_seconds = 180
     elif "-m compileall" in rendered:
         timeout_seconds = 300

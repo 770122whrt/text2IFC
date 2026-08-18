@@ -913,6 +913,30 @@ def test_default_preflight_runner_applies_a_bounded_timeout(
     assert captured["timeout"] == 60
 
 
+def test_default_preflight_runner_allows_the_real_full_suite_budget(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    module = _module()
+    captured: dict[str, Any] = {}
+
+    def fake_run(*_args: Any, **kwargs: Any) -> subprocess.CompletedProcess[str]:
+        captured.update(kwargs)
+        return subprocess.CompletedProcess(
+            (module.sys.executable, "-m", "pytest", "tests/ifc_repair", "-q"),
+            0,
+            "",
+            "",
+        )
+
+    monkeypatch.setattr(module.subprocess, "run", fake_run)
+    module._default_command_runner(
+        (module.sys.executable, "-m", "pytest", "tests/ifc_repair", "-q"),
+        cwd=ROOT,
+    )
+
+    assert captured["timeout"] == 7_200
+
+
 def test_preflight_timeout_has_a_distinct_blocking_reason_and_zero_transport(
     tmp_path: Path,
 ) -> None:
