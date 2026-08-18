@@ -1,0 +1,31 @@
+{
+  "schema_version": "text2ifc/ifc-repair-few-shot/0.1",
+  "example_id": "column.add.v0.2.unsupported",
+  "profile_id": "column.add.v0.2",
+  "case": "unsupported",
+  "user_text": "EXAMPLE_ONLY: add an inclined round column on Grid B/2",
+  "expected": {
+    "operation_type": "add_column",
+    "status": "unsupported",
+    "capability_code": "COLUMN_GEOMETRY_UNSUPPORTED",
+    "unsupported_facts": [
+      "inclined_member",
+      "round_section",
+      "grid_placement"
+    ],
+    "rule": "emit an exact unsupported_request bound to the selected operation/profile; never approximate, alias, clarify, or invent Grid coordinates",
+    "unsupported_requests": [
+      {
+        "unsupported_id": "unsupported-1",
+        "kind": "registered_capability",
+        "operation_id": "column-1",
+        "capability_id": "round_section",
+        "source": {
+          "source_kind": "user_request",
+          "reference": "request:/text",
+          "excerpt": "EXAMPLE_ONLY"
+        }
+      }
+    ]
+  }
+}

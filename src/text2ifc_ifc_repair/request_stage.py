@@ -32,11 +32,13 @@ from .repair_intent import (
     REPAIR_INTENT_BODY_SCHEMA_VERSION_0_3,
     REPAIR_INTENT_BODY_SCHEMA_VERSION_0_4,
     REPAIR_INTENT_BODY_SCHEMA_VERSION_0_5,
+    REPAIR_INTENT_BODY_SCHEMA_VERSION_0_6,
     REPAIR_INTENT_SCHEMA_VERSION,
     REPAIR_INTENT_SCHEMA_VERSION_0_2,
     REPAIR_INTENT_SCHEMA_VERSION_0_3,
     REPAIR_INTENT_SCHEMA_VERSION_0_4,
     REPAIR_INTENT_SCHEMA_VERSION_0_5,
+    REPAIR_INTENT_SCHEMA_VERSION_0_6,
     fingerprint_text,
     hash_request,
     load_repair_intent_body_schema,
@@ -49,6 +51,7 @@ TEMPLATE_ID_0_2 = "ifc-repair-intent.v0.2"
 TEMPLATE_ID_0_3 = "ifc-repair-intent.v0.3"
 TEMPLATE_ID_0_4 = "ifc-repair-intent.v0.4"
 TEMPLATE_ID_0_5 = "ifc-repair-intent.v0.5"
+TEMPLATE_ID_0_6 = "ifc-repair-intent.v0.6"
 _INTENT_CONTRACTS = {
     REPAIR_INTENT_SCHEMA_VERSION: (
         REPAIR_INTENT_BODY_SCHEMA_VERSION,
@@ -69,6 +72,10 @@ _INTENT_CONTRACTS = {
     REPAIR_INTENT_SCHEMA_VERSION_0_5: (
         REPAIR_INTENT_BODY_SCHEMA_VERSION_0_5,
         TEMPLATE_ID_0_5,
+    ),
+    REPAIR_INTENT_SCHEMA_VERSION_0_6: (
+        REPAIR_INTENT_BODY_SCHEMA_VERSION_0_6,
+        TEMPLATE_ID_0_6,
     ),
 }
 MAX_REQUEST_BYTES = DEFAULT_REPAIR_INTENT_LIMITS.max_request_bytes
@@ -105,8 +112,12 @@ def generate_repair_intent(
     schema = load_repair_intent_body_schema(body_schema_version)
     source_request_hash = hash_request(repair_request)
     supported_operations = (
-        _compact_supported_profiles(registry)
-        if intent_schema_version == REPAIR_INTENT_SCHEMA_VERSION_0_5
+        _compact_supported_profiles(
+            registry,
+            intent_schema_version=intent_schema_version,
+        )
+        if intent_schema_version
+        in {REPAIR_INTENT_SCHEMA_VERSION_0_5, REPAIR_INTENT_SCHEMA_VERSION_0_6}
         else _supported_operations(registry)
     )
     feedback: list[dict[str, str]] = []
@@ -219,9 +230,16 @@ def generate_repair_intent(
                     )
                     if (
                         intent_schema_version
-                        == REPAIR_INTENT_SCHEMA_VERSION_0_5
+                        in {
+                            REPAIR_INTENT_SCHEMA_VERSION_0_5,
+                            REPAIR_INTENT_SCHEMA_VERSION_0_6,
+                        }
                     ):
-                        _validate_operation_routing(parsed, registry=registry)
+                        _validate_operation_routing(
+                            parsed,
+                            registry=registry,
+                            intent_schema_version=intent_schema_version,
+                        )
                     model = str(provider_output.metadata.get("model", ""))
                     if not model:
                         raise RepairIntentError(
@@ -246,6 +264,10 @@ def generate_repair_intent(
                         "operations": operations,
                         "provenance": parsed["provenance"],
                     }
+                    if "unsupported_requests" in parsed:
+                        envelope["unsupported_requests"] = parsed[
+                            "unsupported_requests"
+                        ]
                     if "semantic_bundles" in parsed:
                         envelope["semantic_bundles"] = parsed["semantic_bundles"]
                     intent = RepairIntent.from_dict(
@@ -297,7 +319,9 @@ def generate_repair_intent(
                 if unsupported_operations
                 else _missing_parameters(intent, registry)
             )
-            missing_properties = _missing_properties(intent)
+            missing_properties = (
+                [] if unsupported_operations else _missing_properties(intent)
+            )
             if (
                 not unsupported_operations
                 and not missing_parameters
@@ -386,18 +410,72 @@ def _unsupported_operations(
     registry: OperationRegistry,
 ) -> list[dict[str, str]]:
     unsupported: list[dict[str, str]] = []
+    explicit_ids: set[tuple[str, str]] = set()
+    has_unregistered = False
+    for request in intent.unsupported_requests:
+        if request.kind == "unregistered_action":
+            has_unregistered = True
+            unsupported.append(
+                {
+                    "operation_id": "",
+                    "reason_code": "REPAIR_REQUEST_OUT_OF_SCOPE",
+                }
+            )
+            continue
+        operation = next(
+            item
+            for item in intent.operations
+            if item.operation_id == request.operation_id
+        )
+        if request.capability_id.startswith("structural_analysis_"):
+            reason_code = "STRUCTURAL_ANALYSIS_UNSUPPORTED"
+        else:
+            decision = registry.assess_intent_capability(operation.to_dict())
+            reason_code = str(decision.get("reason_code") or "")
+            if not reason_code:
+                family = (
+                    operation.routing_intent.component_family
+                    if operation.routing_intent is not None
+                    else ""
+                )
+                reason_code = {
+                    "beam": "BEAM_GEOMETRY_UNSUPPORTED",
+                    "column": "COLUMN_GEOMETRY_UNSUPPORTED",
+                }.get(family, "OPERATION_UNSUPPORTED")
+        explicit_ids.add((operation.operation_id, reason_code))
+        unsupported.append(
+            {
+                "operation_id": operation.operation_id,
+                "reason_code": reason_code,
+            }
+        )
     for operation in intent.operations:
         decision = registry.assess_intent_capability(operation.to_dict())
         if str(decision.get("status")) != "unsupported":
             continue
+        pair = (
+            operation.operation_id,
+            str(decision.get("reason_code") or "OPERATION_UNSUPPORTED"),
+        )
+        if pair in explicit_ids:
+            continue
         unsupported.append(
             {
                 "operation_id": operation.operation_id,
-                "reason_code": str(
-                    decision.get("reason_code") or "OPERATION_UNSUPPORTED"
-                ),
+                "reason_code": pair[1],
             }
         )
+    reason_codes = {item["reason_code"] for item in unsupported}
+    if (
+        has_unregistered and intent.operations
+    ) or len(reason_codes) > 1:
+        return [
+            {
+                **item,
+                "reason_code": "REPAIR_REQUEST_CONTAINS_UNSUPPORTED_ACTIONS",
+            }
+            for item in unsupported
+        ]
     return unsupported
 
 
@@ -452,6 +530,8 @@ def _supported_operations(registry: OperationRegistry) -> list[dict[str, Any]]:
 
 def _compact_supported_profiles(
     registry: OperationRegistry,
+    *,
+    intent_schema_version: str,
 ) -> list[dict[str, Any]]:
     profile_ids = []
     for operation_type in registry.operation_types:
@@ -460,7 +540,12 @@ def _compact_supported_profiles(
             raise PromptProfileError(
                 "PROFILE_BINDING_MISSING", operation_type
             )
-        profile_ids.append(profile_id)
+        profile_ids.append(
+            _profile_id_for_intent_contract(
+                profile_id,
+                intent_schema_version=intent_schema_version,
+            )
+        )
     catalog = list(
         compact_profile_catalog(
             load_prompt_profiles(),
@@ -472,19 +557,44 @@ def _compact_supported_profiles(
         item["intent_parameter_schema"] = dict(
             definition.intent_parameter_schema or definition.parameter_schema
         )
+        if definition.intent_target_schema is not None:
+            item["intent_target_schema"] = dict(
+                definition.intent_target_schema
+            )
     return catalog
+
+
+def _profile_id_for_intent_contract(
+    profile_id: str,
+    *,
+    intent_schema_version: str,
+) -> str:
+    if intent_schema_version == REPAIR_INTENT_SCHEMA_VERSION_0_5 and profile_id in {
+        "beam.add.v0.2",
+        "column.add.v0.2",
+    }:
+        return profile_id.removesuffix(".v0.2")
+    return profile_id
 
 
 def _validate_operation_routing(
     document: Mapping[str, Any],
     *,
     registry: OperationRegistry,
+    intent_schema_version: str,
 ) -> None:
     profiles = load_prompt_profiles()
     for index, operation in enumerate(document.get("operations", ())):
         operation_type = str(operation.get("operation_type", ""))
         definition = registry.require(operation_type)
-        expected_profile_id = definition.prompt_profile_id
+        expected_profile_id = (
+            None
+            if definition.prompt_profile_id is None
+            else _profile_id_for_intent_contract(
+                definition.prompt_profile_id,
+                intent_schema_version=intent_schema_version,
+            )
+        )
         routing = operation.get("routing_intent")
         if not isinstance(routing, Mapping) or expected_profile_id is None:
             raise RepairIntentError(
@@ -530,6 +640,7 @@ def _fold_created_occurrence_property_operations(
     if normalized.get("schema_version") not in {
         REPAIR_INTENT_BODY_SCHEMA_VERSION_0_4,
         REPAIR_INTENT_BODY_SCHEMA_VERSION_0_5,
+        REPAIR_INTENT_BODY_SCHEMA_VERSION_0_6,
     }:
         return normalized, []
 

@@ -1,0 +1,31 @@
+{
+  "schema_version": "text2ifc/ifc-repair-few-shot/0.1",
+  "example_id": "beam.add.v0.2.unsupported",
+  "profile_id": "beam.add.v0.2",
+  "case": "unsupported",
+  "user_text": "EXAMPLE_ONLY: add a curved I-section beam on Grid A/1",
+  "expected": {
+    "operation_type": "add_beam",
+    "status": "unsupported",
+    "capability_code": "BEAM_GEOMETRY_UNSUPPORTED",
+    "unsupported_facts": [
+      "curved_member",
+      "i_section",
+      "grid_placement"
+    ],
+    "rule": "emit an exact unsupported_request bound to the selected operation/profile; never approximate, alias, clarify, or invent Grid coordinates",
+    "unsupported_requests": [
+      {
+        "unsupported_id": "unsupported-1",
+        "kind": "registered_capability",
+        "operation_id": "beam-1",
+        "capability_id": "i_section",
+        "source": {
+          "source_kind": "user_request",
+          "reference": "request:/text",
+          "excerpt": "EXAMPLE_ONLY"
+        }
+      }
+    ]
+  }
+}

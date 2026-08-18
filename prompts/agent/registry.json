@@ -452,6 +452,34 @@
       ]
     },
     {
+      "template_id": "ifc-repair-intent.v0.6",
+      "role": "ifc_repair_request_understanding",
+      "mode": "repair_intent",
+      "path": "prompts/agent/ifc-repair-intent-v0.6.md",
+      "sha256": "sha256:997a59854ea34ba5bdc6993900da1d7c1b98b8232bbf02c719acff61bacde754",
+      "required_inputs": [
+        "REPAIR_REQUEST",
+        "SUPPORTED_OPERATIONS",
+        "REPAIR_INTENT_SCHEMA",
+        "VALIDATION_FEEDBACK"
+      ],
+      "forbidden_outputs": [
+        "raw_ifc",
+        "step_text",
+        "step_id",
+        "resolved_target_id",
+        "resolved_target_guid",
+        "resolved_type_id",
+        "unregistered_profile",
+        "inferred_occurrence_reuse",
+        "mutation_mapping",
+        "private_original_ifc",
+        "benchmark_gold",
+        "guessed_project_fact",
+        "repair_changeset"
+      ]
+    },
+    {
       "template_id": "ifc-repair-changeset.v0.4",
       "role": "ifc_repair_generator",
       "mode": "bound_changeset",
@@ -499,11 +527,41 @@
       ]
     },
     {
+      "template_id": "beam.add.v0.2",
+      "role": "ifc_repair_operation_profile",
+      "mode": "selected_profile",
+      "path": "prompts/agent/ifc-repair-profiles/beam.add.v0.2.json",
+      "sha256": "sha256:3cd48523388f4b020b4a76f190d9e9ea17045910a9637e61dec869316b763f86",
+      "required_inputs": [],
+      "forbidden_outputs": [
+        "placement_matrix",
+        "generated_global_id",
+        "generated_type_identity",
+        "unselected_profile",
+        "noncanonical_alias"
+      ]
+    },
+    {
       "template_id": "column.add",
       "role": "ifc_repair_operation_profile",
       "mode": "reserved_selected_profile",
       "path": "prompts/agent/ifc-repair-profiles/column.add.json",
       "sha256": "sha256:246d5e2cc1941f35ccc296542dcb12d10c13e72de4e1c1e0b0a800c807772fb1",
+      "required_inputs": [],
+      "forbidden_outputs": [
+        "placement_matrix",
+        "generated_global_id",
+        "generated_type_identity",
+        "unselected_profile",
+        "noncanonical_alias"
+      ]
+    },
+    {
+      "template_id": "column.add.v0.2",
+      "role": "ifc_repair_operation_profile",
+      "mode": "selected_profile",
+      "path": "prompts/agent/ifc-repair-profiles/column.add.v0.2.json",
+      "sha256": "sha256:9fc8b715cf04af8b62c1a973c1ed5c3ee896eb727b247efc02b3ee121f3bd83e",
       "required_inputs": [],
       "forbidden_outputs": [
         "placement_matrix",

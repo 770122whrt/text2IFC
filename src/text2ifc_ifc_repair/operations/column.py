@@ -118,13 +118,39 @@ _INTENT_PARAMETER_SCHEMA = {
             "required": ["shape", "width_mm", "depth_mm"],
             "properties": {
                 **_SECTION_PROPERTIES,
-                "shape": {"type": "string"},
+                "shape": {
+                    "enum": [
+                        "rectangle",
+                        "round_section",
+                        "i_section",
+                        "h_section",
+                        "arbitrary_section",
+                        "variable_section",
+                    ]
+                },
             },
         },
         "height_mm": {"type": "number", "exclusiveMinimum": 0},
-        "analysis_member": {"type": "boolean"},
         "split_at_storeys": {"type": "boolean"},
     },
+}
+_INTENT_TARGET_SCHEMA = {
+    "type": "object",
+    "additionalProperties": False,
+    "required": ["schema_version", "allowed_ifc_classes"],
+    "properties": {
+        "schema_version": {"const": "text2ifc/ifc-target-query/0.1"},
+        "allowed_ifc_classes": {"const": ["IfcBuildingStorey"]},
+        "global_id": {"type": "string", "minLength": 1},
+        "names": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 16,
+            "uniqueItems": True,
+            "items": {"type": "string", "minLength": 1, "maxLength": 256},
+        },
+    },
+    "anyOf": [{"required": ["global_id"]}, {"required": ["names"]}],
 }
 _TARGET_SCHEMA = {
     "type": "object",
@@ -196,6 +222,7 @@ def column_operation_definition() -> OperationDefinition:
         target_ifc_classes=("IfcBuildingStorey",),
         parameter_schema=_PARAMETER_SCHEMA,
         target_schema=_TARGET_SCHEMA,
+        intent_target_schema=_INTENT_TARGET_SCHEMA,
         intent_parameter_schema=_INTENT_PARAMETER_SCHEMA,
         intent_capability_checker=_intent_capability_checker,
         context_adapter=_context_adapter,
@@ -236,7 +263,7 @@ def column_operation_definition() -> OperationDefinition:
         inherited_type_evidence_role="IfcColumnType",
         generated_type_template=generated_column_type_template,
         generated_type_factory=create_generated_column_type,
-        prompt_profile_id="column.add",
+        prompt_profile_id="column.add.v0.2",
         semantic_scope_roles={"column": "column_occurrence"},
         conflict_domain="structural_member",
         intent_policy_checker=_intent_policy_checker,

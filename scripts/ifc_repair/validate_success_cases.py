@@ -42,7 +42,11 @@ from text2ifc_ifc_repair.indexer import build_ifc_index
 from text2ifc_ifc_repair.mutation import remove_structural_members
 from text2ifc_ifc_repair.operations import create_default_registry
 from text2ifc_ifc_repair.operations.hosted_opening import deterministic_global_id
-from text2ifc_ifc_repair.prompt_profiles import load_prompt_profiles, select_prompt_profiles
+from text2ifc_ifc_repair.prompt_profiles import (
+    compact_profile_catalog,
+    load_prompt_profiles,
+    select_prompt_profiles,
+)
 from text2ifc_ifc_repair.production_evidence import build_production_evidence
 from text2ifc_ifc_repair.repair_intent import RepairIntent
 from text2ifc_ifc_repair.resolution_flow import resolve_repair_intent
@@ -76,6 +80,24 @@ STRUCTURAL_OCCURRENCE_CLASS = {
     "beam": "IfcBeam",
     "column": "IfcColumn",
 }
+
+
+def _profile_id_for_intent_schema(
+    operation_type: str,
+    *,
+    intent_schema_version: str,
+) -> str:
+    profile_id = str(
+        create_default_registry().require(operation_type).prompt_profile_id
+    )
+    if intent_schema_version == "text2ifc/ifc-repair-intent/0.5" and profile_id in {
+        "beam.add.v0.2",
+        "column.add.v0.2",
+    }:
+        return profile_id.removesuffix(".v0.2")
+    return profile_id
+
+
 STRUCTURAL_TYPE_CLASS = {
     "beam": "IfcBeamType",
     "column": "IfcColumnType",
@@ -987,11 +1009,14 @@ def _audit_structural_provenance_chain(
         family = STRUCTURAL_FAMILY_BY_OPERATION[operation_type]
         routing = operation.get("routing_intent")
         routing = routing if isinstance(routing, Mapping) else {}
-        definition = registry.require(operation_type)
+        expected_profile_id = _profile_id_for_intent_schema(
+            operation_type,
+            intent_schema_version=str(intent.get("schema_version") or ""),
+        )
         if (
             routing.get("component_family") != family
             or routing.get("action") != "add"
-            or routing.get("operation_profile") != definition.prompt_profile_id
+            or routing.get("operation_profile") != expected_profile_id
         ):
             raise ValueError(
                 f"l0.structural.provenance:routing_binding:{operation_id}"
@@ -1736,6 +1761,26 @@ def _audit_live_transcript_authority(
         }
     )
     expected_selection = select_prompt_profiles(expected_profile_ids).to_dict()
+    profiles = load_prompt_profiles()
+    stage1_profile_ids = sorted(
+        {
+            str(registry.require(operation_type).prompt_profile_id)
+            for operation_type in registry.operation_types
+        }
+    )
+    stage1_catalog = compact_profile_catalog(
+        profiles,
+        include_profile_ids=stage1_profile_ids,
+    )
+    expected_stage1 = {
+        "profile_ids": [str(item["profile_id"]) for item in stage1_catalog],
+        "profile_versions": [
+            str(item["profile_version"]) for item in stage1_catalog
+        ],
+        "profile_hashes": [str(item["profile_hash"]) for item in stage1_catalog],
+        "few_shot_ids": [],
+        "few_shot_hashes": [],
+    }
     selection = _read_json(profile_path)
     if selection != expected_selection:
         raise ValueError("l0.structural.live:prompt_profile_registry_binding")
@@ -1748,12 +1793,22 @@ def _audit_live_transcript_authority(
         if isinstance(item, Mapping) and item.get("case_id") == live_case_id
     )
     for attempt in result_case.get("attempts", ()):
-        if not isinstance(attempt, Mapping) or (
-            attempt.get("profile_ids") != expected_selection["profile_ids"]
-            or attempt.get("profile_versions") != expected_versions
-            or attempt.get("profile_hashes") != expected_selection["profile_hashes"]
-            or attempt.get("few_shot_ids") != expected_selection["few_shot_ids"]
-            or attempt.get("few_shot_hashes") != expected_selection["few_shot_hashes"]
+        if not isinstance(attempt, Mapping):
+            raise ValueError("l0.structural.live:attempt_profile_binding")
+        expected_attempt = (
+            expected_stage1
+            if attempt.get("stage") == "stage1"
+            else {
+                "profile_ids": expected_selection["profile_ids"],
+                "profile_versions": expected_versions,
+                "profile_hashes": expected_selection["profile_hashes"],
+                "few_shot_ids": expected_selection["few_shot_ids"],
+                "few_shot_hashes": expected_selection["few_shot_hashes"],
+            }
+        )
+        if any(
+            attempt.get(key) != value
+            for key, value in expected_attempt.items()
         ):
             raise ValueError("l0.structural.live:attempt_profile_binding")
     return {

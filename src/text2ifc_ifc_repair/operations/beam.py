@@ -110,7 +110,16 @@ _INTENT_PARAMETER_SCHEMA = {
             "additionalProperties": False,
             "required": ["shape", "width_mm", "height_mm"],
             "properties": {
-                "shape": {"type": "string"},
+                "shape": {
+                    "enum": [
+                        "rectangle",
+                        "round_section",
+                        "i_section",
+                        "h_section",
+                        "arbitrary_section",
+                        "variable_section",
+                    ]
+                },
                 "width_mm": {"type": "number", "exclusiveMinimum": 0},
                 "height_mm": {"type": "number", "exclusiveMinimum": 0},
                 "orientation": {"type": "object"},
@@ -118,8 +127,25 @@ _INTENT_PARAMETER_SCHEMA = {
             },
         },
         "length_mm": {"type": "number", "exclusiveMinimum": 0},
-        "analysis_member": {"type": "boolean"},
     },
+}
+_INTENT_TARGET_SCHEMA = {
+    "type": "object",
+    "additionalProperties": False,
+    "required": ["schema_version", "allowed_ifc_classes"],
+    "properties": {
+        "schema_version": {"const": "text2ifc/ifc-target-query/0.1"},
+        "allowed_ifc_classes": {"const": ["IfcBuildingStorey"]},
+        "global_id": {"type": "string", "minLength": 1},
+        "names": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 16,
+            "uniqueItems": True,
+            "items": {"type": "string", "minLength": 1, "maxLength": 256},
+        },
+    },
+    "anyOf": [{"required": ["global_id"]}, {"required": ["names"]}],
 }
 _TARGET_SCHEMA = {
     "type": "object",
@@ -191,6 +217,7 @@ def beam_operation_definition() -> OperationDefinition:
         target_ifc_classes=("IfcBuildingStorey",),
         parameter_schema=_PARAMETER_SCHEMA,
         target_schema=_TARGET_SCHEMA,
+        intent_target_schema=_INTENT_TARGET_SCHEMA,
         intent_parameter_schema=_INTENT_PARAMETER_SCHEMA,
         intent_capability_checker=_intent_capability_checker,
         context_adapter=_context_adapter,
@@ -230,7 +257,7 @@ def beam_operation_definition() -> OperationDefinition:
         inherited_type_evidence_role="IfcBeamType",
         generated_type_template=generated_beam_type_template,
         generated_type_factory=create_generated_beam_type,
-        prompt_profile_id="beam.add",
+        prompt_profile_id="beam.add.v0.2",
         semantic_scope_roles={"beam": "beam_occurrence"},
         conflict_domain="structural_member",
         intent_policy_checker=_intent_policy_checker,

@@ -51,6 +51,7 @@ class OperationDefinition:
         default_factory=dict
     )
     target_schema: Mapping[str, Any] | None = None
+    intent_target_schema: Mapping[str, Any] | None = None
     intent_parameter_schema: Mapping[str, Any] | None = None
     intent_capability_checker: OperationCallable | None = None
     precondition_names: tuple[str, ...] = ()
@@ -91,6 +92,8 @@ class OperationDefinition:
         Draft202012Validator.check_schema(dict(self.parameter_schema))
         if self.target_schema is not None:
             Draft202012Validator.check_schema(dict(self.target_schema))
+        if self.intent_target_schema is not None:
+            Draft202012Validator.check_schema(dict(self.intent_target_schema))
         if self.intent_parameter_schema is not None:
             Draft202012Validator.check_schema(dict(self.intent_parameter_schema))
         if self.intent_capability_checker is not None and not callable(
@@ -388,6 +391,22 @@ class OperationRegistry:
             schema=definition.target_schema,
             code="OPERATION_TARGET_SCHEMA_ERROR",
             path_prefix="/target",
+        )
+
+    def validate_intent_target(
+        self,
+        operation: Mapping[str, Any],
+    ) -> list[ValidationIssue]:
+        """Validate a Stage 1 target claim against operation-owned syntax."""
+
+        definition = self.require(str(operation.get("operation_type", "")))
+        if definition.intent_target_schema is None:
+            return []
+        return _schema_issues(
+            value=operation.get("target_query"),
+            schema=definition.intent_target_schema,
+            code="OPERATION_INTENT_TARGET_SCHEMA_ERROR",
+            path_prefix="/target_query",
         )
 
     def dispatch(

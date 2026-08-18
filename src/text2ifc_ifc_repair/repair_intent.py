@@ -64,12 +64,23 @@ REPAIR_INTENT_BODY_SCHEMA_VERSION_0_5 = (
 REPAIR_INTENT_BODY_SCHEMA_PATH_0_5 = Path(
     "schemas/agent/ifc-repair-intent-body-0.5.schema.json"
 )
+REPAIR_INTENT_SCHEMA_VERSION_0_6 = "text2ifc/ifc-repair-intent/0.6"
+REPAIR_INTENT_SCHEMA_PATH_0_6 = Path(
+    "schemas/agent/ifc-repair-intent-0.6.schema.json"
+)
+REPAIR_INTENT_BODY_SCHEMA_VERSION_0_6 = (
+    "text2ifc/ifc-repair-intent-body/0.6"
+)
+REPAIR_INTENT_BODY_SCHEMA_PATH_0_6 = Path(
+    "schemas/agent/ifc-repair-intent-body-0.6.schema.json"
+)
 _SCHEMA_PATHS = {
     REPAIR_INTENT_SCHEMA_VERSION: REPAIR_INTENT_SCHEMA_PATH,
     REPAIR_INTENT_SCHEMA_VERSION_0_2: REPAIR_INTENT_SCHEMA_PATH_0_2,
     REPAIR_INTENT_SCHEMA_VERSION_0_3: REPAIR_INTENT_SCHEMA_PATH_0_3,
     REPAIR_INTENT_SCHEMA_VERSION_0_4: REPAIR_INTENT_SCHEMA_PATH_0_4,
     REPAIR_INTENT_SCHEMA_VERSION_0_5: REPAIR_INTENT_SCHEMA_PATH_0_5,
+    REPAIR_INTENT_SCHEMA_VERSION_0_6: REPAIR_INTENT_SCHEMA_PATH_0_6,
 }
 _BODY_SCHEMA_PATHS = {
     REPAIR_INTENT_BODY_SCHEMA_VERSION: REPAIR_INTENT_BODY_SCHEMA_PATH,
@@ -77,6 +88,7 @@ _BODY_SCHEMA_PATHS = {
     REPAIR_INTENT_BODY_SCHEMA_VERSION_0_3: REPAIR_INTENT_BODY_SCHEMA_PATH_0_3,
     REPAIR_INTENT_BODY_SCHEMA_VERSION_0_4: REPAIR_INTENT_BODY_SCHEMA_PATH_0_4,
     REPAIR_INTENT_BODY_SCHEMA_VERSION_0_5: REPAIR_INTENT_BODY_SCHEMA_PATH_0_5,
+    REPAIR_INTENT_BODY_SCHEMA_VERSION_0_6: REPAIR_INTENT_BODY_SCHEMA_PATH_0_6,
 }
 
 
@@ -129,6 +141,7 @@ class RepairIntentCode(str, Enum):
     RETRY_EXHAUSTED = "REPAIR_INTENT_RETRY_EXHAUSTED"
     PROPERTY_INCOMPLETE = "REPAIR_INTENT_PROPERTY_INCOMPLETE"
     OPERATION_PROFILE_MISMATCH = "OPERATION_PROFILE_MISMATCH"
+    UNSUPPORTED_REQUEST_INVALID = "REPAIR_INTENT_UNSUPPORTED_REQUEST_INVALID"
 
 
 class RepairIntentError(ValueError):
@@ -188,6 +201,37 @@ class RoutingIntent:
             "component_family": self.component_family,
             "action": self.action,
             "operation_profile": self.operation_profile,
+            "source": self.source.to_dict(),
+        }
+
+
+@dataclass(frozen=True)
+class UnsupportedRequest:
+    """One explicit user request that the registered repair agent cannot do."""
+
+    unsupported_id: str
+    kind: str
+    operation_id: str | None
+    capability_id: str
+    source: PublicProvenance
+
+    @classmethod
+    def from_dict(cls, value: Mapping[str, Any]) -> "UnsupportedRequest":
+        operation_id = value["operation_id"]
+        return cls(
+            unsupported_id=str(value["unsupported_id"]),
+            kind=str(value["kind"]),
+            operation_id=None if operation_id is None else str(operation_id),
+            capability_id=str(value["capability_id"]),
+            source=PublicProvenance.from_dict(value["source"]),
+        )
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "unsupported_id": self.unsupported_id,
+            "kind": self.kind,
+            "operation_id": self.operation_id,
+            "capability_id": self.capability_id,
             "source": self.source.to_dict(),
         }
 
@@ -444,6 +488,8 @@ class RepairIntent:
     schema_version: str = REPAIR_INTENT_SCHEMA_VERSION
     semantic_bundles: tuple[OccurrenceSemanticBundle, ...] = ()
     _has_semantic_bundles_field: bool = False
+    unsupported_requests: tuple[UnsupportedRequest, ...] = ()
+    _has_unsupported_requests_field: bool = False
 
     @classmethod
     def from_dict(
@@ -473,6 +519,16 @@ class RepairIntent:
                 RepairIntentCode.DUPLICATE_OPERATION_ID,
                 "Operation IDs must be unique within one RepairIntent.",
                 path="/operations",
+            )
+        unsupported_ids = [
+            str(item["unsupported_id"])
+            for item in payload.get("unsupported_requests", ())
+        ]
+        if len(unsupported_ids) != len(set(unsupported_ids)):
+            raise RepairIntentError(
+                RepairIntentCode.UNSUPPORTED_REQUEST_INVALID,
+                "Unsupported request IDs must be unique within one RepairIntent.",
+                path="/unsupported_requests",
             )
         bundle_ids = [
             str(item["bundle_id"]) for item in payload.get("semantic_bundles", ())
@@ -510,6 +566,15 @@ class RepairIntent:
                     path=f"/operations/{index}/operation_type",
                 ) from error
             query = raw_operation["target_query"]
+            if schema_version == REPAIR_INTENT_SCHEMA_VERSION_0_6:
+                target_issues = registry.validate_intent_target(raw_operation)
+                if target_issues:
+                    issue = target_issues[0]
+                    raise RepairIntentError(
+                        RepairIntentCode.SCHEMA_INVALID,
+                        issue.message,
+                        path=f"/operations/{index}{issue.path}",
+                    )
             if not _has_target_selector(query):
                 raise RepairIntentError(
                     RepairIntentCode.TARGET_SELECTOR_REQUIRED,
@@ -552,6 +617,12 @@ class RepairIntent:
                         )
             operations.append(OperationIntent.from_dict(raw_operation))
 
+        _validate_unsupported_requests(
+            payload.get("unsupported_requests", ()),
+            operations=operations,
+            registry=registry,
+        )
+
         return cls(
             request_id=str(payload["request_id"]),
             source_request_hash=str(payload["source_request_hash"]),
@@ -567,6 +638,11 @@ class RepairIntent:
                 for item in payload.get("semantic_bundles", ())
             ),
             _has_semantic_bundles_field="semantic_bundles" in payload,
+            unsupported_requests=tuple(
+                UnsupportedRequest.from_dict(item)
+                for item in payload.get("unsupported_requests", ())
+            ),
+            _has_unsupported_requests_field="unsupported_requests" in payload,
         )
 
     def to_dict(self) -> dict[str, Any]:
@@ -582,6 +658,10 @@ class RepairIntent:
         if self._has_semantic_bundles_field:
             payload["semantic_bundles"] = [
                 item.to_dict() for item in self.semantic_bundles
+            ]
+        if self._has_unsupported_requests_field:
+            payload["unsupported_requests"] = [
+                item.to_dict() for item in self.unsupported_requests
             ]
         return payload
 
@@ -641,6 +721,52 @@ def _property_intent_from_dict(
     if value.get("intent_kind") == "natural_language_property":
         return NaturalLanguagePropertyIntent.from_dict(value)
     return ExactPropertyIntent.from_dict(value)
+
+
+def _validate_unsupported_requests(
+    raw_requests: Any,
+    *,
+    operations: list[OperationIntent],
+    registry: OperationRegistry,
+) -> None:
+    if not raw_requests:
+        return
+    from .prompt_profiles import load_prompt_profiles
+
+    operation_by_id = {item.operation_id: item for item in operations}
+    profiles = load_prompt_profiles()
+    for index, raw in enumerate(raw_requests):
+        if raw["kind"] == "unregistered_action":
+            continue
+        operation_id = str(raw["operation_id"])
+        operation = operation_by_id.get(operation_id)
+        if operation is None:
+            raise RepairIntentError(
+                RepairIntentCode.UNSUPPORTED_REQUEST_INVALID,
+                f"Unknown operation_id: {operation_id}",
+                path=f"/unsupported_requests/{index}/operation_id",
+            )
+        profile_id = registry.require(operation.operation_type).prompt_profile_id
+        profile = profiles.get(str(profile_id))
+        if profile is None or operation.routing_intent is None:
+            raise RepairIntentError(
+                RepairIntentCode.UNSUPPORTED_REQUEST_INVALID,
+                operation.operation_type,
+                path=f"/unsupported_requests/{index}/capability_id",
+            )
+        capability_id = str(raw["capability_id"])
+        unsupported = {
+            str(item) for item in profile.document["unsupported_capabilities"]
+        }
+        if (
+            operation.routing_intent.operation_profile != profile.profile_id
+            or capability_id not in unsupported
+        ):
+            raise RepairIntentError(
+                RepairIntentCode.UNSUPPORTED_REQUEST_INVALID,
+                capability_id,
+                path=f"/unsupported_requests/{index}/capability_id",
+            )
 
 
 def _has_target_selector(query: Mapping[str, Any]) -> bool:
@@ -721,6 +847,8 @@ __all__ = [
     "REPAIR_INTENT_BODY_SCHEMA_VERSION_0_4",
     "REPAIR_INTENT_BODY_SCHEMA_PATH_0_5",
     "REPAIR_INTENT_BODY_SCHEMA_VERSION_0_5",
+    "REPAIR_INTENT_BODY_SCHEMA_PATH_0_6",
+    "REPAIR_INTENT_BODY_SCHEMA_VERSION_0_6",
     "REPAIR_INTENT_SCHEMA_PATH",
     "REPAIR_INTENT_SCHEMA_PATH_0_2",
     "REPAIR_INTENT_SCHEMA_VERSION",
@@ -731,11 +859,14 @@ __all__ = [
     "REPAIR_INTENT_SCHEMA_VERSION_0_4",
     "REPAIR_INTENT_SCHEMA_PATH_0_5",
     "REPAIR_INTENT_SCHEMA_VERSION_0_5",
+    "REPAIR_INTENT_SCHEMA_PATH_0_6",
+    "REPAIR_INTENT_SCHEMA_VERSION_0_6",
     "RepairIntent",
     "RepairIntentCode",
     "RepairIntentError",
     "RepairIntentLimits",
     "RoutingIntent",
+    "UnsupportedRequest",
     "fingerprint_text",
     "hash_request",
     "load_repair_intent_schema",

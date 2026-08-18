@@ -5,7 +5,9 @@ from pathlib import Path
 import pytest
 
 from text2ifc_agent.providers import ProviderOutput
+from text2ifc_agent.prompt_registry import render_prompt
 from text2ifc_ifc_repair.operations import create_default_registry
+from text2ifc_ifc_repair.prompt_profiles import select_prompt_profiles
 from text2ifc_ifc_repair.repair_intent import (
     REPAIR_INTENT_BODY_SCHEMA_VERSION_0_6,
     REPAIR_INTENT_SCHEMA_VERSION_0_6,
@@ -386,3 +388,47 @@ def test_stage1_does_not_mutate_provider_body_or_import_private_inputs(
     call_text = json.dumps(provider.calls, sort_keys=True)
     assert "private_original_ifc" not in call_text
     assert "mutation_manifest.private.json" not in call_text
+
+
+def test_v06_prompt_freezes_stage_boundaries_and_exact_scope_language() -> None:
+    rendered = render_prompt(
+        template_id="ifc-repair-intent.v0.6",
+        inputs={
+            "REPAIR_REQUEST": "EXAMPLE_ONLY",
+            "SUPPORTED_OPERATIONS": [],
+            "REPAIR_INTENT_SCHEMA": {},
+            "VALIDATION_FEEDBACK": [],
+        },
+    )["text"]
+    for required in (
+        "registered IFC repair operations",
+        "unsupported_requests",
+        "structural_analysis_node",
+        "Stage 2",
+        "full profile",
+        "few-shots",
+        '`names: ["Level 1"]`',
+        "`rectangular` is not an alias",
+    ):
+        assert required in rendered
+
+
+def test_stage2_selected_structural_profiles_load_only_bound_v02_few_shots() -> None:
+    selected = select_prompt_profiles(
+        ["beam.add.v0.2", "column.add.v0.2"]
+    )
+    assert selected.profile_ids == ("beam.add.v0.2", "column.add.v0.2")
+    assert set(selected.few_shot_ids) == {
+        "beam.add.v0.2.complete",
+        "beam.add.v0.2.clarification",
+        "beam.add.v0.2.type-reuse",
+        "beam.add.v0.2.unsupported",
+        "column.add.v0.2.complete",
+        "column.add.v0.2.clarification",
+        "column.add.v0.2.type-reuse",
+        "column.add.v0.2.unsupported",
+    }
+    assert all(
+        item["profile_id"] in selected.profile_ids
+        for item in selected.few_shots
+    )

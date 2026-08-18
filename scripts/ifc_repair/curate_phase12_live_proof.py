@@ -47,10 +47,21 @@ BASE_DAMAGE_CASE_ID = "phase12-d7n-beam-column-atomic"
 BASE_DAMAGE_CASE = SOURCE.parent
 SUCCESS_CASE_IDS = ("complete", "clarification-resume")
 REQUIRED_CASE_IDS = (*SUCCESS_CASE_IDS, "program-guard")
-EXPECTED_PROFILES = {
-    "complete": frozenset({"beam.add", "column.add"}),
-    "clarification-resume": frozenset({"column.add"}),
-    "program-guard": frozenset({"beam.add"}),
+EXPECTED_STAGE1_PROFILES = frozenset(
+    {
+        "beam.add.v0.2",
+        "column.add.v0.2",
+        "door.add-with-opening.v0.2",
+        "door.fill-existing-opening.v0.2",
+        "occurrence.set-properties",
+        "opening.add-to-wall",
+        "window.add-with-opening",
+    }
+)
+EXPECTED_SELECTED_PROFILES = {
+    "complete": frozenset({"beam.add.v0.2", "column.add.v0.2"}),
+    "clarification-resume": frozenset({"column.add.v0.2"}),
+    "program-guard": frozenset({"beam.add.v0.2"}),
 }
 PROOF_CASE_IDS = {
     "complete": "phase12-live-deepseek-complete",
@@ -250,7 +261,12 @@ def _audit_attempts(
             len(profile_ids) != len(profile_versions)
             or len(profile_ids) != len(profile_hashes)
             or len(set(map(str, profile_ids))) != len(profile_ids)
-            or frozenset(map(str, profile_ids)) != EXPECTED_PROFILES[case_id]
+            or frozenset(map(str, profile_ids))
+            != (
+                EXPECTED_STAGE1_PROFILES
+                if stage == "stage1"
+                else EXPECTED_SELECTED_PROFILES[case_id]
+            )
         ):
             raise ValueError("LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH")
         if stage == "stage2":
@@ -672,7 +688,7 @@ def _runtime_authority(
     if len(contexts) != 1:
         raise ValueError("LIVE_EFFECTIVE_REQUEST_CONTEXT_MISMATCH")
     profile = _read(profile_path)
-    if frozenset(map(str, profile.get("profile_ids", ()))) != EXPECTED_PROFILES[
+    if frozenset(map(str, profile.get("profile_ids", ()))) != EXPECTED_SELECTED_PROFILES[
         case_id
     ]:
         raise ValueError("LIVE_RUNTIME_PROFILE_SELECTION_MISMATCH")
