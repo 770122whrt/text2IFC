@@ -13,7 +13,12 @@ import ifcopenshell
 import ifcopenshell.guid
 import ifcopenshell.util.unit
 import pytest
-from text2ifc_ifc_repair.prompt_profiles import select_prompt_profiles
+from text2ifc_ifc_repair.operations import create_default_registry
+from text2ifc_ifc_repair.prompt_profiles import (
+    compact_profile_catalog,
+    load_prompt_profiles,
+    select_prompt_profiles,
+)
 
 from scripts.ifc_repair.run_phase12_public_structural_repair import (
     run_public_repair,
@@ -718,12 +723,35 @@ def _live_attempt(
         "completion_tokens": 50,
         "total_tokens": 150,
     }
-    profiles = {
-        "complete": ["beam.add", "column.add"],
-        "clarification-resume": ["column.add"],
-        "program-guard": ["beam.add"],
+    selected_profiles = {
+        "complete": ["beam.add.v0.2", "column.add.v0.2"],
+        "clarification-resume": ["column.add.v0.2"],
+        "program-guard": ["beam.add.v0.2"],
     }[case_id]
-    selection = select_prompt_profiles(profiles).to_dict()
+    if stage == "stage1":
+        registry = create_default_registry()
+        catalog = compact_profile_catalog(
+            load_prompt_profiles(),
+            include_profile_ids=[
+                str(registry.require(operation_type).prompt_profile_id)
+                for operation_type in registry.operation_types
+            ],
+        )
+        profile_ids = [str(item["profile_id"]) for item in catalog]
+        profile_versions = [str(item["profile_version"]) for item in catalog]
+        profile_hashes = [str(item["profile_hash"]) for item in catalog]
+        few_shot_ids: list[str] = []
+        few_shot_hashes: list[str] = []
+    else:
+        selection = select_prompt_profiles(selected_profiles).to_dict()
+        profile_ids = selection["profile_ids"]
+        profile_versions = [
+            str(profile["profile_version"])
+            for profile in selection["profiles"]
+        ]
+        profile_hashes = selection["profile_hashes"]
+        few_shot_ids = selection["few_shot_ids"]
+        few_shot_hashes = selection["few_shot_hashes"]
     return {
         "attempt_id": attempt_id,
         "parent_attempt_id": parent,
@@ -760,14 +788,27 @@ def _live_attempt(
             "usage": usage,
         },
         "error": None,
-        "profile_ids": selection["profile_ids"],
-        "profile_versions": [
-            profile["profile_version"] for profile in selection["profiles"]
-        ],
-        "profile_hashes": selection["profile_hashes"],
-        "few_shot_ids": selection["few_shot_ids"],
-        "few_shot_hashes": selection["few_shot_hashes"],
+        "profile_ids": profile_ids,
+        "profile_versions": profile_versions,
+        "profile_hashes": profile_hashes,
+        "few_shot_ids": few_shot_ids,
+        "few_shot_hashes": few_shot_hashes,
     }
+
+
+def _upgrade_live_intent(intent: Mapping[str, Any]) -> dict[str, Any]:
+    upgraded = json.loads(json.dumps(intent))
+    upgraded["schema_version"] = "text2ifc/ifc-repair-intent/0.6"
+    upgraded["unsupported_requests"] = []
+    for operation in upgraded.get("operations", ()):
+        routing = operation.get("routing_intent")
+        if not isinstance(routing, dict):
+            continue
+        if operation.get("operation_type") == "add_beam":
+            routing["operation_profile"] = "beam.add.v0.2"
+        elif operation.get("operation_type") == "add_column":
+            routing["operation_profile"] = "column.add.v0.2"
+    return upgraded
 
 
 def _provider_draft(changeset: Mapping[str, Any]) -> dict[str, Any]:
@@ -808,8 +849,9 @@ def _live_result(
     damaged_sha256: str,
 ) -> dict[str, Any]:
     intent_body = {
-        "schema_version": "text2ifc/ifc-repair-intent-body/0.5",
+        "schema_version": "text2ifc/ifc-repair-intent-body/0.6",
         "operations": intent["operations"],
+        "unsupported_requests": intent.get("unsupported_requests", []),
         "semantic_bundles": intent.get("semantic_bundles", []),
         "provenance": intent.get("provenance", []),
     }
@@ -1056,7 +1098,12 @@ def _live_proof_collection(tmp_path: Path) -> tuple[Path, Path]:
     shutil.copytree(BASE_DAMAGE_CASE, case_root)
     base_manifest_path = case_root / "base-damage-source-manifest.json"
     shutil.copy2(case_root / "manifest.json", base_manifest_path)
-    intent = json.loads((case_root / "repair-intent.json").read_text(encoding="utf-8"))
+    intent = _upgrade_live_intent(
+        json.loads(
+            (case_root / "repair-intent.json").read_text(encoding="utf-8")
+        )
+    )
+    _write_json(case_root / "repair-intent.json", intent)
     changeset = json.loads((case_root / "changeset.json").read_text(encoding="utf-8"))
     damaged_sha256 = _sha256(case_root / "damaged.ifc")
     live_result = _live_result(
@@ -1073,7 +1120,9 @@ def _live_proof_collection(tmp_path: Path) -> tuple[Path, Path]:
     profile_path = case_root / "prompt-profile-selection.json"
     _write_json(
         profile_path,
-        select_prompt_profiles(["beam.add", "column.add"]).to_dict(),
+        select_prompt_profiles(
+            ["beam.add.v0.2", "column.add.v0.2"]
+        ).to_dict(),
     )
 
     base_manifest_sha256 = _sha256(base_manifest_path)
@@ -1234,8 +1283,10 @@ def test_validator_cli_accepts_the_frozen_root_option(
 def _curator_source_run(tmp_path: Path) -> Path:
     source = tmp_path / "source-live-run"
     source.mkdir()
-    intent = json.loads(
-        (BASE_DAMAGE_CASE / "repair-intent.json").read_text(encoding="utf-8")
+    intent = _upgrade_live_intent(
+        json.loads(
+            (BASE_DAMAGE_CASE / "repair-intent.json").read_text(encoding="utf-8")
+        )
     )
     changeset = json.loads(
         (BASE_DAMAGE_CASE / "changeset.json").read_text(encoding="utf-8")
@@ -1274,8 +1325,11 @@ def _curator_source_run(tmp_path: Path) -> Path:
         _replace_live_response_document(
             successful_stage1,
             {
-                "schema_version": "text2ifc/ifc-repair-intent-body/0.5",
+                "schema_version": "text2ifc/ifc-repair-intent-body/0.6",
                 "operations": case_intent["operations"],
+                "unsupported_requests": case_intent.get(
+                    "unsupported_requests", []
+                ),
                 "semantic_bundles": case_intent.get("semantic_bundles", []),
                 "provenance": case_intent.get("provenance", []),
             },
@@ -1369,9 +1423,9 @@ def _curator_source_run(tmp_path: Path) -> Path:
             },
         )
         profiles = (
-            ["beam.add", "column.add"]
+            ["beam.add.v0.2", "column.add.v0.2"]
             if case_id == "complete"
-            else ["column.add"]
+            else ["column.add.v0.2"]
         )
         _write_json(
             run_root / "changeset" / "prompt-profile-selection.json",

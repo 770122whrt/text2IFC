@@ -20,7 +20,10 @@ from text2ifc_ifc_repair.prompt_profiles import (
 def test_compact_catalog_omits_full_few_shot_bodies() -> None:
     profiles = load_prompt_profiles()
     compact = compact_profile_catalog(profiles)
-    assert len(compact) == 9
+    assert len(compact) == 11
+    assert {item["profile_id"] for item in compact}.issuperset(
+        {"beam.add.v0.2", "column.add.v0.2"}
+    )
     serialized = json.dumps(compact, ensure_ascii=False)
     assert "user_text" not in serialized
     assert "EXAMPLE_ONLY" not in serialized

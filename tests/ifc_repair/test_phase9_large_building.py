@@ -110,6 +110,7 @@ def test_large_building_uses_public_api_and_phase10_closes_l2(tmp_path: Path) ->
     api = RepairAPI(
         tmp_path / "output",
         provider=RawProvider(),
+        intent_schema_version="text2ifc/ifc-repair-intent/0.5",
     )
 
     # The production caller supplies only the damaged IFC and natural text.

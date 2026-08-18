@@ -155,6 +155,7 @@ def test_large_building_damaged_ifc_plus_text_passes_production_and_private_l2(t
     api = RepairAPI(
         tmp_path / "runs",
         provider=Provider(),
+        intent_schema_version="text2ifc/ifc-repair-intent/0.5",
         orchestrator_options={"apply_stage": capture_application},
     )
     result = api.start(damaged, request)
