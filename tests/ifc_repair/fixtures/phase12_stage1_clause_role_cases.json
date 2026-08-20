@@ -1,0 +1,134 @@
+{
+  "schema_version": "text2ifc/phase12-stage1-clause-role-cases/0.1",
+  "contract": "12-TRANSACTION-CLAUSE-CORRECTION-SPEC.md",
+  "negative_examples_are_exhaustive": false,
+  "positive_cases": [
+    {
+      "case_id": "preserved-live-atomic-changeset",
+      "request": "Create both in one atomic ChangeSet.",
+      "expected_operation_types": ["add_beam", "add_column"],
+      "expected_unsupported_count": 0,
+      "clause_role": "compatible_transaction_constraint"
+    },
+    {
+      "case_id": "same-changeset",
+      "request": "Add the specified Beam and Column in the same ChangeSet.",
+      "expected_operation_types": ["add_beam", "add_column"],
+      "expected_unsupported_count": 0,
+      "clause_role": "compatible_transaction_constraint"
+    },
+    {
+      "case_id": "one-transaction",
+      "request": "Add the specified Beam and Column in one transaction.",
+      "expected_operation_types": ["add_beam", "add_column"],
+      "expected_unsupported_count": 0,
+      "clause_role": "compatible_transaction_constraint"
+    },
+    {
+      "case_id": "together-atomically",
+      "request": "Create the specified Beam and Column together atomically.",
+      "expected_operation_types": ["add_beam", "add_column"],
+      "expected_unsupported_count": 0,
+      "clause_role": "compatible_transaction_constraint"
+    },
+    {
+      "case_id": "all-or-nothing",
+      "request": "Add the specified Beam and Column all-or-nothing.",
+      "expected_operation_types": ["add_beam", "add_column"],
+      "expected_unsupported_count": 0,
+      "clause_role": "compatible_transaction_constraint"
+    },
+    {
+      "case_id": "publish-both-or-neither",
+      "request": "Publish both the specified Beam and Column or neither.",
+      "expected_operation_types": ["add_beam", "add_column"],
+      "expected_unsupported_count": 0,
+      "clause_role": "compatible_transaction_constraint"
+    },
+    {
+      "case_id": "four-family-atomic",
+      "request": "Add the specified Window, Door, Beam, and Column in one atomic ChangeSet.",
+      "expected_operation_types": [
+        "add_window_with_opening_to_wall",
+        "add_door_with_opening_to_wall",
+        "add_beam",
+        "add_column"
+      ],
+      "expected_unsupported_count": 0,
+      "clause_role": "compatible_transaction_constraint"
+    },
+    {
+      "case_id": "generated-types-are-modifiers",
+      "request": "Generate dedicated structural Types for both the specified Beam and Column.",
+      "expected_operation_types": ["add_beam", "add_column"],
+      "expected_prototype_intents": [null, null],
+      "expected_unsupported_count": 0,
+      "clause_role": "operation_modifier"
+    },
+    {
+      "case_id": "load-bearing-is-property-content",
+      "request": "State that the specified Beam is load bearing.",
+      "expected_operation_types": ["add_beam"],
+      "expected_property_phrase": "load bearing",
+      "expected_unsupported_count": 0,
+      "clause_role": "operation_modifier"
+    },
+    {
+      "case_id": "missing-geometry-is-clarification",
+      "request": "Add a Column on Level 1.",
+      "expected_operation_types": ["add_column"],
+      "expected_unsupported_count": 0,
+      "expected_terminal_class": "clarification_required",
+      "clause_role": "registered_model_operation"
+    }
+  ],
+  "representative_negative_cases": [
+    {
+      "case_id": "registered-analysis-node",
+      "request": "Add the specified Beam and attach a structural analysis node.",
+      "expected_operation_types": ["add_beam"],
+      "expected_unsupported_kind": "registered_capability",
+      "expected_capability_id": "structural_analysis_node"
+    },
+    {
+      "case_id": "registered-curved-beam",
+      "request": "Add a curved Beam on Level 1.",
+      "expected_operation_types": ["add_beam"],
+      "expected_unsupported_kind": "registered_capability",
+      "expected_capability_id": "curved"
+    },
+    {
+      "case_id": "registered-grid-column",
+      "request": "Add a Column at Grid A/1.",
+      "expected_operation_types": ["add_column"],
+      "expected_unsupported_kind": "registered_capability",
+      "expected_capability_id": "grid_placement"
+    },
+    {
+      "case_id": "pure-unregistered-render",
+      "request": "Render a photorealistic view of Level 1.",
+      "expected_operation_types": [],
+      "expected_unsupported_kind": "unregistered_action",
+      "expected_capability_id": "unregistered_operation"
+    },
+    {
+      "case_id": "mixed-repair-and-report",
+      "request": "Add the specified Door and generate a PDF report.",
+      "expected_operation_types": ["add_door_with_opening_to_wall"],
+      "expected_unsupported_kind": "unregistered_action",
+      "expected_capability_id": "unregistered_operation"
+    },
+    {
+      "case_id": "provider-rectangular-token-invalid",
+      "request": "Add a rectangular Beam on Level 1.",
+      "provider_shape": "rectangular",
+      "expected_terminal_class": "schema_invalid"
+    },
+    {
+      "case_id": "provider-storey-alias-invalid",
+      "request": "Add the specified Column on Level 1.",
+      "provider_target": {"storey_name": "Level 1"},
+      "expected_terminal_class": "schema_invalid"
+    }
+  ]
+}
