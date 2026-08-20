@@ -1144,6 +1144,7 @@ def run_live_uat(
     cases: Sequence[LiveCase] = DEFAULT_CASES,
     proof_root: Path | str = DEFAULT_PROOF_ROOT,
     evidence_mode: str = LIVE_EVIDENCE_MODE,
+    preflight_only: bool = False,
 ) -> dict[str, Any]:
     """Execute live cases only after independently verified preflight."""
 
@@ -1178,12 +1179,16 @@ def run_live_uat(
     result.update(
         {
             "execution_mode": (
-                "test_injected" if test_injected else "production_live"
+                "preflight_only"
+                if preflight_only
+                else ("test_injected" if test_injected else "production_live")
             ),
             "provider_evidence_mode": (
-                "test_injected" if test_injected else LIVE_EVIDENCE_MODE
+                "not_run"
+                if preflight_only
+                else ("test_injected" if test_injected else LIVE_EVIDENCE_MODE)
             ),
-            "runner_contract_eligible": not test_injected,
+            "runner_contract_eligible": not test_injected and not preflight_only,
             # The live runner proves the Plan 12-13 transcript contract only.
             # Plan 12-14 separately recomputes preservation and Ground Truth
             # isolation before any run can enter accepted Proof.
@@ -1204,6 +1209,21 @@ def run_live_uat(
             {
                 "status": "preflight_failed",
                 "reason_code": "LIVE_PREFLIGHT_NOT_GREEN",
+            }
+        )
+        _write_json(output / "live-uat-result.json", result)
+        return result
+
+    if preflight_only:
+        result.update(
+            {
+                "status": "preflight_passed",
+                "reason_code": None,
+                "evidence_mode": "not_run",
+                "transport_calls": 0,
+                "transport_calls_by_stage": {"stage1": 0, "stage2": 0},
+                "provider_models": [],
+                "cases": [],
             }
         )
         _write_json(output / "live-uat-result.json", result)
@@ -1368,6 +1388,7 @@ def _config(environment: Mapping[str, str]) -> dict[str, Any]:
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--check-config", action="store_true")
+    parser.add_argument("--preflight-only", action="store_true")
     parser.add_argument("--provider", choices=("deepseek",), default="deepseek")
     parser.add_argument("--require-green-preflight", action="store_true")
     parser.add_argument("--env-file", type=Path, default=ROOT / ".env")
@@ -1375,6 +1396,36 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--proof-root", type=Path, default=DEFAULT_PROOF_ROOT)
     parser.add_argument("--evidence-mode", default=LIVE_EVIDENCE_MODE)
     args = parser.parse_args(argv)
+    if args.preflight_only:
+        if args.check_config:
+            parser.error("--check-config and --preflight-only are mutually exclusive")
+        run_dir = args.output_root / datetime.now(timezone.utc).strftime(
+            "preflight-%Y%m%dT%H%M%S%fZ"
+        )
+
+        def forbidden_transport_factory() -> Any:
+            raise AssertionError("preflight-only must not construct Provider transport")
+
+        result = run_live_uat(
+            run_dir,
+            transport_factory=forbidden_transport_factory,
+            proof_root=args.proof_root,
+            evidence_mode=args.evidence_mode,
+            preflight_only=True,
+        )
+        print(
+            json.dumps(
+                {
+                    "status": result["status"],
+                    "transport_calls": result["transport_calls"],
+                    "result": str(run_dir / "live-uat-result.json"),
+                },
+                ensure_ascii=False,
+                sort_keys=True,
+            )
+        )
+        return 0 if result["status"] == "preflight_passed" else 2
+
     environment = _environment(args.env_file)
     config = _config(environment)
     if args.check_config:
