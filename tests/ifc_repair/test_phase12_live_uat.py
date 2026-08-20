@@ -1005,6 +1005,33 @@ def test_default_preflight_runner_allows_the_real_full_suite_budget(
     assert captured["timeout"] == 7_200
 
 
+def test_preflight_pytest_commands_use_run_local_temp_and_cache(
+    tmp_path: Path,
+) -> None:
+    module = _module()
+    preflight_root = tmp_path / "preflight"
+    commands = dict(
+        module._preflight_commands(preflight_root, _proof_root(tmp_path))
+    )
+
+    expected = {
+        "focused": (
+            preflight_root / "pytest-focused",
+            preflight_root / "pytest-cache-focused",
+        ),
+        "full-suite": (
+            preflight_root / "pytest-full-suite",
+            preflight_root / "pytest-cache-full-suite",
+        ),
+    }
+    for name, (base_temp, cache_dir) in expected.items():
+        command = commands[name]
+        assert f"--basetemp={base_temp.resolve()}" in command
+        assert "-o" in command
+        assert f"cache_dir={cache_dir.resolve()}" in command
+        assert not any(".pytest-tmp" in item for item in command)
+
+
 def test_preflight_timeout_has_a_distinct_blocking_reason_and_zero_transport(
     tmp_path: Path,
 ) -> None:
