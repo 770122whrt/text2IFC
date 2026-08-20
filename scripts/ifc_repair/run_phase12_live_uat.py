@@ -525,7 +525,7 @@ def _default_command_runner(
 ) -> subprocess.CompletedProcess[str]:
     rendered = " ".join(command).replace("\\", "/")
     timeout_seconds = 1_500
-    if tuple(command[1:]) == ("-m", "pytest", "tests/ifc_repair", "-q"):
+    if "-m pytest tests/ifc_repair -q" in rendered:
         timeout_seconds = 7_200
     elif "test_phase12_live_uat.py" in rendered:
         timeout_seconds = 180
@@ -551,6 +551,10 @@ def _preflight_commands(
 ) -> tuple[tuple[str, tuple[str, ...]], ...]:
     python = str(Path(sys.executable).resolve())
     offline_output = preflight_root / "offline-matrix"
+    focused_basetemp = (preflight_root / "pytest-focused").resolve()
+    focused_cache = (preflight_root / "pytest-cache-focused").resolve()
+    full_basetemp = (preflight_root / "pytest-full-suite").resolve()
+    full_cache = (preflight_root / "pytest-cache-full-suite").resolve()
     return (
         (
             "focused",
@@ -560,6 +564,9 @@ def _preflight_commands(
                 "pytest",
                 "tests/ifc_repair/test_phase12_live_uat.py",
                 "-q",
+                f"--basetemp={focused_basetemp}",
+                "-o",
+                f"cache_dir={focused_cache}",
             ),
         ),
         (
@@ -573,7 +580,16 @@ def _preflight_commands(
         ),
         (
             "full-suite",
-            (python, "-m", "pytest", "tests/ifc_repair", "-q"),
+            (
+                python,
+                "-m",
+                "pytest",
+                "tests/ifc_repair",
+                "-q",
+                f"--basetemp={full_basetemp}",
+                "-o",
+                f"cache_dir={full_cache}",
+            ),
         ),
         (
             "compile",
