@@ -49,8 +49,8 @@ SUCCESS_CASE_IDS = ("complete", "clarification-resume")
 REQUIRED_CASE_IDS = (*SUCCESS_CASE_IDS, "program-guard")
 EXPECTED_STAGE1_PROFILES = frozenset(
     {
-        "beam.add.v0.2",
-        "column.add.v0.2",
+        "beam.add.v0.3",
+        "column.add.v0.3",
         "door.add-with-opening.v0.2",
         "door.fill-existing-opening.v0.2",
         "occurrence.set-properties",
@@ -59,9 +59,9 @@ EXPECTED_STAGE1_PROFILES = frozenset(
     }
 )
 EXPECTED_SELECTED_PROFILES = {
-    "complete": frozenset({"beam.add.v0.2", "column.add.v0.2"}),
-    "clarification-resume": frozenset({"column.add.v0.2"}),
-    "program-guard": frozenset({"beam.add.v0.2"}),
+    "complete": frozenset({"beam.add.v0.3", "column.add.v0.3"}),
+    "clarification-resume": frozenset({"column.add.v0.3"}),
+    "program-guard": frozenset({"beam.add.v0.3"}),
 }
 PROOF_CASE_IDS = {
     "complete": "phase12-live-deepseek-complete",

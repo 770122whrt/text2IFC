@@ -33,12 +33,14 @@ from .repair_intent import (
     REPAIR_INTENT_BODY_SCHEMA_VERSION_0_4,
     REPAIR_INTENT_BODY_SCHEMA_VERSION_0_5,
     REPAIR_INTENT_BODY_SCHEMA_VERSION_0_6,
+    REPAIR_INTENT_BODY_SCHEMA_VERSION_0_7,
     REPAIR_INTENT_SCHEMA_VERSION,
     REPAIR_INTENT_SCHEMA_VERSION_0_2,
     REPAIR_INTENT_SCHEMA_VERSION_0_3,
     REPAIR_INTENT_SCHEMA_VERSION_0_4,
     REPAIR_INTENT_SCHEMA_VERSION_0_5,
     REPAIR_INTENT_SCHEMA_VERSION_0_6,
+    REPAIR_INTENT_SCHEMA_VERSION_0_7,
     fingerprint_text,
     hash_request,
     load_repair_intent_body_schema,
@@ -52,6 +54,7 @@ TEMPLATE_ID_0_3 = "ifc-repair-intent.v0.3"
 TEMPLATE_ID_0_4 = "ifc-repair-intent.v0.4"
 TEMPLATE_ID_0_5 = "ifc-repair-intent.v0.5"
 TEMPLATE_ID_0_6 = "ifc-repair-intent.v0.6"
+TEMPLATE_ID_0_7 = "ifc-repair-intent.v0.7"
 _INTENT_CONTRACTS = {
     REPAIR_INTENT_SCHEMA_VERSION: (
         REPAIR_INTENT_BODY_SCHEMA_VERSION,
@@ -76,6 +79,10 @@ _INTENT_CONTRACTS = {
     REPAIR_INTENT_SCHEMA_VERSION_0_6: (
         REPAIR_INTENT_BODY_SCHEMA_VERSION_0_6,
         TEMPLATE_ID_0_6,
+    ),
+    REPAIR_INTENT_SCHEMA_VERSION_0_7: (
+        REPAIR_INTENT_BODY_SCHEMA_VERSION_0_7,
+        TEMPLATE_ID_0_7,
     ),
 }
 MAX_REQUEST_BYTES = DEFAULT_REPAIR_INTENT_LIMITS.max_request_bytes
@@ -117,7 +124,11 @@ def generate_repair_intent(
             intent_schema_version=intent_schema_version,
         )
         if intent_schema_version
-        in {REPAIR_INTENT_SCHEMA_VERSION_0_5, REPAIR_INTENT_SCHEMA_VERSION_0_6}
+        in {
+            REPAIR_INTENT_SCHEMA_VERSION_0_5,
+            REPAIR_INTENT_SCHEMA_VERSION_0_6,
+            REPAIR_INTENT_SCHEMA_VERSION_0_7,
+        }
         else _supported_operations(registry)
     )
     feedback: list[dict[str, str]] = []
@@ -233,6 +244,7 @@ def generate_repair_intent(
                         in {
                             REPAIR_INTENT_SCHEMA_VERSION_0_5,
                             REPAIR_INTENT_SCHEMA_VERSION_0_6,
+                            REPAIR_INTENT_SCHEMA_VERSION_0_7,
                         }
                     ):
                         _validate_operation_routing(
@@ -569,11 +581,16 @@ def _profile_id_for_intent_contract(
     *,
     intent_schema_version: str,
 ) -> str:
-    if intent_schema_version == REPAIR_INTENT_SCHEMA_VERSION_0_5 and profile_id in {
-        "beam.add.v0.2",
-        "column.add.v0.2",
-    }:
-        return profile_id.removesuffix(".v0.2")
+    structural_profiles = {
+        "beam.add.v0.3": "beam.add",
+        "column.add.v0.3": "column.add",
+    }
+    base_profile = structural_profiles.get(profile_id)
+    if base_profile is not None:
+        if intent_schema_version == REPAIR_INTENT_SCHEMA_VERSION_0_5:
+            return base_profile
+        if intent_schema_version == REPAIR_INTENT_SCHEMA_VERSION_0_6:
+            return f"{base_profile}.v0.2"
     return profile_id
 
 
@@ -641,6 +658,7 @@ def _fold_created_occurrence_property_operations(
         REPAIR_INTENT_BODY_SCHEMA_VERSION_0_4,
         REPAIR_INTENT_BODY_SCHEMA_VERSION_0_5,
         REPAIR_INTENT_BODY_SCHEMA_VERSION_0_6,
+        REPAIR_INTENT_BODY_SCHEMA_VERSION_0_7,
     }:
         return normalized, []
 

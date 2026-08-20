@@ -74,6 +74,16 @@ REPAIR_INTENT_BODY_SCHEMA_VERSION_0_6 = (
 REPAIR_INTENT_BODY_SCHEMA_PATH_0_6 = Path(
     "schemas/agent/ifc-repair-intent-body-0.6.schema.json"
 )
+REPAIR_INTENT_SCHEMA_VERSION_0_7 = "text2ifc/ifc-repair-intent/0.7"
+REPAIR_INTENT_SCHEMA_PATH_0_7 = Path(
+    "schemas/agent/ifc-repair-intent-0.7.schema.json"
+)
+REPAIR_INTENT_BODY_SCHEMA_VERSION_0_7 = (
+    "text2ifc/ifc-repair-intent-body/0.7"
+)
+REPAIR_INTENT_BODY_SCHEMA_PATH_0_7 = Path(
+    "schemas/agent/ifc-repair-intent-body-0.7.schema.json"
+)
 _SCHEMA_PATHS = {
     REPAIR_INTENT_SCHEMA_VERSION: REPAIR_INTENT_SCHEMA_PATH,
     REPAIR_INTENT_SCHEMA_VERSION_0_2: REPAIR_INTENT_SCHEMA_PATH_0_2,
@@ -81,6 +91,7 @@ _SCHEMA_PATHS = {
     REPAIR_INTENT_SCHEMA_VERSION_0_4: REPAIR_INTENT_SCHEMA_PATH_0_4,
     REPAIR_INTENT_SCHEMA_VERSION_0_5: REPAIR_INTENT_SCHEMA_PATH_0_5,
     REPAIR_INTENT_SCHEMA_VERSION_0_6: REPAIR_INTENT_SCHEMA_PATH_0_6,
+    REPAIR_INTENT_SCHEMA_VERSION_0_7: REPAIR_INTENT_SCHEMA_PATH_0_7,
 }
 _BODY_SCHEMA_PATHS = {
     REPAIR_INTENT_BODY_SCHEMA_VERSION: REPAIR_INTENT_BODY_SCHEMA_PATH,
@@ -89,6 +100,7 @@ _BODY_SCHEMA_PATHS = {
     REPAIR_INTENT_BODY_SCHEMA_VERSION_0_4: REPAIR_INTENT_BODY_SCHEMA_PATH_0_4,
     REPAIR_INTENT_BODY_SCHEMA_VERSION_0_5: REPAIR_INTENT_BODY_SCHEMA_PATH_0_5,
     REPAIR_INTENT_BODY_SCHEMA_VERSION_0_6: REPAIR_INTENT_BODY_SCHEMA_PATH_0_6,
+    REPAIR_INTENT_BODY_SCHEMA_VERSION_0_7: REPAIR_INTENT_BODY_SCHEMA_PATH_0_7,
 }
 
 
@@ -566,7 +578,10 @@ class RepairIntent:
                     path=f"/operations/{index}/operation_type",
                 ) from error
             query = raw_operation["target_query"]
-            if schema_version == REPAIR_INTENT_SCHEMA_VERSION_0_6:
+            if schema_version in {
+                REPAIR_INTENT_SCHEMA_VERSION_0_6,
+                REPAIR_INTENT_SCHEMA_VERSION_0_7,
+            }:
                 target_issues = registry.validate_intent_target(raw_operation)
                 if target_issues:
                     issue = target_issues[0]
@@ -621,6 +636,7 @@ class RepairIntent:
             payload.get("unsupported_requests", ()),
             operations=operations,
             registry=registry,
+            schema_version=schema_version,
         )
 
         return cls(
@@ -728,6 +744,7 @@ def _validate_unsupported_requests(
     *,
     operations: list[OperationIntent],
     registry: OperationRegistry,
+    schema_version: str,
 ) -> None:
     if not raw_requests:
         return
@@ -746,9 +763,25 @@ def _validate_unsupported_requests(
                 f"Unknown operation_id: {operation_id}",
                 path=f"/unsupported_requests/{index}/operation_id",
             )
-        profile_id = registry.require(operation.operation_type).prompt_profile_id
-        profile = profiles.get(str(profile_id))
-        if profile is None or operation.routing_intent is None:
+        current_profile_id = str(
+            registry.require(operation.operation_type).prompt_profile_id or ""
+        )
+        if operation.routing_intent is None:
+            raise RepairIntentError(
+                RepairIntentCode.UNSUPPORTED_REQUEST_INVALID,
+                operation.operation_type,
+                path=f"/unsupported_requests/{index}/capability_id",
+            )
+        profile_id = operation.routing_intent.operation_profile
+        expected_profile_id = current_profile_id
+        if current_profile_id in {"beam.add.v0.3", "column.add.v0.3"}:
+            base_profile_id = current_profile_id.removesuffix(".v0.3")
+            if schema_version == REPAIR_INTENT_SCHEMA_VERSION_0_5:
+                expected_profile_id = base_profile_id
+            elif schema_version == REPAIR_INTENT_SCHEMA_VERSION_0_6:
+                expected_profile_id = f"{base_profile_id}.v0.2"
+        profile = profiles.get(profile_id)
+        if profile is None or profile_id != expected_profile_id:
             raise RepairIntentError(
                 RepairIntentCode.UNSUPPORTED_REQUEST_INVALID,
                 operation.operation_type,
@@ -759,8 +792,7 @@ def _validate_unsupported_requests(
             str(item) for item in profile.document["unsupported_capabilities"]
         }
         if (
-            operation.routing_intent.operation_profile != profile.profile_id
-            or capability_id not in unsupported
+            profile_id != profile.profile_id or capability_id not in unsupported
         ):
             raise RepairIntentError(
                 RepairIntentCode.UNSUPPORTED_REQUEST_INVALID,
@@ -849,6 +881,8 @@ __all__ = [
     "REPAIR_INTENT_BODY_SCHEMA_VERSION_0_5",
     "REPAIR_INTENT_BODY_SCHEMA_PATH_0_6",
     "REPAIR_INTENT_BODY_SCHEMA_VERSION_0_6",
+    "REPAIR_INTENT_BODY_SCHEMA_PATH_0_7",
+    "REPAIR_INTENT_BODY_SCHEMA_VERSION_0_7",
     "REPAIR_INTENT_SCHEMA_PATH",
     "REPAIR_INTENT_SCHEMA_PATH_0_2",
     "REPAIR_INTENT_SCHEMA_VERSION",
@@ -861,6 +895,8 @@ __all__ = [
     "REPAIR_INTENT_SCHEMA_VERSION_0_5",
     "REPAIR_INTENT_SCHEMA_PATH_0_6",
     "REPAIR_INTENT_SCHEMA_VERSION_0_6",
+    "REPAIR_INTENT_SCHEMA_PATH_0_7",
+    "REPAIR_INTENT_SCHEMA_VERSION_0_7",
     "RepairIntent",
     "RepairIntentCode",
     "RepairIntentError",

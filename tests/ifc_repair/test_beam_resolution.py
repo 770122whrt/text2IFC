@@ -80,7 +80,7 @@ def test_default_registry_resolves_explicit_and_exact_reference_beams_without_co
     registry = create_default_registry()
     assert {"add_beam", "add_column"}.issubset(registry.operation_types)
     definition = registry.require("add_beam")
-    assert definition.prompt_profile_id == "beam.add.v0.2"
+    assert definition.prompt_profile_id == "beam.add.v0.3"
     assert definition.target_ifc_classes == ("IfcBuildingStorey",)
     assert definition.semantic_scope_roles == {"beam": "beam_occurrence"}
     assert definition.generated_type_factory is not None

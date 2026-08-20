@@ -90,11 +90,12 @@ def _profile_id_for_intent_schema(
     profile_id = str(
         create_default_registry().require(operation_type).prompt_profile_id
     )
-    if intent_schema_version == "text2ifc/ifc-repair-intent/0.5" and profile_id in {
-        "beam.add.v0.2",
-        "column.add.v0.2",
-    }:
-        return profile_id.removesuffix(".v0.2")
+    if profile_id in {"beam.add.v0.3", "column.add.v0.3"}:
+        base_profile_id = profile_id.removesuffix(".v0.3")
+        if intent_schema_version == "text2ifc/ifc-repair-intent/0.5":
+            return base_profile_id
+        if intent_schema_version == "text2ifc/ifc-repair-intent/0.6":
+            return f"{base_profile_id}.v0.2"
     return profile_id
 
 

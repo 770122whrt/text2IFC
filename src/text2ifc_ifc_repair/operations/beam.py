@@ -257,7 +257,7 @@ def beam_operation_definition() -> OperationDefinition:
         inherited_type_evidence_role="IfcBeamType",
         generated_type_template=generated_beam_type_template,
         generated_type_factory=create_generated_beam_type,
-        prompt_profile_id="beam.add.v0.2",
+        prompt_profile_id="beam.add.v0.3",
         semantic_scope_roles={"beam": "beam_occurrence"},
         conflict_domain="structural_member",
         intent_policy_checker=_intent_policy_checker,

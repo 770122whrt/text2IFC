@@ -724,9 +724,9 @@ def _live_attempt(
         "total_tokens": 150,
     }
     selected_profiles = {
-        "complete": ["beam.add.v0.2", "column.add.v0.2"],
-        "clarification-resume": ["column.add.v0.2"],
-        "program-guard": ["beam.add.v0.2"],
+        "complete": ["beam.add.v0.3", "column.add.v0.3"],
+        "clarification-resume": ["column.add.v0.3"],
+        "program-guard": ["beam.add.v0.3"],
     }[case_id]
     if stage == "stage1":
         registry = create_default_registry()
@@ -798,16 +798,16 @@ def _live_attempt(
 
 def _upgrade_live_intent(intent: Mapping[str, Any]) -> dict[str, Any]:
     upgraded = json.loads(json.dumps(intent))
-    upgraded["schema_version"] = "text2ifc/ifc-repair-intent/0.6"
+    upgraded["schema_version"] = "text2ifc/ifc-repair-intent/0.7"
     upgraded["unsupported_requests"] = []
     for operation in upgraded.get("operations", ()):
         routing = operation.get("routing_intent")
         if not isinstance(routing, dict):
             continue
         if operation.get("operation_type") == "add_beam":
-            routing["operation_profile"] = "beam.add.v0.2"
+            routing["operation_profile"] = "beam.add.v0.3"
         elif operation.get("operation_type") == "add_column":
-            routing["operation_profile"] = "column.add.v0.2"
+            routing["operation_profile"] = "column.add.v0.3"
     return upgraded
 
 
@@ -849,7 +849,7 @@ def _live_result(
     damaged_sha256: str,
 ) -> dict[str, Any]:
     intent_body = {
-        "schema_version": "text2ifc/ifc-repair-intent-body/0.6",
+        "schema_version": "text2ifc/ifc-repair-intent-body/0.7",
         "operations": intent["operations"],
         "unsupported_requests": intent.get("unsupported_requests", []),
         "semantic_bundles": intent.get("semantic_bundles", []),
@@ -1121,7 +1121,7 @@ def _live_proof_collection(tmp_path: Path) -> tuple[Path, Path]:
     _write_json(
         profile_path,
         select_prompt_profiles(
-            ["beam.add.v0.2", "column.add.v0.2"]
+            ["beam.add.v0.3", "column.add.v0.3"]
         ).to_dict(),
     )
 
@@ -1325,7 +1325,7 @@ def _curator_source_run(tmp_path: Path) -> Path:
         _replace_live_response_document(
             successful_stage1,
             {
-                "schema_version": "text2ifc/ifc-repair-intent-body/0.6",
+                "schema_version": "text2ifc/ifc-repair-intent-body/0.7",
                 "operations": case_intent["operations"],
                 "unsupported_requests": case_intent.get(
                     "unsupported_requests", []
@@ -1423,9 +1423,9 @@ def _curator_source_run(tmp_path: Path) -> Path:
             },
         )
         profiles = (
-            ["beam.add.v0.2", "column.add.v0.2"]
+            ["beam.add.v0.3", "column.add.v0.3"]
             if case_id == "complete"
-            else ["column.add.v0.2"]
+            else ["column.add.v0.3"]
         )
         _write_json(
             run_root / "changeset" / "prompt-profile-selection.json",

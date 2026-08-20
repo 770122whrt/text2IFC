@@ -26,8 +26,8 @@ CURATOR_SCRIPT = ROOT / "scripts/ifc_repair/curate_phase12_live_proof.py"
 HASH_A = "sha256:" + "a" * 64
 HASH_B = "sha256:" + "b" * 64
 STAGE1_COMPACT_PROFILE_IDS = {
-    "beam.add.v0.2",
-    "column.add.v0.2",
+    "beam.add.v0.3",
+    "column.add.v0.3",
     "door.add-with-opening.v0.2",
     "door.fill-existing-opening.v0.2",
     "occurrence.set-properties",
@@ -180,7 +180,7 @@ def _structural_intent_operation(
         "routing_intent": {
             "component_family": family,
             "action": "add",
-            "operation_profile": f"{family}.add.v0.2",
+            "operation_profile": f"{family}.add.v0.3",
             "source": source,
         },
         "target_query": {
@@ -205,7 +205,7 @@ def _intent_body(
     unsupported_requests: list[dict[str, Any]] | None = None,
 ) -> dict[str, Any]:
     return {
-        "schema_version": "text2ifc/ifc-repair-intent-body/0.6",
+        "schema_version": "text2ifc/ifc-repair-intent-body/0.7",
         "operations": list(operations),
         "unsupported_requests": list(unsupported_requests or ()),
         "semantic_bundles": [],
@@ -769,18 +769,18 @@ def test_complete_transport_drives_the_real_repair_api_and_reopens_ifc2x3(
     assert set(provider.attempts[0]["profile_ids"]) == STAGE1_COMPACT_PROFILE_IDS
     assert provider.attempts[0]["few_shot_ids"] == []
     assert set(provider.attempts[1]["profile_ids"]) == {
-        "beam.add.v0.2",
-        "column.add.v0.2",
+        "beam.add.v0.3",
+        "column.add.v0.3",
     }
     assert set(provider.attempts[1]["few_shot_ids"]) == {
-        "beam.add.v0.2.complete",
-        "beam.add.v0.2.clarification",
-        "beam.add.v0.2.type-reuse",
-        "beam.add.v0.2.unsupported",
-        "column.add.v0.2.complete",
-        "column.add.v0.2.clarification",
-        "column.add.v0.2.type-reuse",
-        "column.add.v0.2.unsupported",
+        "beam.add.v0.3.complete",
+        "beam.add.v0.3.clarification",
+        "beam.add.v0.3.type-reuse",
+        "beam.add.v0.3.unsupported",
+        "column.add.v0.3.complete",
+        "column.add.v0.3.clarification",
+        "column.add.v0.3.type-reuse",
+        "column.add.v0.3.unsupported",
     }
     run_root = (
         tmp_path / "complete" / "runtime" / "runs" / final["run_id"]
@@ -791,8 +791,8 @@ def test_complete_transport_drives_the_real_repair_api_and_reopens_ifc2x3(
         )
     )
     assert [item["routing_intent"]["operation_profile"] for item in intent["operations"]] == [
-        "beam.add.v0.2",
-        "column.add.v0.2",
+        "beam.add.v0.3",
+        "column.add.v0.3",
     ]
     assert [
         item["property_intents"][0]["property_phrase"]
@@ -2107,9 +2107,9 @@ def _curation_attempt(
     prompt_hash = canonical(request)
     response_hash = canonical(response)
     selected_profiles = {
-        "complete": ["beam.add.v0.2", "column.add.v0.2"],
-        "clarification-resume": ["column.add.v0.2"],
-        "program-guard": ["beam.add.v0.2"],
+        "complete": ["beam.add.v0.3", "column.add.v0.3"],
+        "clarification-resume": ["column.add.v0.3"],
+        "program-guard": ["beam.add.v0.3"],
     }[case_id]
     profiles = (
         sorted(STAGE1_COMPACT_PROFILE_IDS)

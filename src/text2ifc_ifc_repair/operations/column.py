@@ -263,7 +263,7 @@ def column_operation_definition() -> OperationDefinition:
         inherited_type_evidence_role="IfcColumnType",
         generated_type_template=generated_column_type_template,
         generated_type_factory=create_generated_column_type,
-        prompt_profile_id="column.add.v0.2",
+        prompt_profile_id="column.add.v0.3",
         semantic_scope_roles={"column": "column_occurrence"},
         conflict_domain="structural_member",
         intent_policy_checker=_intent_policy_checker,

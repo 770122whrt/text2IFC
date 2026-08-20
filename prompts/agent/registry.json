@@ -480,6 +480,34 @@
       ]
     },
     {
+      "template_id": "ifc-repair-intent.v0.7",
+      "role": "ifc_repair_request_understanding",
+      "mode": "repair_intent",
+      "path": "prompts/agent/ifc-repair-intent-v0.7.md",
+      "sha256": "sha256:49a518ec482eddb7d187584232d81602514f7e7ced97ee1eabaf79b8e88938bb",
+      "required_inputs": [
+        "REPAIR_REQUEST",
+        "SUPPORTED_OPERATIONS",
+        "REPAIR_INTENT_SCHEMA",
+        "VALIDATION_FEEDBACK"
+      ],
+      "forbidden_outputs": [
+        "raw_ifc",
+        "step_text",
+        "step_id",
+        "resolved_target_id",
+        "resolved_target_guid",
+        "resolved_type_id",
+        "unregistered_profile",
+        "inferred_occurrence_reuse",
+        "mutation_mapping",
+        "private_original_ifc",
+        "benchmark_gold",
+        "guessed_project_fact",
+        "repair_changeset"
+      ]
+    },
+    {
       "template_id": "ifc-repair-changeset.v0.4",
       "role": "ifc_repair_generator",
       "mode": "bound_changeset",
@@ -542,6 +570,21 @@
       ]
     },
     {
+      "template_id": "beam.add.v0.3",
+      "role": "ifc_repair_operation_profile",
+      "mode": "selected_profile",
+      "path": "prompts/agent/ifc-repair-profiles/beam.add.v0.3.json",
+      "sha256": "sha256:4a524131881efa1898130814df86faef8259d9d5e172c63368970a4fe682b6a0",
+      "required_inputs": [],
+      "forbidden_outputs": [
+        "placement_matrix",
+        "generated_global_id",
+        "generated_type_identity",
+        "unselected_profile",
+        "noncanonical_alias"
+      ]
+    },
+    {
       "template_id": "column.add",
       "role": "ifc_repair_operation_profile",
       "mode": "reserved_selected_profile",
@@ -562,6 +605,21 @@
       "mode": "selected_profile",
       "path": "prompts/agent/ifc-repair-profiles/column.add.v0.2.json",
       "sha256": "sha256:9fc8b715cf04af8b62c1a973c1ed5c3ee896eb727b247efc02b3ee121f3bd83e",
+      "required_inputs": [],
+      "forbidden_outputs": [
+        "placement_matrix",
+        "generated_global_id",
+        "generated_type_identity",
+        "unselected_profile",
+        "noncanonical_alias"
+      ]
+    },
+    {
+      "template_id": "column.add.v0.3",
+      "role": "ifc_repair_operation_profile",
+      "mode": "selected_profile",
+      "path": "prompts/agent/ifc-repair-profiles/column.add.v0.3.json",
+      "sha256": "sha256:02809e9ea0dea0e731ec35c376864030d9f30fee9552b5ca458bbfc521062ce7",
       "required_inputs": [],
       "forbidden_outputs": [
         "placement_matrix",

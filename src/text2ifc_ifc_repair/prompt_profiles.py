@@ -22,8 +22,16 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 PROFILE_SCHEMA_PATH = (
     PROJECT_ROOT / "schemas" / "agent" / "ifc-repair-prompt-profile-0.1.schema.json"
 )
+PROFILE_SCHEMA_PATH_0_2 = (
+    PROJECT_ROOT / "schemas" / "agent" / "ifc-repair-prompt-profile-0.2.schema.json"
+)
 DEFAULT_PROFILE_DIR = PROJECT_ROOT / "prompts" / "agent" / "ifc-repair-profiles"
 PROFILE_SCHEMA_VERSION = "text2ifc/ifc-repair-prompt-profile/0.1"
+PROFILE_SCHEMA_VERSION_0_2 = "text2ifc/ifc-repair-prompt-profile/0.2"
+_PROFILE_SCHEMA_PATHS = {
+    PROFILE_SCHEMA_VERSION: PROFILE_SCHEMA_PATH,
+    PROFILE_SCHEMA_VERSION_0_2: PROFILE_SCHEMA_PATH_0_2,
+}
 MAX_PROFILE_COUNT = 32
 MAX_PROFILE_BYTES = 64 * 1024
 MAX_FEW_SHOT_BYTES = 32 * 1024
@@ -55,7 +63,7 @@ class PromptProfile:
     def compact_projection(self) -> dict[str, Any]:
         """Return only Stage 1 classification and slot information."""
 
-        return {
+        compact = {
             "profile_id": self.profile_id,
             "profile_version": self.profile_version,
             "profile_hash": self.profile_hash,
@@ -77,6 +85,11 @@ class PromptProfile:
                 self.document["unsupported_capabilities"]
             ),
         }
+        if "type_intent_rules" in self.document:
+            compact["type_intent_rules"] = _plain(
+                self.document["type_intent_rules"]
+            )
+        return compact
 
     def full_projection(self) -> dict[str, Any]:
         value = _plain(self.document)
@@ -111,9 +124,12 @@ class SelectedPromptProfiles:
         }
 
 
-@lru_cache(maxsize=1)
-def _profile_schema() -> dict[str, Any]:
-    schema = json.loads(PROFILE_SCHEMA_PATH.read_text(encoding="utf-8"))
+@lru_cache(maxsize=None)
+def _profile_schema(version: str) -> dict[str, Any]:
+    path = _PROFILE_SCHEMA_PATHS.get(version)
+    if path is None:
+        raise PromptProfileError("PROFILE_SCHEMA_VERSION_UNSUPPORTED", version)
+    schema = json.loads(path.read_text(encoding="utf-8"))
     Draft202012Validator.check_schema(schema)
     return schema
 
@@ -132,7 +148,6 @@ def load_prompt_profiles(
     if len(paths) > MAX_PROFILE_COUNT:
         raise PromptProfileError("PROFILE_COUNT_LIMIT_EXCEEDED", str(len(paths)))
 
-    validator = Draft202012Validator(_profile_schema())
     loaded: dict[str, PromptProfile] = {}
     for path in paths:
         raw = path.read_bytes()
@@ -142,6 +157,8 @@ def load_prompt_profiles(
             document = json.loads(raw.decode("utf-8"))
         except (UnicodeDecodeError, json.JSONDecodeError) as error:
             raise PromptProfileError("PROFILE_JSON_INVALID", path.name) from error
+        schema_version = str(document.get("schema_version", ""))
+        validator = Draft202012Validator(_profile_schema(schema_version))
         errors = sorted(
             validator.iter_errors(document),
             key=lambda error: tuple(str(item) for item in error.absolute_path),
@@ -348,6 +365,7 @@ def _freeze(value: Any) -> Any:
 
 __all__ = [
     "PROFILE_SCHEMA_VERSION",
+    "PROFILE_SCHEMA_VERSION_0_2",
     "PromptProfile",
     "PromptProfileError",
     "SelectedPromptProfiles",

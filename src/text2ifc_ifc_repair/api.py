@@ -19,7 +19,7 @@ from .provider_stage import generate_bound_changeset
 from .production_evidence import build_production_evidence
 from .semantic_authoring import semantic_manifest_to_dict
 from .repair_intent import RepairIntent
-from .repair_intent import REPAIR_INTENT_SCHEMA_VERSION_0_6
+from .repair_intent import REPAIR_INTENT_SCHEMA_VERSION_0_7
 from .request_stage import generate_repair_intent
 from .run_models import (
     Clarification,
@@ -57,7 +57,7 @@ class RepairAPI:
         changeset_stage: Callable[..., Mapping[str, Any]] = generate_bound_changeset,
         orchestrator_factory: Callable[..., RepairOrchestrator] = RepairOrchestrator,
         orchestrator_options: Mapping[str, Any] | None = None,
-        intent_schema_version: str = REPAIR_INTENT_SCHEMA_VERSION_0_6,
+        intent_schema_version: str = REPAIR_INTENT_SCHEMA_VERSION_0_7,
         property_knowledge_resolver: Any | None = None,
     ) -> None:
         self.store = RunStore(output_root)
@@ -97,7 +97,7 @@ class RepairAPI:
         config = load_openai_compatible_runtime_config(
             dict(os.environ) if environment is None else dict(environment)
         )
-        intent_schema_version = REPAIR_INTENT_SCHEMA_VERSION_0_6
+        intent_schema_version = REPAIR_INTENT_SCHEMA_VERSION_0_7
         return cls(
             output_root,
             provider=OpenAICompatibleLiveProvider(config=config),

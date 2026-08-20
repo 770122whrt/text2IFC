@@ -80,7 +80,7 @@ def test_default_registry_resolves_square_and_oriented_column_contracts(
     registry = create_default_registry()
     assert {"add_beam", "add_column"}.issubset(registry.operation_types)
     definition = registry.require("add_column")
-    assert definition.prompt_profile_id == "column.add.v0.2"
+    assert definition.prompt_profile_id == "column.add.v0.3"
     assert definition.target_ifc_classes == ("IfcBuildingStorey",)
     assert definition.semantic_scope_roles == {"column": "column_occurrence"}
     assert definition.generated_type_factory is not None
