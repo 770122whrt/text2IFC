@@ -571,6 +571,37 @@ def test_cli_accepts_the_frozen_deepseek_provider_key(
     assert invoked is True
 
 
+def test_cli_preflight_only_needs_no_provider_configuration(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    module = _module()
+    captured: dict[str, Any] = {}
+
+    monkeypatch.setattr(
+        module,
+        "_environment",
+        lambda _path: pytest.fail("preflight-only must not read Provider config"),
+    )
+
+    def fake_run_live_uat(*_args: Any, **kwargs: Any) -> dict[str, Any]:
+        captured.update(kwargs)
+        return {"status": "preflight_passed", "transport_calls": 0}
+
+    monkeypatch.setattr(module, "run_live_uat", fake_run_live_uat)
+
+    exit_code = module.main(
+        [
+            "--preflight-only",
+            "--output-root",
+            str(tmp_path),
+        ]
+    )
+
+    assert exit_code == 0
+    assert captured["preflight_only"] is True
+
+
 def test_cli_rejects_every_non_deepseek_provider_before_configuration(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
@@ -591,6 +622,40 @@ def test_cli_rejects_every_non_deepseek_provider_before_configuration(
         )
 
     assert error.value.code == 2
+
+
+def test_preflight_only_returns_before_transport_construction(
+    tmp_path: Path,
+) -> None:
+    module = _module()
+    transport_constructed = False
+
+    def factory() -> _MockTransport:
+        nonlocal transport_constructed
+        transport_constructed = True
+        return _MockTransport()
+
+    result = module.run_live_uat(
+        tmp_path / "run",
+        transport_factory=factory,
+        command_runner=_GreenCommandRunner(),
+        case_executor=lambda *_args: pytest.fail("executor must not run"),
+        cases=module.DEFAULT_CASES,
+        proof_root=_proof_root(tmp_path),
+        preflight_only=True,
+    )
+
+    assert result["status"] == "preflight_passed"
+    assert result["reason_code"] is None
+    assert result["execution_mode"] == "preflight_only"
+    assert result["provider_evidence_mode"] == "not_run"
+    assert result["runner_contract_eligible"] is False
+    assert result["acceptance_eligible"] is False
+    assert result["proof_acceptance_eligible"] is False
+    assert result["transport_calls"] == 0
+    assert result["cases"] == []
+    assert result["preflight"]["status"] == "passed"
+    assert transport_constructed is False
 
 
 def test_fixed_live_requests_have_exact_public_structural_authority() -> None:
