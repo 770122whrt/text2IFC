@@ -89,6 +89,20 @@ semantic ChangeSet and an L1/L2-validated IFC result.
 - [x] **RAG-04**: Retrieval supplies candidates only; the exact Phase 10.1
   property contract, Binder, atomic authoring and reopened L2 remain the sole
   authorization and publication path.
+- [ ] **RAG-05**: The active natural-language property runtime filters
+  versioned public IFC2X3/property records by target-class applicability,
+  scalar template, value/unit/scope compatibility and provenance before a
+  bounded multilingual vector Top-K; historical reviewed aliases remain
+  readable evidence but are not loaded, embedded, prompted or authorized.
+- [ ] **RAG-06**: A separate bounded Property Resolution stage between Stage 1
+  and Stage 2 lets the configured LLM rerank only the offered Top-K and return
+  one offered candidate, clarification or unsupported; malformed output gets
+  at most one schema-correction attempt and no compatibility normalization.
+- [ ] **RAG-07**: Program code independently checks the selected record and
+  evidence for membership, hashes, class/template/type/unit/scope and frozen
+  retrieval-quality policy, then constructs ExactPropertyIntent from the
+  authoritative record plus original user facts; vector Top-1/margin and LLM
+  text are never directly authorable.
 
 ### Batch Repair and Dataset Hygiene
 
@@ -243,6 +257,9 @@ semantic ChangeSet and an L1/L2-validated IFC result.
 | RAG-02 | 10.2 | Complete |
 | RAG-03 | 10.2 | Complete |
 | RAG-04 | 10.2 | Complete |
+| RAG-05 | 12.1 | Pending |
+| RAG-06 | 12.1 | Pending |
+| RAG-07 | 12.1 | Pending |
 | DATA-01 | 10.3 | Complete |
 | DATA-02 | 10.3 | Complete |
 | BATCH-01 | 10.3 | Complete |
@@ -268,7 +285,7 @@ semantic ChangeSet and an L1/L2-validated IFC result.
 | SCALE-01 | 13 | Pending |
 | SCALE-02 | 13 | Pending |
 
-**Coverage:** 52 requirements, 52 mapped, 0 unmapped.
+**Coverage:** 55 requirements, 55 mapped, 0 unmapped.
 
 ---
-*Last updated: 2026-07-31 after Phase 11 offline, real DeepSeek and independent Proof acceptance*
+*Last updated: 2026-08-21 after freezing Phase 12.1 property-resolution requirements*
