@@ -436,6 +436,46 @@ def test_selection_required_projects_one_bounded_candidate_per_type(tmp_path: Pa
     assert not pending.operations[0].authorized_semantics
 
 
+def test_option_a_selection_required_clarifies_only_when_candidates_exist(
+    tmp_path: Path,
+) -> None:
+    target = _record("0AAAAAAAAAAAAAAAAAAAAA", "target")
+    request = _intent(
+        {"global_id": target.ifc_global_id},
+        prototype={
+            "reference_kind": "selection_required",
+            "reference": "an existing compatible Type",
+            "source": {
+                "source_kind": "user_request",
+                "reference": "request:/prototype",
+                "excerpt": "reuse an existing compatible Type",
+            },
+        },
+    )
+
+    with _repository(tmp_path / "with-candidate", [target], types=[_type_record()]) as repository:
+        with_candidate = _api().resolve_repair_intent(
+            request,
+            repository,
+            expected_source_sha256=SOURCE_SHA,
+            operation_registry=_registry(),
+        )
+    with _repository(tmp_path / "without-candidate", [target], types=[]) as repository:
+        without_candidate = _api().resolve_repair_intent(
+            request,
+            repository,
+            expected_source_sha256=SOURCE_SHA,
+            operation_registry=_registry(),
+        )
+
+    assert with_candidate.status == "clarification_required"
+    assert with_candidate.reason_code == "prototype_selection"
+    assert len(with_candidate.candidates) == 1
+    assert without_candidate.status == "failed"
+    assert without_candidate.reason_code == "missing_evidence"
+    assert without_candidate.candidates == ()
+
+
 def test_prototype_authorization_rejects_negative_and_tampered_tokens(tmp_path: Path) -> None:
     target = _record("0AAAAAAAAAAAAAAAAAAAAA", "target")
     request = _intent(
