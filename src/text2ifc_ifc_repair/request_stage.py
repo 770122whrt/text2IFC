@@ -34,6 +34,7 @@ from .repair_intent import (
     REPAIR_INTENT_BODY_SCHEMA_VERSION_0_5,
     REPAIR_INTENT_BODY_SCHEMA_VERSION_0_6,
     REPAIR_INTENT_BODY_SCHEMA_VERSION_0_7,
+    REPAIR_INTENT_BODY_SCHEMA_VERSION_0_8,
     REPAIR_INTENT_SCHEMA_VERSION,
     REPAIR_INTENT_SCHEMA_VERSION_0_2,
     REPAIR_INTENT_SCHEMA_VERSION_0_3,
@@ -41,6 +42,7 @@ from .repair_intent import (
     REPAIR_INTENT_SCHEMA_VERSION_0_5,
     REPAIR_INTENT_SCHEMA_VERSION_0_6,
     REPAIR_INTENT_SCHEMA_VERSION_0_7,
+    REPAIR_INTENT_SCHEMA_VERSION_0_8,
     fingerprint_text,
     hash_request,
     load_repair_intent_body_schema,
@@ -55,6 +57,7 @@ TEMPLATE_ID_0_4 = "ifc-repair-intent.v0.4"
 TEMPLATE_ID_0_5 = "ifc-repair-intent.v0.5"
 TEMPLATE_ID_0_6 = "ifc-repair-intent.v0.6"
 TEMPLATE_ID_0_7 = "ifc-repair-intent.v0.7"
+TEMPLATE_ID_0_8 = "ifc-repair-intent.v0.8"
 _INTENT_CONTRACTS = {
     REPAIR_INTENT_SCHEMA_VERSION: (
         REPAIR_INTENT_BODY_SCHEMA_VERSION,
@@ -83,6 +86,10 @@ _INTENT_CONTRACTS = {
     REPAIR_INTENT_SCHEMA_VERSION_0_7: (
         REPAIR_INTENT_BODY_SCHEMA_VERSION_0_7,
         TEMPLATE_ID_0_7,
+    ),
+    REPAIR_INTENT_SCHEMA_VERSION_0_8: (
+        REPAIR_INTENT_BODY_SCHEMA_VERSION_0_8,
+        TEMPLATE_ID_0_8,
     ),
 }
 MAX_REQUEST_BYTES = DEFAULT_REPAIR_INTENT_LIMITS.max_request_bytes
@@ -128,6 +135,7 @@ def generate_repair_intent(
             REPAIR_INTENT_SCHEMA_VERSION_0_5,
             REPAIR_INTENT_SCHEMA_VERSION_0_6,
             REPAIR_INTENT_SCHEMA_VERSION_0_7,
+            REPAIR_INTENT_SCHEMA_VERSION_0_8,
         }
         else _supported_operations(registry)
     )
@@ -245,6 +253,7 @@ def generate_repair_intent(
                             REPAIR_INTENT_SCHEMA_VERSION_0_5,
                             REPAIR_INTENT_SCHEMA_VERSION_0_6,
                             REPAIR_INTENT_SCHEMA_VERSION_0_7,
+                            REPAIR_INTENT_SCHEMA_VERSION_0_8,
                         }
                     ):
                         _validate_operation_routing(
@@ -659,6 +668,7 @@ def _fold_created_occurrence_property_operations(
         REPAIR_INTENT_BODY_SCHEMA_VERSION_0_5,
         REPAIR_INTENT_BODY_SCHEMA_VERSION_0_6,
         REPAIR_INTENT_BODY_SCHEMA_VERSION_0_7,
+        REPAIR_INTENT_BODY_SCHEMA_VERSION_0_8,
     }:
         return normalized, []
 

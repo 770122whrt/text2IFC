@@ -508,6 +508,34 @@
       ]
     },
     {
+      "template_id": "ifc-repair-intent.v0.8",
+      "role": "ifc_repair_request_understanding",
+      "mode": "repair_intent",
+      "path": "prompts/agent/ifc-repair-intent-v0.8.md",
+      "sha256": "sha256:00e186b6af79628e57e6658ad16309880f67542481e2a4ad07e66a15f4737175",
+      "required_inputs": [
+        "REPAIR_REQUEST",
+        "SUPPORTED_OPERATIONS",
+        "REPAIR_INTENT_SCHEMA",
+        "VALIDATION_FEEDBACK"
+      ],
+      "forbidden_outputs": [
+        "raw_ifc",
+        "step_text",
+        "step_id",
+        "resolved_target_id",
+        "resolved_target_guid",
+        "resolved_type_id",
+        "unregistered_profile",
+        "inferred_occurrence_reuse",
+        "mutation_mapping",
+        "private_original_ifc",
+        "benchmark_gold",
+        "guessed_project_fact",
+        "repair_changeset"
+      ]
+    },
+    {
       "template_id": "ifc-repair-changeset.v0.4",
       "role": "ifc_repair_generator",
       "mode": "bound_changeset",

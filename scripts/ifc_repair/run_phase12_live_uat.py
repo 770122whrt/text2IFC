@@ -44,7 +44,7 @@ from text2ifc_agent.providers import (  # noqa: E402
 )
 from text2ifc_ifc_repair.api import RepairAPI  # noqa: E402
 from text2ifc_ifc_repair.repair_intent import (  # noqa: E402
-    REPAIR_INTENT_SCHEMA_VERSION_0_7,
+    REPAIR_INTENT_SCHEMA_VERSION_0_8,
 )
 from text2ifc_knowledge.property_search import (  # noqa: E402
     create_default_property_resolver,
@@ -899,7 +899,7 @@ def _production_case_executor(
     api = RepairAPI(
         runtime,
         provider=provider,
-        intent_schema_version=REPAIR_INTENT_SCHEMA_VERSION_0_7,
+        intent_schema_version=REPAIR_INTENT_SCHEMA_VERSION_0_8,
         property_knowledge_resolver=create_default_property_resolver(),
     )
     provider.set_lineage("initial")

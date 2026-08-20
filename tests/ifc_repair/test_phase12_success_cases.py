@@ -798,7 +798,7 @@ def _live_attempt(
 
 def _upgrade_live_intent(intent: Mapping[str, Any]) -> dict[str, Any]:
     upgraded = json.loads(json.dumps(intent))
-    upgraded["schema_version"] = "text2ifc/ifc-repair-intent/0.7"
+    upgraded["schema_version"] = "text2ifc/ifc-repair-intent/0.8"
     upgraded["unsupported_requests"] = []
     for operation in upgraded.get("operations", ()):
         routing = operation.get("routing_intent")
@@ -849,7 +849,7 @@ def _live_result(
     damaged_sha256: str,
 ) -> dict[str, Any]:
     intent_body = {
-        "schema_version": "text2ifc/ifc-repair-intent-body/0.7",
+        "schema_version": "text2ifc/ifc-repair-intent-body/0.8",
         "operations": intent["operations"],
         "unsupported_requests": intent.get("unsupported_requests", []),
         "semantic_bundles": intent.get("semantic_bundles", []),
@@ -1325,7 +1325,7 @@ def _curator_source_run(tmp_path: Path) -> Path:
         _replace_live_response_document(
             successful_stage1,
             {
-                "schema_version": "text2ifc/ifc-repair-intent-body/0.7",
+                "schema_version": "text2ifc/ifc-repair-intent-body/0.8",
                 "operations": case_intent["operations"],
                 "unsupported_requests": case_intent.get(
                     "unsupported_requests", []

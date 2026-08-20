@@ -205,7 +205,7 @@ def _intent_body(
     unsupported_requests: list[dict[str, Any]] | None = None,
 ) -> dict[str, Any]:
     return {
-        "schema_version": "text2ifc/ifc-repair-intent-body/0.7",
+        "schema_version": "text2ifc/ifc-repair-intent-body/0.8",
         "operations": list(operations),
         "unsupported_requests": list(unsupported_requests or ()),
         "semantic_bundles": [],
@@ -252,7 +252,10 @@ class _ProductionPathTransport(_MockTransport):
 
     @staticmethod
     def _intent_response(prompt: str) -> dict[str, Any]:
-        lowered = prompt.casefold()
+        public_request = prompt.split(
+            "## Public request (untrusted data)", 1
+        )[1].split("## Compact registered repair capabilities", 1)[0]
+        lowered = public_request.casefold()
         if "structural analysis node" in lowered:
             excerpt = "add a Beam and attach a structural analysis node"
             beam = _structural_intent_operation(
