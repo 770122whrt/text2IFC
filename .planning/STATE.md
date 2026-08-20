@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: IFC ChangeSet Repair Pipeline
-status: Phase 12 executing; Plans 12-01 through 12-12 complete, 12-13 next
-last_updated: "2026-08-11T16:07:25.4599505Z"
+status: Phase 12 live acceptance blocked; Phase 12.1 frozen and ready to execute
+last_updated: "2026-08-20T18:59:13.4459025Z"
 progress:
   total_phases: 13
   completed_phases: 11
-  total_plans: 53
-  completed_plans: 49
-  percent: 92
+  total_plans: 63
+  completed_plans: 51
+  percent: 81
 ---
 
 # Project State
@@ -117,6 +117,38 @@ Next: Execute Phase 12 only from 12-01 and only when explicitly authorized.
       authority model.
 ```
 
+## Phase 12 Real UAT and Phase 12.1 Planning Checkpoint — 2026-08-21
+
+```text
+Mode: SPECIFICATION AND PLAN FROZEN
+Phase: Phase 12.1 Property Resolution RAG and Reranker Correction
+Trigger: Genuine Phase 12 DeepSeek UAT
+Current authority: Phase 12 Plans 12-01 through 12-14 complete; Stage 1 scope,
+                   Type-intent and transaction-clause correction baselines are
+                   implemented and pushed.
+Live evidence: dataset/processed/ifc-repair-runs/phase12-live/
+               uat-20260820T135432218011Z
+Observed result: The complete Beam+Column case produced valid Stage 1
+                 natural_language_property claims for IfcBeam/IfcColumn and
+                 phrase "load bearing", then failed before Stage 2 with
+                 PROPERTY_NOT_RESOLVED. Clarification/resume and the repair-only
+                 program guard passed. No live structural success was curated.
+Root boundary: The default production resolver had vector_index=None and the
+               remaining local path relied on historical reviewed-alias text.
+               This is a property-resolution architecture gap, not an IFC
+               property-name alias to add and not evidence that Stage 1 chose
+               the wrong target/value.
+Frozen correction: target-class applicability -> multilingual vector Top-K ->
+                   separate bounded Stage 1.5 LLM reranker -> deterministic
+                   admissibility -> program-constructed ExactPropertyIntent ->
+                   existing Binder/Stage 2/atomic IFC authoring.
+Requirements: RAG-05, RAG-06, RAG-07, OPS-03 and OPS-04 remain pending.
+Plans: 12.1-01 through 12.1-07, seven sequential waves.
+Next: Execute 12.1-01 only. Do not start Phase 13. If a new deterministic live
+      defect appears after the frozen offline admission gates, preserve it and
+      stop for user discussion before any patch or retry.
+```
+
 ## Project Reference
 
 See `.planning/PROJECT.md`.
@@ -124,14 +156,15 @@ See `.planning/PROJECT.md`.
 **Core value:** Given an IFC file and an explicit user request, produce a
 traceable semantic ChangeSet and an L1/L2-validated IFC result.
 
-**Current focus:** Phase 12 — Beam and Column Operations
-execution contract are frozen and ready to execute. Phase 11 remains closed
-with real DeepSeek and independently recomputed Proof evidence.
+**Current focus:** Phase 12.1 — Property Resolution RAG and Reranker Correction.
+Phase 12 Beam/Column implementation and live/Proof infrastructure are present,
+but final live acceptance remains blocked before Stage 2. Phase 11 remains
+closed with real DeepSeek and independently recomputed Proof evidence.
 
 ## Current Position
 
-Phase: 12 (Beam and Column Operations) — EXECUTING
-Plan: 13 of 16
+Phase: 12.1 (Property Resolution RAG and Reranker Correction) — READY TO EXECUTE
+Plan: 0 of 7
 
 - Milestone: v1.1 IFC ChangeSet Repair Pipeline
 - Phase: 11 complete
@@ -145,14 +178,15 @@ Plan: 13 of 16
   complete, clarification/resume and deterministic unsupported contracts with
   no fallback; both publishable cases independently reopen and pass L0/L1/L2.
 
-- Progress: 11 / 13 phases complete
-- Requirements: WFID-01..06 and OPS-01..02 complete; OPS-03..04 pending
-- Last activity: 2026-08-12 - Plan 12-12 completed. The exact six-success and
-  two-rollback d7n/vvo matrix is source/hash-bound and curated only after
-  strict independent validation. The installed collection passes 22 cases,
-  57 operations, 361 files and 66 IFC reopens. The frozen gate passed 38
-  tests; rollback input/failure authority and final publication are fail-closed.
-  OPS-03/OPS-04 remain pending until real DeepSeek UAT and Plan 12-16.
+- Progress: 11 / 13 major phases complete; 51 / 63 milestone plans complete.
+- Requirements: RAG-01..04, WFID-01..06 and OPS-01..02 remain complete;
+  RAG-05..07 and OPS-03..04 are pending.
+- Last activity: 2026-08-21 - The genuine Phase 12 complete case exposed an
+  alias-dependent/no-vector production property-resolution gap before Stage 2.
+  The failure remains append-only and no live success entered Proof. Phase 12.1
+  CONTEXT, SPEC, RESEARCH, VALIDATION and seven sequential plans now freeze the
+  alias-free vector + bounded LLM reranker correction and conditional Phase 12
+  closeout. No production implementation for Phase 12.1 has started.
 
 - Phase 11 closure evidence: accepted live run
   `uat-20260731T224900289758Z` passed all three contracts. Two live successes
@@ -328,13 +362,15 @@ Plan: 13 of 16
 
 ## Next Action
 
-Phase 11 remains closed. Continue Phase 12 strictly with
-`.planning/phases/12-beam-and-column-operations/12-13-PLAN.md`, followed by
-12-14 through 12-16. OPS-03/OPS-04 remain pending until final independent
-closure. Do not start Phase 13.
+Phase 11 remains closed. Execute Phase 12.1 strictly from
+`.planning/phases/12.1-property-resolution-rag-reranker/12.1-01-PLAN.md` through
+12.1-07. RAG-05..07 and OPS-03/OPS-04 remain pending until genuine DeepSeek,
+independent Proof, IFCCompare and final regression all pass. Do not start Phase
+13 or reopen frozen Door/Window, geometry, Type/material, Storey or private-Gold
+contracts.
 
 ---
-*Last updated: 2026-08-12 after completing Phase 12 Plan 12*
+*Last updated: 2026-08-21 after freezing Phase 12.1 specification and plans*
 
 ## Accumulated Context
 

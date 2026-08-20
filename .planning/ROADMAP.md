@@ -496,9 +496,13 @@ profiles.
 
 ### Phase 12: Beam and Column Operations
 
-**Status:** In progress - 2026-08-12. Specification, research, pattern mapping,
-Nyquist validation and sixteen sequential execution plans are frozen; Plans
-12-01 through 12-12 are complete and Plan 12-13 is next.
+**Status:** Live acceptance blocked - 2026-08-21. Plans 12-01 through 12-14 are
+complete. The genuine Plan 12-15 DeepSeek run preserved a valid Stage 1
+Beam/Column property claim but failed before Stage 2 with
+`PROPERTY_NOT_RESOLVED`; no live success was curated. Stage 1 scope, Type intent
+and transaction-clause corrections are implemented on the current branch, but
+they do not satisfy Wave 15 acceptance. Property authority correction and final
+closeout move through inserted Phase 12.1; Phase 13 remains unstarted.
 
 **Goal:** Prove the common ChangeSet architecture across non-opening structural
 elements.
@@ -516,7 +520,7 @@ elements.
 
 **Validation strategy:** [Phase 12 VALIDATION](phases/12-beam-and-column-operations/12-VALIDATION.md)
 
-**Plans:** 12/16 plans executed
+**Plans:** 14/16 primary plans complete; Wave 15 acceptance blocked
 
 - [x] **Wave 1:** [12-01 - Structural prompt profiles and selected routing](phases/12-beam-and-column-operations/12-01-PLAN.md)
 - [x] **Wave 2** *(blocked on Wave 1)*: [12-02 - Structural occurrence and Type index](phases/12-beam-and-column-operations/12-02-PLAN.md)
@@ -530,10 +534,16 @@ elements.
 - [x] **Wave 10** *(blocked on Wave 9)*: [12-10 - Structural mutation and private-Gold isolation](phases/12-beam-and-column-operations/12-10-PLAN.md)
 - [x] **Wave 11** *(blocked on Wave 10)*: [12-11 - Family-neutral strict independent Proof validator](phases/12-beam-and-column-operations/12-11-PLAN.md)
 - [x] **Wave 12** *(blocked on Wave 11)*: [12-12 - d7n/vvo offline runner and curated strict Proof contract](phases/12-beam-and-column-operations/12-12-PLAN.md)
-- **Wave 13** *(blocked on Wave 12)*: [12-13 - Live transcript, preflight and no-fallback contract](phases/12-beam-and-column-operations/12-13-PLAN.md)
-- **Wave 14** *(blocked on Wave 13)*: [12-14 - Live Proof curation acceptance contract](phases/12-beam-and-column-operations/12-14-PLAN.md)
-- **Wave 15** *(blocked on Wave 14 and every offline gate)*: [12-15 - Execute and independently curate real DeepSeek structural UAT](phases/12-beam-and-column-operations/12-15-PLAN.md)
-- **Wave 16** *(blocked on Wave 15 accepted live evidence)*: [12-16 - Regress, report and conditionally close Phase 12](phases/12-beam-and-column-operations/12-16-PLAN.md)
+- [x] **Wave 13** *(blocked on Wave 12)*: [12-13 - Live transcript, preflight and no-fallback contract](phases/12-beam-and-column-operations/12-13-PLAN.md)
+- [x] **Wave 14** *(blocked on Wave 13)*: [12-14 - Live Proof curation acceptance contract](phases/12-beam-and-column-operations/12-14-PLAN.md)
+- **Wave 15 — BLOCKED** *(all offline gates passed; genuine live complete case failed before Stage 2)*: [12-15 - Execute and independently curate real DeepSeek structural UAT](phases/12-beam-and-column-operations/12-15-PLAN.md)
+- **Wave 16 — DEFERRED TO PHASE 12.1 CLOSEOUT** *(still blocked on accepted live evidence)*: [12-16 - Regress, report and conditionally close Phase 12](phases/12-beam-and-column-operations/12-16-PLAN.md)
+
+Corrective subplans [12-15A](phases/12-beam-and-column-operations/12-15A-PLAN.md),
+[12-15B](phases/12-beam-and-column-operations/12-15B-PLAN.md) and
+[12-15C](phases/12-beam-and-column-operations/12-15C-PLAN.md) produced the
+current Stage 1 scope, structural Type-intent and transaction-clause baseline.
+They are prerequisite implementation history, not accepted Wave 15 live Proof.
 
 **Cross-cutting constraints:**
 
@@ -563,6 +573,70 @@ elements.
    semantic checks.
 3. Common orchestration remains free of Window/Door-specific fields.
 
+### Phase 12.1: Property Resolution RAG and Reranker Correction
+
+**Status:** Specification and plans frozen - 2026-08-21; ready for Plan 12.1-01.
+
+**Goal:** Replace active reviewed-alias/local-consensus property authorization
+with class-applicable multilingual vector retrieval, one independent bounded
+Property Resolution Provider stage, deterministic admissibility and
+program-constructed ExactPropertyIntent, then finish Phase 12 live acceptance.
+
+**Requirements:** RAG-05, RAG-06, RAG-07, OPS-03, OPS-04
+
+**Depends on:** Phase 10.1 exact property authority, Phase 10.2 historical
+knowledge/vector baseline, Phase 12 Plans 12-01 through 12-14 and the current
+12-15A/B/C correction baseline
+
+**Context:** [Phase 12.1 CONTEXT](phases/12.1-property-resolution-rag-reranker/12.1-CONTEXT.md)
+
+**Specification:** [Phase 12.1 SPEC](phases/12.1-property-resolution-rag-reranker/12.1-SPEC.md)
+
+**Implementation research:** [Phase 12.1 RESEARCH](phases/12.1-property-resolution-rag-reranker/12.1-RESEARCH.md)
+
+**Validation strategy:** [Phase 12.1 VALIDATION](phases/12.1-property-resolution-rag-reranker/12.1-VALIDATION.md)
+
+**Plans:** 0/7 plans executed
+
+- **Wave 1:** [12.1-01 - Additive Stage 1.5 schemas, policy contract and Prompt](phases/12.1-property-resolution-rag-reranker/12.1-01-PLAN.md)
+- **Wave 2** *(blocked on Wave 1)*: [12.1-02 - Alias-free multilingual vector runtime](phases/12.1-property-resolution-rag-reranker/12.1-02-PLAN.md)
+- **Wave 3** *(blocked on Wave 2)*: [12.1-03 - Bounded Property Resolution Provider stage](phases/12.1-property-resolution-rag-reranker/12.1-03-PLAN.md)
+- **Wave 4** *(blocked on Wave 3)*: [12.1-04 - Admissibility gate and ExactPropertyIntent construction](phases/12.1-property-resolution-rag-reranker/12.1-04-PLAN.md)
+- **Wave 5** *(blocked on Wave 4)*: [12.1-05 - Durable public API integration and clarification resume](phases/12.1-property-resolution-rag-reranker/12.1-05-PLAN.md)
+- **Wave 6** *(blocked on Wave 5)*: [12.1-06 - Frozen evaluation, five-family regression and zero-skip preflight](phases/12.1-property-resolution-rag-reranker/12.1-06-PLAN.md)
+- **Wave 7** *(blocked on Wave 6)*: [12.1-07 - Genuine DeepSeek, independent Proof, IFCCompare and closeout](phases/12.1-property-resolution-rag-reranker/12.1-07-PLAN.md)
+
+**Cross-cutting constraints:**
+
+- `property_aliases.json` remains historical evidence only. No new reviewed
+  alias, phrase table, keyword family branch or Provider-output compatibility
+  mapping is permitted.
+- Explicit canonical `Pset.Property` requests retain the exact no-RAG path.
+  Natural-language claims follow Stage 1 claim extraction -> deterministic
+  class/template eligibility -> multilingual vector Top-K -> independent Stage
+  1.5 -> deterministic admissibility -> program ExactPropertyIntent -> Stage 2.
+- Vector score/rank/margin are retained retrieval evidence. Neither Top-1 nor a
+  large margin can auto-authorize a property; the bounded LLM reranks offered
+  candidates, and code only decides whether its selection is executable.
+- The common path covers existing property-capable Window, Door,
+  Wall/WallStandardCase, Beam and Column occurrences. Wall remains
+  property-only; no `add_wall` operation is added.
+- Door/Window workflows, geometry thresholds, Type/material authority, Storey
+  policy, Ground Truth isolation and atomic publication remain frozen.
+- Any new deterministic defect found by live UAT stops execution for discussion;
+  no patch-and-retry, synthetic/cached fallback or Phase 13 work is allowed.
+
+**Success criteria:**
+
+1. Active natural-language resolution has no alias authority and production
+   vector health/fingerprints are reusable, public and fail-closed.
+2. Stage 1.5 selects only offered class-applicable candidates or asks/declines;
+   code constructs the only executable ExactPropertyIntent.
+3. Frozen Baseline/Candidate evaluation has zero false standard authorization,
+   and Window/Door/Wall/Beam/Column public chains preserve existing contracts.
+4. Fresh preflight, genuine DeepSeek matrix, independent Proof, IFCCompare and
+   final regressions all pass before Phase 12/12.1 and OPS-03/04 close.
+
 ### Phase 13: Large IFC Context and 128k Experiment
 
 **Goal:** Validate retrieval and Provider behavior on BIMNet-scale files before
@@ -570,8 +644,8 @@ changing the default input budget.
 
 **Requirements:** SCALE-01, SCALE-02
 
-**Depends on:** Phases 7 through 12, including inserted Phases 09.1, 10.1 and
-10.2
+**Depends on:** Phases 7 through 12.1, including inserted Phases 09.1, 10.1,
+10.2 and the completed Phase 12/12.1 acceptance chain
 
 **Success criteria:**
 
@@ -598,9 +672,10 @@ changing the default input budget.
 | 10.5 | WFID-01..06 |
 | 11 | OPS-01..02 |
 | 12 | OPS-03..04 |
+| 12.1 | RAG-05..07, OPS-03..04 |
 | 13 | SCALE-01..02 |
 
-**Coverage:** 52 committed requirements, 52 mapped, 0 unmapped.
+**Coverage:** 55 committed requirements, 55 mapped, 0 unmapped.
 
 ## Delivery Sequence and Deferred Horizon
 
@@ -619,7 +694,10 @@ The v1.1 sequence is intentionally layered:
    validation runtime before the Window reference implementation is reused.
 8. Phases 11-12 expand the same Registry/ChangeSet/evaluation architecture to
    Opening, Door, Beam and Column operations.
-9. Phase 13 measures near-limit context and 128k behavior before changing the
+9. Phase 12.1 replaces historical alias authority with a bounded vector/LLM
+   property-resolution stage and completes Phase 12 acceptance without
+   changing Door/Window or structural operation contracts.
+10. Phase 13 measures near-limit context and 128k behavior before changing the
    bounded 64k default.
 
 Post-v1.1 work remains explicitly uncommitted: existing Wall mutation beyond
