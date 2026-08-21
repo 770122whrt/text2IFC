@@ -280,6 +280,48 @@ def test_valid_standard_selection_constructs_exact_intent_from_record_and_claim(
         assert forbidden not in serialized
 
 
+def test_inherited_wall_property_remains_authorable_for_wall_standard_case(
+    knowledge,
+) -> None:
+    registry, by_path = knowledge
+    record = by_path["Pset_WallCommon.IsExternal"]
+    claim = _claim(phrase="external", value=True)
+    query = _query(claim, target_class="IfcWallStandardCase")
+    candidate_set = _candidate_set(
+        query,
+        [_candidate(record, rank=1, score=0.92)],
+    )
+    result = _admit(
+        {
+            "registry": registry,
+            "records": (record,),
+            "claim": claim,
+            "query": query,
+            "candidate_set": candidate_set,
+            "decision": _decision(
+                "confirmed",
+                selected=candidate_set["candidates"][0]["candidate_id"],
+            ),
+            "decision_trace": _trace(query, candidate_set),
+            "policy": _policy(),
+        }
+    )
+
+    fact = _module().authorize_admissible_standard_property(
+        result,
+        registry=registry,
+        target_ifc_class="IfcWallStandardCase",
+        existing_facts=(),
+        operation_id="operation-1",
+        target_global_id="wall-guid-1",
+        request_hash="existing-request-binding",
+        model_fingerprint="existing-model-binding",
+    )
+    assert fact.set_name == "Pset_WallCommon"
+    assert fact.property_name == "IsExternal"
+    assert fact.value is True
+
+
 @pytest.mark.parametrize(
     ("mutator", "reason_code"),
     [
@@ -294,18 +336,13 @@ def test_valid_standard_selection_constructs_exact_intent_from_record_and_claim(
             "PROPERTY_TARGET_CLASS_INAPPLICABLE",
         ),
         (
-            lambda case: (
-                case.update(
-                    records=(
-                        replace(
-                            case["records"][0],
-                            template_type="TypePropertyListValue",
-                        ),
-                    )
-                ),
-                case["candidate_set"]["candidates"][0].update(
-                    template_type="TypePropertyListValue"
-                ),
+            lambda case: case.update(
+                records=(
+                    replace(
+                        case["records"][0],
+                        template_type="TypePropertyListValue",
+                    ),
+                )
             ),
             "PROPERTY_SCALAR_TEMPLATE_UNSUPPORTED",
         ),
@@ -314,10 +351,9 @@ def test_valid_standard_selection_constructs_exact_intent_from_record_and_claim(
             "PROPERTY_AUTHORITATIVE_RECORD_MISSING",
         ),
         (
-            lambda case: (
-                setattr(case["claim"], "raw_value", "yes")
-                if False
-                else case["query"].update(raw_value="yes", raw_value_kind="string")
+            lambda case: case["query"].update(
+                raw_value="yes",
+                raw_value_kind="string",
             ),
             "PROPERTY_QUERY_CLAIM_MISMATCH",
         ),
@@ -361,6 +397,18 @@ def test_valid_standard_selection_constructs_exact_intent_from_record_and_claim(
         (
             lambda case: case["decision_trace"].update(
                 candidate_set_id="property-candidates:other"
+            ),
+            "PROPERTY_DECISION_BINDING_MISMATCH",
+        ),
+        (
+            lambda case: case["candidate_set"].update(
+                query_id="property-query:other"
+            ),
+            "PROPERTY_DECISION_BINDING_MISMATCH",
+        ),
+        (
+            lambda case: case["candidate_set"].update(
+                corpus_version="ifc2x3-property-records/stale"
             ),
             "PROPERTY_DECISION_BINDING_MISMATCH",
         ),

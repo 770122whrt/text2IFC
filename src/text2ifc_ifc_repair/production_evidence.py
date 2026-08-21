@@ -12,6 +12,8 @@ from fnmatch import fnmatchcase
 from types import MappingProxyType
 from typing import Any, Mapping
 
+from text2ifc_knowledge.property_search import normalize_property_value
+
 from .evaluation_policy import (
     EvidenceSourceKind,
     SemanticApplicability,
@@ -677,7 +679,30 @@ def _property_claim_matches_authority(
     if (claim.scope or "occurrence_direct") != authority.get("ownership"):
         return False
     if isinstance(claim, NaturalLanguagePropertyIntent):
-        return True
+        value_type = str(authority.get("value_type", ""))
+        authority_unit = (
+            None
+            if authority.get("unit") is None
+            else str(authority.get("unit"))
+        )
+        project_length_unit = (
+            authority_unit
+            if value_type == "IfcLengthMeasure" and authority_unit is not None
+            else "m"
+        )
+        try:
+            normalized_value, normalized_unit = normalize_property_value(
+                claim.raw_value,
+                raw_unit=claim.raw_unit,
+                value_type=value_type,
+                project_length_unit=project_length_unit,
+            )
+        except ValueError:
+            return False
+        return (
+            normalized_value == authority.get("value")
+            and normalized_unit == authority_unit
+        )
     return (
         claim.set_name == authority.get("set_name")
         and claim.property_name == authority.get("property_name")

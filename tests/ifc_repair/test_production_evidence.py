@@ -57,6 +57,8 @@ def test_property_claim_binds_by_source_identity_not_display_excerpt() -> None:
         "set_name": "Pset_WindowCommon",
         "property_name": "IsExternal",
         "value": True,
+        "value_type": "IfcBoolean",
+        "unit": None,
         "ownership": "occurrence_direct",
         "source": source.to_dict(),
     }
@@ -79,6 +81,10 @@ def test_property_claim_binds_by_source_identity_not_display_excerpt() -> None:
 
     assert _property_claim_matches_authority(natural, authority)
     assert _property_claim_matches_authority(exact, authority)
+    assert not _property_claim_matches_authority(
+        replace(natural, raw_value=False),
+        authority,
+    )
     compact_authority = {
         **authority,
         "source": {

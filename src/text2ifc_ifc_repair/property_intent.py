@@ -17,6 +17,7 @@ from .run_models import hash_json
 if TYPE_CHECKING:
     from .index_models import PropertyFact
     from .repair_intent import PublicProvenance
+    from text2ifc_knowledge.property_search import PropertyKnowledgeRecord
 
 
 class PropertyResolutionStatus(str, Enum):
@@ -137,6 +138,34 @@ class NaturalLanguagePropertyIntent:
             "scope": self.scope,
             "source": self.source.to_dict(),
         }
+
+
+def construct_exact_property_intent(
+    *,
+    record: "PropertyKnowledgeRecord",
+    claim: NaturalLanguagePropertyIntent,
+    normalized_value: Any,
+    normalized_unit: str | None,
+    scope: str,
+) -> ExactPropertyIntent:
+    """Copy executable fields from authority plus the original public claim."""
+
+    if (
+        record.value_type is None
+        or record.template_type != "TypePropertySingleValue"
+        or scope != "occurrence_direct"
+    ):
+        raise ValueError("PROPERTY_EXACT_INTENT_CONSTRUCTION_NOT_ALLOWED")
+    return ExactPropertyIntent(
+        set_name=record.set_name,
+        property_name=record.property_name,
+        value=normalized_value,
+        requested_value_type=record.value_type,
+        requested_unit=normalized_unit,
+        scope=scope,
+        source=claim.source,
+        intent_kind="exact_property",
+    )
 
 
 @dataclass(frozen=True)
@@ -540,7 +569,16 @@ def resolve_exact_property_intent(
         "unit_types": unit_types,
         "evidence": evidence + (f"registry-property:{intent.set_name}.{intent.property_name}",),
     }
-    if target_ifc_class not in applicable_classes:
+    target_declaration = registry.entity(target_ifc_class)
+    target_supertypes = (
+        ()
+        if target_declaration is None
+        else tuple(str(item) for item in target_declaration.get("supertypes", ()))
+    )
+    if (
+        target_ifc_class not in applicable_classes
+        and not any(item in applicable_classes for item in target_supertypes)
+    ):
         return _resolve_custom(
             intent,
             registry,
@@ -734,6 +772,7 @@ __all__ = [
     "PropertyResolutionStatus",
     "authorize_custom_property",
     "authorize_standard_property",
+    "construct_exact_property_intent",
     "normalize_property_scope",
     "resolve_exact_property_intent",
 ]
