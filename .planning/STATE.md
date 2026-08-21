@@ -144,6 +144,11 @@ Frozen correction: target-class applicability -> multilingual vector Top-K ->
                    existing Binder/Stage 2/atomic IFC authoring.
 Requirements: RAG-05, RAG-06, RAG-07, OPS-03 and OPS-04 remain pending.
 Plans: 12.1-01 through 12.1-07, seven sequential waves.
+Contract amendment: Phase 12.1 adds no hash/fingerprint authorization or
+                    acceptance gate. Stable IDs, explicit versions and persisted
+                    candidate membership connect the stages. Each new gate must
+                    protect a named product failure; existing source/private-Gold
+                    isolation and historical accepted-Proof mechanisms are unchanged.
 Next: Execute 12.1-01 only. Do not start Phase 13. If a new deterministic live
       defect appears after the frozen offline admission gates, preserve it and
       stop for user discussion before any patch or retry.
@@ -186,7 +191,10 @@ Plan: 0 of 7
   The failure remains append-only and no live success entered Proof. Phase 12.1
   CONTEXT, SPEC, RESEARCH, VALIDATION and seven sequential plans now freeze the
   alias-free vector + bounded LLM reranker correction and conditional Phase 12
-  closeout. No production implementation for Phase 12.1 has started.
+  closeout. Before execution, the user amended the frozen contract to reject new
+  hash/fingerprint gates and generic security checks; validation now names the
+  concrete product failure and risk for every new gate. No production
+  implementation for Phase 12.1 has started.
 
 - Phase 11 closure evidence: accepted live run
   `uat-20260731T224900289758Z` passed all three contracts. Two live successes
@@ -370,7 +378,7 @@ independent Proof, IFCCompare and final regression all pass. Do not start Phase
 contracts.
 
 ---
-*Last updated: 2026-08-21 after freezing Phase 12.1 specification and plans*
+*Last updated: 2026-08-21 after the no-hash/concrete-risk Phase 12.1 amendment*
 
 ## Accumulated Context
 

@@ -99,9 +99,10 @@ semantic ChangeSet and an L1/L2-validated IFC result.
   one offered candidate, clarification or unsupported; malformed output gets
   at most one schema-correction attempt and no compatibility normalization.
 - [ ] **RAG-07**: Program code independently checks the selected record and
-  evidence for membership, hashes, class/template/type/unit/scope and frozen
-  retrieval-quality policy, then constructs ExactPropertyIntent from the
-  authoritative record plus original user facts; vector Top-1/margin and LLM
+  evidence for offered-set membership, authoritative record identity,
+  class/template/type/unit/scope and frozen retrieval-quality policy, then
+  constructs ExactPropertyIntent from the authoritative record plus original
+  user facts; vector Top-1/margin and LLM
   text are never directly authorable.
 
 ### Batch Repair and Dataset Hygiene

@@ -629,7 +629,7 @@ knowledge/vector baseline, Phase 12 Plans 12-01 through 12-14 and the current
 **Success criteria:**
 
 1. Active natural-language resolution has no alias authority and production
-   vector health/fingerprints are reusable, public and fail-closed.
+   vector health/configured versions are reusable, public and fail-closed.
 2. Stage 1.5 selects only offered class-applicable candidates or asks/declines;
    code constructs the only executable ExactPropertyIntent.
 3. Frozen Baseline/Candidate evaluation has zero false standard authorization,
