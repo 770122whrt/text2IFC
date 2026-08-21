@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: IFC ChangeSet Repair Pipeline
-status: Phase 12 live acceptance blocked; Phase 12.1 Plan 4 of 7 complete
-last_updated: "2026-08-21T05:42:55.8323720Z"
+status: Phase 12 live acceptance blocked; Phase 12.1 Plan 5 of 7 complete
+last_updated: "2026-08-21T06:37:11.1011587Z"
 progress:
   total_phases: 13
   completed_phases: 11
   total_plans: 63
-  completed_plans: 55
-  percent: 87
+  completed_plans: 56
+  percent: 89
 ---
 
 # Project State
@@ -143,13 +143,13 @@ Frozen correction: target-class applicability -> multilingual vector Top-K ->
                    admissibility -> program-constructed ExactPropertyIntent ->
                    existing Binder/Stage 2/atomic IFC authoring.
 Requirements: RAG-05, RAG-06, RAG-07, OPS-03 and OPS-04 remain pending.
-Plans: 12.1-01 through 12.1-04 complete; 12.1-05 through 12.1-07 pending in sequence.
+Plans: 12.1-01 through 12.1-05 complete; 12.1-06 through 12.1-07 pending in sequence.
 Contract amendment: Phase 12.1 adds no hash/fingerprint authorization or
                     acceptance gate. Stable IDs, explicit versions and persisted
                     candidate membership connect the stages. Each new gate must
                     protect a named product failure; existing source/private-Gold
                     isolation and historical accepted-Proof mechanisms are unchanged.
-Next: Execute 12.1-05 only. Do not start Phase 13. If a new deterministic live
+Next: Execute 12.1-06 only. Do not start Phase 13. If a new deterministic live
       defect appears after the frozen offline admission gates, preserve it and
       stop for user discussion before any patch or retry.
 ```
@@ -169,7 +169,7 @@ closed with real DeepSeek and independently recomputed Proof evidence.
 ## Current Position
 
 Phase: 12.1 (Property Resolution RAG and Reranker Correction) — IN PROGRESS
-Plan: 4 of 7
+Plan: 5 of 7
 
 - Milestone: v1.1 IFC ChangeSet Repair Pipeline
 - Phase: 11 complete
@@ -183,7 +183,7 @@ Plan: 4 of 7
   complete, clarification/resume and deterministic unsupported contracts with
   no fallback; both publishable cases independently reopen and pass L0/L1/L2.
 
-- Progress: 11 / 13 major phases complete; 55 / 63 milestone plans complete.
+- Progress: 11 / 13 major phases complete; 56 / 63 milestone plans complete.
 - Requirements: RAG-01..04, WFID-01..06 and OPS-01..02 remain complete;
   RAG-05..07 and OPS-03..04 are pending.
 - Last activity: 2026-08-21 - The genuine Phase 12 complete case exposed an
@@ -202,8 +202,13 @@ Plan: 4 of 7
   stage, exact offered-ID checks and permanently non-live injected evidence.
   Plan 12.1-04 adds the pure admissibility boundary, program-constructed exact
   intent, inherited class applicability and original-user-value binding without
-  adding a hash/fingerprint gate. Durable public integration remains pending
-  from Plan 12.1-05.
+  adding a hash/fingerprint gate. Plan 12.1-05 now integrates that chain into
+  the durable public API: query/candidate/decision/admissibility checkpoints
+  survive restart, Stage 2 waits for exact resolution, and clarification
+  answers bind to one operation and claim. The frozen Plan 05 gate passes 72
+  tests and the existing Phase 9/resolution regression passes 42 tests, both
+  without skip. Five-family evaluation and zero-skip preflight remain pending
+  in Plan 12.1-06.
 
 - Phase 11 closure evidence: accepted live run
   `uat-20260731T224900289758Z` passed all three contracts. Two live successes
@@ -380,14 +385,14 @@ Plan: 4 of 7
 ## Next Action
 
 Phase 11 remains closed. Continue Phase 12.1 strictly from
-`.planning/phases/12.1-property-resolution-rag-reranker/12.1-05-PLAN.md` through
+`.planning/phases/12.1-property-resolution-rag-reranker/12.1-06-PLAN.md` through
 12.1-07. RAG-05..07 and OPS-03/OPS-04 remain pending until genuine DeepSeek,
 independent Proof, IFCCompare and final regression all pass. Do not start Phase
 13 or reopen frozen Door/Window, geometry, Type/material, Storey or private-Gold
 contracts.
 
 ---
-*Last updated: 2026-08-21 after Phase 12.1 Plan 04 completion*
+*Last updated: 2026-08-21 after Phase 12.1 Plan 05 completion*
 
 ## Accumulated Context
 
