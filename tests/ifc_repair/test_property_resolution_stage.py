@@ -8,7 +8,12 @@ from typing import Any
 
 import pytest
 
-from text2ifc_agent.providers import LiveProviderResult, ProviderOutput
+from text2ifc_agent.openai_compat import OpenAICompatError
+from text2ifc_agent.providers import (
+    LiveProviderResult,
+    ProviderOutput,
+    ProviderOutputError,
+)
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -152,6 +157,43 @@ class InjectedGenerateLiveProvider:
             response={"fixture": True},
             events=({"sequence": 0, "event": "fixture", "data": {}},),
             output=output,
+        )
+
+
+class IncompleteInjectedLiveProvider:
+    def generate_live(self, **arguments):
+        output = ProviderOutput(
+            text='{"schema_version":"text2ifc/ifc-property-rerank-decision/0.1",',
+            metadata={"provider": "fixture", "stop_reason": "max_tokens"},
+        )
+        live_result = LiveProviderResult(
+            session_id=arguments["session_id"],
+            evidence_class="live",
+            http_status=200,
+            request={"fixture": True},
+            response={"stop_reason": "max_tokens"},
+            events=({"sequence": 0, "event": "fixture", "data": {}},),
+            output=output,
+        )
+        raise ProviderOutputError(
+            "incomplete response",
+            live_result=live_result,
+        )
+
+
+class TruncatedOpenAICompatProvider:
+    def generate_live(self, **arguments):
+        raise OpenAICompatError(
+            "truncated response",
+            evidence={
+                "provider": "deepseek-openai-compatible",
+                "evidence_class": "live",
+                "failure_class": "truncated",
+                "session_id": arguments["session_id"],
+                "content_text": '{"schema_version":',
+                "finish_reason": "length",
+                "request": {"fixture": True},
+            },
         )
 
 
@@ -397,6 +439,42 @@ def test_injected_generate_live_transport_is_permanently_non_live(
     assert metadata["acceptance_eligible"] is False
 
 
+def test_incomplete_live_response_is_preserved_and_rejected(tmp_path: Path) -> None:
+    result = _run(
+        tmp_path,
+        IncompleteInjectedLiveProvider(),
+        max_attempts=1,
+    )
+    assert result["valid"] is False
+    assert result["attempts"][0]["issues"][0]["code"] == (
+        "PROPERTY_PROVIDER_RESPONSE_INCOMPLETE"
+    )
+    raw = json.loads(
+        (tmp_path / "attempt-001/raw-response.json").read_text(encoding="utf-8")
+    )
+    assert raw["text"].endswith(",")
+    assert raw["transport"]["response"]["stop_reason"] == "max_tokens"
+
+
+def test_deepseek_style_truncation_evidence_is_preserved_and_rejected(
+    tmp_path: Path,
+) -> None:
+    result = _run(
+        tmp_path,
+        TruncatedOpenAICompatProvider(),
+        max_attempts=1,
+    )
+    assert result["valid"] is False
+    assert result["attempts"][0]["issues"][0]["code"] == (
+        "PROPERTY_PROVIDER_RESPONSE_INCOMPLETE"
+    )
+    raw = json.loads(
+        (tmp_path / "attempt-001/raw-response.json").read_text(encoding="utf-8")
+    )
+    assert raw["text"] == '{"schema_version":'
+    assert raw["transport"]["failure_class"] == "truncated"
+
+
 def test_response_size_guard_preserves_raw_output_and_never_reaches_schema(
     tmp_path: Path,
 ) -> None:
@@ -415,4 +493,3 @@ def test_response_size_guard_preserves_raw_output_and_never_reaches_schema(
         (tmp_path / "attempt-001/raw-response.json").read_text(encoding="utf-8")
     )
     assert raw["text"] == oversized
-
