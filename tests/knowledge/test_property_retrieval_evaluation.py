@@ -1,62 +1,136 @@
 from __future__ import annotations
 
 import json
+from collections import Counter
 from pathlib import Path
 
-from text2ifc_knowledge.property_search import (
-    PropertyKnowledgeQuery,
-    create_default_property_resolver,
-)
+from jsonschema import Draft202012Validator
 
 
-def test_checked_in_retrieval_evaluation_has_zero_false_authorizations(
+def _fixture(project_root: Path) -> tuple[dict, list[dict]]:
+    path = (
+        project_root
+        / "tests"
+        / "fixtures"
+        / "knowledge"
+        / "phase12_1_property_resolution.json"
+    )
+    document = json.loads(path.read_text(encoding="utf-8"))
+    baseline_path = project_root / document["baseline_fixture"]
+    baseline = json.loads(baseline_path.read_text(encoding="utf-8"))["cases"]
+    return document, [*baseline, *document["cases"]]
+
+
+def test_phase12_1_frozen_evaluation_has_60_grouped_cases(
     project_root: Path,
 ) -> None:
-    dataset = json.loads(
+    document, cases = _fixture(project_root)
+
+    assert document["schema_version"] == "text2ifc/property-resolution-eval/0.2"
+    assert len(cases) == 60
+    assert document["baseline_case_count"] == 40
+    assert document["addition_case_count"] == 20
+    additions = document["cases"]
+    assert Counter(item["family"] for item in additions) == {
+        "window": 4,
+        "door": 4,
+        "wall": 4,
+        "beam": 4,
+        "column": 4,
+    }
+    assert len({item["id"] for item in cases}) == len(cases)
+    assert all(item["group_id"] for item in additions)
+    group_roles: dict[str, set[str]] = {}
+    for item in additions:
+        group_roles.setdefault(item["group_id"], set()).add(item["role"])
+    assert all(len(roles) == 1 for roles in group_roles.values())
+    assert any(item["phrase"] == "外窗" for item in additions)
+    assert {
+        (item["class"], item["phrase"])
+        for item in additions
+        if item["phrase"] == "load bearing"
+    } == {("IfcBeam", "load bearing"), ("IfcColumn", "load bearing")}
+    assert any(item["authorize"] is False for item in additions)
+
+
+def test_executable_policy_is_the_frozen_alias_free_v02(
+    project_root: Path,
+) -> None:
+    policy_path = (
+        project_root
+        / "schemas"
+        / "ifc"
+        / "knowledge"
+        / "property_resolution_policy.v0.2.json"
+    )
+    policy = json.loads(policy_path.read_text(encoding="utf-8"))
+    schema = json.loads(
         (
             project_root
-            / "tests"
-            / "fixtures"
+            / "schemas"
+            / "ifc"
             / "knowledge"
-            / "phase10_2_property_retrieval.json"
+            / "property_resolution_policy.schema.json"
         ).read_text(encoding="utf-8")
     )
-    cases = dataset["cases"]
-    assert len(cases) >= 40
-    assert any(any("\u4e00" <= char <= "\u9fff" for char in case["phrase"]) for case in cases)
-    assert any(case["phrase"].isascii() for case in cases)
 
-    resolver = create_default_property_resolver()
-    false_authorizations: list[str] = []
-    expected_authorizations = 0
-    correct_authorizations = 0
-    for case in cases:
-        try:
-            decision = resolver.resolve(
-                PropertyKnowledgeQuery(
-                    target_ifc_class=case["class"],
-                    phrase=case["phrase"],
-                    raw_value=case["value"],
-                )
-            )
-        except ValueError:
-            decision = None
-        authorized_path = None
-        if (
-            decision is not None
-            and decision.status == "standard_resolved"
-            and decision.exact_intent is not None
-        ):
-            authorized_path = (
-                f"{decision.exact_intent.set_name}."
-                f"{decision.exact_intent.property_name}"
-            )
-        if case["authorize"]:
-            expected_authorizations += 1
-            if authorized_path == case["expected"]:
-                correct_authorizations += 1
-        elif authorized_path is not None:
-            false_authorizations.append(case["id"])
+    assert not list(Draft202012Validator(schema).iter_errors(policy))
+    assert policy["alias_authority"] is False
+    assert policy["vector_top1_authority"] is False
+    assert policy["vector_margin_authority"] is False
+    assert policy["standard_selection"] == "stage_1_5_required"
+    assert 0.0 < policy["minimum_retrieval_score"] < 0.5
 
-    assert false_authorizations == []
-    assert correct_authorizations == expected_authorizations
+
+def test_real_bge_frozen_baseline_candidate_evaluation_passes_hard_gates(
+    project_root: Path,
+    tmp_path: Path,
+) -> None:
+    from scripts.ifc_repair import run_phase12_offline
+
+    evaluate = getattr(
+        run_phase12_offline,
+        "evaluate_property_resolution_matrix",
+        None,
+    )
+    assert callable(evaluate), "Phase 12.1 property evaluator is missing"
+    result = evaluate(
+        project_root=project_root,
+        output_path=tmp_path / "property-evaluation.json",
+        qdrant_path=tmp_path / "qdrant",
+    )
+
+    assert result["schema_version"] == (
+        "text2ifc/phase12.1-property-resolution-evaluation/0.1"
+    )
+    assert result["status"] == "passed"
+    assert result["case_count"] == 60
+    assert result["failures_in_denominator"] > 0
+    assert result["evaluator_id"] == "phase12.1.fixed-property-evaluator/0.1"
+    assert result["baseline"]["case_count"] == 60
+    assert result["candidate"]["case_count"] == 60
+    assert result["candidate"]["false_standard_authorization_count"] == 0
+    assert result["candidate"]["unoffered_selection_count"] == 0
+    assert result["candidate"]["private_leakage_count"] == 0
+    assert result["candidate"]["supported_top_k_recall"] == 1.0
+    assert result["candidate"]["confirmed_standard_precision"] == 1.0
+    assert set(result["candidate"]["family_slices"]) >= {
+        "window",
+        "door",
+        "wall",
+        "beam",
+        "column",
+    }
+    assert result["hard_gates"] == {
+        "all_supported_in_top_k": True,
+        "zero_false_standard_authorization": True,
+        "zero_wrong_class_type_unit_scope": True,
+        "zero_alias_runtime_authority": True,
+        "zero_unoffered_selection": True,
+        "zero_private_leakage": True,
+    }
+    assert result["knowledge_health"]["status"] == "ready"
+    assert result["knowledge_health"]["embedding_model_id"] == "BAAI/bge-m3"
+    assert result["knowledge_health"]["runtime_mode"] == "production"
+    assert result["knowledge_health"]["acceptance_eligible"] is True
+    assert Path(result["output_path"]).is_file()

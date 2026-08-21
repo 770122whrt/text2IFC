@@ -1,0 +1,32 @@
+{
+  "schema_version": "text2ifc/property-resolution-eval/0.2",
+  "baseline_fixture": "tests/fixtures/knowledge/phase10_2_property_retrieval.json",
+  "baseline_case_count": 40,
+  "addition_case_count": 20,
+  "cases": [
+    {"id":"p12w01","group_id":"window-external-zh-short","role":"revealed-regression","family":"window","class":"IfcWindow","phrase":"外窗","value":true,"expected":"Pset_WindowCommon.IsExternal","authorize":true,"expected_route":"confirmed_standard"},
+    {"id":"p12w02","group_id":"window-external-zh-envelope","role":"holdout","family":"window","class":"IfcWindow","phrase":"这个窗属于建筑外部围护","value":true,"expected":"Pset_WindowCommon.IsExternal","authorize":true,"expected_route":"confirmed_standard"},
+    {"id":"p12w03","group_id":"window-external-en-flag","role":"holdout","family":"window","class":"IfcWindow","phrase":"exterior window flag","value":true,"expected":"Pset_WindowCommon.IsExternal","authorize":true,"expected_route":"confirmed_standard"},
+    {"id":"p12w04","group_id":"window-fire-rating-wrong-value","role":"boundary","family":"window","class":"IfcWindow","phrase":"窗的防火等级","value":true,"expected":null,"authorize":false,"expected_route":"inadmissible"},
+
+    {"id":"p12d01","group_id":"door-external-zh","role":"holdout","family":"door","class":"IfcDoor","phrase":"建筑外门属性","value":true,"expected":"Pset_DoorCommon.IsExternal","authorize":true,"expected_route":"confirmed_standard"},
+    {"id":"p12d02","group_id":"door-selfclosing-zh","role":"holdout","family":"door","class":"IfcDoor","phrase":"门需要自动闭合","value":true,"expected":"Pset_DoorCommon.SelfClosing","authorize":true,"expected_route":"confirmed_standard"},
+    {"id":"p12d03","group_id":"door-fireexit-en","role":"holdout","family":"door","class":"IfcDoor","phrase":"mark the door as a fire exit","value":true,"expected":"Pset_DoorCommon.FireExit","authorize":true,"expected_route":"confirmed_standard"},
+    {"id":"p12d04","group_id":"door-fire-rating-wrong-value","role":"boundary","family":"door","class":"IfcDoor","phrase":"door fire rating","value":true,"expected":null,"authorize":false,"expected_route":"inadmissible"},
+
+    {"id":"p12m01","group_id":"wall-loadbearing-zh","role":"holdout","family":"wall","class":"IfcWall","phrase":"该墙是承重构件","value":true,"expected":"Pset_WallCommon.LoadBearing","authorize":true,"expected_route":"confirmed_standard"},
+    {"id":"p12m02","group_id":"wall-external-zh","role":"holdout","family":"wall","class":"IfcWallStandardCase","phrase":"建筑外墙属性","value":true,"expected":"Pset_WallCommon.IsExternal","authorize":true,"expected_route":"confirmed_standard"},
+    {"id":"p12m03","group_id":"wall-compartmentation-zh","role":"holdout","family":"wall","class":"IfcWall","phrase":"墙体用于防火分区","value":true,"expected":"Pset_WallCommon.Compartmentation","authorize":true,"expected_route":"confirmed_standard"},
+    {"id":"p12m04","group_id":"wall-unknown-acoustic","role":"negative","family":"wall","class":"IfcWall","phrase":"wall acoustic performance flag","value":true,"expected":null,"authorize":false,"expected_route":"clarification_or_unsupported"},
+
+    {"id":"p12b01","group_id":"beam-loadbearing-short","role":"revealed-regression","family":"beam","class":"IfcBeam","phrase":"load bearing","value":true,"expected":"Pset_BeamCommon.LoadBearing","authorize":true,"expected_route":"confirmed_standard"},
+    {"id":"p12b02","group_id":"beam-loadbearing-zh","role":"holdout","family":"beam","class":"IfcBeam","phrase":"梁为承重构件","value":true,"expected":"Pset_BeamCommon.LoadBearing","authorize":true,"expected_route":"confirmed_standard"},
+    {"id":"p12b03","group_id":"beam-external-en","role":"holdout","family":"beam","class":"IfcBeam","phrase":"beam is external","value":true,"expected":"Pset_BeamCommon.IsExternal","authorize":true,"expected_route":"confirmed_standard"},
+    {"id":"p12b04","group_id":"beam-reference-wrong-value","role":"boundary","family":"beam","class":"IfcBeam","phrase":"beam reference code","value":42,"expected":null,"authorize":false,"expected_route":"inadmissible"},
+
+    {"id":"p12c01","group_id":"column-loadbearing-short","role":"revealed-regression","family":"column","class":"IfcColumn","phrase":"load bearing","value":true,"expected":"Pset_ColumnCommon.LoadBearing","authorize":true,"expected_route":"confirmed_standard"},
+    {"id":"p12c02","group_id":"column-loadbearing-zh","role":"holdout","family":"column","class":"IfcColumn","phrase":"柱是承重构件","value":true,"expected":"Pset_ColumnCommon.LoadBearing","authorize":true,"expected_route":"confirmed_standard"},
+    {"id":"p12c03","group_id":"column-external-en","role":"holdout","family":"column","class":"IfcColumn","phrase":"column is external","value":true,"expected":"Pset_ColumnCommon.IsExternal","authorize":true,"expected_route":"confirmed_standard"},
+    {"id":"p12c04","group_id":"column-loadbearing-wrong-value","role":"boundary","family":"column","class":"IfcColumn","phrase":"column load bearing","value":"yes","expected":null,"authorize":false,"expected_route":"inadmissible"}
+  ]
+}
