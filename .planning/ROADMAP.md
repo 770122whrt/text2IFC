@@ -575,7 +575,7 @@ They are prerequisite implementation history, not accepted Wave 15 live Proof.
 
 ### Phase 12.1: Property Resolution RAG and Reranker Correction
 
-**Status:** In progress - Plans 12.1-01 and 12.1-02 complete; Plan 12.1-03 next.
+**Status:** In progress - Plans 12.1-01 through 12.1-03 complete; Plan 12.1-04 next.
 
 **Goal:** Replace active reviewed-alias/local-consensus property authorization
 with class-applicable multilingual vector retrieval, one independent bounded
@@ -596,12 +596,12 @@ knowledge/vector baseline, Phase 12 Plans 12-01 through 12-14 and the current
 
 **Validation strategy:** [Phase 12.1 VALIDATION](phases/12.1-property-resolution-rag-reranker/12.1-VALIDATION.md)
 
-**Plans:** 2/7 plans executed
+**Plans:** 3/7 plans executed
 
 - [x] **Wave 1:** [12.1-01 - Additive Stage 1.5 schemas, policy contract and Prompt](phases/12.1-property-resolution-rag-reranker/12.1-01-PLAN.md)
 - [x] **Wave 2:** [12.1-02 - Alias-free multilingual vector runtime](phases/12.1-property-resolution-rag-reranker/12.1-02-PLAN.md)
-- [ ] **Wave 3** *(next)*: [12.1-03 - Bounded Property Resolution Provider stage](phases/12.1-property-resolution-rag-reranker/12.1-03-PLAN.md)
-- **Wave 4** *(blocked on Wave 3)*: [12.1-04 - Admissibility gate and ExactPropertyIntent construction](phases/12.1-property-resolution-rag-reranker/12.1-04-PLAN.md)
+- [x] **Wave 3:** [12.1-03 - Bounded Property Resolution Provider stage](phases/12.1-property-resolution-rag-reranker/12.1-03-PLAN.md)
+- [ ] **Wave 4** *(next)*: [12.1-04 - Admissibility gate and ExactPropertyIntent construction](phases/12.1-property-resolution-rag-reranker/12.1-04-PLAN.md)
 - **Wave 5** *(blocked on Wave 4)*: [12.1-05 - Durable public API integration and clarification resume](phases/12.1-property-resolution-rag-reranker/12.1-05-PLAN.md)
 - **Wave 6** *(blocked on Wave 5)*: [12.1-06 - Frozen evaluation, five-family regression and zero-skip preflight](phases/12.1-property-resolution-rag-reranker/12.1-06-PLAN.md)
 - **Wave 7** *(blocked on Wave 6)*: [12.1-07 - Genuine DeepSeek, independent Proof, IFCCompare and closeout](phases/12.1-property-resolution-rag-reranker/12.1-07-PLAN.md)
