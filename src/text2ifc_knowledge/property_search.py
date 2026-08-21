@@ -6,10 +6,11 @@ from dataclasses import asdict, dataclass
 import hashlib
 import json
 import math
+import os
 from pathlib import Path
 import re
 import sqlite3
-from typing import Any, Iterable, Mapping, Protocol, Sequence
+from typing import Any, Callable, Iterable, Mapping, Protocol, Sequence
 
 from .registry import IfcKnowledgeRegistry, check_registry_files, load_ifc2x3_registry
 
@@ -29,6 +30,45 @@ SUPPORTED_AUTHORABLE_VALUE_TYPES = frozenset(
         "IfcText",
     }
 )
+
+_WINDOWS_TORCH_RUNTIME_HANDLES: list[Any] = []
+
+
+def _prepare_windows_torch_runtime(
+    *,
+    os_name: str | None = None,
+    system_root: Path | str | None = None,
+    dll_loader: Callable[[str], Any] | None = None,
+) -> tuple[Any, ...]:
+    """Load the OS MSVC runtime before Torch when Python ships older DLLs."""
+
+    active_os = os.name if os_name is None else os_name
+    if active_os != "nt":
+        return ()
+    root_value = system_root or os.environ.get("SystemRoot")
+    if not root_value:
+        raise RuntimeError("BGE_M3_WINDOWS_RUNTIME_UNAVAILABLE")
+    system32 = Path(root_value) / "System32"
+    paths = tuple(
+        system32 / name
+        for name in (
+            "msvcp140.dll",
+            "vcruntime140.dll",
+            "vcruntime140_1.dll",
+        )
+    )
+    if not all(path.is_file() for path in paths):
+        raise RuntimeError("BGE_M3_WINDOWS_RUNTIME_UNAVAILABLE")
+    if dll_loader is None:
+        import ctypes
+
+        dll_loader = ctypes.WinDLL
+    try:
+        handles = tuple(dll_loader(str(path)) for path in paths)
+    except (AttributeError, OSError) as error:
+        raise RuntimeError("BGE_M3_WINDOWS_RUNTIME_UNAVAILABLE") from error
+    _WINDOWS_TORCH_RUNTIME_HANDLES.extend(handles)
+    return handles
 
 
 def _stable_hash(value: object) -> str:
@@ -618,10 +658,14 @@ class BgeM3EmbeddingProvider:
         self.device = device
         self.local_files_only = local_files_only
         self._model: Any | None = None
-        self.model_fingerprint = _embedding_model_fingerprint(model_path)
+        self.model_fingerprint = _embedding_model_fingerprint(
+            model_path,
+            model_version=model_version,
+        )
 
     def _load(self) -> Any:
         if self._model is None:
+            _prepare_windows_torch_runtime()
             try:
                 from sentence_transformers import SentenceTransformer
             except ImportError as error:
@@ -875,34 +919,24 @@ def collection_fingerprint(
     )
 
 
-def _embedding_model_fingerprint(model_path: str) -> str:
+def _embedding_model_fingerprint(
+    model_path: str,
+    *,
+    model_version: str,
+) -> str:
     path = Path(model_path)
     if path.is_dir():
-        digest = hashlib.sha256()
-        files = [
-            candidate
-            for name in (
-                "config.json",
-                "modules.json",
-                "pytorch_model.bin",
-                "model.safetensors",
-            )
-            if (candidate := path / name).is_file()
-        ]
-        if not any(item.name in {"pytorch_model.bin", "model.safetensors"} for item in files):
+        if not any(
+            (path / name).is_file()
+            for name in ("pytorch_model.bin", "model.safetensors")
+        ):
             raise ValueError("BGE_M3_WEIGHT_FILE_MISSING")
-        for item in files:
-            digest.update(item.name.encode("utf-8"))
-            with item.open("rb") as stream:
-                for chunk in iter(lambda: stream.read(4 * 1024 * 1024), b""):
-                    digest.update(chunk)
-        return "sha256:" + digest.hexdigest()
-    return _stable_hash(
-        {
-            "adapter": "sentence-transformers",
-            "model_id": BgeM3EmbeddingProvider.model_id,
-            "remote_revision": model_path,
-        }
+    return ":".join(
+        (
+            "configured",
+            BgeM3EmbeddingProvider.model_id,
+            model_version,
+        )
     )
 
 

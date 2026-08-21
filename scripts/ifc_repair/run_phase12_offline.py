@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import math
 import os
 import re
 import shutil
@@ -14,15 +15,20 @@ from copy import deepcopy
 from pathlib import Path
 from typing import Any, Iterable, Mapping
 
-import ifcopenshell
-
-
 ROOT = Path(__file__).resolve().parents[2]
 SRC = ROOT / "src"
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
+
+from text2ifc_knowledge.property_search import (  # noqa: E402
+    _prepare_windows_torch_runtime,
+)
+
+_prepare_windows_torch_runtime()
+
+import ifcopenshell  # noqa: E402
 
 from text2ifc_ifc_repair.apply import apply_changeset  # noqa: E402
 from text2ifc_ifc_repair.benchmark_evaluation import (  # noqa: E402
@@ -35,7 +41,16 @@ from text2ifc_ifc_repair.index_store import SQLiteIndexRepository  # noqa: E402
 from text2ifc_ifc_repair.indexer import build_ifc_index  # noqa: E402
 from text2ifc_ifc_repair.mutation import remove_structural_members  # noqa: E402
 from text2ifc_ifc_repair.operations import create_default_registry  # noqa: E402
-from text2ifc_ifc_repair.repair_intent import RepairIntent  # noqa: E402
+from text2ifc_ifc_repair.property_admissibility import (  # noqa: E402
+    admit_property_decision,
+)
+from text2ifc_ifc_repair.property_intent import (  # noqa: E402
+    NaturalLanguagePropertyIntent,
+)
+from text2ifc_ifc_repair.repair_intent import (  # noqa: E402
+    PublicProvenance,
+    RepairIntent,
+)
 from text2ifc_ifc_repair.resolution_flow import resolve_repair_intent  # noqa: E402
 from text2ifc_ifc_repair.semantic_authoring import (  # noqa: E402
     parse_semantic_manifest,
@@ -43,7 +58,11 @@ from text2ifc_ifc_repair.semantic_authoring import (  # noqa: E402
     semantic_manifest_to_dict,
 )
 from text2ifc_knowledge.property_search import (  # noqa: E402
+    PropertyKnowledgeQuery,
     create_default_property_resolver,
+)
+from text2ifc_knowledge.property_runtime import (  # noqa: E402
+    create_default_property_runtime,
 )
 from scripts.ifc_repair.run_phase12_public_structural_repair import (  # noqa: E402
     _bound_changeset,
@@ -987,6 +1006,384 @@ def _run_mixed_failure(failed_root: Path) -> dict[str, Any]:
     }
     _write(case_root / "failure.json", failure)
     return failure
+
+
+def _property_family(target_class: str) -> str:
+    return {
+        "IfcWindow": "window",
+        "IfcDoor": "door",
+        "IfcWall": "wall",
+        "IfcWallStandardCase": "wall",
+        "IfcBeam": "beam",
+        "IfcColumn": "column",
+    }[target_class]
+
+
+def _wilson_interval(successes: int, total: int) -> dict[str, float]:
+    if total == 0:
+        return {"lower": 0.0, "upper": 1.0}
+    z = 1.959963984540054
+    rate = successes / total
+    denominator = 1.0 + z * z / total
+    centre = (rate + z * z / (2.0 * total)) / denominator
+    radius = (
+        z
+        * math.sqrt(
+            rate * (1.0 - rate) / total
+            + z * z / (4.0 * total * total)
+        )
+        / denominator
+    )
+    return {"lower": centre - radius, "upper": centre + radius}
+
+
+def _property_metrics(rows: list[dict[str, Any]]) -> dict[str, Any]:
+    supported = [item for item in rows if item["authorize"]]
+    negatives = [item for item in rows if not item["authorize"]]
+    correct = sum(bool(item["passed"]) for item in rows)
+    standard_outputs = [item for item in rows if item["authorized_path"]]
+    correct_standard = sum(
+        item["authorized_path"] == item["expected"]
+        for item in standard_outputs
+    )
+    family_slices: dict[str, Any] = {}
+    for family in ("window", "door", "wall", "beam", "column"):
+        family_rows = [item for item in rows if item["family"] == family]
+        family_correct = sum(bool(item["passed"]) for item in family_rows)
+        family_slices[family] = {
+            "case_count": len(family_rows),
+            "passed_count": family_correct,
+            "accuracy": family_correct / len(family_rows),
+            "accuracy_95ci": _wilson_interval(
+                family_correct,
+                len(family_rows),
+            ),
+        }
+    return {
+        "case_count": len(rows),
+        "supported_count": len(supported),
+        "negative_count": len(negatives),
+        "passed_count": correct,
+        "failed_count": len(rows) - correct,
+        "accuracy": correct / len(rows),
+        "accuracy_95ci": _wilson_interval(correct, len(rows)),
+        "confirmed_standard_count": len(standard_outputs),
+        "confirmed_standard_precision": (
+            correct_standard / len(standard_outputs)
+            if standard_outputs
+            else 1.0
+        ),
+        "confirmed_standard_precision_95ci": _wilson_interval(
+            correct_standard,
+            len(standard_outputs),
+        ),
+        "false_standard_authorization_count": sum(
+            bool(item["authorized_path"]) for item in negatives
+        ),
+        "family_slices": family_slices,
+        "decision_slices": {
+            "supported": {
+                "case_count": len(supported),
+                "passed_count": sum(bool(item["passed"]) for item in supported),
+            },
+            "negative_or_inadmissible": {
+                "case_count": len(negatives),
+                "passed_count": sum(bool(item["passed"]) for item in negatives),
+            },
+        },
+    }
+
+
+def _property_evaluation_cases(project_root: Path) -> list[dict[str, Any]]:
+    addition = _read(
+        project_root
+        / "tests/fixtures/knowledge/phase12_1_property_resolution.json"
+    )
+    baseline = _read(project_root / str(addition["baseline_fixture"]))
+    cases = [*baseline["cases"], *addition["cases"]]
+    if len(cases) != 60:
+        raise RuntimeError("PHASE12_1_PROPERTY_EVALUATION_CASE_COUNT")
+    return cases
+
+
+def evaluate_property_resolution_matrix(
+    *,
+    project_root: Path | str = ROOT,
+    output_path: Path | str,
+    qdrant_path: Path | str,
+) -> dict[str, Any]:
+    """Score historical alias Baseline and alias-free BGE Candidate once."""
+
+    root = Path(project_root).resolve()
+    destination = Path(output_path).resolve()
+    cases = _property_evaluation_cases(root)
+    baseline_resolver = create_default_property_resolver()
+    baseline_rows: list[dict[str, Any]] = []
+    for case in cases:
+        decision = None
+        failure = None
+        try:
+            decision = baseline_resolver.resolve(
+                PropertyKnowledgeQuery(
+                    target_ifc_class=str(case["class"]),
+                    phrase=str(case["phrase"]),
+                    raw_value=case["value"],
+                    raw_unit=None,
+                    scope="occurrence_direct",
+                )
+            )
+        except ValueError as error:
+            failure = str(error)
+        exact = None if decision is None else decision.exact_intent
+        authorized_path = (
+            None
+            if exact is None
+            else f"{exact.set_name}.{exact.property_name}"
+        )
+        expected = case.get("expected")
+        passed = (
+            authorized_path == expected
+            if bool(case["authorize"])
+            else authorized_path is None
+        )
+        baseline_rows.append(
+            {
+                "id": str(case["id"]),
+                "group_id": str(case.get("group_id") or f"baseline:{case['id']}"),
+                "role": str(case.get("role") or "historical"),
+                "family": str(case.get("family") or _property_family(str(case["class"]))),
+                "authorize": bool(case["authorize"]),
+                "expected": expected,
+                "authorized_path": authorized_path,
+                "passed": passed,
+                "status": None if decision is None else decision.status,
+                "reason_code": (
+                    failure
+                    if decision is None
+                    else decision.reason_code
+                ),
+            }
+        )
+
+    model_path = root / ".cache/models/BAAI-bge-m3"
+    if not model_path.is_dir():
+        raise RuntimeError("PHASE12_1_LOCAL_BGE_M3_UNAVAILABLE")
+    policy = _read(
+        root / "schemas/ifc/knowledge/property_resolution_policy.v0.2.json"
+    )
+    runtime = create_default_property_runtime(
+        project_root=root,
+        qdrant_path=Path(qdrant_path),
+        embedding_model_path=str(model_path),
+        embedding_model_version="BAAI-bge-m3-local/phase12.1",
+        device="cpu",
+        runtime_mode="production",
+    )
+    if runtime.health.status != "ready":
+        raise RuntimeError(
+            f"PHASE12_1_PROPERTY_RUNTIME_NOT_READY:{runtime.health.reason_code}"
+        )
+
+    candidate_rows: list[dict[str, Any]] = []
+    unoffered_selection_count = 0
+    wrong_class_type_unit_scope_count = 0
+    alias_runtime_authority_count = 0
+    private_leakage_count = 0
+    try:
+        for index, case in enumerate(cases):
+            operation_id = f"property-eval-operation-{index + 1}"
+            claim_id = f"property-eval-claim-{index + 1}"
+            retrieval = runtime.retrieve(
+                run_id="phase12-1-property-evaluation",
+                request_id="phase12-1-property-evaluation",
+                model_id="offline-frozen-oracle",
+                operation_id=operation_id,
+                operation_type="set_occurrence_properties",
+                claim_id=claim_id,
+                property_phrase=str(case["phrase"]),
+                target_ifc_class=str(case["class"]),
+                raw_value=case["value"],
+                raw_unit=None,
+                scope="occurrence_direct",
+            )
+            candidates = list(retrieval.candidate_set["candidates"])
+            expected = case.get("expected")
+            selected = next(
+                (
+                    item
+                    for item in candidates
+                    if item["canonical_path"] == expected
+                ),
+                None,
+            )
+            if bool(case["authorize"]) and selected is not None:
+                decision = {
+                    "schema_version": "text2ifc/ifc-property-rerank-decision/0.1",
+                    "decision": "confirmed",
+                    "selected_candidate_id": selected["candidate_id"],
+                    "conflicting_candidate_ids": [],
+                    "clarification_question": None,
+                }
+            else:
+                decision = {
+                    "schema_version": "text2ifc/ifc-property-rerank-decision/0.1",
+                    "decision": "unsupported",
+                    "selected_candidate_id": None,
+                    "conflicting_candidate_ids": [],
+                    "clarification_question": None,
+                }
+            claim = NaturalLanguagePropertyIntent(
+                property_phrase=str(case["phrase"]),
+                raw_value=case["value"],
+                raw_unit=None,
+                scope="occurrence_direct",
+                source=PublicProvenance(
+                    source_kind="user_request",
+                    reference=f"request:/property-evaluation/{case['id']}",
+                    excerpt=str(case["phrase"]),
+                ),
+            )
+            admission = admit_property_decision(
+                query=retrieval.query,
+                candidate_set=retrieval.candidate_set,
+                decision=decision,
+                decision_trace={
+                    "run_id": retrieval.query["run_id"],
+                    "request_id": retrieval.query["request_id"],
+                    "model_id": retrieval.query["model_id"],
+                    "operation_id": retrieval.query["operation_id"],
+                    "claim_id": retrieval.query["claim_id"],
+                    "query_id": retrieval.query["query_id"],
+                    "candidate_set_id": retrieval.candidate_set["candidate_set_id"],
+                    "provider_call_ordinal": "property_resolution",
+                    "status": "valid",
+                },
+                policy=policy,
+                records=runtime.records,
+                registry=runtime.registry,
+                claim=claim,
+            )
+            exact = admission.exact_intent
+            authorized_path = (
+                None
+                if exact is None
+                else f"{exact.set_name}.{exact.property_name}"
+            )
+            passed = (
+                authorized_path == expected
+                if bool(case["authorize"])
+                else authorized_path is None
+            )
+            if admission.reason_code == "PROPERTY_CANDIDATE_NOT_OFFERED":
+                unoffered_selection_count += 1
+            if admission.status == "passed" and authorized_path != expected:
+                wrong_class_type_unit_scope_count += 1
+            public_evidence = json.dumps(
+                {
+                    "query": retrieval.query,
+                    "candidate_set": retrieval.candidate_set,
+                    "admission": admission.to_dict(),
+                },
+                ensure_ascii=False,
+                sort_keys=True,
+            ).casefold()
+            if "reviewed_alias" in public_evidence or "property_aliases" in public_evidence:
+                alias_runtime_authority_count += 1
+            if any(
+                token in public_evidence
+                for token in (
+                    "benchmark_gold",
+                    "private_gold",
+                    "mutation_recipe",
+                    "deleted_identity",
+                )
+            ):
+                private_leakage_count += 1
+            scores = [float(item["score"]) for item in candidates]
+            candidate_rows.append(
+                {
+                    "id": str(case["id"]),
+                    "group_id": str(case.get("group_id") or f"baseline:{case['id']}"),
+                    "role": str(case.get("role") or "historical"),
+                    "family": str(case.get("family") or _property_family(str(case["class"]))),
+                    "authorize": bool(case["authorize"]),
+                    "expected": expected,
+                    "authorized_path": authorized_path,
+                    "passed": passed,
+                    "retrieval_hit": selected is not None,
+                    "selected_rank": None if selected is None else int(selected["rank"]),
+                    "selected_score": None if selected is None else float(selected["score"]),
+                    "top1_score": None if not scores else scores[0],
+                    "top1_top2_margin": (
+                        None if len(scores) < 2 else scores[0] - scores[1]
+                    ),
+                    "candidate_paths": [
+                        str(item["canonical_path"]) for item in candidates
+                    ],
+                    "decision": decision["decision"],
+                    "admissibility_status": admission.status,
+                    "reason_code": admission.reason_code,
+                }
+            )
+    finally:
+        close = getattr(runtime.vector_index, "close", None)
+        if callable(close):
+            close()
+
+    baseline = _property_metrics(baseline_rows)
+    candidate = _property_metrics(candidate_rows)
+    supported_rows = [item for item in candidate_rows if item["authorize"]]
+    supported_hits = sum(bool(item["retrieval_hit"]) for item in supported_rows)
+    candidate["supported_top_k_recall"] = supported_hits / len(supported_rows)
+    candidate["supported_top_k_recall_95ci"] = _wilson_interval(
+        supported_hits,
+        len(supported_rows),
+    )
+    candidate["unoffered_selection_count"] = unoffered_selection_count
+    candidate["wrong_class_type_unit_scope_count"] = (
+        wrong_class_type_unit_scope_count
+    )
+    candidate["alias_runtime_authority_count"] = alias_runtime_authority_count
+    candidate["private_leakage_count"] = private_leakage_count
+    hard_gates = {
+        "all_supported_in_top_k": candidate["supported_top_k_recall"] == 1.0,
+        "zero_false_standard_authorization": candidate["false_standard_authorization_count"] == 0,
+        "zero_wrong_class_type_unit_scope": wrong_class_type_unit_scope_count == 0,
+        "zero_alias_runtime_authority": alias_runtime_authority_count == 0,
+        "zero_unoffered_selection": unoffered_selection_count == 0,
+        "zero_private_leakage": private_leakage_count == 0,
+    }
+    result = {
+        "schema_version": "text2ifc/phase12.1-property-resolution-evaluation/0.1",
+        "status": (
+            "passed"
+            if all(hard_gates.values()) and candidate["failed_count"] == 0
+            else "failed"
+        ),
+        "evaluator_id": "phase12.1.fixed-property-evaluator/0.1",
+        "case_count": len(cases),
+        "failures_in_denominator": baseline["failed_count"] + candidate["failed_count"],
+        "minimum_retrieval_score": policy["minimum_retrieval_score"],
+        "calibration": {
+            "frozen_supported_minimum_score": 0.4805306036784617,
+            "configured_floor": policy["minimum_retrieval_score"],
+            "floor_purpose": "exclude low-quality retrieval evidence before Stage 1.5; never authorize by score",
+        },
+        "baseline": baseline,
+        "candidate": candidate,
+        "hard_gates": hard_gates,
+        "knowledge_health": runtime.health.to_dict(),
+        "evaluation_mode": "offline_frozen_oracle_reranker",
+        "provider_network_calls": 0,
+        "claim_scope": "offline retrieval and admissibility; not live LLM capability",
+        "cases": {
+            "baseline": baseline_rows,
+            "candidate": candidate_rows,
+        },
+        "output_path": str(destination),
+    }
+    _write(destination, result)
+    return result
 
 
 def run_offline_matrix(

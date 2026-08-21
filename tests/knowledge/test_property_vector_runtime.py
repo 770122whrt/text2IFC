@@ -4,6 +4,8 @@ import importlib
 import importlib.util
 import json
 from pathlib import Path
+import subprocess
+import sys
 from typing import Any
 
 import pytest
@@ -389,6 +391,96 @@ def test_missing_bge_and_qdrant_have_distinct_pre_provider_reasons(
         vector_index_factory=missing_qdrant,
     )
     assert qdrant.health.reason_code == "QDRANT_UNAVAILABLE"
+
+
+def test_windows_bge_loader_preloads_system_msvc_runtime(
+    tmp_path: Path,
+) -> None:
+    system32 = tmp_path / "System32"
+    system32.mkdir()
+    expected = (
+        system32 / "msvcp140.dll",
+        system32 / "vcruntime140.dll",
+        system32 / "vcruntime140_1.dll",
+    )
+    for path in expected:
+        path.touch()
+    loaded: list[Path] = []
+
+    def fixture_loader(path: str):
+        loaded.append(Path(path))
+        return object()
+
+    handles = property_search._prepare_windows_torch_runtime(
+        os_name="nt",
+        system_root=tmp_path,
+        dll_loader=fixture_loader,
+    )
+
+    assert tuple(loaded) == expected
+    assert len(handles) == len(expected)
+
+
+def test_non_windows_bge_loader_does_not_load_dlls() -> None:
+    def fail_if_loaded(path: str):
+        raise AssertionError(f"unexpected DLL load: {path}")
+
+    assert property_search._prepare_windows_torch_runtime(
+        os_name="posix",
+        system_root=Path("unused"),
+        dll_loader=fail_if_loaded,
+    ) == ()
+
+
+def test_bge_identity_uses_configured_version_without_reading_weight_bytes(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    model = tmp_path / "bge-m3"
+    model.mkdir()
+    (model / "model.safetensors").touch()
+
+    def fail_if_opened(*args, **kwargs):
+        del args, kwargs
+        raise AssertionError("model weights must not be hashed at startup")
+
+    monkeypatch.setattr(Path, "open", fail_if_opened)
+    first = property_search._embedding_model_fingerprint(
+        str(model),
+        model_version="bge-m3/local-v1",
+    )
+    second = property_search._embedding_model_fingerprint(
+        str(model),
+        model_version="bge-m3/local-v2",
+    )
+
+    assert first == "configured:BAAI/bge-m3:bge-m3/local-v1"
+    assert second == "configured:BAAI/bge-m3:bge-m3/local-v2"
+
+
+@pytest.mark.skipif(sys.platform != "win32", reason="Windows DLL ordering contract")
+def test_public_repair_api_loads_before_torch_in_fresh_process() -> None:
+    probe = subprocess.run(
+        [
+            sys.executable,
+            "-X",
+            "faulthandler",
+            "-c",
+            (
+                "from text2ifc_ifc_repair.api import RepairAPI; "
+                "import torch; "
+                "print(RepairAPI.__name__, torch.__version__)"
+            ),
+        ],
+        cwd=PROJECT_ROOT,
+        check=False,
+        capture_output=True,
+        text=True,
+        timeout=30,
+    )
+
+    assert probe.returncode == 0, probe.stdout + probe.stderr
+    assert "RepairAPI" in probe.stdout
 
 
 def test_qdrant_collection_build_reuse_version_change_and_allowed_filter(

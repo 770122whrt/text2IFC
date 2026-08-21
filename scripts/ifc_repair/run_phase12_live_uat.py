@@ -20,15 +20,20 @@ from pathlib import Path
 from typing import Any, Callable, Iterable, Mapping, Sequence
 from urllib.parse import urlsplit
 
-import ifcopenshell
-
-
 ROOT = Path(__file__).resolve().parents[2]
 SRC = ROOT / "src"
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
+
+from text2ifc_knowledge.property_search import (  # noqa: E402
+    _prepare_windows_torch_runtime,
+)
+
+_prepare_windows_torch_runtime()
+
+import ifcopenshell  # noqa: E402
 
 from scripts.ifc_repair.validate_success_cases import (  # noqa: E402
     audit_repaired_operations,
