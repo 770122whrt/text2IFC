@@ -482,7 +482,10 @@ def resolve_repair_intent(
                 )
             knowledge = property_registry or load_ifc2x3_registry()
             custom_previews: list[PropertyConfirmationPreview] = []
-            for property_intent in operation.property_intents:
+            for property_index, property_intent in enumerate(
+                operation.property_intents,
+                start=1,
+            ):
                 try:
                     normalize_property_scope(property_intent.scope)
                 except ValueError as error:
@@ -503,15 +506,30 @@ def resolve_repair_intent(
                             operations=completed,
                             source_sha=expected_source_sha256,
                         )
-                    knowledge_decision = property_knowledge_resolver.resolve(
-                        PropertyKnowledgeQuery(
-                            target_ifc_class=property_target_class,
-                            phrase=str(property_intent.property_phrase),
-                            raw_value=property_intent.raw_value,
-                            raw_unit=property_intent.raw_unit,
-                            scope=property_intent.scope,
-                        )
+                    property_query = PropertyKnowledgeQuery(
+                        target_ifc_class=property_target_class,
+                        phrase=str(property_intent.property_phrase),
+                        raw_value=property_intent.raw_value,
+                        raw_unit=property_intent.raw_unit,
+                        scope=property_intent.scope,
                     )
+                    resolve_for_claim = getattr(
+                        property_knowledge_resolver,
+                        "resolve_for_claim",
+                        None,
+                    )
+                    if callable(resolve_for_claim):
+                        knowledge_decision = resolve_for_claim(
+                            operation_id=operation.operation_id,
+                            operation_type=operation.operation_type,
+                            claim_id=f"claim-{property_index:03d}",
+                            claim=property_intent,
+                            query=property_query,
+                        )
+                    else:
+                        knowledge_decision = property_knowledge_resolver.resolve(
+                            property_query
+                        )
                     evidence_document = _property_resolution_evidence(
                         operation.operation_id,
                         property_intent,
@@ -520,6 +538,14 @@ def resolve_repair_intent(
                     )
                     property_evidence.append(evidence_document)
                     if knowledge_decision.exact_intent is None:
+                        if knowledge_decision.status == "unsupported":
+                            return _failure(
+                                intent,
+                                "unsupported",
+                                operation_id=operation.operation_id,
+                                operations=completed,
+                                source_sha=expected_source_sha256,
+                            )
                         return ResolutionBatch(
                             status="clarification_required",
                             reason_code=knowledge_decision.reason_code,

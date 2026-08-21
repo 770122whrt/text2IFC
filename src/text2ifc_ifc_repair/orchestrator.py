@@ -57,6 +57,7 @@ class RepairOrchestrator:
         evidence_builder: Callable[..., Any] = build_production_evidence,
         artifact_publisher: Callable[..., Any] = publish_terminal_artifacts,
         defer_publication: bool = False,
+        defer_changeset: bool = False,
         operation_registry: Any | None = None,
         resolver_options: Mapping[str, Any] | None = None,
     ) -> None:
@@ -74,6 +75,7 @@ class RepairOrchestrator:
         self._evidence_builder = evidence_builder
         self._artifact_publisher = artifact_publisher
         self._defer_publication = defer_publication
+        self._defer_changeset = defer_changeset
         self._operation_registry = operation_registry
         self._resolver_options = dict(resolver_options or {})
         self._resolution: Any = None
@@ -107,7 +109,17 @@ class RepairOrchestrator:
     def _advance_if_exact(self, resolution: Any) -> OrchestrationResult:
         if resolution.status != "resolved":
             return OrchestrationResult(status="clarification_required", reason_code=resolution.reason_code)
-        changeset = self._changeset_stage(resolution)
+        if self._defer_changeset:
+            return OrchestrationResult(status="resolution_ready")
+        return self.advance_to_changeset()
+
+    def advance_to_changeset(self) -> OrchestrationResult:
+        if self._resolution is None or self._resolution.status != "resolved":
+            raise ValueError("REPAIR_RESOLUTION_NOT_EXACT")
+        existing = self.run_directory / "changeset.json"
+        if existing.exists():
+            raise ValueError("CHANGESET_STAGE_ALREADY_COMMITTED")
+        changeset = self._changeset_stage(self._resolution)
         self._write("changeset.json", changeset)
         return OrchestrationResult(status="changeset_ready", changeset=changeset)
 

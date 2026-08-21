@@ -17,6 +17,12 @@ from .operations import create_default_registry
 from .orchestrator import OrchestrationResult, RepairOrchestrator
 from .provider_stage import generate_bound_changeset
 from .production_evidence import build_production_evidence
+from .property_intent import NaturalLanguagePropertyIntent
+from .property_resolution_coordinator import (
+    DurablePropertyResolutionCoordinator,
+    PendingPropertyClarification,
+)
+from .property_resolution_stage import generate_property_resolution_decision
 from .semantic_authoring import semantic_manifest_to_dict
 from .repair_intent import RepairIntent
 from .repair_intent import REPAIR_INTENT_SCHEMA_VERSION_0_8
@@ -35,8 +41,8 @@ from text2ifc_knowledge.property_search import (
     PropertyKnowledgeResolver,
     PropertyKnowledgeStore,
     build_project_property_records,
-    create_default_property_resolver,
 )
+from text2ifc_knowledge.property_runtime import create_default_property_runtime
 
 
 class RepairAPI:
@@ -59,6 +65,10 @@ class RepairAPI:
         orchestrator_options: Mapping[str, Any] | None = None,
         intent_schema_version: str = REPAIR_INTENT_SCHEMA_VERSION_0_8,
         property_knowledge_resolver: Any | None = None,
+        property_knowledge_runtime: Any | None = None,
+        property_resolution_stage: Callable[..., Mapping[str, Any]] = (
+            generate_property_resolution_decision
+        ),
     ) -> None:
         self.store = RunStore(output_root)
         self.provider = provider
@@ -69,10 +79,15 @@ class RepairAPI:
         self._orchestrator_factory = orchestrator_factory
         self._intent_schema_version = intent_schema_version
         self._property_knowledge_resolver = property_knowledge_resolver
+        self._property_knowledge_runtime = property_knowledge_runtime
+        self._property_resolution_stage = property_resolution_stage
         requested_options = dict(orchestrator_options or {})
         if requested_options.get("defer_publication") is False:
             raise ValueError("DURABLE_PUBLICATION_CANNOT_BE_DISABLED")
         requested_options["defer_publication"] = True
+        if requested_options.get("defer_changeset") is False:
+            raise ValueError("DURABLE_CHANGESET_ORDER_CANNOT_BE_DISABLED")
+        requested_options["defer_changeset"] = True
         if property_knowledge_resolver is not None:
             resolver_options = dict(requested_options.get("resolver_options") or {})
             resolver_options["property_knowledge_resolver"] = (
@@ -102,7 +117,7 @@ class RepairAPI:
             output_root,
             provider=OpenAICompatibleLiveProvider(config=config),
             intent_schema_version=intent_schema_version,
-            property_knowledge_resolver=create_default_property_resolver(),
+            property_knowledge_runtime=create_default_property_runtime(),
         )
 
     def start(
@@ -261,7 +276,22 @@ class RepairAPI:
         attempt_id = uuid.uuid4().hex
         resume_intent_ref: str | None = None
         missing_parameters: list[dict[str, Any]] = []
-        if kind == "select_candidate":
+        property_resolution_answer: dict[str, str] | None = None
+        property_resolution_generation: int | None = None
+        if kind == "select_candidate" and clarification.reason_code == (
+            "property_resolution"
+        ):
+            if clarification.claim_id is None:
+                raise RunStoreError(
+                    "RUN_STATE_CONFLICT",
+                    "property clarification claim binding is missing",
+                )
+            property_resolution_answer = {
+                "operation_id": clarification.operation_id,
+                "claim_id": clarification.claim_id,
+                "candidate_token": str(answer.get("candidate_token", "")),
+            }
+        elif kind == "select_candidate":
             token = str(answer.get("candidate_token", ""))
             selected = next((item for item in clarification.candidates if item.token == token), None)
             if selected is None:
@@ -331,6 +361,11 @@ class RepairAPI:
                 resume_intent_ref,
                 self._intent_schema_version,
             )
+            if clarification.reason_code == "property_resolution":
+                property_resolution_generation = expected_state_version + 1
+                resume_payload["property_resolution_generation"] = (
+                    property_resolution_generation
+                )
         resumed = self.store.continue_with_answer(
             run_id, clarification_id=clarification_id,
             expected_state_version=expected_state_version, answer=answer,
@@ -385,15 +420,45 @@ class RepairAPI:
             repair_text,
             prototype_answer=prototype_answer,
             property_answer=property_answer,
+            property_resolution_answer=property_resolution_answer,
+            property_resolution_generation=property_resolution_generation,
         )
 
     def read_result(self, run_id: str) -> RunResult:
         return self.store.read_result(run_id)
 
+    def resume(self, run_id: str) -> RunResult:
+        """Resume a non-terminal run from its last committed public boundary."""
+
+        state = self.store.load(run_id)
+        if state.stage is RunStage.CLARIFICATION_REQUIRED:
+            return self.store.read_result(run_id)
+        if state.stage is not RunStage.INTENT_READY:
+            raise RunStoreError(
+                "RUN_STATE_CONFLICT",
+                f"run cannot resume from {state.stage.value}",
+            )
+        context_path = self.store.runs_root / run_id / _latest_api_context(state)
+        context = json.loads(context_path.read_text(encoding="utf-8"))
+        intent = RepairIntent.from_dict(
+            context["intent"],
+            registry=self.registry,
+        )
+        return self._resolve_and_finish(
+            run_id,
+            intent,
+            str(context["repair_text"]),
+            property_resolution_generation=(
+                _latest_property_resolution_generation(state)
+            ),
+        )
+
     def _resolve_and_finish(
         self, run_id: str, intent: RepairIntent, repair_text: str,
         *, prototype_answer: Mapping[str, Any] | None = None,
         property_answer: Mapping[str, Any] | None = None,
+        property_resolution_answer: Mapping[str, Any] | None = None,
+        property_resolution_generation: int | None = None,
     ) -> RunResult:
         state = self.store.load(run_id)
         run_dir = self.store.runs_root / run_id
@@ -560,12 +625,34 @@ class RepairAPI:
             resolver_options = dict(
                 orchestrator_options.get("resolver_options") or {}
             )
-            resolver_options["property_knowledge_resolver"] = (
-                self._resolver_with_project_facts(
-                    repository,
-                    state.source.sha256,
+            property_coordinator: DurablePropertyResolutionCoordinator | None = None
+            if _has_natural_property_claims(intent):
+                if self._property_knowledge_runtime is None:
+                    return self._fail(
+                        run_id,
+                        RunStage.PROVIDER_FAILED,
+                        "PROPERTY_RUNTIME_NOT_READY",
+                    )
+                property_coordinator = DurablePropertyResolutionCoordinator(
+                    store=self.store,
+                    run_id=run_id,
+                    intent=intent,
+                    runtime=self._property_knowledge_runtime,
+                    provider=self.provider,
+                    property_resolution_stage=self._property_resolution_stage,
+                    selected_candidate_answer=property_resolution_answer,
+                    claim_generation=property_resolution_generation,
                 )
-            )
+                resolver_options["property_knowledge_resolver"] = (
+                    property_coordinator
+                )
+            else:
+                resolver_options["property_knowledge_resolver"] = (
+                    self._resolver_with_project_facts(
+                        repository,
+                        state.source.sha256,
+                    )
+                )
             orchestrator_options["resolver_options"] = resolver_options
             orchestrator = self._orchestrator_factory(
                 run_directory=run_dir,
@@ -605,7 +692,23 @@ class RepairAPI:
                 }.get(str(resolution.reason_code), RunStage.INVALID_INPUT)
                 return self._fail(run_id, stage, str(resolution.reason_code or "RESOLUTION_FAILED"))
             if outcome.status == "clarification_required":
-                clarification = _clarification(run_id, state.state_version + 1, resolution)
+                state = self.store.load(run_id)
+                clarification = (
+                    _property_resolution_clarification(
+                        run_id,
+                        state.state_version + 1,
+                        property_coordinator.pending_clarification,
+                    )
+                    if (
+                        property_coordinator is not None
+                        and property_coordinator.pending_clarification is not None
+                    )
+                    else _clarification(
+                        run_id,
+                        state.state_version + 1,
+                        resolution,
+                    )
+                )
                 resolution_ref = _snapshot_artifact(
                     run_dir, "resolution.json", f"resolution-v{state.state_version + 1:03d}.json"
                 )
@@ -620,6 +723,7 @@ class RepairAPI:
                     )},
                 )
                 return self.store.read_result(run_id)
+            state = self.store.load(run_id)
             resolution_ref = _snapshot_artifact(
                 run_dir, "resolution.json", f"resolution-v{state.state_version + 1:03d}.json"
             )
@@ -631,6 +735,14 @@ class RepairAPI:
                     run_id, resolution_ref, "text2ifc/ifc-resolution-flow/0.1"
                 )},
             )
+            try:
+                outcome = orchestrator.advance_to_changeset()
+            except Exception as error:
+                return self._fail(
+                    run_id,
+                    RunStage.PROVIDER_FAILED,
+                    _safe_code(error, "CHANGESET_STAGE_FAILED"),
+                )
             changeset_ref = _snapshot_artifact(
                 run_dir, "changeset.json", f"changeset-v{state.state_version + 1:03d}.json"
             )
@@ -839,6 +951,58 @@ def _clarification(run_id: str, version: int, resolution: Any) -> Clarification:
     )
 
 
+def _property_resolution_clarification(
+    run_id: str,
+    version: int,
+    pending: PendingPropertyClarification,
+) -> Clarification:
+    candidates = tuple(
+        ClarificationCandidate(
+            token=str(item["candidate_id"]),
+            public_id=str(item["record_id"]),
+            ifc_class=str(item["applicable_classes"][0]),
+            name=str(item["canonical_path"]),
+            storey=None,
+            position=None,
+            evidence=(
+                f"definition:{str(item['definition'])[:320]}",
+                f"vector-score:{float(item['score']):.6f}",
+            ),
+            candidate_kind="property",
+        )
+        for item in pending.candidates
+    )
+    return Clarification(
+        clarification_id=f"clarify-{version:03d}",
+        run_id=run_id,
+        state_version=version,
+        operation_id=pending.operation_id,
+        claim_id=pending.claim_id,
+        stage=RunStage.INTENT_READY,
+        resume_stage=RunStage.INTENT_READY,
+        reason_code="property_resolution",
+        question=pending.question,
+        answer_modes=(
+            ("select_candidate", "cancel")
+            if candidates
+            else ("add_detail", "cancel")
+        ),
+        candidates=candidates,
+    )
+
+
+def _has_natural_property_claims(intent: RepairIntent) -> bool:
+    return any(
+        isinstance(claim, NaturalLanguagePropertyIntent)
+        for operation in intent.operations
+        for claim in operation.property_intents
+    ) or any(
+        isinstance(claim, NaturalLanguagePropertyIntent)
+        for bundle in intent.semantic_bundles
+        for claim in bundle.property_intents
+    )
+
+
 def _public_property_preview(preview: Mapping[str, Any]) -> dict[str, Any]:
     """Keep multi-operation confirmation public records bounded and readable."""
 
@@ -930,6 +1094,14 @@ def _latest_api_context(state: Any) -> str:
         if isinstance(binding, Mapping) and binding.get("path"):
             return str(binding["path"])
     raise RunStoreError("RUN_TAMPER_DETECTED", "api context binding is missing")
+
+
+def _latest_property_resolution_generation(state: Any) -> int | None:
+    for transition in reversed(state.transitions):
+        value = transition.stage_payload.get("property_resolution_generation")
+        if value is not None:
+            return int(value)
+    return None
 
 
 def _snapshot_artifact(run_dir: Path, source: str, destination: str) -> str:

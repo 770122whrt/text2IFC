@@ -567,6 +567,8 @@ class RunStore:
             if target not in {resume_stage, RunStage.CANCELLED}:
                 raise RunStoreError(RunStoreCode.INVALID_TRANSITION, f"{current.value}->{target.value}")
             return
+        if current is RunStage.INTENT_READY and target is RunStage.INTENT_READY:
+            return
         allowed: set[RunStage] = set(_FAILURES) | {RunStage.CLARIFICATION_REQUIRED}
         index = _PROGRESS.index(current)
         if index + 1 < len(_PROGRESS):

@@ -13,12 +13,12 @@ from typing import Any, Mapping
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 RUN_STATE_SCHEMA_VERSION = "text2ifc/ifc-repair-run-state/0.1"
-CLARIFICATION_SCHEMA_VERSION = "text2ifc/ifc-repair-clarification/0.1"
+CLARIFICATION_SCHEMA_VERSION = "text2ifc/ifc-repair-clarification/0.2"
 RESULT_SCHEMA_VERSION = "text2ifc/ifc-repair-result/0.1"
 TRANSITION_SCHEMA_VERSION = "text2ifc/ifc-repair-transition/0.1"
 ORCHESTRATOR_VERSION = "0.1"
 RUN_STATE_SCHEMA_PATH = Path("schemas/agent/ifc-repair-run-state-0.1.schema.json")
-CLARIFICATION_SCHEMA_PATH = Path("schemas/agent/ifc-repair-clarification-0.1.schema.json")
+CLARIFICATION_SCHEMA_PATH = Path("schemas/agent/ifc-repair-clarification-0.2.schema.json")
 RESULT_SCHEMA_PATH = Path("schemas/agent/ifc-repair-result-0.1.schema.json")
 
 
@@ -161,6 +161,7 @@ class Clarification:
     reason_code: str
     question: str
     answer_modes: tuple[str, ...]
+    claim_id: str | None = None
     candidates: tuple[ClarificationCandidate, ...] = ()
     property_preview: Mapping[str, Any] | None = None
     schema_version: str = CLARIFICATION_SCHEMA_VERSION
@@ -193,7 +194,7 @@ class Clarification:
             "required": ["kind"],
             "properties": {
                 "kind": {"enum": list(self.answer_modes)},
-                "candidate_token": {"type": "string", "minLength": 1, "maxLength": 128},
+                "candidate_token": {"type": "string", "minLength": 1, "maxLength": 256},
                 "detail": {"type": "string", "minLength": 1, "maxLength": 4096},
                 "authorized": {"const": True},
                 "preview_hash": {
@@ -205,7 +206,7 @@ class Clarification:
         }
 
     def to_dict(self) -> dict[str, Any]:
-        return {
+        document = {
             "schema_version": self.schema_version,
             "clarification_id": self.clarification_id,
             "run_id": self.run_id,
@@ -222,6 +223,9 @@ class Clarification:
                 None if self.property_preview is None else thaw_json(self.property_preview)
             ),
         }
+        if self.schema_version == CLARIFICATION_SCHEMA_VERSION:
+            document["claim_id"] = self.claim_id
+        return document
 
     @classmethod
     def from_dict(cls, value: Mapping[str, Any]) -> "Clarification":
@@ -235,6 +239,9 @@ class Clarification:
             reason_code=str(value["reason_code"]),
             question=str(value["question"]),
             answer_modes=tuple(str(item) for item in value["answer_modes"]),
+            claim_id=(
+                None if value.get("claim_id") is None else str(value["claim_id"])
+            ),
             candidates=tuple(
                 ClarificationCandidate.from_dict(item) for item in value["candidates"]
             ),
@@ -242,6 +249,9 @@ class Clarification:
                 None
                 if value.get("property_preview") is None
                 else freeze_json(value["property_preview"])
+            ),
+            schema_version=str(
+                value.get("schema_version", CLARIFICATION_SCHEMA_VERSION)
             ),
         )
 
