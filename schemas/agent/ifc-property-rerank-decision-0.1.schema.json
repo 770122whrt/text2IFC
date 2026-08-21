@@ -1,0 +1,98 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "text2ifc/ifc-property-rerank-decision/0.1",
+  "title": "IFC Property Rerank Decision 0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "decision",
+    "selected_candidate_id",
+    "conflicting_candidate_ids",
+    "clarification_question"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "text2ifc/ifc-property-rerank-decision/0.1"
+    },
+    "decision": {
+      "enum": ["confirmed", "clarification_required", "unsupported"]
+    },
+    "selected_candidate_id": {
+      "oneOf": [
+        {"$ref": "#/$defs/candidate_id"},
+        {"type": "null"}
+      ]
+    },
+    "conflicting_candidate_ids": {
+      "type": "array",
+      "maxItems": 5,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/candidate_id"
+      }
+    },
+    "clarification_question": {
+      "oneOf": [
+        {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512
+        },
+        {"type": "null"}
+      ]
+    }
+  },
+  "$defs": {
+    "candidate_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]*$"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {"decision": {"const": "confirmed"}},
+        "required": ["decision"]
+      },
+      "then": {
+        "properties": {
+          "selected_candidate_id": {"$ref": "#/$defs/candidate_id"},
+          "clarification_question": {"type": "null"}
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {"decision": {"const": "clarification_required"}},
+        "required": ["decision"]
+      },
+      "then": {
+        "properties": {
+          "selected_candidate_id": {"type": "null"},
+          "conflicting_candidate_ids": {"minItems": 1},
+          "clarification_question": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {"decision": {"const": "unsupported"}},
+        "required": ["decision"]
+      },
+      "then": {
+        "properties": {
+          "selected_candidate_id": {"type": "null"},
+          "conflicting_candidate_ids": {"maxItems": 0},
+          "clarification_question": {"type": "null"}
+        }
+      }
+    }
+  ]
+}

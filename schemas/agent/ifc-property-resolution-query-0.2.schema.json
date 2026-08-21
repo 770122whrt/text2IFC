@@ -1,0 +1,112 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "text2ifc/ifc-property-resolution-query/0.2",
+  "title": "IFC Property Resolution Query 0.2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "query_id",
+    "run_id",
+    "request_id",
+    "model_id",
+    "operation_id",
+    "operation_type",
+    "claim_id",
+    "property_phrase",
+    "target_ifc_class",
+    "raw_value",
+    "raw_value_kind",
+    "raw_unit",
+    "scope",
+    "corpus_version"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "text2ifc/ifc-property-resolution-query/0.2"
+    },
+    "query_id": {
+      "$ref": "#/$defs/stable_id"
+    },
+    "run_id": {
+      "$ref": "#/$defs/stable_id"
+    },
+    "request_id": {
+      "$ref": "#/$defs/stable_id"
+    },
+    "model_id": {
+      "$ref": "#/$defs/stable_id"
+    },
+    "operation_id": {
+      "$ref": "#/$defs/stable_id"
+    },
+    "operation_type": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[a-z][a-z0-9_]*$"
+    },
+    "claim_id": {
+      "$ref": "#/$defs/stable_id"
+    },
+    "property_phrase": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 512
+    },
+    "target_ifc_class": {
+      "type": "string",
+      "pattern": "^Ifc[A-Za-z0-9]+$",
+      "maxLength": 128
+    },
+    "raw_value": {
+      "type": ["string", "number", "integer", "boolean", "null"]
+    },
+    "raw_value_kind": {
+      "enum": ["string", "number", "integer", "boolean", "null"]
+    },
+    "raw_unit": {
+      "type": ["string", "null"],
+      "minLength": 1,
+      "maxLength": 128
+    },
+    "scope": {
+      "enum": ["occurrence_direct", "type_owned", null]
+    },
+    "corpus_version": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128
+    }
+  },
+  "$defs": {
+    "stable_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]*$"
+    }
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"raw_value_kind": {"const": "boolean"}}},
+      "then": {"properties": {"raw_value": {"type": "boolean"}}}
+    },
+    {
+      "if": {"properties": {"raw_value_kind": {"const": "integer"}}},
+      "then": {"properties": {"raw_value": {"type": "integer"}}}
+    },
+    {
+      "if": {"properties": {"raw_value_kind": {"const": "number"}}},
+      "then": {"properties": {"raw_value": {"type": "number"}}}
+    },
+    {
+      "if": {"properties": {"raw_value_kind": {"const": "string"}}},
+      "then": {"properties": {"raw_value": {"type": "string"}}}
+    },
+    {
+      "if": {"properties": {"raw_value_kind": {"const": "null"}}},
+      "then": {"properties": {"raw_value": {"type": "null"}}}
+    }
+  ]
+}

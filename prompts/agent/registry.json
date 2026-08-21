@@ -721,6 +721,32 @@
       "forbidden_outputs": ["unselected_profile", "unregistered_operation"]
     },
     {
+      "template_id": "ifc-property-resolution.v0.1",
+      "role": "ifc_property_resolution",
+      "mode": "rerank_or_clarify",
+      "path": "prompts/agent/ifc-property-resolution-v0.1.md",
+      "sha256": "sha256:00a38b99a1941b04c8c98ffe0883399f72bdf60380e792ac493243494a3c9e49",
+      "required_inputs": [
+        "PROPERTY_QUERY",
+        "CANDIDATE_SET",
+        "DECISION_SCHEMA",
+        "PREVIOUS_VALIDATION_FEEDBACK"
+      ],
+      "forbidden_outputs": [
+        "raw_ifc",
+        "step_text",
+        "canonical_property",
+        "canonical_pset",
+        "value_override",
+        "scope_override",
+        "operation_override",
+        "private_original_ifc",
+        "benchmark_gold",
+        "mutation_mapping",
+        "repair_changeset"
+      ]
+    },
+    {
       "template_id": "audit.v1",
       "role": "audit",
       "mode": "semantic_review",

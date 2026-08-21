@@ -1,0 +1,124 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "text2ifc/ifc-property-admissibility/0.1",
+  "title": "IFC Property Admissibility Result 0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "admissibility_id",
+    "query_id",
+    "candidate_set_id",
+    "decision_id",
+    "policy_id",
+    "policy_version",
+    "status",
+    "selected_candidate_id",
+    "authoritative_record_id",
+    "checks",
+    "reason_code"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "text2ifc/ifc-property-admissibility/0.1"
+    },
+    "admissibility_id": {"$ref": "#/$defs/stable_id"},
+    "query_id": {"$ref": "#/$defs/stable_id"},
+    "candidate_set_id": {"$ref": "#/$defs/stable_id"},
+    "decision_id": {"$ref": "#/$defs/stable_id"},
+    "policy_id": {"$ref": "#/$defs/stable_id"},
+    "policy_version": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128
+    },
+    "status": {
+      "enum": [
+        "passed",
+        "clarification_required",
+        "unsupported",
+        "custom_confirmation_required",
+        "rejected"
+      ]
+    },
+    "selected_candidate_id": {
+      "oneOf": [
+        {"$ref": "#/$defs/stable_id"},
+        {"type": "null"}
+      ]
+    },
+    "authoritative_record_id": {
+      "oneOf": [
+        {"$ref": "#/$defs/stable_id"},
+        {"type": "null"}
+      ]
+    },
+    "checks": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "offered_candidate",
+        "authoritative_record_present",
+        "target_class_applicable",
+        "scalar_template_supported",
+        "value_type_compatible",
+        "unit_compatible",
+        "occurrence_scope_supported",
+        "minimum_retrieval_quality_met",
+        "conflict_resolved"
+      ],
+      "properties": {
+        "offered_candidate": {"type": "boolean"},
+        "authoritative_record_present": {"type": "boolean"},
+        "target_class_applicable": {"type": "boolean"},
+        "scalar_template_supported": {"type": "boolean"},
+        "value_type_compatible": {"type": "boolean"},
+        "unit_compatible": {"type": "boolean"},
+        "occurrence_scope_supported": {"type": "boolean"},
+        "minimum_retrieval_quality_met": {"type": "boolean"},
+        "conflict_resolved": {"type": "boolean"}
+      }
+    },
+    "reason_code": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[A-Z][A-Z0-9_]*$"
+    }
+  },
+  "$defs": {
+    "stable_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]*$"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {"status": {"const": "passed"}},
+        "required": ["status"]
+      },
+      "then": {
+        "properties": {
+          "selected_candidate_id": {"$ref": "#/$defs/stable_id"},
+          "authoritative_record_id": {"$ref": "#/$defs/stable_id"},
+          "checks": {
+            "properties": {
+              "offered_candidate": {"const": true},
+              "authoritative_record_present": {"const": true},
+              "target_class_applicable": {"const": true},
+              "scalar_template_supported": {"const": true},
+              "value_type_compatible": {"const": true},
+              "unit_compatible": {"const": true},
+              "occurrence_scope_supported": {"const": true},
+              "minimum_retrieval_quality_met": {"const": true},
+              "conflict_resolved": {"const": true}
+            }
+          }
+        }
+      }
+    }
+  ]
+}
