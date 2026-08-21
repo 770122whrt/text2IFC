@@ -20,6 +20,14 @@ from .property_search import (
     load_reviewed_aliases,
     load_property_resolution_policy,
 )
+from .property_runtime import (
+    PropertyKnowledgeRuntime,
+    PropertyRetrievalResult,
+    PropertyRuntimeError,
+    PropertyRuntimeHealth,
+    create_default_property_runtime,
+    create_property_runtime,
+)
 from .sources import (
     ArchiveSafetyError,
     SourceIntegrityError,
@@ -38,9 +46,13 @@ __all__ = [
     "InMemoryVectorIndex",
     "PropertyAlias",
     "PropertyKnowledgeQuery",
+    "PropertyKnowledgeRuntime",
     "PropertyKnowledgeResolver",
     "PropertyKnowledgeStore",
+    "PropertyRetrievalResult",
     "PropertyResolutionPolicy",
+    "PropertyRuntimeError",
+    "PropertyRuntimeHealth",
     "QdrantVectorIndex",
     "SourceIntegrityError",
     "SourceManifestError",
@@ -51,6 +63,8 @@ __all__ = [
     "build_standard_property_records",
     "collection_fingerprint",
     "create_default_property_resolver",
+    "create_default_property_runtime",
+    "create_property_runtime",
     "default_standard_corpus_fingerprint",
     "download_source",
     "inspect_zip_archive",

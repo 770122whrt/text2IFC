@@ -538,6 +538,7 @@ class InMemoryVectorIndex:
     def __init__(self, embedding_provider: EmbeddingProvider) -> None:
         self.embedding_provider = embedding_provider
         self._vectors: dict[str, tuple[float, ...]] = {}
+        self._collection_version: str | None = None
 
     def build(self, records: Iterable[PropertyKnowledgeRecord]) -> None:
         materialized = tuple(records)
@@ -563,6 +564,41 @@ class InMemoryVectorIndex:
             if item.score > 0.0
         )[:limit]
 
+    def ensure_versioned(
+        self,
+        records: Iterable[PropertyKnowledgeRecord],
+        *,
+        collection_version: str,
+    ) -> str:
+        if self._vectors and self._collection_version == collection_version:
+            return "reused"
+        status = "rebuilt" if self._vectors else "built"
+        self.build(records)
+        self._collection_version = collection_version
+        return status
+
+    def search_allowed(
+        self,
+        text: str,
+        *,
+        allowed_record_ids: Iterable[str],
+        limit: int,
+    ) -> tuple[VectorHit, ...]:
+        allowed = frozenset(str(item) for item in allowed_record_ids)
+        if not allowed:
+            return ()
+        query = tuple(float(value) for value in self.embedding_provider.embed([text])[0])
+        hits = (
+            VectorHit(record_id, _cosine(query, vector))
+            for record_id, vector in self._vectors.items()
+            if record_id in allowed
+        )
+        return tuple(
+            item
+            for item in sorted(hits, key=lambda item: (-item.score, item.record_id))
+            if item.score > 0.0
+        )[:limit]
+
 
 class BgeM3EmbeddingProvider:
     """Lazy local BGE-M3 adapter; importing this module never loads Torch."""
@@ -573,10 +609,12 @@ class BgeM3EmbeddingProvider:
         self,
         *,
         model_path: str = "BAAI/bge-m3",
+        model_version: str = "configured",
         device: str | None = None,
         local_files_only: bool = True,
     ) -> None:
         self.model_path = model_path
+        self.model_version = model_version
         self.device = device
         self.local_files_only = local_files_only
         self._model: Any | None = None
@@ -692,11 +730,110 @@ class QdrantVectorIndex:
             )
         return "built"
 
+    def ensure_versioned(
+        self,
+        records: Iterable[PropertyKnowledgeRecord],
+        *,
+        collection_version: str,
+    ) -> str:
+        from qdrant_client.models import (
+            Distance,
+            PointStruct,
+            VectorParams,
+        )
+
+        materialized = tuple(records)
+        if not materialized:
+            raise ValueError("PROPERTY_CORPUS_EMPTY")
+        collections = {
+            item.name for item in self._client.get_collections().collections
+        }
+        existed = self.collection_name in collections
+        if existed:
+            sample = self._client.scroll(
+                self.collection_name,
+                limit=1,
+                with_payload=True,
+                with_vectors=False,
+            )[0]
+            if (
+                sample
+                and sample[0].payload
+                and sample[0].payload.get("collection_version") == collection_version
+            ):
+                return "reused"
+            self._client.delete_collection(self.collection_name)
+        vectors = self.embedding_provider.embed(
+            [record.search_text for record in materialized]
+        )
+        if len(vectors) != len(materialized):
+            raise ValueError("EMBEDDING_COUNT_MISMATCH")
+        self._client.create_collection(
+            self.collection_name,
+            vectors_config=VectorParams(
+                size=len(vectors[0]),
+                distance=Distance.COSINE,
+            ),
+        )
+        points = [
+            PointStruct(
+                id=index,
+                vector=list(vector),
+                payload={
+                    "record_id": record.record_id,
+                    "collection_version": collection_version,
+                },
+            )
+            for index, (record, vector) in enumerate(
+                zip(materialized, vectors, strict=True)
+            )
+        ]
+        for offset in range(0, len(points), 128):
+            self._client.upsert(
+                collection_name=self.collection_name,
+                points=points[offset : offset + 128],
+                wait=True,
+            )
+        return "rebuilt" if existed else "built"
+
     def search(self, text: str, *, limit: int = 10) -> tuple[VectorHit, ...]:
         vector = list(self.embedding_provider.embed([text])[0])
         response = self._client.query_points(
             collection_name=self.collection_name,
             query=vector,
+            limit=limit,
+            with_payload=True,
+        )
+        return tuple(
+            VectorHit(str(item.payload["record_id"]), float(item.score))
+            for item in response.points
+            if item.payload and item.payload.get("record_id")
+        )
+
+    def search_allowed(
+        self,
+        text: str,
+        *,
+        allowed_record_ids: Iterable[str],
+        limit: int,
+    ) -> tuple[VectorHit, ...]:
+        from qdrant_client.models import FieldCondition, Filter, MatchAny
+
+        allowed = sorted({str(item) for item in allowed_record_ids})
+        if not allowed:
+            return ()
+        vector = list(self.embedding_provider.embed([text])[0])
+        response = self._client.query_points(
+            collection_name=self.collection_name,
+            query=vector,
+            query_filter=Filter(
+                must=[
+                    FieldCondition(
+                        key="record_id",
+                        match=MatchAny(any=allowed),
+                    )
+                ]
+            ),
             limit=limit,
             with_payload=True,
         )
