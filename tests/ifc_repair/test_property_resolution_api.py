@@ -33,13 +33,18 @@ class _Embedding:
     model_fingerprint = "offline-test-only"
 
     def embed(self, texts):
-        return [
-            [
-                float("load" in text.casefold().replace("_", "")),
-                float("external" in text.casefold().replace("_", "")),
-            ]
-            for text in texts
-        ]
+        vectors = []
+        for text in texts:
+            normalized = text.casefold().replace("_", "")
+            if "unmatched property" in normalized:
+                vectors.append([0.0, 0.0])
+            elif "load" in normalized:
+                vectors.append([1.0, 0.0])
+            elif "external" in normalized:
+                vectors.append([0.9, 0.1])
+            else:
+                vectors.append([0.0, 1.0])
+        return vectors
 
 
 class _VectorIndex(InMemoryVectorIndex):
@@ -153,9 +158,27 @@ def _source_record() -> dict[str, str]:
     }
 
 
-def _intent(request_id: str, request: str, registry, *, kind: str) -> RepairIntent:
+def _intent(
+    request_id: str,
+    request: str,
+    registry,
+    *,
+    kind: str,
+    natural_phrase: str = "load bearing",
+) -> RepairIntent:
     properties: list[dict[str, Any]]
     if kind == "natural":
+        properties = [
+            {
+                "intent_kind": "natural_language_property",
+                "property_phrase": natural_phrase,
+                "raw_value": True,
+                "raw_unit": None,
+                "scope": "occurrence_direct",
+                "source": _source_record(),
+            }
+        ]
+    elif kind == "natural_multi":
         properties = [
             {
                 "intent_kind": "natural_language_property",
@@ -164,7 +187,15 @@ def _intent(request_id: str, request: str, registry, *, kind: str) -> RepairInte
                 "raw_unit": None,
                 "scope": "occurrence_direct",
                 "source": _source_record(),
-            }
+            },
+            {
+                "intent_kind": "natural_language_property",
+                "property_phrase": "external",
+                "raw_value": True,
+                "raw_unit": None,
+                "scope": "occurrence_direct",
+                "source": _source_record(),
+            },
         ]
     elif kind == "exact":
         properties = [
@@ -230,6 +261,7 @@ def _api(
     *,
     kind: str,
     decisions: list[dict[str, Any]],
+    derive_natural_phrase: bool = False,
 ) -> tuple[RepairAPI, list[str], _DecisionProvider]:
     events: list[str] = []
     provider = _DecisionProvider(events, decisions)
@@ -245,6 +277,14 @@ def _api(
                 kwargs["repair_request"],
                 kwargs["registry"],
                 kind=kind,
+                natural_phrase=(
+                    "load bearing"
+                    if derive_natural_phrase
+                    and "load bearing" in kwargs["repair_request"].casefold()
+                    else "unmatched property"
+                    if derive_natural_phrase
+                    else "load bearing"
+                ),
             ),
             "missing_parameters": [],
         }
@@ -461,3 +501,84 @@ def test_property_resolution_unsupported_is_terminal_before_stage_2(
     assert len(provider.calls) == 1
     assert "stage2" not in events
     assert result.successful_artifact_publishable is False
+
+
+def test_property_add_detail_starts_a_new_claim_lineage_in_the_same_run(
+    tmp_path: Path,
+) -> None:
+    source = tmp_path / "source-add-detail.ifc"
+    _source(source)
+    api, events, provider = _api(
+        tmp_path,
+        kind="natural",
+        decisions=[_confirmed()],
+        derive_natural_phrase=True,
+    )
+    pending = api.start(source, "Set the selected beam property.")
+    assert pending.clarification is not None
+    assert pending.clarification.answer_modes == ("add_detail", "cancel")
+
+    result = api.continue_with_answer(
+        pending.run_id,
+        {"kind": "add_detail", "detail": "The property is load bearing."},
+        clarification_id=pending.clarification.clarification_id,
+        expected_state_version=pending.state_version,
+    )
+
+    assert result.status == "succeeded"
+    assert len(provider.calls) == 1
+    assert events.count("stage1") == 2
+    assert events.count("vector") == 2
+    assert events.count("property_resolution") == 1
+    state = api.store.load(result.run_id)
+    claim_ids = {
+        item.stage_payload["property_resolution"]["claim_id"]
+        for item in state.transitions
+        if "property_resolution" in item.stage_payload
+    }
+    assert claim_ids == {
+        "claim-001",
+        f"claim-001-resume-{pending.state_version + 1:03d}",
+    }
+
+
+def test_property_selection_is_bound_to_one_claim_within_an_operation(
+    tmp_path: Path,
+) -> None:
+    source = tmp_path / "source-multi-claim.ifc"
+    _source(source)
+    load_id = "candidate:1:ifc2x3:Pset_BeamCommon.LoadBearing"
+    external_id = "candidate:1:ifc2x3:Pset_BeamCommon.IsExternal"
+    external_peer = "candidate:2:ifc2x3:Pset_BeamCommon.LoadBearing"
+    api, events, provider = _api(
+        tmp_path,
+        kind="natural_multi",
+        decisions=[
+            _confirmed(load_id),
+            {
+                "schema_version": "text2ifc/ifc-property-rerank-decision/0.1",
+                "decision": "clarification_required",
+                "selected_candidate_id": None,
+                "conflicting_candidate_ids": [external_id, external_peer],
+                "clarification_question": "Which second Beam property?",
+            },
+        ],
+    )
+
+    pending = api.start(source, "Set two properties on the selected beam.")
+    assert pending.clarification is not None
+    assert pending.clarification.operation_id == "operation-1"
+    assert pending.clarification.claim_id == "claim-002"
+
+    result = api.continue_with_answer(
+        pending.run_id,
+        {"kind": "select_candidate", "candidate_token": external_id},
+        clarification_id=pending.clarification.clarification_id,
+        expected_state_version=pending.state_version,
+    )
+
+    assert result.status == "succeeded"
+    assert len(provider.calls) == 2
+    assert events.count("vector") == 2
+    assert events.count("property_resolution") == 2
+    assert events.count("stage2") == 1
