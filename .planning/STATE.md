@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: IFC ChangeSet Repair Pipeline
-status: Phase 12 live acceptance blocked; Phase 12.1 frozen and ready to execute
-last_updated: "2026-08-20T18:59:13.4459025Z"
+status: Phase 12 live acceptance blocked; Phase 12.1 Plan 1 of 7 complete
+last_updated: "2026-08-21T04:51:36.315Z"
 progress:
   total_phases: 13
   completed_phases: 11
   total_plans: 63
-  completed_plans: 51
-  percent: 81
+  completed_plans: 52
+  percent: 83
 ---
 
 # Project State
@@ -120,7 +120,7 @@ Next: Execute Phase 12 only from 12-01 and only when explicitly authorized.
 ## Phase 12 Real UAT and Phase 12.1 Planning Checkpoint — 2026-08-21
 
 ```text
-Mode: SPECIFICATION AND PLAN FROZEN
+Mode: EXECUTION IN PROGRESS
 Phase: Phase 12.1 Property Resolution RAG and Reranker Correction
 Trigger: Genuine Phase 12 DeepSeek UAT
 Current authority: Phase 12 Plans 12-01 through 12-14 complete; Stage 1 scope,
@@ -143,13 +143,13 @@ Frozen correction: target-class applicability -> multilingual vector Top-K ->
                    admissibility -> program-constructed ExactPropertyIntent ->
                    existing Binder/Stage 2/atomic IFC authoring.
 Requirements: RAG-05, RAG-06, RAG-07, OPS-03 and OPS-04 remain pending.
-Plans: 12.1-01 through 12.1-07, seven sequential waves.
+Plans: 12.1-01 complete; 12.1-02 through 12.1-07 pending in sequence.
 Contract amendment: Phase 12.1 adds no hash/fingerprint authorization or
                     acceptance gate. Stable IDs, explicit versions and persisted
                     candidate membership connect the stages. Each new gate must
                     protect a named product failure; existing source/private-Gold
                     isolation and historical accepted-Proof mechanisms are unchanged.
-Next: Execute 12.1-01 only. Do not start Phase 13. If a new deterministic live
+Next: Execute 12.1-02 only. Do not start Phase 13. If a new deterministic live
       defect appears after the frozen offline admission gates, preserve it and
       stop for user discussion before any patch or retry.
 ```
@@ -168,8 +168,8 @@ closed with real DeepSeek and independently recomputed Proof evidence.
 
 ## Current Position
 
-Phase: 12.1 (Property Resolution RAG and Reranker Correction) — READY TO EXECUTE
-Plan: 0 of 7
+Phase: 12.1 (Property Resolution RAG and Reranker Correction) — IN PROGRESS
+Plan: 1 of 7
 
 - Milestone: v1.1 IFC ChangeSet Repair Pipeline
 - Phase: 11 complete
@@ -183,7 +183,7 @@ Plan: 0 of 7
   complete, clarification/resume and deterministic unsupported contracts with
   no fallback; both publishable cases independently reopen and pass L0/L1/L2.
 
-- Progress: 11 / 13 major phases complete; 51 / 63 milestone plans complete.
+- Progress: 11 / 13 major phases complete; 52 / 63 milestone plans complete.
 - Requirements: RAG-01..04, WFID-01..06 and OPS-01..02 remain complete;
   RAG-05..07 and OPS-03..04 are pending.
 - Last activity: 2026-08-21 - The genuine Phase 12 complete case exposed an
@@ -193,8 +193,10 @@ Plan: 0 of 7
   alias-free vector + bounded LLM reranker correction and conditional Phase 12
   closeout. Before execution, the user amended the frozen contract to reject new
   hash/fingerprint gates and generic security checks; validation now names the
-  concrete product failure and risk for every new gate. No production
-  implementation for Phase 12.1 has started.
+  concrete product failure and risk for every new gate. Plan 12.1-01 now adds
+  closed query/candidate/decision/admissibility/policy schemas and the bounded
+  repair-only Stage 1.5 Prompt. The vector runtime and all executable integration
+  remain pending from Plan 12.1-02 onward.
 
 - Phase 11 closure evidence: accepted live run
   `uat-20260731T224900289758Z` passed all three contracts. Two live successes
@@ -370,8 +372,8 @@ Plan: 0 of 7
 
 ## Next Action
 
-Phase 11 remains closed. Execute Phase 12.1 strictly from
-`.planning/phases/12.1-property-resolution-rag-reranker/12.1-01-PLAN.md` through
+Phase 11 remains closed. Continue Phase 12.1 strictly from
+`.planning/phases/12.1-property-resolution-rag-reranker/12.1-02-PLAN.md` through
 12.1-07. RAG-05..07 and OPS-03/OPS-04 remain pending until genuine DeepSeek,
 independent Proof, IFCCompare and final regression all pass. Do not start Phase
 13 or reopen frozen Door/Window, geometry, Type/material, Storey or private-Gold
