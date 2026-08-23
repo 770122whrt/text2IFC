@@ -11,7 +11,7 @@ from text2ifc_knowledge.property_search import (
     PropertyKnowledgeQuery,
     PropertyKnowledgeResolver,
     VectorHit,
-    create_default_property_resolver,
+    create_historical_alias_baseline_resolver,
 )
 
 
@@ -112,7 +112,7 @@ def test_structural_load_bearing_resolves_to_exact_applicable_typed_fact(
     ifc_class: str,
     set_name: str,
 ) -> None:
-    decision = create_default_property_resolver().resolve(
+    decision = create_historical_alias_baseline_resolver().resolve(
         PropertyKnowledgeQuery(
             target_ifc_class=ifc_class,
             phrase=f"{set_name}.LoadBearing",
@@ -141,7 +141,7 @@ class _VectorOnly:
 
 
 def test_vector_only_cross_class_and_noncanonical_structural_paths_have_no_authority() -> None:
-    base = create_default_property_resolver()
+    base = create_historical_alias_baseline_resolver()
     beam_record = next(
         record
         for record in base.records

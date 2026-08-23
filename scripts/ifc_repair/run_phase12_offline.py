@@ -11,6 +11,7 @@ import re
 import shutil
 import sys
 import tempfile
+from contextlib import closing
 from copy import deepcopy
 from pathlib import Path
 from typing import Any, Iterable, Mapping
@@ -30,6 +31,7 @@ _prepare_windows_torch_runtime()
 
 import ifcopenshell  # noqa: E402
 
+from text2ifc_agent.providers import ProviderOutput  # noqa: E402
 from text2ifc_ifc_repair.apply import apply_changeset  # noqa: E402
 from text2ifc_ifc_repair.benchmark_evaluation import (  # noqa: E402
     ProductionEvaluationInputs,
@@ -47,6 +49,9 @@ from text2ifc_ifc_repair.property_admissibility import (  # noqa: E402
 from text2ifc_ifc_repair.property_intent import (  # noqa: E402
     NaturalLanguagePropertyIntent,
 )
+from text2ifc_ifc_repair.property_resolution_stage import (  # noqa: E402
+    generate_property_resolution_decision,
+)
 from text2ifc_ifc_repair.repair_intent import (  # noqa: E402
     PublicProvenance,
     RepairIntent,
@@ -59,7 +64,9 @@ from text2ifc_ifc_repair.semantic_authoring import (  # noqa: E402
 )
 from text2ifc_knowledge.property_search import (  # noqa: E402
     PropertyKnowledgeQuery,
-    create_default_property_resolver,
+    PropertyResolutionDecision,
+    ResolvedExactProperty,
+    create_historical_alias_baseline_resolver,
 )
 from text2ifc_knowledge.property_runtime import (  # noqa: E402
     create_default_property_runtime,
@@ -136,6 +143,182 @@ def _read(path: Path) -> dict[str, Any]:
     if not isinstance(value, dict):
         raise ValueError(f"PHASE12_JSON_OBJECT_REQUIRED:{path}")
     return value
+
+
+class _FrozenOfflinePropertyProvider:
+    """One-shot offline oracle that must select an actually rendered offer."""
+
+    def __init__(self, *, candidate_id: str, canonical_path: str) -> None:
+        self.candidate_id = candidate_id
+        self.canonical_path = canonical_path
+        self.call_count = 0
+
+    def generate_candidate(self, **kwargs: Any) -> ProviderOutput:
+        self.call_count += 1
+        if self.call_count != 1:
+            raise RuntimeError("PHASE12_1_OFFLINE_PROPERTY_PROVIDER_REUSED")
+        prompt = str(kwargs["prompt"])
+        if self.candidate_id not in prompt or self.canonical_path not in prompt:
+            raise RuntimeError("PHASE12_1_EXPECTED_PROPERTY_NOT_RENDERED")
+        if kwargs["state"].get("provider_call_ordinal") != "property_resolution":
+            raise RuntimeError("PHASE12_1_PROPERTY_STAGE_ORDINAL_MISMATCH")
+        return ProviderOutput(
+            text=json.dumps(
+                {
+                    "schema_version": (
+                        "text2ifc/ifc-property-rerank-decision/0.1"
+                    ),
+                    "decision": "confirmed",
+                    "selected_candidate_id": self.candidate_id,
+                    "conflicting_candidate_ids": [],
+                    "clarification_question": None,
+                },
+                ensure_ascii=False,
+            ),
+            metadata={
+                "provider": "phase12.1-frozen-offline-oracle",
+                "evidence_class": "injected_offline",
+            },
+        )
+
+
+class _OfflineStage15PropertyResolver:
+    """Run actual retrieval, Stage1.5 and admissibility for offline cases."""
+
+    def __init__(
+        self,
+        *,
+        runtime: Any,
+        output_root: Path,
+        expected_paths: Mapping[tuple[str, str], str],
+    ) -> None:
+        self.runtime = runtime
+        self.output_root = output_root
+        self.expected_paths = dict(expected_paths)
+
+    def resolve(self, query: PropertyKnowledgeQuery) -> PropertyResolutionDecision:
+        del query
+        raise RuntimeError("PHASE12_1_PROPERTY_CLAIM_BINDING_REQUIRED")
+
+    def resolve_for_claim(
+        self,
+        *,
+        operation_id: str,
+        operation_type: str,
+        claim_id: str,
+        claim: NaturalLanguagePropertyIntent,
+        query: PropertyKnowledgeQuery,
+    ) -> PropertyResolutionDecision:
+        expected = self.expected_paths.get((operation_id, claim_id))
+        if expected is None:
+            raise RuntimeError("PHASE12_1_OFFLINE_PROPERTY_EXPECTATION_MISSING")
+        claim_root = self.output_root / operation_id / claim_id
+        retrieval = self.runtime.retrieve(
+            run_id="phase12-offline-matrix",
+            request_id=f"request-{operation_id}",
+            model_id="phase12-offline-frozen-oracle",
+            operation_id=operation_id,
+            operation_type=operation_type,
+            claim_id=claim_id,
+            property_phrase=str(claim.property_phrase),
+            target_ifc_class=query.target_ifc_class,
+            raw_value=claim.raw_value,
+            raw_unit=claim.raw_unit,
+            scope=claim.scope,
+            project_length_unit=query.project_length_unit,
+        )
+        _write(claim_root / "query.json", retrieval.query)
+        _write(claim_root / "candidate-set.json", retrieval.candidate_set)
+        selected = next(
+            (
+                item
+                for item in retrieval.candidate_set["candidates"]
+                if item["canonical_path"] == expected
+            ),
+            None,
+        )
+        if selected is None:
+            return PropertyResolutionDecision(
+                status="clarification_required",
+                reason_code="PROPERTY_EXPECTED_CANDIDATE_NOT_RETRIEVED",
+                exact_intent=None,
+                candidates=(),
+            )
+        provider = _FrozenOfflinePropertyProvider(
+            candidate_id=str(selected["candidate_id"]),
+            canonical_path=expected,
+        )
+        stage_result = generate_property_resolution_decision(
+            query=retrieval.query,
+            candidate_set=retrieval.candidate_set,
+            output_dir=claim_root / "provider",
+            provider=provider,
+        )
+        if not stage_result.get("valid") or stage_result.get("decision") is None:
+            raise RuntimeError(
+                "PHASE12_1_OFFLINE_PROPERTY_STAGE_FAILED:"
+                + str(stage_result.get("error_code") or "UNKNOWN")
+            )
+        decision = dict(stage_result["decision"])
+        trace = _read(claim_root / "provider/attempt-001/trace.json")
+        policy = dict(self.runtime.policy or {})
+        admission = admit_property_decision(
+            query=retrieval.query,
+            candidate_set=retrieval.candidate_set,
+            decision=decision,
+            decision_trace=trace,
+            policy=policy,
+            records=self.runtime.records,
+            registry=self.runtime.registry,
+            claim=claim,
+            project_length_unit=query.project_length_unit,
+        )
+        _write(claim_root / "admissibility.json", admission.to_dict())
+        if admission.status != "passed" or admission.exact_intent is None:
+            return PropertyResolutionDecision(
+                status=(
+                    "unsupported"
+                    if admission.status == "unsupported"
+                    else "clarification_required"
+                ),
+                reason_code=admission.reason_code,
+                exact_intent=None,
+                candidates=(),
+            )
+        exact = admission.exact_intent
+        return PropertyResolutionDecision(
+            status="standard_resolved",
+            reason_code="PROPERTY_ADMISSIBLE_STAGE_1_5",
+            exact_intent=ResolvedExactProperty(
+                set_name=exact.set_name,
+                property_name=exact.property_name,
+                value=exact.value,
+                requested_value_type=exact.requested_value_type,
+                requested_unit=exact.requested_unit,
+                scope=exact.scope,
+            ),
+            candidates=(),
+        )
+
+
+def _offline_expected_property_paths(
+    operations: Iterable[Mapping[str, Any]],
+) -> dict[tuple[str, str], str]:
+    expected_by_operation_type = {
+        "add_beam": "Pset_BeamCommon.LoadBearing",
+        "add_column": "Pset_ColumnCommon.LoadBearing",
+    }
+    expected: dict[tuple[str, str], str] = {}
+    for operation in operations:
+        claims = list(operation.get("property_intents") or [])
+        if not claims:
+            continue
+        operation_type = str(operation["operation_type"])
+        canonical_path = expected_by_operation_type.get(operation_type)
+        if canonical_path is None or len(claims) != 1:
+            raise RuntimeError("PHASE12_1_OFFLINE_PROPERTY_FIXTURE_UNFROZEN")
+        expected[(str(operation["operation_id"]), "claim-001")] = canonical_path
+    return expected
 
 
 def _beam_parameters(*, x_mm: float, y_mm: float, z_mm: float) -> dict[str, Any]:
@@ -369,6 +552,7 @@ def _run_structural_case(
     spec: Mapping[str, Any],
     accepted_root: Path,
     scratch_root: Path,
+    property_runtime: Any,
 ) -> dict[str, Any]:
     source = Path(spec["source"])
     mutation_root = scratch_root / case_id
@@ -385,10 +569,16 @@ def _run_structural_case(
         _bundle(case_id, str(spec["request"]), list(spec["operations"])),
     )
     case_root = accepted_root / case_id
+    property_resolver = _OfflineStage15PropertyResolver(
+        runtime=property_runtime,
+        output_root=case_root / "property-resolution",
+        expected_paths=_offline_expected_property_paths(spec["operations"]),
+    )
     run_public_repair(
         damaged_ifc=mutation_root / "damaged.ifc",
         public_request_bundle=request_bundle,
         output_root=case_root,
+        property_knowledge_resolver=property_resolver,
     )
     manifest = _augment_source_case(
         case_root=case_root,
@@ -617,6 +807,7 @@ def _run_mixed_case(
     *,
     output_root: Path,
     duplicate_beam: bool,
+    property_runtime: Any,
 ) -> tuple[dict[str, Any], dict[str, Any]]:
     case_id = (
         "phase12-vvo-door-window-beam-column-rollback"
@@ -655,13 +846,18 @@ def _run_mixed_case(
     )
     index_path = case_root / "target-index.sqlite"
     metadata = build_ifc_index(damaged, index_path)
+    property_resolver = _OfflineStage15PropertyResolver(
+        runtime=property_runtime,
+        output_root=case_root / "property-resolution",
+        expected_paths=_offline_expected_property_paths(intent_document["operations"]),
+    )
     with SQLiteIndexRepository.open(index_path) as repository:
         resolution = resolve_repair_intent(
             intent,
             repository,
             expected_source_sha256=metadata.source_ifc_sha256,
             operation_registry=registry,
-            property_knowledge_resolver=create_default_property_resolver(),
+            property_knowledge_resolver=property_resolver,
         )
         records = {item.ifc_global_id: item for item in repository.iter_records()}
         type_records = {
@@ -901,7 +1097,11 @@ def _run_mixed_case(
     return application, {"case_id": case_id, "case_root": case_root, "manifest": manifest}
 
 
-def _run_structural_failure(failed_root: Path, scratch_root: Path) -> dict[str, Any]:
+def _run_structural_failure(
+    failed_root: Path,
+    scratch_root: Path,
+    property_runtime: Any,
+) -> dict[str, Any]:
     case_id = "phase12-d7n-beam-column-rollback"
     case_root = failed_root / case_id
     case_root.mkdir(parents=True)
@@ -920,17 +1120,23 @@ def _run_structural_failure(failed_root: Path, scratch_root: Path) -> dict[str, 
     bundle_path = scratch_root / f"{case_id}.request.json"
     _write(bundle_path, _bundle(case_id, "Add two Beams on the same axis.", operations))
     failure_stage = ""
+    attempt_root = case_root / "attempt"
+    property_resolver = _OfflineStage15PropertyResolver(
+        runtime=property_runtime,
+        output_root=attempt_root / "property-resolution",
+        expected_paths=_offline_expected_property_paths(operations),
+    )
     try:
         run_public_repair(
             damaged_ifc=D7N,
             public_request_bundle=bundle_path,
-            output_root=case_root / "attempt",
+            output_root=attempt_root,
+            property_knowledge_resolver=property_resolver,
         )
     except RuntimeError as error:
         failure_stage = str(error).split(":", 1)[0]
     if failure_stage != "PUBLIC_STRUCTURAL_APPLICATION_FAILED":
         raise RuntimeError("PHASE12_STRUCTURAL_ROLLBACK_DID_NOT_FAIL")
-    attempt_root = case_root / "attempt"
     application = _read(attempt_root / "application.json")
     if (
         application.get("valid") is not False
@@ -968,11 +1174,15 @@ def _run_structural_failure(failed_root: Path, scratch_root: Path) -> dict[str, 
     return failure
 
 
-def _run_mixed_failure(failed_root: Path) -> dict[str, Any]:
+def _run_mixed_failure(
+    failed_root: Path,
+    property_runtime: Any,
+) -> dict[str, Any]:
     source_hash = _sha256(FOUR_FAMILY_BASE / "02-damaged.ifc")
     application, metadata = _run_mixed_case(
         output_root=failed_root,
         duplicate_beam=True,
+        property_runtime=property_runtime,
     )
     case_root = Path(metadata["case_root"])
     if (
@@ -1117,7 +1327,7 @@ def evaluate_property_resolution_matrix(
     root = Path(project_root).resolve()
     destination = Path(output_path).resolve()
     cases = _property_evaluation_cases(root)
-    baseline_resolver = create_default_property_resolver()
+    baseline_resolver = create_historical_alias_baseline_resolver()
     baseline_rows: list[dict[str, Any]] = []
     for case in cases:
         decision = None
@@ -1408,7 +1618,23 @@ def run_offline_matrix(
     accepted: list[dict[str, Any]] = []
     failures: list[dict[str, Any]] = []
     specs = _structural_specs()
-    with tempfile.TemporaryDirectory(prefix="phase12-offline-", dir=output) as tmp:
+    property_runtime = create_default_property_runtime(
+        project_root=ROOT,
+        qdrant_path=ROOT / ".cache/property-resolution/qdrant",
+        embedding_model_path=str(ROOT / ".cache/models/BAAI-bge-m3"),
+        embedding_model_version="BAAI-bge-m3-local/phase12.1",
+        device="cpu",
+        runtime_mode="production",
+    )
+    if property_runtime.health.status != "ready":
+        raise RuntimeError(
+            "PHASE12_1_PROPERTY_RUNTIME_NOT_READY:"
+            + str(property_runtime.health.reason_code)
+        )
+    with closing(property_runtime.vector_index), tempfile.TemporaryDirectory(
+        prefix="phase12-offline-",
+        dir=output,
+    ) as tmp:
         scratch = Path(tmp)
         for case_id in selected:
             if case_id in specs:
@@ -1418,12 +1644,14 @@ def run_offline_matrix(
                         spec=specs[case_id],
                         accepted_root=accepted_root,
                         scratch_root=scratch,
+                        property_runtime=property_runtime,
                     )
                 )
             else:
                 _, metadata = _run_mixed_case(
                     output_root=accepted_root,
                     duplicate_beam=False,
+                    property_runtime=property_runtime,
                 )
                 manifest = metadata["manifest"]
                 accepted.append(
@@ -1445,8 +1673,14 @@ def run_offline_matrix(
                     }
                 )
         if case_ids is None:
-            failures.append(_run_structural_failure(failed_root, scratch))
-            failures.append(_run_mixed_failure(failed_root))
+            failures.append(
+                _run_structural_failure(
+                    failed_root,
+                    scratch,
+                    property_runtime,
+                )
+            )
+            failures.append(_run_mixed_failure(failed_root, property_runtime))
 
     accepted_ids = {item["case_id"] for item in accepted}
     failure_ids = {item["case_id"] for item in failures}
@@ -1480,6 +1714,16 @@ def run_offline_matrix(
         "accepted_cases": accepted,
         "failed_cases": failures,
         "coverage": coverage,
+        "property_resolution": {
+            "attempt_count": sum(
+                len(operation.get("property_intents") or [])
+                for case_id in selected
+                for operation in specs.get(case_id, {}).get("operations", [])
+            ),
+            "provider_evidence_mode": "injected_offline",
+            "provider_network_calls": 0,
+            "runtime_health": property_runtime.health.to_dict(),
+        },
     }
     _write(output / "run-summary.json", summary)
     return summary

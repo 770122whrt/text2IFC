@@ -338,7 +338,7 @@ class DurablePropertyResolutionCoordinator:
         if admission_status == "passed" and exact is not None:
             return self._decision(
                 status="standard_resolved",
-                reason_code="STAGE_1_5_ADMISSIBLE",
+                reason_code="PROPERTY_ADMISSIBLE_STAGE_1_5",
                 exact=exact,
                 candidate_set=candidate_set,
             )

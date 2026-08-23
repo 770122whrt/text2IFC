@@ -377,6 +377,17 @@ def test_fixed_matrix_covers_frozen_structural_and_mixed_contract(
         "door_window_beam_column_rollback": True,
     }
     assert summary["evidence_scope"] == "cross_scene_same_family_bimnet"
+    assert summary["property_resolution"]["attempt_count"] == 2
+    assert summary["property_resolution"]["provider_evidence_mode"] == (
+        "injected_offline"
+    )
+    assert summary["property_resolution"]["provider_network_calls"] == 0
+    assert summary["property_resolution"]["runtime_health"]["status"] == (
+        "ready"
+    )
+    assert summary["property_resolution"]["runtime_health"][
+        "acceptance_eligible"
+    ] is True
 
     expected_psets = {
         "phase12-d7n-beam-loadbearing": (
@@ -403,11 +414,30 @@ def test_fixed_matrix_covers_frozen_structural_and_mixed_contract(
         resolution = _read(case / "target-resolution.json")
         evidence = resolution["property_resolutions"][0]
         assert evidence["decision"]["status"] == "standard_resolved"
-        assert evidence["decision"]["reason_code"] == "REVIEWED_ALIAS_EXACT"
+        assert evidence["decision"]["reason_code"] == (
+            "PROPERTY_ADMISSIBLE_STAGE_1_5"
+        )
         exact = evidence["decision"]["exact_intent"]
         assert f"{exact['set_name']}.{exact['property_name']}" == canonical_path
         assert exact["requested_value_type"] == "IfcBoolean"
         assert exact["value"] is True
+        operation_id = intent["operations"][0]["operation_id"]
+        property_root = case / "property-resolution" / operation_id / "claim-001"
+        candidate_set = _read(property_root / "candidate-set.json")
+        selected = next(
+            item
+            for item in candidate_set["candidates"]
+            if item["canonical_path"] == canonical_path
+        )
+        assert selected["rank"] >= 1
+        assert selected["score"] >= 0.45
+        admission = _read(property_root / "admissibility.json")
+        assert admission["status"] == "passed"
+        assert admission["reason_code"] == "PROPERTY_ADMISSIBLE"
+        trace = _read(property_root / "provider/attempt-001/trace.json")
+        assert trace["provider_call_ordinal"] == "property_resolution"
+        assert trace["evidence_class"] == "injected_offline"
+        assert trace["acceptance_eligible"] is False
 
 
 def test_every_accepted_source_case_is_hash_bound_reopened_and_public_only(

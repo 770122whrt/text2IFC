@@ -1013,6 +1013,9 @@ def _validate_subprocess(
             and all(
                 item.get("provider_evidence_mode") == LIVE_EVIDENCE_MODE
                 and item.get("live_transcript_status") == "strict_recomputed"
+                and item.get("property_authority_coverage")
+                in {"strict_stage_1_5_recomputed", "not_applicable"}
+                and item.get("current_property_acceptance_eligible") is True
                 for item in cases
             )
         )

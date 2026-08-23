@@ -39,11 +39,6 @@ from text2ifc_ifc_repair.semantic_authoring import (  # noqa: E402
     semantic_manifest_expected_facts,
     semantic_manifest_to_dict,
 )
-from text2ifc_knowledge.property_search import (  # noqa: E402
-    create_default_property_resolver,
-)
-
-
 SCHEMA_VERSION = "text2ifc/phase12-public-structural-repair/0.1"
 PUBLIC_BUNDLE_SCHEMA_VERSION = (
     "text2ifc/phase12-public-structural-request/0.1"
@@ -433,6 +428,7 @@ def run_public_repair(
     damaged_ifc: Path,
     public_request_bundle: Path,
     output_root: Path,
+    property_knowledge_resolver: Any | None = None,
 ) -> dict[str, Any]:
     """Resolve, bind, apply, reopen and evaluate using public inputs only."""
 
@@ -446,7 +442,7 @@ def run_public_repair(
     damaged_hash = _sha256(damaged_copy)
     request = str(bundle["request"])
     registry = create_default_registry()
-    property_resolver = create_default_property_resolver()
+    property_resolver = property_knowledge_resolver
     intent = RepairIntent.from_dict(
         _intent_document(bundle, damaged_hash=damaged_hash),
         registry=registry,

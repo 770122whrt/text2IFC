@@ -81,6 +81,11 @@ class RepairAPI:
         self._property_knowledge_resolver = property_knowledge_resolver
         self._property_knowledge_runtime = property_knowledge_runtime
         self._property_resolution_stage = property_resolution_stage
+        if (
+            isinstance(property_knowledge_resolver, PropertyKnowledgeResolver)
+            and property_knowledge_resolver.aliases
+        ):
+            raise ValueError("ACTIVE_REVIEWED_ALIASES_FORBIDDEN")
         requested_options = dict(orchestrator_options or {})
         if requested_options.get("defer_publication") is False:
             raise ValueError("DURABLE_PUBLICATION_CANNOT_BE_DISABLED")

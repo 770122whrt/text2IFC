@@ -48,6 +48,8 @@ from text2ifc_ifc_repair.prompt_profiles import (
     select_prompt_profiles,
 )
 from text2ifc_ifc_repair.production_evidence import build_production_evidence
+from text2ifc_ifc_repair.property_admissibility import admit_property_decision
+from text2ifc_ifc_repair.property_intent import NaturalLanguagePropertyIntent
 from text2ifc_ifc_repair.repair_intent import RepairIntent
 from text2ifc_ifc_repair.resolution_flow import resolve_repair_intent
 from text2ifc_ifc_repair.run_models import hash_json
@@ -58,7 +60,13 @@ from text2ifc_ifc_repair.semantic_facts import (
     extract_property_facts,
 )
 from text2ifc_ifc_repair.type_templates import type_authority_fingerprint
-from text2ifc_knowledge.property_search import create_default_property_resolver
+from text2ifc_knowledge.property_search import (
+    PropertyResolutionDecision,
+    ResolvedExactProperty,
+    build_standard_property_records,
+    default_standard_corpus_fingerprint,
+)
+from text2ifc_knowledge.registry import load_ifc2x3_registry
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -80,6 +88,8 @@ STRUCTURAL_OCCURRENCE_CLASS = {
     "beam": "IfcBeam",
     "column": "IfcColumn",
 }
+CURRENT_STAGE_1_5_REASON = "PROPERTY_ADMISSIBLE_STAGE_1_5"
+HISTORICAL_ALIAS_REASON = "REVIEWED_ALIAS_EXACT"
 
 
 def _profile_id_for_intent_schema(
@@ -162,6 +172,8 @@ class ProofValidationResult:
     reopened_ifc_count: int = 0
     independently_recomputed_case_count: int = 0
     legacy_unverifiable_case_count: int = 0
+    strict_stage_1_5_case_count: int = 0
+    historical_property_artifact_case_count: int = 0
     errors: list[str] = field(default_factory=list)
     limitations: list[str] = field(default_factory=list)
     cases: list[dict[str, Any]] = field(default_factory=list)
@@ -179,6 +191,10 @@ class ProofValidationResult:
                 self.independently_recomputed_case_count
             ),
             "legacy_unverifiable_case_count": self.legacy_unverifiable_case_count,
+            "strict_stage_1_5_case_count": self.strict_stage_1_5_case_count,
+            "historical_property_artifact_case_count": (
+                self.historical_property_artifact_case_count
+            ),
             "errors": self.errors,
             "limitations": self.limitations,
             "cases": self.cases,
@@ -215,6 +231,11 @@ def validate_success_case_collection(
                     result.limitations.append(
                         f"{summary['case_id']}: {summary['independent_reaudit_error']}"
                     )
+                property_coverage = summary.get("property_authority_coverage")
+                if property_coverage == "strict_stage_1_5_recomputed":
+                    result.strict_stage_1_5_case_count += 1
+                elif property_coverage == "historical_property_artifact_only":
+                    result.historical_property_artifact_case_count += 1
             except Exception as error:
                 case_id = str(case.get("case_id", "<unknown>"))
                 result.errors.append(f"{case_id}: {error}")
@@ -1103,13 +1124,15 @@ def _audit_structural_provenance_chain(
         ):
             raise ValueError("l0.structural.provenance:semantic_manifest_binding")
 
-    _audit_structural_authority_replay(
+    property_authority = _audit_structural_authority_replay(
         damaged_ifc_path=damaged_ifc_path,
         damaged_sha256=damaged_sha256,
         intent=intent,
         changeset=changeset,
         retained_resolution=resolution,
         retained_manifest=bundle,
+        roles=roles,
+        provider_evidence_mode=str(case.get("provider_evidence_mode") or ""),
     )
 
     evidence_mode = str(case.get("provider_evidence_mode") or "")
@@ -1121,16 +1144,274 @@ def _audit_structural_provenance_chain(
             "l0.structural.provenance:provider_evidence_mode_binding"
         )
     if evidence_mode == "offline_bound_deterministic":
-        return {}
+        return property_authority
     if evidence_mode != "live":
         raise ValueError("l0.structural.provenance:provider_evidence_mode")
-    return _audit_live_transcript_authority(
-        case=case,
-        roles=roles,
-        source_manifest=source_manifest,
-        intent=intent,
-        changeset=changeset,
+    return {
+        **property_authority,
+        **_audit_live_transcript_authority(
+            case=case,
+            roles=roles,
+            source_manifest=source_manifest,
+            intent=intent,
+            changeset=changeset,
+        ),
+    }
+
+
+class _RetainedStage15PropertyResolver:
+    """Recompute current admissibility from retained public evidence only."""
+
+    def __init__(
+        self,
+        *,
+        case_root: Path,
+        roles: Mapping[str, Path],
+        provider_evidence_mode: str,
+    ) -> None:
+        self.case_root = case_root
+        self.artifacts = {path.resolve() for path in roles.values()}
+        self.provider_evidence_mode = provider_evidence_mode
+        self.registry = load_ifc2x3_registry(ROOT)
+        self.records = build_standard_property_records(
+            self.registry,
+            corpus_fingerprint=default_standard_corpus_fingerprint(),
+        )
+        self.policy = _read_json(
+            ROOT
+            / "schemas/ifc/knowledge/property_resolution_policy.v0.2.json"
+        )
+        self.recomputed_claim_count = 0
+
+    def resolve(self, query: Any) -> PropertyResolutionDecision:
+        del query
+        raise ValueError("l0.structural.provenance:property_claim_binding")
+
+    def resolve_for_claim(
+        self,
+        *,
+        operation_id: str,
+        operation_type: str,
+        claim_id: str,
+        claim: NaturalLanguagePropertyIntent,
+        query: Any,
+    ) -> PropertyResolutionDecision:
+        query_path, query_document = self._query_for_claim(
+            operation_id=operation_id,
+            operation_type=operation_type,
+            claim_id=claim_id,
+        )
+        if (
+            query_document.get("target_ifc_class") != query.target_ifc_class
+            or query_document.get("property_phrase") != claim.property_phrase
+            or query_document.get("raw_value") != claim.raw_value
+            or query_document.get("raw_unit") != claim.raw_unit
+            or query_document.get("scope") != claim.scope
+        ):
+            raise ValueError(
+                "l0.structural.provenance:property_query_claim_binding"
+            )
+        claim_root = query_path.parent
+        candidate_path = self._require_listed(claim_root / "candidate-set.json")
+        candidate_set = _read_json(candidate_path)
+        decision, trace = self._provider_decision(
+            claim_root=claim_root,
+            operation_id=operation_id,
+            claim_id=claim_id,
+        )
+        admission_path = self._one_existing_listed(
+            claim_root,
+            ("admissibility-provider.json", "admissibility.json"),
+            "property_admissibility_missing",
+        )
+        retained_admission = _read_json(admission_path)
+        admission = admit_property_decision(
+            query=query_document,
+            candidate_set=candidate_set,
+            decision=decision,
+            decision_trace=trace,
+            policy=self.policy,
+            records=self.records,
+            registry=self.registry,
+            claim=claim,
+            project_length_unit=query.project_length_unit,
+        )
+        if (
+            admission.status != "passed"
+            or admission.exact_intent is None
+            or admission.to_dict() != retained_admission
+        ):
+            raise ValueError(
+                "l0.structural.provenance:property_admissibility_replay"
+            )
+        exact_paths = [
+            path
+            for name in ("exact-intent-provider.json", "exact-intent.json")
+            if (path := claim_root / name).resolve() in self.artifacts
+        ]
+        if len(exact_paths) > 1:
+            raise ValueError(
+                "l0.structural.provenance:property_exact_intent_duplicate"
+            )
+        if exact_paths and _read_json(exact_paths[0]) != admission.exact_intent.to_dict():
+            raise ValueError(
+                "l0.structural.provenance:property_exact_intent_replay"
+            )
+        exact = admission.exact_intent
+        self.recomputed_claim_count += 1
+        return PropertyResolutionDecision(
+            status="standard_resolved",
+            reason_code=CURRENT_STAGE_1_5_REASON,
+            exact_intent=ResolvedExactProperty(
+                set_name=exact.set_name,
+                property_name=exact.property_name,
+                value=exact.value,
+                requested_value_type=exact.requested_value_type,
+                requested_unit=exact.requested_unit,
+                scope=exact.scope,
+            ),
+            # Candidate observability is retained separately. It is not an
+            # executable authority and is deliberately not hash-gated here.
+            candidates=(),
+        )
+
+    def _query_for_claim(
+        self,
+        *,
+        operation_id: str,
+        operation_type: str,
+        claim_id: str,
+    ) -> tuple[Path, dict[str, Any]]:
+        matches: list[tuple[Path, dict[str, Any]]] = []
+        for path in self.artifacts:
+            if path.name != "query.json":
+                continue
+            try:
+                relative = path.relative_to(self.case_root)
+            except ValueError:
+                continue
+            if "property-resolution" not in relative.parts:
+                continue
+            document = _read_json(path)
+            if (
+                document.get("operation_id") == operation_id
+                and document.get("operation_type") == operation_type
+                and document.get("claim_id") == claim_id
+            ):
+                matches.append((path, document))
+        if len(matches) != 1:
+            raise ValueError(
+                "l0.structural.provenance:property_evidence_group"
+            )
+        return matches[0]
+
+    def _provider_decision(
+        self,
+        *,
+        claim_root: Path,
+        operation_id: str,
+        claim_id: str,
+    ) -> tuple[dict[str, Any], dict[str, Any]]:
+        valid_attempts: list[tuple[Path, dict[str, Any]]] = []
+        for path in self.artifacts:
+            if path.name != "trace.json" or claim_root not in path.parents:
+                continue
+            trace = _read_json(path)
+            if (
+                trace.get("operation_id") == operation_id
+                and trace.get("claim_id") == claim_id
+                and trace.get("status") == "valid"
+            ):
+                valid_attempts.append((path, trace))
+        if len(valid_attempts) != 1:
+            raise ValueError(
+                "l0.structural.provenance:property_provider_decision"
+            )
+        trace_path, trace = valid_attempts[0]
+        for name in (
+            "parsed-response.json",
+            "provider-metadata.json",
+            "raw-response.json",
+            "rendered-prompt.txt",
+            "renderer-input.json",
+            "trace.json",
+            "validation-feedback.json",
+        ):
+            self._require_listed(trace_path.parent / name)
+        if self.provider_evidence_mode == "live":
+            if (
+                trace.get("evidence_class") != "live"
+                or trace.get("acceptance_eligible") is not True
+            ):
+                raise ValueError(
+                    "l0.structural.provenance:property_live_evidence"
+                )
+        elif self.provider_evidence_mode == "offline_bound_deterministic":
+            if trace.get("evidence_class") != "injected_offline":
+                raise ValueError(
+                    "l0.structural.provenance:property_offline_evidence"
+                )
+        else:
+            raise ValueError(
+                "l0.structural.provenance:property_evidence_mode"
+            )
+        decision = _read_json(trace_path.parent / "parsed-response.json")
+        result_path = claim_root / "decision-result-provider.json"
+        if result_path.resolve() in self.artifacts:
+            result = _read_json(result_path)
+            if (
+                result.get("valid") is not True
+                or result.get("decision") != decision
+                or result.get("trace") != trace
+            ):
+                raise ValueError(
+                    "l0.structural.provenance:property_decision_result_binding"
+                )
+        return decision, trace
+
+    def _require_listed(self, path: Path) -> Path:
+        resolved = path.resolve()
+        if resolved not in self.artifacts or not resolved.is_file():
+            raise ValueError(
+                "l0.structural.provenance:property_evidence_group"
+            )
+        return resolved
+
+    def _one_existing_listed(
+        self,
+        root: Path,
+        names: tuple[str, ...],
+        reason: str,
+    ) -> Path:
+        matches = [
+            path.resolve()
+            for name in names
+            if (path := root / name).resolve() in self.artifacts
+        ]
+        if len(matches) != 1:
+            raise ValueError(f"l0.structural.provenance:{reason}")
+        return matches[0]
+
+
+def _natural_property_claim_count(intent: Mapping[str, Any]) -> int:
+    return sum(
+        1
+        for operation in intent.get("operations", ())
+        if isinstance(operation, Mapping)
+        for claim in operation.get("property_intents", ())
+        if isinstance(claim, Mapping)
+        and claim.get("intent_kind") == "natural_language_property"
     )
+
+
+def _without_property_candidate_observability(
+    document: Mapping[str, Any],
+) -> dict[str, Any]:
+    normalized = json.loads(json.dumps(dict(document), ensure_ascii=False))
+    for resolution in normalized.get("property_resolutions", ()):
+        if isinstance(resolution, dict):
+            resolution["candidates"] = []
+    return normalized
 
 
 def _audit_structural_authority_replay(
@@ -1141,13 +1422,49 @@ def _audit_structural_authority_replay(
     changeset: Mapping[str, Any],
     retained_resolution: Mapping[str, Any],
     retained_manifest: Mapping[str, Any],
-) -> None:
+    roles: Mapping[str, Path],
+    provider_evidence_mode: str,
+) -> dict[str, Any]:
     registry = create_default_registry()
     parsed_intent = RepairIntent.from_dict(
         dict(intent),
         registry=registry,
         require_complete=False,
     )
+    property_claim_count = _natural_property_claim_count(intent)
+    retained_property_resolutions = [
+        item
+        for item in retained_resolution.get("property_resolutions", ())
+        if isinstance(item, Mapping)
+    ]
+    reason_codes = {
+        str(item.get("decision", {}).get("reason_code") or "")
+        for item in retained_property_resolutions
+        if isinstance(item.get("decision"), Mapping)
+    }
+    if property_claim_count and reason_codes != {CURRENT_STAGE_1_5_REASON}:
+        if CURRENT_STAGE_1_5_REASON in reason_codes:
+            raise ValueError(
+                "l0.structural.provenance:mixed_property_authority"
+            )
+        return {
+            "property_authority_coverage": "historical_property_artifact_only",
+            "property_claim_count": property_claim_count,
+            "property_reason_codes": sorted(reason_codes),
+            "historical_alias_present": HISTORICAL_ALIAS_REASON in reason_codes,
+            "current_property_acceptance_eligible": False,
+        }
+    if len(retained_property_resolutions) != property_claim_count:
+        raise ValueError(
+            "l0.structural.provenance:property_resolution_count"
+        )
+    property_resolver = None
+    if property_claim_count:
+        property_resolver = _RetainedStage15PropertyResolver(
+            case_root=roles["source_run_manifest"].parent,
+            roles=roles,
+            provider_evidence_mode=provider_evidence_mode,
+        )
     with tempfile.TemporaryDirectory(prefix="phase12-proof-authority-") as tmp:
         index_path = Path(tmp) / "independent-index.sqlite"
         metadata = build_ifc_index(damaged_ifc_path, index_path)
@@ -1159,7 +1476,7 @@ def _audit_structural_authority_replay(
                 repository,
                 expected_source_sha256=metadata.source_ifc_sha256,
                 operation_registry=registry,
-                property_knowledge_resolver=create_default_property_resolver(),
+                property_knowledge_resolver=property_resolver,
             )
             records = {
                 item.ifc_global_id: item for item in repository.iter_records()
@@ -1168,10 +1485,17 @@ def _audit_structural_authority_replay(
                 item.ifc_global_id: item
                 for item in repository.iter_type_records()
             }
-    if replayed.status != "resolved" or replayed.to_dict() != dict(
-        retained_resolution
-    ):
+    if replayed.status != "resolved" or _without_property_candidate_observability(
+        replayed.to_dict()
+    ) != _without_property_candidate_observability(retained_resolution):
         raise ValueError("l0.structural.provenance:resolution_replay")
+    if (
+        property_resolver is not None
+        and property_resolver.recomputed_claim_count != property_claim_count
+    ):
+        raise ValueError(
+            "l0.structural.provenance:property_replay_count"
+        )
 
     bound_operations = {
         str(item.get("operation_id")): item
@@ -1252,6 +1576,17 @@ def _audit_structural_authority_replay(
         for document in documents
     ):
         raise ValueError("l0.structural.provenance:semantic_authority_replay")
+    return {
+        "property_authority_coverage": (
+            "strict_stage_1_5_recomputed"
+            if property_claim_count
+            else "not_applicable"
+        ),
+        "property_claim_count": property_claim_count,
+        "property_reason_codes": sorted(reason_codes),
+        "historical_alias_present": False,
+        "current_property_acceptance_eligible": True,
+    }
 
 
 def _bound_target_global_id(operation: Mapping[str, Any]) -> str:
@@ -1675,7 +2010,9 @@ def _audit_structural_production_isolation(
         ):
             raise ValueError("l0.structural.isolation:private_canary")
         if path.suffix.casefold() == ".json":
-            _assert_no_structural_private_keys(_read_json(path))
+            _assert_no_structural_private_keys(
+                json.loads(path.read_text(encoding="utf-8"))
+            )
 
 
 def _assert_no_structural_private_keys(value: Any) -> None:

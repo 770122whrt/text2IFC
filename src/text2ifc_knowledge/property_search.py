@@ -501,7 +501,7 @@ def default_standard_corpus_fingerprint() -> str:
     return _stable_hash(check_registry_files())
 
 
-def create_default_property_resolver(
+def create_historical_alias_baseline_resolver(
     *,
     vector_index: InMemoryVectorIndex | None = None,
 ) -> "PropertyKnowledgeResolver":
@@ -1288,7 +1288,7 @@ __all__ = [
     "build_project_property_records",
     "build_standard_property_records",
     "collection_fingerprint",
-    "create_default_property_resolver",
+    "create_historical_alias_baseline_resolver",
     "default_standard_corpus_fingerprint",
     "load_property_resolution_policy",
     "load_reviewed_aliases",

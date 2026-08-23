@@ -17,7 +17,9 @@ from text2ifc_ifc_repair.index_store import SQLiteIndexRepository
 from text2ifc_ifc_repair.indexer import EXTRACTOR_VERSION
 from text2ifc_ifc_repair.repair_intent import RepairIntent
 from text2ifc_ifc_repair.registry import OperationDefinition, OperationRegistry
-from text2ifc_knowledge.property_search import create_default_property_resolver
+from text2ifc_knowledge.property_search import (
+    create_historical_alias_baseline_resolver,
+)
 
 
 SOURCE_SHA = "sha256:" + "a" * 64
@@ -151,7 +153,7 @@ def test_natural_language_property_uses_local_reviewed_alias_and_records_evidenc
             repository,
             expected_source_sha256=SOURCE_SHA,
             operation_registry=_registry(),
-            property_knowledge_resolver=create_default_property_resolver(),
+            property_knowledge_resolver=create_historical_alias_baseline_resolver(),
         )
 
     assert result.status == "resolved"

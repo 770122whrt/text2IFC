@@ -626,6 +626,13 @@ def curate(
             )
         if validation.independently_recomputed_case_count != len(entries):
             raise ValueError("PHASE12_CANDIDATE_NOT_FULLY_RECOMPUTED")
+        if any(
+            item.get("property_authority_coverage")
+            not in {"strict_stage_1_5_recomputed", "not_applicable"}
+            or item.get("current_property_acceptance_eligible") is not True
+            for item in validation.cases
+        ):
+            raise ValueError("PHASE12_CANDIDATE_PROPERTY_AUTHORITY_INELIGIBLE")
 
         collection_manifest_path = collection_root / "manifest.json"
         original_manifest = collection_manifest_path.read_bytes()
@@ -702,6 +709,18 @@ def curate(
                 for entry in entries
             ):
                 raise ValueError("PHASE12_FINAL_CASE_NOT_STRICTLY_RECOMPUTED")
+            if any(
+                validated_by_id.get(entry["case_id"], {}).get(
+                    "property_authority_coverage"
+                )
+                not in {"strict_stage_1_5_recomputed", "not_applicable"}
+                or validated_by_id.get(entry["case_id"], {}).get(
+                    "current_property_acceptance_eligible"
+                )
+                is not True
+                for entry in entries
+            ):
+                raise ValueError("PHASE12_FINAL_PROPERTY_AUTHORITY_INELIGIBLE")
         except Exception:
             _rollback_installed_cases(installed)
             collection_manifest_path.write_bytes(original_manifest)
