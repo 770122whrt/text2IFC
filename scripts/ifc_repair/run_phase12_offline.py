@@ -182,6 +182,144 @@ class _FrozenOfflinePropertyProvider:
         )
 
 
+def _prompt_json_document(prompt: str, label: str) -> dict[str, Any]:
+    marker = f"{label}:"
+    try:
+        start = prompt.index(marker) + len(marker)
+        value, _end = json.JSONDecoder().raw_decode(prompt[start:].lstrip())
+    except (ValueError, json.JSONDecodeError) as error:
+        raise RuntimeError(f"PHASE12_1_STAGE15_PROMPT_INVALID:{label}") from error
+    if not isinstance(value, dict):
+        raise RuntimeError(f"PHASE12_1_STAGE15_PROMPT_OBJECT_REQUIRED:{label}")
+    return value
+
+
+def _stage15_replay_key(query: Mapping[str, Any]) -> str:
+    return json.dumps(
+        {
+            "target_ifc_class": query.get("target_ifc_class"),
+            "property_phrase": query.get("property_phrase"),
+            "raw_value": query.get("raw_value"),
+            "scope": query.get("scope"),
+        },
+        ensure_ascii=False,
+        sort_keys=True,
+        separators=(",", ":"),
+        allow_nan=False,
+    )
+
+
+class _FrozenStage15PromptReplayProvider:
+    """Offline transcript replay that can see only rendered public inputs."""
+
+    def __init__(self, document: Mapping[str, Any]) -> None:
+        if document.get("schema_version") != (
+            "text2ifc/property-resolution-stage15-transcript-replay/0.1"
+        ):
+            raise ValueError("PHASE12_1_STAGE15_REPLAY_VERSION_INVALID")
+        responses = document.get("responses")
+        if not isinstance(responses, list):
+            raise ValueError("PHASE12_1_STAGE15_REPLAY_RESPONSES_INVALID")
+        self._responses: dict[str, dict[str, Any]] = {}
+        for response in responses:
+            if not isinstance(response, Mapping):
+                raise ValueError("PHASE12_1_STAGE15_REPLAY_RESPONSE_INVALID")
+            forbidden = {"expected", "authorize", "case_id", "id"} & set(response)
+            if forbidden:
+                raise ValueError("PHASE12_1_STAGE15_REPLAY_GOLD_FIELD_FORBIDDEN")
+            key = _stage15_replay_key(response)
+            normalized = dict(response)
+            if key in self._responses and self._responses[key] != normalized:
+                raise ValueError("PHASE12_1_STAGE15_REPLAY_CONFLICT")
+            self._responses[key] = normalized
+        self.call_count = 0
+
+    def generate_candidate(self, **kwargs: Any) -> ProviderOutput:
+        self.call_count += 1
+        state = kwargs.get("state")
+        if not isinstance(state, Mapping) or state.get(
+            "provider_call_ordinal"
+        ) != "property_resolution":
+            raise RuntimeError("PHASE12_1_PROPERTY_STAGE_ORDINAL_MISMATCH")
+        prompt = str(kwargs["prompt"])
+        query = _prompt_json_document(prompt, "PROPERTY_QUERY")
+        candidate_set = _prompt_json_document(prompt, "CANDIDATE_SET")
+        candidates = candidate_set.get("candidates")
+        if not isinstance(candidates, list):
+            raise RuntimeError("PHASE12_1_STAGE15_CANDIDATES_INVALID")
+
+        phrase = str(query.get("property_phrase") or "")
+        canonical_input = re.fullmatch(
+            r"[A-Za-z_][A-Za-z0-9_]*\.[A-Za-z_][A-Za-z0-9_]*",
+            phrase,
+        )
+        if canonical_input:
+            response = {
+                "decision": "confirmed",
+                "selected_canonical_path": phrase,
+            }
+        else:
+            response = self._responses.get(_stage15_replay_key(query))
+            if response is None:
+                raise RuntimeError("PHASE12_1_STAGE15_REPLAY_INPUT_MISSING")
+
+        selected = None
+        selected_path = response.get("selected_canonical_path")
+        if response.get("decision") == "confirmed" and isinstance(
+            selected_path, str
+        ):
+            selected = next(
+                (
+                    item
+                    for item in candidates
+                    if isinstance(item, Mapping)
+                    and item.get("canonical_path") == selected_path
+                ),
+                None,
+            )
+        confirmed = selected is not None
+        decision = {
+            "schema_version": "text2ifc/ifc-property-rerank-decision/0.1",
+            "decision": "confirmed" if confirmed else "unsupported",
+            "selected_candidate_id": (
+                str(selected["candidate_id"]) if confirmed else None
+            ),
+            "conflicting_candidate_ids": [],
+            "clarification_question": None,
+        }
+        return ProviderOutput(
+            text=json.dumps(decision, ensure_ascii=False),
+            metadata={
+                "provider": "phase12.1-frozen-stage15-prompt-replay",
+                "evidence_class": "deterministic_offline_prompt_replay",
+                "network_calls": 0,
+            },
+        )
+
+
+def _generate_frozen_stage15_candidate_decision(
+    query: Mapping[str, Any],
+    candidate_set: Mapping[str, Any],
+    output_dir: Path,
+    provider: Any,
+) -> tuple[dict[str, Any], dict[str, Any]]:
+    result = generate_property_resolution_decision(
+        query=query,
+        candidate_set=candidate_set,
+        output_dir=output_dir,
+        provider=provider,
+        max_attempts=1,
+    )
+    decision = result.get("decision")
+    if result.get("valid") is not True or not isinstance(decision, Mapping):
+        raise RuntimeError(
+            "PHASE12_1_FROZEN_STAGE15_REPLAY_FAILED:"
+            + str(result.get("error_code") or "UNKNOWN")
+        )
+    trace = _read(output_dir / "attempt-001/trace.json")
+    return dict(decision), trace
+
+
 class _OfflineStage15PropertyResolver:
     """Run actual retrieval, Stage1.5 and admissibility for offline cases."""
 
@@ -1310,9 +1448,39 @@ def _property_evaluation_cases(project_root: Path) -> list[dict[str, Any]]:
         / "tests/fixtures/knowledge/phase12_1_property_resolution.json"
     )
     baseline = _read(project_root / str(addition["baseline_fixture"]))
-    cases = [*baseline["cases"], *addition["cases"]]
+    baseline_cases = [deepcopy(item) for item in baseline["cases"]]
+    addition_cases = [deepcopy(item) for item in addition["cases"]]
+    cases = [*baseline_cases, *addition_cases]
     if len(cases) != 60:
         raise RuntimeError("PHASE12_1_PROPERTY_EVALUATION_CASE_COUNT")
+    baseline_ids = {str(item["id"]) for item in baseline_cases}
+    groups: dict[str, list[dict[str, Any]]] = {}
+    canonical_pattern = re.compile(
+        r"[A-Za-z_][A-Za-z0-9_]*\.[A-Za-z_][A-Za-z0-9_]*"
+    )
+    for case in cases:
+        semantic_path = case.get("expected")
+        phrase = str(case["phrase"])
+        if semantic_path is None and canonical_pattern.fullmatch(phrase):
+            semantic_path = phrase
+        group_id = (
+            f"{case['class']}:{semantic_path}"
+            if isinstance(semantic_path, str)
+            else str(case.get("group_id") or f"{case['class']}:negative:{case['id']}")
+        )
+        case["group_id"] = group_id
+        groups.setdefault(group_id, []).append(case)
+    for members in groups.values():
+        roles = {str(item.get("role") or "historical") for item in members}
+        member_ids = {str(item["id"]) for item in members}
+        if "revealed-regression" in roles:
+            split = "revealed"
+        elif member_ids & baseline_ids:
+            split = "baseline"
+        else:
+            split = "holdout"
+        for item in members:
+            item["group_split"] = split
     return cases
 
 
@@ -1399,6 +1567,13 @@ def evaluate_property_resolution_matrix(
     wrong_class_type_unit_scope_count = 0
     alias_runtime_authority_count = 0
     private_leakage_count = 0
+    no_candidate_route_count = 0
+    replay_path = (
+        root
+        / "tests/fixtures/knowledge/phase12_1_stage15_transcript_replay.json"
+    )
+    replay_provider = _FrozenStage15PromptReplayProvider(_read(replay_path))
+    replay_output = destination.parent / "stage15-prompt-replay"
     try:
         for index, case in enumerate(cases):
             operation_id = f"property-eval-operation-{index + 1}"
@@ -1417,6 +1592,52 @@ def evaluate_property_resolution_matrix(
                 scope="occurrence_direct",
             )
             candidates = list(retrieval.candidate_set["candidates"])
+            if not candidates:
+                no_candidate_route_count += 1
+                decision = {"decision": "not_called_no_candidates"}
+                admission_document: dict[str, Any] | None = None
+                admission_status = "not_run_no_candidates"
+                reason_code = "PROPERTY_RETRIEVAL_BELOW_FLOOR"
+                authorized_path = None
+            else:
+                decision, decision_trace = (
+                    _generate_frozen_stage15_candidate_decision(
+                        retrieval.query,
+                        retrieval.candidate_set,
+                        replay_output / str(case["id"]),
+                        replay_provider,
+                    )
+                )
+                claim = NaturalLanguagePropertyIntent(
+                    property_phrase=str(case["phrase"]),
+                    raw_value=case["value"],
+                    raw_unit=None,
+                    scope="occurrence_direct",
+                    source=PublicProvenance(
+                        source_kind="user_request",
+                        reference=f"request:/property-evaluation/{case['id']}",
+                        excerpt=str(case["phrase"]),
+                    ),
+                )
+                admission = admit_property_decision(
+                    query=retrieval.query,
+                    candidate_set=retrieval.candidate_set,
+                    decision=decision,
+                    decision_trace=decision_trace,
+                    policy=policy,
+                    records=runtime.records,
+                    registry=runtime.registry,
+                    claim=claim,
+                )
+                exact = admission.exact_intent
+                authorized_path = (
+                    None
+                    if exact is None
+                    else f"{exact.set_name}.{exact.property_name}"
+                )
+                admission_document = admission.to_dict()
+                admission_status = admission.status
+                reason_code = admission.reason_code
             expected = case.get("expected")
             selected = next(
                 (
@@ -1426,73 +1647,21 @@ def evaluate_property_resolution_matrix(
                 ),
                 None,
             )
-            if bool(case["authorize"]) and selected is not None:
-                decision = {
-                    "schema_version": "text2ifc/ifc-property-rerank-decision/0.1",
-                    "decision": "confirmed",
-                    "selected_candidate_id": selected["candidate_id"],
-                    "conflicting_candidate_ids": [],
-                    "clarification_question": None,
-                }
-            else:
-                decision = {
-                    "schema_version": "text2ifc/ifc-property-rerank-decision/0.1",
-                    "decision": "unsupported",
-                    "selected_candidate_id": None,
-                    "conflicting_candidate_ids": [],
-                    "clarification_question": None,
-                }
-            claim = NaturalLanguagePropertyIntent(
-                property_phrase=str(case["phrase"]),
-                raw_value=case["value"],
-                raw_unit=None,
-                scope="occurrence_direct",
-                source=PublicProvenance(
-                    source_kind="user_request",
-                    reference=f"request:/property-evaluation/{case['id']}",
-                    excerpt=str(case["phrase"]),
-                ),
-            )
-            admission = admit_property_decision(
-                query=retrieval.query,
-                candidate_set=retrieval.candidate_set,
-                decision=decision,
-                decision_trace={
-                    "run_id": retrieval.query["run_id"],
-                    "request_id": retrieval.query["request_id"],
-                    "model_id": retrieval.query["model_id"],
-                    "operation_id": retrieval.query["operation_id"],
-                    "claim_id": retrieval.query["claim_id"],
-                    "query_id": retrieval.query["query_id"],
-                    "candidate_set_id": retrieval.candidate_set["candidate_set_id"],
-                    "provider_call_ordinal": "property_resolution",
-                    "status": "valid",
-                },
-                policy=policy,
-                records=runtime.records,
-                registry=runtime.registry,
-                claim=claim,
-            )
-            exact = admission.exact_intent
-            authorized_path = (
-                None
-                if exact is None
-                else f"{exact.set_name}.{exact.property_name}"
-            )
             passed = (
                 authorized_path == expected
                 if bool(case["authorize"])
                 else authorized_path is None
             )
-            if admission.reason_code == "PROPERTY_CANDIDATE_NOT_OFFERED":
+            if reason_code == "PROPERTY_CANDIDATE_NOT_OFFERED":
                 unoffered_selection_count += 1
-            if admission.status == "passed" and authorized_path != expected:
+            if admission_status == "passed" and authorized_path != expected:
                 wrong_class_type_unit_scope_count += 1
             public_evidence = json.dumps(
                 {
                     "query": retrieval.query,
                     "candidate_set": retrieval.candidate_set,
-                    "admission": admission.to_dict(),
+                    "admission": admission_document,
+                    "routing_reason_code": reason_code,
                 },
                 ensure_ascii=False,
                 sort_keys=True,
@@ -1531,8 +1700,8 @@ def evaluate_property_resolution_matrix(
                         str(item["canonical_path"]) for item in candidates
                     ],
                     "decision": decision["decision"],
-                    "admissibility_status": admission.status,
-                    "reason_code": admission.reason_code,
+                    "admissibility_status": admission_status,
+                    "reason_code": reason_code,
                 }
             )
     finally:
@@ -1583,9 +1752,22 @@ def evaluate_property_resolution_matrix(
         "candidate": candidate,
         "hard_gates": hard_gates,
         "knowledge_health": runtime.health.to_dict(),
-        "evaluation_mode": "offline_frozen_oracle_reranker",
+        "evaluation_mode": "offline_frozen_stage15_prompt_replay",
+        "stage15_replay": {
+            "schema_version": (
+                "text2ifc/property-resolution-stage15-transcript-replay/0.1"
+            ),
+            "path": str(replay_path),
+            "sha256": _sha256(replay_path),
+            "attempt_count": replay_provider.call_count,
+            "no_candidate_route_count": no_candidate_route_count,
+            "gold_labels_available_to_provider": False,
+        },
         "provider_network_calls": 0,
-        "claim_scope": "offline retrieval and admissibility; not live LLM capability",
+        "claim_scope": (
+            "offline retrieval, frozen prompt replay and admissibility; "
+            "not live LLM capability"
+        ),
         "cases": {
             "baseline": baseline_rows,
             "candidate": candidate_rows,

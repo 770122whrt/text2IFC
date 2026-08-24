@@ -518,7 +518,7 @@ class _GreenCommandRunner:
             return "focused"
         if "run_phase12_offline.py" in rendered:
             return "offline"
-        if "-m pytest tests/ifc_repair -q" in rendered:
+        if "-m pytest tests/knowledge tests/ifc_repair -q" in rendered:
             return "full-suite"
         if "-m compileall" in rendered:
             return "compile"
@@ -1239,7 +1239,14 @@ def test_default_preflight_runner_allows_the_real_full_suite_budget(
     def fake_run(*_args: Any, **kwargs: Any) -> subprocess.CompletedProcess[str]:
         captured.update(kwargs)
         return subprocess.CompletedProcess(
-            (module.sys.executable, "-m", "pytest", "tests/ifc_repair", "-q"),
+            (
+                module.sys.executable,
+                "-m",
+                "pytest",
+                "tests/knowledge",
+                "tests/ifc_repair",
+                "-q",
+            ),
             0,
             "",
             "",
@@ -1247,7 +1254,14 @@ def test_default_preflight_runner_allows_the_real_full_suite_budget(
 
     monkeypatch.setattr(module.subprocess, "run", fake_run)
     module._default_command_runner(
-        (module.sys.executable, "-m", "pytest", "tests/ifc_repair", "-q"),
+        (
+            module.sys.executable,
+            "-m",
+            "pytest",
+            "tests/knowledge",
+            "tests/ifc_repair",
+            "-q",
+        ),
         cwd=ROOT,
     )
 
@@ -1279,6 +1293,10 @@ def test_preflight_pytest_commands_use_run_local_temp_and_cache(
         assert "-o" in command
         assert f"cache_dir={cache_dir.resolve()}" in command
         assert not any(".pytest-tmp" in item for item in command)
+    assert commands["full-suite"][3:5] == (
+        "tests/knowledge",
+        "tests/ifc_repair",
+    )
 
 
 def test_preflight_timeout_has_a_distinct_blocking_reason_and_zero_transport(
@@ -1559,7 +1577,7 @@ def test_green_preflight_binds_commands_results_and_artifact_hashes(
 
     checks = result["preflight"]["checks"]
     assert result["preflight"]["schema_version"] == (
-        "text2ifc/phase12-live-preflight/0.2"
+        "text2ifc/phase12-live-preflight/0.3"
     )
     assert {
         key: result["preflight"][key]
@@ -1590,6 +1608,9 @@ def test_green_preflight_binds_commands_results_and_artifact_hashes(
     assert all(item["stdout_sha256"].startswith("sha256:") for item in checks)
     assert all(item["stderr_sha256"].startswith("sha256:") for item in checks)
     assert all(item["result_sha256"].startswith("sha256:") for item in checks)
+    assert all(item["started_at_utc"] for item in checks)
+    assert all(item["finished_at_utc"] for item in checks)
+    assert all(item["network_transport_attempted"] is False for item in checks)
     assert {item["name"] for item in checks if item["artifacts"]} >= {
         "offline",
         "proof",
@@ -1598,6 +1619,21 @@ def test_green_preflight_binds_commands_results_and_artifact_hashes(
         for artifact in check["artifacts"]:
             assert artifact["sha256"].startswith("sha256:")
             assert artifact["size_bytes"] > 0
+
+    identity = result["preflight"]["execution_identity"]
+    assert identity["repository"]["commit"]
+    assert identity["repository"]["branch"]
+    assert identity["repository"]["worktree_porcelain_v1_sha256"].startswith(
+        "sha256:"
+    )
+    assert isinstance(identity["repository"]["worktree_clean"], bool)
+    assert identity["python"]["executable"]
+    assert identity["python"]["version"]
+    assert identity["platform"]["platform"]
+    assert identity["dependencies"]
+    assert result["preflight"]["started_at_utc"]
+    assert result["preflight"]["finished_at_utc"]
+    assert result["preflight"]["network_transport_attempted"] is False
 
     assert result["status"] == "blocked"
     assert result["reason_code"] == "LIVE_CASE_MATRIX_REQUIRED"
@@ -1668,6 +1704,10 @@ def test_preflight_rejects_skip_substitution_or_network_usage(
     assert preflight["status"] == "failed"
     assert checks[failed_gate]["reason_code"] == reason_code
     assert preflight[count_key] == 1
+    assert preflight["network_transport_attempted"] is (defect == "network")
+    assert checks[failed_gate]["network_transport_attempted"] is (
+        defect == "network"
+    )
 
 
 def test_green_preflight_rejects_a_partial_or_substituted_live_matrix(

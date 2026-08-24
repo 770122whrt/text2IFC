@@ -10,8 +10,10 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import importlib.metadata
 import json
 import os
+import platform
 import re
 import subprocess
 import sys
@@ -580,7 +582,7 @@ def _default_command_runner(
 ) -> subprocess.CompletedProcess[str]:
     rendered = " ".join(command).replace("\\", "/")
     timeout_seconds = 1_500
-    if "-m pytest tests/ifc_repair -q" in rendered:
+    if "-m pytest tests/knowledge tests/ifc_repair -q" in rendered:
         timeout_seconds = 7_200
     elif "test_phase12_live_uat.py" in rendered:
         timeout_seconds = 180
@@ -639,6 +641,7 @@ def _preflight_commands(
                 python,
                 "-m",
                 "pytest",
+                "tests/knowledge",
                 "tests/ifc_repair",
                 "-q",
                 f"--basetemp={full_basetemp}",
@@ -674,6 +677,72 @@ def _artifact_record(path: Path, *, root: Path) -> dict[str, Any]:
         "path": reference,
         "sha256": _path_sha256(path),
         "size_bytes": path.stat().st_size,
+    }
+
+
+def _utc_now() -> str:
+    return datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
+
+
+def _git_text(*arguments: str) -> str:
+    completed = subprocess.run(
+        ("git", *arguments),
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+        errors="replace",
+        check=False,
+        timeout=30,
+    )
+    if completed.returncode != 0:
+        return ""
+    return str(completed.stdout or "").strip()
+
+
+def _execution_identity() -> dict[str, Any]:
+    status_text = _git_text("status", "--porcelain=v1", "--untracked-files=normal")
+    status_entries = [line for line in status_text.splitlines() if line]
+    dependencies: dict[str, str | None] = {}
+    for package in (
+        "ifcopenshell",
+        "jsonschema",
+        "pytest",
+        "qdrant-client",
+        "sentence-transformers",
+        "torch",
+    ):
+        try:
+            dependencies[package] = importlib.metadata.version(package)
+        except importlib.metadata.PackageNotFoundError:
+            dependencies[package] = None
+    branch = _git_text("branch", "--show-current") or "(detached)"
+    return {
+        "repository": {
+            "commit": _git_text("rev-parse", "HEAD"),
+            "branch": branch,
+            "worktree_clean": not status_entries,
+            "tracked_change_count": sum(
+                not entry.startswith("??") for entry in status_entries
+            ),
+            "untracked_count": sum(
+                entry.startswith("??") for entry in status_entries
+            ),
+            "worktree_porcelain_v1": status_entries,
+            "worktree_porcelain_v1_sha256": _text_sha256(status_text),
+        },
+        "python": {
+            "executable": str(Path(sys.executable).resolve()),
+            "version": sys.version,
+            "implementation": platform.python_implementation(),
+        },
+        "platform": {
+            "platform": platform.platform(),
+            "system": platform.system(),
+            "release": platform.release(),
+            "machine": platform.machine(),
+        },
+        "dependencies": dependencies,
     }
 
 
@@ -818,11 +887,14 @@ def run_preflight(
     proof_root: Path,
     command_runner: Callable[..., subprocess.CompletedProcess[str]],
 ) -> dict[str, Any]:
+    started_at = _utc_now()
+    execution_identity = _execution_identity()
     preflight_root.mkdir(parents=True, exist_ok=True)
     logs = preflight_root / "logs"
     logs.mkdir()
     checks: list[dict[str, Any]] = []
     for name, command in _preflight_commands(preflight_root, proof_root):
+        check_started_at = _utc_now()
         execution_reason: str | None = None
         try:
             completed = command_runner(command, cwd=ROOT)
@@ -863,9 +935,18 @@ def run_preflight(
             for path in (stdout_path, stderr_path, *semantic_artifacts)
             if path.is_file() and path.stat().st_size > 0
         ]
+        check_counts = _preflight_check_counts(
+            name=name,
+            command=command,
+            stdout=stdout,
+            execution_reason=execution_reason,
+        )
+        check_finished_at = _utc_now()
         record = {
             "name": name,
             "command": list(command),
+            "started_at_utc": check_started_at,
+            "finished_at_utc": check_finished_at,
             "exit_code": int(completed.returncode),
             "status": "passed" if reason is None else "failed",
             "reason_code": reason,
@@ -875,19 +956,19 @@ def run_preflight(
                 _artifact_record(path, root=preflight_root)
                 for path in artifact_paths
             ],
-            **_preflight_check_counts(
-                name=name,
-                command=command,
-                stdout=stdout,
-                execution_reason=execution_reason,
-            ),
+            "network_transport_attempted": bool(check_counts["network_calls"]),
+            **check_counts,
         }
         record["result_sha256"] = _canonical_sha256(record)
         checks.append(record)
     status = "passed" if all(item["status"] == "passed" for item in checks) else "failed"
+    finished_at = _utc_now()
     result = {
-        "schema_version": "text2ifc/phase12-live-preflight/0.2",
+        "schema_version": "text2ifc/phase12-live-preflight/0.3",
         "status": status,
+        "started_at_utc": started_at,
+        "finished_at_utc": finished_at,
+        "execution_identity": execution_identity,
         "failure_count": sum(item["status"] != "passed" for item in checks),
         "skip_count": sum(int(item["skip_count"]) for item in checks),
         "substitution_count": sum(
@@ -895,6 +976,9 @@ def run_preflight(
         ),
         "timeout_count": sum(int(item["timeout_count"]) for item in checks),
         "network_calls": sum(int(item["network_calls"]) for item in checks),
+        "network_transport_attempted": any(
+            bool(item["network_transport_attempted"]) for item in checks
+        ),
         "checks": checks,
     }
     result["evidence_sha256"] = _canonical_sha256(result)

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import inspect
 from collections import Counter
 from pathlib import Path
 
@@ -40,10 +41,9 @@ def test_phase12_1_frozen_evaluation_has_60_grouped_cases(
     }
     assert len({item["id"] for item in cases}) == len(cases)
     assert all(item["group_id"] for item in additions)
-    group_roles: dict[str, set[str]] = {}
-    for item in additions:
-        group_roles.setdefault(item["group_id"], set()).add(item["role"])
-    assert all(len(roles) == 1 for roles in group_roles.values())
+    group_counts = Counter(item["group_id"] for item in additions)
+    assert len(group_counts) < len(additions)
+    assert any(count > 1 for count in group_counts.values())
     assert any(item["phrase"] == "外窗" for item in additions)
     assert {
         (item["class"], item["phrase"])
@@ -51,6 +51,48 @@ def test_phase12_1_frozen_evaluation_has_60_grouped_cases(
         if item["phrase"] == "load bearing"
     } == {("IfcBeam", "load bearing"), ("IfcColumn", "load bearing")}
     assert any(item["authorize"] is False for item in additions)
+
+
+def test_phase12_1_evaluation_groups_are_non_vacuous_and_split_isolated(
+    project_root: Path,
+) -> None:
+    from scripts.ifc_repair import run_phase12_offline
+
+    cases = run_phase12_offline._property_evaluation_cases(project_root)
+    groups: dict[str, list[dict]] = {}
+    for case in cases:
+        groups.setdefault(case["group_id"], []).append(case)
+
+    assert len(groups) < len(cases)
+    assert any(len(members) > 1 for members in groups.values())
+    assert all(
+        len({member["group_split"] for member in members}) == 1
+        for members in groups.values()
+    )
+    by_id = {case["id"]: case for case in cases}
+    assert by_id["a01"]["group_id"] == by_id["p12w01"]["group_id"]
+    assert by_id["p12b01"]["group_id"] == by_id["p12b02"]["group_id"]
+    assert by_id["p12c01"]["group_id"] == by_id["p12c02"]["group_id"]
+
+
+def test_candidate_stage15_boundary_cannot_receive_gold_labels() -> None:
+    from scripts.ifc_repair import run_phase12_offline
+
+    boundary = getattr(
+        run_phase12_offline,
+        "_generate_frozen_stage15_candidate_decision",
+        None,
+    )
+    assert callable(boundary)
+    assert tuple(inspect.signature(boundary).parameters) == (
+        "query",
+        "candidate_set",
+        "output_dir",
+        "provider",
+    )
+    source = inspect.getsource(boundary)
+    assert "expected" not in source
+    assert "authorize" not in source
 
 
 def test_executable_policy_is_the_frozen_alias_free_v02(
@@ -114,6 +156,14 @@ def test_real_bge_frozen_baseline_candidate_evaluation_passes_hard_gates(
     assert result["candidate"]["private_leakage_count"] == 0
     assert result["candidate"]["supported_top_k_recall"] == 1.0
     assert result["candidate"]["confirmed_standard_precision"] == 1.0
+    assert result["evaluation_mode"] == "offline_frozen_stage15_prompt_replay"
+    assert result["stage15_replay"] == {
+        **result["stage15_replay"],
+        "attempt_count": 58,
+        "no_candidate_route_count": 2,
+        "gold_labels_available_to_provider": False,
+    }
+    assert result["provider_network_calls"] == 0
     assert set(result["candidate"]["family_slices"]) >= {
         "window",
         "door",

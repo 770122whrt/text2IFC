@@ -1662,7 +1662,7 @@ def _curator_source_run(tmp_path: Path) -> Path:
         _write_json(case_root / "case-result.json", case)
     _write_json(source / "live-uat-result.json", live_result)
     preflight = {
-        "schema_version": "text2ifc/phase12-live-preflight/0.2",
+        "schema_version": "text2ifc/phase12-live-preflight/0.3",
         "status": "passed",
         "failure_count": 0,
         "skip_count": 0,
