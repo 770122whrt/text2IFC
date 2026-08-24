@@ -575,7 +575,7 @@ They are prerequisite implementation history, not accepted Wave 15 live Proof.
 
 ### Phase 12.1: Property Resolution RAG and Reranker Correction
 
-**Status:** In progress - Plans 12.1-01 through 12.1-05 complete; Plan 12.1-06 next.
+**Status:** In progress - Plans 12.1-01 through 12.1-05 complete; Plan 12.1-06 blocked on independent Stage 1.5 Candidate evidence.
 
 **Goal:** Replace active reviewed-alias/local-consensus property authorization
 with class-applicable multilingual vector retrieval, one independent bounded
@@ -603,7 +603,7 @@ knowledge/vector baseline, Phase 12 Plans 12-01 through 12-14 and the current
 - [x] **Wave 3:** [12.1-03 - Bounded Property Resolution Provider stage](phases/12.1-property-resolution-rag-reranker/12.1-03-PLAN.md)
 - [x] **Wave 4:** [12.1-04 - Admissibility gate and ExactPropertyIntent construction](phases/12.1-property-resolution-rag-reranker/12.1-04-PLAN.md)
 - [x] **Wave 5:** [12.1-05 - Durable public API integration and clarification resume](phases/12.1-property-resolution-rag-reranker/12.1-05-PLAN.md)
-- [ ] **Wave 6** *(next)*: [12.1-06 - Frozen evaluation, five-family regression and zero-skip preflight](phases/12.1-property-resolution-rag-reranker/12.1-06-PLAN.md)
+- [ ] **Wave 6** *(blocked)*: [12.1-06 - Frozen evaluation, five-family regression and zero-skip preflight](phases/12.1-property-resolution-rag-reranker/12.1-06-PLAN.md) — real BGE Top-K and preflight 0.3 pass, but no Gold-independent Stage 1.5 Candidate outputs exist for R12.
 - **Wave 7** *(blocked on Wave 6)*: [12.1-07 - Genuine DeepSeek, independent Proof, IFCCompare and closeout](phases/12.1-property-resolution-rag-reranker/12.1-07-PLAN.md)
 
 **Cross-cutting constraints:**

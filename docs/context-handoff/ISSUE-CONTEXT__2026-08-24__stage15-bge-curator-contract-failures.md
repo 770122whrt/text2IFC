@@ -2,8 +2,8 @@
 
 **Created:** 2026-08-24  
 **Last updated:** 2026-08-24  
-**Status:** Investigation complete; external resolution review pending  
-**Scope:** Phase 12.1 Plan 06 candidate work only; no production-code or test fix is applied by this investigation
+**Status:** Partially resolved; Plan 12.1-06 blocked on Gold-independent R12 Candidate evidence
+**Scope:** Phase 12.1 Plan 06 investigation/correction only; no genuine DeepSeek call, Proof curation, final IFCCompare or Plan 07
 
 ## 1. Problem Statement
 
@@ -719,3 +719,212 @@ matrix defects in production.
 - `tests/knowledge/test_property_vector_runtime.py`
 - `tests/ifc_repair/test_property_resolution_family_e2e.py`
 - current Git status/diff/log and the two repository-local failure artifact roots
+
+## 17. Implementation Addendum — 2026-08-24
+
+This addendum preserves the original investigation above. It supersedes only
+the pending execution state recorded in Section 14; it does not rewrite the
+earlier observations or hypotheses as if they had been known initially.
+
+### Implemented root causes
+
+The issue was a composite incomplete integration, not one property phrase or a
+reason to restore an alias:
+
+1. `BGE_M3_UNAVAILABLE` was correct production fail-closed behavior. The
+   mocked-transport full-chain test was environment-sensitive because the live
+   executor constructed the default production BGE-M3/Qdrant runtime internally
+   instead of accepting a deterministic alias-free runtime at the test seam.
+2. Stage 1.5 had not been integrated into the live evidence path as a first-
+   class semantic stage. `TranscriptProvider` could not label
+   `ifc_property_resolution`, attempt counts omitted it, identity validation
+   treated every attempt as an operation-profile attempt, and wrapper-based
+   live eligibility was lost at the outer Python type.
+3. The frozen live matrix and mocked transport still represented a Stage 1/2-
+   only three-case workflow. They did not execute property clarification/resume
+   or the Window `外窗=true` semantic canary through Stage 1.5.
+4. Validator and curator had acquired mandatory property-authority fields
+   without a formal versioned boundary. Updating only mock payloads would have
+   hidden the production integration defects and silently changed report 0.1.
+5. Historical property-bearing Proof cases needed an explicit ineligible
+   classification. `not_applicable` is valid only for a genuinely non-property
+   case; it cannot make an unrecomputed alias-era property artifact current.
+6. The first 60-case Candidate evaluator was not admissible evidence: it
+   selected an expected candidate and authorization outcome from Gold fixture
+   fields, and its added group IDs made group isolation vacuous.
+7. Preflight 0.2 was incomplete: its full-suite command omitted
+   `tests/knowledge`, it did not bind execution identity/timestamps/network
+   attempt state, and an untracked auto-loaded pytest conftest affected the run.
+
+### Implemented fix
+
+Implementation checkpoints:
+
+- `2a87020b` (`fix(12.1-06): complete stage 1.5 offline contracts`);
+- `4d2cd7d3` (`fix(12.1-06): make offline admission non-oracular`).
+
+- Added a bounded, cycle-safe provider-evidence delegation protocol. A wrapper
+  may expose the actual transport identity without a `TranscriptProvider`-
+  specific compatibility branch; injected transports remain non-live.
+- Added a `property_resolution` transcript stage, separate Stage 1 / Stage 1.5 /
+  Stage 2 counts, immutable Stage 1.5 template identity, exact operation-profile
+  identity for Stage 1/2, and exact zero-few-shot handling where the registered
+  profile has no examples.
+- Added narrow dependency injection to the mocked full-chain executor and the
+  private offline public-repair helper. The public production function retains
+  its three-input signature and the default live/CLI path still constructs the
+  real BGE-M3/Qdrant runtime.
+- Extended the fixed matrix to Beam+Column natural-language properties,
+  property clarification/user candidate selection, Window `外窗=true`, and the
+  unsupported-program guard. The mocked transport now traverses the real
+  RepairAPI, persistence/orchestration, admissibility, Stage 2, IFC application,
+  reopen, and publication path.
+- Added `text2ifc/ifc-repair-proof-validation/0.2` as the minimal validator-to-
+  curator schema. The two fixed live property success IDs require
+  `strict_stage_1_5_recomputed`, at least one property claim, and current
+  eligibility. Unrecomputed property artifacts are
+  `historical_property_artifact_only` and ineligible; zero-property cases may
+  remain `not_applicable`.
+- Added deterministic replay for a public user candidate selection without a
+  Provider call or legacy alias resolver. Forged selection, wrong transition,
+  missing Stage 1.5 evidence, unoffered selection, and alias authority fail
+  closed.
+- Replaced the oracle-capable Candidate evaluator with deterministic frozen
+  Stage 1.5 prompt replay. The replay sees only the rendered query and offered
+  candidates; expected/authorization/case-ID fields are rejected. Empty
+  candidate sets follow the production clarification route without a replay
+  Provider call. The 60 cases now form 40 non-vacuous semantic groups.
+- Upgraded preflight to 0.3. It runs the exact
+  `tests/knowledge tests/ifc_repair` suite, records commit/branch/dirty-worktree
+  state, runtime/dependency identity and check timestamps, and derives
+  `network_transport_attempted` from observed calls. The pytest environment
+  shim is now tracked instead of silently auto-loading from an untracked file.
+
+No reviewed alias, phrase table, compatibility normalization, production test
+fallback, retrieval/admissibility relaxation, L0/L1/L2 weakening, property hash
+gate, genuine DeepSeek call, Proof curation, or Phase 13 work was added.
+
+## 18. Interim Regression Evidence
+
+### Focused and family gates
+
+- Stage 1.5 runner/success focus: `124 passed in 556.68s`, zero skip.
+- Frozen 60-case evaluation: `5 passed in 183.73s`. Baseline passed 46/60;
+  Candidate passed 60/60 with 14 failures retained in the denominator.
+  Supported Top-K recall and confirmed-standard precision were 1.0. False
+  standard authorization, wrong class/type/unit/scope, alias runtime authority,
+  unoffered selection, and private leakage were all zero. The replay recorded 58
+  attempts plus two no-candidate routes and could not read Gold labels.
+- Five-family and alias-retirement regression: `8 passed in 18.99s`, covering
+  Window, Door, Wall, Beam, and Column through the public Stage 1.5 path.
+- Dataset real-IFC full chain: `12 passed in 461.44s`, including six successes
+  and two expected atomic rollbacks.
+
+### Fresh machine-readable preflight 0.3
+
+Preflight evidence ID:
+`sha256:70725e29ee3761be682967f51d00277fdfef9d126bbb0ce4f2fff0cd33b6cdbf`.
+
+- execution commit:
+  `4d2cd7d37d0e00953b6a1774bff71955410eab5b`;
+- focused: passed, exit 0, `86 passed in 147.98s`;
+- offline matrix: passed, six accepted cases, two expected atomic rollbacks,
+  `provider_network_calls=0`;
+- complete `tests/knowledge tests/ifc_repair`:
+  `1100 passed in 3149.34s`, zero skip;
+- compileall: passed;
+- `git diff --check`: passed;
+- existing accepted Proof validator: passed under report 0.2.
+
+The manifest reports exactly zero failures, skips, substitutions, timeouts, and
+network calls. It also binds branch, intentionally dirty worktree, Python/
+platform/dependency identity, per-check timestamps, and a network-attempt flag
+derived from observed calls. The enclosing preflight-only result reports
+`transport_calls=0` and `evidence_mode=not_run`; it is not live evidence.
+
+### Rejected interim admission record
+
+- Exact combined preflight command `tests/knowledge tests/ifc_repair`:
+  `1100 passed in 3149.34s (52:29)`; JUnit independently records 1100 tests,
+  zero failures, zero errors, and zero skipped.
+- Existing accepted Proof recomputation report 0.2: 22 cases, 57 operations,
+  361 checked files, 66 IFC reopens, 17 independently recomputed cases, five
+  legacy limitations, zero current strict Stage 1.5 cases, and two historical
+  property artifacts explicitly ineligible. This run did not add or curate
+  Phase 12.1 Proof.
+- Final IFCCompare was not executed as Plan 06 admission. It remains a Plan 07
+  responsibility over genuine live results.
+
+### Runtime boundary
+
+Both runtime classes were exercised and must not be conflated:
+
+- the 60-case evaluation and offline-matrix readiness used the real local
+  production BGE-M3/Qdrant runtime (`BAAI/bge-m3`, 472 records, ready);
+- the mocked Provider full-chain executor used the deterministic alias-free
+  runtime injection seam while executing real product orchestration and IFC
+  application.
+
+No genuine DeepSeek transport was called. Plan 12.1-07 remains responsible for
+the four-case live matrix, independent live Proof curation/recomputation, final
+IFCCompare, and Phase 12/12.1 closeout.
+
+## 19. Independent Re-review Rejection and Fail-Closed Correction
+
+The follow-up independent review rejected the Candidate result recorded in
+Section 18. That rejection supersedes the earlier Candidate 60/60 and Plan 06
+admission language; the raw preflight 0.3 artifact remains useful execution
+evidence but is not an accepted Plan 06 gate.
+
+### Remaining root cause
+
+The removed helper no longer received fields named `expected` or `authorize`,
+but `phase12_1_stage15_transcript_replay.json` was an answer-equivalent table:
+all 31 replay keys matched evaluation inputs and all 31 replay decisions matched
+Gold. The Provider performed an exact query lookup and selected the stored
+canonical path. Therefore the reported Candidate 60/60 measured fixture
+conformance, not Gold-independent Stage 1.5 semantics. The shallow helper-
+signature test did not detect this indirect leakage.
+
+### Corrective implementation
+
+Checkpoint `b8cf328e` (`fix(12.1-06): reject replay-oracle evaluation`):
+
+- deletes the answer-equivalent Stage 1.5 replay fixture and its evaluation
+  provider/helper;
+- preserves deterministic Stage 1.5 fakes only for offline prompt/parser/
+  orchestration/full-chain plumbing, where they are valid and explicitly
+  non-live;
+- upgrades the evaluation report to
+  `text2ifc/phase12.1-property-resolution-evaluation/0.2`;
+- runs real BGE-M3/Qdrant retrieval for all 60 cases but reports semantic
+  Candidate rows as unscored;
+- returns `status=blocked` with
+  `INDEPENDENT_STAGE15_CANDIDATE_OUTPUT_REQUIRED` and never converts missing
+  semantic evidence into zero false authorization or perfect precision;
+- adds a regression that rejects any reintroduction of the replay fixture,
+  helper or oracle model ID into the 60-case Candidate evaluator.
+
+Fresh focused evidence:
+
+- anti-oracle RED: one expected failure on the answer-table evaluator;
+- anti-oracle GREEN: one pass after removal;
+- complete real-BGE evaluation file: `5 passed in 125.06s`;
+- supported canonical Top-K recall remains 1.0;
+- semantic Candidate scored count is 0 and unscored count is 60;
+- Provider/network calls remain 0.
+
+### Admission consequence
+
+Plan 12.1-06 is **not complete**. Frozen R12 requires Candidate semantic outputs
+that can be scored by the same evaluator without Gold leakage. This task also
+forbids a genuine DeepSeek call, and no pre-Gold frozen Candidate output exists
+in the repository. Consequently the remaining evidence cannot be manufactured
+by another fixture, alias, deterministic auto-authorization rule, subagent
+opinion or relaxed gate.
+
+Preflight 0.3 implementation/provenance remains valid, and its recorded
+`tests/knowledge tests/ifc_repair` execution did pass 1100 tests with zero
+failure/error/skip/network. It cannot admit Plan 06 because the evaluation
+included in that run was later proven invalid. No Plan 06 summary or completion
+checkpoint is created, and Plan 07 remains blocked.

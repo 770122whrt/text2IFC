@@ -2,8 +2,8 @@
 gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: IFC ChangeSet Repair Pipeline
-status: Phase 12 live acceptance blocked; Phase 12.1 Plan 5 of 7 complete
-last_updated: "2026-08-21T06:37:11.1011587Z"
+status: Phase 12 live acceptance blocked; Phase 12.1 Plan 06 blocked on R12 evidence
+last_updated: "2026-08-24T14:15:00Z"
 progress:
   total_phases: 13
   completed_phases: 11
@@ -154,6 +154,40 @@ Next: Execute 12.1-06 only. Do not start Phase 13. If a new deterministic live
       stop for user discussion before any patch or retry.
 ```
 
+## Phase 12.1 Plan 06 Re-admission Blocker — 2026-08-24
+
+```text
+Mode: EXECUTION BLOCKED — OFFLINE EVIDENCE CORRECTED
+Phase: Phase 12.1 Property Resolution RAG and Reranker Correction
+State: PLAN 12.1-06 INCOMPLETE; PLAN 12.1-07 BLOCKED
+Implementation checkpoints: 2a87020b, 4d2cd7d3
+Correction checkpoint: b8cf328e
+Production boundary: BGE_M3_UNAVAILABLE remains fail closed; production live
+                     runtime construction has no alias/fallback.
+Stage boundary: Stage 1 / property_resolution / Stage 2 are independently
+                recorded; Stage 1.5 uses immutable template identity and
+                wrapped live transports delegate explicit provider evidence.
+Proof boundary: validator-to-curator report 0.2 requires strict Stage 1.5
+                recomputation for property-bearing live success cases;
+                historical property artifacts remain current-ineligible.
+Evaluation: Independent review proved the prior Candidate 60/60 was an
+            answer-equivalent replay oracle. b8cf328e removes that replay from
+            scoring. Real local BAAI/bge-m3 + Qdrant now reports supported
+            Top-K recall = 1.0 but blocks semantic Candidate scoring with
+            INDEPENDENT_STAGE15_CANDIDATE_OUTPUT_REQUIRED.
+Preflight: 0.3 implementation/execution at 4d2cd7d3 is complete and recorded
+           six zero-count checks with tests/knowledge + tests/ifc_repair =
+           1100 pass. That artifact is rejected as Plan 06 admission because
+           its 60-case Candidate evidence was later shown invalid.
+Proof validation: existing accepted Proof report 0.2 passed read-only; no
+                  current strict Stage 1.5 live success was curated.
+Live status: NOT RUN. No genuine DeepSeek call and no new Proof curation.
+Next: Resolve the frozen R12 evidence conflict: Plan 06 requires independent
+      Stage 1.5 Candidate outputs, but this task forbids a genuine DeepSeek call
+      and no pre-Gold frozen Candidate output exists. Do not start Plan 07 or
+      Phase 13 and do not restore replay/alias authority.
+```
+
 ## Project Reference
 
 See `.planning/PROJECT.md`.
@@ -163,13 +197,14 @@ traceable semantic ChangeSet and an L1/L2-validated IFC result.
 
 **Current focus:** Phase 12.1 — Property Resolution RAG and Reranker Correction.
 Phase 12 Beam/Column implementation and live/Proof infrastructure are present,
-but final live acceptance remains blocked before Stage 2. Phase 11 remains
-closed with real DeepSeek and independently recomputed Proof evidence.
+but genuine live acceptance has not been rerun; the preserved live attempt
+failed before Stage 2. Phase 11 remains closed with real DeepSeek and
+independently recomputed Proof evidence.
 
 ## Current Position
 
 Phase: 12.1 (Property Resolution RAG and Reranker Correction) — IN PROGRESS
-Plan: 5 of 7
+Plan: 5 of 7; Plan 06 active but blocked
 
 - Milestone: v1.1 IFC ChangeSet Repair Pipeline
 - Phase: 11 complete
@@ -186,38 +221,29 @@ Plan: 5 of 7
 - Progress: 11 / 13 major phases complete; 56 / 63 milestone plans complete.
 - Requirements: RAG-01..04, WFID-01..06 and OPS-01..02 remain complete;
   RAG-05..07 and OPS-03..04 are pending.
-- Last activity: 2026-08-21 - The genuine Phase 12 complete case exposed an
-  alias-dependent/no-vector production property-resolution gap before Stage 2.
-  The failure remains append-only and no live success entered Proof. Phase 12.1
-  CONTEXT, SPEC, RESEARCH, VALIDATION and seven sequential plans now freeze the
-  alias-free vector + bounded LLM reranker correction and conditional Phase 12
-  closeout. Before execution, the user amended the frozen contract to reject new
-  hash/fingerprint gates and generic security checks; validation now names the
-  concrete product failure and risk for every new gate. Plan 12.1-01 now adds
-  closed query/candidate/decision/admissibility/policy schemas and the bounded
-  repair-only Stage 1.5 Prompt. Plan 12.1-02 adds the alias-free, class/value/
-  unit/scope-filtered vector runtime and explicit-version BGE-M3/Qdrant lifecycle;
-  production remains not-ready until the evaluated policy is added. Plan
-  12.1-03 adds the independent, at-most-two-attempt Property Resolution Provider
-  stage, exact offered-ID checks and permanently non-live injected evidence.
-  Plan 12.1-04 adds the pure admissibility boundary, program-constructed exact
-  intent, inherited class applicability and original-user-value binding without
-  adding a hash/fingerprint gate. Plan 12.1-05 now integrates that chain into
-  the durable public API: query/candidate/decision/admissibility checkpoints
-  survive restart, Stage 2 waits for exact resolution, and clarification
-  answers bind to one operation and claim. The frozen Plan 05 gate passes 72
-  tests and the existing Phase 9/resolution regression passes 42 tests, both
-  without skip. Five-family evaluation and zero-skip preflight remain pending
-  in Plan 12.1-06.
+- Last activity: 2026-08-24 - Independent follow-up review rejected Plan
+  12.1-06 admission. Preflight 0.3 is a real improvement: it binds
+  commit/worktree/runtime/timestamps, derives network status from observed
+  calls, and its exact `tests/knowledge tests/ifc_repair` suite passed 1100
+  tests without failure, error or skip. However, the claimed Candidate 60/60
+  merely copied Gold-equivalent answers into a second replay fixture.
+  `b8cf328e` removes that answer table from evaluation. A fresh real-BGE run
+  passes five evaluator tests in 125.06s and proves supported Top-K recall 1.0,
+  but the report now correctly blocks with
+  `INDEPENDENT_STAGE15_CANDIDATE_OUTPUT_REQUIRED`: 60 semantic Candidate rows
+  are unscored, no replay is treated as R12 evidence. Existing Proof report 0.2
+  remains read-only/current-ineligible for old property artifacts. No genuine
+  DeepSeek, new Proof curation, final IFCCompare, Plan 07 or Phase closure
+  occurred.
 
 - Phase 11 closure evidence: accepted live run
   `uat-20260731T224900289758Z` passed all three contracts. Two live successes
-  were curated into the Proof collection. The current independent verifier
-  passes 16 cases, 45 operations, 247 hash-bound files and 48 IFC reopens.
-  The complete `tests/ifc_repair` regression passes 688 tests with 1 expected
-  skip in 1099.76 seconds. A broader repository-wide 1599-test attempt produced
-  no failure before the 1204-second command limit, so that separate attempt is
-  recorded as a timeout rather than reported as a repository-wide pass.
+  were curated into the Proof collection. The current report-0.2 verifier
+  passes the expanded accepted collection with 22 cases, 57 operations, 361
+  checked files and 66 IFC reopens; 17 cases are strictly recomputed and five
+  retain explicit legacy limitations. The Phase 11 accepted artifacts remain
+  unchanged. The rejected preflight 0.3 full-suite execution passed 1100 tests,
+  but it is not Plan 06 admission because R12 Candidate evidence was invalid.
 
 - Phase 11 design decisions were confirmed on 2026-07-28 and are frozen in
   `11-CONTEXT.md` and `11-SPEC.md`. Five sequential implementation plans,
@@ -384,15 +410,16 @@ Plan: 5 of 7
 
 ## Next Action
 
-Phase 11 remains closed. Continue Phase 12.1 strictly from
-`.planning/phases/12.1-property-resolution-rag-reranker/12.1-06-PLAN.md` through
-12.1-07. RAG-05..07 and OPS-03/OPS-04 remain pending until genuine DeepSeek,
-independent Proof, IFCCompare and final regression all pass. Do not start Phase
-13 or reopen frozen Door/Window, geometry, Type/material, Storey or private-Gold
+Phase 11 remains closed. Continue only from
+`.planning/phases/12.1-property-resolution-rag-reranker/12.1-06-PLAN.md` after
+resolving the R12 evidence conflict. Plan 12.1-07 remains blocked.
+RAG-05..07 and OPS-03/OPS-04 remain pending until genuine DeepSeek, independent
+live Proof, IFCCompare and final regression all pass. Do not start Phase 13 or
+reopen frozen Door/Window, geometry, Type/material, Storey or private-Gold
 contracts.
 
 ---
-*Last updated: 2026-08-21 after Phase 12.1 Plan 05 completion*
+*Last updated: 2026-08-24 after independent rejection of Plan 12.1-06 admission*
 
 ## Accumulated Context
 
