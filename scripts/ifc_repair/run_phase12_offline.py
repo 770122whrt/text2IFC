@@ -182,144 +182,6 @@ class _FrozenOfflinePropertyProvider:
         )
 
 
-def _prompt_json_document(prompt: str, label: str) -> dict[str, Any]:
-    marker = f"{label}:"
-    try:
-        start = prompt.index(marker) + len(marker)
-        value, _end = json.JSONDecoder().raw_decode(prompt[start:].lstrip())
-    except (ValueError, json.JSONDecodeError) as error:
-        raise RuntimeError(f"PHASE12_1_STAGE15_PROMPT_INVALID:{label}") from error
-    if not isinstance(value, dict):
-        raise RuntimeError(f"PHASE12_1_STAGE15_PROMPT_OBJECT_REQUIRED:{label}")
-    return value
-
-
-def _stage15_replay_key(query: Mapping[str, Any]) -> str:
-    return json.dumps(
-        {
-            "target_ifc_class": query.get("target_ifc_class"),
-            "property_phrase": query.get("property_phrase"),
-            "raw_value": query.get("raw_value"),
-            "scope": query.get("scope"),
-        },
-        ensure_ascii=False,
-        sort_keys=True,
-        separators=(",", ":"),
-        allow_nan=False,
-    )
-
-
-class _FrozenStage15PromptReplayProvider:
-    """Offline transcript replay that can see only rendered public inputs."""
-
-    def __init__(self, document: Mapping[str, Any]) -> None:
-        if document.get("schema_version") != (
-            "text2ifc/property-resolution-stage15-transcript-replay/0.1"
-        ):
-            raise ValueError("PHASE12_1_STAGE15_REPLAY_VERSION_INVALID")
-        responses = document.get("responses")
-        if not isinstance(responses, list):
-            raise ValueError("PHASE12_1_STAGE15_REPLAY_RESPONSES_INVALID")
-        self._responses: dict[str, dict[str, Any]] = {}
-        for response in responses:
-            if not isinstance(response, Mapping):
-                raise ValueError("PHASE12_1_STAGE15_REPLAY_RESPONSE_INVALID")
-            forbidden = {"expected", "authorize", "case_id", "id"} & set(response)
-            if forbidden:
-                raise ValueError("PHASE12_1_STAGE15_REPLAY_GOLD_FIELD_FORBIDDEN")
-            key = _stage15_replay_key(response)
-            normalized = dict(response)
-            if key in self._responses and self._responses[key] != normalized:
-                raise ValueError("PHASE12_1_STAGE15_REPLAY_CONFLICT")
-            self._responses[key] = normalized
-        self.call_count = 0
-
-    def generate_candidate(self, **kwargs: Any) -> ProviderOutput:
-        self.call_count += 1
-        state = kwargs.get("state")
-        if not isinstance(state, Mapping) or state.get(
-            "provider_call_ordinal"
-        ) != "property_resolution":
-            raise RuntimeError("PHASE12_1_PROPERTY_STAGE_ORDINAL_MISMATCH")
-        prompt = str(kwargs["prompt"])
-        query = _prompt_json_document(prompt, "PROPERTY_QUERY")
-        candidate_set = _prompt_json_document(prompt, "CANDIDATE_SET")
-        candidates = candidate_set.get("candidates")
-        if not isinstance(candidates, list):
-            raise RuntimeError("PHASE12_1_STAGE15_CANDIDATES_INVALID")
-
-        phrase = str(query.get("property_phrase") or "")
-        canonical_input = re.fullmatch(
-            r"[A-Za-z_][A-Za-z0-9_]*\.[A-Za-z_][A-Za-z0-9_]*",
-            phrase,
-        )
-        if canonical_input:
-            response = {
-                "decision": "confirmed",
-                "selected_canonical_path": phrase,
-            }
-        else:
-            response = self._responses.get(_stage15_replay_key(query))
-            if response is None:
-                raise RuntimeError("PHASE12_1_STAGE15_REPLAY_INPUT_MISSING")
-
-        selected = None
-        selected_path = response.get("selected_canonical_path")
-        if response.get("decision") == "confirmed" and isinstance(
-            selected_path, str
-        ):
-            selected = next(
-                (
-                    item
-                    for item in candidates
-                    if isinstance(item, Mapping)
-                    and item.get("canonical_path") == selected_path
-                ),
-                None,
-            )
-        confirmed = selected is not None
-        decision = {
-            "schema_version": "text2ifc/ifc-property-rerank-decision/0.1",
-            "decision": "confirmed" if confirmed else "unsupported",
-            "selected_candidate_id": (
-                str(selected["candidate_id"]) if confirmed else None
-            ),
-            "conflicting_candidate_ids": [],
-            "clarification_question": None,
-        }
-        return ProviderOutput(
-            text=json.dumps(decision, ensure_ascii=False),
-            metadata={
-                "provider": "phase12.1-frozen-stage15-prompt-replay",
-                "evidence_class": "deterministic_offline_prompt_replay",
-                "network_calls": 0,
-            },
-        )
-
-
-def _generate_frozen_stage15_candidate_decision(
-    query: Mapping[str, Any],
-    candidate_set: Mapping[str, Any],
-    output_dir: Path,
-    provider: Any,
-) -> tuple[dict[str, Any], dict[str, Any]]:
-    result = generate_property_resolution_decision(
-        query=query,
-        candidate_set=candidate_set,
-        output_dir=output_dir,
-        provider=provider,
-        max_attempts=1,
-    )
-    decision = result.get("decision")
-    if result.get("valid") is not True or not isinstance(decision, Mapping):
-        raise RuntimeError(
-            "PHASE12_1_FROZEN_STAGE15_REPLAY_FAILED:"
-            + str(result.get("error_code") or "UNKNOWN")
-        )
-    trace = _read(output_dir / "attempt-001/trace.json")
-    return dict(decision), trace
-
-
 class _OfflineStage15PropertyResolver:
     """Run actual retrieval, Stage1.5 and admissibility for offline cases."""
 
@@ -1563,17 +1425,8 @@ def evaluate_property_resolution_matrix(
         )
 
     candidate_rows: list[dict[str, Any]] = []
-    unoffered_selection_count = 0
-    wrong_class_type_unit_scope_count = 0
     alias_runtime_authority_count = 0
     private_leakage_count = 0
-    no_candidate_route_count = 0
-    replay_path = (
-        root
-        / "tests/fixtures/knowledge/phase12_1_stage15_transcript_replay.json"
-    )
-    replay_provider = _FrozenStage15PromptReplayProvider(_read(replay_path))
-    replay_output = destination.parent / "stage15-prompt-replay"
     try:
         for index, case in enumerate(cases):
             operation_id = f"property-eval-operation-{index + 1}"
@@ -1581,7 +1434,7 @@ def evaluate_property_resolution_matrix(
             retrieval = runtime.retrieve(
                 run_id="phase12-1-property-evaluation",
                 request_id="phase12-1-property-evaluation",
-                model_id="offline-frozen-oracle",
+                model_id="offline-retrieval-evaluation",
                 operation_id=operation_id,
                 operation_type="set_occurrence_properties",
                 claim_id=claim_id,
@@ -1592,52 +1445,6 @@ def evaluate_property_resolution_matrix(
                 scope="occurrence_direct",
             )
             candidates = list(retrieval.candidate_set["candidates"])
-            if not candidates:
-                no_candidate_route_count += 1
-                decision = {"decision": "not_called_no_candidates"}
-                admission_document: dict[str, Any] | None = None
-                admission_status = "not_run_no_candidates"
-                reason_code = "PROPERTY_RETRIEVAL_BELOW_FLOOR"
-                authorized_path = None
-            else:
-                decision, decision_trace = (
-                    _generate_frozen_stage15_candidate_decision(
-                        retrieval.query,
-                        retrieval.candidate_set,
-                        replay_output / str(case["id"]),
-                        replay_provider,
-                    )
-                )
-                claim = NaturalLanguagePropertyIntent(
-                    property_phrase=str(case["phrase"]),
-                    raw_value=case["value"],
-                    raw_unit=None,
-                    scope="occurrence_direct",
-                    source=PublicProvenance(
-                        source_kind="user_request",
-                        reference=f"request:/property-evaluation/{case['id']}",
-                        excerpt=str(case["phrase"]),
-                    ),
-                )
-                admission = admit_property_decision(
-                    query=retrieval.query,
-                    candidate_set=retrieval.candidate_set,
-                    decision=decision,
-                    decision_trace=decision_trace,
-                    policy=policy,
-                    records=runtime.records,
-                    registry=runtime.registry,
-                    claim=claim,
-                )
-                exact = admission.exact_intent
-                authorized_path = (
-                    None
-                    if exact is None
-                    else f"{exact.set_name}.{exact.property_name}"
-                )
-                admission_document = admission.to_dict()
-                admission_status = admission.status
-                reason_code = admission.reason_code
             expected = case.get("expected")
             selected = next(
                 (
@@ -1647,21 +1454,10 @@ def evaluate_property_resolution_matrix(
                 ),
                 None,
             )
-            passed = (
-                authorized_path == expected
-                if bool(case["authorize"])
-                else authorized_path is None
-            )
-            if reason_code == "PROPERTY_CANDIDATE_NOT_OFFERED":
-                unoffered_selection_count += 1
-            if admission_status == "passed" and authorized_path != expected:
-                wrong_class_type_unit_scope_count += 1
             public_evidence = json.dumps(
                 {
                     "query": retrieval.query,
                     "candidate_set": retrieval.candidate_set,
-                    "admission": admission_document,
-                    "routing_reason_code": reason_code,
                 },
                 ensure_ascii=False,
                 sort_keys=True,
@@ -1687,8 +1483,11 @@ def evaluate_property_resolution_matrix(
                     "family": str(case.get("family") or _property_family(str(case["class"]))),
                     "authorize": bool(case["authorize"]),
                     "expected": expected,
-                    "authorized_path": authorized_path,
-                    "passed": passed,
+                    "authorized_path": None,
+                    "passed": None,
+                    "semantic_decision_status": (
+                        "not_evaluated_independent_output_missing"
+                    ),
                     "retrieval_hit": selected is not None,
                     "selected_rank": None if selected is None else int(selected["rank"]),
                     "selected_score": None if selected is None else float(selected["score"]),
@@ -1699,9 +1498,11 @@ def evaluate_property_resolution_matrix(
                     "candidate_paths": [
                         str(item["canonical_path"]) for item in candidates
                     ],
-                    "decision": decision["decision"],
-                    "admissibility_status": admission_status,
-                    "reason_code": reason_code,
+                    "decision": None,
+                    "admissibility_status": "not_evaluated",
+                    "reason_code": (
+                        "INDEPENDENT_STAGE15_CANDIDATE_OUTPUT_REQUIRED"
+                    ),
                 }
             )
     finally:
@@ -1710,38 +1511,51 @@ def evaluate_property_resolution_matrix(
             close()
 
     baseline = _property_metrics(baseline_rows)
-    candidate = _property_metrics(candidate_rows)
     supported_rows = [item for item in candidate_rows if item["authorize"]]
     supported_hits = sum(bool(item["retrieval_hit"]) for item in supported_rows)
-    candidate["supported_top_k_recall"] = supported_hits / len(supported_rows)
-    candidate["supported_top_k_recall_95ci"] = _wilson_interval(
-        supported_hits,
-        len(supported_rows),
-    )
-    candidate["unoffered_selection_count"] = unoffered_selection_count
-    candidate["wrong_class_type_unit_scope_count"] = (
-        wrong_class_type_unit_scope_count
-    )
-    candidate["alias_runtime_authority_count"] = alias_runtime_authority_count
-    candidate["private_leakage_count"] = private_leakage_count
+    candidate_family_slices: dict[str, Any] = {}
+    for family in ("window", "door", "wall", "beam", "column"):
+        family_rows = [item for item in candidate_rows if item["family"] == family]
+        supported_family_rows = [item for item in family_rows if item["authorize"]]
+        candidate_family_slices[family] = {
+            "case_count": len(family_rows),
+            "supported_count": len(supported_family_rows),
+            "supported_top_k_hits": sum(
+                bool(item["retrieval_hit"]) for item in supported_family_rows
+            ),
+            "semantic_scored_count": 0,
+        }
+    candidate = {
+        "case_count": len(candidate_rows),
+        "supported_count": len(supported_rows),
+        "negative_count": len(candidate_rows) - len(supported_rows),
+        "semantic_scored_count": 0,
+        "semantic_unscored_count": len(candidate_rows),
+        "confirmed_standard_count": 0,
+        "confirmed_standard_precision": None,
+        "false_standard_authorization_count": None,
+        "supported_top_k_recall": supported_hits / len(supported_rows),
+        "supported_top_k_recall_95ci": _wilson_interval(
+            supported_hits,
+            len(supported_rows),
+        ),
+        "alias_runtime_authority_count": alias_runtime_authority_count,
+        "private_leakage_count": private_leakage_count,
+        "family_slices": candidate_family_slices,
+    }
     hard_gates = {
         "all_supported_in_top_k": candidate["supported_top_k_recall"] == 1.0,
-        "zero_false_standard_authorization": candidate["false_standard_authorization_count"] == 0,
-        "zero_wrong_class_type_unit_scope": wrong_class_type_unit_scope_count == 0,
+        "independent_stage15_candidate_outputs_available": False,
         "zero_alias_runtime_authority": alias_runtime_authority_count == 0,
-        "zero_unoffered_selection": unoffered_selection_count == 0,
         "zero_private_leakage": private_leakage_count == 0,
     }
     result = {
-        "schema_version": "text2ifc/phase12.1-property-resolution-evaluation/0.1",
-        "status": (
-            "passed"
-            if all(hard_gates.values()) and candidate["failed_count"] == 0
-            else "failed"
-        ),
-        "evaluator_id": "phase12.1.fixed-property-evaluator/0.1",
+        "schema_version": "text2ifc/phase12.1-property-resolution-evaluation/0.2",
+        "status": "blocked",
+        "reason_code": "INDEPENDENT_STAGE15_CANDIDATE_OUTPUT_REQUIRED",
+        "evaluator_id": "phase12.1.fixed-property-evaluator/0.2",
         "case_count": len(cases),
-        "failures_in_denominator": baseline["failed_count"] + candidate["failed_count"],
+        "failures_in_denominator": baseline["failed_count"] + len(candidate_rows),
         "minimum_retrieval_score": policy["minimum_retrieval_score"],
         "calibration": {
             "frozen_supported_minimum_score": 0.4805306036784617,
@@ -1752,21 +1566,18 @@ def evaluate_property_resolution_matrix(
         "candidate": candidate,
         "hard_gates": hard_gates,
         "knowledge_health": runtime.health.to_dict(),
-        "evaluation_mode": "offline_frozen_stage15_prompt_replay",
-        "stage15_replay": {
-            "schema_version": (
-                "text2ifc/property-resolution-stage15-transcript-replay/0.1"
-            ),
-            "path": str(replay_path),
-            "sha256": _sha256(replay_path),
-            "attempt_count": replay_provider.call_count,
-            "no_candidate_route_count": no_candidate_route_count,
-            "gold_labels_available_to_provider": False,
+        "evaluation_mode": "offline_retrieval_only_stage15_fixture_excluded",
+        "stage15_candidate_evidence": {
+            "status": "missing_independent_output",
+            "semantic_scored_count": 0,
+            "fixture_or_replay_used_for_scoring": False,
+            "provider_network_calls": 0,
         },
         "provider_network_calls": 0,
         "claim_scope": (
-            "offline retrieval, frozen prompt replay and admissibility; "
-            "not live LLM capability"
+            "real BGE retrieval readiness only; deterministic Stage 1.5 fixtures "
+            "remain full-chain plumbing evidence and are excluded from Candidate "
+            "semantic scoring"
         ),
         "cases": {
             "baseline": baseline_rows,

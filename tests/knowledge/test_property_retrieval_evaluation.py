@@ -75,24 +75,16 @@ def test_phase12_1_evaluation_groups_are_non_vacuous_and_split_isolated(
     assert by_id["p12c01"]["group_id"] == by_id["p12c02"]["group_id"]
 
 
-def test_candidate_stage15_boundary_cannot_receive_gold_labels() -> None:
+def test_candidate_evaluation_has_no_answer_equivalent_stage15_replay() -> None:
     from scripts.ifc_repair import run_phase12_offline
 
-    boundary = getattr(
-        run_phase12_offline,
-        "_generate_frozen_stage15_candidate_decision",
-        None,
+    source = inspect.getsource(
+        run_phase12_offline.evaluate_property_resolution_matrix
     )
-    assert callable(boundary)
-    assert tuple(inspect.signature(boundary).parameters) == (
-        "query",
-        "candidate_set",
-        "output_dir",
-        "provider",
-    )
-    source = inspect.getsource(boundary)
-    assert "expected" not in source
-    assert "authorize" not in source
+    assert "phase12_1_stage15_transcript_replay" not in source
+    assert "_FrozenStage15PromptReplayProvider" not in source
+    assert "_generate_frozen_stage15_candidate_decision" not in source
+    assert "offline-frozen-oracle" not in source
 
 
 def test_executable_policy_is_the_frozen_alias_free_v02(
@@ -124,7 +116,7 @@ def test_executable_policy_is_the_frozen_alias_free_v02(
     assert 0.0 < policy["minimum_retrieval_score"] < 0.5
 
 
-def test_real_bge_frozen_baseline_candidate_evaluation_passes_hard_gates(
+def test_real_bge_evaluation_blocks_without_independent_stage15_outputs(
     project_root: Path,
     tmp_path: Path,
 ) -> None:
@@ -143,25 +135,31 @@ def test_real_bge_frozen_baseline_candidate_evaluation_passes_hard_gates(
     )
 
     assert result["schema_version"] == (
-        "text2ifc/phase12.1-property-resolution-evaluation/0.1"
+        "text2ifc/phase12.1-property-resolution-evaluation/0.2"
     )
-    assert result["status"] == "passed"
+    assert result["status"] == "blocked"
+    assert result["reason_code"] == (
+        "INDEPENDENT_STAGE15_CANDIDATE_OUTPUT_REQUIRED"
+    )
     assert result["case_count"] == 60
     assert result["failures_in_denominator"] > 0
-    assert result["evaluator_id"] == "phase12.1.fixed-property-evaluator/0.1"
+    assert result["evaluator_id"] == "phase12.1.fixed-property-evaluator/0.2"
     assert result["baseline"]["case_count"] == 60
     assert result["candidate"]["case_count"] == 60
-    assert result["candidate"]["false_standard_authorization_count"] == 0
-    assert result["candidate"]["unoffered_selection_count"] == 0
+    assert result["candidate"]["semantic_scored_count"] == 0
+    assert result["candidate"]["semantic_unscored_count"] == 60
+    assert result["candidate"]["false_standard_authorization_count"] is None
     assert result["candidate"]["private_leakage_count"] == 0
     assert result["candidate"]["supported_top_k_recall"] == 1.0
-    assert result["candidate"]["confirmed_standard_precision"] == 1.0
-    assert result["evaluation_mode"] == "offline_frozen_stage15_prompt_replay"
-    assert result["stage15_replay"] == {
-        **result["stage15_replay"],
-        "attempt_count": 58,
-        "no_candidate_route_count": 2,
-        "gold_labels_available_to_provider": False,
+    assert result["candidate"]["confirmed_standard_precision"] is None
+    assert result["evaluation_mode"] == (
+        "offline_retrieval_only_stage15_fixture_excluded"
+    )
+    assert result["stage15_candidate_evidence"] == {
+        "status": "missing_independent_output",
+        "semantic_scored_count": 0,
+        "fixture_or_replay_used_for_scoring": False,
+        "provider_network_calls": 0,
     }
     assert result["provider_network_calls"] == 0
     assert set(result["candidate"]["family_slices"]) >= {
@@ -173,10 +171,8 @@ def test_real_bge_frozen_baseline_candidate_evaluation_passes_hard_gates(
     }
     assert result["hard_gates"] == {
         "all_supported_in_top_k": True,
-        "zero_false_standard_authorization": True,
-        "zero_wrong_class_type_unit_scope": True,
+        "independent_stage15_candidate_outputs_available": False,
         "zero_alias_runtime_authority": True,
-        "zero_unoffered_selection": True,
         "zero_private_leakage": True,
     }
     assert result["knowledge_health"]["status"] == "ready"
