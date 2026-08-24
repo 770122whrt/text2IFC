@@ -928,3 +928,56 @@ Preflight 0.3 implementation/provenance remains valid, and its recorded
 failure/error/skip/network. It cannot admit Plan 06 because the evaluation
 included in that run was later proven invalid. No Plan 06 summary or completion
 checkpoint is created, and Plan 07 remains blocked.
+
+## 20. Local Temporary Artifact Cleanup
+
+On 2026-08-24, repository-root cleanup identified 175 untracked `.tmp-*`
+items totaling 11,172,528,170 bytes. They were pytest base directories, test
+caches, repeated generated IFC/JSON outputs, JUnit files, and superseded
+Phase 11/12/12.1 preflight workspaces. No matching pytest or Python process was
+running at cleanup time.
+
+The first cleanup batch removed 161 reproducible pytest/preflight directories
+totaling 10,785,621,982 bytes with zero failures. It deliberately retained the
+two diagnostic roots named earlier in this issue,
+`.tmp-issue-context-stage15-20260824` and
+`.tmp-phase12-1-live-proof-contract-regression`, plus 12 small JUnit XML result
+files, until their evidence boundary was checked. Their durable findings are
+already distilled in Sections 2, 15, 16, 18, and 19; retaining complete test
+workspaces would duplicate generated data without strengthening the evidence.
+
+Before deleting the remaining temporary carriers, their exact boundary was
+recorded. `.tmp-issue-context-stage15-20260824` contained 139 files / 22,625,930
+bytes; `.tmp-phase12-1-live-proof-contract-regression` contained 1,466 files /
+363,675,394 bytes. The 12 JUnit XML files totaled 604,864 bytes and recorded:
+
+| Run label | Tests | Failures | Errors | Skipped | Pytest time (s) |
+|---|---:|---:|---:|---:|---:|
+| admission-focused3 | 152 | 0 | 0 | 0 | 492.010 |
+| admission-full | 1,094 | 4 | 3 | 0 | 1,492.453 |
+| admission-full2 | 1,094 | 0 | 0 | 0 | 3,004.886 |
+| diagnose-acceleration | 3 | 0 | 0 | 0 | 6.891 |
+| final-full | 1,098 | 0 | 0 | 0 | 3,267.542 |
+| fix-contracts-focused | 38 | 0 | 0 | 0 | 169.988 |
+| fix-dataset-e2e | 3 | 0 | 0 | 0 | 381.164 |
+| preflight-v02-green | 11 | 0 | 0 | 0 | 5.306 |
+| preflight-v02-live-full | 86 | 0 | 0 | 0 | 165.937 |
+| proof-nonproperty-green | 3 | 0 | 0 | 0 | 46.567 |
+| specialty-eval60 | 3 | 0 | 0 | 0 | 243.447 |
+| specialty-five-family | 8 | 0 | 0 | 0 | 19.642 |
+
+These JUnit rows are historical intermediate executions only. In particular,
+the green intermediate runs do not supersede the anti-oracle rejection in
+Section 19 and do not admit Plan 06.
+
+Durable change and regression history remains in Git checkpoints `87b6f7c5`,
+`2a87020b`, `4d2cd7d3`, `b8cf328e`, and `8f83cca9`, together with this issue,
+`.planning/STATE.md`, `.planning/ROADMAP.md`, and
+`PROJECT-CONTEXT-PACK.md`. Genuine run/failure evidence and accepted Proof under
+`dataset/processed/ifc-repair-runs` and `dataset/processed/proof` are explicitly
+outside the cleanup scope. Dataset sources, PDFs, requirements, and unrelated
+dirty-worktree changes are also untouched.
+
+Removing these temporary paths does not change the evidence classification:
+Plan 12.1-06 remains blocked on Gold-independent Stage 1.5 Candidate output,
+Plan 07 remains blocked, and no live evidence or Proof has been promoted.

@@ -451,10 +451,13 @@ fresh run-local output directories and the repository `.venv`.
    `docs/validation/agent-capability-evaluation.md`, but that file is currently
    untracked in this worktree. Its commit status must be resolved deliberately;
    do not silently omit or absorb it.
-7. **Temporary-run visibility:** `git status` reports many historical untracked
-   `.tmp-*` directories. Cleanup is authorized only for the explicit run-local
-   roots created by the current Plan 06 closeout after evidence is recorded;
-   unrelated or historical evidence roots remain outside scope.
+7. **Temporary-run visibility:** On 2026-08-24, 175 repository-root `.tmp-*`
+   test/preflight artifacts totaling 11,172,528,170 bytes were inventoried.
+   The first cleanup batch removed 161 reproducible directories totaling
+   10,785,621,982 bytes after their durable findings were recorded. Two
+   issue-referenced diagnostic roots and 12 JUnit XML files remained protected
+   pending final evidence-boundary review. Genuine run/failure evidence and
+   accepted Proof under `dataset/processed` remain outside the cleanup scope.
 
 ### Open questions requiring later evidence, not assumptions
 
@@ -491,8 +494,9 @@ fresh run-local output directories and the repository `.venv`.
 anti-oracle correction are isolated in the checkpoints above. The remaining
 scoped documentation changes record the blocked state in the issue context,
 project context, STATE and ROADMAP; there is no accepted Plan 06 summary.
-Unrelated PDF, dataset, requirements, docs, generated-run, protocol and temp
-changes remain excluded.
+Unrelated PDF, dataset, requirements, docs, generated-run and protocol changes
+remain excluded. Repository-root `.tmp-*` test/preflight artifacts are cleaned
+only after their durable findings are retained in the issue context and Git.
 
 **Confirmed Repository Fact:** Earlier current-milestone material changes are:
 
