@@ -981,3 +981,8 @@ dirty-worktree changes are also untouched.
 Removing these temporary paths does not change the evidence classification:
 Plan 12.1-06 remains blocked on Gold-independent Stage 1.5 Candidate output,
 Plan 07 remains blocked, and no live evidence or Proof has been promoted.
+
+After checkpoint `a0218ab9` durably recorded the retained boundary, the final
+batch removed the two diagnostic roots and 12 JUnit XML carriers with zero
+failures. The complete cleanup therefore removed all 175 repository-root
+`.tmp-*` items / 11,172,528,170 bytes, leaving zero matching paths.
