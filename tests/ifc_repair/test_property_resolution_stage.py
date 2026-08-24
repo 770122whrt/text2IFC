@@ -8,7 +8,10 @@ from typing import Any
 
 import pytest
 
-from text2ifc_agent.openai_compat import OpenAICompatError
+from text2ifc_agent.openai_compat import (
+    OpenAICompatError,
+    OpenAICompatibleLiveProvider,
+)
 from text2ifc_agent.providers import (
     LiveProviderResult,
     ProviderOutput,
@@ -160,6 +163,46 @@ class InjectedGenerateLiveProvider:
         )
 
 
+class FixtureDefaultOpenAIProvider(OpenAICompatibleLiveProvider):
+    """Network-free fixture preserving the production provider identity contract."""
+
+    def __init__(self, response: str) -> None:
+        self.response = response
+        self.calls: list[dict[str, Any]] = []
+        self.uses_default_sdk_client = True
+
+    def generate_live(self, **arguments):
+        self.calls.append(arguments)
+        output = ProviderOutput(
+            text=self.response,
+            metadata={
+                "provider": "fixture-openai-compatible",
+                "model": "fixture-reranker",
+                "evidence_class": "live",
+            },
+        )
+        return LiveProviderResult(
+            session_id=arguments["session_id"],
+            evidence_class="live",
+            http_status=200,
+            request={"fixture": True},
+            response={"fixture": True},
+            events=({"sequence": 0, "event": "fixture", "data": {}},),
+            output=output,
+        )
+
+
+class DelegatingProvider:
+    def __init__(self, provider: Any) -> None:
+        self.provider = provider
+
+    def provider_evidence_delegate(self) -> Any:
+        return self.provider
+
+    def generate_live(self, **arguments):
+        return self.provider.generate_live(**arguments)
+
+
 class IncompleteInjectedLiveProvider:
     def generate_live(self, **arguments):
         output = ProviderOutput(
@@ -215,6 +258,7 @@ def _json_text(document: dict[str, Any]) -> str:
 
 
 def test_confirmed_stage_is_separate_bounded_and_non_executable(tmp_path: Path) -> None:
+    module = _stage_module()
     selected = "candidate:1:ifc2x3:Pset_BeamCommon.LoadBearing"
     provider = CapturingProvider(
         [_json_text(_decision("confirmed", selected=selected))]
@@ -231,7 +275,8 @@ def test_confirmed_stage_is_separate_bounded_and_non_executable(tmp_path: Path) 
     assert call["session_id"] == (
         "ifc-property-resolution-run-1-operation-1-claim-1"
     )
-    assert call["state"] == {
+    state = call["state"]
+    assert state == {
         "run_id": "run-1",
         "request_id": "request-1",
         "model_id": "model-1",
@@ -240,7 +285,13 @@ def test_confirmed_stage_is_separate_bounded_and_non_executable(tmp_path: Path) 
         "stage": "ifc_property_resolution",
         "provider_call_ordinal": "property_resolution",
         "attempt": 1,
+        "template_id": module.TEMPLATE_ID,
+        "template_hash": state["template_hash"],
     }
+    hash_algorithm, hash_value = state["template_hash"].split(":", 1)
+    assert hash_algorithm == "sha256"
+    assert len(hash_value) == 64
+    int(hash_value, 16)
     assert call["schema"]["$id"] == (
         "text2ifc/ifc-property-rerank-decision/0.1"
     )
@@ -437,6 +488,23 @@ def test_injected_generate_live_transport_is_permanently_non_live(
     )
     assert metadata["evidence_class"] == "injected_offline"
     assert metadata["acceptance_eligible"] is False
+
+
+def test_live_evidence_eligibility_survives_a_general_provider_wrapper(
+    tmp_path: Path,
+) -> None:
+    selected = "candidate:1:ifc2x3:Pset_BeamCommon.LoadBearing"
+    provider = DelegatingProvider(
+        FixtureDefaultOpenAIProvider(
+            _json_text(_decision("confirmed", selected=selected))
+        )
+    )
+
+    result = _run(tmp_path, provider)
+
+    assert result["valid"] is True
+    assert result["evidence_class"] == "live"
+    assert result["acceptance_eligible"] is True
 
 
 def test_incomplete_live_response_is_preserved_and_rejected(tmp_path: Path) -> None:

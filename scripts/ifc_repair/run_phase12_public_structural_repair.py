@@ -423,7 +423,7 @@ def _bound_changeset(
     }
 
 
-def run_public_repair(
+def _run_public_repair_with_resolver(
     *,
     damaged_ifc: Path,
     public_request_bundle: Path,
@@ -651,6 +651,21 @@ def run_public_repair(
         }
     _write(output_root / "manifest.json", manifest)
     return manifest
+
+
+def run_public_repair(
+    *,
+    damaged_ifc: Path,
+    public_request_bundle: Path,
+    output_root: Path,
+) -> dict[str, Any]:
+    """Resolve, bind, apply, reopen and evaluate from public inputs only."""
+
+    return _run_public_repair_with_resolver(
+        damaged_ifc=damaged_ifc,
+        public_request_bundle=public_request_bundle,
+        output_root=output_root,
+    )
 
 
 def main(argv: list[str] | None = None) -> int:

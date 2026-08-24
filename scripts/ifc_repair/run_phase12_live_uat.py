@@ -43,11 +43,16 @@ from text2ifc_agent.openai_compat import (  # noqa: E402
     load_openai_compatible_config,
     load_openai_compatible_runtime_config,
 )
+from text2ifc_agent.prompt_registry import load_prompt_registry  # noqa: E402
 from text2ifc_agent.providers import (  # noqa: E402
     ProviderOutputError,
     redact_provider_payload,
 )
 from text2ifc_ifc_repair.api import RepairAPI  # noqa: E402
+from text2ifc_ifc_repair.prompt_profiles import select_prompt_profiles  # noqa: E402
+from text2ifc_ifc_repair.property_resolution_stage import (  # noqa: E402
+    TEMPLATE_ID as PROPERTY_RESOLUTION_TEMPLATE_ID,
+)
 from text2ifc_ifc_repair.repair_intent import (  # noqa: E402
     REPAIR_INTENT_SCHEMA_VERSION_0_8,
 )
@@ -63,6 +68,9 @@ DEFAULT_PROOF_ROOT = (
 SOURCE = (
     DEFAULT_PROOF_ROOT
     / "structural/batch/phase12-d7n-beam-column-atomic/damaged.ifc"
+)
+PROPERTY_RESOLUTION_TEMPLATE_HASH = str(
+    load_prompt_registry()[PROPERTY_RESOLUTION_TEMPLATE_ID]["sha256"]
 )
 FROZEN_SOURCE_SHA256 = (
     "sha256:25240558bcbe23c1bbf4916d0b9a0fbb"
@@ -96,15 +104,20 @@ COMPLETE_REQUEST = (
     "bearing, and state that the Column is load bearing."
 )
 CLARIFICATION_REQUEST = (
-    'On the IFC Building Storey named "Level 1", add one vertical rectangular '
-    "Column. The complete center axis, rectangular section dimensions, and "
-    "local width direction are not specified; do not infer them."
+    'On the IFC Building Storey named "Level 1", add one vertical straight '
+    "rectangular Column with center-axis base (120000, 120000, 0) mm and top "
+    "(120000, 120000, 6000) mm, a section 400 mm wide and 600 mm deep, and "
+    "local width direction (0, 1). Set its natural-language property "
+    '"load bearing status or external status" to true, but do not choose '
+    "between those two meanings without clarification."
 )
 CLARIFICATION_ANSWER = (
-    'Use a vertical Column on the IFC Building Storey named "Level 1". Its '
-    "center axis is base (120000, 120000, 0) mm to top "
-    "(120000, 120000, 6000) mm; its rectangular section is 400 mm wide and "
-    "600 mm deep, with local width direction (0, 1)."
+    "candidate:2:ifc2x3:Pset_ColumnCommon.LoadBearing"
+)
+WINDOW_SEMANTIC_REQUEST = (
+    'For the IfcWindow with GlobalId "1PkWQ2IbXBH9Ib7VGdBY7r", set '
+    "外窗=true on this occurrence only. Do not change its Type or any "
+    "other Window."
 )
 PROGRAM_GUARD_REQUEST = (
     'On the IFC Building Storey named "Level 1", add a straight rectangular '
@@ -117,7 +130,7 @@ PROGRAM_GUARD_REASON = "STRUCTURAL_ANALYSIS_UNSUPPORTED"
 class LiveCase:
     """One fixed public live case; intentionally simple for importlib seams."""
 
-    __slots__ = ("case_id", "request", "feedback")
+    __slots__ = ("case_id", "request", "feedback", "feedback_kind")
 
     def __init__(
         self,
@@ -125,12 +138,22 @@ class LiveCase:
         case_id: str,
         request: str,
         feedback: str | None = None,
+        feedback_kind: str | None = None,
     ) -> None:
         if not case_id or not request.strip():
             raise ValueError("LIVE_CASE_ID_AND_REQUEST_REQUIRED")
         self.case_id = case_id
         self.request = request
         self.feedback = feedback
+        if feedback is None:
+            if feedback_kind is not None:
+                raise ValueError("LIVE_CASE_FEEDBACK_KIND_WITHOUT_FEEDBACK")
+            self.feedback_kind = None
+        else:
+            resolved_kind = feedback_kind or "add_detail"
+            if resolved_kind not in {"add_detail", "select_candidate"}:
+                raise ValueError("LIVE_CASE_FEEDBACK_KIND_UNSUPPORTED")
+            self.feedback_kind = resolved_kind
 
 
 DEFAULT_CASES = (
@@ -139,13 +162,18 @@ DEFAULT_CASES = (
         case_id="clarification-resume",
         request=CLARIFICATION_REQUEST,
         feedback=CLARIFICATION_ANSWER,
+        feedback_kind="select_candidate",
+    ),
+    LiveCase(
+        case_id="window-semantic-canary",
+        request=WINDOW_SEMANTIC_REQUEST,
     ),
     LiveCase(case_id="program-guard", request=PROGRAM_GUARD_REQUEST),
 )
 REQUIRED_CASE_IDS = tuple(case.case_id for case in DEFAULT_CASES)
 FROZEN_CASE_MATRIX_SHA256 = (
-    "sha256:1b9b181f42ca9eccdda5cffac323cb5c"
-    "ec67633bf4859c1000e9f7324681fd2b"
+    "sha256:25061d1ae8840ff7b1ee6ec7a58cc46e"
+    "8767a2c830f6427dbbbd12e14bb061e4"
 )
 
 
@@ -190,6 +218,7 @@ def _case_matrix_sha256(cases: Sequence[LiveCase]) -> str:
                 "case_id": case.case_id,
                 "request": case.request,
                 "feedback": case.feedback,
+                "feedback_kind": case.feedback_kind,
             }
             for case in cases
         ]
@@ -327,7 +356,10 @@ def _prompt_identities(prompt: str) -> dict[str, list[str]]:
         "profile_ids": _unique_matches(
             r'"profile_id"\s*:\s*"([^"]+)"', prompt
         ),
-        "profile_versions": _unique_matches(
+        # Versions are positional identity fields. Multiple selected profiles
+        # commonly share one version (for example Beam + Column v0.3), so
+        # deduplicating them breaks alignment with profile_ids/profile_hashes.
+        "profile_versions": re.findall(
             r'"profile_version"\s*:\s*"([^"]+)"', prompt
         ),
         "profile_hashes": _unique_matches(
@@ -354,6 +386,8 @@ def _correction_reason(prompt: str, stage_attempt: int) -> str | None:
 
 def _stage_name(raw: Any) -> str:
     stage = str(raw)
+    if stage == "ifc_property_resolution":
+        return "property_resolution"
     if "intent" in stage:
         return "stage1"
     if "changeset" in stage:
@@ -378,6 +412,11 @@ class TranscriptProvider:
     def set_case(self, case_id: str) -> None:
         self._case_id = case_id
         self._lineage = "initial"
+
+    def provider_evidence_delegate(self) -> Any:
+        """Expose the actual transport through the general Provider evidence seam."""
+
+        return self._transport
 
     def set_lineage(self, lineage: str) -> None:
         if not self._case_id:
@@ -436,6 +475,7 @@ class TranscriptProvider:
                 response=response,
                 metadata=metadata,
                 prompt=prompt,
+                state=state,
                 error=type(error).__name__,
             )
             raise
@@ -453,6 +493,7 @@ class TranscriptProvider:
             response=getattr(live_result, "response", {}),
             metadata=metadata,
             prompt=prompt,
+            state=state,
             error=None,
         )
         return live_result
@@ -471,6 +512,7 @@ class TranscriptProvider:
         response: Any,
         metadata: Mapping[str, Any],
         prompt: str,
+        state: Mapping[str, Any],
         error: str | None,
     ) -> None:
         assert self._case_id is not None
@@ -488,6 +530,8 @@ class TranscriptProvider:
             usage = safe_response.get("usage")
         usage = dict(usage) if isinstance(usage, Mapping) else {}
         identities = _prompt_identities(prompt)
+        template_id = state.get("template_id")
+        template_hash = state.get("template_hash")
         normalized_evidence_class = str(evidence_class or "")
         fallback_flags = {
             mode.replace("-", "_"): normalized_evidence_class == mode
@@ -517,6 +561,12 @@ class TranscriptProvider:
             "response": safe_response,
             "metadata": safe_metadata,
             "error": error,
+            "template_id": (
+                str(template_id) if isinstance(template_id, str) else None
+            ),
+            "template_hash": (
+                str(template_hash) if isinstance(template_hash, str) else None
+            ),
             **identities,
         }
         self.attempts.append(record)
@@ -627,6 +677,59 @@ def _artifact_record(path: Path, *, root: Path) -> dict[str, Any]:
     }
 
 
+def _pytest_summary_counts(stdout: str) -> dict[str, int]:
+    return {
+        label: sum(
+            int(match)
+            for match in re.findall(rf"\b(\d+)\s+{label}\b", stdout)
+        )
+        for label in (
+            "passed",
+            "failed",
+            "errors",
+            "skipped",
+            "deselected",
+            "xfailed",
+            "xpassed",
+        )
+    }
+
+
+def _preflight_check_counts(
+    *,
+    name: str,
+    command: tuple[str, ...],
+    stdout: str,
+    execution_reason: str | None,
+) -> dict[str, int]:
+    skip_count = 0
+    substitution_count = 0
+    network_calls = 0
+    if name in {"focused", "full-suite"}:
+        pytest_counts = _pytest_summary_counts(stdout)
+        skip_count = pytest_counts["skipped"]
+        substitution_count = sum(
+            pytest_counts[key] for key in ("deselected", "xfailed", "xpassed")
+        )
+    elif name == "offline":
+        try:
+            output = Path(command[command.index("--output-root") + 1])
+            summary = _read_json(output / "run-summary.json")
+            property_resolution = summary.get("property_resolution")
+            if isinstance(property_resolution, Mapping):
+                network_calls = int(
+                    property_resolution.get("provider_network_calls", 0)
+                )
+        except (FileNotFoundError, TypeError, ValueError):
+            network_calls = 0
+    return {
+        "skip_count": skip_count,
+        "substitution_count": substitution_count,
+        "timeout_count": int(execution_reason == "COMMAND_TIMEOUT"),
+        "network_calls": network_calls,
+    }
+
+
 def _verify_preflight_semantics(
     *,
     name: str,
@@ -637,6 +740,16 @@ def _verify_preflight_semantics(
 ) -> tuple[str | None, list[Path]]:
     if int(completed.returncode) != 0:
         return f"COMMAND_EXIT_{completed.returncode}", []
+    if name in {"focused", "full-suite"}:
+        counts = _pytest_summary_counts(str(completed.stdout or ""))
+        if counts["passed"] < 1:
+            return "PYTEST_SUMMARY_MISSING", []
+        if counts["failed"] or counts["errors"]:
+            return "PYTEST_FAILURES_PRESENT", []
+        if counts["skipped"]:
+            return "PYTEST_SKIPS_PRESENT", []
+        if any(counts[key] for key in ("deselected", "xfailed", "xpassed")):
+            return "PYTEST_SUBSTITUTIONS_PRESENT", []
     if name == "offline":
         output = Path(command[command.index("--output-root") + 1])
         summary_path = output / "run-summary.json"
@@ -653,6 +766,16 @@ def _verify_preflight_semantics(
             or summary.get("matrix_complete") is not True
         ):
             return "OFFLINE_MATRIX_NOT_GREEN", [summary_path]
+        property_resolution = summary.get("property_resolution")
+        if (
+            not isinstance(property_resolution, Mapping)
+            or not isinstance(
+                property_resolution.get("provider_network_calls"), int
+            )
+        ):
+            return "OFFLINE_PROVIDER_NETWORK_ACCOUNTING_MISSING", [summary_path]
+        if int(property_resolution["provider_network_calls"]) != 0:
+            return "OFFLINE_PROVIDER_NETWORK_CALLS_NONZERO", [summary_path]
         return None, [summary_path]
     if name == "proof":
         try:
@@ -668,7 +791,7 @@ def _verify_preflight_semantics(
         valid = (
             isinstance(proof, Mapping)
             and proof.get("schema_version")
-            == "text2ifc/ifc-repair-proof-validation/0.1"
+            == "text2ifc/ifc-repair-proof-validation/0.2"
             and proof.get("status") == "passed"
             and proof.get("errors") == []
             and all(int(proof.get(key, 0)) > 0 for key in required_counts)
@@ -752,13 +875,26 @@ def run_preflight(
                 _artifact_record(path, root=preflight_root)
                 for path in artifact_paths
             ],
+            **_preflight_check_counts(
+                name=name,
+                command=command,
+                stdout=stdout,
+                execution_reason=execution_reason,
+            ),
         }
         record["result_sha256"] = _canonical_sha256(record)
         checks.append(record)
     status = "passed" if all(item["status"] == "passed" for item in checks) else "failed"
     result = {
-        "schema_version": "text2ifc/phase12-live-preflight/0.1",
+        "schema_version": "text2ifc/phase12-live-preflight/0.2",
         "status": status,
+        "failure_count": sum(item["status"] != "passed" for item in checks),
+        "skip_count": sum(int(item["skip_count"]) for item in checks),
+        "substitution_count": sum(
+            int(item["substitution_count"]) for item in checks
+        ),
+        "timeout_count": sum(int(item["timeout_count"]) for item in checks),
+        "network_calls": sum(int(item["network_calls"]) for item in checks),
         "checks": checks,
     }
     result["evidence_sha256"] = _canonical_sha256(result)
@@ -912,16 +1048,23 @@ def _production_case_executor(
     case: LiveCase,
     provider: TranscriptProvider,
     case_root: Path,
+    *,
+    property_knowledge_runtime: Any | None = None,
 ) -> dict[str, Any]:
     runtime = case_root / "runtime"
     source_sha256_before = _path_sha256(SOURCE)
     if source_sha256_before != FROZEN_SOURCE_SHA256:
         raise ValueError("LIVE_SOURCE_HASH_MISMATCH")
+    knowledge_runtime = (
+        create_default_property_runtime()
+        if property_knowledge_runtime is None
+        else property_knowledge_runtime
+    )
     api = RepairAPI(
         runtime,
         provider=provider,
         intent_schema_version=REPAIR_INTENT_SCHEMA_VERSION_0_8,
-        property_knowledge_runtime=create_default_property_runtime(),
+        property_knowledge_runtime=knowledge_runtime,
     )
     provider.set_lineage("initial")
     initial = api.start(SOURCE, case.request)
@@ -940,9 +1083,18 @@ def _production_case_executor(
     answer_applied = False
     if case.feedback is not None and clarification is not None:
         provider.set_lineage("clarification-resume")
+        if case.feedback_kind == "select_candidate":
+            answer = {
+                "kind": "select_candidate",
+                "candidate_token": case.feedback,
+            }
+        elif case.feedback_kind == "add_detail":
+            answer = {"kind": "add_detail", "detail": case.feedback}
+        else:
+            raise ValueError("LIVE_CASE_FEEDBACK_KIND_REQUIRED")
         final = api.continue_with_answer(
             initial.run_id,
-            {"kind": "add_detail", "detail": case.feedback},
+            answer,
             clarification_id=clarification.clarification_id,
             expected_state_version=initial.state_version,
         )
@@ -989,7 +1141,7 @@ def _production_case_executor(
 
 
 def _counts(attempts: Iterable[Mapping[str, Any]]) -> dict[str, int]:
-    result = {"stage1": 0, "stage2": 0}
+    result = {"stage1": 0, "property_resolution": 0, "stage2": 0}
     for attempt in attempts:
         stage = str(attempt.get("stage"))
         if stage in result:
@@ -1017,7 +1169,16 @@ def _live_attempt_evidence_pass(
             return False
         if not isinstance(fallback_flags, Mapping):
             return False
-        if (
+        stage = attempt.get("stage")
+        if stage == "property_resolution":
+            template_id = attempt.get("template_id")
+            template_hash = attempt.get("template_hash")
+            if (
+                template_id != PROPERTY_RESOLUTION_TEMPLATE_ID
+                or template_hash != PROPERTY_RESOLUTION_TEMPLATE_HASH
+            ):
+                return False
+        elif (
             not isinstance(profile_ids, list)
             or not profile_ids
             or not isinstance(profile_versions, list)
@@ -1026,13 +1187,29 @@ def _live_attempt_evidence_pass(
             or not profile_hashes
         ):
             return False
-        if attempt.get("stage") == "stage2" and (
-            not isinstance(few_shot_ids, list)
-            or not few_shot_ids
-            or not isinstance(few_shot_hashes, list)
-            or not few_shot_hashes
-        ):
-            return False
+        if stage == "stage2":
+            if not isinstance(few_shot_ids, list) or not isinstance(
+                few_shot_hashes, list
+            ):
+                return False
+            try:
+                expected_selection = select_prompt_profiles(
+                    list(map(str, profile_ids))
+                ).to_dict()
+            except (KeyError, TypeError, ValueError):
+                return False
+            expected_versions = [
+                str(profile["profile_version"])
+                for profile in expected_selection["profiles"]
+            ]
+            if (
+                profile_ids != expected_selection["profile_ids"]
+                or profile_versions != expected_versions
+                or profile_hashes != expected_selection["profile_hashes"]
+                or few_shot_ids != expected_selection["few_shot_ids"]
+                or few_shot_hashes != expected_selection["few_shot_hashes"]
+            ):
+                return False
         if (
             attempt.get("evidence_class") != LIVE_EVIDENCE_MODE
             or metadata.get("evidence_class") != LIVE_EVIDENCE_MODE
@@ -1074,8 +1251,9 @@ def _case_contract_pass(
         return (
             final.get("status") == "succeeded"
             and published
-            and counts.get("stage1", 0) >= 1
-            and counts.get("stage2", 0) >= 1
+            and counts.get("stage1", 0) == 1
+            and counts.get("property_resolution", 0) == 2
+            and counts.get("stage2", 0) == 1
             and strict_ok
         )
     if case.case_id == "clarification-resume":
@@ -1108,10 +1286,31 @@ def _case_contract_pass(
             final.get("status") == "succeeded"
             and published
             and final.get("clarification_answer_applied") is True
-            and counts.get("stage1") == 2
+            and counts.get("stage1") == 1
+            and counts.get("property_resolution") == 1
             and counts.get("stage2") == 1
             and strict_ok
             and initial_stop_ok
+            and clarification.get("reason_code") == "property_resolution"
+            and clarification.get("answer_modes")
+            == ["select_candidate", "cancel"]
+        )
+    if case.case_id == "window-semantic-canary":
+        strict = final.get("strict_reopen_verification")
+        strict_ok = (
+            isinstance(strict, Mapping)
+            and strict.get("status") == "passed"
+            and strict.get("l0_pass") is True
+            and strict.get("l1_pass") is True
+            and strict.get("l2_pass") is True
+        )
+        return (
+            final.get("status") == "succeeded"
+            and published
+            and counts.get("stage1") == 1
+            and counts.get("property_resolution") == 1
+            and counts.get("stage2") == 1
+            and strict_ok
         )
     if case.case_id == "program-guard":
         guard = final.get("program_guard_evidence")
@@ -1130,10 +1329,11 @@ def _case_contract_pass(
             and final.get("reason_code") == PROGRAM_GUARD_REASON
             and not published
             and counts.get("stage1") == 1
+            and counts.get("property_resolution") == 0
             and counts.get("stage2") == 0
             and guard_ok
         )
-    return True
+    return False
 
 
 def _base_result(*, evidence_mode: str) -> dict[str, Any]:
@@ -1146,7 +1346,11 @@ def _base_result(*, evidence_mode: str) -> dict[str, Any]:
             "max_completion_tokens": TOKEN_GUARD,
         },
         "transport_calls": 0,
-        "transport_calls_by_stage": {"stage1": 0, "stage2": 0},
+        "transport_calls_by_stage": {
+            "stage1": 0,
+            "property_resolution": 0,
+            "stage2": 0,
+        },
         "provider_models": [],
         "cases": [],
     }
@@ -1242,7 +1446,11 @@ def run_live_uat(
                 "reason_code": None,
                 "evidence_mode": "not_run",
                 "transport_calls": 0,
-                "transport_calls_by_stage": {"stage1": 0, "stage2": 0},
+                "transport_calls_by_stage": {
+                    "stage1": 0,
+                    "property_resolution": 0,
+                    "stage2": 0,
+                },
                 "provider_models": [],
                 "cases": [],
             }

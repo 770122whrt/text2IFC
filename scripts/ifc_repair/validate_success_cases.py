@@ -19,6 +19,8 @@ from typing import Any, Iterable, Mapping
 
 import ifcopenshell
 import ifcopenshell.util.element
+from jsonschema import Draft202012Validator
+from text2ifc_agent.prompt_registry import load_prompt_registry
 
 try:
     from scripts.ifc_repair.audit_door_repair_triplet import (
@@ -50,6 +52,9 @@ from text2ifc_ifc_repair.prompt_profiles import (
 from text2ifc_ifc_repair.production_evidence import build_production_evidence
 from text2ifc_ifc_repair.property_admissibility import admit_property_decision
 from text2ifc_ifc_repair.property_intent import NaturalLanguagePropertyIntent
+from text2ifc_ifc_repair.property_resolution_stage import (
+    TEMPLATE_ID as PROPERTY_RESOLUTION_TEMPLATE_ID,
+)
 from text2ifc_ifc_repair.repair_intent import RepairIntent
 from text2ifc_ifc_repair.resolution_flow import resolve_repair_intent
 from text2ifc_ifc_repair.run_models import hash_json
@@ -70,6 +75,9 @@ from text2ifc_knowledge.registry import load_ifc2x3_registry
 
 
 ROOT = Path(__file__).resolve().parents[2]
+PROPERTY_RESOLUTION_TEMPLATE_HASH = str(
+    load_prompt_registry()[PROPERTY_RESOLUTION_TEMPLATE_ID]["sha256"]
+)
 DEFAULT_COLLECTION = (
     ROOT / "dataset" / "processed" / "proof" / "ifc-repair-success-cases"
 )
@@ -180,7 +188,7 @@ class ProofValidationResult:
 
     def to_dict(self) -> dict[str, Any]:
         return {
-            "schema_version": "text2ifc/ifc-repair-proof-validation/0.1",
+            "schema_version": "text2ifc/ifc-repair-proof-validation/0.2",
             "status": self.status,
             "collection_root": self.collection_root,
             "case_count": self.case_count,
@@ -199,6 +207,17 @@ class ProofValidationResult:
             "limitations": self.limitations,
             "cases": self.cases,
         }
+
+
+PROOF_VALIDATION_SCHEMA = (
+    ROOT / "schemas/agent/ifc-repair-proof-validation-0.2.schema.json"
+)
+
+
+def validate_proof_validation_document(document: Mapping[str, Any]) -> None:
+    schema = _read_json(PROOF_VALIDATION_SCHEMA)
+    Draft202012Validator.check_schema(schema)
+    Draft202012Validator(schema).validate(dict(document))
 
 
 def validate_success_case_collection(
@@ -410,7 +429,10 @@ def _validate_case(root: Path, case: Mapping[str, Any]) -> dict[str, Any]:
     elif has_structural_operations:
         raise ValueError("l0.structural.no-fallback:source_run_manifest_missing")
 
-    live_authority: dict[str, Any] = {}
+    live_authority = _unrecomputed_property_authority(
+        intent=intent,
+        roles=roles,
+    )
     if has_structural_operations:
         if intent is None:
             raise ValueError("l0.structural.provenance:intent_missing")
@@ -759,17 +781,12 @@ def audit_repaired_operations(
 
 
 def _occurrence_role(definition: Any) -> str:
-    expected_scope = f"{definition.evaluation_policy.semantic_role}_occurrence"
-    matches = [
-        role
-        for role, scope in definition.semantic_scope_roles.items()
-        if scope == expected_scope
-    ]
-    if len(matches) != 1:
+    semantic_role = str(definition.evaluation_policy.semantic_role)
+    if semantic_role not in definition.semantic_scope_roles:
         raise ValueError(
             f"independent audit occurrence role unresolved: {definition.operation_type}"
         )
-    return str(matches[0])
+    return semantic_role
 
 
 def _application_role_id(changes: Mapping[str, Any], role: str) -> str:
@@ -1219,9 +1236,51 @@ class _RetainedStage15PropertyResolver:
             operation_id=operation_id,
             claim_id=claim_id,
         )
+        user_result_path = claim_root / "decision-result-user.json"
+        if user_result_path.resolve() in self.artifacts:
+            provider_admission_path = self._require_listed(
+                claim_root / "admissibility-provider.json"
+            )
+            provider_admission = admit_property_decision(
+                query=query_document,
+                candidate_set=candidate_set,
+                decision=decision,
+                decision_trace=trace,
+                policy=self.policy,
+                records=self.records,
+                registry=self.registry,
+                claim=claim,
+                project_length_unit=query.project_length_unit,
+            )
+            if (
+                provider_admission.status != "clarification_required"
+                or provider_admission.exact_intent is not None
+                or provider_admission.to_dict()
+                != _read_json(provider_admission_path)
+            ):
+                raise ValueError(
+                    "l0.structural.provenance:property_provider_clarification_replay"
+                )
+            provider_conflicts = decision.get("conflicting_candidate_ids")
+            decision, trace = self._user_decision(
+                claim_root=claim_root,
+                operation_id=operation_id,
+                claim_id=claim_id,
+                query_document=query_document,
+                candidate_set=candidate_set,
+                provider_conflicts=provider_conflicts,
+            )
+            admission_names = ("admissibility-user.json",)
+            exact_names = ("exact-intent-user.json",)
+        else:
+            admission_names = (
+                "admissibility-provider.json",
+                "admissibility.json",
+            )
+            exact_names = ("exact-intent-provider.json", "exact-intent.json")
         admission_path = self._one_existing_listed(
             claim_root,
-            ("admissibility-provider.json", "admissibility.json"),
+            admission_names,
             "property_admissibility_missing",
         )
         retained_admission = _read_json(admission_path)
@@ -1246,7 +1305,7 @@ class _RetainedStage15PropertyResolver:
             )
         exact_paths = [
             path
-            for name in ("exact-intent-provider.json", "exact-intent.json")
+            for name in exact_names
             if (path := claim_root / name).resolve() in self.artifacts
         ]
         if len(exact_paths) > 1:
@@ -1274,6 +1333,118 @@ class _RetainedStage15PropertyResolver:
             # executable authority and is deliberately not hash-gated here.
             candidates=(),
         )
+
+    def _user_decision(
+        self,
+        *,
+        claim_root: Path,
+        operation_id: str,
+        claim_id: str,
+        query_document: Mapping[str, Any],
+        candidate_set: Mapping[str, Any],
+        provider_conflicts: Any,
+    ) -> tuple[dict[str, Any], dict[str, Any]]:
+        result = _read_json(
+            self._require_listed(claim_root / "decision-result-user.json")
+        )
+        decision = result.get("decision")
+        trace = result.get("trace")
+        if not isinstance(decision, dict) or not isinstance(trace, dict):
+            raise ValueError(
+                "l0.structural.provenance:property_user_decision_binding"
+            )
+        selected = str(decision.get("selected_candidate_id") or "")
+        offered = {
+            str(item.get("candidate_id") or "")
+            for item in candidate_set.get("candidates", ())
+            if isinstance(item, Mapping)
+        }
+        conflicts = {
+            str(item) for item in provider_conflicts
+        } if isinstance(provider_conflicts, list) else set()
+        if (
+            result.get("valid") is not True
+            or result.get("classification") != "confirmed"
+            or result.get("evidence_class") != "public_user_answer"
+            or result.get("acceptance_eligible") is not False
+            or result.get("attempts") != []
+            or decision.get("decision") != "confirmed"
+            or not selected
+            or selected not in offered
+            or selected not in conflicts
+            or decision.get("conflicting_candidate_ids") != []
+            or decision.get("clarification_question") is not None
+            or trace.get("status") != "valid"
+            or trace.get("evidence_class") != "public_user_answer"
+            or trace.get("operation_id") != operation_id
+            or trace.get("claim_id") != claim_id
+            or trace.get("query_id") != query_document.get("query_id")
+            or trace.get("candidate_set_id")
+            != candidate_set.get("candidate_set_id")
+        ):
+            raise ValueError(
+                "l0.structural.provenance:property_user_decision_binding"
+            )
+        self._validate_user_answer_transition(
+            operation_id=operation_id,
+            claim_id=claim_id,
+            selected_candidate_id=selected,
+        )
+        return decision, trace
+
+    def _validate_user_answer_transition(
+        self,
+        *,
+        operation_id: str,
+        claim_id: str,
+        selected_candidate_id: str,
+    ) -> None:
+        state_paths = [
+            path for path in self.artifacts if path.name == "state.json"
+        ]
+        if len(state_paths) != 1:
+            raise ValueError(
+                "l0.structural.provenance:property_user_answer_binding"
+            )
+        transitions = _read_json(state_paths[0]).get("transitions")
+        if not isinstance(transitions, list):
+            raise ValueError(
+                "l0.structural.provenance:property_user_answer_binding"
+            )
+        clarifications = [
+            item.get("clarification")
+            for item in transitions
+            if isinstance(item, Mapping)
+            and isinstance(item.get("clarification"), Mapping)
+            and item["clarification"].get("reason_code")
+            == "property_resolution"
+            and item["clarification"].get("operation_id") == operation_id
+            and item["clarification"].get("claim_id") == claim_id
+        ]
+        answers = [
+            item.get("answer")
+            for item in transitions
+            if isinstance(item, Mapping)
+            and item.get("from_stage") == "clarification_required"
+            and isinstance(item.get("answer"), Mapping)
+            and item["answer"].get("kind") == "select_candidate"
+            and item["answer"].get("candidate_token")
+            == selected_candidate_id
+        ]
+        offered_tokens = {
+            str(candidate.get("token") or "")
+            for clarification in clarifications
+            for candidate in clarification.get("candidates", ())
+            if isinstance(candidate, Mapping)
+        }
+        if (
+            len(clarifications) != 1
+            or len(answers) != 1
+            or selected_candidate_id not in offered_tokens
+        ):
+            raise ValueError(
+                "l0.structural.provenance:property_user_answer_binding"
+            )
 
     def _query_for_claim(
         self,
@@ -1402,6 +1573,39 @@ def _natural_property_claim_count(intent: Mapping[str, Any]) -> int:
         if isinstance(claim, Mapping)
         and claim.get("intent_kind") == "natural_language_property"
     )
+
+
+def _unrecomputed_property_authority(
+    *,
+    intent: Mapping[str, Any] | None,
+    roles: Mapping[str, Path],
+) -> dict[str, Any]:
+    """Classify cases that have not passed strict Stage 1.5 replay."""
+
+    property_claim_count = _natural_property_claim_count(intent or {})
+    reason_codes: set[str] = set()
+    if property_claim_count:
+        resolution_path = roles.get("deterministic_target_resolution")
+        if resolution_path is not None:
+            retained_resolution = _read_json(resolution_path)
+            reason_codes = {
+                str(item.get("decision", {}).get("reason_code") or "")
+                for item in retained_resolution.get("property_resolutions", ())
+                if isinstance(item, Mapping)
+                and isinstance(item.get("decision"), Mapping)
+                and item.get("decision", {}).get("reason_code")
+            }
+    return {
+        "property_authority_coverage": (
+            "historical_property_artifact_only"
+            if property_claim_count
+            else "not_applicable"
+        ),
+        "property_claim_count": property_claim_count,
+        "property_reason_codes": sorted(reason_codes),
+        "historical_alias_present": HISTORICAL_ALIAS_REASON in reason_codes,
+        "current_property_acceptance_eligible": property_claim_count == 0,
+    }
 
 
 def _without_property_candidate_observability(
@@ -2133,17 +2337,37 @@ def _audit_live_transcript_authority(
     for attempt in result_case.get("attempts", ()):
         if not isinstance(attempt, Mapping):
             raise ValueError("l0.structural.live:attempt_profile_binding")
-        expected_attempt = (
-            expected_stage1
-            if attempt.get("stage") == "stage1"
-            else {
+        stage = attempt.get("stage")
+        if stage == "property_resolution":
+            if (
+                attempt.get("template_id") != PROPERTY_RESOLUTION_TEMPLATE_ID
+                or attempt.get("template_hash")
+                != PROPERTY_RESOLUTION_TEMPLATE_HASH
+                or any(
+                    attempt.get(key) not in (None, [])
+                    for key in (
+                        "profile_ids",
+                        "profile_versions",
+                        "profile_hashes",
+                        "few_shot_ids",
+                        "few_shot_hashes",
+                    )
+                )
+            ):
+                raise ValueError("l0.structural.live:attempt_template_binding")
+            continue
+        if stage == "stage1":
+            expected_attempt = expected_stage1
+        elif stage == "stage2":
+            expected_attempt = {
                 "profile_ids": expected_selection["profile_ids"],
                 "profile_versions": expected_versions,
                 "profile_hashes": expected_selection["profile_hashes"],
                 "few_shot_ids": expected_selection["few_shot_ids"],
                 "few_shot_hashes": expected_selection["few_shot_hashes"],
             }
-        )
+        else:
+            raise ValueError("l0.structural.live:attempt_profile_binding")
         if any(
             attempt.get(key) != value
             for key, value in expected_attempt.items()
@@ -3262,8 +3486,10 @@ def main(argv: Iterable[str] | None = None) -> int:
     parser.add_argument("--json", action="store_true", dest="as_json")
     args = parser.parse_args(argv)
     result = validate_success_case_collection(args.collection_root)
+    document = result.to_dict()
+    validate_proof_validation_document(document)
     if args.as_json:
-        print(json.dumps(result.to_dict(), ensure_ascii=False, indent=2))
+        print(json.dumps(document, ensure_ascii=False, indent=2))
     else:
         print(
             f"status={result.status} cases={result.case_count} "

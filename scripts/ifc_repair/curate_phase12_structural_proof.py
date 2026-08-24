@@ -17,10 +17,14 @@ import ifcopenshell
 
 try:
     from scripts.ifc_repair.validate_success_cases import (
+        validate_proof_validation_document,
         validate_success_case_collection,
     )
 except ModuleNotFoundError:  # Direct execution from scripts/ifc_repair.
-    from validate_success_cases import validate_success_case_collection
+    from validate_success_cases import (
+        validate_proof_validation_document,
+        validate_success_case_collection,
+    )
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -32,6 +36,20 @@ SCOPE_SENTENCE = (
     "Cross-scene, same-family BIMNet evidence only; "
     "not cross-dataset generalization."
 )
+
+
+def _property_authority_eligible(case: Mapping[str, Any]) -> bool:
+    claim_count = int(case.get("property_claim_count", -1))
+    expected_coverage = (
+        "strict_stage_1_5_recomputed"
+        if claim_count > 0
+        else "not_applicable"
+    )
+    return (
+        claim_count >= 0
+        and case.get("property_authority_coverage") == expected_coverage
+        and case.get("current_property_acceptance_eligible") is True
+    )
 SUCCESS_CASE_IDS = frozenset(
     {
         "phase12-d7n-beam-loadbearing",
@@ -619,6 +637,7 @@ def curate(
 
         _write(stage_root / "manifest.json", _candidate_manifest(entries))
         validation = validate_success_case_collection(stage_root)
+        validate_proof_validation_document(validation.to_dict())
         if validation.status != "passed":
             raise ValueError(
                 "PHASE12_CANDIDATE_VALIDATION_FAILED:"
@@ -626,12 +645,7 @@ def curate(
             )
         if validation.independently_recomputed_case_count != len(entries):
             raise ValueError("PHASE12_CANDIDATE_NOT_FULLY_RECOMPUTED")
-        if any(
-            item.get("property_authority_coverage")
-            not in {"strict_stage_1_5_recomputed", "not_applicable"}
-            or item.get("current_property_acceptance_eligible") is not True
-            for item in validation.cases
-        ):
+        if any(not _property_authority_eligible(item) for item in validation.cases):
             raise ValueError("PHASE12_CANDIDATE_PROPERTY_AUTHORITY_INELIGIBLE")
 
         collection_manifest_path = collection_root / "manifest.json"
@@ -693,6 +707,7 @@ def curate(
             _write_atomic(collection_manifest_path, collection)
             _write_atomic(readme_path, readme)
             final_validation = validate_success_case_collection(collection_root)
+            validate_proof_validation_document(final_validation.to_dict())
             if final_validation.status != "passed":
                 raise ValueError(
                     "PHASE12_FINAL_COLLECTION_VALIDATION_FAILED:"
@@ -710,14 +725,9 @@ def curate(
             ):
                 raise ValueError("PHASE12_FINAL_CASE_NOT_STRICTLY_RECOMPUTED")
             if any(
-                validated_by_id.get(entry["case_id"], {}).get(
-                    "property_authority_coverage"
+                not _property_authority_eligible(
+                    validated_by_id.get(entry["case_id"], {})
                 )
-                not in {"strict_stage_1_5_recomputed", "not_applicable"}
-                or validated_by_id.get(entry["case_id"], {}).get(
-                    "current_property_acceptance_eligible"
-                )
-                is not True
                 for entry in entries
             ):
                 raise ValueError("PHASE12_FINAL_PROPERTY_AUTHORITY_INELIGIBLE")

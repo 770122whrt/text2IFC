@@ -76,7 +76,7 @@ from scripts.ifc_repair.run_phase12_public_structural_repair import (  # noqa: E
     _build_authority,
     _intent_document,
     _production_evidence_document,
-    run_public_repair,
+    _run_public_repair_with_resolver as run_public_repair,
 )
 
 

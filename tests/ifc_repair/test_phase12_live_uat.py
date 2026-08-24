@@ -16,8 +16,13 @@ from text2ifc_agent.openai_compat import (
     OpenAICompatibleLiveProvider,
     OpenAICompatRuntimeConfig,
 )
+from text2ifc_agent.prompt_registry import load_prompt_registry
 from text2ifc_agent.providers import LiveProviderResult, ProviderOutput
 from scripts.ifc_repair.run_phase12_live_uat import DEFAULT_CASES as FROZEN_LIVE_CASES
+from text2ifc_ifc_repair.prompt_profiles import select_prompt_profiles
+from tests.ifc_repair.test_property_resolution_family_e2e import (
+    _runtime as _offline_property_runtime,
+)
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -25,6 +30,9 @@ SCRIPT = ROOT / "scripts/ifc_repair/run_phase12_live_uat.py"
 CURATOR_SCRIPT = ROOT / "scripts/ifc_repair/curate_phase12_live_proof.py"
 HASH_A = "sha256:" + "a" * 64
 HASH_B = "sha256:" + "b" * 64
+STAGE15_TEMPLATE_HASH = load_prompt_registry()[
+    "ifc-property-resolution.v0.1"
+]["sha256"]
 STAGE1_COMPACT_PROFILE_IDS = {
     "beam.add.v0.3",
     "column.add.v0.3",
@@ -160,6 +168,7 @@ def _structural_intent_operation(
     parameters: dict[str, Any],
     excerpt: str,
     load_bearing: bool = False,
+    property_phrase: str | None = None,
 ) -> dict[str, Any]:
     source = _public_source(excerpt)
     properties = []
@@ -172,6 +181,17 @@ def _structural_intent_operation(
                 "raw_unit": None,
                 "scope": "occurrence_direct",
                 "source": _public_source(f"{family} is load bearing"),
+            }
+        )
+    if property_phrase is not None:
+        properties.append(
+            {
+                "intent_kind": "natural_language_property",
+                "property_phrase": property_phrase,
+                "raw_value": True,
+                "raw_unit": None,
+                "scope": "occurrence_direct",
+                "source": _public_source(property_phrase),
             }
         )
     return {
@@ -221,6 +241,14 @@ def _prompt_json(prompt: str, heading: str) -> Any:
     return value
 
 
+def _labeled_prompt_json(prompt: str, label: str) -> Any:
+    marker = f"{label}:"
+    start = prompt.index(marker) + len(marker)
+    payload = prompt[start:].lstrip()
+    value, _end = json.JSONDecoder().raw_decode(payload)
+    return value
+
+
 class _ProductionPathTransport(_MockTransport):
     """Mock only the external Provider transport; exercise the real API."""
 
@@ -238,6 +266,8 @@ class _ProductionPathTransport(_MockTransport):
         stage = str(state["stage"])
         if stage == "ifc_repair_intent":
             content = self._intent_response(prompt)
+        elif stage == "ifc_property_resolution":
+            content = self._property_resolution_response(prompt)
         elif stage == "ifc_repair_bound_changeset":
             content = self._changeset_response(prompt)
         else:
@@ -249,6 +279,51 @@ class _ProductionPathTransport(_MockTransport):
             schema=schema,
             state=state,
         )
+
+    @staticmethod
+    def _property_resolution_response(prompt: str) -> dict[str, Any]:
+        query = _labeled_prompt_json(prompt, "PROPERTY_QUERY")
+        candidate_set = _labeled_prompt_json(prompt, "CANDIDATE_SET")
+        phrase = str(query["property_phrase"]).casefold()
+        if (
+            "load bearing" in phrase
+            and "external" in phrase
+        ):
+            conflicts = [
+                item["candidate_id"]
+                for item in candidate_set["candidates"]
+                if str(item["canonical_path"]).endswith(
+                    (".LoadBearing", ".IsExternal")
+                )
+            ]
+            assert len(conflicts) == 2
+            return {
+                "schema_version": "text2ifc/ifc-property-rerank-decision/0.1",
+                "decision": "clarification_required",
+                "selected_candidate_id": None,
+                "conflicting_candidate_ids": conflicts,
+                "clarification_question": (
+                    "Do you mean load-bearing status or external status?"
+                ),
+            }
+        if "load bearing" in phrase:
+            suffix = ".LoadBearing"
+        elif "外窗" in phrase or "external" in phrase:
+            suffix = ".IsExternal"
+        else:
+            raise AssertionError(f"unexpected property phrase: {phrase}")
+        selected = next(
+            item
+            for item in candidate_set["candidates"]
+            if str(item["canonical_path"]).endswith(suffix)
+        )
+        return {
+            "schema_version": "text2ifc/ifc-property-rerank-decision/0.1",
+            "decision": "confirmed",
+            "selected_candidate_id": selected["candidate_id"],
+            "conflicting_candidate_ids": [],
+            "clarification_question": None,
+        }
 
     @staticmethod
     def _intent_response(prompt: str) -> dict[str, Any]:
@@ -279,8 +354,11 @@ class _ProductionPathTransport(_MockTransport):
                     }
                 ],
             )
-        if "(120000, 120000, 6000)" in prompt:
-            excerpt = "vertical Column on Level 1 with complete axis and section"
+        if "load bearing status or external status" in lowered:
+            excerpt = (
+                "vertical Column on Level 1 with complete geometry and "
+                "load bearing status or external status"
+            )
             column = _structural_intent_operation(
                 operation_id="live-clarification-column-1",
                 family="column",
@@ -297,17 +375,45 @@ class _ProductionPathTransport(_MockTransport):
                     },
                 },
                 excerpt=excerpt,
+                property_phrase="load bearing status or external status",
             )
             return _intent_body(column, excerpt=excerpt)
-        if "complete center axis" in lowered:
-            excerpt = "add a Column on Level 1 without axis or section facts"
-            column = _structural_intent_operation(
-                operation_id="live-clarification-column-1",
-                family="column",
-                parameters={},
-                excerpt=excerpt,
-            )
-            return _intent_body(column, excerpt=excerpt)
+        if "外窗=true" in public_request:
+            excerpt = "set 外窗=true on the selected Window occurrence"
+            source = _public_source(excerpt)
+            operation = {
+                "operation_id": "live-window-property-1",
+                "operation_type": "set_occurrence_properties",
+                "routing_intent": {
+                    "component_family": "occurrence",
+                    "action": "set_properties",
+                    "operation_profile": "occurrence.set-properties",
+                    "source": source,
+                },
+                "target_query": {
+                    "schema_version": "text2ifc/ifc-target-query/0.1",
+                    "allowed_ifc_classes": ["IfcWindow"],
+                    "global_id": "1PkWQ2IbXBH9Ib7VGdBY7r",
+                },
+                "parameters": {},
+                "attribute_intents": [],
+                "property_intents": [
+                    {
+                        "intent_kind": "natural_language_property",
+                        "property_phrase": "外窗",
+                        "raw_value": True,
+                        "raw_unit": None,
+                        "scope": "occurrence_direct",
+                        "source": _public_source("外窗=true"),
+                    }
+                ],
+                "semantic_bundle_refs": [],
+                "quantity_intents": [],
+                "occurrence_reuse_intent": None,
+                "prototype_intent": None,
+                "provenance": [source],
+            }
+            return _intent_body(operation, excerpt=excerpt)
         if "beam is load bearing" in lowered:
             excerpt = "create Beam and Column; beam is load bearing; column is load bearing"
             beam = _structural_intent_operation(
@@ -358,11 +464,16 @@ class _ProductionPathTransport(_MockTransport):
         for operation_id, operation in projection["operations"].items():
             target_id = str(operation["target_global_id"])
             operation_evidence = list(operation["evidence_pointers"])
+            target_key = (
+                "element_global_id"
+                if operation["operation_type"] == "set_occurrence_properties"
+                else "storey_global_id"
+            )
             operations.append(
                 {
                     "operation_id": operation_id,
                     "operation_type": operation["operation_type"],
-                    "target": {"storey_global_id": target_id},
+                    "target": {target_key: target_id},
                     "parameters": operation["parameters"],
                     "evidence_refs": operation_evidence,
                 }
@@ -438,6 +549,9 @@ class _GreenCommandRunner:
                         "schema_version": "text2ifc/phase12-offline-matrix/0.1",
                         "status": "passed",
                         "matrix_complete": True,
+                        "property_resolution": {
+                            "provider_network_calls": 0,
+                        },
                     },
                     sort_keys=True,
                 ),
@@ -446,7 +560,7 @@ class _GreenCommandRunner:
         if name == "proof":
             stdout = json.dumps(
                 {
-                    "schema_version": "text2ifc/ifc-repair-proof-validation/0.1",
+                    "schema_version": "text2ifc/ifc-repair-proof-validation/0.2",
                     "status": "passed",
                     "case_count": 22,
                     "operation_count": 57,
@@ -459,7 +573,12 @@ class _GreenCommandRunner:
             if self.forge == "proof":
                 stdout = '{"status":"passed"}'
             return subprocess.CompletedProcess(command, 0, stdout, "")
-        return subprocess.CompletedProcess(command, 0, f"{name} passed", "")
+        stdout = (
+            "1 passed in 0.01s"
+            if name in {"focused", "full-suite"}
+            else f"{name} passed"
+        )
+        return subprocess.CompletedProcess(command, 0, stdout, "")
 
 
 def _proof_root(tmp_path: Path) -> Path:
@@ -526,6 +645,85 @@ def _run(
         proof_root=_proof_root(tmp_path),
         evidence_mode=evidence_mode,
     )
+
+
+def _stage2_profile_prompt(case_id: str) -> str:
+    profile_ids = {
+        "complete": ["beam.add.v0.3", "column.add.v0.3"],
+        "clarification-resume": ["column.add.v0.3"],
+        "window-semantic-canary": ["occurrence.set-properties"],
+    }[case_id]
+    selection = select_prompt_profiles(profile_ids).to_dict()
+    return json.dumps(
+        {
+            "selected_profiles": [
+                {
+                    "profile_id": profile["profile_id"],
+                    "profile_version": profile["profile_version"],
+                    "profile_hash": profile["profile_hash"],
+                }
+                for profile in selection["profiles"]
+            ],
+            "few_shots": [
+                {"example_id": example_id, "example_hash": example_hash}
+                for example_id, example_hash in zip(
+                    selection["few_shot_ids"],
+                    selection["few_shot_hashes"],
+                    strict=True,
+                )
+            ],
+        },
+        sort_keys=True,
+    )
+
+
+def _record_frozen_contract_attempts(provider: Any, case_id: str) -> None:
+    def call(stage: str, *, property_template: bool = False) -> None:
+        provider.generate_live(
+            session_id=f"mock-{case_id}-{stage}",
+            prompt=(
+                "PROPERTY_RESOLUTION_INPUT={}"
+                if property_template
+                else (
+                    _stage2_profile_prompt(case_id)
+                    if stage == "ifc_repair_bound_changeset"
+                    else PROFILE_PROMPT
+                )
+            ),
+            schema={"type": "object"},
+            state={
+                "stage": stage,
+                "attempt": 1,
+                **(
+                    {
+                        "template_id": "ifc-property-resolution.v0.1",
+                        "template_hash": STAGE15_TEMPLATE_HASH,
+                    }
+                    if property_template
+                    else {}
+                ),
+            },
+        )
+
+    provider.set_lineage("initial")
+    call("ifc_repair_intent")
+    if case_id == "program-guard":
+        return
+    call("ifc_property_resolution", property_template=True)
+    if case_id == "complete":
+        call("ifc_property_resolution", property_template=True)
+    if case_id == "clarification-resume":
+        provider.set_lineage("clarification-resume")
+    call("ifc_repair_bound_changeset")
+
+
+def _valid_property_clarification() -> dict[str, Any]:
+    return {
+        "clarification_id": "clarification-001",
+        "reason_code": "property_resolution",
+        "question": "Select the intended IFC property.",
+        "answer_modes": ["select_candidate", "cancel"],
+    }
 
 
 def test_cli_accepts_the_frozen_deepseek_provider_key(
@@ -677,10 +875,9 @@ def test_fixed_live_requests_have_exact_public_structural_authority() -> None:
     assert 'Storey named "Level 1"' in module.CLARIFICATION_REQUEST
     assert "center axis is base" not in module.CLARIFICATION_REQUEST
     assert 'Storey named "Level 1"' in module.PROGRAM_GUARD_REQUEST
-    assert 'Storey named "Level 1"' in module.CLARIFICATION_ANSWER
-    assert "(120000, 120000, 0)" in module.CLARIFICATION_ANSWER
-    assert "(120000, 120000, 6000)" in module.CLARIFICATION_ANSWER
-    assert "400 mm wide and 600 mm deep" in module.CLARIFICATION_ANSWER
+    assert module.CLARIFICATION_ANSWER == (
+        "candidate:2:ifc2x3:Pset_ColumnCommon.LoadBearing"
+    )
 
 
 def test_live_runner_uses_only_the_curated_public_damaged_d7n_input() -> None:
@@ -707,12 +904,31 @@ def test_fixed_live_matrix_is_bound_to_an_independent_reviewed_digest() -> None:
     module = _module()
 
     assert module.FROZEN_CASE_MATRIX_SHA256 == (
-        "sha256:1b9b181f42ca9eccdda5cffac323cb5c"
-        "ec67633bf4859c1000e9f7324681fd2b"
+        "sha256:25061d1ae8840ff7b1ee6ec7a58cc46e"
+        "8767a2c830f6427dbbbd12e14bb061e4"
     )
     assert module._case_matrix_sha256(module.DEFAULT_CASES) == (
         module.FROZEN_CASE_MATRIX_SHA256
     )
+
+
+def test_fixed_live_matrix_covers_property_clarification_window_and_guard() -> None:
+    module = _module()
+    by_id = {case.case_id: case for case in module.DEFAULT_CASES}
+
+    assert list(by_id) == [
+        "complete",
+        "clarification-resume",
+        "window-semantic-canary",
+        "program-guard",
+    ]
+    clarification = by_id["clarification-resume"]
+    assert "load bearing status or external status" in clarification.request
+    assert clarification.feedback_kind == "select_candidate"
+    assert clarification.feedback.endswith("Pset_ColumnCommon.LoadBearing")
+    window = by_id["window-semantic-canary"]
+    assert "外窗=true" in window.request
+    assert "1PkWQ2IbXBH9Ib7VGdBY7r" in window.request
 
 
 def test_live_runner_cannot_claim_independent_proof_before_plan_12_14(
@@ -720,16 +936,8 @@ def test_live_runner_cannot_claim_independent_proof_before_plan_12_14(
 ) -> None:
     module = _module()
     transport = _MockTransport(
-        [{"content": {"ok": True}} for _ in range(6)]
+        [{"content": {"ok": True}} for _ in range(11)]
     )
-
-    def call(provider: Any, *, stage: str) -> None:
-        provider.generate_live(
-            session_id=f"mock-{stage}",
-            prompt=PROFILE_PROMPT,
-            schema={"type": "object"},
-            state={"stage": stage, "attempt": 1},
-        )
 
     strict = {
         "status": "passed",
@@ -740,12 +948,8 @@ def test_live_runner_cannot_claim_independent_proof_before_plan_12_14(
     }
 
     def executor(case: Any, provider: Any, _case_root: Path) -> dict[str, Any]:
-        call(provider, stage="ifc_repair_intent")
-        if case.case_id == "clarification-resume":
-            provider.set_lineage("clarification-resume")
-            call(provider, stage="ifc_repair_intent")
+        _record_frozen_contract_attempts(provider, case.case_id)
         if case.case_id != "program-guard":
-            call(provider, stage="ifc_repair_bound_changeset")
             result = {
                 "status": "succeeded",
                 "complete_repair_success": True,
@@ -765,9 +969,9 @@ def test_live_runner_cannot_claim_independent_proof_before_plan_12_14(
                         },
                         "clarification": {
                             "clarification_id": "clarification-001",
-                            "reason_code": "STRUCTURAL_REQUIRED_FIELDS_MISSING",
-                            "question": "Provide the grouped structural details.",
-                            "answer_modes": ["add_detail"],
+                            "reason_code": "property_resolution",
+                            "question": "Select the intended IFC property.",
+                            "answer_modes": ["select_candidate", "cancel"],
                         },
                     }
                 )
@@ -812,6 +1016,7 @@ def test_complete_transport_drives_the_real_repair_api_and_reopens_ifc2x3(
         case,
         provider,
         tmp_path / "complete",
+        property_knowledge_runtime=_offline_property_runtime(),
     )
 
     assert final["status"] == "succeeded", (
@@ -832,15 +1037,21 @@ def test_complete_transport_drives_the_real_repair_api_and_reopens_ifc2x3(
     ] == "pending_plan_12_14"
     assert [item["stage"] for item in provider.attempts] == [
         "stage1",
+        "property_resolution",
+        "property_resolution",
         "stage2",
     ]
     assert set(provider.attempts[0]["profile_ids"]) == STAGE1_COMPACT_PROFILE_IDS
     assert provider.attempts[0]["few_shot_ids"] == []
-    assert set(provider.attempts[1]["profile_ids"]) == {
+    assert provider.attempts[1]["template_id"] == "ifc-property-resolution.v0.1"
+    assert provider.attempts[1]["template_hash"].startswith("sha256:")
+    assert provider.attempts[2]["template_id"] == "ifc-property-resolution.v0.1"
+    assert provider.attempts[2]["template_hash"].startswith("sha256:")
+    assert set(provider.attempts[3]["profile_ids"]) == {
         "beam.add.v0.3",
         "column.add.v0.3",
     }
-    assert set(provider.attempts[1]["few_shot_ids"]) == {
+    assert set(provider.attempts[3]["few_shot_ids"]) == {
         "beam.add.v0.3.complete",
         "beam.add.v0.3.clarification",
         "beam.add.v0.3.type-reuse",
@@ -881,12 +1092,13 @@ def test_clarification_transport_drives_real_api_resume_and_publication(
         case,
         provider,
         tmp_path / "clarification",
+        property_knowledge_runtime=_offline_property_runtime(),
     )
 
     assert final["initial"]["status"] == "clarification_required"
     assert final["initial"]["successful_artifact_publishable"] is False
-    assert final["clarification"]["reason_code"] == "missing_required_parameter"
-    assert final["clarification"]["answer_modes"] == ["add_detail", "cancel"]
+    assert final["clarification"]["reason_code"] == "property_resolution"
+    assert final["clarification"]["answer_modes"] == ["select_candidate", "cancel"]
     assert final["clarification_answer_applied"] is True
     assert final["status"] == "succeeded", (
         final["status"],
@@ -895,13 +1107,47 @@ def test_clarification_transport_drives_real_api_resume_and_publication(
     assert final["strict_reopen_verification"]["operation_count"] == 1
     assert [item["stage"] for item in provider.attempts] == [
         "stage1",
-        "stage1",
+        "property_resolution",
         "stage2",
     ]
     assert [item["lineage"] for item in provider.attempts] == [
         "initial",
+        "initial",
         "clarification-resume",
-        "clarification-resume",
+    ]
+
+
+def test_window_semantic_canary_drives_vector_stage15_stage2_and_reopen(
+    tmp_path: Path,
+) -> None:
+    module = _module()
+    transport = _ProductionPathTransport()
+    provider = module.TranscriptProvider(transport)
+    case = next(
+        item
+        for item in module.DEFAULT_CASES
+        if item.case_id == "window-semantic-canary"
+    )
+    provider.set_case(case.case_id)
+
+    final = module._production_case_executor(
+        case,
+        provider,
+        tmp_path / "window",
+        property_knowledge_runtime=_offline_property_runtime(),
+    )
+
+    assert final["status"] == "succeeded", (
+        final["status"],
+        final["reason_code"],
+        final.get("clarification"),
+    )
+    assert final["strict_reopen_verification"]["status"] == "passed"
+    assert final["strict_reopen_verification"]["operation_count"] == 1
+    assert [item["stage"] for item in provider.attempts] == [
+        "stage1",
+        "property_resolution",
+        "stage2",
     ]
 
 
@@ -911,13 +1157,16 @@ def test_program_guard_transport_stops_real_api_before_stage2_or_mutation(
     module = _module()
     transport = _ProductionPathTransport()
     provider = module.TranscriptProvider(transport)
-    case = module.DEFAULT_CASES[2]
+    case = next(
+        item for item in module.DEFAULT_CASES if item.case_id == "program-guard"
+    )
     provider.set_case(case.case_id)
 
     final = module._production_case_executor(
         case,
         provider,
         tmp_path / "guard",
+        property_knowledge_runtime=_offline_property_runtime(),
     )
 
     assert final["status"] == "unsupported", (
@@ -1309,6 +1558,25 @@ def test_green_preflight_binds_commands_results_and_artifact_hashes(
     )
 
     checks = result["preflight"]["checks"]
+    assert result["preflight"]["schema_version"] == (
+        "text2ifc/phase12-live-preflight/0.2"
+    )
+    assert {
+        key: result["preflight"][key]
+        for key in (
+            "failure_count",
+            "skip_count",
+            "substitution_count",
+            "timeout_count",
+            "network_calls",
+        )
+    } == {
+        "failure_count": 0,
+        "skip_count": 0,
+        "substitution_count": 0,
+        "timeout_count": 0,
+        "network_calls": 0,
+    }
     assert [item["name"] for item in checks] == [
         "focused",
         "offline",
@@ -1334,6 +1602,72 @@ def test_green_preflight_binds_commands_results_and_artifact_hashes(
     assert result["status"] == "blocked"
     assert result["reason_code"] == "LIVE_CASE_MATRIX_REQUIRED"
     assert result["transport_calls"] == 0
+
+
+@pytest.mark.parametrize(
+    ("defect", "failed_gate", "reason_code", "count_key"),
+    (
+        ("skip", "focused", "PYTEST_SKIPS_PRESENT", "skip_count"),
+        (
+            "substitution",
+            "full-suite",
+            "PYTEST_SUBSTITUTIONS_PRESENT",
+            "substitution_count",
+        ),
+        (
+            "network",
+            "offline",
+            "OFFLINE_PROVIDER_NETWORK_CALLS_NONZERO",
+            "network_calls",
+        ),
+    ),
+)
+def test_preflight_rejects_skip_substitution_or_network_usage(
+    tmp_path: Path,
+    defect: str,
+    failed_gate: str,
+    reason_code: str,
+    count_key: str,
+) -> None:
+    module = _module()
+    base = _GreenCommandRunner()
+
+    def runner(
+        command: tuple[str, ...],
+        *,
+        cwd: Path,
+    ) -> subprocess.CompletedProcess[str]:
+        completed = base(command, cwd=cwd)
+        name = base._name(command)
+        if defect == "skip" and name == "focused":
+            return subprocess.CompletedProcess(
+                command, 0, "1 passed, 1 skipped in 0.01s", ""
+            )
+        if defect == "substitution" and name == "full-suite":
+            return subprocess.CompletedProcess(
+                command, 0, "1 passed, 1 deselected in 0.01s", ""
+            )
+        if defect == "network" and name == "offline":
+            output = Path(command[command.index("--output-root") + 1])
+            summary_path = output / "run-summary.json"
+            summary = json.loads(summary_path.read_text(encoding="utf-8"))
+            summary["property_resolution"] = {"provider_network_calls": 1}
+            summary_path.write_text(
+                json.dumps(summary, sort_keys=True),
+                encoding="utf-8",
+            )
+        return completed
+
+    preflight = module.run_preflight(
+        tmp_path / "preflight",
+        proof_root=_proof_root(tmp_path),
+        command_runner=runner,
+    )
+    checks = {item["name"]: item for item in preflight["checks"]}
+
+    assert preflight["status"] == "failed"
+    assert checks[failed_gate]["reason_code"] == reason_code
+    assert preflight[count_key] == 1
 
 
 def test_green_preflight_rejects_a_partial_or_substituted_live_matrix(
@@ -1585,18 +1919,10 @@ def test_non_genuine_or_private_transport_cannot_pass_as_live(
 ) -> None:
     module = _module()
     transport = _MockTransport(
-        [{"content": {"ok": True}} for _ in range(6)],
+        [{"content": {"ok": True}} for _ in range(11)],
         evidence_class=evidence_class,
         include_private_gold=include_private_gold,
     )
-
-    def call(provider: Any, *, stage: str) -> None:
-        provider.generate_live(
-            session_id=f"mock-{stage}",
-            prompt=PROFILE_PROMPT,
-            schema={"type": "object"},
-            state={"stage": stage, "attempt": 1},
-        )
 
     strict = {
         "status": "passed",
@@ -1606,12 +1932,8 @@ def test_non_genuine_or_private_transport_cannot_pass_as_live(
     }
 
     def executor(case: Any, provider: Any, _case_root: Path) -> dict[str, Any]:
-        call(provider, stage="ifc_repair_intent")
-        if case.case_id == "clarification-resume":
-            provider.set_lineage("clarification-resume")
-            call(provider, stage="ifc_repair_intent")
+        _record_frozen_contract_attempts(provider, case.case_id)
         if case.case_id != "program-guard":
-            call(provider, stage="ifc_repair_bound_changeset")
             final = {
                 "status": "succeeded",
                 "complete_repair_success": True,
@@ -1629,12 +1951,7 @@ def test_non_genuine_or_private_transport_cannot_pass_as_live(
                             "complete_repair_success": False,
                             "successful_artifact_publishable": False,
                         },
-                        "clarification": {
-                            "clarification_id": "clarification-001",
-                            "reason_code": "STRUCTURAL_REQUIRED_FIELDS_MISSING",
-                            "question": "Provide the grouped structural details.",
-                            "answer_modes": ["add_detail"],
-                        },
+                        "clarification": _valid_property_clarification(),
                     }
                 )
             return final
@@ -1652,11 +1969,7 @@ def test_non_genuine_or_private_transport_cannot_pass_as_live(
         transport=transport,
         runner=_GreenCommandRunner(),
         executor=executor,
-        cases=(
-            _case(module, "complete"),
-            _case(module, "clarification-resume"),
-            _case(module, "program-guard"),
-        ),
+        cases=module.DEFAULT_CASES,
     )
 
     assert result["status"] == "failed"
@@ -1664,7 +1977,7 @@ def test_non_genuine_or_private_transport_cannot_pass_as_live(
     assert [
         case["attempts"][0].get("evidence_class")
         for case in result["cases"]
-    ] == [evidence_class, evidence_class, evidence_class]
+    ] == [evidence_class, evidence_class, evidence_class, evidence_class]
     if include_private_gold:
         assert all(
             case["attempts"][0]["private_evidence_detected"] is True
@@ -1681,24 +1994,12 @@ def test_published_case_without_strict_reopen_evidence_cannot_pass(
 ) -> None:
     module = _module()
     transport = _MockTransport(
-        [{"content": {"ok": True}} for _ in range(6)]
+        [{"content": {"ok": True}} for _ in range(11)]
     )
 
-    def call(provider: Any, *, stage: str) -> None:
-        provider.generate_live(
-            session_id=f"mock-{stage}",
-            prompt=PROFILE_PROMPT,
-            schema={"type": "object"},
-            state={"stage": stage, "attempt": 1},
-        )
-
     def executor(case: Any, provider: Any, _case_root: Path) -> dict[str, Any]:
-        call(provider, stage="ifc_repair_intent")
-        if case.case_id == "clarification-resume":
-            provider.set_lineage("clarification-resume")
-            call(provider, stage="ifc_repair_intent")
+        _record_frozen_contract_attempts(provider, case.case_id)
         if case.case_id != "program-guard":
-            call(provider, stage="ifc_repair_bound_changeset")
             return {
                 "status": "succeeded",
                 "complete_repair_success": True,
@@ -1721,17 +2022,14 @@ def test_published_case_without_strict_reopen_evidence_cannot_pass(
         transport=transport,
         runner=_GreenCommandRunner(),
         executor=executor,
-        cases=(
-            _case(module, "complete"),
-            _case(module, "clarification-resume"),
-            _case(module, "program-guard"),
-        ),
+        cases=module.DEFAULT_CASES,
     )
 
     by_case = {item["case_id"]: item for item in result["cases"]}
     assert result["status"] == "failed"
     assert by_case["complete"]["contract_pass"] is False
     assert by_case["clarification-resume"]["contract_pass"] is False
+    assert by_case["window-semantic-canary"]["contract_pass"] is False
     assert by_case["program-guard"]["contract_pass"] is True
 
 
@@ -1740,16 +2038,8 @@ def test_clarification_success_requires_the_initial_grouped_stop(
 ) -> None:
     module = _module()
     transport = _MockTransport(
-        [{"content": {"ok": True}} for _ in range(6)]
+        [{"content": {"ok": True}} for _ in range(11)]
     )
-
-    def call(provider: Any, *, stage: str) -> None:
-        provider.generate_live(
-            session_id=f"mock-{stage}",
-            prompt=PROFILE_PROMPT,
-            schema={"type": "object"},
-            state={"stage": stage, "attempt": 1},
-        )
 
     strict = {
         "status": "passed",
@@ -1759,12 +2049,8 @@ def test_clarification_success_requires_the_initial_grouped_stop(
     }
 
     def executor(case: Any, provider: Any, _case_root: Path) -> dict[str, Any]:
-        call(provider, stage="ifc_repair_intent")
-        if case.case_id == "clarification-resume":
-            provider.set_lineage("clarification-resume")
-            call(provider, stage="ifc_repair_intent")
+        _record_frozen_contract_attempts(provider, case.case_id)
         if case.case_id != "program-guard":
-            call(provider, stage="ifc_repair_bound_changeset")
             final = {
                 "status": "succeeded",
                 "complete_repair_success": True,
@@ -1800,17 +2086,14 @@ def test_clarification_success_requires_the_initial_grouped_stop(
         transport=transport,
         runner=_GreenCommandRunner(),
         executor=executor,
-        cases=(
-            _case(module, "complete"),
-            _case(module, "clarification-resume"),
-            _case(module, "program-guard"),
-        ),
+        cases=module.DEFAULT_CASES,
     )
 
     by_case = {item["case_id"]: item for item in result["cases"]}
     assert result["status"] == "failed"
     assert by_case["complete"]["contract_pass"] is True
     assert by_case["clarification-resume"]["contract_pass"] is False
+    assert by_case["window-semantic-canary"]["contract_pass"] is True
     assert by_case["program-guard"]["contract_pass"] is True
 
 
@@ -1819,16 +2102,8 @@ def test_program_guard_requires_the_frozen_capability_reason(
 ) -> None:
     module = _module()
     transport = _MockTransport(
-        [{"content": {"ok": True}} for _ in range(6)]
+        [{"content": {"ok": True}} for _ in range(11)]
     )
-
-    def call(provider: Any, *, stage: str) -> None:
-        provider.generate_live(
-            session_id=f"mock-{stage}",
-            prompt=PROFILE_PROMPT,
-            schema={"type": "object"},
-            state={"stage": stage, "attempt": 1},
-        )
 
     strict = {
         "status": "passed",
@@ -1836,20 +2111,11 @@ def test_program_guard_requires_the_frozen_capability_reason(
         "l1_pass": True,
         "l2_pass": True,
     }
-    clarification = {
-        "clarification_id": "clarification-001",
-        "reason_code": "STRUCTURAL_REQUIRED_FIELDS_MISSING",
-        "question": "Provide the grouped structural details.",
-        "answer_modes": ["add_detail"],
-    }
+    clarification = _valid_property_clarification()
 
     def executor(case: Any, provider: Any, _case_root: Path) -> dict[str, Any]:
-        call(provider, stage="ifc_repair_intent")
-        if case.case_id == "clarification-resume":
-            provider.set_lineage("clarification-resume")
-            call(provider, stage="ifc_repair_intent")
+        _record_frozen_contract_attempts(provider, case.case_id)
         if case.case_id != "program-guard":
-            call(provider, stage="ifc_repair_bound_changeset")
             final = {
                 "status": "succeeded",
                 "complete_repair_success": True,
@@ -1884,17 +2150,14 @@ def test_program_guard_requires_the_frozen_capability_reason(
         transport=transport,
         runner=_GreenCommandRunner(),
         executor=executor,
-        cases=(
-            _case(module, "complete"),
-            _case(module, "clarification-resume"),
-            _case(module, "program-guard"),
-        ),
+        cases=module.DEFAULT_CASES,
     )
 
     by_case = {item["case_id"]: item for item in result["cases"]}
     assert result["status"] == "failed"
     assert by_case["complete"]["contract_pass"] is True
     assert by_case["clarification-resume"]["contract_pass"] is True
+    assert by_case["window-semantic-canary"]["contract_pass"] is True
     assert by_case["program-guard"]["contract_pass"] is False
 
 
@@ -1914,16 +2177,8 @@ def test_program_guard_requires_source_bound_zero_mutation_evidence(
 ) -> None:
     module = _module()
     transport = _MockTransport(
-        [{"content": {"ok": True}} for _ in range(6)]
+        [{"content": {"ok": True}} for _ in range(11)]
     )
-
-    def call(provider: Any, *, stage: str) -> None:
-        provider.generate_live(
-            session_id=f"mock-{stage}",
-            prompt=PROFILE_PROMPT,
-            schema={"type": "object"},
-            state={"stage": stage, "attempt": 1},
-        )
 
     strict = {
         "status": "passed",
@@ -1931,20 +2186,11 @@ def test_program_guard_requires_source_bound_zero_mutation_evidence(
         "l1_pass": True,
         "l2_pass": True,
     }
-    clarification = {
-        "clarification_id": "clarification-001",
-        "reason_code": "STRUCTURAL_REQUIRED_FIELDS_MISSING",
-        "question": "Provide the grouped structural details.",
-        "answer_modes": ["add_detail"],
-    }
+    clarification = _valid_property_clarification()
 
     def executor(case: Any, provider: Any, _case_root: Path) -> dict[str, Any]:
-        call(provider, stage="ifc_repair_intent")
-        if case.case_id == "clarification-resume":
-            provider.set_lineage("clarification-resume")
-            call(provider, stage="ifc_repair_intent")
+        _record_frozen_contract_attempts(provider, case.case_id)
         if case.case_id != "program-guard":
-            call(provider, stage="ifc_repair_bound_changeset")
             final = {
                 "status": "succeeded",
                 "complete_repair_success": True,
@@ -1991,36 +2237,25 @@ def test_program_guard_requires_source_bound_zero_mutation_evidence(
     assert by_case["program-guard"]["contract_pass"] is False
 
 
-def test_complete_clarification_resume_and_program_guard_have_exact_lineage(
+def test_frozen_live_cases_have_exact_three_stage_lineage(
     tmp_path: Path,
 ) -> None:
     module = _module()
     transport = _MockTransport(
         [
             {"content": {"operations": [{"beam_start": [0, 0, 0]}]}},
-            {"content": {"operations": [{"axis": {"start": {}, "end": {}}}]}},
-            {"content": {"operations": [{"beam_axis": "noncanonical"}]}},
-            {"content": {"operations": [{"parameters": {"axis": {}}}]}},
-            {"content": {"classification": "clarification_required"}},
+            {"content": {"selected_candidate_id": "beam-property"}},
+            {"content": {"selected_candidate_id": "column-property"}},
+            {"content": {"operations": [{"beam_axis": "canonical"}]}},
             {"content": {"classification": "repair_intent"}},
-            {"content": {"schema_version": "canonical-draft"}},
+            {"content": {"selected_candidate_id": None}},
+            {"content": {"schema_version": "canonical-column-draft"}},
+            {"content": {"classification": "window-property-intent"}},
+            {"content": {"selected_candidate_id": "window-property"}},
+            {"content": {"schema_version": "canonical-window-draft"}},
             {"content": {"classification": "unsupported"}},
         ]
     )
-
-    def call(
-        provider: Any,
-        *,
-        stage: str,
-        attempt: int,
-        prompt: str,
-    ) -> Any:
-        return provider.generate_live(
-            session_id=f"mock-{stage}",
-            prompt=prompt,
-            schema={"type": "object"},
-            state={"stage": stage, "attempt": attempt},
-        )
 
     strict = {
         "status": "passed",
@@ -2030,61 +2265,8 @@ def test_complete_clarification_resume_and_program_guard_have_exact_lineage(
     }
 
     def executor(case: Any, provider: Any, _case_root: Path) -> dict[str, Any]:
-        if case.case_id == "complete":
-            provider.set_lineage("initial")
-            call(provider, stage="ifc_repair_intent", attempt=1, prompt=PROFILE_PROMPT)
-            call(
-                provider,
-                stage="ifc_repair_intent",
-                attempt=2,
-                prompt=(
-                    PROFILE_PROMPT
-                    + '\nVALIDATION_FEEDBACK=[{"code":"REPAIR_INTENT_SCHEMA_INVALID"}]'
-                ),
-            )
-            call(provider, stage="ifc_repair_bound_changeset", attempt=1, prompt=PROFILE_PROMPT)
-            call(
-                provider,
-                stage="ifc_repair_bound_changeset",
-                attempt=2,
-                prompt=(
-                    PROFILE_PROMPT
-                    + '\nVALIDATION_FEEDBACK=[{"code":"DRAFT_SCHEMA_INVALID"}]'
-                ),
-            )
-            return {
-                "status": "succeeded",
-                "complete_repair_success": True,
-                "successful_artifact_publishable": True,
-                "strict_reopen_verification": strict,
-            }
-        if case.case_id == "clarification-resume":
-            provider.set_lineage("initial")
-            call(provider, stage="ifc_repair_intent", attempt=1, prompt=PROFILE_PROMPT)
-            provider.set_lineage("clarification-resume")
-            call(provider, stage="ifc_repair_intent", attempt=1, prompt=PROFILE_PROMPT)
-            call(provider, stage="ifc_repair_bound_changeset", attempt=1, prompt=PROFILE_PROMPT)
-            return {
-                "status": "succeeded",
-                "complete_repair_success": True,
-                "successful_artifact_publishable": True,
-                "clarification_answer_applied": True,
-                "strict_reopen_verification": strict,
-                "initial": {
-                    "status": "clarification_required",
-                    "complete_repair_success": False,
-                    "successful_artifact_publishable": False,
-                },
-                "clarification": {
-                    "clarification_id": "clarification-001",
-                    "reason_code": "STRUCTURAL_REQUIRED_FIELDS_MISSING",
-                    "question": "Provide the grouped structural details.",
-                    "answer_modes": ["add_detail"],
-                },
-            }
+        _record_frozen_contract_attempts(provider, case.case_id)
         if case.case_id == "program-guard":
-            provider.set_lineage("initial")
-            call(provider, stage="ifc_repair_intent", attempt=1, prompt=PROFILE_PROMPT)
             return {
                 "status": "unsupported",
                 "reason_code": module.PROGRAM_GUARD_REASON,
@@ -2092,7 +2274,27 @@ def test_complete_clarification_resume_and_program_guard_have_exact_lineage(
                 "successful_artifact_publishable": False,
                 "program_guard_evidence": _guard_evidence(module),
             }
-        raise AssertionError(case.case_id)
+        final = {
+            "status": "succeeded",
+            "complete_repair_success": True,
+            "successful_artifact_publishable": True,
+            "clarification_answer_applied": (
+                case.case_id == "clarification-resume"
+            ),
+            "strict_reopen_verification": strict,
+        }
+        if case.case_id == "clarification-resume":
+            final.update(
+                {
+                    "initial": {
+                        "status": "clarification_required",
+                        "complete_repair_success": False,
+                        "successful_artifact_publishable": False,
+                    },
+                    "clarification": _valid_property_clarification(),
+                }
+            )
+        return final
 
     result = _run(
         module,
@@ -2100,44 +2302,48 @@ def test_complete_clarification_resume_and_program_guard_have_exact_lineage(
         transport=transport,
         runner=_GreenCommandRunner(),
         executor=executor,
-        cases=(
-            _case(module, "complete"),
-            _case(module, "clarification-resume"),
-            _case(module, "program-guard"),
-        ),
+        cases=module.DEFAULT_CASES,
     )
 
     assert result["status"] == "test_passed"
     assert result["execution_mode"] == "test_injected"
     assert result["acceptance_eligible"] is False
-    assert result["transport_calls"] == 8
-    assert result["transport_calls_by_stage"] == {"stage1": 5, "stage2": 3}
+    assert result["transport_calls"] == 11
+    assert result["transport_calls_by_stage"] == {
+        "stage1": 4,
+        "property_resolution": 4,
+        "stage2": 3,
+    }
     by_case = {item["case_id"]: item for item in result["cases"]}
     assert by_case["complete"]["transport_calls_by_stage"] == {
-        "stage1": 2,
-        "stage2": 2,
+        "stage1": 1,
+        "property_resolution": 2,
+        "stage2": 1,
     }
     assert by_case["clarification-resume"]["transport_calls_by_stage"] == {
-        "stage1": 2,
+        "stage1": 1,
+        "property_resolution": 1,
+        "stage2": 1,
+    }
+    assert by_case["window-semantic-canary"]["transport_calls_by_stage"] == {
+        "stage1": 1,
+        "property_resolution": 1,
         "stage2": 1,
     }
     assert by_case["program-guard"]["transport_calls_by_stage"] == {
         "stage1": 1,
+        "property_resolution": 0,
         "stage2": 0,
     }
 
     complete_attempts = by_case["complete"]["attempts"]
     assert [item["stage"] for item in complete_attempts] == [
         "stage1",
-        "stage1",
-        "stage2",
+        "property_resolution",
+        "property_resolution",
         "stage2",
     ]
-    assert [item["ordinal"] for item in complete_attempts] == [1, 2, 1, 2]
-    assert complete_attempts[1]["correction_reason"] == (
-        "REPAIR_INTENT_SCHEMA_INVALID"
-    )
-    assert complete_attempts[3]["correction_reason"] == "DRAFT_SCHEMA_INVALID"
+    assert [item["ordinal"] for item in complete_attempts] == [1, 1, 2, 1]
     assert complete_attempts[0]["parent_attempt_id"] is None
     assert all(
         item["parent_attempt_id"] == complete_attempts[index - 1]["attempt_id"]
@@ -2147,14 +2353,19 @@ def test_complete_clarification_resume_and_program_guard_have_exact_lineage(
     resumed = by_case["clarification-resume"]["attempts"]
     assert [item["lineage"] for item in resumed] == [
         "initial",
-        "clarification-resume",
+        "initial",
         "clarification-resume",
     ]
     assert resumed[1]["parent_attempt_id"] == resumed[0]["attempt_id"]
 
     assert complete_attempts[0]["response"]["content"].find("beam_start") >= 0
     assert "\"axis\"" not in complete_attempts[0]["response"]["content"]
-    assert complete_attempts[2]["response"]["content"].find("beam_axis") >= 0
+    assert complete_attempts[3]["response"]["content"].find("beam_axis") >= 0
+    assert complete_attempts[1]["template_id"] == (
+        "ifc-property-resolution.v0.1"
+    )
+    assert complete_attempts[1]["template_hash"] == STAGE15_TEMPLATE_HASH
+    assert complete_attempts[1]["profile_ids"] == []
     assert complete_attempts[0]["provider"] == "mock-deepseek"
     assert complete_attempts[0]["model"] == "mock-reasoner"
     assert complete_attempts[0]["usage"]["prompt_tokens"] == 101
@@ -2204,13 +2415,31 @@ def _curation_attempt(
     selected_profiles = {
         "complete": ["beam.add.v0.3", "column.add.v0.3"],
         "clarification-resume": ["column.add.v0.3"],
+        "window-semantic-canary": ["occurrence.set-properties"],
         "program-guard": ["beam.add.v0.3"],
     }[case_id]
-    profiles = (
-        sorted(STAGE1_COMPACT_PROFILE_IDS)
-        if stage == "stage1"
-        else selected_profiles
-    )
+    if stage == "stage1":
+        profiles = sorted(STAGE1_COMPACT_PROFILE_IDS)
+        profile_versions = ["0.2" for _profile in profiles]
+        profile_hashes = [HASH_A for _profile in profiles]
+        few_shot_ids: list[str] = []
+        few_shot_hashes: list[str] = []
+    elif stage == "stage2":
+        selection = select_prompt_profiles(selected_profiles).to_dict()
+        profiles = selection["profile_ids"]
+        profile_versions = [
+            str(profile["profile_version"])
+            for profile in selection["profiles"]
+        ]
+        profile_hashes = selection["profile_hashes"]
+        few_shot_ids = selection["few_shot_ids"]
+        few_shot_hashes = selection["few_shot_hashes"]
+    else:
+        profiles = []
+        profile_versions = []
+        profile_hashes = []
+        few_shot_ids = []
+        few_shot_hashes = []
     return {
         "attempt_id": attempt_id,
         "parent_attempt_id": parent_attempt_id,
@@ -2255,18 +2484,35 @@ def _curation_attempt(
             },
         },
         "error": None,
+        "template_id": (
+            "ifc-property-resolution.v0.1"
+            if stage == "property_resolution"
+            else None
+        ),
+        "template_hash": (
+            STAGE15_TEMPLATE_HASH if stage == "property_resolution" else None
+        ),
         "profile_ids": profiles,
-        "profile_versions": ["0.2" for _profile in profiles],
-        "profile_hashes": [HASH_A for _profile in profiles],
-        "few_shot_ids": (
-            [f"{profile}.complete" for profile in profiles]
-            if stage == "stage2"
-            else []
-        ),
-        "few_shot_hashes": (
-            [HASH_B for _profile in profiles] if stage == "stage2" else []
-        ),
+        "profile_versions": profile_versions,
+        "profile_hashes": profile_hashes,
+        "few_shot_ids": few_shot_ids,
+        "few_shot_hashes": few_shot_hashes,
     }
+
+
+def test_stage2_live_identity_accepts_exact_registered_zero_few_shot_profile() -> None:
+    module = _module()
+    attempt = _curation_attempt(
+        case_id="window-semantic-canary",
+        stage="stage2",
+        ordinal=1,
+        parent_attempt_id=None,
+        lineage="initial",
+    )
+
+    assert attempt["few_shot_ids"] == []
+    assert attempt["few_shot_hashes"] == []
+    assert module._live_attempt_evidence_pass([attempt]) is True
 
 
 def _curation_case(
@@ -2275,7 +2521,7 @@ def _curation_case(
     stages: tuple[tuple[str, str], ...],
 ) -> dict[str, Any]:
     attempts: list[dict[str, Any]] = []
-    stage_ordinals = {"stage1": 0, "stage2": 0}
+    stage_ordinals = {"stage1": 0, "property_resolution": 0, "stage2": 0}
     parent: str | None = None
     for stage, lineage in stages:
         stage_ordinals[stage] += 1
@@ -2290,6 +2536,9 @@ def _curation_case(
         parent = str(attempt["attempt_id"])
     counts = {
         "stage1": sum(item[0] == "stage1" for item in stages),
+        "property_resolution": sum(
+            item[0] == "property_resolution" for item in stages
+        ),
         "stage2": sum(item[0] == "stage2" for item in stages),
     }
     if case_id == "program-guard":
@@ -2335,9 +2584,9 @@ def _curation_case(
                     },
                     "clarification": {
                         "clarification_id": "clarification-001",
-                        "reason_code": "missing_required_parameter",
-                        "question": "Provide the grouped structural facts.",
-                        "answer_modes": ["add_detail", "cancel"],
+                        "reason_code": "property_resolution",
+                        "question": "Select the intended IFC property.",
+                        "answer_modes": ["select_candidate", "cancel"],
                     },
                 }
             )
@@ -2370,14 +2619,27 @@ def _valid_live_curation_result() -> dict[str, Any]:
     cases = [
         _curation_case(
             case_id="complete",
-            stages=(("stage1", "initial"), ("stage2", "initial")),
+            stages=(
+                ("stage1", "initial"),
+                ("property_resolution", "initial"),
+                ("property_resolution", "initial"),
+                ("stage2", "initial"),
+            ),
         ),
         _curation_case(
             case_id="clarification-resume",
             stages=(
                 ("stage1", "initial"),
-                ("stage1", "clarification-resume"),
+                ("property_resolution", "initial"),
                 ("stage2", "clarification-resume"),
+            ),
+        ),
+        _curation_case(
+            case_id="window-semantic-canary",
+            stages=(
+                ("stage1", "initial"),
+                ("property_resolution", "initial"),
+                ("stage2", "initial"),
             ),
         ),
         _curation_case(
@@ -2395,8 +2657,12 @@ def _valid_live_curation_result() -> dict[str, Any]:
         "acceptance_eligible": False,
         "proof_validation_status": "pending_plan_12_14",
         "synthetic_fallback_used": False,
-        "transport_calls": 6,
-        "transport_calls_by_stage": {"stage1": 4, "stage2": 2},
+        "transport_calls": 11,
+        "transport_calls_by_stage": {
+            "stage1": 4,
+            "property_resolution": 4,
+            "stage2": 3,
+        },
         "provider_models": [
             {
                 "provider": "deepseek-openai-compatible",
@@ -2414,8 +2680,9 @@ def test_live_curator_accepts_only_complete_and_resumed_success_transcripts() ->
 
     assert audit["status"] == "passed"
     assert audit["success_case_ids"] == ["complete", "clarification-resume"]
+    assert audit["semantic_canary_case_id"] == "window-semantic-canary"
     assert audit["program_guard_case_id"] == "program-guard"
-    assert audit["transport_calls"] == 6
+    assert audit["transport_calls"] == 11
 
 
 @pytest.mark.parametrize(
@@ -2427,6 +2694,8 @@ def test_live_curator_accepts_only_complete_and_resumed_success_transcripts() ->
         ("missing_raw_response", "LIVE_ATTEMPT_RAW_RESPONSE_REQUIRED"),
         ("redacted_hash_mismatch", "LIVE_ATTEMPT_REDACTED_HASH_MISMATCH"),
         ("missing_profile_hash", "LIVE_ATTEMPT_PROFILE_HASH_REQUIRED"),
+        ("missing_template_id", "LIVE_ATTEMPT_TEMPLATE_ID_REQUIRED"),
+        ("missing_template_hash", "LIVE_ATTEMPT_TEMPLATE_HASH_REQUIRED"),
         ("missing_few_shot_hash", "LIVE_ATTEMPT_FEW_SHOT_HASH_REQUIRED"),
         ("missing_profile_few_shot", "LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH"),
         ("fallback_true", "LIVE_ATTEMPT_FALLBACK_FLAG"),
@@ -2456,7 +2725,8 @@ def test_live_curator_rejects_each_single_transcript_defect(
     result = _valid_live_curation_result()
     complete = result["cases"][0]
     first = complete["attempts"][0]
-    stage2 = complete["attempts"][1]
+    property_resolution = complete["attempts"][1]
+    stage2 = complete["attempts"][-1]
     if defect == "missing_provider":
         first["provider"] = ""
     elif defect == "missing_model":
@@ -2469,6 +2739,10 @@ def test_live_curator_rejects_each_single_transcript_defect(
         first["response_sha256"] = "sha256:" + "0" * 64
     elif defect == "missing_profile_hash":
         first["profile_hashes"] = []
+    elif defect == "missing_template_id":
+        property_resolution["template_id"] = None
+    elif defect == "missing_template_hash":
+        property_resolution["template_hash"] = None
     elif defect == "missing_few_shot_hash":
         stage2["few_shot_hashes"] = []
     elif defect == "missing_profile_few_shot":
@@ -2509,7 +2783,7 @@ def test_live_curator_rejects_each_single_transcript_defect(
     elif defect == "acceptance_self_claim":
         result["acceptance_eligible"] = True
     elif defect == "clarification_lineage":
-        result["cases"][1]["attempts"][1]["lineage"] = "initial"
+        result["cases"][1]["attempts"][-1]["lineage"] = "initial"
     elif defect == "terminal_publication":
         complete["final"]["successful_artifact_publishable"] = False
     elif defect == "synthetic_fallback":

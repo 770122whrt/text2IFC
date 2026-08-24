@@ -20,6 +20,8 @@ from datetime import date
 from pathlib import Path
 from typing import Any, Callable, Mapping, Sequence
 
+from jsonschema import Draft202012Validator
+
 
 ROOT = Path(__file__).resolve().parents[2]
 if str(ROOT) not in sys.path:
@@ -35,6 +37,11 @@ from scripts.ifc_repair.run_phase12_live_uat import (  # noqa: E402
     PROGRAM_GUARD_REASON,
     SOURCE,
 )
+from text2ifc_agent.prompt_registry import load_prompt_registry  # noqa: E402
+from text2ifc_ifc_repair.prompt_profiles import select_prompt_profiles  # noqa: E402
+from text2ifc_ifc_repair.property_resolution_stage import (  # noqa: E402
+    TEMPLATE_ID as PROPERTY_RESOLUTION_TEMPLATE_ID,
+)
 
 
 LIVE_SOURCE_SCHEMA = "text2ifc/phase12-live-proof-source/0.1"
@@ -46,7 +53,13 @@ EVIDENCE_SCOPE = "cross_scene_same_family_bimnet"
 BASE_DAMAGE_CASE_ID = "phase12-d7n-beam-column-atomic"
 BASE_DAMAGE_CASE = SOURCE.parent
 SUCCESS_CASE_IDS = ("complete", "clarification-resume")
-REQUIRED_CASE_IDS = (*SUCCESS_CASE_IDS, "program-guard")
+SEMANTIC_CANARY_CASE_ID = "window-semantic-canary"
+PROGRAM_GUARD_CASE_ID = "program-guard"
+REQUIRED_CASE_IDS = (
+    *SUCCESS_CASE_IDS,
+    SEMANTIC_CANARY_CASE_ID,
+    PROGRAM_GUARD_CASE_ID,
+)
 EXPECTED_STAGE1_PROFILES = frozenset(
     {
         "beam.add.v0.3",
@@ -61,8 +74,12 @@ EXPECTED_STAGE1_PROFILES = frozenset(
 EXPECTED_SELECTED_PROFILES = {
     "complete": frozenset({"beam.add.v0.3", "column.add.v0.3"}),
     "clarification-resume": frozenset({"column.add.v0.3"}),
+    "window-semantic-canary": frozenset({"occurrence.set-properties"}),
     "program-guard": frozenset({"beam.add.v0.3"}),
 }
+PROPERTY_RESOLUTION_TEMPLATE_HASH = str(
+    load_prompt_registry()[PROPERTY_RESOLUTION_TEMPLATE_ID]["sha256"]
+)
 PROOF_CASE_IDS = {
     "complete": "phase12-live-deepseek-complete",
     "clarification-resume": "phase12-live-deepseek-clarification-resume",
@@ -71,6 +88,9 @@ FORBIDDEN_FALLBACK_FLAGS = frozenset(
     {"cached", "hand_authored", "prerecorded", "synthetic"}
 )
 VALIDATOR = ROOT / "scripts/ifc_repair/validate_success_cases.py"
+PROOF_VALIDATION_SCHEMA = (
+    ROOT / "schemas/agent/ifc-repair-proof-validation-0.2.schema.json"
+)
 
 
 def _canonical_sha256(value: Any) -> str:
@@ -151,7 +171,7 @@ def _audit_attempts(
     if not isinstance(raw_attempts, list) or not raw_attempts:
         raise ValueError("LIVE_CASE_ATTEMPTS_REQUIRED")
     attempts: list[Mapping[str, Any]] = []
-    ordinals = {"stage1": 0, "stage2": 0}
+    ordinals = {"stage1": 0, "property_resolution": 0, "stage2": 0}
     previous: str | None = None
     provider_models: set[tuple[str, str]] = set()
     seen_ids: set[str] = set()
@@ -247,50 +267,73 @@ def _audit_attempts(
         profile_ids = raw.get("profile_ids")
         profile_versions = raw.get("profile_versions")
         profile_hashes = raw.get("profile_hashes")
-        if (
-            not isinstance(profile_ids, list)
-            or not profile_ids
-            or not isinstance(profile_versions, list)
-            or not profile_versions
-            or not isinstance(profile_hashes, list)
-            or not profile_hashes
-            or any(not _valid_sha256(value) for value in profile_hashes)
-        ):
-            raise ValueError("LIVE_ATTEMPT_PROFILE_HASH_REQUIRED")
-        if (
-            len(profile_ids) != len(profile_versions)
-            or len(profile_ids) != len(profile_hashes)
-            or len(set(map(str, profile_ids))) != len(profile_ids)
-            or frozenset(map(str, profile_ids))
-            != (
-                EXPECTED_STAGE1_PROFILES
-                if stage == "stage1"
-                else EXPECTED_SELECTED_PROFILES[case_id]
-            )
-        ):
-            raise ValueError("LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH")
+        if stage == "property_resolution":
+            if raw.get("template_id") != PROPERTY_RESOLUTION_TEMPLATE_ID:
+                raise ValueError("LIVE_ATTEMPT_TEMPLATE_ID_REQUIRED")
+            if raw.get("template_hash") != PROPERTY_RESOLUTION_TEMPLATE_HASH:
+                raise ValueError("LIVE_ATTEMPT_TEMPLATE_HASH_REQUIRED")
+            if any(
+                raw.get(key) not in (None, [])
+                for key in (
+                    "profile_ids",
+                    "profile_versions",
+                    "profile_hashes",
+                    "few_shot_ids",
+                    "few_shot_hashes",
+                )
+            ):
+                raise ValueError("LIVE_ATTEMPT_TEMPLATE_ROUTING_MISMATCH")
+        else:
+            if (
+                not isinstance(profile_ids, list)
+                or not profile_ids
+                or not isinstance(profile_versions, list)
+                or not profile_versions
+                or not isinstance(profile_hashes, list)
+                or not profile_hashes
+                or any(not _valid_sha256(value) for value in profile_hashes)
+            ):
+                raise ValueError("LIVE_ATTEMPT_PROFILE_HASH_REQUIRED")
+            if (
+                len(profile_ids) != len(profile_versions)
+                or len(profile_ids) != len(profile_hashes)
+                or len(set(map(str, profile_ids))) != len(profile_ids)
+                or frozenset(map(str, profile_ids))
+                != (
+                    EXPECTED_STAGE1_PROFILES
+                    if stage == "stage1"
+                    else EXPECTED_SELECTED_PROFILES[case_id]
+                )
+            ):
+                raise ValueError("LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH")
         if stage == "stage2":
             few_shot_ids = raw.get("few_shot_ids")
             few_shot_hashes = raw.get("few_shot_hashes")
-            if (
-                not isinstance(few_shot_ids, list)
-                or not few_shot_ids
-                or not isinstance(few_shot_hashes, list)
+            expected_selection = select_prompt_profiles(
+                sorted(EXPECTED_SELECTED_PROFILES[case_id])
+            ).to_dict()
+            expected_few_shot_ids = expected_selection["few_shot_ids"]
+            expected_few_shot_hashes = expected_selection["few_shot_hashes"]
+            if not isinstance(few_shot_ids, list) or not isinstance(
+                few_shot_hashes, list
+            ):
+                raise ValueError("LIVE_ATTEMPT_FEW_SHOT_HASH_REQUIRED")
+            if expected_few_shot_ids and (
+                not few_shot_ids
                 or not few_shot_hashes
                 or any(not _valid_sha256(value) for value in few_shot_hashes)
             ):
                 raise ValueError("LIVE_ATTEMPT_FEW_SHOT_HASH_REQUIRED")
+            expected_versions = [
+                str(profile["profile_version"])
+                for profile in expected_selection["profiles"]
+            ]
             if (
-                len(few_shot_ids) != len(few_shot_hashes)
-                or len(set(map(str, few_shot_ids))) != len(few_shot_ids)
-                or any(
-                    not any(str(example).startswith(f"{profile}.") for profile in profile_ids)
-                    for example in few_shot_ids
-                )
-                or any(
-                    not any(str(example).startswith(f"{profile}.") for example in few_shot_ids)
-                    for profile in profile_ids
-                )
+                profile_ids != expected_selection["profile_ids"]
+                or profile_versions != expected_versions
+                or profile_hashes != expected_selection["profile_hashes"]
+                or few_shot_ids != expected_few_shot_ids
+                or few_shot_hashes != expected_few_shot_hashes
             ):
                 raise ValueError("LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH")
         attempts.append(raw)
@@ -339,7 +382,7 @@ def audit_live_uat_result(result: Mapping[str, Any]) -> dict[str, Any]:
         for item in raw_cases
     ] != list(REQUIRED_CASE_IDS):
         raise ValueError("LIVE_CASE_MATRIX_INVALID")
-    aggregate = {"stage1": 0, "stage2": 0}
+    aggregate = {"stage1": 0, "property_resolution": 0, "stage2": 0}
     transport_calls = 0
     provider_models: set[tuple[str, str]] = set()
     for case in raw_cases:
@@ -373,9 +416,11 @@ def audit_live_uat_result(result: Mapping[str, Any]) -> dict[str, Any]:
         provider_models.update(case_models)
         final = case.get("final")
         if case_id == "complete":
-            if not _strict_success(final) or counts["stage1"] < 1 or counts[
-                "stage2"
-            ] < 1:
+            if (
+                not _strict_success(final)
+                or counts
+                != {"stage1": 1, "property_resolution": 2, "stage2": 1}
+            ):
                 raise ValueError("LIVE_SUCCESS_TERMINAL_INVALID")
             if any(item.get("lineage") != "initial" for item in attempts):
                 raise ValueError("LIVE_COMPLETE_LINEAGE_INVALID")
@@ -386,10 +431,11 @@ def audit_live_uat_result(result: Mapping[str, Any]) -> dict[str, Any]:
             lineage = [item.get("lineage") for item in attempts]
             if (
                 not _strict_success(final)
-                or counts != {"stage1": 2, "stage2": 1}
+                or counts
+                != {"stage1": 1, "property_resolution": 1, "stage2": 1}
                 or lineage != [
                     "initial",
-                    "clarification-resume",
+                    "initial",
                     "clarification-resume",
                 ]
                 or final.get("clarification_answer_applied") is not True
@@ -398,9 +444,19 @@ def audit_live_uat_result(result: Mapping[str, Any]) -> dict[str, Any]:
                 or initial.get("successful_artifact_publishable") is not False
                 or not isinstance(clarification, Mapping)
                 or not str(clarification.get("clarification_id") or "")
-                or not str(clarification.get("reason_code") or "")
+                or clarification.get("reason_code") != "property_resolution"
+                or clarification.get("answer_modes")
+                != ["select_candidate", "cancel"]
             ):
                 raise ValueError("LIVE_CLARIFICATION_LINEAGE_INVALID")
+        elif case_id == SEMANTIC_CANARY_CASE_ID:
+            if (
+                not _strict_success(final)
+                or counts
+                != {"stage1": 1, "property_resolution": 1, "stage2": 1}
+                or any(item.get("lineage") != "initial" for item in attempts)
+            ):
+                raise ValueError("LIVE_SEMANTIC_CANARY_INVALID")
         else:
             assert isinstance(final, Mapping)
             guard = final.get("program_guard_evidence")
@@ -408,7 +464,8 @@ def audit_live_uat_result(result: Mapping[str, Any]) -> dict[str, Any]:
                 final.get("status") != "unsupported"
                 or final.get("reason_code") != PROGRAM_GUARD_REASON
                 or final.get("successful_artifact_publishable") is not False
-                or counts != {"stage1": 1, "stage2": 0}
+                or counts
+                != {"stage1": 1, "property_resolution": 0, "stage2": 0}
                 or [item.get("lineage") for item in attempts] != ["initial"]
                 or not isinstance(guard, Mapping)
                 or guard.get("source_unchanged") is not True
@@ -431,7 +488,8 @@ def audit_live_uat_result(result: Mapping[str, Any]) -> dict[str, Any]:
         "schema_version": "text2ifc/phase12-live-transcript-audit/0.1",
         "status": "passed",
         "success_case_ids": list(SUCCESS_CASE_IDS),
-        "program_guard_case_id": "program-guard",
+        "semantic_canary_case_id": SEMANTIC_CANARY_CASE_ID,
+        "program_guard_case_id": PROGRAM_GUARD_CASE_ID,
         "transport_calls": transport_calls,
         "transport_calls_by_stage": aggregate,
         "provider_models": expected_models,
@@ -585,9 +643,9 @@ def _effective_request(case_id: str) -> tuple[str, str, str | None]:
     initial = str(case.request)
     feedback = None if case.feedback is None else str(case.feedback)
     effective = (
-        initial
-        if feedback is None
-        else f"{initial}\n补充说明：{feedback.strip()}"
+        f"{initial}\n补充说明：{feedback.strip()}"
+        if feedback is not None and case.feedback_kind == "add_detail"
+        else initial
     )
     return effective, initial, feedback
 
@@ -990,6 +1048,12 @@ def _validate_subprocess(
         raise ValueError("LIVE_CANDIDATE_VALIDATION_FAILED") from error
     if not isinstance(payload, dict):
         raise ValueError("LIVE_CANDIDATE_VALIDATION_FAILED")
+    try:
+        proof_validation_schema = _read(PROOF_VALIDATION_SCHEMA)
+        Draft202012Validator.check_schema(proof_validation_schema)
+        Draft202012Validator(proof_validation_schema).validate(payload)
+    except Exception as error:
+        raise ValueError("LIVE_CANDIDATE_VALIDATION_FAILED") from error
     cases = payload.get("cases")
     case_ids = {
         str(item.get("case_id"))
@@ -1014,17 +1078,34 @@ def _validate_subprocess(
                 item.get("provider_evidence_mode") == LIVE_EVIDENCE_MODE
                 and item.get("live_transcript_status") == "strict_recomputed"
                 and item.get("property_authority_coverage")
-                in {"strict_stage_1_5_recomputed", "not_applicable"}
+                == "strict_stage_1_5_recomputed"
+                and int(item.get("property_claim_count", 0)) >= 1
                 and item.get("current_property_acceptance_eligible") is True
                 for item in cases
             )
         )
     else:
         manifest = _read(collection_root / "manifest.json")
+        cases_by_id = {
+            str(item.get("case_id")): item
+            for item in cases
+            if isinstance(item, Mapping)
+        }
+        required_property_cases = [
+            cases_by_id.get(case_id) for case_id in PROOF_CASE_IDS.values()
+        ]
         common_pass = bool(
             common_pass
             and payload.get("case_count") == manifest.get("case_count")
             and set(PROOF_CASE_IDS.values()).issubset(case_ids)
+            and all(
+                isinstance(item, Mapping)
+                and item.get("property_authority_coverage")
+                == "strict_stage_1_5_recomputed"
+                and int(item.get("property_claim_count", 0)) >= 1
+                and item.get("current_property_acceptance_eligible") is True
+                for item in required_property_cases
+            )
         )
     if not common_pass:
         raise ValueError("LIVE_CANDIDATE_VALIDATION_FAILED")

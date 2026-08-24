@@ -20,6 +20,7 @@ from text2ifc_agent.providers import (
     ProviderOutput,
     ProviderOutputError,
     redact_provider_payload,
+    resolve_provider_evidence_source,
     validate_provider_output,
 )
 from text2ifc_text.splits import atomic_write_text
@@ -121,6 +122,8 @@ def generate_property_resolution_decision(
                 "stage": "ifc_property_resolution",
                 "provider_call_ordinal": "property_resolution",
                 "attempt": attempt_number,
+                "template_id": str(rendered["metadata"]["template_id"]),
+                "template_hash": str(rendered["metadata"]["template_hash"]),
             },
         }
         provider_output: ProviderOutput | None = None
@@ -482,10 +485,11 @@ def _execution_evidence(
         transport_evidence is not None
         and transport_evidence.get("evidence_class") == "live"
     )
-    if isinstance(provider, OpenAICompatibleLiveProvider):
-        eligible = live_transport and bool(provider.uses_default_sdk_client)
+    evidence_source = resolve_provider_evidence_source(provider)
+    if isinstance(evidence_source, OpenAICompatibleLiveProvider):
+        eligible = live_transport and bool(evidence_source.uses_default_sdk_client)
         return ("live" if eligible else "injected_offline", eligible)
-    if isinstance(provider, MimoAgentProvider):
+    if isinstance(evidence_source, MimoAgentProvider):
         eligible = bool(live_transport)
         return ("live" if eligible else "injected_offline", eligible)
     return "injected_offline", False

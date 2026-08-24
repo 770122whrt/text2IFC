@@ -13,6 +13,8 @@ import ifcopenshell
 import ifcopenshell.guid
 import ifcopenshell.util.unit
 import pytest
+from jsonschema import Draft202012Validator
+from text2ifc_agent.prompt_registry import load_prompt_registry
 from text2ifc_ifc_repair.operations import create_default_registry
 from text2ifc_ifc_repair.prompt_profiles import (
     compact_profile_catalog,
@@ -46,6 +48,9 @@ BASE_DAMAGE_CASE = (
 LIVE_CASE_ID = "phase12-live-deepseek-complete"
 LIVE_CASE_PATH = Path("structural") / "live" / LIVE_CASE_ID
 CURATOR_SCRIPT = ROOT / "scripts/ifc_repair/curate_phase12_live_proof.py"
+STAGE15_TEMPLATE_HASH = load_prompt_registry()[
+    "ifc-property-resolution.v0.1"
+]["sha256"]
 
 
 def _curator_module():
@@ -726,6 +731,7 @@ def _live_attempt(
     selected_profiles = {
         "complete": ["beam.add.v0.3", "column.add.v0.3"],
         "clarification-resume": ["column.add.v0.3"],
+        "window-semantic-canary": ["occurrence.set-properties"],
         "program-guard": ["beam.add.v0.3"],
     }[case_id]
     if stage == "stage1":
@@ -742,7 +748,7 @@ def _live_attempt(
         profile_hashes = [str(item["profile_hash"]) for item in catalog]
         few_shot_ids: list[str] = []
         few_shot_hashes: list[str] = []
-    else:
+    elif stage == "stage2":
         selection = select_prompt_profiles(selected_profiles).to_dict()
         profile_ids = selection["profile_ids"]
         profile_versions = [
@@ -752,6 +758,12 @@ def _live_attempt(
         profile_hashes = selection["profile_hashes"]
         few_shot_ids = selection["few_shot_ids"]
         few_shot_hashes = selection["few_shot_hashes"]
+    else:
+        profile_ids = []
+        profile_versions = []
+        profile_hashes = []
+        few_shot_ids = []
+        few_shot_hashes = []
     return {
         "attempt_id": attempt_id,
         "parent_attempt_id": parent,
@@ -788,6 +800,14 @@ def _live_attempt(
             "usage": usage,
         },
         "error": None,
+        "template_id": (
+            "ifc-property-resolution.v0.1"
+            if stage == "property_resolution"
+            else None
+        ),
+        "template_hash": (
+            STAGE15_TEMPLATE_HASH if stage == "property_resolution" else None
+        ),
         "profile_ids": profile_ids,
         "profile_versions": profile_versions,
         "profile_hashes": profile_hashes,
@@ -863,12 +883,28 @@ def _live_result(
         lineage="initial",
         response_document=intent_body,
     )
+    complete_property_1 = _live_attempt(
+        case_id="complete",
+        stage="property_resolution",
+        ordinal=1,
+        parent=complete_stage1["attempt_id"],
+        lineage="initial",
+        response_document={"selected_candidate_id": "beam-property"},
+    )
+    complete_property_2 = _live_attempt(
+        case_id="complete",
+        stage="property_resolution",
+        ordinal=2,
+        parent=complete_property_1["attempt_id"],
+        lineage="initial",
+        response_document={"selected_candidate_id": "column-property"},
+    )
     draft = _provider_draft(changeset)
     complete_stage2 = _live_attempt(
         case_id="complete",
         stage="stage2",
         ordinal=1,
-        parent=complete_stage1["attempt_id"],
+        parent=complete_property_2["attempt_id"],
         lineage="initial",
         response_document=draft,
     )
@@ -878,22 +914,46 @@ def _live_result(
         ordinal=1,
         parent=None,
         lineage="initial",
-        response_document={"classification": "clarification_required"},
-    )
-    resumed_stage1 = _live_attempt(
-        case_id="clarification-resume",
-        stage="stage1",
-        ordinal=2,
-        parent=clarification_stage1["attempt_id"],
-        lineage="clarification-resume",
         response_document=intent_body,
+    )
+    clarification_property = _live_attempt(
+        case_id="clarification-resume",
+        stage="property_resolution",
+        ordinal=1,
+        parent=clarification_stage1["attempt_id"],
+        lineage="initial",
+        response_document={"selected_candidate_id": None},
     )
     resumed_stage2 = _live_attempt(
         case_id="clarification-resume",
         stage="stage2",
         ordinal=1,
-        parent=resumed_stage1["attempt_id"],
+        parent=clarification_property["attempt_id"],
         lineage="clarification-resume",
+        response_document=draft,
+    )
+    window_stage1 = _live_attempt(
+        case_id="window-semantic-canary",
+        stage="stage1",
+        ordinal=1,
+        parent=None,
+        lineage="initial",
+        response_document=intent_body,
+    )
+    window_property = _live_attempt(
+        case_id="window-semantic-canary",
+        stage="property_resolution",
+        ordinal=1,
+        parent=window_stage1["attempt_id"],
+        lineage="initial",
+        response_document={"selected_candidate_id": "window-property"},
+    )
+    window_stage2 = _live_attempt(
+        case_id="window-semantic-canary",
+        stage="stage2",
+        ordinal=1,
+        parent=window_property["attempt_id"],
+        lineage="initial",
         response_document=draft,
     )
     guard_stage1 = _live_attempt(
@@ -943,9 +1003,18 @@ def _live_result(
             **request_fields["complete"],
             "status": "passed",
             "final": published,
-            "attempts": [complete_stage1, complete_stage2],
-            "transport_calls": 2,
-            "transport_calls_by_stage": {"stage1": 1, "stage2": 1},
+            "attempts": [
+                complete_stage1,
+                complete_property_1,
+                complete_property_2,
+                complete_stage2,
+            ],
+            "transport_calls": 4,
+            "transport_calls_by_stage": {
+                "stage1": 1,
+                "property_resolution": 2,
+                "stage2": 1,
+            },
             "synthetic_fallback_used": False,
             "live_evidence_pass": True,
             "private_evidence_detected": False,
@@ -967,18 +1036,41 @@ def _live_result(
                 },
                 "clarification": {
                     "clarification_id": "clarification-001",
-                    "reason_code": "missing_required_parameter",
-                    "question": "Provide grouped facts.",
-                    "answer_modes": ["add_detail", "cancel"],
+                    "reason_code": "property_resolution",
+                    "question": "Select the intended IFC property.",
+                    "answer_modes": ["select_candidate", "cancel"],
                 },
             },
             "attempts": [
                 clarification_stage1,
-                resumed_stage1,
+                clarification_property,
                 resumed_stage2,
             ],
             "transport_calls": 3,
-            "transport_calls_by_stage": {"stage1": 2, "stage2": 1},
+            "transport_calls_by_stage": {
+                "stage1": 1,
+                "property_resolution": 1,
+                "stage2": 1,
+            },
+            "synthetic_fallback_used": False,
+            "live_evidence_pass": True,
+            "private_evidence_detected": False,
+            "contract_pass": True,
+            "proof_acceptance_eligible": False,
+            "proof_validation_status": "pending_plan_12_14",
+        },
+        {
+            "case_id": "window-semantic-canary",
+            **request_fields["window-semantic-canary"],
+            "status": "passed",
+            "final": dict(published),
+            "attempts": [window_stage1, window_property, window_stage2],
+            "transport_calls": 3,
+            "transport_calls_by_stage": {
+                "stage1": 1,
+                "property_resolution": 1,
+                "stage2": 1,
+            },
             "synthetic_fallback_used": False,
             "live_evidence_pass": True,
             "private_evidence_detected": False,
@@ -1009,7 +1101,11 @@ def _live_result(
             },
             "attempts": [guard_stage1],
             "transport_calls": 1,
-            "transport_calls_by_stage": {"stage1": 1, "stage2": 0},
+            "transport_calls_by_stage": {
+                "stage1": 1,
+                "property_resolution": 0,
+                "stage2": 0,
+            },
             "synthetic_fallback_used": False,
             "live_evidence_pass": True,
             "private_evidence_detected": False,
@@ -1028,8 +1124,12 @@ def _live_result(
         "acceptance_eligible": False,
         "proof_validation_status": "pending_plan_12_14",
         "synthetic_fallback_used": False,
-        "transport_calls": 6,
-        "transport_calls_by_stage": {"stage1": 4, "stage2": 2},
+        "transport_calls": 11,
+        "transport_calls_by_stage": {
+            "stage1": 4,
+            "property_resolution": 4,
+            "stage2": 3,
+        },
         "provider_models": [
             {
                 "provider": "deepseek-openai-compatible",
@@ -1215,6 +1315,112 @@ def test_live_structural_proof_recomputes_transcript_and_base_damage_authority(
     assert result.cases[0]["base_damage_case_id"] == BASE_DAMAGE_CASE_ID
 
 
+def test_property_authority_replay_accepts_public_user_candidate_selection(
+    tmp_path: Path,
+) -> None:
+    from scripts.ifc_repair import run_phase12_live_uat as live_uat
+    from tests.ifc_repair.test_phase12_live_uat import _ProductionPathTransport
+    from tests.ifc_repair.test_property_resolution_family_e2e import (
+        _runtime as offline_property_runtime,
+    )
+
+    case = next(
+        item for item in live_uat.DEFAULT_CASES
+        if item.case_id == "clarification-resume"
+    )
+    provider = live_uat.TranscriptProvider(_ProductionPathTransport())
+    provider.set_case(case.case_id)
+    case_root = tmp_path / "clarification"
+    final = live_uat._production_case_executor(
+        case,
+        provider,
+        case_root,
+        property_knowledge_runtime=offline_property_runtime(),
+    )
+    assert final["status"] == "succeeded"
+    run_root = case_root / "runtime" / "runs" / str(final["run_id"])
+    source_manifest = run_root / "proof-source-manifest.json"
+    _write_json(source_manifest, {"status": "test-fixture"})
+    roles = {
+        f"artifact-{index}": path
+        for index, path in enumerate(run_root.rglob("*"), start=1)
+        if path.is_file()
+    }
+    roles["source_run_manifest"] = source_manifest
+    intent = json.loads(
+        (run_root / "intent" / "repair-intent.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    changeset = json.loads(
+        (run_root / "changeset" / "bound-changeset.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    retained_resolution = json.loads(
+        (run_root / "resolution.json").read_text(encoding="utf-8")
+    )
+    retained_manifest = json.loads(
+        (run_root / "semantic-manifest.json").read_text(encoding="utf-8")
+    )
+
+    def replay() -> dict[str, Any]:
+        return success_validator._audit_structural_authority_replay(
+            damaged_ifc_path=live_uat.SOURCE,
+            damaged_sha256=success_validator._normalize_sha256(
+                _sha256(live_uat.SOURCE)
+            ),
+            intent=intent,
+            changeset=changeset,
+            retained_resolution=retained_resolution,
+            retained_manifest=retained_manifest,
+            roles=roles,
+            provider_evidence_mode="offline_bound_deterministic",
+        )
+
+    authority = replay()
+
+    assert authority["property_authority_coverage"] == (
+        "strict_stage_1_5_recomputed"
+    )
+    assert authority["property_claim_count"] == 1
+    assert authority["current_property_acceptance_eligible"] is True
+
+    user_decision_path = next(
+        run_root.glob(
+            "property-resolution/operation-*/claim-*/decision-result-user.json"
+        )
+    )
+    user_decision = json.loads(user_decision_path.read_text(encoding="utf-8"))
+    user_decision["decision"]["selected_candidate_id"] = "candidate:forged"
+    _write_json(user_decision_path, user_decision)
+    with pytest.raises(
+        ValueError,
+        match="property_user_decision_binding",
+    ):
+        replay()
+
+    user_decision["decision"]["selected_candidate_id"] = (
+        "candidate:2:ifc2x3:Pset_ColumnCommon.LoadBearing"
+    )
+    _write_json(user_decision_path, user_decision)
+    state_path = run_root / "state.json"
+    state = json.loads(state_path.read_text(encoding="utf-8"))
+    answer_transition = next(
+        transition
+        for transition in state["transitions"]
+        if isinstance(transition.get("answer"), dict)
+        and transition["answer"].get("kind") == "select_candidate"
+    )
+    answer_transition["answer"]["candidate_token"] = "candidate:forged"
+    _write_json(state_path, state)
+    with pytest.raises(
+        ValueError,
+        match="property_user_answer_binding",
+    ):
+        replay()
+
+
 @pytest.mark.parametrize(
     ("defect", "check_id"),
     (
@@ -1305,9 +1511,10 @@ def _curator_source_run(tmp_path: Path) -> Path:
             continue
         frozen = next(item for item in FROZEN_LIVE_CASES if item.case_id == case_id)
         effective_request = (
-            frozen.request
-            if frozen.feedback is None
-            else f"{frozen.request}\n补充说明：{frozen.feedback.strip()}"
+            f"{frozen.request}\n补充说明：{frozen.feedback.strip()}"
+            if frozen.feedback is not None
+            and frozen.feedback_kind == "add_detail"
+            else frozen.request
         )
         effective_hash = "sha256:" + hashlib.sha256(
             effective_request.encode("utf-8")
@@ -1342,6 +1549,7 @@ def _curator_source_run(tmp_path: Path) -> Path:
         case["final"]["run_id"] = run_id
         run_root = case_root / "runtime" / "runs" / run_id
         (run_root / "intent").mkdir(parents=True)
+        (run_root / "property-resolution").mkdir()
         (run_root / "changeset" / "attempt-001").mkdir(parents=True)
         (run_root / "publication" / "terminal").mkdir(parents=True)
         _write_json(run_root / "intent" / "repair-intent.json", case_intent)
@@ -1425,20 +1633,25 @@ def _curator_source_run(tmp_path: Path) -> Path:
         profiles = (
             ["beam.add.v0.3", "column.add.v0.3"]
             if case_id == "complete"
-            else ["column.add.v0.3"]
+            else (
+                ["column.add.v0.3"]
+                if case_id == "clarification-resume"
+                else ["occurrence.set-properties"]
+            )
         )
         _write_json(
             run_root / "changeset" / "prompt-profile-selection.json",
             select_prompt_profiles(profiles).to_dict(),
         )
         for index, attempt in enumerate(case["attempts"], start=1):
+            if attempt["stage"] == "stage1":
+                relative = f"intent/attempt-{index:03d}.json"
+            elif attempt["stage"] == "property_resolution":
+                relative = f"property-resolution/transcript-attempt-{index:03d}.json"
+            else:
+                relative = "changeset/attempt-001/provider-metadata.json"
             _write_json(
-                run_root
-                / (
-                    f"intent/attempt-{index:03d}.json"
-                    if attempt["stage"] == "stage1"
-                    else "changeset/attempt-001/provider-metadata.json"
-                ),
+                run_root / relative,
                 attempt,
             )
         case["final"]["artifacts"] = {
@@ -1449,8 +1662,13 @@ def _curator_source_run(tmp_path: Path) -> Path:
         _write_json(case_root / "case-result.json", case)
     _write_json(source / "live-uat-result.json", live_result)
     preflight = {
-        "schema_version": "text2ifc/phase12-live-preflight/0.1",
+        "schema_version": "text2ifc/phase12-live-preflight/0.2",
         "status": "passed",
+        "failure_count": 0,
+        "skip_count": 0,
+        "substitution_count": 0,
+        "timeout_count": 0,
+        "network_calls": 0,
         "checks": [],
     }
     preflight["evidence_sha256"] = _canonical_transport_sha256(preflight)
@@ -1492,7 +1710,7 @@ def _strict_validator_payload(
     legacy_unverifiable: int = 0,
 ) -> dict[str, Any]:
     return {
-        "schema_version": "text2ifc/ifc-repair-proof-validation/0.1",
+        "schema_version": "text2ifc/ifc-repair-proof-validation/0.2",
         "status": "passed",
         "case_count": case_count,
         "independently_recomputed_case_count": independently_recomputed,
@@ -1503,10 +1721,167 @@ def _strict_validator_payload(
                 "case_id": case_id,
                 "provider_evidence_mode": "live",
                 "live_transcript_status": "strict_recomputed",
+                "property_authority_coverage": "strict_stage_1_5_recomputed",
+                "property_claim_count": 1,
+                "current_property_acceptance_eligible": True,
             }
             for case_id in case_ids
         ],
     }
+
+
+def _proof_validation_v02_payload(
+    *,
+    schema_version: str = "text2ifc/ifc-repair-proof-validation/0.2",
+    coverage_by_case: Mapping[str, str] | None = None,
+) -> dict[str, Any]:
+    case_ids = (
+        "phase12-live-deepseek-complete",
+        "phase12-live-deepseek-clarification-resume",
+    )
+    coverage = dict(coverage_by_case or {})
+    return {
+        "schema_version": schema_version,
+        "status": "passed",
+        "case_count": 2,
+        "independently_recomputed_case_count": 2,
+        "legacy_unverifiable_case_count": 0,
+        "errors": [],
+        "cases": [
+            {
+                "case_id": case_id,
+                "provider_evidence_mode": "live",
+                "live_transcript_status": "strict_recomputed",
+                "property_authority_coverage": coverage.get(
+                    case_id, "strict_stage_1_5_recomputed"
+                ),
+                "property_claim_count": 1,
+                "current_property_acceptance_eligible": True,
+            }
+            for case_id in case_ids
+        ],
+    }
+
+
+def test_proof_validation_v02_formalizes_the_validator_curator_boundary() -> None:
+    schema_path = (
+        ROOT / "schemas/agent/ifc-repair-proof-validation-0.2.schema.json"
+    )
+    assert schema_path.is_file()
+    schema = json.loads(schema_path.read_text(encoding="utf-8"))
+    Draft202012Validator.check_schema(schema)
+    payload = ProofValidationResult(
+        status="passed",
+        collection_root="fixture",
+        case_count=1,
+        independently_recomputed_case_count=1,
+        cases=[
+            {
+                "case_id": "case-1",
+                "provider_evidence_mode": "live",
+                "live_transcript_status": "strict_recomputed",
+                "property_authority_coverage": "strict_stage_1_5_recomputed",
+                "property_claim_count": 1,
+                "current_property_acceptance_eligible": True,
+            }
+        ],
+    ).to_dict()
+
+    assert payload["schema_version"] == (
+        "text2ifc/ifc-repair-proof-validation/0.2"
+    )
+    Draft202012Validator(schema).validate(payload)
+
+    missing_boundary_field = json.loads(json.dumps(payload))
+    del missing_boundary_field["cases"][0]["property_authority_coverage"]
+    assert list(Draft202012Validator(schema).iter_errors(missing_boundary_field))
+
+
+def test_unrecomputed_property_authority_distinguishes_non_property_from_alias(
+    tmp_path: Path,
+) -> None:
+    non_property = success_validator._unrecomputed_property_authority(
+        intent={"operations": [{"property_intents": []}]},
+        roles={},
+    )
+    assert non_property == {
+        "property_authority_coverage": "not_applicable",
+        "property_claim_count": 0,
+        "property_reason_codes": [],
+        "historical_alias_present": False,
+        "current_property_acceptance_eligible": True,
+    }
+
+    resolution = tmp_path / "target-resolution.json"
+    _write_json(
+        resolution,
+        {
+            "property_resolutions": [
+                {"decision": {"reason_code": "REVIEWED_ALIAS_EXACT"}}
+            ]
+        },
+    )
+    property_bearing = success_validator._unrecomputed_property_authority(
+        intent={
+            "operations": [
+                {
+                    "property_intents": [
+                        {"intent_kind": "natural_language_property"}
+                    ]
+                }
+            ]
+        },
+        roles={"deterministic_target_resolution": resolution},
+    )
+    assert property_bearing == {
+        "property_authority_coverage": "historical_property_artifact_only",
+        "property_claim_count": 1,
+        "property_reason_codes": ["REVIEWED_ALIAS_EXACT"],
+        "historical_alias_present": True,
+        "current_property_acceptance_eligible": False,
+    }
+
+
+@pytest.mark.parametrize(
+    "payload",
+    (
+        _proof_validation_v02_payload(
+            schema_version="text2ifc/ifc-repair-proof-validation/0.1"
+        ),
+        _proof_validation_v02_payload(
+            coverage_by_case={
+                "phase12-live-deepseek-complete": "not_applicable",
+            }
+        ),
+    ),
+    ids=("old-contract", "required-property-case-not-applicable"),
+)
+def test_live_curator_rejects_non_v02_or_non_strict_property_authority(
+    tmp_path: Path,
+    payload: Mapping[str, Any],
+) -> None:
+    curator = _curator_module()
+    proof = _empty_proof(tmp_path / "proof")
+
+    def validator_runner(
+        command: Sequence[str],
+        *,
+        cwd: Path,
+    ) -> subprocess.CompletedProcess[str]:
+        del cwd
+        return subprocess.CompletedProcess(
+            command,
+            0,
+            json.dumps(payload),
+            "",
+        )
+
+    with pytest.raises(ValueError, match="LIVE_CANDIDATE_VALIDATION_FAILED"):
+        curator._validate_subprocess(
+            proof,
+            validator_runner=validator_runner,
+            candidate_only=True,
+        )
 
 
 def test_public_curate_runs_validator_in_a_separate_process_before_install(
@@ -1529,7 +1904,7 @@ def test_public_curate_runs_validator_in_a_separate_process_before_install(
             1,
             json.dumps(
                 {
-                    "schema_version": "text2ifc/ifc-repair-proof-validation/0.1",
+                    "schema_version": "text2ifc/ifc-repair-proof-validation/0.2",
                     "status": "failed",
                     "case_count": 2,
                     "independently_recomputed_case_count": 0,
