@@ -116,9 +116,93 @@ def test_executable_policy_is_the_frozen_alias_free_v02(
     assert 0.0 < policy["minimum_retrieval_score"] < 0.5
 
 
-def test_real_bge_evaluation_blocks_without_independent_stage15_outputs(
+def test_real_bge_retrieval_producer_persists_gold_free_public_ledger(
     project_root: Path,
     tmp_path: Path,
+) -> None:
+    from scripts.ifc_repair import run_phase12_offline
+
+    produce = getattr(
+        run_phase12_offline,
+        "produce_property_retrieval_ledger",
+        None,
+    )
+    assert callable(produce), "Plan 06 retrieval producer is missing"
+
+    output_path = tmp_path / "property-retrieval-ledger.json"
+    result = produce(
+        project_root=project_root,
+        output_path=output_path,
+        qdrant_path=tmp_path / "qdrant",
+    )
+
+    assert result["schema_version"] == (
+        "text2ifc/phase12.1-property-retrieval-ledger/0.1"
+    )
+    assert result["status"] == "passed"
+    assert result["case_count"] == 60
+    assert result["provider_network_calls"] == 0
+    assert result["knowledge_health"]["status"] == "ready"
+    assert result["knowledge_health"]["runtime_mode"] == "production"
+    assert output_path.is_file()
+    persisted = json.loads(output_path.read_text(encoding="utf-8"))
+    assert persisted == result
+
+    def all_keys(value: object) -> set[str]:
+        if isinstance(value, dict):
+            return set(value) | {
+                child
+                for item in value.values()
+                for child in all_keys(item)
+            }
+        if isinstance(value, list):
+            return {child for item in value for child in all_keys(item)}
+        return set()
+
+    assert {"expected", "authorize", "expected_route"}.isdisjoint(
+        all_keys(result)
+    )
+    assert all(
+        set(item) == {"case_id", "query", "candidate_set"}
+        for item in result["cases"]
+    )
+
+
+def test_retrieval_public_cases_do_not_load_hidden_gold(
+    project_root: Path,
+    monkeypatch,
+) -> None:
+    from scripts.ifc_repair import run_phase12_offline
+
+    def fail_if_gold_is_loaded(_project_root: Path) -> list[dict]:
+        raise AssertionError("retrieval producer touched hidden Gold")
+
+    monkeypatch.setattr(
+        run_phase12_offline,
+        "_property_evaluation_cases",
+        fail_if_gold_is_loaded,
+    )
+    cases = run_phase12_offline._property_evaluation_public_cases(project_root)
+
+    assert len(cases) == 60
+    assert all(
+        set(case)
+        == {
+            "case_id",
+            "target_ifc_class",
+            "property_phrase",
+            "raw_value",
+            "raw_unit",
+            "scope",
+        }
+        for case in cases
+    )
+
+
+def test_real_bge_evaluation_reports_retrieval_without_synthetic_semantic_score(
+    project_root: Path,
+    tmp_path: Path,
+    monkeypatch,
 ) -> None:
     from scripts.ifc_repair import run_phase12_offline
 
@@ -128,22 +212,43 @@ def test_real_bge_evaluation_blocks_without_independent_stage15_outputs(
         None,
     )
     assert callable(evaluate), "Phase 12.1 property evaluator is missing"
+    ledger_path = tmp_path / "property-retrieval-ledger.json"
+    evaluation_path = tmp_path / "property-evaluation.json"
+    gold_loader = run_phase12_offline._property_evaluation_cases
+
+    def load_gold_only_after_retrieval_is_persisted(root: Path) -> list[dict]:
+        assert ledger_path.is_file(), "Gold loaded before retrieval ledger persisted"
+        return gold_loader(root)
+
+    monkeypatch.setattr(
+        run_phase12_offline,
+        "_property_evaluation_gold_cases",
+        load_gold_only_after_retrieval_is_persisted,
+        raising=False,
+    )
     result = evaluate(
         project_root=project_root,
-        output_path=tmp_path / "property-evaluation.json",
+        output_path=evaluation_path,
         qdrant_path=tmp_path / "qdrant",
+        retrieval_ledger_path=ledger_path,
     )
 
     assert result["schema_version"] == (
-        "text2ifc/phase12.1-property-resolution-evaluation/0.2"
+        "text2ifc/phase12.1-property-resolution-evaluation/0.3"
     )
-    assert result["status"] == "blocked"
-    assert result["reason_code"] == (
-        "INDEPENDENT_STAGE15_CANDIDATE_OUTPUT_REQUIRED"
-    )
+    assert result["status"] == "passed"
+    assert result["reason_code"] is None
     assert result["case_count"] == 60
     assert result["failures_in_denominator"] > 0
-    assert result["evaluator_id"] == "phase12.1.fixed-property-evaluator/0.2"
+    assert result["evaluator_id"] == "phase12.1.fixed-property-evaluator/0.3"
+    assert result["retrieval_capability"] == "evaluated"
+    assert result["retrieval_metrics"]["case_count"] == 60
+    assert result["retrieval_metrics"]["retrieval_ledger_path"] == str(
+        ledger_path.resolve()
+    )
+    assert result["stage_1_5_semantic_evaluation_status"] == (
+        "not_evaluated_offline"
+    )
     assert result["baseline"]["case_count"] == 60
     assert result["candidate"]["case_count"] == 60
     assert result["candidate"]["semantic_scored_count"] == 0
@@ -156,7 +261,7 @@ def test_real_bge_evaluation_blocks_without_independent_stage15_outputs(
         "offline_retrieval_only_stage15_fixture_excluded"
     )
     assert result["stage15_candidate_evidence"] == {
-        "status": "missing_independent_output",
+        "status": "not_evaluated_offline",
         "semantic_scored_count": 0,
         "fixture_or_replay_used_for_scoring": False,
         "provider_network_calls": 0,
@@ -171,7 +276,9 @@ def test_real_bge_evaluation_blocks_without_independent_stage15_outputs(
     }
     assert result["hard_gates"] == {
         "all_supported_in_top_k": True,
-        "independent_stage15_candidate_outputs_available": False,
+        "empty_top_k_fail_closed": True,
+        "retrieval_floor_policy": True,
+        "zero_ineligible_candidates_offered": True,
         "zero_alias_runtime_authority": True,
         "zero_private_leakage": True,
     }
@@ -179,4 +286,6 @@ def test_real_bge_evaluation_blocks_without_independent_stage15_outputs(
     assert result["knowledge_health"]["embedding_model_id"] == "BAAI/bge-m3"
     assert result["knowledge_health"]["runtime_mode"] == "production"
     assert result["knowledge_health"]["acceptance_eligible"] is True
-    assert Path(result["output_path"]).is_file()
+    assert evaluation_path.is_file()
+    assert ledger_path.is_file()
+    assert Path(result["output_path"]) == evaluation_path.resolve()

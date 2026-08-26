@@ -250,6 +250,9 @@ diagnostic artifacts remain available.
 | Retrieval policy | `text2ifc/property-resolution-policy/0.2` | Top-K, retrieval floor, supported template/scope, runtime readiness |
 | Stage 1.5 prompt | `ifc-property-resolution.v0.1` | repair-only, one bounded claim, no authoring fields |
 | Proof validation | `text2ifc/ifc-repair-proof-validation/0.2` | minimal validator-to-curator property-authority boundary; historical 0.1 semantics remain historical |
+| Retrieval ledger | `text2ifc/phase12.1-property-retrieval-ledger/0.1` | public query and ordered real-BGE/Qdrant Top-K only; no Gold labels |
+| Offline retrieval evaluation | `text2ifc/phase12.1-property-resolution-evaluation/0.3` | evaluator opens Gold only after ledger persistence; semantics remain unscored offline |
+| Live admission preflight | `text2ifc/phase12-live-preflight/0.4` | explicit retrieval artifact plus focused/offline/full-suite/compile/diff/Proof zero-network gates |
 
 **Confirmed Repository Fact:** Live transcript evidence is now stage-aware.
 Stage 1 and Stage 2 retain operation prompt-profile identity; Stage 1.5 records
@@ -305,9 +308,10 @@ Baseline/Candidate evaluation supports a broader claim.
 
 ## 7. Acceptance and Release Gates
 
-**Confirmed Repository Fact:** Most Plan 12.1-06 offline plumbing and preflight
-work is implemented, but frozen R12 Candidate evaluation remains blocked.
-Phase-level closeout still requires, in order:
+**Confirmed Repository Fact:** Plan 12.1-06 offline retrieval/plumbing admission
+is complete. It proves real local BGE-M3/Qdrant retrieval and offline contract/
+system correctness, while explicitly leaving genuine Stage 1.5 semantic
+capability unevaluated. Phase-level closeout still requires, in order:
 
 1. contract, retrieval, reranker, admissibility, and exact-intent tests;
 2. the frozen minimum 60-case evaluation with Window/Door/Wall/Beam/Column
@@ -375,7 +379,7 @@ calls; its recorded 1100-test suite passed, but the artifact cannot admit Plan
 | Phases 7–10.5 | Complete in current milestone records | Index, evaluation, public repair API, Type/property contracts, Window reference path, dataset/preservation infrastructure |
 | Phase 11 | Complete | Opening/Door implementation accepted with genuine DeepSeek and independently recomputed Proof; frozen contracts remain in force |
 | Phase 12 | Live acceptance blocked | Plans 12-01 through 12-14 complete; Beam/Column implementation and offline/live infrastructure exist; genuine complete case failed before Stage 2 with `PROPERTY_NOT_RESOLVED`; no live structural success was curated |
-| Phase 12.1 | In progress, formal 5/7 | Plans 01–05 complete; Plan 06 is blocked on Gold-independent Stage 1.5 Candidate evidence; Plan 07 remains blocked |
+| Phase 12.1 | In progress, formal 6/7 | Plans 01–06 complete; Plan 07 is unstarted and awaits explicit Go/No-Go for genuine semantic/live acceptance |
 | Phase 13 | Not started | BIMNet-scale retrieval and 128k experiment remain blocked on Phase 12/12.1 closure |
 
 Current requirement state:
@@ -384,8 +388,8 @@ Current requirement state:
 - pending: `RAG-05..07`, `OPS-03`, `OPS-04`;
 - future/blocked: `SCALE-01`, `SCALE-02`.
 
-The next authoritative execution plan is
-`.planning/phases/12.1-property-resolution-rag-reranker/12.1-06-PLAN.md`.
+The next authoritative execution plan, only after an explicit Go/No-Go, is
+`.planning/phases/12.1-property-resolution-rag-reranker/12.1-07-PLAN.md`.
 
 ## 10. Entry Points
 
@@ -397,7 +401,7 @@ The next authoritative execution plan is
 4. `.planning/REQUIREMENTS.md`
 5. `.planning/phases/12.1-property-resolution-rag-reranker/12.1-SPEC.md`
 6. `.planning/phases/12.1-property-resolution-rag-reranker/12.1-VALIDATION.md`
-7. the active blocked PLAN, currently `12.1-06-PLAN.md`
+7. accepted `12.1-06-SUMMARY.md`, then the unstarted `12.1-07-PLAN.md`
 8. `docs/validation/agent-capability-evaluation.md` before any Agent/LLM
    behavior change, capability claim, or real Provider run
 
@@ -428,10 +432,11 @@ fresh run-local output directories and the repository `.venv`.
 
 ### Confirmed current risks
 
-1. **R12 evaluation blocked:** real BGE Top-K retrieval is green, but no
-   Gold-independent frozen Stage 1.5 Candidate outputs exist. The removed
-   answer-table replay cannot be used as semantic Candidate evidence, and this
-   task forbids a genuine DeepSeek call. Plan 06 and Plan 07 remain blocked.
+1. **Genuine semantic/live acceptance remains pending:** Plan 06 real-BGE
+   retrieval and offline admission are green, but Plan 07 has not run the
+   route-faithful genuine 60-case Stage 1.5 semantic evaluation or separate
+   four-case DeepSeek E2E matrix. No semantic/live success may be inferred from
+   Plan 06 Top-K Recall or deterministic Provider doubles.
 2. **Live acceptance remains red:** the preserved genuine Phase 12 complete
    case failed before Stage 2 with `PROPERTY_NOT_RESOLVED`; no structural live
    success is in accepted Proof.
@@ -461,9 +466,8 @@ fresh run-local output directories and the repository `.venv`.
 
 ### Open questions requiring later evidence, not assumptions
 
-- How frozen R12 will obtain Gold-independent Stage 1.5 Candidate outputs
-  without violating the current prohibition on genuine DeepSeek calls in Plan
-  06. No valid pre-Gold frozen output exists in the repository.
+- Whether the unchanged 60-case corpus passes the frozen route-faithful genuine
+  Stage 1.5 semantic gates when Plan 07 is explicitly authorized.
 - The real local BGE-M3/Qdrant runtime was ready for Plan 06, but Plan 07 must
   rerun its fresh preflight rather than treating one environment snapshot as
   permanent readiness.
@@ -490,13 +494,13 @@ fresh run-local output directories and the repository `.venv`.
 - `b8cf328e` — deletes the replay answer table and makes evaluation 0.2 block
   when independent Stage 1.5 Candidate outputs are unavailable.
 
-**Confirmed Repository Fact:** Plan 06 production/test/schema changes and the
-anti-oracle correction are isolated in the checkpoints above. The remaining
-scoped documentation changes record the blocked state in the issue context,
-project context, STATE and ROADMAP; there is no accepted Plan 06 summary.
-Unrelated PDF, dataset, requirements, docs, generated-run and protocol changes
-remain excluded. Repository-root `.tmp-*` test/preflight artifacts are cleaned
-only after their durable findings are retained in the issue context and Git.
+**Confirmed Repository Fact:** Plan 06 now has an accepted
+`12.1-06-SUMMARY.md`, retrieval ledger 0.1, evaluation report 0.3 and preflight
+0.4. The accepted fresh preflight passed 89 focused tests and 1105 complete-
+suite tests with zero failure/skip/substitution/timeout/network. Unrelated PDF,
+dataset, requirements, docs, generated-run and protocol changes remain
+excluded from the Phase 12.1 checkpoint. Test basetemp/cache is removed only
+after durable findings and core run artifacts are retained.
 
 **Confirmed Repository Fact:** Earlier current-milestone material changes are:
 
@@ -519,9 +523,10 @@ facts:
    `b8cf328e`.
 2. **Confirmed:** the worktree is intentionally dirty; preserve unrelated user
    files and all genuine run/failure evidence.
-3. **Confirmed:** formal state is Phase 12.1 Plan 5/7; Plan 06 is blocked.
-4. **Confirmed:** no accepted `12.1-06-SUMMARY.md` or Plan 06 completion
-   checkpoint exists; Plan 07 genuine live evidence remains absent.
+3. **Confirmed:** formal state is Phase 12.1 Plan 6/7; Plan 06 offline admission
+   is complete and Plan 07 awaits explicit Go/No-Go.
+4. **Confirmed:** `12.1-06-SUMMARY.md` records the accepted retrieval/offline
+   evidence; Plan 07 genuine semantic/live evidence remains absent.
 5. **Confirmed:** Phase 12 live acceptance is blocked; no live structural
    success has been curated.
 6. **Confirmed:** Phase 11 is closed and its Door/Opening acceptance contracts
@@ -542,12 +547,12 @@ facts:
     boundaries.
 13. **Project Decision:** no synthetic/cached/prerecorded fallback can count as
     live evidence.
-14. **Confirmed:** five-family regression and preflight 0.3 execution are green,
-    but Plan 12.1-06 has not passed frozen R12 Candidate evaluation.
+14. **Confirmed:** five-family regression and preflight 0.4 are green; Plan 06
+    reports retrieval evaluated and Stage 1.5 semantics not evaluated offline.
 15. **Confirmed:** Plan 12.1-07 owns genuine DeepSeek, independent Proof,
     IFCCompare, report, requirements, and state closeout.
 16. **Project Decision:** do not start Phase 13 or reopen frozen
     Door/Window/structural/Storey/Type/material/private-Gold contracts.
-17. **Confirmed:** the valid Plan 06 evidence proves real-BGE Top-K retrieval
-    readiness and deterministic offline plumbing only; it does not admit Plan
-    06 or prove Stage 1.5 semantics.
+17. **Confirmed:** Plan 06 is admitted for real-BGE retrieval and deterministic
+    offline plumbing/system correctness only; it does not prove Stage 1.5
+    semantic capability or live E2E viability.

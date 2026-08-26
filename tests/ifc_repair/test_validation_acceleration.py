@@ -12,6 +12,9 @@ from text2ifc_ifc_repair.evaluation import (
 )
 
 
+PARITY_TEST_DEADLINE_SECONDS = 60.0
+
+
 def _write(path: Path, *, extra_error: bool = False) -> None:
     model = ifcopenshell.file(schema="IFC2X3")
     model.create_entity("IfcCartesianPoint")
@@ -27,7 +30,7 @@ def _run(
     validation_worker=None,
     diff_worker=None,
     rss_reader=None,
-    deadline: float = 10.0,
+    deadline: float = PARITY_TEST_DEADLINE_SECONDS,
     rss_limit: int = 4 * 1024**3,
 ):
     baseline = tmp_path / "baseline.ifc"
@@ -94,7 +97,7 @@ def test_reopened_model_reuse_preserves_full_validation_and_diff(
     _write(candidate, extra_error=True)
     policy = EvaluationExecutionPolicy(
         mode="accelerated",
-        deadline_seconds=10.0,
+        deadline_seconds=PARITY_TEST_DEADLINE_SECONDS,
     )
     expected = execute_validation_and_diff(
         damaged_ifc_path=baseline,

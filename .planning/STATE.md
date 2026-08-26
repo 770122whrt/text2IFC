@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: IFC ChangeSet Repair Pipeline
-status: Phase 12 live acceptance blocked; Phase 12.1 Plan 06 blocked on R12 evidence
-last_updated: "2026-08-24T14:15:00Z"
+status: Phase 12 live acceptance blocked; Phase 12.1 Plan 06 complete; Plan 07 awaiting Go/No-Go
+last_updated: "2026-08-26T00:00:00Z"
 progress:
   total_phases: 13
   completed_phases: 11
   total_plans: 63
-  completed_plans: 56
-  percent: 89
+  completed_plans: 57
+  percent: 90
 ---
 
 # Project State
@@ -188,6 +188,60 @@ Next: Resolve the frozen R12 evidence conflict: Plan 06 requires independent
       Phase 13 and do not restore replay/alias authority.
 ```
 
+## Phase 12.1 R12/R13 Evaluation Boundary Amendment — 2026-08-26
+
+```text
+Mode: CONTRACT AMENDED; ZERO-NETWORK RE-ADMISSION IN PROGRESS
+Phase: Phase 12.1 Property Resolution RAG and Reranker Correction
+Trigger: Independent review proved that a zero-network deterministic Stage 1.5
+         semantic Candidate score is either unavailable or Gold-equivalent.
+Resolution: Treat the prior state as an evaluation-contract conflict, not a
+            production regression or a reason to restore aliases.
+Plan 06 owns: unchanged 60-case real local BGE-M3/Qdrant retrieval metrics;
+              Stage 1.5 Prompt/parser/orchestration constraints; deterministic
+              admissibility; five-family/public full-chain regression; fresh
+              zero-skip/zero-timeout/zero-substitution/zero-network preflight.
+Plan 06 report: retrieval_capability=evaluated;
+                stage_1_5_semantic_evaluation_status=not_evaluated_offline.
+Plan 07 owns: the unchanged 60-case genuine Provider Stage 1.5 semantic
+              evaluation, followed by the separate four-case DeepSeek E2E
+              matrix, independent Proof, IFCCompare and Phase 12/12.1 closure.
+Gold boundary: retrieval Top-K and, in Plan 07, Provider decisions must be
+               durably persisted before evaluator-only Gold is opened. The
+               Provider never receives Gold/expected/authorize/private truth.
+Amendment-time state: Plan 06 remained incomplete pending contract review,
+                      evaluator report 0.3 alignment and fresh necessary
+                      zero-network checks.
+Live status: NOT RUN. Plan 07 requires a separate Go/No-Go after Plan 06 closes.
+```
+
+## Phase 12.1 Plan 06 Offline Admission Complete — 2026-08-26
+
+```text
+Mode: CHECKPOINT; PLAN 06 COMPLETE; LIVE NOT RUN
+Phase: Phase 12.1 Property Resolution RAG and Reranker Correction
+State: PLAN 12.1-06 COMPLETE; PLAN 12.1-07 UNSTARTED
+Summary: .planning/phases/12.1-property-resolution-rag-reranker/12.1-06-SUMMARY.md
+Retrieval: report 0.3 passed on the unchanged 60-case corpus using the real
+           local production BGE-M3/Qdrant runtime. Supported Top-K recall=1.0;
+           empty Top-K=2; policy/ineligible/alias/private/network counts=0.
+Semantic boundary: retrieval_capability=evaluated;
+                   stage_1_5_semantic_evaluation_status=not_evaluated_offline;
+                   semantic scored count=0 and no deterministic oracle/replay.
+Preflight: 0.4 passed all seven gates; 89 focused and 1105 complete-suite tests
+           passed with zero failure, skip, substitution, timeout or network.
+Offline chain: six accepted structural/mixed cases and two expected atomic
+               rollbacks; deterministic Provider/runtime fixtures remain
+               plumbing evidence only.
+Proof boundary: existing accepted Proof validator 0.2 passed read-only; no new
+                Proof was curated and final IFCCompare remains Plan 07.
+Live status: NOT RUN. DeepSeek transport calls=0; synthetic fallback=false.
+Next: Stop at this checkpoint and await explicit Go/No-Go for 12.1-07. Plan 07
+      must rerun fresh preflight, compare frozen fixtures to the Plan 06 Git
+      checkpoint, then run genuine semantic evaluation before separate E2E.
+      Do not start Phase 13.
+```
+
 ## Project Reference
 
 See `.planning/PROJECT.md`.
@@ -197,14 +251,14 @@ traceable semantic ChangeSet and an L1/L2-validated IFC result.
 
 **Current focus:** Phase 12.1 — Property Resolution RAG and Reranker Correction.
 Phase 12 Beam/Column implementation and live/Proof infrastructure are present,
-but genuine live acceptance has not been rerun; the preserved live attempt
-failed before Stage 2. Phase 11 remains closed with real DeepSeek and
-independently recomputed Proof evidence.
+and Plan 06 offline admission is complete; genuine semantic/live acceptance has
+not been rerun. The preserved live attempt failed before Stage 2. Phase 11
+remains closed with real DeepSeek and independently recomputed Proof evidence.
 
 ## Current Position
 
 Phase: 12.1 (Property Resolution RAG and Reranker Correction) — IN PROGRESS
-Plan: 5 of 7; Plan 06 active but blocked
+Plan: 6 of 7; Plan 06 complete; Plan 07 awaiting explicit Go/No-Go
 
 - Milestone: v1.1 IFC ChangeSet Repair Pipeline
 - Phase: 11 complete
@@ -218,23 +272,18 @@ Plan: 5 of 7; Plan 06 active but blocked
   complete, clarification/resume and deterministic unsupported contracts with
   no fallback; both publishable cases independently reopen and pass L0/L1/L2.
 
-- Progress: 11 / 13 major phases complete; 56 / 63 milestone plans complete.
+- Progress: 11 / 13 major phases complete; 57 / 63 milestone plans complete.
 - Requirements: RAG-01..04, WFID-01..06 and OPS-01..02 remain complete;
   RAG-05..07 and OPS-03..04 are pending.
-- Last activity: 2026-08-24 - Independent follow-up review rejected Plan
-  12.1-06 admission. Preflight 0.3 is a real improvement: it binds
-  commit/worktree/runtime/timestamps, derives network status from observed
-  calls, and its exact `tests/knowledge tests/ifc_repair` suite passed 1100
-  tests without failure, error or skip. However, the claimed Candidate 60/60
-  merely copied Gold-equivalent answers into a second replay fixture.
-  `b8cf328e` removes that answer table from evaluation. A fresh real-BGE run
-  passes five evaluator tests in 125.06s and proves supported Top-K recall 1.0,
-  but the report now correctly blocks with
-  `INDEPENDENT_STAGE15_CANDIDATE_OUTPUT_REQUIRED`: 60 semantic Candidate rows
-  are unscored, no replay is treated as R12 evidence. Existing Proof report 0.2
-  remains read-only/current-ineligible for old property artifacts. No genuine
-  DeepSeek, new Proof curation, final IFCCompare, Plan 07 or Phase closure
-  occurred.
+- Last activity: 2026-08-26 - The R12/R13 responsibility boundary was amended
+  to remove the internally unsatisfiable requirement for zero-network semantic
+  Candidate accuracy. Plan 06 now measures real BGE-M3/Qdrant retrieval and
+  offline contract/system correctness, with Stage 1.5 semantics explicitly
+  `not_evaluated_offline`. Plan 07 must run genuine Provider semantic scoring on
+  the unchanged 60 cases before the separate E2E UAT matrix. The rejected
+  replay oracle remains deleted; no DeepSeek, Proof curation, IFCCompare or
+  Phase closure has occurred. Fresh Plan 06 re-admission passed preflight 0.4;
+  Plan 07 remains unstarted pending explicit Go/No-Go.
 
 - Phase 11 closure evidence: accepted live run
   `uat-20260731T224900289758Z` passed all three contracts. Two live successes
@@ -410,16 +459,16 @@ Plan: 5 of 7; Plan 06 active but blocked
 
 ## Next Action
 
-Phase 11 remains closed. Continue only from
-`.planning/phases/12.1-property-resolution-rag-reranker/12.1-06-PLAN.md` after
-resolving the R12 evidence conflict. Plan 12.1-07 remains blocked.
+Phase 11 remains closed. Plan 12.1-06 is complete at its offline checkpoint.
+Do not execute `.planning/phases/12.1-property-resolution-rag-reranker/12.1-07-PLAN.md`
+until the user gives an explicit Go/No-Go.
 RAG-05..07 and OPS-03/OPS-04 remain pending until genuine DeepSeek, independent
 live Proof, IFCCompare and final regression all pass. Do not start Phase 13 or
 reopen frozen Door/Window, geometry, Type/material, Storey or private-Gold
 contracts.
 
 ---
-*Last updated: 2026-08-24 after independent rejection of Plan 12.1-06 admission*
+*Last updated: 2026-08-26 after accepted Plan 12.1-06 offline admission*
 
 ## Accumulated Context
 

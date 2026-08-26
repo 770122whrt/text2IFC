@@ -67,7 +67,9 @@ from text2ifc_knowledge.property_search import (  # noqa: E402
     PropertyResolutionDecision,
     ResolvedExactProperty,
     create_historical_alias_baseline_resolver,
+    normalize_property_value,
 )
+from text2ifc_knowledge.registry import load_ifc2x3_registry  # noqa: E402
 from text2ifc_knowledge.property_runtime import (  # noqa: E402
     create_default_property_runtime,
 )
@@ -136,6 +138,37 @@ def _write(path: Path, value: Any) -> None:
         )
     )
     path.write_text(rendered.rstrip() + "\n", encoding="utf-8")
+
+
+def _write_atomic(path: Path, value: Any) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    rendered = json.dumps(
+        value,
+        ensure_ascii=False,
+        indent=2,
+        sort_keys=True,
+        allow_nan=False,
+        default=str,
+    ).rstrip() + "\n"
+    temporary_path: Path | None = None
+    try:
+        with tempfile.NamedTemporaryFile(
+            mode="w",
+            encoding="utf-8",
+            dir=path.parent,
+            prefix=f".{path.name}.",
+            suffix=".tmp",
+            delete=False,
+        ) as handle:
+            handle.write(rendered)
+            handle.flush()
+            os.fsync(handle.fileno())
+            temporary_path = Path(handle.name)
+        os.replace(temporary_path, path)
+        temporary_path = None
+    finally:
+        if temporary_path is not None:
+            temporary_path.unlink(missing_ok=True)
 
 
 def _read(path: Path) -> dict[str, Any]:
@@ -1346,19 +1379,114 @@ def _property_evaluation_cases(project_root: Path) -> list[dict[str, Any]]:
     return cases
 
 
-def evaluate_property_resolution_matrix(
+def _property_evaluation_public_cases(project_root: Path) -> list[dict[str, Any]]:
+    public_fixture = _read(
+        project_root
+        / "tests/fixtures/knowledge/phase12_1_property_retrieval_public.json"
+    )
+    if public_fixture.get("schema_version") != (
+        "text2ifc/property-retrieval-public-eval/0.1"
+    ):
+        raise RuntimeError("PHASE12_1_PROPERTY_PUBLIC_FIXTURE_VERSION")
+    cases = [deepcopy(item) for item in public_fixture.get("cases", [])]
+    if len(cases) != 60 or public_fixture.get("case_count") != 60:
+        raise RuntimeError("PHASE12_1_PROPERTY_PUBLIC_FIXTURE_CASE_COUNT")
+    allowed_keys = {
+        "case_id",
+        "target_ifc_class",
+        "property_phrase",
+        "raw_value",
+        "raw_unit",
+        "scope",
+    }
+    if any(set(case) != allowed_keys for case in cases):
+        raise RuntimeError("PHASE12_1_PROPERTY_PUBLIC_FIXTURE_SHAPE")
+    if len({str(case["case_id"]) for case in cases}) != len(cases):
+        raise RuntimeError("PHASE12_1_PROPERTY_PUBLIC_FIXTURE_DUPLICATE_ID")
+    return cases
+
+
+def produce_property_retrieval_ledger(
     *,
     project_root: Path | str = ROOT,
     output_path: Path | str,
     qdrant_path: Path | str,
 ) -> dict[str, Any]:
-    """Score historical alias Baseline and alias-free BGE Candidate once."""
+    """Persist Gold-free real-BGE retrieval output for the frozen 60 cases."""
 
     root = Path(project_root).resolve()
     destination = Path(output_path).resolve()
-    cases = _property_evaluation_cases(root)
+    public_cases = _property_evaluation_public_cases(root)
+    model_path = root / ".cache/models/BAAI-bge-m3"
+    if not model_path.is_dir():
+        raise RuntimeError("PHASE12_1_LOCAL_BGE_M3_UNAVAILABLE")
+    runtime = create_default_property_runtime(
+        project_root=root,
+        qdrant_path=Path(qdrant_path),
+        embedding_model_path=str(model_path),
+        embedding_model_version="BAAI-bge-m3-local/phase12.1",
+        device="cpu",
+        runtime_mode="production",
+    )
+    if runtime.health.status != "ready":
+        raise RuntimeError(
+            f"PHASE12_1_PROPERTY_RUNTIME_NOT_READY:{runtime.health.reason_code}"
+        )
+
+    ledger_cases: list[dict[str, Any]] = []
+    try:
+        for index, case in enumerate(public_cases):
+            retrieval = runtime.retrieve(
+                run_id="phase12-1-property-evaluation",
+                request_id="phase12-1-property-evaluation",
+                model_id="offline-retrieval-evaluation",
+                operation_id=f"property-eval-operation-{index + 1}",
+                operation_type="set_occurrence_properties",
+                claim_id=f"property-eval-claim-{index + 1}",
+                property_phrase=case["property_phrase"],
+                target_ifc_class=case["target_ifc_class"],
+                raw_value=case["raw_value"],
+                raw_unit=case["raw_unit"],
+                scope=case["scope"],
+            )
+            ledger_cases.append(
+                {
+                    "case_id": case["case_id"],
+                    "query": retrieval.query,
+                    "candidate_set": retrieval.candidate_set,
+                }
+            )
+    finally:
+        close = getattr(runtime.vector_index, "close", None)
+        if callable(close):
+            close()
+
+    result = {
+        "schema_version": (
+            "text2ifc/phase12.1-property-retrieval-ledger/0.1"
+        ),
+        "status": "passed",
+        "case_count": len(ledger_cases),
+        "knowledge_health": runtime.health.to_dict(),
+        "provider_network_calls": 0,
+        "cases": ledger_cases,
+        "output_path": str(destination),
+    }
+    _write_atomic(destination, result)
+    return result
+
+
+def _property_evaluation_gold_cases(project_root: Path) -> list[dict[str, Any]]:
+    """Load evaluator-only Gold after public retrieval evidence is durable."""
+
+    return _property_evaluation_cases(project_root)
+
+
+def _historical_alias_baseline_rows(
+    cases: Iterable[Mapping[str, Any]],
+) -> list[dict[str, Any]]:
     baseline_resolver = create_historical_alias_baseline_resolver()
-    baseline_rows: list[dict[str, Any]] = []
+    rows: list[dict[str, Any]] = []
     for case in cases:
         decision = None
         failure = None
@@ -1376,9 +1504,7 @@ def evaluate_property_resolution_matrix(
             failure = str(error)
         exact = None if decision is None else decision.exact_intent
         authorized_path = (
-            None
-            if exact is None
-            else f"{exact.set_name}.{exact.property_name}"
+            None if exact is None else f"{exact.set_name}.{exact.property_name}"
         )
         expected = case.get("expected")
         passed = (
@@ -1386,142 +1512,261 @@ def evaluate_property_resolution_matrix(
             if bool(case["authorize"])
             else authorized_path is None
         )
-        baseline_rows.append(
+        rows.append(
             {
                 "id": str(case["id"]),
                 "group_id": str(case.get("group_id") or f"baseline:{case['id']}"),
                 "role": str(case.get("role") or "historical"),
-                "family": str(case.get("family") or _property_family(str(case["class"]))),
+                "family": str(
+                    case.get("family") or _property_family(str(case["class"]))
+                ),
                 "authorize": bool(case["authorize"]),
                 "expected": expected,
                 "authorized_path": authorized_path,
                 "passed": passed,
                 "status": None if decision is None else decision.status,
-                "reason_code": (
-                    failure
-                    if decision is None
-                    else decision.reason_code
-                ),
+                "reason_code": failure if decision is None else decision.reason_code,
             }
         )
+    return rows
 
-    model_path = root / ".cache/models/BAAI-bge-m3"
-    if not model_path.is_dir():
-        raise RuntimeError("PHASE12_1_LOCAL_BGE_M3_UNAVAILABLE")
+
+def _candidate_is_currently_eligible(
+    *,
+    query: Mapping[str, Any],
+    candidate: Mapping[str, Any],
+    minimum_score: float,
+    registry: Any,
+) -> bool:
+    if query.get("scope") != "occurrence_direct":
+        return False
+    if float(candidate.get("score", -1.0)) < minimum_score:
+        return False
+    if candidate.get("template_type") != "TypePropertySingleValue":
+        return False
+    if candidate.get("standard_status") not in {"standard", "project_custom"}:
+        return False
+    source = candidate.get("source")
+    if not isinstance(source, Mapping) or source.get("kind") not in {
+        "ifc2x3_psd",
+        "project_record",
+    }:
+        return False
+    applicable_classes = {
+        str(item) for item in candidate.get("applicable_classes", [])
+    }
+    target_ifc_class = str(query.get("target_ifc_class") or "")
+    declaration = registry.entity(target_ifc_class)
+    supertypes = (
+        set()
+        if declaration is None
+        else {str(item) for item in declaration.get("supertypes", ())}
+    )
+    if target_ifc_class not in applicable_classes and not (
+        applicable_classes & supertypes
+    ):
+        return False
+    value_type = candidate.get("value_type")
+    if not isinstance(value_type, str) or not value_type:
+        return False
+    try:
+        normalize_property_value(
+            query.get("raw_value"),
+            raw_unit=query.get("raw_unit"),
+            value_type=value_type,
+            project_length_unit="m",
+        )
+    except ValueError:
+        return False
+    return True
+
+
+def _candidate_set_obeys_retrieval_policy(
+    candidate_set: Mapping[str, Any],
+    *,
+    minimum_score: float,
+    max_candidates: int,
+) -> bool:
+    candidates = list(candidate_set.get("candidates", []))
+    if len(candidates) > max_candidates:
+        return False
+    ranks = [int(item.get("rank", -1)) for item in candidates]
+    if ranks != list(range(1, len(candidates) + 1)):
+        return False
+    scores = [float(item.get("score", -1.0)) for item in candidates]
+    if any(score < minimum_score for score in scores):
+        return False
+    if scores != sorted(scores, reverse=True):
+        return False
+    record_ids = [str(item.get("record_id") or "") for item in candidates]
+    return bool(all(record_ids)) and len(record_ids) == len(set(record_ids))
+
+
+def score_property_retrieval_ledger(
+    *,
+    project_root: Path | str = ROOT,
+    retrieval_ledger_path: Path | str,
+    output_path: Path | str,
+) -> dict[str, Any]:
+    """Open evaluator-only Gold only after a Gold-free ledger is durable."""
+
+    root = Path(project_root).resolve()
+    ledger_path = Path(retrieval_ledger_path).resolve()
+    destination = Path(output_path).resolve()
+    ledger = _read(ledger_path)
+    if ledger.get("schema_version") != (
+        "text2ifc/phase12.1-property-retrieval-ledger/0.1"
+    ):
+        raise RuntimeError("PHASE12_1_PROPERTY_RETRIEVAL_LEDGER_VERSION")
+    if ledger.get("status") != "passed" or ledger.get("case_count") != 60:
+        raise RuntimeError("PHASE12_1_PROPERTY_RETRIEVAL_LEDGER_INCOMPLETE")
+    ledger_cases = list(ledger.get("cases", []))
+    ledger_ids = [str(item.get("case_id") or "") for item in ledger_cases]
+    if len(ledger_cases) != 60 or len(set(ledger_ids)) != 60 or not all(ledger_ids):
+        raise RuntimeError("PHASE12_1_PROPERTY_RETRIEVAL_LEDGER_CASE_IDS")
+
+    public_cases = _property_evaluation_public_cases(root)
+    public_by_id = {str(item["case_id"]): item for item in public_cases}
+    if set(ledger_ids) != set(public_by_id):
+        raise RuntimeError("PHASE12_1_PROPERTY_RETRIEVAL_LEDGER_CORPUS_MISMATCH")
+    for item in ledger_cases:
+        public_case = public_by_id[str(item["case_id"])]
+        query = item.get("query", {})
+        if any(
+            query.get(query_key) != public_case[public_key]
+            for query_key, public_key in (
+                ("target_ifc_class", "target_ifc_class"),
+                ("property_phrase", "property_phrase"),
+                ("raw_value", "raw_value"),
+                ("raw_unit", "raw_unit"),
+                ("scope", "scope"),
+            )
+        ):
+            raise RuntimeError("PHASE12_1_PROPERTY_RETRIEVAL_QUERY_MISMATCH")
+
+    cases = _property_evaluation_gold_cases(root)
+    gold_ids = {str(case["id"]) for case in cases}
+    if gold_ids != set(ledger_ids):
+        raise RuntimeError("PHASE12_1_PROPERTY_RETRIEVAL_GOLD_JOIN_MISMATCH")
+    ledger_by_id = {str(item["case_id"]): item for item in ledger_cases}
     policy = _read(
         root / "schemas/ifc/knowledge/property_resolution_policy.v0.2.json"
     )
-    runtime = create_default_property_runtime(
-        project_root=root,
-        qdrant_path=Path(qdrant_path),
-        embedding_model_path=str(model_path),
-        embedding_model_version="BAAI-bge-m3-local/phase12.1",
-        device="cpu",
-        runtime_mode="production",
-    )
-    if runtime.health.status != "ready":
-        raise RuntimeError(
-            f"PHASE12_1_PROPERTY_RUNTIME_NOT_READY:{runtime.health.reason_code}"
-        )
+    minimum_score = float(policy["minimum_retrieval_score"])
+    max_candidates = int(policy["max_candidates"])
+    registry = load_ifc2x3_registry(root)
 
+    baseline_rows = _historical_alias_baseline_rows(cases)
     candidate_rows: list[dict[str, Any]] = []
     alias_runtime_authority_count = 0
     private_leakage_count = 0
-    try:
-        for index, case in enumerate(cases):
-            operation_id = f"property-eval-operation-{index + 1}"
-            claim_id = f"property-eval-claim-{index + 1}"
-            retrieval = runtime.retrieve(
-                run_id="phase12-1-property-evaluation",
-                request_id="phase12-1-property-evaluation",
-                model_id="offline-retrieval-evaluation",
-                operation_id=operation_id,
-                operation_type="set_occurrence_properties",
-                claim_id=claim_id,
-                property_phrase=str(case["phrase"]),
-                target_ifc_class=str(case["class"]),
-                raw_value=case["value"],
-                raw_unit=None,
-                scope="occurrence_direct",
+    ineligible_offered_record_count = 0
+    retrieval_policy_violation_count = 0
+    empty_top_k_count = 0
+    for case in cases:
+        evidence = ledger_by_id[str(case["id"])]
+        query = evidence["query"]
+        candidate_set = evidence["candidate_set"]
+        candidates = list(candidate_set.get("candidates", []))
+        if not candidates:
+            empty_top_k_count += 1
+        policy_pass = _candidate_set_obeys_retrieval_policy(
+            candidate_set,
+            minimum_score=minimum_score,
+            max_candidates=max_candidates,
+        )
+        if not policy_pass:
+            retrieval_policy_violation_count += 1
+        ineligible_for_case = sum(
+            not _candidate_is_currently_eligible(
+                query=query,
+                candidate=candidate,
+                minimum_score=minimum_score,
+                registry=registry,
             )
-            candidates = list(retrieval.candidate_set["candidates"])
-            expected = case.get("expected")
-            selected = next(
-                (
-                    item
-                    for item in candidates
-                    if item["canonical_path"] == expected
+            for candidate in candidates
+        )
+        ineligible_offered_record_count += ineligible_for_case
+        expected = case.get("expected")
+        selected = next(
+            (
+                item
+                for item in candidates
+                if item.get("canonical_path") == expected
+            ),
+            None,
+        )
+        public_evidence = json.dumps(
+            {"query": query, "candidate_set": candidate_set},
+            ensure_ascii=False,
+            sort_keys=True,
+        ).casefold()
+        if "reviewed_alias" in public_evidence or "property_aliases" in public_evidence:
+            alias_runtime_authority_count += 1
+        if any(
+            token in public_evidence
+            for token in (
+                "benchmark_gold",
+                "private_gold",
+                "mutation_recipe",
+                "deleted_identity",
+            )
+        ):
+            private_leakage_count += 1
+        scores = [float(item["score"]) for item in candidates]
+        candidate_rows.append(
+            {
+                "id": str(case["id"]),
+                "group_id": str(case.get("group_id") or f"baseline:{case['id']}"),
+                "role": str(case.get("role") or "historical"),
+                "family": str(
+                    case.get("family") or _property_family(str(case["class"]))
                 ),
-                None,
-            )
-            public_evidence = json.dumps(
-                {
-                    "query": retrieval.query,
-                    "candidate_set": retrieval.candidate_set,
-                },
-                ensure_ascii=False,
-                sort_keys=True,
-            ).casefold()
-            if "reviewed_alias" in public_evidence or "property_aliases" in public_evidence:
-                alias_runtime_authority_count += 1
-            if any(
-                token in public_evidence
-                for token in (
-                    "benchmark_gold",
-                    "private_gold",
-                    "mutation_recipe",
-                    "deleted_identity",
-                )
-            ):
-                private_leakage_count += 1
-            scores = [float(item["score"]) for item in candidates]
-            candidate_rows.append(
-                {
-                    "id": str(case["id"]),
-                    "group_id": str(case.get("group_id") or f"baseline:{case['id']}"),
-                    "role": str(case.get("role") or "historical"),
-                    "family": str(case.get("family") or _property_family(str(case["class"]))),
-                    "authorize": bool(case["authorize"]),
-                    "expected": expected,
-                    "authorized_path": None,
-                    "passed": None,
-                    "semantic_decision_status": (
-                        "not_evaluated_independent_output_missing"
-                    ),
-                    "retrieval_hit": selected is not None,
-                    "selected_rank": None if selected is None else int(selected["rank"]),
-                    "selected_score": None if selected is None else float(selected["score"]),
-                    "top1_score": None if not scores else scores[0],
-                    "top1_top2_margin": (
-                        None if len(scores) < 2 else scores[0] - scores[1]
-                    ),
-                    "candidate_paths": [
-                        str(item["canonical_path"]) for item in candidates
-                    ],
-                    "decision": None,
-                    "admissibility_status": "not_evaluated",
-                    "reason_code": (
-                        "INDEPENDENT_STAGE15_CANDIDATE_OUTPUT_REQUIRED"
-                    ),
-                }
-            )
-    finally:
-        close = getattr(runtime.vector_index, "close", None)
-        if callable(close):
-            close()
+                "authorize": bool(case["authorize"]),
+                "expected": expected,
+                "authorized_path": None,
+                "passed": None,
+                "semantic_decision_status": "not_evaluated_offline",
+                "retrieval_hit": selected is not None,
+                "selected_rank": None if selected is None else int(selected["rank"]),
+                "selected_score": None if selected is None else float(selected["score"]),
+                "top1_score": None if not scores else scores[0],
+                "top1_top2_margin": None if len(scores) < 2 else scores[0] - scores[1],
+                "candidate_paths": [
+                    str(item["canonical_path"]) for item in candidates
+                ],
+                "candidate_count": len(candidates),
+                "ineligible_offered_record_count": ineligible_for_case,
+                "retrieval_policy_pass": policy_pass,
+                "decision": None,
+                "admissibility_status": "not_evaluated_semantically",
+                "reason_code": None,
+            }
+        )
 
     baseline = _property_metrics(baseline_rows)
     supported_rows = [item for item in candidate_rows if item["authorize"]]
     supported_hits = sum(bool(item["retrieval_hit"]) for item in supported_rows)
+    retrieval_miss_count = len(supported_rows) - supported_hits
     candidate_family_slices: dict[str, Any] = {}
     for family in ("window", "door", "wall", "beam", "column"):
         family_rows = [item for item in candidate_rows if item["family"] == family]
         supported_family_rows = [item for item in family_rows if item["authorize"]]
+        family_hits = sum(
+            bool(item["retrieval_hit"]) for item in supported_family_rows
+        )
         candidate_family_slices[family] = {
             "case_count": len(family_rows),
             "supported_count": len(supported_family_rows),
-            "supported_top_k_hits": sum(
-                bool(item["retrieval_hit"]) for item in supported_family_rows
+            "supported_top_k_hits": family_hits,
+            "supported_top_k_recall": (
+                None
+                if not supported_family_rows
+                else family_hits / len(supported_family_rows)
+            ),
+            "supported_top_k_recall_95ci": _wilson_interval(
+                family_hits,
+                len(supported_family_rows),
             ),
             "semantic_scored_count": 0,
         }
@@ -1531,7 +1776,7 @@ def evaluate_property_resolution_matrix(
         "negative_count": len(candidate_rows) - len(supported_rows),
         "semantic_scored_count": 0,
         "semantic_unscored_count": len(candidate_rows),
-        "confirmed_standard_count": 0,
+        "confirmed_standard_count": None,
         "confirmed_standard_precision": None,
         "false_standard_authorization_count": None,
         "supported_top_k_recall": supported_hits / len(supported_rows),
@@ -1539,55 +1784,100 @@ def evaluate_property_resolution_matrix(
             supported_hits,
             len(supported_rows),
         ),
+        "empty_top_k_case_count": empty_top_k_count,
+        "retrieval_policy_violation_count": retrieval_policy_violation_count,
+        "ineligible_offered_record_count": ineligible_offered_record_count,
         "alias_runtime_authority_count": alias_runtime_authority_count,
         "private_leakage_count": private_leakage_count,
         "family_slices": candidate_family_slices,
     }
     hard_gates = {
         "all_supported_in_top_k": candidate["supported_top_k_recall"] == 1.0,
-        "independent_stage15_candidate_outputs_available": False,
+        "empty_top_k_fail_closed": all(
+            item["authorized_path"] is None
+            for item in candidate_rows
+            if item["candidate_count"] == 0
+        ),
+        "retrieval_floor_policy": retrieval_policy_violation_count == 0,
+        "zero_ineligible_candidates_offered": ineligible_offered_record_count == 0,
         "zero_alias_runtime_authority": alias_runtime_authority_count == 0,
         "zero_private_leakage": private_leakage_count == 0,
     }
+    status = "passed" if all(hard_gates.values()) else "failed"
     result = {
-        "schema_version": "text2ifc/phase12.1-property-resolution-evaluation/0.2",
-        "status": "blocked",
-        "reason_code": "INDEPENDENT_STAGE15_CANDIDATE_OUTPUT_REQUIRED",
-        "evaluator_id": "phase12.1.fixed-property-evaluator/0.2",
+        "schema_version": "text2ifc/phase12.1-property-resolution-evaluation/0.3",
+        "status": status,
+        "reason_code": None if status == "passed" else "PROPERTY_RETRIEVAL_GATE_FAILED",
+        "evaluator_id": "phase12.1.fixed-property-evaluator/0.3",
         "case_count": len(cases),
-        "failures_in_denominator": baseline["failed_count"] + len(candidate_rows),
-        "minimum_retrieval_score": policy["minimum_retrieval_score"],
+        "failures_in_denominator": baseline["failed_count"] + retrieval_miss_count,
+        "minimum_retrieval_score": minimum_score,
         "calibration": {
             "frozen_supported_minimum_score": 0.4805306036784617,
-            "configured_floor": policy["minimum_retrieval_score"],
-            "floor_purpose": "exclude low-quality retrieval evidence before Stage 1.5; never authorize by score",
+            "configured_floor": minimum_score,
+            "floor_purpose": (
+                "exclude low-quality retrieval evidence before Stage 1.5; "
+                "never authorize by score"
+            ),
         },
+        "retrieval_capability": "evaluated",
+        "retrieval_metrics": {
+            "case_count": len(candidate_rows),
+            "retrieval_ledger_path": str(ledger_path),
+            "supported_top_k_recall": candidate["supported_top_k_recall"],
+            "empty_top_k_case_count": empty_top_k_count,
+            "retrieval_policy_violation_count": retrieval_policy_violation_count,
+            "ineligible_offered_record_count": ineligible_offered_record_count,
+        },
+        "stage_1_5_semantic_evaluation_status": "not_evaluated_offline",
         "baseline": baseline,
         "candidate": candidate,
         "hard_gates": hard_gates,
-        "knowledge_health": runtime.health.to_dict(),
+        "knowledge_health": ledger["knowledge_health"],
         "evaluation_mode": "offline_retrieval_only_stage15_fixture_excluded",
         "stage15_candidate_evidence": {
-            "status": "missing_independent_output",
+            "status": "not_evaluated_offline",
             "semantic_scored_count": 0,
             "fixture_or_replay_used_for_scoring": False,
             "provider_network_calls": 0,
         },
         "provider_network_calls": 0,
         "claim_scope": (
-            "real BGE retrieval readiness only; deterministic Stage 1.5 fixtures "
-            "remain full-chain plumbing evidence and are excluded from Candidate "
-            "semantic scoring"
+            "real BGE-M3/Qdrant retrieval capability only; Stage 1.5 semantic "
+            "capability is not evaluated offline"
         ),
-        "cases": {
-            "baseline": baseline_rows,
-            "candidate": candidate_rows,
-        },
+        "cases": {"baseline": baseline_rows, "candidate": candidate_rows},
         "output_path": str(destination),
     }
-    _write(destination, result)
+    _write_atomic(destination, result)
     return result
 
+
+def evaluate_property_resolution_matrix(
+    *,
+    project_root: Path | str = ROOT,
+    output_path: Path | str,
+    qdrant_path: Path | str,
+    retrieval_ledger_path: Path | str | None = None,
+) -> dict[str, Any]:
+    """Produce Gold-free real retrieval evidence, then score it once."""
+
+    destination = Path(output_path).resolve()
+    ledger_path = (
+        destination.with_name(f"{destination.stem}-retrieval-ledger.json")
+        if retrieval_ledger_path is None
+        else Path(retrieval_ledger_path).resolve()
+    )
+    produce_property_retrieval_ledger(
+        project_root=project_root,
+        output_path=ledger_path,
+        qdrant_path=qdrant_path,
+    )
+    return score_property_retrieval_ledger(
+        project_root=project_root,
+        retrieval_ledger_path=ledger_path,
+        output_path=destination,
+    )
 
 def run_offline_matrix(
     output_root: Path | str = DEFAULT_OUTPUT,
@@ -1725,7 +2015,20 @@ def run_offline_matrix(
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--output-root", type=Path, default=DEFAULT_OUTPUT)
+    parser.add_argument(
+        "--property-retrieval-evaluation-only",
+        action="store_true",
+    )
     arguments = parser.parse_args(argv)
+    if arguments.property_retrieval_evaluation_only:
+        output = arguments.output_root.resolve()
+        result = evaluate_property_resolution_matrix(
+            output_path=output / "property-evaluation.json",
+            retrieval_ledger_path=output / "property-retrieval-ledger.json",
+            qdrant_path=output / "qdrant",
+        )
+        print(json.dumps(result, ensure_ascii=False, sort_keys=True))
+        return 0 if result["status"] == "passed" else 2
     result = run_offline_matrix(arguments.output_root)
     print(json.dumps(result, ensure_ascii=False, sort_keys=True))
     return 0

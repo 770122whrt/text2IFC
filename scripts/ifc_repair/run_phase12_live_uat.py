@@ -607,6 +607,7 @@ def _preflight_commands(
     proof_root: Path,
 ) -> tuple[tuple[str, tuple[str, ...]], ...]:
     python = str(Path(sys.executable).resolve())
+    retrieval_output = preflight_root / "property-retrieval-evaluation"
     offline_output = preflight_root / "offline-matrix"
     focused_basetemp = (preflight_root / "pytest-focused").resolve()
     focused_cache = (preflight_root / "pytest-cache-focused").resolve()
@@ -624,6 +625,16 @@ def _preflight_commands(
                 f"--basetemp={focused_basetemp}",
                 "-o",
                 f"cache_dir={focused_cache}",
+            ),
+        ),
+        (
+            "retrieval-evaluation",
+            (
+                python,
+                "scripts/ifc_repair/run_phase12_offline.py",
+                "--output-root",
+                str(retrieval_output),
+                "--property-retrieval-evaluation-only",
             ),
         ),
         (
@@ -780,15 +791,19 @@ def _preflight_check_counts(
         substitution_count = sum(
             pytest_counts[key] for key in ("deselected", "xfailed", "xpassed")
         )
-    elif name == "offline":
+    elif name in {"retrieval-evaluation", "offline"}:
         try:
             output = Path(command[command.index("--output-root") + 1])
-            summary = _read_json(output / "run-summary.json")
-            property_resolution = summary.get("property_resolution")
-            if isinstance(property_resolution, Mapping):
-                network_calls = int(
-                    property_resolution.get("provider_network_calls", 0)
-                )
+            if name == "retrieval-evaluation":
+                report = _read_json(output / "property-evaluation.json")
+                network_calls = int(report.get("provider_network_calls", 0))
+            else:
+                summary = _read_json(output / "run-summary.json")
+                property_resolution = summary.get("property_resolution")
+                if isinstance(property_resolution, Mapping):
+                    network_calls = int(
+                        property_resolution.get("provider_network_calls", 0)
+                    )
         except (FileNotFoundError, TypeError, ValueError):
             network_calls = 0
     return {
@@ -819,6 +834,66 @@ def _verify_preflight_semantics(
             return "PYTEST_SKIPS_PRESENT", []
         if any(counts[key] for key in ("deselected", "xfailed", "xpassed")):
             return "PYTEST_SUBSTITUTIONS_PRESENT", []
+    if name == "retrieval-evaluation":
+        output = Path(command[command.index("--output-root") + 1]).resolve()
+        report_path = output / "property-evaluation.json"
+        ledger_path = output / "property-retrieval-ledger.json"
+        if not report_path.is_file() or not ledger_path.is_file():
+            return "PROPERTY_RETRIEVAL_EVALUATION_MISSING", []
+        try:
+            report = _read_json(report_path)
+            ledger = _read_json(ledger_path)
+        except Exception as error:
+            return (
+                f"PROPERTY_RETRIEVAL_EVALUATION_INVALID:{type(error).__name__}",
+                [],
+            )
+        if int(report.get("provider_network_calls", -1)) != 0:
+            return "PROPERTY_RETRIEVAL_EVALUATION_NETWORK_NONZERO", [
+                report_path,
+                ledger_path,
+            ]
+        hard_gates = report.get("hard_gates")
+        candidate = report.get("candidate")
+        health = report.get("knowledge_health")
+        retrieval_metrics = report.get("retrieval_metrics")
+        valid = (
+            report.get("schema_version")
+            == "text2ifc/phase12.1-property-resolution-evaluation/0.3"
+            and report.get("status") == "passed"
+            and report.get("case_count") == 60
+            and report.get("retrieval_capability") == "evaluated"
+            and report.get("stage_1_5_semantic_evaluation_status")
+            == "not_evaluated_offline"
+            and isinstance(candidate, Mapping)
+            and candidate.get("semantic_scored_count") == 0
+            and candidate.get("confirmed_standard_precision") is None
+            and candidate.get("false_standard_authorization_count") is None
+            and isinstance(hard_gates, Mapping)
+            and bool(hard_gates)
+            and all(value is True for value in hard_gates.values())
+            and isinstance(health, Mapping)
+            and health.get("status") == "ready"
+            and health.get("runtime_mode") == "production"
+            and health.get("acceptance_eligible") is True
+            and isinstance(retrieval_metrics, Mapping)
+            and retrieval_metrics.get("case_count") == 60
+            and Path(
+                str(retrieval_metrics.get("retrieval_ledger_path") or "")
+            ).resolve()
+            == ledger_path
+            and ledger.get("schema_version")
+            == "text2ifc/phase12.1-property-retrieval-ledger/0.1"
+            and ledger.get("status") == "passed"
+            and ledger.get("case_count") == 60
+            and ledger.get("provider_network_calls") == 0
+        )
+        if not valid:
+            return "PROPERTY_RETRIEVAL_EVALUATION_NOT_GREEN", [
+                report_path,
+                ledger_path,
+            ]
+        return None, [report_path, ledger_path]
     if name == "offline":
         output = Path(command[command.index("--output-root") + 1])
         summary_path = output / "run-summary.json"
@@ -964,7 +1039,7 @@ def run_preflight(
     status = "passed" if all(item["status"] == "passed" for item in checks) else "failed"
     finished_at = _utc_now()
     result = {
-        "schema_version": "text2ifc/phase12-live-preflight/0.3",
+        "schema_version": "text2ifc/phase12-live-preflight/0.4",
         "status": status,
         "started_at_utc": started_at,
         "finished_at_utc": finished_at,

@@ -1,8 +1,8 @@
 # Issue Context: Stage 1.5 BGE, Live Transcript, and Curator Contract Failures
 
 **Created:** 2026-08-24  
-**Last updated:** 2026-08-24  
-**Status:** Partially resolved; Plan 12.1-06 blocked on Gold-independent R12 Candidate evidence
+**Last updated:** 2026-08-26
+**Status:** Resolved for Plan 12.1-06 offline admission; Plan 12.1-07 awaits explicit Go/No-Go
 **Scope:** Phase 12.1 Plan 06 investigation/correction only; no genuine DeepSeek call, Proof curation, final IFCCompare or Plan 07
 
 ## 1. Problem Statement
@@ -986,3 +986,105 @@ After checkpoint `a0218ab9` durably recorded the retained boundary, the final
 batch removed the two diagnostic roots and 12 JUnit XML carriers with zero
 failures. The complete cleanup therefore removed all 175 repository-root
 `.tmp-*` items / 11,172,528,170 bytes, leaving zero matching paths.
+
+## 21. Final Plan 06 Resolution — 2026-08-26
+
+This section supersedes only the admission conclusion in Section 19. It does
+not relabel the rejected replay result or remove the preserved failed evidence.
+The contract boundary was corrected: Plan 06 evaluates real retrieval and
+offline system correctness; Plan 07 owns genuine Stage 1.5 semantic capability,
+live DeepSeek viability, new Proof, final IFCCompare, and phase closure.
+
+### Final root cause
+
+The remaining block was a contract/evidence-category error, not a reason to
+restore aliases or fabricate a deterministic semantic Candidate:
+
+1. evaluation report 0.2 conflated real Top-K retrieval with genuine Stage 1.5
+   Provider semantics even though Plan 06 expressly prohibited a genuine
+   Provider call;
+2. the first retrieval producer opened the hidden Gold-bearing fixture before
+   public ledger persistence, so the process boundary was not independently
+   auditable even though the emitted rows were later projected;
+3. preflight did not explicitly require and validate a persisted public
+   retrieval ledger plus a post-persistence evaluation report;
+4. retired alias classes remained importable from the package root despite no
+   longer being valid runtime authority; and
+5. three validation-acceleration tests used a test-only 10-second parity
+   deadline that passed in isolation but expired under the complete suite. The
+   production default remained 180 seconds and was not changed.
+
+### Implemented fix
+
+- Added public-only fixture
+  `tests/fixtures/knowledge/phase12_1_property_retrieval_public.json` and
+  ledger contract `text2ifc/phase12.1-property-retrieval-ledger/0.1`.
+- The producer loads only the public fixture, executes the real production
+  BGE-M3/Qdrant runtime, and persists ordered Top-K rows before the scorer may
+  open hidden Gold.
+- Evaluation report `text2ifc/phase12.1-property-resolution-evaluation/0.3`
+  records retrieval capability as evaluated and Stage 1.5 semantic capability
+  exactly as `not_evaluated_offline`; it synthesizes no semantic score.
+- Preflight `text2ifc/phase12-live-preflight/0.4` explicitly gates the ledger,
+  report, focused Stage 1.5 full chain, offline matrix, complete suite,
+  compileall, diff check, read-only Proof validation, and zero network/skip/
+  substitution/timeout conditions.
+- Removed `PropertyAlias` and `PropertyKnowledgeResolver` from public package
+  exports. No reviewed alias, phrase map, compatibility normalization, or
+  production fallback was restored.
+- Raised only the validation-acceleration test helper's parity budget from 10
+  to 60 seconds. The production 180-second fail-closed behavior and the
+  dedicated 0.01-second deadline rejection test remain unchanged.
+
+### Regression and admission evidence
+
+The first fresh preflight is preserved at
+`dataset/processed/ifc-repair-runs/phase12-live/preflight-20260826T014807731670Z`.
+It failed only the complete-suite gate: `1102 passed, 3 failed in 1488.34s`.
+All three failures were the test-only parity deadline above; the same three
+tests passed in isolation in 10.70 seconds. This run is failure evidence, not
+accepted admission.
+
+The accepted fresh preflight is preserved at
+`dataset/processed/ifc-repair-runs/phase12-live/preflight-20260826T130321658243Z`:
+
+- focused Stage 1.5/full-chain gate: `89 passed in 93.41s`;
+- real BGE-M3/Qdrant 60-case retrieval: 60 cases, supported canonical Top-K
+  recall 1.0, two empty-Top-K clarification routes, zero policy/ineligible/
+  alias/private/network violations;
+- offline dataset matrix: six accepted repairs plus two expected atomic
+  rollbacks, zero network calls;
+- complete `tests/knowledge tests/ifc_repair`: `1105 passed in 2966.05s`, zero
+  failure/skip;
+- compileall, `git diff --check`, and existing Proof validation 0.2: passed;
+- preflight totals: zero failure, skip, substitution, timeout, and network;
+- no genuine DeepSeek transport, no new Proof curation, and no final
+  IFCCompare.
+
+The real local production BGE-M3/Qdrant runtime was exercised for retrieval.
+The mocked-Provider public full-chain separately used the deterministic
+alias-free injected runtime while still executing RepairAPI, orchestration,
+admissibility, Stage 2, IFC authoring, reopen, and publication. These two
+evidence classes remain explicitly distinct.
+
+### Independent review and cleanup
+
+An independent read-only review returned PASS with no BLOCK/HIGH finding. It
+verified the 60-row public fixture projection, Gold-after-ledger process
+boundary, unscored semantic fields, mandatory production BGE/Qdrant preflight,
+alias export retirement, test-only deadline scope, and that the fixes did not
+merely change expectations to match the current implementation.
+
+After durable manifests and reports were retained, 19 reproducible pytest
+basetemp/cache directories containing 13,883 files and 2,520,168,701 bytes were
+removed. The failed and accepted preflight manifests, logs, ledger/report,
+offline results, and outer results remain preserved. Unrelated PDFs, dataset
+sources, requirements, documentation work, generated run evidence, and private
+Proof were not staged into the Plan 06 checkpoint.
+
+### Final boundary
+
+Plan 12.1-06 is complete for its frozen offline scope. This result proves real
+retrieval readiness and deterministic offline system/contract correctness; it
+does not prove Stage 1.5 semantic capability or live E2E success. Plan 12.1-07
+has not started and requires explicit Go/No-Go.

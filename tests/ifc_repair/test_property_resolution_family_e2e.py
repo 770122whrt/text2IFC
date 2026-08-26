@@ -36,6 +36,8 @@ GLOBAL_ID = "0000000000000000000001"
 def test_active_property_authority_does_not_export_legacy_alias_entrypoints() -> None:
     assert not hasattr(text2ifc_knowledge, "create_default_property_resolver")
     assert not hasattr(text2ifc_knowledge, "load_reviewed_aliases")
+    assert not hasattr(text2ifc_knowledge, "PropertyAlias")
+    assert not hasattr(text2ifc_knowledge, "PropertyKnowledgeResolver")
 
 
 def test_repair_api_rejects_alias_bearing_property_resolver(tmp_path: Path) -> None:

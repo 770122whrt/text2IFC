@@ -516,6 +516,11 @@ class _GreenCommandRunner:
         rendered = " ".join(command).replace("\\", "/")
         if "test_phase12_live_uat.py" in rendered:
             return "focused"
+        if (
+            "run_phase12_offline.py" in rendered
+            and "--property-retrieval-evaluation-only" in rendered
+        ):
+            return "retrieval-evaluation"
         if "run_phase12_offline.py" in rendered:
             return "offline"
         if "-m pytest tests/knowledge tests/ifc_repair -q" in rendered:
@@ -552,6 +557,65 @@ class _GreenCommandRunner:
                         "property_resolution": {
                             "provider_network_calls": 0,
                         },
+                    },
+                    sort_keys=True,
+                ),
+                encoding="utf-8",
+            )
+        if name == "retrieval-evaluation" and self.forge != name:
+            output = Path(command[command.index("--output-root") + 1])
+            output.mkdir(parents=True, exist_ok=True)
+            ledger_path = (output / "property-retrieval-ledger.json").resolve()
+            ledger_path.write_text(
+                json.dumps(
+                    {
+                        "schema_version": (
+                            "text2ifc/phase12.1-property-retrieval-ledger/0.1"
+                        ),
+                        "status": "passed",
+                        "case_count": 60,
+                        "provider_network_calls": 0,
+                        "cases": [],
+                    },
+                    sort_keys=True,
+                ),
+                encoding="utf-8",
+            )
+            (output / "property-evaluation.json").write_text(
+                json.dumps(
+                    {
+                        "schema_version": (
+                            "text2ifc/phase12.1-property-resolution-evaluation/0.3"
+                        ),
+                        "status": "passed",
+                        "case_count": 60,
+                        "retrieval_capability": "evaluated",
+                        "retrieval_metrics": {
+                            "case_count": 60,
+                            "retrieval_ledger_path": str(ledger_path),
+                        },
+                        "stage_1_5_semantic_evaluation_status": (
+                            "not_evaluated_offline"
+                        ),
+                        "candidate": {
+                            "semantic_scored_count": 0,
+                            "confirmed_standard_precision": None,
+                            "false_standard_authorization_count": None,
+                        },
+                        "hard_gates": {
+                            "all_supported_in_top_k": True,
+                            "empty_top_k_fail_closed": True,
+                            "retrieval_floor_policy": True,
+                            "zero_ineligible_candidates_offered": True,
+                            "zero_alias_runtime_authority": True,
+                            "zero_private_leakage": True,
+                        },
+                        "knowledge_health": {
+                            "status": "ready",
+                            "runtime_mode": "production",
+                            "acceptance_eligible": True,
+                        },
+                        "provider_network_calls": 0,
                     },
                     sort_keys=True,
                 ),
@@ -1577,7 +1641,7 @@ def test_green_preflight_binds_commands_results_and_artifact_hashes(
 
     checks = result["preflight"]["checks"]
     assert result["preflight"]["schema_version"] == (
-        "text2ifc/phase12-live-preflight/0.3"
+        "text2ifc/phase12-live-preflight/0.4"
     )
     assert {
         key: result["preflight"][key]
@@ -1597,6 +1661,7 @@ def test_green_preflight_binds_commands_results_and_artifact_hashes(
     }
     assert [item["name"] for item in checks] == [
         "focused",
+        "retrieval-evaluation",
         "offline",
         "full-suite",
         "compile",
@@ -1612,6 +1677,7 @@ def test_green_preflight_binds_commands_results_and_artifact_hashes(
     assert all(item["finished_at_utc"] for item in checks)
     assert all(item["network_transport_attempted"] is False for item in checks)
     assert {item["name"] for item in checks if item["artifacts"]} >= {
+        "retrieval-evaluation",
         "offline",
         "proof",
     }
@@ -1638,6 +1704,52 @@ def test_green_preflight_binds_commands_results_and_artifact_hashes(
     assert result["status"] == "blocked"
     assert result["reason_code"] == "LIVE_CASE_MATRIX_REQUIRED"
     assert result["transport_calls"] == 0
+
+
+@pytest.mark.parametrize(
+    ("defect", "reason_code"),
+    (
+        ("missing", "PROPERTY_RETRIEVAL_EVALUATION_MISSING"),
+        ("semantic_claim", "PROPERTY_RETRIEVAL_EVALUATION_NOT_GREEN"),
+        ("network", "PROPERTY_RETRIEVAL_EVALUATION_NETWORK_NONZERO"),
+    ),
+)
+def test_preflight_rejects_missing_or_invalid_retrieval_evaluation(
+    tmp_path: Path,
+    defect: str,
+    reason_code: str,
+) -> None:
+    module = _module()
+    base = _GreenCommandRunner(forge=("retrieval-evaluation" if defect == "missing" else None))
+
+    def runner(
+        command: tuple[str, ...],
+        *,
+        cwd: Path,
+    ) -> subprocess.CompletedProcess[str]:
+        completed = base(command, cwd=cwd)
+        if base._name(command) != "retrieval-evaluation" or defect == "missing":
+            return completed
+        output = Path(command[command.index("--output-root") + 1])
+        report_path = output / "property-evaluation.json"
+        report = json.loads(report_path.read_text(encoding="utf-8"))
+        if defect == "semantic_claim":
+            report["stage_1_5_semantic_evaluation_status"] = "evaluated"
+        else:
+            report["provider_network_calls"] = 1
+        report_path.write_text(json.dumps(report, sort_keys=True), encoding="utf-8")
+        return completed
+
+    preflight = module.run_preflight(
+        tmp_path / "preflight",
+        proof_root=_proof_root(tmp_path),
+        command_runner=runner,
+    )
+    checks = {item["name"]: item for item in preflight["checks"]}
+
+    assert preflight["status"] == "failed"
+    assert checks["retrieval-evaluation"]["reason_code"] == reason_code
+    assert preflight["network_calls"] == int(defect == "network")
 
 
 @pytest.mark.parametrize(
