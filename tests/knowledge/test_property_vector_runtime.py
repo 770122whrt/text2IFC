@@ -60,6 +60,34 @@ class IneligibleHitVectorIndex:
         return (VectorHit("record-not-in-eligible-set", 1.0),)
 
 
+class ExpectedCandidateVectorIndex:
+    """Deterministic external-index seam for retrieval-eligibility tests."""
+
+    def __init__(self, expected_path: str) -> None:
+        self.embedding_provider = SemanticFixtureEmbedding()
+        self.expected_path = expected_path
+        self.expected_record_id: str | None = None
+        self.search_text: str | None = None
+        self.allowed_record_ids: frozenset[str] = frozenset()
+
+    def ensure_versioned(self, records, *, collection_version: str) -> str:
+        del collection_version
+        self.expected_record_id = next(
+            record.record_id
+            for record in records
+            if record.canonical_path == self.expected_path
+        )
+        return "built"
+
+    def search_allowed(self, text: str, *, allowed_record_ids, limit: int):
+        del limit
+        self.search_text = text
+        self.allowed_record_ids = frozenset(allowed_record_ids)
+        if self.expected_record_id not in self.allowed_record_ids:
+            return ()
+        return (VectorHit(self.expected_record_id, 1.0),)
+
+
 def _runtime_module():
     module_name = "text2ifc_knowledge.property_runtime"
     assert importlib.util.find_spec(module_name) is not None, (
@@ -271,7 +299,7 @@ def test_post_search_ineligible_id_fails_closed(project_root: Path) -> None:
         _retrieve(runtime, target_class="IfcWindow", phrase="external property")
 
 
-def test_type_owned_scope_and_incompatible_value_have_no_eligible_candidates(
+def test_type_owned_scope_has_no_eligible_candidates(
     project_root: Path,
 ) -> None:
     runtime = _runtime(project_root)
@@ -288,21 +316,90 @@ def test_type_owned_scope_and_incompatible_value_have_no_eligible_candidates(
         raw_unit=None,
         scope="type_owned",
     )
-    incompatible = runtime.retrieve(
-        run_id="run-1",
-        request_id="request-1",
-        model_id="model-1",
-        operation_id="operation-1",
+    assert type_owned.candidate_set["candidates"] == []
+
+
+@pytest.mark.parametrize(
+    (
+        "case_id",
+        "target_class",
+        "phrase",
+        "raw_value",
+        "expected_path",
+    ),
+    [
+        (
+            "p12w04",
+            "IfcWindow",
+            "窗的防火等级",
+            True,
+            "Pset_WindowCommon.FireRating",
+        ),
+        (
+            "p12d04",
+            "IfcDoor",
+            "door fire rating",
+            True,
+            "Pset_DoorCommon.FireRating",
+        ),
+        (
+            "p12c04",
+            "IfcColumn",
+            "column load bearing",
+            "yes",
+            "Pset_ColumnCommon.LoadBearing",
+        ),
+        (
+            "p12b04",
+            "IfcBeam",
+            "beam reference code",
+            42,
+            "Pset_BeamCommon.Reference",
+        ),
+        (
+            "p12m04",
+            "IfcWall",
+            "wall acoustic performance flag",
+            True,
+            "Pset_WallCommon.AcousticRating",
+        ),
+    ],
+)
+def test_incompatible_value_does_not_remove_property_before_vector_retrieval(
+    project_root: Path,
+    case_id: str,
+    target_class: str,
+    phrase: str,
+    raw_value: object,
+    expected_path: str,
+) -> None:
+    index = ExpectedCandidateVectorIndex(expected_path)
+    runtime = _runtime(project_root, vector_index=index)
+
+    result = runtime.retrieve(
+        run_id="run-boundary",
+        request_id="request-boundary",
+        model_id="model-boundary",
+        operation_id=f"operation-{case_id}",
         operation_type="set_occurrence_properties",
-        claim_id="claim-value",
-        property_phrase="external property",
-        target_ifc_class="IfcWindow",
-        raw_value="yes",
+        claim_id=case_id,
+        property_phrase=phrase,
+        target_ifc_class=target_class,
+        raw_value=raw_value,
         raw_unit=None,
         scope="occurrence_direct",
     )
-    assert type_owned.candidate_set["candidates"] == []
-    assert incompatible.candidate_set["candidates"] == []
+
+    assert index.expected_record_id in index.allowed_record_ids
+    assert _paths(result) == [expected_path]
+    assert result.query["raw_value"] == raw_value
+    assert index.search_text is not None
+    assert phrase in index.search_text
+    assert f"class {target_class}" in index.search_text
+    assert "scope occurrence_direct" in index.search_text
+    assert "operation set_occurrence_properties" in index.search_text
+    assert "value kind" not in index.search_text
+    assert "unit " not in index.search_text
 
 
 def test_invalid_policy_is_rejected_before_index_build(project_root: Path) -> None:
@@ -391,6 +488,92 @@ def test_missing_bge_and_qdrant_have_distinct_pre_provider_reasons(
         vector_index_factory=missing_qdrant,
     )
     assert qdrant.health.reason_code == "QDRANT_UNAVAILABLE"
+
+
+def test_production_runtime_config_resolves_repo_local_assets_without_download(
+    tmp_path: Path,
+) -> None:
+    module = _runtime_module()
+    model_path = tmp_path / ".cache/models/BAAI-bge-m3"
+    model_path.mkdir(parents=True)
+
+    config = module.load_property_runtime_config({}, project_root=tmp_path)
+
+    assert config.project_root == tmp_path.resolve()
+    assert config.embedding_model_path == str(model_path.resolve())
+    assert config.qdrant_path == (
+        tmp_path / ".cache/property-resolution/qdrant"
+    ).resolve()
+    assert config.qdrant_url is None
+    assert config.local_files_only is True
+
+
+def test_production_runtime_config_resolves_relative_environment_overrides(
+    tmp_path: Path,
+) -> None:
+    module = _runtime_module()
+    config = module.load_property_runtime_config(
+        {
+            "TEXT2IFC_PROPERTY_BGE_MODEL_PATH": "models/bge-m3",
+            "TEXT2IFC_PROPERTY_BGE_MODEL_VERSION": "local-approved/0.1",
+            "TEXT2IFC_PROPERTY_QDRANT_PATH": "vectors/qdrant",
+            "TEXT2IFC_PROPERTY_BGE_DEVICE": "cpu",
+        },
+        project_root=tmp_path,
+    )
+
+    assert config.embedding_model_path == str(
+        (tmp_path / "models/bge-m3").resolve()
+    )
+    assert config.embedding_model_version == "local-approved/0.1"
+    assert config.qdrant_path == (tmp_path / "vectors/qdrant").resolve()
+    assert config.device == "cpu"
+
+
+def test_environment_runtime_factory_forwards_one_resolved_production_config(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    module = _runtime_module()
+    captured: dict[str, Any] = {}
+    sentinel = object()
+
+    def capture(**kwargs):
+        captured.update(kwargs)
+        return sentinel
+
+    monkeypatch.setattr(module, "create_default_property_runtime", capture)
+    result = module.create_property_runtime_from_environment(
+        {
+            "TEXT2IFC_PROPERTY_BGE_MODEL_PATH": "models/bge-m3",
+            "TEXT2IFC_PROPERTY_QDRANT_PATH": "vectors/qdrant",
+        },
+        project_root=tmp_path,
+    )
+
+    assert result is sentinel
+    assert captured["runtime_mode"] == "production"
+    assert captured["embedding_model_path"] == str(
+        (tmp_path / "models/bge-m3").resolve()
+    )
+    assert captured["qdrant_path"] == (tmp_path / "vectors/qdrant").resolve()
+    assert captured["qdrant_url"] is None
+
+
+def test_runtime_config_rejects_ambiguous_qdrant_location(tmp_path: Path) -> None:
+    module = _runtime_module()
+
+    with pytest.raises(
+        module.PropertyRuntimeConfigurationError,
+        match="PROPERTY_QDRANT_LOCATION_AMBIGUOUS",
+    ):
+        module.load_property_runtime_config(
+            {
+                "TEXT2IFC_PROPERTY_QDRANT_PATH": "vectors/qdrant",
+                "TEXT2IFC_PROPERTY_QDRANT_URL": "http://127.0.0.1:6333",
+            },
+            project_root=tmp_path,
+        )
 
 
 def test_windows_bge_loader_preloads_system_msvc_runtime(

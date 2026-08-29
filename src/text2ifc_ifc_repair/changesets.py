@@ -23,6 +23,7 @@ BOUND_CHANGESET_SCHEMA_VERSION = "text2ifc/ifc-repair-changeset/0.2"
 BOUND_CHANGESET_SCHEMA_VERSION_0_3 = "text2ifc/ifc-repair-changeset/0.3"
 BOUND_CHANGESET_SCHEMA_VERSION_0_4 = "text2ifc/ifc-repair-changeset/0.4"
 DRAFT_CHANGESET_SCHEMA_VERSION = "text2ifc/ifc-repair-changeset-draft/0.2"
+DRAFT_CHANGESET_SCHEMA_VERSION_0_3 = "text2ifc/ifc-repair-changeset-draft/0.3"
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 CHANGESET_SCHEMA_PATH = (
     PROJECT_ROOT / "schemas" / "agent" / "ifc-repair-changeset-0.1.schema.json"
@@ -31,6 +32,7 @@ BOUND_CHANGESET_SCHEMA_PATH = PROJECT_ROOT / "schemas" / "agent" / "ifc-repair-c
 BOUND_CHANGESET_SCHEMA_PATH_0_3 = PROJECT_ROOT / "schemas" / "agent" / "ifc-repair-changeset-0.3.schema.json"
 BOUND_CHANGESET_SCHEMA_PATH_0_4 = PROJECT_ROOT / "schemas" / "agent" / "ifc-repair-changeset-0.4.schema.json"
 DRAFT_CHANGESET_SCHEMA_PATH = PROJECT_ROOT / "schemas" / "agent" / "ifc-repair-changeset-draft-0.2.schema.json"
+DRAFT_CHANGESET_SCHEMA_PATH_0_3 = PROJECT_ROOT / "schemas" / "agent" / "ifc-repair-changeset-draft-0.3.schema.json"
 
 
 @lru_cache(maxsize=1)
@@ -55,8 +57,16 @@ def _cached_schema(path: str) -> dict[str, Any]:
     return schema
 
 
-def load_changeset_draft_schema() -> dict[str, Any]:
-    return copy.deepcopy(_cached_schema(str(DRAFT_CHANGESET_SCHEMA_PATH)))
+def load_changeset_draft_schema(
+    version: str = DRAFT_CHANGESET_SCHEMA_VERSION,
+) -> dict[str, Any]:
+    path = {
+        DRAFT_CHANGESET_SCHEMA_VERSION: DRAFT_CHANGESET_SCHEMA_PATH,
+        DRAFT_CHANGESET_SCHEMA_VERSION_0_3: DRAFT_CHANGESET_SCHEMA_PATH_0_3,
+    }.get(version)
+    if path is None:
+        raise ValueError(f"unsupported draft ChangeSet schema: {version}")
+    return copy.deepcopy(_cached_schema(str(path)))
 
 
 def load_bound_changeset_schema(
@@ -100,8 +110,23 @@ def validate_changeset(document: Any) -> list[ValidationIssue]:
     return _sort_issues(issues)
 
 
-def validate_changeset_draft(document: Any) -> list[ValidationIssue]:
-    validator = Draft202012Validator(_cached_schema(str(DRAFT_CHANGESET_SCHEMA_PATH)))
+def validate_changeset_draft(
+    document: Any,
+    *,
+    expected_version: str | None = None,
+) -> list[ValidationIssue]:
+    version = (
+        expected_version
+        if expected_version is not None
+        else document.get("schema_version")
+        if isinstance(document, Mapping)
+        else None
+    )
+    path = {
+        DRAFT_CHANGESET_SCHEMA_VERSION: DRAFT_CHANGESET_SCHEMA_PATH,
+        DRAFT_CHANGESET_SCHEMA_VERSION_0_3: DRAFT_CHANGESET_SCHEMA_PATH_0_3,
+    }.get(version, DRAFT_CHANGESET_SCHEMA_PATH)
+    validator = Draft202012Validator(_cached_schema(str(path)))
     issues = [
         ValidationIssue(
             code="DRAFT_SCHEMA_VALIDATION_ERROR",
@@ -122,12 +147,22 @@ def bind_repair_changeset(
     source_request_hash: str,
     base_model_fingerprint: str,
     bound_schema_version: str = BOUND_CHANGESET_SCHEMA_VERSION,
+    resolved_authority: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Bind a non-authoritative Provider draft to immutable semantic manifests."""
 
-    issues = validate_changeset_draft(draft)
+    issues = validate_changeset_draft(
+        draft,
+        expected_version=(
+            DRAFT_CHANGESET_SCHEMA_VERSION_0_3
+            if resolved_authority is not None
+            else None
+        ),
+    )
     if issues:
         raise ValueError(f"DRAFT_SCHEMA_INVALID:{issues[0].path}")
+    if resolved_authority is not None:
+        _require_exact_draft_authority(draft, resolved_authority)
     if draft["source_request_hash"] != source_request_hash:
         raise ValueError("SOURCE_REQUEST_HASH_MISMATCH")
     if draft["base_model_fingerprint"] != base_model_fingerprint:
@@ -184,6 +219,55 @@ def bind_repair_changeset(
     if bound_issues:
         raise ValueError(f"BOUND_CHANGESET_INVALID:{bound_issues[0].path}")
     return bound
+
+
+def _require_exact_draft_authority(
+    draft: Mapping[str, Any],
+    authority: Mapping[str, Any],
+) -> None:
+    expected_operations = list(authority.get("operations", ()))
+    actual_operations = list(draft.get("operations", ()))
+    if len(actual_operations) != len(expected_operations):
+        raise ValueError(
+            "DRAFT_AUTHORITY_OPERATION_CARDINALITY_MISMATCH:/operations"
+        )
+    expected_ids = [str(item.get("operation_id", "")) for item in expected_operations]
+    actual_ids = [str(item.get("operation_id", "")) for item in actual_operations]
+    if (
+        len(set(actual_ids)) != len(actual_ids)
+        or set(actual_ids) != set(expected_ids)
+    ):
+        raise ValueError("DRAFT_AUTHORITY_OPERATION_ID_SET_MISMATCH:/operations")
+    if draft.get("scope") != authority.get("scope"):
+        raise ValueError("DRAFT_AUTHORITY_SCOPE_MISMATCH:/scope")
+    if draft.get("evidence_refs") != authority.get("evidence_refs"):
+        raise ValueError("DRAFT_AUTHORITY_EVIDENCE_MISMATCH:/evidence_refs")
+
+    expected_by_id = {
+        str(item["operation_id"]): item for item in expected_operations
+    }
+    for index, operation in enumerate(actual_operations):
+        operation_id = str(operation["operation_id"])
+        expected = expected_by_id[operation_id]
+        if operation.get("operation_type") != expected.get("operation_type"):
+            raise ValueError(
+                "DRAFT_AUTHORITY_OPERATION_TYPE_MISMATCH:"
+                f"/operations/{index}/operation_type"
+            )
+        if operation.get("target") != expected.get("target"):
+            raise ValueError(
+                f"DRAFT_AUTHORITY_TARGET_MISMATCH:/operations/{index}/target"
+            )
+        if operation.get("parameters") != expected.get("parameters"):
+            raise ValueError(
+                "DRAFT_AUTHORITY_PARAMETERS_MISMATCH:"
+                f"/operations/{index}/parameters"
+            )
+        if operation.get("evidence_refs") != expected.get("evidence_refs"):
+            raise ValueError(
+                "DRAFT_AUTHORITY_OPERATION_EVIDENCE_MISMATCH:"
+                f"/operations/{index}/evidence_refs"
+            )
 
 
 def _plain_json(value: Any) -> Any:

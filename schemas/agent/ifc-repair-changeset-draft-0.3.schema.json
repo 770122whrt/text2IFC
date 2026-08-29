@@ -1,0 +1,148 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "text2ifc/ifc-repair-changeset-draft/0.3",
+  "title": "Provider Beam and Column IFC Repair ChangeSet Draft 0.3",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "draft_id", "base_model_fingerprint",
+    "source_request_hash", "semantic_manifest_ref",
+    "semantic_manifest_sha256", "semantic_summary", "scope",
+    "evidence_refs", "preconditions", "postconditions", "operations"
+  ],
+  "properties": {
+    "schema_version": {"const": "text2ifc/ifc-repair-changeset-draft/0.3"},
+    "draft_id": {"$ref": "#/$defs/id"},
+    "base_model_fingerprint": {"$ref": "#/$defs/hash"},
+    "source_request_hash": {"$ref": "#/$defs/hash"},
+    "semantic_manifest_ref": {"type": "string", "minLength": 1},
+    "semantic_manifest_sha256": {"$ref": "#/$defs/hash"},
+    "semantic_summary": {
+      "type": "object", "additionalProperties": false,
+      "required": ["required", "conditional", "not_required"],
+      "properties": {
+        "required": {"type": "integer", "minimum": 0},
+        "conditional": {"type": "integer", "minimum": 0},
+        "not_required": {"type": "integer", "minimum": 0}
+      }
+    },
+    "scope": {"$ref": "#/$defs/scope"},
+    "evidence_refs": {"$ref": "#/$defs/strings"},
+    "preconditions": {"$ref": "#/$defs/strings"},
+    "postconditions": {"$ref": "#/$defs/strings"},
+    "operations": {
+      "type": "array", "minItems": 1,
+      "items": {
+        "oneOf": [
+          {"$ref": "#/$defs/beam"},
+          {"$ref": "#/$defs/column"}
+        ]
+      }
+    }
+  },
+  "$defs": {
+    "id": {"type": "string", "minLength": 1, "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]*$"},
+    "hash": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "strings": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+    "scope": {
+      "type": "object", "additionalProperties": false,
+      "required": ["target_ids", "forbidden_ids"],
+      "properties": {
+        "target_ids": {"$ref": "#/$defs/strings"},
+        "forbidden_ids": {"$ref": "#/$defs/strings"}
+      }
+    },
+    "point": {
+      "type": "object", "additionalProperties": false,
+      "required": ["x_mm", "y_mm", "z_mm"],
+      "properties": {
+        "x_mm": {"type": "number"},
+        "y_mm": {"type": "number"},
+        "z_mm": {"type": "number"}
+      }
+    },
+    "target": {
+      "type": "object", "additionalProperties": false,
+      "required": ["storey_global_id"],
+      "properties": {
+        "storey_global_id": {"type": "string", "minLength": 1}
+      }
+    },
+    "beamParameters": {
+      "type": "object", "additionalProperties": false,
+      "required": ["axis", "section"],
+      "properties": {
+        "axis": {
+          "type": "object", "additionalProperties": false,
+          "required": ["start", "end"],
+          "properties": {
+            "start": {"$ref": "#/$defs/point"},
+            "end": {"$ref": "#/$defs/point"}
+          }
+        },
+        "section": {
+          "type": "object", "additionalProperties": false,
+          "required": ["shape", "width_mm", "height_mm"],
+          "properties": {
+            "shape": {"const": "rectangle"},
+            "width_mm": {"type": "number", "exclusiveMinimum": 0},
+            "height_mm": {"type": "number", "exclusiveMinimum": 0}
+          }
+        }
+      }
+    },
+    "columnParameters": {
+      "type": "object", "additionalProperties": false,
+      "required": ["axis", "section"],
+      "properties": {
+        "axis": {
+          "type": "object", "additionalProperties": false,
+          "required": ["base", "top"],
+          "properties": {
+            "base": {"$ref": "#/$defs/point"},
+            "top": {"$ref": "#/$defs/point"}
+          }
+        },
+        "section": {
+          "type": "object", "additionalProperties": false,
+          "required": ["shape", "width_mm", "depth_mm"],
+          "properties": {
+            "shape": {"const": "rectangle"},
+            "width_mm": {"type": "number", "exclusiveMinimum": 0},
+            "depth_mm": {"type": "number", "exclusiveMinimum": 0},
+            "orientation": {
+              "type": "object", "additionalProperties": false,
+              "required": ["x", "y"],
+              "properties": {
+                "x": {"type": "number"},
+                "y": {"type": "number"}
+              }
+            }
+          }
+        }
+      }
+    },
+    "beam": {
+      "type": "object", "additionalProperties": false,
+      "required": ["operation_id", "operation_type", "target", "parameters", "evidence_refs"],
+      "properties": {
+        "operation_id": {"$ref": "#/$defs/id"},
+        "operation_type": {"const": "add_beam"},
+        "target": {"$ref": "#/$defs/target"},
+        "parameters": {"$ref": "#/$defs/beamParameters"},
+        "evidence_refs": {"$ref": "#/$defs/strings"}
+      }
+    },
+    "column": {
+      "type": "object", "additionalProperties": false,
+      "required": ["operation_id", "operation_type", "target", "parameters", "evidence_refs"],
+      "properties": {
+        "operation_id": {"$ref": "#/$defs/id"},
+        "operation_type": {"const": "add_column"},
+        "target": {"$ref": "#/$defs/target"},
+        "parameters": {"$ref": "#/$defs/columnParameters"},
+        "evidence_refs": {"$ref": "#/$defs/strings"}
+      }
+    }
+  }
+}

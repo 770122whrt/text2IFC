@@ -191,6 +191,7 @@ def run_openai_sdk_chat_smoke(
         "response_format": {"type": "json_object"},
     }
     request.update(_token_limit_request(config))
+    request.update(_provider_request_extensions(config))
     response = client.chat.completions.create(**request)
     payload = _object_to_dict(response)
     evidence = parse_chat_completion_evidence(
@@ -260,6 +261,7 @@ class OpenAICompatibleLiveProvider:
             "response_format": {"type": "json_object"},
         }
         request.update(_token_limit_request(self.config))
+        request.update(_provider_request_extensions(self.config))
         transport_attempts = 0
         while True:
             transport_attempts += 1
@@ -308,6 +310,7 @@ class OpenAICompatibleLiveProvider:
                     "estimated_input_tokens": estimated_input_tokens,
                     "max_input_tokens": self.config.max_input_tokens,
                     "transport_attempts": transport_attempts,
+                    **_provider_request_configuration_metadata(self.config, request),
                 },
             )
         )
@@ -497,6 +500,31 @@ def token_limit_request(config: OpenAICompatRuntimeConfig) -> dict[str, int]:
     if config.provider == PROVIDER_DEEPSEEK:
         return {"max_tokens": config.max_completion_tokens}
     return {"max_completion_tokens": config.max_completion_tokens}
+
+
+def _provider_request_extensions(
+    config: OpenAICompatRuntimeConfig,
+) -> dict[str, Any]:
+    if config.provider != PROVIDER_DEEPSEEK:
+        return {}
+    return {"extra_body": {"thinking": {"type": "enabled"}}}
+
+
+def _provider_request_configuration_metadata(
+    config: OpenAICompatRuntimeConfig,
+    request: dict[str, Any],
+) -> dict[str, Any]:
+    if config.provider != PROVIDER_DEEPSEEK:
+        return {}
+    return {
+        "request_configuration": {
+            "thinking": dict(request["extra_body"]["thinking"]),
+            "temperature": {
+                "value": request["temperature"],
+                "effective": False,
+            },
+        }
+    }
 
 
 def estimate_openai_compatible_input_tokens(text: str) -> int:

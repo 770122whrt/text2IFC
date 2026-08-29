@@ -11,6 +11,23 @@ Production/private L1/L2 与 occurrence fidelity，且没有 synthetic fallback�
 
 本目录集中保存可执行的验证设计、评估协议、样例冻结规则和配套实施指令。
 
+## Repair Milestone R1 最终验收冻结包
+
+- [R1 冻结包索引](repair-milestone-r1/README.md)
+  - 冻结当前 IFC2X3 bounded semantic repair 能力声明、4 个公开模型与 12 个
+    待执行案例。
+  - 包含模型/请求 SHA、稳定 IFC identity、能力覆盖、现有 Proof 约定和明确
+    non-claims；当前状态仅为等待人工 freeze approval，不代表 genuine E2E 或
+    final IFCCompare 已执行。
+
+## Agent 能力评测与真实 LLM 准入
+
+- [Agent Debug、能力评测与真实 LLM 准入协议](agent-capability-evaluation.md)
+  - 规定单例 Bug、失败类别鲁棒性和系统能力提升三种声明的证据边界。
+  - 要求修复前冻结 Failure Family，并进行 Baseline/Candidate 配对评测。
+  - 真实 LLM 调用前必须完成逐环节测试、离线公共入口全链路测试和机器可读
+    preflight；任何失败、跳过、替代或超时都阻断网络调用。
+
 ## IFC2X3 Local ChangeSet
 
 - [主题索引与运行入口](ifc2x3-changeset/README.md)

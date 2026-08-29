@@ -67,7 +67,6 @@ from text2ifc_knowledge.property_search import (  # noqa: E402
     PropertyResolutionDecision,
     ResolvedExactProperty,
     create_historical_alias_baseline_resolver,
-    normalize_property_value,
 )
 from text2ifc_knowledge.registry import load_ifc2x3_registry  # noqa: E402
 from text2ifc_knowledge.property_runtime import (  # noqa: E402
@@ -1567,18 +1566,7 @@ def _candidate_is_currently_eligible(
     ):
         return False
     value_type = candidate.get("value_type")
-    if not isinstance(value_type, str) or not value_type:
-        return False
-    try:
-        normalize_property_value(
-            query.get("raw_value"),
-            raw_unit=query.get("raw_unit"),
-            value_type=value_type,
-            project_length_unit="m",
-        )
-    except ValueError:
-        return False
-    return True
+    return isinstance(value_type, str) and bool(value_type)
 
 
 def _candidate_set_obeys_retrieval_policy(

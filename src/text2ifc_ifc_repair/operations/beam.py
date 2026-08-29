@@ -258,6 +258,7 @@ def beam_operation_definition() -> OperationDefinition:
         generated_type_template=generated_beam_type_template,
         generated_type_factory=create_generated_beam_type,
         prompt_profile_id="beam.add.v0.3",
+        stage2_prompt_profile_id="beam.add.stage2.v0.1",
         semantic_scope_roles={"beam": "beam_occurrence"},
         conflict_domain="structural_member",
         intent_policy_checker=_intent_policy_checker,

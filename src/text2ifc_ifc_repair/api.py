@@ -42,7 +42,9 @@ from text2ifc_knowledge.property_search import (
     PropertyKnowledgeStore,
     build_project_property_records,
 )
-from text2ifc_knowledge.property_runtime import create_default_property_runtime
+from text2ifc_knowledge.property_runtime import (
+    create_property_runtime_from_environment,
+)
 
 
 class RepairAPI:
@@ -122,7 +124,9 @@ class RepairAPI:
             output_root,
             provider=OpenAICompatibleLiveProvider(config=config),
             intent_schema_version=intent_schema_version,
-            property_knowledge_runtime=create_default_property_runtime(),
+            property_knowledge_runtime=create_property_runtime_from_environment(
+                dict(os.environ) if environment is None else dict(environment)
+            ),
         )
 
     def start(

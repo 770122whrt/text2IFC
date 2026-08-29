@@ -66,6 +66,7 @@ class OperationDefinition:
     generated_occurrence_facts: OperationCallable | None = None
     operation_conflict_checker: OperationCallable | None = None
     prompt_profile_id: str | None = None
+    stage2_prompt_profile_id: str | None = None
     semantic_scope_roles: Mapping[str, str] = field(default_factory=dict)
     conflict_domain: str | None = None
     intent_policy_checker: OperationCallable | None = None
@@ -141,6 +142,13 @@ class OperationDefinition:
         if self.prompt_profile_id is not None and not self.prompt_profile_id:
             raise OperationRegistryError(
                 "INVALID_PROMPT_PROFILE_ID", self.operation_type
+            )
+        if (
+            self.stage2_prompt_profile_id is not None
+            and not self.stage2_prompt_profile_id
+        ):
+            raise OperationRegistryError(
+                "INVALID_STAGE2_PROMPT_PROFILE_ID", self.operation_type
             )
         if any(not role or not scope for role, scope in self.semantic_scope_roles.items()):
             raise OperationRegistryError(

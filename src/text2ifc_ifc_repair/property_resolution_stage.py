@@ -26,7 +26,7 @@ from text2ifc_agent.providers import (
 from text2ifc_text.splits import atomic_write_text
 
 
-TEMPLATE_ID = "ifc-property-resolution.v0.1"
+TEMPLATE_ID = "ifc-property-resolution.v0.2"
 MAX_PROPERTY_RESOLUTION_ATTEMPTS = 2
 MAX_PROPERTY_RESOLUTION_RESPONSE_BYTES = 32_768
 MAX_PROPERTY_RESOLUTION_RESPONSE_TOKENS = 4_096

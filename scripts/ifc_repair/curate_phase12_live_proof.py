@@ -36,6 +36,7 @@ from scripts.ifc_repair.run_phase12_live_uat import (  # noqa: E402
     FROZEN_SOURCE_SHA256,
     PROGRAM_GUARD_REASON,
     SOURCE,
+    _few_shot_binding_map,
 )
 from text2ifc_agent.prompt_registry import load_prompt_registry  # noqa: E402
 from text2ifc_ifc_repair.prompt_profiles import select_prompt_profiles  # noqa: E402
@@ -280,6 +281,7 @@ def _audit_attempts(
                     "profile_hashes",
                     "few_shot_ids",
                     "few_shot_hashes",
+                    "few_shot_bindings",
                 )
             ):
                 raise ValueError("LIVE_ATTEMPT_TEMPLATE_ROUTING_MISMATCH")
@@ -307,22 +309,22 @@ def _audit_attempts(
             ):
                 raise ValueError("LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH")
         if stage == "stage2":
-            few_shot_ids = raw.get("few_shot_ids")
-            few_shot_hashes = raw.get("few_shot_hashes")
+            few_shot_binding_map = _few_shot_binding_map(
+                raw.get("few_shot_bindings")
+            )
             expected_selection = select_prompt_profiles(
                 sorted(EXPECTED_SELECTED_PROFILES[case_id])
             ).to_dict()
-            expected_few_shot_ids = expected_selection["few_shot_ids"]
-            expected_few_shot_hashes = expected_selection["few_shot_hashes"]
-            if not isinstance(few_shot_ids, list) or not isinstance(
-                few_shot_hashes, list
-            ):
+            expected_few_shot_binding_map = dict(
+                zip(
+                    expected_selection["few_shot_ids"],
+                    expected_selection["few_shot_hashes"],
+                    strict=True,
+                )
+            )
+            if few_shot_binding_map is None:
                 raise ValueError("LIVE_ATTEMPT_FEW_SHOT_HASH_REQUIRED")
-            if expected_few_shot_ids and (
-                not few_shot_ids
-                or not few_shot_hashes
-                or any(not _valid_sha256(value) for value in few_shot_hashes)
-            ):
+            if expected_few_shot_binding_map and not few_shot_binding_map:
                 raise ValueError("LIVE_ATTEMPT_FEW_SHOT_HASH_REQUIRED")
             expected_versions = [
                 str(profile["profile_version"])
@@ -332,8 +334,7 @@ def _audit_attempts(
                 profile_ids != expected_selection["profile_ids"]
                 or profile_versions != expected_versions
                 or profile_hashes != expected_selection["profile_hashes"]
-                or few_shot_ids != expected_few_shot_ids
-                or few_shot_hashes != expected_few_shot_hashes
+                or few_shot_binding_map != expected_few_shot_binding_map
             ):
                 raise ValueError("LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH")
         attempts.append(raw)

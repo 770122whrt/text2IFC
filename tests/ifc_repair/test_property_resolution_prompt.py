@@ -7,7 +7,8 @@ from text2ifc_agent.prompt_registry import load_prompt_registry, render_prompt
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
-TEMPLATE_ID = "ifc-property-resolution.v0.1"
+TEMPLATE_ID = "ifc-property-resolution.v0.2"
+HISTORICAL_TEMPLATE_ID = "ifc-property-resolution.v0.1"
 
 
 def test_property_resolution_prompt_has_exactly_four_public_inputs() -> None:
@@ -35,13 +36,14 @@ def test_property_resolution_prompt_has_exactly_four_public_inputs() -> None:
 
 def test_prompt_contains_no_family_phrase_mapping_or_compatibility_instruction() -> None:
     prompt = (
-        PROJECT_ROOT / "prompts/agent/ifc-property-resolution-v0.1.md"
+        PROJECT_ROOT / "prompts/agent/ifc-property-resolution-v0.2.md"
     ).read_text(encoding="utf-8")
     casefolded = prompt.casefold()
     for forbidden in (
         "外窗",
         "load bearing",
         "loadbearing",
+        "坚固",
         "reviewed alias",
         "property_aliases",
         "compatibility mapping",
@@ -81,3 +83,30 @@ def test_decision_schema_cannot_carry_executable_property_fields() -> None:
             "exact_intent",
         }
     )
+
+
+def test_historical_prompt_remains_registered_while_v02_is_current() -> None:
+    registry = load_prompt_registry()
+    assert HISTORICAL_TEMPLATE_ID in registry
+    assert registry[HISTORICAL_TEMPLATE_ID]["path"].endswith(
+        "ifc-property-resolution-v0.1.md"
+    )
+    assert registry[TEMPLATE_ID]["path"].endswith(
+        "ifc-property-resolution-v0.2.md"
+    )
+
+
+def test_v02_prompt_requires_unique_evidence_and_clarifies_vague_repair_goals() -> None:
+    prompt = (
+        PROJECT_ROOT / "prompts/agent/ifc-property-resolution-v0.2.md"
+    ).read_text(encoding="utf-8").casefold()
+
+    for contract_text in (
+        "direct and sufficiently specific semantic evidence",
+        "nearest candidate",
+        "possible way to achieve the user's goal",
+        "underspecified but potentially repairable",
+        "prefer `clarification_required`",
+        "genuinely outside the supported repair capability",
+    ):
+        assert contract_text in prompt

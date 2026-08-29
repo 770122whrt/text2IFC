@@ -27,6 +27,64 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 BEAM_ID = "0000000000000000000001"
 
 
+def test_repair_api_from_environment_shares_provider_and_property_config(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    import text2ifc_agent.openai_compat as openai_compat
+    import text2ifc_ifc_repair.api as api_module
+
+    environment = {
+        "DEEPSEEK_API_KEY": "not-used",
+        "TEXT2IFC_PROPERTY_BGE_MODEL_PATH": "models/bge-m3",
+        "TEXT2IFC_PROPERTY_QDRANT_PATH": "vectors/qdrant",
+    }
+    provider_config = object()
+    provider = object()
+    property_runtime = object()
+    captured: dict[str, Any] = {}
+
+    class CapturingRepairAPI(RepairAPI):
+        def __init__(self, output_root: Path | str, **kwargs: Any) -> None:
+            captured["output_root"] = output_root
+            captured.update(kwargs)
+
+    monkeypatch.setattr(
+        openai_compat,
+        "load_openai_compatible_runtime_config",
+        lambda values: (
+            provider_config
+            if values == environment
+            else pytest.fail("Provider received the wrong environment")
+        ),
+    )
+    monkeypatch.setattr(
+        openai_compat,
+        "OpenAICompatibleLiveProvider",
+        lambda *, config: (
+            provider
+            if config is provider_config
+            else pytest.fail("Provider received the wrong config")
+        ),
+    )
+    monkeypatch.setattr(
+        api_module,
+        "create_property_runtime_from_environment",
+        lambda values: (
+            property_runtime
+            if values == environment
+            else pytest.fail("Property runtime received the wrong environment")
+        ),
+    )
+
+    result = CapturingRepairAPI.from_environment(tmp_path, environment)
+
+    assert result is not None
+    assert captured["output_root"] == tmp_path
+    assert captured["provider"] is provider
+    assert captured["property_knowledge_runtime"] is property_runtime
+
+
 class _Embedding:
     model_id = "fixture-semantic"
     model_version = "fixture-semantic/0.1"

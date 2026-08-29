@@ -49,7 +49,7 @@ LIVE_CASE_ID = "phase12-live-deepseek-complete"
 LIVE_CASE_PATH = Path("structural") / "live" / LIVE_CASE_ID
 CURATOR_SCRIPT = ROOT / "scripts/ifc_repair/curate_phase12_live_proof.py"
 STAGE15_TEMPLATE_HASH = load_prompt_registry()[
-    "ifc-property-resolution.v0.1"
+    "ifc-property-resolution.v0.2"
 ]["sha256"]
 
 
@@ -801,7 +801,7 @@ def _live_attempt(
         },
         "error": None,
         "template_id": (
-            "ifc-property-resolution.v0.1"
+            "ifc-property-resolution.v0.2"
             if stage == "property_resolution"
             else None
         ),

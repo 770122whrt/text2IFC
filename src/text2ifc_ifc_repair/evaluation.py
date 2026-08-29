@@ -117,7 +117,7 @@ def execute_validation_and_diff(
             cache_dir=Path(cache_dir),
             policy=policy,
             started=started,
-            rss_reader=rss_reader or _process_tree_rss,
+            rss_reader=rss_reader or _current_process_rss,
             baseline_model=baseline_model,
             candidate_model=candidate_model,
         )
@@ -132,11 +132,11 @@ def execute_validation_and_diff(
             cache_dir=Path(cache_dir),
             policy=policy,
             started=started,
-            rss_reader=rss_reader or _process_tree_rss,
+            rss_reader=rss_reader or _current_process_rss,
         )
     validate = validation_worker or _cached_validation_worker
     compare = diff_worker or _path_diff_worker
-    rss = rss_reader or _process_tree_rss
+    rss = rss_reader or _current_process_rss
     tasks = {
         "validation": lambda: validate(
             Path(damaged_ifc_path),
@@ -388,10 +388,8 @@ def _execute_reused_models(
         failed["metrics"]["worker_count"] = 1 + len(pending)
         failed["metrics"]["stage_seconds"] = stage_seconds
         return failed
-    peak_rss = max(
-        int(rss_reader()),
-        _current_process_peak_rss() + sum(worker_peak_rss.values()),
-    )
+    parent_current_rss = int(rss_reader())
+    peak_rss = parent_current_rss + sum(worker_peak_rss.values())
     if peak_rss > policy.rss_limit_bytes:
         return {
             "status": "failed",
@@ -404,6 +402,8 @@ def _execute_reused_models(
                 "stage_seconds": stage_seconds,
                 "peak_rss_bytes": peak_rss,
                 "rss_limit_bytes": policy.rss_limit_bytes,
+                "parent_current_rss_bytes": parent_current_rss,
+                "worker_peak_rss_bytes": worker_peak_rss,
             },
         }
     return {
@@ -423,6 +423,8 @@ def _execute_reused_models(
             "stage_seconds": stage_seconds,
             "peak_rss_bytes": peak_rss,
             "rss_limit_bytes": policy.rss_limit_bytes,
+            "parent_current_rss_bytes": parent_current_rss,
+            "worker_peak_rss_bytes": worker_peak_rss,
         },
     }
 
@@ -509,10 +511,8 @@ def _execute_default_accelerated(
             started=started,
             rss_reader=rss_reader,
         )
-    peak_rss = max(
-        int(rss_reader()),
-        _current_process_peak_rss() + sum(worker_peak_rss.values()),
-    )
+    parent_current_rss = int(rss_reader())
+    peak_rss = parent_current_rss + sum(worker_peak_rss.values())
     if peak_rss > policy.rss_limit_bytes:
         return {
             "status": "failed",
@@ -522,6 +522,8 @@ def _execute_default_accelerated(
                 "wall_seconds": wall,
                 "peak_rss_bytes": peak_rss,
                 "rss_limit_bytes": policy.rss_limit_bytes,
+                "parent_current_rss_bytes": parent_current_rss,
+                "worker_peak_rss_bytes": worker_peak_rss,
             },
         }
     return {
@@ -541,6 +543,7 @@ def _execute_default_accelerated(
             "stage_seconds": stage_seconds,
             "peak_rss_bytes": peak_rss,
             "rss_limit_bytes": policy.rss_limit_bytes,
+            "parent_current_rss_bytes": parent_current_rss,
             "worker_peak_rss_bytes": worker_peak_rss,
         },
     }
@@ -701,44 +704,74 @@ def _process_tree_rss() -> int:
             )
         )
     except Exception:
-        return _current_process_peak_rss()
+        return _current_process_rss()
+
+
+def _current_process_rss() -> int:
+    """Return current parent-process RSS without child or lifetime-peak memory."""
+
+    try:
+        if os.name == "nt":
+            counters = _windows_process_memory_counters()
+            if counters is not None:
+                return int(counters.WorkingSetSize)
+        else:
+            statm_path = Path("/proc/self/statm")
+            if statm_path.is_file():
+                resident_pages = int(
+                    statm_path.read_text(encoding="ascii").split()[1]
+                )
+                return resident_pages * int(os.sysconf("SC_PAGE_SIZE"))
+    except Exception:
+        pass
+    return _current_process_peak_rss()
+
+
+def _windows_process_memory_counters() -> Any | None:
+    if os.name != "nt":
+        return None
+    try:
+        import ctypes
+        from ctypes import wintypes
+
+        class ProcessMemoryCounters(ctypes.Structure):
+            _fields_ = [
+                ("cb", wintypes.DWORD),
+                ("PageFaultCount", wintypes.DWORD),
+                ("PeakWorkingSetSize", ctypes.c_size_t),
+                ("WorkingSetSize", ctypes.c_size_t),
+                ("QuotaPeakPagedPoolUsage", ctypes.c_size_t),
+                ("QuotaPagedPoolUsage", ctypes.c_size_t),
+                ("QuotaPeakNonPagedPoolUsage", ctypes.c_size_t),
+                ("QuotaNonPagedPoolUsage", ctypes.c_size_t),
+                ("PagefileUsage", ctypes.c_size_t),
+                ("PeakPagefileUsage", ctypes.c_size_t),
+            ]
+
+        counters = ProcessMemoryCounters()
+        counters.cb = ctypes.sizeof(counters)
+        get_current_process = ctypes.windll.kernel32.GetCurrentProcess
+        get_current_process.restype = wintypes.HANDLE
+        process = get_current_process()
+        get_memory = ctypes.windll.psapi.GetProcessMemoryInfo
+        get_memory.argtypes = [
+            wintypes.HANDLE,
+            ctypes.POINTER(ProcessMemoryCounters),
+            wintypes.DWORD,
+        ]
+        get_memory.restype = wintypes.BOOL
+        if get_memory(process, ctypes.byref(counters), counters.cb):
+            return counters
+    except Exception:
+        pass
+    return None
 
 
 def _current_process_peak_rss() -> int:
     try:
         if os.name == "nt":
-            import ctypes
-            from ctypes import wintypes
-
-            class ProcessMemoryCounters(ctypes.Structure):
-                _fields_ = [
-                    ("cb", wintypes.DWORD),
-                    ("PageFaultCount", wintypes.DWORD),
-                    ("PeakWorkingSetSize", ctypes.c_size_t),
-                    ("WorkingSetSize", ctypes.c_size_t),
-                    ("QuotaPeakPagedPoolUsage", ctypes.c_size_t),
-                    ("QuotaPagedPoolUsage", ctypes.c_size_t),
-                    ("QuotaPeakNonPagedPoolUsage", ctypes.c_size_t),
-                    ("QuotaNonPagedPoolUsage", ctypes.c_size_t),
-                    ("PagefileUsage", ctypes.c_size_t),
-                    ("PeakPagefileUsage", ctypes.c_size_t),
-                ]
-
-            counters = ProcessMemoryCounters()
-            counters.cb = ctypes.sizeof(counters)
-            get_current_process = ctypes.windll.kernel32.GetCurrentProcess
-            get_current_process.restype = wintypes.HANDLE
-            process = get_current_process()
-            get_memory = ctypes.windll.psapi.GetProcessMemoryInfo
-            get_memory.argtypes = [
-                wintypes.HANDLE,
-                ctypes.POINTER(ProcessMemoryCounters),
-                wintypes.DWORD,
-            ]
-            get_memory.restype = wintypes.BOOL
-            if get_memory(
-                process, ctypes.byref(counters), counters.cb
-            ):
+            counters = _windows_process_memory_counters()
+            if counters is not None:
                 return int(counters.PeakWorkingSetSize)
         else:
             import resource

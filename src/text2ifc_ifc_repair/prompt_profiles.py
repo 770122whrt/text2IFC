@@ -25,12 +25,24 @@ PROFILE_SCHEMA_PATH = (
 PROFILE_SCHEMA_PATH_0_2 = (
     PROJECT_ROOT / "schemas" / "agent" / "ifc-repair-prompt-profile-0.2.schema.json"
 )
+PROFILE_SCHEMA_PATH_0_3 = (
+    PROJECT_ROOT / "schemas" / "agent" / "ifc-repair-prompt-profile-0.3.schema.json"
+)
+STAGE2_FEW_SHOT_SCHEMA_PATH = (
+    PROJECT_ROOT / "schemas" / "agent" / "ifc-repair-stage2-few-shot-0.1.schema.json"
+)
+STAGE2_OPERATION_SCHEMA_PATH = (
+    PROJECT_ROOT / "schemas" / "agent" / "ifc-repair-stage2-operation-0.1.schema.json"
+)
 DEFAULT_PROFILE_DIR = PROJECT_ROOT / "prompts" / "agent" / "ifc-repair-profiles"
 PROFILE_SCHEMA_VERSION = "text2ifc/ifc-repair-prompt-profile/0.1"
 PROFILE_SCHEMA_VERSION_0_2 = "text2ifc/ifc-repair-prompt-profile/0.2"
+PROFILE_SCHEMA_VERSION_0_3 = "text2ifc/ifc-repair-prompt-profile/0.3"
+STAGE2_OPERATION_SCHEMA_VERSION = "text2ifc/ifc-repair-stage2-operation/0.1"
 _PROFILE_SCHEMA_PATHS = {
     PROFILE_SCHEMA_VERSION: PROFILE_SCHEMA_PATH,
     PROFILE_SCHEMA_VERSION_0_2: PROFILE_SCHEMA_PATH_0_2,
+    PROFILE_SCHEMA_VERSION_0_3: PROFILE_SCHEMA_PATH_0_3,
 }
 MAX_PROFILE_COUNT = 32
 MAX_PROFILE_BYTES = 64 * 1024
@@ -59,6 +71,10 @@ class PromptProfile:
     document: Mapping[str, Any]
     profile_hash: str
     profile_bytes: int
+
+    @property
+    def stage(self) -> str:
+        return str(self.document.get("stage", "shared"))
 
     def compact_projection(self) -> dict[str, Any]:
         """Return only Stage 1 classification and slot information."""
@@ -197,7 +213,11 @@ def compact_profile_catalog(
 ) -> tuple[dict[str, Any], ...]:
     registry = profiles or load_prompt_profiles()
     selected = (
-        set(registry)
+        {
+            profile_id
+            for profile_id, profile in registry.items()
+            if profile.stage != "stage2"
+        }
         if include_profile_ids is None
         else {str(item) for item in include_profile_ids}
     )
@@ -328,6 +348,69 @@ def _validate_few_shots(document: Mapping[str, Any]) -> None:
             raise PromptProfileError("FEW_SHOT_BINDING_MISMATCH", example_id)
         if "EXAMPLE_ONLY" not in str(example):
             raise PromptProfileError("FEW_SHOT_SENTINEL_MISSING", example_id)
+        if document.get("stage") == "stage2":
+            _validate_stage2_few_shot(
+                example,
+                example_id=example_id,
+                declared_output_schema=str(
+                    document.get("few_shot_output_schema", "")
+                ),
+            )
+
+
+@lru_cache(maxsize=1)
+def _stage2_few_shot_schema() -> dict[str, Any]:
+    schema = json.loads(STAGE2_FEW_SHOT_SCHEMA_PATH.read_text(encoding="utf-8"))
+    Draft202012Validator.check_schema(schema)
+    return schema
+
+
+@lru_cache(maxsize=1)
+def _stage2_operation_schema() -> dict[str, Any]:
+    schema = json.loads(STAGE2_OPERATION_SCHEMA_PATH.read_text(encoding="utf-8"))
+    Draft202012Validator.check_schema(schema)
+    return schema
+
+
+def _validate_stage2_few_shot(
+    example: Mapping[str, Any],
+    *,
+    example_id: str,
+    declared_output_schema: str,
+) -> None:
+    envelope_errors = sorted(
+        Draft202012Validator(_stage2_few_shot_schema()).iter_errors(example),
+        key=lambda error: tuple(str(item) for item in error.absolute_path),
+    )
+    if envelope_errors:
+        error = envelope_errors[0]
+        pointer = "/" + "/".join(str(item) for item in error.absolute_path)
+        raise PromptProfileError(
+            "STAGE2_FEW_SHOT_SCHEMA_INVALID",
+            f"{example_id}:{pointer}:{error.message}",
+        )
+    if (
+        declared_output_schema != STAGE2_OPERATION_SCHEMA_VERSION
+        or example.get("output_schema") != declared_output_schema
+    ):
+        raise PromptProfileError(
+            "STAGE2_FEW_SHOT_OUTPUT_SCHEMA_MISMATCH", example_id
+        )
+    expected_errors = sorted(
+        Draft202012Validator(_stage2_operation_schema()).iter_errors(
+            example.get("expected")
+        ),
+        key=lambda error: tuple(str(item) for item in error.absolute_path),
+    )
+    if expected_errors:
+        error = expected_errors[0]
+        pointer = "/expected/" + "/".join(
+            str(item) for item in error.absolute_path
+        )
+        raise PromptProfileError(
+            "STAGE2_FEW_SHOT_EXPECTED_SCHEMA_INVALID",
+            f"{example_id}:{pointer}:{error.message}",
+        )
 
 
 def _project_file(relative_path: str) -> Path:
@@ -366,6 +449,7 @@ def _freeze(value: Any) -> Any:
 __all__ = [
     "PROFILE_SCHEMA_VERSION",
     "PROFILE_SCHEMA_VERSION_0_2",
+    "PROFILE_SCHEMA_VERSION_0_3",
     "PromptProfile",
     "PromptProfileError",
     "SelectedPromptProfiles",

@@ -1088,3 +1088,215 @@ Plan 12.1-06 is complete for its frozen offline scope. This result proves real
 retrieval readiness and deterministic offline system/contract correctness; it
 does not prove Stage 1.5 semantic capability or live E2E success. Plan 12.1-07
 has not started and requires explicit Go/No-Go.
+
+## 22. Plan 07 Preparation Blockers Resolved — 2026-08-27
+
+This preparation pass did not reopen Plan 06 and did not execute any genuine
+Provider call, the real 60-case semantic benchmark, the four live E2E cases,
+new Proof curation, final IFCCompare, or Phase 13 work.
+
+### Confirmed blocker root causes
+
+1. The repository had a Gold-after-public-ledger retrieval evaluator, but no
+   route-faithful Stage 1.5 semantic runner. There was no durable path that
+   persisted offered Top-K, production prompt input, raw Provider response,
+   parsed decision, admissibility result, and a frozen per-case prediction
+   before permitting the evaluator to open Gold.
+2. `RepairAPI.from_environment` and the live runner still called the default
+   runtime constructor without forwarding the explicit local BGE-M3 model
+   configuration used by accepted Plan 06 evaluation. With
+   `local_files_only=True`, the unresolved model ID correctly failed closed as
+   `BGE_M3_UNAVAILABLE`, but the intended repository-local model assets were
+   not reachable through one production configuration path.
+
+### Implemented resolution
+
+- Added `scripts/ifc_repair/run_phase12_1_semantic_evaluation.py`. Its public
+  execution order is public 60-case input, production BGE-M3/Qdrant retrieval,
+  durable offered Top-K, production Stage 1.5 rendering/call artifacts, raw and
+  parsed decision lineage, deterministic admissibility, durable per-case
+  prediction, durable 60-case prediction ledger, and only then Gold loading and
+  scoring.
+- The semantic report separates correct offered-candidate selection,
+  clarification, unsupported, retrieval failure, semantic-selection failure,
+  unoffered selection, malformed/retry exhaustion, admissibility rejection,
+  and infrastructure/runtime failure. It also retains family slices, attempt
+  and retry counts, token usage, latency, and artifact paths. The runner never
+  invokes Stage 2, authors IFC, or curates Proof.
+- Offline Provider doubles are marked `injected_offline`; their score fields
+  remain null and the report status is `offline_contract_only`. They prove
+  execution/persistence contracts only and cannot claim semantic accuracy.
+- Added `PropertyRuntimeConfig`, `load_property_runtime_config`, and
+  `create_property_runtime_from_environment`. Relative paths resolve against
+  the repository root; the default local model is
+  `.cache/models/BAAI-bge-m3` when present, and the default local Qdrant path is
+  `.cache/property-resolution/qdrant`. No developer-specific absolute path,
+  alias, test runtime, download, or fallback was added. Missing assets still
+  fail closed.
+- `RepairAPI.from_environment`, the live-UAT preflight-only path, the genuine
+  live executor, and the semantic readiness/runner path now use that same
+  production factory. The live/preflight runner records runtime health and
+  refuses to construct a transcript Provider or execute a case when production
+  runtime readiness is absent.
+- Added a no-network readiness mode. It rejects remote Qdrant configuration
+  before construction, retains `local_files_only=True`, makes zero Provider
+  calls, and closes the local Qdrant client after the check.
+
+### Focused regression evidence
+
+- Initial semantic/config RED collection: `15 failed, 19 passed` because the
+  runner and environment factory APIs did not exist.
+- Shared live-preflight configuration RED: one expected failure before the
+  live runner exposed the production factory.
+- Readiness-probe RED: two expected failures before the probe API existed.
+- Semantic runner, Gold ordering, outcome classifier, production config, and
+  live-preflight focused GREEN: `38 passed in 40.53s`.
+- Actual production-preflight readiness lifecycle test: `1 passed in 2.31s`;
+  it proved ready-runtime open/close and zero Provider construction.
+- Final combined focused GREEN after the live-readiness seam was included:
+  `39 passed in 40.35s`.
+- `RepairAPI.from_environment` same-environment Provider/Property-runtime
+  wiring regression: `1 passed in 1.57s`.
+- Repository-local no-network readiness probe: `status=ready`,
+  `acceptance_eligible=true`, BGE model path
+  `.cache/models/BAAI-bge-m3`, local Qdrant path
+  `.cache/property-resolution/qdrant`, 472 records, collection status `built`,
+  zero Provider calls, and approximately 249.03 seconds for first local
+  collection construction.
+
+All task-created `.tmp-phase12-1-07-*` pytest basetemp/cache directories were
+removed after the durable results above were recorded. Unrelated PDF, dataset,
+requirements, documentation, generated run, and user worktree changes were not
+reset, cleaned, or absorbed.
+
+### Remaining evidence boundary
+
+The two preparation blockers are resolved, but no Stage 1.5 semantic accuracy
+or live E2E result exists yet. A new Provider Go/No-Go may now recheck the
+frozen Plan 07 prerequisites. If authorized later, the genuine 60-case
+semantic evaluation must use the unchanged public queries/Gold and this runner;
+the four-case DeepSeek matrix, new live Proof, final IFCCompare, and phase
+closure remain separate subsequent Plan 07 work.
+
+### Final Go/No-Go review correction
+
+The lightweight review found two runner-policy defects before any Provider
+call. Infrastructure/request failures were previously representable as case
+outcomes but did not stop the remaining run, and family slices lacked the
+frozen uncertainty plus Stage 1.5-invoked denominator. The narrow correction:
+
+- persists a Gold-free `aborted` ledger and stops on BGE/Qdrant/runtime,
+  Provider request/connection, non-live evidence, and deterministic protocol
+  defects;
+- never invokes the scorer or opens Gold after such an abort;
+- continues and scores genuine semantic errors, including wrong selection,
+  clarification/unsupported mistakes, unoffered selection and bounded
+  malformed/retry exhaustion;
+- determines genuine scoring eligibility from live transport lineage rather
+  than requiring the model answer itself to be valid;
+- reports Wilson 95% intervals and both complete-route and Provider-invoked
+  family accuracy, with the family gate bound to the frozen nonempty invoked
+  denominator.
+
+Focused RED covered all four gaps. Focused GREEN was `4 passed in 1.49s`; the
+complete semantic-runner test file then passed `17 passed in 19.47s`. No query,
+Gold label, Prompt, retrieval policy, threshold, Provider call, Stage 2, IFC,
+Proof or Phase 13 artifact changed or ran.
+
+## 23. Stage 1.5 Semantic Contract v0.2 and Post-fix Acceptance — 2026-08-28
+
+### Root cause and corrective contract
+
+The preserved first genuine run
+`semantic-20260827T160906604981Z` remains a failed v0.1 experiment: 59/60,
+one false authorization, Wall `n06`. Its prediction-ledger SHA-256 remains
+`675091396930c72df41ea659304f518f5e04f034607b38a3dfe5e55f67bbbbc6`.
+
+The localized product defect was Stage 1.5 semantic overreach: Prompt v0.1 made
+clarification explicit for competing offered candidates but did not clearly
+separate an underspecified, potentially repairable goal from an unsupported
+request. The genuine model acknowledged that the offered property was only a
+related engineering interpretation and nevertheless confirmed the nearest
+candidate. Retrieval and deterministic admissibility were not the root cause.
+
+The additive correction is frozen in
+`12.1-STAGE15-SEMANTIC-CONTRACT-v0.2.md` and registered Prompt
+`ifc-property-resolution.v0.2`. Confirmation now requires direct and sufficiently
+specific evidence for exactly one offered property. A meaningful but
+underspecified goal requires clarification even when one related candidate is
+only one possible repair interpretation. Unsupported is reserved for requests
+that cannot become a supported repair action through clarification. No case-ID,
+keyword, Chinese phrase, `LoadBearing`, alias, compatibility, or deterministic
+semantic-classifier special case was added.
+
+All 60 cases were audited in semantic taxonomy 0.2 without changing public
+queries, retrieval Gold identities, values, scopes, or families. Only `n06`
+(`unsupported` -> `clarification_required`) and `p12m04`
+(`clarification_or_unsupported` -> strict `clarification_required`) changed,
+under the same general underspecification rule. Prompt, taxonomy, prediction
+ledger, and semantic report now have additive 0.2 identities; v0.1 artifacts
+remain readable and unchanged.
+
+### Focused regression and readiness
+
+The stable pre-fix RED was `9 failed, 27 passed`. The final focused suite passed
+`54 passed in 53.01s`; it covers Prompt/registry boundaries, single-related-
+candidate clarification, all-60 offline runner persistence, prediction-before-
+Gold ordering, strict route scoring, post-fix label propagation, and current
+live/E2E template identity. No Plan 06 suite was rerun.
+
+The zero-network production readiness probe passed with production BGE-M3,
+repository-local Qdrant, collection version `ifc2x3-property-vector/0.2`, 472
+records, `acceptance_eligible=true`, and zero Provider calls. The live request
+used `deepseek-v4-flash`, explicit `thinking={"type":"enabled"}`, and recorded
+`temperature=0` as ineffective while thinking is enabled.
+
+### Genuine post-fix semantic result
+
+The separately labeled run is
+`post-fix-semantic-20260828T092301205242Z` with evaluation label
+`POST_FIX_STAGE15_ACCEPTANCE_EVALUATION`, Prompt v0.2, taxonomy v0.2, prediction
+ledger 0.2, and report 0.2. Prediction-ledger SHA-256 is
+`bd7d0ed46bdde3febbafa1287c1ec81dfdf1d4e39c3262475b7ee4d38593cadd`;
+report SHA-256 is
+`0d546f49569e800150b248e28b8e8b0794e21f2a85fa5ce021db9594fe5f6f5a`.
+Gold was absent during prediction and opened only after all 60 predictions were
+frozen. Every one of 31 Provider attempts is genuine live evidence from
+`deepseek-v4-flash`, thinking enabled, one transport attempt, and stop reason
+`stop`; there were zero retries, infrastructure failures, malformed responses,
+unoffered selections, private leakage, false publications, or IFC writes.
+
+The corrected acceptance failed:
+
+- strict route accuracy: 54/60 = 0.90;
+- confirmed offered-candidate selection: 1.0;
+- clarification: 1/2 = 0.50;
+- unsupported: 1/2 = 0.50;
+- deterministic-inadmissible route: 8/12 = 0.6667;
+- false authorization: 0;
+- unresolved confirmed cases with Gold offered: 0;
+- Provider usage: 31 attempts, 0 retries, 74,923 prompt tokens, 20,061
+  completion tokens, 94,984 total tokens;
+- latency: p50 3,472.31 ms, p95 17,546.17 ms, total 158,155.66 ms.
+
+Failed cases are `n05` (clarification instead of unsupported), `p12w04` and
+`p12d04` (clarification instead of deterministic inadmissible), `p12m04`
+(unsupported instead of clarification), `p12c04` (unsupported instead of
+deterministic inadmissible), and non-Provider route `p12b04` (empty Top-K /
+not-invoked unsupported route instead of deterministic inadmissible). Thus five
+failures are genuine Provider semantic outcomes and one is a non-invoked
+retrieval/routing outcome. `n06` itself now correctly returned clarification and
+made no property authorization.
+
+Invoked family accuracy was Window 7/8, Door 6/8, Wall 7/8, Beam 3/3, and Column
+3/4. Retrieval-failure, semantic-selection-failure, false-authorization,
+unoffered, malformed, and infrastructure counts were all zero; the failures are
+strict terminal-route mismatches retained in the denominator.
+
+### Stop boundary
+
+Because the corrected 60-case hard gates failed, the four-case E2E matrix was
+not started. No Stage 2, IFC authoring, Proof curation, IFCCompare, Phase
+12/12.1 closeout, checkpoint, or Phase 13 action was performed. The result is
+`PLAN_07_STAGE15_POST_FIX_ACCEPTANCE_FAILED` pending review; no post-observation
+Prompt, taxonomy, scorer, Provider configuration, or gate edit was made.

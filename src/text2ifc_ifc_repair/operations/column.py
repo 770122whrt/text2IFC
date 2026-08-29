@@ -264,6 +264,7 @@ def column_operation_definition() -> OperationDefinition:
         generated_type_template=generated_column_type_template,
         generated_type_factory=create_generated_column_type,
         prompt_profile_id="column.add.v0.3",
+        stage2_prompt_profile_id="column.add.stage2.v0.1",
         semantic_scope_roles={"column": "column_occurrence"},
         conflict_domain="structural_member",
         intent_policy_checker=_intent_policy_checker,

@@ -5,7 +5,14 @@ import inspect
 from collections import Counter
 from pathlib import Path
 
+import pytest
 from jsonschema import Draft202012Validator
+
+from text2ifc_knowledge.property_search import (
+    build_standard_property_records,
+    default_standard_corpus_fingerprint,
+)
+from text2ifc_knowledge.registry import load_ifc2x3_registry
 
 
 def _fixture(project_root: Path) -> tuple[dict, list[dict]]:
@@ -196,6 +203,66 @@ def test_retrieval_public_cases_do_not_load_hidden_gold(
             "scope",
         }
         for case in cases
+    )
+
+
+@pytest.mark.parametrize(
+    ("target_class", "raw_value", "canonical_path"),
+    [
+        ("IfcWindow", True, "Pset_WindowCommon.FireRating"),
+        ("IfcDoor", True, "Pset_DoorCommon.FireRating"),
+        ("IfcColumn", "yes", "Pset_ColumnCommon.LoadBearing"),
+        ("IfcBeam", 42, "Pset_BeamCommon.Reference"),
+        ("IfcWall", True, "Pset_WallCommon.AcousticRating"),
+    ],
+)
+def test_retrieval_evaluator_does_not_apply_value_compatibility_before_selection(
+    project_root: Path,
+    target_class: str,
+    raw_value: object,
+    canonical_path: str,
+) -> None:
+    from scripts.ifc_repair import run_phase12_offline
+
+    registry = load_ifc2x3_registry(project_root)
+    record = next(
+        item
+        for item in build_standard_property_records(
+            registry,
+            corpus_fingerprint=default_standard_corpus_fingerprint(),
+        )
+        if item.canonical_path == canonical_path
+    )
+    candidate = {
+        "score": 0.9,
+        "template_type": record.template_type,
+        "standard_status": (
+            "standard"
+            if record.authority == "ifc2x3_psd"
+            else "project_custom"
+        ),
+        "source": {
+            "kind": (
+                "ifc2x3_psd"
+                if record.authority == "ifc2x3_psd"
+                else "project_record"
+            ),
+            "reference": record.source_ref,
+        },
+        "applicable_classes": list(record.applicable_classes),
+        "value_type": record.value_type,
+    }
+
+    assert run_phase12_offline._candidate_is_currently_eligible(
+        query={
+            "target_ifc_class": target_class,
+            "raw_value": raw_value,
+            "raw_unit": None,
+            "scope": "occurrence_direct",
+        },
+        candidate=candidate,
+        minimum_score=0.1,
+        registry=registry,
     )
 
 

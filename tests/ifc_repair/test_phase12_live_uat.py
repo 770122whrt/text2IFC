@@ -8,6 +8,7 @@ import shutil
 import subprocess
 from collections import deque
 from pathlib import Path
+from types import SimpleNamespace
 from typing import Any, Mapping
 
 import pytest
@@ -31,7 +32,7 @@ CURATOR_SCRIPT = ROOT / "scripts/ifc_repair/curate_phase12_live_proof.py"
 HASH_A = "sha256:" + "a" * 64
 HASH_B = "sha256:" + "b" * 64
 STAGE15_TEMPLATE_HASH = load_prompt_registry()[
-    "ifc-property-resolution.v0.1"
+    "ifc-property-resolution.v0.2"
 ]["sha256"]
 STAGE1_COMPACT_PROFILE_IDS = {
     "beam.add.v0.3",
@@ -269,7 +270,7 @@ class _ProductionPathTransport(_MockTransport):
         elif stage == "ifc_property_resolution":
             content = self._property_resolution_response(prompt)
         elif stage == "ifc_repair_bound_changeset":
-            content = self._changeset_response(prompt)
+            content = self._changeset_response(prompt, schema=schema)
         else:
             raise AssertionError(stage)
         self.responses.append({"content": content})
@@ -455,31 +456,42 @@ class _ProductionPathTransport(_MockTransport):
         raise AssertionError("unexpected Stage 1 request")
 
     @staticmethod
-    def _changeset_response(prompt: str) -> dict[str, Any]:
+    def _changeset_response(
+        prompt: str,
+        *,
+        schema: Mapping[str, Any],
+    ) -> dict[str, Any]:
         projection = _prompt_json(prompt, "Resolved operation projection")
         semantic_summary = _prompt_json(prompt, "Semantic group counts")
-        operations = []
-        scope: list[str] = []
-        evidence: list[str] = []
-        for operation_id, operation in projection["operations"].items():
-            target_id = str(operation["target_global_id"])
-            operation_evidence = list(operation["evidence_pointers"])
-            target_key = (
-                "element_global_id"
-                if operation["operation_type"] == "set_occurrence_properties"
-                else "storey_global_id"
-            )
-            operations.append(
-                {
-                    "operation_id": operation_id,
-                    "operation_type": operation["operation_type"],
-                    "target": {target_key: target_id},
-                    "parameters": operation["parameters"],
-                    "evidence_refs": operation_evidence,
-                }
-            )
-            scope.extend(str(value) for value in operation["scope_ids"])
-            evidence.extend(str(value) for value in operation_evidence)
+        raw_operations = projection["operations"]
+        if isinstance(raw_operations, list):
+            operations = json.loads(json.dumps(raw_operations))
+            scope = list(projection["scope"]["target_ids"])
+            evidence = list(projection["evidence_refs"])
+        else:
+            operations = []
+            scope = []
+            evidence = []
+            for operation_id, operation in raw_operations.items():
+                target_id = str(operation["target_global_id"])
+                operation_evidence = list(operation["evidence_pointers"])
+                target_key = (
+                    "element_global_id"
+                    if operation["operation_type"]
+                    == "set_occurrence_properties"
+                    else "storey_global_id"
+                )
+                operations.append(
+                    {
+                        "operation_id": operation_id,
+                        "operation_type": operation["operation_type"],
+                        "target": {target_key: target_id},
+                        "parameters": operation["parameters"],
+                        "evidence_refs": operation_evidence,
+                    }
+                )
+                scope.extend(str(value) for value in operation["scope_ids"])
+                evidence.extend(str(value) for value in operation_evidence)
         binding_lines = prompt.split("## Immutable bindings", 1)[1].split(
             "## Resolved operation projection", 1
         )[0]
@@ -487,7 +499,7 @@ class _ProductionPathTransport(_MockTransport):
             re.findall(r"^- ([^:]+): (.+)$", binding_lines, flags=re.MULTILINE)
         )
         return {
-            "schema_version": "text2ifc/ifc-repair-changeset-draft/0.2",
+            "schema_version": str(schema["$id"]),
             "draft_id": "draft-live-production-path",
             "base_model_fingerprint": bindings["model"],
             "source_request_hash": bindings["source request"],
@@ -655,6 +667,128 @@ def _proof_root(tmp_path: Path) -> Path:
     return root
 
 
+def _changed_scope_admission(module: Any, tmp_path: Path) -> Path:
+    source_root = tmp_path / "source-preflight"
+    logs = source_root / "logs"
+    logs.mkdir(parents=True)
+    full_suite_log = logs / "full-suite.stdout.txt"
+    full_suite_log.write_text(
+        "4 failed, 1151 passed in 1551.10s (0:25:51)\n",
+        encoding="utf-8",
+    )
+    source = {
+        "schema_version": "text2ifc/phase12-live-preflight/0.4",
+        "status": "failed",
+        "failure_count": 2,
+        "network_calls": 0,
+        "network_transport_attempted": False,
+        "skip_count": 0,
+        "substitution_count": 0,
+        "timeout_count": 0,
+        "checks": [
+            {
+                "name": "retrieval-evaluation",
+                "status": "failed",
+                "exit_code": 2,
+            },
+            {
+                "name": "full-suite",
+                "status": "failed",
+                "exit_code": 1,
+                "artifacts": [
+                    {
+                        "path": "logs/full-suite.stdout.txt",
+                        "sha256": module._path_sha256(full_suite_log),
+                    }
+                ],
+            },
+        ],
+    }
+    source_path = source_root / "preflight.json"
+    source_path.write_text(
+        json.dumps(source, sort_keys=True),
+        encoding="utf-8",
+    )
+    resolution_evidence = tmp_path / "resolution-evidence.txt"
+    resolution_evidence.write_text("focused regression passed\n", encoding="utf-8")
+    supporting_evidence = tmp_path / "supporting-evidence.txt"
+    supporting_evidence.write_text("admission seam passed\n", encoding="utf-8")
+    scope_paths = (
+        ".planning/phases/12.1-property-resolution-rag-reranker/12.1-VALIDATION.md",
+        "scripts/ifc_repair/run_phase12_offline.py",
+        "tests/knowledge/test_property_retrieval_evaluation.py",
+        "src/text2ifc_ifc_repair/evaluation.py",
+        "tests/ifc_repair/test_validation_acceleration.py",
+        "scripts/ifc_repair/curate_phase12_live_proof.py",
+        "scripts/ifc_repair/run_phase12_live_uat.py",
+        "tests/ifc_repair/test_phase12_live_uat.py",
+    )
+    admission = {
+        "schema_version": (
+            "text2ifc/phase12-live-changed-scope-admission/0.1"
+        ),
+        "status": "passed",
+        "admission_basis": (
+            "previous full-preflight evidence + focused revalidation of all "
+            "previously failed/changed scopes"
+        ),
+        "source_preflight": {
+            "path": str(source_path.relative_to(ROOT)).replace("\\", "/"),
+            "sha256": module._path_sha256(source_path),
+        },
+        "prior_full_suite": {
+            "passed_count": 1151,
+            "failed_count": 4,
+        },
+        "resolved_checks": [
+            {
+                "check_id": check_id,
+                "status": "passed",
+                "exit_code": 0,
+                "skip_count": 0,
+                "substitution_count": 0,
+                "timeout_count": 0,
+                "network_calls": 0,
+                "evidence": [
+                    {
+                        "path": str(resolution_evidence.relative_to(ROOT)).replace(
+                            "\\", "/"
+                        ),
+                        "sha256": module._path_sha256(resolution_evidence),
+                    }
+                ],
+            }
+            for check_id in (
+                "retrieval_evaluator_contract",
+                "sequential_accelerated_parity",
+                "cold_warm_cache_parity",
+                "reopened_model_reuse_parity",
+            )
+        ],
+        "scope_file_sha256": {
+            path: module._path_sha256(ROOT / path)
+            for path in scope_paths
+        },
+        "provider_calls": 0,
+        "predictions_regenerated": 0,
+        "network_transport_attempted": False,
+        "supporting_evidence": [
+            {
+                "path": str(supporting_evidence.relative_to(ROOT)).replace(
+                    "\\", "/"
+                ),
+                "sha256": module._path_sha256(supporting_evidence),
+            }
+        ],
+    }
+    admission_path = tmp_path / "changed-scope-admission.json"
+    admission_path.write_text(
+        json.dumps(admission, sort_keys=True),
+        encoding="utf-8",
+    )
+    return admission_path
+
+
 def _case(module: Any, case_id: str, *, feedback: str | None = None):
     frozen = next(
         (case for case in module.DEFAULT_CASES if case.case_id == case_id),
@@ -713,8 +847,11 @@ def _run(
 
 def _stage2_profile_prompt(case_id: str) -> str:
     profile_ids = {
-        "complete": ["beam.add.v0.3", "column.add.v0.3"],
-        "clarification-resume": ["column.add.v0.3"],
+        "complete": [
+            "beam.add.stage2.v0.1",
+            "column.add.stage2.v0.1",
+        ],
+        "clarification-resume": ["column.add.stage2.v0.1"],
         "window-semantic-canary": ["occurrence.set-properties"],
     }[case_id]
     selection = select_prompt_profiles(profile_ids).to_dict()
@@ -760,7 +897,7 @@ def _record_frozen_contract_attempts(provider: Any, case_id: str) -> None:
                 "attempt": 1,
                 **(
                     {
-                        "template_id": "ifc-property-resolution.v0.1",
+                        "template_id": "ifc-property-resolution.v0.2",
                         "template_hash": STAGE15_TEMPLATE_HASH,
                     }
                     if property_template
@@ -833,21 +970,43 @@ def test_cli_accepts_the_frozen_deepseek_provider_key(
     assert invoked is True
 
 
-def test_cli_preflight_only_needs_no_provider_configuration(
+def test_cli_preflight_only_uses_property_runtime_config_without_provider_config(
     monkeypatch: pytest.MonkeyPatch,
     tmp_path: Path,
 ) -> None:
     module = _module()
     captured: dict[str, Any] = {}
+    environment = {
+        "TEXT2IFC_PROPERTY_BGE_MODEL_PATH": "models/bge-m3",
+        "TEXT2IFC_PROPERTY_QDRANT_PATH": "vectors/qdrant",
+    }
+    runtime = object()
 
     monkeypatch.setattr(
         module,
         "_environment",
-        lambda _path: pytest.fail("preflight-only must not read Provider config"),
+        lambda _path: environment,
+    )
+    monkeypatch.setattr(
+        module,
+        "_config",
+        lambda _environment: pytest.fail(
+            "preflight-only must not resolve Provider configuration"
+        ),
+    )
+    monkeypatch.setattr(
+        module,
+        "create_property_runtime_from_environment",
+        lambda values, *, project_root: (
+            runtime
+            if values is environment and project_root == module.ROOT
+            else pytest.fail("property runtime received the wrong configuration")
+        ),
     )
 
     def fake_run_live_uat(*_args: Any, **kwargs: Any) -> dict[str, Any]:
         captured.update(kwargs)
+        assert kwargs["property_runtime_factory"]() is runtime
         return {"status": "preflight_passed", "transport_calls": 0}
 
     monkeypatch.setattr(module, "run_live_uat", fake_run_live_uat)
@@ -862,6 +1021,7 @@ def test_cli_preflight_only_needs_no_provider_configuration(
 
     assert exit_code == 0
     assert captured["preflight_only"] is True
+    assert captured["property_runtime_factory"] is not None
 
 
 def test_cli_rejects_every_non_deepseek_provider_before_configuration(
@@ -920,6 +1080,141 @@ def test_preflight_only_returns_before_transport_construction(
     assert transport_constructed is False
 
 
+def test_changed_scope_admission_validates_failed_source_and_all_resolutions(
+    tmp_path: Path,
+) -> None:
+    module = _module()
+    admission_path = _changed_scope_admission(module, tmp_path)
+
+    admission = module._load_changed_scope_admission(admission_path)
+
+    assert admission["status"] == "passed"
+    assert admission["mode"] == "changed_scope_evidence_reuse"
+    assert admission["network_transport_attempted"] is False
+    assert {
+        item["check_id"] for item in admission["resolved_checks"]
+    } == {
+        "retrieval_evaluator_contract",
+        "sequential_accelerated_parity",
+        "cold_warm_cache_parity",
+        "reopened_model_reuse_parity",
+    }
+
+
+def test_changed_scope_admission_rejects_tampered_resolution_evidence(
+    tmp_path: Path,
+) -> None:
+    module = _module()
+    admission_path = _changed_scope_admission(module, tmp_path)
+    admission = json.loads(admission_path.read_text(encoding="utf-8"))
+    evidence_path = ROOT / admission["resolved_checks"][0]["evidence"][0]["path"]
+    evidence_path.write_text("tampered\n", encoding="utf-8")
+
+    with pytest.raises(
+        ValueError,
+        match="CHANGED_SCOPE_RESOLUTION_EVIDENCE_INVALID",
+    ):
+        module._load_changed_scope_admission(admission_path)
+
+
+def test_live_runner_uses_changed_scope_admission_without_running_full_preflight(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    module = _module()
+    admission_path = _changed_scope_admission(module, tmp_path)
+    runtime_closed = False
+
+    class Health:
+        def to_dict(self) -> dict[str, Any]:
+            return {"status": "ready", "acceptance_eligible": True}
+
+    class VectorIndex:
+        def close(self) -> None:
+            nonlocal runtime_closed
+            runtime_closed = True
+
+    runtime = type(
+        "ReadyPropertyRuntime",
+        (),
+        {"health": Health(), "vector_index": VectorIndex()},
+    )()
+    monkeypatch.setattr(
+        module,
+        "run_preflight",
+        lambda *_args, **_kwargs: pytest.fail(
+            "changed-scope admission must not rerun full preflight"
+        ),
+    )
+
+    result = module.run_live_uat(
+        tmp_path / "admitted-run",
+        transport_factory=lambda: pytest.fail(
+            "preflight-only must not construct Provider transport"
+        ),
+        proof_root=_proof_root(tmp_path),
+        preflight_only=True,
+        property_runtime_factory=lambda: runtime,
+        admission_evidence_path=admission_path,
+    )
+
+    assert result["status"] == "preflight_passed"
+    assert result["preflight"]["mode"] == "changed_scope_evidence_reuse"
+    assert result["transport_calls"] == 0
+    assert runtime_closed is True
+
+
+def test_production_preflight_opens_and_closes_ready_property_runtime(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    module = _module()
+    runner = _GreenCommandRunner()
+    transport_constructed = False
+    runtime_closed = False
+
+    class Health:
+        def to_dict(self) -> dict[str, Any]:
+            return {
+                "status": "ready",
+                "reason_code": None,
+                "acceptance_eligible": True,
+            }
+
+    class VectorIndex:
+        def close(self) -> None:
+            nonlocal runtime_closed
+            runtime_closed = True
+
+    runtime = type(
+        "ReadyPropertyRuntime",
+        (),
+        {"health": Health(), "vector_index": VectorIndex()},
+    )()
+
+    def forbidden_transport() -> Any:
+        nonlocal transport_constructed
+        transport_constructed = True
+        pytest.fail("preflight-only must not construct Provider transport")
+
+    monkeypatch.setattr(module, "_default_command_runner", runner)
+    result = module.run_live_uat(
+        tmp_path / "run",
+        transport_factory=forbidden_transport,
+        command_runner=runner,
+        case_executor=module._ORIGINAL_PRODUCTION_CASE_EXECUTOR,
+        cases=module.DEFAULT_CASES,
+        proof_root=_proof_root(tmp_path),
+        preflight_only=True,
+        property_runtime_factory=lambda: runtime,
+    )
+
+    assert result["status"] == "preflight_passed"
+    assert result["property_runtime_readiness"]["status"] == "ready"
+    assert runtime_closed is True
+    assert transport_constructed is False
+
+
 def test_fixed_live_requests_have_exact_public_structural_authority() -> None:
     module = _module()
 
@@ -939,8 +1234,8 @@ def test_fixed_live_requests_have_exact_public_structural_authority() -> None:
     assert 'Storey named "Level 1"' in module.CLARIFICATION_REQUEST
     assert "center axis is base" not in module.CLARIFICATION_REQUEST
     assert 'Storey named "Level 1"' in module.PROGRAM_GUARD_REQUEST
-    assert module.CLARIFICATION_ANSWER == (
-        "candidate:2:ifc2x3:Pset_ColumnCommon.LoadBearing"
+    assert module.CLARIFICATION_PROPERTY_IDENTITY == (
+        "ifc2x3:Pset_ColumnCommon.LoadBearing"
     )
 
 
@@ -968,8 +1263,8 @@ def test_fixed_live_matrix_is_bound_to_an_independent_reviewed_digest() -> None:
     module = _module()
 
     assert module.FROZEN_CASE_MATRIX_SHA256 == (
-        "sha256:25061d1ae8840ff7b1ee6ec7a58cc46e"
-        "8767a2c830f6427dbbbd12e14bb061e4"
+        "sha256:8d5dec1c09a2b66ec10703930b340437"
+        "cb3ae9de02f502e0b9c22ef186e14f5c"
     )
     assert module._case_matrix_sha256(module.DEFAULT_CASES) == (
         module.FROZEN_CASE_MATRIX_SHA256
@@ -989,7 +1284,7 @@ def test_fixed_live_matrix_covers_property_clarification_window_and_guard() -> N
     clarification = by_id["clarification-resume"]
     assert "load bearing status or external status" in clarification.request
     assert clarification.feedback_kind == "select_candidate"
-    assert clarification.feedback.endswith("Pset_ColumnCommon.LoadBearing")
+    assert clarification.feedback == module.CLARIFICATION_PROPERTY_IDENTITY
     window = by_id["window-semantic-canary"]
     assert "外窗=true" in window.request
     assert "1PkWQ2IbXBH9Ib7VGdBY7r" in window.request
@@ -1107,24 +1402,32 @@ def test_complete_transport_drives_the_real_repair_api_and_reopens_ifc2x3(
     ]
     assert set(provider.attempts[0]["profile_ids"]) == STAGE1_COMPACT_PROFILE_IDS
     assert provider.attempts[0]["few_shot_ids"] == []
-    assert provider.attempts[1]["template_id"] == "ifc-property-resolution.v0.1"
+    assert provider.attempts[1]["template_id"] == "ifc-property-resolution.v0.2"
     assert provider.attempts[1]["template_hash"].startswith("sha256:")
-    assert provider.attempts[2]["template_id"] == "ifc-property-resolution.v0.1"
+    assert provider.attempts[2]["template_id"] == "ifc-property-resolution.v0.2"
     assert provider.attempts[2]["template_hash"].startswith("sha256:")
     assert set(provider.attempts[3]["profile_ids"]) == {
-        "beam.add.v0.3",
-        "column.add.v0.3",
+        "beam.add.stage2.v0.1",
+        "column.add.stage2.v0.1",
     }
     assert set(provider.attempts[3]["few_shot_ids"]) == {
-        "beam.add.v0.3.complete",
-        "beam.add.v0.3.clarification",
-        "beam.add.v0.3.type-reuse",
-        "beam.add.v0.3.unsupported",
-        "column.add.v0.3.complete",
-        "column.add.v0.3.clarification",
-        "column.add.v0.3.type-reuse",
-        "column.add.v0.3.unsupported",
+        "beam.add.stage2.v0.1.complete",
+        "column.add.stage2.v0.1.complete",
     }
+    expected_selection = select_prompt_profiles(
+        ["beam.add.stage2.v0.1", "column.add.stage2.v0.1"]
+    ).to_dict()
+    assert {
+        item["few_shot_id"]: item["few_shot_hash"]
+        for item in provider.attempts[3]["few_shot_bindings"]
+    } == dict(
+        zip(
+            expected_selection["few_shot_ids"],
+            expected_selection["few_shot_hashes"],
+            strict=True,
+        )
+    )
+    assert module._live_attempt_evidence_pass(provider.attempts) is True
     run_root = (
         tmp_path / "complete" / "runtime" / "runs" / final["run_id"]
     )
@@ -1179,6 +1482,82 @@ def test_clarification_transport_drives_real_api_resume_and_publication(
         "initial",
         "clarification-resume",
     ]
+
+
+def test_prompt_identity_evidence_binds_each_few_shot_to_its_own_hash() -> None:
+    module = _module()
+    prompt = json.dumps(
+        {
+            "rendered_examples": [
+                {"example_id": "example-a", "payload": {"value": "A"}},
+                {"example_id": "example-b", "payload": {"value": "B"}},
+            ],
+            "authoritative_references": [
+                {
+                    "example_id": "example-b",
+                    "path": "examples/b.json",
+                    "sha256": HASH_B,
+                },
+                {
+                    "example_id": "example-a",
+                    "path": "examples/a.json",
+                    "sha256": HASH_A,
+                },
+            ],
+        },
+        sort_keys=True,
+    )
+
+    identities = module._prompt_identities(prompt)
+
+    assert identities["few_shot_bindings"] == [
+        {"few_shot_id": "example-b", "few_shot_hash": HASH_B},
+        {"few_shot_id": "example-a", "few_shot_hash": HASH_A},
+    ]
+    assert identities["few_shot_ids"] == ["example-b", "example-a"]
+    assert identities["few_shot_hashes"] == [HASH_B, HASH_A]
+
+
+def test_stable_property_identity_resolves_against_current_offered_set() -> None:
+    module = _module()
+    clarification = SimpleNamespace(
+        candidates=(
+            SimpleNamespace(
+                token="candidate:7:ifc2x3:Pset_ColumnCommon.IsExternal",
+                public_id="ifc2x3:Pset_ColumnCommon.IsExternal",
+            ),
+            SimpleNamespace(
+                token="candidate:1:ifc2x3:Pset_ColumnCommon.LoadBearing",
+                public_id="ifc2x3:Pset_ColumnCommon.LoadBearing",
+            ),
+        )
+    )
+
+    assert module._offered_candidate_token_for_property_identity(
+        clarification,
+        module.CLARIFICATION_PROPERTY_IDENTITY,
+    ) == "candidate:1:ifc2x3:Pset_ColumnCommon.LoadBearing"
+
+
+def test_stable_property_identity_fails_closed_when_not_currently_offered() -> None:
+    module = _module()
+    clarification = SimpleNamespace(
+        candidates=(
+            SimpleNamespace(
+                token="candidate:1:ifc2x3:Pset_ColumnCommon.IsExternal",
+                public_id="ifc2x3:Pset_ColumnCommon.IsExternal",
+            ),
+        )
+    )
+
+    with pytest.raises(
+        ValueError,
+        match="LIVE_CASE_PROPERTY_IDENTITY_NOT_OFFERED",
+    ):
+        module._offered_candidate_token_for_property_identity(
+            clarification,
+            module.CLARIFICATION_PROPERTY_IDENTITY,
+        )
 
 
 def test_window_semantic_canary_drives_vector_stage15_stage2_and_reopen(
@@ -2514,7 +2893,7 @@ def test_frozen_live_cases_have_exact_three_stage_lineage(
     assert "\"axis\"" not in complete_attempts[0]["response"]["content"]
     assert complete_attempts[3]["response"]["content"].find("beam_axis") >= 0
     assert complete_attempts[1]["template_id"] == (
-        "ifc-property-resolution.v0.1"
+        "ifc-property-resolution.v0.2"
     )
     assert complete_attempts[1]["template_hash"] == STAGE15_TEMPLATE_HASH
     assert complete_attempts[1]["profile_ids"] == []
@@ -2565,10 +2944,13 @@ def _curation_attempt(
     prompt_hash = canonical(request)
     response_hash = canonical(response)
     selected_profiles = {
-        "complete": ["beam.add.v0.3", "column.add.v0.3"],
-        "clarification-resume": ["column.add.v0.3"],
+        "complete": [
+            "beam.add.stage2.v0.1",
+            "column.add.stage2.v0.1",
+        ],
+        "clarification-resume": ["column.add.stage2.v0.1"],
         "window-semantic-canary": ["occurrence.set-properties"],
-        "program-guard": ["beam.add.v0.3"],
+        "program-guard": ["beam.add.stage2.v0.1"],
     }[case_id]
     if stage == "stage1":
         profiles = sorted(STAGE1_COMPACT_PROFILE_IDS)
@@ -2592,6 +2974,14 @@ def _curation_attempt(
         profile_hashes = []
         few_shot_ids = []
         few_shot_hashes = []
+    few_shot_bindings = [
+        {"few_shot_id": few_shot_id, "few_shot_hash": few_shot_hash}
+        for few_shot_id, few_shot_hash in zip(
+            few_shot_ids,
+            few_shot_hashes,
+            strict=True,
+        )
+    ]
     return {
         "attempt_id": attempt_id,
         "parent_attempt_id": parent_attempt_id,
@@ -2637,7 +3027,7 @@ def _curation_attempt(
         },
         "error": None,
         "template_id": (
-            "ifc-property-resolution.v0.1"
+            "ifc-property-resolution.v0.2"
             if stage == "property_resolution"
             else None
         ),
@@ -2649,6 +3039,7 @@ def _curation_attempt(
         "profile_hashes": profile_hashes,
         "few_shot_ids": few_shot_ids,
         "few_shot_hashes": few_shot_hashes,
+        "few_shot_bindings": few_shot_bindings,
     }
 
 
@@ -2837,6 +3228,17 @@ def test_live_curator_accepts_only_complete_and_resumed_success_transcripts() ->
     assert audit["transport_calls"] == 11
 
 
+def test_live_curator_does_not_authorize_by_legacy_parallel_array_position() -> None:
+    curator = _curator_module()
+    result = _valid_live_curation_result()
+    stage2 = result["cases"][0]["attempts"][-1]
+    stage2["few_shot_ids"].reverse()
+
+    audit = curator.audit_live_uat_result(result)
+
+    assert audit["status"] == "passed"
+
+
 @pytest.mark.parametrize(
     ("defect", "expected_code"),
     (
@@ -2896,10 +3298,9 @@ def test_live_curator_rejects_each_single_transcript_defect(
     elif defect == "missing_template_hash":
         property_resolution["template_hash"] = None
     elif defect == "missing_few_shot_hash":
-        stage2["few_shot_hashes"] = []
+        stage2["few_shot_bindings"][0].pop("few_shot_hash")
     elif defect == "missing_profile_few_shot":
-        stage2["few_shot_ids"].pop()
-        stage2["few_shot_hashes"].pop()
+        stage2["few_shot_bindings"].pop()
     elif defect == "fallback_true":
         first["fallback_flags"]["cached"] = True
     elif defect == "missing_response_id":

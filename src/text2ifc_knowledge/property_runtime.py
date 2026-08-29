@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from dataclasses import asdict, dataclass
 import json
+import os
 from pathlib import Path
 from typing import Any, Callable, Iterable, Mapping
 
@@ -16,7 +17,6 @@ from .property_search import (
     SUPPORTED_AUTHORABLE_VALUE_TYPES,
     PropertyKnowledgeRecord,
     build_standard_property_records,
-    normalize_property_value,
 )
 from .registry import IfcKnowledgeRegistry, load_ifc2x3_registry
 
@@ -29,10 +29,46 @@ DEFAULT_EMBEDDING_MODEL_VERSION = "configured"
 DEFAULT_DOCUMENT_RENDERER_VERSION = "property-record-text/0.1"
 DEFAULT_COLLECTION_VERSION = "ifc2x3-property-vector/0.2"
 DEFAULT_COLLECTION_NAME = "ifc2x3_property_resolution_v02"
+PROPERTY_BGE_MODEL_PATH_ENV = "TEXT2IFC_PROPERTY_BGE_MODEL_PATH"
+PROPERTY_BGE_MODEL_VERSION_ENV = "TEXT2IFC_PROPERTY_BGE_MODEL_VERSION"
+PROPERTY_BGE_DEVICE_ENV = "TEXT2IFC_PROPERTY_BGE_DEVICE"
+PROPERTY_QDRANT_PATH_ENV = "TEXT2IFC_PROPERTY_QDRANT_PATH"
+PROPERTY_QDRANT_URL_ENV = "TEXT2IFC_PROPERTY_QDRANT_URL"
+PROPERTY_QDRANT_COLLECTION_ENV = "TEXT2IFC_PROPERTY_QDRANT_COLLECTION"
 
 
 class PropertyRuntimeError(ValueError):
     """Stable fail-closed error raised before any Provider call."""
+
+
+class PropertyRuntimeConfigurationError(ValueError):
+    """Invalid production runtime configuration; never repaired by fallback."""
+
+
+@dataclass(frozen=True)
+class PropertyRuntimeConfig:
+    project_root: Path
+    embedding_model_path: str
+    embedding_model_version: str
+    qdrant_path: Path | None
+    qdrant_url: str | None
+    collection_name: str
+    device: str | None
+    local_files_only: bool = True
+
+    def to_redacted_dict(self) -> dict[str, Any]:
+        return {
+            "project_root": str(self.project_root),
+            "embedding_model_path": self.embedding_model_path,
+            "embedding_model_version": self.embedding_model_version,
+            "qdrant_path": (
+                None if self.qdrant_path is None else str(self.qdrant_path)
+            ),
+            "qdrant_url": self.qdrant_url,
+            "collection_name": self.collection_name,
+            "device": self.device,
+            "local_files_only": self.local_files_only,
+        }
 
 
 @dataclass(frozen=True)
@@ -131,10 +167,7 @@ class PropertyKnowledgeRuntime:
                 record,
                 registry=self.registry,
                 target_ifc_class=target_ifc_class,
-                raw_value=raw_value,
-                raw_unit=raw_unit,
                 scope=scope,
-                project_length_unit=project_length_unit,
             )
         )
         allowed_ids = frozenset(record.record_id for record in eligible)
@@ -142,8 +175,6 @@ class PropertyKnowledgeRuntime:
             _render_query_text(
                 property_phrase=phrase,
                 target_ifc_class=target_ifc_class,
-                raw_value_kind=query["raw_value_kind"],
-                raw_unit=raw_unit,
                 scope=scope,
                 operation_type=operation_type,
             ),
@@ -239,6 +270,98 @@ def create_property_runtime(
         policy=policy,
         health=health,
     )
+
+
+def load_property_runtime_config(
+    environ: Mapping[str, str] | None = None,
+    *,
+    project_root: Path | str | None = None,
+) -> PropertyRuntimeConfig:
+    """Resolve one local-only production BGE/Qdrant configuration."""
+
+    env = os.environ if environ is None else environ
+    root = (
+        Path(project_root).resolve()
+        if project_root is not None
+        else Path(__file__).resolve().parents[2]
+    )
+    configured_model = str(env.get(PROPERTY_BGE_MODEL_PATH_ENV, "")).strip()
+    repository_model = root / ".cache/models/BAAI-bge-m3"
+    if configured_model:
+        embedding_model_path = str(_resolve_config_path(root, configured_model))
+    elif repository_model.is_dir():
+        embedding_model_path = str(repository_model.resolve())
+    else:
+        embedding_model_path = DEFAULT_EMBEDDING_MODEL_ID
+
+    configured_version = str(
+        env.get(PROPERTY_BGE_MODEL_VERSION_ENV, "")
+    ).strip()
+    embedding_model_version = configured_version or (
+        "BAAI-bge-m3-local/phase12.1"
+        if embedding_model_path != DEFAULT_EMBEDDING_MODEL_ID
+        else DEFAULT_EMBEDDING_MODEL_VERSION
+    )
+
+    configured_qdrant_path = str(env.get(PROPERTY_QDRANT_PATH_ENV, "")).strip()
+    qdrant_url = str(env.get(PROPERTY_QDRANT_URL_ENV, "")).strip() or None
+    if configured_qdrant_path and qdrant_url:
+        raise PropertyRuntimeConfigurationError(
+            "PROPERTY_QDRANT_LOCATION_AMBIGUOUS"
+        )
+    qdrant_path = (
+        None
+        if qdrant_url
+        else _resolve_config_path(
+            root,
+            configured_qdrant_path or ".cache/property-resolution/qdrant",
+        )
+    )
+    collection_name = str(
+        env.get(PROPERTY_QDRANT_COLLECTION_ENV, DEFAULT_COLLECTION_NAME)
+    ).strip()
+    if not collection_name:
+        raise PropertyRuntimeConfigurationError(
+            "PROPERTY_QDRANT_COLLECTION_REQUIRED"
+        )
+    device = str(env.get(PROPERTY_BGE_DEVICE_ENV, "")).strip() or None
+    return PropertyRuntimeConfig(
+        project_root=root,
+        embedding_model_path=embedding_model_path,
+        embedding_model_version=embedding_model_version,
+        qdrant_path=qdrant_path,
+        qdrant_url=qdrant_url,
+        collection_name=collection_name,
+        device=device,
+    )
+
+
+def create_property_runtime_from_environment(
+    environ: Mapping[str, str] | None = None,
+    *,
+    project_root: Path | str | None = None,
+) -> PropertyKnowledgeRuntime:
+    """Construct the production runtime used by API, preflight and live paths."""
+
+    config = load_property_runtime_config(
+        environ,
+        project_root=project_root,
+    )
+    return create_default_property_runtime(
+        project_root=config.project_root,
+        qdrant_path=config.qdrant_path,
+        qdrant_url=config.qdrant_url,
+        collection_name=config.collection_name,
+        runtime_mode="production",
+        embedding_model_path=config.embedding_model_path,
+        embedding_model_version=config.embedding_model_version,
+        device=config.device,
+    )
+
+
+def _resolve_config_path(root: Path, value: str) -> Path:
+    path = Path(value)
+    return (path if path.is_absolute() else root / path).resolve()
 
 
 def create_default_property_runtime(
@@ -410,10 +533,7 @@ def _eligible_for_request(
     *,
     registry: IfcKnowledgeRegistry,
     target_ifc_class: str,
-    raw_value: object,
-    raw_unit: str | None,
     scope: str | None,
-    project_length_unit: str,
 ) -> bool:
     if scope != "occurrence_direct":
         return False
@@ -426,15 +546,6 @@ def _eligible_for_request(
     ):
         return False
     if record.value_type is None:
-        return False
-    try:
-        normalize_property_value(
-            raw_value,
-            raw_unit=raw_unit,
-            value_type=record.value_type,
-            project_length_unit=project_length_unit,
-        )
-    except ValueError:
         return False
     return True
 
@@ -457,8 +568,6 @@ def _render_query_text(
     *,
     property_phrase: str,
     target_ifc_class: str,
-    raw_value_kind: str,
-    raw_unit: str | None,
     scope: str | None,
     operation_type: str,
 ) -> str:
@@ -466,8 +575,6 @@ def _render_query_text(
         (
             property_phrase,
             f"class {target_ifc_class}",
-            f"value kind {raw_value_kind}",
-            f"unit {raw_unit or 'none'}",
             f"scope {scope or 'none'}",
             f"operation {operation_type}",
         )
@@ -582,8 +689,12 @@ def _not_ready_runtime(
 __all__ = [
     "PropertyKnowledgeRuntime",
     "PropertyRetrievalResult",
+    "PropertyRuntimeConfig",
+    "PropertyRuntimeConfigurationError",
     "PropertyRuntimeError",
     "PropertyRuntimeHealth",
     "create_default_property_runtime",
     "create_property_runtime",
+    "create_property_runtime_from_environment",
+    "load_property_runtime_config",
 ]

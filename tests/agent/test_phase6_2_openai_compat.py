@@ -477,7 +477,7 @@ def test_openai_compatible_live_provider_returns_live_provider_result():
     assert captured["client_kwargs"]["api_key"] == "secret-api-key"
 
 
-def test_deepseek_live_provider_uses_flash_model_and_safe_provider_label():
+def test_deepseek_live_provider_records_enabled_thinking_request_and_evidence():
     captured = {}
 
     class Response:
@@ -542,6 +542,12 @@ def test_deepseek_live_provider_uses_flash_model_and_safe_provider_label():
     assert captured["max_tokens"] == 65536
     assert "max_completion_tokens" not in captured
     assert captured["response_format"] == {"type": "json_object"}
+    assert captured["extra_body"] == {"thinking": {"type": "enabled"}}
+    assert result.request["extra_body"] == {"thinking": {"type": "enabled"}}
+    assert result.output.metadata["request_configuration"] == {
+        "thinking": {"type": "enabled"},
+        "temperature": {"value": 0, "effective": False},
+    }
     assert captured["client_kwargs"] == {
         "api_key": "secret-deepseek-key",
         "base_url": "https://api.deepseek.com",

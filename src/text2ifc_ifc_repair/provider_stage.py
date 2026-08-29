@@ -18,6 +18,7 @@ from text2ifc_text.splits import atomic_write_text
 from .changesets import (
     BOUND_CHANGESET_SCHEMA_VERSION_0_3,
     BOUND_CHANGESET_SCHEMA_VERSION_0_4,
+    DRAFT_CHANGESET_SCHEMA_VERSION_0_3,
     bind_repair_changeset,
     load_changeset_draft_schema,
     load_changeset_schema,
@@ -75,12 +76,26 @@ def generate_bound_changeset(
     used_operation_types = tuple(
         sorted({str(item["operation_type"]) for item in operations})
     )
+    manifests = tuple(semantic_manifests)
+    structural_compact_mode = bool(manifests) and set(used_operation_types).issubset(
+        {"add_beam", "add_column"}
+    )
     supported_operations: Any = [
-        _operation_contract(registry, name) for name in used_operation_types
+        (
+            _stage2_operation_contract(registry, name)
+            if structural_compact_mode
+            else _operation_contract(registry, name)
+        )
+        for name in used_operation_types
     ]
-    selected_profile_ids = [
-        registry.require(name).prompt_profile_id for name in used_operation_types
-    ]
+    selected_profile_ids = []
+    for name in used_operation_types:
+        definition = registry.require(name)
+        selected_profile_ids.append(
+            definition.stage2_prompt_profile_id
+            if structural_compact_mode
+            else definition.prompt_profile_id
+        )
     profile_selection = None
     if selected_profile_ids and all(selected_profile_ids):
         profile_selection = select_prompt_profiles(
@@ -96,7 +111,6 @@ def generate_bound_changeset(
             output / "prompt-profile-selection.json",
             _json(selection_document),
         )
-    manifests = tuple(semantic_manifests)
     manifest_hashes = dict(semantic_manifest_hashes or {})
     compact_mode = bool(manifests)
     semantic_contract_v02 = bool(
@@ -118,9 +132,19 @@ def generate_bound_changeset(
     manifest_hash = (
         manifest_hashes.get(manifests[0].operation_id, "") if compact_mode else ""
     )
-    provider_schema = load_changeset_draft_schema() if compact_mode else load_changeset_schema()
+    provider_schema = (
+        load_changeset_draft_schema(DRAFT_CHANGESET_SCHEMA_VERSION_0_3)
+        if structural_compact_mode
+        else load_changeset_draft_schema()
+        if compact_mode
+        else load_changeset_schema()
+    )
     prompt_operations = (
-        _compact_operation_projection(operations) if compact_mode else resolved_document
+        _structural_draft_authority(operations, registry=registry)
+        if structural_compact_mode
+        else _compact_operation_projection(operations)
+        if compact_mode
+        else resolved_document
     )
     semantic_summary = _semantic_summary(manifests)
     explicit_slot_refs = sorted(
@@ -208,7 +232,14 @@ def generate_bound_changeset(
                         semantic_summary=semantic_summary,
                     )
             contract_issues = (
-                validate_changeset_draft(parsed)
+                validate_changeset_draft(
+                    parsed,
+                    expected_version=(
+                        DRAFT_CHANGESET_SCHEMA_VERSION_0_3
+                        if structural_compact_mode
+                        else None
+                    ),
+                )
                 if compact_mode
                 else validate_changeset(parsed)
             )
@@ -231,6 +262,11 @@ def generate_bound_changeset(
                                 else BOUND_CHANGESET_SCHEMA_VERSION_0_3
                                 if semantic_contract_v02
                                 else "text2ifc/ifc-repair-changeset/0.2"
+                            ),
+                            resolved_authority=(
+                                prompt_operations
+                                if structural_compact_mode
+                                else None
                             ),
                         )
                     except ValueError as error:
@@ -292,6 +328,53 @@ def _compact_operation_projection(operations: list[dict[str, Any]]) -> dict[str,
     }
 
 
+def _structural_draft_authority(
+    operations: list[dict[str, Any]],
+    *,
+    registry: OperationRegistry,
+) -> dict[str, Any]:
+    projected_operations = []
+    for operation in operations:
+        projected_operations.append(
+            {
+                "operation_id": str(operation["operation_id"]),
+                "operation_type": str(operation["operation_type"]),
+                "target": registry.bind_resolved_target(
+                    str(operation["operation_type"]),
+                    operation.get("target_global_id"),
+                ),
+                "parameters": json.loads(
+                    json.dumps(
+                        operation["parameters"],
+                        ensure_ascii=False,
+                        allow_nan=False,
+                    )
+                ),
+                "evidence_refs": [
+                    str(item) for item in operation["evidence_pointers"]
+                ],
+            }
+        )
+    return {
+        "scope": {
+            "target_ids": sorted(
+                {
+                    str(scope_id)
+                    for operation in operations
+                    for scope_id in operation["scope_ids"]
+                }
+            ),
+            "forbidden_ids": [],
+        },
+        "evidence_refs": sorted(
+            {
+                str(pointer)
+                for operation in operations
+                for pointer in operation["evidence_pointers"]
+            }
+        ),
+        "operations": projected_operations,
+    }
 def _semantic_summary(manifests: tuple[Any, ...]) -> dict[str, int]:
     values = {"required": 0, "conditional": 0, "not_required": 0}
     for manifest in manifests:
@@ -766,6 +849,26 @@ def _operation_contract(registry: OperationRegistry, operation_type: str) -> dic
         "precondition_names": list(definition.precondition_names),
         "postcondition_names": list(definition.postcondition_names),
         "capability_constraints": dict(definition.capability_constraints),
+    }
+
+
+def _stage2_operation_contract(
+    registry: OperationRegistry,
+    operation_type: str,
+) -> dict[str, Any]:
+    """Expose only the executable Draft responsibility for structural Stage 2."""
+
+    definition = registry.require(operation_type)
+    return {
+        "operation_type": operation_type,
+        "target_ifc_classes": list(definition.target_ifc_classes),
+        "target_schema": dict(
+            definition.target_schema
+            or {"type": "object", "minProperties": 1}
+        ),
+        "parameter_schema": dict(definition.parameter_schema),
+        "precondition_names": list(definition.precondition_names),
+        "postcondition_names": list(definition.postcondition_names),
     }
 
 

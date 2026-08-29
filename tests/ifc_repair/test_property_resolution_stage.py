@@ -354,6 +354,45 @@ def test_nonconfirmed_decisions_never_select_an_executable_candidate(
     assert result["classification"] == classification
     assert result["decision"]["selected_candidate_id"] is None
 
+def test_vague_repair_goal_can_clarify_with_one_relevant_offered_candidate(
+    tmp_path: Path,
+) -> None:
+    candidate_id = "candidate:1:ifc2x3:Pset_BeamCommon.LoadBearing"
+    query = {
+        **_query(),
+        "property_phrase": "make this structural element more robust",
+    }
+    candidate_set = {
+        **_candidate_set(),
+        "candidates": [
+            _candidate(
+                candidate_id,
+                "Pset_BeamCommon.LoadBearing",
+                1,
+                0.82,
+            )
+        ],
+    }
+    decision = _decision(
+        "clarification_required",
+        conflicts=[candidate_id],
+        question=(
+            "Do you mean setting load-bearing status, or another structural change?"
+        ),
+    )
+
+    result = _run(
+        tmp_path,
+        CapturingProvider([_json_text(decision)]),
+        query=query,
+        candidate_set=candidate_set,
+    )
+
+    assert result["valid"] is True
+    assert result["classification"] == "clarification_required"
+    assert result["decision"]["selected_candidate_id"] is None
+
+
 
 def test_invalid_first_attempt_is_preserved_and_gets_one_issue_only_retry(
     tmp_path: Path,

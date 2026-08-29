@@ -30,7 +30,7 @@ SCHEMA_IDS = {
     "admissibility": "text2ifc/ifc-property-admissibility/0.1",
     "policy": "text2ifc/property-resolution-policy/0.2",
 }
-PROMPT_ID = "ifc-property-resolution.v0.1"
+PROMPT_ID = "ifc-property-resolution.v0.2"
 
 
 def _load_schema(name: str) -> dict[str, Any]:
@@ -347,7 +347,7 @@ def test_registered_prompt_is_bounded_repair_only_and_has_no_phrase_mapping() ->
         ).read_text(encoding="utf-8")
     )["aliases"]
     prompt_template = (
-        PROJECT_ROOT / "prompts/agent/ifc-property-resolution-v0.1.md"
+        PROJECT_ROOT / "prompts/agent/ifc-property-resolution-v0.2.md"
     ).read_text(encoding="utf-8")
     assert "load bearing" not in prompt_template.lower()
     for alias in aliases:

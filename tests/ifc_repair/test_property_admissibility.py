@@ -323,6 +323,63 @@ def test_inherited_wall_property_remains_authorable_for_wall_standard_case(
 
 
 @pytest.mark.parametrize(
+    ("target_class", "phrase", "raw_value", "canonical_path"),
+    [
+        ("IfcWindow", "窗的防火等级", True, "Pset_WindowCommon.FireRating"),
+        ("IfcDoor", "door fire rating", True, "Pset_DoorCommon.FireRating"),
+        (
+            "IfcColumn",
+            "column load bearing",
+            "yes",
+            "Pset_ColumnCommon.LoadBearing",
+        ),
+        ("IfcBeam", "beam reference code", 42, "Pset_BeamCommon.Reference"),
+        (
+            "IfcWall",
+            "wall acoustic performance flag",
+            True,
+            "Pset_WallCommon.AcousticRating",
+        ),
+    ],
+)
+def test_resolved_property_with_incompatible_value_is_rejected_after_selection(
+    knowledge,
+    target_class: str,
+    phrase: str,
+    raw_value: object,
+    canonical_path: str,
+) -> None:
+    registry, by_path = knowledge
+    record = by_path[canonical_path]
+    claim = _claim(phrase=phrase, value=raw_value)
+    query = _query(claim, target_class=target_class)
+    candidate_set = _candidate_set(
+        query,
+        [_candidate(record, rank=1, score=0.92)],
+    )
+
+    result = _admit(
+        {
+            "registry": registry,
+            "records": (record,),
+            "claim": claim,
+            "query": query,
+            "candidate_set": candidate_set,
+            "decision": _decision(
+                "confirmed",
+                selected=candidate_set["candidates"][0]["candidate_id"],
+            ),
+            "decision_trace": _trace(query, candidate_set),
+            "policy": _policy(),
+        }
+    )
+
+    assert result.status == "rejected"
+    assert result.reason_code == "PROPERTY_VALUE_TYPE_INCOMPATIBLE"
+    assert result.exact_intent is None
+
+
+@pytest.mark.parametrize(
     ("mutator", "reason_code"),
     [
         (

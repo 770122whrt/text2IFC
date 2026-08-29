@@ -1,12 +1,12 @@
 # Project Context Pack
 
-- Last updated: 2026-08-23
+- Last updated: 2026-08-28
 - Repository: `text2ifc` / BIMNet workspace (`E:\code for project\bimnet`)
 - Branch: `codex/workflow-dataset-links`
-- Commit / HEAD: `46c4173803adf91176a37e5ea85d8512d6ea8cd9`
+- Commit / HEAD: `350f4030fbae9c75c7c1d6341d63f35c07410bd8`
 - Maintainer: Codex-assisted
 - Purpose: cross-conversation technical handoff
-- Worktree state: dirty; branch is one commit ahead of `origin/codex/workflow-dataset-links`
+- Worktree state: dirty; HEAD matches `origin/codex/workflow-dataset-links`
 
 This pack is a current-state orientation document, not a specification, release
 record, acceptance report, or replacement for repository authorities. Update it
@@ -53,8 +53,9 @@ flows:
 
 **Confirmed Repository Fact:** The active milestone is `v1.1 — IFC ChangeSet
 Repair Pipeline`. The current focus is Phase 12.1, Property Resolution RAG and
-Reranker Correction. Formal planning status is **Plan 5 of 7 complete** and
-**Phase 12 live acceptance blocked**.
+Reranker Correction. Formal planning status is **Plan 6 of 7 complete**;
+Plan 07 is active but its genuine post-fix Stage 1.5 acceptance failed, so
+**Phase 12 live acceptance remains blocked**.
 
 **Confirmed Repository Fact:** Current repair operation registration includes:
 
@@ -248,11 +249,22 @@ diagnostic artifacts remain available.
 | Rerank decision | `text2ifc/ifc-property-rerank-decision/0.1` | offered candidate ID, clarification, or unsupported only |
 | Admissibility | `text2ifc/ifc-property-admissibility/0.1` | deterministic execution checks; no natural-language semantic decision |
 | Retrieval policy | `text2ifc/property-resolution-policy/0.2` | Top-K, retrieval floor, supported template/scope, runtime readiness |
-| Stage 1.5 prompt | `ifc-property-resolution.v0.1` | repair-only, one bounded claim, no authoring fields |
+| Stage 1.5 prompt | current `ifc-property-resolution.v0.2`; historical v0.1 retained | unique specific evidence confirms; underspecified potentially repairable goals clarify; no authoring fields |
+| Semantic taxonomy | `text2ifc/property-semantic-taxonomy/0.2` | audited 60-case route sidecar; public queries and retrieval Gold remain unchanged |
 | Proof validation | `text2ifc/ifc-repair-proof-validation/0.2` | minimal validator-to-curator property-authority boundary; historical 0.1 semantics remain historical |
 | Retrieval ledger | `text2ifc/phase12.1-property-retrieval-ledger/0.1` | public query and ordered real-BGE/Qdrant Top-K only; no Gold labels |
 | Offline retrieval evaluation | `text2ifc/phase12.1-property-resolution-evaluation/0.3` | evaluator opens Gold only after ledger persistence; semantics remain unscored offline |
+| Semantic prediction ledger | current `text2ifc/phase12.1-property-semantic-prediction-ledger/0.2`; historical 0.1 retained | offered Top-K, prompt/response/decision/admissibility plus template/taxonomy/evaluation-label identity; frozen predictions contain no Gold |
+| Semantic evaluation report | current `text2ifc/phase12.1-property-semantic-evaluation/0.2`; historical 0.1 retained | scorer opens Gold only after all predictions and the ledger are durable; strict route metrics remain separate |
 | Live admission preflight | `text2ifc/phase12-live-preflight/0.4` | explicit retrieval artifact plus focused/offline/full-suite/compile/diff/Proof zero-network gates |
+
+**User/Project Decision:** Stage 1.5 may confirm only from direct and
+sufficiently specific evidence for one offered property. A meaningful but
+underspecified repair goal requires clarification when one property is not
+uniquely authorized, including when one related candidate is merely one
+possible repair interpretation. Unsupported is reserved for requests that
+cannot become supported through clarification. Retrieval proximity is not
+semantic authority; deterministic admissibility remains non-semantic.
 
 **Confirmed Repository Fact:** Live transcript evidence is now stage-aware.
 Stage 1 and Stage 2 retain operation prompt-profile identity; Stage 1.5 records
@@ -266,6 +278,23 @@ BGE-M3/Qdrant runtime and fails closed when it is unavailable. The offline
 mocked-transport full-chain path accepts a deterministic alias-free runtime at a
 narrow dependency-injection seam while retaining the real RepairAPI,
 orchestration, admissibility, Stage 2, IFC apply, reopen, and publication path.
+
+**Confirmed Repository Fact:** Production Property runtime configuration is
+resolved once through `load_property_runtime_config` and constructed through
+`create_property_runtime_from_environment`. Repository-relative or explicit
+environment paths reach the intended local BGE-M3/Qdrant assets; model loading
+remains `local_files_only=True`. `RepairAPI.from_environment`, live-UAT
+preflight/live execution, and the Stage 1.5 semantic runner use this same
+factory. No alias, download, test-runtime, or missing-model fallback is part of
+the production path.
+
+**Confirmed Repository Fact:** The genuine semantic runner distinguishes model
+outcomes from experiment-invalidating defects. Genuine wrong/malformed bounded
+decisions remain in the semantic denominator and the run continues. Runtime,
+Provider-request, non-live-evidence, persistence or deterministic protocol
+defects stop subsequent cases, persist a Gold-free `aborted` ledger, and never
+open the scorer. Family reports include Wilson 95% uncertainty and bind the
+frozen family gate to the nonempty Stage 1.5-invoked denominator.
 
 **Confirmed Repository Fact:** Released/registered older schemas and prompt
 profiles remain present. New behavior is additive; older contract files are not
@@ -292,7 +321,7 @@ unchanged.
 | Resolution and API tests | deterministic binding, clarification lineage, persistence/restart, fail-closed behavior | `test_resolution_flow.py`, `test_property_resolution_api.py`, API/run-store tests under `tests/ifc_repair/` |
 | Operation tests | geometry, Type/material, relationships, Psets, L1/L2 per family | Window/Door/Opening/structural tests under `tests/ifc_repair/` |
 | Full-chain offline tests | public API/CLI, mixed atomicity, rollback, source immutability, private-Gold isolation | Phase 11/12 runner and dataset E2E tests |
-| Frozen capability evaluation | Baseline/Candidate denominator, family slices, negatives, false-authorization gates | `tests/fixtures/knowledge/phase12_1_property_resolution.json`, `test_property_retrieval_evaluation.py` |
+| Frozen capability evaluation | Gold-free prediction ledger before Gold scoring, family slices, negatives, false-authorization gates | `tests/fixtures/knowledge/phase12_1_property_resolution.json`, `run_phase12_1_semantic_evaluation.py`, semantic/retrieval evaluation tests |
 | Live Provider UAT | genuine Provider viability only after offline admission | `scripts/ifc_repair/run_phase12_live_uat.py` and persisted live run artifacts |
 | Independent Proof | reopens artifacts and recomputes L0/L1/L2/preservation without trusting runner aggregates | `scripts/ifc_repair/validate_success_cases.py`, curation scripts, IFCCompare tooling |
 
@@ -432,11 +461,13 @@ fresh run-local output directories and the repository `.venv`.
 
 ### Confirmed current risks
 
-1. **Genuine semantic/live acceptance remains pending:** Plan 06 real-BGE
-   retrieval and offline admission are green, but Plan 07 has not run the
-   route-faithful genuine 60-case Stage 1.5 semantic evaluation or separate
-   four-case DeepSeek E2E matrix. No semantic/live success may be inferred from
-   Plan 06 Top-K Recall or deterministic Provider doubles.
+1. **Genuine semantic acceptance is red:** the separately labeled v0.2 post-fix
+   run completed 60/60 predictions with 31 genuine DeepSeek attempts and opened
+   Gold only afterward, but strict route accuracy was 54/60. Confirmed selection
+   remained 1.0 and false authorization was zero; clarification, unsupported,
+   deterministic-inadmissible, and four family gates failed. The four-case E2E
+   matrix was therefore not started. This failed run remains durable evidence,
+   not a prompt-tuning sample to patch and rerun in place.
 2. **Live acceptance remains red:** the preserved genuine Phase 12 complete
    case failed before Stage 2 with `PROPERTY_NOT_RESOLVED`; no structural live
    success is in accepted Proof.
@@ -466,11 +497,12 @@ fresh run-local output directories and the repository `.venv`.
 
 ### Open questions requiring later evidence, not assumptions
 
-- Whether the unchanged 60-case corpus passes the frozen route-faithful genuine
-  Stage 1.5 semantic gates when Plan 07 is explicitly authorized.
-- The real local BGE-M3/Qdrant runtime was ready for Plan 06, but Plan 07 must
-  rerun its fresh preflight rather than treating one environment snapshot as
-  permanent readiness.
+- Whether a subsequent, separately frozen experiment should address the five
+  genuine Provider terminal-route errors and one non-invoked route mismatch;
+  no post-observation v0.2 Prompt/taxonomy/scorer/gate edit is authorized.
+- The shared production configuration passed a 2026-08-28 local-only readiness
+  probe (472 records, zero Provider calls); later live work must recheck rather
+  than treat this snapshot as permanent readiness.
 - Whether genuine DeepSeek passes all four required live cases after offline
   admission, and whether independent Proof/IFCCompare accepts the results.
 
@@ -523,10 +555,11 @@ facts:
    `b8cf328e`.
 2. **Confirmed:** the worktree is intentionally dirty; preserve unrelated user
    files and all genuine run/failure evidence.
-3. **Confirmed:** formal state is Phase 12.1 Plan 6/7; Plan 06 offline admission
-   is complete and Plan 07 awaits explicit Go/No-Go.
-4. **Confirmed:** `12.1-06-SUMMARY.md` records the accepted retrieval/offline
-   evidence; Plan 07 genuine semantic/live evidence remains absent.
+3. **Confirmed:** formal state is Phase 12.1 Plan 6/7 complete and Plan 07
+   active but blocked by its failed v0.2 semantic acceptance.
+4. **Confirmed:** `12.1-06-SUMMARY.md` records accepted retrieval/offline
+   evidence; the append-only post-fix semantic run records 54/60 and zero false
+   authorization. The four-case E2E matrix was not started.
 5. **Confirmed:** Phase 12 live acceptance is blocked; no live structural
    success has been curated.
 6. **Confirmed:** Phase 11 is closed and its Door/Opening acceptance contracts
@@ -553,6 +586,20 @@ facts:
     IFCCompare, report, requirements, and state closeout.
 16. **Project Decision:** do not start Phase 13 or reopen frozen
     Door/Window/structural/Storey/Type/material/private-Gold contracts.
+20. **Confirmed:** current Stage 1.5 Prompt/taxonomy/prediction-ledger/report
+    identities are additive v0.2; v0.1 remains historical and unchanged.
+21. **Confirmed:** `POST_FIX_STAGE15_ACCEPTANCE_EVALUATION` used 31 genuine
+    `deepseek-v4-flash` attempts with thinking enabled after production local
+    BGE/Qdrant readiness, but failed the frozen 60-case route gates at 54/60.
+22. **Project Decision:** stop before E2E, Proof, IFCCompare, phase closure and
+    Phase 13; do not tune against the observed v0.2 result in place.
 17. **Confirmed:** Plan 06 is admitted for real-BGE retrieval and deterministic
     offline plumbing/system correctness only; it does not prove Stage 1.5
     semantic capability or live E2E viability.
+18. **Confirmed:** a dedicated 60-case Stage 1.5 runner now persists offered
+    Top-K and full Provider/decision/admissibility lineage, freezes every
+    prediction, and only then permits Gold scoring; its offline-double results
+    cannot claim semantic accuracy.
+19. **Confirmed:** RepairAPI, semantic readiness/evaluation, and live-UAT
+    preflight/live execution now share one local-only production BGE/Qdrant
+    configuration factory and retain fail-closed missing-runtime behavior.

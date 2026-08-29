@@ -59,7 +59,7 @@ from text2ifc_ifc_repair.repair_intent import (  # noqa: E402
     REPAIR_INTENT_SCHEMA_VERSION_0_8,
 )
 from text2ifc_knowledge.property_runtime import (  # noqa: E402
-    create_default_property_runtime,
+    create_property_runtime_from_environment,
 )
 
 
@@ -93,6 +93,33 @@ PREFLIGHT_NAMES = (
     "diff",
     "proof",
 )
+CHANGED_SCOPE_ADMISSION_SCHEMA = (
+    "text2ifc/phase12-live-changed-scope-admission/0.1"
+)
+CHANGED_SCOPE_ADMISSION_BASIS = (
+    "previous full-preflight evidence + focused revalidation of all "
+    "previously failed/changed scopes"
+)
+REQUIRED_CHANGED_SCOPE_RESOLUTIONS = frozenset(
+    {
+        "retrieval_evaluator_contract",
+        "sequential_accelerated_parity",
+        "cold_warm_cache_parity",
+        "reopened_model_reuse_parity",
+    }
+)
+REQUIRED_CHANGED_SCOPE_FILES = frozenset(
+    {
+        ".planning/phases/12.1-property-resolution-rag-reranker/12.1-VALIDATION.md",
+        "scripts/ifc_repair/run_phase12_offline.py",
+        "tests/knowledge/test_property_retrieval_evaluation.py",
+        "src/text2ifc_ifc_repair/evaluation.py",
+        "tests/ifc_repair/test_validation_acceleration.py",
+        "scripts/ifc_repair/curate_phase12_live_proof.py",
+        "scripts/ifc_repair/run_phase12_live_uat.py",
+        "tests/ifc_repair/test_phase12_live_uat.py",
+    }
+)
 
 COMPLETE_REQUEST = (
     'On the IFC Building Storey named "Level 1", add one horizontal straight '
@@ -113,8 +140,8 @@ CLARIFICATION_REQUEST = (
     '"load bearing status or external status" to true, but do not choose '
     "between those two meanings without clarification."
 )
-CLARIFICATION_ANSWER = (
-    "candidate:2:ifc2x3:Pset_ColumnCommon.LoadBearing"
+CLARIFICATION_PROPERTY_IDENTITY = (
+    "ifc2x3:Pset_ColumnCommon.LoadBearing"
 )
 WINDOW_SEMANTIC_REQUEST = (
     'For the IfcWindow with GlobalId "1PkWQ2IbXBH9Ib7VGdBY7r", set '
@@ -163,7 +190,7 @@ DEFAULT_CASES = (
     LiveCase(
         case_id="clarification-resume",
         request=CLARIFICATION_REQUEST,
-        feedback=CLARIFICATION_ANSWER,
+        feedback=CLARIFICATION_PROPERTY_IDENTITY,
         feedback_kind="select_candidate",
     ),
     LiveCase(
@@ -174,8 +201,8 @@ DEFAULT_CASES = (
 )
 REQUIRED_CASE_IDS = tuple(case.case_id for case in DEFAULT_CASES)
 FROZEN_CASE_MATRIX_SHA256 = (
-    "sha256:25061d1ae8840ff7b1ee6ec7a58cc46e"
-    "8767a2c830f6427dbbbd12e14bb061e4"
+    "sha256:8d5dec1c09a2b66ec10703930b340437"
+    "cb3ae9de02f502e0b9c22ef186e14f5c"
 )
 
 
@@ -193,6 +220,157 @@ def _path_sha256(path: Path) -> str:
         for chunk in iter(lambda: stream.read(1024 * 1024), b""):
             digest.update(chunk)
     return "sha256:" + digest.hexdigest()
+
+
+def _repository_evidence_path(value: Any) -> Path:
+    path = (ROOT / str(value)).resolve()
+    if not path.is_relative_to(ROOT) or not path.is_file():
+        raise ValueError("CHANGED_SCOPE_ADMISSION_PATH_INVALID")
+    return path
+
+
+def _verify_changed_scope_evidence_refs(
+    value: Any,
+    *,
+    reason_code: str,
+) -> None:
+    if not isinstance(value, list) or not value:
+        raise ValueError(reason_code)
+    for item in value:
+        if not isinstance(item, Mapping):
+            raise ValueError(reason_code)
+        evidence_path = _repository_evidence_path(item.get("path"))
+        if _path_sha256(evidence_path) != item.get("sha256"):
+            raise ValueError(reason_code)
+
+
+def _load_changed_scope_admission(path: Path | str) -> dict[str, Any]:
+    admission_path = Path(path).resolve()
+    if (
+        not admission_path.is_relative_to(ROOT)
+        or not admission_path.is_file()
+    ):
+        raise ValueError("CHANGED_SCOPE_ADMISSION_PATH_INVALID")
+    payload = json.loads(admission_path.read_text(encoding="utf-8"))
+    if (
+        payload.get("schema_version") != CHANGED_SCOPE_ADMISSION_SCHEMA
+        or payload.get("status") != "passed"
+        or payload.get("admission_basis") != CHANGED_SCOPE_ADMISSION_BASIS
+    ):
+        raise ValueError("CHANGED_SCOPE_ADMISSION_CONTRACT_INVALID")
+    if (
+        payload.get("provider_calls") != 0
+        or payload.get("predictions_regenerated") != 0
+        or payload.get("network_transport_attempted") is not False
+    ):
+        raise ValueError("CHANGED_SCOPE_ADMISSION_OFFLINE_EVIDENCE_REQUIRED")
+
+    source_ref = payload.get("source_preflight")
+    if not isinstance(source_ref, Mapping):
+        raise ValueError("CHANGED_SCOPE_SOURCE_PREFLIGHT_REQUIRED")
+    source_path = _repository_evidence_path(source_ref.get("path"))
+    if _path_sha256(source_path) != source_ref.get("sha256"):
+        raise ValueError("CHANGED_SCOPE_SOURCE_PREFLIGHT_HASH_MISMATCH")
+    source = json.loads(source_path.read_text(encoding="utf-8"))
+    failed_source_checks = {
+        str(item.get("name"))
+        for item in source.get("checks", ())
+        if item.get("status") == "failed"
+    }
+    if (
+        source.get("status") != "failed"
+        or source.get("network_transport_attempted") is not False
+        or source.get("network_calls") != 0
+        or source.get("skip_count") != 0
+        or source.get("substitution_count") != 0
+        or source.get("timeout_count") != 0
+        or failed_source_checks != {"retrieval-evaluation", "full-suite"}
+    ):
+        raise ValueError("CHANGED_SCOPE_SOURCE_PREFLIGHT_INVALID")
+    prior_suite = payload.get("prior_full_suite")
+    if not isinstance(prior_suite, Mapping) or dict(prior_suite) != {
+        "passed_count": 1151,
+        "failed_count": 4,
+    }:
+        raise ValueError("CHANGED_SCOPE_PRIOR_SUITE_COUNTS_INVALID")
+    full_suite = next(
+        (
+            item
+            for item in source.get("checks", ())
+            if item.get("name") == "full-suite"
+        ),
+        None,
+    )
+    artifacts = (
+        full_suite.get("artifacts", ())
+        if isinstance(full_suite, Mapping)
+        else ()
+    )
+    full_log_ref = next(
+        (
+            item
+            for item in artifacts
+            if item.get("path") == "logs/full-suite.stdout.txt"
+        ),
+        None,
+    )
+    if not isinstance(full_log_ref, Mapping):
+        raise ValueError("CHANGED_SCOPE_PRIOR_SUITE_LOG_REQUIRED")
+    full_log_path = (source_path.parent / str(full_log_ref["path"])).resolve()
+    if (
+        not full_log_path.is_relative_to(source_path.parent)
+        or not full_log_path.is_file()
+        or _path_sha256(full_log_path) != full_log_ref.get("sha256")
+        or "4 failed, 1151 passed" not in full_log_path.read_text(
+            encoding="utf-8"
+        )
+    ):
+        raise ValueError("CHANGED_SCOPE_PRIOR_SUITE_LOG_INVALID")
+
+    resolved = payload.get("resolved_checks")
+    if not isinstance(resolved, list):
+        raise ValueError("CHANGED_SCOPE_RESOLUTIONS_REQUIRED")
+    resolved_ids = {str(item.get("check_id")) for item in resolved}
+    if (
+        len(resolved) != len(REQUIRED_CHANGED_SCOPE_RESOLUTIONS)
+        or resolved_ids != REQUIRED_CHANGED_SCOPE_RESOLUTIONS
+        or any(
+            item.get("status") != "passed"
+            or item.get("exit_code") != 0
+            or item.get("skip_count") != 0
+            or item.get("substitution_count") != 0
+            or item.get("timeout_count") != 0
+            or item.get("network_calls") != 0
+            for item in resolved
+        )
+    ):
+        raise ValueError("CHANGED_SCOPE_RESOLUTIONS_INVALID")
+    for item in resolved:
+        _verify_changed_scope_evidence_refs(
+            item.get("evidence"),
+            reason_code="CHANGED_SCOPE_RESOLUTION_EVIDENCE_INVALID",
+        )
+    _verify_changed_scope_evidence_refs(
+        payload.get("supporting_evidence"),
+        reason_code="CHANGED_SCOPE_SUPPORTING_EVIDENCE_INVALID",
+    )
+
+    scope_hashes = payload.get("scope_file_sha256")
+    if (
+        not isinstance(scope_hashes, Mapping)
+        or set(scope_hashes) != REQUIRED_CHANGED_SCOPE_FILES
+        or any(
+            _path_sha256(_repository_evidence_path(scope_path))
+            != scope_hashes[scope_path]
+            for scope_path in REQUIRED_CHANGED_SCOPE_FILES
+        )
+    ):
+        raise ValueError("CHANGED_SCOPE_FILE_HASH_MISMATCH")
+    return {
+        **payload,
+        "mode": "changed_scope_evidence_reuse",
+        "admission_path": admission_path.relative_to(ROOT).as_posix(),
+    }
 
 
 def _canonical_sha256(value: Any) -> str:
@@ -343,17 +521,31 @@ def _unique_matches(pattern: str, value: str) -> list[str]:
     return list(dict.fromkeys(re.findall(pattern, value, flags=re.IGNORECASE)))
 
 
-def _prompt_identities(prompt: str) -> dict[str, list[str]]:
+def _prompt_few_shot_bindings(prompt: str) -> list[dict[str, str]]:
     hash_pattern = r"(sha256:[0-9a-f]{64})"
-    explicit_few_shot_hashes = _unique_matches(
-        rf'"(?:example_hash|few_shot_hash)"\s*:\s*"{hash_pattern}"',
-        prompt,
+    id_pattern = r'"(?:example_id|few_shot_id)"\s*:\s*"([^"]+)"'
+    until_next_id = (
+        r'(?:(?!"(?:example_id|few_shot_id)"\s*:)[\s\S]){0,320}?'
     )
-    referenced_few_shot_hashes = _unique_matches(
-        rf'"example_id"\s*:\s*"[^"]+"[\s\S]{{0,320}}?'
-        rf'"sha256"\s*:\s*"{hash_pattern}"',
-        prompt,
-    )
+    pairs: list[tuple[str, str]] = []
+    for hash_field in (r"(?:example_hash|few_shot_hash)", "sha256"):
+        pairs.extend(
+            re.findall(
+                rf'{id_pattern}{until_next_id}"{hash_field}"\s*:\s*"{hash_pattern}"',
+                prompt,
+                flags=re.IGNORECASE,
+            )
+        )
+    unique_pairs = list(dict.fromkeys(pairs))
+    return [
+        {"few_shot_id": few_shot_id, "few_shot_hash": few_shot_hash}
+        for few_shot_id, few_shot_hash in unique_pairs
+    ]
+
+
+def _prompt_identities(prompt: str) -> dict[str, Any]:
+    hash_pattern = r"(sha256:[0-9a-f]{64})"
+    few_shot_bindings = _prompt_few_shot_bindings(prompt)
     return {
         "profile_ids": _unique_matches(
             r'"profile_id"\s*:\s*"([^"]+)"', prompt
@@ -367,15 +559,15 @@ def _prompt_identities(prompt: str) -> dict[str, list[str]]:
         "profile_hashes": _unique_matches(
             rf'"profile_hash"\s*:\s*"{hash_pattern}"', prompt
         ),
-        "few_shot_ids": _unique_matches(
-            r'"(?:example_id|few_shot_id)"\s*:\s*"([^"]+)"',
-            prompt,
-        ),
-        "few_shot_hashes": list(
-            dict.fromkeys(
-                [*explicit_few_shot_hashes, *referenced_few_shot_hashes]
-            )
-        ),
+        # Legacy arrays remain derived evidence only. Authorization validates
+        # the bound records below and never reconstructs identity by position.
+        "few_shot_ids": [
+            item["few_shot_id"] for item in few_shot_bindings
+        ],
+        "few_shot_hashes": [
+            item["few_shot_hash"] for item in few_shot_bindings
+        ],
+        "few_shot_bindings": few_shot_bindings,
     }
 
 
@@ -1203,6 +1395,22 @@ def _strict_reopen_verification(
         }
 
 
+def _offered_candidate_token_for_property_identity(
+    clarification: Any,
+    property_identity: str,
+) -> str:
+    matches = [
+        str(candidate.token)
+        for candidate in getattr(clarification, "candidates", ())
+        if getattr(candidate, "public_id", None) == property_identity
+        and isinstance(getattr(candidate, "token", None), str)
+        and str(candidate.token).strip()
+    ]
+    if len(matches) != 1:
+        raise ValueError("LIVE_CASE_PROPERTY_IDENTITY_NOT_OFFERED")
+    return matches[0]
+
+
 def _production_case_executor(
     case: LiveCase,
     provider: TranscriptProvider,
@@ -1215,7 +1423,7 @@ def _production_case_executor(
     if source_sha256_before != FROZEN_SOURCE_SHA256:
         raise ValueError("LIVE_SOURCE_HASH_MISMATCH")
     knowledge_runtime = (
-        create_default_property_runtime()
+        create_property_runtime_from_environment(project_root=ROOT)
         if property_knowledge_runtime is None
         else property_knowledge_runtime
     )
@@ -1245,7 +1453,12 @@ def _production_case_executor(
         if case.feedback_kind == "select_candidate":
             answer = {
                 "kind": "select_candidate",
-                "candidate_token": case.feedback,
+                "candidate_token": (
+                    _offered_candidate_token_for_property_identity(
+                        clarification,
+                        case.feedback,
+                    )
+                ),
             }
         elif case.feedback_kind == "add_detail":
             answer = {"kind": "add_detail", "detail": case.feedback}
@@ -1299,12 +1512,36 @@ def _production_case_executor(
     }
 
 
+_ORIGINAL_PRODUCTION_CASE_EXECUTOR = _production_case_executor
+
+
 def _counts(attempts: Iterable[Mapping[str, Any]]) -> dict[str, int]:
     result = {"stage1": 0, "property_resolution": 0, "stage2": 0}
     for attempt in attempts:
         stage = str(attempt.get("stage"))
         if stage in result:
             result[stage] += 1
+    return result
+
+
+def _few_shot_binding_map(value: Any) -> dict[str, str] | None:
+    if not isinstance(value, list):
+        return None
+    result: dict[str, str] = {}
+    for item in value:
+        if not isinstance(item, Mapping):
+            return None
+        few_shot_id = item.get("few_shot_id")
+        few_shot_hash = item.get("few_shot_hash")
+        if (
+            not isinstance(few_shot_id, str)
+            or not few_shot_id.strip()
+            or not isinstance(few_shot_hash, str)
+            or re.fullmatch(r"sha256:[0-9a-f]{64}", few_shot_hash) is None
+            or few_shot_id in result
+        ):
+            return None
+        result[few_shot_id] = few_shot_hash
     return result
 
 
@@ -1320,8 +1557,7 @@ def _live_attempt_evidence_pass(
         profile_ids = attempt.get("profile_ids")
         profile_versions = attempt.get("profile_versions")
         profile_hashes = attempt.get("profile_hashes")
-        few_shot_ids = attempt.get("few_shot_ids")
-        few_shot_hashes = attempt.get("few_shot_hashes")
+        few_shot_bindings = attempt.get("few_shot_bindings")
         if not isinstance(metadata, Mapping):
             return False
         if not isinstance(usage, Mapping) or not usage:
@@ -1347,10 +1583,6 @@ def _live_attempt_evidence_pass(
         ):
             return False
         if stage == "stage2":
-            if not isinstance(few_shot_ids, list) or not isinstance(
-                few_shot_hashes, list
-            ):
-                return False
             try:
                 expected_selection = select_prompt_profiles(
                     list(map(str, profile_ids))
@@ -1361,12 +1593,19 @@ def _live_attempt_evidence_pass(
                 str(profile["profile_version"])
                 for profile in expected_selection["profiles"]
             ]
+            actual_binding_map = _few_shot_binding_map(few_shot_bindings)
+            expected_binding_map = dict(
+                zip(
+                    expected_selection["few_shot_ids"],
+                    expected_selection["few_shot_hashes"],
+                    strict=True,
+                )
+            )
             if (
                 profile_ids != expected_selection["profile_ids"]
                 or profile_versions != expected_versions
                 or profile_hashes != expected_selection["profile_hashes"]
-                or few_shot_ids != expected_selection["few_shot_ids"]
-                or few_shot_hashes != expected_selection["few_shot_hashes"]
+                or actual_binding_map != expected_binding_map
             ):
                 return False
         if (
@@ -1515,6 +1754,45 @@ def _base_result(*, evidence_mode: str) -> dict[str, Any]:
     }
 
 
+def _close_property_runtime(runtime: Any | None) -> None:
+    if runtime is None:
+        return
+    close = getattr(getattr(runtime, "vector_index", None), "close", None)
+    if callable(close):
+        close()
+
+
+def _open_property_runtime(
+    factory: Callable[[], Any],
+) -> tuple[Any | None, dict[str, Any]]:
+    try:
+        runtime = factory()
+    except Exception as error:
+        return None, {
+            "status": "not_ready",
+            "reason_code": str(error).split(":", 1)[0][:128]
+            or type(error).__name__,
+            "acceptance_eligible": False,
+        }
+    health = getattr(runtime, "health", None)
+    readiness = (
+        dict(health.to_dict())
+        if health is not None and callable(getattr(health, "to_dict", None))
+        else {
+            "status": "not_ready",
+            "reason_code": "PROPERTY_RUNTIME_HEALTH_REQUIRED",
+            "acceptance_eligible": False,
+        }
+    )
+    if (
+        readiness.get("status") == "ready"
+        and readiness.get("acceptance_eligible") is True
+    ):
+        return runtime, readiness
+    _close_property_runtime(runtime)
+    return None, readiness
+
+
 def run_live_uat(
     output_root: Path | str,
     *,
@@ -1529,6 +1807,8 @@ def run_live_uat(
     proof_root: Path | str = DEFAULT_PROOF_ROOT,
     evidence_mode: str = LIVE_EVIDENCE_MODE,
     preflight_only: bool = False,
+    property_runtime_factory: Callable[[], Any] | None = None,
+    admission_evidence_path: Path | str | None = None,
 ) -> dict[str, Any]:
     """Execute live cases only after independently verified preflight."""
 
@@ -1582,11 +1862,25 @@ def run_live_uat(
         }
     )
 
-    preflight = run_preflight(
-        output / "preflight",
-        proof_root=Path(proof_root).resolve(),
-        command_runner=command_runner,
-    )
+    if admission_evidence_path is None:
+        preflight = run_preflight(
+            output / "preflight",
+            proof_root=Path(proof_root).resolve(),
+            command_runner=command_runner,
+        )
+    else:
+        try:
+            preflight = _load_changed_scope_admission(
+                admission_evidence_path
+            )
+        except Exception as error:
+            preflight = {
+                "schema_version": CHANGED_SCOPE_ADMISSION_SCHEMA,
+                "status": "failed",
+                "mode": "changed_scope_evidence_reuse",
+                "reason_code": str(error).split(":", 1)[0][:128],
+                "network_transport_attempted": False,
+            }
     result["preflight"] = preflight
     if preflight["status"] != "passed":
         result.update(
@@ -1599,6 +1893,25 @@ def run_live_uat(
         return result
 
     if preflight_only:
+        if case_executor is _ORIGINAL_PRODUCTION_CASE_EXECUTOR:
+            factory = property_runtime_factory or (
+                lambda: create_property_runtime_from_environment(
+                    project_root=ROOT
+                )
+            )
+            runtime, readiness = _open_property_runtime(factory)
+            result["property_runtime_readiness"] = readiness
+            if runtime is None:
+                result.update(
+                    {
+                        "status": "preflight_failed",
+                        "reason_code": readiness.get("reason_code")
+                        or "PROPERTY_RUNTIME_NOT_READY",
+                    }
+                )
+                _write_json(output / "live-uat-result.json", result)
+                return result
+            _close_property_runtime(runtime)
         result.update(
             {
                 "status": "preflight_passed",
@@ -1655,6 +1968,26 @@ def run_live_uat(
         )
         _write_json(output / "live-uat-result.json", result)
         return result
+
+    property_runtime = None
+    if case_executor is _ORIGINAL_PRODUCTION_CASE_EXECUTOR:
+        factory = property_runtime_factory or (
+            lambda: create_property_runtime_from_environment(project_root=ROOT)
+        )
+        property_runtime, readiness = _open_property_runtime(factory)
+        result["property_runtime_readiness"] = readiness
+        if property_runtime is None:
+            result.update(
+                {
+                    "status": "blocked",
+                    "reason_code": readiness.get("reason_code")
+                    or "PROPERTY_RUNTIME_NOT_READY",
+                    "runner_contract_eligible": False,
+                    "acceptance_eligible": False,
+                }
+            )
+            _write_json(output / "live-uat-result.json", result)
+            return result
     provider = TranscriptProvider(transport)
     case_results: list[dict[str, Any]] = []
     for case in cases:
@@ -1663,7 +1996,17 @@ def run_live_uat(
         case_root = output / "cases" / case.case_id
         case_root.mkdir(parents=True)
         try:
-            final = dict(case_executor(case, provider, case_root))
+            if property_runtime is None:
+                final = dict(case_executor(case, provider, case_root))
+            else:
+                final = dict(
+                    case_executor(
+                        case,
+                        provider,
+                        case_root,
+                        property_knowledge_runtime=property_runtime,
+                    )
+                )
         except Exception as error:
             final = {
                 "status": "provider_failed",
@@ -1739,6 +2082,7 @@ def run_live_uat(
             "cases": case_results,
         }
     )
+    _close_property_runtime(property_runtime)
     _write_json(output / "live-uat-result.json", result)
     return result
 
@@ -1779,6 +2123,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--preflight-only", action="store_true")
     parser.add_argument("--provider", choices=("deepseek",), default="deepseek")
     parser.add_argument("--require-green-preflight", action="store_true")
+    parser.add_argument("--changed-scope-admission", type=Path)
     parser.add_argument("--env-file", type=Path, default=ROOT / ".env")
     parser.add_argument("--output-root", type=Path, default=DEFAULT_OUTPUT)
     parser.add_argument("--proof-root", type=Path, default=DEFAULT_PROOF_ROOT)
@@ -1794,12 +2139,21 @@ def main(argv: list[str] | None = None) -> int:
         def forbidden_transport_factory() -> Any:
             raise AssertionError("preflight-only must not construct Provider transport")
 
+        environment = _environment(args.env_file)
+
         result = run_live_uat(
             run_dir,
             transport_factory=forbidden_transport_factory,
             proof_root=args.proof_root,
             evidence_mode=args.evidence_mode,
             preflight_only=True,
+            property_runtime_factory=lambda: (
+                create_property_runtime_from_environment(
+                    environment,
+                    project_root=ROOT,
+                )
+            ),
+            admission_evidence_path=args.changed_scope_admission,
         )
         print(
             json.dumps(
@@ -1840,6 +2194,13 @@ def main(argv: list[str] | None = None) -> int:
         transport_factory=transport_factory,
         proof_root=args.proof_root,
         evidence_mode=args.evidence_mode,
+        property_runtime_factory=lambda: (
+            create_property_runtime_from_environment(
+                environment,
+                project_root=ROOT,
+            )
+        ),
+        admission_evidence_path=args.changed_scope_admission,
     )
     print(
         json.dumps(

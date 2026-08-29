@@ -1,15 +1,24 @@
 from __future__ import annotations
 
+import hashlib
 import time
 from pathlib import Path
 
 import ifcopenshell
+import pytest
 
+import text2ifc_ifc_repair.benchmark_evaluation as benchmark_evaluation_module
+import text2ifc_ifc_repair.evaluation as evaluation_module
+from text2ifc_ifc_repair.benchmark_evaluation import (
+    ProductionEvaluationInputs,
+    evaluate_production,
+)
 from text2ifc_ifc_repair.evaluation import (
     EvaluationExecutionPolicy,
     _open_ifc_pair,
     execute_validation_and_diff,
 )
+from text2ifc_ifc_repair.operations import create_default_registry
 
 
 PARITY_TEST_DEADLINE_SECONDS = 60.0
@@ -21,6 +30,10 @@ def _write(path: Path, *, extra_error: bool = False) -> None:
     if extra_error:
         model.create_entity("IfcDirection")
     model.write(str(path))
+
+
+def _sha256(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
 def _run(
@@ -199,6 +212,104 @@ def test_rss_limit_failure_suppresses_results(tmp_path: Path) -> None:
     assert result["status"] == "failed"
     assert result["reason_code"] == "EVALUATION_RSS_LIMIT_EXCEEDED"
     assert result["results"] == {}
+
+
+def test_accelerated_rss_ignores_unrelated_parent_lifetime_peak(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    historical_parent_peak = 4_150_000_000
+    monkeypatch.setattr(
+        evaluation_module,
+        "_current_process_peak_rss",
+        lambda: historical_parent_peak,
+    )
+
+    result = _run(tmp_path, mode="accelerated")
+
+    assert result["status"] == "passed"
+    metrics = result["metrics"]
+    assert metrics["parent_current_rss_bytes"] < historical_parent_peak
+    assert metrics["peak_rss_bytes"] == (
+        metrics["parent_current_rss_bytes"]
+        + sum(metrics["worker_peak_rss_bytes"].values())
+    )
+
+
+def test_accelerated_current_rss_limit_violation_still_fails_closed(
+    tmp_path: Path,
+) -> None:
+    limit = 1024
+
+    result = _run(
+        tmp_path,
+        mode="accelerated",
+        rss_reader=lambda: limit + 1,
+        rss_limit=limit,
+    )
+
+    assert result["status"] == "failed"
+    assert result["reason_code"] == "EVALUATION_RSS_LIMIT_EXCEEDED"
+    assert result["results"] == {}
+    assert result["metrics"]["parent_current_rss_bytes"] == limit + 1
+
+
+def test_evaluate_production_uses_green_accelerated_scheduler(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    damaged = tmp_path / "production-damaged.ifc"
+    repaired = tmp_path / "production-repaired.ifc"
+    _write(damaged)
+    repaired.write_bytes(damaged.read_bytes())
+    scheduler_results: list[dict[str, object]] = []
+    real_execute = evaluation_module.execute_validation_and_diff
+
+    def record_execute(**kwargs):
+        result = real_execute(**kwargs)
+        scheduler_results.append(result)
+        return result
+
+    monkeypatch.setattr(
+        evaluation_module,
+        "execute_validation_and_diff",
+        record_execute,
+    )
+    monkeypatch.setattr(
+        benchmark_evaluation_module,
+        "aggregate_repair",
+        lambda **kwargs: type(
+            "ProductionSchedulerProbe",
+            (),
+            {
+                "complete_repair_success": (
+                    kwargs["preservation"].status.value == "passed"
+                )
+            },
+        )(),
+    )
+
+    evaluate_production(
+        ProductionEvaluationInputs(
+            damaged_ifc_path=damaged,
+            repaired_ifc_path=repaired,
+            changeset={
+                "schema_version": "text2ifc/ifc-repair-changeset/0.3",
+                "base_model_fingerprint": _sha256(damaged),
+                "operations": [],
+            },
+            application_result={
+                "valid": True,
+                "published": True,
+                "operations": [],
+            },
+            registry=create_default_registry(),
+        )
+    )
+
+    assert len(scheduler_results) == 1
+    assert scheduler_results[0]["status"] == "passed"
+    assert scheduler_results[0]["metrics"]["mode"] == "accelerated"
 
 
 def test_policy_rejects_more_than_two_workers() -> None:
