@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import hashlib
 import json
-import shutil
 from pathlib import Path
 from typing import Any
 
@@ -672,100 +671,6 @@ def test_r1_stage15_authority_replay_accepts_pure_window_occurrence(
     assert authority["property_claim_count"] == 1
     assert authority["current_property_acceptance_eligible"] is True
 
-    source_copy = run_root / "source.ifc"
-    shutil.copy2(live_uat.SOURCE, source_copy)
-    repaired = next(run_root.rglob("repaired.ifc"))
-    terminal_evidence_path = next(run_root.rglob("terminal/evidence.json"))
-    terminal_evidence = json.loads(
-        terminal_evidence_path.read_text(encoding="utf-8")
-    )
-    application_path = run_root / "application-proof.json"
-    _write_json(application_path, terminal_evidence["evidence"]["application"])
-    digest = "sha256:" + hashlib.sha256(source_copy.read_bytes()).hexdigest()
-    _write_json(
-        run_root / "terminal.json",
-        {
-            "schema_version": "text2ifc/ifc-repair-proof-terminal/0.1",
-            "case_id": "window-stage15",
-            "terminal_class": "SUCCESS",
-            "source": {
-                "path": "source.ifc",
-                "sha256_before": digest,
-                "sha256_after": digest,
-                "unchanged": True,
-            },
-            "resume_success": True,
-        },
-    )
-    operation = changeset["operations"][0]
-    assignment = next(
-        item
-        for item in operation["semantic_assignments"]
-        if str(item["fact_key"]).startswith("pset:")
-    )
-    pset_property = str(assignment["fact_key"]).removeprefix("pset:").split(".", 1)
-    target_id = str(operation["target"]["element_global_id"])
-    profile = _r1_profile("window-stage15", "SUCCESS")
-    profile["property_claim_count"] = 1
-    profile["artifact_predicates"] = _property_predicates(
-        ifc_class="IfcWindow",
-        set_name=pset_property[0],
-        property_name=pset_property[1],
-        value_type=str(assignment["value_type"]),
-        value=assignment["value"],
-    )
-    for predicate in profile["artifact_predicates"]:
-        predicate["target"]["global_id"] = target_id
-    _write_case_files(run_root, "window-stage15")
-    freeze_hash = _write_fixture_freeze(tmp_path)
-    _write_json(
-        tmp_path / "profiles.json",
-        {
-            "schema_version": "text2ifc/ifc-repair-proof-profiles/0.1",
-            "provenance_namespace": "repair-milestone-r1",
-            "freeze": {"path": "freeze.json", "sha256": freeze_hash},
-            "execution_order": ["window-stage15"],
-            "cases": [profile],
-        },
-    )
-    relative = lambda path: path.relative_to(tmp_path).as_posix()
-    _write_json(
-        tmp_path / "manifest.json",
-        {
-            "schema_version": "text2ifc/ifc-repair-proof-collection/0.2",
-            "provenance_namespace": "repair-milestone-r1",
-            "profile": "profiles.json",
-            "case_count": 1,
-            "cases": [{
-                "case_id": "window-stage15",
-                "status": "accepted",
-                "terminal_class": "SUCCESS",
-                "case_root": relative(run_root),
-                "files": relative(run_root / "FILES.json"),
-                "report": relative(run_root / "REPORT.md"),
-                "terminal_record": relative(run_root / "terminal.json"),
-                "source_ifc": relative(source_copy),
-                "repaired_ifc": relative(repaired),
-                "changeset": relative(run_root / "changeset/bound-changeset.json"),
-                "application": relative(application_path),
-                "provider_evidence_mode": "offline_bound_deterministic",
-                "authority_replay": {
-                    "intent": relative(run_root / "intent/repair-intent.json"),
-                    "resolution": relative(run_root / "resolution.json"),
-                    "semantic_manifest": relative(run_root / "semantic-manifest.json"),
-                    "source_manifest": relative(source_manifest),
-                    "evidence_root": relative(run_root),
-                },
-            }],
-        },
-    )
-
-    collection = proof_validator.validate_r1_proof_collection(tmp_path)
-    assert collection.status == "passed", collection.errors
-    assert collection.cases[0]["property_authority_coverage"] == (
-        "strict_stage_1_5_recomputed"
-    )
-
 
 def _write_json(path: Path, value: Any) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -820,15 +725,63 @@ def _write_fixture_freeze(root: Path, content: str = "{}\n") -> str:
     return "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def _write_guard_collection(tmp_path: Path, *, profile_terminal: str) -> None:
-    source = tmp_path / "cases" / "guard" / "source.ifc"
+def _write_canonical_collection_skeleton(
+    root: Path,
+    *,
+    terminal_overrides: dict[str, str] | None = None,
+) -> None:
+    profile_source = (
+        ROOT / "docs/validation/repair-milestone-r1/repair-proof-profiles.json"
+    )
+    freeze_source = (
+        ROOT / "docs/validation/repair-milestone-r1/repair-acceptance-freeze.json"
+    )
+    profile_path = root / profile_source.name
+    freeze_path = root / freeze_source.name
+    profile_path.write_bytes(profile_source.read_bytes())
+    freeze_path.write_bytes(freeze_source.read_bytes())
+    profile = json.loads(profile_path.read_text(encoding="utf-8"))
+    overrides = terminal_overrides or {}
+    cases = []
+    for item in profile["cases"]:
+        case_id = str(item["case_id"])
+        case_root = f"cases/{case_id}"
+        cases.append(
+            {
+                "case_id": case_id,
+                "status": "accepted",
+                "terminal_class": overrides.get(
+                    case_id,
+                    str(item["terminal_class"]),
+                ),
+                "case_root": case_root,
+                "files": f"{case_root}/FILES.json",
+                "report": f"{case_root}/REPORT.md",
+                "terminal_record": f"{case_root}/terminal.json",
+            }
+        )
+    _write_json(
+        root / "manifest.json",
+        {
+            "schema_version": "text2ifc/ifc-repair-proof-collection/0.2",
+            "provenance_namespace": "repair-milestone-r1",
+            "profile": profile_path.name,
+            "case_count": len(cases),
+            "cases": cases,
+        },
+    )
+
+
+def test_r1_no_output_terminal_accepts_without_fabricated_repaired_ifc(
+    tmp_path: Path,
+) -> None:
+    source = tmp_path / "source.ifc"
     _source_model(source, "IfcBeam")
     digest = "sha256:" + hashlib.sha256(source.read_bytes()).hexdigest()
-    _write_json(
-        source.parent / "terminal.json",
+    result = proof_validator.validate_r1_terminal_record(
         {
             "schema_version": "text2ifc/ifc-repair-proof-terminal/0.1",
-            "case_id": "guard",
+            "case_id": "H4",
             "terminal_class": "UNSUPPORTED_ATOMIC_GUARD",
             "source": {
                 "path": "source.ifc",
@@ -848,61 +801,27 @@ def _write_guard_collection(tmp_path: Path, *, profile_terminal: str) -> None:
             },
             "resume_success": False,
         },
-    )
-    _write_case_files(source.parent, "guard")
-    freeze_hash = _write_fixture_freeze(tmp_path)
-    _write_json(
-        tmp_path / "profiles.json",
-        {
-            "schema_version": "text2ifc/ifc-repair-proof-profiles/0.1",
-            "provenance_namespace": "repair-milestone-r1",
-            "freeze": {"path": "freeze.json", "sha256": freeze_hash},
-            "execution_order": ["guard"],
-            "cases": [_r1_profile("guard", profile_terminal)],
-        },
-    )
-    _write_json(
-        tmp_path / "manifest.json",
-        {
-            "schema_version": "text2ifc/ifc-repair-proof-collection/0.2",
-            "provenance_namespace": "repair-milestone-r1",
-            "profile": "profiles.json",
-            "case_count": 1,
-            "cases": [{
-                "case_id": "guard",
-                "status": "accepted",
-                "terminal_class": "UNSUPPORTED_ATOMIC_GUARD",
-                "case_root": "cases/guard",
-                "files": "cases/guard/FILES.json",
-                "report": "cases/guard/REPORT.md",
-                "terminal_record": "cases/guard/terminal.json",
-            }],
-        },
+        case_root=tmp_path,
     )
 
-
-def test_r1_collection_accepts_no_output_without_fabricated_repaired_ifc(
-    tmp_path: Path,
-) -> None:
-    _write_guard_collection(tmp_path, profile_terminal="UNSUPPORTED_ATOMIC_GUARD")
-
-    result = proof_validator.validate_r1_proof_collection(tmp_path)
-
-    assert result.status == "passed", result.errors
-    assert result.no_output_case_count == 1
-    assert result.cases[0]["published_artifact_present"] is False
-    assert not (tmp_path / "cases/guard/repaired.ifc").exists()
+    assert result["status"] == "passed"
+    assert result["source_immutable"] is True
+    assert result["published_artifact_present"] is False
+    assert not (tmp_path / "repaired.ifc").exists()
 
 
 def test_r1_collection_rejects_profile_terminal_contract_drift(
     tmp_path: Path,
 ) -> None:
-    _write_guard_collection(tmp_path, profile_terminal="SUCCESS")
+    _write_canonical_collection_skeleton(
+        tmp_path,
+        terminal_overrides={"H4": "SUCCESS"},
+    )
 
     result = proof_validator.validate_r1_proof_collection(tmp_path)
 
     assert result.status == "failed"
-    assert any("profile.terminal_class" in error for error in result.errors)
+    assert "H4: proof.profile.terminal_class" in result.errors
 
 
 def test_r1_profile_is_machine_readable_and_bound_to_the_accepted_freeze() -> None:
@@ -1008,7 +927,7 @@ def test_r1_structural_add_predicate_fails_closed_on_tampered_geometry() -> None
         )
 
 
-def test_r1_curator_is_profile_driven_not_plan07_case_id_driven(
+def test_r1_curator_rejects_injected_validation_for_noncanonical_collection(
     tmp_path: Path,
 ) -> None:
     from scripts.ifc_repair.curate_repair_milestone_r1_proof import curate_r1_proof
@@ -1048,37 +967,35 @@ def test_r1_curator_is_profile_driven_not_plan07_case_id_driven(
     (source_root / "cases" / "arbitrary-case").mkdir(parents=True)
     _write_case_files(source_root / "cases" / "arbitrary-case", "arbitrary-case")
 
-    result = curate_r1_proof(
-        source_root=source_root,
-        destination_root=destination_root,
-        validation_document={
-            "schema_version": "text2ifc/ifc-repair-proof-validation/0.3",
-            "status": "passed",
-            "collection_root": source_root.as_posix(),
-            "case_count": 1,
-            "operation_count": 1,
-            "checked_file_count": 0,
-            "reopened_ifc_count": 2,
-            "independently_recomputed_case_count": 1,
-            "no_output_case_count": 0,
-            "errors": [],
-            "limitations": [],
-            "cases": [{
-                "case_id": "arbitrary-case",
-                "provenance_namespace": "repair-milestone-r1",
-                "terminal_class": "SUCCESS",
+    with pytest.raises(ValueError, match="R1_CURATOR_VALIDATION_FAILED"):
+        curate_r1_proof(
+            source_root=source_root,
+            destination_root=destination_root,
+            validation_document={
+                "schema_version": "text2ifc/ifc-repair-proof-validation/0.3",
                 "status": "passed",
-                "artifact_predicates": [],
-                "property_authority_coverage": "not_applicable",
-                "property_claim_count": 0,
-                "current_property_acceptance_eligible": True,
-                "source_immutable": True,
-                "published_artifact_present": True,
-            }],
-        },
-    )
+                "collection_root": source_root.as_posix(),
+                "case_count": 1,
+                "operation_count": 1,
+                "checked_file_count": 0,
+                "reopened_ifc_count": 2,
+                "independently_recomputed_case_count": 1,
+                "no_output_case_count": 0,
+                "errors": [],
+                "limitations": [],
+                "cases": [{
+                    "case_id": "arbitrary-case",
+                    "provenance_namespace": "repair-milestone-r1",
+                    "terminal_class": "SUCCESS",
+                    "status": "passed",
+                    "artifact_predicates": [],
+                    "property_authority_coverage": "not_applicable",
+                    "property_claim_count": 0,
+                    "current_property_acceptance_eligible": True,
+                    "source_immutable": True,
+                    "published_artifact_present": True,
+                }],
+            },
+        )
 
-    assert result["status"] == "curated"
-    assert result["provenance_namespace"] == "repair-milestone-r1"
-    assert result["case_ids"] == ["arbitrary-case"]
-    assert (destination_root / "manifest.json").is_file()
+    assert not destination_root.exists()

@@ -165,23 +165,293 @@ def _safe_relative(root: Path, raw: Any) -> Path:
     return path
 
 
+def _profile_identity_from_records(
+    raw_profiles: Any,
+    *,
+    error_code: str,
+) -> dict[str, list[str]]:
+    if (
+        not isinstance(raw_profiles, Sequence)
+        or isinstance(raw_profiles, (str, bytes))
+        or not raw_profiles
+    ):
+        raise ValueError(error_code)
+    profile_ids: list[str] = []
+    profile_versions: list[str] = []
+    profile_hashes: list[str] = []
+    for raw_profile in raw_profiles:
+        if not isinstance(raw_profile, Mapping):
+            raise ValueError(error_code)
+        profile_id = _require_text(raw_profile.get("profile_id"), error_code)
+        profile_version = _require_text(
+            raw_profile.get("profile_version"), error_code
+        )
+        profile_hash = str(raw_profile.get("profile_hash") or "")
+        if not _valid_sha256(profile_hash):
+            raise ValueError(error_code)
+        profile_ids.append(profile_id)
+        profile_versions.append(profile_version)
+        profile_hashes.append(profile_hash)
+    if len(set(profile_ids)) != len(profile_ids):
+        raise ValueError(error_code)
+    return {
+        "profile_ids": profile_ids,
+        "profile_versions": profile_versions,
+        "profile_hashes": profile_hashes,
+    }
+
+
+def _stage2_identity_from_selection(raw_selection: Any) -> dict[str, Any]:
+    error_code = "LIVE_ATTEMPT_EXPECTED_STAGE2_CONTRACT_INVALID"
+    if not isinstance(raw_selection, Mapping):
+        raise ValueError(error_code)
+    identity = _profile_identity_from_records(
+        raw_selection.get("profiles"),
+        error_code=error_code,
+    )
+    if (
+        raw_selection.get("profile_ids") != identity["profile_ids"]
+        or raw_selection.get("profile_hashes") != identity["profile_hashes"]
+    ):
+        raise ValueError(error_code)
+    few_shot_ids = raw_selection.get("few_shot_ids")
+    few_shot_hashes = raw_selection.get("few_shot_hashes")
+    if (
+        not isinstance(few_shot_ids, list)
+        or not isinstance(few_shot_hashes, list)
+        or len(few_shot_ids) != len(few_shot_hashes)
+        or len(set(map(str, few_shot_ids))) != len(few_shot_ids)
+        or any(not isinstance(value, str) or not value for value in few_shot_ids)
+        or any(not _valid_sha256(value) for value in few_shot_hashes)
+    ):
+        raise ValueError(error_code)
+    return {
+        **identity,
+        "few_shot_bindings": dict(
+            zip(few_shot_ids, few_shot_hashes, strict=True)
+        ),
+    }
+
+
+def _attempt_round_contract(
+    raw_rounds: Sequence[Mapping[str, Any]] | None,
+    *,
+    property_resolution_expected: bool,
+    stage2_expected: bool,
+) -> list[dict[str, Any]] | None:
+    if raw_rounds is None:
+        return None
+    if (
+        not isinstance(raw_rounds, Sequence)
+        or isinstance(raw_rounds, (str, bytes))
+        or not raw_rounds
+    ):
+        raise ValueError("LIVE_ATTEMPT_ROUND_CONTRACT_INVALID")
+    stage_ranks = {"stage1": 0, "property_resolution": 1, "stage2": 2}
+    normalized: list[dict[str, Any]] = []
+    seen_lineages: set[str] = set()
+    for index, raw_round in enumerate(raw_rounds):
+        if not isinstance(raw_round, Mapping) or set(raw_round) != {
+            "lineage",
+            "stages",
+        }:
+            raise ValueError("LIVE_ATTEMPT_ROUND_CONTRACT_INVALID")
+        lineage = _require_text(
+            raw_round.get("lineage"),
+            "LIVE_ATTEMPT_ROUND_CONTRACT_INVALID",
+        )
+        stages = raw_round.get("stages")
+        if (
+            lineage in seen_lineages
+            or not isinstance(stages, list)
+            or not stages
+            or (index == 0 and stages[0] != "stage1")
+            or any(stage not in stage_ranks for stage in stages)
+            or len(stages) != len(set(stages))
+            or [stage_ranks[stage] for stage in stages]
+            != sorted(stage_ranks[stage] for stage in stages)
+        ):
+            raise ValueError("LIVE_ATTEMPT_ROUND_CONTRACT_INVALID")
+        if "stage2" in stages and (
+            index != len(raw_rounds) - 1
+            or stages[-1] != "stage2"
+            or (
+                property_resolution_expected
+                and stages[-2:] != ["property_resolution", "stage2"]
+            )
+        ):
+            raise ValueError("LIVE_ATTEMPT_ROUND_CONTRACT_INVALID")
+        seen_lineages.add(lineage)
+        normalized.append({"lineage": lineage, "stages": list(stages)})
+    configured_stages = {"stage1"}
+    if property_resolution_expected:
+        configured_stages.add("property_resolution")
+    if stage2_expected:
+        configured_stages.add("stage2")
+    offered_stages = {
+        stage for round_contract in normalized for stage in round_contract["stages"]
+    }
+    if offered_stages != configured_stages:
+        raise ValueError("LIVE_ATTEMPT_ROUND_CONTRACT_INVALID")
+    if stage2_expected and normalized[-1]["stages"][-1] != "stage2":
+        raise ValueError("LIVE_ATTEMPT_ROUND_CONTRACT_INVALID")
+    return normalized
+
+
+def audit_live_attempts(
+    *,
+    case_id: str,
+    raw_attempts: Any,
+    expected_stage1_profiles: Sequence[Mapping[str, Any]],
+    expected_stage2_selection: Mapping[str, Any] | None,
+    expected_property_resolution_template: Mapping[str, Any] | None,
+    expected_provider: str,
+    expected_model: str,
+    expected_evidence_mode: str,
+    expected_thinking: Mapping[str, Any],
+    expected_rounds: Sequence[Mapping[str, Any]] | None = None,
+) -> dict[str, Any]:
+    """Audit an arbitrary genuine case against caller-supplied frozen identities.
+
+    Plan 07 retains its legacy private contract through ``_audit_attempts``.
+    This public seam lets later frozen milestones supply their own immutable
+    prompt identities without teaching the Phase 12 curator new case IDs.
+    """
+
+    normalized_case_id = _require_text(case_id, "LIVE_ATTEMPT_CASE_REQUIRED")
+    stage1_identity = _profile_identity_from_records(
+        expected_stage1_profiles,
+        error_code="LIVE_ATTEMPT_EXPECTED_STAGE1_CONTRACT_INVALID",
+    )
+    stage2_identity = (
+        None
+        if expected_stage2_selection is None
+        else _stage2_identity_from_selection(expected_stage2_selection)
+    )
+    if expected_property_resolution_template is None:
+        stage15_identity = None
+    else:
+        template_id = _require_text(
+            expected_property_resolution_template.get("template_id"),
+            "LIVE_ATTEMPT_EXPECTED_TEMPLATE_CONTRACT_INVALID",
+        )
+        template_hash = str(
+            expected_property_resolution_template.get("template_hash") or ""
+        )
+        if not _valid_sha256(template_hash):
+            raise ValueError("LIVE_ATTEMPT_EXPECTED_TEMPLATE_CONTRACT_INVALID")
+        stage15_identity = {
+            "template_id": template_id,
+            "template_hash": template_hash,
+        }
+    contract = {
+        "stage1": stage1_identity,
+        "stage2": stage2_identity,
+        "property_resolution": stage15_identity,
+        "provider": _require_text(
+            expected_provider, "LIVE_ATTEMPT_EXPECTED_PROVIDER_REQUIRED"
+        ),
+        "model": _require_text(
+            expected_model, "LIVE_ATTEMPT_EXPECTED_MODEL_REQUIRED"
+        ),
+        "evidence_mode": _require_text(
+            expected_evidence_mode,
+            "LIVE_ATTEMPT_EXPECTED_EVIDENCE_MODE_REQUIRED",
+        ),
+        "thinking": dict(expected_thinking),
+    }
+    if not contract["thinking"]:
+        raise ValueError("LIVE_ATTEMPT_EXPECTED_THINKING_REQUIRED")
+    contract["rounds"] = _attempt_round_contract(
+        expected_rounds,
+        property_resolution_expected=stage15_identity is not None,
+        stage2_expected=stage2_identity is not None,
+    )
+    attempts, counts, provider_models = _audit_attempts(
+        normalized_case_id,
+        raw_attempts,
+        contract=contract,
+    )
+    return {
+        "case_id": normalized_case_id,
+        "attempt_count": len(attempts),
+        "transport_calls": len(attempts),
+        "transport_calls_by_stage": counts,
+        "provider_models": [
+            {"provider": provider, "model": model}
+            for provider, model in sorted(provider_models)
+        ],
+    }
+
+
 def _audit_attempts(
     case_id: str,
     raw_attempts: Any,
+    *,
+    contract: Mapping[str, Any] | None = None,
 ) -> tuple[list[Mapping[str, Any]], dict[str, int], set[tuple[str, str]]]:
     if not isinstance(raw_attempts, list) or not raw_attempts:
         raise ValueError("LIVE_CASE_ATTEMPTS_REQUIRED")
     attempts: list[Mapping[str, Any]] = []
     ordinals = {"stage1": 0, "property_resolution": 0, "stage2": 0}
+    stage_ranks = {"stage1": 0, "property_resolution": 1, "stage2": 2}
     previous: str | None = None
+    previous_stage: str | None = None
+    previous_stage_attempt: int | None = None
+    previous_lineage: str | None = None
+    previous_stage_rank = -1
+    round_contract = (
+        None if contract is None else contract.get("rounds")
+    )
+    round_index = 0
+    round_stage_index = 0
     provider_models: set[tuple[str, str]] = set()
     seen_ids: set[str] = set()
+    expected_evidence_mode = (
+        LIVE_EVIDENCE_MODE
+        if contract is None
+        else str(contract["evidence_mode"])
+    )
+    expected_provider = (
+        LIVE_PROVIDER if contract is None else str(contract["provider"])
+    )
+    expected_model = None if contract is None else str(contract["model"])
     for raw in raw_attempts:
         if not isinstance(raw, Mapping):
             raise ValueError("LIVE_ATTEMPT_OBJECT_REQUIRED")
         stage = str(raw.get("stage") or "")
         if stage not in ordinals:
             raise ValueError("LIVE_ATTEMPT_STAGE_INVALID")
+        stage_rank = stage_ranks[stage]
+        if round_contract is None:
+            if stage_rank < previous_stage_rank:
+                raise ValueError("LIVE_ATTEMPT_STAGE_ORDER_INVALID")
+        else:
+            assert isinstance(round_contract, list)
+            if (
+                previous_lineage is not None
+                and raw.get("lineage") != previous_lineage
+            ):
+                current_stages = round_contract[round_index]["stages"]
+                if round_stage_index != len(current_stages) - 1:
+                    raise ValueError("LIVE_ATTEMPT_ROUND_SEQUENCE_INVALID")
+                round_index += 1
+                round_stage_index = 0
+                previous_stage = None
+                previous_stage_attempt = None
+            if round_index >= len(round_contract):
+                raise ValueError("LIVE_ATTEMPT_ROUND_SEQUENCE_INVALID")
+            expected_round = round_contract[round_index]
+            if raw.get("lineage") != expected_round["lineage"]:
+                raise ValueError("LIVE_ATTEMPT_ROUND_LINEAGE_INVALID")
+            if previous_stage is not None and stage != previous_stage:
+                round_stage_index += 1
+            expected_stages = expected_round["stages"]
+            if (
+                round_stage_index >= len(expected_stages)
+                or stage != expected_stages[round_stage_index]
+            ):
+                raise ValueError("LIVE_ATTEMPT_ROUND_SEQUENCE_INVALID")
         ordinals[stage] += 1
         if raw.get("ordinal") != ordinals[stage]:
             raise ValueError("LIVE_ATTEMPT_ORDINAL_MISMATCH")
@@ -198,13 +468,41 @@ def _audit_attempts(
         stage_attempt = raw.get("stage_attempt")
         if not isinstance(stage_attempt, int) or stage_attempt < 1:
             raise ValueError("LIVE_ATTEMPT_STAGE_ATTEMPT_INVALID")
+        if stage == "property_resolution" and stage_attempt > 2:
+            raise ValueError("LIVE_ATTEMPT_STAGE15_RETRY_EXHAUSTED")
+        if stage != previous_stage:
+            if stage_attempt != 1:
+                raise ValueError(
+                    "LIVE_ATTEMPT_STAGE_ATTEMPT_SEQUENCE_INVALID"
+                )
+        elif stage == "property_resolution":
+            assert previous_stage_attempt is not None
+            if (
+                stage_attempt != 1
+                and stage_attempt != previous_stage_attempt + 1
+            ):
+                raise ValueError(
+                    "LIVE_ATTEMPT_STAGE_ATTEMPT_SEQUENCE_INVALID"
+                )
+        else:
+            assert previous_stage_attempt is not None
+            if stage_attempt != previous_stage_attempt + 1:
+                raise ValueError(
+                    "LIVE_ATTEMPT_STAGE_ATTEMPT_SEQUENCE_INVALID"
+                )
+        previous_stage = stage
+        previous_stage_attempt = stage_attempt
+        previous_lineage = str(raw.get("lineage") or "")
+        previous_stage_rank = stage_rank
         correction = raw.get("correction_reason")
         if stage_attempt > 1 and (
             not isinstance(correction, str) or not correction.strip()
         ):
             raise ValueError("LIVE_ATTEMPT_CORRECTION_REASON_REQUIRED")
+        if contract is not None and contract.get(stage) is None:
+            raise ValueError("LIVE_ATTEMPT_STAGE_NOT_EXPECTED")
         if (
-            raw.get("evidence_class") != LIVE_EVIDENCE_MODE
+            raw.get("evidence_class") != expected_evidence_mode
             or raw.get("http_status") != 200
             or raw.get("error") is not None
             or raw.get("private_evidence_detected") is not False
@@ -220,9 +518,11 @@ def _audit_attempts(
         provider = _require_text(
             raw.get("provider"), "LIVE_ATTEMPT_PROVIDER_REQUIRED"
         )
-        if provider != LIVE_PROVIDER:
+        if provider != expected_provider:
             raise ValueError("LIVE_ATTEMPT_PROVIDER_IDENTITY_INVALID")
         model = _require_text(raw.get("model"), "LIVE_ATTEMPT_MODEL_REQUIRED")
+        if expected_model is not None and model != expected_model:
+            raise ValueError("LIVE_ATTEMPT_MODEL_IDENTITY_INVALID")
         provider_models.add((provider, model))
         usage = raw.get("usage")
         if not isinstance(usage, Mapping) or not usage:
@@ -259,19 +559,52 @@ def _audit_attempts(
         if (
             metadata.get("provider") != provider
             or metadata.get("model") != model
-            or metadata.get("evidence_class") != LIVE_EVIDENCE_MODE
+            or metadata.get("evidence_class") != expected_evidence_mode
             or metadata.get("usage") != usage
             or not isinstance(metadata.get("transport_attempts"), int)
             or int(metadata["transport_attempts"]) < 1
         ):
             raise ValueError("LIVE_ATTEMPT_METADATA_INVALID")
+        if contract is not None:
+            request_configuration = metadata.get("request_configuration")
+            request_extra_body = (
+                request.get("extra_body") if isinstance(request, Mapping) else None
+            )
+            expected_thinking = contract["thinking"]
+            if (
+                not isinstance(request, Mapping)
+                or request.get("model") != expected_model
+                or not isinstance(request_extra_body, Mapping)
+                or request_extra_body.get("thinking") != expected_thinking
+                or not isinstance(request_configuration, Mapping)
+                or request_configuration.get("thinking") != expected_thinking
+            ):
+                raise ValueError("LIVE_ATTEMPT_THINKING_CONFIGURATION_INVALID")
+            if expected_thinking.get("type") == "enabled":
+                temperature = request_configuration.get("temperature")
+                if (
+                    not isinstance(temperature, Mapping)
+                    or temperature.get("effective") is not False
+                ):
+                    raise ValueError(
+                        "LIVE_ATTEMPT_THINKING_CONFIGURATION_INVALID"
+                    )
         profile_ids = raw.get("profile_ids")
         profile_versions = raw.get("profile_versions")
         profile_hashes = raw.get("profile_hashes")
         if stage == "property_resolution":
-            if raw.get("template_id") != PROPERTY_RESOLUTION_TEMPLATE_ID:
+            expected_template = (
+                {
+                    "template_id": PROPERTY_RESOLUTION_TEMPLATE_ID,
+                    "template_hash": PROPERTY_RESOLUTION_TEMPLATE_HASH,
+                }
+                if contract is None
+                else contract["property_resolution"]
+            )
+            assert isinstance(expected_template, Mapping)
+            if raw.get("template_id") != expected_template["template_id"]:
                 raise ValueError("LIVE_ATTEMPT_TEMPLATE_ID_REQUIRED")
-            if raw.get("template_hash") != PROPERTY_RESOLUTION_TEMPLATE_HASH:
+            if raw.get("template_hash") != expected_template["template_hash"]:
                 raise ValueError("LIVE_ATTEMPT_TEMPLATE_HASH_REQUIRED")
             if any(
                 raw.get(key) not in (None, [])
@@ -300,44 +633,91 @@ def _audit_attempts(
                 len(profile_ids) != len(profile_versions)
                 or len(profile_ids) != len(profile_hashes)
                 or len(set(map(str, profile_ids))) != len(profile_ids)
-                or frozenset(map(str, profile_ids))
-                != (
+            ):
+                raise ValueError("LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH")
+            if contract is None:
+                if frozenset(map(str, profile_ids)) != (
                     EXPECTED_STAGE1_PROFILES
                     if stage == "stage1"
                     else EXPECTED_SELECTED_PROFILES[case_id]
-                )
-            ):
-                raise ValueError("LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH")
+                ):
+                    raise ValueError("LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH")
+            else:
+                expected_identity = contract[stage]
+                assert isinstance(expected_identity, Mapping)
+                if any(
+                    raw.get(key) != expected_identity[key]
+                    for key in (
+                        "profile_ids",
+                        "profile_versions",
+                        "profile_hashes",
+                    )
+                ):
+                    raise ValueError("LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH")
+                if stage == "stage1" and any(
+                    raw.get(key) not in (None, [])
+                    for key in (
+                        "few_shot_ids",
+                        "few_shot_hashes",
+                        "few_shot_bindings",
+                    )
+                ):
+                    raise ValueError("LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH")
         if stage == "stage2":
             few_shot_binding_map = _few_shot_binding_map(
                 raw.get("few_shot_bindings")
             )
-            expected_selection = select_prompt_profiles(
-                sorted(EXPECTED_SELECTED_PROFILES[case_id])
-            ).to_dict()
-            expected_few_shot_binding_map = dict(
-                zip(
-                    expected_selection["few_shot_ids"],
-                    expected_selection["few_shot_hashes"],
-                    strict=True,
+            if contract is None:
+                expected_selection = select_prompt_profiles(
+                    sorted(EXPECTED_SELECTED_PROFILES[case_id])
+                ).to_dict()
+                expected_few_shot_binding_map = dict(
+                    zip(
+                        expected_selection["few_shot_ids"],
+                        expected_selection["few_shot_hashes"],
+                        strict=True,
+                    )
                 )
-            )
+                expected_versions = [
+                    str(profile["profile_version"])
+                    for profile in expected_selection["profiles"]
+                ]
+                expected_profile_ids = expected_selection["profile_ids"]
+                expected_profile_hashes = expected_selection["profile_hashes"]
+            else:
+                expected_selection = contract["stage2"]
+                assert isinstance(expected_selection, Mapping)
+                expected_few_shot_binding_map = expected_selection[
+                    "few_shot_bindings"
+                ]
+                expected_versions = expected_selection["profile_versions"]
+                expected_profile_ids = expected_selection["profile_ids"]
+                expected_profile_hashes = expected_selection["profile_hashes"]
             if few_shot_binding_map is None:
                 raise ValueError("LIVE_ATTEMPT_FEW_SHOT_HASH_REQUIRED")
             if expected_few_shot_binding_map and not few_shot_binding_map:
                 raise ValueError("LIVE_ATTEMPT_FEW_SHOT_HASH_REQUIRED")
-            expected_versions = [
-                str(profile["profile_version"])
-                for profile in expected_selection["profiles"]
-            ]
             if (
-                profile_ids != expected_selection["profile_ids"]
+                profile_ids != expected_profile_ids
                 or profile_versions != expected_versions
-                or profile_hashes != expected_selection["profile_hashes"]
+                or profile_hashes != expected_profile_hashes
                 or few_shot_binding_map != expected_few_shot_binding_map
             ):
                 raise ValueError("LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH")
         attempts.append(raw)
+    if round_contract is not None:
+        assert isinstance(round_contract, list)
+        if (
+            round_index != len(round_contract) - 1
+            or round_stage_index
+            != len(round_contract[round_index]["stages"]) - 1
+        ):
+            raise ValueError("LIVE_ATTEMPT_ROUND_SEQUENCE_INVALID")
+    if contract is not None and any(
+        contract.get(stage) is not None and ordinals[stage] < 1
+        for stage in ordinals
+    ):
+        raise ValueError("LIVE_ATTEMPT_STAGE_REQUIRED")
     return attempts, ordinals, provider_models
 
 

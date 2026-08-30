@@ -8,7 +8,7 @@ import io
 import json
 import math
 import time
-from collections import deque
+from collections import Counter, deque
 from collections.abc import Iterable, Mapping
 from dataclasses import dataclass
 from importlib.metadata import PackageNotFoundError, version
@@ -313,6 +313,83 @@ class _ModelFingerprinter:
                 f"roots={self.root_count}:"
                 f"cached_entities={len(self.entity_cache)}"
             )
+
+
+def unreachable_non_root_fingerprint_multiset(
+    model: Any,
+    *,
+    timeout_seconds: float = DEFAULT_COMPARISON_TIMEOUT_SECONDS,
+) -> Counter[str]:
+    """Fingerprint persisted non-Root entities outside every IfcRoot graph."""
+
+    deadline = time.perf_counter() + max(0.0, float(timeout_seconds))
+    reachable: set[int] = set()
+    queue = deque(model.by_type("IfcRoot"))
+    while queue:
+        if len(reachable) % 1024 == 0:
+            _check_comparison_deadline(
+                deadline,
+                stage="nonroot-orphan-reachability",
+            )
+        entity = queue.popleft()
+        step_id = int(entity.id())
+        if step_id <= 0 or step_id in reachable:
+            continue
+        reachable.add(step_id)
+        for index in range(len(entity)):
+            queue.extend(_forward_persisted_entity_references(entity[index]))
+
+    orphans: list[Any] = []
+    for index, entity in enumerate(model):
+        if index % 1024 == 0:
+            _check_comparison_deadline(
+                deadline,
+                stage="nonroot-orphan-index",
+            )
+        step_id = int(entity.id())
+        if (
+            step_id > 0
+            and not entity.is_a("IfcRoot")
+            and step_id not in reachable
+        ):
+            orphans.append(entity)
+
+    fingerprinter = _ModelFingerprinter(model, deadline=deadline)
+    fingerprints: Counter[str] = Counter()
+    for index, entity in enumerate(orphans):
+        if index % 1024 == 0:
+            _check_comparison_deadline(
+                deadline,
+                stage="nonroot-orphan-fingerprint",
+            )
+        digest, _ = fingerprinter._fingerprint_entity(
+            entity,
+            active=(),
+            is_root=False,
+        )
+        fingerprints["sha256:" + digest.hex()] += 1
+    return fingerprints
+
+
+def _forward_persisted_entity_references(value: Any) -> Iterable[Any]:
+    pending = [value]
+    visited_typed_values: set[int] = set()
+    while pending:
+        current = pending.pop()
+        if isinstance(current, (tuple, list)):
+            pending.extend(current)
+            continue
+        if not hasattr(current, "is_a") or not hasattr(current, "id"):
+            continue
+        step_id = int(current.id())
+        if step_id > 0:
+            yield current
+            continue
+        identity = id(current)
+        if identity in visited_typed_values:
+            continue
+        visited_typed_values.add(identity)
+        pending.extend(current[index] for index in range(len(current)))
 
 
 def _encode_record(tag: str, *parts: bytes) -> bytes:

@@ -20,7 +20,13 @@ from typing import Any, Iterable, Mapping
 import ifcopenshell
 import ifcopenshell.util.element
 from jsonschema import Draft202012Validator
-from text2ifc_agent.prompt_registry import load_prompt_registry
+from text2ifc_agent.openai_compat import estimate_openai_compatible_input_tokens
+from text2ifc_agent.prompt_registry import load_prompt_registry, render_prompt
+from text2ifc_agent.providers import (
+    ProviderOutput,
+    ProviderOutputError,
+    validate_provider_output,
+)
 
 try:
     from scripts.ifc_repair.audit_door_repair_triplet import (
@@ -30,7 +36,12 @@ try:
 except ModuleNotFoundError:  # Direct script execution from scripts/ifc_repair.
     from audit_door_repair_triplet import DOOR_OPERATION_TYPES, audit_case
 from text2ifc_ifc_repair.audit import audit_changeset
-from text2ifc_ifc_repair.compare import profile_normalized_model_diff
+from text2ifc_ifc_repair.compare import (
+    profile_normalized_model_diff,
+    unreachable_non_root_fingerprint_multiset,
+)
+from text2ifc_ifc_repair.evaluation import evaluate_independent_l1
+from text2ifc_ifc_repair.evaluation_models import EvaluationStatus
 from text2ifc_ifc_repair.evaluation_policy import (
     STRUCTURAL_L1_CHECK_IDS,
     EvidenceSourceKind,
@@ -53,11 +64,19 @@ from text2ifc_ifc_repair.production_evidence import build_production_evidence
 from text2ifc_ifc_repair.property_admissibility import admit_property_decision
 from text2ifc_ifc_repair.property_intent import NaturalLanguagePropertyIntent
 from text2ifc_ifc_repair.property_resolution_stage import (
+    MAX_PROPERTY_RESOLUTION_RESPONSE_BYTES,
+    MAX_PROPERTY_RESOLUTION_RESPONSE_TOKENS,
     TEMPLATE_ID as PROPERTY_RESOLUTION_TEMPLATE_ID,
+    _decision_issues as _property_decision_issues,
+    _issue as _property_issue,
+    _sort_issues as _sort_property_issues,
 )
 from text2ifc_ifc_repair.repair_intent import RepairIntent
+from text2ifc_ifc_repair.request_stage import _unsupported_operations
 from text2ifc_ifc_repair.resolution_flow import resolve_repair_intent
 from text2ifc_ifc_repair.run_models import hash_json
+from text2ifc_ifc_repair.run_store import RunStore
+from text2ifc_ifc_repair.target_query import TargetQuery, resolve_target
 from text2ifc_ifc_repair.semantic_authoring import semantic_manifest_to_dict
 from text2ifc_ifc_repair.semantic_facts import (
     SemanticFact,
@@ -256,6 +275,24 @@ PROOF_COLLECTION_SCHEMA_V02 = (
 )
 PROOF_PROFILE_SCHEMA = (
     ROOT / "schemas/agent/ifc-repair-proof-profile-0.1.schema.json"
+)
+R1_CANONICAL_PROFILE = (
+    ROOT / "docs/validation/repair-milestone-r1/repair-proof-profiles.json"
+)
+R1_CANONICAL_FREEZE = (
+    ROOT / "docs/validation/repair-milestone-r1/repair-acceptance-freeze.json"
+)
+R1_CANONICAL_HANDOFF = (
+    ROOT / "docs/handoffs/repair-milestone-r1-final-acceptance.md"
+)
+R1_CANONICAL_PROFILE_SHA256 = (
+    "375463e43852483106e798a0692e6ed6bed8349de29554e5e0680a64f7340289"
+)
+R1_CANONICAL_FREEZE_SHA256 = (
+    "e1a66e61de8cc56b1b99bb2cb376c7c78429fe4fc8e0a537e29c356a15dded70"
+)
+R1_CANONICAL_HANDOFF_SHA256 = (
+    "bb8c7ecfbf5afd2c231b3be2ef21288101f25f0547e4f3ef770a1b349acff49e"
 )
 
 
@@ -758,16 +795,127 @@ def _validate_r1_profile_freeze(
     profile_path: Path,
     profiles: Mapping[str, Any],
 ) -> None:
+    if (
+        _sha256(R1_CANONICAL_PROFILE) != R1_CANONICAL_PROFILE_SHA256
+        or _sha256(R1_CANONICAL_FREEZE) != R1_CANONICAL_FREEZE_SHA256
+        or _sha256(R1_CANONICAL_HANDOFF) != R1_CANONICAL_HANDOFF_SHA256
+    ):
+        raise ValueError("proof.profile.repository_authority_drift")
+    if _sha256(profile_path) != R1_CANONICAL_PROFILE_SHA256:
+        raise ValueError("proof.profile.authoritative_profile")
     freeze = profiles.get("freeze")
     if not isinstance(freeze, Mapping):
         raise ValueError("proof.profile.freeze")
     freeze_path = _safe_path(profile_path.parent, str(freeze.get("path") or ""))
     if (
         not freeze_path.is_file()
-        or _sha256(freeze_path)
-        != _normalize_sha256(str(freeze.get("sha256") or ""))
+        or _normalize_sha256(str(freeze.get("sha256") or ""))
+        != R1_CANONICAL_FREEZE_SHA256
+        or _sha256(freeze_path) != R1_CANONICAL_FREEZE_SHA256
     ):
         raise ValueError("proof.profile.freeze_hash")
+
+
+def _r1_frozen_case_authority(case_id: str) -> tuple[Mapping[str, Any], Mapping[str, Any]]:
+    """Return the byte-frozen case/model pair, never a curated self-report."""
+
+    if _sha256(R1_CANONICAL_FREEZE) != R1_CANONICAL_FREEZE_SHA256:
+        raise ValueError("proof.case_authority.freeze_hash")
+    freeze = _read_json(R1_CANONICAL_FREEZE)
+    cases = [item for item in freeze.get("cases", ()) if item.get("case_id") == case_id]
+    if len(cases) != 1:
+        raise ValueError("proof.case_authority.case_id")
+    case = cases[0]
+    models = [
+        item
+        for item in freeze.get("models", ())
+        if item.get("model_id") == case.get("model_id")
+    ]
+    if len(models) != 1:
+        raise ValueError("proof.case_authority.model_id")
+    return case, models[0]
+
+
+def _r1_text_sha256(value: str) -> str:
+    return hashlib.sha256(value.encode("utf-8")).hexdigest()
+
+
+def _audit_r1_frozen_case_authority(
+    *,
+    case_id: str,
+    terminal: Mapping[str, Any],
+    source_ifc_path: Path,
+    roles: Mapping[str, Path],
+) -> dict[str, str | None]:
+    """Bind retained public source/request bytes to the canonical R1 freeze."""
+
+    frozen, model = _r1_frozen_case_authority(case_id)
+    source = terminal.get("source")
+    if (
+        not isinstance(source, Mapping)
+        or source_ifc_path.stat().st_size != int(model.get("size_bytes", -1))
+        or _sha256(source_ifc_path) != _normalize_sha256(str(model.get("sha256") or ""))
+        or _normalize_sha256(str(source.get("sha256_before") or ""))
+        != _normalize_sha256(str(model.get("sha256") or ""))
+        or _normalize_sha256(str(source.get("sha256_after") or ""))
+        != _normalize_sha256(str(model.get("sha256") or ""))
+        or source.get("unchanged") is not True
+    ):
+        raise ValueError("proof.case_authority.source")
+    if str(ifcopenshell.open(str(source_ifc_path)).schema) != str(model.get("schema") or ""):
+        raise ValueError("proof.case_authority.source_schema")
+
+    initial = str(frozen.get("request") or "")
+    resume = frozen.get("resume")
+    initial_role = "initial_user_request" if resume is not None else "user_request"
+    initial_path = _require_r1_role(roles, initial_role)
+    if (
+        initial_path.read_text(encoding="utf-8").rstrip() != initial
+        or _r1_text_sha256(initial) != _normalize_sha256(str(frozen.get("request_sha256") or ""))
+    ):
+        raise ValueError("proof.case_authority.request")
+    effective = initial
+    if resume is not None:
+        answer_path = _require_r1_role(roles, "clarification_answer")
+        answer = answer_path.read_text(encoding="utf-8").rstrip()
+        if (
+            answer != str(resume)
+            or _r1_text_sha256(answer)
+            != _normalize_sha256(str(frozen.get("resume_sha256") or ""))
+        ):
+            raise ValueError("proof.case_authority.resume")
+        if case_id == "M1":
+            effective = f"{initial}\n补充说明：{answer.strip()}"
+        user_request = _require_r1_role(roles, "user_request")
+        if user_request.read_text(encoding="utf-8").rstrip() != effective:
+            raise ValueError("proof.case_authority.effective_request")
+    return {
+        "initial_hash": "sha256:" + _r1_text_sha256(initial),
+        "effective_hash": "sha256:" + _r1_text_sha256(effective),
+        "resume": None if resume is None else str(resume),
+    }
+
+
+def _audit_r1_request_hash_lineage(
+    *,
+    authority: Mapping[str, str | None],
+    state: Mapping[str, Any] | Any,
+    initial_intent: Mapping[str, Any],
+    final_intent: Mapping[str, Any],
+    changeset: Mapping[str, Any] | None,
+    boundary: Mapping[str, Any] | None,
+) -> None:
+    state_document = state.to_dict() if hasattr(state, "to_dict") else dict(state)
+    initial_hash = str(authority["initial_hash"])
+    effective_hash = str(authority["effective_hash"])
+    if (
+        state_document.get("request_hash") != initial_hash
+        or initial_intent.get("source_request_hash") != initial_hash
+        or final_intent.get("source_request_hash") != effective_hash
+        or (changeset is not None and changeset.get("source_request_hash") != effective_hash)
+        or (boundary is not None and boundary.get("request_sha256") != effective_hash)
+    ):
+        raise ValueError("proof.case_authority.request_lineage")
 
 
 def _validate_r1_case(
@@ -781,13 +929,18 @@ def _validate_r1_case(
     case_root = _safe_path(root, str(case["case_root"]))
     if not case_root.is_dir():
         raise ValueError("proof.case_root")
-    checked_file_count = _validate_r1_case_files(
+    checked_file_count, roles = _validate_r1_case_files(
         case_id=case_id,
         case_root=case_root,
         files_path=_safe_path(root, str(case["files"])),
         report_path=_safe_path(root, str(case["report"])),
     )
-    terminal_path = _safe_path(root, str(case.get("terminal_record") or ""))
+    terminal_path = _require_r1_declared_artifact(
+        case_root=case_root,
+        declared_path=_safe_path(root, str(case.get("terminal_record") or "")),
+        roles=roles,
+        role="proof_terminal_record",
+    )
     terminal = _read_json(terminal_path)
     if terminal.get("case_id") != case_id:
         raise ValueError("proof.terminal.case_id")
@@ -801,7 +954,18 @@ def _validate_r1_case(
         for key, value in terminal_expectation.items()
     ):
         raise ValueError("proof.profile.terminal_expectation")
-    terminal_source = _safe_path(case_root, str(terminal["source"]["path"]))
+    terminal_source = _require_r1_declared_artifact(
+        case_root=case_root,
+        declared_path=_safe_path(case_root, str(terminal["source"]["path"])),
+        roles=roles,
+        role="repair_input_ifc",
+    )
+    case_authority = _audit_r1_frozen_case_authority(
+        case_id=case_id,
+        terminal=terminal,
+        source_ifc_path=terminal_source,
+        roles=roles,
+    )
     source_model = ifcopenshell.open(str(terminal_source))
     if source_model.schema != "IFC2X3":
         raise ValueError("proof.ifc.schema")
@@ -842,6 +1006,22 @@ def _validate_r1_case(
         }
         if any(not path.is_file() for path in replay_paths.values()):
             raise ValueError("proof.terminal.value_admissibility_replay_artifact")
+        m1_state_path = _require_r1_role(roles, "runtime_state")
+        m1_state = _load_validated_r1_state(m1_state_path)
+        m1_initial_intent_path = _r1_initial_request_intent_path(
+            state=m1_state,
+            state_path=m1_state_path,
+            listed_paths=roles.values(),
+            fallback=_require_r1_role(roles, "stage1_repair_intent"),
+        )
+        _audit_r1_m1_initial_replay_binding(
+            replay_paths=replay_paths,
+            roles=roles,
+            state=m1_state,
+            state_path=m1_state_path,
+            expected_resume_answer=str(case_authority["resume"] or ""),
+            initial_intent=_read_json(m1_initial_intent_path),
+        )
         audit_r1_inadmissible_value_replay(
             query=_read_json(replay_paths["query"]),
             candidate_set=_read_json(replay_paths["candidate_set"]),
@@ -856,16 +1036,138 @@ def _validate_r1_case(
     if terminal_class == "UNSUPPORTED_ATOMIC_GUARD":
         if predicates:
             raise ValueError("proof.guard.artifact_predicates")
+        state_path = _require_r1_role(roles, "runtime_state")
+        state = _load_validated_r1_state(state_path)
+        if _normalize_sha256(str(state.source.sha256)) != _sha256(terminal_source):
+            raise ValueError("proof.h4.source_binding")
+        intent_path = _r1_bound_transition_artifact(
+            state=state,
+            state_path=state_path,
+            artifact_key="intent",
+            listed_paths=roles.values(),
+            before_transition_id=state.transitions[-1].transition_id,
+            require_unique=True,
+        )
+        declared_intent_path = _require_r1_role(roles, "stage1_repair_intent")
+        if intent_path != declared_intent_path.resolve():
+            raise ValueError("proof.h4.stage1_intent_binding")
+        _audit_r1_request_hash_lineage(
+            authority=case_authority,
+            state=state,
+            initial_intent=_read_json(intent_path),
+            final_intent=_read_json(intent_path),
+            changeset=None,
+            boundary=(
+                _read_json(roles["production_input_boundary"])
+                if "production_input_boundary" in roles
+                else None
+            ),
+        )
+        live_audit = _audit_r1_live_provider_provenance(
+            case_id=case_id,
+            roles=roles,
+            provider_intent=_read_json(intent_path),
+            changeset=None,
+            damaged_sha256=_sha256(terminal_source),
+            validated_state=state,
+        )
+        attempts = live_audit["attempts"]
+        replayed_guard = _audit_r1_unsupported_guard_replay(
+            intent=_read_json(intent_path),
+            state=state,
+            expected_supported_capabilities=terminal_expectation.get(
+                "supported_capabilities", ()
+            ),
+            expected_unsupported_capabilities=terminal_expectation.get(
+                "unsupported_capabilities", ()
+            ),
+            expected_reason_code="STRUCTURAL_ANALYSIS_UNSUPPORTED",
+            attempts=attempts,
+        )
+        for field in (
+            "supported_capabilities",
+            "unsupported_capabilities",
+            "atomic_request",
+            "stage2_attempts",
+            "apply_attempts",
+            "published_outputs",
+        ):
+            if initial_stop.get(field) != replayed_guard[field]:
+                raise ValueError(f"proof.h4.terminal_replay:{field}")
+        _audit_r1_h4_no_mutation_artifacts(
+            roles=roles,
+            source_ifc_path=terminal_source,
+            validated_state=state,
+        )
         return base
+    if terminal_class == "CLARIFICATION_THEN_SUCCESS":
+        state_path = _require_r1_role(roles, "runtime_state")
+        state = _load_validated_r1_state(state_path)
+        if _normalize_sha256(str(state.source.sha256)) != _sha256(terminal_source):
+            raise ValueError("proof.h3.source_binding")
+        expected_selected = str(
+            terminal_expectation.get("selected_identity") or ""
+        )
+        lineage = _audit_r1_h3_state_selection(
+            state=state,
+            expected_selected_identity=expected_selected,
+        )
+        clarification_transition_id = lineage.get(
+            "clarification_transition_id"
+        )
+        if not isinstance(clarification_transition_id, int):
+            raise ValueError("proof.h3.clarification_lineage")
+        initial_intent_path = _r1_bound_transition_artifact(
+            state=state,
+            state_path=state_path,
+            artifact_key="intent",
+            listed_paths=roles.values(),
+            before_transition_id=clarification_transition_id,
+            require_unique=True,
+        )
+        with tempfile.TemporaryDirectory(prefix="r1-h3-target-replay-") as scratch:
+            final_target_replay = _audit_r1_h3_final_target_resolution_replay(
+                source_ifc_path=terminal_source,
+                initial_intent=_read_json(initial_intent_path),
+                state=state,
+                expected_selected_identity=expected_selected,
+                scratch_root=Path(scratch),
+            )
+        replayed = final_target_replay["initial_replay"]
+        h3_projected_intent = final_target_replay["projected_intent"]
+        if (
+            set(map(str, initial_stop.get("offered_identities", ())))
+            != set(replayed["offered_identities"])
+            or initial_stop.get("selected_identity")
+            != replayed["selected_identity"]
+            or initial_stop.get("lineage_id")
+            != f"run:{lineage['run_id']}"
+            or initial_stop.get("status") != "clarification_required"
+            or initial_stop.get("reason_code") != "ambiguous_target"
+            or initial_stop.get("stage2_attempts") != 0
+            or initial_stop.get("apply_attempts") != 0
+            or initial_stop.get("published_outputs") != []
+        ):
+            raise ValueError("proof.h3.terminal_replay")
     if terminal_result["published_artifact_present"] is not True:
         raise ValueError("proof.success.published_artifact")
 
     required = ("source_ifc", "repaired_ifc", "changeset", "application")
-    paths = {
-        name: _safe_path(root, str(case.get(name) or "")) for name in required
+    role_by_name = {
+        "source_ifc": "repair_input_ifc",
+        "repaired_ifc": "published_repair_output",
+        "changeset": "bound_changeset",
+        "application": "application_result",
     }
-    if any(not path.is_file() for path in paths.values()):
-        raise ValueError("proof.success.artifacts")
+    paths = {
+        name: _require_r1_declared_artifact(
+            case_root=case_root,
+            declared_path=_safe_path(root, str(case.get(name) or "")),
+            roles=roles,
+            role=role_by_name[name],
+        )
+        for name in required
+    }
     if terminal_source != paths["source_ifc"]:
         raise ValueError("proof.terminal.source_binding")
     repaired_model = ifcopenshell.open(str(paths["repaired_ifc"]))
@@ -873,9 +1175,66 @@ def _validate_r1_case(
         raise ValueError("proof.ifc.schema")
     changeset = _read_json(paths["changeset"])
     application = _read_json(paths["application"])
+    success_state_path = _require_r1_role(roles, "runtime_state")
+    success_state = _load_validated_r1_state(success_state_path)
+    if _normalize_sha256(str(success_state.source.sha256)) != _sha256(
+        terminal_source
+    ):
+        raise ValueError("proof.success.source_binding")
+    final_intent_path = _r1_bound_transition_artifact(
+        state=success_state,
+        state_path=success_state_path,
+        artifact_key="intent",
+        listed_paths=roles.values(),
+        before_transition_id=None,
+        require_unique=False,
+    )
+    initial_request_intent_path = _r1_initial_request_intent_path(
+        state=success_state,
+        state_path=success_state_path,
+        listed_paths=roles.values(),
+        fallback=initial_intent_path if terminal_class == "CLARIFICATION_THEN_SUCCESS" else final_intent_path,
+    )
+    bound_changeset_path = _r1_bound_transition_artifact(
+        state=success_state,
+        state_path=success_state_path,
+        artifact_key="changeset",
+        listed_paths=roles.values(),
+        before_transition_id=None,
+        require_unique=True,
+    )
+    if _sha256(bound_changeset_path) != _sha256(paths["changeset"]):
+        raise ValueError("proof.success.changeset_binding")
+    _audit_r1_request_hash_lineage(
+        authority=case_authority,
+        state=success_state,
+        initial_intent=_read_json(initial_request_intent_path),
+        final_intent=_read_json(final_intent_path),
+        changeset=changeset,
+        boundary=(
+            _read_json(roles["production_input_boundary"])
+            if "production_input_boundary" in roles
+            else None
+        ),
+    )
+    provider_intent_path = (
+        initial_intent_path
+        if terminal_class == "CLARIFICATION_THEN_SUCCESS"
+        else final_intent_path
+    )
+    _audit_r1_live_provider_provenance(
+        case_id=case_id,
+        roles=roles,
+        provider_intent=_read_json(provider_intent_path),
+        initial_provider_intent=_read_json(initial_request_intent_path),
+        changeset=changeset,
+        damaged_sha256=_sha256(terminal_source),
+        validated_state=success_state,
+    )
     operations = [
         item for item in changeset.get("operations", ()) if isinstance(item, Mapping)
     ]
+    _audit_r1_exact_operation_set(changeset=changeset, profile=profile)
     application_ids = [
         str(item.get("operation_id"))
         for item in application.get("operations", ())
@@ -887,7 +1246,22 @@ def _validate_r1_case(
         or application_ids != [str(item.get("operation_id")) for item in operations]
     ):
         raise ValueError("proof.application.publication")
+    _audit_r1_success_terminal_binding(
+        state=success_state,
+        state_path=success_state_path,
+        roles=roles,
+        repaired_ifc_path=paths["repaired_ifc"],
+        application=application,
+    )
     audit_repaired_operations(
+        changeset=changeset,
+        application=application,
+        damaged_model=source_model,
+        repaired_model=repaired_model,
+    )
+    _audit_authorized_repair_preservation(
+        damaged_ifc_path=paths["source_ifc"],
+        repaired_ifc_path=paths["repaired_ifc"],
         changeset=changeset,
         application=application,
         damaged_model=source_model,
@@ -903,11 +1277,15 @@ def _validate_r1_case(
             damaged_model=source_model,
             repaired_model=repaired_model,
         )
-        _audit_structural_preservation(
-            changeset=changeset,
-            damaged_model=source_model,
-            repaired_model=repaired_model,
-        )
+        if not any(
+            item.get("operation_type") == "set_occurrence_properties"
+            for item in operations
+        ):
+            _audit_structural_preservation(
+                changeset=changeset,
+                damaged_model=source_model,
+                repaired_model=repaired_model,
+            )
     predicate_results = audit_r1_artifact_predicates(
         source_model=source_model,
         repaired_model=repaired_model,
@@ -942,20 +1320,22 @@ def _validate_r1_case(
         evidence_root = replay_paths["evidence_root"]
         if not evidence_root.is_dir():
             raise ValueError("proof.property.evidence_root")
-        roles = {
-            f"artifact-{index}": path
-            for index, path in enumerate(evidence_root.rglob("*"), start=1)
-            if path.is_file()
-        }
-        roles["source_run_manifest"] = replay_paths["source_manifest"]
+        if _sha256(replay_paths["intent"]) != _sha256(final_intent_path):
+            raise ValueError("proof.property.intent_state_binding")
+        authority_roles = dict(roles)
+        if authority_roles.get("source_run_manifest") != replay_paths["source_manifest"]:
+            raise ValueError("proof.property.source_manifest_role")
+        authority_intent = _read_json(replay_paths["intent"])
+        if terminal_class == "CLARIFICATION_THEN_SUCCESS":
+            authority_intent = h3_projected_intent
         authority = audit_current_property_authority_replay(
             source_ifc_path=paths["source_ifc"],
             source_sha256=_sha256(paths["source_ifc"]),
-            intent=_read_json(replay_paths["intent"]),
+            intent=authority_intent,
             changeset=changeset,
             retained_resolution=_read_json(replay_paths["resolution"]),
             retained_manifest=_read_json(replay_paths["semantic_manifest"]),
-            roles=roles,
+            roles=authority_roles,
             provider_evidence_mode=str(case.get("provider_evidence_mode") or "live"),
         )
         if (
@@ -976,7 +1356,7 @@ def _validate_r1_case_files(
     case_root: Path,
     files_path: Path,
     report_path: Path,
-) -> int:
+) -> tuple[int, dict[str, Path]]:
     if files_path.parent != case_root or report_path.parent != case_root:
         raise ValueError("proof.files.case_root_binding")
     files = _read_json(files_path)
@@ -989,7 +1369,7 @@ def _validate_r1_case_files(
     if not isinstance(entries, list) or not entries:
         raise ValueError("proof.files.entries")
     listed: set[str] = set()
-    roles: set[str] = set()
+    roles: dict[str, Path] = {}
     for entry in entries:
         if not isinstance(entry, Mapping):
             raise ValueError("proof.files.entry")
@@ -998,25 +1378,27 @@ def _validate_r1_case_files(
         if not relative or relative in listed or not role or role in roles:
             raise ValueError("proof.files.identity")
         listed.add(relative)
-        roles.add(role)
         artifact = _safe_path(case_root, relative)
+        roles[role] = artifact
         if not artifact.is_file():
             raise ValueError(f"proof.artifact.missing:{relative}")
         if artifact.stat().st_size != int(entry.get("size_bytes", -1)):
             raise ValueError(f"proof.artifact.size:{relative}")
         if _sha256(artifact) != _normalize_sha256(str(entry.get("sha256") or "")):
             raise ValueError(f"proof.artifact.sha256:{relative}")
+    if roles.get("proof_report") != report_path.resolve():
+        raise ValueError("proof.files.report_role")
     actual = {
         path.relative_to(case_root).as_posix()
         for path in case_root.rglob("*")
         if path.is_file()
     }
-    expected = listed | {files_path.name, report_path.name}
+    expected = listed | {files_path.name}
     if actual != expected:
         raise ValueError(
             f"proof.files.coverage:missing={sorted(expected-actual)}:unindexed={sorted(actual-expected)}"
         )
-    return len(entries)
+    return len(entries), roles
 
 
 def validate_success_case_collection(
@@ -1997,6 +2379,12 @@ class _RetainedStage15PropertyResolver:
             ROOT
             / "schemas/ifc/knowledge/property_resolution_policy.v0.2.json"
         )
+        state_path = roles.get("runtime_state")
+        self.state = (
+            None
+            if state_path is None
+            else _load_validated_r1_state(state_path)
+        )
         self.recomputed_claim_count = 0
 
     def resolve(self, query: Any) -> PropertyResolutionDecision:
@@ -2012,10 +2400,18 @@ class _RetainedStage15PropertyResolver:
         claim: NaturalLanguagePropertyIntent,
         query: Any,
     ) -> PropertyResolutionDecision:
+        evidence_claim_id = (
+            claim_id
+            if self.state is None
+            else _r1_effective_property_claim_id(
+                state=self.state,
+                base_claim_id=claim_id,
+            )
+        )
         query_path, query_document = self._query_for_claim(
             operation_id=operation_id,
             operation_type=operation_type,
-            claim_id=claim_id,
+            claim_id=evidence_claim_id,
         )
         if (
             query_document.get("target_ifc_class") != query.target_ifc_class
@@ -2033,7 +2429,7 @@ class _RetainedStage15PropertyResolver:
         decision, trace = self._provider_decision(
             claim_root=claim_root,
             operation_id=operation_id,
-            claim_id=claim_id,
+            claim_id=evidence_claim_id,
         )
         user_result_path = claim_root / "decision-result-user.json"
         if user_result_path.resolve() in self.artifacts:
@@ -2064,7 +2460,7 @@ class _RetainedStage15PropertyResolver:
             decision, trace = self._user_decision(
                 claim_root=claim_root,
                 operation_id=operation_id,
-                claim_id=claim_id,
+                claim_id=evidence_claim_id,
                 query_document=query_document,
                 candidate_set=candidate_set,
                 provider_conflicts=provider_conflicts,
@@ -2994,29 +3390,65 @@ def _audit_structural_production_isolation(
     boundary_path = roles.get("production_input_boundary")
     if boundary_path is None:
         raise ValueError("l0.structural.isolation:boundary_missing")
+    _audit_production_input_isolation(
+        roles=roles,
+        boundary_path=boundary_path,
+        damaged_sha256=damaged_sha256,
+        request_sha256=str(changeset.get("source_request_hash") or ""),
+        resolved_target_count=operation_count,
+        expected_entrypoint=None,
+        entrypoint_prefix="run_phase12_",
+        boundary_error="l0.structural.isolation:production_boundary",
+        private_canary_error="l0.structural.isolation:private_canary",
+        private_field_error="l0.structural.isolation:private_field",
+    )
+
+
+def _audit_production_input_isolation(
+    *,
+    roles: Mapping[str, Path],
+    boundary_path: Path,
+    damaged_sha256: str,
+    request_sha256: str,
+    resolved_target_count: int,
+    expected_entrypoint: str | None,
+    entrypoint_prefix: str | None,
+    boundary_error: str,
+    private_canary_error: str,
+    private_field_error: str,
+) -> None:
+    """Shared production boundary and public-artifact isolation contract."""
+
     boundary = _read_json(boundary_path)
     entrypoint = boundary.get("entrypoint")
-    passed = (
+    entrypoint_valid = bool(
+        isinstance(entrypoint, str)
+        and Path(entrypoint).name == entrypoint
+        and entrypoint.endswith(".py")
+        and (
+            entrypoint == expected_entrypoint
+            if expected_entrypoint is not None
+            else isinstance(entrypoint_prefix, str)
+            and entrypoint.startswith(entrypoint_prefix)
+        )
+    )
+    if not (
         boundary.get("schema_version")
         == "text2ifc/production-input-boundary/0.2"
-        and isinstance(entrypoint, str)
-        and entrypoint.startswith("run_phase12_")
-        and entrypoint.endswith(".py")
-        and Path(entrypoint).name == entrypoint
+        and entrypoint_valid
         and boundary.get("ifc_inputs") == ["damaged_ifc_path"]
         and boundary.get("request_inputs") == ["public_request_bundle"]
         and boundary.get("original_ifc_supplied") is False
         and boundary.get("mutation_manifest_supplied") is False
         and boundary.get("deleted_object_ids_supplied") is False
         and boundary.get("private_comparator_available_during_repair") is False
-        and _normalize_sha256(str(boundary.get("damaged_ifc_sha256")))
-        == damaged_sha256
-        and boundary.get("request_sha256")
-        == changeset.get("source_request_hash")
-        and int(boundary.get("resolved_target_count", -1)) == operation_count
-    )
-    if not passed:
-        raise ValueError("l0.structural.isolation:production_boundary")
+        and _normalize_sha256(str(boundary.get("damaged_ifc_sha256") or ""))
+        == _normalize_sha256(damaged_sha256)
+        and str(boundary.get("request_sha256") or "") == request_sha256
+        and isinstance(boundary.get("resolved_target_count"), int)
+        and int(boundary["resolved_target_count"]) == resolved_target_count
+    ):
+        raise ValueError(boundary_error)
 
     private_roles = {
         "original_ground_truth",
@@ -3040,14 +3472,19 @@ def _audit_structural_production_isolation(
             or re.sub(r"[^a-z0-9]+", "", marker) in compact
             for marker in _STRUCTURAL_PRIVATE_CANARY_MARKERS
         ):
-            raise ValueError("l0.structural.isolation:private_canary")
+            raise ValueError(private_canary_error)
         if path.suffix.casefold() == ".json":
             _assert_no_structural_private_keys(
-                json.loads(path.read_text(encoding="utf-8"))
+                json.loads(text),
+                error_code=private_field_error,
             )
 
 
-def _assert_no_structural_private_keys(value: Any) -> None:
+def _assert_no_structural_private_keys(
+    value: Any,
+    *,
+    error_code: str = "l0.structural.isolation:private_field",
+) -> None:
     pending = [value]
     while pending:
         item = pending.pop()
@@ -3058,7 +3495,7 @@ def _assert_no_structural_private_keys(value: Any) -> None:
                 )
                 normalized = separated.casefold().replace("-", "_")
                 if normalized in _STRUCTURAL_FORBIDDEN_PUBLIC_KEYS:
-                    raise ValueError("l0.structural.isolation:private_field")
+                    raise ValueError(error_code)
                 pending.append(child)
         elif isinstance(item, (list, tuple)):
             pending.extend(item)
@@ -3592,6 +4029,1999 @@ def _audit_structural_preservation(
             raise ValueError(
                 f"l0.structural.preservation:modified_root:{global_id}"
             )
+
+
+def _audit_authorized_repair_preservation(
+    *,
+    damaged_ifc_path: Path | str,
+    repaired_ifc_path: Path | str,
+    changeset: Mapping[str, Any],
+    application: Mapping[str, Any],
+    damaged_model: Any,
+    repaired_model: Any,
+) -> None:
+    """Apply the registered operation adapters to the complete ChangeSet once."""
+
+    try:
+        level = evaluate_independent_l1(
+            damaged_ifc_path=damaged_ifc_path,
+            repaired_ifc_path=repaired_ifc_path,
+            changeset=changeset,
+            application_result=application,
+            registry=create_default_registry(),
+            reopened_models=(
+                (damaged_model, None),
+                (repaired_model, None),
+            ),
+        )
+    except Exception as error:
+        raise ValueError(
+            "proof.global_preservation:not_evaluable:"
+            + type(error).__name__
+        ) from error
+    if level.status is EvaluationStatus.PASSED:
+        for operation in changeset.get("operations", ()):
+            if (
+                isinstance(operation, Mapping)
+                and operation.get("operation_type")
+                == "set_occurrence_properties"
+            ):
+                _audit_occurrence_property_exact_delta(
+                    operation=operation,
+                    damaged_model=damaged_model,
+                    repaired_model=repaired_model,
+                )
+        if unreachable_non_root_fingerprint_multiset(
+            damaged_model
+        ) != unreachable_non_root_fingerprint_multiset(repaired_model):
+            raise ValueError(
+                "proof.global_preservation:nonroot_orphan_delta"
+            )
+        return
+    failed = sorted(
+        f"{check.check_id}={check.status.value}"
+        for check in level.checks
+        if check.status
+        not in {EvaluationStatus.PASSED, EvaluationStatus.NOT_REQUIRED}
+    )
+    raise ValueError(
+        "proof.global_preservation:"
+        + (",".join(failed) if failed else level.status.value)
+    )
+
+
+def _audit_occurrence_property_exact_delta(
+    *,
+    operation: Mapping[str, Any],
+    damaged_model: Any,
+    repaired_model: Any,
+) -> None:
+    target_id = str(operation.get("target", {}).get("element_global_id") or "")
+    before_target = _optional_guid(damaged_model, target_id)
+    after_target = _optional_guid(repaired_model, target_id)
+    if (
+        before_target is None
+        or after_target is None
+        or before_target.is_a() != after_target.is_a()
+        or _root_attributes_fingerprint(before_target)
+        != _root_attributes_fingerprint(after_target)
+    ):
+        raise ValueError("proof.global_preservation:property_target")
+    assignments_by_set: dict[str, dict[str, Mapping[str, Any]]] = {}
+    for assignment in operation.get("semantic_assignments", ()):
+        if not isinstance(assignment, Mapping):
+            raise ValueError("proof.global_preservation:property_assignment")
+        fact_key = str(assignment.get("fact_key") or "")
+        if not fact_key.startswith("pset:") or "." not in fact_key:
+            raise ValueError("proof.global_preservation:property_assignment")
+        set_name, property_name = fact_key.removeprefix("pset:").split(".", 1)
+        if (
+            not set_name
+            or not property_name
+            or assignment.get("source_fact_key") != fact_key
+            or assignment.get("ownership") != "occurrence_direct"
+            or assignment.get("authoring_action") != "set_occurrence_pset"
+            or property_name in assignments_by_set.setdefault(set_name, {})
+        ):
+            raise ValueError("proof.global_preservation:property_assignment")
+        assignments_by_set[set_name][property_name] = assignment
+    if not assignments_by_set:
+        raise ValueError("proof.global_preservation:property_assignment")
+    for set_name, assignments in assignments_by_set.items():
+        before_relations = _direct_occurrence_pset_relations(
+            before_target, set_name=set_name
+        )
+        after_relations = _direct_occurrence_pset_relations(
+            after_target, set_name=set_name
+        )
+        if len(before_relations) > 1 or len(after_relations) != 1:
+            raise ValueError("proof.global_preservation:property_pset_cardinality")
+        after_relation = after_relations[0]
+        after_pset = after_relation.RelatingPropertyDefinition
+        if tuple(str(item.GlobalId) for item in after_relation.RelatedObjects) != (
+            target_id,
+        ):
+            raise ValueError("proof.global_preservation:property_relation_scope")
+        before_pset = (
+            before_relations[0].RelatingPropertyDefinition
+            if before_relations
+            else None
+        )
+        if before_pset is None:
+            if set(_property_map(after_pset)) != set(assignments):
+                raise ValueError("proof.global_preservation:property_created_pset")
+        else:
+            before_relation = before_relations[0]
+            if len(tuple(before_relation.RelatedObjects)) != 1:
+                raise ValueError("proof.global_preservation:property_shared_pset")
+            if (
+                str(before_relation.GlobalId) != str(after_relation.GlobalId)
+                or str(before_pset.GlobalId) != str(after_pset.GlobalId)
+                or _root_attributes_fingerprint(
+                    before_relation, exclude=frozenset()
+                )
+                != _root_attributes_fingerprint(
+                    after_relation, exclude=frozenset()
+                )
+                or _root_attributes_fingerprint(
+                    before_pset, exclude=frozenset({"HasProperties"})
+                )
+                != _root_attributes_fingerprint(
+                    after_pset, exclude=frozenset({"HasProperties"})
+                )
+            ):
+                raise ValueError("proof.global_preservation:property_pset_identity")
+            before_properties = _property_map(before_pset)
+            after_properties = _property_map(after_pset)
+            if set(after_properties) != set(before_properties) | set(assignments):
+                raise ValueError("proof.global_preservation:property_member_set")
+            for property_name, before_property in before_properties.items():
+                after_property = after_properties[property_name]
+                if property_name in assignments:
+                    if _entity_attributes_fingerprint(
+                        before_property,
+                        exclude=frozenset({"NominalValue", "Unit"}),
+                    ) != _entity_attributes_fingerprint(
+                        after_property,
+                        exclude=frozenset({"NominalValue", "Unit"}),
+                    ):
+                        raise ValueError(
+                            "proof.global_preservation:property_member_metadata"
+                        )
+                elif _entity_attributes_fingerprint(
+                    before_property, exclude=frozenset()
+                ) != _entity_attributes_fingerprint(
+                    after_property, exclude=frozenset()
+                ):
+                    raise ValueError(
+                        "proof.global_preservation:property_member_undeclared"
+                    )
+        after_properties = _property_map(after_pset)
+        for property_name, assignment in assignments.items():
+            prop = after_properties.get(property_name)
+            nominal = None if prop is None else getattr(prop, "NominalValue", None)
+            actual_value = None if nominal is None else nominal.wrappedValue
+            actual_type = None if nominal is None else nominal.is_a()
+            if (
+                prop is None
+                or actual_type != assignment.get("value_type")
+                or actual_value != assignment.get("value")
+                or getattr(prop, "Unit", None) is not None
+                and assignment.get("unit") is None
+            ):
+                raise ValueError("proof.global_preservation:property_value")
+
+
+def _direct_occurrence_pset_relations(
+    target: Any,
+    *,
+    set_name: str,
+) -> tuple[Any, ...]:
+    return tuple(
+        relation
+        for relation in getattr(target, "IsDefinedBy", ())
+        if relation.is_a("IfcRelDefinesByProperties")
+        and relation.RelatingPropertyDefinition.is_a("IfcPropertySet")
+        and str(relation.RelatingPropertyDefinition.Name or "") == set_name
+    )
+
+
+def _property_map(pset: Any) -> dict[str, Any]:
+    properties = tuple(getattr(pset, "HasProperties", ()))
+    mapped = {str(item.Name or ""): item for item in properties}
+    if len(mapped) != len(properties) or any(not name for name in mapped):
+        raise ValueError("proof.global_preservation:property_member_identity")
+    return mapped
+
+
+def _root_attributes_fingerprint(
+    entity: Any,
+    *,
+    exclude: frozenset[str] = frozenset(),
+) -> tuple[Any, ...]:
+    return _entity_attributes_fingerprint(entity, exclude=exclude)
+
+
+def _entity_attributes_fingerprint(
+    entity: Any,
+    *,
+    exclude: frozenset[str],
+) -> tuple[Any, ...]:
+    return tuple(
+        (
+            entity.attribute_name(index),
+            _ifc_value_fingerprint(entity[index], seen=set(), depth=0),
+        )
+        for index in range(len(entity))
+        if entity.attribute_name(index) not in exclude
+    )
+
+
+def _audit_r1_exact_operation_set(
+    *,
+    changeset: Mapping[str, Any],
+    profile: Mapping[str, Any],
+) -> None:
+    """Bind every successful ChangeSet to the exact frozen operation family set."""
+
+    operations = tuple(
+        operation
+        for operation in changeset.get("operations", ())
+        if isinstance(operation, Mapping)
+    )
+    operation_ids = [str(operation.get("operation_id") or "") for operation in operations]
+    if (
+        not operation_ids
+        or any(not operation_id for operation_id in operation_ids)
+        or len(set(operation_ids)) != len(operation_ids)
+    ):
+        raise ValueError("proof.changeset.operation_set:operation_id")
+    predicates = tuple(
+        predicate
+        for predicate in profile.get("artifact_predicates", ())
+        if isinstance(predicate, Mapping)
+    )
+    atomic = [
+        predicate
+        for predicate in predicates
+        if predicate.get("kind") == "atomic_operation_set"
+    ]
+    if len(atomic) > 1:
+        raise ValueError("proof.changeset.operation_set:profile_atomic")
+    inferred = [
+        str(predicate.get("operation_type") or "")
+        for predicate in predicates
+        if predicate.get("kind") == "structural_add"
+    ]
+    inferred.extend(
+        "set_occurrence_properties"
+        for predicate in predicates
+        if predicate.get("kind") == "occurrence_property"
+    )
+    expected = (
+        [str(value) for value in atomic[0].get("operation_types", ())]
+        if atomic
+        else inferred
+    )
+    if (
+        not expected
+        or any(not operation_type for operation_type in expected)
+        or (atomic and inferred and Counter(expected) != Counter(inferred))
+        or Counter(
+            str(operation.get("operation_type") or "") for operation in operations
+        )
+        != Counter(expected)
+        or len(operations) != len(expected)
+    ):
+        raise ValueError("proof.changeset.operation_set")
+
+
+def _audit_r1_initial_target_resolution_replay(
+    *,
+    source_ifc_path: Path | str,
+    initial_intent: Mapping[str, Any],
+    retained_offered_identities: Iterable[str],
+    selected_identity: str,
+    expected_selected_identity: str,
+    scratch_root: Path | str,
+) -> dict[str, Any]:
+    """Replay H3 target ambiguity without trusting token/rank/terminal summaries."""
+
+    try:
+        parsed_intent = RepairIntent.from_dict(
+            initial_intent,
+            registry=create_default_registry(),
+        )
+    except Exception as error:
+        raise ValueError("proof.h3.initial_intent") from error
+    scratch = Path(scratch_root)
+    scratch.mkdir(parents=True, exist_ok=True)
+    index_path = scratch / "h3-target-replay.sqlite"
+    try:
+        metadata = build_ifc_index(source_ifc_path, index_path)
+        with SQLiteIndexRepository.open(index_path) as repository:
+            replayed = resolve_repair_intent(
+                parsed_intent,
+                repository,
+                expected_source_sha256=metadata.source_ifc_sha256,
+                operation_registry=create_default_registry(),
+            )
+    except Exception as error:
+        raise ValueError("proof.h3.initial_resolution:not_evaluable") from error
+    if replayed.status != "clarification_required" or replayed.reason_code != "ambiguous":
+        raise ValueError("proof.h3.initial_resolution")
+    recomputed = {
+        _stable_target_identity(candidate)
+        for candidate in replayed.candidates
+        if isinstance(candidate, Mapping)
+    }
+    retained = {str(value) for value in retained_offered_identities}
+    if not recomputed or retained != recomputed:
+        raise ValueError("proof.h3.offered_identity_set")
+    selected = str(selected_identity)
+    expected = str(expected_selected_identity)
+    if selected != expected or selected not in retained or selected not in recomputed:
+        raise ValueError("proof.h3.selected_identity")
+    return {
+        "status": replayed.status,
+        "reason_code": replayed.reason_code,
+        "offered_identities": sorted(recomputed),
+        "selected_identity": selected,
+    }
+
+
+def _stable_target_identity(candidate: Mapping[str, Any]) -> str:
+    ifc_class = str(candidate.get("ifc_class") or "")
+    public_id = str(candidate.get("public_id") or "")
+    if public_id.startswith("ifc:"):
+        public_id = public_id.removeprefix("ifc:")
+    if not ifc_class or not public_id or public_id.startswith("candidate:"):
+        raise ValueError("proof.h3.candidate_identity")
+    return f"{ifc_class}:{public_id}"
+
+
+def _audit_r1_h3_state_selection(
+    *,
+    state: Mapping[str, Any] | Any,
+    expected_selected_identity: str,
+) -> dict[str, Any]:
+    """Bind a transient clarification token to the retained stable identity set."""
+
+    state_document = state.to_dict() if hasattr(state, "to_dict") else dict(state)
+    if state_document.get("stage") != "succeeded":
+        raise ValueError("proof.h3.state_terminal")
+    transitions = tuple(
+        item
+        for item in state_document.get("transitions", ())
+        if isinstance(item, Mapping)
+    )
+    clarifications = [
+        item
+        for item in transitions
+        if item.get("from_stage") == "intent_ready"
+        and item.get("to_stage") == "clarification_required"
+        and item.get("reason_code") == "ambiguous_target"
+        and isinstance(item.get("clarification"), Mapping)
+        and item["clarification"].get("reason_code") == "ambiguous_target"
+    ]
+    if len(clarifications) != 1:
+        raise ValueError("proof.h3.clarification_lineage")
+    clarification = clarifications[0]
+    candidates = tuple(
+        item
+        for item in clarification["clarification"].get("candidates", ())
+        if isinstance(item, Mapping)
+    )
+    token_to_identity: dict[str, str] = {}
+    for candidate in candidates:
+        token = str(candidate.get("token") or "")
+        if not token or token in token_to_identity:
+            raise ValueError("proof.h3.candidate_token")
+        token_to_identity[token] = _stable_target_identity(candidate)
+    offered_identities = set(token_to_identity.values())
+    if not offered_identities or len(offered_identities) != len(token_to_identity):
+        raise ValueError("proof.h3.offered_identity_set")
+
+    clarification_index = transitions.index(clarification)
+    forbidden_pre_clarification_stages = {
+        "targets_resolved",
+        "changeset_ready",
+        "application_ready",
+        "evaluated",
+        "succeeded",
+    }
+    for transition in transitions[: clarification_index + 1]:
+        if str(transition.get("to_stage") or "") in forbidden_pre_clarification_stages:
+            raise ValueError("proof.h3.pre_mutation")
+        result_artifacts = transition.get("result_artifacts")
+        if isinstance(result_artifacts, Mapping) and result_artifacts:
+            raise ValueError("proof.h3.pre_mutation")
+    resumes = [
+        item
+        for item in transitions[clarification_index + 1 :]
+        if item.get("from_stage") == "clarification_required"
+        and item.get("to_stage") == "intent_ready"
+        and isinstance(item.get("answer"), Mapping)
+        and item["answer"].get("kind") == "select_candidate"
+    ]
+    if len(resumes) != 1:
+        raise ValueError("proof.h3.resume_lineage")
+    selected_token = str(resumes[0]["answer"].get("candidate_token") or "")
+    selected_identity = token_to_identity.get(selected_token)
+    if (
+        selected_identity is None
+        or selected_identity != str(expected_selected_identity)
+        or selected_identity not in offered_identities
+    ):
+        raise ValueError("proof.h3.selected_identity")
+    return {
+        "offered_identities": sorted(offered_identities),
+        "selected_identity": selected_identity,
+        "clarification_transition_id": clarification.get("transition_id"),
+        "operation_id": clarification["clarification"].get("operation_id"),
+        "run_id": str(state_document.get("run_id") or ""),
+    }
+
+
+def _audit_r1_h3_final_target_resolution_replay(
+    *,
+    source_ifc_path: Path,
+    initial_intent: Mapping[str, Any],
+    state: Mapping[str, Any] | Any,
+    expected_selected_identity: str,
+    scratch_root: Path,
+) -> dict[str, Any]:
+    """Project H3's stable selection into an intent copy and replay final resolution."""
+
+    lineage = _audit_r1_h3_state_selection(
+        state=state,
+        expected_selected_identity=expected_selected_identity,
+    )
+    initial_replay = _audit_r1_initial_target_resolution_replay(
+        source_ifc_path=source_ifc_path,
+        initial_intent=initial_intent,
+        retained_offered_identities=lineage["offered_identities"],
+        selected_identity=str(lineage["selected_identity"]),
+        expected_selected_identity=expected_selected_identity,
+        scratch_root=scratch_root,
+    )
+    selected_class, separator, selected_global_id = str(
+        lineage["selected_identity"]
+    ).partition(":")
+    operation_id = str(lineage.get("operation_id") or "")
+    projected = json.loads(json.dumps(dict(initial_intent), ensure_ascii=False))
+    matching_operations = [
+        operation
+        for operation in projected.get("operations", ())
+        if isinstance(operation, dict)
+        and str(operation.get("operation_id") or "") == operation_id
+    ]
+    if not separator or not selected_global_id or len(matching_operations) != 1:
+        raise ValueError("proof.h3.selected_identity")
+    query = matching_operations[0].get("target_query")
+    allowed = query.get("allowed_ifc_classes") if isinstance(query, Mapping) else None
+    if not isinstance(allowed, list) or selected_class not in allowed:
+        raise ValueError("proof.h3.selected_identity")
+    matching_operations[0]["target_query"] = {
+        key: value
+        for key, value in query.items()
+        if key
+        in {
+            "schema_version",
+            "allowed_ifc_classes",
+            "max_candidates",
+            "winner_margin",
+        }
+    }
+    matching_operations[0]["target_query"]["global_id"] = selected_global_id
+
+    scratch_root.mkdir(parents=True, exist_ok=True)
+    index_path = scratch_root / "final-target-index.sqlite"
+    build_ifc_index(source_ifc_path, index_path)
+    with SQLiteIndexRepository.open(index_path) as repository:
+        resolution = resolve_target(
+            repository,
+            TargetQuery.from_dict(matching_operations[0]["target_query"]),
+        )
+        selected_record = repository.get_by_global_id(selected_global_id)
+    if (
+        resolution.status != "resolved"
+        or selected_record is None
+        or resolution.resolved_target_id != selected_record.record_id
+        or selected_record.ifc_class != selected_class
+    ):
+        raise ValueError("proof.h3.final_resolution")
+    return {
+        "status": resolution.status,
+        "resolved_identity": f"{selected_record.ifc_class}:{selected_global_id}",
+        "projected_intent": projected,
+        "initial_replay": initial_replay,
+    }
+
+
+def _audit_r1_unsupported_guard_replay(
+    *,
+    intent: Mapping[str, Any],
+    state: Mapping[str, Any] | Any,
+    expected_supported_capabilities: Iterable[str],
+    expected_unsupported_capabilities: Iterable[str],
+    expected_reason_code: str,
+    attempts: Iterable[Mapping[str, Any]],
+) -> dict[str, Any]:
+    """Recompute H4 routing and prove the retained run stopped pre-mutation."""
+
+    registry = create_default_registry()
+    try:
+        parsed = RepairIntent.from_dict(intent, registry=registry)
+    except Exception as error:
+        raise ValueError("proof.h4.stage1_intent") from error
+    expected_supported = sorted(str(value) for value in expected_supported_capabilities)
+    expected_unsupported = sorted(
+        str(value) for value in expected_unsupported_capabilities
+    )
+    supported = sorted(
+        operation.operation_type
+        for operation in parsed.operations
+        if str(registry.assess_intent_capability(operation.to_dict()).get("status"))
+        != "unsupported"
+    )
+    unsupported_capabilities = sorted(
+        request.capability_id for request in parsed.unsupported_requests
+    )
+    unsupported = _unsupported_operations(parsed, registry)
+    reason_codes = {str(item.get("reason_code") or "") for item in unsupported}
+    if unsupported_capabilities != expected_unsupported or not unsupported:
+        raise ValueError("proof.h4.unsupported_request")
+    if supported != expected_supported:
+        raise ValueError("proof.h4.supported_capability")
+    if reason_codes != {str(expected_reason_code)}:
+        raise ValueError("proof.h4.reason_code")
+
+    state_document = (
+        state.to_dict() if hasattr(state, "to_dict") else dict(state)
+    )
+    transitions = tuple(
+        item
+        for item in state_document.get("transitions", ())
+        if isinstance(item, Mapping)
+    )
+    if (
+        state_document.get("stage") != "unsupported"
+        or state_document.get("reason_code") != expected_reason_code
+        or not transitions
+        or transitions[-1].get("to_stage") != "unsupported"
+        or transitions[-1].get("reason_code") != expected_reason_code
+    ):
+        raise ValueError("proof.h4.state_terminal")
+    forbidden_stages = {
+        "targets_resolved",
+        "changeset_ready",
+        "application_ready",
+        "evaluated",
+        "succeeded",
+    }
+    if any(str(item.get("to_stage") or "") in forbidden_stages for item in transitions):
+        raise ValueError("proof.h4.pre_mutation")
+    result_artifacts: list[tuple[str, str]] = []
+    for document in (*transitions, state_document):
+        artifacts = document.get("result_artifacts", {})
+        if isinstance(artifacts, Mapping):
+            result_artifacts.extend(
+                (str(key), str(value)) for key, value in artifacts.items()
+            )
+    forbidden_artifact_keys = {
+        "successful_ifc",
+        "repaired_ifc",
+        "diagnostic_candidate",
+        "candidate_ifc",
+    }
+    if any(
+        key in forbidden_artifact_keys or value.casefold().endswith(".ifc")
+        for key, value in result_artifacts
+    ):
+        raise ValueError("proof.h4.pre_mutation")
+    retained_attempts = tuple(
+        item for item in attempts if isinstance(item, Mapping)
+    )
+    stages = [str(item.get("stage") or "") for item in retained_attempts]
+    if not stages or any(stage != "stage1" for stage in stages):
+        raise ValueError("proof.h4.attempt_stage")
+    return {
+        "supported_capabilities": supported,
+        "unsupported_capabilities": unsupported_capabilities,
+        "atomic_request": bool(supported and unsupported_capabilities),
+        "stage1_attempts": len(stages),
+        "property_resolution_attempts": 0,
+        "stage2_attempts": 0,
+        "apply_attempts": 0,
+        "published_outputs": [],
+        "reason_code": expected_reason_code,
+    }
+
+
+def _r1_expected_stage1_profiles() -> list[dict[str, Any]]:
+    registry = create_default_registry()
+    profile_ids = sorted(
+        {
+            str(registry.require(operation_type).prompt_profile_id)
+            for operation_type in registry.operation_types
+        }
+    )
+    return compact_profile_catalog(
+        load_prompt_profiles(),
+        include_profile_ids=profile_ids,
+    )
+
+
+def _audit_r1_live_provider_provenance(
+    *,
+    case_id: str,
+    roles: Mapping[str, Path],
+    provider_intent: Mapping[str, Any],
+    initial_provider_intent: Mapping[str, Any] | None = None,
+    changeset: Mapping[str, Any] | None,
+    damaged_sha256: str,
+    validated_state: Mapping[str, Any] | Any | None = None,
+) -> dict[str, Any]:
+    """Reuse the stage-aware Plan 07 auditor for one frozen R1 case."""
+
+    try:
+        from scripts.ifc_repair.curate_phase12_live_proof import (
+            _bind_stage1,
+            _bind_stage2,
+            _response_document,
+            audit_live_attempts,
+        )
+    except ModuleNotFoundError:  # Direct script execution.
+        from curate_phase12_live_proof import (  # type: ignore[no-redef]
+            _bind_stage1,
+            _bind_stage2,
+            _response_document,
+            audit_live_attempts,
+        )
+
+    result = _read_json(_require_r1_role(roles, "live_provider_result"))
+    case_result = _read_json(
+        _require_r1_role(roles, "live_provider_case_result")
+    )
+    matching = [
+        item
+        for item in result.get("cases", ())
+        if isinstance(item, Mapping) and item.get("case_id") == case_id
+    ]
+    if len(matching) != 1 or dict(matching[0]) != case_result:
+        raise ValueError("proof.live.case_result_binding")
+    if (
+        result.get("evidence_mode") != "live"
+        or result.get("provider_evidence_mode") != "live"
+        or result.get("execution_mode") != "production_live"
+        or result.get("synthetic_fallback_used") is not False
+        or case_result.get("synthetic_fallback_used") is not False
+        or case_result.get("private_evidence_detected") is not False
+    ):
+        raise ValueError("proof.live.production_mode")
+    if validated_state is None:
+        raise ValueError("proof.live.case_result_state_binding")
+    _audit_r1_case_result_state_binding(
+        case_result=case_result,
+        validated_state=validated_state,
+    )
+
+    natural_claim_count = _natural_property_claim_count(provider_intent)
+    expected_stage15 = (
+        {
+            "template_id": PROPERTY_RESOLUTION_TEMPLATE_ID,
+            "template_hash": PROPERTY_RESOLUTION_TEMPLATE_HASH,
+        }
+        if natural_claim_count
+        else None
+    )
+    expected_stage2: Mapping[str, Any] | None = None
+    provider_draft: Mapping[str, Any] | None = None
+    if changeset is not None:
+        operation_types = {
+            str(item.get("operation_type") or "")
+            for item in changeset.get("operations", ())
+            if isinstance(item, Mapping)
+        }
+        registry = create_default_registry()
+        expected_stage2 = select_prompt_profiles(
+            sorted(
+                {
+                    str(registry.require(operation_type).prompt_profile_id)
+                    for operation_type in operation_types
+                }
+            )
+        ).to_dict()
+        selection_path = _require_r1_role(
+            roles, "live_prompt_profile_selection"
+        )
+        if _read_json(selection_path) != expected_stage2:
+            raise ValueError("proof.live.prompt_profile_selection")
+        provider_draft = _read_json(
+            _require_r1_role(roles, "live_provider_draft")
+        )
+
+    state_document = (
+        validated_state.to_dict()
+        if hasattr(validated_state, "to_dict")
+        else dict(validated_state or {"transitions": []})
+    )
+    expected_rounds = _r1_expected_live_attempt_rounds(
+        state=state_document,
+        property_resolution_expected=expected_stage15 is not None,
+        stage2_expected=expected_stage2 is not None,
+    )
+    attempts = case_result.get("attempts")
+    try:
+        audit = audit_live_attempts(
+            case_id=case_id,
+            raw_attempts=attempts,
+            expected_stage1_profiles=_r1_expected_stage1_profiles(),
+            expected_stage2_selection=expected_stage2,
+            expected_property_resolution_template=expected_stage15,
+            expected_provider="deepseek-openai-compatible",
+            expected_model="deepseek-v4-flash",
+            expected_evidence_mode="live",
+            expected_thinking={"type": "enabled"},
+            expected_rounds=expected_rounds,
+        )
+    except (KeyError, TypeError, ValueError) as error:
+        raise ValueError(f"proof.live.attempts:{error}") from error
+    retained_attempts = [
+        item for item in attempts if isinstance(item, Mapping)
+    ] if isinstance(attempts, list) else []
+    resume_stage1_expected = any(
+        round_contract["lineage"] == "clarification-resume"
+        and "stage1" in round_contract["stages"]
+        for round_contract in expected_rounds
+    )
+    if resume_stage1_expected and initial_provider_intent is None:
+        raise ValueError("proof.live.stage1_binding:initial_intent_required")
+    expected_stage1_intents = {
+        "initial": initial_provider_intent or provider_intent,
+    }
+    if resume_stage1_expected:
+        expected_stage1_intents["clarification-resume"] = provider_intent
+    _audit_r1_stage1_round_bindings(
+        attempts=retained_attempts,
+        response_document=_response_document,
+        expected_intents_by_lineage=expected_stage1_intents,
+    )
+    if expected_stage15 is not None:
+        _audit_r1_stage15_attempt_binding(
+            roles=roles,
+            attempts=retained_attempts,
+            response_document=_response_document,
+            provider_intent=provider_intent,
+            state=(validated_state if validated_state is not None else {"transitions": []}),
+        )
+    if changeset is not None:
+        assert provider_draft is not None
+        stage2_attempts = [
+            item for item in retained_attempts if item.get("stage") == "stage2"
+        ]
+        if not stage2_attempts:
+            raise ValueError("proof.live.stage2_response")
+        try:
+            _bind_stage2(
+                _response_document(stage2_attempts[-1]), provider_draft
+            )
+            _bind_stage2(provider_draft, changeset)
+        except (KeyError, TypeError, ValueError) as error:
+            raise ValueError(f"proof.live.stage2_binding:{error}") from error
+    _audit_r1_production_input_isolation(
+        roles=roles,
+        damaged_sha256=damaged_sha256,
+        request_sha256=str(provider_intent.get("source_request_hash") or ""),
+        resolved_target_count=(
+            0
+            if changeset is None
+            else len(
+                [
+                    item
+                    for item in changeset.get("operations", ())
+                    if isinstance(item, Mapping)
+                ]
+            )
+        ),
+    )
+    return {**audit, "attempts": retained_attempts}
+
+
+def _audit_r1_case_result_state_binding(
+    *,
+    case_result: Mapping[str, Any],
+    validated_state: Mapping[str, Any] | Any,
+) -> None:
+    """Bind the retained live terminal summary to the hash-valid RunStore state."""
+
+    state_document = (
+        validated_state.to_dict()
+        if hasattr(validated_state, "to_dict")
+        else dict(validated_state)
+    )
+    final = case_result.get("final")
+    if not isinstance(final, Mapping):
+        raise ValueError("proof.live.case_result_state_binding")
+    succeeded = state_document.get("stage") == "succeeded"
+    expected = {
+        "run_id": state_document.get("run_id"),
+        "state_version": state_document.get("state_version"),
+        "status": state_document.get("stage"),
+        "reason_code": state_document.get("reason_code"),
+        "complete_repair_success": succeeded,
+        "successful_artifact_publishable": succeeded,
+        "artifacts": dict(state_document.get("result_artifacts") or {}),
+    }
+    if any(final.get(key) != value for key, value in expected.items()):
+        raise ValueError("proof.live.case_result_state_binding")
+
+
+def _audit_r1_h4_no_mutation_artifacts(
+    *,
+    roles: Mapping[str, Path],
+    source_ifc_path: Path,
+    validated_state: Mapping[str, Any] | Any,
+) -> None:
+    """Prove H4 retained no candidate IFC, ChangeSet, or application output."""
+
+    terminal_error = "proof.h4.failure_terminal_evidence"
+    state_document = (
+        validated_state.to_dict()
+        if hasattr(validated_state, "to_dict")
+        else dict(validated_state)
+    )
+    source = source_ifc_path.resolve()
+    retained_ifc = {
+        path.resolve()
+        for path in roles.values()
+        if path.suffix.casefold() == ".ifc"
+    }
+    if retained_ifc != {source}:
+        raise ValueError("proof.h4.no_mutation_artifacts")
+    state_path = _require_r1_role(roles, "runtime_state").resolve()
+    run_root = state_path.parent
+    result_artifacts = state_document.get("result_artifacts")
+    if not isinstance(result_artifacts, Mapping) or set(result_artifacts) != {
+        "manifest",
+        "evaluation",
+        "evidence",
+    }:
+        raise ValueError("proof.h4.no_mutation_artifacts")
+    listed = {path.resolve() for path in roles.values()}
+    retained_terminal: dict[str, Path] = {}
+    for name, relative in result_artifacts.items():
+        artifact = _safe_path(run_root, str(relative)).resolve()
+        if artifact not in listed or not artifact.is_file():
+            raise ValueError("proof.h4.no_mutation_artifacts")
+        retained_terminal[str(name)] = artifact
+
+    try:
+        runtime_result = RunStore(run_root.parent.parent).read_result(run_root.name)
+    except Exception as error:
+        raise ValueError(terminal_error) from error
+    if (
+        state_document.get("stage") != "unsupported"
+        or runtime_result.run_id != state_document.get("run_id")
+        or runtime_result.state_version != state_document.get("state_version")
+        or runtime_result.status != state_document.get("stage")
+        or runtime_result.reason_code != state_document.get("reason_code")
+        or runtime_result.complete_repair_success is not False
+        or runtime_result.successful_artifact_publishable is not False
+        or dict(runtime_result.artifacts) != dict(result_artifacts)
+    ):
+        raise ValueError(terminal_error)
+    case_result = _read_json(
+        _require_r1_role(roles, "live_provider_case_result")
+    )
+    try:
+        _audit_r1_case_result_state_binding(
+            case_result=case_result,
+            validated_state=validated_state,
+        )
+    except ValueError as error:
+        raise ValueError(terminal_error) from error
+
+    transitions = [
+        item
+        for item in state_document.get("transitions", ())
+        if isinstance(item, Mapping)
+    ]
+    final_transition = transitions[-1] if transitions else None
+    reason_code = state_document.get("reason_code")
+    if (
+        not isinstance(final_transition, Mapping)
+        or final_transition.get("to_stage") != "unsupported"
+        or final_transition.get("reason_code") != reason_code
+        or dict(final_transition.get("result_artifacts") or {})
+        != dict(result_artifacts)
+    ):
+        raise ValueError(terminal_error)
+
+    manifest = _read_json(retained_terminal["manifest"])
+    entries = manifest.get("artifacts")
+    if (
+        manifest.get("schema_version")
+        != "text2ifc/ifc-repair-artifact-manifest/0.1"
+        or not isinstance(entries, list)
+        or len(entries) != 2
+    ):
+        raise ValueError(terminal_error)
+    expected_entries = {
+        retained_terminal["evaluation"]: "public_evaluation",
+        retained_terminal["evidence"]: "public_evidence",
+    }
+    seen_entries: set[Path] = set()
+    evidence_path = retained_terminal["evidence"]
+    for entry in entries:
+        if not isinstance(entry, Mapping) or set(entry) != {
+            "path",
+            "sha256",
+            "size_bytes",
+            "role",
+        }:
+            raise ValueError(terminal_error)
+        try:
+            entry_path = _safe_path(
+                run_root, str(entry.get("path") or "")
+            ).resolve()
+        except (OSError, ValueError) as error:
+            raise ValueError(terminal_error) from error
+        if (
+            entry_path in seen_entries
+            or expected_entries.get(entry_path) != entry.get("role")
+            or _normalize_sha256(str(entry.get("sha256") or ""))
+            != _sha256(entry_path)
+            or int(entry.get("size_bytes", -1)) != entry_path.stat().st_size
+        ):
+            raise ValueError(terminal_error)
+        seen_entries.add(entry_path)
+    if seen_entries != set(expected_entries):
+        raise ValueError(terminal_error)
+
+    evidence_document = _read_json(evidence_path)
+    public_evidence = evidence_document.get("evidence")
+    evaluation_document = _read_json(retained_terminal["evaluation"])
+    final = case_result.get("final")
+    expected_evaluation = {
+        "schema_version": "text2ifc/ifc-repair-evaluation-public/0.2",
+        "policy_version": "phase8.1",
+        "status": "not_evaluable",
+        "reason": reason_code,
+        "complete_repair_success": False,
+        "successful_artifact_publishable": False,
+        "diagnostic_artifact_retained": False,
+        "application": {
+            "check_id": "application.valid",
+            "status": "not_evaluable",
+            "reason": reason_code,
+        },
+        "preservation": {
+            "check_id": "preservation.valid",
+            "status": "not_evaluable",
+            "reason": reason_code,
+        },
+        "operations": [],
+    }
+    if (
+        evidence_document.get("terminal_status") != "unsupported"
+        or not isinstance(public_evidence, Mapping)
+        or not isinstance(final, Mapping)
+        or set(public_evidence) != {"reason_code", "stage"}
+        or public_evidence.get("reason_code") != reason_code
+        or public_evidence.get("stage") != final_transition.get("from_stage")
+        or final.get("reason_code") != reason_code
+        or evaluation_document != expected_evaluation
+    ):
+        raise ValueError(terminal_error)
+
+    for path in listed:
+        if path.suffix.casefold() != ".json" or not path.is_file():
+            continue
+        document = _read_json(path)
+        schema_version = str(document.get("schema_version") or "")
+        if schema_version.startswith("text2ifc/ifc-repair-changeset") or {
+            "valid",
+            "published",
+            "operations",
+        }.issubset(document):
+            raise ValueError("proof.h4.no_mutation_artifacts")
+
+
+def _r1_expected_live_attempt_rounds(
+    *,
+    state: Mapping[str, Any] | Any,
+    property_resolution_expected: bool,
+    stage2_expected: bool,
+) -> list[dict[str, Any]]:
+    """Derive the exact R1 Provider lineage from retained clarification state."""
+
+    state_document = state.to_dict() if hasattr(state, "to_dict") else dict(state)
+    answers = [
+        transition.get("answer")
+        for transition in state_document.get("transitions", ())
+        if isinstance(transition, Mapping)
+        and isinstance(transition.get("answer"), Mapping)
+    ]
+    add_detail = [answer for answer in answers if answer.get("kind") == "add_detail"]
+    select_target = [
+        answer for answer in answers if answer.get("kind") == "select_candidate"
+    ]
+    if len(add_detail) > 1 or len(select_target) > 1 or (add_detail and select_target):
+        raise ValueError("proof.live.round_lineage")
+
+    def _tail(*, include_stage1: bool) -> list[str]:
+        stages = ["stage1"] if include_stage1 else []
+        if property_resolution_expected:
+            stages.append("property_resolution")
+        if stage2_expected:
+            stages.append("stage2")
+        return stages
+
+    if add_detail:
+        initial = _tail(include_stage1=True)
+        if stage2_expected:
+            initial.remove("stage2")
+        return [
+            {"lineage": "initial", "stages": initial},
+            {
+                "lineage": "clarification-resume",
+                "stages": _tail(include_stage1=True),
+            },
+        ]
+    if select_target:
+        resume = _tail(include_stage1=False)
+        if not resume:
+            raise ValueError("proof.live.round_lineage")
+        return [
+            {"lineage": "initial", "stages": ["stage1"]},
+            {"lineage": "clarification-resume", "stages": resume},
+        ]
+    return [{"lineage": "initial", "stages": _tail(include_stage1=True)}]
+
+
+def _audit_r1_stage1_round_bindings(
+    *,
+    attempts: Iterable[Mapping[str, Any]],
+    response_document: Any,
+    expected_intents_by_lineage: Mapping[str, Mapping[str, Any]],
+) -> None:
+    """Bind the authoritative Stage 1 response in every frozen R1 round."""
+
+    grouped: dict[str, list[Mapping[str, Any]]] = {}
+    for attempt in attempts:
+        if not isinstance(attempt, Mapping) or attempt.get("stage") != "stage1":
+            continue
+        lineage = str(attempt.get("lineage") or "")
+        grouped.setdefault(lineage, []).append(attempt)
+    if not expected_intents_by_lineage or set(grouped) != set(
+        expected_intents_by_lineage
+    ):
+        raise ValueError("proof.live.stage1_binding")
+    try:
+        from scripts.ifc_repair.curate_phase12_live_proof import _bind_stage1
+    except ModuleNotFoundError:  # Direct script execution.
+        from curate_phase12_live_proof import _bind_stage1  # type: ignore[no-redef]
+    for lineage, intent in expected_intents_by_lineage.items():
+        try:
+            document = response_document(grouped[lineage][-1])
+            _bind_stage1(document, intent)
+            if document.get("unsupported_requests", []) != intent.get(
+                "unsupported_requests", []
+            ):
+                raise ValueError("LIVE_STAGE1_RESPONSE_ARTIFACT_MISMATCH")
+        except (KeyError, TypeError, ValueError) as error:
+            raise ValueError(f"proof.live.stage1_binding:{error}") from error
+
+
+def _r1_transcript_response_text(response: Mapping[str, Any]) -> str | None:
+    """Return the exact retained Provider text when the transport preserved it."""
+
+    content = response.get("content")
+    if isinstance(content, str):
+        return content
+    choices = response.get("choices")
+    if isinstance(choices, list) and len(choices) == 1:
+        choice = choices[0]
+        message = choice.get("message") if isinstance(choice, Mapping) else None
+        text = message.get("content") if isinstance(message, Mapping) else None
+        if isinstance(text, str):
+            return text
+    if isinstance(content, Mapping):
+        # Older retained fixtures stored the parsed document directly. Their
+        # byte-level Provider text was not retained, so semantic equality is
+        # checked below instead of inventing a serialization.
+        return None
+    raise ValueError("proof.live.property_attempt_raw_response")
+
+
+def _audit_r1_stage15_attempt_binding(
+    *,
+    roles: Mapping[str, Path],
+    attempts: Iterable[Mapping[str, Any]],
+    response_document: Any,
+    provider_intent: Mapping[str, Any],
+    state: Mapping[str, Any] | Any,
+) -> None:
+    """Bind each transcript Stage 1.5 call to its case-local production evidence."""
+
+    live_attempts = [
+        item
+        for item in attempts
+        if isinstance(item, Mapping) and item.get("stage") == "property_resolution"
+    ]
+    listed = {path.resolve() for path in roles.values()}
+    metadata_paths = [
+        path.resolve()
+        for path in listed
+        if path.name == "provider-metadata.json"
+        and "property-resolution" in path.parts
+    ]
+    if not live_attempts or len(metadata_paths) != len(live_attempts):
+        raise ValueError("proof.live.property_attempt_binding")
+
+    state_document = state.to_dict() if hasattr(state, "to_dict") else dict(state)
+    base_claims: set[tuple[str, str]] = set()
+    for operation in provider_intent.get("operations", ()):
+        if not isinstance(operation, Mapping):
+            continue
+        operation_id = str(operation.get("operation_id") or "")
+        for property_index, claim in enumerate(
+            operation.get("property_intents", ()), start=1
+        ):
+            if not isinstance(claim, Mapping) or claim.get("intent_kind") != "natural_language_property":
+                continue
+            base_claim = f"claim-{property_index:03d}"
+            base_claims.add((operation_id, base_claim))
+    resume_generations = [
+        transition.get("stage_payload", {}).get("property_resolution_generation")
+        for transition in state_document.get("transitions", ())
+        if isinstance(transition, Mapping)
+        and isinstance(transition.get("answer"), Mapping)
+        and transition["answer"].get("kind") == "add_detail"
+        and isinstance(transition.get("stage_payload"), Mapping)
+    ]
+    if any(not isinstance(item, int) for item in resume_generations) or len(resume_generations) > 1:
+        raise ValueError("proof.live.property_claim_authority")
+    expected_claims = set(base_claims)
+    if resume_generations:
+        generation = int(resume_generations[0])
+        expected_claims.update(
+            (operation_id, f"{claim_id}-resume-{generation:03d}")
+            for operation_id, claim_id in base_claims
+        )
+    decision_claims: set[tuple[str, str]] = set()
+    for transition in state_document.get("transitions", ()):
+        if not isinstance(transition, Mapping):
+            continue
+        payload = transition.get("stage_payload")
+        resolution = payload.get("property_resolution") if isinstance(payload, Mapping) else None
+        if isinstance(resolution, Mapping) and resolution.get("checkpoint") == "decision":
+            decision_claims.add(
+                (str(resolution.get("operation_id") or ""), str(resolution.get("claim_id") or ""))
+            )
+    if state_document.get("transitions") and decision_claims != expected_claims:
+        raise ValueError("proof.live.property_claim_checkpoint_set")
+    for operation_id, claim_id in expected_claims:
+        base_claim_id = claim_id.split("-resume-", 1)[0]
+        if (operation_id, base_claim_id) not in base_claims:
+            raise ValueError("proof.live.property_claim_authority")
+        if "-resume-" in claim_id and claim_id != _r1_effective_property_claim_id(
+            state=state_document,
+            base_claim_id=base_claim_id,
+        ):
+            raise ValueError("proof.live.property_claim_authority")
+
+    used_attempt_ids: set[str] = set()
+    retained_groups: dict[tuple[str, str], list[dict[str, Any]]] = {}
+    for metadata_path in metadata_paths:
+        attempt_root = metadata_path.parent
+        required = {
+            "metadata": metadata_path,
+            "raw": (attempt_root / "raw-response.json").resolve(),
+            "parsed": (attempt_root / "parsed-response.json").resolve(),
+            "prompt": (attempt_root / "rendered-prompt.txt").resolve(),
+            "trace": (attempt_root / "trace.json").resolve(),
+            "renderer_input": (attempt_root / "renderer-input.json").resolve(),
+            "feedback": (attempt_root / "validation-feedback.json").resolve(),
+        }
+        if any(path not in listed or not path.is_file() for path in required.values()):
+            raise ValueError("proof.live.property_attempt_binding")
+
+        metadata = _read_json(required["metadata"])
+        response_id = str(metadata.get("response_id") or "")
+        matches = [
+            item
+            for item in live_attempts
+            if isinstance(item.get("metadata"), Mapping)
+            and item["metadata"].get("response_id") == response_id
+        ]
+        if len(matches) != 1:
+            raise ValueError("proof.live.property_attempt_binding")
+        attempt = matches[0]
+        attempt_id = str(attempt.get("attempt_id") or "")
+        if not attempt_id or attempt_id in used_attempt_ids:
+            raise ValueError("proof.live.property_attempt_binding")
+        used_attempt_ids.add(attempt_id)
+
+        attempt_metadata = attempt.get("metadata")
+        assert isinstance(attempt_metadata, Mapping)
+        if any(
+            metadata.get(key) != attempt_metadata.get(key)
+            for key in (
+                "response_id",
+                "provider",
+                "model",
+                "evidence_class",
+                "usage",
+                "request_configuration",
+            )
+        ):
+            raise ValueError("proof.live.property_attempt_binding")
+        request = attempt.get("request")
+        response = attempt.get("response")
+        raw = _read_json(required["raw"])
+        transport = raw.get("transport")
+        trace = _read_json(required["trace"])
+        if (
+            not isinstance(request, Mapping)
+            or not isinstance(response, Mapping)
+            or not isinstance(transport, Mapping)
+            or transport.get("request") != request
+            or transport.get("response") != response
+        ):
+            raise ValueError("proof.live.property_attempt_binding")
+        transcript_text = _r1_transcript_response_text(response)
+        if transcript_text is not None and raw.get("text") != transcript_text:
+            raise ValueError("proof.live.property_attempt_raw_response")
+        messages = request.get("messages")
+        if (
+            not isinstance(messages, list)
+            or not messages
+            or not isinstance(messages[0], Mapping)
+            or messages[0].get("content")
+            != required["prompt"].read_text(encoding="utf-8")
+        ):
+            raise ValueError("proof.live.property_attempt_binding")
+        try:
+            retained_parsed = json.loads(
+                required["parsed"].read_text(encoding="utf-8")
+            )
+        except json.JSONDecodeError as error:
+            raise ValueError("proof.live.property_attempt_binding") from error
+
+        renderer_input = _read_json(required["renderer_input"])
+        if set(renderer_input) != {
+            "PROPERTY_QUERY",
+            "CANDIDATE_SET",
+            "DECISION_SCHEMA",
+            "PREVIOUS_VALIDATION_FEEDBACK",
+        }:
+            raise ValueError("proof.live.property_attempt_renderer")
+        candidate_set = renderer_input.get("CANDIDATE_SET")
+        decision_schema = renderer_input.get("DECISION_SCHEMA")
+        candidates = candidate_set.get("candidates") if isinstance(candidate_set, Mapping) else None
+        if not isinstance(decision_schema, Mapping) or not isinstance(candidates, list):
+            raise ValueError("proof.live.property_attempt_renderer")
+        frozen_decision_schema = _read_json(
+            ROOT / "schemas" / "agent" / "ifc-property-rerank-decision-0.1.schema.json"
+        )
+        if decision_schema != frozen_decision_schema:
+            raise ValueError("proof.live.property_attempt_schema")
+        claim_root = attempt_root.parents[1]
+        query_path = (claim_root / "query.json").resolve()
+        candidate_path = (claim_root / "candidate-set.json").resolve()
+        if (
+            query_path not in listed
+            or candidate_path not in listed
+            or not query_path.is_file()
+            or not candidate_path.is_file()
+            or renderer_input["PROPERTY_QUERY"] != _read_json(query_path)
+            or candidate_set != _read_json(candidate_path)
+        ):
+            raise ValueError("proof.live.property_attempt_renderer")
+        rendered = render_prompt(
+            template_id=PROPERTY_RESOLUTION_TEMPLATE_ID,
+            inputs=renderer_input,
+        )
+        if (
+            str(rendered["text"])
+            != required["prompt"].read_text(encoding="utf-8")
+            or rendered["metadata"].get("template_id")
+            != trace.get("template_id")
+            or rendered["metadata"].get("template_hash")
+            != trace.get("template_hash")
+        ):
+            raise ValueError("proof.live.property_attempt_renderer")
+        query_document = renderer_input["PROPERTY_QUERY"]
+        if (
+            trace.get("run_id") != query_document.get("run_id")
+            or trace.get("operation_id") != query_document.get("operation_id")
+            or trace.get("claim_id") != query_document.get("claim_id")
+            or trace.get("query_id") != query_document.get("query_id")
+            or trace.get("candidate_set_id")
+            != candidate_set.get("candidate_set_id")
+            or candidate_set.get("query_id") != query_document.get("query_id")
+        ):
+            raise ValueError("proof.live.property_attempt_renderer")
+        offered_ids = frozenset(
+            str(candidate.get("candidate_id") or "")
+            for candidate in candidates
+            if isinstance(candidate, Mapping)
+        )
+        raw_text = str(raw.get("text") or "")
+        provider_output = ProviderOutput(text=raw_text, metadata={})
+        parse_status = "not_parsed"
+        parsed: Mapping[str, Any] | None = None
+        recomputed_issues: list[dict[str, str]] = []
+        if (
+            len(raw_text.encode("utf-8"))
+            > MAX_PROPERTY_RESOLUTION_RESPONSE_BYTES
+            or estimate_openai_compatible_input_tokens(raw_text)
+            > MAX_PROPERTY_RESOLUTION_RESPONSE_TOKENS
+        ):
+            recomputed_issues.append(
+                _property_issue(
+                    "PROPERTY_PROVIDER_RESPONSE_TOO_LARGE",
+                    "",
+                    "Provider response exceeds the Property Resolution limit.",
+                )
+            )
+        else:
+            try:
+                validate_provider_output(provider_output)
+            except ProviderOutputError:
+                recomputed_issues.append(
+                    _property_issue(
+                        "PROPERTY_PRIVATE_OUTPUT_FORBIDDEN",
+                        "",
+                        "Provider output violates the public structured-output boundary.",
+                    )
+                )
+            if not recomputed_issues:
+                parse_status, parsed_document, parse_issues = provider_output.parse_json()
+                parsed = parsed_document
+                recomputed_issues.extend(
+                    _property_issue(
+                        str(item.get("code", "PROPERTY_PROVIDER_JSON_INVALID")),
+                        str(item.get("path", "")),
+                        str(item.get("message", "Provider JSON is invalid.")),
+                    )
+                    for item in parse_issues
+                )
+                if (
+                    parse_status == "ok"
+                    and isinstance(parsed, Mapping)
+                    and not recomputed_issues
+                ):
+                    recomputed_issues.extend(
+                        _property_decision_issues(
+                            parsed,
+                            schema=decision_schema,
+                            offered_ids=offered_ids,
+                        )
+                    )
+        recomputed_issues = _sort_property_issues(recomputed_issues)
+        retained_feedback = json.loads(required["feedback"].read_text(encoding="utf-8"))
+        if not isinstance(retained_feedback, list) or retained_feedback != recomputed_issues:
+            raise ValueError("proof.live.property_attempt_feedback_recompute")
+        independently_valid = isinstance(parsed, Mapping) and not recomputed_issues
+        if (
+            trace.get("parse_status") != parse_status
+            or retained_parsed != parsed
+            or trace.get("status")
+            != ("valid" if independently_valid else "invalid")
+            or trace.get("acceptance_eligible") is not independently_valid
+            or (
+                independently_valid
+                and response_document(attempt) != parsed
+            )
+        ):
+            raise ValueError("proof.live.property_attempt_status")
+
+        if (
+            trace.get("template_id") != attempt.get("template_id")
+            or trace.get("template_hash") != attempt.get("template_hash")
+            or trace.get("attempt") != attempt.get("stage_attempt")
+            or trace.get("evidence_class") != "live"
+        ):
+            raise ValueError("proof.live.property_attempt_binding")
+        operation_id = str(trace.get("operation_id") or "")
+        claim_id = str(trace.get("claim_id") or "")
+        if not operation_id or not claim_id:
+            raise ValueError("proof.live.property_attempt_claim")
+        retained_groups.setdefault((operation_id, claim_id), []).append(
+            {
+                "number": trace.get("attempt"),
+                "status": "valid" if independently_valid else "invalid",
+                "renderer": renderer_input,
+                "feedback": retained_feedback,
+                "attempt_id": attempt_id,
+            }
+        )
+
+    live_positions = {str(item.get("attempt_id") or ""): index for index, item in enumerate(live_attempts)}
+    if set(retained_groups) != expected_claims:
+        raise ValueError("proof.live.property_claim_set")
+    for evidence in retained_groups.values():
+        ordered = sorted(evidence, key=lambda item: int(item["number"]))
+        numbers = [item["number"] for item in ordered]
+        if numbers not in ([1], [1, 2]):
+            raise ValueError("proof.live.property_attempt_sequence")
+        first_renderer = ordered[0]["renderer"]
+        if (
+            not isinstance(first_renderer, Mapping)
+            or not isinstance(ordered[0]["feedback"], list)
+            or first_renderer.get(
+            "PREVIOUS_VALIDATION_FEEDBACK"
+            ) != []
+            or (numbers == [1] and ordered[0]["status"] != "valid")
+            or (numbers == [1] and ordered[0]["feedback"] != [])
+        ):
+            raise ValueError("proof.live.property_attempt_feedback")
+        if numbers == [1, 2]:
+            first, second = ordered
+            if (
+                not isinstance(second["renderer"], Mapping)
+                or not isinstance(second["feedback"], list)
+                or
+                first["status"] != "invalid"
+                or second["status"] != "valid"
+                or not first["feedback"]
+                or second["feedback"] != []
+                or live_positions[second["attempt_id"]]
+                != live_positions[first["attempt_id"]] + 1
+                or second["renderer"].get("PREVIOUS_VALIDATION_FEEDBACK")
+                != first["feedback"]
+                or {
+                    key: value
+                    for key, value in second["renderer"].items()
+                    if key != "PREVIOUS_VALIDATION_FEEDBACK"
+                }
+                != {
+                    key: value
+                    for key, value in first_renderer.items()
+                    if key != "PREVIOUS_VALIDATION_FEEDBACK"
+                }
+            ):
+                raise ValueError("proof.live.property_attempt_retry_binding")
+
+    if used_attempt_ids != {
+        str(item.get("attempt_id") or "") for item in live_attempts
+    }:
+        raise ValueError("proof.live.property_attempt_binding")
+
+
+def _audit_r1_production_input_isolation(
+    *,
+    roles: Mapping[str, Path],
+    damaged_sha256: str,
+    request_sha256: str,
+    resolved_target_count: int,
+) -> None:
+    _audit_production_input_isolation(
+        roles=roles,
+        boundary_path=_require_r1_role(roles, "production_input_boundary"),
+        damaged_sha256=damaged_sha256,
+        request_sha256=request_sha256,
+        resolved_target_count=resolved_target_count,
+        # The frozen R1 plan deliberately defers the exact command to the
+        # post-approval execution manifest.  Until that runner/manifest exists,
+        # this is only a basename/shape check; readiness must remain blocked.
+        expected_entrypoint=None,
+        entrypoint_prefix="run_",
+        boundary_error="proof.live.production_input_boundary",
+        private_canary_error="proof.live.private_canary",
+        private_field_error="proof.live.private_field",
+    )
+
+
+def _require_r1_role(roles: Mapping[str, Path], role: str) -> Path:
+    path = roles.get(role)
+    if path is None or not path.is_file():
+        raise ValueError(f"proof.files.required_role:{role}")
+    return path
+
+
+def _require_r1_declared_artifact(
+    *,
+    case_root: Path,
+    declared_path: Path,
+    roles: Mapping[str, Path],
+    role: str,
+) -> Path:
+    root = case_root.resolve()
+    declared = declared_path.resolve()
+    retained = roles.get(role)
+    if (
+        retained is None
+        or retained.resolve() != declared
+        or not declared.is_relative_to(root)
+        or not declared.is_file()
+    ):
+        raise ValueError(f"proof.files.declared_artifact:{role}")
+    return declared
+
+
+def _load_validated_r1_state(state_path: Path) -> Any:
+    resolved = state_path.resolve(strict=True)
+    run_root = resolved.parent
+    runs_root = run_root.parent
+    if resolved.name != "state.json" or runs_root.name != "runs":
+        raise ValueError("proof.runtime_state.location")
+    if (run_root / ".terminal-publication.json").exists():
+        raise ValueError("proof.runtime_state.pending_publication")
+    try:
+        store = RunStore(runs_root.parent)
+        state = store.load(run_root.name)
+        result = store.read_result(run_root.name)
+    except Exception as error:
+        raise ValueError("proof.runtime_state.invalid") from error
+    if (
+        state.run_id != run_root.name
+        or result.run_id != state.run_id
+        or result.state_version != state.state_version
+        or result.status != state.stage.value
+        or result.reason_code != state.reason_code
+        or dict(result.artifacts) != dict(state.result_artifacts)
+    ):
+        raise ValueError("proof.runtime_state.identity")
+    return state
+
+
+def _audit_r1_success_terminal_binding(
+    *,
+    state: Mapping[str, Any] | Any,
+    state_path: Path,
+    roles: Mapping[str, Path],
+    repaired_ifc_path: Path,
+    application: Mapping[str, Any],
+) -> None:
+    """Bind a successful Proof to the atomic RunStore publication commit."""
+
+    error = "proof.success.terminal_publication"
+    document = state.to_dict() if hasattr(state, "to_dict") else dict(state)
+    transitions = [
+        item
+        for item in document.get("transitions", ())
+        if isinstance(item, Mapping)
+    ]
+    result_artifacts = document.get("result_artifacts")
+    if (
+        document.get("stage") != "succeeded"
+        or document.get("reason_code") is not None
+        or not transitions
+        or transitions[-1].get("to_stage") != "succeeded"
+        or transitions[-1].get("reason_code") is not None
+        or transitions[-1].get("stage_payload") != {"status": "succeeded"}
+        or not isinstance(result_artifacts, Mapping)
+        or transitions[-1].get("result_artifacts") != result_artifacts
+        or set(result_artifacts)
+        != {"manifest", "successful_ifc", "evaluation"}
+    ):
+        raise ValueError(error)
+
+    run_root = state_path.resolve(strict=True).parent
+    listed = {path.resolve(strict=True) for path in roles.values()}
+
+    def _artifact(reference: Any) -> Path:
+        if not isinstance(reference, str) or not reference:
+            raise ValueError(error)
+        path = _safe_path(run_root, reference)
+        if not path.is_file() or path.resolve() not in listed:
+            raise ValueError(error)
+        return path.resolve()
+
+    manifest_path = _artifact(result_artifacts["manifest"])
+    successful_path = _artifact(result_artifacts["successful_ifc"])
+    evaluation_path = _artifact(result_artifacts["evaluation"])
+    if (
+        successful_path != repaired_ifc_path.resolve(strict=True)
+        or roles.get("production_publication_manifest") != manifest_path
+        or roles.get("production_evaluation") != evaluation_path
+        or roles.get("application_result") is None
+        or _read_json(roles["application_result"]) != application
+    ):
+        raise ValueError(error)
+
+    evaluation = _read_json(evaluation_path)
+    if (
+        evaluation.get("schema_version")
+        != "text2ifc/ifc-repair-evaluation-public/0.2"
+        or evaluation.get("complete_repair_success") is not True
+        or evaluation.get("successful_artifact_publishable") is not True
+    ):
+        raise ValueError(error)
+
+    manifest = _read_json(manifest_path)
+    entries = manifest.get("artifacts")
+    if (
+        manifest.get("schema_version")
+        != "text2ifc/ifc-repair-artifact-manifest/0.1"
+        or not isinstance(entries, list)
+        or len(entries) != 3
+    ):
+        raise ValueError(error)
+    by_role: dict[str, Path] = {}
+    for entry in entries:
+        if not isinstance(entry, Mapping):
+            raise ValueError(error)
+        role = str(entry.get("role") or "")
+        path = _artifact(entry.get("path"))
+        if (
+            role in by_role
+            or _normalize_sha256(str(entry.get("sha256") or ""))
+            != _sha256(path)
+            or int(entry.get("size_bytes", -1)) != path.stat().st_size
+        ):
+            raise ValueError(error)
+        by_role[role] = path
+    if (
+        set(by_role)
+        != {"public_evaluation", "public_evidence", "successful_ifc"}
+        or by_role["public_evaluation"] != evaluation_path
+        or by_role["successful_ifc"] != successful_path
+        or roles.get("production_publication_evidence")
+        != by_role["public_evidence"]
+    ):
+        raise ValueError(error)
+    evidence = _read_json(by_role["public_evidence"])
+    public_evidence = evidence.get("evidence")
+    if (
+        evidence.get("terminal_status") != "succeeded"
+        or not isinstance(public_evidence, Mapping)
+        or public_evidence.get("application") != application
+    ):
+        raise ValueError(error)
+
+
+def _r1_bound_transition_artifact(
+    *,
+    state: Mapping[str, Any] | Any,
+    state_path: Path,
+    artifact_key: str,
+    listed_paths: Iterable[Path],
+    before_transition_id: int | None,
+    require_unique: bool,
+) -> Path:
+    """Resolve one RunStore SHA binding and require its file was in FILES 0.2."""
+
+    state_document = state.to_dict() if hasattr(state, "to_dict") else dict(state)
+    matches: list[Mapping[str, Any]] = []
+    for transition in state_document.get("transitions", ()):
+        if not isinstance(transition, Mapping):
+            continue
+        transition_id = transition.get("transition_id")
+        if (
+            before_transition_id is not None
+            and isinstance(transition_id, int)
+            and transition_id >= before_transition_id
+        ):
+            continue
+        payload = transition.get("stage_payload")
+        binding = payload.get(artifact_key) if isinstance(payload, Mapping) else None
+        if isinstance(binding, Mapping):
+            matches.append(binding)
+    if not matches or (require_unique and len(matches) != 1):
+        raise ValueError(f"proof.runtime_state.artifact_binding:{artifact_key}")
+    binding = matches[-1]
+    if set(binding) != {"path", "sha256", "schema_version"} or not str(
+        binding.get("schema_version") or ""
+    ):
+        raise ValueError(f"proof.runtime_state.artifact_binding:{artifact_key}")
+    run_root = state_path.resolve(strict=True).parent
+    artifact = _safe_path(run_root, str(binding.get("path") or ""))
+    listed = {path.resolve(strict=True) for path in listed_paths}
+    if (
+        not artifact.is_file()
+        or artifact.resolve() not in listed
+        or _normalize_sha256(str(binding.get("sha256") or ""))
+        != _sha256(artifact)
+    ):
+        raise ValueError(f"proof.runtime_state.artifact_binding:{artifact_key}")
+    return artifact.resolve()
+
+
+def _r1_effective_property_claim_id(
+    *,
+    state: Mapping[str, Any] | Any,
+    base_claim_id: str,
+) -> str:
+    """Derive the exact M1 resume claim from its hash-chained generation."""
+
+    state_document = state.to_dict() if hasattr(state, "to_dict") else dict(state)
+    resume_generations: list[int] = []
+    for transition in state_document.get("transitions", ()):
+        if not isinstance(transition, Mapping):
+            continue
+        answer = transition.get("answer")
+        payload = transition.get("stage_payload")
+        if not isinstance(answer, Mapping) or answer.get("kind") != "add_detail":
+            continue
+        generation = (
+            payload.get("property_resolution_generation")
+            if isinstance(payload, Mapping)
+            else None
+        )
+        if not isinstance(generation, int) or generation < 1:
+            raise ValueError("proof.m1.property_resolution_generation")
+        resume_generations.append(generation)
+    if not resume_generations:
+        return str(base_claim_id)
+    if len(resume_generations) != 1:
+        raise ValueError("proof.m1.resume_lineage")
+    return f"{base_claim_id}-resume-{resume_generations[0]:03d}"
+
+
+def _r1_initial_request_intent_path(
+    *,
+    state: Mapping[str, Any] | Any,
+    state_path: Path,
+    listed_paths: Iterable[Path],
+    fallback: Path,
+) -> Path:
+    """Resolve the intent before add-detail; target selection keeps the request."""
+
+    state_document = state.to_dict() if hasattr(state, "to_dict") else dict(state)
+    add_detail_ids = [
+        transition.get("transition_id")
+        for transition in state_document.get("transitions", ())
+        if isinstance(transition, Mapping)
+        and isinstance(transition.get("answer"), Mapping)
+        and transition["answer"].get("kind") == "add_detail"
+    ]
+    if not add_detail_ids:
+        return fallback.resolve()
+    if len(add_detail_ids) != 1 or not isinstance(add_detail_ids[0], int):
+        raise ValueError("proof.m1.resume_lineage")
+    return _r1_bound_transition_artifact(
+        state=state,
+        state_path=state_path,
+        artifact_key="intent",
+        listed_paths=listed_paths,
+        before_transition_id=add_detail_ids[0],
+        require_unique=True,
+    )
+
+
+def _audit_r1_m1_initial_replay_binding(
+    *,
+    replay_paths: Mapping[str, Path],
+    roles: Mapping[str, Path],
+    state: Mapping[str, Any] | Any,
+    state_path: Path,
+    expected_resume_answer: str,
+    initial_intent: Mapping[str, Any],
+) -> None:
+    """Bind M1's initial rejection to the case-local base-claim evidence."""
+
+    listed = {path.resolve() for path in roles.values()}
+    required_names = {
+        "query": "query.json",
+        "candidate_set": "candidate-set.json",
+        "decision": "parsed-response.json",
+        "decision_trace": "trace.json",
+        "claim": "claim.json",
+        "retained_admission": "admissibility-provider.json",
+    }
+    if (
+        set(replay_paths) != set(required_names)
+        or any(
+            path.resolve() not in listed
+            or not path.is_file()
+            or path.name != required_names[name]
+            for name, path in replay_paths.items()
+        )
+    ):
+        raise ValueError("proof.m1.initial_replay_binding")
+    paths = {name: path.resolve() for name, path in replay_paths.items()}
+    claim_root = paths["query"].parent
+    if (
+        paths["candidate_set"].parent != claim_root
+        or paths["claim"].parent != claim_root
+        or paths["retained_admission"].parent != claim_root
+        or paths["decision"].parent != paths["decision_trace"].parent
+        or claim_root not in paths["decision_trace"].parents
+        or "property-resolution" not in paths["decision_trace"].parts
+    ):
+        raise ValueError("proof.m1.initial_replay_binding")
+    query = _read_json(paths["query"])
+    candidate_set = _read_json(paths["candidate_set"])
+    trace = _read_json(paths["decision_trace"])
+    claim_id = str(query.get("claim_id") or "")
+    operation_id = str(query.get("operation_id") or "")
+    claim_suffix = claim_id.removeprefix("claim-")
+    matching_operations = [
+        operation
+        for operation in initial_intent.get("operations", ())
+        if isinstance(operation, Mapping)
+        and str(operation.get("operation_id") or "") == operation_id
+    ]
+    if (
+        len(matching_operations) != 1
+        or not claim_suffix.isdigit()
+        or claim_id != f"claim-{int(claim_suffix):03d}"
+    ):
+        raise ValueError("proof.m1.initial_claim")
+    property_intents = matching_operations[0].get("property_intents")
+    claim_index = int(claim_suffix) - 1
+    if (
+        not isinstance(property_intents, list)
+        or claim_index < 0
+        or claim_index >= len(property_intents)
+        or not isinstance(property_intents[claim_index], Mapping)
+        or property_intents[claim_index].get("intent_kind")
+        != "natural_language_property"
+        or _read_json(paths["claim"]) != property_intents[claim_index]
+    ):
+        raise ValueError("proof.m1.initial_claim")
+    state_document = state.to_dict() if hasattr(state, "to_dict") else dict(state)
+    run_id = str(state_document.get("run_id") or "")
+    if (
+        not claim_id
+        or "-resume-" in claim_id
+        or not run_id
+        or query.get("run_id") != run_id
+        or trace.get("run_id") != run_id
+        or trace.get("claim_id") != claim_id
+        or trace.get("operation_id") != query.get("operation_id")
+        or trace.get("query_id") != query.get("query_id")
+        or trace.get("candidate_set_id")
+        != candidate_set.get("candidate_set_id")
+    ):
+        raise ValueError("proof.m1.initial_replay_binding")
+    checkpoints: list[str] = []
+    checkpoint_payloads: dict[str, Mapping[str, Any]] = {}
+    add_detail_index: int | None = None
+    add_detail_clarification_id: str | None = None
+    clarification_indexes: list[int] = []
+    clarification_id: str | None = None
+    for index, transition in enumerate(state_document.get("transitions", ())):
+        if not isinstance(transition, Mapping):
+            continue
+        answer = transition.get("answer")
+        if isinstance(answer, Mapping) and answer.get("kind") == "add_detail":
+            answer_payload = transition.get("stage_payload")
+            transition_id = transition.get("transition_id")
+            state_version = transition.get("state_version")
+            generation = (
+                answer_payload.get("property_resolution_generation")
+                if isinstance(answer_payload, Mapping)
+                else None
+            )
+            if (
+                not isinstance(transition_id, int)
+                or not isinstance(state_version, int)
+                or not isinstance(generation, int)
+                or generation != transition_id
+                or state_version != transition_id
+                or not isinstance(answer_payload.get("clarification_id"), str)
+                or not str(answer_payload["clarification_id"]).strip()
+            ):
+                raise ValueError("proof.m1.resume_lineage")
+            if (
+                add_detail_index is not None
+                or answer.get("detail") != expected_resume_answer
+                or transition.get("from_stage") != "clarification_required"
+                or transition.get("to_stage") != "intent_ready"
+                or not isinstance(answer_payload, Mapping)
+                or not isinstance(
+                    answer_payload.get("property_resolution_generation"), int
+                )
+                or int(answer_payload["property_resolution_generation"]) < 1
+            ):
+                raise ValueError("proof.m1.resume_answer")
+            add_detail_index = index
+            add_detail_clarification_id = str(answer_payload["clarification_id"])
+        if (
+            transition.get("to_stage") == "clarification_required"
+            and answer is None
+        ):
+            clarification = transition.get("clarification")
+            answer_modes = (
+                clarification.get("answer_modes")
+                if isinstance(clarification, Mapping)
+                else None
+            )
+            if (
+                transition.get("from_stage") != "intent_ready"
+                or
+                transition.get("reason_code") != "property_resolution"
+                or not isinstance(clarification, Mapping)
+                or not isinstance(clarification.get("clarification_id"), str)
+                or not str(clarification["clarification_id"]).strip()
+                or clarification.get("run_id") != run_id
+                or clarification.get("operation_id")
+                != query.get("operation_id")
+                or clarification.get("claim_id") != claim_id
+                or clarification.get("reason_code") != "property_resolution"
+                or not isinstance(answer_modes, list)
+                or "add_detail" not in answer_modes
+            ):
+                raise ValueError("proof.m1.resume_clarification")
+            clarification_indexes.append(index)
+            clarification_id = str(clarification["clarification_id"])
+        payload = transition.get("stage_payload")
+        resolution = payload.get("property_resolution") if isinstance(payload, Mapping) else None
+        if not isinstance(resolution, Mapping):
+            continue
+        if (
+            resolution.get("run_id") == run_id
+            and resolution.get("operation_id") == query.get("operation_id")
+            and resolution.get("claim_id") == claim_id
+        ):
+            checkpoints.append(str(resolution.get("checkpoint") or ""))
+            checkpoint_payloads[str(resolution.get("checkpoint") or "")] = resolution
+            if add_detail_index is not None:
+                raise ValueError("proof.m1.initial_replay_order")
+    if checkpoints != ["candidates", "decision", "admissibility"]:
+        raise ValueError("proof.m1.initial_replay_checkpoint")
+    if (
+        add_detail_index is None
+        or len(clarification_indexes) != 1
+        or clarification_indexes[0] + 1 != add_detail_index
+        or add_detail_clarification_id != clarification_id
+    ):
+        raise ValueError("proof.m1.resume_lineage")
+    forbidden_pre_clarification_stages = {
+        "targets_resolved",
+        "changeset_ready",
+        "application_ready",
+        "evaluated",
+        "succeeded",
+    }
+    clarification_index = clarification_indexes[0]
+    for transition in state_document.get("transitions", ())[: clarification_index + 1]:
+        if not isinstance(transition, Mapping):
+            continue
+        if str(transition.get("to_stage") or "") in forbidden_pre_clarification_stages:
+            raise ValueError("proof.m1.initial_stop")
+        result_artifacts = transition.get("result_artifacts")
+        if isinstance(result_artifacts, Mapping) and result_artifacts:
+            raise ValueError("proof.m1.initial_stop")
+    expected_by_checkpoint = {
+        "candidates": {
+            "query": paths["query"],
+            "candidate_set": paths["candidate_set"],
+        },
+        "admissibility": {"admissibility": paths["retained_admission"]},
+    }
+    run_root = state_path.resolve().parent
+    for checkpoint, expected_artifacts in expected_by_checkpoint.items():
+        artifacts = checkpoint_payloads[checkpoint].get("artifacts")
+        if not isinstance(artifacts, Mapping):
+            raise ValueError("proof.m1.initial_replay_artifact")
+        for artifact_name, expected_path in expected_artifacts.items():
+            reference = artifacts.get(artifact_name)
+            if not isinstance(reference, Mapping):
+                raise ValueError("proof.m1.initial_replay_artifact")
+            artifact = _safe_path(run_root, str(reference.get("path") or ""))
+            if (
+                artifact.resolve() != expected_path
+                or artifact.resolve() not in listed
+                or _normalize_sha256(str(reference.get("sha256") or ""))
+                != _sha256(artifact)
+            ):
+                raise ValueError("proof.m1.initial_replay_artifact")
+    decision_artifacts = checkpoint_payloads["decision"].get("artifacts")
+    decision_reference = (
+        decision_artifacts.get("decision")
+        if isinstance(decision_artifacts, Mapping)
+        else None
+    )
+    if not isinstance(decision_reference, Mapping):
+        raise ValueError("proof.m1.initial_replay_artifact")
+    decision_result = _safe_path(run_root, str(decision_reference.get("path") or ""))
+    decision_document = _read_json(decision_result)
+    if (
+        decision_result.resolve() not in listed
+        or _normalize_sha256(str(decision_reference.get("sha256") or ""))
+        != _sha256(decision_result)
+        or decision_document.get("decision") != _read_json(paths["decision"])
+        or decision_document.get("trace") != _read_json(paths["decision_trace"])
+    ):
+        raise ValueError("proof.m1.initial_replay_artifact")
 
 
 def _independent_created_product_contract(
