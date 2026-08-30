@@ -209,8 +209,53 @@ class ProofValidationResult:
         }
 
 
+@dataclass
+class ProofValidationResultV03:
+    """R1-capable boundary; the frozen 0.2 result remains unchanged."""
+
+    status: str
+    collection_root: str
+    case_count: int = 0
+    operation_count: int = 0
+    checked_file_count: int = 0
+    reopened_ifc_count: int = 0
+    independently_recomputed_case_count: int = 0
+    no_output_case_count: int = 0
+    errors: list[str] = field(default_factory=list)
+    limitations: list[str] = field(default_factory=list)
+    cases: list[dict[str, Any]] = field(default_factory=list)
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "schema_version": "text2ifc/ifc-repair-proof-validation/0.3",
+            "status": self.status,
+            "collection_root": self.collection_root,
+            "case_count": self.case_count,
+            "operation_count": self.operation_count,
+            "checked_file_count": self.checked_file_count,
+            "reopened_ifc_count": self.reopened_ifc_count,
+            "independently_recomputed_case_count": self.independently_recomputed_case_count,
+            "no_output_case_count": self.no_output_case_count,
+            "errors": self.errors,
+            "limitations": self.limitations,
+            "cases": self.cases,
+        }
+
+
 PROOF_VALIDATION_SCHEMA = (
     ROOT / "schemas/agent/ifc-repair-proof-validation-0.2.schema.json"
+)
+PROOF_VALIDATION_SCHEMA_V03 = (
+    ROOT / "schemas/agent/ifc-repair-proof-validation-0.3.schema.json"
+)
+PROOF_TERMINAL_SCHEMA = (
+    ROOT / "schemas/agent/ifc-repair-proof-terminal-0.1.schema.json"
+)
+PROOF_COLLECTION_SCHEMA_V02 = (
+    ROOT / "schemas/agent/ifc-repair-proof-collection-0.2.schema.json"
+)
+PROOF_PROFILE_SCHEMA = (
+    ROOT / "schemas/agent/ifc-repair-proof-profile-0.1.schema.json"
 )
 
 
@@ -218,6 +263,760 @@ def validate_proof_validation_document(document: Mapping[str, Any]) -> None:
     schema = _read_json(PROOF_VALIDATION_SCHEMA)
     Draft202012Validator.check_schema(schema)
     Draft202012Validator(schema).validate(dict(document))
+
+
+def validate_proof_validation_document_v03(
+    document: Mapping[str, Any],
+) -> None:
+    schema = _read_json(PROOF_VALIDATION_SCHEMA_V03)
+    Draft202012Validator.check_schema(schema)
+    Draft202012Validator(schema).validate(dict(document))
+
+
+def audit_r1_artifact_predicates(
+    *,
+    source_model: Any,
+    repaired_model: Any,
+    changeset: Mapping[str, Any],
+    application: Mapping[str, Any],
+    predicates: Iterable[Mapping[str, Any]],
+) -> list[dict[str, Any]]:
+    """Recompute the request-specific R1 artifact predicates from IFC output."""
+
+    registry = create_default_registry()
+    operations = [
+        item
+        for item in changeset.get("operations", ())
+        if isinstance(item, Mapping)
+    ]
+    application_by_id = {
+        str(item.get("operation_id")): item
+        for item in application.get("operations", ())
+        if isinstance(item, Mapping)
+    }
+    results: list[dict[str, Any]] = []
+    seen_ids: set[str] = set()
+    for predicate in predicates:
+        predicate_id = str(predicate.get("predicate_id") or "")
+        kind = str(predicate.get("kind") or "")
+        if not predicate_id or predicate_id in seen_ids:
+            raise ValueError("proof.predicate.identity")
+        seen_ids.add(predicate_id)
+        if kind in {"occurrence_property", "occurrence_preservation"}:
+            target = predicate.get("target")
+            if not isinstance(target, Mapping):
+                raise ValueError(f"proof.predicate.target:{predicate_id}")
+            global_id = str(target.get("global_id") or "")
+            ifc_class = str(target.get("ifc_class") or "")
+            matches = [
+                item
+                for item in operations
+                if item.get("operation_type") == "set_occurrence_properties"
+                and str(item.get("target", {}).get("element_global_id") or "")
+                == global_id
+            ]
+            if len(matches) != 1:
+                raise ValueError(
+                    f"proof.predicate.occurrence_operation:{predicate_id}"
+                )
+            operation = matches[0]
+            try:
+                source_target = source_model.by_guid(global_id)
+                repaired_target = repaired_model.by_guid(global_id)
+            except RuntimeError as error:
+                raise ValueError(
+                    f"proof.predicate.target_missing:{predicate_id}"
+                ) from error
+            if (
+                source_target.is_a() != ifc_class
+                or repaired_target.is_a() != ifc_class
+            ):
+                raise ValueError(f"proof.predicate.target_class:{predicate_id}")
+            applied = application_by_id.get(str(operation.get("operation_id")))
+            if not isinstance(applied, Mapping) or not isinstance(
+                applied.get("changes"), Mapping
+            ):
+                raise ValueError(f"proof.predicate.application:{predicate_id}")
+
+        if kind == "occurrence_property":
+            expected = predicate.get("property")
+            if not isinstance(expected, Mapping):
+                raise ValueError(
+                    f"proof.predicate.occurrence_property:{predicate_id}"
+                )
+            set_name = str(expected.get("set_name") or "")
+            property_name = str(expected.get("property_name") or "")
+            fact_key = f"pset:{set_name}.{property_name}"
+            assignments = [
+                item
+                for item in operation.get("semantic_assignments", ())
+                if isinstance(item, Mapping)
+                and item.get("fact_key") == fact_key
+                and item.get("source_fact_key") == fact_key
+            ]
+            facts = [
+                item
+                for item in extract_property_facts(repaired_target)
+                if item.set_name == set_name
+                and item.property_name == property_name
+                and not item.inherited
+            ]
+            if (
+                len(assignments) != 1
+                or assignments[0].get("value") != expected.get("value")
+                or assignments[0].get("value_type") != expected.get("value_type")
+                or assignments[0].get("ownership") != "occurrence_direct"
+                or expected.get("scope") != "occurrence_direct"
+                or len(facts) != 1
+                or facts[0].value != expected.get("value")
+                or facts[0].value_type != expected.get("value_type")
+            ):
+                raise ValueError(
+                    f"proof.predicate.occurrence_property:{predicate_id}"
+                )
+            postcondition = registry.dispatch(
+                "postcondition_checker",
+                operation,
+                model=repaired_model,
+                application=applied["changes"],
+            )
+            if (
+                not isinstance(postcondition, Mapping)
+                or postcondition.get("valid") is not True
+            ):
+                raise ValueError(
+                    f"proof.predicate.occurrence_property:{predicate_id}"
+                )
+        elif kind == "occurrence_preservation":
+            comparison = registry.dispatch(
+                "comparison_adapter",
+                operation,
+                before_model=source_model,
+                after_model=repaired_model,
+                application=applied["changes"],
+                role_mapping={"target": global_id},
+            )
+            checks = (
+                comparison.get("l1_checks")
+                if isinstance(comparison, Mapping)
+                else None
+            )
+            if (
+                not isinstance(checks, Mapping)
+                or not checks
+                or any(
+                    not isinstance(value, Mapping)
+                    or value.get("status") != "passed"
+                    for value in checks.values()
+                )
+            ):
+                raise ValueError(
+                    f"proof.predicate.occurrence_preservation:{predicate_id}"
+                )
+        elif kind == "structural_add":
+            operation_type = str(predicate.get("operation_type") or "")
+            matches = [
+                item
+                for item in operations
+                if item.get("operation_type") == operation_type
+            ]
+            if len(matches) != 1 or operation_type not in STRUCTURAL_OPERATION_TYPES:
+                raise ValueError(f"proof.predicate.structural_operation:{predicate_id}")
+            operation = matches[0]
+            applied = application_by_id.get(str(operation.get("operation_id")))
+            if not isinstance(applied, Mapping):
+                raise ValueError(f"proof.predicate.application:{predicate_id}")
+            changes = applied.get("changes")
+            resolved = changes.get("resolved") if isinstance(changes, Mapping) else None
+            geometry = resolved.get("geometry") if isinstance(resolved, Mapping) else None
+            section = geometry.get("section") if isinstance(geometry, Mapping) else None
+            expected_geometry = {
+                "axis_start_mm": predicate.get("axis_start_mm"),
+                "axis_end_mm": predicate.get("axis_end_mm"),
+            }
+            if (
+                not isinstance(geometry, Mapping)
+                or not isinstance(section, Mapping)
+                or any(
+                    [float(value) for value in geometry.get(field, ())]
+                    != [float(value) for value in expected]
+                    for field, expected in expected_geometry.items()
+                    if expected is not None
+                )
+                or float(section.get("width_mm", -1))
+                != float(predicate.get("section_width_mm", -2))
+                or float(
+                    section.get(
+                        "height_mm" if operation_type == "add_beam" else "depth_mm",
+                        -1,
+                    )
+                )
+                != float(predicate.get("section_height_mm", -2))
+                or str(resolved.get("storey_global_id") or "")
+                != str(predicate.get("storey_global_id") or "")
+            ):
+                raise ValueError(f"proof.predicate.structural_geometry:{predicate_id}")
+            expected_orientation = predicate.get("orientation_xy")
+            if expected_orientation is not None:
+                actual_orientation = geometry.get("orientation", ())
+                if [float(value) for value in actual_orientation[:2]] != [
+                    float(value) for value in expected_orientation
+                ]:
+                    raise ValueError(f"proof.predicate.structural_geometry:{predicate_id}")
+            created = changes.get("created", ())
+            structural_role = STRUCTURAL_FAMILY_BY_OPERATION[operation_type]
+            occurrences = [
+                item for item in created
+                if isinstance(item, Mapping) and item.get("role") == structural_role
+            ]
+            if len(occurrences) != 1:
+                raise ValueError(f"proof.predicate.structural_created:{predicate_id}")
+            occurrence = repaired_model.by_guid(str(occurrences[0]["global_id"]))
+            type_policy = str(predicate.get("type_policy") or "")
+            type_global_id = str(resolved.get("type_global_id") or "")
+            created_types = [
+                item for item in created
+                if isinstance(item, Mapping) and item.get("role") == "structural_type"
+            ]
+            if type_policy == "generated":
+                if len(created_types) != 1 or created_types[0].get("global_id") != type_global_id:
+                    raise ValueError(f"proof.predicate.structural_type:{predicate_id}")
+            elif type_policy == "reuse_exact_existing":
+                if (
+                    type_global_id != str(predicate.get("type_global_id") or "")
+                    or created_types
+                    or source_model.by_guid(type_global_id) is None
+                ):
+                    raise ValueError(f"proof.predicate.structural_type:{predicate_id}")
+            else:
+                raise ValueError(f"proof.predicate.structural_type_policy:{predicate_id}")
+            expected_property = predicate.get("property")
+            if isinstance(expected_property, Mapping):
+                set_name = str(expected_property.get("set_name") or "")
+                property_name = str(expected_property.get("property_name") or "")
+                fact_key = f"pset:{set_name}.{property_name}"
+                assignments = [
+                    item for item in operation.get("semantic_assignments", ())
+                    if isinstance(item, Mapping) and item.get("fact_key") == fact_key
+                ]
+                facts = [
+                    item for item in extract_property_facts(occurrence)
+                    if item.set_name == set_name
+                    and item.property_name == property_name
+                    and not item.inherited
+                ]
+                if (
+                    len(assignments) != 1
+                    or assignments[0].get("value") != expected_property.get("value")
+                    or assignments[0].get("value_type") != expected_property.get("value_type")
+                    or len(facts) != 1
+                    or facts[0].value != expected_property.get("value")
+                    or facts[0].value_type != expected_property.get("value_type")
+                ):
+                    raise ValueError(f"proof.predicate.structural_property:{predicate_id}")
+        elif kind == "atomic_operation_set":
+            expected_types = [str(value) for value in predicate.get("operation_types", ())]
+            actual_types = [str(item.get("operation_type")) for item in operations]
+            application_ids = [
+                str(item.get("operation_id"))
+                for item in application.get("operations", ())
+                if isinstance(item, Mapping)
+            ]
+            if (
+                Counter(actual_types) != Counter(expected_types)
+                or application.get("valid") is not True
+                or application.get("published") is not True
+                or application_ids != [str(item.get("operation_id")) for item in operations]
+            ):
+                raise ValueError(f"proof.predicate.atomic_operation_set:{predicate_id}")
+        else:
+            raise ValueError(f"proof.predicate.kind:{predicate_id}")
+        results.append(
+            {"predicate_id": predicate_id, "kind": kind, "status": "passed"}
+        )
+    return results
+
+
+def validate_r1_terminal_record(
+    document: Mapping[str, Any],
+    *,
+    case_root: Path | str,
+) -> dict[str, Any]:
+    """Validate one explicit R1 pre-mutation/no-output terminal record."""
+
+    schema = _read_json(PROOF_TERMINAL_SCHEMA)
+    Draft202012Validator.check_schema(schema)
+    if list(Draft202012Validator(schema).iter_errors(dict(document))):
+        raise ValueError("proof.terminal.schema")
+    root = Path(case_root).resolve()
+    source = document["source"]
+    source_path = _safe_path(root, str(source["path"]))
+    actual = f"sha256:{_sha256(source_path)}"
+    if (
+        source.get("sha256_before") != actual
+        or source.get("sha256_after") != actual
+        or source.get("unchanged") is not True
+    ):
+        raise ValueError("proof.terminal.source_immutability")
+
+    terminal_class = str(document["terminal_class"])
+    if terminal_class == "SUCCESS":
+        if document.get("resume_success") is not True:
+            raise ValueError("proof.terminal.success")
+        return {
+            "status": "passed",
+            "terminal_class": terminal_class,
+            "source_immutable": True,
+            "published_artifact_present": True,
+        }
+
+    stop = document.get("initial_stop")
+    if not isinstance(stop, Mapping):
+        raise ValueError("proof.terminal.initial_stop")
+    if (
+        stop.get("stage2_attempts") != 0
+        or stop.get("apply_attempts") != 0
+        or stop.get("published_outputs") != []
+    ):
+        raise ValueError("proof.terminal.pre_mutation")
+    if terminal_class == "CLARIFICATION_THEN_SUCCESS":
+        offered = stop.get("offered_identities")
+        selected = stop.get("selected_identity")
+        if (
+            stop.get("status") != "clarification_required"
+            or not isinstance(offered, list)
+            or not offered
+            or len(set(map(str, offered))) != len(offered)
+            or selected not in offered
+            or any(re.match(r"^candidate:\d+(?::|$)", str(item)) for item in offered)
+            or not str(stop.get("lineage_id") or "")
+            or stop.get("resume_lineage_same") is not True
+            or document.get("resume_success") is not True
+        ):
+            raise ValueError("proof.terminal.clarification_lineage")
+        published = True
+    elif terminal_class == "INADMISSIBLE_VALUE_OR_CLARIFICATION":
+        if (
+            stop.get("status") != "clarification_required"
+            or stop.get("deterministic_admissibility_status")
+            != "clarification_required"
+            or "." not in str(stop.get("resolved_property_identity") or "")
+        ):
+            raise ValueError("proof.terminal.value_admissibility")
+        published = bool(document.get("resume_success"))
+    elif terminal_class == "UNSUPPORTED_ATOMIC_GUARD":
+        if (
+            stop.get("status") != "unsupported"
+            or stop.get("atomic_request") is not True
+            or not stop.get("supported_capabilities")
+            or not stop.get("unsupported_capabilities")
+            or document.get("resume_success") is not False
+        ):
+            raise ValueError("proof.terminal.atomic_guard")
+        published = False
+    else:
+        raise ValueError("proof.terminal.class")
+    return {
+        "status": "passed",
+        "terminal_class": terminal_class,
+        "source_immutable": True,
+        "published_artifact_present": published,
+    }
+
+
+def audit_r1_inadmissible_value_replay(
+    *,
+    query: Mapping[str, Any],
+    candidate_set: Mapping[str, Any],
+    decision: Mapping[str, Any],
+    decision_trace: Mapping[str, Any],
+    claim: Mapping[str, Any],
+    expected_property_identity: str,
+    retained_admission: Mapping[str, Any] | None = None,
+) -> dict[str, Any]:
+    """Re-run the deterministic post-resolution value/type rejection."""
+
+    registry = load_ifc2x3_registry(ROOT)
+    records = build_standard_property_records(
+        registry,
+        corpus_fingerprint=default_standard_corpus_fingerprint(),
+    )
+    policy = _read_json(
+        ROOT / "schemas/ifc/knowledge/property_resolution_policy.v0.2.json"
+    )
+    admission = admit_property_decision(
+        query=query,
+        candidate_set=candidate_set,
+        decision=decision,
+        decision_trace=decision_trace,
+        policy=policy,
+        records=records,
+        registry=registry,
+        claim=NaturalLanguagePropertyIntent.from_dict(claim),
+    )
+    document = admission.to_dict()
+    selected_id = str(decision.get("selected_candidate_id") or "")
+    selected = next(
+        (
+            item
+            for item in candidate_set.get("candidates", ())
+            if isinstance(item, Mapping)
+            and str(item.get("candidate_id") or "") == selected_id
+        ),
+        None,
+    )
+    identity = (
+        f"{selected.get('set_name')}.{selected.get('property_name')}"
+        if isinstance(selected, Mapping)
+        else ""
+    )
+    if (
+        identity != expected_property_identity
+        or admission.exact_intent is not None
+        or admission.status != "rejected"
+        or admission.reason_code
+        not in {"PROPERTY_VALUE_TYPE_INCOMPATIBLE", "PROPERTY_UNIT_INCOMPATIBLE"}
+        or (
+            retained_admission is not None
+            and dict(retained_admission) != document
+        )
+    ):
+        raise ValueError("proof.terminal.value_admissibility_replay")
+    return {
+        "status": "passed",
+        "resolved_property_identity": identity,
+        "deterministic_status": admission.status,
+        "reason_code": admission.reason_code,
+        "exact_intent_constructed": False,
+    }
+
+
+def validate_r1_proof_collection(
+    collection_root: Path | str,
+) -> ProofValidationResultV03:
+    """Validate an R1 collection without requiring private triplet truth."""
+
+    root = Path(collection_root).resolve()
+    result = ProofValidationResultV03(status="failed", collection_root=root.as_posix())
+    try:
+        collection = _read_json(root / "manifest.json")
+        collection_schema = _read_json(PROOF_COLLECTION_SCHEMA_V02)
+        Draft202012Validator.check_schema(collection_schema)
+        Draft202012Validator(collection_schema).validate(collection)
+        profile_path = _safe_path(root, str(collection["profile"]))
+        profiles = _read_json(profile_path)
+        profile_schema = _read_json(PROOF_PROFILE_SCHEMA)
+        Draft202012Validator.check_schema(profile_schema)
+        Draft202012Validator(profile_schema).validate(profiles)
+        _validate_r1_profile_freeze(profile_path, profiles)
+        if profiles.get("provenance_namespace") != collection.get(
+            "provenance_namespace"
+        ):
+            raise ValueError("proof.profile.provenance_namespace")
+        cases = collection["cases"]
+        if int(collection["case_count"]) != len(cases):
+            raise ValueError("proof.collection.case_count")
+        case_ids = [str(case["case_id"]) for case in cases]
+        if len(set(case_ids)) != len(case_ids):
+            raise ValueError("proof.collection.case_id")
+        profiles_by_id = {
+            str(profile["case_id"]): profile for profile in profiles["cases"]
+        }
+        if case_ids != list(profiles["execution_order"]):
+            raise ValueError("proof.profile.execution_order")
+        result.case_count = len(cases)
+        for case in cases:
+            case_id = str(case["case_id"])
+            try:
+                profile = profiles_by_id.get(case_id)
+                if not isinstance(profile, Mapping):
+                    raise ValueError("proof.profile.case_missing")
+                if profile.get("terminal_class") != case.get("terminal_class"):
+                    raise ValueError("proof.profile.terminal_class")
+                summary = _validate_r1_case(
+                    root=root,
+                    case=case,
+                    profile=profile,
+                    provenance_namespace=str(collection["provenance_namespace"]),
+                )
+                result.cases.append(summary)
+                result.operation_count += int(summary.get("operation_count", 0))
+                result.checked_file_count += int(summary.get("checked_file_count", 0))
+                result.reopened_ifc_count += int(summary.get("reopened_ifc_count", 0))
+                result.independently_recomputed_case_count += 1
+                if summary.get("published_artifact_present") is False:
+                    result.no_output_case_count += 1
+            except Exception as error:
+                result.errors.append(f"{case_id}: {error}")
+    except Exception as error:
+        result.errors.append(f"collection: {error}")
+    result.status = "passed" if not result.errors else "failed"
+    return result
+
+
+def _validate_r1_profile_freeze(
+    profile_path: Path,
+    profiles: Mapping[str, Any],
+) -> None:
+    freeze = profiles.get("freeze")
+    if not isinstance(freeze, Mapping):
+        raise ValueError("proof.profile.freeze")
+    freeze_path = _safe_path(profile_path.parent, str(freeze.get("path") or ""))
+    if (
+        not freeze_path.is_file()
+        or _sha256(freeze_path)
+        != _normalize_sha256(str(freeze.get("sha256") or ""))
+    ):
+        raise ValueError("proof.profile.freeze_hash")
+
+
+def _validate_r1_case(
+    *,
+    root: Path,
+    case: Mapping[str, Any],
+    profile: Mapping[str, Any],
+    provenance_namespace: str,
+) -> dict[str, Any]:
+    case_id = str(case["case_id"])
+    case_root = _safe_path(root, str(case["case_root"]))
+    if not case_root.is_dir():
+        raise ValueError("proof.case_root")
+    checked_file_count = _validate_r1_case_files(
+        case_id=case_id,
+        case_root=case_root,
+        files_path=_safe_path(root, str(case["files"])),
+        report_path=_safe_path(root, str(case["report"])),
+    )
+    terminal_path = _safe_path(root, str(case.get("terminal_record") or ""))
+    terminal = _read_json(terminal_path)
+    if terminal.get("case_id") != case_id:
+        raise ValueError("proof.terminal.case_id")
+    terminal_result = validate_r1_terminal_record(terminal, case_root=case_root)
+    terminal_expectation = profile.get("terminal_expectation", {})
+    if not isinstance(terminal_expectation, Mapping):
+        raise ValueError("proof.profile.terminal_expectation")
+    initial_stop = terminal.get("initial_stop", {})
+    if not isinstance(initial_stop, Mapping) or any(
+        initial_stop.get(key) != value
+        for key, value in terminal_expectation.items()
+    ):
+        raise ValueError("proof.profile.terminal_expectation")
+    terminal_source = _safe_path(case_root, str(terminal["source"]["path"]))
+    source_model = ifcopenshell.open(str(terminal_source))
+    if source_model.schema != "IFC2X3":
+        raise ValueError("proof.ifc.schema")
+    terminal_class = str(case["terminal_class"])
+    predicates = profile.get("artifact_predicates", ())
+    property_claim_count = int(profile.get("property_claim_count", 0))
+    base = {
+        "case_id": case_id,
+        "provenance_namespace": provenance_namespace,
+        "terminal_class": terminal_class,
+        "status": "passed",
+        "artifact_predicates": [],
+        "property_authority_coverage": "not_applicable",
+        "property_claim_count": property_claim_count,
+        "current_property_acceptance_eligible": property_claim_count == 0,
+        "source_immutable": bool(terminal_result["source_immutable"]),
+        "published_artifact_present": bool(
+            terminal_result["published_artifact_present"]
+        ),
+        "operation_count": 0,
+        "checked_file_count": checked_file_count,
+        "reopened_ifc_count": 1,
+    }
+    if terminal_class == "INADMISSIBLE_VALUE_OR_CLARIFICATION":
+        replay = case.get("inadmissible_value_replay")
+        if not isinstance(replay, Mapping):
+            raise ValueError("proof.terminal.value_admissibility_replay_missing")
+        replay_paths = {
+            name: _safe_path(root, str(replay.get(name) or ""))
+            for name in (
+                "query",
+                "candidate_set",
+                "decision",
+                "decision_trace",
+                "claim",
+                "retained_admission",
+            )
+        }
+        if any(not path.is_file() for path in replay_paths.values()):
+            raise ValueError("proof.terminal.value_admissibility_replay_artifact")
+        audit_r1_inadmissible_value_replay(
+            query=_read_json(replay_paths["query"]),
+            candidate_set=_read_json(replay_paths["candidate_set"]),
+            decision=_read_json(replay_paths["decision"]),
+            decision_trace=_read_json(replay_paths["decision_trace"]),
+            claim=_read_json(replay_paths["claim"]),
+            expected_property_identity=str(
+                terminal["initial_stop"]["resolved_property_identity"]
+            ),
+            retained_admission=_read_json(replay_paths["retained_admission"]),
+        )
+    if terminal_class == "UNSUPPORTED_ATOMIC_GUARD":
+        if predicates:
+            raise ValueError("proof.guard.artifact_predicates")
+        return base
+    if terminal_result["published_artifact_present"] is not True:
+        raise ValueError("proof.success.published_artifact")
+
+    required = ("source_ifc", "repaired_ifc", "changeset", "application")
+    paths = {
+        name: _safe_path(root, str(case.get(name) or "")) for name in required
+    }
+    if any(not path.is_file() for path in paths.values()):
+        raise ValueError("proof.success.artifacts")
+    if terminal_source != paths["source_ifc"]:
+        raise ValueError("proof.terminal.source_binding")
+    repaired_model = ifcopenshell.open(str(paths["repaired_ifc"]))
+    if source_model.schema != "IFC2X3" or repaired_model.schema != "IFC2X3":
+        raise ValueError("proof.ifc.schema")
+    changeset = _read_json(paths["changeset"])
+    application = _read_json(paths["application"])
+    operations = [
+        item for item in changeset.get("operations", ()) if isinstance(item, Mapping)
+    ]
+    application_ids = [
+        str(item.get("operation_id"))
+        for item in application.get("operations", ())
+        if isinstance(item, Mapping)
+    ]
+    if (
+        application.get("valid") is not True
+        or application.get("published") is not True
+        or application_ids != [str(item.get("operation_id")) for item in operations]
+    ):
+        raise ValueError("proof.application.publication")
+    audit_repaired_operations(
+        changeset=changeset,
+        application=application,
+        damaged_model=source_model,
+        repaired_model=repaired_model,
+    )
+    structural = any(
+        item.get("operation_type") in STRUCTURAL_OPERATION_TYPES
+        for item in operations
+    )
+    if structural:
+        _audit_structural_type_and_semantic_authority(
+            changeset=changeset,
+            damaged_model=source_model,
+            repaired_model=repaired_model,
+        )
+        _audit_structural_preservation(
+            changeset=changeset,
+            damaged_model=source_model,
+            repaired_model=repaired_model,
+        )
+    predicate_results = audit_r1_artifact_predicates(
+        source_model=source_model,
+        repaired_model=repaired_model,
+        changeset=changeset,
+        application=application,
+        predicates=predicates,
+    )
+    base.update(
+        {
+            "artifact_predicates": predicate_results,
+            "operation_count": len(operations),
+            "checked_file_count": checked_file_count,
+            "reopened_ifc_count": 2,
+        }
+    )
+    if property_claim_count:
+        replay = case.get("authority_replay")
+        if not isinstance(replay, Mapping):
+            raise ValueError("proof.property.authority_replay_missing")
+        replay_paths = {
+            name: _safe_path(root, str(replay.get(name) or ""))
+            for name in (
+                "intent",
+                "resolution",
+                "semantic_manifest",
+                "source_manifest",
+                "evidence_root",
+            )
+        }
+        if any(not path.exists() for path in replay_paths.values()):
+            raise ValueError("proof.property.authority_replay_artifact")
+        evidence_root = replay_paths["evidence_root"]
+        if not evidence_root.is_dir():
+            raise ValueError("proof.property.evidence_root")
+        roles = {
+            f"artifact-{index}": path
+            for index, path in enumerate(evidence_root.rglob("*"), start=1)
+            if path.is_file()
+        }
+        roles["source_run_manifest"] = replay_paths["source_manifest"]
+        authority = audit_current_property_authority_replay(
+            source_ifc_path=paths["source_ifc"],
+            source_sha256=_sha256(paths["source_ifc"]),
+            intent=_read_json(replay_paths["intent"]),
+            changeset=changeset,
+            retained_resolution=_read_json(replay_paths["resolution"]),
+            retained_manifest=_read_json(replay_paths["semantic_manifest"]),
+            roles=roles,
+            provider_evidence_mode=str(case.get("provider_evidence_mode") or "live"),
+        )
+        if (
+            authority.get("property_authority_coverage")
+            != "strict_stage_1_5_recomputed"
+            or authority.get("current_property_acceptance_eligible") is not True
+            or int(authority.get("property_claim_count", -1))
+            != property_claim_count
+        ):
+            raise ValueError("proof.property.authority_replay")
+        base.update(authority)
+    return base
+
+
+def _validate_r1_case_files(
+    *,
+    case_id: str,
+    case_root: Path,
+    files_path: Path,
+    report_path: Path,
+) -> int:
+    if files_path.parent != case_root or report_path.parent != case_root:
+        raise ValueError("proof.files.case_root_binding")
+    files = _read_json(files_path)
+    if (
+        files.get("schema_version") != "text2ifc/ifc-repair-proof-files/0.2"
+        or files.get("case_id") != case_id
+    ):
+        raise ValueError("proof.files.contract")
+    entries = files.get("files")
+    if not isinstance(entries, list) or not entries:
+        raise ValueError("proof.files.entries")
+    listed: set[str] = set()
+    roles: set[str] = set()
+    for entry in entries:
+        if not isinstance(entry, Mapping):
+            raise ValueError("proof.files.entry")
+        relative = str(entry.get("path") or "")
+        role = str(entry.get("role") or "")
+        if not relative or relative in listed or not role or role in roles:
+            raise ValueError("proof.files.identity")
+        listed.add(relative)
+        roles.add(role)
+        artifact = _safe_path(case_root, relative)
+        if not artifact.is_file():
+            raise ValueError(f"proof.artifact.missing:{relative}")
+        if artifact.stat().st_size != int(entry.get("size_bytes", -1)):
+            raise ValueError(f"proof.artifact.size:{relative}")
+        if _sha256(artifact) != _normalize_sha256(str(entry.get("sha256") or "")):
+            raise ValueError(f"proof.artifact.sha256:{relative}")
+    actual = {
+        path.relative_to(case_root).as_posix()
+        for path in case_root.rglob("*")
+        if path.is_file()
+    }
+    expected = listed | {files_path.name, report_path.name}
+    if actual != expected:
+        raise ValueError(
+            f"proof.files.coverage:missing={sorted(expected-actual)}:unindexed={sorted(actual-expected)}"
+        )
+    return len(entries)
 
 
 def validate_success_case_collection(
@@ -1628,6 +2427,7 @@ def _audit_structural_authority_replay(
     retained_manifest: Mapping[str, Any],
     roles: Mapping[str, Path],
     provider_evidence_mode: str,
+    _manifest_operation_types: frozenset[str] | None = STRUCTURAL_OPERATION_TYPES,
 ) -> dict[str, Any]:
     registry = create_default_registry()
     parsed_intent = RepairIntent.from_dict(
@@ -1759,7 +2559,8 @@ def _audit_structural_authority_replay(
             base_model_fingerprint=f"sha256:{damaged_sha256}",
         )
         for operation_id in sorted(evidence.operation_types)
-        if evidence.operation_types[operation_id] in STRUCTURAL_OPERATION_TYPES
+        if _manifest_operation_types is None
+        or evidence.operation_types[operation_id] in _manifest_operation_types
     )
     documents = [semantic_manifest_to_dict(item) for item in manifests]
     raw_retained = retained_manifest.get("manifests")
@@ -1793,6 +2594,32 @@ def _audit_structural_authority_replay(
     }
 
 
+def audit_current_property_authority_replay(
+    *,
+    source_ifc_path: Path,
+    source_sha256: str,
+    intent: Mapping[str, Any],
+    changeset: Mapping[str, Any],
+    retained_resolution: Mapping[str, Any],
+    retained_manifest: Mapping[str, Any],
+    roles: Mapping[str, Path],
+    provider_evidence_mode: str,
+) -> dict[str, Any]:
+    """Replay current Stage 1.5 authority for every registered operation."""
+
+    return _audit_structural_authority_replay(
+        damaged_ifc_path=source_ifc_path,
+        damaged_sha256=source_sha256,
+        intent=intent,
+        changeset=changeset,
+        retained_resolution=retained_resolution,
+        retained_manifest=retained_manifest,
+        roles=roles,
+        provider_evidence_mode=provider_evidence_mode,
+        _manifest_operation_types=None,
+    )
+
+
 def _bound_target_global_id(operation: Mapping[str, Any]) -> str:
     operation_type = str(operation.get("operation_type") or "")
     field = {
@@ -1802,6 +2629,7 @@ def _bound_target_global_id(operation: Mapping[str, Any]) -> str:
         "add_opening_to_wall": "wall_global_id",
         "add_door_with_opening_to_wall": "wall_global_id",
         "fill_existing_opening_with_door": "opening_global_id",
+        "set_occurrence_properties": "element_global_id",
     }.get(operation_type)
     target = operation.get("target")
     target = target if isinstance(target, Mapping) else {}
@@ -3485,9 +4313,16 @@ def main(argv: Iterable[str] | None = None) -> int:
     )
     parser.add_argument("--json", action="store_true", dest="as_json")
     args = parser.parse_args(argv)
-    result = validate_success_case_collection(args.collection_root)
-    document = result.to_dict()
-    validate_proof_validation_document(document)
+    manifest_path = args.collection_root.resolve() / "manifest.json"
+    manifest = _read_json(manifest_path)
+    if manifest.get("schema_version") == "text2ifc/ifc-repair-proof-collection/0.2":
+        result = validate_r1_proof_collection(args.collection_root)
+        document = result.to_dict()
+        validate_proof_validation_document_v03(document)
+    else:
+        result = validate_success_case_collection(args.collection_root)
+        document = result.to_dict()
+        validate_proof_validation_document(document)
     if args.as_json:
         print(json.dumps(document, ensure_ascii=False, indent=2))
     else:

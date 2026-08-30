@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "text2ifc/ifc-repair-proof-terminal/0.1",
+  "title": "IFC Repair Proof Terminal Evidence 0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "case_id", "terminal_class", "source", "resume_success"],
+  "properties": {
+    "schema_version": {"const": "text2ifc/ifc-repair-proof-terminal/0.1"},
+    "case_id": {"type": "string", "minLength": 1},
+    "terminal_class": {"enum": ["SUCCESS", "CLARIFICATION_THEN_SUCCESS", "INADMISSIBLE_VALUE_OR_CLARIFICATION", "UNSUPPORTED_ATOMIC_GUARD"]},
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256_before", "sha256_after", "unchanged"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "sha256_before": {"$ref": "#/$defs/sha256"},
+        "sha256_after": {"$ref": "#/$defs/sha256"},
+        "unchanged": {"type": "boolean"}
+      }
+    },
+    "initial_stop": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["status", "reason_code", "stage2_attempts", "apply_attempts", "published_outputs"],
+      "properties": {
+        "status": {"enum": ["clarification_required", "unsupported"]},
+        "reason_code": {"type": "string", "minLength": 1},
+        "stage2_attempts": {"type": "integer", "minimum": 0},
+        "apply_attempts": {"type": "integer", "minimum": 0},
+        "published_outputs": {"type": "array", "items": {"type": "string", "minLength": 1}}
+      }
+    },
+    "resume_success": {"type": "boolean"}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"terminal_class": {"const": "SUCCESS"}}},
+      "then": {"not": {"required": ["initial_stop"]}},
+      "else": {"required": ["initial_stop"]}
+    },
+    {
+      "if": {"properties": {"terminal_class": {"const": "CLARIFICATION_THEN_SUCCESS"}}},
+      "then": {
+        "properties": {
+          "resume_success": {"const": true},
+          "initial_stop": {
+            "required": ["offered_identities", "selected_identity", "lineage_id"]
+          }
+        }
+      }
+    }
+  ]
+}

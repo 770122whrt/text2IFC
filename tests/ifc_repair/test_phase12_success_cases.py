@@ -764,6 +764,14 @@ def _live_attempt(
         profile_hashes = []
         few_shot_ids = []
         few_shot_hashes = []
+    few_shot_bindings = [
+        {"few_shot_id": few_shot_id, "few_shot_hash": few_shot_hash}
+        for few_shot_id, few_shot_hash in zip(
+            few_shot_ids,
+            few_shot_hashes,
+            strict=True,
+        )
+    ]
     return {
         "attempt_id": attempt_id,
         "parent_attempt_id": parent,
@@ -813,6 +821,7 @@ def _live_attempt(
         "profile_hashes": profile_hashes,
         "few_shot_ids": few_shot_ids,
         "few_shot_hashes": few_shot_hashes,
+        "few_shot_bindings": few_shot_bindings,
     }
 
 

@@ -35,6 +35,7 @@ curation 全部通过后，才能升级为已接受能力。
 - [能力覆盖矩阵](repair-capability-coverage-matrix.md)
 - [未来 Proof Matrix 计划](repair-proof-matrix-plan.md)
 - [机器可读冻结清单](repair-acceptance-freeze.json)
+- [R1 Proof profiles](repair-proof-profiles.json)
 
 ## 后续执行顺序（本任务不执行）
 
@@ -43,8 +44,9 @@ curation 全部通过后，才能升级为已接受能力。
    closure evidence，不计入本 R1 12 案。
 3. 按 `E1 → E2 → E3 → E4 → M1 → M2 → M3 → H1 → H2 → H3 → H4 → A1`
    执行 R1 genuine cases；任何 deterministic/infrastructure defect 保留失败并停止。
-4. 成功后使用现有 validation 0.2、FILES 0.2、collection 0.1 约定独立复算和
-   curate Proof。
+4. 成功后使用复用现有 Proof 架构的 R1 后继合同独立复算和 curate Proof：
+   validation 0.3、collection 0.2、terminal 0.1、profile 0.1。历史 Plan 07
+   继续使用原 validation 0.2 / collection 0.1，二者不混写。
 5. 仅对具有合法私有三元真值的既有独立集合运行 final IFCCompare；R1 diversity
    cases 为 0 个。
 

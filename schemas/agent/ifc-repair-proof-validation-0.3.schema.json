@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "text2ifc/ifc-repair-proof-validation/0.3",
+  "title": "IFC Repair Proof Validation Curator Boundary 0.3",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["schema_version", "status", "case_count", "independently_recomputed_case_count", "no_output_case_count", "errors", "cases"],
+  "properties": {
+    "schema_version": {"const": "text2ifc/ifc-repair-proof-validation/0.3"},
+    "status": {"enum": ["passed", "failed"]},
+    "case_count": {"type": "integer", "minimum": 0},
+    "independently_recomputed_case_count": {"type": "integer", "minimum": 0},
+    "no_output_case_count": {"type": "integer", "minimum": 0},
+    "errors": {"type": "array", "items": {"type": "string"}},
+    "cases": {"type": "array", "items": {"$ref": "#/$defs/case"}}
+  },
+  "$defs": {
+    "case": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["case_id", "provenance_namespace", "terminal_class", "status", "artifact_predicates", "property_authority_coverage", "property_claim_count", "current_property_acceptance_eligible", "source_immutable", "published_artifact_present"],
+      "properties": {
+        "case_id": {"type": "string", "minLength": 1},
+        "provenance_namespace": {"enum": ["phase12.1-plan07", "repair-milestone-r1"]},
+        "terminal_class": {"enum": ["SUCCESS", "CLARIFICATION_THEN_SUCCESS", "INADMISSIBLE_VALUE_OR_CLARIFICATION", "UNSUPPORTED_ATOMIC_GUARD"]},
+        "status": {"enum": ["passed", "failed"]},
+        "artifact_predicates": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": true,
+            "required": ["predicate_id", "status"],
+            "properties": {
+              "predicate_id": {"type": "string", "minLength": 1},
+              "status": {"enum": ["passed", "failed", "not_applicable"]}
+            }
+          }
+        },
+        "property_authority_coverage": {"enum": ["strict_stage_1_5_recomputed", "not_applicable"]},
+        "property_claim_count": {"type": "integer", "minimum": 0},
+        "current_property_acceptance_eligible": {"type": "boolean"},
+        "source_immutable": {"type": "boolean"},
+        "published_artifact_present": {"type": "boolean"}
+      }
+    }
+  }
+}

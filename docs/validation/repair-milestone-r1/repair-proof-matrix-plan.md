@@ -2,15 +2,22 @@
 
 ## 1. Existing proof convention
 
-Future curation must reuse the current Phase 12 conventions, not invent a replacement:
+Future curation reuses the current Phase 12 validators, operation registry, L0/L1/L2 adapters and
+artifact conventions. The R1 terminal diversity requires a versioned successor instead of silently
+changing the released Plan 07 contracts:
 
-- proof validation contract: `ifc-repair-proof-validation/0.2`;
-- per-case FILES manifest convention: `0.2`;
-- success collection convention: `0.1`;
+- historical Plan 07 proof validation remains `ifc-repair-proof-validation/0.2` and its success
+  collection remains `0.1`;
+- R1 proof validation is `ifc-repair-proof-validation/0.3`;
+- R1 collection is `ifc-repair-proof-collection/0.2`;
+- R1 no-output/initial-stop evidence is `ifc-repair-proof-terminal/0.1`;
+- frozen, case-specific admission metadata is `ifc-repair-proof-profiles/0.1`;
 - current validators/curators:
   `scripts/ifc_repair/validate_success_cases.py`,
   `scripts/ifc_repair/curate_phase12_live_proof.py`, and
-  `scripts/ifc_repair/curate_phase12_structural_proof.py`.
+  `scripts/ifc_repair/curate_phase12_structural_proof.py`;
+- R1 curation entry point:
+  `scripts/ifc_repair/curate_repair_milestone_r1_proof.py`.
 
 This file plans evidence only. No Proof was curated while preparing the freeze package.
 
@@ -43,10 +50,10 @@ a published repaired IFC; it must not receive fabricated L0/L1/L2 PASS values.
 
 | Case | Semantic/model outcome | Deterministic execution outcome | Artifact outcome | Evidence/contract outcome | Truth-based IFCCompare |
 |---|---|---|---|---|---|
-| E1 | IsExternal selected | accepted + executed | repaired IFC/reopen | full 0.2 validation | ineligible |
-| E2 | Door FireRating selected | accepted + executed | repaired IFC/reopen | full 0.2 validation | ineligible |
-| E3 | Beam Reference selected | accepted + executed | repaired IFC/reopen | full 0.2 validation | ineligible |
-| E4 | Wall AcousticRating selected | accepted + executed | repaired IFC/reopen | full 0.2 validation | ineligible |
+| E1 | IsExternal selected | accepted + executed | repaired IFC/reopen | full R1 0.3 validation | ineligible |
+| E2 | Door FireRating selected | accepted + executed | repaired IFC/reopen | full R1 0.3 validation | ineligible |
+| E3 | Beam Reference selected | accepted + executed | repaired IFC/reopen | full R1 0.3 validation | ineligible |
+| E4 | Wall AcousticRating selected | accepted + executed | repaired IFC/reopen | full R1 0.3 validation | ineligible |
 | M1 | FireRating selected; value correction | initial rejection; resume executed | no initial artifact; resumed repaired IFC | both turns + lineage | ineligible |
 | M2 | Beam/property intent | accepted + executed | repaired IFC/reopen | structural + property evidence | ineligible |
 | M3 | Column/property intent | accepted + executed | repaired IFC/reopen | geometry/orientation/property evidence | ineligible |
@@ -66,7 +73,7 @@ A case is eligible for current Proof only after:
 
 - genuine Provider evidence is immutable and stage-aware;
 - required deterministic execution and artifact checks completed with zero skip/substitution;
-- current validation 0.2 report passes its applicable property-authority contract;
+- current R1 validation 0.3 report passes its applicable property-authority and terminal contract;
 - source immutability and leakage checks pass;
 - the independent validator recomputes, rather than trusts, claimed results.
 
