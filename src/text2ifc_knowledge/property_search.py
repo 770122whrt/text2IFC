@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import asdict, dataclass
+import gc
 import hashlib
 import json
 import math
@@ -32,6 +33,32 @@ SUPPORTED_AUTHORABLE_VALUE_TYPES = frozenset(
 )
 
 _WINDOWS_TORCH_RUNTIME_HANDLES: list[Any] = []
+
+
+def _trim_current_process_working_set() -> bool:
+    """Let Windows reclaim physical pages from released retrieval weights."""
+
+    if os.name != "nt":
+        return False
+    try:
+        import ctypes
+
+        kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
+        get_current_process = kernel32.GetCurrentProcess
+        get_current_process.restype = ctypes.c_void_p
+        trim = kernel32.SetProcessWorkingSetSize
+        trim.argtypes = (
+            ctypes.c_void_p,
+            ctypes.c_size_t,
+            ctypes.c_size_t,
+        )
+        trim.restype = ctypes.c_int
+        sentinel = ctypes.c_size_t(-1).value
+        return bool(
+            trim(get_current_process(), sentinel, sentinel)
+        )
+    except Exception:
+        return False
 
 
 def _prepare_windows_torch_runtime(
@@ -685,6 +712,15 @@ class BgeM3EmbeddingProvider:
         )
         return [tuple(float(value) for value in vector) for vector in vectors]
 
+    def release_transient_resources(self) -> None:
+        """Release lazy model weights after the bounded retrieval stage."""
+
+        if self._model is None:
+            return
+        self._model = None
+        gc.collect()
+        _trim_current_process_working_set()
+
 
 class QdrantVectorIndex:
     """Rebuildable vector index backed by Qdrant local storage or service."""
@@ -887,7 +923,17 @@ class QdrantVectorIndex:
             if item.payload and item.payload.get("record_id")
         )
 
+    def release_transient_resources(self) -> None:
+        release = getattr(
+            self.embedding_provider,
+            "release_transient_resources",
+            None,
+        )
+        if callable(release):
+            release()
+
     def close(self) -> None:
+        self.release_transient_resources()
         self._client.close()
 
 

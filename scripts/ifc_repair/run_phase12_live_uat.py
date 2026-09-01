@@ -9,6 +9,7 @@ the same gate.
 from __future__ import annotations
 
 import argparse
+from dataclasses import replace
 import hashlib
 import importlib.metadata
 import json
@@ -17,6 +18,7 @@ import platform
 import re
 import subprocess
 import sys
+import time
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Callable, Iterable, Mapping, Sequence
@@ -51,6 +53,12 @@ from text2ifc_agent.providers import (  # noqa: E402
     redact_provider_payload,
 )
 from text2ifc_ifc_repair.api import RepairAPI  # noqa: E402
+from text2ifc_ifc_repair.benchmark_evaluation import (  # noqa: E402
+    evaluate_production,
+)
+from text2ifc_ifc_repair.evaluation import (  # noqa: E402
+    EvaluationExecutionPolicy,
+)
 from text2ifc_ifc_repair.prompt_profiles import select_prompt_profiles  # noqa: E402
 from text2ifc_ifc_repair.property_resolution_stage import (  # noqa: E402
     TEMPLATE_ID as PROPERTY_RESOLUTION_TEMPLATE_ID,
@@ -373,6 +381,135 @@ def _load_changed_scope_admission(path: Path | str) -> dict[str, Any]:
     }
 
 
+def _load_green_full_preflight_evidence(
+    path: Path | str,
+    *,
+    artifact_overrides: Mapping[str, Path | str] | None = None,
+) -> dict[str, Any]:
+    """Revalidate one completed zero-network full preflight from its artifacts."""
+
+    evidence_path = Path(path).resolve()
+    if (
+        not evidence_path.is_relative_to(ROOT)
+        or not evidence_path.is_file()
+        or evidence_path.name != "preflight.json"
+    ):
+        raise ValueError("FULL_PREFLIGHT_EVIDENCE_PATH_INVALID")
+    preflight_root = evidence_path.parent
+    overrides = {
+        str(reference): Path(path).resolve()
+        for reference, path in (artifact_overrides or {}).items()
+    }
+    used_overrides: set[str] = set()
+    payload = json.loads(evidence_path.read_text(encoding="utf-8"))
+    expected_names = (
+        "focused",
+        "retrieval-evaluation",
+        "offline",
+        "full-suite",
+        "compile",
+        "diff",
+        "proof",
+    )
+    if (
+        not isinstance(payload, dict)
+        or payload.get("schema_version")
+        != "text2ifc/phase12-live-preflight/0.4"
+        or payload.get("status") != "passed"
+        or payload.get("failure_count") != 0
+        or payload.get("skip_count") != 0
+        or payload.get("substitution_count") != 0
+        or payload.get("timeout_count") != 0
+        or payload.get("network_calls") != 0
+        or payload.get("network_transport_attempted") is not False
+    ):
+        raise ValueError("FULL_PREFLIGHT_EVIDENCE_NOT_GREEN")
+    unsigned_payload = dict(payload)
+    evidence_sha256 = unsigned_payload.pop("evidence_sha256", None)
+    if evidence_sha256 != _canonical_sha256(unsigned_payload):
+        raise ValueError("FULL_PREFLIGHT_EVIDENCE_HASH_MISMATCH")
+    checks = payload.get("checks")
+    if (
+        not isinstance(checks, list)
+        or tuple(
+            str(item.get("name"))
+            for item in checks
+            if isinstance(item, Mapping)
+        )
+        != expected_names
+        or len(checks) != len(expected_names)
+    ):
+        raise ValueError("FULL_PREFLIGHT_CHECK_SET_INVALID")
+    for check in checks:
+        if not isinstance(check, Mapping):
+            raise ValueError("FULL_PREFLIGHT_CHECK_INVALID")
+        name = str(check["name"])
+        unsigned_check = dict(check)
+        result_sha256 = unsigned_check.pop("result_sha256", None)
+        if result_sha256 != _canonical_sha256(unsigned_check):
+            raise ValueError("FULL_PREFLIGHT_CHECK_HASH_MISMATCH")
+        if (
+            check.get("status") != "passed"
+            or check.get("reason_code") is not None
+            or check.get("exit_code") != 0
+            or check.get("skip_count") != 0
+            or check.get("substitution_count") != 0
+            or check.get("timeout_count") != 0
+            or check.get("network_calls") != 0
+            or check.get("network_transport_attempted") is not False
+            or not isinstance(check.get("command"), list)
+            or not check["command"]
+        ):
+            raise ValueError("FULL_PREFLIGHT_CHECK_NOT_GREEN")
+        for stream_name in ("stdout", "stderr"):
+            stream_path = preflight_root / "logs" / f"{name}.{stream_name}.txt"
+            if (
+                not stream_path.is_file()
+                or _text_sha256(stream_path.read_text(encoding="utf-8"))
+                != check.get(f"{stream_name}_sha256")
+            ):
+                raise ValueError("FULL_PREFLIGHT_ARTIFACT_HASH_MISMATCH")
+        artifacts = check.get("artifacts")
+        if not isinstance(artifacts, list):
+            raise ValueError("FULL_PREFLIGHT_ARTIFACT_SET_INVALID")
+        seen: set[str] = set()
+        for artifact in artifacts:
+            if not isinstance(artifact, Mapping):
+                raise ValueError("FULL_PREFLIGHT_ARTIFACT_SET_INVALID")
+            reference = str(artifact.get("path") or "")
+            if not reference or reference in seen:
+                raise ValueError("FULL_PREFLIGHT_ARTIFACT_SET_INVALID")
+            seen.add(reference)
+            override = overrides.get(reference)
+            if override is not None:
+                artifact_path = override
+                used_overrides.add(reference)
+            else:
+                candidate = Path(reference)
+                artifact_path = (
+                    candidate.resolve()
+                    if candidate.is_absolute()
+                    else (preflight_root / candidate).resolve()
+                )
+            if not artifact_path.is_relative_to(ROOT):
+                raise ValueError("FULL_PREFLIGHT_ARTIFACT_PATH_INVALID")
+            if (
+                not artifact_path.is_file()
+                or artifact_path.stat().st_size
+                != int(artifact.get("size_bytes", -1))
+                or _path_sha256(artifact_path) != artifact.get("sha256")
+            ):
+                raise ValueError("FULL_PREFLIGHT_ARTIFACT_HASH_MISMATCH")
+    if used_overrides != set(overrides):
+        raise ValueError("FULL_PREFLIGHT_ARTIFACT_OVERRIDE_UNUSED")
+    return {
+        **payload,
+        "mode": "full_preflight_evidence_reuse",
+        "evidence_path": evidence_path.relative_to(ROOT).as_posix(),
+        "evidence_file_sha256": _path_sha256(evidence_path),
+    }
+
+
 def _canonical_sha256(value: Any) -> str:
     rendered = json.dumps(
         value,
@@ -522,20 +659,36 @@ def _unique_matches(pattern: str, value: str) -> list[str]:
 
 
 def _prompt_few_shot_bindings(prompt: str) -> list[dict[str, str]]:
-    hash_pattern = r"(sha256:[0-9a-f]{64})"
-    id_pattern = r'"(?:example_id|few_shot_id)"\s*:\s*"([^"]+)"'
-    until_next_id = (
-        r'(?:(?!"(?:example_id|few_shot_id)"\s*:)[\s\S]){0,320}?'
-    )
     pairs: list[tuple[str, str]] = []
-    for hash_field in (r"(?:example_hash|few_shot_hash)", "sha256"):
-        pairs.extend(
-            re.findall(
-                rf'{id_pattern}{until_next_id}"{hash_field}"\s*:\s*"{hash_pattern}"',
-                prompt,
-                flags=re.IGNORECASE,
+
+    def collect(value: Any) -> None:
+        if isinstance(value, Mapping):
+            few_shot_id = value.get("example_id", value.get("few_shot_id"))
+            few_shot_hash = value.get(
+                "example_hash",
+                value.get("few_shot_hash", value.get("sha256")),
             )
-        )
+            if (
+                isinstance(few_shot_id, str)
+                and few_shot_id.strip()
+                and isinstance(few_shot_hash, str)
+                and re.fullmatch(r"sha256:[0-9a-f]{64}", few_shot_hash)
+            ):
+                pairs.append((few_shot_id, few_shot_hash))
+            for child in value.values():
+                collect(child)
+        elif isinstance(value, (list, tuple)):
+            for child in value:
+                collect(child)
+
+    decoder = json.JSONDecoder()
+    for match in re.finditer(r"[\[{]", prompt):
+        try:
+            document, _end = decoder.raw_decode(prompt, match.start())
+        except json.JSONDecodeError:
+            continue
+        collect(document)
+
     unique_pairs = list(dict.fromkeys(pairs))
     return [
         {"few_shot_id": few_shot_id, "few_shot_hash": few_shot_hash}
@@ -777,7 +930,7 @@ def _default_command_runner(
     if "-m pytest tests/knowledge tests/ifc_repair -q" in rendered:
         timeout_seconds = 7_200
     elif "test_phase12_live_uat.py" in rendered:
-        timeout_seconds = 180
+        timeout_seconds = 300
     elif "-m compileall" in rendered:
         timeout_seconds = 300
     elif rendered.startswith("git diff --check"):
@@ -1276,6 +1429,9 @@ def _safe_artifact_path(run_root: Path, relative: str) -> Path:
 def _strict_reopen_verification(
     runtime: Path,
     final: Mapping[str, Any],
+    *,
+    expected_source_path: Path | str = SOURCE,
+    expected_source_sha256: str = FROZEN_SOURCE_SHA256,
 ) -> dict[str, Any]:
     if not final.get("successful_artifact_publishable"):
         return {
@@ -1318,13 +1474,14 @@ def _strict_reopen_verification(
         if not isinstance(source, Mapping):
             raise ValueError("LIVE_SOURCE_BINDING_MISSING")
         source_path = Path(str(source["reference"])).resolve()
-        if source_path != SOURCE.resolve():
+        frozen_source_path = Path(expected_source_path).resolve()
+        if source_path != frozen_source_path:
             raise ValueError("LIVE_SOURCE_PATH_MISMATCH")
         if not source_path.is_file():
             raise ValueError("LIVE_SOURCE_MISSING")
         if (
-            _path_sha256(source_path) != FROZEN_SOURCE_SHA256
-            or str(source.get("sha256")) != FROZEN_SOURCE_SHA256
+            _path_sha256(source_path) != expected_source_sha256
+            or str(source.get("sha256")) != expected_source_sha256
         ):
             raise ValueError("LIVE_SOURCE_HASH_MISMATCH")
         damaged = ifcopenshell.open(str(source_path))
@@ -1411,30 +1568,94 @@ def _offered_candidate_token_for_property_identity(
     return matches[0]
 
 
+def _evaluation_stage_with_policy(
+    policy: EvaluationExecutionPolicy,
+    *,
+    performance_slo_seconds: float,
+    evidence: dict[str, Any],
+) -> Callable[[Any], Any]:
+    """Bind an explicit evaluator budget and retain its nonblocking SLO."""
+
+    if performance_slo_seconds <= 0:
+        raise ValueError("EVALUATION_PERFORMANCE_SLO_INVALID")
+
+    def evaluate(inputs: Any) -> Any:
+        started = time.monotonic()
+        try:
+            configured = replace(inputs, execution_policy=policy)
+            return evaluate_production(configured)
+        finally:
+            wall_seconds = time.monotonic() - started
+            evidence.update(
+                {
+                    "schema_version": (
+                        "text2ifc/ifc-repair-evaluation-execution/0.1"
+                    ),
+                    "correctness_deadline_seconds": (
+                        policy.deadline_seconds
+                    ),
+                    "rss_limit_bytes": policy.rss_limit_bytes,
+                    "mode": policy.mode,
+                    "cache_mode": policy.cache_mode,
+                    "wall_seconds": wall_seconds,
+                    "performance_slo_seconds": (
+                        performance_slo_seconds
+                    ),
+                    "performance_slo_met": (
+                        wall_seconds <= performance_slo_seconds
+                    ),
+                    "performance_slo_blocking": False,
+                }
+            )
+
+    return evaluate
+
+
 def _production_case_executor(
     case: LiveCase,
     provider: TranscriptProvider,
     case_root: Path,
     *,
     property_knowledge_runtime: Any | None = None,
+    source_path: Path | str = SOURCE,
+    expected_source_sha256: str = FROZEN_SOURCE_SHA256,
+    evaluation_execution_policy: (
+        EvaluationExecutionPolicy | None
+    ) = None,
+    performance_slo_seconds: float | None = None,
 ) -> dict[str, Any]:
     runtime = case_root / "runtime"
-    source_sha256_before = _path_sha256(SOURCE)
-    if source_sha256_before != FROZEN_SOURCE_SHA256:
+    source = Path(source_path).resolve()
+    source_sha256_before = _path_sha256(source)
+    if source_sha256_before != expected_source_sha256:
         raise ValueError("LIVE_SOURCE_HASH_MISMATCH")
     knowledge_runtime = (
         create_property_runtime_from_environment(project_root=ROOT)
         if property_knowledge_runtime is None
         else property_knowledge_runtime
     )
+    evaluation_execution_evidence: dict[str, Any] | None = None
+    orchestrator_options: dict[str, Any] = {}
+    if evaluation_execution_policy is not None:
+        if performance_slo_seconds is None:
+            raise ValueError("EVALUATION_PERFORMANCE_SLO_REQUIRED")
+        evaluation_execution_evidence = {}
+        orchestrator_options["evaluation_stage"] = (
+            _evaluation_stage_with_policy(
+                evaluation_execution_policy,
+                performance_slo_seconds=performance_slo_seconds,
+                evidence=evaluation_execution_evidence,
+            )
+        )
     api = RepairAPI(
         runtime,
         provider=provider,
         intent_schema_version=REPAIR_INTENT_SCHEMA_VERSION_0_8,
         property_knowledge_runtime=knowledge_runtime,
+        orchestrator_options=orchestrator_options,
     )
     provider.set_lineage("initial")
-    initial = api.start(SOURCE, case.request)
+    initial = api.start(source, case.request)
     clarification = initial.clarification
     clarification_payload = (
         None
@@ -1479,7 +1700,7 @@ def _production_case_executor(
     )
     program_guard_evidence = None
     if case.case_id == "program-guard":
-        source_sha256_after = _path_sha256(SOURCE)
+        source_sha256_after = _path_sha256(source)
         stage2_attempts = sum(
             1
             for attempt in provider.attempts
@@ -1487,7 +1708,7 @@ def _production_case_executor(
             and attempt.get("stage") == "stage2"
         )
         program_guard_evidence = {
-            "source_reference": str(SOURCE.resolve()),
+            "source_reference": str(source),
             "source_sha256_before": source_sha256_before,
             "source_sha256_after": source_sha256_after,
             "source_unchanged": source_sha256_before == source_sha256_after,
@@ -1505,9 +1726,12 @@ def _production_case_executor(
             None if case.feedback is None else _text_sha256(case.feedback)
         ),
         "program_guard_evidence": program_guard_evidence,
+        "evaluation_execution_evidence": evaluation_execution_evidence,
         "strict_reopen_verification": _strict_reopen_verification(
             runtime,
             final_summary,
+            expected_source_path=source,
+            expected_source_sha256=expected_source_sha256,
         ),
     }
 
@@ -1691,7 +1915,11 @@ def _case_contract_pass(
             and initial_stop_ok
             and clarification.get("reason_code") == "property_resolution"
             and clarification.get("answer_modes")
-            == ["select_candidate", "cancel"]
+            == [
+                "select_candidate",
+                "add_detail",
+                "cancel",
+            ]
         )
     if case.case_id == "window-semantic-canary":
         strict = final.get("strict_reopen_verification")

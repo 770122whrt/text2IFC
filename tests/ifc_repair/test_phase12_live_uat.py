@@ -325,7 +325,6 @@ class _ProductionPathTransport(_MockTransport):
             "conflicting_candidate_ids": [],
             "clarification_question": None,
         }
-
     @staticmethod
     def _intent_response(prompt: str) -> dict[str, Any]:
         public_request = prompt.split(
@@ -515,6 +514,21 @@ class _ProductionPathTransport(_MockTransport):
             "postconditions": [],
             "operations": operations,
         }
+
+
+class _InvalidThenValidStage1IdTransport(_ProductionPathTransport):
+    """Exercise the real public chain after one Stage 1 ID-contract retry."""
+
+    def __init__(self) -> None:
+        super().__init__()
+        self.stage1_responses = 0
+
+    def _intent_response(self, prompt: str) -> dict[str, Any]:
+        response = super()._intent_response(prompt)
+        self.stage1_responses += 1
+        if self.stage1_responses == 1:
+            response["operations"][0]["operation_id"] = "invalid$operation$id"
+        return response
 
 
 class _GreenCommandRunner:
@@ -923,7 +937,7 @@ def _valid_property_clarification() -> dict[str, Any]:
         "clarification_id": "clarification-001",
         "reason_code": "property_resolution",
         "question": "Select the intended IFC property.",
-        "answer_modes": ["select_candidate", "cancel"],
+        "answer_modes": ["select_candidate", "add_detail", "cancel"],
     }
 
 
@@ -1330,7 +1344,11 @@ def test_live_runner_cannot_claim_independent_proof_before_plan_12_14(
                             "clarification_id": "clarification-001",
                             "reason_code": "property_resolution",
                             "question": "Select the intended IFC property.",
-                            "answer_modes": ["select_candidate", "cancel"],
+                            "answer_modes": [
+                                "select_candidate",
+                                "add_detail",
+                                "cancel",
+                            ],
                         },
                     }
                 )
@@ -1446,6 +1464,70 @@ def test_complete_transport_drives_the_real_repair_api_and_reopens_ifc2x3(
     ] == ["beam is load bearing", "column is load bearing"]
 
 
+def test_stage1_invalid_internal_id_retries_then_completes_public_full_chain(
+    tmp_path: Path,
+) -> None:
+    module = _module()
+    transport = _InvalidThenValidStage1IdTransport()
+    provider = module.TranscriptProvider(transport)
+    case = module.DEFAULT_CASES[0]
+    provider.set_case(case.case_id)
+
+    final = module._production_case_executor(
+        case,
+        provider,
+        tmp_path / "stage1-id-retry-full-chain",
+        property_knowledge_runtime=_offline_property_runtime(),
+    )
+
+    assert final["status"] == "succeeded", (
+        final["status"],
+        final["reason_code"],
+    )
+    assert final["complete_repair_success"] is True
+    assert final["successful_artifact_publishable"] is True
+    assert final["strict_reopen_verification"]["status"] == "passed"
+    assert final["strict_reopen_verification"]["l0_pass"] is True
+    assert final["strict_reopen_verification"]["l1_pass"] is True
+    assert final["strict_reopen_verification"]["l2_pass"] is True
+    assert [item["stage"] for item in provider.attempts] == [
+        "stage1",
+        "stage1",
+        "property_resolution",
+        "property_resolution",
+        "stage2",
+    ]
+    assert transport.stage1_responses == 2
+    assert "REPAIR_INTENT_OPERATION_ID_INVALID" in transport.calls[1]["prompt"]
+
+
+def test_complete_executor_reopens_against_its_explicit_frozen_source(
+    tmp_path: Path,
+) -> None:
+    module = _module()
+    source = tmp_path / "r1-damaged.ifc"
+    shutil.copy2(module.SOURCE, source)
+    source_sha256 = "sha256:" + hashlib.sha256(source.read_bytes()).hexdigest()
+    transport = _ProductionPathTransport()
+    provider = module.TranscriptProvider(transport)
+    case = module.DEFAULT_CASES[0]
+    provider.set_case(case.case_id)
+
+    final = module._production_case_executor(
+        case,
+        provider,
+        tmp_path / "explicit-source",
+        property_knowledge_runtime=_offline_property_runtime(),
+        source_path=source,
+        expected_source_sha256=source_sha256,
+    )
+
+    assert final["status"] == "succeeded"
+    assert final["strict_reopen_verification"]["status"] == "passed"
+    assert final["strict_reopen_verification"]["l0_pass"] is True
+    assert final["strict_reopen_verification"]["l1_pass"] is True
+    assert final["strict_reopen_verification"]["l2_pass"] is True
+
 def test_clarification_transport_drives_real_api_resume_and_publication(
     tmp_path: Path,
 ) -> None:
@@ -1465,7 +1547,11 @@ def test_clarification_transport_drives_real_api_resume_and_publication(
     assert final["initial"]["status"] == "clarification_required"
     assert final["initial"]["successful_artifact_publishable"] is False
     assert final["clarification"]["reason_code"] == "property_resolution"
-    assert final["clarification"]["answer_modes"] == ["select_candidate", "cancel"]
+    assert final["clarification"]["answer_modes"] == [
+        "select_candidate",
+        "add_detail",
+        "cancel",
+    ]
     assert final["clarification_answer_applied"] is True
     assert final["status"] == "succeeded", (
         final["status"],
@@ -1516,6 +1602,26 @@ def test_prompt_identity_evidence_binds_each_few_shot_to_its_own_hash() -> None:
     ]
     assert identities["few_shot_ids"] == ["example-b", "example-a"]
     assert identities["few_shot_hashes"] == [HASH_B, HASH_A]
+
+
+def test_prompt_identity_keeps_sort_keys_example_hash_with_its_own_id() -> None:
+    module = _module()
+    prompt = json.dumps(
+        {
+            "few_shots": [
+                {"example_id": "example-a", "example_hash": HASH_A},
+                {"example_id": "example-b", "example_hash": HASH_B},
+            ]
+        },
+        sort_keys=True,
+    )
+
+    identities = module._prompt_identities(prompt)
+
+    assert identities["few_shot_bindings"] == [
+        {"few_shot_id": "example-a", "few_shot_hash": HASH_A},
+        {"few_shot_id": "example-b", "few_shot_hash": HASH_B},
+    ]
 
 
 def test_stable_property_identity_resolves_against_current_offered_set() -> None:
@@ -1740,6 +1846,35 @@ def test_preflight_pytest_commands_use_run_local_temp_and_cache(
         "tests/knowledge",
         "tests/ifc_repair",
     )
+
+
+def test_focused_preflight_timeout_allows_loaded_host(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    module = _module()
+    captured: dict[str, Any] = {}
+
+    def fake_run(
+        command: list[str],
+        **kwargs: Any,
+    ) -> subprocess.CompletedProcess[str]:
+        captured.update(kwargs)
+        return subprocess.CompletedProcess(command, 0, "", "")
+
+    monkeypatch.setattr(module.subprocess, "run", fake_run)
+    module._default_command_runner(
+        (
+            str(ROOT / ".venv/Scripts/python.exe"),
+            "-m",
+            "pytest",
+            "tests/ifc_repair/test_phase12_live_uat.py",
+            "-q",
+        ),
+        cwd=tmp_path,
+    )
+
+    assert captured["timeout"] == 300
 
 
 def test_preflight_timeout_has_a_distinct_blocking_reason_and_zero_transport(
@@ -2084,6 +2219,85 @@ def test_green_preflight_binds_commands_results_and_artifact_hashes(
     assert result["reason_code"] == "LIVE_CASE_MATRIX_REQUIRED"
     assert result["transport_calls"] == 0
 
+
+def test_green_full_preflight_evidence_reuse_recomputes_hashes_and_rejects_tamper(
+    tmp_path: Path,
+) -> None:
+    module = _module()
+    preflight_root = tmp_path / "preflight"
+    preflight = module.run_preflight(
+        preflight_root,
+        proof_root=_proof_root(tmp_path),
+        command_runner=_GreenCommandRunner(),
+    )
+
+    loaded = module._load_green_full_preflight_evidence(
+        preflight_root / "preflight.json"
+    )
+
+    assert loaded["status"] == "passed"
+    assert loaded["mode"] == "full_preflight_evidence_reuse"
+    assert loaded["evidence_sha256"] == preflight["evidence_sha256"]
+    assert [item["name"] for item in loaded["checks"]] == [
+        "focused",
+        "retrieval-evaluation",
+        "offline",
+        "full-suite",
+        "compile",
+        "diff",
+        "proof",
+    ]
+
+    (preflight_root / "logs" / "focused.stdout.txt").write_text(
+        "tampered\n",
+        encoding="utf-8",
+    )
+    with pytest.raises(ValueError, match="FULL_PREFLIGHT_ARTIFACT_HASH_MISMATCH"):
+        module._load_green_full_preflight_evidence(
+            preflight_root / "preflight.json"
+        )
+
+
+def test_green_full_preflight_can_validate_an_immutable_curated_artifact_snapshot(
+    tmp_path: Path,
+) -> None:
+    module = _module()
+    proof_root = _proof_root(tmp_path)
+    preflight_root = tmp_path / "preflight"
+    module.run_preflight(
+        preflight_root,
+        proof_root=proof_root,
+        command_runner=_GreenCommandRunner(),
+    )
+    preflight = json.loads(
+        (preflight_root / "preflight.json").read_text(encoding="utf-8")
+    )
+    proof_artifact = next(
+        item
+        for check in preflight["checks"]
+        if check["name"] == "proof"
+        for item in check["artifacts"]
+        if Path(str(item["path"])).resolve()
+        == (proof_root / "manifest.json").resolve()
+    )
+    snapshot = tmp_path / "snapshot" / "manifest.json"
+    snapshot.parent.mkdir()
+    snapshot.write_bytes((proof_root / "manifest.json").read_bytes())
+    (proof_root / "manifest.json").write_text(
+        '{"legitimate_append": true}\n', encoding="utf-8"
+    )
+
+    with pytest.raises(ValueError, match="FULL_PREFLIGHT_ARTIFACT_HASH_MISMATCH"):
+        module._load_green_full_preflight_evidence(
+            preflight_root / "preflight.json"
+        )
+
+    loaded = module._load_green_full_preflight_evidence(
+        preflight_root / "preflight.json",
+        artifact_overrides={str(proof_artifact["path"]): snapshot},
+    )
+
+    assert loaded["status"] == "passed"
 
 @pytest.mark.parametrize(
     ("defect", "reason_code"),
@@ -2628,6 +2842,70 @@ def test_clarification_success_requires_the_initial_grouped_stop(
     assert by_case["program-guard"]["contract_pass"] is True
 
 
+def test_live_matrix_accepts_current_property_add_detail_answer_mode(
+    tmp_path: Path,
+) -> None:
+    module = _module()
+    transport = _MockTransport(
+        [{"content": {"ok": True}} for _ in range(11)]
+    )
+    strict = {
+        "status": "passed",
+        "l0_pass": True,
+        "l1_pass": True,
+        "l2_pass": True,
+    }
+    clarification = {
+        **_valid_property_clarification(),
+        "answer_modes": ["select_candidate", "add_detail", "cancel"],
+    }
+
+    def executor(case: Any, provider: Any, _case_root: Path) -> dict[str, Any]:
+        _record_frozen_contract_attempts(provider, case.case_id)
+        if case.case_id != "program-guard":
+            final = {
+                "status": "succeeded",
+                "complete_repair_success": True,
+                "successful_artifact_publishable": True,
+                "clarification_answer_applied": (
+                    case.case_id == "clarification-resume"
+                ),
+                "strict_reopen_verification": strict,
+            }
+            if case.case_id == "clarification-resume":
+                final.update(
+                    {
+                        "initial": {
+                            "status": "clarification_required",
+                            "complete_repair_success": False,
+                            "successful_artifact_publishable": False,
+                        },
+                        "clarification": clarification,
+                    }
+                )
+            return final
+        return {
+            "status": "unsupported",
+            "reason_code": module.PROGRAM_GUARD_REASON,
+            "complete_repair_success": False,
+            "successful_artifact_publishable": False,
+            "program_guard_evidence": _guard_evidence(module),
+        }
+
+    result = _run(
+        module,
+        tmp_path,
+        transport=transport,
+        runner=_GreenCommandRunner(),
+        executor=executor,
+        cases=module.DEFAULT_CASES,
+    )
+
+    assert result["status"] == "test_passed"
+    assert result["reason_code"] is None
+    assert all(case["contract_pass"] for case in result["cases"])
+
+
 def test_program_guard_requires_the_frozen_capability_reason(
     tmp_path: Path,
 ) -> None:
@@ -2931,7 +3209,21 @@ def _curation_attempt(
 ) -> dict[str, Any]:
     attempt_id = f"{case_id}:{stage}:{ordinal:03d}"
     request = {"model": "deepseek-chat", "messages": ["redacted"]}
-    response = {"id": f"response-{attempt_id}", "content": "{}"}
+    response_document = (
+        {
+            "schema_version": (
+                "text2ifc/ifc-repair-changeset-draft/0.2"
+                if case_id == "window-semantic-canary"
+                else "text2ifc/ifc-repair-changeset-draft/0.3"
+            )
+        }
+        if stage == "stage2"
+        else {}
+    )
+    response = {
+        "id": f"response-{attempt_id}",
+        "content": json.dumps(response_document, sort_keys=True),
+    }
     canonical = lambda value: "sha256:" + hashlib.sha256(
         json.dumps(
             value,
@@ -3228,6 +3520,25 @@ def test_live_curator_accepts_only_complete_and_resumed_success_transcripts() ->
     assert audit["transport_calls"] == 11
 
 
+def test_live_curator_accepts_current_property_add_detail_answer_mode() -> None:
+    curator = _curator_module()
+    result = _valid_live_curation_result()
+    clarification_case = next(
+        item
+        for item in result["cases"]
+        if item["case_id"] == "clarification-resume"
+    )
+    clarification_case["final"]["clarification"]["answer_modes"] = [
+        "select_candidate",
+        "add_detail",
+        "cancel",
+    ]
+
+    audit = curator.audit_live_uat_result(result)
+
+    assert audit["status"] == "passed"
+
+
 def test_live_curator_does_not_authorize_by_legacy_parallel_array_position() -> None:
     curator = _curator_module()
     result = _valid_live_curation_result()
@@ -3390,7 +3701,7 @@ def test_live_curator_binds_provider_responses_to_retained_runtime_artifacts(
         "provenance": [],
     }
     provider_draft = {
-        "schema_version": "text2ifc/ifc-repair-changeset-draft/0.2",
+        "schema_version": "text2ifc/ifc-repair-changeset-draft/0.3",
         "draft_id": "draft-complete",
         "base_model_fingerprint": "sha256:" + "1" * 64,
         "source_request_hash": "sha256:" + "2" * 64,
@@ -3413,7 +3724,10 @@ def test_live_curator_binds_provider_responses_to_retained_runtime_artifacts(
             **intent,
         },
     )
-    _set_curation_response_document(complete["attempts"][1], provider_draft)
+    stage2_attempt = next(
+        attempt for attempt in complete["attempts"] if attempt["stage"] == "stage2"
+    )
+    _set_curation_response_document(stage2_attempt, provider_draft)
     if artifact == "intent":
         intent["operations"] = [{"operation_id": "unrelated-intent"}]
     else:

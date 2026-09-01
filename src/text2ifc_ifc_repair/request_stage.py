@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+import re
 from typing import Any, Mapping
 
 from jsonschema import Draft202012Validator
@@ -58,6 +59,9 @@ TEMPLATE_ID_0_5 = "ifc-repair-intent.v0.5"
 TEMPLATE_ID_0_6 = "ifc-repair-intent.v0.6"
 TEMPLATE_ID_0_7 = "ifc-repair-intent.v0.7"
 TEMPLATE_ID_0_8 = "ifc-repair-intent.v0.8"
+TEMPLATE_ID_0_9 = "ifc-repair-intent.v0.9"
+TEMPLATE_ID_0_10 = "ifc-repair-intent.v0.10"
+_STABLE_INTERNAL_ID = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._:/-]*$")
 _INTENT_CONTRACTS = {
     REPAIR_INTENT_SCHEMA_VERSION: (
         REPAIR_INTENT_BODY_SCHEMA_VERSION,
@@ -89,7 +93,7 @@ _INTENT_CONTRACTS = {
     ),
     REPAIR_INTENT_SCHEMA_VERSION_0_8: (
         REPAIR_INTENT_BODY_SCHEMA_VERSION_0_8,
-        TEMPLATE_ID_0_8,
+        TEMPLATE_ID_0_10,
     ),
 }
 MAX_REQUEST_BYTES = DEFAULT_REPAIR_INTENT_LIMITS.max_request_bytes
@@ -242,6 +246,8 @@ def generate_repair_intent(
                             error.message,
                             path=_pointer(error.absolute_path),
                         )
+                    if intent_schema_version == REPAIR_INTENT_SCHEMA_VERSION_0_8:
+                        _validate_stable_internal_operation_ids(parsed)
                     parsed, normalizations = (
                         _fold_created_occurrence_property_operations(
                             parsed, registry=registry
@@ -647,6 +653,22 @@ def _validate_operation_routing(
             )
 
 
+def _validate_stable_internal_operation_ids(
+    document: Mapping[str, Any],
+) -> None:
+    for index, operation in enumerate(document.get("operations", ())):
+        operation_id = str(operation.get("operation_id", ""))
+        if _STABLE_INTERNAL_ID.fullmatch(operation_id) is not None:
+            continue
+        raise RepairIntentError(
+            RepairIntentCode.OPERATION_ID_INVALID,
+            "Internal operation_id must match "
+            "^[A-Za-z0-9][A-Za-z0-9._:/-]*$ and must not embed an IFC "
+            "GlobalId or other target identity.",
+            path=f"/operations/{index}/operation_id",
+        )
+
+
 def _fold_created_occurrence_property_operations(
     document: Mapping[str, Any],
     *,
@@ -980,5 +1002,6 @@ __all__ = [
     "TEMPLATE_ID_0_2",
     "TEMPLATE_ID_0_3",
     "TEMPLATE_ID_0_4",
+    "TEMPLATE_ID_0_10",
     "generate_repair_intent",
 ]

@@ -163,6 +163,27 @@ def _paths(result) -> list[str]:
     return [item["canonical_path"] for item in result.candidate_set["candidates"]]
 
 
+def test_bge_embedding_provider_releases_only_loaded_transient_model(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    trim_calls: list[str] = []
+    monkeypatch.setattr(
+        property_search,
+        "_trim_current_process_working_set",
+        lambda: trim_calls.append("trim"),
+    )
+    provider = property_search.BgeM3EmbeddingProvider(
+        model_path="unused-offline-model",
+        model_version="test",
+    )
+    loaded_model = object()
+    provider._model = loaded_model
+
+    provider.release_transient_resources()
+
+    assert provider._model is None
+    assert trim_calls == ["trim"]
+
 def test_active_runtime_module_is_additive_and_non_executable() -> None:
     module = _runtime_module()
     assert hasattr(module, "PropertyKnowledgeRuntime")

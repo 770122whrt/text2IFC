@@ -2187,13 +2187,17 @@ def _audit_structural_provenance_chain(
         _retained_request_text(request_path).encode("utf-8")
     ).hexdigest()
     damaged_prefixed = f"sha256:{damaged_sha256}"
+    evidence_mode = str(case.get("provider_evidence_mode") or "")
     if (
         changeset.get("source_request_hash") != request_sha256
         or intent.get("source_request_hash") != request_sha256
-        or _normalize_sha256(str(intent.get("model_fingerprint")))
-        != damaged_sha256
         or _normalize_sha256(str(changeset.get("base_model_fingerprint")))
         != damaged_sha256
+        or (
+            evidence_mode != "live"
+            and _normalize_sha256(str(intent.get("model_fingerprint")))
+            != damaged_sha256
+        )
     ):
         raise ValueError("l0.structural.provenance:request_or_model_hash")
 
@@ -2246,8 +2250,7 @@ def _audit_structural_provenance_chain(
     if (
         _normalize_sha256(str(resolution.get("source_ifc_sha256")))
         != damaged_sha256
-        or _normalize_sha256(str(resolution.get("model_fingerprint")))
-        != damaged_sha256
+        or resolution.get("model_fingerprint") != intent.get("model_fingerprint")
     ):
         raise ValueError("l0.structural.provenance:resolution_model_hash")
     resolved_identity = [
@@ -2285,8 +2288,16 @@ def _audit_structural_provenance_chain(
                 raise ValueError("l0.structural.provenance:resolution_binding")
 
     manifest_ref = str(changeset.get("semantic_manifest_ref") or "")
-    manifest_matches = [path for path in roles.values() if path.name == manifest_ref]
-    if len(manifest_matches) != 1:
+    manifest_name = Path(manifest_ref).name
+    canonical_manifest = roles.get("semantic_manifests") or roles.get(
+        "semantic_manifest"
+    )
+    manifest_matches = (
+        [canonical_manifest]
+        if canonical_manifest is not None
+        else [path for path in roles.values() if path.name == manifest_name]
+    )
+    if len(manifest_matches) != 1 or manifest_matches[0].name != manifest_name:
         raise ValueError("l0.structural.provenance:semantic_manifest_missing")
     manifest_path = manifest_matches[0]
     bundle = _read_json(manifest_path)
@@ -3561,12 +3572,25 @@ def _audit_live_transcript_authority(
         if isinstance(item, Mapping)
     }
     registry = create_default_registry()
-    expected_profile_ids = sorted(
-        {
-            str(registry.require(operation_type).prompt_profile_id)
-            for operation_type in operation_types
-        }
-    )
+    stage2_schema_version = str(provider_draft.get("schema_version") or "")
+    if stage2_schema_version == "text2ifc/ifc-repair-changeset-draft/0.3":
+        expected_profile_ids = sorted(
+            {
+                str(registry.require(operation_type).stage2_prompt_profile_id)
+                for operation_type in operation_types
+            }
+        )
+    elif stage2_schema_version == "text2ifc/ifc-repair-changeset-draft/0.2":
+        expected_profile_ids = sorted(
+            {
+                str(registry.require(operation_type).prompt_profile_id)
+                for operation_type in operation_types
+            }
+        )
+    else:
+        raise ValueError("l0.structural.live:stage2_schema_unreviewed")
+    if not expected_profile_ids or any(item == "None" for item in expected_profile_ids):
+        raise ValueError("l0.structural.live:prompt_profile_registry_binding")
     expected_selection = select_prompt_profiles(expected_profile_ids).to_dict()
     profiles = load_prompt_profiles()
     stage1_profile_ids = sorted(
@@ -3599,6 +3623,18 @@ def _audit_live_transcript_authority(
         for item in live_result["cases"]
         if isinstance(item, Mapping) and item.get("case_id") == live_case_id
     )
+    stage1_attempts = [
+        item
+        for item in result_case.get("attempts", ())
+        if isinstance(item, Mapping) and item.get("stage") == "stage1"
+    ]
+    if (
+        not stage1_attempts
+        or intent.get("model_fingerprint")
+        != "sha256:"
+        + hashlib.sha256(str(stage1_attempts[-1].get("model") or "").encode("utf-8")).hexdigest()
+    ):
+        raise ValueError("l0.structural.live:intent_model_fingerprint")
     for attempt in result_case.get("attempts", ()):
         if not isinstance(attempt, Mapping):
             raise ValueError("l0.structural.live:attempt_profile_binding")
@@ -6744,7 +6780,11 @@ def main(argv: Iterable[str] | None = None) -> int:
     parser.add_argument("--json", action="store_true", dest="as_json")
     args = parser.parse_args(argv)
     manifest_path = args.collection_root.resolve() / "manifest.json"
-    manifest = _read_json(manifest_path)
+    manifest = (
+        _read_json(manifest_path)
+        if manifest_path.is_file()
+        else {}
+    )
     if manifest.get("schema_version") == "text2ifc/ifc-repair-proof-collection/0.2":
         result = validate_r1_proof_collection(args.collection_root)
         document = result.to_dict()

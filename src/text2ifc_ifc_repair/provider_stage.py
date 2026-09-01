@@ -18,6 +18,7 @@ from text2ifc_text.splits import atomic_write_text
 from .changesets import (
     BOUND_CHANGESET_SCHEMA_VERSION_0_3,
     BOUND_CHANGESET_SCHEMA_VERSION_0_4,
+    BOUND_CHANGESET_SCHEMA_VERSION_0_5,
     DRAFT_CHANGESET_SCHEMA_VERSION_0_3,
     bind_repair_changeset,
     load_changeset_draft_schema,
@@ -33,6 +34,7 @@ TEMPLATE_ID = "ifc-repair-changeset.v0.1"
 BOUND_TEMPLATE_ID = "ifc-repair-changeset.v0.2"
 BOUND_TEMPLATE_ID_0_3 = "ifc-repair-changeset.v0.3"
 BOUND_TEMPLATE_ID_0_4 = "ifc-repair-changeset.v0.4"
+BOUND_TEMPLATE_ID_0_5 = "ifc-repair-changeset.v0.5"
 _PRIVATE_CANARIES = (
     "private_original",
     "mutation_manifest",
@@ -76,9 +78,12 @@ def generate_bound_changeset(
     used_operation_types = tuple(
         sorted({str(item["operation_type"]) for item in operations})
     )
+    used_definitions = tuple(
+        registry.require(name) for name in used_operation_types
+    )
     manifests = tuple(semantic_manifests)
-    structural_compact_mode = bool(manifests) and set(used_operation_types).issubset(
-        {"add_beam", "add_column"}
+    structural_compact_mode = bool(manifests) and all(
+        definition.stage2_prompt_profile_id for definition in used_definitions
     )
     supported_operations: Any = [
         (
@@ -113,22 +118,15 @@ def generate_bound_changeset(
         )
     manifest_hashes = dict(semantic_manifest_hashes or {})
     compact_mode = bool(manifests)
-    semantic_contract_v02 = bool(
-        manifests
-        and all(
-            item.schema_version
-            == "text2ifc/ifc-repair-semantic-manifest/0.2"
-            for item in manifests
-        )
+    manifest_versions = frozenset(item.schema_version for item in manifests)
+    semantic_contract_v03 = (
+        "text2ifc/ifc-repair-semantic-manifest/0.3" in manifest_versions
     )
-    semantic_contract_v03 = bool(
-        manifests
-        and all(
-            item.schema_version
-            == "text2ifc/ifc-repair-semantic-manifest/0.3"
-            for item in manifests
-        )
+    semantic_contract_v02 = (
+        not semantic_contract_v03
+        and "text2ifc/ifc-repair-semantic-manifest/0.2" in manifest_versions
     )
+    mixed_semantic_contract = len(manifest_versions) > 1
     manifest_hash = (
         manifest_hashes.get(manifests[0].operation_id, "") if compact_mode else ""
     )
@@ -139,12 +137,13 @@ def generate_bound_changeset(
         if compact_mode
         else load_changeset_schema()
     )
-    prompt_operations = (
+    resolved_authority = (
         _structural_draft_authority(operations, registry=registry)
-        if structural_compact_mode
-        else _compact_operation_projection(operations)
         if compact_mode
-        else resolved_document
+        else None
+    )
+    prompt_operations = (
+        resolved_authority if compact_mode else resolved_document
     )
     semantic_summary = _semantic_summary(manifests)
     explicit_slot_refs = sorted(
@@ -175,7 +174,7 @@ def generate_bound_changeset(
         }
         rendered = render_prompt(
             template_id=(
-                BOUND_TEMPLATE_ID_0_4
+                BOUND_TEMPLATE_ID_0_5
                 if semantic_contract_v03
                 else BOUND_TEMPLATE_ID_0_3
                 if semantic_contract_v02
@@ -230,6 +229,7 @@ def generate_bound_changeset(
                         semantic_manifest_ref=semantic_manifest_ref,
                         semantic_manifest_hash=manifest_hash,
                         semantic_summary=semantic_summary,
+                        resolved_authority=resolved_authority,
                     )
             contract_issues = (
                 validate_changeset_draft(
@@ -257,16 +257,16 @@ def generate_bound_changeset(
                             source_request_hash=source_request_hash,
                             base_model_fingerprint=base_fingerprint,
                             bound_schema_version=(
-                                BOUND_CHANGESET_SCHEMA_VERSION_0_4
+                                BOUND_CHANGESET_SCHEMA_VERSION_0_5
+                                if mixed_semantic_contract
+                                else BOUND_CHANGESET_SCHEMA_VERSION_0_4
                                 if semantic_contract_v03
                                 else BOUND_CHANGESET_SCHEMA_VERSION_0_3
                                 if semantic_contract_v02
                                 else "text2ifc/ifc-repair-changeset/0.2"
                             ),
                             resolved_authority=(
-                                prompt_operations
-                                if structural_compact_mode
-                                else None
+                                resolved_authority
                             ),
                         )
                     except ValueError as error:
@@ -389,8 +389,12 @@ def _upgrade_legacy_draft(
     semantic_manifest_ref: str,
     semantic_manifest_hash: str,
     semantic_summary: Mapping[str, int],
+    resolved_authority: Mapping[str, Any] | None,
 ) -> dict[str, Any]:
-    """Explicit 0.1 compatibility: retain geometry, strip authority, mark draft."""
+    """Validate released 0.1 first, then rebuild draft authority deterministically."""
+
+    if resolved_authority is None:
+        raise ValueError("LEGACY_DRAFT_AUTHORITY_REQUIRED")
 
     return {
         "schema_version": "text2ifc/ifc-repair-changeset-draft/0.2",
@@ -400,11 +404,11 @@ def _upgrade_legacy_draft(
         "semantic_manifest_ref": semantic_manifest_ref,
         "semantic_manifest_sha256": semantic_manifest_hash,
         "semantic_summary": dict(semantic_summary),
-        "scope": changeset["scope"],
-        "evidence_refs": changeset["evidence_refs"],
+        "scope": resolved_authority["scope"],
+        "evidence_refs": resolved_authority["evidence_refs"],
         "preconditions": changeset["preconditions"],
         "postconditions": changeset["postconditions"],
-        "operations": changeset["operations"],
+        "operations": resolved_authority["operations"],
     }
 
 

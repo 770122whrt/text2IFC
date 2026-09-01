@@ -217,6 +217,13 @@ class PropertyKnowledgeRuntime:
             health=self.health.to_dict(),
         )
 
+    def release_transient_resources(self) -> None:
+        """Drop retrieval-only model weights without closing the vector store."""
+
+        release = getattr(self.vector_index, "release_transient_resources", None)
+        if callable(release):
+            release()
+
 
 def create_property_runtime(
     *,

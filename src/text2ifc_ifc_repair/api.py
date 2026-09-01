@@ -47,6 +47,14 @@ from text2ifc_knowledge.property_runtime import (
 )
 
 
+def _source_ifc_schema(source_ifc_path: Path | str) -> str:
+    """Probe schema without retaining the opened IFC model for later stages."""
+
+    return str(
+        ifcopenshell.open(str(Path(source_ifc_path).resolve())).schema
+    )
+
+
 class RepairAPI:
     """Behavior authority used by Python callers and every CLI mode.
 
@@ -147,8 +155,7 @@ class RepairAPI:
         )
         run_dir = self.store.runs_root / state.run_id
         try:
-            model = ifcopenshell.open(str(Path(source_ifc_path).resolve()))
-            if model.schema != "IFC2X3":
+            if _source_ifc_schema(source_ifc_path) != "IFC2X3":
                 return self._fail(state.run_id, RunStage.INVALID_INPUT, "IFC_SCHEMA_UNSUPPORTED")
         except Exception:
             return self._fail(state.run_id, RunStage.INVALID_INPUT, "IFC_SOURCE_INVALID")
@@ -195,10 +202,34 @@ class RepairAPI:
             )
         context_ref = self._write_context(run_dir, repair_text=repair_text, intent=intent)
         if intent_result.get("classification") == "unsupported":
+            reason_code = str(
+                intent_result.get("reason_code") or "OPERATION_UNSUPPORTED"
+            )
+            self.store.transition(
+                state.run_id,
+                to_stage=RunStage.INTENT_READY,
+                expected_state_version=state.state_version,
+                stage_payload={
+                    "intent": self.store.artifact_binding(
+                        state.run_id,
+                        "intent/repair-intent.json",
+                        self._intent_schema_version,
+                    ),
+                    "api_context": self.store.artifact_binding(
+                        state.run_id,
+                        context_ref,
+                        "text2ifc/ifc-repair-api-context/0.1",
+                    ),
+                    "route": {
+                        "classification": "unsupported",
+                        "reason_code": reason_code,
+                    },
+                },
+            )
             return self._fail(
                 state.run_id,
                 RunStage.UNSUPPORTED,
-                str(intent_result.get("reason_code") or "OPERATION_UNSUPPORTED"),
+                reason_code,
             )
         missing_parameters = list(intent_result.get("missing_parameters") or ())
         if (
@@ -670,11 +701,21 @@ class RepairAPI:
                 **orchestrator_options,
             )
             try:
-                outcome = orchestrator.start(
-                    intent=intent,
-                    repository=repository,
-                    expected_source_sha256=state.source.sha256,
-                )
+                try:
+                    outcome = orchestrator.start(
+                        intent=intent,
+                        repository=repository,
+                        expected_source_sha256=state.source.sha256,
+                    )
+                finally:
+                    if property_coordinator is not None:
+                        release = getattr(
+                            self._property_knowledge_runtime,
+                            "release_transient_resources",
+                            None,
+                        )
+                        if callable(release):
+                            release()
             except Exception as error:
                 return self._fail(
                     run_id,
@@ -992,7 +1033,7 @@ def _property_resolution_clarification(
         reason_code="property_resolution",
         question=pending.question,
         answer_modes=(
-            ("select_candidate", "cancel")
+            ("select_candidate", "add_detail", "cancel")
             if candidates
             else ("add_detail", "cancel")
         ),

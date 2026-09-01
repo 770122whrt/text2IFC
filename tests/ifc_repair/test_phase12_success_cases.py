@@ -16,10 +16,17 @@ import pytest
 from jsonschema import Draft202012Validator
 from text2ifc_agent.prompt_registry import load_prompt_registry
 from text2ifc_ifc_repair.operations import create_default_registry
+from text2ifc_ifc_repair.operations.hosted_opening import deterministic_global_id
 from text2ifc_ifc_repair.prompt_profiles import (
     compact_profile_catalog,
     load_prompt_profiles,
     select_prompt_profiles,
+)
+from text2ifc_ifc_repair.run_models import RunStage, hash_json
+from text2ifc_ifc_repair.run_store import RunStore
+from text2ifc_ifc_repair.resolution_flow import (
+    ResolvedOperation,
+    generated_type_authority,
 )
 
 from scripts.ifc_repair.run_phase12_public_structural_repair import (
@@ -61,6 +68,42 @@ def _curator_module():
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     return module
+
+
+def test_live_curator_validates_the_production_runstore_transition_ledger(
+    tmp_path: Path,
+) -> None:
+    curator = _curator_module()
+    source = tmp_path / "source.ifc"
+    source.write_bytes(b"ISO-10303-21;END-ISO-10303-21;")
+    runtime_root = tmp_path / "runtime"
+    store = RunStore(runtime_root)
+    state = store.start_run(
+        source_path=source,
+        request_id="phase12-curator-ledger",
+        request_text="add a beam",
+        run_id="repair-phase12-curator-ledger",
+    )
+    run_root = store.runs_root / state.run_id
+
+    assert not (run_root / "transitions.json").exists()
+    validated = curator._load_validated_run_state(
+        runtime_root,
+        state.run_id,
+        run_root / "state.json",
+    )
+    assert validated.to_dict() == state.to_dict()
+
+    transition_path = run_root / "transitions" / "000000.json"
+    transition = json.loads(transition_path.read_text(encoding="utf-8"))
+    transition["record_hash"] = "sha256:" + "0" * 64
+    _write_json(transition_path, transition)
+    with pytest.raises(ValueError, match="LIVE_RUNTIME_STATE_CHAIN_MISMATCH"):
+        curator._load_validated_run_state(
+            runtime_root,
+            state.run_id,
+            run_root / "state.json",
+        )
 
 
 def _sha256(path: Path) -> str:
@@ -825,9 +868,194 @@ def _live_attempt(
     }
 
 
+def _bind_resolution_model_fingerprint(
+    value: Any,
+    model_fingerprint: str,
+    *,
+    source_request_hash: str,
+) -> Any:
+    if isinstance(value, dict):
+        for key, child in tuple(value.items()):
+            if key == "model_fingerprint":
+                value[key] = model_fingerprint
+            else:
+                _bind_resolution_model_fingerprint(
+                    child,
+                    model_fingerprint,
+                    source_request_hash=source_request_hash,
+                )
+        if value.get("kind") == "authorized_property_fact" and "property_hash" in value:
+            value["property_hash"] = hash_json(
+                {key: child for key, child in value.items() if key != "property_hash"}
+            )
+    elif isinstance(value, list):
+        for child in value:
+            _bind_resolution_model_fingerprint(
+                child,
+                model_fingerprint,
+                source_request_hash=source_request_hash,
+            )
+    if isinstance(value, dict) and isinstance(value.get("operations"), list):
+        registry = create_default_registry()
+        for operation in value["operations"]:
+            if not isinstance(operation, dict):
+                continue
+            semantics = operation.get("authorized_semantics")
+            if not isinstance(semantics, list) or not any(
+                isinstance(item, Mapping)
+                and item.get("kind") == "system_generated_type"
+                for item in semantics
+            ):
+                continue
+            definition = registry.require(str(operation["operation_type"]))
+            resolved_operation = ResolvedOperation(
+                operation_id=str(operation["operation_id"]),
+                operation_type=str(operation["operation_type"]),
+                target_global_id=operation.get("target_global_id"),
+                scope_ids=tuple(str(item) for item in operation.get("scope_ids", ())),
+                evidence_pointers=tuple(
+                    str(item) for item in operation.get("evidence_pointers", ())
+                ),
+                parameters=dict(operation.get("parameters") or {}),
+                context=dict(operation.get("context") or {}),
+                authorized_semantics=tuple(
+                    item
+                    for item in semantics
+                    if isinstance(item, Mapping)
+                    and item.get("kind") != "system_generated_type"
+                ),
+            )
+            rebuilt = generated_type_authority(
+                definition,
+                operation_id=resolved_operation.operation_id,
+                request_hash=source_request_hash,
+                model_fingerprint=model_fingerprint,
+                resolved_operation=resolved_operation,
+            )
+            for index, semantic in enumerate(semantics):
+                if (
+                    isinstance(semantic, dict)
+                    and semantic.get("kind") == "system_generated_type"
+                ):
+                    semantics[index] = rebuilt
+    return value
+
+def _generated_type_ids(resolution: Mapping[str, Any]) -> dict[str, str]:
+    generated: dict[str, str] = {}
+    for operation in resolution.get("operations", ()):
+        if not isinstance(operation, Mapping):
+            continue
+        for semantic in operation.get("authorized_semantics", ()):
+            if (
+                isinstance(semantic, Mapping)
+                and semantic.get("kind") == "system_generated_type"
+            ):
+                generated[str(operation["operation_id"])] = str(semantic["global_id"])
+    return generated
+
+
+def _rebind_semantic_manifest_generated_types(
+    bundle: dict[str, Any],
+    *,
+    previous_resolution: Mapping[str, Any],
+    rebound_resolution: Mapping[str, Any],
+) -> None:
+    previous = _generated_type_ids(previous_resolution)
+    rebound = _generated_type_ids(rebound_resolution)
+    for manifest in bundle.get("manifests", ()):
+        if not isinstance(manifest, dict):
+            continue
+        operation_id = str(manifest.get("operation_id") or "")
+        old_global_id = previous.get(operation_id)
+        new_global_id = rebound.get(operation_id)
+        if not old_global_id or not new_global_id or old_global_id == new_global_id:
+            continue
+        for assignment in manifest.get("assignments", ()):
+            if not isinstance(assignment, dict):
+                continue
+            if assignment.get("value") == old_global_id:
+                assignment["value"] = new_global_id
+            if assignment.get("source_ref") == f"generated-type:{old_global_id}":
+                assignment["source_ref"] = f"generated-type:{new_global_id}"
+        identity = json.dumps(
+            {
+                "operation_id": operation_id,
+                "operation_type": manifest["operation_type"],
+                "base_model_fingerprint": manifest["base_model_fingerprint"],
+                "policy_id": manifest["policy"]["policy_id"],
+                "policy_version": manifest["policy"]["policy_version"],
+                "assignments": manifest["assignments"],
+            },
+            ensure_ascii=False,
+            sort_keys=True,
+            separators=(",", ":"),
+        ).encode("utf-8")
+        manifest["manifest_id"] = (
+            "semantic-manifest-" + hashlib.sha256(identity).hexdigest()[:24]
+        )
+
+def _rebind_structural_ifc_identities(
+    repaired_path: Path,
+    *,
+    previous_resolution: Mapping[str, Any],
+    rebound_resolution: Mapping[str, Any],
+    previous_changeset: Mapping[str, Any],
+    rebound_changeset: Mapping[str, Any],
+) -> dict[str, str]:
+    replacements: dict[str, str] = {}
+    previous_types = _generated_type_ids(previous_resolution)
+    rebound_types = _generated_type_ids(rebound_resolution)
+    for operation_id, old_global_id in previous_types.items():
+        new_global_id = rebound_types.get(operation_id)
+        if new_global_id and new_global_id != old_global_id:
+            replacements[old_global_id] = new_global_id
+    previous_operations = {
+        str(item["operation_id"]): item for item in previous_changeset["operations"]
+    }
+    rebound_operations = {
+        str(item["operation_id"]): item for item in rebound_changeset["operations"]
+    }
+    for operation_id, old_operation in previous_operations.items():
+        operation_type = str(old_operation["operation_type"])
+        family = {"add_beam": "beam", "add_column": "column"}.get(operation_type)
+        if family is None:
+            continue
+        old_global_id = deterministic_global_id(old_operation, family)
+        new_global_id = deterministic_global_id(
+            rebound_operations[operation_id], family
+        )
+        if new_global_id != old_global_id:
+            replacements[old_global_id] = new_global_id
+    model = ifcopenshell.open(str(repaired_path))
+    for old_global_id, new_global_id in replacements.items():
+        entity = model.by_guid(old_global_id)
+        assert entity is not None, old_global_id
+        entity.GlobalId = new_global_id
+    model.write(str(repaired_path))
+    return replacements
+
+
+def _replace_bound_identities(value: Any, replacements: Mapping[str, str]) -> Any:
+    if isinstance(value, dict):
+        for key, child in tuple(value.items()):
+            value[key] = _replace_bound_identities(child, replacements)
+    elif isinstance(value, list):
+        for index, child in enumerate(value):
+            value[index] = _replace_bound_identities(child, replacements)
+    elif isinstance(value, str):
+        if value in replacements:
+            return replacements[value]
+        for old_global_id, new_global_id in replacements.items():
+            if value == f"generated-type:{old_global_id}":
+                return f"generated-type:{new_global_id}"
+    return value
+
 def _upgrade_live_intent(intent: Mapping[str, Any]) -> dict[str, Any]:
     upgraded = json.loads(json.dumps(intent))
     upgraded["schema_version"] = "text2ifc/ifc-repair-intent/0.8"
+    upgraded["model_fingerprint"] = (
+        "sha256:" + hashlib.sha256(b"deepseek-chat").hexdigest()
+    )
     upgraded["unsupported_requests"] = []
     for operation in upgraded.get("operations", ()):
         routing = operation.get("routing_intent")
@@ -838,6 +1066,89 @@ def _upgrade_live_intent(intent: Mapping[str, Any]) -> dict[str, Any]:
         elif operation.get("operation_type") == "add_column":
             routing["operation_profile"] = "column.add.v0.3"
     return upgraded
+
+
+@pytest.mark.parametrize(
+    ("profile_ids", "schema_version"),
+    [
+        (
+            ["beam.add.v0.3", "column.add.v0.3"],
+            "text2ifc/ifc-repair-changeset-draft/0.2",
+        ),
+        (
+            ["beam.add.stage2.v0.1", "column.add.stage2.v0.1"],
+            "text2ifc/ifc-repair-changeset-draft/0.3",
+        ),
+    ],
+)
+def test_plan07_attempt_audit_accepts_only_reviewed_stage2_profile_generations(
+    profile_ids: list[str],
+    schema_version: str,
+) -> None:
+    attempt = _live_attempt(
+        case_id="complete",
+        stage="stage2",
+        ordinal=1,
+        parent=None,
+        lineage="initial",
+        response_document={"schema_version": schema_version},
+    )
+    selection = select_prompt_profiles(profile_ids).to_dict()
+    attempt["profile_ids"] = selection["profile_ids"]
+    attempt["profile_versions"] = [
+        str(profile["profile_version"])
+        for profile in selection["profiles"]
+    ]
+    attempt["profile_hashes"] = selection["profile_hashes"]
+    attempt["few_shot_ids"] = selection["few_shot_ids"]
+    attempt["few_shot_hashes"] = selection["few_shot_hashes"]
+    attempt["few_shot_bindings"] = [
+        {"few_shot_id": few_shot_id, "few_shot_hash": few_shot_hash}
+        for few_shot_id, few_shot_hash in zip(
+            selection["few_shot_ids"],
+            selection["few_shot_hashes"],
+            strict=True,
+        )
+    ]
+
+    _curator_module()._audit_attempts("complete", [attempt])
+
+
+def test_plan07_attempt_audit_rejects_cross_generation_stage2_profile_mix() -> None:
+    attempt = _live_attempt(
+        case_id="complete",
+        stage="stage2",
+        ordinal=1,
+        parent=None,
+        lineage="initial",
+        response_document={
+            "schema_version": "text2ifc/ifc-repair-changeset-draft/0.3"
+        },
+    )
+    selection = select_prompt_profiles(
+        ["beam.add.v0.3", "column.add.stage2.v0.1"]
+    ).to_dict()
+    attempt["profile_ids"] = selection["profile_ids"]
+    attempt["profile_versions"] = [
+        str(profile["profile_version"])
+        for profile in selection["profiles"]
+    ]
+    attempt["profile_hashes"] = selection["profile_hashes"]
+    attempt["few_shot_ids"] = selection["few_shot_ids"]
+    attempt["few_shot_hashes"] = selection["few_shot_hashes"]
+    attempt["few_shot_bindings"] = [
+        {"few_shot_id": few_shot_id, "few_shot_hash": few_shot_hash}
+        for few_shot_id, few_shot_hash in zip(
+            selection["few_shot_ids"],
+            selection["few_shot_hashes"],
+            strict=True,
+
+        )
+    ]
+
+    with pytest.raises(ValueError, match="LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH"):
+        _curator_module()._audit_attempts("complete", [attempt])
+
 
 
 def _provider_draft(changeset: Mapping[str, Any]) -> dict[str, Any]:
@@ -1213,7 +1524,52 @@ def _live_proof_collection(tmp_path: Path) -> tuple[Path, Path]:
         )
     )
     _write_json(case_root / "repair-intent.json", intent)
+    resolution_path = case_root / "target-resolution.json"
+    previous_resolution = json.loads(resolution_path.read_text(encoding="utf-8"))
+    resolution = json.loads(json.dumps(previous_resolution))
+    _bind_resolution_model_fingerprint(
+        resolution,
+        intent["model_fingerprint"],
+        source_request_hash=intent["source_request_hash"],
+    )
+    _write_json(resolution_path, resolution)
+    semantic_path = case_root / "semantic-manifests.json"
+    semantic_bundle = json.loads(semantic_path.read_text(encoding="utf-8"))
+    _rebind_semantic_manifest_generated_types(
+        semantic_bundle,
+        previous_resolution=previous_resolution,
+        rebound_resolution=resolution,
+    )
+    _write_json(semantic_path, semantic_bundle)
     changeset = json.loads((case_root / "changeset.json").read_text(encoding="utf-8"))
+    previous_changeset = json.loads(json.dumps(changeset))
+    changeset["semantic_manifest_ref"] = (
+        "changeset/" + Path(str(changeset["semantic_manifest_ref"])).name
+    )
+    changeset["semantic_manifest_sha256"] = _canonical_payload_sha256(
+        semantic_bundle
+    )
+    manifests_by_operation = {
+        str(item["operation_id"]): item
+        for item in semantic_bundle["manifests"]
+    }
+    for operation in changeset["operations"]:
+        manifest = manifests_by_operation[str(operation["operation_id"])]
+        operation["semantic_manifest"]["manifest_id"] = manifest["manifest_id"]
+        operation["semantic_assignments"] = manifest["assignments"]
+    _write_json(case_root / "changeset.json", changeset)
+    identity_replacements = _rebind_structural_ifc_identities(
+        case_root / "repaired.ifc",
+        previous_resolution=previous_resolution,
+        rebound_resolution=resolution,
+        previous_changeset=previous_changeset,
+        rebound_changeset=changeset,
+    )
+    for artifact_name in ("application.json", "evaluation.json"):
+        artifact_path = case_root / artifact_name
+        document = json.loads(artifact_path.read_text(encoding="utf-8"))
+        _replace_bound_identities(document, identity_replacements)
+        _write_json(artifact_path, document)
     damaged_sha256 = _sha256(case_root / "damaged.ifc")
     live_result = _live_result(
         intent=intent,
@@ -1530,6 +1886,9 @@ def _curator_source_run(tmp_path: Path) -> Path:
         ).hexdigest()
         case_intent = json.loads(json.dumps(intent))
         case_changeset = json.loads(json.dumps(changeset))
+        case_changeset["semantic_manifest_ref"] = (
+            "changeset/" + Path(str(case_changeset["semantic_manifest_ref"])).name
+        )
         case_intent["source_request_hash"] = effective_hash
         case_changeset["source_request_hash"] = effective_hash
         successful_stage1 = [
@@ -1554,18 +1913,33 @@ def _curator_source_run(tmp_path: Path) -> Path:
             successful_stage2,
             _provider_draft(case_changeset),
         )
-        run_id = f"run-{case_id}"
+        run_id = f"repair-test-{case_id}"
         case["final"]["run_id"] = run_id
-        run_root = case_root / "runtime" / "runs" / run_id
+        runtime_root = case_root / "runtime"
+        store = RunStore(runtime_root)
+        store.start_run(
+            source_path=BASE_DAMAGE_CASE / "damaged.ifc",
+            request_id=f"phase12-{case_id}",
+            request_text=effective_request,
+            run_id=run_id,
+        )
+        run_root = runtime_root / "runs" / run_id
         (run_root / "intent").mkdir(parents=True)
         (run_root / "property-resolution").mkdir()
         (run_root / "changeset" / "attempt-001").mkdir(parents=True)
         (run_root / "publication" / "terminal").mkdir(parents=True)
         _write_json(run_root / "intent" / "repair-intent.json", case_intent)
-        shutil.copy2(
-            BASE_DAMAGE_CASE / "target-resolution.json",
-            run_root / "resolution.json",
+        resolution = json.loads(
+            (BASE_DAMAGE_CASE / "target-resolution.json").read_text(
+                encoding="utf-8"
+            )
         )
+        _bind_resolution_model_fingerprint(
+            resolution,
+            case_intent["model_fingerprint"],
+            source_request_hash=case_intent["source_request_hash"],
+        )
+        _write_json(run_root / "resolution.json", resolution)
         for destination in (
             run_root / "changeset.json",
             run_root / "changeset" / "bound-changeset.json",
@@ -1609,28 +1983,15 @@ def _curator_source_run(tmp_path: Path) -> Path:
                 {
                     "path": artifact.relative_to(run_root).as_posix(),
                     "size_bytes": artifact.stat().st_size,
-                    "sha256": _sha256(artifact),
+                    "sha256": _sha256(artifact).removeprefix("sha256:"),
                 }
             )
         _write_json(
             run_root / "publication" / "manifest.json",
             {"artifacts": publication_artifacts},
         )
-        _write_json(
-            run_root / "state.json",
-            {
-                "run_id": run_id,
-                "source": {
-                    "reference": str((BASE_DAMAGE_CASE / "damaged.ifc").resolve()),
-                    "sha256": _sha256(BASE_DAMAGE_CASE / "damaged.ifc"),
-                },
-                "status": "succeeded",
-            },
-        )
-        _write_json(
-            run_root / "transitions.json",
-            {"run_id": run_id, "terminal_status": "succeeded"},
-        )
+
+
         _write_json(
             run_root / "api-context.json",
             {
@@ -1639,6 +2000,46 @@ def _curator_source_run(tmp_path: Path) -> Path:
                 "intent": case_intent,
             },
         )
+        state = store.load(run_id)
+        state = store.transition(
+            run_id,
+            to_stage=RunStage.SOURCE_VALIDATED,
+            expected_state_version=state.state_version,
+            stage_payload={},
+        )
+        state = store.transition(
+            run_id,
+            to_stage=RunStage.INDEX_READY,
+            expected_state_version=state.state_version,
+            stage_payload={},
+        )
+        state = store.transition(
+            run_id,
+            to_stage=RunStage.INTENT_READY,
+            expected_state_version=state.state_version,
+            stage_payload={
+                "api_context": store.artifact_binding(
+                    run_id,
+                    "api-context.json",
+                    "text2ifc/ifc-repair-api-context/0.1",
+                )
+            },
+        )
+        if case_id == "clarification-resume":
+            versioned_context = "api-context-v004-resume.json"
+            shutil.copy2(run_root / "api-context.json", run_root / versioned_context)
+            store.transition(
+                run_id,
+                to_stage=RunStage.INTENT_READY,
+                expected_state_version=state.state_version,
+                stage_payload={
+                    "api_context": store.artifact_binding(
+                        run_id,
+                        versioned_context,
+                        "text2ifc/ifc-repair-api-context/0.1",
+                    )
+                },
+            )
         profiles = (
             ["beam.add.v0.3", "column.add.v0.3"]
             if case_id == "complete"
@@ -1670,19 +2071,54 @@ def _curator_source_run(tmp_path: Path) -> Path:
         }
         _write_json(case_root / "case-result.json", case)
     _write_json(source / "live-uat-result.json", live_result)
+    preflight_root = source / "preflight"
+    logs_root = preflight_root / "logs"
+    logs_root.mkdir(parents=True)
+    checks = []
+    empty_hash = "sha256:" + hashlib.sha256(b"").hexdigest()
+    for name in (
+        "focused",
+        "retrieval-evaluation",
+        "offline",
+        "full-suite",
+        "compile",
+        "diff",
+        "proof",
+    ):
+        (logs_root / f"{name}.stdout.txt").write_text("", encoding="utf-8")
+        (logs_root / f"{name}.stderr.txt").write_text("", encoding="utf-8")
+        check = {
+            "name": name,
+            "command": ["offline-fixture", name],
+            "started_at_utc": "2026-08-17T00:00:00+00:00",
+            "finished_at_utc": "2026-08-17T00:00:01+00:00",
+            "status": "passed",
+            "reason_code": None,
+            "exit_code": 0,
+            "skip_count": 0,
+            "substitution_count": 0,
+            "timeout_count": 0,
+            "network_calls": 0,
+            "network_transport_attempted": False,
+            "stdout_sha256": empty_hash,
+            "stderr_sha256": empty_hash,
+            "artifacts": [],
+        }
+        check["result_sha256"] = _canonical_transport_sha256(check)
+        checks.append(check)
     preflight = {
-        "schema_version": "text2ifc/phase12-live-preflight/0.3",
+        "schema_version": "text2ifc/phase12-live-preflight/0.4",
         "status": "passed",
         "failure_count": 0,
         "skip_count": 0,
         "substitution_count": 0,
         "timeout_count": 0,
         "network_calls": 0,
-        "checks": [],
+        "network_transport_attempted": False,
+        "checks": checks,
     }
     preflight["evidence_sha256"] = _canonical_transport_sha256(preflight)
-    (source / "preflight").mkdir()
-    _write_json(source / "preflight" / "preflight.json", preflight)
+    _write_json(preflight_root / "preflight.json", preflight)
     return source
 
 
@@ -1949,6 +2385,9 @@ def test_public_curate_installs_only_two_strict_success_cases_after_validation(
 ) -> None:
     curator = _curator_module()
     source = _curator_source_run(tmp_path)
+    scratch = source / "preflight" / "pytest-full-suite" / "unbound"
+    scratch.mkdir(parents=True)
+    _write_json(scratch / "FILES.json", {"not": "declared evidence"})
     proof = _empty_proof(tmp_path / "proof")
     calls: list[tuple[tuple[str, ...], Path]] = []
 
@@ -1986,6 +2425,12 @@ def test_public_curate_installs_only_two_strict_success_cases_after_validation(
         case_root = proof / "structural" / "live" / case_id
         assert (case_root / "runtime" / "runs").is_dir()
         assert (case_root / "provider-evidence" / "live-uat-result.json").is_file()
+        assert not (
+            case_root
+            / "provider-evidence"
+            / "preflight"
+            / "pytest-full-suite"
+        ).exists()
     assert not (proof / "structural" / "live" / "program-guard").exists()
 
 

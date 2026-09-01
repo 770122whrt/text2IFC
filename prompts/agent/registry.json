@@ -536,11 +536,99 @@
       ]
     },
     {
+      "template_id": "ifc-repair-intent.v0.9",
+      "role": "ifc_repair_request_understanding",
+      "mode": "repair_intent",
+      "path": "prompts/agent/ifc-repair-intent-v0.9.md",
+      "sha256": "sha256:0b839b55a1176657d9ca315479c7a8849f298688a5c15226eac13aeb03c8f648",
+      "required_inputs": [
+        "REPAIR_REQUEST",
+        "SUPPORTED_OPERATIONS",
+        "REPAIR_INTENT_SCHEMA",
+        "VALIDATION_FEEDBACK"
+      ],
+      "forbidden_outputs": [
+        "raw_ifc",
+        "step_text",
+        "step_id",
+        "resolved_target_id",
+        "resolved_target_guid",
+        "resolved_type_id",
+        "unregistered_profile",
+        "inferred_occurrence_reuse",
+        "mutation_mapping",
+        "private_original_ifc",
+        "benchmark_gold",
+        "guessed_project_fact",
+        "repair_changeset"
+      ]
+    },
+    {
+      "template_id": "ifc-repair-intent.v0.10",
+      "role": "ifc_repair_request_understanding",
+      "mode": "repair_intent",
+      "path": "prompts/agent/ifc-repair-intent-v0.10.md",
+      "sha256": "sha256:a88495cc266d827cbd9623407ab8105205e2d00cc736813172e350f977578e70",
+      "required_inputs": [
+        "REPAIR_REQUEST",
+        "SUPPORTED_OPERATIONS",
+        "REPAIR_INTENT_SCHEMA",
+        "VALIDATION_FEEDBACK"
+      ],
+      "forbidden_outputs": [
+        "raw_ifc",
+        "step_text",
+        "step_id",
+        "resolved_target_id",
+        "resolved_target_guid",
+        "resolved_type_id",
+        "unregistered_profile",
+        "inferred_occurrence_reuse",
+        "mutation_mapping",
+        "private_original_ifc",
+        "benchmark_gold",
+        "guessed_project_fact",
+        "repair_changeset"
+      ]
+    },
+    {
       "template_id": "ifc-repair-changeset.v0.4",
       "role": "ifc_repair_generator",
       "mode": "bound_changeset",
       "path": "prompts/agent/ifc-repair-changeset-v0.4.md",
       "sha256": "sha256:9bb8866082df52fcaa9b064fb38fe5cf5f527e547a993f10d808bf6cb5901622",
+      "required_inputs": [
+        "REPAIR_REQUEST",
+        "SOURCE_REQUEST_HASH",
+        "MODEL_FINGERPRINT",
+        "RESOLVED_OPERATIONS",
+        "SUPPORTED_OPERATIONS",
+        "CHANGESET_SCHEMA",
+        "VALIDATION_FEEDBACK",
+        "SEMANTIC_MANIFEST_REF",
+        "SEMANTIC_MANIFEST_SHA256",
+        "SEMANTIC_SUMMARY",
+        "EXPLICIT_REQUEST_SLOT_REFS"
+      ],
+      "forbidden_outputs": [
+        "raw_ifc",
+        "step_text",
+        "step_id",
+        "raw_cohort_candidates",
+        "private_original_ifc",
+        "benchmark_gold",
+        "mutation_mapping",
+        "semantic_assignments",
+        "unregistered_operation",
+        "unselected_profile"
+      ]
+    },
+    {
+      "template_id": "ifc-repair-changeset.v0.5",
+      "role": "ifc_repair_generator",
+      "mode": "bound_changeset",
+      "path": "prompts/agent/ifc-repair-changeset-v0.5.md",
+      "sha256": "sha256:f354db4172fe177dfbed8ded156d5c62aec7aead33302ffe996050c57f20885f",
       "required_inputs": [
         "REPAIR_REQUEST",
         "SOURCE_REQUEST_HASH",

@@ -418,6 +418,96 @@ def test_invalid_output_is_corrected_once_with_bounded_redacted_evidence(
     assert "[REDACTED_PRIVATE]" in stored_attempt
 
 
+def test_v08_retries_invalid_internal_operation_id_without_rewriting_target_global_id(
+    tmp_path: Path,
+) -> None:
+    request_text = (
+        "将 Level 4 中 GlobalId 为 3JlX9$$_PCKBNpDob64$5M 的门的"
+        "防火等级设置为 EI60。"
+    )
+    source = _source(request_text)
+
+    def response(operation_id: str) -> dict:
+        return {
+            "schema_version": "text2ifc/ifc-repair-intent-body/0.8",
+            "operations": [
+                {
+                    "operation_id": operation_id,
+                    "operation_type": "set_occurrence_properties",
+                    "routing_intent": {
+                        "component_family": "occurrence",
+                        "action": "set_properties",
+                        "operation_profile": "occurrence.set-properties",
+                        "source": source,
+                    },
+                    "target_query": {
+                        "schema_version": "text2ifc/ifc-target-query/0.1",
+                        "allowed_ifc_classes": ["IfcDoor"],
+                        "global_id": "3JlX9$$_PCKBNpDob64$5M",
+                        "storey_name": "Level 4",
+                    },
+                    "parameters": {},
+                    "attribute_intents": [],
+                    "property_intents": [
+                        {
+                            "intent_kind": "natural_language_property",
+                            "property_phrase": "防火等级",
+                            "raw_value": "EI60",
+                            "raw_unit": None,
+                            "scope": "occurrence_direct",
+                            "source": source,
+                        }
+                    ],
+                    "semantic_bundle_refs": [],
+                    "quantity_intents": [],
+                    "occurrence_reuse_intent": None,
+                    "prototype_intent": None,
+                    "provenance": [source],
+                }
+            ],
+            "unsupported_requests": [],
+            "semantic_bundles": [],
+            "provenance": [source],
+        }
+
+    provider = SequentialProvider(
+        [
+            response("set_fire_rating_3JlX9$$_PCKBNpDob64$5M"),
+            response("set-door-fire-rating-1"),
+        ]
+    )
+
+    result = _stage_module().generate_repair_intent(
+        provider=provider,
+        request_id="request-public-door-fire-rating-001",
+        repair_request=request_text,
+        registry=create_default_registry(),
+        output_dir=tmp_path,
+        intent_schema_version="text2ifc/ifc-repair-intent/0.8",
+    )
+
+    assert result["valid"] is True
+    assert len(provider.calls) == 2
+    assert result["intent"].operations[0].operation_id == (
+        "set-door-fire-rating-1"
+    )
+    assert result["intent"].operations[0].target_query.global_id == (
+        "3JlX9$$_PCKBNpDob64$5M"
+    )
+    assert result["attempts"][0]["issues"] == [
+        {
+            "code": "REPAIR_INTENT_OPERATION_ID_INVALID",
+            "path": "/operations/0/operation_id",
+            "message": (
+                "Internal operation_id must match "
+                "^[A-Za-z0-9][A-Za-z0-9._:/-]*$ and must not embed an IFC "
+                "GlobalId or other target identity."
+            ),
+        }
+    ]
+    assert "REPAIR_INTENT_OPERATION_ID_INVALID" in provider.calls[1]["prompt"]
+
+
 def test_retry_exhaustion_has_stable_typed_failure_and_byte_stable_evidence(
     tmp_path: Path,
 ) -> None:

@@ -230,11 +230,72 @@ def test_accelerated_rss_ignores_unrelated_parent_lifetime_peak(
     assert result["status"] == "passed"
     metrics = result["metrics"]
     assert metrics["parent_current_rss_bytes"] < historical_parent_peak
-    assert metrics["peak_rss_bytes"] == (
-        metrics["parent_current_rss_bytes"]
-        + sum(metrics["worker_peak_rss_bytes"].values())
+    assert metrics["diff_phase_peak_rss_bytes"] == metrics[
+        "parent_current_rss_bytes"
+    ]
+    assert metrics["peak_rss_bytes"] == max(
+        metrics["validation_phase_peak_rss_bytes"],
+        metrics["diff_phase_peak_rss_bytes"],
     )
 
+
+def test_accelerated_rss_peak_respects_nonoverlapping_phases(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    worker_peak = 1_000_000_000
+    validation_parent_rss = 1_500_000_000
+    diff_parent_rss = 3_000_000_000
+    models_opened = False
+
+    class ImmediateFuture:
+        def result(self, timeout=None):
+            return ({"valid": True}, {"status": "miss"}, worker_peak)
+
+    class ImmediateExecutor:
+        def __init__(self, max_workers):
+            assert max_workers == 2
+
+        def submit(self, *_args, **_kwargs):
+            return ImmediateFuture()
+
+        def shutdown(self, *, wait, cancel_futures):
+            return None
+
+    def open_model(_path):
+        nonlocal models_opened
+        models_opened = True
+        return object()
+
+    monkeypatch.setattr(
+        evaluation_module, "ProcessPoolExecutor", ImmediateExecutor
+    )
+    monkeypatch.setattr(evaluation_module.ifcopenshell, "open", open_model)
+    monkeypatch.setattr(
+        evaluation_module,
+        "compare_validation_models",
+        lambda *_args, **_kwargs: {"same": True},
+    )
+    monkeypatch.setattr(
+        evaluation_module,
+        "normalized_model_diff",
+        lambda *_args, **_kwargs: {"same": True},
+    )
+
+    result = _run(
+        tmp_path,
+        mode="accelerated",
+        rss_reader=lambda: (
+            diff_parent_rss if models_opened else validation_parent_rss
+        ),
+        rss_limit=4_000_000_000,
+    )
+
+    assert result["status"] == "passed"
+    metrics = result["metrics"]
+    assert metrics["validation_phase_peak_rss_bytes"] == 3_500_000_000
+    assert metrics["diff_phase_peak_rss_bytes"] == 3_000_000_000
+    assert metrics["peak_rss_bytes"] == 3_500_000_000
 
 def test_accelerated_current_rss_limit_violation_still_fails_closed(
     tmp_path: Path,
