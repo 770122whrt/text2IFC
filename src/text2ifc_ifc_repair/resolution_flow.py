@@ -487,7 +487,7 @@ def resolve_repair_intent(
                 start=1,
             ):
                 try:
-                    normalize_property_scope(property_intent.scope)
+                    property_scope = normalize_property_scope(property_intent.scope)
                 except ValueError as error:
                     return _failure(
                         intent,
@@ -511,7 +511,7 @@ def resolve_repair_intent(
                         phrase=str(property_intent.property_phrase),
                         raw_value=property_intent.raw_value,
                         raw_unit=property_intent.raw_unit,
-                        scope=property_intent.scope,
+                        scope=property_scope,
                     )
                     resolve_for_claim = getattr(
                         property_knowledge_resolver,
