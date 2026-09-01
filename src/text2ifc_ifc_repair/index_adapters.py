@@ -9,6 +9,7 @@ import ifcopenshell.util.unit
 
 from .geometry import (
     UNSUPPORTED_WALL_GEOMETRY,
+    _clean_mm,
     opening_dimensions_mm,
     opening_position_in_wall_mm,
     straight_wall_axis,
@@ -211,12 +212,18 @@ class FillingIndexAdapter:
             "overall_width": (
                 None
                 if getattr(entity, "OverallWidth", None) is None
-                else float(entity.OverallWidth) * millimetres_per_project_unit
+                else _clean_mm(
+                    float(entity.OverallWidth)
+                    * millimetres_per_project_unit
+                )
             ),
             "overall_height": (
                 None
                 if getattr(entity, "OverallHeight", None) is None
-                else float(entity.OverallHeight) * millimetres_per_project_unit
+                else _clean_mm(
+                    float(entity.OverallHeight)
+                    * millimetres_per_project_unit
+                )
             ),
         }
         return AdapterResult(

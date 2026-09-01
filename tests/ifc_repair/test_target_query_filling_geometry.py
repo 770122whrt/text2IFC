@@ -38,8 +38,8 @@ def _filling_record(guid: str, name: str, tag: str, **changes: object) -> Elemen
         geometry_capability="opening_filling",
         geometry_summary={
             "dimensions_mm": {
-                "overall_width": 819.0000000000001,
-                "overall_height": 758.999999999998,
+                "overall_width": 819.0,
+                "overall_height": 759.0,
             }
         },
         facets={"editable_target": True, "opening_global_ids": ["0OPENINGAAAAAAAAAAAAA1"]},
@@ -94,6 +94,35 @@ def test_opening_dimension_constraints_match_filling_targets(tmp_path: Path) -> 
     assert result.status == "ambiguous"
     offered = sorted(hit.ifc_global_id for hit in result.candidates)
     assert offered == sorted([target.ifc_global_id, same_size_peer.ifc_global_id])
+
+
+def test_opening_dimension_constraints_match_exact_filling_dimensions(
+    tmp_path: Path,
+) -> None:
+    """A zero-tolerance request matches filling dimensions without float noise.
+
+    IFC OverallWidth/Height are metre floats multiplied by a unit scale; the
+    stored millimetre value must be free of tessellation/unit noise so a
+    user's exact millimetre statement matches at ``tolerance_mm=0``.
+    """
+    target = _filling_record("0AAAAAAAAAAAAAAAAAAAAA", "window 819x759", "149537")
+    database = _repository(tmp_path, [target])
+    query = TargetQuery.from_dict(
+        {
+            "schema_version": "text2ifc/ifc-target-query/0.1",
+            "allowed_ifc_classes": ["IfcWindow"],
+            "storey_name": "Level 2",
+            "geometry_constraints": [
+                {"field": "opening_width_mm", "value": 819, "tolerance_mm": 0},
+                {"field": "opening_height_mm", "value": 759, "tolerance_mm": 0},
+            ],
+        }
+    )
+    with SQLiteIndexRepository.open(database) as repository:
+        result = resolve_target(repository, query)
+
+    assert result.status == "resolved"
+    assert result.resolved_target_id == target.record_id
 
 
 def test_opening_dimension_constraints_still_match_hosted_openings(
