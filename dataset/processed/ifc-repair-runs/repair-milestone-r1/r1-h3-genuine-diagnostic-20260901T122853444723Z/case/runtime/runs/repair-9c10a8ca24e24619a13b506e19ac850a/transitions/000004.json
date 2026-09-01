@@ -1,0 +1,105 @@
+{
+  "answer": null,
+  "clarification": {
+    "answer_modes": [
+      "add_detail",
+      "cancel"
+    ],
+    "answer_schema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "add_detail"
+              }
+            }
+          },
+          "then": {
+            "maxProperties": 2,
+            "required": [
+              "kind",
+              "detail"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "cancel"
+              }
+            }
+          },
+          "then": {
+            "maxProperties": 1,
+            "required": [
+              "kind"
+            ]
+          }
+        }
+      ],
+      "properties": {
+        "authorized": {
+          "const": true
+        },
+        "candidate_token": {
+          "maxLength": 256,
+          "minLength": 1,
+          "type": "string"
+        },
+        "detail": {
+          "maxLength": 4096,
+          "minLength": 1,
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "add_detail",
+            "cancel"
+          ]
+        },
+        "preview_hash": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind"
+      ],
+      "type": "object"
+    },
+    "candidates": [],
+    "claim_id": null,
+    "clarification_id": "clarify-004",
+    "operation_id": "set-window-external-property-1",
+    "property_preview": null,
+    "question": "目标不唯一或证据不足，请选择候选、补充说明或取消。",
+    "reason_code": "additional_target_detail",
+    "resume_stage": "intent_ready",
+    "run_id": "repair-9c10a8ca24e24619a13b506e19ac850a",
+    "schema_version": "text2ifc/ifc-repair-clarification/0.2",
+    "stage": "targets_resolved",
+    "state_version": 4
+  },
+  "created_at": "2026-09-01T12:29:29.094914+00:00",
+  "from_stage": "intent_ready",
+  "previous_hash": "sha256:f6fd77138f6a44502d9eeef152c5e3a3b031aefe4e2f63c92832a82f52eda6cf",
+  "reason_code": "not_found",
+  "record_hash": "sha256:51849a8de1ec22aec6646e9686329ad20d814dd2a214d743844382c56522b1c3",
+  "result_artifacts": {},
+  "schema_version": "text2ifc/ifc-repair-transition/0.1",
+  "stage_hash": "sha256:30f8c4324877da0cfa2636486f5f4855d65e8316bfab953ea37336be372cf7e0",
+  "stage_payload": {
+    "resolution": {
+      "path": "resolution-v004.json",
+      "schema_version": "text2ifc/ifc-resolution-flow/0.1",
+      "sha256": "sha256:ca3d05c253f433768b4b5eb218d2fffdc6085128ef83e20c0c61a09360d6b479"
+    }
+  },
+  "state_version": 4,
+  "to_stage": "clarification_required",
+  "transition_id": 4
+}
