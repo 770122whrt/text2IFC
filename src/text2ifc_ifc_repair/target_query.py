@@ -294,17 +294,21 @@ def _geometry_constraint_value(
     if field_name == "storey_elevation_mm":
         value = record.facets.get("storey_elevation_mm")
     else:
-        dimension_key = {
-            "wall_length_mm": "length",
-            "wall_height_mm": "height",
-            "wall_thickness_mm": "thickness",
-            "opening_width_mm": "width",
-            "opening_height_mm": "height",
-            "opening_depth_mm": "depth",
+        dimension_keys = {
+            "wall_length_mm": ("length",),
+            "wall_height_mm": ("height",),
+            "wall_thickness_mm": ("thickness",),
+            # Hosted openings measure width/height/depth; opening fillings
+            # (Window/Door) carry the same opening size as OverallWidth/Height.
+            "opening_width_mm": ("width", "overall_width"),
+            "opening_height_mm": ("height", "overall_height"),
+            "opening_depth_mm": ("depth",),
         }.get(field_name)
-        if dimension_key is not None:
-            value = record.geometry_summary.get("dimensions_mm", {}).get(
-                dimension_key
+        if dimension_keys is not None:
+            dimensions = record.geometry_summary.get("dimensions_mm", {})
+            value = next(
+                (dimensions[key] for key in dimension_keys if key in dimensions),
+                None,
             )
         else:
             position_key = {

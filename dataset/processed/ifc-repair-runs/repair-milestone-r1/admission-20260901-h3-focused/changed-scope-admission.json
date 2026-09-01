@@ -1,0 +1,97 @@
+{
+ "schema_version": "text2ifc/repair-milestone-r1-changed-scope-admission/0.1",
+ "status": "passed",
+ "admission_basis": "previous full-preflight evidence + focused revalidation of all previously failed/changed scopes",
+ "generated_at": "2026-09-01",
+ "trigger": {
+  "defect": "R1 r1-20260901T055419268779Z case H3 deterministic stop LIVE_CASE_PROPERTY_IDENTITY_NOT_OFFERED",
+  "root_cause": "target geometry constraints opening_width_mm/opening_height_mm read only dimensions_mm.width/height (hosted openings); opening-filling records (IfcWindow/IfcDoor) store dimensions_mm.overall_width/overall_height, so the frozen Level 2 819x759 Window query offered zero public target candidates.",
+  "fix": "src/text2ifc_ifc_repair/target_query.py _geometry_constraint_value now accepts overall_width/overall_height as fallback dimension keys for the opening width/height constraints. No schema, prompt, fixture, Gold, or threshold change."
+ },
+ "source_full_preflight": {
+  "path": "dataset/processed/proof/ifc-repair-success-cases/structural/live/phase12-live-deepseek-complete/provider-evidence/preflight/preflight.json",
+  "sha256": "sha256:cc506b4759af65ee4573abe0f045a1b803a418aea552e4f286ff7125c7009c2d",
+  "preserved_status": "passed"
+ },
+ "prior_r1_run": {
+  "path": "dataset/processed/ifc-repair-runs/repair-milestone-r1/r1-20260901T055419268779Z/r1-execution-result.json",
+  "sha256": "sha256:e9de4e966b047a2df2b769d4ed1fe2bd6dfd016099724092f6ada873afd48ea2",
+  "preserved_status": "failed",
+  "stopped_after_case": "H3"
+ },
+ "provider_calls": 0,
+ "predictions_regenerated": 0,
+ "network_transport_attempted": false,
+ "changed_scope_files": {
+  "src/text2ifc_ifc_repair/target_query.py": "sha256:a2d85352dd41f8bc4f0135da0b8abbc2b545f432563a3efa9fc7124b96604564",
+  "tests/ifc_repair/test_target_query_filling_geometry.py": "sha256:af87b423e40a456f8584e1109c0804b1cf74ddf08be9f287363b91138be89316"
+ },
+ "resolved_checks": [
+  {
+   "check_id": "target_resolution_focused_regression",
+   "status": "passed",
+   "exit_code": 0,
+   "skip_count": 0,
+   "substitution_count": 0,
+   "timeout_count": 0,
+   "network_calls": 0,
+   "result": "37 passed (4 filling-geometry RED/GREEN + 15 target-query + 18 resolution-flow); includes pre-fix RED reproduction of H3 not_found and post-fix ambiguous with offered candidates",
+   "evidence": [
+    {
+     "path": "dataset/processed/ifc-repair-runs/repair-milestone-r1/admission-20260901-h3-focused/target-resolution-focused.junit.xml",
+     "sha256": "sha256:5f77fe2e3935343b180f7895a5090737f8cfad8391f294630671feecd52d497e"
+    }
+   ]
+  },
+  {
+   "check_id": "live_runner_contract_regression",
+   "status": "passed",
+   "exit_code": 0,
+   "skip_count": 0,
+   "substitution_count": 0,
+   "timeout_count": 0,
+   "network_calls": 0,
+   "result": "105 passed in 134.09s; offered-set validation and resume contract unchanged",
+   "evidence": [
+    {
+     "path": "dataset/processed/ifc-repair-runs/repair-milestone-r1/admission-20260901-h3-focused/live-runner-contract.junit.xml",
+     "sha256": "sha256:11bcc9e9dc0f10507673336a7a64e1882fb797f412a57dd8e78fe2e6861b7e94"
+    }
+   ]
+  },
+  {
+   "check_id": "full_ifc_repair_suite",
+   "status": "passed",
+   "exit_code": 0,
+   "skip_count": 0,
+   "substitution_count": 0,
+   "timeout_count": 0,
+   "network_calls": 0,
+   "result": "1249 passed in 1726.33s (0:28:46); zero failure, zero skip",
+   "evidence": [
+    {
+     "path": "dataset/processed/ifc-repair-runs/repair-milestone-r1/admission-20260901-h3-focused/ifc-repair-suite-stdout.txt",
+     "sha256": "sha256:e2627408dde4b5553aab1da533c532938953f5700f7caf4d2de80461f28be3bd"
+    }
+   ]
+  },
+  {
+   "check_id": "full_knowledge_suite",
+   "status": "passed",
+   "exit_code": 0,
+   "skip_count": 0,
+   "substitution_count": 0,
+   "timeout_count": 0,
+   "network_calls": 0,
+   "result": "111 passed in 269.74s (sequential rerun); the single parallel-run failure of test_real_bge_evaluation_reports_retrieval_without_synthetic_semantic_score passed in 3 isolated reruns (107.04s/104.93s/101.04s) and is resource contention, not a code failure",
+   "evidence": [
+    {
+     "path": "dataset/processed/ifc-repair-runs/repair-milestone-r1/admission-20260901-h3-focused/knowledge-suite-stdout.txt",
+     "sha256": "sha256:0844a8987f2de3d13164d77afa9ecef7a27e6977e0fcf508cb8cb5b916cc9447"
+    }
+   ]
+  }
+ ],
+ "compileall": "passed (src tests scripts)",
+ "git_diff_check": "passed"
+}
