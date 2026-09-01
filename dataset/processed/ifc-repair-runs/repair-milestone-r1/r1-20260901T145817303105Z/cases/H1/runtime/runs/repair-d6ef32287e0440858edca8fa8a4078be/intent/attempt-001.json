@@ -1,0 +1,37 @@
+{
+  "attempt": 1,
+  "issues": [],
+  "normalizations": [],
+  "provider_metadata": {
+    "estimated_input_tokens": "[REDACTED]",
+    "evidence_class": "live",
+    "max_input_tokens": "[REDACTED]",
+    "model": "deepseek-v4-flash",
+    "provider": "deepseek-openai-compatible",
+    "request_configuration": {
+      "temperature": {
+        "effective": false,
+        "value": 0
+      },
+      "thinking": {
+        "type": "enabled"
+      }
+    },
+    "response_id": "bda150cc-1070-4ad8-9628-526f949312b6",
+    "session_id": "ifc-repair-intent-request-00bb6ee2ce21cdea",
+    "stop_reason": "stop",
+    "transport_attempts": 1,
+    "usage": {
+      "completion_tokens": 8147,
+      "completion_tokens_details": "[REDACTED]",
+      "prompt_cache_hit_tokens": "[REDACTED]",
+      "prompt_cache_miss_tokens": "[REDACTED]",
+      "prompt_tokens": 11625,
+      "prompt_tokens_details": "[REDACTED]",
+      "total_tokens": 19772
+    }
+  },
+  "response_excerpt": "{\n  \"schema_version\": \"text2ifc/ifc-repair-intent-body/0.8\",\n  \"operations\": [\n    {\n      \"operation_id\": \"add-beam-1\",\n      \"operation_type\": \"add_beam\",\n      \"routing_intent\": {\n        \"component_family\": \"beam\",\n        \"action\": \"add\",\n        \"operation_profile\": \"beam.add.v0.3\",\n        \"source\": {\n          \"source_kind\": \"user_request\",\n          \"reference\": \"beam-request\",\n          \"excerpt\": \"在 Level 1 添加一根新的水平矩形梁，中心轴从 (1000, -20000, 3100) mm 到 (7000, -20000, 3100) mm，截面尺寸为 300 × 500 mm，并为它创建独立 Beam Type。\"\n        }\n      },\n      \"target_query\": {\n        \"schema_version\": \"text2ifc/ifc-target-query/0.1\",\n        \"allowed_ifc_classes\": [\"IfcBuildingStorey\"],\n        \"names\": [\"Level 1\"]\n      },\n      \"parameters\": {\n        \"axis\": {\n          \"start\": {\n            \"x_mm\": 1000,\n            \"y_mm\": -20000,\n            \"z_mm\": 3100\n          },\n          \"end\": {\n            \"x_mm\": 7000,\n            \"y_mm\": -20000,\n            \"z_mm\": 3100\n          }\n        },\n        \"section\": {\n          \"shape\": \"rectangle\",\n          \"width_mm\": 300,\n          \"height_mm\": 500\n        }\n      },\n      \"attribute_intents\": [],\n      \"property_intents\": [],\n      \"semantic_bundle_refs\": [],\n      \"quantity_intents\": [],\n      \"occurrence_reuse_intent\": null,\n      \"prototype_intent\": null,\n      \"provenance\": [\n        {\n          \"source_kind\": \"user_request\",\n          \"reference\": \"beam-request\",\n          \"excerpt\": \"在 Level 1 添加一根新的水平矩形梁，中心轴从 (1000, -20000, 3100) mm 到 (7000, -20000, 3100) mm，截面尺寸为 300 × 500 mm，并为它创建独立 Beam Type。\"\n        }\n      ]\n    },\n    {\n      \"operation_id\": \"set-window-fire-rating-1\",\n      \"operation_type\": \"set_occurrence_properties\",\n      \"routing_intent\": {\n        \"component_family\": \"occurrence\",\n        \"action\": \"set_properties\",\n        \"operation_profile\": \"occurrence.set-properties\",\n        \"source\": {\n          \"source_kind\": \"user_request\",\n          \"reference\": \"window-request\",\n          \"excerpt\": \"将 GlobalId 为 1hOSvn6df7F8_7GcBWlRLx、Tag 为 146885 的窗的防火等级设置为 EI60。\"\n        }\n      },\n      \"target_query\": {\n        \"schema_version\": \"text2ifc/ifc-target-query/0.1\",\n        \"allowed_ifc_classes\": [\"IfcWindow\"],\n        \"global_id\": \"1hOSvn6df7F8_7GcBWlRLx\",\n        \"attribute_intents\": [\n          {\n            \"name\": \"Tag\",\n            \"value\": \"146885\"\n          }\n        ]\n      },\n      \"parameters\": {},\n      \"attribute_intents\": [],\n      \"property_intents\": [\n        {\n          \"intent_kind\": \"natural_language_property\",\n          \"property_phrase\": \"防火等级\",\n          \"raw_value\": \"EI60\",\n          \"raw_unit\": null,\n          \"scope\": \"occurrence_direct\",\n          \"source\": {\n            \"source_kind\": \"user_request\",\n            \"reference\": \"window-request\",\n            \"excerpt\": \"将 GlobalId 为 1hOSvn6df7F8_7GcBWlRLx、Tag 为 146885 的窗的防火等级设置为 EI60。\"\n          }\n        }\n      ],\n      \"semantic_bundle_refs\": [],\n      \"quantity_intents\": [],\n      \"occurrence_reuse_intent\": null,\n      \"prototype_intent\": null,\n      \"provenance\": [\n        {\n          \"source_kind\": \"user_request\",\n          \"reference\": \"window-request\",\n          \"excerpt\": \"将 GlobalId 为 1hOSvn6df7F8_7GcBWlRLx、Tag 为 146885 的窗的防火等级设置为 EI60。\"\n        }\n      ]\n    }\n  ],\n  \"unsupported_requests\": [],\n  \"semantic_bundles\": [],\n  \"provenance\": [\n    {\n      \"source_kind\": \"user_request\",\n      \"reference\": \"full-request\",\n      \"excerpt\": \"在 Level 1 添加一根新的水平矩形梁，中心轴从 (1000, -20000, 3100) mm 到 (7000, -20000, 3100) mm，截面尺寸为 300 × 500 mm，并为它创建独立 Beam Type。同时，将 GlobalId 为 1hOSvn6df7F8_7GcBWlRLx、Tag 为 146885 的窗的防火等级设置为 EI60。两项修改必须在同一个原子事务中完成，全部成功才发布。\"\n    }\n  ]\n}",
+  "response_sha256": "sha256:4a04e83e8d4337e008fc2936593f914cb812c4c721d9d11c22485e9d08da40be",
+  "status": "valid"
+}

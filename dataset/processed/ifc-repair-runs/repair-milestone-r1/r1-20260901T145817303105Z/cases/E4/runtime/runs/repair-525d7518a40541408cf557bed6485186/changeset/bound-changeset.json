@@ -1,0 +1,68 @@
+{
+  "base_model_fingerprint": "sha256:9f180a7148bb7bcf43dd80800068553f1c8b189ebe0dc84b6c498061832960d1",
+  "binding_status": "bound",
+  "changeset_id": "changeset-set-wall-sound-insulation-1",
+  "evidence_refs": [
+    "resolved:/operations/set-wall-sound-insulation-1/context/candidate_targets/0"
+  ],
+  "operations": [
+    {
+      "evidence_refs": [
+        "resolved:/operations/set-wall-sound-insulation-1/context/candidate_targets/0"
+      ],
+      "operation_id": "set-wall-sound-insulation-1",
+      "operation_type": "set_occurrence_properties",
+      "parameters": {},
+      "semantic_assignments": [
+        {
+          "applicability": "conditional",
+          "authoring_action": "set_occurrence_pset",
+          "fact_key": "pset:Pset_WallCommon.AcousticRating",
+          "operation_id": "set-wall-sound-insulation-1",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "request-source:user_request",
+            "request-evidence:user-request",
+            "operation:set-wall-sound-insulation-1",
+            "property-hash:sha256:845cbe3f410936d717d11813ed1c518d8a1fef3d76e1a7831ec8e2691998fc4c",
+            "source_fact_key:pset:Pset_WallCommon.AcousticRating"
+          ],
+          "source_fact_key": "pset:Pset_WallCommon.AcousticRating",
+          "source_kind": "explicit_request",
+          "source_ref": "user-request",
+          "unit": null,
+          "value": "Rw 50",
+          "value_type": "IfcLabel"
+        }
+      ],
+      "semantic_manifest": {
+        "manifest_id": "semantic-manifest-2cdad55c9f7d73eddf264e5f",
+        "policy_id": "occurrence.property.l2",
+        "policy_version": "0.1"
+      },
+      "target": {
+        "element_global_id": "0ZBert7zf3GhThdO12NKAr"
+      }
+    }
+  ],
+  "postconditions": [
+    "target_preserved",
+    "requested_properties_match",
+    "shared_type_unchanged"
+  ],
+  "preconditions": [
+    "target_exists",
+    "target_class_supported",
+    "property_assignments_bound"
+  ],
+  "schema_version": "text2ifc/ifc-repair-changeset/0.2",
+  "scope": {
+    "forbidden_ids": [],
+    "target_ids": [
+      "0ZBert7zf3GhThdO12NKAr"
+    ]
+  },
+  "semantic_manifest_ref": "changeset/semantic-manifest-set-wall-sound-insulation-1.json",
+  "semantic_manifest_sha256": "sha256:676e1b59050e7e52db7a8b201cad54e0458ee20a164b4c857932451975a97f7b",
+  "source_request_hash": "sha256:e008a58f9a64e51138c51e3e2420c7a981af9bb44fb8aeae6a44f66abec759f9"
+}

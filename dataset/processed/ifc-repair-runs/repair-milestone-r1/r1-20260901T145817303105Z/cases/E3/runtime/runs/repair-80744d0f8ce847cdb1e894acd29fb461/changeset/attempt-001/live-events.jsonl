@@ -1,0 +1,40 @@
+{
+  "data": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "logprobs": null,
+        "message": {
+          "annotations": null,
+          "audio": null,
+          "content": "{\n  \"schema_version\": \"text2ifc/ifc-repair-changeset-draft/0.2\",\n  \"draft_id\": \"changeset/set-beam-component-number-1-draft-0.2\",\n  \"base_model_fingerprint\": \"sha256:79f294c643438ac7a494e4871857244c2de0eefa536eda5977af20640a301a22\",\n  \"source_request_hash\": \"sha256:37587fefb2e9ebbb5fd91bb9adc083849c5e4115cec871e0a73420fc4519a545\",\n  \"semantic_manifest_ref\": \"changeset/semantic-manifest-set-beam-component-number-1.json\",\n  \"semantic_manifest_sha256\": \"sha256:512aec11d3834b91c208cb82e9c97c2c5aa5daa7609fd0dba69f2beb472cc181\",\n  \"semantic_summary\": {\n    \"required\": 0,\n    \"conditional\": 1,\n    \"not_required\": 0\n  },\n  \"scope\": {\n    \"target_ids\": [\"1BpQ2K66f13Pyv1xzN7BBN\"],\n    \"forbidden_ids\": []\n  },\n  \"evidence_refs\": [\"resolved:/operations/set-beam-component-number-1/context/candidate_targets/0\"],\n  \"preconditions\": [\n    \"target_exists\",\n    \"target_class_supported\",\n    \"property_assignments_bound\"\n  ],\n  \"postconditions\": [\n    \"target_preserved\",\n    \"requested_properties_match\",\n    \"shared_type_unchanged\"\n  ],\n  \"operations\": [\n    {\n      \"operation_id\": \"set-beam-component-number-1\",\n      \"operation_type\": \"set_occurrence_properties\",\n      \"target\": {\n        \"element_global_id\": \"1BpQ2K66f13Pyv1xzN7BBN\"\n      },\n      \"parameters\": {},\n      \"evidence_refs\": [\"resolved:/operations/set-beam-component-number-1/context/candidate_targets/0\"]\n    }\n  ]\n}",
+          "function_call": null,
+          "reasoning_content": "We need respond with JSON only. Need generate draft JSON per schema. Need inspect request, bindings, operation projection. Need output one JSON object. Need conform schema.\n\nWe have resolved operation projection: one operation set-beam-component-number-1, set_occurrence_properties, target element_global_id \"1BpQ2K66f13Pyv1xzN7BBN\", parameters empty {}, evidence refs [\"resolved:/operations/set-beam-component-number-1/context/candidate_targets/0\"]. Scope forbidden_ids [], target_ids [\"1BpQ2K66f13Pyv1xzN7BBN\"]. Semantic group counts: conditional 1, not_required 0, required 0. Explicit user slots: [\"pset:Pset_BeamCommon.Reference\"]. Need include semantic_summary required/conditional/not_required. Source hash, model hash, manifest ref, manifest hash.\n\nNeed evidence_refs at top? Schema has evidence_refs required (strings array). Could be from projection? The projection has evidence_refs only per operation? Top-level evidence_refs should be array of strings maybe include? Could copy operation evidence? Need decide. The schema requires \"evidence_refs\": \"#/$defs/strings\". We can include empty array? But likely need echo evidence. Operation projection has per-operation evidence_refs. Top-level evidence_refs maybe not provided, but schema requires. Maybe set to same as operation evidence refs? We need determine from instructions: Copy operation IDs, types, targets, parameters, scope, and evidence exactly. It says \"evidence exactly\". Top-level evidence_refs in schema likely should be maybe list of evidence refs for operations? Since projection has evidence_refs field per operation and also top-level? The draft schema top-level requires evidence_refs. We can put unique evidence refs from operations. Also preconditions, postconditions required strings arrays. We need include precondition_names and postcondition_names from operation contract? The resolved operation projection didn't include preconditions/postconditions. The registered operation contract includes precondition_names and postcondition_names. Need put those likely at top-level as preconditions and postconditions. Since schema requires. Operation contract lists: preconditions [\"target_exists\",\"target_class_supported\",\"property_assignments_bound\"], postconditions [\"target_preserved\",\"requested_properties_match\",\"shared_type_unchanged\"]. Need include those strings at top-level.\n\nSemantic summary: required 0, conditional 1, not_required 0. So {\"required\":0,\"conditional\":1,\"not_required\":0}.\n\ndraft_id: Need generate? Schema id minLength pattern. Could use \"changeset/set-beam-component-number-1-draft\"? But must be deterministic? Not specified. The semantic manifest ref is changeset/semantic-manifest-set-beam-component-number-1.json. The draft id maybe \"changeset/set-beam-component-number-1-0.2\"? Need see examples? The instruction says \"Return exactly one JSON object conforming to CHANGESET_SCHEMA.\" It says deterministic code binds semantic assignments. We need output draft. draft_id required. We can construct maybe \"changeset/set-beam-component-number-1-draft-0.2\". Must satisfy id pattern. But maybe should be exactly from operation_id? Operation_id \"set-beam-component-number-1\". Could use \"changeset/set-beam-component-number-1\". Need include schema_version const. base_model_fingerprint = \"sha256:79f294c643438ac7a494e4871857244c2de0eefa536eda5977af20640a301a22\". source_request_hash = \"sha256:37587fefb2e9ebbb5fd91bb9adc083849c5e4115cec871e0a73420fc4519a545\". semantic_manifest_ref = \"changeset/semantic-manifest-set-beam-component-number-1.json\". semantic_manifest_sha256 = \"sha256:512aec11d3834b91c208cb82e9c97c2c5aa5daa7609fd0dba69f2beb472cc181\".\n\nNeed include operation. operation object: operation_id \"set-beam-component-number-1\", operation_type \"set_occurrence_properties\", target {\"element_global_id\":\"1BpQ2K66f13Pyv1xzN7BBN\"}, parameters {}, evidence_refs [\"resolved:/operations/set-beam-component-number-1/context/candidate_targets/0\"].\n\nScope: target_ids [\"1BpQ2K66f13Pyv1xzN7BBN\"], forbidden_ids [].\n\nTop-level evidence_refs: maybe same as operation evidence_refs. Need uniqueItems true. So [\"resolved:/operations/set-beam-component-number-1/context/candidate_targets/0\"].\n\nPreconditions and postconditions: Need strings array. Let's include exactly from contract: preconditions [\"target_exists\",\"target_class_supported\",\"property_assignments_bound\"], postconditions [\"target_preserved\",\"requested_properties_match\",\"shared_type_unchanged\"].\n\nCheck schema requires all. additionalProperties false. So no extra.\n\nNeed maybe include semantic_summary. Yes.\n\nNow ensure JSON valid. No comments.\n\nLet's craft.",
+          "refusal": null,
+          "role": "assistant",
+          "tool_calls": null
+        }
+      }
+    ],
+    "created": 1788275221,
+    "id": "8157afeb-6275-433f-a6dd-dc5433038a9c",
+    "model": "deepseek-v4-flash",
+    "moderation": null,
+    "object": "chat.completion",
+    "service_tier": null,
+    "stop_reason": "stop",
+    "system_fingerprint": "a26a7955944dc5c60445bff77fac9c8e",
+    "usage": {
+      "completion_tokens": 1591,
+      "completion_tokens_details": "[REDACTED]",
+      "prompt_cache_hit_tokens": "[REDACTED]",
+      "prompt_cache_miss_tokens": "[REDACTED]",
+      "prompt_tokens": 2083,
+      "prompt_tokens_details": "[REDACTED]",
+      "total_tokens": 3674
+    }
+  },
+  "event": "chat.completion",
+  "sequence": 0
+}
