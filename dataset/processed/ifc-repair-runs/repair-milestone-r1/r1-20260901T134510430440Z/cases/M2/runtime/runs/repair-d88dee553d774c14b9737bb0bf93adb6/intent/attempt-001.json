@@ -1,0 +1,37 @@
+{
+  "attempt": 1,
+  "issues": [],
+  "normalizations": [],
+  "provider_metadata": {
+    "estimated_input_tokens": "[REDACTED]",
+    "evidence_class": "live",
+    "max_input_tokens": "[REDACTED]",
+    "model": "deepseek-v4-flash",
+    "provider": "deepseek-openai-compatible",
+    "request_configuration": {
+      "temperature": {
+        "effective": false,
+        "value": 0
+      },
+      "thinking": {
+        "type": "enabled"
+      }
+    },
+    "response_id": "2de56c74-ce1d-4d7c-aef4-df084407bdd3",
+    "session_id": "ifc-repair-intent-request-1fc01d35d2e4d78e",
+    "stop_reason": "stop",
+    "transport_attempts": 1,
+    "usage": {
+      "completion_tokens": 3006,
+      "completion_tokens_details": "[REDACTED]",
+      "prompt_cache_hit_tokens": "[REDACTED]",
+      "prompt_cache_miss_tokens": "[REDACTED]",
+      "prompt_tokens": 11581,
+      "prompt_tokens_details": "[REDACTED]",
+      "total_tokens": 14587
+    }
+  },
+  "response_excerpt": "{\n  \"schema_version\": \"text2ifc/ifc-repair-intent-body/0.8\",\n  \"operations\": [\n    {\n      \"operation_id\": \"add-beam-level2-b-new-01\",\n      \"operation_type\": \"add_beam\",\n      \"routing_intent\": {\n        \"component_family\": \"beam\",\n        \"action\": \"add\",\n        \"operation_profile\": \"beam.add.v0.3\",\n        \"source\": {\n          \"source_kind\": \"user_request\",\n          \"reference\": \"public-request\",\n          \"excerpt\": \"在 Level 2 添加一根新的水平直线矩形梁，中心轴从 (2000, -2000, 3000) mm 到 (8000, -2000, 3000) mm，截面宽 300 mm、高 500 mm。为它创建独立的 Beam Type，并将构件编号设置为 B-NEW-01。\"\n        }\n      },\n      \"target_query\": {\n        \"schema_version\": \"text2ifc/ifc-target-query/0.1\",\n        \"allowed_ifc_classes\": [\"IfcBuildingStorey\"],\n        \"names\": [\"Level 2\"]\n      },\n      \"parameters\": {\n        \"axis\": {\n          \"start\": {\n            \"x_mm\": 2000,\n            \"y_mm\": -2000,\n            \"z_mm\": 3000\n          },\n          \"end\": {\n            \"x_mm\": 8000,\n            \"y_mm\": -2000,\n            \"z_mm\": 3000\n          }\n        },\n        \"section\": {\n          \"shape\": \"rectangle\",\n          \"width_mm\": 300,\n          \"height_mm\": 500\n        }\n      },\n      \"attribute_intents\": [\n        {\n          \"intent_kind\": \"attribute\",\n          \"name\": \"Tag\",\n          \"value\": \"B-NEW-01\",\n          \"source\": {\n            \"source_kind\": \"user_request\",\n            \"reference\": \"public-request\",\n            \"excerpt\": \"在 Level 2 添加一根新的水平直线矩形梁，中心轴从 (2000, -2000, 3000) mm 到 (8000, -2000, 3000) mm，截面宽 300 mm、高 500 mm。为它创建独立的 Beam Type，并将构件编号设置为 B-NEW-01。\"\n          }\n        }\n      ],\n      \"property_intents\": [],\n      \"semantic_bundle_refs\": [],\n      \"quantity_intents\": [],\n      \"occurrence_reuse_intent\": null,\n      \"prototype_intent\": null,\n      \"provenance\": [\n        {\n          \"source_kind\": \"user_request\",\n          \"reference\": \"public-request\",\n          \"excerpt\": \"在 Level 2 添加一根新的水平直线矩形梁，中心轴从 (2000, -2000, 3000) mm 到 (8000, -2000, 3000) mm，截面宽 300 mm、高 500 mm。为它创建独立的 Beam Type，并将构件编号设置为 B-NEW-01。\"\n        }\n      ]\n    }\n  ],\n  \"unsupported_requests\": [],\n  \"semantic_bundles\": [],\n  \"provenance\": [\n    {\n      \"source_kind\": \"user_request\",\n      \"reference\": \"public-request\",\n      \"excerpt\": \"在 Level 2 添加一根新的水平直线矩形梁，中心轴从 (2000, -2000, 3000) mm 到 (8000, -2000, 3000) mm，截面宽 300 mm、高 500 mm。为它创建独立的 Beam Type，并将构件编号设置为 B-NEW-01。\"\n    }\n  ]\n}",
+  "response_sha256": "sha256:60af8fe78d1039be441d7f418434fb228a29841ccc246b6ff2fde731c7f9fbd7",
+  "status": "valid"
+}

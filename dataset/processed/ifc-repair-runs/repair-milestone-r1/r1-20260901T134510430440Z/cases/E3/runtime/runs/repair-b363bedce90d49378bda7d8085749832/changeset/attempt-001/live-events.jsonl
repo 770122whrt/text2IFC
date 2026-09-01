@@ -1,0 +1,40 @@
+{
+  "data": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "logprobs": null,
+        "message": {
+          "annotations": null,
+          "audio": null,
+          "content": "{\n  \"schema_version\": \"text2ifc/ifc-repair-changeset-draft/0.2\",\n  \"draft_id\": \"changeset-set-beam-component-number-1\",\n  \"base_model_fingerprint\": \"sha256:79f294c643438ac7a494e4871857244c2de0eefa536eda5977af20640a301a22\",\n  \"source_request_hash\": \"sha256:37587fefb2e9ebbb5fd91bb9adc083849c5e4115cec871e0a73420fc4519a545\",\n  \"semantic_manifest_ref\": \"changeset/semantic-manifest-set-beam-component-number-1.json\",\n  \"semantic_manifest_sha256\": \"sha256:8e9c5d34708411f64e93332c39513c2fb60340d5b0a74bbd5792d4b66e74a87e\",\n  \"semantic_summary\": {\n    \"required\": 0,\n    \"conditional\": 1,\n    \"not_required\": 0\n  },\n  \"scope\": {\n    \"target_ids\": [\"1BpQ2K66f13Pyv1xzN7BBN\"],\n    \"forbidden_ids\": []\n  },\n  \"evidence_refs\": [\"resolved:/operations/set-beam-component-number-1/context/candidate_targets/0\"],\n  \"preconditions\": [\"target_exists\", \"target_class_supported\", \"property_assignments_bound\"],\n  \"postconditions\": [\"target_preserved\", \"requested_properties_match\", \"shared_type_unchanged\"],\n  \"operations\": [\n    {\n      \"operation_id\": \"set-beam-component-number-1\",\n      \"operation_type\": \"set_occurrence_properties\",\n      \"target\": {\n        \"element_global_id\": \"1BpQ2K66f13Pyv1xzN7BBN\"\n      },\n      \"parameters\": {},\n      \"evidence_refs\": [\"resolved:/operations/set-beam-component-number-1/context/candidate_targets/0\"]\n    }\n  ]\n}",
+          "function_call": null,
+          "reasoning_content": "我们只需要按照规则输出JSON。给定的输入是公共请求和解析操作投影等。我们需要根据草稿模式生成JSON。注意规则：复制操作ID、类型、目标、参数、范围、证据。具体来说，来自解析操作投影的操作是：\n\n- operation_id: \"set-beam-component-number-1\"\n- operation_type: \"set_occurrence_properties\"\n- parameters: {} (空对象)\n- target: {\"element_global_id\": \"1BpQ2K66f13Pyv1xzN7BBN\"}\n- evidence_refs: [\"resolved:/operations/set-beam-component-number-1/context/candidate_targets/0\"]\n\n还有scope: {\"forbidden_ids\": [], \"target_ids\": [\"1BpQ2K66f13Pyv1xzN7BBN\"]}\n\n以及evidence_refs在顶层？草稿模式有顶层evidence_refs: strings。我们需要提供。此外，preconditions和postconditions是字符串数组。从操作合同中，有precondition_names和postcondition_names，但规则说“Do not emit semantic assignments...”，并且“Copy operation IDs, types, targets, parameters, scope, and evidence exactly.” 预条件和后条件可能来自合同名称？但规则没有明确说复制它们。然而草稿模式要求它们存在。根据示例，我们需要推断。可能preconditions和postconditions应该包含操作合同的precondition_names和postcondition_names？但规则说“Copy operation IDs, types, targets, parameters, scope, and evidence exactly.” 没有提到preconditions/postconditions。不过我们必须提供。查看解析操作投影没有提供它们。但注册的操作合同有precondition_names和postcondition_names。可能我们应该从那里复制？但规则说“Do not emit semantic assignments”。也许preconditions/postconditions只是字符串列表，可以来自操作合同的名称。让我们看看先前的验证反馈是空的，所以可能没问题。\n\n为了安全，我将从操作合同中提取precondition_names和postcondition_names作为数组。操作合同有一个，即set_occurrence_properties。它有precondition_names: [\"target_exists\", \"target_class_supported\", \"property_assignments_bound\"] 和 postcondition_names: [\"target_preserved\", \"requested_properties_match\", \"shared_type_unchanged\"]。\n\n注意，操作投影中的操作没有指定这些，但它们可能在上下文中。由于草稿模式要求这些字段，我将使用这些。\n\n另外，semantic_summary需要从“Semantic group counts”中获取。给定：{\"conditional\": 1, \"not_required\": 0, \"required\": 0}。所以semantic_summary应为{\"required\": 0, \"conditional\": 1, \"not_required\": 0}。\n\n其他字段：\n- schema_version: \"text2ifc/ifc-repair-changeset-draft/0.2\"\n- draft_id: 应该是唯一的id。可能我们可以生成一个，但规则没有指定。也许从操作id派生？但必须符合id模式。我们可以使用\"set-beam-component-number-1\"作为draft_id？但draft_id是草稿的id，可能应该是某种标识符。由于没有提供，我可以使用\"changeset-set-beam-component-number-1\"或类似。但规则说“Copy operation IDs... exactly”所以操作id是固定的。draft_id可能是我们选择的。但为了一致性，也许使用操作id？或者使用一个唯一的。我将使用\"set-beam-component-number-1\"作为draft_id？但可能应该以\"changeset-\"开头。由于没有严格规定，我将使用\"changeset-set-beam-component-number-1\"以确保唯一性。\n- base_model_fingerprint: 模型的哈希：sha256:79f294c643438ac7a494e4871857244c2de0eefa536eda5977af20640a301a22\n- source_request_hash: sha256:37587fefb2e9ebbb5fd91bb9adc083849c5e4115cec871e0a73420fc4519a545\n- semantic_manifest_ref: \"changeset/semantic-manifest-set-beam-component-number-1.json\"\n- semantic_manifest_sha256: sha256:8e9c5d34708411f64e93332c39513c2fb60340d5b0a74bbd5792d4b66e74a87e\n- evidence_refs: 顶层应该是什么？可能包含解析操作投影中的evidence_refs？但它们是相同的。可能顶层evidence_refs应该包含所有操作的evidence_refs的并集？或者复制自操作投影？在解析操作投影中，有evidence_refs字段，但它是每个操作的一部分。草稿模式在顶层也有evidence_refs。我应该从操作投影中取evidence_refs？操作投影中有两个地方：在操作中有一个evidence_refs，在顶层也有一个evidence_refs？实际上，解析操作投影JSON是：\n\n{\"evidence_refs\": [\"resolved:/operations/set-beam-component-number-1/context/candidate_targets/0\"], \"operations\": [{\"evidence_refs\": [\"resolved:/operations/set-beam-component-number-1/context/candidate_targets/0\"], \"operation_id\": \"set-beam-component-number-1\", \"operation_type\": \"set_occurrence_properties\", \"parameters\": {}, \"target\": {\"element_global_id\": \"1BpQ2K66f13Pyv1xzN7BBN\"}}], \"scope\": {\"forbidden_ids\": [], \"target_ids\": [\"1BpQ2K66f13Pyv1xzN7BBN\"]}}\n\n所以顶层有evidence_refs和operations和scope。但草稿模式也要求evidence_refs，所以我们复制顶层的那个。\n\n注意：操作中的evidence_refs与顶层相同。我们复制它们。\n\n- scope: 从操作投影复制：{\"forbidden_ids\": [], \"target_ids\": [\"1BpQ2K66f13Pyv1xzN7BBN\"]}\n\n- operations: 一个数组，包含一个操作。操作结构需要\"operation_id\", \"operation_type\", \"target\", \"parameters\", \"evidence_refs\"。我们从投影中复制。\n\n现在preconditions和postconditions：我将使用操作合同的名称。\n\n注意：操作合同可能来自单个操作，但它们是全局的？既然只有一个操作，没问题。\n\n让我们构建JSON。\n\n需要确保所有字段符合模式。\n\n另外，draft_id必须匹配模式：^[A-Za-z0-9][A-Za-z0-9._:/-]*$，所以\"changeset-set-beam-component-number-1\"可以。\n\n我将draft_id设为\"changeset-set-beam-component-number-1\"。\n\n现在，preconditions和postconditions是字符串数组，使用操作合同的precondition_names和postcondition_names。\n\n所以preconditions: [\"target_exists\", \"target_class_supported\", \"property_assignments_bound\"]\npostconditions: [\"target_preserved\", \"requested_properties_match\", \"shared_type_unchanged\"]\n\n检查草稿模式：preconditions和postconditions都是strings类型，所以数组。\n\nsemantic_summary: {\"required\": 0, \"conditional\": 1, \"not_required\": 0}\n\n现在，最终JSON。\n\n注意：规则说“Return exactly one JSON object conforming to CHANGESET_SCHEMA”。所以输出应该是纯JSON。\n\n另外，规则说“Do not emit semantic assignments...”所以我们不添加任何参数（parameters为空）。\n\n现在生成。",
+          "refusal": null,
+          "role": "assistant",
+          "tool_calls": null
+        }
+      }
+    ],
+    "created": 1788270750,
+    "id": "65a087ec-1f9e-4cd5-bfef-8b2e3b7d50f9",
+    "model": "deepseek-v4-flash",
+    "moderation": null,
+    "object": "chat.completion",
+    "service_tier": null,
+    "stop_reason": "stop",
+    "system_fingerprint": "a26a7955944dc5c60445bff77fac9c8e",
+    "usage": {
+      "completion_tokens": 2039,
+      "completion_tokens_details": "[REDACTED]",
+      "prompt_cache_hit_tokens": "[REDACTED]",
+      "prompt_cache_miss_tokens": "[REDACTED]",
+      "prompt_tokens": 2085,
+      "prompt_tokens_details": "[REDACTED]",
+      "total_tokens": 4124
+    }
+  },
+  "event": "chat.completion",
+  "sequence": 0
+}

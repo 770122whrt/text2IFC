@@ -1,0 +1,40 @@
+{
+  "data": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "logprobs": null,
+        "message": {
+          "annotations": null,
+          "audio": null,
+          "content": "{\"schema_version\":\"text2ifc/ifc-repair-changeset-draft/0.2\",\"draft_id\":\"changeset-set-door-fire-rating-1\",\"base_model_fingerprint\":\"sha256:989ace1d52f694ee94d80bd99aa81d0ff3d76cf21f34fcfd00a286ac897ed8a6\",\"source_request_hash\":\"sha256:daf7374cd446ee01d467eb700d33da287668a51979ee8904aa8d4620ba2e434e\",\"semantic_manifest_ref\":\"changeset/semantic-manifest-set-door-fire-rating-1.json\",\"semantic_manifest_sha256\":\"sha256:b131a3762d18bc70b659dc274b10f587d5870e54103ed5a8bf446b3420508704\",\"semantic_summary\":{\"required\":0,\"conditional\":1,\"not_required\":0},\"scope\":{\"target_ids\":[\"3JlX9$$_PCKBNpDob64$5M\"],\"forbidden_ids\":[]},\"evidence_refs\":[\"resolved:/operations/set-door-fire-rating-1/context/candidate_targets/0\"],\"preconditions\":[\"target_exists\",\"target_class_supported\",\"property_assignments_bound\"],\"postconditions\":[\"target_preserved\",\"requested_properties_match\",\"shared_type_unchanged\"],\"operations\":[{\"operation_id\":\"set-door-fire-rating-1\",\"operation_type\":\"set_occurrence_properties\",\"target\":{\"element_global_id\":\"3JlX9$$_PCKBNpDob64$5M\"},\"parameters\":{},\"evidence_refs\":[\"resolved:/operations/set-door-fire-rating-1/context/candidate_targets/0\"]}]}",
+          "function_call": null,
+          "reasoning_content": "We need produce JSON object exactly with required fields. Need use provided data. Need output draft. Need follow schema. Need determine draft_id maybe something unique? Not specified; must be id pattern. We can choose \"changeset-set-door-fire-rating-1\" maybe. But likely deterministic? Need include evidence refs from resolved operation projection: evidence_refs list at top-level likely same as operation evidence? In resolved operation projection: \"evidence_refs\": [\"resolved:/operations/set-door-fire-rating-1/context/candidate_targets/0\"]. Also operation has same. Need scope target_ids [\"3JlX9$$_PCKBNpDob64$5M\"], forbidden_ids []. Preconditions and postconditions from registered operation contracts: preconditions names, postconditions names. Need include all? They are arrays of strings. Operation contracts has one contract. Selected profile maybe. Need use preconditions from contract: [\"target_exists\",\"target_class_supported\",\"property_assignments_bound\"]; postconditions: [\"target_preserved\",\"requested_properties_match\",\"shared_type_unchanged\"]. Need include.\n\nNeed semantic_summary counts given: {\"conditional\": 1, \"not_required\": 0, \"required\": 0}. Need base_model_fingerprint = model sha256: \"sha256:989ace1d52f694ee94d80bd99aa81d0ff3d76cf21f34fcfd00a286ac897ed8a6\". source_request_hash: \"sha256:daf7374cd446ee01d467eb700d33da287668a51979ee8904aa8d4620ba2e434e\". semantic_manifest_ref: \"changeset/semantic-manifest-set-door-fire-rating-1.json\". semantic_manifest_sha256: \"sha256:b131a3762d18bc70b659dc274b10f587d5870e54103ed5a8bf446b3420508704\".\n\nNeed evidence_refs top-level: likely same as resolved operation projection's evidence_refs. It's array with one string. Need operations array: one object with operation_id \"set-door-fire-rating-1\", operation_type \"set_occurrence_properties\", target {\"element_global_id\": \"3JlX9$$_PCKBNpDob64$5M\"}, parameters {} (empty object), evidence_refs same array. Need ensure exact.\n\nNeed draft_id: choose something like \"changeset-set-door-fire-rating-1\"? Pattern allows alnum and . _ : / - must start alnum. \"changeset-set-door-fire-rating-1\" okay. Use same as operation? Could be \"set-door-fire-rating-1-changeset\". We'll use \"changeset-set-door-fire-rating-1\". Need include schema_version const \"text2ifc/ifc-repair-changeset-draft/0.2\".\n\nNeed ensure JSON only.\n\nLet's construct.",
+          "refusal": null,
+          "role": "assistant",
+          "tool_calls": null
+        }
+      }
+    ],
+    "created": 1788270481,
+    "id": "7f70ef1b-a72b-4b62-9da0-2ac8a0c414ba",
+    "model": "deepseek-v4-flash",
+    "moderation": null,
+    "object": "chat.completion",
+    "service_tier": null,
+    "stop_reason": "stop",
+    "system_fingerprint": "a26a7955944dc5c60445bff77fac9c8e",
+    "usage": {
+      "completion_tokens": 1017,
+      "completion_tokens_details": "[REDACTED]",
+      "prompt_cache_hit_tokens": "[REDACTED]",
+      "prompt_cache_miss_tokens": "[REDACTED]",
+      "prompt_tokens": 2074,
+      "prompt_tokens_details": "[REDACTED]",
+      "total_tokens": 3091
+    }
+  },
+  "event": "chat.completion",
+  "sequence": 0
+}
