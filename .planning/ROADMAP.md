@@ -576,7 +576,8 @@ They are prerequisite implementation history, not accepted Wave 15 live Proof.
 ### Phase 12.1: Property Resolution RAG and Reranker Correction
 
 **Status:** In progress - Plans 12.1-01 through 12.1-06 complete; Plan 12.1-07
-is unstarted and awaits an explicit Go/No-Go.
+has partial genuine evidence but final Proof, IFCCompare and closeout remain
+incomplete. A separate R1 ordered run stopped at H3 after 9/12 cases.
 
 **Goal:** Replace active reviewed-alias/local-consensus property authorization
 with class-applicable multilingual vector retrieval, one independent bounded
@@ -605,7 +606,7 @@ knowledge/vector baseline, Phase 12 Plans 12-01 through 12-14 and the current
 - [x] **Wave 4:** [12.1-04 - Admissibility gate and ExactPropertyIntent construction](phases/12.1-property-resolution-rag-reranker/12.1-04-PLAN.md)
 - [x] **Wave 5:** [12.1-05 - Durable public API integration and clarification resume](phases/12.1-property-resolution-rag-reranker/12.1-05-PLAN.md)
 - [x] **Wave 6:** [12.1-06 - Frozen retrieval evaluation, Stage 1.5 offline contract, five-family regression and zero-network preflight](phases/12.1-property-resolution-rag-reranker/12.1-06-PLAN.md) — real local BGE-M3/Qdrant retrieval, five-family/offline full-chain and preflight 0.4 passed; Stage 1.5 semantic capability is explicitly not evaluated here. See [summary](phases/12.1-property-resolution-rag-reranker/12.1-06-SUMMARY.md).
-- [ ] **Wave 7** *(blocked on explicit Go/No-Go)*: [12.1-07 - Genuine 60-case Stage 1.5 semantic evaluation, four-case DeepSeek UAT, independent Proof, IFCCompare and closeout](phases/12.1-property-resolution-rag-reranker/12.1-07-PLAN.md)
+- [ ] **Wave 7** *(in progress; not closure-eligible)*: [12.1-07 - Genuine 60-case Stage 1.5 semantic evaluation, four-case DeepSeek UAT, independent Proof, IFCCompare and closeout](phases/12.1-property-resolution-rag-reranker/12.1-07-PLAN.md) — the frozen four case contracts have genuine Provider results; top-level Proof eligibility remains false/pending and final IFCCompare/closeout are not complete. See the [2026-09-01 handoff](../docs/handoffs/repair-milestone-r1-checkpoint-2026-09-01.md) and [execution matrix](../docs/validation/repair-milestone-r1/plan07-r1-genuine-execution-matrix-2026-09-01.md).
 
 **Cross-cutting constraints:**
 
