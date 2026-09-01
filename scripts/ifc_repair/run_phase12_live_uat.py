@@ -167,7 +167,13 @@ PROGRAM_GUARD_REASON = "STRUCTURAL_ANALYSIS_UNSUPPORTED"
 class LiveCase:
     """One fixed public live case; intentionally simple for importlib seams."""
 
-    __slots__ = ("case_id", "request", "feedback", "feedback_kind")
+    __slots__ = (
+        "case_id",
+        "request",
+        "feedback",
+        "feedback_kind",
+        "expect_program_guard",
+    )
 
     def __init__(
         self,
@@ -176,12 +182,14 @@ class LiveCase:
         request: str,
         feedback: str | None = None,
         feedback_kind: str | None = None,
+        expect_program_guard: bool = False,
     ) -> None:
         if not case_id or not request.strip():
             raise ValueError("LIVE_CASE_ID_AND_REQUEST_REQUIRED")
         self.case_id = case_id
         self.request = request
         self.feedback = feedback
+        self.expect_program_guard = bool(expect_program_guard)
         if feedback is None:
             if feedback_kind is not None:
                 raise ValueError("LIVE_CASE_FEEDBACK_KIND_WITHOUT_FEEDBACK")
@@ -205,7 +213,11 @@ DEFAULT_CASES = (
         case_id="window-semantic-canary",
         request=WINDOW_SEMANTIC_REQUEST,
     ),
-    LiveCase(case_id="program-guard", request=PROGRAM_GUARD_REQUEST),
+    LiveCase(
+        case_id="program-guard",
+        request=PROGRAM_GUARD_REQUEST,
+        expect_program_guard=True,
+    ),
 )
 REQUIRED_CASE_IDS = tuple(case.case_id for case in DEFAULT_CASES)
 FROZEN_CASE_MATRIX_SHA256 = (
@@ -1699,7 +1711,7 @@ def _production_case_executor(
         if key in {"successful_ifc", "diagnostic_candidate"} and value
     )
     program_guard_evidence = None
-    if case.case_id == "program-guard":
+    if case.expect_program_guard:
         source_sha256_after = _path_sha256(source)
         stage2_attempts = sum(
             1

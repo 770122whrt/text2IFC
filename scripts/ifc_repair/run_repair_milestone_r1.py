@@ -164,10 +164,7 @@ def load_execution_manifest(
         model["resolved_path"] = str(model_path)
 
     resume_bindings = document["resume_bindings"]
-    if not isinstance(resume_bindings, Mapping) or set(resume_bindings) != {
-        "M1",
-        "H3",
-    }:
+    if not isinstance(resume_bindings, Mapping) or not resume_bindings:
         raise ValueError("R1_EXECUTION_RESUME_BINDINGS_INVALID")
     public_cases: list[dict[str, Any]] = []
     for case in cases:
@@ -178,11 +175,26 @@ def load_execution_manifest(
         model_id = str(case["model_id"])
         if model_id not in models:
             raise ValueError("R1_EXECUTION_CASE_MODEL_MISMATCH")
+        expected = case.get("evaluation_only_expected")
+        if not isinstance(expected, Mapping):
+            raise ValueError("R1_EXECUTION_EXPECTED_OUTCOME_MISSING")
+        outcome = str(
+            expected.get("outcome") or expected.get("resume_outcome") or ""
+        )
+        initial_outcome = str(expected.get("initial_outcome") or "")
+        if outcome == "unsupported_program_zero_mutation" and not (
+            initial_outcome == "" or initial_outcome == outcome
+        ):
+            raise ValueError("R1_EXECUTION_EXPECTED_OUTCOME_INVALID")
         public_case = {
             "case_id": case_id,
             "model_id": model_id,
             "request": request,
             "request_sha256": str(case["request_sha256"]),
+            "expected_outcome": outcome,
+            "expect_program_guard": outcome
+            == "unsupported_program_zero_mutation",
+            "expect_resume": case_id in resume_bindings,
             "feedback": None,
             "feedback_kind": None,
             "source_path": models[model_id]["resolved_path"],
@@ -226,22 +238,25 @@ def load_execution_manifest(
 
 
 def _case_contract_pass(
-    case_id: str,
+    expected_outcome: str,
     final: Mapping[str, Any],
     *,
     live_evidence_pass: bool,
     private_evidence_detected: bool,
+    expect_resume: bool,
 ) -> bool:
     if private_evidence_detected or not live_evidence_pass:
         return False
-    if case_id == "H4":
+    if expected_outcome == "unsupported_program_zero_mutation":
         return (
             final.get("status") == "unsupported"
             and final.get("reason_code") == "STRUCTURAL_ANALYSIS_UNSUPPORTED"
             and final.get("successful_artifact_publishable") is False
-            and not final.get("program_guard_evidence", {}).get(
-                "mutation_attempted", True
+            and isinstance(final.get("program_guard_evidence"), Mapping)
+            and final.get("program_guard_evidence").get(
+                "mutation_attempted"
             )
+            is False
         )
     strict = final.get("strict_reopen_verification")
     if not isinstance(strict, Mapping):
@@ -255,7 +270,7 @@ def _case_contract_pass(
         and strict.get("l1_pass") is True
         and strict.get("l2_pass") is True
         and (
-            case_id not in {"M1", "H3"}
+            not expect_resume
             or final.get("clarification_answer_applied") is True
         )
     )
@@ -488,6 +503,9 @@ def run_r1_acceptance(
                 request=str(case_document["request"]),
                 feedback=case_document["feedback"],
                 feedback_kind=case_document["feedback_kind"],
+                expect_program_guard=bool(
+                    case_document["expect_program_guard"]
+                ),
             )
             try:
                 final = dict(
@@ -527,13 +545,15 @@ def run_r1_acceptance(
             counts = live._counts(attempts)
             live_pass = live._live_attempt_evidence_pass(attempts)
             contract_pass = _case_contract_pass(
-                case_id,
+                str(case_document["expected_outcome"]),
                 final,
                 live_evidence_pass=live_pass,
                 private_evidence_detected=private_evidence,
+                expect_resume=bool(case_document["expect_resume"]),
             )
             case_result = {
                 "case_id": case_id,
+                "expected_outcome": str(case_document["expected_outcome"]),
                 "status": "passed" if contract_pass else "failed",
                 "contract_pass": contract_pass,
                 "final": final,

@@ -277,3 +277,119 @@ def test_r1_prerequisite_accepts_plan07_full_preflight_without_old_admission(
         "full_preflight": plan07["preflight"],
         "plan07_result": plan07,
     }
+
+
+def test_public_cases_carry_declarative_outcome_not_case_id_branching() -> None:
+    """Contract evaluation must be driven by frozen expected outcomes.
+
+    The runner's contract function may not switch on case ids; every case
+    declares its frozen outcome class from the acceptance freeze, and the
+    guard expectation is derived from that outcome, not from an identity.
+    """
+    loaded = runner.load_execution_manifest(MANIFEST)
+
+    by_id = {case["case_id"]: case for case in loaded["public_cases"]}
+    assert by_id["H4"]["expected_outcome"] == (
+        "unsupported_program_zero_mutation"
+    )
+    assert by_id["H4"]["expect_program_guard"] is True
+    assert by_id["H4"]["expect_resume"] is False
+    for case_id in ("E1", "E2", "E3", "E4", "M2", "M3", "H1", "H2", "A1"):
+        assert by_id[case_id]["expected_outcome"] in {
+            "success",
+            "atomic_success",
+        }
+        assert by_id[case_id]["expect_program_guard"] is False
+        assert by_id[case_id]["expect_resume"] is False
+    for case_id in ("M1", "H3"):
+        assert by_id[case_id]["expect_resume"] is True
+        assert by_id[case_id]["expect_program_guard"] is False
+
+
+def _guard_final(mutating: bool) -> dict:
+    return {
+        "status": "unsupported",
+        "reason_code": "STRUCTURAL_ANALYSIS_UNSUPPORTED",
+        "successful_artifact_publishable": False,
+        "program_guard_evidence": {
+            "source_reference": "fixture",
+            "source_sha256_before": "sha256:x",
+            "source_sha256_after": "sha256:x",
+            "source_unchanged": True,
+            "stage2_attempts": 0 if not mutating else 1,
+            "candidate_output_paths": [],
+            "mutation_attempted": mutating,
+        },
+    }
+
+
+def test_guard_contract_passes_only_with_zero_mutation_evidence() -> None:
+    ok = runner._case_contract_pass(
+        "unsupported_program_zero_mutation",
+        _guard_final(mutating=False),
+        live_evidence_pass=True,
+        private_evidence_detected=False,
+        expect_resume=False,
+    )
+    mutated = runner._case_contract_pass(
+        "unsupported_program_zero_mutation",
+        _guard_final(mutating=True),
+        live_evidence_pass=True,
+        private_evidence_detected=False,
+        expect_resume=False,
+    )
+    missing_evidence = dict(_guard_final(mutating=False))
+    missing_evidence["program_guard_evidence"] = None
+    crashed_pre_fix = runner._case_contract_pass(
+        "unsupported_program_zero_mutation",
+        missing_evidence,
+        live_evidence_pass=True,
+        private_evidence_detected=False,
+        expect_resume=False,
+    )
+    assert ok is True
+    assert mutated is False
+    # A None guard evidence must be a contract failure, never an exception:
+    # this is the exact crash observed on the first 12-case run.
+    assert crashed_pre_fix is False
+
+
+def test_success_contract_requires_resume_answer_only_when_declared() -> None:
+    def _success_final(applied: bool) -> dict:
+        return {
+            "status": "succeeded",
+            "complete_repair_success": True,
+            "successful_artifact_publishable": True,
+            "clarification_answer_applied": applied,
+            "strict_reopen_verification": {
+                "status": "passed",
+                "l0_pass": True,
+                "l1_pass": True,
+                "l2_pass": True,
+            },
+        }
+
+    resume_required = runner._case_contract_pass(
+        "success",
+        _success_final(applied=False),
+        live_evidence_pass=True,
+        private_evidence_detected=False,
+        expect_resume=True,
+    )
+    resume_satisfied = runner._case_contract_pass(
+        "success",
+        _success_final(applied=True),
+        live_evidence_pass=True,
+        private_evidence_detected=False,
+        expect_resume=True,
+    )
+    plain_success = runner._case_contract_pass(
+        "success",
+        _success_final(applied=False),
+        live_evidence_pass=True,
+        private_evidence_detected=False,
+        expect_resume=False,
+    )
+    assert resume_required is False
+    assert resume_satisfied is True
+    assert plain_success is True
