@@ -1,0 +1,36 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "message": {
+        "annotations": null,
+        "audio": null,
+        "content": "{\n  \"schema_version\": \"text2ifc/ifc-repair-changeset-draft/0.2\",\n  \"draft_id\": \"changeset-set-beam-number-1\",\n  \"base_model_fingerprint\": \"sha256:79f294c643438ac7a494e4871857244c2de0eefa536eda5977af20640a301a22\",\n  \"source_request_hash\": \"sha256:37587fefb2e9ebbb5fd91bb9adc083849c5e4115cec871e0a73420fc4519a545\",\n  \"semantic_manifest_ref\": \"changeset/semantic-manifest-set-beam-number-1.json\",\n  \"semantic_manifest_sha256\": \"sha256:39dd516bba7fa745d6d05101ba97d72eb186743c6aa87a66e04b233e95397f7c\",\n  \"semantic_summary\": {\n    \"required\": 0,\n    \"conditional\": 1,\n    \"not_required\": 0\n  },\n  \"scope\": {\n    \"target_ids\": [\n      \"1BpQ2K66f13Pyv1xzN7BBN\"\n    ],\n    \"forbidden_ids\": []\n  },\n  \"evidence_refs\": [\n    \"resolved:/operations/set-beam-number-1/context/candidate_targets/0\"\n  ],\n  \"preconditions\": [\n    \"target_exists\",\n    \"target_class_supported\",\n    \"property_assignments_bound\"\n  ],\n  \"postconditions\": [\n    \"target_preserved\",\n    \"requested_properties_match\",\n    \"shared_type_unchanged\"\n  ],\n  \"operations\": [\n    {\n      \"operation_id\": \"set-beam-number-1\",\n      \"operation_type\": \"set_occurrence_properties\",\n      \"target\": {\n        \"element_global_id\": \"1BpQ2K66f13Pyv1xzN7BBN\"\n      },\n      \"parameters\": {},\n      \"evidence_refs\": [\n        \"resolved:/operations/set-beam-number-1/context/candidate_targets/0\"\n      ]\n    }\n  ]\n}",
+        "function_call": null,
+        "reasoning_content": "我们只需要根据给定的信息生成JSON。注意规则：不要发出语义分配、Pset值等。操作投影中已经有操作，但参数为空。schema需要所有字段。我们使用提供的解析操作投影。注意draft schema中的semantic_summary需要包含required, conditional, not_required，由语义组计数给出：conditional=1, not_required=0, required=0。\n\nevidence_refs来自解析操作投影和顶层证据？顶层evidence_refs应该是操作中的证据？但schema要求顶层evidence_refs，可能是所有操作的证据引用？解析操作投影有evidence_refs数组。操作也有evidence_refs。我们按照schema要求，为顶层提供证据引用。由于只有一个操作，我们可以使用相同的证据。但也许顶层evidence_refs是全局的，我们从操作中收集。在示例中，通常顶层evidence_refs包含所有证据。我们使用解析操作投影中的evidence_refs。\n\npreconditions和postconditions：从操作契约中，precondition_names和postcondition_names。但解析操作投影没有列出。我们根据操作契约和选定的profile？操作契约中有precondition_names和postcondition_names。对于operation_type \"set_occurrence_properties\"，precondition_names: [\"target_exists\", \"target_class_supported\", \"property_assignments_bound\"]，postcondition_names: [\"target_preserved\", \"requested_properties_match\", \"shared_type_unchanged\"]。这些应该被输出。\n\ndraft_id：我们需要生成一个id。格式允许[A-Za-z0-9][...]*，所以我们可以使用类似\"changeset-set-beam-number-1\"或类似。但必须唯一？没有指示。我们可以用\"draft-set-beam-number-1\"。\n\nbase_model_fingerprint来自不可变绑定：model: sha256:... 但注意schema要求hash类型，以\"sha256:\"开头。提供的模型hash是\"sha256:79f294c643438ac7a494e4871857244c2de0eefa536eda5977af20640a301a22\"，直接使用。\n\nsource_request_hash：来自源请求sha256：\"sha256:37587fefb2e9ebbb5fd91bb9adc083849c5e4115cec871e0a73420fc4519a545\"\n\nsemantic_manifest_ref：\"changeset/semantic-manifest-set-beam-number-1.json\"\nsemantic_manifest_sha256：\"sha256:39dd516bba7fa745d6d05101ba97d72eb186743c6aa87a66e04b233e95397f7c\"\n\nsemantic_summary: {\"required\":0, \"conditional\":1, \"not_required\":0}\n\nscope来自操作投影：{\"forbidden_ids\": [], \"target_ids\": [\"1BpQ2K66f13Pyv1xzN7BBN\"]}\n\nevidence_refs：使用解析操作投影中的evidence_refs。注意操作投影中的evidence_refs是数组，包含一个字符串\"resolved:/operations/set-beam-number-1/context/candidate_targets/0\"。我们为顶层和操作都用这个。\n\n操作：从操作投影中复制。操作对象中，operation_id, operation_type, target, parameters, evidence_refs。注意操作投影中的target是{\"element_global_id\": \"1BpQ2K66f13Pyv1xzN7BBN\"}，parameters为空{}。\n\n我们需要确保operation的target满足schema的minProperties=1。是的。\n\n另外，注意操作投影中operation_id \"set-beam-number-1\"是合法的id。\n\n因此，构造JSON。\n\n但还要确保没有额外的字段。schema additionalProperties false。\n\n现在生成。",
+        "refusal": null,
+        "role": "assistant",
+        "tool_calls": null
+      }
+    }
+  ],
+  "created": 1788278103,
+  "id": "1254b3fc-d961-4913-9340-8db0ee6efa69",
+  "model": "deepseek-v4-flash",
+  "moderation": null,
+  "object": "chat.completion",
+  "service_tier": null,
+  "stop_reason": "stop",
+  "system_fingerprint": "a26a7955944dc5c60445bff77fac9c8e",
+  "usage": {
+    "completion_tokens": 1252,
+    "completion_tokens_details": "[REDACTED]",
+    "prompt_cache_hit_tokens": "[REDACTED]",
+    "prompt_cache_miss_tokens": "[REDACTED]",
+    "prompt_tokens": 2075,
+    "prompt_tokens_details": "[REDACTED]",
+    "total_tokens": 3327
+  }
+}
