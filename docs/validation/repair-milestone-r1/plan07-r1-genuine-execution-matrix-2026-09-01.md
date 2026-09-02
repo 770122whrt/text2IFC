@@ -5,11 +5,24 @@
 - Implementation checkpoint: `223e46e7`
 - Provider: `deepseek-v4-flash`, thinking enabled
 - Retrieval: production BGE-M3/Qdrant; no alias or synthetic fallback
-- Overall status: Plan 07 case contracts PASS; R1 partial at 9/12
+- Overall status at this checkpoint: Plan 07 case contracts PASS; R1 partial at 9/12
 
 This document keeps semantic/model outcome, deterministic execution, artifact
 outcome, and evidence/contract outcome separate. `NOT_EXECUTED` is not PASS or
-FAIL. R1 is not closed.
+FAIL. At this historical checkpoint R1 was not closed.
+
+## Closure update — 2026-09-03
+
+This checkpoint has been superseded by a new uninterrupted 12/12 run and
+independent Proof 0.3. The historical rows and false/pending eligibility fields
+below remain unchanged. Current closure evidence is the
+[final R1 Proof Matrix](repair-proof-matrix-2026-09-03.md), accepted run
+`r1-20260902T152701658266Z` and curated Proof root
+`dataset/processed/proof/repair-milestone-r1/r1-20260902T152701658266Z-curated/`.
+The original Plan 07 four cases were also rerun once on the final code as
+`uat-20260902T180900748385Z`: 4/4 PASS with 11 genuine calls. Its changed-scope
+curator packaging limitation is recorded in the final matrix and is not
+represented as a second independently curated Proof.
 
 ## 1. Plan 07 frozen four-case genuine matrix
 

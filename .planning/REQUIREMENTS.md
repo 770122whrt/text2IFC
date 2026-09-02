@@ -89,16 +89,16 @@ semantic ChangeSet and an L1/L2-validated IFC result.
 - [x] **RAG-04**: Retrieval supplies candidates only; the exact Phase 10.1
   property contract, Binder, atomic authoring and reopened L2 remain the sole
   authorization and publication path.
-- [ ] **RAG-05**: The active natural-language property runtime filters
+- [x] **RAG-05**: The active natural-language property runtime filters
   versioned public IFC2X3/property records by target-class applicability,
   scalar template, value/unit/scope compatibility and provenance before a
   bounded multilingual vector Top-K; historical reviewed aliases remain
   readable evidence but are not loaded, embedded, prompted or authorized.
-- [ ] **RAG-06**: A separate bounded Property Resolution stage between Stage 1
+- [x] **RAG-06**: A separate bounded Property Resolution stage between Stage 1
   and Stage 2 lets the configured LLM rerank only the offered Top-K and return
   one offered candidate, clarification or unsupported; malformed output gets
   at most one schema-correction attempt and no compatibility normalization.
-- [ ] **RAG-07**: Program code independently checks the selected record and
+- [x] **RAG-07**: Program code independently checks the selected record and
   evidence for offered-set membership, authoritative record identity,
   class/template/type/unit/scope and frozen retrieval-quality policy, then
   constructs ExactPropertyIntent from the authoritative record plus original
@@ -197,9 +197,9 @@ semantic ChangeSet and an L1/L2-validated IFC result.
   into one surviving empty Opening, with exact/generated Type policy,
   viewpoint-aware operation semantics and required L1/L2 evidence through
   registered Door-specific operations.
-- [ ] **OPS-03**: User can add a Beam with operation-specific placement,
+- [x] **OPS-03**: User can add a Beam with operation-specific placement,
   containment, type/material and L1/L2 semantics.
-- [ ] **OPS-04**: User can add a Column with operation-specific placement,
+- [x] **OPS-04**: User can add a Column with operation-specific placement,
   containment, type/material and L1/L2 semantics.
 
 ### Scale and Context
@@ -258,9 +258,9 @@ semantic ChangeSet and an L1/L2-validated IFC result.
 | RAG-02 | 10.2 | Complete |
 | RAG-03 | 10.2 | Complete |
 | RAG-04 | 10.2 | Complete |
-| RAG-05 | 12.1 | Pending |
-| RAG-06 | 12.1 | Pending |
-| RAG-07 | 12.1 | Pending |
+| RAG-05 | 12.1 | Complete |
+| RAG-06 | 12.1 | Complete |
+| RAG-07 | 12.1 | Complete |
 | DATA-01 | 10.3 | Complete |
 | DATA-02 | 10.3 | Complete |
 | BATCH-01 | 10.3 | Complete |
@@ -281,12 +281,12 @@ semantic ChangeSet and an L1/L2-validated IFC result.
 | WFID-06 | 10.5 | Complete |
 | OPS-01 | 11 | Complete |
 | OPS-02 | 11 | Complete |
-| OPS-03 | 12 | Pending |
-| OPS-04 | 12 | Pending |
+| OPS-03 | 12 | Complete |
+| OPS-04 | 12 | Complete |
 | SCALE-01 | 13 | Pending |
 | SCALE-02 | 13 | Pending |
 
 **Coverage:** 55 requirements, 55 mapped, 0 unmapped.
 
 ---
-*Last updated: 2026-08-21 after freezing Phase 12.1 property-resolution requirements*
+*Last updated: 2026-09-03 after Phase 12/12.1 R1 Proof closure*
