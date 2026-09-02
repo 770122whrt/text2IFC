@@ -1,0 +1,255 @@
+{
+  "contract": "text2ifc-repair-r1-acceptance-freeze/0.1",
+  "created_utc": "2026-08-29T00:00:00Z",
+  "status": "AWAITING_HUMAN_FREEZE_APPROVAL",
+  "execution_performed": false,
+  "provider_calls_performed": 0,
+  "proof_curated": false,
+  "final_ifccompare_performed": false,
+  "authoritative_handoff": {
+    "path": "docs/handoffs/repair-milestone-r1-final-acceptance.md",
+    "sha256": "bb8c7ecfbf5afd2c231b3be2ef21288101f25f0547e4f3ef770a1b349acff49e"
+  },
+  "production_private_boundary": {
+    "production_may_read_expected_fields": false,
+    "production_may_read_private_gold": false,
+    "production_may_read_mutation_truth": false,
+    "production_may_read_existing_proof": false,
+    "prediction_must_be_frozen_before_evaluation": true
+  },
+  "models": [
+    {
+      "model_id": "R1-DPX-ARC",
+      "path": "dataset/external/ifc-bench/projects/duplex/arc.ifc",
+      "schema": "IFC2X3",
+      "size_bytes": 1656153,
+      "sha256": "707a032566dee8e969a44d95509be46d646440e2443624709f8d3ae2b45f4656",
+      "license": "CC BY 4.0"
+    },
+    {
+      "model_id": "R1-WRH-ARC",
+      "path": "dataset/external/ifc-bench/projects/west_riverside_hospital/arc_ifc2x3.ifc",
+      "schema": "IFC2X3",
+      "size_bytes": 80318141,
+      "sha256": "989ace1d52f694ee94d80bd99aa81d0ff3d76cf21f34fcfd00a286ac897ed8a6",
+      "license": "CC BY 3.0"
+    },
+    {
+      "model_id": "R1-S65-STR",
+      "path": "dataset/external/ifc-bench/projects/sixty5/str.ifc",
+      "schema": "IFC2X3",
+      "size_bytes": 7422441,
+      "sha256": "79f294c643438ac7a494e4871857244c2de0eefa536eda5977af20640a301a22",
+      "license": "CC BY 4.0"
+    },
+    {
+      "model_id": "R1-BW-TALL",
+      "path": "dataset/external/bim-whale-ifc-samples/TallBuilding/IFC/TallBuilding.ifc",
+      "schema": "IFC2X3",
+      "size_bytes": 616509,
+      "sha256": "9f180a7148bb7bcf43dd80800068553f1c8b189ebe0dc84b6c498061832960d1",
+      "license": "MIT retained corpus"
+    }
+  ],
+  "property_authority": {
+    "corpus": "ifc2x3-property-records/0.2",
+    "records": [
+      {
+        "ifc_class": "IfcWindow",
+        "pset": "Pset_WindowCommon",
+        "property": "IsExternal",
+        "ifc_value_type": "IfcBoolean",
+        "record_sha256": "dcb2ba5a5bdf53cb679e2c0a884d140e9dd426638d144f3b0069828fb1a6a383"
+      },
+      {
+        "ifc_class": "IfcWindow",
+        "pset": "Pset_WindowCommon",
+        "property": "FireRating",
+        "ifc_value_type": "IfcLabel",
+        "record_sha256": "1e5f4e9a3c040d312619911de885a30d9e2ee9dd68d2418da04f796bd436d2c6"
+      },
+      {
+        "ifc_class": "IfcDoor",
+        "pset": "Pset_DoorCommon",
+        "property": "FireRating",
+        "ifc_value_type": "IfcLabel",
+        "record_sha256": "18305dceef09901ee7bbdc3ba4739242e06a85ecd6409d8d2ca28462d22d202a"
+      },
+      {
+        "ifc_class": "IfcBeam",
+        "pset": "Pset_BeamCommon",
+        "property": "Reference",
+        "ifc_value_type": "IfcIdentifier",
+        "record_sha256": "c34b6a67961abab027b7145bfc21d7a31a87dc5516eb8713e46f448ca1030b31"
+      },
+      {
+        "ifc_class": "IfcColumn",
+        "pset": "Pset_ColumnCommon",
+        "property": "LoadBearing",
+        "ifc_value_type": "IfcBoolean",
+        "record_sha256": "2923ba6268cc16843ebfdcd7c383a6a1a56776d6b02462c4c8d52fa05febcc8d"
+      },
+      {
+        "ifc_class": "IfcWall",
+        "pset": "Pset_WallCommon",
+        "property": "AcousticRating",
+        "ifc_value_type": "IfcLabel",
+        "record_sha256": "c62de11554af3e5103d2331869d7d8b2003fcc2b0a8d3246d7d80ae56fb5040b"
+      }
+    ]
+  },
+  "execution_order": [
+    "E1",
+    "E2",
+    "E3",
+    "E4",
+    "M1",
+    "M2",
+    "M3",
+    "H1",
+    "H2",
+    "H3",
+    "H4",
+    "A1"
+  ],
+  "cases": [
+    {
+      "case_id": "E1",
+      "difficulty": "easy",
+      "model_id": "R1-DPX-ARC",
+      "request": "将 Level 1 中 GlobalId 为 1hOSvn6df7F8_7GcBWlRRL、Tag 为 147051 的窗设置为外窗。",
+      "request_sha256": "e88a9df0ac1abe694a3a22645306d0152d3833a4e806adbe3b821b66b7d88840",
+      "shape": "single",
+      "target": {"ifc_class": "IfcWindow", "global_id": "1hOSvn6df7F8_7GcBWlRRL", "tag": "147051", "storey": "Level 1"},
+      "evaluation_only_expected": {"outcome": "success", "property": "Pset_WindowCommon.IsExternal", "ifc_value_type": "IfcBoolean", "value": true}
+    },
+    {
+      "case_id": "E2",
+      "difficulty": "easy",
+      "model_id": "R1-WRH-ARC",
+      "request": "将 Level 4 中 GlobalId 为 3JlX9$$_PCKBNpDob64$5M、Tag 为 439207 的门的防火等级设置为 EI60。",
+      "request_sha256": "daf7374cd446ee01d467eb700d33da287668a51979ee8904aa8d4620ba2e434e",
+      "shape": "single",
+      "target": {"ifc_class": "IfcDoor", "global_id": "3JlX9$$_PCKBNpDob64$5M", "tag": "439207", "storey": "Level 4"},
+      "evaluation_only_expected": {"outcome": "success", "property": "Pset_DoorCommon.FireRating", "ifc_value_type": "IfcLabel", "value": "EI60"}
+    },
+    {
+      "case_id": "E3",
+      "difficulty": "easy",
+      "model_id": "R1-S65-STR",
+      "request": "将 00 begane grond 中 GlobalId 为 1BpQ2K66f13Pyv1xzN7BBN、Tag 为 738548 的梁的构件编号设置为 B-204。",
+      "request_sha256": "37587fefb2e9ebbb5fd91bb9adc083849c5e4115cec871e0a73420fc4519a545",
+      "shape": "single",
+      "target": {"ifc_class": "IfcBeam", "global_id": "1BpQ2K66f13Pyv1xzN7BBN", "tag": "738548", "storey": "00 begane grond"},
+      "evaluation_only_expected": {"outcome": "success", "property": "Pset_BeamCommon.Reference", "ifc_value_type": "IfcIdentifier", "value": "B-204"}
+    },
+    {
+      "case_id": "E4",
+      "difficulty": "easy",
+      "model_id": "R1-BW-TALL",
+      "request": "将 Level 1 中 GlobalId 为 0ZBert7zf3GhThdO12NKAr、Tag 为 358471 的墙的隔声等级设置为 Rw 50。",
+      "request_sha256": "e008a58f9a64e51138c51e3e2420c7a981af9bb44fb8aeae6a44f66abec759f9",
+      "shape": "single",
+      "target": {"ifc_class": "IfcWallStandardCase", "global_id": "0ZBert7zf3GhThdO12NKAr", "tag": "358471", "storey": "Level 1"},
+      "evaluation_only_expected": {"outcome": "success", "property": "Pset_WallCommon.AcousticRating", "ifc_value_type": "IfcLabel", "value": "Rw 50"}
+    },
+    {
+      "case_id": "M1",
+      "difficulty": "medium",
+      "model_id": "R1-WRH-ARC",
+      "request": "将 Level 4 中 GlobalId 为 3JlX9$$_PCKBNpDob64$4w、Tag 为 439243 的门的防火等级设置为 true。",
+      "request_sha256": "45b55d9703c7c1e25a485e3e3a3d2ebb1050424b82acac5722c70ade294523f2",
+      "resume": "改为 EI60。",
+      "resume_sha256": "ce6bb4771fd1d55722c1c7d4315a467b5fca18469855aa8ea5cd5a6f1b3e689f",
+      "shape": "single_resume",
+      "target": {"ifc_class": "IfcDoor", "global_id": "3JlX9$$_PCKBNpDob64$4w", "tag": "439243", "storey": "Level 4"},
+      "evaluation_only_expected": {"initial_outcome": "value_clarification_no_mutation", "resolved_property": "Pset_DoorCommon.FireRating", "resume_outcome": "success", "ifc_value_type": "IfcLabel", "value": "EI60"}
+    },
+    {
+      "case_id": "M2",
+      "difficulty": "medium",
+      "model_id": "R1-BW-TALL",
+      "request": "在 Level 2 添加一根新的水平直线矩形梁，中心轴从 (2000, -2000, 3000) mm 到 (8000, -2000, 3000) mm，截面宽 300 mm、高 500 mm。为它创建独立的 Beam Type，并将构件编号设置为 B-NEW-01。",
+      "request_sha256": "1fc01d35d2e4d78e637aacb852b9f843f5e79d6ec7a24e1ee66eb2d2410058eb",
+      "shape": "single",
+      "storey": {"name": "Level 2", "global_id": "2nxdYR2RHCDBiKJuiQr1lO"},
+      "evaluation_only_expected": {"outcome": "success", "operation": "add_beam", "type_policy": "generated", "property": "Pset_BeamCommon.Reference", "value": "B-NEW-01"}
+    },
+    {
+      "case_id": "M3",
+      "difficulty": "medium",
+      "model_id": "R1-S65-STR",
+      "request": "在 00 begane grond 添加一根新的竖直矩形柱，中心轴底点为 (25000, 60000, 0) mm，顶点为 (25000, 60000, 3000) mm，截面宽 400 mm、深 600 mm，局部宽度方向为 (1, 0)。为它创建独立的 Column Type，并将其设置为承重构件。",
+      "request_sha256": "1abb29da38d8c29e15936a31249389bfbcb122a3e27a1da34e309a70809f0837",
+      "shape": "single",
+      "storey": {"name": "00 begane grond", "global_id": "02GkOQJZz4x9WAhoZkM67S"},
+      "evaluation_only_expected": {"outcome": "success", "operation": "add_column", "type_policy": "generated", "property": "Pset_ColumnCommon.LoadBearing", "value": true}
+    },
+    {
+      "case_id": "H1",
+      "difficulty": "hard",
+      "model_id": "R1-DPX-ARC",
+      "request": "在 Level 1 添加一根新的水平矩形梁，中心轴从 (1000, -20000, 3100) mm 到 (7000, -20000, 3100) mm，截面尺寸为 300 × 500 mm，并为它创建独立 Beam Type。同时，将 GlobalId 为 1hOSvn6df7F8_7GcBWlRLx、Tag 为 146885 的窗的防火等级设置为 EI60。两项修改必须在同一个原子事务中完成，全部成功才发布。",
+      "request_sha256": "00bb6ee2ce21cdeab02bec894449085bcc29a31e9d7c2e2256b0ef1494c156f0",
+      "shape": "multi_atomic",
+      "storey": {"name": "Level 1", "global_id": "1xS3BCk291UvhgP2dvNMKI"},
+      "target": {"ifc_class": "IfcWindow", "global_id": "1hOSvn6df7F8_7GcBWlRLx", "tag": "146885"},
+      "evaluation_only_expected": {"outcome": "atomic_success", "operations": ["add_beam", "Pset_WindowCommon.FireRating"], "window_value": "EI60"}
+    },
+    {
+      "case_id": "H2",
+      "difficulty": "hard",
+      "model_id": "R1-WRH-ARC",
+      "request": "将 Level 4 中 GlobalId 为 1jI3nV6Sn2LfeyEYxROCeh、Tag 为 468036 的门的防火等级设置为 EI60，同时将同层 GlobalId 为 2HaS6zNOX8xOGjmaNi_r5s、Tag 为 187497 的墙的隔声等级设置为 Rw 50。两项修改在同一个原子事务中执行。",
+      "request_sha256": "cc56683933b9d15bfffb31c029e32a641e950c44e80f55faf625df1486da2ab5",
+      "shape": "multi_atomic",
+      "targets": [
+        {"ifc_class": "IfcDoor", "global_id": "1jI3nV6Sn2LfeyEYxROCeh", "tag": "468036", "storey": "Level 4"},
+        {"ifc_class": "IfcWall", "global_id": "2HaS6zNOX8xOGjmaNi_r5s", "tag": "187497", "storey": "Level 4"}
+      ],
+      "evaluation_only_expected": {"outcome": "atomic_success", "properties": ["Pset_DoorCommon.FireRating", "Pset_WallCommon.AcousticRating"], "values": ["EI60", "Rw 50"]}
+    },
+    {
+      "case_id": "H3",
+      "difficulty": "hard",
+      "model_id": "R1-DPX-ARC",
+      "request": "将 Level 2 中 819 mm × 759 mm 类型的窗设置为外窗。",
+      "request_sha256": "36dfc1fb5f516caed07e475a91dc04d1c5918ee7d5783af2eeb07e3cb036c844",
+      "resume": "选择 GlobalId 为 1hOSvn6df7F8_7GcBWlS2V、Tag 为 149537 的窗。",
+      "resume_sha256": "9740a22ca0b629c28690ed3e8abb82a378bd4bc03edf27695624beaa686312e3",
+      "shape": "single_resume",
+      "evaluation_only_expected": {"initial_outcome": "target_clarification_no_mutation", "selected_global_id": "1hOSvn6df7F8_7GcBWlS2V", "selected_tag": "149537", "resume_outcome": "success", "property": "Pset_WindowCommon.IsExternal", "value": true}
+    },
+    {
+      "case_id": "H4",
+      "difficulty": "hard",
+      "model_id": "R1-BW-TALL",
+      "request": "在 Level 5 添加一根受支持的水平矩形梁，中心轴从 (2000, 10000, 3000) mm 到 (8000, 10000, 3000) mm，截面宽 300 mm、高 500 mm，并同时为该梁创建一个 structural analysis node。两项必须作为同一个事务完成。",
+      "request_sha256": "8305aae47936c190f6ad8aa63a9cd48ef126e287e5d2d3598f985caa6087723b",
+      "shape": "multi_atomic",
+      "storey": {"name": "Level 5", "global_id": "2nxdYR2RHCDBiKJuiQqMQj"},
+      "evaluation_only_expected": {"outcome": "unsupported_program_zero_mutation", "unsupported_operation": "structural_analysis_node", "partial_publication_allowed": false}
+    },
+    {
+      "case_id": "A1",
+      "difficulty": "capability_driven",
+      "model_id": "R1-S65-STR",
+      "request": "在 00 begane grond 添加一根新的水平直线矩形梁，中心轴从 (25000, 58000, 3000) mm 到 (31000, 58000, 3000) mm，截面宽 500 mm、高 800 mm，并精确复用 GlobalId 为 12jWe1_Rb2cR0ot5ICgwf_、名称为 28_SF_AT_balk vierkant beton:balk vierkant_gen_500x800 (C35/45) 的现有 IfcBeamType。",
+      "request_sha256": "fe084ed99b6c038aec419b5181f7fab22834c9f80d6e133c263a6b76f2da01c0",
+      "shape": "single",
+      "storey": {"name": "00 begane grond", "global_id": "02GkOQJZz4x9WAhoZkM67S"},
+      "type": {"ifc_class": "IfcBeamType", "global_id": "12jWe1_Rb2cR0ot5ICgwf_", "name": "28_SF_AT_balk vierkant beton:balk vierkant_gen_500x800 (C35/45)"},
+      "evaluation_only_expected": {"outcome": "success", "operation": "add_beam", "type_policy": "reuse_exact_existing", "duplicate_type_count": 0}
+    }
+  ],
+  "proof_conventions": {
+    "proof_validation_contract": "ifc-repair-proof-validation/0.2",
+    "files_manifest_version": "0.2",
+    "success_collection_version": "0.1"
+  },
+  "ifccompare": {
+    "eligible_r1_cases": [],
+    "reason": "No legitimate pristine/damaged/repaired private triplet truth exists for the 12 public diversity cases."
+  },
+  "next_action": "MANDATORY_HUMAN_FREEZE_REVIEW"
+}

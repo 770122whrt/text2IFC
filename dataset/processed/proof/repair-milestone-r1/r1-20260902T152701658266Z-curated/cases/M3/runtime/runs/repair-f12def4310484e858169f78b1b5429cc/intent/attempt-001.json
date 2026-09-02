@@ -1,0 +1,43 @@
+{
+  "attempt": 1,
+  "issues": [
+    {
+      "code": "JSON_DECODE_ERROR",
+      "message": "Expecting ',' delimiter at line 1 column 1436",
+      "path": ""
+    }
+  ],
+  "normalizations": [],
+  "provider_metadata": {
+    "estimated_input_tokens": "[REDACTED]",
+    "evidence_class": "live",
+    "max_input_tokens": "[REDACTED]",
+    "model": "deepseek-v4-flash",
+    "provider": "deepseek-openai-compatible",
+    "request_configuration": {
+      "temperature": {
+        "effective": false,
+        "value": 0
+      },
+      "thinking": {
+        "type": "enabled"
+      }
+    },
+    "response_id": "2fe333d7-9f0a-462d-abc6-6326a4641c09",
+    "session_id": "ifc-repair-intent-request-1abb29da38d8c29e",
+    "stop_reason": "stop",
+    "transport_attempts": 1,
+    "usage": {
+      "completion_tokens": 3886,
+      "completion_tokens_details": "[REDACTED]",
+      "prompt_cache_hit_tokens": "[REDACTED]",
+      "prompt_cache_miss_tokens": "[REDACTED]",
+      "prompt_tokens": 11782,
+      "prompt_tokens_details": "[REDACTED]",
+      "total_tokens": 15668
+    }
+  },
+  "response_excerpt": "{\"schema_version\":\"text2ifc/ifc-repair-intent-body/0.8\",\"operations\":[{\"operation_id\":\"add-rectangular-column-1\",\"operation_type\":\"add_column\",\"routing_intent\":{\"component_family\":\"column\",\"action\":\"add\",\"operation_profile\":\"column.add.v0.3\",\"source\":{\"source_kind\":\"user_request\",\"reference\":\"user-request-main\",\"excerpt\":\"在 00 begane grond 添加一根新的竖直矩形柱，中心轴底点为 (25000, 60000, 0) mm，顶点为 (25000, 60000, 3000) mm，截面宽 400 mm、深 600 mm，局部宽度方向为 (1, 0)。为它创建独立的 Column Type，并将其设置为承重构件。\"}},\"target_query\":{\"schema_version\":\"text2ifc/ifc-target-query/0.1\",\"allowed_ifc_classes\":[\"IfcBuildingStorey\"],\"names\":[\"00 begane grond\"]},\"parameters\":{\"axis\":{\"base\":{\"x_mm\":25000,\"y_mm\":60000,\"z_mm\":0},\"top\":{\"x_mm\":25000,\"y_mm\":60000,\"z_mm\":3000}},\"section\":{\"shape\":\"rectangle\",\"width_mm\":400,\"depth_mm\":600,\"orientation\":{\"x\":1,\"y\":0}}},\"attribute_intents\":[],\"property_intents\":[{\"intent_kind\":\"natural_language_property\",\"property_phrase\":\"承重构件\",\"raw_value\":true,\"raw_unit\":null,\"scope\":\"occurrence_direct\",\"source\":{\"source_kind\":\"user_request\",\"reference\":\"user-request-main\",\"excerpt\":\"并将其设置为承重构件\"}}],\"semantic_bundle_refs\":[],\"quantity_intents\":[],\"occurrence_reuse_intent\":null,\"prototype_intent\":null,\"provenance\":[{\"source_kind\":\"user_request\",\"reference\":\"user-request-main\",\"excerpt\":\"在 00 begane grond 添加一根新的竖直矩形柱，中心轴底点为 (25000, 60000, 0) mm，顶点为 (25000, 60000, 3000) mm，截面宽 400 mm、深 600 mm，局部宽度方向为 (1, 0)。为它创建独立的 Column Type，并将其设置为承重构件。\"}}],\"unsupported_requests\":[],\"semantic_bundles\":[],\"provenance\":[{\"source_kind\":\"user_request\",\"reference\":\"user-request-main\",\"excerpt\":\"在 00 begane grond 添加一根新的竖直矩形柱，中心轴底点为 (25000, 60000, 0) mm，顶点为 (25000, 60000, 3000) mm，截面宽 400 mm、深 600 mm，局部宽度方向为 (1, 0)。为它创建独立的 Column Type，并将其设置为承重构件。\"}]}",
+  "response_sha256": "sha256:772d3abeea05b885f88ba1e00a9e42150102f2f40f18077851ed0819b7c5d4e4",
+  "status": "invalid"
+}

@@ -10,7 +10,7 @@
     "preservation": "passed",
     "successful_artifact_publishable": true
   },
-  "case_count": 22,
+  "case_count": 24,
   "cases": [
     {
       "case_id": "largebuilding-full-replication",
@@ -417,6 +417,47 @@
       "provider_evidence_mode": "offline_bound_deterministic",
       "repaired_ifc": "mixed/door-window-beam-column/phase12-vvo-door-window-beam-column-atomic/repaired.ifc",
       "report": "mixed/door-window-beam-column/phase12-vvo-door-window-beam-column-atomic/REPORT.md",
+      "status": "accepted"
+    },
+    {
+      "case_id": "phase12-live-deepseek-complete",
+      "case_kind": "live",
+      "damaged_ifc": "structural/live/phase12-live-deepseek-complete/damaged.ifc",
+      "evidence_scope": "cross_scene_same_family_bimnet",
+      "files": "structural/live/phase12-live-deepseek-complete/FILES.json",
+      "model": "deepseek-chat",
+      "operation_count": 2,
+      "operation_family": "structural",
+      "operation_types": [
+        "add_beam",
+        "add_column"
+      ],
+      "original_ifc": "structural/live/phase12-live-deepseek-complete/original.ifc",
+      "phase": "12",
+      "provider": "deepseek-openai-compatible",
+      "provider_evidence_mode": "live",
+      "repaired_ifc": "structural/live/phase12-live-deepseek-complete/repaired.ifc",
+      "report": "structural/live/phase12-live-deepseek-complete/REPORT.md",
+      "status": "accepted"
+    },
+    {
+      "case_id": "phase12-live-deepseek-clarification-resume",
+      "case_kind": "live",
+      "damaged_ifc": "structural/live/phase12-live-deepseek-clarification-resume/damaged.ifc",
+      "evidence_scope": "cross_scene_same_family_bimnet",
+      "files": "structural/live/phase12-live-deepseek-clarification-resume/FILES.json",
+      "model": "deepseek-chat",
+      "operation_count": 1,
+      "operation_family": "structural",
+      "operation_types": [
+        "add_column"
+      ],
+      "original_ifc": "structural/live/phase12-live-deepseek-clarification-resume/original.ifc",
+      "phase": "12",
+      "provider": "deepseek-openai-compatible",
+      "provider_evidence_mode": "live",
+      "repaired_ifc": "structural/live/phase12-live-deepseek-clarification-resume/repaired.ifc",
+      "report": "structural/live/phase12-live-deepseek-clarification-resume/REPORT.md",
       "status": "accepted"
     }
   ],

@@ -1,0 +1,156 @@
+{
+  "audit": {
+    "checks": [
+      {
+        "code": "CHANGESET_SCHEMA",
+        "evidence": {},
+        "status": "passed"
+      },
+      {
+        "code": "IFC_SCHEMA",
+        "evidence": {
+          "actual_schema": "IFC2X3"
+        },
+        "status": "passed"
+      },
+      {
+        "code": "BASE_MODEL_FINGERPRINT",
+        "evidence": {
+          "actual_fingerprint": "sha256:79f294c643438ac7a494e4871857244c2de0eefa536eda5977af20640a301a22"
+        },
+        "status": "passed"
+      },
+      {
+        "code": "SOURCE_REQUEST_HASH",
+        "evidence": {
+          "actual_request_hash": "sha256:37587fefb2e9ebbb5fd91bb9adc083849c5e4115cec871e0a73420fc4519a545"
+        },
+        "status": "passed"
+      },
+      {
+        "code": "OPERATION_REGISTRATION",
+        "evidence": {
+          "operation_type": "set_occurrence_properties"
+        },
+        "status": "passed"
+      }
+    ],
+    "issues": [],
+    "operation_audits": [
+      {
+        "checks": [
+          {
+            "code": "PROPERTY_OCCURRENCE_READY",
+            "evidence": {
+              "assignment_count": 1,
+              "global_id": "1BpQ2K66f13Pyv1xzN7BBN",
+              "ifc_class": "IfcBeam"
+            },
+            "status": "passed"
+          }
+        ],
+        "evidence": {
+          "target_global_id": "1BpQ2K66f13Pyv1xzN7BBN"
+        },
+        "operation_id": "set-beam-property-1",
+        "operation_type": "set_occurrence_properties",
+        "valid": true
+      }
+    ],
+    "schema_version": "text2ifc/ifc-repair-audit/0.1",
+    "valid": true
+  },
+  "issues": [],
+  "operations": [
+    {
+      "changes": {
+        "created": [],
+        "modified": [
+          {
+            "global_id": "1BpQ2K66f13Pyv1xzN7BBN",
+            "ifc_class": "IfcBeam",
+            "role": "target"
+          },
+          {
+            "global_id": "1BpQ2K66f13Pyv35PN7BBN",
+            "ifc_class": "IfcPropertySet",
+            "role": "semantic_pset_updated"
+          }
+        ],
+        "removed": [],
+        "resolved": {
+          "target_global_id": "1BpQ2K66f13Pyv1xzN7BBN",
+          "target_ifc_class": "IfcBeam"
+        },
+        "semantic": {
+          "created": [],
+          "modified": [
+            {
+              "global_id": "1BpQ2K66f13Pyv35PN7BBN",
+              "ifc_class": "IfcPropertySet",
+              "role": "semantic_pset_updated"
+            }
+          ],
+          "scopes": {
+            "occurrence_direct": {
+              "created": [],
+              "modified": [
+                {
+                  "global_id": "1BpQ2K66f13Pyv35PN7BBN",
+                  "ifc_class": "IfcPropertySet",
+                  "role": "semantic_pset_updated"
+                }
+              ],
+              "skipped": [],
+              "updated": [
+                {
+                  "global_id": "step:214168",
+                  "ifc_class": "IfcPropertySingleValue",
+                  "role": "semantic_pset_property_updated"
+                }
+              ]
+            }
+          },
+          "skipped": [],
+          "updated": [
+            {
+              "global_id": "step:214168",
+              "ifc_class": "IfcPropertySingleValue",
+              "role": "semantic_pset_property_updated"
+            }
+          ]
+        }
+      },
+      "operation_id": "set-beam-property-1",
+      "operation_type": "set_occurrence_properties"
+    }
+  ],
+  "output": {
+    "path": "E:\\code for project\\bimnet\\dataset\\processed\\ifc-repair-runs\\repair-milestone-r1\\r1-20260902T152701658266Z\\cases\\E3\\runtime\\runs\\repair-f930e1b7bdf64579a246beede1bc4c87\\staging\\application-candidate.ifc",
+    "sha256": "25f79c543fd15ad733a36a744fc6dadb46aa1f1094e473a93c004781ea6dedda"
+  },
+  "postconditions": [
+    {
+      "checks": [
+        {
+          "code": "PROPERTY_MATCH:Pset_BeamCommon.Reference",
+          "evidence": {
+            "actual": "B-204",
+            "expected": "B-204",
+            "ownership": "occurrence_direct"
+          },
+          "status": "passed"
+        }
+      ],
+      "evidence": {
+        "target_global_id": "1BpQ2K66f13Pyv1xzN7BBN"
+      },
+      "issues": [],
+      "operation_id": "set-beam-property-1",
+      "valid": true
+    }
+  ],
+  "published": true,
+  "schema_version": "text2ifc/ifc-repair-application/0.1",
+  "valid": true
+}

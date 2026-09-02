@@ -1,0 +1,37 @@
+{
+  "attempt": 1,
+  "issues": [],
+  "normalizations": [],
+  "provider_metadata": {
+    "estimated_input_tokens": "[REDACTED]",
+    "evidence_class": "live",
+    "max_input_tokens": "[REDACTED]",
+    "model": "deepseek-v4-flash",
+    "provider": "deepseek-openai-compatible",
+    "request_configuration": {
+      "temperature": {
+        "effective": false,
+        "value": 0
+      },
+      "thinking": {
+        "type": "enabled"
+      }
+    },
+    "response_id": "d80de40a-ce88-4c9c-8970-58bdd696915a",
+    "session_id": "ifc-repair-intent-request-d036f61d4ff64280",
+    "stop_reason": "stop",
+    "transport_attempts": 1,
+    "usage": {
+      "completion_tokens": 7264,
+      "completion_tokens_details": "[REDACTED]",
+      "prompt_cache_hit_tokens": "[REDACTED]",
+      "prompt_cache_miss_tokens": "[REDACTED]",
+      "prompt_tokens": 11735,
+      "prompt_tokens_details": "[REDACTED]",
+      "total_tokens": 18999
+    }
+  },
+  "response_excerpt": "{\n  \"schema_version\": \"text2ifc/ifc-repair-intent-body/0.8\",\n  \"operations\": [\n    {\n      \"operation_id\": \"add-beam-1\",\n      \"operation_type\": \"add_beam\",\n      \"routing_intent\": {\n        \"component_family\": \"beam\",\n        \"action\": \"add\",\n        \"operation_profile\": \"beam.add.v0.3\",\n        \"source\": {\n          \"source_kind\": \"user_request\",\n          \"reference\": \"public_request\",\n          \"excerpt\": \"On the IFC Building Storey named \\\"Level 1\\\", add a straight rectangular Beam\"\n        }\n      },\n      \"target_query\": {\n        \"schema_version\": \"text2ifc/ifc-target-query/0.1\",\n        \"allowed_ifc_classes\": [\"IfcBuildingStorey\"],\n        \"names\": [\"Level 1\"]\n      },\n      \"parameters\": {\n        \"section\": {\n          \"shape\": \"rectangle\"\n        }\n      },\n      \"attribute_intents\": [],\n      \"property_intents\": [],\n      \"semantic_bundle_refs\": [],\n      \"quantity_intents\": [],\n      \"occurrence_reuse_intent\": null,\n      \"prototype_intent\": null,\n      \"provenance\": [\n        {\n          \"source_kind\": \"user_request\",\n          \"reference\": \"public_request\",\n          \"excerpt\": \"On the IFC Building Storey named \\\"Level 1\\\", add a straight rectangular Beam\"\n        }\n      ]\n    }\n  ],\n  \"unsupported_requests\": [\n    {\n      \"unsupported_id\": \"attach-sa-node-1\",\n      \"kind\": \"registered_capability\",\n      \"operation_id\": \"add-beam-1\",\n      \"capability_id\": \"structural_analysis_node\",\n      \"source\": {\n        \"source_kind\": \"user_request\",\n        \"reference\": \"public_request\",\n        \"excerpt\": \"attach a structural analysis node\"\n      }\n    }\n  ],\n  \"semantic_bundles\": [],\n  \"provenance\": [\n    {\n      \"source_kind\": \"user_request\",\n      \"reference\": \"public_request\",\n      \"excerpt\": \"On the IFC Building Storey named \\\"Level 1\\\", add a straight rectangular Beam\"\n    },\n    {\n      \"source_kind\": \"user_request\",\n      \"reference\": \"public_request\",\n      \"excerpt\": \"attach a structural analysis node\"\n    }\n  ]\n}",
+  "response_sha256": "sha256:452d7159332038cc6588727e297e93be4f2876722b8fd1db9c4dc99440fc5671",
+  "status": "valid"
+}

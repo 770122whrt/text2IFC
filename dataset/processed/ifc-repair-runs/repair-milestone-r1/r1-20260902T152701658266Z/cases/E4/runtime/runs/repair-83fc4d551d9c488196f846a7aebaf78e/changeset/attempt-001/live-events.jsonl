@@ -1,0 +1,40 @@
+{
+  "data": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "logprobs": null,
+        "message": {
+          "annotations": null,
+          "audio": null,
+          "content": "{\"schema_version\":\"text2ifc/ifc-repair-changeset-draft/0.2\",\"draft_id\":\"set-wall-sound-insulation-1\",\"base_model_fingerprint\":\"sha256:9f180a7148bb7bcf43dd80800068553f1c8b189ebe0dc84b6c498061832960d1\",\"source_request_hash\":\"sha256:e008a58f9a64e51138c51e3e2420c7a981af9bb44fb8aeae6a44f66abec759f9\",\"semantic_manifest_ref\":\"changeset/semantic-manifest-set-wall-sound-insulation-1.json\",\"semantic_manifest_sha256\":\"sha256:5d28f0ad131ea0b9d6bf36b1dd66692c117088650dc5186abe30173e62e6fe15\",\"semantic_summary\":{\"required\":0,\"conditional\":1,\"not_required\":0},\"scope\":{\"target_ids\":[\"0ZBert7zf3GhThdO12NKAr\"],\"forbidden_ids\":[]},\"evidence_refs\":[\"resolved:/operations/set-wall-sound-insulation-1/context/candidate_targets/0\"],\"preconditions\":[\"target_exists\",\"target_class_supported\",\"property_assignments_bound\"],\"postconditions\":[\"target_preserved\",\"requested_properties_match\",\"shared_type_unchanged\"],\"operations\":[{\"operation_id\":\"set-wall-sound-insulation-1\",\"operation_type\":\"set_occurrence_properties\",\"target\":{\"element_global_id\":\"0ZBert7zf3GhThdO12NKAr\"},\"parameters\":{},\"evidence_refs\":[\"resolved:/operations/set-wall-sound-insulation-1/context/candidate_targets/0\"]}]}",
+          "function_call": null,
+          "reasoning_content": "We need produce JSON draft according to schema. Need use provided info. Public request in Chinese: \"将 Level 1 中 GlobalId 为 0ZBert7zf3GhThdO12NKAr、Tag 为 358471 的墙的隔声等级设置为 Rw 50。\" Means set sound insulation rating of wall to Rw 50. However resolved operation projection says operation set-wall-sound-insulation-1 only target element_global_id, no parameters. Explicit user slot references pset:Pset_WallCommon.AcousticRating. But operation contracts parameters maxProperties 0. So operation parameters should be empty object. Need evidence_refs copied exactly: [\"resolved:/operations/set-wall-sound-insulation-1/context/candidate_targets/0\"] for evidence_refs at top? In projection top-level evidence_refs same single string? It says evidence_refs: [\"resolved:/operations/set-wall-sound-insulation-1/context/candidate_targets/0\"] on outer? Actually resolved operation projection includes \"evidence_refs\" and \"operations\". The operation within has evidence_refs same plus operation_id, operation_type, parameters {}, target. Need produce schema with envelope.\n\nAlso semantic group counts given: {\"conditional\": 1, \"not_required\": 0, \"required\": 0}. Need semantic_summary object.\n\nNeed preconditions/postconditions? Registered operation contract lists postcondition_names, precondition_names. Likely preconditions and postconditions arrays strings. Need \"preconditions\" and \"postconditions\" strings. Copy from contract? For operation type set_occurrence_properties preconditions names: target_exists, target_class_supported, property_assignments_bound. postconditions: target_preserved, requested_properties_match, shared_type_unchanged. Since all operations same type. Include as arrays.\n\nNeed draft_id: must satisfy id min length pattern. Need something unique maybe \"changeset-set-wall-sound-insulation-1\" or use operation_id? Could use \"draft-\" etc. Need valid pattern ^[A-Za-z0-9][A-Za-z0-9._:/-]*$. Better \"set-wall-sound-insulation-1\" maybe, because operation. Actually draft_id should probably unique draft id. We can use \"changeset-set-wall-sound-insulation-1\" no spaces. Accept.\n\nNeed base_model_fingerprint exact sha256:9f... etc.\nsource_request_hash exact sha256:e008...\nsemantic_manifest_ref \"changeset/semantic-manifest-set-wall-sound-insulation-1.json\"\nsemantic_manifest_sha256 sha256:5d28...\n\nNeed scope object exact target_ids [\"0ZBert7zf3GhThdO12NKAr\"], forbidden_ids [].\n\nNeed evidence_refs at top? Schema requires evidence_refs strings. Use from projection top-level. It's [\"resolved:/operations/set-wall-sound-insulation-1/context/candidate_targets/0\"] exactly.\n\nOperations array contains one operation:\n- operation_id \"set-wall-sound-insulation-1\"\n- operation_type \"set_occurrence_properties\"\n- target {\"element_global_id\":\"0ZBert7zf3GhThdO12NKAr\"}\n- parameters {} (empty object)\n- evidence_refs same as operation's projection evidence_refs\n\nNeed all operation copy exactly including evidence refs.\n\nPotential nuance: Public request mentions Tag 358471. But resolved operation projection target only GlobalId, no tag. So operation target just global id, no tag. Do not add tag. Parameters empty intentionally because no parameter schema allowed. Need not include property value. It says do not emit semantic assignments. So correct.\n\nNeed JSON only. Include trailing newlines maybe fine. Ensure no extra.\n\nLet's construct JSON. Must match schema exactly additionalProperties false. For properties arrays of strings unique. preconditions/postconditions no duplicates.\n\nTop-level properties required:\nschema_version: \"text2ifc/ifc-repair-changeset-draft/0.2\"\ndraft_id: perhaps \"set-wall-sound-insulation-1\" (no conflict)\nbase_model_fingerprint\nsource_request_hash\nsemantic_manifest_ref\nsemantic_manifest_sha256\nsemantic_summary {required:0 conditional:1 not_required:0}\nscope {target_ids:[\"0ZBert7zf3GhThdO12NKAr\"], forbidden_ids:[]}\nevidence_refs: [\"resolved:/operations/set-wall-sound-insulation-1/context/candidate_targets/0\"]\npreconditions: [\"target_exists\",\"target_class_supported\",\"property_assignments_bound\"]\npostconditions: [\"target_preserved\",\"requested_properties_match\",\"shared_type_unchanged\"]\noperations: [ { operation_id ..., operation_type ..., target ..., parameters {}, evidence_refs same } ]\n\nNeed ensure \"semantic_manifest_ref\" not included in pre? yes.\n\nOne issue: \"semantic_summary\" includes \"conditional\": 1 etc. Good.\n\nDraft_id pattern allows slashes etc, but okay.\n\nLet's produce JSON compact or pretty? Fine. Need only JSON. Ensure no comments.",
+          "refusal": null,
+          "role": "assistant",
+          "tool_calls": null
+        }
+      }
+    ],
+    "created": 1788363857,
+    "id": "40034c31-97c5-466a-af35-0e0d0c78be03",
+    "model": "deepseek-v4-flash",
+    "moderation": null,
+    "object": "chat.completion",
+    "service_tier": null,
+    "stop_reason": "stop",
+    "system_fingerprint": "a26a7955944dc5c60445bff77fac9c8e",
+    "usage": {
+      "completion_tokens": 1474,
+      "completion_tokens_details": "[REDACTED]",
+      "prompt_cache_hit_tokens": "[REDACTED]",
+      "prompt_cache_miss_tokens": "[REDACTED]",
+      "prompt_tokens": 2081,
+      "prompt_tokens_details": "[REDACTED]",
+      "total_tokens": 3555
+    }
+  },
+  "event": "chat.completion",
+  "sequence": 0
+}

@@ -1,0 +1,288 @@
+{
+  "audit": {
+    "checks": [
+      {
+        "code": "CHANGESET_SCHEMA",
+        "evidence": {},
+        "status": "passed"
+      },
+      {
+        "code": "IFC_SCHEMA",
+        "evidence": {
+          "actual_schema": "IFC2X3"
+        },
+        "status": "passed"
+      },
+      {
+        "code": "BASE_MODEL_FINGERPRINT",
+        "evidence": {
+          "actual_fingerprint": "sha256:9f180a7148bb7bcf43dd80800068553f1c8b189ebe0dc84b6c498061832960d1"
+        },
+        "status": "passed"
+      },
+      {
+        "code": "SOURCE_REQUEST_HASH",
+        "evidence": {
+          "actual_request_hash": "sha256:1fc01d35d2e4d78e637aacb852b9f843f5e79d6ec7a24e1ee66eb2d2410058eb"
+        },
+        "status": "passed"
+      },
+      {
+        "code": "OPERATION_REGISTRATION",
+        "evidence": {
+          "operation_type": "add_beam"
+        },
+        "status": "passed"
+      }
+    ],
+    "issues": [],
+    "operation_audits": [
+      {
+        "checks": [
+          {
+            "code": "STRUCTURAL_STOREY_AVAILABLE",
+            "evidence": {
+              "storey_global_id": "2nxdYR2RHCDBiKJuiQr1lO"
+            },
+            "status": "passed"
+          },
+          {
+            "code": "STRUCTURAL_AXIS_AVAILABLE",
+            "evidence": {
+              "axis_extent_mm": 6000.0
+            },
+            "status": "passed"
+          },
+          {
+            "code": "STRUCTURAL_TYPE_AUTHORIZED",
+            "evidence": {
+              "assignment_count": 1
+            },
+            "status": "passed"
+          }
+        ],
+        "evidence": {
+          "axis_extent_mm": 6000.0,
+          "storey_global_id": "2nxdYR2RHCDBiKJuiQr1lO"
+        },
+        "operation_id": "add-beam-1",
+        "operation_type": "add_beam",
+        "valid": true
+      }
+    ],
+    "schema_version": "text2ifc/ifc-repair-audit/0.1",
+    "valid": true
+  },
+  "issues": [],
+  "operations": [
+    {
+      "changes": {
+        "created": [
+          {
+            "global_id": "2xSPLyyjnJgg6lVwYR9uNU",
+            "ifc_class": "IfcBeam",
+            "role": "beam"
+          },
+          {
+            "global_id": "0cm7tILHrGwR$V__HqSJ8Q",
+            "ifc_class": "IfcBeamType",
+            "role": "structural_type"
+          },
+          {
+            "global_id": "33qXD5GabTtAFHOH17QVWn",
+            "ifc_class": "IfcRelDefinesByType",
+            "role": "structural_type_relationship"
+          },
+          {
+            "global_id": "2eI_jjDATUjvMaWiLuX4ZH",
+            "ifc_class": "IfcPropertySet",
+            "role": "semantic_beam_pset"
+          },
+          {
+            "global_id": "2bZ2x7VA1UUP4QKSjvLviS",
+            "ifc_class": "IfcRelDefinesByProperties",
+            "role": "semantic_beam_pset_relationship"
+          }
+        ],
+        "modified": [
+          {
+            "global_id": "15Z0v90RiHrPC20066FoKR",
+            "ifc_class": "IfcRelContainedInSpatialStructure",
+            "role": "spatial_containment"
+          }
+        ],
+        "removed": [],
+        "resolved": {
+          "geometry": {
+            "axis_direction": [
+              1.0,
+              0.0,
+              0.0
+            ],
+            "axis_end_mm": [
+              8000.0,
+              -2000.0,
+              3000.0
+            ],
+            "axis_extent_mm": 6000.0,
+            "axis_start_mm": [
+              2000.0,
+              -2000.0,
+              3000.0
+            ],
+            "orientation": [
+              1.0,
+              0.0,
+              0.0
+            ],
+            "representation_type": "SweptSolid",
+            "section": {
+              "height_mm": 500.0,
+              "shape": "rectangle",
+              "width_mm": 300.0
+            }
+          },
+          "storey_global_id": "2nxdYR2RHCDBiKJuiQr1lO",
+          "type_global_id": "0cm7tILHrGwR$V__HqSJ8Q"
+        },
+        "semantic": {
+          "created": [
+            {
+              "global_id": "2eI_jjDATUjvMaWiLuX4ZH",
+              "ifc_class": "IfcPropertySet",
+              "role": "semantic_beam_pset"
+            },
+            {
+              "global_id": "2bZ2x7VA1UUP4QKSjvLviS",
+              "ifc_class": "IfcRelDefinesByProperties",
+              "role": "semantic_beam_pset_relationship"
+            }
+          ],
+          "modified": [],
+          "scopes": {
+            "beam_occurrence": {
+              "created": [
+                {
+                  "global_id": "2eI_jjDATUjvMaWiLuX4ZH",
+                  "ifc_class": "IfcPropertySet",
+                  "role": "semantic_beam_pset"
+                },
+                {
+                  "global_id": "2bZ2x7VA1UUP4QKSjvLviS",
+                  "ifc_class": "IfcRelDefinesByProperties",
+                  "role": "semantic_beam_pset_relationship"
+                }
+              ],
+              "modified": [],
+              "skipped": [
+                "relationship:type"
+              ],
+              "updated": []
+            }
+          },
+          "skipped": [
+            "relationship:type"
+          ],
+          "updated": []
+        }
+      },
+      "operation_id": "add-beam-1",
+      "operation_type": "add_beam"
+    }
+  ],
+  "output": {
+    "path": "E:\\code for project\\bimnet\\dataset\\processed\\ifc-repair-runs\\repair-milestone-r1\\r1-20260902T152701658266Z\\cases\\M2\\runtime\\runs\\repair-7988ad21f9a54fa9b7400b7f8ce10c51\\staging\\application-candidate.ifc",
+    "sha256": "ac9b6e48102c23b7df6842a4eec9998591b7104f9b095e506be4869671a1ad58"
+  },
+  "postconditions": [
+    {
+      "checks": [
+        {
+          "code": "BEAM_GEOMETRY_MATCHES",
+          "evidence": {
+            "axis_direction": [
+              1.0,
+              0.0,
+              0.0
+            ],
+            "axis_end_mm": [
+              8000.0,
+              -2000.0,
+              3000.0
+            ],
+            "axis_extent_mm": 6000.0,
+            "axis_start_mm": [
+              2000.0,
+              -2000.0,
+              3000.0
+            ],
+            "orientation": [
+              1.0,
+              0.0,
+              0.0
+            ],
+            "representation_type": "SweptSolid",
+            "section": {
+              "height_mm": 500.0,
+              "shape": "rectangle",
+              "width_mm": 300.0
+            }
+          },
+          "status": "passed"
+        },
+        {
+          "code": "BEAM_CONTAINED_IN_STOREY",
+          "evidence": {},
+          "status": "passed"
+        },
+        {
+          "code": "BEAM_TYPE_BOUND",
+          "evidence": {},
+          "status": "passed"
+        },
+        {
+          "code": "BEAM_ANALYSIS_RELATIONSHIPS_ABSENT",
+          "evidence": {},
+          "status": "passed"
+        }
+      ],
+      "evidence": {
+        "measurement": {
+          "axis_direction": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "axis_end_mm": [
+            8000.0,
+            -2000.0,
+            3000.0
+          ],
+          "axis_extent_mm": 6000.0,
+          "axis_start_mm": [
+            2000.0,
+            -2000.0,
+            3000.0
+          ],
+          "orientation": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "representation_type": "SweptSolid",
+          "section": {
+            "height_mm": 500.0,
+            "shape": "rectangle",
+            "width_mm": 300.0
+          }
+        }
+      },
+      "issues": [],
+      "operation_id": "add-beam-1",
+      "valid": true
+    }
+  ],
+  "published": true,
+  "schema_version": "text2ifc/ifc-repair-application/0.1",
+  "valid": true
+}

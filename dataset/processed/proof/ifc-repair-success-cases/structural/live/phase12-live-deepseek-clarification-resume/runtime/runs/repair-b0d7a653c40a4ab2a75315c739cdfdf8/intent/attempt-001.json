@@ -1,0 +1,37 @@
+{
+  "attempt": 1,
+  "issues": [],
+  "normalizations": [],
+  "provider_metadata": {
+    "estimated_input_tokens": "[REDACTED]",
+    "evidence_class": "live",
+    "max_input_tokens": "[REDACTED]",
+    "model": "deepseek-v4-flash",
+    "provider": "deepseek-openai-compatible",
+    "request_configuration": {
+      "temperature": {
+        "effective": false,
+        "value": 0
+      },
+      "thinking": {
+        "type": "enabled"
+      }
+    },
+    "response_id": "61ca104d-c82b-4568-b75b-2c16f313540d",
+    "session_id": "ifc-repair-intent-request-9a008ca96cbb317d",
+    "stop_reason": "stop",
+    "transport_attempts": 1,
+    "usage": {
+      "completion_tokens": 5390,
+      "completion_tokens_details": "[REDACTED]",
+      "prompt_cache_hit_tokens": "[REDACTED]",
+      "prompt_cache_miss_tokens": "[REDACTED]",
+      "prompt_tokens": 11467,
+      "prompt_tokens_details": "[REDACTED]",
+      "total_tokens": 16857
+    }
+  },
+  "response_excerpt": "{\n  \"schema_version\": \"text2ifc/ifc-repair-intent-body/0.8\",\n  \"operations\": [\n    {\n      \"operation_id\": \"add_column_1\",\n      \"operation_type\": \"add_column\",\n      \"routing_intent\": {\n        \"component_family\": \"column\",\n        \"action\": \"add\",\n        \"operation_profile\": \"column.add.v0.3\",\n        \"source\": {\n          \"source_kind\": \"user_request\",\n          \"reference\": \"public_request_001\",\n          \"excerpt\": \"On the IFC Building Storey named \\\"Level 1\\\", add one vertical straight rectangular Column with center-axis base (120000, 120000, 0) mm and top (120000, 120000, 6000) mm, a section 400 mm wide and 600 mm deep, and local width direction (0, 1).\"\n        }\n      },\n      \"target_query\": {\n        \"schema_version\": \"text2ifc/ifc-target-query/0.1\",\n        \"allowed_ifc_classes\": [\"IfcBuildingStorey\"],\n        \"names\": [\"Level 1\"]\n      },\n      \"parameters\": {\n        \"axis\": {\n          \"base\": { \"x_mm\": 120000, \"y_mm\": 120000, \"z_mm\": 0 },\n          \"top\": { \"x_mm\": 120000, \"y_mm\": 120000, \"z_mm\": 6000 }\n        },\n        \"section\": {\n          \"shape\": \"rectangle\",\n          \"width_mm\": 400,\n          \"depth_mm\": 600,\n          \"orientation\": { \"x\": 0, \"y\": 1 }\n        }\n      },\n      \"attribute_intents\": [],\n      \"property_intents\": [\n        {\n          \"intent_kind\": \"natural_language_property\",\n          \"property_phrase\": \"load bearing status or external status\",\n          \"raw_value\": true,\n          \"raw_unit\": null,\n          \"scope\": \"occurrence_direct\",\n          \"source\": {\n            \"source_kind\": \"user_request\",\n            \"reference\": \"public_request_001\",\n            \"excerpt\": \"Set its natural-language property \\\"load bearing status or external status\\\" to true\"\n          }\n        }\n      ],\n      \"semantic_bundle_refs\": [],\n      \"quantity_intents\": [],\n      \"occurrence_reuse_intent\": null,\n      \"prototype_intent\": null,\n      \"provenance\": [\n        {\n          \"source_kind\": \"user_request\",\n          \"reference\": \"public_request_001\",\n          \"excerpt\": \"On the IFC Building Storey named \\\"Level 1\\\", add one vertical straight rectangular Column with center-axis base (120000, 120000, 0) mm and top (120000, 120000, 6000) mm, a section 400 mm wide and 600 mm deep, and local width direction (0, 1).\"\n        }\n      ]\n    }\n  ],\n  \"unsupported_requests\": [],\n  \"semantic_bundles\": [],\n  \"provenance\": [\n    {\n      \"source_kind\": \"user_request\",\n      \"reference\": \"public_request_001\",\n      \"excerpt\": \"On the IFC Building Storey named \\\"Level 1\\\", add one vertical straight rectangular Column with center-axis base (120000, 120000, 0) mm and top (120000, 120000, 6000) mm, a section 400 mm wide and 600 mm deep, and local width direction (0, 1). Set its natural-language property \\\"load bearing status or external status\\\" to true, but do not choose between those two meanings without clarification.\"\n    }\n  ]\n}",
+  "response_sha256": "sha256:2c046435393d14fcd315d3d053e0443fa2050ccd3c11846fc983c628ab43d72b",
+  "status": "valid"
+}

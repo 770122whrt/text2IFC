@@ -1,0 +1,37 @@
+{
+  "attempt": 1,
+  "issues": [],
+  "normalizations": [],
+  "provider_metadata": {
+    "estimated_input_tokens": "[REDACTED]",
+    "evidence_class": "live",
+    "max_input_tokens": "[REDACTED]",
+    "model": "deepseek-v4-flash",
+    "provider": "deepseek-openai-compatible",
+    "request_configuration": {
+      "temperature": {
+        "effective": false,
+        "value": 0
+      },
+      "thinking": {
+        "type": "enabled"
+      }
+    },
+    "response_id": "b9ce8f0c-da72-499f-9f91-f074dfcf331c",
+    "session_id": "ifc-repair-intent-request-45b55d9703c7c1e2",
+    "stop_reason": "stop",
+    "transport_attempts": 2,
+    "usage": {
+      "completion_tokens": 7505,
+      "completion_tokens_details": "[REDACTED]",
+      "prompt_cache_hit_tokens": "[REDACTED]",
+      "prompt_cache_miss_tokens": "[REDACTED]",
+      "prompt_tokens": 11743,
+      "prompt_tokens_details": "[REDACTED]",
+      "total_tokens": 19248
+    }
+  },
+  "response_excerpt": "{\n  \"schema_version\": \"text2ifc/ifc-repair-intent-body/0.8\",\n  \"operations\": [\n    {\n      \"operation_id\": \"set-door-fire-rating-1\",\n      \"operation_type\": \"set_occurrence_properties\",\n      \"routing_intent\": {\n        \"component_family\": \"occurrence\",\n        \"action\": \"set_properties\",\n        \"operation_profile\": \"occurrence.set-properties\",\n        \"source\": {\n          \"source_kind\": \"user_request\",\n          \"reference\": \"public-request\",\n          \"excerpt\": \"将 Level 4 中 GlobalId 为 3JlX9$$_PCKBNpDob64$4w、Tag 为 439243 的门的防火等级设置为 true。\"\n        }\n      },\n      \"target_query\": {\n        \"schema_version\": \"text2ifc/ifc-target-query/0.1\",\n        \"allowed_ifc_classes\": [\"IfcDoor\"],\n        \"global_id\": \"3JlX9$$_PCKBNpDob64$4w\",\n        \"storey_name\": \"Level 4\"\n      },\n      \"parameters\": {},\n      \"attribute_intents\": [],\n      \"property_intents\": [\n        {\n          \"intent_kind\": \"natural_language_property\",\n          \"property_phrase\": \"防火等级\",\n          \"raw_value\": true,\n          \"raw_unit\": null,\n          \"scope\": \"occurrence_direct\",\n          \"source\": {\n            \"source_kind\": \"user_request\",\n            \"reference\": \"public-request\",\n            \"excerpt\": \"将 Level 4 中 GlobalId 为 3JlX9$$_PCKBNpDob64$4w、Tag 为 439243 的门的防火等级设置为 true。\"\n          }\n        }\n      ],\n      \"semantic_bundle_refs\": [],\n      \"quantity_intents\": [],\n      \"occurrence_reuse_intent\": null,\n      \"prototype_intent\": null,\n      \"provenance\": [\n        {\n          \"source_kind\": \"user_request\",\n          \"reference\": \"public-request\",\n          \"excerpt\": \"将 Level 4 中 GlobalId 为 3JlX9$$_PCKBNpDob64$4w、Tag 为 439243 的门的防火等级设置为 true。\"\n        }\n      ]\n    }\n  ],\n  \"unsupported_requests\": [],\n  \"semantic_bundles\": [],\n  \"provenance\": [\n    {\n      \"source_kind\": \"user_request\",\n      \"reference\": \"public-request\",\n      \"excerpt\": \"将 Level 4 中 GlobalId 为 3JlX9$$_PCKBNpDob64$4w、Tag 为 439243 的门的防火等级设置为 true。\"\n    }\n  ]\n}",
+  "response_sha256": "sha256:a589bb8b246d725966f55bd278f6b399fb17ec1cd95969299f5f64d4cb5d6734",
+  "status": "valid"
+}
