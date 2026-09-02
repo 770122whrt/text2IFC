@@ -1256,7 +1256,14 @@ def _application_role_binding_errors(
     )
     for change_kind, roles in authorization.get("required_roles", {}).items():
         for role in roles:
-            identifiers = role_entries.get((str(change_kind), str(role)), ())
+            if change_kind == "created_or_modified":
+                identifiers = [
+                    identifier
+                    for kind in ("created", "modified")
+                    for identifier in role_entries.get((kind, str(role)), ())
+                ]
+            else:
+                identifiers = role_entries.get((str(change_kind), str(role)), ())
             if len(identifiers) != 1:
                 errors.append(
                     f"required role {change_kind}.{role} has {len(identifiers)} bindings"
