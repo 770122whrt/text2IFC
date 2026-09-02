@@ -576,10 +576,19 @@ def compare_ifc_models(
     }
 
 
-def normalized_model_diff(before_model: Any, after_model: Any) -> dict[str, Any]:
+def normalized_model_diff(
+    before_model: Any,
+    after_model: Any,
+    *,
+    timeout_seconds: float = DEFAULT_COMPARISON_TIMEOUT_SECONDS,
+) -> dict[str, Any]:
     """Return deterministic actual IfcRoot changes from independently opened models."""
 
-    return profile_normalized_model_diff(before_model, after_model)["changes"]
+    return profile_normalized_model_diff(
+        before_model,
+        after_model,
+        timeout_seconds=timeout_seconds,
+    )["changes"]
 
 
 def profile_normalized_model_diff(

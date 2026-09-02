@@ -8,8 +8,8 @@ from text2ifc_ifc_repair.request_stage import _INTENT_CONTRACTS
 PROMPT_ID = "ifc-repair-intent.v0.10"
 
 
-def test_v010_is_current_and_freezes_internal_id_boundary() -> None:
-    assert _INTENT_CONTRACTS[REPAIR_INTENT_SCHEMA_VERSION_0_8][1] == PROMPT_ID
+def test_v010_remains_registered_and_freezes_internal_id_boundary() -> None:
+    assert _INTENT_CONTRACTS[REPAIR_INTENT_SCHEMA_VERSION_0_8][1] != PROMPT_ID
 
     rendered = render_prompt(
         template_id=PROMPT_ID,

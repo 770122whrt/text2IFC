@@ -224,6 +224,21 @@ class PropertyKnowledgeRuntime:
         if callable(release):
             release()
 
+    def warmup(self) -> dict[str, Any]:
+        """Prove the lazy local embedding model can encode before live use."""
+
+        if self.health.status != "ready" or self.vector_index is None:
+            raise PropertyRuntimeError(
+                self.health.reason_code or "PROPERTY_RUNTIME_NOT_READY"
+            )
+        warmup = getattr(self.vector_index, "warmup", None)
+        if not callable(warmup):
+            raise PropertyRuntimeError("PROPERTY_RUNTIME_WARMUP_UNAVAILABLE")
+        result = warmup()
+        if not isinstance(result, Mapping) or result.get("status") != "ready":
+            raise PropertyRuntimeError("PROPERTY_RUNTIME_WARMUP_FAILED")
+        return dict(result)
+
 
 def create_property_runtime(
     *,

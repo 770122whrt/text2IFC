@@ -139,10 +139,11 @@ def main(argv: list[str] | None = None) -> int:
     counts = live._counts(attempts)
     live_pass = live._live_attempt_evidence_pass(attempts)
     contract_pass = _case_contract_pass(
-        "H3",
+        "success",
         final,
         live_evidence_pass=live_pass,
         private_evidence_detected=private_evidence,
+        expect_resume=True,
     )
     result = {
         "schema_version": SCHEMA_VERSION,

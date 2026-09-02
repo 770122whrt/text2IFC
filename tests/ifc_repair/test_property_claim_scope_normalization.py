@@ -22,6 +22,7 @@ from typing import Any
 from text2ifc_ifc_repair.property_intent import normalize_property_scope
 from text2ifc_ifc_repair.repair_intent import PublicProvenance
 from text2ifc_ifc_repair.resolution_flow import PropertyKnowledgeQuery
+from text2ifc_knowledge.property_search import PropertyResolutionDecision
 
 
 def _claim(scope: str | None) -> Any:
@@ -202,3 +203,73 @@ def test_durable_coordinator_uses_normalized_query_scope(tmp_path: Path) -> None
     # below-floor branch; the normalized scope is what made retrieval
     # eligible in production.
     assert decision.reason_code == "PROPERTY_RETRIEVAL_BELOW_FLOOR"
+
+
+class _ClaimAwareResolverRecorder:
+    def __init__(self) -> None:
+        self.claims: list[Any] = []
+        self.queries: list[PropertyKnowledgeQuery] = []
+
+    def resolve_for_claim(
+        self,
+        *,
+        operation_id: str,
+        operation_type: str,
+        claim_id: str,
+        claim: Any,
+        query: PropertyKnowledgeQuery,
+    ) -> PropertyResolutionDecision:
+        self.claims.append(claim)
+        self.queries.append(query)
+        return PropertyResolutionDecision(
+            status="clarification_required",
+            reason_code="PROPERTY_RETRIEVAL_BELOW_FLOOR",
+            exact_intent=None,
+            candidates=(),
+        )
+
+
+def test_public_resolution_normalizes_claim_once_for_resolver_and_evidence(
+    tmp_path: Path,
+) -> None:
+    """All post-normalization consumers must receive one canonical claim."""
+    from tests.ifc_repair.test_resolution_flow import (
+        SOURCE_SHA,
+        _intent,
+        _record,
+        _registry,
+        _repository,
+    )
+    from text2ifc_ifc_repair.resolution_flow import resolve_repair_intent
+
+    target = _record("0CCCCCCCCCCCCCCCCCCCCC", "generic target")
+    recorder = _ClaimAwareResolverRecorder()
+    property_claim = {
+        "intent_kind": "natural_language_property",
+        "property_phrase": "防火等级",
+        "raw_value": "EI60",
+        "raw_unit": None,
+        "scope": None,
+        "source": {
+            "source_kind": "user_request",
+            "reference": "request:/properties/0",
+            "excerpt": "设置防火等级",
+        },
+    }
+    with _repository(tmp_path, [target]) as repository:
+        result = resolve_repair_intent(
+            _intent(
+                {"global_id": target.ifc_global_id},
+                properties=[property_claim],
+                schema_version_override="text2ifc/ifc-repair-intent/0.3",
+            ),
+            repository,
+            expected_source_sha256=SOURCE_SHA,
+            operation_registry=_registry(),
+            property_knowledge_resolver=recorder,
+        )
+
+    assert result.status == "clarification_required"
+    assert recorder.queries[0].scope == "occurrence_direct"
+    assert recorder.claims[0].scope == "occurrence_direct"
+    assert result.property_resolutions[0]["query"]["scope"] == "occurrence_direct"

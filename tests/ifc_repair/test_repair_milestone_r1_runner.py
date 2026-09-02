@@ -34,6 +34,9 @@ def test_r1_execution_manifest_binds_frozen_cases_models_and_resume_answers() ->
     assert loaded["resume_bindings"]["H3"]["stable_public_identity"] == (
         "1hOSvn6df7F8_7GcBWlS2V"
     )
+    assert loaded["proof_profiles_by_case"]["M2"]["artifact_predicates"][0][
+        "predicate_id"
+    ] == "M2-beam"
     serialized = json.dumps(loaded["public_cases"], ensure_ascii=False)
     for forbidden in (
         "evaluation_only_expected",
@@ -65,6 +68,30 @@ def test_r1_runner_readiness_never_constructs_provider(
     assert result["transport_calls"] == 0
     assert result["case_count"] == 12
     assert calls == 0
+
+
+def test_r1_property_runtime_warmup_is_real_and_fail_closed() -> None:
+    events: list[str] = []
+
+    class ReadyRuntime:
+        def warmup(self):
+            events.append("warmup")
+            return {"status": "ready", "embedding_count": 1}
+
+    assert runner._warm_property_runtime(ReadyRuntime()) == {
+        "status": "passed",
+        "reason_code": None,
+        "details": {"status": "ready", "embedding_count": 1},
+    }
+    assert events == ["warmup"]
+
+    class FailedRuntime:
+        def warmup(self):
+            raise OSError(1114, "DLL initialization failed")
+
+    failed = runner._warm_property_runtime(FailedRuntime())
+    assert failed["status"] == "failed"
+    assert failed["reason_code"].startswith("[Errno 1114]")
 
 
 def test_r1_runner_cannot_execute_while_manifest_is_unapproved(
@@ -390,6 +417,151 @@ def test_success_contract_requires_resume_answer_only_when_declared() -> None:
         private_evidence_detected=False,
         expect_resume=False,
     )
+    frozen_predicate_failed = runner._case_contract_pass(
+        "success",
+        _success_final(applied=False),
+        live_evidence_pass=True,
+        private_evidence_detected=False,
+        expect_resume=False,
+        artifact_predicate_pass=False,
+    )
     assert resume_required is False
     assert resume_satisfied is True
     assert plain_success is True
+    assert frozen_predicate_failed is False
+
+
+def test_post_execution_predicate_audit_reopens_bound_terminal_artifacts(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    source = tmp_path / "source.ifc"
+    source.write_bytes(b"source")
+    case_root = tmp_path / "case"
+    run_root = case_root / "runtime" / "runs" / "repair-1"
+    bundle = run_root / ".terminal-bundles" / "bundle"
+    (bundle / "successful").mkdir(parents=True)
+    (bundle / "terminal").mkdir()
+    changeset = run_root / "changeset-v001.json"
+    changeset.write_text(
+        json.dumps({"operations": []}),
+        encoding="utf-8",
+    )
+    repaired = bundle / "successful" / "repaired.ifc"
+    repaired.write_bytes(b"repaired")
+    evidence = bundle / "terminal" / "evidence.json"
+    evidence.write_text(
+        json.dumps({"evidence": {"application": {"valid": True}}}),
+        encoding="utf-8",
+    )
+    manifest = bundle / "manifest.json"
+    manifest.write_text(
+        json.dumps(
+            {
+                "schema_version": (
+                    "text2ifc/ifc-repair-artifact-manifest/0.1"
+                ),
+                "artifacts": [
+                    {
+                        "path": repaired.relative_to(run_root).as_posix(),
+                        "role": "successful_ifc",
+                        "sha256": runner._sha256_path(repaired),
+                        "size_bytes": repaired.stat().st_size,
+                    },
+                    {
+                        "path": evidence.relative_to(run_root).as_posix(),
+                        "role": "public_evidence",
+                        "sha256": runner._sha256_path(evidence),
+                        "size_bytes": evidence.stat().st_size,
+                    },
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+    (run_root / "state.json").write_text(
+        json.dumps(
+            {
+                "run_id": "repair-1",
+                "transitions": [
+                    {
+                        "stage_payload": {
+                            "changeset": {
+                                "path": changeset.relative_to(
+                                    run_root
+                                ).as_posix(),
+                                "schema_version": (
+                                    "text2ifc/ifc-repair-changeset/0.1"
+                                ),
+                                "sha256": (
+                                    "sha256:" + runner._sha256_path(changeset)
+                                ),
+                            }
+                        }
+                    }
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+    captured = {}
+    monkeypatch.setattr(
+        runner.ifcopenshell,
+        "open",
+        lambda path: f"reopened:{Path(path).name}",
+    )
+
+    def audit(**kwargs):
+        captured.update(kwargs)
+        return [{"predicate_id": "generic", "status": "passed"}]
+
+    result = runner._post_execution_predicate_audit(
+        case_root=case_root,
+        source_path=source,
+        final={
+            "run_id": "repair-1",
+            "status": "succeeded",
+            "artifacts": {
+                "manifest": manifest.relative_to(run_root).as_posix(),
+                "successful_ifc": repaired.relative_to(run_root).as_posix(),
+            },
+        },
+        profile={
+            "artifact_predicates": [
+                {"predicate_id": "generic", "kind": "fixture"}
+            ]
+        },
+        predicate_auditor=audit,
+    )
+
+    assert result["status"] == "passed"
+    assert captured["changeset"] == {"operations": []}
+    assert captured["application"] == {"valid": True}
+    assert captured["source_model"] == "reopened:source.ifc"
+    assert captured["repaired_model"] == "reopened:repaired.ifc"
+
+    failed = runner._post_execution_predicate_audit(
+        case_root=case_root,
+        source_path=source,
+        final={
+            "run_id": "repair-1",
+            "status": "succeeded",
+            "artifacts": {
+                "manifest": manifest.relative_to(run_root).as_posix(),
+                "successful_ifc": repaired.relative_to(run_root).as_posix(),
+            },
+        },
+        profile={
+            "artifact_predicates": [
+                {"predicate_id": "generic", "kind": "fixture"}
+            ]
+        },
+        predicate_auditor=lambda **_kwargs: (_ for _ in ()).throw(
+            ValueError("proof.predicate.fixture")
+        ),
+    )
+    assert failed == {
+        "status": "failed",
+        "reason_code": "proof.predicate.fixture",
+        "predicate_results": [],
+    }

@@ -5,6 +5,7 @@ import json
 import shutil
 from copy import deepcopy
 from pathlib import Path
+from types import SimpleNamespace
 from typing import Any, Mapping
 
 import ifcopenshell
@@ -20,6 +21,7 @@ from tests.ifc_repair.test_r1_live_attempt_audit import (
 )
 from text2ifc_agent.prompt_registry import render_prompt
 from text2ifc_ifc_repair.apply import apply_changeset
+from text2ifc_ifc_repair.evaluation_models import EvaluationStatus
 from text2ifc_ifc_repair.operations import create_default_registry
 from text2ifc_ifc_repair.run_models import RunStage
 from text2ifc_ifc_repair.run_store import RunStore
@@ -331,6 +333,9 @@ def _r1_live_provenance_fixture(
         "operations": [property_operation],
     }
     provider_draft = deepcopy(changeset)
+    provider_draft["schema_version"] = (
+        "text2ifc/ifc-repair-changeset-draft/0.2"
+    )
     selection = proof_validator.select_prompt_profiles(
         ["occurrence.set-properties"]
     ).to_dict()
@@ -1900,6 +1905,57 @@ def test_r1_stage15_single_attempt_must_be_independently_valid(
         )
 
 
+def test_r1_independent_proof_uses_frozen_comparison_budget(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    diff_budgets: list[float] = []
+    orphan_budgets: list[float] = []
+    l1_budgets: list[float] = []
+
+    def _diff(_before: Any, _after: Any, *, timeout_seconds: float) -> dict:
+        diff_budgets.append(timeout_seconds)
+        return {
+            "changes": {"created": [], "modified": [], "removed": []},
+        }
+
+    def _orphan(_model: Any, *, timeout_seconds: float) -> dict:
+        orphan_budgets.append(timeout_seconds)
+        return {}
+
+    def _l1(**kwargs: Any) -> SimpleNamespace:
+        l1_budgets.append(kwargs["comparison_timeout_seconds"])
+        return SimpleNamespace(
+            status=EvaluationStatus.PASSED,
+            checks=[],
+        )
+
+    monkeypatch.setattr(proof_validator, "profile_normalized_model_diff", _diff)
+    monkeypatch.setattr(
+        proof_validator,
+        "unreachable_non_root_fingerprint_multiset",
+        _orphan,
+    )
+    monkeypatch.setattr(proof_validator, "evaluate_independent_l1", _l1)
+
+    proof_validator._audit_structural_preservation(
+        changeset={"operations": []},
+        damaged_model=object(),
+        repaired_model=object(),
+    )
+    proof_validator._audit_authorized_repair_preservation(
+        damaged_ifc_path="damaged.ifc",
+        repaired_ifc_path="repaired.ifc",
+        changeset={"operations": []},
+        application={},
+        damaged_model=object(),
+        repaired_model=object(),
+    )
+
+    assert diff_budgets == [600.0]
+    assert orphan_budgets == [600.0, 600.0]
+    assert l1_budgets == [600.0]
+
+
 def test_r1_m1_initial_replay_is_case_listed_and_uses_base_claim(
     tmp_path: Path,
 ) -> None:
@@ -1912,16 +1968,48 @@ def test_r1_m1_initial_replay_is_case_listed_and_uses_base_claim(
     _write_json(
         query,
         {
+            "schema_version": "text2ifc/ifc-property-resolution-query/0.2",
             "run_id": "run-e1",
             "operation_id": "e1-window-property",
             "claim_id": "claim-001",
-            "query_id": "query-e1",
+            "query_id": (
+                "property-query:run-e1:e1-window-property:claim-001"
+            ),
         },
     )
-    _write_json(candidate_set, {"candidate_set_id": "candidate-set-e1"})
+    _write_json(
+        candidate_set,
+        {
+            "schema_version": "text2ifc/ifc-property-candidate-set/0.1",
+            "candidate_set_id": (
+                "property-candidates:run-e1:e1-window-property:claim-001"
+            ),
+            "query_id": (
+                "property-query:run-e1:e1-window-property:claim-001"
+            ),
+        },
+    )
     initial_claim = deepcopy(intent["operations"][0]["property_intents"][0])
     _write_json(claim, initial_claim)
-    _write_json(admission, {"status": "clarification_required"})
+    _write_json(
+        admission,
+        {
+            "schema_version": "text2ifc/ifc-property-admissibility/0.1",
+            "admissibility_id": (
+                "property-admissibility:run-e1:e1-window-property:claim-001"
+            ),
+            "query_id": (
+                "property-query:run-e1:e1-window-property:claim-001"
+            ),
+            "candidate_set_id": (
+                "property-candidates:run-e1:e1-window-property:claim-001"
+            ),
+            "decision_id": (
+                "property-decision:run-e1:e1-window-property:claim-001"
+            ),
+            "status": "clarification_required",
+        },
+    )
     roles.update(
         {
             "property_query": query,
@@ -1940,6 +2028,10 @@ def test_r1_m1_initial_replay_is_case_listed_and_uses_base_claim(
     }
     trace_document = proof_validator._read_json(roles["property_trace"])
     trace_document["run_id"] = "run-e1"
+    trace_document["query_id"] = proof_validator._read_json(query)["query_id"]
+    trace_document["candidate_set_id"] = proof_validator._read_json(
+        candidate_set
+    )["candidate_set_id"]
     _write_json(roles["property_trace"], trace_document)
     state_path = claim_root.parents[2] / "state.json"
     decision_result = claim_root / "decision-result-initial.json"
@@ -1961,10 +2053,35 @@ def test_r1_m1_initial_replay_is_case_listed_and_uses_base_claim(
     )
 
     def _ref(path: Path) -> dict[str, str]:
-        return {
+        document = proof_validator._read_json(path)
+        reference = {
             "path": path.relative_to(state_path.parent).as_posix(),
-            "sha256": "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest(),
         }
+        if path == query:
+            reference.update(
+                schema_version=document["schema_version"],
+                query_id=document["query_id"],
+            )
+        elif path == candidate_set:
+            reference.update(
+                schema_version=document["schema_version"],
+                candidate_set_id=document["candidate_set_id"],
+            )
+        elif path == admission:
+            reference.update(
+                schema_version=document["schema_version"],
+                admissibility_id=document["admissibility_id"],
+            )
+        else:
+            reference.update(
+                schema_version=(
+                    "text2ifc/ifc-property-resolution-result/0.1"
+                ),
+                decision_id=(
+                    "property-decision:run-e1:e1-window-property:claim-001"
+                ),
+            )
+        return reference
 
     state = {
         "run_id": "run-e1",

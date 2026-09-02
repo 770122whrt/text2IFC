@@ -22,8 +22,27 @@ if str(ROOT) not in sys.path:
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
+R1_NATIVE_RUNTIME_BOOTSTRAP: dict[str, Any] | None = None
+if __name__ == "__main__" and "--execute-genuine" in sys.argv:
+    try:
+        from text2ifc_knowledge.property_search import (
+            prepare_local_embedding_native_runtime,
+        )
+
+        R1_NATIVE_RUNTIME_BOOTSTRAP = (
+            prepare_local_embedding_native_runtime()
+        )
+    except Exception as error:
+        R1_NATIVE_RUNTIME_BOOTSTRAP = {
+            "status": "failed",
+            "reason_code": (str(error) or type(error).__name__)[:256],
+        }
+
+import ifcopenshell
+
 from scripts.ifc_repair import run_phase12_live_uat as live
 from scripts.ifc_repair import curate_phase12_live_proof as live_curator
+from scripts.ifc_repair import validate_success_cases as proof_validator
 from text2ifc_agent.openai_compat import (
     OpenAICompatibleLiveProvider,
     load_openai_compatible_runtime_config,
@@ -138,7 +157,7 @@ def load_execution_manifest(
         raise ValueError("R1_EXECUTION_PROVIDER_CONTRACT_INVALID")
 
     freeze_path = _bound_repository_file(document["acceptance_freeze"])
-    _bound_repository_file(document["proof_profiles"])
+    proof_profiles_path = _bound_repository_file(document["proof_profiles"])
     freeze = _read_json(freeze_path)
     order = [str(value) for value in document["execution_order"]]
     if order != [str(value) for value in freeze.get("execution_order", ())]:
@@ -152,6 +171,21 @@ def load_execution_manifest(
     cases = [dict(item) for item in case_documents]
     if [str(item.get("case_id")) for item in cases] != order:
         raise ValueError("R1_EXECUTION_CASE_SET_MISMATCH")
+    proof_profiles = _read_json(proof_profiles_path)
+    profile_cases = proof_profiles.get("cases")
+    if (
+        proof_profiles.get("schema_version")
+        != "text2ifc/ifc-repair-proof-profiles/0.1"
+        or proof_profiles.get("provenance_namespace")
+        != "repair-milestone-r1"
+        or proof_profiles.get("execution_order") != order
+        or not isinstance(profile_cases, list)
+        or [str(item.get("case_id")) for item in profile_cases] != order
+    ):
+        raise ValueError("R1_EXECUTION_PROOF_PROFILES_INVALID")
+    proof_profiles_by_case = {
+        str(item["case_id"]): dict(item) for item in profile_cases
+    }
 
     for model in models.values():
         model_path = (ROOT / str(model["path"])).resolve()
@@ -234,6 +268,7 @@ def load_execution_manifest(
         "models": models,
         "cases": cases,
         "public_cases": public_cases,
+        "proof_profiles_by_case": proof_profiles_by_case,
     }
 
 
@@ -244,8 +279,13 @@ def _case_contract_pass(
     live_evidence_pass: bool,
     private_evidence_detected: bool,
     expect_resume: bool,
+    artifact_predicate_pass: bool = True,
 ) -> bool:
-    if private_evidence_detected or not live_evidence_pass:
+    if (
+        private_evidence_detected
+        or not live_evidence_pass
+        or not artifact_predicate_pass
+    ):
         return False
     if expected_outcome == "unsupported_program_zero_mutation":
         return (
@@ -274,6 +314,167 @@ def _case_contract_pass(
             or final.get("clarification_answer_applied") is True
         )
     )
+
+
+def _safe_run_artifact(run_root: Path, relative: str) -> Path:
+    value = Path(relative)
+    path = (run_root / value).resolve()
+    if (
+        not relative
+        or value.is_absolute()
+        or ".." in value.parts
+        or not path.is_relative_to(run_root.resolve())
+        or not path.is_file()
+    ):
+        raise ValueError("R1_ARTIFACT_PREDICATE_PATH_INVALID")
+    return path
+
+
+def _post_execution_predicate_audit(
+    *,
+    case_root: Path,
+    source_path: Path | str,
+    final: Mapping[str, Any],
+    profile: Mapping[str, Any],
+    predicate_auditor: Callable[..., list[dict[str, Any]]] | None = None,
+) -> dict[str, Any]:
+    """Reopen retained outputs and apply frozen predicates after Provider use."""
+
+    predicates = profile.get("artifact_predicates")
+    if not isinstance(predicates, list):
+        return {
+            "status": "failed",
+            "reason_code": "R1_ARTIFACT_PREDICATE_PROFILE_INVALID",
+            "predicate_results": [],
+        }
+    if not predicates:
+        return {
+            "status": "not_applicable",
+            "reason_code": None,
+            "predicate_results": [],
+        }
+    try:
+        run_id = str(final.get("run_id") or "")
+        run_root = (
+            case_root / "runtime" / "runs" / run_id
+        ).resolve()
+        expected_runs_root = (case_root / "runtime" / "runs").resolve()
+        if (
+            not run_id
+            or not run_root.is_relative_to(expected_runs_root)
+            or not run_root.is_dir()
+        ):
+            raise ValueError("R1_ARTIFACT_PREDICATE_RUN_INVALID")
+        state = _read_json(run_root / "state.json")
+        changeset_bindings = []
+        for transition in state.get("transitions", ()):
+            payload = (
+                transition.get("stage_payload")
+                if isinstance(transition, Mapping)
+                else None
+            )
+            binding = (
+                payload.get("changeset")
+                if isinstance(payload, Mapping)
+                else None
+            )
+            if isinstance(binding, Mapping):
+                changeset_bindings.append(binding)
+        if len(changeset_bindings) != 1:
+            raise ValueError("R1_ARTIFACT_PREDICATE_CHANGESET_BINDING")
+        changeset_binding = changeset_bindings[0]
+        if (
+            set(changeset_binding)
+            != {"path", "schema_version", "sha256"}
+            or changeset_binding.get("schema_version")
+            != "text2ifc/ifc-repair-changeset/0.1"
+        ):
+            raise ValueError("R1_ARTIFACT_PREDICATE_CHANGESET_BINDING")
+        changeset_path = _safe_run_artifact(
+            run_root, str(changeset_binding.get("path") or "")
+        )
+        if str(changeset_binding.get("sha256") or "").removeprefix(
+            "sha256:"
+        ) != _sha256_path(changeset_path):
+            raise ValueError("R1_ARTIFACT_PREDICATE_CHANGESET_HASH")
+
+        artifacts = final.get("artifacts")
+        if not isinstance(artifacts, Mapping):
+            raise ValueError("R1_ARTIFACT_PREDICATE_TERMINAL_BINDING")
+        manifest_path = _safe_run_artifact(
+            run_root, str(artifacts.get("manifest") or "")
+        )
+        manifest = _read_json(manifest_path)
+        entries = manifest.get("artifacts")
+        if (
+            manifest.get("schema_version")
+            != "text2ifc/ifc-repair-artifact-manifest/0.1"
+            or not isinstance(entries, list)
+        ):
+            raise ValueError("R1_ARTIFACT_PREDICATE_MANIFEST")
+        by_role: dict[str, Path] = {}
+        for entry in entries:
+            if not isinstance(entry, Mapping):
+                raise ValueError("R1_ARTIFACT_PREDICATE_MANIFEST")
+            role = str(entry.get("role") or "")
+            artifact = _safe_run_artifact(
+                run_root, str(entry.get("path") or "")
+            )
+            if (
+                role in by_role
+                or str(entry.get("sha256") or "").removeprefix("sha256:")
+                != _sha256_path(artifact)
+                or int(entry.get("size_bytes", -1)) != artifact.stat().st_size
+            ):
+                raise ValueError("R1_ARTIFACT_PREDICATE_MANIFEST")
+            by_role[role] = artifact
+        repaired_path = by_role.get("successful_ifc")
+        evidence_path = by_role.get("public_evidence")
+        if (
+            repaired_path is None
+            or evidence_path is None
+            or repaired_path
+            != _safe_run_artifact(
+                run_root, str(artifacts.get("successful_ifc") or "")
+            )
+        ):
+            raise ValueError("R1_ARTIFACT_PREDICATE_TERMINAL_BINDING")
+        evidence = _read_json(evidence_path)
+        evidence_payload = evidence.get("evidence")
+        application = (
+            evidence_payload.get("application")
+            if isinstance(evidence_payload, Mapping)
+            else None
+        )
+        if not isinstance(application, Mapping):
+            raise ValueError("R1_ARTIFACT_PREDICATE_APPLICATION")
+        source = Path(source_path).resolve()
+        if not source.is_file():
+            raise ValueError("R1_ARTIFACT_PREDICATE_SOURCE")
+        auditor = (
+            proof_validator.audit_r1_artifact_predicates
+            if predicate_auditor is None
+            else predicate_auditor
+        )
+        predicate_results = auditor(
+            source_model=ifcopenshell.open(str(source)),
+            repaired_model=ifcopenshell.open(str(repaired_path)),
+            changeset=_read_json(changeset_path),
+            application=dict(application),
+            predicates=predicates,
+        )
+        return {
+            "status": "passed",
+            "reason_code": None,
+            "predicate_results": predicate_results,
+        }
+    except Exception as error:
+        reason = str(error).split(":", 1)[0] or type(error).__name__
+        return {
+            "status": "failed",
+            "reason_code": reason[:128],
+            "predicate_results": [],
+        }
 
 
 def _retained_preflight_artifact_overrides(
@@ -384,6 +585,30 @@ def _load_r1_prerequisite_evidence(
     return evidence
 
 
+def _warm_property_runtime(runtime: Any) -> dict[str, Any]:
+    """Exercise lazy embedding initialization before any Provider call."""
+
+    try:
+        warmup = getattr(runtime, "warmup", None)
+        if not callable(warmup):
+            raise RuntimeError("PROPERTY_RUNTIME_WARMUP_UNAVAILABLE")
+        details = warmup()
+        if not isinstance(details, Mapping) or details.get("status") != "ready":
+            raise RuntimeError("PROPERTY_RUNTIME_WARMUP_FAILED")
+        return {
+            "status": "passed",
+            "reason_code": None,
+            "details": dict(details),
+        }
+    except Exception as error:
+        reason = str(error) or type(error).__name__
+        return {
+            "status": "failed",
+            "reason_code": reason[:256],
+            "details": None,
+        }
+
+
 def run_r1_acceptance(
     output_root: Path | str,
     *,
@@ -423,6 +648,23 @@ def run_r1_acceptance(
             "performance_slo_blocking": R1_PERFORMANCE_SLO_BLOCKING,
         },
     }
+    if R1_NATIVE_RUNTIME_BOOTSTRAP is not None:
+        result["native_runtime_bootstrap"] = dict(
+            R1_NATIVE_RUNTIME_BOOTSTRAP
+        )
+    if (
+        execute_genuine
+        and isinstance(R1_NATIVE_RUNTIME_BOOTSTRAP, Mapping)
+        and R1_NATIVE_RUNTIME_BOOTSTRAP.get("status") == "failed"
+    ):
+        result.update(
+            {
+                "status": "blocked",
+                "reason_code": "R1_NATIVE_RUNTIME_BOOTSTRAP_FAILED",
+            }
+        )
+        live._write_json(output / "r1-execution-result.json", result)
+        return result
     if not execute_genuine:
         result["status"] = "ready_for_genuine_authorization"
         live._write_json(output / "r1-execution-result.json", result)
@@ -488,6 +730,18 @@ def run_r1_acceptance(
         )
         live._write_json(output / "r1-execution-result.json", result)
         return result
+    warmup = _warm_property_runtime(property_runtime)
+    result["property_runtime_warmup"] = warmup
+    if warmup["status"] != "passed":
+        live._close_property_runtime(property_runtime)
+        result.update(
+            {
+                "status": "blocked",
+                "reason_code": "R1_PROPERTY_RUNTIME_WARMUP_FAILED",
+            }
+        )
+        live._write_json(output / "r1-execution-result.json", result)
+        return result
 
     provider = live.TranscriptProvider(transport)
     case_results: list[dict[str, Any]] = []
@@ -544,12 +798,35 @@ def run_r1_acceptance(
             attempts = provider.attempts[before:]
             counts = live._counts(attempts)
             live_pass = live._live_attempt_evidence_pass(attempts)
+            base_contract_pass = _case_contract_pass(
+                str(case_document["expected_outcome"]),
+                final,
+                live_evidence_pass=live_pass,
+                private_evidence_detected=private_evidence,
+                expect_resume=bool(case_document["expect_resume"]),
+            )
+            predicate_audit = (
+                _post_execution_predicate_audit(
+                    case_root=case_root,
+                    source_path=case_document["source_path"],
+                    final=final,
+                    profile=loaded["proof_profiles_by_case"][case_id],
+                )
+                if base_contract_pass
+                else {
+                    "status": "not_evaluated",
+                    "reason_code": "R1_BASE_CASE_CONTRACT_FAILED",
+                    "predicate_results": [],
+                }
+            )
             contract_pass = _case_contract_pass(
                 str(case_document["expected_outcome"]),
                 final,
                 live_evidence_pass=live_pass,
                 private_evidence_detected=private_evidence,
                 expect_resume=bool(case_document["expect_resume"]),
+                artifact_predicate_pass=predicate_audit["status"]
+                in {"passed", "not_applicable"},
             )
             case_result = {
                 "case_id": case_id,
@@ -563,6 +840,7 @@ def run_r1_acceptance(
                 "synthetic_fallback_used": False,
                 "private_evidence_detected": private_evidence,
                 "execution_error": execution_error,
+                "artifact_predicate_audit": predicate_audit,
             }
             live._write_json(case_root / "case-result.json", case_result)
             case_results.append(case_result)

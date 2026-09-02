@@ -184,6 +184,60 @@ def test_bge_embedding_provider_releases_only_loaded_transient_model(
     assert provider._model is None
     assert trim_calls == ["trim"]
 
+
+def test_local_embedding_native_bootstrap_loads_msvc_before_torch(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    events: list[str] = []
+
+    def load_msvc():
+        events.append("msvc")
+        return (object(), object(), object())
+
+    class TorchFixture:
+        __version__ = "2.9-test"
+
+    def import_module(name: str):
+        events.append(f"import:{name}")
+        return TorchFixture()
+
+    monkeypatch.setattr(
+        property_search,
+        "_prepare_windows_torch_runtime",
+        load_msvc,
+    )
+    monkeypatch.setattr(importlib, "import_module", import_module)
+
+    assert property_search.prepare_local_embedding_native_runtime() == {
+        "status": "ready",
+        "msvc_runtime_handle_count": 3,
+        "torch_version": "2.9-test",
+    }
+    assert events == ["msvc", "import:torch"]
+
+
+def test_property_runtime_warmup_exercises_embedding_before_live_use(
+    project_root: Path,
+) -> None:
+    runtime = _runtime(project_root)
+    calls: list[str] = []
+
+    class WarmIndex:
+        def warmup(self) -> dict[str, object]:
+            calls.append("embedding")
+            return {
+                "status": "ready",
+                "embedding_count": 1,
+            }
+
+    runtime.vector_index = WarmIndex()
+
+    assert runtime.warmup() == {
+        "status": "ready",
+        "embedding_count": 1,
+    }
+    assert calls == ["embedding"]
+
 def test_active_runtime_module_is_additive_and_non_executable() -> None:
     module = _runtime_module()
     assert hasattr(module, "PropertyKnowledgeRuntime")

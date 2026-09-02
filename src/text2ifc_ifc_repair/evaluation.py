@@ -821,6 +821,7 @@ def evaluate_independent_l1(
     changeset: Mapping[str, Any],
     application_result: Mapping[str, Any],
     registry: Any,
+    comparison_timeout_seconds: float | None = None,
     execution_policy: EvaluationExecutionPolicy | None = None,
     validation_cache_dir: Path | str | None = None,
     reopened_models: (
@@ -1010,7 +1011,15 @@ def evaluate_independent_l1(
 
     try:
         if actual_changes is None:
-            actual_changes = normalized_model_diff(before_model, after_model)
+            actual_changes = normalized_model_diff(
+                before_model,
+                after_model,
+                **(
+                    {}
+                    if comparison_timeout_seconds is None
+                    else {"timeout_seconds": comparison_timeout_seconds}
+                ),
+            )
     except ComparisonIntegrityError as error:
         checks.extend(_comparison_not_evaluable_checks(error))
         return _l1_level(checks, readable=True)

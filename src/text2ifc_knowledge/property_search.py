@@ -5,6 +5,7 @@ from __future__ import annotations
 from dataclasses import asdict, dataclass
 import gc
 import hashlib
+import importlib
 import json
 import math
 import os
@@ -96,6 +97,18 @@ def _prepare_windows_torch_runtime(
         raise RuntimeError("BGE_M3_WINDOWS_RUNTIME_UNAVAILABLE") from error
     _WINDOWS_TORCH_RUNTIME_HANDLES.extend(handles)
     return handles
+
+
+def prepare_local_embedding_native_runtime() -> dict[str, Any]:
+    """Initialize Windows runtime DLLs before importing local Torch."""
+
+    handles = _prepare_windows_torch_runtime()
+    torch = importlib.import_module("torch")
+    return {
+        "status": "ready",
+        "msvc_runtime_handle_count": len(handles),
+        "torch_version": str(torch.__version__),
+    }
 
 
 def _stable_hash(value: object) -> str:
@@ -931,6 +944,23 @@ class QdrantVectorIndex:
         )
         if callable(release):
             release()
+
+    def warmup(self) -> dict[str, Any]:
+        """Exercise the configured embedding runtime without querying data."""
+
+        vectors = self.embedding_provider.embed(
+            ("IFC property embedding runtime readiness probe",)
+        )
+        if len(vectors) != 1 or not vectors[0]:
+            raise RuntimeError("PROPERTY_EMBEDDING_WARMUP_INVALID")
+        return {
+            "status": "ready",
+            "embedding_count": 1,
+            "embedding_dimensions": len(vectors[0]),
+            "model_fingerprint": str(
+                self.embedding_provider.model_fingerprint
+            ),
+        }
 
     def close(self) -> None:
         self.release_transient_resources()
