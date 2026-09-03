@@ -1,0 +1,256 @@
+{
+  "base_model_fingerprint": "sha256:636135b4bc12ea3e45d9a7155f714834ff5eaaba1f2d3d2e7a5ae84a525a59aa",
+  "binding_status": "bound",
+  "changeset_id": "changeset-phase12-v2-vvo-beam-column-atomic-restoration",
+  "evidence_refs": [
+    "resolved:/operations/phase12-v2-vvo-beam-column-atomic-restoration-beam-1/context/candidate_targets/0",
+    "resolved:/operations/phase12-v2-vvo-beam-column-atomic-restoration-column-2/context/candidate_targets/0"
+  ],
+  "operations": [
+    {
+      "evidence_refs": [
+        "resolved:/operations/phase12-v2-vvo-beam-column-atomic-restoration-beam-1/context/candidate_targets/0"
+      ],
+      "operation_id": "phase12-v2-vvo-beam-column-atomic-restoration-beam-1",
+      "operation_type": "add_beam",
+      "parameters": {
+        "axis": {
+          "end": {
+            "x_mm": -3316.629521,
+            "y_mm": -8803.522838,
+            "z_mm": 0.0
+          },
+          "start": {
+            "x_mm": -3316.629521,
+            "y_mm": -3863.522838,
+            "z_mm": 0.0
+          }
+        },
+        "section": {
+          "height_mm": 570.0,
+          "shape": "rectangle",
+          "width_mm": 455.0
+        }
+      },
+      "semantic_assignments": [
+        {
+          "applicability": "conditional",
+          "authoring_action": "bind_relationship",
+          "derivation": null,
+          "fact_key": "relationship:host",
+          "operation_id": "phase12-v2-vvo-beam-column-atomic-restoration-beam-1",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "resolved-host-target:1vTeahUkP60PdWqwCTjUuM",
+            "resolved-host:1vTeahUkP60PdWqwCTjUuM",
+            "operation:phase12-v2-vvo-beam-column-atomic-restoration-beam-1"
+          ],
+          "scope": "beam_occurrence",
+          "source_fact_key": "relationship:host",
+          "source_kind": "deterministic_derived",
+          "source_ref": "current-host-binding:1vTeahUkP60PdWqwCTjUuM",
+          "unit": null,
+          "value": "1vTeahUkP60PdWqwCTjUuM",
+          "value_type": "IfcBuildingStorey"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "bind_relationship",
+          "derivation": null,
+          "fact_key": "relationship:storey",
+          "operation_id": "phase12-v2-vvo-beam-column-atomic-restoration-beam-1",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "operation:phase12-v2-vvo-beam-column-atomic-restoration-beam-1",
+            "registered-beam-storey-policy:0.1"
+          ],
+          "scope": "beam_occurrence",
+          "source_fact_key": "relationship:storey",
+          "source_kind": "deterministic_derived",
+          "source_ref": "resolved:/operations/phase12-v2-vvo-beam-column-atomic-restoration-beam-1/target",
+          "unit": null,
+          "value": "1vTeahUkP60PdWqwCTjUuM",
+          "value_type": "IfcBuildingStorey"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "inherit_from_type",
+          "derivation": {
+            "formal_attributes": {},
+            "ifc_class": "IfcBeamType",
+            "template": {
+              "name": "Text2IFC generated beam type phase12-v2-vvo-beam-column-atomic-restoration-beam-1",
+              "predefined_type": "NOTDEFINED",
+              "section": {
+                "height_mm": 570.0,
+                "shape": "rectangle",
+                "width_mm": 455.0
+              },
+              "section_digest": "sha256:f076fabc5746c9d777651d25771b99a5987b295533a9942f3a0b5a6cacb1e298"
+            },
+            "template_digest": "sha256:9153bdfe93c339facef804ee897aee8652406df705715da89ca7109b34d46941",
+            "template_id": "text2ifc-rectangular-beam-type",
+            "template_version": "0.1"
+          },
+          "fact_key": "relationship:type",
+          "operation_id": "phase12-v2-vvo-beam-column-atomic-restoration-beam-1",
+          "ownership": "type_inherited",
+          "provenance": [
+            "operation:phase12-v2-vvo-beam-column-atomic-restoration-beam-1",
+            "generated-type-template:0.1"
+          ],
+          "scope": "beam_occurrence",
+          "source_fact_key": "relationship:type",
+          "source_kind": "deterministic_derived",
+          "source_ref": "generated-type:1LyKwQJ1rJoxl4D3lMFpmq",
+          "unit": null,
+          "value": "1LyKwQJ1rJoxl4D3lMFpmq",
+          "value_type": "IfcBeamType"
+        }
+      ],
+      "semantic_manifest": {
+        "manifest_id": "semantic-manifest-3a169939b7bcddadb0bb6fef",
+        "policy_id": "beam.add.l2",
+        "policy_version": "0.1"
+      },
+      "target": {
+        "storey_global_id": "1vTeahUkP60PdWqwCTjUuM"
+      }
+    },
+    {
+      "evidence_refs": [
+        "resolved:/operations/phase12-v2-vvo-beam-column-atomic-restoration-column-2/context/candidate_targets/0"
+      ],
+      "operation_id": "phase12-v2-vvo-beam-column-atomic-restoration-column-2",
+      "operation_type": "add_column",
+      "parameters": {
+        "axis": {
+          "base": {
+            "x_mm": -3307.426702,
+            "y_mm": -9061.78314,
+            "z_mm": 0.0
+          },
+          "top": {
+            "x_mm": -3307.426702,
+            "y_mm": -9061.78314,
+            "z_mm": 3712.059993
+          }
+        },
+        "section": {
+          "depth_mm": 500.0,
+          "orientation": {
+            "x": 0.0,
+            "y": -1.0
+          },
+          "shape": "rectangle",
+          "width_mm": 500.0
+        }
+      },
+      "semantic_assignments": [
+        {
+          "applicability": "conditional",
+          "authoring_action": "bind_relationship",
+          "derivation": null,
+          "fact_key": "relationship:host",
+          "operation_id": "phase12-v2-vvo-beam-column-atomic-restoration-column-2",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "resolved-host-target:1vTeahUkP60PdWqwCTjeRs",
+            "resolved-host:1vTeahUkP60PdWqwCTjeRs",
+            "operation:phase12-v2-vvo-beam-column-atomic-restoration-column-2"
+          ],
+          "scope": "column_occurrence",
+          "source_fact_key": "relationship:host",
+          "source_kind": "deterministic_derived",
+          "source_ref": "current-host-binding:1vTeahUkP60PdWqwCTjeRs",
+          "unit": null,
+          "value": "1vTeahUkP60PdWqwCTjeRs",
+          "value_type": "IfcBuildingStorey"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "bind_relationship",
+          "derivation": null,
+          "fact_key": "relationship:storey",
+          "operation_id": "phase12-v2-vvo-beam-column-atomic-restoration-column-2",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "operation:phase12-v2-vvo-beam-column-atomic-restoration-column-2",
+            "registered-column-base-storey-policy:0.1"
+          ],
+          "scope": "column_occurrence",
+          "source_fact_key": "relationship:storey",
+          "source_kind": "deterministic_derived",
+          "source_ref": "resolved:/operations/phase12-v2-vvo-beam-column-atomic-restoration-column-2/target",
+          "unit": null,
+          "value": "1vTeahUkP60PdWqwCTjeRs",
+          "value_type": "IfcBuildingStorey"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "inherit_from_type",
+          "derivation": {
+            "formal_attributes": {},
+            "ifc_class": "IfcColumnType",
+            "template": {
+              "name": "Text2IFC generated column type phase12-v2-vvo-beam-column-atomic-restoration-column-2",
+              "predefined_type": "NOTDEFINED",
+              "section": {
+                "depth_mm": 500.0,
+                "shape": "rectangle",
+                "width_mm": 500.0
+              },
+              "section_digest": "sha256:3e0f0103aba6ac1f7b2d09a5d4d3d02d3d3854085115987dd744114a58f82774"
+            },
+            "template_digest": "sha256:012e7b88ba27afb8e46883e33a78491b6ff47f75968ebdd8cf66bdb2a9331eeb",
+            "template_id": "text2ifc-rectangular-column-type",
+            "template_version": "0.1"
+          },
+          "fact_key": "relationship:type",
+          "operation_id": "phase12-v2-vvo-beam-column-atomic-restoration-column-2",
+          "ownership": "type_inherited",
+          "provenance": [
+            "operation:phase12-v2-vvo-beam-column-atomic-restoration-column-2",
+            "generated-type-template:0.1"
+          ],
+          "scope": "column_occurrence",
+          "source_fact_key": "relationship:type",
+          "source_kind": "deterministic_derived",
+          "source_ref": "generated-type:1oEE0yG5vHORZux_AU_TkP",
+          "unit": null,
+          "value": "1oEE0yG5vHORZux_AU_TkP",
+          "value_type": "IfcColumnType"
+        }
+      ],
+      "semantic_manifest": {
+        "manifest_id": "semantic-manifest-c4bb171b51c44d5fbed4e7f6",
+        "policy_id": "column.add.l2",
+        "policy_version": "0.1"
+      },
+      "target": {
+        "storey_global_id": "1vTeahUkP60PdWqwCTjeRs"
+      }
+    }
+  ],
+  "postconditions": [
+    "structural_geometry_matches",
+    "structural_containment_matches",
+    "structural_type_matches"
+  ],
+  "preconditions": [
+    "structural_targets_resolved",
+    "structural_geometry_authorized",
+    "structural_semantics_bound"
+  ],
+  "schema_version": "text2ifc/ifc-repair-changeset/0.4",
+  "scope": {
+    "forbidden_ids": [],
+    "target_ids": [
+      "1vTeahUkP60PdWqwCTjUuM",
+      "1vTeahUkP60PdWqwCTjeRs"
+    ]
+  },
+  "semantic_manifest_ref": "semantic-manifests.json",
+  "semantic_manifest_sha256": "sha256:91690f48a694fbbb45d25d6d3d78b147e1baa130556b0631c4d1052f1919ff95",
+  "source_request_hash": "sha256:c014d4b2f0bb9a6127ff32f2b8209dc20852db017632eb43a5f3dbec42d8b31f"
+}

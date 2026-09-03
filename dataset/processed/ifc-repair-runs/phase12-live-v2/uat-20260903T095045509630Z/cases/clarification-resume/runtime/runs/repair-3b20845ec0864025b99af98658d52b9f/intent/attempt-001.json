@@ -1,0 +1,37 @@
+{
+  "attempt": 1,
+  "issues": [],
+  "normalizations": [],
+  "provider_metadata": {
+    "estimated_input_tokens": "[REDACTED]",
+    "evidence_class": "live",
+    "max_input_tokens": "[REDACTED]",
+    "model": "deepseek-v4-flash",
+    "provider": "deepseek-openai-compatible",
+    "request_configuration": {
+      "temperature": {
+        "effective": false,
+        "value": 0
+      },
+      "thinking": {
+        "type": "enabled"
+      }
+    },
+    "response_id": "a5477191-7979-4cd5-9577-7f094c074758",
+    "session_id": "ifc-repair-intent-request-ad744dc304357435",
+    "stop_reason": "stop",
+    "transport_attempts": 1,
+    "usage": {
+      "completion_tokens": 3816,
+      "completion_tokens_details": "[REDACTED]",
+      "prompt_cache_hit_tokens": "[REDACTED]",
+      "prompt_cache_miss_tokens": "[REDACTED]",
+      "prompt_tokens": 11811,
+      "prompt_tokens_details": "[REDACTED]",
+      "total_tokens": 15627
+    }
+  },
+  "response_excerpt": "{\n  \"schema_version\": \"text2ifc/ifc-repair-intent-body/0.8\",\n  \"operations\": [\n    {\n      \"operation_id\": \"add-column-1\",\n      \"operation_type\": \"add_column\",\n      \"routing_intent\": {\n        \"component_family\": \"column\",\n        \"action\": \"add\",\n        \"operation_profile\": \"column.add.v0.3\",\n        \"source\": {\n          \"source_kind\": \"user_request\",\n          \"reference\": \"ifc-repair-intent/user-request/0\",\n          \"excerpt\": \"In the damaged IFC, on the Building Storey named \\\"标高0\\\", restore the missing vertical straight rectangular Column with center-axis base (-3307.426702, -9061.783140, 0) mm and top (-3307.426702, -9061.783140, 3712.059993) mm and a square section 500 mm wide and 500 mm deep. Set its natural-language property \\\"load bearing status or external status\\\" to true, but do not choose between those two meanings without clarification.\"\n        }\n      },\n      \"target_query\": {\n        \"schema_version\": \"text2ifc/ifc-target-query/0.1\",\n        \"allowed_ifc_classes\": [\"IfcBuildingStorey\"],\n        \"names\": [\"标高0\"]\n      },\n      \"parameters\": {\n        \"axis\": {\n          \"base\": {\"x_mm\": -3307.426702, \"y_mm\": -9061.78314, \"z_mm\": 0},\n          \"top\": {\"x_mm\": -3307.426702, \"y_mm\": -9061.78314, \"z_mm\": 3712.059993}\n        },\n        \"section\": {\n          \"shape\": \"rectangle\",\n          \"width_mm\": 500,\n          \"depth_mm\": 500\n        }\n      },\n      \"attribute_intents\": [],\n      \"property_intents\": [\n        {\n          \"intent_kind\": \"natural_language_property\",\n          \"property_phrase\": \"load bearing status or external status\",\n          \"raw_value\": true,\n          \"raw_unit\": null,\n          \"scope\": \"occurrence_direct\",\n          \"source\": {\n            \"source_kind\": \"user_request\",\n            \"reference\": \"ifc-repair-intent/user-request/0\",\n            \"excerpt\": \"In the damaged IFC, on the Building Storey named \\\"标高0\\\", restore the missing vertical straight rectangular Column with center-axis base (-3307.426702, -9061.783140, 0) mm and top (-3307.426702, -9061.783140, 3712.059993) mm and a square section 500 mm wide and 500 mm deep. Set its natural-language property \\\"load bearing status or external status\\\" to true, but do not choose between those two meanings without clarification.\"\n          }\n        }\n      ],\n      \"semantic_bundle_refs\": [],\n      \"quantity_intents\": [],\n      \"occurrence_reuse_intent\": null,\n      \"prototype_intent\": null,\n      \"provenance\": [\n        {\n          \"source_kind\": \"user_request\",\n          \"reference\": \"ifc-repair-intent/user-request/0\",\n          \"excerpt\": \"In the damaged IFC, on the Building Storey named \\\"标高0\\\", restore the missing vertical straight rectangular Column with center-axis base (-3307.426702, -9061.783140, 0) mm and top (-3307.426702, -9061.783140, 3712.059993) mm and a square section 500 mm wide and 500 mm deep. Set its natural-language property \\\"load bearing status or external status\\\" to true, but do not choose between those two meanings without clarification.\"\n        }\n      ]\n    }\n  ],\n  \"unsupported_requests\": [],\n  \"semantic_bundles\": [],\n  \"provenance\": [\n    {\n      \"source_kind\": \"user_request\",\n      \"reference\": \"ifc-repair-intent/user-request/0\",\n      \"excerpt\": \"In the damaged IFC, on the Building Storey named \\\"标高0\\\", restore the missing vertical straight rectangular Column with center-axis base (-3307.426702, -9061.783140, 0) mm and top (-3307.426702, -9061.783140, 3712.059993) mm and a square section 500 mm wide and 500 mm deep. Set its natural-language property \\\"load bearing status or external status\\\" to true, but do not choose between those two meanings without clarification.\"\n    }\n  ]\n}",
+  "response_sha256": "sha256:40a2f4bf015df175e19c157f53070904aea32838dc34e387d2b24bf442ee23ef",
+  "status": "valid"
+}

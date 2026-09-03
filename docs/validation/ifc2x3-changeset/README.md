@@ -1,5 +1,15 @@
 # IFC2X3 Local ChangeSet 验证索引
 
+> **2026-09-03 结构恢复勘误：** Phase 12 Plan 07 既有 Beam/Column 成功案例证明了
+> request-conformance add，但没有证明恢复了 damaged IFC 中被删除的构件；D7N
+> 柱还被确认是当前矩形柱 operation 不支持的圆柱。在替换 fixture 并通过
+> damage-to-repair 等价门之前，不得用这些案例关闭结构 damage-restoration。
+> 详见 [Phase 12 Plan 07 结构恢复证据勘误与重新准入要求](phase12-plan07-structural-restoration-erratum-2026-09-03.md)。
+> 2026-09-03 后续：旧错位 Phase 12 accepted Proof 已从主集合移除；VVO v2 的 6 案
+> 离线 restoration matrix 与 4 角色 genuine Provider run 已通过。人读证据位于
+> `dataset/processed/proof/ifc-repair-success-cases-v2-plan07-staging/plan07-live-v2-uat-20260903T095045509630Z/REPORT.md`；
+> 正式 Phase acceptance 仍以冻结 Plan 12/14 Proof gate 为准。
+
 Phase 11 当前状态见
 [Door / Opening 验证报告](phase11-door-validation-report.md)：合同、索引、
 确定性解析、IFC 写入、L1/L2、occurrence comparator 以及 LargeBuilding/vvo
@@ -47,6 +57,7 @@ Phase 8 验证报告：[Evaluation 0.2、Benchmark Gold 隔离与 LargeBuilding 
 | [Phase 11 RESEARCH](../../../.planning/phases/11-wall-opening-and-door-operations/11-RESEARCH.md) | 当前 Window 专用耦合、IFC2X3 DoorStyle/Openings 事实、版本升级和推荐扩展缝 | 2026-07-28 规划研究完成 |
 | [Phase 11 VALIDATION](../../../.planning/phases/11-wall-opening-and-door-operations/11-VALIDATION.md) | schema、索引、authoring、L1/L2、批量/混合、大型 IFC、真实 DeepSeek 和 Proof 验收 | 2026-07-28 验证矩阵完成 |
 | [Phase 11 Door Storey Policy Erratum](phase11-door-storey-policy-erratum.md) | 多楼层贯通墙中 direct containment 与 Opening 高度上下文冲突时的正式 Storey 决策 | 2026-07-30 已冻结并有 fail-closed 回归 |
+| [Phase 12 Structural Type Visual Fidelity 修复计划](phase12-structural-type-visual-fidelity-plan-2026-09-03.md) | Beam/Column 精确复用现有 Type 时的 RepresentationMap、Material 与 SurfaceStyle 灰色回归调研、根因和最小修复/验证计划 | 2026-09-03 调研完成，待实现 |
 | [Phase 11 执行计划](../../../.planning/phases/11-wall-opening-and-door-operations/11-01-PLAN.md) | 五步顺序入口：契约/Prompt → 索引/解析 → IFC 写入 → 评估 → 数据集/live UAT | 离线实现与 Proof 完成；真实 Provider UAT 待执行 |
 | [phase10.5-window-fidelity-validation-report.md](phase10.5-window-fidelity-validation-report.md) | occurrence 属性输入/授权复用、Ground Truth Comparator、validation cache、冷/热大型 IFC 性能与真实 DeepSeek UAT | 2026-07-26 全部通过；Production/private L1/L2 与 occurrence fidelity passed |
 | [phase10.4-comparator-0.2-validation-report.md](phase10.4-comparator-0.2-validation-report.md) | 大型 IFC 全局保全门禁、fail-closed 指纹、三次性能/内存基准与完整 Production 重放 | 2026-07-25 Comparator 与 AdvancedProject 五窗 L1/L2/发布闭环通过 |

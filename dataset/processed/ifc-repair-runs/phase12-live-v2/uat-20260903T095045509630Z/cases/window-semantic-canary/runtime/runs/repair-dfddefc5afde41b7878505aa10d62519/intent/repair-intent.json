@@ -1,0 +1,66 @@
+{
+  "model_fingerprint": "sha256:f61ff5cf8e1cc88da6944d6bcd3e2e7da5ff27dd3288a8781908018cb8240cd6",
+  "operations": [
+    {
+      "attribute_intents": [],
+      "occurrence_reuse_intent": null,
+      "operation_id": "set-window-property-1",
+      "operation_type": "set_occurrence_properties",
+      "parameters": {},
+      "property_intents": [
+        {
+          "intent_kind": "natural_language_property",
+          "property_phrase": "外窗",
+          "raw_unit": null,
+          "raw_value": true,
+          "scope": "occurrence_direct",
+          "source": {
+            "excerpt": "set 外窗=true on this occurrence only",
+            "reference": "public-request-1",
+            "source_kind": "user_request"
+          }
+        }
+      ],
+      "prototype_intent": null,
+      "provenance": [
+        {
+          "excerpt": "For the IfcWindow with GlobalId \"2IUEnGd5v4Yfg1ZlPtd0c_\", set 外窗=true on this occurrence only. Do not change its Type or any other Window.",
+          "reference": "public-request-1",
+          "source_kind": "user_request"
+        }
+      ],
+      "quantity_intents": [],
+      "routing_intent": {
+        "action": "set_properties",
+        "component_family": "occurrence",
+        "operation_profile": "occurrence.set-properties",
+        "source": {
+          "excerpt": "For the IfcWindow with GlobalId \"2IUEnGd5v4Yfg1ZlPtd0c_\", set 外窗=true on this occurrence only.",
+          "reference": "public-request-1",
+          "source_kind": "user_request"
+        }
+      },
+      "semantic_bundle_refs": [],
+      "target_query": {
+        "allowed_ifc_classes": [
+          "IfcWindow"
+        ],
+        "global_id": "2IUEnGd5v4Yfg1ZlPtd0c_",
+        "schema_version": "text2ifc/ifc-target-query/0.1"
+      }
+    }
+  ],
+  "prompt_fingerprint": "sha256:dec929f94db4c626fadf9b2bc2592e3c351d9fbd0ef4c94243475a4559e8b568",
+  "provenance": [
+    {
+      "excerpt": "For the IfcWindow with GlobalId \"2IUEnGd5v4Yfg1ZlPtd0c_\", set 外窗=true on this occurrence only. Do not change its Type or any other Window.",
+      "reference": "public-request-1",
+      "source_kind": "user_request"
+    }
+  ],
+  "request_id": "request-ebc0fc54b9ae5c00",
+  "schema_version": "text2ifc/ifc-repair-intent/0.8",
+  "semantic_bundles": [],
+  "source_request_hash": "sha256:ebc0fc54b9ae5c00fddb2095ac030404d615430ba5fdea542240525eaa478a01",
+  "unsupported_requests": []
+}

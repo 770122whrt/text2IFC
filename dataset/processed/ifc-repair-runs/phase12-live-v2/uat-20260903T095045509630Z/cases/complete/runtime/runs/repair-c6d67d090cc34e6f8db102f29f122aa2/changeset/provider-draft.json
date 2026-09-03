@@ -1,0 +1,97 @@
+{
+  "base_model_fingerprint": "sha256:636135b4bc12ea3e45d9a7155f714834ff5eaaba1f2d3d2e7a5ae84a525a59aa",
+  "draft_id": "changeset/restore-beam-column-017ec4f6862d5f3dfede003e621d02cab80a55ef7157eb59c8d63cf7b95c337f",
+  "evidence_refs": [
+    "resolved:/operations/restore-beam-1/context/candidate_targets/0",
+    "resolved:/operations/restore-column-1/context/candidate_targets/0"
+  ],
+  "operations": [
+    {
+      "evidence_refs": [
+        "resolved:/operations/restore-beam-1/context/candidate_targets/0"
+      ],
+      "operation_id": "restore-beam-1",
+      "operation_type": "add_beam",
+      "parameters": {
+        "axis": {
+          "end": {
+            "x_mm": -3316.629521,
+            "y_mm": -8803.522838,
+            "z_mm": 0.0
+          },
+          "start": {
+            "x_mm": -3316.629521,
+            "y_mm": -3863.522838,
+            "z_mm": 0.0
+          }
+        },
+        "section": {
+          "height_mm": 570,
+          "shape": "rectangle",
+          "width_mm": 455
+        }
+      },
+      "target": {
+        "storey_global_id": "1vTeahUkP60PdWqwCTjUuM"
+      }
+    },
+    {
+      "evidence_refs": [
+        "resolved:/operations/restore-column-1/context/candidate_targets/0"
+      ],
+      "operation_id": "restore-column-1",
+      "operation_type": "add_column",
+      "parameters": {
+        "axis": {
+          "base": {
+            "x_mm": -3307.426702,
+            "y_mm": -9061.78314,
+            "z_mm": 0.0
+          },
+          "top": {
+            "x_mm": -3307.426702,
+            "y_mm": -9061.78314,
+            "z_mm": 3712.059993
+          }
+        },
+        "section": {
+          "depth_mm": 500,
+          "shape": "rectangle",
+          "width_mm": 500
+        }
+      },
+      "target": {
+        "storey_global_id": "1vTeahUkP60PdWqwCTjeRs"
+      }
+    }
+  ],
+  "postconditions": [
+    "beam_geometry_matches",
+    "beam_contained_in_storey",
+    "beam_type_bound",
+    "column_geometry_matches",
+    "column_contained_in_base_storey",
+    "column_type_bound"
+  ],
+  "preconditions": [
+    "target_exists",
+    "structural_axis_available",
+    "structural_type_authorized"
+  ],
+  "schema_version": "text2ifc/ifc-repair-changeset-draft/0.3",
+  "scope": {
+    "forbidden_ids": [],
+    "target_ids": [
+      "1vTeahUkP60PdWqwCTjUuM",
+      "1vTeahUkP60PdWqwCTjeRs"
+    ]
+  },
+  "semantic_manifest_ref": "changeset/semantic-manifests.json",
+  "semantic_manifest_sha256": "sha256:6ce31f842b0260d686f0c88a5b30519b3bc438e0cde81f2f477a0ca154770d0a",
+  "semantic_summary": {
+    "conditional": 4,
+    "not_required": 0,
+    "required": 4
+  },
+  "source_request_hash": "sha256:017ec4f6862d5f3dfede003e621d02cab80a55ef7157eb59c8d63cf7b95c337f"
+}

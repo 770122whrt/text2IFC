@@ -1,0 +1,127 @@
+{
+  "model_fingerprint": "sha256:636135b4bc12ea3e45d9a7155f714834ff5eaaba1f2d3d2e7a5ae84a525a59aa",
+  "operations": [
+    {
+      "attribute_intents": [],
+      "occurrence_reuse_intent": null,
+      "operation_id": "phase12-v2-vvo-beam-column-atomic-restoration-beam-1",
+      "operation_type": "add_beam",
+      "parameters": {
+        "axis": {
+          "end": {
+            "x_mm": -3316.629521,
+            "y_mm": -8803.522838,
+            "z_mm": 0.0
+          },
+          "start": {
+            "x_mm": -3316.629521,
+            "y_mm": -3863.522838,
+            "z_mm": 0.0
+          }
+        },
+        "section": {
+          "height_mm": 570.0,
+          "shape": "rectangle",
+          "width_mm": 455.0
+        }
+      },
+      "property_intents": [],
+      "prototype_intent": null,
+      "provenance": [
+        {
+          "excerpt": "Restore the missing Beam and Column at their specified center axes in one atomic ChangeSet.",
+          "reference": "request:/operations/0",
+          "source_kind": "user_request"
+        }
+      ],
+      "quantity_intents": [],
+      "routing_intent": {
+        "action": "add",
+        "component_family": "beam",
+        "operation_profile": "beam.add",
+        "source": {
+          "excerpt": "Restore the missing Beam and Column at their specified center axes in one atomic ChangeSet.",
+          "reference": "request:/operations/0",
+          "source_kind": "user_request"
+        }
+      },
+      "semantic_bundle_refs": [],
+      "target_query": {
+        "allowed_ifc_classes": [
+          "IfcBuildingStorey"
+        ],
+        "global_id": "1vTeahUkP60PdWqwCTjUuM",
+        "schema_version": "text2ifc/ifc-target-query/0.1"
+      }
+    },
+    {
+      "attribute_intents": [],
+      "occurrence_reuse_intent": null,
+      "operation_id": "phase12-v2-vvo-beam-column-atomic-restoration-column-2",
+      "operation_type": "add_column",
+      "parameters": {
+        "axis": {
+          "base": {
+            "x_mm": -3307.426702,
+            "y_mm": -9061.78314,
+            "z_mm": 0.0
+          },
+          "top": {
+            "x_mm": -3307.426702,
+            "y_mm": -9061.78314,
+            "z_mm": 3712.059993
+          }
+        },
+        "section": {
+          "depth_mm": 500.0,
+          "orientation": {
+            "x": 0.0,
+            "y": -1.0
+          },
+          "shape": "rectangle",
+          "width_mm": 500.0
+        }
+      },
+      "property_intents": [],
+      "prototype_intent": null,
+      "provenance": [
+        {
+          "excerpt": "Restore the missing Beam and Column at their specified center axes in one atomic ChangeSet.",
+          "reference": "request:/operations/1",
+          "source_kind": "user_request"
+        }
+      ],
+      "quantity_intents": [],
+      "routing_intent": {
+        "action": "add",
+        "component_family": "column",
+        "operation_profile": "column.add",
+        "source": {
+          "excerpt": "Restore the missing Beam and Column at their specified center axes in one atomic ChangeSet.",
+          "reference": "request:/operations/1",
+          "source_kind": "user_request"
+        }
+      },
+      "semantic_bundle_refs": [],
+      "target_query": {
+        "allowed_ifc_classes": [
+          "IfcBuildingStorey"
+        ],
+        "global_id": "1vTeahUkP60PdWqwCTjeRs",
+        "schema_version": "text2ifc/ifc-target-query/0.1"
+      }
+    }
+  ],
+  "prompt_fingerprint": "sha256:7fefcd7f537f4ee5086c4be3cc95d75f18be99da23e568c150f11a78a4042cf3",
+  "provenance": [
+    {
+      "excerpt": "Restore the missing Beam and Column at their specified center axes in one atomic ChangeSet.",
+      "reference": "request:/text",
+      "source_kind": "user_request"
+    }
+  ],
+  "request_id": "request-phase12-v2-vvo-beam-column-atomic-restoration",
+  "schema_version": "text2ifc/ifc-repair-intent/0.5",
+  "semantic_bundles": [],
+  "source_request_hash": "sha256:c014d4b2f0bb9a6127ff32f2b8209dc20852db017632eb43a5f3dbec42d8b31f"
+}

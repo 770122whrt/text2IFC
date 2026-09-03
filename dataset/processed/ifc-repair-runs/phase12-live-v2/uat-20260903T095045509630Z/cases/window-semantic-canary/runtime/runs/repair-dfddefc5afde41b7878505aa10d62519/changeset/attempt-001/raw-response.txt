@@ -1,0 +1,31 @@
+{
+  "schema_version": "text2ifc/ifc-repair-changeset-draft/0.2",
+  "draft_id": "changeset/set-window-property-1/2IUEnGd5v4Yfg1ZlPtd0c_",
+  "base_model_fingerprint": "sha256:636135b4bc12ea3e45d9a7155f714834ff5eaaba1f2d3d2e7a5ae84a525a59aa",
+  "source_request_hash": "sha256:ebc0fc54b9ae5c00fddb2095ac030404d615430ba5fdea542240525eaa478a01",
+  "semantic_manifest_ref": "changeset/semantic-manifest-set-window-property-1.json",
+  "semantic_manifest_sha256": "sha256:23d8e79270a9f03ac38833d33a8e28adc577daa9ae7f090553035c57955d0c14",
+  "semantic_summary": {
+    "required": 0,
+    "conditional": 1,
+    "not_required": 0
+  },
+  "scope": {
+    "target_ids": ["2IUEnGd5v4Yfg1ZlPtd0c_"],
+    "forbidden_ids": []
+  },
+  "evidence_refs": ["resolved:/operations/set-window-property-1/context/candidate_targets/0"],
+  "preconditions": ["target_exists", "target_class_supported", "property_assignments_bound"],
+  "postconditions": ["target_preserved", "requested_properties_match", "shared_type_unchanged"],
+  "operations": [
+    {
+      "operation_id": "set-window-property-1",
+      "operation_type": "set_occurrence_properties",
+      "target": {
+        "element_global_id": "2IUEnGd5v4Yfg1ZlPtd0c_"
+      },
+      "parameters": {},
+      "evidence_refs": ["resolved:/operations/set-window-property-1/context/candidate_targets/0"]
+    }
+  ]
+}

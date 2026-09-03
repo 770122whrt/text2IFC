@@ -62,6 +62,10 @@ from text2ifc_ifc_repair.semantic_authoring import (  # noqa: E402
     semantic_manifest_expected_facts,
     semantic_manifest_to_dict,
 )
+from text2ifc_ifc_repair.structural_restoration import (  # noqa: E402
+    SCHEMA_VERSION as STRUCTURAL_RESTORATION_SCHEMA_VERSION,
+    audit_structural_restoration_case,
+)
 from text2ifc_knowledge.property_search import (  # noqa: E402
     PropertyKnowledgeQuery,
     PropertyResolutionDecision,
@@ -101,16 +105,16 @@ VVO_COLUMN_STOREY = "1vTeahUkP60PdWqwCTjeRs"
 VVO_MIXED_STOREY = "1vTeahUkP60PdWqwCTjSGJ"
 
 SUCCESS_CASE_IDS = (
-    "phase12-d7n-beam-loadbearing",
-    "phase12-d7n-column-loadbearing",
-    "phase12-d7n-beam-column-atomic",
-    "phase12-vvo-beam-material-present",
-    "phase12-vvo-column-material-absent",
-    "phase12-vvo-door-window-beam-column-atomic",
+    "phase12-v2-vvo-beam-loadbearing-restoration",
+    "phase12-v2-vvo-column-loadbearing-restoration",
+    "phase12-v2-vvo-beam-column-atomic-restoration",
+    "phase12-v2-vvo-beam-material-present-restoration",
+    "phase12-v2-vvo-column-material-absent-restoration",
+    "phase12-v2-vvo-door-window-beam-column-atomic-restoration",
 )
 FAILURE_CASE_IDS = (
     "phase12-d7n-beam-column-rollback",
-    "phase12-vvo-door-window-beam-column-rollback",
+    "phase12-v2-vvo-door-window-beam-column-rollback",
 )
 
 
@@ -378,6 +382,51 @@ def _column_parameters(*, x_mm: float, y_mm: float) -> dict[str, Any]:
     }
 
 
+def _measured_beam_parameters(
+    *,
+    start_mm: tuple[float, float, float],
+    end_mm: tuple[float, float, float],
+    width_mm: float,
+    height_mm: float,
+) -> dict[str, Any]:
+    def point(values: tuple[float, float, float]) -> dict[str, float]:
+        return dict(zip(("x_mm", "y_mm", "z_mm"), values, strict=True))
+
+    return {
+        "axis": {"start": point(start_mm), "end": point(end_mm)},
+        "section": {
+            "shape": "rectangle",
+            "width_mm": width_mm,
+            "height_mm": height_mm,
+        },
+    }
+
+
+def _measured_column_parameters(
+    *,
+    base_mm: tuple[float, float, float],
+    top_mm: tuple[float, float, float],
+    width_mm: float,
+    depth_mm: float,
+    orientation_xy: tuple[float, float],
+) -> dict[str, Any]:
+    def point(values: tuple[float, float, float]) -> dict[str, float]:
+        return dict(zip(("x_mm", "y_mm", "z_mm"), values, strict=True))
+
+    return {
+        "axis": {"base": point(base_mm), "top": point(top_mm)},
+        "section": {
+            "shape": "rectangle",
+            "width_mm": width_mm,
+            "depth_mm": depth_mm,
+            "orientation": {
+                "x": orientation_xy[0],
+                "y": orientation_xy[1],
+            },
+        },
+    }
+
+
 def _load_bearing(family: str, index: int) -> dict[str, Any]:
     phrase = f"{family} is load bearing"
     return {
@@ -447,91 +496,120 @@ def _bundle(case_id: str, request: str, operations: list[dict[str, Any]]) -> dic
 
 
 def _structural_specs() -> dict[str, dict[str, Any]]:
+    beam_parameters = _measured_beam_parameters(
+        start_mm=(-3316.629521, -3863.522838, 0.0),
+        end_mm=(-3316.629521, -8803.522838, 0.0),
+        width_mm=455.0,
+        height_mm=570.0,
+    )
+    column_parameters = _measured_column_parameters(
+        base_mm=(-3307.426702, -9061.783140, 0.0),
+        top_mm=(-3307.426702, -9061.783140, 3712.059993),
+        width_mm=500.0,
+        depth_mm=500.0,
+        orientation_xy=(0.0, -1.0),
+    )
     return {
-        "phase12-d7n-beam-loadbearing": {
-            "source": D7N,
-            "beam_ids": (D7N_BEAM_ID,),
-            "column_ids": (),
-            "operations": [
-                _operation(
-                    case_id="phase12-d7n-beam-loadbearing",
-                    family="beam",
-                    index=0,
-                    storey_id=D7N_BEAM_STOREY,
-                    parameters=_beam_parameters(x_mm=100000, y_mm=100000, z_mm=0),
-                    load_bearing=True,
-                )
-            ],
-            "request": "Add one horizontal rectangular Beam and make the Beam load bearing.",
-        },
-        "phase12-d7n-column-loadbearing": {
-            "source": D7N,
-            "beam_ids": (),
-            "column_ids": (D7N_COLUMN_ID,),
-            "operations": [
-                _operation(
-                    case_id="phase12-d7n-column-loadbearing",
-                    family="column",
-                    index=0,
-                    storey_id=D7N_COLUMN_STOREY,
-                    parameters=_column_parameters(x_mm=110000, y_mm=110000),
-                    load_bearing=True,
-                )
-            ],
-            "request": "Add one vertical rectangular Column and make the Column load bearing.",
-        },
-        "phase12-d7n-beam-column-atomic": {
-            "source": D7N,
-            "beam_ids": (D7N_BEAM_ID,),
-            "column_ids": (D7N_COLUMN_ID,),
-            "operations": [
-                _operation(
-                    case_id="phase12-d7n-beam-column-atomic",
-                    family="beam",
-                    index=0,
-                    storey_id=D7N_COLUMN_STOREY,
-                    parameters=_beam_parameters(x_mm=120000, y_mm=120000, z_mm=3000),
-                ),
-                _operation(
-                    case_id="phase12-d7n-beam-column-atomic",
-                    family="column",
-                    index=1,
-                    storey_id=D7N_COLUMN_STOREY,
-                    parameters=_column_parameters(x_mm=123000, y_mm=124000),
-                ),
-            ],
-            "request": "Add one Beam supported by one Column in one atomic ChangeSet.",
-        },
-        "phase12-vvo-beam-material-present": {
+        "phase12-v2-vvo-beam-loadbearing-restoration": {
             "source": VVO,
             "beam_ids": (VVO_BEAM_ID,),
             "column_ids": (),
             "operations": [
                 _operation(
-                    case_id="phase12-vvo-beam-material-present",
+                    case_id="phase12-v2-vvo-beam-loadbearing-restoration",
                     family="beam",
                     index=0,
                     storey_id=VVO_BEAM_STOREY,
-                    parameters=_beam_parameters(x_mm=200000, y_mm=200000, z_mm=0),
-                    material="C_钢筋砼C30",
+                    parameters=beam_parameters,
+                    load_bearing=True,
                 )
             ],
-            "request": "Add one horizontal rectangular Beam with explicitly authorized material C_钢筋砼C30.",
+            "request": (
+                "Restore the missing horizontal rectangular Beam at the "
+                "specified center axis and make the Beam load bearing."
+            ),
         },
-        "phase12-vvo-column-material-absent": {
+        "phase12-v2-vvo-column-loadbearing-restoration": {
             "source": VVO,
             "beam_ids": (),
             "column_ids": (VVO_COLUMN_ID,),
             "operations": [
                 _operation(
-                    case_id="phase12-vvo-column-material-absent",
+                    case_id="phase12-v2-vvo-column-loadbearing-restoration",
                     family="column",
                     index=0,
                     storey_id=VVO_COLUMN_STOREY,
-                    parameters=_column_parameters(x_mm=210000, y_mm=210000),
+                    parameters=column_parameters,
+                    load_bearing=True,
                 )
             ],
-            "request": "Add one vertical rectangular Column; no material is specified.",
+            "request": (
+                "Restore the missing vertical rectangular Column at the "
+                "specified center axis and make the Column load bearing."
+            ),
+        },
+        "phase12-v2-vvo-beam-column-atomic-restoration": {
+            "source": VVO,
+            "beam_ids": (VVO_BEAM_ID,),
+            "column_ids": (VVO_COLUMN_ID,),
+            "operations": [
+                _operation(
+                    case_id="phase12-v2-vvo-beam-column-atomic-restoration",
+                    family="beam",
+                    index=0,
+                    storey_id=VVO_BEAM_STOREY,
+                    parameters=beam_parameters,
+                ),
+                _operation(
+                    case_id="phase12-v2-vvo-beam-column-atomic-restoration",
+                    family="column",
+                    index=1,
+                    storey_id=VVO_COLUMN_STOREY,
+                    parameters=column_parameters,
+                ),
+            ],
+            "request": (
+                "Restore the missing Beam and Column at their specified "
+                "center axes in one atomic ChangeSet."
+            ),
+        },
+        "phase12-v2-vvo-beam-material-present-restoration": {
+            "source": VVO,
+            "beam_ids": (VVO_BEAM_ID,),
+            "column_ids": (),
+            "operations": [
+                _operation(
+                    case_id="phase12-v2-vvo-beam-material-present-restoration",
+                    family="beam",
+                    index=0,
+                    storey_id=VVO_BEAM_STOREY,
+                    parameters=beam_parameters,
+                    material="C_钢筋砼C30",
+                )
+            ],
+            "request": (
+                "Restore the missing horizontal rectangular Beam at the "
+                "specified center axis with explicitly authorized material "
+                "C_钢筋砼C30."
+            ),
+        },
+        "phase12-v2-vvo-column-material-absent-restoration": {
+            "source": VVO,
+            "beam_ids": (),
+            "column_ids": (VVO_COLUMN_ID,),
+            "operations": [
+                _operation(
+                    case_id="phase12-v2-vvo-column-material-absent-restoration",
+                    family="column",
+                    index=0,
+                    storey_id=VVO_COLUMN_STOREY,
+                    parameters=column_parameters,
+                )
+            ],
+            "request": (
+                "Restore the missing vertical rectangular Column at the "
+                "specified center axis; no material is specified."
+            ),
         },
     }
 
@@ -564,8 +642,12 @@ def _augment_source_case(
         case_root / "mutation_report.json",
     )
     manifest = _read(case_root / "manifest.json")
-    manifest["schema_version"] = "text2ifc/phase12-offline-case/0.1"
-    manifest["evidence_scope"] = "cross_scene_same_family_bimnet"
+    manifest["schema_version"] = "text2ifc/phase12-offline-case/0.2"
+    manifest["evidence_scope"] = "single_scene_bimnet_vvo"
+    manifest["structural_evidence_kind"] = "restoration"
+    manifest["structural_restoration_contract"] = (
+        STRUCTURAL_RESTORATION_SCHEMA_VERSION
+    )
     manifest["source"] = {
         "path": source.relative_to(ROOT).as_posix(),
         "schema": "IFC2X3",
@@ -573,6 +655,13 @@ def _augment_source_case(
         "sha256": _sha256(source),
     }
     manifest["damage"] = _read(mutation_root / "mutation_report.json")
+    restoration = audit_structural_restoration_case(case_root)
+    _write(case_root / "structural-restoration-audit.json", restoration)
+    if restoration["restoration_eligible"] is not True:
+        raise RuntimeError(
+            "PHASE12_STRUCTURAL_RESTORATION_FAILED:"
+            + json.dumps(restoration["issues"], ensure_ascii=False)
+        )
     manifest["artifacts"] = _artifact_index(case_root)
     _write(case_root / "manifest.json", manifest)
     return manifest
@@ -687,7 +776,12 @@ def _upgrade_legacy_mixed_operation(operation: Mapping[str, Any]) -> dict[str, A
     return result
 
 
-def _mixed_private_manifest(original: Path, damaged: Path) -> dict[str, Any]:
+def _mixed_private_manifest(
+    original: Path,
+    damaged: Path,
+    *,
+    structural_private: Mapping[str, Any],
+) -> dict[str, Any]:
     mapping = _read(FOUR_FAMILY_BASE / "private-evaluation/benchmark-mapping.json")
     model = ifcopenshell.open(str(original))
     targets: list[dict[str, Any]] = []
@@ -702,9 +796,11 @@ def _mixed_private_manifest(original: Path, damaged: Path) -> dict[str, Any]:
                 f"window-opening-{index}",
             )
         )
+    targets.extend(deepcopy(list(structural_private.get("targets", ()))))
     return {
-        "schema_version": "text2ifc/phase12-private-damage-manifest/0.1",
+        "schema_version": "text2ifc/phase12-private-damage-manifest/0.2",
         "visibility": "evaluator_only_after_production",
+        "mutation_type": "remove_door_window_beam_column",
         "source": {
             "path": VVO.relative_to(ROOT).as_posix(),
             "schema": "IFC2X3",
@@ -716,6 +812,34 @@ def _mixed_private_manifest(original: Path, damaged: Path) -> dict[str, Any]:
         "role_mapping": {
             target["role"]: target["entity"]["global_id"] for target in targets
         },
+    }
+
+
+def _mixed_damage_report(
+    *,
+    original: Path,
+    damaged: Path,
+    structural_report: Mapping[str, Any],
+) -> dict[str, Any]:
+    base_damage = _read(
+        FOUR_FAMILY_BASE / "validation/source-run-manifest.json"
+    )["damage"]
+    return {
+        "schema_version": "text2ifc/phase12-four-family-damage-report/0.2",
+        "mutation_type": "remove_door_window_beam_column",
+        "source_sha256": _sha256(original),
+        "base_door_window_damaged_sha256": _sha256(
+            FOUR_FAMILY_BASE / "02-damaged.ifc"
+        ),
+        "damaged_sha256": _sha256(damaged),
+        "removed_doors": deepcopy(base_damage["removed_doors"]),
+        "removed_windows": deepcopy(base_damage["removed_windows"]),
+        "door_openings_removed": False,
+        "window_openings_removed": True,
+        "removed_beams": [{"global_id": VVO_BEAM_ID}],
+        "removed_columns": [{"global_id": VVO_COLUMN_ID}],
+        "structural_mutation": deepcopy(dict(structural_report)),
+        "valid": bool(structural_report.get("valid") is True),
     }
 
 
@@ -740,24 +864,32 @@ def _mixed_intent_document(
 ) -> tuple[dict[str, Any], dict[str, Any]]:
     base = _read(FOUR_FAMILY_BASE / "agent/repair-intent.json")
     case_id = (
-        "phase12-vvo-door-window-beam-column-rollback"
+        "phase12-v2-vvo-door-window-beam-column-rollback"
         if duplicate_beam
-        else "phase12-vvo-door-window-beam-column-atomic"
+        else "phase12-v2-vvo-door-window-beam-column-atomic-restoration"
     )
     structural_operations = [
         _operation(
             case_id=case_id,
             family="beam",
             index=0,
-            storey_id=VVO_MIXED_STOREY,
-            parameters=_beam_parameters(x_mm=100000, y_mm=100000, z_mm=3000),
+            storey_id=VVO_BEAM_STOREY,
+            parameters=deepcopy(
+                _structural_specs()[
+                    "phase12-v2-vvo-beam-column-atomic-restoration"
+                ]["operations"][0]["parameters"]
+            ),
         ),
         _operation(
             case_id=case_id,
             family="column",
             index=1,
-            storey_id=VVO_MIXED_STOREY,
-            parameters=_column_parameters(x_mm=103000, y_mm=104000),
+            storey_id=VVO_COLUMN_STOREY,
+            parameters=deepcopy(
+                _structural_specs()[
+                    "phase12-v2-vvo-beam-column-atomic-restoration"
+                ]["operations"][1]["parameters"]
+            ),
         ),
     ]
     if duplicate_beam:
@@ -766,11 +898,11 @@ def _mixed_intent_document(
                 case_id=case_id,
                 family="beam",
                 index=2,
-                storey_id=VVO_MIXED_STOREY,
-                parameters=_beam_parameters(
-                    x_mm=100000,
-                    y_mm=100000,
-                    z_mm=3000,
+                storey_id=VVO_BEAM_STOREY,
+                parameters=deepcopy(
+                    _structural_specs()[
+                        "phase12-v2-vvo-beam-column-atomic-restoration"
+                    ]["operations"][0]["parameters"]
                 ),
             )
         )
@@ -842,24 +974,53 @@ def _run_mixed_case(
     property_runtime: Any,
 ) -> tuple[dict[str, Any], dict[str, Any]]:
     case_id = (
-        "phase12-vvo-door-window-beam-column-rollback"
+        "phase12-v2-vvo-door-window-beam-column-rollback"
         if duplicate_beam
-        else "phase12-vvo-door-window-beam-column-atomic"
+        else "phase12-v2-vvo-door-window-beam-column-atomic-restoration"
     )
     case_root = output_root / case_id
     case_root.mkdir(parents=True)
     original = case_root / "original.ifc"
     damaged = case_root / "damaged.ifc"
-    shutil.copy2(FOUR_FAMILY_BASE / "01-original.ifc", original)
-    shutil.copy2(FOUR_FAMILY_BASE / "02-damaged.ifc", damaged)
+    shutil.copy2(VVO, original)
+    with tempfile.TemporaryDirectory(
+        prefix="phase12-mixed-structural-damage-",
+        dir=output_root.parent,
+    ) as temporary:
+        mutation_root = Path(temporary) / "mutation"
+        remove_structural_members(
+            source_path=FOUR_FAMILY_BASE / "02-damaged.ifc",
+            output_dir=mutation_root,
+            beam_global_ids=(VVO_BEAM_ID,),
+            column_global_ids=(VVO_COLUMN_ID,),
+            expected_source_sha256=_sha256(
+                FOUR_FAMILY_BASE / "02-damaged.ifc"
+            ).removeprefix("sha256:"),
+        )
+        shutil.copy2(mutation_root / "damaged.ifc", damaged)
+        structural_private = _read(
+            mutation_root / "mutation_manifest.private.json"
+        )
+        structural_report = _read(mutation_root / "mutation_report.json")
+    private_manifest = _mixed_private_manifest(
+        original,
+        damaged,
+        structural_private=structural_private,
+    )
+    damage_report = _mixed_damage_report(
+        original=original,
+        damaged=damaged,
+        structural_report=structural_report,
+    )
     damaged_hash = _sha256(damaged)
     base_request = (
         FOUR_FAMILY_BASE / "input/request.txt"
     ).read_text(encoding="utf-8").strip()
     request = (
         base_request
-        + "\nAdd one horizontal rectangular Beam and one vertical rectangular "
-        "Column on the exact authorized Storey in the same atomic ChangeSet."
+        + "\nRestore the missing horizontal rectangular Beam and vertical "
+        "rectangular Column at their specified center axes and exact Storeys "
+        "in the same atomic ChangeSet."
     )
     if duplicate_beam:
         request += " Add a second Beam on the same axis for rollback verification."
@@ -1105,26 +1266,34 @@ def _run_mixed_case(
             )
         ),
     }
-    private_manifest = _mixed_private_manifest(original, damaged)
     _write(case_root / "comparison.json", comparison)
     _write(case_root / "production-boundary.json", boundary)
     _write(case_root / "mutation_manifest.private.json", private_manifest)
     manifest = {
-        "schema_version": "text2ifc/phase12-offline-case/0.1",
+        "schema_version": "text2ifc/phase12-offline-case/0.2",
         "case_id": case_id,
         "status": "passed",
         "provider_evidence_mode": "offline_bound_deterministic",
         "synthetic_fallback_used": False,
-        "evidence_scope": "cross_scene_same_family_bimnet",
+        "evidence_scope": "single_scene_bimnet_vvo",
+        "structural_evidence_kind": "restoration",
+        "structural_restoration_contract": (
+            STRUCTURAL_RESTORATION_SCHEMA_VERSION
+        ),
         "operation_count": len(resolution.operations),
         "operation_families": {"window": 2, "door": 2, "beam": 1, "column": 1},
         "source": private_manifest["source"],
-        "damage": _read(
-            FOUR_FAMILY_BASE / "validation/source-run-manifest.json"
-        )["damage"],
+        "damage": damage_report,
         "production_input_boundary": boundary,
-        "artifacts": _artifact_index(case_root),
     }
+    restoration = audit_structural_restoration_case(case_root)
+    _write(case_root / "structural-restoration-audit.json", restoration)
+    if restoration["restoration_eligible"] is not True:
+        raise RuntimeError(
+            "PHASE12_MIXED_STRUCTURAL_RESTORATION_FAILED:"
+            + json.dumps(restoration["issues"], ensure_ascii=False)
+        )
+    manifest["artifacts"] = _artifact_index(case_root)
     _write(case_root / "manifest.json", manifest)
     return application, {"case_id": case_id, "case_root": case_root, "manifest": manifest}
 
@@ -1210,7 +1379,6 @@ def _run_mixed_failure(
     failed_root: Path,
     property_runtime: Any,
 ) -> dict[str, Any]:
-    source_hash = _sha256(FOUR_FAMILY_BASE / "02-damaged.ifc")
     application, metadata = _run_mixed_case(
         output_root=failed_root,
         duplicate_beam=True,
@@ -1232,8 +1400,7 @@ def _run_mixed_failure(
     damaged_input_hash = _sha256(damaged_input)
     changeset_fingerprint = str(changeset.get("base_model_fingerprint") or "")
     source_unchanged = (
-        damaged_input_hash == source_hash
-        and changeset_fingerprint == damaged_input_hash
+        changeset_fingerprint == damaged_input_hash
     )
     failure = {
         "case_id": metadata["case_id"],
@@ -1956,19 +2123,36 @@ def run_offline_matrix(
     accepted_ids = {item["case_id"] for item in accepted}
     failure_ids = {item["case_id"] for item in failures}
     coverage = {
-        "beam_only": "phase12-d7n-beam-loadbearing" in accepted_ids,
-        "column_only": "phase12-d7n-column-loadbearing" in accepted_ids,
-        "beam_column_atomic": "phase12-d7n-beam-column-atomic" in accepted_ids,
-        "beam_loadbearing": "phase12-d7n-beam-loadbearing" in accepted_ids,
-        "column_loadbearing": "phase12-d7n-column-loadbearing" in accepted_ids,
-        "material_present": "phase12-vvo-beam-material-present" in accepted_ids,
-        "material_absent": "phase12-vvo-column-material-absent" in accepted_ids,
+        "beam_only": (
+            "phase12-v2-vvo-beam-loadbearing-restoration" in accepted_ids
+        ),
+        "column_only": (
+            "phase12-v2-vvo-column-loadbearing-restoration" in accepted_ids
+        ),
+        "beam_column_atomic": (
+            "phase12-v2-vvo-beam-column-atomic-restoration" in accepted_ids
+        ),
+        "beam_loadbearing": (
+            "phase12-v2-vvo-beam-loadbearing-restoration" in accepted_ids
+        ),
+        "column_loadbearing": (
+            "phase12-v2-vvo-column-loadbearing-restoration" in accepted_ids
+        ),
+        "material_present": (
+            "phase12-v2-vvo-beam-material-present-restoration"
+            in accepted_ids
+        ),
+        "material_absent": (
+            "phase12-v2-vvo-column-material-absent-restoration"
+            in accepted_ids
+        ),
         "rollback": "phase12-d7n-beam-column-rollback" in failure_ids,
         "door_window_beam_column_atomic": (
-            "phase12-vvo-door-window-beam-column-atomic" in accepted_ids
+            "phase12-v2-vvo-door-window-beam-column-atomic-restoration"
+            in accepted_ids
         ),
         "door_window_beam_column_rollback": (
-            "phase12-vvo-door-window-beam-column-rollback" in failure_ids
+            "phase12-v2-vvo-door-window-beam-column-rollback" in failure_ids
         ),
     }
     matrix_complete = (
@@ -1981,7 +2165,7 @@ def run_offline_matrix(
         "schema_version": "text2ifc/phase12-offline-matrix/0.1",
         "status": "passed" if matrix_complete else "partial",
         "matrix_complete": matrix_complete,
-        "evidence_scope": "cross_scene_same_family_bimnet",
+        "evidence_scope": "single_scene_bimnet_vvo",
         "accepted_cases": accepted,
         "failed_cases": failures,
         "coverage": coverage,

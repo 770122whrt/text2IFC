@@ -155,6 +155,57 @@ def test_structural_adapters_keep_unmeasurable_geometry_diagnostic_only(
         ) == 2
 
 
+def test_mapped_rectangular_column_axis_is_measured_from_body_extrusion() -> None:
+    model = ifcopenshell.open(str(VVO))
+    column = model.by_guid("1rsYNObuDC4euALdw6WUK4")
+
+    result = index_adapters.ColumnIndexAdapter().extract(column)
+    axis = result.geometry_summary["axis_capability"]
+    section = result.geometry_summary["section_capability"]
+
+    assert result.geometry_capability == "measured_structural_member"
+    assert axis["status"] == "measured_current_ifc"
+    assert axis["provenance"] == (
+        "IfcMappedItem/IfcExtrudedAreaSolid/IfcRectangleProfileDef"
+    )
+    assert axis["storey_global_id"] == "1vTeahUkP60PdWqwCTjeRs"
+    assert axis["storey_local_start_mm"] == pytest.approx(
+        [-3307.42670197247, -9061.78314004458, 0.0]
+    )
+    assert axis["storey_local_end_mm"] == pytest.approx(
+        [-3307.42670197247, -9061.78314004458, 3712.05999269584]
+    )
+    assert axis["world_direction"] == pytest.approx([0.0, 0.0, 1.0])
+    assert axis["length_mm"] == pytest.approx(3712.05999269584)
+    assert section["world_profile_x_direction"] == pytest.approx(
+        [0.0, -1.0, 0.0]
+    )
+    assert section["storey_local_profile_x_direction"] == pytest.approx(
+        [0.0, -1.0, 0.0]
+    )
+
+
+def test_mapped_circular_column_remains_outside_rectangular_restoration() -> None:
+    model = ifcopenshell.open(str(D7N))
+    column = model.by_guid("3dldEzenf9LvnDJYNNzLsH")
+
+    result = index_adapters.ColumnIndexAdapter().extract(column)
+
+    assert result.geometry_capability == "structural_geometry_unmeasurable"
+    assert (
+        result.geometry_summary["axis_capability"]["status"]
+        == "unavailable"
+    )
+    assert (
+        result.geometry_summary["section_capability"]["status"]
+        == "unavailable"
+    )
+    assert (
+        result.geometry_summary["section_capability"]["candidate_count"]
+        == 0
+    )
+
+
 def test_stale_structural_index_is_rejected_by_default_then_atomically_rebuilt(
     tmp_path: Path,
 ) -> None:
@@ -183,5 +234,5 @@ def test_stale_structural_index_is_rejected_by_default_then_atomically_rebuilt(
         assert counts["IfcColumn"] == 15
 
     assert INDEX_SCHEMA_VERSION == "text2ifc/ifc-index/0.5"
-    assert EXTRACTOR_VERSION == "text2ifc/ifc-indexer/0.6"
+    assert EXTRACTOR_VERSION == "text2ifc/ifc-indexer/0.7"
     assert not list(tmp_path.glob("*.building-*"))

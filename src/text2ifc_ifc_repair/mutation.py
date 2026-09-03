@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import math
 import os
 import shutil
 import tempfile
@@ -927,7 +928,19 @@ def _structural_target_snapshot(entity: Any, *, role: str) -> dict[str, Any]:
     storey = storey_relations[0].RelatingStructure
 
     adapter = BeamIndexAdapter() if family == "beam" else ColumnIndexAdapter()
-    geometry_summary = dict(adapter.extract(entity).geometry_summary)
+    extracted = adapter.extract(entity)
+    geometry_summary = dict(extracted.geometry_summary)
+    if (
+        extracted.geometry_capability != "measured_structural_member"
+        or not _structural_geometry_is_reconstructable(
+            family=family,
+            geometry_summary=geometry_summary,
+            storey_global_id=str(storey.GlobalId),
+        )
+    ):
+        raise ValueError(
+            f"STRUCTURAL_MUTATION_TARGET_NOT_RECONSTRUCTABLE:{family}"
+        )
     return {
         "role": role,
         "entity": _private_entity_identity(entity),
@@ -945,6 +958,69 @@ def _structural_target_snapshot(entity: Any, *, role: str) -> dict[str, Any]:
             "material_associations": _direct_material_association_snapshot(entity),
         },
     }
+
+
+def _structural_geometry_is_reconstructable(
+    *,
+    family: str,
+    geometry_summary: dict[str, Any],
+    storey_global_id: str,
+) -> bool:
+    axis = geometry_summary.get("axis_capability")
+    section = geometry_summary.get("section_capability")
+    if not isinstance(axis, dict) or not isinstance(section, dict):
+        return False
+    if (
+        axis.get("status") != "measured_current_ifc"
+        or section.get("status") != "measured_current_ifc"
+        or str(axis.get("storey_global_id") or "") != storey_global_id
+    ):
+        return False
+    try:
+        axis_length = float(axis["length_mm"])
+        body_length = float(section["extrusion_depth_mm"])
+        direction = tuple(float(value) for value in axis["world_direction"])
+        profile_x = tuple(
+            float(value) for value in section["world_profile_x_direction"]
+        )
+        profile_x_mm = float(section["profile_x_mm"])
+        profile_y_mm = float(section["profile_y_mm"])
+    except (KeyError, TypeError, ValueError):
+        return False
+    finite_values = (
+        axis_length,
+        body_length,
+        profile_x_mm,
+        profile_y_mm,
+        *direction,
+        *profile_x,
+    )
+    if (
+        len(direction) != 3
+        or len(profile_x) != 3
+        or not all(math.isfinite(value) for value in finite_values)
+        or min(axis_length, body_length, profile_x_mm, profile_y_mm) <= 0.0
+        or not math.isclose(
+            axis_length,
+            body_length,
+            rel_tol=0.0,
+            abs_tol=0.01,
+        )
+    ):
+        return False
+
+    angular_tolerance = math.sin(math.radians(0.1))
+    if family == "beam":
+        horizontal = abs(direction[2]) <= angular_tolerance
+        supported_roll = (
+            abs(abs(profile_x[2]) - 1.0) <= angular_tolerance
+        )
+        return horizontal and supported_roll
+    if family == "column":
+        vertical = math.hypot(direction[0], direction[1]) <= angular_tolerance
+        horizontal_profile = abs(profile_x[2]) <= angular_tolerance
+        return vertical and horizontal_profile
+    return False
 
 
 def _private_entity_identity(entity: Any) -> dict[str, Any]:

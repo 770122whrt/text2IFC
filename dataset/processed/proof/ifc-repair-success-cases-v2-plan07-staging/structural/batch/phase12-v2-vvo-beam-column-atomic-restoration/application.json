@@ -1,0 +1,464 @@
+{
+  "audit": {
+    "checks": [
+      {
+        "code": "CHANGESET_SCHEMA",
+        "evidence": {},
+        "status": "passed"
+      },
+      {
+        "code": "IFC_SCHEMA",
+        "evidence": {
+          "actual_schema": "IFC2X3"
+        },
+        "status": "passed"
+      },
+      {
+        "code": "BASE_MODEL_FINGERPRINT",
+        "evidence": {
+          "actual_fingerprint": "sha256:636135b4bc12ea3e45d9a7155f714834ff5eaaba1f2d3d2e7a5ae84a525a59aa"
+        },
+        "status": "passed"
+      },
+      {
+        "code": "SOURCE_REQUEST_HASH",
+        "evidence": {
+          "actual_request_hash": "sha256:c014d4b2f0bb9a6127ff32f2b8209dc20852db017632eb43a5f3dbec42d8b31f"
+        },
+        "status": "passed"
+      },
+      {
+        "code": "OPERATION_REGISTRATION",
+        "evidence": {
+          "operation_type": "add_beam"
+        },
+        "status": "passed"
+      },
+      {
+        "code": "OPERATION_REGISTRATION",
+        "evidence": {
+          "operation_type": "add_column"
+        },
+        "status": "passed"
+      }
+    ],
+    "issues": [],
+    "operation_audits": [
+      {
+        "checks": [
+          {
+            "code": "STRUCTURAL_STOREY_AVAILABLE",
+            "evidence": {
+              "storey_global_id": "1vTeahUkP60PdWqwCTjUuM"
+            },
+            "status": "passed"
+          },
+          {
+            "code": "STRUCTURAL_AXIS_AVAILABLE",
+            "evidence": {
+              "axis_extent_mm": 4940.000000000001
+            },
+            "status": "passed"
+          },
+          {
+            "code": "STRUCTURAL_TYPE_AUTHORIZED",
+            "evidence": {
+              "assignment_count": 1
+            },
+            "status": "passed"
+          }
+        ],
+        "evidence": {
+          "axis_extent_mm": 4940.000000000001,
+          "storey_global_id": "1vTeahUkP60PdWqwCTjUuM"
+        },
+        "operation_id": "phase12-v2-vvo-beam-column-atomic-restoration-beam-1",
+        "operation_type": "add_beam",
+        "valid": true
+      },
+      {
+        "checks": [
+          {
+            "code": "STRUCTURAL_STOREY_AVAILABLE",
+            "evidence": {
+              "storey_global_id": "1vTeahUkP60PdWqwCTjeRs"
+            },
+            "status": "passed"
+          },
+          {
+            "code": "STRUCTURAL_AXIS_AVAILABLE",
+            "evidence": {
+              "axis_extent_mm": 3712.059993
+            },
+            "status": "passed"
+          },
+          {
+            "code": "STRUCTURAL_TYPE_AUTHORIZED",
+            "evidence": {
+              "assignment_count": 1
+            },
+            "status": "passed"
+          }
+        ],
+        "evidence": {
+          "axis_extent_mm": 3712.059993,
+          "storey_global_id": "1vTeahUkP60PdWqwCTjeRs"
+        },
+        "operation_id": "phase12-v2-vvo-beam-column-atomic-restoration-column-2",
+        "operation_type": "add_column",
+        "valid": true
+      }
+    ],
+    "schema_version": "text2ifc/ifc-repair-audit/0.1",
+    "valid": true
+  },
+  "issues": [],
+  "operations": [
+    {
+      "changes": {
+        "created": [
+          {
+            "global_id": "0iPxb3oibHZvNVjZ6iXK2g",
+            "ifc_class": "IfcBeam",
+            "role": "beam"
+          },
+          {
+            "global_id": "1LyKwQJ1rJoxl4D3lMFpmq",
+            "ifc_class": "IfcBeamType",
+            "role": "structural_type"
+          },
+          {
+            "global_id": "0MPgftPIPGSQQwhDw3rPFG",
+            "ifc_class": "IfcRelDefinesByType",
+            "role": "structural_type_relationship"
+          }
+        ],
+        "modified": [
+          {
+            "global_id": "2CsmzAChHF6O6maGblo6DL",
+            "ifc_class": "IfcRelContainedInSpatialStructure",
+            "role": "spatial_containment"
+          }
+        ],
+        "removed": [],
+        "resolved": {
+          "geometry": {
+            "axis_direction": [
+              0.0,
+              -1.0,
+              0.0
+            ],
+            "axis_end_mm": [
+              -3316.629521,
+              -8803.522838,
+              0.0
+            ],
+            "axis_extent_mm": 4940.0,
+            "axis_start_mm": [
+              -3316.629521,
+              -3863.522838,
+              0.0
+            ],
+            "orientation": [
+              0.0,
+              -1.0,
+              0.0
+            ],
+            "representation_type": "SweptSolid",
+            "section": {
+              "height_mm": 570.0,
+              "shape": "rectangle",
+              "width_mm": 455.0
+            }
+          },
+          "storey_global_id": "1vTeahUkP60PdWqwCTjUuM",
+          "type_global_id": "1LyKwQJ1rJoxl4D3lMFpmq"
+        },
+        "semantic": {
+          "created": [],
+          "modified": [],
+          "scopes": {
+            "beam_occurrence": {
+              "created": [],
+              "modified": [],
+              "skipped": [
+                "relationship:type"
+              ],
+              "updated": []
+            }
+          },
+          "skipped": [
+            "relationship:type"
+          ],
+          "updated": []
+        }
+      },
+      "operation_id": "phase12-v2-vvo-beam-column-atomic-restoration-beam-1",
+      "operation_type": "add_beam"
+    },
+    {
+      "changes": {
+        "created": [
+          {
+            "global_id": "3273a7JYDMZwxYZ4kCrZFx",
+            "ifc_class": "IfcColumn",
+            "role": "column"
+          },
+          {
+            "global_id": "1oEE0yG5vHORZux_AU_TkP",
+            "ifc_class": "IfcColumnType",
+            "role": "structural_type"
+          },
+          {
+            "global_id": "1uMaR5uyHNHhcxNB0UYBJW",
+            "ifc_class": "IfcRelDefinesByType",
+            "role": "structural_type_relationship"
+          }
+        ],
+        "modified": [
+          {
+            "global_id": "3kSL0VGKv3gxJCujiqtuJj",
+            "ifc_class": "IfcRelContainedInSpatialStructure",
+            "role": "spatial_containment"
+          }
+        ],
+        "removed": [],
+        "resolved": {
+          "containment_policy": "axis_base_storey_only",
+          "geometry": {
+            "axis_direction": [
+              0.0,
+              0.0,
+              1.0
+            ],
+            "axis_end_mm": [
+              -3307.426702,
+              -9061.78314,
+              3712.059993
+            ],
+            "axis_extent_mm": 3712.059993,
+            "axis_start_mm": [
+              -3307.426702,
+              -9061.78314,
+              0.0
+            ],
+            "orientation": [
+              0.0,
+              -1.0,
+              0.0
+            ],
+            "representation_type": "SweptSolid",
+            "section": {
+              "depth_mm": 500.0,
+              "shape": "rectangle",
+              "width_mm": 500.0
+            }
+          },
+          "storey_global_id": "1vTeahUkP60PdWqwCTjeRs",
+          "type_global_id": "1oEE0yG5vHORZux_AU_TkP"
+        },
+        "semantic": {
+          "created": [],
+          "modified": [],
+          "scopes": {
+            "column_occurrence": {
+              "created": [],
+              "modified": [],
+              "skipped": [
+                "relationship:type"
+              ],
+              "updated": []
+            }
+          },
+          "skipped": [
+            "relationship:type"
+          ],
+          "updated": []
+        }
+      },
+      "operation_id": "phase12-v2-vvo-beam-column-atomic-restoration-column-2",
+      "operation_type": "add_column"
+    }
+  ],
+  "output": {
+    "path": "E:\\code for project\\bimnet\\.pytest-tmp\\plan07-v2-full-run-20260903\\accepted\\phase12-v2-vvo-beam-column-atomic-restoration\\repaired.ifc",
+    "sha256": "cd814cbcea73c1a0977bd2eeca6a9e1239c2633cea4a6469a630fcc95944f0d1"
+  },
+  "postconditions": [
+    {
+      "checks": [
+        {
+          "code": "BEAM_GEOMETRY_MATCHES",
+          "evidence": {
+            "axis_direction": [
+              0.0,
+              -1.0,
+              0.0
+            ],
+            "axis_end_mm": [
+              -3316.629521,
+              -8803.522838,
+              0.0
+            ],
+            "axis_extent_mm": 4940.0,
+            "axis_start_mm": [
+              -3316.629521,
+              -3863.522838,
+              0.0
+            ],
+            "orientation": [
+              0.0,
+              -1.0,
+              0.0
+            ],
+            "representation_type": "SweptSolid",
+            "section": {
+              "height_mm": 570.0,
+              "shape": "rectangle",
+              "width_mm": 455.0
+            }
+          },
+          "status": "passed"
+        },
+        {
+          "code": "BEAM_CONTAINED_IN_STOREY",
+          "evidence": {},
+          "status": "passed"
+        },
+        {
+          "code": "BEAM_TYPE_BOUND",
+          "evidence": {},
+          "status": "passed"
+        },
+        {
+          "code": "BEAM_ANALYSIS_RELATIONSHIPS_ABSENT",
+          "evidence": {},
+          "status": "passed"
+        }
+      ],
+      "evidence": {
+        "measurement": {
+          "axis_direction": [
+            0.0,
+            -1.0,
+            0.0
+          ],
+          "axis_end_mm": [
+            -3316.629521,
+            -8803.522838,
+            0.0
+          ],
+          "axis_extent_mm": 4940.0,
+          "axis_start_mm": [
+            -3316.629521,
+            -3863.522838,
+            0.0
+          ],
+          "orientation": [
+            0.0,
+            -1.0,
+            0.0
+          ],
+          "representation_type": "SweptSolid",
+          "section": {
+            "height_mm": 570.0,
+            "shape": "rectangle",
+            "width_mm": 455.0
+          }
+        }
+      },
+      "issues": [],
+      "operation_id": "phase12-v2-vvo-beam-column-atomic-restoration-beam-1",
+      "valid": true
+    },
+    {
+      "checks": [
+        {
+          "code": "COLUMN_GEOMETRY_MATCHES",
+          "evidence": {
+            "axis_direction": [
+              0.0,
+              0.0,
+              1.0
+            ],
+            "axis_end_mm": [
+              -3307.426702,
+              -9061.78314,
+              3712.059993
+            ],
+            "axis_extent_mm": 3712.059993,
+            "axis_start_mm": [
+              -3307.426702,
+              -9061.78314,
+              0.0
+            ],
+            "orientation": [
+              0.0,
+              -1.0,
+              0.0
+            ],
+            "representation_type": "SweptSolid",
+            "section": {
+              "depth_mm": 500.0,
+              "shape": "rectangle",
+              "width_mm": 500.0
+            }
+          },
+          "status": "passed"
+        },
+        {
+          "code": "COLUMN_CONTAINED_IN_BASE_STOREY",
+          "evidence": {},
+          "status": "passed"
+        },
+        {
+          "code": "COLUMN_TYPE_BOUND",
+          "evidence": {},
+          "status": "passed"
+        },
+        {
+          "code": "COLUMN_ANALYSIS_RELATIONSHIPS_ABSENT",
+          "evidence": {},
+          "status": "passed"
+        }
+      ],
+      "evidence": {
+        "measurement": {
+          "axis_direction": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "axis_end_mm": [
+            -3307.426702,
+            -9061.78314,
+            3712.059993
+          ],
+          "axis_extent_mm": 3712.059993,
+          "axis_start_mm": [
+            -3307.426702,
+            -9061.78314,
+            0.0
+          ],
+          "orientation": [
+            0.0,
+            -1.0,
+            0.0
+          ],
+          "representation_type": "SweptSolid",
+          "section": {
+            "depth_mm": 500.0,
+            "shape": "rectangle",
+            "width_mm": 500.0
+          }
+        }
+      },
+      "issues": [],
+      "operation_id": "phase12-v2-vvo-beam-column-atomic-restoration-column-2",
+      "valid": true
+    }
+  ],
+  "published": true,
+  "schema_version": "text2ifc/ifc-repair-application/0.1",
+  "valid": true
+}

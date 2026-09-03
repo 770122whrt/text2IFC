@@ -10,6 +10,10 @@ must have a reviewed license, provenance, validation status, and intended use.
 
 - Repository: https://github.com/LydJason/BIMNet
 - Dataset basis: Matterport3D-derived scans with dedicated manually modeled IFC
+- Local paper: `dataset/sources/PAPERS/Liu-et-al-2025-BIM-reconstruction-dataset-benchmark.pdf`
+- Local Matterport terms: `dataset/sources/LICENSES/Matterport/MP_TOS.pdf`
+- Chinese reference translation: `dataset/sources/LICENSES/Matterport/MP_TOS.zh-CN.md`
+  (non-authoritative; consult the original PDF for legal interpretation)
 - Local content: 25 IFC2X3 files
 - Authorization: User confirmed Matterport3D/BIMNet authorization for local
   training on 2026-06-11.

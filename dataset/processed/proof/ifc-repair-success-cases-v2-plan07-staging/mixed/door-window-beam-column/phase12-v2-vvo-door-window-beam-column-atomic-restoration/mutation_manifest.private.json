@@ -1,0 +1,504 @@
+{
+  "damaged_ifc": {
+    "path": "damaged.ifc",
+    "sha256": "sha256:4a0116d439bcc286e501f459afb4fe31c9607d9233f18fb373921d991c436e66"
+  },
+  "mutation_type": "remove_door_window_beam_column",
+  "role_mapping": {
+    "beam": "17tPjyQtf2L9JnbXXmcTUF",
+    "column": "1rsYNObuDC4euALdw6WUK4",
+    "door-1": "2IUEnGd5v4Yfg1ZlPtd0qa",
+    "door-2": "1B$rgWypT66viEf2CI1iIv",
+    "window-1": "2dYMXn0_5AKRbD_0yUIAqJ",
+    "window-2": "08xWVL$9z6JRwr3oWJHoAz",
+    "window-opening-1": "2dYMXn0_5AKRbD_1mUIAqJ",
+    "window-opening-2": "08xWVL$9z6JRwr3piJHoAz"
+  },
+  "schema_version": "text2ifc/phase12-private-damage-manifest/0.2",
+  "source": {
+    "path": "dataset/ifc/train/vvo.ifc",
+    "schema": "IFC2X3",
+    "sha256": "sha256:b6c435be955aeb6b2998f42a62f4ebf8c3f91eb7d373ca71a2dcedfeb95b3fdc",
+    "size_bytes": 2409268
+  },
+  "targets": [
+    {
+      "entity": {
+        "global_id": "2IUEnGd5v4Yfg1ZlPtd0qa",
+        "ifc_class": "IfcDoor",
+        "name": "单扇 - 与墙齐:800x2480:255008",
+        "step_id": 53124
+      },
+      "role": "door-1"
+    },
+    {
+      "entity": {
+        "global_id": "1B$rgWypT66viEf2CI1iIv",
+        "ifc_class": "IfcDoor",
+        "name": "单扇 - 与墙齐:935x2400:275772",
+        "step_id": 67428
+      },
+      "role": "door-2"
+    },
+    {
+      "entity": {
+        "global_id": "2dYMXn0_5AKRbD_0yUIAqJ",
+        "ifc_class": "IfcWindow",
+        "name": "固定:500x1180:279940",
+        "step_id": 68272
+      },
+      "role": "window-1"
+    },
+    {
+      "entity": {
+        "global_id": "2dYMXn0_5AKRbD_1mUIAqJ",
+        "ifc_class": "IfcOpeningElement",
+        "name": "固定:500x1180:279940:1",
+        "step_id": 85742
+      },
+      "role": "window-opening-1"
+    },
+    {
+      "entity": {
+        "global_id": "08xWVL$9z6JRwr3oWJHoAz",
+        "ifc_class": "IfcWindow",
+        "name": "固定:870x2370:255906",
+        "step_id": 59619
+      },
+      "role": "window-2"
+    },
+    {
+      "entity": {
+        "global_id": "08xWVL$9z6JRwr3piJHoAz",
+        "ifc_class": "IfcOpeningElement",
+        "name": "固定:870x2370:255906:1",
+        "step_id": 85848
+      },
+      "role": "window-opening-2"
+    },
+    {
+      "entity": {
+        "global_id": "17tPjyQtf2L9JnbXXmcTUF",
+        "ifc_class": "IfcBeam",
+        "name": "现浇混凝土梁-支撑梁:S_支撑梁-1-ZC1 700x800 C30:297382",
+        "step_id": 82976
+      },
+      "geometry": {
+        "axis_capability": {
+          "authority": "diagnostic_only",
+          "length_mm": 4940.0,
+          "provenance": "IfcShapeRepresentation.Axis/IfcPolyline",
+          "status": "measured_current_ifc",
+          "storey_global_id": "1vTeahUkP60PdWqwCTjUuM",
+          "storey_local_end_mm": [
+            -3316.62952073651,
+            -8803.52283818294,
+            0.0
+          ],
+          "storey_local_start_mm": [
+            -3316.62952073651,
+            -3863.52283818294,
+            0.0
+          ],
+          "world_direction": [
+            0.0,
+            -1.0,
+            0.0
+          ],
+          "world_end_mm": [
+            -3316.62952073651,
+            -8803.52283818294,
+            1368.0
+          ],
+          "world_start_mm": [
+            -3316.62952073651,
+            -3863.52283818294,
+            1368.0
+          ]
+        },
+        "representation_summary": {
+          "authority": "diagnostic_only",
+          "provenance": "current_ifc_representation",
+          "representations": [
+            {
+              "identifier": "Axis",
+              "item_classes": [
+                "IfcPolyline"
+              ],
+              "type": "Curve2D"
+            },
+            {
+              "identifier": "Body",
+              "item_classes": [
+                "IfcExtrudedAreaSolid"
+              ],
+              "type": "SweptSolid"
+            }
+          ],
+          "resolved_item_classes": [
+            "IfcExtrudedAreaSolid",
+            "IfcPolyline"
+          ]
+        },
+        "section_capability": {
+          "authority": "diagnostic_only",
+          "extrusion_depth_mm": 4940.0,
+          "profile_x_mm": 570.000000000001,
+          "profile_y_mm": 454.999999999999,
+          "provenance": "IfcExtrudedAreaSolid/IfcRectangleProfileDef",
+          "shape": "rectangle",
+          "status": "measured_current_ifc",
+          "storey_local_profile_x_direction": [
+            0.0,
+            0.0,
+            -1.0
+          ],
+          "world_profile_x_direction": [
+            0.0,
+            0.0,
+            -1.0
+          ]
+        }
+      },
+      "role": "beam",
+      "semantics": {
+        "material_associations": [
+          {
+            "material": {
+              "ifc_class": "IfcMaterial",
+              "name": "C_钢筋砼C30",
+              "step_id": 82980
+            },
+            "relationship": {
+              "global_id": "3Mv_ut3cT5EBLla14VTGuT",
+              "ifc_class": "IfcRelAssociatesMaterial",
+              "step_id": 84948
+            }
+          }
+        ],
+        "property_sets": [
+          {
+            "definition": {
+              "global_id": "3vZSMx6Tf7Mw7YqMHsz0ad",
+              "ifc_class": "IfcPropertySet",
+              "name": "Pset_ReinforcementBarPitchOfBeam",
+              "step_id": 83004
+            },
+            "properties": [
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "name": "Reference",
+                "step_id": 83003,
+                "value": "S_支撑梁-1-ZC1 700x800 C30",
+                "value_type": "IfcLabel"
+              }
+            ],
+            "relationship": {
+              "global_id": "0BC5n8lMj0GejY9dcR9skF",
+              "ifc_class": "IfcRelDefinesByProperties",
+              "step_id": 83019
+            }
+          },
+          {
+            "definition": {
+              "global_id": "1H4L488hnB68CWoykVedBc",
+              "ifc_class": "IfcPropertySet",
+              "name": "Pset_ConcreteElementGeneral",
+              "step_id": 82996
+            },
+            "properties": [
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "name": "FireRating",
+                "step_id": 82995
+              }
+            ],
+            "relationship": {
+              "global_id": "1yceXvFKf28PVmz2M7khyC",
+              "ifc_class": "IfcRelDefinesByProperties",
+              "step_id": 83010
+            }
+          },
+          {
+            "definition": {
+              "global_id": "3MGEnHEWH2WRBJJGm1oj4D",
+              "ifc_class": "IfcPropertySet",
+              "name": "Pset_ManufacturerTypeInformation",
+              "step_id": 82999
+            },
+            "properties": [
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "name": "Manufacturer",
+                "step_id": 82998
+              }
+            ],
+            "relationship": {
+              "global_id": "235X0phUfF2QR64gVqiLiQ",
+              "ifc_class": "IfcRelDefinesByProperties",
+              "step_id": 83013
+            }
+          },
+          {
+            "definition": {
+              "global_id": "0vzYRRz6n14eQY1BspKrl7",
+              "ifc_class": "IfcPropertySet",
+              "name": "Pset_QuantityTakeOff",
+              "step_id": 83001
+            },
+            "properties": [
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "name": "Reference",
+                "step_id": 82990,
+                "value": "S_支撑梁-1-ZC1 700x800 C30",
+                "value_type": "IfcIdentifier"
+              }
+            ],
+            "relationship": {
+              "global_id": "2D2UL$Gx5CWPqZNE06tF10",
+              "ifc_class": "IfcRelDefinesByProperties",
+              "step_id": 83016
+            }
+          },
+          {
+            "definition": {
+              "global_id": "17tPjyQtf2L9JndV5mcTUF",
+              "ifc_class": "IfcPropertySet",
+              "name": "Pset_BeamCommon",
+              "step_id": 82993
+            },
+            "properties": [
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "name": "IsExternal",
+                "step_id": 249,
+                "value": false,
+                "value_type": "IfcBoolean"
+              },
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "name": "Slope",
+                "step_id": 82828,
+                "value": 0.0,
+                "value_type": "IfcPlaneAngleMeasure"
+              },
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "name": "Reference",
+                "step_id": 82990,
+                "value": "S_支撑梁-1-ZC1 700x800 C30",
+                "value_type": "IfcIdentifier"
+              },
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "name": "Span",
+                "step_id": 82991,
+                "value": 4940.0,
+                "value_type": "IfcPositiveLengthMeasure"
+              },
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "name": "FireRating",
+                "step_id": 82992
+              }
+            ],
+            "relationship": {
+              "global_id": "2YHToiCJn3EBx3UdSfU3oM",
+              "ifc_class": "IfcRelDefinesByProperties",
+              "step_id": 83006
+            }
+          }
+        ]
+      },
+      "storey": {
+        "global_id": "1vTeahUkP60PdWqwCTjUuM",
+        "ifc_class": "IfcBuildingStorey",
+        "name": "标高7",
+        "step_id": 156
+      },
+      "type": {
+        "global_id": "17tPjyQtf2L9JnbXXmcTTd",
+        "ifc_class": "IfcBeamType",
+        "name": "S_支撑梁-1-ZC1 700x800 C30",
+        "step_id": 82979
+      }
+    },
+    {
+      "entity": {
+        "global_id": "1rsYNObuDC4euALdw6WUK4",
+        "ifc_class": "IfcColumn",
+        "name": "矩形柱:500x500:295975",
+        "step_id": 82824
+      },
+      "geometry": {
+        "axis_capability": {
+          "authority": "diagnostic_only",
+          "length_mm": 3712.05999269584,
+          "provenance": "IfcMappedItem/IfcExtrudedAreaSolid/IfcRectangleProfileDef",
+          "status": "measured_current_ifc",
+          "storey_global_id": "1vTeahUkP60PdWqwCTjeRs",
+          "storey_local_end_mm": [
+            -3307.42670197247,
+            -9061.78314004458,
+            3712.05999269584
+          ],
+          "storey_local_start_mm": [
+            -3307.42670197247,
+            -9061.78314004458,
+            0.0
+          ],
+          "world_direction": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "world_end_mm": [
+            -3307.42670197247,
+            -9061.78314004458,
+            1368.0
+          ],
+          "world_start_mm": [
+            -3307.42670197247,
+            -9061.78314004458,
+            -2344.05999269584
+          ]
+        },
+        "representation_summary": {
+          "authority": "diagnostic_only",
+          "provenance": "current_ifc_representation",
+          "representations": [
+            {
+              "identifier": "Body",
+              "item_classes": [
+                "IfcMappedItem"
+              ],
+              "type": "MappedRepresentation"
+            }
+          ],
+          "resolved_item_classes": [
+            "IfcExtrudedAreaSolid"
+          ]
+        },
+        "section_capability": {
+          "authority": "diagnostic_only",
+          "extrusion_depth_mm": 3712.05999269584,
+          "profile_x_mm": 499.999999999999,
+          "profile_y_mm": 500.0,
+          "provenance": "IfcMappedItem/IfcExtrudedAreaSolid/IfcRectangleProfileDef",
+          "shape": "rectangle",
+          "status": "measured_current_ifc",
+          "storey_local_profile_x_direction": [
+            0.0,
+            -1.0,
+            0.0
+          ],
+          "world_profile_x_direction": [
+            0.0,
+            -1.0,
+            0.0
+          ]
+        }
+      },
+      "role": "column",
+      "semantics": {
+        "material_associations": [],
+        "property_sets": [
+          {
+            "definition": {
+              "global_id": "0uglNTdzfAkBU3YrMEuQXt",
+              "ifc_class": "IfcPropertySet",
+              "name": "Pset_QuantityTakeOff",
+              "step_id": 82831
+            },
+            "properties": [
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "name": "Reference",
+                "step_id": 82827,
+                "value": "500x500",
+                "value_type": "IfcIdentifier"
+              }
+            ],
+            "relationship": {
+              "global_id": "0xc3Et_qf2IRWlkcNyHfq3",
+              "ifc_class": "IfcRelDefinesByProperties",
+              "step_id": 82840
+            }
+          },
+          {
+            "definition": {
+              "global_id": "01YHREeqH0vOh2Z0X4in1$",
+              "ifc_class": "IfcPropertySet",
+              "name": "Pset_ReinforcementBarPitchOfColumn",
+              "step_id": 82834
+            },
+            "properties": [
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "name": "Reference",
+                "step_id": 82833,
+                "value": "500x500",
+                "value_type": "IfcLabel"
+              }
+            ],
+            "relationship": {
+              "global_id": "1GH15a$qfD58OSaFTYq9cW",
+              "ifc_class": "IfcRelDefinesByProperties",
+              "step_id": 82843
+            }
+          },
+          {
+            "definition": {
+              "global_id": "2Y_JzWGLn9mfWL_Vcd_6lc",
+              "ifc_class": "IfcPropertySet",
+              "name": "Pset_ColumnCommon",
+              "step_id": 82829
+            },
+            "properties": [
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "name": "IsExternal",
+                "step_id": 249,
+                "value": false,
+                "value_type": "IfcBoolean"
+              },
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "name": "Reference",
+                "step_id": 82827,
+                "value": "500x500",
+                "value_type": "IfcIdentifier"
+              },
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "name": "Slope",
+                "step_id": 82828,
+                "value": 0.0,
+                "value_type": "IfcPlaneAngleMeasure"
+              }
+            ],
+            "relationship": {
+              "global_id": "38NYeav8rEa8tlSwFAaq6b",
+              "ifc_class": "IfcRelDefinesByProperties",
+              "step_id": 82836
+            }
+          }
+        ]
+      },
+      "storey": {
+        "global_id": "1vTeahUkP60PdWqwCTjeRs",
+        "ifc_class": "IfcBuildingStorey",
+        "name": "标高0",
+        "step_id": 126
+      },
+      "type": {
+        "global_id": "1rsYNObuDC4euALdw6WUK0",
+        "ifc_class": "IfcColumnType",
+        "name": "500x500",
+        "step_id": 82812
+      }
+    }
+  ],
+  "visibility": "evaluator_only_after_production"
+}

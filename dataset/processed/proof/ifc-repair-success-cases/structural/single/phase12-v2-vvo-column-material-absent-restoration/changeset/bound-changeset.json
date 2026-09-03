@@ -1,0 +1,144 @@
+{
+  "base_model_fingerprint": "sha256:0e36ffb6747fca2dfc65c0038be775b610bdcaeb28a0189786af29a697522f89",
+  "binding_status": "bound",
+  "changeset_id": "changeset-phase12-v2-vvo-column-material-absent-restoration",
+  "evidence_refs": [
+    "resolved:/operations/phase12-v2-vvo-column-material-absent-restoration-column-1/context/candidate_targets/0"
+  ],
+  "operations": [
+    {
+      "evidence_refs": [
+        "resolved:/operations/phase12-v2-vvo-column-material-absent-restoration-column-1/context/candidate_targets/0"
+      ],
+      "operation_id": "phase12-v2-vvo-column-material-absent-restoration-column-1",
+      "operation_type": "add_column",
+      "parameters": {
+        "axis": {
+          "base": {
+            "x_mm": -3307.426702,
+            "y_mm": -9061.78314,
+            "z_mm": 0.0
+          },
+          "top": {
+            "x_mm": -3307.426702,
+            "y_mm": -9061.78314,
+            "z_mm": 3712.059993
+          }
+        },
+        "section": {
+          "depth_mm": 500.0,
+          "orientation": {
+            "x": 0.0,
+            "y": -1.0
+          },
+          "shape": "rectangle",
+          "width_mm": 500.0
+        }
+      },
+      "semantic_assignments": [
+        {
+          "applicability": "conditional",
+          "authoring_action": "bind_relationship",
+          "derivation": null,
+          "fact_key": "relationship:host",
+          "operation_id": "phase12-v2-vvo-column-material-absent-restoration-column-1",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "resolved-host-target:1vTeahUkP60PdWqwCTjeRs",
+            "resolved-host:1vTeahUkP60PdWqwCTjeRs",
+            "operation:phase12-v2-vvo-column-material-absent-restoration-column-1"
+          ],
+          "scope": "column_occurrence",
+          "source_fact_key": "relationship:host",
+          "source_kind": "deterministic_derived",
+          "source_ref": "current-host-binding:1vTeahUkP60PdWqwCTjeRs",
+          "unit": null,
+          "value": "1vTeahUkP60PdWqwCTjeRs",
+          "value_type": "IfcBuildingStorey"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "bind_relationship",
+          "derivation": null,
+          "fact_key": "relationship:storey",
+          "operation_id": "phase12-v2-vvo-column-material-absent-restoration-column-1",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "operation:phase12-v2-vvo-column-material-absent-restoration-column-1",
+            "registered-column-base-storey-policy:0.1"
+          ],
+          "scope": "column_occurrence",
+          "source_fact_key": "relationship:storey",
+          "source_kind": "deterministic_derived",
+          "source_ref": "resolved:/operations/phase12-v2-vvo-column-material-absent-restoration-column-1/target",
+          "unit": null,
+          "value": "1vTeahUkP60PdWqwCTjeRs",
+          "value_type": "IfcBuildingStorey"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "inherit_from_type",
+          "derivation": {
+            "formal_attributes": {},
+            "ifc_class": "IfcColumnType",
+            "template": {
+              "name": "Text2IFC generated column type phase12-v2-vvo-column-material-absent-restoration-column-1",
+              "predefined_type": "NOTDEFINED",
+              "section": {
+                "depth_mm": 500.0,
+                "shape": "rectangle",
+                "width_mm": 500.0
+              },
+              "section_digest": "sha256:3e0f0103aba6ac1f7b2d09a5d4d3d02d3d3854085115987dd744114a58f82774"
+            },
+            "template_digest": "sha256:c5ef68da19bd4fef773cf8ca894fccab06b91ec5a375245f62bc2100f6e6cc2e",
+            "template_id": "text2ifc-rectangular-column-type",
+            "template_version": "0.1"
+          },
+          "fact_key": "relationship:type",
+          "operation_id": "phase12-v2-vvo-column-material-absent-restoration-column-1",
+          "ownership": "type_inherited",
+          "provenance": [
+            "operation:phase12-v2-vvo-column-material-absent-restoration-column-1",
+            "generated-type-template:0.1"
+          ],
+          "scope": "column_occurrence",
+          "source_fact_key": "relationship:type",
+          "source_kind": "deterministic_derived",
+          "source_ref": "generated-type:1XP7XG5LvM6O4aPx$6g9p5",
+          "unit": null,
+          "value": "1XP7XG5LvM6O4aPx$6g9p5",
+          "value_type": "IfcColumnType"
+        }
+      ],
+      "semantic_manifest": {
+        "manifest_id": "semantic-manifest-4b38a8990917b7477d48c361",
+        "policy_id": "column.add.l2",
+        "policy_version": "0.1"
+      },
+      "target": {
+        "storey_global_id": "1vTeahUkP60PdWqwCTjeRs"
+      }
+    }
+  ],
+  "postconditions": [
+    "structural_geometry_matches",
+    "structural_containment_matches",
+    "structural_type_matches"
+  ],
+  "preconditions": [
+    "structural_targets_resolved",
+    "structural_geometry_authorized",
+    "structural_semantics_bound"
+  ],
+  "schema_version": "text2ifc/ifc-repair-changeset/0.4",
+  "scope": {
+    "forbidden_ids": [],
+    "target_ids": [
+      "1vTeahUkP60PdWqwCTjeRs"
+    ]
+  },
+  "semantic_manifest_ref": "semantic-manifest.json",
+  "semantic_manifest_sha256": "sha256:b6602b695eb42b19055a6909ab67a08f81b15d6d0d10d32b24246a1ebd4a4422",
+  "source_request_hash": "sha256:9ec66d9740117342d91d8915b943e072952d9d402c530275df3f4ddbea01af25"
+}

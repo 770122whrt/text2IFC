@@ -518,15 +518,22 @@ def _number_or_none(value: Any) -> float | None:
 
 def _structural_axis_capability(entity: Any) -> dict[str, Any]:
     representation = getattr(entity, "Representation", None)
+    axis_shapes = [
+        shape
+        for shape in getattr(representation, "Representations", ()) or ()
+        if str(getattr(shape, "RepresentationIdentifier", "")) == "Axis"
+    ]
     candidates: list[Any] = []
-    for shape in getattr(representation, "Representations", ()) or ():
-        if str(getattr(shape, "RepresentationIdentifier", "")) != "Axis":
-            continue
+    for shape in axis_shapes:
         candidates.extend(
             item
             for item in getattr(shape, "Items", ()) or ()
             if item.is_a("IfcPolyline")
         )
+    if not axis_shapes:
+        body_axis = _rectangular_extrusion_axis_capability(entity)
+        if body_axis is not None:
+            return body_axis
     if len(candidates) != 1:
         return {
             "status": "unavailable",
@@ -634,33 +641,269 @@ def _structural_axis_capability(entity: Any) -> dict[str, Any]:
         }
 
 
-def _structural_section_capability(entity: Any) -> dict[str, Any]:
-    solids = [
-        item
-        for item in _structural_representation_items(entity)
-        if item.is_a("IfcExtrudedAreaSolid")
-        and getattr(item, "SweptArea", None) is not None
-        and item.SweptArea.is_a("IfcRectangleProfileDef")
+def _rectangular_extrusion_candidates(
+    entity: Any,
+) -> list[tuple[Any, Any, tuple[str, ...]]]:
+    representation = getattr(entity, "Representation", None)
+    identity = ifcopenshell.util.placement.get_local_placement(None)
+    pending = [
+        (item, identity, ())
+        for shape in getattr(representation, "Representations", ()) or ()
+        if str(getattr(shape, "RepresentationIdentifier", "")) == "Body"
+        for item in getattr(shape, "Items", ()) or ()
     ]
-    if len(solids) != 1:
+    candidates: list[tuple[Any, Any, tuple[str, ...]]] = []
+    while pending:
+        item, matrix, path = pending.pop()
+        if item.is_a("IfcMappedItem"):
+            if int(item.id()) in {
+                step_id for step_id, _ in path
+            }:
+                continue
+            mapped_matrix = (
+                ifcopenshell.util.placement.get_mappeditem_transformation(item)
+            )
+            if mapped_matrix is None:
+                continue
+            mapped = item.MappingSource.MappedRepresentation
+            pending.extend(
+                (
+                    child,
+                    matrix @ mapped_matrix,
+                    (*path, (int(item.id()), "IfcMappedItem")),
+                )
+                for child in getattr(mapped, "Items", ()) or ()
+            )
+            continue
+        if (
+            item.is_a("IfcExtrudedAreaSolid")
+            and getattr(item, "SweptArea", None) is not None
+            and item.SweptArea.is_a("IfcRectangleProfileDef")
+        ):
+            candidates.append(
+                (
+                    item,
+                    matrix,
+                    tuple(item_class for _, item_class in path),
+                )
+            )
+    return candidates
+
+
+def _rectangular_extrusion_axis_capability(
+    entity: Any,
+) -> dict[str, Any] | None:
+    identity = ifcopenshell.util.placement.get_local_placement(None)
+    candidates = _rectangular_extrusion_candidates(entity)
+    if not candidates:
+        return None
+    if len(candidates) != 1:
+        return {
+            "status": "unavailable",
+            "reason": "single_rectangular_body_extrusion_required",
+            "candidate_count": len(candidates),
+            "authority": "diagnostic_only",
+        }
+
+    try:
+        solid, representation_matrix, path = candidates[0]
+        scale = ifcopenshell.util.unit.calculate_unit_scale(entity.file) * 1000.0
+        entity_matrix = ifcopenshell.util.placement.get_local_placement(
+            getattr(entity, "ObjectPlacement", None)
+        )
+        solid_position = getattr(solid, "Position", None)
+        solid_matrix = (
+            ifcopenshell.util.placement.get_axis2placement(solid_position)
+            if solid_position is not None
+            else identity
+        )
+        direction = [
+            float(value)
+            for value in tuple(solid.ExtrudedDirection.DirectionRatios)
+        ]
+        direction.extend([0.0] * (3 - len(direction)))
+        direction = direction[:3]
+        direction_length = math.sqrt(
+            sum(value * value for value in direction)
+        )
+        if direction_length <= 0.0:
+            raise ValueError("zero_length_extrusion_direction")
+        unit_direction = [
+            value / direction_length for value in direction
+        ]
+        depth = float(solid.Depth)
+        if depth <= 0.0:
+            raise ValueError("non_positive_extrusion_depth")
+
+        matrix = entity_matrix @ representation_matrix @ solid_matrix
+        start = matrix @ [0.0, 0.0, 0.0, 1.0]
+        end = matrix @ [
+            unit_direction[0] * depth,
+            unit_direction[1] * depth,
+            unit_direction[2] * depth,
+            1.0,
+        ]
+        world_points = [
+            [float(point[index]) * scale for index in range(3)]
+            for point in (start, end)
+        ]
+        delta = [
+            world_points[1][index] - world_points[0][index]
+            for index in range(3)
+        ]
+        length_mm = math.sqrt(sum(value * value for value in delta))
+        if length_mm <= 0.0:
+            raise ValueError("zero_length_axis")
+
+        result = {
+            "status": "measured_current_ifc",
+            "world_start_mm": world_points[0],
+            "world_end_mm": world_points[1],
+            "world_direction": [value / length_mm for value in delta],
+            "length_mm": length_mm,
+            "provenance": "/".join(
+                (*path, "IfcExtrudedAreaSolid", "IfcRectangleProfileDef")
+            ),
+            "authority": "diagnostic_only",
+        }
+        storeys = [
+            relation.RelatingStructure
+            for relation in getattr(entity, "ContainedInStructure", ())
+            if relation.RelatingStructure.is_a("IfcBuildingStorey")
+        ]
+        if len(storeys) == 1:
+            storey = storeys[0]
+            storey_matrix = (
+                ifcopenshell.util.placement.get_local_placement(
+                    storey.ObjectPlacement
+                )
+            )
+            inverse = storey_matrix.copy()
+            rotation = storey_matrix[:3, :3]
+            inverse[:3, :3] = rotation.T
+            inverse[:3, 3] = -(rotation.T @ storey_matrix[:3, 3])
+            inverse[3, :] = (0.0, 0.0, 0.0, 1.0)
+            storey_local_points = []
+            for world_point in world_points:
+                project_point = [value / scale for value in world_point]
+                transformed = inverse @ [*project_point, 1.0]
+                storey_local_points.append(
+                    [
+                        float(transformed[index]) * scale
+                        for index in range(3)
+                    ]
+                )
+            result.update(
+                {
+                    "storey_global_id": str(storey.GlobalId),
+                    "storey_local_start_mm": storey_local_points[0],
+                    "storey_local_end_mm": storey_local_points[1],
+                }
+            )
+        return result
+    except Exception as error:
+        return {
+            "status": "unavailable",
+            "reason": "rectangular_body_axis_measurement_failed",
+            "error": str(error),
+            "authority": "diagnostic_only",
+        }
+
+
+def _structural_section_capability(entity: Any) -> dict[str, Any]:
+    candidates = _rectangular_extrusion_candidates(entity)
+    if len(candidates) != 1:
         return {
             "status": "unavailable",
             "reason": "explicit_single_rectangular_extrusion_required",
-            "candidate_count": len(solids),
+            "candidate_count": len(candidates),
             "authority": "diagnostic_only",
         }
     try:
-        solid = solids[0]
+        solid, representation_matrix, path = candidates[0]
         scale = ifcopenshell.util.unit.calculate_unit_scale(entity.file) * 1000.0
-        return {
+        entity_matrix = ifcopenshell.util.placement.get_local_placement(
+            getattr(entity, "ObjectPlacement", None)
+        )
+        solid_position = getattr(solid, "Position", None)
+        solid_matrix = (
+            ifcopenshell.util.placement.get_axis2placement(solid_position)
+            if solid_position is not None
+            else ifcopenshell.util.placement.get_local_placement(None)
+        )
+        frame = entity_matrix @ representation_matrix @ solid_matrix
+        profile_x = frame[:3, 0]
+        profile_y = frame[:3, 1]
+        profile_x_scale = math.sqrt(
+            sum(float(value) ** 2 for value in profile_x)
+        )
+        profile_y_scale = math.sqrt(
+            sum(float(value) ** 2 for value in profile_y)
+        )
+        if profile_x_scale <= 0.0 or profile_y_scale <= 0.0:
+            raise ValueError("zero_length_profile_direction")
+        world_profile_x_direction = [
+            float(value) / profile_x_scale for value in profile_x
+        ]
+        direction = [
+            float(value)
+            for value in tuple(solid.ExtrudedDirection.DirectionRatios)
+        ]
+        direction.extend([0.0] * (3 - len(direction)))
+        direction = direction[:3]
+        direction_length = math.sqrt(
+            sum(value * value for value in direction)
+        )
+        if direction_length <= 0.0:
+            raise ValueError("zero_length_extrusion_direction")
+        world_extrusion = frame[:3, :3] @ [
+            value / direction_length for value in direction
+        ]
+        extrusion_scale = math.sqrt(
+            sum(float(value) ** 2 for value in world_extrusion)
+        )
+        result = {
             "status": "measured_current_ifc",
             "shape": "rectangle",
-            "profile_x_mm": float(solid.SweptArea.XDim) * scale,
-            "profile_y_mm": float(solid.SweptArea.YDim) * scale,
-            "extrusion_depth_mm": float(solid.Depth) * scale,
-            "provenance": "IfcExtrudedAreaSolid/IfcRectangleProfileDef",
+            "profile_x_mm": (
+                float(solid.SweptArea.XDim) * scale * profile_x_scale
+            ),
+            "profile_y_mm": (
+                float(solid.SweptArea.YDim) * scale * profile_y_scale
+            ),
+            "extrusion_depth_mm": (
+                float(solid.Depth) * scale * extrusion_scale
+            ),
+            "world_profile_x_direction": world_profile_x_direction,
+            "provenance": "/".join(
+                (*path, "IfcExtrudedAreaSolid", "IfcRectangleProfileDef")
+            ),
             "authority": "diagnostic_only",
         }
+        storeys = [
+            relation.RelatingStructure
+            for relation in getattr(entity, "ContainedInStructure", ())
+            if relation.RelatingStructure.is_a("IfcBuildingStorey")
+        ]
+        if len(storeys) == 1:
+            storey_matrix = (
+                ifcopenshell.util.placement.get_local_placement(
+                    storeys[0].ObjectPlacement
+                )
+            )
+            storey_profile_x = (
+                storey_matrix[:3, :3].T @ world_profile_x_direction
+            )
+            storey_profile_x_scale = math.sqrt(
+                sum(float(value) ** 2 for value in storey_profile_x)
+            )
+            if storey_profile_x_scale <= 0.0:
+                raise ValueError("zero_length_storey_profile_direction")
+            result["storey_local_profile_x_direction"] = [
+                float(value) / storey_profile_x_scale
+                for value in storey_profile_x
+            ]
+        return result
     except Exception as error:
         return {
             "status": "unavailable",

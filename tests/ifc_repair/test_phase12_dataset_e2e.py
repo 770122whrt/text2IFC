@@ -17,16 +17,16 @@ from scripts.ifc_repair.validate_success_cases import (
 
 
 SUCCESS_CASE_IDS = {
-    "phase12-d7n-beam-loadbearing",
-    "phase12-d7n-column-loadbearing",
-    "phase12-d7n-beam-column-atomic",
-    "phase12-vvo-beam-material-present",
-    "phase12-vvo-column-material-absent",
-    "phase12-vvo-door-window-beam-column-atomic",
+    "phase12-v2-vvo-beam-loadbearing-restoration",
+    "phase12-v2-vvo-column-loadbearing-restoration",
+    "phase12-v2-vvo-beam-column-atomic-restoration",
+    "phase12-v2-vvo-beam-material-present-restoration",
+    "phase12-v2-vvo-column-material-absent-restoration",
+    "phase12-v2-vvo-door-window-beam-column-atomic-restoration",
 }
 FAILURE_CASE_IDS = {
     "phase12-d7n-beam-column-rollback",
-    "phase12-vvo-door-window-beam-column-rollback",
+    "phase12-v2-vvo-door-window-beam-column-rollback",
 }
 REQUIRED_COVERAGE = {
     "beam_only",
@@ -145,7 +145,7 @@ def _minimal_failure_matrix(root: Path) -> Path:
     summary = {
         "status": "passed",
         "matrix_complete": True,
-        "evidence_scope": "cross_scene_same_family_bimnet",
+        "evidence_scope": "single_scene_bimnet_vvo",
         "accepted_cases": accepted,
         "failed_cases": failed_cases,
         "coverage": {key: True for key in REQUIRED_COVERAGE},
@@ -376,7 +376,7 @@ def test_fixed_matrix_covers_frozen_structural_and_mixed_contract(
         "door_window_beam_column_atomic": True,
         "door_window_beam_column_rollback": True,
     }
-    assert summary["evidence_scope"] == "cross_scene_same_family_bimnet"
+    assert summary["evidence_scope"] == "single_scene_bimnet_vvo"
     assert summary["property_resolution"]["attempt_count"] == 2
     assert summary["property_resolution"]["provider_evidence_mode"] == (
         "injected_offline"
@@ -390,11 +390,11 @@ def test_fixed_matrix_covers_frozen_structural_and_mixed_contract(
     ] is True
 
     expected_psets = {
-        "phase12-d7n-beam-loadbearing": (
+        "phase12-v2-vvo-beam-loadbearing-restoration": (
             "beam is load bearing",
             "Pset_BeamCommon.LoadBearing",
         ),
-        "phase12-d7n-column-loadbearing": (
+        "phase12-v2-vvo-column-loadbearing-restoration": (
             "column is load bearing",
             "Pset_ColumnCommon.LoadBearing",
         ),
@@ -448,6 +448,11 @@ def test_every_accepted_source_case_is_hash_bound_reopened_and_public_only(
         case = phase12_offline_run / record["relative_path"]
         manifest = _read(case / "manifest.json")
         assert manifest["status"] == "passed"
+        assert manifest["schema_version"] == "text2ifc/phase12-offline-case/0.2"
+        assert manifest["structural_evidence_kind"] == "restoration"
+        assert manifest["structural_restoration_contract"] == (
+            "text2ifc/structural-restoration-audit/0.2"
+        )
         assert manifest["provider_evidence_mode"] == (
             "offline_bound_deterministic"
         )
@@ -468,6 +473,12 @@ def test_every_accepted_source_case_is_hash_bound_reopened_and_public_only(
         assert boundary["private_comparator_available_during_repair"] is False
 
         private = _read(case / "mutation_manifest.private.json")
+        restoration = _read(case / "structural-restoration-audit.json")
+        assert restoration["schema_version"] == (
+            manifest["structural_restoration_contract"]
+        )
+        assert restoration["status"] == "passed"
+        assert restoration["restoration_eligible"] is True
         private_tokens = {
             str(target["entity"]["global_id"])
             for target in private["targets"]
@@ -497,7 +508,7 @@ def test_four_family_case_is_one_success_and_one_real_rollback(
     success = (
         phase12_offline_run
         / "accepted"
-        / "phase12-vvo-door-window-beam-column-atomic"
+        / "phase12-v2-vvo-door-window-beam-column-atomic-restoration"
     )
     changeset = _read(success / "changeset.json")
     application = _read(success / "application.json")
@@ -512,6 +523,18 @@ def test_four_family_case_is_one_success_and_one_real_rollback(
     }
     assert application["valid"] is True
     assert application["published"] is True
+    private = _read(success / "mutation_manifest.private.json")
+    assert {target["entity"]["global_id"] for target in private["targets"]} >= {
+        "17tPjyQtf2L9JnbXXmcTUF",
+        "1rsYNObuDC4euALdw6WUK4",
+    }
+    restoration = _read(success / "structural-restoration-audit.json")
+    assert restoration["status"] == "passed", restoration["issues"]
+    assert restoration["restoration_eligible"] is True
+    assert {outcome["family"] for outcome in restoration["outcomes"]} == {
+        "beam",
+        "column",
+    }
 
     for case_id in FAILURE_CASE_IDS:
         failed = phase12_offline_run / "failed" / case_id
@@ -529,7 +552,7 @@ def test_four_family_case_is_one_success_and_one_real_rollback(
         assert application["valid"] is False
         assert application["published"] is False
         assert not list(failed.rglob("repaired.ifc"))
-        if case_id == "phase12-vvo-door-window-beam-column-rollback":
+        if case_id == "phase12-v2-vvo-door-window-beam-column-rollback":
             intent = _read(failed / "repair-intent.json")
             assert intent["operations"][-1]["provenance"][0]["reference"] == (
                 "request:/operations/6"
@@ -539,7 +562,7 @@ def test_four_family_case_is_one_success_and_one_real_rollback(
 def test_fixed_structural_case_is_byte_deterministic(tmp_path: Path) -> None:
     first = tmp_path / "first"
     second = tmp_path / "second"
-    only = ("phase12-d7n-beam-loadbearing",)
+    only = ("phase12-v2-vvo-beam-loadbearing-restoration",)
     first_result = run_offline_matrix(first, case_ids=only)
     second_result = run_offline_matrix(second, case_ids=only)
     assert first_result["status"] == second_result["status"] == "partial"
@@ -577,17 +600,24 @@ def test_curator_accepts_only_strict_cases_and_states_scope_honestly(
     ]
     assert {item["case_id"] for item in structural} == SUCCESS_CASE_IDS
     assert not FAILURE_CASE_IDS & {item["case_id"] for item in manifest["cases"]}
-    assert manifest["evidence_scope"] == "cross_scene_same_family_bimnet"
+    assert manifest["evidence_scope"] == "single_scene_bimnet_vvo"
     readme = (phase12_curated / "README.md").read_text(encoding="utf-8")
     assert (
-        "Cross-scene, same-family BIMNet evidence only; "
-        "not cross-dataset generalization."
+        "Single-scene BIMNet VVO evidence only; "
+        "not cross-scene or cross-dataset generalization."
     ) in readme
 
     validation = validate_success_case_collection(phase12_curated)
     assert validation.status == "passed", validation.errors
     assert validation.independently_recomputed_case_count == len(
         SUCCESS_CASE_IDS
+    )
+    assert {
+        item["structural_audit_coverage"] for item in validation.cases
+    } == {"strict_restoration_triplet_recomputed"}
+    assert all(
+        item["independent_structural_restoration_eligible"] is True
+        for item in validation.cases
     )
 
 
@@ -598,13 +628,14 @@ def test_phase12_damage_source_hash_is_recomputed_after_manifest_rehash(
     tampered = _single_case_collection(
         phase12_curated,
         tmp_path / "tampered",
-        case_id="phase12-d7n-beam-loadbearing",
+        case_id="phase12-v2-vvo-beam-loadbearing-restoration",
     )
     manifest = _read(tampered / "manifest.json")
     entry = next(
         item
         for item in manifest["cases"]
-        if item["case_id"] == "phase12-d7n-beam-loadbearing"
+        if item["case_id"]
+        == "phase12-v2-vvo-beam-loadbearing-restoration"
     )
     case_root = (tampered / entry["files"]).parent
     private_path = case_root / "mutation_manifest.private.json"
@@ -660,7 +691,7 @@ def test_phase12_damage_audit_cannot_be_disabled_by_schema_downgrade(
     tampered = _single_case_collection(
         phase12_curated,
         tmp_path / "schema-tampered",
-        case_id="phase12-d7n-beam-loadbearing",
+        case_id="phase12-v2-vvo-beam-loadbearing-restoration",
     )
     manifest = _read(tampered / "manifest.json")
     entry = manifest["cases"][0]

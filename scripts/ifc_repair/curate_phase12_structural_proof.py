@@ -31,10 +31,10 @@ ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_SOURCE = ROOT / "dataset/processed/ifc-repair/phase12-offline"
 DEFAULT_COLLECTION = ROOT / "dataset/processed/proof/ifc-repair-success-cases"
 EVIDENCE_MODE = "offline_bound_deterministic"
-EVIDENCE_SCOPE = "cross_scene_same_family_bimnet"
+EVIDENCE_SCOPE = "single_scene_bimnet_vvo"
 SCOPE_SENTENCE = (
-    "Cross-scene, same-family BIMNet evidence only; "
-    "not cross-dataset generalization."
+    "Single-scene BIMNet VVO evidence only; "
+    "not cross-scene or cross-dataset generalization."
 )
 
 
@@ -52,18 +52,18 @@ def _property_authority_eligible(case: Mapping[str, Any]) -> bool:
     )
 SUCCESS_CASE_IDS = frozenset(
     {
-        "phase12-d7n-beam-loadbearing",
-        "phase12-d7n-column-loadbearing",
-        "phase12-d7n-beam-column-atomic",
-        "phase12-vvo-beam-material-present",
-        "phase12-vvo-column-material-absent",
-        "phase12-vvo-door-window-beam-column-atomic",
+        "phase12-v2-vvo-beam-loadbearing-restoration",
+        "phase12-v2-vvo-column-loadbearing-restoration",
+        "phase12-v2-vvo-beam-column-atomic-restoration",
+        "phase12-v2-vvo-beam-material-present-restoration",
+        "phase12-v2-vvo-column-material-absent-restoration",
+        "phase12-v2-vvo-door-window-beam-column-atomic-restoration",
     }
 )
 FAILURE_CASE_IDS = frozenset(
     {
         "phase12-d7n-beam-column-rollback",
-        "phase12-vvo-door-window-beam-column-rollback",
+        "phase12-v2-vvo-door-window-beam-column-rollback",
     }
 )
 FAILURE_INPUT_CONTRACTS = {
@@ -75,12 +75,12 @@ FAILURE_INPUT_CONTRACTS = {
         "bytes": 3_293_724,
         "blocking_code": "STRUCTURAL_SAME_AXIS_OVERLAP",
     },
-    "phase12-vvo-door-window-beam-column-rollback": {
+    "phase12-v2-vvo-door-window-beam-column-rollback": {
         "damaged_path": "damaged.ifc",
         "sha256": (
-            "sha256:6824086b4171cce034acaa23ad51c3020d87ed44c0aead62979a4b4ad17c4db3"
+            "sha256:4a0116d439bcc286e501f459afb4fe31c9607d9233f18fb373921d991c436e66"
         ),
-        "bytes": 2_431_536,
+        "bytes": 2_428_264,
         "blocking_code": "STRUCTURAL_SAME_AXIS_OVERLAP",
     },
 }
@@ -124,6 +124,7 @@ ROLE_BY_BASENAME = {
     "three-way-audit.json": "three_way_l0_l1_l2_audit",
     "release-decision.json": "l0_l1_l2_release_decision",
     "AUDIT-REPORT.md": "human_readable_three_way_audit",
+    "structural-restoration-audit.json": "structural_restoration_audit",
 }
 REQUIRED_SOURCE_BASENAMES = frozenset(
     {
@@ -139,6 +140,7 @@ REQUIRED_SOURCE_BASENAMES = frozenset(
         "comparison.json",
         "production-boundary.json",
         "mutation_manifest.private.json",
+        "structural-restoration-audit.json",
     }
 )
 
@@ -232,8 +234,14 @@ def _validate_source_case(
         raise ValueError("SOURCE_CASE_ID_MISMATCH")
     if manifest.get("status") != "passed":
         raise ValueError("SOURCE_CASE_NOT_PASSED")
-    if manifest.get("schema_version") != "text2ifc/phase12-offline-case/0.1":
+    if manifest.get("schema_version") != "text2ifc/phase12-offline-case/0.2":
         raise ValueError("SOURCE_PHASE12_SCHEMA_MISMATCH")
+    if manifest.get("structural_evidence_kind") != "restoration":
+        raise ValueError("SOURCE_STRUCTURAL_EVIDENCE_KIND_MISMATCH")
+    if manifest.get("structural_restoration_contract") != (
+        "text2ifc/structural-restoration-audit/0.2"
+    ):
+        raise ValueError("SOURCE_STRUCTURAL_RESTORATION_CONTRACT_MISMATCH")
     if manifest.get("evidence_scope") != EVIDENCE_SCOPE:
         raise ValueError("SOURCE_CASE_SCOPE_MISMATCH")
     if manifest.get("provider_evidence_mode") != EVIDENCE_MODE:
@@ -720,7 +728,7 @@ def curate(
                 validated_by_id.get(entry["case_id"], {}).get(
                     "structural_audit_coverage"
                 )
-                != "strict_structural_recomputed"
+                != "strict_restoration_triplet_recomputed"
                 for entry in entries
             ):
                 raise ValueError("PHASE12_FINAL_CASE_NOT_STRICTLY_RECOMPUTED")

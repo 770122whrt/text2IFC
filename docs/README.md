@@ -10,6 +10,9 @@
 | 了解已有/damaged IFC + 文本如何生成可验证的新 IFC，以及后续 Phase 安排 | [IFC2X3 修复链路与后续路线](architecture/ifc-repair-pipeline-status-and-roadmap.md) |
 | 了解当前系统如何运行 | [当前工作流与数据流](architecture/current-workflow-and-data-flow.md) |
 | 浏览系统架构和阶段演进 | [Architecture Index](architecture/README.md) |
+| 规范 Agent Debug、能力提升声明和真实 LLM 前测试 | [Agent 能力评测与真实 LLM 准入协议](validation/agent-capability-evaluation.md) |
+| 接手 Phase 12 Repair Pipeline 与 Plan 07 收尾 | [Phase 12 Plan 07 技术 handover](handoffs/phase12-plan07-closeout-handover-2026-09-03.md) |
+| 人工检查 Plan 07 IFC 与证据矩阵 | [Plan 07 人工 Proof 入口](../dataset/processed/proof/ifc-repair-success-cases/PLAN07-REPORT.md) |
 | 查找验证、评估和 UAT 方案 | [Validation Index](validation/README.md) |
 | 查找 BIM JSON、IFC2X3 和 Provider 参考 | [Reference Index](reference/README.md) |
 | 查看研究总结和周报 | [Reports Index](reports/README.md) |
@@ -17,6 +20,10 @@
 
 ## 当前重点
 
+- [Phase 12 Plan 07 技术 handover](handoffs/phase12-plan07-closeout-handover-2026-09-03.md)
+  - 面向后续接手者说明项目分层、Repair Pipeline、关键代码、证据入口、已知风险和接续顺序。
+- [Plan 07 人工 Proof 入口](../dataset/processed/proof/ifc-repair-success-cases/PLAN07-REPORT.md)
+  - 直接查看 9 份 repaired IFC、1 个正确无输出 guard，以及各案例的人读报告。
 - [IFC2X3 修复链路与后续路线](architecture/ifc-repair-pipeline-status-and-roadmap.md)
   - 参考成功案例文档排布，完整说明已实现 Repair Pipeline、放行证据、失败路由
     和后续 Roadmap。
@@ -80,6 +87,7 @@ Schema、EXPRESS Schema 和数据 manifest 仍保留在其机器可读目录。
 - [BIM JSON 1.0 Contract Reference](reference/bim-json-1.0.md)
 - [Dataset Organization](../dataset/data_organization.md)
 - [External Data Source Catalog](../dataset/sources/CATALOG.md)
+- [Processed Dataset 与 Proof 分层](../dataset/processed/README.md)
 - [Dataset Manifest Format](../dataset/manifests/README.md)
 - [Authorized BIMNet IFC2X3 Manifest](../dataset/manifests/bimnet-ifc2x3.jsonl)
 - [BIMNet Extraction Audit](../dataset/processed/bim-json-2.0/extraction-audit.json)

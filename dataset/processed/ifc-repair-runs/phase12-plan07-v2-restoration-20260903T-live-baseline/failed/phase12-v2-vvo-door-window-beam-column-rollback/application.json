@@ -1,0 +1,415 @@
+{
+  "audit": {
+    "checks": [
+      {
+        "code": "CHANGESET_SCHEMA",
+        "evidence": {},
+        "status": "passed"
+      },
+      {
+        "code": "IFC_SCHEMA",
+        "evidence": {
+          "actual_schema": "IFC2X3"
+        },
+        "status": "passed"
+      },
+      {
+        "code": "BASE_MODEL_FINGERPRINT",
+        "evidence": {
+          "actual_fingerprint": "sha256:4a0116d439bcc286e501f459afb4fe31c9607d9233f18fb373921d991c436e66"
+        },
+        "status": "passed"
+      },
+      {
+        "code": "SOURCE_REQUEST_HASH",
+        "evidence": {
+          "actual_request_hash": "sha256:d756820bc6bb07cdb6ef05a8b36a670262fc23fa0cb35e3ac8941add2d768cfb"
+        },
+        "status": "passed"
+      },
+      {
+        "code": "OPERATION_REGISTRATION",
+        "evidence": {
+          "operation_type": "add_window_with_opening_to_wall"
+        },
+        "status": "passed"
+      },
+      {
+        "code": "OPERATION_REGISTRATION",
+        "evidence": {
+          "operation_type": "add_window_with_opening_to_wall"
+        },
+        "status": "passed"
+      },
+      {
+        "code": "OPERATION_REGISTRATION",
+        "evidence": {
+          "operation_type": "fill_existing_opening_with_door"
+        },
+        "status": "passed"
+      },
+      {
+        "code": "OPERATION_REGISTRATION",
+        "evidence": {
+          "operation_type": "fill_existing_opening_with_door"
+        },
+        "status": "passed"
+      },
+      {
+        "code": "OPERATION_REGISTRATION",
+        "evidence": {
+          "operation_type": "add_beam"
+        },
+        "status": "passed"
+      },
+      {
+        "code": "OPERATION_REGISTRATION",
+        "evidence": {
+          "operation_type": "add_column"
+        },
+        "status": "passed"
+      },
+      {
+        "code": "OPERATION_REGISTRATION",
+        "evidence": {
+          "operation_type": "add_beam"
+        },
+        "status": "passed"
+      }
+    ],
+    "issues": [
+      {
+        "code": "STRUCTURAL_SAME_AXIS_OVERLAP",
+        "message": "Structural member overlaps an operation on the same axis.",
+        "path": "/operations/6/parameters/axis/start"
+      }
+    ],
+    "operation_audits": [
+      {
+        "checks": [
+          {
+            "code": "OPENING_WITHIN_WALL_HORIZONTAL",
+            "evidence": {
+              "requested_interval_mm": [
+                4111.961,
+                5291.961
+              ],
+              "wall_length_mm": 17765.29189
+            },
+            "status": "passed"
+          },
+          {
+            "code": "OPENING_WITHIN_WALL_VERTICAL",
+            "evidence": {
+              "requested_interval_mm": [
+                2670.828,
+                3170.828
+              ],
+              "wall_height_mm": 3581.700793
+            },
+            "status": "passed"
+          },
+          {
+            "code": "WALL_VOID_DEPTH_RESOLVED",
+            "evidence": {
+              "wall_thickness_mm": 240.0
+            },
+            "status": "passed"
+          },
+          {
+            "code": "OPENING_INTERVAL_AVAILABLE",
+            "evidence": {
+              "overlapping_region_mm": null
+            },
+            "status": "passed"
+          }
+        ],
+        "evidence": {
+          "existing_opening_intervals_mm": [
+            [
+              1041.29189,
+              2221.29189
+            ],
+            [
+              6661.29189,
+              7961.29189
+            ]
+          ],
+          "existing_opening_regions_mm": [
+            {
+              "horizontal_interval_mm": [
+                1041.29189,
+                2221.29189
+              ],
+              "vertical_interval_mm": [
+                2672.616472,
+                3172.616472
+              ]
+            },
+            {
+              "horizontal_interval_mm": [
+                6661.29189,
+                7961.29189
+              ],
+              "vertical_interval_mm": [
+                2069.376442,
+                2569.376442
+              ]
+            }
+          ],
+          "requested_interval_mm": [
+            4111.961,
+            5291.961
+          ],
+          "requested_vertical_interval_mm": [
+            2670.828,
+            3170.828
+          ],
+          "wall_dimensions_mm": {
+            "height": 3581.700793,
+            "length": 17765.29189,
+            "thickness": 240.0
+          },
+          "wall_global_id": "2CsmzAChHF6O6maGXlo6yJ"
+        },
+        "operation_id": "operation-window-001",
+        "operation_type": "add_window_with_opening_to_wall",
+        "valid": true
+      },
+      {
+        "checks": [
+          {
+            "code": "OPENING_WITHIN_WALL_HORIZONTAL",
+            "evidence": {
+              "requested_interval_mm": [
+                8880.561,
+                9750.561
+              ],
+              "wall_length_mm": 13455.560798
+            },
+            "status": "passed"
+          },
+          {
+            "code": "OPENING_WITHIN_WALL_VERTICAL",
+            "evidence": {
+              "requested_interval_mm": [
+                610.0,
+                2980.0
+              ],
+              "wall_height_mm": 4175.094268
+            },
+            "status": "passed"
+          },
+          {
+            "code": "WALL_VOID_DEPTH_RESOLVED",
+            "evidence": {
+              "wall_thickness_mm": 240.0
+            },
+            "status": "passed"
+          },
+          {
+            "code": "OPENING_INTERVAL_AVAILABLE",
+            "evidence": {
+              "overlapping_region_mm": null
+            },
+            "status": "passed"
+          }
+        ],
+        "evidence": {
+          "existing_opening_intervals_mm": [
+            [
+              3560.560798,
+              4430.560798
+            ],
+            [
+              5740.560798,
+              7580.560798
+            ],
+            [
+              5750.560798,
+              7550.560798
+            ],
+            [
+              12230.560798,
+              13055.560798
+            ]
+          ],
+          "existing_opening_regions_mm": [
+            {
+              "horizontal_interval_mm": [
+                3560.560798,
+                4430.560798
+              ],
+              "vertical_interval_mm": [
+                608.563584,
+                2978.563584
+              ]
+            },
+            {
+              "horizontal_interval_mm": [
+                5740.560798,
+                7580.560798
+              ],
+              "vertical_interval_mm": [
+                0.0,
+                2460.0
+              ]
+            },
+            {
+              "horizontal_interval_mm": [
+                5750.560798,
+                7550.560798
+              ],
+              "vertical_interval_mm": [
+                2783.268929,
+                3583.268929
+              ]
+            },
+            {
+              "horizontal_interval_mm": [
+                12230.560798,
+                13055.560798
+              ],
+              "vertical_interval_mm": [
+                -0.359199,
+                2975.094268
+              ]
+            }
+          ],
+          "requested_interval_mm": [
+            8880.561,
+            9750.561
+          ],
+          "requested_vertical_interval_mm": [
+            610.0,
+            2980.0
+          ],
+          "wall_dimensions_mm": {
+            "height": 4175.094268,
+            "length": 13455.560798,
+            "thickness": 240.0
+          },
+          "wall_global_id": "0jltRti3rFigAmdXYhXxqI"
+        },
+        "operation_id": "operation-window-002",
+        "operation_type": "add_window_with_opening_to_wall",
+        "valid": true
+      },
+      {
+        "checks": [
+          {
+            "code": "EMPTY_OPENING_AVAILABLE",
+            "evidence": {
+              "host_wall_global_id": "2HNE4WMQ1CXebZMaih8XoD",
+              "opening_global_id": "2IUEnGd5v4Yfg1ZkLtd0qa"
+            },
+            "status": "passed"
+          }
+        ],
+        "evidence": {
+          "opening_global_id": "2IUEnGd5v4Yfg1ZkLtd0qa"
+        },
+        "operation_id": "operation-door-001",
+        "operation_type": "fill_existing_opening_with_door",
+        "valid": true
+      },
+      {
+        "checks": [
+          {
+            "code": "EMPTY_OPENING_AVAILABLE",
+            "evidence": {
+              "host_wall_global_id": "2HNE4WMQ1CXebZMaih8Xi_",
+              "opening_global_id": "1B$rgWypT66viEf30I1iIv"
+            },
+            "status": "passed"
+          }
+        ],
+        "evidence": {
+          "opening_global_id": "1B$rgWypT66viEf30I1iIv"
+        },
+        "operation_id": "operation-door-002",
+        "operation_type": "fill_existing_opening_with_door",
+        "valid": true
+      },
+      {
+        "checks": [
+          {
+            "code": "STRUCTURAL_STOREY_AVAILABLE",
+            "evidence": {
+              "storey_global_id": "1vTeahUkP60PdWqwCTjUuM"
+            },
+            "status": "passed"
+          },
+          {
+            "code": "STRUCTURAL_AXIS_AVAILABLE",
+            "evidence": {
+              "axis_extent_mm": 4940.000000000001
+            },
+            "status": "passed"
+          },
+          {
+            "code": "STRUCTURAL_TYPE_AUTHORIZED",
+            "evidence": {
+              "assignment_count": 1
+            },
+            "status": "passed"
+          }
+        ],
+        "evidence": {
+          "axis_extent_mm": 4940.000000000001,
+          "storey_global_id": "1vTeahUkP60PdWqwCTjUuM"
+        },
+        "operation_id": "phase12-v2-vvo-door-window-beam-column-rollback-beam-1",
+        "operation_type": "add_beam",
+        "valid": true
+      },
+      {
+        "checks": [
+          {
+            "code": "STRUCTURAL_STOREY_AVAILABLE",
+            "evidence": {
+              "storey_global_id": "1vTeahUkP60PdWqwCTjeRs"
+            },
+            "status": "passed"
+          },
+          {
+            "code": "STRUCTURAL_AXIS_AVAILABLE",
+            "evidence": {
+              "axis_extent_mm": 3712.059993
+            },
+            "status": "passed"
+          },
+          {
+            "code": "STRUCTURAL_TYPE_AUTHORIZED",
+            "evidence": {
+              "assignment_count": 1
+            },
+            "status": "passed"
+          }
+        ],
+        "evidence": {
+          "axis_extent_mm": 3712.059993,
+          "storey_global_id": "1vTeahUkP60PdWqwCTjeRs"
+        },
+        "operation_id": "phase12-v2-vvo-door-window-beam-column-rollback-column-2",
+        "operation_type": "add_column",
+        "valid": true
+      }
+    ],
+    "schema_version": "text2ifc/ifc-repair-audit/0.1",
+    "valid": false
+  },
+  "issues": [
+    {
+      "code": "STRUCTURAL_SAME_AXIS_OVERLAP",
+      "message": "Structural member overlaps an operation on the same axis.",
+      "path": "/operations/6/parameters/axis/start"
+    }
+  ],
+  "operations": [],
+  "output": null,
+  "postconditions": [],
+  "published": false,
+  "schema_version": "text2ifc/ifc-repair-application/0.1",
+  "valid": false
+}
