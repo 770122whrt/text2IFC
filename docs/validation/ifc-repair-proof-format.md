@@ -8,7 +8,7 @@
 
 每个正式集合分为两层：
 
-1. **人类可读视图**：集合根目录的 `README.md`、`REPORT.md`、`manifest.json` 和 `accepted-cases/`。它负责导航、解释、直接展示必要 IFC。
+1. **人类可读视图**：集合根目录的 `README.md`、`REPORT.md`、`manifest.json`，以及按 `family/kind/case-id` 分类的案例目录。它负责导航、解释、直接展示必要 IFC。
 2. **机器权威包**：既有 curator/proof/run package。它保存 Provider attempts、Prompt/profile、intent、resolution、candidate/admissibility、ChangeSet、apply、terminal、evaluation、hash 和独立复算结果。
 
 人类视图是 additive discovery layer，不移动、不重命名、不改写 accepted machine authority。二者若有差异，必须停止发布并调查；不能靠修改报告掩盖差异。
@@ -20,21 +20,26 @@
 ├── README.md
 ├── REPORT.md
 ├── manifest.json
-├── accepted-cases/
-│   └── <case-id>/
-│       ├── REPORT.md
-│       ├── request.txt
-│       ├── damaged.ifc
-│       ├── repaired.ifc          # 仅成功修复案
-│       ├── original.ifc          # 仅在角色合法且明确时
-│       ├── NO-REPAIR.md          # 仅预期无输出案
-│       └── evidence/
-│           └── README.md         # 指向完整机器权威
-└── <machine-authority>/
-    └── ...
+├── <family>/
+│   └── <kind>/
+│       └── <case-id>/
+│           ├── 01-original.ifc   # 仅在角色合法且明确时
+│           ├── 02-damaged.ifc
+│           ├── 03-repaired.ifc   # 仅成功修复案
+│           ├── NO-REPAIR.md      # 仅预期无输出案
+│           ├── REPORT.md
+│           ├── FILES.json
+│           ├── input/
+│           ├── agent/
+│           ├── changeset/
+│           ├── validation/
+│           └── private-evaluation/
+└── <review-manifest>.json        # 尚未 accepted 的人工检查批次
 ```
 
-案例根目录只放审阅者首先需要的文件。庞大的 Provider/runtime 树不再复制到 `accepted-cases/`，而由 `evidence/README.md` 给出短路径。
+案例根目录直接展示 IFC、报告和文件索引，过程证据按职责放入子目录。庞大的 runtime 树不重复复制；报告应指向其 append-only machine authority。
+
+待人工检查的批次使用独立 review manifest，并明确标记 `pending_human_review`。在人工检查或冻结验收门批准前，不得把它写进集合主 `manifest.json` 的 accepted 列表。
 
 ## 3. 文件角色
 
@@ -47,10 +52,10 @@
 ### 案例级文件
 
 - `REPORT.md`：结论、Provider call count、语义结果、确定性执行、产物、Proof 结论和限制。
-- `request.txt`：实际公共 repair request；不含 private Gold、mutation truth 或 pristine-only facts。
-- `damaged.ifc`：实际进入 production repair path 的输入。
-- `repaired.ifc`：成功发布并可 reopen 的修复输出。成功案必须直接可见。
-- `original.ifc`：可选。只有在 original 角色在运行前已经合法定义时才允许出现。
+- `input/request.txt`：实际公共 repair request；不含 private Gold、mutation truth 或 pristine-only facts。
+- `02-damaged.ifc`：实际进入 production repair path 的输入。
+- `03-repaired.ifc`：成功发布并可 reopen 的修复输出。成功案必须直接可见。
+- `01-original.ifc`：可选。只有 original 角色合法且明确时才允许出现。
 - `NO-REPAIR.md`：预期无输出案必须解释为什么没有 repaired IFC，以及零 mutation/零 publish 的证据。
 - `evidence/README.md`：连接到完整 append-only authority，不建立新的真值。
 
@@ -61,15 +66,15 @@
 - `private_ground_truth`：运行前冻结、evaluator-only、具有合法 pristine/damaged/repaired truth，可用于相应 IFCCompare。
 - `physical_fixture_non_private_audit`：三份物理 IFC 均存在，便于人工或结构审计，但不能声称 private triplet-audit publishable。
 
-如果没有运行前冻结的 case-specific private truth，就不复制 `original.ifc`，并把 IFCCompare 明确写为 N/A。不能在看到 repaired 后再把共享 pristine、相似文件或人工挑选文件改标为 Gold。
+如果没有运行前冻结的 case-specific private truth，可以在明确声明 `physical_fixture_non_private_audit` 时保留 `01-original.ifc` 供人工物理对照，但 IFCCompare 必须写为 N/A。若两种合法角色都不成立，就不复制 original。不能在看到 repaired 后再把共享 pristine、相似文件或人工挑选文件改标为 Gold。
 
 ## 5. no-output 案例
 
 guard、unsupported 或原子回滚案例的正确结果可能是没有 repaired IFC。这类案例必须：
 
 - `outcome=no_output`；
-- 存在 `damaged.ifc` 与 `NO-REPAIR.md`；
-- 不存在 `repaired.ifc`；
+- 存在 `02-damaged.ifc` 与 `NO-REPAIR.md`；
+- 不存在 `03-repaired.ifc`；
 - 报告 Stage 2/apply/publish 是否为零、source 是否不变，以及适用的 reason code；
 - 将 L0/L1/L2 标为 N/A，而不是伪造 PASS。
 
@@ -112,8 +117,8 @@ full curator 的典型触发条件只有：新 accepted run 安装、re-curation
 
 ```powershell
 .venv\Scripts\python scripts\ifc_repair\validate_human_proof_layout.py --root dataset\processed\proof\repair-milestone-r1 --json
-.venv\Scripts\python scripts\ifc_repair\validate_human_proof_layout.py --root dataset\processed\proof\phase12-plan07-final --json
-.venv\Scripts\python -m pytest tests\ifc_repair\test_human_proof_layout.py -q
+.venv\Scripts\python scripts\ifc_repair\install_plan07_human_proof.py --validate-only
+.venv\Scripts\python -m pytest tests\ifc_repair\test_plan07_human_proof_install.py -q
 ```
 
 这些命令验证人类视图的可发现性和角色安全，不冒充 semantic capability evaluation，也不替代原机器包已经要求的独立 Proof。

@@ -133,13 +133,22 @@ Window 字段伪装成新能力。
 
 Cross-scene, same-family BIMNet evidence only; not cross-dataset generalization.
 
-## Phase 12 structural Proof
+## Phase 12 Plan 07 人工检查入口
 
-Phase 12 adds five strict offline Beam/Column cases and one atomic
-Door/Window/Beam/Column case, covering 12 accepted operations. These are
-`offline_bound_deterministic` operation-engine Proof cases, not live Provider
-evidence. Their current layout supersedes the legacy Beam/Column examples
-above:
+修正后的 Plan 07 证据已经按本集合既有案例格式整理，统一入口见
+[PLAN07-REPORT.md](PLAN07-REPORT.md)。它包含：
+
+- 6 个离线确定性 restoration/atomicity 案例，共 12 个 operation；
+- genuine run `uat-20260903T095045509630Z` 的 3 个 repaired 案例；
+- 同一 genuine run 的 1 个 expected no-repair program guard；
+- 每个 repaired 案例根目录直接提供 `01-original.ifc`、
+  `02-damaged.ifc` 和 `03-repaired.ifc`。
+
+当前 `plan07-manifest.json` 状态为 `pending_human_review`，这些案例尚未写入
+本集合主 `manifest.json` 的 accepted 列表。人工检查通过后再完成 Plan 07
+状态更新。Repair Milestone R1 不在本次目录整理范围内。
+
+目录仍按 operation family 和 case kind 分类：
 
 ```text
 structural/single/<case-id>/
