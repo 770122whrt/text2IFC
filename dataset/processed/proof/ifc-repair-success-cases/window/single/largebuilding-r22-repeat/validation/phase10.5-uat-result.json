@@ -1,0 +1,195 @@
+{
+  "live": {
+    "actual_contracts": {
+      "actual_bound_changeset": "text2ifc/ifc-repair-changeset/0.3",
+      "actual_repair_intent": "text2ifc/ifc-repair-intent/0.4",
+      "expected_bound_changeset": "text2ifc/ifc-repair-changeset/0.3",
+      "requested_repair_intent": "text2ifc/ifc-repair-intent/0.4"
+    },
+    "command": [
+      "-B",
+      "E:\\code for project\\bimnet\\scripts\\ifc_repair\\run_phase10_1_full_replication_uat.py",
+      "--live",
+      "--env-file",
+      "E:\\code for project\\bimnet\\.env",
+      "--output-root",
+      "E:\\code for project\\bimnet\\dataset\\processed\\ifc-repair\\phase10.5-window-fidelity-live-20260726-r22\\deepseek-live",
+      "--intent-schema-version",
+      "text2ifc/ifc-repair-intent/0.4"
+    ],
+    "configured_input_tokens": 65536,
+    "configured_output_tokens": 65536,
+    "contract_match": true,
+    "delegated_result_path": "uat-20260726T120631197306Z/result.json",
+    "prompt_response_artifact_hashes": [
+      {
+        "bytes": 17422,
+        "path": "uat-20260726T120631197306Z/runtime/runs/repair-a6ba5ab6ea5645d684558930a5ea3d06/intent/rendered-prompt.md",
+        "sha256": "sha256:eb0b9e7bd1fc44724be8c58ba9b5c5eff7cad9c079622c0481630bd1a1f34a80"
+      },
+      {
+        "bytes": 5589,
+        "path": "uat-20260726T120631197306Z/runtime/runs/repair-a6ba5ab6ea5645d684558930a5ea3d06/intent/attempt-001.json",
+        "sha256": "sha256:59b549265ec6921cec2490941b0b9cc045e64112381addd519c2ae7c4d31c18d"
+      },
+      {
+        "bytes": 10850,
+        "path": "uat-20260726T120631197306Z/runtime/runs/repair-a6ba5ab6ea5645d684558930a5ea3d06/changeset/attempt-001/rendered-prompt.md",
+        "sha256": "sha256:7fbf0776433b70225e257a5a39b33827c47943730b2daa3877fb1b1bef505d43"
+      },
+      {
+        "bytes": 2979,
+        "path": "uat-20260726T120631197306Z/runtime/runs/repair-a6ba5ab6ea5645d684558930a5ea3d06/changeset/attempt-001/raw-response.txt",
+        "sha256": "sha256:91eb4d3c4e41e9e4635124bc745d8f95801bb39b16135acc5f4ae35d58950325"
+      }
+    ],
+    "provider": "deepseek-openai-compatible",
+    "provider_attempts": {
+      "stage1": 1,
+      "stage2": 1
+    },
+    "requested_contracts": {
+      "actual_bound_changeset": "text2ifc/ifc-repair-changeset/0.3",
+      "actual_repair_intent": "text2ifc/ifc-repair-intent/0.4",
+      "expected_bound_changeset": "text2ifc/ifc-repair-changeset/0.3",
+      "requested_repair_intent": "text2ifc/ifc-repair-intent/0.4"
+    },
+    "returncode": 0,
+    "runtime_source": {
+      "occurrence_fidelity_path": "E:/code for project/bimnet/src/text2ifc_ifc_repair/occurrence_fidelity.py",
+      "occurrence_fidelity_sha256": "sha256:1f067392cb8bb23aabf78ef8f9064779f39d6f925b7fca70d39cfef1c2930749",
+      "production_evaluation_mode": "sequential"
+    },
+    "status": "passed",
+    "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_tail": "",
+    "stdout_sha256": "sha256:266e2c0bc7808410c21472ce8c68251a28f07f9dedbb896d5d09259c00e41a96",
+    "stdout_tail": "{\"confirmation\": {\"item_count\": 16, \"preview_hash\": \"sha256:d084ecc44d1d1e5f1fd75cf4600cab7b9d87c48f2f5157c82f8b91542953dd8c\", \"preview_kind\": \"property_batch\"}, \"contract_pass\": true, \"contract_versions\": {\"actual_bound_changeset\": \"text2ifc/ifc-repair-changeset/0.3\", \"actual_repair_intent\": \"text2ifc/ifc-repair-intent/0.4\", \"expected_bound_changeset\": \"text2ifc/ifc-repair-changeset/0.3\", \"requested_repair_intent\": \"text2ifc/ifc-repair-intent/0.4\"}, \"damaged_sha256\": \"ca703845ddf4a434eea0317498fb29893877f87d66047cf6c890a61cd2844933\", \"mapped_attribute_complete_match\": false, \"mapped_direct_properties_complete_match\": false, \"mapped_effective_properties_complete_match\": true, \"official_added_count\": 1, \"official_changed_count\": 126, \"official_deleted_count\": 1, \"original_window_global_id\": \"2cXV28XOjE6f6irgi0CO4t\", \"private_benchmark_levels\": {\"L1\": \"passed\", \"L2\": \"passed\", \"L3\": \"not_required\"}, \"production_levels\": {\"L1\": \"passed\", \"L2\": \"passed\", \"L3\": \"not_required\"}, \"property_fact_count\": 16, \"provider\": [{\"model\": \"deepseek-v4-flash\", \"provider\": \"deepseek-openai-compatible\", \"stage\": \"stage1\"}, {\"model\": \"deepseek-v4-flash\", \"provider\": \"deepseek-openai-compatible\", \"stage\": \"stage2\"}], \"provider_attempts\": {\"stage1\": 1, \"stage2\": 1}, \"reason_code\": null, \"repaired_sha256\": \"be464c323a3b956fa3e039e7e185bcc46f7b9a7e633dec069b7a6c32ebf3cb19\", \"repaired_window_global_id\": \"366opc$vnGhBMHfcrrv5Kg\", \"run_id\": \"repair-a6ba5ab6ea5645d684558930a5ea3d06\", \"runtime_source\": {\"occurrence_fidelity_path\": \"E:/code for project/bimnet/src/text2ifc_ifc_repair/occurrence_fidelity.py\", \"occurrence_fidelity_sha256\": \"sha256:1f067392cb8bb23aabf78ef8f9064779f39d6f925b7fca70d39cfef1c2930749\", \"production_evaluation_mode\": \"sequential\"}, \"schema_version\": \"text2ifc/phase10.1-full-replication/0.1\", \"source_sha256\": \"102f8123f85eae5e237d7f6a9dcbc364bd5f1c0cfb94b40a7eeb2d7eac9bb725\", \"status\": \"succeeded\", \"synthetic_fallback\": false}\n",
+    "synthetic_fallback": false,
+    "wall_seconds": 100.84299999999348
+  },
+  "manifest": "dataset/manifests/ifc-repair-cases/phase10.5-window-fidelity-cases.json",
+  "matrix": [
+    {
+      "bound_changeset_version": "text2ifc/ifc-repair-changeset/0.3",
+      "case_id": "largebuilding-explicit-single-window",
+      "mode": "complete_explicit",
+      "public_facts": [
+        "opening.width_mm=915",
+        "opening.height_mm=1830",
+        "opening.sill_height_mm=305",
+        "Pset_WindowCommon.IsExternal=true",
+        "BaseQuantities.Width=915",
+        "BaseQuantities.Height=1830",
+        "BaseQuantities.Area=1674450"
+      ],
+      "public_request": "在指定墙上恢复一扇 915 mm × 1830 mm、窗台高 305 mm 的窗。设置 Pset_WindowCommon.IsExternal=true，并写入 Window BaseQuantities 的 Width、Height、Area。",
+      "public_request_sha256": "sha256:cf9e9dc353112722e74cfaf96a39c9f46ddbe990be14fca8c0fae0bf95c06174",
+      "repair_intent_version": "text2ifc/ifc-repair-intent/0.4",
+      "semantic_manifest_version": "text2ifc/ifc-repair-semantic-manifest/0.2",
+      "source": {
+        "bytes": 1292595,
+        "path": "dataset/external/bim-whale-ifc-samples/LargeBuilding/IFC/LargeBuilding.ifc",
+        "sha256": "sha256:102f8123f85eae5e237d7f6a9dcbc364bd5f1c0cfb94b40a7eeb2d7eac9bb725"
+      }
+    },
+    {
+      "bound_changeset_version": "text2ifc/ifc-repair-changeset/0.3",
+      "case_id": "largebuilding-exact-occurrence-reference",
+      "mode": "exact_occurrence",
+      "public_facts": [
+        "occurrence_reuse.mode=exact_occurrence",
+        "occurrence_reuse.reference_kind=global_id",
+        "occurrence_reuse.reference=2cXV28XOjE6f6irhu0CO_c",
+        "include=Pset_WindowCommon.*"
+      ],
+      "public_request": "恢复目标窗，并明确授权复制 GUID 为 2cXV28XOjE6f6irhu0CO_c 的 surviving Window occurrence 的 Pset_WindowCommon.* 标量属性；位置和尺寸仍按本次墙体参数重新计算。",
+      "public_request_sha256": "sha256:64fd0d8858d15c482ccb817ff11778effc375ead1119c8fbac446a3e438b4593",
+      "repair_intent_version": "text2ifc/ifc-repair-intent/0.4",
+      "semantic_manifest_version": "text2ifc/ifc-repair-semantic-manifest/0.2",
+      "source": {
+        "bytes": 1292595,
+        "path": "dataset/external/bim-whale-ifc-samples/LargeBuilding/IFC/LargeBuilding.ifc",
+        "sha256": "sha256:102f8123f85eae5e237d7f6a9dcbc364bd5f1c0cfb94b40a7eeb2d7eac9bb725"
+      }
+    },
+    {
+      "bound_changeset_version": "text2ifc/ifc-repair-changeset/0.3",
+      "case_id": "vvo-authorized-type-cohort",
+      "mode": "same_type_consensus",
+      "public_facts": [
+        "occurrence_reuse.mode=same_type_consensus",
+        "include=Pset_WindowCommon.*",
+        "conflict_policy=clarification_required"
+      ],
+      "public_request": "恢复目标窗，并明确授权从指定 Window Type 的 surviving occurrence cohort 中复制所有一致的 Pset_WindowCommon.* 标量值；任何值或单位冲突都必须先澄清。",
+      "public_request_sha256": "sha256:82c841e4960d5cf8da2354316f770fab3fd4a0ea32f812d10f30138fdc3eaa3f",
+      "repair_intent_version": "text2ifc/ifc-repair-intent/0.4",
+      "semantic_manifest_version": "text2ifc/ifc-repair-semantic-manifest/0.2",
+      "source": {
+        "bytes": 2409268,
+        "path": "dataset/ifc/train/vvo.ifc",
+        "sha256": "sha256:b6c435be955aeb6b2998f42a62f4ebf8c3f91eb7d373ca71a2dcedfeb95b3fdc"
+      }
+    },
+    {
+      "bound_changeset_version": "text2ifc/ifc-repair-changeset/0.3",
+      "case_id": "vvo-deliberate-cohort-conflict",
+      "mode": "same_type_conflict",
+      "public_facts": [
+        "occurrence_reuse.mode=same_type_consensus",
+        "include=Constraints.Level",
+        "expected_terminal=clarification_required",
+        "expected_publication=false"
+      ],
+      "public_request": "尝试按指定 Window Type cohort 复用 Constraints.Level；若 surviving occurrences 的值不一致，不生成 ChangeSet，也不发布 IFC。",
+      "public_request_sha256": "sha256:dd4a2d71ec5344a9aa62e3a87d9b80340b564defc25afb9d9513e967e7ee84ce",
+      "repair_intent_version": "text2ifc/ifc-repair-intent/0.4",
+      "semantic_manifest_version": "text2ifc/ifc-repair-semantic-manifest/0.2",
+      "source": {
+        "bytes": 2409268,
+        "path": "dataset/ifc/train/vvo.ifc",
+        "sha256": "sha256:b6c435be955aeb6b2998f42a62f4ebf8c3f91eb7d373ca71a2dcedfeb95b3fdc"
+      }
+    },
+    {
+      "bound_changeset_version": "text2ifc/ifc-repair-changeset/0.3",
+      "case_id": "advancedproject-five-window-shared-bundle",
+      "damaged": {
+        "bytes": 44228167,
+        "path": "dataset/processed/ifc-repair/phase10.4-comparator-0.2/replay-input-minimal-fix/fixture/damaged.ifc",
+        "sha256": "sha256:65b576a99174d413eeed9c0517592a0f31a9b6f5fb68bd4d006d94ed18a4adcb"
+      },
+      "mode": "five_window_bundle",
+      "public_facts": [
+        "operation_count=5",
+        "changeset_count=1",
+        "shared_bundle=true",
+        "shared_type_mutation=false",
+        "atomic_rollback=true"
+      ],
+      "public_request": "一次性恢复五扇窗。五个 operation 共用一个 occurrence semantic bundle；每扇窗的墙、位置、尺寸、host/storey 和标识仍按各 operation 单独绑定。任一语义写入失败必须整体回滚。",
+      "public_request_sha256": "sha256:26f92be6d30576a199c9292b179f1f41dd1ee1dd2759bd6f809c177fcc8edd05",
+      "repair_intent_version": "text2ifc/ifc-repair-intent/0.4",
+      "repaired_reference": {
+        "bytes": 44242439,
+        "path": "dataset/processed/ifc-repair/phase10.4-comparator-0.2/preflight-production-007-validation-delta/repaired.ifc",
+        "sha256": "sha256:91e5295b0487389546bc575d294038c2669f052d41edef3813734234638c3a2a"
+      },
+      "semantic_manifest_version": "text2ifc/ifc-repair-semantic-manifest/0.2",
+      "source": {
+        "bytes": 44337371,
+        "path": "dataset/external/bim-whale-ifc-samples/AdvancedProject/IFC/AdvancedProject.ifc",
+        "sha256": "sha256:86b068a7ca6947e398c1daaa8bede9d31048c3990adc308429faeb56ee01db94"
+      }
+    }
+  ],
+  "offline": {
+    "status": "skipped"
+  },
+  "performance": {
+    "status": "skipped"
+  },
+  "schema_version": "text2ifc/phase10.5-window-fidelity-uat/0.1",
+  "status": "passed"
+}

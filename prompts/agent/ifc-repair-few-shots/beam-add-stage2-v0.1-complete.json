@@ -1,0 +1,22 @@
+{
+  "schema_version": "text2ifc/ifc-repair-stage2-few-shot/0.1",
+  "example_id": "beam.add.stage2.v0.1.complete",
+  "profile_id": "beam.add.stage2.v0.1",
+  "case": "complete",
+  "sentinel": "EXAMPLE_ONLY",
+  "output_schema": "text2ifc/ifc-repair-stage2-operation/0.1",
+  "expected": {
+    "operation_id": "beam-example-1",
+    "operation_type": "add_beam",
+    "target": {"storey_global_id": "EXAMPLE-STOREY-BEAM"},
+    "parameters": {
+      "axis": {
+        "start": {"x_mm": 0, "y_mm": 0, "z_mm": 3000},
+        "end": {"x_mm": 5000, "y_mm": 0, "z_mm": 3000}
+      },
+      "section": {"shape": "rectangle", "width_mm": 300, "height_mm": 500}
+    },
+    "evidence_refs": ["resolved:/operations/beam-example-1/context/candidate_targets/0"]
+  },
+  "rule": "Copy the deterministic resolved operation exactly; Stage 2 does not emit intent, Type, property, status, clarification, or unsupported-result fields."
+}

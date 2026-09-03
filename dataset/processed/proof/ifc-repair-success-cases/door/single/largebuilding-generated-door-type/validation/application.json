@@ -1,0 +1,536 @@
+{
+  "audit": {
+    "checks": [
+      {
+        "code": "CHANGESET_SCHEMA",
+        "evidence": {},
+        "status": "passed"
+      },
+      {
+        "code": "IFC_SCHEMA",
+        "evidence": {
+          "actual_schema": "IFC2X3"
+        },
+        "status": "passed"
+      },
+      {
+        "code": "BASE_MODEL_FINGERPRINT",
+        "evidence": {
+          "actual_fingerprint": "sha256:fed14afd7b68fa79afee817b4f73e3fe391415e2e515b7a329744ba78aeeb10f"
+        },
+        "status": "passed"
+      },
+      {
+        "code": "SOURCE_REQUEST_HASH",
+        "evidence": {
+          "actual_request_hash": "sha256:b9ca64a69dd23e23e41753a10fa657105e3d995027b55fb27fef8e27267c5004"
+        },
+        "status": "passed"
+      },
+      {
+        "code": "OPERATION_REGISTRATION",
+        "evidence": {
+          "operation_type": "add_door_with_opening_to_wall"
+        },
+        "status": "passed"
+      }
+    ],
+    "issues": [],
+    "operation_audits": [
+      {
+        "checks": [
+          {
+            "code": "OPENING_WITHIN_WALL_HORIZONTAL",
+            "evidence": {
+              "requested_interval_mm": [
+                1200.0,
+                2115.0
+              ]
+            },
+            "status": "passed"
+          },
+          {
+            "code": "OPENING_WITHIN_WALL_VERTICAL",
+            "evidence": {
+              "requested_interval_mm": [
+                0.0,
+                2134.0
+              ]
+            },
+            "status": "passed"
+          },
+          {
+            "code": "WALL_VOID_DEPTH_RESOLVED",
+            "evidence": {
+              "wall_thickness_mm": 200.0
+            },
+            "status": "passed"
+          },
+          {
+            "code": "OPENING_INTERVAL_AVAILABLE",
+            "evidence": {
+              "overlapping_region_mm": null
+            },
+            "status": "passed"
+          }
+        ],
+        "evidence": {
+          "existing_opening_regions_mm": [
+            {
+              "center_offset_mm": 3672.5,
+              "height_mm": 2134.0,
+              "horizontal_interval_mm": [
+                3215.0,
+                4130.0
+              ],
+              "host_wall_global_id": "2cXV28XOjE6f6irgi0COfF",
+              "sill_height_mm": 0.0,
+              "vertical_interval_mm": [
+                0.0,
+                2134.0
+              ],
+              "width_mm": 915.0
+            },
+            {
+              "center_offset_mm": 5080.0,
+              "height_mm": 1830.0,
+              "horizontal_interval_mm": [
+                4622.5,
+                5537.5
+              ],
+              "host_wall_global_id": "2cXV28XOjE6f6irgi0COfF",
+              "sill_height_mm": 305.0,
+              "vertical_interval_mm": [
+                305.0,
+                2135.0
+              ],
+              "width_mm": 915.0
+            },
+            {
+              "center_offset_mm": 6487.5,
+              "height_mm": 2134.0,
+              "horizontal_interval_mm": [
+                6030.0,
+                6945.0
+              ],
+              "host_wall_global_id": "2cXV28XOjE6f6irgi0COfF",
+              "sill_height_mm": 0.0,
+              "vertical_interval_mm": [
+                0.0,
+                2134.0
+              ],
+              "width_mm": 915.0
+            },
+            {
+              "center_offset_mm": 9557.5,
+              "height_mm": 1830.0,
+              "horizontal_interval_mm": [
+                9100.0,
+                10015.0
+              ],
+              "host_wall_global_id": "2cXV28XOjE6f6irgi0COfF",
+              "sill_height_mm": 305.0,
+              "vertical_interval_mm": [
+                305.0,
+                2135.0
+              ],
+              "width_mm": 915.0
+            },
+            {
+              "center_offset_mm": 13742.5,
+              "height_mm": 1830.0,
+              "horizontal_interval_mm": [
+                13285.0,
+                14200.0
+              ],
+              "host_wall_global_id": "2cXV28XOjE6f6irgi0COfF",
+              "sill_height_mm": 305.0,
+              "vertical_interval_mm": [
+                305.0,
+                2135.0
+              ],
+              "width_mm": 915.0
+            },
+            {
+              "center_offset_mm": 16457.5,
+              "height_mm": 1830.0,
+              "horizontal_interval_mm": [
+                16000.0,
+                16915.0
+              ],
+              "host_wall_global_id": "2cXV28XOjE6f6irgi0COfF",
+              "sill_height_mm": 305.0,
+              "vertical_interval_mm": [
+                305.0,
+                2135.0
+              ],
+              "width_mm": 915.0
+            },
+            {
+              "center_offset_mm": 18357.5,
+              "height_mm": 1830.0,
+              "horizontal_interval_mm": [
+                17900.0,
+                18815.0
+              ],
+              "host_wall_global_id": "2cXV28XOjE6f6irgi0COfF",
+              "sill_height_mm": 305.0,
+              "vertical_interval_mm": [
+                305.0,
+                2135.0
+              ],
+              "width_mm": 915.0
+            }
+          ],
+          "footprint": {
+            "center_offset_mm": 1657.5,
+            "height_mm": 2134.0,
+            "horizontal_interval_mm": [
+              1200.0,
+              2115.0
+            ],
+            "host_wall_global_id": "2cXV28XOjE6f6irgi0COfF",
+            "sill_height_mm": 0.0,
+            "vertical_interval_mm": [
+              0.0,
+              2134.0
+            ],
+            "width_mm": 915.0
+          },
+          "wall_dimensions_mm": {
+            "height": 3850.0,
+            "length": 20000.0,
+            "thickness": 200.0
+          }
+        },
+        "operation_id": "operation-generated-door-001",
+        "operation_type": "add_door_with_opening_to_wall",
+        "valid": true
+      }
+    ],
+    "schema_version": "text2ifc/ifc-repair-audit/0.1",
+    "valid": true
+  },
+  "issues": [],
+  "operations": [
+    {
+      "changes": {
+        "created": [
+          {
+            "global_id": "2LPFqTp2DNNxh5k_iYF5k6",
+            "ifc_class": "IfcOpeningElement",
+            "role": "opening"
+          },
+          {
+            "global_id": "0D7Y3YmePRFvlI9spRjDYN",
+            "ifc_class": "IfcRelVoidsElement",
+            "role": "voids_relationship"
+          },
+          {
+            "global_id": "3B_xZ3LlPHr8sg9aigaebZ",
+            "ifc_class": "IfcDoorStyle",
+            "role": "generated_door_type"
+          },
+          {
+            "global_id": "0TUv5LyxDVMvgMRCTIlfNs",
+            "ifc_class": "IfcRelDefinesByType",
+            "role": "door_type_relationship"
+          },
+          {
+            "global_id": "3WGF1dkUzHkung2ItzKtYu",
+            "ifc_class": "IfcDoor",
+            "role": "door"
+          },
+          {
+            "global_id": "3ufXaVs1HSFPlbo8xCogRj",
+            "ifc_class": "IfcRelFillsElement",
+            "role": "fills_relationship"
+          }
+        ],
+        "modified": [
+          {
+            "global_id": "2cXV28XOjE6f6irgi0COfF",
+            "role": "host_wall"
+          },
+          {
+            "global_id": "3Zu5Bv0LOHrPC10066FoQQ",
+            "role": "spatial_containment"
+          }
+        ],
+        "removed": [],
+        "resolved": {
+          "door_placement": {
+            "relative_location": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "relative_ref_direction": [
+              1.0,
+              0.0,
+              0.0
+            ],
+            "selection_evidence": {
+              "axis_deviation_degrees": 0.0,
+              "door_bounds_in_opening_mm": {
+                "x": [
+                  0.0,
+                  915.0
+                ],
+                "y": [
+                  -25.0,
+                  25.0
+                ],
+                "z": [
+                  0.0,
+                  2134.0
+                ]
+              },
+              "geometry_center_deviation_mm": 0.0,
+              "height_deviation_mm": 0.0,
+              "nominal_center_deviation_mm": 0.0,
+              "nominal_door_bounds_mm": {
+                "x": [
+                  0.0,
+                  915.0
+                ],
+                "y": [
+                  0.0,
+                  0.0
+                ],
+                "z": [
+                  0.0,
+                  2134.0
+                ]
+              },
+              "normal_axis_intersection_mm": 50.0,
+              "opening_bounds_mm": {
+                "x": [
+                  0.0,
+                  915.0
+                ],
+                "y": [
+                  -100.0,
+                  100.0
+                ],
+                "z": [
+                  0.0,
+                  2134.0
+                ]
+              },
+              "projected_overlap_ratio": 1.0,
+              "thresholds": {
+                "maximum_axis_deviation_degrees": 0.1,
+                "maximum_center_deviation_mm": 5.0,
+                "maximum_dimension_deviation_mm": 1.0,
+                "minimum_projected_overlap_ratio": 0.95
+              },
+              "valid": true,
+              "width_deviation_mm": 0.0
+            }
+          },
+          "door_type_global_id": "3B_xZ3LlPHr8sg9aigaebZ",
+          "opening_depth_mm": 200.0,
+          "opening_global_id": "2LPFqTp2DNNxh5k_iYF5k6",
+          "storey_global_id": "2nxdYR2RHCDBiKJuiQr1XP"
+        },
+        "semantic": {
+          "created": [],
+          "modified": [],
+          "scopes": {
+            "door_occurrence": {
+              "created": [],
+              "modified": [],
+              "skipped": [
+                "relationship:type"
+              ],
+              "updated": []
+            }
+          },
+          "skipped": [
+            "relationship:type"
+          ],
+          "updated": []
+        }
+      },
+      "operation_id": "operation-generated-door-001",
+      "operation_type": "add_door_with_opening_to_wall"
+    }
+  ],
+  "output": {
+    "path": "E:\\code for project\\bimnet\\dataset\\processed\\ifc-repair\\phase11-door-audit-fix-final-2\\largebuilding-generated-door-type\\repaired.ifc",
+    "sha256": "2af345dc8edd0b986b22b669ced51a8fd6812e1756f79dd76bb3e78ca0ba3858"
+  },
+  "postconditions": [
+    {
+      "checks": [
+        {
+          "code": "DOOR_FILLS_OPENING",
+          "evidence": {},
+          "status": "passed"
+        },
+        {
+          "code": "OPENING_VOIDS_WALL",
+          "evidence": {},
+          "status": "passed"
+        },
+        {
+          "code": "DOOR_DIMENSIONS_MATCH",
+          "evidence": {},
+          "status": "passed"
+        },
+        {
+          "code": "DOOR_GEOMETRY_ALIGNED_WITH_OPENING",
+          "evidence": {
+            "axis_deviation_degrees": 0.0,
+            "door_bounds_in_opening_mm": {
+              "x": [
+                0.0,
+                915.0
+              ],
+              "y": [
+                -25.0,
+                25.0
+              ],
+              "z": [
+                0.0,
+                2134.0
+              ]
+            },
+            "geometry_center_deviation_mm": 0.0,
+            "height_deviation_mm": 0.0,
+            "nominal_center_deviation_mm": 0.0,
+            "nominal_door_bounds_mm": {
+              "x": [
+                0.0,
+                915.0
+              ],
+              "y": [
+                0.0,
+                0.0
+              ],
+              "z": [
+                0.0,
+                2134.0
+              ]
+            },
+            "normal_axis_intersection_mm": 50.0,
+            "opening_bounds_mm": {
+              "x": [
+                0.0,
+                915.0
+              ],
+              "y": [
+                -100.0,
+                100.0
+              ],
+              "z": [
+                0.0,
+                2134.0
+              ]
+            },
+            "projected_overlap_ratio": 1.0,
+            "thresholds": {
+              "maximum_axis_deviation_degrees": 0.1,
+              "maximum_center_deviation_mm": 5.0,
+              "maximum_dimension_deviation_mm": 1.0,
+              "minimum_projected_overlap_ratio": 0.95
+            },
+            "valid": true,
+            "width_deviation_mm": 0.0
+          },
+          "status": "passed"
+        },
+        {
+          "code": "DOOR_STOREY_MATCHES_HOST",
+          "evidence": {
+            "actual_storey_global_ids": [
+              "2nxdYR2RHCDBiKJuiQr1XP"
+            ],
+            "expected_storey_global_id": "2nxdYR2RHCDBiKJuiQr1XP",
+            "resolution_error": null
+          },
+          "status": "passed"
+        },
+        {
+          "code": "DOOR_TYPE_BOUND",
+          "evidence": {},
+          "status": "passed"
+        }
+      ],
+      "evidence": {
+        "actual_storey_global_ids": [
+          "2nxdYR2RHCDBiKJuiQr1XP"
+        ],
+        "door_global_id": "3WGF1dkUzHkung2ItzKtYu",
+        "expected_storey_global_id": "2nxdYR2RHCDBiKJuiQr1XP",
+        "geometry_alignment": {
+          "axis_deviation_degrees": 0.0,
+          "door_bounds_in_opening_mm": {
+            "x": [
+              0.0,
+              915.0
+            ],
+            "y": [
+              -25.0,
+              25.0
+            ],
+            "z": [
+              0.0,
+              2134.0
+            ]
+          },
+          "geometry_center_deviation_mm": 0.0,
+          "height_deviation_mm": 0.0,
+          "nominal_center_deviation_mm": 0.0,
+          "nominal_door_bounds_mm": {
+            "x": [
+              0.0,
+              915.0
+            ],
+            "y": [
+              0.0,
+              0.0
+            ],
+            "z": [
+              0.0,
+              2134.0
+            ]
+          },
+          "normal_axis_intersection_mm": 50.0,
+          "opening_bounds_mm": {
+            "x": [
+              0.0,
+              915.0
+            ],
+            "y": [
+              -100.0,
+              100.0
+            ],
+            "z": [
+              0.0,
+              2134.0
+            ]
+          },
+          "projected_overlap_ratio": 1.0,
+          "thresholds": {
+            "maximum_axis_deviation_degrees": 0.1,
+            "maximum_center_deviation_mm": 5.0,
+            "maximum_dimension_deviation_mm": 1.0,
+            "minimum_projected_overlap_ratio": 0.95
+          },
+          "valid": true,
+          "width_deviation_mm": 0.0
+        },
+        "host_wall_global_id": "2cXV28XOjE6f6irgi0COfF",
+        "opening_global_id": "2LPFqTp2DNNxh5k_iYF5k6"
+      },
+      "issues": [],
+      "operation_id": "operation-generated-door-001",
+      "valid": true
+    }
+  ],
+  "published": true,
+  "schema_version": "text2ifc/ifc-repair-application/0.1",
+  "valid": true
+}

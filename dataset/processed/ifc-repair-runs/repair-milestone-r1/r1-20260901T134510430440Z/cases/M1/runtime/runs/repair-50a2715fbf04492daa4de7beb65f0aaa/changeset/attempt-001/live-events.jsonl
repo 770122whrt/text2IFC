@@ -1,0 +1,40 @@
+{
+  "data": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "logprobs": null,
+        "message": {
+          "annotations": null,
+          "audio": null,
+          "content": "{\n  \"schema_version\": \"text2ifc/ifc-repair-changeset-draft/0.2\",\n  \"draft_id\": \"draft-set-door-fire-rating-1\",\n  \"base_model_fingerprint\": \"sha256:989ace1d52f694ee94d80bd99aa81d0ff3d76cf21f34fcfd00a286ac897ed8a6\",\n  \"source_request_hash\": \"sha256:640abdd6ac85ad88e6c376e644f62db05fdc8f80304c8c2a51bd8f5a5834946c\",\n  \"semantic_manifest_ref\": \"changeset/semantic-manifest-set-door-fire-rating-1.json\",\n  \"semantic_manifest_sha256\": \"sha256:0350ca38b6a11e02cd5213f0350c01c4439441c73ea9f4bf96d9d6a397114c0b\",\n  \"semantic_summary\": {\n    \"required\": 0,\n    \"conditional\": 1,\n    \"not_required\": 0\n  },\n  \"scope\": {\n    \"forbidden_ids\": [],\n    \"target_ids\": [\"3JlX9$$_PCKBNpDob64$4w\"]\n  },\n  \"evidence_refs\": [\"resolved:/operations/set-door-fire-rating-1/context/candidate_targets/0\"],\n  \"preconditions\": [\"target_exists\", \"target_class_supported\", \"property_assignments_bound\"],\n  \"postconditions\": [\"target_preserved\", \"requested_properties_match\", \"shared_type_unchanged\"],\n  \"operations\": [\n    {\n      \"operation_id\": \"set-door-fire-rating-1\",\n      \"operation_type\": \"set_occurrence_properties\",\n      \"target\": {\n        \"element_global_id\": \"3JlX9$$_PCKBNpDob64$4w\"\n      },\n      \"parameters\": {},\n      \"evidence_refs\": [\"resolved:/operations/set-door-fire-rating-1/context/candidate_targets/0\"]\n    }\n  ]\n}",
+          "function_call": null,
+          "reasoning_content": "我们根据指令生成JSON。用户请求是中文，需要处理。我们需要输出一个符合给定schema的JSON对象。根据提供的操作投影和语义组计数等。\n\n关键内容：\n- schema_version: \"text2ifc/ifc-repair-changeset-draft/0.2\"\n- draft_id: 需要生成一个ID，但可能从操作投影中？操作投影中有operation_id \"set-door-fire-rating-1\"。draft_id应该类似，但可能是任意字符串。指令说\"Copy operation IDs, types, targets, parameters, scope, and evidence exactly.\" 所以操作ID等要复制。draft_id应该由我们生成？可能用类似\"set-door-fire-rating-1\"或加前缀？需要看schema要求draft_id是`id`类型，pattern允许字母数字和点/下划线/冒号/斜杠等。我们可以用\"changeset-set-door-fire-rating-1\"或直接\"set-door-fire-rating-1\"。但为了区分，可能用\"draft-set-door-fire-rating-1\"。不过指令没有明确，但我们需要一个合法ID。可以基于操作ID。\n\n- base_model_fingerprint: 模型sha256: \"sha256:989ace1d52f694ee94d80bd99aa81d0ff3d76cf21f34fcfd00a286ac897ed8a6\"\n- source_request_hash: \"sha256:640abdd6ac85ad88e6c376e644f62db05fdc8f80304c8c2a51bd8f5a5834946c\"\n- semantic_manifest_ref: \"changeset/semantic-manifest-set-door-fire-rating-1.json\"\n- semantic_manifest_sha256: \"sha256:0350ca38b6a11e02cd5213f0350c01c4439441c73ea9f4bf96d9d6a397114c0b\"\n- semantic_summary: {\"required\": 0, \"conditional\": 1, \"not_required\": 0} (来自计数)\n- scope: 从操作投影中，scope有target_ids和forbidden_ids，直接复制。\n- evidence_refs: 来自操作投影，有\"resolved:/operations/set-door-fire-rating-1/context/candidate_targets/0\"。注意在投影中operations内部也有evidence_refs，但顶层的evidence_refs应该也是同样的？指令说\"Copy operation IDs, types, targets, parameters, scope, and evidence exactly.\" 可能顶层evidence_refs应该是所有操作evidence_refs的并集？但操作投影中只有一个操作，evidence_refs相同。所以我们顶层evidence_refs也复制同样的数组。\n- preconditions和postconditions: 从操作契约中，precondition_names和postcondition_names。需要复制这些名称。注意契约中确实有precondition_names: [\"target_exists\", \"target_class_supported\", \"property_assignments_bound\"]和postcondition_names: [\"target_preserved\", \"requested_properties_match\", \"shared_type_unchanged\"]。所以顶层preconditions和postconditions是这些数组。\n- operations: 数组，包含一个操作对象。操作对象结构要求：operation_id, operation_type, target, parameters, evidence_refs。从投影中，操作有这些字段。注意target是{\"element_global_id\": \"3JlX9$$_PCKBNpDob64$4w\"}，parameters是{}，evidence_refs同上。\n\n我们还需要生成draft_id。可以使用\"set-door-fire-rating-1\"作为基础，但为了清晰，我使用\"changeset-set-door-fire-rating-1\"或\"draft-set-door-fire-rating-1\"。但注意pattern要求首字符字母数字，所以\"draft-set-door-fire-rating-1\"合法。因为pattern: \"^[A-Za-z0-9][A-Za-z0-9._:/-]*$\"。我们也可以用operation_id，但多个操作可能冲突，不过这里只有一个。我选择\"draft-set-door-fire-rating-1\"。\n\n确认所有字段都满足schema。\n\n最终输出JSON。注意不要有额外注释，只输出JSON对象。",
+          "refusal": null,
+          "role": "assistant",
+          "tool_calls": null
+        }
+      }
+    ],
+    "created": 1788271044,
+    "id": "e336e396-add7-49a1-bc9f-e6907dfa4ac0",
+    "model": "deepseek-v4-flash",
+    "moderation": null,
+    "object": "chat.completion",
+    "service_tier": null,
+    "stop_reason": "stop",
+    "system_fingerprint": "a26a7955944dc5c60445bff77fac9c8e",
+    "usage": {
+      "completion_tokens": 1368,
+      "completion_tokens_details": "[REDACTED]",
+      "prompt_cache_hit_tokens": "[REDACTED]",
+      "prompt_cache_miss_tokens": "[REDACTED]",
+      "prompt_tokens": 2094,
+      "prompt_tokens_details": "[REDACTED]",
+      "total_tokens": 3462
+    }
+  },
+  "event": "chat.completion",
+  "sequence": 0
+}

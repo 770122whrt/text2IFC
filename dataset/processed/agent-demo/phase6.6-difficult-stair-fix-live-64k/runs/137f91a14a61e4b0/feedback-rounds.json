@@ -1,0 +1,140 @@
+{
+  "rounds": [
+    {
+      "attempted_action": "stop_for_user_input",
+      "input_issue_count": 8,
+      "issue_delta": null,
+      "issue_set_changed": false,
+      "issues": [
+        {
+          "actual_ref": "/doors/0/host_wall",
+          "evidence": "PACKAGE_HOST_WALL_UNRESOLVED: 'door-living-corridor-storey1' has no explicit host wall.",
+          "expected_fact_ref": null,
+          "issue_id": "issue_schema_validation_0001",
+          "issue_type": "draft_unresolved_path",
+          "owner": "user",
+          "retryable": true,
+          "severity": "blocking",
+          "source": "schema_validation",
+          "suggested_route": "ask_user"
+        },
+        {
+          "actual_ref": "/doors/1/host_wall",
+          "evidence": "PACKAGE_HOST_WALL_UNRESOLVED: 'door-dining-corridor-storey1' has no explicit host wall.",
+          "expected_fact_ref": null,
+          "issue_id": "issue_schema_validation_0002",
+          "issue_type": "draft_unresolved_path",
+          "owner": "user",
+          "retryable": true,
+          "severity": "blocking",
+          "source": "schema_validation",
+          "suggested_route": "ask_user"
+        },
+        {
+          "actual_ref": "/doors/2/host_wall",
+          "evidence": "PACKAGE_HOST_WALL_UNRESOLVED: 'door-kitchen-corridor-storey1' has no explicit host wall.",
+          "expected_fact_ref": null,
+          "issue_id": "issue_schema_validation_0003",
+          "issue_type": "draft_unresolved_path",
+          "owner": "user",
+          "retryable": true,
+          "severity": "blocking",
+          "source": "schema_validation",
+          "suggested_route": "ask_user"
+        },
+        {
+          "actual_ref": "/doors/3/host_wall",
+          "evidence": "PACKAGE_HOST_WALL_UNRESOLVED: 'door-bathroom-corridor-storey1' has no explicit host wall.",
+          "expected_fact_ref": null,
+          "issue_id": "issue_schema_validation_0004",
+          "issue_type": "draft_unresolved_path",
+          "owner": "user",
+          "retryable": true,
+          "severity": "blocking",
+          "source": "schema_validation",
+          "suggested_route": "ask_user"
+        },
+        {
+          "actual_ref": "/doors/6/host_wall",
+          "evidence": "PACKAGE_HOST_WALL_UNRESOLVED: 'door-bedroom1-corridor-storey2' has no explicit host wall.",
+          "expected_fact_ref": null,
+          "issue_id": "issue_schema_validation_0005",
+          "issue_type": "draft_unresolved_path",
+          "owner": "user",
+          "retryable": true,
+          "severity": "blocking",
+          "source": "schema_validation",
+          "suggested_route": "ask_user"
+        },
+        {
+          "actual_ref": "/doors/7/host_wall",
+          "evidence": "PACKAGE_HOST_WALL_UNRESOLVED: 'door-bathroom-corridor-storey2' has no explicit host wall.",
+          "expected_fact_ref": null,
+          "issue_id": "issue_schema_validation_0006",
+          "issue_type": "draft_unresolved_path",
+          "owner": "user",
+          "retryable": true,
+          "severity": "blocking",
+          "source": "schema_validation",
+          "suggested_route": "ask_user"
+        },
+        {
+          "actual_ref": "/doors/8/host_wall",
+          "evidence": "PACKAGE_HOST_WALL_UNRESOLVED: 'door-bedroom2-corridor-storey2' has no explicit host wall.",
+          "expected_fact_ref": null,
+          "issue_id": "issue_schema_validation_0007",
+          "issue_type": "draft_unresolved_path",
+          "owner": "user",
+          "retryable": true,
+          "severity": "blocking",
+          "source": "schema_validation",
+          "suggested_route": "ask_user"
+        },
+        {
+          "actual_ref": "/doors/9/host_wall",
+          "evidence": "PACKAGE_HOST_WALL_UNRESOLVED: 'door-bedroom3-corridor-storey2' has no explicit host wall.",
+          "expected_fact_ref": null,
+          "issue_id": "issue_schema_validation_0008",
+          "issue_type": "draft_unresolved_path",
+          "owner": "user",
+          "retryable": true,
+          "severity": "blocking",
+          "source": "schema_validation",
+          "suggested_route": "ask_user"
+        }
+      ],
+      "max_feedback_rounds": 3,
+      "output_issue_count": 8,
+      "retry_allowed": false,
+      "round_index": 0,
+      "route": "ask_user",
+      "route_decision": {
+        "blocking_issue_ids": [
+          "issue_schema_validation_0001",
+          "issue_schema_validation_0002",
+          "issue_schema_validation_0003",
+          "issue_schema_validation_0004",
+          "issue_schema_validation_0005",
+          "issue_schema_validation_0006",
+          "issue_schema_validation_0007",
+          "issue_schema_validation_0008"
+        ],
+        "current_feedback_round": 0,
+        "final_status": "draft",
+        "human_review_required": false,
+        "max_feedback_rounds": 3,
+        "reason": "Route ask_user selected from 8 issue(s); first issue issue_schema_validation_0001 is draft_unresolved_path owned by user.",
+        "retry_allowed": false,
+        "route": "ask_user",
+        "schema_version": "text2ifc/route-decision/2.0",
+        "source_issue_count": 8,
+        "target_stage": "user"
+      },
+      "schema_version": "text2ifc/feedback-round/1.0",
+      "source_stage": "workflow",
+      "target_stage": "user",
+      "terminal_status": "draft"
+    }
+  ],
+  "schema_version": "text2ifc/feedback-rounds/1.0"
+}

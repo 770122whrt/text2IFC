@@ -1,0 +1,534 @@
+"""Heterogeneous operation capability registry for IFC repair orchestration."""
+
+from __future__ import annotations
+
+import copy
+from dataclasses import dataclass, field
+from typing import TYPE_CHECKING, Any, Callable, Iterable, Mapping
+
+from jsonschema import Draft202012Validator
+
+from text2ifc_contract.validation import ValidationIssue
+
+if TYPE_CHECKING:
+    from .evaluation_models import CheckResult
+    from .evaluation_policy import OperationEvaluationPolicy
+    from .semantic_facts import SemanticFact
+
+
+OperationCallable = Callable[..., Any]
+CAPABILITY_NAMES = (
+    "context_adapter",
+    "precondition_checker",
+    "applicator",
+    "postcondition_checker",
+    "comparison_adapter",
+)
+
+
+class OperationRegistryError(ValueError):
+    """Stable machine-readable registry failure."""
+
+    def __init__(self, code: str, detail: str) -> None:
+        self.code = code
+        self.detail = detail
+        super().__init__(f"{code}: {detail}")
+
+
+@dataclass(frozen=True)
+class OperationDefinition:
+    operation_type: str
+    target_ifc_classes: tuple[str, ...]
+    parameter_schema: Mapping[str, Any]
+    context_adapter: OperationCallable
+    precondition_checker: OperationCallable
+    applicator: OperationCallable
+    postcondition_checker: OperationCallable
+    comparison_adapter: OperationCallable
+    capability_constraints: Mapping[str, Any]
+    prototype_ifc_classes: tuple[str, ...] = ()
+    prototype_dimension_paths: Mapping[str, tuple[str, ...]] = field(
+        default_factory=dict
+    )
+    target_schema: Mapping[str, Any] | None = None
+    intent_target_schema: Mapping[str, Any] | None = None
+    intent_parameter_schema: Mapping[str, Any] | None = None
+    intent_capability_checker: OperationCallable | None = None
+    precondition_names: tuple[str, ...] = ()
+    postcondition_names: tuple[str, ...] = ()
+    evaluation_policy: OperationEvaluationPolicy | None = None
+    semantic_manifest_builder: OperationCallable | None = None
+    semantic_policy_fact_builder: OperationCallable | None = None
+    editable_occurrence_ifc_class: str | None = None
+    editable_occurrence_ifc_classes: tuple[str, ...] = ()
+    inherited_type_evidence_role: str | None = None
+    generated_type_template: OperationCallable | None = None
+    generated_occurrence_facts: OperationCallable | None = None
+    operation_conflict_checker: OperationCallable | None = None
+    prompt_profile_id: str | None = None
+    stage2_prompt_profile_id: str | None = None
+    semantic_scope_roles: Mapping[str, str] = field(default_factory=dict)
+    conflict_domain: str | None = None
+    intent_policy_checker: OperationCallable | None = None
+    parameter_resolver: OperationCallable | None = None
+    generated_type_factory: OperationCallable | None = None
+
+    def __post_init__(self) -> None:
+        if not self.operation_type or not self.target_ifc_classes:
+            raise OperationRegistryError(
+                "INVALID_OPERATION_DEFINITION", self.operation_type or "<empty>"
+            )
+        if any(not value for value in self.prototype_ifc_classes):
+            raise OperationRegistryError(
+                "INVALID_PROTOTYPE_IFC_CLASS", self.operation_type
+            )
+        if any(not value for value in self.editable_occurrence_ifc_classes):
+            raise OperationRegistryError(
+                "INVALID_EDITABLE_OCCURRENCE_IFC_CLASS", self.operation_type
+            )
+        if any(not key or not path for key, path in self.prototype_dimension_paths.items()):
+            raise OperationRegistryError(
+                "INVALID_PROTOTYPE_DIMENSION_PATH", self.operation_type
+            )
+        Draft202012Validator.check_schema(dict(self.parameter_schema))
+        if self.target_schema is not None:
+            Draft202012Validator.check_schema(dict(self.target_schema))
+        if self.intent_target_schema is not None:
+            Draft202012Validator.check_schema(dict(self.intent_target_schema))
+        if self.intent_parameter_schema is not None:
+            Draft202012Validator.check_schema(dict(self.intent_parameter_schema))
+        if self.intent_capability_checker is not None and not callable(
+            self.intent_capability_checker
+        ):
+            raise OperationRegistryError(
+                "INVALID_INTENT_CAPABILITY_CHECKER", self.operation_type
+            )
+        for capability_name in CAPABILITY_NAMES:
+            if not callable(getattr(self, capability_name)):
+                raise OperationRegistryError(
+                    "INVALID_OPERATION_CAPABILITY",
+                    f"{self.operation_type}.{capability_name}",
+                )
+        if self.semantic_manifest_builder is not None and not callable(
+            self.semantic_manifest_builder
+        ):
+            raise OperationRegistryError(
+                "INVALID_SEMANTIC_MANIFEST_BUILDER", self.operation_type
+            )
+        if self.semantic_policy_fact_builder is not None and not callable(
+            self.semantic_policy_fact_builder
+        ):
+            raise OperationRegistryError(
+                "INVALID_SEMANTIC_POLICY_FACT_BUILDER", self.operation_type
+            )
+        if self.generated_type_template is not None and not callable(
+            self.generated_type_template
+        ):
+            raise OperationRegistryError(
+                "INVALID_GENERATED_TYPE_TEMPLATE", self.operation_type
+            )
+        if self.generated_occurrence_facts is not None and not callable(
+            self.generated_occurrence_facts
+        ):
+            raise OperationRegistryError(
+                "INVALID_GENERATED_OCCURRENCE_FACTS", self.operation_type
+            )
+        if self.operation_conflict_checker is not None and not callable(
+            self.operation_conflict_checker
+        ):
+            raise OperationRegistryError(
+                "INVALID_OPERATION_CONFLICT_CHECKER", self.operation_type
+            )
+        if self.prompt_profile_id is not None and not self.prompt_profile_id:
+            raise OperationRegistryError(
+                "INVALID_PROMPT_PROFILE_ID", self.operation_type
+            )
+        if (
+            self.stage2_prompt_profile_id is not None
+            and not self.stage2_prompt_profile_id
+        ):
+            raise OperationRegistryError(
+                "INVALID_STAGE2_PROMPT_PROFILE_ID", self.operation_type
+            )
+        if any(not role or not scope for role, scope in self.semantic_scope_roles.items()):
+            raise OperationRegistryError(
+                "INVALID_SEMANTIC_SCOPE_ROLE", self.operation_type
+            )
+        if len(set(self.semantic_scope_roles.values())) != len(
+            self.semantic_scope_roles
+        ):
+            raise OperationRegistryError(
+                "DUPLICATE_SEMANTIC_SCOPE", self.operation_type
+            )
+        if self.conflict_domain is not None and not self.conflict_domain:
+            raise OperationRegistryError(
+                "INVALID_CONFLICT_DOMAIN", self.operation_type
+            )
+        for hook_name in (
+            "intent_policy_checker",
+            "parameter_resolver",
+            "generated_type_factory",
+        ):
+            hook = getattr(self, hook_name)
+            if hook is not None and not callable(hook):
+                raise OperationRegistryError(
+                    f"INVALID_{hook_name.upper()}", self.operation_type
+                )
+        if self.generated_type_factory is not None and (
+            self.generated_type_template is None
+        ):
+            raise OperationRegistryError(
+                "GENERATED_TYPE_FACTORY_TEMPLATE_REQUIRED", self.operation_type
+            )
+
+
+class OperationRegistry:
+    """Registry used by common context, audit, apply and compare dispatchers."""
+
+    def __init__(self) -> None:
+        self._definitions: dict[str, OperationDefinition] = {}
+
+    @property
+    def operation_types(self) -> tuple[str, ...]:
+        return tuple(sorted(self._definitions))
+
+    def register(self, definition: OperationDefinition) -> None:
+        if definition.operation_type in self._definitions:
+            raise OperationRegistryError(
+                "DUPLICATE_OPERATION_TYPE", definition.operation_type
+            )
+        policy = definition.evaluation_policy
+        if policy is not None:
+            if policy.operation_type != definition.operation_type:
+                raise OperationRegistryError(
+                    "EVALUATION_POLICY_OPERATION_MISMATCH",
+                    f"{policy.operation_type}:{definition.operation_type}",
+                )
+            if any(
+                registered.evaluation_policy is not None
+                and registered.evaluation_policy.policy_id == policy.policy_id
+                for registered in self._definitions.values()
+            ):
+                raise OperationRegistryError(
+                    "DUPLICATE_EVALUATION_POLICY_ID", policy.policy_id
+                )
+        self._definitions[definition.operation_type] = definition
+
+    def require(self, operation_type: str) -> OperationDefinition:
+        try:
+            return self._definitions[operation_type]
+        except KeyError as error:
+            raise OperationRegistryError(
+                "UNKNOWN_OPERATION_TYPE", operation_type
+            ) from error
+
+    def require_evaluation_policy(
+        self, operation_type: str
+    ) -> OperationEvaluationPolicy:
+        definition = self.require(operation_type)
+        if definition.evaluation_policy is None:
+            raise OperationRegistryError(
+                "MISSING_EVALUATION_POLICY", operation_type
+            )
+        return definition.evaluation_policy
+
+    def evaluate_semantics(
+        self,
+        operation_type: str,
+        *,
+        expected_facts: Iterable[SemanticFact],
+        repaired_facts: Iterable[SemanticFact],
+    ) -> tuple[CheckResult, ...]:
+        from .semantic_facts import evaluate_operation_semantics
+
+        return evaluate_operation_semantics(
+            self.require_evaluation_policy(operation_type),
+            expected_facts=expected_facts,
+            repaired_facts=repaired_facts,
+        )
+
+    def build_semantic_manifest(self, operation_type: str, **kwargs: Any) -> Any:
+        definition = self.require(operation_type)
+        builder = definition.semantic_manifest_builder
+        if builder is None:
+            from .semantic_authoring import build_semantic_manifest
+
+            builder = build_semantic_manifest
+        return builder(registry=self, **kwargs)
+
+    def build_semantic_policy_facts(
+        self, operation_type: str, *, operation: Mapping[str, Any]
+    ) -> tuple[Any, ...]:
+        builder = self.require(operation_type).semantic_policy_fact_builder
+        if builder is None:
+            return ()
+        return tuple(builder(operation=operation))
+
+    def bind_resolved_target(
+        self,
+        operation_type: str,
+        target_global_id: str | None,
+    ) -> dict[str, str]:
+        """Project one resolved identity through the registered target contract."""
+
+        definition = self.require(operation_type)
+        schema = definition.target_schema
+        required = () if schema is None else schema.get("required", ())
+        identity_fields = [
+            str(name)
+            for name in required
+            if str(name).endswith("_global_id")
+        ]
+        if len(identity_fields) != 1:
+            raise OperationRegistryError(
+                "RESOLVED_TARGET_CONTRACT_INVALID",
+                operation_type,
+            )
+        if not target_global_id:
+            raise OperationRegistryError(
+                "RESOLVED_TARGET_ID_REQUIRED",
+                operation_type,
+            )
+        target = {identity_fields[0]: str(target_global_id)}
+        issues = self.validate_target(
+            {"operation_type": operation_type, "target": target}
+        )
+        if issues:
+            raise OperationRegistryError(
+                "RESOLVED_TARGET_CONTRACT_INVALID",
+                f"{operation_type}:{issues[0].path}",
+            )
+        return target
+
+    def validate_parameters(
+        self,
+        operation: Mapping[str, Any],
+    ) -> list[ValidationIssue]:
+        definition = self.require(str(operation.get("operation_type", "")))
+        return _schema_issues(
+            value=operation.get("parameters"),
+            schema=definition.parameter_schema,
+            code="OPERATION_PARAMETER_SCHEMA_ERROR",
+            path_prefix="/parameters",
+        )
+
+    def prepare_partial_parameters(
+        self,
+        operation: Mapping[str, Any],
+    ) -> dict[str, Any]:
+        """Copy partial parameters and add only schema-declared constants.
+
+        Constants such as the Window operation's local-coordinate convention
+        are deterministic compiler policy, not project facts authored by the
+        Provider.
+        """
+
+        definition = self.require(str(operation.get("operation_type", "")))
+        raw = operation.get("parameters")
+        value = copy.deepcopy(raw if isinstance(raw, Mapping) else {})
+        _inject_schema_constants(value, _intent_parameter_schema(definition))
+        return value
+
+    def validate_partial_parameters(
+        self,
+        operation: Mapping[str, Any],
+    ) -> list[ValidationIssue]:
+        """Validate supplied values without treating absent required facts as errors."""
+
+        definition = self.require(str(operation.get("operation_type", "")))
+        return _schema_issues(
+            value=operation.get("parameters"),
+            schema=_without_required(_intent_parameter_schema(definition)),
+            code="OPERATION_PARAMETER_SCHEMA_ERROR",
+            path_prefix="/parameters",
+        )
+
+    def validate_intent_parameters(
+        self,
+        operation: Mapping[str, Any],
+    ) -> list[ValidationIssue]:
+        """Validate a complete Stage 1 intent without requiring execution facts."""
+
+        definition = self.require(str(operation.get("operation_type", "")))
+        return _schema_issues(
+            value=operation.get("parameters"),
+            schema=_intent_parameter_schema(definition),
+            code="OPERATION_PARAMETER_SCHEMA_ERROR",
+            path_prefix="/parameters",
+        )
+
+    def missing_required_parameters(
+        self,
+        operation: Mapping[str, Any],
+    ) -> tuple[str, ...]:
+        """Return stable JSON pointers for executable facts still absent."""
+
+        definition = self.require(str(operation.get("operation_type", "")))
+        parameters = operation.get("parameters")
+        value = parameters if isinstance(parameters, Mapping) else {}
+        return tuple(
+            sorted(_missing_required(value, _intent_parameter_schema(definition)))
+        )
+
+    def assess_intent_capability(
+        self,
+        operation: Mapping[str, Any],
+    ) -> Mapping[str, Any]:
+        """Classify deterministic Stage 1 capability before completeness."""
+
+        definition = self.require(str(operation.get("operation_type", "")))
+        checker = definition.intent_capability_checker
+        if checker is None:
+            return {"status": "supported"}
+        decision = checker(operation=operation)
+        if not isinstance(decision, Mapping):
+            raise OperationRegistryError(
+                "INTENT_CAPABILITY_DECISION_INVALID", definition.operation_type
+            )
+        return dict(decision)
+
+    def validate_target(
+        self,
+        operation: Mapping[str, Any],
+    ) -> list[ValidationIssue]:
+        definition = self.require(str(operation.get("operation_type", "")))
+        if definition.target_schema is None:
+            return []
+        return _schema_issues(
+            value=operation.get("target"),
+            schema=definition.target_schema,
+            code="OPERATION_TARGET_SCHEMA_ERROR",
+            path_prefix="/target",
+        )
+
+    def validate_intent_target(
+        self,
+        operation: Mapping[str, Any],
+    ) -> list[ValidationIssue]:
+        """Validate a Stage 1 target claim against operation-owned syntax."""
+
+        definition = self.require(str(operation.get("operation_type", "")))
+        if definition.intent_target_schema is None:
+            return []
+        return _schema_issues(
+            value=operation.get("target_query"),
+            schema=definition.intent_target_schema,
+            code="OPERATION_INTENT_TARGET_SCHEMA_ERROR",
+            path_prefix="/target_query",
+        )
+
+    def dispatch(
+        self,
+        capability_name: str,
+        operation: Mapping[str, Any],
+        **kwargs: Any,
+    ) -> Any:
+        if capability_name not in CAPABILITY_NAMES:
+            raise OperationRegistryError(
+                "UNKNOWN_OPERATION_CAPABILITY", capability_name
+            )
+        definition = self.require(str(operation.get("operation_type", "")))
+        capability = getattr(definition, capability_name)
+        return capability(operation=operation, **kwargs)
+
+
+def _schema_issues(
+    *,
+    value: Any,
+    schema: Mapping[str, Any],
+    code: str,
+    path_prefix: str,
+) -> list[ValidationIssue]:
+    validator = Draft202012Validator(dict(schema))
+    issues = [
+        ValidationIssue(
+            code=code,
+            path=_pointer(error.absolute_path, prefix=path_prefix),
+            message=error.message,
+        )
+        for error in validator.iter_errors(value)
+    ]
+    return sorted(set(issues), key=lambda issue: (issue.path, issue.message))
+
+
+def _intent_parameter_schema(
+    definition: OperationDefinition,
+) -> Mapping[str, Any]:
+    return definition.intent_parameter_schema or definition.parameter_schema
+
+
+def _without_required(schema: Mapping[str, Any]) -> dict[str, Any]:
+    relaxed: dict[str, Any] = {}
+    for key, value in schema.items():
+        if key == "required":
+            continue
+        if isinstance(value, Mapping):
+            relaxed[key] = _without_required(value)
+        elif isinstance(value, list):
+            relaxed[key] = [
+                _without_required(item) if isinstance(item, Mapping) else copy.deepcopy(item)
+                for item in value
+            ]
+        else:
+            relaxed[key] = copy.deepcopy(value)
+    return relaxed
+
+
+def _inject_schema_constants(value: dict[str, Any], schema: Mapping[str, Any]) -> None:
+    properties = schema.get("properties")
+    if not isinstance(properties, Mapping):
+        return
+    required = {
+        str(name) for name in schema.get("required", ())
+    }
+    for name, raw_child in properties.items():
+        if not isinstance(raw_child, Mapping):
+            continue
+        child = dict(raw_child)
+        if name not in value and "const" in child:
+            value[str(name)] = copy.deepcopy(child["const"])
+            continue
+        if child.get("type") != "object":
+            continue
+        existing = value.get(name)
+        nested: dict[str, Any]
+        if isinstance(existing, Mapping):
+            nested = copy.deepcopy(dict(existing))
+        elif existing is None and str(name) in required:
+            nested = {}
+        else:
+            continue
+        _inject_schema_constants(nested, child)
+        if nested:
+            value[str(name)] = nested
+
+
+def _missing_required(
+    value: Mapping[str, Any],
+    schema: Mapping[str, Any],
+    prefix: str = "",
+) -> list[str]:
+    required = schema.get("required", ())
+    properties = schema.get("properties", {})
+    if not isinstance(required, (list, tuple)) or not isinstance(properties, Mapping):
+        return []
+    missing: list[str] = []
+    for raw_name in required:
+        name = str(raw_name)
+        child = properties.get(name, {})
+        child_schema = child if isinstance(child, Mapping) else {}
+        path = f"{prefix}/{name}"
+        present = name in value
+        if not present:
+            nested = _missing_required({}, child_schema, path)
+            missing.extend(nested or [path])
+            continue
+        child_value = value[name]
+        if isinstance(child_value, Mapping):
+            missing.extend(_missing_required(child_value, child_schema, path))
+    return missing
+
+
+def _pointer(parts: Any, *, prefix: str) -> str:
+    tokens = [str(part).replace("~", "~0").replace("/", "~1") for part in parts]
+    return prefix + ("/" + "/".join(tokens) if tokens else "")

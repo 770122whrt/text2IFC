@@ -1,0 +1,284 @@
+{
+  "model_fingerprint": "sha256:f61ff5cf8e1cc88da6944d6bcd3e2e7da5ff27dd3288a8781908018cb8240cd6",
+  "operations": [
+    {
+      "attribute_intents": [],
+      "operation_id": "op-001",
+      "operation_type": "add_window_with_opening_to_wall",
+      "parameters": {
+        "opening": {
+          "height_mm": 1830,
+          "sill_height_mm": 305,
+          "width_mm": 915
+        },
+        "position": {
+          "center_offset_mm": 3042.5,
+          "reference": "wall_local_start"
+        },
+        "window": {
+          "fit_opening": true
+        }
+      },
+      "property_intents": [
+        {
+          "intent_kind": "pset_property",
+          "property_name": "Level",
+          "requested_unit": null,
+          "requested_value_type": "IfcLabel",
+          "scope": "occurrence_direct",
+          "set_name": "Constraints",
+          "source": {
+            "excerpt": "{\"set_name\":\"Constraints\",\"property_name\":\"Level\",\"value\":\"Level: Level 1\",\"requested_value_type\":\"IfcLabel\",\"requested_unit\":null,\"scope\":\"occurrence_direct\"}",
+            "reference": "request:/text",
+            "source_kind": "user_request"
+          },
+          "value": "Level: Level 1"
+        },
+        {
+          "intent_kind": "pset_property",
+          "property_name": "Sill Height",
+          "requested_unit": "mm",
+          "requested_value_type": "IfcLengthMeasure",
+          "scope": "occurrence_direct",
+          "set_name": "Constraints",
+          "source": {
+            "excerpt": "{\"set_name\":\"Constraints\",\"property_name\":\"Sill Height\",\"value\":305.000000000004,\"requested_value_type\":\"IfcLengthMeasure\",\"requested_unit\":\"mm\",\"scope\":\"occurrence_direct\"}",
+            "reference": "request:/text",
+            "source_kind": "user_request"
+          },
+          "value": 305.000000000004
+        },
+        {
+          "intent_kind": "pset_property",
+          "property_name": "NetArea",
+          "requested_unit": "m2",
+          "requested_value_type": "IfcAreaMeasure",
+          "scope": "occurrence_direct",
+          "set_name": "Custom_Pset",
+          "source": {
+            "excerpt": "{\"set_name\":\"Custom_Pset\",\"property_name\":\"NetArea\",\"value\":3.17875400000013,\"requested_value_type\":\"IfcAreaMeasure\",\"requested_unit\":\"m2\",\"scope\":\"occurrence_direct\"}",
+            "reference": "request:/text",
+            "source_kind": "user_request"
+          },
+          "value": 3.17875400000013
+        },
+        {
+          "intent_kind": "pset_property",
+          "property_name": "SillHeight",
+          "requested_unit": "mm",
+          "requested_value_type": "IfcLengthMeasure",
+          "scope": "occurrence_direct",
+          "set_name": "Custom_Pset",
+          "source": {
+            "excerpt": "{\"set_name\":\"Custom_Pset\",\"property_name\":\"SillHeight\",\"value\":305.000000000004,\"requested_value_type\":\"IfcLengthMeasure\",\"requested_unit\":\"mm\",\"scope\":\"occurrence_direct\"}",
+            "reference": "request:/text",
+            "source_kind": "user_request"
+          },
+          "value": 305.000000000004
+        },
+        {
+          "intent_kind": "pset_property",
+          "property_name": "StatusConstruction",
+          "requested_unit": null,
+          "requested_value_type": "IfcLabel",
+          "scope": "occurrence_direct",
+          "set_name": "Custom_Pset",
+          "source": {
+            "excerpt": "{\"set_name\":\"Custom_Pset\",\"property_name\":\"StatusConstruction\",\"value\":\"New Construction\",\"requested_value_type\":\"IfcLabel\",\"requested_unit\":null,\"scope\":\"occurrence_direct\"}",
+            "reference": "request:/text",
+            "source_kind": "user_request"
+          },
+          "value": "New Construction"
+        },
+        {
+          "intent_kind": "pset_property",
+          "property_name": "StoreyName",
+          "requested_unit": null,
+          "requested_value_type": "IfcText",
+          "scope": "occurrence_direct",
+          "set_name": "Custom_Pset",
+          "source": {
+            "excerpt": "{\"set_name\":\"Custom_Pset\",\"property_name\":\"StoreyName\",\"value\":\"Level: Level 1\",\"requested_value_type\":\"IfcText\",\"requested_unit\":null,\"scope\":\"occurrence_direct\"}",
+            "reference": "request:/text",
+            "source_kind": "user_request"
+          },
+          "value": "Level: Level 1"
+        },
+        {
+          "intent_kind": "pset_property",
+          "property_name": "Area",
+          "requested_unit": "m2",
+          "requested_value_type": "IfcAreaMeasure",
+          "scope": "occurrence_direct",
+          "set_name": "Dimensions",
+          "source": {
+            "excerpt": "{\"set_name\":\"Dimensions\",\"property_name\":\"Area\",\"value\":3.17875400000013,\"requested_value_type\":\"IfcAreaMeasure\",\"requested_unit\":\"m2\",\"scope\":\"occurrence_direct\"}",
+            "reference": "request:/text",
+            "source_kind": "user_request"
+          },
+          "value": 3.17875400000013
+        },
+        {
+          "intent_kind": "pset_property",
+          "property_name": "Volume",
+          "requested_unit": "m3",
+          "requested_value_type": "IfcVolumeMeasure",
+          "scope": "occurrence_direct",
+          "set_name": "Dimensions",
+          "source": {
+            "excerpt": "{\"set_name\":\"Dimensions\",\"property_name\":\"Volume\",\"value\":0.0561146700000025,\"requested_value_type\":\"IfcVolumeMeasure\",\"requested_unit\":\"m3\",\"scope\":\"occurrence_direct\"}",
+            "reference": "request:/text",
+            "source_kind": "user_request"
+          },
+          "value": 0.0561146700000025
+        },
+        {
+          "intent_kind": "pset_property",
+          "property_name": "Mark",
+          "requested_unit": null,
+          "requested_value_type": "IfcText",
+          "scope": "occurrence_direct",
+          "set_name": "Identity Data",
+          "source": {
+            "excerpt": "{\"set_name\":\"Identity Data\",\"property_name\":\"Mark\",\"value\":\"7\",\"requested_value_type\":\"IfcText\",\"requested_unit\":null,\"scope\":\"occurrence_direct\"}",
+            "reference": "request:/text",
+            "source_kind": "user_request"
+          },
+          "value": "7"
+        },
+        {
+          "intent_kind": "pset_property",
+          "property_name": "Family",
+          "requested_unit": null,
+          "requested_value_type": "IfcLabel",
+          "scope": "occurrence_direct",
+          "set_name": "Other",
+          "source": {
+            "excerpt": "{\"set_name\":\"Other\",\"property_name\":\"Family\",\"value\":\"M_Fixed: 0915 x 1830mm\",\"requested_value_type\":\"IfcLabel\",\"requested_unit\":null,\"scope\":\"occurrence_direct\"}",
+            "reference": "request:/text",
+            "source_kind": "user_request"
+          },
+          "value": "M_Fixed: 0915 x 1830mm"
+        },
+        {
+          "intent_kind": "pset_property",
+          "property_name": "Family and Type",
+          "requested_unit": null,
+          "requested_value_type": "IfcLabel",
+          "scope": "occurrence_direct",
+          "set_name": "Other",
+          "source": {
+            "excerpt": "{\"set_name\":\"Other\",\"property_name\":\"Family and Type\",\"value\":\"M_Fixed: 0915 x 1830mm\",\"requested_value_type\":\"IfcLabel\",\"requested_unit\":null,\"scope\":\"occurrence_direct\"}",
+            "reference": "request:/text",
+            "source_kind": "user_request"
+          },
+          "value": "M_Fixed: 0915 x 1830mm"
+        },
+        {
+          "intent_kind": "pset_property",
+          "property_name": "Head Height",
+          "requested_unit": "mm",
+          "requested_value_type": "IfcLengthMeasure",
+          "scope": "occurrence_direct",
+          "set_name": "Other",
+          "source": {
+            "excerpt": "{\"set_name\":\"Other\",\"property_name\":\"Head Height\",\"value\":2135.0,\"requested_value_type\":\"IfcLengthMeasure\",\"requested_unit\":\"mm\",\"scope\":\"occurrence_direct\"}",
+            "reference": "request:/text",
+            "source_kind": "user_request"
+          },
+          "value": 2135.0
+        },
+        {
+          "intent_kind": "pset_property",
+          "property_name": "Host Id",
+          "requested_unit": null,
+          "requested_value_type": "IfcLabel",
+          "scope": "occurrence_direct",
+          "set_name": "Other",
+          "source": {
+            "excerpt": "{\"set_name\":\"Other\",\"property_name\":\"Host Id\",\"value\":\"Basic Wall: Outside wall\",\"requested_value_type\":\"IfcLabel\",\"requested_unit\":null,\"scope\":\"occurrence_direct\"}",
+            "reference": "request:/text",
+            "source_kind": "user_request"
+          },
+          "value": "Basic Wall: Outside wall"
+        },
+        {
+          "intent_kind": "pset_property",
+          "property_name": "Type",
+          "requested_unit": null,
+          "requested_value_type": "IfcLabel",
+          "scope": "occurrence_direct",
+          "set_name": "Other",
+          "source": {
+            "excerpt": "{\"set_name\":\"Other\",\"property_name\":\"Type\",\"value\":\"M_Fixed: 0915 x 1830mm\",\"requested_value_type\":\"IfcLabel\",\"requested_unit\":null,\"scope\":\"occurrence_direct\"}",
+            "reference": "request:/text",
+            "source_kind": "user_request"
+          },
+          "value": "M_Fixed: 0915 x 1830mm"
+        },
+        {
+          "intent_kind": "pset_property",
+          "property_name": "Type Id",
+          "requested_unit": null,
+          "requested_value_type": "IfcLabel",
+          "scope": "occurrence_direct",
+          "set_name": "Other",
+          "source": {
+            "excerpt": "{\"set_name\":\"Other\",\"property_name\":\"Type Id\",\"value\":\"M_Fixed: 0915 x 1830mm\",\"requested_value_type\":\"IfcLabel\",\"requested_unit\":null,\"scope\":\"occurrence_direct\"}",
+            "reference": "request:/text",
+            "source_kind": "user_request"
+          },
+          "value": "M_Fixed: 0915 x 1830mm"
+        },
+        {
+          "intent_kind": "pset_property",
+          "property_name": "Phase Created",
+          "requested_unit": null,
+          "requested_value_type": "IfcLabel",
+          "scope": "occurrence_direct",
+          "set_name": "Phasing",
+          "source": {
+            "excerpt": "{\"set_name\":\"Phasing\",\"property_name\":\"Phase Created\",\"value\":\"New Construction\",\"requested_value_type\":\"IfcLabel\",\"requested_unit\":null,\"scope\":\"occurrence_direct\"}",
+            "reference": "request:/text",
+            "source_kind": "user_request"
+          },
+          "value": "New Construction"
+        }
+      ],
+      "prototype_intent": {
+        "reference": "M_Fixed:0915 x 1830mm",
+        "reference_kind": "type_name",
+        "source": {
+          "excerpt": "Reuse the existing Window Type named 'M_Fixed:0915 x 1830mm'.",
+          "reference": "request:/text",
+          "source_kind": "user_request"
+        }
+      },
+      "provenance": [
+        {
+          "excerpt": "On IfcWall GlobalId 1F6umJ5H50aeL3A1As_wTm, restore the missing window. Create a 915 mm wide and 1830 mm high window, with a 305 mm sill. Its center offset is 3042.5 mm from wall_local_start. Reuse the existing Window Type named 'M_Fixed:0915 x 1830mm'.",
+          "reference": "request:/text",
+          "source_kind": "user_request"
+        }
+      ],
+      "target_query": {
+        "allowed_ifc_classes": [
+          "IfcWall"
+        ],
+        "global_id": "1F6umJ5H50aeL3A1As_wTm",
+        "schema_version": "text2ifc/ifc-target-query/0.1"
+      }
+    }
+  ],
+  "prompt_fingerprint": "sha256:fd12bd5c6361f4d6e57a52f6080e77e225c7a056eab9e1dd996c85bd36e44aee",
+  "provenance": [
+    {
+      "excerpt": "On IfcWall GlobalId 1F6umJ5H50aeL3A1As_wTm, restore the missing window. Create a 915 mm wide and 1830 mm high window, with a 305 mm sill. Its center offset is 3042.5 mm from wall_local_start. Reuse the existing Window Type named 'M_Fixed:0915 x 1830mm'.",
+      "reference": "request:/text",
+      "source_kind": "user_request"
+    }
+  ],
+  "request_id": "request-a4e1146cea90e922",
+  "schema_version": "text2ifc/ifc-repair-intent/0.2",
+  "source_request_hash": "sha256:a4e1146cea90e9228174b0d811a7e26d7afb07b6214f3b03caf0154db8f28afb"
+}

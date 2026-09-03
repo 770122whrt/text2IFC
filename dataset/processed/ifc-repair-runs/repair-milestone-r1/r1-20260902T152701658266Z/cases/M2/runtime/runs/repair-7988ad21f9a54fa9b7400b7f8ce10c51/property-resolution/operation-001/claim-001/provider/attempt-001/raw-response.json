@@ -1,0 +1,104 @@
+{
+  "text": "{\"schema_version\":\"text2ifc/ifc-property-rerank-decision/0.1\",\"decision\":\"confirmed\",\"selected_candidate_id\":\"candidate:1:ifc2x3:Pset_BeamCommon.Reference\",\"conflicting_candidate_ids\":[],\"clarification_question\":null}",
+  "transport": {
+    "events": [
+      {
+        "data": {
+          "choices": [
+            {
+              "finish_reason": "stop",
+              "index": 0,
+              "logprobs": null,
+              "message": {
+                "annotations": null,
+                "audio": null,
+                "content": "{\"schema_version\":\"text2ifc/ifc-property-rerank-decision/0.1\",\"decision\":\"confirmed\",\"selected_candidate_id\":\"candidate:1:ifc2x3:Pset_BeamCommon.Reference\",\"conflicting_candidate_ids\":[],\"clarification_question\":null}",
+                "function_call": null,
+                "reasoning_content": "We need to output JSON object according to DECISION_SCHEMA. Need to decide based on property phrase \"构件编号\" (Chinese for \"component number/mark\"). Target class IfcBeam. Candidates offered.\n\nCandidates:\n1. Pset_BeamCommon.Reference - \"Reference ID for this specified type in this project (e.g. type 'A-1')\" - property_name Reference, value type IfcIdentifier. This sounds like an element mark / reference. The phrase \"构件编号\" often maps to \"element mark\" or \"reference\" or \"tag\". In IFC, IfcElement has Tag attribute (not in candidates), but property \"Reference\" in Pset_BeamCommon is similar. The definition says \"Reference ID for this specified type in this project (e.g. type 'A-1')\", likely a type reference, not instance mark. But phrase \"构件编号\" could be \"component number\". In construction, beam mark like B-NEW-01 is an element mark. Candidate 1 is \"Reference\" with IfcIdentifier. Value \"B-NEW-01\" is an identifier. This may be the intended.\n\n2. Pset_BeamCommon.LoadBearing - boolean, no.\n3. Pset_BeamCommon.IsExternal - boolean, no.\n4. Pset_ReinforcementBarPitchOfBeam.Description - Description text, maybe not.\n5. Pset_QuantityTakeOff.LocalContext - Local context text, not relevant.\n\nNeed to decide if confirmed with candidate 1 or clarification? The property phrase \"构件编号\" literally \"member number\" or \"component number\". Offered candidate \"Reference\" has definition \"Reference ID for this specified type in this project (e.g. type 'A-1')\". This is quite close. However, let's consider IFC semantics: For IfcBeam, the common property set has \"Reference\" which is a \"Reference ID for this specified type in this project\". Also in IfcElement there is an attribute \"Tag\" which is not in Pset. But the candidate set doesn't include Tag. The user asks for \"构件编号\" and value \"B-NEW-01\", likely a beam mark. In BIM, often \"Reference\" property is used for mark. The candidate is ranked top. We need to ensure \"direct and sufficiently specific semantic evidence\" uniquely authorizes exactly one offered candidate. Does \"构件编号\" map to \"Reference\" unambiguously? Let's examine other candidates: Description of reinforcement? LoadBearing? IsExternal? LocalContext? None are plausible. So only candidate 1 is plausible. So confirm.\n\nBut need to consider if there is a possible \"name\" or \"object type\" etc missing. Since candidates only include those, candidate 1 is plausible. The phrase means \"component number\", and Reference is \"reference ID\". That's semantically aligned. Should be confirmed.\n\nCheck decision schema: if confirmed, selected_candidate_id must be one offered candidate id. conflicting_candidate_ids? The schema requires conflicting_candidate_ids array, and if confirmed, no constraint on maxItems? Actually allOf: if decision confirmed then selected_candidate_id non-null and clarification_question null. There is no specific requirement for conflicting_candidate_ids in confirmed branch. The property is required array, can be empty. So output empty array. clarification_question null.\n\nNeed include schema_version exactly.\n\nThus output:\n\n{\n  \"schema_version\": \"text2ifc/ifc-property-rerank-decision/0.1\",\n  \"decision\": \"confirmed\",\n  \"selected_candidate_id\": \"candidate:1:ifc2x3:Pset_BeamCommon.Reference\",\n  \"conflicting_candidate_ids\": [],\n  \"clarification_question\": null\n}\n\nLet's verify ID matches pattern. Candidate id is \"candidate:1:ifc2x3:Pset_BeamCommon.Reference\". Contains dots? Pattern ^[A-Za-z0-9][A-Za-z0-9._:/-]*$ allows dots. OK.\n\nNeed output only JSON.",
+                "refusal": null,
+                "role": "assistant",
+                "tool_calls": null
+              }
+            }
+          ],
+          "created": 1788364784,
+          "id": "24a01aeb-4180-406e-94ea-f2d23cf2df6d",
+          "model": "deepseek-v4-flash",
+          "moderation": null,
+          "object": "chat.completion",
+          "service_tier": null,
+          "stop_reason": "stop",
+          "system_fingerprint": "a26a7955944dc5c60445bff77fac9c8e",
+          "usage": {
+            "completion_tokens": 923,
+            "completion_tokens_details": "[REDACTED]",
+            "prompt_cache_hit_tokens": "[REDACTED]",
+            "prompt_cache_miss_tokens": "[REDACTED]",
+            "prompt_tokens": 2788,
+            "prompt_tokens_details": "[REDACTED]",
+            "total_tokens": 3711
+          }
+        },
+        "event": "chat.completion",
+        "sequence": 0
+      }
+    ],
+    "evidence_class": "live",
+    "http_status": 200,
+    "request": {
+      "extra_body": {
+        "thinking": {
+          "type": "enabled"
+        }
+      },
+      "max_tokens": 65536,
+      "messages": [
+        {
+          "content": "# IFC Property Resolution Stage 1.5\n\nYou are a repair-only semantic candidate selector. You handle exactly one\nproperty claim after its target IFC class has already been resolved. You are not\na general BIM analysis agent and you do not author IFC facts.\n\n## Public inputs\n\nPROPERTY_QUERY:\n{\"claim_id\": \"claim-001\", \"corpus_version\": \"ifc2x3-property-records/0.2\", \"model_id\": \"sha256:f61ff5cf8e1cc88da6944d6bcd3e2e7da5ff27dd3288a8781908018cb8240cd6\", \"operation_id\": \"add-beam-1\", \"operation_type\": \"add_beam\", \"property_phrase\": \"构件编号\", \"query_id\": \"property-query:repair-7988ad21f9a54fa9b7400b7f8ce10c51:add-beam-1:claim-001\", \"raw_unit\": null, \"raw_value\": \"B-NEW-01\", \"raw_value_kind\": \"string\", \"request_id\": \"request-1fc01d35d2e4d78e\", \"run_id\": \"repair-7988ad21f9a54fa9b7400b7f8ce10c51\", \"schema_version\": \"text2ifc/ifc-property-resolution-query/0.2\", \"scope\": \"occurrence_direct\", \"target_ifc_class\": \"IfcBeam\"}\n\nCANDIDATE_SET:\n{\"candidate_set_id\": \"property-candidates:repair-7988ad21f9a54fa9b7400b7f8ce10c51:add-beam-1:claim-001\", \"candidates\": [{\"applicable_classes\": [\"IfcBeam\"], \"candidate_id\": \"candidate:1:ifc2x3:Pset_BeamCommon.Reference\", \"canonical_path\": \"Pset_BeamCommon.Reference\", \"definition\": \"Reference ID for this specified type in this project (e.g. type 'A-1')\", \"property_name\": \"Reference\", \"rank\": 1, \"record_id\": \"ifc2x3:Pset_BeamCommon.Reference\", \"score\": 0.5423390394528174, \"set_name\": \"Pset_BeamCommon\", \"source\": {\"kind\": \"ifc2x3_psd\", \"reference\": \"R2x3_TC1/psd/IfcSharedBldgElements/Pset_BeamCommon.xml\"}, \"standard_status\": \"standard\", \"template_type\": \"TypePropertySingleValue\", \"unit\": null, \"value_type\": \"IfcIdentifier\"}, {\"applicable_classes\": [\"IfcBeam\"], \"candidate_id\": \"candidate:2:ifc2x3:Pset_BeamCommon.LoadBearing\", \"canonical_path\": \"Pset_BeamCommon.LoadBearing\", \"definition\": \"Indicates whether the object is intended to carry loads (TRUE) or not (FALSE).\", \"property_name\": \"LoadBearing\", \"rank\": 2, \"record_id\": \"ifc2x3:Pset_BeamCommon.LoadBearing\", \"score\": 0.4835125284754725, \"set_name\": \"Pset_BeamCommon\", \"source\": {\"kind\": \"ifc2x3_psd\", \"reference\": \"R2x3_TC1/psd/IfcSharedBldgElements/Pset_BeamCommon.xml\"}, \"standard_status\": \"standard\", \"template_type\": \"TypePropertySingleValue\", \"unit\": null, \"value_type\": \"IfcBoolean\"}, {\"applicable_classes\": [\"IfcBeam\"], \"candidate_id\": \"candidate:3:ifc2x3:Pset_BeamCommon.IsExternal\", \"canonical_path\": \"Pset_BeamCommon.IsExternal\", \"definition\": \"Indication whether the element is designed for use in the exterior (TRUE) or not (FALSE). If (TRUE) it is an external element and faces the outside of the building.\", \"property_name\": \"IsExternal\", \"rank\": 3, \"record_id\": \"ifc2x3:Pset_BeamCommon.IsExternal\", \"score\": 0.4718333435208379, \"set_name\": \"Pset_BeamCommon\", \"source\": {\"kind\": \"ifc2x3_psd\", \"reference\": \"R2x3_TC1/psd/IfcSharedBldgElements/Pset_BeamCommon.xml\"}, \"standard_status\": \"standard\", \"template_type\": \"TypePropertySingleValue\", \"unit\": null, \"value_type\": \"IfcBoolean\"}, {\"applicable_classes\": [\"IfcBeam\"], \"candidate_id\": \"candidate:4:ifc2x3:Pset_ReinforcementBarPitchOfBeam.Description\", \"canonical_path\": \"Pset_ReinforcementBarPitchOfBeam.Description\", \"definition\": \"Description of the reinforcement.\", \"property_name\": \"Description\", \"rank\": 4, \"record_id\": \"ifc2x3:Pset_ReinforcementBarPitchOfBeam.Description\", \"score\": 0.46897390784676185, \"set_name\": \"Pset_ReinforcementBarPitchOfBeam\", \"source\": {\"kind\": \"ifc2x3_psd\", \"reference\": \"R2x3_TC1/psd/IfcStructuralElementsDomain/Pset_ReinforcementBarPitchOfBeam.xml\"}, \"standard_status\": \"standard\", \"template_type\": \"TypePropertySingleValue\", \"unit\": null, \"value_type\": \"IfcText\"}, {\"applicable_classes\": [\"IfcElement\"], \"candidate_id\": \"candidate:5:ifc2x3:Pset_QuantityTakeOff.LocalContext\", \"canonical_path\": \"Pset_QuantityTakeOff.LocalContext\", \"definition\": \"Local context information for the take-off quantity, if multiple information items are passed, then the property shall be indexed, e.g. LocalContext1, LocalContext2, …\", \"property_name\": \"LocalContext\", \"rank\": 5, \"record_id\": \"ifc2x3:Pset_QuantityTakeOff.LocalContext\", \"score\": 0.4601530604384113, \"set_name\": \"Pset_QuantityTakeOff\", \"source\": {\"kind\": \"ifc2x3_psd\", \"reference\": \"R2x3_TC1/psd/IfcProductExtension/Pset_QuantityTakeOff.xml\"}, \"standard_status\": \"standard\", \"template_type\": \"TypePropertySingleValue\", \"unit\": null, \"value_type\": \"IfcText\"}], \"collection_version\": \"ifc2x3-property-vector/0.2\", \"corpus_version\": \"ifc2x3-property-records/0.2\", \"document_renderer_version\": \"property-record-text/0.1\", \"embedding_model\": {\"model_id\": \"BAAI/bge-m3\", \"model_version\": \"BAAI-bge-m3-local/phase12.1\"}, \"query_id\": \"property-query:repair-7988ad21f9a54fa9b7400b7f8ce10c51:add-beam-1:claim-001\", \"schema_version\": \"text2ifc/ifc-property-candidate-set/0.1\"}\n\nDECISION_SCHEMA:\n{\"$defs\": {\"candidate_id\": {\"maxLength\": 256, \"minLength\": 1, \"pattern\": \"^[A-Za-z0-9][A-Za-z0-9._:/-]*$\", \"type\": \"string\"}}, \"$id\": \"text2ifc/ifc-property-rerank-decision/0.1\", \"$schema\": \"https://json-schema.org/draft/2020-12/schema\", \"additionalProperties\": false, \"allOf\": [{\"if\": {\"properties\": {\"decision\": {\"const\": \"confirmed\"}}, \"required\": [\"decision\"]}, \"then\": {\"properties\": {\"clarification_question\": {\"type\": \"null\"}, \"selected_candidate_id\": {\"$ref\": \"#/$defs/candidate_id\"}}}}, {\"if\": {\"properties\": {\"decision\": {\"const\": \"clarification_required\"}}, \"required\": [\"decision\"]}, \"then\": {\"properties\": {\"clarification_question\": {\"maxLength\": 512, \"minLength\": 1, \"type\": \"string\"}, \"conflicting_candidate_ids\": {\"minItems\": 1}, \"selected_candidate_id\": {\"type\": \"null\"}}}}, {\"if\": {\"properties\": {\"decision\": {\"const\": \"unsupported\"}}, \"required\": [\"decision\"]}, \"then\": {\"properties\": {\"clarification_question\": {\"type\": \"null\"}, \"conflicting_candidate_ids\": {\"maxItems\": 0}, \"selected_candidate_id\": {\"type\": \"null\"}}}}], \"properties\": {\"clarification_question\": {\"oneOf\": [{\"maxLength\": 512, \"minLength\": 1, \"type\": \"string\"}, {\"type\": \"null\"}]}, \"conflicting_candidate_ids\": {\"items\": {\"$ref\": \"#/$defs/candidate_id\"}, \"maxItems\": 5, \"type\": \"array\", \"uniqueItems\": true}, \"decision\": {\"enum\": [\"confirmed\", \"clarification_required\", \"unsupported\"]}, \"schema_version\": {\"const\": \"text2ifc/ifc-property-rerank-decision/0.1\"}, \"selected_candidate_id\": {\"oneOf\": [{\"$ref\": \"#/$defs/candidate_id\"}, {\"type\": \"null\"}]}}, \"required\": [\"schema_version\", \"decision\", \"selected_candidate_id\", \"conflicting_candidate_ids\", \"clarification_question\"], \"title\": \"IFC Property Rerank Decision 0.1\", \"type\": \"object\"}\n\nPREVIOUS_VALIDATION_FEEDBACK:\n[]\n\n## Boundary\n\n- Compare the original property phrase with the definitions and metadata of the\n  offered candidates for this one property claim.\n- Return `confirmed` only when the user's language provides direct and sufficiently specific semantic evidence that uniquely authorizes exactly one offered candidate.\n  When confirmed, select exactly one offered candidate.\n- Semantic relatedness, the nearest candidate, a plausible engineering means, or a\n  possible way to achieve the user's goal is not sufficient evidence for `confirmed`.\n- If multiple offered candidates remain semantically plausible, return\n  `clarification_required`, list only their offered IDs, and ask one short\n  question that distinguishes them.\n- Also return `clarification_required` when the request is underspecified but potentially repairable and the language does not uniquely authorize one\n  property or repair interpretation. List only the offered candidate IDs that\n  remain plausible; one relevant offered ID is sufficient when the question\n  must distinguish it from a broader repair interpretation.\n- When a meaningful repair goal is not specific enough for one executable property, prefer `clarification_required` over choosing the closest candidate.\n- Return `unsupported` only when the request is genuinely outside the supported repair capability or cannot be resolved into a supported repair\n  action even through clarification. A missing exact candidate match alone is\n  not sufficient for `unsupported`.\n- Never invent a candidate ID or use knowledge of a candidate that is not in\n  CANDIDATE_SET.\n- Do not infer, translate, normalize, or change the user's value, unit, scope,\n  operation, target, or provenance.\n- Do not output a Pset name, property name, IFC value type, unit decision,\n  authoring instruction, ChangeSet, or IFC object.\n- Treat scores and ranks only as retrieval evidence. They do not decide semantic\n  meaning, and a Top-1 candidate is not automatically correct.\n- No candidate is executable authority. Program code performs admissibility and\n  constructs the exact typed property after this stage.\n- On a correction attempt, fix only the listed validation errors. Do not rename\n  fields or emit compatibility aliases.\n\n## Output\n\nReturn exactly one JSON object that validates against DECISION_SCHEMA. Do not\nuse Markdown fences, explanations before or after the object, or additional\nfields.\n",
+          "role": "user"
+        }
+      ],
+      "model": "deepseek-v4-flash",
+      "response_format": {
+        "type": "json_object"
+      },
+      "temperature": 0
+    },
+    "response": {
+      "choices": [
+        {
+          "finish_reason": "stop",
+          "index": 0,
+          "logprobs": null,
+          "message": {
+            "annotations": null,
+            "audio": null,
+            "content": "{\"schema_version\":\"text2ifc/ifc-property-rerank-decision/0.1\",\"decision\":\"confirmed\",\"selected_candidate_id\":\"candidate:1:ifc2x3:Pset_BeamCommon.Reference\",\"conflicting_candidate_ids\":[],\"clarification_question\":null}",
+            "function_call": null,
+            "reasoning_content": "We need to output JSON object according to DECISION_SCHEMA. Need to decide based on property phrase \"构件编号\" (Chinese for \"component number/mark\"). Target class IfcBeam. Candidates offered.\n\nCandidates:\n1. Pset_BeamCommon.Reference - \"Reference ID for this specified type in this project (e.g. type 'A-1')\" - property_name Reference, value type IfcIdentifier. This sounds like an element mark / reference. The phrase \"构件编号\" often maps to \"element mark\" or \"reference\" or \"tag\". In IFC, IfcElement has Tag attribute (not in candidates), but property \"Reference\" in Pset_BeamCommon is similar. The definition says \"Reference ID for this specified type in this project (e.g. type 'A-1')\", likely a type reference, not instance mark. But phrase \"构件编号\" could be \"component number\". In construction, beam mark like B-NEW-01 is an element mark. Candidate 1 is \"Reference\" with IfcIdentifier. Value \"B-NEW-01\" is an identifier. This may be the intended.\n\n2. Pset_BeamCommon.LoadBearing - boolean, no.\n3. Pset_BeamCommon.IsExternal - boolean, no.\n4. Pset_ReinforcementBarPitchOfBeam.Description - Description text, maybe not.\n5. Pset_QuantityTakeOff.LocalContext - Local context text, not relevant.\n\nNeed to decide if confirmed with candidate 1 or clarification? The property phrase \"构件编号\" literally \"member number\" or \"component number\". Offered candidate \"Reference\" has definition \"Reference ID for this specified type in this project (e.g. type 'A-1')\". This is quite close. However, let's consider IFC semantics: For IfcBeam, the common property set has \"Reference\" which is a \"Reference ID for this specified type in this project\". Also in IfcElement there is an attribute \"Tag\" which is not in Pset. But the candidate set doesn't include Tag. The user asks for \"构件编号\" and value \"B-NEW-01\", likely a beam mark. In BIM, often \"Reference\" property is used for mark. The candidate is ranked top. We need to ensure \"direct and sufficiently specific semantic evidence\" uniquely authorizes exactly one offered candidate. Does \"构件编号\" map to \"Reference\" unambiguously? Let's examine other candidates: Description of reinforcement? LoadBearing? IsExternal? LocalContext? None are plausible. So only candidate 1 is plausible. So confirm.\n\nBut need to consider if there is a possible \"name\" or \"object type\" etc missing. Since candidates only include those, candidate 1 is plausible. The phrase means \"component number\", and Reference is \"reference ID\". That's semantically aligned. Should be confirmed.\n\nCheck decision schema: if confirmed, selected_candidate_id must be one offered candidate id. conflicting_candidate_ids? The schema requires conflicting_candidate_ids array, and if confirmed, no constraint on maxItems? Actually allOf: if decision confirmed then selected_candidate_id non-null and clarification_question null. There is no specific requirement for conflicting_candidate_ids in confirmed branch. The property is required array, can be empty. So output empty array. clarification_question null.\n\nNeed include schema_version exactly.\n\nThus output:\n\n{\n  \"schema_version\": \"text2ifc/ifc-property-rerank-decision/0.1\",\n  \"decision\": \"confirmed\",\n  \"selected_candidate_id\": \"candidate:1:ifc2x3:Pset_BeamCommon.Reference\",\n  \"conflicting_candidate_ids\": [],\n  \"clarification_question\": null\n}\n\nLet's verify ID matches pattern. Candidate id is \"candidate:1:ifc2x3:Pset_BeamCommon.Reference\". Contains dots? Pattern ^[A-Za-z0-9][A-Za-z0-9._:/-]*$ allows dots. OK.\n\nNeed output only JSON.",
+            "refusal": null,
+            "role": "assistant",
+            "tool_calls": null
+          }
+        }
+      ],
+      "created": 1788364784,
+      "id": "24a01aeb-4180-406e-94ea-f2d23cf2df6d",
+      "model": "deepseek-v4-flash",
+      "moderation": null,
+      "object": "chat.completion",
+      "service_tier": null,
+      "stop_reason": "stop",
+      "system_fingerprint": "a26a7955944dc5c60445bff77fac9c8e",
+      "usage": {
+        "completion_tokens": 923,
+        "completion_tokens_details": "[REDACTED]",
+        "prompt_cache_hit_tokens": "[REDACTED]",
+        "prompt_cache_miss_tokens": "[REDACTED]",
+        "prompt_tokens": 2788,
+        "prompt_tokens_details": "[REDACTED]",
+        "total_tokens": 3711
+      }
+    }
+  }
+}

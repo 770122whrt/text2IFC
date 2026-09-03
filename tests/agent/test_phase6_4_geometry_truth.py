@@ -109,6 +109,72 @@ def test_derives_structural_slab_below_storey_top_elevation():
     ]
 
 
+def test_derives_generic_linear_product_geometry_from_railing_facts():
+    design_brief = _controlled_design_brief()
+    expected_facts = _controlled_expected_facts()
+    expected_facts["products"] = [
+        {
+            "id": "railing-atrium-north",
+            "ifc_class": "IfcRailing",
+            "storey": "storey-2",
+            "geometry": {
+                "kind": "linear_segment",
+                "start_mm": [6000, 3000, 3300],
+                "end_mm": [12000, 3000, 3300],
+                "height_mm": 1100,
+                "thickness_mm": 50,
+            },
+            "alignment_target": "void-atrium:north-edge",
+        },
+        {
+            "id": "railing-atrium-west",
+            "ifc_class": "IfcRailing",
+            "storey": "storey-2",
+            "geometry": {
+                "kind": "linear_segment",
+                "start_mm": [6000, 0, 3300],
+                "end_mm": [6000, 3000, 3300],
+                "height_mm": 1100,
+                "thickness_mm": 50,
+            },
+            "alignment_target": "void-atrium:west-edge",
+        },
+    ]
+
+    expectation = build_design_geometry_expectation(
+        case_id="difficult-railing-geometry",
+        design_brief=design_brief,
+        expected_facts=expected_facts,
+    )
+
+    assert expectation["products"] == {
+        "railing-atrium-north": {
+            "ifc_class": "IfcRailing",
+            "geometry_kind": "linear_segment",
+            "bbox": {
+                "x": [6.0, 12.0],
+                "y": [2.975, 3.025],
+                "z": [3.3, 4.4],
+            },
+            "bbox_issue_code": "LINEAR_PRODUCT_BBOX_MISMATCH",
+            "alignment_target": "void-atrium:north-edge",
+            "source_fact_refs": ["/products/0/geometry"],
+        },
+        "railing-atrium-west": {
+            "ifc_class": "IfcRailing",
+            "geometry_kind": "linear_segment",
+            "bbox": {
+                "x": [5.975, 6.025],
+                "y": [0.0, 3.0],
+                "z": [3.3, 4.4],
+            },
+            "bbox_issue_code": "LINEAR_PRODUCT_BBOX_MISMATCH",
+            "alignment_target": "void-atrium:west-edge",
+            "source_fact_refs": ["/products/1/geometry"],
+        },
+    }
+
+
 def test_candidate_gate_uses_design_derived_geometry_expectation(tmp_path):
     design_brief = _controlled_design_brief()
     expected_facts = _controlled_expected_facts()

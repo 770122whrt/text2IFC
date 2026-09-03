@@ -1,0 +1,123 @@
+{
+  "schema_version": "text2ifc/phase12-stage1-scope-cases/0.1",
+  "contract": "12-STAGE1-SCOPE-CORRECTION-SPEC.md",
+  "cases": [
+    {
+      "case_id": "beam-complete-d7n",
+      "scene": "d7n",
+      "request": "On Level 1 add a horizontal rectangular Beam from (120000,120000,3000) mm to (126000,120000,3000) mm, 300 mm wide and 500 mm high.",
+      "expected": "repair_intent"
+    },
+    {
+      "case_id": "column-complete-vvo",
+      "scene": "vvo",
+      "request": "On Level 1 add a vertical rectangular Column from (120000,120000,0) mm to (120000,120000,6000) mm, 400 mm wide and 600 mm deep, oriented along local Y.",
+      "expected": "repair_intent"
+    },
+    {
+      "case_id": "column-grouped-clarification-d7n",
+      "scene": "d7n",
+      "request": "Add a Column on Level 1.",
+      "expected": "clarification_required"
+    },
+    {
+      "case_id": "analysis-member",
+      "scene": "d7n",
+      "request": "Add a Beam on Level 1 and make it a structural analysis member.",
+      "expected": "unsupported",
+      "capability_id": "structural_analysis_member",
+      "reason_code": "STRUCTURAL_ANALYSIS_UNSUPPORTED"
+    },
+    {
+      "case_id": "analysis-node",
+      "scene": "d7n",
+      "request": "Add a Beam on Level 1 and attach a structural analysis node.",
+      "expected": "unsupported",
+      "capability_id": "structural_analysis_node",
+      "reason_code": "STRUCTURAL_ANALYSIS_UNSUPPORTED"
+    },
+    {
+      "case_id": "analysis-load",
+      "scene": "vvo",
+      "request": "Add a Column on Level 1 and assign a structural load.",
+      "expected": "unsupported",
+      "capability_id": "structural_analysis_load",
+      "reason_code": "STRUCTURAL_ANALYSIS_UNSUPPORTED"
+    },
+    {
+      "case_id": "analysis-port",
+      "scene": "vvo",
+      "request": "Add a Beam on Level 1 and create a structural analysis port.",
+      "expected": "unsupported",
+      "capability_id": "structural_analysis_port",
+      "reason_code": "STRUCTURAL_ANALYSIS_UNSUPPORTED"
+    },
+    {
+      "case_id": "analysis-connection",
+      "scene": "d7n",
+      "request": "Add a Column on Level 1 and create a structural analysis connection.",
+      "expected": "unsupported",
+      "capability_id": "structural_analysis_connection",
+      "reason_code": "STRUCTURAL_ANALYSIS_UNSUPPORTED"
+    },
+    {
+      "case_id": "beam-round-section",
+      "scene": "d7n",
+      "request": "Add a round Beam on Level 1.",
+      "expected": "unsupported",
+      "capability_id": "round_section",
+      "reason_code": "BEAM_GEOMETRY_UNSUPPORTED"
+    },
+    {
+      "case_id": "pure-unregistered-render",
+      "scene": "vvo",
+      "request": "Render a photorealistic view of Level 1.",
+      "expected": "unsupported",
+      "capability_id": "unregistered_operation",
+      "reason_code": "REPAIR_REQUEST_OUT_OF_SCOPE"
+    },
+    {
+      "case_id": "mixed-repair-and-render",
+      "scene": "d7n",
+      "request": "Add the stated Beam on Level 1 and render a photorealistic view.",
+      "expected": "unsupported",
+      "capability_id": "unregistered_operation",
+      "reason_code": "REPAIR_REQUEST_CONTAINS_UNSUPPORTED_ACTIONS"
+    },
+    {
+      "case_id": "exact-rectangle-token",
+      "scene": "d7n",
+      "request": "Add the stated rectangular Beam on Level 1.",
+      "provider_shape": "rectangle",
+      "expected": "accepted_shape"
+    },
+    {
+      "case_id": "forbidden-rectangular-alias",
+      "scene": "d7n",
+      "request": "Add the stated rectangular Beam on Level 1.",
+      "provider_shape": "rectangular",
+      "expected": "schema_invalid"
+    },
+    {
+      "case_id": "storey-target-name",
+      "scene": "vvo",
+      "request": "Add the stated Column on Level 1.",
+      "provider_target": {"names": ["Level 1"]},
+      "expected": "accepted_target"
+    },
+    {
+      "case_id": "forbidden-storey-filter-selector",
+      "scene": "vvo",
+      "request": "Add the stated Column on Level 1.",
+      "provider_target": {"storey_name": "Level 1"},
+      "expected": "schema_invalid"
+    },
+    {
+      "case_id": "malformed-truncated-json",
+      "scene": "d7n",
+      "request": "Add the stated Beam on Level 1.",
+      "provider_output": "{\"schema_version\":",
+      "expected": "retry_exhausted"
+    }
+  ]
+}

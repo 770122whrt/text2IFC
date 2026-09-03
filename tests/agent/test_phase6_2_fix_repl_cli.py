@@ -643,7 +643,11 @@ def _brief(*, original_request: str, status: str, source_turns=None):
         "status": status,
         "known_facts": {
             "space": {"length_mm": 6000, "width_mm": 4000, "height_mm": 3000},
-            "walls": {"count": 4, "enclosure": "closed"},
+            "walls": {
+                "count": 4,
+                "enclosure": "closed",
+                **({"thickness_mm": 300} if status == "ready" else {}),
+            },
         },
         "fact_sources": [
             {

@@ -1,0 +1,806 @@
+{
+  "expectation_source": "design_brief_expected_facts",
+  "issues": [
+    {
+      "actual": {
+        "x": [
+          12.0,
+          18.0
+        ],
+        "y": [
+          4.0,
+          7.0
+        ],
+        "z": [
+          2.9999999999999996,
+          3.2999999999999994
+        ]
+      },
+      "code": "FLOOR_OPENING_BBOX_MISMATCH",
+      "entity_ids": [
+        "opening-first-floor-slab-atrium"
+      ],
+      "expected": {
+        "x": [
+          6.0,
+          12.0
+        ],
+        "y": [
+          0.0,
+          3.0
+        ],
+        "z": [
+          3.0,
+          3.3
+        ]
+      },
+      "message": "Component 'opening-first-floor-slab-atrium' world bounding box is outside tolerance.",
+      "path": "/floor_openings/opening-first-floor-slab-atrium/bbox",
+      "source_fact_refs": [
+        "/known_facts/floor_slabs/1/openings/0"
+      ]
+    },
+    {
+      "actual": {
+        "x": [
+          16.0,
+          17.0
+        ],
+        "y": [
+          7.5,
+          12.0
+        ],
+        "z": [
+          2.9999999999999996,
+          3.2999999999999994
+        ]
+      },
+      "code": "FLOOR_OPENING_BBOX_MISMATCH",
+      "entity_ids": [
+        "opening-first-floor-slab-stair"
+      ],
+      "expected": {
+        "x": [
+          10.0,
+          11.0
+        ],
+        "y": [
+          3.5,
+          8.0
+        ],
+        "z": [
+          3.0,
+          3.3
+        ]
+      },
+      "message": "Component 'opening-first-floor-slab-stair' world bounding box is outside tolerance.",
+      "path": "/floor_openings/opening-first-floor-slab-stair/bbox",
+      "source_fact_refs": [
+        "/known_facts/floor_slabs/1/openings/1"
+      ]
+    }
+  ],
+  "metrics": {
+    "case_id": "53df7ac99abf41e8",
+    "floor_openings": {
+      "opening-first-floor-slab-atrium": {
+        "bbox": {
+          "x": [
+            12.0,
+            18.0
+          ],
+          "y": [
+            4.0,
+            7.0
+          ],
+          "z": [
+            2.9999999999999996,
+            3.2999999999999994
+          ]
+        },
+        "ifc_class": "IfcOpeningElement"
+      },
+      "opening-first-floor-slab-stair": {
+        "bbox": {
+          "x": [
+            16.0,
+            17.0
+          ],
+          "y": [
+            7.5,
+            12.0
+          ],
+          "z": [
+            2.9999999999999996,
+            3.2999999999999994
+          ]
+        },
+        "ifc_class": "IfcOpeningElement"
+      }
+    },
+    "products": {
+      "railing-atrium-north": {
+        "bbox": {
+          "x": [
+            6.0,
+            12.0
+          ],
+          "y": [
+            2.975,
+            3.025
+          ],
+          "z": [
+            3.3000000000000003,
+            4.4
+          ]
+        },
+        "ifc_class": "IfcRailing"
+      },
+      "railing-atrium-west": {
+        "bbox": {
+          "x": [
+            5.975,
+            6.025
+          ],
+          "y": [
+            0.0,
+            3.0
+          ],
+          "z": [
+            3.3000000000000003,
+            4.4
+          ]
+        },
+        "ifc_class": "IfcRailing"
+      }
+    },
+    "roof": {},
+    "slabs": {
+      "first-floor-slab": {
+        "bbox": {
+          "x": [
+            0.0,
+            12.0
+          ],
+          "y": [
+            0.0,
+            8.0
+          ],
+          "z": [
+            2.9999999999999996,
+            3.2999999999999994
+          ]
+        },
+        "ifc_class": "IfcSlab"
+      },
+      "ground-floor-slab": {
+        "bbox": {
+          "x": [
+            0.0,
+            12.0
+          ],
+          "y": [
+            0.0,
+            8.0
+          ],
+          "z": [
+            -0.3,
+            0.0
+          ]
+        },
+        "ifc_class": "IfcSlab"
+      }
+    },
+    "spaces": {
+      "space-storey-1-bathroom": {
+        "bbox": {
+          "x": [
+            5.0,
+            7.0
+          ],
+          "y": [
+            5.0,
+            8.0
+          ],
+          "z": [
+            0.0,
+            3.0
+          ]
+        },
+        "ifc_class": "IfcSpace"
+      },
+      "space-storey-1-corridor": {
+        "bbox": {
+          "x": [
+            0.0,
+            10.0
+          ],
+          "y": [
+            3.0,
+            5.0
+          ],
+          "z": [
+            0.0,
+            3.0
+          ]
+        },
+        "ifc_class": "IfcSpace"
+      },
+      "space-storey-1-dining": {
+        "bbox": {
+          "x": [
+            7.0,
+            12.0
+          ],
+          "y": [
+            0.0,
+            3.0
+          ],
+          "z": [
+            0.0,
+            3.0
+          ]
+        },
+        "ifc_class": "IfcSpace"
+      },
+      "space-storey-1-kitchen": {
+        "bbox": {
+          "x": [
+            0.0,
+            5.0
+          ],
+          "y": [
+            5.0,
+            8.0
+          ],
+          "z": [
+            0.0,
+            3.0
+          ]
+        },
+        "ifc_class": "IfcSpace"
+      },
+      "space-storey-1-living": {
+        "bbox": {
+          "x": [
+            0.0,
+            7.0
+          ],
+          "y": [
+            0.0,
+            3.0
+          ],
+          "z": [
+            0.0,
+            3.0
+          ]
+        },
+        "ifc_class": "IfcSpace"
+      },
+      "space-storey-1-stair-hall": {
+        "bbox": {
+          "x": [
+            7.0,
+            12.0
+          ],
+          "y": [
+            5.0,
+            8.0
+          ],
+          "z": [
+            0.0,
+            3.0
+          ]
+        },
+        "ifc_class": "IfcSpace"
+      },
+      "space-storey-2-bathroom": {
+        "bbox": {
+          "x": [
+            5.0,
+            7.0
+          ],
+          "y": [
+            5.0,
+            8.0
+          ],
+          "z": [
+            3.3000000000000003,
+            6.300000000000001
+          ]
+        },
+        "ifc_class": "IfcSpace"
+      },
+      "space-storey-2-bedroom-1": {
+        "bbox": {
+          "x": [
+            0.0,
+            5.0
+          ],
+          "y": [
+            5.0,
+            8.0
+          ],
+          "z": [
+            3.3000000000000003,
+            6.300000000000001
+          ]
+        },
+        "ifc_class": "IfcSpace"
+      },
+      "space-storey-2-bedroom-2": {
+        "bbox": {
+          "x": [
+            7.0,
+            10.0
+          ],
+          "y": [
+            5.0,
+            8.0
+          ],
+          "z": [
+            3.3000000000000003,
+            6.300000000000001
+          ]
+        },
+        "ifc_class": "IfcSpace"
+      },
+      "space-storey-2-bedroom-3": {
+        "bbox": {
+          "x": [
+            0.0,
+            6.0
+          ],
+          "y": [
+            0.0,
+            3.0
+          ],
+          "z": [
+            3.3000000000000003,
+            6.300000000000001
+          ]
+        },
+        "ifc_class": "IfcSpace"
+      },
+      "space-storey-2-corridor": {
+        "bbox": {
+          "x": [
+            0.0,
+            10.0
+          ],
+          "y": [
+            3.0,
+            5.0
+          ],
+          "z": [
+            3.3000000000000003,
+            6.300000000000001
+          ]
+        },
+        "ifc_class": "IfcSpace"
+      }
+    },
+    "stairs": {
+      "stair-1": {
+        "bbox": {
+          "x": [
+            10.0,
+            11.0
+          ],
+          "y": [
+            3.75,
+            8.0
+          ],
+          "z": [
+            0.0,
+            3.3000000000000003
+          ]
+        },
+        "flight_ids": [
+          "stair-flight-1"
+        ],
+        "has_stepped_profile": true
+      }
+    },
+    "wall_set_convention": "primary",
+    "walls": {
+      "wall-bathroom-bedroom2-storey2": {
+        "axis": "y",
+        "bbox": {
+          "x": [
+            6.9,
+            7.1
+          ],
+          "y": [
+            5.0,
+            8.0
+          ],
+          "z": [
+            3.3000000000000003,
+            6.300000000000001
+          ]
+        },
+        "ifc_class": "IfcWall"
+      },
+      "wall-bathroom-corridor-storey1": {
+        "axis": "x",
+        "bbox": {
+          "x": [
+            5.0,
+            7.0
+          ],
+          "y": [
+            4.9,
+            5.1
+          ],
+          "z": [
+            0.0,
+            3.0
+          ]
+        },
+        "ifc_class": "IfcWall"
+      },
+      "wall-bathroom-stairhall-storey1": {
+        "axis": "y",
+        "bbox": {
+          "x": [
+            6.9,
+            7.1
+          ],
+          "y": [
+            5.0,
+            8.0
+          ],
+          "z": [
+            0.0,
+            3.0
+          ]
+        },
+        "ifc_class": "IfcWall"
+      },
+      "wall-bedroom1-bathroom-storey2": {
+        "axis": "y",
+        "bbox": {
+          "x": [
+            4.9,
+            5.1
+          ],
+          "y": [
+            5.0,
+            8.0
+          ],
+          "z": [
+            3.3000000000000003,
+            6.300000000000001
+          ]
+        },
+        "ifc_class": "IfcWall"
+      },
+      "wall-corridor-bathroom-storey2": {
+        "axis": "x",
+        "bbox": {
+          "x": [
+            5.0,
+            7.0
+          ],
+          "y": [
+            4.9,
+            5.1
+          ],
+          "z": [
+            3.3000000000000003,
+            6.300000000000001
+          ]
+        },
+        "ifc_class": "IfcWall"
+      },
+      "wall-corridor-bedroom1-storey2": {
+        "axis": "x",
+        "bbox": {
+          "x": [
+            0.0,
+            5.0
+          ],
+          "y": [
+            4.9,
+            5.1
+          ],
+          "z": [
+            3.3000000000000003,
+            6.300000000000001
+          ]
+        },
+        "ifc_class": "IfcWall"
+      },
+      "wall-corridor-bedroom2-storey2": {
+        "axis": "x",
+        "bbox": {
+          "x": [
+            7.0,
+            10.0
+          ],
+          "y": [
+            4.9,
+            5.1
+          ],
+          "z": [
+            3.3000000000000003,
+            6.300000000000001
+          ]
+        },
+        "ifc_class": "IfcWall"
+      },
+      "wall-corridor-bedroom3-storey2": {
+        "axis": "x",
+        "bbox": {
+          "x": [
+            0.0,
+            6.0
+          ],
+          "y": [
+            2.9,
+            3.1
+          ],
+          "z": [
+            3.3000000000000003,
+            6.300000000000001
+          ]
+        },
+        "ifc_class": "IfcWall"
+      },
+      "wall-dining-corridor-storey1": {
+        "axis": "x",
+        "bbox": {
+          "x": [
+            7.0,
+            12.0
+          ],
+          "y": [
+            2.9,
+            3.1
+          ],
+          "z": [
+            0.0,
+            3.0
+          ]
+        },
+        "ifc_class": "IfcWall"
+      },
+      "wall-kitchen-bathroom-storey1": {
+        "axis": "y",
+        "bbox": {
+          "x": [
+            4.9,
+            5.1
+          ],
+          "y": [
+            5.0,
+            8.0
+          ],
+          "z": [
+            0.0,
+            3.0
+          ]
+        },
+        "ifc_class": "IfcWall"
+      },
+      "wall-kitchen-corridor-storey1": {
+        "axis": "x",
+        "bbox": {
+          "x": [
+            0.0,
+            5.0
+          ],
+          "y": [
+            4.9,
+            5.1
+          ],
+          "z": [
+            0.0,
+            3.0
+          ]
+        },
+        "ifc_class": "IfcWall"
+      },
+      "wall-living-corridor-storey1": {
+        "axis": "x",
+        "bbox": {
+          "x": [
+            0.0,
+            7.0
+          ],
+          "y": [
+            2.9,
+            3.1
+          ],
+          "z": [
+            0.0,
+            3.0
+          ]
+        },
+        "ifc_class": "IfcWall"
+      },
+      "wall-living-dining-storey1": {
+        "axis": "y",
+        "bbox": {
+          "x": [
+            6.9,
+            7.1
+          ],
+          "y": [
+            0.0,
+            3.0
+          ],
+          "z": [
+            0.0,
+            3.0
+          ]
+        },
+        "ifc_class": "IfcWall"
+      },
+      "wall-stairhall-corridor-storey1": {
+        "axis": "x",
+        "bbox": {
+          "x": [
+            7.0,
+            12.0
+          ],
+          "y": [
+            4.9,
+            5.1
+          ],
+          "z": [
+            0.0,
+            3.0
+          ]
+        },
+        "ifc_class": "IfcWall"
+      },
+      "wall-storey-1-east": {
+        "axis": "y",
+        "bbox": {
+          "x": [
+            11.9,
+            12.1
+          ],
+          "y": [
+            0.0,
+            8.0
+          ],
+          "z": [
+            0.0,
+            3.0
+          ]
+        },
+        "ifc_class": "IfcWall"
+      },
+      "wall-storey-1-north": {
+        "axis": "x",
+        "bbox": {
+          "x": [
+            0.0,
+            12.0
+          ],
+          "y": [
+            7.9,
+            8.1
+          ],
+          "z": [
+            0.0,
+            3.0
+          ]
+        },
+        "ifc_class": "IfcWall"
+      },
+      "wall-storey-1-south": {
+        "axis": "x",
+        "bbox": {
+          "x": [
+            0.0,
+            12.0
+          ],
+          "y": [
+            -0.1,
+            0.1
+          ],
+          "z": [
+            0.0,
+            3.0
+          ]
+        },
+        "ifc_class": "IfcWall"
+      },
+      "wall-storey-1-west": {
+        "axis": "y",
+        "bbox": {
+          "x": [
+            -0.10000000000000003,
+            0.1
+          ],
+          "y": [
+            0.0,
+            8.0
+          ],
+          "z": [
+            0.0,
+            3.0
+          ]
+        },
+        "ifc_class": "IfcWall"
+      },
+      "wall-storey-2-east": {
+        "axis": "y",
+        "bbox": {
+          "x": [
+            11.9,
+            12.1
+          ],
+          "y": [
+            0.0,
+            8.0
+          ],
+          "z": [
+            3.3000000000000003,
+            6.300000000000001
+          ]
+        },
+        "ifc_class": "IfcWall"
+      },
+      "wall-storey-2-north": {
+        "axis": "x",
+        "bbox": {
+          "x": [
+            0.0,
+            12.0
+          ],
+          "y": [
+            7.9,
+            8.1
+          ],
+          "z": [
+            3.3000000000000003,
+            6.300000000000001
+          ]
+        },
+        "ifc_class": "IfcWall"
+      },
+      "wall-storey-2-south": {
+        "axis": "x",
+        "bbox": {
+          "x": [
+            0.0,
+            12.0
+          ],
+          "y": [
+            -0.1,
+            0.1
+          ],
+          "z": [
+            3.3000000000000003,
+            6.300000000000001
+          ]
+        },
+        "ifc_class": "IfcWall"
+      },
+      "wall-storey-2-west": {
+        "axis": "y",
+        "bbox": {
+          "x": [
+            -0.1,
+            0.1
+          ],
+          "y": [
+            0.0,
+            8.0
+          ],
+          "z": [
+            3.3000000000000003,
+            6.300000000000001
+          ]
+        },
+        "ifc_class": "IfcWall"
+      }
+    }
+  },
+  "success": false
+}

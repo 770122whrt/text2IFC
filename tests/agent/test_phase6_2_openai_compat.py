@@ -273,7 +273,7 @@ def test_deepseek_runtime_config_keeps_base_url_without_v1_suffix():
     assert "api.deepseek.com" not in repr(config)
 
 
-def test_deepseek_runtime_config_defaults_to_bounded_output_budget():
+def test_deepseek_runtime_config_defaults_to_64k_input_and_output_budgets():
     config = load_openai_compatible_runtime_config(
         {
             "TEXT2IFC_PROVIDER": "deepseek",
@@ -283,7 +283,8 @@ def test_deepseek_runtime_config_defaults_to_bounded_output_budget():
         }
     )
 
-    assert config.max_completion_tokens == 8192
+    assert config.max_completion_tokens == 65536
+    assert config.max_input_tokens == 65536
 
 
 def test_deepseek_runtime_config_accepts_explicit_output_budget():
@@ -298,6 +299,20 @@ def test_deepseek_runtime_config_accepts_explicit_output_budget():
     )
 
     assert config.max_completion_tokens == 16384
+
+
+def test_deepseek_runtime_config_accepts_explicit_input_budget():
+    config = load_openai_compatible_runtime_config(
+        {
+            "TEXT2IFC_PROVIDER": "deepseek",
+            "API_KEY": "secret-deepseek-key",
+            "OpenAI_BASE_URL": "https://api.deepseek.com",
+            "TEXT2IFC_DEEPSEEK_MODEL": "deepseek-v4-flash",
+            "TEXT2IFC_DEEPSEEK_MAX_INPUT_TOKENS": "32768",
+        }
+    )
+
+    assert config.max_input_tokens == 32768
 
 
 def test_runtime_config_accepts_explicit_provider_timeout():
@@ -462,7 +477,7 @@ def test_openai_compatible_live_provider_returns_live_provider_result():
     assert captured["client_kwargs"]["api_key"] == "secret-api-key"
 
 
-def test_deepseek_live_provider_uses_flash_model_and_safe_provider_label():
+def test_deepseek_live_provider_records_enabled_thinking_request_and_evidence():
     captured = {}
 
     class Response:
@@ -524,13 +539,60 @@ def test_deepseek_live_provider_uses_flash_model_and_safe_provider_label():
     assert result.output.text == '{"ok":true}'
     assert result.output.metadata["provider"] == "deepseek-openai-compatible"
     assert captured["model"] == "deepseek-v4-flash"
-    assert captured["max_tokens"] == 8192
+    assert captured["max_tokens"] == 65536
     assert "max_completion_tokens" not in captured
     assert captured["response_format"] == {"type": "json_object"}
+    assert captured["extra_body"] == {"thinking": {"type": "enabled"}}
+    assert result.request["extra_body"] == {"thinking": {"type": "enabled"}}
+    assert result.output.metadata["request_configuration"] == {
+        "thinking": {"type": "enabled"},
+        "temperature": {"value": 0, "effective": False},
+    }
     assert captured["client_kwargs"] == {
         "api_key": "secret-deepseek-key",
         "base_url": "https://api.deepseek.com",
     }
+
+
+def test_deepseek_live_provider_rejects_prompt_over_input_budget_before_call():
+    called = False
+
+    class Client:
+        def __init__(self, **kwargs):
+            del kwargs
+            self.chat = self
+            self.completions = self
+
+        def create(self, **kwargs):
+            nonlocal called
+            called = True
+            del kwargs
+            raise AssertionError("provider call must not occur")
+
+    config = load_openai_compatible_runtime_config(
+        {
+            "TEXT2IFC_PROVIDER": "deepseek",
+            "API_KEY": "secret-deepseek-key",
+            "OpenAI_BASE_URL": "https://api.deepseek.com",
+            "TEXT2IFC_DEEPSEEK_MODEL": "deepseek-v4-flash",
+            "TEXT2IFC_DEEPSEEK_MAX_INPUT_TOKENS": "1",
+        }
+    )
+    provider = openai_compat.OpenAICompatibleLiveProvider(
+        config=config, client_factory=Client
+    )
+
+    with pytest.raises(ProviderOutputError, match="input token budget") as captured:
+        provider.generate_live(
+            session_id="over-budget",
+            prompt="12345",
+            schema={},
+            state={},
+        )
+
+    assert called is False
+    assert captured.value.details["max_input_tokens"] == 1
+    assert captured.value.details["estimated_input_tokens"] == 2
 
 
 def test_deepseek_live_provider_wraps_connection_failure_without_secrets():
@@ -571,9 +633,77 @@ def test_deepseek_live_provider_wraps_connection_failure_without_secrets():
     assert details["provider"] == "deepseek-openai-compatible"
     assert details["failure_class"] == "provider_connection_error"
     assert details["exception_type"] == "RuntimeError"
-    assert details["request"]["max_tokens"] == 8192
+    assert details["request"]["max_tokens"] == 65536
     assert "secret-deepseek-key" not in rendered
     assert "api.deepseek.com" not in rendered
+
+
+def test_deepseek_live_provider_retries_transient_connection_then_succeeds():
+    calls = 0
+    delays = []
+
+    class APIConnectionError(Exception):
+        pass
+
+    class Response:
+        def model_dump(self):
+            return {
+                "id": "deepseek-retry-001",
+                "object": "chat.completion",
+                "model": "deepseek-v4-flash",
+                "choices": [
+                    {
+                        "index": 0,
+                        "finish_reason": "stop",
+                        "message": {"role": "assistant", "content": '{"ok":true}'},
+                    }
+                ],
+                "usage": {
+                    "prompt_tokens": 5,
+                    "completion_tokens": 3,
+                    "total_tokens": 8,
+                },
+            }
+
+    class ChatCompletions:
+        def create(self, **kwargs):
+            nonlocal calls
+            del kwargs
+            calls += 1
+            if calls == 1:
+                raise APIConnectionError("transient secret-bearing detail")
+            return Response()
+
+    class Client:
+        def __init__(self, **kwargs):
+            del kwargs
+            self.chat = type("Chat", (), {"completions": ChatCompletions()})()
+
+    config = load_openai_compatible_runtime_config(
+        {
+            "TEXT2IFC_PROVIDER": "deepseek",
+            "API_KEY": "secret-deepseek-key",
+            "OpenAI_BASE_URL": "https://api.deepseek.com",
+            "TEXT2IFC_DEEPSEEK_MODEL": "deepseek-v4-flash",
+        }
+    )
+    provider = openai_compat.OpenAICompatibleLiveProvider(
+        config=config,
+        client_factory=Client,
+        connection_retry_delay_seconds=0.25,
+        sleep=delays.append,
+    )
+
+    result = provider.generate_live(
+        session_id="phase6.2-retry",
+        prompt="Return JSON",
+        schema={},
+        state={},
+    )
+
+    assert calls == 2
+    assert delays == [0.25]
+    assert result.output.metadata["transport_attempts"] == 2
 
 
 def test_phase6_2_compatibility_check_combines_live_probe_results():

@@ -1,0 +1,185 @@
+{
+  "base_model_fingerprint": "sha256:707a032566dee8e969a44d95509be46d646440e2443624709f8d3ae2b45f4656",
+  "binding_status": "bound",
+  "changeset_id": "changeset/00bb6ee2ce21cdeab02bec894449085bcc29a31e9d7c2e2256b0ef1494c156f0",
+  "evidence_refs": [
+    "resolved:/operations/add-beam-1/context/candidate_targets/0",
+    "resolved:/operations/set-window-fire-rating-1/context/candidate_targets/0"
+  ],
+  "operations": [
+    {
+      "evidence_refs": [
+        "resolved:/operations/add-beam-1/context/candidate_targets/0"
+      ],
+      "operation_id": "add-beam-1",
+      "operation_type": "add_beam",
+      "parameters": {
+        "axis": {
+          "end": {
+            "x_mm": 7000.0,
+            "y_mm": -20000.0,
+            "z_mm": 3100.0
+          },
+          "start": {
+            "x_mm": 1000.0,
+            "y_mm": -20000.0,
+            "z_mm": 3100.0
+          }
+        },
+        "section": {
+          "height_mm": 500,
+          "shape": "rectangle",
+          "width_mm": 300
+        }
+      },
+      "semantic_assignments": [
+        {
+          "applicability": "conditional",
+          "authoring_action": "bind_relationship",
+          "derivation": null,
+          "fact_key": "relationship:host",
+          "operation_id": "add-beam-1",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "resolved-host-target:1xS3BCk291UvhgP2dvNMKI",
+            "resolved-host:1xS3BCk291UvhgP2dvNMKI",
+            "operation:add-beam-1"
+          ],
+          "scope": "beam_occurrence",
+          "source_fact_key": "relationship:host",
+          "source_kind": "deterministic_derived",
+          "source_ref": "current-host-binding:1xS3BCk291UvhgP2dvNMKI",
+          "unit": null,
+          "value": "1xS3BCk291UvhgP2dvNMKI",
+          "value_type": "IfcBuildingStorey"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "bind_relationship",
+          "derivation": null,
+          "fact_key": "relationship:storey",
+          "operation_id": "add-beam-1",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "operation:add-beam-1",
+            "registered-beam-storey-policy:0.1"
+          ],
+          "scope": "beam_occurrence",
+          "source_fact_key": "relationship:storey",
+          "source_kind": "deterministic_derived",
+          "source_ref": "resolved:/operations/add-beam-1/target",
+          "unit": null,
+          "value": "1xS3BCk291UvhgP2dvNMKI",
+          "value_type": "IfcBuildingStorey"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "inherit_from_type",
+          "derivation": {
+            "formal_attributes": {},
+            "ifc_class": "IfcBeamType",
+            "template": {
+              "name": "Text2IFC generated beam type add-beam-1",
+              "predefined_type": "NOTDEFINED",
+              "section": {
+                "height_mm": 500.0,
+                "shape": "rectangle",
+                "width_mm": 300.0
+              },
+              "section_digest": "sha256:db582be0ced28b6b6de912e19cf652f4c387aca91e7d30984152748192f244eb"
+            },
+            "template_digest": "sha256:e60f0a1b787dfeeaa0349f1ee07c7f816b46a8d34921f83a73b1bb75c02a94e1",
+            "template_id": "text2ifc-rectangular-beam-type",
+            "template_version": "0.1"
+          },
+          "fact_key": "relationship:type",
+          "operation_id": "add-beam-1",
+          "ownership": "type_inherited",
+          "provenance": [
+            "operation:add-beam-1",
+            "generated-type-template:0.1"
+          ],
+          "scope": "beam_occurrence",
+          "source_fact_key": "relationship:type",
+          "source_kind": "deterministic_derived",
+          "source_ref": "generated-type:171SZKyDLHKvvHB68doQvM",
+          "unit": null,
+          "value": "171SZKyDLHKvvHB68doQvM",
+          "value_type": "IfcBeamType"
+        }
+      ],
+      "semantic_manifest": {
+        "manifest_id": "semantic-manifest-1f8f57d34fcc8efb60d05fd2",
+        "policy_id": "beam.add.l2",
+        "policy_version": "0.1"
+      },
+      "target": {
+        "storey_global_id": "1xS3BCk291UvhgP2dvNMKI"
+      }
+    },
+    {
+      "evidence_refs": [
+        "resolved:/operations/set-window-fire-rating-1/context/candidate_targets/0"
+      ],
+      "operation_id": "set-window-fire-rating-1",
+      "operation_type": "set_occurrence_properties",
+      "parameters": {},
+      "semantic_assignments": [
+        {
+          "applicability": "conditional",
+          "authoring_action": "set_occurrence_pset",
+          "fact_key": "pset:Pset_WindowCommon.FireRating",
+          "operation_id": "set-window-fire-rating-1",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "request-source:user_request",
+            "request-evidence:window-request",
+            "operation:set-window-fire-rating-1",
+            "property-hash:sha256:917d0eb02cadaf6369eb5177d412158c56e6d400e1558efbc3edfeb82a0bdf49",
+            "source_fact_key:pset:Pset_WindowCommon.FireRating"
+          ],
+          "source_fact_key": "pset:Pset_WindowCommon.FireRating",
+          "source_kind": "explicit_request",
+          "source_ref": "window-request",
+          "unit": null,
+          "value": "EI60",
+          "value_type": "IfcLabel"
+        }
+      ],
+      "semantic_manifest": {
+        "manifest_id": "semantic-manifest-495281d7d8604a6401a78d29",
+        "policy_id": "occurrence.property.l2",
+        "policy_version": "0.1"
+      },
+      "target": {
+        "element_global_id": "1hOSvn6df7F8_7GcBWlRLx"
+      }
+    }
+  ],
+  "postconditions": [
+    "beam_geometry_matches",
+    "beam_contained_in_storey",
+    "beam_type_bound",
+    "target_preserved",
+    "requested_properties_match",
+    "shared_type_unchanged"
+  ],
+  "preconditions": [
+    "target_exists",
+    "structural_axis_available",
+    "structural_type_authorized",
+    "target_class_supported",
+    "property_assignments_bound"
+  ],
+  "schema_version": "text2ifc/ifc-repair-changeset/0.5",
+  "scope": {
+    "forbidden_ids": [],
+    "target_ids": [
+      "1hOSvn6df7F8_7GcBWlRLx",
+      "1xS3BCk291UvhgP2dvNMKI"
+    ]
+  },
+  "semantic_manifest_ref": "changeset/semantic-manifests.json",
+  "semantic_manifest_sha256": "sha256:f393a13e5924ea9d61b78d843c7d5e214886fb1e0b119267de4eee47dfa1deb6",
+  "source_request_hash": "sha256:00bb6ee2ce21cdeab02bec894449085bcc29a31e9d7c2e2256b0ef1494c156f0"
+}

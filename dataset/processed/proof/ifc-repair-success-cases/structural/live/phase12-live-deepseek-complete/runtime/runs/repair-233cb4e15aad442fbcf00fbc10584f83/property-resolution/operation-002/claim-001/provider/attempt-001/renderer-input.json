@@ -1,0 +1,279 @@
+{
+  "CANDIDATE_SET": {
+    "candidate_set_id": "property-candidates:repair-233cb4e15aad442fbcf00fbc10584f83:add_column_1:claim-001",
+    "candidates": [
+      {
+        "applicable_classes": [
+          "IfcColumn"
+        ],
+        "candidate_id": "candidate:1:ifc2x3:Pset_ColumnCommon.LoadBearing",
+        "canonical_path": "Pset_ColumnCommon.LoadBearing",
+        "definition": "Indicates whether the object is intended to carry loads (TRUE) or not (FALSE).",
+        "property_name": "LoadBearing",
+        "rank": 1,
+        "record_id": "ifc2x3:Pset_ColumnCommon.LoadBearing",
+        "score": 0.5309538380913932,
+        "set_name": "Pset_ColumnCommon",
+        "source": {
+          "kind": "ifc2x3_psd",
+          "reference": "R2x3_TC1/psd/IfcSharedBldgElements/Pset_ColumnCommon.xml"
+        },
+        "standard_status": "standard",
+        "template_type": "TypePropertySingleValue",
+        "unit": null,
+        "value_type": "IfcBoolean"
+      },
+      {
+        "applicable_classes": [
+          "IfcColumn"
+        ],
+        "candidate_id": "candidate:2:ifc2x3:Pset_ColumnCommon.Reference",
+        "canonical_path": "Pset_ColumnCommon.Reference",
+        "definition": "Reference ID for this specified type in this project (e.g. type 'A-1')",
+        "property_name": "Reference",
+        "rank": 2,
+        "record_id": "ifc2x3:Pset_ColumnCommon.Reference",
+        "score": 0.49707292568950834,
+        "set_name": "Pset_ColumnCommon",
+        "source": {
+          "kind": "ifc2x3_psd",
+          "reference": "R2x3_TC1/psd/IfcSharedBldgElements/Pset_ColumnCommon.xml"
+        },
+        "standard_status": "standard",
+        "template_type": "TypePropertySingleValue",
+        "unit": null,
+        "value_type": "IfcIdentifier"
+      },
+      {
+        "applicable_classes": [
+          "IfcColumn"
+        ],
+        "candidate_id": "candidate:3:ifc2x3:Pset_ReinforcementBarPitchOfColumn.Description",
+        "canonical_path": "Pset_ReinforcementBarPitchOfColumn.Description",
+        "definition": "Description of the reinforcement.",
+        "property_name": "Description",
+        "rank": 3,
+        "record_id": "ifc2x3:Pset_ReinforcementBarPitchOfColumn.Description",
+        "score": 0.47671130717578253,
+        "set_name": "Pset_ReinforcementBarPitchOfColumn",
+        "source": {
+          "kind": "ifc2x3_psd",
+          "reference": "R2x3_TC1/psd/IfcStructuralElementsDomain/Pset_ReinforcementBarPitchOfColumn.xml"
+        },
+        "standard_status": "standard",
+        "template_type": "TypePropertySingleValue",
+        "unit": null,
+        "value_type": "IfcText"
+      },
+      {
+        "applicable_classes": [
+          "IfcColumn"
+        ],
+        "candidate_id": "candidate:4:ifc2x3:Pset_ReinforcementBarPitchOfColumn.Reference",
+        "canonical_path": "Pset_ReinforcementBarPitchOfColumn.Reference",
+        "definition": "A descriptive label for the general reinforcement type.",
+        "property_name": "Reference",
+        "rank": 4,
+        "record_id": "ifc2x3:Pset_ReinforcementBarPitchOfColumn.Reference",
+        "score": 0.4667501361106854,
+        "set_name": "Pset_ReinforcementBarPitchOfColumn",
+        "source": {
+          "kind": "ifc2x3_psd",
+          "reference": "R2x3_TC1/psd/IfcStructuralElementsDomain/Pset_ReinforcementBarPitchOfColumn.xml"
+        },
+        "standard_status": "standard",
+        "template_type": "TypePropertySingleValue",
+        "unit": null,
+        "value_type": "IfcLabel"
+      },
+      {
+        "applicable_classes": [
+          "IfcElement"
+        ],
+        "candidate_id": "candidate:5:ifc2x3:Pset_QuantityTakeOff.Reference",
+        "canonical_path": "Pset_QuantityTakeOff.Reference",
+        "definition": "Reference ID for this specified type of quantity, e.g. linking back to a macro name, etc.",
+        "property_name": "Reference",
+        "rank": 5,
+        "record_id": "ifc2x3:Pset_QuantityTakeOff.Reference",
+        "score": 0.4545296288502719,
+        "set_name": "Pset_QuantityTakeOff",
+        "source": {
+          "kind": "ifc2x3_psd",
+          "reference": "R2x3_TC1/psd/IfcProductExtension/Pset_QuantityTakeOff.xml"
+        },
+        "standard_status": "standard",
+        "template_type": "TypePropertySingleValue",
+        "unit": null,
+        "value_type": "IfcIdentifier"
+      }
+    ],
+    "collection_version": "ifc2x3-property-vector/0.2",
+    "corpus_version": "ifc2x3-property-records/0.2",
+    "document_renderer_version": "property-record-text/0.1",
+    "embedding_model": {
+      "model_id": "BAAI/bge-m3",
+      "model_version": "BAAI-bge-m3-local/phase12.1"
+    },
+    "query_id": "property-query:repair-233cb4e15aad442fbcf00fbc10584f83:add_column_1:claim-001",
+    "schema_version": "text2ifc/ifc-property-candidate-set/0.1"
+  },
+  "DECISION_SCHEMA": {
+    "$defs": {
+      "candidate_id": {
+        "maxLength": 256,
+        "minLength": 1,
+        "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]*$",
+        "type": "string"
+      }
+    },
+    "$id": "text2ifc/ifc-property-rerank-decision/0.1",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "additionalProperties": false,
+    "allOf": [
+      {
+        "if": {
+          "properties": {
+            "decision": {
+              "const": "confirmed"
+            }
+          },
+          "required": [
+            "decision"
+          ]
+        },
+        "then": {
+          "properties": {
+            "clarification_question": {
+              "type": "null"
+            },
+            "selected_candidate_id": {
+              "$ref": "#/$defs/candidate_id"
+            }
+          }
+        }
+      },
+      {
+        "if": {
+          "properties": {
+            "decision": {
+              "const": "clarification_required"
+            }
+          },
+          "required": [
+            "decision"
+          ]
+        },
+        "then": {
+          "properties": {
+            "clarification_question": {
+              "maxLength": 512,
+              "minLength": 1,
+              "type": "string"
+            },
+            "conflicting_candidate_ids": {
+              "minItems": 1
+            },
+            "selected_candidate_id": {
+              "type": "null"
+            }
+          }
+        }
+      },
+      {
+        "if": {
+          "properties": {
+            "decision": {
+              "const": "unsupported"
+            }
+          },
+          "required": [
+            "decision"
+          ]
+        },
+        "then": {
+          "properties": {
+            "clarification_question": {
+              "type": "null"
+            },
+            "conflicting_candidate_ids": {
+              "maxItems": 0
+            },
+            "selected_candidate_id": {
+              "type": "null"
+            }
+          }
+        }
+      }
+    ],
+    "properties": {
+      "clarification_question": {
+        "oneOf": [
+          {
+            "maxLength": 512,
+            "minLength": 1,
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "conflicting_candidate_ids": {
+        "items": {
+          "$ref": "#/$defs/candidate_id"
+        },
+        "maxItems": 5,
+        "type": "array",
+        "uniqueItems": true
+      },
+      "decision": {
+        "enum": [
+          "confirmed",
+          "clarification_required",
+          "unsupported"
+        ]
+      },
+      "schema_version": {
+        "const": "text2ifc/ifc-property-rerank-decision/0.1"
+      },
+      "selected_candidate_id": {
+        "oneOf": [
+          {
+            "$ref": "#/$defs/candidate_id"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "required": [
+      "schema_version",
+      "decision",
+      "selected_candidate_id",
+      "conflicting_candidate_ids",
+      "clarification_question"
+    ],
+    "title": "IFC Property Rerank Decision 0.1",
+    "type": "object"
+  },
+  "PREVIOUS_VALIDATION_FEEDBACK": [],
+  "PROPERTY_QUERY": {
+    "claim_id": "claim-001",
+    "corpus_version": "ifc2x3-property-records/0.2",
+    "model_id": "sha256:f61ff5cf8e1cc88da6944d6bcd3e2e7da5ff27dd3288a8781908018cb8240cd6",
+    "operation_id": "add_column_1",
+    "operation_type": "add_column",
+    "property_phrase": "load bearing",
+    "query_id": "property-query:repair-233cb4e15aad442fbcf00fbc10584f83:add_column_1:claim-001",
+    "raw_unit": null,
+    "raw_value": true,
+    "raw_value_kind": "boolean",
+    "request_id": "request-eaac43393aa00672",
+    "run_id": "repair-233cb4e15aad442fbcf00fbc10584f83",
+    "schema_version": "text2ifc/ifc-property-resolution-query/0.2",
+    "scope": "occurrence_direct",
+    "target_ifc_class": "IfcColumn"
+  }
+}

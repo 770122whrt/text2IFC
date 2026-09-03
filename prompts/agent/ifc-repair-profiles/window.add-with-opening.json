@@ -1,0 +1,20 @@
+{
+  "schema_version": "text2ifc/ifc-repair-prompt-profile/0.1",
+  "profile_id": "window.add-with-opening",
+  "profile_version": "0.1",
+  "component_family": "window",
+  "action": "add_with_opening",
+  "operation_type": "add_window_with_opening_to_wall",
+  "target_ifc_classes": ["IfcWall"],
+  "classification_terms": ["window", "窗", "add window", "repair window"],
+  "slot_summary": "Target Wall; wall-local position; opening width, height and sill; optional exact Window Type and occurrence properties.",
+  "required_slots": ["/target_query", "/parameters/position", "/parameters/opening/width_mm", "/parameters/opening/height_mm", "/parameters/opening/sill_height_mm"],
+  "conditional_slots": ["/prototype_intent"],
+  "optional_slots": ["/property_intents", "/quantity_intents", "/occurrence_reuse_intent"],
+  "program_derived_slots": ["/parameters/window/fit_opening", "opening depth", "GlobalIds", "storey containment"],
+  "forbidden_inferences": ["missing geometry", "prototype similarity", "occurrence property values"],
+  "supported_capabilities": ["straight_wall", "exact_type_reuse", "generated_type", "scalar_occurrence_properties"],
+  "unsupported_capabilities": ["curved_wall", "shared_type_mutation"],
+  "stage2_projection_fields": ["operation_id", "operation_type", "target", "parameters", "evidence_refs"],
+  "few_shots": []
+}

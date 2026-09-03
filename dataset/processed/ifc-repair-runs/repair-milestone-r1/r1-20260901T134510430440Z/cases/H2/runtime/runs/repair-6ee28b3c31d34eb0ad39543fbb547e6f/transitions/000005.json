@@ -1,0 +1,105 @@
+{
+  "answer": null,
+  "clarification": {
+    "answer_modes": [
+      "add_detail",
+      "cancel"
+    ],
+    "answer_schema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "add_detail"
+              }
+            }
+          },
+          "then": {
+            "maxProperties": 2,
+            "required": [
+              "kind",
+              "detail"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "cancel"
+              }
+            }
+          },
+          "then": {
+            "maxProperties": 1,
+            "required": [
+              "kind"
+            ]
+          }
+        }
+      ],
+      "properties": {
+        "authorized": {
+          "const": true
+        },
+        "candidate_token": {
+          "maxLength": 256,
+          "minLength": 1,
+          "type": "string"
+        },
+        "detail": {
+          "maxLength": 4096,
+          "minLength": 1,
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "add_detail",
+            "cancel"
+          ]
+        },
+        "preview_hash": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind"
+      ],
+      "type": "object"
+    },
+    "candidates": [],
+    "claim_id": "claim-001",
+    "clarification_id": "clarify-005",
+    "operation_id": "set-door-fire-rating-1",
+    "property_preview": null,
+    "question": "No class-applicable scalar property met the configured retrieval floor. Please add detail or cancel.",
+    "reason_code": "property_resolution",
+    "resume_stage": "intent_ready",
+    "run_id": "repair-6ee28b3c31d34eb0ad39543fbb547e6f",
+    "schema_version": "text2ifc/ifc-repair-clarification/0.2",
+    "stage": "intent_ready",
+    "state_version": 5
+  },
+  "created_at": "2026-09-01T14:06:56.482386+00:00",
+  "from_stage": "intent_ready",
+  "previous_hash": "sha256:26d79d5d9197957bef826aad77957746a0d6ee0f50da655a2718f903e61f28d3",
+  "reason_code": "PROPERTY_RETRIEVAL_BELOW_FLOOR",
+  "record_hash": "sha256:e8def16ad279110ff4954e55c98f4e771856aa6948c60203f03b4623c0f492da",
+  "result_artifacts": {},
+  "schema_version": "text2ifc/ifc-repair-transition/0.1",
+  "stage_hash": "sha256:b2f7006858fc0eb044859a83e02ce6ff4c9ab3b709e1a21cbb9c1395c43431d1",
+  "stage_payload": {
+    "resolution": {
+      "path": "resolution-v005.json",
+      "schema_version": "text2ifc/ifc-resolution-flow/0.1",
+      "sha256": "sha256:f36657099a93344f0cbef5f85e22ea871647b069c1a523b11d63914eb223070f"
+    }
+  },
+  "state_version": 5,
+  "to_stage": "clarification_required",
+  "transition_id": 5
+}

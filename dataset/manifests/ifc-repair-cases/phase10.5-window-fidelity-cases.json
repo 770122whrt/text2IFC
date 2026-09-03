@@ -1,0 +1,96 @@
+{
+  "schema_version": "text2ifc/phase10.5-window-fidelity-cases/0.1",
+  "cases": [
+    {
+      "case_id": "largebuilding-explicit-single-window",
+      "mode": "complete_explicit",
+      "source": {
+        "path": "dataset/external/bim-whale-ifc-samples/LargeBuilding/IFC/LargeBuilding.ifc",
+        "sha256": "102f8123f85eae5e237d7f6a9dcbc364bd5f1c0cfb94b40a7eeb2d7eac9bb725"
+      },
+      "public_request": "在指定墙上恢复一扇 915 mm × 1830 mm、窗台高 305 mm 的窗。设置 Pset_WindowCommon.IsExternal=true，并写入 Window BaseQuantities 的 Width、Height、Area。",
+      "public_request_sha256": "sha256:pending-runtime-verification",
+      "public_facts": [
+        "opening.width_mm=915",
+        "opening.height_mm=1830",
+        "opening.sill_height_mm=305",
+        "Pset_WindowCommon.IsExternal=true",
+        "BaseQuantities.Width=915",
+        "BaseQuantities.Height=1830",
+        "BaseQuantities.Area=1674450"
+      ]
+    },
+    {
+      "case_id": "largebuilding-exact-occurrence-reference",
+      "mode": "exact_occurrence",
+      "source": {
+        "path": "dataset/external/bim-whale-ifc-samples/LargeBuilding/IFC/LargeBuilding.ifc",
+        "sha256": "102f8123f85eae5e237d7f6a9dcbc364bd5f1c0cfb94b40a7eeb2d7eac9bb725"
+      },
+      "public_request": "恢复目标窗，并明确授权复制 GUID 为 2cXV28XOjE6f6irhu0CO_c 的 surviving Window occurrence 的 Pset_WindowCommon.* 标量属性；位置和尺寸仍按本次墙体参数重新计算。",
+      "public_request_sha256": "sha256:pending-runtime-verification",
+      "public_facts": [
+        "occurrence_reuse.mode=exact_occurrence",
+        "occurrence_reuse.reference_kind=global_id",
+        "occurrence_reuse.reference=2cXV28XOjE6f6irhu0CO_c",
+        "include=Pset_WindowCommon.*"
+      ]
+    },
+    {
+      "case_id": "vvo-authorized-type-cohort",
+      "mode": "same_type_consensus",
+      "source": {
+        "path": "dataset/ifc/train/vvo.ifc",
+        "sha256": "b6c435be955aeb6b2998f42a62f4ebf8c3f91eb7d373ca71a2dcedfeb95b3fdc"
+      },
+      "public_request": "恢复目标窗，并明确授权从指定 Window Type 的 surviving occurrence cohort 中复制所有一致的 Pset_WindowCommon.* 标量值；任何值或单位冲突都必须先澄清。",
+      "public_request_sha256": "sha256:pending-runtime-verification",
+      "public_facts": [
+        "occurrence_reuse.mode=same_type_consensus",
+        "include=Pset_WindowCommon.*",
+        "conflict_policy=clarification_required"
+      ]
+    },
+    {
+      "case_id": "vvo-deliberate-cohort-conflict",
+      "mode": "same_type_conflict",
+      "source": {
+        "path": "dataset/ifc/train/vvo.ifc",
+        "sha256": "b6c435be955aeb6b2998f42a62f4ebf8c3f91eb7d373ca71a2dcedfeb95b3fdc"
+      },
+      "public_request": "尝试按指定 Window Type cohort 复用 Constraints.Level；若 surviving occurrences 的值不一致，不生成 ChangeSet，也不发布 IFC。",
+      "public_request_sha256": "sha256:pending-runtime-verification",
+      "public_facts": [
+        "occurrence_reuse.mode=same_type_consensus",
+        "include=Constraints.Level",
+        "expected_terminal=clarification_required",
+        "expected_publication=false"
+      ]
+    },
+    {
+      "case_id": "advancedproject-five-window-shared-bundle",
+      "mode": "five_window_bundle",
+      "source": {
+        "path": "dataset/external/bim-whale-ifc-samples/AdvancedProject/IFC/AdvancedProject.ifc",
+        "sha256": "86b068a7ca6947e398c1daaa8bede9d31048c3990adc308429faeb56ee01db94"
+      },
+      "damaged": {
+        "path": "dataset/processed/ifc-repair/phase10.4-comparator-0.2/replay-input-minimal-fix/fixture/damaged.ifc",
+        "sha256": "65b576a99174d413eeed9c0517592a0f31a9b6f5fb68bd4d006d94ed18a4adcb"
+      },
+      "repaired_reference": {
+        "path": "dataset/processed/ifc-repair/phase10.4-comparator-0.2/preflight-production-007-validation-delta/repaired.ifc",
+        "sha256": "91e5295b0487389546bc575d294038c2669f052d41edef3813734234638c3a2a"
+      },
+      "public_request": "一次性恢复五扇窗。五个 operation 共用一个 occurrence semantic bundle；每扇窗的墙、位置、尺寸、host/storey 和标识仍按各 operation 单独绑定。任一语义写入失败必须整体回滚。",
+      "public_request_sha256": "sha256:pending-runtime-verification",
+      "public_facts": [
+        "operation_count=5",
+        "changeset_count=1",
+        "shared_bundle=true",
+        "shared_type_mutation=false",
+        "atomic_rollback=true"
+      ]
+    }
+  ]
+}

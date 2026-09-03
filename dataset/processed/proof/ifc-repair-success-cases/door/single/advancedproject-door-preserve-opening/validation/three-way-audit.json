@@ -1,0 +1,1998 @@
+{
+  "artifact_paths": {
+    "application": "E:/code for project/bimnet/dataset/processed/ifc-repair/phase11-door-audit-fix-final-2/advancedproject-door-preserve-opening/application.json",
+    "changeset": "E:/code for project/bimnet/dataset/processed/ifc-repair/phase11-door-audit-fix-final-2/advancedproject-door-preserve-opening/changeset.json",
+    "damaged": "E:/code for project/bimnet/dataset/processed/ifc-repair/phase11-door-audit-fix-final-2/advancedproject-door-preserve-opening/damaged.ifc",
+    "evaluation": "E:/code for project/bimnet/dataset/processed/ifc-repair/phase11-door-audit-fix-final-2/advancedproject-door-preserve-opening/evaluation.json",
+    "manifest": "E:/code for project/bimnet/dataset/processed/ifc-repair/phase11-door-audit-fix-final-2/advancedproject-door-preserve-opening/manifest.json",
+    "original": "E:/code for project/bimnet/dataset/processed/ifc-repair/phase11-door-audit-fix-final-2/advancedproject-door-preserve-opening/original.ifc",
+    "production_boundary": "E:/code for project/bimnet/dataset/processed/ifc-repair/phase11-door-audit-fix-final-2/advancedproject-door-preserve-opening/production-boundary.json",
+    "repaired": "E:/code for project/bimnet/dataset/processed/ifc-repair/phase11-door-audit-fix-final-2/advancedproject-door-preserve-opening/repaired.ifc",
+    "request": "E:/code for project/bimnet/dataset/processed/ifc-repair/phase11-door-audit-fix-final-2/advancedproject-door-preserve-opening/request.txt"
+  },
+  "case_id": "advancedproject-door-preserve-opening",
+  "l0": {
+    "checks": [
+      {
+        "code": "L0_REOPEN_ORIGINAL",
+        "evidence": {
+          "path": "E:/code for project/bimnet/dataset/processed/ifc-repair/phase11-door-audit-fix-final-2/advancedproject-door-preserve-opening/original.ifc",
+          "schema": "IFC2X3"
+        },
+        "status": "passed"
+      },
+      {
+        "code": "L0_REOPEN_DAMAGED",
+        "evidence": {
+          "path": "E:/code for project/bimnet/dataset/processed/ifc-repair/phase11-door-audit-fix-final-2/advancedproject-door-preserve-opening/damaged.ifc",
+          "schema": "IFC2X3"
+        },
+        "status": "passed"
+      },
+      {
+        "code": "L0_REOPEN_REPAIRED",
+        "evidence": {
+          "path": "E:/code for project/bimnet/dataset/processed/ifc-repair/phase11-door-audit-fix-final-2/advancedproject-door-preserve-opening/repaired.ifc",
+          "schema": "IFC2X3"
+        },
+        "status": "passed"
+      },
+      {
+        "code": "L0_BASE_MODEL_FINGERPRINT",
+        "evidence": {
+          "actual": "sha256:8e187d9a9ce07067f276c8afb056e294d83b08098371f619ac3b76577f5576bd",
+          "expected": "sha256:8e187d9a9ce07067f276c8afb056e294d83b08098371f619ac3b76577f5576bd"
+        },
+        "status": "passed"
+      },
+      {
+        "code": "L0_SOURCE_REQUEST_HASH",
+        "evidence": {
+          "actual": "sha256:3d9255a7afe73b8e719fae3677849fa4459445988af70b70fd84d420bdc35346",
+          "expected": "sha256:3d9255a7afe73b8e719fae3677849fa4459445988af70b70fd84d420bdc35346"
+        },
+        "status": "passed"
+      },
+      {
+        "code": "L0_OPERATION_IDENTITY",
+        "evidence": {
+          "actual": [
+            "operation-advancedproject-door-preserve-opening"
+          ],
+          "expected": [
+            "operation-advancedproject-door-preserve-opening"
+          ]
+        },
+        "status": "passed"
+      },
+      {
+        "code": "L0_RELATIONSHIP_INTEGRITY",
+        "evidence": {
+          "broken_fill_relationship_steps": [],
+          "broken_void_relationship_steps": [],
+          "duplicate_fill_openings": []
+        },
+        "status": "passed"
+      },
+      {
+        "code": "L0_PRODUCTION_INPUT_BOUNDARY",
+        "evidence": {
+          "boundary": {
+            "changeset_canonical_sha256": "sha256:bb73d52d01a70e6fa93380f50e4db871e1042228e4e47c0dc40c4f9a8a8fb089",
+            "damaged_ifc_sha256": "sha256:8e187d9a9ce07067f276c8afb056e294d83b08098371f619ac3b76577f5576bd",
+            "deleted_object_ids_supplied": false,
+            "entrypoint": "_execute_public_production",
+            "ifc_inputs": [
+              "damaged_ifc_path"
+            ],
+            "mutation_manifest_supplied": false,
+            "original_ifc_supplied": false,
+            "request_sha256": "sha256:3d9255a7afe73b8e719fae3677849fa4459445988af70b70fd84d420bdc35346",
+            "schema_version": "text2ifc/production-input-boundary/0.1"
+          },
+          "expected_changeset_canonical_sha256": "sha256:bb73d52d01a70e6fa93380f50e4db871e1042228e4e47c0dc40c4f9a8a8fb089",
+          "expected_damaged_ifc_sha256": "sha256:8e187d9a9ce07067f276c8afb056e294d83b08098371f619ac3b76577f5576bd",
+          "expected_request_sha256": "sha256:3d9255a7afe73b8e719fae3677849fa4459445988af70b70fd84d420bdc35346"
+        },
+        "status": "passed"
+      },
+      {
+        "code": "L0_SOURCE_FILES_UNCHANGED",
+        "evidence": {
+          "after": {
+            "damaged": "sha256:8e187d9a9ce07067f276c8afb056e294d83b08098371f619ac3b76577f5576bd",
+            "original": "sha256:86b068a7ca6947e398c1daaa8bede9d31048c3990adc308429faeb56ee01db94",
+            "repaired": "sha256:3809fd67e3141f4adb506a98f58c8cae141b4e30f16aa3a9aa2ca229e7e17c39"
+          },
+          "before": {
+            "damaged": "sha256:8e187d9a9ce07067f276c8afb056e294d83b08098371f619ac3b76577f5576bd",
+            "original": "sha256:86b068a7ca6947e398c1daaa8bede9d31048c3990adc308429faeb56ee01db94",
+            "repaired": "sha256:3809fd67e3141f4adb506a98f58c8cae141b4e30f16aa3a9aa2ca229e7e17c39"
+          }
+        },
+        "status": "passed"
+      }
+    ],
+    "pass": true
+  },
+  "private_original_to_damaged": {
+    "added_root_count": 0,
+    "all_expected_doors_removed": true,
+    "door_count_delta": -1,
+    "entity_count_delta": -50,
+    "opening_count_delta": 0,
+    "private_only": true,
+    "removed_door_ids": [
+      "0MOEoDTm9EnO9yKsXjjkME"
+    ],
+    "removed_root_count": 27,
+    "window_count_delta": 0
+  },
+  "private_original_to_repaired": {
+    "objects": [
+      {
+        "geometry": {
+          "equivalent_within_1mm": true,
+          "opening_local_bounds_delta_mm": {
+            "x": [
+              0.0,
+              0.0
+            ],
+            "y": [
+              0.0,
+              0.0
+            ],
+            "z": [
+              0.0,
+              0.0
+            ]
+          },
+          "original_alignment": {
+            "axis_deviation_degrees": 0.0,
+            "door_bounds_in_opening_mm": {
+              "x": [
+                -76.0,
+                991.0
+              ],
+              "y": [
+                -25.0,
+                205.0
+              ],
+              "z": [
+                0.0,
+                2210.0
+              ]
+            },
+            "geometry_center_deviation_mm": 38.0,
+            "height_deviation_mm": 0.0,
+            "nominal_center_deviation_mm": 0.0,
+            "nominal_door_bounds_mm": {
+              "x": [
+                0.0,
+                915.0
+              ],
+              "y": [
+                0.0,
+                0.0
+              ],
+              "z": [
+                0.0,
+                2134.0
+              ]
+            },
+            "normal_axis_intersection_mm": 180.0,
+            "opening_bounds_mm": {
+              "x": [
+                0.0,
+                915.0
+              ],
+              "y": [
+                0.0,
+                180.0
+              ],
+              "z": [
+                0.0,
+                2134.0
+              ]
+            },
+            "projected_overlap_ratio": 1.0,
+            "thresholds": {
+              "maximum_axis_deviation_degrees": 0.1,
+              "maximum_center_deviation_mm": 5.0,
+              "maximum_dimension_deviation_mm": 1.0,
+              "minimum_projected_overlap_ratio": 0.95
+            },
+            "valid": true,
+            "width_deviation_mm": 0.0
+          },
+          "repaired_alignment": {
+            "axis_deviation_degrees": 0.0,
+            "door_bounds_in_opening_mm": {
+              "x": [
+                -76.0,
+                991.0
+              ],
+              "y": [
+                -25.0,
+                205.0
+              ],
+              "z": [
+                0.0,
+                2210.0
+              ]
+            },
+            "geometry_center_deviation_mm": 38.0,
+            "height_deviation_mm": 0.0,
+            "nominal_center_deviation_mm": 0.0,
+            "nominal_door_bounds_mm": {
+              "x": [
+                0.0,
+                915.0
+              ],
+              "y": [
+                0.0,
+                0.0
+              ],
+              "z": [
+                0.0,
+                2134.0
+              ]
+            },
+            "normal_axis_intersection_mm": 180.0,
+            "opening_bounds_mm": {
+              "x": [
+                0.0,
+                915.0
+              ],
+              "y": [
+                0.0,
+                180.0
+              ],
+              "z": [
+                0.0,
+                2134.0
+              ]
+            },
+            "projected_overlap_ratio": 1.0,
+            "thresholds": {
+              "maximum_axis_deviation_degrees": 0.1,
+              "maximum_center_deviation_mm": 5.0,
+              "maximum_dimension_deviation_mm": 1.0,
+              "minimum_projected_overlap_ratio": 0.95
+            },
+            "valid": true,
+            "width_deviation_mm": 0.0
+          }
+        },
+        "mapping": {
+          "confidence": 1.0,
+          "evidence": {
+            "retained_opening_global_id": "0MOEoDTm9EnO9yKtjjjkME"
+          },
+          "match_method": "mutation_manifest+application_role",
+          "original_guid": "0MOEoDTm9EnO9yKsXjjkME",
+          "repaired_guid": "0waWkd0DzORB1Cx$6HGsTK"
+        },
+        "object_class": "IfcDoor",
+        "operation_id": "operation-advancedproject-door-preserve-opening",
+        "private_exact_fidelity_pass": false,
+        "semantics": {
+          "effective_material_match": true,
+          "host_match": true,
+          "material_provenance_match": false,
+          "occurrence_comparison": {
+            "authoring_exactness": false,
+            "counts": {
+              "matched": 33,
+              "not_in_user_text": 20,
+              "ownership_only": 3,
+              "unsupported_authoring": 14,
+              "wrong_value": 2
+            },
+            "detail_total": 72,
+            "details": [
+              {
+                "actual": {
+                  "owner_ref": "guid:0waWkd0DzORB1Cx$6HGsTK",
+                  "ownership": "occurrence_direct",
+                  "unit": null,
+                  "value": "Text2IFC door operation-advancedproject-door-preserve-opening",
+                  "value_type": "IfcLabel"
+                },
+                "classification": "wrong_value",
+                "expected": {
+                  "owner_ref": "guid:0MOEoDTm9EnO9yKsXjjkME",
+                  "ownership": "occurrence_direct",
+                  "unit": null,
+                  "value": "M_Single-Flush:Generic Door:586077",
+                  "value_type": "IfcLabel"
+                },
+                "fact_key": "door_occurrence:attribute:Name",
+                "required": false
+              },
+              {
+                "actual": {
+                  "owner_ref": "guid:0waWkd0DzORB1Cx$6HGsTK",
+                  "ownership": "occurrence_direct",
+                  "unit": null,
+                  "value": "M_Single-Flush:Generic Door",
+                  "value_type": "IfcLabel"
+                },
+                "classification": "ownership_only",
+                "expected": {
+                  "owner_ref": "guid:0MOEoDTm9EnO9yKsXjjkME",
+                  "ownership": "occurrence_direct",
+                  "unit": null,
+                  "value": "M_Single-Flush:Generic Door",
+                  "value_type": "IfcLabel"
+                },
+                "fact_key": "door_occurrence:attribute:ObjectType",
+                "required": false
+              },
+              {
+                "actual": {
+                  "owner_ref": "guid:0waWkd0DzORB1Cx$6HGsTK",
+                  "ownership": "occurrence_direct",
+                  "unit": null,
+                  "value": 2134.0,
+                  "value_type": "IfcPositiveLengthMeasure"
+                },
+                "classification": "ownership_only",
+                "expected": {
+                  "owner_ref": "guid:0MOEoDTm9EnO9yKsXjjkME",
+                  "ownership": "occurrence_direct",
+                  "unit": null,
+                  "value": 2134.0,
+                  "value_type": "IfcPositiveLengthMeasure"
+                },
+                "fact_key": "door_occurrence:attribute:OverallHeight",
+                "required": true
+              },
+              {
+                "actual": {
+                  "owner_ref": "guid:0waWkd0DzORB1Cx$6HGsTK",
+                  "ownership": "occurrence_direct",
+                  "unit": null,
+                  "value": 915.0,
+                  "value_type": "IfcPositiveLengthMeasure"
+                },
+                "classification": "ownership_only",
+                "expected": {
+                  "owner_ref": "guid:0MOEoDTm9EnO9yKsXjjkME",
+                  "ownership": "occurrence_direct",
+                  "unit": null,
+                  "value": 915.0,
+                  "value_type": "IfcPositiveLengthMeasure"
+                },
+                "fact_key": "door_occurrence:attribute:OverallWidth",
+                "required": true
+              },
+              {
+                "actual": {
+                  "owner_ref": "guid:0waWkd0DzORB1Cx$6HGsTK",
+                  "ownership": "occurrence_direct",
+                  "unit": null,
+                  "value": "operation-advancedproject-door-preserve-opening",
+                  "value_type": "IfcIdentifier"
+                },
+                "classification": "wrong_value",
+                "expected": {
+                  "owner_ref": "guid:0MOEoDTm9EnO9yKsXjjkME",
+                  "ownership": "occurrence_direct",
+                  "unit": null,
+                  "value": "586077",
+                  "value_type": "IfcIdentifier"
+                },
+                "fact_key": "door_occurrence:attribute:Tag",
+                "required": false
+              },
+              {
+                "actual": {
+                  "owner_ref": "guid:3W2Tu2KKr66wtPVQ1PGsDC",
+                  "ownership": "type_inherited",
+                  "unit": null,
+                  "value": "Metal",
+                  "value_type": "IfcText"
+                },
+                "classification": "matched",
+                "expected": {
+                  "owner_ref": "guid:3W2Tu2KKr66wtPVQ1PGsDC",
+                  "ownership": "type_inherited",
+                  "unit": null,
+                  "value": "Metal",
+                  "value_type": "IfcText"
+                },
+                "fact_key": "door_occurrence:pset:Analytical-Properties-Type.Analytic-Construction",
+                "required": false
+              },
+              {
+                "actual": {
+                  "owner_ref": "guid:3W2Tu2KKr66wtPVQ1PGsDC",
+                  "ownership": "type_inherited",
+                  "unit": null,
+                  "value": "Schematic Type",
+                  "value_type": "IfcIdentifier"
+                },
+                "classification": "matched",
+                "expected": {
+                  "owner_ref": "guid:3W2Tu2KKr66wtPVQ1PGsDC",
+                  "ownership": "type_inherited",
+                  "unit": null,
+                  "value": "Schematic Type",
+                  "value_type": "IfcIdentifier"
+                },
+                "fact_key": "door_occurrence:pset:Analytical-Properties-Type.Define-Thermal-Properties-by",
+                "required": false
+              },
+              {
+                "actual": {
+                  "owner_ref": "guid:3W2Tu2KKr66wtPVQ1PGsDC",
+                  "ownership": "type_inherited",
+                  "unit": null,
+                  "value": 3.7021,
+                  "value_type": "IfcReal"
+                },
+                "classification": "matched",
+                "expected": {
+                  "owner_ref": "guid:3W2Tu2KKr66wtPVQ1PGsDC",
+                  "ownership": "type_inherited",
+                  "unit": null,
+                  "value": 3.7021,
+                  "value_type": "IfcReal"
+                },
+                "fact_key": "door_occurrence:pset:Analytical-Properties-Type.Heat-Transfer-Coefficient-U",
+                "required": false
+              },
+              {
+                "actual": {
+                  "owner_ref": "guid:3W2Tu2KKr66wtPVQ1PGsDC",
+                  "ownership": "type_inherited",
+                  "unit": null,
+                  "value": 0.0,
+                  "value_type": "IfcReal"
+                },
+                "classification": "matched",
+                "expected": {
+                  "owner_ref": "guid:3W2Tu2KKr66wtPVQ1PGsDC",
+                  "ownership": "type_inherited",
+                  "unit": null,
+                  "value": 0.0,
+                  "value_type": "IfcReal"
+                },
+                "fact_key": "door_occurrence:pset:Analytical-Properties-Type.Solar-Heat-Gain-Coefficient",
+                "required": false
+              },
+              {
+                "actual": {
+                  "owner_ref": "guid:3W2Tu2KKr66wtPVQ1PGsDC",
+                  "ownership": "type_inherited",
+                  "unit": null,
+                  "value": 0.270116961,
+                  "value_type": "IfcReal"
+                },
+                "classification": "matched",
+                "expected": {
+                  "owner_ref": "guid:3W2Tu2KKr66wtPVQ1PGsDC",
+                  "ownership": "type_inherited",
+                  "unit": null,
+                  "value": 0.270116961,
+                  "value_type": "IfcReal"
+                },
+                "fact_key": "door_occurrence:pset:Analytical-Properties-Type.Thermal-Resistance-R",
+                "required": false
+              },
+              {
+                "actual": {
+                  "owner_ref": "guid:3W2Tu2KKr66wtPVQ1PGsDC",
+                  "ownership": "type_inherited",
+                  "unit": null,
+                  "value": 0.0,
+                  "value_type": "IfcReal"
+                },
+                "classification": "matched",
+                "expected": {
+                  "owner_ref": "guid:3W2Tu2KKr66wtPVQ1PGsDC",
+                  "ownership": "type_inherited",
+                  "unit": null,
+                  "value": 0.0,
+                  "value_type": "IfcReal"
+                },
+                "fact_key": "door_occurrence:pset:Analytical-Properties-Type.Visual-Light-Transmittance",
+                "required": false
+              },
+              {
+                "actual": null,
+                "classification": "not_in_user_text",
+                "expected": {
+                  "owner_ref": "guid:0MOEoDTm9EnO9yLNnjjkME",
+                  "ownership": "occurrence_direct",
+                  "unit": null,
+                  "value": "Level: 1 - First Floor",
+                  "value_type": "IfcLabel"
+                },
+                "fact_key": "door_occurrence:pset:Constraints.Level",
+                "required": false
+              },
+              {
+                "actual": null,
+                "classification": "not_in_user_text",
+                "expected": {
+                  "owner_ref": "guid:0MOEoDTm9EnO9yLNnjjkME",
+                  "ownership": "occurrence_direct",
+                  "unit": "mm",
+                  "value": 0.0,
+                  "value_type": "IfcLengthMeasure"
+                },
+                "fact_key": "door_occurrence:pset:Constraints.Sill-Height",
+                "required": false
+              },
+              {
+                "actual": {
+                  "owner_ref": "guid:3W2Tu2KKr66wtPVVbPGsDC",
+                  "ownership": "type_inherited",
+                  "unit": null,
+                  "value": "Interior",
+                  "value_type": "IfcIdentifier"
+                },
+                "classification": "matched",
+                "expected": {
+                  "owner_ref": "guid:3W2Tu2KKr66wtPVVbPGsDC",
+                  "ownership": "type_inherited",
+                  "unit": null,
+                  "value": "Interior",
+                  "value_type": "IfcIdentifier"
+                },
+                "fact_key": "door_occurrence:pset:Construction-Type.Function",
+                "required": false
+              },
+              {
+                "actual": {
+                  "owner_ref": "guid:3W2Tu2KKr66wtPVVbPGsDC",
+                  "ownership": "type_inherited",
+                  "unit": null,
+                  "value": "By host",
+                  "value_type": "IfcIdentifier"
+                },
+                "classification": "matched",
+                "expected": {
+                  "owner_ref": "guid:3W2Tu2KKr66wtPVVbPGsDC",
+                  "ownership": "type_inherited",
+                  "unit": null,
+                  "value": "By host",
+                  "value_type": "IfcIdentifier"
+                },
+                "fact_key": "door_occurrence:pset:Construction-Type.Wall-Closure",
+                "required": false
+              },
+              {
+                "actual": {
+                  "owner_ref": "guid:1uudqMnUr7RQMDvVbA_mtp",
+                  "ownership": "type_inherited",
+                  "unit": "mm",
+                  "value": 2134.0,
+                  "value_type": "IfcLengthMeasure"
+                },
+                "classification": "unsupported_authoring",
+                "expected": {
+                  "owner_ref": "guid:1RBbapi7DBLhXoiJYs1AEN",
+                  "ownership": "occurrence_direct",
+                  "unit": "mm",
+                  "value": 2134.0,
+                  "value_type": "IfcLengthMeasure"
+                },
+                "fact_key": "door_occurrence:pset:Custom_Pset.Height",
+                "required": false
+              },
+              {
+                "actual": {
+                  "owner_ref": "guid:1uudqMnUr7RQMDvVbA_mtp",
+                  "ownership": "type_inherited",
+                  "unit": null,
+                  "value": "Door: URL",
+                  "value_type": "IfcText"
+                },
+                "classification": "unsupported_authoring",
+                "expected": {
+                  "owner_ref": "guid:1RBbapi7DBLhXoiJYs1AEN",
+                  "ownership": "occurrence_direct",
+                  "unit": null,
+                  "value": "Door: URL",
+                  "value_type": "IfcText"
+                },
+                "fact_key": "door_occurrence:pset:Custom_Pset.Hyperlink",
+                "required": false
+              },
+              {
+                "actual": {
+                  "owner_ref": "guid:1uudqMnUr7RQMDvVbA_mtp",
+                  "ownership": "type_inherited",
+                  "unit": null,
+                  "value": "Door: Keynote",
+                  "value_type": "IfcLabel"
+                },
+                "classification": "unsupported_authoring",
+                "expected": {
+                  "owner_ref": "guid:1RBbapi7DBLhXoiJYs1AEN",
+                  "ownership": "occurrence_direct",
+                  "unit": null,
+                  "value": "Door: Keynote",
+                  "value_type": "IfcLabel"
+                },
+                "fact_key": "door_occurrence:pset:Custom_Pset.Keynote",
+                "required": false
+              },
+              {
+                "actual": null,
+                "classification": "not_in_user_text",
+                "expected": {
+                  "owner_ref": "guid:1RBbapi7DBLhXoiJYs1AEN",
+                  "ownership": "occurrence_direct",
+                  "unit": "m2",
+                  "value": 3.189579,
+                  "value_type": "IfcAreaMeasure"
+                },
+                "fact_key": "door_occurrence:pset:Custom_Pset.NetArea",
+                "required": false
+              },
+              {
+                "actual": null,
+                "classification": "not_in_user_text",
+                "expected": {
+                  "owner_ref": "guid:1RBbapi7DBLhXoiJYs1AEN",
+                  "ownership": "occurrence_direct",
+                  "unit": "mm",
+                  "value": 0.0,
+                  "value_type": "IfcLengthMeasure"
+                },
+                "fact_key": "door_occurrence:pset:Custom_Pset.SillHeight",
+                "required": false
+              },
+              {
+                "actual": null,
+                "classification": "not_in_user_text",
+                "expected": {
+                  "owner_ref": "guid:1RBbapi7DBLhXoiJYs1AEN",
+                  "ownership": "occurrence_direct",
+                  "unit": null,
+                  "value": "New Construction",
+                  "value_type": "IfcLabel"
+                },
+                "fact_key": "door_occurrence:pset:Custom_Pset.StatusConstruction",
+                "required": false
+              },
+              {
+                "actual": null,
+                "classification": "not_in_user_text",
+                "expected": {
+                  "owner_ref": "guid:1RBbapi7DBLhXoiJYs1AEN",
+                  "ownership": "occurrence_direct",
+                  "unit": null,
+                  "value": "Level: 1 - First Floor",
+                  "value_type": "IfcText"
+                },
+                "fact_key": "door_occurrence:pset:Custom_Pset.StoreyName",
+                "required": false
+              },
+              {
+                "actual": {
+                  "owner_ref": "guid:1uudqMnUr7RQMDvVbA_mtp",
+                  "ownership": "type_inherited",
+                  "unit": null,
+                  "value": "Door: Description",
+                  "value_type": "IfcText"
+                },
+                "classification": "unsupported_authoring",
+                "expected": {
+                  "owner_ref": "guid:1RBbapi7DBLhXoiJYs1AEN",
+                  "ownership": "occurrence_direct",
+                  "unit": null,
+                  "value": "Door: Description",
+                  "value_type": "IfcText"
+                },
+                "fact_key": "door_occurrence:pset:Custom_Pset.TypeDescription",
+                "required": false
+              },
+              {
+                "actual": {
+                  "owner_ref": "guid:1uudqMnUr7RQMDvVbA_mtp",
+                  "ownership": "type_inherited",
+                  "unit": null,
+                  "value": "Door: Type Mark",
+                  "value_type": "IfcLabel"
+                },
+                "classification": "unsupported_authoring",
+                "expected": {
+                  "owner_ref": "guid:1RBbapi7DBLhXoiJYs1AEN",
+                  "ownership": "occurrence_direct",
+                  "unit": null,
+                  "value": "Door: Type Mark",
+                  "value_type": "IfcLabel"
+                },
+                "fact_key": "door_occurrence:pset:Custom_Pset.TypeMark",
+                "required": false
+              },
+              {
+                "actual": {
+                  "owner_ref": "guid:1uudqMnUr7RQMDvVbA_mtp",
+                  "ownership": "type_inherited",
+                  "unit": "mm",
+                  "value": 915.0,
+                  "value_type": "IfcLengthMeasure"
+                },
+                "classification": "unsupported_authoring",
+                "expected": {
+                  "owner_ref": "guid:1RBbapi7DBLhXoiJYs1AEN",
+                  "ownership": "occurrence_direct",
+                  "unit": "mm",
+                  "value": 915.0,
+                  "value_type": "IfcLengthMeasure"
+                },
+                "fact_key": "door_occurrence:pset:Custom_Pset.Width",
+                "required": false
+              },
+              {
+                "actual": {
+                  "owner_ref": "guid:3W2Tu2KKr66wtPVVzPGsDC",
+                  "ownership": "type_inherited",
+                  "unit": "mm",
+                  "value": 2134.0,
+                  "value_type": "IfcLengthMeasure"
+                },
+                "classification": "matched",
+                "expected": {
+                  "owner_ref": "guid:3W2Tu2KKr66wtPVVzPGsDC",
+                  "ownership": "type_inherited",
+                  "unit": "mm",
+                  "value": 2134.0,
+                  "value_type": "IfcLengthMeasure"
+                },
+                "fact_key": "door_occurrence:pset:Dimensions-Type.Height",
+                "required": false
+              },
+              {
+                "actual": {
+                  "owner_ref": "guid:3W2Tu2KKr66wtPVVzPGsDC",
+                  "ownership": "type_inherited",
+                  "unit": "mm",
+                  "value": 51.0,
+                  "value_type": "IfcLengthMeasure"
+                },
+                "classification": "matched",
+                "expected": {
+                  "owner_ref": "guid:3W2Tu2KKr66wtPVVzPGsDC",
+                  "ownership": "type_inherited",
+                  "unit": "mm",
+                  "value": 51.0,
+                  "value_type": "IfcLengthMeasure"
+                },
+                "fact_key": "door_occurrence:pset:Dimensions-Type.Thickness",
+                "required": false
+              },
+              {
+                "actual": {
+                  "owner_ref": "guid:3W2Tu2KKr66wtPVVzPGsDC",
+                  "ownership": "type_inherited",
+                  "unit": "mm",
+                  "value": 25.0,
+                  "value_type": "IfcLengthMeasure"
+                },
+                "classification": "matched",
+                "expected": {
+                  "owner_ref": "guid:3W2Tu2KKr66wtPVVzPGsDC",
+                  "ownership": "type_inherited",
+                  "unit": "mm",
+                  "value": 25.0,
+                  "value_type": "IfcLengthMeasure"
+                },
+                "fact_key": "door_occurrence:pset:Dimensions-Type.Trim-Projection-Ext",
+                "required": false
+              },
+              {
+                "actual": {
+                  "owner_ref": "guid:3W2Tu2KKr66wtPVVzPGsDC",
+                  "ownership": "type_inherited",
+                  "unit": "mm",
+                  "value": 25.0,
+                  "value_type": "IfcLengthMeasure"
+                },
+                "classification": "matched",
+                "expected": {
+                  "owner_ref": "guid:3W2Tu2KKr66wtPVVzPGsDC",
+                  "ownership": "type_inherited",
+                  "unit": "mm",
+                  "value": 25.0,
+                  "value_type": "IfcLengthMeasure"
+                },
+                "fact_key": "door_occurrence:pset:Dimensions-Type.Trim-Projection-Int",
+                "required": false
+              },
+              {
+                "actual": {
+                  "owner_ref": "guid:3W2Tu2KKr66wtPVVzPGsDC",
+                  "ownership": "type_inherited",
+                  "unit": "mm",
+                  "value": 76.0,
+                  "value_type": "IfcLengthMeasure"
+                },
+                "classification": "matched",
+                "expected": {
+                  "owner_ref": "guid:3W2Tu2KKr66wtPVVzPGsDC",
+                  "ownership": "type_inherited",
+                  "unit": "mm",
+                  "value": 76.0,
+                  "value_type": "IfcLengthMeasure"
+                },
+                "fact_key": "door_occurrence:pset:Dimensions-Type.Trim-Width",
+                "required": false
+              },
+              {
+                "actual": {
+                  "owner_ref": "guid:3W2Tu2KKr66wtPVVzPGsDC",
+                  "ownership": "type_inherited",
+                  "unit": "mm",
+                  "value": 915.0,
+                  "value_type": "IfcLengthMeasure"
+                },
+                "classification": "matched",
+                "expected": {
+                  "owner_ref": "guid:3W2Tu2KKr66wtPVVzPGsDC",
+                  "ownership": "type_inherited",
+                  "unit": "mm",
+                  "value": 915.0,
+                  "value_type": "IfcLengthMeasure"
+                },
+                "fact_key": "door_occurrence:pset:Dimensions-Type.Width",
+                "required": false
+              },
+              {
+                "actual": null,
+                "classification": "not_in_user_text",
+                "expected": {
+                  "owner_ref": "guid:0MOEoDTm9EnO9yLMfjjkME",
+                  "ownership": "occurrence_direct",
+                  "unit": "m2",
+                  "value": 3.189579,
+                  "value_type": "IfcAreaMeasure"
+                },
+                "fact_key": "door_occurrence:pset:Dimensions.Area",
+                "required": false
+              },
+              {
+                "actual": null,
+                "classification": "not_in_user_text",
+                "expected": {
+                  "owner_ref": "guid:0MOEoDTm9EnO9yLMfjjkME",
+                  "ownership": "occurrence_direct",
+                  "unit": "m3",
+                  "value": 0.11985611,
+                  "value_type": "IfcVolumeMeasure"
+                },
+                "fact_key": "door_occurrence:pset:Dimensions.Volume",
+                "required": false
+              },
+              {
+                "actual": {
+                  "owner_ref": "guid:3W2Tu2KKr66wtPVVnPGsDC",
+                  "ownership": "type_inherited",
+                  "unit": null,
+                  "value": "Door: Assembly Code",
+                  "value_type": "IfcText"
+                },
+                "classification": "matched",
+                "expected": {
+                  "owner_ref": "guid:3W2Tu2KKr66wtPVVnPGsDC",
+                  "ownership": "type_inherited",
+                  "unit": null,
+                  "value": "Door: Assembly Code",
+                  "value_type": "IfcText"
+                },
+                "fact_key": "door_occurrence:pset:Identity-Data-Type.Assembly-Code",
+                "required": false
+              },
+              {
+                "actual": {
+                  "owner_ref": "guid:3W2Tu2KKr66wtPVVnPGsDC",
+                  "ownership": "type_inherited",
+                  "unit": null,
+                  "value": "",
+                  "value_type": "IfcText"
+                },
+                "classification": "matched",
+                "expected": {
+                  "owner_ref": "guid:3W2Tu2KKr66wtPVVnPGsDC",
+                  "ownership": "type_inherited",
+                  "unit": null,
+                  "value": "",
+                  "value_type": "IfcText"
+                },
+                "fact_key": "door_occurrence:pset:Identity-Data-Type.Assembly-Description",
+                "required": false
+              },
+              {
+                "actual": {
+                  "owner_ref": "guid:3W2Tu2KKr66wtPVVnPGsDC",
+                  "ownership": "type_inherited",
+                  "unit": null,
+                  "value": "",
+                  "value_type": "IfcText"
+                },
+                "classification": "matched",
+                "expected": {
+                  "owner_ref": "guid:3W2Tu2KKr66wtPVVnPGsDC",
+                  "ownership": "type_inherited",
+                  "unit": null,
+                  "value": "",
+                  "value_type": "IfcText"
+                },
+                "fact_key": "door_occurrence:pset:Identity-Data-Type.Code-Name",
+                "required": false
+              },
+              {
+                "actual": {
+                  "owner_ref": "guid:3W2Tu2KKr66wtPVVnPGsDC",
+                  "ownership": "type_inherited",
+                  "unit": null,
+                  "value": "Door: Description",
+                  "value_type": "IfcText"
+                },
+                "classification": "matched",
+                "expected": {
+                  "owner_ref": "guid:3W2Tu2KKr66wtPVVnPGsDC",
+                  "ownership": "type_inherited",
+                  "unit": null,
+                  "value": "Door: Description",
+                  "value_type": "IfcText"
+                },
+                "fact_key": "door_occurrence:pset:Identity-Data-Type.Description",
+                "required": false
+              },
+              {
+                "actual": {
+                  "owner_ref": "guid:3W2Tu2KKr66wtPVVnPGsDC",
+                  "ownership": "type_inherited",
+                  "unit": null,
+                  "value": "Door: Fire Rating",
+                  "value_type": "IfcText"
+                },
+                "classification": "matched",
+                "expected": {
+                  "owner_ref": "guid:3W2Tu2KKr66wtPVVnPGsDC",
+                  "ownership": "type_inherited",
+                  "unit": null,
+                  "value": "Door: Fire Rating",
+                  "value_type": "IfcText"
+                },
+                "fact_key": "door_occurrence:pset:Identity-Data-Type.Fire-Rating",
+                "required": false
+              },
+              {
+                "actual": {
+                  "owner_ref": "guid:3W2Tu2KKr66wtPVVnPGsDC",
+                  "ownership": "type_inherited",
+                  "unit": null,
+                  "value": "Door: Keynote",
+                  "value_type": "IfcText"
+                },
+                "classification": "matched",
+                "expected": {
+                  "owner_ref": "guid:3W2Tu2KKr66wtPVVnPGsDC",
+                  "ownership": "type_inherited",
+                  "unit": null,
+                  "value": "Door: Keynote",
+                  "value_type": "IfcText"
+                },
+                "fact_key": "door_occurrence:pset:Identity-Data-Type.Keynote",
+                "required": false
+              },
+              {
+                "actual": {
+                  "owner_ref": "guid:3W2Tu2KKr66wtPVVnPGsDC",
+                  "ownership": "type_inherited",
+                  "unit": null,
+                  "value": "Door: Manufacturer",
+                  "value_type": "IfcText"
+                },
+                "classification": "matched",
+                "expected": {
+                  "owner_ref": "guid:3W2Tu2KKr66wtPVVnPGsDC",
+                  "ownership": "type_inherited",
+                  "unit": null,
+                  "value": "Door: Manufacturer",
+                  "value_type": "IfcText"
+                },
+                "fact_key": "door_occurrence:pset:Identity-Data-Type.Manufacturer",
+                "required": false
+              },
+              {
+                "actual": {
+                  "owner_ref": "guid:3W2Tu2KKr66wtPVVnPGsDC",
+                  "ownership": "type_inherited",
+                  "unit": null,
+                  "value": "Door: Model",
+                  "value_type": "IfcText"
+                },
+                "classification": "matched",
+                "expected": {
+                  "owner_ref": "guid:3W2Tu2KKr66wtPVVnPGsDC",
+                  "ownership": "type_inherited",
+                  "unit": null,
+                  "value": "Door: Model",
+                  "value_type": "IfcText"
+                },
+                "fact_key": "door_occurrence:pset:Identity-Data-Type.Model",
+                "required": false
+              },
+              {
+                "actual": {
+                  "owner_ref": "guid:3W2Tu2KKr66wtPVVnPGsDC",
+                  "ownership": "type_inherited",
+                  "unit": null,
+                  "value": "23.30.10.00",
+                  "value_type": "IfcText"
+                },
+                "classification": "matched",
+                "expected": {
+                  "owner_ref": "guid:3W2Tu2KKr66wtPVVnPGsDC",
+                  "ownership": "type_inherited",
+                  "unit": null,
+                  "value": "23.30.10.00",
+                  "value_type": "IfcText"
+                },
+                "fact_key": "door_occurrence:pset:Identity-Data-Type.OmniClass-Number",
+                "required": false
+              },
+              {
+                "actual": {
+                  "owner_ref": "guid:3W2Tu2KKr66wtPVVnPGsDC",
+                  "ownership": "type_inherited",
+                  "unit": null,
+                  "value": "Doors",
+                  "value_type": "IfcText"
+                },
+                "classification": "matched",
+                "expected": {
+                  "owner_ref": "guid:3W2Tu2KKr66wtPVVnPGsDC",
+                  "ownership": "type_inherited",
+                  "unit": null,
+                  "value": "Doors",
+                  "value_type": "IfcText"
+                },
+                "fact_key": "door_occurrence:pset:Identity-Data-Type.OmniClass-Title",
+                "required": false
+              },
+              {
+                "actual": {
+                  "owner_ref": "guid:3W2Tu2KKr66wtPVVnPGsDC",
+                  "ownership": "type_inherited",
+                  "unit": null,
+                  "value": "Door: Type Comments",
+                  "value_type": "IfcText"
+                },
+                "classification": "matched",
+                "expected": {
+                  "owner_ref": "guid:3W2Tu2KKr66wtPVVnPGsDC",
+                  "ownership": "type_inherited",
+                  "unit": null,
+                  "value": "Door: Type Comments",
+                  "value_type": "IfcText"
+                },
+                "fact_key": "door_occurrence:pset:Identity-Data-Type.Type-Comments",
+                "required": false
+              },
+              {
+                "actual": {
+                  "owner_ref": "guid:3W2Tu2KKr66wtPVVnPGsDC",
+                  "ownership": "type_inherited",
+                  "unit": null,
+                  "value": "Door: Type Mark",
+                  "value_type": "IfcText"
+                },
+                "classification": "matched",
+                "expected": {
+                  "owner_ref": "guid:3W2Tu2KKr66wtPVVnPGsDC",
+                  "ownership": "type_inherited",
+                  "unit": null,
+                  "value": "Door: Type Mark",
+                  "value_type": "IfcText"
+                },
+                "fact_key": "door_occurrence:pset:Identity-Data-Type.Type-Mark",
+                "required": false
+              },
+              {
+                "actual": {
+                  "owner_ref": "guid:3W2Tu2KKr66wtPVVnPGsDC",
+                  "ownership": "type_inherited",
+                  "unit": null,
+                  "value": "Generic Door",
+                  "value_type": "IfcText"
+                },
+                "classification": "matched",
+                "expected": {
+                  "owner_ref": "guid:3W2Tu2KKr66wtPVVnPGsDC",
+                  "ownership": "type_inherited",
+                  "unit": null,
+                  "value": "Generic Door",
+                  "value_type": "IfcText"
+                },
+                "fact_key": "door_occurrence:pset:Identity-Data-Type.Type-Name",
+                "required": false
+              },
+              {
+                "actual": {
+                  "owner_ref": "guid:3W2Tu2KKr66wtPVVnPGsDC",
+                  "ownership": "type_inherited",
+                  "unit": null,
+                  "value": "Door: URL",
+                  "value_type": "IfcText"
+                },
+                "classification": "matched",
+                "expected": {
+                  "owner_ref": "guid:3W2Tu2KKr66wtPVVnPGsDC",
+                  "ownership": "type_inherited",
+                  "unit": null,
+                  "value": "Door: URL",
+                  "value_type": "IfcText"
+                },
+                "fact_key": "door_occurrence:pset:Identity-Data-Type.URL",
+                "required": false
+              },
+              {
+                "actual": null,
+                "classification": "not_in_user_text",
+                "expected": {
+                  "owner_ref": "guid:0MOEoDTm9EnO9yLMbjjkME",
+                  "ownership": "occurrence_direct",
+                  "unit": null,
+                  "value": "217",
+                  "value_type": "IfcText"
+                },
+                "fact_key": "door_occurrence:pset:Identity-Data.Mark",
+                "required": false
+              },
+              {
+                "actual": {
+                  "owner_ref": "guid:3W2Tu2KKr66wtPVVjPGsDC",
+                  "ownership": "type_inherited",
+                  "unit": null,
+                  "value": "Door - Panel",
+                  "value_type": "IfcLabel"
+                },
+                "classification": "matched",
+                "expected": {
+                  "owner_ref": "guid:3W2Tu2KKr66wtPVVjPGsDC",
+                  "ownership": "type_inherited",
+                  "unit": null,
+                  "value": "Door - Panel",
+                  "value_type": "IfcLabel"
+                },
+                "fact_key": "door_occurrence:pset:Materials-and-Finishes-Type.Door-Material",
+                "required": false
+              },
+              {
+                "actual": {
+                  "owner_ref": "guid:3W2Tu2KKr66wtPVVjPGsDC",
+                  "ownership": "type_inherited",
+                  "unit": null,
+                  "value": "Door - Frame",
+                  "value_type": "IfcLabel"
+                },
+                "classification": "matched",
+                "expected": {
+                  "owner_ref": "guid:3W2Tu2KKr66wtPVVjPGsDC",
+                  "ownership": "type_inherited",
+                  "unit": null,
+                  "value": "Door - Frame",
+                  "value_type": "IfcLabel"
+                },
+                "fact_key": "door_occurrence:pset:Materials-and-Finishes-Type.Frame-Material",
+                "required": false
+              },
+              {
+                "actual": {
+                  "owner_ref": "guid:2PTeNqVuj0sQy8ePm3lpA3",
+                  "ownership": "type_inherited",
+                  "unit": null,
+                  "value": "Doors",
+                  "value_type": "IfcLabel"
+                },
+                "classification": "matched",
+                "expected": {
+                  "owner_ref": "guid:2PTeNqVuj0sQy8ePm3lpA3",
+                  "ownership": "type_inherited",
+                  "unit": null,
+                  "value": "Doors",
+                  "value_type": "IfcLabel"
+                },
+                "fact_key": "door_occurrence:pset:Other-Type.Category",
+                "required": false
+              },
+              {
+                "actual": {
+                  "owner_ref": "guid:2PTeNqVuj0sQy8ePm3lpA3",
+                  "ownership": "type_inherited",
+                  "unit": null,
+                  "value": "M_Single-Flush",
+                  "value_type": "IfcText"
+                },
+                "classification": "matched",
+                "expected": {
+                  "owner_ref": "guid:2PTeNqVuj0sQy8ePm3lpA3",
+                  "ownership": "type_inherited",
+                  "unit": null,
+                  "value": "M_Single-Flush",
+                  "value_type": "IfcText"
+                },
+                "fact_key": "door_occurrence:pset:Other-Type.Family-Name",
+                "required": false
+              },
+              {
+                "actual": null,
+                "classification": "not_in_user_text",
+                "expected": {
+                  "owner_ref": "guid:3MB7vBCWn8rw95FaTzorzM",
+                  "ownership": "occurrence_direct",
+                  "unit": null,
+                  "value": "Doors",
+                  "value_type": "IfcLabel"
+                },
+                "fact_key": "door_occurrence:pset:Other.Category",
+                "required": false
+              },
+              {
+                "actual": null,
+                "classification": "not_in_user_text",
+                "expected": {
+                  "owner_ref": "guid:3MB7vBCWn8rw95FaTzorzM",
+                  "ownership": "occurrence_direct",
+                  "unit": null,
+                  "value": "M_Single-Flush: Generic Door",
+                  "value_type": "IfcLabel"
+                },
+                "fact_key": "door_occurrence:pset:Other.Family",
+                "required": false
+              },
+              {
+                "actual": null,
+                "classification": "not_in_user_text",
+                "expected": {
+                  "owner_ref": "guid:3MB7vBCWn8rw95FaTzorzM",
+                  "ownership": "occurrence_direct",
+                  "unit": null,
+                  "value": "M_Single-Flush: Generic Door",
+                  "value_type": "IfcLabel"
+                },
+                "fact_key": "door_occurrence:pset:Other.Family-and-Type",
+                "required": false
+              },
+              {
+                "actual": null,
+                "classification": "not_in_user_text",
+                "expected": {
+                  "owner_ref": "guid:3MB7vBCWn8rw95FaTzorzM",
+                  "ownership": "occurrence_direct",
+                  "unit": "mm",
+                  "value": 2134.0,
+                  "value_type": "IfcLengthMeasure"
+                },
+                "fact_key": "door_occurrence:pset:Other.Head-Height",
+                "required": false
+              },
+              {
+                "actual": null,
+                "classification": "not_in_user_text",
+                "expected": {
+                  "owner_ref": "guid:3MB7vBCWn8rw95FaTzorzM",
+                  "ownership": "occurrence_direct",
+                  "unit": null,
+                  "value": "Basic Wall: MockUp Interior between App",
+                  "value_type": "IfcLabel"
+                },
+                "fact_key": "door_occurrence:pset:Other.Host-Id",
+                "required": false
+              },
+              {
+                "actual": null,
+                "classification": "not_in_user_text",
+                "expected": {
+                  "owner_ref": "guid:3MB7vBCWn8rw95FaTzorzM",
+                  "ownership": "occurrence_direct",
+                  "unit": null,
+                  "value": "M_Single-Flush: Generic Door",
+                  "value_type": "IfcLabel"
+                },
+                "fact_key": "door_occurrence:pset:Other.Type",
+                "required": false
+              },
+              {
+                "actual": null,
+                "classification": "not_in_user_text",
+                "expected": {
+                  "owner_ref": "guid:3MB7vBCWn8rw95FaTzorzM",
+                  "ownership": "occurrence_direct",
+                  "unit": null,
+                  "value": "M_Single-Flush: Generic Door",
+                  "value_type": "IfcLabel"
+                },
+                "fact_key": "door_occurrence:pset:Other.Type-Id",
+                "required": false
+              },
+              {
+                "actual": null,
+                "classification": "not_in_user_text",
+                "expected": {
+                  "owner_ref": "guid:0MOEoDTm9EnO9yLMTjjkME",
+                  "ownership": "occurrence_direct",
+                  "unit": null,
+                  "value": "New Construction",
+                  "value_type": "IfcLabel"
+                },
+                "fact_key": "door_occurrence:pset:Phasing.Phase-Created",
+                "required": false
+              },
+              {
+                "actual": {
+                  "owner_ref": "guid:03s4H0svP5iAqfMtVc283O",
+                  "ownership": "type_inherited",
+                  "unit": null,
+                  "value": "Door: Fire Rating",
+                  "value_type": "IfcLabel"
+                },
+                "classification": "unsupported_authoring",
+                "expected": {
+                  "owner_ref": "guid:1SDSN9hHT1dxPmGBkgzjuc",
+                  "ownership": "occurrence_direct",
+                  "unit": null,
+                  "value": "Door: Fire Rating",
+                  "value_type": "IfcLabel"
+                },
+                "fact_key": "door_occurrence:pset:Pset_ConcreteElementGeneral.FireRating",
+                "required": false
+              },
+              {
+                "actual": {
+                  "owner_ref": "guid:3W2Tu2KKr66wtPS0rPGsDC",
+                  "ownership": "type_inherited",
+                  "unit": null,
+                  "value": "Door: Fire Rating",
+                  "value_type": "IfcLabel"
+                },
+                "classification": "unsupported_authoring",
+                "expected": {
+                  "owner_ref": "guid:0MOEoDTm9EnO9yM9XjjkME",
+                  "ownership": "occurrence_direct",
+                  "unit": null,
+                  "value": "Door: Fire Rating",
+                  "value_type": "IfcLabel"
+                },
+                "fact_key": "door_occurrence:pset:Pset_DoorCommon.FireRating",
+                "required": false
+              },
+              {
+                "actual": {
+                  "owner_ref": "guid:3W2Tu2KKr66wtPS0rPGsDC",
+                  "ownership": "type_inherited",
+                  "unit": null,
+                  "value": false,
+                  "value_type": "IfcBoolean"
+                },
+                "classification": "unsupported_authoring",
+                "expected": {
+                  "owner_ref": "guid:0MOEoDTm9EnO9yM9XjjkME",
+                  "ownership": "occurrence_direct",
+                  "unit": null,
+                  "value": false,
+                  "value_type": "IfcBoolean"
+                },
+                "fact_key": "door_occurrence:pset:Pset_DoorCommon.IsExternal",
+                "required": false
+              },
+              {
+                "actual": {
+                  "owner_ref": "guid:3W2Tu2KKr66wtPS0rPGsDC",
+                  "ownership": "type_inherited",
+                  "unit": null,
+                  "value": "Generic Door",
+                  "value_type": "IfcIdentifier"
+                },
+                "classification": "unsupported_authoring",
+                "expected": {
+                  "owner_ref": "guid:0MOEoDTm9EnO9yM9XjjkME",
+                  "ownership": "occurrence_direct",
+                  "unit": null,
+                  "value": "Generic Door",
+                  "value_type": "IfcIdentifier"
+                },
+                "fact_key": "door_occurrence:pset:Pset_DoorCommon.Reference",
+                "required": false
+              },
+              {
+                "actual": {
+                  "owner_ref": "guid:3W2Tu2KKr66wtPS0rPGsDC",
+                  "ownership": "type_inherited",
+                  "unit": null,
+                  "value": 3.7021,
+                  "value_type": "IfcThermalTransmittanceMeasure"
+                },
+                "classification": "unsupported_authoring",
+                "expected": {
+                  "owner_ref": "guid:0MOEoDTm9EnO9yM9XjjkME",
+                  "ownership": "occurrence_direct",
+                  "unit": null,
+                  "value": 3.7021,
+                  "value_type": "IfcThermalTransmittanceMeasure"
+                },
+                "fact_key": "door_occurrence:pset:Pset_DoorCommon.ThermalTransmittance",
+                "required": false
+              },
+              {
+                "actual": {
+                  "owner_ref": "guid:35mv_V0Fb519uY1Bm5y$Ys",
+                  "ownership": "type_inherited",
+                  "unit": null,
+                  "value": "Door: Manufacturer",
+                  "value_type": "IfcLabel"
+                },
+                "classification": "unsupported_authoring",
+                "expected": {
+                  "owner_ref": "guid:347M0QdFP9pvpIZiu5uhSX",
+                  "ownership": "occurrence_direct",
+                  "unit": null,
+                  "value": "Door: Manufacturer",
+                  "value_type": "IfcLabel"
+                },
+                "fact_key": "door_occurrence:pset:Pset_ManufacturerTypeInformation.Manufacturer",
+                "required": false
+              },
+              {
+                "actual": {
+                  "owner_ref": "guid:2tU1viMIT1JPrfYhB8y6hC",
+                  "ownership": "type_inherited",
+                  "unit": null,
+                  "value": "Doors",
+                  "value_type": "IfcLabel"
+                },
+                "classification": "unsupported_authoring",
+                "expected": {
+                  "owner_ref": "guid:0lj9h2wG17yANtVsoY74Vi",
+                  "ownership": "occurrence_direct",
+                  "unit": null,
+                  "value": "Doors",
+                  "value_type": "IfcLabel"
+                },
+                "fact_key": "door_occurrence:pset:Pset_ProductRequirements.Category",
+                "required": false
+              },
+              {
+                "actual": {
+                  "owner_ref": "guid:2aTYo7l_11Yf_ZZTw1AxAU",
+                  "ownership": "type_inherited",
+                  "unit": null,
+                  "value": "Generic Door",
+                  "value_type": "IfcIdentifier"
+                },
+                "classification": "unsupported_authoring",
+                "expected": {
+                  "owner_ref": "guid:2APmetCG54KQfSt5U0WFk8",
+                  "ownership": "occurrence_direct",
+                  "unit": null,
+                  "value": "Generic Door",
+                  "value_type": "IfcIdentifier"
+                },
+                "fact_key": "door_occurrence:pset:Pset_QuantityTakeOff.Reference",
+                "required": false
+              },
+              {
+                "actual": null,
+                "classification": "not_in_user_text",
+                "expected": {
+                  "owner_ref": "guid:3Wxq9TbDb2VguATH8Lg3Gs",
+                  "ownership": "occurrence_direct",
+                  "unit": "m2",
+                  "value": 3.189579,
+                  "value_type": "IfcQuantityArea"
+                },
+                "fact_key": "door_occurrence:quantity:BaseQuantities.Area",
+                "required": false
+              },
+              {
+                "actual": null,
+                "classification": "not_in_user_text",
+                "expected": {
+                  "owner_ref": "guid:3Wxq9TbDb2VguATH8Lg3Gs",
+                  "ownership": "occurrence_direct",
+                  "unit": "mm",
+                  "value": 2134.0,
+                  "value_type": "IfcQuantityLength"
+                },
+                "fact_key": "door_occurrence:quantity:BaseQuantities.Height",
+                "required": false
+              },
+              {
+                "actual": null,
+                "classification": "not_in_user_text",
+                "expected": {
+                  "owner_ref": "guid:3Wxq9TbDb2VguATH8Lg3Gs",
+                  "ownership": "occurrence_direct",
+                  "unit": "mm",
+                  "value": 915.0,
+                  "value_type": "IfcQuantityLength"
+                },
+                "fact_key": "door_occurrence:quantity:BaseQuantities.Width",
+                "required": false
+              },
+              {
+                "actual": {
+                  "owner_ref": "guid:0MOEoDTm9EnO9yKtjjjkME",
+                  "ownership": "derived_relationship",
+                  "unit": null,
+                  "value": "0MOEoDTm9EnO9yKsXjjlBg",
+                  "value_type": "IfcGloballyUniqueId"
+                },
+                "classification": "matched",
+                "expected": {
+                  "owner_ref": "guid:0MOEoDTm9EnO9yKtjjjkME",
+                  "ownership": "derived_relationship",
+                  "unit": null,
+                  "value": "0MOEoDTm9EnO9yKsXjjlBg",
+                  "value_type": "IfcGloballyUniqueId"
+                },
+                "fact_key": "door_occurrence:relationship:host",
+                "required": false
+              }
+            ],
+            "geometry_relationship_success": true,
+            "mapping": {
+              "actual": {
+                "entity_global_id": "0waWkd0DzORB1Cx$6HGsTK",
+                "entity_name": "Text2IFC door operation-advancedproject-door-preserve-opening",
+                "ifc_class": "IfcDoor",
+                "related_opening_global_id": "0MOEoDTm9EnO9yKtjjjkME",
+                "role": "door",
+                "scope": "door_occurrence"
+              },
+              "expected": {
+                "entity_global_id": "0MOEoDTm9EnO9yKsXjjkME",
+                "entity_name": "M_Single-Flush:Generic Door:586077",
+                "ifc_class": "IfcDoor",
+                "related_opening_global_id": "0MOEoDTm9EnO9yKtjjjkME",
+                "role": "door",
+                "scope": "door_occurrence"
+              }
+            },
+            "occurrence_fidelity_success": true,
+            "schema_version": "text2ifc/ifc-occurrence-comparison/0.2",
+            "semantic_fidelity_success": true,
+            "source_hashes": {},
+            "truncated": false
+          },
+          "original_provenance": {
+            "material": {
+              "effective": {
+                "ifc_class": "IfcMaterialList",
+                "names": [
+                  "Door - Frame",
+                  "Door - Panel"
+                ]
+              },
+              "occurrence_assignments": [
+                {
+                  "ifc_class": "IfcMaterialList",
+                  "names": [
+                    "Door - Frame",
+                    "Door - Panel"
+                  ]
+                }
+              ],
+              "sources": [
+                "occurrence",
+                "type"
+              ],
+              "type_assignments": [
+                {
+                  "ifc_class": "IfcMaterialList",
+                  "names": [
+                    "Door - Frame",
+                    "Door - Panel"
+                  ]
+                }
+              ]
+            },
+            "occurrence_pset_fact_count": 31,
+            "occurrence_pset_fact_keys": [
+              "door_occurrence:pset:Constraints.Level",
+              "door_occurrence:pset:Constraints.Sill-Height",
+              "door_occurrence:pset:Custom_Pset.Height",
+              "door_occurrence:pset:Custom_Pset.Hyperlink",
+              "door_occurrence:pset:Custom_Pset.Keynote",
+              "door_occurrence:pset:Custom_Pset.NetArea",
+              "door_occurrence:pset:Custom_Pset.SillHeight",
+              "door_occurrence:pset:Custom_Pset.StatusConstruction",
+              "door_occurrence:pset:Custom_Pset.StoreyName",
+              "door_occurrence:pset:Custom_Pset.TypeDescription",
+              "door_occurrence:pset:Custom_Pset.TypeMark",
+              "door_occurrence:pset:Custom_Pset.Width",
+              "door_occurrence:pset:Dimensions.Area",
+              "door_occurrence:pset:Dimensions.Volume",
+              "door_occurrence:pset:Identity-Data.Mark",
+              "door_occurrence:pset:Other.Category",
+              "door_occurrence:pset:Other.Family",
+              "door_occurrence:pset:Other.Family-and-Type",
+              "door_occurrence:pset:Other.Head-Height",
+              "door_occurrence:pset:Other.Host-Id",
+              "door_occurrence:pset:Other.Type",
+              "door_occurrence:pset:Other.Type-Id",
+              "door_occurrence:pset:Phasing.Phase-Created",
+              "door_occurrence:pset:Pset_ConcreteElementGeneral.FireRating",
+              "door_occurrence:pset:Pset_DoorCommon.FireRating",
+              "door_occurrence:pset:Pset_DoorCommon.IsExternal",
+              "door_occurrence:pset:Pset_DoorCommon.Reference",
+              "door_occurrence:pset:Pset_DoorCommon.ThermalTransmittance",
+              "door_occurrence:pset:Pset_ManufacturerTypeInformation.Manufacturer",
+              "door_occurrence:pset:Pset_ProductRequirements.Category",
+              "door_occurrence:pset:Pset_QuantityTakeOff.Reference"
+            ],
+            "quantity_fact_count": 3,
+            "quantity_fact_keys": [
+              "door_occurrence:quantity:BaseQuantities.Area",
+              "door_occurrence:quantity:BaseQuantities.Height",
+              "door_occurrence:quantity:BaseQuantities.Width"
+            ],
+            "type_inherited_pset_fact_count": 32,
+            "type_inherited_pset_fact_keys": [
+              "door_occurrence:pset:Analytical-Properties-Type.Analytic-Construction",
+              "door_occurrence:pset:Analytical-Properties-Type.Define-Thermal-Properties-by",
+              "door_occurrence:pset:Analytical-Properties-Type.Heat-Transfer-Coefficient-U",
+              "door_occurrence:pset:Analytical-Properties-Type.Solar-Heat-Gain-Coefficient",
+              "door_occurrence:pset:Analytical-Properties-Type.Thermal-Resistance-R",
+              "door_occurrence:pset:Analytical-Properties-Type.Visual-Light-Transmittance",
+              "door_occurrence:pset:Construction-Type.Function",
+              "door_occurrence:pset:Construction-Type.Wall-Closure",
+              "door_occurrence:pset:Dimensions-Type.Height",
+              "door_occurrence:pset:Dimensions-Type.Thickness",
+              "door_occurrence:pset:Dimensions-Type.Trim-Projection-Ext",
+              "door_occurrence:pset:Dimensions-Type.Trim-Projection-Int",
+              "door_occurrence:pset:Dimensions-Type.Trim-Width",
+              "door_occurrence:pset:Dimensions-Type.Width",
+              "door_occurrence:pset:Identity-Data-Type.Assembly-Code",
+              "door_occurrence:pset:Identity-Data-Type.Assembly-Description",
+              "door_occurrence:pset:Identity-Data-Type.Code-Name",
+              "door_occurrence:pset:Identity-Data-Type.Description",
+              "door_occurrence:pset:Identity-Data-Type.Fire-Rating",
+              "door_occurrence:pset:Identity-Data-Type.Keynote",
+              "door_occurrence:pset:Identity-Data-Type.Manufacturer",
+              "door_occurrence:pset:Identity-Data-Type.Model",
+              "door_occurrence:pset:Identity-Data-Type.OmniClass-Number",
+              "door_occurrence:pset:Identity-Data-Type.OmniClass-Title",
+              "door_occurrence:pset:Identity-Data-Type.Type-Comments",
+              "door_occurrence:pset:Identity-Data-Type.Type-Mark",
+              "door_occurrence:pset:Identity-Data-Type.Type-Name",
+              "door_occurrence:pset:Identity-Data-Type.URL",
+              "door_occurrence:pset:Materials-and-Finishes-Type.Door-Material",
+              "door_occurrence:pset:Materials-and-Finishes-Type.Frame-Material",
+              "door_occurrence:pset:Other-Type.Category",
+              "door_occurrence:pset:Other-Type.Family-Name"
+            ]
+          },
+          "private_exact_gap_count": 36,
+          "production_required_occurrence_facts": [
+            "door_occurrence:attribute:OverallHeight",
+            "door_occurrence:attribute:OverallWidth"
+          ],
+          "repaired_provenance": {
+            "material": {
+              "effective": {
+                "ifc_class": "IfcMaterialList",
+                "names": [
+                  "Door - Frame",
+                  "Door - Panel"
+                ]
+              },
+              "occurrence_assignments": [],
+              "sources": [
+                "type"
+              ],
+              "type_assignments": [
+                {
+                  "ifc_class": "IfcMaterialList",
+                  "names": [
+                    "Door - Frame",
+                    "Door - Panel"
+                  ]
+                }
+              ]
+            },
+            "occurrence_pset_fact_count": 0,
+            "occurrence_pset_fact_keys": [],
+            "quantity_fact_count": 0,
+            "quantity_fact_keys": [],
+            "type_inherited_pset_fact_count": 46,
+            "type_inherited_pset_fact_keys": [
+              "door_occurrence:pset:Analytical-Properties-Type.Analytic-Construction",
+              "door_occurrence:pset:Analytical-Properties-Type.Define-Thermal-Properties-by",
+              "door_occurrence:pset:Analytical-Properties-Type.Heat-Transfer-Coefficient-U",
+              "door_occurrence:pset:Analytical-Properties-Type.Solar-Heat-Gain-Coefficient",
+              "door_occurrence:pset:Analytical-Properties-Type.Thermal-Resistance-R",
+              "door_occurrence:pset:Analytical-Properties-Type.Visual-Light-Transmittance",
+              "door_occurrence:pset:Construction-Type.Function",
+              "door_occurrence:pset:Construction-Type.Wall-Closure",
+              "door_occurrence:pset:Custom_Pset.Height",
+              "door_occurrence:pset:Custom_Pset.Hyperlink",
+              "door_occurrence:pset:Custom_Pset.Keynote",
+              "door_occurrence:pset:Custom_Pset.TypeDescription",
+              "door_occurrence:pset:Custom_Pset.TypeMark",
+              "door_occurrence:pset:Custom_Pset.Width",
+              "door_occurrence:pset:Dimensions-Type.Height",
+              "door_occurrence:pset:Dimensions-Type.Thickness",
+              "door_occurrence:pset:Dimensions-Type.Trim-Projection-Ext",
+              "door_occurrence:pset:Dimensions-Type.Trim-Projection-Int",
+              "door_occurrence:pset:Dimensions-Type.Trim-Width",
+              "door_occurrence:pset:Dimensions-Type.Width",
+              "door_occurrence:pset:Identity-Data-Type.Assembly-Code",
+              "door_occurrence:pset:Identity-Data-Type.Assembly-Description",
+              "door_occurrence:pset:Identity-Data-Type.Code-Name",
+              "door_occurrence:pset:Identity-Data-Type.Description",
+              "door_occurrence:pset:Identity-Data-Type.Fire-Rating",
+              "door_occurrence:pset:Identity-Data-Type.Keynote",
+              "door_occurrence:pset:Identity-Data-Type.Manufacturer",
+              "door_occurrence:pset:Identity-Data-Type.Model",
+              "door_occurrence:pset:Identity-Data-Type.OmniClass-Number",
+              "door_occurrence:pset:Identity-Data-Type.OmniClass-Title",
+              "door_occurrence:pset:Identity-Data-Type.Type-Comments",
+              "door_occurrence:pset:Identity-Data-Type.Type-Mark",
+              "door_occurrence:pset:Identity-Data-Type.Type-Name",
+              "door_occurrence:pset:Identity-Data-Type.URL",
+              "door_occurrence:pset:Materials-and-Finishes-Type.Door-Material",
+              "door_occurrence:pset:Materials-and-Finishes-Type.Frame-Material",
+              "door_occurrence:pset:Other-Type.Category",
+              "door_occurrence:pset:Other-Type.Family-Name",
+              "door_occurrence:pset:Pset_ConcreteElementGeneral.FireRating",
+              "door_occurrence:pset:Pset_DoorCommon.FireRating",
+              "door_occurrence:pset:Pset_DoorCommon.IsExternal",
+              "door_occurrence:pset:Pset_DoorCommon.Reference",
+              "door_occurrence:pset:Pset_DoorCommon.ThermalTransmittance",
+              "door_occurrence:pset:Pset_ManufacturerTypeInformation.Manufacturer",
+              "door_occurrence:pset:Pset_ProductRequirements.Category",
+              "door_occurrence:pset:Pset_QuantityTakeOff.Reference"
+            ]
+          },
+          "storey_match": true,
+          "type_match": true
+        }
+      }
+    ],
+    "private_exact_fidelity_pass": false
+  },
+  "production_damaged_to_repaired": {
+    "l1_pass": true,
+    "l2_pass": true,
+    "model_diff": {
+      "added_root_count": 2,
+      "declared_created_root_count": 2,
+      "door_count_delta": 1,
+      "entity_count_delta": 15,
+      "opening_count_delta": 0,
+      "removed_root_count": 0,
+      "undeclared_added_roots": [],
+      "window_count_delta": 0
+    },
+    "operation_checks": [
+      {
+        "checks": [
+          {
+            "code": "DOOR_FILLS_OPENING",
+            "evidence": {},
+            "status": "passed"
+          },
+          {
+            "code": "OPENING_VOIDS_WALL",
+            "evidence": {},
+            "status": "passed"
+          },
+          {
+            "code": "DOOR_DIMENSIONS_MATCH",
+            "evidence": {},
+            "status": "passed"
+          },
+          {
+            "code": "DOOR_GEOMETRY_ALIGNED_WITH_OPENING",
+            "evidence": {
+              "axis_deviation_degrees": 0.0,
+              "door_bounds_in_opening_mm": {
+                "x": [
+                  -76.0,
+                  991.0
+                ],
+                "y": [
+                  -25.0,
+                  205.0
+                ],
+                "z": [
+                  0.0,
+                  2210.0
+                ]
+              },
+              "geometry_center_deviation_mm": 38.0,
+              "height_deviation_mm": 0.0,
+              "nominal_center_deviation_mm": 0.0,
+              "nominal_door_bounds_mm": {
+                "x": [
+                  0.0,
+                  915.0
+                ],
+                "y": [
+                  0.0,
+                  0.0
+                ],
+                "z": [
+                  0.0,
+                  2134.0
+                ]
+              },
+              "normal_axis_intersection_mm": 180.0,
+              "opening_bounds_mm": {
+                "x": [
+                  0.0,
+                  915.0
+                ],
+                "y": [
+                  0.0,
+                  180.0
+                ],
+                "z": [
+                  0.0,
+                  2134.0
+                ]
+              },
+              "projected_overlap_ratio": 1.0,
+              "thresholds": {
+                "maximum_axis_deviation_degrees": 0.1,
+                "maximum_center_deviation_mm": 5.0,
+                "maximum_dimension_deviation_mm": 1.0,
+                "minimum_projected_overlap_ratio": 0.95
+              },
+              "valid": true,
+              "width_deviation_mm": 0.0
+            },
+            "status": "passed"
+          },
+          {
+            "code": "DOOR_STOREY_MATCHES_HOST",
+            "evidence": {
+              "actual_storey_global_ids": [
+                "0JBeWf23HFRgZonzHC5mk3"
+              ],
+              "expected_storey_global_id": "0JBeWf23HFRgZonzHC5mk3",
+              "resolution_error": null
+            },
+            "status": "passed"
+          },
+          {
+            "code": "DOOR_TYPE_BOUND",
+            "evidence": {},
+            "status": "passed"
+          }
+        ],
+        "evidence": {
+          "actual_storey_global_ids": [
+            "0JBeWf23HFRgZonzHC5mk3"
+          ],
+          "door_global_id": "0waWkd0DzORB1Cx$6HGsTK",
+          "expected_storey_global_id": "0JBeWf23HFRgZonzHC5mk3",
+          "geometry_alignment": {
+            "axis_deviation_degrees": 0.0,
+            "door_bounds_in_opening_mm": {
+              "x": [
+                -76.0,
+                991.0
+              ],
+              "y": [
+                -25.0,
+                205.0
+              ],
+              "z": [
+                0.0,
+                2210.0
+              ]
+            },
+            "geometry_center_deviation_mm": 38.0,
+            "height_deviation_mm": 0.0,
+            "nominal_center_deviation_mm": 0.0,
+            "nominal_door_bounds_mm": {
+              "x": [
+                0.0,
+                915.0
+              ],
+              "y": [
+                0.0,
+                0.0
+              ],
+              "z": [
+                0.0,
+                2134.0
+              ]
+            },
+            "normal_axis_intersection_mm": 180.0,
+            "opening_bounds_mm": {
+              "x": [
+                0.0,
+                915.0
+              ],
+              "y": [
+                0.0,
+                180.0
+              ],
+              "z": [
+                0.0,
+                2134.0
+              ]
+            },
+            "projected_overlap_ratio": 1.0,
+            "thresholds": {
+              "maximum_axis_deviation_degrees": 0.1,
+              "maximum_center_deviation_mm": 5.0,
+              "maximum_dimension_deviation_mm": 1.0,
+              "minimum_projected_overlap_ratio": 0.95
+            },
+            "valid": true,
+            "width_deviation_mm": 0.0
+          },
+          "host_wall_global_id": "0MOEoDTm9EnO9yKsXjjlBg",
+          "opening_global_id": "0MOEoDTm9EnO9yKtjjjkME"
+        },
+        "issues": [],
+        "operation_id": "operation-advancedproject-door-preserve-opening",
+        "operation_type": "fill_existing_opening_with_door",
+        "valid": true
+      }
+    ]
+  },
+  "production_ground_truth_isolation": {
+    "checked_private_deleted_object_count": 1,
+    "leaked_deleted_object_ids": [],
+    "passed": true,
+    "private_comparator_started_after_repair": true,
+    "production_inputs": [
+      "02-damaged.ifc",
+      "request.txt",
+      "bound ChangeSet",
+      "authorized surviving IFC evidence"
+    ]
+  },
+  "release_decision": {
+    "blocking_findings": [],
+    "diagnostics": [
+      {
+        "code": "PRIVATE_EXACTNESS_INFORMATIONAL",
+        "message": "Private Ground Truth gaps never participate in target resolution or ChangeSet construction."
+      }
+    ],
+    "l0_pass": true,
+    "l1_pass": true,
+    "l2_pass": true,
+    "production_evaluation_status": "passed",
+    "publishable": true,
+    "schema_version": "text2ifc/ifc-repair-release-decision/0.1",
+    "warnings": [
+      {
+        "code": "PRIVATE_GROUND_TRUTH_FIDELITY_GAP",
+        "message": "Non-required original occurrence authoring facts remain different; production Manifest still passes.",
+        "operation_id": "operation-advancedproject-door-preserve-opening"
+      }
+    ]
+  },
+  "run_fingerprints": {
+    "application_sha256": "sha256:2e3149487cddf48f31a97cccb9001bbf972f0aec19234b80f7e12f7ffc58d00a",
+    "changeset_sha256": "sha256:491950327c3b54c7480dd03db1a2bc1601a2c75e092463c3bfebb3bf279bc792",
+    "damaged_ifc_sha256": "sha256:8e187d9a9ce07067f276c8afb056e294d83b08098371f619ac3b76577f5576bd",
+    "original_ifc_sha256": "sha256:86b068a7ca6947e398c1daaa8bede9d31048c3990adc308429faeb56ee01db94",
+    "production_evaluation_sha256": "sha256:e3ad1118661ba42155e284f5da4c98588b840084149baeb220efa536f797a41d",
+    "repaired_ifc_sha256": "sha256:3809fd67e3141f4adb506a98f58c8cae141b4e30f16aa3a9aa2ca229e7e17c39",
+    "request_sha256": "sha256:3d9255a7afe73b8e719fae3677849fa4459445988af70b70fd84d420bdc35346"
+  },
+  "schema_version": "text2ifc/door-repair-three-way-audit/0.1",
+  "source_hashes": {
+    "damaged": "sha256:8e187d9a9ce07067f276c8afb056e294d83b08098371f619ac3b76577f5576bd",
+    "original": "sha256:86b068a7ca6947e398c1daaa8bede9d31048c3990adc308429faeb56ee01db94",
+    "repaired": "sha256:3809fd67e3141f4adb506a98f58c8cae141b4e30f16aa3a9aa2ca229e7e17c39"
+  }
+}

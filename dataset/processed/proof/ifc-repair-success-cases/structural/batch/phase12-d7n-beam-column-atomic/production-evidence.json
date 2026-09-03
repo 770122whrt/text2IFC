@@ -1,0 +1,156 @@
+{
+  "applicability_by_operation": {
+    "phase12-d7n-beam-column-atomic-beam-1": {
+      "beam.material": {
+        "applicability": "conditional",
+        "evidence_pointer": "production-evidence:/phase12-d7n-beam-column-atomic-beam-1/beam.material",
+        "mandatory": false,
+        "outcome": "not_required",
+        "verified_absence": true
+      },
+      "beam.pset": {
+        "applicability": "conditional",
+        "evidence_pointer": "production-evidence:/phase12-d7n-beam-column-atomic-beam-1/beam.pset",
+        "mandatory": false,
+        "outcome": "not_required",
+        "verified_absence": true
+      },
+      "beam.storey": {
+        "applicability": "required",
+        "evidence_pointer": "production-evidence:/phase12-d7n-beam-column-atomic-beam-1/beam.storey",
+        "mandatory": true,
+        "outcome": "evaluable",
+        "verified_absence": false
+      },
+      "beam.type": {
+        "applicability": "required",
+        "evidence_pointer": "production-evidence:/phase12-d7n-beam-column-atomic-beam-1/beam.type",
+        "mandatory": true,
+        "outcome": "evaluable",
+        "verified_absence": false
+      }
+    },
+    "phase12-d7n-beam-column-atomic-column-2": {
+      "column.material": {
+        "applicability": "conditional",
+        "evidence_pointer": "production-evidence:/phase12-d7n-beam-column-atomic-column-2/column.material",
+        "mandatory": false,
+        "outcome": "not_required",
+        "verified_absence": true
+      },
+      "column.pset": {
+        "applicability": "conditional",
+        "evidence_pointer": "production-evidence:/phase12-d7n-beam-column-atomic-column-2/column.pset",
+        "mandatory": false,
+        "outcome": "not_required",
+        "verified_absence": true
+      },
+      "column.storey": {
+        "applicability": "required",
+        "evidence_pointer": "production-evidence:/phase12-d7n-beam-column-atomic-column-2/column.storey",
+        "mandatory": true,
+        "outcome": "evaluable",
+        "verified_absence": false
+      },
+      "column.type": {
+        "applicability": "required",
+        "evidence_pointer": "production-evidence:/phase12-d7n-beam-column-atomic-column-2/column.type",
+        "mandatory": true,
+        "outcome": "evaluable",
+        "verified_absence": false
+      }
+    }
+  },
+  "conflicts": [],
+  "expected_facts_by_operation": {
+    "phase12-d7n-beam-column-atomic-beam-1": [
+      {
+        "fact_key": "relationship:host",
+        "inherited": false,
+        "provenance": [
+          "resolved-host-target:0K_MqVdrL0JOCMi_GblRwJ",
+          "resolved-host:0K_MqVdrL0JOCMi_GblRwJ",
+          "operation:phase12-d7n-beam-column-atomic-beam-1"
+        ],
+        "source_kind": "surviving_target",
+        "source_ref": "current-host-binding:0K_MqVdrL0JOCMi_GblRwJ",
+        "unit": null,
+        "value": "0K_MqVdrL0JOCMi_GblRwJ",
+        "value_type": "IfcBuildingStorey"
+      },
+      {
+        "fact_key": "relationship:storey",
+        "inherited": false,
+        "provenance": [
+          "operation:phase12-d7n-beam-column-atomic-beam-1",
+          "registered-beam-storey-policy:0.1"
+        ],
+        "source_kind": "deterministic_policy",
+        "source_ref": "resolved:/operations/phase12-d7n-beam-column-atomic-beam-1/target",
+        "unit": null,
+        "value": "0K_MqVdrL0JOCMi_GblRwJ",
+        "value_type": "IfcBuildingStorey"
+      },
+      {
+        "fact_key": "relationship:type",
+        "inherited": true,
+        "provenance": [
+          "operation:phase12-d7n-beam-column-atomic-beam-1",
+          "generated-type-template:0.1"
+        ],
+        "source_kind": "deterministic_policy",
+        "source_ref": "generated-type:1edbVJsHzGJu4tKx1bEBKt",
+        "unit": null,
+        "value": "1edbVJsHzGJu4tKx1bEBKt",
+        "value_type": "IfcBeamType"
+      }
+    ],
+    "phase12-d7n-beam-column-atomic-column-2": [
+      {
+        "fact_key": "relationship:host",
+        "inherited": false,
+        "provenance": [
+          "resolved-host-target:0K_MqVdrL0JOCMi_GblRwJ",
+          "resolved-host:0K_MqVdrL0JOCMi_GblRwJ",
+          "operation:phase12-d7n-beam-column-atomic-column-2"
+        ],
+        "source_kind": "surviving_target",
+        "source_ref": "current-host-binding:0K_MqVdrL0JOCMi_GblRwJ",
+        "unit": null,
+        "value": "0K_MqVdrL0JOCMi_GblRwJ",
+        "value_type": "IfcBuildingStorey"
+      },
+      {
+        "fact_key": "relationship:storey",
+        "inherited": false,
+        "provenance": [
+          "operation:phase12-d7n-beam-column-atomic-column-2",
+          "registered-column-base-storey-policy:0.1"
+        ],
+        "source_kind": "deterministic_policy",
+        "source_ref": "resolved:/operations/phase12-d7n-beam-column-atomic-column-2/target",
+        "unit": null,
+        "value": "0K_MqVdrL0JOCMi_GblRwJ",
+        "value_type": "IfcBuildingStorey"
+      },
+      {
+        "fact_key": "relationship:type",
+        "inherited": true,
+        "provenance": [
+          "operation:phase12-d7n-beam-column-atomic-column-2",
+          "generated-type-template:0.1"
+        ],
+        "source_kind": "deterministic_policy",
+        "source_ref": "generated-type:2Fye8O5nPNFP0dkgYO3SX0",
+        "unit": null,
+        "value": "2Fye8O5nPNFP0dkgYO3SX0",
+        "value_type": "IfcColumnType"
+      }
+    ]
+  },
+  "operation_types": {
+    "phase12-d7n-beam-column-atomic-beam-1": "add_beam",
+    "phase12-d7n-beam-column-atomic-column-2": "add_column"
+  },
+  "schema_version": "text2ifc/phase12-production-evidence/0.1"
+}

@@ -1,0 +1,63 @@
+{
+  "schema_version": "text2ifc/ifc-repair-changeset-draft/0.3",
+  "draft_id": "add-beam-1",
+  "base_model_fingerprint": "sha256:79f294c643438ac7a494e4871857244c2de0eefa536eda5977af20640a301a22",
+  "source_request_hash": "sha256:fe084ed99b6c038aec419b5181f7fab22834c9f80d6e133c263a6b76f2da01c0",
+  "semantic_manifest_ref": "changeset/semantic-manifest-add-beam-1.json",
+  "semantic_manifest_sha256": "sha256:67da4eba942eca98061a90901b28af50438272ceea49cf9e04388472dd46d8cf",
+  "semantic_summary": {
+    "required": 2,
+    "conditional": 3,
+    "not_required": 0
+  },
+  "scope": {
+    "target_ids": [
+      "02GkOQJZz4x9WAhoZkM67S"
+    ],
+    "forbidden_ids": []
+  },
+  "evidence_refs": [
+    "resolved:/operations/add-beam-1/context/candidate_targets/0"
+  ],
+  "preconditions": [
+    "target_exists",
+    "structural_axis_available",
+    "structural_type_authorized"
+  ],
+  "postconditions": [
+    "beam_geometry_matches",
+    "beam_contained_in_storey",
+    "beam_type_bound"
+  ],
+  "operations": [
+    {
+      "operation_id": "add-beam-1",
+      "operation_type": "add_beam",
+      "target": {
+        "storey_global_id": "02GkOQJZz4x9WAhoZkM67S"
+      },
+      "parameters": {
+        "axis": {
+          "start": {
+            "x_mm": 25000.0,
+            "y_mm": 58000.0,
+            "z_mm": 3000.0
+          },
+          "end": {
+            "x_mm": 31000.0,
+            "y_mm": 58000.0,
+            "z_mm": 3000.0
+          }
+        },
+        "section": {
+          "shape": "rectangle",
+          "width_mm": 500,
+          "height_mm": 800
+        }
+      },
+      "evidence_refs": [
+        "resolved:/operations/add-beam-1/context/candidate_targets/0"
+      ]
+    }
+  ]
+}

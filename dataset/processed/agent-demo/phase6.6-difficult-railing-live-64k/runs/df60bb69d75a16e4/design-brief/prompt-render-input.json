@@ -1,0 +1,1600 @@
+{
+  "CONVERSATION": [
+    {
+      "content": "## 4.4.10 Difficult 修订输入：双开口、直跑楼梯与中庭栏杆\n\n创建一栋两层住宅。采用毫米和右手坐标系：X 轴向东，Y 轴向北，Z 轴向上。室内净轮廓为 `x=0..12000, y=0..8000`。\n\n### 4.4.10.1 建筑与楼层\n\n- 首层 `storey-1` 标高为 0，二层 `storey-2` 标高为 3300；\n- 两层净高均为 3000；\n- 所有普通墙厚 200、高 3000；\n- 两层均使用连续的南、北、西、东四段外墙封闭外轮廓，转角直接相接；\n- 首层和二层墙分别归属 `storey-1` 和 `storey-2`，不得跨层或重复。\n\n### 4.4.10.2 楼板和两个独立开口\n\n生成两块 `IfcSlab`：\n\n- `ground-floor-slab` 归属 `storey-1`，顶标高 0，厚 300，平面为 `[[0,0],[12000,0],[12000,8000],[0,8000],[0,0]]`；\n- `first-floor-slab` 归属 `storey-2`，顶标高 3300，厚 300，平面同上。\n\n`first-floor-slab` 必须有两个彼此独立的开口，不得合并为一个外包矩形：\n\n- 中庭开口 `opening-first-floor-slab-atrium`：`x=6000..12000, y=0..3000`；\n- 楼梯开口 `opening-first-floor-slab-stair`：`x=10000..11000, y=3500..8000`。\n\n每个开口分别生成 `IfcOpeningElement` 和各自的 `IfcRelVoidsElement`。开口范围内不得生成楼板实体。\n\n### 4.4.10.3 首层空间\n\n为以下每个矩形生成独立 `IfcSpace`：\n\n- 客厅 `space-storey-1-living`：`x=0..7000, y=0..3000`；\n- 餐厅 `space-storey-1-dining`：`x=7000..12000, y=0..3000`；\n- 走廊 `space-storey-1-corridor`：`x=0..10000, y=3000..5000`；\n- 厨房 `space-storey-1-kitchen`：`x=0..5000, y=5000..8000`；\n- 卫生间 `space-storey-1-bathroom`：`x=5000..7000, y=5000..8000`；\n- 楼梯厅 `space-storey-1-stair-hall`：`x=7000..12000, y=5000..8000`。\n\n楼梯会占用楼梯厅和走廊东端附近的明确区域，但不得移动上述空间边界。相邻空间只生成一段共享墙；走廊与每个房间的公共边界必须保持唯一。\n\n### 4.4.10.4 二层空间和中庭\n\n为以下每个矩形生成独立 `IfcSpace`：\n\n- 走廊 `space-storey-2-corridor`：`x=0..10000, y=3000..5000`；\n- 卧室一 `space-storey-2-bedroom-1`：`x=0..5000, y=5000..8000`；\n- 卫生间 `space-storey-2-bathroom`：`x=5000..7000, y=5000..8000`；\n- 卧室二 `space-storey-2-bedroom-2`：`x=7000..10000, y=5000..8000`；\n- 卧室三 `space-storey-2-bedroom-3`：`x=0..6000, y=0..3000`。\n\n中庭挑空范围为 `x=6000..12000, y=0..3000`，楼梯保留区为 `x=10000..11000, y=3500..8000`。这两个区域均不得生成二层 `IfcSpace`。中庭北边和西边不得生成普通封闭墙，改用下述栏杆。\n\n### 4.4.10.5 受支持的直跑楼梯\n\n生成一部由 `IfcStair` 和一个 `IfcStairFlight` 组成的直跑楼梯，不使用双跑、平台或转折：\n\n- `stair-1` 从 `storey-1` 连接到 `storey-2`；\n- 平面 bounds 为 `x=10000..11000, y=3750..8000`；\n- 起跑点为全局 `[11000,8000,0]`，沿 `-Y` 方向运行，梯段宽度向西展开 1000；\n- 起点标高 0，终点标高 3300，总高差 3300；\n- 18 个踢面、17 个踏面；\n- 踢面高为 `3300/18` 毫米，踏面深 250 毫米，总水平投影长 4250 毫米；\n- 楼梯完整位于 `opening-first-floor-slab-stair` 内，不得与二层楼板实体相交。\n\n### 4.4.10.6 两段中庭栏杆\n\n生成且只生成以下两段简化实体 `IfcRailing`，均归属 `storey-2`：\n\n- `railing-atrium-north`：中心线从 `[6000,3000,3300]` 到 `[12000,3000,3300]`；\n- `railing-atrium-west`：中心线从 `[6000,0,3300]` 到 `[6000,3000,3300]`。\n\n两段栏杆高度均为 1100，简化实体厚度均为 50。栏杆必须沿中庭边缘，底标高为 3300；不得偏移、悬空、改成普通墙，也不得自行增加立柱、材料或栏杆类型。\n\n### 4.4.10.7 门\n\n所有普通室内门高 2100；卫生间门宽 800，其余室内门宽 900。门中心使用下列全局 XY 坐标，必须使用对应共享墙作为宿主：\n\n- 首层客厅到走廊 `[3500,3000]`；\n- 首层餐厅到走廊 `[8500,3000]`；\n- 首层厨房到走廊 `[2500,5000]`；\n- 首层卫生间到走廊 `[6000,5000]`；\n- 首层楼梯厅到走廊 `[8500,5000]`；\n- 二层卧室一到走廊 `[2500,5000]`；\n- 二层卫生间到走廊 `[6000,5000]`；\n- 二层卧室二到走廊 `[8500,5000]`；\n- 二层卧室三到走廊 `[3000,3000]`。\n\n住宅主入口门位于首层西外墙，中心 `[0,4000]`，宽 1000、高 2100。每扇门分别生成自己的开口、`IfcRelVoidsElement` 和 `IfcRelFillsElement`，不得共用开口。\n\n### 4.4.10.8 窗\n\n普通窗宽 1500、高 1200、窗台高 900：\n\n- 首层客厅南外墙中心 `[2333,0]` 和 `[4667,0]`；\n- 首层餐厅南外墙中心 `[8250,0]` 和 `[10750,0]`；\n- 首层厨房北外墙中心 `[2500,8000]`；\n- 二层卧室一北外墙中心 `[2500,8000]`；\n- 二层卧室二北外墙中心 `[8500,8000]`；\n- 二层卧室三南外墙中心 `[3000,0]`。\n\n两个卫生间各有一扇高窗，宽 800、高 600、窗台高 1600：首层中心 `[6000,8000]`，二层中心 `[6000,8000]`，分别宿主于各自楼层北外墙。每扇窗分别生成自己的开口和填充关系；同一宿主墙上的多个窗使用显式中心点，不得全部放在墙中点或互相重叠。\n\n### 4.4.10.9 IFC 验收要求\n\n- BIM JSON 2.0 必须通过正式 Schema 校验后才编译；\n- IFC2X3 文件必须可编译、可重开且无 EXPRESS 错误；\n- 必须有 2 个 `IfcBuildingStorey`、11 个 `IfcSpace`、2 个 `IfcSlab`、1 个 `IfcStair`、1 个 `IfcStairFlight` 和 2 个 `IfcRailing`；\n- 两个楼板开口必须独立存在且范围正确；\n- 两段栏杆必须归属二层，世界坐标范围、1100 高度和 50 厚度必须与输入一致；\n- 中庭和楼梯开口内不得生成二层空间或楼板实体；\n- 门窗必须位于指定中心、绑定正确宿主，并具有独立开口和填充关系；\n- 共享墙不得重复，外墙转角不得留缝，所有空间和构件必须归属正确楼层。",
+      "question_ids": [],
+      "role": "user",
+      "turn_id": "turn-user-001"
+    }
+  ],
+  "DESIGN_BRIEF_SCHEMA": {
+    "$defs": {
+      "ambiguity": {
+        "additionalProperties": false,
+        "properties": {
+          "blocking": {
+            "type": "boolean"
+          },
+          "evidence_refs": {
+            "$ref": "#/$defs/evidenceRefs"
+          },
+          "id": {
+            "$ref": "#/$defs/nonEmptyString"
+          },
+          "message": {
+            "$ref": "#/$defs/nonEmptyString"
+          },
+          "options": {
+            "items": {},
+            "minItems": 2,
+            "type": "array"
+          },
+          "path": {
+            "$ref": "#/$defs/jsonPointer"
+          },
+          "reason": {
+            "$ref": "#/$defs/nonEmptyString"
+          },
+          "source_turns": {
+            "$ref": "#/$defs/stringList"
+          }
+        },
+        "required": [
+          "id",
+          "path",
+          "message",
+          "reason",
+          "blocking",
+          "evidence_refs",
+          "source_turns",
+          "options"
+        ],
+        "type": "object"
+      },
+      "correction": {
+        "additionalProperties": false,
+        "properties": {
+          "evidence_refs": {
+            "$ref": "#/$defs/evidenceRefs"
+          },
+          "path": {
+            "$ref": "#/$defs/jsonPointer"
+          },
+          "replaces": {},
+          "source_turn": {
+            "$ref": "#/$defs/nonEmptyString"
+          },
+          "value": {}
+        },
+        "required": [
+          "path",
+          "value",
+          "source_turn",
+          "evidence_refs"
+        ],
+        "type": "object"
+      },
+      "evidenceRefs": {
+        "items": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "minItems": 1,
+        "type": "array",
+        "uniqueItems": true
+      },
+      "factSource": {
+        "additionalProperties": false,
+        "properties": {
+          "evidence_refs": {
+            "$ref": "#/$defs/evidenceRefs"
+          },
+          "path": {
+            "$ref": "#/$defs/jsonPointer"
+          },
+          "source_turns": {
+            "$ref": "#/$defs/stringList"
+          }
+        },
+        "required": [
+          "path",
+          "source_turns",
+          "evidence_refs"
+        ],
+        "type": "object"
+      },
+      "jsonPointer": {
+        "pattern": "^/",
+        "type": "string"
+      },
+      "missingFact": {
+        "additionalProperties": false,
+        "properties": {
+          "blocking": {
+            "type": "boolean"
+          },
+          "code": {
+            "$ref": "#/$defs/nonEmptyString"
+          },
+          "evidence_refs": {
+            "$ref": "#/$defs/evidenceRefs"
+          },
+          "id": {
+            "$ref": "#/$defs/nonEmptyString"
+          },
+          "message": {
+            "$ref": "#/$defs/nonEmptyString"
+          },
+          "path": {
+            "$ref": "#/$defs/jsonPointer"
+          },
+          "reason": {
+            "$ref": "#/$defs/nonEmptyString"
+          },
+          "source_turns": {
+            "$ref": "#/$defs/stringList"
+          }
+        },
+        "required": [
+          "id",
+          "code",
+          "path",
+          "message",
+          "reason",
+          "blocking",
+          "evidence_refs",
+          "source_turns"
+        ],
+        "type": "object"
+      },
+      "nonEmptyString": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "provenance": {
+        "additionalProperties": false,
+        "properties": {
+          "few_shot_ids": {
+            "items": {
+              "$ref": "#/$defs/nonEmptyString"
+            },
+            "type": "array",
+            "uniqueItems": true
+          },
+          "selected_evidence_ids": {
+            "items": {
+              "$ref": "#/$defs/nonEmptyString"
+            },
+            "type": "array",
+            "uniqueItems": true
+          },
+          "source_turns": {
+            "$ref": "#/$defs/stringList"
+          }
+        },
+        "required": [
+          "source_turns",
+          "selected_evidence_ids",
+          "few_shot_ids"
+        ],
+        "type": "object"
+      },
+      "question": {
+        "additionalProperties": false,
+        "properties": {
+          "evidence_refs": {
+            "$ref": "#/$defs/evidenceRefs"
+          },
+          "id": {
+            "$ref": "#/$defs/nonEmptyString"
+          },
+          "reason": {
+            "$ref": "#/$defs/nonEmptyString"
+          },
+          "targets": {
+            "$ref": "#/$defs/stringList"
+          },
+          "text": {
+            "$ref": "#/$defs/nonEmptyString"
+          }
+        },
+        "required": [
+          "id",
+          "text",
+          "targets",
+          "reason",
+          "evidence_refs"
+        ],
+        "type": "object"
+      },
+      "stringList": {
+        "items": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "minItems": 1,
+        "type": "array",
+        "uniqueItems": true
+      },
+      "unsupportedRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "blocking": {
+            "type": "boolean"
+          },
+          "evidence_refs": {
+            "$ref": "#/$defs/evidenceRefs"
+          },
+          "id": {
+            "$ref": "#/$defs/nonEmptyString"
+          },
+          "message": {
+            "$ref": "#/$defs/nonEmptyString"
+          },
+          "path": {
+            "$ref": "#/$defs/jsonPointer"
+          },
+          "reason": {
+            "$ref": "#/$defs/nonEmptyString"
+          },
+          "requested_value": {},
+          "source_turns": {
+            "$ref": "#/$defs/stringList"
+          }
+        },
+        "required": [
+          "id",
+          "path",
+          "message",
+          "reason",
+          "blocking",
+          "requested_value",
+          "evidence_refs",
+          "source_turns"
+        ],
+        "type": "object"
+      }
+    },
+    "$id": "https://text2ifc.local/schemas/agent/design-brief/2.0/schema.json",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "additionalProperties": false,
+    "allOf": [
+      {
+        "if": {
+          "properties": {
+            "status": {
+              "const": "needs_clarification"
+            }
+          },
+          "required": [
+            "status"
+          ]
+        },
+        "then": {
+          "properties": {
+            "clarification_questions": {
+              "maxItems": 3,
+              "minItems": 1
+            }
+          }
+        }
+      },
+      {
+        "if": {
+          "properties": {
+            "status": {
+              "const": "ready"
+            }
+          },
+          "required": [
+            "status"
+          ]
+        },
+        "then": {
+          "properties": {
+            "clarification_questions": {
+              "maxItems": 0
+            }
+          }
+        }
+      }
+    ],
+    "properties": {
+      "ambiguities": {
+        "items": {
+          "$ref": "#/$defs/ambiguity"
+        },
+        "type": "array"
+      },
+      "clarification_questions": {
+        "items": {
+          "$ref": "#/$defs/question"
+        },
+        "maxItems": 3,
+        "type": "array"
+      },
+      "fact_sources": {
+        "items": {
+          "$ref": "#/$defs/factSource"
+        },
+        "type": "array"
+      },
+      "known_facts": {
+        "type": "object"
+      },
+      "language": {
+        "const": "zh-CN"
+      },
+      "missing_facts": {
+        "items": {
+          "$ref": "#/$defs/missingFact"
+        },
+        "type": "array"
+      },
+      "original_request": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "provenance": {
+        "$ref": "#/$defs/provenance"
+      },
+      "schema_version": {
+        "const": "text2ifc/design-brief/2.0"
+      },
+      "status": {
+        "enum": [
+          "ready",
+          "needs_clarification",
+          "draft_required",
+          "blocked"
+        ]
+      },
+      "unsupported_requests": {
+        "items": {
+          "$ref": "#/$defs/unsupportedRequest"
+        },
+        "type": "array"
+      },
+      "user_corrections": {
+        "items": {
+          "$ref": "#/$defs/correction"
+        },
+        "type": "array"
+      }
+    },
+    "required": [
+      "schema_version",
+      "language",
+      "original_request",
+      "status",
+      "known_facts",
+      "fact_sources",
+      "missing_facts",
+      "ambiguities",
+      "unsupported_requests",
+      "user_corrections",
+      "clarification_questions",
+      "provenance"
+    ],
+    "title": "text2IFC Evidence-grounded Design Brief 2.0",
+    "type": "object"
+  },
+  "EVIDENCE_CATALOG": [
+    {
+      "content": {
+        "$defs": {
+          "attributes": {
+            "properties": {
+              "ObjectPlacement": {
+                "$ref": "#/$defs/objectPlacement"
+              },
+              "Representation": {
+                "$ref": "#/$defs/representation"
+              }
+            },
+            "type": "object"
+          },
+          "entity": {
+            "additionalProperties": false,
+            "properties": {
+              "attributes": {
+                "$ref": "#/$defs/attributes"
+              },
+              "global_id": {},
+              "id": {
+                "$ref": "#/$defs/nonEmptyString"
+              },
+              "ifc_class": {
+                "$ref": "#/$defs/nonEmptyString"
+              },
+              "materials": {
+                "items": {
+                  "$ref": "#/$defs/materialAssignment"
+                },
+                "type": "array"
+              },
+              "property_sets": {
+                "additionalProperties": {
+                  "type": "object"
+                },
+                "type": "object"
+              },
+              "provenance": {
+                "$ref": "#/$defs/provenance"
+              }
+            },
+            "required": [
+              "id",
+              "ifc_class",
+              "attributes",
+              "property_sets",
+              "provenance"
+            ],
+            "type": "object"
+          },
+          "localPosition": {
+            "additionalProperties": false,
+            "properties": {
+              "axis": {
+                "$ref": "#/$defs/vector3"
+              },
+              "origin": {
+                "$ref": "#/$defs/vector3"
+              },
+              "ref_direction": {
+                "$ref": "#/$defs/vector3"
+              }
+            },
+            "required": [
+              "origin",
+              "axis",
+              "ref_direction"
+            ],
+            "type": "object"
+          },
+          "materialAssignment": {
+            "additionalProperties": false,
+            "properties": {
+              "direction": {
+                "enum": [
+                  "AXIS1",
+                  "AXIS2",
+                  "AXIS3"
+                ]
+              },
+              "direction_sense": {
+                "enum": [
+                  "POSITIVE",
+                  "NEGATIVE"
+                ]
+              },
+              "kind": {
+                "const": "material_layer_set_usage"
+              },
+              "layer_set_name": {
+                "$ref": "#/$defs/nonEmptyString"
+              },
+              "layers": {
+                "items": {
+                  "$ref": "#/$defs/materialLayer"
+                },
+                "minItems": 1,
+                "type": "array"
+              },
+              "offset_from_reference_line": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "kind",
+              "layer_set_name",
+              "direction",
+              "direction_sense",
+              "offset_from_reference_line",
+              "layers"
+            ],
+            "type": "object"
+          },
+          "materialLayer": {
+            "additionalProperties": false,
+            "properties": {
+              "name": {
+                "$ref": "#/$defs/nonEmptyString"
+              },
+              "thickness": {
+                "exclusiveMinimum": 0,
+                "type": "number"
+              }
+            },
+            "required": [
+              "name",
+              "thickness"
+            ],
+            "type": "object"
+          },
+          "nonEmptyString": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "objectPlacement": {
+            "additionalProperties": false,
+            "properties": {
+              "axis": {
+                "$ref": "#/$defs/vector3"
+              },
+              "origin": {
+                "$ref": "#/$defs/vector3"
+              },
+              "ref_direction": {
+                "$ref": "#/$defs/vector3"
+              },
+              "relative_to": {
+                "$ref": "#/$defs/nonEmptyString"
+              }
+            },
+            "required": [
+              "relative_to",
+              "origin",
+              "axis",
+              "ref_direction"
+            ],
+            "type": "object"
+          },
+          "point2": {
+            "items": {
+              "type": "number"
+            },
+            "maxItems": 2,
+            "minItems": 2,
+            "type": "array"
+          },
+          "profile": {
+            "allOf": [
+              {
+                "if": {
+                  "properties": {
+                    "kind": {
+                      "const": "rectangle"
+                    }
+                  },
+                  "required": [
+                    "kind"
+                  ]
+                },
+                "then": {
+                  "required": [
+                    "x",
+                    "y"
+                  ]
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "kind": {
+                      "const": "polygon"
+                    }
+                  },
+                  "required": [
+                    "kind"
+                  ]
+                },
+                "then": {
+                  "required": [
+                    "points"
+                  ]
+                }
+              }
+            ],
+            "properties": {
+              "kind": {
+                "type": "string"
+              },
+              "points": {
+                "items": {
+                  "$ref": "#/$defs/point2"
+                },
+                "type": "array"
+              },
+              "x": {
+                "type": "number"
+              },
+              "y": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "kind"
+            ],
+            "type": "object"
+          },
+          "provenance": {
+            "minProperties": 1,
+            "type": "object"
+          },
+          "relationship": {
+            "additionalProperties": false,
+            "properties": {
+              "attributes": {
+                "type": "object"
+              },
+              "global_id": {},
+              "id": {
+                "$ref": "#/$defs/nonEmptyString"
+              },
+              "ifc_class": {
+                "$ref": "#/$defs/nonEmptyString"
+              },
+              "provenance": {
+                "$ref": "#/$defs/provenance"
+              }
+            },
+            "required": [
+              "id",
+              "ifc_class",
+              "attributes",
+              "provenance"
+            ],
+            "type": "object"
+          },
+          "representation": {
+            "allOf": [
+              {
+                "if": {
+                  "properties": {
+                    "kind": {
+                      "const": "extruded_profile"
+                    }
+                  },
+                  "required": [
+                    "kind"
+                  ]
+                },
+                "then": {
+                  "required": [
+                    "profile",
+                    "depth",
+                    "direction"
+                  ]
+                }
+              }
+            ],
+            "properties": {
+              "depth": {
+                "type": "number"
+              },
+              "direction": {
+                "$ref": "#/$defs/vector3"
+              },
+              "kind": {
+                "type": "string"
+              },
+              "position": {
+                "$ref": "#/$defs/localPosition"
+              },
+              "profile": {
+                "$ref": "#/$defs/profile"
+              }
+            },
+            "required": [
+              "kind"
+            ],
+            "type": "object"
+          },
+          "units": {
+            "additionalProperties": false,
+            "properties": {
+              "length": {
+                "const": "MILLIMETRE"
+              }
+            },
+            "required": [
+              "length"
+            ],
+            "type": "object"
+          },
+          "vector3": {
+            "items": {
+              "type": "number"
+            },
+            "maxItems": 3,
+            "minItems": 3,
+            "type": "array"
+          }
+        },
+        "$id": "https://text2ifc.local/schemas/bim-json/2.0/schema.json",
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "additionalProperties": false,
+        "properties": {
+          "entities": {
+            "items": {
+              "$ref": "#/$defs/entity"
+            },
+            "type": "array"
+          },
+          "ifc_schema": {
+            "const": "IFC2X3"
+          },
+          "provenance": {
+            "$ref": "#/$defs/provenance"
+          },
+          "relationships": {
+            "items": {
+              "$ref": "#/$defs/relationship"
+            },
+            "type": "array"
+          },
+          "schema_version": {
+            "const": "bim-json/2.0"
+          },
+          "units": {
+            "$ref": "#/$defs/units"
+          }
+        },
+        "required": [
+          "schema_version",
+          "ifc_schema",
+          "units",
+          "entities",
+          "relationships",
+          "provenance"
+        ],
+        "title": "text2IFC BIM JSON 2.0",
+        "type": "object"
+      },
+      "evidence_id": "schema:bim-json-v2:root",
+      "json_pointer": "/",
+      "kind": "bim_json_schema",
+      "source_path": "schemas/bim-json/2.0/schema.json",
+      "source_sha256": "sha256:f80d438f84707c16c3d077d5190c8d49c7e40755b8e8b6cadd63973281fdb16f"
+    },
+    {
+      "content": {
+        "additionalProperties": false,
+        "properties": {
+          "attributes": {
+            "$ref": "#/$defs/attributes"
+          },
+          "global_id": {},
+          "id": {
+            "$ref": "#/$defs/nonEmptyString"
+          },
+          "ifc_class": {
+            "$ref": "#/$defs/nonEmptyString"
+          },
+          "materials": {
+            "items": {
+              "$ref": "#/$defs/materialAssignment"
+            },
+            "type": "array"
+          },
+          "property_sets": {
+            "additionalProperties": {
+              "type": "object"
+            },
+            "type": "object"
+          },
+          "provenance": {
+            "$ref": "#/$defs/provenance"
+          }
+        },
+        "required": [
+          "id",
+          "ifc_class",
+          "attributes",
+          "property_sets",
+          "provenance"
+        ],
+        "type": "object"
+      },
+      "evidence_id": "schema:bim-json-v2:entity",
+      "json_pointer": "/$defs/entity",
+      "kind": "bim_json_schema",
+      "source_path": "schemas/bim-json/2.0/schema.json",
+      "source_sha256": "sha256:f80d438f84707c16c3d077d5190c8d49c7e40755b8e8b6cadd63973281fdb16f"
+    },
+    {
+      "content": {
+        "properties": {
+          "ObjectPlacement": {
+            "$ref": "#/$defs/objectPlacement"
+          },
+          "Representation": {
+            "$ref": "#/$defs/representation"
+          }
+        },
+        "type": "object"
+      },
+      "evidence_id": "schema:bim-json-v2:attributes",
+      "json_pointer": "/$defs/attributes",
+      "kind": "bim_json_schema",
+      "source_path": "schemas/bim-json/2.0/schema.json",
+      "source_sha256": "sha256:f80d438f84707c16c3d077d5190c8d49c7e40755b8e8b6cadd63973281fdb16f"
+    },
+    {
+      "content": {
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "kind": {
+                  "const": "extruded_profile"
+                }
+              },
+              "required": [
+                "kind"
+              ]
+            },
+            "then": {
+              "required": [
+                "profile",
+                "depth",
+                "direction"
+              ]
+            }
+          }
+        ],
+        "properties": {
+          "depth": {
+            "type": "number"
+          },
+          "direction": {
+            "$ref": "#/$defs/vector3"
+          },
+          "kind": {
+            "type": "string"
+          },
+          "position": {
+            "$ref": "#/$defs/localPosition"
+          },
+          "profile": {
+            "$ref": "#/$defs/profile"
+          }
+        },
+        "required": [
+          "kind"
+        ],
+        "type": "object"
+      },
+      "evidence_id": "schema:bim-json-v2:representation",
+      "json_pointer": "/$defs/representation",
+      "kind": "bim_json_schema",
+      "source_path": "schemas/bim-json/2.0/schema.json",
+      "source_sha256": "sha256:f80d438f84707c16c3d077d5190c8d49c7e40755b8e8b6cadd63973281fdb16f"
+    },
+    {
+      "content": {
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "kind": {
+                  "const": "rectangle"
+                }
+              },
+              "required": [
+                "kind"
+              ]
+            },
+            "then": {
+              "required": [
+                "x",
+                "y"
+              ]
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "kind": {
+                  "const": "polygon"
+                }
+              },
+              "required": [
+                "kind"
+              ]
+            },
+            "then": {
+              "required": [
+                "points"
+              ]
+            }
+          }
+        ],
+        "properties": {
+          "kind": {
+            "type": "string"
+          },
+          "points": {
+            "items": {
+              "$ref": "#/$defs/point2"
+            },
+            "type": "array"
+          },
+          "x": {
+            "type": "number"
+          },
+          "y": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "kind"
+        ],
+        "type": "object"
+      },
+      "evidence_id": "schema:bim-json-v2:profile",
+      "json_pointer": "/$defs/profile",
+      "kind": "bim_json_schema",
+      "source_path": "schemas/bim-json/2.0/schema.json",
+      "source_sha256": "sha256:f80d438f84707c16c3d077d5190c8d49c7e40755b8e8b6cadd63973281fdb16f"
+    },
+    {
+      "content": {
+        "additionalProperties": false,
+        "properties": {
+          "axis": {
+            "$ref": "#/$defs/vector3"
+          },
+          "origin": {
+            "$ref": "#/$defs/vector3"
+          },
+          "ref_direction": {
+            "$ref": "#/$defs/vector3"
+          },
+          "relative_to": {
+            "$ref": "#/$defs/nonEmptyString"
+          }
+        },
+        "required": [
+          "relative_to",
+          "origin",
+          "axis",
+          "ref_direction"
+        ],
+        "type": "object"
+      },
+      "evidence_id": "schema:bim-json-v2:object-placement",
+      "json_pointer": "/$defs/objectPlacement",
+      "kind": "bim_json_schema",
+      "source_path": "schemas/bim-json/2.0/schema.json",
+      "source_sha256": "sha256:f80d438f84707c16c3d077d5190c8d49c7e40755b8e8b6cadd63973281fdb16f"
+    },
+    {
+      "content": {
+        "additionalProperties": false,
+        "properties": {
+          "attributes": {
+            "type": "object"
+          },
+          "global_id": {},
+          "id": {
+            "$ref": "#/$defs/nonEmptyString"
+          },
+          "ifc_class": {
+            "$ref": "#/$defs/nonEmptyString"
+          },
+          "provenance": {
+            "$ref": "#/$defs/provenance"
+          }
+        },
+        "required": [
+          "id",
+          "ifc_class",
+          "attributes",
+          "provenance"
+        ],
+        "type": "object"
+      },
+      "evidence_id": "schema:bim-json-v2:relationship",
+      "json_pointer": "/$defs/relationship",
+      "kind": "bim_json_schema",
+      "source_path": "schemas/bim-json/2.0/schema.json",
+      "source_sha256": "sha256:f80d438f84707c16c3d077d5190c8d49c7e40755b8e8b6cadd63973281fdb16f"
+    },
+    {
+      "content": "generate",
+      "evidence_id": "capability:IFC2X3:IfcBuilding",
+      "json_pointer": "/entities/IfcBuilding",
+      "kind": "ifc_generation_capability",
+      "source_path": "schemas/ifc/capabilities/IFC2X3.json",
+      "source_sha256": "sha256:9b071f0a2ee21de04f834479aa22bfaf85df20ec4f73fbe8db79664fb5b8ba99"
+    },
+    {
+      "content": "generate",
+      "evidence_id": "capability:IFC2X3:IfcSpace",
+      "json_pointer": "/entities/IfcSpace",
+      "kind": "ifc_generation_capability",
+      "source_path": "schemas/ifc/capabilities/IFC2X3.json",
+      "source_sha256": "sha256:9b071f0a2ee21de04f834479aa22bfaf85df20ec4f73fbe8db79664fb5b8ba99"
+    },
+    {
+      "content": "generate",
+      "evidence_id": "capability:IFC2X3:IfcWall",
+      "json_pointer": "/entities/IfcWall",
+      "kind": "ifc_generation_capability",
+      "source_path": "schemas/ifc/capabilities/IFC2X3.json",
+      "source_sha256": "sha256:9b071f0a2ee21de04f834479aa22bfaf85df20ec4f73fbe8db79664fb5b8ba99"
+    },
+    {
+      "content": "generate",
+      "evidence_id": "capability:IFC2X3:IfcDoor",
+      "json_pointer": "/entities/IfcDoor",
+      "kind": "ifc_generation_capability",
+      "source_path": "schemas/ifc/capabilities/IFC2X3.json",
+      "source_sha256": "sha256:9b071f0a2ee21de04f834479aa22bfaf85df20ec4f73fbe8db79664fb5b8ba99"
+    },
+    {
+      "content": "generate",
+      "evidence_id": "capability:IFC2X3:IfcWindow",
+      "json_pointer": "/entities/IfcWindow",
+      "kind": "ifc_generation_capability",
+      "source_path": "schemas/ifc/capabilities/IFC2X3.json",
+      "source_sha256": "sha256:9b071f0a2ee21de04f834479aa22bfaf85df20ec4f73fbe8db79664fb5b8ba99"
+    },
+    {
+      "content": "generate",
+      "evidence_id": "capability:IFC2X3:IfcOpeningElement",
+      "json_pointer": "/entities/IfcOpeningElement",
+      "kind": "ifc_generation_capability",
+      "source_path": "schemas/ifc/capabilities/IFC2X3.json",
+      "source_sha256": "sha256:9b071f0a2ee21de04f834479aa22bfaf85df20ec4f73fbe8db79664fb5b8ba99"
+    },
+    {
+      "content": "generate",
+      "evidence_id": "capability:IFC2X3:IfcBuildingStorey",
+      "json_pointer": "/entities/IfcBuildingStorey",
+      "kind": "ifc_generation_capability",
+      "source_path": "schemas/ifc/capabilities/IFC2X3.json",
+      "source_sha256": "sha256:9b071f0a2ee21de04f834479aa22bfaf85df20ec4f73fbe8db79664fb5b8ba99"
+    },
+    {
+      "content": "generate",
+      "evidence_id": "capability:IFC2X3:IfcSlab",
+      "json_pointer": "/entities/IfcSlab",
+      "kind": "ifc_generation_capability",
+      "source_path": "schemas/ifc/capabilities/IFC2X3.json",
+      "source_sha256": "sha256:9b071f0a2ee21de04f834479aa22bfaf85df20ec4f73fbe8db79664fb5b8ba99"
+    },
+    {
+      "content": "generate",
+      "evidence_id": "capability:IFC2X3:IfcColumn",
+      "json_pointer": "/entities/IfcColumn",
+      "kind": "ifc_generation_capability",
+      "source_path": "schemas/ifc/capabilities/IFC2X3.json",
+      "source_sha256": "sha256:9b071f0a2ee21de04f834479aa22bfaf85df20ec4f73fbe8db79664fb5b8ba99"
+    },
+    {
+      "content": "generate",
+      "evidence_id": "capability:IFC2X3:IfcStair",
+      "json_pointer": "/entities/IfcStair",
+      "kind": "ifc_generation_capability",
+      "source_path": "schemas/ifc/capabilities/IFC2X3.json",
+      "source_sha256": "sha256:9b071f0a2ee21de04f834479aa22bfaf85df20ec4f73fbe8db79664fb5b8ba99"
+    },
+    {
+      "content": "generate",
+      "evidence_id": "capability:IFC2X3:IfcRailing",
+      "json_pointer": "/entities/IfcRailing",
+      "kind": "ifc_generation_capability",
+      "source_path": "schemas/ifc/capabilities/IFC2X3.json",
+      "source_sha256": "sha256:9b071f0a2ee21de04f834479aa22bfaf85df20ec4f73fbe8db79664fb5b8ba99"
+    },
+    {
+      "content": "generate",
+      "evidence_id": "capability:IFC2X3:IfcRelVoidsElement",
+      "json_pointer": "/entities/IfcRelVoidsElement",
+      "kind": "ifc_generation_capability",
+      "source_path": "schemas/ifc/capabilities/IFC2X3.json",
+      "source_sha256": "sha256:9b071f0a2ee21de04f834479aa22bfaf85df20ec4f73fbe8db79664fb5b8ba99"
+    },
+    {
+      "content": "generate",
+      "evidence_id": "capability:IFC2X3:IfcRelFillsElement",
+      "json_pointer": "/entities/IfcRelFillsElement",
+      "kind": "ifc_generation_capability",
+      "source_path": "schemas/ifc/capabilities/IFC2X3.json",
+      "source_sha256": "sha256:9b071f0a2ee21de04f834479aa22bfaf85df20ec4f73fbe8db79664fb5b8ba99"
+    },
+    {
+      "content": {
+        "cross_checks": {
+          "ifcopenshell_pset_adapter": {
+            "property_sets": 317,
+            "simple_property_templates": 1850
+          }
+        },
+        "generator_version": 1,
+        "ifcopenshell_version": "0.8.5",
+        "outputs": {
+          "declarations.json": {
+            "counts": {
+              "declarations": 980,
+              "entities": 653
+            },
+            "sha256": "b822174bb9e5541e7f8d3703850b67e1010332ec92e611a992b235e523f9d4fa"
+          },
+          "property_sets.json": {
+            "counts": {
+              "complex_properties": 6,
+              "property_definitions": 1832,
+              "property_sets": 317,
+              "simple_properties": 1850
+            },
+            "sha256": "d80fa90e4566d60f8cfa0cd5bd87e72c0074c97e56e13d680cee507acd9ff18e"
+          }
+        },
+        "schema": "IFC2X3",
+        "source_manifest_sha256": "ea1de62ad5d7007cf8725e2414ac618c2d7e679f8221b9e83eedd864b0c047d9",
+        "sources": {
+          "ifc2x3-tc1-express": {
+            "role": "structural-authority",
+            "sha256": "e18a1b2c3e29f5256904c83378ccad0850f52287a8d0122d149aba4a417fe5e5",
+            "url": "https://standards.buildingsmart.org/IFC/RELEASE/IFC2x3/TC1/EXPRESS/IFC2X3_TC1.exp"
+          },
+          "ifc2x3-tc1-html-psd": {
+            "role": "property-set-authority",
+            "sha256": "ba22d66bc961b14a65d393e9a83672c17b646d7cdf2991a242f136b2e7849b6f",
+            "url": "https://standards.buildingsmart.org/IFC/RELEASE/IFC2x3/TC1/IFC2x3_TC1_HTML_distribution-pset_errata.zip"
+          },
+          "ifc2x3-tc1-xsd": {
+            "role": "ifcxml-support",
+            "sha256": "e49b60b94bd2ce6aed8486a55bd94e788180109283fb856805995f7a627d1e03",
+            "url": "https://standards.buildingsmart.org/IFC/RELEASE/IFC2x3/TC1/XML/IFC2X3.xsd"
+          }
+        }
+      },
+      "evidence_id": "registry:IFC2X3:manifest",
+      "json_pointer": "/",
+      "kind": "ifc_registry_manifest",
+      "source_path": "schemas/ifc/generated/IFC2X3/registry-manifest.json",
+      "source_sha256": "sha256:9b7f6b038235377b7dd451abaec2ab7410e83de25a59bb390ba15d811e2e8871"
+    }
+  ],
+  "FEW_SHOTS": [
+    {
+      "few_shot_id": "design-brief-v2.complete-room-openings",
+      "input": {
+        "conversation": [
+          {
+            "content": "创建一个6米乘4米、高3米的矩形房间，墙厚300毫米；南墙中央有一扇0.9米乘2.1米的门，北墙中央有一扇1.2米乘1.5米、窗台高0.9米的窗。",
+            "role": "user",
+            "turn_id": "turn-user-001"
+          }
+        ],
+        "user_request": "创建一个6米乘4米、高3米的矩形房间，墙厚300毫米；南墙中央有一扇0.9米乘2.1米的门，北墙中央有一扇1.2米乘1.5米、窗台高0.9米的窗。"
+      },
+      "output": {
+        "ambiguities": [],
+        "clarification_questions": [],
+        "fact_sources": [
+          {
+            "evidence_refs": [
+              "schema:bim-json-v2:entity",
+              "schema:bim-json-v2:representation"
+            ],
+            "path": "/known_facts",
+            "source_turns": [
+              "turn-user-001"
+            ]
+          }
+        ],
+        "known_facts": {
+          "storeys": [
+            {
+              "doors": [
+                {
+                  "alignment": "host_centerline",
+                  "height_mm": 2100,
+                  "host_wall": "wall-south",
+                  "id": "door-south",
+                  "width_mm": 900
+                }
+              ],
+              "elevation_mm": 0,
+              "id": "storey-1",
+              "net_height_mm": 3000,
+              "spaces": [
+                {
+                  "bounds": {
+                    "x": [
+                      0,
+                      6000
+                    ],
+                    "y": [
+                      0,
+                      4000
+                    ]
+                  },
+                  "id": "space-room",
+                  "shape": "rectangle"
+                }
+              ],
+              "walls": {
+                "exterior": [
+                  {
+                    "height_mm": 3000,
+                    "id": "wall-south",
+                    "side": "south",
+                    "thickness_mm": 300
+                  },
+                  {
+                    "height_mm": 3000,
+                    "id": "wall-north",
+                    "side": "north",
+                    "thickness_mm": 300
+                  },
+                  {
+                    "height_mm": 3000,
+                    "id": "wall-west",
+                    "side": "west",
+                    "thickness_mm": 300
+                  },
+                  {
+                    "height_mm": 3000,
+                    "id": "wall-east",
+                    "side": "east",
+                    "thickness_mm": 300
+                  }
+                ],
+                "interior": []
+              },
+              "windows": [
+                {
+                  "alignment": "host_centerline",
+                  "height_mm": 1500,
+                  "host_wall": "wall-north",
+                  "id": "window-north",
+                  "sill_height_mm": 900,
+                  "width_mm": 1200
+                }
+              ]
+            }
+          ]
+        },
+        "language": "zh-CN",
+        "missing_facts": [],
+        "original_request": "创建一个6米乘4米、高3米的矩形房间，墙厚300毫米；南墙中央有一扇0.9米乘2.1米的门，北墙中央有一扇1.2米乘1.5米、窗台高0.9米的窗。",
+        "provenance": {
+          "few_shot_ids": [
+            "design-brief-v2.complete-room-openings"
+          ],
+          "selected_evidence_ids": [
+            "schema:bim-json-v2:entity",
+            "schema:bim-json-v2:representation",
+            "capability:IFC2X3:IfcSpace",
+            "capability:IFC2X3:IfcWall",
+            "capability:IFC2X3:IfcDoor",
+            "capability:IFC2X3:IfcWindow"
+          ],
+          "source_turns": [
+            "turn-user-001"
+          ]
+        },
+        "schema_version": "text2ifc/design-brief/2.0",
+        "status": "ready",
+        "unsupported_requests": [],
+        "user_corrections": []
+      },
+      "reasoning_summary": "当前请求已给出所要求构件的尺寸、宿主和局部位置。用户没有要求地理定向、门开启方向或窗扇机构；能力与 Schema 证据也不要求这些未请求语义才能表达当前模型，因此不追问。这里的“中央”按普通建筑语言表示构件中心线与宿主墙中心线对齐，不凭空增加距离。",
+      "selection_terms": [
+        "房间",
+        "墙",
+        "门",
+        "窗",
+        "中央",
+        "厚度",
+        "南墙",
+        "北墙"
+      ]
+    },
+    {
+      "few_shot_id": "design-brief-v2.standard-two-storey-building",
+      "input": {
+        "conversation": [
+          {
+            "content": "创建一个两层测试建筑。首层标高0毫米，二层标高3150毫米，每层净高3000毫米，墙厚200毫米，楼板厚150毫米，屋面板厚150毫米。首层有客厅和楼梯间，二层有卧室和楼梯平台。每层都有独立外墙。首层南墙有门，二层南墙有窗，楼梯连接两层。",
+            "role": "user",
+            "turn_id": "turn-user-001"
+          }
+        ],
+        "user_request": "创建一个两层测试建筑。首层标高0毫米，二层标高3150毫米，每层净高3000毫米，墙厚200毫米，楼板厚150毫米，屋面板厚150毫米。首层有客厅和楼梯间，二层有卧室和楼梯平台。每层都有独立外墙。首层南墙有门，二层南墙有窗，楼梯连接两层。"
+      },
+      "output": {
+        "ambiguities": [],
+        "clarification_questions": [],
+        "fact_sources": [
+          {
+            "evidence_refs": [
+              "schema:bim-json-v2:entity",
+              "schema:bim-json-v2:representation",
+              "capability:IFC2X3:IfcBuilding",
+              "capability:IFC2X3:IfcBuildingStorey",
+              "capability:IFC2X3:IfcSpace",
+              "capability:IFC2X3:IfcWall",
+              "capability:IFC2X3:IfcDoor",
+              "capability:IFC2X3:IfcWindow",
+              "capability:IFC2X3:IfcSlab",
+              "capability:IFC2X3:IfcRoof",
+              "capability:IFC2X3:IfcStair"
+            ],
+            "path": "/known_facts",
+            "source_turns": [
+              "turn-user-001"
+            ]
+          }
+        ],
+        "known_facts": {
+          "building": {
+            "floor_slab_thickness_mm": 150,
+            "roof_slab_thickness_mm": 150,
+            "storey_count": 2,
+            "wall_thickness_mm": 200
+          },
+          "floor_slabs": [
+            {
+              "id": "ground-floor-slab",
+              "storey": "storey-1",
+              "thickness_mm": 150,
+              "top_elevation_mm": 0
+            },
+            {
+              "id": "first-floor-slab",
+              "storey": "storey-2",
+              "thickness_mm": 150,
+              "top_elevation_mm": 3150
+            }
+          ],
+          "roof_slab": {
+            "bottom_elevation_mm": 6150,
+            "id": "roof-slab",
+            "thickness_mm": 150
+          },
+          "stairs": [
+            {
+              "from_storey": "storey-1",
+              "id": "stair-1",
+              "semantic_requirement": "connects_two_storeys",
+              "to_storey": "storey-2"
+            }
+          ],
+          "storeys": [
+            {
+              "doors": [
+                {
+                  "host_wall": "storey-1-wall-south",
+                  "id": "door-storey-1-south",
+                  "location": "center"
+                }
+              ],
+              "elevation_mm": 0,
+              "id": "storey-1",
+              "name": "首层",
+              "net_height_mm": 3000,
+              "spaces": [
+                {
+                  "id": "space-living",
+                  "location": "west",
+                  "name": "客厅"
+                },
+                {
+                  "id": "space-stair-hall",
+                  "location": "east",
+                  "name": "楼梯间"
+                }
+              ],
+              "walls": {
+                "exterior": [
+                  {
+                    "id": "storey-1-wall-south",
+                    "side": "south"
+                  },
+                  {
+                    "id": "storey-1-wall-north",
+                    "side": "north"
+                  },
+                  {
+                    "id": "storey-1-wall-west",
+                    "side": "west"
+                  },
+                  {
+                    "id": "storey-1-wall-east",
+                    "side": "east"
+                  }
+                ]
+              },
+              "windows": []
+            },
+            {
+              "doors": [],
+              "elevation_mm": 3150,
+              "id": "storey-2",
+              "name": "二层",
+              "net_height_mm": 3000,
+              "spaces": [
+                {
+                  "id": "space-bedroom",
+                  "location": "west",
+                  "name": "卧室"
+                },
+                {
+                  "id": "space-stair-landing",
+                  "location": "east",
+                  "name": "楼梯平台"
+                }
+              ],
+              "walls": {
+                "exterior": [
+                  {
+                    "id": "storey-2-wall-south",
+                    "side": "south"
+                  },
+                  {
+                    "id": "storey-2-wall-north",
+                    "side": "north"
+                  },
+                  {
+                    "id": "storey-2-wall-west",
+                    "side": "west"
+                  },
+                  {
+                    "id": "storey-2-wall-east",
+                    "side": "east"
+                  }
+                ]
+              },
+              "windows": [
+                {
+                  "host_wall": "storey-2-wall-south",
+                  "id": "window-storey-2-south",
+                  "location": "center"
+                }
+              ]
+            }
+          ]
+        },
+        "language": "zh-CN",
+        "missing_facts": [],
+        "original_request": "创建一个两层测试建筑。首层标高0毫米，二层标高3150毫米，每层净高3000毫米，墙厚200毫米，楼板厚150毫米，屋面板厚150毫米。首层有客厅和楼梯间，二层有卧室和楼梯平台。每层都有独立外墙。首层南墙有门，二层南墙有窗，楼梯连接两层。",
+        "provenance": {
+          "few_shot_ids": [
+            "design-brief-v2.standard-two-storey-building"
+          ],
+          "selected_evidence_ids": [
+            "schema:bim-json-v2:entity",
+            "schema:bim-json-v2:representation",
+            "capability:IFC2X3:IfcBuilding",
+            "capability:IFC2X3:IfcBuildingStorey",
+            "capability:IFC2X3:IfcSpace",
+            "capability:IFC2X3:IfcWall",
+            "capability:IFC2X3:IfcDoor",
+            "capability:IFC2X3:IfcWindow",
+            "capability:IFC2X3:IfcSlab",
+            "capability:IFC2X3:IfcRoof",
+            "capability:IFC2X3:IfcStair"
+          ],
+          "source_turns": [
+            "turn-user-001"
+          ]
+        },
+        "schema_version": "text2ifc/design-brief/2.0",
+        "status": "ready",
+        "unsupported_requests": [],
+        "user_corrections": []
+      },
+      "reasoning_summary": "多层请求应使用一个规范的 known_facts.storeys 数组承载各楼层事实。不要把楼层事实拆成顶层 storey_1/storey_2、spaces_ground/spaces_first，也不要把门窗合并成 generic openings；门窗应放入其宿主墙所在楼层。这里用户已经给出楼层标高、层高、墙厚、楼板和屋面板厚度、空间、门窗和楼梯语义，因此可以进入 ready。",
+      "selection_terms": [
+        "两层",
+        "双层",
+        "二层",
+        "多层",
+        "楼梯",
+        "IfcStair",
+        "storey",
+        "two-storey"
+      ]
+    },
+    {
+      "few_shot_id": "design-brief-v2.incomplete-room",
+      "input": {
+        "conversation": [
+          {
+            "content": "创建一个矩形房间，但我还不知道宽度。",
+            "role": "user",
+            "turn_id": "turn-user-001"
+          }
+        ],
+        "user_request": "创建一个矩形房间，但我还不知道宽度。"
+      },
+      "output": {
+        "ambiguities": [],
+        "clarification_questions": [
+          {
+            "evidence_refs": [
+              "schema:bim-json-v2:representation"
+            ],
+            "id": "q-space-width",
+            "reason": "该问题只询问当前矩形空间生成所缺少的阻塞事实。",
+            "targets": [
+              "mf-space-width"
+            ],
+            "text": "房间宽度是多少？如果暂时不知道，可以直接告诉我不知道。"
+          }
+        ],
+        "fact_sources": [
+          {
+            "evidence_refs": [
+              "schema:bim-json-v2:representation"
+            ],
+            "path": "/known_facts/storeys/0/spaces/0/shape",
+            "source_turns": [
+              "turn-user-001"
+            ]
+          }
+        ],
+        "known_facts": {
+          "storeys": [
+            {
+              "doors": [],
+              "elevation_mm": 0,
+              "id": "storey-1",
+              "spaces": [
+                {
+                  "id": "space-room",
+                  "shape": "rectangle"
+                }
+              ],
+              "walls": {
+                "exterior": [],
+                "interior": []
+              },
+              "windows": []
+            }
+          ]
+        },
+        "language": "zh-CN",
+        "missing_facts": [
+          {
+            "blocking": true,
+            "code": "SPACE_WIDTH_MISSING",
+            "evidence_refs": [
+              "schema:bim-json-v2:representation"
+            ],
+            "id": "mf-space-width",
+            "message": "矩形房间宽度尚未确定。",
+            "path": "/known_facts/storeys/0/spaces/0/width_mm",
+            "reason": "用户要求生成矩形房间，矩形轮廓需要宽度；用户明确表示该值未知。",
+            "source_turns": [
+              "turn-user-001"
+            ]
+          }
+        ],
+        "original_request": "创建一个矩形房间，但我还不知道宽度。",
+        "provenance": {
+          "few_shot_ids": [
+            "design-brief-v2.incomplete-room"
+          ],
+          "selected_evidence_ids": [
+            "schema:bim-json-v2:representation",
+            "capability:IFC2X3:IfcSpace"
+          ],
+          "source_turns": [
+            "turn-user-001"
+          ]
+        },
+        "schema_version": "text2ifc/design-brief/2.0",
+        "status": "needs_clarification",
+        "unsupported_requests": [],
+        "user_corrections": []
+      },
+      "reasoning_summary": "用户明确要求生成矩形空间，又明确说明宽度未知。矩形轮廓证据需要两个平面尺寸，因此宽度是当前请求的阻塞事实；不能用常见值补齐。",
+      "selection_terms": [
+        "房间",
+        "矩形",
+        "尺寸",
+        "宽度",
+        "不知道",
+        "不清楚"
+      ]
+    }
+  ],
+  "USER_REQUEST": "## 4.4.10 Difficult 修订输入：双开口、直跑楼梯与中庭栏杆\n\n创建一栋两层住宅。采用毫米和右手坐标系：X 轴向东，Y 轴向北，Z 轴向上。室内净轮廓为 `x=0..12000, y=0..8000`。\n\n### 4.4.10.1 建筑与楼层\n\n- 首层 `storey-1` 标高为 0，二层 `storey-2` 标高为 3300；\n- 两层净高均为 3000；\n- 所有普通墙厚 200、高 3000；\n- 两层均使用连续的南、北、西、东四段外墙封闭外轮廓，转角直接相接；\n- 首层和二层墙分别归属 `storey-1` 和 `storey-2`，不得跨层或重复。\n\n### 4.4.10.2 楼板和两个独立开口\n\n生成两块 `IfcSlab`：\n\n- `ground-floor-slab` 归属 `storey-1`，顶标高 0，厚 300，平面为 `[[0,0],[12000,0],[12000,8000],[0,8000],[0,0]]`；\n- `first-floor-slab` 归属 `storey-2`，顶标高 3300，厚 300，平面同上。\n\n`first-floor-slab` 必须有两个彼此独立的开口，不得合并为一个外包矩形：\n\n- 中庭开口 `opening-first-floor-slab-atrium`：`x=6000..12000, y=0..3000`；\n- 楼梯开口 `opening-first-floor-slab-stair`：`x=10000..11000, y=3500..8000`。\n\n每个开口分别生成 `IfcOpeningElement` 和各自的 `IfcRelVoidsElement`。开口范围内不得生成楼板实体。\n\n### 4.4.10.3 首层空间\n\n为以下每个矩形生成独立 `IfcSpace`：\n\n- 客厅 `space-storey-1-living`：`x=0..7000, y=0..3000`；\n- 餐厅 `space-storey-1-dining`：`x=7000..12000, y=0..3000`；\n- 走廊 `space-storey-1-corridor`：`x=0..10000, y=3000..5000`；\n- 厨房 `space-storey-1-kitchen`：`x=0..5000, y=5000..8000`；\n- 卫生间 `space-storey-1-bathroom`：`x=5000..7000, y=5000..8000`；\n- 楼梯厅 `space-storey-1-stair-hall`：`x=7000..12000, y=5000..8000`。\n\n楼梯会占用楼梯厅和走廊东端附近的明确区域，但不得移动上述空间边界。相邻空间只生成一段共享墙；走廊与每个房间的公共边界必须保持唯一。\n\n### 4.4.10.4 二层空间和中庭\n\n为以下每个矩形生成独立 `IfcSpace`：\n\n- 走廊 `space-storey-2-corridor`：`x=0..10000, y=3000..5000`；\n- 卧室一 `space-storey-2-bedroom-1`：`x=0..5000, y=5000..8000`；\n- 卫生间 `space-storey-2-bathroom`：`x=5000..7000, y=5000..8000`；\n- 卧室二 `space-storey-2-bedroom-2`：`x=7000..10000, y=5000..8000`；\n- 卧室三 `space-storey-2-bedroom-3`：`x=0..6000, y=0..3000`。\n\n中庭挑空范围为 `x=6000..12000, y=0..3000`，楼梯保留区为 `x=10000..11000, y=3500..8000`。这两个区域均不得生成二层 `IfcSpace`。中庭北边和西边不得生成普通封闭墙，改用下述栏杆。\n\n### 4.4.10.5 受支持的直跑楼梯\n\n生成一部由 `IfcStair` 和一个 `IfcStairFlight` 组成的直跑楼梯，不使用双跑、平台或转折：\n\n- `stair-1` 从 `storey-1` 连接到 `storey-2`；\n- 平面 bounds 为 `x=10000..11000, y=3750..8000`；\n- 起跑点为全局 `[11000,8000,0]`，沿 `-Y` 方向运行，梯段宽度向西展开 1000；\n- 起点标高 0，终点标高 3300，总高差 3300；\n- 18 个踢面、17 个踏面；\n- 踢面高为 `3300/18` 毫米，踏面深 250 毫米，总水平投影长 4250 毫米；\n- 楼梯完整位于 `opening-first-floor-slab-stair` 内，不得与二层楼板实体相交。\n\n### 4.4.10.6 两段中庭栏杆\n\n生成且只生成以下两段简化实体 `IfcRailing`，均归属 `storey-2`：\n\n- `railing-atrium-north`：中心线从 `[6000,3000,3300]` 到 `[12000,3000,3300]`；\n- `railing-atrium-west`：中心线从 `[6000,0,3300]` 到 `[6000,3000,3300]`。\n\n两段栏杆高度均为 1100，简化实体厚度均为 50。栏杆必须沿中庭边缘，底标高为 3300；不得偏移、悬空、改成普通墙，也不得自行增加立柱、材料或栏杆类型。\n\n### 4.4.10.7 门\n\n所有普通室内门高 2100；卫生间门宽 800，其余室内门宽 900。门中心使用下列全局 XY 坐标，必须使用对应共享墙作为宿主：\n\n- 首层客厅到走廊 `[3500,3000]`；\n- 首层餐厅到走廊 `[8500,3000]`；\n- 首层厨房到走廊 `[2500,5000]`；\n- 首层卫生间到走廊 `[6000,5000]`；\n- 首层楼梯厅到走廊 `[8500,5000]`；\n- 二层卧室一到走廊 `[2500,5000]`；\n- 二层卫生间到走廊 `[6000,5000]`；\n- 二层卧室二到走廊 `[8500,5000]`；\n- 二层卧室三到走廊 `[3000,3000]`。\n\n住宅主入口门位于首层西外墙，中心 `[0,4000]`，宽 1000、高 2100。每扇门分别生成自己的开口、`IfcRelVoidsElement` 和 `IfcRelFillsElement`，不得共用开口。\n\n### 4.4.10.8 窗\n\n普通窗宽 1500、高 1200、窗台高 900：\n\n- 首层客厅南外墙中心 `[2333,0]` 和 `[4667,0]`；\n- 首层餐厅南外墙中心 `[8250,0]` 和 `[10750,0]`；\n- 首层厨房北外墙中心 `[2500,8000]`；\n- 二层卧室一北外墙中心 `[2500,8000]`；\n- 二层卧室二北外墙中心 `[8500,8000]`；\n- 二层卧室三南外墙中心 `[3000,0]`。\n\n两个卫生间各有一扇高窗，宽 800、高 600、窗台高 1600：首层中心 `[6000,8000]`，二层中心 `[6000,8000]`，分别宿主于各自楼层北外墙。每扇窗分别生成自己的开口和填充关系；同一宿主墙上的多个窗使用显式中心点，不得全部放在墙中点或互相重叠。\n\n### 4.4.10.9 IFC 验收要求\n\n- BIM JSON 2.0 必须通过正式 Schema 校验后才编译；\n- IFC2X3 文件必须可编译、可重开且无 EXPRESS 错误；\n- 必须有 2 个 `IfcBuildingStorey`、11 个 `IfcSpace`、2 个 `IfcSlab`、1 个 `IfcStair`、1 个 `IfcStairFlight` 和 2 个 `IfcRailing`；\n- 两个楼板开口必须独立存在且范围正确；\n- 两段栏杆必须归属二层，世界坐标范围、1100 高度和 50 厚度必须与输入一致；\n- 中庭和楼梯开口内不得生成二层空间或楼板实体；\n- 门窗必须位于指定中心、绑定正确宿主，并具有独立开口和填充关系；\n- 共享墙不得重复，外墙转角不得留缝，所有空间和构件必须归属正确楼层。"
+}

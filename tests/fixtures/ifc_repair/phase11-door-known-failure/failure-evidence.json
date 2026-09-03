@@ -1,0 +1,42 @@
+{
+  "artifact_role": "known_failing_regression_fixture",
+  "blocking_findings": [
+    {
+      "code": "DOOR_GEOMETRY_ALIGNED_WITH_OPENING",
+      "operation_id": "operation-door-001",
+      "world_geometry_center_delta_mm": [
+        800.0,
+        160.0,
+        0.0
+      ]
+    },
+    {
+      "code": "DOOR_STOREY_MATCHES_HOST",
+      "operation_id": "operation-door-001",
+      "expected_storey": "标高2",
+      "actual_storey": "标高0"
+    },
+    {
+      "code": "DOOR_STOREY_MATCHES_HOST",
+      "operation_id": "operation-door-002",
+      "expected_storey": "标高2",
+      "actual_storey": "标高0"
+    }
+  ],
+  "files": {
+    "01-original.ifc": {
+      "sha256": "sha256:b6c435be955aeb6b2998f42a62f4ebf8c3f91eb7d373ca71a2dcedfeb95b3fdc"
+    },
+    "02-damaged.ifc": {
+      "sha256": "sha256:6824086b4171cce034acaa23ad51c3020d87ed44c0aead62979a4b4ad17c4db3"
+    },
+    "03-known-failing-repaired.ifc": {
+      "sha256": "sha256:0d30005fa91360f186a6c539206aa1c229db03f69ac4d2e183a42c53db91a76e"
+    }
+  },
+  "l0_pass": true,
+  "l1_pass": false,
+  "l2_pass": false,
+  "publishable": false,
+  "schema_version": "text2ifc/door-known-failure/0.1"
+}

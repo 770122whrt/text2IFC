@@ -1,0 +1,164 @@
+{
+  "candidates": [],
+  "model_fingerprint": "sha256:0e36ffb6747fca2dfc65c0038be775b610bdcaeb28a0189786af29a697522f89",
+  "operation_id": null,
+  "operations": [
+    {
+      "authorized_semantics": [
+        {
+          "authorization": "deterministic_policy",
+          "formal_attributes": {},
+          "global_id": "3n8N5ysmfGAg58bUg2JBi$",
+          "ifc_class": "IfcColumnType",
+          "kind": "system_generated_type",
+          "operation_id": "phase12-vvo-column-material-absent-column-1",
+          "template": {
+            "name": "Text2IFC generated column type phase12-vvo-column-material-absent-column-1",
+            "predefined_type": "NOTDEFINED",
+            "section": {
+              "depth_mm": 600.0,
+              "shape": "rectangle",
+              "width_mm": 400.0
+            },
+            "section_digest": "sha256:e43ab32a66ab3e17d637a6299e8714efdf1265e8e0e50097c7112727d5d39c57"
+          },
+          "template_digest": "sha256:4231cc6c8572ad44a23926dbc65facabef8f4f2f260fa7233ad0956f16b5c623",
+          "template_id": "text2ifc-rectangular-column-type",
+          "template_version": "0.1"
+        }
+      ],
+      "context": {
+        "base_model_fingerprint": "sha256:0e36ffb6747fca2dfc65c0038be775b610bdcaeb28a0189786af29a697522f89",
+        "candidate_targets": [
+          {
+            "evidence": [
+              {
+                "candidate_value": "1vTeahUkP60PdWqwCTjeRs",
+                "field": "global_id",
+                "provenance": "IfcRoot.GlobalId",
+                "query_value": "1vTeahUkP60PdWqwCTjeRs",
+                "state": "matched"
+              },
+              {
+                "candidate_value": "IfcBuildingStorey",
+                "field": "ifc_class",
+                "provenance": "IfcProduct.is_a",
+                "query_value": [
+                  "IfcBuildingStorey"
+                ],
+                "state": "matched"
+              },
+              {
+                "candidate_value": "标高0",
+                "field": "name",
+                "provenance": "aliases",
+                "query_value": null,
+                "state": "unavailable"
+              },
+              {
+                "candidate_value": null,
+                "field": "storey",
+                "provenance": "spatial_relationship",
+                "query_value": null,
+                "state": "unavailable"
+              },
+              {
+                "candidate_value": "structural_storey_target",
+                "field": "geometry_capability",
+                "provenance": "adapter",
+                "query_value": null,
+                "state": "unavailable"
+              }
+            ],
+            "facets": {
+              "editable_target": false
+            },
+            "geometry": {},
+            "geometry_capability": "structural_storey_target",
+            "ifc_class": "IfcBuildingStorey",
+            "ifc_global_id": "1vTeahUkP60PdWqwCTjeRs",
+            "name": "标高0",
+            "properties": [],
+            "retrieval": {
+              "fused_score": 1000,
+              "matched_fields": [
+                "global_id"
+              ],
+              "retriever": "structured",
+              "retriever_version": "text2ifc/structured-retriever/0.1",
+              "source_score": 1000
+            },
+            "storey_name": null,
+            "target_id": "ifc:1vTeahUkP60PdWqwCTjeRs",
+            "type_name": null
+          }
+        ],
+        "context_budget": {
+          "actual_bytes": 1936,
+          "estimated_tokens": 484,
+          "max_bytes": 48000,
+          "max_candidates": 5,
+          "mode": "normal",
+          "omitted_candidate_count": 0,
+          "selected_candidate_count": 1,
+          "token_estimator": "ceil(utf8_bytes/4)"
+        },
+        "model_constraints": {
+          "facts_source": "current_ifc_only",
+          "ifc_schema": "IFC2X3",
+          "index_schema_version": "text2ifc/ifc-index/0.5",
+          "source_ifc_sha256": "sha256:0e36ffb6747fca2dfc65c0038be775b610bdcaeb28a0189786af29a697522f89",
+          "vector_retrieval": "disabled"
+        },
+        "model_fingerprint": "sha256:0e36ffb6747fca2dfc65c0038be775b610bdcaeb28a0189786af29a697522f89",
+        "operation_hints": [
+          "add_column"
+        ],
+        "query_schema_version": "text2ifc/ifc-target-query/0.1",
+        "resolution_schema_version": "text2ifc/ifc-target-resolution/0.1",
+        "resolved_target_id": "ifc:1vTeahUkP60PdWqwCTjeRs",
+        "schema_version": "text2ifc/ifc-target-context/0.1",
+        "score_version": "text2ifc/target-score/0.1",
+        "status": "resolved"
+      },
+      "evidence_pointers": [
+        "resolved:/operations/phase12-vvo-column-material-absent-column-1/context/candidate_targets/0"
+      ],
+      "operation_id": "phase12-vvo-column-material-absent-column-1",
+      "operation_type": "add_column",
+      "parameters": {
+        "axis": {
+          "base": {
+            "x_mm": 210000.0,
+            "y_mm": 210000.0,
+            "z_mm": 0.0
+          },
+          "top": {
+            "x_mm": 210000.0,
+            "y_mm": 210000.0,
+            "z_mm": 6000.0
+          }
+        },
+        "section": {
+          "depth_mm": 600,
+          "orientation": {
+            "x": 0,
+            "y": 1
+          },
+          "shape": "rectangle",
+          "width_mm": 400
+        }
+      },
+      "scope_ids": [
+        "1vTeahUkP60PdWqwCTjeRs"
+      ],
+      "target_global_id": "1vTeahUkP60PdWqwCTjeRs"
+    }
+  ],
+  "property_preview": null,
+  "property_resolutions": [],
+  "reason_code": null,
+  "schema_version": "text2ifc/ifc-resolution-flow/0.1",
+  "source_ifc_sha256": "sha256:0e36ffb6747fca2dfc65c0038be775b610bdcaeb28a0189786af29a697522f89",
+  "status": "resolved"
+}

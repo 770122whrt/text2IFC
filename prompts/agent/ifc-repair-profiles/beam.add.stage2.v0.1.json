@@ -1,0 +1,26 @@
+{
+  "schema_version": "text2ifc/ifc-repair-prompt-profile/0.3",
+  "profile_id": "beam.add.stage2.v0.1",
+  "profile_version": "0.1",
+  "stage": "stage2",
+  "component_family": "beam",
+  "action": "add",
+  "operation_type": "add_beam",
+  "target_ifc_classes": ["IfcBuildingStorey"],
+  "draft_responsibility": "Copy the deterministic resolved target, geometry parameters, and evidence references into the Draft operation exactly. Consumed upstream authority is not recreated or reinterpreted.",
+  "stage2_projection_fields": [
+    "operation_id",
+    "operation_type",
+    "target",
+    "parameters",
+    "evidence_refs"
+  ],
+  "few_shot_output_schema": "text2ifc/ifc-repair-stage2-operation/0.1",
+  "few_shots": [
+    {
+      "example_id": "beam.add.stage2.v0.1.complete",
+      "path": "prompts/agent/ifc-repair-few-shots/beam-add-stage2-v0.1-complete.json",
+      "sha256": "sha256:0cfebe0759f75b33346f86c01e580f387f5bb12549e55d32692f9d6187433e39"
+    }
+  ]
+}

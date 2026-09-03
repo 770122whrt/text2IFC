@@ -1,0 +1,114 @@
+{
+  "case_id": "largebuilding-live-deepseek-complete-door",
+  "files": [
+    {
+      "path": "01-original.ifc",
+      "role": "original_ground_truth",
+      "sha256": "sha256:102f8123f85eae5e237d7f6a9dcbc364bd5f1c0cfb94b40a7eeb2d7eac9bb725",
+      "size_bytes": 1292595
+    },
+    {
+      "path": "02-damaged.ifc",
+      "role": "repair_input_ifc",
+      "sha256": "sha256:37c395b695f2efad78598811b643987e53a347fb0f33c07698eff29818629390",
+      "size_bytes": 1287831
+    },
+    {
+      "path": "03-repaired.ifc",
+      "role": "published_repair_output",
+      "sha256": "sha256:2f6544e7eb9d8529705778851554565cc3bb20e33c6cc7d3fb1d4eb9c100dc71",
+      "size_bytes": 1288644
+    },
+    {
+      "path": "agent/repair-intent.json",
+      "role": "stage1_repair_intent",
+      "sha256": "sha256:3617694a916c2bd2745c488f5b3618718f07f913e9e711731a66ee6ac3de2915",
+      "size_bytes": 2599
+    },
+    {
+      "path": "agent/semantic-manifest-door-1.json",
+      "role": "semantic_manifest",
+      "sha256": "sha256:0db0f7309a75b3c3f198777991f321d49eb8e18048173c8667b4989eda274df1",
+      "size_bytes": 33708
+    },
+    {
+      "path": "agent/target-resolution.json",
+      "role": "deterministic_target_resolution",
+      "sha256": "sha256:850eded118fd5a1c302bf3a29b80bc80c2b124e448623b7db57b938004f51c24",
+      "size_bytes": 4077
+    },
+    {
+      "path": "changeset/bound-changeset.json",
+      "role": "bound_changeset",
+      "sha256": "sha256:654028ffe0b998413760aab86d34940be62317dd1192eb2088e3ec65fdf84e5a",
+      "size_bytes": 49953
+    },
+    {
+      "path": "input/request.txt",
+      "role": "user_request",
+      "sha256": "sha256:7b3f49f654ef9529601717541fd8d53f05ad93fa412920ce0f85e18fe01532fc",
+      "size_bytes": 269
+    },
+    {
+      "path": "provider-evidence/live-case-result.json",
+      "role": "live_provider_case_result",
+      "sha256": "sha256:8689074d279cd01d63cf999cc11f803157ac6e74595931903d47afd47afe0e65",
+      "size_bytes": 7658
+    },
+    {
+      "path": "provider-evidence/prompt-profile-selection.json",
+      "role": "prompt_profile_evidence",
+      "sha256": "sha256:b705befa22b7a823d33d0fd3e0e6008df3cf6f0750147032253d39379b793db2",
+      "size_bytes": 6884
+    },
+    {
+      "path": "provider-evidence/provider-attempts.json",
+      "role": "live_provider_attempts",
+      "sha256": "sha256:3d3a97fdde089519107b919bfccb5d38ad7e356b180e3e204a3e17399171fa36",
+      "size_bytes": 4033
+    },
+    {
+      "path": "validation/application.json",
+      "role": "application_result",
+      "sha256": "sha256:6762ac1db00b9069d5bb75a83a20b1f650e6237b94323579595286dd35e79497",
+      "size_bytes": 15315
+    },
+    {
+      "path": "validation/production-boundary.json",
+      "role": "production_input_boundary",
+      "sha256": "sha256:75649b8e08e8323cc61620baf847ed70b4c119e30a7ae04182feefbb5d4fd9a5",
+      "size_bytes": 651
+    },
+    {
+      "path": "validation/production-evaluation.json",
+      "role": "production_evaluation",
+      "sha256": "sha256:d29a7207bd8261fa7d8271fe3592050ff656500e02f67a26f55a008d574d21d6",
+      "size_bytes": 23228
+    },
+    {
+      "path": "validation/release-decision.json",
+      "role": "l0_l1_l2_release_decision",
+      "sha256": "sha256:5b4beccf8b7390f6d135f28240fa9aedecf8207b8db0ff6599c5855418a465b6",
+      "size_bytes": 672
+    },
+    {
+      "path": "validation/source-run-manifest.json",
+      "role": "source_run_manifest",
+      "sha256": "sha256:ac61878607884347f8b565393932d7950d30cd27bdd977b3372653e11cddf846",
+      "size_bytes": 1653
+    },
+    {
+      "path": "validation/strict-reopen-verification.json",
+      "role": "independent_live_reopen_verification",
+      "sha256": "sha256:66c8816996177f37d098b39092bd36a9c93f247db91f45b18a4636abe7cdc0ef",
+      "size_bytes": 507
+    },
+    {
+      "path": "validation/three-way-audit.json",
+      "role": "three_way_l0_l1_l2_audit",
+      "sha256": "sha256:70614b4fe352803dcee3ae44818ebcdba2537fdb9ba613d486b3434073e1bc38",
+      "size_bytes": 82881
+    }
+  ],
+  "schema_version": "text2ifc/ifc-repair-proof-files/0.2"
+}

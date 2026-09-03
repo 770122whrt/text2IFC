@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "text2ifc/ifc-target-query/0.1",
+  "title": "IFC Target Query 0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "allowed_ifc_classes"],
+  "properties": {
+    "schema_version": {"const": "text2ifc/ifc-target-query/0.1"},
+    "allowed_ifc_classes": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"type": "string", "pattern": "^Ifc[A-Za-z0-9]+$"}
+    },
+    "global_id": {"type": ["string", "null"]},
+    "names": {"type": "array", "items": {"type": "string"}, "default": []},
+    "storey_name": {"type": ["string", "null"]},
+    "storey_global_id": {"type": ["string", "null"]},
+    "host_global_id": {"type": ["string", "null"]},
+    "grid": {"type": ["string", "null"]},
+    "space": {"type": ["string", "null"]},
+    "direction": {"type": ["string", "null"]},
+    "geometry_capabilities": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"type": "string"},
+      "default": []
+    },
+    "geometry_constraints": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 8,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["field", "value", "tolerance_mm"],
+        "properties": {
+          "field": {
+            "enum": [
+              "storey_elevation_mm",
+              "wall_length_mm",
+              "wall_height_mm",
+              "wall_thickness_mm",
+              "opening_width_mm",
+              "opening_height_mm",
+              "opening_depth_mm",
+              "opening_center_offset_mm",
+              "opening_sill_height_mm",
+              "opening_normal_offset_mm"
+            ]
+          },
+          "value": {"type": "number"},
+          "tolerance_mm": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1000
+          }
+        }
+      },
+      "default": []
+    },
+    "attribute_intents": {
+      "type": "array",
+      "items": {"type": "object"},
+      "default": []
+    },
+    "max_candidates": {"type": "integer", "minimum": 1, "maximum": 10, "default": 5},
+    "winner_margin": {"type": "integer", "minimum": 1, "default": 10}
+  }
+}

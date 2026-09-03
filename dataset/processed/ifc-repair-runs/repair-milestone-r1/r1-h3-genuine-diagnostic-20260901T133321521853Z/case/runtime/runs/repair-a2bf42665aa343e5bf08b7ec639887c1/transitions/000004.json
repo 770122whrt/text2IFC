@@ -1,0 +1,214 @@
+{
+  "answer": null,
+  "clarification": {
+    "answer_modes": [
+      "select_candidate",
+      "add_detail",
+      "cancel"
+    ],
+    "answer_schema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "select_candidate"
+              }
+            }
+          },
+          "then": {
+            "maxProperties": 2,
+            "required": [
+              "kind",
+              "candidate_token"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "add_detail"
+              }
+            }
+          },
+          "then": {
+            "maxProperties": 2,
+            "required": [
+              "kind",
+              "detail"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "cancel"
+              }
+            }
+          },
+          "then": {
+            "maxProperties": 1,
+            "required": [
+              "kind"
+            ]
+          }
+        }
+      ],
+      "properties": {
+        "authorized": {
+          "const": true
+        },
+        "candidate_token": {
+          "maxLength": 256,
+          "minLength": 1,
+          "type": "string"
+        },
+        "detail": {
+          "maxLength": 4096,
+          "minLength": 1,
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "select_candidate",
+            "add_detail",
+            "cancel"
+          ]
+        },
+        "preview_hash": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind"
+      ],
+      "type": "object"
+    },
+    "candidates": [
+      {
+        "candidate_kind": "target",
+        "dimensions": {},
+        "evidence": [
+          "identity:1hOSvn6df7F8_7GcBWlS1M",
+          "class:IfcWindow",
+          "name:M_Casement:819mm x 759mm:819mm x 759mm:149736",
+          "storey:Level 2"
+        ],
+        "ifc_class": "IfcWindow",
+        "name": "M_Casement:819mm x 759mm:819mm x 759mm:149736",
+        "occurrence_count": 0,
+        "position": "{\"dimensions_mm\": {\"overall_height\": 759.0, \"overall_width\": 819.0}}",
+        "public_id": "1hOSvn6df7F8_7GcBWlS1M",
+        "storey": "Level 2",
+        "storeys": [],
+        "token": "5fc2e9b538b5625da0c291a3"
+      },
+      {
+        "candidate_kind": "target",
+        "dimensions": {},
+        "evidence": [
+          "identity:1hOSvn6df7F8_7GcBWlS2V",
+          "class:IfcWindow",
+          "name:M_Fixed:819mm x 759mm:819mm x 759mm:149537",
+          "storey:Level 2"
+        ],
+        "ifc_class": "IfcWindow",
+        "name": "M_Fixed:819mm x 759mm:819mm x 759mm:149537",
+        "occurrence_count": 0,
+        "position": "{\"dimensions_mm\": {\"overall_height\": 759.0, \"overall_width\": 819.0}}",
+        "public_id": "1hOSvn6df7F8_7GcBWlS2V",
+        "storey": "Level 2",
+        "storeys": [],
+        "token": "700ed87f9e26524f324acb65"
+      },
+      {
+        "candidate_kind": "target",
+        "dimensions": {},
+        "evidence": [
+          "identity:1hOSvn6df7F8_7GcBWlS4Q",
+          "class:IfcWindow",
+          "name:M_Fixed:819mm x 759mm:819mm x 759mm:149924",
+          "storey:Level 2"
+        ],
+        "ifc_class": "IfcWindow",
+        "name": "M_Fixed:819mm x 759mm:819mm x 759mm:149924",
+        "occurrence_count": 0,
+        "position": "{\"dimensions_mm\": {\"overall_height\": 759.0, \"overall_width\": 819.0}}",
+        "public_id": "1hOSvn6df7F8_7GcBWlS4Q",
+        "storey": "Level 2",
+        "storeys": [],
+        "token": "28222073a79f9d058d650fbc"
+      },
+      {
+        "candidate_kind": "target",
+        "dimensions": {},
+        "evidence": [
+          "identity:1hOSvn6df7F8_7GcBWlSXO",
+          "class:IfcWindow",
+          "name:M_Fixed:2800mm x 2410mm:2800mm x 2410mm:147686",
+          "storey:Level 2"
+        ],
+        "ifc_class": "IfcWindow",
+        "name": "M_Fixed:2800mm x 2410mm:2800mm x 2410mm:147686",
+        "occurrence_count": 0,
+        "position": "{\"dimensions_mm\": {\"overall_height\": 2410.0, \"overall_width\": 2800.0}}",
+        "public_id": "1hOSvn6df7F8_7GcBWlSXO",
+        "storey": "Level 2",
+        "storeys": [],
+        "token": "01eb4a16b59c988bcb8aa516"
+      },
+      {
+        "candidate_kind": "target",
+        "dimensions": {},
+        "evidence": [
+          "identity:1hOSvn6df7F8_7GcBWlS_W",
+          "class:IfcWindow",
+          "name:M_Fixed:2800mm x 2410mm:2800mm x 2410mm:149278",
+          "storey:Level 2"
+        ],
+        "ifc_class": "IfcWindow",
+        "name": "M_Fixed:2800mm x 2410mm:2800mm x 2410mm:149278",
+        "occurrence_count": 0,
+        "position": "{\"dimensions_mm\": {\"overall_height\": 2410.0, \"overall_width\": 2800.0}}",
+        "public_id": "1hOSvn6df7F8_7GcBWlS_W",
+        "storey": "Level 2",
+        "storeys": [],
+        "token": "e55d3904f380e3fe63dc3e82"
+      }
+    ],
+    "claim_id": null,
+    "clarification_id": "clarify-004",
+    "operation_id": "set-window-external-1",
+    "property_preview": null,
+    "question": "目标不唯一或证据不足，请选择候选、补充说明或取消。",
+    "reason_code": "ambiguous_target",
+    "resume_stage": "intent_ready",
+    "run_id": "repair-a2bf42665aa343e5bf08b7ec639887c1",
+    "schema_version": "text2ifc/ifc-repair-clarification/0.2",
+    "stage": "targets_resolved",
+    "state_version": 4
+  },
+  "created_at": "2026-09-01T13:34:14.549336+00:00",
+  "from_stage": "intent_ready",
+  "previous_hash": "sha256:1ba9224f2b50e8590be85a0ab7053503fa7df834a26ed0cc2001b95dab3dd094",
+  "reason_code": "ambiguous",
+  "record_hash": "sha256:77dea261fdf093f642439455702e297f203bf2717744812a19155b17f3bf2814",
+  "result_artifacts": {},
+  "schema_version": "text2ifc/ifc-repair-transition/0.1",
+  "stage_hash": "sha256:cf271c5d351af650536e4569659a87dc2767aaedca4fd0f88badddc3a9a43f06",
+  "stage_payload": {
+    "resolution": {
+      "path": "resolution-v004.json",
+      "schema_version": "text2ifc/ifc-resolution-flow/0.1",
+      "sha256": "sha256:3dd261965fc80c02b0acfe99a6cf174e6351aa70af9dcc64d0fd3a24dcc3544d"
+    }
+  },
+  "state_version": 4,
+  "to_stage": "clarification_required",
+  "transition_id": 4
+}

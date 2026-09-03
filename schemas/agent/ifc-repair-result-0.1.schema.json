@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "text2ifc/ifc-repair-result/0.1",
+  "title": "IFC Repair Result 0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "run_id", "state_version", "status", "reason_code",
+    "complete_repair_success", "successful_artifact_publishable", "run_directory",
+    "artifacts", "clarification"
+  ],
+  "properties": {
+    "schema_version": {"const": "text2ifc/ifc-repair-result/0.1"},
+    "run_id": {"type": "string", "pattern": "^repair-[a-z0-9][a-z0-9-]{0,95}$"},
+    "state_version": {"type": "integer", "minimum": 0},
+    "status": {"type": "string", "minLength": 1, "maxLength": 64},
+    "reason_code": {"type": ["string", "null"], "maxLength": 256},
+    "complete_repair_success": {"type": "boolean"},
+    "successful_artifact_publishable": {"type": "boolean"},
+    "run_directory": {"type": "string", "minLength": 1, "maxLength": 256},
+    "artifacts": {
+      "type": "object", "maxProperties": 32,
+      "additionalProperties": {"type": "string", "minLength": 1, "maxLength": 1024}
+    },
+    "clarification": {
+      "oneOf": [
+        {"type": "null"},
+        {"type": "object"}
+      ]
+    }
+  }
+}

@@ -237,6 +237,45 @@ def test_generated_ifc_gate_rejects_wrong_roof_stair_and_opening_bounds(tmp_path
     assert stair_rise["recommended_action"] == "translate_stair"
 
 
+def test_generated_ifc_gate_rejects_stair_flight_crossing_wall(tmp_path: Path):
+    output = tmp_path / "stair-crosses-wall.ifc"
+    result = compile_document(_stair_wall_document(with_passage=False), output)
+
+    assert result.success
+    gate = check_generated_ifc(output, _stair_wall_expectation(with_passage=False))
+
+    assert gate.success is False
+    issue = next(
+        item for item in gate.issues if item["code"] == "STAIR_WALL_INTERSECTION"
+    )
+    assert issue["entity_ids"] == ["stair-1", "stair-flight-1", "wall-crossing"]
+    assert issue["expected"] == {"intersection": False}
+    assert issue["actual"]["overlap_bbox"] == {
+        "x": pytest.approx([-0.5, 0.5]),
+        "y": pytest.approx([-0.1, 0.1]),
+        "z": pytest.approx([0.0, 3.0]),
+    }
+    assert issue["source_fact_refs"] == [
+        "/known_facts/stairs/0",
+        "/known_facts/storeys/0/walls/interior/0",
+    ]
+
+
+def test_generated_ifc_gate_accepts_stair_through_explicit_wall_passage(
+    tmp_path: Path,
+):
+    output = tmp_path / "stair-through-wall-passage.ifc"
+    result = compile_document(_stair_wall_document(with_passage=True), output)
+
+    assert result.success
+    gate = check_generated_ifc(output, _stair_wall_expectation(with_passage=True))
+
+    assert gate.success is True
+    assert not any(
+        item["code"] == "STAIR_WALL_INTERSECTION" for item in gate.issues
+    )
+
+
 def test_stair_endpoint_diagnostics_require_profile_reshape_when_only_one_end_differs():
     diagnostics = _stair_endpoint_diagnostics(
         actual_z=[0.3, 3.15],
@@ -347,6 +386,137 @@ def _slab_gap_document() -> dict:
         ],
         "relationships": [],
         "provenance": {"source": "test"},
+    }
+
+
+def _stair_wall_document(*, with_passage: bool) -> dict:
+    document = {
+        "schema_version": "bim-json/2.0",
+        "ifc_schema": "IFC2X3",
+        "units": {"length": "MILLIMETRE"},
+        "entities": [
+            _entity("project-1", "IfcProject", {"Name": "Project"}),
+            _entity(
+                "site-1",
+                "IfcSite",
+                {"Name": "Site", "ObjectPlacement": _placement("project-1")},
+            ),
+            _entity(
+                "building-1",
+                "IfcBuilding",
+                {"Name": "Building", "ObjectPlacement": _placement("site-1")},
+            ),
+            _entity(
+                "storey-1",
+                "IfcBuildingStorey",
+                {
+                    "Name": "Storey 1",
+                    "Elevation": 0,
+                    "ObjectPlacement": _placement("building-1"),
+                },
+            ),
+            _entity(
+                "stair-1",
+                "IfcStair",
+                {
+                    "Name": "Stair",
+                    "ShapeType": "STRAIGHT_RUN_STAIR",
+                    "ObjectPlacement": _placement("storey-1"),
+                    "Representation": _rectangle(1000, 4000, 3000),
+                },
+            ),
+            _entity(
+                "stair-flight-1",
+                "IfcStairFlight",
+                {
+                    "Name": "Flight",
+                    "ObjectPlacement": _placement("stair-1"),
+                    "Representation": _rectangle(1000, 4000, 3000),
+                },
+            ),
+        ],
+        "relationships": [],
+        "provenance": {"source": "test"},
+    }
+    if with_passage:
+        document["entities"].extend(
+            [
+                _entity(
+                    "wall-left",
+                    "IfcWall",
+                    {
+                        "Name": "Wall left",
+                        "ObjectPlacement": _placement("storey-1", [-1800, 0, 0]),
+                        "Representation": _rectangle(2400, 200, 3000),
+                    },
+                ),
+                _entity(
+                    "wall-right",
+                    "IfcWall",
+                    {
+                        "Name": "Wall right",
+                        "ObjectPlacement": _placement("storey-1", [1800, 0, 0]),
+                        "Representation": _rectangle(2400, 200, 3000),
+                    },
+                ),
+            ]
+        )
+    else:
+        document["entities"].append(
+            _entity(
+                "wall-crossing",
+                "IfcWall",
+                {
+                    "Name": "Crossing wall",
+                    "ObjectPlacement": _placement("storey-1"),
+                    "Representation": _rectangle(6000, 200, 3000),
+                },
+            )
+        )
+    return document
+
+
+def _stair_wall_expectation(*, with_passage: bool) -> dict:
+    wall_source = "/known_facts/storeys/0/walls/interior/0"
+    walls = (
+        {
+            "wall-left": {
+                "axis": "x",
+                "bbox": {"x": [-3.0, -0.6], "y": [-0.1, 0.1], "z": [0.0, 3.0]},
+                "source_fact_refs": [wall_source],
+            },
+            "wall-right": {
+                "axis": "x",
+                "bbox": {"x": [0.6, 3.0], "y": [-0.1, 0.1], "z": [0.0, 3.0]},
+                "source_fact_refs": [
+                    "/known_facts/storeys/0/walls/interior/1"
+                ],
+            },
+        }
+        if with_passage
+        else {
+            "wall-crossing": {
+                "axis": "x",
+                "bbox": {"x": [-3.0, 3.0], "y": [-0.1, 0.1], "z": [0.0, 3.0]},
+                "source_fact_refs": [wall_source],
+            }
+        }
+    )
+    return {
+        "case_id": "stair-wall-passage" if with_passage else "stair-wall-collision",
+        "tolerance": 0.01,
+        "walls": walls,
+        "stairs": {
+            "stair-1": {
+                "flight_ids": ["stair-flight-1"],
+                "bbox": {
+                    "x": [-0.5, 0.5],
+                    "y": [-2.0, 2.0],
+                    "z": [0.0, 3.0],
+                },
+                "source_fact_refs": ["/known_facts/stairs/0"],
+            }
+        },
     }
 
 

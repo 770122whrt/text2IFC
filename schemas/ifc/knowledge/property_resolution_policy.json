@@ -1,0 +1,15 @@
+{
+  "schema_version": "text2ifc/property-resolution-policy/0.1",
+  "policy_id": "ifc2x3.single-value.hybrid",
+  "version": "0.1",
+  "max_candidates": 5,
+  "vector_min_score": 0.5,
+  "vector_min_margin": 0.03,
+  "rules": {
+    "canonical_exact": "auto_authorize_unique_applicable_standard",
+    "reviewed_alias_exact": "auto_authorize_unique_applicable_standard",
+    "hybrid_consensus": "auto_authorize_only_same_top_with_score_and_margin",
+    "vector_only": "clarification_required",
+    "project_or_custom": "explicit_confirmation_required"
+  }
+}

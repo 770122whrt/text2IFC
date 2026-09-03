@@ -1,0 +1,45 @@
+{
+  "schema_version": "text2ifc/ifc-repair-benchmark-case-private/0.1",
+  "case_id": "px4-1-five-window-001",
+  "source": {
+    "local_path": "dataset/ifc/train/px4_1.ifc",
+    "sha256": "8c336ee9af66a55fb4cac26b608bef11ace5a3a0a490931205045e4f87b4c46d"
+  },
+  "selection_policy": {
+    "operation_count": 5,
+    "source_schema": "IFC2X3",
+    "requirements": [
+      "five distinct supported straight host walls",
+      "valid Window-Opening-Wall relationship chain",
+      "window and host wall resolve to the same storey",
+      "selected Window Type remains observable after damage"
+    ]
+  },
+  "targets": [
+    {
+      "wall_global_id": "03SCVysybE5QR$e8dtXVfQ",
+      "opening_global_id": "1F2LRTmm9Cq8Zp5ids9Ixv",
+      "window_global_id": "1F2LRTmm9Cq8Zp5jhs9Ixv"
+    },
+    {
+      "wall_global_id": "1aUf$RNz1A_AvssKHMHdxj",
+      "opening_global_id": "0k_GWa30P01vUfZ2kLomr9",
+      "window_global_id": "0k_GWa30P01vUfZ3YLomr9"
+    },
+    {
+      "wall_global_id": "1aUf$RNz1A_AvssKHMHdxj",
+      "opening_global_id": "0k_GWa30P01vUfZ2kLomt0",
+      "window_global_id": "0k_GWa30P01vUfZ3YLomt0"
+    },
+    {
+      "wall_global_id": "03SCVysybE5QR$e8dtXS08",
+      "opening_global_id": "0k_GWa30P01vUfZ2kLpCnL",
+      "window_global_id": "0k_GWa30P01vUfZ3YLpCnL"
+    },
+    {
+      "wall_global_id": "03SCVysybE5QR$e8dtXVs8",
+      "opening_global_id": "380TAK7Qb3SBeU4fWddW8l",
+      "window_global_id": "380TAK7Qb3SBeU4eiddW8l"
+    }
+  ]
+}

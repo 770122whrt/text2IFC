@@ -1,0 +1,53 @@
+{
+  "schema_version": "text2ifc/external-corpora/1.0",
+  "recorded_at": "2026-07-16",
+  "admission_policy": "linked_not_training_admitted",
+  "corpora": [
+    {
+      "corpus_id": "bim-whale-ifc-samples",
+      "path": "dataset/external/bim-whale-ifc-samples",
+      "acquisition_mode": "git_submodule",
+      "source_repository": "https://github.com/andrewisen/bim-whale-ifc-samples.git",
+      "source_revision": "595fa90e3af7120d004fcb37a79d8657f1d1c9c2",
+      "license": "MIT",
+      "license_evidence": "dataset/external/bim-whale-ifc-samples/LICENSE",
+      "file_count": 59,
+      "size_bytes": 167443501,
+      "ifc_inventory": {
+        "file_count": 6,
+        "ifc2x3_reopen_eligible_count": 6
+      },
+      "approved_uses": [
+        "parser-testing",
+        "compiler-testing",
+        "geometry-robustness-research"
+      ],
+      "training_eligible": false,
+      "status": "linked-not-admitted",
+      "notes": "Dummy sample models. Promote selected files through raw-files.jsonl and a leak-free split before training use."
+    },
+    {
+      "corpus_id": "ifc-bench",
+      "path": "dataset/external/ifc-bench",
+      "acquisition_mode": "git_submodule",
+      "source_repository": "https://huggingface.co/datasets/sylvainHellin/ifc-bench",
+      "source_revision": "fa301cfbff5bcc0a27a5e8ef7714fea48b123208",
+      "license": "CC-BY-4.0-with-model-specific-licenses",
+      "license_evidence": "dataset/external/ifc-bench/LICENSE",
+      "file_count": 170,
+      "size_bytes": 2074769344,
+      "ifc_inventory": {
+        "file_count": 50,
+        "ifc2x3_reopen_eligible_count": 27
+      },
+      "approved_uses": [
+        "evaluation-research",
+        "schema-robustness-research",
+        "spatial-reasoning-research"
+      ],
+      "training_eligible": false,
+      "status": "linked-not-admitted",
+      "notes": "The QA content is CC BY 4.0, while IFC models retain project-specific licenses. Review each selected model before redistribution or training."
+    }
+  ]
+}

@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://text2ifc.local/schemas/agent/ifc-repair-context-0.1.schema.json",
+  "title": "text2IFC IFC Repair Context 0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "base_model_fingerprint",
+    "request_operation_hints",
+    "candidate_targets",
+    "model_constraints",
+    "context_budget"
+  ],
+  "properties": {
+    "schema_version": {"const": "text2ifc/ifc-repair-context/0.1"},
+    "base_model_fingerprint": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "request_operation_hints": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "candidate_targets": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/candidateTarget"}
+    },
+    "model_constraints": {"type": "object"},
+    "context_budget": {"$ref": "#/$defs/contextBudget"}
+  },
+  "$defs": {
+    "candidateTarget": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "target_id",
+        "ifc_global_id",
+        "ifc_class",
+        "name",
+        "storey",
+        "geometry_capability",
+        "details"
+      ],
+      "properties": {
+        "target_id": {"type": "string", "minLength": 1},
+        "ifc_global_id": {"type": "string", "minLength": 1},
+        "ifc_class": {"type": "string", "pattern": "^Ifc[A-Za-z0-9]+$"},
+        "name": {"type": "string"},
+        "storey": {"type": "string"},
+        "geometry_capability": {"type": "string", "minLength": 1},
+        "details": {"type": "object", "minProperties": 1}
+      }
+    },
+    "contextBudget": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "max_candidates",
+        "max_bytes",
+        "selected_candidate_count",
+        "omitted_candidate_count",
+        "actual_bytes",
+        "estimated_tokens",
+        "token_estimator"
+      ],
+      "properties": {
+        "max_candidates": {"type": "integer", "minimum": 1},
+        "max_bytes": {"type": "integer", "minimum": 1},
+        "selected_candidate_count": {"type": "integer", "minimum": 1},
+        "omitted_candidate_count": {"type": "integer", "minimum": 0},
+        "actual_bytes": {"type": "integer", "minimum": 1},
+        "estimated_tokens": {"type": "integer", "minimum": 1},
+        "token_estimator": {"const": "ceil(utf8_bytes/4)"}
+      }
+    }
+  }
+}

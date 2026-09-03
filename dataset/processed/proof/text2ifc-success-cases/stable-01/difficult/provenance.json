@@ -1,0 +1,46 @@
+{
+  "proof_id": "stable-01-difficult",
+  "group": "stable-01",
+  "difficulty": "difficult",
+  "language": "zh-CN",
+  "input_source": "dataset/processed/agent-demo/phase6.5-wave8-observation/manifests/STD-D-MUL-04.json",
+  "input_field": "input",
+  "ifc_source": "dataset/processed/agent-demo/phase6.6-difficult-stair-fix-live-64k-explicit-hosts/runs/ba2277d8363bce69/stable1-difficult-716.ifc",
+  "proof_input": "dataset/processed/proof/text2ifc-success-cases/stable-01/difficult/stable-01-difficult.input.zh-CN.txt",
+  "proof_ifc": "dataset/processed/proof/text2ifc-success-cases/stable-01/difficult/stable-01-difficult.ifc",
+  "input_sha256": "439493c99d55ed02dbeade6654e5ba9029cac4cf3a2cb512aa1c131d4f9f3e5c",
+  "ifc_sha256": "8209696eabb12c9b3f2f8daac6124d0f02bfe501913a0b7a769ca7c74892367e",
+  "input_bytes": 8878,
+  "ifc_bytes": 124635,
+  "ifc_schema": "IFC2X3",
+  "entity_counts": {
+    "IfcProject": 1,
+    "IfcSite": 1,
+    "IfcBuilding": 1,
+    "IfcBuildingStorey": 2,
+    "IfcSpace": 11,
+    "IfcWall": 23,
+    "IfcSlab": 2,
+    "IfcDoor": 10,
+    "IfcWindow": 10,
+    "IfcOpeningElement": 22,
+    "IfcStair": 1,
+    "IfcStairFlight": 1,
+    "IfcRailing": 5,
+    "IfcRoof": 0
+  },
+  "acceptance_evidence": [
+    "dataset/processed/agent-demo/phase6.6-difficult-stair-fix-live-64k-explicit-hosts/runs/ba2277d8363bce69/acceptance-metrics.json",
+    "dataset/processed/agent-demo/phase6.6-difficult-stair-fix-live-64k-explicit-hosts/runs/ba2277d8363bce69/case-result.json",
+    "dataset/processed/agent-demo/phase6.6-difficult-stair-fix-live-64k-explicit-hosts/runs/ba2277d8363bce69/component-preservation.json",
+    "dataset/processed/agent-demo/phase6.6-difficult-stair-fix-live-64k-explicit-hosts/runs/ba2277d8363bce69/gate-summary.json",
+    "dataset/processed/agent-demo/phase6.6-difficult-stair-fix-live-64k-explicit-hosts/runs/ba2277d8363bce69/ifc-verification.json",
+    "dataset/processed/agent-demo/phase6.6-difficult-stair-fix-live-64k-explicit-hosts/runs/ba2277d8363bce69/report.md",
+    "dataset/processed/agent-demo/phase6.6-difficult-stair-fix-live-64k-explicit-hosts/runs/ba2277d8363bce69/secret-scan.json"
+  ],
+  "human_uat": {
+    "status": "accepted",
+    "note": "项目负责人已人工检查并确认楼梯、墙体、洞口与栏杆结果可接受。"
+  },
+  "selection_note": "采用完成楼梯穿墙修正后的最终会话 ba2277d8363bce69；排除早期会话 53df7ac99abf41e8 中的同名 IFC。"
+}

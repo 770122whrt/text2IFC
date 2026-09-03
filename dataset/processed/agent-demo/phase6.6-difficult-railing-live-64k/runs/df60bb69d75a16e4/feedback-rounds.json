@@ -1,0 +1,62 @@
+{
+  "rounds": [
+    {
+      "attempted_action": "prepare_repair_feedback",
+      "input_issue_count": 2,
+      "issue_delta": null,
+      "issue_set_changed": false,
+      "issues": [
+        {
+          "actual_ref": "/railing-atrium-north/ifc_class",
+          "evidence": "PACKAGE_LOCAL_COMPONENT_INVALID: No diagnostic message was provided.",
+          "expected_fact_ref": null,
+          "issue_id": "issue_schema_validation_0001",
+          "issue_type": "schema_mismatch",
+          "owner": "repair",
+          "retryable": true,
+          "severity": "blocking",
+          "source": "schema_validation",
+          "suggested_route": "repair_json"
+        },
+        {
+          "actual_ref": "/railing-atrium-west/ifc_class",
+          "evidence": "PACKAGE_LOCAL_COMPONENT_INVALID: No diagnostic message was provided.",
+          "expected_fact_ref": null,
+          "issue_id": "issue_schema_validation_0002",
+          "issue_type": "schema_mismatch",
+          "owner": "repair",
+          "retryable": true,
+          "severity": "blocking",
+          "source": "schema_validation",
+          "suggested_route": "repair_json"
+        }
+      ],
+      "max_feedback_rounds": 3,
+      "output_issue_count": 2,
+      "retry_allowed": true,
+      "round_index": 0,
+      "route": "repair_json",
+      "route_decision": {
+        "blocking_issue_ids": [
+          "issue_schema_validation_0001",
+          "issue_schema_validation_0002"
+        ],
+        "current_feedback_round": 0,
+        "final_status": "blocked",
+        "human_review_required": false,
+        "max_feedback_rounds": 3,
+        "reason": "Route repair_json selected from 2 issue(s); first issue issue_schema_validation_0001 is schema_mismatch owned by repair.",
+        "retry_allowed": true,
+        "route": "repair_json",
+        "schema_version": "text2ifc/route-decision/2.0",
+        "source_issue_count": 2,
+        "target_stage": "repair"
+      },
+      "schema_version": "text2ifc/feedback-round/1.0",
+      "source_stage": "workflow",
+      "target_stage": "repair",
+      "terminal_status": "retry_prepared"
+    }
+  ],
+  "schema_version": "text2ifc/feedback-rounds/1.0"
+}

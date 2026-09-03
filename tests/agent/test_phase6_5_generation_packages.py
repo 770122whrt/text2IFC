@@ -98,6 +98,21 @@ def test_manifest_routes_unknown_stair_endpoint_to_draft():
     }
 
 
+def test_manifest_omits_empty_cross_storey_package():
+    expected = _expected(1)
+    expected["slabs"] = []
+    expected["stairs"] = []
+    expected["roof"] = None
+
+    manifest = build_generation_package_manifest(expected)
+
+    assert manifest["status"] == "ready"
+    assert [package["package_id"] for package in manifest["packages"]] == [
+        "package-skeleton",
+        "package-storey-1",
+    ]
+
+
 def test_expected_facts_embeds_the_same_generation_package_manifest():
     brief = {
         "schema_version": "text2ifc/design-brief/2.0",
@@ -126,6 +141,46 @@ def test_expected_facts_embeds_the_same_generation_package_manifest():
         for package in expected["generation_package_manifest"]["packages"]
         if package["kind"] == "storey_local"
     ] == ["storey-a", "storey-b"]
+
+
+def test_manifest_binds_generic_product_ids_to_exact_ifc_classes():
+    expected = _expected(2)
+    expected["products"] = [
+        {
+            "id": "railing-atrium-north",
+            "ifc_class": "IfcRailing",
+            "storey": "storey-2",
+            "geometry": {
+                "kind": "linear_segment",
+                "start_mm": [6000, 3000, 3300],
+                "end_mm": [12000, 3000, 3300],
+                "height_mm": 1100,
+                "thickness_mm": 50,
+            },
+        },
+        {
+            "id": "railing-atrium-west",
+            "ifc_class": "IfcRailing",
+            "storey": "storey-2",
+            "geometry": {
+                "kind": "linear_segment",
+                "start_mm": [6000, 0, 3300],
+                "end_mm": [6000, 3000, 3300],
+                "height_mm": 1100,
+                "thickness_mm": 50,
+            },
+        },
+    ]
+
+    manifest = build_generation_package_manifest(expected)
+    package = next(
+        item for item in manifest["packages"] if item["package_id"] == "package-storey-2"
+    )
+
+    assert package["owned_component_classes"] == {
+        "railing-atrium-north": "IfcRailing",
+        "railing-atrium-west": "IfcRailing",
+    }
 
 
 def test_expected_facts_preserves_explicit_storey_owned_wall_inventory():

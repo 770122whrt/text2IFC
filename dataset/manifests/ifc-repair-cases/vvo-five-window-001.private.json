@@ -1,0 +1,47 @@
+{
+  "schema_version": "text2ifc/ifc-repair-benchmark-case-private/0.1",
+  "case_id": "vvo-five-window-001",
+  "source": {
+    "local_path": "dataset/ifc/train/vvo.ifc",
+    "sha256": "b6c435be955aeb6b2998f42a62f4ebf8c3f91eb7d373ca71a2dcedfeb95b3fdc"
+  },
+  "selection_policy": {
+    "operation_count": 5,
+    "source_schema": "IFC2X3",
+    "requirements": [
+      "valid Window-Opening-Wall chain",
+      "straight supported host wall",
+      "Window and host wall have the same original storey",
+      "requested opening does not overlap a surviving opening",
+      "selected Type remains observable in the damaged IFC",
+      "includes two non-overlapping Windows on one host wall"
+    ]
+  },
+  "targets": [
+    {
+      "wall_global_id": "2CsmzAChHF6O6maGXlo6yJ",
+      "opening_global_id": "2dYMXn0_5AKRbD_1mUIAqJ",
+      "window_global_id": "2dYMXn0_5AKRbD_0yUIAqJ"
+    },
+    {
+      "wall_global_id": "0jltRti3rFigAmdXYhXxqI",
+      "opening_global_id": "08xWVL$9z6JRwr3piJHoAz",
+      "window_global_id": "08xWVL$9z6JRwr3oWJHoAz"
+    },
+    {
+      "wall_global_id": "1boalssSHBYut0JHgwRsGf",
+      "opening_global_id": "3xYoUsotL2OPYJwoCd43$o",
+      "window_global_id": "3xYoUsotL2OPYJwp0d43$o"
+    },
+    {
+      "wall_global_id": "0jltRti3rFigAmdXYhXx0W",
+      "opening_global_id": "0ZHc4SjhnChed_CM8dKBvN",
+      "window_global_id": "0ZHc4SjhnChed_CN4dKBvN"
+    },
+    {
+      "wall_global_id": "0jltRti3rFigAmdXYhXx0W",
+      "opening_global_id": "0ZHc4SjhnChed_CM8dKBcC",
+      "window_global_id": "0ZHc4SjhnChed_CN4dKBcC"
+    }
+  ]
+}

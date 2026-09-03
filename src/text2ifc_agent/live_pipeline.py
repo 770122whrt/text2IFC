@@ -1524,7 +1524,14 @@ def _semantic_geometry_expectation_from_case(
             )
             if any(
                 design_expectation.get(key)
-                for key in ("walls", "slabs", "roof", "stairs", "floor_openings")
+                for key in (
+                    "walls",
+                    "slabs",
+                    "roof",
+                    "stairs",
+                    "floor_openings",
+                    "products",
+                )
             ):
                 return design_expectation
     return build_semantic_geometry_expectation(

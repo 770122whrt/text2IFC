@@ -42,6 +42,32 @@ must have a reviewed license, provenance, validation status, and intended use.
 
 ## Review-required Sources
 
+### BIM Whale IFC Samples
+
+- Repository: https://github.com/andrewisen/bim-whale-ifc-samples
+- Pinned revision: `595fa90e3af7120d004fcb37a79d8657f1d1c9c2`
+- License: MIT, retained in the linked corpus.
+- Local form: Git submodule at
+  `dataset/external/bim-whale-ifc-samples`.
+- Content: Six dummy IFC2X3 sample models plus authoring and screenshot files.
+- Current use: parser, compiler, and geometry robustness research.
+- Training status: Not admitted. Selected files still require individual raw
+  manifest records, provenance, and split assignment.
+
+### IFC-Bench
+
+- Repository: https://huggingface.co/datasets/sylvainHellin/ifc-bench
+- Pinned revision: `fa301cfbff5bcc0a27a5e8ef7714fea48b123208`
+- Dataset license: CC BY 4.0 for the benchmark content. Included IFC models
+  retain project-specific licenses, including GPLv3, MIT, CC BY 3.0, and
+  CC BY 4.0 variants.
+- Local form: Git submodule at `dataset/external/ifc-bench`.
+- Content: 22 projects, 50 IFC files, and 1,027 question-answer records.
+- Current use: evaluation and schema/spatial reasoning research only.
+- Training status: Not admitted. Each selected IFC model requires a
+  project-level license decision, an individual raw manifest record, and a
+  leak-free split assignment.
+
 ### buildingSMART Community-Sample-Test-Files
 
 - Repository:

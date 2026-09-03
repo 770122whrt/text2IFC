@@ -5,6 +5,10 @@ import stat
 import zipfile
 from pathlib import Path
 
+from text2ifc_knowledge.property_search import _prepare_windows_torch_runtime
+
+_prepare_windows_torch_runtime()
+
 import ifcopenshell
 import pytest
 

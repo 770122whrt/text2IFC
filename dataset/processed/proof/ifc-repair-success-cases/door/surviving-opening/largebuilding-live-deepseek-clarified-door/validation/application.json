@@ -1,0 +1,470 @@
+{
+  "audit": {
+    "checks": [
+      {
+        "code": "CHANGESET_SCHEMA",
+        "evidence": {},
+        "status": "passed"
+      },
+      {
+        "code": "IFC_SCHEMA",
+        "evidence": {
+          "actual_schema": "IFC2X3"
+        },
+        "status": "passed"
+      },
+      {
+        "code": "BASE_MODEL_FINGERPRINT",
+        "evidence": {
+          "actual_fingerprint": "sha256:37c395b695f2efad78598811b643987e53a347fb0f33c07698eff29818629390"
+        },
+        "status": "passed"
+      },
+      {
+        "code": "SOURCE_REQUEST_HASH",
+        "evidence": {
+          "actual_request_hash": "sha256:6334e31552b981850176b342bbe439ccc0aaa1612fdf3ceace30d6a8c7eb690b"
+        },
+        "status": "passed"
+      },
+      {
+        "code": "OPERATION_REGISTRATION",
+        "evidence": {
+          "operation_type": "fill_existing_opening_with_door"
+        },
+        "status": "passed"
+      }
+    ],
+    "issues": [],
+    "operation_audits": [
+      {
+        "checks": [
+          {
+            "code": "EMPTY_OPENING_AVAILABLE",
+            "evidence": {
+              "host_wall_global_id": "2cXV28XOjE6f6irgi0COfF",
+              "opening_global_id": "2cXV28XOjE6f6irhW0COhu"
+            },
+            "status": "passed"
+          }
+        ],
+        "evidence": {
+          "opening_global_id": "2cXV28XOjE6f6irhW0COhu"
+        },
+        "operation_id": "door-fill-existing-1",
+        "operation_type": "fill_existing_opening_with_door",
+        "valid": true
+      }
+    ],
+    "schema_version": "text2ifc/ifc-repair-audit/0.1",
+    "valid": true
+  },
+  "issues": [],
+  "operations": [
+    {
+      "changes": {
+        "created": [
+          {
+            "global_id": "05Qnu_IcfGCQq8JRG5j4OR",
+            "ifc_class": "IfcDoor",
+            "role": "door"
+          },
+          {
+            "global_id": "0plJJShNfSKfD1sTyHeZRX",
+            "ifc_class": "IfcRelFillsElement",
+            "role": "fills_relationship"
+          }
+        ],
+        "modified": [
+          {
+            "global_id": "2cXV28XOjE6f6irgi0COfF",
+            "role": "host_wall"
+          },
+          {
+            "global_id": "2cXV28XOjE6f6irhW0COhu",
+            "role": "opening"
+          },
+          {
+            "global_id": "2AgyFd$QH9AO0Nm0$mTxVK",
+            "role": "door_type_relationship"
+          },
+          {
+            "global_id": "3Zu5Bv0LOHrPC10066FoQQ",
+            "role": "spatial_containment"
+          }
+        ],
+        "removed": [],
+        "resolved": {
+          "door_placement": {
+            "relative_location": [
+              -915.0,
+              -200.0,
+              0.0
+            ],
+            "relative_ref_direction": [
+              1.0,
+              0.0,
+              0.0
+            ],
+            "selection_evidence": {
+              "axis_deviation_degrees": 0.0,
+              "door_bounds_in_opening_mm": {
+                "x": [
+                  -991.0,
+                  76.0
+                ],
+                "y": [
+                  -225.0,
+                  25.0
+                ],
+                "z": [
+                  0.0,
+                  2210.0
+                ]
+              },
+              "geometry_center_deviation_mm": 38.0,
+              "height_deviation_mm": 0.0,
+              "nominal_center_deviation_mm": 0.0,
+              "nominal_door_bounds_mm": {
+                "x": [
+                  -915.0,
+                  0.0
+                ],
+                "y": [
+                  -200.0,
+                  -200.0
+                ],
+                "z": [
+                  0.0,
+                  2134.0
+                ]
+              },
+              "normal_axis_intersection_mm": 200.0,
+              "opening_bounds_mm": {
+                "x": [
+                  -915.0,
+                  0.0
+                ],
+                "y": [
+                  -200.0,
+                  0.0
+                ],
+                "z": [
+                  0.0,
+                  2134.0
+                ]
+              },
+              "projected_overlap_ratio": 1.0,
+              "thresholds": {
+                "maximum_axis_deviation_degrees": 0.1,
+                "maximum_center_deviation_mm": 5.0,
+                "maximum_dimension_deviation_mm": 1.0,
+                "minimum_projected_overlap_ratio": 0.95
+              },
+              "valid": true,
+              "width_deviation_mm": 0.0
+            }
+          },
+          "door_type_global_id": "2cXV28XOjE6f6irhu0COgZ",
+          "opening_depth_mm": 200.0,
+          "opening_global_id": "2cXV28XOjE6f6irhW0COhu",
+          "storey_global_id": "2nxdYR2RHCDBiKJuiQr1XP"
+        },
+        "semantic": {
+          "created": [],
+          "modified": [],
+          "scopes": {
+            "door_occurrence": {
+              "created": [],
+              "modified": [],
+              "skipped": [
+                "label:Name",
+                "material:Door---Frame",
+                "material:Door---Panel",
+                "pset:Analytical-Properties.Analytic-Construction",
+                "pset:Analytical-Properties.Define-Thermal-Properties-by",
+                "pset:Analytical-Properties.Heat-Transfer-Coefficient-U",
+                "pset:Analytical-Properties.Solar-Heat-Gain-Coefficient",
+                "pset:Analytical-Properties.Thermal-Resistance-R",
+                "pset:Analytical-Properties.Visual-Light-Transmittance",
+                "pset:Construction.Function",
+                "pset:Construction.Wall-Closure",
+                "pset:Custom_Pset.Height",
+                "pset:Custom_Pset.Hyperlink",
+                "pset:Custom_Pset.Keynote",
+                "pset:Custom_Pset.TypeDescription",
+                "pset:Custom_Pset.TypeMark",
+                "pset:Custom_Pset.Width",
+                "pset:Dimensions.Height",
+                "pset:Dimensions.Thickness",
+                "pset:Dimensions.Trim-Projection-Ext",
+                "pset:Dimensions.Trim-Projection-Int",
+                "pset:Dimensions.Trim-Width",
+                "pset:Dimensions.Width",
+                "pset:Identity-Data.Assembly-Code",
+                "pset:Identity-Data.Assembly-Description",
+                "pset:Identity-Data.Code-Name",
+                "pset:Identity-Data.Description",
+                "pset:Identity-Data.Fire-Rating",
+                "pset:Identity-Data.Keynote",
+                "pset:Identity-Data.Manufacturer",
+                "pset:Identity-Data.Model",
+                "pset:Identity-Data.OmniClass-Number",
+                "pset:Identity-Data.OmniClass-Title",
+                "pset:Identity-Data.Type-Comments",
+                "pset:Identity-Data.Type-Mark",
+                "pset:Identity-Data.Type-Name",
+                "pset:Identity-Data.URL",
+                "pset:Materials-and-Finishes.Door-Material",
+                "pset:Materials-and-Finishes.Frame-Material",
+                "pset:Other.Category",
+                "pset:Other.Family-Name",
+                "pset:Pset_ConcreteElementGeneral.FireRating",
+                "pset:Pset_DoorCommon.FireRating",
+                "pset:Pset_DoorCommon.IsExternal",
+                "pset:Pset_DoorCommon.Reference",
+                "pset:Pset_DoorCommon.ThermalTransmittance",
+                "pset:Pset_ManufacturerTypeInformation.Manufacturer",
+                "pset:Pset_ProductRequirements.Category",
+                "pset:Pset_QuantityTakeOff.Reference",
+                "relationship:type"
+              ],
+              "updated": []
+            }
+          },
+          "skipped": [
+            "label:Name",
+            "material:Door---Frame",
+            "material:Door---Panel",
+            "pset:Analytical-Properties.Analytic-Construction",
+            "pset:Analytical-Properties.Define-Thermal-Properties-by",
+            "pset:Analytical-Properties.Heat-Transfer-Coefficient-U",
+            "pset:Analytical-Properties.Solar-Heat-Gain-Coefficient",
+            "pset:Analytical-Properties.Thermal-Resistance-R",
+            "pset:Analytical-Properties.Visual-Light-Transmittance",
+            "pset:Construction.Function",
+            "pset:Construction.Wall-Closure",
+            "pset:Custom_Pset.Height",
+            "pset:Custom_Pset.Hyperlink",
+            "pset:Custom_Pset.Keynote",
+            "pset:Custom_Pset.TypeDescription",
+            "pset:Custom_Pset.TypeMark",
+            "pset:Custom_Pset.Width",
+            "pset:Dimensions.Height",
+            "pset:Dimensions.Thickness",
+            "pset:Dimensions.Trim-Projection-Ext",
+            "pset:Dimensions.Trim-Projection-Int",
+            "pset:Dimensions.Trim-Width",
+            "pset:Dimensions.Width",
+            "pset:Identity-Data.Assembly-Code",
+            "pset:Identity-Data.Assembly-Description",
+            "pset:Identity-Data.Code-Name",
+            "pset:Identity-Data.Description",
+            "pset:Identity-Data.Fire-Rating",
+            "pset:Identity-Data.Keynote",
+            "pset:Identity-Data.Manufacturer",
+            "pset:Identity-Data.Model",
+            "pset:Identity-Data.OmniClass-Number",
+            "pset:Identity-Data.OmniClass-Title",
+            "pset:Identity-Data.Type-Comments",
+            "pset:Identity-Data.Type-Mark",
+            "pset:Identity-Data.Type-Name",
+            "pset:Identity-Data.URL",
+            "pset:Materials-and-Finishes.Door-Material",
+            "pset:Materials-and-Finishes.Frame-Material",
+            "pset:Other.Category",
+            "pset:Other.Family-Name",
+            "pset:Pset_ConcreteElementGeneral.FireRating",
+            "pset:Pset_DoorCommon.FireRating",
+            "pset:Pset_DoorCommon.IsExternal",
+            "pset:Pset_DoorCommon.Reference",
+            "pset:Pset_DoorCommon.ThermalTransmittance",
+            "pset:Pset_ManufacturerTypeInformation.Manufacturer",
+            "pset:Pset_ProductRequirements.Category",
+            "pset:Pset_QuantityTakeOff.Reference",
+            "relationship:type"
+          ],
+          "updated": []
+        }
+      },
+      "operation_id": "door-fill-existing-1",
+      "operation_type": "fill_existing_opening_with_door"
+    }
+  ],
+  "output": {
+    "path": "E:\\code for project\\bimnet\\dataset\\processed\\ifc-repair\\phase11-live-uat\\uat-20260731T224900289758Z\\incomplete-then-feedback\\runtime\\runs\\repair-94edd8ccb3994076af171d75db5c0549\\staging\\application-candidate.ifc",
+    "sha256": "221224d1eca4cab303484c2d1c92b6d352301c7f42c2a8ade01fecbcbc0dadaa"
+  },
+  "postconditions": [
+    {
+      "checks": [
+        {
+          "code": "DOOR_FILLS_OPENING",
+          "evidence": {},
+          "status": "passed"
+        },
+        {
+          "code": "OPENING_VOIDS_WALL",
+          "evidence": {},
+          "status": "passed"
+        },
+        {
+          "code": "DOOR_DIMENSIONS_MATCH",
+          "evidence": {},
+          "status": "passed"
+        },
+        {
+          "code": "DOOR_GEOMETRY_ALIGNED_WITH_OPENING",
+          "evidence": {
+            "axis_deviation_degrees": 0.0,
+            "door_bounds_in_opening_mm": {
+              "x": [
+                -991.0,
+                76.0
+              ],
+              "y": [
+                -225.0,
+                25.0
+              ],
+              "z": [
+                0.0,
+                2210.0
+              ]
+            },
+            "geometry_center_deviation_mm": 38.0,
+            "height_deviation_mm": 0.0,
+            "nominal_center_deviation_mm": 0.0,
+            "nominal_door_bounds_mm": {
+              "x": [
+                -915.0,
+                0.0
+              ],
+              "y": [
+                -200.0,
+                -200.0
+              ],
+              "z": [
+                0.0,
+                2134.0
+              ]
+            },
+            "normal_axis_intersection_mm": 200.0,
+            "opening_bounds_mm": {
+              "x": [
+                -915.0,
+                0.0
+              ],
+              "y": [
+                -200.0,
+                0.0
+              ],
+              "z": [
+                0.0,
+                2134.0
+              ]
+            },
+            "projected_overlap_ratio": 1.0,
+            "thresholds": {
+              "maximum_axis_deviation_degrees": 0.1,
+              "maximum_center_deviation_mm": 5.0,
+              "maximum_dimension_deviation_mm": 1.0,
+              "minimum_projected_overlap_ratio": 0.95
+            },
+            "valid": true,
+            "width_deviation_mm": 0.0
+          },
+          "status": "passed"
+        },
+        {
+          "code": "DOOR_STOREY_MATCHES_HOST",
+          "evidence": {
+            "actual_storey_global_ids": [
+              "2nxdYR2RHCDBiKJuiQr1XP"
+            ],
+            "expected_storey_global_id": "2nxdYR2RHCDBiKJuiQr1XP",
+            "resolution_error": null
+          },
+          "status": "passed"
+        },
+        {
+          "code": "DOOR_TYPE_BOUND",
+          "evidence": {},
+          "status": "passed"
+        }
+      ],
+      "evidence": {
+        "actual_storey_global_ids": [
+          "2nxdYR2RHCDBiKJuiQr1XP"
+        ],
+        "door_global_id": "05Qnu_IcfGCQq8JRG5j4OR",
+        "expected_storey_global_id": "2nxdYR2RHCDBiKJuiQr1XP",
+        "geometry_alignment": {
+          "axis_deviation_degrees": 0.0,
+          "door_bounds_in_opening_mm": {
+            "x": [
+              -991.0,
+              76.0
+            ],
+            "y": [
+              -225.0,
+              25.0
+            ],
+            "z": [
+              0.0,
+              2210.0
+            ]
+          },
+          "geometry_center_deviation_mm": 38.0,
+          "height_deviation_mm": 0.0,
+          "nominal_center_deviation_mm": 0.0,
+          "nominal_door_bounds_mm": {
+            "x": [
+              -915.0,
+              0.0
+            ],
+            "y": [
+              -200.0,
+              -200.0
+            ],
+            "z": [
+              0.0,
+              2134.0
+            ]
+          },
+          "normal_axis_intersection_mm": 200.0,
+          "opening_bounds_mm": {
+            "x": [
+              -915.0,
+              0.0
+            ],
+            "y": [
+              -200.0,
+              0.0
+            ],
+            "z": [
+              0.0,
+              2134.0
+            ]
+          },
+          "projected_overlap_ratio": 1.0,
+          "thresholds": {
+            "maximum_axis_deviation_degrees": 0.1,
+            "maximum_center_deviation_mm": 5.0,
+            "maximum_dimension_deviation_mm": 1.0,
+            "minimum_projected_overlap_ratio": 0.95
+          },
+          "valid": true,
+          "width_deviation_mm": 0.0
+        },
+        "host_wall_global_id": "2cXV28XOjE6f6irgi0COfF",
+        "opening_global_id": "2cXV28XOjE6f6irhW0COhu"
+      },
+      "issues": [],
+      "operation_id": "door-fill-existing-1",
+      "valid": true
+    }
+  ],
+  "published": true,
+  "schema_version": "text2ifc/ifc-repair-application/0.1",
+  "valid": true
+}

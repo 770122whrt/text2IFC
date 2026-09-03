@@ -64,6 +64,7 @@ def build_design_geometry_expectation(
     roof: dict[str, dict[str, Any]] = {}
     stairs: dict[str, dict[str, Any]] = {}
     floor_openings: dict[str, dict[str, Any]] = {}
+    products: dict[str, dict[str, Any]] = {}
     unresolved: list[dict[str, Any]] = []
 
     for space_index, space in enumerate(_records(expected_facts.get("spaces"))):
@@ -203,6 +204,29 @@ def build_design_geometry_expectation(
             "require_steps": True,
             "source_fact_refs": [path],
         }
+
+    for product_index, product in enumerate(_records(expected_facts.get("products"))):
+        product_id = _string(product.get("id"))
+        ifc_class = _string(product.get("ifc_class"))
+        geometry = product.get("geometry")
+        path = f"/products/{product_index}/geometry"
+        linear_bbox = _linear_product_bbox(geometry)
+        if product_id is None or ifc_class is None or linear_bbox is None:
+            unresolved.append(
+                _unresolved_geometry(path=path, reason="linear_product_geometry_missing")
+            )
+            continue
+        record = {
+            "ifc_class": ifc_class,
+            "geometry_kind": "linear_segment",
+            "bbox": linear_bbox,
+            "bbox_issue_code": "LINEAR_PRODUCT_BBOX_MISMATCH",
+            "source_fact_refs": [path],
+        }
+        alignment_target = _string(product.get("alignment_target"))
+        if alignment_target is not None:
+            record["alignment_target"] = alignment_target
+        products[product_id] = record
 
     explicit_wall_ids: set[str] = set()
     for wall_index, wall in enumerate(_records(expected_facts.get("walls"))):
@@ -383,8 +407,58 @@ def build_design_geometry_expectation(
         "roof": roof,
         "stairs": stairs,
         "floor_openings": floor_openings,
+        "products": products,
         "unresolved": unresolved,
     }
+
+
+def _linear_product_bbox(value: Any) -> dict[str, list[float]] | None:
+    if not isinstance(value, Mapping) or value.get("kind") != "linear_segment":
+        return None
+    start = _point3(value.get("start_mm"))
+    end = _point3(value.get("end_mm"))
+    height = _number(value.get("height_mm"))
+    thickness = _number(value.get("thickness_mm"))
+    if (
+        start is None
+        or end is None
+        or height is None
+        or thickness is None
+        or height <= 0
+        or thickness <= 0
+        or start[2] != end[2]
+        or start == end
+    ):
+        return None
+    half_thickness = thickness / 2
+    if start[1] == end[1]:
+        return _bbox(
+            min(start[0], end[0]),
+            max(start[0], end[0]),
+            start[1] - half_thickness,
+            start[1] + half_thickness,
+            start[2],
+            start[2] + height,
+        )
+    if start[0] == end[0]:
+        return _bbox(
+            start[0] - half_thickness,
+            start[0] + half_thickness,
+            min(start[1], end[1]),
+            max(start[1], end[1]),
+            start[2],
+            start[2] + height,
+        )
+    return None
+
+
+def _point3(value: Any) -> tuple[float, float, float] | None:
+    if not isinstance(value, list) or len(value) != 3:
+        return None
+    coordinates = tuple(_number(item) for item in value)
+    if any(item is None for item in coordinates):
+        return None
+    return coordinates  # type: ignore[return-value]
 
 
 def _records(value: Any) -> list[Mapping[str, Any]]:

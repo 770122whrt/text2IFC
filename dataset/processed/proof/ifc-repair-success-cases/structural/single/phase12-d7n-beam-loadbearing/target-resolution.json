@@ -1,0 +1,226 @@
+{
+  "candidates": [],
+  "model_fingerprint": "sha256:d2a9c507c437974209c1713fc994929f890c445ad6b4c2cdbf839dbd78ebfab2",
+  "operation_id": null,
+  "operations": [
+    {
+      "authorized_semantics": [
+        {
+          "authorization": "deterministic_policy",
+          "formal_attributes": {},
+          "global_id": "1LXaZt8AfLKva17OX6BTm4",
+          "ifc_class": "IfcBeamType",
+          "kind": "system_generated_type",
+          "operation_id": "phase12-d7n-beam-loadbearing-beam-1",
+          "template": {
+            "name": "Text2IFC generated beam type phase12-d7n-beam-loadbearing-beam-1",
+            "predefined_type": "NOTDEFINED",
+            "section": {
+              "height_mm": 500.0,
+              "shape": "rectangle",
+              "width_mm": 300.0
+            },
+            "section_digest": "sha256:db582be0ced28b6b6de912e19cf652f4c387aca91e7d30984152748192f244eb"
+          },
+          "template_digest": "sha256:39100f2dadf4cf5c3be99cfcc08776c7ee817de7089ef2a32516a58761f2fa32",
+          "template_id": "text2ifc-rectangular-beam-type",
+          "template_version": "0.1"
+        },
+        {
+          "classification": "standard",
+          "confirmation_hash": null,
+          "confirmation_ref": null,
+          "kind": "authorized_property_fact",
+          "model_fingerprint": "sha256:d2a9c507c437974209c1713fc994929f890c445ad6b4c2cdbf839dbd78ebfab2",
+          "operation_id": "phase12-d7n-beam-loadbearing-beam-1",
+          "ownership": "occurrence_direct",
+          "property_hash": "sha256:05d2ef541751e472c7800f7c7154f54f1718dcbea8c0f12077825b00153cd53a",
+          "property_name": "LoadBearing",
+          "request_hash": "sha256:6ed8264a6c230f73c3277f039d50b79a33a74e4a589b8d12519d46ab6707c808",
+          "set_name": "Pset_BeamCommon",
+          "source": {
+            "excerpt": "beam is load bearing",
+            "reference": "request:/operations/0/properties/0",
+            "source_kind": "user_request"
+          },
+          "target_global_id": "0K_MqVdrL0JOCMi_Gblgiw",
+          "unit": null,
+          "value": true,
+          "value_type": "IfcBoolean"
+        }
+      ],
+      "context": {
+        "base_model_fingerprint": "sha256:d2a9c507c437974209c1713fc994929f890c445ad6b4c2cdbf839dbd78ebfab2",
+        "candidate_targets": [
+          {
+            "evidence": [
+              {
+                "candidate_value": "0K_MqVdrL0JOCMi_Gblgiw",
+                "field": "global_id",
+                "provenance": "IfcRoot.GlobalId",
+                "query_value": "0K_MqVdrL0JOCMi_Gblgiw",
+                "state": "matched"
+              },
+              {
+                "candidate_value": "IfcBuildingStorey",
+                "field": "ifc_class",
+                "provenance": "IfcProduct.is_a",
+                "query_value": [
+                  "IfcBuildingStorey"
+                ],
+                "state": "matched"
+              },
+              {
+                "candidate_value": "Level 3",
+                "field": "name",
+                "provenance": "aliases",
+                "query_value": null,
+                "state": "unavailable"
+              },
+              {
+                "candidate_value": null,
+                "field": "storey",
+                "provenance": "spatial_relationship",
+                "query_value": null,
+                "state": "unavailable"
+              },
+              {
+                "candidate_value": "structural_storey_target",
+                "field": "geometry_capability",
+                "provenance": "adapter",
+                "query_value": null,
+                "state": "unavailable"
+              }
+            ],
+            "facets": {
+              "editable_target": false
+            },
+            "geometry": {},
+            "geometry_capability": "structural_storey_target",
+            "ifc_class": "IfcBuildingStorey",
+            "ifc_global_id": "0K_MqVdrL0JOCMi_Gblgiw",
+            "name": "Level 3",
+            "properties": [],
+            "retrieval": {
+              "fused_score": 1000,
+              "matched_fields": [
+                "global_id"
+              ],
+              "retriever": "structured",
+              "retriever_version": "text2ifc/structured-retriever/0.1",
+              "source_score": 1000
+            },
+            "storey_name": null,
+            "target_id": "ifc:0K_MqVdrL0JOCMi_Gblgiw",
+            "type_name": null
+          }
+        ],
+        "context_budget": {
+          "actual_bytes": 1934,
+          "estimated_tokens": 484,
+          "max_bytes": 48000,
+          "max_candidates": 5,
+          "mode": "normal",
+          "omitted_candidate_count": 0,
+          "selected_candidate_count": 1,
+          "token_estimator": "ceil(utf8_bytes/4)"
+        },
+        "model_constraints": {
+          "facts_source": "current_ifc_only",
+          "ifc_schema": "IFC2X3",
+          "index_schema_version": "text2ifc/ifc-index/0.5",
+          "source_ifc_sha256": "sha256:d2a9c507c437974209c1713fc994929f890c445ad6b4c2cdbf839dbd78ebfab2",
+          "vector_retrieval": "disabled"
+        },
+        "model_fingerprint": "sha256:d2a9c507c437974209c1713fc994929f890c445ad6b4c2cdbf839dbd78ebfab2",
+        "operation_hints": [
+          "add_beam"
+        ],
+        "query_schema_version": "text2ifc/ifc-target-query/0.1",
+        "resolution_schema_version": "text2ifc/ifc-target-resolution/0.1",
+        "resolved_target_id": "ifc:0K_MqVdrL0JOCMi_Gblgiw",
+        "schema_version": "text2ifc/ifc-target-context/0.1",
+        "score_version": "text2ifc/target-score/0.1",
+        "status": "resolved"
+      },
+      "evidence_pointers": [
+        "resolved:/operations/phase12-d7n-beam-loadbearing-beam-1/context/candidate_targets/0"
+      ],
+      "operation_id": "phase12-d7n-beam-loadbearing-beam-1",
+      "operation_type": "add_beam",
+      "parameters": {
+        "axis": {
+          "end": {
+            "x_mm": 103000.0,
+            "y_mm": 104000.0,
+            "z_mm": 0.0
+          },
+          "start": {
+            "x_mm": 100000.0,
+            "y_mm": 100000.0,
+            "z_mm": 0.0
+          }
+        },
+        "section": {
+          "height_mm": 500,
+          "shape": "rectangle",
+          "width_mm": 300
+        }
+      },
+      "scope_ids": [
+        "0K_MqVdrL0JOCMi_Gblgiw"
+      ],
+      "target_global_id": "0K_MqVdrL0JOCMi_Gblgiw"
+    }
+  ],
+  "property_preview": null,
+  "property_resolutions": [
+    {
+      "candidates": [
+        {
+          "authority": "ifc2x3_psd",
+          "canonical_path": "Pset_BeamCommon.LoadBearing",
+          "keyword_score": null,
+          "record_id": "sha256:a982a2019210d754e1821b28b073b9429d607e63231788f6de05c725afb4af28",
+          "retrieval_paths": [
+            "reviewed_alias"
+          ],
+          "source_hash": "sha256:380093112f9675595e0d0b7a6e50a4a5a94e8b9ddddd7be6ffae64b3fb15ab75",
+          "source_ref": "R2x3_TC1/psd/IfcSharedBldgElements/Pset_BeamCommon.xml",
+          "vector_score": null
+        }
+      ],
+      "decision": {
+        "exact_intent": {
+          "property_name": "LoadBearing",
+          "requested_unit": null,
+          "requested_value_type": "IfcBoolean",
+          "scope": "occurrence_direct",
+          "set_name": "Pset_BeamCommon",
+          "value": true
+        },
+        "reason_code": "REVIEWED_ALIAS_EXACT",
+        "schema_version": "text2ifc/property-resolution-decision/0.1",
+        "status": "standard_resolved"
+      },
+      "operation_id": "phase12-d7n-beam-loadbearing-beam-1",
+      "query": {
+        "property_phrase": "beam is load bearing",
+        "raw_unit": null,
+        "raw_value": true,
+        "schema_version": "text2ifc/property-knowledge-query/0.1",
+        "scope": "occurrence_direct",
+        "source": {
+          "excerpt": "beam is load bearing",
+          "reference": "request:/operations/0/properties/0",
+          "source_kind": "user_request"
+        },
+        "target_ifc_class": "IfcBeam"
+      }
+    }
+  ],
+  "reason_code": null,
+  "schema_version": "text2ifc/ifc-resolution-flow/0.1",
+  "source_ifc_sha256": "sha256:d2a9c507c437974209c1713fc994929f890c445ad6b4c2cdbf839dbd78ebfab2",
+  "status": "resolved"
+}

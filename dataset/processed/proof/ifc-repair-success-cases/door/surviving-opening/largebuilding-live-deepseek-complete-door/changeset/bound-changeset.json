@@ -1,0 +1,1262 @@
+{
+  "base_model_fingerprint": "sha256:37c395b695f2efad78598811b643987e53a347fb0f33c07698eff29818629390",
+  "binding_status": "bound",
+  "changeset_id": "changeset-door-1",
+  "evidence_refs": [
+    "resolved:/operations/door-1/context/candidate_targets/0"
+  ],
+  "operations": [
+    {
+      "evidence_refs": [
+        "resolved:/operations/door-1/context/candidate_targets/0"
+      ],
+      "operation_id": "door-1",
+      "operation_type": "fill_existing_opening_with_door",
+      "parameters": {
+        "derivation": {
+          "digest": "sha256:15dcb46c999c1782ca1e0dbaebbace114ebdef6992a8abd8e66ff81df6b88b47",
+          "position": {
+            "formula": "existing_opening_center",
+            "source_anchor": "opening:2cXV28XOjE6f6irhW0COhu"
+          }
+        },
+        "door": {
+          "operation_derivation": {
+            "formal_attribute": "OperationType",
+            "source": "door_style:2cXV28XOjE6f6irhu0COgZ"
+          },
+          "operation_type": "SINGLE_SWING_RIGHT",
+          "overall_height_mm": 2134.0,
+          "overall_width_mm": 915.0
+        },
+        "fit_existing_opening": true,
+        "host_wall_global_id": "2cXV28XOjE6f6irgi0COfF",
+        "opening": {
+          "derivation": {
+            "formula": "fit_existing_opening",
+            "source": "opening:2cXV28XOjE6f6irhW0COhu"
+          },
+          "dimension_meaning": "overall_opening",
+          "height_mm": 2134.0,
+          "sill_height_mm": 0.0,
+          "width_mm": 915.0
+        },
+        "position": {
+          "center_offset_mm": 1657.5,
+          "reference": "wall_local_start"
+        }
+      },
+      "semantic_assignments": [
+        {
+          "applicability": "required",
+          "authoring_action": "set_attribute",
+          "derivation": null,
+          "fact_key": "attribute:OverallHeight",
+          "operation_id": "door-1",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "operation:door-1",
+            "registered-door-parameter-policy:0.1"
+          ],
+          "scope": "door_occurrence",
+          "source_fact_key": "attribute:OverallHeight",
+          "source_kind": "deterministic_derived",
+          "source_ref": "resolved:/operations/door-1/parameters/door",
+          "unit": null,
+          "value": 2134.0,
+          "value_type": "IfcPositiveLengthMeasure"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "set_attribute",
+          "derivation": null,
+          "fact_key": "attribute:OverallWidth",
+          "operation_id": "door-1",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "operation:door-1",
+            "registered-door-parameter-policy:0.1"
+          ],
+          "scope": "door_occurrence",
+          "source_fact_key": "attribute:OverallWidth",
+          "source_kind": "deterministic_derived",
+          "source_ref": "resolved:/operations/door-1/parameters/door",
+          "unit": null,
+          "value": 915.0,
+          "value_type": "IfcPositiveLengthMeasure"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "inherit_from_type",
+          "derivation": null,
+          "fact_key": "label:Name",
+          "operation_id": "door-1",
+          "ownership": "type_inherited",
+          "provenance": [
+            "type-index:type:2cXV28XOjE6f6irhu0COgZ",
+            "type_record:2cXV28XOjE6f6irhu0COgZ",
+            "user_authorization:explicit_request_reference",
+            "operation:door-1"
+          ],
+          "scope": "door_occurrence",
+          "source_fact_key": "label:Name",
+          "source_kind": "type_inherited",
+          "source_ref": "user-approved-prototype:2cXV28XOjE6f6irhu0COgZ",
+          "unit": null,
+          "value": "M_Single-Flush:Inside Door",
+          "value_type": "IfcLabel"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "inherit_from_type",
+          "derivation": null,
+          "fact_key": "material:Door---Frame",
+          "operation_id": "door-1",
+          "ownership": "type_inherited",
+          "provenance": [
+            "current_ifc:#3223",
+            "IfcRelAssociatesMaterial:#34782",
+            "IfcMaterialList:#3248",
+            "authority-source:user-approved-prototype:2cXV28XOjE6f6irhu0COgZ",
+            "relationship:guid:2LOLWAiV90B8ywliDGp42A",
+            "resource:step:3248",
+            "type_record:2cXV28XOjE6f6irhu0COgZ",
+            "user_authorization:explicit_request_reference",
+            "operation:door-1"
+          ],
+          "scope": "door_occurrence",
+          "source_fact_key": "material:Door---Frame",
+          "source_kind": "type_inherited",
+          "source_ref": "resource:step:3248",
+          "unit": null,
+          "value": "Door - Frame",
+          "value_type": "IfcMaterial"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "inherit_from_type",
+          "derivation": null,
+          "fact_key": "material:Door---Panel",
+          "operation_id": "door-1",
+          "ownership": "type_inherited",
+          "provenance": [
+            "current_ifc:#3223",
+            "IfcRelAssociatesMaterial:#34782",
+            "IfcMaterialList:#3248",
+            "authority-source:user-approved-prototype:2cXV28XOjE6f6irhu0COgZ",
+            "relationship:guid:2LOLWAiV90B8ywliDGp42A",
+            "resource:step:3248",
+            "type_record:2cXV28XOjE6f6irhu0COgZ",
+            "user_authorization:explicit_request_reference",
+            "operation:door-1"
+          ],
+          "scope": "door_occurrence",
+          "source_fact_key": "material:Door---Panel",
+          "source_kind": "type_inherited",
+          "source_ref": "resource:step:3248",
+          "unit": null,
+          "value": "Door - Panel",
+          "value_type": "IfcMaterial"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "inherit_from_type",
+          "derivation": null,
+          "fact_key": "pset:Analytical-Properties.Analytic-Construction",
+          "operation_id": "door-1",
+          "ownership": "type_inherited",
+          "provenance": [
+            "type-index:type:2cXV28XOjE6f6irhu0COgZ",
+            "ifcopenshell.util.element.get_psets:direct",
+            "type_record:2cXV28XOjE6f6irhu0COgZ",
+            "user_authorization:explicit_request_reference",
+            "operation:door-1"
+          ],
+          "scope": "door_occurrence",
+          "source_fact_key": "pset:Analytical-Properties.Analytic-Construction",
+          "source_kind": "type_inherited",
+          "source_ref": "user-approved-prototype:2cXV28XOjE6f6irhu0COgZ",
+          "unit": null,
+          "value": "Metal",
+          "value_type": "IfcText"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "inherit_from_type",
+          "derivation": null,
+          "fact_key": "pset:Analytical-Properties.Define-Thermal-Properties-by",
+          "operation_id": "door-1",
+          "ownership": "type_inherited",
+          "provenance": [
+            "type-index:type:2cXV28XOjE6f6irhu0COgZ",
+            "ifcopenshell.util.element.get_psets:direct",
+            "type_record:2cXV28XOjE6f6irhu0COgZ",
+            "user_authorization:explicit_request_reference",
+            "operation:door-1"
+          ],
+          "scope": "door_occurrence",
+          "source_fact_key": "pset:Analytical-Properties.Define-Thermal-Properties-by",
+          "source_kind": "type_inherited",
+          "source_ref": "user-approved-prototype:2cXV28XOjE6f6irhu0COgZ",
+          "unit": null,
+          "value": "Schematic Type",
+          "value_type": "IfcIdentifier"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "inherit_from_type",
+          "derivation": null,
+          "fact_key": "pset:Analytical-Properties.Heat-Transfer-Coefficient-U",
+          "operation_id": "door-1",
+          "ownership": "type_inherited",
+          "provenance": [
+            "type-index:type:2cXV28XOjE6f6irhu0COgZ",
+            "ifcopenshell.util.element.get_psets:direct",
+            "type_record:2cXV28XOjE6f6irhu0COgZ",
+            "user_authorization:explicit_request_reference",
+            "operation:door-1"
+          ],
+          "scope": "door_occurrence",
+          "source_fact_key": "pset:Analytical-Properties.Heat-Transfer-Coefficient-U",
+          "source_kind": "type_inherited",
+          "source_ref": "user-approved-prototype:2cXV28XOjE6f6irhu0COgZ",
+          "unit": null,
+          "value": 3.7021,
+          "value_type": "IfcReal"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "inherit_from_type",
+          "derivation": null,
+          "fact_key": "pset:Analytical-Properties.Solar-Heat-Gain-Coefficient",
+          "operation_id": "door-1",
+          "ownership": "type_inherited",
+          "provenance": [
+            "type-index:type:2cXV28XOjE6f6irhu0COgZ",
+            "ifcopenshell.util.element.get_psets:direct",
+            "type_record:2cXV28XOjE6f6irhu0COgZ",
+            "user_authorization:explicit_request_reference",
+            "operation:door-1"
+          ],
+          "scope": "door_occurrence",
+          "source_fact_key": "pset:Analytical-Properties.Solar-Heat-Gain-Coefficient",
+          "source_kind": "type_inherited",
+          "source_ref": "user-approved-prototype:2cXV28XOjE6f6irhu0COgZ",
+          "unit": null,
+          "value": 0.0,
+          "value_type": "IfcReal"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "inherit_from_type",
+          "derivation": null,
+          "fact_key": "pset:Analytical-Properties.Thermal-Resistance-R",
+          "operation_id": "door-1",
+          "ownership": "type_inherited",
+          "provenance": [
+            "type-index:type:2cXV28XOjE6f6irhu0COgZ",
+            "ifcopenshell.util.element.get_psets:direct",
+            "type_record:2cXV28XOjE6f6irhu0COgZ",
+            "user_authorization:explicit_request_reference",
+            "operation:door-1"
+          ],
+          "scope": "door_occurrence",
+          "source_fact_key": "pset:Analytical-Properties.Thermal-Resistance-R",
+          "source_kind": "type_inherited",
+          "source_ref": "user-approved-prototype:2cXV28XOjE6f6irhu0COgZ",
+          "unit": null,
+          "value": 0.270116960643959,
+          "value_type": "IfcReal"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "inherit_from_type",
+          "derivation": null,
+          "fact_key": "pset:Analytical-Properties.Visual-Light-Transmittance",
+          "operation_id": "door-1",
+          "ownership": "type_inherited",
+          "provenance": [
+            "type-index:type:2cXV28XOjE6f6irhu0COgZ",
+            "ifcopenshell.util.element.get_psets:direct",
+            "type_record:2cXV28XOjE6f6irhu0COgZ",
+            "user_authorization:explicit_request_reference",
+            "operation:door-1"
+          ],
+          "scope": "door_occurrence",
+          "source_fact_key": "pset:Analytical-Properties.Visual-Light-Transmittance",
+          "source_kind": "type_inherited",
+          "source_ref": "user-approved-prototype:2cXV28XOjE6f6irhu0COgZ",
+          "unit": null,
+          "value": 0.0,
+          "value_type": "IfcReal"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "inherit_from_type",
+          "derivation": null,
+          "fact_key": "pset:Construction.Function",
+          "operation_id": "door-1",
+          "ownership": "type_inherited",
+          "provenance": [
+            "type-index:type:2cXV28XOjE6f6irhu0COgZ",
+            "ifcopenshell.util.element.get_psets:direct",
+            "type_record:2cXV28XOjE6f6irhu0COgZ",
+            "user_authorization:explicit_request_reference",
+            "operation:door-1"
+          ],
+          "scope": "door_occurrence",
+          "source_fact_key": "pset:Construction.Function",
+          "source_kind": "type_inherited",
+          "source_ref": "user-approved-prototype:2cXV28XOjE6f6irhu0COgZ",
+          "unit": null,
+          "value": "Interior",
+          "value_type": "IfcIdentifier"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "inherit_from_type",
+          "derivation": null,
+          "fact_key": "pset:Construction.Wall-Closure",
+          "operation_id": "door-1",
+          "ownership": "type_inherited",
+          "provenance": [
+            "type-index:type:2cXV28XOjE6f6irhu0COgZ",
+            "ifcopenshell.util.element.get_psets:direct",
+            "type_record:2cXV28XOjE6f6irhu0COgZ",
+            "user_authorization:explicit_request_reference",
+            "operation:door-1"
+          ],
+          "scope": "door_occurrence",
+          "source_fact_key": "pset:Construction.Wall-Closure",
+          "source_kind": "type_inherited",
+          "source_ref": "user-approved-prototype:2cXV28XOjE6f6irhu0COgZ",
+          "unit": null,
+          "value": "By host",
+          "value_type": "IfcIdentifier"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "inherit_from_type",
+          "derivation": null,
+          "fact_key": "pset:Custom_Pset.Height",
+          "operation_id": "door-1",
+          "ownership": "type_inherited",
+          "provenance": [
+            "type-index:type:2cXV28XOjE6f6irhu0COgZ",
+            "ifcopenshell.util.element.get_psets:direct",
+            "type_record:2cXV28XOjE6f6irhu0COgZ",
+            "user_authorization:explicit_request_reference",
+            "operation:door-1"
+          ],
+          "scope": "door_occurrence",
+          "source_fact_key": "pset:Custom_Pset.Height",
+          "source_kind": "type_inherited",
+          "source_ref": "user-approved-prototype:2cXV28XOjE6f6irhu0COgZ",
+          "unit": null,
+          "value": 2134.0,
+          "value_type": "IfcLengthMeasure"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "inherit_from_type",
+          "derivation": null,
+          "fact_key": "pset:Custom_Pset.Hyperlink",
+          "operation_id": "door-1",
+          "ownership": "type_inherited",
+          "provenance": [
+            "type-index:type:2cXV28XOjE6f6irhu0COgZ",
+            "ifcopenshell.util.element.get_psets:direct",
+            "type_record:2cXV28XOjE6f6irhu0COgZ",
+            "user_authorization:explicit_request_reference",
+            "operation:door-1"
+          ],
+          "scope": "door_occurrence",
+          "source_fact_key": "pset:Custom_Pset.Hyperlink",
+          "source_kind": "type_inherited",
+          "source_ref": "user-approved-prototype:2cXV28XOjE6f6irhu0COgZ",
+          "unit": null,
+          "value": "Inside door: URL",
+          "value_type": "IfcText"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "inherit_from_type",
+          "derivation": null,
+          "fact_key": "pset:Custom_Pset.Keynote",
+          "operation_id": "door-1",
+          "ownership": "type_inherited",
+          "provenance": [
+            "type-index:type:2cXV28XOjE6f6irhu0COgZ",
+            "ifcopenshell.util.element.get_psets:direct",
+            "type_record:2cXV28XOjE6f6irhu0COgZ",
+            "user_authorization:explicit_request_reference",
+            "operation:door-1"
+          ],
+          "scope": "door_occurrence",
+          "source_fact_key": "pset:Custom_Pset.Keynote",
+          "source_kind": "type_inherited",
+          "source_ref": "user-approved-prototype:2cXV28XOjE6f6irhu0COgZ",
+          "unit": null,
+          "value": "Inside door: Keynote",
+          "value_type": "IfcLabel"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "inherit_from_type",
+          "derivation": null,
+          "fact_key": "pset:Custom_Pset.TypeDescription",
+          "operation_id": "door-1",
+          "ownership": "type_inherited",
+          "provenance": [
+            "type-index:type:2cXV28XOjE6f6irhu0COgZ",
+            "ifcopenshell.util.element.get_psets:direct",
+            "type_record:2cXV28XOjE6f6irhu0COgZ",
+            "user_authorization:explicit_request_reference",
+            "operation:door-1"
+          ],
+          "scope": "door_occurrence",
+          "source_fact_key": "pset:Custom_Pset.TypeDescription",
+          "source_kind": "type_inherited",
+          "source_ref": "user-approved-prototype:2cXV28XOjE6f6irhu0COgZ",
+          "unit": null,
+          "value": "Inside door: Description",
+          "value_type": "IfcText"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "inherit_from_type",
+          "derivation": null,
+          "fact_key": "pset:Custom_Pset.TypeMark",
+          "operation_id": "door-1",
+          "ownership": "type_inherited",
+          "provenance": [
+            "type-index:type:2cXV28XOjE6f6irhu0COgZ",
+            "ifcopenshell.util.element.get_psets:direct",
+            "type_record:2cXV28XOjE6f6irhu0COgZ",
+            "user_authorization:explicit_request_reference",
+            "operation:door-1"
+          ],
+          "scope": "door_occurrence",
+          "source_fact_key": "pset:Custom_Pset.TypeMark",
+          "source_kind": "type_inherited",
+          "source_ref": "user-approved-prototype:2cXV28XOjE6f6irhu0COgZ",
+          "unit": null,
+          "value": "Inside door: Type Mark",
+          "value_type": "IfcLabel"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "inherit_from_type",
+          "derivation": null,
+          "fact_key": "pset:Custom_Pset.Width",
+          "operation_id": "door-1",
+          "ownership": "type_inherited",
+          "provenance": [
+            "type-index:type:2cXV28XOjE6f6irhu0COgZ",
+            "ifcopenshell.util.element.get_psets:direct",
+            "type_record:2cXV28XOjE6f6irhu0COgZ",
+            "user_authorization:explicit_request_reference",
+            "operation:door-1"
+          ],
+          "scope": "door_occurrence",
+          "source_fact_key": "pset:Custom_Pset.Width",
+          "source_kind": "type_inherited",
+          "source_ref": "user-approved-prototype:2cXV28XOjE6f6irhu0COgZ",
+          "unit": null,
+          "value": 915.0,
+          "value_type": "IfcLengthMeasure"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "inherit_from_type",
+          "derivation": null,
+          "fact_key": "pset:Dimensions.Height",
+          "operation_id": "door-1",
+          "ownership": "type_inherited",
+          "provenance": [
+            "type-index:type:2cXV28XOjE6f6irhu0COgZ",
+            "ifcopenshell.util.element.get_psets:direct",
+            "type_record:2cXV28XOjE6f6irhu0COgZ",
+            "user_authorization:explicit_request_reference",
+            "operation:door-1"
+          ],
+          "scope": "door_occurrence",
+          "source_fact_key": "pset:Dimensions.Height",
+          "source_kind": "type_inherited",
+          "source_ref": "user-approved-prototype:2cXV28XOjE6f6irhu0COgZ",
+          "unit": null,
+          "value": 2134.0,
+          "value_type": "IfcLengthMeasure"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "inherit_from_type",
+          "derivation": null,
+          "fact_key": "pset:Dimensions.Thickness",
+          "operation_id": "door-1",
+          "ownership": "type_inherited",
+          "provenance": [
+            "type-index:type:2cXV28XOjE6f6irhu0COgZ",
+            "ifcopenshell.util.element.get_psets:direct",
+            "type_record:2cXV28XOjE6f6irhu0COgZ",
+            "user_authorization:explicit_request_reference",
+            "operation:door-1"
+          ],
+          "scope": "door_occurrence",
+          "source_fact_key": "pset:Dimensions.Thickness",
+          "source_kind": "type_inherited",
+          "source_ref": "user-approved-prototype:2cXV28XOjE6f6irhu0COgZ",
+          "unit": null,
+          "value": 51.0,
+          "value_type": "IfcLengthMeasure"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "inherit_from_type",
+          "derivation": null,
+          "fact_key": "pset:Dimensions.Trim-Projection-Ext",
+          "operation_id": "door-1",
+          "ownership": "type_inherited",
+          "provenance": [
+            "type-index:type:2cXV28XOjE6f6irhu0COgZ",
+            "ifcopenshell.util.element.get_psets:direct",
+            "type_record:2cXV28XOjE6f6irhu0COgZ",
+            "user_authorization:explicit_request_reference",
+            "operation:door-1"
+          ],
+          "scope": "door_occurrence",
+          "source_fact_key": "pset:Dimensions.Trim-Projection-Ext",
+          "source_kind": "type_inherited",
+          "source_ref": "user-approved-prototype:2cXV28XOjE6f6irhu0COgZ",
+          "unit": null,
+          "value": 25.0,
+          "value_type": "IfcLengthMeasure"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "inherit_from_type",
+          "derivation": null,
+          "fact_key": "pset:Dimensions.Trim-Projection-Int",
+          "operation_id": "door-1",
+          "ownership": "type_inherited",
+          "provenance": [
+            "type-index:type:2cXV28XOjE6f6irhu0COgZ",
+            "ifcopenshell.util.element.get_psets:direct",
+            "type_record:2cXV28XOjE6f6irhu0COgZ",
+            "user_authorization:explicit_request_reference",
+            "operation:door-1"
+          ],
+          "scope": "door_occurrence",
+          "source_fact_key": "pset:Dimensions.Trim-Projection-Int",
+          "source_kind": "type_inherited",
+          "source_ref": "user-approved-prototype:2cXV28XOjE6f6irhu0COgZ",
+          "unit": null,
+          "value": 25.0,
+          "value_type": "IfcLengthMeasure"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "inherit_from_type",
+          "derivation": null,
+          "fact_key": "pset:Dimensions.Trim-Width",
+          "operation_id": "door-1",
+          "ownership": "type_inherited",
+          "provenance": [
+            "type-index:type:2cXV28XOjE6f6irhu0COgZ",
+            "ifcopenshell.util.element.get_psets:direct",
+            "type_record:2cXV28XOjE6f6irhu0COgZ",
+            "user_authorization:explicit_request_reference",
+            "operation:door-1"
+          ],
+          "scope": "door_occurrence",
+          "source_fact_key": "pset:Dimensions.Trim-Width",
+          "source_kind": "type_inherited",
+          "source_ref": "user-approved-prototype:2cXV28XOjE6f6irhu0COgZ",
+          "unit": null,
+          "value": 76.0,
+          "value_type": "IfcLengthMeasure"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "inherit_from_type",
+          "derivation": null,
+          "fact_key": "pset:Dimensions.Width",
+          "operation_id": "door-1",
+          "ownership": "type_inherited",
+          "provenance": [
+            "type-index:type:2cXV28XOjE6f6irhu0COgZ",
+            "ifcopenshell.util.element.get_psets:direct",
+            "type_record:2cXV28XOjE6f6irhu0COgZ",
+            "user_authorization:explicit_request_reference",
+            "operation:door-1"
+          ],
+          "scope": "door_occurrence",
+          "source_fact_key": "pset:Dimensions.Width",
+          "source_kind": "type_inherited",
+          "source_ref": "user-approved-prototype:2cXV28XOjE6f6irhu0COgZ",
+          "unit": null,
+          "value": 915.0,
+          "value_type": "IfcLengthMeasure"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "inherit_from_type",
+          "derivation": null,
+          "fact_key": "pset:Identity-Data.Assembly-Code",
+          "operation_id": "door-1",
+          "ownership": "type_inherited",
+          "provenance": [
+            "type-index:type:2cXV28XOjE6f6irhu0COgZ",
+            "ifcopenshell.util.element.get_psets:direct",
+            "type_record:2cXV28XOjE6f6irhu0COgZ",
+            "user_authorization:explicit_request_reference",
+            "operation:door-1"
+          ],
+          "scope": "door_occurrence",
+          "source_fact_key": "pset:Identity-Data.Assembly-Code",
+          "source_kind": "type_inherited",
+          "source_ref": "user-approved-prototype:2cXV28XOjE6f6irhu0COgZ",
+          "unit": null,
+          "value": "Inside door: Assembly Code",
+          "value_type": "IfcText"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "inherit_from_type",
+          "derivation": null,
+          "fact_key": "pset:Identity-Data.Assembly-Description",
+          "operation_id": "door-1",
+          "ownership": "type_inherited",
+          "provenance": [
+            "type-index:type:2cXV28XOjE6f6irhu0COgZ",
+            "ifcopenshell.util.element.get_psets:direct",
+            "type_record:2cXV28XOjE6f6irhu0COgZ",
+            "user_authorization:explicit_request_reference",
+            "operation:door-1"
+          ],
+          "scope": "door_occurrence",
+          "source_fact_key": "pset:Identity-Data.Assembly-Description",
+          "source_kind": "type_inherited",
+          "source_ref": "user-approved-prototype:2cXV28XOjE6f6irhu0COgZ",
+          "unit": null,
+          "value": "",
+          "value_type": "IfcText"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "inherit_from_type",
+          "derivation": null,
+          "fact_key": "pset:Identity-Data.Code-Name",
+          "operation_id": "door-1",
+          "ownership": "type_inherited",
+          "provenance": [
+            "type-index:type:2cXV28XOjE6f6irhu0COgZ",
+            "ifcopenshell.util.element.get_psets:direct",
+            "type_record:2cXV28XOjE6f6irhu0COgZ",
+            "user_authorization:explicit_request_reference",
+            "operation:door-1"
+          ],
+          "scope": "door_occurrence",
+          "source_fact_key": "pset:Identity-Data.Code-Name",
+          "source_kind": "type_inherited",
+          "source_ref": "user-approved-prototype:2cXV28XOjE6f6irhu0COgZ",
+          "unit": null,
+          "value": "",
+          "value_type": "IfcText"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "inherit_from_type",
+          "derivation": null,
+          "fact_key": "pset:Identity-Data.Description",
+          "operation_id": "door-1",
+          "ownership": "type_inherited",
+          "provenance": [
+            "type-index:type:2cXV28XOjE6f6irhu0COgZ",
+            "ifcopenshell.util.element.get_psets:direct",
+            "type_record:2cXV28XOjE6f6irhu0COgZ",
+            "user_authorization:explicit_request_reference",
+            "operation:door-1"
+          ],
+          "scope": "door_occurrence",
+          "source_fact_key": "pset:Identity-Data.Description",
+          "source_kind": "type_inherited",
+          "source_ref": "user-approved-prototype:2cXV28XOjE6f6irhu0COgZ",
+          "unit": null,
+          "value": "Inside door: Description",
+          "value_type": "IfcText"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "inherit_from_type",
+          "derivation": null,
+          "fact_key": "pset:Identity-Data.Fire-Rating",
+          "operation_id": "door-1",
+          "ownership": "type_inherited",
+          "provenance": [
+            "type-index:type:2cXV28XOjE6f6irhu0COgZ",
+            "ifcopenshell.util.element.get_psets:direct",
+            "type_record:2cXV28XOjE6f6irhu0COgZ",
+            "user_authorization:explicit_request_reference",
+            "operation:door-1"
+          ],
+          "scope": "door_occurrence",
+          "source_fact_key": "pset:Identity-Data.Fire-Rating",
+          "source_kind": "type_inherited",
+          "source_ref": "user-approved-prototype:2cXV28XOjE6f6irhu0COgZ",
+          "unit": null,
+          "value": "Inside door: Fire Rating",
+          "value_type": "IfcText"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "inherit_from_type",
+          "derivation": null,
+          "fact_key": "pset:Identity-Data.Keynote",
+          "operation_id": "door-1",
+          "ownership": "type_inherited",
+          "provenance": [
+            "type-index:type:2cXV28XOjE6f6irhu0COgZ",
+            "ifcopenshell.util.element.get_psets:direct",
+            "type_record:2cXV28XOjE6f6irhu0COgZ",
+            "user_authorization:explicit_request_reference",
+            "operation:door-1"
+          ],
+          "scope": "door_occurrence",
+          "source_fact_key": "pset:Identity-Data.Keynote",
+          "source_kind": "type_inherited",
+          "source_ref": "user-approved-prototype:2cXV28XOjE6f6irhu0COgZ",
+          "unit": null,
+          "value": "Inside door: Keynote",
+          "value_type": "IfcText"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "inherit_from_type",
+          "derivation": null,
+          "fact_key": "pset:Identity-Data.Manufacturer",
+          "operation_id": "door-1",
+          "ownership": "type_inherited",
+          "provenance": [
+            "type-index:type:2cXV28XOjE6f6irhu0COgZ",
+            "ifcopenshell.util.element.get_psets:direct",
+            "type_record:2cXV28XOjE6f6irhu0COgZ",
+            "user_authorization:explicit_request_reference",
+            "operation:door-1"
+          ],
+          "scope": "door_occurrence",
+          "source_fact_key": "pset:Identity-Data.Manufacturer",
+          "source_kind": "type_inherited",
+          "source_ref": "user-approved-prototype:2cXV28XOjE6f6irhu0COgZ",
+          "unit": null,
+          "value": "Inside door: Manufacturer",
+          "value_type": "IfcText"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "inherit_from_type",
+          "derivation": null,
+          "fact_key": "pset:Identity-Data.Model",
+          "operation_id": "door-1",
+          "ownership": "type_inherited",
+          "provenance": [
+            "type-index:type:2cXV28XOjE6f6irhu0COgZ",
+            "ifcopenshell.util.element.get_psets:direct",
+            "type_record:2cXV28XOjE6f6irhu0COgZ",
+            "user_authorization:explicit_request_reference",
+            "operation:door-1"
+          ],
+          "scope": "door_occurrence",
+          "source_fact_key": "pset:Identity-Data.Model",
+          "source_kind": "type_inherited",
+          "source_ref": "user-approved-prototype:2cXV28XOjE6f6irhu0COgZ",
+          "unit": null,
+          "value": "Inside door: Model",
+          "value_type": "IfcText"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "inherit_from_type",
+          "derivation": null,
+          "fact_key": "pset:Identity-Data.OmniClass-Number",
+          "operation_id": "door-1",
+          "ownership": "type_inherited",
+          "provenance": [
+            "type-index:type:2cXV28XOjE6f6irhu0COgZ",
+            "ifcopenshell.util.element.get_psets:direct",
+            "type_record:2cXV28XOjE6f6irhu0COgZ",
+            "user_authorization:explicit_request_reference",
+            "operation:door-1"
+          ],
+          "scope": "door_occurrence",
+          "source_fact_key": "pset:Identity-Data.OmniClass-Number",
+          "source_kind": "type_inherited",
+          "source_ref": "user-approved-prototype:2cXV28XOjE6f6irhu0COgZ",
+          "unit": null,
+          "value": "23.30.10.00",
+          "value_type": "IfcText"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "inherit_from_type",
+          "derivation": null,
+          "fact_key": "pset:Identity-Data.OmniClass-Title",
+          "operation_id": "door-1",
+          "ownership": "type_inherited",
+          "provenance": [
+            "type-index:type:2cXV28XOjE6f6irhu0COgZ",
+            "ifcopenshell.util.element.get_psets:direct",
+            "type_record:2cXV28XOjE6f6irhu0COgZ",
+            "user_authorization:explicit_request_reference",
+            "operation:door-1"
+          ],
+          "scope": "door_occurrence",
+          "source_fact_key": "pset:Identity-Data.OmniClass-Title",
+          "source_kind": "type_inherited",
+          "source_ref": "user-approved-prototype:2cXV28XOjE6f6irhu0COgZ",
+          "unit": null,
+          "value": "Doors",
+          "value_type": "IfcText"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "inherit_from_type",
+          "derivation": null,
+          "fact_key": "pset:Identity-Data.Type-Comments",
+          "operation_id": "door-1",
+          "ownership": "type_inherited",
+          "provenance": [
+            "type-index:type:2cXV28XOjE6f6irhu0COgZ",
+            "ifcopenshell.util.element.get_psets:direct",
+            "type_record:2cXV28XOjE6f6irhu0COgZ",
+            "user_authorization:explicit_request_reference",
+            "operation:door-1"
+          ],
+          "scope": "door_occurrence",
+          "source_fact_key": "pset:Identity-Data.Type-Comments",
+          "source_kind": "type_inherited",
+          "source_ref": "user-approved-prototype:2cXV28XOjE6f6irhu0COgZ",
+          "unit": null,
+          "value": "Inside door: Type Comments",
+          "value_type": "IfcText"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "inherit_from_type",
+          "derivation": null,
+          "fact_key": "pset:Identity-Data.Type-Mark",
+          "operation_id": "door-1",
+          "ownership": "type_inherited",
+          "provenance": [
+            "type-index:type:2cXV28XOjE6f6irhu0COgZ",
+            "ifcopenshell.util.element.get_psets:direct",
+            "type_record:2cXV28XOjE6f6irhu0COgZ",
+            "user_authorization:explicit_request_reference",
+            "operation:door-1"
+          ],
+          "scope": "door_occurrence",
+          "source_fact_key": "pset:Identity-Data.Type-Mark",
+          "source_kind": "type_inherited",
+          "source_ref": "user-approved-prototype:2cXV28XOjE6f6irhu0COgZ",
+          "unit": null,
+          "value": "Inside door: Type Mark",
+          "value_type": "IfcText"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "inherit_from_type",
+          "derivation": null,
+          "fact_key": "pset:Identity-Data.Type-Name",
+          "operation_id": "door-1",
+          "ownership": "type_inherited",
+          "provenance": [
+            "type-index:type:2cXV28XOjE6f6irhu0COgZ",
+            "ifcopenshell.util.element.get_psets:direct",
+            "type_record:2cXV28XOjE6f6irhu0COgZ",
+            "user_authorization:explicit_request_reference",
+            "operation:door-1"
+          ],
+          "scope": "door_occurrence",
+          "source_fact_key": "pset:Identity-Data.Type-Name",
+          "source_kind": "type_inherited",
+          "source_ref": "user-approved-prototype:2cXV28XOjE6f6irhu0COgZ",
+          "unit": null,
+          "value": "Inside Door",
+          "value_type": "IfcText"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "inherit_from_type",
+          "derivation": null,
+          "fact_key": "pset:Identity-Data.URL",
+          "operation_id": "door-1",
+          "ownership": "type_inherited",
+          "provenance": [
+            "type-index:type:2cXV28XOjE6f6irhu0COgZ",
+            "ifcopenshell.util.element.get_psets:direct",
+            "type_record:2cXV28XOjE6f6irhu0COgZ",
+            "user_authorization:explicit_request_reference",
+            "operation:door-1"
+          ],
+          "scope": "door_occurrence",
+          "source_fact_key": "pset:Identity-Data.URL",
+          "source_kind": "type_inherited",
+          "source_ref": "user-approved-prototype:2cXV28XOjE6f6irhu0COgZ",
+          "unit": null,
+          "value": "Inside door: URL",
+          "value_type": "IfcText"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "inherit_from_type",
+          "derivation": null,
+          "fact_key": "pset:Materials-and-Finishes.Door-Material",
+          "operation_id": "door-1",
+          "ownership": "type_inherited",
+          "provenance": [
+            "type-index:type:2cXV28XOjE6f6irhu0COgZ",
+            "ifcopenshell.util.element.get_psets:direct",
+            "type_record:2cXV28XOjE6f6irhu0COgZ",
+            "user_authorization:explicit_request_reference",
+            "operation:door-1"
+          ],
+          "scope": "door_occurrence",
+          "source_fact_key": "pset:Materials-and-Finishes.Door-Material",
+          "source_kind": "type_inherited",
+          "source_ref": "user-approved-prototype:2cXV28XOjE6f6irhu0COgZ",
+          "unit": null,
+          "value": "Door - Panel",
+          "value_type": "IfcLabel"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "inherit_from_type",
+          "derivation": null,
+          "fact_key": "pset:Materials-and-Finishes.Frame-Material",
+          "operation_id": "door-1",
+          "ownership": "type_inherited",
+          "provenance": [
+            "type-index:type:2cXV28XOjE6f6irhu0COgZ",
+            "ifcopenshell.util.element.get_psets:direct",
+            "type_record:2cXV28XOjE6f6irhu0COgZ",
+            "user_authorization:explicit_request_reference",
+            "operation:door-1"
+          ],
+          "scope": "door_occurrence",
+          "source_fact_key": "pset:Materials-and-Finishes.Frame-Material",
+          "source_kind": "type_inherited",
+          "source_ref": "user-approved-prototype:2cXV28XOjE6f6irhu0COgZ",
+          "unit": null,
+          "value": "Door - Frame",
+          "value_type": "IfcLabel"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "inherit_from_type",
+          "derivation": null,
+          "fact_key": "pset:Other.Category",
+          "operation_id": "door-1",
+          "ownership": "type_inherited",
+          "provenance": [
+            "type-index:type:2cXV28XOjE6f6irhu0COgZ",
+            "ifcopenshell.util.element.get_psets:direct",
+            "type_record:2cXV28XOjE6f6irhu0COgZ",
+            "user_authorization:explicit_request_reference",
+            "operation:door-1"
+          ],
+          "scope": "door_occurrence",
+          "source_fact_key": "pset:Other.Category",
+          "source_kind": "type_inherited",
+          "source_ref": "user-approved-prototype:2cXV28XOjE6f6irhu0COgZ",
+          "unit": null,
+          "value": "Doors",
+          "value_type": "IfcLabel"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "inherit_from_type",
+          "derivation": null,
+          "fact_key": "pset:Other.Family-Name",
+          "operation_id": "door-1",
+          "ownership": "type_inherited",
+          "provenance": [
+            "type-index:type:2cXV28XOjE6f6irhu0COgZ",
+            "ifcopenshell.util.element.get_psets:direct",
+            "type_record:2cXV28XOjE6f6irhu0COgZ",
+            "user_authorization:explicit_request_reference",
+            "operation:door-1"
+          ],
+          "scope": "door_occurrence",
+          "source_fact_key": "pset:Other.Family-Name",
+          "source_kind": "type_inherited",
+          "source_ref": "user-approved-prototype:2cXV28XOjE6f6irhu0COgZ",
+          "unit": null,
+          "value": "M_Single-Flush",
+          "value_type": "IfcText"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "inherit_from_type",
+          "derivation": null,
+          "fact_key": "pset:Pset_ConcreteElementGeneral.FireRating",
+          "operation_id": "door-1",
+          "ownership": "type_inherited",
+          "provenance": [
+            "type-index:type:2cXV28XOjE6f6irhu0COgZ",
+            "ifcopenshell.util.element.get_psets:direct",
+            "type_record:2cXV28XOjE6f6irhu0COgZ",
+            "user_authorization:explicit_request_reference",
+            "operation:door-1"
+          ],
+          "scope": "door_occurrence",
+          "source_fact_key": "pset:Pset_ConcreteElementGeneral.FireRating",
+          "source_kind": "type_inherited",
+          "source_ref": "user-approved-prototype:2cXV28XOjE6f6irhu0COgZ",
+          "unit": null,
+          "value": "Inside door: Fire Rating",
+          "value_type": "IfcLabel"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "inherit_from_type",
+          "derivation": null,
+          "fact_key": "pset:Pset_DoorCommon.FireRating",
+          "operation_id": "door-1",
+          "ownership": "type_inherited",
+          "provenance": [
+            "type-index:type:2cXV28XOjE6f6irhu0COgZ",
+            "ifcopenshell.util.element.get_psets:direct",
+            "type_record:2cXV28XOjE6f6irhu0COgZ",
+            "user_authorization:explicit_request_reference",
+            "operation:door-1"
+          ],
+          "scope": "door_occurrence",
+          "source_fact_key": "pset:Pset_DoorCommon.FireRating",
+          "source_kind": "type_inherited",
+          "source_ref": "user-approved-prototype:2cXV28XOjE6f6irhu0COgZ",
+          "unit": null,
+          "value": "Inside door: Fire Rating",
+          "value_type": "IfcLabel"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "inherit_from_type",
+          "derivation": null,
+          "fact_key": "pset:Pset_DoorCommon.IsExternal",
+          "operation_id": "door-1",
+          "ownership": "type_inherited",
+          "provenance": [
+            "type-index:type:2cXV28XOjE6f6irhu0COgZ",
+            "ifcopenshell.util.element.get_psets:direct",
+            "type_record:2cXV28XOjE6f6irhu0COgZ",
+            "user_authorization:explicit_request_reference",
+            "operation:door-1"
+          ],
+          "scope": "door_occurrence",
+          "source_fact_key": "pset:Pset_DoorCommon.IsExternal",
+          "source_kind": "type_inherited",
+          "source_ref": "user-approved-prototype:2cXV28XOjE6f6irhu0COgZ",
+          "unit": null,
+          "value": false,
+          "value_type": "IfcBoolean"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "inherit_from_type",
+          "derivation": null,
+          "fact_key": "pset:Pset_DoorCommon.Reference",
+          "operation_id": "door-1",
+          "ownership": "type_inherited",
+          "provenance": [
+            "type-index:type:2cXV28XOjE6f6irhu0COgZ",
+            "ifcopenshell.util.element.get_psets:direct",
+            "type_record:2cXV28XOjE6f6irhu0COgZ",
+            "user_authorization:explicit_request_reference",
+            "operation:door-1"
+          ],
+          "scope": "door_occurrence",
+          "source_fact_key": "pset:Pset_DoorCommon.Reference",
+          "source_kind": "type_inherited",
+          "source_ref": "user-approved-prototype:2cXV28XOjE6f6irhu0COgZ",
+          "unit": null,
+          "value": "Inside Door",
+          "value_type": "IfcIdentifier"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "inherit_from_type",
+          "derivation": null,
+          "fact_key": "pset:Pset_DoorCommon.ThermalTransmittance",
+          "operation_id": "door-1",
+          "ownership": "type_inherited",
+          "provenance": [
+            "type-index:type:2cXV28XOjE6f6irhu0COgZ",
+            "ifcopenshell.util.element.get_psets:direct",
+            "type_record:2cXV28XOjE6f6irhu0COgZ",
+            "user_authorization:explicit_request_reference",
+            "operation:door-1"
+          ],
+          "scope": "door_occurrence",
+          "source_fact_key": "pset:Pset_DoorCommon.ThermalTransmittance",
+          "source_kind": "type_inherited",
+          "source_ref": "user-approved-prototype:2cXV28XOjE6f6irhu0COgZ",
+          "unit": null,
+          "value": 3.7021,
+          "value_type": "IfcThermalTransmittanceMeasure"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "inherit_from_type",
+          "derivation": null,
+          "fact_key": "pset:Pset_ManufacturerTypeInformation.Manufacturer",
+          "operation_id": "door-1",
+          "ownership": "type_inherited",
+          "provenance": [
+            "type-index:type:2cXV28XOjE6f6irhu0COgZ",
+            "ifcopenshell.util.element.get_psets:direct",
+            "type_record:2cXV28XOjE6f6irhu0COgZ",
+            "user_authorization:explicit_request_reference",
+            "operation:door-1"
+          ],
+          "scope": "door_occurrence",
+          "source_fact_key": "pset:Pset_ManufacturerTypeInformation.Manufacturer",
+          "source_kind": "type_inherited",
+          "source_ref": "user-approved-prototype:2cXV28XOjE6f6irhu0COgZ",
+          "unit": null,
+          "value": "Inside door: Manufacturer",
+          "value_type": "IfcLabel"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "inherit_from_type",
+          "derivation": null,
+          "fact_key": "pset:Pset_ProductRequirements.Category",
+          "operation_id": "door-1",
+          "ownership": "type_inherited",
+          "provenance": [
+            "type-index:type:2cXV28XOjE6f6irhu0COgZ",
+            "ifcopenshell.util.element.get_psets:direct",
+            "type_record:2cXV28XOjE6f6irhu0COgZ",
+            "user_authorization:explicit_request_reference",
+            "operation:door-1"
+          ],
+          "scope": "door_occurrence",
+          "source_fact_key": "pset:Pset_ProductRequirements.Category",
+          "source_kind": "type_inherited",
+          "source_ref": "user-approved-prototype:2cXV28XOjE6f6irhu0COgZ",
+          "unit": null,
+          "value": "Doors",
+          "value_type": "IfcLabel"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "inherit_from_type",
+          "derivation": null,
+          "fact_key": "pset:Pset_QuantityTakeOff.Reference",
+          "operation_id": "door-1",
+          "ownership": "type_inherited",
+          "provenance": [
+            "type-index:type:2cXV28XOjE6f6irhu0COgZ",
+            "ifcopenshell.util.element.get_psets:direct",
+            "type_record:2cXV28XOjE6f6irhu0COgZ",
+            "user_authorization:explicit_request_reference",
+            "operation:door-1"
+          ],
+          "scope": "door_occurrence",
+          "source_fact_key": "pset:Pset_QuantityTakeOff.Reference",
+          "source_kind": "type_inherited",
+          "source_ref": "user-approved-prototype:2cXV28XOjE6f6irhu0COgZ",
+          "unit": null,
+          "value": "Inside Door",
+          "value_type": "IfcIdentifier"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "bind_relationship",
+          "derivation": null,
+          "fact_key": "relationship:host",
+          "operation_id": "door-1",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "operation:door-1",
+            "resolved-target:2cXV28XOjE6f6irhW0COhu",
+            "current-host-relationship:2cXV28XOjE6f6irgi0COfF"
+          ],
+          "scope": "door_occurrence",
+          "source_fact_key": "relationship:host",
+          "source_kind": "deterministic_derived",
+          "source_ref": "current-relationship:host:2cXV28XOjE6f6irgi0COfF",
+          "unit": null,
+          "value": "2cXV28XOjE6f6irgi0COfF",
+          "value_type": "IfcWallStandardCase"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "bind_relationship",
+          "derivation": null,
+          "fact_key": "relationship:storey",
+          "operation_id": "door-1",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "resolved-host-target:2cXV28XOjE6f6irhW0COhu",
+            "operation:door-1"
+          ],
+          "scope": "door_occurrence",
+          "source_fact_key": "relationship:storey",
+          "source_kind": "deterministic_derived",
+          "source_ref": "current-target-storey:2nxdYR2RHCDBiKJuiQr1XP",
+          "unit": null,
+          "value": "2nxdYR2RHCDBiKJuiQr1XP",
+          "value_type": "IfcBuildingStorey"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "inherit_from_type",
+          "derivation": null,
+          "fact_key": "relationship:type",
+          "operation_id": "door-1",
+          "ownership": "type_inherited",
+          "provenance": [
+            "user_authorization:explicit_request_reference",
+            "operation:door-1"
+          ],
+          "scope": "door_occurrence",
+          "source_fact_key": "relationship:type",
+          "source_kind": "type_inherited",
+          "source_ref": "user-approved-prototype:2cXV28XOjE6f6irhu0COgZ",
+          "unit": null,
+          "value": "2cXV28XOjE6f6irhu0COgZ",
+          "value_type": "IfcDoorStyle"
+        }
+      ],
+      "semantic_manifest": {
+        "manifest_id": "semantic-manifest-96c917ab558121eff5357905",
+        "policy_id": "door.fill-existing-opening.l2",
+        "policy_version": "0.1"
+      },
+      "target": {
+        "opening_global_id": "2cXV28XOjE6f6irhW0COhu"
+      }
+    }
+  ],
+  "postconditions": [
+    "door_fills_opening",
+    "door_contained_in_storey",
+    "door_type_bound"
+  ],
+  "preconditions": [
+    "target_exists",
+    "opening_available",
+    "opening_within_wall"
+  ],
+  "schema_version": "text2ifc/ifc-repair-changeset/0.4",
+  "scope": {
+    "forbidden_ids": [],
+    "target_ids": [
+      "2cXV28XOjE6f6irhW0COhu"
+    ]
+  },
+  "semantic_manifest_ref": "changeset/semantic-manifest-door-1.json",
+  "semantic_manifest_sha256": "sha256:0db0f7309a75b3c3f198777991f321d49eb8e18048173c8667b4989eda274df1",
+  "source_request_hash": "sha256:62d4d1b5370e8ba1c1017df184bc1f90b637e4911eea9e06f65396f4fba34665"
+}

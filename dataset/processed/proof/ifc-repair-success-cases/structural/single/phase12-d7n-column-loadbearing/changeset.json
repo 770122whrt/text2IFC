@@ -1,0 +1,166 @@
+{
+  "base_model_fingerprint": "sha256:f95c6f63ea7613389f489cc3731e60c087a6b46cca242972449864c25db62116",
+  "binding_status": "bound",
+  "changeset_id": "changeset-phase12-d7n-column-loadbearing",
+  "evidence_refs": [
+    "resolved:/operations/phase12-d7n-column-loadbearing-column-1/context/candidate_targets/0"
+  ],
+  "operations": [
+    {
+      "evidence_refs": [
+        "resolved:/operations/phase12-d7n-column-loadbearing-column-1/context/candidate_targets/0"
+      ],
+      "operation_id": "phase12-d7n-column-loadbearing-column-1",
+      "operation_type": "add_column",
+      "parameters": {
+        "axis": {
+          "base": {
+            "x_mm": 110000.0,
+            "y_mm": 110000.0,
+            "z_mm": 0.0
+          },
+          "top": {
+            "x_mm": 110000.0,
+            "y_mm": 110000.0,
+            "z_mm": 6000.0
+          }
+        },
+        "section": {
+          "depth_mm": 600,
+          "orientation": {
+            "x": 0,
+            "y": 1
+          },
+          "shape": "rectangle",
+          "width_mm": 400
+        }
+      },
+      "semantic_assignments": [
+        {
+          "applicability": "conditional",
+          "authoring_action": "set_occurrence_pset",
+          "derivation": null,
+          "fact_key": "pset:Pset_ColumnCommon.LoadBearing",
+          "operation_id": "phase12-d7n-column-loadbearing-column-1",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "request-source:user_request",
+            "request-evidence:request:/operations/0/properties/0",
+            "operation:phase12-d7n-column-loadbearing-column-1",
+            "property-hash:sha256:604f80501cc5be6f833ec530751c3a611b82a081712b5d5dd247a05991782e29",
+            "source_fact_key:pset:Pset_ColumnCommon.LoadBearing"
+          ],
+          "scope": "column_occurrence",
+          "source_fact_key": "pset:Pset_ColumnCommon.LoadBearing",
+          "source_kind": "explicit_value",
+          "source_ref": "request:/operations/0/properties/0",
+          "unit": null,
+          "value": true,
+          "value_type": "IfcBoolean"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "bind_relationship",
+          "derivation": null,
+          "fact_key": "relationship:host",
+          "operation_id": "phase12-d7n-column-loadbearing-column-1",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "resolved-host-target:0K_MqVdrL0JOCMi_GblRwJ",
+            "resolved-host:0K_MqVdrL0JOCMi_GblRwJ",
+            "operation:phase12-d7n-column-loadbearing-column-1"
+          ],
+          "scope": "column_occurrence",
+          "source_fact_key": "relationship:host",
+          "source_kind": "deterministic_derived",
+          "source_ref": "current-host-binding:0K_MqVdrL0JOCMi_GblRwJ",
+          "unit": null,
+          "value": "0K_MqVdrL0JOCMi_GblRwJ",
+          "value_type": "IfcBuildingStorey"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "bind_relationship",
+          "derivation": null,
+          "fact_key": "relationship:storey",
+          "operation_id": "phase12-d7n-column-loadbearing-column-1",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "operation:phase12-d7n-column-loadbearing-column-1",
+            "registered-column-base-storey-policy:0.1"
+          ],
+          "scope": "column_occurrence",
+          "source_fact_key": "relationship:storey",
+          "source_kind": "deterministic_derived",
+          "source_ref": "resolved:/operations/phase12-d7n-column-loadbearing-column-1/target",
+          "unit": null,
+          "value": "0K_MqVdrL0JOCMi_GblRwJ",
+          "value_type": "IfcBuildingStorey"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "inherit_from_type",
+          "derivation": {
+            "formal_attributes": {},
+            "ifc_class": "IfcColumnType",
+            "template": {
+              "name": "Text2IFC generated column type phase12-d7n-column-loadbearing-column-1",
+              "predefined_type": "NOTDEFINED",
+              "section": {
+                "depth_mm": 600.0,
+                "shape": "rectangle",
+                "width_mm": 400.0
+              },
+              "section_digest": "sha256:e43ab32a66ab3e17d637a6299e8714efdf1265e8e0e50097c7112727d5d39c57"
+            },
+            "template_digest": "sha256:e4ddc12c753e69828e666be64f4ca1b97850f57e8aa37e37f4da89fc3e6985e5",
+            "template_id": "text2ifc-rectangular-column-type",
+            "template_version": "0.1"
+          },
+          "fact_key": "relationship:type",
+          "operation_id": "phase12-d7n-column-loadbearing-column-1",
+          "ownership": "type_inherited",
+          "provenance": [
+            "operation:phase12-d7n-column-loadbearing-column-1",
+            "generated-type-template:0.1"
+          ],
+          "scope": "column_occurrence",
+          "source_fact_key": "relationship:type",
+          "source_kind": "deterministic_derived",
+          "source_ref": "generated-type:16ss1rIF9LtxUe95LejPIF",
+          "unit": null,
+          "value": "16ss1rIF9LtxUe95LejPIF",
+          "value_type": "IfcColumnType"
+        }
+      ],
+      "semantic_manifest": {
+        "manifest_id": "semantic-manifest-7c70cb89d9e2306bb2c0b9dc",
+        "policy_id": "column.add.l2",
+        "policy_version": "0.1"
+      },
+      "target": {
+        "storey_global_id": "0K_MqVdrL0JOCMi_GblRwJ"
+      }
+    }
+  ],
+  "postconditions": [
+    "structural_geometry_matches",
+    "structural_containment_matches",
+    "structural_type_matches"
+  ],
+  "preconditions": [
+    "structural_targets_resolved",
+    "structural_geometry_authorized",
+    "structural_semantics_bound"
+  ],
+  "schema_version": "text2ifc/ifc-repair-changeset/0.4",
+  "scope": {
+    "forbidden_ids": [],
+    "target_ids": [
+      "0K_MqVdrL0JOCMi_GblRwJ"
+    ]
+  },
+  "semantic_manifest_ref": "semantic-manifest.json",
+  "semantic_manifest_sha256": "sha256:5088274fe5943b7c8ca54608727f91838522b989ed9b186c9c72f5fd0d90919c",
+  "source_request_hash": "sha256:a1284021fd968e2dd9b954fe29a3c08e5636e59e49dced674aa2ca7b91a2ca9b"
+}

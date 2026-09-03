@@ -8,7 +8,7 @@ import urllib.error
 import urllib.request
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any
+from typing import Any, Protocol, runtime_checkable
 
 from .state import redact_metadata
 
@@ -43,6 +43,32 @@ class ProviderOutputError(ValueError):
         super().__init__(message)
         self.live_result = live_result
         self.details = {} if details is None else details
+
+
+@runtime_checkable
+class ProviderEvidenceDelegator(Protocol):
+    """Narrow wrapper contract for preserving the underlying Provider identity."""
+
+    def provider_evidence_delegate(self) -> Any:
+        """Return the directly wrapped Provider used for the transport call."""
+
+
+def resolve_provider_evidence_source(provider: Any) -> Any | None:
+    """Resolve an explicitly delegated Provider identity, failing closed on cycles."""
+
+    current = provider
+    seen: set[int] = set()
+    for _ in range(8):
+        identity = id(current)
+        if identity in seen:
+            return None
+        seen.add(identity)
+        if not isinstance(current, ProviderEvidenceDelegator):
+            return current
+        current = current.provider_evidence_delegate()
+        if current is None:
+            return None
+    return None
 
 
 @dataclass(frozen=True)

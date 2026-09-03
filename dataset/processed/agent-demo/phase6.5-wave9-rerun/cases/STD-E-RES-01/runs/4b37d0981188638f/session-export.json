@@ -1,0 +1,139 @@
+{
+  "agent_calls": [
+    {
+      "created_at": "2026-07-16T06:13:21+00:00",
+      "payload": {
+        "artifact_dir": "dataset\\processed\\agent-demo\\phase6.5-wave9-rerun\\cases\\STD-E-RES-01\\runs\\4b37d0981188638f\\calls\\01-design-brief",
+        "call_index": 1,
+        "prompt_template_hash": "sha256:1c543bc7d636b71fbe29842d566d294789a03797f860bb2ef2df757a38ee582f",
+        "prompt_template_id": "design-brief.v2.1",
+        "response_id": "03ef48c3-555c-49f1-aeb3-2876d9ed19cc",
+        "role": "design_brief",
+        "status": "ready"
+      }
+    }
+  ],
+  "artifacts": [
+    {
+      "created_at": "2026-07-16T06:13:21+00:00",
+      "kind": "design_brief",
+      "path": "runs/4b37d0981188638f/design-brief.json"
+    },
+    {
+      "created_at": "2026-07-16T06:13:21+00:00",
+      "kind": "session_export",
+      "path": "runs/4b37d0981188638f/session-export.json"
+    },
+    {
+      "created_at": "2026-07-16T06:13:21+00:00",
+      "kind": "expected_facts",
+      "path": "runs/4b37d0981188638f/expected-facts.json"
+    },
+    {
+      "created_at": "2026-07-16T06:13:25+00:00",
+      "kind": "session_export",
+      "path": "runs/4b37d0981188638f/session-export.json"
+    }
+  ],
+  "events": [
+    {
+      "created_at": "2026-07-16T06:12:52+00:00",
+      "event_index": 0,
+      "event_type": "repl_session_started",
+      "payload": {
+        "input_source": "terminal",
+        "interaction_mode": "human_repl_live",
+        "terminal_encoding": {
+          "stderr_encoding": "utf-8",
+          "stdin_encoding": "utf-8",
+          "stdout_encoding": null
+        }
+      }
+    },
+    {
+      "created_at": "2026-07-16T06:13:25+00:00",
+      "event_index": 1,
+      "event_type": "generator_completed",
+      "payload": {
+        "case_id": "4b37d0981188638f",
+        "classification": "draft",
+        "contract_valid": false,
+        "evidence_class": "provider-backed-staged",
+        "output_dir": "dataset\\processed\\agent-demo\\phase6.5-wave9-rerun\\cases\\STD-E-RES-01\\runs\\4b37d0981188638f\\generator",
+        "response_id": "813d9227-2f93-43be-a0a0-0c6804051bed",
+        "stage": "generate",
+        "status": "draft",
+        "strict_output_contract_valid": false,
+        "valid": false
+      }
+    },
+    {
+      "created_at": "2026-07-16T06:13:25+00:00",
+      "event_index": 2,
+      "event_type": "repair_completed",
+      "payload": {
+        "case_id": "4b37d0981188638f",
+        "evidence_class": "live-derived-no-call",
+        "output_dir": "dataset/processed/agent-demo/phase6.5-wave9-rerun/cases/STD-E-RES-01/runs/4b37d0981188638f/repair",
+        "provider_call_count": 0,
+        "repair_attempts": [],
+        "route": "no_repair_needed",
+        "source_generator_response_id": "813d9227-2f93-43be-a0a0-0c6804051bed",
+        "stage": "repair",
+        "valid": false
+      }
+    }
+  ],
+  "gates": [],
+  "metrics": [
+    {
+      "created_at": "2026-07-16T06:13:25+00:00",
+      "payload": {
+        "case_id": "4b37d0981188638f",
+        "classification": "draft",
+        "contract_valid": false,
+        "evidence_class": "provider-backed-staged",
+        "output_dir": "dataset\\processed\\agent-demo\\phase6.5-wave9-rerun\\cases\\STD-E-RES-01\\runs\\4b37d0981188638f\\generator",
+        "response_id": "813d9227-2f93-43be-a0a0-0c6804051bed",
+        "stage": "generate",
+        "status": "draft",
+        "strict_output_contract_valid": false,
+        "valid": false
+      }
+    },
+    {
+      "created_at": "2026-07-16T06:13:25+00:00",
+      "payload": {
+        "case_id": "4b37d0981188638f",
+        "evidence_class": "live-derived-no-call",
+        "output_dir": "dataset/processed/agent-demo/phase6.5-wave9-rerun/cases/STD-E-RES-01/runs/4b37d0981188638f/repair",
+        "provider_call_count": 0,
+        "repair_attempts": [],
+        "route": "no_repair_needed",
+        "source_generator_response_id": "813d9227-2f93-43be-a0a0-0c6804051bed",
+        "stage": "repair",
+        "valid": false
+      }
+    }
+  ],
+  "prompts": [],
+  "responses": [],
+  "schema_version": "text2ifc/phase6.2-session-export-v1",
+  "session": {
+    "created_at": "2026-07-16T06:12:50+00:00",
+    "original_input": "## 2.2 Easy：单个矩形房间\n\n创建一个单层矩形房间，房间净尺寸为东西方向 6 米、南北方向 4 米，净高 3 米。\n\n墙厚 200 毫米，地板厚 150 毫米。\n\n在南侧外墙中央设置一樘外门，门宽 0.9 米、高 2.1 米，向室内开启。\n\n在北侧外墙中央设置一扇窗，窗宽 1.5 米、高 1.2 米，窗台距地面 0.9 米。\n\n生成楼层、房间空间、四面墙、地板、门和窗，并确保门窗正确依附在对应墙体中。房间应生成对应的 `IfcSpace`。",
+    "run_dir": "dataset\\processed\\agent-demo\\phase6.5-wave9-rerun\\cases\\STD-E-RES-01\\runs\\4b37d0981188638f",
+    "session_hash": "4b37d0981188638f",
+    "session_id": "phase6.2-af3cf72cef484dfdac50eef23de9871b",
+    "status": "draft_or_blocked",
+    "updated_at": "2026-07-16T06:13:25+00:00"
+  },
+  "turns": [
+    {
+      "created_at": "2026-07-16T06:12:50+00:00",
+      "role": "user",
+      "text": "## 2.2 Easy：单个矩形房间\n\n创建一个单层矩形房间，房间净尺寸为东西方向 6 米、南北方向 4 米，净高 3 米。\n\n墙厚 200 毫米，地板厚 150 毫米。\n\n在南侧外墙中央设置一樘外门，门宽 0.9 米、高 2.1 米，向室内开启。\n\n在北侧外墙中央设置一扇窗，窗宽 1.5 米、高 1.2 米，窗台距地面 0.9 米。\n\n生成楼层、房间空间、四面墙、地板、门和窗，并确保门窗正确依附在对应墙体中。房间应生成对应的 `IfcSpace`。",
+      "turn_index": 0
+    }
+  ]
+}

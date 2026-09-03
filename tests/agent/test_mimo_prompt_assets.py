@@ -129,13 +129,17 @@ def test_design_brief_v21_enforces_question_target_consistency():
 def test_design_brief_v21_defines_canonical_multistorey_structure():
     text = DESIGN_BRIEF_V21.read_text(encoding="utf-8")
 
-    assert "Canonical multi-storey Design Brief structure" in text
+    assert "Canonical Design Brief storey structure" in text
+    assert "including a single-storey building" in text
     assert "Use `elevation_mm`; do not use `level` as a substitute" in text
+    assert "Do not create singular top-level `storey`, `space`, `door`, or `window` keys" in text
     assert "Do not create top-level `storey_1`, `storey_2`, `spaces_ground`, `spaces_first`, or generic `openings`" in text
     assert "Put doors and windows inside the storey that owns their host wall" in text
     assert "Use exactly `host_wall`" in text
     assert "Do not emit `host_wall_id`" in text
     assert "Use `known_facts.floor_slabs`" in text
+    assert "except `floor_slabs`, `roof_slab`, and cross-storey `stairs`" in text
+    assert "Never put `floor_slabs` or `floor_thickness_mm` inside a storey object" in text
     assert "Use one `known_facts.roof_slab`" in text
     assert "Do not collapse explicit slab instances into thickness-only building metadata" in text
     assert "literal key `bounds`, not `plan_bounds`" in text
@@ -189,7 +193,103 @@ def test_design_brief_few_shots_include_valid_standard_two_storey_contract():
         for evidence_id in output["provenance"]["selected_evidence_ids"]
     ]
     assert validate_design_brief(output, evidence_catalog=evidence_catalog) == []
- 
+
+
+def test_design_brief_few_shots_include_canonical_single_storey_floor_slab():
+    payload = json.loads(DESIGN_BRIEF_FEW_SHOTS.read_text(encoding="utf-8"))
+    shot = next(
+        item
+        for item in payload["few_shots"]
+        if item["few_shot_id"] == "design-brief-v2.single-storey-floor-slab"
+    )
+
+    known = shot["output"]["known_facts"]
+    slab = known["floor_slabs"][0]
+    assert {
+        "id": slab["id"],
+        "storey": slab["storey"],
+        "top_elevation_mm": slab["top_elevation_mm"],
+        "thickness_mm": slab["thickness_mm"],
+    } == {
+        "id": "ground-floor-slab",
+        "storey": "storey-1",
+        "top_elevation_mm": 0,
+        "thickness_mm": 150,
+    }
+    assert slab["polygon"][0] == slab["polygon"][-1]
+    assert "floor_slabs" not in known["storeys"][0]
+    assert "floor_thickness_mm" not in known["storeys"][0]
+
+
+def test_design_brief_prompt_preserves_explicit_linear_railing_facts():
+    text = DESIGN_BRIEF_V21.read_text(encoding="utf-8")
+
+    assert "Use `known_facts.railings`" in text
+    assert "`start_mm: [x, y, z]`" in text
+    assert "`end_mm: [x, y, z]`" in text
+    assert "`height_mm`" in text
+    assert "`thickness_mm`" in text
+    assert "Do not invent railing endpoints, elevation, height, or thickness" in text
+
+
+def test_design_brief_prompt_preserves_multiple_slab_openings_separately():
+    text = DESIGN_BRIEF_V21.read_text(encoding="utf-8")
+
+    assert "Use `openings` as an array when a slab has more than one confirmed opening" in text
+    assert "Do not merge separate opening rectangles into one union rectangle" in text
+    assert "stable opening `id`" in text
+
+
+def test_design_brief_few_shot_preserves_two_storey_local_linear_railings():
+    payload = json.loads(DESIGN_BRIEF_FEW_SHOTS.read_text(encoding="utf-8"))
+    shot = next(
+        item
+        for item in payload["few_shots"]
+        if item["few_shot_id"] == "design-brief-v2.linear-railings"
+    )
+
+    railings = shot["output"]["known_facts"]["railings"]
+    assert [railing["id"] for railing in railings] == [
+        "railing-atrium-north",
+        "railing-atrium-west",
+    ]
+    assert all(railing["storey"] == "storey-2" for railing in railings)
+    assert railings[0]["start_mm"] == [6000, 3000, 3300]
+    assert railings[0]["end_mm"] == [12000, 3000, 3300]
+    assert railings[1]["start_mm"] == [6000, 0, 3300]
+    assert railings[1]["end_mm"] == [6000, 3000, 3300]
+    assert all(railing["height_mm"] == 1100 for railing in railings)
+    assert all(railing["thickness_mm"] == 50 for railing in railings)
+
+
+def test_design_brief_prompt_forbids_conflicting_shared_wall_centerlines():
+    text = DESIGN_BRIEF_V21.read_text(encoding="utf-8")
+
+    assert "Do not assign `host_centerline` to multiple openings on the same host wall" in text
+    assert "split the wall into explicit touching segments" in text
+    assert "use `center_global_mm` and omit `alignment`" in text
+
+def test_design_brief_few_shot_complete_room_uses_canonical_single_storey_contract():
+    payload = json.loads(DESIGN_BRIEF_FEW_SHOTS.read_text(encoding="utf-8"))
+    shot = next(
+        item
+        for item in payload["few_shots"]
+        if item["few_shot_id"] == "design-brief-v2.complete-room-openings"
+    )
+
+    known = shot["output"]["known_facts"]
+    assert "storey" not in known
+    assert "space" not in known
+    assert "door" not in known
+    assert "window" not in known
+    assert [storey["id"] for storey in known["storeys"]] == ["storey-1"]
+    storey = known["storeys"][0]
+    assert len(storey["spaces"]) == 1
+    assert len(storey["walls"]["exterior"]) == 4
+    assert storey["walls"].get("interior") == []
+    assert len(storey["doors"]) == 1
+    assert len(storey["windows"]) == 1
+
 def test_audit_v2_understands_parent_relative_centered_openings():
     text = AUDIT_V2.read_text(encoding="utf-8")
 

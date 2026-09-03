@@ -1,0 +1,33 @@
+{
+  "schema_version": "text2ifc/ifc-repair-few-shot/0.1",
+  "example_id": "beam.add.v0.3.clarification",
+  "profile_id": "beam.add.v0.3",
+  "case": "clarification",
+  "user_text": "EXAMPLE_ONLY: add a 300 by 500 mm rectangular beam on Level 2; the center-axis endpoints are not stated",
+  "expected": {
+    "operation_type": "add_beam",
+    "status": "clarification_required",
+    "parameters": {
+      "section": {
+        "shape": "rectangle",
+        "width_mm": 300,
+        "height_mm": 500
+      }
+    },
+    "omitted_unknown_slots": [
+      "/parameters/axis/start",
+      "/parameters/axis/end"
+    ],
+    "rule": "omit unknown coordinates; never infer an axis, scalar length, null placeholder, or nearby member",
+    "target_query": {
+      "schema_version": "text2ifc/ifc-target-query/0.1",
+      "allowed_ifc_classes": [
+        "IfcBuildingStorey"
+      ],
+      "names": [
+        "Level 1"
+      ]
+    }
+  },
+  "rule": "undefined; the Storey itself is selected with target_query.names, never storey_name"
+}

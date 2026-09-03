@@ -1,0 +1,43 @@
+{
+  "attempt": 1,
+  "issues": [
+    {
+      "code": "JSON_DECODE_ERROR",
+      "message": "Expecting ',' delimiter at line 1 column 1213",
+      "path": ""
+    }
+  ],
+  "normalizations": [],
+  "provider_metadata": {
+    "estimated_input_tokens": "[REDACTED]",
+    "evidence_class": "live",
+    "max_input_tokens": "[REDACTED]",
+    "model": "deepseek-v4-flash",
+    "provider": "deepseek-openai-compatible",
+    "request_configuration": {
+      "temperature": {
+        "effective": false,
+        "value": 0
+      },
+      "thinking": {
+        "type": "enabled"
+      }
+    },
+    "response_id": "64ad850a-666e-4cf8-8d64-1fafb3fe26cc",
+    "session_id": "ifc-repair-intent-request-daf7374cd446ee01",
+    "stop_reason": "stop",
+    "transport_attempts": 1,
+    "usage": {
+      "completion_tokens": 5476,
+      "completion_tokens_details": "[REDACTED]",
+      "prompt_cache_hit_tokens": "[REDACTED]",
+      "prompt_cache_miss_tokens": "[REDACTED]",
+      "prompt_tokens": 11744,
+      "prompt_tokens_details": "[REDACTED]",
+      "total_tokens": 17220
+    }
+  },
+  "response_excerpt": "{\"schema_version\":\"text2ifc/ifc-repair-intent-body/0.8\",\"operations\":[{\"operation_id\":\"set-door-fire-rating-1\",\"operation_type\":\"set_occurrence_properties\",\"routing_intent\":{\"component_family\":\"occurrence\",\"action\":\"set_properties\",\"operation_profile\":\"occurrence.set-properties\",\"source\":{\"source_kind\":\"user_request\",\"reference\":\"public-request\",\"excerpt\":\"将 Level 4 中 GlobalId 为 3JlX9$$_PCKBNpDob64$5M、Tag 为 439207 的门的防火等级设置为 EI60。\"}},\"target_query\":{\"schema_version\":\"text2ifc/ifc-target-query/0.1\",\"allowed_ifc_classes\":[\"IfcDoor\"],\"global_id\":\"3JlX9$$_PCKBNpDob64$5M\",\"storey_name\":\"Level 4\"},\"parameters\":{},\"attribute_intents\":[],\"property_intents\":[{\"intent_kind\":\"natural_language_property\",\"property_phrase\":\"防火等级\",\"raw_value\":\"EI60\",\"raw_unit\":null,\"scope\":\"occurrence_direct\",\"source\":{\"source_kind\":\"user_request\",\"reference\":\"public-request\",\"excerpt\":\"将 Level 4 中 GlobalId 为 3JlX9$$_PCKBNpDob64$5M、Tag 为 439207 的门的防火等级设置为 EI60。\"}}],\"semantic_bundle_refs\":[],\"quantity_intents\":[],\"occurrence_reuse_intent\":null,\"prototype_intent\":null,\"provenance\":[{\"source_kind\":\"user_request\",\"reference\":\"public-request\",\"excerpt\":\"将 Level 4 中 GlobalId 为 3JlX9$$_PCKBNpDob64$5M、Tag 为 439207 的门的防火等级设置为 EI60。\"}}],\"unsupported_requests\":[],\"semantic_bundles\":[],\"provenance\":[{\"source_kind\":\"user_request\",\"reference\":\"public-request\",\"excerpt\":\"将 Level 4 中 GlobalId 为 3JlX9$$_PCKBNpDob64$5M、Tag 为 439207 的门的防火等级设置为 EI60。\"}]}",
+  "response_sha256": "sha256:71b416893239eb9304f0dd760441eff5bf452b80b80c225626d5d4447bc03db2",
+  "status": "invalid"
+}

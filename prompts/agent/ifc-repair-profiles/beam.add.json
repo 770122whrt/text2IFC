@@ -1,0 +1,25 @@
+{
+  "schema_version": "text2ifc/ifc-repair-prompt-profile/0.1",
+  "profile_id": "beam.add",
+  "profile_version": "0.1",
+  "component_family": "beam",
+  "action": "add",
+  "operation_type": "add_beam",
+  "target_ifc_classes": ["IfcBuildingStorey"],
+  "classification_terms": ["beam", "structural beam", "add beam", "horizontal member", "梁", "添加梁"],
+  "slot_summary": "Target Storey; straight horizontal center-axis start/end in Storey-local millimetres; rectangular width/height; optional exact Beam Type reuse, explicit material and canonical requested Pset/quantity facts. Omit unstated facts instead of emitting aliases or null placeholders.",
+  "required_slots": ["/target_query", "/parameters/axis/start", "/parameters/axis/end", "/parameters/section/shape", "/parameters/section/width_mm", "/parameters/section/height_mm"],
+  "conditional_slots": ["/prototype_intent", "/attribute_intents"],
+  "optional_slots": ["/property_intents", "/quantity_intents", "/semantic_bundle_refs"],
+  "program_derived_slots": ["axis length from start/end", "unit and placement matrices", "representation context and swept-solid topology", "occurrence and relationship GUIDs", "generated-template identity and label", "Storey containment relationship"],
+  "forbidden_inferences": ["profile-corner or support-face placement", "scalar length in conflict with or substituted for the center axis", "nearby Beam or Type similarity", "material, strength, grade, property or quantity when absent", "aliases, wrong nesting or null placeholders", "Grid labels as coordinates"],
+  "supported_capabilities": ["straight_horizontal", "any_storey_xy_direction", "rectangular_section", "center_axis_mm", "exact_type_reuse", "generated_type", "optional_explicit_material", "Pset_BeamCommon"],
+  "unsupported_capabilities": ["inclined", "curved", "round_section", "i_section", "h_section", "arbitrary_section", "variable_section", "section_rotation", "grid_placement", "structural_analysis_connection"],
+  "stage2_projection_fields": ["operation_id", "operation_type", "target", "parameters", "evidence_refs"],
+  "few_shots": [
+    {"example_id": "beam.add.complete", "path": "prompts/agent/ifc-repair-few-shots/beam-add-complete.json", "sha256": "sha256:c8d422a0d95240dbae84d88428f4e0ee3dba5007d4d22efc69277fa079e5705a"},
+    {"example_id": "beam.add.clarification", "path": "prompts/agent/ifc-repair-few-shots/beam-add-clarification.json", "sha256": "sha256:1d26888e9c67c21a209b8e942f98f309d93aef8d411c3cf6fc31b0ccc700436e"},
+    {"example_id": "beam.add.type-reuse", "path": "prompts/agent/ifc-repair-few-shots/beam-add-type-reuse.json", "sha256": "sha256:daac3d6dedae6fcde0d9fae5e9c7417f91d2caf1be8a2e51dd2d6acfa5875867"},
+    {"example_id": "beam.add.unsupported", "path": "prompts/agent/ifc-repair-few-shots/beam-add-unsupported.json", "sha256": "sha256:feb2efff36ef7f942d2f3f824c1c225a02ba431161b7d20a32113e069021aabd"}
+  ]
+}

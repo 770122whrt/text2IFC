@@ -1,0 +1,421 @@
+{
+  "model_fingerprint": "sha256:6824086b4171cce034acaa23ad51c3020d87ed44c0aead62979a4b4ad17c4db3",
+  "operations": [
+    {
+      "attribute_intents": [],
+      "occurrence_reuse_intent": null,
+      "operation_id": "operation-window-001",
+      "operation_type": "add_window_with_opening_to_wall",
+      "parameters": {
+        "opening": {
+          "height_mm": 500.0,
+          "sill_height_mm": 2670.828,
+          "width_mm": 1180.0
+        },
+        "position": {
+          "center_offset_mm": 4701.961,
+          "reference": "wall_local_start"
+        },
+        "window": {
+          "fit_opening": true
+        }
+      },
+      "property_intents": [],
+      "prototype_intent": null,
+      "provenance": [
+        {
+          "excerpt": "窗 1：按楼层标高、朝向和墙体尺寸定位，在指定墙局部位置开窗并使用受控模板。",
+          "reference": "request:/operations/0",
+          "source_kind": "user_request"
+        }
+      ],
+      "quantity_intents": [],
+      "routing_intent": {
+        "action": "add",
+        "component_family": "window",
+        "operation_profile": "window.add-with-opening",
+        "source": {
+          "excerpt": "窗 1：按楼层标高、朝向和墙体尺寸定位，在指定墙局部位置开窗并使用受控模板。",
+          "reference": "request:/operations/0",
+          "source_kind": "user_request"
+        }
+      },
+      "semantic_bundle_refs": [],
+      "target_query": {
+        "allowed_ifc_classes": [
+          "IfcWall"
+        ],
+        "direction": "south",
+        "geometry_capabilities": [
+          "straight_wall"
+        ],
+        "geometry_constraints": [
+          {
+            "field": "storey_elevation_mm",
+            "tolerance_mm": 1.0,
+            "value": -2213.701
+          },
+          {
+            "field": "wall_length_mm",
+            "tolerance_mm": 1.0,
+            "value": 17765.292
+          },
+          {
+            "field": "wall_height_mm",
+            "tolerance_mm": 1.0,
+            "value": 3581.701
+          },
+          {
+            "field": "wall_thickness_mm",
+            "tolerance_mm": 1.0,
+            "value": 240.0
+          }
+        ],
+        "max_candidates": 5,
+        "schema_version": "text2ifc/ifc-target-query/0.1",
+        "winner_margin": 10
+      }
+    },
+    {
+      "attribute_intents": [],
+      "occurrence_reuse_intent": null,
+      "operation_id": "operation-window-002",
+      "operation_type": "add_window_with_opening_to_wall",
+      "parameters": {
+        "opening": {
+          "height_mm": 2370.0,
+          "sill_height_mm": 610.0,
+          "width_mm": 870.0
+        },
+        "position": {
+          "center_offset_mm": 9315.561,
+          "reference": "wall_local_start"
+        },
+        "window": {
+          "fit_opening": true
+        }
+      },
+      "property_intents": [],
+      "prototype_intent": null,
+      "provenance": [
+        {
+          "excerpt": "窗 2：按楼层标高、朝向和墙体尺寸定位，在指定墙局部位置开窗并使用受控模板。",
+          "reference": "request:/operations/1",
+          "source_kind": "user_request"
+        }
+      ],
+      "quantity_intents": [],
+      "routing_intent": {
+        "action": "add",
+        "component_family": "window",
+        "operation_profile": "window.add-with-opening",
+        "source": {
+          "excerpt": "窗 2：按楼层标高、朝向和墙体尺寸定位，在指定墙局部位置开窗并使用受控模板。",
+          "reference": "request:/operations/1",
+          "source_kind": "user_request"
+        }
+      },
+      "semantic_bundle_refs": [],
+      "target_query": {
+        "allowed_ifc_classes": [
+          "IfcWall"
+        ],
+        "direction": "east",
+        "geometry_capabilities": [
+          "straight_wall"
+        ],
+        "geometry_constraints": [
+          {
+            "field": "storey_elevation_mm",
+            "tolerance_mm": 1.0,
+            "value": -2213.701
+          },
+          {
+            "field": "wall_length_mm",
+            "tolerance_mm": 1.0,
+            "value": 13455.561
+          },
+          {
+            "field": "wall_height_mm",
+            "tolerance_mm": 1.0,
+            "value": 4175.094
+          },
+          {
+            "field": "wall_thickness_mm",
+            "tolerance_mm": 1.0,
+            "value": 240.0
+          }
+        ],
+        "max_candidates": 5,
+        "schema_version": "text2ifc/ifc-target-query/0.1",
+        "winner_margin": 10
+      }
+    },
+    {
+      "attribute_intents": [],
+      "occurrence_reuse_intent": null,
+      "operation_id": "operation-door-001",
+      "operation_type": "fill_existing_opening_with_door",
+      "parameters": {
+        "door": {
+          "formal_enum_explicit": true,
+          "operation_type": "SINGLE_SWING_LEFT"
+        },
+        "fit_existing_opening": true
+      },
+      "property_intents": [],
+      "prototype_intent": null,
+      "provenance": [
+        {
+          "excerpt": "门 1：按既有空洞的宽高、深度和墙局部位置定位，填入 SINGLE_SWING_LEFT 门并使用受控模板。",
+          "reference": "request:/operations/2",
+          "source_kind": "user_request"
+        }
+      ],
+      "quantity_intents": [],
+      "routing_intent": {
+        "action": "fill",
+        "component_family": "door",
+        "operation_profile": "door.fill-existing-opening.v0.2",
+        "source": {
+          "excerpt": "门 1：按既有空洞的宽高、深度和墙局部位置定位，填入 SINGLE_SWING_LEFT 门并使用受控模板。",
+          "reference": "request:/operations/2",
+          "source_kind": "user_request"
+        }
+      },
+      "semantic_bundle_refs": [],
+      "target_query": {
+        "allowed_ifc_classes": [
+          "IfcOpeningElement"
+        ],
+        "geometry_capabilities": [
+          "measured_hosted_opening"
+        ],
+        "geometry_constraints": [
+          {
+            "field": "opening_width_mm",
+            "tolerance_mm": 1.0,
+            "value": 800.0
+          },
+          {
+            "field": "opening_height_mm",
+            "tolerance_mm": 1.0,
+            "value": 2480.0
+          },
+          {
+            "field": "opening_depth_mm",
+            "tolerance_mm": 1.0,
+            "value": 160.0
+          },
+          {
+            "field": "opening_center_offset_mm",
+            "tolerance_mm": 1.0,
+            "value": 565.932
+          },
+          {
+            "field": "opening_sill_height_mm",
+            "tolerance_mm": 1.0,
+            "value": 130.359
+          }
+        ],
+        "max_candidates": 5,
+        "schema_version": "text2ifc/ifc-target-query/0.1",
+        "winner_margin": 10
+      }
+    },
+    {
+      "attribute_intents": [],
+      "occurrence_reuse_intent": null,
+      "operation_id": "operation-door-002",
+      "operation_type": "fill_existing_opening_with_door",
+      "parameters": {
+        "door": {
+          "formal_enum_explicit": true,
+          "operation_type": "SINGLE_SWING_RIGHT"
+        },
+        "fit_existing_opening": true
+      },
+      "property_intents": [],
+      "prototype_intent": null,
+      "provenance": [
+        {
+          "excerpt": "门 2：按既有空洞的宽高、深度和墙局部位置定位，填入 SINGLE_SWING_RIGHT 门并使用受控模板。",
+          "reference": "request:/operations/3",
+          "source_kind": "user_request"
+        }
+      ],
+      "quantity_intents": [],
+      "routing_intent": {
+        "action": "fill",
+        "component_family": "door",
+        "operation_profile": "door.fill-existing-opening.v0.2",
+        "source": {
+          "excerpt": "门 2：按既有空洞的宽高、深度和墙局部位置定位，填入 SINGLE_SWING_RIGHT 门并使用受控模板。",
+          "reference": "request:/operations/3",
+          "source_kind": "user_request"
+        }
+      },
+      "semantic_bundle_refs": [],
+      "target_query": {
+        "allowed_ifc_classes": [
+          "IfcOpeningElement"
+        ],
+        "geometry_capabilities": [
+          "measured_hosted_opening"
+        ],
+        "geometry_constraints": [
+          {
+            "field": "opening_width_mm",
+            "tolerance_mm": 1.0,
+            "value": 935.0
+          },
+          {
+            "field": "opening_height_mm",
+            "tolerance_mm": 1.0,
+            "value": 2400.0
+          },
+          {
+            "field": "opening_depth_mm",
+            "tolerance_mm": 1.0,
+            "value": 270.0
+          },
+          {
+            "field": "opening_center_offset_mm",
+            "tolerance_mm": 1.0,
+            "value": 6507.5
+          },
+          {
+            "field": "opening_sill_height_mm",
+            "tolerance_mm": 1.0,
+            "value": 110.359
+          }
+        ],
+        "max_candidates": 5,
+        "schema_version": "text2ifc/ifc-target-query/0.1",
+        "winner_margin": 10
+      }
+    },
+    {
+      "attribute_intents": [],
+      "occurrence_reuse_intent": null,
+      "operation_id": "phase12-vvo-door-window-beam-column-atomic-beam-1",
+      "operation_type": "add_beam",
+      "parameters": {
+        "axis": {
+          "end": {
+            "x_mm": 103000,
+            "y_mm": 104000,
+            "z_mm": 3000
+          },
+          "start": {
+            "x_mm": 100000,
+            "y_mm": 100000,
+            "z_mm": 3000
+          }
+        },
+        "section": {
+          "height_mm": 500,
+          "shape": "rectangle",
+          "width_mm": 300
+        }
+      },
+      "property_intents": [],
+      "prototype_intent": null,
+      "provenance": [
+        {
+          "excerpt": "请在一个原子 ChangeSet 中恢复两扇窗和两扇门。不得使用对象 GlobalId 或 Name 定位。窗 1：在楼层标高 -2213.701 mm、朝南、长 17765.292 mm、高 3581.701 mm、厚 240 mm 的直墙上，以 wall_local_start 为基准在中心偏移 4701.961 mm 处开一个宽 1180 mm、高 500 mm、窗台高 2670.828 mm 的窗，未指定复用 Type，使用受控模板。窗 2：在楼层标高 -2213.701 mm、朝东、长 13455.561 mm、高 4175.094 mm、厚 240 mm 的直墙上，以 wall_local_start 为基准在中心偏移 9315.561 mm 处开一个宽 870 mm、高 2370 mm、窗台高 610 mm 的窗，未指定复用 Type，使用受控模板。门 1：找到当前 IFC 中尚未填充、宽 800 mm、高 2480 mm、洞深 160 mm、墙局部中心偏移 565.932 mm、门槛高 130.359 mm 的既有洞口，安装宽 800 mm、高 2480 mm、SINGLE_SWING_LEFT 的门；不新建第二个洞口，未指定复用 Type，使用受控模板。门 2：找到当前 IFC 中尚未填充、宽 935 mm、高 2400 mm、洞深 270 mm、墙局部中心偏移 6507.500 mm、门槛高 110.359 mm 的既有洞口，安装宽 935 mm、高 2400 mm、SINGLE_SWING_RIGHT 的门；不新建第二个洞口，未指定复用 Type，使用受控模板。\nAdd one horizontal rectangular Beam and one vertical rectangular Column on the exact authorized Storey in the same atomic ChangeSet.",
+          "reference": "request:/operations/4",
+          "source_kind": "user_request"
+        }
+      ],
+      "quantity_intents": [],
+      "routing_intent": {
+        "action": "add",
+        "component_family": "beam",
+        "operation_profile": "beam.add",
+        "source": {
+          "excerpt": "请在一个原子 ChangeSet 中恢复两扇窗和两扇门。不得使用对象 GlobalId 或 Name 定位。窗 1：在楼层标高 -2213.701 mm、朝南、长 17765.292 mm、高 3581.701 mm、厚 240 mm 的直墙上，以 wall_local_start 为基准在中心偏移 4701.961 mm 处开一个宽 1180 mm、高 500 mm、窗台高 2670.828 mm 的窗，未指定复用 Type，使用受控模板。窗 2：在楼层标高 -2213.701 mm、朝东、长 13455.561 mm、高 4175.094 mm、厚 240 mm 的直墙上，以 wall_local_start 为基准在中心偏移 9315.561 mm 处开一个宽 870 mm、高 2370 mm、窗台高 610 mm 的窗，未指定复用 Type，使用受控模板。门 1：找到当前 IFC 中尚未填充、宽 800 mm、高 2480 mm、洞深 160 mm、墙局部中心偏移 565.932 mm、门槛高 130.359 mm 的既有洞口，安装宽 800 mm、高 2480 mm、SINGLE_SWING_LEFT 的门；不新建第二个洞口，未指定复用 Type，使用受控模板。门 2：找到当前 IFC 中尚未填充、宽 935 mm、高 2400 mm、洞深 270 mm、墙局部中心偏移 6507.500 mm、门槛高 110.359 mm 的既有洞口，安装宽 935 mm、高 2400 mm、SINGLE_SWING_RIGHT 的门；不新建第二个洞口，未指定复用 Type，使用受控模板。\nAdd one horizontal rectangular Beam and one vertical rectangular Column on the exact authorized Storey in the same atomic ChangeSet.",
+          "reference": "request:/operations/4",
+          "source_kind": "user_request"
+        }
+      },
+      "semantic_bundle_refs": [],
+      "target_query": {
+        "allowed_ifc_classes": [
+          "IfcBuildingStorey"
+        ],
+        "global_id": "1vTeahUkP60PdWqwCTjSGJ",
+        "schema_version": "text2ifc/ifc-target-query/0.1"
+      }
+    },
+    {
+      "attribute_intents": [],
+      "occurrence_reuse_intent": null,
+      "operation_id": "phase12-vvo-door-window-beam-column-atomic-column-2",
+      "operation_type": "add_column",
+      "parameters": {
+        "axis": {
+          "base": {
+            "x_mm": 103000,
+            "y_mm": 104000,
+            "z_mm": 0
+          },
+          "top": {
+            "x_mm": 103000,
+            "y_mm": 104000,
+            "z_mm": 6000
+          }
+        },
+        "section": {
+          "depth_mm": 600,
+          "orientation": {
+            "x": 0,
+            "y": 1
+          },
+          "shape": "rectangle",
+          "width_mm": 400
+        }
+      },
+      "property_intents": [],
+      "prototype_intent": null,
+      "provenance": [
+        {
+          "excerpt": "请在一个原子 ChangeSet 中恢复两扇窗和两扇门。不得使用对象 GlobalId 或 Name 定位。窗 1：在楼层标高 -2213.701 mm、朝南、长 17765.292 mm、高 3581.701 mm、厚 240 mm 的直墙上，以 wall_local_start 为基准在中心偏移 4701.961 mm 处开一个宽 1180 mm、高 500 mm、窗台高 2670.828 mm 的窗，未指定复用 Type，使用受控模板。窗 2：在楼层标高 -2213.701 mm、朝东、长 13455.561 mm、高 4175.094 mm、厚 240 mm 的直墙上，以 wall_local_start 为基准在中心偏移 9315.561 mm 处开一个宽 870 mm、高 2370 mm、窗台高 610 mm 的窗，未指定复用 Type，使用受控模板。门 1：找到当前 IFC 中尚未填充、宽 800 mm、高 2480 mm、洞深 160 mm、墙局部中心偏移 565.932 mm、门槛高 130.359 mm 的既有洞口，安装宽 800 mm、高 2480 mm、SINGLE_SWING_LEFT 的门；不新建第二个洞口，未指定复用 Type，使用受控模板。门 2：找到当前 IFC 中尚未填充、宽 935 mm、高 2400 mm、洞深 270 mm、墙局部中心偏移 6507.500 mm、门槛高 110.359 mm 的既有洞口，安装宽 935 mm、高 2400 mm、SINGLE_SWING_RIGHT 的门；不新建第二个洞口，未指定复用 Type，使用受控模板。\nAdd one horizontal rectangular Beam and one vertical rectangular Column on the exact authorized Storey in the same atomic ChangeSet.",
+          "reference": "request:/operations/5",
+          "source_kind": "user_request"
+        }
+      ],
+      "quantity_intents": [],
+      "routing_intent": {
+        "action": "add",
+        "component_family": "column",
+        "operation_profile": "column.add",
+        "source": {
+          "excerpt": "请在一个原子 ChangeSet 中恢复两扇窗和两扇门。不得使用对象 GlobalId 或 Name 定位。窗 1：在楼层标高 -2213.701 mm、朝南、长 17765.292 mm、高 3581.701 mm、厚 240 mm 的直墙上，以 wall_local_start 为基准在中心偏移 4701.961 mm 处开一个宽 1180 mm、高 500 mm、窗台高 2670.828 mm 的窗，未指定复用 Type，使用受控模板。窗 2：在楼层标高 -2213.701 mm、朝东、长 13455.561 mm、高 4175.094 mm、厚 240 mm 的直墙上，以 wall_local_start 为基准在中心偏移 9315.561 mm 处开一个宽 870 mm、高 2370 mm、窗台高 610 mm 的窗，未指定复用 Type，使用受控模板。门 1：找到当前 IFC 中尚未填充、宽 800 mm、高 2480 mm、洞深 160 mm、墙局部中心偏移 565.932 mm、门槛高 130.359 mm 的既有洞口，安装宽 800 mm、高 2480 mm、SINGLE_SWING_LEFT 的门；不新建第二个洞口，未指定复用 Type，使用受控模板。门 2：找到当前 IFC 中尚未填充、宽 935 mm、高 2400 mm、洞深 270 mm、墙局部中心偏移 6507.500 mm、门槛高 110.359 mm 的既有洞口，安装宽 935 mm、高 2400 mm、SINGLE_SWING_RIGHT 的门；不新建第二个洞口，未指定复用 Type，使用受控模板。\nAdd one horizontal rectangular Beam and one vertical rectangular Column on the exact authorized Storey in the same atomic ChangeSet.",
+          "reference": "request:/operations/5",
+          "source_kind": "user_request"
+        }
+      },
+      "semantic_bundle_refs": [],
+      "target_query": {
+        "allowed_ifc_classes": [
+          "IfcBuildingStorey"
+        ],
+        "global_id": "1vTeahUkP60PdWqwCTjSGJ",
+        "schema_version": "text2ifc/ifc-target-query/0.1"
+      }
+    }
+  ],
+  "prompt_fingerprint": "sha256:bf576432e47f9d811e5857d39439426c190f66b4701b446f4cecceb0cfebf6c9",
+  "provenance": [
+    {
+      "excerpt": "请在一个原子 ChangeSet 中恢复两扇窗和两扇门。不得使用对象 GlobalId 或 Name 定位。窗 1：在楼层标高 -2213.701 mm、朝南、长 17765.292 mm、高 3581.701 mm、厚 240 mm 的直墙上，以 wall_local_start 为基准在中心偏移 4701.961 mm 处开一个宽 1180 mm、高 500 mm、窗台高 2670.828 mm 的窗，未指定复用 Type，使用受控模板。窗 2：在楼层标高 -2213.701 mm、朝东、长 13455.561 mm、高 4175.094 mm、厚 240 mm 的直墙上，以 wall_local_start 为基准在中心偏移 9315.561 mm 处开一个宽 870 mm、高 2370 mm、窗台高 610 mm 的窗，未指定复用 Type，使用受控模板。门 1：找到当前 IFC 中尚未填充、宽 800 mm、高 2480 mm、洞深 160 mm、墙局部中心偏移 565.932 mm、门槛高 130.359 mm 的既有洞口，安装宽 800 mm、高 2480 mm、SINGLE_SWING_LEFT 的门；不新建第二个洞口，未指定复用 Type，使用受控模板。门 2：找到当前 IFC 中尚未填充、宽 935 mm、高 2400 mm、洞深 270 mm、墙局部中心偏移 6507.500 mm、门槛高 110.359 mm 的既有洞口，安装宽 935 mm、高 2400 mm、SINGLE_SWING_RIGHT 的门；不新建第二个洞口，未指定复用 Type，使用受控模板。\nAdd one horizontal rectangular Beam and one vertical rectangular Column on the exact authorized Storey in the same atomic ChangeSet.",
+      "reference": "request:/text",
+      "source_kind": "user_request"
+    }
+  ],
+  "request_id": "request-phase12-vvo-door-window-beam-column-atomic",
+  "schema_version": "text2ifc/ifc-repair-intent/0.5",
+  "semantic_bundles": [],
+  "source_request_hash": "sha256:6fd0b7309e6c21519c9fbceb758cf5302b72699cec7df6a899b0b26b44e0b6aa"
+}

@@ -6,7 +6,7 @@
       "role": "bim_json_generator",
       "mode": "generate_or_repair",
       "path": "prompts/agent/mimo-bim-json-v3.md",
-      "sha256": "sha256:bca281dab3b85ac79f9921582a2b447c63d406dd4cad1fb1a3d2970a6ebdc4fd",
+      "sha256": "sha256:00d0212e7419f7712a6e9cb6a8c416d70e4d36f7d76ceea8ae001b52ab5626a9",
       "required_inputs": [
         "USER_REQUEST",
         "REFERENCE_JSON",
@@ -20,6 +20,75 @@
         "IfcDirection",
         "IfcOwnerHistory",
         "compiler_only_object"
+      ]
+    },
+    {
+      "template_id": "ifc-repair-changeset.v0.2",
+      "role": "ifc_repair_generator",
+      "mode": "bound_changeset",
+      "path": "prompts/agent/ifc-repair-changeset-v0.2.md",
+      "sha256": "sha256:945d2741cc181e3ad1501ecc44e98c035dbbe2890b88adcc819e3c7dfcb68055",
+      "required_inputs": [
+        "REPAIR_REQUEST",
+        "SOURCE_REQUEST_HASH",
+        "MODEL_FINGERPRINT",
+        "RESOLVED_OPERATIONS",
+        "SUPPORTED_OPERATIONS",
+        "CHANGESET_SCHEMA",
+        "VALIDATION_FEEDBACK",
+        "SEMANTIC_MANIFEST_REF",
+        "SEMANTIC_MANIFEST_SHA256",
+        "SEMANTIC_SUMMARY",
+        "EXPLICIT_REQUEST_SLOT_REFS"
+      ],
+      "forbidden_outputs": [
+        "raw_ifc",
+        "step_text",
+        "step_id",
+        "generated_global_id",
+        "candidate_search",
+        "target_reselection",
+        "prototype_selection",
+        "private_original_ifc",
+        "benchmark_gold",
+        "IfcLocalPlacement",
+        "IfcAxis2Placement3D",
+        "IfcCartesianPoint",
+        "IfcDirection",
+        "IfcOwnerHistory",
+        "representation_topology",
+        "unregistered_operation"
+      ]
+    },
+    {
+      "template_id": "ifc-repair-changeset.v0.3",
+      "role": "ifc_repair_generator",
+      "mode": "bound_changeset",
+      "path": "prompts/agent/ifc-repair-changeset-v0.3.md",
+      "sha256": "sha256:548c793a3c758fe291d27ac3b33ee85e366d3477c1d46272021bb77a444fc271",
+      "required_inputs": [
+        "REPAIR_REQUEST",
+        "SOURCE_REQUEST_HASH",
+        "MODEL_FINGERPRINT",
+        "RESOLVED_OPERATIONS",
+        "SUPPORTED_OPERATIONS",
+        "CHANGESET_SCHEMA",
+        "VALIDATION_FEEDBACK",
+        "SEMANTIC_MANIFEST_REF",
+        "SEMANTIC_MANIFEST_SHA256",
+        "SEMANTIC_SUMMARY",
+        "EXPLICIT_REQUEST_SLOT_REFS"
+      ],
+      "forbidden_outputs": [
+        "raw_ifc",
+        "step_text",
+        "step_id",
+        "raw_cohort_candidates",
+        "private_original_ifc",
+        "benchmark_gold",
+        "mutation_mapping",
+        "semantic_assignments",
+        "unregistered_operation"
       ]
     },
     {
@@ -74,7 +143,7 @@
       "role": "design_brief",
       "mode": "extract_or_clarify",
       "path": "prompts/agent/design-brief-v2.1.md",
-      "sha256": "sha256:1c543bc7d636b71fbe29842d566d294789a03797f860bb2ef2df757a38ee582f",
+      "sha256": "sha256:5332662a5e5484570a8c858106e0e11f97d34018d260731793bf1157c137d002",
       "required_inputs": [
         "USER_REQUEST",
         "CONVERSATION",
@@ -182,7 +251,7 @@
       "role": "bim_json_generator",
       "mode": "changeset",
       "path": "prompts/agent/bim-json-changeset-v1.md",
-      "sha256": "sha256:816c59b740cd236a28029cd9c044696d07563d9aa1d0cc80249aff3e898a06d8",
+      "sha256": "sha256:0ecdf7c6d5eb0f4612bc10ef103a23fde55cc5491be813c4beb2ac0306de70bb",
       "required_inputs": [
         "USER_REQUEST",
         "CONVERSATION",
@@ -208,6 +277,641 @@
         "full_bim_json_replacement",
         "array_index_target",
         "unauthorized_component_change"
+      ]
+    },
+    {
+      "template_id": "ifc-repair-changeset.v0.1",
+      "role": "ifc_repair_generator",
+      "mode": "changeset",
+      "path": "prompts/agent/ifc-repair-changeset-v0.1.md",
+      "sha256": "sha256:0929bf63e4361037d7cfefd1f5bc33758d7cafc24b2e20fddb7d44bb8991e9a5",
+      "required_inputs": [
+        "REPAIR_REQUEST",
+        "PUBLIC_REPAIR_SPEC",
+        "PUBLIC_CONTEXT",
+        "SOURCE_REQUEST_HASH",
+        "SUPPORTED_OPERATIONS",
+        "CHANGESET_SCHEMA"
+      ],
+      "forbidden_outputs": [
+        "raw_ifc",
+        "step_text",
+        "step_id",
+        "generated_global_id",
+        "IfcLocalPlacement",
+        "IfcAxis2Placement3D",
+        "IfcCartesianPoint",
+        "IfcDirection",
+        "IfcOwnerHistory",
+        "representation_topology",
+        "unregistered_operation"
+      ]
+    },
+    {
+      "template_id": "ifc-repair-intent.v0.1",
+      "role": "ifc_repair_request_understanding",
+      "mode": "repair_intent",
+      "path": "prompts/agent/ifc-repair-intent-v0.1.md",
+      "sha256": "sha256:507796fcdcb2c238f40eaf4b60cea655aeeab0d51332cd04e30183f21bf308c7",
+      "required_inputs": [
+        "REPAIR_REQUEST",
+        "SUPPORTED_OPERATIONS",
+        "REPAIR_INTENT_SCHEMA",
+        "VALIDATION_FEEDBACK"
+      ],
+      "forbidden_outputs": [
+        "raw_ifc",
+        "step_text",
+        "step_id",
+        "resolved_target_id",
+        "resolved_target_guid",
+        "mutation_mapping",
+        "private_original_ifc",
+        "benchmark_gold",
+        "guessed_project_fact",
+        "repair_changeset"
+      ]
+    },
+    {
+      "template_id": "ifc-repair-intent.v0.2",
+      "role": "ifc_repair_request_understanding",
+      "mode": "repair_intent",
+      "path": "prompts/agent/ifc-repair-intent-v0.2.md",
+      "sha256": "sha256:fd12bd5c6361f4d6e57a52f6080e77e225c7a056eab9e1dd996c85bd36e44aee",
+      "required_inputs": [
+        "REPAIR_REQUEST",
+        "SUPPORTED_OPERATIONS",
+        "REPAIR_INTENT_SCHEMA",
+        "VALIDATION_FEEDBACK"
+      ],
+      "forbidden_outputs": [
+        "raw_ifc",
+        "step_text",
+        "step_id",
+        "resolved_target_id",
+        "resolved_target_guid",
+        "resolved_type_id",
+        "standard_status",
+        "applicable",
+        "confirmed",
+        "authorized",
+        "mutation_mapping",
+        "private_original_ifc",
+        "benchmark_gold",
+        "guessed_project_fact",
+        "repair_changeset"
+      ]
+    },
+    {
+      "template_id": "ifc-repair-intent.v0.3",
+      "role": "ifc_repair_request_understanding",
+      "mode": "repair_intent",
+      "path": "prompts/agent/ifc-repair-intent-v0.3.md",
+      "sha256": "sha256:9c59ab60eebe1ded70b6e9c1a66a6a7e3de3da08056e9217bb68a9d423bbbdee",
+      "required_inputs": [
+        "REPAIR_REQUEST",
+        "SUPPORTED_OPERATIONS",
+        "REPAIR_INTENT_SCHEMA",
+        "VALIDATION_FEEDBACK"
+      ],
+      "forbidden_outputs": [
+        "raw_ifc",
+        "step_text",
+        "step_id",
+        "resolved_target_id",
+        "resolved_target_guid",
+        "resolved_type_id",
+        "canonical_property_name",
+        "canonical_pset_name",
+        "standard_status",
+        "applicable",
+        "confirmed",
+        "authorized",
+        "mutation_mapping",
+        "private_original_ifc",
+        "benchmark_gold",
+        "guessed_project_fact",
+        "repair_changeset"
+      ]
+    },
+    {
+      "template_id": "ifc-repair-intent.v0.4",
+      "role": "ifc_repair_request_understanding",
+      "mode": "repair_intent",
+      "path": "prompts/agent/ifc-repair-intent-v0.4.md",
+      "sha256": "sha256:6d711cf3ca881945313c6180902d52e43a5416d5e86e07d866ff682839fc902c",
+      "required_inputs": [
+        "REPAIR_REQUEST",
+        "SUPPORTED_OPERATIONS",
+        "REPAIR_INTENT_SCHEMA",
+        "VALIDATION_FEEDBACK"
+      ],
+      "forbidden_outputs": [
+        "raw_ifc",
+        "step_text",
+        "step_id",
+        "resolved_target_id",
+        "resolved_target_guid",
+        "resolved_type_id",
+        "canonical_property_name",
+        "canonical_pset_name",
+        "inferred_occurrence_reuse",
+        "mutation_mapping",
+        "private_original_ifc",
+        "benchmark_gold",
+        "guessed_project_fact",
+        "repair_changeset"
+      ]
+    },
+    {
+      "template_id": "ifc-repair-intent.v0.5",
+      "role": "ifc_repair_request_understanding",
+      "mode": "repair_intent",
+      "path": "prompts/agent/ifc-repair-intent-v0.5.md",
+      "sha256": "sha256:e04f5b4f66f3c566f0f8008767cdcb80ea7aae8655e9de0f7f7bfdd8bc1379ac",
+      "required_inputs": [
+        "REPAIR_REQUEST",
+        "SUPPORTED_OPERATIONS",
+        "REPAIR_INTENT_SCHEMA",
+        "VALIDATION_FEEDBACK"
+      ],
+      "forbidden_outputs": [
+        "raw_ifc",
+        "step_text",
+        "step_id",
+        "resolved_target_id",
+        "resolved_target_guid",
+        "resolved_type_id",
+        "unregistered_profile",
+        "inferred_occurrence_reuse",
+        "mutation_mapping",
+        "private_original_ifc",
+        "benchmark_gold",
+        "guessed_project_fact",
+        "repair_changeset"
+      ]
+    },
+    {
+      "template_id": "ifc-repair-intent.v0.6",
+      "role": "ifc_repair_request_understanding",
+      "mode": "repair_intent",
+      "path": "prompts/agent/ifc-repair-intent-v0.6.md",
+      "sha256": "sha256:997a59854ea34ba5bdc6993900da1d7c1b98b8232bbf02c719acff61bacde754",
+      "required_inputs": [
+        "REPAIR_REQUEST",
+        "SUPPORTED_OPERATIONS",
+        "REPAIR_INTENT_SCHEMA",
+        "VALIDATION_FEEDBACK"
+      ],
+      "forbidden_outputs": [
+        "raw_ifc",
+        "step_text",
+        "step_id",
+        "resolved_target_id",
+        "resolved_target_guid",
+        "resolved_type_id",
+        "unregistered_profile",
+        "inferred_occurrence_reuse",
+        "mutation_mapping",
+        "private_original_ifc",
+        "benchmark_gold",
+        "guessed_project_fact",
+        "repair_changeset"
+      ]
+    },
+    {
+      "template_id": "ifc-repair-intent.v0.7",
+      "role": "ifc_repair_request_understanding",
+      "mode": "repair_intent",
+      "path": "prompts/agent/ifc-repair-intent-v0.7.md",
+      "sha256": "sha256:49a518ec482eddb7d187584232d81602514f7e7ced97ee1eabaf79b8e88938bb",
+      "required_inputs": [
+        "REPAIR_REQUEST",
+        "SUPPORTED_OPERATIONS",
+        "REPAIR_INTENT_SCHEMA",
+        "VALIDATION_FEEDBACK"
+      ],
+      "forbidden_outputs": [
+        "raw_ifc",
+        "step_text",
+        "step_id",
+        "resolved_target_id",
+        "resolved_target_guid",
+        "resolved_type_id",
+        "unregistered_profile",
+        "inferred_occurrence_reuse",
+        "mutation_mapping",
+        "private_original_ifc",
+        "benchmark_gold",
+        "guessed_project_fact",
+        "repair_changeset"
+      ]
+    },
+    {
+      "template_id": "ifc-repair-intent.v0.8",
+      "role": "ifc_repair_request_understanding",
+      "mode": "repair_intent",
+      "path": "prompts/agent/ifc-repair-intent-v0.8.md",
+      "sha256": "sha256:00e186b6af79628e57e6658ad16309880f67542481e2a4ad07e66a15f4737175",
+      "required_inputs": [
+        "REPAIR_REQUEST",
+        "SUPPORTED_OPERATIONS",
+        "REPAIR_INTENT_SCHEMA",
+        "VALIDATION_FEEDBACK"
+      ],
+      "forbidden_outputs": [
+        "raw_ifc",
+        "step_text",
+        "step_id",
+        "resolved_target_id",
+        "resolved_target_guid",
+        "resolved_type_id",
+        "unregistered_profile",
+        "inferred_occurrence_reuse",
+        "mutation_mapping",
+        "private_original_ifc",
+        "benchmark_gold",
+        "guessed_project_fact",
+        "repair_changeset"
+      ]
+    },
+    {
+      "template_id": "ifc-repair-intent.v0.9",
+      "role": "ifc_repair_request_understanding",
+      "mode": "repair_intent",
+      "path": "prompts/agent/ifc-repair-intent-v0.9.md",
+      "sha256": "sha256:0b839b55a1176657d9ca315479c7a8849f298688a5c15226eac13aeb03c8f648",
+      "required_inputs": [
+        "REPAIR_REQUEST",
+        "SUPPORTED_OPERATIONS",
+        "REPAIR_INTENT_SCHEMA",
+        "VALIDATION_FEEDBACK"
+      ],
+      "forbidden_outputs": [
+        "raw_ifc",
+        "step_text",
+        "step_id",
+        "resolved_target_id",
+        "resolved_target_guid",
+        "resolved_type_id",
+        "unregistered_profile",
+        "inferred_occurrence_reuse",
+        "mutation_mapping",
+        "private_original_ifc",
+        "benchmark_gold",
+        "guessed_project_fact",
+        "repair_changeset"
+      ]
+    },
+    {
+      "template_id": "ifc-repair-intent.v0.10",
+      "role": "ifc_repair_request_understanding",
+      "mode": "repair_intent",
+      "path": "prompts/agent/ifc-repair-intent-v0.10.md",
+      "sha256": "sha256:a88495cc266d827cbd9623407ab8105205e2d00cc736813172e350f977578e70",
+      "required_inputs": [
+        "REPAIR_REQUEST",
+        "SUPPORTED_OPERATIONS",
+        "REPAIR_INTENT_SCHEMA",
+        "VALIDATION_FEEDBACK"
+      ],
+      "forbidden_outputs": [
+        "raw_ifc",
+        "step_text",
+        "step_id",
+        "resolved_target_id",
+        "resolved_target_guid",
+        "resolved_type_id",
+        "unregistered_profile",
+        "inferred_occurrence_reuse",
+        "mutation_mapping",
+        "private_original_ifc",
+        "benchmark_gold",
+        "guessed_project_fact",
+        "repair_changeset"
+      ]
+    },
+    {
+      "template_id": "ifc-repair-intent.v0.11",
+      "role": "ifc_repair_request_understanding",
+      "mode": "repair_intent",
+      "path": "prompts/agent/ifc-repair-intent-v0.11.md",
+      "sha256": "sha256:dec929f94db4c626fadf9b2bc2592e3c351d9fbd0ef4c94243475a4559e8b568",
+      "required_inputs": [
+        "REPAIR_REQUEST",
+        "SUPPORTED_OPERATIONS",
+        "REPAIR_INTENT_SCHEMA",
+        "VALIDATION_FEEDBACK"
+      ],
+      "forbidden_outputs": [
+        "raw_ifc",
+        "step_text",
+        "step_id",
+        "resolved_target_id",
+        "resolved_target_guid",
+        "resolved_type_id",
+        "unregistered_profile",
+        "inferred_occurrence_reuse",
+        "mutation_mapping",
+        "private_original_ifc",
+        "benchmark_gold",
+        "guessed_project_fact",
+        "repair_changeset"
+      ]
+    },
+    {
+      "template_id": "ifc-repair-changeset.v0.4",
+      "role": "ifc_repair_generator",
+      "mode": "bound_changeset",
+      "path": "prompts/agent/ifc-repair-changeset-v0.4.md",
+      "sha256": "sha256:9bb8866082df52fcaa9b064fb38fe5cf5f527e547a993f10d808bf6cb5901622",
+      "required_inputs": [
+        "REPAIR_REQUEST",
+        "SOURCE_REQUEST_HASH",
+        "MODEL_FINGERPRINT",
+        "RESOLVED_OPERATIONS",
+        "SUPPORTED_OPERATIONS",
+        "CHANGESET_SCHEMA",
+        "VALIDATION_FEEDBACK",
+        "SEMANTIC_MANIFEST_REF",
+        "SEMANTIC_MANIFEST_SHA256",
+        "SEMANTIC_SUMMARY",
+        "EXPLICIT_REQUEST_SLOT_REFS"
+      ],
+      "forbidden_outputs": [
+        "raw_ifc",
+        "step_text",
+        "step_id",
+        "raw_cohort_candidates",
+        "private_original_ifc",
+        "benchmark_gold",
+        "mutation_mapping",
+        "semantic_assignments",
+        "unregistered_operation",
+        "unselected_profile"
+      ]
+    },
+    {
+      "template_id": "ifc-repair-changeset.v0.5",
+      "role": "ifc_repair_generator",
+      "mode": "bound_changeset",
+      "path": "prompts/agent/ifc-repair-changeset-v0.5.md",
+      "sha256": "sha256:f354db4172fe177dfbed8ded156d5c62aec7aead33302ffe996050c57f20885f",
+      "required_inputs": [
+        "REPAIR_REQUEST",
+        "SOURCE_REQUEST_HASH",
+        "MODEL_FINGERPRINT",
+        "RESOLVED_OPERATIONS",
+        "SUPPORTED_OPERATIONS",
+        "CHANGESET_SCHEMA",
+        "VALIDATION_FEEDBACK",
+        "SEMANTIC_MANIFEST_REF",
+        "SEMANTIC_MANIFEST_SHA256",
+        "SEMANTIC_SUMMARY",
+        "EXPLICIT_REQUEST_SLOT_REFS"
+      ],
+      "forbidden_outputs": [
+        "raw_ifc",
+        "step_text",
+        "step_id",
+        "raw_cohort_candidates",
+        "private_original_ifc",
+        "benchmark_gold",
+        "mutation_mapping",
+        "semantic_assignments",
+        "unregistered_operation",
+        "unselected_profile"
+      ]
+    },
+    {
+      "template_id": "beam.add",
+      "role": "ifc_repair_operation_profile",
+      "mode": "reserved_selected_profile",
+      "path": "prompts/agent/ifc-repair-profiles/beam.add.json",
+      "sha256": "sha256:4de755a16bd692c01348310b60dded8b3102ad7c957074d50832c721281c8bf6",
+      "required_inputs": [],
+      "forbidden_outputs": [
+        "placement_matrix",
+        "generated_global_id",
+        "generated_type_identity",
+        "unselected_profile",
+        "noncanonical_alias"
+      ]
+    },
+    {
+      "template_id": "beam.add.v0.2",
+      "role": "ifc_repair_operation_profile",
+      "mode": "selected_profile",
+      "path": "prompts/agent/ifc-repair-profiles/beam.add.v0.2.json",
+      "sha256": "sha256:3cd48523388f4b020b4a76f190d9e9ea17045910a9637e61dec869316b763f86",
+      "required_inputs": [],
+      "forbidden_outputs": [
+        "placement_matrix",
+        "generated_global_id",
+        "generated_type_identity",
+        "unselected_profile",
+        "noncanonical_alias"
+      ]
+    },
+    {
+      "template_id": "beam.add.v0.3",
+      "role": "ifc_repair_operation_profile",
+      "mode": "selected_profile",
+      "path": "prompts/agent/ifc-repair-profiles/beam.add.v0.3.json",
+      "sha256": "sha256:4a524131881efa1898130814df86faef8259d9d5e172c63368970a4fe682b6a0",
+      "required_inputs": [],
+      "forbidden_outputs": [
+        "placement_matrix",
+        "generated_global_id",
+        "generated_type_identity",
+        "unselected_profile",
+        "noncanonical_alias"
+      ]
+    },
+    {
+      "template_id": "beam.add.stage2.v0.1",
+      "role": "ifc_repair_operation_profile",
+      "mode": "selected_stage2_profile",
+      "path": "prompts/agent/ifc-repair-profiles/beam.add.stage2.v0.1.json",
+      "sha256": "sha256:6281a88273c828c8e52057652c6f91982e7d03975a93e79e2f2629e68675ad4b",
+      "required_inputs": [],
+      "forbidden_outputs": [
+        "unselected_profile",
+        "noncanonical_alias",
+        "upstream_intent_authority"
+      ]
+    },
+    {
+      "template_id": "column.add",
+      "role": "ifc_repair_operation_profile",
+      "mode": "reserved_selected_profile",
+      "path": "prompts/agent/ifc-repair-profiles/column.add.json",
+      "sha256": "sha256:246d5e2cc1941f35ccc296542dcb12d10c13e72de4e1c1e0b0a800c807772fb1",
+      "required_inputs": [],
+      "forbidden_outputs": [
+        "placement_matrix",
+        "generated_global_id",
+        "generated_type_identity",
+        "unselected_profile",
+        "noncanonical_alias"
+      ]
+    },
+    {
+      "template_id": "column.add.v0.2",
+      "role": "ifc_repair_operation_profile",
+      "mode": "selected_profile",
+      "path": "prompts/agent/ifc-repair-profiles/column.add.v0.2.json",
+      "sha256": "sha256:9fc8b715cf04af8b62c1a973c1ed5c3ee896eb727b247efc02b3ee121f3bd83e",
+      "required_inputs": [],
+      "forbidden_outputs": [
+        "placement_matrix",
+        "generated_global_id",
+        "generated_type_identity",
+        "unselected_profile",
+        "noncanonical_alias"
+      ]
+    },
+    {
+      "template_id": "column.add.v0.3",
+      "role": "ifc_repair_operation_profile",
+      "mode": "selected_profile",
+      "path": "prompts/agent/ifc-repair-profiles/column.add.v0.3.json",
+      "sha256": "sha256:02809e9ea0dea0e731ec35c376864030d9f30fee9552b5ca458bbfc521062ce7",
+      "required_inputs": [],
+      "forbidden_outputs": [
+        "placement_matrix",
+        "generated_global_id",
+        "generated_type_identity",
+        "unselected_profile",
+        "noncanonical_alias"
+      ]
+    },
+    {
+      "template_id": "column.add.stage2.v0.1",
+      "role": "ifc_repair_operation_profile",
+      "mode": "selected_stage2_profile",
+      "path": "prompts/agent/ifc-repair-profiles/column.add.stage2.v0.1.json",
+      "sha256": "sha256:4246f8ab76aeee47ab60b8479773c4573003b30df7348e9a19e59496934b03ab",
+      "required_inputs": [],
+      "forbidden_outputs": [
+        "unselected_profile",
+        "noncanonical_alias",
+        "upstream_intent_authority"
+      ]
+    },
+    {
+      "template_id": "door.add-with-opening",
+      "role": "ifc_repair_operation_profile",
+      "mode": "selected_profile",
+      "path": "prompts/agent/ifc-repair-profiles/door.add-with-opening.json",
+      "sha256": "sha256:7fa4d80429ce46089a940db35a0a0fbb8effaacca4bbfac7b766245ee6d0c370",
+      "required_inputs": [],
+      "forbidden_outputs": ["unselected_profile", "unregistered_operation"]
+    },
+    {
+      "template_id": "door.add-with-opening.v0.2",
+      "role": "ifc_repair_operation_profile",
+      "mode": "selected_profile",
+      "path": "prompts/agent/ifc-repair-profiles/door.add-with-opening.v0.2.json",
+      "sha256": "sha256:7eac7e8ac80e158a8cee4142a6830dce0d849b111efc6547201232e79e88bb36",
+      "required_inputs": [],
+      "forbidden_outputs": ["unselected_profile", "unregistered_operation"]
+    },
+    {
+      "template_id": "door.fill-existing-opening",
+      "role": "ifc_repair_operation_profile",
+      "mode": "selected_profile",
+      "path": "prompts/agent/ifc-repair-profiles/door.fill-existing-opening.json",
+      "sha256": "sha256:aea25a85765334feb272148e2e455fd35d4616fcdb1190bf4d7624f790e70be3",
+      "required_inputs": [],
+      "forbidden_outputs": ["unselected_profile", "unregistered_operation"]
+    },
+    {
+      "template_id": "door.fill-existing-opening.v0.2",
+      "role": "ifc_repair_operation_profile",
+      "mode": "selected_profile",
+      "path": "prompts/agent/ifc-repair-profiles/door.fill-existing-opening.v0.2.json",
+      "sha256": "sha256:1e79bce84c2704108eb22a59ec45e279366196ed28439dcc4bcfca8591721dd6",
+      "required_inputs": [],
+      "forbidden_outputs": ["unselected_profile", "unregistered_operation"]
+    },
+    {
+      "template_id": "occurrence.set-properties",
+      "role": "ifc_repair_operation_profile",
+      "mode": "selected_profile",
+      "path": "prompts/agent/ifc-repair-profiles/occurrence.set-properties.json",
+        "sha256": "sha256:7b95c00e8f19ff4990053698c42dd182e385931260a2929d0edecbd19dbbec2b",
+      "required_inputs": [],
+      "forbidden_outputs": ["unselected_profile", "unregistered_operation"]
+    },
+    {
+      "template_id": "opening.add-to-wall",
+      "role": "ifc_repair_operation_profile",
+      "mode": "selected_profile",
+      "path": "prompts/agent/ifc-repair-profiles/opening.add-to-wall.json",
+      "sha256": "sha256:db70f1f22bd270636c00b210ac99f18f4c7b2a38cd5bc891a7106c7101d5dbbc",
+      "required_inputs": [],
+      "forbidden_outputs": ["unselected_profile", "unregistered_operation"]
+    },
+    {
+      "template_id": "window.add-with-opening",
+      "role": "ifc_repair_operation_profile",
+      "mode": "selected_profile",
+      "path": "prompts/agent/ifc-repair-profiles/window.add-with-opening.json",
+      "sha256": "sha256:d00699ba8ee0f5ec4751bb982f113662bb7920409f3ca5f8915dd3c941cec45c",
+      "required_inputs": [],
+      "forbidden_outputs": ["unselected_profile", "unregistered_operation"]
+    },
+    {
+      "template_id": "ifc-property-resolution.v0.1",
+      "role": "ifc_property_resolution",
+      "mode": "rerank_or_clarify",
+      "path": "prompts/agent/ifc-property-resolution-v0.1.md",
+      "sha256": "sha256:00a38b99a1941b04c8c98ffe0883399f72bdf60380e792ac493243494a3c9e49",
+      "required_inputs": [
+        "PROPERTY_QUERY",
+        "CANDIDATE_SET",
+        "DECISION_SCHEMA",
+        "PREVIOUS_VALIDATION_FEEDBACK"
+      ],
+      "forbidden_outputs": [
+        "raw_ifc",
+        "step_text",
+        "canonical_property",
+        "canonical_pset",
+        "value_override",
+        "scope_override",
+        "operation_override",
+        "private_original_ifc",
+        "benchmark_gold",
+        "mutation_mapping",
+        "repair_changeset"
+      ]
+    },
+    {
+      "template_id": "ifc-property-resolution.v0.2",
+      "role": "ifc_property_resolution",
+      "mode": "rerank_or_clarify",
+      "path": "prompts/agent/ifc-property-resolution-v0.2.md",
+      "sha256": "sha256:cb184d74d316dc441868c8266cccfe6ca06b5eb7598f99c693a8647564d4d0df",
+      "required_inputs": [
+        "PROPERTY_QUERY",
+        "CANDIDATE_SET",
+        "DECISION_SCHEMA",
+        "PREVIOUS_VALIDATION_FEEDBACK"
+      ],
+      "forbidden_outputs": [
+        "raw_ifc",
+        "step_text",
+        "canonical_property",
+        "canonical_pset",
+        "value_override",
+        "scope_override",
+        "operation_override",
+        "private_original_ifc",
+        "benchmark_gold",
+        "mutation_mapping",
+        "repair_changeset"
       ]
     },
     {

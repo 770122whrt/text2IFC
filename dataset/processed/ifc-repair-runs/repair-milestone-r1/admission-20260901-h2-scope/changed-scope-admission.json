@@ -1,0 +1,99 @@
+{
+ "schema_version": "text2ifc/repair-milestone-r1-changed-scope-admission/0.1",
+ "status": "passed",
+ "admission_basis": "previous full-preflight evidence + focused revalidation of all previously failed/changed scopes",
+ "generated_at": "2026-09-01",
+ "trigger": {
+  "defect": "R1 r1-20260901T134510430440Z case H2 deterministic stop PROPERTY_RETRIEVAL_BELOW_FLOOR",
+  "root_cause": "Stage 1 legitimately emitted scope=null on natural-language property claims (schema permits null when the user states no scope). resolution_flow forwarded the raw null into PropertyKnowledgeQuery and the durable coordinator re-read claim.scope; pre-retrieval eligibility accepts only exactly 'occurrence_direct', so every record was excluded and Top-K was empty.",
+  "fix": "resolution_flow normalizes the claim scope once (normalize_property_scope: null -> occurrence_direct) and passes the normalized value into the query; the coordinator reads the query's normalized scope. type_owned still fails closed. No schema, prompt, fixture, Gold, threshold, or eligibility-rule change.",
+  "implementation_commit": "f1a37348"
+ },
+ "source_full_preflight": {
+  "path": "dataset/processed/proof/ifc-repair-success-cases/structural/live/phase12-live-deepseek-complete/provider-evidence/preflight/preflight.json",
+  "sha256": "sha256:cc506b4759af65ee4573abe0f045a1b803a418aea552e4f286ff7125c7009c2d",
+  "preserved_status": "passed"
+ },
+ "preserved_interrupted_run": {
+  "path": "dataset/processed/ifc-repair-runs/repair-milestone-r1/r1-20260901T134510430440Z/r1-execution-result.json",
+  "sha256": "sha256:15376e333d2048c34be31916d0a70fd33282e7ddc69474f86efcb14149762a7d",
+  "preserved_status": "failed",
+  "stopped_after_case": "H2",
+  "passed_before_stop": [
+   "E1",
+   "E2",
+   "E3",
+   "E4",
+   "M1",
+   "M2",
+   "M3",
+   "H1"
+  ]
+ },
+ "provider_calls": 0,
+ "predictions_regenerated": 0,
+ "network_transport_attempted": false,
+ "changed_scope_files": {
+  "src/text2ifc_ifc_repair/resolution_flow.py": "sha256:8dbfa2f6feb581326f3326f3f4b3cf2faa2a60927136fc228a27122bdb5a76ba",
+  "src/text2ifc_ifc_repair/property_resolution_coordinator.py": "sha256:f6c572a3da85656e115ea697f572c19f44bc2529b0b87b1f1f13e55dab9a7d84",
+  "tests/ifc_repair/test_property_claim_scope_normalization.py": "sha256:d95d088f9122ed19d217e068a714f95a4b9f870ac0f8bb525042b1512544bace"
+ },
+ "resolved_checks": [
+  {
+   "check_id": "property_claim_scope_normalization_focused",
+   "status": "passed",
+   "exit_code": 0,
+   "skip_count": 0,
+   "substitution_count": 0,
+   "timeout_count": 0,
+   "network_calls": 0,
+   "result": "2 passed; RED reproduced pre-fix on the coordinator seam, GREEN post-fix",
+   "evidence": []
+  },
+  {
+   "check_id": "property_resolution_family_regression",
+   "status": "passed",
+   "exit_code": 0,
+   "skip_count": 0,
+   "substitution_count": 0,
+   "timeout_count": 0,
+   "network_calls": 0,
+   "result": "139 passed (scope + property resolution + admissibility + vector runtime family)",
+   "evidence": []
+  },
+  {
+   "check_id": "full_ifc_repair_suite",
+   "status": "passed",
+   "exit_code": 0,
+   "skip_count": 0,
+   "substitution_count": 0,
+   "timeout_count": 0,
+   "network_calls": 0,
+   "result": "1250 passed across four parallel batches (288+313+279+370); zero failure, zero skip",
+   "evidence": [
+    {
+     "path": "dataset/processed/ifc-repair-runs/repair-milestone-r1/admission-20260901-h2-scope/ifc-repair-suite-stdout.txt",
+     "sha256": "sha256:17e549b674a8e6f4e2c4855f4f40f9b85c2ed4999e6f7d428c2cd3eddf255a62"
+    }
+   ]
+  },
+  {
+   "check_id": "full_knowledge_suite",
+   "status": "passed",
+   "exit_code": 0,
+   "skip_count": 0,
+   "substitution_count": 0,
+   "timeout_count": 0,
+   "network_calls": 0,
+   "result": "111 passed in 258.90s",
+   "evidence": [
+    {
+     "path": "dataset/processed/ifc-repair-runs/repair-milestone-r1/admission-20260901-h2-scope/knowledge-suite-stdout.txt",
+     "sha256": "sha256:bcf05a809804abf60bca39464ad64c584b55866a05e5d3a94ade3f1c0cbf853f"
+    }
+   ]
+  }
+ ],
+ "compileall": "passed (src tests scripts)",
+ "git_diff_check": "passed"
+}

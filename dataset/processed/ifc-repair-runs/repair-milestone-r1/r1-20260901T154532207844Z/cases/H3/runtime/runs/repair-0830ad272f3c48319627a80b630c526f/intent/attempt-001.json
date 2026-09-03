@@ -1,0 +1,37 @@
+{
+  "attempt": 1,
+  "issues": [],
+  "normalizations": [],
+  "provider_metadata": {
+    "estimated_input_tokens": "[REDACTED]",
+    "evidence_class": "live",
+    "max_input_tokens": "[REDACTED]",
+    "model": "deepseek-v4-flash",
+    "provider": "deepseek-openai-compatible",
+    "request_configuration": {
+      "temperature": {
+        "effective": false,
+        "value": 0
+      },
+      "thinking": {
+        "type": "enabled"
+      }
+    },
+    "response_id": "91c55351-16ee-4f3b-8e34-403e648d3183",
+    "session_id": "ifc-repair-intent-request-36dfc1fb5f516cae",
+    "stop_reason": "stop",
+    "transport_attempts": 1,
+    "usage": {
+      "completion_tokens": 6307,
+      "completion_tokens_details": "[REDACTED]",
+      "prompt_cache_hit_tokens": "[REDACTED]",
+      "prompt_cache_miss_tokens": "[REDACTED]",
+      "prompt_tokens": 11528,
+      "prompt_tokens_details": "[REDACTED]",
+      "total_tokens": 17835
+    }
+  },
+  "response_excerpt": "{\n  \"schema_version\": \"text2ifc/ifc-repair-intent-body/0.8\",\n  \"operations\": [\n    {\n      \"operation_id\": \"set-window-external-1\",\n      \"operation_type\": \"set_occurrence_properties\",\n      \"routing_intent\": {\n        \"component_family\": \"occurrence\",\n        \"action\": \"set_properties\",\n        \"operation_profile\": \"occurrence.set-properties\",\n        \"source\": {\n          \"source_kind\": \"user_request\",\n          \"reference\": \"user-request-1\",\n          \"excerpt\": \"将 Level 2 中 819 mm × 759 mm 类型的窗设置为外窗。\"\n        }\n      },\n      \"target_query\": {\n        \"schema_version\": \"text2ifc/ifc-target-query/0.1\",\n        \"allowed_ifc_classes\": [\"IfcWindow\"],\n        \"storey_name\": \"Level 2\",\n        \"geometry_constraints\": [\n          {\n            \"field\": \"opening_width_mm\",\n            \"value\": 819,\n            \"tolerance_mm\": 1\n          },\n          {\n            \"field\": \"opening_height_mm\",\n            \"value\": 759,\n            \"tolerance_mm\": 1\n          }\n        ]\n      },\n      \"parameters\": {},\n      \"attribute_intents\": [],\n      \"property_intents\": [\n        {\n          \"intent_kind\": \"natural_language_property\",\n          \"property_phrase\": \"外窗\",\n          \"raw_value\": true,\n          \"raw_unit\": null,\n          \"scope\": \"occurrence_direct\",\n          \"source\": {\n            \"source_kind\": \"user_request\",\n            \"reference\": \"user-request-1\",\n            \"excerpt\": \"将 Level 2 中 819 mm × 759 mm 类型的窗设置为外窗。\"\n          }\n        }\n      ],\n      \"semantic_bundle_refs\": [],\n      \"quantity_intents\": [],\n      \"occurrence_reuse_intent\": null,\n      \"prototype_intent\": null,\n      \"provenance\": [\n        {\n          \"source_kind\": \"user_request\",\n          \"reference\": \"user-request-1\",\n          \"excerpt\": \"将 Level 2 中 819 mm × 759 mm 类型的窗设置为外窗。\"\n        }\n      ]\n    }\n  ],\n  \"unsupported_requests\": [],\n  \"semantic_bundles\": [],\n  \"provenance\": [\n    {\n      \"source_kind\": \"user_request\",\n      \"reference\": \"user-request-1\",\n      \"excerpt\": \"将 Level 2 中 819 mm × 759 mm 类型的窗设置为外窗。\"\n    }\n  ]\n}",
+  "response_sha256": "sha256:166d6e923097a35474c0b39ce795ed6328d6c7ab136bed1c1cbbe1923a37bec7",
+  "status": "valid"
+}

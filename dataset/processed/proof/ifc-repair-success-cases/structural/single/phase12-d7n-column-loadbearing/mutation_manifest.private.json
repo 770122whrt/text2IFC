@@ -1,0 +1,197 @@
+{
+  "counts": {
+    "after": {
+      "IfcBeam": 10,
+      "IfcBeamType": 1,
+      "IfcBuilding": 1,
+      "IfcBuildingStorey": 4,
+      "IfcColumn": 14,
+      "IfcColumnType": 15,
+      "IfcDoor": 17,
+      "IfcOpeningElement": 26,
+      "IfcProject": 1,
+      "IfcRelAssociatesMaterial": 104,
+      "IfcRelContainedInSpatialStructure": 8,
+      "IfcRelDefinesByType": 51,
+      "IfcRelFillsElement": 24,
+      "IfcRelVoidsElement": 26,
+      "IfcSite": 1,
+      "IfcSpace": 12,
+      "IfcWall": 65,
+      "IfcWindow": 7
+    },
+    "before": {
+      "IfcBeam": 10,
+      "IfcBeamType": 1,
+      "IfcBuilding": 1,
+      "IfcBuildingStorey": 4,
+      "IfcColumn": 15,
+      "IfcColumnType": 15,
+      "IfcDoor": 17,
+      "IfcOpeningElement": 26,
+      "IfcProject": 1,
+      "IfcRelAssociatesMaterial": 104,
+      "IfcRelContainedInSpatialStructure": 8,
+      "IfcRelDefinesByType": 52,
+      "IfcRelFillsElement": 24,
+      "IfcRelVoidsElement": 26,
+      "IfcSite": 1,
+      "IfcSpace": 12,
+      "IfcWall": 65,
+      "IfcWindow": 7
+    }
+  },
+  "damaged_ifc": {
+    "path": "damaged.ifc",
+    "sha256": "f95c6f63ea7613389f489cc3731e60c087a6b46cca242972449864c25db62116"
+  },
+  "mutation_type": "remove_structural_members",
+  "role_mapping": {
+    "column": "3dldEzenf9LvnDJYNNzLsH"
+  },
+  "schema_version": "text2ifc/ifc-repair-structural-mutation-private/0.1",
+  "source": {
+    "path": "E:/code for project/bimnet/dataset/ifc/test/d7n.ifc",
+    "schema": "IFC2X3",
+    "sha256": "43b6756b88874f9525f6a511d7dc718844dac59b638a11e3fbc36b321e0ab8b7",
+    "size_bytes": 3293724
+  },
+  "targets": [
+    {
+      "entity": {
+        "global_id": "3dldEzenf9LvnDJYNNzLsH",
+        "ifc_class": "IfcColumn",
+        "name": "柱 2:柱 2:291688",
+        "step_id": 99468
+      },
+      "geometry": {
+        "axis_capability": {
+          "authority": "diagnostic_only",
+          "candidate_count": 0,
+          "reason": "explicit_single_axis_polyline_required",
+          "status": "unavailable"
+        },
+        "representation_summary": {
+          "authority": "diagnostic_only",
+          "provenance": "current_ifc_representation",
+          "representations": [
+            {
+              "identifier": "Body",
+              "item_classes": [
+                "IfcMappedItem"
+              ],
+              "type": "MappedRepresentation"
+            }
+          ],
+          "resolved_item_classes": [
+            "IfcExtrudedAreaSolid"
+          ]
+        },
+        "section_capability": {
+          "authority": "diagnostic_only",
+          "candidate_count": 0,
+          "reason": "explicit_single_rectangular_extrusion_required",
+          "status": "unavailable"
+        }
+      },
+      "role": "column",
+      "semantics": {
+        "material_associations": [],
+        "property_sets": [
+          {
+            "definition": {
+              "global_id": "3skXilZ4b54fJkEV_uRnr_",
+              "ifc_class": "IfcPropertySet",
+              "name": "Pset_ReinforcementBarPitchOfColumn",
+              "step_id": 99478
+            },
+            "properties": [
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "name": "Reference",
+                "step_id": 99477,
+                "value": "柱 2",
+                "value_type": "IfcLabel"
+              }
+            ],
+            "relationship": {
+              "global_id": "0VN4RrCUj7RRfSTo$OGUNf",
+              "ifc_class": "IfcRelDefinesByProperties",
+              "step_id": 99487
+            }
+          },
+          {
+            "definition": {
+              "global_id": "1e97vOyvL9X8hyS3vedTJ5",
+              "ifc_class": "IfcPropertySet",
+              "name": "Pset_ColumnCommon",
+              "step_id": 99473
+            },
+            "properties": [
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "name": "IsExternal",
+                "step_id": 1799,
+                "value": false,
+                "value_type": "IfcBoolean"
+              },
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "name": "Reference",
+                "step_id": 99471,
+                "value": "柱 2",
+                "value_type": "IfcIdentifier"
+              },
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "name": "Slope",
+                "step_id": 99472,
+                "value": 0.0,
+                "value_type": "IfcPlaneAngleMeasure"
+              }
+            ],
+            "relationship": {
+              "global_id": "217c8VUm15EAy3B8bXvijC",
+              "ifc_class": "IfcRelDefinesByProperties",
+              "step_id": 99480
+            }
+          },
+          {
+            "definition": {
+              "global_id": "2exH0CCYr7SAz3y3dN3Esx",
+              "ifc_class": "IfcPropertySet",
+              "name": "Pset_QuantityTakeOff",
+              "step_id": 99475
+            },
+            "properties": [
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "name": "Reference",
+                "step_id": 99471,
+                "value": "柱 2",
+                "value_type": "IfcIdentifier"
+              }
+            ],
+            "relationship": {
+              "global_id": "2_xJx$Z_X6pR$mj9QhTYE2",
+              "ifc_class": "IfcRelDefinesByProperties",
+              "step_id": 99484
+            }
+          }
+        ]
+      },
+      "storey": {
+        "global_id": "0K_MqVdrL0JOCMi_GblRwJ",
+        "ifc_class": "IfcBuildingStorey",
+        "name": "Level 1",
+        "step_id": 124
+      },
+      "type": {
+        "global_id": "3dldEzenf9LvnDJYNNzLsV",
+        "ifc_class": "IfcColumnType",
+        "name": "柱 2",
+        "step_id": 99458
+      }
+    }
+  ]
+}

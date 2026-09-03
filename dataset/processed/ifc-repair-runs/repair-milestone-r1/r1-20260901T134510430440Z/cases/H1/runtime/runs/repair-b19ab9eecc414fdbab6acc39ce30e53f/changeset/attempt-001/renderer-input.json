@@ -1,0 +1,732 @@
+{
+  "CHANGESET_SCHEMA": {
+    "$defs": {
+      "hash": {
+        "pattern": "^sha256:[0-9a-f]{64}$",
+        "type": "string"
+      },
+      "id": {
+        "minLength": 1,
+        "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]*$",
+        "type": "string"
+      },
+      "operation": {
+        "additionalProperties": false,
+        "properties": {
+          "evidence_refs": {
+            "$ref": "#/$defs/strings"
+          },
+          "operation_id": {
+            "$ref": "#/$defs/id"
+          },
+          "operation_type": {
+            "$ref": "#/$defs/id"
+          },
+          "parameters": {
+            "type": "object"
+          },
+          "target": {
+            "minProperties": 1,
+            "type": "object"
+          }
+        },
+        "required": [
+          "operation_id",
+          "operation_type",
+          "target",
+          "parameters",
+          "evidence_refs"
+        ],
+        "type": "object"
+      },
+      "scope": {
+        "additionalProperties": false,
+        "properties": {
+          "forbidden_ids": {
+            "$ref": "#/$defs/strings"
+          },
+          "target_ids": {
+            "$ref": "#/$defs/strings"
+          }
+        },
+        "required": [
+          "target_ids",
+          "forbidden_ids"
+        ],
+        "type": "object"
+      },
+      "strings": {
+        "items": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "type": "array",
+        "uniqueItems": true
+      }
+    },
+    "$id": "text2ifc/ifc-repair-changeset-draft/0.2",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "additionalProperties": false,
+    "properties": {
+      "base_model_fingerprint": {
+        "$ref": "#/$defs/hash"
+      },
+      "draft_id": {
+        "$ref": "#/$defs/id"
+      },
+      "evidence_refs": {
+        "$ref": "#/$defs/strings"
+      },
+      "operations": {
+        "items": {
+          "$ref": "#/$defs/operation"
+        },
+        "minItems": 1,
+        "type": "array"
+      },
+      "postconditions": {
+        "$ref": "#/$defs/strings"
+      },
+      "preconditions": {
+        "$ref": "#/$defs/strings"
+      },
+      "schema_version": {
+        "const": "text2ifc/ifc-repair-changeset-draft/0.2"
+      },
+      "scope": {
+        "$ref": "#/$defs/scope"
+      },
+      "semantic_manifest_ref": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "semantic_manifest_sha256": {
+        "$ref": "#/$defs/hash"
+      },
+      "semantic_summary": {
+        "additionalProperties": false,
+        "properties": {
+          "conditional": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "not_required": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "required": {
+            "minimum": 0,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "required",
+          "conditional",
+          "not_required"
+        ],
+        "type": "object"
+      },
+      "source_request_hash": {
+        "$ref": "#/$defs/hash"
+      }
+    },
+    "required": [
+      "schema_version",
+      "draft_id",
+      "base_model_fingerprint",
+      "source_request_hash",
+      "semantic_manifest_ref",
+      "semantic_manifest_sha256",
+      "semantic_summary",
+      "scope",
+      "evidence_refs",
+      "preconditions",
+      "postconditions",
+      "operations"
+    ],
+    "title": "Provider IFC Repair ChangeSet Draft 0.2",
+    "type": "object"
+  },
+  "EXPLICIT_REQUEST_SLOT_REFS": [
+    "pset:Pset_WindowCommon.FireRating"
+  ],
+  "MODEL_FINGERPRINT": "sha256:707a032566dee8e969a44d95509be46d646440e2443624709f8d3ae2b45f4656",
+  "REPAIR_REQUEST": "在 Level 1 添加一根新的水平矩形梁，中心轴从 (1000, -20000, 3100) mm 到 (7000, -20000, 3100) mm，截面尺寸为 300 × 500 mm，并为它创建独立 Beam Type。同时，将 GlobalId 为 1hOSvn6df7F8_7GcBWlRLx、Tag 为 146885 的窗的防火等级设置为 EI60。两项修改必须在同一个原子事务中完成，全部成功才发布。",
+  "RESOLVED_OPERATIONS": {
+    "evidence_refs": [
+      "resolved:/operations/add-beam-level1/context/candidate_targets/0",
+      "resolved:/operations/set-window-fire-rating/context/candidate_targets/0"
+    ],
+    "operations": [
+      {
+        "evidence_refs": [
+          "resolved:/operations/add-beam-level1/context/candidate_targets/0"
+        ],
+        "operation_id": "add-beam-level1",
+        "operation_type": "add_beam",
+        "parameters": {
+          "axis": {
+            "end": {
+              "x_mm": 7000.0,
+              "y_mm": -20000.0,
+              "z_mm": 3100.0
+            },
+            "start": {
+              "x_mm": 1000.0,
+              "y_mm": -20000.0,
+              "z_mm": 3100.0
+            }
+          },
+          "section": {
+            "height_mm": 500,
+            "shape": "rectangle",
+            "width_mm": 300
+          }
+        },
+        "target": {
+          "storey_global_id": "1xS3BCk291UvhgP2dvNMKI"
+        }
+      },
+      {
+        "evidence_refs": [
+          "resolved:/operations/set-window-fire-rating/context/candidate_targets/0"
+        ],
+        "operation_id": "set-window-fire-rating",
+        "operation_type": "set_occurrence_properties",
+        "parameters": {},
+        "target": {
+          "element_global_id": "1hOSvn6df7F8_7GcBWlRLx"
+        }
+      }
+    ],
+    "scope": {
+      "forbidden_ids": [],
+      "target_ids": [
+        "1hOSvn6df7F8_7GcBWlRLx",
+        "1xS3BCk291UvhgP2dvNMKI"
+      ]
+    }
+  },
+  "SEMANTIC_MANIFEST_REF": "changeset/semantic-manifests.json",
+  "SEMANTIC_MANIFEST_SHA256": "sha256:e89b2464e79170a1a603e486366ba36a135793b73f346e47821773450fcd6342",
+  "SEMANTIC_SUMMARY": {
+    "conditional": 2,
+    "not_required": 0,
+    "required": 2
+  },
+  "SOURCE_REQUEST_HASH": "sha256:00bb6ee2ce21cdeab02bec894449085bcc29a31e9d7c2e2256b0ef1494c156f0",
+  "SUPPORTED_OPERATIONS": {
+    "few_shots": [
+      {
+        "case": "clarification",
+        "example_id": "beam.add.v0.3.clarification",
+        "expected": {
+          "omitted_unknown_slots": [
+            "/parameters/axis/start",
+            "/parameters/axis/end"
+          ],
+          "operation_type": "add_beam",
+          "parameters": {
+            "section": {
+              "height_mm": 500,
+              "shape": "rectangle",
+              "width_mm": 300
+            }
+          },
+          "rule": "omit unknown coordinates; never infer an axis, scalar length, null placeholder, or nearby member",
+          "status": "clarification_required",
+          "target_query": {
+            "allowed_ifc_classes": [
+              "IfcBuildingStorey"
+            ],
+            "names": [
+              "Level 1"
+            ],
+            "schema_version": "text2ifc/ifc-target-query/0.1"
+          }
+        },
+        "profile_id": "beam.add.v0.3",
+        "rule": "undefined; the Storey itself is selected with target_query.names, never storey_name",
+        "schema_version": "text2ifc/ifc-repair-few-shot/0.1",
+        "user_text": "EXAMPLE_ONLY: add a 300 by 500 mm rectangular beam on Level 2; the center-axis endpoints are not stated"
+      },
+      {
+        "case": "complete",
+        "example_id": "beam.add.v0.3.complete",
+        "expected": {
+          "operation_type": "add_beam",
+          "parameters": {
+            "axis": {
+              "end": {
+                "x_mm": 5000,
+                "y_mm": 0,
+                "z_mm": 3000
+              },
+              "start": {
+                "x_mm": 0,
+                "y_mm": 0,
+                "z_mm": 3000
+              }
+            },
+            "section": {
+              "height_mm": 500,
+              "shape": "rectangle",
+              "width_mm": 300
+            }
+          },
+          "prototype_intent": null,
+          "status": "complete",
+          "target_query": {
+            "allowed_ifc_classes": [
+              "IfcBuildingStorey"
+            ],
+            "names": [
+              "Level 2"
+            ],
+            "schema_version": "text2ifc/ifc-target-query/0.1"
+          }
+        },
+        "profile_id": "beam.add.v0.3",
+        "rule": "a requested new, generated or dedicated Type keeps prototype_intent null because generated Type identity is program-derived; axis endpoints are end-face centers in Storey-local millimetres; the Storey itself is selected with target_query.names, never storey_name",
+        "schema_version": "text2ifc/ifc-repair-few-shot/0.1",
+        "user_text": "EXAMPLE_ONLY: on Level 2 add a horizontal rectangular beam from (0, 0, 3000) mm to (5000, 0, 3000) mm with 300 mm width and 500 mm height and generate a dedicated Beam Type"
+      },
+      {
+        "case": "exact_type_reuse",
+        "example_id": "beam.add.v0.3.type-reuse",
+        "expected": {
+          "operation_type": "add_beam",
+          "parameters": {
+            "axis": {
+              "end": {
+                "x_mm": 5000,
+                "y_mm": 0,
+                "z_mm": 3000
+              },
+              "start": {
+                "x_mm": 0,
+                "y_mm": 0,
+                "z_mm": 3000
+              }
+            },
+            "section": {
+              "height_mm": 500,
+              "shape": "rectangle",
+              "width_mm": 300
+            }
+          },
+          "prototype_intent": {
+            "reference": "EXAMPLE_BEAM_TYPE",
+            "reference_kind": "type_name"
+          },
+          "rule": "reuse only the exact authorized Type without scaling, rewriting, or copying occurrence-direct semantics"
+        },
+        "profile_id": "beam.add.v0.3",
+        "schema_version": "text2ifc/ifc-repair-few-shot/0.1",
+        "user_text": "EXAMPLE_ONLY: add the stated 300 by 500 mm rectangular beam and reuse IfcBeamType EXAMPLE_BEAM_TYPE exactly"
+      },
+      {
+        "case": "unsupported",
+        "example_id": "beam.add.v0.3.unsupported",
+        "expected": {
+          "capability_code": "BEAM_GEOMETRY_UNSUPPORTED",
+          "operation_type": "add_beam",
+          "rule": "emit an exact unsupported_request bound to the selected operation/profile; never approximate, alias, clarify, or invent Grid coordinates",
+          "status": "unsupported",
+          "unsupported_facts": [
+            "curved_member",
+            "i_section",
+            "grid_placement"
+          ],
+          "unsupported_requests": [
+            {
+              "capability_id": "i_section",
+              "kind": "registered_capability",
+              "operation_id": "beam-1",
+              "source": {
+                "excerpt": "EXAMPLE_ONLY",
+                "reference": "request:/text",
+                "source_kind": "user_request"
+              },
+              "unsupported_id": "unsupported-1"
+            }
+          ]
+        },
+        "profile_id": "beam.add.v0.3",
+        "schema_version": "text2ifc/ifc-repair-few-shot/0.1",
+        "user_text": "EXAMPLE_ONLY: add a curved I-section beam on Grid A/1"
+      }
+    ],
+    "operation_contracts": [
+      {
+        "capability_constraints": {
+          "axis": "straight_horizontal_storey_local",
+          "grid_placement": false,
+          "handler_owned_semantic_facts": [
+            "relationship:host",
+            "relationship:storey"
+          ],
+          "ifc_schemas": [
+            "IFC2X3"
+          ],
+          "section": "rectangle_unrotated",
+          "structural_analysis": false
+        },
+        "operation_type": "add_beam",
+        "parameter_schema": {
+          "additionalProperties": false,
+          "properties": {
+            "axis": {
+              "additionalProperties": false,
+              "properties": {
+                "end": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "x_mm": {
+                      "type": "number"
+                    },
+                    "y_mm": {
+                      "type": "number"
+                    },
+                    "z_mm": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "x_mm",
+                    "y_mm",
+                    "z_mm"
+                  ],
+                  "type": "object"
+                },
+                "start": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "x_mm": {
+                      "type": "number"
+                    },
+                    "y_mm": {
+                      "type": "number"
+                    },
+                    "z_mm": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "x_mm",
+                    "y_mm",
+                    "z_mm"
+                  ],
+                  "type": "object"
+                }
+              },
+              "required": [
+                "start",
+                "end"
+              ],
+              "type": "object"
+            },
+            "section": {
+              "additionalProperties": false,
+              "properties": {
+                "height_mm": {
+                  "exclusiveMinimum": 0,
+                  "type": "number"
+                },
+                "shape": {
+                  "const": "rectangle"
+                },
+                "width_mm": {
+                  "exclusiveMinimum": 0,
+                  "type": "number"
+                }
+              },
+              "required": [
+                "shape",
+                "width_mm",
+                "height_mm"
+              ],
+              "type": "object"
+            }
+          },
+          "required": [
+            "axis",
+            "section"
+          ],
+          "type": "object"
+        },
+        "postcondition_names": [
+          "beam_geometry_matches",
+          "beam_contained_in_storey",
+          "beam_type_bound"
+        ],
+        "precondition_names": [
+          "target_exists",
+          "structural_axis_available",
+          "structural_type_authorized"
+        ],
+        "prototype_dimension_paths": {
+          "height_mm": [
+            "section",
+            "height_mm"
+          ],
+          "width_mm": [
+            "section",
+            "width_mm"
+          ]
+        },
+        "prototype_ifc_classes": [
+          "IfcBeamType"
+        ],
+        "target_ifc_classes": [
+          "IfcBuildingStorey"
+        ],
+        "target_schema": {
+          "additionalProperties": false,
+          "properties": {
+            "storey_global_id": {
+              "minLength": 1,
+              "type": "string"
+            }
+          },
+          "required": [
+            "storey_global_id"
+          ],
+          "type": "object"
+        }
+      },
+      {
+        "capability_constraints": {
+          "geometry_mutation": false,
+          "ifc_schemas": [
+            "IFC2X3"
+          ],
+          "mutation_scope": "occurrence_only",
+          "property_templates": [
+            "IfcPropertySingleValue"
+          ],
+          "semantic_authoring_scope": "explicit_request_only",
+          "shared_type_mutation": false
+        },
+        "operation_type": "set_occurrence_properties",
+        "parameter_schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "additionalProperties": false,
+          "maxProperties": 0,
+          "type": "object"
+        },
+        "postcondition_names": [
+          "target_preserved",
+          "requested_properties_match",
+          "shared_type_unchanged"
+        ],
+        "precondition_names": [
+          "target_exists",
+          "target_class_supported",
+          "property_assignments_bound"
+        ],
+        "prototype_dimension_paths": {},
+        "prototype_ifc_classes": [],
+        "target_ifc_classes": [
+          "IfcBeam",
+          "IfcColumn",
+          "IfcDoor",
+          "IfcWall",
+          "IfcWallStandardCase",
+          "IfcWindow"
+        ],
+        "target_schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "additionalProperties": false,
+          "properties": {
+            "element_global_id": {
+              "minLength": 1,
+              "type": "string"
+            }
+          },
+          "required": [
+            "element_global_id"
+          ],
+          "type": "object"
+        }
+      }
+    ],
+    "selected_profiles": [
+      {
+        "action": "add",
+        "classification_terms": [
+          "beam",
+          "structural beam",
+          "add beam",
+          "horizontal member",
+          "梁",
+          "添加梁"
+        ],
+        "component_family": "beam",
+        "conditional_slots": [
+          "/prototype_intent",
+          "/attribute_intents"
+        ],
+        "few_shots": [
+          {
+            "example_id": "beam.add.v0.3.complete",
+            "path": "prompts/agent/ifc-repair-few-shots/beam-add-v0.3-complete.json",
+            "sha256": "sha256:becd578135b68436c4126f0ec938de6df56a2f83d60c857570f16fdbb0d8d419"
+          },
+          {
+            "example_id": "beam.add.v0.3.clarification",
+            "path": "prompts/agent/ifc-repair-few-shots/beam-add-v0.3-clarification.json",
+            "sha256": "sha256:f80df3b9e3bd39ffb6024aabbebefa4873a696f966f0a12234180f46d3c4e4f7"
+          },
+          {
+            "example_id": "beam.add.v0.3.type-reuse",
+            "path": "prompts/agent/ifc-repair-few-shots/beam-add-v0.3-type-reuse.json",
+            "sha256": "sha256:6b026938b129d060efa51b9f02f4b85baebc6764df74af18760c16f6cff6720b"
+          },
+          {
+            "example_id": "beam.add.v0.3.unsupported",
+            "path": "prompts/agent/ifc-repair-few-shots/beam-add-v0.3-unsupported.json",
+            "sha256": "sha256:e2e81c10d99f9e8c1c3f88a425ee64eba4a081b4c301dd7305f5c735b368c150"
+          }
+        ],
+        "forbidden_inferences": [
+          "profile-corner or support-face placement",
+          "scalar length in conflict with or substituted for the center axis",
+          "nearby Beam or Type similarity",
+          "new, generated or dedicated Type wording as existing-Type reuse",
+          "material, strength, grade, property or quantity when absent",
+          "aliases, wrong nesting or null placeholders",
+          "Grid labels as coordinates",
+          "storey_name/storey_global_id containment-filter aliases for the target Storey"
+        ],
+        "operation_type": "add_beam",
+        "optional_slots": [
+          "/property_intents",
+          "/quantity_intents",
+          "/semantic_bundle_refs"
+        ],
+        "profile_hash": "sha256:4a524131881efa1898130814df86faef8259d9d5e172c63368970a4fe682b6a0",
+        "profile_id": "beam.add.v0.3",
+        "profile_version": "0.3",
+        "program_derived_slots": [
+          "axis length from start/end",
+          "unit and placement matrices",
+          "representation context and swept-solid topology",
+          "occurrence and relationship GUIDs",
+          "generated-template identity and label",
+          "Storey containment relationship"
+        ],
+        "required_slots": [
+          "/target_query",
+          "/parameters/axis/start",
+          "/parameters/axis/end",
+          "/parameters/section/shape",
+          "/parameters/section/width_mm",
+          "/parameters/section/height_mm"
+        ],
+        "schema_version": "text2ifc/ifc-repair-prompt-profile/0.2",
+        "slot_summary": "Target Storey selected only by its own global_id or names; straight horizontal center-axis start/end in Storey-local millimetres; rectangular width/height; no Type instruction or a new/generated/dedicated Beam Type request keeps prototype_intent null; exact existing-Type reuse uses only an explicit name or GlobalId; unspecified existing-Type reuse uses selection_required; explicit material and canonical requested Pset/quantity facts remain optional. Omit unstated facts instead of emitting aliases or null placeholders.",
+        "stage2_projection_fields": [
+          "operation_id",
+          "operation_type",
+          "target",
+          "parameters",
+          "evidence_refs"
+        ],
+        "supported_capabilities": [
+          "straight_horizontal",
+          "any_storey_xy_direction",
+          "rectangular_section",
+          "center_axis_mm",
+          "exact_type_reuse",
+          "generated_type",
+          "optional_explicit_material",
+          "Pset_BeamCommon"
+        ],
+        "target_ifc_classes": [
+          "IfcBuildingStorey"
+        ],
+        "type_intent_rules": {
+          "exact_existing_type_reuse": "global_id_or_type_name",
+          "no_type_or_new_type": "prototype_intent_null",
+          "unspecified_existing_type_reuse": "selection_required",
+          "zero_candidate_policy": "missing_evidence"
+        },
+        "unsupported_capabilities": [
+          "inclined",
+          "curved",
+          "round_section",
+          "i_section",
+          "h_section",
+          "arbitrary_section",
+          "variable_section",
+          "section_rotation",
+          "grid_placement",
+          "structural_analysis_member",
+          "structural_analysis_node",
+          "structural_analysis_load",
+          "structural_analysis_port",
+          "structural_analysis_connection"
+        ]
+      },
+      {
+        "action": "set_properties",
+        "classification_terms": [
+          "property",
+          "pset",
+          "属性",
+          "set property"
+        ],
+        "component_family": "occurrence",
+        "conditional_slots": [],
+        "few_shots": [],
+        "forbidden_inferences": [
+          "property value",
+          "shared Type mutation",
+          "custom property confirmation"
+        ],
+        "operation_type": "set_occurrence_properties",
+        "optional_slots": [],
+        "profile_hash": "sha256:7b95c00e8f19ff4990053698c42dd182e385931260a2929d0edecbd19dbbec2b",
+        "profile_id": "occurrence.set-properties",
+        "profile_version": "0.1",
+        "program_derived_slots": [
+          "canonical property typing after knowledge resolution"
+        ],
+        "required_slots": [
+          "/target_query",
+          "/property_intents"
+        ],
+        "schema_version": "text2ifc/ifc-repair-prompt-profile/0.1",
+        "slot_summary": "Existing occurrence target and one or more explicit scalar property values.",
+        "stage2_projection_fields": [
+          "operation_id",
+          "operation_type",
+          "target",
+          "parameters",
+          "evidence_refs"
+        ],
+        "supported_capabilities": [
+          "IfcPropertySingleValue",
+          "occurrence_direct"
+        ],
+        "target_ifc_classes": [
+          "IfcBeam",
+          "IfcColumn",
+          "IfcDoor",
+          "IfcWall",
+          "IfcWallStandardCase",
+          "IfcWindow"
+        ],
+        "unsupported_capabilities": [
+          "enumerated_value",
+          "list_value",
+          "table_value",
+          "complex_property",
+          "type_owned"
+        ]
+      }
+    ]
+  },
+  "VALIDATION_FEEDBACK": []
+}

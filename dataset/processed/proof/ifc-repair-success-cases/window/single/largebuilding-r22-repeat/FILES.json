@@ -1,0 +1,25 @@
+{
+  "schema_version": "text2ifc/ifc-repair-success-case-files/0.1",
+  "case_id": "largebuilding-r22-repeat",
+  "copy_policy": "copy",
+  "source_run": "dataset/processed/ifc-repair/phase10.5-window-fidelity-live-20260726-r22/deepseek-live/uat-20260726T120631197306Z",
+  "files": [
+    {"path":"01-original.ifc","role":"original_ground_truth","visibility":"evaluator_only","size_bytes":1292595,"sha256":"102f8123f85eae5e237d7f6a9dcbc364bd5f1c0cfb94b40a7eeb2d7eac9bb725"},
+    {"path":"02-damaged.ifc","role":"repair_input_ifc","visibility":"agent_input","size_bytes":1287030,"sha256":"ca703845ddf4a434eea0317498fb29893877f87d66047cf6c890a61cd2844933"},
+    {"path":"03-repaired.ifc","role":"published_repair_output","visibility":"public_artifact","size_bytes":1292695,"sha256":"be464c323a3b956fa3e039e7e185bcc46f7b9a7e633dec069b7a6c32ebf3cb19"},
+    {"path":"input/request.json","role":"user_request","visibility":"agent_input","size_bytes":4029,"sha256":"5c36e3e8f6bbbede9ae5f46148dcae1cbbde17180ca49ec72fe7b7d655d918fd"},
+    {"path":"agent/repair-intent.json","role":"stage1_repair_intent","visibility":"agent_output","size_bytes":13683,"sha256":"072bc05f7d3da07d08bfb69779b01f99215c92c7cd359c471467d936f5829d78"},
+    {"path":"agent/stage1-response.json","role":"stage1_raw_response","visibility":"audit","size_bytes":5589,"sha256":"59b549265ec6921cec2490941b0b9cc045e64112381addd519c2ae7c4d31c18d"},
+    {"path":"agent/provider-draft.json","role":"stage2_changeset_draft","visibility":"agent_output","size_bytes":2992,"sha256":"2b6f117191ba9b85c582ae5a8dd7b4969c8ef753004d4b16f2a6f9e4b0819238"},
+    {"path":"agent/stage2-response.txt","role":"stage2_raw_response","visibility":"audit","size_bytes":2979,"sha256":"91eb4d3c4e41e9e4635124bc745d8f95801bb39b16135acc5f4ae35d58950325"},
+    {"path":"changeset/bound-changeset.json","role":"bound_changeset","visibility":"execution_contract","size_bytes":117708,"sha256":"fd15223b8f8b26d9e450d69ef541e871f1a7f7717d11054af600c2736f278684"},
+    {"path":"validation/mutation-manifest.private.json","role":"damage_ground_truth","visibility":"evaluator_only","size_bytes":2905,"sha256":"c65b02ce0f87311d75369e8cd2f11ec88cb56a0a6e7d84f667eb78a217468dcf"},
+    {"path":"validation/mutation-report.json","role":"damage_report","visibility":"audit","size_bytes":1583,"sha256":"de412e6a1511b028b3d850ad9969735a784494b4b31492f657521af65c1adc6a"},
+    {"path":"validation/production-evaluation.json","role":"production_evaluation","visibility":"public_evidence","size_bytes":12311,"sha256":"3374bc0e2273049eb85b580c2fda2c0985812982497f51fa9900d4d42ca0ce7a"},
+    {"path":"validation/private-ground-truth-evaluation.json","role":"private_ground_truth_evaluation","visibility":"evaluator_only","size_bytes":114303,"sha256":"e4e43eebbe4ea7941411184246c7e23e96c74f1088e7e890ffb197899f5134f7"},
+    {"path":"validation/ifc-comparison.json","role":"ifcopenshell_comparison","visibility":"audit","size_bytes":6957,"sha256":"29b932eaffda3e70d3f39e4921e38b2e1a5543e2388cbc91bf7b627f7aef0d2b"},
+    {"path":"validation/window-comparison.json","role":"window_comparison","visibility":"audit","size_bytes":1585,"sha256":"22e9a2d8f3a9f0b4e64c89fc984a749d16735b9406c09faa2bb04b08d69f138e"},
+    {"path":"validation/run-summary.json","role":"run_summary","visibility":"public_evidence","size_bytes":1863,"sha256":"0a24faa015bbb1e9e88d868afc6530c45adae6e50ab166b5f7e3c220cf7618a9"},
+    {"path":"validation/phase10.5-uat-result.json","role":"uat_summary","visibility":"public_evidence","size_bytes":11664,"sha256":"c6d2a0104eb7efe847364ace245ec3a97bf900040b9cb85b5276ca0023833b50"}
+  ]
+}

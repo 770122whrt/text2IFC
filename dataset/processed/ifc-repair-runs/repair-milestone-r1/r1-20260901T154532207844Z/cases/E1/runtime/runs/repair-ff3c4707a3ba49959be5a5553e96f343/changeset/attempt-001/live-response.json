@@ -1,0 +1,36 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "message": {
+        "annotations": null,
+        "audio": null,
+        "content": "{\n  \"schema_version\": \"text2ifc/ifc-repair-changeset-draft/0.2\",\n  \"draft_id\": \"changeset/set-window-exterior-prop-1\",\n  \"base_model_fingerprint\": \"sha256:707a032566dee8e969a44d95509be46d646440e2443624709f8d3ae2b45f4656\",\n  \"source_request_hash\": \"sha256:e88a9df0ac1abe694a3a22645306d0152d3833a4e806adbe3b821b66b7d88840\",\n  \"semantic_manifest_ref\": \"changeset/semantic-manifest-set-window-exterior-prop-1.json\",\n  \"semantic_manifest_sha256\": \"sha256:d54c47f5ae713e0f44d4c14851873c5e739ef2cc128bd79907fa6e44e5fe19c5\",\n  \"semantic_summary\": {\n    \"required\": 0,\n    \"conditional\": 1,\n    \"not_required\": 0\n  },\n  \"scope\": {\n    \"target_ids\": [\"1hOSvn6df7F8_7GcBWlRRL\"],\n    \"forbidden_ids\": []\n  },\n  \"evidence_refs\": [\"resolved:/operations/set-window-exterior-prop-1/context/candidate_targets/0\"],\n  \"preconditions\": [\"target_exists\", \"target_class_supported\", \"property_assignments_bound\"],\n  \"postconditions\": [\"target_preserved\", \"requested_properties_match\", \"shared_type_unchanged\"],\n  \"operations\": [\n    {\n      \"operation_id\": \"set-window-exterior-prop-1\",\n      \"operation_type\": \"set_occurrence_properties\",\n      \"target\": {\n        \"element_global_id\": \"1hOSvn6df7F8_7GcBWlRRL\"\n      },\n      \"parameters\": {},\n      \"evidence_refs\": [\"resolved:/operations/set-window-exterior-prop-1/context/candidate_targets/0\"]\n    }\n  ]\n}",
+        "function_call": null,
+        "reasoning_content": "We need respond JSON only. Need produce draft per schema. Need inspect request. Need output exactly one JSON object. Need infer operation parameters empty? The resolved operation projection shows operation with parameters {} target element_global_id. We need construct changeset draft.\n\nNeed use provided immutable bindings:\n- source request hash sha256:e88a9df0ac1abe694a3a22645306d0152d3833a4e806adbe3b821b66b7d88840\n- model hash sha256:707a032566dee8e969a44d95509be46d646440e2443624709f8d3ae2b45f4656\n- semantic manifest ref: changeset/semantic-manifest-set-window-exterior-prop-1.json\n- semantic manifest hash: sha256:d54c47f5ae713e0f44d4c14851873c5e739ef2cc128bd79907fa6e44e5fe19c5\n\nNeed draft_id? Could be some id. Need maybe derived from operation_id? Schema id pattern. Draft id can be any id. Need likely \"changeset/set-window-exterior-prop-1\" maybe. Need evidence_refs exactly from operation projection: [\"resolved:/operations/set-window-exterior-prop-1/context/candidate_targets/0\"] for evidence_refs? At top level maybe same? Need inspect schema: property evidence_refs strings array. Should likely copy resolved operation projection evidence_refs? It has operation-level evidence_refs and top-level maybe same? Resolved operation projection has \"evidence_refs\": [\"resolved:/operations/set-window-exterior-prop-1/context/candidate_targets/0\"] and operations has evidence_refs same. Top-level likely use same evidence refs? Need decide.\n\nNeed include preconditions and postconditions. Registered operation contracts has precondition_names, postcondition_names. Need arrays of strings? Schema just strings. In resolved projection not provided. Given Registered operation contracts: for set_occurrence_properties, preconditions: [\"target_exists\", \"target_class_supported\", \"property_assignments_bound\"], postconditions: [\"target_preserved\", \"requested_properties_match\", \"shared_type_unchanged\"]. Need include those probably.\n\nNeed semantic_summary: {\"conditional\":1, \"not_required\":0, \"required\":0} from semantic group counts. Need put.\n\nNeed scope: {\"forbidden_ids\":[], \"target_ids\":[\"1hOSvn6df7F8_7GcBWlRRL\"]}.\n\nNeed operation object:\n{\n\"operation_id\": \"set-window-exterior-prop-1\",\n\"operation_type\": \"set_occurrence_properties\",\n\"target\": {\"element_global_id\": \"1hOSvn6df7F8_7GcBWlRRL\"},\n\"parameters\": {},\n\"evidence_refs\": [\"resolved:/operations/set-window-exterior-prop-1/context/candidate_targets/0\"]\n}\n\nNeed top-level evidence_refs maybe same array. Could maybe need include more? Since only one. Use same.\n\nNeed draft_id: perhaps \"changeset/set-window-exterior-prop-1\" or \"draft-set-window-exterior-prop-1\"? Need pattern allows. We'll choose \"changeset/set-window-exterior-prop-1\". Ensure id pattern: starts alphanumeric, contains allowed chars. Yes.\n\nNeed ensure all required fields.\n\nNeed possibly include preconditions/postconditions arrays. Good.\n\nPotential caveat: explicit user slot references include pset:Pset_WindowCommon.IsExternal but we're told do not emit semantic assignments or property values. So no.\n\nNeed not include semantic manifest details beyond ref and hash.\n\nNeed final JSON only. Let's craft. Use double quotes.\n\nCheck schema additionalProperties false; properties exactly. Need no extra.\n\nLet's verify all required:\nschema_version\ndraft_id\nbase_model_fingerprint\nsource_request_hash\nsemantic_manifest_ref\nsemantic_manifest_sha256\nsemantic_summary\nscope\nevidence_refs\npreconditions\npostconditions\noperations\n\nAll present.\n\nNeed ensure semantic_summary required fields: required, conditional, not_required. Are numbers. Use 0,1,0.\n\nNeed \"operations\" array minItems 1.\n\nNeed top-level evidence_refs unique strings? It has one.\n\nNeed preconditions/postcondition names as schema just array strings. Use provided.\n\nPotential issue: Should top-level evidence_refs include all evidence from operations? Same. Good.\n\nNeed maybe include \"operation\" evidence_refs required. Yes.\n\nNeed \"target\" minProperties 1 and object. Fine.\n\nNeed \"parameters\" type object; empty ok.\n\nLet's output.",
+        "refusal": null,
+        "role": "assistant",
+        "tool_calls": null
+      }
+    }
+  ],
+  "created": 1788277595,
+  "id": "175ae7f0-9363-441e-9742-8b9903ec1811",
+  "model": "deepseek-v4-flash",
+  "moderation": null,
+  "object": "chat.completion",
+  "service_tier": null,
+  "stop_reason": "stop",
+  "system_fingerprint": "a26a7955944dc5c60445bff77fac9c8e",
+  "usage": {
+    "completion_tokens": 1473,
+    "completion_tokens_details": "[REDACTED]",
+    "prompt_cache_hit_tokens": "[REDACTED]",
+    "prompt_cache_miss_tokens": "[REDACTED]",
+    "prompt_tokens": 2086,
+    "prompt_tokens_details": "[REDACTED]",
+    "total_tokens": 3559
+  }
+}

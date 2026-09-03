@@ -1,0 +1,56 @@
+{
+  "schema_version": "text2ifc/phase12-type-intent-cases/0.1",
+  "cases": [
+    {
+      "case_id": "beam-no-type-instruction",
+      "family": "beam",
+      "user_text": "On Level 1 add a rectangular Beam from (0, 0, 3000) mm to (6000, 0, 3000) mm, 300 mm wide and 500 mm high.",
+      "expected_state": "generated_type",
+      "expected_prototype_intent": null
+    },
+    {
+      "case_id": "column-new-dedicated-type",
+      "family": "column",
+      "user_text": "On Level 1 add a 500 mm square Column from (1000, 2000, 0) mm to (1000, 2000, 3000) mm and generate a dedicated Column Type.",
+      "expected_state": "generated_type",
+      "expected_prototype_intent": null
+    },
+    {
+      "case_id": "live-complete-dedicated-structural-types",
+      "family": "mixed",
+      "user_text": "Add the specified Beam and Column on Level 1 and generate dedicated structural Types.",
+      "expected_state": "generated_type",
+      "expected_prototype_intent": [null, null]
+    },
+    {
+      "case_id": "beam-exact-type-name-reuse",
+      "family": "beam",
+      "user_text": "Add the specified Beam and reuse existing IfcBeamType BEAM_TYPE_EXAMPLE exactly.",
+      "expected_state": "exact_reuse",
+      "expected_reference_kind": "type_name",
+      "expected_reference": "BEAM_TYPE_EXAMPLE"
+    },
+    {
+      "case_id": "column-exact-global-id-reuse",
+      "family": "column",
+      "user_text": "Add the specified Column and reuse existing IfcColumnType 0COLUMN_TYPE_EXAMPLE01 exactly.",
+      "expected_state": "exact_reuse",
+      "expected_reference_kind": "global_id",
+      "expected_reference": "0COLUMN_TYPE_EXAMPLE01"
+    },
+    {
+      "case_id": "beam-unspecified-reuse-with-candidates",
+      "family": "beam",
+      "user_text": "Add the specified Beam and reuse an existing compatible Beam Type, but I have not named which one.",
+      "expected_state": "selection_required",
+      "expected_resolution": "prototype_selection"
+    },
+    {
+      "case_id": "column-unspecified-reuse-without-candidates",
+      "family": "column",
+      "user_text": "Add the specified Column and reuse an existing Column Type, but I have not named which one.",
+      "expected_state": "selection_required",
+      "expected_resolution": "missing_evidence"
+    }
+  ]
+}

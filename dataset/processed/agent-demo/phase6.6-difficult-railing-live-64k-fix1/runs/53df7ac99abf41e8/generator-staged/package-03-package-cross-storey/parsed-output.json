@@ -1,0 +1,517 @@
+{
+  "base_candidate_hash": "sha256:0ecdfb32ece118ad7e8ac210c2d5503bf82f0542ebfdb8fab2850a92aa456b22",
+  "base_revision_id": "revision-02",
+  "changeset_id": "changeset-package-cross-storey",
+  "expected_facts_hash": "sha256:4e54b604e3a94e586911bbc68ee29003e951361f1f512016581ba057b3925ea0",
+  "operations": [
+    {
+      "evidence_refs": [
+        "issue-package-cross-storey:/expected"
+      ],
+      "op": "add_entity",
+      "operation_id": "add-ground-floor-slab",
+      "target_id": "ground-floor-slab",
+      "value": {
+        "attributes": {
+          "Name": "Ground Floor Slab",
+          "ObjectPlacement": {
+            "axis": [
+              0,
+              0,
+              1
+            ],
+            "origin": [
+              6000,
+              4000,
+              -300
+            ],
+            "ref_direction": [
+              1,
+              0,
+              0
+            ],
+            "relative_to": "storey-1"
+          },
+          "Representation": {
+            "depth": 300,
+            "direction": [
+              0,
+              0,
+              1
+            ],
+            "kind": "extruded_profile",
+            "profile": {
+              "kind": "rectangle",
+              "x": 12000,
+              "y": 8000
+            }
+          }
+        },
+        "id": "ground-floor-slab",
+        "ifc_class": "IfcSlab",
+        "property_sets": {},
+        "provenance": {
+          "source": "issue-package-cross-storey"
+        }
+      }
+    },
+    {
+      "evidence_refs": [
+        "issue-package-cross-storey:/expected"
+      ],
+      "op": "add_entity",
+      "operation_id": "add-first-floor-slab",
+      "target_id": "first-floor-slab",
+      "value": {
+        "attributes": {
+          "Name": "First Floor Slab",
+          "ObjectPlacement": {
+            "axis": [
+              0,
+              0,
+              1
+            ],
+            "origin": [
+              6000,
+              4000,
+              -300
+            ],
+            "ref_direction": [
+              1,
+              0,
+              0
+            ],
+            "relative_to": "storey-2"
+          },
+          "Representation": {
+            "depth": 300,
+            "direction": [
+              0,
+              0,
+              1
+            ],
+            "kind": "extruded_profile",
+            "profile": {
+              "kind": "rectangle",
+              "x": 12000,
+              "y": 8000
+            }
+          }
+        },
+        "id": "first-floor-slab",
+        "ifc_class": "IfcSlab",
+        "property_sets": {},
+        "provenance": {
+          "source": "issue-package-cross-storey"
+        }
+      }
+    },
+    {
+      "evidence_refs": [
+        "issue-package-cross-storey:/expected"
+      ],
+      "op": "add_entity",
+      "operation_id": "add-opening-first-floor-slab-atrium",
+      "target_id": "opening-first-floor-slab-atrium",
+      "value": {
+        "attributes": {
+          "Name": "Atrium Opening",
+          "ObjectPlacement": {
+            "axis": [
+              0,
+              0,
+              1
+            ],
+            "origin": [
+              9000,
+              1500,
+              -300
+            ],
+            "ref_direction": [
+              1,
+              0,
+              0
+            ],
+            "relative_to": "first-floor-slab"
+          },
+          "Representation": {
+            "depth": 300,
+            "direction": [
+              0,
+              0,
+              1
+            ],
+            "kind": "extruded_profile",
+            "profile": {
+              "kind": "rectangle",
+              "x": 6000,
+              "y": 3000
+            }
+          }
+        },
+        "id": "opening-first-floor-slab-atrium",
+        "ifc_class": "IfcOpeningElement",
+        "property_sets": {},
+        "provenance": {
+          "source": "issue-package-cross-storey"
+        }
+      }
+    },
+    {
+      "evidence_refs": [
+        "issue-package-cross-storey:/expected"
+      ],
+      "op": "add_entity",
+      "operation_id": "add-opening-first-floor-slab-stair",
+      "target_id": "opening-first-floor-slab-stair",
+      "value": {
+        "attributes": {
+          "Name": "Stair Opening",
+          "ObjectPlacement": {
+            "axis": [
+              0,
+              0,
+              1
+            ],
+            "origin": [
+              10500,
+              5750,
+              -300
+            ],
+            "ref_direction": [
+              1,
+              0,
+              0
+            ],
+            "relative_to": "first-floor-slab"
+          },
+          "Representation": {
+            "depth": 300,
+            "direction": [
+              0,
+              0,
+              1
+            ],
+            "kind": "extruded_profile",
+            "profile": {
+              "kind": "rectangle",
+              "x": 1000,
+              "y": 4500
+            }
+          }
+        },
+        "id": "opening-first-floor-slab-stair",
+        "ifc_class": "IfcOpeningElement",
+        "property_sets": {},
+        "provenance": {
+          "source": "issue-package-cross-storey"
+        }
+      }
+    },
+    {
+      "evidence_refs": [
+        "issue-package-cross-storey:/expected"
+      ],
+      "op": "add_entity",
+      "operation_id": "add-stair-1",
+      "target_id": "stair-1",
+      "value": {
+        "attributes": {
+          "Name": "Main Stair",
+          "ObjectPlacement": {
+            "axis": [
+              0,
+              0,
+              1
+            ],
+            "origin": [
+              11000,
+              8000,
+              0
+            ],
+            "ref_direction": [
+              -1,
+              0,
+              0
+            ],
+            "relative_to": "storey-1"
+          },
+          "ShapeType": "STRAIGHT_RUN_STAIR"
+        },
+        "id": "stair-1",
+        "ifc_class": "IfcStair",
+        "property_sets": {},
+        "provenance": {
+          "source": "issue-package-cross-storey"
+        }
+      }
+    },
+    {
+      "evidence_refs": [
+        "issue-package-cross-storey:/expected"
+      ],
+      "op": "add_entity",
+      "operation_id": "add-stair-flight-1",
+      "target_id": "stair-flight-1",
+      "value": {
+        "attributes": {
+          "Name": "Stepped Flight",
+          "ObjectPlacement": {
+            "axis": [
+              0,
+              0,
+              1
+            ],
+            "origin": [
+              0,
+              0,
+              0
+            ],
+            "ref_direction": [
+              1,
+              0,
+              0
+            ],
+            "relative_to": "stair-1"
+          },
+          "Representation": {
+            "depth": 1000,
+            "direction": [
+              1,
+              0,
+              0
+            ],
+            "kind": "extruded_profile",
+            "profile": {
+              "kind": "polygon",
+              "points": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  4250,
+                  0
+                ],
+                [
+                  4250,
+                  183.33333333333334
+                ],
+                [
+                  4000,
+                  183.33333333333334
+                ],
+                [
+                  4000,
+                  366.6666666666667
+                ],
+                [
+                  3750,
+                  366.6666666666667
+                ],
+                [
+                  3750,
+                  550.0
+                ],
+                [
+                  3500,
+                  550.0
+                ],
+                [
+                  3500,
+                  733.3333333333334
+                ],
+                [
+                  3250,
+                  733.3333333333334
+                ],
+                [
+                  3250,
+                  916.6666666666667
+                ],
+                [
+                  3000,
+                  916.6666666666667
+                ],
+                [
+                  3000,
+                  1100.0
+                ],
+                [
+                  2750,
+                  1100.0
+                ],
+                [
+                  2750,
+                  1283.3333333333333
+                ],
+                [
+                  2500,
+                  1283.3333333333333
+                ],
+                [
+                  2500,
+                  1466.6666666666667
+                ],
+                [
+                  2250,
+                  1466.6666666666667
+                ],
+                [
+                  2250,
+                  1650.0
+                ],
+                [
+                  2000,
+                  1650.0
+                ],
+                [
+                  2000,
+                  1833.3333333333333
+                ],
+                [
+                  1750,
+                  1833.3333333333333
+                ],
+                [
+                  1750,
+                  2016.6666666666667
+                ],
+                [
+                  1500,
+                  2016.6666666666667
+                ],
+                [
+                  1500,
+                  2200.0
+                ],
+                [
+                  1250,
+                  2200.0
+                ],
+                [
+                  1250,
+                  2383.3333333333335
+                ],
+                [
+                  1000,
+                  2383.3333333333335
+                ],
+                [
+                  1000,
+                  2566.6666666666665
+                ],
+                [
+                  750,
+                  2566.6666666666665
+                ],
+                [
+                  750,
+                  2750.0
+                ],
+                [
+                  500,
+                  2750.0
+                ],
+                [
+                  500,
+                  2933.3333333333335
+                ],
+                [
+                  250,
+                  2933.3333333333335
+                ],
+                [
+                  250,
+                  3116.6666666666665
+                ],
+                [
+                  0,
+                  3116.6666666666665
+                ],
+                [
+                  0,
+                  3300
+                ],
+                [
+                  0,
+                  0
+                ]
+              ]
+            }
+          }
+        },
+        "id": "stair-flight-1",
+        "ifc_class": "IfcStairFlight",
+        "property_sets": {},
+        "provenance": {
+          "source": "issue-package-cross-storey"
+        }
+      }
+    },
+    {
+      "evidence_refs": [
+        "issue-package-cross-storey:/expected"
+      ],
+      "op": "add_relationship",
+      "operation_id": "add-rel-voids-atrium",
+      "target_id": "rel-voids-first-floor-slab",
+      "value": {
+        "attributes": {
+          "RelatedOpeningElement": "opening-first-floor-slab-atrium",
+          "RelatingBuildingElement": "first-floor-slab"
+        },
+        "id": "rel-voids-first-floor-slab",
+        "ifc_class": "IfcRelVoidsElement",
+        "provenance": {
+          "source": "issue-package-cross-storey"
+        }
+      }
+    },
+    {
+      "evidence_refs": [
+        "issue-package-cross-storey:/expected"
+      ],
+      "op": "add_relationship",
+      "operation_id": "add-rel-voids-stair",
+      "target_id": "rel-voids-first-floor-slab-2",
+      "value": {
+        "attributes": {
+          "RelatedOpeningElement": "opening-first-floor-slab-stair",
+          "RelatingBuildingElement": "first-floor-slab"
+        },
+        "id": "rel-voids-first-floor-slab-2",
+        "ifc_class": "IfcRelVoidsElement",
+        "provenance": {
+          "source": "issue-package-cross-storey"
+        }
+      }
+    },
+    {
+      "evidence_refs": [
+        "issue-package-cross-storey:/expected"
+      ],
+      "op": "add_relationship",
+      "operation_id": "add-aggregate-stair-flight",
+      "target_id": "aggregate-stair-1-flight",
+      "value": {
+        "attributes": {
+          "RelatedObjects": [
+            "stair-flight-1"
+          ],
+          "RelatingObject": "stair-1"
+        },
+        "id": "aggregate-stair-1-flight",
+        "ifc_class": "IfcRelAggregates",
+        "provenance": {
+          "source": "issue-package-cross-storey"
+        }
+      }
+    }
+  ],
+  "schema_version": "text2ifc/bim-json-changeset/1.0",
+  "scope_id": "scope-package-3",
+  "source_issue_ids": [
+    "issue-package-cross-storey"
+  ]
+}

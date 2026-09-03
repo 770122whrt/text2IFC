@@ -1,0 +1,28 @@
+{
+  "attempt": 1,
+  "issues": [],
+  "normalizations": [],
+  "provider_metadata": {
+    "estimated_input_tokens": "[REDACTED]",
+    "evidence_class": "live",
+    "max_input_tokens": "[REDACTED]",
+    "model": "deepseek-v4-flash",
+    "provider": "deepseek-openai-compatible",
+    "response_id": "63a7bebb-04b8-4571-9fcb-dcf51e2b1d49",
+    "session_id": "ifc-repair-intent-request-774c569f28173084",
+    "stop_reason": "stop",
+    "transport_attempts": 1,
+    "usage": {
+      "completion_tokens": 5613,
+      "completion_tokens_details": "[REDACTED]",
+      "prompt_cache_hit_tokens": "[REDACTED]",
+      "prompt_cache_miss_tokens": "[REDACTED]",
+      "prompt_tokens": 5106,
+      "prompt_tokens_details": "[REDACTED]",
+      "total_tokens": 10719
+    }
+  },
+  "response_excerpt": "{\n  \"schema_version\": \"text2ifc/ifc-repair-intent-body/0.4\",\n  \"operations\": [\n    {\n      \"operation_id\": \"op-1\",\n      \"operation_type\": \"add_window_with_opening_to_wall\",\n      \"target_query\": {\n        \"schema_version\": \"text2ifc/ifc-target-query/0.1\",\n        \"allowed_ifc_classes\": [\"IfcWall\"],\n        \"global_id\": \"1F6umJ5H50aeL3A1As_wTm\"\n      },\n      \"parameters\": {\n        \"position\": {\n          \"reference\": \"wall_local_start\",\n          \"center_offset_mm\": 3042.5\n        },\n        \"opening\": {\n          \"width_mm\": 915,\n          \"height_mm\": 1830,\n          \"sill_height_mm\": 305\n        },\n        \"window\": {\n          \"fit_opening\": true\n        }\n      },\n      \"attribute_intents\": [],\n      \"property_intents\": [\n        {\n          \"intent_kind\": \"exact_property\",\n          \"set_name\": \"Constraints\",\n          \"property_name\": \"Level\",\n          \"raw_value\": \"Level: Level 1\",\n          \"raw_unit\": null,\n          \"requested_value_type\": \"IfcLabel\",\n          \"scope\": \"occurrence_direct\",\n          \"source\": {\n            \"source_kind\": \"user_request\",\n            \"reference\": \"request:/text\",\n            \"excerpt\": \"{\\\"set_name\\\":\\\"Constraints\\\",\\\"property_name\\\":\\\"Level\\\",\\\"value\\\":\\\"Level: Level 1\\\",\\\"requested_value_type\\\":\\\"IfcLabel\\\",\\\"requested_unit\\\":null,\\\"scope\\\":\\\"occurrence_direct\\\"}\"\n          }\n        },\n        {\n          \"intent_kind\": \"exact_property\",\n          \"set_name\": \"Constraints\",\n          \"property_name\": \"Sill Height\",\n          \"raw_value\": 305.000000000004,\n          \"raw_unit\": \"mm\",\n          \"requested_value_type\": \"IfcLengthMeasure\",\n          \"scope\": \"occurrence_direct\",\n          \"source\": {\n            \"source_kind\": \"user_request\",\n            \"reference\": \"request:/text\",\n            \"excerpt\": \"{\\\"set_name\\\":\\\"Constraints\\\",\\\"property_name\\\":\\\"Sill Height\\\",\\\"value\\\":305.000000000004,\\\"requested_value_type\\\":\\\"IfcLengthMeasure\\\",\\\"requested_unit\\\":\\\"mm\\\",\\\"scope\\\":\\\"occurrence_direct\\\"}\"\n          }\n        },\n        {\n          \"intent_kind\": \"exact_property\",\n          \"set_name\": \"Custom_Pset\",\n          \"property_name\": \"NetArea\",\n          \"raw_value\": 3.17875400000013,\n          \"raw_unit\": \"mm2\",\n          \"requested_value_type\": \"IfcAreaMeasure\",\n          \"scope\": \"occurrence_direct\",\n          \"source\": {\n            \"source_kind\": \"user_request\",\n            \"reference\": \"request:/text\",\n            \"excerpt\": \"{\\\"set_name\\\":\\\"Custom_Pset\\\",\\\"property_name\\\":\\\"NetArea\\\",\\\"value\\\":3.17875400000013,\\\"requested_value_type\\\":\\\"IfcAreaMeasure\\\",\\\"requested_unit\\\":\\\"mm2\\\",\\\"scope\\\":\\\"occurrence_direct\\\"}\"\n          }\n        },\n        {\n          \"intent_kind\": \"exact_property\",\n          \"set_name\": \"Custom_Pset\",\n          \"property_name\": \"SillHeight\",\n          \"raw_value\": 305.000000000004,\n          \"raw_unit\": \"mm\",\n          \"requested_value_type\": \"IfcLengthMeasure\",\n          \"scope\": \"occurrence_direct\",\n          \"source\": {\n            \"source_kind\": \"user_request\",\n            \"reference\": \"request:/text\",\n            \"excerpt\": \"{\\\"set_name\\\":\\\"Custom_Pset\\\",\\\"property_name\\\":\\\"SillHeight\\\",\\\"value\\\":305.000000000004,\\\"requested_value_type\\\":\\\"IfcLengthMeasure\\\",\\\"requested_unit\\\":\\\"mm\\\",\\\"scope\\\":\\\"occurrence_direct\\\"}\"\n          }\n        },\n        {\n          \"intent_kind\": \"exact_property\",\n          \"set_name\": \"Custom_Pset\",\n          \"property_name\": \"StatusConstruction\",\n          \"raw_value\": \"New Construction\",\n          \"raw_unit\": null,\n          \"requested_value_type\": \"IfcLabel\",\n          \"scope\": \"occurrence_direct\",\n          \"source\": {\n            \"source_kind\": \"user_request\",\n            \"reference\": \"request:/text\",\n            \"excerpt\": \"{\\\"set_name\\\":\\\"Custom_Pset\\\",\\\"property_name\\\":\\\"StatusConstruction\\\",\\\"value\\\":\\\"New Construction\\\",\\\"requested_value_type\\\":\\\"IfcLabel\\\",\\\"requested_unit\\\":null,\\\"scope\\\":\\\"occurrence_direct\\\"}\"\n          }\n        },\n        {\n          \"intent_kind\": \"exact_property\",\n          \"set_name\": \"Custom_Pset\",\n          \"property_name\": \"StoreyName\",\n          \"raw_value\": \"Level: Lev",
+  "response_sha256": "sha256:fbce3bb05df18280e563094540f92c5c459c9e2507d811d03ca38dc61d1bea0a",
+  "status": "valid"
+}

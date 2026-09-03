@@ -1,0 +1,248 @@
+{
+  "case_id": "d2f86855a9738b50",
+  "door_counts_by_storey": {
+    "storey-1": 1
+  },
+  "doors": [
+    {
+      "alignment": "host_centerline",
+      "height_mm": 2100,
+      "host_wall": "wall-south",
+      "id": "door-south",
+      "open_direction": "inside",
+      "source_key": "storey-1.door[1]",
+      "storey": "storey-1",
+      "width_mm": 900
+    }
+  ],
+  "entity_id_contract": {
+    "doors": [
+      {
+        "brief_id": "door-south",
+        "entity_id": "door-storey-1-door-south",
+        "storey": "storey-1"
+      }
+    ],
+    "spaces": [
+      {
+        "brief_id": "space-room",
+        "entity_id": "space-storey-1-space-room",
+        "storey": "storey-1"
+      }
+    ],
+    "walls": [
+      {
+        "brief_id": "wall-south",
+        "entity_id": "wall-storey-1-wall-south",
+        "storey": "storey-1"
+      },
+      {
+        "brief_id": "wall-north",
+        "entity_id": "wall-storey-1-wall-north",
+        "storey": "storey-1"
+      },
+      {
+        "brief_id": "wall-west",
+        "entity_id": "wall-storey-1-wall-west",
+        "storey": "storey-1"
+      },
+      {
+        "brief_id": "wall-east",
+        "entity_id": "wall-storey-1-wall-east",
+        "storey": "storey-1"
+      }
+    ],
+    "windows": [
+      {
+        "brief_id": "window-north",
+        "entity_id": "window-storey-1-window-north",
+        "storey": "storey-1"
+      }
+    ]
+  },
+  "generation_package_manifest": {
+    "issues": [],
+    "packages": [
+      {
+        "allowed_reference_ids": [],
+        "kind": "skeleton",
+        "owned_component_ids": [
+          "project-main",
+          "site-main",
+          "building-main",
+          "storey-1"
+        ],
+        "owned_relationship_ids": [
+          "aggregate-project-site",
+          "aggregate-site-building",
+          "aggregate-building-storeys"
+        ],
+        "package_id": "package-skeleton",
+        "storey_id": null
+      },
+      {
+        "allowed_reference_ids": [
+          "storey-1",
+          "wall-north",
+          "wall-south"
+        ],
+        "kind": "storey_local",
+        "owned_component_ids": [
+          "wall-south",
+          "wall-north",
+          "wall-west",
+          "wall-east",
+          "space-room",
+          "door-south",
+          "opening-door-south",
+          "window-north",
+          "opening-window-north"
+        ],
+        "owned_relationship_ids": [
+          "rel-voids-door-south",
+          "rel-fills-door-south",
+          "rel-voids-window-north",
+          "rel-fills-window-north"
+        ],
+        "package_id": "package-storey-1",
+        "storey_id": "storey-1"
+      },
+      {
+        "allowed_reference_ids": [
+          "storey-1"
+        ],
+        "kind": "cross_storey",
+        "owned_component_ids": [
+          "floor-slab-1"
+        ],
+        "owned_relationship_ids": [],
+        "package_id": "package-cross-storey",
+        "storey_id": null
+      }
+    ],
+    "schema_version": "text2ifc/generation-package-manifest/1.0",
+    "status": "ready",
+    "storey_count": 1
+  },
+  "required_relationships": {
+    "containment": {
+      "doors": 1,
+      "spaces": 1,
+      "storeys": 1,
+      "walls": 4,
+      "windows": 1
+    },
+    "opening_fill": {
+      "doors": 1,
+      "windows": 1
+    }
+  },
+  "roof": null,
+  "schema_version": "text2ifc/expected-facts/1.0",
+  "sidecar_role": "orchestration_expectations_not_bim_json_schema",
+  "slabs": [
+    {
+      "id": "floor-slab-1",
+      "owning_storey": "storey-1",
+      "thickness_mm": 150,
+      "top_elevation_mm": 0
+    }
+  ],
+  "source": {
+    "design_brief_schema_version": "text2ifc/design-brief/2.0",
+    "language": "zh-CN",
+    "status": "ready"
+  },
+  "source_paths": {
+    "/known_facts": [
+      "turn-user-001"
+    ]
+  },
+  "space_counts_by_storey": {
+    "storey-1": 1
+  },
+  "spaces": [
+    {
+      "bounds": {
+        "x": [
+          0,
+          6000
+        ],
+        "y": [
+          0,
+          4000
+        ]
+      },
+      "id": "space-room",
+      "shape": "rectangle",
+      "source_key": "storey-1.spaces[1]",
+      "storey": "storey-1"
+    }
+  ],
+  "stairs": [],
+  "storey_count": 1,
+  "storeys": [
+    {
+      "elevation_mm": 0,
+      "id": "storey-1",
+      "source_key": "storey-1"
+    }
+  ],
+  "total_counts": {
+    "IfcBuildingStorey": 1,
+    "IfcDoor": 1,
+    "IfcSpace": 1,
+    "IfcWall": 4,
+    "IfcWindow": 1
+  },
+  "unresolved_expectations": [],
+  "walls": [
+    {
+      "height_mm": 3000,
+      "id": "wall-south",
+      "side": "south",
+      "source_key": "storey-1.walls.exterior[1]",
+      "storey": "storey-1",
+      "thickness_mm": 200
+    },
+    {
+      "height_mm": 3000,
+      "id": "wall-north",
+      "side": "north",
+      "source_key": "storey-1.walls.exterior[2]",
+      "storey": "storey-1",
+      "thickness_mm": 200
+    },
+    {
+      "height_mm": 3000,
+      "id": "wall-west",
+      "side": "west",
+      "source_key": "storey-1.walls.exterior[3]",
+      "storey": "storey-1",
+      "thickness_mm": 200
+    },
+    {
+      "height_mm": 3000,
+      "id": "wall-east",
+      "side": "east",
+      "source_key": "storey-1.walls.exterior[4]",
+      "storey": "storey-1",
+      "thickness_mm": 200
+    }
+  ],
+  "window_counts_by_storey": {
+    "storey-1": 1
+  },
+  "windows": [
+    {
+      "alignment": "host_centerline",
+      "height_mm": 1200,
+      "host_wall": "wall-north",
+      "id": "window-north",
+      "sill_height_mm": 900,
+      "source_key": "storey-1.window[1]",
+      "storey": "storey-1",
+      "width_mm": 1500
+    }
+  ]
+}

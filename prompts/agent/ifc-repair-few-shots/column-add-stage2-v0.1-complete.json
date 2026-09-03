@@ -1,0 +1,27 @@
+{
+  "schema_version": "text2ifc/ifc-repair-stage2-few-shot/0.1",
+  "example_id": "column.add.stage2.v0.1.complete",
+  "profile_id": "column.add.stage2.v0.1",
+  "case": "complete",
+  "sentinel": "EXAMPLE_ONLY",
+  "output_schema": "text2ifc/ifc-repair-stage2-operation/0.1",
+  "expected": {
+    "operation_id": "column-example-1",
+    "operation_type": "add_column",
+    "target": {"storey_global_id": "EXAMPLE-STOREY-COLUMN"},
+    "parameters": {
+      "axis": {
+        "base": {"x_mm": 1000, "y_mm": 2000, "z_mm": 0},
+        "top": {"x_mm": 1000, "y_mm": 2000, "z_mm": 3000}
+      },
+      "section": {
+        "shape": "rectangle",
+        "width_mm": 400,
+        "depth_mm": 600,
+        "orientation": {"x": 0, "y": 1}
+      }
+    },
+    "evidence_refs": ["resolved:/operations/column-example-1/context/candidate_targets/0"]
+  },
+  "rule": "Copy the deterministic resolved operation exactly; Stage 2 does not emit intent, Type, property, status, clarification, or unsupported-result fields."
+}

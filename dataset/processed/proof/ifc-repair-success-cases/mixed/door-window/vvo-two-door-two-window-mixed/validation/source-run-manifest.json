@@ -1,0 +1,136 @@
+{
+  "artifacts": {
+    "AUDIT-REPORT.md": {
+      "bytes": 7493,
+      "path": "AUDIT-REPORT.md",
+      "sha256": "sha256:9d844a1e16b4c3c00147274a3a974f9238fd2d622c9bea535c4e89da5f1d0d27"
+    },
+    "application.json": {
+      "bytes": 36951,
+      "path": "application.json",
+      "sha256": "sha256:d79a62184393f14cd5abba0233f7bf5cea781dd0b1bacbd3468fda8a38d5ca45"
+    },
+    "changeset.json": {
+      "bytes": 13886,
+      "path": "changeset.json",
+      "sha256": "sha256:e402daa51d7cb77fc853927d72a49e8e9297874006558519b3fa2c4d12270801"
+    },
+    "comparison.json": {
+      "bytes": 31599,
+      "path": "comparison.json",
+      "sha256": "sha256:28217cc5f0d299cc2b1934f03373c49b5352aff3025fcf9f465ed999aa126186"
+    },
+    "damaged.ifc": {
+      "bytes": 2431536,
+      "path": "damaged.ifc",
+      "sha256": "sha256:6824086b4171cce034acaa23ad51c3020d87ed44c0aead62979a4b4ad17c4db3"
+    },
+    "evaluation.json": {
+      "bytes": 444194,
+      "path": "evaluation.json",
+      "sha256": "sha256:12953ce01c16afb01d572a97876002ef3940f30831d71e786a96bdacf468287c"
+    },
+    "original.ifc": {
+      "bytes": 2409268,
+      "path": "original.ifc",
+      "sha256": "sha256:b6c435be955aeb6b2998f42a62f4ebf8c3f91eb7d373ca71a2dcedfeb95b3fdc"
+    },
+    "production-boundary.json": {
+      "bytes": 584,
+      "path": "production-boundary.json",
+      "sha256": "sha256:9af491045156a669ddd31634f69222770c5f86db5e41640483de798486234de8"
+    },
+    "release-decision.json": {
+      "bytes": 1387,
+      "path": "release-decision.json",
+      "sha256": "sha256:6e4dc41b5f92925ddb6ecc189ab86282dfca8bf8b6fa9db0a99aff492ef4debd"
+    },
+    "repair-intent.json": {
+      "bytes": 9884,
+      "path": "repair-intent.json",
+      "sha256": "sha256:57a104ec56b47de59d7a52f9b8037a108f50d1e6cf9eafe97b6e262b5405cbed"
+    },
+    "repaired.ifc": {
+      "bytes": 2438425,
+      "path": "repaired.ifc",
+      "sha256": "sha256:de8ebc1aa849b4968ffa54f19fb3dcfce44a83968b2548104beb63b1c18336cf"
+    },
+    "request.txt": {
+      "bytes": 1501,
+      "path": "request.txt",
+      "sha256": "sha256:26a8e917886e9d172a6d8c172b84b0e7d80357888eab68f40b38d67500cc2c44"
+    },
+    "target-resolution.json": {
+      "bytes": 27040,
+      "path": "target-resolution.json",
+      "sha256": "sha256:9068226c130c3ec4d5e5c8dc46977c9eace0d2fd3b244f123e5c4bffbeec3243"
+    },
+    "three-way-audit.json": {
+      "bytes": 82699,
+      "path": "three-way-audit.json",
+      "sha256": "sha256:3493883594a13c6d663101b5b10f54e2e73ba42dfe3395f185b89a13cf57e62b"
+    }
+  },
+  "case_id": "vvo-two-door-two-window-mixed",
+  "damage": {
+    "door_openings_removed": false,
+    "removed_doors": [
+      {
+        "global_id": "2IUEnGd5v4Yfg1ZlPtd0qa",
+        "name": "单扇 - 与墙齐:800x2480:255008",
+        "operation_type": "SINGLE_SWING_LEFT",
+        "overall_height_mm": 2480.0,
+        "overall_width_mm": 800.0,
+        "type_global_id": "2Bp10QP5H0qx3NLxP020qy",
+        "type_name": "800x2480"
+      },
+      {
+        "global_id": "1B$rgWypT66viEf2CI1iIv",
+        "name": "单扇 - 与墙齐:935x2400:275772",
+        "operation_type": "SINGLE_SWING_RIGHT",
+        "overall_height_mm": 2400.0,
+        "overall_width_mm": 935.0,
+        "type_global_id": "1B$rgWypT66viEf3OI1iU2",
+        "type_name": "935x2400"
+      }
+    ],
+    "removed_windows": [
+      {
+        "global_id": "2dYMXn0_5AKRbD_0yUIAqJ",
+        "height_mm": 499.999999999999,
+        "ifc_class": "IfcWindow",
+        "name": "固定:500x1180:279940",
+        "step_id": 68272,
+        "width_mm": 1180.0
+      },
+      {
+        "global_id": "08xWVL$9z6JRwr3oWJHoAz",
+        "height_mm": 2370.0,
+        "ifc_class": "IfcWindow",
+        "name": "固定:870x2370:255906",
+        "step_id": 59619,
+        "width_mm": 869.999999999999
+      }
+    ],
+    "window_ids": [
+      "2dYMXn0_5AKRbD_0yUIAqJ",
+      "08xWVL$9z6JRwr3oWJHoAz"
+    ],
+    "window_openings_removed": true
+  },
+  "generated_type_ids": {},
+  "one_atomic_changeset": true,
+  "operation_count": 4,
+  "operation_families": {
+    "door": 2,
+    "window": 2
+  },
+  "public_targeting": {
+    "guid_free": true,
+    "resolved_operation_count": 4,
+    "strategy": "name_storey_and_wall_local_position"
+  },
+  "schema_version": "text2ifc/phase11-door-proof/0.2",
+  "status": "passed",
+  "synthetic_fallback_used": false
+}

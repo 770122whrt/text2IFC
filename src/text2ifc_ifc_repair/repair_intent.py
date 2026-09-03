@@ -1,0 +1,928 @@
+"""Exact-versioned public RepairIntent domain contract."""
+
+from __future__ import annotations
+
+import hashlib
+import json
+from dataclasses import dataclass
+from enum import Enum
+from pathlib import Path
+from types import MappingProxyType
+from typing import Any, Mapping
+
+from jsonschema import Draft202012Validator
+
+from .property_intent import ExactPropertyIntent, NaturalLanguagePropertyIntent
+from .registry import OperationRegistry, OperationRegistryError
+from .target_query import TargetQuery
+
+
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+REPAIR_INTENT_SCHEMA_VERSION = "text2ifc/ifc-repair-intent/0.1"
+REPAIR_INTENT_SCHEMA_PATH = Path("schemas/agent/ifc-repair-intent-0.1.schema.json")
+REPAIR_INTENT_BODY_SCHEMA_VERSION = "text2ifc/ifc-repair-intent-body/0.1"
+REPAIR_INTENT_BODY_SCHEMA_PATH = Path(
+    "schemas/agent/ifc-repair-intent-body-0.1.schema.json"
+)
+REPAIR_INTENT_SCHEMA_VERSION_0_2 = "text2ifc/ifc-repair-intent/0.2"
+REPAIR_INTENT_SCHEMA_PATH_0_2 = Path(
+    "schemas/agent/ifc-repair-intent-0.2.schema.json"
+)
+REPAIR_INTENT_BODY_SCHEMA_VERSION_0_2 = (
+    "text2ifc/ifc-repair-intent-body/0.2"
+)
+REPAIR_INTENT_BODY_SCHEMA_PATH_0_2 = Path(
+    "schemas/agent/ifc-repair-intent-body-0.2.schema.json"
+)
+REPAIR_INTENT_SCHEMA_VERSION_0_3 = "text2ifc/ifc-repair-intent/0.3"
+REPAIR_INTENT_SCHEMA_PATH_0_3 = Path(
+    "schemas/agent/ifc-repair-intent-0.3.schema.json"
+)
+REPAIR_INTENT_BODY_SCHEMA_VERSION_0_3 = (
+    "text2ifc/ifc-repair-intent-body/0.3"
+)
+REPAIR_INTENT_BODY_SCHEMA_PATH_0_3 = Path(
+    "schemas/agent/ifc-repair-intent-body-0.3.schema.json"
+)
+REPAIR_INTENT_SCHEMA_VERSION_0_4 = "text2ifc/ifc-repair-intent/0.4"
+REPAIR_INTENT_SCHEMA_PATH_0_4 = Path(
+    "schemas/agent/ifc-repair-intent-0.4.schema.json"
+)
+REPAIR_INTENT_BODY_SCHEMA_VERSION_0_4 = (
+    "text2ifc/ifc-repair-intent-body/0.4"
+)
+REPAIR_INTENT_BODY_SCHEMA_PATH_0_4 = Path(
+    "schemas/agent/ifc-repair-intent-body-0.4.schema.json"
+)
+REPAIR_INTENT_SCHEMA_VERSION_0_5 = "text2ifc/ifc-repair-intent/0.5"
+REPAIR_INTENT_SCHEMA_PATH_0_5 = Path(
+    "schemas/agent/ifc-repair-intent-0.5.schema.json"
+)
+REPAIR_INTENT_BODY_SCHEMA_VERSION_0_5 = (
+    "text2ifc/ifc-repair-intent-body/0.5"
+)
+REPAIR_INTENT_BODY_SCHEMA_PATH_0_5 = Path(
+    "schemas/agent/ifc-repair-intent-body-0.5.schema.json"
+)
+REPAIR_INTENT_SCHEMA_VERSION_0_6 = "text2ifc/ifc-repair-intent/0.6"
+REPAIR_INTENT_SCHEMA_PATH_0_6 = Path(
+    "schemas/agent/ifc-repair-intent-0.6.schema.json"
+)
+REPAIR_INTENT_BODY_SCHEMA_VERSION_0_6 = (
+    "text2ifc/ifc-repair-intent-body/0.6"
+)
+REPAIR_INTENT_BODY_SCHEMA_PATH_0_6 = Path(
+    "schemas/agent/ifc-repair-intent-body-0.6.schema.json"
+)
+REPAIR_INTENT_SCHEMA_VERSION_0_7 = "text2ifc/ifc-repair-intent/0.7"
+REPAIR_INTENT_SCHEMA_PATH_0_7 = Path(
+    "schemas/agent/ifc-repair-intent-0.7.schema.json"
+)
+REPAIR_INTENT_BODY_SCHEMA_VERSION_0_7 = (
+    "text2ifc/ifc-repair-intent-body/0.7"
+)
+REPAIR_INTENT_BODY_SCHEMA_PATH_0_7 = Path(
+    "schemas/agent/ifc-repair-intent-body-0.7.schema.json"
+)
+REPAIR_INTENT_SCHEMA_VERSION_0_8 = "text2ifc/ifc-repair-intent/0.8"
+REPAIR_INTENT_SCHEMA_PATH_0_8 = Path(
+    "schemas/agent/ifc-repair-intent-0.8.schema.json"
+)
+REPAIR_INTENT_BODY_SCHEMA_VERSION_0_8 = (
+    "text2ifc/ifc-repair-intent-body/0.8"
+)
+REPAIR_INTENT_BODY_SCHEMA_PATH_0_8 = Path(
+    "schemas/agent/ifc-repair-intent-body-0.8.schema.json"
+)
+_SCHEMA_PATHS = {
+    REPAIR_INTENT_SCHEMA_VERSION: REPAIR_INTENT_SCHEMA_PATH,
+    REPAIR_INTENT_SCHEMA_VERSION_0_2: REPAIR_INTENT_SCHEMA_PATH_0_2,
+    REPAIR_INTENT_SCHEMA_VERSION_0_3: REPAIR_INTENT_SCHEMA_PATH_0_3,
+    REPAIR_INTENT_SCHEMA_VERSION_0_4: REPAIR_INTENT_SCHEMA_PATH_0_4,
+    REPAIR_INTENT_SCHEMA_VERSION_0_5: REPAIR_INTENT_SCHEMA_PATH_0_5,
+    REPAIR_INTENT_SCHEMA_VERSION_0_6: REPAIR_INTENT_SCHEMA_PATH_0_6,
+    REPAIR_INTENT_SCHEMA_VERSION_0_7: REPAIR_INTENT_SCHEMA_PATH_0_7,
+    REPAIR_INTENT_SCHEMA_VERSION_0_8: REPAIR_INTENT_SCHEMA_PATH_0_8,
+}
+_BODY_SCHEMA_PATHS = {
+    REPAIR_INTENT_BODY_SCHEMA_VERSION: REPAIR_INTENT_BODY_SCHEMA_PATH,
+    REPAIR_INTENT_BODY_SCHEMA_VERSION_0_2: REPAIR_INTENT_BODY_SCHEMA_PATH_0_2,
+    REPAIR_INTENT_BODY_SCHEMA_VERSION_0_3: REPAIR_INTENT_BODY_SCHEMA_PATH_0_3,
+    REPAIR_INTENT_BODY_SCHEMA_VERSION_0_4: REPAIR_INTENT_BODY_SCHEMA_PATH_0_4,
+    REPAIR_INTENT_BODY_SCHEMA_VERSION_0_5: REPAIR_INTENT_BODY_SCHEMA_PATH_0_5,
+    REPAIR_INTENT_BODY_SCHEMA_VERSION_0_6: REPAIR_INTENT_BODY_SCHEMA_PATH_0_6,
+    REPAIR_INTENT_BODY_SCHEMA_VERSION_0_7: REPAIR_INTENT_BODY_SCHEMA_PATH_0_7,
+    REPAIR_INTENT_BODY_SCHEMA_VERSION_0_8: REPAIR_INTENT_BODY_SCHEMA_PATH_0_8,
+}
+
+
+@dataclass(frozen=True)
+class RepairIntentLimits:
+    """Single authority for public Stage 1 content and retry bounds."""
+
+    max_operations: int = 16
+    max_provenance_excerpt_chars: int = 2048
+    max_request_bytes: int = 16 * 1024
+    max_provider_response_bytes: int = 256 * 1024
+    max_correction_attempts: int = 2
+    max_attempt_excerpt_chars: int = 4096
+    public_source_kinds: tuple[str, ...] = (
+        "user_request",
+        "public_capability",
+        "public_clarification",
+    )
+    private_canary_terms: tuple[str, ...] = (
+        "mutation_manifest.private.json",
+        "private_original_ifc",
+        "mutation_mapping",
+        "benchmark_gold",
+        "gold_ifc",
+    )
+
+
+DEFAULT_REPAIR_INTENT_LIMITS = RepairIntentLimits()
+MAX_OPERATIONS = DEFAULT_REPAIR_INTENT_LIMITS.max_operations
+MAX_PROVENANCE_EXCERPT_CHARS = (
+    DEFAULT_REPAIR_INTENT_LIMITS.max_provenance_excerpt_chars
+)
+
+
+class RepairIntentCode(str, Enum):
+    SCHEMA_INVALID = "REPAIR_INTENT_SCHEMA_INVALID"
+    OPERATION_ID_INVALID = "REPAIR_INTENT_OPERATION_ID_INVALID"
+    DUPLICATE_OPERATION_ID = "REPAIR_INTENT_DUPLICATE_OPERATION_ID"
+    UNSUPPORTED_OPERATION = "REPAIR_INTENT_UNSUPPORTED_OPERATION"
+    TARGET_SELECTOR_REQUIRED = "REPAIR_INTENT_TARGET_SELECTOR_REQUIRED"
+    TARGET_CLASS_NOT_ALLOWED = "REPAIR_INTENT_TARGET_CLASS_NOT_ALLOWED"
+    PARAMETER_SCHEMA_INVALID = "REPAIR_INTENT_PARAMETER_SCHEMA_INVALID"
+    REQUEST_ID_MISMATCH = "REPAIR_INTENT_REQUEST_ID_MISMATCH"
+    REQUEST_HASH_MISMATCH = "REPAIR_INTENT_REQUEST_HASH_MISMATCH"
+    PROMPT_FINGERPRINT_MISMATCH = "REPAIR_INTENT_PROMPT_FINGERPRINT_MISMATCH"
+    MODEL_FINGERPRINT_MISMATCH = "REPAIR_INTENT_MODEL_FINGERPRINT_MISMATCH"
+    REQUEST_TOO_LARGE = "REPAIR_REQUEST_TOO_LARGE"
+    ATTEMPT_BUDGET_INVALID = "REPAIR_INTENT_ATTEMPT_BUDGET_INVALID"
+    PROVIDER_RESPONSE_TOO_LARGE = "PROVIDER_RESPONSE_TOO_LARGE"
+    PROVIDER_REQUEST_FAILED = "REPAIR_INTENT_PROVIDER_FAILED"
+    RETRY_EXHAUSTED = "REPAIR_INTENT_RETRY_EXHAUSTED"
+    PROPERTY_INCOMPLETE = "REPAIR_INTENT_PROPERTY_INCOMPLETE"
+    OPERATION_PROFILE_MISMATCH = "OPERATION_PROFILE_MISMATCH"
+    UNSUPPORTED_REQUEST_INVALID = "REPAIR_INTENT_UNSUPPORTED_REQUEST_INVALID"
+
+
+class RepairIntentError(ValueError):
+    """Stable fail-closed RepairIntent validation failure."""
+
+    def __init__(
+        self, code: RepairIntentCode | str, detail: str, *, path: str = ""
+    ) -> None:
+        self.code = code.value if isinstance(code, RepairIntentCode) else code
+        self.detail = detail
+        self.path = path
+        super().__init__(f"{code}: {detail}")
+
+
+@dataclass(frozen=True)
+class PublicProvenance:
+    source_kind: str
+    reference: str
+    excerpt: str
+
+    @classmethod
+    def from_dict(cls, value: Mapping[str, Any]) -> "PublicProvenance":
+        return cls(
+            source_kind=str(value["source_kind"]),
+            reference=str(value["reference"]),
+            excerpt=str(value["excerpt"]),
+        )
+
+    def to_dict(self) -> dict[str, str]:
+        return {
+            "source_kind": self.source_kind,
+            "reference": self.reference,
+            "excerpt": self.excerpt,
+        }
+
+
+@dataclass(frozen=True)
+class RoutingIntent:
+    """Provider-extracted classification bound to checked-in operation metadata."""
+
+    component_family: str
+    action: str
+    operation_profile: str
+    source: PublicProvenance
+
+    @classmethod
+    def from_dict(cls, value: Mapping[str, Any]) -> "RoutingIntent":
+        return cls(
+            component_family=str(value["component_family"]),
+            action=str(value["action"]),
+            operation_profile=str(value["operation_profile"]),
+            source=PublicProvenance.from_dict(value["source"]),
+        )
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "component_family": self.component_family,
+            "action": self.action,
+            "operation_profile": self.operation_profile,
+            "source": self.source.to_dict(),
+        }
+
+
+@dataclass(frozen=True)
+class UnsupportedRequest:
+    """One explicit user request that the registered repair agent cannot do."""
+
+    unsupported_id: str
+    kind: str
+    operation_id: str | None
+    capability_id: str
+    source: PublicProvenance
+
+    @classmethod
+    def from_dict(cls, value: Mapping[str, Any]) -> "UnsupportedRequest":
+        operation_id = value["operation_id"]
+        return cls(
+            unsupported_id=str(value["unsupported_id"]),
+            kind=str(value["kind"]),
+            operation_id=None if operation_id is None else str(operation_id),
+            capability_id=str(value["capability_id"]),
+            source=PublicProvenance.from_dict(value["source"]),
+        )
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "unsupported_id": self.unsupported_id,
+            "kind": self.kind,
+            "operation_id": self.operation_id,
+            "capability_id": self.capability_id,
+            "source": self.source.to_dict(),
+        }
+
+
+@dataclass(frozen=True)
+class AttributeIntent:
+    intent_kind: str
+    name: str
+    value: Any
+    source: PublicProvenance
+
+    @classmethod
+    def from_dict(cls, value: Mapping[str, Any]) -> "AttributeIntent":
+        return cls(
+            intent_kind=str(value["intent_kind"]),
+            name=str(value["name"]),
+            value=value["value"],
+            source=PublicProvenance.from_dict(value["source"]),
+        )
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "intent_kind": self.intent_kind,
+            "name": self.name,
+            "value": self.value,
+            "source": self.source.to_dict(),
+        }
+
+
+@dataclass(frozen=True)
+class PrototypeIntent:
+    reference_kind: str
+    reference: str
+    source: PublicProvenance
+
+    @classmethod
+    def from_dict(cls, value: Mapping[str, Any]) -> "PrototypeIntent":
+        return cls(
+            reference_kind=str(value["reference_kind"]),
+            reference=str(value["reference"]),
+            source=PublicProvenance.from_dict(value["source"]),
+        )
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "reference_kind": self.reference_kind,
+            "reference": self.reference,
+            "source": self.source.to_dict(),
+        }
+
+
+@dataclass(frozen=True)
+class QuantityIntent:
+    scope: str
+    set_name: str
+    quantity_name: str
+    value: Any
+    value_type: str
+    unit: str | None
+    source: PublicProvenance
+
+    @classmethod
+    def from_dict(cls, value: Mapping[str, Any]) -> "QuantityIntent":
+        return cls(
+            scope=str(value["scope"]),
+            set_name=str(value["set_name"]),
+            quantity_name=str(value["quantity_name"]),
+            value=value["value"],
+            value_type=str(value["value_type"]),
+            unit=None if value["unit"] is None else str(value["unit"]),
+            source=PublicProvenance.from_dict(value["source"]),
+        )
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "scope": self.scope,
+            "set_name": self.set_name,
+            "quantity_name": self.quantity_name,
+            "value": self.value,
+            "value_type": self.value_type,
+            "unit": self.unit,
+            "source": self.source.to_dict(),
+        }
+
+
+@dataclass(frozen=True)
+class OccurrenceReuseIntent:
+    mode: str
+    reference_kind: str
+    reference: str
+    include_patterns: tuple[str, ...]
+    source: PublicProvenance
+
+    @classmethod
+    def from_dict(cls, value: Mapping[str, Any]) -> "OccurrenceReuseIntent":
+        return cls(
+            mode=str(value["mode"]),
+            reference_kind=str(value["reference_kind"]),
+            reference=str(value["reference"]),
+            include_patterns=tuple(str(item) for item in value["include_patterns"]),
+            source=PublicProvenance.from_dict(value["source"]),
+        )
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "mode": self.mode,
+            "reference_kind": self.reference_kind,
+            "reference": self.reference,
+            "include_patterns": list(self.include_patterns),
+            "source": self.source.to_dict(),
+        }
+
+
+@dataclass(frozen=True)
+class OccurrenceSemanticBundle:
+    bundle_id: str
+    property_intents: tuple[
+        ExactPropertyIntent | NaturalLanguagePropertyIntent, ...
+    ]
+    quantity_intents: tuple[QuantityIntent, ...]
+    provenance: tuple[PublicProvenance, ...]
+
+    @classmethod
+    def from_dict(cls, value: Mapping[str, Any]) -> "OccurrenceSemanticBundle":
+        return cls(
+            bundle_id=str(value["bundle_id"]),
+            property_intents=tuple(
+                _property_intent_from_dict(item)
+                for item in value["property_intents"]
+            ),
+            quantity_intents=tuple(
+                QuantityIntent.from_dict(item) for item in value["quantity_intents"]
+            ),
+            provenance=tuple(
+                PublicProvenance.from_dict(item) for item in value["provenance"]
+            ),
+        )
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "bundle_id": self.bundle_id,
+            "property_intents": [item.to_dict() for item in self.property_intents],
+            "quantity_intents": [item.to_dict() for item in self.quantity_intents],
+            "provenance": [item.to_dict() for item in self.provenance],
+        }
+
+
+@dataclass(frozen=True)
+class OperationIntent:
+    operation_id: str
+    operation_type: str
+    target_query: TargetQuery
+    parameters: Mapping[str, Any]
+    attribute_intents: tuple[AttributeIntent, ...]
+    prototype_intent: PrototypeIntent | None
+    provenance: tuple[PublicProvenance, ...]
+    _target_query_document: Mapping[str, Any]
+    property_intents: tuple[
+        ExactPropertyIntent | NaturalLanguagePropertyIntent, ...
+    ] = ()
+    _has_property_intents_field: bool = False
+    semantic_bundle_refs: tuple[str, ...] = ()
+    quantity_intents: tuple[QuantityIntent, ...] = ()
+    occurrence_reuse_intent: OccurrenceReuseIntent | None = None
+    _has_occurrence_semantics_fields: bool = False
+    routing_intent: RoutingIntent | None = None
+
+    @classmethod
+    def from_dict(cls, value: Mapping[str, Any]) -> "OperationIntent":
+        target_document = _freeze_json(value["target_query"])
+        prototype = value["prototype_intent"]
+        reuse = value.get("occurrence_reuse_intent")
+        return cls(
+            operation_id=str(value["operation_id"]),
+            operation_type=str(value["operation_type"]),
+            target_query=TargetQuery.from_dict(_thaw_json(target_document)),
+            parameters=_freeze_json(value["parameters"]),
+            attribute_intents=tuple(
+                AttributeIntent.from_dict(item) for item in value["attribute_intents"]
+            ),
+            property_intents=tuple(
+                _property_intent_from_dict(item)
+                for item in value.get("property_intents", ())
+            ),
+            prototype_intent=(
+                None if prototype is None else PrototypeIntent.from_dict(prototype)
+            ),
+            provenance=tuple(
+                PublicProvenance.from_dict(item) for item in value["provenance"]
+            ),
+            _target_query_document=target_document,
+            _has_property_intents_field="property_intents" in value,
+            semantic_bundle_refs=tuple(
+                str(item) for item in value.get("semantic_bundle_refs", ())
+            ),
+            quantity_intents=tuple(
+                QuantityIntent.from_dict(item)
+                for item in value.get("quantity_intents", ())
+            ),
+            occurrence_reuse_intent=(
+                None if reuse is None else OccurrenceReuseIntent.from_dict(reuse)
+            ),
+            _has_occurrence_semantics_fields=(
+                "semantic_bundle_refs" in value
+                or "quantity_intents" in value
+                or "occurrence_reuse_intent" in value
+            ),
+            routing_intent=(
+                None
+                if value.get("routing_intent") is None
+                else RoutingIntent.from_dict(value["routing_intent"])
+            ),
+        )
+
+    def to_dict(self) -> dict[str, Any]:
+        payload = {
+            "operation_id": self.operation_id,
+            "operation_type": self.operation_type,
+            "target_query": _thaw_json(self._target_query_document),
+            "parameters": _thaw_json(self.parameters),
+            "attribute_intents": [item.to_dict() for item in self.attribute_intents],
+            "prototype_intent": (
+                None if self.prototype_intent is None else self.prototype_intent.to_dict()
+            ),
+            "provenance": [item.to_dict() for item in self.provenance],
+        }
+        if self._has_property_intents_field:
+            payload["property_intents"] = [
+                item.to_dict() for item in self.property_intents
+            ]
+        if self._has_occurrence_semantics_fields:
+            payload["semantic_bundle_refs"] = list(self.semantic_bundle_refs)
+            payload["quantity_intents"] = [
+                item.to_dict() for item in self.quantity_intents
+            ]
+            payload["occurrence_reuse_intent"] = (
+                None
+                if self.occurrence_reuse_intent is None
+                else self.occurrence_reuse_intent.to_dict()
+            )
+        if self.routing_intent is not None:
+            payload["routing_intent"] = self.routing_intent.to_dict()
+        return payload
+
+
+@dataclass(frozen=True)
+class RepairIntent:
+    request_id: str
+    source_request_hash: str
+    model_fingerprint: str
+    prompt_fingerprint: str
+    operations: tuple[OperationIntent, ...]
+    provenance: tuple[PublicProvenance, ...]
+    schema_version: str = REPAIR_INTENT_SCHEMA_VERSION
+    semantic_bundles: tuple[OccurrenceSemanticBundle, ...] = ()
+    _has_semantic_bundles_field: bool = False
+    unsupported_requests: tuple[UnsupportedRequest, ...] = ()
+    _has_unsupported_requests_field: bool = False
+
+    @classmethod
+    def from_dict(
+        cls,
+        value: Mapping[str, Any],
+        *,
+        registry: OperationRegistry,
+        require_complete: bool = True,
+    ) -> "RepairIntent":
+        payload = _json_copy(value)
+        schema_version = str(payload.get("schema_version", ""))
+        errors = sorted(
+            _validator(schema_version).iter_errors(payload),
+            key=lambda error: tuple(str(part) for part in error.absolute_path),
+        )
+        if errors:
+            error = errors[0]
+            raise RepairIntentError(
+                RepairIntentCode.SCHEMA_INVALID,
+                error.message,
+                path=_pointer(error.absolute_path),
+            )
+
+        operation_ids = [str(item["operation_id"]) for item in payload["operations"]]
+        if len(operation_ids) != len(set(operation_ids)):
+            raise RepairIntentError(
+                RepairIntentCode.DUPLICATE_OPERATION_ID,
+                "Operation IDs must be unique within one RepairIntent.",
+                path="/operations",
+            )
+        unsupported_ids = [
+            str(item["unsupported_id"])
+            for item in payload.get("unsupported_requests", ())
+        ]
+        if len(unsupported_ids) != len(set(unsupported_ids)):
+            raise RepairIntentError(
+                RepairIntentCode.UNSUPPORTED_REQUEST_INVALID,
+                "Unsupported request IDs must be unique within one RepairIntent.",
+                path="/unsupported_requests",
+            )
+        bundle_ids = [
+            str(item["bundle_id"]) for item in payload.get("semantic_bundles", ())
+        ]
+        if len(bundle_ids) != len(set(bundle_ids)):
+            raise RepairIntentError(
+                RepairIntentCode.SCHEMA_INVALID,
+                "Semantic bundle IDs must be unique within one RepairIntent.",
+                path="/semantic_bundles",
+            )
+        declared_bundle_ids = set(bundle_ids)
+        for operation_index, operation in enumerate(payload["operations"]):
+            for ref_index, bundle_ref in enumerate(
+                operation.get("semantic_bundle_refs", ())
+            ):
+                if bundle_ref not in declared_bundle_ids:
+                    raise RepairIntentError(
+                        RepairIntentCode.SCHEMA_INVALID,
+                        f"Unknown semantic bundle reference: {bundle_ref}",
+                        path=(
+                            f"/operations/{operation_index}/"
+                            f"semantic_bundle_refs/{ref_index}"
+                        ),
+                    )
+
+        operations: list[OperationIntent] = []
+        for index, raw_operation in enumerate(payload["operations"]):
+            operation_type = str(raw_operation["operation_type"])
+            try:
+                definition = registry.require(operation_type)
+            except OperationRegistryError as error:
+                raise RepairIntentError(
+                    RepairIntentCode.UNSUPPORTED_OPERATION,
+                    error.detail,
+                    path=f"/operations/{index}/operation_type",
+                ) from error
+            query = raw_operation["target_query"]
+            if schema_version in {
+                REPAIR_INTENT_SCHEMA_VERSION_0_6,
+                REPAIR_INTENT_SCHEMA_VERSION_0_7,
+                REPAIR_INTENT_SCHEMA_VERSION_0_8,
+            }:
+                target_issues = registry.validate_intent_target(raw_operation)
+                if target_issues:
+                    issue = target_issues[0]
+                    raise RepairIntentError(
+                        RepairIntentCode.SCHEMA_INVALID,
+                        issue.message,
+                        path=f"/operations/{index}{issue.path}",
+                    )
+            if not _has_target_selector(query):
+                raise RepairIntentError(
+                    RepairIntentCode.TARGET_SELECTOR_REQUIRED,
+                    "At least one public target selector is required.",
+                    path=f"/operations/{index}/target_query",
+                )
+            if not set(query["allowed_ifc_classes"]).issubset(
+                definition.target_ifc_classes
+            ):
+                raise RepairIntentError(
+                    RepairIntentCode.TARGET_CLASS_NOT_ALLOWED,
+                    operation_type,
+                    path=f"/operations/{index}/target_query/allowed_ifc_classes",
+                )
+            parameter_issues = (
+                registry.validate_intent_parameters(raw_operation)
+                if require_complete
+                else registry.validate_partial_parameters(raw_operation)
+            )
+            if parameter_issues:
+                issue = parameter_issues[0]
+                raise RepairIntentError(
+                    RepairIntentCode.PARAMETER_SCHEMA_INVALID,
+                    issue.message,
+                    path=f"/operations/{index}{issue.path}",
+                )
+            if require_complete:
+                for property_index, property_intent in enumerate(
+                    raw_operation.get("property_intents", ())
+                ):
+                    missing = _property_intent_from_dict(property_intent).missing_fields
+                    if missing:
+                        raise RepairIntentError(
+                            RepairIntentCode.PROPERTY_INCOMPLETE,
+                            ",".join(missing),
+                            path=(
+                                f"/operations/{index}/property_intents/"
+                                f"{property_index}"
+                            ),
+                        )
+            operations.append(OperationIntent.from_dict(raw_operation))
+
+        _validate_unsupported_requests(
+            payload.get("unsupported_requests", ()),
+            operations=operations,
+            registry=registry,
+            schema_version=schema_version,
+        )
+
+        return cls(
+            request_id=str(payload["request_id"]),
+            source_request_hash=str(payload["source_request_hash"]),
+            model_fingerprint=str(payload["model_fingerprint"]),
+            prompt_fingerprint=str(payload["prompt_fingerprint"]),
+            operations=tuple(operations),
+            provenance=tuple(
+                PublicProvenance.from_dict(item) for item in payload["provenance"]
+            ),
+            schema_version=schema_version,
+            semantic_bundles=tuple(
+                OccurrenceSemanticBundle.from_dict(item)
+                for item in payload.get("semantic_bundles", ())
+            ),
+            _has_semantic_bundles_field="semantic_bundles" in payload,
+            unsupported_requests=tuple(
+                UnsupportedRequest.from_dict(item)
+                for item in payload.get("unsupported_requests", ())
+            ),
+            _has_unsupported_requests_field="unsupported_requests" in payload,
+        )
+
+    def to_dict(self) -> dict[str, Any]:
+        payload = {
+            "schema_version": self.schema_version,
+            "request_id": self.request_id,
+            "source_request_hash": self.source_request_hash,
+            "model_fingerprint": self.model_fingerprint,
+            "prompt_fingerprint": self.prompt_fingerprint,
+            "operations": [operation.to_dict() for operation in self.operations],
+            "provenance": [item.to_dict() for item in self.provenance],
+        }
+        if self._has_semantic_bundles_field:
+            payload["semantic_bundles"] = [
+                item.to_dict() for item in self.semantic_bundles
+            ]
+        if self._has_unsupported_requests_field:
+            payload["unsupported_requests"] = [
+                item.to_dict() for item in self.unsupported_requests
+            ]
+        return payload
+
+    def canonical_json(self) -> str:
+        return _canonical_json(self.to_dict())
+
+    @property
+    def intent_hash(self) -> str:
+        return fingerprint_text(self.canonical_json())
+
+
+def load_repair_intent_schema(
+    version: str = REPAIR_INTENT_SCHEMA_VERSION,
+) -> dict[str, Any]:
+    path = _SCHEMA_PATHS.get(version)
+    if path is None:
+        raise RepairIntentError(
+            RepairIntentCode.SCHEMA_INVALID,
+            f"Unsupported RepairIntent schema version: {version}",
+            path="/schema_version",
+        )
+    return json.loads(
+        (PROJECT_ROOT / path).read_text(encoding="utf-8")
+    )
+
+
+def load_repair_intent_body_schema(
+    version: str = REPAIR_INTENT_BODY_SCHEMA_VERSION,
+) -> dict[str, Any]:
+    path = _BODY_SCHEMA_PATHS.get(version)
+    if path is None:
+        raise RepairIntentError(
+            RepairIntentCode.SCHEMA_INVALID,
+            f"Unsupported RepairIntent body schema version: {version}",
+            path="/schema_version",
+        )
+    return json.loads(
+        (PROJECT_ROOT / path).read_text(encoding="utf-8")
+    )
+
+
+def hash_request(request_text: str) -> str:
+    return fingerprint_text(request_text)
+
+
+def fingerprint_text(value: str) -> str:
+    return "sha256:" + hashlib.sha256(value.encode("utf-8")).hexdigest()
+
+
+def _validator(version: str) -> Draft202012Validator:
+    return Draft202012Validator(load_repair_intent_schema(version))
+
+
+def _property_intent_from_dict(
+    value: Mapping[str, Any],
+) -> ExactPropertyIntent | NaturalLanguagePropertyIntent:
+    if value.get("intent_kind") == "natural_language_property":
+        return NaturalLanguagePropertyIntent.from_dict(value)
+    return ExactPropertyIntent.from_dict(value)
+
+
+def _validate_unsupported_requests(
+    raw_requests: Any,
+    *,
+    operations: list[OperationIntent],
+    registry: OperationRegistry,
+    schema_version: str,
+) -> None:
+    if not raw_requests:
+        return
+    from .prompt_profiles import load_prompt_profiles
+
+    operation_by_id = {item.operation_id: item for item in operations}
+    profiles = load_prompt_profiles()
+    for index, raw in enumerate(raw_requests):
+        if raw["kind"] == "unregistered_action":
+            continue
+        operation_id = str(raw["operation_id"])
+        operation = operation_by_id.get(operation_id)
+        if operation is None:
+            raise RepairIntentError(
+                RepairIntentCode.UNSUPPORTED_REQUEST_INVALID,
+                f"Unknown operation_id: {operation_id}",
+                path=f"/unsupported_requests/{index}/operation_id",
+            )
+        current_profile_id = str(
+            registry.require(operation.operation_type).prompt_profile_id or ""
+        )
+        if operation.routing_intent is None:
+            raise RepairIntentError(
+                RepairIntentCode.UNSUPPORTED_REQUEST_INVALID,
+                operation.operation_type,
+                path=f"/unsupported_requests/{index}/capability_id",
+            )
+        profile_id = operation.routing_intent.operation_profile
+        expected_profile_id = current_profile_id
+        if current_profile_id in {"beam.add.v0.3", "column.add.v0.3"}:
+            base_profile_id = current_profile_id.removesuffix(".v0.3")
+            if schema_version == REPAIR_INTENT_SCHEMA_VERSION_0_5:
+                expected_profile_id = base_profile_id
+            elif schema_version == REPAIR_INTENT_SCHEMA_VERSION_0_6:
+                expected_profile_id = f"{base_profile_id}.v0.2"
+        profile = profiles.get(profile_id)
+        if profile is None or profile_id != expected_profile_id:
+            raise RepairIntentError(
+                RepairIntentCode.UNSUPPORTED_REQUEST_INVALID,
+                operation.operation_type,
+                path=f"/unsupported_requests/{index}/capability_id",
+            )
+        capability_id = str(raw["capability_id"])
+        unsupported = {
+            str(item) for item in profile.document["unsupported_capabilities"]
+        }
+        if (
+            profile_id != profile.profile_id or capability_id not in unsupported
+        ):
+            raise RepairIntentError(
+                RepairIntentCode.UNSUPPORTED_REQUEST_INVALID,
+                capability_id,
+                path=f"/unsupported_requests/{index}/capability_id",
+            )
+
+
+def _has_target_selector(query: Mapping[str, Any]) -> bool:
+    scalar_fields = (
+        "global_id",
+        "storey_name",
+        "storey_global_id",
+        "host_global_id",
+        "grid",
+        "space",
+        "direction",
+    )
+    return any(query.get(field) for field in scalar_fields) or any(
+        query.get(field)
+        for field in (
+            "names",
+            "geometry_capabilities",
+            "geometry_constraints",
+        )
+    )
+
+
+def _canonical_json(value: Any) -> str:
+    return json.dumps(
+        value,
+        ensure_ascii=False,
+        sort_keys=True,
+        separators=(",", ":"),
+        allow_nan=False,
+    )
+
+
+def _json_copy(value: Any) -> Any:
+    return json.loads(_canonical_json(value))
+
+
+def _freeze_json(value: Any) -> Any:
+    if isinstance(value, Mapping):
+        return MappingProxyType(
+            {str(key): _freeze_json(item) for key, item in value.items()}
+        )
+    if isinstance(value, (list, tuple)):
+        return tuple(_freeze_json(item) for item in value)
+    return value
+
+
+def _thaw_json(value: Any) -> Any:
+    if isinstance(value, Mapping):
+        return {str(key): _thaw_json(item) for key, item in value.items()}
+    if isinstance(value, tuple):
+        return [_thaw_json(item) for item in value]
+    return value
+
+
+def _pointer(parts: Any) -> str:
+    tokens = [str(part).replace("~", "~0").replace("/", "~1") for part in parts]
+    return "/" + "/".join(tokens) if tokens else ""
+
+
+__all__ = [
+    "AttributeIntent",
+    "DEFAULT_REPAIR_INTENT_LIMITS",
+    "MAX_OPERATIONS",
+    "MAX_PROVENANCE_EXCERPT_CHARS",
+    "OperationIntent",
+    "OccurrenceReuseIntent",
+    "OccurrenceSemanticBundle",
+    "PrototypeIntent",
+    "PublicProvenance",
+    "QuantityIntent",
+    "REPAIR_INTENT_BODY_SCHEMA_PATH",
+    "REPAIR_INTENT_BODY_SCHEMA_PATH_0_2",
+    "REPAIR_INTENT_BODY_SCHEMA_VERSION",
+    "REPAIR_INTENT_BODY_SCHEMA_VERSION_0_2",
+    "REPAIR_INTENT_BODY_SCHEMA_PATH_0_3",
+    "REPAIR_INTENT_BODY_SCHEMA_VERSION_0_3",
+    "REPAIR_INTENT_BODY_SCHEMA_PATH_0_4",
+    "REPAIR_INTENT_BODY_SCHEMA_VERSION_0_4",
+    "REPAIR_INTENT_BODY_SCHEMA_PATH_0_5",
+    "REPAIR_INTENT_BODY_SCHEMA_VERSION_0_5",
+    "REPAIR_INTENT_BODY_SCHEMA_PATH_0_6",
+    "REPAIR_INTENT_BODY_SCHEMA_VERSION_0_6",
+    "REPAIR_INTENT_BODY_SCHEMA_PATH_0_7",
+    "REPAIR_INTENT_BODY_SCHEMA_VERSION_0_7",
+    "REPAIR_INTENT_BODY_SCHEMA_PATH_0_8",
+    "REPAIR_INTENT_BODY_SCHEMA_VERSION_0_8",
+    "REPAIR_INTENT_SCHEMA_PATH",
+    "REPAIR_INTENT_SCHEMA_PATH_0_2",
+    "REPAIR_INTENT_SCHEMA_VERSION",
+    "REPAIR_INTENT_SCHEMA_VERSION_0_2",
+    "REPAIR_INTENT_SCHEMA_PATH_0_3",
+    "REPAIR_INTENT_SCHEMA_VERSION_0_3",
+    "REPAIR_INTENT_SCHEMA_PATH_0_4",
+    "REPAIR_INTENT_SCHEMA_VERSION_0_4",
+    "REPAIR_INTENT_SCHEMA_PATH_0_5",
+    "REPAIR_INTENT_SCHEMA_VERSION_0_5",
+    "REPAIR_INTENT_SCHEMA_PATH_0_6",
+    "REPAIR_INTENT_SCHEMA_VERSION_0_6",
+    "REPAIR_INTENT_SCHEMA_PATH_0_7",
+    "REPAIR_INTENT_SCHEMA_VERSION_0_7",
+    "REPAIR_INTENT_SCHEMA_PATH_0_8",
+    "REPAIR_INTENT_SCHEMA_VERSION_0_8",
+    "RepairIntent",
+    "RepairIntentCode",
+    "RepairIntentError",
+    "RepairIntentLimits",
+    "RoutingIntent",
+    "UnsupportedRequest",
+    "fingerprint_text",
+    "hash_request",
+    "load_repair_intent_schema",
+    "load_repair_intent_body_schema",
+]

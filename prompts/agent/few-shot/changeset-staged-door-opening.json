@@ -1,0 +1,122 @@
+{
+  "few_shot_id": "changeset.staged-door-opening",
+  "description": "Add a floor-based door opening and filling without treating half the door height as a placement offset.",
+  "input": {
+    "expected_facts": {
+      "wall": {
+        "id": "wall-entrance",
+        "length_mm": 8000,
+        "thickness_mm": 200,
+        "height_mm": 3200
+      },
+      "door": {
+        "id": "door-entrance",
+        "host_wall": "wall-entrance",
+        "alignment": "host_centerline",
+        "width_mm": 1600,
+        "height_mm": 2200
+      }
+    },
+    "change_scope": {
+      "entity_ids": ["opening-door-entrance", "door-entrance"],
+      "relationship_ids": ["rel-voids-door-entrance", "rel-fills-door-entrance"]
+    }
+  },
+  "output": {
+    "schema_version": "text2ifc/bim-json-changeset/1.0",
+    "changeset_id": "changeset-door-entrance",
+    "base_revision_id": "revision-base",
+    "base_candidate_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "expected_facts_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "source_issue_ids": ["issue-package-entrance"],
+    "scope_id": "scope-package-entrance",
+    "operations": [
+      {
+        "operation_id": "operation-add-opening-door-entrance",
+        "op": "add_entity",
+        "target_id": "opening-door-entrance",
+        "value": {
+          "id": "opening-door-entrance",
+          "ifc_class": "IfcOpeningElement",
+          "attributes": {
+            "Name": "Opening for Entrance Door",
+            "ObjectPlacement": {
+              "relative_to": "wall-entrance",
+              "origin": [0, 0, 0],
+              "axis": [0, 0, 1],
+              "ref_direction": [1, 0, 0]
+            },
+            "Representation": {
+              "kind": "extruded_profile",
+              "profile": {"kind": "rectangle", "x": 1600, "y": 200},
+              "depth": 2200,
+              "direction": [0, 0, 1]
+            }
+          },
+          "property_sets": {},
+          "provenance": {"source": "issue-package-entrance"}
+        },
+        "evidence_refs": ["issue-package-entrance:/expected"]
+      },
+      {
+        "operation_id": "operation-add-door-entrance",
+        "op": "add_entity",
+        "target_id": "door-entrance",
+        "value": {
+          "id": "door-entrance",
+          "ifc_class": "IfcDoor",
+          "attributes": {
+            "Name": "Entrance Door",
+            "OverallWidth": 1600,
+            "OverallHeight": 2200,
+            "ObjectPlacement": {
+              "relative_to": "opening-door-entrance",
+              "origin": [0, 0, 0],
+              "axis": [0, 0, 1],
+              "ref_direction": [1, 0, 0]
+            },
+            "Representation": {
+              "kind": "extruded_profile",
+              "profile": {"kind": "rectangle", "x": 1600, "y": 100},
+              "depth": 2200,
+              "direction": [0, 0, 1]
+            }
+          },
+          "property_sets": {},
+          "provenance": {"source": "issue-package-entrance"}
+        },
+        "evidence_refs": ["issue-package-entrance:/expected"]
+      },
+      {
+        "operation_id": "operation-add-void-door-entrance",
+        "op": "add_relationship",
+        "target_id": "rel-voids-door-entrance",
+        "value": {
+          "id": "rel-voids-door-entrance",
+          "ifc_class": "IfcRelVoidsElement",
+          "attributes": {
+            "RelatingBuildingElement": "wall-entrance",
+            "RelatedOpeningElement": "opening-door-entrance"
+          },
+          "provenance": {"source": "issue-package-entrance"}
+        },
+        "evidence_refs": ["issue-package-entrance:/expected"]
+      },
+      {
+        "operation_id": "operation-add-fill-door-entrance",
+        "op": "add_relationship",
+        "target_id": "rel-fills-door-entrance",
+        "value": {
+          "id": "rel-fills-door-entrance",
+          "ifc_class": "IfcRelFillsElement",
+          "attributes": {
+            "RelatingOpeningElement": "opening-door-entrance",
+            "RelatedBuildingElement": "door-entrance"
+          },
+          "provenance": {"source": "issue-package-entrance"}
+        },
+        "evidence_refs": ["issue-package-entrance:/expected"]
+      }
+    ]
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "schema_version": "text2ifc/ifc-repair-few-shot/0.1",
+  "example_id": "column.add.v0.2.complete",
+  "profile_id": "column.add.v0.2",
+  "case": "complete",
+  "user_text": "EXAMPLE_ONLY: on Level 1 add a vertical square column from (1000, 2000, 0) mm to (1000, 2000, 3000) mm with 500 mm width and depth",
+  "expected": {
+    "operation_type": "add_column",
+    "status": "complete",
+    "parameters": {
+      "axis": {
+        "base": {
+          "x_mm": 1000,
+          "y_mm": 2000,
+          "z_mm": 0
+        },
+        "top": {
+          "x_mm": 1000,
+          "y_mm": 2000,
+          "z_mm": 3000
+        }
+      },
+      "section": {
+        "shape": "rectangle",
+        "width_mm": 500,
+        "depth_mm": 500
+      }
+    },
+    "target_query": {
+      "schema_version": "text2ifc/ifc-target-query/0.1",
+      "allowed_ifc_classes": [
+        "IfcBuildingStorey"
+      ],
+      "names": [
+        "Level 1"
+      ]
+    }
+  },
+  "rule": "axis points are section centers in Storey-local millimetres; square section orientation is not inferred or required; the Storey itself is selected with target_query.names, never storey_name"
+}

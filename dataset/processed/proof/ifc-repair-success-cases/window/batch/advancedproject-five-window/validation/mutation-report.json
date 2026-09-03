@@ -1,0 +1,98 @@
+{
+  "checks": {
+    "all_host_walls_preserved": true,
+    "all_target_chains_removed": true,
+    "all_target_regions_closed": true,
+    "schema_preserved": true,
+    "single_model_write": true,
+    "source_unchanged": true
+  },
+  "counts": {
+    "after": {
+      "IfcBuilding": 1,
+      "IfcBuildingStorey": 10,
+      "IfcDoor": 126,
+      "IfcOpeningElement": 422,
+      "IfcProject": 1,
+      "IfcRelFillsElement": 384,
+      "IfcRelVoidsElement": 422,
+      "IfcSite": 18,
+      "IfcSpace": 8,
+      "IfcWall": 390,
+      "IfcWindow": 258
+    },
+    "before": {
+      "IfcBuilding": 1,
+      "IfcBuildingStorey": 10,
+      "IfcDoor": 126,
+      "IfcOpeningElement": 427,
+      "IfcProject": 1,
+      "IfcRelFillsElement": 389,
+      "IfcRelVoidsElement": 427,
+      "IfcSite": 18,
+      "IfcSpace": 8,
+      "IfcWall": 390,
+      "IfcWindow": 263
+    }
+  },
+  "damaged_sha256": "65b576a99174d413eeed9c0517592a0f31a9b6f5fb68bd4d006d94ed18a4adcb",
+  "geometry": {
+    "targets": [
+      {
+        "host_wall_volume_after_m3": 5.300316695125495,
+        "host_wall_volume_before_m3": 3.914316695125497,
+        "host_wall_volume_delta_m3": 1.3859999999999983,
+        "target_expected_closed_void_volume_m3": 1.3860000000000003,
+        "target_id": "window-repair-001",
+        "target_region_closed": true,
+        "wall_expected_closed_void_volume_m3": 1.3860000000000003,
+        "wall_global_id": "31F6eMknj99vYl9fb0Qb7F"
+      },
+      {
+        "host_wall_volume_after_m3": 5.922057541402468,
+        "host_wall_volume_before_m3": 4.5360575414025455,
+        "host_wall_volume_delta_m3": 1.3859999999999228,
+        "target_expected_closed_void_volume_m3": 1.3860000000000001,
+        "target_id": "window-repair-002",
+        "target_region_closed": true,
+        "wall_expected_closed_void_volume_m3": 1.3860000000000001,
+        "wall_global_id": "0MOEoDTm9EnO9yKsXjjie3"
+      },
+      {
+        "host_wall_volume_after_m3": 15.928701775711055,
+        "host_wall_volume_before_m3": 15.550701775711055,
+        "host_wall_volume_delta_m3": 0.3780000000000001,
+        "target_expected_closed_void_volume_m3": 0.37799999999999995,
+        "target_id": "window-repair-003",
+        "target_region_closed": true,
+        "wall_expected_closed_void_volume_m3": 0.37799999999999995,
+        "wall_global_id": "3ktY1kg3rAwgNBX_XWRSTN"
+      },
+      {
+        "host_wall_volume_after_m3": 13.765354292904272,
+        "host_wall_volume_before_m3": 10.99335429290428,
+        "host_wall_volume_delta_m3": 2.7719999999999914,
+        "target_expected_closed_void_volume_m3": 2.7720000000000002,
+        "target_id": "window-repair-004",
+        "target_region_closed": true,
+        "wall_expected_closed_void_volume_m3": 2.7720000000000002,
+        "wall_global_id": "0qPq0uZ5vABQlKT8FAVXQn"
+      },
+      {
+        "host_wall_volume_after_m3": 21.672015974282992,
+        "host_wall_volume_before_m3": 17.514015974283,
+        "host_wall_volume_delta_m3": 4.157999999999991,
+        "target_expected_closed_void_volume_m3": 4.158,
+        "target_id": "window-repair-005",
+        "target_region_closed": true,
+        "wall_expected_closed_void_volume_m3": 4.158,
+        "wall_global_id": "2V6UQJFc92sfDYeuDKgYFi"
+      }
+    ]
+  },
+  "mutation_type": "remove_windows_and_openings_batch",
+  "schema_version": "text2ifc/ifc-repair-mutation-report/0.2",
+  "source_sha256": "86b068a7ca6947e398c1daaa8bede9d31048c3990adc308429faeb56ee01db94",
+  "target_count": 5,
+  "valid": true
+}

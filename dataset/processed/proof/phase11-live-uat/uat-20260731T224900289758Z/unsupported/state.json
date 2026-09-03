@@ -1,0 +1,111 @@
+{
+  "clarification": null,
+  "orchestrator_version": "0.1",
+  "reason_code": "DOOR_OPERATION_TYPE_UNSUPPORTED",
+  "request_hash": "sha256:2156b3de97de36ad30306c035aedc2fb5fd05ff587b188ec062f2bc37ef732bf",
+  "request_id": "request-2156b3de97de36ad",
+  "result_artifacts": {
+    "evaluation": ".terminal-bundles/a56d468537004497b4cf086028a07f88/evaluation/public-evaluation.json",
+    "evidence": ".terminal-bundles/a56d468537004497b4cf086028a07f88/terminal/evidence.json",
+    "manifest": ".terminal-bundles/a56d468537004497b4cf086028a07f88/manifest.json"
+  },
+  "run_id": "repair-091d667e6d334857aa364e8038ffd8e9",
+  "schema_version": "text2ifc/ifc-repair-run-state/0.1",
+  "source": {
+    "reference": "E:\\code for project\\bimnet\\dataset\\processed\\ifc-repair\\phase11-live-uat\\uat-20260731T224900289758Z\\unsupported-complex-door\\fixture\\damaged.ifc",
+    "sha256": "sha256:37c395b695f2efad78598811b643987e53a347fb0f33c07698eff29818629390",
+    "size_bytes": 1287831
+  },
+  "stage": "unsupported",
+  "state_version": 3,
+  "transitions": [
+    {
+      "answer": null,
+      "clarification": null,
+      "created_at": "2026-07-31T22:52:29.461788+00:00",
+      "from_stage": null,
+      "previous_hash": null,
+      "reason_code": null,
+      "record_hash": "sha256:c1e5efef9f0f03232b5188c7c5143ee7900bb82c5d902b9af9f775c4078966c9",
+      "result_artifacts": {},
+      "schema_version": "text2ifc/ifc-repair-transition/0.1",
+      "stage_hash": "sha256:c5a17ce2b1571040de924116c52409ac76edc6c8c04de1ee502fd14367b49b20",
+      "stage_payload": {
+        "request_hash": "sha256:2156b3de97de36ad30306c035aedc2fb5fd05ff587b188ec062f2bc37ef732bf",
+        "source_sha256": "sha256:37c395b695f2efad78598811b643987e53a347fb0f33c07698eff29818629390"
+      },
+      "state_version": 0,
+      "to_stage": "created",
+      "transition_id": 0
+    },
+    {
+      "answer": null,
+      "clarification": null,
+      "created_at": "2026-07-31T22:52:29.709050+00:00",
+      "from_stage": "created",
+      "previous_hash": "sha256:c1e5efef9f0f03232b5188c7c5143ee7900bb82c5d902b9af9f775c4078966c9",
+      "reason_code": null,
+      "record_hash": "sha256:bb5a790280684a7bf51eb3df1a91115fc5e1aae03e0bffdd59e38a43d17bd343",
+      "result_artifacts": {},
+      "schema_version": "text2ifc/ifc-repair-transition/0.1",
+      "stage_hash": "sha256:5582f7bc7eab94e2ef859bfdff246a577a3ec83e62ed00e449cd7713d49d9cde",
+      "stage_payload": {
+        "ifc_schema": "IFC2X3",
+        "source_sha256": "sha256:37c395b695f2efad78598811b643987e53a347fb0f33c07698eff29818629390"
+      },
+      "state_version": 1,
+      "to_stage": "source_validated",
+      "transition_id": 1
+    },
+    {
+      "answer": null,
+      "clarification": null,
+      "created_at": "2026-07-31T22:52:33.688876+00:00",
+      "from_stage": "source_validated",
+      "previous_hash": "sha256:bb5a790280684a7bf51eb3df1a91115fc5e1aae03e0bffdd59e38a43d17bd343",
+      "reason_code": null,
+      "record_hash": "sha256:b4e09eb2ed1fcac100ed3d4b03f004cd6dc93b076b7e5c6d7e583b5b6112f28c",
+      "result_artifacts": {},
+      "schema_version": "text2ifc/ifc-repair-transition/0.1",
+      "stage_hash": "sha256:5c1b4b38e3ae11c4abbedb1020c3985a862259797e61d3f9770574b4ddf37f34",
+      "stage_payload": {
+        "index": {
+          "path": "index/targets.sqlite",
+          "schema_version": "text2ifc/ifc-index/0.4",
+          "sha256": "sha256:8a495bf47bd2b48dc87fdd8b00b7ff8f35eb03a93b9bbdefc482d47330e78c75"
+        },
+        "source_sha256": "sha256:37c395b695f2efad78598811b643987e53a347fb0f33c07698eff29818629390"
+      },
+      "state_version": 2,
+      "to_stage": "index_ready",
+      "transition_id": 2
+    },
+    {
+      "answer": null,
+      "clarification": null,
+      "created_at": "2026-07-31T22:53:10.468957+00:00",
+      "from_stage": "index_ready",
+      "previous_hash": "sha256:b4e09eb2ed1fcac100ed3d4b03f004cd6dc93b076b7e5c6d7e583b5b6112f28c",
+      "reason_code": "DOOR_OPERATION_TYPE_UNSUPPORTED",
+      "record_hash": "sha256:755bd1e76a68506aafcde1721ba17d8f7c392d91d46d95bd4c1095634156c5cc",
+      "result_artifacts": {
+        "evaluation": ".terminal-bundles/a56d468537004497b4cf086028a07f88/evaluation/public-evaluation.json",
+        "evidence": ".terminal-bundles/a56d468537004497b4cf086028a07f88/terminal/evidence.json",
+        "manifest": ".terminal-bundles/a56d468537004497b4cf086028a07f88/manifest.json"
+      },
+      "schema_version": "text2ifc/ifc-repair-transition/0.1",
+      "stage_hash": "sha256:543775d990f180c4c8e0f9740a1266b0e42ea3c78132d0aee6d2435149470d75",
+      "stage_payload": {
+        "manifest": {
+          "path": ".terminal-bundles/a56d468537004497b4cf086028a07f88/manifest.json",
+          "schema_version": "text2ifc/ifc-repair-artifact-manifest/0.1",
+          "sha256": "sha256:1c6ce58e632d2479525c61fa38f78001acd006ea849dc4156a3ad2c94b423b43"
+        },
+        "reason_code": "DOOR_OPERATION_TYPE_UNSUPPORTED"
+      },
+      "state_version": 3,
+      "to_stage": "unsupported",
+      "transition_id": 3
+    }
+  ]
+}

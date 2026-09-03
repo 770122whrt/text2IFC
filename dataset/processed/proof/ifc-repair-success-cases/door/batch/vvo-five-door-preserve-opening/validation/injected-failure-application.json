@@ -1,0 +1,188 @@
+{
+  "audit": {
+    "checks": [
+      {
+        "code": "CHANGESET_SCHEMA",
+        "evidence": {},
+        "status": "passed"
+      },
+      {
+        "code": "IFC_SCHEMA",
+        "evidence": {
+          "actual_schema": "IFC2X3"
+        },
+        "status": "passed"
+      },
+      {
+        "code": "BASE_MODEL_FINGERPRINT",
+        "evidence": {
+          "actual_fingerprint": "sha256:d91addae033f50c564cb3dfefaa7df496212ddd20da86d91bdd1ea256eb7373f"
+        },
+        "status": "passed"
+      },
+      {
+        "code": "SOURCE_REQUEST_HASH",
+        "evidence": {
+          "actual_request_hash": "sha256:062ff03c16d06a3ade4a384a33c6bbc863f2d94a68bb72586ad9b744b587fed8"
+        },
+        "status": "passed"
+      },
+      {
+        "code": "OPERATION_REGISTRATION",
+        "evidence": {
+          "operation_type": "fill_existing_opening_with_door"
+        },
+        "status": "passed"
+      },
+      {
+        "code": "OPERATION_REGISTRATION",
+        "evidence": {
+          "operation_type": "fill_existing_opening_with_door"
+        },
+        "status": "passed"
+      },
+      {
+        "code": "OPERATION_REGISTRATION",
+        "evidence": {
+          "operation_type": "fill_existing_opening_with_door"
+        },
+        "status": "passed"
+      },
+      {
+        "code": "OPERATION_REGISTRATION",
+        "evidence": {
+          "operation_type": "fill_existing_opening_with_door"
+        },
+        "status": "passed"
+      },
+      {
+        "code": "OPERATION_REGISTRATION",
+        "evidence": {
+          "operation_type": "fill_existing_opening_with_door"
+        },
+        "status": "passed"
+      },
+      {
+        "code": "OPERATION_REGISTRATION",
+        "evidence": {
+          "operation_type": "fill_existing_opening_with_door"
+        },
+        "status": "passed"
+      }
+    ],
+    "issues": [
+      {
+        "code": "BATCH_OPENING_OVERLAP",
+        "message": "Opening overlaps another operation in the hosted_opening domain: operation-door-001.",
+        "path": "/operations/5/parameters/position/center_offset_mm"
+      }
+    ],
+    "operation_audits": [
+      {
+        "checks": [
+          {
+            "code": "EMPTY_OPENING_AVAILABLE",
+            "evidence": {
+              "host_wall_global_id": "2HNE4WMQ1CXebZMaih8XoD",
+              "opening_global_id": "2IUEnGd5v4Yfg1ZkLtd0qa"
+            },
+            "status": "passed"
+          }
+        ],
+        "evidence": {
+          "opening_global_id": "2IUEnGd5v4Yfg1ZkLtd0qa"
+        },
+        "operation_id": "operation-door-001",
+        "operation_type": "fill_existing_opening_with_door",
+        "valid": true
+      },
+      {
+        "checks": [
+          {
+            "code": "EMPTY_OPENING_AVAILABLE",
+            "evidence": {
+              "host_wall_global_id": "1cbLGwmrv8LAj2u11O6kgh",
+              "opening_global_id": "2IUEnGd5v4Yfg1ZkLtd0tI"
+            },
+            "status": "passed"
+          }
+        ],
+        "evidence": {
+          "opening_global_id": "2IUEnGd5v4Yfg1ZkLtd0tI"
+        },
+        "operation_id": "operation-door-002",
+        "operation_type": "fill_existing_opening_with_door",
+        "valid": true
+      },
+      {
+        "checks": [
+          {
+            "code": "EMPTY_OPENING_AVAILABLE",
+            "evidence": {
+              "host_wall_global_id": "2HNE4WMQ1CXebZMaih8Xg3",
+              "opening_global_id": "08xWVL$9z6JRwr3piJHoYK"
+            },
+            "status": "passed"
+          }
+        ],
+        "evidence": {
+          "opening_global_id": "08xWVL$9z6JRwr3piJHoYK"
+        },
+        "operation_id": "operation-door-003",
+        "operation_type": "fill_existing_opening_with_door",
+        "valid": true
+      },
+      {
+        "checks": [
+          {
+            "code": "EMPTY_OPENING_AVAILABLE",
+            "evidence": {
+              "host_wall_global_id": "2HNE4WMQ1CXebZMaih8Xg3",
+              "opening_global_id": "08xWVL$9z6JRwr3piJHoYg"
+            },
+            "status": "passed"
+          }
+        ],
+        "evidence": {
+          "opening_global_id": "08xWVL$9z6JRwr3piJHoYg"
+        },
+        "operation_id": "operation-door-004",
+        "operation_type": "fill_existing_opening_with_door",
+        "valid": true
+      },
+      {
+        "checks": [
+          {
+            "code": "EMPTY_OPENING_AVAILABLE",
+            "evidence": {
+              "host_wall_global_id": "2HNE4WMQ1CXebZMaih8YJg",
+              "opening_global_id": "08xWVL$9z6JRwr3piJHpOf"
+            },
+            "status": "passed"
+          }
+        ],
+        "evidence": {
+          "opening_global_id": "08xWVL$9z6JRwr3piJHpOf"
+        },
+        "operation_id": "operation-door-005",
+        "operation_type": "fill_existing_opening_with_door",
+        "valid": true
+      }
+    ],
+    "schema_version": "text2ifc/ifc-repair-audit/0.1",
+    "valid": false
+  },
+  "issues": [
+    {
+      "code": "BATCH_OPENING_OVERLAP",
+      "message": "Opening overlaps another operation in the hosted_opening domain: operation-door-001.",
+      "path": "/operations/5/parameters/position/center_offset_mm"
+    }
+  ],
+  "operations": [],
+  "output": null,
+  "postconditions": [],
+  "published": false,
+  "schema_version": "text2ifc/ifc-repair-application/0.1",
+  "valid": false
+}

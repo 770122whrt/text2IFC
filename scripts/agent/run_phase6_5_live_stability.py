@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import io
 import json
 import os
@@ -37,7 +38,9 @@ WorkflowRunner = Callable[..., dict[str, Any]]
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--case", choices=tuple(CASE_FILES))
+    source = parser.add_mutually_exclusive_group()
+    source.add_argument("--case", choices=tuple(CASE_FILES))
+    source.add_argument("--manifest", type=Path)
     parser.add_argument("--runs", type=int, default=1)
     parser.add_argument("--required-consecutive", type=int, default=1)
     parser.add_argument("--env-file", type=Path, default=ROOT / ".env")
@@ -58,6 +61,7 @@ def run_campaign(
     env_file: Path | None = None,
     timeout_seconds: float = 1800.0,
     trace_level: str = "compact",
+    input_text: str | None = None,
 ) -> dict[str, Any]:
     if run_limit < 1 or required_consecutive < 1:
         raise ValueError("run limits must be positive")
@@ -75,6 +79,7 @@ def run_campaign(
             env_file=env_file or ROOT / ".env",
             timeout_seconds=timeout_seconds,
             trace_level=trace_level,
+            input_text=input_text,
         )
         accepted = _is_live_acceptance(row)
         row = {**row, "accepted": accepted, "run_index": run_index, "case_name": case_name}
@@ -87,6 +92,11 @@ def run_campaign(
     result = {
         "schema_version": "text2ifc/phase6.5-live-stability/1.0",
         "case_name": case_name,
+        "input_sha256": (
+            hashlib.sha256(input_text.encode("utf-8")).hexdigest()
+            if input_text is not None
+            else ""
+        ),
         "provider": "deepseek-openai-compatible",
         "required_consecutive": required_consecutive,
         "run_limit": run_limit,
@@ -109,10 +119,13 @@ def _run_real_workflow(
     env_file: Path,
     timeout_seconds: float,
     trace_level: str,
+    input_text: str | None = None,
 ) -> dict[str, Any]:
-    fixture = _read_json(case_fixture_path(case_name))
+    if input_text is None:
+        fixture = _read_json(case_fixture_path(case_name))
+        input_text = str(fixture["input"])
     transcript = io.StringIO()
-    driver = _CanonicalInputDriver(str(fixture["input"]))
+    driver = _CanonicalInputDriver(input_text)
     os.environ["TEXT2IFC_PROVIDER_TIMEOUT_SECONDS"] = str(timeout_seconds)
     exit_code = run_text2ifc_chat.main(
         [
@@ -187,6 +200,23 @@ def case_fixture_path(case_name: str) -> Path:
     except KeyError as exc:
         raise ValueError(f"unknown Phase 6.5 case: {case_name}") from exc
     return CASE_ROOT / filename
+
+
+def load_frozen_manifest(path: Path | str) -> dict[str, Any]:
+    payload = _read_json(Path(path))
+    case_id = payload.get("case_id")
+    input_text = payload.get("input")
+    expected_hash = payload.get("input_sha256")
+    if not isinstance(case_id, str) or not case_id:
+        raise ValueError("frozen manifest requires case_id")
+    if not isinstance(input_text, str) or not input_text:
+        raise ValueError("frozen manifest requires input")
+    if payload.get("model_output") is not None:
+        raise ValueError("frozen manifest model_output must be null")
+    actual_hash = hashlib.sha256(input_text.encode("utf-8")).hexdigest()
+    if expected_hash != actual_hash:
+        raise ValueError("frozen manifest input_sha256 does not match input")
+    return payload
 
 
 class _CanonicalInputDriver:
@@ -272,16 +302,24 @@ def main(argv: list[str] | None = None) -> int:
         _write_json(args.output_root / "config-check.json", result)
         print(json.dumps(result, ensure_ascii=False, sort_keys=True))
         return 0 if result["configured"] else 2
-    if not args.case:
-        parser.error("--case is required unless --check-config is used")
+    if args.manifest:
+        manifest = load_frozen_manifest(args.manifest)
+        case_name = str(manifest["case_id"])
+        input_text = str(manifest["input"])
+    else:
+        if not args.case:
+            parser.error("--case or --manifest is required unless --check-config is used")
+        case_name = args.case
+        input_text = None
     result = run_campaign(
         output_root=args.output_root,
-        case_name=args.case,
+        case_name=case_name,
         run_limit=args.runs,
         required_consecutive=args.required_consecutive,
         env_file=args.env_file,
         timeout_seconds=args.timeout_seconds,
         trace_level=args.trace_level,
+        input_text=input_text,
     )
     print(json.dumps(result, ensure_ascii=False, sort_keys=True))
     return 0 if result["stable"] else 2

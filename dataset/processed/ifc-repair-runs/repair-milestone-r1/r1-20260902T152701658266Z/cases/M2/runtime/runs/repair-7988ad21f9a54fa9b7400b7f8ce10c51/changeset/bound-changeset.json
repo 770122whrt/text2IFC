@@ -1,0 +1,162 @@
+{
+  "base_model_fingerprint": "sha256:9f180a7148bb7bcf43dd80800068553f1c8b189ebe0dc84b6c498061832960d1",
+  "binding_status": "bound",
+  "changeset_id": "changeset/add-beam-1-stage2-v0.1",
+  "evidence_refs": [
+    "resolved:/operations/add-beam-1/context/candidate_targets/0"
+  ],
+  "operations": [
+    {
+      "evidence_refs": [
+        "resolved:/operations/add-beam-1/context/candidate_targets/0"
+      ],
+      "operation_id": "add-beam-1",
+      "operation_type": "add_beam",
+      "parameters": {
+        "axis": {
+          "end": {
+            "x_mm": 8000.0,
+            "y_mm": -2000.0,
+            "z_mm": 3000.0
+          },
+          "start": {
+            "x_mm": 2000.0,
+            "y_mm": -2000.0,
+            "z_mm": 3000.0
+          }
+        },
+        "section": {
+          "height_mm": 500,
+          "shape": "rectangle",
+          "width_mm": 300
+        }
+      },
+      "semantic_assignments": [
+        {
+          "applicability": "conditional",
+          "authoring_action": "set_occurrence_pset",
+          "derivation": null,
+          "fact_key": "pset:Pset_BeamCommon.Reference",
+          "operation_id": "add-beam-1",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "request-source:user_request",
+            "request-evidence:public_request",
+            "operation:add-beam-1",
+            "property-hash:sha256:bf99b5b9a6309e8839f552ed35b896dca8858a9e9cba5a30d208bba152ce420b",
+            "source_fact_key:pset:Pset_BeamCommon.Reference"
+          ],
+          "scope": "beam_occurrence",
+          "source_fact_key": "pset:Pset_BeamCommon.Reference",
+          "source_kind": "explicit_value",
+          "source_ref": "public_request",
+          "unit": null,
+          "value": "B-NEW-01",
+          "value_type": "IfcIdentifier"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "bind_relationship",
+          "derivation": null,
+          "fact_key": "relationship:host",
+          "operation_id": "add-beam-1",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "resolved-host-target:2nxdYR2RHCDBiKJuiQr1lO",
+            "resolved-host:2nxdYR2RHCDBiKJuiQr1lO",
+            "operation:add-beam-1"
+          ],
+          "scope": "beam_occurrence",
+          "source_fact_key": "relationship:host",
+          "source_kind": "deterministic_derived",
+          "source_ref": "current-host-binding:2nxdYR2RHCDBiKJuiQr1lO",
+          "unit": null,
+          "value": "2nxdYR2RHCDBiKJuiQr1lO",
+          "value_type": "IfcBuildingStorey"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "bind_relationship",
+          "derivation": null,
+          "fact_key": "relationship:storey",
+          "operation_id": "add-beam-1",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "operation:add-beam-1",
+            "registered-beam-storey-policy:0.1"
+          ],
+          "scope": "beam_occurrence",
+          "source_fact_key": "relationship:storey",
+          "source_kind": "deterministic_derived",
+          "source_ref": "resolved:/operations/add-beam-1/target",
+          "unit": null,
+          "value": "2nxdYR2RHCDBiKJuiQr1lO",
+          "value_type": "IfcBuildingStorey"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "inherit_from_type",
+          "derivation": {
+            "formal_attributes": {},
+            "ifc_class": "IfcBeamType",
+            "template": {
+              "name": "Text2IFC generated beam type add-beam-1",
+              "predefined_type": "NOTDEFINED",
+              "section": {
+                "height_mm": 500.0,
+                "shape": "rectangle",
+                "width_mm": 300.0
+              },
+              "section_digest": "sha256:db582be0ced28b6b6de912e19cf652f4c387aca91e7d30984152748192f244eb"
+            },
+            "template_digest": "sha256:e60f0a1b787dfeeaa0349f1ee07c7f816b46a8d34921f83a73b1bb75c02a94e1",
+            "template_id": "text2ifc-rectangular-beam-type",
+            "template_version": "0.1"
+          },
+          "fact_key": "relationship:type",
+          "operation_id": "add-beam-1",
+          "ownership": "type_inherited",
+          "provenance": [
+            "operation:add-beam-1",
+            "generated-type-template:0.1"
+          ],
+          "scope": "beam_occurrence",
+          "source_fact_key": "relationship:type",
+          "source_kind": "deterministic_derived",
+          "source_ref": "generated-type:0cm7tILHrGwR$V__HqSJ8Q",
+          "unit": null,
+          "value": "0cm7tILHrGwR$V__HqSJ8Q",
+          "value_type": "IfcBeamType"
+        }
+      ],
+      "semantic_manifest": {
+        "manifest_id": "semantic-manifest-2e7798f34eacb1152fca1555",
+        "policy_id": "beam.add.l2",
+        "policy_version": "0.1"
+      },
+      "target": {
+        "storey_global_id": "2nxdYR2RHCDBiKJuiQr1lO"
+      }
+    }
+  ],
+  "postconditions": [
+    "beam_geometry_matches",
+    "beam_contained_in_storey",
+    "beam_type_bound"
+  ],
+  "preconditions": [
+    "target_exists",
+    "structural_axis_available",
+    "structural_type_authorized"
+  ],
+  "schema_version": "text2ifc/ifc-repair-changeset/0.4",
+  "scope": {
+    "forbidden_ids": [],
+    "target_ids": [
+      "2nxdYR2RHCDBiKJuiQr1lO"
+    ]
+  },
+  "semantic_manifest_ref": "changeset/semantic-manifest-add-beam-1.json",
+  "semantic_manifest_sha256": "sha256:8ccaf220d6182c1e3635f2baab4913602e10f9d4443d31525745ac3fa38ee842",
+  "source_request_hash": "sha256:1fc01d35d2e4d78e637aacb852b9f843f5e79d6ec7a24e1ee66eb2d2410058eb"
+}

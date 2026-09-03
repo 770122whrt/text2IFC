@@ -1,0 +1,160 @@
+{
+  "schema_version": "text2ifc/design-brief/2.0",
+  "language": "zh-CN",
+  "original_request": "## 3.3 Medium：三间办公室与公共走廊\n\n创建一个单层小型办公区。\n\n南侧设置一条东西向公共走廊，净尺寸为 12 米 × 2 米。\n\n走廊北侧从西向东依次设置：\n\n- 办公室 A：4 米 × 4 米；\n- 办公室 B：4 米 × 4 米；\n- 办公室 C：4 米 × 4 米。\n\n办公区净高为 3.2 米，墙厚为 200 毫米，地板厚为 150 毫米。\n\n每间办公室与走廊之间设置一樘门，门位于对应共用墙中央，门宽 0.9 米、高 2.1 米。\n\n在走廊南侧外墙中央设置一樘主入口双扇门，总宽 1.6 米、高 2.2 米。\n\n每间办公室北侧外墙各设置一扇窗，窗宽 1.8 米、高 1.2 米，窗台高 0.9 米。\n\n分别为走廊和三间办公室生成 `IfcSpace`。\n\n相邻办公室之间以及办公室与走廊之间必须共用墙体，不得生成重叠墙。",
+  "status": "needs_clarification",
+  "known_facts": {
+    "spaces": [
+      {
+        "id": "corridor",
+        "name": "公共走廊",
+        "shape": "rectangle",
+        "net_length_mm": 12000,
+        "net_width_mm": 2000,
+        "net_height_mm": 3200
+      },
+      {
+        "id": "office_a",
+        "name": "办公室A",
+        "shape": "rectangle",
+        "net_length_mm": 4000,
+        "net_width_mm": 4000,
+        "net_height_mm": 3200
+      },
+      {
+        "id": "office_b",
+        "name": "办公室B",
+        "shape": "rectangle",
+        "net_length_mm": 4000,
+        "net_width_mm": 4000,
+        "net_height_mm": 3200
+      },
+      {
+        "id": "office_c",
+        "name": "办公室C",
+        "shape": "rectangle",
+        "net_length_mm": 4000,
+        "net_width_mm": 4000,
+        "net_height_mm": 3200
+      }
+    ],
+    "walls": {
+      "thickness_mm": 200
+    },
+    "doors": [
+      {
+        "id": "door_a",
+        "host": "office_a_to_corridor_wall",
+        "width_mm": 900,
+        "height_mm": 2100,
+        "location": "wall_center"
+      },
+      {
+        "id": "door_b",
+        "host": "office_b_to_corridor_wall",
+        "width_mm": 900,
+        "height_mm": 2100,
+        "location": "wall_center"
+      },
+      {
+        "id": "door_c",
+        "host": "office_c_to_corridor_wall",
+        "width_mm": 900,
+        "height_mm": 2100,
+        "location": "wall_center"
+      },
+      {
+        "id": "main_door",
+        "host": "corridor_south_wall",
+        "width_mm": 1600,
+        "height_mm": 2200,
+        "location": "wall_center"
+      }
+    ],
+    "windows": [
+      {
+        "id": "window_a",
+        "host": "office_a_north_wall",
+        "width_mm": 1800,
+        "height_mm": 1200,
+        "sill_height_mm": 900,
+        "location": "wall_center"
+      },
+      {
+        "id": "window_b",
+        "host": "office_b_north_wall",
+        "width_mm": 1800,
+        "height_mm": 1200,
+        "sill_height_mm": 900,
+        "location": "wall_center"
+      },
+      {
+        "id": "window_c",
+        "host": "office_c_north_wall",
+        "width_mm": 1800,
+        "height_mm": 1200,
+        "sill_height_mm": 900,
+        "location": "wall_center"
+      }
+    ],
+    "floor_slabs": {
+      "thickness_mm": 150
+    }
+  },
+  "fact_sources": [
+    {
+      "path": "/known_facts",
+      "source_turns": ["turn-user-001"],
+      "evidence_refs": [
+        "schema:bim-json-v2:entity",
+        "schema:bim-json-v2:representation",
+        "schema:bim-json-v2:object-placement",
+        "capability:IFC2X3:IfcSpace",
+        "capability:IFC2X3:IfcWall",
+        "capability:IFC2X3:IfcDoor",
+        "capability:IFC2X3:IfcWindow",
+        "capability:IFC2X3:IfcSlab"
+      ]
+    }
+  ],
+  "missing_facts": [],
+  "ambiguities": [
+    {
+      "id": "amb-corridor-end-walls",
+      "path": "/known_facts/walls/corridor_end_walls",
+      "message": "走廊东西两端是否需要设置外墙？",
+      "reason": "用户指定了走廊南侧外墙和办公室北侧外墙，但未说明走廊东西两端是否封闭。",
+      "blocking": true,
+      "evidence_refs": ["schema:bim-json-v2:entity"],
+      "source_turns": ["turn-user-001"],
+      "options": [
+        "需要，两端设置200mm厚外墙",
+        "不需要，走廊两端开口或与外部直接连通"
+      ]
+    }
+  ],
+  "unsupported_requests": [],
+  "user_corrections": [],
+  "clarification_questions": [
+    {
+      "id": "q-corridor-end-walls",
+      "text": "走廊东西两端是否需要设置外墙？请确认。",
+      "targets": ["amb-corridor-end-walls"],
+      "reason": "走廊端墙会影响空间边界定义和墙体布局，需要用户明确。",
+      "evidence_refs": ["schema:bim-json-v2:entity"]
+    }
+  ],
+  "provenance": {
+    "source_turns": ["turn-user-001"],
+    "selected_evidence_ids": [
+      "schema:bim-json-v2:entity",
+      "schema:bim-json-v2:representation",
+      "capability:IFC2X3:IfcSpace",
+      "capability:IFC2X3:IfcWall",
+      "capability:IFC2X3:IfcDoor",
+      "capability:IFC2X3:IfcWindow",
+      "capability:IFC2X3:IfcSlab"
+    ],
+    "few_shot_ids": ["design-brief-v2.complete-room-openings"]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "text2ifc/ifc-repair-stage2-few-shot/0.1",
+  "title": "IFC Repair Stage 2 Few-shot 0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "example_id", "profile_id", "case", "sentinel",
+    "output_schema", "expected", "rule"
+  ],
+  "properties": {
+    "schema_version": {"const": "text2ifc/ifc-repair-stage2-few-shot/0.1"},
+    "example_id": {"type": "string", "minLength": 1, "maxLength": 128},
+    "profile_id": {"type": "string", "minLength": 1, "maxLength": 128},
+    "case": {"const": "complete"},
+    "sentinel": {"const": "EXAMPLE_ONLY"},
+    "output_schema": {"const": "text2ifc/ifc-repair-stage2-operation/0.1"},
+    "expected": {"type": "object"},
+    "rule": {"type": "string", "minLength": 1, "maxLength": 1024}
+  }
+}

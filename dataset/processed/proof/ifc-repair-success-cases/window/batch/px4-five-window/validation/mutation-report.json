@@ -1,0 +1,120 @@
+{
+  "checks": {
+    "all_host_walls_preserved": true,
+    "all_target_chains_removed": true,
+    "all_target_regions_closed": true,
+    "schema_preserved": true,
+    "single_model_write": true,
+    "source_unchanged": true
+  },
+  "counts": {
+    "after": {
+      "IfcBuilding": 1,
+      "IfcBuildingStorey": 4,
+      "IfcDoor": 14,
+      "IfcOpeningElement": 34,
+      "IfcProject": 1,
+      "IfcRelFillsElement": 28,
+      "IfcRelVoidsElement": 34,
+      "IfcSite": 1,
+      "IfcSpace": 0,
+      "IfcWall": 44,
+      "IfcWindow": 15
+    },
+    "before": {
+      "IfcBuilding": 1,
+      "IfcBuildingStorey": 4,
+      "IfcDoor": 14,
+      "IfcOpeningElement": 39,
+      "IfcProject": 1,
+      "IfcRelFillsElement": 33,
+      "IfcRelVoidsElement": 39,
+      "IfcSite": 1,
+      "IfcSpace": 0,
+      "IfcWall": 44,
+      "IfcWindow": 20
+    }
+  },
+  "damaged_sha256": "0630c9bd509bde693c3c3368bcea9e041a3af8d5d1c34d6f797c0f41fb7d0e6c",
+  "geometry": {
+    "targets": [
+      {
+        "host_wall_volume_after_m3": 2.960132031434342,
+        "host_wall_volume_before_m3": 2.6022920314343425,
+        "host_wall_volume_delta_m3": 0.3578399999999995,
+        "target_expected_closed_void_volume_m3": 0.35783999999999955,
+        "target_id": "window-repair-001",
+        "target_region_closed": true,
+        "wall_expected_closed_void_volume_m3": 0.35783999999999955,
+        "wall_global_id": "03SCVysybE5QR$e8dtXVfQ"
+      },
+      {
+        "host_wall_volume_after_m3": 1.827913164735951,
+        "host_wall_volume_before_m3": 1.762201164735951,
+        "host_wall_volume_delta_m3": 0.06571199999999999,
+        "target_expected_closed_void_volume_m3": 0.032855999999999906,
+        "target_id": "window-repair-002",
+        "target_region_closed": true,
+        "wall_expected_closed_void_volume_m3": 0.06571199999999981,
+        "wall_global_id": "1aUf$RNz1A_AvssKHMHdxj"
+      },
+      {
+        "host_wall_volume_after_m3": 1.827913164735951,
+        "host_wall_volume_before_m3": 1.762201164735951,
+        "host_wall_volume_delta_m3": 0.06571199999999999,
+        "target_expected_closed_void_volume_m3": 0.032855999999999906,
+        "target_id": "window-repair-003",
+        "target_region_closed": true,
+        "wall_expected_closed_void_volume_m3": 0.06571199999999981,
+        "wall_global_id": "1aUf$RNz1A_AvssKHMHdxj"
+      },
+      {
+        "host_wall_volume_after_m3": 3.2222757508144566,
+        "host_wall_volume_before_m3": 1.183235750814457,
+        "host_wall_volume_delta_m3": 2.0390399999999995,
+        "target_expected_closed_void_volume_m3": 2.03904,
+        "target_id": "window-repair-004",
+        "target_region_closed": true,
+        "wall_expected_closed_void_volume_m3": 2.03904,
+        "wall_global_id": "03SCVysybE5QR$e8dtXS08"
+      },
+      {
+        "host_wall_volume_after_m3": 1.3202355539741424,
+        "host_wall_volume_before_m3": 0.8252355539741423,
+        "host_wall_volume_delta_m3": 0.4950000000000001,
+        "target_expected_closed_void_volume_m3": 0.495,
+        "target_id": "window-repair-005",
+        "target_region_closed": true,
+        "wall_expected_closed_void_volume_m3": 0.495,
+        "wall_global_id": "03SCVysybE5QR$e8dtXVs8"
+      }
+    ]
+  },
+  "mutation_type": "remove_windows_and_openings_batch",
+  "removed_windows": [
+    {
+      "name": "固定:840x1775:237502",
+      "target_id": "window-repair-001"
+    },
+    {
+      "name": "固定:370x370:249432",
+      "target_id": "window-repair-002"
+    },
+    {
+      "name": "固定:370x370:249553",
+      "target_id": "window-repair-003"
+    },
+    {
+      "name": "塑钢窗-三扇中固定:DSC2415:266052",
+      "target_id": "window-repair-004"
+    },
+    {
+      "name": "固定:1100x1875:289339",
+      "target_id": "window-repair-005"
+    }
+  ],
+  "schema_version": "text2ifc/ifc-repair-mutation-report/0.2",
+  "source_sha256": "8c336ee9af66a55fb4cac26b608bef11ace5a3a0a490931205045e4f87b4c46d",
+  "target_count": 5,
+  "valid": true
+}

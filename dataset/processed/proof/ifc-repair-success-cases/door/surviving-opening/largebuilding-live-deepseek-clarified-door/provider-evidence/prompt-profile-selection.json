@@ -1,0 +1,203 @@
+{
+  "estimated_tokens": 1142,
+  "few_shot_hashes": [
+    "sha256:e53e989a7d195c9c67cde4cec90c2f680422f95b8817fd1af56ecefd3baa7c6f",
+    "sha256:41e506263c0dc643fefec07c25457febfcb3dc8dea02396de78b5ba7b4b05ab1",
+    "sha256:a2ae9d7a59c53c7444dba7b113d3496887d1a37edacc33fa87d98f4af393e860",
+    "sha256:7652bbb46725e720be2ff84f2421ff714ec9a568dbcb121b8d2bac3125f1ae3b"
+  ],
+  "few_shot_ids": [
+    "door.fill.v0.2.clarification",
+    "door.fill.v0.2.complete",
+    "door.fill.v0.2.type-reuse",
+    "door.fill.v0.2.unsupported"
+  ],
+  "few_shots": [
+    {
+      "case": "clarification",
+      "example_id": "door.fill.v0.2.clarification",
+      "expected": {
+        "missing_slots": [
+          "/prototype_intent",
+          "/parameters/door/operation_type or viewpoint"
+        ],
+        "operation_type": "fill_existing_opening_with_door",
+        "parameters": {
+          "fit_existing_opening": true
+        },
+        "status": "clarification_required"
+      },
+      "profile_id": "door.fill-existing-opening.v0.2",
+      "schema_version": "text2ifc/ifc-repair-few-shot/0.1",
+      "user_text": "EXAMPLE_ONLY: put a door in Opening EXAMPLE_OPENING_GUID"
+    },
+    {
+      "case": "complete",
+      "example_id": "door.fill.v0.2.complete",
+      "expected": {
+        "operation_type": "fill_existing_opening_with_door",
+        "parameters": {
+          "fit_existing_opening": true
+        },
+        "program_derived": [
+          "position",
+          "opening dimensions",
+          "door overall dimensions",
+          "host wall"
+        ],
+        "prototype_intent": {
+          "reference": "EXAMPLE_STYLE_GUID",
+          "reference_kind": "global_id"
+        },
+        "status": "complete",
+        "target_query": {
+          "allowed_ifc_classes": [
+            "IfcOpeningElement"
+          ],
+          "global_id": "EXAMPLE_OPENING_GUID"
+        }
+      },
+      "profile_id": "door.fill-existing-opening.v0.2",
+      "schema_version": "text2ifc/ifc-repair-few-shot/0.1",
+      "user_text": "EXAMPLE_ONLY: fill Opening EXAMPLE_OPENING_GUID using exact DoorStyle EXAMPLE_STYLE_GUID"
+    },
+    {
+      "case": "exact_type_reuse",
+      "example_id": "door.fill.v0.2.type-reuse",
+      "expected": {
+        "operation_type": "fill_existing_opening_with_door",
+        "parameters": {
+          "fit_existing_opening": true
+        },
+        "prototype_intent": {
+          "reference": "EXAMPLE_STYLE",
+          "reference_kind": "type_name"
+        },
+        "rule": "unique exact resolution or clarification; geometry remains program-derived"
+      },
+      "profile_id": "door.fill-existing-opening.v0.2",
+      "schema_version": "text2ifc/ifc-repair-few-shot/0.1",
+      "user_text": "EXAMPLE_ONLY: fill the opening and reuse the exact DoorStyle named EXAMPLE_STYLE"
+    },
+    {
+      "case": "unsupported",
+      "example_id": "door.fill.v0.2.unsupported",
+      "expected": {
+        "capability_code": "DOOR_OPERATION_TYPE_UNSUPPORTED",
+        "operation_type": "fill_existing_opening_with_door",
+        "parameters": {
+          "door": {
+            "operation_type": "FOLDING_TO_LEFT"
+          },
+          "fit_existing_opening": true
+        },
+        "status": "unsupported"
+      },
+      "profile_id": "door.fill-existing-opening.v0.2",
+      "schema_version": "text2ifc/ifc-repair-few-shot/0.1",
+      "user_text": "EXAMPLE_ONLY: fill the opening with a FOLDING_TO_LEFT door"
+    }
+  ],
+  "input_bytes": 4567,
+  "profile_hashes": [
+    "sha256:1e79bce84c2704108eb22a59ec45e279366196ed28439dcc4bcfca8591721dd6"
+  ],
+  "profile_ids": [
+    "door.fill-existing-opening.v0.2"
+  ],
+  "profiles": [
+    {
+      "action": "fill_existing_opening",
+      "classification_terms": [
+        "fill opening",
+        "existing opening",
+        "填门",
+        "洞口装门"
+      ],
+      "component_family": "door",
+      "conditional_slots": [
+        "/parameters/door/operation_type",
+        "/parameters/door/viewpoint",
+        "/prototype_intent"
+      ],
+      "few_shots": [
+        {
+          "example_id": "door.fill.v0.2.complete",
+          "path": "prompts/agent/ifc-repair-few-shots/door-fill-v0.2-complete.json",
+          "sha256": "sha256:41e506263c0dc643fefec07c25457febfcb3dc8dea02396de78b5ba7b4b05ab1"
+        },
+        {
+          "example_id": "door.fill.v0.2.clarification",
+          "path": "prompts/agent/ifc-repair-few-shots/door-fill-v0.2-clarification.json",
+          "sha256": "sha256:e53e989a7d195c9c67cde4cec90c2f680422f95b8817fd1af56ecefd3baa7c6f"
+        },
+        {
+          "example_id": "door.fill.v0.2.type-reuse",
+          "path": "prompts/agent/ifc-repair-few-shots/door-fill-v0.2-type-reuse.json",
+          "sha256": "sha256:a2ae9d7a59c53c7444dba7b113d3496887d1a37edacc33fa87d98f4af393e860"
+        },
+        {
+          "example_id": "door.fill.v0.2.unsupported",
+          "path": "prompts/agent/ifc-repair-few-shots/door-fill-v0.2-unsupported.json",
+          "sha256": "sha256:7652bbb46725e720be2ff84f2421ff714ec9a568dbcb121b8d2bac3125f1ae3b"
+        }
+      ],
+      "forbidden_inferences": [
+        "opening identity",
+        "left or right swing without viewpoint",
+        "prototype similarity",
+        "resize opening",
+        "LLM-authored retained Opening geometry"
+      ],
+      "operation_type": "fill_existing_opening_with_door",
+      "optional_slots": [
+        "/property_intents",
+        "/quantity_intents",
+        "/occurrence_reuse_intent"
+      ],
+      "profile_hash": "sha256:1e79bce84c2704108eb22a59ec45e279366196ed28439dcc4bcfca8591721dd6",
+      "profile_id": "door.fill-existing-opening.v0.2",
+      "profile_version": "0.2",
+      "program_derived_slots": [
+        "/parameters/position",
+        "/parameters/opening",
+        "/parameters/door/overall_width_mm",
+        "/parameters/door/overall_height_mm",
+        "host wall",
+        "GlobalIds",
+        "storey containment",
+        "door visual representation"
+      ],
+      "required_slots": [
+        "/target_query",
+        "/parameters/fit_existing_opening"
+      ],
+      "schema_version": "text2ifc/ifc-repair-prompt-profile/0.1",
+      "slot_summary": "Exact resolvable unfilled Opening; exact DoorStyle or explicit Door operation intent. Opening position and all overall dimensions come from the retained Opening.",
+      "stage2_projection_fields": [
+        "operation_id",
+        "operation_type",
+        "target",
+        "parameters",
+        "evidence_refs"
+      ],
+      "supported_capabilities": [
+        "SINGLE_SWING_LEFT",
+        "SINGLE_SWING_RIGHT",
+        "NOTDEFINED",
+        "exact_type_reuse",
+        "generated_type"
+      ],
+      "target_ifc_classes": [
+        "IfcOpeningElement"
+      ],
+      "unsupported_capabilities": [
+        "filled_opening",
+        "opening_resize",
+        "REVOLVING",
+        "FOLDING",
+        "SLIDING"
+      ]
+    }
+  ]
+}

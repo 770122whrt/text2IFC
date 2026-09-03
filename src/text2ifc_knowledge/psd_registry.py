@@ -68,6 +68,9 @@ def _property_record(property_def) -> dict[str, Any]:
         "template_type": template_type,
         "data_type": data_types[0] if data_types else None,
     }
+    definition = _direct_text(property_def, "Definition")
+    if definition:
+        record["definition"] = definition
     if len(data_types) > 1:
         record["data_types"] = data_types
     if reference_type:
@@ -139,12 +142,16 @@ def _parse_property_set(xml_bytes: bytes, source_path: str) -> tuple[str, dict[s
                 )
             properties[property_name] = _property_record(property_def)
 
-    return name, {
+    record = {
         "name": name,
         "applicable_classes": applicable_classes,
         "properties": dict(sorted(properties.items())),
         "source_path": source_path,
     }
+    definition = _direct_text(root, "Definition")
+    if definition:
+        record["definition"] = definition
+    return name, record
 
 
 def build_property_registry(archive_path: str | Path) -> dict[str, Any]:

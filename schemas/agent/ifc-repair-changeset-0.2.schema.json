@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "text2ifc/ifc-repair-changeset/0.2",
+  "title": "Bound IFC Repair ChangeSet 0.2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "changeset_id", "binding_status", "base_model_fingerprint", "source_request_hash", "semantic_manifest_ref", "semantic_manifest_sha256", "scope", "evidence_refs", "preconditions", "postconditions", "operations"],
+  "properties": {
+    "schema_version": {"const": "text2ifc/ifc-repair-changeset/0.2"},
+    "changeset_id": {"$ref": "#/$defs/id"},
+    "binding_status": {"const": "bound"},
+    "base_model_fingerprint": {"$ref": "#/$defs/hash"},
+    "source_request_hash": {"$ref": "#/$defs/hash"},
+    "semantic_manifest_ref": {"type": "string", "minLength": 1},
+    "semantic_manifest_sha256": {"$ref": "#/$defs/hash"},
+    "scope": {"$ref": "#/$defs/scope"},
+    "evidence_refs": {"$ref": "#/$defs/strings"},
+    "preconditions": {"$ref": "#/$defs/strings"},
+    "postconditions": {"$ref": "#/$defs/strings"},
+    "operations": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/operation"}}
+  },
+  "$defs": {
+    "id": {"type": "string", "minLength": 1, "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]*$"},
+    "hash": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "strings": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+    "scope": {"type": "object", "additionalProperties": false, "required": ["target_ids", "forbidden_ids"], "properties": {"target_ids": {"$ref": "#/$defs/strings"}, "forbidden_ids": {"$ref": "#/$defs/strings"}}},
+    "assignment": {
+      "type": "object", "additionalProperties": false,
+      "required": ["operation_id", "fact_key", "source_fact_key", "value", "value_type", "unit", "ownership", "applicability", "source_kind", "source_ref", "provenance", "authoring_action"],
+      "properties": {
+        "operation_id": {"$ref": "#/$defs/id"}, "fact_key": {"type": "string", "minLength": 1}, "source_fact_key": {"type": "string", "minLength": 1}, "value": {}, "value_type": {"type": "string", "minLength": 1}, "unit": {"type": ["string", "null"]},
+        "ownership": {"enum": ["occurrence_direct", "type_inherited"]}, "applicability": {"enum": ["required", "conditional"]},
+        "source_kind": {"enum": ["explicit_request", "surviving_target", "surviving_host", "surviving_type", "authorized_type_cohort", "approved_prototype", "deterministic_policy"]},
+        "source_ref": {"type": "string", "minLength": 1}, "provenance": {"$ref": "#/$defs/strings"},
+        "authoring_action": {"enum": ["set_attribute", "set_occurrence_pset", "set_quantity", "reuse_material", "reuse_classification", "bind_relationship", "inherit_from_type"]}
+      }
+    },
+    "manifestBinding": {"type": "object", "additionalProperties": false, "required": ["manifest_id", "policy_id", "policy_version"], "properties": {"manifest_id": {"$ref": "#/$defs/id"}, "policy_id": {"$ref": "#/$defs/id"}, "policy_version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+$"}}},
+    "operation": {
+      "type": "object", "additionalProperties": false,
+      "required": ["operation_id", "operation_type", "target", "parameters", "evidence_refs", "semantic_manifest", "semantic_assignments"],
+      "properties": {"operation_id": {"$ref": "#/$defs/id"}, "operation_type": {"$ref": "#/$defs/id"}, "target": {"type": "object", "minProperties": 1}, "parameters": {"type": "object"}, "evidence_refs": {"$ref": "#/$defs/strings"}, "semantic_manifest": {"$ref": "#/$defs/manifestBinding"}, "semantic_assignments": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/assignment"}}}
+    }
+  }
+}

@@ -56,6 +56,7 @@ def validate_package_changeset(
     allowed_refs = set(package.get("allowed_reference_ids", []))
     duplicate_targets = {target for target, count in Counter(targets).items() if target and count > 1}
     values: dict[str, dict[str, Any]] = {}
+    component_class_contract = _component_class_contract(package)
 
     for index, operation in enumerate(operations):
         target_id = targets[index]
@@ -71,7 +72,13 @@ def validate_package_changeset(
             issues.append(_issue("PACKAGE_VALUE_ID_MISMATCH", f"{path}/value/id", target_id))
             continue
         values[target_id] = dict(value)
-        issues.extend(_representation_issues(target_id, value))
+        issues.extend(
+            _representation_issues(
+                target_id,
+                value,
+                required=target_id in component_class_contract,
+            )
+        )
 
     package_ids = set(values)
     visible_ids = set(existing) | package_ids | allowed_refs
@@ -103,7 +110,14 @@ def validate_package_changeset(
     issues.extend(_manifest_ownership_issues(manifest))
     kind = str(package.get("kind"))
     if kind == "storey_local":
-        issues.extend(_local_package_issues(package, workspace, values))
+        issues.extend(
+            _local_package_issues(
+                package,
+                workspace,
+                values,
+                component_class_contract,
+            )
+        )
     elif kind == "cross_storey":
         for component_id, value in values.items():
             if not str(value.get("ifc_class", "")).startswith("IfcRel") and value.get("ifc_class") not in _CROSS_CLASSES:
@@ -115,6 +129,7 @@ def _local_package_issues(
     package: Mapping[str, Any],
     workspace: Mapping[str, Any],
     values: Mapping[str, Mapping[str, Any]],
+    component_class_contract: Mapping[str, str],
 ) -> list[dict[str, Any]]:
     issues: list[dict[str, Any]] = []
     storey_id = str(package.get("storey_id") or "")
@@ -128,9 +143,26 @@ def _local_package_issues(
     containment = _containment_map(relationships)
     for component_id, value in values.items():
         ifc_class = str(value.get("ifc_class", ""))
+        expected_class = component_class_contract.get(component_id)
         if ifc_class in _CROSS_ONLY_CLASSES:
             issues.append(_issue("PACKAGE_VERTICAL_COMPONENT_IN_LOCAL", f"/{component_id}/ifc_class", component_id))
-        elif not ifc_class.startswith("IfcRel") and ifc_class not in _LOCAL_CLASSES:
+        elif expected_class is not None and ifc_class != expected_class:
+            issues.append(
+                _issue(
+                    "PACKAGE_COMPONENT_CLASS_MISMATCH",
+                    f"/{component_id}/ifc_class",
+                    component_id,
+                    message=(
+                        f"Package expects {component_id!r} to use {expected_class!r}, "
+                        f"not {ifc_class!r}."
+                    ),
+                )
+            )
+        elif (
+            expected_class is None
+            and not ifc_class.startswith("IfcRel")
+            and ifc_class not in _LOCAL_CLASSES
+        ):
             issues.append(_issue("PACKAGE_LOCAL_COMPONENT_INVALID", f"/{component_id}/ifc_class", component_id))
 
     voids = {
@@ -173,6 +205,17 @@ def _local_package_issues(
     return issues
 
 
+def _component_class_contract(package: Mapping[str, Any]) -> dict[str, str]:
+    value = package.get("owned_component_classes")
+    if not isinstance(value, Mapping):
+        return {}
+    return {
+        str(component_id): str(ifc_class)
+        for component_id, ifc_class in value.items()
+        if str(component_id) and str(ifc_class)
+    }
+
+
 def _manifest_ownership_issues(manifest: Mapping[str, Any]) -> list[dict[str, Any]]:
     owners: dict[str, list[str]] = {}
     for package in _records(manifest.get("packages")):
@@ -191,8 +234,10 @@ def _manifest_ownership_issues(manifest: Mapping[str, Any]) -> list[dict[str, An
 def _representation_issues(
     component_id: str,
     value: Mapping[str, Any],
+    *,
+    required: bool = False,
 ) -> list[dict[str, Any]]:
-    if str(value.get("ifc_class", "")) not in _REPRESENTED_CLASSES:
+    if not required and str(value.get("ifc_class", "")) not in _REPRESENTED_CLASSES:
         return []
     attributes = value.get("attributes")
     representation = attributes.get("Representation") if isinstance(attributes, Mapping) else None

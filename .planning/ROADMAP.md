@@ -1,1055 +1,713 @@
 # Roadmap: text2IFC
 
-## Phase 1: BIM JSON 1.0 Contract and Validator
+## Milestones
 
-**Goal:** Define one versioned BIM JSON contract, validate it with field-level
-errors, and migrate or explicitly reject existing project JSON artifacts.
+- [x] **v1.0 Supported Text2IFC Baseline** - Phases 1 through 6.7, shipped
+  2026-07-16. See [archived roadmap](milestones/v1.0-ROADMAP.md),
+  [requirements](milestones/v1.0-REQUIREMENTS.md), and
+  [audit](milestones/v1.0-MILESTONE-AUDIT.md).
+- [ ] **v1.1 IFC ChangeSet Repair Pipeline** - Phases 7 through 13, including
+  inserted Phases 09.1 and 10.1 through 10.5, in progress
+  (12 / 13 phases complete; Phase 13 remains unstarted).
 
-**Requirements:** JSON-01, JSON-02, JSON-03, JSON-04, JSON-05, DOC-01, DOC-02
+## Current Cycle: v1.1 IFC ChangeSet Repair Pipeline
 
-**Explicit boundary:** This phase defines data meaning and validation. It does
-not expand IFC generation behavior.
+**Goal:** Given an existing or damaged IFC2X3 file plus a natural-language
+request, produce a bound semantic ChangeSet, deterministically apply it, and
+publish an IFC result with mandatory L1 and L2 evidence.
 
-**Plans:** 4 plans in 3 waves
+### Phase 7: IFC Retrieval Index and Target Resolution
 
-**Wave 1**
+**Status:** Complete — 2026-07-19
 
-- [x] `01-01-PLAN.md` - Canonical structural contract, validator, and CLI
+**Goal:** Resolve human target descriptions to unique IFC entities using
+deterministic, explainable evidence rather than relying on `Name` alone.
 
-**Wave 2** *(blocked on Wave 1 completion)*
+**Requirements:** TGT-01, TGT-02, TGT-03, TGT-04, TGT-05
 
-- [x] `01-02-PLAN.md` - Semantic identity and storey-reference validation
-- [x] `01-04-PLAN.md` - Generated contract reference and drift check
+**Depends on:** v1.0 baseline and the Window repair prototype
 
-**Wave 3** *(blocked on Wave 2 semantic validation)*
+**Success criteria:**
 
-- [x] `01-03-PLAN.md` - Complete legacy migration audit
+1. One indexing command extracts stable identity, aliases, type, storey,
+   spatial, relationship and geometry summaries from an IFC2X3 file.
+2. Exact GUID, Name/Tag/type, grid/space, direction and geometry constraints can
+   be combined in one versioned `TargetQuery`.
+3. Candidate rankings include field-level evidence and never silently resolve
+   zero-match, ambiguous or conflicting selectors.
+4. Compact top-K context remains deterministic and token-budgeted.
 
-**Cross-cutting constraints:**
+**Evidence:** [Phase 7 validation report](../docs/validation/ifc2x3-changeset/phase7-validation-report.md)
 
-- JSON Schema Draft 2020-12 remains the single structural source of truth.
-- Validation and migration are deterministic and never invent required data.
-- Validation performs no IFC I/O and no remote schema resolution.
+### Phase 8: L1/L2 Evaluation Contract
 
-**Status:** Complete - verified 2026-06-11
+**Status:** Complete — 2026-07-20
 
-## Phase 2: Minimum BIM JSON to IFC2X3 Compiler
+**Goal:** Make repair success mean both physical correctness and required BIM
+semantic fidelity, while explicitly deferring L3 exactness.
 
-**Goal:** Compile valid BIM JSON 1.0 into reopenable IFC2X3 with correct
-hierarchy, supported element counts, basic dimensions, and selected properties.
+**Requirements:** VAL-01, VAL-02, VAL-03, VAL-04, VAL-05
 
-**Requirements:** IFC-01, IFC-02, IFC-03, IFC-04, IFC-05, VER-01, VER-02,
-VER-03
+**Depends on:** Phase 7 target identity contract
 
-**Depends on:** Phase 1
+**Success criteria:**
 
-**Plans:** 4 plans in 3 waves
+1. Versioned reports expose `passed`, `failed`, `partial`, `not_required` and
+   `not_evaluable` for each level.
+2. L1 validates geometry, host/topology, scope and preservation.
+3. Operation-specific L2 allowlists validate type, storey, key Psets,
+   quantities, material, classification and other required semantics.
+4. Benchmark ground truth is private evaluator-only; production evaluation can
+   use request, surviving model facts and prototypes without gold leakage.
+5. L3 remains documented and `not_required` for v1.1.
 
-**Wave 1**
+**Evidence:** [Phase 8 validation report](../docs/validation/ifc2x3-changeset/phase8-validation-report.md), [goal verification](phases/08-l1-l2-evaluation-contract/08-VERIFICATION.md), and [security audit](phases/08-l1-l2-evaluation-contract/08-SECURITY.md)
 
-- [x] `02-01-PLAN.md` - Validated compiler boundary, hierarchy, identity, and
-  atomic IFC2X3 output
+### Phase 9: General IFC + Text Repair Orchestrator
 
-**Wave 2** *(blocked on Wave 1 completion)*
+**Status:** Complete — 2026-07-20
 
-- [x] `02-02-PLAN.md` - Deterministic all-family geometry and dimensions
-- [x] `02-03-PLAN.md` - Selected property and predefined-type fidelity
+**Goal:** Provide one supported programmatic entry point from IFC + request to
+ChangeSet + IFC + evidence.
 
-**Wave 3** *(blocked on Wave 2 completion)*
+**Requirements:** PIPE-01, PIPE-02, PIPE-03, PIPE-04
 
-- [x] `02-04-PLAN.md` - Verifier proof, CLI, complete acceptance, and docs
+**Depends on:** Phases 7 and 8
 
-**Cross-cutting constraints:**
+**Plans:** 5 plans in 5 sequential waves
 
-- BIM JSON 1.0 validation runs before any IFC output path is touched.
-- Tests inspect serialized and reopened IFC instead of compiler bookkeeping.
-- Output replacement occurs only after in-memory and reopened verification.
-- Every behavior follows a recorded RED-GREEN TDD cycle.
-
-**Status:** Complete - verified 2026-06-11
-
-**Post-verification discovery:** BIM JSON 1.0 intentionally contains no
-source placement. A 35-file IFC audit confirmed that this prevents spatial
-training and motivated the inserted Phase 2.5 without invalidating Phase 2's
-minimum-compiler acceptance criteria.
-
-## Phase 2.5: BIM JSON 2.0 IFC Semantic Graph (INSERTED)
-
-**Goal:** Define and validate an IFC2X3-aligned BIM JSON 2.0 semantic entity
-graph, build deterministic knowledge registries from official buildingSMART
-sources, extract authorized IFC ground truth without silent loss, and extend
-the compiler for the initial BIMNet architectural generation profile.
-
-**Requirements:** JSON-06, KNOW-01, KNOW-02, ENTITY-01, CAP-01, GEO-01,
-GEO-02, SPACE-01, DRAFT-01, EXTRACT-01, COMPAT-01
-
-**Depends on:** Phase 1, Phase 2
-
-**Evidence:** `02.5-IFC-GAP-AUDIT.md` audits 25 BIMNet IFC2X3 and 10
-buildingSMART IFC4/IFC4X3 files.
-
-**Canonical refs:**
-
-- `.planning/phases/02.5-bim-json-2.0-ifc-semantic-graph/02.5-SPEC.md`
-- `.planning/phases/02.5-bim-json-2.0-ifc-semantic-graph/02.5-CONTEXT.md`
-- `.planning/phases/02.5-bim-json-2.0-ifc-semantic-graph/02.5-IFC-GAP-AUDIT.md`
-- `docs/reference/ifc2x3-knowledge-sources.md`
-
-**Explicit boundary:** This phase establishes official IFC2X3 knowledge,
-IFC-class semantic truth, parent-relative placement, bounded semantic
-geometry, Draft/loss accounting, and the BIMNet architectural generation
-profile. Arbitrary BRep/tessellation, materials, type reuse, broad connection
-topology, furnishing/MEP generation, and IFC4/IFC4X3 output remain Phase 4.
-
-**Plans:** 6 plans in 5 waves
-
-**Wave 1**
-
-- [x] `02.5-01-PLAN.md` - Official IFC2X3 source manifest, safe acquisition,
-  declaration registry, and PSD property registry
-
-**Wave 2** *(blocked on Wave 1 completion)*
-
-- [x] `02.5-02-PLAN.md` - Formal BIM JSON 2.0, Draft Envelope, capability
-  overlay, registry validation, and 1.0 Draft migration
-
-**Wave 3** *(blocked on Wave 2 completion)*
-
-- [x] `02.5-03-PLAN.md` - Parent-relative placement, semantic geometry,
-  spaces, openings, and void/fill relationship validation
-
-**Wave 4** *(blocked on Wave 3 completion)*
-
-- [x] `02.5-04-PLAN.md` - Deterministic IFC2X3 extraction and complete loss
-  accounting
-- [x] `02.5-05-PLAN.md` - BIM JSON 2.0 architectural compiler profile and
-  reopened IFC verification
-
-**Wave 5** *(blocked on both Wave 4 plans)*
-
-- [x] `02.5-06-PLAN.md` - All-25 BIMNet audit, provenance, generated
-  references, reviews, and phase acceptance
+- [x] **Wave 1:** `09-01` - Versioned RepairIntent and public request-understanding stage.
+- [x] **Wave 2** *(blocked on Wave 1)*: `09-02` - Durable run and clarification state machine.
+- [x] **Wave 3** *(blocked on Waves 1-2)*: `09-03` - Deterministic resolution and bound unified ChangeSet orchestration.
+- [x] **Wave 4** *(blocked on Waves 1-3)*: `09-04` - Production semantic authority, atomic application, and publication.
+- [x] **Wave 5** *(blocked on Waves 1-4)*: `09-05` - Interactive CLI, offline acceptance, and opt-in live UAT.
 
 **Cross-cutting constraints:**
 
-- Official-source schema/property facts and project-authored capability
-  decisions remain separate.
-- Normal validation and compilation are offline; network access is restricted
-  to an explicit hash-verified acquisition command.
-- Formal input is complete and compiler-ready; incomplete or unsupported
-  content remains a Draft and never reaches IFC output.
-- No source class, relation, property, geometry, or migration fact is silently
-  dropped, substituted, or invented.
-- Every implementation behavior follows recorded RED-GREEN TDD before full
-  regression.
+- Both Agent stages and every public artifact are bounded and Gold-free.
+- One run owns one unified, all-or-nothing ChangeSet transaction.
+- Source IFC bytes remain unchanged; run transitions and detailed evidence are
+  versioned, immutable, and resumable.
+- Evaluation 0.2 is the only successful-artifact publication authority.
+- Window L2 authoring remains Phase 10; later entity operations and vector/128k
+  expansion remain outside Phase 9.
 
-**Status:** Complete - verified 2026-06-12
+**Success criteria:**
 
-## Phase 3: Text-to-JSON Dataset and Baseline
+1. CLI/API accepts an IFC path and natural-language request and returns a
+   structured terminal status and immutable run directory.
+2. Agent receives only bounded public request/spec/context/contracts.
+3. Ambiguous, unsupported or failed validation paths publish no misleading IFC
+   success artifact.
+4. Successful runs publish ChangeSet, repaired/modified IFC, L1/L2 reports,
+   provider trace and hash manifest.
 
-**Goal:** Use canonical formal BIM JSON 2.0 ground truth to build provenance-linked
-text/JSON pairs, establish a structured-output Text-to-JSON baseline, evaluate
-it, and demonstrate the first spatial Text-to-JSON-to-IFC request.
+**Evidence:** [Phase 9 validation report](../docs/validation/ifc2x3-changeset/phase9-validation-report.md), [goal verification](phases/09-general-ifc-text-repair-orchestrator/09-VERIFICATION.md), [security audit](phases/09-general-ifc-text-repair-orchestrator/09-SECURITY.md), and [clean code review](phases/09-general-ifc-text-repair-orchestrator/09-REVIEW.md)
 
-**Requirements:** TEXT-01, TEXT-02, TEXT-03, E2E-01
+### Phase 09.1: IFC Type Evidence and Prototype Resolution Correction (INSERTED)
 
-**Depends on:** Phase 1, Phase 2, Phase 2.5
+**Goal:** Correct IFC Type/occurrence semantic authority and make Prototype
+resolution human-readable before Window L2 authoring begins.
 
-**Canonical refs:**
+**Requirements:** TYPE-01, TYPE-02, TYPE-03
 
-- `.planning/phases/03-text-to-json-dataset-and-baseline/03-SPEC.md`
-- `.planning/phases/03-text-to-json-dataset-and-baseline/03-CONTEXT.md`
-- `.planning/phases/03-text-to-json-dataset-and-baseline/03-RESEARCH.md`
-- `.planning/phases/03-text-to-json-dataset-and-baseline/03-VALIDATION.md`
-- `.planning/phases/03-text-to-json-dataset-and-baseline/03-GOAL-PROMPT.md`
+**Depends on:** Phases 7 and 9
 
-**Data boundary:**
+**Plans:** 4/4 plans executed
 
-- BIMNet is the primary authorized IFC2X3 source.
-- Train, validation, and test split by Matterport scene family before any
-  text generation or augmentation.
-- buildingSMART samples remain a separate cross-schema and relationship track.
-- IFC-to-BIM-JSON is an offline label-construction step; runtime inference
-  remains Natural Language to formal BIM JSON 2.0 to IFC.
+Plans:
 
-**Explicit boundary:** This phase builds the data and evaluation loop for
-Text-to-JSON. It does not fine-tune a production model, does not implement the
-runtime multi-turn clarification Agent, and does not expand source IFC fidelity
-beyond the Phase 2.5 formal generation profile.
+**Wave 1:**
 
-**Plans:** 7 plans in 7 waves
+- [x] **09.1-01** - Versioned TypeRecord index and inheritance-aware extraction.
 
-**Wave 1**
+**Wave 2** *(blocked on Wave 1 completion; plans may run in parallel)*:
 
-- [x] `03-01-PLAN.md` - Scene-family split manifest and provenance gate
+- [x] **09.1-02** - Human-readable and deduplicated Prototype resolution.
+- [x] **09.1-03** - TypeRecord-backed production semantic authority.
 
-**Wave 2** *(blocked on Wave 1 completion)*
+**Wave 3** *(blocked on both Wave 2 plans)*:
 
-- [x] `03-02-PLAN.md` - Draft triage and formal supported-scope gold set
-
-**Wave 2.5** *(INSERTED; blocked on Wave 2 zero-formal finding)*
-
-- [x] `03-02.5-PLAN.md` - Supported-scope projection for formal
-  Text-to-JSON targets
-
-**Wave 3** *(blocked on Wave 2.5 completion)*
-
-- [x] `03-03-PLAN.md` - Deterministic Text/JSON pair generation
-
-**Wave 4** *(blocked on Wave 3 completion)*
-
-- [x] `03-04-PLAN.md` - Provider-independent evaluation harness
-
-**Wave 5** *(blocked on Wave 4 completion)*
-
-- [x] `03-05-PLAN.md` - Structured-output Text-to-JSON baseline
-
-**Wave 6** *(blocked on Wave 5 completion)*
-
-- [x] `03-06-PLAN.md` - End-to-end demo, summary, and RAG/fine-tune decision
-  report
+- [x] **09.1-04** - LargeBuilding closure, no-GUID UAT and Phase 10 handoff.
 
 **Cross-cutting constraints:**
 
-- Scene-family split assignment happens before any text generation,
-  augmentation, baseline run, or fine-tuning export.
-- Formal baseline targets are supported-scope BIM JSON 2.0 documents; source
-  losses remain in sidecars and are not invented into the target.
-- Draft/clarification records remain separate from formal baseline records.
-- The model layer outputs BIM JSON 2.0 only; raw IFC STEP and low-level IFC
-  implementation objects remain compiler output.
-- Evaluation reports invalid JSON/BIM JSON as first-class failures before
-  semantic field scoring.
-- Every implementation behavior with defined inputs and outputs follows a
-  recorded RED-GREEN TDD cycle.
+- Type objects remain separate from editable occurrence targets and every fact
+  retains explicit current-IFC provenance.
+- Similarity may retrieve candidates but cannot authorize a Type without an
+  explicit unique name or stored affirmative user answer.
+- Historical run evidence stays immutable; v0.2 indexes rebuild rather than
+  reinterpret v0.1 evidence.
+- Phase 09.1 cannot author Phase 10 Window semantics or weaken Evaluation 0.2
+  publication gates.
 
-**Status:** Complete - verified 2026-06-14
+**Success criteria:**
 
-## Phase 4: High-fidelity IFC Round Trip
+1. Direct occurrence properties are never mislabeled as inherited Type facts,
+   and IFC2X3 `IfcWindowStyle` facts have explicit provenance.
+2. A user can authorize a unique Type by human-readable name or confirm a
+   deduplicated Type candidate without supplying a GUID; similarity alone does
+   not authorize selection.
+3. The LargeBuilding 41-occurrence Window Style case builds production
+   evidence without `PROTOTYPE_TYPE_FACT_CONFLICT`, reaches the real L2
+   comparator, and preserves fail-closed publication behavior.
 
-**Goal:** Improve the full text-to-BIM-JSON-to-IFC path so generated IFC is
-spatially and semantically correct under automated checks, then preserve
-material/type fidelity, complex source geometry, supported connection topology,
-and broader product classes while reporting every unsupported loss.
+### Phase 10: Window L2 Semantic Fidelity Closure
 
-**Requirements:** GEN-01, GEN-02, GEO-03, GEO-04, GEO-05, IFC-06
+**Goal:** Upgrade the proven Window repair from L1-only to required L1+L2.
 
-**Depends on:** Phase 2.5, Phase 3, Phase 5
+**Requirements:** WIN-01, WIN-02
 
-**Canonical refs:**
+**Depends on:** Phases 8, 9 and 09.1
 
-- `.planning/phases/04-high-fidelity-ifc-round-trip/04-SPEC.md`
-- `.planning/phases/04-high-fidelity-ifc-round-trip/04-CONTEXT.md`
-- `.planning/phases/04-high-fidelity-ifc-round-trip/04-VALIDATION.md`
-- `.planning/phases/04-high-fidelity-ifc-round-trip/04-GOAL-PROMPT.md`
+**Plans:** 5/5 plans executed
 
-**Explicit boundary:** Phase 4 starts with a generated-IFC correctness gate for
-the text -> BIM JSON -> IFC path. It does not proceed to high-fidelity source
-round-trip work until `simple-room-fixed` and `two-room-suite` pass automated
-spatial, attribute, relationship, and IFC-structure checks. Unsupported source
-facts remain explicit Draft/loss content and are never replaced with fabricated
-boxes or proxies.
+- [x] **10-01** - Frozen Window semantic manifest and L2 policy contract.
+- [x] **10-02** - Production semantic authority from surviving IFC evidence.
+- [x] **10-03** - Compact Provider draft and deterministic Bound ChangeSet 0.2.
+- [x] **10-04** - Atomic IFC2X3 semantic authoring and independent reopen/L1/L2.
+- [x] **10-05** - LargeBuilding offline and four-path real DeepSeek acceptance.
 
-**Plans:** 7 plans in 7 waves
+**Success criteria:**
 
-**Wave 0**
+1. Window repair restores required `IsExternal`, selected instance Psets,
+   quantities, material and classification using non-gold model evidence.
+2. The LargeBuilding benchmark passes both L1 and the frozen Window L2
+   allowlist in offline and real-Provider UAT.
+3. Historical v0.1 L1 evidence remains versioned rather than relabelled.
 
-- [x] `04-00-PLAN.md` - Generated IFC correctness gate for simple-room-fixed
-  and two-room-suite
+**Evidence:** [Phase 10 validation report](../docs/validation/ifc2x3-changeset/phase10-validation-report.md) and [goal verification](phases/10-window-l2-semantic-fidelity-closure/10-VERIFICATION.md)
 
-**Wave 1** *(blocked on Wave 0 generated-IFC gate)*
+### Phase 10.1: Explicit IFC Property Authoring and Validation (INSERTED)
 
-- [x] `04-01-PLAN.md` - Fidelity inventory and metric harness
+**Status:** Complete — 2026-07-23
 
-**Wave 2** *(blocked on Wave 1 inventory)*
+**Goal:** When a user explicitly supplies an exact Pset name, property name and
+value, deterministically ensure that typed effective property on the intended
+Window occurrence, reuse only an explicitly resolved/confirmed existing Type
+or create a deterministic system-template Type when none was requested, and
+publish only after independent reopened-IFC L2 validation.
 
-- [x] `04-02-PLAN.md` - Material and layer fidelity
+**Requirements:** PROP-01, PROP-02, PROP-03, PROP-04, PROP-05
 
-**Wave 3** *(blocked on Wave 2 material support)*
+**Depends on:** Phase 10
 
-- [x] `04-03-PLAN.md` - Type reuse fidelity
+**Plans:** 4/4 plans complete
 
-**Wave 4** *(blocked on Wave 3 type support)*
-
-- [x] `04-04-PLAN.md` - Connection topology fidelity
-
-**Wave 5** *(blocked on Wave 4 topology support)*
-
-- [x] `04-05-PLAN.md` - Complex and mapped geometry fidelity
-
-**Wave 6** *(blocked on Wave 5 geometry support)*
-
-- [x] `04-06-PLAN.md` - Broader classes, all-25 audit, and Phase 6 readiness
+- [x] **Wave 1:** `10.1-01` - Versioned exact-property intent and deterministic resolution contract.
+- [x] **Wave 2** *(blocked on Wave 1)*: `10.1-02` - Clarification, custom-property confirmation and scope safety.
+- [x] **Wave 3** *(blocked on Waves 1-2)*: `10.1-03` - Atomic Pset authoring, manifest binding and dynamic L2 enforcement.
+- [x] **Wave 4** *(blocked on Waves 1-3)*: `10.1-04` - LargeBuilding offline/live acceptance, regression and handoff evidence.
 
 **Cross-cutting constraints:**
 
-- Generated IFC acceptance requires spatial topology, attribute correctness,
-  relationship correctness, IFC hierarchy/containment correctness, compile,
-  reopen, and artifact secret-scan checks.
-- Prompt and provider iterations must be versioned and tied to machine-readable
-  experiment records.
-- The model layer outputs BIM JSON 2.0 semantics only; raw IFC STEP and
-  low-level helper objects remain compiler output.
-- Unsupported material, type, topology, product-class, BRep, mapped geometry,
-  and tessellation facts must be explicitly represented as losses or Draft
-  content.
-- Phase 3 scene-family splits and provenance remain binding for any BIMNet
-  benchmark or training-related artifact.
-- Every implementation behavior with defined inputs and outputs follows a
-  recorded RED-GREEN TDD cycle.
+- Phase 10.1 performs exact lookup only; it does not search aliases, embeddings
+  or semantically similar properties.
+- Property mutation is occurrence-only. Binding an already authorized existing
+  Type and reading its inherited facts remain allowed; modifying a shared Type
+  is explicitly deferred and fails closed in this phase.
+- Existing Types are never selected by a hard-coded GUID or silent same-size/
+  similarity fallback. Exact unique references resolve directly, uncertainty
+  asks the user, and absence of Type intent creates a dedicated versioned
+  system-template Type.
+- Every custom property requires confirmation of exact Pset/property, value,
+  IFC value type, unit and scope before it becomes authorized.
+- Provider output remains a draft. Only deterministic resolution, Binder,
+  atomic application, reopen and L1/L2 gates can publish an IFC.
+- Initial acceptance covers scalar `IfcPropertySingleValue` properties on the
+  Window pipeline while keeping operation-neutral interfaces for later entity
+  families.
 
-**Status:** Complete - verified 2026-06-16
+**Success criteria:**
 
-## Phase 5: Multi-turn Clarification Agent
+1. Exact standard `Pset.Property` requests resolve offline against the checked-
+   in IFC2X3 property registry and enforce applicable class, template type,
+   IFC value type and unit requirements.
+2. Unknown/custom properties never crash or silently pass: they require a
+   durable confirmation and then enter the same typed manifest and L2 path.
+3. Existing Type reuse is explicit or user-confirmed; a request with no Type
+   creates and binds a deterministic dedicated Window Type, while an ambiguous
+   Type pauses instead of silently selecting a neighbor Type.
+4. Occurrence edits cannot mutate other occurrences sharing a Type; an explicit
+   shared-Type mutation request is reported as deferred and writes nothing.
+5. The applicator creates or updates one direct Pset/property without duplicate
+   relationships, rolls back atomically on failure, and independently reopens
+   the IFC before requested-property L2.
+6. LargeBuilding passes deterministic acceptance and an opt-in real DeepSeek
+   exact-property UAT without RAG, Gold leakage or synthetic fallback.
 
-**Goal:** Turn incomplete Chinese natural-language requests into explicit Draft
-clarification state or valid formal BIM JSON 2.0, then compile the completed
-simple-room Agent demo to a reopenable IFC2X3 file.
+### Phase 10.2: IFC2X3 Property Knowledge Retrieval and Resolution (INSERTED)
 
-**Requirements:** AGENT-01, AGENT-02, AGENT-03
+**Status:** Complete — 2026-07-24
 
-**Depends on:** Phase 1, Phase 2.5, Phase 3
+**Goal:** Resolve non-exact multilingual property requests to evidence-bearing
+standard or project-property candidates, authorize only deterministic standard
+matches, clarify genuine uncertainty/custom facts, and emit only the exact
+typed property contract already proven by Phase 10.1.
 
-**Canonical refs:**
+**Requirements:** RAG-01, RAG-02, RAG-03, RAG-04
 
-- `.planning/phases/05-multi-turn-clarification-agent/05-SPEC.md`
-- `.planning/phases/05-multi-turn-clarification-agent/05-CONTEXT.md`
-- `.planning/phases/05-multi-turn-clarification-agent/05-AI-SPEC.md`
-- `.planning/phases/05-multi-turn-clarification-agent/05-RESEARCH.md`
-- `.planning/phases/05-multi-turn-clarification-agent/05-VALIDATION.md`
-- `.planning/phases/05-multi-turn-clarification-agent/05-GOAL-PROMPT.md`
+**Depends on:** Phase 10.1
 
-**Explicit boundary:** Phase 5 builds the runtime clarification Agent, not
-Phase 4 fidelity and not Phase 6 fine-tuning/deployment. The Agent asks Chinese
-questions, keeps unknown required facts as Draft, and compiles IFC only after
-formal BIM JSON 2.0 validation. The model/provider layer must not output raw
-IFC, STEP text, low-level IFC helper entities, or compiler bookkeeping.
+**Success criteria:**
 
-**Final acceptance artifact:**
-`dataset/processed/agent-demo/simple-room/output.ifc`
+1. IFC2X3 official properties and current-project properties have versioned,
+   provenance-bearing searchable records with exact applicability and types.
+2. Exact, reviewed-alias, keyword and local Qdrant/BGE-M3 retrieval produce
+   bounded evidence; vectors improve recall but are never an authority.
+3. Unique exact/reviewed-alias matches and measured keyword/vector consensus
+   may resolve locally; low-confidence, conflicting and custom candidates
+   produce bounded clarification/confirmation.
+4. Retrieval output is candidate evidence only and cannot bypass Phase 10.1
+   confirmation, Binder, atomic authoring, reopened L2 or publication gates.
+5. One generic occurrence-property operation supports Wall, WallStandardCase,
+   Door and Window scalar properties with target-local copy-on-write, while one
+   real LargeBuilding Window DeepSeek UAT passes with knowledge health ready.
 
-**Plans:** 6 plans in 6 waves
+**Evidence:** [Phase 10.2 validation](phases/10.2-ifc2x3-property-knowledge-retrieval-and-resolution/10.2-VALIDATION.md)
 
-**Wave 1**
+### Phase 10.3: Batch Window Repair and Dataset Benchmark Hygiene (INSERTED)
 
-- [x] `05-01-PLAN.md` - Agent state contract, transcript, missing facts, and
-  redaction primitives
+**Status:** Complete — 2026-07-24
 
-**Wave 2** *(blocked on Wave 1 completion)*
+**Goal:** Prove a genuine five-Window transaction on a larger IFC while making
+dataset and benchmark identities reproducible and non-destructive.
 
-- [x] `05-02-PLAN.md` - Missing-fact diagnostics to bounded Chinese questions
+**Requirements:** DATA-01, DATA-02, BATCH-01, BATCH-02, BATCH-03, BATCH-04,
+BATCH-05
 
-**Wave 3** *(blocked on Wave 2 completion)*
+**Depends on:** Phases 10, 10.1 and 10.2
 
-- [x] `05-03-PLAN.md` - Answer merge and Draft/Formal transitions
+**Plans:** 1 plan in 4 waves
 
-**Wave 4** *(blocked on Wave 3 completion)*
+- [x] **Wave 1:** Dataset audit, inventory classification and benchmark manifest.
+- [x] **Wave 2:** Five-chain mutation and Gold-free batch public projection.
+- [x] **Wave 3:** Unified atomic ChangeSet, per-operation L1/L2 and rollback.
+- [x] **Wave 4:** Larger IFC compatibility matrix, real DeepSeek UAT and closure.
 
-- [x] `05-04-PLAN.md` - Fake/file providers and optional Anthropic-compatible
-  Mimo adapter
+**Success criteria:**
 
-**Wave 5** *(blocked on Wave 4 completion)*
+1. Dataset manifests are hash/schema/path validated without moving or deleting
+   existing files, and processed outputs receive an explicit review class.
+2. One mutation of `vvo.ifc` removes five valid Window/Opening chains and
+   produces one source-bound damaged IFC while preserving all host walls.
+3. One bounded user request produces one RepairIntent and one unified,
+   five-operation ChangeSet with no private Ground Truth in Provider input.
+4. One atomic apply publishes a reopened IFC only when all five operations pass
+   independent L1 and L2; any failure suppresses partial success.
+5. Larger BIMNet IFC compatibility and a real DeepSeek five-Window UAT are
+   recorded with prompt size, timing and honest success/failure evidence.
 
-- [x] `05-05-PLAN.md` - Scripted Chinese clarification demo to IFC
+**Evidence:** [Phase 10.3 validation report](../docs/validation/ifc2x3-changeset/phase10.3-five-window-batch-validation-report.md)
 
-**Wave 6** *(blocked on Wave 5 completion)*
+### Phase 10.4: Comparator 0.2 Scalable Preservation Gate (INSERTED)
 
-- [x] `05-06-PLAN.md` - Final verification, summary, security review, and
-  roadmap/state update
+**Status:** Complete - 2026-07-24
 
-**Cross-cutting constraints:**
+**Goal:** Make Evaluation 0.2 complete on BIMNet-scale IFC2X3 files without
+weakening the blocking global preservation guarantee or changing L1/L2
+publication semantics.
 
-- Chinese-first interaction with 1-3 user-facing questions per turn.
-- No silent defaults when required facts are unknown.
-- Draft state is explicit and never compiled.
-- Formal BIM JSON 2.0 validation gates IFC compilation.
-- Fake/file providers are deterministic; live Mimo smoke is optional and
-  secret-safe.
-- The final phase gate is a generated, reopenable IFC file.
+**Requirements:** CMP-01, CMP-02, CMP-03, CMP-04, CMP-05
 
-**Status:** Complete - verified 2026-06-15
+**Depends on:** Phases 8 and 10.3
 
-## Phase 6: Multi-agent Prompt Reliability, Data Expansion, Fine-tuning, and Deployment
+**Plans:** 1 plan in 5 sequential waves
 
-**Goal:** Build a traceable multi-agent prompt and audit architecture, expand
-approved training data only after reliability metrics exist, compare prompt-only,
-conditional repair, optional RAG, and fine-tune approaches, then package the
-supported text2IFC service.
-
-**Requirements:** PROMPT-01, AGENT-04, AGENT-05, REPAIR-01, OBS-01, MODEL-01,
-MODEL-02, DEPLOY-01
-
-**Depends on:** Phase 3, Phase 4, Phase 5
-
-**Canonical refs:**
-
-- `.planning/phases/06-multiagent-prompt-reliability-data-expansion-and-deployment/06-SPEC.md`
-- `.planning/phases/06-multiagent-prompt-reliability-data-expansion-and-deployment/06-CONTEXT.md`
-- `.planning/phases/06-multiagent-prompt-reliability-data-expansion-and-deployment/06-AI-SPEC.md`
-- `.planning/phases/06-multiagent-prompt-reliability-data-expansion-and-deployment/06-RESEARCH.md`
-- `.planning/phases/06-multiagent-prompt-reliability-data-expansion-and-deployment/06-VALIDATION.md`
-- `.planning/phases/06-multiagent-prompt-reliability-data-expansion-and-deployment/06-ACCEPTANCE-TRACE-REPORT.md`
-- `docs/architecture/phase-6-multiagent-design.md`
-
-**Explicit boundary:** Phase 6 starts with prompt registry, traceability, and
-multi-agent responsibility separation before data expansion or fine-tuning.
-Design Brief captures user intent; BIM JSON Generator emits BIM JSON 2.0 or
-Draft; failure routing decides whether no repair is needed, a conditional
-repair attempt is safe, Draft clarification is required, or the run must block;
-Audit Agent reviews semantic coverage but cannot override deterministic
-validation, compile, reopen, generated-IFC, run-report, split, or secret-scan
-gates.
-
-**Plans:** 7 plans in 7 waves
-
-**Wave 0**
-
-- [x] `06-00-PLAN.md` - Prompt registry and multi-agent design contract
-
-**Wave 1** *(blocked on Wave 0 prompt traceability)*
-
-- [x] `06-01-PLAN.md` - Design Brief Agent contract
-
-**Wave 2** *(blocked on Wave 1 Design Brief contract)*
-
-- [x] `06-02-PLAN.md` - BIM JSON Generator orchestration and conditional
-  failure routing
-
-**Wave 3** *(blocked on Wave 2 generation and failure-routing traceability)*
-
-- [x] `06-03-PLAN.md` - Audit Agent and deterministic gate integration
-
-**Wave 4** *(blocked on Wave 3 audit integration)*
-
-- [x] `06-04-PLAN.md` - Experiment harness and reliability metrics
-
-**Wave 5** *(blocked on Wave 4 experiment harness)*
-
-- [x] `06-05-PLAN.md` - Data expansion and model decision
-
-**Wave 6** *(blocked on Wave 5 model decision)*
-
-- [x] `06-06-PLAN.md` - Deployable service and final multi-agent IFC demo
+- [x] **Wave 1:** Baseline instrumentation and fail-closed RED contracts.
+- [x] **Wave 2:** Complete cycle-safe, memoized root fingerprint engine.
+- [x] **Wave 3:** Production integration and authorized-neighborhood caches.
+- [x] **Wave 4:** Legacy equivalence, security and performance regression.
+- [x] **Wave 5:** Fresh AdvancedProject comparator and Production acceptance.
 
 **Cross-cutting constraints:**
 
-- All provider-backed prompt calls must use a versioned prompt template,
-  template hash, structured renderer inputs, and durable trace artifacts.
-- BIM JSON Schema remains the only BIM JSON structural truth.
-- The model layer outputs Design Brief, BIM JSON 2.0, Draft updates, or audit
-  reports only; raw IFC, STEP text, STEP IDs, and low-level helper entities
-  remain forbidden.
-- Repair is not required for successful runs. Failure routing must record
-  whether no repair was needed, repair was attempted, Draft clarification was
-  required, or the run blocked. Any repair attempt may not invent missing user
-  facts and must return Draft questions when feedback cannot be resolved from
-  known facts.
-- Audit Agent cannot pass failed deterministic gates.
-- Every Phase 6 run must write a generated `report.md` as the human-review
-  entry point. The report must expose the original input, Design Brief,
-  rendered prompt, raw output, parsed BIM JSON or Draft, validation feedback,
-  geometry feedback, failure/repair route, audit result, metrics, final IFC
-  path when compiled, and links or paths to the source trace sidecars.
-- Dataset expansion must preserve license status, source provenance, sidecar
-  losses, and Phase 3 scene-family splits.
-- Fine-tuning is selected only if measured prompt-only, conditional repair, and
-  optional RAG baselines justify it.
-- All conversation-specific work happens in the C-drive `multiagent-design`
-  worktree; the E-drive working tree is not edited.
+- Global preservation remains blocking; timeout or incomplete evidence never
+  passes.
+- Evaluation 0.2 statuses, check identifiers, report shape and L2 rules remain
+  compatible.
+- Full IfcDiff is diagnostic by default; a known pre-publication contradiction
+  fails closed.
+- This phase adds no new IFC operation family.
 
-**Status:** Complete - verified 2026-06-21
+**Success criteria:**
 
-## Phase 6.1: Live Mimo Multi-agent Pipeline (INSERTED)
+1. Complete global root fingerprints detect the unauthorized-change fault
+   corpus while reusing shared subgraph calculations.
+2. Policy-derived target/host neighborhoods retain deep structural and geometry
+   checks while shared representation subgraphs use per-run memoization.
+3. vvo and LargeBuilding produce equivalent comparison/evaluation outcomes;
+   vvo runtime regresses by no more than 20%.
+4. Three fresh AdvancedProject comparator runs have median preservation time at
+   most 120 seconds and peak RSS at most 4 GiB; one fresh full Production replay
+   completes within 180 seconds.
+5. The saved real DeepSeek ChangeSet is reapplied in a new directory and
+   reaches an honest publication decision.
 
-**Goal:** Replace the Phase 6 fake-provider acceptance claim with an observable,
-Chinese-first, real-Mimo multi-agent pipeline that reaches validated BIM JSON
-2.0 or an explicit canonical Draft, compiles accepted Formal output to IFC2X3,
-and records exact provider evidence without supervisor-authored semantic facts.
+**Evidence:** [Phase 10.4 validation report](../docs/validation/ifc2x3-changeset/phase10.4-comparator-0.2-validation-report.md)
 
-**Requirements:** LIVE-01, LIVE-02, LIVE-03, LIVE-04, LIVE-05, LIVE-06, OBS-02
+### Phase 10.5: Window Occurrence Fidelity and Validation Acceleration (INSERTED)
 
-**Depends on:** Phase 6
+**Status:** Complete — 2026-07-26
 
-**Canonical refs:**
+**Goal:** Given a complete authorized natural-language request and a damaged
+IFC2X3 model, restore the selected Window/Opening geometry, relationships,
+effective occurrence scalar properties and relevant quantities to Ground Truth
+semantic equivalence, while keeping full Production evaluation within 180
+seconds.
 
-- `.planning/phases/06.1-live-mimo-multiagent-pipeline/06.1-SPEC.md`
-- `.planning/phases/06.1-live-mimo-multiagent-pipeline/06.1-CONTEXT.md`
-- `.planning/phases/06.1-live-mimo-multiagent-pipeline/06.1-AI-SPEC.md`
-- `.planning/phases/06.1-live-mimo-multiagent-pipeline/06.1-RESEARCH.md`
-- `.planning/phases/06.1-live-mimo-multiagent-pipeline/06.1-VALIDATION.md`
+**Requirements:** WFID-01, WFID-02, WFID-03, WFID-04, WFID-05, WFID-06
 
-**Explicit boundary:** Every acceptance run calls the configured Mimo Anthropic
-API for the Design Brief Agent, BIM JSON Generator, and Audit Agent. Repair also
-uses Mimo when deterministic feedback makes repair eligible. Fake/file
-providers remain available only for isolated unit tests and replay; their output
-cannot support a live quality, completion, or deployment claim. The Observer is
-not a semantic agent and may never delete ambiguity, add facts, or reinterpret
-user intent to force a run through a gate.
+**Depends on:** Phases 7, 8, 9, 09.1 and 10 through 10.4
 
-**Plans:** 7 plans in 7 waves
+**Plans:** 3/3 plans executed
 
-**Wave 0**
-
-- [x] `06.1-00-PLAN.md` - Real Mimo envelope, streaming, and trace contract
-
-**Wave 1** *(verified on Wave 0 exact response provenance)*
-
-- [x] `06.1-01-PLAN.md` - Dynamic Design Brief Agent and clarification ownership
-
-**Wave 2** *(verified on Wave 1 readiness contract)*
-
-- [x] `06.1-02-PLAN.md` - Real Chinese multi-turn orchestration
-
-**Wave 3** *(verified on Wave 2 clarified Design Brief)*
-
-- [x] `06.1-03-PLAN.md` - Formal/Draft Generator contracts and output routing
-
-**Wave 4** *(verified on Wave 3 terminal generation route)*
-
-- [x] `06.1-04-PLAN.md` - Conditional Mimo repair without supervisor mutation
-
-**Wave 5** *(verified on Wave 4 terminal generation route)*
-
-- [x] `06.1-05-PLAN.md` - Real Mimo Audit and generated review report
-
-**Wave 6** *(blocked on final IFC acceptance gates)*
-
-- [x] `06.1-06-PLAN.md` - Live acceptance matrix, IFC artifact, and final review
-
-**Acceptance artifacts:**
-
-- `dataset/processed/agent-demo/phase6.1-mimo-live/output.ifc`
-- `dataset/processed/agent-demo/phase6.1-mimo-live/report.md`
-- A trace bundle containing original Chinese input, conversation turns,
-  Design Brief prompt/request/raw response/parsed output, Generator evidence,
-  validation and geometry feedback, conditional repair evidence, Audit
-  evidence, provider `id`/`model`/`stop_reason`/`usage`, event stream, metrics,
-  and secret-scan result.
-- Live matrix sidecars also cover non-IFC terminal outcomes: `unknown-answer`
-  must stop at canonical Draft after the user says a required fact is unknown,
-  and `invalid-contract` replay must block as `unknown_contract` while staying
-  excluded from live-quality metrics.
-
-**Status:** Complete - verified with real Mimo and final IFC gates 2026-06-23
-
-## Phase 6.2: Interactive CLI with OpenAI-Compatible Mimo Agent Orchestration (INSERTED)
-
-**Goal:** Turn the Phase 6.1 scripted-answer live workflow into a Chinese-first
-interactive CLI where the user types the request and clarification answers,
-while the system persists role-isolated Mimo evidence, deterministic gates,
-generated report, and a final IFC2X3 artifact.
-
-**Requirements:** CLI-01, CLI-02, CLI-03, CLI-04, CLI-05, CLI-06, CLI-07
-
-**Depends on:** Phase 6.1
-
-**Canonical refs:**
-
-- `.planning/phases/06.2-interactive-cli-with-openai-compatible-mimo-agent-orchestration/06.2-SPEC.md`
-- `.planning/phases/06.2-interactive-cli-with-openai-compatible-mimo-agent-orchestration/06.2-CONTEXT.md`
-- `.planning/phases/06.2-interactive-cli-with-openai-compatible-mimo-agent-orchestration/06.2-AI-SPEC.md`
-- `.planning/phases/06.2-interactive-cli-with-openai-compatible-mimo-agent-orchestration/06.2-RESEARCH.md`
-- `.planning/phases/06.2-interactive-cli-with-openai-compatible-mimo-agent-orchestration/06.2-VALIDATION.md`
-- `.planning/phases/06.2-interactive-cli-with-openai-compatible-mimo-agent-orchestration/06.2-PLAN-OUTLINE.md`
-- `docs/reference/mimo-openai-api.md`
-
-**Explicit boundary:** Phase 6.2 prioritizes the local CLI clarification
-experience over public API/service work. It may use OpenAI Agents SDK only if
-Wave 0 proves compatibility with Mimo Chat Completions and preserves required
-trace evidence. Otherwise the native text2IFC orchestrator plus OpenAI Python
-SDK provider remains the implementation path. Fake/file/replay providers remain
-unit-test tools and cannot satisfy live CLI acceptance.
-
-**Final acceptance artifacts:**
-
-- `dataset/processed/agent-demo/phase6.2-interactive-cli/sessions.sqlite`
-- `dataset/processed/agent-demo/phase6.2-interactive-cli/final-acceptance.json`
-  naming the accepted `session_id` and `session_hash`
-- `dataset/processed/agent-demo/phase6.2-interactive-cli/runs/<session_hash>/output.ifc`
-- `dataset/processed/agent-demo/phase6.2-interactive-cli/runs/<session_hash>/report.md`
-- `dataset/processed/agent-demo/phase6.2-interactive-cli/runs/<session_hash>/session-export.json`
-- Large-object artifacts linked from the session DB as needed.
-
-**Plans:** 7 plans in 7 waves
-
-**Wave 0**
-
-- [x] `06.2-00-PLAN.md` - OpenAI Agents SDK research and OpenAI-compatible
-  Mimo compatibility checkpoint
-
-**Wave 1** *(blocked on Wave 0 provider/framework decision)*
-
-- [x] `06.2-01-PLAN.md` - Interactive CLI session shell, shared DB, and
-  query/resume/export interface
-
-**Wave 2** *(blocked on Wave 1 durable session shell)*
-
-- [x] `06.2-02-PLAN.md` - Interactive Design Brief clarification loop
-
-**Wave 3** *(blocked on Wave 2 ready Design Brief or canonical Draft routing)*
-
-- [x] `06.2-03-PLAN.md` - BIM JSON generation and deterministic IFC gates
-
-**Wave 4** *(blocked on Wave 3 terminal generation and gate state)*
-
-- [x] `06.2-04-PLAN.md` - Audit, conditional repair, and generated report
-  integration
-
-**Wave 5** *(blocked on Wave 4 generated report integration)*
-
-- [x] `06.2-05-PLAN.md` - Interactive acceptance matrix and final
-  Codex-as-user CLI IFC demo
-
-**Wave 6** *(blocked on Wave 5 final artifact bundle)*
-
-- [x] `06.2-06-PLAN.md` - Final verification, security review, and roadmap
-  state update
+- [x] **Wave 1:** `10.5-01` - Complete occurrence input, authorized
+  exact-occurrence/cohort reuse, reusable bundles, and atomic Window/Opening
+  semantic authoring.
+- [x] **Wave 2** *(blocked on Wave 1)*: `10.5-02` - Ground Truth occurrence
+  comparator, blocking fidelity integration, and human-readable IFC comparison.
+- [x] **Wave 3** *(blocked on Waves 1-2)*: `10.5-03` - Validation cache,
+  bounded parallel evaluation, offline acceptance matrix, AdvancedProject
+  performance gates and real DeepSeek no-fallback UAT.
 
 **Cross-cutting constraints:**
 
-- All Phase 6.2 work happens in the C-drive `multiagent-design` worktree; the
-  E-drive working tree is not edited.
-- The CLI may support scripted stdin for deterministic tests, but the scripted
-  path must exercise the same code path as a human terminal session.
-- The shared SQLite session DB is the primary evidence container for Phase 6.2
-  CLI runs. Each run receives a stable `session_id` and `session_hash`;
-  artifact files are linked payloads or exported review bundles.
-- Session query, resume, and export commands are part of the Phase 6.2 product
-  surface, not optional debug helpers.
-- Final acceptance requires a real-time UAT in which Codex acts as the user and
-  Mimo acts as the Agent provider. Scripted stdin is regression support, not the
-  highest acceptance evidence.
-- Real-provider claims require real Mimo response IDs, model, finish reason,
-  usage, raw output, prompt ID/hash, parsed output, and evidence-class labels.
-- A truncated OpenAI-compatible response (`finish_reason: length`) blocks
-  semantic acceptance.
-- The model layer outputs Design Brief, BIM JSON 2.0, canonical Draft, repair
-  output, or Audit only; raw IFC/STEP and low-level IFC helper objects remain
-  forbidden.
-- Formal BIM JSON 2.0 validation gates IFC compilation; Draft and blocked
-  outcomes write reports but no IFC.
-- Every CLI run must generate `report.md` from session DB records and linked
-  artifacts so the user can
-  review original input, transcript, prompts, raw outputs, parsed outputs,
-  gate feedback, route, metrics, Audit, and final artifact paths in one file.
-- OpenAI Agents SDK adoption is conditional on Wave 0 evidence; a rejected SDK
-  does not block the native OpenAI SDK provider path.
+- Every authored fact is explicit, deterministically derived, Type-inherited,
+  copied from an explicitly authorized occurrence, or taken from an explicitly
+  authorized unanimous Type cohort. Retrieval never invents a value.
+- Contextual/identity facts are recomputed or explicitly overridden and are
+  never copied blindly.
+- Window/Opening effective semantic equivalence is blocking; GUID, STEP,
+  serialization, ownership-graph and low-level geometry-node differences remain
+  diagnostic `authoring_exactness`.
+- Global preservation and IfcOpenShell validation remain complete and
+  fail-closed. Acceleration may change scheduling/reuse only.
+- Private Ground Truth remains evaluator-only and never enters either Provider
+  prompt.
 
-**Status:** Complete - verified 2026-06-26 with accepted live IFC session
-`0fe9f14742b5c5d7`
+**Success criteria:**
 
-## Phase 6.2-fix: Real-time REPL CLI UAT Correction (INSERTED)
+1. One bounded request can express exact scalar Psets, Window/Opening
+   quantities, one reusable bundle, per-operation overrides, and an explicitly
+   authorized exact occurrence or unanimous same-Type cohort.
+2. Exact-reference ambiguity, empty/conflicting cohorts, missing values,
+   unsupported authoring, timeout, cache corruption and worker failure clarify
+   or fail closed and publish no successful IFC.
+3. A private comparator classifies every supported Ground Truth fact as
+   `matched`, `not_in_user_text`, `unsupported_authoring`, `wrong_value`, or
+   `ownership_only` and reports independent geometry, L2 semantic, occurrence
+   fidelity and authoring-exactness statuses.
+4. Single complete-input, exact-reference, cohort, and five-Window shared-bundle
+   offline cases pass reopened IFC2X3, global preservation, L1/L2 and occurrence
+   fidelity; the five-Window path remains one atomic ChangeSet.
+5. AdvancedProject cold and warm full Production runs each complete within 180
+   seconds and 4 GiB without reducing checks, and one real DeepSeek run records
+   honest success or failure with no fallback.
 
-**Goal:** Correct the Phase 6.2 acceptance gap by delivering a true
-Chinese-first terminal REPL where the user types a request, sees each
-Mimo-authored clarification question before answering, and receives a validated
-IFC2X3 artifact plus a DB-backed review report.
+**Evidence:** [Phase 10.5 validation report](../docs/validation/ifc2x3-changeset/phase10.5-window-fidelity-validation-report.md)
 
-**Requirements:** CLI-02, CLI-03, CLI-04, CLI-05, CLI-06, CLI-07, CLI-08,
-CLI-09, AGENT-05, REPAIR-01, OBS-01
+### Phase 11: Wall Opening and Door Operations
 
-**Depends on:** Phase 6.2
+**Status:** Complete — 2026-07-31. All five plans pass deterministic and real
+Provider acceptance. The 2026-07-29 correction rejects relationship-only false
+positives: Door geometry must overlap its Opening, use the contextual
+Opening-elevation Storey and satisfy exact fill/void/type topology. The
+damaged-only authority rerun proves that private Ground Truth is unavailable
+during repair. Real DeepSeek run `uat-20260731T224900289758Z` used no synthetic
+fallback: the complete case used Stage 1/2 = 1/1, the clarification/resume case
+used total Stage 1/2 = 2/1, and unsupported complex generation stopped at
+Stage 1/2 = 1/0 with exact `DOOR_OPERATION_TYPE_UNSUPPORTED`. Both published
+IFC files independently reopen as IFC2X3 and pass strict L0/L1/L2. The checked-
+in Proof collection passes as 16 cases, 45 operations, 247 files and 48 IFC
+reopens; 11 cases are independently recomputed and five older Window cases are
+explicitly identified as legacy artifact-only evidence.
 
-**Canonical refs:**
+**Goal:** Extend the Registry with opening-only, Door+Opening and
+Door-into-existing-Opening operations without copying the Window pipeline,
+while adding per-operation RepairIntent routing and token-bounded prompt
+profiles.
 
-- `.planning/phases/06.2-fix-real-time-repl-cli-uat/06.2-fix-SPEC.md`
-- `.planning/phases/06.2-fix-real-time-repl-cli-uat/06.2-fix-PLAN-OUTLINE.md`
+**Requirements:** OPS-01, OPS-02
 
-**Explicit boundary:** This phase does not replace the Phase 6.2 backend
-pipeline, provider path, session DB, query/export commands, Generator, Audit,
-or compiler. It fixes the user-facing acceptance boundary and the trust gates
-around accepted IFC output. Scripted stdin, prewritten answer files, fake
-providers, and replay evidence remain regression tools only and cannot satisfy
-final Phase 6.2-fix acceptance. After UAT defect 003, generated-IFC gate
-feedback must reach decisive Audit before acceptance, and confirmed geometry
-failures must route to bounded repair/generation or explicit blocking. After
-UAT defect 004, Formal acceptance must also prove Design-Brief semantic
-coverage: geometry expectations for supported rectangular rooms derive from
-user facts rather than candidate wall placements alone, and unsupported
-explicit facts remain Draft/blocked unless the user waives them. After UAT
-defect 005, parseable invalid Formal Generator output must enter bounded
-repair/regeneration when diagnostics are actionable instead of blocking only
-because no validated `candidate.json` exists.
+**Depends on:** Phases 10.1, 10.2 and 10.5
 
-**Final acceptance artifacts:**
+**Specification:** [Phase 11 SPEC](phases/11-wall-opening-and-door-operations/11-SPEC.md)
 
-- `dataset/processed/agent-demo/phase6.2-fix-repl/sessions.sqlite`
-- `dataset/processed/agent-demo/phase6.2-fix-repl/final-acceptance.json`
-- `dataset/processed/agent-demo/phase6.2-fix-repl/runs/<session_hash>/output.ifc`
-- `dataset/processed/agent-demo/phase6.2-fix-repl/runs/<session_hash>/report.md`
-- `dataset/processed/agent-demo/phase6.2-fix-repl/runs/<session_hash>/session-export.json`
+**Implementation research:** [Phase 11 RESEARCH](phases/11-wall-opening-and-door-operations/11-RESEARCH.md)
 
-**Plans:** 7 plans in 7 waves
+**Validation strategy:** [Phase 11 VALIDATION](phases/11-wall-opening-and-door-operations/11-VALIDATION.md)
 
-**Wave 0**
+**Plans:** 5 sequential plans
 
-- [x] `06.2-fix-00-PLAN.md` - Failure reproduction and REPL acceptance contract
+1. [11-01 — Versioned routing, prompt profiles and authority contracts](phases/11-wall-opening-and-door-operations/11-01-PLAN.md)
+2. [11-02 — Opening/DoorStyle index and deterministic Door resolution](phases/11-wall-opening-and-door-operations/11-02-PLAN.md)
+3. [11-03 — Shared hosted-opening core and deterministic IFC authoring](phases/11-wall-opening-and-door-operations/11-03-PLAN.md)
+4. [11-04 — Door/Opening L1, L2 and occurrence fidelity](phases/11-wall-opening-and-door-operations/11-04-PLAN.md)
+5. [11-05 — Dataset matrix, real DeepSeek UAT and Proof publication](phases/11-wall-opening-and-door-operations/11-05-PLAN.md)
 
-**Wave 1** *(blocked on Wave 0 RED tests)*
+**Execution sequence:**
 
-- [x] `06.2-fix-01-PLAN.md` - Chinese REPL entrypoint and stepwise Design
-  Brief loop
-
-**Wave 2** *(blocked on Wave 1 REPL interaction)*
-
-- [x] `06.2-fix-02-PLAN.md` - REPL-to-IFC route, report evidence, and strict
-  verifier
-
-**Wave 3** *(blocked on Wave 2 verifier and report gates)*
-
-- [ ] `06.2-fix-03-PLAN.md` - Real Mimo REPL UAT, final verification, and
-  documentation closure
-
-**Wave 4** *(inserted after Wave 3 UAT defect 003)*
-
-- [x] `06.2-fix-04-PLAN.md` - Geometry feedback to Audit and bounded repair
-  loop
-
-**Wave 5** *(inserted after Wave 4 live UAT review defect 004)*
-
-- [x] `06.2-fix-05-PLAN.md` - Semantic fidelity gate and BIM JSON capability
-  contract
-
-**Wave 6** *(inserted after Wave 5 final UAT defect 005)*
-
-- [x] `06.2-fix-06-PLAN.md` - Invalid Formal recovery loop and Design Brief
-  gate normalization
+| Wave | Plan | Blocking outcome |
+|---:|---|---|
+| 1 | 11-01 | RepairIntent 0.5, Prompt Profile 0.1, Manifest 0.3 and ChangeSet 0.4 are frozen and selected-profile prompts work |
+| 2 | 11-02 | Opening/Type evidence and all blocking Door facts resolve or clarify deterministically |
+| 3 | 11-03 | Opening-only and both Door IFC operations apply atomically on the shared hosted-opening core |
+| 4 | 11-04 | Independent L1/L2/occurrence/global gates pass for single, batch and mixed operations |
+| 5 | 11-05 | Real datasets, AdvancedProject and real DeepSeek produce reproducible accepted evidence |
 
 **Cross-cutting constraints:**
 
-- Final accepted evidence must be `interaction_mode: "human_repl_live"` and
-  `input_source: "terminal"`.
-- The REPL must print/persist Mimo's assistant question before reading the
-  user's answer.
-- Scripted stdin, file input, fake providers, and replay evidence cannot
-  satisfy final acceptance even if they produce valid IFC.
-- Regression tests may use fake providers and scripted IO, but they must be
-  labelled as regression evidence only.
-- Formal BIM JSON 2.0 validation still gates IFC compilation.
-- Generated-IFC compile, reopen, and geometry feedback must be available to
-  decisive Audit before final acceptance.
-- Audit may classify failed deterministic gates but cannot override them.
-- True candidate geometry failures route to bounded repair/generation; gate
-  disputes block for human/developer review.
-- Supported rectangular-room semantic geometry expectations derive from the
-  Design Brief and explicit user facts, not only from candidate wall boxes.
-- Every explicit user fact must be represented, compiler-generated,
-  unsupported/Draft, waived by the user, or blocked as unknown capability
-  before Formal acceptance.
-- Custom property text preservation cannot count as faithful IFC semantic
-  support.
-- Draft, quit, and blocked outcomes write trace/report artifacts but no IFC.
-- All work remains in the C-drive `multiagent-design` worktree; the E-drive
-  working tree is not edited.
+- Stage 1 records component/action routing in each RepairIntent operation; the
+  runtime then loads only referenced operation contracts and few-shots.
+- Exact `IfcDoorStyle` reuse preserves that Type unchanged. Without reuse, the
+  compiler creates only a supported dedicated single-swing/explicitly
+  `NOTDEFINED` style.
+- Public target selection must not require an IFC GlobalId. Descriptive
+  selectors resolve against the current IFC index; a duplicate DoorStyle name
+  may be narrowed by an explicit formal OperationType, otherwise it clarifies.
+- Missing optional Door features are omitted; missing blocking facts clarify;
+  requested unsupported features fail in deterministic capability code.
+- Space may resolve target/viewpoint but Phase 11 does not author
+  `IfcRelSpaceBoundary`.
+- Existing Door replacement/deletion, project-coordinate placement, complex
+  generated Door styles and curved walls remain deferred.
+- For vvo multi-storey host walls, direct wall containment may be a base
+  Storey while the retained Opening world elevation belongs to an upper
+  Storey. Phase 11 records this as an IFC authoring exception and uses the
+  unique contextual Opening-elevation Storey; missing, conflicting or
+  equidistant candidates fail closed.
 
-**Status:** Waves 0-2 implemented and automatically verified 2026-06-26.
-Wave 3 real UAT found defects 001 and 002 that were fixed, then exposed UAT
-defect 003: Audit accepted before final geometry feedback existed. Wave 4 is
-implemented and automatically verified: generated-IFC gate feedback now reaches
-Audit before acceptance, Audit override attempts block, and Audit `revise` can
-route true geometry failures to bounded repair and a second gate/Audit pass.
-Follow-up live session `d462b95089755d47` proved the real REPL can generate a
-viewable IFC, but review exposed defect 004: candidate-derived geometry
-expectations can be circular, and unsupported explicit facts such as inward
-door opening can be silently lost. Wave 5 is now planned to add semantic
-capability and coverage gates before final Phase 6.2-fix acceptance. Wave 5
-implementation and automated verification are complete: semantic geometry,
-semantic capability, semantic coverage, report, Audit evidence, and verifier
-gates are implemented. Final UAT then exposed defect 005: parseable invalid
-Formal Generator output was not treated as a repair source, so repair blocked
-with `previous_candidate=None`. Wave 6 is implemented and automatically
-verified: parseable invalid Formal output can now enter bounded repair when
-diagnostics are actionable, repair route evidence records the invalid Formal
-source, and Design Brief outside-boundary wording is normalized for semantic
-geometry gates. Final Phase 6.2-fix acceptance still requires a fresh real
-human-terminal Mimo REPL run after Wave 6.
+**Success criteria:**
 
-## Phase 6.3: Gate-Audit Fusion, Dynamic Routing, and Compact Trace (INSERTED)
+1. `add_opening_to_wall` has its own target/parameter/L1/L2 contracts.
+2. `add_door_with_opening_to_wall` and
+   `fill_existing_opening_with_door` restore host/opening/filling topology,
+   exact or generated Door Type, viewpoint-aware operation semantics and
+   required L2 facts.
+3. Family/action routing selects only relevant operation prompt profiles and
+   few-shots; unsupported capability is rejected by program logic rather than
+   improvised by the Provider.
+4. Five-Door and mixed Window/Door cases remain one transaction with
+   independently evaluated L1/L2 and all-or-nothing publication.
+5. LargeBuilding, vvo and AdvancedProject offline cases plus complete and
+   clarification-driven real DeepSeek paths pass reopened-IFC validation,
+   occurrence fidelity and full-model preservation.
 
-**Goal:** Add scalable complex-building reliability to the live text2IFC
-pipeline by fusing deterministic gates with dynamic Audit reasoning, routing
-failures back to the correct stage, and reducing default trace artifacts enough
-to speed up normal generation runs without losing auditability.
+### Phase 12: Beam and Column Operations
 
-**Requirements:** GEN-03, GATE-01, GATE-02, GATE-03, ROUTE-01, TRACE-02,
-AGENT-04, AGENT-05, REPAIR-01, OBS-01
+**Status:** Complete — 2026-09-03. The corrective property-authority work and
+deferred Wave 15/16 acceptance closed through Phase 12.1. The accepted genuine
+R1 run passed all 12 frozen contracts, and independent Proof 0.3 plus final
+IFCCompare/collection validation passed. See the
+[final validation report](../docs/validation/ifc2x3-changeset/phase12-beam-column-validation-report.md).
 
-**Depends on:** Phase 6.2-fix
+**Goal:** Prove the common ChangeSet architecture across non-opening structural
+elements.
 
-**Canonical refs:**
+**Requirements:** OPS-03, OPS-04
 
-- `.planning/phases/06.3-gate-audit-fusion-dynamic-routing-and-compact-trace/06.3-SPEC.md`
-- `.planning/phases/06.3-gate-audit-fusion-dynamic-routing-and-compact-trace/06.3-PLAN-OUTLINE.md`
+**Depends on:** Phases 8, 9 and 11; uses the property contract proven in Phase
+10.1 and the optional retrieval interface evaluated in Phase 10.2
 
-**Explicit boundary:** Phase 6.3 is not Phase 7 and not a BIM JSON schema
-redesign. It improves the current live REPL pipeline so complex multi-storey
-requests can be dynamically audited, safely blocked, and routed to Design
-Brief, Generator, local repair, Draft, or gate-dispute review. The phase may
-add sidecars such as `expected-facts.json`, `gate-summary.json`,
-`route-decision.json`, and `trace-manifest.json`, but JSON Schema remains the
-single BIM JSON structural truth. Single-room and two-room demos are smoke
-regressions only; the primary target is complex multi-storey no-false-accept
-behavior and accurate routing. Compact trace exists to speed normal generation
-and reduce review noise while preserving debug/full trace on demand.
+**Specification:** [Phase 12 SPEC](phases/12-beam-and-column-operations/12-SPEC.md)
 
-**Plans:** 7 plans in 7 waves
+**Implementation research:** [Phase 12 RESEARCH](phases/12-beam-and-column-operations/12-RESEARCH.md)
 
-**Wave 0**
+**Pattern map:** [Phase 12 PATTERNS](phases/12-beam-and-column-operations/12-PATTERNS.md)
 
-- [x] `06.3-00-PLAN.md` - Complex multi-storey failure fixture and
-  no-false-accept baseline
+**Validation strategy:** [Phase 12 VALIDATION](phases/12-beam-and-column-operations/12-VALIDATION.md)
 
-**Wave 1** *(blocked on Wave 0 fixture baseline)*
+**Plans:** 16/16 primary plans complete; corrective 12-15A/B/C lineages closed
+by the final Phase 12/12.1 validation report
 
-- [x] `06.3-01-PLAN.md` - Gate-Audit evidence bundle and applicability states
+- [x] **Wave 1:** [12-01 - Structural prompt profiles and selected routing](phases/12-beam-and-column-operations/12-01-PLAN.md)
+- [x] **Wave 2** *(blocked on Wave 1)*: [12-02 - Structural occurrence and Type index](phases/12-beam-and-column-operations/12-02-PLAN.md)
+- [x] **Wave 3** *(blocked on Wave 2)*: [12-03 - Structural occurrence property and RAG authority integration](phases/12-beam-and-column-operations/12-03-PLAN.md)
+- [x] **Wave 4** *(blocked on Wave 3)*: [12-04 - Deterministic structural Type factories](phases/12-beam-and-column-operations/12-04-PLAN.md)
+- [x] **Wave 5** *(blocked on Wave 4)*: [12-05 - Repair-local straight rectangular member geometry](phases/12-beam-and-column-operations/12-05-PLAN.md)
+- [x] **Wave 6** *(blocked on Wave 5)*: [12-06 - Exact-Type and optional material/Pset preservation](phases/12-beam-and-column-operations/12-06-PLAN.md)
+- [x] **Wave 7** *(blocked on Wave 6)*: [12-07 - Registered add_beam resolution and application](phases/12-beam-and-column-operations/12-07-PLAN.md)
+- [x] **Wave 8** *(blocked on Wave 7)*: [12-08 - Registered add_column resolution and application](phases/12-beam-and-column-operations/12-08-PLAN.md)
+- [x] **Wave 9** *(blocked on Wave 8)*: [12-09 - Strict structural evaluation and mixed atomicity](phases/12-beam-and-column-operations/12-09-PLAN.md)
+- [x] **Wave 10** *(blocked on Wave 9)*: [12-10 - Structural mutation and private-Gold isolation](phases/12-beam-and-column-operations/12-10-PLAN.md)
+- [x] **Wave 11** *(blocked on Wave 10)*: [12-11 - Family-neutral strict independent Proof validator](phases/12-beam-and-column-operations/12-11-PLAN.md)
+- [x] **Wave 12** *(blocked on Wave 11)*: [12-12 - d7n/vvo offline runner and curated strict Proof contract](phases/12-beam-and-column-operations/12-12-PLAN.md)
+- [x] **Wave 13** *(blocked on Wave 12)*: [12-13 - Live transcript, preflight and no-fallback contract](phases/12-beam-and-column-operations/12-13-PLAN.md)
+- [x] **Wave 14** *(blocked on Wave 13)*: [12-14 - Live Proof curation acceptance contract](phases/12-beam-and-column-operations/12-14-PLAN.md)
+- [x] **Wave 15:** [12-15 - Execute and independently curate real DeepSeek structural UAT](phases/12-beam-and-column-operations/12-15-PLAN.md) — accepted through the Phase 12.1 R1 successor run and Proof; failed historical attempts remain unchanged.
+- [x] **Wave 16:** [12-16 - Regress, report and conditionally close Phase 12](phases/12-beam-and-column-operations/12-16-PLAN.md) — final regressions, IFCCompare boundary and closure report complete.
 
-**Wave 2** *(blocked on Wave 1 shared evidence bundle)*
-
-- [x] `06.3-02-PLAN.md` - Dynamic expected facts from Design Brief
-
-**Wave 3** *(blocked on Wave 2 expected facts)*
-
-- [x] `06.3-03-PLAN.md` - Dynamic completeness, containment, and opening/fill
-  gates
-
-**Wave 4** *(blocked on Wave 3 dynamic gates)*
-
-- [x] `06.3-04-PLAN.md` - Route decisions and bounded stage back-routing
-
-**Wave 5** *(blocked on Wave 4 route decisions)*
-
-- [x] `06.3-05-PLAN.md` - Compact trace levels and artifact write reduction
-
-**Wave 6** *(blocked on Wave 5 compact trace)*
-
-- [x] `06.3-06-PLAN.md` - Complex-building matrix, final verification, and
-  documentation closure
+Corrective subplans [12-15A](phases/12-beam-and-column-operations/12-15A-PLAN.md),
+[12-15B](phases/12-beam-and-column-operations/12-15B-PLAN.md) and
+[12-15C](phases/12-beam-and-column-operations/12-15C-PLAN.md) produced the
+current Stage 1 scope, structural Type-intent and transaction-clause baseline.
+They are prerequisite implementation history, not accepted Wave 15 live Proof.
 
 **Cross-cutting constraints:**
 
-- Gate and Audit form one review system: gates provide deterministic evidence,
-  Audit provides dynamic classification, and failed applicable gates cannot be
-  accepted by Audit wording.
-- Every nontrivial gate must declare applicability, basis, and source evidence.
-- Expected facts derive from Design Brief and transcript evidence, not
-  hard-coded floor, room, wall, door, or window counts.
-- Non-two-storey coverage must exercise expected-fact extraction, dynamic
-  gates, and route decisions; extraction-only coverage is not enough.
-- Gate summary, Audit input, route decision, report, and trace manifest must
-  bind to the same candidate through matching evidence hashes.
-- Stage routes must distinguish Design Brief revision, Generator regeneration,
-  local repair, Draft/clarification, gate dispute, and blocked failure.
-- Back-routing is bounded and observable; stalled or non-improving loops block
-  with evidence.
-- Compact trace is the default to reduce normal run file writes and latency;
-  debug/full trace remains available for provider and prompt audit. Compact
-  non-accept routes must still preserve or link recoverable failure evidence.
-- Phase 6.3 may add orchestration sidecars but does not silently change BIM
-  JSON 2.0 schema or add a second BIM JSON model.
-- All work remains in the C-drive `multiagent-design` worktree; the E-drive
-  working tree is not edited.
+- Stage 1 keeps the existing single compact classification/extraction call;
+  Stage 2 receives only selected full operation profiles and few-shots.
+- Noncanonical Provider fields fail closed. No compatibility aliases are
+  added to accommodate model output.
+- Missing Type-reuse intent creates one dedicated deterministic structural
+  Type; exact Type reuse remains unchanged. Material and Psets are optional
+  unless explicitly requested or exactly authorized.
+- Structural L1 requires axis endpoints/base/top within 5 mm,
+  direction/horizontal-or-vertical tilt within 0.1 degrees, section/member
+  dimensions within 1 mm, and exact containment/Type cardinality.
+- Vector/RAG recall remains discovery only; executable property values require
+  exact typed authority.
+- Damaged/public production input is isolated from original/private Gold.
+  `d7n` and `vvo` prove cross-scene BIMNet compatibility only.
+- Real DeepSeek starts only after all offline gates pass, never uses synthetic,
+  cached or prerecorded fallback, and cannot close the phase until a separate
+  validator reopens and recomputes strict Proof.
 
-**Status:** Complete - verified 2026-07-02. Phase 6.3 closes the reliability
-architecture for complex-building no-false-accept, dynamic Gate/Audit routing,
-hash-bound evidence, and compact trace. The complex two-storey matrix case is
-currently an honest blocked route, not a claimed accepted live IFC.
+**Success criteria:**
 
-## Phase 6.4: Feedback Routing Loop MVP and Live DeepSeek Matrix (INSERTED)
+1. Beam and Column operations use operation-specific target, placement,
+   containment, type/material and L2 contracts.
+2. Structural additions pass IFC2X3 reopen, L1 geometry/relationship and L2
+   semantic checks.
+3. Common orchestration remains free of Window/Door-specific fields.
 
-**Goal:** Turn the current mostly linear text2IFC workflow into a
-feedback-capable loop by normalizing validation, compiler, gate, Audit,
-provider, and runtime failures into structured Issues, aggregating them into
-RouteDecision v2, recording bounded feedback rounds, producing matrix
-artifacts, and proving the result with deterministic TDD plus real DeepSeek
-live workflow evidence.
+### Phase 12.1: Property Resolution RAG and Reranker Correction
 
-**Requirements:** GEN-02, GEN-03, GATE-01, ROUTE-01, TRACE-02, AGENT-04,
-AGENT-05, REPAIR-01, OBS-01, CLI-02, CLI-03, CLI-04, CLI-05, CLI-06, CLI-08
+**Status:** Complete — 2026-09-03. Plan 12.1-07 accepted a new uninterrupted
+R1 12/12 genuine run, independent Proof 0.3 and the frozen IFCCompare boundary.
 
-**Depends on:** Phase 6.3
+**Goal:** Replace active reviewed-alias/local-consensus property authorization
+with class-applicable multilingual vector retrieval, one independent bounded
+Property Resolution Provider stage, deterministic admissibility and
+program-constructed ExactPropertyIntent, then finish Phase 12 live acceptance.
 
-**Canonical refs:**
+**Requirements:** RAG-05, RAG-06, RAG-07, OPS-03, OPS-04
 
-- `.planning/phases/06.4-feedback-routing-loop-mvp-and-live-deepseek-matrix/06.4-SPEC.md`
-- `.planning/phases/06.4-feedback-routing-loop-mvp-and-live-deepseek-matrix/06.4-PLAN-OUTLINE.md`
+**Depends on:** Phase 10.1 exact property authority, Phase 10.2 historical
+knowledge/vector baseline, Phase 12 Plans 12-01 through 12-14 and the current
+12-15A/B/C correction baseline
 
-**Explicit boundary:** Phase 6.4 prioritizes the feedback loop mechanism over
-making one complex two-storey prompt pass. It does not introduce RAG,
-fine-tuning, deployment changes, large BIM JSON schema redesign, or
-case-specific production fixes. Deterministic TDD/regression tests must pass
-before real DeepSeek live tests. Live acceptance requires real provider
-evidence and cannot be satisfied by fake/file/replay providers, prewritten
-`answers.json`, or exact scripted clarification transcripts.
+**Context:** [Phase 12.1 CONTEXT](phases/12.1-property-resolution-rag-reranker/12.1-CONTEXT.md)
 
-**Plans:** 10 plans in 10 waves
+**Specification:** [Phase 12.1 SPEC](phases/12.1-property-resolution-rag-reranker/12.1-SPEC.md)
 
-**Wave 0**
+**Implementation research:** [Phase 12.1 RESEARCH](phases/12.1-property-resolution-rag-reranker/12.1-RESEARCH.md)
 
-- [x] `06.4-00-PLAN.md` - Issue and RouteDecision v2 contracts
+**Validation strategy:** [Phase 12.1 VALIDATION](phases/12.1-property-resolution-rag-reranker/12.1-VALIDATION.md)
 
-**Wave 1** *(blocked on Wave 0 contracts)*
+**Plans:** 7/7 plans executed
 
-- [x] `06.4-01-PLAN.md` - Failure source Issue normalization
-
-**Wave 2** *(blocked on Wave 1 normalizers)*
-
-- [x] `06.4-02-PLAN.md` - Bounded feedback round controller
-
-**Wave 3** *(blocked on Wave 2 feedback rounds)*
-
-- [x] `06.4-03-PLAN.md` - Matrix artifacts and report integration
-
-**Wave 4** *(blocked on Wave 3 matrix/report artifacts)*
-
-- [x] `06.4-04-PLAN.md` - Adaptive CLI and live UAT harness
-
-**Wave 5** *(blocked on Wave 4 live UAT harness)*
-
-- [x] `06.4-05-PLAN.md` - Real DeepSeek live matrix and final verification
-
-**Wave 6** *(supplemental verification; blocked on Wave 5 live evidence)*
-
-- [x] `06.4-06-PLAN.md` - Supplemental live chain coverage evidence
-
-**Wave 7** *(manual-IFC bugfix; blocked on Wave 6 evidence)*
-
-- [x] `06.4-07-PLAN.md` - Geometry truth, stair frame, and Gate/Audit redesign
-
-**Wave 8** *(bounded orchestration stabilization; blocked on Wave 7)*
-
-- [x] `06.4-08-PLAN.md` - Gate-authoritative bounded regeneration and live closure
-
-**Wave 9** *(datum/stair truth bugfix; blocked on Wave 8)*
-
-- [x] `06.4-09-PLAN.md` - Canonical slab/roof/stair expectations, stepped
-  `IfcStairFlight` compilation, and authoritative world-geometry checks
+- [x] **Wave 1:** [12.1-01 - Additive Stage 1.5 schemas, policy contract and Prompt](phases/12.1-property-resolution-rag-reranker/12.1-01-PLAN.md)
+- [x] **Wave 2:** [12.1-02 - Alias-free multilingual vector runtime](phases/12.1-property-resolution-rag-reranker/12.1-02-PLAN.md)
+- [x] **Wave 3:** [12.1-03 - Bounded Property Resolution Provider stage](phases/12.1-property-resolution-rag-reranker/12.1-03-PLAN.md)
+- [x] **Wave 4:** [12.1-04 - Admissibility gate and ExactPropertyIntent construction](phases/12.1-property-resolution-rag-reranker/12.1-04-PLAN.md)
+- [x] **Wave 5:** [12.1-05 - Durable public API integration and clarification resume](phases/12.1-property-resolution-rag-reranker/12.1-05-PLAN.md)
+- [x] **Wave 6:** [12.1-06 - Frozen retrieval evaluation, Stage 1.5 offline contract, five-family regression and zero-network preflight](phases/12.1-property-resolution-rag-reranker/12.1-06-PLAN.md) — real local BGE-M3/Qdrant retrieval, five-family/offline full-chain and preflight 0.4 passed; Stage 1.5 semantic capability is explicitly not evaluated here. See [summary](phases/12.1-property-resolution-rag-reranker/12.1-06-SUMMARY.md).
+- [x] **Wave 7:** [12.1-07 - Genuine 60-case Stage 1.5 semantic evaluation, four-case DeepSeek UAT, independent Proof, IFCCompare and closeout](phases/12.1-property-resolution-rag-reranker/12.1-07-PLAN.md) — final R1 run `r1-20260902T152701658266Z` passed 12/12 with 40 genuine calls; curated Proof 0.3 and final IFCCompare/collection validation passed. Final-code Plan 07 compatibility run `uat-20260902T180900748385Z` passed 4/4 with 11 genuine calls. Its changed-scope curator packaging limitation is documented and is not represented as a second curated Proof. Historical Plan 07 false/pending fields remain immutable and are superseded only by additive closure evidence. See the [summary](phases/12.1-property-resolution-rag-reranker/12.1-07-SUMMARY.md) and [final Proof matrix](../docs/validation/repair-milestone-r1/repair-proof-matrix-2026-09-03.md).
 
 **Cross-cutting constraints:**
 
-- New machine-readable workflow fields, JSON keys, enum values, issue types,
-  route names, structured logs, and tests use English control vocabulary.
-- Chinese raw user input is preserved as source text; Chinese may appear in
-  transcripts, reports, or optional `message_zh`, but not as control keys.
-- JSON Schema remains the single BIM JSON structural truth.
-- Every terminal non-accept run with a session directory writes
-  `issues.json`, `route-decision.json`, `feedback-rounds.json`,
-  `case-result.json`, and `report.md`.
-- Feedback loops are bounded to `max_feedback_rounds = 3` by default. Early
-  non-improvement requires unchanged structured issue evidence, not merely an
-  unchanged issue count.
-- DeepSeek secrets, headers, private base URLs, and token values never appear
-  in prompts, traces, reports, commits, or final answers.
-- `finish_reason=length` or equivalent provider truncation blocks acceptance.
-- Real DeepSeek live acceptance happens only after deterministic TDD and matrix
-  tests pass.
+- `property_aliases.json` remains historical evidence only. No new reviewed
+  alias, phrase table, keyword family branch or Provider-output compatibility
+  mapping is permitted.
+- Explicit canonical `Pset.Property` requests retain the exact no-RAG path.
+  Natural-language claims follow Stage 1 claim extraction -> deterministic
+  class/template eligibility -> multilingual vector Top-K -> independent Stage
+  1.5 -> deterministic admissibility -> program ExactPropertyIntent -> Stage 2.
+- Vector score/rank/margin are retained retrieval evidence. Neither Top-1 nor a
+  large margin can auto-authorize a property; the bounded LLM reranks offered
+  candidates, and code only decides whether its selection is executable.
+- The frozen 60 cases support three separate claims: Plan 06 retrieval
+  capability, Plan 07 genuine Stage 1.5 semantic capability, and separate
+  four-case E2E repair viability. Deterministic Stage 1.5 doubles are contract/
+  plumbing evidence only and never semantic Candidate evidence.
+- The common path covers existing property-capable Window, Door,
+  Wall/WallStandardCase, Beam and Column occurrences. Wall remains
+  property-only; no `add_wall` operation is added.
+- Door/Window workflows, geometry thresholds, Type/material authority, Storey
+  policy, Ground Truth isolation and atomic publication remain frozen.
+- Any new deterministic defect found by live UAT stops execution for discussion;
+  no patch-and-retry, synthetic/cached fallback or Phase 13 work is allowed.
 
-**Status:** Supplemental Wave 9 completed its deterministic compiler/Gate
-scope on 2026-07-12. Rechecking prior live acceptance exposed missing stair
-expectation coverage, so the earlier accepted session is not evidence that the
-stair system was geometrically correct. Current live DeepSeek runs are honestly
-blocked when stair/opening/window geometry drifts. Component-level constrained
-regeneration remains required before claiming stable multi-storey acceptance.
-Manual visual IFC review remains a separate human acceptance activity.
+**Success criteria:**
 
-**Prior verified scope:** Phase 6.4 has normalized
-Issues, RouteDecision v2, bounded feedback rounds, generated matrix/report
-artifacts, adaptive live-UAT guardrails, a real DeepSeek JSON smoke, a real
-DeepSeek accepted IFC workflow, a real DeepSeek non-accept Draft route, a
-supplemental live-chain coverage report proving 8 / 8 required workflow links,
-a chain-completeness report proving the required deterministic route matrix
-with explicit route boundaries, a route-level live UAT supplement covering all
-defined Phase 6.4 routes, and zero secret findings in generated Phase 6.4
-artifacts.
+1. Active natural-language resolution has no alias authority and production
+   vector health/configured versions are reusable, public and fail-closed.
+2. Stage 1.5 selects only offered class-applicable candidates or asks/declines;
+   code constructs the only executable ExactPropertyIntent.
+3. Plan 06 real-BGE/Qdrant retrieval evaluation passes its frozen Top-K/family/
+   leakage gates and explicitly reports Stage 1.5 semantics not evaluated;
+   Window/Door/Wall/Beam/Column offline chains preserve existing contracts.
+4. Plan 07 genuine 60-case Stage 1.5 semantic evaluation, separate four-case
+   DeepSeek E2E matrix, independent Proof, IFCCompare and final regressions all
+   pass before Phase 12/12.1 and OPS-03/04 close.
 
-## Phase 6.5: Component-scoped ChangeSets and Multi-storey Stability (INSERTED)
+### Phase 13: Large IFC Context and 128k Experiment
 
-**Goal:** Replace full-document Generator regeneration with immutable,
-stable-ID-addressed BIM JSON ChangeSets, then reuse the same deterministic
-composition boundary for dynamic storey packages so real Chinese two- and
-three-storey Text2IFC requests produce stable, traceable IFC2X3 results.
+**Goal:** Validate retrieval and Provider behavior on BIMNet-scale files before
+changing the default input budget.
 
-**Requirements:** GEN-02, GEN-03, GATE-01, GATE-02, GATE-03, ROUTE-01,
-TRACE-02, REPAIR-01, OBS-01, PATCH-01, PATCH-02, PATCH-03, PATCH-04, MULTI-01,
-MULTI-02, STABLE-01
+**Requirements:** SCALE-01, SCALE-02
 
-**Depends on:** Phase 6.4
+**Depends on:** Phases 7 through 12.1, including inserted Phases 09.1, 10.1,
+10.2 and the completed Phase 12/12.1 acceptance chain
 
-**Canonical refs:**
+**Success criteria:**
 
-- `.planning/phases/06.5-component-scoped-changesets-and-multistorey-stability/06.5-SPEC.md`
-- `.planning/phases/06.5-component-scoped-changesets-and-multistorey-stability/06.5-CONTEXT.md`
-- `.planning/phases/06.5-component-scoped-changesets-and-multistorey-stability/06.5-AI-SPEC.md`
-- `.planning/phases/06.5-component-scoped-changesets-and-multistorey-stability/06.5-PLAN-OUTLINE.md`
+1. Large-IFC indexing and retrieval have measured latency, memory, candidate
+   recall and context-size evidence.
+2. A dedicated near-limit experiment distinguishes Provider context window,
+   client input guard and reserved output budget.
+3. The 64k default changes to 128k only if tokenizer, API and end-to-end
+   evidence pass; otherwise the bounded retrieval path remains authoritative.
 
-**Explicit boundary:** Phase 6.5 remains a Text2IFC generation phase. It uses
-IFC5 development ideas only as architectural inspiration and does not adopt
-IFC5/IFCX, import or edit existing IFC, add RAG/fine-tuning, redesign the Formal
-BIM JSON schema, or package a service. Existing-IFC natural-language completion
-is reserved for a later phase that may reuse the ChangeSet revision interface.
+## Requirement Coverage
 
-**Plans:** 7 plans in 7 waves
+| Phase | Requirements |
+|---|---|
+| 7 | TGT-01..05 |
+| 8 | VAL-01..05 |
+| 9 | PIPE-01..04 |
+| 09.1 | TYPE-01..03 |
+| 10 | WIN-01..02 |
+| 10.1 | PROP-01..05 |
+| 10.2 | RAG-01..04 |
+| 10.3 | DATA-01..02, BATCH-01..05 |
+| 10.4 | CMP-01..05 |
+| 10.5 | WFID-01..06 |
+| 11 | OPS-01..02 |
+| 12 | OPS-03..04 |
+| 12.1 | RAG-05..07, OPS-03..04 |
+| 13 | SCALE-01..02 |
 
-**Wave 0**
+**Coverage:** 55 committed requirements, 55 mapped, 0 unmapped.
 
-- [x] `06.5-00-PLAN.md` - ChangeSet, revision, and scope contracts
+## Delivery Sequence and Deferred Horizon
 
-**Wave 1** *(blocked on Wave 0)*
+The v1.1 sequence is intentionally layered:
 
-- [x] `06.5-01-PLAN.md` - Immutable applicator and deterministic dependency scope
+1. Phases 7-09.1 established target/Type evidence and public orchestration.
+2. Phase 10 proved one complete Window L1/L2 repair.
+3. Phase 10.1 adds exact user-requested scalar Psets without retrieval.
+4. Phase 10.2 evaluates property knowledge retrieval/RAG against the exact
+   Phase 10.1 output contract.
+5. Phase 10.3 proves that the same bounded contract remains atomic and
+   verifiable for five Window operations on larger IFC2X3 files.
+6. Phase 10.4 makes the unchanged blocking preservation contract practical on
+   BIMNet-scale files before operation expansion.
+7. Phase 10.5 closes Window/Opening occurrence-fact coverage and full
+   validation runtime before the Window reference implementation is reused.
+8. Phases 11-12 expand the same Registry/ChangeSet/evaluation architecture to
+   Opening, Door, Beam and Column operations.
+9. Phase 12.1 replaces historical alias authority with a bounded vector/LLM
+   property-resolution stage and completes Phase 12 acceptance without
+   changing Door/Window or structural operation contracts.
+10. Phase 13 measures near-limit context and 128k behavior before changing the
+   bounded 64k default.
 
-**Wave 2** *(blocked on Wave 1)*
-
-- [x] `06.5-02-PLAN.md` - ChangeSet Generator and feedback-loop integration
-
-**Wave 3** *(blocked on Wave 2)*
-
-- [x] `06.5-03-PLAN.md` - Dynamic staged multi-storey initial composition
-
-**Wave 4** *(blocked on Wave 3)*
-
-- [x] `06.5-04-PLAN.md` - Revision Gates, Audit, reports, timing, and compact evidence
-
-**Wave 5** *(blocked on Wave 4)*
-
-- [x] `06.5-05-PLAN.md` - Deterministic multi-storey matrix and regression closure
-
-**Wave 6** *(blocked on Wave 5 deterministic verification)*
-
-- [x] `06.5-06-PLAN.md` - Real DeepSeek graded multi-storey acceptance campaign
-
-**Supplemental graded acceptance closure**
-
-- [x] `06.5-07-PLAN.md` - Easy/Medium/Hard canonical fixtures, storey-name
-  consistency, and one real accepted IFC per difficulty
-- [x] `06.5-07-SUMMARY.md` - Hard session `999d210c233b1c34` passed schema,
-  staged generation, three bounded ChangeSet rounds, global Gates,
-  compile/reopen, geometry, Audit, preservation, and secret scan
-
-**Supplemental Medium geometry closure**
-
-- [x] `06.5-07.1-PLAN.md` - Canonical Medium geometry contract, component
-  evidence, bounded ChangeSet loop, and one accepted real DeepSeek Medium IFC
-- [x] `06.5-07.1-SUMMARY.md` - Session `a95a0f967982690a` passed schema,
-  global Gates, compile/reopen, geometry, final Audit, and secret scan after two
-  evidence-driven ChangeSet rounds
-
-**Cross-cutting constraints:**
-
-- Formal BIM JSON 2.0 JSON Schema remains the single model truth.
-- ChangeSets and composition workspaces are workflow sidecars, not alternative
-  Formal BIM models.
-- Feedback Changes address stable semantic IDs, not array indexes.
-- Every accepted revision has unrelated-component preservation rate 1.0.
-- Default maximum is three ChangeSet rounds after the initial candidate.
-- Local Gates may accelerate feedback; final acceptance always runs complete
-  global Gates, compile/reopen, postcompile geometry checks, and Audit.
-- Deterministic tests precede real DeepSeek calls, and live evidence cannot be
-  satisfied by fake/file/replay providers or prewritten model responses.
-- All work remains in the C-drive `multiagent-design` worktree.
-
-**Status:** Phase 6.5 graded acceptance is complete. Easy, Medium, and Hard each
-have an accepted review artifact. The Hard three-storey real DeepSeek session
-`999d210c233b1c34` reached `revision-07` after three bounded ChangeSet rounds,
-then passed global Gates, compile/reopen, postcompile geometry, final Audit,
-preservation 1.0, and a zero-finding secret scan. This is one accepted run per
-difficulty, not a statistical stability-rate claim.
+Post-v1.1 work remains explicitly uncommitted: existing Wall mutation beyond
+straight-wall openings, Space/room editing, curved/free-form walls, additional
+MEP/structural families, and L3 authoring/identity exactness. Each requires its
+own operation and evaluation contract rather than an implicit extension of the
+Window path.

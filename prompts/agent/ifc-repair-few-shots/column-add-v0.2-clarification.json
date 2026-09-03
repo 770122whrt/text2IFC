@@ -1,0 +1,44 @@
+{
+  "schema_version": "text2ifc/ifc-repair-few-shot/0.1",
+  "example_id": "column.add.v0.2.clarification",
+  "profile_id": "column.add.v0.2",
+  "case": "clarification",
+  "user_text": "EXAMPLE_ONLY: on Level 1 add a vertical 400 by 600 mm rectangular column at the stated base and top; orientation is not stated",
+  "expected": {
+    "operation_type": "add_column",
+    "status": "clarification_required",
+    "parameters": {
+      "axis": {
+        "base": {
+          "x_mm": 1000,
+          "y_mm": 2000,
+          "z_mm": 0
+        },
+        "top": {
+          "x_mm": 1000,
+          "y_mm": 2000,
+          "z_mm": 3000
+        }
+      },
+      "section": {
+        "shape": "rectangle",
+        "width_mm": 400,
+        "depth_mm": 600
+      }
+    },
+    "omitted_unknown_slots": [
+      "/parameters/section/orientation"
+    ],
+    "rule": "a non-square section requires explicit or uniquely resolved orientation; never default it",
+    "target_query": {
+      "schema_version": "text2ifc/ifc-target-query/0.1",
+      "allowed_ifc_classes": [
+        "IfcBuildingStorey"
+      ],
+      "names": [
+        "Level 1"
+      ]
+    }
+  },
+  "rule": "undefined; the Storey itself is selected with target_query.names, never storey_name"
+}

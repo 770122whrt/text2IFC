@@ -1,0 +1,40 @@
+{
+  "data": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "logprobs": null,
+        "message": {
+          "annotations": null,
+          "audio": null,
+          "content": "{\n  \"schema_version\": \"text2ifc/ifc-repair-changeset-draft/0.2\",\n  \"draft_id\": \"changeset-draft-cc56683933b9d15bfffb31c029e32a641e950c44e80f55faf625df1486da2ab5\",\n  \"base_model_fingerprint\": \"sha256:989ace1d52f694ee94d80bd99aa81d0ff3d76cf21f34fcfd00a286ac897ed8a6\",\n  \"source_request_hash\": \"sha256:cc56683933b9d15bfffb31c029e32a641e950c44e80f55faf625df1486da2ab5\",\n  \"semantic_manifest_ref\": \"changeset/semantic-manifests.json\",\n  \"semantic_manifest_sha256\": \"sha256:d3f3764cf23e45477456b7c5c6378a38db46e90560130cd8f52a1212be35be36\",\n  \"semantic_summary\": {\n    \"required\": 0,\n    \"conditional\": 2,\n    \"not_required\": 0\n  },\n  \"scope\": {\n    \"target_ids\": [\n      \"1jI3nV6Sn2LfeyEYxROCeh\",\n      \"2HaS6zNOX8xOGjmaNi_r5s\"\n    ],\n    \"forbidden_ids\": []\n  },\n  \"evidence_refs\": [\n    \"resolved:/operations/set-door-fire-rating/context/candidate_targets/0\",\n    \"resolved:/operations/set-wall-sound-rating/context/candidate_targets/0\"\n  ],\n  \"preconditions\": [\n    \"target_exists\",\n    \"target_class_supported\",\n    \"property_assignments_bound\"\n  ],\n  \"postconditions\": [\n    \"target_preserved\",\n    \"requested_properties_match\",\n    \"shared_type_unchanged\"\n  ],\n  \"operations\": [\n    {\n      \"operation_id\": \"set-door-fire-rating\",\n      \"operation_type\": \"set_occurrence_properties\",\n      \"target\": {\n        \"element_global_id\": \"1jI3nV6Sn2LfeyEYxROCeh\"\n      },\n      \"parameters\": {},\n      \"evidence_refs\": [\n        \"resolved:/operations/set-door-fire-rating/context/candidate_targets/0\"\n      ]\n    },\n    {\n      \"operation_id\": \"set-wall-sound-rating\",\n      \"operation_type\": \"set_occurrence_properties\",\n      \"target\": {\n        \"element_global_id\": \"2HaS6zNOX8xOGjmaNi_r5s\"\n      },\n      \"parameters\": {},\n      \"evidence_refs\": [\n        \"resolved:/operations/set-wall-sound-rating/context/candidate_targets/0\"\n      ]\n    }\n  ]\n}",
+          "function_call": null,
+          "reasoning_content": "We need output JSON only. Need construct draft per schema. Need use provided info. Let's parse.\n\nWe have immutable bindings: source request hash, model hash (base_model_fingerprint), semantic manifest ref, semantic manifest hash. Need draft_id? Schema requires id pattern. We need generate? Probably deterministic draft id? The instructions say copy operation IDs etc exactly, echo hashes. Draft_id maybe derive from? The user says \"Return exactly one JSON object conforming to CHANGESET_SCHEMA\". We need fill all required fields. draft_id is required but no explicit value. We can create one perhaps based on source? Need pattern ^[A-Za-z0-9][A-Za-z0-9._:/-]*$. It can be simple like \"draft-cc56683933b9d15bfffb31c029e32a641e950c44e80f55faf625df1486da2ab5\"? But length okay. Need be valid. Probably okay.\n\nNeed evidence_refs top-level: should include evidence refs from operations? The resolved operation projection has evidence_refs per operation. The top-level schema requires evidence_refs array. Need likely combine unique refs. The resolved projection evidence_refs: for first operation [\"resolved:/operations/set-door-fire-rating/context/candidate_targets/0\"], second [\"resolved:/operations/set-wall-sound-rating/context/candidate_targets/0\"]. So top-level evidence_refs should be union: these two strings.\n\nOperations array: copy exactly the operations from resolved projection? The operations have \"parameters\": {} empty because parameter schema maxProperties 0. In resolved projection, operations have \"parameters\": {} yes. Need include evidence_refs per operation. We can use the exact operation objects from projection, but note the projection includes operation_id, operation_type, target, parameters, evidence_refs. Good.\n\nPreconditions and postconditions: The draft schema requires strings array. We need include from operation contracts? The operation contract has precondition_names: [\"target_exists\", \"target_class_supported\", \"property_assignments_bound\"] and postcondition_names: [\"target_preserved\", \"requested_properties_match\", \"shared_type_unchanged\"]. For multiple operations, should we include all? Likely combine unique preconditions/postconditions across operations? Since two operations same contract, no duplicates. So preconditions: [\"target_exists\", \"target_class_supported\", \"property_assignments_bound\"]; postconditions: [\"target_preserved\", \"requested_properties_match\", \"shared_type_unchanged\"].\n\nSemantic summary: given semantic group counts: {\"conditional\":2, \"not_required\":0, \"required\":0}. Need include.\n\nScope: copy from resolved projection: {\"forbidden_ids\":[], \"target_ids\":[\"1jI3nV6Sn2LfeyEYxROCeh\", \"2HaS6zNOX8xOGjmaNi_r5s\"]}.\n\nNeed base_model_fingerprint = model hash: sha256:989ace1d52f694ee94d80bd99aa81d0ff3d76cf21f34fcfd00a286ac897ed8a6\n\nsource_request_hash = sha256:cc56683933b9d15bfffb31c029e32a641e950c44e80f55faf625df1486da2ab5\n\nsemantic_manifest_ref = \"changeset/semantic-manifests.json\"\n\nsemantic_manifest_sha256 = sha256:d3f3764cf23e45477456b7c5c6378a38db46e90560130cd8f52a1212be35be36\n\nschema_version = \"text2ifc/ifc-repair-changeset-draft/0.2\"\n\nNeed ensure all hashes match regex. They start with sha256: and 64 hex, good.\n\nNeed draft_id maybe \"changeset-draft-0.2-cc56683933b9d15bfffb31c029e32a641e950c44e80f55faf625df1486da2ab5\"? That includes hyphen and letters. Fine.\n\nNeed additionalProperties false, so must not include extra fields.\n\nLet's double-check operations: The operation contract parameter_schema allows additionalProperties false, maxProperties 0, so parameters must be {} not null. Good.\n\nCheck target object: needs minProperties 1, contains element_global_id. Good.\n\nNeed evidence_refs per operation exactly as given. The top-level evidence_refs unique. Need uniqueItems true. The two strings are distinct.\n\nNow produce JSON.\n\nLet's write JSON with proper escaping. Use double quotes. No trailing commas.\n\nLet's make operations array with both operations. Operation id and type from projection. Need include \"operation_id\": \"set-door-fire-rating\" etc.\n\nPreconditions and postconditions arrays with strings from contract. But the schema requires strings array, no uniqueness? It says strings type array uniqueItems true. So ensure unique. They are.\n\nPotential issue: The operation contract precondition_names are for operation type, but maybe exactly should be referenced? The schema just requires strings. I think yes.\n\nSemantic summary required fields all present.\n\nLet's verify draft_id pattern: starts with letter, okay. Use \"changeset-draft-cc56683933b9d15bfffb31c029e32a641e950c44e80f55faf625df1486da2ab5\" (length okay). Could also use \"draft-...\" but fine.\n\nLet's output JSON.",
+          "refusal": null,
+          "role": "assistant",
+          "tool_calls": null
+        }
+      }
+    ],
+    "created": 1788279155,
+    "id": "b0920ce6-b4ff-4417-b445-1a2ddd37dc4d",
+    "model": "deepseek-v4-flash",
+    "moderation": null,
+    "object": "chat.completion",
+    "service_tier": null,
+    "stop_reason": "stop",
+    "system_fingerprint": "a26a7955944dc5c60445bff77fac9c8e",
+    "usage": {
+      "completion_tokens": 1831,
+      "completion_tokens_details": "[REDACTED]",
+      "prompt_cache_hit_tokens": "[REDACTED]",
+      "prompt_cache_miss_tokens": "[REDACTED]",
+      "prompt_tokens": 2256,
+      "prompt_tokens_details": "[REDACTED]",
+      "total_tokens": 4087
+    }
+  },
+  "event": "chat.completion",
+  "sequence": 0
+}

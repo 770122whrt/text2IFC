@@ -1,0 +1,116 @@
+{
+  "schema_version": "text2ifc/ifc-repair-prompt-profile/0.2",
+  "profile_id": "beam.add.v0.3",
+  "profile_version": "0.3",
+  "component_family": "beam",
+  "action": "add",
+  "operation_type": "add_beam",
+  "target_ifc_classes": [
+    "IfcBuildingStorey"
+  ],
+  "classification_terms": [
+    "beam",
+    "structural beam",
+    "add beam",
+    "horizontal member",
+    "梁",
+    "添加梁"
+  ],
+  "slot_summary": "Target Storey selected only by its own global_id or names; straight horizontal center-axis start/end in Storey-local millimetres; rectangular width/height; no Type instruction or a new/generated/dedicated Beam Type request keeps prototype_intent null; exact existing-Type reuse uses only an explicit name or GlobalId; unspecified existing-Type reuse uses selection_required; explicit material and canonical requested Pset/quantity facts remain optional. Omit unstated facts instead of emitting aliases or null placeholders.",
+  "required_slots": [
+    "/target_query",
+    "/parameters/axis/start",
+    "/parameters/axis/end",
+    "/parameters/section/shape",
+    "/parameters/section/width_mm",
+    "/parameters/section/height_mm"
+  ],
+  "conditional_slots": [
+    "/prototype_intent",
+    "/attribute_intents"
+  ],
+  "optional_slots": [
+    "/property_intents",
+    "/quantity_intents",
+    "/semantic_bundle_refs"
+  ],
+  "program_derived_slots": [
+    "axis length from start/end",
+    "unit and placement matrices",
+    "representation context and swept-solid topology",
+    "occurrence and relationship GUIDs",
+    "generated-template identity and label",
+    "Storey containment relationship"
+  ],
+  "forbidden_inferences": [
+    "profile-corner or support-face placement",
+    "scalar length in conflict with or substituted for the center axis",
+    "nearby Beam or Type similarity",
+    "new, generated or dedicated Type wording as existing-Type reuse",
+    "material, strength, grade, property or quantity when absent",
+    "aliases, wrong nesting or null placeholders",
+    "Grid labels as coordinates",
+    "storey_name/storey_global_id containment-filter aliases for the target Storey"
+  ],
+  "supported_capabilities": [
+    "straight_horizontal",
+    "any_storey_xy_direction",
+    "rectangular_section",
+    "center_axis_mm",
+    "exact_type_reuse",
+    "generated_type",
+    "optional_explicit_material",
+    "Pset_BeamCommon"
+  ],
+  "unsupported_capabilities": [
+    "inclined",
+    "curved",
+    "round_section",
+    "i_section",
+    "h_section",
+    "arbitrary_section",
+    "variable_section",
+    "section_rotation",
+    "grid_placement",
+    "structural_analysis_member",
+    "structural_analysis_node",
+    "structural_analysis_load",
+    "structural_analysis_port",
+    "structural_analysis_connection"
+  ],
+  "type_intent_rules": {
+    "no_type_or_new_type": "prototype_intent_null",
+    "exact_existing_type_reuse": "global_id_or_type_name",
+    "unspecified_existing_type_reuse": "selection_required",
+    "zero_candidate_policy": "missing_evidence"
+  },
+  "stage2_projection_fields": [
+    "operation_id",
+    "operation_type",
+    "target",
+    "parameters",
+    "evidence_refs"
+  ],
+  "few_shots": [
+    {
+      "example_id": "beam.add.v0.3.complete",
+      "path": "prompts/agent/ifc-repair-few-shots/beam-add-v0.3-complete.json",
+      "sha256": "sha256:becd578135b68436c4126f0ec938de6df56a2f83d60c857570f16fdbb0d8d419"
+    },
+    {
+      "example_id": "beam.add.v0.3.clarification",
+      "path": "prompts/agent/ifc-repair-few-shots/beam-add-v0.3-clarification.json",
+      "sha256": "sha256:f80df3b9e3bd39ffb6024aabbebefa4873a696f966f0a12234180f46d3c4e4f7"
+    },
+    {
+      "example_id": "beam.add.v0.3.type-reuse",
+      "path": "prompts/agent/ifc-repair-few-shots/beam-add-v0.3-type-reuse.json",
+      "sha256": "sha256:6b026938b129d060efa51b9f02f4b85baebc6764df74af18760c16f6cff6720b"
+    },
+    {
+      "example_id": "beam.add.v0.3.unsupported",
+      "path": "prompts/agent/ifc-repair-few-shots/beam-add-v0.3-unsupported.json",
+      "sha256": "sha256:e2e81c10d99f9e8c1c3f88a425ee64eba4a081b4c301dd7305f5c735b368c150"
+    }
+  ]
+}

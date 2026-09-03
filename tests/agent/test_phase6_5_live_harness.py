@@ -1,5 +1,8 @@
+import hashlib
 import json
 from pathlib import Path
+
+import pytest
 
 from scripts.agent import run_phase6_5_live_stability
 
@@ -80,8 +83,85 @@ def test_live_harness_has_no_scripted_model_answer_option():
     assert "--output-root" in option_strings
     assert "--timeout-seconds" in option_strings
     assert "--trace-level" in option_strings
+    assert "--manifest" in option_strings
     assert "--scripted-stdin" not in option_strings
     assert "--answers-json" not in option_strings
+
+
+def test_frozen_manifest_loader_preserves_input_and_rejects_hash_drift(tmp_path):
+    text = "创建一个六米乘四米的单层房间。"
+    manifest_path = tmp_path / "case.json"
+    payload = {
+        "case_id": "STD-E-RES-01",
+        "difficulty": "easy",
+        "input": text,
+        "input_sha256": hashlib.sha256(text.encode("utf-8")).hexdigest(),
+        "model_output": None,
+    }
+    manifest_path.write_text(
+        json.dumps(payload, ensure_ascii=False), encoding="utf-8"
+    )
+
+    loaded = run_phase6_5_live_stability.load_frozen_manifest(manifest_path)
+
+    assert loaded["case_id"] == "STD-E-RES-01"
+    assert loaded["input"] == text
+
+    payload["input"] += "不要改变原文。"
+    manifest_path.write_text(
+        json.dumps(payload, ensure_ascii=False), encoding="utf-8"
+    )
+    with pytest.raises(ValueError, match="input_sha256"):
+        run_phase6_5_live_stability.load_frozen_manifest(manifest_path)
+
+
+def test_difficult_successor_freezes_wall_passage_and_five_opening_guards():
+    manifest_path = Path(
+        "dataset/processed/agent-demo/phase6.5-wave8-observation/manifests/"
+        "STD-D-MUL-03.json"
+    )
+
+    payload = run_phase6_5_live_stability.load_frozen_manifest(manifest_path)
+    text = payload["input"]
+
+    assert payload["case_id"] == "STD-D-MUL-03"
+    assert payload["supersedes"] == "STD-D-MUL-02"
+    assert payload["model_output"] is None
+    assert "x=9900..11100, y=4000..7750" in text
+    assert "[11000,7750,0]" in text
+    assert "x=7000..9900" in text
+    assert "[11100,5000]` 到 `[12000,5000]" in text
+    assert text.count("railing-stair-opening-") == 3
+    assert "5 个 `IfcRailing`" in text
+    source_path = Path(payload["source_path"])
+    assert hashlib.sha256(source_path.read_bytes()).hexdigest() == payload[
+        "source_sha256"
+    ]
+
+
+def test_explicit_host_difficult_manifest_freezes_walls_and_door_hosts():
+    manifest_path = Path(
+        "dataset/processed/agent-demo/phase6.5-wave8-observation/manifests/"
+        "STD-D-MUL-04.json"
+    )
+
+    payload = run_phase6_5_live_stability.load_frozen_manifest(manifest_path)
+    text = payload["input"]
+
+    assert payload["case_id"] == "STD-D-MUL-04"
+    assert payload["supersedes"] == "STD-D-MUL-03"
+    assert payload["model_output"] is None
+    assert "首层只生成以下九段室内墙" in text
+    assert "二层只生成以下六段室内墙" in text
+    assert "十扇门及其明确宿主" in text
+    assert text.count("宿主 `wall-") == 9
+    assert text.count("railing-stair-opening-") == 3
+    assert "23 个 `IfcWall`" in text
+    assert "正体积相交数量必须为 0" in text
+    source_path = Path(payload["source_path"])
+    assert hashlib.sha256(source_path.read_bytes()).hexdigest() == payload[
+        "source_sha256"
+    ]
 
 
 def test_live_harness_exposes_graded_cases_with_single_run_defaults():

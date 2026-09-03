@@ -13,6 +13,17 @@ from .generation_packages import build_generation_package_manifest
 
 EXPECTED_FACTS_SCHEMA_VERSION = "text2ifc/expected-facts/1.0"
 
+_PRODUCT_FAMILY_SPECS = {
+    "railings": {
+        "ifc_class": "IfcRailing",
+        "geometry_kind": "linear_segment",
+    },
+}
+
+
+class ExpectedFactsError(ValueError):
+    """Raised when a Design Brief cannot be projected safely."""
+
 
 def build_expected_facts(
     *,
@@ -22,6 +33,7 @@ def build_expected_facts(
     """Build dynamic expected facts without mutating the Design Brief."""
     known = design_brief.get("known_facts", {})
     known_facts = known if isinstance(known, Mapping) else {}
+    known_facts = _migrate_legacy_single_storey_facts(known_facts)
     nested_storeys = _nested_storeys(known_facts.get("storeys"))
     if nested_storeys:
         storeys = _storey_records_from_nested(nested_storeys)
@@ -154,7 +166,13 @@ def build_expected_facts(
         or _singular_stair_record(known_facts, storeys)
         or _stair_records_from_nested(nested_storeys, storeys)
     )
+    products = _product_records(known_facts)
     roof = _roof_record(known_facts)
+    if design_brief.get("status") == "ready" and not storeys:
+        raise ExpectedFactsError(
+            "DESIGN_BRIEF_PROJECTION_EMPTY: ready Design Brief has no canonical "
+            "known_facts.storeys[] and cannot enter generation."
+        )
     entity_id_contract = _build_entity_id_contract(
         walls=walls,
         spaces=spaces,
@@ -180,6 +198,7 @@ def build_expected_facts(
         "slabs": _copy_records(slabs),
         "roof": deepcopy(dict(roof)) if roof is not None else None,
         "stairs": _copy_records(stairs),
+        "products": _copy_records(products),
         "entity_id_contract": entity_id_contract,
         "space_counts_by_storey": _counts_by_storey(spaces),
         "door_counts_by_storey": _counts_by_storey(doors),
@@ -196,6 +215,7 @@ def build_expected_facts(
                 "spaces": len(spaces),
                 "doors": len(doors),
                 "windows": len(windows),
+                "products": len(products),
             },
             "opening_fill": {
                 "doors": len(doors),
@@ -210,10 +230,108 @@ def build_expected_facts(
     if walls:
         payload["total_counts"]["IfcWall"] = len(walls)
         payload["required_relationships"]["containment"]["walls"] = len(walls)
+    if slabs:
+        payload["total_counts"]["IfcSlab"] = len(slabs)
+        payload["required_relationships"]["containment"]["slabs"] = len(slabs)
+    for product in products:
+        ifc_class = _string(product.get("ifc_class"))
+        if ifc_class is not None:
+            payload["total_counts"][ifc_class] = (
+                payload["total_counts"].get(ifc_class, 0) + 1
+            )
     if isinstance(fixture_reuse, Mapping):
         payload["fixture_reuse"] = deepcopy(dict(fixture_reuse))
     payload["generation_package_manifest"] = build_generation_package_manifest(payload)
     return payload
+
+
+def _migrate_legacy_single_storey_facts(
+    known_facts: Mapping[str, Any],
+) -> Mapping[str, Any]:
+    """Normalize the bounded historical complete-room dialect for projection.
+
+    This is intentionally a one-shape migration, not a general alias layer. It
+    only runs when the legacy brief explicitly contains a complete rectangular
+    room, four closed walls, and a wall thickness.
+    """
+
+    if known_facts.get("storeys") is not None:
+        return known_facts
+    space = known_facts.get("space")
+    walls = known_facts.get("walls")
+    if not isinstance(space, Mapping) or not isinstance(walls, Mapping):
+        return known_facts
+    length = _number_alias(space, ("length_mm", "length"))
+    width = _number_alias(space, ("width_mm", "width"))
+    height = _number_alias(space, ("height_mm", "height"))
+    wall_count = _number_alias(walls, ("count", "quantity"))
+    wall_thickness = _number_alias(walls, ("thickness_mm", "thickness"))
+    if (
+        any(value is None or value <= 0 for value in (length, width, height, wall_thickness))
+        or wall_count != 4
+        or walls.get("enclosure") != "closed"
+    ):
+        return known_facts
+
+    storey_id = "storey-1"
+    space_record = _copy_payload(space)
+    space_record["id"] = _string(space_record.get("id")) or "space-1"
+    wall_records: list[dict[str, Any]] = []
+    for side in ("south", "north", "west", "east"):
+        wall_record = _copy_payload(walls)
+        wall_record.pop("count", None)
+        wall_record.pop("quantity", None)
+        wall_record.pop("enclosure", None)
+        wall_record["id"] = f"wall-{side}"
+        wall_record["side"] = side
+        wall_record.setdefault("height_mm", height)
+        wall_records.append(wall_record)
+
+    storey: dict[str, Any] = {
+        "id": storey_id,
+        "elevation_mm": 0,
+        "net_height_mm": height,
+        "spaces": [space_record],
+        "walls": {"exterior": wall_records, "interior": []},
+        "doors": _migrate_legacy_opening(known_facts.get("door"), "door", "wall-south"),
+        "windows": _migrate_legacy_opening(
+            known_facts.get("window"), "window", "wall-north"
+        ),
+    }
+    normalized = dict(known_facts)
+    for legacy_key in ("space", "walls", "door", "window"):
+        normalized.pop(legacy_key, None)
+    normalized["storeys"] = [storey]
+    return normalized
+
+
+def _migrate_legacy_opening(
+    value: Any,
+    opening_type: str,
+    fallback_host_wall: str,
+) -> list[dict[str, Any]]:
+    if not isinstance(value, Mapping):
+        return []
+    record = _copy_payload(value)
+    record["id"] = _string(record.get("id")) or f"{opening_type}-1"
+    host = _first_present(record, ("host_wall", "host_wall_id", "host", "wall"))
+    record["host_wall"] = _legacy_host_wall_id(host) or fallback_host_wall
+    return [record]
+
+
+def _legacy_host_wall_id(value: Any) -> str | None:
+    if not isinstance(value, str) or not value:
+        return None
+    normalized = value.lower().replace(" ", "_")
+    if normalized in {"south", "south_wall"}:
+        return "wall-south"
+    if normalized in {"north", "north_wall"}:
+        return "wall-north"
+    if normalized in {"west", "west_wall"}:
+        return "wall-west"
+    if normalized in {"east", "east_wall"}:
+        return "wall-east"
+    return value
 
 
 def _build_entity_id_contract(
@@ -1031,6 +1149,75 @@ def _slab_records(known_facts: Mapping[str, Any]) -> list[Mapping[str, Any]]:
         records.append(record)
     records.sort(key=lambda record: record.get("elevation_mm", 1_000_000))
     return records
+
+
+def _product_records(known_facts: Mapping[str, Any]) -> list[dict[str, Any]]:
+    products: list[dict[str, Any]] = []
+    for collection, spec in _PRODUCT_FAMILY_SPECS.items():
+        expected_class = str(spec["ifc_class"])
+        for index, item in enumerate(_records(known_facts.get(collection))):
+            declared_class = item.get("ifc_class")
+            if declared_class is not None and declared_class != expected_class:
+                raise ExpectedFactsError(
+                    "DESIGN_BRIEF_PRODUCT_CLASS_CONFLICT: "
+                    f"known_facts.{collection}[{index}] declares "
+                    f"{declared_class!r}, but the family requires "
+                    f"{expected_class!r}."
+                )
+            record: dict[str, Any] = {
+                "id": item.get("id"),
+                "ifc_class": expected_class,
+                "storey": item.get("storey"),
+                "geometry": _linear_product_geometry(
+                    item,
+                    geometry_kind=str(spec["geometry_kind"]),
+                ),
+            }
+            alignment_target = item.get("alignment_target")
+            if isinstance(alignment_target, str) and alignment_target:
+                record["alignment_target"] = alignment_target
+            products.append(record)
+    return products
+
+
+def _linear_product_geometry(
+    item: Mapping[str, Any],
+    *,
+    geometry_kind: str,
+) -> dict[str, Any]:
+    base_elevation = _number_alias(item, ("base_elevation_mm",))
+    start = _point_with_elevation(item.get("start_mm"), base_elevation)
+    end = _point_with_elevation(item.get("end_mm"), base_elevation)
+    geometry: dict[str, Any] = {"kind": geometry_kind}
+    if start is not None:
+        geometry["start_mm"] = start
+    if end is not None:
+        geometry["end_mm"] = end
+    height = _number_alias(item, ("height_mm",))
+    if height is not None:
+        geometry["height_mm"] = height
+    thickness = _number_alias(item, ("thickness_mm",))
+    if thickness is not None:
+        geometry["thickness_mm"] = thickness
+    return geometry
+
+
+def _point_with_elevation(value: Any, elevation: int | float | None) -> list[Any] | None:
+    if not isinstance(value, list):
+        return None
+    if len(value) == 3 and all(_is_number(item) for item in value):
+        return list(value)
+    if (
+        len(value) == 2
+        and elevation is not None
+        and all(_is_number(item) for item in value)
+    ):
+        return [value[0], value[1], elevation]
+    return None
+
+
+def _is_number(value: Any) -> bool:
+    return isinstance(value, (int, float)) and not isinstance(value, bool)
 
 
 def _roof_record(known_facts: Mapping[str, Any]) -> dict[str, Any] | None:

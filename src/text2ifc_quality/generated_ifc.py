@@ -137,6 +137,15 @@ def _check_roof_stairs_and_openings(
         path_prefix="floor_openings",
         issues=issues,
     )
+    metrics["products"] = _check_component_bboxes(
+        products_by_id=products_by_id,
+        expected_components=expectation.get("products"),
+        tolerance=tolerance,
+        missing_code="MISSING_EXPECTED_PRODUCT",
+        mismatch_code="LINEAR_PRODUCT_BBOX_MISMATCH",
+        path_prefix="products",
+        issues=issues,
+    )
     stair_metrics: dict[str, Any] = {}
     expected_stairs = expectation.get("stairs")
     if isinstance(expected_stairs, Mapping):
@@ -166,6 +175,7 @@ def _check_roof_stairs_and_openings(
                 "flight_ids": [str(item) for item in flight_ids],
                 "bbox": actual_bbox,
                 "has_stepped_profile": all(_has_stepped_profile(flight) for flight in flights),
+                "wall_intersections": [],
             }
             expected_bbox = expected_stair.get("bbox")
             if isinstance(expected_bbox, Mapping):
@@ -218,6 +228,56 @@ def _check_roof_stairs_and_openings(
                         source_fact_refs=expected_stair.get("source_fact_refs"),
                     )
                 )
+            wall_metrics = metrics.get("walls")
+            expected_walls = expectation.get("walls")
+            if isinstance(wall_metrics, Mapping):
+                for wall_id, wall_metric in wall_metrics.items():
+                    if not isinstance(wall_metric, Mapping):
+                        continue
+                    wall_bbox = wall_metric.get("bbox")
+                    if not isinstance(wall_bbox, Mapping):
+                        continue
+                    overlap = _positive_bbox_overlap(
+                        actual_bbox,
+                        wall_bbox,
+                        tolerance=tolerance,
+                    )
+                    if overlap is None:
+                        continue
+                    stair_metrics[str(stair_id)]["wall_intersections"].append(
+                        {"wall_id": str(wall_id), "overlap_bbox": overlap}
+                    )
+                    wall_expectation = (
+                        expected_walls.get(wall_id)
+                        if isinstance(expected_walls, Mapping)
+                        else None
+                    )
+                    wall_source_refs = (
+                        wall_expectation.get("source_fact_refs")
+                        if isinstance(wall_expectation, Mapping)
+                        else None
+                    )
+                    issues.append(
+                        _issue(
+                            "STAIR_WALL_INTERSECTION",
+                            f"/stairs/{stair_id}/wall_intersections/{wall_id}",
+                            (
+                                f"Stair {stair_id!r} intersects wall "
+                                f"{wall_id!r} with positive solid overlap."
+                            ),
+                            entity_ids=[
+                                str(stair_id),
+                                *[str(item) for item in flight_ids],
+                                str(wall_id),
+                            ],
+                            expected={"intersection": False},
+                            actual={"overlap_bbox": overlap},
+                            source_fact_refs=_merge_source_fact_refs(
+                                expected_stair.get("source_fact_refs"),
+                                wall_source_refs,
+                            ),
+                        )
+                    )
     metrics["stairs"] = stair_metrics
     return GeneratedIfcCheckResult(success=not issues, issues=issues, metrics=metrics)
 
@@ -337,6 +397,35 @@ def _combined_bbox(boxes: list[Mapping[str, list[float]]]) -> dict[str, list[flo
         ]
         for axis in AXES
     }
+
+
+def _positive_bbox_overlap(
+    left: Mapping[str, list[float]],
+    right: Mapping[str, list[float]],
+    *,
+    tolerance: float,
+) -> dict[str, list[float]] | None:
+    overlap = {
+        axis: [
+            max(float(left[axis][0]), float(right[axis][0])),
+            min(float(left[axis][1]), float(right[axis][1])),
+        ]
+        for axis in AXES
+    }
+    if any(bounds[1] - bounds[0] <= tolerance for bounds in overlap.values()):
+        return None
+    return overlap
+
+
+def _merge_source_fact_refs(*values: Any) -> list[str]:
+    merged: list[str] = []
+    for value in values:
+        if not isinstance(value, list):
+            continue
+        for item in value:
+            if isinstance(item, str) and item not in merged:
+                merged.append(item)
+    return merged
 
 
 def _axes_match(

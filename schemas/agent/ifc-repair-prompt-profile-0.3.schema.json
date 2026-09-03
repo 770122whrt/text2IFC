@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "text2ifc/ifc-repair-prompt-profile/0.3",
+  "title": "IFC Repair Stage 2 Operation Prompt Profile 0.3",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "profile_id", "profile_version", "stage",
+    "component_family", "action", "operation_type", "target_ifc_classes",
+    "draft_responsibility", "stage2_projection_fields",
+    "few_shot_output_schema", "few_shots"
+  ],
+  "properties": {
+    "schema_version": {"const": "text2ifc/ifc-repair-prompt-profile/0.3"},
+    "profile_id": {"type": "string", "pattern": "^[a-z][a-z0-9._-]*$", "maxLength": 128},
+    "profile_version": {"const": "0.1"},
+    "stage": {"const": "stage2"},
+    "component_family": {"enum": ["beam", "column"]},
+    "action": {"const": "add"},
+    "operation_type": {"enum": ["add_beam", "add_column"]},
+    "target_ifc_classes": {"const": ["IfcBuildingStorey"]},
+    "draft_responsibility": {"type": "string", "minLength": 1, "maxLength": 1024},
+    "stage2_projection_fields": {
+      "const": ["operation_id", "operation_type", "target", "parameters", "evidence_refs"]
+    },
+    "few_shot_output_schema": {"const": "text2ifc/ifc-repair-stage2-operation/0.1"},
+    "few_shots": {
+      "type": "array", "minItems": 1, "maxItems": 4, "uniqueItems": true,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["example_id", "path", "sha256"],
+        "properties": {
+          "example_id": {"type": "string", "minLength": 1, "maxLength": 128},
+          "path": {"type": "string", "pattern": "^prompts/agent/ifc-repair-few-shots/[A-Za-z0-9._/-]+\\.json$"},
+          "sha256": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}
+        }
+      }
+    }
+  }
+}

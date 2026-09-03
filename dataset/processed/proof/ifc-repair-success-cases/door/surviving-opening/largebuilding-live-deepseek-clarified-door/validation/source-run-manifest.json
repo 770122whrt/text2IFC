@@ -1,0 +1,51 @@
+{
+  "case_id": "largebuilding-live-deepseek-clarified-door",
+  "damage": {
+    "damage_scope": {
+      "door_removed": true,
+      "fill_removed": true,
+      "opening_removed": false,
+      "void_removed": false
+    },
+    "mutation_type": "remove_door_preserve_opening",
+    "removed_doors": [
+      {
+        "global_id": "2cXV28XOjE6f6irgi0COhu",
+        "name": "M_Single-Flush:Inside Door:353172",
+        "operation_type": "SINGLE_SWING_RIGHT",
+        "type_global_id": "2cXV28XOjE6f6irhu0COgZ",
+        "type_name": "M_Single-Flush:Inside Door"
+      }
+    ]
+  },
+  "live_contract": {
+    "contract_pass": true,
+    "provider_attempts": {
+      "stage1": 2,
+      "stage2": 1
+    },
+    "strict_reopen_verification": {
+      "application_evidence": ".terminal-bundles/097167aaab2546cb80204435e8e8101b/terminal/evidence.json",
+      "changeset": "changeset/bound-changeset.json",
+      "evaluation": ".terminal-bundles/097167aaab2546cb80204435e8e8101b/evaluation/public-evaluation.json",
+      "l0_pass": true,
+      "l1_pass": true,
+      "l2_pass": true,
+      "operation_count": 1,
+      "reopened_schema": "IFC2X3",
+      "status": "passed",
+      "successful_ifc_sha256": "sha256:221224d1eca4cab303484c2d1c92b6d352301c7f42c2a8ade01fecbcbc0dadaa"
+    }
+  },
+  "model": "deepseek-v4-flash",
+  "operation_count": 1,
+  "provider": "deepseek-openai-compatible",
+  "provider_evidence_mode": "live",
+  "public_targeting": {
+    "guid_free": false,
+    "name_free": false
+  },
+  "schema_version": "text2ifc/phase11-live-proof-source/0.1",
+  "status": "passed",
+  "synthetic_fallback_used": false
+}

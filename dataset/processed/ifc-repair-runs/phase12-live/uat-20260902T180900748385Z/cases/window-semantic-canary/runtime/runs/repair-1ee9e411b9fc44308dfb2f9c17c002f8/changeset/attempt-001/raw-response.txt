@@ -1,0 +1,31 @@
+{
+  "schema_version": "text2ifc/ifc-repair-changeset-draft/0.2",
+  "draft_id": "changeset/draft-set-window-property-1",
+  "base_model_fingerprint": "sha256:25240558bcbe23c1bbf4916d0b9a0fbbde8202d63dbc7a488ef633ab40eb6127",
+  "source_request_hash": "sha256:17eed55838744c8f4544a8d23ed626e33f2642c817bf619fc217c7be28a9a68c",
+  "semantic_manifest_ref": "changeset/semantic-manifest-set-window-property-1.json",
+  "semantic_manifest_sha256": "sha256:052b2fa1f4258cfd449228e847fe34b98ab2d156e68e064916de359586ee543c",
+  "semantic_summary": {
+    "required": 0,
+    "conditional": 1,
+    "not_required": 0
+  },
+  "scope": {
+    "target_ids": ["1PkWQ2IbXBH9Ib7VGdBY7r"],
+    "forbidden_ids": []
+  },
+  "evidence_refs": ["resolved:/operations/set-window-property-1/context/candidate_targets/0"],
+  "preconditions": ["target_exists", "target_class_supported", "property_assignments_bound"],
+  "postconditions": ["target_preserved", "requested_properties_match", "shared_type_unchanged"],
+  "operations": [
+    {
+      "operation_id": "set-window-property-1",
+      "operation_type": "set_occurrence_properties",
+      "target": {
+        "element_global_id": "1PkWQ2IbXBH9Ib7VGdBY7r"
+      },
+      "parameters": {},
+      "evidence_refs": ["resolved:/operations/set-window-property-1/context/candidate_targets/0"]
+    }
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "proof_id": "hard-three-storey-final",
+  "group": "historical-accepted",
+  "difficulty": "historical",
+  "language": "zh-CN",
+  "input_source": "dataset/processed/agent-demo/phase6.5-cases/hard-three-storey-l-shape.json",
+  "input_field": "input",
+  "ifc_source": "dataset/processed/agent-demo/phase6.5-hard-accepted/hard-three-storey-final.ifc",
+  "proof_input": "dataset/processed/proof/text2ifc-success-cases/historical-accepted/hard-three-storey-final/hard-three-storey-final.input.zh-CN.txt",
+  "proof_ifc": "dataset/processed/proof/text2ifc-success-cases/historical-accepted/hard-three-storey-final/hard-three-storey-final.ifc",
+  "input_sha256": "e6734773849d1cfe6a3138395a51afde5dfc2ff62d9ff2dfc72aaf18c37d9ec5",
+  "ifc_sha256": "0404c9f45d61606aceae361d14dbf5c5c130edb3e0521c517808212ddf6959e0",
+  "input_bytes": 8620,
+  "ifc_bytes": 169823,
+  "ifc_schema": "IFC2X3",
+  "entity_counts": {
+    "IfcProject": 1,
+    "IfcSite": 1,
+    "IfcBuilding": 1,
+    "IfcBuildingStorey": 3,
+    "IfcSpace": 18,
+    "IfcWall": 48,
+    "IfcSlab": 3,
+    "IfcDoor": 12,
+    "IfcWindow": 9,
+    "IfcOpeningElement": 23,
+    "IfcStair": 2,
+    "IfcStairFlight": 2,
+    "IfcRailing": 0,
+    "IfcRoof": 1
+  },
+  "acceptance_evidence": [
+    "dataset/processed/agent-demo/phase6.5-hard-accepted/case-result.json",
+    "dataset/processed/agent-demo/phase6.5-hard-accepted/component-preservation.json",
+    "dataset/processed/agent-demo/phase6.5-hard-accepted/dynamic-gates.json",
+    "dataset/processed/agent-demo/phase6.5-hard-accepted/ifc-verification.json",
+    "dataset/processed/agent-demo/phase6.5-hard-accepted/report.md",
+    "dataset/processed/agent-demo/phase6.5-hard-accepted/secret-scan.json",
+    "dataset/processed/agent-demo/phase6.5-hard-accepted/stability-report.md"
+  ],
+  "human_uat": {
+    "status": "accepted",
+    "note": "项目负责人在 Proof 集整理前已将该三层复杂案例列为成功产物。"
+  }
+}

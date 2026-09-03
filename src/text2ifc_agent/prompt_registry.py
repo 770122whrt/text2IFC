@@ -60,7 +60,7 @@ def load_prompt_registry(
         if template_id in registry:
             raise PromptRegistryError(f"duplicate prompt template_id: {template_id}")
         template_path = _project_path(str(template["path"]))
-        actual_hash = "sha256:" + hashlib.sha256(template_path.read_bytes()).hexdigest()
+        actual_hash = _template_sha256(template_path)
         if template["sha256"] != actual_hash:
             raise PromptRegistryError(
                 f"prompt template hash mismatch for {template_id}: {actual_hash}"
@@ -137,6 +137,11 @@ def _render_value(value: Any) -> str:
     if isinstance(value, str):
         return value
     return json.dumps(value, ensure_ascii=False, sort_keys=True, allow_nan=False)
+
+
+def _template_sha256(path: Path) -> str:
+    canonical_bytes = path.read_bytes().replace(b"\r\n", b"\n")
+    return "sha256:" + hashlib.sha256(canonical_bytes).hexdigest()
 
 
 def _project_path(relative_path: str) -> Path:

@@ -1,0 +1,104 @@
+{
+  "text": "{\"schema_version\":\"text2ifc/ifc-property-rerank-decision/0.1\",\"decision\":\"confirmed\",\"selected_candidate_id\":\"candidate:1:ifc2x3:Pset_DoorCommon.FireRating\",\"conflicting_candidate_ids\":[],\"clarification_question\":null}",
+  "transport": {
+    "events": [
+      {
+        "data": {
+          "choices": [
+            {
+              "finish_reason": "stop",
+              "index": 0,
+              "logprobs": null,
+              "message": {
+                "annotations": null,
+                "audio": null,
+                "content": "{\"schema_version\":\"text2ifc/ifc-property-rerank-decision/0.1\",\"decision\":\"confirmed\",\"selected_candidate_id\":\"candidate:1:ifc2x3:Pset_DoorCommon.FireRating\",\"conflicting_candidate_ids\":[],\"clarification_question\":null}",
+                "function_call": null,
+                "reasoning_content": "We need to produce JSON decision for given query. The property phrase is \"防火等级\" (fire rating). Target class IfcDoor. Candidates list includes FireRating, SurfaceSpreadOfFlame, Reference, SecurityRating, FireExit. Need decide: confirmed, clarification_required, unsupported.\n\nWe need evaluate semantic evidence. \"防火等级\" literally means \"fire rating\" or \"fire resistance rating\". The first candidate \"Pset_DoorCommon.FireRating\" definition: \"Fire rating for this object. It is given according to the national fire safety classification.\" That exactly matches \"防火等级\". Value raw_value is boolean true? Wait raw_value kind boolean, raw_value true. But property FireRating expects IfcLabel, not boolean. But our stage is only selecting candidate property, not validating value type? The boundary says do not infer or change value. We select property based on phrase. The phrase strongly matches FireRating. However there is also FireExit (boolean) which is \"Indication whether this object is designed to serve as an exit in the case of fire (TRUE) or not (FALSE).\" But \"防火等级\" is not about exit. FireRating is the correct property.\n\nBut we need be careful: the user's raw_value is boolean true, and property phrase \"防火等级\". Is it possible they intend a boolean property like \"has fire rating\"? But the phrase \"防火等级\" is a rating level, not boolean. Candidate FireRating is IfcLabel. Candidate FireExit is boolean and about fire exit. The semantic evidence strongly points to FireRating. However there is also \"SecurityRating\" etc. No ambiguity.\n\nBut note: The candidate set includes \"Pset_FireRatingProperties.SurfaceSpreadOfFlame\" applicable to IfcElement, IfcSpatialStructureElement not IfcDoor? It says applicable_classes includes IfcElement (and IfcSpatialStructureElement), but not IfcDoor specifically? Actually IfcDoor is subtype of IfcElement, so it may be applicable? But candidate says applicable_classes: [\"IfcElement\", \"IfcSpatialStructureElement\"], not IfcDoor specifically, but maybe applicable via inheritance. SurfaceSpreadOfFlame is about flame spread, not fire rating. So not matching.\n\nWe need decide confirmed with candidate:1. Since phrase uniquely matches FireRating. All other candidates are not semantically equivalent. So \"confirmed\" selected_candidate_id candidate:1. conflicting_candidate_ids empty? Schema requires conflicting_candidate_ids array. For confirmed, it can be empty? Let's check schema: allOf if decision confirmed then properties require clarification_question null, selected_candidate_id. It doesn't specify conflicting_candidate_ids must be empty? Actually \"conflicting_candidate_ids\" is a property with maxItems 5, uniqueItems. For confirmed, it doesn't explicitly restrict it, but logically no conflicts. In the unsupported case it requires maxItems 0. For confirmed, probably empty array. We'll output empty array.\n\nNeed ensure schema_version constant. Also clarification_question null for confirmed.\n\nThus output JSON.\n\nBut let's double-check if there is any ambiguity because raw_value boolean true. Could \"防火等级\" be interpreted as \"fire rating\" and user wants to set it to true? That is semantically invalid but not our concern? The stage is property resolution, not value type checking. We are to select candidate based on phrase. The phrase directly maps. So confirmed.\n\nHowever boundary says: \"Return confirmed only when the user's language provides direct and sufficiently specific semantic evidence that uniquely authorizes exactly one offered candidate.\" Here yes.\n\nThus final.\n\nWe must output JSON only, no markdown.",
+                "refusal": null,
+                "role": "assistant",
+                "tool_calls": null
+              }
+            }
+          ],
+          "created": 1788278339,
+          "id": "1be83a4c-ae26-45b8-a66e-6db04d1a2485",
+          "model": "deepseek-v4-flash",
+          "moderation": null,
+          "object": "chat.completion",
+          "service_tier": null,
+          "stop_reason": "stop",
+          "system_fingerprint": "a26a7955944dc5c60445bff77fac9c8e",
+          "usage": {
+            "completion_tokens": 824,
+            "completion_tokens_details": "[REDACTED]",
+            "prompt_cache_hit_tokens": "[REDACTED]",
+            "prompt_cache_miss_tokens": "[REDACTED]",
+            "prompt_tokens": 2745,
+            "prompt_tokens_details": "[REDACTED]",
+            "total_tokens": 3569
+          }
+        },
+        "event": "chat.completion",
+        "sequence": 0
+      }
+    ],
+    "evidence_class": "live",
+    "http_status": 200,
+    "request": {
+      "extra_body": {
+        "thinking": {
+          "type": "enabled"
+        }
+      },
+      "max_tokens": 65536,
+      "messages": [
+        {
+          "content": "# IFC Property Resolution Stage 1.5\n\nYou are a repair-only semantic candidate selector. You handle exactly one\nproperty claim after its target IFC class has already been resolved. You are not\na general BIM analysis agent and you do not author IFC facts.\n\n## Public inputs\n\nPROPERTY_QUERY:\n{\"claim_id\": \"claim-001\", \"corpus_version\": \"ifc2x3-property-records/0.2\", \"model_id\": \"sha256:f61ff5cf8e1cc88da6944d6bcd3e2e7da5ff27dd3288a8781908018cb8240cd6\", \"operation_id\": \"set-door-fire-rating-1\", \"operation_type\": \"set_occurrence_properties\", \"property_phrase\": \"防火等级\", \"query_id\": \"property-query:repair-0aacacff70534519bb3aff859e6837f3:set-door-fire-rating-1:claim-001\", \"raw_unit\": null, \"raw_value\": true, \"raw_value_kind\": \"boolean\", \"request_id\": \"request-45b55d9703c7c1e2\", \"run_id\": \"repair-0aacacff70534519bb3aff859e6837f3\", \"schema_version\": \"text2ifc/ifc-property-resolution-query/0.2\", \"scope\": \"occurrence_direct\", \"target_ifc_class\": \"IfcDoor\"}\n\nCANDIDATE_SET:\n{\"candidate_set_id\": \"property-candidates:repair-0aacacff70534519bb3aff859e6837f3:set-door-fire-rating-1:claim-001\", \"candidates\": [{\"applicable_classes\": [\"IfcDoor\"], \"candidate_id\": \"candidate:1:ifc2x3:Pset_DoorCommon.FireRating\", \"canonical_path\": \"Pset_DoorCommon.FireRating\", \"definition\": \"Fire rating for this object.\\nIt is given according to the national fire safety classification.\", \"property_name\": \"FireRating\", \"rank\": 1, \"record_id\": \"ifc2x3:Pset_DoorCommon.FireRating\", \"score\": 0.5678902469201849, \"set_name\": \"Pset_DoorCommon\", \"source\": {\"kind\": \"ifc2x3_psd\", \"reference\": \"R2x3_TC1/psd/IfcSharedBldgElements/Pset_DoorCommon.xml\"}, \"standard_status\": \"standard\", \"template_type\": \"TypePropertySingleValue\", \"unit\": null, \"value_type\": \"IfcLabel\"}, {\"applicable_classes\": [\"IfcElement\", \"IfcSpatialStructureElement\"], \"candidate_id\": \"candidate:2:ifc2x3:Pset_FireRatingProperties.SurfaceSpreadOfFlame\", \"canonical_path\": \"Pset_FireRatingProperties.SurfaceSpreadOfFlame\", \"definition\": \"Surface spread of flame characteristics.\", \"property_name\": \"SurfaceSpreadOfFlame\", \"rank\": 2, \"record_id\": \"ifc2x3:Pset_FireRatingProperties.SurfaceSpreadOfFlame\", \"score\": 0.538713145480276, \"set_name\": \"Pset_FireRatingProperties\", \"source\": {\"kind\": \"ifc2x3_psd\", \"reference\": \"R2x3_TC1/psd/IfcSharedBldgServiceElements/Pset_FireRatingProperties.xml\"}, \"standard_status\": \"standard\", \"template_type\": \"TypePropertySingleValue\", \"unit\": null, \"value_type\": \"IfcLabel\"}, {\"applicable_classes\": [\"IfcDoor\"], \"candidate_id\": \"candidate:3:ifc2x3:Pset_DoorCommon.Reference\", \"canonical_path\": \"Pset_DoorCommon.Reference\", \"definition\": \"Reference ID for this specified type in this project (e.g. type 'A-1')\", \"property_name\": \"Reference\", \"rank\": 3, \"record_id\": \"ifc2x3:Pset_DoorCommon.Reference\", \"score\": 0.5242153785490011, \"set_name\": \"Pset_DoorCommon\", \"source\": {\"kind\": \"ifc2x3_psd\", \"reference\": \"R2x3_TC1/psd/IfcSharedBldgElements/Pset_DoorCommon.xml\"}, \"standard_status\": \"standard\", \"template_type\": \"TypePropertySingleValue\", \"unit\": null, \"value_type\": \"IfcIdentifier\"}, {\"applicable_classes\": [\"IfcDoor\"], \"candidate_id\": \"candidate:4:ifc2x3:Pset_DoorCommon.SecurityRating\", \"canonical_path\": \"Pset_DoorCommon.SecurityRating\", \"definition\": \"Index based rating system indicating security level.\\nIt is giving according to the national building code.\", \"property_name\": \"SecurityRating\", \"rank\": 4, \"record_id\": \"ifc2x3:Pset_DoorCommon.SecurityRating\", \"score\": 0.5086756422785697, \"set_name\": \"Pset_DoorCommon\", \"source\": {\"kind\": \"ifc2x3_psd\", \"reference\": \"R2x3_TC1/psd/IfcSharedBldgElements/Pset_DoorCommon.xml\"}, \"standard_status\": \"standard\", \"template_type\": \"TypePropertySingleValue\", \"unit\": null, \"value_type\": \"IfcLabel\"}, {\"applicable_classes\": [\"IfcDoor\"], \"candidate_id\": \"candidate:5:ifc2x3:Pset_DoorCommon.FireExit\", \"canonical_path\": \"Pset_DoorCommon.FireExit\", \"definition\": \"Indication whether this object is designed to serve as an exit in the case of fire (TRUE) or not (FALSE).\\nHere it defines an exit door in accordance to the national building code.\", \"property_name\": \"FireExit\", \"rank\": 5, \"record_id\": \"ifc2x3:Pset_DoorCommon.FireExit\", \"score\": 0.5002464978389509, \"set_name\": \"Pset_DoorCommon\", \"source\": {\"kind\": \"ifc2x3_psd\", \"reference\": \"R2x3_TC1/psd/IfcSharedBldgElements/Pset_DoorCommon.xml\"}, \"standard_status\": \"standard\", \"template_type\": \"TypePropertySingleValue\", \"unit\": null, \"value_type\": \"IfcBoolean\"}], \"collection_version\": \"ifc2x3-property-vector/0.2\", \"corpus_version\": \"ifc2x3-property-records/0.2\", \"document_renderer_version\": \"property-record-text/0.1\", \"embedding_model\": {\"model_id\": \"BAAI/bge-m3\", \"model_version\": \"BAAI-bge-m3-local/phase12.1\"}, \"query_id\": \"property-query:repair-0aacacff70534519bb3aff859e6837f3:set-door-fire-rating-1:claim-001\", \"schema_version\": \"text2ifc/ifc-property-candidate-set/0.1\"}\n\nDECISION_SCHEMA:\n{\"$defs\": {\"candidate_id\": {\"maxLength\": 256, \"minLength\": 1, \"pattern\": \"^[A-Za-z0-9][A-Za-z0-9._:/-]*$\", \"type\": \"string\"}}, \"$id\": \"text2ifc/ifc-property-rerank-decision/0.1\", \"$schema\": \"https://json-schema.org/draft/2020-12/schema\", \"additionalProperties\": false, \"allOf\": [{\"if\": {\"properties\": {\"decision\": {\"const\": \"confirmed\"}}, \"required\": [\"decision\"]}, \"then\": {\"properties\": {\"clarification_question\": {\"type\": \"null\"}, \"selected_candidate_id\": {\"$ref\": \"#/$defs/candidate_id\"}}}}, {\"if\": {\"properties\": {\"decision\": {\"const\": \"clarification_required\"}}, \"required\": [\"decision\"]}, \"then\": {\"properties\": {\"clarification_question\": {\"maxLength\": 512, \"minLength\": 1, \"type\": \"string\"}, \"conflicting_candidate_ids\": {\"minItems\": 1}, \"selected_candidate_id\": {\"type\": \"null\"}}}}, {\"if\": {\"properties\": {\"decision\": {\"const\": \"unsupported\"}}, \"required\": [\"decision\"]}, \"then\": {\"properties\": {\"clarification_question\": {\"type\": \"null\"}, \"conflicting_candidate_ids\": {\"maxItems\": 0}, \"selected_candidate_id\": {\"type\": \"null\"}}}}], \"properties\": {\"clarification_question\": {\"oneOf\": [{\"maxLength\": 512, \"minLength\": 1, \"type\": \"string\"}, {\"type\": \"null\"}]}, \"conflicting_candidate_ids\": {\"items\": {\"$ref\": \"#/$defs/candidate_id\"}, \"maxItems\": 5, \"type\": \"array\", \"uniqueItems\": true}, \"decision\": {\"enum\": [\"confirmed\", \"clarification_required\", \"unsupported\"]}, \"schema_version\": {\"const\": \"text2ifc/ifc-property-rerank-decision/0.1\"}, \"selected_candidate_id\": {\"oneOf\": [{\"$ref\": \"#/$defs/candidate_id\"}, {\"type\": \"null\"}]}}, \"required\": [\"schema_version\", \"decision\", \"selected_candidate_id\", \"conflicting_candidate_ids\", \"clarification_question\"], \"title\": \"IFC Property Rerank Decision 0.1\", \"type\": \"object\"}\n\nPREVIOUS_VALIDATION_FEEDBACK:\n[]\n\n## Boundary\n\n- Compare the original property phrase with the definitions and metadata of the\n  offered candidates for this one property claim.\n- Return `confirmed` only when the user's language provides direct and sufficiently specific semantic evidence that uniquely authorizes exactly one offered candidate.\n  When confirmed, select exactly one offered candidate.\n- Semantic relatedness, the nearest candidate, a plausible engineering means, or a\n  possible way to achieve the user's goal is not sufficient evidence for `confirmed`.\n- If multiple offered candidates remain semantically plausible, return\n  `clarification_required`, list only their offered IDs, and ask one short\n  question that distinguishes them.\n- Also return `clarification_required` when the request is underspecified but potentially repairable and the language does not uniquely authorize one\n  property or repair interpretation. List only the offered candidate IDs that\n  remain plausible; one relevant offered ID is sufficient when the question\n  must distinguish it from a broader repair interpretation.\n- When a meaningful repair goal is not specific enough for one executable property, prefer `clarification_required` over choosing the closest candidate.\n- Return `unsupported` only when the request is genuinely outside the supported repair capability or cannot be resolved into a supported repair\n  action even through clarification. A missing exact candidate match alone is\n  not sufficient for `unsupported`.\n- Never invent a candidate ID or use knowledge of a candidate that is not in\n  CANDIDATE_SET.\n- Do not infer, translate, normalize, or change the user's value, unit, scope,\n  operation, target, or provenance.\n- Do not output a Pset name, property name, IFC value type, unit decision,\n  authoring instruction, ChangeSet, or IFC object.\n- Treat scores and ranks only as retrieval evidence. They do not decide semantic\n  meaning, and a Top-1 candidate is not automatically correct.\n- No candidate is executable authority. Program code performs admissibility and\n  constructs the exact typed property after this stage.\n- On a correction attempt, fix only the listed validation errors. Do not rename\n  fields or emit compatibility aliases.\n\n## Output\n\nReturn exactly one JSON object that validates against DECISION_SCHEMA. Do not\nuse Markdown fences, explanations before or after the object, or additional\nfields.\n",
+          "role": "user"
+        }
+      ],
+      "model": "deepseek-v4-flash",
+      "response_format": {
+        "type": "json_object"
+      },
+      "temperature": 0
+    },
+    "response": {
+      "choices": [
+        {
+          "finish_reason": "stop",
+          "index": 0,
+          "logprobs": null,
+          "message": {
+            "annotations": null,
+            "audio": null,
+            "content": "{\"schema_version\":\"text2ifc/ifc-property-rerank-decision/0.1\",\"decision\":\"confirmed\",\"selected_candidate_id\":\"candidate:1:ifc2x3:Pset_DoorCommon.FireRating\",\"conflicting_candidate_ids\":[],\"clarification_question\":null}",
+            "function_call": null,
+            "reasoning_content": "We need to produce JSON decision for given query. The property phrase is \"防火等级\" (fire rating). Target class IfcDoor. Candidates list includes FireRating, SurfaceSpreadOfFlame, Reference, SecurityRating, FireExit. Need decide: confirmed, clarification_required, unsupported.\n\nWe need evaluate semantic evidence. \"防火等级\" literally means \"fire rating\" or \"fire resistance rating\". The first candidate \"Pset_DoorCommon.FireRating\" definition: \"Fire rating for this object. It is given according to the national fire safety classification.\" That exactly matches \"防火等级\". Value raw_value is boolean true? Wait raw_value kind boolean, raw_value true. But property FireRating expects IfcLabel, not boolean. But our stage is only selecting candidate property, not validating value type? The boundary says do not infer or change value. We select property based on phrase. The phrase strongly matches FireRating. However there is also FireExit (boolean) which is \"Indication whether this object is designed to serve as an exit in the case of fire (TRUE) or not (FALSE).\" But \"防火等级\" is not about exit. FireRating is the correct property.\n\nBut we need be careful: the user's raw_value is boolean true, and property phrase \"防火等级\". Is it possible they intend a boolean property like \"has fire rating\"? But the phrase \"防火等级\" is a rating level, not boolean. Candidate FireRating is IfcLabel. Candidate FireExit is boolean and about fire exit. The semantic evidence strongly points to FireRating. However there is also \"SecurityRating\" etc. No ambiguity.\n\nBut note: The candidate set includes \"Pset_FireRatingProperties.SurfaceSpreadOfFlame\" applicable to IfcElement, IfcSpatialStructureElement not IfcDoor? It says applicable_classes includes IfcElement (and IfcSpatialStructureElement), but not IfcDoor specifically? Actually IfcDoor is subtype of IfcElement, so it may be applicable? But candidate says applicable_classes: [\"IfcElement\", \"IfcSpatialStructureElement\"], not IfcDoor specifically, but maybe applicable via inheritance. SurfaceSpreadOfFlame is about flame spread, not fire rating. So not matching.\n\nWe need decide confirmed with candidate:1. Since phrase uniquely matches FireRating. All other candidates are not semantically equivalent. So \"confirmed\" selected_candidate_id candidate:1. conflicting_candidate_ids empty? Schema requires conflicting_candidate_ids array. For confirmed, it can be empty? Let's check schema: allOf if decision confirmed then properties require clarification_question null, selected_candidate_id. It doesn't specify conflicting_candidate_ids must be empty? Actually \"conflicting_candidate_ids\" is a property with maxItems 5, uniqueItems. For confirmed, it doesn't explicitly restrict it, but logically no conflicts. In the unsupported case it requires maxItems 0. For confirmed, probably empty array. We'll output empty array.\n\nNeed ensure schema_version constant. Also clarification_question null for confirmed.\n\nThus output JSON.\n\nBut let's double-check if there is any ambiguity because raw_value boolean true. Could \"防火等级\" be interpreted as \"fire rating\" and user wants to set it to true? That is semantically invalid but not our concern? The stage is property resolution, not value type checking. We are to select candidate based on phrase. The phrase directly maps. So confirmed.\n\nHowever boundary says: \"Return confirmed only when the user's language provides direct and sufficiently specific semantic evidence that uniquely authorizes exactly one offered candidate.\" Here yes.\n\nThus final.\n\nWe must output JSON only, no markdown.",
+            "refusal": null,
+            "role": "assistant",
+            "tool_calls": null
+          }
+        }
+      ],
+      "created": 1788278339,
+      "id": "1be83a4c-ae26-45b8-a66e-6db04d1a2485",
+      "model": "deepseek-v4-flash",
+      "moderation": null,
+      "object": "chat.completion",
+      "service_tier": null,
+      "stop_reason": "stop",
+      "system_fingerprint": "a26a7955944dc5c60445bff77fac9c8e",
+      "usage": {
+        "completion_tokens": 824,
+        "completion_tokens_details": "[REDACTED]",
+        "prompt_cache_hit_tokens": "[REDACTED]",
+        "prompt_cache_miss_tokens": "[REDACTED]",
+        "prompt_tokens": 2745,
+        "prompt_tokens_details": "[REDACTED]",
+        "total_tokens": 3569
+      }
+    }
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "schema_version": "text2ifc/ifc-repair-prompt-profile/0.1",
+  "profile_id": "door.fill-existing-opening.v0.2",
+  "profile_version": "0.2",
+  "component_family": "door",
+  "action": "fill_existing_opening",
+  "operation_type": "fill_existing_opening_with_door",
+  "target_ifc_classes": ["IfcOpeningElement"],
+  "classification_terms": ["fill opening", "existing opening", "填门", "洞口装门"],
+  "slot_summary": "Exact resolvable unfilled Opening; exact DoorStyle or explicit Door operation intent. Opening position and all overall dimensions come from the retained Opening.",
+  "required_slots": ["/target_query", "/parameters/fit_existing_opening"],
+  "conditional_slots": ["/parameters/door/operation_type", "/parameters/door/viewpoint", "/prototype_intent"],
+  "optional_slots": ["/property_intents", "/quantity_intents", "/occurrence_reuse_intent"],
+  "program_derived_slots": ["/parameters/position", "/parameters/opening", "/parameters/door/overall_width_mm", "/parameters/door/overall_height_mm", "host wall", "GlobalIds", "storey containment", "door visual representation"],
+  "forbidden_inferences": ["opening identity", "left or right swing without viewpoint", "prototype similarity", "resize opening", "LLM-authored retained Opening geometry"],
+  "supported_capabilities": ["SINGLE_SWING_LEFT", "SINGLE_SWING_RIGHT", "NOTDEFINED", "exact_type_reuse", "generated_type"],
+  "unsupported_capabilities": ["filled_opening", "opening_resize", "REVOLVING", "FOLDING", "SLIDING"],
+  "stage2_projection_fields": ["operation_id", "operation_type", "target", "parameters", "evidence_refs"],
+  "few_shots": [
+    {"example_id":"door.fill.v0.2.complete","path":"prompts/agent/ifc-repair-few-shots/door-fill-v0.2-complete.json","sha256":"sha256:41e506263c0dc643fefec07c25457febfcb3dc8dea02396de78b5ba7b4b05ab1"},
+    {"example_id":"door.fill.v0.2.clarification","path":"prompts/agent/ifc-repair-few-shots/door-fill-v0.2-clarification.json","sha256":"sha256:e53e989a7d195c9c67cde4cec90c2f680422f95b8817fd1af56ecefd3baa7c6f"},
+    {"example_id":"door.fill.v0.2.type-reuse","path":"prompts/agent/ifc-repair-few-shots/door-fill-v0.2-type-reuse.json","sha256":"sha256:a2ae9d7a59c53c7444dba7b113d3496887d1a37edacc33fa87d98f4af393e860"},
+    {"example_id":"door.fill.v0.2.unsupported","path":"prompts/agent/ifc-repair-few-shots/door-fill-v0.2-unsupported.json","sha256":"sha256:7652bbb46725e720be2ff84f2421ff714ec9a568dbcb121b8d2bac3125f1ae3b"}
+  ]
+}

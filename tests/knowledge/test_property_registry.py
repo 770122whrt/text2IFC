@@ -75,6 +75,35 @@ def test_psd_parser_preserves_complex_property_children(psd_zip_factory) -> None
     assert colour["properties"]["Green"]["data_type"] == "IfcInteger"
 
 
+def test_psd_parser_preserves_property_and_pset_definitions(
+    psd_zip_factory,
+) -> None:
+    xml = (
+        "<PropertySetDef>"
+        "<Name>Pset_WindowCommon</Name>"
+        "<Definition>Common properties for windows.</Definition>"
+        "<ApplicableClasses><ClassName>IfcWindow</ClassName></ApplicableClasses>"
+        "<PropertyDefs><PropertyDef><Name>IsExternal</Name>"
+        "<Definition>Whether the window is external.</Definition>"
+        "<PropertyType><TypePropertySingleValue>"
+        '<DataType type="IfcBoolean"/>'
+        "</TypePropertySingleValue></PropertyType></PropertyDef></PropertyDefs>"
+        "</PropertySetDef>"
+    )
+    archive = psd_zip_factory(
+        {"R2x3_TC1/psd/IfcSharedBldgElements/Pset_WindowCommon.xml": xml}
+    )
+
+    registry = build_property_registry(archive)
+    window = registry["property_sets"]["Pset_WindowCommon"]
+
+    assert window["definition"] == "Common properties for windows."
+    assert (
+        window["properties"]["IsExternal"]["definition"]
+        == "Whether the window is external."
+    )
+
+
 def test_checked_in_property_registry_matches_official_inventory(
     project_root: Path,
 ) -> None:

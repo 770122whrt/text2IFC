@@ -1,0 +1,55 @@
+{
+  "schema_version": "text2ifc/phase12-stage1-property-value-contract-cases/0.1",
+  "contract": "preserve_explicit_property_value_before_property_resolution",
+  "cases": [
+    {
+      "case_id": "affirmative-window",
+      "family": "window",
+      "request": "Mark the target Window as external.",
+      "expected_raw_value": true,
+      "expected_route": "property_resolution"
+    },
+    {
+      "case_id": "affirmative-column",
+      "family": "column",
+      "request": "State that the target Column is load bearing.",
+      "expected_raw_value": true,
+      "expected_route": "property_resolution"
+    },
+    {
+      "case_id": "negative-door",
+      "family": "door",
+      "request": "State that the target Door is not external.",
+      "expected_raw_value": false,
+      "expected_route": "property_resolution"
+    },
+    {
+      "case_id": "negative-beam",
+      "family": "beam",
+      "request": "Mark the target Beam as not load bearing.",
+      "expected_raw_value": false,
+      "expected_route": "property_resolution"
+    },
+    {
+      "case_id": "literal-wall",
+      "family": "wall",
+      "request": "Set the target Wall acoustic rating to Rw 50.",
+      "expected_raw_value": "Rw 50",
+      "expected_route": "property_resolution"
+    },
+    {
+      "case_id": "numeric-beam",
+      "family": "beam",
+      "request": "Set the target Beam reference code to 42.",
+      "expected_raw_value": 42,
+      "expected_route": "property_resolution"
+    },
+    {
+      "case_id": "missing-column",
+      "family": "column",
+      "request": "Set the target Column load bearing status.",
+      "expected_raw_value": null,
+      "expected_route": "value_clarification"
+    }
+  ]
+}

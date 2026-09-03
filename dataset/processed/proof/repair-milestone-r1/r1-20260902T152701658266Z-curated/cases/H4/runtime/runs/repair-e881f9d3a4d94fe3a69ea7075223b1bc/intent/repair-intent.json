@@ -1,0 +1,85 @@
+{
+  "model_fingerprint": "sha256:f61ff5cf8e1cc88da6944d6bcd3e2e7da5ff27dd3288a8781908018cb8240cd6",
+  "operations": [
+    {
+      "attribute_intents": [],
+      "occurrence_reuse_intent": null,
+      "operation_id": "add-beam-level5-1",
+      "operation_type": "add_beam",
+      "parameters": {
+        "axis": {
+          "end": {
+            "x_mm": 8000,
+            "y_mm": 10000,
+            "z_mm": 3000
+          },
+          "start": {
+            "x_mm": 2000,
+            "y_mm": 10000,
+            "z_mm": 3000
+          }
+        },
+        "section": {
+          "height_mm": 500,
+          "shape": "rectangle",
+          "width_mm": 300
+        }
+      },
+      "property_intents": [],
+      "prototype_intent": null,
+      "provenance": [
+        {
+          "excerpt": "在 Level 5 添加一根受支持的水平矩形梁，中心轴从 (2000, 10000, 3000) mm 到 (8000, 10000, 3000) mm，截面宽 300 mm、高 500 mm",
+          "reference": "public_request",
+          "source_kind": "user_request"
+        }
+      ],
+      "quantity_intents": [],
+      "routing_intent": {
+        "action": "add",
+        "component_family": "beam",
+        "operation_profile": "beam.add.v0.3",
+        "source": {
+          "excerpt": "在 Level 5 添加一根受支持的水平矩形梁，中心轴从 (2000, 10000, 3000) mm 到 (8000, 10000, 3000) mm，截面宽 300 mm、高 500 mm",
+          "reference": "public_request",
+          "source_kind": "user_request"
+        }
+      },
+      "semantic_bundle_refs": [],
+      "target_query": {
+        "allowed_ifc_classes": [
+          "IfcBuildingStorey"
+        ],
+        "names": [
+          "Level 5"
+        ],
+        "schema_version": "text2ifc/ifc-target-query/0.1"
+      }
+    }
+  ],
+  "prompt_fingerprint": "sha256:dec929f94db4c626fadf9b2bc2592e3c351d9fbd0ef4c94243475a4559e8b568",
+  "provenance": [
+    {
+      "excerpt": "在 Level 5 添加一根受支持的水平矩形梁，中心轴从 (2000, 10000, 3000) mm 到 (8000, 10000, 3000) mm，截面宽 300 mm、高 500 mm，并同时为该梁创建一个 structural analysis node。两项必须作为同一个事务完成。",
+      "reference": "public_request",
+      "source_kind": "user_request"
+    }
+  ],
+  "request_id": "request-8305aae47936c190",
+  "schema_version": "text2ifc/ifc-repair-intent/0.8",
+  "semantic_bundles": [],
+  "source_request_hash": "sha256:8305aae47936c190f6ad8aa63a9cd48ef126e287e5d2d3598f985caa6087723b",
+  "unsupported_requests": [
+    {
+      "capability_id": "structural_analysis_node",
+      "kind": "registered_capability",
+      "operation_id": "add-beam-level5-1",
+      "source": {
+        "excerpt": "并同时为该梁创建一个 structural analysis node",
+        "reference": "public_request",
+        "source_kind": "user_request"
+      },
+      "unsupported_id": "structural-analysis-node-for-beam-1"
+    }
+  ]
+}

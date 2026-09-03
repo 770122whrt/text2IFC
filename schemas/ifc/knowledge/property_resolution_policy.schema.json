@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "text2ifc/property-resolution-policy/0.2",
+  "title": "IFC Property Resolution Policy 0.2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "policy_id",
+    "version",
+    "max_candidates",
+    "max_attempts",
+    "vector_required",
+    "minimum_retrieval_score",
+    "alias_authority",
+    "vector_top1_authority",
+    "vector_margin_authority",
+    "standard_selection",
+    "project_or_custom",
+    "explicit_canonical",
+    "supported_template",
+    "supported_scope"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "text2ifc/property-resolution-policy/0.2"
+    },
+    "policy_id": {
+      "const": "ifc2x3.single-value.vector-reranker"
+    },
+    "version": {"const": "0.2"},
+    "max_candidates": {"const": 5},
+    "max_attempts": {"const": 2},
+    "vector_required": {"const": true},
+    "minimum_retrieval_score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "alias_authority": {"const": false},
+    "vector_top1_authority": {"const": false},
+    "vector_margin_authority": {"const": false},
+    "standard_selection": {"const": "stage_1_5_required"},
+    "project_or_custom": {"const": "explicit_confirmation_required"},
+    "explicit_canonical": {"const": "exact_path_bypass"},
+    "supported_template": {"const": "TypePropertySingleValue"},
+    "supported_scope": {"const": "occurrence_direct"}
+  }
+}

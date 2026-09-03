@@ -1,0 +1,25 @@
+{
+  "schema_version": "text2ifc/phase12-live-proof-source/0.1",
+  "case_id": "H1",
+  "status": "passed",
+  "provider": "deepseek-openai-compatible",
+  "model": "deepseek-v4-flash",
+  "provider_evidence_mode": "live",
+  "synthetic_fallback_used": false,
+  "operation_count": 2,
+  "source": {
+    "path": "dataset/external/ifc-bench/projects/duplex/arc.ifc",
+    "schema": "IFC2X3",
+    "sha256": "sha256:707a032566dee8e969a44d95509be46d646440e2443624709f8d3ae2b45f4656",
+    "size_bytes": 1656153
+  },
+  "live_contract": {
+    "case_id": "H1",
+    "live_uat_result_path": "provider-evidence/live-result.json",
+    "live_uat_result_sha256": "sha256:bd97fc39e7f725df8f2530c3841368982de384abc0324c1235fa53a167557e6b",
+    "provider_draft_path": "runtime/runs/repair-ced900798d8c479da01c5d903cc7d061/changeset/provider-draft.json",
+    "provider_draft_sha256": "sha256:0ffe41c7bdeec085e0a0ed4c9fd49b56766e157e9041a808569ae43717bea5a4",
+    "prompt_profile_selection_path": "runtime/runs/repair-ced900798d8c479da01c5d903cc7d061/changeset/prompt-profile-selection.json",
+    "prompt_profile_selection_sha256": "sha256:b0eb03fb9f2612243538855ee293c826a1c60b7872b49d7c0f11e2cee3dccc4c"
+  }
+}

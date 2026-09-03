@@ -1,0 +1,129 @@
+{
+  "schema_version": "text2ifc/phase12-plan07-final-proof/0.1",
+  "proof_id": "phase12-plan07-final-uat-20260902T180900748385Z",
+  "created_at": "2026-09-03",
+  "status": "closed_by_additive_evidence",
+  "payload_file_count_before_package_metadata": 238,
+  "payload_ifc_count": 8,
+  "provider": "deepseek-openai-compatible",
+  "model": "deepseek-v4-flash",
+  "thinking": {
+    "type": "enabled"
+  },
+  "final_code_run": {
+    "source": "raw-run/live-uat-result.json",
+    "status": "passed",
+    "case_count": 4,
+    "contract_pass_count": 4,
+    "transport_calls": 11,
+    "transport_calls_by_stage": {
+      "stage1": 4,
+      "property_resolution": 4,
+      "stage2": 3
+    },
+    "runner_contract_eligible": true,
+    "embedded_historical_fields_preserved": {
+      "acceptance_eligible": false,
+      "proof_acceptance_eligible": false,
+      "proof_validation_status": "pending_plan_12_14"
+    }
+  },
+  "source_fixture": {
+    "public_damaged_ifc": "source-fixture/public-input/02-damaged.ifc",
+    "evaluator_only_original_ifc": "source-fixture/private-evaluator-only/01-original.ifc",
+    "evaluator_only_mutation_truth": "source-fixture/private-evaluator-only/mutation_manifest.private.json",
+    "authority_manifest": "source-fixture/authority/manifest.json",
+    "production_isolation": "The original IFC and mutation truth were copied into this package only after the genuine run and remain evaluator-only."
+  },
+  "admission": {
+    "root": "admission",
+    "network_calls": 0,
+    "role": "final-code changed-scope admission binding"
+  },
+  "cases": [
+    {
+      "case_id": "complete",
+      "status": "passed",
+      "transport_calls_by_stage": {
+        "stage1": 1,
+        "property_resolution": 2,
+        "stage2": 1
+      },
+      "raw_case_result": "raw-run/cases/complete/case-result.json",
+      "process_root": "raw-run/cases/complete/runtime/runs/repair-2c2d4be0aa8240488448b826efc0dab4",
+      "original_ifc": "source-fixture/private-evaluator-only/01-original.ifc",
+      "damaged_ifc": "source-fixture/public-input/02-damaged.ifc",
+      "repaired_ifc": "raw-run/cases/complete/runtime/runs/repair-2c2d4be0aa8240488448b826efc0dab4/.terminal-bundles/59df2d59c1e845d28d91baf52a1c358c/successful/repaired.ifc",
+      "l0_l1_l2": "passed",
+      "accepted_plan07_structural_proof_with_physical_triplet": "../../ifc-repair-success-cases/structural/live/phase12-live-deepseek-complete",
+      "independent_triplet_audit_publishable": null,
+      "strict_structural_recomputed": true
+    },
+    {
+      "case_id": "clarification-resume",
+      "status": "passed",
+      "transport_calls_by_stage": {
+        "stage1": 1,
+        "property_resolution": 1,
+        "stage2": 1
+      },
+      "raw_case_result": "raw-run/cases/clarification-resume/case-result.json",
+      "process_root": "raw-run/cases/clarification-resume/runtime/runs/repair-392a149cc545470085ee1bce5176a108",
+      "original_ifc": "source-fixture/private-evaluator-only/01-original.ifc",
+      "damaged_ifc": "source-fixture/public-input/02-damaged.ifc",
+      "repaired_ifc": "raw-run/cases/clarification-resume/runtime/runs/repair-392a149cc545470085ee1bce5176a108/.terminal-bundles/13d95f2497bc4699ad188281c940c1fe/successful/repaired.ifc",
+      "l0_l1_l2": "passed",
+      "accepted_plan07_structural_proof_with_physical_triplet": "../../ifc-repair-success-cases/structural/live/phase12-live-deepseek-clarification-resume",
+      "independent_triplet_audit_publishable": null,
+      "strict_structural_recomputed": true
+    },
+    {
+      "case_id": "window-semantic-canary",
+      "status": "passed",
+      "transport_calls_by_stage": {
+        "stage1": 1,
+        "property_resolution": 1,
+        "stage2": 1
+      },
+      "raw_case_result": "raw-run/cases/window-semantic-canary/case-result.json",
+      "process_root": "raw-run/cases/window-semantic-canary/runtime/runs/repair-1ee9e411b9fc44308dfb2f9c17c002f8",
+      "original_ifc": null,
+      "damaged_ifc": "source-fixture/public-input/02-damaged.ifc",
+      "repaired_ifc": "raw-run/cases/window-semantic-canary/runtime/runs/repair-1ee9e411b9fc44308dfb2f9c17c002f8/.terminal-bundles/31eab6f6a4374d3faf0687a70b8a3bac/successful/repaired.ifc",
+      "l0_l1_l2": "passed",
+      "triplet_status": "not_lawful_for_private_ifccompare",
+      "triplet_reason": "No pre-declared private property mutation truth was frozen for this semantic canary; the shared pristine file is not relabeled as case-specific Gold."
+    },
+    {
+      "case_id": "program-guard",
+      "status": "passed",
+      "transport_calls_by_stage": {
+        "stage1": 1,
+        "property_resolution": 0,
+        "stage2": 0
+      },
+      "raw_case_result": "raw-run/cases/program-guard/case-result.json",
+      "process_root": "raw-run/cases/program-guard/runtime/runs/repair-588c520fcc6448269d3484a8e8b418af",
+      "original_ifc": null,
+      "damaged_ifc": "source-fixture/public-input/02-damaged.ifc",
+      "repaired_ifc": null,
+      "terminal_class": "STRUCTURAL_ANALYSIS_UNSUPPORTED",
+      "mutation_attempted": false,
+      "published": false,
+      "triplet_status": "not_applicable_no_output_guard"
+    }
+  ],
+  "proof_authorities": {
+    "original_plan07_independent_proof_collection": "../../ifc-repair-success-cases",
+    "r1_independent_proof_validation": "../../repair-milestone-r1/r1-20260902T152701658266Z-curated/PROOF-VALIDATION.json",
+    "final_code_compatibility_evidence": "raw-run/live-uat-result.json"
+  },
+  "retained_limitations": [
+    {
+      "code": "PLAN07_FINAL_CODE_CURATOR_LAYOUT_COMPATIBILITY",
+      "detail": "The existing curator requires a run-local full preflight tree and rejected the changed-scope admission layout with LIVE_PREFLIGHT_EVIDENCE_MISSING. This bundle is not claimed as a second curator-installed independent Proof."
+    }
+  ],
+  "package_validation": "PACKAGE-VALIDATION.json",
+  "payload_inventory": "PAYLOAD-INVENTORY.json"
+}

@@ -1,0 +1,14 @@
+请一次性修复以下共 5 扇窗，并作为一个统一 ChangeSet 原子执行：
+1. 在 Level 1 的墙“Basic Wall:MockUp Exterior Ground Floor:526491”（GlobalId: 31F6eMknj99vYl9fb0Qb7F）上，以wall_local_start 为基准，沿墙 Axis 正方向 886.886 mm 处设置洞口中心；洞口宽 1000 mm、高 2200 mm，窗台高 0 mm；复用损伤 IFC 中仍存在的窗型“BALANS Fixed Single Window:BALANS 10M FLOOR (SH = 0)”（GlobalId: 0t7TVxPGL1fBrLXVTrUtp6），窗完整填充洞口。
+2. 在 Level 1 的墙“Basic Wall:MockUp Exterior Ground Floor:581328”（GlobalId: 0MOEoDTm9EnO9yKsXjjie3）上，以wall_local_start 为基准，沿墙 Axis 正方向 1027.89 mm 处设置洞口中心；洞口宽 1000 mm、高 2200 mm，窗台高 0 mm；复用损伤 IFC 中仍存在的窗型“BALANS Fixed Single Window:BALANS 10M FLOOR (SH = 0)”（GlobalId: 0t7TVxPGL1fBrLXVTrUtp6），窗完整填充洞口。
+   属性要求：Pset_WindowCommon.IsExternal=true、Pset_WindowCommon.Reference="BALANS 10M FLOOR (SH = 0)"
+3. 在 6 - Sixth Floor 的墙“Basic Wall:MockUp Roof Wall:945627”（GlobalId: 3ktY1kg3rAwgNBX_XWRSTN）上，以wall_local_start 为基准，沿墙 Axis 正方向 5389.16 mm 处设置洞口中心；洞口宽 1000 mm、高 600 mm，窗台高 1200 mm；复用损伤 IFC 中仍存在的窗型“BALANS Fixed Single Window:BALANS 10M BATHROOM”（GlobalId: 0ifV7awIzBlRVUTZ41zp$1），窗完整填充洞口。
+   属性要求：Pset_WindowCommon.IsExternal=true、Pset_WindowCommon.Reference="BALANS 10M BATHROOM"
+4. 在 Level 1 的墙“Basic Wall:MockUp Exterior Ground Floor:525446”（GlobalId: 0qPq0uZ5vABQlKT8FAVXQn）上，以wall_local_start 为基准，沿墙 Axis 正方向 1619.45 mm 处设置洞口中心；洞口宽 2000 mm、高 2200 mm，窗台高 0 mm；复用损伤 IFC 中仍存在的窗型“BALANS Fixed Single Window:BALANS 20M FLOOR (SH = 0)”（GlobalId: 0t7TVxPGL1fBrLXVTrUtwx），窗完整填充洞口。
+   属性要求：Pset_WindowCommon.IsExternal=true、Pset_WindowCommon.Reference="BALANS 20M FLOOR (SH = 0)"
+5. 在 Level 1 的墙“Basic Wall:MockUp Exterior Ground Floor:451915”（GlobalId: 2V6UQJFc92sfDYeuDKgYFi）上，以wall_local_start 为基准，沿墙 Axis 正方向 11030 mm 处设置洞口中心；洞口宽 3000 mm、高 2200 mm，窗台高 0 mm；复用损伤 IFC 中仍存在的窗型“BALANS Fixed Single Window:BALANS 30M FLOOR (SH = 0)”（GlobalId: 0t7TVxPGL1fBrLXVTrUtsB），窗完整填充洞口。
+   属性要求：Pset_WindowCommon.IsExternal=true、Pset_WindowCommon.Reference="BALANS 30M FLOOR (SH = 0)"
+约束：
+- 保持五面宿主墙的身份、放置、材质、类型和既有属性不变
+- 保持楼层、空间布局和所有非目标构件不变
+- 任何一项不能安全完成时整批失败，不发布部分成功 IFC

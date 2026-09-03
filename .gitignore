@@ -3,8 +3,34 @@
 .cache/
 .pytest_cache/
 .pytest-tmp/
+.pytest-tmp*/
+.pytest-*/
+.pytest-*.log
+tmp_ifc_*/
+.tmp/
+
+# Local experiment/UAT output. Reproducible, reviewable success bundles belong
+# under dataset/processed/proof/ and are committed separately.
+/dataset/processed/jsonfix/
+/dataset/processed/ifc-repair/*
+/dataset/processed/audit-*/
+/dataset/processed/agent-demo/phase6.5-live-stability/
+/dataset/processed/agent-demo/phase6.6-difficult-live-64k-observation/
+/dataset/processed/agent-demo/phase6.6-medium-live*/
+
+# One sandbox-created evidence directory lost its inherited Windows ACL before
+# it could be normalized. The readable, verified bundle uses the -v1 suffix.
+/dataset/processed/ifc-repair/cases/large-building-window-repair-001-offline/
+# Old UAT fixtures whose inherited Windows ACL cannot be read or removed.
+# All accessible duplicate evidence in these exact directories was deleted.
+/dataset/processed/ifc-repair/phase9-live-uat/uat-20260720T161502158611Z/
+/dataset/processed/ifc-repair/phase9-live-uat/uat-20260720T161804460546Z/
+/dataset/processed/ifc-repair/phase9-live-uat/uat-20260720T162004153948Z/
+/dataset/processed/ifc-repair/phase9-live-uat/uat-20260720T174031012211Z/
+/dataset/processed/ifc-repair/phase9-live-uat/uat-20260720T174449826438Z/
 __pycache__/
 *.py[cod]
+*.egg-info/
 *.exp.cache.dat
 .claude/
 .playwright-mcp/

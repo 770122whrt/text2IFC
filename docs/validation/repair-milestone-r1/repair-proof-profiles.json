@@ -1,0 +1,58 @@
+{
+  "schema_version": "text2ifc/ifc-repair-proof-profiles/0.1",
+  "provenance_namespace": "repair-milestone-r1",
+  "freeze": {
+    "path": "repair-acceptance-freeze.json",
+    "sha256": "sha256:e1a66e61de8cc56b1b99bb2cb376c7c78429fe4fc8e0a537e29c356a15dded70"
+  },
+  "execution_order": ["E1", "E2", "E3", "E4", "M1", "M2", "M3", "H1", "H2", "H3", "H4", "A1"],
+  "cases": [
+    {"profile_id": "r1-E1", "case_id": "E1", "provenance_namespace": "repair-milestone-r1", "terminal_class": "SUCCESS", "property_claim_count": 1, "artifact_predicates": [
+      {"predicate_id": "E1-property", "kind": "occurrence_property", "target": {"ifc_class": "IfcWindow", "global_id": "1hOSvn6df7F8_7GcBWlRRL"}, "property": {"set_name": "Pset_WindowCommon", "property_name": "IsExternal", "value_type": "IfcBoolean", "value": true, "scope": "occurrence_direct"}},
+      {"predicate_id": "E1-preservation", "kind": "occurrence_preservation", "target": {"ifc_class": "IfcWindow", "global_id": "1hOSvn6df7F8_7GcBWlRRL"}}
+    ]},
+    {"profile_id": "r1-E2", "case_id": "E2", "provenance_namespace": "repair-milestone-r1", "terminal_class": "SUCCESS", "property_claim_count": 1, "artifact_predicates": [
+      {"predicate_id": "E2-property", "kind": "occurrence_property", "target": {"ifc_class": "IfcDoor", "global_id": "3JlX9$$_PCKBNpDob64$5M"}, "property": {"set_name": "Pset_DoorCommon", "property_name": "FireRating", "value_type": "IfcLabel", "value": "EI60", "scope": "occurrence_direct"}},
+      {"predicate_id": "E2-preservation", "kind": "occurrence_preservation", "target": {"ifc_class": "IfcDoor", "global_id": "3JlX9$$_PCKBNpDob64$5M"}}
+    ]},
+    {"profile_id": "r1-E3", "case_id": "E3", "provenance_namespace": "repair-milestone-r1", "terminal_class": "SUCCESS", "property_claim_count": 1, "artifact_predicates": [
+      {"predicate_id": "E3-property", "kind": "occurrence_property", "target": {"ifc_class": "IfcBeam", "global_id": "1BpQ2K66f13Pyv1xzN7BBN"}, "property": {"set_name": "Pset_BeamCommon", "property_name": "Reference", "value_type": "IfcIdentifier", "value": "B-204", "scope": "occurrence_direct"}},
+      {"predicate_id": "E3-preservation", "kind": "occurrence_preservation", "target": {"ifc_class": "IfcBeam", "global_id": "1BpQ2K66f13Pyv1xzN7BBN"}}
+    ]},
+    {"profile_id": "r1-E4", "case_id": "E4", "provenance_namespace": "repair-milestone-r1", "terminal_class": "SUCCESS", "property_claim_count": 1, "artifact_predicates": [
+      {"predicate_id": "E4-property", "kind": "occurrence_property", "target": {"ifc_class": "IfcWallStandardCase", "global_id": "0ZBert7zf3GhThdO12NKAr"}, "property": {"set_name": "Pset_WallCommon", "property_name": "AcousticRating", "value_type": "IfcLabel", "value": "Rw 50", "scope": "occurrence_direct"}},
+      {"predicate_id": "E4-preservation", "kind": "occurrence_preservation", "target": {"ifc_class": "IfcWallStandardCase", "global_id": "0ZBert7zf3GhThdO12NKAr"}}
+    ]},
+    {"profile_id": "r1-M1", "case_id": "M1", "provenance_namespace": "repair-milestone-r1", "terminal_class": "INADMISSIBLE_VALUE_OR_CLARIFICATION", "property_claim_count": 1, "terminal_expectation": {"resolved_property_identity": "Pset_DoorCommon.FireRating", "deterministic_admissibility_status": "clarification_required"}, "artifact_predicates": [
+      {"predicate_id": "M1-property-after-resume", "kind": "occurrence_property", "target": {"ifc_class": "IfcDoor", "global_id": "3JlX9$$_PCKBNpDob64$4w"}, "property": {"set_name": "Pset_DoorCommon", "property_name": "FireRating", "value_type": "IfcLabel", "value": "EI60", "scope": "occurrence_direct"}},
+      {"predicate_id": "M1-preservation", "kind": "occurrence_preservation", "target": {"ifc_class": "IfcDoor", "global_id": "3JlX9$$_PCKBNpDob64$4w"}}
+    ]},
+    {"profile_id": "r1-M2", "case_id": "M2", "provenance_namespace": "repair-milestone-r1", "terminal_class": "SUCCESS", "property_claim_count": 1, "artifact_predicates": [
+      {"predicate_id": "M2-beam", "kind": "structural_add", "operation_type": "add_beam", "storey_global_id": "2nxdYR2RHCDBiKJuiQr1lO", "axis_start_mm": [2000, -2000, 3000], "axis_end_mm": [8000, -2000, 3000], "section_width_mm": 300, "section_height_mm": 500, "type_policy": "generated", "property": {"set_name": "Pset_BeamCommon", "property_name": "Reference", "value_type": "IfcIdentifier", "value": "B-NEW-01", "scope": "occurrence_direct"}}
+    ]},
+    {"profile_id": "r1-M3", "case_id": "M3", "provenance_namespace": "repair-milestone-r1", "terminal_class": "SUCCESS", "property_claim_count": 1, "artifact_predicates": [
+      {"predicate_id": "M3-column", "kind": "structural_add", "operation_type": "add_column", "storey_global_id": "02GkOQJZz4x9WAhoZkM67S", "axis_start_mm": [25000, 60000, 0], "axis_end_mm": [25000, 60000, 3000], "section_width_mm": 400, "section_height_mm": 600, "orientation_xy": [1, 0], "type_policy": "generated", "property": {"set_name": "Pset_ColumnCommon", "property_name": "LoadBearing", "value_type": "IfcBoolean", "value": true, "scope": "occurrence_direct"}}
+    ]},
+    {"profile_id": "r1-H1", "case_id": "H1", "provenance_namespace": "repair-milestone-r1", "terminal_class": "SUCCESS", "property_claim_count": 1, "artifact_predicates": [
+      {"predicate_id": "H1-beam", "kind": "structural_add", "operation_type": "add_beam", "storey_global_id": "1xS3BCk291UvhgP2dvNMKI", "axis_start_mm": [1000, -20000, 3100], "axis_end_mm": [7000, -20000, 3100], "section_width_mm": 300, "section_height_mm": 500, "type_policy": "generated"},
+      {"predicate_id": "H1-window", "kind": "occurrence_property", "target": {"ifc_class": "IfcWindow", "global_id": "1hOSvn6df7F8_7GcBWlRLx"}, "property": {"set_name": "Pset_WindowCommon", "property_name": "FireRating", "value_type": "IfcLabel", "value": "EI60", "scope": "occurrence_direct"}},
+      {"predicate_id": "H1-window-preservation", "kind": "occurrence_preservation", "target": {"ifc_class": "IfcWindow", "global_id": "1hOSvn6df7F8_7GcBWlRLx"}},
+      {"predicate_id": "H1-atomic", "kind": "atomic_operation_set", "operation_types": ["add_beam", "set_occurrence_properties"]}
+    ]},
+    {"profile_id": "r1-H2", "case_id": "H2", "provenance_namespace": "repair-milestone-r1", "terminal_class": "SUCCESS", "property_claim_count": 2, "artifact_predicates": [
+      {"predicate_id": "H2-door", "kind": "occurrence_property", "target": {"ifc_class": "IfcDoor", "global_id": "1jI3nV6Sn2LfeyEYxROCeh"}, "property": {"set_name": "Pset_DoorCommon", "property_name": "FireRating", "value_type": "IfcLabel", "value": "EI60", "scope": "occurrence_direct"}},
+      {"predicate_id": "H2-wall", "kind": "occurrence_property", "target": {"ifc_class": "IfcWall", "global_id": "2HaS6zNOX8xOGjmaNi_r5s"}, "property": {"set_name": "Pset_WallCommon", "property_name": "AcousticRating", "value_type": "IfcLabel", "value": "Rw 50", "scope": "occurrence_direct"}},
+      {"predicate_id": "H2-door-preservation", "kind": "occurrence_preservation", "target": {"ifc_class": "IfcDoor", "global_id": "1jI3nV6Sn2LfeyEYxROCeh"}},
+      {"predicate_id": "H2-wall-preservation", "kind": "occurrence_preservation", "target": {"ifc_class": "IfcWall", "global_id": "2HaS6zNOX8xOGjmaNi_r5s"}},
+      {"predicate_id": "H2-atomic", "kind": "atomic_operation_set", "operation_types": ["set_occurrence_properties", "set_occurrence_properties"]}
+    ]},
+    {"profile_id": "r1-H3", "case_id": "H3", "provenance_namespace": "repair-milestone-r1", "terminal_class": "CLARIFICATION_THEN_SUCCESS", "property_claim_count": 1, "terminal_expectation": {"selected_identity": "IfcWindow:1hOSvn6df7F8_7GcBWlS2V"}, "artifact_predicates": [
+      {"predicate_id": "H3-property", "kind": "occurrence_property", "target": {"ifc_class": "IfcWindow", "global_id": "1hOSvn6df7F8_7GcBWlS2V"}, "property": {"set_name": "Pset_WindowCommon", "property_name": "IsExternal", "value_type": "IfcBoolean", "value": true, "scope": "occurrence_direct"}},
+      {"predicate_id": "H3-preservation", "kind": "occurrence_preservation", "target": {"ifc_class": "IfcWindow", "global_id": "1hOSvn6df7F8_7GcBWlS2V"}}
+    ]},
+    {"profile_id": "r1-H4", "case_id": "H4", "provenance_namespace": "repair-milestone-r1", "terminal_class": "UNSUPPORTED_ATOMIC_GUARD", "property_claim_count": 0, "terminal_expectation": {"supported_capabilities": ["add_beam"], "unsupported_capabilities": ["structural_analysis_node"], "atomic_request": true}, "artifact_predicates": []},
+    {"profile_id": "r1-A1", "case_id": "A1", "provenance_namespace": "repair-milestone-r1", "terminal_class": "SUCCESS", "property_claim_count": 0, "artifact_predicates": [
+      {"predicate_id": "A1-beam", "kind": "structural_add", "operation_type": "add_beam", "storey_global_id": "02GkOQJZz4x9WAhoZkM67S", "axis_start_mm": [25000, 58000, 3000], "axis_end_mm": [31000, 58000, 3000], "section_width_mm": 500, "section_height_mm": 800, "type_policy": "reuse_exact_existing", "type_global_id": "12jWe1_Rb2cR0ot5ICgwf_"}
+    ]}
+  ]
+}

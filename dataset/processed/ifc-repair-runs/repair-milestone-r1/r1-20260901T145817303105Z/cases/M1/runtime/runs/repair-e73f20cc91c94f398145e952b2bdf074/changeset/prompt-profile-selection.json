@@ -1,0 +1,72 @@
+{
+  "estimated_tokens": 287,
+  "few_shot_hashes": [],
+  "few_shot_ids": [],
+  "few_shots": [],
+  "input_bytes": 1148,
+  "profile_hashes": [
+    "sha256:7b95c00e8f19ff4990053698c42dd182e385931260a2929d0edecbd19dbbec2b"
+  ],
+  "profile_ids": [
+    "occurrence.set-properties"
+  ],
+  "profiles": [
+    {
+      "action": "set_properties",
+      "classification_terms": [
+        "property",
+        "pset",
+        "属性",
+        "set property"
+      ],
+      "component_family": "occurrence",
+      "conditional_slots": [],
+      "few_shots": [],
+      "forbidden_inferences": [
+        "property value",
+        "shared Type mutation",
+        "custom property confirmation"
+      ],
+      "operation_type": "set_occurrence_properties",
+      "optional_slots": [],
+      "profile_hash": "sha256:7b95c00e8f19ff4990053698c42dd182e385931260a2929d0edecbd19dbbec2b",
+      "profile_id": "occurrence.set-properties",
+      "profile_version": "0.1",
+      "program_derived_slots": [
+        "canonical property typing after knowledge resolution"
+      ],
+      "required_slots": [
+        "/target_query",
+        "/property_intents"
+      ],
+      "schema_version": "text2ifc/ifc-repair-prompt-profile/0.1",
+      "slot_summary": "Existing occurrence target and one or more explicit scalar property values.",
+      "stage2_projection_fields": [
+        "operation_id",
+        "operation_type",
+        "target",
+        "parameters",
+        "evidence_refs"
+      ],
+      "supported_capabilities": [
+        "IfcPropertySingleValue",
+        "occurrence_direct"
+      ],
+      "target_ifc_classes": [
+        "IfcBeam",
+        "IfcColumn",
+        "IfcDoor",
+        "IfcWall",
+        "IfcWallStandardCase",
+        "IfcWindow"
+      ],
+      "unsupported_capabilities": [
+        "enumerated_value",
+        "list_value",
+        "table_value",
+        "complex_property",
+        "type_owned"
+      ]
+    }
+  ]
+}

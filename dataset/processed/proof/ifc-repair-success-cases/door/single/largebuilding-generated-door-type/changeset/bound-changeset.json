@@ -1,0 +1,97 @@
+{
+  "base_model_fingerprint": "sha256:fed14afd7b68fa79afee817b4f73e3fe391415e2e515b7a329744ba78aeeb10f",
+  "binding_status": "bound",
+  "changeset_id": "changeset-largebuilding-generated-door-type",
+  "evidence_refs": [
+    "request:/operation"
+  ],
+  "operations": [
+    {
+      "evidence_refs": [
+        "request:/operation"
+      ],
+      "operation_id": "operation-generated-door-001",
+      "operation_type": "add_door_with_opening_to_wall",
+      "parameters": {
+        "door": {
+          "operation_type": "SINGLE_SWING_RIGHT",
+          "overall_height_mm": 2134.0,
+          "overall_width_mm": 915.0
+        },
+        "opening": {
+          "height_mm": 2134.0,
+          "sill_height_mm": 0.0,
+          "width_mm": 915.0
+        },
+        "position": {
+          "center_offset_mm": 1657.5,
+          "reference": "wall_local_start"
+        }
+      },
+      "semantic_assignments": [
+        {
+          "applicability": "required",
+          "authoring_action": "inherit_from_type",
+          "derivation": {
+            "formal_attributes": {
+              "construction_type": "NOTDEFINED",
+              "operation_type": "SINGLE_SWING_RIGHT",
+              "parameter_takes_precedence": false,
+              "sizeable": false
+            },
+            "ifc_class": "IfcDoorStyle",
+            "template": {
+              "construction_type": "NOTDEFINED",
+              "name": "Text2IFC generated door type operation-generated-door-001",
+              "operation_type": "SINGLE_SWING_RIGHT",
+              "parameter_takes_precedence": false,
+              "sizeable": false
+            },
+            "template_digest": "sha256:fbb0687b50d9a784ae914128bb6d7fb374f0e9fc0f0037c826fbb0e861606891",
+            "template_id": "text2ifc-door-single-swing-template",
+            "template_version": "0.1"
+          },
+          "fact_key": "relationship:type",
+          "operation_id": "operation-generated-door-001",
+          "ownership": "type_inherited",
+          "provenance": [
+            "generated-type-template:0.1"
+          ],
+          "scope": "door_occurrence",
+          "source_fact_key": "relationship:type",
+          "source_kind": "deterministic_derived",
+          "source_ref": "generated-type:3B_xZ3LlPHr8sg9aigaebZ",
+          "unit": null,
+          "value": "3B_xZ3LlPHr8sg9aigaebZ",
+          "value_type": "IfcDoorStyle"
+        }
+      ],
+      "semantic_manifest": {
+        "manifest_id": "manifest-operation-generated-door-001",
+        "policy_id": "door.add-with-opening.l2",
+        "policy_version": "0.1"
+      },
+      "target": {
+        "wall_global_id": "2cXV28XOjE6f6irgi0COfF"
+      }
+    }
+  ],
+  "postconditions": [
+    "opening_voids_wall",
+    "door_fills_opening"
+  ],
+  "preconditions": [
+    "target_exists",
+    "opening_interval_available"
+  ],
+  "schema_version": "text2ifc/ifc-repair-changeset/0.4",
+  "scope": {
+    "forbidden_ids": [],
+    "target_ids": [
+      "2cXV28XOjE6f6irgi0COfF"
+    ]
+  },
+  "semantic_manifest_ref": "semantic-manifest.json",
+  "semantic_manifest_sha256": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+  "source_request_hash": "sha256:b9ca64a69dd23e23e41753a10fa657105e3d995027b55fb27fef8e27267c5004"
+}

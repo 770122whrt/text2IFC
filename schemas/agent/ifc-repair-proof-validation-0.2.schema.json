@@ -1,0 +1,80 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "text2ifc/ifc-repair-proof-validation/0.2",
+  "title": "IFC Repair Proof Validation Curator Boundary 0.2",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "schema_version",
+    "status",
+    "case_count",
+    "independently_recomputed_case_count",
+    "legacy_unverifiable_case_count",
+    "errors",
+    "cases"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "text2ifc/ifc-repair-proof-validation/0.2"
+    },
+    "status": {
+      "enum": ["passed", "failed"]
+    },
+    "case_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "independently_recomputed_case_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "legacy_unverifiable_case_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "errors": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "cases": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/case"
+      }
+    }
+  },
+  "$defs": {
+    "case": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "case_id",
+        "property_authority_coverage",
+        "property_claim_count",
+        "current_property_acceptance_eligible"
+      ],
+      "properties": {
+        "case_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "property_authority_coverage": {
+          "enum": [
+            "strict_stage_1_5_recomputed",
+            "not_applicable",
+            "historical_property_artifact_only"
+          ]
+        },
+        "property_claim_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "current_property_acceptance_eligible": {
+          "type": "boolean"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,77 @@
+{
+  "schema_version": "text2ifc/design-brief/2.0",
+  "language": "zh-CN",
+  "original_request": "## 2.2 Easy：单个矩形房间\n\n创建一个单层矩形房间，房间净尺寸为东西方向 6 米、南北方向 4 米，净高 3 米。\n\n墙厚 200 毫米，地板厚 150 毫米。\n\n在南侧外墙中央设置一樘外门，门宽 0.9 米、高 2.1 米，向室内开启。\n\n在北侧外墙中央设置一扇窗，窗宽 1.5 米、高 1.2 米，窗台距地面 0.9 米。\n\n生成楼层、房间空间、四面墙、地板、门和窗，并确保门窗正确依附在对应墙体中。房间应生成对应的 `IfcSpace`。",
+  "status": "ready",
+  "known_facts": {
+    "space": {
+      "shape": "rectangle",
+      "length_mm": 6000,
+      "width_mm": 4000,
+      "height_mm": 3000
+    },
+    "walls": {
+      "count": 4,
+      "enclosure": "closed",
+      "thickness_mm": 200
+    },
+    "floor": {
+      "thickness_mm": 150
+    },
+    "door": {
+      "host": "south_wall",
+      "alignment": "host_centerline",
+      "width_mm": 900,
+      "height_mm": 2100,
+      "opening_direction": "inward"
+    },
+    "window": {
+      "host": "north_wall",
+      "alignment": "host_centerline",
+      "width_mm": 1500,
+      "height_mm": 1200,
+      "sill_height_mm": 900
+    },
+    "storey": {
+      "id": "storey-1",
+      "name": "一层",
+      "elevation_mm": 0,
+      "net_height_mm": 3000
+    }
+  },
+  "fact_sources": [
+    {
+      "path": "/known_facts",
+      "source_turns": ["turn-user-001"],
+      "evidence_refs": [
+        "schema:bim-json-v2:entity",
+        "schema:bim-json-v2:representation",
+        "capability:IFC2X3:IfcSpace",
+        "capability:IFC2X3:IfcWall",
+        "capability:IFC2X3:IfcDoor",
+        "capability:IFC2X3:IfcWindow",
+        "capability:IFC2X3:IfcBuildingStorey",
+        "capability:IFC2X3:IfcSlab"
+      ]
+    }
+  ],
+  "missing_facts": [],
+  "ambiguities": [],
+  "unsupported_requests": [],
+  "user_corrections": [],
+  "clarification_questions": [],
+  "provenance": {
+    "source_turns": ["turn-user-001"],
+    "selected_evidence_ids": [
+      "schema:bim-json-v2:entity",
+      "schema:bim-json-v2:representation",
+      "capability:IFC2X3:IfcSpace",
+      "capability:IFC2X3:IfcWall",
+      "capability:IFC2X3:IfcDoor",
+      "capability:IFC2X3:IfcWindow",
+      "capability:IFC2X3:IfcBuildingStorey",
+      "capability:IFC2X3:IfcSlab"
+    ],
+    "few_shot_ids": ["design-brief-v2.complete-room-openings"]
+  }
+}
