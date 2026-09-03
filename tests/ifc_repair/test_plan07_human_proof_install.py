@@ -1,3 +1,4 @@
+import json
 from pathlib import Path
 
 from scripts.ifc_repair.install_plan07_human_proof import (
@@ -15,6 +16,25 @@ def test_checked_in_plan07_human_proof_is_directly_reviewable() -> None:
     assert result["no_repair_case_count"] == 1
     assert result["live_provider_calls"] == 11
     assert result["reopened_ifc_count"] == 28
+    assert result["accepted_overlap_count"] == 0
+
+    manifest = json.loads(
+        (DEFAULT_COLLECTION_ROOT / "plan07-manifest.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    assert manifest["status"] == "pending_human_review"
+    assert manifest["r1_included"] is False
+    for case in manifest["cases"]:
+        case_root = DEFAULT_COLLECTION_ROOT / case["path"]
+        authority = case_root / "evidence/README.md"
+        assert authority.is_file()
+        assert "Authoritative source bundle" in authority.read_text(
+            encoding="utf-8"
+        )
+        assert "evidence/README.md" in (
+            case_root / "REPORT.md"
+        ).read_text(encoding="utf-8")
 
     report = DEFAULT_COLLECTION_ROOT / "PLAN07-REPORT.md"
     assert report.is_file()

@@ -21,6 +21,7 @@
 3. 查看 agent/repair-intent.json 与 agent/target-resolution.json。
 4. 查看 changeset/bound-changeset.json。
 5. 查看 validation/structural-restoration-audit.json、validation/production-evaluation.json 和 validation/ifc-comparison.json。
+6. 通过 [evidence/README.md](evidence/README.md) 回到完整机器权威包。
 
 ## 证据边界
 

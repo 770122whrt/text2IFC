@@ -19,6 +19,7 @@
 3. 查看 agent/repair-intent.json、agent/target-resolution.json 与 agent/provider-attempts.json。
 4. 查看 changeset/bound-changeset.json。
 5. 查看 validation/evidence-decision.json、validation/production-evaluation.json；结构案例另看 validation/structural-restoration-audit.json。
+6. 通过 [evidence/README.md](evidence/README.md) 回到完整机器权威包。
 
 ## original 与 IFCCompare 边界
 

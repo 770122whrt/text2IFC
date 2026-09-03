@@ -16,5 +16,6 @@
 1. 阅读 input/request.txt。
 2. 阅读 NO-REPAIR.md。
 3. 查看 agent/provider-attempts.json 和 validation/evidence-decision.json。
+4. 通过 [evidence/README.md](evidence/README.md) 回到完整机器权威包。
 
 该目录故意没有 03-repaired.ifc。出现 repaired IFC 反而表示 guard 失败。

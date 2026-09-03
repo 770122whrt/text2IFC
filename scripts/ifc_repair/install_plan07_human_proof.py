@@ -9,6 +9,8 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
+import re
 import shutil
 import tempfile
 from dataclasses import dataclass
@@ -152,7 +154,9 @@ def _read_json(path: Path) -> dict[str, Any]:
 
 def _write_text(path: Path, value: str) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(value.rstrip() + "\n", encoding="utf-8")
+    path.write_text(
+        value.rstrip() + "\n", encoding="utf-8", newline="\n"
+    )
 
 
 def _write_json(path: Path, value: Any) -> None:
@@ -267,6 +271,7 @@ def _offline_report(case_root: Path, spec: CaseSpec) -> str:
 3. 查看 agent/repair-intent.json 与 agent/target-resolution.json。
 4. 查看 changeset/bound-changeset.json。
 5. 查看 validation/structural-restoration-audit.json、validation/production-evaluation.json 和 validation/ifc-comparison.json。
+6. 通过 [evidence/README.md](evidence/README.md) 回到完整机器权威包。
 
 ## 证据边界
 
@@ -294,7 +299,7 @@ def _copy_offline_case(
     _files_document(case_root, Path(spec.destination).name, roles)
 
 
-def _live_roles(case_id: str) -> dict[str, tuple[str, str]]:
+def _live_roles(spec: CaseSpec) -> dict[str, tuple[str, str]]:
     common = {
         "original.ifc": (
             "01-original.ifc",
@@ -363,7 +368,7 @@ def _live_roles(case_id: str) -> dict[str, tuple[str, str]]:
             "mutation_manifest_private",
         ),
     }
-    if case_id == "program-guard":
+    if spec.outcome == "expected_no_repair":
         allowed = {
             "damaged.ifc",
             "request.txt",
@@ -399,6 +404,7 @@ def _live_report(case_root: Path, spec: CaseSpec) -> str:
 1. 阅读 input/request.txt。
 2. 阅读 NO-REPAIR.md。
 3. 查看 agent/provider-attempts.json 和 validation/evidence-decision.json。
+4. 通过 [evidence/README.md](evidence/README.md) 回到完整机器权威包。
 
 该目录故意没有 03-repaired.ifc。出现 repaired IFC 反而表示 guard 失败。
 """
@@ -424,6 +430,7 @@ def _live_report(case_root: Path, spec: CaseSpec) -> str:
 3. 查看 agent/repair-intent.json、agent/target-resolution.json 与 agent/provider-attempts.json。
 4. 查看 changeset/bound-changeset.json。
 5. 查看 validation/evidence-decision.json、validation/production-evaluation.json；结构案例另看 validation/structural-restoration-audit.json。
+6. 通过 [evidence/README.md](evidence/README.md) 回到完整机器权威包。
 
 ## original 与 IFCCompare 边界
 
@@ -436,7 +443,7 @@ def _copy_live_case(
 ) -> None:
     source = source_root / LIVE_BUNDLE / "cases" / spec.source
     roles: dict[str, str] = {}
-    for source_name, (destination, role) in _live_roles(spec.source).items():
+    for source_name, (destination, role) in _live_roles(spec).items():
         path = source / source_name
         if path.is_file():
             _copy(path, case_root / destination)
@@ -465,6 +472,66 @@ def _manifest_case(spec: CaseSpec) -> dict[str, Any]:
         "files": f"{spec.destination}/FILES.json",
         "accepted_collection_status": "pending_human_review",
     }
+
+
+def _authority_case_root(source_root: Path, spec: CaseSpec) -> Path:
+    if spec.evidence_mode == "live":
+        return source_root / LIVE_BUNDLE / "cases" / spec.source
+    return source_root / spec.source
+
+
+def _authority_readme(
+    source_root: Path, collection_root: Path, spec: CaseSpec
+) -> str:
+    case_root = collection_root / spec.destination
+    authority_root = _authority_case_root(source_root, spec)
+    relative = Path(os.path.relpath(authority_root, case_root)).as_posix()
+    return f"""# Machine authority
+
+本目录是便于人工检查的展示视图，不改变证据状态。完整的 Provider、runtime、ChangeSet 和验证材料以原始机器权威包为准。
+
+- [Authoritative source bundle]({relative})
+- Evidence mode：{spec.evidence_mode}
+- Outcome：{spec.outcome}
+- Collection status：pending_human_review
+
+展示视图与机器权威的关系由 FILES.json 记录。该链接只提供追溯路径，不把 pending review 提升为 accepted Proof。
+"""
+
+
+def refresh_plan07_navigation(
+    source_root: Path, collection_root: Path
+) -> None:
+    """Refresh presentation metadata without rewriting machine authority."""
+
+    source_root = source_root.resolve()
+    collection_root = collection_root.resolve()
+    for spec in ALL_CASES:
+        case_root = collection_root / spec.destination
+        if not case_root.is_dir():
+            raise FileNotFoundError(case_root)
+        source_files = _read_json(case_root / "FILES.json").get(
+            "files", ()
+        )
+        roles = {
+            str(entry["path"]): str(entry["role"])
+            for entry in source_files
+            if str(entry["path"]) != "evidence/README.md"
+        }
+        report = (
+            _live_report(case_root, spec)
+            if spec.evidence_mode == "live"
+            else _offline_report(case_root, spec)
+        )
+        _write_text(case_root / "REPORT.md", report)
+        _write_text(case_root / "validation/AUDIT-REPORT.md", report)
+        _write_text(
+            case_root / "evidence/README.md",
+            _authority_readme(source_root, collection_root, spec),
+        )
+        roles["validation/AUDIT-REPORT.md"] = "human_validation_report"
+        roles["evidence/README.md"] = "machine_authority_navigation"
+        _files_document(case_root, Path(spec.destination).name, roles)
 
 
 def _collection_report() -> str:
@@ -568,14 +635,19 @@ def install(source_root: Path, collection_root: Path) -> dict[str, Any]:
             str(temp / "plan07-manifest.json"),
             collection_root / "plan07-manifest.json",
         )
+        refresh_plan07_navigation(source_root, collection_root)
     finally:
         if temp.exists():
             shutil.rmtree(temp)
     return validate_plan07_layout(collection_root)
 
 
-def validate_plan07_layout(collection_root: Path) -> dict[str, Any]:
+def validate_plan07_layout(
+    collection_root: Path,
+    source_root: Path = DEFAULT_SOURCE_ROOT,
+) -> dict[str, Any]:
     collection_root = collection_root.resolve()
+    source_root = source_root.resolve()
     errors: list[str] = []
     reopened = 0
     repaired = 0
@@ -591,15 +663,45 @@ def validate_plan07_layout(collection_root: Path) -> dict[str, Any]:
             "no_repair_case_count": 0,
             "live_provider_calls": 0,
             "reopened_ifc_count": 0,
+            "accepted_overlap_count": 0,
         }
     manifest = _read_json(manifest_path)
+    if manifest.get("status") != "pending_human_review":
+        errors.append("plan07 manifest status must remain pending_human_review")
+    if manifest.get("r1_included") is not False:
+        errors.append("plan07 review manifest must exclude R1")
     cases = manifest.get("cases")
     if not isinstance(cases, list) or len(cases) != 10:
         errors.append("plan07 manifest must contain exactly 10 cases")
         cases = cases if isinstance(cases, list) else []
+    accepted_manifest_path = collection_root / "manifest.json"
+    accepted_ids: set[str] = set()
+    if accepted_manifest_path.is_file():
+        accepted_cases = _read_json(accepted_manifest_path).get("cases", ())
+        accepted_ids = {
+            str(case.get("case_id"))
+            for case in accepted_cases
+            if isinstance(case, dict)
+        }
+    review_ids = {
+        str(case.get("case_id")) for case in cases if isinstance(case, dict)
+    }
+    accepted_overlap = accepted_ids & review_ids
+    if accepted_overlap:
+        errors.append(
+            "pending Plan 07 cases overlap accepted manifest: "
+            + ", ".join(sorted(accepted_overlap))
+        )
+    specs = {Path(spec.destination).name: spec for spec in ALL_CASES}
     for case in cases:
         path = collection_root / str(case.get("path"))
         try:
+            case_id = str(case.get("case_id"))
+            spec = specs.get(case_id)
+            if spec is None:
+                raise ValueError("case is not in frozen Plan 07 case set")
+            if case.get("accepted_collection_status") != "pending_human_review":
+                raise ValueError("case status must remain pending_human_review")
             if not (path / "REPORT.md").is_file():
                 raise ValueError("REPORT.md missing")
             if not (path / "FILES.json").is_file():
@@ -607,12 +709,36 @@ def validate_plan07_layout(collection_root: Path) -> dict[str, Any]:
             if not (path / "input/request.txt").is_file():
                 raise ValueError("input/request.txt missing")
             files = _read_json(path / "FILES.json").get("files", ())
+            file_roles = {
+                str(entry["path"]): str(entry["role"])
+                for entry in files
+            }
             for entry in files:
                 artifact = path / str(entry["path"])
                 if not artifact.is_file():
                     raise ValueError(
                         f"listed artifact missing: {entry['path']}"
                     )
+            authority_readme = path / "evidence/README.md"
+            if file_roles.get("evidence/README.md") != (
+                "machine_authority_navigation"
+            ):
+                raise ValueError("machine authority navigation is not listed")
+            authority_text = authority_readme.read_text(encoding="utf-8")
+            match = re.search(
+                r"\[Authoritative source bundle\]\(([^)]+)\)",
+                authority_text,
+            )
+            if match is None:
+                raise ValueError("machine authority link is missing")
+            linked_authority = (path / match.group(1)).resolve()
+            expected_authority = _authority_case_root(source_root, spec).resolve()
+            if linked_authority != expected_authority or not linked_authority.is_dir():
+                raise ValueError("machine authority link does not resolve")
+            if "evidence/README.md" not in (path / "REPORT.md").read_text(
+                encoding="utf-8"
+            ):
+                raise ValueError("REPORT.md does not link machine authority")
             if case.get("outcome") == "repaired":
                 for name in (
                     "01-original.ifc",
@@ -627,8 +753,23 @@ def validate_plan07_layout(collection_root: Path) -> dict[str, Any]:
                     raise ValueError(
                         "repaired case contains NO-REPAIR.md"
                     )
+                if case.get("evidence_mode") == "live":
+                    role = _read_json(
+                        path / "private-evaluation/original-role.json"
+                    )
+                    if (
+                        role.get("original_is_case_specific_property_gold")
+                        is not False
+                        or role.get("private_evidence_available_during_repair")
+                        is not False
+                    ):
+                        raise ValueError("live original role boundary mismatch")
+                elif file_roles.get("01-original.ifc") != (
+                    "original_ground_truth"
+                ):
+                    raise ValueError("offline original role boundary mismatch")
                 repaired += 1
-            else:
+            elif case.get("outcome") == "expected_no_repair":
                 model = ifcopenshell.open(
                     str(path / "02-damaged.ifc")
                 )
@@ -656,6 +797,8 @@ def validate_plan07_layout(collection_root: Path) -> dict[str, Any]:
                         "guard fail-closed evidence mismatch"
                     )
                 no_repair += 1
+            else:
+                raise ValueError("unknown Plan 07 outcome")
             if case.get("evidence_mode") == "live":
                 live_calls += int(case.get("provider_calls", 0))
         except Exception as error:
@@ -670,6 +813,7 @@ def validate_plan07_layout(collection_root: Path) -> dict[str, Any]:
         "no_repair_case_count": no_repair,
         "live_provider_calls": live_calls,
         "reopened_ifc_count": reopened,
+        "accepted_overlap_count": len(accepted_overlap),
     }
 
 
@@ -681,13 +825,21 @@ def main(argv: Iterable[str] | None = None) -> int:
     parser.add_argument(
         "--collection-root", type=Path, default=DEFAULT_COLLECTION_ROOT
     )
-    parser.add_argument("--validate-only", action="store_true")
+    action = parser.add_mutually_exclusive_group()
+    action.add_argument("--validate-only", action="store_true")
+    action.add_argument("--refresh-navigation", action="store_true")
     args = parser.parse_args(argv)
-    result = (
-        validate_plan07_layout(args.collection_root)
-        if args.validate_only
-        else install(args.source_root, args.collection_root)
-    )
+    if args.refresh_navigation:
+        refresh_plan07_navigation(args.source_root, args.collection_root)
+        result = validate_plan07_layout(
+            args.collection_root, args.source_root
+        )
+    elif args.validate_only:
+        result = validate_plan07_layout(
+            args.collection_root, args.source_root
+        )
+    else:
+        result = install(args.source_root, args.collection_root)
     print(json.dumps(result, ensure_ascii=False, indent=2))
     return 0 if result["status"] == "passed" else 1
 

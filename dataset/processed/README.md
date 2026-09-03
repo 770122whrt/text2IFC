@@ -6,7 +6,7 @@
 
 | 目录 | 职责 | Git / 清理原则 |
 |---|---|---|
-| ifc-repair-runs/ | repair 的原始 run、Provider attempts、clarification、索引、staging 与终端材料 | 默认由 .gitignore 作为本地运行区；genuine Provider attempts 保留；离线 pytest、preflight 和 admission 缓存可在不含跟踪文件时删除 |
+| ifc-repair-runs/ | repair 的原始 run、Provider attempts、clarification、索引、staging 与终端材料 | 不整体忽略，保证新的 genuine 成功/失败 attempt 会出现在 Git 状态中；离线 pytest、preflight 和 admission 缓存可在不含跟踪文件时删除 |
 | proof/ | 已冻结或待人工检查的证据视图与机器权威包 | 已提交 authority 按 append-only 处理；重复副本可在逐文件确认相同后删除 |
 | proof/ifc-repair-success-cases/ | 人读优先的成功案例集合；案例根目录直接放 IFC、请求与报告 | 主 manifest 只列 accepted case；待检查批次使用独立 review manifest |
 | 其他 processed 子目录 | extraction、projection、benchmark 或阶段性派生产物 | 按各自 manifest 与上游脚本判断，不因“processed”名称统一删除 |

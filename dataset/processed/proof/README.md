@@ -9,8 +9,8 @@
 | 目录 | 证据类型 | 当前用途 |
 |---|---|---|
 | ifc-repair-success-cases/ | 已接受历史案例，以及独立 plan07-manifest.json 管理的 Plan 07 待人工检查批次 | IFCCompare、跨版本回归、Plan 07 人工验收入口；不能把 review manifest 当作主 manifest accepted |
+| ifc-repair-success-cases-v2-plan07-staging/ | Plan 07 v2 隔离机器权威；含 6 个离线 restoration case 和 genuine run bundle | 为人读 Plan 07 案例提供 Provider/runtime/ChangeSet/验证追溯；不会自动安装进主 accepted manifest |
 | repair-milestone-r1/ | [人类入口](repair-milestone-r1/README.md) + `r1-20260902T152701658266Z-curated/` 机器权威 | R1 12 案报告、直接可见 IFC 与 Proof 0.3 |
-| phase12-plan07-final/ | [人类入口](phase12-plan07-final/README.md) + `uat-20260902T180900748385Z/` 机器权威 | final-code 四案兼容性 Proof；不冒充第二份 curator-installed Proof |
 | phase11-live-uat/ | Phase 11 历史 live UAT 包 | 历史追溯，不用于提升 R1 结论 |
 | text2ifc-success-cases/ | Text-to-IFC 生成成功案例 | 生成链路证据，不是 repair 三元组证据 |
 
@@ -40,24 +40,24 @@ R1 的 E1-A1 是 frozen diversity/request-contract 案例。它们从真实 sour
 
 - 保持既有 accepted Proof append-only，不移动、不重命名；
 - 为所有顶层 Proof 集合建立统一索引；
-- 将 final-code Plan 07 四案的 238 个 payload 文件集中复制到新的 Proof 包：raw Provider/runtime 过程、零网络 admission、公共 damaged 输入和 evaluator-only original/mutation truth；
-- 写明 Plan 07 两个 accepted、strict-recomputed structural bundle（含物理三元组但 private triplet audit 为 N/A）、一个 source/repaired semantic canary 和一个 no-output guard 的不同证据等级；
-- 保留当前 curator 对 changed-scope admission 布局的兼容限制，不将其改写成语义或 IFC 失败。
+- 将修正后的 6 个离线 case、3 个 genuine repaired case 和 1 个 no-output guard 组织到统一的人读入口；
+- 每个 Plan 07 案例直接展示 request、IFC、REPORT.md，并通过 evidence/README.md 回链隔离的机器权威；
+- 明确人读 Plan 07 manifest 仍为 pending_human_review、r1_included=false，且与主 accepted manifest 零重叠。
 
 ## 人类阅读入口
 
 - [Phase 12 Plan 07 待人工检查矩阵](ifc-repair-success-cases/PLAN07-REPORT.md)
+- [Plan 07 v2 机器权威说明](ifc-repair-success-cases-v2-plan07-staging/README.md)
 - [Repair Milestone R1 总报告](repair-milestone-r1/REPORT.md)
-- [Phase 12 Plan 07 总报告](phase12-plan07-final/REPORT.md)
 
 成功案的 repaired IFC 直接放在各自案例根目录。Plan 07 新视图使用 operation family / case kind / case-id；R1 与旧 final-code 集合使用各自已发布的布局。H4 和 program-guard 没有 repaired IFC 是冻结安全合同的正确结果，并在各自 NO-REPAIR.md 中解释。
 
 ## 校验入口
 
     .venv\Scripts\python scripts\ifc_repair\validate_success_cases.py --json
+    .venv\Scripts\python scripts\ifc_repair\install_plan07_human_proof.py --validate-only
     .venv\Scripts\python scripts\ifc_repair\assemble_repair_milestone_r1_proof.py --help
     .venv\Scripts\python scripts\ifc_repair\validate_human_proof_layout.py --root dataset\processed\proof\repair-milestone-r1 --json
-    .venv\Scripts\python scripts\ifc_repair\validate_human_proof_layout.py --root dataset\processed\proof\phase12-plan07-final --json
     .venv\Scripts\python -m pytest tests\ifc_repair\test_target_query_filling_geometry.py -q
 
 根据变更风险选择验证器；README 或导航更新不自动要求重复 curator。各集合的完成声明仍必须来自适用的冻结合同与对应 validator，而不是本索引本身。
