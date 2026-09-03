@@ -33,6 +33,9 @@ from text2ifc_ifc_repair.evaluation_policy import (
 )
 from text2ifc_ifc_repair.registry import OperationDefinition, OperationRegistryError
 from text2ifc_ifc_repair.type_templates import ensure_bound_type
+from text2ifc_ifc_repair.window_geometry import (
+    select_window_placement_in_opening,
+)
 from text2ifc_ifc_repair.operations.hosted_opening import (
     body_context as hosted_body_context,
     deterministic_global_id as hosted_deterministic_global_id,
@@ -798,19 +801,24 @@ def _applicator(*, operation: Mapping[str, Any], model: Any) -> dict[str, Any]:
     uses_mapped_representation = bool(
         window_type is not None and window_type.RepresentationMaps
     )
-    window.ObjectPlacement = _local_placement(
-        model,
-        relative_to=opening.ObjectPlacement,
-        location=(
-            0.0,
-            (
-                -millimetres_to_project_units(model, thickness / 2.0)
-                if uses_mapped_representation
-                else 0.0
-            ),
-            0.0,
-        ),
-    )
+    if uses_mapped_representation:
+        placement = select_window_placement_in_opening(
+            window,
+            opening,
+            window_type,
+        )
+        window.ObjectPlacement = _local_placement(
+            model,
+            relative_to=opening.ObjectPlacement,
+            location=placement["location"],
+            ref_direction=placement["ref_direction"],
+        )
+    else:
+        window.ObjectPlacement = _local_placement(
+            model,
+            relative_to=opening.ObjectPlacement,
+            location=(0.0, 0.0, 0.0),
+        )
 
     voids = model.create_entity(
         "IfcRelVoidsElement",

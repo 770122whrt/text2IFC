@@ -46,6 +46,19 @@ KNOWN_FAILURE = (
     / "phase11-door-known-failure"
 )
 
+SOURCE_DOOR_GEOMETRY_CASES = (
+    (
+        ROOT / "dataset" / "ifc" / "train" / "1px.ifc",
+        "2AJ6T3vZDDZRJL7l0pGl86",
+        "2AJ6T3vZDDZRJL7kCpGl86",
+    ),
+    (
+        ROOT / "dataset" / "ifc" / "test" / "d7n.ifc",
+        "08DlcJHzb8WfJZDS4ZFHLL",
+        "08DlcJHzb8WfJZDT8ZFHLL",
+    ),
+)
+
 
 def _check_proof_operation(
     case: Path,
@@ -570,6 +583,43 @@ def test_supported_left_and_right_handed_types_both_pass_geometry_gate() -> None
     assert measure_door_opening_alignment(
         second, second.FillsVoids[0].RelatingOpeningElement
     )["valid"]
+
+
+@pytest.mark.parametrize(
+    ("source", "door_global_id", "opening_global_id"),
+    SOURCE_DOOR_GEOMETRY_CASES,
+)
+def test_surviving_mapped_door_styles_pass_selection_and_measurement(
+    source: Path,
+    door_global_id: str,
+    opening_global_id: str,
+) -> None:
+    model = ifcopenshell.open(str(source))
+    door = model.by_guid(door_global_id)
+    opening = model.by_guid(opening_global_id)
+
+    selection = select_door_placement_in_opening(door, opening)
+    measured = measure_door_opening_alignment(door, opening)
+
+    assert selection["diagnostics"]["valid"] is True
+    assert measured["valid"] is True
+
+
+def test_mapped_door_style_still_rejects_a_materially_displaced_occurrence() -> None:
+    source, door_global_id, opening_global_id = SOURCE_DOOR_GEOMETRY_CASES[1]
+    model = ifcopenshell.open(str(source))
+    door = model.by_guid(door_global_id)
+    opening = model.by_guid(opening_global_id)
+    door.ObjectPlacement = local_placement(
+        model,
+        relative_to=opening.ObjectPlacement,
+        location=(1000.0, 0.0, 0.0),
+    )
+
+    measured = measure_door_opening_alignment(door, opening)
+
+    assert measured["valid"] is False
+    assert measured["geometry_placement_excess_mm"] > 0.0
 
 
 def test_public_production_boundary_has_no_original_or_mutation_inputs() -> None:

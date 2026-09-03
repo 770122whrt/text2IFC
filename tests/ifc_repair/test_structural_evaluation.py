@@ -371,7 +371,7 @@ def test_preservation_authority_cannot_be_supplied_by_application_claims(
     monkeypatch.setattr(
         validate_success_cases,
         "profile_normalized_model_diff",
-        lambda before, after: {
+        lambda before, after, **_kwargs: {
             "changes": {
                 "created": [
                     {"global_id": "beam-created"},
