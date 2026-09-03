@@ -1,7 +1,31 @@
 # Phase 12 Plan 07 结构恢复证据勘误与重新准入要求
 
 日期：2026-09-03
-状态：**Plan 07 的 Beam/Column damage-restoration 结论暂停使用，等待更换 fixture 后重新验证**
+状态：**旧 Proof 已撤销；VVO v2 replacement 的离线矩阵和 genuine Provider evidence 已通过，正式 Phase acceptance 仍等待冻结 Plan 12/14 Proof gate**
+
+## 0. 2026-09-03 修复进展（本节优先于下文的历史待办描述）
+
+- 已把主成功集合中的 8 个错误/受污染 Phase 12 条目及其目录删除；主 manifest 从
+  24 案改为 16 案，旧错位产物不再作为 Proof。原始 genuine run 仍作为失败历史保留，
+  不能重新标成成功。
+- 通用 extractor 已支持从 `IfcMappedItem`、对象放置、映射变换、solid position 和
+  extrusion direction 推导矩形柱中心轴；圆柱、异形和 axis/body 不一致目标继续
+  fail closed。
+- 采用 VVO 中可重建的真实 Beam 与矩形 Column 重新冻结 damage/request。线性几何
+  容差为 `0.01 mm`；旧案例的数百毫米至数百米错位不可能被该容差掩盖。
+- 新离线连续矩阵：6 个 restoration success、2 个 expected rollback，12 个成功
+  operation；独立重新打开 18 个 IFC，6 案均通过 damage-to-repair triplet 复算。
+- Genuine run `uat-20260903T095045509630Z`：4/4 角色通过，共 11 次 Provider calls
+  （Stage 1=4、Stage 1.5=4、Stage 2=3），model 为 `deepseek-v4-flash` 且 thinking
+  enabled。
+- 人读入口：
+  `dataset/processed/proof/ifc-repair-success-cases-v2-plan07-staging/plan07-live-v2-uat-20260903T095045509630Z/REPORT.md`。
+  `complete`、`clarification-resume`、`window-semantic-canary` 均直接包含
+  `repaired.ifc`；`program-guard` 以 `NO-REPAIR.md` 说明零 mutation/零 publish。
+- 澄清案按 request 只恢复 Column；同一 damaged IFC 中未被请求的 Beam 明确记录为
+  `unrequested_damage_families=["beam"]`，既不偷偷修复，也不误判为本次请求失败。
+- 以上材料是真实 Provider/IFC evidence，尚未把原始 run 的
+  `proof_validation_status=pending_plan_12_14` 擅自改成 Phase closure。
 
 ## 1. 结论
 
@@ -19,8 +43,9 @@
 缺少 damage-to-repair 绑定门。重复运行同一请求只会重复相同结果，不能形成新的
 有效恢复证据。
 
-本文件是追加勘误，不删除、不重写、不重新标注已有 genuine attempts 或 accepted
-artifact。凡既有报告与本勘误的结构恢复结论冲突，以本勘误为准。
+本文件保留 genuine attempts 的历史事实，不重写 Provider 结果。经用户明确要求，
+已确认错误的 curated accepted Proof 副本及主 manifest 条目被删除，避免继续被误用；
+凡既有报告与本勘误冲突，以本勘误为准。
 
 ## 2. 已核对的证据链
 
@@ -203,8 +228,8 @@ fail-closed 决定，用来避免在目标尚未可证明重建时再次制造�
 
 ## 6. 后续执行顺序
 
-1. 保留所有旧 run 和 Proof，不删除、不重标；
-2. 将旧结构案例视为 request-conformance 历史证据，不再视为 restoration authority；
+1. 保留旧 genuine run 作为失败历史；删除已确认错误的 accepted Proof 副本和条目；
+2. 旧结构结果只在本勘误中作为 request/Proof 缺陷历史，不再作为 restoration authority；
 3. 离线扫描候选 IFC，淘汰不支持的圆柱/映射表示/不可解析 placement；
 4. 选定新的矩形 Beam 和 Column fixture，冻结原始几何与语义；
 5. 先写会让现有远端占位案例失败的聚焦测试，再实现通用 restoration gates；
