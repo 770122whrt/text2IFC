@@ -8,7 +8,7 @@
 
 | 目录 | 证据类型 | 当前用途 |
 |---|---|---|
-| ifc-repair-success-cases/ | 冻结 repair success collection；包含合法 original/damaged/repaired 三元组、输入、ChangeSet 和验证材料 | IFCCompare、跨版本回归、Plan 07 accepted structural Proof |
+| ifc-repair-success-cases/ | 已接受历史案例，以及独立 plan07-manifest.json 管理的 Plan 07 待人工检查批次 | IFCCompare、跨版本回归、Plan 07 人工验收入口；不能把 review manifest 当作主 manifest accepted |
 | repair-milestone-r1/ | [人类入口](repair-milestone-r1/README.md) + `r1-20260902T152701658266Z-curated/` 机器权威 | R1 12 案报告、直接可见 IFC 与 Proof 0.3 |
 | phase12-plan07-final/ | [人类入口](phase12-plan07-final/README.md) + `uat-20260902T180900748385Z/` 机器权威 | final-code 四案兼容性 Proof；不冒充第二份 curator-installed Proof |
 | phase11-live-uat/ | Phase 11 历史 live UAT 包 | 历史追溯，不用于提升 R1 结论 |
@@ -46,10 +46,11 @@ R1 的 E1-A1 是 frozen diversity/request-contract 案例。它们从真实 sour
 
 ## 人类阅读入口
 
+- [Phase 12 Plan 07 待人工检查矩阵](ifc-repair-success-cases/PLAN07-REPORT.md)
 - [Repair Milestone R1 总报告](repair-milestone-r1/REPORT.md)
 - [Phase 12 Plan 07 总报告](phase12-plan07-final/REPORT.md)
 
-成功案的 `repaired.ifc` 现在直接放在各自 `accepted-cases/<case>/` 根目录。H4 和 program-guard 没有 repaired IFC 是冻结安全合同的正确结果，并在各自 `NO-REPAIR.md` 中解释。
+成功案的 repaired IFC 直接放在各自案例根目录。Plan 07 新视图使用 operation family / case kind / case-id；R1 与旧 final-code 集合使用各自已发布的布局。H4 和 program-guard 没有 repaired IFC 是冻结安全合同的正确结果，并在各自 NO-REPAIR.md 中解释。
 
 ## 校验入口
 
