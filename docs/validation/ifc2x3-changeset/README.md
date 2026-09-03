@@ -1,5 +1,11 @@
 # IFC2X3 Local ChangeSet 验证索引
 
+> **2026-09-03 结构恢复勘误：** Phase 12 Plan 07 既有 Beam/Column 成功案例证明了
+> request-conformance add，但没有证明恢复了 damaged IFC 中被删除的构件；D7N
+> 柱还被确认是当前矩形柱 operation 不支持的圆柱。在替换 fixture 并通过
+> damage-to-repair 等价门之前，不得用这些案例关闭结构 damage-restoration。
+> 详见 [Phase 12 Plan 07 结构恢复证据勘误与重新准入要求](phase12-plan07-structural-restoration-erratum-2026-09-03.md)。
+
 Phase 11 当前状态见
 [Door / Opening 验证报告](phase11-door-validation-report.md)：合同、索引、
 确定性解析、IFC 写入、L1/L2、occurrence comparator 以及 LargeBuilding/vvo
