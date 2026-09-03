@@ -1,0 +1,37 @@
+{
+  "attempt": 1,
+  "issues": [],
+  "normalizations": [],
+  "provider_metadata": {
+    "estimated_input_tokens": "[REDACTED]",
+    "evidence_class": "live",
+    "max_input_tokens": "[REDACTED]",
+    "model": "deepseek-v4-flash",
+    "provider": "deepseek-openai-compatible",
+    "request_configuration": {
+      "temperature": {
+        "effective": false,
+        "value": 0
+      },
+      "thinking": {
+        "type": "enabled"
+      }
+    },
+    "response_id": "3ad578d3-b7cf-464e-a928-ca351a935419",
+    "session_id": "ifc-repair-intent-request-017ec4f6862d5f3d",
+    "stop_reason": "stop",
+    "transport_attempts": 1,
+    "usage": {
+      "completion_tokens": 6509,
+      "completion_tokens_details": "[REDACTED]",
+      "prompt_cache_hit_tokens": "[REDACTED]",
+      "prompt_cache_miss_tokens": "[REDACTED]",
+      "prompt_tokens": 11886,
+      "prompt_tokens_details": "[REDACTED]",
+      "total_tokens": 18395
+    }
+  },
+  "response_excerpt": "{\n  \"schema_version\": \"text2ifc/ifc-repair-intent-body/0.8\",\n  \"operations\": [\n    {\n      \"operation_id\": \"restore-beam-1\",\n      \"operation_type\": \"add_beam\",\n      \"routing_intent\": {\n        \"component_family\": \"beam\",\n        \"action\": \"add\",\n        \"operation_profile\": \"beam.add.v0.3\",\n        \"source\": {\n          \"source_kind\": \"user_request\",\n          \"reference\": \"public_request\",\n          \"excerpt\": \"restore the missing horizontal straight rectangular Beam with center axis from (-3316.629521, -3863.522838, 0) mm to (-3316.629521, -8803.522838, 0) mm and a rectangular section 455 mm wide and 570 mm high; generate dedicated structural Types; state that the Beam is load bearing\"\n        }\n      },\n      \"target_query\": {\n        \"schema_version\": \"text2ifc/ifc-target-query/0.1\",\n        \"allowed_ifc_classes\": [\"IfcBuildingStorey\"],\n        \"names\": [\"标高7\"]\n      },\n      \"parameters\": {\n        \"axis\": {\n          \"start\": {\n            \"x_mm\": -3316.629521,\n            \"y_mm\": -3863.522838,\n            \"z_mm\": 0\n          },\n          \"end\": {\n            \"x_mm\": -3316.629521,\n            \"y_mm\": -8803.522838,\n            \"z_mm\": 0\n          }\n        },\n        \"section\": {\n          \"shape\": \"rectangle\",\n          \"width_mm\": 455,\n          \"height_mm\": 570\n        }\n      },\n      \"attribute_intents\": [],\n      \"property_intents\": [\n        {\n          \"intent_kind\": \"natural_language_property\",\n          \"property_phrase\": \"load bearing\",\n          \"raw_value\": true,\n          \"raw_unit\": null,\n          \"scope\": \"occurrence_direct\",\n          \"source\": {\n            \"source_kind\": \"user_request\",\n            \"reference\": \"public_request\",\n            \"excerpt\": \"state that the Beam is load bearing\"\n          }\n        }\n      ],\n      \"semantic_bundle_refs\": [],\n      \"quantity_intents\": [],\n      \"occurrence_reuse_intent\": null,\n      \"prototype_intent\": null,\n      \"provenance\": [\n        {\n          \"source_kind\": \"user_request\",\n          \"reference\": \"public_request\",\n          \"excerpt\": \"On the Building Storey named \\\"标高7\\\", restore the missing horizontal straight rectangular Beam with center axis from (-3316.629521, -3863.522838, 0) mm to (-3316.629521, -8803.522838, 0) mm and a rectangular section 455 mm wide and 570 mm high; generate dedicated structural Types; state that the Beam is load bearing\"\n        }\n      ]\n    },\n    {\n      \"operation_id\": \"restore-column-1\",\n      \"operation_type\": \"add_column\",\n      \"routing_intent\": {\n        \"component_family\": \"column\",\n        \"action\": \"add\",\n        \"operation_profile\": \"column.add.v0.3\",\n        \"source\": {\n          \"source_kind\": \"user_request\",\n          \"reference\": \"public_request\",\n          \"excerpt\": \"restore the missing vertical straight rectangular Column with center-axis base (-3307.426702, -9061.783140, 0) mm and top (-3307.426702, -9061.783140, 3712.059993) mm and a square section 500 mm wide and 500 mm deep; generate dedicated structural Types; state that the Column is load bearing\"\n        }\n      },\n      \"target_query\": {\n        \"schema_version\": \"text2ifc/ifc-target-query/0.1\",\n        \"allowed_ifc_classes\": [\"IfcBuildingStorey\"],\n        \"names\": [\"标高0\"]\n      },\n      \"parameters\": {\n        \"axis\": {\n          \"base\": {\n            \"x_mm\": -3307.426702,\n            \"y_mm\": -9061.78314,\n            \"z_mm\": 0\n          },\n          \"top\": {\n            \"x_mm\": -3307.426702,\n            \"y_mm\": -9061.78314,\n            \"z_mm\": 3712.059993\n          }\n        },\n        \"section\": {\n          \"shape\": \"rectangle\",\n          \"width_mm\": 500,\n          \"depth_mm\": 500\n        }\n      },\n      \"attribute_intents\": [],\n      \"property_intents\": [\n        {\n          \"intent_kind\": \"natural_language_property\",\n          \"property_phrase\": \"load bearing\",\n          \"raw_value\": true,\n          \"raw_unit\": null,\n          \"scope\": \"occurrence_direct\",\n          \"source\": {\n            \"source_kind\": \"user_request\",\n            \"reference\": \"public_request\",\n            \"excerpt\": \"state that the Column is load bearing\"\n          }",
+  "response_sha256": "sha256:2ee87bd1a8f8c917ff4758048444fa716a1d89b47fbdf08db53f485f0b049d0f",
+  "status": "valid"
+}

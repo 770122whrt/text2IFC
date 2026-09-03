@@ -1,0 +1,942 @@
+{
+  "application": {
+    "applicability": "required",
+    "check_id": "application.valid",
+    "evidence": [
+      {
+        "actual_state": "available",
+        "actual_value": {
+          "published": true,
+          "valid": true
+        },
+        "expected_state": "available",
+        "expected_value": "passed",
+        "fact_id": "application.valid.evidence",
+        "provenance": [
+          "application_result",
+          "application.valid"
+        ],
+        "source_kind": "application_result",
+        "source_ref": "application.valid"
+      }
+    ],
+    "mandatory": true,
+    "policy_id": "evaluation.phase8",
+    "reason": "The deterministic application must complete and publish its candidate.",
+    "status": "passed"
+  },
+  "complete_repair_success": true,
+  "diagnostic_artifact_retained": false,
+  "evidence": [
+    {
+      "actual_state": "available",
+      "actual_value": "passed",
+      "expected_state": "available",
+      "expected_value": "all mandatory gates passed",
+      "fact_id": "run.summary",
+      "provenance": [
+        "evaluation_policy",
+        "phase8.1"
+      ],
+      "source_kind": "evaluation_policy",
+      "source_ref": "phase8.1"
+    }
+  ],
+  "operations": [
+    {
+      "evidence": [
+        {
+          "actual_state": "available",
+          "actual_value": {
+            "l1": "passed",
+            "l2": "passed"
+          },
+          "expected_state": "available",
+          "expected_value": "L1 and L2 passed",
+          "fact_id": "operation.phase12-v2-vvo-column-material-absent-restoration-column-1",
+          "provenance": [
+            "operation_policy",
+            "column.add.l2"
+          ],
+          "source_kind": "operation_policy",
+          "source_ref": "column.add.l2"
+        }
+      ],
+      "levels": [
+        {
+          "checks": [
+            {
+              "applicability": "required",
+              "check_id": "l1.output.readable",
+              "evidence": [
+                {
+                  "actual_state": "available",
+                  "actual_value": {
+                    "after_error": null,
+                    "after_readable": true,
+                    "before_error": null,
+                    "before_readable": true
+                  },
+                  "expected_state": "available",
+                  "expected_value": {
+                    "after_readable": true,
+                    "before_readable": true
+                  },
+                  "fact_id": "l1.output.readable.evidence",
+                  "provenance": [
+                    "ifc_reopen",
+                    "repaired-ifc"
+                  ],
+                  "source_kind": "ifc_reopen",
+                  "source_ref": "repaired-ifc"
+                }
+              ],
+              "mandatory": true,
+              "policy_id": "l1.common",
+              "reason": "Both source and repaired IFC artifacts must reopen independently.",
+              "status": "passed"
+            },
+            {
+              "applicability": "required",
+              "check_id": "l1.output.schema",
+              "evidence": [
+                {
+                  "actual_state": "available",
+                  "actual_value": "IFC2X3",
+                  "expected_state": "available",
+                  "expected_value": "IFC2X3",
+                  "fact_id": "l1.output.schema.evidence",
+                  "provenance": [
+                    "ifc_schema",
+                    "repaired-ifc"
+                  ],
+                  "source_kind": "ifc_schema",
+                  "source_ref": "repaired-ifc"
+                }
+              ],
+              "mandatory": true,
+              "policy_id": "l1.common",
+              "reason": "The repaired IFC schema must match the source IFC schema.",
+              "status": "passed"
+            },
+            {
+              "applicability": "required",
+              "check_id": "l1.output.validation",
+              "evidence": [
+                {
+                  "actual_state": "available",
+                  "actual_value": {
+                    "baseline_diagnostic_count": 0,
+                    "baseline_status": "passed",
+                    "cache": {
+                      "baseline": {
+                        "key": {
+                          "diagnostic_normalization_version": "ifc-diagnostic-signature/0.1",
+                          "ifc_schema": "IFC2X3",
+                          "ifc_sha256": "sha256:0e36ffb6747fca2dfc65c0038be775b610bdcaeb28a0189786af29a697522f89",
+                          "ifcopenshell_version": "0.8.5",
+                          "validation_policy_version": "ifcopenshell-schema-no-express/0.1"
+                        },
+                        "key_digest": "sha256:42e3c36f701216b4278cab8cc6d7b0c94f60cbfc2d78e4c51ebdcb80b3e68a59",
+                        "mode": "read_write",
+                        "reason": "entry_missing",
+                        "schema_version": "text2ifc/ifc-validation-cache/0.1",
+                        "status": "miss"
+                      },
+                      "candidate": {
+                        "key": {
+                          "diagnostic_normalization_version": "ifc-diagnostic-signature/0.1",
+                          "ifc_schema": "IFC2X3",
+                          "ifc_sha256": "sha256:6180d58bc86cd2e5ea82efce1ad48bc14cb1f036c02eb43e3f21d865ed9253a9",
+                          "ifcopenshell_version": "0.8.5",
+                          "validation_policy_version": "ifcopenshell-schema-no-express/0.1"
+                        },
+                        "key_digest": "sha256:f9a79c7e705e0693c4924b81e1ba07c0a4a31b3e6f0d9538ca86c0f465d205bd",
+                        "mode": "read_write",
+                        "reason": "entry_missing",
+                        "schema_version": "text2ifc/ifc-validation-cache/0.1",
+                        "status": "miss"
+                      }
+                    },
+                    "candidate_diagnostic_count": 0,
+                    "execution": {
+                      "diff_phase_peak_rss_bytes": 2161983488,
+                      "mode": "accelerated",
+                      "parent_current_rss_bytes": 2161983488,
+                      "peak_rss_bytes": 2398367744,
+                      "rss_limit_bytes": 4294967296,
+                      "stage_seconds": {
+                        "diff": 0.7179999999934807,
+                        "validation": 4.905999999988126
+                      },
+                      "validation_phase_peak_rss_bytes": 2398367744,
+                      "wall_seconds": 6.186999999990803,
+                      "worker_count": 2,
+                      "worker_peak_rss_bytes": {
+                        "baseline": 125693952,
+                        "candidate": 126111744
+                      }
+                    },
+                    "new_diagnostic_count": 0,
+                    "new_diagnostics": [],
+                    "new_diagnostics_truncated": false,
+                    "resolved_diagnostic_count": 0,
+                    "schema_version": "text2ifc/ifc-validation-delta/0.1",
+                    "status": "passed"
+                  },
+                  "expected_state": "available",
+                  "expected_value": {
+                    "new_diagnostic_count": 0
+                  },
+                  "fact_id": "l1.output.validation.evidence",
+                  "provenance": [
+                    "ifcopenshell_validation",
+                    "damaged-to-repaired"
+                  ],
+                  "source_kind": "ifcopenshell_validation",
+                  "source_ref": "damaged-to-repaired"
+                }
+              ],
+              "mandatory": true,
+              "policy_id": "l1.common",
+              "reason": "The repaired IFC must not introduce IfcOpenShell validation diagnostics beyond the damaged baseline.",
+              "status": "passed"
+            },
+            {
+              "applicability": "required",
+              "check_id": "l1.scope.created-roots",
+              "evidence": [
+                {
+                  "actual_state": "available",
+                  "actual_value": {
+                    "after": {
+                      "attribute_sha256": "sha256:f3d1bfb76a33ac1edae85580908e3e008ff732c4b00460a3d0eba439427e4125",
+                      "containers": [
+                        "1vTeahUkP60PdWqwCTjeRs"
+                      ],
+                      "geometry": {
+                        "available": true,
+                        "representation_sha256": "sha256:d62ad24321fa9c1436b76272ac9a98d5088ad195714378676f04f3e8510dc2dc"
+                      },
+                      "ifc_class": "IfcColumn",
+                      "name": "Text2IFC column phase12-v2-vvo-column-material-absent-restoration-column-1",
+                      "placement": [
+                        [
+                          0.0,
+                          1.0,
+                          0.0,
+                          -3307.426702
+                        ],
+                        [
+                          -1.0,
+                          0.0,
+                          0.0,
+                          -9061.78314
+                        ],
+                        [
+                          0.0,
+                          0.0,
+                          1.0,
+                          -2344.059993
+                        ],
+                        [
+                          0.0,
+                          0.0,
+                          0.0,
+                          1.0
+                        ]
+                      ],
+                      "snapshot_sha256": "sha256:6d5e2e23e66b62d98822bc6204c9d11b8f40ed420ed901ac4c88218fe0286bf6",
+                      "types": [
+                        "1XP7XG5LvM6O4aPx$6g9p5"
+                      ]
+                    },
+                    "authorization_reason": "authorized by Registry policy and ChangeSet operation scope",
+                    "authorized": true,
+                    "before": null,
+                    "change_kind": "created",
+                    "global_id": "1Uwc_d9$zHrvRRlSyVALLo",
+                    "ifc_class": "IfcColumn",
+                    "is_relationship": false
+                  },
+                  "expected_state": "available",
+                  "expected_value": "policy-and-scope-authorized effect",
+                  "fact_id": "l1.scope.created-roots.0000",
+                  "provenance": [
+                    "ifc_actual_diff",
+                    "ifc-guid:1Uwc_d9$zHrvRRlSyVALLo"
+                  ],
+                  "source_kind": "ifc_actual_diff",
+                  "source_ref": "ifc-guid:1Uwc_d9$zHrvRRlSyVALLo"
+                },
+                {
+                  "actual_state": "available",
+                  "actual_value": {
+                    "after": {
+                      "attribute_sha256": "sha256:633aa3c427686a0a738c58389ee725754e2ff2a1815a4d0d78b8a05cc9e98c7f",
+                      "containers": null,
+                      "geometry": null,
+                      "ifc_class": "IfcColumnType",
+                      "name": "Text2IFC generated column type phase12-v2-vvo-column-material-absent-restoration-column-1",
+                      "placement": null,
+                      "snapshot_sha256": "sha256:f06f5b74fb94c279537ba4c73a621dd7173551533ca33475a0a7ff4cb01daef9",
+                      "types": null
+                    },
+                    "authorization_reason": "authorized by Registry policy and ChangeSet operation scope",
+                    "authorized": true,
+                    "before": null,
+                    "change_kind": "created",
+                    "global_id": "1XP7XG5LvM6O4aPx$6g9p5",
+                    "ifc_class": "IfcColumnType",
+                    "is_relationship": false
+                  },
+                  "expected_state": "available",
+                  "expected_value": "policy-and-scope-authorized effect",
+                  "fact_id": "l1.scope.created-roots.0001",
+                  "provenance": [
+                    "ifc_actual_diff",
+                    "ifc-guid:1XP7XG5LvM6O4aPx$6g9p5"
+                  ],
+                  "source_kind": "ifc_actual_diff",
+                  "source_ref": "ifc-guid:1XP7XG5LvM6O4aPx$6g9p5"
+                }
+              ],
+              "mandatory": true,
+              "policy_id": "l1.common",
+              "reason": "Every actual IFC effect must be authorized by policy and declared scope.",
+              "status": "passed"
+            },
+            {
+              "applicability": "required",
+              "check_id": "l1.scope.modified-roots",
+              "evidence": [
+                {
+                  "actual_state": "available",
+                  "actual_value": {
+                    "changes": []
+                  },
+                  "expected_state": "available",
+                  "expected_value": "no unexplained effects",
+                  "fact_id": "l1.scope.modified-roots.evidence",
+                  "provenance": [
+                    "ifc_actual_diff",
+                    "reopened-ifc"
+                  ],
+                  "source_kind": "ifc_actual_diff",
+                  "source_ref": "reopened-ifc"
+                }
+              ],
+              "mandatory": true,
+              "policy_id": "l1.common",
+              "reason": "Every actual IFC effect must be authorized by policy and declared scope.",
+              "status": "passed"
+            },
+            {
+              "applicability": "required",
+              "check_id": "l1.scope.relations",
+              "evidence": [
+                {
+                  "actual_state": "available",
+                  "actual_value": {
+                    "after": {
+                      "attribute_sha256": "sha256:70f9963ca147e7cfbef2eb6ef44f76015c8288db81f3268cc2cdaa9c1dc716ce",
+                      "containers": null,
+                      "geometry": null,
+                      "ifc_class": "IfcRelDefinesByType",
+                      "name": null,
+                      "placement": null,
+                      "snapshot_sha256": "sha256:6212031ce1d3a6292b81d85eeb3d85e1eedf5d2881f66cfc5b32b3988a1d9740",
+                      "types": null
+                    },
+                    "authorization_reason": "authorized relationship role and endpoints",
+                    "authorized": true,
+                    "before": null,
+                    "change_kind": "created",
+                    "global_id": "0XA3D9cbzKehq$qYdLxi3A",
+                    "ifc_class": "IfcRelDefinesByType",
+                    "is_relationship": true
+                  },
+                  "expected_state": "available",
+                  "expected_value": "policy-and-scope-authorized effect",
+                  "fact_id": "l1.scope.relations.0000",
+                  "provenance": [
+                    "ifc_actual_diff",
+                    "ifc-guid:0XA3D9cbzKehq$qYdLxi3A"
+                  ],
+                  "source_kind": "ifc_actual_diff",
+                  "source_ref": "ifc-guid:0XA3D9cbzKehq$qYdLxi3A"
+                },
+                {
+                  "actual_state": "available",
+                  "actual_value": {
+                    "after": {
+                      "attribute_sha256": "sha256:3aafca770efae38205702c8dd903a35cd1046485330ecb61a882c2b4c9117d90",
+                      "containers": null,
+                      "geometry": null,
+                      "ifc_class": "IfcRelContainedInSpatialStructure",
+                      "name": null,
+                      "placement": null,
+                      "snapshot_sha256": "sha256:aaed308bce22121233ccb6066ac93e0f9bff25ea408b4260f56b3ff9f97250af",
+                      "types": null
+                    },
+                    "authorization_reason": "authorized relationship role and endpoints",
+                    "authorized": true,
+                    "before": {
+                      "attribute_sha256": "sha256:a573ce4106ce24cd840c179db434d708206ecc587f3170c4fcfe6ffcee86fd34",
+                      "containers": null,
+                      "geometry": null,
+                      "ifc_class": "IfcRelContainedInSpatialStructure",
+                      "name": null,
+                      "placement": null,
+                      "snapshot_sha256": "sha256:dfea5eddc4a5c7a78914bcff7998e2d0f2cf5d663d6ef34376a3337058688e67",
+                      "types": null
+                    },
+                    "change_kind": "modified",
+                    "global_id": "3kSL0VGKv3gxJCujiqtuJj",
+                    "ifc_class": "IfcRelContainedInSpatialStructure",
+                    "is_relationship": true
+                  },
+                  "expected_state": "available",
+                  "expected_value": "policy-and-scope-authorized effect",
+                  "fact_id": "l1.scope.relations.0001",
+                  "provenance": [
+                    "ifc_actual_diff",
+                    "ifc-guid:3kSL0VGKv3gxJCujiqtuJj"
+                  ],
+                  "source_kind": "ifc_actual_diff",
+                  "source_ref": "ifc-guid:3kSL0VGKv3gxJCujiqtuJj"
+                }
+              ],
+              "mandatory": true,
+              "policy_id": "l1.common",
+              "reason": "Every actual IFC effect must be authorized by policy and declared scope.",
+              "status": "passed"
+            },
+            {
+              "applicability": "required",
+              "check_id": "l1.scope.removed-roots",
+              "evidence": [
+                {
+                  "actual_state": "available",
+                  "actual_value": {
+                    "changes": []
+                  },
+                  "expected_state": "available",
+                  "expected_value": "no unexplained effects",
+                  "fact_id": "l1.scope.removed-roots.evidence",
+                  "provenance": [
+                    "ifc_actual_diff",
+                    "reopened-ifc"
+                  ],
+                  "source_kind": "ifc_actual_diff",
+                  "source_ref": "reopened-ifc"
+                }
+              ],
+              "mandatory": true,
+              "policy_id": "l1.common",
+              "reason": "Every actual IFC effect must be authorized by policy and declared scope.",
+              "status": "passed"
+            },
+            {
+              "applicability": "required",
+              "check_id": "l1.source.immutable",
+              "evidence": [
+                {
+                  "actual_state": "available",
+                  "actual_value": {
+                    "after": "sha256:0e36ffb6747fca2dfc65c0038be775b610bdcaeb28a0189786af29a697522f89",
+                    "before": "sha256:0e36ffb6747fca2dfc65c0038be775b610bdcaeb28a0189786af29a697522f89"
+                  },
+                  "expected_state": "available",
+                  "expected_value": "sha256:0e36ffb6747fca2dfc65c0038be775b610bdcaeb28a0189786af29a697522f89",
+                  "fact_id": "l1.source.immutable.evidence",
+                  "provenance": [
+                    "source_fingerprint",
+                    "E:\\code for project\\bimnet\\.pytest-tmp\\plan07-v2-full-run-20260903\\accepted\\phase12-v2-vvo-column-material-absent-restoration\\damaged.ifc"
+                  ],
+                  "source_kind": "source_fingerprint",
+                  "source_ref": "E:\\code for project\\bimnet\\.pytest-tmp\\plan07-v2-full-run-20260903\\accepted\\phase12-v2-vvo-column-material-absent-restoration\\damaged.ifc"
+                }
+              ],
+              "mandatory": true,
+              "policy_id": "l1.common",
+              "reason": "The source IFC must remain bound to the declared base fingerprint.",
+              "status": "passed"
+            },
+            {
+              "applicability": "required",
+              "check_id": "l1.structural.axis-direction",
+              "evidence": [
+                {
+                  "actual_state": "available",
+                  "actual_value": {
+                    "error_degrees": 0.0
+                  },
+                  "expected_state": "available",
+                  "expected_value": {
+                    "maximum_error_degrees": 0.1
+                  },
+                  "fact_id": "l1.structural.axis-direction.evidence",
+                  "provenance": [
+                    "operation_measurement",
+                    "operation:phase12-v2-vvo-column-material-absent-restoration-column-1"
+                  ],
+                  "source_kind": "operation_measurement",
+                  "source_ref": "operation:phase12-v2-vvo-column-material-absent-restoration-column-1"
+                }
+              ],
+              "mandatory": true,
+              "policy_id": "column.add.l1",
+              "reason": "Reopened member direction and horizontal/vertical tilt must match.",
+              "status": "passed"
+            },
+            {
+              "applicability": "required",
+              "check_id": "l1.structural.axis-points",
+              "evidence": [
+                {
+                  "actual_state": "available",
+                  "actual_value": {
+                    "end_mm": 0.0,
+                    "start_mm": 0.0
+                  },
+                  "expected_state": "available",
+                  "expected_value": {
+                    "maximum_error_mm": 5.0
+                  },
+                  "fact_id": "l1.structural.axis-points.evidence",
+                  "provenance": [
+                    "operation_measurement",
+                    "operation:phase12-v2-vvo-column-material-absent-restoration-column-1"
+                  ],
+                  "source_kind": "operation_measurement",
+                  "source_ref": "operation:phase12-v2-vvo-column-material-absent-restoration-column-1"
+                }
+              ],
+              "mandatory": true,
+              "policy_id": "column.add.l1",
+              "reason": "Each reopened structural axis endpoint must match the bound center axis.",
+              "status": "passed"
+            },
+            {
+              "applicability": "required",
+              "check_id": "l1.structural.member-dimension",
+              "evidence": [
+                {
+                  "actual_state": "available",
+                  "actual_value": {
+                    "error_mm": 0.0
+                  },
+                  "expected_state": "available",
+                  "expected_value": {
+                    "maximum_error_mm": 1.0
+                  },
+                  "fact_id": "l1.structural.member-dimension.evidence",
+                  "provenance": [
+                    "operation_measurement",
+                    "operation:phase12-v2-vvo-column-material-absent-restoration-column-1"
+                  ],
+                  "source_kind": "operation_measurement",
+                  "source_ref": "operation:phase12-v2-vvo-column-material-absent-restoration-column-1"
+                }
+              ],
+              "mandatory": true,
+              "policy_id": "column.add.l1",
+              "reason": "Reopened member axis extent must match the bound length or height.",
+              "status": "passed"
+            },
+            {
+              "applicability": "required",
+              "check_id": "l1.structural.product",
+              "evidence": [
+                {
+                  "actual_state": "available",
+                  "actual_value": {
+                    "analysis_relationship_count": 0,
+                    "global_id": "1Uwc_d9$zHrvRRlSyVALLo",
+                    "ifc_class": "IfcColumn",
+                    "representation_type": "SweptSolid"
+                  },
+                  "expected_state": "available",
+                  "expected_value": {
+                    "analysis_relationship_count": 0,
+                    "global_id": "1Uwc_d9$zHrvRRlSyVALLo",
+                    "ifc_class": "IfcColumn",
+                    "representation_type": "SweptSolid"
+                  },
+                  "fact_id": "l1.structural.product.evidence",
+                  "provenance": [
+                    "operation_measurement",
+                    "operation:phase12-v2-vvo-column-material-absent-restoration-column-1"
+                  ],
+                  "source_kind": "operation_measurement",
+                  "source_ref": "operation:phase12-v2-vvo-column-material-absent-restoration-column-1"
+                }
+              ],
+              "mandatory": true,
+              "policy_id": "column.add.l1",
+              "reason": "The reopened product must be one physical member of the registered IFC class.",
+              "status": "passed"
+            },
+            {
+              "applicability": "required",
+              "check_id": "l1.structural.profile-orientation",
+              "evidence": [
+                {
+                  "actual_state": "available",
+                  "actual_value": {
+                    "error_degrees": 0.0
+                  },
+                  "expected_state": "available",
+                  "expected_value": {
+                    "maximum_error_degrees": 0.1,
+                    "square_orientation": "omitted"
+                  },
+                  "fact_id": "l1.structural.profile-orientation.evidence",
+                  "provenance": [
+                    "operation_measurement",
+                    "operation:phase12-v2-vvo-column-material-absent-restoration-column-1"
+                  ],
+                  "source_kind": "operation_measurement",
+                  "source_ref": "operation:phase12-v2-vvo-column-material-absent-restoration-column-1"
+                }
+              ],
+              "mandatory": true,
+              "policy_id": "column.add.l1",
+              "reason": "Column profile orientation must match when declared and stay omitted for a square section.",
+              "status": "passed"
+            },
+            {
+              "applicability": "required",
+              "check_id": "l1.structural.relationships",
+              "evidence": [
+                {
+                  "actual_state": "available",
+                  "actual_value": {
+                    "storey_global_ids": [
+                      "1vTeahUkP60PdWqwCTjeRs"
+                    ],
+                    "type_global_ids": [
+                      "1XP7XG5LvM6O4aPx$6g9p5"
+                    ],
+                    "type_ifc_classes": [
+                      "IfcColumnType"
+                    ]
+                  },
+                  "expected_state": "available",
+                  "expected_value": {
+                    "storey_global_ids": [
+                      "1vTeahUkP60PdWqwCTjeRs"
+                    ],
+                    "type_global_ids": [
+                      "1XP7XG5LvM6O4aPx$6g9p5"
+                    ],
+                    "type_ifc_class": "IfcColumnType"
+                  },
+                  "fact_id": "l1.structural.relationships.evidence",
+                  "provenance": [
+                    "operation_measurement",
+                    "operation:phase12-v2-vvo-column-material-absent-restoration-column-1"
+                  ],
+                  "source_kind": "operation_measurement",
+                  "source_ref": "operation:phase12-v2-vvo-column-material-absent-restoration-column-1"
+                }
+              ],
+              "mandatory": true,
+              "policy_id": "column.add.l1",
+              "reason": "The member must have exactly one declared Storey and one declared Type binding.",
+              "status": "passed"
+            },
+            {
+              "applicability": "required",
+              "check_id": "l1.structural.section-dimensions",
+              "evidence": [
+                {
+                  "actual_state": "available",
+                  "actual_value": {
+                    "depth_mm": 0.0,
+                    "width_mm": 0.0
+                  },
+                  "expected_state": "available",
+                  "expected_value": {
+                    "maximum_error_mm": 1.0
+                  },
+                  "fact_id": "l1.structural.section-dimensions.evidence",
+                  "provenance": [
+                    "operation_measurement",
+                    "operation:phase12-v2-vvo-column-material-absent-restoration-column-1"
+                  ],
+                  "source_kind": "operation_measurement",
+                  "source_ref": "operation:phase12-v2-vvo-column-material-absent-restoration-column-1"
+                }
+              ],
+              "mandatory": true,
+              "policy_id": "column.add.l1",
+              "reason": "Every reopened rectangular section dimension must match.",
+              "status": "passed"
+            }
+          ],
+          "evidence": [
+            {
+              "actual_state": "available",
+              "actual_value": {
+                "check_count": 15,
+                "readable": true
+              },
+              "expected_state": "available",
+              "expected_value": "readable policy-authorized physical repair",
+              "fact_id": "l1.summary",
+              "provenance": [
+                "ifc_actual_diff",
+                "reopened-ifc"
+              ],
+              "source_kind": "ifc_actual_diff",
+              "source_ref": "reopened-ifc"
+            }
+          ],
+          "level": "L1",
+          "reason": "Independent reopened IFC L1 authorization and measurement.",
+          "status": "passed"
+        },
+        {
+          "checks": [
+            {
+              "applicability": "required",
+              "check_id": "column.type",
+              "evidence": [
+                {
+                  "actual_state": "available",
+                  "actual_value": {
+                    "entity_source": "IfcColumn:1Uwc_d9$zHrvRRlSyVALLo",
+                    "inherited": false,
+                    "pset_path": null,
+                    "unit": null,
+                    "value": "1XP7XG5LvM6O4aPx$6g9p5",
+                    "value_type": "IfcColumnType"
+                  },
+                  "expected_state": "available",
+                  "expected_value": {
+                    "entity_source": "semantic-manifest:phase12-v2-vvo-column-material-absent-restoration-column-1",
+                    "inherited": true,
+                    "pset_path": null,
+                    "unit": null,
+                    "value": "1XP7XG5LvM6O4aPx$6g9p5",
+                    "value_type": "IfcColumnType"
+                  },
+                  "fact_id": "relationship:type",
+                  "provenance": [
+                    "operation:phase12-v2-vvo-column-material-absent-restoration-column-1",
+                    "generated-type-template:0.1",
+                    "repaired:application-role:column:phase12-v2-vvo-column-material-absent-restoration-column-1"
+                  ],
+                  "source_kind": "deterministic_policy",
+                  "source_ref": "generated-type:1XP7XG5LvM6O4aPx$6g9p5"
+                }
+              ],
+              "mandatory": true,
+              "policy_id": "column.add.l2",
+              "reason": "Authorized semantic fact is present and equivalent in repaired output",
+              "status": "passed"
+            },
+            {
+              "applicability": "required",
+              "check_id": "column.storey",
+              "evidence": [
+                {
+                  "actual_state": "available",
+                  "actual_value": {
+                    "entity_source": "IfcColumn:1Uwc_d9$zHrvRRlSyVALLo",
+                    "inherited": false,
+                    "pset_path": null,
+                    "unit": null,
+                    "value": "1vTeahUkP60PdWqwCTjeRs",
+                    "value_type": "IfcBuildingStorey"
+                  },
+                  "expected_state": "available",
+                  "expected_value": {
+                    "entity_source": "semantic-manifest:phase12-v2-vvo-column-material-absent-restoration-column-1",
+                    "inherited": false,
+                    "pset_path": null,
+                    "unit": null,
+                    "value": "1vTeahUkP60PdWqwCTjeRs",
+                    "value_type": "IfcBuildingStorey"
+                  },
+                  "fact_id": "relationship:storey",
+                  "provenance": [
+                    "operation:phase12-v2-vvo-column-material-absent-restoration-column-1",
+                    "registered-column-base-storey-policy:0.1",
+                    "repaired:application-role:column:phase12-v2-vvo-column-material-absent-restoration-column-1"
+                  ],
+                  "source_kind": "deterministic_policy",
+                  "source_ref": "resolved:/operations/phase12-v2-vvo-column-material-absent-restoration-column-1/target"
+                }
+              ],
+              "mandatory": true,
+              "policy_id": "column.add.l2",
+              "reason": "Authorized semantic fact is present and equivalent in repaired output",
+              "status": "passed"
+            },
+            {
+              "applicability": "conditional",
+              "check_id": "column.pset",
+              "evidence": [
+                {
+                  "actual_state": "not_applicable",
+                  "actual_value": null,
+                  "expected_state": "unavailable",
+                  "expected_value": null,
+                  "fact_id": "column.pset",
+                  "provenance": [
+                    "searched:explicit_request",
+                    "searched:surviving_target",
+                    "searched:surviving_type",
+                    "searched:approved_prototype",
+                    "searched:authorized_type_cohort",
+                    "searched:deterministic_policy",
+                    "searched:private_original"
+                  ],
+                  "source_kind": "source_search",
+                  "source_ref": "column.add.l2/column.pset"
+                }
+              ],
+              "mandatory": false,
+              "policy_id": "column.add.l2",
+              "reason": "No authorized source establishes this conditional semantic fact",
+              "status": "not_required"
+            },
+            {
+              "applicability": "conditional",
+              "check_id": "column.material",
+              "evidence": [
+                {
+                  "actual_state": "not_applicable",
+                  "actual_value": null,
+                  "expected_state": "unavailable",
+                  "expected_value": null,
+                  "fact_id": "column.material",
+                  "provenance": [
+                    "searched:explicit_request",
+                    "searched:surviving_target",
+                    "searched:surviving_type",
+                    "searched:approved_prototype",
+                    "searched:authorized_type_cohort",
+                    "searched:deterministic_policy",
+                    "searched:private_original"
+                  ],
+                  "source_kind": "source_search",
+                  "source_ref": "column.add.l2/column.material"
+                }
+              ],
+              "mandatory": false,
+              "policy_id": "column.add.l2",
+              "reason": "No authorized source establishes this conditional semantic fact",
+              "status": "not_required"
+            }
+          ],
+          "evidence": [
+            {
+              "actual_state": "available",
+              "actual_value": {
+                "check_count": 4
+              },
+              "expected_state": "available",
+              "expected_value": "all mandatory L2 checks passed",
+              "fact_id": "l2.summary",
+              "provenance": [
+                "semantic_policy",
+                "column.add.l2"
+              ],
+              "source_kind": "semantic_policy",
+              "source_ref": "column.add.l2"
+            }
+          ],
+          "level": "L2",
+          "reason": "Policy-owned semantic facts are compared through authorized evidence.",
+          "status": "passed"
+        },
+        {
+          "checks": [
+            {
+              "applicability": "informational",
+              "check_id": "l3.authoring-identity",
+              "evidence": [
+                {
+                  "actual_state": "available",
+                  "actual_value": "1Uwc_d9$zHrvRRlSyVALLo",
+                  "expected_state": "available",
+                  "expected_value": null,
+                  "fact_id": "l3.authoring-identity",
+                  "provenance": [
+                    "identity_observation",
+                    "operation:phase12-v2-vvo-column-material-absent-restoration-column-1"
+                  ],
+                  "source_kind": "identity_observation",
+                  "source_ref": "operation:phase12-v2-vvo-column-material-absent-restoration-column-1"
+                }
+              ],
+              "mandatory": false,
+              "policy_id": "l3.v1.1-observation",
+              "reason": "Original identity is observational and never gates v1.1 repair success.",
+              "status": "failed"
+            }
+          ],
+          "evidence": [
+            {
+              "actual_state": "available",
+              "actual_value": "observed",
+              "expected_state": "available",
+              "expected_value": "not required",
+              "fact_id": "l3.summary",
+              "provenance": [
+                "policy_boundary",
+                "v1.1"
+              ],
+              "source_kind": "policy_boundary",
+              "source_ref": "v1.1"
+            }
+          ],
+          "level": "L3",
+          "reason": "L3 authoring and identity exactness is not required in v1.1.",
+          "status": "not_required"
+        }
+      ],
+      "mandatory": true,
+      "operation_id": "phase12-v2-vvo-column-material-absent-restoration-column-1",
+      "operation_type": "add_column",
+      "policy_id": "column.add.l2",
+      "policy_version": "0.1",
+      "reason": "Mandatory L1 and L2 jointly determine operation success.",
+      "status": "passed"
+    }
+  ],
+  "policy_version": "phase8.1",
+  "preservation": {
+    "applicability": "required",
+    "check_id": "preservation.valid",
+    "evidence": [
+      {
+        "actual_state": "available",
+        "actual_value": {
+          "l1_status": "passed"
+        },
+        "expected_state": "available",
+        "expected_value": "passed",
+        "fact_id": "preservation.valid.evidence",
+        "provenance": [
+          "application_result",
+          "preservation.valid"
+        ],
+        "source_kind": "application_result",
+        "source_ref": "preservation.valid"
+      }
+    ],
+    "mandatory": true,
+    "policy_id": "evaluation.phase8",
+    "reason": "Independent L1 evidence must authorize preservation and scope effects.",
+    "status": "passed"
+  },
+  "reason": "Application, preservation, and mandatory L1/L2 are strict gates.",
+  "schema_version": "text2ifc/ifc-repair-evaluation/0.2",
+  "status": "passed",
+  "successful_artifact_publishable": true
+}

@@ -1,0 +1,106 @@
+{
+  "applicability_by_operation": {
+    "phase12-v2-vvo-beam-loadbearing-restoration-beam-1": {
+      "beam.material": {
+        "applicability": "conditional",
+        "evidence_pointer": "production-evidence:/phase12-v2-vvo-beam-loadbearing-restoration-beam-1/beam.material",
+        "mandatory": false,
+        "outcome": "not_required",
+        "verified_absence": true
+      },
+      "beam.pset": {
+        "applicability": "conditional",
+        "evidence_pointer": "production-evidence:/phase12-v2-vvo-beam-loadbearing-restoration-beam-1/beam.pset",
+        "mandatory": true,
+        "outcome": "evaluable",
+        "verified_absence": true
+      },
+      "beam.storey": {
+        "applicability": "required",
+        "evidence_pointer": "production-evidence:/phase12-v2-vvo-beam-loadbearing-restoration-beam-1/beam.storey",
+        "mandatory": true,
+        "outcome": "evaluable",
+        "verified_absence": false
+      },
+      "beam.type": {
+        "applicability": "required",
+        "evidence_pointer": "production-evidence:/phase12-v2-vvo-beam-loadbearing-restoration-beam-1/beam.type",
+        "mandatory": true,
+        "outcome": "evaluable",
+        "verified_absence": false
+      },
+      "explicit.pset-Pset_BeamCommon.LoadBearing": {
+        "applicability": "required",
+        "evidence_pointer": "production-evidence:/phase12-v2-vvo-beam-loadbearing-restoration-beam-1/explicit.pset-Pset_BeamCommon.LoadBearing",
+        "mandatory": true,
+        "outcome": "evaluable",
+        "verified_absence": false
+      }
+    }
+  },
+  "conflicts": [],
+  "expected_facts_by_operation": {
+    "phase12-v2-vvo-beam-loadbearing-restoration-beam-1": [
+      {
+        "fact_key": "pset:Pset_BeamCommon.LoadBearing",
+        "inherited": false,
+        "provenance": [
+          "request-source:user_request",
+          "request-evidence:request:/operations/0/properties/0",
+          "operation:phase12-v2-vvo-beam-loadbearing-restoration-beam-1",
+          "property-hash:sha256:bfc988082f16e19e303e88d00df869d62e40b477bc4cfdb7e81e3bd5c7257647",
+          "source_fact_key:pset:Pset_BeamCommon.LoadBearing"
+        ],
+        "source_kind": "explicit_request",
+        "source_ref": "request:/operations/0/properties/0",
+        "unit": null,
+        "value": true,
+        "value_type": "IfcBoolean"
+      },
+      {
+        "fact_key": "relationship:host",
+        "inherited": false,
+        "provenance": [
+          "resolved-host-target:1vTeahUkP60PdWqwCTjUuM",
+          "resolved-host:1vTeahUkP60PdWqwCTjUuM",
+          "operation:phase12-v2-vvo-beam-loadbearing-restoration-beam-1"
+        ],
+        "source_kind": "surviving_target",
+        "source_ref": "current-host-binding:1vTeahUkP60PdWqwCTjUuM",
+        "unit": null,
+        "value": "1vTeahUkP60PdWqwCTjUuM",
+        "value_type": "IfcBuildingStorey"
+      },
+      {
+        "fact_key": "relationship:storey",
+        "inherited": false,
+        "provenance": [
+          "operation:phase12-v2-vvo-beam-loadbearing-restoration-beam-1",
+          "registered-beam-storey-policy:0.1"
+        ],
+        "source_kind": "deterministic_policy",
+        "source_ref": "resolved:/operations/phase12-v2-vvo-beam-loadbearing-restoration-beam-1/target",
+        "unit": null,
+        "value": "1vTeahUkP60PdWqwCTjUuM",
+        "value_type": "IfcBuildingStorey"
+      },
+      {
+        "fact_key": "relationship:type",
+        "inherited": true,
+        "provenance": [
+          "operation:phase12-v2-vvo-beam-loadbearing-restoration-beam-1",
+          "generated-type-template:0.1"
+        ],
+        "source_kind": "deterministic_policy",
+        "source_ref": "generated-type:1ok0WSj$5QVgnrSdHt3lI4",
+        "unit": null,
+        "value": "1ok0WSj$5QVgnrSdHt3lI4",
+        "value_type": "IfcBeamType"
+      }
+    ]
+  },
+  "operation_types": {
+    "phase12-v2-vvo-beam-loadbearing-restoration-beam-1": "add_beam"
+  },
+  "schema_version": "text2ifc/phase12-production-evidence/0.1"
+}

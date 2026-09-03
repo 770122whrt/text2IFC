@@ -1,0 +1,251 @@
+{
+  "base_model_fingerprint": "sha256:43b6756b88874f9525f6a511d7dc718844dac59b638a11e3fbc36b321e0ab8b7",
+  "binding_status": "bound",
+  "changeset_id": "changeset-phase12-d7n-beam-column-rollback",
+  "evidence_refs": [
+    "resolved:/operations/phase12-d7n-beam-column-rollback-beam-1/context/candidate_targets/0",
+    "resolved:/operations/phase12-d7n-beam-column-rollback-beam-2/context/candidate_targets/0"
+  ],
+  "operations": [
+    {
+      "evidence_refs": [
+        "resolved:/operations/phase12-d7n-beam-column-rollback-beam-1/context/candidate_targets/0"
+      ],
+      "operation_id": "phase12-d7n-beam-column-rollback-beam-1",
+      "operation_type": "add_beam",
+      "parameters": {
+        "axis": {
+          "end": {
+            "x_mm": 133000.0,
+            "y_mm": 134000.0,
+            "z_mm": 3000.0
+          },
+          "start": {
+            "x_mm": 130000.0,
+            "y_mm": 130000.0,
+            "z_mm": 3000.0
+          }
+        },
+        "section": {
+          "height_mm": 500,
+          "shape": "rectangle",
+          "width_mm": 300
+        }
+      },
+      "semantic_assignments": [
+        {
+          "applicability": "conditional",
+          "authoring_action": "bind_relationship",
+          "derivation": null,
+          "fact_key": "relationship:host",
+          "operation_id": "phase12-d7n-beam-column-rollback-beam-1",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "resolved-host-target:0K_MqVdrL0JOCMi_GblRwJ",
+            "resolved-host:0K_MqVdrL0JOCMi_GblRwJ",
+            "operation:phase12-d7n-beam-column-rollback-beam-1"
+          ],
+          "scope": "beam_occurrence",
+          "source_fact_key": "relationship:host",
+          "source_kind": "deterministic_derived",
+          "source_ref": "current-host-binding:0K_MqVdrL0JOCMi_GblRwJ",
+          "unit": null,
+          "value": "0K_MqVdrL0JOCMi_GblRwJ",
+          "value_type": "IfcBuildingStorey"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "bind_relationship",
+          "derivation": null,
+          "fact_key": "relationship:storey",
+          "operation_id": "phase12-d7n-beam-column-rollback-beam-1",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "operation:phase12-d7n-beam-column-rollback-beam-1",
+            "registered-beam-storey-policy:0.1"
+          ],
+          "scope": "beam_occurrence",
+          "source_fact_key": "relationship:storey",
+          "source_kind": "deterministic_derived",
+          "source_ref": "resolved:/operations/phase12-d7n-beam-column-rollback-beam-1/target",
+          "unit": null,
+          "value": "0K_MqVdrL0JOCMi_GblRwJ",
+          "value_type": "IfcBuildingStorey"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "inherit_from_type",
+          "derivation": {
+            "formal_attributes": {},
+            "ifc_class": "IfcBeamType",
+            "template": {
+              "name": "Text2IFC generated beam type phase12-d7n-beam-column-rollback-beam-1",
+              "predefined_type": "NOTDEFINED",
+              "section": {
+                "height_mm": 500.0,
+                "shape": "rectangle",
+                "width_mm": 300.0
+              },
+              "section_digest": "sha256:db582be0ced28b6b6de912e19cf652f4c387aca91e7d30984152748192f244eb"
+            },
+            "template_digest": "sha256:936bc9bf4a6677dd92e3a7f7f74692e31dbf09d70578e241b9b234d8555a36ba",
+            "template_id": "text2ifc-rectangular-beam-type",
+            "template_version": "0.1"
+          },
+          "fact_key": "relationship:type",
+          "operation_id": "phase12-d7n-beam-column-rollback-beam-1",
+          "ownership": "type_inherited",
+          "provenance": [
+            "operation:phase12-d7n-beam-column-rollback-beam-1",
+            "generated-type-template:0.1"
+          ],
+          "scope": "beam_occurrence",
+          "source_fact_key": "relationship:type",
+          "source_kind": "deterministic_derived",
+          "source_ref": "generated-type:1QI76$4BPS9gQeiD_rXLxK",
+          "unit": null,
+          "value": "1QI76$4BPS9gQeiD_rXLxK",
+          "value_type": "IfcBeamType"
+        }
+      ],
+      "semantic_manifest": {
+        "manifest_id": "semantic-manifest-7f6f8e7291ff7e1e19dc57ce",
+        "policy_id": "beam.add.l2",
+        "policy_version": "0.1"
+      },
+      "target": {
+        "storey_global_id": "0K_MqVdrL0JOCMi_GblRwJ"
+      }
+    },
+    {
+      "evidence_refs": [
+        "resolved:/operations/phase12-d7n-beam-column-rollback-beam-2/context/candidate_targets/0"
+      ],
+      "operation_id": "phase12-d7n-beam-column-rollback-beam-2",
+      "operation_type": "add_beam",
+      "parameters": {
+        "axis": {
+          "end": {
+            "x_mm": 133000.0,
+            "y_mm": 134000.0,
+            "z_mm": 3000.0
+          },
+          "start": {
+            "x_mm": 130000.0,
+            "y_mm": 130000.0,
+            "z_mm": 3000.0
+          }
+        },
+        "section": {
+          "height_mm": 500,
+          "shape": "rectangle",
+          "width_mm": 300
+        }
+      },
+      "semantic_assignments": [
+        {
+          "applicability": "conditional",
+          "authoring_action": "bind_relationship",
+          "derivation": null,
+          "fact_key": "relationship:host",
+          "operation_id": "phase12-d7n-beam-column-rollback-beam-2",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "resolved-host-target:0K_MqVdrL0JOCMi_GblRwJ",
+            "resolved-host:0K_MqVdrL0JOCMi_GblRwJ",
+            "operation:phase12-d7n-beam-column-rollback-beam-2"
+          ],
+          "scope": "beam_occurrence",
+          "source_fact_key": "relationship:host",
+          "source_kind": "deterministic_derived",
+          "source_ref": "current-host-binding:0K_MqVdrL0JOCMi_GblRwJ",
+          "unit": null,
+          "value": "0K_MqVdrL0JOCMi_GblRwJ",
+          "value_type": "IfcBuildingStorey"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "bind_relationship",
+          "derivation": null,
+          "fact_key": "relationship:storey",
+          "operation_id": "phase12-d7n-beam-column-rollback-beam-2",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "operation:phase12-d7n-beam-column-rollback-beam-2",
+            "registered-beam-storey-policy:0.1"
+          ],
+          "scope": "beam_occurrence",
+          "source_fact_key": "relationship:storey",
+          "source_kind": "deterministic_derived",
+          "source_ref": "resolved:/operations/phase12-d7n-beam-column-rollback-beam-2/target",
+          "unit": null,
+          "value": "0K_MqVdrL0JOCMi_GblRwJ",
+          "value_type": "IfcBuildingStorey"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "inherit_from_type",
+          "derivation": {
+            "formal_attributes": {},
+            "ifc_class": "IfcBeamType",
+            "template": {
+              "name": "Text2IFC generated beam type phase12-d7n-beam-column-rollback-beam-2",
+              "predefined_type": "NOTDEFINED",
+              "section": {
+                "height_mm": 500.0,
+                "shape": "rectangle",
+                "width_mm": 300.0
+              },
+              "section_digest": "sha256:db582be0ced28b6b6de912e19cf652f4c387aca91e7d30984152748192f244eb"
+            },
+            "template_digest": "sha256:b0d0780368c9b3372b193564b3281d8dfb3164b6d2f680679030c9f74f489c7e",
+            "template_id": "text2ifc-rectangular-beam-type",
+            "template_version": "0.1"
+          },
+          "fact_key": "relationship:type",
+          "operation_id": "phase12-d7n-beam-column-rollback-beam-2",
+          "ownership": "type_inherited",
+          "provenance": [
+            "operation:phase12-d7n-beam-column-rollback-beam-2",
+            "generated-type-template:0.1"
+          ],
+          "scope": "beam_occurrence",
+          "source_fact_key": "relationship:type",
+          "source_kind": "deterministic_derived",
+          "source_ref": "generated-type:23ccD7O6rHSR3JY$wfScB9",
+          "unit": null,
+          "value": "23ccD7O6rHSR3JY$wfScB9",
+          "value_type": "IfcBeamType"
+        }
+      ],
+      "semantic_manifest": {
+        "manifest_id": "semantic-manifest-698e7af79e6128aabd5431f4",
+        "policy_id": "beam.add.l2",
+        "policy_version": "0.1"
+      },
+      "target": {
+        "storey_global_id": "0K_MqVdrL0JOCMi_GblRwJ"
+      }
+    }
+  ],
+  "postconditions": [
+    "structural_geometry_matches",
+    "structural_containment_matches",
+    "structural_type_matches"
+  ],
+  "preconditions": [
+    "structural_targets_resolved",
+    "structural_geometry_authorized",
+    "structural_semantics_bound"
+  ],
+  "schema_version": "text2ifc/ifc-repair-changeset/0.4",
+  "scope": {
+    "forbidden_ids": [],
+    "target_ids": [
+      "0K_MqVdrL0JOCMi_GblRwJ"
+    ]
+  },
+  "semantic_manifest_ref": "semantic-manifests.json",
+  "semantic_manifest_sha256": "sha256:3fe6e1fb58ee91991e984f561f38844f67f2f32c4d49640fec4bbf751ab26f6f",
+  "source_request_hash": "sha256:b3c05217cad3cb6e0bfd422467756b5af2239fb746b03f2446eef566d83cf0fa"
+}

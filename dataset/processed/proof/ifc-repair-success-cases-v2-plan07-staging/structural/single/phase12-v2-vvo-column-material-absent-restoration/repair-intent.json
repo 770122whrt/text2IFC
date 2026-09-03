@@ -1,0 +1,74 @@
+{
+  "model_fingerprint": "sha256:0e36ffb6747fca2dfc65c0038be775b610bdcaeb28a0189786af29a697522f89",
+  "operations": [
+    {
+      "attribute_intents": [],
+      "occurrence_reuse_intent": null,
+      "operation_id": "phase12-v2-vvo-column-material-absent-restoration-column-1",
+      "operation_type": "add_column",
+      "parameters": {
+        "axis": {
+          "base": {
+            "x_mm": -3307.426702,
+            "y_mm": -9061.78314,
+            "z_mm": 0.0
+          },
+          "top": {
+            "x_mm": -3307.426702,
+            "y_mm": -9061.78314,
+            "z_mm": 3712.059993
+          }
+        },
+        "section": {
+          "depth_mm": 500.0,
+          "orientation": {
+            "x": 0.0,
+            "y": -1.0
+          },
+          "shape": "rectangle",
+          "width_mm": 500.0
+        }
+      },
+      "property_intents": [],
+      "prototype_intent": null,
+      "provenance": [
+        {
+          "excerpt": "Restore the missing vertical rectangular Column at the specified center axis; no material is specified.",
+          "reference": "request:/operations/0",
+          "source_kind": "user_request"
+        }
+      ],
+      "quantity_intents": [],
+      "routing_intent": {
+        "action": "add",
+        "component_family": "column",
+        "operation_profile": "column.add",
+        "source": {
+          "excerpt": "Restore the missing vertical rectangular Column at the specified center axis; no material is specified.",
+          "reference": "request:/operations/0",
+          "source_kind": "user_request"
+        }
+      },
+      "semantic_bundle_refs": [],
+      "target_query": {
+        "allowed_ifc_classes": [
+          "IfcBuildingStorey"
+        ],
+        "global_id": "1vTeahUkP60PdWqwCTjeRs",
+        "schema_version": "text2ifc/ifc-target-query/0.1"
+      }
+    }
+  ],
+  "prompt_fingerprint": "sha256:7fefcd7f537f4ee5086c4be3cc95d75f18be99da23e568c150f11a78a4042cf3",
+  "provenance": [
+    {
+      "excerpt": "Restore the missing vertical rectangular Column at the specified center axis; no material is specified.",
+      "reference": "request:/text",
+      "source_kind": "user_request"
+    }
+  ],
+  "request_id": "request-phase12-v2-vvo-column-material-absent-restoration",
+  "schema_version": "text2ifc/ifc-repair-intent/0.5",
+  "semantic_bundles": [],
+  "source_request_hash": "sha256:9ec66d9740117342d91d8915b943e072952d9d402c530275df3f4ddbea01af25"
+}

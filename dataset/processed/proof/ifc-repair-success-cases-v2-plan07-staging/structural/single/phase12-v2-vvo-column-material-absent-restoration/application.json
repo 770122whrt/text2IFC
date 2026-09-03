@@ -1,0 +1,257 @@
+{
+  "audit": {
+    "checks": [
+      {
+        "code": "CHANGESET_SCHEMA",
+        "evidence": {},
+        "status": "passed"
+      },
+      {
+        "code": "IFC_SCHEMA",
+        "evidence": {
+          "actual_schema": "IFC2X3"
+        },
+        "status": "passed"
+      },
+      {
+        "code": "BASE_MODEL_FINGERPRINT",
+        "evidence": {
+          "actual_fingerprint": "sha256:0e36ffb6747fca2dfc65c0038be775b610bdcaeb28a0189786af29a697522f89"
+        },
+        "status": "passed"
+      },
+      {
+        "code": "SOURCE_REQUEST_HASH",
+        "evidence": {
+          "actual_request_hash": "sha256:9ec66d9740117342d91d8915b943e072952d9d402c530275df3f4ddbea01af25"
+        },
+        "status": "passed"
+      },
+      {
+        "code": "OPERATION_REGISTRATION",
+        "evidence": {
+          "operation_type": "add_column"
+        },
+        "status": "passed"
+      }
+    ],
+    "issues": [],
+    "operation_audits": [
+      {
+        "checks": [
+          {
+            "code": "STRUCTURAL_STOREY_AVAILABLE",
+            "evidence": {
+              "storey_global_id": "1vTeahUkP60PdWqwCTjeRs"
+            },
+            "status": "passed"
+          },
+          {
+            "code": "STRUCTURAL_AXIS_AVAILABLE",
+            "evidence": {
+              "axis_extent_mm": 3712.059993
+            },
+            "status": "passed"
+          },
+          {
+            "code": "STRUCTURAL_TYPE_AUTHORIZED",
+            "evidence": {
+              "assignment_count": 1
+            },
+            "status": "passed"
+          }
+        ],
+        "evidence": {
+          "axis_extent_mm": 3712.059993,
+          "storey_global_id": "1vTeahUkP60PdWqwCTjeRs"
+        },
+        "operation_id": "phase12-v2-vvo-column-material-absent-restoration-column-1",
+        "operation_type": "add_column",
+        "valid": true
+      }
+    ],
+    "schema_version": "text2ifc/ifc-repair-audit/0.1",
+    "valid": true
+  },
+  "issues": [],
+  "operations": [
+    {
+      "changes": {
+        "created": [
+          {
+            "global_id": "1Uwc_d9$zHrvRRlSyVALLo",
+            "ifc_class": "IfcColumn",
+            "role": "column"
+          },
+          {
+            "global_id": "1XP7XG5LvM6O4aPx$6g9p5",
+            "ifc_class": "IfcColumnType",
+            "role": "structural_type"
+          },
+          {
+            "global_id": "0XA3D9cbzKehq$qYdLxi3A",
+            "ifc_class": "IfcRelDefinesByType",
+            "role": "structural_type_relationship"
+          }
+        ],
+        "modified": [
+          {
+            "global_id": "3kSL0VGKv3gxJCujiqtuJj",
+            "ifc_class": "IfcRelContainedInSpatialStructure",
+            "role": "spatial_containment"
+          }
+        ],
+        "removed": [],
+        "resolved": {
+          "containment_policy": "axis_base_storey_only",
+          "geometry": {
+            "axis_direction": [
+              0.0,
+              0.0,
+              1.0
+            ],
+            "axis_end_mm": [
+              -3307.426702,
+              -9061.78314,
+              3712.059993
+            ],
+            "axis_extent_mm": 3712.059993,
+            "axis_start_mm": [
+              -3307.426702,
+              -9061.78314,
+              0.0
+            ],
+            "orientation": [
+              0.0,
+              -1.0,
+              0.0
+            ],
+            "representation_type": "SweptSolid",
+            "section": {
+              "depth_mm": 500.0,
+              "shape": "rectangle",
+              "width_mm": 500.0
+            }
+          },
+          "storey_global_id": "1vTeahUkP60PdWqwCTjeRs",
+          "type_global_id": "1XP7XG5LvM6O4aPx$6g9p5"
+        },
+        "semantic": {
+          "created": [],
+          "modified": [],
+          "scopes": {
+            "column_occurrence": {
+              "created": [],
+              "modified": [],
+              "skipped": [
+                "relationship:type"
+              ],
+              "updated": []
+            }
+          },
+          "skipped": [
+            "relationship:type"
+          ],
+          "updated": []
+        }
+      },
+      "operation_id": "phase12-v2-vvo-column-material-absent-restoration-column-1",
+      "operation_type": "add_column"
+    }
+  ],
+  "output": {
+    "path": "E:\\code for project\\bimnet\\.pytest-tmp\\plan07-v2-full-run-20260903\\accepted\\phase12-v2-vvo-column-material-absent-restoration\\repaired.ifc",
+    "sha256": "6180d58bc86cd2e5ea82efce1ad48bc14cb1f036c02eb43e3f21d865ed9253a9"
+  },
+  "postconditions": [
+    {
+      "checks": [
+        {
+          "code": "COLUMN_GEOMETRY_MATCHES",
+          "evidence": {
+            "axis_direction": [
+              0.0,
+              0.0,
+              1.0
+            ],
+            "axis_end_mm": [
+              -3307.426702,
+              -9061.78314,
+              3712.059993
+            ],
+            "axis_extent_mm": 3712.059993,
+            "axis_start_mm": [
+              -3307.426702,
+              -9061.78314,
+              0.0
+            ],
+            "orientation": [
+              0.0,
+              -1.0,
+              0.0
+            ],
+            "representation_type": "SweptSolid",
+            "section": {
+              "depth_mm": 500.0,
+              "shape": "rectangle",
+              "width_mm": 500.0
+            }
+          },
+          "status": "passed"
+        },
+        {
+          "code": "COLUMN_CONTAINED_IN_BASE_STOREY",
+          "evidence": {},
+          "status": "passed"
+        },
+        {
+          "code": "COLUMN_TYPE_BOUND",
+          "evidence": {},
+          "status": "passed"
+        },
+        {
+          "code": "COLUMN_ANALYSIS_RELATIONSHIPS_ABSENT",
+          "evidence": {},
+          "status": "passed"
+        }
+      ],
+      "evidence": {
+        "measurement": {
+          "axis_direction": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "axis_end_mm": [
+            -3307.426702,
+            -9061.78314,
+            3712.059993
+          ],
+          "axis_extent_mm": 3712.059993,
+          "axis_start_mm": [
+            -3307.426702,
+            -9061.78314,
+            0.0
+          ],
+          "orientation": [
+            0.0,
+            -1.0,
+            0.0
+          ],
+          "representation_type": "SweptSolid",
+          "section": {
+            "depth_mm": 500.0,
+            "shape": "rectangle",
+            "width_mm": 500.0
+          }
+        }
+      },
+      "issues": [],
+      "operation_id": "phase12-v2-vvo-column-material-absent-restoration-column-1",
+      "valid": true
+    }
+  ],
+  "published": true,
+  "schema_version": "text2ifc/ifc-repair-application/0.1",
+  "valid": true
+}

@@ -1,0 +1,60 @@
+{
+  "schema_version": "text2ifc/phase12-live-changed-scope-admission/0.2",
+  "status": "passed",
+  "admission_basis": "prior full-preflight admission plus zero-network revalidation of every Plan 07 v2 changed scope",
+  "generated_at": "2026-09-03T00:00:00+08:00",
+  "case_contract_version": "phase12-plan07-live-cases/0.2",
+  "case_matrix_sha256": "sha256:9c2328f09d36bcad1b393337aa5d030877e8a53b24c1ffaed87db4723de24afb",
+  "source_sha256": "sha256:636135b4bc12ea3e45d9a7155f714834ff5eaaba1f2d3d2e7a5ae84a525a59aa",
+  "parent_admission": {
+    "path": "dataset/processed/ifc-repair-runs/phase12-live/admission-20260903-r1-final-code/changed-scope-admission.json",
+    "sha256": "sha256:515c33e54d4fa604678848419592a33ab3ba74c69688681fb49ebbdf7fda6aea"
+  },
+  "offline_matrix": {
+    "path": "dataset/processed/ifc-repair-runs/phase12-plan07-v2-restoration-20260903T-live-baseline/run-summary.json",
+    "sha256": "sha256:a4c0de856e26afdd65e9f8fb19ac3a0d2a141396f7689c2ce5c0ce1d0151e98d"
+  },
+  "proof_validation": {
+    "path": "dataset/processed/ifc-repair-runs/phase12-live-v2/admission-20260903/proof-validation.json",
+    "sha256": "sha256:d8dbc460054e91eb8b4253d251670ab9cb319a0f298e5e6bfb925f1e127145a0"
+  },
+  "structural_junit": {
+    "path": "dataset/processed/ifc-repair-runs/phase12-live-v2/admission-20260903/structural-restoration-green.junit.xml",
+    "sha256": "sha256:a78aa9b282511399ef576c4358b488298c77aefad0bae4cda7147e6786b80981"
+  },
+  "live_runner_junit": {
+    "path": "dataset/processed/ifc-repair-runs/phase12-live-v2/admission-20260903/live-runner-contract-green-v2.junit.xml",
+    "sha256": "sha256:297d3fd665b0d402b44582b819ad01cf1bad1a14329a3147615dcbad9933b0f4"
+  },
+  "checks": {
+    "structural_focused": "13 passed in 52.73s",
+    "live_runner_contract": "108 passed in 158.19s",
+    "offline_matrix": "6 accepted restoration cases; 2 expected fail-closed cases; matrix_complete=true",
+    "proof_validation": "6 cases; 12 operations; 18 IFC reopens; strict restoration triplet recompute",
+    "compileall": "passed for every changed Python file",
+    "diff_check": "passed"
+  },
+  "scope_file_sha256": {
+    "scripts/ifc_repair/run_phase12_offline.py": "sha256:9d2c749fb4f025b077c298980b2c3e237db69e0fe3126a23ad55f413783e7760",
+    "scripts/ifc_repair/curate_phase12_structural_proof.py": "sha256:ceea8461a480751fbe625faecaa5787d7defb87991751b38cb0228dcea8668dc",
+    "scripts/ifc_repair/validate_success_cases.py": "sha256:a52e7a35bdea1c768e03fdca6eeee23a2e794e3af60bbd9406795c663a867f42",
+    "scripts/ifc_repair/run_phase12_live_uat.py": "sha256:f4c8c9422d88232a03f156c207309183e44d5cf431bcfd89abe025c2e0baf0be",
+    "scripts/ifc_repair/run_phase12_live_uat_v2.py": "sha256:59e33c6ce1ac4c27ff673c8913b32050e904446f54cd0818cadd1818052c8a29",
+    "src/text2ifc_ifc_repair/index_adapters.py": "sha256:a193efc8d268e8279d8cf0d5d34f62bd7129597e010d0ea474d6098c3e83cf99",
+    "src/text2ifc_ifc_repair/indexer.py": "sha256:0208029e0c6e03d8178e983cc6e1236e83067f3b5f0523f5e349079dff32076d",
+    "src/text2ifc_ifc_repair/mutation.py": "sha256:359af26e2b1f6a92c2eb5eb3f9b55c54a17fa4ad1eb4d4381179b5cd1a9fa1ff",
+    "src/text2ifc_ifc_repair/structural_restoration.py": "sha256:5534e14aac279b87b688cda3196852d36508b4fdf189f6142ed50824b6236932",
+    "tests/ifc_repair/test_phase12_dataset_e2e.py": "sha256:5018f73e4e52459460a20131a5135bf76b850adca6f0d9c7df251d89ced0960d",
+    "tests/ifc_repair/test_phase12_live_uat.py": "sha256:499f82b1b186da423e965843578398fdca0ab0fa1e6f3d4fa3f12caab1edb401",
+    "tests/ifc_repair/test_phase12_live_uat_v2.py": "sha256:7966799712db655601dc000a2e4927d6c05ff62f96671a917e0357f32eef5b78",
+    "tests/ifc_repair/test_structural_index.py": "sha256:8fd0ea3c7e3d83885d2be8a3f1e48e21437932a9df4dcf6f1eaada9c66100cd4",
+    "tests/ifc_repair/test_structural_mutation.py": "sha256:24ad1cc37762485d13c845a7a41151e2c406fe74cea97c2daf308a855e53710f",
+    "tests/ifc_repair/test_structural_restoration.py": "sha256:9d73856cfd2d9303f48a69cf825a04b7dffa58e6a191427327f113cdbb005a29"
+  },
+  "provider_calls": 0,
+  "network_transport_attempted": false,
+  "skip_count": 0,
+  "substitution_count": 0,
+  "timeout_count": 0,
+  "full_suite_rerun": false
+}

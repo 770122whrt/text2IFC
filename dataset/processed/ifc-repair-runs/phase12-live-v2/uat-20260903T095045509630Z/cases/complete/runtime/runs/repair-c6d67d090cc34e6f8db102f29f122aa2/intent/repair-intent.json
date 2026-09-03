@@ -1,0 +1,154 @@
+{
+  "model_fingerprint": "sha256:f61ff5cf8e1cc88da6944d6bcd3e2e7da5ff27dd3288a8781908018cb8240cd6",
+  "operations": [
+    {
+      "attribute_intents": [],
+      "occurrence_reuse_intent": null,
+      "operation_id": "restore-beam-1",
+      "operation_type": "add_beam",
+      "parameters": {
+        "axis": {
+          "end": {
+            "x_mm": -3316.629521,
+            "y_mm": -8803.522838,
+            "z_mm": 0
+          },
+          "start": {
+            "x_mm": -3316.629521,
+            "y_mm": -3863.522838,
+            "z_mm": 0
+          }
+        },
+        "section": {
+          "height_mm": 570,
+          "shape": "rectangle",
+          "width_mm": 455
+        }
+      },
+      "property_intents": [
+        {
+          "intent_kind": "natural_language_property",
+          "property_phrase": "load bearing",
+          "raw_unit": null,
+          "raw_value": true,
+          "scope": "occurrence_direct",
+          "source": {
+            "excerpt": "state that the Beam is load bearing",
+            "reference": "public_request",
+            "source_kind": "user_request"
+          }
+        }
+      ],
+      "prototype_intent": null,
+      "provenance": [
+        {
+          "excerpt": "On the Building Storey named \"标高7\", restore the missing horizontal straight rectangular Beam with center axis from (-3316.629521, -3863.522838, 0) mm to (-3316.629521, -8803.522838, 0) mm and a rectangular section 455 mm wide and 570 mm high; generate dedicated structural Types; state that the Beam is load bearing",
+          "reference": "public_request",
+          "source_kind": "user_request"
+        }
+      ],
+      "quantity_intents": [],
+      "routing_intent": {
+        "action": "add",
+        "component_family": "beam",
+        "operation_profile": "beam.add.v0.3",
+        "source": {
+          "excerpt": "restore the missing horizontal straight rectangular Beam with center axis from (-3316.629521, -3863.522838, 0) mm to (-3316.629521, -8803.522838, 0) mm and a rectangular section 455 mm wide and 570 mm high; generate dedicated structural Types; state that the Beam is load bearing",
+          "reference": "public_request",
+          "source_kind": "user_request"
+        }
+      },
+      "semantic_bundle_refs": [],
+      "target_query": {
+        "allowed_ifc_classes": [
+          "IfcBuildingStorey"
+        ],
+        "names": [
+          "标高7"
+        ],
+        "schema_version": "text2ifc/ifc-target-query/0.1"
+      }
+    },
+    {
+      "attribute_intents": [],
+      "occurrence_reuse_intent": null,
+      "operation_id": "restore-column-1",
+      "operation_type": "add_column",
+      "parameters": {
+        "axis": {
+          "base": {
+            "x_mm": -3307.426702,
+            "y_mm": -9061.78314,
+            "z_mm": 0
+          },
+          "top": {
+            "x_mm": -3307.426702,
+            "y_mm": -9061.78314,
+            "z_mm": 3712.059993
+          }
+        },
+        "section": {
+          "depth_mm": 500,
+          "shape": "rectangle",
+          "width_mm": 500
+        }
+      },
+      "property_intents": [
+        {
+          "intent_kind": "natural_language_property",
+          "property_phrase": "load bearing",
+          "raw_unit": null,
+          "raw_value": true,
+          "scope": "occurrence_direct",
+          "source": {
+            "excerpt": "state that the Column is load bearing",
+            "reference": "public_request",
+            "source_kind": "user_request"
+          }
+        }
+      ],
+      "prototype_intent": null,
+      "provenance": [
+        {
+          "excerpt": "On the Building Storey named \"标高0\", restore the missing vertical straight rectangular Column with center-axis base (-3307.426702, -9061.783140, 0) mm and top (-3307.426702, -9061.783140, 3712.059993) mm and a square section 500 mm wide and 500 mm deep; generate dedicated structural Types; state that the Column is load bearing",
+          "reference": "public_request",
+          "source_kind": "user_request"
+        }
+      ],
+      "quantity_intents": [],
+      "routing_intent": {
+        "action": "add",
+        "component_family": "column",
+        "operation_profile": "column.add.v0.3",
+        "source": {
+          "excerpt": "restore the missing vertical straight rectangular Column with center-axis base (-3307.426702, -9061.783140, 0) mm and top (-3307.426702, -9061.783140, 3712.059993) mm and a square section 500 mm wide and 500 mm deep; generate dedicated structural Types; state that the Column is load bearing",
+          "reference": "public_request",
+          "source_kind": "user_request"
+        }
+      },
+      "semantic_bundle_refs": [],
+      "target_query": {
+        "allowed_ifc_classes": [
+          "IfcBuildingStorey"
+        ],
+        "names": [
+          "标高0"
+        ],
+        "schema_version": "text2ifc/ifc-target-query/0.1"
+      }
+    }
+  ],
+  "prompt_fingerprint": "sha256:dec929f94db4c626fadf9b2bc2592e3c351d9fbd0ef4c94243475a4559e8b568",
+  "provenance": [
+    {
+      "excerpt": "In the damaged IFC, on the Building Storey named \"标高7\", restore the missing horizontal straight rectangular Beam with center axis from (-3316.629521, -3863.522838, 0) mm to (-3316.629521, -8803.522838, 0) mm and a rectangular section 455 mm wide and 570 mm high. On the Building Storey named \"标高0\", restore the missing vertical straight rectangular Column with center-axis base (-3307.426702, -9061.783140, 0) mm and top (-3307.426702, -9061.783140, 3712.059993) mm and a square section 500 mm wide and 500 mm deep. Create both in one atomic ChangeSet, generate dedicated structural Types, state that the Beam is load bearing, and state that the Column is load bearing.",
+      "reference": "public_request",
+      "source_kind": "user_request"
+    }
+  ],
+  "request_id": "request-017ec4f6862d5f3d",
+  "schema_version": "text2ifc/ifc-repair-intent/0.8",
+  "semantic_bundles": [],
+  "source_request_hash": "sha256:017ec4f6862d5f3dfede003e621d02cab80a55ef7157eb59c8d63cf7b95c337f",
+  "unsupported_requests": []
+}

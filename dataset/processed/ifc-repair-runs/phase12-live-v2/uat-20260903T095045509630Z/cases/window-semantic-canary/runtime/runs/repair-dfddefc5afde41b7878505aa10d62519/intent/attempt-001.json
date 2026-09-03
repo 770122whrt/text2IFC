@@ -1,0 +1,37 @@
+{
+  "attempt": 1,
+  "issues": [],
+  "normalizations": [],
+  "provider_metadata": {
+    "estimated_input_tokens": "[REDACTED]",
+    "evidence_class": "live",
+    "max_input_tokens": "[REDACTED]",
+    "model": "deepseek-v4-flash",
+    "provider": "deepseek-openai-compatible",
+    "request_configuration": {
+      "temperature": {
+        "effective": false,
+        "value": 0
+      },
+      "thinking": {
+        "type": "enabled"
+      }
+    },
+    "response_id": "731cb538-ff6a-4949-94aa-f025ce387bd8",
+    "session_id": "ifc-repair-intent-request-ebc0fc54b9ae5c00",
+    "stop_reason": "stop",
+    "transport_attempts": 1,
+    "usage": {
+      "completion_tokens": 3570,
+      "completion_tokens_details": "[REDACTED]",
+      "prompt_cache_hit_tokens": "[REDACTED]",
+      "prompt_cache_miss_tokens": "[REDACTED]",
+      "prompt_tokens": 11748,
+      "prompt_tokens_details": "[REDACTED]",
+      "total_tokens": 15318
+    }
+  },
+  "response_excerpt": "{\"schema_version\":\"text2ifc/ifc-repair-intent-body/0.8\",\"operations\":[{\"operation_id\":\"set-window-property-1\",\"operation_type\":\"set_occurrence_properties\",\"routing_intent\":{\"component_family\":\"occurrence\",\"action\":\"set_properties\",\"operation_profile\":\"occurrence.set-properties\",\"source\":{\"source_kind\":\"user_request\",\"reference\":\"public-request-1\",\"excerpt\":\"For the IfcWindow with GlobalId \\\"2IUEnGd5v4Yfg1ZlPtd0c_\\\", set 外窗=true on this occurrence only.\"}},\"target_query\":{\"schema_version\":\"text2ifc/ifc-target-query/0.1\",\"allowed_ifc_classes\":[\"IfcWindow\"],\"global_id\":\"2IUEnGd5v4Yfg1ZlPtd0c_\"},\"parameters\":{},\"attribute_intents\":[],\"property_intents\":[{\"intent_kind\":\"natural_language_property\",\"property_phrase\":\"外窗\",\"raw_value\":true,\"raw_unit\":null,\"scope\":\"occurrence_direct\",\"source\":{\"source_kind\":\"user_request\",\"reference\":\"public-request-1\",\"excerpt\":\"set 外窗=true on this occurrence only\"}}],\"semantic_bundle_refs\":[],\"quantity_intents\":[],\"occurrence_reuse_intent\":null,\"prototype_intent\":null,\"provenance\":[{\"source_kind\":\"user_request\",\"reference\":\"public-request-1\",\"excerpt\":\"For the IfcWindow with GlobalId \\\"2IUEnGd5v4Yfg1ZlPtd0c_\\\", set 外窗=true on this occurrence only. Do not change its Type or any other Window.\"}]}],\"unsupported_requests\":[],\"semantic_bundles\":[],\"provenance\":[{\"source_kind\":\"user_request\",\"reference\":\"public-request-1\",\"excerpt\":\"For the IfcWindow with GlobalId \\\"2IUEnGd5v4Yfg1ZlPtd0c_\\\", set 外窗=true on this occurrence only. Do not change its Type or any other Window.\"}]}",
+  "response_sha256": "sha256:44123c4a3fb9aaaff481f625ccbfd066bb8184791785edb88a7bde9176a48397",
+  "status": "valid"
+}

@@ -1,0 +1,87 @@
+{
+  "cases": [
+    {
+      "case_id": "complete",
+      "l0_pass": true,
+      "l1_pass": true,
+      "l2_pass": true,
+      "operation_count": 2,
+      "outcome": "repaired",
+      "provider_calls": 4,
+      "repaired_ifc": "cases/complete/repaired.ifc",
+      "report": "cases/complete/REPORT.md",
+      "runtime_run_id": "repair-c6d67d090cc34e6f8db102f29f122aa2",
+      "status": "passed"
+    },
+    {
+      "case_id": "clarification-resume",
+      "l0_pass": true,
+      "l1_pass": true,
+      "l2_pass": true,
+      "operation_count": 1,
+      "outcome": "repaired",
+      "provider_calls": 3,
+      "repaired_ifc": "cases/clarification-resume/repaired.ifc",
+      "report": "cases/clarification-resume/REPORT.md",
+      "runtime_run_id": "repair-3b20845ec0864025b99af98658d52b9f",
+      "status": "passed"
+    },
+    {
+      "case_id": "window-semantic-canary",
+      "l0_pass": true,
+      "l1_pass": true,
+      "l2_pass": true,
+      "operation_count": 1,
+      "outcome": "repaired",
+      "provider_calls": 3,
+      "repaired_ifc": "cases/window-semantic-canary/repaired.ifc",
+      "report": "cases/window-semantic-canary/REPORT.md",
+      "runtime_run_id": "repair-dfddefc5afde41b7878505aa10d62519",
+      "status": "passed"
+    },
+    {
+      "case_id": "program-guard",
+      "l0_pass": true,
+      "l1_pass": null,
+      "l2_pass": null,
+      "operation_count": 0,
+      "outcome": "expected_no_repair",
+      "provider_calls": 1,
+      "repaired_ifc": null,
+      "report": "cases/program-guard/REPORT.md",
+      "runtime_run_id": "repair-1846433202c74d65a017b01aa1810d30",
+      "status": "passed"
+    }
+  ],
+  "evidence_validation_status": "passed",
+  "no_repair_case_count": 1,
+  "phase_acceptance_eligible": false,
+  "proof_validation_status": "pending_plan_12_14",
+  "schema_version": "text2ifc/phase12-live-evidence-validation/0.2",
+  "source_run": "dataset/processed/ifc-repair-runs/phase12-live-v2/uat-20260903T095045509630Z",
+  "success_case_count": 3,
+  "transcript": {
+    "no_repair_case_ids": [
+      "program-guard"
+    ],
+    "provider_models": [
+      {
+        "model": "deepseek-v4-flash",
+        "provider": "deepseek-openai-compatible"
+      }
+    ],
+    "schema_version": "text2ifc/phase12-live-transcript-audit/0.2",
+    "status": "passed",
+    "success_case_ids": [
+      "complete",
+      "clarification-resume",
+      "window-semantic-canary"
+    ],
+    "transport_calls": 11,
+    "transport_calls_by_stage": {
+      "property_resolution": 4,
+      "stage1": 4,
+      "stage2": 3
+    }
+  }
+}
