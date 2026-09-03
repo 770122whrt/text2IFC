@@ -83,6 +83,10 @@ from text2ifc_ifc_repair.semantic_facts import (
     extract_ifc_semantic_facts,
     extract_property_facts,
 )
+from text2ifc_ifc_repair.structural_restoration import (
+    SCHEMA_VERSION as STRUCTURAL_RESTORATION_SCHEMA_VERSION,
+    audit_structural_restoration_case,
+)
 from text2ifc_ifc_repair.type_templates import type_authority_fingerprint
 from text2ifc_knowledge.property_search import (
     PropertyResolutionDecision,
@@ -160,17 +164,40 @@ _PHASE12_DAMAGE_TARGET_IDS = {
     },
     "phase12-vvo-beam-material-present": {"17tPjyQtf2L9JnbXXmcTUF"},
     "phase12-vvo-column-material-absent": {"1rsYNObuDC4euALdw6WUK4"},
-    "phase12-vvo-door-window-beam-column-atomic": {
+    "phase12-v2-vvo-beam-loadbearing-restoration": {
+        "17tPjyQtf2L9JnbXXmcTUF"
+    },
+    "phase12-v2-vvo-column-loadbearing-restoration": {
+        "1rsYNObuDC4euALdw6WUK4"
+    },
+    "phase12-v2-vvo-beam-column-atomic-restoration": {
+        "17tPjyQtf2L9JnbXXmcTUF",
+        "1rsYNObuDC4euALdw6WUK4",
+    },
+    "phase12-v2-vvo-beam-material-present-restoration": {
+        "17tPjyQtf2L9JnbXXmcTUF"
+    },
+    "phase12-v2-vvo-column-material-absent-restoration": {
+        "1rsYNObuDC4euALdw6WUK4"
+    },
+    "phase12-v2-vvo-door-window-beam-column-atomic-restoration": {
         "2IUEnGd5v4Yfg1ZlPtd0qa",
         "1B$rgWypT66viEf2CI1iIv",
         "2dYMXn0_5AKRbD_0yUIAqJ",
         "08xWVL$9z6JRwr3oWJHoAz",
         "2dYMXn0_5AKRbD_1mUIAqJ",
         "08xWVL$9z6JRwr3piJHoAz",
+        "17tPjyQtf2L9JnbXXmcTUF",
+        "1rsYNObuDC4euALdw6WUK4",
     },
 }
 _PHASE12_MIXED_DAMAGED_SHA256 = (
     "6824086b4171cce034acaa23ad51c3020d87ed44c0aead62979a4b4ad17c4db3"
+)
+_PHASE12_MIXED_BASE_DAMAGED_PATH = (
+    ROOT
+    / "dataset/processed/proof/ifc-repair-success-cases"
+    / "mixed/door-window/vvo-authority-triplet-public-repair/02-damaged.ifc"
 )
 _STRUCTURAL_PRIVATE_CANARY_MARKERS = (
     "canary-structural",
@@ -1563,6 +1590,12 @@ def _validate_case(root: Path, case: Mapping[str, Any]) -> dict[str, Any]:
         structural_operation_count > 0
         or bool(existing_structural_property_operations)
     )
+    structural_restoration_eligible: bool | None = None
+    structural_audit_coverage = (
+        "strict_structural_recomputed"
+        if has_structural_operations
+        else "not_applicable"
+    )
     if existing_structural_property_operations:
         raise ValueError(
             "l0.structural.proof:existing_occurrence_property_not_curated"
@@ -1701,10 +1734,15 @@ def _validate_case(root: Path, case: Mapping[str, Any]) -> dict[str, Any]:
                     damaged_ifc_path=required_role_paths["repair_input_ifc"],
                 )
                 live_authority["base_damage_case_id"] = damage_case_id
-            elif source_manifest.get("schema_version") != (
-                "text2ifc/phase12-offline-case/0.1"
-            ):
-                raise ValueError("l0.structural.damage:source_manifest_schema")
+            else:
+                source_schema = source_manifest.get("schema_version")
+                if source_schema not in {
+                    "text2ifc/phase12-offline-case/0.1",
+                    "text2ifc/phase12-offline-case/0.2",
+                }:
+                    raise ValueError(
+                        "l0.structural.damage:source_manifest_schema"
+                    )
             _audit_phase12_damage_provenance(
                 case=case,
                 roles=roles,
@@ -1715,6 +1753,44 @@ def _validate_case(root: Path, case: Mapping[str, Any]) -> dict[str, Any]:
                 original_ifc_path=required_role_paths["original_ground_truth"],
                 damaged_ifc_path=required_role_paths["repair_input_ifc"],
             )
+            if evidence_mode == "offline_bound_deterministic":
+                source_schema = str(source_manifest.get("schema_version") or "")
+                evidence_kind = str(
+                    source_manifest.get("structural_evidence_kind") or ""
+                )
+                if source_schema == "text2ifc/phase12-offline-case/0.2":
+                    if evidence_kind != "restoration":
+                        raise ValueError(
+                            "l0.structural.restoration:evidence_kind"
+                        )
+                    if source_manifest.get(
+                        "structural_restoration_contract"
+                    ) != STRUCTURAL_RESTORATION_SCHEMA_VERSION:
+                        raise ValueError(
+                            "l0.structural.restoration:contract"
+                        )
+                    restoration = audit_structural_restoration_case(case_root)
+                    structural_restoration_eligible = bool(
+                        restoration.get("schema_version")
+                        == STRUCTURAL_RESTORATION_SCHEMA_VERSION
+                        and restoration.get("status") == "passed"
+                        and restoration.get("restoration_eligible") is True
+                    )
+                    if not structural_restoration_eligible:
+                        raise ValueError(
+                            "l0.structural.restoration:independent_recompute"
+                        )
+                    structural_audit_coverage = (
+                        "strict_restoration_triplet_recomputed"
+                    )
+                elif evidence_kind:
+                    raise ValueError(
+                        "l0.structural.restoration:legacy_schema_claim"
+                    )
+                else:
+                    structural_audit_coverage = (
+                        "structural_operation_only_not_restoration"
+                    )
         _audit_structural_preservation(
             changeset=changeset,
             damaged_model=models["repair_input_ifc"],
@@ -1788,10 +1864,9 @@ def _validate_case(root: Path, case: Mapping[str, Any]) -> dict[str, Any]:
         "independent_triplet_audit_publishable": (
             independent_triplet_audit_publishable
         ),
-        "structural_audit_coverage": (
-            "strict_structural_recomputed"
-            if has_structural_operations
-            else "not_applicable"
+        "structural_audit_coverage": structural_audit_coverage,
+        "independent_structural_restoration_eligible": (
+            structural_restoration_eligible
         ),
         "independent_structural_operation_count": structural_operation_count,
         "damaged_sha256": f"sha256:{damaged_hash}",
@@ -3769,7 +3844,12 @@ def _audit_phase12_damage_provenance(
 ) -> None:
     if case.get("phase") != "12":
         raise ValueError("l0.structural.damage:phase_binding")
-    expected_scope = "cross_scene_same_family_bimnet"
+    expected_scope = (
+        "single_scene_bimnet_vvo"
+        if source_manifest.get("schema_version")
+        == "text2ifc/phase12-offline-case/0.2"
+        else "cross_scene_same_family_bimnet"
+    )
     if (
         case.get("evidence_scope") != expected_scope
         or source_manifest.get("evidence_scope") != expected_scope
@@ -3926,7 +4006,10 @@ def _audit_phase12_damage_provenance(
                 or _sha256(replay_root / "damaged.ifc") != damaged_hash
             ):
                 raise ValueError("l0.structural.damage:deterministic_replay")
-    elif private_schema == "text2ifc/phase12-private-damage-manifest/0.1":
+    elif private_schema in {
+        "text2ifc/phase12-private-damage-manifest/0.1",
+        "text2ifc/phase12-private-damage-manifest/0.2",
+    }:
         expected_mixed_targets = {
             (str(item.get("global_id") or ""), "IfcDoor")
             for item in damage.get("removed_doors", ())
@@ -3943,6 +4026,17 @@ def _audit_phase12_damage_provenance(
                         "IfcOpeningElement",
                     )
                 )
+        if private_schema == "text2ifc/phase12-private-damage-manifest/0.2":
+            expected_mixed_targets.update(
+                (str(item.get("global_id") or ""), "IfcBeam")
+                for item in damage.get("removed_beams", ())
+                if isinstance(item, Mapping)
+            )
+            expected_mixed_targets.update(
+                (str(item.get("global_id") or ""), "IfcColumn")
+                for item in damage.get("removed_columns", ())
+                if isinstance(item, Mapping)
+            )
         if (
             damage.get("door_openings_removed") is not False
             or damage.get("window_openings_removed") is not True
@@ -3951,9 +4045,77 @@ def _audit_phase12_damage_provenance(
                 for global_id, ifc_class in target_classes.items()
             }
             != expected_mixed_targets
-            or damaged_hash != _PHASE12_MIXED_DAMAGED_SHA256
         ):
             raise ValueError("l0.structural.damage:mixed_damage_binding")
+        if private_schema == "text2ifc/phase12-private-damage-manifest/0.1":
+            if damaged_hash != _PHASE12_MIXED_DAMAGED_SHA256:
+                raise ValueError("l0.structural.damage:mixed_damage_binding")
+        else:
+            structural = damage.get("structural_mutation")
+            base_hash = _sha256(_PHASE12_MIXED_BASE_DAMAGED_PATH)
+            beam_ids = tuple(
+                sorted(
+                    global_id
+                    for global_id, ifc_class in target_classes.items()
+                    if ifc_class == "IfcBeam"
+                )
+            )
+            column_ids = tuple(
+                sorted(
+                    global_id
+                    for global_id, ifc_class in target_classes.items()
+                    if ifc_class == "IfcColumn"
+                )
+            )
+            if (
+                private.get("mutation_type")
+                != "remove_door_window_beam_column"
+                or damage.get("schema_version")
+                != "text2ifc/phase12-four-family-damage-report/0.2"
+                or damage.get("mutation_type")
+                != "remove_door_window_beam_column"
+                or damage.get("valid") is not True
+                or _normalize_sha256(str(damage.get("source_sha256")))
+                != original_hash
+                or _normalize_sha256(
+                    str(damage.get("base_door_window_damaged_sha256"))
+                )
+                != base_hash
+                or _normalize_sha256(str(damage.get("damaged_sha256")))
+                != damaged_hash
+                or not isinstance(structural, Mapping)
+                or structural.get("schema_version")
+                != "text2ifc/ifc-repair-structural-mutation-report/0.1"
+                or structural.get("mutation_type")
+                != "remove_structural_members"
+                or structural.get("valid") is not True
+                or _normalize_sha256(str(structural.get("source_sha256")))
+                != base_hash
+                or _normalize_sha256(str(structural.get("damaged_sha256")))
+                != damaged_hash
+                or len(beam_ids) != 1
+                or len(column_ids) != 1
+            ):
+                raise ValueError("l0.structural.damage:mixed_damage_binding")
+            with tempfile.TemporaryDirectory(
+                prefix="phase12-proof-mixed-damage-"
+            ) as temporary:
+                replay_root = Path(temporary) / "mutation"
+                replay = remove_structural_members(
+                    source_path=_PHASE12_MIXED_BASE_DAMAGED_PATH,
+                    output_dir=replay_root,
+                    beam_global_ids=beam_ids,
+                    column_global_ids=column_ids,
+                    expected_source_sha256=base_hash,
+                )
+                if (
+                    _normalize_sha256(str(replay.get("damaged_sha256")))
+                    != damaged_hash
+                    or _sha256(replay_root / "damaged.ifc") != damaged_hash
+                ):
+                    raise ValueError(
+                        "l0.structural.damage:mixed_deterministic_replay"
+                    )
     else:
         raise ValueError("l0.structural.damage:private_manifest_schema")
 

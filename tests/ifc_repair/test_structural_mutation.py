@@ -17,16 +17,6 @@ VVO = ROOT / "dataset" / "ifc" / "train" / "vvo.ifc"
 
 CASES = (
     (
-        "d7n",
-        D7N,
-        "1RnWak0Kr6GxkeYF4Sd_bw",
-        "3dldEzenf9LvnDJYNNzLsH",
-        "1EazmrnrP3p9dtRknlmbVD",
-        "3dldEzenf9LvnDJYNNzLsV",
-        "0K_MqVdrL0JOCMi_Gblgiw",
-        "0K_MqVdrL0JOCMi_GblRwJ",
-    ),
-    (
         "vvo",
         VVO,
         "17tPjyQtf2L9JnbXXmcTUF",
@@ -145,6 +135,14 @@ def test_real_structural_damage_is_deterministic_source_bound_and_private(
             "section_capability",
             "representation_summary",
         }
+        assert (
+            target["geometry"]["axis_capability"]["status"]
+            == "measured_current_ifc"
+        )
+        assert (
+            target["geometry"]["section_capability"]["status"]
+            == "measured_current_ifc"
+        )
         assert "property_sets" in target["semantics"]
         assert "material_associations" in target["semantics"]
 
@@ -177,6 +175,42 @@ def test_real_structural_damage_is_deterministic_source_bound_and_private(
     )
     assert comparison["complete_preservation_success"] is True
     assert comparison["unexpected_changed_ids"] == []
+
+
+def test_structural_mutation_rejects_unreconstructable_circular_column(
+    tmp_path: Path,
+) -> None:
+    output = tmp_path / "must-not-exist"
+
+    with pytest.raises(
+        ValueError,
+        match="STRUCTURAL_MUTATION_TARGET_NOT_RECONSTRUCTABLE:column",
+    ):
+        mutation.remove_structural_members(
+            source_path=D7N,
+            output_dir=output,
+            column_global_ids=("3dldEzenf9LvnDJYNNzLsH",),
+        )
+
+    assert not output.exists()
+
+
+def test_structural_mutation_rejects_axis_body_extent_mismatch(
+    tmp_path: Path,
+) -> None:
+    output = tmp_path / "must-not-exist"
+
+    with pytest.raises(
+        ValueError,
+        match="STRUCTURAL_MUTATION_TARGET_NOT_RECONSTRUCTABLE:beam",
+    ):
+        mutation.remove_structural_members(
+            source_path=D7N,
+            output_dir=output,
+            beam_global_ids=("1RnWak0Kr6GxkeYF4Sd_bw",),
+        )
+
+    assert not output.exists()
 
 
 def test_structural_mutation_rejects_wrong_source_fingerprint_before_output(

@@ -978,6 +978,7 @@ def _preflight_commands(
                 "-m",
                 "pytest",
                 "tests/ifc_repair/test_phase12_live_uat.py",
+                "tests/ifc_repair/test_phase12_live_uat_v2.py",
                 "-q",
                 f"--basetemp={focused_basetemp}",
                 "-o",
@@ -1868,6 +1869,9 @@ def _case_contract_pass(
     case: LiveCase,
     final: Mapping[str, Any],
     counts: Mapping[str, int],
+    *,
+    expected_source_path: Path | str = SOURCE,
+    expected_source_sha256: str = FROZEN_SOURCE_SHA256,
 ) -> bool:
     published = bool(
         final.get("complete_repair_success")
@@ -1954,9 +1958,10 @@ def _case_contract_pass(
         guard = final.get("program_guard_evidence")
         guard_ok = (
             isinstance(guard, Mapping)
-            and guard.get("source_reference") == str(SOURCE.resolve())
-            and guard.get("source_sha256_before") == FROZEN_SOURCE_SHA256
-            and guard.get("source_sha256_after") == FROZEN_SOURCE_SHA256
+            and guard.get("source_reference")
+            == str(Path(expected_source_path).resolve())
+            and guard.get("source_sha256_before") == expected_source_sha256
+            and guard.get("source_sha256_after") == expected_source_sha256
             and guard.get("source_unchanged") is True
             and guard.get("stage2_attempts") == 0
             and guard.get("candidate_output_paths") == []
@@ -1974,10 +1979,15 @@ def _case_contract_pass(
     return False
 
 
-def _base_result(*, evidence_mode: str) -> dict[str, Any]:
+def _base_result(
+    *,
+    evidence_mode: str,
+    case_contract_version: str = "phase12-plan07-live-cases/0.1",
+) -> dict[str, Any]:
     return {
         "schema_version": "text2ifc/phase12-live-uat/0.1",
         "evidence_mode": evidence_mode,
+        "case_contract_version": case_contract_version,
         "synthetic_fallback_used": False,
         "token_guard": {
             "max_input_tokens": TOKEN_GUARD,
@@ -2049,12 +2059,23 @@ def run_live_uat(
     preflight_only: bool = False,
     property_runtime_factory: Callable[[], Any] | None = None,
     admission_evidence_path: Path | str | None = None,
+    source_path: Path | str = SOURCE,
+    expected_source_sha256: str = FROZEN_SOURCE_SHA256,
+    required_case_ids: Sequence[str] = REQUIRED_CASE_IDS,
+    case_matrix_sha256: str = FROZEN_CASE_MATRIX_SHA256,
+    case_contract_version: str = "phase12-plan07-live-cases/0.1",
+    admission_loader: Callable[[Path | str], dict[str, Any]] = (
+        _load_changed_scope_admission
+    ),
 ) -> dict[str, Any]:
     """Execute live cases only after independently verified preflight."""
 
     output = Path(output_root).resolve()
     output.mkdir(parents=True, exist_ok=False)
-    result = _base_result(evidence_mode=evidence_mode)
+    result = _base_result(
+        evidence_mode=evidence_mode,
+        case_contract_version=case_contract_version,
+    )
     if evidence_mode != LIVE_EVIDENCE_MODE:
         result.update(
             {
@@ -2110,7 +2131,7 @@ def run_live_uat(
         )
     else:
         try:
-            preflight = _load_changed_scope_admission(
+            preflight = admission_loader(
                 admission_evidence_path
             )
         except Exception as error:
@@ -2171,11 +2192,16 @@ def run_live_uat(
         return result
 
     case_ids = tuple(case.case_id for case in cases)
-    required_case_matrix_sha256 = FROZEN_CASE_MATRIX_SHA256
-    current_default_case_matrix_sha256 = _case_matrix_sha256(DEFAULT_CASES)
+    required_case_matrix_sha256 = case_matrix_sha256
+    required_case_ids = tuple(required_case_ids)
+    current_default_case_matrix_sha256 = (
+        _case_matrix_sha256(DEFAULT_CASES)
+        if case_contract_version == "phase12-plan07-live-cases/0.1"
+        else required_case_matrix_sha256
+    )
     provided_case_matrix_sha256 = _case_matrix_sha256(cases)
     if (
-        case_ids != REQUIRED_CASE_IDS
+        case_ids != required_case_ids
         or current_default_case_matrix_sha256 != required_case_matrix_sha256
         or provided_case_matrix_sha256 != required_case_matrix_sha256
     ):
@@ -2183,7 +2209,7 @@ def run_live_uat(
             {
                 "status": "blocked",
                 "reason_code": "LIVE_CASE_MATRIX_REQUIRED",
-                "required_case_ids": list(REQUIRED_CASE_IDS),
+                "required_case_ids": list(required_case_ids),
                 "provided_case_ids": list(case_ids),
                 "required_case_matrix_sha256": required_case_matrix_sha256,
                 "current_default_case_matrix_sha256": (
@@ -2236,7 +2262,24 @@ def run_live_uat(
         case_root = output / "cases" / case.case_id
         case_root.mkdir(parents=True)
         try:
-            if property_runtime is None:
+            if case_executor is _ORIGINAL_PRODUCTION_CASE_EXECUTOR:
+                executor_options: dict[str, Any] = {
+                    "source_path": source_path,
+                    "expected_source_sha256": expected_source_sha256,
+                }
+                if property_runtime is not None:
+                    executor_options["property_knowledge_runtime"] = (
+                        property_runtime
+                    )
+                final = dict(
+                    case_executor(
+                        case,
+                        provider,
+                        case_root,
+                        **executor_options,
+                    )
+                )
+            elif property_runtime is None:
                 final = dict(case_executor(case, provider, case_root))
             else:
                 final = dict(
@@ -2270,6 +2313,8 @@ def run_live_uat(
                 case,
                 final,
                 call_counts,
+                expected_source_path=source_path,
+                expected_source_sha256=expected_source_sha256,
             )
         )
         case_result = {
