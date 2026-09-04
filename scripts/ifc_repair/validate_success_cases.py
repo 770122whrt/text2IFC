@@ -146,11 +146,11 @@ STRUCTURAL_TYPE_CLASS = {
     "column": "IfcColumnType",
 }
 _PHASE12_SOURCE_CONTRACTS = {
-    "dataset/ifc/test/d7n.ifc": (
+    "dataset/external/bimnet/d7n.ifc": (
         "43b6756b88874f9525f6a511d7dc718844dac59b638a11e3fbc36b321e0ab8b7",
         3_293_724,
     ),
-    "dataset/ifc/train/vvo.ifc": (
+    "dataset/external/bimnet/vvo.ifc": (
         "b6c435be955aeb6b2998f42a62f4ebf8c3f91eb7d373ca71a2dcedfeb95b3fdc",
         2_409_268,
     ),

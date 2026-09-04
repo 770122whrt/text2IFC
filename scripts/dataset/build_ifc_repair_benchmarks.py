@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import argparse
 import sys
 from pathlib import Path
 
@@ -14,12 +15,13 @@ from text2ifc_dataset.ifc_repair_benchmarks import (
     build_benchmark_record,
     render_jsonl,
 )
+from text2ifc_text.splits import atomic_write_text
 
 
 BENCHMARKS = (
     {
         "benchmark_id": "bimnet-vvo-five-window-primary",
-        "local_path": "dataset/ifc/train/vvo.ifc",
+        "local_path": "dataset/external/bimnet/vvo.ifc",
         "execution_role": "primary_full_pipeline",
         "suitability": (
             "23 valid Window chains on 77 straight walls; project test split; "
@@ -28,7 +30,7 @@ BENCHMARKS = (
     },
     {
         "benchmark_id": "bimnet-px4-1-medium-compatibility",
-        "local_path": "dataset/ifc/train/px4_1.ifc",
+        "local_path": "dataset/external/bimnet/px4_1.ifc",
         "execution_role": "medium_compatibility",
         "suitability": (
             "19 valid Window chains and roughly ten times vvo entity scale"
@@ -59,11 +61,18 @@ BENCHMARKS = (
 
 
 def main() -> int:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--write", action="store_true")
+    args = parser.parse_args()
     records = [
         build_benchmark_record(root=ROOT, **definition)
         for definition in BENCHMARKS
     ]
-    print(render_jsonl(records), end="")
+    rendered = render_jsonl(records)
+    if args.write:
+        atomic_write_text(ROOT / "dataset/manifests/ifc-repair-benchmarks.jsonl", rendered)
+    else:
+        print(rendered, end="")
     return 0
 
 

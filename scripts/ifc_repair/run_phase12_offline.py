@@ -86,8 +86,8 @@ from scripts.ifc_repair.run_phase12_public_structural_repair import (  # noqa: E
 
 
 DEFAULT_OUTPUT = ROOT / "dataset/processed/ifc-repair/phase12-offline"
-D7N = ROOT / "dataset/ifc/test/d7n.ifc"
-VVO = ROOT / "dataset/ifc/train/vvo.ifc"
+D7N = ROOT / "dataset/external/bimnet/d7n.ifc"
+VVO = ROOT / "dataset/external/bimnet/vvo.ifc"
 FOUR_FAMILY_BASE = (
     ROOT
     / "dataset/processed/proof/ifc-repair-success-cases"

@@ -38,7 +38,7 @@ def test_fidelity_inventory_counts_phase4_source_fact_classes() -> None:
     assert record["scene_family"] == "hxp"
     assert record["split"] == "train"
     assert record["sha256"]
-    assert record["local_path"].endswith("dataset/ifc/train/hxp.ifc")
+    assert record["local_path"].endswith("dataset/external/bimnet/hxp.ifc")
     metrics = record["metrics"]
     for key in (
         "material_associations",

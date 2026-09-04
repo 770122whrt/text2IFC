@@ -15,7 +15,7 @@ def test_source_provenance_and_inventory_are_complete(hxp_result) -> None:
     assert hxp_result.draft is not None
     assert validate_draft(hxp_result.draft) == []
     provenance = hxp_result.draft["provenance"]
-    assert provenance["source_path"] == "dataset/ifc/train/hxp.ifc"
+    assert provenance["source_path"] == "dataset/external/bimnet/hxp.ifc"
     assert provenance["source_sha256"] == expected_hash
     assert provenance["ifc_schema"] == "IFC2X3"
 
