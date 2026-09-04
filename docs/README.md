@@ -7,8 +7,9 @@
 
 | 目的 | 入口 |
 |---|---|
+| 首次由 Agent 或开发者接管项目 | [首次接管 text2IFC 项目](how-to/agent-takeover.md) |
 | 了解已有/damaged IFC + 文本如何生成可验证的新 IFC，以及后续 Phase 安排 | [IFC2X3 修复链路与后续路线](architecture/ifc-repair-pipeline-status-and-roadmap.md) |
-| 了解当前系统如何运行 | [当前工作流与数据流](architecture/current-workflow-and-data-flow.md) |
+| 了解 Text -> BIM JSON -> IFC generation | [Generation 工作流与数据流（截至 Phase 6.5）](architecture/current-workflow-and-data-flow.md) |
 | 浏览系统架构和阶段演进 | [Architecture Index](architecture/README.md) |
 | 规范 Agent Debug、能力提升声明和真实 LLM 前测试 | [Agent 能力评测与真实 LLM 准入协议](validation/agent-capability-evaluation.md) |
 | 接手 Phase 12 Repair Pipeline 与 Plan 07 收尾 | [Phase 12 Plan 07 技术 handover](handoffs/phase12-plan07-closeout-handover-2026-09-03.md) |
@@ -20,6 +21,8 @@
 
 ## 当前重点
 
+- [首次接管 text2IFC 项目](how-to/agent-takeover.md)
+  - 先确认 Git 与当前状态，再按任务类型选择架构、Phase、验证和证据入口。
 - [Phase 12 Plan 07 技术 handover](handoffs/phase12-plan07-closeout-handover-2026-09-03.md)
   - 面向后续接手者说明项目分层、Repair Pipeline、关键代码、证据入口、已知风险和接续顺序。
 - [Plan 07 人工 Proof 入口](../dataset/processed/proof/ifc-repair-success-cases/PLAN07-REPORT.md)
@@ -31,8 +34,8 @@
   - 既有 IFC 局部修改、紧凑 LLM Context、可扩展 Operation Registry。
 - [IFC2X3 Local ChangeSet 实施 Prompt](validation/ifc2x3-changeset/implementation-prompt.md)
   - 实施顺序、离线测试和真实 Provider UAT。
-- [当前 text2IFC 工作流与数据流](architecture/current-workflow-and-data-flow.md)
-  - 多 Agent、BIM JSON、Gate、IFC 编译、ChangeSet 和报告链路。
+- [text2IFC Generation 工作流与数据流（截至 Phase 6.5）](architecture/current-workflow-and-data-flow.md)
+  - 两种生成策略、多 Agent、BIM JSON、Gate、IFC 编译、ChangeSet 和报告链路。
 
 ## 文档分区
 
@@ -59,8 +62,9 @@ Schema、EXPRESS Schema 和数据 manifest 仍保留在其机器可读目录。
 
 ### How-to
 
-目录：[`docs/how-to/`](how-to/publish-to-github.md)
+目录：[`docs/how-to/`](how-to/README.md)
 
+- [首次接管 text2IFC 项目](how-to/agent-takeover.md)
 - [发布到 GitHub](how-to/publish-to-github.md)
 
 保存面向具体任务的操作步骤。

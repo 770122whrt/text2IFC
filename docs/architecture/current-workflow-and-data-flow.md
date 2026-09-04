@@ -1,10 +1,14 @@
-# 当前 text2IFC 工作流与数据流
+# text2IFC Generation 工作流与数据流（截至 Phase 6.5）
 
 **更新时间：** 2026-07-13
 
 **目标读者：** 新加入项目的开发者、研究人员、项目审核者和汇报撰写者
 
-**覆盖范围：** 当前项目至 Phase 6.5 的中文自然语言到 IFC2X3 工作流
+**覆盖范围：** 截至 Phase 6.5 的中文自然语言到新 IFC2X3 模型生成工作流
+
+本文解释 generation 链路，不代表当前 milestone 执行状态。当前状态以
+[`.planning/STATE.md`](../../.planning/STATE.md) 为准。项目和产品名称是
+`text2IFC`；本地目录名 `bimnet` 及 dataset 语境中的 `BIMNet` 都不是产品名。
 
 ## 1. 项目概述
 
@@ -59,13 +63,18 @@ flowchart TD
     READY -- "是" --> B["Ready Design Brief 2.0"]
 
     B --> E["Expected Facts<br/>用于验证的事实投影"]
-    E --> P["生成包清单<br/>Skeleton、各楼层、跨楼层包"]
+    E --> STRATEGY{"Generation strategy"}
+    STRATEGY -- "legacy_full：CLI 默认" --> FULL["Generator Agent<br/>一次生成完整 BIM JSON"]
+    STRATEGY -- "staged：显式选择" --> P["生成包清单<br/>Skeleton、各楼层、跨楼层包"]
 
     P --> S["确定性 Skeleton<br/>Project、Site、Building、Storeys"]
     S --> G["Generator Agent<br/>按包生成 BIM JSON ChangeSet"]
     G --> PG["Package Gates<br/>Schema、归属、引用、稳定 ID"]
-    PG -- "失败" --> G
+    PG -- "失败且仍有预算" --> G
     PG -- "通过" --> J["完整 Formal BIM JSON 2.0"]
+    FULL --> CLASSIFY{"Formal / Draft / invalid"}
+    CLASSIFY -- "Formal 且合同有效" --> J
+    CLASSIFY -- "Draft 或 invalid" --> N
 
     J --> PRE["预编译 Gates<br/>Schema、语义覆盖、归属、拓扑"]
     PRE -- "失败" --> N["问题标准化与路由决策"]
@@ -146,9 +155,19 @@ Expected Facts 不是另一套 BIM Schema。它只保留生成控制与结果验
 主要实现：
 [`expected_facts.py`](../../src/text2ifc_agent/expected_facts.py)。
 
-### 4.4 多楼层分包生成
+### 4.4 两种 generation 策略
 
-复杂建筑不会再交给模型一次性生成完整 JSON。当前编排按有限范围组合模型：
+当前公开 CLI 同时保留两条生成路径：
+
+1. `legacy_full` 是默认值，由 Generator Agent 一次输出完整 Formal BIM JSON 2.0
+   或 Draft。
+2. `staged` 必须显式传入 `--generation-strategy staged`。它面向复杂、多楼层
+   请求，按有限 ownership 组合模型。
+
+当前代码不会根据复杂度自动切换，也不会把一条策略静默 fallback 到另一条。接管
+运行时应检查命令和 `generation-strategy.json`，不要只根据本文流程图判断。
+
+`staged` 路径具体执行：
 
 1. 确定性 Skeleton 创建 `IfcProject`、`IfcSite`、`IfcBuilding` 和根据输入动态
    发现的 `IfcBuildingStorey`。
@@ -156,16 +175,21 @@ Expected Facts 不是另一套 BIM Schema。它只保留生成控制与结果验
 3. 跨楼层包负责楼梯、层间楼板、屋面、竖向洞口和连接楼层的关系。
 
 每个包必须先经过 Package Gate，才能应用到内部工作区。部分工作区不能称为
-Formal BIM JSON，也不能提前编译为 IFC。
+Formal BIM JSON，也不能提前编译为 IFC。每包最多尝试三次；已经合入的构件会被冻结，
+后续包不得造成漂移。
 
 主要实现：
 [`staged_generation.py`](../../src/text2ifc_agent/staged_generation.py) 和
 [`generation_packages.py`](../../src/text2ifc_agent/generation_packages.py)。
 
+公开入口：
+[`run_text2ifc_chat.py`](../../scripts/agent/run_text2ifc_chat.py)。
+
 ### 4.5 Formal BIM JSON 2.0
 
-所有生成包通过并组合完成后，结果必须通过完整 BIM JSON 2.0 Schema 和语义
-验证，才能成为 Formal Candidate。这是 IFC 编译器唯一接受的模型输入。
+无论是 `legacy_full` 的完整文档，还是所有 staged 包组合后的结果，都必须通过
+完整 BIM JSON 2.0 Schema 和语义验证，才能成为 Formal Candidate。这是 IFC
+编译器唯一接受的模型输入。
 
 BIM JSON 2.0 表达 IFC 语义类别、稳定实体 ID、关系、局部位置、受支持几何、
 尺寸和属性。模型不需要输出 `IfcCartesianPoint`、`IfcDirection`、
@@ -275,6 +299,10 @@ ChangeSet Schema：
 返工循环：
 [`scoped_loop.py`](../../src/text2ifc_agent/scoped_loop.py)。
 
+这里的 generator repair/ChangeSet 修改的是本轮生成的 BIM JSON Candidate，不是
+[`text2ifc_ifc_repair`](../../src/text2ifc_ifc_repair/) 对已有 damaged IFC 执行的局部
+repair。两条链路具有不同输入、状态和 Proof，不能互相替代。
+
 ## 5. 主要数据合同
 
 | 数据对象 | 生产者 | 消费者 | 作用 | 是否为结构真相 |
@@ -289,7 +317,7 @@ ChangeSet Schema：
 | BIM JSON 2.0 | Generator 与确定性组合器 | Validator、IFC Compiler | 正式语义 BIM 表达 | **是** |
 | Gate Bundle | 确定性检查器 | Router、Audit、报告 | 可机器验证的正确性证据 | 否 |
 | Audit Result | Audit Agent | Router、Final Acceptance | 对意图和证据进行语义复核 | 否 |
-| IFC2X3 | 确定性编译器 | IFC Gate、最终用户 | 最终 BIM 交付文件 | 最终输出 |
+| IFC2X3 | 确定性编译器 | IFC Gate、最终用户 | 编译候选或最终 BIM 交付文件 | 通过 Final Acceptance 后才是最终输出 |
 | Session DB 与 Trace | Runtime Observer | CLI 查询、报告、审核者 | 重现运行和追踪来源 | 否 |
 
 ## 6. 数据权威顺序
@@ -333,18 +361,34 @@ ChangeSet Schema：
 
 ```text
 runs/<session_hash>/
-  output.ifc
-  report.md
-  session-export.json
   design-brief/
   expected-facts.json
-  generation-packages.json
-  revisions/
-  gate-results/
+  generation-strategy.json
+  generator/
+  generator-staged/          # 仅 staged strategy
+  repair/                    # generation 内部的 BIM JSON 候选返工
+  candidate.json
+  candidate-revision.json
+  component-preservation.json
+  semantic-coverage.json
+  ifc-verification.json
+  geometry-feedback.json
+  gate-summary.json
   audit/
-  provider-traces/
-  artifact-manifest.json
+  issues.json
+  route-decision.json
+  feedback-rounds.json
+  changeset-round-*/         # 仅发生 scoped 返工时
+  output.ifc
+  acceptance-metrics.json
+  secret-scan.json
+  report.md
+  session-export.json
 ```
+
+Candidate Gate 为编译、重开和几何检查可能先写出 `output.ifc`；因此“文件存在”
+只说明产生过一个可检查候选。只有 session 终态为 `compiled`，且
+`acceptance-metrics.json#/valid` 为 true，才能把该文件称为 accepted IFC。
 
 具体内部文件名可能随 Trace Level 调整，但报告应让审核者无需逐个打开 JSON
 即可了解：
@@ -359,9 +403,9 @@ runs/<session_hash>/
 - 最终状态与 IFC 路径；
 - 产物引用和密钥扫描结果。
 
-## 9. 当前能力边界
+## 9. 截至 Phase 6.5 的 generation 能力边界
 
-当前架构已经覆盖：
+该 generation 基线已经覆盖：
 
 - 中文优先的多轮澄清；
 - 包括 DeepSeek 配置在内的 OpenAI-compatible Provider；
@@ -412,7 +456,7 @@ Hard 标准案例进行验收。单个成功案例只能证明该路线真实可
 
 1. 本文：了解完整系统和数据流。
 2. [`BIM JSON 2.0 参考`](../reference/bim-json-2.0.md)：了解正式模型合同。
-3. [`Phase 6.5 SPEC`](../../.planning/phases/06.5-component-scoped-changesets-and-multistorey-stability/06.5-SPEC.md)：了解当前需求和边界。
+3. [`Phase 6.5 SPEC`](../../.planning/phases/06.5-component-scoped-changesets-and-multistorey-stability/06.5-SPEC.md)：了解该 generation 阶段的冻结需求和边界，不把它当作当前 milestone 状态。
 4. [`Prompt Registry`](../../prompts/agent/registry.json)：了解当前 Prompt 清单。
 5. [`repl_chat.py`](../../src/text2ifc_agent/repl_chat.py) 与
    [`interactive_cli_flow.py`](../../src/text2ifc_agent/interactive_cli_flow.py)：了解运行入口。
@@ -423,9 +467,12 @@ Hard 标准案例进行验收。单个成功案例只能证明该路线真实可
 ## 12. 可直接用于汇报的简版说明
 
 > text2IFC 使用中文优先的多 Agent 工作流，把自然语言整理为 Ready Design
-> Brief，再生成满足 Schema 的 BIM JSON 2.0。复杂多楼层建筑按照楼层包和跨楼层
-> 包进行有限范围组合。确定性 Gate 检查结构、关系、几何和 IFC 可重开性，Audit
+> Brief，再生成满足 Schema 的 BIM JSON 2.0。显式选择 `staged` 时，复杂多楼层
+> 建筑按照楼层包和跨楼层包进行有限范围组合；公开 CLI 默认仍是 `legacy_full`。
+> 确定性 Gate 检查结构、关系、几何和 IFC 可重开性，Audit
 > Agent 再综合原始需求与检查证据进行语义复核。失败结果会被标准化并路由到用户
-> 澄清、Design Brief 修订、有限 JSON Repair 或稳定 ID ChangeSet 返工。只有通过
-> 全部必要检查的 Formal BIM JSON 才能编译为最终 IFC2X3，同时 SQLite Session、
-> 不可变 Revision、Trace 产物和自动生成的报告保存完整证据链。
+> 澄清、Design Brief 修订、有限 JSON Repair 或稳定 ID ChangeSet 返工。Formal
+> BIM JSON 可进入候选编译；Final Acceptance 要求此前 Audit 是 non-blocking
+> accept 且 strict output contract 有效，再重跑 Candidate Gate 与 secret scan。
+> 只有这些条件全部满足，`output.ifc` 才能作为 accepted IFC2X3。SQLite Session、不可变
+> Revision、Trace 产物和自动生成的报告保存完整证据链。

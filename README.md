@@ -6,16 +6,36 @@ JSON representation between language understanding and IFC generation.
 
 ## Start Here
 
+- [First-time Agent and maintainer takeover guide](docs/how-to/agent-takeover.md)
 - [Documentation index](docs/README.md)
-- [Project architecture](docs/architecture/text2ifc-overview.md)
+- [Current execution state](.planning/STATE.md)
+- [Foundational architecture and phase history](docs/architecture/text2ifc-overview.md)
 - [GitHub publishing guide](docs/how-to/publish-to-github.md)
 - [GSD project context](.planning/PROJECT.md)
 - [Roadmap](.planning/ROADMAP.md)
 
-## Current Focus
+## Core Generation Workflow
 
-The active engineering line repairs an existing IFC2X3 model from a public
-natural-language request. The Provider proposes intent and a bounded ChangeSet;
+The project's primary product path is Text -> BIM JSON -> IFC. A DB-backed
+Design Brief loop clarifies the user's intent, deterministic code derives
+Expected Facts, and a Provider produces a schema-bound BIM JSON candidate.
+The candidate must pass semantic coverage, deterministic compilation/reopen
+and geometry gates, Audit, and final acceptance before its IFC is accepted.
+
+Generation currently has two explicit strategies: `legacy_full` is the public
+CLI default and asks the Generator for one complete document; `staged` builds a
+deterministic hierarchy skeleton and composes bounded storey-local and
+cross-storey ChangeSets. The system does not select `staged` automatically.
+
+- [Generation workflow and data flow through Phase 6.5](docs/architecture/current-workflow-and-data-flow.md)
+- [First-time takeover guide and code map](docs/how-to/agent-takeover.md)
+- [BIM JSON 2.0 contract](docs/reference/bim-json-2.0.md)
+
+## Recently Delivered Repair Workflow
+
+Alongside new-model generation, the recently closed repair engineering line
+modifies an existing IFC2X3 model from a public natural-language request. The
+Provider proposes intent and a bounded ChangeSet;
 deterministic code resolves IFC identities, applies one atomic transaction,
 reopens the candidate, and publishes it only after the applicable L0/L1/L2 and
 preservation gates pass.
