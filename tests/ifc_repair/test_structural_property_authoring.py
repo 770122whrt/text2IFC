@@ -263,3 +263,50 @@ def test_structural_semantic_role_authors_exact_property_and_reopens(
     assert prop.NominalValue.wrappedValue is True
     assert all(item["role"].startswith(f"semantic_{role}_") for item in result["created"])
     assert not reopened.HasAssociations
+
+
+def test_beam_slope_authors_plane_angle_measure_and_reopens(
+    tmp_path: Path,
+) -> None:
+    model, beam = _model_and_element("IfcBeam")
+    assignment = _assignment(
+        "IfcBeam",
+        value_type="IfcPlaneAngleMeasure",
+        scope="beam_occurrence",
+    )
+    assignment.update(
+        {
+            "fact_key": "pset:Pset_BeamCommon.Slope",
+            "source_fact_key": "pset:Pset_BeamCommon.Slope",
+            "value": 0.0,
+        }
+    )
+    operation = _operation(beam, assignment)
+
+    apply_semantic_assignments(
+        model=model,
+        operation=operation,
+        application={
+            "created": [
+                {
+                    "role": "beam",
+                    "ifc_class": "IfcBeam",
+                    "global_id": str(beam.GlobalId),
+                }
+            ]
+        },
+        target_role="beam",
+    )
+    output = tmp_path / "beam-slope.ifc"
+    model.write(str(output))
+    reopened = ifcopenshell.open(str(output)).by_guid(str(beam.GlobalId))
+    pset = next(
+        relation.RelatingPropertyDefinition
+        for relation in reopened.IsDefinedBy
+        if relation.is_a("IfcRelDefinesByProperties")
+        and relation.RelatingPropertyDefinition.Name == "Pset_BeamCommon"
+    )
+    slope = next(item for item in pset.HasProperties if item.Name == "Slope")
+
+    assert slope.NominalValue.is_a() == "IfcPlaneAngleMeasure"
+    assert slope.NominalValue.wrappedValue == pytest.approx(0.0)

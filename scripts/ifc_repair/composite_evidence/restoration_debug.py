@@ -474,6 +474,7 @@ def _member_debug(
     *,
     key: str,
     index: int,
+    repaired_tag: str | None,
     original_model: Any,
     repaired_model: Any,
 ) -> dict[str, Any]:
@@ -485,10 +486,11 @@ def _member_debug(
     }
     ifc_class, tag_prefix, projector = definitions[key]
     original = original_model.by_guid(str(member["gid"]))
+    resolved_tag = repaired_tag or f"{tag_prefix}-{index}"
     repaired = _restored_by_tag(
         repaired_model,
         ifc_class=ifc_class,
-        tag=f"{tag_prefix}-{index}",
+        tag=resolved_tag,
     )
     if key == "doors":
         original_geometry = _door_geometry(
@@ -588,6 +590,7 @@ def compare_damage_restoration(
     *,
     original_path: Path | str,
     repaired_path: Path | str,
+    repaired_tags: Mapping[str, Sequence[str]] | None = None,
 ) -> dict[str, Any]:
     """Run whole-model IFCcompare plus role-mapped geometry/property debug."""
 
@@ -597,12 +600,25 @@ def compare_damage_restoration(
     repaired_model = ifcopenshell.open(str(repaired_path))
     members = []
     for key in ("beams", "columns", "doors", "windows"):
-        for index, member in enumerate(case["damage"].get(key, ()), start=1):
+        damage_members = case["damage"].get(key, ())
+        resolved_tags = tuple((repaired_tags or {}).get(key, ()))
+        if repaired_tags is not None and len(resolved_tags) != len(
+            damage_members
+        ):
+            raise ValueError(
+                f"RESTORATION_DEBUG_TAG_BINDING_CARDINALITY:{key}"
+            )
+        for index, member in enumerate(damage_members, start=1):
             members.append(
                 _member_debug(
                     member,
                     key=key,
                     index=index,
+                    repaired_tag=(
+                        resolved_tags[index - 1]
+                        if repaired_tags is not None
+                        else None
+                    ),
                     original_model=original_model,
                     repaired_model=repaired_model,
                 )
@@ -625,6 +641,11 @@ def compare_damage_restoration(
             "original_sha256": _sha256(original_path),
             "repaired_sha256": _sha256(repaired_path),
             "private_mapping_source": "frozen_damage_recipe",
+            "repaired_binding_source": (
+                "bound_changeset_operation_ids"
+                if repaired_tags is not None
+                else "legacy_fixture_tags"
+            ),
         },
         "status": focused_status,
         "member_count": len(members),

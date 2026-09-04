@@ -44,12 +44,19 @@ from scripts.ifc_repair.composite_evidence import baseline_fingerprint  # noqa: 
 from scripts.ifc_repair.composite_evidence.restoration_debug import (  # noqa: E402
     compare_damage_restoration,
 )
+from scripts.ifc_repair.composite_evidence.run_c1_c5_light_preflight import (  # noqa: E402
+    load_light_preflight_evidence,
+)
 from text2ifc_agent.openai_compat import (  # noqa: E402
     OpenAICompatibleLiveProvider,
     load_openai_compatible_runtime_config,
 )
 from text2ifc_knowledge import (  # noqa: E402
     create_property_runtime_from_environment,
+)
+from text2ifc_knowledge.property_runtime import (  # noqa: E402
+    PROPERTY_BGE_MODEL_PATH_ENV,
+    PROPERTY_QDRANT_PATH_ENV,
 )
 from text2ifc_ifc_repair.api import RepairAPI  # noqa: E402
 from text2ifc_ifc_repair.benchmark_evaluation import evaluate_production  # noqa: E402
@@ -70,11 +77,18 @@ DOC_DIR = ROOT / "docs" / "validation" / "repair-composite-milestone"
 FREEZE_PATH = DOC_DIR / "damage-restoration-c1-c5-freeze.json"
 FREEZE = json.loads(FREEZE_PATH.read_text(encoding="utf-8"))
 RESULT_SCHEMA = "text2ifc/damage-restoration-c1-c5-execution-result/0.1"
+TARGET_MATCH_TOLERANCE_MM = 0.1
 TYPE_CLASS_BY_DAMAGE_KEY = {
     "beams": ("IfcBeam", "IfcBeamType", "restore-beam"),
     "columns": ("IfcColumn", "IfcColumnType", "restore-column"),
     "doors": ("IfcDoor", "IfcDoorStyle", "restore-door"),
     "windows": ("IfcWindow", "IfcWindowStyle", "restore-window"),
+}
+OPERATION_TYPE_BY_DAMAGE_KEY = {
+    "beams": "add_beam",
+    "columns": "add_column",
+    "doors": "fill_existing_opening_with_door",
+    "windows": "add_window_with_opening_to_wall",
 }
 
 
@@ -84,6 +98,22 @@ def _sha256_path(path: Path) -> str:
         for chunk in iter(lambda: handle.read(1024 * 1024), b""):
             digest.update(chunk)
     return "sha256:" + digest.hexdigest()
+
+
+def _public_repair_request(case: Mapping[str, Any]) -> str:
+    request = str(case["request"]).strip()
+    request = (
+        f"{request} Use a target-matching tolerance of "
+        f"{TARGET_MATCH_TOLERANCE_MM:g} mm for every stated millimetre "
+        "geometry selector; this tolerance applies only to identifying "
+        "existing IFC targets, not to the dimensions created or restored."
+    )
+    if "operation type NOTDEFINED" in request:
+        request += (
+            " For every Door explicitly requested with operation type "
+            "NOTDEFINED, I explicitly accept NOTDEFINED."
+        )
+    return request
 
 
 def _write_json(path: Path, payload: Mapping[str, Any]) -> None:
@@ -107,6 +137,146 @@ def _large_model_evaluation_stage(inputs):
 def _orchestrator_factory(**kwargs):
     kwargs["evaluation_stage"] = _large_model_evaluation_stage
     return RepairOrchestrator(**kwargs)
+
+
+def _prepare_property_runtime_environment(
+    environment: Mapping[str, str],
+    *,
+    cache_root: Path | None,
+) -> dict[str, str]:
+    prepared = dict(environment)
+    if cache_root is None:
+        return prepared
+    resolved_cache = cache_root.resolve()
+    model_path = resolved_cache / "models" / "BAAI-bge-m3"
+    if not model_path.is_dir():
+        raise RuntimeError("PROPERTY_BGE_MODEL_CACHE_MISSING")
+    prepared.setdefault(PROPERTY_BGE_MODEL_PATH_ENV, str(model_path))
+    prepared.setdefault(
+        PROPERTY_QDRANT_PATH_ENV,
+        str((resolved_cache / "property-resolution" / "qdrant").resolve()),
+    )
+    return prepared
+
+
+def _require_ready_property_runtime(runtime: Any) -> None:
+    health = getattr(runtime, "health", None)
+    if (
+        health is None
+        or getattr(health, "status", None) != "ready"
+        or getattr(health, "acceptance_eligible", None) is not True
+    ):
+        reason = getattr(health, "reason_code", None)
+        raise RuntimeError(reason or "PROPERTY_RUNTIME_NOT_READY")
+
+
+def _updated_transport_call_count(
+    current: int,
+    attempts: list[Mapping[str, Any]],
+) -> int:
+    return current + len(attempts)
+
+
+def _matches_expected_value(expected: Any, actual: Any) -> bool:
+    if isinstance(expected, Mapping):
+        return isinstance(actual, Mapping) and all(
+            key in actual and _matches_expected_value(value, actual[key])
+            for key, value in expected.items()
+        )
+    if isinstance(expected, (int, float)) and not isinstance(expected, bool):
+        return (
+            isinstance(actual, (int, float))
+            and not isinstance(actual, bool)
+            and abs(float(expected) - float(actual)) <= 1e-3
+        )
+    return expected == actual
+
+
+def _expected_operation_content(
+    key: str,
+    member: Mapping[str, Any],
+) -> tuple[dict[str, Any], dict[str, Any]]:
+    if key == "beams":
+        return {}, {
+            "axis": member["axis"],
+            "section": {
+                "shape": "rectangle",
+                "width_mm": member["section"]["width_mm"],
+                "height_mm": member["section"]["height_mm"],
+            },
+        }
+    if key == "columns":
+        return {}, {
+            "axis": member["axis"],
+            "section": {
+                "shape": "rectangle",
+                "width_mm": member["section"]["width_mm"],
+                "depth_mm": member["section"]["depth_mm"],
+            },
+        }
+    if key == "doors":
+        return {"opening_global_id": member["opening"]["gid"]}, {}
+    opening = member["opening"]
+    return {"wall_global_id": member["wall_query"]["wall_global_id"]}, {
+        "position": {
+            "reference": "wall_local_start",
+            "center_offset_mm": opening["center_offset_mm"],
+        },
+        "opening": {
+            "width_mm": opening["width_mm"],
+            "height_mm": opening["height_mm"],
+            "sill_height_mm": opening["sill_height_mm"],
+        },
+    }
+
+
+def _resolve_restoration_tags(
+    case: Mapping[str, Any],
+    bound_changeset: Mapping[str, Any],
+) -> dict[str, list[str]]:
+    """Bind frozen damage roles to actual provider operation IDs by content."""
+
+    operations = list(bound_changeset.get("operations") or ())
+    relevant_types = set(OPERATION_TYPE_BY_DAMAGE_KEY.values())
+    expected_count = sum(
+        len(case["damage"].get(key, ()))
+        for key in OPERATION_TYPE_BY_DAMAGE_KEY
+    )
+    relevant_operations = [
+        operation
+        for operation in operations
+        if operation.get("operation_type") in relevant_types
+    ]
+    if len(relevant_operations) != expected_count:
+        raise ValueError("RESTORATION_OPERATION_BINDING_CARDINALITY")
+    result = {key: [] for key in OPERATION_TYPE_BY_DAMAGE_KEY}
+    used_ids: set[str] = set()
+    for key, operation_type in OPERATION_TYPE_BY_DAMAGE_KEY.items():
+        for member in case["damage"].get(key, ()):
+            expected_target, expected_parameters = _expected_operation_content(
+                key, member
+            )
+            matches = [
+                operation
+                for operation in relevant_operations
+                if operation.get("operation_type") == operation_type
+                and str(operation.get("operation_id") or "") not in used_ids
+                and _matches_expected_value(
+                    expected_target, operation.get("target") or {}
+                )
+                and _matches_expected_value(
+                    expected_parameters, operation.get("parameters") or {}
+                )
+            ]
+            if len(matches) != 1:
+                reason = "MISSING" if not matches else "AMBIGUOUS"
+                raise ValueError(
+                    f"RESTORATION_OPERATION_BINDING_{reason}:{key}"
+                )
+            operation_id = str(matches[0]["operation_id"])
+            used_ids.add(operation_id)
+            result[key].append(operation_id)
+    return result
 
 
 def _apply_damage(case: Mapping[str, Any], case_root: Path) -> Path:
@@ -219,6 +389,7 @@ def _verify_exact_type_reuse(
     damaged_model: Any,
     repaired_model: Any,
     preflight: Mapping[str, Any],
+    repaired_tags: Mapping[str, list[str]] | None = None,
 ) -> dict[str, Any]:
     type_counts_unchanged = all(
         len(repaired_model.by_type(type_class))
@@ -244,10 +415,15 @@ def _verify_exact_type_reuse(
         for index, member in enumerate(
             case["damage"].get(key, []), start=1
         ):
+            tag = (
+                repaired_tags[key][index - 1]
+                if repaired_tags is not None
+                else f"{tag_prefix}-{index}"
+            )
             matches = [
                 entity
                 for entity in repaired_model.by_type(occurrence_class)
-                if str(entity.Tag) == f"{tag_prefix}-{index}"
+                if str(entity.Tag) == tag
             ]
             occurrence_bindings_exact = occurrence_bindings_exact and (
                 len(matches) == 1
@@ -320,7 +496,7 @@ def _execute_case(
     )
     provider.set_lineage("initial")
     started = time.monotonic()
-    initial = api.start(damaged, str(case["request"]))
+    initial = api.start(damaged, _public_repair_request(case))
     latency_seconds = round(time.monotonic() - started, 3)
     summary = live._result_summary(initial)
 
@@ -336,10 +512,17 @@ def _execute_case(
         repaired_path = (
             run_root / str(summary["artifacts"]["successful_ifc"])
         )
+        bound_changeset = json.loads(
+            (run_root / "changeset/bound-changeset.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        repaired_tags = _resolve_restoration_tags(case, bound_changeset)
         focused_debug = compare_damage_restoration(
             case,
             original_path=source,
             repaired_path=repaired_path,
+            repaired_tags=repaired_tags,
         )
         comparison = focused_debug["whole_model_ifccompare"]
         repaired_model = ifcopenshell.open(str(repaired_path))
@@ -348,6 +531,7 @@ def _execute_case(
             damaged_model=damaged_model,
             repaired_model=repaired_model,
             preflight=type_reuse_preflight,
+            repaired_tags=repaired_tags,
         )
         counts = {
             ifc_class: {
@@ -381,6 +565,7 @@ def _execute_case(
                 for item in counts.values()
             ),
             "exact_type_reuse": type_reuse,
+            "restoration_operation_bindings": repaired_tags,
             "focused_geometry_property_debug": focused_debug,
             "identity_equivalent": bool(
                 comparison.get("complete_preservation_success")
@@ -424,11 +609,19 @@ def main() -> int:
     )
     parser.add_argument("--env-file", type=Path, default=ROOT / ".env")
     parser.add_argument(
+        "--property-cache-root",
+        type=Path,
+        help=(
+            "explicit shared cache containing models/BAAI-bge-m3 and "
+            "property-resolution/qdrant"
+        ),
+    )
+    parser.add_argument(
         "--preflight-evidence",
         type=Path,
         help=(
-            "machine-readable, zero-network full preflight.json; required "
-            "for --execute-genuine"
+            "machine-readable, zero-network full or C1-C5 light "
+            "preflight.json; required for --execute-genuine"
         ),
     )
     parser.add_argument(
@@ -476,9 +669,17 @@ def main() -> int:
         _write_json(output_root / "execution-result.json", result)
         return 1
     try:
-        preflight = live._load_green_full_preflight_evidence(
-            args.preflight_evidence
-        )
+        try:
+            preflight = load_light_preflight_evidence(
+                args.preflight_evidence
+            )
+        except ValueError as light_error:
+            try:
+                preflight = live._load_green_full_preflight_evidence(
+                    args.preflight_evidence
+                )
+            except ValueError:
+                raise light_error
     except Exception as error:
         result["status"] = "blocked"
         result["reason_code"] = (
@@ -514,14 +715,21 @@ def main() -> int:
             key, _, value = line.partition("=")
             environment[key.strip()] = value.strip()
 
-    property_runtime = create_property_runtime_from_environment(
-        environment, project_root=ROOT
-    )
-    if property_runtime is None:
+    try:
+        environment = _prepare_property_runtime_environment(
+            environment,
+            cache_root=args.property_cache_root,
+        )
+        property_runtime = create_property_runtime_from_environment(
+            environment, project_root=ROOT
+        )
+        _require_ready_property_runtime(property_runtime)
+    except Exception as error:
         result["status"] = "blocked"
-        result["reason_code"] = "PROPERTY_RUNTIME_NOT_READY"
+        result["reason_code"] = str(error)[:512]
         _write_json(output_root / "execution-result.json", result)
         return 1
+    result["property_runtime"] = property_runtime.health.to_dict()
 
     config = load_openai_compatible_runtime_config(environment)
     transport = OpenAICompatibleLiveProvider(config=config)
@@ -566,6 +774,7 @@ def main() -> int:
                 "successful_artifact_publishable": False,
             }
         attempts = provider.attempts[before:]
+        total_calls = _updated_transport_call_count(total_calls, attempts)
         _write_json(case_root / "case-result.json", final)
         _write_json(case_root / "live-attempts.json", attempts)
         result["cases"].append(
@@ -595,7 +804,6 @@ def main() -> int:
                 file=sys.stderr,
             )
             break
-        total_calls += len(attempts)
         comparison = final.get("original_comparison") or {}
         print(
             f"  {case_id}: {final.get('status')} "

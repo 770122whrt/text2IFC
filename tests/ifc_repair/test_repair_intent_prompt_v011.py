@@ -20,8 +20,8 @@ from tests.ifc_repair.test_repair_intent_v08 import (
 PROMPT_ID = "ifc-repair-intent.v0.11"
 
 
-def test_v011_is_current_and_forbids_implicit_root_attribute_inference() -> None:
-    assert _INTENT_CONTRACTS[REPAIR_INTENT_SCHEMA_VERSION_0_8][1] == PROMPT_ID
+def test_v011_remains_registered_and_forbids_implicit_root_attribute_inference() -> None:
+    assert _INTENT_CONTRACTS[REPAIR_INTENT_SCHEMA_VERSION_0_8][1] != PROMPT_ID
 
     rendered = render_prompt(
         template_id=PROMPT_ID,

@@ -28,6 +28,7 @@ SUPPORTED_AUTHORABLE_VALUE_TYPES = frozenset(
         "IfcLabel",
         "IfcLengthMeasure",
         "IfcLogical",
+        "IfcPlaneAngleMeasure",
         "IfcReal",
         "IfcText",
     }
@@ -1317,6 +1318,15 @@ def normalize_property_value(
         if raw_unit is not None:
             raise ValueError("PROPERTY_UNIT_FAMILY_UNSUPPORTED")
         return raw_value, None
+    if value_type == "IfcPlaneAngleMeasure":
+        if not isinstance(raw_value, (int, float)) or isinstance(raw_value, bool):
+            raise ValueError("PROPERTY_VALUE_TYPE_INCOMPATIBLE")
+        normalized = float(raw_value)
+        if not math.isfinite(normalized):
+            raise ValueError("PROPERTY_VALUE_INVALID")
+        if raw_unit is not None:
+            raise ValueError("PROPERTY_UNIT_FAMILY_UNSUPPORTED")
+        return normalized, None
     raise ValueError("PROPERTY_VALUE_TYPE_UNSUPPORTED")
 
 

@@ -1,0 +1,83 @@
+{
+  "schema_version": "text2ifc/damage-restoration-proof/0.3",
+  "case_id": "C2",
+  "status": "passed",
+  "provider_evidence_mode": "genuine_live_provider",
+  "synthetic_fallback_used": false,
+  "claim_level": "case_viability_and_reliability_only",
+  "source_batch": "batch-01",
+  "damage_reconstruction_guid_trace": [
+    {
+      "role": "beam-1",
+      "repaired_tag": "restore-beam-1",
+      "damage_action": "removed",
+      "original_ifc_class": "IfcBeam",
+      "original_global_id": "2kMW8XyZv1d9XdPJLihM2E",
+      "repair_action": "rebuilt",
+      "repaired_ifc_class": "IfcBeam",
+      "repaired_global_id": "2rNJSIlpzHCOHLIeIfKKkG"
+    },
+    {
+      "role": "door-1",
+      "repaired_tag": "restore-door-1",
+      "damage_action": "removed",
+      "original_ifc_class": "IfcDoor",
+      "original_global_id": "2AJ6T3vZDDZRJL7l0pGl86",
+      "repair_action": "rebuilt",
+      "repaired_ifc_class": "IfcDoor",
+      "repaired_global_id": "11xxv$HQPPwwhkMbOliRCq"
+    },
+    {
+      "role": "door-opening-1",
+      "repaired_tag": null,
+      "damage_action": "retained",
+      "original_ifc_class": "IfcOpeningElement",
+      "original_global_id": "2AJ6T3vZDDZRJL7kCpGl86",
+      "repair_action": "reused",
+      "repaired_ifc_class": "IfcOpeningElement",
+      "repaired_global_id": "2AJ6T3vZDDZRJL7kCpGl86"
+    }
+  ],
+  "focused_ifccompare_status": "passed",
+  "generic_ifccompare_summary": {
+    "created_root_count": 15,
+    "modified_root_count": 2,
+    "removed_root_count": 20,
+    "changed_product_count": 4,
+    "changed_product_classes": {
+      "IfcBeam": 2,
+      "IfcDoor": 2
+    }
+  },
+  "whole_model_identity_equivalent": false,
+  "damage": {
+    "beams_removed": 1,
+    "columns_removed": 0,
+    "doors_removed": 1,
+    "windows_removed": 0
+  },
+  "artifacts": [
+    "01-original.ifc",
+    "02-damaged.ifc",
+    "03-repaired.ifc",
+    "REPORT.md",
+    "agent/intent-renderer-input.json",
+    "agent/live-attempts.json",
+    "agent/rendered-intent-prompt.md",
+    "agent/repair-intent.json",
+    "changeset/bound-changeset.json",
+    "changeset/prompt-profile-selection.json",
+    "changeset/semantic-manifest-restore-beam-1.json",
+    "changeset/semantic-manifest-restore-door-1.json",
+    "changeset/semantic-manifests.json",
+    "input/frozen-request.txt",
+    "input/request.txt",
+    "terminal/evidence.json",
+    "terminal/state.json",
+    "validation/case-result.json",
+    "validation/damage-reconstruction-guid-trace.json",
+    "validation/generic-ifccompare.json",
+    "validation/ifccompare-geometry-property-debug.json",
+    "validation/public-evaluation.json"
+  ]
+}

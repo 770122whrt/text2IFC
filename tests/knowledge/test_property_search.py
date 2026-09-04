@@ -3,6 +3,8 @@ from __future__ import annotations
 from pathlib import Path
 from types import SimpleNamespace
 
+import pytest
+
 from text2ifc_knowledge.property_search import (
     InMemoryVectorIndex,
     PropertyAlias,
@@ -288,8 +290,6 @@ def test_chinese_length_units_normalize_to_project_units() -> None:
 
 
 def test_unsupported_measure_family_cannot_be_normalized_for_authoring() -> None:
-    import pytest
-
     with pytest.raises(ValueError, match="PROPERTY_VALUE_TYPE_UNSUPPORTED"):
         normalize_property_value(
             3.6,
@@ -302,3 +302,24 @@ def test_unsupported_measure_family_cannot_be_normalized_for_authoring() -> None
         value_type="IfcLengthMeasure",
         project_length_unit="m",
     ) == (0.25, "m")
+
+
+def test_plane_angle_measure_uses_project_unit_and_rejects_explicit_conversion() -> None:
+    assert normalize_property_value(
+        0.0,
+        raw_unit=None,
+        value_type="IfcPlaneAngleMeasure",
+    ) == (0.0, None)
+
+    with pytest.raises(ValueError, match="PROPERTY_UNIT_FAMILY_UNSUPPORTED"):
+        normalize_property_value(
+            10.0,
+            raw_unit="degree",
+            value_type="IfcPlaneAngleMeasure",
+        )
+    with pytest.raises(ValueError, match="PROPERTY_VALUE_INVALID"):
+        normalize_property_value(
+            float("nan"),
+            raw_unit=None,
+            value_type="IfcPlaneAngleMeasure",
+        )

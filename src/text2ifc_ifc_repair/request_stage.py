@@ -62,6 +62,7 @@ TEMPLATE_ID_0_8 = "ifc-repair-intent.v0.8"
 TEMPLATE_ID_0_9 = "ifc-repair-intent.v0.9"
 TEMPLATE_ID_0_10 = "ifc-repair-intent.v0.10"
 TEMPLATE_ID_0_11 = "ifc-repair-intent.v0.11"
+TEMPLATE_ID_0_12 = "ifc-repair-intent.v0.12"
 _STABLE_INTERNAL_ID = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._:/-]*$")
 _INTENT_CONTRACTS = {
     REPAIR_INTENT_SCHEMA_VERSION: (
@@ -94,7 +95,7 @@ _INTENT_CONTRACTS = {
     ),
     REPAIR_INTENT_SCHEMA_VERSION_0_8: (
         REPAIR_INTENT_BODY_SCHEMA_VERSION_0_8,
-        TEMPLATE_ID_0_11,
+        TEMPLATE_ID_0_12,
     ),
 }
 MAX_REQUEST_BYTES = DEFAULT_REPAIR_INTENT_LIMITS.max_request_bytes
