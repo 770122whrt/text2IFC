@@ -302,6 +302,10 @@ def main(argv: list[str] | None = None) -> int:
         return 0 if config["status"] == "ready" else 2
     if not args.preflight_only and not args.require_green_preflight:
         parser.error("--require-green-preflight is mandatory for live execution")
+    if not args.preflight_only and args.changed_scope_admission is None:
+        parser.error(
+            "--changed-scope-admission is mandatory for live execution"
+        )
     if not args.preflight_only and config["status"] != "ready":
         print(json.dumps(config, ensure_ascii=False, sort_keys=True))
         return 2

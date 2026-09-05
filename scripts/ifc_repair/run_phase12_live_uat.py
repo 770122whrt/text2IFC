@@ -2123,6 +2123,22 @@ def run_live_uat(
         }
     )
 
+    if admission_evidence_path is None and not preflight_only:
+        result["preflight"] = {
+            "status": "not_run",
+            "mode": "admission_required",
+            "reason_code": "LIVE_ADMISSION_REQUIRED",
+            "network_transport_attempted": False,
+            "checks": [],
+        }
+        result.update(
+            {
+                "status": "blocked",
+                "reason_code": "LIVE_ADMISSION_REQUIRED",
+            }
+        )
+        _write_json(output / "live-uat-result.json", result)
+        return result
     if admission_evidence_path is None:
         preflight = run_preflight(
             output / "preflight",
@@ -2460,6 +2476,10 @@ def main(argv: list[str] | None = None) -> int:
         return 0 if config["status"] == "ready" else 2
     if not args.require_green_preflight:
         parser.error("--require-green-preflight is mandatory for live execution")
+    if args.changed_scope_admission is None:
+        parser.error(
+            "--changed-scope-admission is mandatory for live execution"
+        )
     if (
         config["status"] != "ready"
         or config.get("provider_key") != args.provider
