@@ -4,10 +4,10 @@
 
 ## Current certified inventory
 
-- Canonical IFC2X3: **206**
+- Canonical IFC2X3: **214**
 - `<1 MiB`: **74**
-- `<3 MiB`: **99**
-- `<10 MiB`: **145**
+- `<3 MiB`: **100**
+- `<10 MiB`: **153**
 - Technical admission authority: `dataset/manifests/ifc2x3-certified.jsonl`
 - Canonical file authority: `dataset/manifests/ifc-files.jsonl`
 
@@ -96,7 +96,7 @@ Count: **74**
 
 ### R1 / Small (1–3 MiB)
 
-Count: **25**
+Count: **26**
 
 | Size (MiB) | Source | Relative path |
 | ---: | --- | --- |
@@ -112,6 +112,7 @@ Count: **25**
 | 1.558 | `duraark-public` | `dataset/external/duraark/NBU_Duplex/NBU_Duplex-Apt_Eng-MEP-1.ifc` |
 | 1.579 | `ifc-bench` | `dataset/external/ifc-bench/projects/duplex/arc.ifc` |
 | 1.629 | `gni-bim-dataset` | `dataset/external/gni-bim-dataset/2025_BIMfundamentals/model_18.ifc` |
+| 1.782 | `kaggle-ifc-examples` | `dataset/external/kaggle-ifc-examples/intro-python-bim/Grethes-hus-bok-2.ifc` |
 | 1.809 | `bim2modelica` | `dataset/external/bim2modelica/RooftopBuilding3ZonesThin.ifc` |
 | 1.867 | `buildingsmart-community` | `dataset/external/buildingsmart-community/Schependomlaan/Coordination model and subcontractors models/BIMsight Projectdata1/WILLEMSEN-Laagbouw.ifc` |
 | 2.113 | `buildingsmart-community` | `dataset/external/buildingsmart-community/Schependomlaan/Coordination model and subcontractors models/BIMsight Projectdata1/BALKONHEKKEN 23-9-2015.IFC` |
@@ -128,21 +129,25 @@ Count: **25**
 
 ### R2 / Compact (3–10 MiB)
 
-Count: **46**
+Count: **53**
 
 | Size (MiB) | Source | Relative path |
 | ---: | --- | --- |
+| 3.016 | `kaggle-ifc-examples` | `dataset/external/kaggle-ifc-examples/open-ifc-model-repository/20160613office_model_CV2b_fordesign.ifc` |
 | 3.100 | `duraark-public` | `dataset/external/duraark/SGD_Duplex/SGD_Duplex_Eng-HVAC-Ventilation.ifc` |
 | 3.141 | `bimnet` | `dataset/external/bimnet/d7n.ifc` |
 | 3.216 | `duraark-public` | `dataset/external/duraark/KIT_Smiley-West/KIT_Smiley-West_Arch.ifc` |
 | 3.242 | `bim2modelica` | `dataset/external/bim2modelica/RooftopBuilding4ZonesThin.ifc` |
 | 3.250 | `duraark-public` | `dataset/external/duraark/SGD_Blueberry/SGD_Blueberry_Eng-HVAC-Plumbing-1.ifc` |
+| 3.379 | `kaggle-ifc-examples` | `dataset/external/kaggle-ifc-examples/open-ifc-model-repository/20160125Trapelo - Existing-RST_2010_Trapelo.ifc` |
 | 3.409 | `buildingsmart-community` | `dataset/external/buildingsmart-community/Schependomlaan/Coordination model and subcontractors models/BIMsight Projectdata1/JORDAHL-Gevelderagers.ifc` |
 | 3.707 | `buildingsmart-community` | `dataset/external/buildingsmart-community/Schependomlaan/Coordination model and subcontractors models/BIMsight Projectdata1/BERNTS-Staalconstructie.ifc` |
 | 3.837 | `buildingsmart-community` | `dataset/external/buildingsmart-community/Schependomlaan/Coordination model and subcontractors models/BIMsight Projectdata1/FEK - Balkonhekken en borstweringsleuningen.IFC` |
+| 3.843 | `kaggle-ifc-examples` | `dataset/external/kaggle-ifc-examples/open-ifc-model-repository/20191002V57-3-BA2-01-001.ifc` |
 | 3.877 | `duraark-public` | `dataset/external/duraark/SGD_Blueberry/SGD_Blueberry_Arch-1.ifc` |
 | 3.909 | `ifc-bench` | `dataset/external/ifc-bench/projects/wbdg_office/arc.ifc` |
 | 4.112 | `buildingsmart-community` | `dataset/external/buildingsmart-community/Schependomlaan/Coordination model and subcontractors models/BIMsight Projectdata1/ProjectData/BERNTS-Staalconstructie.ifc` |
+| 4.166 | `kaggle-ifc-examples` | `dataset/external/kaggle-ifc-examples/open-ifc-model-repository/20200106QT42__190412.ifc` |
 | 4.480 | `buildingsmart-community` | `dataset/external/buildingsmart-community/Schependomlaan/Coordination model and subcontractors models/BIMsight Projectdata1/ProjectData/WAARDO-Kanaalplaatvloer.ifc` |
 | 4.506 | `ifc-bench` | `dataset/external/ifc-bench/projects/west_riverside_hospital/elec_ifc2x3.ifc` |
 | 4.678 | `duraark-public` | `dataset/external/duraark/SGD_Blueberry/SGD_Blueberry_Eng-HVAC-Plumbing-2.ifc` |
@@ -158,6 +163,8 @@ Count: **46**
 | 5.779 | `gni-bim-dataset` | `dataset/external/gni-bim-dataset/2025_BIMfundamentals/model_39.ifc` |
 | 5.786 | `ifc-bench` | `dataset/external/ifc-bench/projects/sixty5/facade.ifc` |
 | 6.102 | `ifc-bench` | `dataset/external/ifc-bench/projects/west_riverside_hospital/str_ifc2x3.ifc` |
+| 6.110 | `kaggle-ifc-examples` | `dataset/external/kaggle-ifc-examples/open-ifc-model-repository/20160125Autodesk_Hospital_Parking Garage_2015.ifc` |
+| 6.413 | `kaggle-ifc-examples` | `dataset/external/kaggle-ifc-examples/open-ifc-model-repository/20200117TOWER_TOTAL_00_10006320176.ifc` |
 | 6.485 | `buildingsmart-community` | `dataset/external/buildingsmart-community/Medical-Dental Clinic/Clinic_Electrical.ifc` |
 | 6.583 | `gni-bim-dataset` | `dataset/external/gni-bim-dataset/2025_BIMfundamentals/model_128.ifc` |
 | 6.689 | `gni-bim-dataset` | `dataset/external/gni-bim-dataset/2025_BIMfundamentals/model_123.ifc` |
@@ -176,6 +183,7 @@ Count: **46**
 | 8.753 | `duraark-public` | `dataset/external/duraark/SGD_Blueberry/SGD_Blueberry_Merged-Ventilation_.ifc` |
 | 8.931 | `duraark-public` | `dataset/external/duraark/NVW_DCR-LOD/NVW_DCR-LOD200_Eng-CON-2.ifc` |
 | 8.956 | `gni-bim-dataset` | `dataset/external/gni-bim-dataset/2026_BIMprojects/model_7_arc.ifc` |
+| 8.963 | `kaggle-ifc-examples` | `dataset/external/kaggle-ifc-examples/open-ifc-model-repository/20210125Prova.ifc` |
 | 9.157 | `duraark-public` | `dataset/external/duraark/NBS_Lakeside/NBS_LakesideRVT01_Arch.ifc` |
 | 9.273 | `gni-bim-dataset` | `dataset/external/gni-bim-dataset/2025_BIMfundamentals/model_148.ifc` |
 

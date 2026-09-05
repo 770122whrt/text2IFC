@@ -232,6 +232,23 @@ SOURCE_POLICIES: tuple[SourcePolicy, ...] = (
             "Only IFC2X3 models below 10 MiB that pass the semantic meaningfulness gate are admitted in this batch.",
         ),
     ),
+    SourcePolicy(
+        source_id="kaggle-ifc-examples",
+        name="Kaggle IFC File Examples",
+        paths=("dataset/external/kaggle-ifc-examples",),
+        classification="public_research",
+        canonical_source="claytonmiller/example-ifc-file (Kaggle)",
+        license="dataset-CC-BY-4.0-upstream-model-rights-review-required",
+        research_use="allowed_with_attribution",
+        training_use="review_required",
+        redistribution="review_required",
+        attribution="required",
+        notes=(
+            "Kaggle dataset card declares CC BY 4.0; most files mirror the Open IFC Model Repository.",
+            "Training and redistribution remain review-required because dataset-level licensing does not replace upstream provenance review.",
+            "Only distinct meaningful IFC2X3 models below 10 MiB are admitted; component fixtures and known model-family variants are excluded.",
+        ),
+    ),
 )
 
 
