@@ -25,8 +25,8 @@ Production/private L1/L2 与 occurrence fidelity，且没有 synthetic fallback�
 - [Agent Debug、能力评测与真实 LLM 准入协议](agent-capability-evaluation.md)
   - 规定单例 Bug、失败类别鲁棒性和系统能力提升三种声明的证据边界。
   - 要求修复前冻结 Failure Family，并进行 Baseline/Candidate 配对评测。
-  - 真实 LLM 调用前必须完成逐环节测试、离线公共入口全链路测试和机器可读
-    preflight；任何失败、跳过、替代或超时都阻断网络调用。
+  - 验证分为 scoped validation、阶段首次进入/失效后的 Stage Preflight，以及需要用户明确批准的 Full / repository-wide preflight。
+  - 真实 LLM 调用前必须已有当前 stage 的有效 Admission；缺失或失效时 fail-closed，不能自动用 Full Preflight 兜底。
 
 ## IFC2X3 Local ChangeSet
 
