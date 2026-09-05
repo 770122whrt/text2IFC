@@ -32,7 +32,10 @@ against `w`; it did not curate, regenerate or reassess that accepted Proof.
 
 Recovery procedure:
 
-1. Clone `Zcode` and run `git lfs pull origin Zcode`.
+1. On Windows, clone with long paths enabled:
+   `git -c core.longpaths=true clone --branch Zcode https://github.com/770122whrt/text2IFC.git text2ifc-recovered`.
+   In the new checkout, run `git config core.longpaths true` and
+   `git -c core.longpaths=true lfs pull origin Zcode`.
 2. Check archive SHA-256 values and the per-file manifests before using data.
 3. Unzip historical archives into a new empty recovery directory. Their paths
    are repository-relative; the `w/` tree is a historical source, not a nested

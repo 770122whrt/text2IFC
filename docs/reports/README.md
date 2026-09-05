@@ -6,6 +6,7 @@
 
 ## 项目总结
 
+- [2026-09-05 Zcode 整合与恢复核查](zcode-integration-20260905/REPORT.md)
 - [项目研究思路与 Pipeline 总结](project-research-summary.md)
 
 ## 周报
