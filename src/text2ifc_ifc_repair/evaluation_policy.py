@@ -483,7 +483,6 @@ def structural_l1_authorization(family: str) -> dict[str, Any]:
             # of creating one; the generated-Type path stays in "created".
             "structural_type_relationship": "IfcRelDefinesByType",
             "spatial_containment": "IfcRelContainedInSpatialStructure",
-            "structural_type_relationship": "IfcRelDefinesByType",
         },
         "removed": {},
         "required_roles": {
