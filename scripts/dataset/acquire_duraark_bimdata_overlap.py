@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import argparse
 import hashlib
 import json
 import os
@@ -28,6 +29,26 @@ PACKAGES = (
     {
         "family": "SGD_Blueberry",
         "url": "https://tib.eu/data/duraark/BuildingData/01_IFC/SGD_Blueberry_ifc.zip",
+        "discovered_via": "bimdata-rd-index",
+    },
+    {
+        "family": "SGD_BARD",
+        "url": "https://tib.eu/data/duraark/BuildingData/01_IFC/SGD_BARD_ifc.zip",
+        "discovered_via": "bimdata-rd-index",
+    },
+    {
+        "family": "NBU_Duplex",
+        "url": "https://tib.eu/data/duraark/BuildingData/01_IFC/NBU_Duplex_ifc.zip",
+        "discovered_via": "bimdata-rd-index",
+    },
+    {
+        "family": "SGD_Munkerud",
+        "url": "https://tib.eu/data/duraark/BuildingData/01_IFC/SGD_Munkerud_ifc.zip",
+        "discovered_via": "bimdata-rd-index",
+    },
+    {
+        "family": "SGD_Duplex",
+        "url": "https://tib.eu/data/duraark/BuildingData/01_IFC/SGD_Duplex_ifc.zip",
         "discovered_via": "bimdata-rd-index",
     },
 )
