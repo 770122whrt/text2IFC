@@ -216,6 +216,22 @@ SOURCE_POLICIES: tuple[SourcePolicy, ...] = (
             "All retained files are below 10 MiB and pass the semantic meaningfulness gate.",
         ),
     ),
+    SourcePolicy(
+        source_id="gni-bim-dataset",
+        name="GNI BIM Dataset",
+        paths=("dataset/external/gni-bim-dataset",),
+        classification="public_research",
+        canonical_source="ZijianWang-ZW/GNI-BIM-Dataset / Zenodo 19722012",
+        license="CC-BY-4.0",
+        research_use="allowed_with_attribution",
+        training_use="allowed_with_attribution",
+        redistribution="allowed_with_attribution",
+        attribution="required",
+        notes=(
+            "Anonymized student BIM models released with explicit CC BY 4.0 dataset rights.",
+            "Only IFC2X3 models below 10 MiB that pass the semantic meaningfulness gate are admitted in this batch.",
+        ),
+    ),
 )
 
 

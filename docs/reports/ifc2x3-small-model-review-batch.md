@@ -1,6 +1,6 @@
 # IFC2X3 Small Model Review Batch
 
-> Pre-admission review batch. No IFC in this report is canonical unless `local_exact_duplicate` points to an existing canonical file. New candidates remain outside `dataset/external/` until human review.
+> Discovery batch originally prepared pre-admission. The 16 GNI BIM Dataset candidates listed below were subsequently admitted on 2026-09-05 after the user authorized continuing without a separate review gate. All 16 passed parse, traversal, write, reopen, and `IFC2X3_CERTIFIED` checks. Classification/provenance authority: `dataset/manifests/acquisitions/gni-bim-dataset-small-ifc2x3.jsonl`.
 
 ## Summary
 

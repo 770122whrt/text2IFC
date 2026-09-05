@@ -4,10 +4,10 @@
 
 ## Current certified inventory
 
-- Canonical IFC2X3: **190**
-- `<1 MiB`: **71**
-- `<3 MiB`: **94**
-- `<10 MiB`: **129**
+- Canonical IFC2X3: **206**
+- `<1 MiB`: **74**
+- `<3 MiB`: **99**
+- `<10 MiB`: **145**
 - Technical admission authority: `dataset/manifests/ifc2x3-certified.jsonl`
 - Canonical file authority: `dataset/manifests/ifc-files.jsonl`
 
@@ -15,7 +15,7 @@
 
 ### G0 / Generation reference (<1 MiB)
 
-Count: **71**
+Count: **74**
 
 | Size (MiB) | Source | Relative path |
 | ---: | --- | --- |
@@ -51,6 +51,7 @@ Count: **71**
 | 0.178 | `duraark-public` | `dataset/external/duraark/NVW_DCR-LOD/NVW_DCR-LOD100_Arch.ifc` |
 | 0.178 | `bimcollab-example` | `dataset/external/bimcollab-example/06_BIMcollab_Example_Limestone_walls_optimized.ifc` |
 | 0.192 | `buildingsmart-community` | `dataset/external/buildingsmart-community/Schependomlaan/Coordination model and subcontractors models/BIMsight Projectdata1/XELLA-3e verdieping.ifc` |
+| 0.238 | `gni-bim-dataset` | `dataset/external/gni-bim-dataset/2026_BIMprojects/model_4_structure.ifc` |
 | 0.254 | `buildingsmart-community` | `dataset/external/buildingsmart-community/Schependomlaan/Coordination model and subcontractors models/BIMsight Projectdata1/GEELEN-Dakvloer.ifc` |
 | 0.285 | `buildingsmart-community` | `dataset/external/buildingsmart-community/Schependomlaan/Coordination model and subcontractors models/BIMsight Projectdata1/ProjectData/GEELEN-Breedplaat V2.ifc` |
 | 0.286 | `buildingsmart-community` | `dataset/external/buildingsmart-community/Schependomlaan/Coordination model and subcontractors models/BIMsight Projectdata1/GEELEN-Breedplaat V2.ifc` |
@@ -60,6 +61,7 @@ Count: **71**
 | 0.319 | `buildingsmart-community` | `dataset/external/buildingsmart-community/Schependomlaan/Coordination model and subcontractors models/BIMsight Projectdata1/MULTICOM-trappen+bordessen.ifc` |
 | 0.321 | `bimnet` | `dataset/external/bimnet/px4_2.ifc` |
 | 0.384 | `buildingsmart-community` | `dataset/external/buildingsmart-community/Schependomlaan/Coordination model and subcontractors models/BIMsight Projectdata1/MULTICOM-banden.ifc` |
+| 0.391 | `gni-bim-dataset` | `dataset/external/gni-bim-dataset/2026_BIMprojects/model_3_structure.ifc` |
 | 0.395 | `thatopen-engine-web-ifc` | `dataset/external/thatopen-engine-web-ifc/example.ifc` |
 | 0.425 | `buildingsmart-community` | `dataset/external/buildingsmart-community/Schependomlaan/Coordination model and subcontractors models/BIMsight Projectdata1/XELLA-2e verdieping.ifc` |
 | 0.434 | `bimcollab-example` | `dataset/external/bimcollab-example/02_BIMcollab_Example_STR_optimized.ifc` |
@@ -72,6 +74,7 @@ Count: **71**
 | 0.528 | `steptools-samples` | `dataset/external/steptools-samples/aisc_sculpture_brep.ifc` |
 | 0.529 | `duraark-public` | `dataset/external/duraark/NBU_Duplex/NBU_Duplex-Apt-COBie_Arch-ProductSelect.ifc` |
 | 0.536 | `duraark-public` | `dataset/external/duraark/NBU_Duplex/NBU_Duplex-Apt-COBie_Arch-Handover.ifc` |
+| 0.536 | `gni-bim-dataset` | `dataset/external/gni-bim-dataset/2026_BIMprojects/model_1_structure.ifc` |
 | 0.538 | `buildingsmart-community` | `dataset/external/buildingsmart-community/Schependomlaan/Coordination model and subcontractors models/BIMsight Projectdata1/ProjectData/XELLA-1e verdieping.ifc` |
 | 0.543 | `bimnet` | `dataset/external/bimnet/i5n_1.ifc` |
 | 0.547 | `duraark-public` | `dataset/external/duraark/NBU_Duplex/NBU_Duplex-Apt-COBie_Arch-ProductInstall.ifc` |
@@ -93,7 +96,7 @@ Count: **71**
 
 ### R1 / Small (1–3 MiB)
 
-Count: **23**
+Count: **25**
 
 | Size (MiB) | Source | Relative path |
 | ---: | --- | --- |
@@ -108,6 +111,7 @@ Count: **23**
 | 1.529 | `buildingsmart-community` | `dataset/external/buildingsmart-community/Duplex Apartment/Duplex_Electrical_20121207.ifc` |
 | 1.558 | `duraark-public` | `dataset/external/duraark/NBU_Duplex/NBU_Duplex-Apt_Eng-MEP-1.ifc` |
 | 1.579 | `ifc-bench` | `dataset/external/ifc-bench/projects/duplex/arc.ifc` |
+| 1.629 | `gni-bim-dataset` | `dataset/external/gni-bim-dataset/2025_BIMfundamentals/model_18.ifc` |
 | 1.809 | `bim2modelica` | `dataset/external/bim2modelica/RooftopBuilding3ZonesThin.ifc` |
 | 1.867 | `buildingsmart-community` | `dataset/external/buildingsmart-community/Schependomlaan/Coordination model and subcontractors models/BIMsight Projectdata1/WILLEMSEN-Laagbouw.ifc` |
 | 2.113 | `buildingsmart-community` | `dataset/external/buildingsmart-community/Schependomlaan/Coordination model and subcontractors models/BIMsight Projectdata1/BALKONHEKKEN 23-9-2015.IFC` |
@@ -119,11 +123,12 @@ Count: **23**
 | 2.705 | `duraark-public` | `dataset/external/duraark/KIT_Institute/KIT_Institute_Arch.ifc` |
 | 2.745 | `buildingsmart-community` | `dataset/external/buildingsmart-community/Schependomlaan/Coordination model and subcontractors models/BIMsight Projectdata1/ProjectData/FEK-Leuningen en hekwerken.IFC` |
 | 2.816 | `bim2modelica` | `dataset/external/bim2modelica/MultiZoneBuilding.ifc` |
+| 2.935 | `gni-bim-dataset` | `dataset/external/gni-bim-dataset/2026_BIMprojects/model_7_structure.ifc` |
 | 2.938 | `bimnet` | `dataset/external/bimnet/759.ifc` |
 
 ### R2 / Compact (3–10 MiB)
 
-Count: **35**
+Count: **46**
 
 | Size (MiB) | Source | Relative path |
 | ---: | --- | --- |
@@ -143,25 +148,36 @@ Count: **35**
 | 4.678 | `duraark-public` | `dataset/external/duraark/SGD_Blueberry/SGD_Blueberry_Eng-HVAC-Plumbing-2.ifc` |
 | 4.705 | `bimnet` | `dataset/external/bimnet/zsn.ifc` |
 | 4.752 | `buildingsmart-community` | `dataset/external/buildingsmart-community/Schependomlaan/Coordination model and subcontractors models/BIMsight Projectdata1/ProjectData/JORDAHL-Gevelderagers.ifc` |
+| 4.782 | `gni-bim-dataset` | `dataset/external/gni-bim-dataset/2025_BIMfundamentals/model_160.ifc` |
+| 4.852 | `gni-bim-dataset` | `dataset/external/gni-bim-dataset/2025_BIMfundamentals/model_203.ifc` |
 | 4.978 | `buildingsmart-community` | `dataset/external/buildingsmart-community/Schependomlaan/Coordination model and subcontractors models/BIMsight Projectdata1/WILLEMSEN-Hoogbouw dakpannen.ifc` |
 | 5.137 | `duraark-public` | `dataset/external/duraark/Academic_Autodesk/Academic_Autodesk-BasicSampleProject_Arch.ifc` |
 | 5.477 | `duraark-public` | `dataset/external/duraark/SGD_Blueberry/SGD_Blueberry_Arch-2.ifc` |
+| 5.486 | `gni-bim-dataset` | `dataset/external/gni-bim-dataset/2026_BIMprojects/model_0_structure.ifc` |
 | 5.739 | `buildingsmart-community` | `dataset/external/buildingsmart-community/Schependomlaan/Coordination model and subcontractors models/BIMsight Projectdata1/WILLEMSEN-Hoogbouw.ifc` |
+| 5.779 | `gni-bim-dataset` | `dataset/external/gni-bim-dataset/2025_BIMfundamentals/model_39.ifc` |
 | 5.786 | `ifc-bench` | `dataset/external/ifc-bench/projects/sixty5/facade.ifc` |
 | 6.102 | `ifc-bench` | `dataset/external/ifc-bench/projects/west_riverside_hospital/str_ifc2x3.ifc` |
 | 6.485 | `buildingsmart-community` | `dataset/external/buildingsmart-community/Medical-Dental Clinic/Clinic_Electrical.ifc` |
+| 6.583 | `gni-bim-dataset` | `dataset/external/gni-bim-dataset/2025_BIMfundamentals/model_128.ifc` |
+| 6.689 | `gni-bim-dataset` | `dataset/external/gni-bim-dataset/2025_BIMfundamentals/model_123.ifc` |
+| 6.723 | `gni-bim-dataset` | `dataset/external/gni-bim-dataset/2026_BIMprojects/model_0_arc.ifc` |
 | 6.951 | `ifc-bench` | `dataset/external/ifc-bench/projects/4351/arc.ifc` |
 | 7.079 | `ifc-bench` | `dataset/external/ifc-bench/projects/sixty5/str.ifc` |
 | 7.167 | `duraark-public` | `dataset/external/duraark/SGD_HiTOS/SGD_HiTOS_Eng-ELE.ifc` |
 | 7.536 | `bimcollab-example` | `dataset/external/bimcollab-example/05_BIMcollab_Example_Hollow_core_slabs_optimized.ifc` |
 | 7.663 | `duraark-public` | `dataset/external/duraark/SGD_Blueberry/SGD_Blueberry_Arch-3.ifc` |
 | 7.777 | `bimnet` | `dataset/external/bimnet/b6b.ifc` |
+| 7.958 | `gni-bim-dataset` | `dataset/external/gni-bim-dataset/2025_BIMfundamentals/model_174.ifc` |
 | 8.375 | `buildingsmart-community` | `dataset/external/buildingsmart-community/Duplex Apartment/Duplex_M_20111024_ROOMS_AND_SPACES.ifc` |
 | 8.523 | `duraark-public` | `dataset/external/duraark/NBU_Duplex/NBU_Duplex-Apt_Eng-MEP-2.ifc` |
 | 8.591 | `bimnet` | `dataset/external/bimnet/7y3_1.ifc` |
+| 8.608 | `gni-bim-dataset` | `dataset/external/gni-bim-dataset/2025_BIMfundamentals/model_131.ifc` |
 | 8.753 | `duraark-public` | `dataset/external/duraark/SGD_Blueberry/SGD_Blueberry_Merged-Ventilation_.ifc` |
 | 8.931 | `duraark-public` | `dataset/external/duraark/NVW_DCR-LOD/NVW_DCR-LOD200_Eng-CON-2.ifc` |
+| 8.956 | `gni-bim-dataset` | `dataset/external/gni-bim-dataset/2026_BIMprojects/model_7_arc.ifc` |
 | 9.157 | `duraark-public` | `dataset/external/duraark/NBS_Lakeside/NBS_LakesideRVT01_Arch.ifc` |
+| 9.273 | `gni-bim-dataset` | `dataset/external/gni-bim-dataset/2025_BIMfundamentals/model_148.ifc` |
 
 ### R3 / Normal (10–30 MiB)
 
