@@ -46,7 +46,7 @@ SOURCE_POLICIES: tuple[SourcePolicy, ...] = (
     SourcePolicy(
         source_id="bimnet",
         name="BIMNet IFC2X3",
-        paths=("dataset/external/bimnet", "dataset/ifc/train", "dataset/ifc/test"),
+        paths=("dataset/external/bimnet",),
         classification="authorized_local",
         canonical_source="LydJason/BIMNet (Matterport3D-derived)",
         license="user-authorized-local-use",
@@ -116,6 +116,23 @@ SOURCE_POLICIES: tuple[SourcePolicy, ...] = (
         notes=(
             "Community sample repository may contain intentionally invalid or non-conformant files.",
             "Only parseable and roundtrip-stable IFC2X3 files enter the current Repair source pool.",
+        ),
+    ),
+    SourcePolicy(
+        source_id="duraark-public",
+        name="DURAARK Public Building Data",
+        paths=("dataset/external/duraark",),
+        classification="public_research",
+        canonical_source="DURAARK/TIB BuildingData",
+        license="source-open-data-model-rights-review-required",
+        research_use="review_required",
+        training_use="review_required",
+        redistribution="review_required",
+        attribution="required",
+        discovered_via=("bimdata-rd-index",),
+        notes=(
+            "BIMData R&D is discovery-only; canonical provenance remains DURAARK/TIB or the original model source.",
+            "Do not infer per-model training or redistribution rights from repository-level open-data metadata.",
         ),
     ),
     SourcePolicy(
