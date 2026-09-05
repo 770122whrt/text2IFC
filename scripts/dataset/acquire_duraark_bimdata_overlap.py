@@ -19,6 +19,7 @@ SOURCE_ID = "duraark-public"
 TARGET_ROOT = ROOT / "dataset/external/duraark"
 LEDGER_PATH = ROOT / "dataset/manifests/acquisition-duraark-bimdata-overlap.jsonl"
 USER_AGENT = "text2ifc-dataset/1.0"
+MAX_AUTO_RETAIN_BYTES = 100 * 1024 * 1024
 
 PACKAGES = (
     {
@@ -49,6 +50,36 @@ PACKAGES = (
     {
         "family": "SGD_Duplex",
         "url": "https://tib.eu/data/duraark/BuildingData/01_IFC/SGD_Duplex_ifc.zip",
+        "discovered_via": "bimdata-rd-index",
+    },
+    {
+        "family": "Academic_Autodesk",
+        "url": "https://tib.eu/data/duraark/BuildingData/01_IFC/Academic_Autodesk_ifc.zip",
+        "discovered_via": "bimdata-rd-index",
+    },
+    {
+        "family": "KIT_Smiley-West",
+        "url": "https://tib.eu/data/duraark/BuildingData/01_IFC/KIT_Smiley-West_ifc.zip",
+        "discovered_via": "bimdata-rd-index",
+    },
+    {
+        "family": "KIT_Institute",
+        "url": "https://tib.eu/data/duraark/BuildingData/01_IFC/KIT_Institute_ifc.zip",
+        "discovered_via": "bimdata-rd-index",
+    },
+    {
+        "family": "NBS_Lakeside",
+        "url": "https://tib.eu/data/duraark/BuildingData/01_IFC/NBS_Lakeside_ifc.zip",
+        "discovered_via": "bimdata-rd-index",
+    },
+    {
+        "family": "SGD_BODO",
+        "url": "https://tib.eu/data/duraark/BuildingData/01_IFC/SGD_BODO_ifc.zip",
+        "discovered_via": "bimdata-rd-index",
+    },
+    {
+        "family": "NVW_DCR-LOD",
+        "url": "https://tib.eu/data/duraark/BuildingData/01_IFC/NVW_DCR-LOD_ifc.zip",
         "discovered_via": "bimdata-rd-index",
     },
 )
@@ -104,14 +135,34 @@ def _write(records: list[dict]) -> None:
     os.replace(tmp, LEDGER_PATH)
 
 
+def _read_existing_records() -> dict[tuple[str, str], dict]:
+    if not LEDGER_PATH.is_file():
+        return {}
+    records: dict[tuple[str, str], dict] = {}
+    for line in LEDGER_PATH.read_text(encoding="utf-8").splitlines():
+        if not line.strip():
+            continue
+        record = json.loads(line)
+        records[(str(record["family"]), str(record["member_name"]))] = record
+    return records
+
+
 def main() -> int:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--family", action="append", default=[])
+    args = parser.parse_args()
+    selected = set(args.family)
+
     TARGET_ROOT.mkdir(parents=True, exist_ok=True)
     hashes = _existing_hashes()
-    records: list[dict] = []
+    records_by_key = _read_existing_records()
+    processed: list[dict] = []
     with tempfile.TemporaryDirectory(prefix="duraark-acquire-") as temp_dir:
         temp_root = Path(temp_dir)
         for package_def in PACKAGES:
             family = str(package_def["family"])
+            if selected and family not in selected:
+                continue
             url = str(package_def["url"])
             package = temp_root / f"{family}.zip"
             print(f"DOWNLOAD {family} {url}", flush=True)
@@ -141,6 +192,13 @@ def main() -> int:
                         status = "exact_duplicate_existing"
                         canonical = existing
                         print(f"DEDUP {safe_name} -> {existing}", flush=True)
+                    elif extracted.stat().st_size > MAX_AUTO_RETAIN_BYTES:
+                        status = "manual_review_required_size_not_retained"
+                        canonical = None
+                        print(
+                            f"REVIEW_SIZE {safe_name} {extracted.stat().st_size} bytes",
+                            flush=True,
+                        )
                     else:
                         target = TARGET_ROOT / family / Path(safe_name).name
                         target.parent.mkdir(parents=True, exist_ok=True)
@@ -157,7 +215,7 @@ def main() -> int:
                         hashes[digest] = canonical
                         status = "stored_canonical"
                         print(f"STORE {canonical} sha={digest[:12]}", flush=True)
-                    records.append({
+                    record = {
                         "schema_version": "text2ifc/acquisition-record/1.0",
                         "source_id": SOURCE_ID,
                         "family": family,
@@ -174,9 +232,11 @@ def main() -> int:
                         "research_use": "review_required",
                         "training_use": "review_required",
                         "redistribution": "review_required",
-                    })
-                    _write(records)
-    print(json.dumps({"records": len(records), "stored": sum(r["status"] == "stored_canonical" for r in records), "deduplicated": sum(r["status"] != "stored_canonical" for r in records)}, indent=2, sort_keys=True))
+                    }
+                    records_by_key[(family, safe_name)] = record
+                    processed.append(record)
+                    _write(list(records_by_key.values()))
+    print(json.dumps({"processed_records": len(processed), "ledger_records": len(records_by_key), "stored": sum(r["status"] == "stored_canonical" for r in processed), "deduplicated": sum(r["status"] != "stored_canonical" for r in processed)}, indent=2, sort_keys=True))
     return 0
 
 

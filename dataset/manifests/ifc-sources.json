@@ -15,9 +15,7 @@
         "Physical legacy train/test directories are not experiment split authority."
       ],
       "paths": [
-        "dataset/external/bimnet",
-        "dataset/ifc/train",
-        "dataset/ifc/test"
+        "dataset/external/bimnet"
       ],
       "redistribution": "not_inferred",
       "research_use": "authorized",
@@ -70,7 +68,7 @@
       "canonical_source": "sylvainHellin/ifc-bench",
       "classification": "public_research",
       "discovered_via": [],
-      "file_count": 50,
+      "file_count": 48,
       "license": "model-specific",
       "name": "IFC-Bench models",
       "notes": [
@@ -91,7 +89,7 @@
       "canonical_source": "buildingsmart-community/Community-Sample-Test-Files",
       "classification": "public_test_fixture",
       "discovered_via": [],
-      "file_count": 0,
+      "file_count": 74,
       "license": "CC-BY-4.0",
       "name": "buildingSMART Community Sample Test Files",
       "notes": [
@@ -104,7 +102,30 @@
       "redistribution": "allowed_with_attribution",
       "research_use": "allowed_with_attribution",
       "source_id": "buildingsmart-community",
-      "status": "not_acquired",
+      "status": "present",
+      "training_use": "review_required"
+    },
+    {
+      "attribution": "required",
+      "canonical_source": "DURAARK/TIB BuildingData",
+      "classification": "public_research",
+      "discovered_via": [
+        "bimdata-rd-index"
+      ],
+      "file_count": 54,
+      "license": "source-open-data-model-rights-review-required",
+      "name": "DURAARK Public Building Data",
+      "notes": [
+        "BIMData R&D is discovery-only; canonical provenance remains DURAARK/TIB or the original model source.",
+        "Do not infer per-model training or redistribution rights from repository-level open-data metadata."
+      ],
+      "paths": [
+        "dataset/external/duraark"
+      ],
+      "redistribution": "review_required",
+      "research_use": "review_required",
+      "source_id": "duraark-public",
+      "status": "present",
       "training_use": "review_required"
     },
     {
@@ -112,7 +133,7 @@
       "canonical_source": "BIMcollab Example Project",
       "classification": "public_example",
       "discovered_via": [],
-      "file_count": 0,
+      "file_count": 9,
       "license": "review-required",
       "name": "BIMcollab Example Project",
       "notes": [
@@ -124,7 +145,7 @@
       "redistribution": "review_required",
       "research_use": "review_required",
       "source_id": "bimcollab-example",
-      "status": "not_acquired",
+      "status": "present",
       "training_use": "review_required"
     },
     {
@@ -132,7 +153,7 @@
       "canonical_source": "KIT IFC Examples / IFC Wiki",
       "classification": "public_example",
       "discovered_via": [],
-      "file_count": 0,
+      "file_count": 2,
       "license": "source-states-unrestricted-use-with-attribution",
       "name": "KIT IFC Examples",
       "notes": [
@@ -144,7 +165,7 @@
       "redistribution": "review_required",
       "research_use": "allowed_with_attribution",
       "source_id": "kit-examples",
-      "status": "not_acquired",
+      "status": "present",
       "training_use": "review_required"
     },
     {
@@ -152,7 +173,7 @@
       "canonical_source": "STEP Tools IFC Sample Data",
       "classification": "public_example",
       "discovered_via": [],
-      "file_count": 0,
+      "file_count": 2,
       "license": "review-required",
       "name": "STEP Tools IFC Sample Data",
       "notes": [
@@ -164,7 +185,68 @@
       "redistribution": "review_required",
       "research_use": "review_required",
       "source_id": "steptools-samples",
-      "status": "not_acquired",
+      "status": "present",
+      "training_use": "review_required"
+    },
+    {
+      "attribution": "license_notice_required",
+      "canonical_source": "ThatOpen/engine_web-ifc",
+      "classification": "public_example",
+      "discovered_via": [],
+      "file_count": 1,
+      "license": "MPL-2.0",
+      "name": "ThatOpen engine_web-ifc Example",
+      "notes": [
+        "Small semantically meaningful IFC2X3 example admitted after IfcOpenShell screening."
+      ],
+      "paths": [
+        "dataset/external/thatopen-engine-web-ifc"
+      ],
+      "redistribution": "allowed_with_license_conditions",
+      "research_use": "allowed_with_license_conditions",
+      "source_id": "thatopen-engine-web-ifc",
+      "status": "present",
+      "training_use": "review_required"
+    },
+    {
+      "attribution": "license_notice_required",
+      "canonical_source": "ThatOpen/web-ifc-three",
+      "classification": "public_example",
+      "discovered_via": [],
+      "file_count": 1,
+      "license": "MIT",
+      "name": "ThatOpen web-ifc-three Example",
+      "notes": [
+        "Small semantically meaningful IFC2X3 example admitted after IfcOpenShell screening."
+      ],
+      "paths": [
+        "dataset/external/thatopen-web-ifc-three"
+      ],
+      "redistribution": "allowed_with_license_conditions",
+      "research_use": "allowed",
+      "source_id": "thatopen-web-ifc-three",
+      "status": "present",
+      "training_use": "review_required"
+    },
+    {
+      "attribution": "source_and_license_notice_required",
+      "canonical_source": "UdK-VPT/BIM2Modelica",
+      "classification": "public_research",
+      "discovered_via": [],
+      "file_count": 5,
+      "license": "repository-BSD-3-Clause-model-rights-review-required",
+      "name": "UdK BIM2Modelica IFC2X3 Models",
+      "notes": [
+        "Only distinct UdKB building/zone models are retained; repetitive SBT unit-test variants are excluded.",
+        "All retained files are below 10 MiB and pass the semantic meaningfulness gate."
+      ],
+      "paths": [
+        "dataset/external/bim2modelica"
+      ],
+      "redistribution": "review_required",
+      "research_use": "allowed_with_source_review",
+      "source_id": "bim2modelica",
+      "status": "present",
       "training_use": "review_required"
     }
   ]
