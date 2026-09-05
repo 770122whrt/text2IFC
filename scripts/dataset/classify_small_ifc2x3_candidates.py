@@ -13,8 +13,8 @@ import certifi
 import ifcopenshell
 
 ROOT = Path(__file__).resolve().parents[2]
-INPUT = ROOT / "dataset/external/.acquisition-tmp/ifc2x3-small-github-candidates.jsonl"
-OUTPUT = ROOT / "dataset/external/.acquisition-tmp/ifc2x3-small-github-classified.jsonl"
+INPUT = ROOT / ".tmp/dataset-acquisition/ifc2x3-small-github-candidates.jsonl"
+OUTPUT = ROOT / ".tmp/dataset-acquisition/ifc2x3-small-github-classified.jsonl"
 REPORT = ROOT / "docs/reports/ifc2x3-small-model-meaningfulness.md"
 USER_AGENT = "text2ifc-dataset-classifier/1.0"
 

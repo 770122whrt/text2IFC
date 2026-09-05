@@ -8,7 +8,7 @@ from collections import defaultdict
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-INPUT = ROOT / "dataset/external/.acquisition-tmp/ifc2x3-small-github-classified.jsonl"
+INPUT = ROOT / ".tmp/dataset-acquisition/ifc2x3-small-github-classified.jsonl"
 OUTPUT = ROOT / "dataset/manifests/acquisitions/ifc2x3-small-github-refined.jsonl"
 REPORT = ROOT / "docs/reports/ifc2x3-small-model-refined-shortlist.md"
 
