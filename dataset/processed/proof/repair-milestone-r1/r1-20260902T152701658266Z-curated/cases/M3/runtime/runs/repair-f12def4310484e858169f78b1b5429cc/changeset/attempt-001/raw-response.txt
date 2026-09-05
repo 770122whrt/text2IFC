@@ -1,0 +1,67 @@
+{
+  "schema_version": "text2ifc/ifc-repair-changeset-draft/0.3",
+  "draft_id": "draft-add-column-00begane-1",
+  "base_model_fingerprint": "sha256:79f294c643438ac7a494e4871857244c2de0eefa536eda5977af20640a301a22",
+  "source_request_hash": "sha256:1abb29da38d8c29e15936a31249389bfbcb122a3e27a1da34e309a70809f0837",
+  "semantic_manifest_ref": "changeset/semantic-manifest-add-column-00begane-1.json",
+  "semantic_manifest_sha256": "sha256:81237ae9169a5452287ad4d9f398e19a44840edcbb9b52bd514a1f97c7aeb741",
+  "semantic_summary": {
+    "required": 2,
+    "conditional": 2,
+    "not_required": 0
+  },
+  "scope": {
+    "target_ids": [
+      "02GkOQJZz4x9WAhoZkM67S"
+    ],
+    "forbidden_ids": []
+  },
+  "evidence_refs": [
+    "resolved:/operations/add-column-00begane-1/context/candidate_targets/0"
+  ],
+  "preconditions": [
+    "target_exists",
+    "structural_axis_available",
+    "structural_type_authorized"
+  ],
+  "postconditions": [
+    "column_geometry_matches",
+    "column_contained_in_base_storey",
+    "column_type_bound"
+  ],
+  "operations": [
+    {
+      "operation_id": "add-column-00begane-1",
+      "operation_type": "add_column",
+      "target": {
+        "storey_global_id": "02GkOQJZz4x9WAhoZkM67S"
+      },
+      "parameters": {
+        "axis": {
+          "base": {
+            "x_mm": 25000.0,
+            "y_mm": 60000.0,
+            "z_mm": 0.0
+          },
+          "top": {
+            "x_mm": 25000.0,
+            "y_mm": 60000.0,
+            "z_mm": 3000.0
+          }
+        },
+        "section": {
+          "depth_mm": 600,
+          "orientation": {
+            "x": 1,
+            "y": 0
+          },
+          "shape": "rectangle",
+          "width_mm": 400
+        }
+      },
+      "evidence_refs": [
+        "resolved:/operations/add-column-00begane-1/context/candidate_targets/0"
+      ]
+    }
+  ]
+}

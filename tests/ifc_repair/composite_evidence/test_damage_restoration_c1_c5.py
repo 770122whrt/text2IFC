@@ -16,6 +16,7 @@ import json
 import re
 import sys
 from pathlib import Path
+from types import SimpleNamespace
 
 import ifcopenshell
 import ifcopenshell.util.placement
@@ -35,7 +36,6 @@ from text2ifc_ifc_repair.api import RepairAPI  # noqa: E402
 from text2ifc_ifc_repair.benchmark_evaluation import (  # noqa: E402
     evaluate_production,
 )
-from text2ifc_ifc_repair.compare import compare_ifc_models  # noqa: E402
 from text2ifc_ifc_repair.evaluation import (  # noqa: E402
     EvaluationExecutionPolicy,
 )
@@ -77,6 +77,18 @@ from text2ifc_ifc_repair.mutation import (  # noqa: E402
 from scripts.ifc_repair.composite_evidence.run_damage_restoration_c1_c5 import (  # noqa: E402
     _type_reuse_preflight as _runner_type_reuse_preflight,
 )
+from scripts.ifc_repair.composite_evidence import (  # noqa: E402
+    run_damage_restoration_c1_c5 as live_runner,
+)
+from scripts.ifc_repair.composite_evidence.restoration_debug import (  # noqa: E402
+    compare_damage_restoration,
+)
+from scripts.ifc_repair.composite_evidence import (  # noqa: E402
+    curate_damage_restoration_c1_c5 as proof_curator,
+)
+from scripts.ifc_repair.composite_evidence.curate_damage_restoration_c1_c5 import (  # noqa: E402
+    validate_recorded_debug,
+)
 
 FREEZE = json.loads(
     (
@@ -85,6 +97,31 @@ FREEZE = json.loads(
         / "damage-restoration-c1-c5-freeze.json"
     ).read_text(encoding="utf-8")
 )
+
+
+def test_live_public_input_declares_strict_geometry_target_tolerance() -> None:
+    request = live_runner._public_repair_request(FREEZE["cases"][1])
+
+    assert FREEZE["cases"][1]["request"] in request
+    assert (
+        "Use a target-matching tolerance of 0.1 mm for every stated "
+        "millimetre geometry selector"
+    ) in request
+    assert "0.1 mm" in request
+
+
+def test_live_public_input_confirms_explicit_notdefined_door_request() -> None:
+    case = next(case for case in FREEZE["cases"] if case["case_id"] == "C3")
+    assert "operation type NOTDEFINED" in case["request"]
+
+    request = live_runner._public_repair_request(case)
+
+    assert (
+        "For every Door explicitly requested with operation type NOTDEFINED, "
+        "I explicitly accept NOTDEFINED"
+    ) in request
+
+
 SOURCE = {
     "source_kind": "user_request",
     "reference": "request:/text",
@@ -94,7 +131,8 @@ SOURCE = {
 
 def _section_json(prompt: str, heading: str) -> dict:
     part = prompt.split(f"## {heading}", 1)[1].split("\n## ", 1)[0].strip()
-    return json.loads(part)
+    document, _ = json.JSONDecoder().raw_decode(part)
+    return document
 
 
 def _prototype_intent(member: dict) -> dict | None:
@@ -635,6 +673,311 @@ def test_runner_stops_when_the_required_type_does_not_survive_damage(
         )
 
 
+def test_proof_curation_accepts_recomputed_focused_ifccompare() -> None:
+    payload = {
+        "status": "passed",
+        "members": [{"repaired_tag": "restore-beam-1"}],
+    }
+
+    validate_recorded_debug(payload, json.loads(json.dumps(payload)))
+
+
+def test_proof_curation_ignores_only_ifccompare_runtime_timings() -> None:
+    recorded = {
+        "status": "passed",
+        "whole_model_ifccompare": {
+            "comparison_status": "passed",
+            "comparison_metrics": {
+                "timeout_seconds": 120.0,
+                "root_index_seconds": 1.0,
+                "total_seconds": 2.0,
+            },
+        },
+    }
+    recomputed = json.loads(json.dumps(recorded))
+    recomputed["whole_model_ifccompare"]["comparison_metrics"].update(
+        root_index_seconds=3.0,
+        total_seconds=4.0,
+    )
+
+    validate_recorded_debug(recorded, recomputed)
+
+
+def test_proof_curation_rejects_focused_ifccompare_drift() -> None:
+    recorded = {"status": "passed", "members": []}
+    recomputed = {
+        "status": "passed",
+        "members": [{"repaired_tag": "restore-beam-1"}],
+    }
+
+    with pytest.raises(ValueError, match="PROOF_IFCCOMPARE_DEBUG_MISMATCH"):
+        validate_recorded_debug(recorded, recomputed)
+
+
+def test_proof_curation_accepts_a_succeeded_case_from_a_completed_subset() -> None:
+    execution = {
+        "status": "completed",
+        "cases": [
+            {"case_id": "C1", "status": "succeeded"},
+            {"case_id": "C2", "status": "succeeded"},
+        ],
+    }
+
+    selected = proof_curator.validate_selected_case_execution(
+        execution, case_id="C1"
+    )
+
+    assert selected["status"] == "succeeded"
+    assert execution["status"] == "completed"
+
+
+def test_proof_curation_rejects_a_failed_source_batch() -> None:
+    execution = {
+        "status": "failed",
+        "cases": [
+            {"case_id": "C1", "status": "succeeded"},
+            {"case_id": "C2", "status": "clarification_required"},
+        ],
+    }
+
+    with pytest.raises(ValueError, match="PROOF_SOURCE_EXECUTION_NOT_COMPLETED"):
+        proof_curator.validate_selected_case_execution(execution, case_id="C1")
+
+
+def test_proof_curation_reuses_recorded_operation_bindings() -> None:
+    result = {
+        "original_comparison": {
+            "restoration_operation_bindings": {
+                "beams": ["beam-provider-id"],
+                "columns": [],
+                "doors": ["door-provider-id"],
+                "windows": [],
+            }
+        }
+    }
+
+    assert proof_curator.restoration_tags_for_result(result) == {
+        "beams": ["beam-provider-id"],
+        "columns": [],
+        "doors": ["door-provider-id"],
+        "windows": [],
+    }
+
+
+def test_proof_curation_loads_the_actual_public_request(tmp_path: Path) -> None:
+    run_dir = tmp_path / "runtime-run"
+    renderer_input = run_dir / "intent" / "renderer-input.json"
+    renderer_input.parent.mkdir(parents=True)
+    renderer_input.write_text(
+        json.dumps({"REPAIR_REQUEST": "frozen request plus live suffix"}),
+        encoding="utf-8",
+    )
+
+    assert (
+        proof_curator.load_public_request(run_dir)
+        == "frozen request plus live suffix"
+    )
+
+
+def test_proof_report_lists_removed_and_rebuilt_guids() -> None:
+    report = proof_curator._case_report(
+        {"case_id": "C-test", "source": "source.ifc"},
+        {
+            "status": "succeeded",
+            "latency_seconds": 1.0,
+            "original_comparison": {
+                "comparison_status": "passed",
+                "class_counts_restored": True,
+                "identity_equivalent": False,
+            },
+            "damage": {
+                "beams_removed": 1,
+                "columns_removed": 0,
+                "doors_removed": 0,
+                "windows_removed": 0,
+            },
+        },
+        {
+            "status": "passed",
+            "member_count": 1,
+            "failed_member_count": 0,
+            "members": [
+                {
+                    "repaired_tag": "beam-1",
+                    "geometry": {"status": "passed"},
+                    "properties": {"status": "passed"},
+                    "type_reuse": {"status": "passed"},
+                }
+            ],
+        },
+        {"summary": {"changed_product_count": 2, "changed_product_classes": {}}},
+        guid_trace=[
+            {
+                "role": "beam-1",
+                "damage_action": "removed",
+                "original_ifc_class": "IfcBeam",
+                "original_global_id": "old-guid",
+                "repair_action": "rebuilt",
+                "repaired_ifc_class": "IfcBeam",
+                "repaired_global_id": "new-guid",
+            }
+        ],
+        source_batch_id="batch-01",
+    )
+
+    assert "old-guid" in report
+    assert "new-guid" in report
+    assert "removed" in report
+    assert "rebuilt" in report
+
+
+def test_proof_copy_normalizes_text_artifacts_to_lf(tmp_path: Path) -> None:
+    source = tmp_path / "source.json"
+    target = tmp_path / "proof" / "target.json"
+    source.write_bytes(b'{"status":"passed"}\r\n')
+
+    proof_curator._copy(source, target)
+
+    assert target.read_bytes() == b'{"status":"passed"}\n'
+
+
+def test_live_runner_uses_an_explicit_shared_property_cache(
+    tmp_path: Path,
+) -> None:
+    prepare = getattr(
+        live_runner,
+        "_prepare_property_runtime_environment",
+        None,
+    )
+    assert callable(prepare)
+    cache_root = tmp_path / "shared-cache"
+    (cache_root / "models" / "BAAI-bge-m3").mkdir(parents=True)
+
+    environment = prepare({}, cache_root=cache_root)
+
+    assert environment["TEXT2IFC_PROPERTY_BGE_MODEL_PATH"] == str(
+        (cache_root / "models" / "BAAI-bge-m3").resolve()
+    )
+    assert environment["TEXT2IFC_PROPERTY_QDRANT_PATH"] == str(
+        (cache_root / "property-resolution" / "qdrant").resolve()
+    )
+
+
+def test_live_runner_blocks_an_unhealthy_property_runtime_before_provider() -> None:
+    require_ready = getattr(
+        live_runner,
+        "_require_ready_property_runtime",
+        None,
+    )
+    assert callable(require_ready)
+    unavailable = SimpleNamespace(
+        health=SimpleNamespace(
+            status="not_ready",
+            reason_code="BGE_M3_UNAVAILABLE",
+            acceptance_eligible=False,
+        )
+    )
+
+    with pytest.raises(RuntimeError, match="BGE_M3_UNAVAILABLE"):
+        require_ready(unavailable)
+
+    ready = SimpleNamespace(
+        health=SimpleNamespace(
+            status="ready",
+            reason_code=None,
+            acceptance_eligible=True,
+        )
+    )
+    require_ready(ready)
+
+
+def test_failed_live_case_still_counts_its_provider_attempts() -> None:
+    update_count = getattr(live_runner, "_updated_transport_call_count", None)
+    assert callable(update_count)
+    assert update_count(0, [{"stage": "stage1"}]) == 1
+
+
+@pytest.mark.parametrize("case", FREEZE["cases"], ids=lambda c: c["case_id"])
+def test_live_runner_resolves_actual_operation_ids_from_bound_content(
+    case: dict,
+) -> None:
+    resolve = getattr(live_runner, "_resolve_restoration_tags", None)
+    assert callable(resolve)
+    run_root = (
+        ROOT
+        / "dataset/processed/ifc-repair-runs/c1c5-offline-20260903-v2"
+        / "cases"
+        / case["case_id"]
+        / "runtime"
+    )
+    changeset_path = next(run_root.rglob("bound-changeset.json"))
+    changeset = json.loads(changeset_path.read_text(encoding="utf-8"))
+    operation_type_by_key = {
+        "beams": "add_beam",
+        "columns": "add_column",
+        "doors": "fill_existing_opening_with_door",
+        "windows": "add_window_with_opening_to_wall",
+    }
+    expected = {key: [] for key in operation_type_by_key}
+    for index, operation in enumerate(changeset["operations"], start=1):
+        operation["operation_id"] = f"provider-operation-{index}"
+        for key, operation_type in operation_type_by_key.items():
+            if operation["operation_type"] == operation_type:
+                expected[key].append(operation["operation_id"])
+    changeset["operations"].reverse()
+
+    assert resolve(case, changeset) == expected
+
+
+def test_focused_ifccompare_and_type_reuse_accept_actual_operation_tags(
+    tmp_path: Path,
+) -> None:
+    case = next(case for case in FREEZE["cases"] if case["case_id"] == "C1")
+    proof = (
+        ROOT
+        / "dataset/processed/proof/repair-damage-restoration"
+        / "c1-c5-offline-20260903-v2/C1"
+    )
+    repaired_path = tmp_path / "arbitrary-tags.ifc"
+    repaired_model = ifcopenshell.open(str(proof / "03-repaired.ifc"))
+    tags = {"beams": ["provider-beam-a", "provider-beam-b"]}
+    for index, tag in enumerate(tags["beams"], start=1):
+        restored = next(
+            entity
+            for entity in repaired_model.by_type("IfcBeam")
+            if str(entity.Tag) == f"restore-beam-{index}"
+        )
+        restored.Tag = tag
+    repaired_model.write(str(repaired_path))
+
+    debug = compare_damage_restoration(
+        case,
+        original_path=proof / "01-original.ifc",
+        repaired_path=repaired_path,
+        repaired_tags=tags,
+    )
+    original_model = ifcopenshell.open(str(proof / "01-original.ifc"))
+    damaged_model = ifcopenshell.open(str(proof / "02-damaged.ifc"))
+    preflight = live_runner._type_reuse_preflight(
+        case,
+        original_model=original_model,
+        damaged_model=damaged_model,
+    )
+    type_reuse = live_runner._verify_exact_type_reuse(
+        case,
+        damaged_model=damaged_model,
+        repaired_model=ifcopenshell.open(str(repaired_path)),
+        preflight=preflight,
+        repaired_tags=tags,
+    )
+
+    assert debug["status"] == "passed"
+    assert [member["repaired_tag"] for member in debug["members"]] == tags[
+        "beams"
+    ]
+    assert type_reuse["status"] == "passed"
+
+
 @pytest.mark.parametrize("case", FREEZE["cases"], ids=lambda c: c["case_id"])
 def test_damage_restoration_c_case(case: dict, tmp_path: Path) -> None:
     scratch = tmp_path / "scratch"
@@ -897,7 +1240,23 @@ def test_damage_restoration_c_case(case: dict, tmp_path: Path) -> None:
             assert key in props, (column["gid"], key, sorted(props))
             assert props[key] == claim["raw_value"], (column["gid"], key)
 
-    comparison = compare_ifc_models(source, repaired, allowed_changed_ids=())
+    focused_debug = compare_damage_restoration(
+        case,
+        original_path=source,
+        repaired_path=repaired,
+    )
+    assert focused_debug["status"] == "passed", focused_debug["members"]
+    assert focused_debug["failed_member_count"] == 0
+    assert focused_debug["member_count"] == sum(
+        len(case["damage"].get(key, ()))
+        for key in ("beams", "columns", "doors", "windows")
+    )
+    for member in focused_debug["members"]:
+        assert member["geometry"]["status"] == "passed", member
+        assert member["geometry"]["differences"] == []
+        assert member["properties"]["status"] == "passed", member
+        assert member["type_reuse"]["status"] == "passed", member
+    comparison = focused_debug["whole_model_ifccompare"]
     assert comparison["comparison_status"] == "passed", comparison.get(
         "comparison_error_code"
     )

@@ -1,0 +1,484 @@
+{
+  "attempts": [
+    {
+      "attempt_id": "E1:stage1:001",
+      "case_id": "E1",
+      "correction_reason": null,
+      "error": null,
+      "evidence_class": "live",
+      "fallback_flags": {
+        "cached": false,
+        "hand_authored": false,
+        "prerecorded": false,
+        "synthetic": false
+      },
+      "few_shot_bindings": [],
+      "few_shot_hashes": [],
+      "few_shot_ids": [],
+      "http_status": 200,
+      "lineage": "initial",
+      "metadata": {
+        "estimated_input_tokens": "[REDACTED]",
+        "evidence_class": "live",
+        "max_input_tokens": "[REDACTED]",
+        "model": "deepseek-v4-flash",
+        "provider": "deepseek-openai-compatible",
+        "request_configuration": {
+          "temperature": {
+            "effective": false,
+            "value": 0
+          },
+          "thinking": {
+            "type": "enabled"
+          }
+        },
+        "response_id": "c58143bc-64d6-4a00-b63a-40ba99bfa034",
+        "session_id": "ifc-repair-intent-request-e88a9df0ac1abe69",
+        "stop_reason": "stop",
+        "transport_attempts": 1,
+        "usage": {
+          "completion_tokens": 2447,
+          "completion_tokens_details": "[REDACTED]",
+          "prompt_cache_hit_tokens": "[REDACTED]",
+          "prompt_cache_miss_tokens": "[REDACTED]",
+          "prompt_tokens": 11550,
+          "prompt_tokens_details": "[REDACTED]",
+          "total_tokens": 13997
+        }
+      },
+      "model": "deepseek-v4-flash",
+      "ordinal": 1,
+      "parent_attempt_id": null,
+      "private_evidence_detected": false,
+      "profile_hashes": [
+        "sha256:4a524131881efa1898130814df86faef8259d9d5e172c63368970a4fe682b6a0",
+        "sha256:02809e9ea0dea0e731ec35c376864030d9f30fee9552b5ca458bbfc521062ce7",
+        "sha256:7eac7e8ac80e158a8cee4142a6830dce0d849b111efc6547201232e79e88bb36",
+        "sha256:1e79bce84c2704108eb22a59ec45e279366196ed28439dcc4bcfca8591721dd6",
+        "sha256:7b95c00e8f19ff4990053698c42dd182e385931260a2929d0edecbd19dbbec2b",
+        "sha256:db70f1f22bd270636c00b210ac99f18f4c7b2a38cd5bc891a7106c7101d5dbbc",
+        "sha256:d00699ba8ee0f5ec4751bb982f113662bb7920409f3ca5f8915dd3c941cec45c"
+      ],
+      "profile_ids": [
+        "beam.add.v0.3",
+        "column.add.v0.3",
+        "door.add-with-opening.v0.2",
+        "door.fill-existing-opening.v0.2",
+        "occurrence.set-properties",
+        "opening.add-to-wall",
+        "window.add-with-opening"
+      ],
+      "profile_versions": [
+        "0.3",
+        "0.3",
+        "0.2",
+        "0.2",
+        "0.1",
+        "0.1",
+        "0.1"
+      ],
+      "provider": "deepseek-openai-compatible",
+      "raw_request_sha256": "sha256:9f6f2136bc4ced2e8ab62aef28c1b91d0211a9c64b85158b53da84c1610d80af",
+      "raw_response_sha256": "sha256:00f51a7005a6d75823f2ef6b94849add88c6b5c31f82a8fbb7de9c6165924b39",
+      "request": {
+        "extra_body": {
+          "thinking": {
+            "type": "enabled"
+          }
+        },
+        "max_tokens": 65536,
+        "messages": [
+          {
+            "content": "# IFC RepairIntent Request Understanding v0.10\n\nYou are Stage 1 of a deterministic IFC repair agent. Read only the delimited\npublic user request. In one response, classify its clauses and extract a JSON\nbody conforming exactly to `text2ifc/ifc-repair-intent-body/0.8`.\n\nYour scope is the IFC repair operations in SUPPORTED_OPERATIONS. You do not\nperform structural analysis, rendering, design, calculation, simulation,\nreporting, export, messaging, or general assistant tasks. Never silently drop\na requested result. Classify by the clause's semantic object and outcome, not\nby an imperative verb such as create, generate, state, or publish.\n\n## Clause roles: classify the semantic object before routing\n\nUse exactly these four semantic roles. The examples are representative, not exhaustive.\n\n| Role | Semantic test | RepairIntent encoding |\n|---|---|---|\n| Registered model operation | Satisfying the clause changes IFC entities, attributes, geometry, semantics, or relationships and maps to one operation in SUPPORTED_OPERATIONS. | Add exactly one `operations` item for that requested model change. |\n| Operation content or modifier | The clause supplies a target, geometry, Type intent, material, property, quantity, or another field for an operation already extracted. | Encode it inside that operation; never create an additional operation. |\n| Compatible transaction or execution constraint | The clause only says how already requested operations are grouped, committed, rolled back, validated, or published. Satisfying it alone changes no IFC content. | Add no operation and no unsupported item. The exact request remains in the request hash and root provenance, and deterministic application enforces the atomic transaction. |\n| Unsupported requested result | The clause requests a distinct result outside the registry or an exact capability that the selected compact profile marks unsupported. | Add one exact `unsupported_requests` item. |\n\nCompatible transaction phrases include `one atomic ChangeSet`, `the same ChangeSet`,\n`one transaction`, `together atomically`, `all-or-nothing`, and `publish both or neither`.\nThey never introduce a new operation or an\nunregistered action. An anaphoric phrase such as “Create both in one atomic\nChangeSet” refers to the objects already extracted; `both` is not a third\nsemantic object.\n\nTarget, geometry, Type, material, property, and quantity clauses are operation\ncontent. For example, “generate dedicated structural Types” modifies the\ncorresponding Beam and Column operations, while “generate a report” requests a\nseparate unregistered result. Likewise, “state that the Beam is load bearing”\nrequests an IFC property; it is not a reporting task.\n\nThe compact catalog is the complete executable authority. The short examples\nbelow are not an allow-list or deny-list. For every phrase not shown, first\napply the four semantic roles, then use only the exact operation, schema, and\ncapability IDs supplied by SUPPORTED_OPERATIONS.\n\n## Registered operation routing\n\nFor each registered model operation, choose exactly one compact profile from\nSUPPORTED_OPERATIONS. Copy its `component_family`, `action`, and `profile_id`\ninto `routing_intent`; quote the public request in its source. The compact\ncatalog contains classification terms, exact Stage 1 target/parameter schemas,\nslots, and capability IDs. It intentionally does not contain full profile\ndocuments or few-shots. Those are selected only after deterministic resolution\nfor Stage 2. Do not invent a profile or capability ID.\n\n## Unsupported requests are terminal, not clarification\n\nUse `unsupported_requests` only for an unsupported requested result:\n\n- For a registered but unsupported capability, keep its partial registered\n  operation, set `kind` to `registered_capability`, bind `operation_id` to that\n  operation, and copy one exact ID from the selected profile's\n  `unsupported_capabilities` into `capability_id`.\n- Structural-analysis requests use exactly one of\n  `structural_analysis_member`, `structural_analysis_node`,\n  `structural_analysis_load`, `structural_analysis_port`, or\n  `structural_analysis_connection` when that exact ID is present in the\n  selected compact profile.\n- For a distinct unregistered result or external task, set `kind` to\n  `unregistered_action`, `operation_id` to `null`, and `capability_id` to\n  `unregistered_operation`.\n- A pure unregistered request has `operations: []`. A mixed request preserves\n  both its registered operations and unsupported items.\n\nDo not ask for missing geometry after an unsupported item exists. Deterministic\ncode rejects the whole request before completeness, clarification, target/type\nresolution, property retrieval, Stage 2, or IFC mutation. Never encode an\nunsupported result as a missing field, `analysis_member`, explanatory key,\nalias, or ordinary provenance text.\n\n## Stable internal identifiers are not IFC target identities\n\n`operation_id` and `unsupported_id` are internal correlation identifiers, not\nIFC data. Every non-null internal identifier must match exactly\n`^[A-Za-z0-9][A-Za-z0-9._:/-]*$`. Generate a short semantic identifier such as\n`set-door-property-1`; do not copy or embed a target GlobalId, Tag, Name, or\nother model identity in an internal identifier. IFC target identities belong\nonly in `target_query`. A registered-capability unsupported item must reference\nthe exact stable `operation_id` of its associated operation.\n\n## Exact extraction rules\n\nRecord claims; do not resolve them. Never inspect private Ground Truth,\nbenchmark Gold, mutation recipes or mappings, deleted identities, raw IFC STEP,\nor hidden project facts. Never invent a missing value. Omit unknown optional\nvalues and partial nested facts. Use `null` only where the exact schema permits\nit. Deterministic code asks a grouped clarification for missing required slots\nonly when `unsupported_requests` is empty.\n\n## Property identity and requested value are independent claims\n\nFor every property intent, extract the property identity claim and the requested\nvalue claim separately. Property identity may be an exact Pset/property path or\na natural-language phrase. The requested value is the scalar stated by the\nuser; it is not supplied by property retrieval.\n\n- If the user explicitly states a JSON-compatible scalar (Boolean, number, or\n  string), copy it unchanged into `raw_value`.\n  Never replace an explicitly stated scalar with `null`, even when the property identity still requires\n  Stage 1.5 resolution or clarification.\n- Unambiguous affirmative Boolean property assertions such as “is\n  <binary-property>”, “mark <object> as <binary-property>”, or “state that\n  <object> is <binary-property>” mean `raw_value: true`.\n- Explicitly negated Boolean property assertions such as “is not\n  <binary-property>” or “mark <object> as not <binary-property>” mean\n  `raw_value: false`.\n- A literal assignment such as “set <property> to <value>” preserves that\n  explicit Boolean, number, or string as `raw_value` without translation or\n  canonicalization.\n- If a property is named but no value is stated, use `raw_value: null` only\n  where the schema permits it and let deterministic completeness request the\n  missing value. Do not infer a value from a property name alone, a typical IFC\n  default, retrieved candidates, or model context.\n\nThese rules record only the user's value claim. They do not authorize a\nproperty identity, infer its IFC type/unit/scope, or bypass Stage 1.5 and\npost-resolution deterministic admissibility.\n\nUse only the exact `intent_target_schema` and `intent_parameter_schema` in the\nselected compact profile. They are Stage 1 claim shapes, not executable\nChangeSet shapes. Never move a field, emit a synonymous key, or repair\nVALIDATION_FEEDBACK by renaming Provider output.\n\n## Existing-Type reuse versus generated Type creation\n\nApply the selected compact profile's `type_intent_rules` literally. These are\nthree different user intents and must never be merged:\n\n1. If the user gives no Type instruction, or asks to create, generate, or\n   dedicate a new Type, `prototype_intent` must be exactly `null`. A new Type's\n   identity and label are deterministic program outputs, not an existing\n   prototype reference.\n2. If the user explicitly asks to reuse an exact existing Type name or\n   GlobalId, emit only that exact public identity with `reference_kind`\n   `type_name` or `global_id`.\n3. If the user explicitly asks to reuse an existing Type but supplies no exact\n   identity, emit `reference_kind: \"selection_required\"`. Deterministic\n   resolution asks the user to choose only when bounded public candidates\n   exist. With zero candidates it fails closed as `missing_evidence`.\n\nWords such as new, create, generate, generated, dedicated, or make a Type do\nnot authorize reuse and never mean `selection_required`. Similarity does not\nauthorize reuse. Never rewrite or normalize a Provider Type-intent result in\nprogram code; emit the correct contract here.\n\n## Beam and Column exact output rules\n\n- The target is the `IfcBuildingStorey` itself. For “on Level 1”, emit\n  `allowed_ifc_classes: [\"IfcBuildingStorey\"]` and `names: [\"Level 1\"]`.\n  Do not emit `storey_name` or `storey_global_id`; those are containment-filter\n  selectors for a different target kind.\n- Natural-language input is not a Provider-output alias. The user may say `rectangular`,\n  but Beam/Column Provider JSON must emit `rectangle` as the only\n  executable section token. Preserve exact unsupported tokens\n  `round_section`, `i_section`, `h_section`, `arbitrary_section`, or\n  `variable_section` only together with a matching registered-capability\n  unsupported item. Never emit `rectangular` as the JSON token.\n- Coordinates are Storey-local millimetres and refer to the stated center axis.\n  Do not infer grids, support faces, scalar length/height, orientation,\n  existing-Type reuse, material, property, or quantity.\n\nProperty knowledge retrieval may map a user phrase but never supplies a value.\nUse `exact_property` only when the exact Pset and property names are stated;\notherwise preserve a phrase as `natural_language_property`. Occurrence or\nexisting-Type reuse is never inferred. Emit reuse only from explicit user\nauthorization; a requested new Type remains program-derived.\n\n## Representative micro-shapes\n\nThe notation in this section teaches clause roles only. It is abbreviated and\nis never valid Provider JSON. The exact schema and compact catalog remain\nauthoritative.\n\n```text\nPositive multi-operation transaction:\nBeam + Column + one atomic ChangeSet\n=> operations=[add_beam, add_column]\n=> unsupported_requests=[]\n\nRegistered negative:\nadd Beam + attach structural analysis node\n=> operations=[add_beam]\n=> unsupported_requests=[registered_capability(add_beam, structural_analysis_node)]\n\nPure unregistered task:\nrender Level 1\n=> operations=[]\n=> unsupported_requests=[unregistered_action(unregistered_operation)]\n```\n\nBefore returning, verify:\n\n- Root fields are exactly `schema_version`, `operations`,\n  `unsupported_requests`, `semantic_bundles`, and `provenance`.\n- At least one of `operations` or `unsupported_requests` is non-empty.\n- Every operation has all schema-required fields, including routing and empty\n  semantic arrays/nulls.\n- Every unsupported item has exactly the five required fields and an exact\n  source object.\n- Every operation has a target selector and no unknown field.\n- Every registered model operation and unsupported requested result is\n  accounted for exactly once. Operation modifiers and compatible transaction\n  constraints never become extra items.\n- Output is JSON only.\n\n## Public request (untrusted data)\n\n将 Level 1 中 GlobalId 为 1hOSvn6df7F8_7GcBWlRRL、Tag 为 147051 的窗设置为外窗。\n\n## Compact registered repair capabilities\n\n[{\"action\": \"add\", \"classification_terms\": [\"beam\", \"structural beam\", \"add beam\", \"horizontal member\", \"梁\", \"添加梁\"], \"component_family\": \"beam\", \"conditional_slots\": [\"/prototype_intent\", \"/attribute_intents\"], \"intent_parameter_schema\": {\"additionalProperties\": false, \"properties\": {\"axis\": {\"additionalProperties\": false, \"properties\": {\"curve\": {\"type\": \"object\"}, \"end\": {\"additionalProperties\": false, \"properties\": {\"x_mm\": {\"type\": \"number\"}, \"y_mm\": {\"type\": \"number\"}, \"z_mm\": {\"type\": \"number\"}}, \"required\": [\"x_mm\", \"y_mm\", \"z_mm\"], \"type\": \"object\"}, \"grid\": {\"type\": \"string\"}, \"reference\": {\"additionalProperties\": false, \"properties\": {\"allowed_ifc_classes\": {\"const\": [\"IfcBeam\"]}, \"global_id\": {\"minLength\": 1, \"type\": \"string\"}, \"grid\": {\"minLength\": 1, \"type\": \"string\"}, \"max_candidates\": {\"maximum\": 10, \"minimum\": 1, \"type\": \"integer\"}, \"names\": {\"items\": {\"minLength\": 1, \"type\": \"string\"}, \"type\": \"array\"}, \"schema_version\": {\"const\": \"text2ifc/ifc-target-query/0.1\"}, \"storey_global_id\": {\"minLength\": 1, \"type\": \"string\"}, \"storey_name\": {\"minLength\": 1, \"type\": \"string\"}, \"winner_margin\": {\"minimum\": 1, \"type\": \"integer\"}}, \"required\": [\"schema_version\", \"allowed_ifc_classes\"], \"type\": \"object\"}, \"start\": {\"additionalProperties\": false, \"properties\": {\"x_mm\": {\"type\": \"number\"}, \"y_mm\": {\"type\": \"number\"}, \"z_mm\": {\"type\": \"number\"}}, \"required\": [\"x_mm\", \"y_mm\", \"z_mm\"], \"type\": \"object\"}}, \"type\": \"object\"}, \"length_mm\": {\"exclusiveMinimum\": 0, \"type\": \"number\"}, \"section\": {\"additionalProperties\": false, \"properties\": {\"height_mm\": {\"exclusiveMinimum\": 0, \"type\": \"number\"}, \"orientation\": {\"type\": \"object\"}, \"rotation_degrees\": {\"type\": \"number\"}, \"shape\": {\"enum\": [\"rectangle\", \"round_section\", \"i_section\", \"h_section\", \"arbitrary_section\", \"variable_section\"]}, \"width_mm\": {\"exclusiveMinimum\": 0, \"type\": \"number\"}}, \"required\": [\"shape\", \"width_mm\", \"height_mm\"], \"type\": \"object\"}}, \"required\": [\"axis\", \"section\"], \"type\": \"object\"}, \"intent_target_schema\": {\"additionalProperties\": false, \"anyOf\": [{\"required\": [\"global_id\"]}, {\"required\": [\"names\"]}], \"properties\": {\"allowed_ifc_classes\": {\"const\": [\"IfcBuildingStorey\"]}, \"global_id\": {\"minLength\": 1, \"type\": \"string\"}, \"names\": {\"items\": {\"maxLength\": 256, \"minLength\": 1, \"type\": \"string\"}, \"maxItems\": 16, \"minItems\": 1, \"type\": \"array\", \"uniqueItems\": true}, \"schema_version\": {\"const\": \"text2ifc/ifc-target-query/0.1\"}}, \"required\": [\"schema_version\", \"allowed_ifc_classes\"], \"type\": \"object\"}, \"operation_type\": \"add_beam\", \"profile_hash\": \"sha256:4a524131881efa1898130814df86faef8259d9d5e172c63368970a4fe682b6a0\", \"profile_id\": \"beam.add.v0.3\", \"profile_version\": \"0.3\", \"program_derived_slots\": [\"axis length from start/end\", \"unit and placement matrices\", \"representation context and swept-solid topology\", \"occurrence and relationship GUIDs\", \"generated-template identity and label\", \"Storey containment relationship\"], \"required_slots\": [\"/target_query\", \"/parameters/axis/start\", \"/parameters/axis/end\", \"/parameters/section/shape\", \"/parameters/section/width_mm\", \"/parameters/section/height_mm\"], \"slot_summary\": \"Target Storey selected only by its own global_id or names; straight horizontal center-axis start/end in Storey-local millimetres; rectangular width/height; no Type instruction or a new/generated/dedicated Beam Type request keeps prototype_intent null; exact existing-Type reuse uses only an explicit name or GlobalId; unspecified existing-Type reuse uses selection_required; explicit material and canonical requested Pset/quantity facts remain optional. Omit unstated facts instead of emitting aliases or null placeholders.\", \"supported_capabilities\": [\"straight_horizontal\", \"any_storey_xy_direction\", \"rectangular_section\", \"center_axis_mm\", \"exact_type_reuse\", \"generated_type\", \"optional_explicit_material\", \"Pset_BeamCommon\"], \"target_ifc_classes\": [\"IfcBuildingStorey\"], \"type_intent_rules\": {\"exact_existing_type_reuse\": \"global_id_or_type_name\", \"no_type_or_new_type\": \"prototype_intent_null\", \"unspecified_existing_type_reuse\": \"selection_required\", \"zero_candidate_policy\": \"missing_evidence\"}, \"unsupported_capabilities\": [\"inclined\", \"curved\", \"round_section\", \"i_section\", \"h_section\", \"arbitrary_section\", \"variable_section\", \"section_rotation\", \"grid_placement\", \"structural_analysis_member\", \"structural_analysis_node\", \"structural_analysis_load\", \"structural_analysis_port\", \"structural_analysis_connection\"]}, {\"action\": \"add\", \"classification_terms\": [\"column\", \"structural column\", \"add column\", \"vertical member\", \"柱\", \"添加柱\"], \"component_family\": \"column\", \"conditional_slots\": [\"/parameters/section/orientation\", \"/prototype_intent\", \"/attribute_intents\"], \"intent_parameter_schema\": {\"additionalProperties\": false, \"properties\": {\"axis\": {\"additionalProperties\": false, \"properties\": {\"base\": {\"additionalProperties\": false, \"properties\": {\"x_mm\": {\"type\": \"number\"}, \"y_mm\": {\"type\": \"number\"}, \"z_mm\": {\"type\": \"number\"}}, \"required\": [\"x_mm\", \"y_mm\", \"z_mm\"], \"type\": \"object\"}, \"curve\": {\"type\": \"object\"}, \"grid\": {\"type\": \"string\"}, \"reference\": {\"additionalProperties\": false, \"properties\": {\"allowed_ifc_classes\": {\"const\": [\"IfcColumn\"]}, \"global_id\": {\"minLength\": 1, \"type\": \"string\"}, \"grid\": {\"minLength\": 1, \"type\": \"string\"}, \"max_candidates\": {\"maximum\": 10, \"minimum\": 1, \"type\": \"integer\"}, \"names\": {\"items\": {\"minLength\": 1, \"type\": \"string\"}, \"type\": \"array\"}, \"schema_version\": {\"const\": \"text2ifc/ifc-target-query/0.1\"}, \"storey_global_id\": {\"minLength\": 1, \"type\": \"string\"}, \"storey_name\": {\"minLength\": 1, \"type\": \"string\"}, \"winner_margin\": {\"minimum\": 1, \"type\": \"integer\"}}, \"required\": [\"schema_version\", \"allowed_ifc_classes\"], \"type\": \"object\"}, \"top\": {\"additionalProperties\": false, \"properties\": {\"x_mm\": {\"type\": \"number\"}, \"y_mm\": {\"type\": \"number\"}, \"z_mm\": {\"type\": \"number\"}}, \"required\": [\"x_mm\", \"y_mm\", \"z_mm\"], \"type\": \"object\"}}, \"type\": \"object\"}, \"height_mm\": {\"exclusiveMinimum\": 0, \"type\": \"number\"}, \"section\": {\"additionalProperties\": false, \"properties\": {\"depth_mm\": {\"exclusiveMinimum\": 0, \"type\": \"number\"}, \"orientation\": {\"additionalProperties\": false, \"properties\": {\"x\": {\"type\": \"number\"}, \"y\": {\"type\": \"number\"}}, \"required\": [\"x\", \"y\"], \"type\": \"object\"}, \"shape\": {\"enum\": [\"rectangle\", \"round_section\", \"i_section\", \"h_section\", \"arbitrary_section\", \"variable_section\"]}, \"width_mm\": {\"exclusiveMinimum\": 0, \"type\": \"number\"}}, \"required\": [\"shape\", \"width_mm\", \"depth_mm\"], \"type\": \"object\"}, \"split_at_storeys\": {\"type\": \"boolean\"}}, \"required\": [\"axis\", \"section\"], \"type\": \"object\"}, \"intent_target_schema\": {\"additionalProperties\": false, \"anyOf\": [{\"required\": [\"global_id\"]}, {\"required\": [\"names\"]}], \"properties\": {\"allowed_ifc_classes\": {\"const\": [\"IfcBuildingStorey\"]}, \"global_id\": {\"minLength\": 1, \"type\": \"string\"}, \"names\": {\"items\": {\"maxLength\": 256, \"minLength\": 1, \"type\": \"string\"}, \"maxItems\": 16, \"minItems\": 1, \"type\": \"array\", \"uniqueItems\": true}, \"schema_version\": {\"const\": \"text2ifc/ifc-target-query/0.1\"}}, \"required\": [\"schema_version\", \"allowed_ifc_classes\"], \"type\": \"object\"}, \"operation_type\": \"add_column\", \"profile_hash\": \"sha256:02809e9ea0dea0e731ec35c376864030d9f30fee9552b5ca458bbfc521062ce7\", \"profile_id\": \"column.add.v0.3\", \"profile_version\": \"0.3\", \"program_derived_slots\": [\"axis height from base/top\", \"unit and placement matrices\", \"representation context and swept-solid topology\", \"occurrence and relationship GUIDs\", \"generated-template identity and label\", \"base-Storey containment relationship\"], \"required_slots\": [\"/target_query\", \"/parameters/axis/base\", \"/parameters/axis/top\", \"/parameters/section/shape\", \"/parameters/section/width_mm\", \"/parameters/section/depth_mm\"], \"slot_summary\": \"Target base Storey selected only by its own global_id or names; straight vertical center-axis base/top in Storey-local millimetres; rectangular width/depth and explicit orientation for a non-square section; no Type instruction or a new/generated/dedicated Column Type request keeps prototype_intent null; exact existing-Type reuse uses only an explicit name or GlobalId; unspecified existing-Type reuse uses selection_required; explicit material and canonical requested Pset/quantity facts remain optional. Omit unstated facts instead of emitting aliases or null placeholders.\", \"supported_capabilities\": [\"straight_vertical\", \"rectangular_section\", \"center_axis_mm\", \"explicit_non_square_orientation\", \"exact_type_reuse\", \"generated_type\", \"optional_explicit_material\", \"Pset_ColumnCommon\"], \"target_ifc_classes\": [\"IfcBuildingStorey\"], \"type_intent_rules\": {\"exact_existing_type_reuse\": \"global_id_or_type_name\", \"no_type_or_new_type\": \"prototype_intent_null\", \"unspecified_existing_type_reuse\": \"selection_required\", \"zero_candidate_policy\": \"missing_evidence\"}, \"unsupported_capabilities\": [\"inclined\", \"curved\", \"round_section\", \"i_section\", \"h_section\", \"arbitrary_section\", \"variable_section\", \"automatic_storey_split\", \"grid_placement\", \"structural_analysis_member\", \"structural_analysis_node\", \"structural_analysis_load\", \"structural_analysis_port\", \"structural_analysis_connection\"]}, {\"action\": \"add_with_opening\", \"classification_terms\": [\"door\", \"门\", \"add door\", \"repair door\", \"single swing\"], \"component_family\": \"door\", \"conditional_slots\": [\"/parameters/door/operation_type\", \"/parameters/door/viewpoint\", \"/prototype_intent\"], \"intent_parameter_schema\": {\"additionalProperties\": false, \"properties\": {\"door\": {\"additionalProperties\": false, \"properties\": {\"formal_enum_explicit\": {\"type\": \"boolean\"}, \"hinge_side\": {\"enum\": [\"left\", \"right\"]}, \"notdefined_accepted\": {\"type\": \"boolean\"}, \"operation_type\": {\"enum\": [\"DOUBLE_DOOR_DOUBLE_SWING\", \"DOUBLE_DOOR_SINGLE_SWING\", \"DOUBLE_SWING_LEFT\", \"DOUBLE_SWING_RIGHT\", \"FOLDING_TO_LEFT\", \"FOLDING_TO_RIGHT\", \"NOTDEFINED\", \"REVOLVING\", \"ROLLINGUP\", \"SINGLE_SWING_LEFT\", \"SINGLE_SWING_RIGHT\", \"SLIDING_TO_LEFT\", \"SLIDING_TO_RIGHT\", \"SWING_FIXED_LEFT\", \"SWING_FIXED_RIGHT\"]}, \"viewpoint\": {\"additionalProperties\": false, \"properties\": {\"destination\": {\"minLength\": 1, \"type\": \"string\"}, \"from_space\": {\"minLength\": 1, \"type\": \"string\"}, \"observation_side\": {\"enum\": [\"wall_positive\", \"wall_negative\"]}, \"to_space\": {\"minLength\": 1, \"type\": \"string\"}}, \"type\": \"object\"}}, \"type\": \"object\"}, \"opening\": {\"additionalProperties\": false, \"properties\": {\"dimension_meaning\": {\"enum\": [\"overall_opening\", \"clear_passage\", \"door_leaf\", \"rough_opening\", \"unknown\"]}, \"height_mm\": {\"exclusiveMinimum\": 0, \"type\": \"number\"}, \"sill_height_mm\": {\"minimum\": 0, \"type\": \"number\"}, \"width_mm\": {\"exclusiveMinimum\": 0, \"type\": \"number\"}}, \"required\": [\"width_mm\", \"height_mm\", \"dimension_meaning\"], \"type\": \"object\"}, \"position\": {\"additionalProperties\": false, \"properties\": {\"anchor\": {\"enum\": [\"start\", \"end\"]}, \"center_offset_mm\": {\"minimum\": 0, \"type\": \"number\"}, \"measure_to\": {\"enum\": [\"center\", \"nearest_edge\"]}, \"offset_mm\": {\"minimum\": 0, \"type\": \"number\"}, \"reference\": {\"enum\": [\"wall_local_start\", \"wall_midpoint\", \"wall_end\"]}}, \"required\": [\"reference\"], \"type\": \"object\"}}, \"required\": [\"position\", \"opening\"], \"type\": \"object\"}, \"operation_type\": \"add_door_with_opening_to_wall\", \"profile_hash\": \"sha256:7eac7e8ac80e158a8cee4142a6830dce0d849b111efc6547201232e79e88bb36\", \"profile_id\": \"door.add-with-opening.v0.2\", \"profile_version\": \"0.2\", \"program_derived_slots\": [\"/parameters/opening/sill_height_mm\", \"opening depth\", \"GlobalIds\", \"storey containment\", \"door visual representation\"], \"required_slots\": [\"/target_query\", \"/parameters/position\", \"/parameters/opening/width_mm\", \"/parameters/opening/height_mm\"], \"slot_summary\": \"Target Wall; explicitly stated wall-local position and opening dimensions; optional exact DoorStyle or canonical Door operation. Omit every unstated parameter field instead of writing null placeholders.\", \"supported_capabilities\": [\"straight_wall\", \"SINGLE_SWING_LEFT\", \"SINGLE_SWING_RIGHT\", \"NOTDEFINED\", \"exact_type_reuse\", \"generated_type\"], \"target_ifc_classes\": [\"IfcWall\"], \"unsupported_capabilities\": [\"REVOLVING\", \"FOLDING\", \"SLIDING\", \"DOUBLE_DOOR\", \"curved_wall\"]}, {\"action\": \"fill_existing_opening\", \"classification_terms\": [\"fill opening\", \"existing opening\", \"填门\", \"洞口装门\"], \"component_family\": \"door\", \"conditional_slots\": [\"/parameters/door/operation_type\", \"/parameters/door/viewpoint\", \"/prototype_intent\"], \"intent_parameter_schema\": {\"additionalProperties\": false, \"properties\": {\"door\": {\"additionalProperties\": false, \"properties\": {\"formal_enum_explicit\": {\"type\": \"boolean\"}, \"hinge_side\": {\"enum\": [\"left\", \"right\"]}, \"notdefined_accepted\": {\"type\": \"boolean\"}, \"operation_type\": {\"enum\": [\"DOUBLE_DOOR_DOUBLE_SWING\", \"DOUBLE_DOOR_SINGLE_SWING\", \"DOUBLE_SWING_LEFT\", \"DOUBLE_SWING_RIGHT\", \"FOLDING_TO_LEFT\", \"FOLDING_TO_RIGHT\", \"NOTDEFINED\", \"REVOLVING\", \"ROLLINGUP\", \"SINGLE_SWING_LEFT\", \"SINGLE_SWING_RIGHT\", \"SLIDING_TO_LEFT\", \"SLIDING_TO_RIGHT\", \"SWING_FIXED_LEFT\", \"SWING_FIXED_RIGHT\"]}, \"viewpoint\": {\"additionalProperties\": false, \"properties\": {\"destination\": {\"minLength\": 1, \"type\": \"string\"}, \"from_space\": {\"minLength\": 1, \"type\": \"string\"}, \"observation_side\": {\"enum\": [\"wall_positive\", \"wall_negative\"]}, \"to_space\": {\"minLength\": 1, \"type\": \"string\"}}, \"type\": \"object\"}}, \"type\": \"object\"}, \"fit_existing_opening\": {\"const\": true}}, \"required\": [\"fit_existing_opening\"], \"type\": \"object\"}, \"operation_type\": \"fill_existing_opening_with_door\", \"profile_hash\": \"sha256:1e79bce84c2704108eb22a59ec45e279366196ed28439dcc4bcfca8591721dd6\", \"profile_id\": \"door.fill-existing-opening.v0.2\", \"profile_version\": \"0.2\", \"program_derived_slots\": [\"/parameters/position\", \"/parameters/opening\", \"/parameters/door/overall_width_mm\", \"/parameters/door/overall_height_mm\", \"host wall\", \"GlobalIds\", \"storey containment\", \"door visual representation\"], \"required_slots\": [\"/target_query\", \"/parameters/fit_existing_opening\"], \"slot_summary\": \"Exact resolvable unfilled Opening; exact DoorStyle or explicit Door operation intent. Opening position and all overall dimensions come from the retained Opening.\", \"supported_capabilities\": [\"SINGLE_SWING_LEFT\", \"SINGLE_SWING_RIGHT\", \"NOTDEFINED\", \"exact_type_reuse\", \"generated_type\"], \"target_ifc_classes\": [\"IfcOpeningElement\"], \"unsupported_capabilities\": [\"filled_opening\", \"opening_resize\", \"REVOLVING\", \"FOLDING\", \"SLIDING\"]}, {\"action\": \"set_properties\", \"classification_terms\": [\"property\", \"pset\", \"属性\", \"set property\"], \"component_family\": \"occurrence\", \"conditional_slots\": [], \"intent_parameter_schema\": {\"$schema\": \"https://json-schema.org/draft/2020-12/schema\", \"additionalProperties\": false, \"maxProperties\": 0, \"type\": \"object\"}, \"operation_type\": \"set_occurrence_properties\", \"profile_hash\": \"sha256:7b95c00e8f19ff4990053698c42dd182e385931260a2929d0edecbd19dbbec2b\", \"profile_id\": \"occurrence.set-properties\", \"profile_version\": \"0.1\", \"program_derived_slots\": [\"canonical property typing after knowledge resolution\"], \"required_slots\": [\"/target_query\", \"/property_intents\"], \"slot_summary\": \"Existing occurrence target and one or more explicit scalar property values.\", \"supported_capabilities\": [\"IfcPropertySingleValue\", \"occurrence_direct\"], \"target_ifc_classes\": [\"IfcBeam\", \"IfcColumn\", \"IfcDoor\", \"IfcWall\", \"IfcWallStandardCase\", \"IfcWindow\"], \"unsupported_capabilities\": [\"enumerated_value\", \"list_value\", \"table_value\", \"complex_property\", \"type_owned\"]}, {\"action\": \"add_to_wall\", \"classification_terms\": [\"opening\", \"void\", \"洞口\", \"开洞\", \"挖墙\"], \"component_family\": \"opening\", \"conditional_slots\": [], \"intent_parameter_schema\": {\"additionalProperties\": false, \"properties\": {\"opening\": {\"additionalProperties\": true, \"properties\": {\"height_mm\": {\"exclusiveMinimum\": 0, \"type\": \"number\"}, \"sill_height_mm\": {\"minimum\": 0, \"type\": \"number\"}, \"width_mm\": {\"exclusiveMinimum\": 0, \"type\": \"number\"}}, \"required\": [\"width_mm\", \"height_mm\", \"sill_height_mm\"], \"type\": \"object\"}, \"position\": {\"additionalProperties\": false, \"properties\": {\"center_offset_mm\": {\"minimum\": 0, \"type\": \"number\"}, \"reference\": {\"const\": \"wall_local_start\"}}, \"required\": [\"reference\", \"center_offset_mm\"], \"type\": \"object\"}}, \"required\": [\"position\", \"opening\"], \"type\": \"object\"}, \"operation_type\": \"add_opening_to_wall\", \"profile_hash\": \"sha256:db70f1f22bd270636c00b210ac99f18f4c7b2a38cd5bc891a7106c7101d5dbbc\", \"profile_id\": \"opening.add-to-wall\", \"profile_version\": \"0.1\", \"program_derived_slots\": [\"opening depth\", \"GlobalIds\"], \"required_slots\": [\"/target_query\", \"/parameters/position\", \"/parameters/opening/width_mm\", \"/parameters/opening/height_mm\", \"/parameters/opening/sill_height_mm\"], \"slot_summary\": \"Target Wall; wall-local position; opening width, height and sill. No filling element is created.\", \"supported_capabilities\": [\"straight_wall\", \"wall_local_position\"], \"target_ifc_classes\": [\"IfcWall\"], \"unsupported_capabilities\": [\"curved_wall\", \"arbitrary_profile\"]}, {\"action\": \"add_with_opening\", \"classification_terms\": [\"window\", \"窗\", \"add window\", \"repair window\"], \"component_family\": \"window\", \"conditional_slots\": [\"/prototype_intent\"], \"intent_parameter_schema\": {\"$schema\": \"https://json-schema.org/draft/2020-12/schema\", \"additionalProperties\": false, \"properties\": {\"opening\": {\"additionalProperties\": false, \"properties\": {\"height_mm\": {\"exclusiveMinimum\": 0, \"type\": \"number\"}, \"sill_height_mm\": {\"minimum\": 0, \"type\": \"number\"}, \"width_mm\": {\"exclusiveMinimum\": 0, \"type\": \"number\"}}, \"required\": [\"width_mm\", \"height_mm\", \"sill_height_mm\"], \"type\": \"object\"}, \"position\": {\"additionalProperties\": false, \"properties\": {\"center_offset_mm\": {\"minimum\": 0, \"type\": \"number\"}, \"reference\": {\"const\": \"wall_local_start\"}}, \"required\": [\"reference\", \"center_offset_mm\"], \"type\": \"object\"}, \"window\": {\"additionalProperties\": false, \"properties\": {\"fit_opening\": {\"const\": true}}, \"required\": [\"fit_opening\"], \"type\": \"object\"}}, \"required\": [\"position\", \"opening\", \"window\"], \"type\": \"object\"}, \"operation_type\": \"add_window_with_opening_to_wall\", \"profile_hash\": \"sha256:d00699ba8ee0f5ec4751bb982f113662bb7920409f3ca5f8915dd3c941cec45c\", \"profile_id\": \"window.add-with-opening\", \"profile_version\": \"0.1\", \"program_derived_slots\": [\"/parameters/window/fit_opening\", \"opening depth\", \"GlobalIds\", \"storey containment\"], \"required_slots\": [\"/target_query\", \"/parameters/position\", \"/parameters/opening/width_mm\", \"/parameters/opening/height_mm\", \"/parameters/opening/sill_height_mm\"], \"slot_summary\": \"Target Wall; wall-local position; opening width, height and sill; optional exact Window Type and occurrence properties.\", \"supported_capabilities\": [\"straight_wall\", \"exact_type_reuse\", \"generated_type\", \"scalar_occurrence_properties\"], \"target_ifc_classes\": [\"IfcWall\"], \"unsupported_capabilities\": [\"curved_wall\", \"shared_type_mutation\"]}]\n\n## Exact output schema\n\n{\"$defs\": {\"attribute_intent\": {\"additionalProperties\": false, \"properties\": {\"intent_kind\": {\"enum\": [\"attribute\", \"material\"]}, \"name\": {\"maxLength\": 256, \"minLength\": 1, \"type\": \"string\"}, \"source\": {\"$ref\": \"#/$defs/provenance\"}, \"value\": {\"$ref\": \"#/$defs/scalar\"}}, \"required\": [\"intent_kind\", \"name\", \"value\", \"source\"], \"type\": \"object\"}, \"exact_property\": {\"additionalProperties\": false, \"properties\": {\"intent_kind\": {\"const\": \"exact_property\"}, \"property_name\": {\"$ref\": \"#/$defs/nullable_text\"}, \"raw_unit\": {\"oneOf\": [{\"type\": \"null\"}, {\"maxLength\": 128, \"minLength\": 1, \"type\": \"string\"}]}, \"raw_value\": {\"$ref\": \"#/$defs/scalar\"}, \"requested_value_type\": {\"oneOf\": [{\"type\": \"null\"}, {\"maxLength\": 128, \"pattern\": \"^Ifc[A-Za-z0-9]+$\", \"type\": \"string\"}]}, \"scope\": {\"enum\": [\"occurrence_direct\", \"type_owned\", null]}, \"set_name\": {\"$ref\": \"#/$defs/nullable_text\"}, \"source\": {\"$ref\": \"#/$defs/provenance\"}}, \"required\": [\"intent_kind\", \"set_name\", \"property_name\", \"raw_value\", \"raw_unit\", \"requested_value_type\", \"scope\", \"source\"], \"type\": \"object\"}, \"natural_language_property\": {\"additionalProperties\": false, \"properties\": {\"intent_kind\": {\"const\": \"natural_language_property\"}, \"property_phrase\": {\"$ref\": \"#/$defs/nullable_text\"}, \"raw_unit\": {\"oneOf\": [{\"type\": \"null\"}, {\"maxLength\": 128, \"minLength\": 1, \"type\": \"string\"}]}, \"raw_value\": {\"$ref\": \"#/$defs/scalar\"}, \"scope\": {\"enum\": [\"occurrence_direct\", \"type_owned\", null]}, \"source\": {\"$ref\": \"#/$defs/provenance\"}}, \"required\": [\"intent_kind\", \"property_phrase\", \"raw_value\", \"raw_unit\", \"scope\", \"source\"], \"type\": \"object\"}, \"nullable_text\": {\"oneOf\": [{\"type\": \"null\"}, {\"maxLength\": 256, \"minLength\": 1, \"type\": \"string\"}]}, \"occurrence_reuse_intent\": {\"additionalProperties\": false, \"properties\": {\"include_patterns\": {\"items\": {\"maxLength\": 256, \"minLength\": 1, \"type\": \"string\"}, \"maxItems\": 32, \"minItems\": 1, \"type\": \"array\", \"uniqueItems\": true}, \"mode\": {\"enum\": [\"exact_occurrence\", \"same_type_consensus\"]}, \"reference\": {\"maxLength\": 256, \"minLength\": 1, \"type\": \"string\"}, \"reference_kind\": {\"enum\": [\"global_id\", \"name\", \"type_global_id\", \"type_name\"]}, \"source\": {\"$ref\": \"#/$defs/provenance\"}}, \"required\": [\"mode\", \"reference_kind\", \"reference\", \"include_patterns\", \"source\"], \"type\": \"object\"}, \"operation\": {\"additionalProperties\": false, \"properties\": {\"attribute_intents\": {\"items\": {\"$ref\": \"#/$defs/attribute_intent\"}, \"maxItems\": 64, \"type\": \"array\"}, \"occurrence_reuse_intent\": {\"oneOf\": [{\"type\": \"null\"}, {\"$ref\": \"#/$defs/occurrence_reuse_intent\"}]}, \"operation_id\": {\"maxLength\": 128, \"minLength\": 1, \"type\": \"string\"}, \"operation_type\": {\"maxLength\": 128, \"minLength\": 1, \"type\": \"string\"}, \"parameters\": {\"maxProperties\": 64, \"type\": \"object\"}, \"property_intents\": {\"items\": {\"$ref\": \"#/$defs/property_claim\"}, \"maxItems\": 64, \"type\": \"array\"}, \"prototype_intent\": {\"oneOf\": [{\"type\": \"null\"}, {\"$ref\": \"#/$defs/prototype_intent\"}]}, \"provenance\": {\"items\": {\"$ref\": \"#/$defs/provenance\"}, \"maxItems\": 32, \"minItems\": 1, \"type\": \"array\"}, \"quantity_intents\": {\"items\": {\"$ref\": \"#/$defs/quantity_intent\"}, \"maxItems\": 128, \"type\": \"array\"}, \"routing_intent\": {\"$ref\": \"#/$defs/routing_intent\"}, \"semantic_bundle_refs\": {\"items\": {\"maxLength\": 128, \"minLength\": 1, \"type\": \"string\"}, \"maxItems\": 16, \"type\": \"array\", \"uniqueItems\": true}, \"target_query\": {\"$ref\": \"#/$defs/target_query\"}}, \"required\": [\"operation_id\", \"operation_type\", \"routing_intent\", \"target_query\", \"parameters\", \"attribute_intents\", \"property_intents\", \"semantic_bundle_refs\", \"quantity_intents\", \"occurrence_reuse_intent\", \"prototype_intent\", \"provenance\"], \"type\": \"object\"}, \"property_claim\": {\"oneOf\": [{\"$ref\": \"#/$defs/exact_property\"}, {\"$ref\": \"#/$defs/natural_language_property\"}]}, \"prototype_intent\": {\"additionalProperties\": false, \"properties\": {\"reference\": {\"maxLength\": 256, \"minLength\": 1, \"type\": \"string\"}, \"reference_kind\": {\"enum\": [\"global_id\", \"type_name\", \"selection_required\"]}, \"source\": {\"$ref\": \"#/$defs/provenance\"}}, \"required\": [\"reference_kind\", \"reference\", \"source\"], \"type\": \"object\"}, \"provenance\": {\"additionalProperties\": false, \"properties\": {\"excerpt\": {\"maxLength\": 2048, \"minLength\": 1, \"type\": \"string\"}, \"reference\": {\"maxLength\": 256, \"minLength\": 1, \"type\": \"string\"}, \"source_kind\": {\"enum\": [\"user_request\", \"public_capability\", \"public_clarification\"]}}, \"required\": [\"source_kind\", \"reference\", \"excerpt\"], \"type\": \"object\"}, \"quantity_intent\": {\"additionalProperties\": false, \"properties\": {\"quantity_name\": {\"maxLength\": 256, \"minLength\": 1, \"type\": \"string\"}, \"scope\": {\"enum\": [\"window_occurrence\", \"door_occurrence\", \"opening_occurrence\", \"beam_occurrence\", \"column_occurrence\"]}, \"set_name\": {\"maxLength\": 256, \"minLength\": 1, \"type\": \"string\"}, \"source\": {\"$ref\": \"#/$defs/provenance\"}, \"unit\": {\"oneOf\": [{\"type\": \"null\"}, {\"maxLength\": 128, \"minLength\": 1, \"type\": \"string\"}]}, \"value\": {\"type\": [\"number\", \"integer\", \"boolean\", \"string\"]}, \"value_type\": {\"enum\": [\"IfcQuantityLength\", \"IfcQuantityArea\"]}}, \"required\": [\"scope\", \"set_name\", \"quantity_name\", \"value\", \"value_type\", \"unit\", \"source\"], \"type\": \"object\"}, \"routing_intent\": {\"additionalProperties\": false, \"properties\": {\"action\": {\"maxLength\": 64, \"minLength\": 1, \"pattern\": \"^[a-z][a-z0-9_-]*$\", \"type\": \"string\"}, \"component_family\": {\"maxLength\": 64, \"minLength\": 1, \"pattern\": \"^[a-z][a-z0-9_-]*$\", \"type\": \"string\"}, \"operation_profile\": {\"maxLength\": 128, \"minLength\": 1, \"pattern\": \"^[a-z][a-z0-9._-]*$\", \"type\": \"string\"}, \"source\": {\"$ref\": \"#/$defs/provenance\"}}, \"required\": [\"component_family\", \"action\", \"operation_profile\", \"source\"], \"type\": \"object\"}, \"scalar\": {\"type\": [\"string\", \"number\", \"integer\", \"boolean\", \"null\"]}, \"semantic_bundle\": {\"additionalProperties\": false, \"properties\": {\"bundle_id\": {\"maxLength\": 128, \"minLength\": 1, \"pattern\": \"^[A-Za-z0-9][A-Za-z0-9._:/-]*$\", \"type\": \"string\"}, \"property_intents\": {\"items\": {\"$ref\": \"#/$defs/property_claim\"}, \"maxItems\": 128, \"type\": \"array\"}, \"provenance\": {\"items\": {\"$ref\": \"#/$defs/provenance\"}, \"maxItems\": 32, \"minItems\": 1, \"type\": \"array\"}, \"quantity_intents\": {\"items\": {\"$ref\": \"#/$defs/quantity_intent\"}, \"maxItems\": 128, \"type\": \"array\"}}, \"required\": [\"bundle_id\", \"property_intents\", \"quantity_intents\", \"provenance\"], \"type\": \"object\"}, \"target_query\": {\"additionalProperties\": false, \"properties\": {\"allowed_ifc_classes\": {\"items\": {\"pattern\": \"^Ifc[A-Za-z0-9]+$\", \"type\": \"string\"}, \"minItems\": 1, \"type\": \"array\", \"uniqueItems\": true}, \"attribute_intents\": {\"items\": {\"type\": \"object\"}, \"maxItems\": 32, \"type\": \"array\"}, \"direction\": {\"type\": [\"string\", \"null\"]}, \"geometry_capabilities\": {\"items\": {\"maxLength\": 128, \"minLength\": 1, \"type\": \"string\"}, \"maxItems\": 16, \"type\": \"array\", \"uniqueItems\": true}, \"geometry_constraints\": {\"items\": {\"additionalProperties\": false, \"properties\": {\"field\": {\"enum\": [\"storey_elevation_mm\", \"wall_length_mm\", \"wall_height_mm\", \"wall_thickness_mm\", \"opening_width_mm\", \"opening_height_mm\", \"opening_depth_mm\", \"opening_center_offset_mm\", \"opening_sill_height_mm\", \"opening_normal_offset_mm\"]}, \"tolerance_mm\": {\"maximum\": 1000, \"minimum\": 0, \"type\": \"number\"}, \"value\": {\"type\": \"number\"}}, \"required\": [\"field\", \"value\", \"tolerance_mm\"], \"type\": \"object\"}, \"maxItems\": 8, \"minItems\": 1, \"type\": \"array\"}, \"global_id\": {\"type\": [\"string\", \"null\"]}, \"grid\": {\"type\": [\"string\", \"null\"]}, \"host_global_id\": {\"type\": [\"string\", \"null\"]}, \"max_candidates\": {\"maximum\": 10, \"minimum\": 1, \"type\": \"integer\"}, \"names\": {\"items\": {\"maxLength\": 256, \"minLength\": 1, \"type\": \"string\"}, \"maxItems\": 16, \"type\": \"array\"}, \"schema_version\": {\"const\": \"text2ifc/ifc-target-query/0.1\"}, \"space\": {\"type\": [\"string\", \"null\"]}, \"storey_global_id\": {\"type\": [\"string\", \"null\"]}, \"storey_name\": {\"type\": [\"string\", \"null\"]}, \"winner_margin\": {\"minimum\": 1, \"type\": \"integer\"}}, \"required\": [\"schema_version\", \"allowed_ifc_classes\"], \"type\": \"object\"}, \"unsupported_request\": {\"oneOf\": [{\"additionalProperties\": false, \"properties\": {\"capability_id\": {\"maxLength\": 128, \"minLength\": 1, \"pattern\": \"^[a-z][a-z0-9_]*$\", \"type\": \"string\"}, \"kind\": {\"const\": \"registered_capability\"}, \"operation_id\": {\"maxLength\": 128, \"minLength\": 1, \"type\": \"string\"}, \"source\": {\"$ref\": \"#/$defs/provenance\"}, \"unsupported_id\": {\"maxLength\": 128, \"minLength\": 1, \"pattern\": \"^[A-Za-z0-9][A-Za-z0-9._:/-]*$\", \"type\": \"string\"}}, \"required\": [\"unsupported_id\", \"kind\", \"operation_id\", \"capability_id\", \"source\"], \"type\": \"object\"}, {\"additionalProperties\": false, \"properties\": {\"capability_id\": {\"const\": \"unregistered_operation\"}, \"kind\": {\"const\": \"unregistered_action\"}, \"operation_id\": {\"type\": \"null\"}, \"source\": {\"$ref\": \"#/$defs/provenance\"}, \"unsupported_id\": {\"maxLength\": 128, \"minLength\": 1, \"pattern\": \"^[A-Za-z0-9][A-Za-z0-9._:/-]*$\", \"type\": \"string\"}}, \"required\": [\"unsupported_id\", \"kind\", \"operation_id\", \"capability_id\", \"source\"], \"type\": \"object\"}]}}, \"$id\": \"text2ifc/ifc-repair-intent-body/0.8\", \"$schema\": \"https://json-schema.org/draft/2020-12/schema\", \"additionalProperties\": false, \"anyOf\": [{\"properties\": {\"operations\": {\"minItems\": 1}}}, {\"properties\": {\"unsupported_requests\": {\"minItems\": 1}}}], \"properties\": {\"operations\": {\"items\": {\"$ref\": \"#/$defs/operation\"}, \"maxItems\": 16, \"minItems\": 0, \"type\": \"array\"}, \"provenance\": {\"items\": {\"$ref\": \"#/$defs/provenance\"}, \"maxItems\": 32, \"minItems\": 1, \"type\": \"array\"}, \"schema_version\": {\"const\": \"text2ifc/ifc-repair-intent-body/0.8\"}, \"semantic_bundles\": {\"items\": {\"$ref\": \"#/$defs/semantic_bundle\"}, \"maxItems\": 16, \"type\": \"array\"}, \"unsupported_requests\": {\"items\": {\"$ref\": \"#/$defs/unsupported_request\"}, \"maxItems\": 16, \"type\": \"array\"}}, \"required\": [\"schema_version\", \"operations\", \"unsupported_requests\", \"semantic_bundles\", \"provenance\"], \"title\": \"IFC Repair Intent Semantic Body 0.8\", \"type\": \"object\"}\n\n## Validation feedback\n\n[]\n\n\n\n",
+            "role": "user"
+          }
+        ],
+        "model": "deepseek-v4-flash",
+        "response_format": {
+          "type": "json_object"
+        },
+        "temperature": 0
+      },
+      "request_sha256": "sha256:9f6f2136bc4ced2e8ab62aef28c1b91d0211a9c64b85158b53da84c1610d80af",
+      "response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "logprobs": null,
+            "message": {
+              "annotations": null,
+              "audio": null,
+              "content": "{\n  \"schema_version\": \"text2ifc/ifc-repair-intent-body/0.8\",\n  \"operations\": [\n    {\n      \"operation_id\": \"set-window-exterior-prop-1\",\n      \"operation_type\": \"set_occurrence_properties\",\n      \"routing_intent\": {\n        \"component_family\": \"occurrence\",\n        \"action\": \"set_properties\",\n        \"operation_profile\": \"occurrence.set-properties\",\n        \"source\": {\n          \"source_kind\": \"user_request\",\n          \"reference\": \"user_request\",\n          \"excerpt\": \"将 Level 1 中 GlobalId 为 1hOSvn6df7F8_7GcBWlRRL、Tag 为 147051 的窗设置为外窗。\"\n        }\n      },\n      \"target_query\": {\n        \"schema_version\": \"text2ifc/ifc-target-query/0.1\",\n        \"allowed_ifc_classes\": [\"IfcWindow\"],\n        \"global_id\": \"1hOSvn6df7F8_7GcBWlRRL\",\n        \"storey_name\": \"Level 1\"\n      },\n      \"parameters\": {},\n      \"attribute_intents\": [],\n      \"property_intents\": [\n        {\n          \"intent_kind\": \"natural_language_property\",\n          \"property_phrase\": \"外窗\",\n          \"raw_value\": true,\n          \"raw_unit\": null,\n          \"scope\": \"occurrence_direct\",\n          \"source\": {\n            \"source_kind\": \"user_request\",\n            \"reference\": \"user_request\",\n            \"excerpt\": \"将 Level 1 中 GlobalId 为 1hOSvn6df7F8_7GcBWlRRL、Tag 为 147051 的窗设置为外窗。\"\n          }\n        }\n      ],\n      \"semantic_bundle_refs\": [],\n      \"quantity_intents\": [],\n      \"occurrence_reuse_intent\": null,\n      \"prototype_intent\": null,\n      \"provenance\": [\n        {\n          \"source_kind\": \"user_request\",\n          \"reference\": \"user_request\",\n          \"excerpt\": \"将 Level 1 中 GlobalId 为 1hOSvn6df7F8_7GcBWlRRL、Tag 为 147051 的窗设置为外窗。\"\n        }\n      ]\n    }\n  ],\n  \"unsupported_requests\": [],\n  \"semantic_bundles\": [],\n  \"provenance\": [\n    {\n      \"source_kind\": \"user_request\",\n      \"reference\": \"user_request\",\n      \"excerpt\": \"将 Level 1 中 GlobalId 为 1hOSvn6df7F8_7GcBWlRRL、Tag 为 147051 的窗设置为外窗。\"\n    }\n  ]\n}",
+              "function_call": null,
+              "reasoning_content": "We need answer JSON only. Need parse request Chinese: \"将 Level 1 中 GlobalId 为 1hOSvn6df7F8_7GcBWlRRL、Tag 为 147051 的窗设置为外窗。\" Translation: \"Set the window with GlobalId 1hOSvn6df7F8_7GcBWlRRL and Tag 147051 in Level 1 as an exterior window.\" Need classify. We have compact capabilities. Need determine operation. It's setting property on existing window. Operation \"set_properties\" occurrence.set-properties supported classes include IfcWindow. \"外窗\" means exterior window. Need property intent. Likely Pset_WindowCommon? IsExternal? Actually \"外窗\" could be \"IsExternal\" property or \"External\" property? Need extract property identity claim and value. User says set window as exterior window. That sounds Boolean property true: external. Need use natural_language_property or exact_property? Exact Pset/property not stated; only \"外窗\" (exterior window). So natural_language_property. raw_value true (unambiguous affirmative Boolean property assertion: \"设置为外窗\" = set as external window, binary property true). Need scope? occurrence_direct likely. raw_unit null. property_phrase \"外窗\" or maybe \"is exterior window\" but user Chinese. Use property_phrase exactly maybe \"外窗\". Source from user_request excerpt.\n\nNeed target_query: The target is existing window. Profile set-properties target_ifc_classes includes IfcWindow. User provides GlobalId and Tag and Level 1. Target_query schema: allowed_ifc_classes must be list e.g. [\"IfcWindow\"]; global_id \"1hOSvn6df7F8_7GcBWlRRL\"; names? Tag 147051 is not name? Could perhaps include attribute_intents? The target_query schema has many optional fields but no tag field. We should put global_id. Could include names? Tag is not a name. There is no Tag field. We cannot add unknown field. Level 1 is storey context. For occurrence target, maybe storey_name \"Level 1\". The profile requires target_query required schema_version and allowed_ifc_classes. We can include global_id and storey_name. But is storey_name allowed? Schema allows storey_name nullable. The target query for occurrences? The profile says target_ifc_classes [\"IfcBeam\",\"IfcColumn\",\"IfcDoor\",\"IfcWall\",\"IfcWallStandardCase\",\"IfcWindow\"], so allowed_ifc_classes should be [\"IfcWindow\"]. Could include global_id. Storey name \"Level 1\" is additional filter? Probably allowed. But maybe target is ifc element, and storey_name is a filter. The schema includes storey_name, so yes.\n\nNeed operation_type: \"set_occurrence_properties\" from profile operation_type. routing_intent component_family \"occurrence\", action \"set_properties\", operation_profile \"occurrence.set-properties\" (profile ID). Wait routing_intent schema operation_profile must match pattern and max length. profile_id is \"occurrence.set-properties\"; use that. Need source provenance with quote.\n\nNeed operation_id: internal identifier, e.g. \"set-window-exterior-prop-1\". Note \"stable internal identifiers are not IFC target identities\"; okay.\n\nNeed parameters: For set_properties, intent_parameter_schema maxProperties 0, so parameters must be {} (empty object). No conditional slots. But property_intents are at operation level, not parameters. Need property_intents array with one natural_language_property. However check if \"外窗\" maps to Boolean true. The user says \"设置为外窗\" = set as exterior window. This is a property claim that window is external. raw_value true. property_phrase maybe \"外窗\" or \"is exterior window\". Use natural_language_property with property_phrase \"外窗\". raw_unit null, scope occurrence_direct. source.\n\nNeed attribute_intents empty, semantic_bundle_refs empty, quantity_intents empty, occurrence_reuse_intent null, prototype_intent null. provenance array at operation level? Actually operation schema requires provenance field array of provenance. We should include one provenance for the request. Also root provenance array. Need source objects with source_kind \"user_request\", reference? Probably reference \"user_request\" or something. How to set reference? The provenance schema requires reference string and excerpt. Could use reference equal to maybe \"public request\" or an ID? The user request isn't given an ID. Use reference \"user_request\" maybe? Need exact? There's no instruction. Use \"user-request\" or \"public_request\". Let's inspect potential validation. It just requires non-empty. We'll use \"user-request\" maybe. But stable internal identifiers pattern. Reference can be anything. Use \"public_request\". Excerpt is Chinese phrase. Must be 1-2048. Good.\n\nNeed root provenance: same source. Also operation provenance. Each operation requires provenance minItems 1. So include.\n\nNeed semantic_bundles empty array [].\n\nNeed unsupported_requests empty.\n\nNeed confirm no unsupported. The operation set_properties supports IfcPropertySingleValue, occurrence_direct. External window boolean is single value. Good.\n\nNeed maybe classify \"Tag\" as attribute? But user says Tag 147051 as identity. No operation to set Tag. The clause \"Tag 为 147051\" is a target selector, not a property request. So no attribute intent.\n\nNeed ensure target_query allowed_ifc_classes pattern \"^Ifc[A-Za-z0-9]+$\". \"IfcWindow\" okay.\n\nNeed maybe include \"names\"? No, Tag is not name. We could include storey_name \"Level 1\". But user says \"Level 1 中\" = in Level 1. likely storey filter. Use storey_name \"Level 1\". Good.\n\nNeed check schema target_query: additionalProperties false but allows storey_name. allowed nullable fields. No requirement for storey_name.\n\nNeed operation parameters object {}.\n\nNeed one operation. Root anyOf operations non-empty.\n\nLet's construct JSON.\n\nNeed ensure all required fields in natural_language_property: intent_kind, property_phrase, raw_value, raw_unit, scope, source. raw_value can boolean true. raw_unit null. scope \"occurrence_direct\". source object.\n\nNeed maybe property value type? No.\n\nNeed decide property_phrase: The instruction says for exact_property use set_name/property_name. For natural_language, property_phrase. Could use \"外窗\" or \"exterior window\". User language is Chinese. Use \"外窗\" exactly. Could also phrase \"is external\" but not in text. Better use \"外窗\".\n\nPotential issue: \"外窗\" might be a property value (e.g., window type classification), not a boolean property. But setting window as exterior window typically means set Pset_WindowCommon IsExternal = true. The semantic role is property. The value is true.\n\nCould use exact_property with set_name \"Pset_WindowCommon\" and property_name \"IsExternal\"? But user did not state exact pset/property names; the instruction says use exact_property only when exact Pset and property names stated; otherwise natural_language. So natural.\n\nNeed maybe include \"external\" in property_phrase? Use \"外窗\".\n\nNeed also root provenance includes same source. Fine.\n\nLet's produce JSON.\n\nNeed ensure no invalid fields. Operation has required fields: operation_id, operation_type, routing_intent, target_query, parameters, attribute_intents, property_intents, semantic_bundle_refs, quantity_intents, occurrence_reuse_intent, prototype_intent, provenance. All present.\n\nrouting_intent fields: component_family, action, operation_profile, source. Use source as per operation provenance? Should have own source. Could use same source object. The routing_intent source is provenance. Need source object with source_kind etc.\n\nprovenance source object can be reused? JSON doesn't support references; just duplicate.\n\nLet's write.\n\nNeed reference maybe \"user_request\" or \"public_request\". We'll use \"user_request\" and excerpt is full Chinese? The excerpt should be the clause maybe. We'll use the full sentence. The output schema allows maxLength 2048. Good.\n\nLet's craft.\n\nAlso note \"Tag 为 147051\" is not encoded because no tag field. We may include in target_query? There is no tag field. Could we include \"names\": [\"147051\"]? No, that's incorrect. So omit. Fine.\n\nNeed ensure no unsupported item for Tag? Not necessary.\n\nLet's produce final.",
+              "refusal": null,
+              "role": "assistant",
+              "tool_calls": null
+            }
+          }
+        ],
+        "created": 1788277543,
+        "id": "c58143bc-64d6-4a00-b63a-40ba99bfa034",
+        "model": "deepseek-v4-flash",
+        "moderation": null,
+        "object": "chat.completion",
+        "service_tier": null,
+        "stop_reason": "stop",
+        "system_fingerprint": "a26a7955944dc5c60445bff77fac9c8e",
+        "usage": {
+          "completion_tokens": 2447,
+          "completion_tokens_details": "[REDACTED]",
+          "prompt_cache_hit_tokens": "[REDACTED]",
+          "prompt_cache_miss_tokens": "[REDACTED]",
+          "prompt_tokens": 11550,
+          "prompt_tokens_details": "[REDACTED]",
+          "total_tokens": 13997
+        }
+      },
+      "response_sha256": "sha256:1a969a32244a20d5b8d736069b752ea9bc1103fe60afc3b8d417811fdfb6f1b7",
+      "stage": "stage1",
+      "stage_attempt": 1,
+      "template_hash": null,
+      "template_id": null,
+      "usage": {
+        "completion_tokens": 2447,
+        "completion_tokens_details": "[REDACTED]",
+        "prompt_cache_hit_tokens": "[REDACTED]",
+        "prompt_cache_miss_tokens": "[REDACTED]",
+        "prompt_tokens": 11550,
+        "prompt_tokens_details": "[REDACTED]",
+        "total_tokens": 13997
+      }
+    },
+    {
+      "attempt_id": "E1:property_resolution:001",
+      "case_id": "E1",
+      "correction_reason": null,
+      "error": null,
+      "evidence_class": "live",
+      "fallback_flags": {
+        "cached": false,
+        "hand_authored": false,
+        "prerecorded": false,
+        "synthetic": false
+      },
+      "few_shot_bindings": [],
+      "few_shot_hashes": [],
+      "few_shot_ids": [],
+      "http_status": 200,
+      "lineage": "initial",
+      "metadata": {
+        "estimated_input_tokens": "[REDACTED]",
+        "evidence_class": "live",
+        "max_input_tokens": "[REDACTED]",
+        "model": "deepseek-v4-flash",
+        "provider": "deepseek-openai-compatible",
+        "request_configuration": {
+          "temperature": {
+            "effective": false,
+            "value": 0
+          },
+          "thinking": {
+            "type": "enabled"
+          }
+        },
+        "response_id": "e9ec3fab-3508-41e3-ad29-5e5b25435c0e",
+        "session_id": "ifc-property-resolution-repair-ff3c4707a3ba49959be5a5553e96f343-set-window-exterior-prop-1-claim-001",
+        "stop_reason": "stop",
+        "transport_attempts": 1,
+        "usage": {
+          "completion_tokens": 401,
+          "completion_tokens_details": "[REDACTED]",
+          "prompt_cache_hit_tokens": "[REDACTED]",
+          "prompt_cache_miss_tokens": "[REDACTED]",
+          "prompt_tokens": 2338,
+          "prompt_tokens_details": "[REDACTED]",
+          "total_tokens": 2739
+        }
+      },
+      "model": "deepseek-v4-flash",
+      "ordinal": 1,
+      "parent_attempt_id": "E1:stage1:001",
+      "private_evidence_detected": false,
+      "profile_hashes": [],
+      "profile_ids": [],
+      "profile_versions": [],
+      "provider": "deepseek-openai-compatible",
+      "raw_request_sha256": "sha256:a67633e5a8b0ae4602073f477a908793001e9f90b1e87775d825f163299cb5dc",
+      "raw_response_sha256": "sha256:b637755d892ba432029811ea0c77096c309573110fa1a3462e988a34ae01f426",
+      "request": {
+        "extra_body": {
+          "thinking": {
+            "type": "enabled"
+          }
+        },
+        "max_tokens": 65536,
+        "messages": [
+          {
+            "content": "# IFC Property Resolution Stage 1.5\n\nYou are a repair-only semantic candidate selector. You handle exactly one\nproperty claim after its target IFC class has already been resolved. You are not\na general BIM analysis agent and you do not author IFC facts.\n\n## Public inputs\n\nPROPERTY_QUERY:\n{\"claim_id\": \"claim-001\", \"corpus_version\": \"ifc2x3-property-records/0.2\", \"model_id\": \"sha256:f61ff5cf8e1cc88da6944d6bcd3e2e7da5ff27dd3288a8781908018cb8240cd6\", \"operation_id\": \"set-window-exterior-prop-1\", \"operation_type\": \"set_occurrence_properties\", \"property_phrase\": \"外窗\", \"query_id\": \"property-query:repair-ff3c4707a3ba49959be5a5553e96f343:set-window-exterior-prop-1:claim-001\", \"raw_unit\": null, \"raw_value\": true, \"raw_value_kind\": \"boolean\", \"request_id\": \"request-e88a9df0ac1abe69\", \"run_id\": \"repair-ff3c4707a3ba49959be5a5553e96f343\", \"schema_version\": \"text2ifc/ifc-property-resolution-query/0.2\", \"scope\": \"occurrence_direct\", \"target_ifc_class\": \"IfcWindow\"}\n\nCANDIDATE_SET:\n{\"candidate_set_id\": \"property-candidates:repair-ff3c4707a3ba49959be5a5553e96f343:set-window-exterior-prop-1:claim-001\", \"candidates\": [{\"applicable_classes\": [\"IfcWindow\"], \"candidate_id\": \"candidate:1:ifc2x3:Pset_WindowCommon.IsExternal\", \"canonical_path\": \"Pset_WindowCommon.IsExternal\", \"definition\": \"Indication whether the element is designed for use in the exterior (TRUE) or not (FALSE). If (TRUE) it is an external element and faces the outside of the building.\", \"property_name\": \"IsExternal\", \"rank\": 1, \"record_id\": \"ifc2x3:Pset_WindowCommon.IsExternal\", \"score\": 0.4913699937545448, \"set_name\": \"Pset_WindowCommon\", \"source\": {\"kind\": \"ifc2x3_psd\", \"reference\": \"R2x3_TC1/psd/IfcSharedBldgElements/Pset_WindowCommon.xml\"}, \"standard_status\": \"standard\", \"template_type\": \"TypePropertySingleValue\", \"unit\": null, \"value_type\": \"IfcBoolean\"}, {\"applicable_classes\": [\"IfcWindow\"], \"candidate_id\": \"candidate:2:ifc2x3:Pset_WindowCommon.Reference\", \"canonical_path\": \"Pset_WindowCommon.Reference\", \"definition\": \"Reference ID for this specified type in this project (e.g. type 'A-1')\", \"property_name\": \"Reference\", \"rank\": 2, \"record_id\": \"ifc2x3:Pset_WindowCommon.Reference\", \"score\": 0.4890833463028013, \"set_name\": \"Pset_WindowCommon\", \"source\": {\"kind\": \"ifc2x3_psd\", \"reference\": \"R2x3_TC1/psd/IfcSharedBldgElements/Pset_WindowCommon.xml\"}, \"standard_status\": \"standard\", \"template_type\": \"TypePropertySingleValue\", \"unit\": null, \"value_type\": \"IfcIdentifier\"}, {\"applicable_classes\": [\"IfcElement\", \"IfcSpatialStructureElement\"], \"candidate_id\": \"candidate:3:ifc2x3:Pset_FireRatingProperties.SurfaceSpreadOfFlame\", \"canonical_path\": \"Pset_FireRatingProperties.SurfaceSpreadOfFlame\", \"definition\": \"Surface spread of flame characteristics.\", \"property_name\": \"SurfaceSpreadOfFlame\", \"rank\": 3, \"record_id\": \"ifc2x3:Pset_FireRatingProperties.SurfaceSpreadOfFlame\", \"score\": 0.4623587556561074, \"set_name\": \"Pset_FireRatingProperties\", \"source\": {\"kind\": \"ifc2x3_psd\", \"reference\": \"R2x3_TC1/psd/IfcSharedBldgServiceElements/Pset_FireRatingProperties.xml\"}, \"standard_status\": \"standard\", \"template_type\": \"TypePropertySingleValue\", \"unit\": null, \"value_type\": \"IfcLabel\"}], \"collection_version\": \"ifc2x3-property-vector/0.2\", \"corpus_version\": \"ifc2x3-property-records/0.2\", \"document_renderer_version\": \"property-record-text/0.1\", \"embedding_model\": {\"model_id\": \"BAAI/bge-m3\", \"model_version\": \"BAAI-bge-m3-local/phase12.1\"}, \"query_id\": \"property-query:repair-ff3c4707a3ba49959be5a5553e96f343:set-window-exterior-prop-1:claim-001\", \"schema_version\": \"text2ifc/ifc-property-candidate-set/0.1\"}\n\nDECISION_SCHEMA:\n{\"$defs\": {\"candidate_id\": {\"maxLength\": 256, \"minLength\": 1, \"pattern\": \"^[A-Za-z0-9][A-Za-z0-9._:/-]*$\", \"type\": \"string\"}}, \"$id\": \"text2ifc/ifc-property-rerank-decision/0.1\", \"$schema\": \"https://json-schema.org/draft/2020-12/schema\", \"additionalProperties\": false, \"allOf\": [{\"if\": {\"properties\": {\"decision\": {\"const\": \"confirmed\"}}, \"required\": [\"decision\"]}, \"then\": {\"properties\": {\"clarification_question\": {\"type\": \"null\"}, \"selected_candidate_id\": {\"$ref\": \"#/$defs/candidate_id\"}}}}, {\"if\": {\"properties\": {\"decision\": {\"const\": \"clarification_required\"}}, \"required\": [\"decision\"]}, \"then\": {\"properties\": {\"clarification_question\": {\"maxLength\": 512, \"minLength\": 1, \"type\": \"string\"}, \"conflicting_candidate_ids\": {\"minItems\": 1}, \"selected_candidate_id\": {\"type\": \"null\"}}}}, {\"if\": {\"properties\": {\"decision\": {\"const\": \"unsupported\"}}, \"required\": [\"decision\"]}, \"then\": {\"properties\": {\"clarification_question\": {\"type\": \"null\"}, \"conflicting_candidate_ids\": {\"maxItems\": 0}, \"selected_candidate_id\": {\"type\": \"null\"}}}}], \"properties\": {\"clarification_question\": {\"oneOf\": [{\"maxLength\": 512, \"minLength\": 1, \"type\": \"string\"}, {\"type\": \"null\"}]}, \"conflicting_candidate_ids\": {\"items\": {\"$ref\": \"#/$defs/candidate_id\"}, \"maxItems\": 5, \"type\": \"array\", \"uniqueItems\": true}, \"decision\": {\"enum\": [\"confirmed\", \"clarification_required\", \"unsupported\"]}, \"schema_version\": {\"const\": \"text2ifc/ifc-property-rerank-decision/0.1\"}, \"selected_candidate_id\": {\"oneOf\": [{\"$ref\": \"#/$defs/candidate_id\"}, {\"type\": \"null\"}]}}, \"required\": [\"schema_version\", \"decision\", \"selected_candidate_id\", \"conflicting_candidate_ids\", \"clarification_question\"], \"title\": \"IFC Property Rerank Decision 0.1\", \"type\": \"object\"}\n\nPREVIOUS_VALIDATION_FEEDBACK:\n[]\n\n## Boundary\n\n- Compare the original property phrase with the definitions and metadata of the\n  offered candidates for this one property claim.\n- Return `confirmed` only when the user's language provides direct and sufficiently specific semantic evidence that uniquely authorizes exactly one offered candidate.\n  When confirmed, select exactly one offered candidate.\n- Semantic relatedness, the nearest candidate, a plausible engineering means, or a\n  possible way to achieve the user's goal is not sufficient evidence for `confirmed`.\n- If multiple offered candidates remain semantically plausible, return\n  `clarification_required`, list only their offered IDs, and ask one short\n  question that distinguishes them.\n- Also return `clarification_required` when the request is underspecified but potentially repairable and the language does not uniquely authorize one\n  property or repair interpretation. List only the offered candidate IDs that\n  remain plausible; one relevant offered ID is sufficient when the question\n  must distinguish it from a broader repair interpretation.\n- When a meaningful repair goal is not specific enough for one executable property, prefer `clarification_required` over choosing the closest candidate.\n- Return `unsupported` only when the request is genuinely outside the supported repair capability or cannot be resolved into a supported repair\n  action even through clarification. A missing exact candidate match alone is\n  not sufficient for `unsupported`.\n- Never invent a candidate ID or use knowledge of a candidate that is not in\n  CANDIDATE_SET.\n- Do not infer, translate, normalize, or change the user's value, unit, scope,\n  operation, target, or provenance.\n- Do not output a Pset name, property name, IFC value type, unit decision,\n  authoring instruction, ChangeSet, or IFC object.\n- Treat scores and ranks only as retrieval evidence. They do not decide semantic\n  meaning, and a Top-1 candidate is not automatically correct.\n- No candidate is executable authority. Program code performs admissibility and\n  constructs the exact typed property after this stage.\n- On a correction attempt, fix only the listed validation errors. Do not rename\n  fields or emit compatibility aliases.\n\n## Output\n\nReturn exactly one JSON object that validates against DECISION_SCHEMA. Do not\nuse Markdown fences, explanations before or after the object, or additional\nfields.\n",
+            "role": "user"
+          }
+        ],
+        "model": "deepseek-v4-flash",
+        "response_format": {
+          "type": "json_object"
+        },
+        "temperature": 0
+      },
+      "request_sha256": "sha256:a67633e5a8b0ae4602073f477a908793001e9f90b1e87775d825f163299cb5dc",
+      "response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "logprobs": null,
+            "message": {
+              "annotations": null,
+              "audio": null,
+              "content": "{\"schema_version\":\"text2ifc/ifc-property-rerank-decision/0.1\",\"decision\":\"confirmed\",\"selected_candidate_id\":\"candidate:1:ifc2x3:Pset_WindowCommon.IsExternal\",\"conflicting_candidate_ids\":[],\"clarification_question\":null}",
+              "function_call": null,
+              "reasoning_content": "We need to decide based on the property phrase \"外窗\" which means \"exterior window\" or \"external window\" in Chinese. The target class is IfcWindow. Candidate 1 is Pset_WindowCommon.IsExternal, which directly matches: \"Indication whether the element is designed for use in the exterior (TRUE) or not (FALSE).\" The phrase \"外窗\" directly indicates an exterior window, which is a direct semantic match. Candidate 2 is Reference, which is for reference ID, not relevant. Candidate 3 is SurfaceSpreadOfFlame, not relevant. So we can confirm candidate 1.\n\nCheck decision schema: decision confirmed, selected_candidate_id must be one of candidates. Also conflicting_candidate_ids must be empty? For confirmed, the schema requires selected_candidate_id and clarification_question null. Conflicting_candidate_ids is required, likely should be empty array. Since no conflict, set [].\n\nWe must output JSON object only. No additional fields. The schema_version is fixed.\n\nThus output:\n{\"schema_version\": \"text2ifc/ifc-property-rerank-decision/0.1\", \"decision\": \"confirmed\", \"selected_candidate_id\": \"candidate:1:ifc2x3:Pset_WindowCommon.IsExternal\", \"conflicting_candidate_ids\": [], \"clarification_question\": null}\n\nBut ensure candidate_id pattern matches: candidate:1:ifc2x3:Pset_WindowCommon.IsExternal has colons? Pattern allows [A-Za-z0-9._:/-] so yes. Good.\n\nLet's produce JSON.",
+              "refusal": null,
+              "role": "assistant",
+              "tool_calls": null
+            }
+          }
+        ],
+        "created": 1788277589,
+        "id": "e9ec3fab-3508-41e3-ad29-5e5b25435c0e",
+        "model": "deepseek-v4-flash",
+        "moderation": null,
+        "object": "chat.completion",
+        "service_tier": null,
+        "stop_reason": "stop",
+        "system_fingerprint": "a26a7955944dc5c60445bff77fac9c8e",
+        "usage": {
+          "completion_tokens": 401,
+          "completion_tokens_details": "[REDACTED]",
+          "prompt_cache_hit_tokens": "[REDACTED]",
+          "prompt_cache_miss_tokens": "[REDACTED]",
+          "prompt_tokens": 2338,
+          "prompt_tokens_details": "[REDACTED]",
+          "total_tokens": 2739
+        }
+      },
+      "response_sha256": "sha256:016aa3753671566e7e4a56e5e2cf939b8db394e4c86be0472471dd93c7bca15f",
+      "stage": "property_resolution",
+      "stage_attempt": 1,
+      "template_hash": "sha256:cb184d74d316dc441868c8266cccfe6ca06b5eb7598f99c693a8647564d4d0df",
+      "template_id": "ifc-property-resolution.v0.2",
+      "usage": {
+        "completion_tokens": 401,
+        "completion_tokens_details": "[REDACTED]",
+        "prompt_cache_hit_tokens": "[REDACTED]",
+        "prompt_cache_miss_tokens": "[REDACTED]",
+        "prompt_tokens": 2338,
+        "prompt_tokens_details": "[REDACTED]",
+        "total_tokens": 2739
+      }
+    },
+    {
+      "attempt_id": "E1:stage2:001",
+      "case_id": "E1",
+      "correction_reason": null,
+      "error": null,
+      "evidence_class": "live",
+      "fallback_flags": {
+        "cached": false,
+        "hand_authored": false,
+        "prerecorded": false,
+        "synthetic": false
+      },
+      "few_shot_bindings": [],
+      "few_shot_hashes": [],
+      "few_shot_ids": [],
+      "http_status": 200,
+      "lineage": "initial",
+      "metadata": {
+        "estimated_input_tokens": "[REDACTED]",
+        "evidence_class": "live",
+        "max_input_tokens": "[REDACTED]",
+        "model": "deepseek-v4-flash",
+        "provider": "deepseek-openai-compatible",
+        "request_configuration": {
+          "temperature": {
+            "effective": false,
+            "value": 0
+          },
+          "thinking": {
+            "type": "enabled"
+          }
+        },
+        "response_id": "175ae7f0-9363-441e-9742-8b9903ec1811",
+        "session_id": "ifc-repair-repair-ff3c4707a3ba49959be5a5553e96f343",
+        "stop_reason": "stop",
+        "transport_attempts": 1,
+        "usage": {
+          "completion_tokens": 1473,
+          "completion_tokens_details": "[REDACTED]",
+          "prompt_cache_hit_tokens": "[REDACTED]",
+          "prompt_cache_miss_tokens": "[REDACTED]",
+          "prompt_tokens": 2086,
+          "prompt_tokens_details": "[REDACTED]",
+          "total_tokens": 3559
+        }
+      },
+      "model": "deepseek-v4-flash",
+      "ordinal": 1,
+      "parent_attempt_id": "E1:property_resolution:001",
+      "private_evidence_detected": false,
+      "profile_hashes": [
+        "sha256:7b95c00e8f19ff4990053698c42dd182e385931260a2929d0edecbd19dbbec2b"
+      ],
+      "profile_ids": [
+        "occurrence.set-properties"
+      ],
+      "profile_versions": [
+        "0.1"
+      ],
+      "provider": "deepseek-openai-compatible",
+      "raw_request_sha256": "sha256:d0a9b882ace0e85e67e19fee57bb492c1cda0f798bfd3a4b84e63d7b60824fb8",
+      "raw_response_sha256": "sha256:7f5f07a3e378635535c9a602ab3e6c21ee5a6bc1461a044a9b5d9012930761fc",
+      "request": {
+        "extra_body": {
+          "thinking": {
+            "type": "enabled"
+          }
+        },
+        "max_tokens": 65536,
+        "messages": [
+          {
+            "content": "# IFC Repair ChangeSet Draft Generator 0.2\n\nReturn exactly one JSON object conforming to `CHANGESET_SCHEMA`. This output is\na non-executable draft. Deterministic code, not you, binds semantic assignments.\n\n## Public request\n\n将 Level 1 中 GlobalId 为 1hOSvn6df7F8_7GcBWlRRL、Tag 为 147051 的窗设置为外窗。\n\n## Immutable bindings\n\n- source request: sha256:e88a9df0ac1abe694a3a22645306d0152d3833a4e806adbe3b821b66b7d88840\n- model: sha256:707a032566dee8e969a44d95509be46d646440e2443624709f8d3ae2b45f4656\n- semantic manifest ref: changeset/semantic-manifest-set-window-exterior-prop-1.json\n- semantic manifest hash: sha256:d54c47f5ae713e0f44d4c14851873c5e739ef2cc128bd79907fa6e44e5fe19c5\n\n## Resolved operation projection\n\n{\"evidence_refs\": [\"resolved:/operations/set-window-exterior-prop-1/context/candidate_targets/0\"], \"operations\": [{\"evidence_refs\": [\"resolved:/operations/set-window-exterior-prop-1/context/candidate_targets/0\"], \"operation_id\": \"set-window-exterior-prop-1\", \"operation_type\": \"set_occurrence_properties\", \"parameters\": {}, \"target\": {\"element_global_id\": \"1hOSvn6df7F8_7GcBWlRRL\"}}], \"scope\": {\"forbidden_ids\": [], \"target_ids\": [\"1hOSvn6df7F8_7GcBWlRRL\"]}}\n\n## Semantic group counts\n\n{\"conditional\": 1, \"not_required\": 0, \"required\": 0}\n\n## Explicit user slot references\n\n[\"pset:Pset_WindowCommon.IsExternal\"]\n\n## Registered operation contracts\n\n{\"few_shots\": [], \"operation_contracts\": [{\"capability_constraints\": {\"geometry_mutation\": false, \"ifc_schemas\": [\"IFC2X3\"], \"mutation_scope\": \"occurrence_only\", \"property_templates\": [\"IfcPropertySingleValue\"], \"semantic_authoring_scope\": \"explicit_request_only\", \"shared_type_mutation\": false}, \"operation_type\": \"set_occurrence_properties\", \"parameter_schema\": {\"$schema\": \"https://json-schema.org/draft/2020-12/schema\", \"additionalProperties\": false, \"maxProperties\": 0, \"type\": \"object\"}, \"postcondition_names\": [\"target_preserved\", \"requested_properties_match\", \"shared_type_unchanged\"], \"precondition_names\": [\"target_exists\", \"target_class_supported\", \"property_assignments_bound\"], \"prototype_dimension_paths\": {}, \"prototype_ifc_classes\": [], \"target_ifc_classes\": [\"IfcBeam\", \"IfcColumn\", \"IfcDoor\", \"IfcWall\", \"IfcWallStandardCase\", \"IfcWindow\"], \"target_schema\": {\"$schema\": \"https://json-schema.org/draft/2020-12/schema\", \"additionalProperties\": false, \"properties\": {\"element_global_id\": {\"minLength\": 1, \"type\": \"string\"}}, \"required\": [\"element_global_id\"], \"type\": \"object\"}}], \"selected_profiles\": [{\"action\": \"set_properties\", \"classification_terms\": [\"property\", \"pset\", \"属性\", \"set property\"], \"component_family\": \"occurrence\", \"conditional_slots\": [], \"few_shots\": [], \"forbidden_inferences\": [\"property value\", \"shared Type mutation\", \"custom property confirmation\"], \"operation_type\": \"set_occurrence_properties\", \"optional_slots\": [], \"profile_hash\": \"sha256:7b95c00e8f19ff4990053698c42dd182e385931260a2929d0edecbd19dbbec2b\", \"profile_id\": \"occurrence.set-properties\", \"profile_version\": \"0.1\", \"program_derived_slots\": [\"canonical property typing after knowledge resolution\"], \"required_slots\": [\"/target_query\", \"/property_intents\"], \"schema_version\": \"text2ifc/ifc-repair-prompt-profile/0.1\", \"slot_summary\": \"Existing occurrence target and one or more explicit scalar property values.\", \"stage2_projection_fields\": [\"operation_id\", \"operation_type\", \"target\", \"parameters\", \"evidence_refs\"], \"supported_capabilities\": [\"IfcPropertySingleValue\", \"occurrence_direct\"], \"target_ifc_classes\": [\"IfcBeam\", \"IfcColumn\", \"IfcDoor\", \"IfcWall\", \"IfcWallStandardCase\", \"IfcWindow\"], \"unsupported_capabilities\": [\"enumerated_value\", \"list_value\", \"table_value\", \"complex_property\", \"type_owned\"]}]}\n\n## Draft schema\n\n{\"$defs\": {\"hash\": {\"pattern\": \"^sha256:[0-9a-f]{64}$\", \"type\": \"string\"}, \"id\": {\"minLength\": 1, \"pattern\": \"^[A-Za-z0-9][A-Za-z0-9._:/-]*$\", \"type\": \"string\"}, \"operation\": {\"additionalProperties\": false, \"properties\": {\"evidence_refs\": {\"$ref\": \"#/$defs/strings\"}, \"operation_id\": {\"$ref\": \"#/$defs/id\"}, \"operation_type\": {\"$ref\": \"#/$defs/id\"}, \"parameters\": {\"type\": \"object\"}, \"target\": {\"minProperties\": 1, \"type\": \"object\"}}, \"required\": [\"operation_id\", \"operation_type\", \"target\", \"parameters\", \"evidence_refs\"], \"type\": \"object\"}, \"scope\": {\"additionalProperties\": false, \"properties\": {\"forbidden_ids\": {\"$ref\": \"#/$defs/strings\"}, \"target_ids\": {\"$ref\": \"#/$defs/strings\"}}, \"required\": [\"target_ids\", \"forbidden_ids\"], \"type\": \"object\"}, \"strings\": {\"items\": {\"minLength\": 1, \"type\": \"string\"}, \"type\": \"array\", \"uniqueItems\": true}}, \"$id\": \"text2ifc/ifc-repair-changeset-draft/0.2\", \"$schema\": \"https://json-schema.org/draft/2020-12/schema\", \"additionalProperties\": false, \"properties\": {\"base_model_fingerprint\": {\"$ref\": \"#/$defs/hash\"}, \"draft_id\": {\"$ref\": \"#/$defs/id\"}, \"evidence_refs\": {\"$ref\": \"#/$defs/strings\"}, \"operations\": {\"items\": {\"$ref\": \"#/$defs/operation\"}, \"minItems\": 1, \"type\": \"array\"}, \"postconditions\": {\"$ref\": \"#/$defs/strings\"}, \"preconditions\": {\"$ref\": \"#/$defs/strings\"}, \"schema_version\": {\"const\": \"text2ifc/ifc-repair-changeset-draft/0.2\"}, \"scope\": {\"$ref\": \"#/$defs/scope\"}, \"semantic_manifest_ref\": {\"minLength\": 1, \"type\": \"string\"}, \"semantic_manifest_sha256\": {\"$ref\": \"#/$defs/hash\"}, \"semantic_summary\": {\"additionalProperties\": false, \"properties\": {\"conditional\": {\"minimum\": 0, \"type\": \"integer\"}, \"not_required\": {\"minimum\": 0, \"type\": \"integer\"}, \"required\": {\"minimum\": 0, \"type\": \"integer\"}}, \"required\": [\"required\", \"conditional\", \"not_required\"], \"type\": \"object\"}, \"source_request_hash\": {\"$ref\": \"#/$defs/hash\"}}, \"required\": [\"schema_version\", \"draft_id\", \"base_model_fingerprint\", \"source_request_hash\", \"semantic_manifest_ref\", \"semantic_manifest_sha256\", \"semantic_summary\", \"scope\", \"evidence_refs\", \"preconditions\", \"postconditions\", \"operations\"], \"title\": \"Provider IFC Repair ChangeSet Draft 0.2\", \"type\": \"object\"}\n\n## Previous validation feedback\n\n[]\n\nRules:\n\n1. Copy operation IDs, types, targets, parameters, scope, and evidence exactly.\n2. Echo all hashes and the manifest reference exactly.\n3. Do not emit semantic assignments, Pset values, material/classification\n   resource payloads, Type facts, STEP IDs/text, or low-level IFC objects.\n4. Do not search, select a prototype, authorize facts, or add custom slots.\n5. Return JSON only. The draft cannot be applied until deterministic binding.\n\n## Single-operation shape\n\nUse the exact draft schema above; one operation remains a one-item array.\n\n## Multiple-operation shape\n\nUse the same envelope; include each resolved operation once without merging.\n",
+            "role": "user"
+          }
+        ],
+        "model": "deepseek-v4-flash",
+        "response_format": {
+          "type": "json_object"
+        },
+        "temperature": 0
+      },
+      "request_sha256": "sha256:d0a9b882ace0e85e67e19fee57bb492c1cda0f798bfd3a4b84e63d7b60824fb8",
+      "response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "logprobs": null,
+            "message": {
+              "annotations": null,
+              "audio": null,
+              "content": "{\n  \"schema_version\": \"text2ifc/ifc-repair-changeset-draft/0.2\",\n  \"draft_id\": \"changeset/set-window-exterior-prop-1\",\n  \"base_model_fingerprint\": \"sha256:707a032566dee8e969a44d95509be46d646440e2443624709f8d3ae2b45f4656\",\n  \"source_request_hash\": \"sha256:e88a9df0ac1abe694a3a22645306d0152d3833a4e806adbe3b821b66b7d88840\",\n  \"semantic_manifest_ref\": \"changeset/semantic-manifest-set-window-exterior-prop-1.json\",\n  \"semantic_manifest_sha256\": \"sha256:d54c47f5ae713e0f44d4c14851873c5e739ef2cc128bd79907fa6e44e5fe19c5\",\n  \"semantic_summary\": {\n    \"required\": 0,\n    \"conditional\": 1,\n    \"not_required\": 0\n  },\n  \"scope\": {\n    \"target_ids\": [\"1hOSvn6df7F8_7GcBWlRRL\"],\n    \"forbidden_ids\": []\n  },\n  \"evidence_refs\": [\"resolved:/operations/set-window-exterior-prop-1/context/candidate_targets/0\"],\n  \"preconditions\": [\"target_exists\", \"target_class_supported\", \"property_assignments_bound\"],\n  \"postconditions\": [\"target_preserved\", \"requested_properties_match\", \"shared_type_unchanged\"],\n  \"operations\": [\n    {\n      \"operation_id\": \"set-window-exterior-prop-1\",\n      \"operation_type\": \"set_occurrence_properties\",\n      \"target\": {\n        \"element_global_id\": \"1hOSvn6df7F8_7GcBWlRRL\"\n      },\n      \"parameters\": {},\n      \"evidence_refs\": [\"resolved:/operations/set-window-exterior-prop-1/context/candidate_targets/0\"]\n    }\n  ]\n}",
+              "function_call": null,
+              "reasoning_content": "We need respond JSON only. Need produce draft per schema. Need inspect request. Need output exactly one JSON object. Need infer operation parameters empty? The resolved operation projection shows operation with parameters {} target element_global_id. We need construct changeset draft.\n\nNeed use provided immutable bindings:\n- source request hash sha256:e88a9df0ac1abe694a3a22645306d0152d3833a4e806adbe3b821b66b7d88840\n- model hash sha256:707a032566dee8e969a44d95509be46d646440e2443624709f8d3ae2b45f4656\n- semantic manifest ref: changeset/semantic-manifest-set-window-exterior-prop-1.json\n- semantic manifest hash: sha256:d54c47f5ae713e0f44d4c14851873c5e739ef2cc128bd79907fa6e44e5fe19c5\n\nNeed draft_id? Could be some id. Need maybe derived from operation_id? Schema id pattern. Draft id can be any id. Need likely \"changeset/set-window-exterior-prop-1\" maybe. Need evidence_refs exactly from operation projection: [\"resolved:/operations/set-window-exterior-prop-1/context/candidate_targets/0\"] for evidence_refs? At top level maybe same? Need inspect schema: property evidence_refs strings array. Should likely copy resolved operation projection evidence_refs? It has operation-level evidence_refs and top-level maybe same? Resolved operation projection has \"evidence_refs\": [\"resolved:/operations/set-window-exterior-prop-1/context/candidate_targets/0\"] and operations has evidence_refs same. Top-level likely use same evidence refs? Need decide.\n\nNeed include preconditions and postconditions. Registered operation contracts has precondition_names, postcondition_names. Need arrays of strings? Schema just strings. In resolved projection not provided. Given Registered operation contracts: for set_occurrence_properties, preconditions: [\"target_exists\", \"target_class_supported\", \"property_assignments_bound\"], postconditions: [\"target_preserved\", \"requested_properties_match\", \"shared_type_unchanged\"]. Need include those probably.\n\nNeed semantic_summary: {\"conditional\":1, \"not_required\":0, \"required\":0} from semantic group counts. Need put.\n\nNeed scope: {\"forbidden_ids\":[], \"target_ids\":[\"1hOSvn6df7F8_7GcBWlRRL\"]}.\n\nNeed operation object:\n{\n\"operation_id\": \"set-window-exterior-prop-1\",\n\"operation_type\": \"set_occurrence_properties\",\n\"target\": {\"element_global_id\": \"1hOSvn6df7F8_7GcBWlRRL\"},\n\"parameters\": {},\n\"evidence_refs\": [\"resolved:/operations/set-window-exterior-prop-1/context/candidate_targets/0\"]\n}\n\nNeed top-level evidence_refs maybe same array. Could maybe need include more? Since only one. Use same.\n\nNeed draft_id: perhaps \"changeset/set-window-exterior-prop-1\" or \"draft-set-window-exterior-prop-1\"? Need pattern allows. We'll choose \"changeset/set-window-exterior-prop-1\". Ensure id pattern: starts alphanumeric, contains allowed chars. Yes.\n\nNeed ensure all required fields.\n\nNeed possibly include preconditions/postconditions arrays. Good.\n\nPotential caveat: explicit user slot references include pset:Pset_WindowCommon.IsExternal but we're told do not emit semantic assignments or property values. So no.\n\nNeed not include semantic manifest details beyond ref and hash.\n\nNeed final JSON only. Let's craft. Use double quotes.\n\nCheck schema additionalProperties false; properties exactly. Need no extra.\n\nLet's verify all required:\nschema_version\ndraft_id\nbase_model_fingerprint\nsource_request_hash\nsemantic_manifest_ref\nsemantic_manifest_sha256\nsemantic_summary\nscope\nevidence_refs\npreconditions\npostconditions\noperations\n\nAll present.\n\nNeed ensure semantic_summary required fields: required, conditional, not_required. Are numbers. Use 0,1,0.\n\nNeed \"operations\" array minItems 1.\n\nNeed top-level evidence_refs unique strings? It has one.\n\nNeed preconditions/postcondition names as schema just array strings. Use provided.\n\nPotential issue: Should top-level evidence_refs include all evidence from operations? Same. Good.\n\nNeed maybe include \"operation\" evidence_refs required. Yes.\n\nNeed \"target\" minProperties 1 and object. Fine.\n\nNeed \"parameters\" type object; empty ok.\n\nLet's output.",
+              "refusal": null,
+              "role": "assistant",
+              "tool_calls": null
+            }
+          }
+        ],
+        "created": 1788277595,
+        "id": "175ae7f0-9363-441e-9742-8b9903ec1811",
+        "model": "deepseek-v4-flash",
+        "moderation": null,
+        "object": "chat.completion",
+        "service_tier": null,
+        "stop_reason": "stop",
+        "system_fingerprint": "a26a7955944dc5c60445bff77fac9c8e",
+        "usage": {
+          "completion_tokens": 1473,
+          "completion_tokens_details": "[REDACTED]",
+          "prompt_cache_hit_tokens": "[REDACTED]",
+          "prompt_cache_miss_tokens": "[REDACTED]",
+          "prompt_tokens": 2086,
+          "prompt_tokens_details": "[REDACTED]",
+          "total_tokens": 3559
+        }
+      },
+      "response_sha256": "sha256:d9640211ac7f858f49131399349b9d8dffe4c344ade2ad84659cfc1d05e73d6f",
+      "stage": "stage2",
+      "stage_attempt": 1,
+      "template_hash": null,
+      "template_id": null,
+      "usage": {
+        "completion_tokens": 1473,
+        "completion_tokens_details": "[REDACTED]",
+        "prompt_cache_hit_tokens": "[REDACTED]",
+        "prompt_cache_miss_tokens": "[REDACTED]",
+        "prompt_tokens": 2086,
+        "prompt_tokens_details": "[REDACTED]",
+        "total_tokens": 3559
+      }
+    }
+  ],
+  "case_id": "E1",
+  "contract_pass": true,
+  "execution_error": null,
+  "expected_outcome": "success",
+  "final": {
+    "artifacts": {
+      "evaluation": ".terminal-bundles/ba424a74eb954b75a32f44df030d589b/evaluation/public-evaluation.json",
+      "manifest": ".terminal-bundles/ba424a74eb954b75a32f44df030d589b/manifest.json",
+      "successful_ifc": ".terminal-bundles/ba424a74eb954b75a32f44df030d589b/successful/repaired.ifc"
+    },
+    "clarification": null,
+    "clarification_answer_applied": false,
+    "complete_repair_success": true,
+    "evaluation_execution_evidence": {
+      "cache_mode": "read_write",
+      "correctness_deadline_seconds": 600.0,
+      "mode": "accelerated",
+      "performance_slo_blocking": false,
+      "performance_slo_met": true,
+      "performance_slo_seconds": 180.0,
+      "rss_limit_bytes": 4294967296,
+      "schema_version": "text2ifc/ifc-repair-evaluation-execution/0.1",
+      "wall_seconds": 4.39100000000326
+    },
+    "feedback_sha256": null,
+    "initial": {
+      "artifacts": {
+        "evaluation": ".terminal-bundles/ba424a74eb954b75a32f44df030d589b/evaluation/public-evaluation.json",
+        "manifest": ".terminal-bundles/ba424a74eb954b75a32f44df030d589b/manifest.json",
+        "successful_ifc": ".terminal-bundles/ba424a74eb954b75a32f44df030d589b/successful/repaired.ifc"
+      },
+      "complete_repair_success": true,
+      "reason_code": null,
+      "run_id": "repair-ff3c4707a3ba49959be5a5553e96f343",
+      "state_version": 9,
+      "status": "succeeded",
+      "successful_artifact_publishable": true
+    },
+    "program_guard_evidence": null,
+    "reason_code": null,
+    "request_sha256": "sha256:e88a9df0ac1abe694a3a22645306d0152d3833a4e806adbe3b821b66b7d88840",
+    "run_id": "repair-ff3c4707a3ba49959be5a5553e96f343",
+    "state_version": 9,
+    "status": "succeeded",
+    "strict_reopen_verification": {
+      "changeset_sha256": "sha256:8fac5e79eb36e8ea3cde2920121a7b3ea948b5bf0b9556c83125ef3ab0a2019e",
+      "evaluation_sha256": "sha256:a05373980ad4ef4c0d88e552875e569eda38a73d69aadf400f600a80e1d24dbe",
+      "ground_truth_isolation_status": "pending_plan_12_14",
+      "l0_pass": true,
+      "l1_pass": true,
+      "l2_pass": true,
+      "operation_count": 1,
+      "preservation_status": "pending_plan_12_14",
+      "proof_validation_status": "pending_plan_12_14",
+      "reopened_schema": "IFC2X3",
+      "status": "passed",
+      "successful_ifc_sha256": "sha256:8e3db48b8082d128f9c53c1cd1c8234ed0721b8bf101f86b67bc07591e95cbdf"
+    },
+    "successful_artifact_publishable": true
+  },
+  "private_evidence_detected": false,
+  "status": "passed",
+  "synthetic_fallback_used": false,
+  "transport_calls": 3,
+  "transport_calls_by_stage": {
+    "property_resolution": 1,
+    "stage1": 1,
+    "stage2": 1
+  }
+}

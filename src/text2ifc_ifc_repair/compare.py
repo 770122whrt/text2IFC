@@ -24,6 +24,7 @@ from .registry import OperationRegistry
 
 
 COMPARISON_SCHEMA_VERSION = "text2ifc/ifc-repair-comparison/0.1"
+DIFFERENCE_REPORT_SCHEMA_VERSION = "text2ifc/ifc-difference-report/0.1"
 IFCOPENSHELL_COMPARISON_SCHEMA_VERSION = (
     "text2ifc/ifcopenshell-comparison/0.1"
 )
@@ -576,10 +577,162 @@ def compare_ifc_models(
     }
 
 
-def normalized_model_diff(before_model: Any, after_model: Any) -> dict[str, Any]:
+def build_ifc_difference_report(
+    before_path: Path | str,
+    after_path: Path | str,
+    *,
+    timeout_seconds: float = DEFAULT_COMPARISON_TIMEOUT_SECONDS,
+) -> dict[str, Any]:
+    """Describe every changed IFC root and enrich changed products.
+
+    This is a two-file diagnostic report.  It deliberately has no repair-case,
+    operation-id, Tag, or private-Gold assumptions.
+    """
+
+    before_path = Path(before_path).resolve()
+    after_path = Path(after_path).resolve()
+    before = ifcopenshell.open(str(before_path))
+    after = ifcopenshell.open(str(after_path))
+    profiled = profile_normalized_model_diff(
+        before,
+        after,
+        timeout_seconds=timeout_seconds,
+    )
+    changes = profiled["changes"]
+    changed_products = []
+    for change_kind in ("created", "modified", "removed"):
+        for change in changes[change_kind]:
+            global_id = str(change["global_id"])
+            before_entity = _by_guid_optional(before, global_id)
+            after_entity = _by_guid_optional(after, global_id)
+            if not any(
+                entity is not None and entity.is_a("IfcProduct")
+                for entity in (before_entity, after_entity)
+            ):
+                continue
+            changed_products.append(
+                {
+                    "change_kind": change_kind,
+                    "global_id": global_id,
+                    "ifc_class": str(change["ifc_class"]),
+                    "before": (
+                        _product_difference_snapshot(before_entity)
+                        if before_entity is not None
+                        else None
+                    ),
+                    "after": (
+                        _product_difference_snapshot(after_entity)
+                        if after_entity is not None
+                        else None
+                    ),
+                }
+            )
+    class_counts = Counter(
+        item["ifc_class"] for item in changed_products
+    )
+    return {
+        "schema_version": DIFFERENCE_REPORT_SCHEMA_VERSION,
+        "comparison_status": "completed",
+        "before": {
+            "path": str(before_path),
+            "sha256": _file_sha256(before_path),
+            "schema": str(before.schema),
+        },
+        "after": {
+            "path": str(after_path),
+            "sha256": _file_sha256(after_path),
+            "schema": str(after.schema),
+        },
+        "summary": {
+            "created_root_count": len(changes["created"]),
+            "modified_root_count": len(changes["modified"]),
+            "removed_root_count": len(changes["removed"]),
+            "changed_product_count": len(changed_products),
+            "changed_product_classes": dict(sorted(class_counts.items())),
+        },
+        "changed_products": changed_products,
+        "changed_roots": changes,
+        "comparison_metrics": profiled["metrics"],
+    }
+
+
+def normalized_model_diff(
+    before_model: Any,
+    after_model: Any,
+    *,
+    timeout_seconds: float = DEFAULT_COMPARISON_TIMEOUT_SECONDS,
+) -> dict[str, Any]:
     """Return deterministic actual IfcRoot changes from independently opened models."""
 
-    return profile_normalized_model_diff(before_model, after_model)["changes"]
+    return profile_normalized_model_diff(
+        before_model,
+        after_model,
+        timeout_seconds=timeout_seconds,
+    )["changes"]
+
+
+def _by_guid_optional(model: Any, global_id: str) -> Any | None:
+    try:
+        return model.by_guid(global_id)
+    except RuntimeError:
+        return None
+
+
+def _file_sha256(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return "sha256:" + digest.hexdigest()
+
+
+def _product_difference_snapshot(entity: Any) -> dict[str, Any]:
+    root = _root_snapshot(entity)
+    return {
+        "ifc_class": entity.is_a(),
+        "name": getattr(entity, "Name", None),
+        "tag": getattr(entity, "Tag", None),
+        "type_global_ids": root["types"],
+        "container_global_ids": root["containers"],
+        "placement": root["placement"],
+        "geometry": root["geometry"],
+        "direct_properties": _direct_property_records(entity),
+    }
+
+
+def _direct_property_records(entity: Any) -> list[dict[str, Any]]:
+    records: list[dict[str, Any]] = []
+    for relation in getattr(entity, "IsDefinedBy", ()):
+        if not relation.is_a("IfcRelDefinesByProperties"):
+            continue
+        definition = relation.RelatingPropertyDefinition
+        if not definition.is_a("IfcPropertySet"):
+            continue
+        for prop in definition.HasProperties:
+            nominal = getattr(prop, "NominalValue", None)
+            if nominal is not None:
+                value_type = nominal.is_a()
+                value = nominal.wrappedValue
+            else:
+                value_type = prop.is_a()
+                value = _normalize_value(prop, depth=0, seen=set())
+            records.append(
+                {
+                    "property_set_global_id": str(definition.GlobalId),
+                    "set_name": str(definition.Name),
+                    "property_name": str(prop.Name),
+                    "value_type": value_type,
+                    "value": value,
+                }
+            )
+    return sorted(
+        records,
+        key=lambda item: (
+            item["set_name"],
+            item["property_name"],
+            item["property_set_global_id"],
+        ),
+    )
 
 
 def profile_normalized_model_diff(

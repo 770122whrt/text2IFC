@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: IFC ChangeSet Repair Pipeline
-status: Phase 12 live acceptance blocked; Phase 12.1 Plan 06 complete; Plan 07 awaiting Go/No-Go
-last_updated: "2026-08-26T00:00:00Z"
+status: Phase 12 and 12.1 closed; Repair Milestone R1 accepted 12/12 with Proof 0.3
+last_updated: "2026-09-03T00:00:00Z"
 progress:
   total_phases: 13
-  completed_phases: 11
+  completed_phases: 12
   total_plans: 63
-  completed_plans: 57
-  percent: 90
+  completed_plans: 63
+  percent: 96
 ---
 
 # Project State
@@ -242,6 +242,58 @@ Next: Stop at this checkpoint and await explicit Go/No-Go for 12.1-07. Plan 07
       Do not start Phase 13.
 ```
 
+## Phase 12.1 / Repair Milestone R1 Handoff Checkpoint — 2026-09-01
+
+```text
+Mode: CHECKPOINT / HANDOFF
+Class: EXPERIMENTAL
+State: PARTIAL; safe code and documentation checkpoint for a new conversation
+Implementation checkpoint: 223e46e7
+Plan 07 evidence: the frozen four genuine cases completed their case contracts
+                  with 11 Provider calls (Stage 1=4, Stage 1.5=4, Stage 2=3).
+                  Three repaired outputs reopened and passed recorded L0/L1/L2;
+                  the unsupported-program guard stopped before mutation.
+Plan 07 boundary: acceptance_eligible=false, proof_acceptance_eligible=false,
+                  proof_validation_status=pending_plan_12_14. This is not final
+                  Proof or Phase closure.
+R1 evidence: fresh ordered genuine run r1-20260901T055419268779Z passed E1-E4,
+             M1-M3, H1 and H2, then stopped fail-closed at H3 with
+             LIVE_CASE_PROPERTY_IDENTITY_NOT_OFFERED. H4 and A1 were not run.
+             Calls before stop: Stage 1=12, Stage 1.5=11, Stage 2=10.
+R1 boundary: nine successful cases retain repaired IFC and recorded L0/L1/L2;
+             R1 Proof 0.3, final IFCCompare and Phase closure were not run.
+Handoff: docs/handoffs/repair-milestone-r1-checkpoint-2026-09-01.md
+Matrix: docs/validation/repair-milestone-r1/
+        plan07-r1-genuine-execution-matrix-2026-09-01.md
+Next: Start the next conversation from the handoff. Diagnose H3 target
+      resolution before any further live call. Do not splice runs, claim 12/12,
+      close Phase 12/12.1, or start Phase 13.
+```
+
+## Phase 12 / 12.1 and Repair Milestone R1 Closure — 2026-09-03
+
+```text
+Mode: CLOSURE
+Class: ACCEPTED GENUINE + INDEPENDENT PROOF
+State: CLOSED
+Accepted run: r1-20260902T152701658266Z
+Execution: 12/12 frozen contracts PASS; 40 calls (S1=17, S1.5=12, S2=11)
+Plan 07 final-code compatibility: uat-20260902T180900748385Z; 4/4 PASS;
+                                  11 calls (S1=4, S1.5=4, S2=3)
+Artifacts: 11 repaired IFC files independently reopened; L0/L1/L2 PASS
+Unsupported guard: H4 PASS with zero mutation, zero publish and no repaired IFC
+Proof: validation 0.3 PASS; 12 cases, 13 operations, 785 files, 23 reopens,
+       12 independent recomputations, 1 no-output, 0 errors, 0 limitations
+IFCCompare: existing legitimate truth-bearing collection PASS; R1 0/12 legally
+            eligible triplets, therefore N/A without fabricated Ground Truth
+Requirements: RAG-05..07 and OPS-03..04 COMPLETE
+Reports: docs/validation/repair-milestone-r1/repair-proof-matrix-2026-09-03.md
+         docs/validation/ifc2x3-changeset/phase12-beam-column-validation-report.md
+Boundary: historical failed attempts and Plan 07 false/pending fields remain
+          immutable. The final-code Plan 07 rerun has a documented non-semantic
+          changed-scope curator packaging limitation. Phase 13 was not started.
+```
+
 ## Project Reference
 
 See `.planning/PROJECT.md`.
@@ -249,16 +301,14 @@ See `.planning/PROJECT.md`.
 **Core value:** Given an IFC file and an explicit user request, produce a
 traceable semantic ChangeSet and an L1/L2-validated IFC result.
 
-**Current focus:** Phase 12.1 — Property Resolution RAG and Reranker Correction.
-Phase 12 Beam/Column implementation and live/Proof infrastructure are present,
-and Plan 06 offline admission is complete; genuine semantic/live acceptance has
-not been rerun. The preserved live attempt failed before Stage 2. Phase 11
-remains closed with real DeepSeek and independently recomputed Proof evidence.
+**Current focus:** Phase 12 and Phase 12.1 are closed. Repair Milestone R1 has a
+new uninterrupted 12/12 genuine run, curated Proof 0.3 and final IFCCompare
+boundary. Phase 13 remains unstarted and requires a separate explicit task.
 
 ## Current Position
 
-Phase: 12.1 (Property Resolution RAG and Reranker Correction) — IN PROGRESS
-Plan: 6 of 7; Plan 06 complete; Plan 07 awaiting explicit Go/No-Go
+Phase: 12.1 (Property Resolution RAG and Reranker Correction) — COMPLETE
+Plan: 7 of 7 complete; Plan 07 closed by accepted R1 Proof
 
 - Milestone: v1.1 IFC ChangeSet Repair Pipeline
 - Phase: 11 complete
@@ -272,18 +322,15 @@ Plan: 6 of 7; Plan 06 complete; Plan 07 awaiting explicit Go/No-Go
   complete, clarification/resume and deterministic unsupported contracts with
   no fallback; both publishable cases independently reopen and pass L0/L1/L2.
 
-- Progress: 11 / 13 major phases complete; 57 / 63 milestone plans complete.
-- Requirements: RAG-01..04, WFID-01..06 and OPS-01..02 remain complete;
-  RAG-05..07 and OPS-03..04 are pending.
-- Last activity: 2026-08-26 - The R12/R13 responsibility boundary was amended
-  to remove the internally unsatisfiable requirement for zero-network semantic
-  Candidate accuracy. Plan 06 now measures real BGE-M3/Qdrant retrieval and
-  offline contract/system correctness, with Stage 1.5 semantics explicitly
-  `not_evaluated_offline`. Plan 07 must run genuine Provider semantic scoring on
-  the unchanged 60 cases before the separate E2E UAT matrix. The rejected
-  replay oracle remains deleted; no DeepSeek, Proof curation, IFCCompare or
-  Phase closure has occurred. Fresh Plan 06 re-admission passed preflight 0.4;
-  Plan 07 remains unstarted pending explicit Go/No-Go.
+- Progress: 12 / 13 major phases complete; 63 / 63 currently planned milestone plans complete.
+- Requirements: RAG-01..07, WFID-01..06 and OPS-01..04 are complete.
+- Last activity: 2026-09-03 - accepted R1 run `r1-20260902T152701658266Z`
+  passed 12/12 frozen contracts with 40 genuine calls. Curated Proof 0.3 passed
+  all 12 independent recomputations with zero errors/limitations; existing
+  legitimate triplet IFCCompare passed, while R1 correctly remains truth-N/A.
+  Final-code Plan 07 run `uat-20260902T180900748385Z` also passed 4/4 with 11
+  genuine calls; its changed-scope curator packaging limitation is recorded for
+  later work and is not represented as a second curated Proof.
 
 - Phase 11 closure evidence: accepted live run
   `uat-20260731T224900289758Z` passed all three contracts. Two live successes
@@ -459,16 +506,13 @@ Plan: 6 of 7; Plan 06 complete; Plan 07 awaiting explicit Go/No-Go
 
 ## Next Action
 
-Phase 11 remains closed. Plan 12.1-06 is complete at its offline checkpoint.
-Do not execute `.planning/phases/12.1-property-resolution-rag-reranker/12.1-07-PLAN.md`
-until the user gives an explicit Go/No-Go.
-RAG-05..07 and OPS-03/OPS-04 remain pending until genuine DeepSeek, independent
-live Proof, IFCCompare and final regression all pass. Do not start Phase 13 or
-reopen frozen Door/Window, geometry, Type/material, Storey or private-Gold
-contracts.
+Use `docs/handoffs/repair-milestone-r1-closure-2026-09-03.md` and the linked
+final Proof Matrix as the authoritative R1/Phase 12.1 continuation point.
+Preserve all genuine runs and curated Proof append-only. Do not start Phase 13
+without a separate explicit task.
 
 ---
-*Last updated: 2026-08-26 after accepted Plan 12.1-06 offline admission*
+*Last updated: 2026-09-03 at Repair Milestone R1 / Phase 12.1 closure*
 
 ## Accumulated Context
 

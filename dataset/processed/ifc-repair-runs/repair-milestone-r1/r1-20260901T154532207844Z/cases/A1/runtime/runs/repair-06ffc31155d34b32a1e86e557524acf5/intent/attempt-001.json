@@ -1,0 +1,37 @@
+{
+  "attempt": 1,
+  "issues": [],
+  "normalizations": [],
+  "provider_metadata": {
+    "estimated_input_tokens": "[REDACTED]",
+    "evidence_class": "live",
+    "max_input_tokens": "[REDACTED]",
+    "model": "deepseek-v4-flash",
+    "provider": "deepseek-openai-compatible",
+    "request_configuration": {
+      "temperature": {
+        "effective": false,
+        "value": 0
+      },
+      "thinking": {
+        "type": "enabled"
+      }
+    },
+    "response_id": "36a95a7a-dab6-4d7b-8458-37f995df4d3f",
+    "session_id": "ifc-repair-intent-request-fe084ed99b6c038a",
+    "stop_reason": "stop",
+    "transport_attempts": 1,
+    "usage": {
+      "completion_tokens": 3549,
+      "completion_tokens_details": "[REDACTED]",
+      "prompt_cache_hit_tokens": "[REDACTED]",
+      "prompt_cache_miss_tokens": "[REDACTED]",
+      "prompt_tokens": 11631,
+      "prompt_tokens_details": "[REDACTED]",
+      "total_tokens": 15180
+    }
+  },
+  "response_excerpt": "{\n  \"schema_version\": \"text2ifc/ifc-repair-intent-body/0.8\",\n  \"operations\": [\n    {\n      \"operation_id\": \"add-beam-1\",\n      \"operation_type\": \"add_beam\",\n      \"routing_intent\": {\n        \"component_family\": \"beam\",\n        \"action\": \"add\",\n        \"operation_profile\": \"beam.add.v0.3\",\n        \"source\": {\n          \"source_kind\": \"user_request\",\n          \"reference\": \"public request\",\n          \"excerpt\": \"在 00 begane grond 添加一根新的水平直线矩形梁，中心轴从 (25000, 58000, 3000) mm 到 (31000, 58000, 3000) mm，截面宽 500 mm、高 800 mm，并精确复用 GlobalId 为 12jWe1_Rb2cR0ot5ICgwf_、名称为 28_SF_AT_balk vierkant beton:balk vierkant_gen_500x800 (C35/45) 的现有 IfcBeamType。\"\n        }\n      },\n      \"target_query\": {\n        \"schema_version\": \"text2ifc/ifc-target-query/0.1\",\n        \"allowed_ifc_classes\": [\"IfcBuildingStorey\"],\n        \"names\": [\"00 begane grond\"]\n      },\n      \"parameters\": {\n        \"axis\": {\n          \"start\": {\n            \"x_mm\": 25000,\n            \"y_mm\": 58000,\n            \"z_mm\": 3000\n          },\n          \"end\": {\n            \"x_mm\": 31000,\n            \"y_mm\": 58000,\n            \"z_mm\": 3000\n          }\n        },\n        \"section\": {\n          \"shape\": \"rectangle\",\n          \"width_mm\": 500,\n          \"height_mm\": 800\n        }\n      },\n      \"attribute_intents\": [],\n      \"property_intents\": [],\n      \"semantic_bundle_refs\": [],\n      \"quantity_intents\": [],\n      \"occurrence_reuse_intent\": null,\n      \"prototype_intent\": {\n        \"reference_kind\": \"global_id\",\n        \"reference\": \"12jWe1_Rb2cR0ot5ICgwf_\",\n        \"source\": {\n          \"source_kind\": \"user_request\",\n          \"reference\": \"public request\",\n          \"excerpt\": \"在 00 begane grond 添加一根新的水平直线矩形梁，中心轴从 (25000, 58000, 3000) mm 到 (31000, 58000, 3000) mm，截面宽 500 mm、高 800 mm，并精确复用 GlobalId 为 12jWe1_Rb2cR0ot5ICgwf_、名称为 28_SF_AT_balk vierkant beton:balk vierkant_gen_500x800 (C35/45) 的现有 IfcBeamType。\"\n        }\n      },\n      \"provenance\": [\n        {\n          \"source_kind\": \"user_request\",\n          \"reference\": \"public request\",\n          \"excerpt\": \"在 00 begane grond 添加一根新的水平直线矩形梁，中心轴从 (25000, 58000, 3000) mm 到 (31000, 58000, 3000) mm，截面宽 500 mm、高 800 mm，并精确复用 GlobalId 为 12jWe1_Rb2cR0ot5ICgwf_、名称为 28_SF_AT_balk vierkant beton:balk vierkant_gen_500x800 (C35/45) 的现有 IfcBeamType。\"\n        }\n      ]\n    }\n  ],\n  \"unsupported_requests\": [],\n  \"semantic_bundles\": [],\n  \"provenance\": [\n    {\n      \"source_kind\": \"user_request\",\n      \"reference\": \"public request\",\n      \"excerpt\": \"在 00 begane grond 添加一根新的水平直线矩形梁，中心轴从 (25000, 58000, 3000) mm 到 (31000, 58000, 3000) mm，截面宽 500 mm、高 800 mm，并精确复用 GlobalId 为 12jWe1_Rb2cR0ot5ICgwf_、名称为 28_SF_AT_balk vierkant beton:balk vierkant_gen_500x800 (C35/45) 的现有 IfcBeamType。\"\n    }\n  ]\n}",
+  "response_sha256": "sha256:3e84411e7cfde1f15531a831e8f5616875deca91ed8ece56c8cac3db0d5c7e37",
+  "status": "valid"
+}

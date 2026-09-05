@@ -1,0 +1,40 @@
+{
+  "data": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "logprobs": null,
+        "message": {
+          "annotations": null,
+          "audio": null,
+          "content": "{\n  \"schema_version\": \"text2ifc/ifc-repair-changeset-draft/0.2\",\n  \"draft_id\": \"set-wall-sound-insulation-1\",\n  \"base_model_fingerprint\": \"sha256:9f180a7148bb7bcf43dd80800068553f1c8b189ebe0dc84b6c498061832960d1\",\n  \"source_request_hash\": \"sha256:e008a58f9a64e51138c51e3e2420c7a981af9bb44fb8aeae6a44f66abec759f9\",\n  \"semantic_manifest_ref\": \"changeset/semantic-manifest-set-wall-sound-insulation-1.json\",\n  \"semantic_manifest_sha256\": \"sha256:c3781899ca95921c1a9236451e4e93e437dc7604fb10d52584efea77dece04d4\",\n  \"semantic_summary\": {\n    \"required\": 0,\n    \"conditional\": 1,\n    \"not_required\": 0\n  },\n  \"scope\": {\n    \"target_ids\": [\"0ZBert7zf3GhThdO12NKAr\"],\n    \"forbidden_ids\": []\n  },\n  \"evidence_refs\": [\n    \"resolved:/operations/set-wall-sound-insulation-1/context/candidate_targets/0\"\n  ],\n  \"preconditions\": [\n    \"target_exists\",\n    \"target_class_supported\",\n    \"property_assignments_bound\"\n  ],\n  \"postconditions\": [\n    \"target_preserved\",\n    \"requested_properties_match\",\n    \"shared_type_unchanged\"\n  ],\n  \"operations\": [\n    {\n      \"operation_id\": \"set-wall-sound-insulation-1\",\n      \"operation_type\": \"set_occurrence_properties\",\n      \"target\": {\n        \"element_global_id\": \"0ZBert7zf3GhThdO12NKAr\"\n      },\n      \"parameters\": {},\n      \"evidence_refs\": [\n        \"resolved:/operations/set-wall-sound-insulation-1/context/candidate_targets/0\"\n      ]\n    }\n  ]\n}",
+          "function_call": null,
+          "reasoning_content": "We need respond with JSON object only, following schema. Need craft draft. Given resolved operation projection: one operation set occurrence properties, target element_global_id 0ZBert7zf3GhThdO12NKAr. Need include preconditions/postconditions from operation contracts? The draft schema requires preconditions and postconditions strings arrays. Need likely include from registered operation contracts selected profile? We need infer preconditions names: target_exists, target_class_supported, property_assignments_bound. Postconditions: target_preserved, requested_properties_match, shared_type_unchanged. Also maybe include evidence refs. Need copy operation IDs, types, targets, parameters, scope, evidence exactly. The resolved operation projection has evidence_refs in operation: [\"resolved:/operations/set-wall-sound-insulation-1/context/candidate_targets/0\"], and operation_id, operation_type, target, parameters empty object. Scope target_ids, forbidden_ids empty. Need draft_id something. Need generate id? Likely must be unique. Could use \"set-wall-sound-insulation-1\" maybe. Need include base_model_fingerprint hash, source_request_hash, semantic manifest ref and hash. Semantic summary counts given.\n\nNeed ensure all fields. Let's build JSON.\n\nDraft envelope:\n{\n \"schema_version\": \"text2ifc/ifc-repair-changeset-draft/0.2\",\n \"draft_id\": \"set-wall-sound-insulation-1\",\n \"base_model_fingerprint\": \"sha256:9f180a7148bb7bcf43dd80800068553f1c8b189ebe0dc84b6c498061832960d1\",\n \"source_request_hash\": \"sha256:e008a58f9a64e51138c51e3e2420c7a981af9bb44fb8aeae6a44f66abec759f9\",\n \"semantic_manifest_ref\": \"changeset/semantic-manifest-set-wall-sound-insulation-1.json\",\n \"semantic_manifest_sha256\": \"sha256:c3781899ca95921c1a9236451e4e93e437dc7604fb10d52584efea77dece04d4\",\n \"semantic_summary\": {\"required\":0, \"conditional\":1, \"not_required\":0},\n \"scope\": {\"target_ids\": [\"0ZBert7zf3GhThdO12NKAr\"], \"forbidden_ids\": []},\n \"evidence_refs\": [\"resolved:/operations/set-wall-sound-insulation-1/context/candidate_targets/0\"],\n \"preconditions\": [\"target_exists\",\"target_class_supported\",\"property_assignments_bound\"],\n \"postconditions\": [\"target_preserved\",\"requested_properties_match\",\"shared_type_unchanged\"],\n \"operations\": [\n   {\n     \"operation_id\": \"set-wall-sound-insulation-1\",\n     \"operation_type\": \"set_occurrence_properties\",\n     \"target\": {\"element_global_id\": \"0ZBert7zf3GhThdO12NKAr\"},\n     \"parameters\": {},\n     \"evidence_refs\": [\"resolved:/operations/set-wall-sound-insulation-1/context/candidate_targets/0\"]\n   }\n ]\n}\n\nNeed ensure evidence_refs top-level maybe should be array of all evidence refs, likely same as operation's. That's okay.\n\nCheck schema requires base_model_fingerprint hash pattern yes. draft_id pattern allows hyphen. operation_id same. Good.\n\nNeed maybe include pre/post from operation contract only if selected. Yes.\n\nNeed not include Pset value. Good.\n\nLet's output.",
+          "refusal": null,
+          "role": "assistant",
+          "tool_calls": null
+        }
+      }
+    ],
+    "created": 1788278204,
+    "id": "64ab90d1-1060-4e8f-8c00-f84258fb047c",
+    "model": "deepseek-v4-flash",
+    "moderation": null,
+    "object": "chat.completion",
+    "service_tier": null,
+    "stop_reason": "stop",
+    "system_fingerprint": "a26a7955944dc5c60445bff77fac9c8e",
+    "usage": {
+      "completion_tokens": 1250,
+      "completion_tokens_details": "[REDACTED]",
+      "prompt_cache_hit_tokens": "[REDACTED]",
+      "prompt_cache_miss_tokens": "[REDACTED]",
+      "prompt_tokens": 2079,
+      "prompt_tokens_details": "[REDACTED]",
+      "total_tokens": 3329
+    }
+  },
+  "event": "chat.completion",
+  "sequence": 0
+}

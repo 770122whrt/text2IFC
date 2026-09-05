@@ -1,0 +1,37 @@
+{
+  "attempt": 1,
+  "issues": [],
+  "normalizations": [],
+  "provider_metadata": {
+    "estimated_input_tokens": "[REDACTED]",
+    "evidence_class": "live",
+    "max_input_tokens": "[REDACTED]",
+    "model": "deepseek-v4-flash",
+    "provider": "deepseek-openai-compatible",
+    "request_configuration": {
+      "temperature": {
+        "effective": false,
+        "value": 0
+      },
+      "thinking": {
+        "type": "enabled"
+      }
+    },
+    "response_id": "39c0d5d2-94aa-4780-963d-6b66c7ec4e66",
+    "session_id": "ifc-repair-intent-request-45b55d9703c7c1e2",
+    "stop_reason": "stop",
+    "transport_attempts": 1,
+    "usage": {
+      "completion_tokens": 6076,
+      "completion_tokens_details": "[REDACTED]",
+      "prompt_cache_hit_tokens": "[REDACTED]",
+      "prompt_cache_miss_tokens": "[REDACTED]",
+      "prompt_tokens": 11557,
+      "prompt_tokens_details": "[REDACTED]",
+      "total_tokens": 17633
+    }
+  },
+  "response_excerpt": "{\n  \"schema_version\": \"text2ifc/ifc-repair-intent-body/0.8\",\n  \"operations\": [\n    {\n      \"operation_id\": \"set-door-fire-rating-1\",\n      \"operation_type\": \"set_occurrence_properties\",\n      \"routing_intent\": {\n        \"component_family\": \"occurrence\",\n        \"action\": \"set_properties\",\n        \"operation_profile\": \"occurrence.set-properties\",\n        \"source\": {\n          \"source_kind\": \"user_request\",\n          \"reference\": \"public-request-1\",\n          \"excerpt\": \"将 Level 4 中 GlobalId 为 3JlX9$$_PCKBNpDob64$4w、Tag 为 439243 的门的防火等级设置为 true。 补充说明：改为 EI60。\"\n        }\n      },\n      \"target_query\": {\n        \"schema_version\": \"text2ifc/ifc-target-query/0.1\",\n        \"allowed_ifc_classes\": [\"IfcDoor\"],\n        \"global_id\": \"3JlX9$$_PCKBNpDob64$4w\",\n        \"storey_name\": \"Level 4\",\n        \"attribute_intents\": [\n          {\n            \"name\": \"Tag\",\n            \"value\": \"439243\"\n          }\n        ]\n      },\n      \"parameters\": {},\n      \"attribute_intents\": [],\n      \"property_intents\": [\n        {\n          \"intent_kind\": \"natural_language_property\",\n          \"property_phrase\": \"防火等级\",\n          \"raw_value\": true,\n          \"raw_unit\": null,\n          \"scope\": \"occurrence_direct\",\n          \"source\": {\n            \"source_kind\": \"user_request\",\n            \"reference\": \"public-request-1\",\n            \"excerpt\": \"将 Level 4 中 GlobalId 为 3JlX9$$_PCKBNpDob64$4w、Tag 为 439243 的门的防火等级设置为 true。 补充说明：改为 EI60。\"\n          }\n        },\n        {\n          \"intent_kind\": \"natural_language_property\",\n          \"property_phrase\": \"防火等级\",\n          \"raw_value\": \"EI60\",\n          \"raw_unit\": null,\n          \"scope\": \"occurrence_direct\",\n          \"source\": {\n            \"source_kind\": \"user_request\",\n            \"reference\": \"public-request-1\",\n            \"excerpt\": \"将 Level 4 中 GlobalId 为 3JlX9$$_PCKBNpDob64$4w、Tag 为 439243 的门的防火等级设置为 true。 补充说明：改为 EI60。\"\n          }\n        }\n      ],\n      \"semantic_bundle_refs\": [],\n      \"quantity_intents\": [],\n      \"occurrence_reuse_intent\": null,\n      \"prototype_intent\": null,\n      \"provenance\": [\n        {\n          \"source_kind\": \"user_request\",\n          \"reference\": \"public-request-1\",\n          \"excerpt\": \"将 Level 4 中 GlobalId 为 3JlX9$$_PCKBNpDob64$4w、Tag 为 439243 的门的防火等级设置为 true。 补充说明：改为 EI60。\"\n        }\n      ]\n    }\n  ],\n  \"unsupported_requests\": [],\n  \"semantic_bundles\": [],\n  \"provenance\": [\n    {\n      \"source_kind\": \"user_request\",\n      \"reference\": \"public-request-1\",\n      \"excerpt\": \"将 Level 4 中 GlobalId 为 3JlX9$$_PCKBNpDob64$4w、Tag 为 439243 的门的防火等级设置为 true。 补充说明：改为 EI60。\"\n    }\n  ]\n}",
+  "response_sha256": "sha256:85a1016c529d361b36f34fc0c659a1cb103b6b34c6dc61f01dc01a7e0703e950",
+  "status": "valid"
+}

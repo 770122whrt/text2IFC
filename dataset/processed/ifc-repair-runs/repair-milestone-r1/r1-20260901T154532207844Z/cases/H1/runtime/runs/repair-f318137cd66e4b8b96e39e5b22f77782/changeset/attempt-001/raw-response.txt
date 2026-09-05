@@ -1,0 +1,81 @@
+{
+  "schema_version": "text2ifc/ifc-repair-changeset-draft/0.2",
+  "draft_id": "changeset-draft-0.5-add-beam-set-window-fire-rating",
+  "base_model_fingerprint": "sha256:707a032566dee8e969a44d95509be46d646440e2443624709f8d3ae2b45f4656",
+  "source_request_hash": "sha256:00bb6ee2ce21cdeab02bec894449085bcc29a31e9d7c2e2256b0ef1494c156f0",
+  "semantic_manifest_ref": "changeset/semantic-manifests.json",
+  "semantic_manifest_sha256": "sha256:0d0446e371250b8ce70ad259cd20f4b9af6cb7961991bdd7acaeea75f9953233",
+  "semantic_summary": {
+    "required": 2,
+    "conditional": 2,
+    "not_required": 0
+  },
+  "scope": {
+    "target_ids": [
+      "1hOSvn6df7F8_7GcBWlRLx",
+      "1xS3BCk291UvhgP2dvNMKI"
+    ],
+    "forbidden_ids": []
+  },
+  "evidence_refs": [
+    "resolved:/operations/add-beam-level1/context/candidate_targets/0",
+    "resolved:/operations/set-window-fire-rating-1/context/candidate_targets/0"
+  ],
+  "preconditions": [
+    "target_exists",
+    "structural_axis_available",
+    "structural_type_authorized",
+    "target_class_supported",
+    "property_assignments_bound"
+  ],
+  "postconditions": [
+    "beam_geometry_matches",
+    "beam_contained_in_storey",
+    "beam_type_bound",
+    "target_preserved",
+    "requested_properties_match",
+    "shared_type_unchanged"
+  ],
+  "operations": [
+    {
+      "operation_id": "add-beam-level1",
+      "operation_type": "add_beam",
+      "target": {
+        "storey_global_id": "1xS3BCk291UvhgP2dvNMKI"
+      },
+      "parameters": {
+        "axis": {
+          "start": {
+            "x_mm": 1000.0,
+            "y_mm": -20000.0,
+            "z_mm": 3100.0
+          },
+          "end": {
+            "x_mm": 7000.0,
+            "y_mm": -20000.0,
+            "z_mm": 3100.0
+          }
+        },
+        "section": {
+          "shape": "rectangle",
+          "width_mm": 300,
+          "height_mm": 500
+        }
+      },
+      "evidence_refs": [
+        "resolved:/operations/add-beam-level1/context/candidate_targets/0"
+      ]
+    },
+    {
+      "operation_id": "set-window-fire-rating-1",
+      "operation_type": "set_occurrence_properties",
+      "target": {
+        "element_global_id": "1hOSvn6df7F8_7GcBWlRLx"
+      },
+      "parameters": {},
+      "evidence_refs": [
+        "resolved:/operations/set-window-fire-rating-1/context/candidate_targets/0"
+      ]
+    }
+  ]
+}

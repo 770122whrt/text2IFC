@@ -1,0 +1,68 @@
+{
+  "base_model_fingerprint": "sha256:707a032566dee8e969a44d95509be46d646440e2443624709f8d3ae2b45f4656",
+  "binding_status": "bound",
+  "changeset_id": "set-window-external-1",
+  "evidence_refs": [
+    "resolved:/operations/set-window-external-1/context/candidate_targets/0"
+  ],
+  "operations": [
+    {
+      "evidence_refs": [
+        "resolved:/operations/set-window-external-1/context/candidate_targets/0"
+      ],
+      "operation_id": "set-window-external-1",
+      "operation_type": "set_occurrence_properties",
+      "parameters": {},
+      "semantic_assignments": [
+        {
+          "applicability": "conditional",
+          "authoring_action": "set_occurrence_pset",
+          "fact_key": "pset:Pset_WindowCommon.IsExternal",
+          "operation_id": "set-window-external-1",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "request-source:user_request",
+            "request-evidence:request",
+            "operation:set-window-external-1",
+            "property-hash:sha256:954201f9529e0e9071e7d4798c318932f281d4e486c01047b4ae491e2b18538b",
+            "source_fact_key:pset:Pset_WindowCommon.IsExternal"
+          ],
+          "source_fact_key": "pset:Pset_WindowCommon.IsExternal",
+          "source_kind": "explicit_request",
+          "source_ref": "request",
+          "unit": null,
+          "value": true,
+          "value_type": "IfcBoolean"
+        }
+      ],
+      "semantic_manifest": {
+        "manifest_id": "semantic-manifest-c35065a5c10220badb0fafa6",
+        "policy_id": "occurrence.property.l2",
+        "policy_version": "0.1"
+      },
+      "target": {
+        "element_global_id": "1hOSvn6df7F8_7GcBWlRRL"
+      }
+    }
+  ],
+  "postconditions": [
+    "target_preserved",
+    "requested_properties_match",
+    "shared_type_unchanged"
+  ],
+  "preconditions": [
+    "target_exists",
+    "target_class_supported",
+    "property_assignments_bound"
+  ],
+  "schema_version": "text2ifc/ifc-repair-changeset/0.2",
+  "scope": {
+    "forbidden_ids": [],
+    "target_ids": [
+      "1hOSvn6df7F8_7GcBWlRRL"
+    ]
+  },
+  "semantic_manifest_ref": "changeset/semantic-manifest-set-window-external-1.json",
+  "semantic_manifest_sha256": "sha256:9753a0f90f1c4e3ea99110b47f4e9b02986f7076043f6db53461be7569172715",
+  "source_request_hash": "sha256:e88a9df0ac1abe694a3a22645306d0152d3833a4e806adbe3b821b66b7d88840"
+}

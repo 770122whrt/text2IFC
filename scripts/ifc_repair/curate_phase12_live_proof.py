@@ -37,9 +37,12 @@ from scripts.ifc_repair.run_phase12_live_uat import (  # noqa: E402
     PROGRAM_GUARD_REASON,
     SOURCE,
     _few_shot_binding_map,
+    _load_green_full_preflight_evidence,
 )
 from text2ifc_agent.prompt_registry import load_prompt_registry  # noqa: E402
 from text2ifc_ifc_repair.prompt_profiles import select_prompt_profiles  # noqa: E402
+from text2ifc_ifc_repair.run_models import RunStoreError  # noqa: E402
+from text2ifc_ifc_repair.run_store import RunStore  # noqa: E402
 from text2ifc_ifc_repair.property_resolution_stage import (  # noqa: E402
     TEMPLATE_ID as PROPERTY_RESOLUTION_TEMPLATE_ID,
 )
@@ -1114,6 +1117,88 @@ def _copy_file(source: Path, destination: Path) -> None:
     shutil.copy2(source, destination)
 
 
+def _copy_bound_preflight_evidence(
+    preflight_root: Path,
+    destination: Path,
+) -> None:
+    """Retain only the strict preflight manifest and its declared evidence closure."""
+
+    preflight_path = preflight_root / "preflight.json"
+    _load_green_full_preflight_evidence(preflight_path)
+    payload = _read(preflight_path)
+    _copy_file(preflight_path, destination / "preflight.json")
+    copied: set[str] = {"preflight.json"}
+    records: list[dict[str, Any]] = []
+
+    def retain(
+        source: Path,
+        relative: Path,
+        *,
+        check_name: str,
+        evidence_kind: str,
+        source_reference: str,
+    ) -> None:
+        normalized = relative.as_posix()
+        if normalized not in copied:
+            _copy_file(source, destination / relative)
+            copied.add(normalized)
+        records.append(
+            {
+                "check_name": check_name,
+                "evidence_kind": evidence_kind,
+                "source_reference": source_reference,
+                "retained_path": normalized,
+                "sha256": _path_sha256(source),
+                "size_bytes": source.stat().st_size,
+            }
+        )
+
+    for check in payload["checks"]:
+        name = str(check["name"])
+        for stream_name in ("stdout", "stderr"):
+            relative = Path("logs") / f"{name}.{stream_name}.txt"
+            retain(
+                preflight_root / relative,
+                relative,
+                check_name=name,
+                evidence_kind=stream_name,
+                source_reference=relative.as_posix(),
+            )
+        for index, artifact in enumerate(check["artifacts"], start=1):
+            reference = str(artifact["path"])
+            candidate = Path(reference)
+            source = (
+                candidate.resolve()
+                if candidate.is_absolute()
+                else (preflight_root / candidate).resolve()
+            )
+            try:
+                relative = source.relative_to(preflight_root.resolve())
+            except ValueError:
+                digest = _path_sha256(source).removeprefix("sha256:")[:12]
+                relative = (
+                    Path("external-artifacts")
+                    / f"{name}-{index:02d}-{digest}-{source.name}"
+                )
+            retain(
+                source,
+                relative,
+                check_name=name,
+                evidence_kind="declared_artifact",
+                source_reference=reference,
+            )
+    _write(
+        destination / "retained-artifacts.json",
+        {
+            "schema_version": (
+                "text2ifc/phase12-live-proof-preflight-retention/0.1"
+            ),
+            "preflight_sha256": _path_sha256(preflight_path),
+            "retained": records,
+        },
+    )
+
+
 def _artifact_from_final(run_root: Path, final: Mapping[str, Any], name: str) -> Path:
     artifacts = final.get("artifacts")
     if not isinstance(artifacts, Mapping):
@@ -1128,6 +1213,37 @@ def _application_from_terminal(path: Path) -> dict[str, Any]:
     if not isinstance(application, dict):
         raise ValueError("LIVE_TERMINAL_APPLICATION_MISSING")
     return application
+
+
+def _load_validated_run_state(
+    runtime_root: Path,
+    run_id: str,
+    state_path: Path,
+) -> Any:
+    """Load and verify the production state plus its append-only transition ledger."""
+
+    try:
+        state = RunStore(runtime_root).load(run_id)
+    except RunStoreError as error:
+        raise ValueError("LIVE_RUNTIME_STATE_CHAIN_MISMATCH") from error
+    if state.to_dict() != _read(state_path):
+        raise ValueError("LIVE_RUNTIME_STATE_CHAIN_MISMATCH")
+    return state
+
+
+def _latest_bound_api_context(state: Any) -> Mapping[str, Any]:
+    for transition in reversed(state.transitions):
+        payload = transition.stage_payload
+        binding = payload.get("api_context") if isinstance(payload, Mapping) else None
+        if isinstance(binding, Mapping) and binding.get("path"):
+            if (
+                set(binding) != {"path", "sha256", "schema_version"}
+                or binding.get("schema_version")
+                != "text2ifc/ifc-repair-api-context/0.1"
+            ):
+                raise ValueError("LIVE_EFFECTIVE_REQUEST_CONTEXT_MISMATCH")
+            return binding
+    raise ValueError("LIVE_EFFECTIVE_REQUEST_CONTEXT_MISMATCH")
 
 
 def _runtime_authority(
@@ -1160,7 +1276,7 @@ def _runtime_authority(
         run_root, "changeset/prompt-profile-selection.json"
     )
     state_path = _safe_relative(run_root, "state.json")
-    transitions_path = _safe_relative(run_root, "transitions.json")
+    state = _load_validated_run_state(runtime_root, run_id, state_path)
     intent = _read(intent_path)
     applied_changeset = _read(applied_changeset_path)
     bound_changeset = _read(bound_changeset_path)
@@ -1178,17 +1294,16 @@ def _runtime_authority(
         or bound_changeset.get("source_request_hash") != effective_hash
     ):
         raise ValueError("LIVE_EFFECTIVE_REQUEST_BINDING_MISMATCH")
-    contexts = []
-    for path in run_root.glob("api-context*.json"):
-        document = _read(path)
-        context_intent = document.get("intent")
-        if (
-            document.get("repair_text") == effective
-            and isinstance(context_intent, Mapping)
-            and context_intent.get("source_request_hash") == effective_hash
-        ):
-            contexts.append(path)
-    if len(contexts) != 1:
+    context_binding = _latest_bound_api_context(state)
+    context_path = _safe_relative(run_root, context_binding["path"])
+    context = _read(context_path)
+    context_intent = context.get("intent")
+    if (
+        _path_sha256(context_path) != context_binding.get("sha256")
+        or context.get("repair_text") != effective
+        or not isinstance(context_intent, Mapping)
+        or context_intent.get("source_request_hash") != effective_hash
+    ):
         raise ValueError("LIVE_EFFECTIVE_REQUEST_CONTEXT_MISMATCH")
     profile = _read(profile_path)
     expected_runtime_profiles = _expected_plan07_stage2_profiles(
@@ -1203,10 +1318,8 @@ def _runtime_authority(
         != expected_runtime_profiles
     ):
         raise ValueError("LIVE_RUNTIME_PROFILE_SELECTION_MISMATCH")
-    if _read(state_path).get("run_id") != run_id or _read(
-        transitions_path
-    ).get("run_id") != run_id:
-        raise ValueError("LIVE_RUNTIME_STATE_CHAIN_MISMATCH")
+
+
     audit_live_artifact_binding(
         result,
         case_id=case_id,
@@ -1231,7 +1344,7 @@ def _runtime_authority(
         record = published_paths.get(relative)
         if (
             not isinstance(record, Mapping)
-            or record.get("sha256") != _path_sha256(artifact)
+            or record.get("sha256") != _path_sha256(artifact).removeprefix("sha256:")
             or record.get("size_bytes") != artifact.stat().st_size
         ):
             raise ValueError("LIVE_PUBLICATION_ARTIFACT_BINDING_MISMATCH")
@@ -1245,7 +1358,7 @@ def _runtime_authority(
     if len(terminal_paths) != 1:
         raise ValueError("LIVE_TERMINAL_EVIDENCE_MISSING")
     semantic_ref = str(bound_changeset.get("semantic_manifest_ref") or "")
-    semantic_path = _safe_relative(run_root / "changeset", semantic_ref)
+    semantic_path = _safe_relative(run_root, semantic_ref)
     return {
         "case": case,
         "run_id": run_id,
@@ -1300,10 +1413,17 @@ def _write_case_files(case_root: Path, case_id: str) -> None:
         if not artifact.is_file() or artifact.name in {"FILES.json", "REPORT.md"}:
             continue
         relative = artifact.relative_to(case_root).as_posix()
+        role = _role_for_path(relative, fixed_roles, index)
+        if (
+            artifact.parent == case_root
+            and artifact.name.startswith("semantic-manifest")
+            and artifact.suffix == ".json"
+        ):
+            role = "semantic_manifests"
         entries.append(
             {
                 "path": relative,
-                "role": _role_for_path(relative, fixed_roles, index),
+                "role": role,
                 "sha256": _path_sha256(artifact),
                 "size_bytes": artifact.stat().st_size,
             }
@@ -1337,7 +1457,10 @@ def _stage_case(
     _copy_file(authority["repaired_path"], case_root / "repaired.ifc")
     _copy_file(authority["intent_path"], case_root / "repair-intent.json")
     _copy_file(authority["resolution_path"], case_root / "target-resolution.json")
-    _copy_file(authority["semantic_path"], case_root / "semantic-manifests.json")
+    _copy_file(
+        authority["semantic_path"],
+        case_root / Path(authority["semantic_path"]).name,
+    )
     _copy_file(authority["changeset_path"], case_root / "changeset.json")
     _copy_file(authority["provider_draft_path"], case_root / "provider-draft.json")
     _copy_file(
@@ -1362,7 +1485,10 @@ def _stage_case(
     preflight = _read(preflight_root / "preflight.json")
     if preflight.get("status") != "passed":
         raise ValueError("LIVE_PREFLIGHT_EVIDENCE_FAILED")
-    shutil.copytree(preflight_root, provider_root / "preflight")
+    _copy_bound_preflight_evidence(
+        preflight_root,
+        provider_root / "preflight",
+    )
     changeset = authority["changeset"]
     operation_count = len(changeset.get("operations", ()))
     _write(

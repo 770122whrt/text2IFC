@@ -47,6 +47,14 @@ from text2ifc_knowledge.property_runtime import (
 )
 
 
+def _source_ifc_schema(source_ifc_path: Path | str) -> str:
+    """Probe schema without retaining the opened IFC model for later stages."""
+
+    return str(
+        ifcopenshell.open(str(Path(source_ifc_path).resolve())).schema
+    )
+
+
 class RepairAPI:
     """Behavior authority used by Python callers and every CLI mode.
 
@@ -147,8 +155,7 @@ class RepairAPI:
         )
         run_dir = self.store.runs_root / state.run_id
         try:
-            model = ifcopenshell.open(str(Path(source_ifc_path).resolve()))
-            if model.schema != "IFC2X3":
+            if _source_ifc_schema(source_ifc_path) != "IFC2X3":
                 return self._fail(state.run_id, RunStage.INVALID_INPUT, "IFC_SCHEMA_UNSUPPORTED")
         except Exception:
             return self._fail(state.run_id, RunStage.INVALID_INPUT, "IFC_SOURCE_INVALID")
@@ -694,11 +701,21 @@ class RepairAPI:
                 **orchestrator_options,
             )
             try:
-                outcome = orchestrator.start(
-                    intent=intent,
-                    repository=repository,
-                    expected_source_sha256=state.source.sha256,
-                )
+                try:
+                    outcome = orchestrator.start(
+                        intent=intent,
+                        repository=repository,
+                        expected_source_sha256=state.source.sha256,
+                    )
+                finally:
+                    if property_coordinator is not None:
+                        release = getattr(
+                            self._property_knowledge_runtime,
+                            "release_transient_resources",
+                            None,
+                        )
+                        if callable(release):
+                            release()
             except Exception as error:
                 return self._fail(
                     run_id,

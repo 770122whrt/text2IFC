@@ -1,0 +1,67 @@
+{
+  "schema_version": "text2ifc/proof-root-inventory/0.1",
+  "generated_at": "2026-09-03",
+  "scope": "Index of retained proof collections; child manifests remain authoritative.",
+  "collections": [
+    {
+      "collection_id": "ifc-repair-success-cases",
+      "path": "ifc-repair-success-cases",
+      "evidence_kind": "accepted_repair_collection_with_lawful_triplets",
+      "manifest": "ifc-repair-success-cases/manifest.json",
+      "human_validation": "ifc-repair-success-cases/VALIDATION.md",
+      "current_validation_reference": "IFC-REPAIR-COLLECTION-VALIDATION-20260903.json",
+      "used_for": [
+        "lawful_original_damaged_repaired_triplets",
+        "ifccompare",
+        "plan07_accepted_structural_proof"
+      ],
+      "fresh_validation_rerun": {
+        "status": "passed",
+        "case_count": 24,
+        "operation_count": 60,
+        "checked_file_count": 588,
+        "reopened_ifc_count": 72,
+        "independently_recomputed_case_count": 19,
+        "truth_bearing_triplet_publishable_count": 12,
+        "legacy_limitation_count": 5
+      }
+    },
+    {
+      "collection_id": "repair-milestone-r1-r1-20260902T152701658266Z-curated",
+      "path": "repair-milestone-r1/r1-20260902T152701658266Z-curated",
+      "evidence_kind": "independently_recomputed_r1_proof",
+      "manifest": "repair-milestone-r1/r1-20260902T152701658266Z-curated/manifest.json",
+      "validation": "repair-milestone-r1/r1-20260902T152701658266Z-curated/PROOF-VALIDATION.json",
+      "curation": "repair-milestone-r1/r1-20260902T152701658266Z-curated/CURATION.json",
+      "triplet_eligibility": "none",
+      "triplet_reason": "R1 frozen diversity cases were not generated from pre-declared private pristine/damage truth."
+    },
+    {
+      "collection_id": "phase12-plan07-final-uat-20260902T180900748385Z",
+      "path": "phase12-plan07-final/uat-20260902T180900748385Z",
+      "evidence_kind": "additive_final_code_compatibility_proof_package",
+      "manifest": "phase12-plan07-final/uat-20260902T180900748385Z/manifest.json",
+      "report": "phase12-plan07-final/uat-20260902T180900748385Z/FINAL-PROOF.md",
+      "status": "four_case_contract_pass_with_curator_packaging_limitation_retained"
+    },
+    {
+      "collection_id": "phase11-live-uat",
+      "path": "phase11-live-uat",
+      "evidence_kind": "historical_live_uat",
+      "status": "retained_not_revalidated_by_this_inventory_task"
+    },
+    {
+      "collection_id": "text2ifc-success-cases",
+      "path": "text2ifc-success-cases",
+      "evidence_kind": "text_to_ifc_generation_success_collection",
+      "manifest": "text2ifc-success-cases/manifest.json",
+      "status": "separate_non_repair_evidence_scope"
+    }
+  ],
+  "policies": {
+    "append_only_accepted_evidence": true,
+    "post_hoc_gold_forbidden": true,
+    "provider_input_must_exclude_private_truth": true,
+    "hash_policy": "Use existing manifest and source bindings; do not add redundant whole-tree hash gates to the root index."
+  }
+}

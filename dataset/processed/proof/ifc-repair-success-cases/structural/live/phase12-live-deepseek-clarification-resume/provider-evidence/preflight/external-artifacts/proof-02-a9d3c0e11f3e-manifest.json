@@ -1,0 +1,437 @@
+{
+  "admission_policy": {
+    "application": "passed",
+    "complete_repair_success": true,
+    "l3_required": false,
+    "mandatory_levels": [
+      "L1",
+      "L2"
+    ],
+    "preservation": "passed",
+    "successful_artifact_publishable": true
+  },
+  "case_count": 22,
+  "cases": [
+    {
+      "case_id": "largebuilding-full-replication",
+      "case_kind": "single",
+      "damaged_ifc": "window/single/largebuilding-full-replication/02-damaged.ifc",
+      "files": "window/single/largebuilding-full-replication/FILES.json",
+      "model": "deepseek-v4-flash",
+      "operation_count": 1,
+      "operation_family": "window",
+      "operation_type": "add_window_with_opening_to_wall",
+      "original_ifc": "window/single/largebuilding-full-replication/01-original.ifc",
+      "provider": "deepseek-openai-compatible",
+      "repaired_ifc": "window/single/largebuilding-full-replication/03-repaired.ifc",
+      "report": "window/single/largebuilding-full-replication/REPORT.md",
+      "status": "accepted"
+    },
+    {
+      "case_id": "largebuilding-r22-repeat",
+      "case_kind": "single",
+      "damaged_ifc": "window/single/largebuilding-r22-repeat/02-damaged.ifc",
+      "files": "window/single/largebuilding-r22-repeat/FILES.json",
+      "model": "deepseek-v4-flash",
+      "operation_count": 1,
+      "operation_family": "window",
+      "operation_type": "add_window_with_opening_to_wall",
+      "original_ifc": "window/single/largebuilding-r22-repeat/01-original.ifc",
+      "provider": "deepseek-openai-compatible",
+      "provider_evidence_mode": "live",
+      "repaired_ifc": "window/single/largebuilding-r22-repeat/03-repaired.ifc",
+      "report": "window/single/largebuilding-r22-repeat/REPORT.md",
+      "status": "accepted"
+    },
+    {
+      "case_id": "vvo-five-window",
+      "case_kind": "batch",
+      "damaged_ifc": "window/batch/vvo-five-window/02-damaged.ifc",
+      "files": "window/batch/vvo-five-window/FILES.json",
+      "model": "deepseek-v4-flash",
+      "operation_count": 5,
+      "operation_family": "window",
+      "operation_type": "add_window_with_opening_to_wall",
+      "original_ifc": "window/batch/vvo-five-window/01-original.ifc",
+      "provider": "deepseek-openai-compatible",
+      "repaired_ifc": "window/batch/vvo-five-window/03-repaired.ifc",
+      "report": "window/batch/vvo-five-window/REPORT.md",
+      "status": "accepted"
+    },
+    {
+      "case_id": "advancedproject-five-window",
+      "case_kind": "batch",
+      "damaged_ifc": "window/batch/advancedproject-five-window/02-damaged.ifc",
+      "files": "window/batch/advancedproject-five-window/FILES.json",
+      "model": "deepseek-v4-flash",
+      "operation_count": 5,
+      "operation_family": "window",
+      "operation_type": "add_window_with_opening_to_wall",
+      "original_ifc": "window/batch/advancedproject-five-window/01-original.ifc",
+      "provider": "deepseek-openai-compatible",
+      "provider_evidence_mode": "saved_live_output_deterministic_replay",
+      "repaired_ifc": "window/batch/advancedproject-five-window/03-repaired.ifc",
+      "report": "window/batch/advancedproject-five-window/REPORT.md",
+      "status": "accepted"
+    },
+    {
+      "case_id": "px4-five-window",
+      "case_kind": "batch",
+      "damaged_ifc": "window/batch/px4-five-window/02-damaged.ifc",
+      "files": "window/batch/px4-five-window/FILES.json",
+      "model": "phase10.3-five-window-fixture",
+      "operation_count": 5,
+      "operation_family": "window",
+      "operation_type": "add_window_with_opening_to_wall",
+      "original_ifc": "window/batch/px4-five-window/01-original.ifc",
+      "provider": "offline-deterministic",
+      "provider_evidence_mode": "offline_deterministic",
+      "repaired_ifc": "window/batch/px4-five-window/03-repaired.ifc",
+      "report": "window/batch/px4-five-window/REPORT.md",
+      "status": "accepted"
+    },
+    {
+      "case_id": "largebuilding-door-preserve-opening",
+      "case_kind": "single",
+      "damaged_ifc": "door/single/largebuilding-door-preserve-opening/02-damaged.ifc",
+      "files": "door/single/largebuilding-door-preserve-opening/FILES.json",
+      "model": "phase11-bound-fixture",
+      "operation_count": 1,
+      "operation_family": "door",
+      "operation_types": [
+        "fill_existing_opening_with_door"
+      ],
+      "original_ifc": "door/single/largebuilding-door-preserve-opening/01-original.ifc",
+      "provider": "offline-deterministic",
+      "provider_evidence_mode": "offline_bound_deterministic",
+      "repaired_ifc": "door/single/largebuilding-door-preserve-opening/03-repaired.ifc",
+      "report": "door/single/largebuilding-door-preserve-opening/REPORT.md",
+      "status": "accepted"
+    },
+    {
+      "case_id": "vvo-door-preserve-opening",
+      "case_kind": "single",
+      "damaged_ifc": "door/single/vvo-door-preserve-opening/02-damaged.ifc",
+      "files": "door/single/vvo-door-preserve-opening/FILES.json",
+      "model": "phase11-bound-fixture",
+      "operation_count": 1,
+      "operation_family": "door",
+      "operation_types": [
+        "fill_existing_opening_with_door"
+      ],
+      "original_ifc": "door/single/vvo-door-preserve-opening/01-original.ifc",
+      "provider": "offline-deterministic",
+      "provider_evidence_mode": "offline_bound_deterministic",
+      "repaired_ifc": "door/single/vvo-door-preserve-opening/03-repaired.ifc",
+      "report": "door/single/vvo-door-preserve-opening/REPORT.md",
+      "status": "accepted"
+    },
+    {
+      "case_id": "advancedproject-door-preserve-opening",
+      "case_kind": "single",
+      "damaged_ifc": "door/single/advancedproject-door-preserve-opening/02-damaged.ifc",
+      "files": "door/single/advancedproject-door-preserve-opening/FILES.json",
+      "model": "phase11-bound-fixture",
+      "operation_count": 1,
+      "operation_family": "door",
+      "operation_types": [
+        "fill_existing_opening_with_door"
+      ],
+      "original_ifc": "door/single/advancedproject-door-preserve-opening/01-original.ifc",
+      "provider": "offline-deterministic",
+      "provider_evidence_mode": "offline_bound_deterministic",
+      "repaired_ifc": "door/single/advancedproject-door-preserve-opening/03-repaired.ifc",
+      "report": "door/single/advancedproject-door-preserve-opening/REPORT.md",
+      "status": "accepted"
+    },
+    {
+      "case_id": "largebuilding-generated-door-type",
+      "case_kind": "single",
+      "damaged_ifc": "door/single/largebuilding-generated-door-type/02-damaged.ifc",
+      "files": "door/single/largebuilding-generated-door-type/FILES.json",
+      "model": "phase11-bound-fixture",
+      "operation_count": 1,
+      "operation_family": "door",
+      "operation_types": [
+        "add_door_with_opening_to_wall"
+      ],
+      "original_ifc": "door/single/largebuilding-generated-door-type/01-original.ifc",
+      "provider": "offline-deterministic",
+      "provider_evidence_mode": "offline_bound_deterministic",
+      "repaired_ifc": "door/single/largebuilding-generated-door-type/03-repaired.ifc",
+      "report": "door/single/largebuilding-generated-door-type/REPORT.md",
+      "status": "accepted"
+    },
+    {
+      "case_id": "vvo-five-door-preserve-opening",
+      "case_kind": "batch",
+      "damaged_ifc": "door/batch/vvo-five-door-preserve-opening/02-damaged.ifc",
+      "files": "door/batch/vvo-five-door-preserve-opening/FILES.json",
+      "model": "phase11-bound-fixture",
+      "operation_count": 5,
+      "operation_family": "door",
+      "operation_types": [
+        "fill_existing_opening_with_door"
+      ],
+      "original_ifc": "door/batch/vvo-five-door-preserve-opening/01-original.ifc",
+      "provider": "offline-deterministic",
+      "provider_evidence_mode": "offline_bound_deterministic",
+      "repaired_ifc": "door/batch/vvo-five-door-preserve-opening/03-repaired.ifc",
+      "report": "door/batch/vvo-five-door-preserve-opening/REPORT.md",
+      "status": "accepted"
+    },
+    {
+      "case_id": "vvo-two-door-two-window-mixed",
+      "case_kind": "mixed",
+      "damaged_ifc": "mixed/door-window/vvo-two-door-two-window-mixed/02-damaged.ifc",
+      "files": "mixed/door-window/vvo-two-door-two-window-mixed/FILES.json",
+      "model": "phase11-bound-fixture",
+      "operation_count": 4,
+      "operation_family": "mixed",
+      "operation_types": [
+        "add_window_with_opening_to_wall",
+        "fill_existing_opening_with_door"
+      ],
+      "original_ifc": "mixed/door-window/vvo-two-door-two-window-mixed/01-original.ifc",
+      "provider": "offline-deterministic",
+      "provider_evidence_mode": "offline_bound_deterministic",
+      "repaired_ifc": "mixed/door-window/vvo-two-door-two-window-mixed/03-repaired.ifc",
+      "report": "mixed/door-window/vvo-two-door-two-window-mixed/REPORT.md",
+      "status": "accepted"
+    },
+    {
+      "case_id": "vvo-authority-triplet-public-repair",
+      "case_kind": "mixed",
+      "damaged_ifc": "mixed/door-window/vvo-authority-triplet-public-repair/02-damaged.ifc",
+      "files": "mixed/door-window/vvo-authority-triplet-public-repair/FILES.json",
+      "model": "phase11-bound-fixture",
+      "operation_count": 4,
+      "operation_family": "mixed",
+      "operation_types": [
+        "add_window_with_opening_to_wall",
+        "fill_existing_opening_with_door"
+      ],
+      "original_ifc": "mixed/door-window/vvo-authority-triplet-public-repair/01-original.ifc",
+      "provider": "offline-deterministic",
+      "provider_evidence_mode": "offline_bound_deterministic",
+      "repaired_ifc": "mixed/door-window/vvo-authority-triplet-public-repair/03-repaired.ifc",
+      "report": "mixed/door-window/vvo-authority-triplet-public-repair/REPORT.md",
+      "status": "accepted"
+    },
+    {
+      "case_id": "vvo-five-door-authority-public-repair",
+      "case_kind": "batch",
+      "damaged_ifc": "door/batch/vvo-five-door-authority-public-repair/02-damaged.ifc",
+      "files": "door/batch/vvo-five-door-authority-public-repair/FILES.json",
+      "model": "phase11-bound-fixture",
+      "operation_count": 5,
+      "operation_family": "door",
+      "operation_types": [
+        "fill_existing_opening_with_door"
+      ],
+      "original_ifc": "door/batch/vvo-five-door-authority-public-repair/01-original.ifc",
+      "provider": "offline-deterministic",
+      "provider_evidence_mode": "offline_bound_deterministic",
+      "repaired_ifc": "door/batch/vvo-five-door-authority-public-repair/03-repaired.ifc",
+      "report": "door/batch/vvo-five-door-authority-public-repair/REPORT.md",
+      "status": "accepted"
+    },
+    {
+      "case_id": "dental-clinic-two-door-two-window-geometry-targeted",
+      "case_kind": "mixed",
+      "damaged_ifc": "mixed/door-window/dental-clinic-two-door-two-window-geometry-targeted/02-damaged.ifc",
+      "files": "mixed/door-window/dental-clinic-two-door-two-window-geometry-targeted/FILES.json",
+      "model": "phase11-bound-fixture",
+      "operation_count": 4,
+      "operation_family": "mixed",
+      "operation_types": [
+        "add_door_with_opening_to_wall",
+        "add_window_with_opening_to_wall"
+      ],
+      "original_ifc": "mixed/door-window/dental-clinic-two-door-two-window-geometry-targeted/01-original.ifc",
+      "provider": "offline-deterministic",
+      "provider_evidence_mode": "offline_bound_deterministic",
+      "repaired_ifc": "mixed/door-window/dental-clinic-two-door-two-window-geometry-targeted/03-repaired.ifc",
+      "report": "mixed/door-window/dental-clinic-two-door-two-window-geometry-targeted/REPORT.md",
+      "status": "accepted"
+    },
+    {
+      "case_id": "largebuilding-live-deepseek-complete-door",
+      "case_kind": "live_surviving_opening",
+      "damaged_ifc": "door/surviving-opening/largebuilding-live-deepseek-complete-door/02-damaged.ifc",
+      "files": "door/surviving-opening/largebuilding-live-deepseek-complete-door/FILES.json",
+      "model": "deepseek-v4-flash",
+      "operation_count": 1,
+      "operation_family": "door",
+      "operation_types": [
+        "fill_existing_opening_with_door"
+      ],
+      "original_ifc": "door/surviving-opening/largebuilding-live-deepseek-complete-door/01-original.ifc",
+      "provider": "deepseek-openai-compatible",
+      "provider_evidence_mode": "live",
+      "repaired_ifc": "door/surviving-opening/largebuilding-live-deepseek-complete-door/03-repaired.ifc",
+      "report": "door/surviving-opening/largebuilding-live-deepseek-complete-door/REPORT.md",
+      "status": "accepted"
+    },
+    {
+      "case_id": "largebuilding-live-deepseek-clarified-door",
+      "case_kind": "live_surviving_opening",
+      "damaged_ifc": "door/surviving-opening/largebuilding-live-deepseek-clarified-door/02-damaged.ifc",
+      "files": "door/surviving-opening/largebuilding-live-deepseek-clarified-door/FILES.json",
+      "model": "deepseek-v4-flash",
+      "operation_count": 1,
+      "operation_family": "door",
+      "operation_types": [
+        "fill_existing_opening_with_door"
+      ],
+      "original_ifc": "door/surviving-opening/largebuilding-live-deepseek-clarified-door/01-original.ifc",
+      "provider": "deepseek-openai-compatible",
+      "provider_evidence_mode": "live",
+      "repaired_ifc": "door/surviving-opening/largebuilding-live-deepseek-clarified-door/03-repaired.ifc",
+      "report": "door/surviving-opening/largebuilding-live-deepseek-clarified-door/REPORT.md",
+      "status": "accepted"
+    },
+    {
+      "case_id": "phase12-d7n-beam-loadbearing",
+      "case_kind": "single",
+      "damaged_ifc": "structural/single/phase12-d7n-beam-loadbearing/damaged.ifc",
+      "evidence_scope": "cross_scene_same_family_bimnet",
+      "files": "structural/single/phase12-d7n-beam-loadbearing/FILES.json",
+      "model": "phase12-bound-fixture",
+      "operation_count": 1,
+      "operation_family": "structural",
+      "operation_type": "add_beam",
+      "operation_types": [
+        "add_beam"
+      ],
+      "original_ifc": "structural/single/phase12-d7n-beam-loadbearing/original.ifc",
+      "phase": "12",
+      "provider": "offline-deterministic",
+      "provider_evidence_mode": "offline_bound_deterministic",
+      "repaired_ifc": "structural/single/phase12-d7n-beam-loadbearing/repaired.ifc",
+      "report": "structural/single/phase12-d7n-beam-loadbearing/REPORT.md",
+      "status": "accepted"
+    },
+    {
+      "case_id": "phase12-d7n-column-loadbearing",
+      "case_kind": "single",
+      "damaged_ifc": "structural/single/phase12-d7n-column-loadbearing/damaged.ifc",
+      "evidence_scope": "cross_scene_same_family_bimnet",
+      "files": "structural/single/phase12-d7n-column-loadbearing/FILES.json",
+      "model": "phase12-bound-fixture",
+      "operation_count": 1,
+      "operation_family": "structural",
+      "operation_type": "add_column",
+      "operation_types": [
+        "add_column"
+      ],
+      "original_ifc": "structural/single/phase12-d7n-column-loadbearing/original.ifc",
+      "phase": "12",
+      "provider": "offline-deterministic",
+      "provider_evidence_mode": "offline_bound_deterministic",
+      "repaired_ifc": "structural/single/phase12-d7n-column-loadbearing/repaired.ifc",
+      "report": "structural/single/phase12-d7n-column-loadbearing/REPORT.md",
+      "status": "accepted"
+    },
+    {
+      "case_id": "phase12-d7n-beam-column-atomic",
+      "case_kind": "batch",
+      "damaged_ifc": "structural/batch/phase12-d7n-beam-column-atomic/damaged.ifc",
+      "evidence_scope": "cross_scene_same_family_bimnet",
+      "files": "structural/batch/phase12-d7n-beam-column-atomic/FILES.json",
+      "model": "phase12-bound-fixture",
+      "operation_count": 2,
+      "operation_family": "structural",
+      "operation_types": [
+        "add_beam",
+        "add_column"
+      ],
+      "original_ifc": "structural/batch/phase12-d7n-beam-column-atomic/original.ifc",
+      "phase": "12",
+      "provider": "offline-deterministic",
+      "provider_evidence_mode": "offline_bound_deterministic",
+      "repaired_ifc": "structural/batch/phase12-d7n-beam-column-atomic/repaired.ifc",
+      "report": "structural/batch/phase12-d7n-beam-column-atomic/REPORT.md",
+      "status": "accepted"
+    },
+    {
+      "case_id": "phase12-vvo-beam-material-present",
+      "case_kind": "single",
+      "damaged_ifc": "structural/single/phase12-vvo-beam-material-present/damaged.ifc",
+      "evidence_scope": "cross_scene_same_family_bimnet",
+      "files": "structural/single/phase12-vvo-beam-material-present/FILES.json",
+      "model": "phase12-bound-fixture",
+      "operation_count": 1,
+      "operation_family": "structural",
+      "operation_type": "add_beam",
+      "operation_types": [
+        "add_beam"
+      ],
+      "original_ifc": "structural/single/phase12-vvo-beam-material-present/original.ifc",
+      "phase": "12",
+      "provider": "offline-deterministic",
+      "provider_evidence_mode": "offline_bound_deterministic",
+      "repaired_ifc": "structural/single/phase12-vvo-beam-material-present/repaired.ifc",
+      "report": "structural/single/phase12-vvo-beam-material-present/REPORT.md",
+      "status": "accepted"
+    },
+    {
+      "case_id": "phase12-vvo-column-material-absent",
+      "case_kind": "single",
+      "damaged_ifc": "structural/single/phase12-vvo-column-material-absent/damaged.ifc",
+      "evidence_scope": "cross_scene_same_family_bimnet",
+      "files": "structural/single/phase12-vvo-column-material-absent/FILES.json",
+      "model": "phase12-bound-fixture",
+      "operation_count": 1,
+      "operation_family": "structural",
+      "operation_type": "add_column",
+      "operation_types": [
+        "add_column"
+      ],
+      "original_ifc": "structural/single/phase12-vvo-column-material-absent/original.ifc",
+      "phase": "12",
+      "provider": "offline-deterministic",
+      "provider_evidence_mode": "offline_bound_deterministic",
+      "repaired_ifc": "structural/single/phase12-vvo-column-material-absent/repaired.ifc",
+      "report": "structural/single/phase12-vvo-column-material-absent/REPORT.md",
+      "status": "accepted"
+    },
+    {
+      "case_id": "phase12-vvo-door-window-beam-column-atomic",
+      "case_kind": "mixed",
+      "damaged_ifc": "mixed/door-window-beam-column/phase12-vvo-door-window-beam-column-atomic/damaged.ifc",
+      "evidence_scope": "cross_scene_same_family_bimnet",
+      "files": "mixed/door-window-beam-column/phase12-vvo-door-window-beam-column-atomic/FILES.json",
+      "model": "phase12-bound-fixture",
+      "operation_count": 6,
+      "operation_family": "mixed",
+      "operation_types": [
+        "add_beam",
+        "add_column",
+        "add_window_with_opening_to_wall",
+        "fill_existing_opening_with_door"
+      ],
+      "original_ifc": "mixed/door-window-beam-column/phase12-vvo-door-window-beam-column-atomic/original.ifc",
+      "phase": "12",
+      "provider": "offline-deterministic",
+      "provider_evidence_mode": "offline_bound_deterministic",
+      "repaired_ifc": "mixed/door-window-beam-column/phase12-vvo-door-window-beam-column-atomic/repaired.ifc",
+      "report": "mixed/door-window-beam-column/phase12-vvo-door-window-beam-column-atomic/REPORT.md",
+      "status": "accepted"
+    }
+  ],
+  "collection_id": "ifc-repair-success-cases",
+  "copy_policy": "Verified copies are stored here; original run artifacts remain authoritative and are never moved.",
+  "evidence_scope": "cross_scene_same_family_bimnet",
+  "future_operation_families": [
+    "opening"
+  ],
+  "generated_at": "2026-08-11",
+  "operation_families": [
+    "door",
+    "mixed",
+    "structural",
+    "window"
+  ],
+  "schema_version": "text2ifc/ifc-repair-success-collection/0.1"
+}

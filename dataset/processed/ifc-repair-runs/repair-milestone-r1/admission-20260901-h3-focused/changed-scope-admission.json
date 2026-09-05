@@ -1,0 +1,116 @@
+{
+ "schema_version": "text2ifc/repair-milestone-r1-changed-scope-admission/0.1",
+ "status": "passed",
+ "admission_basis": "previous full-preflight evidence + focused revalidation of all previously failed/changed scopes",
+ "generated_at": "2026-09-01",
+ "trigger": {
+  "defect": "R1 r1-20260901T055419268779Z case H3 deterministic stop LIVE_CASE_PROPERTY_IDENTITY_NOT_OFFERED",
+  "root_causes": [
+   "1) target geometry constraints opening_width_mm/opening_height_mm read only dimensions_mm.width/height (hosted openings); opening-filling records (IfcWindow/IfcDoor) store dimensions_mm.overall_width/overall_height, so the frozen Level 2 819x759 Window query offered zero public target candidates.",
+   "2) FillingIndexAdapter stored OverallWidth/OverallHeight as raw metre-float x unit-scale products (e.g. 819.0000000000001 mm), so a valid Stage 1 emission of tolerance_mm=0 still failed exact equality. Confirmed by preserved fail-closed diagnostic r1-h3-genuine-diagnostic-20260901T122853444723Z (1 stage1 call, no artifact)."
+  ],
+  "fixes": [
+   "src/text2ifc_ifc_repair/target_query.py: opening width/height constraints fall back to overall_width/overall_height dimension keys (commit 9510ecf3).",
+   "src/text2ifc_ifc_repair/index_adapters.py: filling overall dimensions routed through _clean_mm noise cleaner (commit 36efa337).",
+   "No schema, prompt, fixture, Gold, threshold, or offered-set validation change; no H3-specific identity or dimension in production code."
+  ]
+ },
+ "source_full_preflight": {
+  "path": "dataset/processed/proof/ifc-repair-success-cases/structural/live/phase12-live-deepseek-complete/provider-evidence/preflight/preflight.json",
+  "sha256": "sha256:cc506b4759af65ee4573abe0f045a1b803a418aea552e4f286ff7125c7009c2d",
+  "preserved_status": "passed"
+ },
+ "prior_r1_run": {
+  "path": "dataset/processed/ifc-repair-runs/repair-milestone-r1/r1-20260901T055419268779Z/r1-execution-result.json",
+  "sha256": "sha256:e9de4e966b047a2df2b769d4ed1fe2bd6dfd016099724092f6ada873afd48ea2",
+  "preserved_status": "failed",
+  "stopped_after_case": "H3"
+ },
+ "preserved_failed_diagnostic": {
+  "path": "dataset/processed/ifc-repair-runs/repair-milestone-r1/r1-h3-genuine-diagnostic-20260901T122853444723Z/h3-genuine-diagnostic-result.json",
+  "sha256": "sha256:dbc217d7da09ff33e5382d5447bf782c158fdc62b9eed58a43c44db1141854e1",
+  "preserved_status": "failed",
+  "reason_code": "LIVE_CASE_PROPERTY_IDENTITY_NOT_OFFERED",
+  "note": "fail-closed after root cause 2; no silent patch-and-continue in the same run"
+ },
+ "provider_calls": 0,
+ "predictions_regenerated": 0,
+ "network_transport_attempted": false,
+ "changed_scope_files": {
+  "src/text2ifc_ifc_repair/target_query.py": "sha256:a2d85352dd41f8bc4f0135da0b8abbc2b545f432563a3efa9fc7124b96604564",
+  "src/text2ifc_ifc_repair/index_adapters.py": "sha256:7c8e229ca4f07febe9d3a4335e189ebd1a7d59284a633238ec1f1e8cdfe61882",
+  "tests/ifc_repair/test_target_query_filling_geometry.py": "sha256:5014d649cc95272f289d59e4998e51baf6ad14bb27af4871113c42f42b477275"
+ },
+ "resolved_checks": [
+  {
+   "check_id": "target_resolution_focused_regression",
+   "status": "passed",
+   "exit_code": 0,
+   "skip_count": 0,
+   "substitution_count": 0,
+   "timeout_count": 0,
+   "network_calls": 0,
+   "result": "37 passed (5 filling-geometry RED/GREEN incl. zero-tolerance exact match + 15 target-query + 17 resolution-flow); pre-fix RED reproduction of H3 not_found retained in test history",
+   "evidence": [
+    {
+     "path": "dataset/processed/ifc-repair-runs/repair-milestone-r1/admission-20260901-h3-focused/target-resolution-focused.junit.xml",
+     "sha256": "sha256:5f77fe2e3935343b180f7895a5090737f8cfad8391f294630671feecd52d497e"
+    }
+   ]
+  },
+  {
+   "check_id": "live_runner_contract_regression",
+   "status": "passed",
+   "exit_code": 0,
+   "skip_count": 0,
+   "substitution_count": 0,
+   "timeout_count": 0,
+   "network_calls": 0,
+   "result": "105 passed in 134.09s; offered-set validation and resume contract unchanged",
+   "evidence": [
+    {
+     "path": "dataset/processed/ifc-repair-runs/repair-milestone-r1/admission-20260901-h3-focused/live-runner-contract.junit.xml",
+     "sha256": "sha256:11bcc9e9dc0f10507673336a7a64e1882fb797f412a57dd8e78fe2e6861b7e94"
+    }
+   ]
+  },
+  {
+   "check_id": "full_ifc_repair_suite",
+   "status": "passed",
+   "exit_code": 0,
+   "skip_count": 0,
+   "substitution_count": 0,
+   "timeout_count": 0,
+   "network_calls": 0,
+   "result": "1250 passed across four parallel batches (288+313+279+370); zero failure, zero skip; single sequential run equivalent",
+   "evidence": [
+    {
+     "path": "dataset/processed/ifc-repair-runs/repair-milestone-r1/admission-20260901-h3-focused/ifc-repair-suite-stdout.txt",
+     "sha256": "sha256:053ff5f91cacd22f4265dc74b250d3801c8deea36cf34a0bc9815edc67d34123"
+    }
+   ]
+  },
+  {
+   "check_id": "full_knowledge_suite",
+   "status": "passed",
+   "exit_code": 0,
+   "skip_count": 0,
+   "substitution_count": 0,
+   "timeout_count": 0,
+   "network_calls": 0,
+   "result": "111 passed in 237.32s after both fixes (sequential)",
+   "evidence": [
+    {
+     "path": "dataset/processed/ifc-repair-runs/repair-milestone-r1/admission-20260901-h3-focused/knowledge-suite-stdout.txt",
+     "sha256": "sha256:efa4303988b23e5f79f98a691acecfdb58b7a58d5695cfe973ae601ed876fc2c"
+    }
+   ]
+  }
+ ],
+ "compileall": "passed (src tests scripts)",
+ "git_diff_check": "passed",
+ "implementation_commits": [
+  "9510ecf3",
+  "36efa337"
+ ]
+}

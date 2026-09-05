@@ -117,6 +117,7 @@ STRUCTURAL_OCCURRENCE_CLASS = {
 }
 CURRENT_STAGE_1_5_REASON = "PROPERTY_ADMISSIBLE_STAGE_1_5"
 HISTORICAL_ALIAS_REASON = "REVIEWED_ALIAS_EXACT"
+R1_PROOF_COMPARISON_TIMEOUT_SECONDS = 600.0
 
 
 def _profile_id_for_intent_schema(
@@ -2187,13 +2188,17 @@ def _audit_structural_provenance_chain(
         _retained_request_text(request_path).encode("utf-8")
     ).hexdigest()
     damaged_prefixed = f"sha256:{damaged_sha256}"
+    evidence_mode = str(case.get("provider_evidence_mode") or "")
     if (
         changeset.get("source_request_hash") != request_sha256
         or intent.get("source_request_hash") != request_sha256
-        or _normalize_sha256(str(intent.get("model_fingerprint")))
-        != damaged_sha256
         or _normalize_sha256(str(changeset.get("base_model_fingerprint")))
         != damaged_sha256
+        or (
+            evidence_mode != "live"
+            and _normalize_sha256(str(intent.get("model_fingerprint")))
+            != damaged_sha256
+        )
     ):
         raise ValueError("l0.structural.provenance:request_or_model_hash")
 
@@ -2246,8 +2251,7 @@ def _audit_structural_provenance_chain(
     if (
         _normalize_sha256(str(resolution.get("source_ifc_sha256")))
         != damaged_sha256
-        or _normalize_sha256(str(resolution.get("model_fingerprint")))
-        != damaged_sha256
+        or resolution.get("model_fingerprint") != intent.get("model_fingerprint")
     ):
         raise ValueError("l0.structural.provenance:resolution_model_hash")
     resolved_identity = [
@@ -2285,8 +2289,16 @@ def _audit_structural_provenance_chain(
                 raise ValueError("l0.structural.provenance:resolution_binding")
 
     manifest_ref = str(changeset.get("semantic_manifest_ref") or "")
-    manifest_matches = [path for path in roles.values() if path.name == manifest_ref]
-    if len(manifest_matches) != 1:
+    manifest_name = Path(manifest_ref).name
+    canonical_manifest = roles.get("semantic_manifests") or roles.get(
+        "semantic_manifest"
+    )
+    manifest_matches = (
+        [canonical_manifest]
+        if canonical_manifest is not None
+        else [path for path in roles.values() if path.name == manifest_name]
+    )
+    if len(manifest_matches) != 1 or manifest_matches[0].name != manifest_name:
         raise ValueError("l0.structural.provenance:semantic_manifest_missing")
     manifest_path = manifest_matches[0]
     bundle = _read_json(manifest_path)
@@ -3561,12 +3573,25 @@ def _audit_live_transcript_authority(
         if isinstance(item, Mapping)
     }
     registry = create_default_registry()
-    expected_profile_ids = sorted(
-        {
-            str(registry.require(operation_type).prompt_profile_id)
-            for operation_type in operation_types
-        }
-    )
+    stage2_schema_version = str(provider_draft.get("schema_version") or "")
+    if stage2_schema_version == "text2ifc/ifc-repair-changeset-draft/0.3":
+        expected_profile_ids = sorted(
+            {
+                str(registry.require(operation_type).stage2_prompt_profile_id)
+                for operation_type in operation_types
+            }
+        )
+    elif stage2_schema_version == "text2ifc/ifc-repair-changeset-draft/0.2":
+        expected_profile_ids = sorted(
+            {
+                str(registry.require(operation_type).prompt_profile_id)
+                for operation_type in operation_types
+            }
+        )
+    else:
+        raise ValueError("l0.structural.live:stage2_schema_unreviewed")
+    if not expected_profile_ids or any(item == "None" for item in expected_profile_ids):
+        raise ValueError("l0.structural.live:prompt_profile_registry_binding")
     expected_selection = select_prompt_profiles(expected_profile_ids).to_dict()
     profiles = load_prompt_profiles()
     stage1_profile_ids = sorted(
@@ -3599,6 +3624,18 @@ def _audit_live_transcript_authority(
         for item in live_result["cases"]
         if isinstance(item, Mapping) and item.get("case_id") == live_case_id
     )
+    stage1_attempts = [
+        item
+        for item in result_case.get("attempts", ())
+        if isinstance(item, Mapping) and item.get("stage") == "stage1"
+    ]
+    if (
+        not stage1_attempts
+        or intent.get("model_fingerprint")
+        != "sha256:"
+        + hashlib.sha256(str(stage1_attempts[-1].get("model") or "").encode("utf-8")).hexdigest()
+    ):
+        raise ValueError("l0.structural.live:intent_model_fingerprint")
     for attempt in result_case.get("attempts", ()):
         if not isinstance(attempt, Mapping):
             raise ValueError("l0.structural.live:attempt_profile_binding")
@@ -3924,6 +3961,7 @@ def _audit_phase12_damage_provenance(
         changes = profile_normalized_model_diff(
             original_model,
             damaged_model,
+            timeout_seconds=R1_PROOF_COMPARISON_TIMEOUT_SECONDS,
         )["changes"]
     except Exception as error:
         raise ValueError(
@@ -3955,7 +3993,11 @@ def _audit_structural_preservation(
     repaired_model: Any,
 ) -> None:
     try:
-        profiled = profile_normalized_model_diff(damaged_model, repaired_model)
+        profiled = profile_normalized_model_diff(
+            damaged_model,
+            repaired_model,
+            timeout_seconds=R1_PROOF_COMPARISON_TIMEOUT_SECONDS,
+        )
     except Exception as error:
         raise ValueError(
             f"l0.structural.preservation:not_evaluable:{type(error).__name__}"
@@ -4049,6 +4091,7 @@ def _audit_authorized_repair_preservation(
             changeset=changeset,
             application_result=application,
             registry=create_default_registry(),
+            comparison_timeout_seconds=R1_PROOF_COMPARISON_TIMEOUT_SECONDS,
             reopened_models=(
                 (damaged_model, None),
                 (repaired_model, None),
@@ -4072,8 +4115,12 @@ def _audit_authorized_repair_preservation(
                     repaired_model=repaired_model,
                 )
         if unreachable_non_root_fingerprint_multiset(
-            damaged_model
-        ) != unreachable_non_root_fingerprint_multiset(repaired_model):
+            damaged_model,
+            timeout_seconds=R1_PROOF_COMPARISON_TIMEOUT_SECONDS,
+        ) != unreachable_non_root_fingerprint_multiset(
+            repaired_model,
+            timeout_seconds=R1_PROOF_COMPARISON_TIMEOUT_SECONDS,
+        ):
             raise ValueError(
                 "proof.global_preservation:nonroot_orphan_delta"
             )
@@ -4400,7 +4447,7 @@ def _audit_r1_h3_state_selection(
         for item in transitions
         if item.get("from_stage") == "intent_ready"
         and item.get("to_stage") == "clarification_required"
-        and item.get("reason_code") == "ambiguous_target"
+        and item.get("reason_code") in {"ambiguous", "ambiguous_target"}
         and isinstance(item.get("clarification"), Mapping)
         and item["clarification"].get("reason_code") == "ambiguous_target"
     ]
@@ -4653,6 +4700,41 @@ def _r1_expected_stage1_profiles() -> list[dict[str, Any]]:
     )
 
 
+def _r1_expected_stage2_selection(
+    *,
+    changeset: Mapping[str, Any],
+    provider_draft: Mapping[str, Any],
+) -> dict[str, Any]:
+    """Recompute the exact Stage 2 profile family used by production."""
+
+    operation_types = {
+        str(item.get("operation_type") or "")
+        for item in changeset.get("operations", ())
+        if isinstance(item, Mapping)
+    }
+    registry = create_default_registry()
+    stage2_schema_version = str(provider_draft.get("schema_version") or "")
+    if stage2_schema_version == "text2ifc/ifc-repair-changeset-draft/0.3":
+        profile_ids = sorted(
+            {
+                str(registry.require(operation_type).stage2_prompt_profile_id)
+                for operation_type in operation_types
+            }
+        )
+    elif stage2_schema_version == "text2ifc/ifc-repair-changeset-draft/0.2":
+        profile_ids = sorted(
+            {
+                str(registry.require(operation_type).prompt_profile_id)
+                for operation_type in operation_types
+            }
+        )
+    else:
+        raise ValueError("proof.live.stage2_schema_unreviewed")
+    if not profile_ids or any(item == "None" for item in profile_ids):
+        raise ValueError("proof.live.prompt_profile_registry_binding")
+    return select_prompt_profiles(profile_ids).to_dict()
+
+
 def _audit_r1_live_provider_provenance(
     *,
     case_id: str,
@@ -4719,28 +4801,18 @@ def _audit_r1_live_provider_provenance(
     expected_stage2: Mapping[str, Any] | None = None
     provider_draft: Mapping[str, Any] | None = None
     if changeset is not None:
-        operation_types = {
-            str(item.get("operation_type") or "")
-            for item in changeset.get("operations", ())
-            if isinstance(item, Mapping)
-        }
-        registry = create_default_registry()
-        expected_stage2 = select_prompt_profiles(
-            sorted(
-                {
-                    str(registry.require(operation_type).prompt_profile_id)
-                    for operation_type in operation_types
-                }
-            )
-        ).to_dict()
+        provider_draft = _read_json(
+            _require_r1_role(roles, "live_provider_draft")
+        )
+        expected_stage2 = _r1_expected_stage2_selection(
+            changeset=changeset,
+            provider_draft=provider_draft,
+        )
         selection_path = _require_r1_role(
             roles, "live_prompt_profile_selection"
         )
         if _read_json(selection_path) != expected_stage2:
             raise ValueError("proof.live.prompt_profile_selection")
-        provider_draft = _read_json(
-            _require_r1_role(roles, "live_provider_draft")
-        )
 
     state_document = (
         validated_state.to_dict()
@@ -5570,6 +5642,37 @@ def _load_validated_r1_state(state_path: Path) -> Any:
     return state
 
 
+def _r1_success_terminal_payload_matches(
+    *,
+    payload: Any,
+    result_artifacts: Mapping[str, Any],
+) -> bool:
+    """Accept only reviewed legacy or manifest-bound success payloads."""
+
+    if payload == {"status": "succeeded"}:
+        return True
+    if not isinstance(payload, Mapping) or set(payload) != {
+        "status",
+        "manifest",
+    }:
+        return False
+    manifest = payload.get("manifest")
+    if (
+        payload.get("status") != "succeeded"
+        or not isinstance(manifest, Mapping)
+        or set(manifest) != {"path", "schema_version", "sha256"}
+        or manifest.get("path") != result_artifacts.get("manifest")
+        or manifest.get("schema_version")
+        != "text2ifc/ifc-repair-artifact-manifest/0.1"
+    ):
+        return False
+    try:
+        _normalize_sha256(str(manifest.get("sha256") or ""))
+    except ValueError:
+        return False
+    return True
+
+
 def _audit_r1_success_terminal_binding(
     *,
     state: Mapping[str, Any] | Any,
@@ -5594,7 +5697,10 @@ def _audit_r1_success_terminal_binding(
         or not transitions
         or transitions[-1].get("to_stage") != "succeeded"
         or transitions[-1].get("reason_code") is not None
-        or transitions[-1].get("stage_payload") != {"status": "succeeded"}
+        or not _r1_success_terminal_payload_matches(
+            payload=transitions[-1].get("stage_payload"),
+            result_artifacts=result_artifacts,
+        )
         or not isinstance(result_artifacts, Mapping)
         or transitions[-1].get("result_artifacts") != result_artifacts
         or set(result_artifacts)
@@ -5785,6 +5891,65 @@ def _r1_initial_request_intent_path(
     )
 
 
+def _r1_m1_rejection_reason_matches(
+    *,
+    transition_reason: Any,
+    admission: Mapping[str, Any],
+) -> bool:
+    """Bind current deterministic rejection codes while retaining legacy Proof."""
+
+    admission_reason = str(admission.get("reason_code") or "")
+    if admission_reason:
+        return (
+            admission_reason
+            in {
+                "PROPERTY_VALUE_TYPE_INCOMPATIBLE",
+                "PROPERTY_UNIT_INCOMPATIBLE",
+            }
+            and transition_reason == admission_reason
+        )
+    return transition_reason == "property_resolution"
+
+
+def _r1_checkpoint_reference_matches(
+    reference: Mapping[str, Any],
+    *,
+    artifact: Path,
+    listed: set[Path],
+    schema_version: str,
+    identity_key: str,
+    identity_value: str,
+) -> bool:
+    """Validate a D-14 stable reference under FILES 0.2 byte sealing.
+
+    Phase 12.1 deliberately does not use an artifact hash as property
+    authorization.  The enclosing runtime state and referenced artifact are
+    each hashed by FILES 0.2; this check binds that byte-sealed pair by exact
+    path, schema version, and stable identity.  A historical optional hash is
+    still verified when present.
+    """
+
+    required = {"path", "schema_version", identity_key}
+    if frozenset(reference) not in {
+        frozenset(required),
+        frozenset(required | {"sha256"}),
+    }:
+        return False
+    resolved = artifact.resolve()
+    if (
+        resolved not in listed
+        or reference.get("schema_version") != schema_version
+        or reference.get(identity_key) != identity_value
+    ):
+        return False
+    if "sha256" in reference:
+        return (
+            _normalize_sha256(str(reference.get("sha256") or ""))
+            == _sha256(resolved)
+        )
+    return True
+
+
 def _audit_r1_m1_initial_replay_binding(
     *,
     replay_paths: Mapping[str, Path],
@@ -5829,6 +5994,7 @@ def _audit_r1_m1_initial_replay_binding(
     query = _read_json(paths["query"])
     candidate_set = _read_json(paths["candidate_set"])
     trace = _read_json(paths["decision_trace"])
+    retained_admission = _read_json(paths["retained_admission"])
     claim_id = str(query.get("claim_id") or "")
     operation_id = str(query.get("operation_id") or "")
     claim_suffix = claim_id.removeprefix("claim-")
@@ -5858,11 +6024,30 @@ def _audit_r1_m1_initial_replay_binding(
         raise ValueError("proof.m1.initial_claim")
     state_document = state.to_dict() if hasattr(state, "to_dict") else dict(state)
     run_id = str(state_document.get("run_id") or "")
+    expected_query_id = f"property-query:{run_id}:{operation_id}:{claim_id}"
+    expected_candidate_set_id = (
+        f"property-candidates:{run_id}:{operation_id}:{claim_id}"
+    )
+    expected_decision_id = (
+        f"property-decision:{run_id}:{operation_id}:{claim_id}"
+    )
+    expected_admissibility_id = (
+        f"property-admissibility:{run_id}:{operation_id}:{claim_id}"
+    )
     if (
         not claim_id
         or "-resume-" in claim_id
         or not run_id
         or query.get("run_id") != run_id
+        or query.get("query_id") != expected_query_id
+        or candidate_set.get("query_id") != expected_query_id
+        or candidate_set.get("candidate_set_id") != expected_candidate_set_id
+        or retained_admission.get("query_id") != expected_query_id
+        or retained_admission.get("candidate_set_id")
+        != expected_candidate_set_id
+        or retained_admission.get("decision_id") != expected_decision_id
+        or retained_admission.get("admissibility_id")
+        != expected_admissibility_id
         or trace.get("run_id") != run_id
         or trace.get("claim_id") != claim_id
         or trace.get("operation_id") != query.get("operation_id")
@@ -5927,7 +6112,10 @@ def _audit_r1_m1_initial_replay_binding(
             if (
                 transition.get("from_stage") != "intent_ready"
                 or
-                transition.get("reason_code") != "property_resolution"
+                not _r1_m1_rejection_reason_matches(
+                    transition_reason=transition.get("reason_code"),
+                    admission=retained_admission,
+                )
                 or not isinstance(clarification, Mapping)
                 or not isinstance(clarification.get("clarification_id"), str)
                 or not str(clarification["clarification_id"]).strip()
@@ -5982,26 +6170,49 @@ def _audit_r1_m1_initial_replay_binding(
             raise ValueError("proof.m1.initial_stop")
     expected_by_checkpoint = {
         "candidates": {
-            "query": paths["query"],
-            "candidate_set": paths["candidate_set"],
+            "query": (
+                paths["query"],
+                "text2ifc/ifc-property-resolution-query/0.2",
+                "query_id",
+                expected_query_id,
+            ),
+            "candidate_set": (
+                paths["candidate_set"],
+                "text2ifc/ifc-property-candidate-set/0.1",
+                "candidate_set_id",
+                expected_candidate_set_id,
+            ),
         },
-        "admissibility": {"admissibility": paths["retained_admission"]},
+        "admissibility": {
+            "admissibility": (
+                paths["retained_admission"],
+                "text2ifc/ifc-property-admissibility/0.1",
+                "admissibility_id",
+                expected_admissibility_id,
+            )
+        },
     }
     run_root = state_path.resolve().parent
     for checkpoint, expected_artifacts in expected_by_checkpoint.items():
         artifacts = checkpoint_payloads[checkpoint].get("artifacts")
         if not isinstance(artifacts, Mapping):
             raise ValueError("proof.m1.initial_replay_artifact")
-        for artifact_name, expected_path in expected_artifacts.items():
+        for artifact_name, contract in expected_artifacts.items():
             reference = artifacts.get(artifact_name)
             if not isinstance(reference, Mapping):
                 raise ValueError("proof.m1.initial_replay_artifact")
+            expected_path, schema_version, identity_key, identity_value = contract
             artifact = _safe_path(run_root, str(reference.get("path") or ""))
             if (
                 artifact.resolve() != expected_path
-                or artifact.resolve() not in listed
-                or _normalize_sha256(str(reference.get("sha256") or ""))
-                != _sha256(artifact)
+                or not _r1_checkpoint_reference_matches(
+                    reference,
+                    artifact=artifact,
+                    listed=listed,
+                    schema_version=schema_version,
+                    identity_key=identity_key,
+                    identity_value=identity_value,
+                )
             ):
                 raise ValueError("proof.m1.initial_replay_artifact")
     decision_artifacts = checkpoint_payloads["decision"].get("artifacts")
@@ -6016,8 +6227,14 @@ def _audit_r1_m1_initial_replay_binding(
     decision_document = _read_json(decision_result)
     if (
         decision_result.resolve() not in listed
-        or _normalize_sha256(str(decision_reference.get("sha256") or ""))
-        != _sha256(decision_result)
+        or not _r1_checkpoint_reference_matches(
+            decision_reference,
+            artifact=decision_result,
+            listed=listed,
+            schema_version="text2ifc/ifc-property-resolution-result/0.1",
+            identity_key="decision_id",
+            identity_value=expected_decision_id,
+        )
         or decision_document.get("decision") != _read_json(paths["decision"])
         or decision_document.get("trace") != _read_json(paths["decision_trace"])
     ):

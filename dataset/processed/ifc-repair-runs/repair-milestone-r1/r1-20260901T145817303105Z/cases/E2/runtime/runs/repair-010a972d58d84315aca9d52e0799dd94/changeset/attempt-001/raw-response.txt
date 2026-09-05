@@ -1,0 +1,31 @@
+{
+  "schema_version": "text2ifc/ifc-repair-changeset-draft/0.2",
+  "draft_id": "changeset/set-fire-rating-door-1",
+  "base_model_fingerprint": "sha256:989ace1d52f694ee94d80bd99aa81d0ff3d76cf21f34fcfd00a286ac897ed8a6",
+  "source_request_hash": "sha256:daf7374cd446ee01d467eb700d33da287668a51979ee8904aa8d4620ba2e434e",
+  "semantic_manifest_ref": "changeset/semantic-manifest-set-fire-rating-door-1.json",
+  "semantic_manifest_sha256": "sha256:e81eda9248fc44b2983933e4ae2830fcf3d5a0932c7a8b06f7011afac1cc5076",
+  "semantic_summary": {
+    "required": 0,
+    "conditional": 1,
+    "not_required": 0
+  },
+  "scope": {
+    "target_ids": ["3JlX9$$_PCKBNpDob64$5M"],
+    "forbidden_ids": []
+  },
+  "evidence_refs": ["resolved:/operations/set-fire-rating-door-1/context/candidate_targets/0"],
+  "preconditions": ["target_exists", "target_class_supported", "property_assignments_bound"],
+  "postconditions": ["target_preserved", "requested_properties_match", "shared_type_unchanged"],
+  "operations": [
+    {
+      "operation_id": "set-fire-rating-door-1",
+      "operation_type": "set_occurrence_properties",
+      "target": {
+        "element_global_id": "3JlX9$$_PCKBNpDob64$5M"
+      },
+      "parameters": {},
+      "evidence_refs": ["resolved:/operations/set-fire-rating-door-1/context/candidate_targets/0"]
+    }
+  ]
+}

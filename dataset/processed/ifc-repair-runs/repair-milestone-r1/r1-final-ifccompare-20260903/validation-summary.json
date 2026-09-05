@@ -1,0 +1,30 @@
+{
+  "schema_version": "text2ifc/repair-milestone-r1-final-ifccompare-summary/0.1",
+  "status": "passed",
+  "recorded_at": "2026-09-03",
+  "command": ".venv\\Scripts\\python scripts/ifc_repair/validate_success_cases.py --root dataset/processed/proof/ifc-repair-success-cases --json",
+  "collection_manifest_schema_version": "text2ifc/ifc-repair-success-collection/0.1",
+  "validator_schema_version": "text2ifc/ifc-repair-proof-validation/0.2",
+  "accepted_collection": {
+    "case_count": 24,
+    "operation_count": 60,
+    "checked_file_count": 588,
+    "reopened_ifc_count": 72,
+    "independently_recomputed_case_count": 19,
+    "truth_bearing_triplet_case_count": 12,
+    "truth_bearing_triplet_publishable_count": 12,
+    "strict_stage_1_5_case_count": 2,
+    "error_count": 0,
+    "limitation_count": 5,
+    "limitation_class": "legacy_unverifiable",
+    "limitation_boundary": "Five historical Window cases lack current application_result role mappings; they remain explicit limitations and are not used as R1 truth."
+  },
+  "repair_milestone_r1": {
+    "case_count": 12,
+    "legal_private_triplet_count": 0,
+    "ifccompare_status": "not_applicable_no_legal_private_ground_truth",
+    "fabricated_ground_truth": false,
+    "artifact_validation": "proof-validation 0.3 independent reopen, L0/L1/L2, property authority, atomicity, source immutability and preservation"
+  },
+  "errors": []
+}

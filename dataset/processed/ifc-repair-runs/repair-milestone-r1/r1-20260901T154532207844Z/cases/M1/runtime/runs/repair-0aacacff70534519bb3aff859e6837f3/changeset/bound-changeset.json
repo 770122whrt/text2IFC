@@ -1,0 +1,68 @@
+{
+  "base_model_fingerprint": "sha256:989ace1d52f694ee94d80bd99aa81d0ff3d76cf21f34fcfd00a286ac897ed8a6",
+  "binding_status": "bound",
+  "changeset_id": "changeset-set-door-fire-rating-1",
+  "evidence_refs": [
+    "resolved:/operations/set-door-fire-rating-1/context/candidate_targets/0"
+  ],
+  "operations": [
+    {
+      "evidence_refs": [
+        "resolved:/operations/set-door-fire-rating-1/context/candidate_targets/0"
+      ],
+      "operation_id": "set-door-fire-rating-1",
+      "operation_type": "set_occurrence_properties",
+      "parameters": {},
+      "semantic_assignments": [
+        {
+          "applicability": "conditional",
+          "authoring_action": "set_occurrence_pset",
+          "fact_key": "pset:Pset_DoorCommon.FireRating",
+          "operation_id": "set-door-fire-rating-1",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "request-source:user_request",
+            "request-evidence:request-1",
+            "operation:set-door-fire-rating-1",
+            "property-hash:sha256:53241faab03827e4c03dcdc818d71cbc5b1c642159e9df719136e2dad1c7ca69",
+            "source_fact_key:pset:Pset_DoorCommon.FireRating"
+          ],
+          "source_fact_key": "pset:Pset_DoorCommon.FireRating",
+          "source_kind": "explicit_request",
+          "source_ref": "request-1",
+          "unit": null,
+          "value": "EI60",
+          "value_type": "IfcLabel"
+        }
+      ],
+      "semantic_manifest": {
+        "manifest_id": "semantic-manifest-153567a1a0d45495153d520a",
+        "policy_id": "occurrence.property.l2",
+        "policy_version": "0.1"
+      },
+      "target": {
+        "element_global_id": "3JlX9$$_PCKBNpDob64$4w"
+      }
+    }
+  ],
+  "postconditions": [
+    "target_preserved",
+    "requested_properties_match",
+    "shared_type_unchanged"
+  ],
+  "preconditions": [
+    "target_exists",
+    "target_class_supported",
+    "property_assignments_bound"
+  ],
+  "schema_version": "text2ifc/ifc-repair-changeset/0.2",
+  "scope": {
+    "forbidden_ids": [],
+    "target_ids": [
+      "3JlX9$$_PCKBNpDob64$4w"
+    ]
+  },
+  "semantic_manifest_ref": "changeset/semantic-manifest-set-door-fire-rating-1.json",
+  "semantic_manifest_sha256": "sha256:369c581e1fb5d001c621bb28209cf9c93f636db6edbe0366e500e38527d09626",
+  "source_request_hash": "sha256:640abdd6ac85ad88e6c376e644f62db05fdc8f80304c8c2a51bd8f5a5834946c"
+}

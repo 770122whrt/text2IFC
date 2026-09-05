@@ -3,7 +3,9 @@
 from __future__ import annotations
 
 from dataclasses import asdict, dataclass
+import gc
 import hashlib
+import importlib
 import json
 import math
 import os
@@ -26,12 +28,39 @@ SUPPORTED_AUTHORABLE_VALUE_TYPES = frozenset(
         "IfcLabel",
         "IfcLengthMeasure",
         "IfcLogical",
+        "IfcPlaneAngleMeasure",
         "IfcReal",
         "IfcText",
     }
 )
 
 _WINDOWS_TORCH_RUNTIME_HANDLES: list[Any] = []
+
+
+def _trim_current_process_working_set() -> bool:
+    """Let Windows reclaim physical pages from released retrieval weights."""
+
+    if os.name != "nt":
+        return False
+    try:
+        import ctypes
+
+        kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
+        get_current_process = kernel32.GetCurrentProcess
+        get_current_process.restype = ctypes.c_void_p
+        trim = kernel32.SetProcessWorkingSetSize
+        trim.argtypes = (
+            ctypes.c_void_p,
+            ctypes.c_size_t,
+            ctypes.c_size_t,
+        )
+        trim.restype = ctypes.c_int
+        sentinel = ctypes.c_size_t(-1).value
+        return bool(
+            trim(get_current_process(), sentinel, sentinel)
+        )
+    except Exception:
+        return False
 
 
 def _prepare_windows_torch_runtime(
@@ -69,6 +98,18 @@ def _prepare_windows_torch_runtime(
         raise RuntimeError("BGE_M3_WINDOWS_RUNTIME_UNAVAILABLE") from error
     _WINDOWS_TORCH_RUNTIME_HANDLES.extend(handles)
     return handles
+
+
+def prepare_local_embedding_native_runtime() -> dict[str, Any]:
+    """Initialize Windows runtime DLLs before importing local Torch."""
+
+    handles = _prepare_windows_torch_runtime()
+    torch = importlib.import_module("torch")
+    return {
+        "status": "ready",
+        "msvc_runtime_handle_count": len(handles),
+        "torch_version": str(torch.__version__),
+    }
 
 
 def _stable_hash(value: object) -> str:
@@ -685,6 +726,15 @@ class BgeM3EmbeddingProvider:
         )
         return [tuple(float(value) for value in vector) for vector in vectors]
 
+    def release_transient_resources(self) -> None:
+        """Release lazy model weights after the bounded retrieval stage."""
+
+        if self._model is None:
+            return
+        self._model = None
+        gc.collect()
+        _trim_current_process_working_set()
+
 
 class QdrantVectorIndex:
     """Rebuildable vector index backed by Qdrant local storage or service."""
@@ -887,7 +937,34 @@ class QdrantVectorIndex:
             if item.payload and item.payload.get("record_id")
         )
 
+    def release_transient_resources(self) -> None:
+        release = getattr(
+            self.embedding_provider,
+            "release_transient_resources",
+            None,
+        )
+        if callable(release):
+            release()
+
+    def warmup(self) -> dict[str, Any]:
+        """Exercise the configured embedding runtime without querying data."""
+
+        vectors = self.embedding_provider.embed(
+            ("IFC property embedding runtime readiness probe",)
+        )
+        if len(vectors) != 1 or not vectors[0]:
+            raise RuntimeError("PROPERTY_EMBEDDING_WARMUP_INVALID")
+        return {
+            "status": "ready",
+            "embedding_count": 1,
+            "embedding_dimensions": len(vectors[0]),
+            "model_fingerprint": str(
+                self.embedding_provider.model_fingerprint
+            ),
+        }
+
     def close(self) -> None:
+        self.release_transient_resources()
         self._client.close()
 
 
@@ -1241,6 +1318,15 @@ def normalize_property_value(
         if raw_unit is not None:
             raise ValueError("PROPERTY_UNIT_FAMILY_UNSUPPORTED")
         return raw_value, None
+    if value_type == "IfcPlaneAngleMeasure":
+        if not isinstance(raw_value, (int, float)) or isinstance(raw_value, bool):
+            raise ValueError("PROPERTY_VALUE_TYPE_INCOMPATIBLE")
+        normalized = float(raw_value)
+        if not math.isfinite(normalized):
+            raise ValueError("PROPERTY_VALUE_INVALID")
+        if raw_unit is not None:
+            raise ValueError("PROPERTY_UNIT_FAMILY_UNSUPPORTED")
+        return normalized, None
     raise ValueError("PROPERTY_VALUE_TYPE_UNSUPPORTED")
 
 

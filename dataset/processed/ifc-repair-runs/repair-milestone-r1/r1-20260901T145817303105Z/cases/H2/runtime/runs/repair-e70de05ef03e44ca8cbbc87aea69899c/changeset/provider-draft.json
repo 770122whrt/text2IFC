@@ -1,0 +1,58 @@
+{
+  "base_model_fingerprint": "sha256:989ace1d52f694ee94d80bd99aa81d0ff3d76cf21f34fcfd00a286ac897ed8a6",
+  "draft_id": "changeset-draft-cc56683933b9d15b",
+  "evidence_refs": [
+    "resolved:/operations/set-door-fire-rating-1/context/candidate_targets/0",
+    "resolved:/operations/set-wall-sound-insulation-2/context/candidate_targets/0"
+  ],
+  "operations": [
+    {
+      "evidence_refs": [
+        "resolved:/operations/set-door-fire-rating-1/context/candidate_targets/0"
+      ],
+      "operation_id": "set-door-fire-rating-1",
+      "operation_type": "set_occurrence_properties",
+      "parameters": {},
+      "target": {
+        "element_global_id": "1jI3nV6Sn2LfeyEYxROCeh"
+      }
+    },
+    {
+      "evidence_refs": [
+        "resolved:/operations/set-wall-sound-insulation-2/context/candidate_targets/0"
+      ],
+      "operation_id": "set-wall-sound-insulation-2",
+      "operation_type": "set_occurrence_properties",
+      "parameters": {},
+      "target": {
+        "element_global_id": "2HaS6zNOX8xOGjmaNi_r5s"
+      }
+    }
+  ],
+  "postconditions": [
+    "target_preserved",
+    "requested_properties_match",
+    "shared_type_unchanged"
+  ],
+  "preconditions": [
+    "target_exists",
+    "target_class_supported",
+    "property_assignments_bound"
+  ],
+  "schema_version": "text2ifc/ifc-repair-changeset-draft/0.2",
+  "scope": {
+    "forbidden_ids": [],
+    "target_ids": [
+      "1jI3nV6Sn2LfeyEYxROCeh",
+      "2HaS6zNOX8xOGjmaNi_r5s"
+    ]
+  },
+  "semantic_manifest_ref": "changeset/semantic-manifests.json",
+  "semantic_manifest_sha256": "sha256:8d039a1dace4915dbcc06715e08e315303edfd4f6dacb9a7df602c803aedf191",
+  "semantic_summary": {
+    "conditional": 2,
+    "not_required": 0,
+    "required": 0
+  },
+  "source_request_hash": "sha256:cc56683933b9d15bfffb31c029e32a641e950c44e80f55faf625df1486da2ab5"
+}

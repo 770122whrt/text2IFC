@@ -22,6 +22,7 @@ CHANGESET_SCHEMA_VERSION = "text2ifc/ifc-repair-changeset/0.1"
 BOUND_CHANGESET_SCHEMA_VERSION = "text2ifc/ifc-repair-changeset/0.2"
 BOUND_CHANGESET_SCHEMA_VERSION_0_3 = "text2ifc/ifc-repair-changeset/0.3"
 BOUND_CHANGESET_SCHEMA_VERSION_0_4 = "text2ifc/ifc-repair-changeset/0.4"
+BOUND_CHANGESET_SCHEMA_VERSION_0_5 = "text2ifc/ifc-repair-changeset/0.5"
 DRAFT_CHANGESET_SCHEMA_VERSION = "text2ifc/ifc-repair-changeset-draft/0.2"
 DRAFT_CHANGESET_SCHEMA_VERSION_0_3 = "text2ifc/ifc-repair-changeset-draft/0.3"
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -31,6 +32,7 @@ CHANGESET_SCHEMA_PATH = (
 BOUND_CHANGESET_SCHEMA_PATH = PROJECT_ROOT / "schemas" / "agent" / "ifc-repair-changeset-0.2.schema.json"
 BOUND_CHANGESET_SCHEMA_PATH_0_3 = PROJECT_ROOT / "schemas" / "agent" / "ifc-repair-changeset-0.3.schema.json"
 BOUND_CHANGESET_SCHEMA_PATH_0_4 = PROJECT_ROOT / "schemas" / "agent" / "ifc-repair-changeset-0.4.schema.json"
+BOUND_CHANGESET_SCHEMA_PATH_0_5 = PROJECT_ROOT / "schemas" / "agent" / "ifc-repair-changeset-0.5.schema.json"
 DRAFT_CHANGESET_SCHEMA_PATH = PROJECT_ROOT / "schemas" / "agent" / "ifc-repair-changeset-draft-0.2.schema.json"
 DRAFT_CHANGESET_SCHEMA_PATH_0_3 = PROJECT_ROOT / "schemas" / "agent" / "ifc-repair-changeset-draft-0.3.schema.json"
 
@@ -49,7 +51,7 @@ def load_changeset_schema() -> dict[str, Any]:
     return copy.deepcopy(_cached_changeset_schema())
 
 
-@lru_cache(maxsize=4)
+@lru_cache(maxsize=5)
 def _cached_schema(path: str) -> dict[str, Any]:
     schema = json.loads(Path(path).read_text(encoding="utf-8"))
     _assert_local_references(schema)
@@ -76,6 +78,7 @@ def load_bound_changeset_schema(
         BOUND_CHANGESET_SCHEMA_VERSION: BOUND_CHANGESET_SCHEMA_PATH,
         BOUND_CHANGESET_SCHEMA_VERSION_0_3: BOUND_CHANGESET_SCHEMA_PATH_0_3,
         BOUND_CHANGESET_SCHEMA_VERSION_0_4: BOUND_CHANGESET_SCHEMA_PATH_0_4,
+        BOUND_CHANGESET_SCHEMA_VERSION_0_5: BOUND_CHANGESET_SCHEMA_PATH_0_5,
     }.get(version)
     if path is None:
         raise ValueError(f"unsupported bound ChangeSet schema: {version}")
@@ -92,6 +95,8 @@ def validate_changeset(document: Any) -> list[ValidationIssue]:
         schema = _cached_schema(str(BOUND_CHANGESET_SCHEMA_PATH_0_3))
     elif version == BOUND_CHANGESET_SCHEMA_VERSION_0_4:
         schema = _cached_schema(str(BOUND_CHANGESET_SCHEMA_PATH_0_4))
+    elif version == BOUND_CHANGESET_SCHEMA_VERSION_0_5:
+        schema = _cached_schema(str(BOUND_CHANGESET_SCHEMA_PATH_0_5))
     else:
         schema = _cached_changeset_schema()
     validator = Draft202012Validator(schema)
@@ -328,7 +333,19 @@ def _assignment_payload(
 ) -> dict[str, Any]:
     payload = _plain_json(value)
     payload["provenance"] = list(dict.fromkeys(payload["provenance"]))
-    if bound_schema_version == BOUND_CHANGESET_SCHEMA_VERSION:
+    legacy_source_kinds = {
+        "explicit_request",
+        "surviving_target",
+        "surviving_host",
+        "surviving_type",
+        "authorized_type_cohort",
+        "approved_prototype",
+        "deterministic_policy",
+    }
+    if bound_schema_version == BOUND_CHANGESET_SCHEMA_VERSION or (
+        bound_schema_version == BOUND_CHANGESET_SCHEMA_VERSION_0_5
+        and payload["source_kind"] in legacy_source_kinds
+    ):
         payload.pop("scope", None)
         payload.pop("derivation", None)
     return payload

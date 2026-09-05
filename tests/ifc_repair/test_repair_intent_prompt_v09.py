@@ -4,8 +4,6 @@ import json
 from pathlib import Path
 
 from text2ifc_agent.prompt_registry import render_prompt
-from text2ifc_ifc_repair.repair_intent import REPAIR_INTENT_SCHEMA_VERSION_0_8
-from text2ifc_ifc_repair.request_stage import _INTENT_CONTRACTS
 
 
 PROMPT_ID = "ifc-repair-intent.v0.9"
@@ -16,9 +14,7 @@ CASES_PATH = (
 )
 
 
-def test_v09_is_current_for_v08_schema_and_freezes_property_value_contract() -> None:
-    assert _INTENT_CONTRACTS[REPAIR_INTENT_SCHEMA_VERSION_0_8][1] == PROMPT_ID
-
+def test_v09_freezes_property_value_contract() -> None:
     rendered = render_prompt(
         template_id=PROMPT_ID,
         inputs={

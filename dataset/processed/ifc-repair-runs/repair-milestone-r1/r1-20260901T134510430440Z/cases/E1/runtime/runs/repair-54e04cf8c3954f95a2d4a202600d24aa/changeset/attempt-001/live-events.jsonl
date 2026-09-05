@@ -1,0 +1,40 @@
+{
+  "data": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "logprobs": null,
+        "message": {
+          "annotations": null,
+          "audio": null,
+          "content": "{\n  \"schema_version\": \"text2ifc/ifc-repair-changeset-draft/0.2\",\n  \"draft_id\": \"set-window-external-1\",\n  \"base_model_fingerprint\": \"sha256:707a032566dee8e969a44d95509be46d646440e2443624709f8d3ae2b45f4656\",\n  \"source_request_hash\": \"sha256:e88a9df0ac1abe694a3a22645306d0152d3833a4e806adbe3b821b66b7d88840\",\n  \"semantic_manifest_ref\": \"changeset/semantic-manifest-set-window-external-1.json\",\n  \"semantic_manifest_sha256\": \"sha256:9753a0f90f1c4e3ea99110b47f4e9b02986f7076043f6db53461be7569172715\",\n  \"semantic_summary\": {\n    \"required\": 0,\n    \"conditional\": 1,\n    \"not_required\": 0\n  },\n  \"scope\": {\n    \"target_ids\": [\"1hOSvn6df7F8_7GcBWlRRL\"],\n    \"forbidden_ids\": []\n  },\n  \"evidence_refs\": [\"resolved:/operations/set-window-external-1/context/candidate_targets/0\"],\n  \"preconditions\": [\"target_exists\", \"target_class_supported\", \"property_assignments_bound\"],\n  \"postconditions\": [\"target_preserved\", \"requested_properties_match\", \"shared_type_unchanged\"],\n  \"operations\": [\n    {\n      \"operation_id\": \"set-window-external-1\",\n      \"operation_type\": \"set_occurrence_properties\",\n      \"target\": {\n        \"element_global_id\": \"1hOSvn6df7F8_7GcBWlRRL\"\n      },\n      \"parameters\": {},\n      \"evidence_refs\": [\"resolved:/operations/set-window-external-1/context/candidate_targets/0\"]\n    }\n  ]\n}",
+          "function_call": null,
+          "reasoning_content": "我们只需要根据给定的信息生成JSON。不需要执行修改，只输出一个符合schema的草稿。操作已经给出：set-window-external-1。需要复制所有字段。\n\n从输入中，我们有：\n\n- source_request_hash: sha256:e88a9df0ac1abe694a3a22645306d0152d3833a4e806adbe3b821b66b7d88840\n- model fingerprint? 在不可变绑定中，model: sha256:707a032566dee8e969a44d95509be46d646440e2443624709f8d3ae2b45f4656 这应该作为base_model_fingerprint。\n- semantic_manifest_ref: changeset/semantic-manifest-set-window-external-1.json\n- semantic_manifest_sha256: sha256:9753a0f90f1c4e3ea99110b47f4e9b02986f7076043f6db53461be7569172715\n- semantic_summary: {\"conditional\": 1, \"not_required\": 0, \"required\": 0}\n- scope: {\"forbidden_ids\": [], \"target_ids\": [\"1hOSvn6df7F8_7GcBWlRRL\"]}\n- evidence_refs: 来自resolved operation projection: [\"resolved:/operations/set-window-external-1/context/candidate_targets/0\"] 另外还有evidence_refs在顶层，应该也是这个？根据schema，顶层evidence_refs是字符串数组。操作也有evidence_refs。我们需要复制顶层和操作内的。从投影中，顶层evidence_refs似乎没有明确给出？但操作投影中给出了evidence_refs。我们需要构造完整的JSON。\n\n从schema的required：schema_version, draft_id, base_model_fingerprint, source_request_hash, semantic_manifest_ref, semantic_manifest_sha256, semantic_summary, scope, evidence_refs, preconditions, postconditions, operations。\n\n我们需要提供draft_id。draft_id应该是唯一的，但这里没有给出。我们可能需要根据某种规则生成，但规则说“Copy operation IDs, types, targets, parameters, scope, and evidence exactly.” 对于draft_id，也许可以使用operation_id？或者从上下文生成？但指令没有明确。或许我们可以使用一个基于操作id的id，如\"set-window-external-1\"？但draft_id需要符合id模式：^[A-Za-z0-9][A-Za-z0-9._:/-]*$。可以用\"set-window-external-1\"。\n\npreconditions和postconditions：根据注册的操作合同，有precondition_names和postcondition_names。对于操作类型set_occurrence_properties，合同中有precondition_names: [\"target_exists\", \"target_class_supported\", \"property_assignments_bound\"] 和 postcondition_names: [\"target_preserved\", \"requested_properties_match\", \"shared_type_unchanged\"]。这些应该放在顶层数组中。\n\nevidence_refs：顶层和操作内部。从投影中，操作包含evidence_refs。顶层evidence_refs应该是所有操作evidence_refs的并集，但只有一个操作，所以一样。\n\n操作的结构：operation_id: \"set-window-external-1\", operation_type: \"set_occurrence_properties\", target: {\"element_global_id\": \"1hOSvn6df7F8_7GcBWlRRL\"}, parameters: {}, evidence_refs: [\"resolved:/operations/set-window-external-1/context/candidate_targets/0\"]。\n\n注意：parameters是空对象，因为合同要求maxProperties 0。\n\nsemantic_summary: 按给出的。\n\nscope: 按给出的。\n\nbase_model_fingerprint: 应该是model的hash，即\"sha256:707a032566dee8e969a44d95509be46d646440e2443624709f8d3ae2b45f4656\"。\n\nsource_request_hash: \"sha256:e88a9df0ac1abe694a3a22645306d0152d3833a4e806adbe3b821b66b7d88840\"。\n\nsemantic_manifest_ref: \"changeset/semantic-manifest-set-window-external-1.json\"。\n\nsemantic_manifest_sha256: \"sha256:9753a0f90f1c4e3ea99110b47f4e9b02986f7076043f6db53461be7569172715\"。\n\nschema_version: \"text2ifc/ifc-repair-changeset-draft/0.2\"。\n\ndraft_id: 我选择\"set-window-external-1-changeset\"或类似，但应该符合id模式。也可以用\"changeset-set-window-external-1\"。\n\npreconditions和postconditions数组。\n\n现在构造JSON。\n\n注意：schema要求additionalProperties false，所以不能有多余字段。\n\n让我们组装。",
+          "refusal": null,
+          "role": "assistant",
+          "tool_calls": null
+        }
+      }
+    ],
+    "created": 1788270373,
+    "id": "af0be94b-fc45-482c-aafc-d1043c191f84",
+    "model": "deepseek-v4-flash",
+    "moderation": null,
+    "object": "chat.completion",
+    "service_tier": null,
+    "stop_reason": "stop",
+    "system_fingerprint": "a26a7955944dc5c60445bff77fac9c8e",
+    "usage": {
+      "completion_tokens": 1535,
+      "completion_tokens_details": "[REDACTED]",
+      "prompt_cache_hit_tokens": "[REDACTED]",
+      "prompt_cache_miss_tokens": "[REDACTED]",
+      "prompt_tokens": 2082,
+      "prompt_tokens_details": "[REDACTED]",
+      "total_tokens": 3617
+    }
+  },
+  "event": "chat.completion",
+  "sequence": 0
+}

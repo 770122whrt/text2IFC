@@ -8,7 +8,7 @@
   [audit](milestones/v1.0-MILESTONE-AUDIT.md).
 - [ ] **v1.1 IFC ChangeSet Repair Pipeline** - Phases 7 through 13, including
   inserted Phases 09.1 and 10.1 through 10.5, in progress
-  (11 / 13 phases complete).
+  (12 / 13 phases complete; Phase 13 remains unstarted).
 
 ## Current Cycle: v1.1 IFC ChangeSet Repair Pipeline
 
@@ -496,13 +496,11 @@ profiles.
 
 ### Phase 12: Beam and Column Operations
 
-**Status:** Live acceptance blocked - 2026-08-21. Plans 12-01 through 12-14 are
-complete. The genuine Plan 12-15 DeepSeek run preserved a valid Stage 1
-Beam/Column property claim but failed before Stage 2 with
-`PROPERTY_NOT_RESOLVED`; no live success was curated. Stage 1 scope, Type intent
-and transaction-clause corrections are implemented on the current branch, but
-they do not satisfy Wave 15 acceptance. Property authority correction and final
-closeout move through inserted Phase 12.1; Phase 13 remains unstarted.
+**Status:** Complete — 2026-09-03. The corrective property-authority work and
+deferred Wave 15/16 acceptance closed through Phase 12.1. The accepted genuine
+R1 run passed all 12 frozen contracts, and independent Proof 0.3 plus final
+IFCCompare/collection validation passed. See the
+[final validation report](../docs/validation/ifc2x3-changeset/phase12-beam-column-validation-report.md).
 
 **Goal:** Prove the common ChangeSet architecture across non-opening structural
 elements.
@@ -520,7 +518,8 @@ elements.
 
 **Validation strategy:** [Phase 12 VALIDATION](phases/12-beam-and-column-operations/12-VALIDATION.md)
 
-**Plans:** 14/16 primary plans complete; Wave 15 acceptance blocked
+**Plans:** 16/16 primary plans complete; corrective 12-15A/B/C lineages closed
+by the final Phase 12/12.1 validation report
 
 - [x] **Wave 1:** [12-01 - Structural prompt profiles and selected routing](phases/12-beam-and-column-operations/12-01-PLAN.md)
 - [x] **Wave 2** *(blocked on Wave 1)*: [12-02 - Structural occurrence and Type index](phases/12-beam-and-column-operations/12-02-PLAN.md)
@@ -536,8 +535,8 @@ elements.
 - [x] **Wave 12** *(blocked on Wave 11)*: [12-12 - d7n/vvo offline runner and curated strict Proof contract](phases/12-beam-and-column-operations/12-12-PLAN.md)
 - [x] **Wave 13** *(blocked on Wave 12)*: [12-13 - Live transcript, preflight and no-fallback contract](phases/12-beam-and-column-operations/12-13-PLAN.md)
 - [x] **Wave 14** *(blocked on Wave 13)*: [12-14 - Live Proof curation acceptance contract](phases/12-beam-and-column-operations/12-14-PLAN.md)
-- **Wave 15 — BLOCKED** *(all offline gates passed; genuine live complete case failed before Stage 2)*: [12-15 - Execute and independently curate real DeepSeek structural UAT](phases/12-beam-and-column-operations/12-15-PLAN.md)
-- **Wave 16 — DEFERRED TO PHASE 12.1 CLOSEOUT** *(still blocked on accepted live evidence)*: [12-16 - Regress, report and conditionally close Phase 12](phases/12-beam-and-column-operations/12-16-PLAN.md)
+- [x] **Wave 15:** [12-15 - Execute and independently curate real DeepSeek structural UAT](phases/12-beam-and-column-operations/12-15-PLAN.md) — accepted through the Phase 12.1 R1 successor run and Proof; failed historical attempts remain unchanged.
+- [x] **Wave 16:** [12-16 - Regress, report and conditionally close Phase 12](phases/12-beam-and-column-operations/12-16-PLAN.md) — final regressions, IFCCompare boundary and closure report complete.
 
 Corrective subplans [12-15A](phases/12-beam-and-column-operations/12-15A-PLAN.md),
 [12-15B](phases/12-beam-and-column-operations/12-15B-PLAN.md) and
@@ -575,8 +574,8 @@ They are prerequisite implementation history, not accepted Wave 15 live Proof.
 
 ### Phase 12.1: Property Resolution RAG and Reranker Correction
 
-**Status:** In progress - Plans 12.1-01 through 12.1-06 complete; Plan 12.1-07
-is unstarted and awaits an explicit Go/No-Go.
+**Status:** Complete — 2026-09-03. Plan 12.1-07 accepted a new uninterrupted
+R1 12/12 genuine run, independent Proof 0.3 and the frozen IFCCompare boundary.
 
 **Goal:** Replace active reviewed-alias/local-consensus property authorization
 with class-applicable multilingual vector retrieval, one independent bounded
@@ -597,7 +596,7 @@ knowledge/vector baseline, Phase 12 Plans 12-01 through 12-14 and the current
 
 **Validation strategy:** [Phase 12.1 VALIDATION](phases/12.1-property-resolution-rag-reranker/12.1-VALIDATION.md)
 
-**Plans:** 6/7 plans executed
+**Plans:** 7/7 plans executed
 
 - [x] **Wave 1:** [12.1-01 - Additive Stage 1.5 schemas, policy contract and Prompt](phases/12.1-property-resolution-rag-reranker/12.1-01-PLAN.md)
 - [x] **Wave 2:** [12.1-02 - Alias-free multilingual vector runtime](phases/12.1-property-resolution-rag-reranker/12.1-02-PLAN.md)
@@ -605,7 +604,7 @@ knowledge/vector baseline, Phase 12 Plans 12-01 through 12-14 and the current
 - [x] **Wave 4:** [12.1-04 - Admissibility gate and ExactPropertyIntent construction](phases/12.1-property-resolution-rag-reranker/12.1-04-PLAN.md)
 - [x] **Wave 5:** [12.1-05 - Durable public API integration and clarification resume](phases/12.1-property-resolution-rag-reranker/12.1-05-PLAN.md)
 - [x] **Wave 6:** [12.1-06 - Frozen retrieval evaluation, Stage 1.5 offline contract, five-family regression and zero-network preflight](phases/12.1-property-resolution-rag-reranker/12.1-06-PLAN.md) — real local BGE-M3/Qdrant retrieval, five-family/offline full-chain and preflight 0.4 passed; Stage 1.5 semantic capability is explicitly not evaluated here. See [summary](phases/12.1-property-resolution-rag-reranker/12.1-06-SUMMARY.md).
-- [ ] **Wave 7** *(blocked on explicit Go/No-Go)*: [12.1-07 - Genuine 60-case Stage 1.5 semantic evaluation, four-case DeepSeek UAT, independent Proof, IFCCompare and closeout](phases/12.1-property-resolution-rag-reranker/12.1-07-PLAN.md)
+- [x] **Wave 7:** [12.1-07 - Genuine 60-case Stage 1.5 semantic evaluation, four-case DeepSeek UAT, independent Proof, IFCCompare and closeout](phases/12.1-property-resolution-rag-reranker/12.1-07-PLAN.md) — final R1 run `r1-20260902T152701658266Z` passed 12/12 with 40 genuine calls; curated Proof 0.3 and final IFCCompare/collection validation passed. Final-code Plan 07 compatibility run `uat-20260902T180900748385Z` passed 4/4 with 11 genuine calls. Its changed-scope curator packaging limitation is documented and is not represented as a second curated Proof. Historical Plan 07 false/pending fields remain immutable and are superseded only by additive closure evidence. See the [summary](phases/12.1-property-resolution-rag-reranker/12.1-07-SUMMARY.md) and [final Proof matrix](../docs/validation/repair-milestone-r1/repair-proof-matrix-2026-09-03.md).
 
 **Cross-cutting constraints:**
 

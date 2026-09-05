@@ -163,6 +163,81 @@ def _paths(result) -> list[str]:
     return [item["canonical_path"] for item in result.candidate_set["candidates"]]
 
 
+def test_bge_embedding_provider_releases_only_loaded_transient_model(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    trim_calls: list[str] = []
+    monkeypatch.setattr(
+        property_search,
+        "_trim_current_process_working_set",
+        lambda: trim_calls.append("trim"),
+    )
+    provider = property_search.BgeM3EmbeddingProvider(
+        model_path="unused-offline-model",
+        model_version="test",
+    )
+    loaded_model = object()
+    provider._model = loaded_model
+
+    provider.release_transient_resources()
+
+    assert provider._model is None
+    assert trim_calls == ["trim"]
+
+
+def test_local_embedding_native_bootstrap_loads_msvc_before_torch(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    events: list[str] = []
+
+    def load_msvc():
+        events.append("msvc")
+        return (object(), object(), object())
+
+    class TorchFixture:
+        __version__ = "2.9-test"
+
+    def import_module(name: str):
+        events.append(f"import:{name}")
+        return TorchFixture()
+
+    monkeypatch.setattr(
+        property_search,
+        "_prepare_windows_torch_runtime",
+        load_msvc,
+    )
+    monkeypatch.setattr(importlib, "import_module", import_module)
+
+    assert property_search.prepare_local_embedding_native_runtime() == {
+        "status": "ready",
+        "msvc_runtime_handle_count": 3,
+        "torch_version": "2.9-test",
+    }
+    assert events == ["msvc", "import:torch"]
+
+
+def test_property_runtime_warmup_exercises_embedding_before_live_use(
+    project_root: Path,
+) -> None:
+    runtime = _runtime(project_root)
+    calls: list[str] = []
+
+    class WarmIndex:
+        def warmup(self) -> dict[str, object]:
+            calls.append("embedding")
+            return {
+                "status": "ready",
+                "embedding_count": 1,
+            }
+
+    runtime.vector_index = WarmIndex()
+
+    assert runtime.warmup() == {
+        "status": "ready",
+        "embedding_count": 1,
+    }
+    assert calls == ["embedding"]
+
 def test_active_runtime_module_is_additive_and_non_executable() -> None:
     module = _runtime_module()
     assert hasattr(module, "PropertyKnowledgeRuntime")
@@ -211,6 +286,96 @@ def test_class_applicable_scalar_filter_precedes_vector_topk(
         )
         for item in result.candidate_set["candidates"]
     )
+
+
+def test_beam_slope_plane_angle_is_active_and_retrievable(
+    project_root: Path,
+) -> None:
+    registry, records = _records(project_root)
+    del registry
+    slope = next(
+        record
+        for record in records
+        if record.canonical_path == "Pset_BeamCommon.Slope"
+    )
+    assert slope.authorable is True
+    assert slope.value_type == "IfcPlaneAngleMeasure"
+
+    runtime = _runtime(
+        project_root,
+        vector_index=ExpectedCandidateVectorIndex(
+            "Pset_BeamCommon.Slope"
+        ),
+    )
+    result = runtime.retrieve(
+        run_id="run-slope",
+        request_id="request-slope",
+        model_id="model-slope",
+        operation_id="restore-beam",
+        operation_type="add_beam",
+        claim_id="claim-slope",
+        property_phrase="slope",
+        target_ifc_class="IfcBeam",
+        raw_value=0.0,
+        raw_unit=None,
+        scope="occurrence_direct",
+    )
+
+    assert _paths(result) == ["Pset_BeamCommon.Slope"]
+    assert result.candidate_set["candidates"][0]["value_type"] == (
+        "IfcPlaneAngleMeasure"
+    )
+
+
+def test_vector_storage_version_binds_the_active_record_set(
+    project_root: Path,
+) -> None:
+    module = _runtime_module()
+    registry, records = _records(project_root)
+    load_bearing = next(
+        record
+        for record in records
+        if record.canonical_path == "Pset_BeamCommon.LoadBearing"
+    )
+    is_external = next(
+        record
+        for record in records
+        if record.canonical_path == "Pset_BeamCommon.IsExternal"
+    )
+
+    class CaptureVersionIndex:
+        def __init__(self) -> None:
+            self.embedding_provider = SemanticFixtureEmbedding()
+            self.versions: list[str] = []
+
+        def ensure_versioned(self, records, *, collection_version: str) -> str:
+            tuple(records)
+            self.versions.append(collection_version)
+            return "built"
+
+    index = CaptureVersionIndex()
+    common = {
+        "registry": registry,
+        "project_records": (),
+        "vector_index": index,
+        "policy_document": _policy(),
+        "corpus_version": "ifc2x3-property-records/0.2",
+        "embedding_model_version": "fixture-semantic/0.1",
+        "document_renderer_version": "property-record-text/0.1",
+        "collection_version": "ifc2x3-property-vector/0.2",
+        "runtime_mode": "offline_test",
+    }
+    module.create_property_runtime(
+        standard_records=(load_bearing,),
+        **common,
+    )
+    module.create_property_runtime(
+        standard_records=(load_bearing, is_external),
+        **common,
+    )
+
+    assert len(index.versions) == 2
+    assert index.versions[0] != index.versions[1]
 
 
 def test_query_candidate_and_health_documents_are_closed_public_and_stable(

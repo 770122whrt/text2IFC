@@ -1,0 +1,158 @@
+{
+  "model_fingerprint": "sha256:f61ff5cf8e1cc88da6944d6bcd3e2e7da5ff27dd3288a8781908018cb8240cd6",
+  "operations": [
+    {
+      "attribute_intents": [],
+      "occurrence_reuse_intent": null,
+      "operation_id": "add-beam-1",
+      "operation_type": "add_beam",
+      "parameters": {
+        "axis": {
+          "end": {
+            "x_mm": 126000,
+            "y_mm": 120000,
+            "z_mm": 3000
+          },
+          "start": {
+            "x_mm": 120000,
+            "y_mm": 120000,
+            "z_mm": 3000
+          }
+        },
+        "section": {
+          "height_mm": 500,
+          "shape": "rectangle",
+          "width_mm": 300
+        }
+      },
+      "property_intents": [
+        {
+          "intent_kind": "natural_language_property",
+          "property_phrase": "load bearing",
+          "raw_unit": null,
+          "raw_value": true,
+          "scope": "occurrence_direct",
+          "source": {
+            "excerpt": "state that the Beam is load bearing",
+            "reference": "public-request-1",
+            "source_kind": "user_request"
+          }
+        }
+      ],
+      "prototype_intent": null,
+      "provenance": [
+        {
+          "excerpt": "On the IFC Building Storey named \"Level 1\", add one horizontal straight rectangular Beam with center axis from (120000, 120000, 3000) mm to (126000, 120000, 3000) mm and a rectangular section 300 mm wide and 500 mm high. On the same Storey, add one vertical straight rectangular Column with center-axis base (123000, 124000, 0) mm and top (123000, 124000, 3000) mm, a section 400 mm wide and 600 mm deep, and local width direction (0, 1). Create both in one atomic ChangeSet, generate dedicated structural Types, state that the Beam is load bearing, and state that the Column is load bearing.",
+          "reference": "public-request-1",
+          "source_kind": "user_request"
+        }
+      ],
+      "quantity_intents": [],
+      "routing_intent": {
+        "action": "add",
+        "component_family": "beam",
+        "operation_profile": "beam.add.v0.3",
+        "source": {
+          "excerpt": "On the IFC Building Storey named \"Level 1\", add one horizontal straight rectangular Beam with center axis from (120000, 120000, 3000) mm to (126000, 120000, 3000) mm and a rectangular section 300 mm wide and 500 mm high. On the same Storey, add one vertical straight rectangular Column with center-axis base (123000, 124000, 0) mm and top (123000, 124000, 3000) mm, a section 400 mm wide and 600 mm deep, and local width direction (0, 1). Create both in one atomic ChangeSet, generate dedicated structural Types, state that the Beam is load bearing, and state that the Column is load bearing.",
+          "reference": "public-request-1",
+          "source_kind": "user_request"
+        }
+      },
+      "semantic_bundle_refs": [],
+      "target_query": {
+        "allowed_ifc_classes": [
+          "IfcBuildingStorey"
+        ],
+        "names": [
+          "Level 1"
+        ],
+        "schema_version": "text2ifc/ifc-target-query/0.1"
+      }
+    },
+    {
+      "attribute_intents": [],
+      "occurrence_reuse_intent": null,
+      "operation_id": "add-column-1",
+      "operation_type": "add_column",
+      "parameters": {
+        "axis": {
+          "base": {
+            "x_mm": 123000,
+            "y_mm": 124000,
+            "z_mm": 0
+          },
+          "top": {
+            "x_mm": 123000,
+            "y_mm": 124000,
+            "z_mm": 3000
+          }
+        },
+        "section": {
+          "depth_mm": 600,
+          "orientation": {
+            "x": 0,
+            "y": 1
+          },
+          "shape": "rectangle",
+          "width_mm": 400
+        }
+      },
+      "property_intents": [
+        {
+          "intent_kind": "natural_language_property",
+          "property_phrase": "load bearing",
+          "raw_unit": null,
+          "raw_value": true,
+          "scope": "occurrence_direct",
+          "source": {
+            "excerpt": "state that the Column is load bearing",
+            "reference": "public-request-1",
+            "source_kind": "user_request"
+          }
+        }
+      ],
+      "prototype_intent": null,
+      "provenance": [
+        {
+          "excerpt": "On the IFC Building Storey named \"Level 1\", add one horizontal straight rectangular Beam with center axis from (120000, 120000, 3000) mm to (126000, 120000, 3000) mm and a rectangular section 300 mm wide and 500 mm high. On the same Storey, add one vertical straight rectangular Column with center-axis base (123000, 124000, 0) mm and top (123000, 124000, 3000) mm, a section 400 mm wide and 600 mm deep, and local width direction (0, 1). Create both in one atomic ChangeSet, generate dedicated structural Types, state that the Beam is load bearing, and state that the Column is load bearing.",
+          "reference": "public-request-1",
+          "source_kind": "user_request"
+        }
+      ],
+      "quantity_intents": [],
+      "routing_intent": {
+        "action": "add",
+        "component_family": "column",
+        "operation_profile": "column.add.v0.3",
+        "source": {
+          "excerpt": "On the IFC Building Storey named \"Level 1\", add one horizontal straight rectangular Beam with center axis from (120000, 120000, 3000) mm to (126000, 120000, 3000) mm and a rectangular section 300 mm wide and 500 mm high. On the same Storey, add one vertical straight rectangular Column with center-axis base (123000, 124000, 0) mm and top (123000, 124000, 3000) mm, a section 400 mm wide and 600 mm deep, and local width direction (0, 1). Create both in one atomic ChangeSet, generate dedicated structural Types, state that the Beam is load bearing, and state that the Column is load bearing.",
+          "reference": "public-request-1",
+          "source_kind": "user_request"
+        }
+      },
+      "semantic_bundle_refs": [],
+      "target_query": {
+        "allowed_ifc_classes": [
+          "IfcBuildingStorey"
+        ],
+        "names": [
+          "Level 1"
+        ],
+        "schema_version": "text2ifc/ifc-target-query/0.1"
+      }
+    }
+  ],
+  "prompt_fingerprint": "sha256:dec929f94db4c626fadf9b2bc2592e3c351d9fbd0ef4c94243475a4559e8b568",
+  "provenance": [
+    {
+      "excerpt": "On the IFC Building Storey named \"Level 1\", add one horizontal straight rectangular Beam with center axis from (120000, 120000, 3000) mm to (126000, 120000, 3000) mm and a rectangular section 300 mm wide and 500 mm high. On the same Storey, add one vertical straight rectangular Column with center-axis base (123000, 124000, 0) mm and top (123000, 124000, 3000) mm, a section 400 mm wide and 600 mm deep, and local width direction (0, 1). Create both in one atomic ChangeSet, generate dedicated structural Types, state that the Beam is load bearing, and state that the Column is load bearing.",
+      "reference": "public-request-1",
+      "source_kind": "user_request"
+    }
+  ],
+  "request_id": "request-eaac43393aa00672",
+  "schema_version": "text2ifc/ifc-repair-intent/0.8",
+  "semantic_bundles": [],
+  "source_request_hash": "sha256:eaac43393aa006722ff10b2fe3c84d4c1c6befd76779ba928d5e97eecb7e66b5",
+  "unsupported_requests": []
+}

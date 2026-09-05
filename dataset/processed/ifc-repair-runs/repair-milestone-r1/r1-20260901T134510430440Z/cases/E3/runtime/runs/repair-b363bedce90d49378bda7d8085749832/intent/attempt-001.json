@@ -1,0 +1,37 @@
+{
+  "attempt": 1,
+  "issues": [],
+  "normalizations": [],
+  "provider_metadata": {
+    "estimated_input_tokens": "[REDACTED]",
+    "evidence_class": "live",
+    "max_input_tokens": "[REDACTED]",
+    "model": "deepseek-v4-flash",
+    "provider": "deepseek-openai-compatible",
+    "request_configuration": {
+      "temperature": {
+        "effective": false,
+        "value": 0
+      },
+      "thinking": {
+        "type": "enabled"
+      }
+    },
+    "response_id": "ebaea766-8952-46c2-aa67-b2ef77b9bb13",
+    "session_id": "ifc-repair-intent-request-37587fefb2e9ebbb",
+    "stop_reason": "stop",
+    "transport_attempts": 1,
+    "usage": {
+      "completion_tokens": 2902,
+      "completion_tokens_details": "[REDACTED]",
+      "prompt_cache_hit_tokens": "[REDACTED]",
+      "prompt_cache_miss_tokens": "[REDACTED]",
+      "prompt_tokens": 11556,
+      "prompt_tokens_details": "[REDACTED]",
+      "total_tokens": 14458
+    }
+  },
+  "response_excerpt": "{\n  \"schema_version\": \"text2ifc/ifc-repair-intent-body/0.8\",\n  \"operations\": [\n    {\n      \"operation_id\": \"set-beam-component-number-1\",\n      \"operation_type\": \"set_occurrence_properties\",\n      \"routing_intent\": {\n        \"component_family\": \"occurrence\",\n        \"action\": \"set_properties\",\n        \"operation_profile\": \"occurrence.set-properties\",\n        \"source\": {\n          \"source_kind\": \"user_request\",\n          \"reference\": \"public_request\",\n          \"excerpt\": \"将 00 begane grond 中 GlobalId 为 1BpQ2K66f13Pyv1xzN7BBN、Tag 为 738548 的梁的构件编号设置为 B-204。\"\n        }\n      },\n      \"target_query\": {\n        \"schema_version\": \"text2ifc/ifc-target-query/0.1\",\n        \"allowed_ifc_classes\": [\"IfcBeam\"],\n        \"global_id\": \"1BpQ2K66f13Pyv1xzN7BBN\"\n      },\n      \"parameters\": {},\n      \"attribute_intents\": [],\n      \"property_intents\": [\n        {\n          \"intent_kind\": \"natural_language_property\",\n          \"property_phrase\": \"构件编号\",\n          \"raw_value\": \"B-204\",\n          \"raw_unit\": null,\n          \"scope\": \"occurrence_direct\",\n          \"source\": {\n            \"source_kind\": \"user_request\",\n            \"reference\": \"public_request\",\n            \"excerpt\": \"将 00 begane grond 中 GlobalId 为 1BpQ2K66f13Pyv1xzN7BBN、Tag 为 738548 的梁的构件编号设置为 B-204。\"\n          }\n        }\n      ],\n      \"semantic_bundle_refs\": [],\n      \"quantity_intents\": [],\n      \"occurrence_reuse_intent\": null,\n      \"prototype_intent\": null,\n      \"provenance\": [\n        {\n          \"source_kind\": \"user_request\",\n          \"reference\": \"public_request\",\n          \"excerpt\": \"将 00 begane grond 中 GlobalId 为 1BpQ2K66f13Pyv1xzN7BBN、Tag 为 738548 的梁的构件编号设置为 B-204。\"\n        }\n      ]\n    }\n  ],\n  \"unsupported_requests\": [],\n  \"semantic_bundles\": [],\n  \"provenance\": [\n    {\n      \"source_kind\": \"user_request\",\n      \"reference\": \"public_request\",\n      \"excerpt\": \"将 00 begane grond 中 GlobalId 为 1BpQ2K66f13Pyv1xzN7BBN、Tag 为 738548 的梁的构件编号设置为 B-204。\"\n    }\n  ]\n}",
+  "response_sha256": "sha256:47abf5ee9f7077ad11fb8d83ffc61f819f031ac655af76d1bd38a5c2f2fab0f6",
+  "status": "valid"
+}

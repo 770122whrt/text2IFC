@@ -1,0 +1,224 @@
+{
+  "schema_version": "text2ifc/repair-milestone-r1-final-changed-scope-admission/0.1",
+  "status": "passed",
+  "admission_basis": "preserved Plan 07 full preflight plus focused zero-network revalidation of every H3, H2, declarative-runner, and A1 changed scope",
+  "generated_at": "2026-09-02T05:24:45.7792294Z",
+  "scope": {
+    "live_provider_admission": true,
+    "acceptance_outcome_claimed": false,
+    "proof_outcome_claimed": false,
+    "network_transport_attempted": false,
+    "provider_calls": 0,
+    "predictions_regenerated": 0
+  },
+  "source_full_preflight": {
+    "path": "dataset/processed/proof/ifc-repair-success-cases/structural/live/phase12-live-deepseek-complete/provider-evidence/preflight/preflight.json",
+    "sha256": "sha256:cc506b4759af65ee4573abe0f045a1b803a418aea552e4f286ff7125c7009c2d",
+    "preserved_status": "passed"
+  },
+  "plan07_result": {
+    "path": "dataset/processed/proof/ifc-repair-success-cases/structural/live/phase12-live-deepseek-complete/provider-evidence/live-uat-result.json",
+    "sha256": "sha256:9977bdffc913d3963717e1c03cfc72cdd0476c01ff136c4d4d42dd22145cb97e",
+    "preserved_status": "passed"
+  },
+  "preserved_changed_scope_admissions": [
+    {
+      "scope": "H3 target offering and exact filling dimensions",
+      "path": "dataset/processed/ifc-repair-runs/repair-milestone-r1/admission-20260901-h3-focused/changed-scope-admission.json",
+      "sha256": "sha256:0318c01b4dc24be768f59ea8696a9343f880dfeb76ef38496a4450c9d21f035c",
+      "status": "passed"
+    },
+    {
+      "scope": "H2 natural-language property scope normalization",
+      "path": "dataset/processed/ifc-repair-runs/repair-milestone-r1/admission-20260901-h2-scope/changed-scope-admission.json",
+      "sha256": "sha256:c8b95c8a00991cc0eaff29b979f39841c023465e6b082725196baf5dd6e10249",
+      "status": "passed"
+    }
+  ],
+  "preserved_live_diagnostics": [
+    {
+      "scope": "A1 post-fix single-case genuine viability only",
+      "path": "dataset/processed/ifc-repair-runs/repair-milestone-r1/r1-a1-genuine-diagnostic-20260902T044750131045Z/a1-genuine-diagnostic-result.json",
+      "sha256": "sha256:df73a949b962e47707f15852e0f7c3f41e8c0ce925c2e12901ec84f36fd0b2ab",
+      "status": "passed",
+      "diagnostic_only": true,
+      "transport_calls": 2,
+      "transport_calls_by_stage": {
+        "stage1": 1,
+        "property_resolution": 0,
+        "stage2": 1
+      },
+      "run_id": "repair-8b672d13acda4926abc5dad22e7f5a79",
+      "acceptance_outcome_claimed": false,
+      "proof_outcome_claimed": false
+    }
+  ],
+  "preserved_latest_interrupted_acceptance": {
+    "path": "dataset/processed/ifc-repair-runs/repair-milestone-r1/r1-20260901T154532207844Z/r1-execution-result.json",
+    "sha256": "sha256:41d656e9d4f64749bc059f425f4b8c11611d1cac45c0d14b4595f76eb6c66f79",
+    "status": "failed",
+    "passed_before_stop": [
+      "E1",
+      "E2",
+      "E3",
+      "E4",
+      "M1",
+      "M2",
+      "M3",
+      "H1",
+      "H2",
+      "H3",
+      "H4"
+    ],
+    "stopped_after_case": "A1",
+    "reason": "pre-fix structural type relation authorization gap"
+  },
+  "resolved_defects": [
+    {
+      "scope": "H3 target query and IFC filling dimension extraction",
+      "implementation_commits": [
+        "9510ecf3",
+        "36efa337"
+      ],
+      "mechanism": "opening width and height constraints use the filling-record overall dimensions when hosted-opening dimensions are absent; extracted overall dimensions use the existing millimetre noise cleaner",
+      "forbidden_shortcuts_absent": true
+    },
+    {
+      "scope": "H2 property claim scope",
+      "implementation_commits": [
+        "f1a37348"
+      ],
+      "mechanism": "schema-valid null natural-language scope is normalized once to occurrence_direct before retrieval; type_owned remains fail-closed",
+      "forbidden_shortcuts_absent": true
+    },
+    {
+      "scope": "R1 declarative expected-outcome evaluation",
+      "implementation_commits": [
+        "e59696df"
+      ],
+      "mechanism": "case evaluation is driven by the frozen manifest outcome and guard/resume declarations rather than hard-coded case identifiers",
+      "forbidden_shortcuts_absent": true
+    },
+    {
+      "scope": "A1 existing structural Type reuse",
+      "implementation_commits": [
+        "d17cd23a"
+      ],
+      "mechanism": "the structural evaluator authorizes exactly one created-or-modified IfcRelDefinesByType binding while still forbidding modification of the reused Type and rejecting missing or duplicate relations",
+      "forbidden_shortcuts_absent": true
+    }
+  ],
+  "scope_file_sha256": {
+    "src/text2ifc_ifc_repair/target_query.py": "sha256:a2d85352dd41f8bc4f0135da0b8abbc2b545f432563a3efa9fc7124b96604564",
+    "src/text2ifc_ifc_repair/index_adapters.py": "sha256:7c8e229ca4f07febe9d3a4335e189ebd1a7d59284a633238ec1f1e8cdfe61882",
+    "src/text2ifc_ifc_repair/resolution_flow.py": "sha256:8dbfa2f6feb581326f3326f3f4b3cf2faa2a60927136fc228a27122bdb5a76ba",
+    "src/text2ifc_ifc_repair/property_resolution_coordinator.py": "sha256:f6c572a3da85656e115ea697f572c19f44bc2529b0b87b1f1f13e55dab9a7d84",
+    "src/text2ifc_ifc_repair/evaluation.py": "sha256:dbd4a7c8cf853ebd5a08eeeb12a8317e58e5eb718ed38cf9533bcae5614e0014",
+    "src/text2ifc_ifc_repair/evaluation_policy.py": "sha256:8618703c97a4d889acd83e94cfdd568d50df292566bce404e90bf42fb7d592ac",
+    "scripts/ifc_repair/run_repair_milestone_r1.py": "sha256:19bf68820c6da5585fbc0fdb206fd9adf173e0bed48c485174873107e6144c36",
+    "tests/ifc_repair/test_target_query_filling_geometry.py": "sha256:5014d649cc95272f289d59e4998e51baf6ad14bb27af4871113c42f42b477275",
+    "tests/ifc_repair/test_property_claim_scope_normalization.py": "sha256:d95d088f9122ed19d217e068a714f95a4b9f870ac0f8bb525042b1512544bace",
+    "tests/ifc_repair/test_structural_type_reuse_authorization.py": "sha256:722595c6985eb8e5f9a420297674e8fda3f8c9d76d4aaca6798c07318e22b9a7",
+    "tests/ifc_repair/test_repair_milestone_r1_runner.py": "sha256:e6153e392d47f6f4b96b1f4db68bd9ae90edb47c887f20db91812aefcdef5381"
+  },
+  "resolved_checks": [
+    {
+      "check_id": "h3_h2_public_runner_contract",
+      "status": "passed",
+      "exit_code": 0,
+      "passed_count": 122,
+      "failed_count": 0,
+      "skip_count": 0,
+      "substitution_count": 0,
+      "timeout_count": 0,
+      "network_calls": 0,
+      "wall_seconds": 294.29,
+      "evidence": [
+        {
+          "path": "dataset/processed/ifc-repair-runs/repair-milestone-r1/admission-20260902-a1-final/core-runner.junit.xml",
+          "sha256": "sha256:5fca80dc68761c985615f78c23fd07afce2e57d1c6fed56080542ffdf62a16a4"
+        }
+      ]
+    },
+    {
+      "check_id": "a1_structural_authoring_evaluation_atomicity",
+      "status": "passed",
+      "exit_code": 0,
+      "passed_count": 98,
+      "failed_count": 0,
+      "skip_count": 0,
+      "substitution_count": 0,
+      "timeout_count": 0,
+      "network_calls": 0,
+      "wall_seconds": 98.91,
+      "evidence": [
+        {
+          "path": "dataset/processed/ifc-repair-runs/repair-milestone-r1/admission-20260902-a1-final/structural-evaluator.junit.xml",
+          "sha256": "sha256:3d4414cab80aece73d6be9f0d7584aaf0c22ed75ba5d5b6a175eb7a4bfef1168"
+        }
+      ]
+    },
+    {
+      "check_id": "r1_proof_reaudit_curator_contract",
+      "status": "passed",
+      "exit_code": 0,
+      "passed_count": 115,
+      "failed_count": 0,
+      "skip_count": 0,
+      "substitution_count": 0,
+      "timeout_count": 0,
+      "network_calls": 0,
+      "wall_seconds": 634.21,
+      "evidence": [
+        {
+          "path": "dataset/processed/ifc-repair-runs/repair-milestone-r1/admission-20260902-a1-final/proof-curator.junit.xml",
+          "sha256": "sha256:7d0db0c47b25230740fc3c8202b71266e189c0e45c312bb76815ab340b086e0c"
+        }
+      ]
+    },
+    {
+      "check_id": "compileall",
+      "status": "passed",
+      "exit_code": 0,
+      "skip_count": 0,
+      "substitution_count": 0,
+      "timeout_count": 0,
+      "network_calls": 0,
+      "scope": [
+        "src",
+        "tests",
+        "scripts"
+      ]
+    },
+    {
+      "check_id": "scoped_git_diff_check",
+      "status": "passed",
+      "exit_code": 0,
+      "skip_count": 0,
+      "substitution_count": 0,
+      "timeout_count": 0,
+      "network_calls": 0,
+      "range": "148f8365..2ce50084",
+      "scope": [
+        "src",
+        "scripts",
+        "tests",
+        ".planning",
+        "docs/validation/repair-milestone-r1"
+      ],
+      "note": "append-only genuine rendered prompts are excluded from whitespace normalization"
+    }
+  ],
+  "test_totals": {
+    "passed": 335,
+    "failed": 0,
+    "skipped": 0,
+    "timeouts": 0,
+    "substitutions": 0,
+    "network_calls": 0
+  },
+  "runner_binding": {
+    "mechanism": "the SHA-256 of this supporting admission is included in the next uninterrupted R1 run authorization_reference; the runner's existing Plan 07 full-preflight loader is not modified or repurposed",
+    "changed_scope_loader_repurposed": false
+  }
+}

@@ -1,0 +1,90 @@
+{
+  "model_fingerprint": "sha256:f61ff5cf8e1cc88da6944d6bcd3e2e7da5ff27dd3288a8781908018cb8240cd6",
+  "operations": [
+    {
+      "attribute_intents": [],
+      "occurrence_reuse_intent": null,
+      "operation_id": "add_column_1",
+      "operation_type": "add_column",
+      "parameters": {
+        "axis": {
+          "base": {
+            "x_mm": 120000,
+            "y_mm": 120000,
+            "z_mm": 0
+          },
+          "top": {
+            "x_mm": 120000,
+            "y_mm": 120000,
+            "z_mm": 6000
+          }
+        },
+        "section": {
+          "depth_mm": 600,
+          "orientation": {
+            "x": 0,
+            "y": 1
+          },
+          "shape": "rectangle",
+          "width_mm": 400
+        }
+      },
+      "property_intents": [
+        {
+          "intent_kind": "natural_language_property",
+          "property_phrase": "load bearing status or external status",
+          "raw_unit": null,
+          "raw_value": true,
+          "scope": "occurrence_direct",
+          "source": {
+            "excerpt": "Set its natural-language property \"load bearing status or external status\" to true",
+            "reference": "public_request_001",
+            "source_kind": "user_request"
+          }
+        }
+      ],
+      "prototype_intent": null,
+      "provenance": [
+        {
+          "excerpt": "On the IFC Building Storey named \"Level 1\", add one vertical straight rectangular Column with center-axis base (120000, 120000, 0) mm and top (120000, 120000, 6000) mm, a section 400 mm wide and 600 mm deep, and local width direction (0, 1).",
+          "reference": "public_request_001",
+          "source_kind": "user_request"
+        }
+      ],
+      "quantity_intents": [],
+      "routing_intent": {
+        "action": "add",
+        "component_family": "column",
+        "operation_profile": "column.add.v0.3",
+        "source": {
+          "excerpt": "On the IFC Building Storey named \"Level 1\", add one vertical straight rectangular Column with center-axis base (120000, 120000, 0) mm and top (120000, 120000, 6000) mm, a section 400 mm wide and 600 mm deep, and local width direction (0, 1).",
+          "reference": "public_request_001",
+          "source_kind": "user_request"
+        }
+      },
+      "semantic_bundle_refs": [],
+      "target_query": {
+        "allowed_ifc_classes": [
+          "IfcBuildingStorey"
+        ],
+        "names": [
+          "Level 1"
+        ],
+        "schema_version": "text2ifc/ifc-target-query/0.1"
+      }
+    }
+  ],
+  "prompt_fingerprint": "sha256:0b839b55a1176657d9ca315479c7a8849f298688a5c15226eac13aeb03c8f648",
+  "provenance": [
+    {
+      "excerpt": "On the IFC Building Storey named \"Level 1\", add one vertical straight rectangular Column with center-axis base (120000, 120000, 0) mm and top (120000, 120000, 6000) mm, a section 400 mm wide and 600 mm deep, and local width direction (0, 1). Set its natural-language property \"load bearing status or external status\" to true, but do not choose between those two meanings without clarification.",
+      "reference": "public_request_001",
+      "source_kind": "user_request"
+    }
+  ],
+  "request_id": "request-9a008ca96cbb317d",
+  "schema_version": "text2ifc/ifc-repair-intent/0.8",
+  "semantic_bundles": [],
+  "source_request_hash": "sha256:9a008ca96cbb317d63fa53aa7bc10b4845924859ef0a8f309f228d866e93169a",
+  "unsupported_requests": []
+}

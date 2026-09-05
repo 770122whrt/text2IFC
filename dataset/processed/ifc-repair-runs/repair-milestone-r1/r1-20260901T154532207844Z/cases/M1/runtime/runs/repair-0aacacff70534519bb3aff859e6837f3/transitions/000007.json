@@ -1,0 +1,140 @@
+{
+  "answer": null,
+  "clarification": {
+    "answer_modes": [
+      "select_candidate",
+      "add_detail",
+      "cancel"
+    ],
+    "answer_schema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "select_candidate"
+              }
+            }
+          },
+          "then": {
+            "maxProperties": 2,
+            "required": [
+              "kind",
+              "candidate_token"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "add_detail"
+              }
+            }
+          },
+          "then": {
+            "maxProperties": 2,
+            "required": [
+              "kind",
+              "detail"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "cancel"
+              }
+            }
+          },
+          "then": {
+            "maxProperties": 1,
+            "required": [
+              "kind"
+            ]
+          }
+        }
+      ],
+      "properties": {
+        "authorized": {
+          "const": true
+        },
+        "candidate_token": {
+          "maxLength": 256,
+          "minLength": 1,
+          "type": "string"
+        },
+        "detail": {
+          "maxLength": 4096,
+          "minLength": 1,
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "select_candidate",
+            "add_detail",
+            "cancel"
+          ]
+        },
+        "preview_hash": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind"
+      ],
+      "type": "object"
+    },
+    "candidates": [
+      {
+        "candidate_kind": "property",
+        "dimensions": {},
+        "evidence": [
+          "definition:Fire rating for this object.\nIt is given according to the national fire safety classification.",
+          "vector-score:0.567890"
+        ],
+        "ifc_class": "IfcDoor",
+        "name": "Pset_DoorCommon.FireRating",
+        "occurrence_count": 0,
+        "position": null,
+        "public_id": "ifc2x3:Pset_DoorCommon.FireRating",
+        "storey": null,
+        "storeys": [],
+        "token": "candidate:1:ifc2x3:Pset_DoorCommon.FireRating"
+      }
+    ],
+    "claim_id": "claim-001",
+    "clarification_id": "clarify-007",
+    "operation_id": "set-door-fire-rating-1",
+    "property_preview": null,
+    "question": "Select the intended property candidate or cancel.",
+    "reason_code": "property_resolution",
+    "resume_stage": "intent_ready",
+    "run_id": "repair-0aacacff70534519bb3aff859e6837f3",
+    "schema_version": "text2ifc/ifc-repair-clarification/0.2",
+    "stage": "intent_ready",
+    "state_version": 7
+  },
+  "created_at": "2026-09-01T15:59:09.160900+00:00",
+  "from_stage": "intent_ready",
+  "previous_hash": "sha256:1257178de6eed004c468b5e842f2b1d08da66a2adbfe327692ae0a766f6ec93d",
+  "reason_code": "PROPERTY_VALUE_TYPE_INCOMPATIBLE",
+  "record_hash": "sha256:d9d93296903d4259399413fb286132322ecff54d163104694eb73029e993e386",
+  "result_artifacts": {},
+  "schema_version": "text2ifc/ifc-repair-transition/0.1",
+  "stage_hash": "sha256:22bc9f7a0d0b1e700ad15eb81e4c28e035598c2924398d07bfed0cb2e5196f38",
+  "stage_payload": {
+    "resolution": {
+      "path": "resolution-v007.json",
+      "schema_version": "text2ifc/ifc-resolution-flow/0.1",
+      "sha256": "sha256:406bb67acde19445d0054c549f993df09e6cfedff9bd3f890f724d2a6c92598a"
+    }
+  },
+  "state_version": 7,
+  "to_stage": "clarification_required",
+  "transition_id": 7
+}

@@ -1,0 +1,104 @@
+{
+  "text": "{\"schema_version\":\"text2ifc/ifc-property-rerank-decision/0.1\",\"decision\":\"confirmed\",\"selected_candidate_id\":\"candidate:4:ifc2x3:Pset_WallCommon.AcousticRating\",\"conflicting_candidate_ids\":[],\"clarification_question\":null}",
+  "transport": {
+    "events": [
+      {
+        "data": {
+          "choices": [
+            {
+              "finish_reason": "stop",
+              "index": 0,
+              "logprobs": null,
+              "message": {
+                "annotations": null,
+                "audio": null,
+                "content": "{\"schema_version\":\"text2ifc/ifc-property-rerank-decision/0.1\",\"decision\":\"confirmed\",\"selected_candidate_id\":\"candidate:4:ifc2x3:Pset_WallCommon.AcousticRating\",\"conflicting_candidate_ids\":[],\"clarification_question\":null}",
+                "function_call": null,
+                "reasoning_content": "We need to analyze the query and candidates. The property phrase is \"隔声等级\" (sound insulation rating/level). Raw value \"Rw 50\" which is a sound insulation rating. Target IfcWallStandardCase. Candidate set includes several. The likely best match is Pset_WallCommon.AcousticRating, which is \"Acoustic rating for this object. It is giving according to the national building code. It indicates the sound transmission resistance of this object by an index ration (instead of providing full sound absorbtion values).\" This directly matches the concept of sound insulation rating/level. The phrase \"隔声等级\" translates to sound insulation level/rating. So we can confirm that.\n\nBut need to ensure that it is uniquely authorized. Other candidates: SurfaceSpreadOfFlame (fire), Compartmentation (fire compartmentation), Reference (ID), LocalContext (quantity takeoff). None relate to sound insulation except AcousticRating. So confirmed.\n\nWe must output JSON with schema_version, decision, selected_candidate_id, conflicting_candidate_ids, clarification_question. For confirmed, clarification_question is null, selected_candidate_id is the candidate ID. Conflicting candidate IDs should be empty (since we are not listing conflicting ones). Also for confirmed, we don't have a conflicting list requirement? The schema says \"conflicting_candidate_ids\" is an array, likely empty when confirmed. We'll set it to [].\n\nNeed to ensure we use exactly the candidate_id: \"candidate:2:ifc2x3:Pset_WallCommon.AcousticRating\"? Wait, that's candidate 4. Let's check candidate ids:\n\ncandidate:1:ifc2x3:Pset_FireRatingProperties.SurfaceSpreadOfFlame\ncandidate:2:ifc2x3:Pset_WallCommon.Compartmentation\ncandidate:3:ifc2x3:Pset_WallCommon.Reference\ncandidate:4:ifc2x3:Pset_WallCommon.AcousticRating\ncandidate:5:ifc2x3:Pset_QuantityTakeOff.LocalContext\n\nSo AcousticRating is candidate:4. We'll select that.\n\nDecision: confirmed.\n\nWe output JSON.",
+                "refusal": null,
+                "role": "assistant",
+                "tool_calls": null
+              }
+            }
+          ],
+          "created": 1788278197,
+          "id": "cd970b9d-7c93-48bc-8190-2c039534cb91",
+          "model": "deepseek-v4-flash",
+          "moderation": null,
+          "object": "chat.completion",
+          "service_tier": null,
+          "stop_reason": "stop",
+          "system_fingerprint": "a26a7955944dc5c60445bff77fac9c8e",
+          "usage": {
+            "completion_tokens": 530,
+            "completion_tokens_details": "[REDACTED]",
+            "prompt_cache_hit_tokens": "[REDACTED]",
+            "prompt_cache_miss_tokens": "[REDACTED]",
+            "prompt_tokens": 2825,
+            "prompt_tokens_details": "[REDACTED]",
+            "total_tokens": 3355
+          }
+        },
+        "event": "chat.completion",
+        "sequence": 0
+      }
+    ],
+    "evidence_class": "live",
+    "http_status": 200,
+    "request": {
+      "extra_body": {
+        "thinking": {
+          "type": "enabled"
+        }
+      },
+      "max_tokens": 65536,
+      "messages": [
+        {
+          "content": "# IFC Property Resolution Stage 1.5\n\nYou are a repair-only semantic candidate selector. You handle exactly one\nproperty claim after its target IFC class has already been resolved. You are not\na general BIM analysis agent and you do not author IFC facts.\n\n## Public inputs\n\nPROPERTY_QUERY:\n{\"claim_id\": \"claim-001\", \"corpus_version\": \"ifc2x3-property-records/0.2\", \"model_id\": \"sha256:f61ff5cf8e1cc88da6944d6bcd3e2e7da5ff27dd3288a8781908018cb8240cd6\", \"operation_id\": \"set-wall-sound-insulation-1\", \"operation_type\": \"set_occurrence_properties\", \"property_phrase\": \"隔声等级\", \"query_id\": \"property-query:repair-0809ab7e6c9e415f9eb49f17e9bdf445:set-wall-sound-insulation-1:claim-001\", \"raw_unit\": null, \"raw_value\": \"Rw 50\", \"raw_value_kind\": \"string\", \"request_id\": \"request-e008a58f9a64e511\", \"run_id\": \"repair-0809ab7e6c9e415f9eb49f17e9bdf445\", \"schema_version\": \"text2ifc/ifc-property-resolution-query/0.2\", \"scope\": \"occurrence_direct\", \"target_ifc_class\": \"IfcWallStandardCase\"}\n\nCANDIDATE_SET:\n{\"candidate_set_id\": \"property-candidates:repair-0809ab7e6c9e415f9eb49f17e9bdf445:set-wall-sound-insulation-1:claim-001\", \"candidates\": [{\"applicable_classes\": [\"IfcElement\", \"IfcSpatialStructureElement\"], \"candidate_id\": \"candidate:1:ifc2x3:Pset_FireRatingProperties.SurfaceSpreadOfFlame\", \"canonical_path\": \"Pset_FireRatingProperties.SurfaceSpreadOfFlame\", \"definition\": \"Surface spread of flame characteristics.\", \"property_name\": \"SurfaceSpreadOfFlame\", \"rank\": 1, \"record_id\": \"ifc2x3:Pset_FireRatingProperties.SurfaceSpreadOfFlame\", \"score\": 0.5183325465563016, \"set_name\": \"Pset_FireRatingProperties\", \"source\": {\"kind\": \"ifc2x3_psd\", \"reference\": \"R2x3_TC1/psd/IfcSharedBldgServiceElements/Pset_FireRatingProperties.xml\"}, \"standard_status\": \"standard\", \"template_type\": \"TypePropertySingleValue\", \"unit\": null, \"value_type\": \"IfcLabel\"}, {\"applicable_classes\": [\"IfcWall\", \"IfcWallStandardCase\"], \"candidate_id\": \"candidate:2:ifc2x3:Pset_WallCommon.Compartmentation\", \"canonical_path\": \"Pset_WallCommon.Compartmentation\", \"definition\": \"Indication whether the object is designed to serve as a fire compartmentation (TRUE) or not (FALSE).\", \"property_name\": \"Compartmentation\", \"rank\": 2, \"record_id\": \"ifc2x3:Pset_WallCommon.Compartmentation\", \"score\": 0.5037524214030549, \"set_name\": \"Pset_WallCommon\", \"source\": {\"kind\": \"ifc2x3_psd\", \"reference\": \"R2x3_TC1/psd/IfcSharedBldgElements/Pset_WallCommon.xml\"}, \"standard_status\": \"standard\", \"template_type\": \"TypePropertySingleValue\", \"unit\": null, \"value_type\": \"IfcBoolean\"}, {\"applicable_classes\": [\"IfcWall\", \"IfcWallStandardCase\"], \"candidate_id\": \"candidate:3:ifc2x3:Pset_WallCommon.Reference\", \"canonical_path\": \"Pset_WallCommon.Reference\", \"definition\": \"Reference ID for this specified type in this project (e.g. type 'A-1')\", \"property_name\": \"Reference\", \"rank\": 3, \"record_id\": \"ifc2x3:Pset_WallCommon.Reference\", \"score\": 0.49432713101256875, \"set_name\": \"Pset_WallCommon\", \"source\": {\"kind\": \"ifc2x3_psd\", \"reference\": \"R2x3_TC1/psd/IfcSharedBldgElements/Pset_WallCommon.xml\"}, \"standard_status\": \"standard\", \"template_type\": \"TypePropertySingleValue\", \"unit\": null, \"value_type\": \"IfcIdentifier\"}, {\"applicable_classes\": [\"IfcWall\", \"IfcWallStandardCase\"], \"candidate_id\": \"candidate:4:ifc2x3:Pset_WallCommon.AcousticRating\", \"canonical_path\": \"Pset_WallCommon.AcousticRating\", \"definition\": \"Acoustic rating for this object.\\nIt is giving according to the national building code. It indicates the sound transmission resistance of this object by an index ration (instead of providing full sound absorbtion values).\", \"property_name\": \"AcousticRating\", \"rank\": 4, \"record_id\": \"ifc2x3:Pset_WallCommon.AcousticRating\", \"score\": 0.4930455665571077, \"set_name\": \"Pset_WallCommon\", \"source\": {\"kind\": \"ifc2x3_psd\", \"reference\": \"R2x3_TC1/psd/IfcSharedBldgElements/Pset_WallCommon.xml\"}, \"standard_status\": \"standard\", \"template_type\": \"TypePropertySingleValue\", \"unit\": null, \"value_type\": \"IfcLabel\"}, {\"applicable_classes\": [\"IfcElement\"], \"candidate_id\": \"candidate:5:ifc2x3:Pset_QuantityTakeOff.LocalContext\", \"canonical_path\": \"Pset_QuantityTakeOff.LocalContext\", \"definition\": \"Local context information for the take-off quantity, if multiple information items are passed, then the property shall be indexed, e.g. LocalContext1, LocalContext2, …\", \"property_name\": \"LocalContext\", \"rank\": 5, \"record_id\": \"ifc2x3:Pset_QuantityTakeOff.LocalContext\", \"score\": 0.48471994682052666, \"set_name\": \"Pset_QuantityTakeOff\", \"source\": {\"kind\": \"ifc2x3_psd\", \"reference\": \"R2x3_TC1/psd/IfcProductExtension/Pset_QuantityTakeOff.xml\"}, \"standard_status\": \"standard\", \"template_type\": \"TypePropertySingleValue\", \"unit\": null, \"value_type\": \"IfcText\"}], \"collection_version\": \"ifc2x3-property-vector/0.2\", \"corpus_version\": \"ifc2x3-property-records/0.2\", \"document_renderer_version\": \"property-record-text/0.1\", \"embedding_model\": {\"model_id\": \"BAAI/bge-m3\", \"model_version\": \"BAAI-bge-m3-local/phase12.1\"}, \"query_id\": \"property-query:repair-0809ab7e6c9e415f9eb49f17e9bdf445:set-wall-sound-insulation-1:claim-001\", \"schema_version\": \"text2ifc/ifc-property-candidate-set/0.1\"}\n\nDECISION_SCHEMA:\n{\"$defs\": {\"candidate_id\": {\"maxLength\": 256, \"minLength\": 1, \"pattern\": \"^[A-Za-z0-9][A-Za-z0-9._:/-]*$\", \"type\": \"string\"}}, \"$id\": \"text2ifc/ifc-property-rerank-decision/0.1\", \"$schema\": \"https://json-schema.org/draft/2020-12/schema\", \"additionalProperties\": false, \"allOf\": [{\"if\": {\"properties\": {\"decision\": {\"const\": \"confirmed\"}}, \"required\": [\"decision\"]}, \"then\": {\"properties\": {\"clarification_question\": {\"type\": \"null\"}, \"selected_candidate_id\": {\"$ref\": \"#/$defs/candidate_id\"}}}}, {\"if\": {\"properties\": {\"decision\": {\"const\": \"clarification_required\"}}, \"required\": [\"decision\"]}, \"then\": {\"properties\": {\"clarification_question\": {\"maxLength\": 512, \"minLength\": 1, \"type\": \"string\"}, \"conflicting_candidate_ids\": {\"minItems\": 1}, \"selected_candidate_id\": {\"type\": \"null\"}}}}, {\"if\": {\"properties\": {\"decision\": {\"const\": \"unsupported\"}}, \"required\": [\"decision\"]}, \"then\": {\"properties\": {\"clarification_question\": {\"type\": \"null\"}, \"conflicting_candidate_ids\": {\"maxItems\": 0}, \"selected_candidate_id\": {\"type\": \"null\"}}}}], \"properties\": {\"clarification_question\": {\"oneOf\": [{\"maxLength\": 512, \"minLength\": 1, \"type\": \"string\"}, {\"type\": \"null\"}]}, \"conflicting_candidate_ids\": {\"items\": {\"$ref\": \"#/$defs/candidate_id\"}, \"maxItems\": 5, \"type\": \"array\", \"uniqueItems\": true}, \"decision\": {\"enum\": [\"confirmed\", \"clarification_required\", \"unsupported\"]}, \"schema_version\": {\"const\": \"text2ifc/ifc-property-rerank-decision/0.1\"}, \"selected_candidate_id\": {\"oneOf\": [{\"$ref\": \"#/$defs/candidate_id\"}, {\"type\": \"null\"}]}}, \"required\": [\"schema_version\", \"decision\", \"selected_candidate_id\", \"conflicting_candidate_ids\", \"clarification_question\"], \"title\": \"IFC Property Rerank Decision 0.1\", \"type\": \"object\"}\n\nPREVIOUS_VALIDATION_FEEDBACK:\n[]\n\n## Boundary\n\n- Compare the original property phrase with the definitions and metadata of the\n  offered candidates for this one property claim.\n- Return `confirmed` only when the user's language provides direct and sufficiently specific semantic evidence that uniquely authorizes exactly one offered candidate.\n  When confirmed, select exactly one offered candidate.\n- Semantic relatedness, the nearest candidate, a plausible engineering means, or a\n  possible way to achieve the user's goal is not sufficient evidence for `confirmed`.\n- If multiple offered candidates remain semantically plausible, return\n  `clarification_required`, list only their offered IDs, and ask one short\n  question that distinguishes them.\n- Also return `clarification_required` when the request is underspecified but potentially repairable and the language does not uniquely authorize one\n  property or repair interpretation. List only the offered candidate IDs that\n  remain plausible; one relevant offered ID is sufficient when the question\n  must distinguish it from a broader repair interpretation.\n- When a meaningful repair goal is not specific enough for one executable property, prefer `clarification_required` over choosing the closest candidate.\n- Return `unsupported` only when the request is genuinely outside the supported repair capability or cannot be resolved into a supported repair\n  action even through clarification. A missing exact candidate match alone is\n  not sufficient for `unsupported`.\n- Never invent a candidate ID or use knowledge of a candidate that is not in\n  CANDIDATE_SET.\n- Do not infer, translate, normalize, or change the user's value, unit, scope,\n  operation, target, or provenance.\n- Do not output a Pset name, property name, IFC value type, unit decision,\n  authoring instruction, ChangeSet, or IFC object.\n- Treat scores and ranks only as retrieval evidence. They do not decide semantic\n  meaning, and a Top-1 candidate is not automatically correct.\n- No candidate is executable authority. Program code performs admissibility and\n  constructs the exact typed property after this stage.\n- On a correction attempt, fix only the listed validation errors. Do not rename\n  fields or emit compatibility aliases.\n\n## Output\n\nReturn exactly one JSON object that validates against DECISION_SCHEMA. Do not\nuse Markdown fences, explanations before or after the object, or additional\nfields.\n",
+          "role": "user"
+        }
+      ],
+      "model": "deepseek-v4-flash",
+      "response_format": {
+        "type": "json_object"
+      },
+      "temperature": 0
+    },
+    "response": {
+      "choices": [
+        {
+          "finish_reason": "stop",
+          "index": 0,
+          "logprobs": null,
+          "message": {
+            "annotations": null,
+            "audio": null,
+            "content": "{\"schema_version\":\"text2ifc/ifc-property-rerank-decision/0.1\",\"decision\":\"confirmed\",\"selected_candidate_id\":\"candidate:4:ifc2x3:Pset_WallCommon.AcousticRating\",\"conflicting_candidate_ids\":[],\"clarification_question\":null}",
+            "function_call": null,
+            "reasoning_content": "We need to analyze the query and candidates. The property phrase is \"隔声等级\" (sound insulation rating/level). Raw value \"Rw 50\" which is a sound insulation rating. Target IfcWallStandardCase. Candidate set includes several. The likely best match is Pset_WallCommon.AcousticRating, which is \"Acoustic rating for this object. It is giving according to the national building code. It indicates the sound transmission resistance of this object by an index ration (instead of providing full sound absorbtion values).\" This directly matches the concept of sound insulation rating/level. The phrase \"隔声等级\" translates to sound insulation level/rating. So we can confirm that.\n\nBut need to ensure that it is uniquely authorized. Other candidates: SurfaceSpreadOfFlame (fire), Compartmentation (fire compartmentation), Reference (ID), LocalContext (quantity takeoff). None relate to sound insulation except AcousticRating. So confirmed.\n\nWe must output JSON with schema_version, decision, selected_candidate_id, conflicting_candidate_ids, clarification_question. For confirmed, clarification_question is null, selected_candidate_id is the candidate ID. Conflicting candidate IDs should be empty (since we are not listing conflicting ones). Also for confirmed, we don't have a conflicting list requirement? The schema says \"conflicting_candidate_ids\" is an array, likely empty when confirmed. We'll set it to [].\n\nNeed to ensure we use exactly the candidate_id: \"candidate:2:ifc2x3:Pset_WallCommon.AcousticRating\"? Wait, that's candidate 4. Let's check candidate ids:\n\ncandidate:1:ifc2x3:Pset_FireRatingProperties.SurfaceSpreadOfFlame\ncandidate:2:ifc2x3:Pset_WallCommon.Compartmentation\ncandidate:3:ifc2x3:Pset_WallCommon.Reference\ncandidate:4:ifc2x3:Pset_WallCommon.AcousticRating\ncandidate:5:ifc2x3:Pset_QuantityTakeOff.LocalContext\n\nSo AcousticRating is candidate:4. We'll select that.\n\nDecision: confirmed.\n\nWe output JSON.",
+            "refusal": null,
+            "role": "assistant",
+            "tool_calls": null
+          }
+        }
+      ],
+      "created": 1788278197,
+      "id": "cd970b9d-7c93-48bc-8190-2c039534cb91",
+      "model": "deepseek-v4-flash",
+      "moderation": null,
+      "object": "chat.completion",
+      "service_tier": null,
+      "stop_reason": "stop",
+      "system_fingerprint": "a26a7955944dc5c60445bff77fac9c8e",
+      "usage": {
+        "completion_tokens": 530,
+        "completion_tokens_details": "[REDACTED]",
+        "prompt_cache_hit_tokens": "[REDACTED]",
+        "prompt_cache_miss_tokens": "[REDACTED]",
+        "prompt_tokens": 2825,
+        "prompt_tokens_details": "[REDACTED]",
+        "total_tokens": 3355
+      }
+    }
+  }
+}

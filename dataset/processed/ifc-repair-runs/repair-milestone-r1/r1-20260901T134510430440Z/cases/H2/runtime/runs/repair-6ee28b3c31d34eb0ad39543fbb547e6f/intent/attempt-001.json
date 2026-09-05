@@ -1,0 +1,37 @@
+{
+  "attempt": 1,
+  "issues": [],
+  "normalizations": [],
+  "provider_metadata": {
+    "estimated_input_tokens": "[REDACTED]",
+    "evidence_class": "live",
+    "max_input_tokens": "[REDACTED]",
+    "model": "deepseek-v4-flash",
+    "provider": "deepseek-openai-compatible",
+    "request_configuration": {
+      "temperature": {
+        "effective": false,
+        "value": 0
+      },
+      "thinking": {
+        "type": "enabled"
+      }
+    },
+    "response_id": "6ed701ca-564b-4c1c-86ff-4bd9fbfd32df",
+    "session_id": "ifc-repair-intent-request-cc56683933b9d15b",
+    "stop_reason": "stop",
+    "transport_attempts": 1,
+    "usage": {
+      "completion_tokens": 5078,
+      "completion_tokens_details": "[REDACTED]",
+      "prompt_cache_hit_tokens": "[REDACTED]",
+      "prompt_cache_miss_tokens": "[REDACTED]",
+      "prompt_tokens": 11604,
+      "prompt_tokens_details": "[REDACTED]",
+      "total_tokens": 16682
+    }
+  },
+  "response_excerpt": "{\n  \"schema_version\": \"text2ifc/ifc-repair-intent-body/0.8\",\n  \"operations\": [\n    {\n      \"operation_id\": \"set-door-fire-rating-1\",\n      \"operation_type\": \"set_occurrence_properties\",\n      \"routing_intent\": {\n        \"component_family\": \"occurrence\",\n        \"action\": \"set_properties\",\n        \"operation_profile\": \"occurrence.set-properties\",\n        \"source\": {\n          \"source_kind\": \"user_request\",\n          \"reference\": \"public-request\",\n          \"excerpt\": \"将 Level 4 中 GlobalId 为 1jI3nV6Sn2LfeyEYxROCeh、Tag 为 468036 的门的防火等级设置为 EI60\"\n        }\n      },\n      \"target_query\": {\n        \"schema_version\": \"text2ifc/ifc-target-query/0.1\",\n        \"allowed_ifc_classes\": [\"IfcDoor\"],\n        \"global_id\": \"1jI3nV6Sn2LfeyEYxROCeh\",\n        \"storey_name\": \"Level 4\"\n      },\n      \"parameters\": {},\n      \"attribute_intents\": [],\n      \"property_intents\": [\n        {\n          \"intent_kind\": \"natural_language_property\",\n          \"property_phrase\": \"防火等级\",\n          \"raw_value\": \"EI60\",\n          \"raw_unit\": null,\n          \"scope\": null,\n          \"source\": {\n            \"source_kind\": \"user_request\",\n            \"reference\": \"public-request\",\n            \"excerpt\": \"将 Level 4 中 GlobalId 为 1jI3nV6Sn2LfeyEYxROCeh、Tag 为 468036 的门的防火等级设置为 EI60\"\n          }\n        }\n      ],\n      \"semantic_bundle_refs\": [],\n      \"quantity_intents\": [],\n      \"occurrence_reuse_intent\": null,\n      \"prototype_intent\": null,\n      \"provenance\": [\n        {\n          \"source_kind\": \"user_request\",\n          \"reference\": \"public-request\",\n          \"excerpt\": \"将 Level 4 中 GlobalId 为 1jI3nV6Sn2LfeyEYxROCeh、Tag 为 468036 的门的防火等级设置为 EI60\"\n        }\n      ]\n    },\n    {\n      \"operation_id\": \"set-wall-sound-insulation-1\",\n      \"operation_type\": \"set_occurrence_properties\",\n      \"routing_intent\": {\n        \"component_family\": \"occurrence\",\n        \"action\": \"set_properties\",\n        \"operation_profile\": \"occurrence.set-properties\",\n        \"source\": {\n          \"source_kind\": \"user_request\",\n          \"reference\": \"public-request\",\n          \"excerpt\": \"同时将同层 GlobalId 为 2HaS6zNOX8xOGjmaNi_r5s、Tag 为 187497 的墙的隔声等级设置为 Rw 50\"\n        }\n      },\n      \"target_query\": {\n        \"schema_version\": \"text2ifc/ifc-target-query/0.1\",\n        \"allowed_ifc_classes\": [\"IfcWall\", \"IfcWallStandardCase\"],\n        \"global_id\": \"2HaS6zNOX8xOGjmaNi_r5s\",\n        \"storey_name\": \"Level 4\"\n      },\n      \"parameters\": {},\n      \"attribute_intents\": [],\n      \"property_intents\": [\n        {\n          \"intent_kind\": \"natural_language_property\",\n          \"property_phrase\": \"隔声等级\",\n          \"raw_value\": \"Rw 50\",\n          \"raw_unit\": null,\n          \"scope\": null,\n          \"source\": {\n            \"source_kind\": \"user_request\",\n            \"reference\": \"public-request\",\n            \"excerpt\": \"同时将同层 GlobalId 为 2HaS6zNOX8xOGjmaNi_r5s、Tag 为 187497 的墙的隔声等级设置为 Rw 50\"\n          }\n        }\n      ],\n      \"semantic_bundle_refs\": [],\n      \"quantity_intents\": [],\n      \"occurrence_reuse_intent\": null,\n      \"prototype_intent\": null,\n      \"provenance\": [\n        {\n          \"source_kind\": \"user_request\",\n          \"reference\": \"public-request\",\n          \"excerpt\": \"同时将同层 GlobalId 为 2HaS6zNOX8xOGjmaNi_r5s、Tag 为 187497 的墙的隔声等级设置为 Rw 50\"\n        }\n      ]\n    }\n  ],\n  \"unsupported_requests\": [],\n  \"semantic_bundles\": [],\n  \"provenance\": [\n    {\n      \"source_kind\": \"user_request\",\n      \"reference\": \"public-request\",\n      \"excerpt\": \"将 Level 4 中 GlobalId 为 1jI3nV6Sn2LfeyEYxROCeh、Tag 为 468036 的门的防火等级设置为 EI60，同时将同层 GlobalId 为 2HaS6zNOX8xOGjmaNi_r5s、Tag 为 187497 的墙的隔声等级设置为 Rw 50。两项修改在同一个原子事务中执行。\"\n    }\n  ]\n}",
+  "response_sha256": "sha256:c23e0b92d5c2809bd21759e0140607436543091d65b75e5260e055ce5b4e9c86",
+  "status": "valid"
+}

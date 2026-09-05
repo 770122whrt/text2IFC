@@ -1,0 +1,31 @@
+{
+  "schema_version": "text2ifc/ifc-repair-changeset-draft/0.2",
+  "draft_id": "changeset-set-beam-component-number-1",
+  "base_model_fingerprint": "sha256:79f294c643438ac7a494e4871857244c2de0eefa536eda5977af20640a301a22",
+  "source_request_hash": "sha256:37587fefb2e9ebbb5fd91bb9adc083849c5e4115cec871e0a73420fc4519a545",
+  "semantic_manifest_ref": "changeset/semantic-manifest-set-beam-component-number-1.json",
+  "semantic_manifest_sha256": "sha256:8e9c5d34708411f64e93332c39513c2fb60340d5b0a74bbd5792d4b66e74a87e",
+  "semantic_summary": {
+    "required": 0,
+    "conditional": 1,
+    "not_required": 0
+  },
+  "scope": {
+    "target_ids": ["1BpQ2K66f13Pyv1xzN7BBN"],
+    "forbidden_ids": []
+  },
+  "evidence_refs": ["resolved:/operations/set-beam-component-number-1/context/candidate_targets/0"],
+  "preconditions": ["target_exists", "target_class_supported", "property_assignments_bound"],
+  "postconditions": ["target_preserved", "requested_properties_match", "shared_type_unchanged"],
+  "operations": [
+    {
+      "operation_id": "set-beam-component-number-1",
+      "operation_type": "set_occurrence_properties",
+      "target": {
+        "element_global_id": "1BpQ2K66f13Pyv1xzN7BBN"
+      },
+      "parameters": {},
+      "evidence_refs": ["resolved:/operations/set-beam-component-number-1/context/candidate_targets/0"]
+    }
+  ]
+}

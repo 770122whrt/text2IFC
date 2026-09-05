@@ -487,7 +487,7 @@ def resolve_repair_intent(
                 start=1,
             ):
                 try:
-                    normalize_property_scope(property_intent.scope)
+                    property_scope = normalize_property_scope(property_intent.scope)
                 except ValueError as error:
                     return _failure(
                         intent,
@@ -498,6 +498,11 @@ def resolve_repair_intent(
                     )
                 exact_intent = property_intent
                 if isinstance(property_intent, NaturalLanguagePropertyIntent):
+                    canonical_property_intent = replace(
+                        property_intent,
+                        scope=property_scope,
+                    )
+                    exact_intent = canonical_property_intent
                     if property_knowledge_resolver is None:
                         return _failure(
                             intent,
@@ -508,10 +513,10 @@ def resolve_repair_intent(
                         )
                     property_query = PropertyKnowledgeQuery(
                         target_ifc_class=property_target_class,
-                        phrase=str(property_intent.property_phrase),
-                        raw_value=property_intent.raw_value,
-                        raw_unit=property_intent.raw_unit,
-                        scope=property_intent.scope,
+                        phrase=str(canonical_property_intent.property_phrase),
+                        raw_value=canonical_property_intent.raw_value,
+                        raw_unit=canonical_property_intent.raw_unit,
+                        scope=property_scope,
                     )
                     resolve_for_claim = getattr(
                         property_knowledge_resolver,
@@ -523,7 +528,7 @@ def resolve_repair_intent(
                             operation_id=operation.operation_id,
                             operation_type=operation.operation_type,
                             claim_id=f"claim-{property_index:03d}",
-                            claim=property_intent,
+                            claim=canonical_property_intent,
                             query=property_query,
                         )
                     else:
@@ -532,7 +537,7 @@ def resolve_repair_intent(
                         )
                     evidence_document = _property_resolution_evidence(
                         operation.operation_id,
-                        property_intent,
+                        canonical_property_intent,
                         property_target_class,
                         knowledge_decision,
                     )
@@ -563,7 +568,7 @@ def resolve_repair_intent(
                         requested_value_type=resolved.requested_value_type,
                         requested_unit=resolved.requested_unit,
                         scope=resolved.scope,
-                        source=property_intent.source,
+                        source=canonical_property_intent.source,
                         intent_kind="exact_property",
                     )
                 property_resolution = resolve_exact_property_intent(

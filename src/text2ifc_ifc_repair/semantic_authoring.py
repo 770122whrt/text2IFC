@@ -661,8 +661,29 @@ def apply_semantic_assignments(
                         }
                     )
                 else:
-                    existing.NominalValue = _ifc_typed_value(model, item)
-                    existing.Unit = _ifc_assignment_unit(model, item)
+                    nominal_value = _ifc_typed_value(model, item)
+                    unit = _ifc_assignment_unit(model, item)
+                    if _pset_property_has_other_owner(
+                        model=model,
+                        pset=pset,
+                        prop=existing,
+                    ):
+                        replacement = model.create_entity(
+                            "IfcPropertySingleValue",
+                            Name=existing.Name,
+                            Description=existing.Description,
+                            NominalValue=nominal_value,
+                            Unit=unit,
+                        )
+                        appended = [
+                            replacement if prop == existing else prop
+                            for prop in appended
+                        ]
+                        by_name[property_name] = replacement
+                        existing = replacement
+                    else:
+                        existing.NominalValue = nominal_value
+                        existing.Unit = unit
                     updated.append(
                         {
                             "role": scoped_role(
@@ -1007,6 +1028,16 @@ def _material_plan_matches(resource: Any, plan: Mapping[str, Any]) -> bool:
         and str(getattr(resource, "Name", "")) == plan["create_label"]
     )
 
+
+def _pset_property_has_other_owner(
+    *,
+    model: Any,
+    pset: Any,
+    prop: Any,
+) -> bool:
+    """Require copy-on-write when one property entity has another owner."""
+
+    return any(owner != pset for owner in model.get_inverse(prop))
 
 def _direct_psets(target: Any, set_name: str) -> list[Any]:
     return [

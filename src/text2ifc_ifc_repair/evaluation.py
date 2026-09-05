@@ -478,7 +478,31 @@ def _execute_default_accelerated(
         return _execution_failure(
             error, policy=policy, started=started, rss_reader=rss_reader
         )
-    executor.shutdown(wait=False, cancel_futures=True)
+    validation_parent_rss = int(rss_reader())
+    validation_phase_peak_rss = (
+        validation_parent_rss + sum(worker_peak_rss.values())
+    )
+    executor.shutdown(wait=True, cancel_futures=True)
+    if validation_phase_peak_rss > policy.rss_limit_bytes:
+        return {
+            "status": "failed",
+            "reason_code": "EVALUATION_RSS_LIMIT_EXCEEDED",
+            "results": {},
+            "metrics": {
+                "mode": "accelerated",
+                "worker_count": 2,
+                "wall_seconds": time.monotonic() - started,
+                "stage_seconds": stage_seconds,
+                "peak_rss_bytes": validation_phase_peak_rss,
+                "rss_limit_bytes": policy.rss_limit_bytes,
+                "parent_current_rss_bytes": validation_parent_rss,
+                "worker_peak_rss_bytes": worker_peak_rss,
+                "validation_phase_peak_rss_bytes": (
+                    validation_phase_peak_rss
+                ),
+                "diff_phase_peak_rss_bytes": None,
+            },
+        }
     remaining = policy.deadline_seconds - (time.monotonic() - started)
     if remaining <= 0:
         return _execution_failure(
@@ -512,7 +536,8 @@ def _execute_default_accelerated(
             rss_reader=rss_reader,
         )
     parent_current_rss = int(rss_reader())
-    peak_rss = parent_current_rss + sum(worker_peak_rss.values())
+    diff_phase_peak_rss = parent_current_rss
+    peak_rss = max(validation_phase_peak_rss, diff_phase_peak_rss)
     if peak_rss > policy.rss_limit_bytes:
         return {
             "status": "failed",
@@ -524,6 +549,10 @@ def _execute_default_accelerated(
                 "rss_limit_bytes": policy.rss_limit_bytes,
                 "parent_current_rss_bytes": parent_current_rss,
                 "worker_peak_rss_bytes": worker_peak_rss,
+                "validation_phase_peak_rss_bytes": (
+                    validation_phase_peak_rss
+                ),
+                "diff_phase_peak_rss_bytes": diff_phase_peak_rss,
             },
         }
     return {
@@ -545,6 +574,8 @@ def _execute_default_accelerated(
             "rss_limit_bytes": policy.rss_limit_bytes,
             "parent_current_rss_bytes": parent_current_rss,
             "worker_peak_rss_bytes": worker_peak_rss,
+            "validation_phase_peak_rss_bytes": validation_phase_peak_rss,
+            "diff_phase_peak_rss_bytes": diff_phase_peak_rss,
         },
     }
 
@@ -790,6 +821,7 @@ def evaluate_independent_l1(
     changeset: Mapping[str, Any],
     application_result: Mapping[str, Any],
     registry: Any,
+    comparison_timeout_seconds: float | None = None,
     execution_policy: EvaluationExecutionPolicy | None = None,
     validation_cache_dir: Path | str | None = None,
     reopened_models: (
@@ -979,7 +1011,15 @@ def evaluate_independent_l1(
 
     try:
         if actual_changes is None:
-            actual_changes = normalized_model_diff(before_model, after_model)
+            actual_changes = normalized_model_diff(
+                before_model,
+                after_model,
+                **(
+                    {}
+                    if comparison_timeout_seconds is None
+                    else {"timeout_seconds": comparison_timeout_seconds}
+                ),
+            )
     except ComparisonIntegrityError as error:
         checks.extend(_comparison_not_evaluable_checks(error))
         return _l1_level(checks, readable=True)
@@ -1225,7 +1265,14 @@ def _application_role_binding_errors(
     )
     for change_kind, roles in authorization.get("required_roles", {}).items():
         for role in roles:
-            identifiers = role_entries.get((str(change_kind), str(role)), ())
+            if change_kind == "created_or_modified":
+                identifiers = [
+                    identifier
+                    for kind in ("created", "modified")
+                    for identifier in role_entries.get((kind, str(role)), ())
+                ]
+            else:
+                identifiers = role_entries.get((str(change_kind), str(role)), ())
             if len(identifiers) != 1:
                 errors.append(
                     f"required role {change_kind}.{role} has {len(identifiers)} bindings"

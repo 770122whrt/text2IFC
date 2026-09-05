@@ -479,12 +479,19 @@ def structural_l1_authorization(family: str) -> dict[str, Any]:
         "policy_version": "0.1",
         "created": created,
         "modified": {
+            # Exact existing-Type reuse extends the existing relation instead
+            # of creating one; the generated-Type path stays in "created".
+            "structural_type_relationship": "IfcRelDefinesByType",
             "spatial_containment": "IfcRelContainedInSpatialStructure",
             "structural_type_relationship": "IfcRelDefinesByType",
         },
         "removed": {},
         "required_roles": {
             "created": (family,),
+            # Generated Types create the relation; exact existing-Type reuse
+            # extends the existing one. Exactly one binding must exist either
+            # way.
+            "created_or_modified": ("structural_type_relationship",),
         },
         "relations": relations,
     }

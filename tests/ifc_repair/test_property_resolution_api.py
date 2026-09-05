@@ -118,6 +118,9 @@ class _VectorIndex(InMemoryVectorIndex):
             limit=limit,
         )
 
+    def release_transient_resources(self) -> None:
+        self.events.append("property_runtime_released")
+
 
 class _DecisionProvider:
     def __init__(self, events: list[str], decisions: list[dict[str, Any]]) -> None:
@@ -449,7 +452,13 @@ def test_public_natural_property_path_orders_all_three_provider_stages(
     result = api.start(source, "Set the selected beam load bearing to true.")
 
     assert result.status == "succeeded"
-    assert events[:4] == ["stage1", "vector", "property_resolution", "stage2"]
+    assert events[:5] == [
+        "stage1",
+        "vector",
+        "property_resolution",
+        "property_runtime_released",
+        "stage2",
+    ]
     assert len(provider.calls) == 1
     assert provider.calls[0]["state"]["provider_call_ordinal"] == (
         "property_resolution"
@@ -516,6 +525,12 @@ def test_property_clarification_resumes_stored_candidate_without_second_llm_call
     assert [item.token for item in pending.clarification.candidates] == [
         first_id,
         second_id,
+    ]
+    assert events[:4] == [
+        "stage1",
+        "vector",
+        "property_resolution",
+        "property_runtime_released",
     ]
     assert "stage2" not in events
 

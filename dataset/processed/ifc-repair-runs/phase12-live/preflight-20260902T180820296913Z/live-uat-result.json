@@ -1,0 +1,149 @@
+{
+  "acceptance_eligible": false,
+  "cases": [],
+  "evidence_mode": "not_run",
+  "execution_mode": "preflight_only",
+  "preflight": {
+    "admission_basis": "previous full-preflight evidence + focused revalidation of all previously failed/changed scopes",
+    "admission_path": "dataset/processed/ifc-repair-runs/phase12-live/admission-20260903-r1-final-code/changed-scope-admission.json",
+    "full_suite_rerun": false,
+    "generated_at": "2026-09-03T02:06:00+08:00",
+    "mode": "changed_scope_evidence_reuse",
+    "network_transport_attempted": false,
+    "predictions_regenerated": 0,
+    "prior_full_suite": {
+      "failed_count": 4,
+      "passed_count": 1151
+    },
+    "proof_validation_rerun": false,
+    "provider_calls": 0,
+    "real_semantic_benchmark_rerun": false,
+    "resolved_checks": [
+      {
+        "check_id": "retrieval_evaluator_contract",
+        "evidence": [
+          {
+            "path": "dataset/processed/ifc-repair-runs/phase12-live/preflight-20260826T130321658243Z/preflight/property-retrieval-evaluation/property-evaluation.json",
+            "sha256": "sha256:20a1a03ab8ab71fb27003f5e8213d8d73e000ce9c008fb569df74c2b81a80dfb"
+          },
+          {
+            "path": "dataset/processed/ifc-repair-runs/phase12-live/admission-20260829-rss-focused/retrieval-boundary.junit.xml",
+            "sha256": "sha256:888b4beb6658ef391d1be50f691c745215ab2c4a1a56f21cddc29b0a5dbc964d"
+          }
+        ],
+        "exit_code": 0,
+        "network_calls": 0,
+        "real_bge_rerun": false,
+        "result": "15 passed in 1.74s; accepted real BGE/Qdrant report retained supported_top_k_recall=1.0 and zero ineligible offered records",
+        "skip_count": 0,
+        "status": "passed",
+        "substitution_count": 0,
+        "timeout_count": 0
+      },
+      {
+        "check_id": "sequential_accelerated_parity",
+        "evidence": [
+          {
+            "path": "dataset/processed/ifc-repair-runs/phase12-live/admission-20260829-rss-focused/validation-acceleration.junit.xml",
+            "sha256": "sha256:0c79e015d910e355464cd4d043b78b70e1b6139e0c6788955296dcceaeea3937"
+          }
+        ],
+        "exit_code": 0,
+        "network_calls": 0,
+        "result": "validation-acceleration suite 12 passed in 11.32s",
+        "skip_count": 0,
+        "status": "passed",
+        "substitution_count": 0,
+        "timeout_count": 0
+      },
+      {
+        "check_id": "cold_warm_cache_parity",
+        "evidence": [
+          {
+            "path": "dataset/processed/ifc-repair-runs/phase12-live/admission-20260829-rss-focused/validation-acceleration.junit.xml",
+            "sha256": "sha256:0c79e015d910e355464cd4d043b78b70e1b6139e0c6788955296dcceaeea3937"
+          }
+        ],
+        "exit_code": 0,
+        "network_calls": 0,
+        "result": "validation-acceleration suite 12 passed in 11.32s",
+        "skip_count": 0,
+        "status": "passed",
+        "substitution_count": 0,
+        "timeout_count": 0
+      },
+      {
+        "check_id": "reopened_model_reuse_parity",
+        "evidence": [
+          {
+            "path": "dataset/processed/ifc-repair-runs/phase12-live/admission-20260829-rss-focused/validation-acceleration.junit.xml",
+            "sha256": "sha256:0c79e015d910e355464cd4d043b78b70e1b6139e0c6788955296dcceaeea3937"
+          }
+        ],
+        "exit_code": 0,
+        "network_calls": 0,
+        "result": "validation-acceleration suite 12 passed in 11.32s",
+        "skip_count": 0,
+        "status": "passed",
+        "substitution_count": 0,
+        "timeout_count": 0
+      }
+    ],
+    "schema_version": "text2ifc/phase12-live-changed-scope-admission/0.1",
+    "scope_file_sha256": {
+      ".planning/phases/12.1-property-resolution-rag-reranker/12.1-VALIDATION.md": "sha256:b0e243376e5f11b55ebd9826cb63001b89c30006b2773a8c85f5d398dc948c22",
+      "scripts/ifc_repair/curate_phase12_live_proof.py": "sha256:f367640e1c878f7da4f03bc3b080214c7f33a6ebef22e491a2a4a6ddcae824d3",
+      "scripts/ifc_repair/run_phase12_live_uat.py": "sha256:9b9e726513df8ca1b3aed08ebd339b2c5a1c890f2d4fe0555bf81a70a0806f80",
+      "scripts/ifc_repair/run_phase12_offline.py": "sha256:a7469a6af7751a2283fabf10f37a05c2854cbcd659ac4a42a6d23e44b1b96b26",
+      "src/text2ifc_ifc_repair/evaluation.py": "sha256:37dae832b85de866ef45a1cdda6342a0288447a8d192f4efedd2b4fd6bfa4903",
+      "tests/ifc_repair/test_phase12_live_uat.py": "sha256:499f82b1b186da423e965843578398fdca0ab0fa1e6f3d4fa3f12caab1edb401",
+      "tests/ifc_repair/test_validation_acceleration.py": "sha256:fff49b3fb7dd12554067cc0e77acfce6342471f379f7046cf7cb2757757883c4",
+      "tests/knowledge/test_property_retrieval_evaluation.py": "sha256:9407da59f7ef93b85717962c2d54e11f02617635e046188e01cacc82b8278bbf"
+    },
+    "source_preflight": {
+      "path": "dataset/processed/ifc-repair-runs/phase12-live/uat-20260828T153638178631Z/preflight/preflight.json",
+      "preserved_status": "failed",
+      "sha256": "sha256:f4a2a21ffb684ddb167190b058c179cf8081eadd0860891372210bce50cd2bfe"
+    },
+    "status": "passed",
+    "supporting_evidence": [
+      {
+        "path": "dataset/processed/ifc-repair-runs/phase12-live/admission-20260903-r1-final-code/final-focused.junit.xml",
+        "result": "104 passed in 70.03s; final-code focused admission; zero skip; deterministic Provider doubles only; no network",
+        "sha256": "sha256:315a73c446eac7df20a966c7e3365f35f8a57b999f4f1b359d75e45e46c37cdd"
+      }
+    ]
+  },
+  "proof_acceptance_eligible": false,
+  "proof_validation_status": "pending_plan_12_14",
+  "property_runtime_readiness": {
+    "acceptance_eligible": true,
+    "collection_status": "reused",
+    "collection_version": "ifc2x3-property-vector/0.2",
+    "corpus_version": "ifc2x3-property-records/0.2",
+    "document_renderer_version": "property-record-text/0.1",
+    "embedding_model_id": "BAAI/bge-m3",
+    "embedding_model_version": "BAAI-bge-m3-local/phase12.1",
+    "reason_code": null,
+    "record_count": 472,
+    "runtime_mode": "production",
+    "status": "ready"
+  },
+  "provider_evidence_mode": "not_run",
+  "provider_models": [],
+  "reason_code": null,
+  "runner_contract_eligible": false,
+  "schema_version": "text2ifc/phase12-live-uat/0.1",
+  "status": "preflight_passed",
+  "synthetic_fallback_used": false,
+  "token_guard": {
+    "max_completion_tokens": 65536,
+    "max_input_tokens": 65536
+  },
+  "transport_calls": 0,
+  "transport_calls_by_stage": {
+    "property_resolution": 0,
+    "stage1": 0,
+    "stage2": 0
+  }
+}

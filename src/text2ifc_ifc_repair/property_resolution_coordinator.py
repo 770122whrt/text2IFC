@@ -103,7 +103,7 @@ class DurablePropertyResolutionCoordinator:
                     target_ifc_class=query.target_ifc_class,
                     raw_value=claim.raw_value,
                     raw_unit=claim.raw_unit,
-                    scope=claim.scope,
+                    scope=query.scope,
                     project_length_unit=query.project_length_unit,
                 )
             except Exception as error:

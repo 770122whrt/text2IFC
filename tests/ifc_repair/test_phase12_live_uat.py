@@ -325,7 +325,6 @@ class _ProductionPathTransport(_MockTransport):
             "conflicting_candidate_ids": [],
             "clarification_question": None,
         }
-
     @staticmethod
     def _intent_response(prompt: str) -> dict[str, Any]:
         public_request = prompt.split(
@@ -515,6 +514,21 @@ class _ProductionPathTransport(_MockTransport):
             "postconditions": [],
             "operations": operations,
         }
+
+
+class _InvalidThenValidStage1IdTransport(_ProductionPathTransport):
+    """Exercise the real public chain after one Stage 1 ID-contract retry."""
+
+    def __init__(self) -> None:
+        super().__init__()
+        self.stage1_responses = 0
+
+    def _intent_response(self, prompt: str) -> dict[str, Any]:
+        response = super()._intent_response(prompt)
+        self.stage1_responses += 1
+        if self.stage1_responses == 1:
+            response["operations"][0]["operation_id"] = "invalid$operation$id"
+        return response
 
 
 class _GreenCommandRunner:
@@ -1450,6 +1464,70 @@ def test_complete_transport_drives_the_real_repair_api_and_reopens_ifc2x3(
     ] == ["beam is load bearing", "column is load bearing"]
 
 
+def test_stage1_invalid_internal_id_retries_then_completes_public_full_chain(
+    tmp_path: Path,
+) -> None:
+    module = _module()
+    transport = _InvalidThenValidStage1IdTransport()
+    provider = module.TranscriptProvider(transport)
+    case = module.DEFAULT_CASES[0]
+    provider.set_case(case.case_id)
+
+    final = module._production_case_executor(
+        case,
+        provider,
+        tmp_path / "stage1-id-retry-full-chain",
+        property_knowledge_runtime=_offline_property_runtime(),
+    )
+
+    assert final["status"] == "succeeded", (
+        final["status"],
+        final["reason_code"],
+    )
+    assert final["complete_repair_success"] is True
+    assert final["successful_artifact_publishable"] is True
+    assert final["strict_reopen_verification"]["status"] == "passed"
+    assert final["strict_reopen_verification"]["l0_pass"] is True
+    assert final["strict_reopen_verification"]["l1_pass"] is True
+    assert final["strict_reopen_verification"]["l2_pass"] is True
+    assert [item["stage"] for item in provider.attempts] == [
+        "stage1",
+        "stage1",
+        "property_resolution",
+        "property_resolution",
+        "stage2",
+    ]
+    assert transport.stage1_responses == 2
+    assert "REPAIR_INTENT_OPERATION_ID_INVALID" in transport.calls[1]["prompt"]
+
+
+def test_complete_executor_reopens_against_its_explicit_frozen_source(
+    tmp_path: Path,
+) -> None:
+    module = _module()
+    source = tmp_path / "r1-damaged.ifc"
+    shutil.copy2(module.SOURCE, source)
+    source_sha256 = "sha256:" + hashlib.sha256(source.read_bytes()).hexdigest()
+    transport = _ProductionPathTransport()
+    provider = module.TranscriptProvider(transport)
+    case = module.DEFAULT_CASES[0]
+    provider.set_case(case.case_id)
+
+    final = module._production_case_executor(
+        case,
+        provider,
+        tmp_path / "explicit-source",
+        property_knowledge_runtime=_offline_property_runtime(),
+        source_path=source,
+        expected_source_sha256=source_sha256,
+    )
+
+    assert final["status"] == "succeeded"
+    assert final["strict_reopen_verification"]["status"] == "passed"
+    assert final["strict_reopen_verification"]["l0_pass"] is True
+    assert final["strict_reopen_verification"]["l1_pass"] is True
+    assert final["strict_reopen_verification"]["l2_pass"] is True
+
 def test_clarification_transport_drives_real_api_resume_and_publication(
     tmp_path: Path,
 ) -> None:
@@ -2141,6 +2219,85 @@ def test_green_preflight_binds_commands_results_and_artifact_hashes(
     assert result["reason_code"] == "LIVE_CASE_MATRIX_REQUIRED"
     assert result["transport_calls"] == 0
 
+
+def test_green_full_preflight_evidence_reuse_recomputes_hashes_and_rejects_tamper(
+    tmp_path: Path,
+) -> None:
+    module = _module()
+    preflight_root = tmp_path / "preflight"
+    preflight = module.run_preflight(
+        preflight_root,
+        proof_root=_proof_root(tmp_path),
+        command_runner=_GreenCommandRunner(),
+    )
+
+    loaded = module._load_green_full_preflight_evidence(
+        preflight_root / "preflight.json"
+    )
+
+    assert loaded["status"] == "passed"
+    assert loaded["mode"] == "full_preflight_evidence_reuse"
+    assert loaded["evidence_sha256"] == preflight["evidence_sha256"]
+    assert [item["name"] for item in loaded["checks"]] == [
+        "focused",
+        "retrieval-evaluation",
+        "offline",
+        "full-suite",
+        "compile",
+        "diff",
+        "proof",
+    ]
+
+    (preflight_root / "logs" / "focused.stdout.txt").write_text(
+        "tampered\n",
+        encoding="utf-8",
+    )
+    with pytest.raises(ValueError, match="FULL_PREFLIGHT_ARTIFACT_HASH_MISMATCH"):
+        module._load_green_full_preflight_evidence(
+            preflight_root / "preflight.json"
+        )
+
+
+def test_green_full_preflight_can_validate_an_immutable_curated_artifact_snapshot(
+    tmp_path: Path,
+) -> None:
+    module = _module()
+    proof_root = _proof_root(tmp_path)
+    preflight_root = tmp_path / "preflight"
+    module.run_preflight(
+        preflight_root,
+        proof_root=proof_root,
+        command_runner=_GreenCommandRunner(),
+    )
+    preflight = json.loads(
+        (preflight_root / "preflight.json").read_text(encoding="utf-8")
+    )
+    proof_artifact = next(
+        item
+        for check in preflight["checks"]
+        if check["name"] == "proof"
+        for item in check["artifacts"]
+        if Path(str(item["path"])).resolve()
+        == (proof_root / "manifest.json").resolve()
+    )
+    snapshot = tmp_path / "snapshot" / "manifest.json"
+    snapshot.parent.mkdir()
+    snapshot.write_bytes((proof_root / "manifest.json").read_bytes())
+    (proof_root / "manifest.json").write_text(
+        '{"legitimate_append": true}\n', encoding="utf-8"
+    )
+
+    with pytest.raises(ValueError, match="FULL_PREFLIGHT_ARTIFACT_HASH_MISMATCH"):
+        module._load_green_full_preflight_evidence(
+            preflight_root / "preflight.json"
+        )
+
+    loaded = module._load_green_full_preflight_evidence(
+        preflight_root / "preflight.json",
+        artifact_overrides={str(proof_artifact["path"]): snapshot},
+    )
+
+    assert loaded["status"] == "passed"
 
 @pytest.mark.parametrize(
     ("defect", "reason_code"),

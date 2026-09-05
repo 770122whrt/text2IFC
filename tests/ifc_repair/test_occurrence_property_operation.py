@@ -6,6 +6,7 @@ import ifcopenshell
 import pytest
 
 from text2ifc_ifc_repair.apply import apply_changeset
+from text2ifc_ifc_repair.compare import normalized_model_diff
 from text2ifc_ifc_repair.operations import create_default_registry
 from text2ifc_ifc_repair.semantic_authoring import apply_semantic_assignments
 
@@ -220,3 +221,111 @@ def test_bound_generic_operation_reopens_with_requested_property(tmp_path) -> No
     prop = next(item for item in pset.HasProperties if item.Name == "IsExternal")
     assert prop.NominalValue.is_a() == "IfcBoolean"
     assert prop.NominalValue.wrappedValue is True
+
+def test_occurrence_property_edit_copies_shared_property_before_mutation(
+    tmp_path,
+) -> None:
+    model, target = _model_and_element("IfcBeam")
+    sibling = model.create_entity(
+        "IfcBeam",
+        GlobalId=ifcopenshell.guid.new(),
+        OwnerHistory=target.OwnerHistory,
+        Name="Sibling occurrence",
+    )
+    shared_reference = model.create_entity(
+        "IfcPropertySingleValue",
+        Name="Reference",
+        NominalValue=model.create_entity("IfcIdentifier", "B-OLD"),
+        Unit=None,
+    )
+    target_pset = model.create_entity(
+        "IfcPropertySet",
+        GlobalId=ifcopenshell.guid.new(),
+        OwnerHistory=target.OwnerHistory,
+        Name="Pset_BeamCommon",
+        HasProperties=[shared_reference],
+    )
+    sibling_pset = model.create_entity(
+        "IfcPropertySet",
+        GlobalId=ifcopenshell.guid.new(),
+        OwnerHistory=target.OwnerHistory,
+        Name="Pset_BeamCommon",
+        HasProperties=[shared_reference],
+    )
+    for element, pset in ((target, target_pset), (sibling, sibling_pset)):
+        model.create_entity(
+            "IfcRelDefinesByProperties",
+            GlobalId=ifcopenshell.guid.new(),
+            OwnerHistory=target.OwnerHistory,
+            RelatedObjects=[element],
+            RelatingPropertyDefinition=pset,
+        )
+    source = tmp_path / "shared-property-source.ifc"
+    output = tmp_path / "shared-property-repaired.ifc"
+    model.write(str(source))
+    request = "Set the target Beam reference code to B-204."
+    operation = _operation(target, value="B-204")
+    assignment = operation["semantic_assignments"][0]
+    assignment.update(
+        {
+            "fact_key": "pset:Pset_BeamCommon.Reference",
+            "source_fact_key": "pset:Pset_BeamCommon.Reference",
+            "value_type": "IfcIdentifier",
+        }
+    )
+    operation.update(
+        {
+            "evidence_refs": [
+                "property-resolution:/claim-001/decision.json"
+            ],
+            "semantic_manifest": {
+                "manifest_id": "manifest-shared-property",
+                "policy_id": "occurrence.property.l2",
+                "policy_version": "0.1",
+            },
+        }
+    )
+    changeset = {
+        "schema_version": "text2ifc/ifc-repair-changeset/0.2",
+        "changeset_id": "changeset-shared-property",
+        "binding_status": "bound",
+        "base_model_fingerprint": "sha256:"
+        + hashlib.sha256(source.read_bytes()).hexdigest(),
+        "source_request_hash": "sha256:"
+        + hashlib.sha256(request.encode("utf-8")).hexdigest(),
+        "scope": {
+            "target_ids": [str(target.GlobalId)],
+            "forbidden_ids": [],
+        },
+        "evidence_refs": [
+            "property-resolution:/claim-001/decision.json"
+        ],
+        "preconditions": ["target_exists"],
+        "postconditions": ["requested_properties_match"],
+        "semantic_manifest_ref": "semantic-manifest.json",
+        "semantic_manifest_sha256": "sha256:" + "d" * 64,
+        "operations": [operation],
+    }
+
+    result = apply_changeset(
+        damaged_ifc_path=source,
+        repair_request=request,
+        changeset=changeset,
+        output_path=output,
+        registry=create_default_registry(),
+    )
+
+    assert result["valid"] and result["published"]
+    source_model = ifcopenshell.open(str(source))
+    repaired_model = ifcopenshell.open(str(output))
+    repaired_target_pset = repaired_model.by_guid(str(target_pset.GlobalId))
+    repaired_sibling_pset = repaired_model.by_guid(str(sibling_pset.GlobalId))
+    target_reference = repaired_target_pset.HasProperties[0]
+    sibling_reference = repaired_sibling_pset.HasProperties[0]
+    assert target_reference.NominalValue.wrappedValue == "B-204"
+    assert sibling_reference.NominalValue.wrappedValue == "B-OLD"
+    assert target_reference.id() != sibling_reference.id()
+    diff = normalized_model_diff(source_model, repaired_model)
+    assert [item["global_id"] for item in diff["modified"]] == [
+        str(target_pset.GlobalId)
+    ]
