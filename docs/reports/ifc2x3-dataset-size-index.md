@@ -4,10 +4,10 @@
 
 ## Current certified inventory
 
-- Canonical IFC2X3: **222**
-- `<1 MiB`: **76**
-- `<3 MiB`: **104**
-- `<10 MiB`: **161**
+- Canonical IFC2X3: **224**
+- `<1 MiB`: **77**
+- `<3 MiB`: **106**
+- `<10 MiB`: **163**
 - Technical admission authority: `dataset/manifests/ifc2x3-certified.jsonl`
 - Canonical file authority: `dataset/manifests/ifc-files.jsonl`
 
@@ -15,7 +15,7 @@
 
 ### G0 / Generation reference (<1 MiB)
 
-Count: **76**
+Count: **77**
 
 | Size (MiB) | Source | Relative path |
 | ---: | --- | --- |
@@ -54,6 +54,7 @@ Count: **76**
 | 0.178 | `bimcollab-example` | `dataset/external/bimcollab-example/06_BIMcollab_Example_Limestone_walls_optimized.ifc` |
 | 0.192 | `buildingsmart-community` | `dataset/external/buildingsmart-community/Schependomlaan/Coordination model and subcontractors models/BIMsight Projectdata1/XELLA-3e verdieping.ifc` |
 | 0.238 | `gni-bim-dataset` | `dataset/external/gni-bim-dataset/2026_BIMprojects/model_4_structure.ifc` |
+| 0.246 | `xbim-essentials-examples` | `dataset/external/xbim-essentials-examples/CPM.ifc` |
 | 0.254 | `buildingsmart-community` | `dataset/external/buildingsmart-community/Schependomlaan/Coordination model and subcontractors models/BIMsight Projectdata1/GEELEN-Dakvloer.ifc` |
 | 0.285 | `buildingsmart-community` | `dataset/external/buildingsmart-community/Schependomlaan/Coordination model and subcontractors models/BIMsight Projectdata1/ProjectData/GEELEN-Breedplaat V2.ifc` |
 | 0.286 | `buildingsmart-community` | `dataset/external/buildingsmart-community/Schependomlaan/Coordination model and subcontractors models/BIMsight Projectdata1/GEELEN-Breedplaat V2.ifc` |
@@ -98,7 +99,7 @@ Count: **76**
 
 ### R1 / Small (1–3 MiB)
 
-Count: **28**
+Count: **29**
 
 | Size (MiB) | Source | Relative path |
 | ---: | --- | --- |
@@ -108,6 +109,7 @@ Count: **28**
 | 1.233 | `bim-whale-ifc-samples` | `dataset/external/bim-whale-ifc-samples/LargeBuilding/IFC/LargeBuilding.ifc` |
 | 1.264 | `bimnet` | `dataset/external/bimnet/e9z.ifc` |
 | 1.312 | `bimnet` | `dataset/external/bimnet/e9z_1.ifc` |
+| 1.361 | `xbim-essentials-examples` | `dataset/external/xbim-essentials-examples/House.ifc` |
 | 1.370 | `duraark-public` | `dataset/external/duraark/NVW_DCR-LOD/NVW_DCR-LOD200_Eng-CON-1.ifc` |
 | 1.447 | `bimnet` | `dataset/external/bimnet/skl.ifc` |
 | 1.529 | `buildingsmart-community` | `dataset/external/buildingsmart-community/Duplex Apartment/Duplex_Electrical_20121207.ifc` |

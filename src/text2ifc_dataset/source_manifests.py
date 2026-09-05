@@ -313,6 +313,23 @@ SOURCE_POLICIES: tuple[SourcePolicy, ...] = (
             "Repository software is Apache-2.0; model-level training and redistribution rights remain review-required.",
         ),
     ),
+    SourcePolicy(
+        source_id="xbim-essentials-examples",
+        name="xBIM Essentials IFC Examples",
+        paths=("dataset/external/xbim-essentials-examples",),
+        classification="public_example",
+        canonical_source="xBimTeam/XbimEssentials",
+        license="repository-CDDL-model-rights-review-required",
+        research_use="allowed_with_source_review",
+        training_use="review_required",
+        redistribution="review_required",
+        attribution="source_and_license_notice_required",
+        notes=(
+            "Only complete IFC2X3 House and CPM models are retained from the test data.",
+            "Tiny parser/geometry fixtures and IFC4/IFC4X3 examples are excluded.",
+            "Repository software is CDDL; model-level training and redistribution rights remain review-required.",
+        ),
+    ),
 )
 
 
