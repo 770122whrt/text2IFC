@@ -1,0 +1,145 @@
+.....................F.................................................. [  6%]
+........................................................................ [ 12%]
+........................................................................ [ 18%]
+........................................................................ [ 24%]
+........................................................................ [ 31%]
+........................................................................ [ 37%]
+........................................................................ [ 43%]
+........................................................................ [ 49%]
+........................................................................ [ 56%]
+........................................................................ [ 62%]
+........................................................................ [ 68%]
+........................................................................ [ 74%]
+........................................................................ [ 81%]
+........................................................................ [ 87%]
+........................................................................ [ 93%]
+......................................................FFF............... [ 99%]
+...                                                                      [100%]
+================================== FAILURES ===================================
+_ test_real_bge_evaluation_reports_retrieval_without_synthetic_semantic_score _
+
+project_root = WindowsPath('E:/code for project/bimnet')
+tmp_path = WindowsPath('E:/code for project/bimnet/dataset/processed/ifc-repair-runs/phase12-live/uat-20260828T153638178631Z/preflight/pytest-full-suite/test_real_bge_evaluation_repor0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002812CA99EB0>
+
+    def test_real_bge_evaluation_reports_retrieval_without_synthetic_semantic_score(
+        project_root: Path,
+        tmp_path: Path,
+        monkeypatch,
+    ) -> None:
+        from scripts.ifc_repair import run_phase12_offline
+    
+        evaluate = getattr(
+            run_phase12_offline,
+            "evaluate_property_resolution_matrix",
+            None,
+        )
+        assert callable(evaluate), "Phase 12.1 property evaluator is missing"
+        ledger_path = tmp_path / "property-retrieval-ledger.json"
+        evaluation_path = tmp_path / "property-evaluation.json"
+        gold_loader = run_phase12_offline._property_evaluation_cases
+    
+        def load_gold_only_after_retrieval_is_persisted(root: Path) -> list[dict]:
+            assert ledger_path.is_file(), "Gold loaded before retrieval ledger persisted"
+            return gold_loader(root)
+    
+        monkeypatch.setattr(
+            run_phase12_offline,
+            "_property_evaluation_gold_cases",
+            load_gold_only_after_retrieval_is_persisted,
+            raising=False,
+        )
+        result = evaluate(
+            project_root=project_root,
+            output_path=evaluation_path,
+            qdrant_path=tmp_path / "qdrant",
+            retrieval_ledger_path=ledger_path,
+        )
+    
+        assert result["schema_version"] == (
+            "text2ifc/phase12.1-property-resolution-evaluation/0.3"
+        )
+>       assert result["status"] == "passed"
+E       AssertionError: assert 'failed' == 'passed'
+E         
+E         - passed
+E         + failed
+
+tests\knowledge\test_property_retrieval_evaluation.py:239: AssertionError
+---------------------------- Captured stderr call -----------------------------
+
+Loading weights:   0%|          | 0/391 [00:00<?, ?it/s]
+Loading weights: 100%|��������������������| 391/391 [00:00<00:00, 26080.99it/s]
+____________ test_sequential_and_accelerated_evidence_is_identical ____________
+
+tmp_path = WindowsPath('E:/code for project/bimnet/dataset/processed/ifc-repair-runs/phase12-live/uat-20260828T153638178631Z/preflight/pytest-full-suite/test_sequential_and_accelerate0')
+
+    def test_sequential_and_accelerated_evidence_is_identical(tmp_path: Path) -> None:
+        sequential = _run(tmp_path, mode="sequential")
+        accelerated = _run(tmp_path, mode="accelerated")
+    
+>       assert sequential["status"] == accelerated["status"] == "passed"
+E       AssertionError: assert 'passed' == 'failed'
+E         
+E         - failed
+E         + passed
+
+tests\ifc_repair\test_validation_acceleration.py:61: AssertionError
+__________ test_cache_cold_then_warm_preserves_diagnostic_signatures __________
+
+tmp_path = WindowsPath('E:/code for project/bimnet/dataset/processed/ifc-repair-runs/phase12-live/uat-20260828T153638178631Z/preflight/pytest-full-suite/test_cache_cold_then_warm_pres0')
+
+    def test_cache_cold_then_warm_preserves_diagnostic_signatures(
+        tmp_path: Path,
+    ) -> None:
+        cold = _run(tmp_path, mode="accelerated")
+        warm = _run(tmp_path, mode="accelerated")
+    
+>       cold_cache = cold["results"]["validation"]["cache"]
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'validation'
+
+tests\ifc_repair\test_validation_acceleration.py:81: KeyError
+________ test_reopened_model_reuse_preserves_full_validation_and_diff _________
+
+tmp_path = WindowsPath('E:/code for project/bimnet/dataset/processed/ifc-repair-runs/phase12-live/uat-20260828T153638178631Z/preflight/pytest-full-suite/test_reopened_model_reuse_pres0')
+
+    def test_reopened_model_reuse_preserves_full_validation_and_diff(
+        tmp_path: Path,
+    ) -> None:
+        baseline = tmp_path / "baseline.ifc"
+        candidate = tmp_path / "candidate.ifc"
+        _write(baseline)
+        _write(candidate, extra_error=True)
+        policy = EvaluationExecutionPolicy(
+            mode="accelerated",
+            deadline_seconds=PARITY_TEST_DEADLINE_SECONDS,
+        )
+        expected = execute_validation_and_diff(
+            damaged_ifc_path=baseline,
+            repaired_ifc_path=candidate,
+            cache_dir=tmp_path / "expected-cache",
+            policy=policy,
+        )
+        reused = execute_validation_and_diff(
+            damaged_ifc_path=baseline,
+            repaired_ifc_path=candidate,
+            cache_dir=tmp_path / "reused-cache",
+            policy=policy,
+            baseline_model=ifcopenshell.open(str(baseline)),
+            candidate_model=ifcopenshell.open(str(candidate)),
+        )
+    
+>       assert expected["status"] == reused["status"] == "passed"
+E       AssertionError: assert 'failed' == 'passed'
+E         
+E         - passed
+E         + failed
+
+tests\ifc_repair\test_validation_acceleration.py:117: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/knowledge/test_property_retrieval_evaluation.py::test_real_bge_evaluation_reports_retrieval_without_synthetic_semantic_score
+FAILED tests/ifc_repair/test_validation_acceleration.py::test_sequential_and_accelerated_evidence_is_identical
+FAILED tests/ifc_repair/test_validation_acceleration.py::test_cache_cold_then_warm_preserves_diagnostic_signatures
+FAILED tests/ifc_repair/test_validation_acceleration.py::test_reopened_model_reuse_preserves_full_validation_and_diff
+4 failed, 1151 passed in 1551.10s (0:25:51)
