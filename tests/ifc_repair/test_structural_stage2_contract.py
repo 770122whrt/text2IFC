@@ -27,6 +27,8 @@ BEAM_EVIDENCE = "resolved:/operations/beam-1/context/candidate_targets/0"
 COLUMN_EVIDENCE = (
     "resolved:/operations/column-1/context/candidate_targets/0"
 )
+WINDOW_ID = "1hOSvn6df7F8_7GcBWlRLx"
+WINDOW_EVIDENCE = "resolved:/operations/window-property-1/context/candidate_targets/0"
 
 
 class _Provider:
@@ -148,6 +150,106 @@ def _manifests() -> tuple:
     )
 
 
+def _property_manifest():
+    return parse_semantic_manifest(
+        {
+            "schema_version": "text2ifc/ifc-repair-semantic-manifest/0.3",
+            "manifest_id": "manifest-window-property-1",
+            "operation_id": "window-property-1",
+            "operation_type": "set_occurrence_properties",
+            "base_model_fingerprint": MODEL,
+            "policy": {
+                "policy_id": "occurrence.property.l2",
+                "policy_version": "0.1",
+            },
+            "assignments": [
+                {
+                    "operation_id": "window-property-1",
+                    "scope": "window_occurrence",
+                    "fact_key": "pset:Pset_WindowCommon.FireRating",
+                    "source_fact_key": "request:/properties/0",
+                    "value": "EI60",
+                    "value_type": "IfcLabel",
+                    "unit": None,
+                    "ownership": "occurrence_direct",
+                    "applicability": "required",
+                    "source_kind": "explicit_value",
+                    "source_ref": "request:/properties/0",
+                    "provenance": ["request:r1-h1"],
+                    "authoring_action": "set_occurrence_pset",
+                }
+            ],
+        }
+    )
+
+
+def _mixed_resolved_operations() -> tuple[dict, dict]:
+    beam = deepcopy(_resolved_operations()[0])
+    return (
+        beam,
+        {
+            "operation_id": "window-property-1",
+            "operation_type": "set_occurrence_properties",
+            "target_global_id": WINDOW_ID,
+            "scope_ids": [WINDOW_ID],
+            "evidence_pointers": [WINDOW_EVIDENCE],
+            "parameters": {},
+            "authorized_semantics": [],
+            "context": {
+                "model_fingerprint": MODEL,
+                "candidate_targets": [
+                    {
+                        "ifc_global_id": WINDOW_ID,
+                        "ifc_class": "IfcWindow",
+                    }
+                ],
+            },
+        },
+    )
+
+
+def _mixed_draft() -> dict:
+    draft = deepcopy(_draft())
+    draft["schema_version"] = "text2ifc/ifc-repair-changeset-draft/0.2"
+    draft["draft_id"] = "draft-r1-h1"
+    draft["semantic_summary"]["required"] = 2
+    draft["scope"]["target_ids"] = [STOREY_ID, WINDOW_ID]
+    draft["evidence_refs"] = [BEAM_EVIDENCE, WINDOW_EVIDENCE]
+    draft["operations"] = [
+        draft["operations"][0],
+        {
+            "operation_id": "window-property-1",
+            "operation_type": "set_occurrence_properties",
+            "target": {"element_global_id": WINDOW_ID},
+            "parameters": {},
+            "evidence_refs": [WINDOW_EVIDENCE],
+        },
+    ]
+    return draft
+
+
+def _run_mixed(tmp_path: Path, draft: dict) -> dict:
+    return generate_bound_changeset(
+        provider=_Provider(draft),
+        case_id="r1-h1-mixed-stage2",
+        repair_request="Add the Beam and set Window FireRating atomically.",
+        source_request_hash=REQUEST,
+        resolved_operations=_mixed_resolved_operations(),
+        model_fingerprint=MODEL,
+        registry=create_default_registry(),
+        output_dir=tmp_path,
+        max_attempts=1,
+        semantic_manifests=(
+            _manifest("beam-1", "add_beam"),
+            _property_manifest(),
+        ),
+        semantic_manifest_hashes={
+            "beam-1": MANIFEST_HASH,
+            "window-property-1": MANIFEST_HASH,
+        },
+    )
+
+
 def _draft() -> dict:
     return {
         "schema_version": "text2ifc/ifc-repair-changeset-draft/0.3",
@@ -237,7 +339,6 @@ def test_structural_stage2_profiles_are_separate_draft_only_contracts() -> None:
         "beam.add.stage2.v0.1.complete",
         "column.add.stage2.v0.1.complete",
     )
-
     payload = selected.to_dict()
     serialized = json.dumps(payload, ensure_ascii=False, sort_keys=True)
     for forbidden in (
@@ -262,6 +363,23 @@ def test_structural_stage2_profiles_are_separate_draft_only_contracts() -> None:
             "parameters",
             "evidence_refs",
         }
+
+
+def test_h1_mixed_binder_rejects_property_target_drift(
+    tmp_path: Path,
+) -> None:
+    draft = _mixed_draft()
+    draft["operations"][1]["target"]["element_global_id"] = (
+        "0FOREIGNWINDOWTARGET00"
+    )
+
+    result = _run_mixed(tmp_path, draft)
+
+    assert result["valid"] is False
+    assert {
+        issue["code"] for issue in result["issues"]
+    } == {"DRAFT_AUTHORITY_TARGET_MISMATCH"}
+    assert result["changeset"] is None
 
 
 def test_stage2_few_shot_expected_cannot_drift_from_declared_schema(

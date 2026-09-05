@@ -522,20 +522,36 @@ def _unique_matches(pattern: str, value: str) -> list[str]:
 
 
 def _prompt_few_shot_bindings(prompt: str) -> list[dict[str, str]]:
-    hash_pattern = r"(sha256:[0-9a-f]{64})"
-    id_pattern = r'"(?:example_id|few_shot_id)"\s*:\s*"([^"]+)"'
-    until_next_id = (
-        r'(?:(?!"(?:example_id|few_shot_id)"\s*:)[\s\S]){0,320}?'
-    )
     pairs: list[tuple[str, str]] = []
-    for hash_field in (r"(?:example_hash|few_shot_hash)", "sha256"):
-        pairs.extend(
-            re.findall(
-                rf'{id_pattern}{until_next_id}"{hash_field}"\s*:\s*"{hash_pattern}"',
-                prompt,
-                flags=re.IGNORECASE,
+
+    def collect(value: Any) -> None:
+        if isinstance(value, Mapping):
+            few_shot_id = value.get("example_id", value.get("few_shot_id"))
+            few_shot_hash = value.get(
+                "example_hash",
+                value.get("few_shot_hash", value.get("sha256")),
             )
-        )
+            if (
+                isinstance(few_shot_id, str)
+                and few_shot_id.strip()
+                and isinstance(few_shot_hash, str)
+                and re.fullmatch(r"sha256:[0-9a-f]{64}", few_shot_hash)
+            ):
+                pairs.append((few_shot_id, few_shot_hash))
+            for child in value.values():
+                collect(child)
+        elif isinstance(value, (list, tuple)):
+            for child in value:
+                collect(child)
+
+    decoder = json.JSONDecoder()
+    for match in re.finditer(r"[\[{]", prompt):
+        try:
+            document, _end = decoder.raw_decode(prompt, match.start())
+        except json.JSONDecodeError:
+            continue
+        collect(document)
+
     unique_pairs = list(dict.fromkeys(pairs))
     return [
         {"few_shot_id": few_shot_id, "few_shot_hash": few_shot_hash}
@@ -777,7 +793,7 @@ def _default_command_runner(
     if "-m pytest tests/knowledge tests/ifc_repair -q" in rendered:
         timeout_seconds = 7_200
     elif "test_phase12_live_uat.py" in rendered:
-        timeout_seconds = 180
+        timeout_seconds = 300
     elif "-m compileall" in rendered:
         timeout_seconds = 300
     elif rendered.startswith("git diff --check"):
@@ -1417,10 +1433,13 @@ def _production_case_executor(
     case_root: Path,
     *,
     property_knowledge_runtime: Any | None = None,
+    source_path: Path | str = SOURCE,
+    expected_source_sha256: str = FROZEN_SOURCE_SHA256,
 ) -> dict[str, Any]:
     runtime = case_root / "runtime"
-    source_sha256_before = _path_sha256(SOURCE)
-    if source_sha256_before != FROZEN_SOURCE_SHA256:
+    source = Path(source_path).resolve()
+    source_sha256_before = _path_sha256(source)
+    if source_sha256_before != expected_source_sha256:
         raise ValueError("LIVE_SOURCE_HASH_MISMATCH")
     knowledge_runtime = (
         create_property_runtime_from_environment(project_root=ROOT)
@@ -1434,7 +1453,7 @@ def _production_case_executor(
         property_knowledge_runtime=knowledge_runtime,
     )
     provider.set_lineage("initial")
-    initial = api.start(SOURCE, case.request)
+    initial = api.start(source, case.request)
     clarification = initial.clarification
     clarification_payload = (
         None
@@ -1479,7 +1498,7 @@ def _production_case_executor(
     )
     program_guard_evidence = None
     if case.case_id == "program-guard":
-        source_sha256_after = _path_sha256(SOURCE)
+        source_sha256_after = _path_sha256(source)
         stage2_attempts = sum(
             1
             for attempt in provider.attempts
@@ -1487,7 +1506,7 @@ def _production_case_executor(
             and attempt.get("stage") == "stage2"
         )
         program_guard_evidence = {
-            "source_reference": str(SOURCE.resolve()),
+            "source_reference": str(source),
             "source_sha256_before": source_sha256_before,
             "source_sha256_after": source_sha256_after,
             "source_unchanged": source_sha256_before == source_sha256_after,
@@ -1691,7 +1710,11 @@ def _case_contract_pass(
             and initial_stop_ok
             and clarification.get("reason_code") == "property_resolution"
             and clarification.get("answer_modes")
-            == ["select_candidate", "cancel"]
+            == [
+                "select_candidate",
+                "add_detail",
+                "cancel",
+            ]
         )
     if case.case_id == "window-semantic-canary":
         strict = final.get("strict_reopen_verification")

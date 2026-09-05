@@ -6744,7 +6744,11 @@ def main(argv: Iterable[str] | None = None) -> int:
     parser.add_argument("--json", action="store_true", dest="as_json")
     args = parser.parse_args(argv)
     manifest_path = args.collection_root.resolve() / "manifest.json"
-    manifest = _read_json(manifest_path)
+    manifest = (
+        _read_json(manifest_path)
+        if manifest_path.is_file()
+        else {}
+    )
     if manifest.get("schema_version") == "text2ifc/ifc-repair-proof-collection/0.2":
         result = validate_r1_proof_collection(args.collection_root)
         document = result.to_dict()

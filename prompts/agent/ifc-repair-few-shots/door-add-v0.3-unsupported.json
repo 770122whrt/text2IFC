@@ -1,0 +1,22 @@
+{
+ "schema_version": "text2ifc/ifc-repair-few-shot/0.1",
+ "example_id": "door.add.v0.3.unsupported",
+ "profile_id": "door.add-with-opening.v0.3",
+ "case": "unsupported",
+ "user_text": "EXAMPLE_ONLY: add a REVOLVING door; geometry is not stated",
+ "expected": {
+  "operation_type": "add_door_with_opening_to_wall",
+  "parameters": {
+   "door": {
+    "operation_type": "REVOLVING"
+   }
+  },
+  "omitted_unknown_slots": [
+   "/parameters/position",
+   "/parameters/opening"
+  ],
+  "status": "unsupported",
+  "capability_code": "DOOR_OPERATION_TYPE_UNSUPPORTED",
+  "rule": "preserve exact unsupported enum and never emit null placeholders"
+ }
+}

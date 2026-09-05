@@ -33,11 +33,11 @@ SOURCE = {
 CURRENT_PROFILE_IDS = {
     "beam.add.v0.3",
     "column.add.v0.3",
-    "door.add-with-opening.v0.2",
-    "door.fill-existing-opening.v0.2",
+    "door.add-with-opening.v0.3",
+    "door.fill-existing-opening.v0.3",
     "occurrence.set-properties",
     "opening.add-to-wall",
-    "window.add-with-opening",
+    "window.add-with-opening.v0.2",
 }
 
 
@@ -272,6 +272,7 @@ def test_v08_stage1_uses_every_current_compact_profile_without_full_fewshots(
     assert all("few_shots" not in item for item in catalog)
     serialized = json.dumps(renderer_input, ensure_ascii=False)
     assert "beam.add.v0.3.complete" not in serialized
+    assert "door.add-with-opening.v0.3.complete" not in serialized
     assert "door.add-with-opening.v0.2.complete" not in serialized
 
 

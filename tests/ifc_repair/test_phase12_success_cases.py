@@ -840,6 +840,89 @@ def _upgrade_live_intent(intent: Mapping[str, Any]) -> dict[str, Any]:
     return upgraded
 
 
+@pytest.mark.parametrize(
+    ("profile_ids", "schema_version"),
+    [
+        (
+            ["beam.add.v0.3", "column.add.v0.3"],
+            "text2ifc/ifc-repair-changeset-draft/0.2",
+        ),
+        (
+            ["beam.add.stage2.v0.1", "column.add.stage2.v0.1"],
+            "text2ifc/ifc-repair-changeset-draft/0.3",
+        ),
+    ],
+)
+def test_plan07_attempt_audit_accepts_only_reviewed_stage2_profile_generations(
+    profile_ids: list[str],
+    schema_version: str,
+) -> None:
+    attempt = _live_attempt(
+        case_id="complete",
+        stage="stage2",
+        ordinal=1,
+        parent=None,
+        lineage="initial",
+        response_document={"schema_version": schema_version},
+    )
+    selection = select_prompt_profiles(profile_ids).to_dict()
+    attempt["profile_ids"] = selection["profile_ids"]
+    attempt["profile_versions"] = [
+        str(profile["profile_version"])
+        for profile in selection["profiles"]
+    ]
+    attempt["profile_hashes"] = selection["profile_hashes"]
+    attempt["few_shot_ids"] = selection["few_shot_ids"]
+    attempt["few_shot_hashes"] = selection["few_shot_hashes"]
+    attempt["few_shot_bindings"] = [
+        {"few_shot_id": few_shot_id, "few_shot_hash": few_shot_hash}
+        for few_shot_id, few_shot_hash in zip(
+            selection["few_shot_ids"],
+            selection["few_shot_hashes"],
+            strict=True,
+        )
+    ]
+
+    _curator_module()._audit_attempts("complete", [attempt])
+
+
+def test_plan07_attempt_audit_rejects_cross_generation_stage2_profile_mix() -> None:
+    attempt = _live_attempt(
+        case_id="complete",
+        stage="stage2",
+        ordinal=1,
+        parent=None,
+        lineage="initial",
+        response_document={
+            "schema_version": "text2ifc/ifc-repair-changeset-draft/0.3"
+        },
+    )
+    selection = select_prompt_profiles(
+        ["beam.add.v0.3", "column.add.stage2.v0.1"]
+    ).to_dict()
+    attempt["profile_ids"] = selection["profile_ids"]
+    attempt["profile_versions"] = [
+        str(profile["profile_version"])
+        for profile in selection["profiles"]
+    ]
+    attempt["profile_hashes"] = selection["profile_hashes"]
+    attempt["few_shot_ids"] = selection["few_shot_ids"]
+    attempt["few_shot_hashes"] = selection["few_shot_hashes"]
+    attempt["few_shot_bindings"] = [
+        {"few_shot_id": few_shot_id, "few_shot_hash": few_shot_hash}
+        for few_shot_id, few_shot_hash in zip(
+            selection["few_shot_ids"],
+            selection["few_shot_hashes"],
+            strict=True,
+
+        )
+    ]
+
+    with pytest.raises(ValueError, match="LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH"):
+        _curator_module()._audit_attempts("complete", [attempt])
+
+
+
 def _provider_draft(changeset: Mapping[str, Any]) -> dict[str, Any]:
     return {
         "schema_version": "text2ifc/ifc-repair-changeset-draft/0.2",

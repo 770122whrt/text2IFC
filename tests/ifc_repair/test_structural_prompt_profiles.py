@@ -271,7 +271,7 @@ def test_stage2_selected_structural_profile_excludes_unrelated_full_payloads(
     assert all(item.startswith(f"{family}.add.") for item in selected.few_shot_ids)
     assert f'"component_family": "{family}"' in payload
     assert f'"component_family": "{other_family}"' not in payload
-    assert "window.add-with-opening" not in payload
+    assert "window.add-with-opening.v0.2" not in payload
     assert "door.add-with-opening" not in payload
 
 

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+from dataclasses import replace
 from pathlib import Path
 from typing import Any, Mapping
 
@@ -58,6 +59,7 @@ TEMPLATE_ID_0_5 = "ifc-repair-intent.v0.5"
 TEMPLATE_ID_0_6 = "ifc-repair-intent.v0.6"
 TEMPLATE_ID_0_7 = "ifc-repair-intent.v0.7"
 TEMPLATE_ID_0_8 = "ifc-repair-intent.v0.8"
+TEMPLATE_ID_0_9 = "ifc-repair-intent.v0.9"
 _INTENT_CONTRACTS = {
     REPAIR_INTENT_SCHEMA_VERSION: (
         REPAIR_INTENT_BODY_SCHEMA_VERSION,
@@ -89,7 +91,7 @@ _INTENT_CONTRACTS = {
     ),
     REPAIR_INTENT_SCHEMA_VERSION_0_8: (
         REPAIR_INTENT_BODY_SCHEMA_VERSION_0_8,
-        TEMPLATE_ID_0_8,
+        TEMPLATE_ID_0_9,
     ),
 }
 MAX_REQUEST_BYTES = DEFAULT_REPAIR_INTENT_LIMITS.max_request_bytes
@@ -296,6 +298,7 @@ def generate_repair_intent(
                         registry=registry,
                         require_complete=False,
                     )
+                    intent = canonicalize_semantic_bundle_claims(intent)
                 except OperationRegistryError as error:
                     issues.append(
                         _issue(
@@ -349,6 +352,7 @@ def generate_repair_intent(
                 and not missing_properties
             ):
                 intent = RepairIntent.from_dict(intent.to_dict(), registry=registry)
+                intent = canonicalize_semantic_bundle_claims(intent)
             classification = (
                 "unsupported"
                 if unsupported_operations
@@ -645,6 +649,65 @@ def _validate_operation_routing(
                 f"expected={expected!r} actual={actual!r}",
                 path=f"/operations/{index}/routing_intent",
             )
+
+
+def canonicalize_semantic_bundle_claims(intent: RepairIntent) -> RepairIntent:
+    """Inline declared semantic-bundle claims into their referencing operations.
+
+    Bundle references are a Provider-side compression of repeated property
+    claims.  Resolution expands them for its own copy, but downstream
+    consumers (production evidence, the durable property coordinator) read
+    the intent directly, so the canonical inline form must live on the intent
+    itself.  Operation-local claims win over bundle slots; bundle order is
+    stable; unknown references stay a hard error.
+    """
+
+    if not any(operation.semantic_bundle_refs for operation in intent.operations):
+        return intent
+
+    bundles_by_id = {
+        bundle.bundle_id: bundle for bundle in intent.semantic_bundles
+    }
+    operations = []
+    for operation in intent.operations:
+        if not operation.semantic_bundle_refs:
+            operations.append(operation)
+            continue
+        properties: dict[tuple, Any] = {}
+        quantities: dict[tuple, Any] = {}
+        for bundle_ref in operation.semantic_bundle_refs:
+            bundle = bundles_by_id.get(bundle_ref)
+            if bundle is None:
+                raise ValueError(f"UNKNOWN_SEMANTIC_BUNDLE:{bundle_ref}")
+            for claim in bundle.property_intents:
+                properties[
+                    (
+                        getattr(claim, "set_name", None)
+                        or getattr(claim, "property_phrase", None),
+                        getattr(claim, "property_name", None),
+                    )
+                ] = claim
+            for claim in bundle.quantity_intents:
+                quantities[(claim.set_name, claim.name)] = claim
+        for claim in operation.property_intents:
+            properties[
+                (
+                    getattr(claim, "set_name", None)
+                    or getattr(claim, "property_phrase", None),
+                    getattr(claim, "property_name", None),
+                )
+            ] = claim
+        for claim in operation.quantity_intents:
+            quantities[(claim.set_name, claim.name)] = claim
+        operations.append(
+            replace(
+                operation,
+                property_intents=tuple(properties.values()),
+                quantity_intents=tuple(quantities.values()),
+                semantic_bundle_refs=(),
+            )
+        )
+    return replace(intent, operations=tuple(operations))
 
 
 def _fold_created_occurrence_property_operations(

@@ -12,6 +12,7 @@ from text2ifc_ifc_repair.evaluation_policy import (
     STRUCTURAL_L1_CHECK_IDS,
     STRUCTURAL_L1_THRESHOLDS,
     compare_structural_l1_measurement,
+    structural_l1_authorization,
 )
 from text2ifc_ifc_repair.operations.structural_member import (
     resolve_structural_member_frame,
@@ -110,6 +111,21 @@ def test_volume_and_mesh_evidence_are_diagnostic_not_l1_gates() -> None:
         "volume" in check_id or "mesh" in check_id
         for check_id in report["l1_checks"]
     )
+
+
+@pytest.mark.parametrize("family", ("beam", "column"))
+def test_structural_type_relationship_allows_exact_type_reuse_or_new_binding(
+    family: str,
+) -> None:
+    authorization = structural_l1_authorization(family)
+
+    assert authorization["created"]["structural_type_relationship"] == (
+        "IfcRelDefinesByType"
+    )
+    assert authorization["modified"]["structural_type_relationship"] == (
+        "IfcRelDefinesByType"
+    )
+    assert authorization["required_roles"]["created"] == (family,)
 
 
 def test_column_profile_orientation_passes_at_point_one_degree_and_fails_beyond() -> None:

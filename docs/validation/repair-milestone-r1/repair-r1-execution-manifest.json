@@ -1,0 +1,69 @@
+{
+  "schema_version": "text2ifc/repair-milestone-r1-execution-manifest/0.1",
+  "status": "PREPARED_AWAITING_GENUINE_AUTHORIZATION",
+  "acceptance_freeze": {
+    "path": "docs/validation/repair-milestone-r1/repair-acceptance-freeze.json",
+    "sha256": "e1a66e61de8cc56b1b99bb2cb376c7c78429fe4fc8e0a537e29c356a15dded70"
+  },
+  "proof_profiles": {
+    "path": "docs/validation/repair-milestone-r1/repair-proof-profiles.json",
+    "sha256": "375463e43852483106e798a0692e6ed6bed8349de29554e5e0680a64f7340289"
+  },
+  "provider": {
+    "provider": "deepseek",
+    "endpoint": "https://api.deepseek.com/chat/completions",
+    "model": "deepseek-v4-flash",
+    "thinking": "enabled",
+    "temperature": 0,
+    "temperature_effective_determinism_control": false,
+    "evidence_mode": "live"
+  },
+  "execution_order": [
+    "E1",
+    "E2",
+    "E3",
+    "E4",
+    "M1",
+    "M2",
+    "M3",
+    "H1",
+    "H2",
+    "H3",
+    "H4",
+    "A1"
+  ],
+  "resume_bindings": {
+    "M1": {
+      "kind": "add_detail",
+      "detail": "改为 EI60。",
+      "sha256": "ce6bb4771fd1d55722c1c7d4315a467b5fca18469855aa8ea5cd5a6f1b3e689f"
+    },
+    "H3": {
+      "kind": "select_candidate",
+      "stable_public_identity": "1hOSvn6df7F8_7GcBWlS2V",
+      "public_answer": "选择 GlobalId 为 1hOSvn6df7F8_7GcBWlS2V、Tag 为 149537 的窗。",
+      "sha256": "9740a22ca0b629c28690ed3e8abb82a378bd4bc03edf27695624beaa686312e3"
+    }
+  },
+  "production_input_policy": {
+    "allow_frozen_public_request": true,
+    "allow_resume_answer": true,
+    "allow_request_relevant_damaged_ifc_context": true,
+    "forbid_pristine_ifc": true,
+    "forbid_private_gold": true,
+    "forbid_mutation_truth": true,
+    "forbid_existing_proof": true,
+    "forbid_synthetic_cached_or_prerecorded_fallback": true
+  },
+  "stop_rules": {
+    "stop_on_deterministic_defect": true,
+    "stop_on_infrastructure_defect": true,
+    "preserve_every_genuine_provider_attempt": true,
+    "never_silently_patch_and_continue_same_acceptance_run": true
+  },
+  "prerequisites": {
+    "focused_offline_admission_required": true,
+    "final_code_plan07_four_case_rerun_required": true,
+    "explicit_genuine_authorization_required": true
+  }
+}

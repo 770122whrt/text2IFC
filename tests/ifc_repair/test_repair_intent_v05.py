@@ -41,7 +41,7 @@ def _payload() -> dict:
                 "routing_intent": {
                     "component_family": "window",
                     "action": "add_with_opening",
-                    "operation_profile": "window.add-with-opening",
+                    "operation_profile": "window.add-with-opening.v0.2",
                     "source": _source(),
                 },
                 "target_query": {
@@ -82,7 +82,7 @@ def test_v05_round_trips_routing_source_exactly() -> None:
     assert intent.operations[0].routing_intent is not None
     assert (
         intent.operations[0].routing_intent.operation_profile
-        == "window.add-with-opening"
+        == "window.add-with-opening.v0.2"
     )
 
 

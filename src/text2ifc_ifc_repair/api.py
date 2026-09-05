@@ -195,10 +195,34 @@ class RepairAPI:
             )
         context_ref = self._write_context(run_dir, repair_text=repair_text, intent=intent)
         if intent_result.get("classification") == "unsupported":
+            reason_code = str(
+                intent_result.get("reason_code") or "OPERATION_UNSUPPORTED"
+            )
+            self.store.transition(
+                state.run_id,
+                to_stage=RunStage.INTENT_READY,
+                expected_state_version=state.state_version,
+                stage_payload={
+                    "intent": self.store.artifact_binding(
+                        state.run_id,
+                        "intent/repair-intent.json",
+                        self._intent_schema_version,
+                    ),
+                    "api_context": self.store.artifact_binding(
+                        state.run_id,
+                        context_ref,
+                        "text2ifc/ifc-repair-api-context/0.1",
+                    ),
+                    "route": {
+                        "classification": "unsupported",
+                        "reason_code": reason_code,
+                    },
+                },
+            )
             return self._fail(
                 state.run_id,
                 RunStage.UNSUPPORTED,
-                str(intent_result.get("reason_code") or "OPERATION_UNSUPPORTED"),
+                reason_code,
             )
         missing_parameters = list(intent_result.get("missing_parameters") or ())
         if (
@@ -992,7 +1016,7 @@ def _property_resolution_clarification(
         reason_code="property_resolution",
         question=pending.question,
         answer_modes=(
-            ("select_candidate", "cancel")
+            ("select_candidate", "add_detail", "cancel")
             if candidates
             else ("add_detail", "cancel")
         ),

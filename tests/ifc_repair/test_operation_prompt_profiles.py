@@ -20,7 +20,9 @@ from text2ifc_ifc_repair.prompt_profiles import (
 def test_compact_catalog_omits_full_few_shot_bodies() -> None:
     profiles = load_prompt_profiles()
     compact = compact_profile_catalog(profiles)
-    assert len(compact) == 13
+    # door/window v0.3 (contract reachability) and window v0.2 (tolerance rule)
+    # added three stage-1 profile generations: 13 -> 16.
+    assert len(compact) == 16
     assert {item["profile_id"] for item in compact}.issuperset(
         {"beam.add.v0.3", "column.add.v0.3"}
     )
@@ -35,11 +37,11 @@ def test_door_only_and_mixed_selection_are_bounded_stable_unions() -> None:
     assert door_only.profile_ids == ("door.add-with-opening",)
     assert len(door_only.few_shot_ids) == 4
     assert all(item.startswith("door.add.") for item in door_only.few_shot_ids)
-    assert "window.add-with-opening" not in json.dumps(door_only.to_dict())
+    assert "window.add-with-opening.v0.2" not in json.dumps(door_only.to_dict())
 
     mixed = select_prompt_profiles(
         [
-            "window.add-with-opening",
+            "window.add-with-opening.v0.2",
             "door.add-with-opening",
             "door.add-with-opening",
             "occurrence.set-properties",
@@ -49,7 +51,7 @@ def test_door_only_and_mixed_selection_are_bounded_stable_unions() -> None:
     assert mixed.profile_ids == (
         "door.add-with-opening",
         "occurrence.set-properties",
-        "window.add-with-opening",
+        "window.add-with-opening.v0.2",
     )
     assert len(mixed.few_shot_ids) == len(set(mixed.few_shot_ids)) == 4
     assert mixed.input_bytes > 0
@@ -82,7 +84,7 @@ def test_hash_mismatch_and_operation_mismatch_fail_closed(tmp_path: Path) -> Non
     profiles = load_prompt_profiles()
     with pytest.raises(PromptProfileError, match="PROFILE_OPERATION_MISMATCH"):
         validate_profile_operation_binding(
-            profiles["window.add-with-opening"],
+            profiles["window.add-with-opening.v0.2"],
             operation_type="wrong_operation",
             target_ifc_classes=("IfcWall",),
         )

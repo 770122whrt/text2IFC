@@ -13,7 +13,7 @@ import pytest
 from text2ifc_agent.providers import ProviderOutput
 from text2ifc_ifc_repair.api import RepairAPI
 from text2ifc_ifc_repair.repair_intent import RepairIntent, fingerprint_text, hash_request
-from text2ifc_ifc_repair.run_models import RunStoreError
+from text2ifc_ifc_repair.run_models import RunStage, RunStoreError
 from text2ifc_knowledge.property_runtime import create_property_runtime
 from text2ifc_knowledge.property_search import (
     InMemoryVectorIndex,
@@ -320,6 +320,8 @@ def _api(
     kind: str,
     decisions: list[dict[str, Any]],
     derive_natural_phrase: bool = False,
+    classification: str = "repair_intent",
+    reason_code: str | None = None,
 ) -> tuple[RepairAPI, list[str], _DecisionProvider]:
     events: list[str] = []
     provider = _DecisionProvider(events, decisions)
@@ -329,7 +331,8 @@ def _api(
         events.append("stage1")
         return {
             "valid": True,
-            "classification": "repair_intent",
+            "classification": classification,
+            "reason_code": reason_code,
             "intent": _intent(
                 kwargs["request_id"],
                 kwargs["repair_request"],
@@ -505,7 +508,11 @@ def test_property_clarification_resumes_stored_candidate_without_second_llm_call
     assert pending.status == "clarification_required"
     assert pending.clarification is not None
     assert pending.clarification.reason_code == "property_resolution"
-    assert pending.clarification.answer_modes == ("select_candidate", "cancel")
+    assert pending.clarification.answer_modes == (
+        "select_candidate",
+        "add_detail",
+        "cancel",
+    )
     assert [item.token for item in pending.clarification.candidates] == [
         first_id,
         second_id,
@@ -532,6 +539,86 @@ def test_property_clarification_resumes_stored_candidate_without_second_llm_call
     assert events.count("vector") == 1
     assert events.count("property_resolution") == 1
     assert events.count("stage2") == 1
+
+
+def test_property_clarification_with_candidates_accepts_add_detail(
+    tmp_path: Path,
+) -> None:
+    source = tmp_path / "source-candidate-add-detail.ifc"
+    _source(source)
+    first_id = "candidate:1:ifc2x3:Pset_BeamCommon.LoadBearing"
+    second_id = "candidate:2:ifc2x3:Pset_BeamCommon.IsExternal"
+    api, events, provider = _api(
+        tmp_path,
+        kind="natural",
+        decisions=[
+            {
+                "schema_version": "text2ifc/ifc-property-rerank-decision/0.1",
+                "decision": "clarification_required",
+                "selected_candidate_id": None,
+                "conflicting_candidate_ids": [first_id, second_id],
+                "clarification_question": "Which property did you mean?",
+            },
+            _confirmed(first_id),
+        ],
+    )
+    pending = api.start(source, "Set the selected property to true.")
+    assert pending.clarification is not None
+
+    result = api.continue_with_answer(
+        pending.run_id,
+        {"kind": "add_detail", "detail": "Use the load-bearing property."},
+        clarification_id=pending.clarification.clarification_id,
+        expected_state_version=pending.state_version,
+    )
+
+    assert result.status == "succeeded"
+    assert len(provider.calls) == 2
+    assert events.count("stage1") == 2
+    assert events.count("property_resolution") == 2
+    assert events.count("stage2") == 1
+
+
+def test_unsupported_intent_is_state_bound_before_terminal_publication(
+    tmp_path: Path,
+) -> None:
+    source = tmp_path / "source-unsupported-route.ifc"
+    _source(source)
+    source_before = source.read_bytes()
+    api, events, _provider = _api(
+        tmp_path,
+        kind="none",
+        decisions=[],
+        classification="unsupported",
+        reason_code="STRUCTURAL_ANALYSIS_UNSUPPORTED",
+    )
+
+    result = api.start(
+        source,
+        "Add a Beam and a structural analysis node atomically.",
+    )
+
+    assert result.status == "unsupported"
+    assert result.reason_code == "STRUCTURAL_ANALYSIS_UNSUPPORTED"
+    assert events == ["stage1"]
+    assert source.read_bytes() == source_before
+    state = api.store.load(result.run_id)
+    intent_ready = [
+        transition
+        for transition in state.transitions
+        if transition.to_stage is RunStage.INTENT_READY
+    ]
+    assert len(intent_ready) == 1
+    assert set(intent_ready[0].stage_payload) >= {
+        "intent",
+        "api_context",
+        "route",
+    }
+    assert intent_ready[0].stage_payload["route"] == {
+        "classification": "unsupported",
+        "reason_code": "STRUCTURAL_ANALYSIS_UNSUPPORTED",
+    }
+    assert set(result.artifacts) == {"manifest", "evaluation", "evidence"}
 
 
 def test_property_resolution_unsupported_is_terminal_before_stage_2(

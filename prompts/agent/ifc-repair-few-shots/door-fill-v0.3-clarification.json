@@ -1,0 +1,18 @@
+{
+ "schema_version": "text2ifc/ifc-repair-few-shot/0.1",
+ "example_id": "door.fill.v0.3.clarification",
+ "profile_id": "door.fill-existing-opening.v0.3",
+ "case": "clarification",
+ "user_text": "EXAMPLE_ONLY: put a door in Opening EXAMPLE_OPENING_GUID",
+ "expected": {
+  "operation_type": "fill_existing_opening_with_door",
+  "status": "clarification_required",
+  "parameters": {
+   "fit_existing_opening": true
+  },
+  "missing_slots": [
+   "/prototype_intent",
+   "/parameters/door/operation_type or viewpoint"
+  ]
+ }
+}

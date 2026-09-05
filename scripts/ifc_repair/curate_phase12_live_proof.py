@@ -65,19 +65,28 @@ EXPECTED_STAGE1_PROFILES = frozenset(
     {
         "beam.add.v0.3",
         "column.add.v0.3",
-        "door.add-with-opening.v0.2",
-        "door.fill-existing-opening.v0.2",
+        "door.add-with-opening.v0.3",
+        "door.fill-existing-opening.v0.3",
         "occurrence.set-properties",
         "opening.add-to-wall",
-        "window.add-with-opening",
+        "window.add-with-opening.v0.2",
     }
 )
 EXPECTED_SELECTED_PROFILES = {
+    "complete": frozenset(
+        {"beam.add.stage2.v0.1", "column.add.stage2.v0.1"}
+    ),
+    "clarification-resume": frozenset({"column.add.stage2.v0.1"}),
+    "window-semantic-canary": frozenset({"occurrence.set-properties"}),
+    "program-guard": frozenset({"beam.add.stage2.v0.1"}),
+}
+HISTORICAL_SELECTED_PROFILES = {
     "complete": frozenset({"beam.add.v0.3", "column.add.v0.3"}),
     "clarification-resume": frozenset({"column.add.v0.3"}),
     "window-semantic-canary": frozenset({"occurrence.set-properties"}),
     "program-guard": frozenset({"beam.add.v0.3"}),
 }
+
 PROPERTY_RESOLUTION_TEMPLATE_HASH = str(
     load_prompt_registry()[PROPERTY_RESOLUTION_TEMPLATE_ID]["sha256"]
 )
@@ -136,6 +145,45 @@ def _read(path: Path) -> dict[str, Any]:
     if not isinstance(value, dict):
         raise ValueError(f"JSON_OBJECT_REQUIRED:{path}")
     return value
+
+
+def _stage2_response_schema(response: Mapping[str, Any]) -> str:
+    content = response.get("content")
+    if not isinstance(content, str):
+        choices = response.get("choices")
+        if (
+            not isinstance(choices, list)
+            or len(choices) != 1
+            or not isinstance(choices[0], Mapping)
+        ):
+            raise ValueError("LIVE_ATTEMPT_STAGE2_RESPONSE_INVALID")
+        message = choices[0].get("message")
+        if not isinstance(message, Mapping):
+            raise ValueError("LIVE_ATTEMPT_STAGE2_RESPONSE_INVALID")
+        content = message.get("content")
+    if not isinstance(content, str):
+        raise ValueError("LIVE_ATTEMPT_STAGE2_RESPONSE_INVALID")
+    try:
+        document = json.loads(content)
+    except json.JSONDecodeError as error:
+        raise ValueError("LIVE_ATTEMPT_STAGE2_RESPONSE_INVALID") from error
+    if not isinstance(document, Mapping):
+        raise ValueError("LIVE_ATTEMPT_STAGE2_RESPONSE_INVALID")
+    return _require_text(
+        document.get("schema_version"),
+        "LIVE_ATTEMPT_STAGE2_SCHEMA_REQUIRED",
+    )
+
+
+def _expected_plan07_stage2_profiles(
+    case_id: str,
+    schema_version: str,
+) -> frozenset[str]:
+    if schema_version == "text2ifc/ifc-repair-changeset-draft/0.3":
+        return EXPECTED_SELECTED_PROFILES[case_id]
+    if schema_version == "text2ifc/ifc-repair-changeset-draft/0.2":
+        return HISTORICAL_SELECTED_PROFILES[case_id]
+    raise ValueError("LIVE_ATTEMPT_STAGE2_SCHEMA_UNREVIEWED")
 
 
 def _write(path: Path, value: Any) -> None:
@@ -470,6 +518,11 @@ def _audit_attempts(
             raise ValueError("LIVE_ATTEMPT_STAGE_ATTEMPT_INVALID")
         if stage == "property_resolution" and stage_attempt > 2:
             raise ValueError("LIVE_ATTEMPT_STAGE15_RETRY_EXHAUSTED")
+        correction = raw.get("correction_reason")
+        if stage_attempt > 1 and (
+            not isinstance(correction, str) or not correction.strip()
+        ):
+            raise ValueError("LIVE_ATTEMPT_CORRECTION_REASON_REQUIRED")
         if stage != previous_stage:
             if stage_attempt != 1:
                 raise ValueError(
@@ -494,11 +547,6 @@ def _audit_attempts(
         previous_stage_attempt = stage_attempt
         previous_lineage = str(raw.get("lineage") or "")
         previous_stage_rank = stage_rank
-        correction = raw.get("correction_reason")
-        if stage_attempt > 1 and (
-            not isinstance(correction, str) or not correction.strip()
-        ):
-            raise ValueError("LIVE_ATTEMPT_CORRECTION_REASON_REQUIRED")
         if contract is not None and contract.get(stage) is None:
             raise ValueError("LIVE_ATTEMPT_STAGE_NOT_EXPECTED")
         if (
@@ -636,11 +684,18 @@ def _audit_attempts(
             ):
                 raise ValueError("LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH")
             if contract is None:
-                if frozenset(map(str, profile_ids)) != (
-                    EXPECTED_STAGE1_PROFILES
-                    if stage == "stage1"
-                    else EXPECTED_SELECTED_PROFILES[case_id]
-                ):
+                if stage == "stage1":
+                    expected_profile_generation = EXPECTED_STAGE1_PROFILES
+                else:
+                    if not isinstance(response, Mapping):
+                        raise ValueError("LIVE_ATTEMPT_STAGE2_RESPONSE_INVALID")
+                    expected_profile_generation = (
+                        _expected_plan07_stage2_profiles(
+                            case_id,
+                            _stage2_response_schema(response),
+                        )
+                    )
+                if frozenset(map(str, profile_ids)) != expected_profile_generation:
                     raise ValueError("LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH")
             else:
                 expected_identity = contract[stage]
@@ -668,8 +723,14 @@ def _audit_attempts(
                 raw.get("few_shot_bindings")
             )
             if contract is None:
+                if not isinstance(response, Mapping):
+                    raise ValueError("LIVE_ATTEMPT_STAGE2_RESPONSE_INVALID")
+                expected_profile_generation = _expected_plan07_stage2_profiles(
+                    case_id,
+                    _stage2_response_schema(response),
+                )
                 expected_selection = select_prompt_profiles(
-                    sorted(EXPECTED_SELECTED_PROFILES[case_id])
+                    sorted(expected_profile_generation)
                 ).to_dict()
                 expected_few_shot_binding_map = dict(
                     zip(
@@ -827,7 +888,10 @@ def audit_live_uat_result(result: Mapping[str, Any]) -> dict[str, Any]:
                 or not str(clarification.get("clarification_id") or "")
                 or clarification.get("reason_code") != "property_resolution"
                 or clarification.get("answer_modes")
-                != ["select_candidate", "cancel"]
+                not in (
+                    ["select_candidate", "cancel"],
+                    ["select_candidate", "add_detail", "cancel"],
+                )
             ):
                 raise ValueError("LIVE_CLARIFICATION_LINEAGE_INVALID")
         elif case_id == SEMANTIC_CANARY_CASE_ID:
@@ -1127,9 +1191,17 @@ def _runtime_authority(
     if len(contexts) != 1:
         raise ValueError("LIVE_EFFECTIVE_REQUEST_CONTEXT_MISMATCH")
     profile = _read(profile_path)
-    if frozenset(map(str, profile.get("profile_ids", ()))) != EXPECTED_SELECTED_PROFILES[
-        case_id
-    ]:
+    expected_runtime_profiles = _expected_plan07_stage2_profiles(
+        case_id,
+        _require_text(
+            provider_draft.get("schema_version"),
+            "LIVE_RUNTIME_STAGE2_SCHEMA_REQUIRED",
+        ),
+    )
+    if (
+        frozenset(map(str, profile.get("profile_ids", ())))
+        != expected_runtime_profiles
+    ):
         raise ValueError("LIVE_RUNTIME_PROFILE_SELECTION_MISMATCH")
     if _read(state_path).get("run_id") != run_id or _read(
         transitions_path

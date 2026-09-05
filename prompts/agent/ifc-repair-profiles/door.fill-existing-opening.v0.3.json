@@ -1,0 +1,102 @@
+{
+ "schema_version": "text2ifc/ifc-repair-prompt-profile/0.2",
+ "profile_id": "door.fill-existing-opening.v0.3",
+ "profile_version": "0.3",
+ "component_family": "door",
+ "action": "fill_existing_opening",
+ "operation_type": "fill_existing_opening_with_door",
+ "target_ifc_classes": [
+  "IfcOpeningElement"
+ ],
+ "classification_terms": [
+  "fill opening",
+  "install door",
+  "fill door",
+  "填门",
+  "装门"
+ ],
+ "slot_summary": "Exact resolvable unfilled Opening; door swing expressed EITHER as an explicit IfcDoorOperationEnum with door.formal_enum_explicit=true, OR as hinge_side plus viewpoint. Opening position and all overall dimensions come from the retained Opening. Geometry constraints on the opening must set tolerance_mm >= 1.0 (never 0) because stored IFC geometry carries sub-millimetre float precision.",
+ "required_slots": [
+  "/target_query",
+  "/parameters/fit_existing_opening"
+ ],
+ "conditional_slots": [
+  "/parameters/door/operation_type with /parameters/door/formal_enum_explicit",
+  "/parameters/door/hinge_side with /parameters/door/viewpoint",
+  "/prototype_intent"
+ ],
+ "optional_slots": [
+  "/property_intents",
+  "/quantity_intents",
+  "/occurrence_reuse_intent"
+ ],
+ "program_derived_slots": [
+  "/parameters/position",
+  "/parameters/opening",
+  "/parameters/door/overall_width_mm",
+  "/parameters/door/overall_height_mm",
+  "host wall",
+  "GlobalIds",
+  "storey containment",
+  "door visual representation"
+ ],
+ "forbidden_inferences": [
+  "opening identity",
+  "door.operation_type enum without door.formal_enum_explicit=true",
+  "tolerance_mm of 0 on any geometry constraint",
+  "left or right swing without viewpoint or explicit enum",
+  "prototype similarity",
+  "resize opening",
+  "LLM-authored retained geometry"
+ ],
+ "supported_capabilities": [
+  "SINGLE_SWING_LEFT",
+  "SINGLE_SWING_RIGHT",
+  "NOTDEFINED",
+  "measured_hosted_opening",
+  "exact_type_reuse",
+  "generated_type"
+ ],
+ "unsupported_capabilities": [
+  "REVOLVING",
+  "FOLDING",
+  "SLIDING",
+  "DOUBLE_DOOR",
+  "curved_wall"
+ ],
+ "type_intent_rules": {
+  "no_type_or_new_type": "prototype_intent_null",
+  "exact_existing_type_reuse": "global_id_or_type_name",
+  "unspecified_existing_type_reuse": "selection_required",
+  "zero_candidate_policy": "missing_evidence"
+ },
+ "stage2_projection_fields": [
+  "operation_id",
+  "operation_type",
+  "target",
+  "parameters",
+  "evidence_refs"
+ ],
+ "few_shots": [
+  {
+   "example_id": "door.fill.v0.3.complete",
+   "path": "prompts/agent/ifc-repair-few-shots/door-fill-v0.3-complete.json",
+   "sha256": "sha256:04a6035b0e826e875b97e4f2e759b2a5080de6ec05edc542f9951d11c72870b9"
+  },
+  {
+   "example_id": "door.fill.v0.3.clarification",
+   "path": "prompts/agent/ifc-repair-few-shots/door-fill-v0.3-clarification.json",
+   "sha256": "sha256:8f9e25e0a85540fb86eccfc5195c7b118630b25226fb7d08401a1d72dbf846d5"
+  },
+  {
+   "example_id": "door.fill.v0.3.type-reuse",
+   "path": "prompts/agent/ifc-repair-few-shots/door-fill-v0.3-type-reuse.json",
+   "sha256": "sha256:daa388814609a4d334bd9dee7511455048e1f02552103d6f9dd67245ba83c420"
+  },
+  {
+   "example_id": "door.fill.v0.3.unsupported",
+   "path": "prompts/agent/ifc-repair-few-shots/door-fill-v0.3-unsupported.json",
+   "sha256": "sha256:ba95d34fca0a3df8d8725c8cc4b886d91fcd75ebec649fc4d56f64579554a55c"
+  }
+ ]
+}

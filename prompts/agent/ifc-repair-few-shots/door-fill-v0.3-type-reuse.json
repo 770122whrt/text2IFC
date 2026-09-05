@@ -1,0 +1,18 @@
+{
+ "schema_version": "text2ifc/ifc-repair-few-shot/0.1",
+ "example_id": "door.fill.v0.3.type-reuse",
+ "profile_id": "door.fill-existing-opening.v0.3",
+ "case": "exact_type_reuse",
+ "user_text": "EXAMPLE_ONLY: fill the opening and reuse the exact DoorStyle named EXAMPLE_STYLE",
+ "expected": {
+  "operation_type": "fill_existing_opening_with_door",
+  "parameters": {
+   "fit_existing_opening": true
+  },
+  "prototype_intent": {
+   "reference_kind": "type_name",
+   "reference": "EXAMPLE_STYLE"
+  },
+  "rule": "unique exact resolution or clarification; geometry remains program-derived"
+ }
+}

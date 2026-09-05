@@ -40,7 +40,7 @@ def _v05_body() -> dict:
                 "routing_intent": {
                     "component_family": "window",
                     "action": "add_with_opening",
-                    "operation_profile": "window.add-with-opening",
+                    "operation_profile": "window.add-with-opening.v0.2",
                     "source": _source(),
                 },
                 "target_query": {
@@ -89,7 +89,7 @@ def _v05_fill_body(*, parameters: dict | None = None) -> dict:
                 "routing_intent": {
                     "component_family": "door",
                     "action": "fill_existing_opening",
-                    "operation_profile": "door.fill-existing-opening.v0.2",
+                    "operation_profile": "door.fill-existing-opening.v0.3",
                     "source": source,
                 },
                 "target_query": {
@@ -125,7 +125,7 @@ def _v05_unsupported_door_body() -> dict:
     operation["routing_intent"].update(
         {
             "action": "add_with_opening",
-            "operation_profile": "door.add-with-opening.v0.2",
+            "operation_profile": "door.add-with-opening.v0.3",
         }
     )
     operation["target_query"] = {
@@ -156,10 +156,10 @@ def test_stage1_routes_and_extracts_in_exactly_one_provider_call(
     )
     catalog = renderer_input["SUPPORTED_OPERATIONS"]
     assert {item["profile_id"] for item in catalog} == {
-        "window.add-with-opening",
+        "window.add-with-opening.v0.2",
         "opening.add-to-wall",
-        "door.add-with-opening.v0.2",
-        "door.fill-existing-opening.v0.2",
+        "door.add-with-opening.v0.3",
+        "door.fill-existing-opening.v0.3",
         "occurrence.set-properties",
         "beam.add",
         "column.add",
@@ -352,9 +352,9 @@ def test_stage2_receives_only_used_full_profile_and_records_hashes(
     selection = json.loads(
         (tmp_path / "prompt-profile-selection.json").read_text(encoding="utf-8")
     )
-    assert selection["profile_ids"] == ["window.add-with-opening"]
+    assert selection["profile_ids"] == ["window.add-with-opening.v0.2"]
     assert selection["few_shot_ids"] == []
     assert selection["profile_hashes"][0].startswith("sha256:")
     prompt = provider.calls[0]["prompt"]
-    assert '"profile_id": "window.add-with-opening"' in prompt
+    assert '"profile_id": "window.add-with-opening.v0.2"' in prompt
     assert "door.add.complete" not in prompt

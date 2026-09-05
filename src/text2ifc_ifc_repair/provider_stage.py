@@ -76,9 +76,12 @@ def generate_bound_changeset(
     used_operation_types = tuple(
         sorted({str(item["operation_type"]) for item in operations})
     )
+    used_definitions = tuple(
+        registry.require(name) for name in used_operation_types
+    )
     manifests = tuple(semantic_manifests)
-    structural_compact_mode = bool(manifests) and set(used_operation_types).issubset(
-        {"add_beam", "add_column"}
+    structural_compact_mode = bool(manifests) and all(
+        definition.stage2_prompt_profile_id for definition in used_definitions
     )
     supported_operations: Any = [
         (
@@ -145,6 +148,11 @@ def generate_bound_changeset(
         else _compact_operation_projection(operations)
         if compact_mode
         else resolved_document
+    )
+    resolved_authority = (
+        _structural_draft_authority(operations, registry=registry)
+        if compact_mode
+        else None
     )
     semantic_summary = _semantic_summary(manifests)
     explicit_slot_refs = sorted(
@@ -230,6 +238,7 @@ def generate_bound_changeset(
                         semantic_manifest_ref=semantic_manifest_ref,
                         semantic_manifest_hash=manifest_hash,
                         semantic_summary=semantic_summary,
+                        resolved_authority=resolved_authority,
                     )
             contract_issues = (
                 validate_changeset_draft(
@@ -264,9 +273,7 @@ def generate_bound_changeset(
                                 else "text2ifc/ifc-repair-changeset/0.2"
                             ),
                             resolved_authority=(
-                                prompt_operations
-                                if structural_compact_mode
-                                else None
+                                resolved_authority
                             ),
                         )
                     except ValueError as error:
@@ -389,8 +396,12 @@ def _upgrade_legacy_draft(
     semantic_manifest_ref: str,
     semantic_manifest_hash: str,
     semantic_summary: Mapping[str, int],
+    resolved_authority: Mapping[str, Any] | None,
 ) -> dict[str, Any]:
-    """Explicit 0.1 compatibility: retain geometry, strip authority, mark draft."""
+    """Validate released 0.1 first, then rebuild draft authority deterministically."""
+
+    if resolved_authority is None:
+        raise ValueError("LEGACY_DRAFT_AUTHORITY_REQUIRED")
 
     return {
         "schema_version": "text2ifc/ifc-repair-changeset-draft/0.2",
@@ -400,11 +411,11 @@ def _upgrade_legacy_draft(
         "semantic_manifest_ref": semantic_manifest_ref,
         "semantic_manifest_sha256": semantic_manifest_hash,
         "semantic_summary": dict(semantic_summary),
-        "scope": changeset["scope"],
-        "evidence_refs": changeset["evidence_refs"],
+        "scope": resolved_authority["scope"],
+        "evidence_refs": resolved_authority["evidence_refs"],
         "preconditions": changeset["preconditions"],
         "postconditions": changeset["postconditions"],
-        "operations": changeset["operations"],
+        "operations": resolved_authority["operations"],
     }
 
 

@@ -480,10 +480,11 @@ def structural_l1_authorization(family: str) -> dict[str, Any]:
         "created": created,
         "modified": {
             "spatial_containment": "IfcRelContainedInSpatialStructure",
+            "structural_type_relationship": "IfcRelDefinesByType",
         },
         "removed": {},
         "required_roles": {
-            "created": (family, "structural_type_relationship"),
+            "created": (family,),
         },
         "relations": relations,
     }

@@ -154,7 +154,7 @@ def bind_repair_changeset(
     issues = validate_changeset_draft(
         draft,
         expected_version=(
-            DRAFT_CHANGESET_SCHEMA_VERSION_0_3
+            str(draft.get("schema_version"))
             if resolved_authority is not None
             else None
         ),
@@ -238,9 +238,13 @@ def _require_exact_draft_authority(
         or set(actual_ids) != set(expected_ids)
     ):
         raise ValueError("DRAFT_AUTHORITY_OPERATION_ID_SET_MISMATCH:/operations")
-    if draft.get("scope") != authority.get("scope"):
+    if not _identifier_set_equal(
+        draft.get("scope"), authority.get("scope")
+    ):
         raise ValueError("DRAFT_AUTHORITY_SCOPE_MISMATCH:/scope")
-    if draft.get("evidence_refs") != authority.get("evidence_refs"):
+    if not _identifier_set_equal(
+        draft.get("evidence_refs"), authority.get("evidence_refs")
+    ):
         raise ValueError("DRAFT_AUTHORITY_EVIDENCE_MISMATCH:/evidence_refs")
 
     expected_by_id = {
@@ -263,11 +267,46 @@ def _require_exact_draft_authority(
                 "DRAFT_AUTHORITY_PARAMETERS_MISMATCH:"
                 f"/operations/{index}/parameters"
             )
-        if operation.get("evidence_refs") != expected.get("evidence_refs"):
+        if not _identifier_set_equal(
+            operation.get("evidence_refs"), expected.get("evidence_refs")
+        ):
             raise ValueError(
                 "DRAFT_AUTHORITY_OPERATION_EVIDENCE_MISMATCH:"
                 f"/operations/{index}/evidence_refs"
             )
+
+
+def _identifier_set_equal(draft_value: Any, authority_value: Any) -> bool:
+    """Compare draft-authority identifier collections as sets.
+
+    The deterministic authority builds ``scope`` and ``evidence_refs`` as
+    ``sorted(set(...))`` identifier collections, and the published draft
+    schema declares them with ``uniqueItems: true`` — they are sets, not
+    ordered sequences.  A Provider returning the same identifiers in a
+    different order is set-equivalent and must bind; any identifier drift,
+    duplication, or shape change still fails closed.
+    """
+
+    if isinstance(draft_value, Mapping) and isinstance(
+        authority_value, Mapping
+    ):
+        if set(draft_value.keys()) != set(authority_value.keys()):
+            return False
+        return all(
+            _identifier_set_equal(draft_value[key], authority_value[key])
+            for key in draft_value
+        )
+    if isinstance(draft_value, (list, tuple)) and isinstance(
+        authority_value, (list, tuple)
+    ):
+        return len(draft_value) == len(authority_value) and sorted(
+            str(item) for item in draft_value
+        ) == sorted(str(item) for item in authority_value)
+    if isinstance(draft_value, (list, tuple)) or isinstance(
+        authority_value, (list, tuple)
+    ):
+        return False
+    return draft_value == authority_value
 
 
 def _plain_json(value: Any) -> Any:

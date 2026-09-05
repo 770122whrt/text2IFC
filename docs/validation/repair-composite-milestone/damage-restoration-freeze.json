@@ -1,0 +1,48 @@
+{
+ "schema_version": "text2ifc/damage-restoration-case-freeze/0.1",
+ "base_model": {
+  "path": "dataset/ifc/train/vvo.ifc",
+  "family": "vvo"
+ },
+ "semantics": "Damage-restoration: original (members exist) -> damage (deterministic removal) -> repair (restore at the removed members' own storey-local geometry) -> repaired compared with original (class counts restored, restored geometry aligned).",
+ "cases": [
+  {
+   "case_id": "R1",
+   "difficulty": "single",
+   "damage": {
+    "beam_global_ids": [
+     "17tPjyQtf2L9JnbXXmcT8w"
+    ],
+    "column_global_ids": []
+   },
+   "request": "On storey 标高7 of this building, restore the one missing horizontal rectangular support beam of the two runs that span between the two supports: its axis runs 3903 mm from (-7452.2, -14836.2, 0.0) mm to (-3549.2, -14836.2, 0.0) mm (storey-local), with a rectangular section 570 mm wide and 400 mm deep. Republish it in one atomic ChangeSet. The axis is fully determined by its start and end points; do not state a scalar length. All coordinates are storey-local millimetres."
+  },
+  {
+   "case_id": "R2",
+   "difficulty": "beam-column",
+   "damage": {
+    "beam_global_ids": [
+     "17tPjyQtf2L9JnbXXmcT8w"
+    ],
+    "column_global_ids": [
+     "1rsYNObuDC4euALdw6WUK4"
+    ]
+   },
+   "request": "Restore the two missing structural members of this building in one atomic ChangeSet: (1) on storey 标高7, one horizontal rectangular support beam whose axis runs from (-7452.2, -14836.2, 0.0) mm to (-3549.2, -14836.2, 0.0) mm (storey-local), section 570 mm wide by 400 mm deep; and (2) on storey 标高0, one vertical rectangular column 500 mm by 500 mm rising 3712.1 mm from (-3307.4, -9061.8, 0.0) mm (storey-local). The axis is fully determined by its start and end points; do not state a scalar length. All coordinates are storey-local millimetres."
+  },
+  {
+   "case_id": "R3",
+   "difficulty": "two-beams-column",
+   "damage": {
+    "beam_global_ids": [
+     "17tPjyQtf2L9JnbXXmcT8w",
+     "17tPjyQtf2L9JnbXXmcTUF"
+    ],
+    "column_global_ids": [
+     "1rsYNObuDC4euALdw6WUK4"
+    ]
+   },
+   "request": "Restore the three missing structural members of this building in one atomic ChangeSet: (1) on storey 标高7, a horizontal rectangular support beam whose axis runs from (-7452.2, -14836.2, 0.0) mm to (-3549.2, -14836.2, 0.0) mm (storey-local), section 570 mm wide by 400 mm deep; (2) on storey 标高7, a second horizontal rectangular support beam whose axis runs from (-3316.6, -3863.5, 0.0) mm to (-3316.6, -8803.5, 0.0) mm (storey-local), section 570 mm wide by 455 mm deep; and (3) on storey 标高0, one vertical rectangular column 500 mm by 500 mm rising 3712.1 mm from (-3307.4, -9061.8, 0.0) mm (storey-local). The axis is fully determined by its start and end points; do not state a scalar length. All coordinates are storey-local millimetres."
+  }
+ ]
+}

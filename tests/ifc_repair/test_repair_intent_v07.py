@@ -355,5 +355,5 @@ def test_default_registry_binds_current_structural_profiles_only() -> None:
     assert registry.require("add_beam").prompt_profile_id == "beam.add.v0.3"
     assert registry.require("add_column").prompt_profile_id == "column.add.v0.3"
     assert registry.require("add_door_with_opening_to_wall").prompt_profile_id == (
-        "door.add-with-opening.v0.2"
+        "door.add-with-opening.v0.3"
     )

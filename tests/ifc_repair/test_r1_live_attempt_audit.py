@@ -59,7 +59,12 @@ def _attempt(
         "model": "deepseek-v4-flash",
         "extra_body": {"thinking": {"type": "enabled"}},
     }
-    response = {"id": f"response-{stage}", "content": {"ok": True}}
+    response_document = (
+        {"schema_version": "text2ifc/ifc-repair-changeset-draft/0.3"}
+        if stage == "stage2"
+        else {"ok": True}
+    )
+    response = {"id": f"response-{stage}", "content": json.dumps(response_document)}
     usage = {"prompt_tokens": 10, "completion_tokens": 5, "total_tokens": 15}
     attempt = {
         "attempt_id": f"{case_id}:{stage}:001",

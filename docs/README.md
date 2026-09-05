@@ -10,6 +10,7 @@
 | 了解已有/damaged IFC + 文本如何生成可验证的新 IFC，以及后续 Phase 安排 | [IFC2X3 修复链路与后续路线](architecture/ifc-repair-pipeline-status-and-roadmap.md) |
 | 了解当前系统如何运行 | [当前工作流与数据流](architecture/current-workflow-and-data-flow.md) |
 | 浏览系统架构和阶段演进 | [Architecture Index](architecture/README.md) |
+| 规范 Agent Debug、能力提升声明和真实 LLM 前测试 | [Agent 能力评测与真实 LLM 准入协议](validation/agent-capability-evaluation.md) |
 | 查找验证、评估和 UAT 方案 | [Validation Index](validation/README.md) |
 | 查找 BIM JSON、IFC2X3 和 Provider 参考 | [Reference Index](reference/README.md) |
 | 查看研究总结和周报 | [Reports Index](reports/README.md) |

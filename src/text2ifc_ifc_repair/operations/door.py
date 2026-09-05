@@ -259,7 +259,7 @@ def add_door_operation_definition() -> OperationDefinition:
         target_classes=("IfcWall",),
         target_schema=_ADD_TARGET_SCHEMA,
         evaluation_policy=ADD_DOOR_EVALUATION_POLICY,
-        prompt_profile_id="door.add-with-opening.v0.2",
+        prompt_profile_id="door.add-with-opening.v0.3",
         applicator=_add_door_applicator,
         precondition_checker=_add_preconditions,
     )
@@ -271,7 +271,7 @@ def fill_door_operation_definition() -> OperationDefinition:
         target_classes=("IfcOpeningElement",),
         target_schema=_FILL_TARGET_SCHEMA,
         evaluation_policy=FILL_DOOR_EVALUATION_POLICY,
-        prompt_profile_id="door.fill-existing-opening.v0.2",
+        prompt_profile_id="door.fill-existing-opening.v0.3",
         applicator=_fill_door_applicator,
         precondition_checker=_fill_preconditions,
     )
@@ -1058,17 +1058,106 @@ def _l1_authorization(*, creates_opening: bool) -> dict[str, Any]:
         "fills_relationship": "IfcRelFillsElement",
         "generated_door_type": "IfcDoorStyle",
         "door_type_relationship": "IfcRelDefinesByType",
+        # Family-scoped semantic authoring effects (mirrors
+        # structural_l1_authorization and WINDOW_L1_AUTHORIZATION): the
+        # door's declared semantic scope is ``door_occurrence`` and the
+        # semantic authoring emits ``semantic_door_*`` roles for pset,
+        # quantity, material and classification assignments.
+        "semantic_door_pset": "IfcPropertySet",
+        "semantic_door_pset_relationship": "IfcRelDefinesByProperties",
+        "semantic_door_quantities": "IfcElementQuantity",
+        "semantic_door_quantity_relationship": "IfcRelDefinesByProperties",
+        "semantic_door_material_relationship": "IfcRelAssociatesMaterial",
+        "semantic_door_classification_relationship": (
+            "IfcRelAssociatesClassification"
+        ),
     }
     if creates_opening:
         created.update(
             {
                 "opening": "IfcOpeningElement",
                 "voids_relationship": "IfcRelVoidsElement",
+                # The add-door operation also declares the opening scope, so
+                # opening-scoped quantities must be authorized like the
+                # window operation's opening quantity roles.
+                "semantic_opening_quantities": "IfcElementQuantity",
+                "semantic_opening_quantity_relationship": (
+                    "IfcRelDefinesByProperties"
+                ),
             }
         )
+    for index in range(2, 65):
+        created[f"semantic_door_pset_{index}"] = "IfcPropertySet"
+        created[f"semantic_door_pset_relationship_{index}"] = (
+            "IfcRelDefinesByProperties"
+        )
+        created[f"semantic_door_material_relationship_{index}"] = (
+            "IfcRelAssociatesMaterial"
+        )
+        created[f"semantic_door_classification_relationship_{index}"] = (
+            "IfcRelAssociatesClassification"
+        )
+    relations = {
+        "fills_relationship": {
+            "ifc_class": "IfcRelFillsElement",
+            "endpoints": {
+                "RelatingOpeningElement": "opening",
+                "RelatedBuildingElement": "door",
+            },
+        },
+        "voids_relationship": {
+            "ifc_class": "IfcRelVoidsElement",
+            "endpoints": {
+                "RelatingBuildingElement": "target",
+                "RelatedOpeningElement": "opening",
+            },
+        },
+        "door_type_relationship": {
+            "ifc_class": "IfcRelDefinesByType",
+            "added_endpoint_roles": ("door",),
+        },
+        "spatial_containment": {
+            "ifc_class": "IfcRelContainedInSpatialStructure",
+            "added_endpoint_roles": ("door",),
+        },
+        "semantic_door_pset_relationship": {
+            "ifc_class": "IfcRelDefinesByProperties",
+            "added_endpoint_roles": ("door",),
+        },
+        "semantic_door_quantity_relationship": {
+            "ifc_class": "IfcRelDefinesByProperties",
+            "added_endpoint_roles": ("door",),
+        },
+        "semantic_door_material_relationship": {
+            "ifc_class": "IfcRelAssociatesMaterial",
+            "added_endpoint_roles": ("door",),
+        },
+        "semantic_door_classification_relationship": {
+            "ifc_class": "IfcRelAssociatesClassification",
+            "added_endpoint_roles": ("door",),
+        },
+    }
+    for index in range(2, 65):
+        relations[f"semantic_door_pset_relationship_{index}"] = {
+            "ifc_class": "IfcRelDefinesByProperties",
+            "added_endpoint_roles": ("door",),
+        }
+        relations[f"semantic_door_material_relationship_{index}"] = {
+            "ifc_class": "IfcRelAssociatesMaterial",
+            "added_endpoint_roles": ("door",),
+        }
+        relations[f"semantic_door_classification_relationship_{index}"] = {
+            "ifc_class": "IfcRelAssociatesClassification",
+            "added_endpoint_roles": ("door",),
+        }
+    if creates_opening:
+        relations["semantic_opening_quantity_relationship"] = {
+            "ifc_class": "IfcRelDefinesByProperties",
+            "added_endpoint_roles": ("opening",),
+        }
     return {
         "policy_id": "door.hosted-opening.l1",
-        "policy_version": "0.2",
+        "policy_version": "0.3",
         "created": created,
         "modified": {
             "opening": "IfcOpeningElement",
@@ -1085,30 +1174,7 @@ def _l1_authorization(*, creates_opening: bool) -> dict[str, Any]:
             + ("door", "fills_relationship"),
             "modified": ("spatial_containment",),
         },
-        "relations": {
-            "fills_relationship": {
-                "ifc_class": "IfcRelFillsElement",
-                "endpoints": {
-                    "RelatingOpeningElement": "opening",
-                    "RelatedBuildingElement": "door",
-                },
-            },
-            "voids_relationship": {
-                "ifc_class": "IfcRelVoidsElement",
-                "endpoints": {
-                    "RelatingBuildingElement": "target",
-                    "RelatedOpeningElement": "opening",
-                },
-            },
-            "door_type_relationship": {
-                "ifc_class": "IfcRelDefinesByType",
-                "added_endpoint_roles": ("door",),
-            },
-            "spatial_containment": {
-                "ifc_class": "IfcRelContainedInSpatialStructure",
-                "added_endpoint_roles": ("door",),
-            },
-        },
+        "relations": relations,
     }
 
 

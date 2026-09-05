@@ -51,7 +51,7 @@ def test_large_building_uses_public_api_and_phase10_closes_l2(tmp_path: Path) ->
                             "routing_intent": {
                                 "component_family": "window",
                                     "action": "add_with_opening",
-                                    "operation_profile": "window.add-with-opening",
+                                    "operation_profile": "window.add-with-opening.v0.2",
                                     "source": {
                                         "source_kind": "public_capability",
                                         "reference": "capability:/window.add-with-opening",

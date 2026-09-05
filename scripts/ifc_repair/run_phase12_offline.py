@@ -657,12 +657,12 @@ def _upgrade_legacy_mixed_operation(operation: Mapping[str, Any]) -> dict[str, A
         "add_window_with_opening_to_wall": (
             "window",
             "add",
-            "window.add-with-opening",
+            "window.add-with-opening.v0.2",
         ),
         "fill_existing_opening_with_door": (
             "door",
             "fill",
-            "door.fill-existing-opening.v0.2",
+            "door.fill-existing-opening.v0.3",
         ),
     }
     try:

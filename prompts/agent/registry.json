@@ -536,6 +536,34 @@
       ]
     },
     {
+      "template_id": "ifc-repair-intent.v0.9",
+      "role": "ifc_repair_request_understanding",
+      "mode": "repair_intent",
+      "path": "prompts/agent/ifc-repair-intent-v0.9.md",
+      "sha256": "sha256:0b839b55a1176657d9ca315479c7a8849f298688a5c15226eac13aeb03c8f648",
+      "required_inputs": [
+        "REPAIR_REQUEST",
+        "SUPPORTED_OPERATIONS",
+        "REPAIR_INTENT_SCHEMA",
+        "VALIDATION_FEEDBACK"
+      ],
+      "forbidden_outputs": [
+        "raw_ifc",
+        "step_text",
+        "step_id",
+        "resolved_target_id",
+        "resolved_target_guid",
+        "resolved_type_id",
+        "unregistered_profile",
+        "inferred_occurrence_reuse",
+        "mutation_mapping",
+        "private_original_ifc",
+        "benchmark_gold",
+        "guessed_project_fact",
+        "repair_changeset"
+      ]
+    },
+    {
       "template_id": "ifc-repair-changeset.v0.4",
       "role": "ifc_repair_generator",
       "mode": "bound_changeset",
@@ -690,7 +718,10 @@
       "path": "prompts/agent/ifc-repair-profiles/door.add-with-opening.json",
       "sha256": "sha256:7fa4d80429ce46089a940db35a0a0fbb8effaacca4bbfac7b766245ee6d0c370",
       "required_inputs": [],
-      "forbidden_outputs": ["unselected_profile", "unregistered_operation"]
+      "forbidden_outputs": [
+        "unselected_profile",
+        "unregistered_operation"
+      ]
     },
     {
       "template_id": "door.add-with-opening.v0.2",
@@ -699,7 +730,22 @@
       "path": "prompts/agent/ifc-repair-profiles/door.add-with-opening.v0.2.json",
       "sha256": "sha256:7eac7e8ac80e158a8cee4142a6830dce0d849b111efc6547201232e79e88bb36",
       "required_inputs": [],
-      "forbidden_outputs": ["unselected_profile", "unregistered_operation"]
+      "forbidden_outputs": [
+        "unselected_profile",
+        "unregistered_operation"
+      ]
+    },
+    {
+      "template_id": "door.add-with-opening.v0.3",
+      "role": "ifc_repair_operation_profile",
+      "mode": "selected_profile",
+      "path": "prompts/agent/ifc-repair-profiles/door.add-with-opening.v0.3.json",
+      "sha256": "sha256:db0247fda27927fef73846ba142aae6c84b0e6b0c9db8af9e6c4ccaa125e1acc",
+      "required_inputs": [],
+      "forbidden_outputs": [
+        "unselected_profile",
+        "unregistered_operation"
+      ]
     },
     {
       "template_id": "door.fill-existing-opening",
@@ -708,7 +754,10 @@
       "path": "prompts/agent/ifc-repair-profiles/door.fill-existing-opening.json",
       "sha256": "sha256:aea25a85765334feb272148e2e455fd35d4616fcdb1190bf4d7624f790e70be3",
       "required_inputs": [],
-      "forbidden_outputs": ["unselected_profile", "unregistered_operation"]
+      "forbidden_outputs": [
+        "unselected_profile",
+        "unregistered_operation"
+      ]
     },
     {
       "template_id": "door.fill-existing-opening.v0.2",
@@ -717,16 +766,34 @@
       "path": "prompts/agent/ifc-repair-profiles/door.fill-existing-opening.v0.2.json",
       "sha256": "sha256:1e79bce84c2704108eb22a59ec45e279366196ed28439dcc4bcfca8591721dd6",
       "required_inputs": [],
-      "forbidden_outputs": ["unselected_profile", "unregistered_operation"]
+      "forbidden_outputs": [
+        "unselected_profile",
+        "unregistered_operation"
+      ]
+    },
+    {
+      "template_id": "door.fill-existing-opening.v0.3",
+      "role": "ifc_repair_operation_profile",
+      "mode": "selected_profile",
+      "path": "prompts/agent/ifc-repair-profiles/door.fill-existing-opening.v0.3.json",
+      "sha256": "sha256:93497312b83c322c59d836a8010c3a93c4a624bcd455392241a69078b0091d8e",
+      "required_inputs": [],
+      "forbidden_outputs": [
+        "unselected_profile",
+        "unregistered_operation"
+      ]
     },
     {
       "template_id": "occurrence.set-properties",
       "role": "ifc_repair_operation_profile",
       "mode": "selected_profile",
       "path": "prompts/agent/ifc-repair-profiles/occurrence.set-properties.json",
-        "sha256": "sha256:7b95c00e8f19ff4990053698c42dd182e385931260a2929d0edecbd19dbbec2b",
+      "sha256": "sha256:7b95c00e8f19ff4990053698c42dd182e385931260a2929d0edecbd19dbbec2b",
       "required_inputs": [],
-      "forbidden_outputs": ["unselected_profile", "unregistered_operation"]
+      "forbidden_outputs": [
+        "unselected_profile",
+        "unregistered_operation"
+      ]
     },
     {
       "template_id": "opening.add-to-wall",
@@ -735,7 +802,10 @@
       "path": "prompts/agent/ifc-repair-profiles/opening.add-to-wall.json",
       "sha256": "sha256:db70f1f22bd270636c00b210ac99f18f4c7b2a38cd5bc891a7106c7101d5dbbc",
       "required_inputs": [],
-      "forbidden_outputs": ["unselected_profile", "unregistered_operation"]
+      "forbidden_outputs": [
+        "unselected_profile",
+        "unregistered_operation"
+      ]
     },
     {
       "template_id": "window.add-with-opening",
@@ -744,7 +814,22 @@
       "path": "prompts/agent/ifc-repair-profiles/window.add-with-opening.json",
       "sha256": "sha256:d00699ba8ee0f5ec4751bb982f113662bb7920409f3ca5f8915dd3c941cec45c",
       "required_inputs": [],
-      "forbidden_outputs": ["unselected_profile", "unregistered_operation"]
+      "forbidden_outputs": [
+        "unselected_profile",
+        "unregistered_operation"
+      ]
+    },
+    {
+      "template_id": "window.add-with-opening.v0.2",
+      "role": "ifc_repair_operation_profile",
+      "mode": "selected_profile",
+      "path": "prompts/agent/ifc-repair-profiles/window.add-with-opening.v0.2.json",
+      "sha256": "sha256:eba021a8cdb7b95910d20e9804771da81ff7290519e1c8da1a8e95cb9db6b99b",
+      "required_inputs": [],
+      "forbidden_outputs": [
+        "unselected_profile",
+        "unregistered_operation"
+      ]
     },
     {
       "template_id": "ifc-property-resolution.v0.1",
