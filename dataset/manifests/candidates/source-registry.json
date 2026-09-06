@@ -1,0 +1,133 @@
+{
+  "schema_version": "text2ifc/candidate-source-registry/1.0",
+  "sources": [
+    {
+      "source_id": "archiset-performance-floorplans",
+      "name": "Archiset performance-data enriched floorplan dataset",
+      "canonical_source": "pinjusicmatea-23/performance-data-enriched-floorplan-datasets / archiset.xyz",
+      "classification": "public_research_dataset",
+      "discovered_via": ["archiset.xyz", "GitHub repository"],
+      "license": "CC-BY-4.0",
+      "model_rights_status": "dataset-level-explicit",
+      "research_use": "allowed_with_attribution",
+      "training_use": "allowed_with_attribution",
+      "redistribution": "allowed_with_attribution",
+      "attribution": "required",
+      "evidence": [
+        "https://archiset.xyz/",
+        "https://github.com/pinjusicmatea-23/performance-data-enriched-floorplan-datasets"
+      ],
+      "notes": [
+        "Archiset download UI explicitly states CC BY 4.0 for the dataset.",
+        "IFC ZIP parts are treated as original dataset artifacts, not converted derivatives.",
+        "Candidate scans use ZIP Range extraction to avoid downloading multi-GB archives wholesale."
+      ]
+    },
+    {
+      "source_id": "thatopen-engine-web-ifc-tests",
+      "name": "ThatOpen engine_web-ifc public test models",
+      "canonical_source": "ThatOpen/engine_web-ifc tests/ifcfiles/public",
+      "classification": "public_test_fixture",
+      "discovered_via": ["ThatOpen engine_web-ifc repository"],
+      "license": "repository-MPL-2.0-model-rights-review-required",
+      "model_rights_status": "review_required",
+      "research_use": "allowed_with_source_review",
+      "training_use": "review_required",
+      "redistribution": "review_required",
+      "attribution": "source_and_license_notice_required",
+      "evidence": [
+        "https://github.com/ThatOpen/engine_web-ifc",
+        "https://raw.githubusercontent.com/ThatOpen/engine_web-ifc/main/package.json",
+        "https://raw.githubusercontent.com/ThatOpen/engine_web-ifc/main/LICENSE.md"
+      ],
+      "notes": [
+        "Repository package metadata and LICENSE.md declare MPL-2.0 for the software repository.",
+        "Repository-level software licensing is not assumed to grant independent model-level training or redistribution rights.",
+        "Issue-labelled files are retained in the candidate pool when they are complete non-single-component IFC2X3 models; purpose is classified separately."
+      ]
+    },
+    {
+      "source_id": "buildingsmart-community",
+      "name": "buildingSMART Community Sample Test Files",
+      "canonical_source": "buildingSMART-community/Community-Sample-Test-Files",
+      "classification": "public_test_fixture",
+      "discovered_via": ["buildingSMART Community repository"],
+      "license": "CC-BY-4.0",
+      "model_rights_status": "repository-contribution-explicit",
+      "research_use": "allowed_with_attribution",
+      "training_use": "review_required",
+      "redistribution": "allowed_with_attribution",
+      "attribution": "required",
+      "evidence": [
+        "https://github.com/buildingsmart-community/Community-Sample-Test-Files",
+        "https://raw.githubusercontent.com/buildingsmart-community/Community-Sample-Test-Files/main/README.md"
+      ],
+      "notes": [
+        "README states contributed files are published under Creative Commons Attribution 4.0 International.",
+        "README also states most samples may not pass validation; technical admission therefore requires local parse/traversal/write/reopen certification."
+      ]
+    },
+    {
+      "source_id": "bimdata-rd-index",
+      "name": "BIMData Research & Development IFC Files index",
+      "canonical_source": "bimdata/BIMData-Research-and-Development IFC_FILES.md",
+      "classification": "discovery_index_only",
+      "discovered_via": ["BIMData R&D IFC Files index"],
+      "license": "not-authoritative-for-indexed-models",
+      "model_rights_status": "resolve-upstream-per-file",
+      "research_use": "review_required",
+      "training_use": "review_required",
+      "redistribution": "review_required",
+      "attribution": "upstream-specific",
+      "evidence": [
+        "https://github.com/bimdata/BIMData-Research-and-Development/blob/master/pages/IFC_FILES.md"
+      ],
+      "notes": [
+        "BIMData is discovery-only. The index name, reported size and source URL are not treated as file-level truth until the upstream package/file is verified.",
+        "Candidate source evidence is resolved to DURAARK/TIB, Open IFC Model Repository, BIMcollab, NIBS or other upstream sources where possible."
+      ]
+    },
+    {
+      "source_id": "duraark-public",
+      "name": "DURAARK Public Building Data",
+      "canonical_source": "DURAARK/TIB BuildingData",
+      "classification": "public_research",
+      "discovered_via": ["BIMData R&D index", "TIB DURAARK source packages"],
+      "license": "source-open-data-model-rights-review-required",
+      "model_rights_status": "review_required",
+      "research_use": "review_required",
+      "training_use": "review_required",
+      "redistribution": "review_required",
+      "attribution": "required",
+      "evidence": [
+        "https://tib.eu/data/duraark/BuildingData/"
+      ],
+      "notes": [
+        "Package URLs and package SHA256 values are recorded in acquisition-duraark-bimdata-overlap.jsonl for acquired families.",
+        "BIMData index metadata never overrides package-level observations."
+      ]
+    },
+    {
+      "source_id": "ifc-bench-v2",
+      "name": "IFC-Bench V2",
+      "canonical_source": "sylvainHellin/ifc-bench",
+      "classification": "public_benchmark_reference",
+      "discovered_via": ["local IFC-Bench checkout"],
+      "license": "benchmark-CC-BY-4.0-model-specific",
+      "model_rights_status": "per-project-license",
+      "research_use": "allowed_with_source_review",
+      "training_use": "review_required",
+      "redistribution": "model_specific",
+      "attribution": "model_specific",
+      "evidence": [
+        "dataset/external/ifc-bench/LICENSE",
+        "dataset/external/ifc-bench/projects/*/license.txt"
+      ],
+      "notes": [
+        "IFC-Bench LICENSE applies CC BY 4.0 to benchmark questions, documentation, model cards and original benchmark content.",
+        "IFC model files retain their original per-project licenses.",
+        "V2 currently has 29/31 referenced model pairs locally; sixty5/arc and sixty5/plumbing are excluded as explicit very-large-file exceptions."
+      ]
+    }
+  ]
+}
