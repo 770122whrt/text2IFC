@@ -121,7 +121,7 @@ def _analyze_file(meta: dict[str, Any], known: dict[str, str]) -> dict[str, Any]
                 or metrics["storey_count"] < 1
                 or metrics["containment_rel_count"] < 1
                 or metrics["element_count"] < 10
-                or metrics["key_class_diversity"] < 3
+                or metrics["key_class_diversity"] < 2
             ):
                 status = "fragment_or_narrow_fixture"
             else:

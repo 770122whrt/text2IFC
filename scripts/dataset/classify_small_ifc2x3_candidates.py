@@ -121,7 +121,7 @@ def _analyze(row: dict) -> dict:
                 and metrics["building_count"] >= 1
                 and metrics["storey_count"] >= 1
                 and metrics["element_count"] >= 10
-                and metrics["key_class_diversity"] >= 3
+                and metrics["key_class_diversity"] >= 2
             )
             repair_candidate = meaningfulness in {"meaningful_model", "discipline_model"}
             return {

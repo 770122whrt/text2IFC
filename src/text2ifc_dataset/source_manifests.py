@@ -347,6 +347,23 @@ SOURCE_POLICIES: tuple[SourcePolicy, ...] = (
             "Repository software is MIT; model-level training and redistribution rights remain review-required.",
         ),
     ),
+    SourcePolicy(
+        source_id="geometrygym-ifc-examples",
+        name="GeometryGym IFC Examples",
+        paths=("dataset/external/geometrygym-ifc-examples",),
+        classification="public_example",
+        canonical_source="GeometryGym/GeometryGymIFCExamples",
+        license="repository-MIT-model-rights-review-required",
+        research_use="allowed_with_source_review",
+        training_use="review_required",
+        redistribution="review_required",
+        attribution="source_and_license_notice_required",
+        notes=(
+            "Only the complete IFC2X3 structural summary model is retained.",
+            "Single-component MEP and feature examples remain excluded.",
+            "Repository software is MIT; model-level training and redistribution rights remain review-required.",
+        ),
+    ),
 )
 
 

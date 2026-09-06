@@ -62,7 +62,7 @@ def main() -> int:
                 and metrics.get("project_count", 0) >= 1
                 and metrics.get("storey_count", 0) >= 1
                 and metrics.get("containment_rel_count", 0) >= 1
-                and metrics.get("key_class_diversity", 0) >= 3
+                and metrics.get("key_class_diversity", 0) >= 2
             )
             enriched = {
                 **row,

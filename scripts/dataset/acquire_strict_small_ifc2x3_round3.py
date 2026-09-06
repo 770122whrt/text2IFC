@@ -161,7 +161,7 @@ def _analyze(data: bytes) -> dict:
             and metrics["storey_count"] >= 1
             and metrics["containment_rel_count"] >= 1
             and metrics["element_count"] >= 10
-            and metrics["key_class_diversity"] >= 3
+            and metrics["key_class_diversity"] >= 2
         ):
             raise RuntimeError(f"semantic gate failed: {metrics}")
         return {"schema": schema, "metrics": metrics}

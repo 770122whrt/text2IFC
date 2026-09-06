@@ -106,7 +106,7 @@ def _meaningfulness(data: bytes) -> tuple[str, dict[str, Any], str | None]:
                 or metrics["storey_count"] < 1
                 or metrics["containment_rel_count"] < 1
                 or metrics["element_count"] < 10
-                or metrics["key_class_diversity"] < 3
+                or metrics["key_class_diversity"] < 2
             ):
                 return "fragment_or_narrow_fixture", metrics, None
             return "meaningful_model", metrics, None

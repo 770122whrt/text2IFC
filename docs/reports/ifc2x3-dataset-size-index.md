@@ -4,10 +4,10 @@
 
 ## Current certified inventory
 
-- Canonical IFC2X3: **225**
-- `<1 MiB`: **78**
-- `<3 MiB`: **107**
-- `<10 MiB`: **164**
+- Canonical IFC2X3: **227**
+- `<1 MiB`: **80**
+- `<3 MiB`: **109**
+- `<10 MiB`: **166**
 - Technical admission authority: `dataset/manifests/ifc2x3-certified.jsonl`
 - Canonical file authority: `dataset/manifests/ifc-files.jsonl`
 
@@ -15,7 +15,7 @@
 
 ### G0 / Generation reference (<1 MiB)
 
-Count: **78**
+Count: **80**
 
 | Size (MiB) | Source | Relative path |
 | ---: | --- | --- |
@@ -51,6 +51,8 @@ Count: **78**
 | 0.123 | `bim2modelica` | `dataset/external/bim2modelica/TwoZones.ifc` |
 | 0.141 | `buildingsmart-community` | `dataset/external/buildingsmart-community/Schependomlaan/Coordination model and subcontractors models/BIMsight Projectdata1/ProjectData/GEELEN-Breedplaat V3.ifc` |
 | 0.147 | `bimcollab-example` | `dataset/external/bimcollab-example/07_BIMcollab_Example_Structural_Steel_optimized.ifc` |
+| 0.155 | `kaggle-ifc-examples` | `dataset/external/kaggle-ifc-examples/open-ifc-model-repository/20200205Model_PNO.ifc` |
+| 0.160 | `geometrygym-ifc-examples` | `dataset/external/geometrygym-ifc-examples/IFC_Model.ifc` |
 | 0.178 | `duraark-public` | `dataset/external/duraark/NVW_DCR-LOD/NVW_DCR-LOD100_Arch.ifc` |
 | 0.178 | `bimcollab-example` | `dataset/external/bimcollab-example/06_BIMcollab_Example_Limestone_walls_optimized.ifc` |
 | 0.192 | `buildingsmart-community` | `dataset/external/buildingsmart-community/Schependomlaan/Coordination model and subcontractors models/BIMsight Projectdata1/XELLA-3e verdieping.ifc` |
