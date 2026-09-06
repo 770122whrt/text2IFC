@@ -1,6 +1,6 @@
 {
   "schema_version": "text2ifc/proof-root-inventory/0.1",
-  "generated_at": "2026-09-03",
+  "generated_at": "2026-09-06",
   "scope": "Index of retained proof collections; child manifests remain authoritative.",
   "collections": [
     {
@@ -11,11 +11,9 @@
       "human_validation": "ifc-repair-success-cases/VALIDATION.md",
       "current_validation_reference": "IFC-REPAIR-COLLECTION-VALIDATION-20260903.json",
       "used_for": [
-        "lawful_original_damaged_repaired_triplets",
-        "ifccompare",
-        "plan07_pending_human_review_view"
+        "retained_reference_authority"
       ],
-      "fresh_validation_rerun": {
+      "historical_validation_snapshot": {
         "status": "passed",
         "case_count": 24,
         "operation_count": 60,
@@ -24,7 +22,10 @@
         "independently_recomputed_case_count": 19,
         "truth_bearing_triplet_publishable_count": 12,
         "legacy_limitation_count": 5
-      }
+      },
+      "current_manifest_case_count": 16,
+      "snapshot_note": "24-case snapshot predates withdrawal a1c3d679; no fresh machine revalidation in layout task",
+      "human_view": "repair/phase11/reference-cases"
     },
     {
       "collection_id": "repair-milestone-r1-r1-20260902T152701658266Z-curated",
@@ -63,5 +64,37 @@
     "post_hoc_gold_forbidden": true,
     "provider_input_must_exclude_private_truth": true,
     "hash_policy": "Use existing manifest and source bindings; do not add redundant whole-tree hash gates to the root index."
-  }
+  },
+  "human_views": [
+    {
+      "path": "generation/phase6.6/generation-examples",
+      "workflow": "generation",
+      "status": "accepted",
+      "case_count": 6
+    },
+    {
+      "path": "repair/phase11/reference-cases",
+      "workflow": "repair",
+      "status": "accepted",
+      "case_count": 16
+    },
+    {
+      "path": "repair/phase11/live-uat",
+      "workflow": "repair",
+      "status": "historical",
+      "case_count": 1
+    },
+    {
+      "path": "repair/phase12/plan07-v2",
+      "workflow": "repair",
+      "status": "pending_human_review",
+      "case_count": 10
+    },
+    {
+      "path": "repair/phase12.1/r1",
+      "workflow": "repair",
+      "status": "accepted",
+      "case_count": 12
+    }
+  ]
 }

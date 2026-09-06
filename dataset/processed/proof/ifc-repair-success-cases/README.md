@@ -1,4 +1,6 @@
-# IFC Repair 成功案例集
+# IFC Repair 参考机器权威
+
+当前人读入口：[Phase 11 reference-cases](../repair/phase11/reference-cases/REPORT.md)；[Plan 07 v2 待审](../repair/phase12/plan07-v2/REPORT.md)。下文旧布局与原验收描述保留作来源说明，不是新收纳命令。
 
 本目录集中保存已经通过机器验证并成功发布 IFC 的修复案例。它回答的是：
 

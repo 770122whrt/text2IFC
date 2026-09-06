@@ -1,0 +1,15 @@
+请一次性修复以下共 5 扇窗，并作为一个统一 ChangeSet 原子执行：
+1. 在 标高2 的墙“基本墙:240:224905”（GlobalId: 2CsmzAChHF6O6maGXlo6yJ）上，以wall_local_start 为基准，沿墙 Axis 正方向 4701.96 mm 处设置洞口中心；洞口宽 1180 mm、高 500 mm，窗台高 2670.83 mm；复用损伤 IFC 中仍存在的窗型“500x1180”（GlobalId: 2dYMXn0_5AKRbD_1eUIAtb），窗完整填充洞口。
+   属性要求：Pset_WindowCommon.IsExternal=true、Pset_WindowCommon.Reference="500x1180"
+2. 在 标高2 的墙“基本墙:240:226415”（GlobalId: 0jltRti3rFigAmdXYhXxqI）上，以wall_local_start 为基准，沿墙 Axis 正方向 9315.56 mm 处设置洞口中心；洞口宽 870 mm、高 2370 mm，窗台高 610 mm；复用损伤 IFC 中仍存在的窗型“870x2370”（GlobalId: 08xWVL$9z6JRwr3pqJHoru），窗完整填充洞口。
+   属性要求：Pset_WindowCommon.IsExternal=true、Pset_WindowCommon.Reference="870x2370"
+3. 在 标高0 的墙“基本墙:600:239145”（GlobalId: 1boalssSHBYut0JHgwRsGf）上，以wall_local_start 为基准，沿墙 Axis 正方向 4280 mm 处设置洞口中心；洞口宽 4500 mm、高 2950 mm，窗台高 131.397 mm；复用损伤 IFC 中仍存在的窗型“4500x2950”（GlobalId: 3xYoUsotL2OPYJwoKd43pe），窗完整填充洞口。
+   属性要求：Pset_WindowCommon.IsExternal=true、Pset_WindowCommon.Reference="4500x2950"
+4. 在 标高2 的墙“基本墙:240:227677”（GlobalId: 0jltRti3rFigAmdXYhXx0W）上，以wall_local_start 为基准，沿墙 Axis 正方向 3283.66 mm 处设置洞口中心；洞口宽 600 mm、高 1600 mm，窗台高 532.987 mm；复用损伤 IFC 中仍存在的窗型“1600x600”（GlobalId: 0ZHc4SjhnChed_CMGdKBu8），窗完整填充洞口。
+   属性要求：Pset_WindowCommon.IsExternal=true、Pset_WindowCommon.Reference="1600x600"
+5. 在 标高2 的墙“基本墙:240:227677”（GlobalId: 0jltRti3rFigAmdXYhXx0W）上，以wall_local_start 为基准，沿墙 Axis 正方向 1078.66 mm 处设置洞口中心；洞口宽 600 mm、高 1600 mm，窗台高 533.5 mm；复用损伤 IFC 中仍存在的窗型“1600x600”（GlobalId: 0ZHc4SjhnChed_CMGdKBu8），窗完整填充洞口。
+   属性要求：Pset_WindowCommon.IsExternal=true、Pset_WindowCommon.Reference="1600x600"
+约束：
+- 保持五面宿主墙的身份、放置、材质、类型和既有属性不变
+- 保持楼层、空间布局和所有非目标构件不变
+- 任何一项不能安全完成时整批失败，不发布部分成功 IFC

@@ -12,6 +12,7 @@ import json
 import os
 import re
 import shutil
+import sys
 import tempfile
 from dataclasses import dataclass
 from pathlib import Path
@@ -21,12 +22,14 @@ import ifcopenshell
 
 
 ROOT = Path(__file__).resolve().parents[2]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 DEFAULT_SOURCE_ROOT = (
     ROOT
     / "dataset/processed/proof/ifc-repair-success-cases-v2-plan07-staging"
 )
 DEFAULT_COLLECTION_ROOT = (
-    ROOT / "dataset/processed/proof/ifc-repair-success-cases"
+    ROOT / "dataset/processed/proof/repair/phase12/plan07-v2"
 )
 LIVE_BUNDLE = "plan07-live-v2-uat-20260903T095045509630Z"
 
@@ -579,6 +582,12 @@ def _collection_report() -> str:
 
 
 def install(source_root: Path, collection_root: Path) -> dict[str, Any]:
+    if collection_root.resolve() == DEFAULT_COLLECTION_ROOT.resolve():
+        if collection_root.exists():
+            raise FileExistsError("human view exists; use --validate-only or --refresh-navigation")
+        from scripts.proof.build_human_views import build_plan07
+        build_plan07(source_root, collection_root)
+        return validate_plan07_layout(collection_root, source_root)
     source_root = source_root.resolve()
     collection_root = collection_root.resolve()
     if not source_root.is_dir() or not collection_root.is_dir():
@@ -646,6 +655,46 @@ def validate_plan07_layout(
     collection_root: Path,
     source_root: Path = DEFAULT_SOURCE_ROOT,
 ) -> dict[str, Any]:
+    modern_path = collection_root / "manifest.json"
+    if modern_path.is_file() and _read_json(modern_path).get("schema_version") == "text2ifc/workflow-human-proof/0.1":
+        from scripts.proof.validate_human_views import validate_collection
+        modern = _read_json(modern_path)
+        result = validate_collection(collection_root, ROOT)
+        errors = result["errors"]
+        specs = {Path(spec.destination).name: spec for spec in ALL_CASES}
+        cases = modern.get("cases", [])
+        if {c.get("case_id") for c in cases} != set(specs) or len(cases) != 10:
+            errors.append("frozen Plan 07 case set mismatch")
+        if modern.get("status") != "pending_human_review" or modern.get("r1_included") is not False:
+            errors.append("Plan 07 must remain pending review and exclude R1")
+        accepted = _read_json(ROOT / "dataset/processed/proof/ifc-repair-success-cases/manifest.json")
+        overlap = {c["case_id"] for c in cases} & {c["case_id"] for c in accepted["cases"]}
+        if overlap:
+            errors.append("review cases overlap accepted authority")
+        for case in cases:
+            spec = specs.get(case.get("case_id"))
+            if spec is None:
+                continue
+            expected = _authority_case_root(source_root, spec).resolve()
+            if (ROOT / case["authority"]).resolve() != expected:
+                errors.append("Plan 07 source authority mismatch")
+            if case["provider_calls"] != spec.provider_calls or case["evidence_mode"] != spec.evidence_mode:
+                errors.append("frozen Provider evidence metadata mismatch")
+            case_root = collection_root / case["path"]
+            if case["outcome"] == "no_output":
+                decision = _read_json(case_root / "validation/evidence-decision.json")
+                if (decision.get("mutation_attempted") is not False or decision.get("source_unchanged") is not True
+                        or decision.get("stage2_attempts") != 0 or decision.get("published_outputs") != []):
+                    errors.append("guard fail-closed evidence mismatch")
+            elif case["evidence_mode"] == "live":
+                role = _read_json(case_root / "private-evaluation/original-role.json")
+                if role.get("original_is_case_specific_property_gold") is not False or role.get("private_evidence_available_during_repair") is not False:
+                    errors.append("live original role boundary mismatch")
+        return {"status": "failed" if errors else "passed", "errors": errors, "case_count": len(cases),
+                "repaired_case_count": sum(c["outcome"] == "repaired" for c in cases),
+                "no_repair_case_count": sum(c["outcome"] == "no_output" for c in cases),
+                "live_provider_calls": sum(c["provider_calls"] for c in cases if c["evidence_mode"] == "live"),
+                "reopened_ifc_count": result["reopened_ifc_count"], "accepted_overlap_count": len(overlap)}
     collection_root = collection_root.resolve()
     source_root = source_root.resolve()
     errors: list[str] = []
@@ -830,7 +879,11 @@ def main(argv: Iterable[str] | None = None) -> int:
     action.add_argument("--refresh-navigation", action="store_true")
     args = parser.parse_args(argv)
     if args.refresh_navigation:
-        refresh_plan07_navigation(args.source_root, args.collection_root)
+        if args.collection_root.resolve() == DEFAULT_COLLECTION_ROOT.resolve():
+            from scripts.proof.build_human_views import build_plan07
+            build_plan07(args.source_root, args.collection_root)
+        else:
+            refresh_plan07_navigation(args.source_root, args.collection_root)
         result = validate_plan07_layout(
             args.collection_root, args.source_root
         )

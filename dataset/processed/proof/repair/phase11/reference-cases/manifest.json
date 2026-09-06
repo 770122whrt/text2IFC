@@ -1,0 +1,305 @@
+{
+  "schema_version": "text2ifc/workflow-human-proof/0.1",
+  "collection_id": "reference-cases",
+  "workflow": "repair",
+  "status": "accepted",
+  "authority": "dataset/processed/proof/ifc-repair-success-cases",
+  "cases": [
+    {
+      "case_id": "largebuilding-full-replication",
+      "path": "window/single/largebuilding-full-replication",
+      "status": "accepted",
+      "outcome": "repaired",
+      "evidence_mode": "deepseek-openai-compatible",
+      "provider_calls": "未知；见原 Provider evidence",
+      "run_id": "未知；见原 authority 的 source-run / Provider 记录",
+      "authority": "dataset/processed/proof/ifc-repair-success-cases/window/single/largebuilding-full-replication",
+      "original_role": "private_ground_truth",
+      "ifccompare": "沿用原案例评估；本案属于 5 个 legacy_unverifiable 历史 Window 案，不得当作新的完整 Proof",
+      "artifacts": {
+        "01-original.ifc": "dataset/processed/proof/ifc-repair-success-cases/window/single/largebuilding-full-replication/01-original.ifc",
+        "02-damaged.ifc": "dataset/processed/proof/ifc-repair-success-cases/window/single/largebuilding-full-replication/02-damaged.ifc",
+        "03-repaired.ifc": "dataset/processed/proof/ifc-repair-success-cases/window/single/largebuilding-full-replication/03-repaired.ifc",
+        "request.txt": {
+          "path": "dataset/processed/proof/ifc-repair-success-cases/window/single/largebuilding-full-replication/input/request.json",
+          "field": "text"
+        }
+      }
+    },
+    {
+      "case_id": "largebuilding-r22-repeat",
+      "path": "window/single/largebuilding-r22-repeat",
+      "status": "accepted",
+      "outcome": "repaired",
+      "evidence_mode": "live",
+      "provider_calls": "未知；见原 Provider evidence",
+      "run_id": "未知；见原 authority 的 source-run / Provider 记录",
+      "authority": "dataset/processed/proof/ifc-repair-success-cases/window/single/largebuilding-r22-repeat",
+      "original_role": "private_ground_truth",
+      "ifccompare": "沿用原案例评估；本案属于 5 个 legacy_unverifiable 历史 Window 案，不得当作新的完整 Proof",
+      "artifacts": {
+        "01-original.ifc": "dataset/processed/proof/ifc-repair-success-cases/window/single/largebuilding-r22-repeat/01-original.ifc",
+        "02-damaged.ifc": "dataset/processed/proof/ifc-repair-success-cases/window/single/largebuilding-r22-repeat/02-damaged.ifc",
+        "03-repaired.ifc": "dataset/processed/proof/ifc-repair-success-cases/window/single/largebuilding-r22-repeat/03-repaired.ifc",
+        "request.txt": {
+          "path": "dataset/processed/proof/ifc-repair-success-cases/window/single/largebuilding-r22-repeat/input/request.json",
+          "field": "text"
+        }
+      }
+    },
+    {
+      "case_id": "vvo-five-window",
+      "path": "window/batch/vvo-five-window",
+      "status": "accepted",
+      "outcome": "repaired",
+      "evidence_mode": "deepseek-openai-compatible",
+      "provider_calls": "未知；见原 Provider evidence",
+      "run_id": "未知；见原 authority 的 source-run / Provider 记录",
+      "authority": "dataset/processed/proof/ifc-repair-success-cases/window/batch/vvo-five-window",
+      "original_role": "private_ground_truth",
+      "ifccompare": "沿用原案例评估；本案属于 5 个 legacy_unverifiable 历史 Window 案，不得当作新的完整 Proof",
+      "artifacts": {
+        "01-original.ifc": "dataset/processed/proof/ifc-repair-success-cases/window/batch/vvo-five-window/01-original.ifc",
+        "02-damaged.ifc": "dataset/processed/proof/ifc-repair-success-cases/window/batch/vvo-five-window/02-damaged.ifc",
+        "03-repaired.ifc": "dataset/processed/proof/ifc-repair-success-cases/window/batch/vvo-five-window/03-repaired.ifc",
+        "request.txt": "dataset/processed/proof/ifc-repair-success-cases/window/batch/vvo-five-window/input/request.txt"
+      }
+    },
+    {
+      "case_id": "advancedproject-five-window",
+      "path": "window/batch/advancedproject-five-window",
+      "status": "accepted",
+      "outcome": "repaired",
+      "evidence_mode": "saved_live_output_deterministic_replay",
+      "provider_calls": "未知；见原 Provider evidence",
+      "run_id": "未知；见原 authority 的 source-run / Provider 记录",
+      "authority": "dataset/processed/proof/ifc-repair-success-cases/window/batch/advancedproject-five-window",
+      "original_role": "private_ground_truth",
+      "ifccompare": "沿用原案例评估；本案属于 5 个 legacy_unverifiable 历史 Window 案，不得当作新的完整 Proof",
+      "artifacts": {
+        "01-original.ifc": "dataset/processed/proof/ifc-repair-success-cases/window/batch/advancedproject-five-window/01-original.ifc",
+        "02-damaged.ifc": "dataset/processed/proof/ifc-repair-success-cases/window/batch/advancedproject-five-window/02-damaged.ifc",
+        "03-repaired.ifc": "dataset/processed/proof/ifc-repair-success-cases/window/batch/advancedproject-five-window/03-repaired.ifc",
+        "request.txt": "dataset/processed/proof/ifc-repair-success-cases/window/batch/advancedproject-five-window/input/request.txt"
+      }
+    },
+    {
+      "case_id": "px4-five-window",
+      "path": "window/batch/px4-five-window",
+      "status": "accepted",
+      "outcome": "repaired",
+      "evidence_mode": "offline_deterministic",
+      "provider_calls": 0,
+      "run_id": "N/A（离线确定性）",
+      "authority": "dataset/processed/proof/ifc-repair-success-cases/window/batch/px4-five-window",
+      "original_role": "private_ground_truth",
+      "ifccompare": "沿用原案例评估；本案属于 5 个 legacy_unverifiable 历史 Window 案，不得当作新的完整 Proof",
+      "artifacts": {
+        "01-original.ifc": "dataset/processed/proof/ifc-repair-success-cases/window/batch/px4-five-window/01-original.ifc",
+        "02-damaged.ifc": "dataset/processed/proof/ifc-repair-success-cases/window/batch/px4-five-window/02-damaged.ifc",
+        "03-repaired.ifc": "dataset/processed/proof/ifc-repair-success-cases/window/batch/px4-five-window/03-repaired.ifc",
+        "request.txt": "dataset/processed/proof/ifc-repair-success-cases/window/batch/px4-five-window/input/request.txt"
+      }
+    },
+    {
+      "case_id": "largebuilding-door-preserve-opening",
+      "path": "door/single/largebuilding-door-preserve-opening",
+      "status": "accepted",
+      "outcome": "repaired",
+      "evidence_mode": "offline_bound_deterministic",
+      "provider_calls": 0,
+      "run_id": "N/A（离线确定性）",
+      "authority": "dataset/processed/proof/ifc-repair-success-cases/door/single/largebuilding-door-preserve-opening",
+      "original_role": "private_ground_truth",
+      "ifccompare": "沿用原案例评估；三元组角色按原冻结记录，不在本轮重新计算 IFCCompare",
+      "artifacts": {
+        "01-original.ifc": "dataset/processed/proof/ifc-repair-success-cases/door/single/largebuilding-door-preserve-opening/01-original.ifc",
+        "02-damaged.ifc": "dataset/processed/proof/ifc-repair-success-cases/door/single/largebuilding-door-preserve-opening/02-damaged.ifc",
+        "03-repaired.ifc": "dataset/processed/proof/ifc-repair-success-cases/door/single/largebuilding-door-preserve-opening/03-repaired.ifc",
+        "request.txt": "dataset/processed/proof/ifc-repair-success-cases/door/single/largebuilding-door-preserve-opening/input/request.txt"
+      }
+    },
+    {
+      "case_id": "vvo-door-preserve-opening",
+      "path": "door/single/vvo-door-preserve-opening",
+      "status": "accepted",
+      "outcome": "repaired",
+      "evidence_mode": "offline_bound_deterministic",
+      "provider_calls": 0,
+      "run_id": "N/A（离线确定性）",
+      "authority": "dataset/processed/proof/ifc-repair-success-cases/door/single/vvo-door-preserve-opening",
+      "original_role": "private_ground_truth",
+      "ifccompare": "沿用原案例评估；三元组角色按原冻结记录，不在本轮重新计算 IFCCompare",
+      "artifacts": {
+        "01-original.ifc": "dataset/processed/proof/ifc-repair-success-cases/door/single/vvo-door-preserve-opening/01-original.ifc",
+        "02-damaged.ifc": "dataset/processed/proof/ifc-repair-success-cases/door/single/vvo-door-preserve-opening/02-damaged.ifc",
+        "03-repaired.ifc": "dataset/processed/proof/ifc-repair-success-cases/door/single/vvo-door-preserve-opening/03-repaired.ifc",
+        "request.txt": "dataset/processed/proof/ifc-repair-success-cases/door/single/vvo-door-preserve-opening/input/request.txt"
+      }
+    },
+    {
+      "case_id": "advancedproject-door-preserve-opening",
+      "path": "door/single/advancedproject-door-preserve-opening",
+      "status": "accepted",
+      "outcome": "repaired",
+      "evidence_mode": "offline_bound_deterministic",
+      "provider_calls": 0,
+      "run_id": "N/A（离线确定性）",
+      "authority": "dataset/processed/proof/ifc-repair-success-cases/door/single/advancedproject-door-preserve-opening",
+      "original_role": "private_ground_truth",
+      "ifccompare": "沿用原案例评估；三元组角色按原冻结记录，不在本轮重新计算 IFCCompare",
+      "artifacts": {
+        "01-original.ifc": "dataset/processed/proof/ifc-repair-success-cases/door/single/advancedproject-door-preserve-opening/01-original.ifc",
+        "02-damaged.ifc": "dataset/processed/proof/ifc-repair-success-cases/door/single/advancedproject-door-preserve-opening/02-damaged.ifc",
+        "03-repaired.ifc": "dataset/processed/proof/ifc-repair-success-cases/door/single/advancedproject-door-preserve-opening/03-repaired.ifc",
+        "request.txt": "dataset/processed/proof/ifc-repair-success-cases/door/single/advancedproject-door-preserve-opening/input/request.txt"
+      }
+    },
+    {
+      "case_id": "largebuilding-generated-door-type",
+      "path": "door/single/largebuilding-generated-door-type",
+      "status": "accepted",
+      "outcome": "repaired",
+      "evidence_mode": "offline_bound_deterministic",
+      "provider_calls": 0,
+      "run_id": "N/A（离线确定性）",
+      "authority": "dataset/processed/proof/ifc-repair-success-cases/door/single/largebuilding-generated-door-type",
+      "original_role": "private_ground_truth",
+      "ifccompare": "沿用原案例评估；三元组角色按原冻结记录，不在本轮重新计算 IFCCompare",
+      "artifacts": {
+        "01-original.ifc": "dataset/processed/proof/ifc-repair-success-cases/door/single/largebuilding-generated-door-type/01-original.ifc",
+        "02-damaged.ifc": "dataset/processed/proof/ifc-repair-success-cases/door/single/largebuilding-generated-door-type/02-damaged.ifc",
+        "03-repaired.ifc": "dataset/processed/proof/ifc-repair-success-cases/door/single/largebuilding-generated-door-type/03-repaired.ifc",
+        "request.txt": "dataset/processed/proof/ifc-repair-success-cases/door/single/largebuilding-generated-door-type/input/request.txt"
+      }
+    },
+    {
+      "case_id": "vvo-five-door-preserve-opening",
+      "path": "door/batch/vvo-five-door-preserve-opening",
+      "status": "accepted",
+      "outcome": "repaired",
+      "evidence_mode": "offline_bound_deterministic",
+      "provider_calls": 0,
+      "run_id": "N/A（离线确定性）",
+      "authority": "dataset/processed/proof/ifc-repair-success-cases/door/batch/vvo-five-door-preserve-opening",
+      "original_role": "private_ground_truth",
+      "ifccompare": "沿用原案例评估；三元组角色按原冻结记录，不在本轮重新计算 IFCCompare",
+      "artifacts": {
+        "01-original.ifc": "dataset/processed/proof/ifc-repair-success-cases/door/batch/vvo-five-door-preserve-opening/01-original.ifc",
+        "02-damaged.ifc": "dataset/processed/proof/ifc-repair-success-cases/door/batch/vvo-five-door-preserve-opening/02-damaged.ifc",
+        "03-repaired.ifc": "dataset/processed/proof/ifc-repair-success-cases/door/batch/vvo-five-door-preserve-opening/03-repaired.ifc",
+        "request.txt": "dataset/processed/proof/ifc-repair-success-cases/door/batch/vvo-five-door-preserve-opening/input/request.txt"
+      }
+    },
+    {
+      "case_id": "vvo-two-door-two-window-mixed",
+      "path": "mixed/door-window/vvo-two-door-two-window-mixed",
+      "status": "accepted",
+      "outcome": "repaired",
+      "evidence_mode": "offline_bound_deterministic",
+      "provider_calls": 0,
+      "run_id": "N/A（离线确定性）",
+      "authority": "dataset/processed/proof/ifc-repair-success-cases/mixed/door-window/vvo-two-door-two-window-mixed",
+      "original_role": "private_ground_truth",
+      "ifccompare": "沿用原案例评估；三元组角色按原冻结记录，不在本轮重新计算 IFCCompare",
+      "artifacts": {
+        "01-original.ifc": "dataset/processed/proof/ifc-repair-success-cases/mixed/door-window/vvo-two-door-two-window-mixed/01-original.ifc",
+        "02-damaged.ifc": "dataset/processed/proof/ifc-repair-success-cases/mixed/door-window/vvo-two-door-two-window-mixed/02-damaged.ifc",
+        "03-repaired.ifc": "dataset/processed/proof/ifc-repair-success-cases/mixed/door-window/vvo-two-door-two-window-mixed/03-repaired.ifc",
+        "request.txt": "dataset/processed/proof/ifc-repair-success-cases/mixed/door-window/vvo-two-door-two-window-mixed/input/request.txt"
+      }
+    },
+    {
+      "case_id": "vvo-authority-triplet-public-repair",
+      "path": "mixed/door-window/vvo-authority-triplet-public-repair",
+      "status": "accepted",
+      "outcome": "repaired",
+      "evidence_mode": "offline_bound_deterministic",
+      "provider_calls": 0,
+      "run_id": "N/A（离线确定性）",
+      "authority": "dataset/processed/proof/ifc-repair-success-cases/mixed/door-window/vvo-authority-triplet-public-repair",
+      "original_role": "private_ground_truth",
+      "ifccompare": "沿用原案例评估；三元组角色按原冻结记录，不在本轮重新计算 IFCCompare",
+      "artifacts": {
+        "01-original.ifc": "dataset/processed/proof/ifc-repair-success-cases/mixed/door-window/vvo-authority-triplet-public-repair/01-original.ifc",
+        "02-damaged.ifc": "dataset/processed/proof/ifc-repair-success-cases/mixed/door-window/vvo-authority-triplet-public-repair/02-damaged.ifc",
+        "03-repaired.ifc": "dataset/processed/proof/ifc-repair-success-cases/mixed/door-window/vvo-authority-triplet-public-repair/03-repaired.ifc",
+        "request.txt": "dataset/processed/proof/ifc-repair-success-cases/mixed/door-window/vvo-authority-triplet-public-repair/input/request.txt"
+      }
+    },
+    {
+      "case_id": "vvo-five-door-authority-public-repair",
+      "path": "door/batch/vvo-five-door-authority-public-repair",
+      "status": "accepted",
+      "outcome": "repaired",
+      "evidence_mode": "offline_bound_deterministic",
+      "provider_calls": 0,
+      "run_id": "N/A（离线确定性）",
+      "authority": "dataset/processed/proof/ifc-repair-success-cases/door/batch/vvo-five-door-authority-public-repair",
+      "original_role": "private_ground_truth",
+      "ifccompare": "沿用原案例评估；三元组角色按原冻结记录，不在本轮重新计算 IFCCompare",
+      "artifacts": {
+        "01-original.ifc": "dataset/processed/proof/ifc-repair-success-cases/door/batch/vvo-five-door-authority-public-repair/01-original.ifc",
+        "02-damaged.ifc": "dataset/processed/proof/ifc-repair-success-cases/door/batch/vvo-five-door-authority-public-repair/02-damaged.ifc",
+        "03-repaired.ifc": "dataset/processed/proof/ifc-repair-success-cases/door/batch/vvo-five-door-authority-public-repair/03-repaired.ifc",
+        "request.txt": "dataset/processed/proof/ifc-repair-success-cases/door/batch/vvo-five-door-authority-public-repair/input/request.txt"
+      }
+    },
+    {
+      "case_id": "dental-clinic-two-door-two-window-geometry-targeted",
+      "path": "mixed/door-window/dental-clinic-two-door-two-window-geometry-targeted",
+      "status": "accepted",
+      "outcome": "repaired",
+      "evidence_mode": "offline_bound_deterministic",
+      "provider_calls": 0,
+      "run_id": "N/A（离线确定性）",
+      "authority": "dataset/processed/proof/ifc-repair-success-cases/mixed/door-window/dental-clinic-two-door-two-window-geometry-targeted",
+      "original_role": "private_ground_truth",
+      "ifccompare": "沿用原案例评估；三元组角色按原冻结记录，不在本轮重新计算 IFCCompare",
+      "artifacts": {
+        "01-original.ifc": "dataset/processed/proof/ifc-repair-success-cases/mixed/door-window/dental-clinic-two-door-two-window-geometry-targeted/01-original.ifc",
+        "02-damaged.ifc": "dataset/processed/proof/ifc-repair-success-cases/mixed/door-window/dental-clinic-two-door-two-window-geometry-targeted/02-damaged.ifc",
+        "03-repaired.ifc": "dataset/processed/proof/ifc-repair-success-cases/mixed/door-window/dental-clinic-two-door-two-window-geometry-targeted/03-repaired.ifc",
+        "request.txt": "dataset/processed/proof/ifc-repair-success-cases/mixed/door-window/dental-clinic-two-door-two-window-geometry-targeted/input/request.txt"
+      }
+    },
+    {
+      "case_id": "largebuilding-live-deepseek-complete-door",
+      "path": "door/surviving-opening/largebuilding-live-deepseek-complete-door",
+      "status": "accepted",
+      "outcome": "repaired",
+      "evidence_mode": "live",
+      "provider_calls": "未知；见原 Provider evidence",
+      "run_id": "未知；见原 authority 的 source-run / Provider 记录",
+      "authority": "dataset/processed/proof/ifc-repair-success-cases/door/surviving-opening/largebuilding-live-deepseek-complete-door",
+      "original_role": "private_ground_truth",
+      "ifccompare": "沿用原案例评估；三元组角色按原冻结记录，不在本轮重新计算 IFCCompare",
+      "artifacts": {
+        "01-original.ifc": "dataset/processed/proof/ifc-repair-success-cases/door/surviving-opening/largebuilding-live-deepseek-complete-door/01-original.ifc",
+        "02-damaged.ifc": "dataset/processed/proof/ifc-repair-success-cases/door/surviving-opening/largebuilding-live-deepseek-complete-door/02-damaged.ifc",
+        "03-repaired.ifc": "dataset/processed/proof/ifc-repair-success-cases/door/surviving-opening/largebuilding-live-deepseek-complete-door/03-repaired.ifc",
+        "request.txt": "dataset/processed/proof/ifc-repair-success-cases/door/surviving-opening/largebuilding-live-deepseek-complete-door/input/request.txt"
+      }
+    },
+    {
+      "case_id": "largebuilding-live-deepseek-clarified-door",
+      "path": "door/surviving-opening/largebuilding-live-deepseek-clarified-door",
+      "status": "accepted",
+      "outcome": "repaired",
+      "evidence_mode": "live",
+      "provider_calls": "未知；见原 Provider evidence",
+      "run_id": "未知；见原 authority 的 source-run / Provider 记录",
+      "authority": "dataset/processed/proof/ifc-repair-success-cases/door/surviving-opening/largebuilding-live-deepseek-clarified-door",
+      "original_role": "private_ground_truth",
+      "ifccompare": "沿用原案例评估；三元组角色按原冻结记录，不在本轮重新计算 IFCCompare",
+      "artifacts": {
+        "01-original.ifc": "dataset/processed/proof/ifc-repair-success-cases/door/surviving-opening/largebuilding-live-deepseek-clarified-door/01-original.ifc",
+        "02-damaged.ifc": "dataset/processed/proof/ifc-repair-success-cases/door/surviving-opening/largebuilding-live-deepseek-clarified-door/02-damaged.ifc",
+        "03-repaired.ifc": "dataset/processed/proof/ifc-repair-success-cases/door/surviving-opening/largebuilding-live-deepseek-clarified-door/03-repaired.ifc",
+        "request.txt": "dataset/processed/proof/ifc-repair-success-cases/door/surviving-opening/largebuilding-live-deepseek-clarified-door/input/request.txt"
+      }
+    }
+  ],
+  "references": [],
+  "scope": "human discovery only; source acceptance and evidence contracts remain authoritative"
+}

@@ -1,0 +1,33 @@
+{
+  "schema_version": "text2ifc/workflow-human-proof/0.1",
+  "collection_id": "live-uat",
+  "workflow": "repair",
+  "status": "historical",
+  "authority": "dataset/processed/proof/phase11-live-uat/uat-20260731T224900289758Z",
+  "cases": [
+    {
+      "case_id": "unsupported-complex-door",
+      "path": "unsupported-complex-door",
+      "status": "historical",
+      "outcome": "no_output",
+      "evidence_mode": "live",
+      "provider_calls": "1/0 (Stage 1/2)",
+      "run_id": "repair-091d667e6d334857aa364e8038ffd8e9",
+      "authority": "dataset/processed/proof/phase11-live-uat/uat-20260731T224900289758Z/unsupported",
+      "original_role": null,
+      "ifccompare": "N/A：unsupported 无输出",
+      "artifacts": {
+        "request.txt": {
+          "path": "dataset/processed/ifc-repair/phase11-live-uat/uat-20260731T224900289758Z/unsupported-complex-door/runtime/runs/repair-091d667e6d334857aa364e8038ffd8e9/api-context.json",
+          "field": "repair_text"
+        },
+        "02-damaged.ifc": "dataset/processed/ifc-repair/phase11-live-uat/uat-20260731T224900289758Z/unsupported-complex-door/fixture/damaged.ifc"
+      }
+    }
+  ],
+  "references": [
+    "- [largebuilding-live-deepseek-complete-door](<../reference-cases/door/surviving-opening/largebuilding-live-deepseek-complete-door/REPORT.md>)",
+    "- [largebuilding-live-deepseek-clarified-door](<../reference-cases/door/surviving-opening/largebuilding-live-deepseek-clarified-door/REPORT.md>)"
+  ],
+  "scope": "human discovery only; source acceptance and evidence contracts remain authoritative"
+}

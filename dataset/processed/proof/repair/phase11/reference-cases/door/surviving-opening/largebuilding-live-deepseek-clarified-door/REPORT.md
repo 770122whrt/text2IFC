@@ -1,0 +1,48 @@
+# largebuilding-live-deepseek-clarified-door
+
+状态：**accepted**；证据方式：`live`。此次只整理展示，不改变原验收或 Phase 状态。
+
+## 请求与输入
+
+完整公共原文：[request.txt](request.txt)。下面是阅读摘要，文件原文未改写。
+
+> 在已有洞口 2cXV28XOjE6f6irhW0COhu 中安装一扇门。保留 damaged IFC 中可确定的洞口、墙和楼层关系；门的开启方式和 DoorStyle 尚未说明。
+> 补充说明：明确复用现有 DoorStyle “M_Single-Flush:Inside Door”（GlobalId 2cXV28XOjE6f6irhu0COgZ）。
+
+## 实际工作
+
+请求涉及 1 个 operation：['fill_existing_opening_with_door']。实际损伤、对象和确定性执行见原案例报告；不从 repaired 反推 Gold。
+
+- **Provider 语义选择：** 原验收记录通过；本轮未重新评估模型语义或能力。
+- **确定性执行：** 请求涉及 1 个 operation：['fill_existing_opening_with_door']。实际损伤、对象和确定性执行见原案例报告；不从 repaired 反推 Gold。
+- **输入／私有评估边界：** original 为已冻结 evaluator-only 真值，仅供修复后评估。 若原评估包含私有删除身份或 mutation mapping，它们仅供修复后评估，不属于 Provider 输入。
+
+## 直接文件
+
+- [01-original.ifc](<01-original.ifc>)
+- [02-damaged.ifc](<02-damaged.ifc>)
+- [03-repaired.ifc](<03-repaired.ifc>)
+- [request.txt](<request.txt>)
+
+
+## 结果与限制
+
+| 维度 | 结论与来源 |
+|---|---|
+| 语义结果 | 原验收记录通过；本轮未重新评估模型语义或能力。 |
+| 确定性执行 | 沿用原操作／编译结果；具体执行与 gates 见下方原记录摘录 |
+| 产物 | repaired；本轮只验证可发现性、来源一致性与 reopen |
+| 证据合同 | [原权威报告](<../../../../../../ifc-repair-success-cases/door/surviving-opening/largebuilding-live-deepseek-clarified-door/REPORT.md>)；原权威保持原位 |
+| IFCCompare | 沿用原案例评估；三元组角色按原冻结记录，不在本轮重新计算 IFCCompare |
+| genuine run ID | 未知；见原 authority 的 source-run / Provider 记录 |
+| Provider 调用次数 | 未知；见原 Provider evidence |
+| 人工审查 | accepted；本轮不提升状态 |
+
+### 原记录中的适用检查
+
+- synthetic fallback: false。
+- production application/preservation/L1/L2 与独立 L0/L1/L2 全部通过。
+
+未在原记录中单列的 atomicity、preservation 或其他门结果记为未知；正确无输出案的输出 reopen/L0/L1/L2 为 N/A。本轮的文件 reopen 只证明文件可打开，不代替这些语义和执行门。
+
+完整过程：[evidence/README.md](evidence/README.md)。这里可进入 Provider attempts、ChangeSet、终端和评估材料；正文不重复展开 runtime 日志。
