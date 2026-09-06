@@ -13,11 +13,18 @@
 | 浏览系统架构和阶段演进 | [Architecture Index](architecture/README.md) |
 | 规范 Agent Debug、能力提升声明和真实 LLM 前测试 | [Agent 能力评测与真实 LLM 准入协议](validation/agent-capability-evaluation.md) |
 | 接手 Phase 12 Repair Pipeline 与 Plan 07 收尾 | [Phase 12 Plan 07 技术 handover](handoffs/phase12-plan07-closeout-handover-2026-09-03.md) |
-| 人工检查 Plan 07 IFC 与证据矩阵 | [Plan 07 人工 Proof 入口](../dataset/processed/proof/ifc-repair-success-cases/PLAN07-REPORT.md) |
+| 人工检查 Plan 07 IFC 与证据矩阵 | [Plan 07 人工 Proof 入口](../dataset/processed/proof/repair/phase12/plan07-v2/REPORT.md) |
 | 查找验证、评估和 UAT 方案 | [Validation Index](validation/README.md) |
 | 查找 BIM JSON、IFC2X3 和 Provider 参考 | [Reference Index](reference/README.md) |
 | 查看研究总结和周报 | [Reports Index](reports/README.md) |
 | 查看项目计划和当前状态 | [`.planning/`](../.planning/PROJECT.md) |
+
+## 仓库整理入口
+
+- [按工作流与 Phase 阅读 Proof](../dataset/processed/proof/README.md)
+- [目录瘦身与后续重构方案](architecture/repository-organization-refactor.md)
+- [归档的 CLI 终端记录](reports/terminal-session-history.md)
+- [专项技术 handoffs](handoffs/) 与 [网页交叉讨论 context-handoff](context-handoff/CONTEXT-HANDOFF-RULES.md) 按各自职责保留。
 
 ## 当前重点
 
@@ -25,7 +32,7 @@
   - 先确认 Git 与当前状态，再按任务类型选择架构、Phase、验证和证据入口。
 - [Phase 12 Plan 07 技术 handover](handoffs/phase12-plan07-closeout-handover-2026-09-03.md)
   - 面向后续接手者说明项目分层、Repair Pipeline、关键代码、证据入口、已知风险和接续顺序。
-- [Plan 07 人工 Proof 入口](../dataset/processed/proof/ifc-repair-success-cases/PLAN07-REPORT.md)
+- [Plan 07 人工 Proof 入口](../dataset/processed/proof/repair/phase12/plan07-v2/REPORT.md)
   - 直接查看 9 份 repaired IFC、1 个正确无输出 guard，以及各案例的人读报告。
 - [IFC2X3 修复链路与后续路线](architecture/ifc-repair-pipeline-status-and-roadmap.md)
   - 参考成功案例文档排布，完整说明已实现 Repair Pipeline、放行证据、失败路由

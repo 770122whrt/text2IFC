@@ -1,5 +1,18 @@
 # Dataset Manifests
 
+## 当前权威与兼容层
+
+- `ifc-sources.json`：来源级记录；`ifc-files.jsonl`：canonical 文件记录。
+- `ifc-source-summary.json`：派生统计；`ifc-validation.jsonl`、`ifc2x3-certified.jsonl`：对应验证与严格样本选择。
+- `ifc-repair-benchmarks.jsonl` 与 `ifc-repair-cases/`：benchmark 子集及 public/private case 合同，不是全量 source inventory。
+- `bimnet-ifc2x3.jsonl` 仍由 source generator 输出兼容投影；`raw-files.jsonl`、`external-corpora.json` 仍有旧消费者。当前不删除这三项。
+- 当前 BIMNet 物理位置是 `dataset/external/bimnet/`；下文 train/test 表述是来源历史。
+- `acquisitions/` 和 acquisition 文件保存逐来源获取记录。
+
+生成入口：`scripts/dataset/build_ifc_source_manifests.py`；审查入口：`scripts/dataset/audit_ifc_source_dataset.py`。本次导航整理未重新运行全量数据探测。
+
+## 历史格式及仍被使用的专项合同
+
 ## `raw-files.jsonl`
 
 One JSON object per externally acquired raw file.

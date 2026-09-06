@@ -1,39 +1,19 @@
-# Processed Dataset 与 Proof 分层
+# Processed dataset 与 Proof
 
-本目录同时包含可重建的中间产物、原始运行记录和正式 Proof。三者用途不同，不能仅按文件名相似就合并。
-
-## 目录职责
-
-| 目录 | 职责 | Git / 清理原则 |
+| 目录 | 当前用途 | 处理原则 |
 |---|---|---|
-| ifc-repair-runs/ | repair 的原始 run、Provider attempts、clarification、索引、staging 与终端材料 | 不整体忽略，保证新的 genuine 成功/失败 attempt 会出现在 Git 状态中；离线 pytest、preflight 和 admission 缓存可在不含跟踪文件时删除 |
-| proof/ | 已冻结或待人工检查的证据视图与机器权威包 | 已提交 authority 按 append-only 处理；重复副本可在逐文件确认相同后删除 |
-| proof/ifc-repair-success-cases/ | 人读优先的成功案例集合；案例根目录直接放 IFC、请求与报告 | 主 manifest 只列 accepted case；待检查批次使用独立 review manifest |
-| 其他 processed 子目录 | extraction、projection、benchmark 或阶段性派生产物 | 按各自 manifest 与上游脚本判断，不因“processed”名称统一删除 |
+| [proof/](proof/README.md) | generation / repair 人读视图与原位机器权威 | 从 workflow → Phase → collection 阅读；状态写在索引中 |
+| ifc-repair-runs/ | 原始 repair runs、genuine 成功和失败 attempts | 不整体忽略或删除 |
+| ifc-repair/ | 早期 repair 运行和来源材料 | 即使被 Git ignore，也不是自动可删除缓存 |
+| agent-demo/ | generation 运行、session 和验收来源 | 保留 provenance 引用的材料及真实 attempts |
+| bim-json-1.0/、bim-json-2.0/、full_dump/、roundtrip_ifc/、roundtrip_json/ | 提取、版本合同及回转派生产物 | 按实际消费者判断，不按版本名删除 |
+| descriptions/、text2json/、phase4/、phase6/ | 历史数据构建和训练／评估产物 | 保留 split、来源和实验边界 |
+| review/ | 数据审查产物 | 不自动提升为正式训练数据 |
+| ifc-presentation-validation/ | 其他任务的展示验证工作 | 本次不吸收或清理 |
+| jsonfix/、ifc_parsed_data.json、ifc_parsed_enhanced.json | 既有修复／解析材料 | 未确认废弃前保留 |
 
-## IFC Repair 的两层证据
+重点入口：[Plan 07 待审矩阵](proof/repair/phase12/plan07-v2/REPORT.md)、[R1](proof/repair/phase12.1/r1/REPORT.md)、[generation](proof/generation/README.md)。
 
-人类检查从 [Plan 07 报告](proof/ifc-repair-success-cases/PLAN07-REPORT.md) 或各 Proof 集合的 REPORT.md 开始。完整 Provider/runtime/Proof 细节保留在机器权威包中，并由案例 FILES.json 和 evidence/README.md 指回。
+pytest 临时目录只有确认不再使用、未跟踪且可重建后才能清理。依赖缓存、下载数据与 genuine attempts 不按 tmp / failed / staging 名称判定垃圾。
 
-成功 repair 案例的最低可见文件是 request、damaged IFC、repaired IFC 和 REPORT.md。只有角色在运行前合法冻结时才将 original IFC 解释为 private Ground Truth；否则 original 只能是明确标注的物理对照，IFCCompare 记为 N/A。
-
-Guard 或 unsupported 案例的正确结果可能是没有 repaired IFC。此时必须有 NO-REPAIR.md，并证明没有 mutation 和 publish。
-
-## 清理边界
-
-可以直接清理：
-
-- pytest 临时目录和 Python cache；
-- 已结束的离线 admission/preflight 工作目录；
-- 与已提交 curated 包逐路径、逐大小确认一致的未跟踪重复副本。
-
-不得直接清理：
-
-- genuine Provider 的成功或失败 attempts；
-- accepted 或 committed machine authority；
-- repaired IFC、终端 manifest、独立 evaluation；
-- 尚未判断角色的 source/original/damaged 文件。
-
-失败 genuine run 不进入成功 Proof，但仍是行为与审计记录。若空间压力需要归档，应先生成索引并保持原 run ID、终端状态和 Provider attempts 可追溯。
-
-详细展示规范见 [IFC Repair Proof 人类可读收纳规范](../../docs/validation/ifc-repair-proof-format.md)。
+[Proof 展示规范](../../docs/validation/ifc-repair-proof-format.md)

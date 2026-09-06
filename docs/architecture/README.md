@@ -37,3 +37,5 @@
 
 阶段规格、计划和验证记录的权威位置仍是
 [`../../.planning/phases/`](../../.planning/phases/)。
+
+- [目录瘦身与后续重构方案](repository-organization-refactor.md)：基于当前体积和消费者的分步建议；未实施的行为重构另行审查。

@@ -45,3 +45,9 @@
 - Choose validation from the plausible failure introduced by the change. Report or navigation-only edits do not require a universal curator pass. A new human view requires the focused layout/reopen/role checks; production behavior, live acceptance, accepted installation, schema or evidence-semantic changes still require their applicable stronger gates.
 - Run the full curator when installing or re-curating an accepted run, changing curator/schema/evidence semantics, or when an applicable frozen release contract explicitly requires it. Do not use curator frequency as a substitute for focused diagnosis, independent Proof, or human review.
 - Risk-proportional validation must never weaken safety or evidence contracts. Missing repaired outputs, repaired files in no-output guards, source mutation, unoffered identities, inadmissible properties, unclear original roles, broken authority paths, or failed applicable Proof gates remain blocking failures.
+
+## Proof navigation
+
+- Human Proof entry: `dataset/processed/proof/README.md`; workflow/phase/collection directories are stable across review status changes.
+- Existing machine authorities remain at their frozen locations. Use the human view manifest to reach them; do not relocate or rewrite them during presentation maintenance.
+- New human views use `scripts/proof/validate_human_views.py`; legacy validators keep their original schema contracts.

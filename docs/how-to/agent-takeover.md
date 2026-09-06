@@ -323,8 +323,8 @@ preservation 和 publish gate。涉及真实 LLM 前，完整要求见
 .venv\Scripts\python scripts\ifc_repair\install_plan07_human_proof.py --validate-only
 
 # R1 人读布局
-.venv\Scripts\python scripts\ifc_repair\validate_human_proof_layout.py `
-  --root dataset\processed\proof\repair-milestone-r1 --json
+.venv\Scripts\python scripts\proof\validate_human_views.py `
+  --root dataset\processed\proof\repair\phase12.1\r1
 
 # Git 格式边界
 git diff --check

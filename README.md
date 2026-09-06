@@ -14,6 +14,11 @@ JSON representation between language understanding and IFC generation.
 - [GSD project context](.planning/PROJECT.md)
 - [Roadmap](.planning/ROADMAP.md)
 
+## Proof and repository layout
+
+- [Generation and repair Proof](dataset/processed/proof/README.md)
+- [Repository slimming proposal](docs/architecture/repository-organization-refactor.md)
+
 ## Core Generation Workflow
 
 The project's primary product path is Text -> BIM JSON -> IFC. A DB-backed
@@ -41,7 +46,7 @@ reopens the candidate, and publishes it only after the applicable L0/L1/L2 and
 preservation gates pass.
 
 - [IFC repair architecture and roadmap](docs/architecture/ifc-repair-pipeline-status-and-roadmap.md)
-- [Phase 12 Plan 07 human Proof review](dataset/processed/proof/ifc-repair-success-cases/PLAN07-REPORT.md)
+- [Phase 12 Plan 07 human Proof review](dataset/processed/proof/repair/phase12/plan07-v2/REPORT.md)
 - [Phase 12 Plan 07 closeout handover](docs/handoffs/phase12-plan07-closeout-handover-2026-09-03.md)
 - [IFC repair Proof presentation standard](docs/validation/ifc-repair-proof-format.md)
 
