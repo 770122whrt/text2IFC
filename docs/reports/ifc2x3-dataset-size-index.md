@@ -4,10 +4,10 @@
 
 ## Current certified inventory
 
-- Canonical IFC2X3: **224**
-- `<1 MiB`: **77**
-- `<3 MiB`: **106**
-- `<10 MiB`: **163**
+- Canonical IFC2X3: **225**
+- `<1 MiB`: **78**
+- `<3 MiB`: **107**
+- `<10 MiB`: **164**
 - Technical admission authority: `dataset/manifests/ifc2x3-certified.jsonl`
 - Canonical file authority: `dataset/manifests/ifc-files.jsonl`
 
@@ -15,7 +15,7 @@
 
 ### G0 / Generation reference (<1 MiB)
 
-Count: **77**
+Count: **78**
 
 | Size (MiB) | Source | Relative path |
 | ---: | --- | --- |
@@ -45,6 +45,7 @@ Count: **77**
 | 0.085 | `opensourcebim-testfiles` | `dataset/external/opensourcebim-testfiles/example.ifc` |
 | 0.088 | `buildingsmart-community` | `dataset/external/buildingsmart-community/Schependomlaan/Coordination model and subcontractors models/BIMsight Projectdata1/YTONG-Kavel 03.ifc` |
 | 0.092 | `buildingsmart-community` | `dataset/external/buildingsmart-community/Schependomlaan/Coordination model and subcontractors models/BIMsight Projectdata1/ProjectData/YTONG-Kavel 03.ifc` |
+| 0.099 | `r-rijnbeek-ifc-webviewer` | `dataset/external/r-rijnbeek-ifc-webviewer/IfcOpenHouse.ifc` |
 | 0.112 | `bim2modelica` | `dataset/external/bim2modelica/OneZone.ifc` |
 | 0.117 | `buildingsmart-community` | `dataset/external/buildingsmart-community/Schependomlaan/Coordination model and subcontractors models/BIMsight Projectdata1/ProjectData/GEELEN-Dakvloer.ifc` |
 | 0.123 | `bim2modelica` | `dataset/external/bim2modelica/TwoZones.ifc` |

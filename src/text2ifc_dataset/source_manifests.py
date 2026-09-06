@@ -330,6 +330,23 @@ SOURCE_POLICIES: tuple[SourcePolicy, ...] = (
             "Repository software is CDDL; model-level training and redistribution rights remain review-required.",
         ),
     ),
+    SourcePolicy(
+        source_id="r-rijnbeek-ifc-webviewer",
+        name="R-Rijnbeek IFC WebViewer Examples",
+        paths=("dataset/external/r-rijnbeek-ifc-webviewer",),
+        classification="public_example",
+        canonical_source="R-Rijnbeek/IFC_WebViewer",
+        license="repository-MIT-model-rights-review-required",
+        research_use="allowed_with_source_review",
+        training_use="review_required",
+        redistribution="review_required",
+        attribution="source_and_license_notice_required",
+        notes=(
+            "Only the complete IFC2X3 IfcOpenHouse representative is retained.",
+            "Room/basic slab-wall fixtures are excluded by the semantic gate.",
+            "Repository software is MIT; model-level training and redistribution rights remain review-required.",
+        ),
+    ),
 )
 
 
