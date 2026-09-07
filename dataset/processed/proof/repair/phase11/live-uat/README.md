@@ -4,4 +4,4 @@
 
 先读 [REPORT.md](REPORT.md)，逐行打开请求、IFC 与案例报告。
 
-机器权威：[原集合](<../../../phase11-live-uat/uat-20260731T224900289758Z>)。
+机器证据已集中在各案例 evidence；旧路径对应关系见 [manifest.json](manifest.json)。

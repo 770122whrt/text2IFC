@@ -1,6 +1,6 @@
 # phase12-v2-vvo-column-material-absent-restoration
 
-状态：**pending_human_review**；证据方式：`offline_bound_deterministic`。此次只整理展示，不改变原验收或 Phase 状态。
+状态：**accepted**；证据方式：`offline_bound_deterministic`。2026-09-07 用户人工审查通过；原机器结果及 Phase 状态不变。
 
 ## 请求与输入
 
@@ -31,11 +31,11 @@
 | 语义结果 | N/A（没有真实 Provider 语义评测）；原记录为离线确定性 operation-engine 通过。 |
 | 确定性执行 | 沿用原操作／编译结果；具体执行与 gates 见下方原记录摘录 |
 | 产物 | repaired；本轮只验证可发现性、来源一致性与 reopen |
-| 证据合同 | [原权威报告](<../../../../ifc-repair-success-cases-v2-plan07-staging/structural/single/phase12-v2-vvo-column-material-absent-restoration/REPORT.md>)；原权威保持原位 |
+| 证据合同 | [原权威报告](<evidence/authority/REPORT.md>)；原权威字节已集中；旧路径由集合迁移索引解释 |
 | IFCCompare | 沿用已冻结 private restoration / comparator 记录；本次不重跑 |
 | genuine run ID | N/A（离线确定性） |
 | Provider 调用次数 | 0 |
-| 人工审查 | pending_human_review；本轮不提升状态 |
+| 人工审查 | accepted；用户于 2026-09-07 明确批准 |
 
 ### 原记录中的适用检查
 

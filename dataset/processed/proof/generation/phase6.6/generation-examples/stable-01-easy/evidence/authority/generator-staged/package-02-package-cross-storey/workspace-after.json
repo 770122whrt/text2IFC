@@ -1,0 +1,631 @@
+{
+  "entities": [
+    {
+      "attributes": {
+        "Name": "Building",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            0,
+            0,
+            0
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ],
+          "relative_to": "site-main"
+        }
+      },
+      "id": "building-main",
+      "ifc_class": "IfcBuilding",
+      "property_sets": {},
+      "provenance": {
+        "source": "text2ifc/staged-skeleton"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "South door",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            0,
+            0,
+            0
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ],
+          "relative_to": "opening-door-south"
+        },
+        "OverallHeight": 2100,
+        "OverallWidth": 900,
+        "Representation": {
+          "depth": 2100,
+          "direction": [
+            0,
+            0,
+            1
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 900,
+            "y": 200
+          }
+        }
+      },
+      "id": "door-south",
+      "ifc_class": "IfcDoor",
+      "property_sets": {},
+      "provenance": {
+        "source": "issue-package-storey-1"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "Floor Slab",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            3000,
+            2000,
+            -150
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ],
+          "relative_to": "storey-1"
+        },
+        "Representation": {
+          "depth": 150,
+          "direction": [
+            0,
+            0,
+            1
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 6000,
+            "y": 4000
+          }
+        }
+      },
+      "id": "floor-slab-1",
+      "ifc_class": "IfcSlab",
+      "property_sets": {},
+      "provenance": {
+        "source": "issue-package-cross-storey"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "Door opening",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            0,
+            0,
+            0
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ],
+          "relative_to": "wall-south"
+        },
+        "Representation": {
+          "depth": 2100,
+          "direction": [
+            0,
+            0,
+            1
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 900,
+            "y": 200
+          }
+        }
+      },
+      "id": "opening-door-south",
+      "ifc_class": "IfcOpeningElement",
+      "property_sets": {},
+      "provenance": {
+        "source": "issue-package-storey-1"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "Window opening",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            0,
+            0,
+            900
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ],
+          "relative_to": "wall-north"
+        },
+        "Representation": {
+          "depth": 1200,
+          "direction": [
+            0,
+            0,
+            1
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 1500,
+            "y": 200
+          }
+        }
+      },
+      "id": "opening-window-north",
+      "ifc_class": "IfcOpeningElement",
+      "property_sets": {},
+      "provenance": {
+        "source": "issue-package-storey-1"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "Project"
+      },
+      "id": "project-main",
+      "ifc_class": "IfcProject",
+      "property_sets": {},
+      "provenance": {
+        "source": "text2ifc/staged-skeleton"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "Site",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            0,
+            0,
+            0
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ],
+          "relative_to": "project-main"
+        }
+      },
+      "id": "site-main",
+      "ifc_class": "IfcSite",
+      "property_sets": {},
+      "provenance": {
+        "source": "text2ifc/staged-skeleton"
+      }
+    },
+    {
+      "attributes": {
+        "InteriorOrExteriorSpace": "INTERNAL",
+        "Name": "Room",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            3000,
+            2000,
+            0
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ],
+          "relative_to": "storey-1"
+        },
+        "Representation": {
+          "depth": 3000,
+          "direction": [
+            0,
+            0,
+            1
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 6000,
+            "y": 4000
+          }
+        }
+      },
+      "id": "space-room",
+      "ifc_class": "IfcSpace",
+      "property_sets": {},
+      "provenance": {
+        "source": "issue-package-storey-1"
+      }
+    },
+    {
+      "attributes": {
+        "Elevation": 0,
+        "Name": "Storey 1",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            0,
+            0,
+            0
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ],
+          "relative_to": "building-main"
+        }
+      },
+      "id": "storey-1",
+      "ifc_class": "IfcBuildingStorey",
+      "property_sets": {},
+      "provenance": {
+        "source": "text2ifc/staged-skeleton"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "East wall",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            6100,
+            2000,
+            0
+          ],
+          "ref_direction": [
+            0,
+            1,
+            0
+          ],
+          "relative_to": "storey-1"
+        },
+        "Representation": {
+          "depth": 3000,
+          "direction": [
+            0,
+            0,
+            1
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 4000,
+            "y": 200
+          }
+        }
+      },
+      "id": "wall-east",
+      "ifc_class": "IfcWall",
+      "property_sets": {},
+      "provenance": {
+        "source": "issue-package-storey-1"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "North wall",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            3000,
+            4100,
+            0
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ],
+          "relative_to": "storey-1"
+        },
+        "Representation": {
+          "depth": 3000,
+          "direction": [
+            0,
+            0,
+            1
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 6000,
+            "y": 200
+          }
+        }
+      },
+      "id": "wall-north",
+      "ifc_class": "IfcWall",
+      "property_sets": {},
+      "provenance": {
+        "source": "issue-package-storey-1"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "South wall",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            3000,
+            -100,
+            0
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ],
+          "relative_to": "storey-1"
+        },
+        "Representation": {
+          "depth": 3000,
+          "direction": [
+            0,
+            0,
+            1
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 6000,
+            "y": 200
+          }
+        }
+      },
+      "id": "wall-south",
+      "ifc_class": "IfcWall",
+      "property_sets": {},
+      "provenance": {
+        "source": "issue-package-storey-1"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "West wall",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            -100,
+            2000,
+            0
+          ],
+          "ref_direction": [
+            0,
+            1,
+            0
+          ],
+          "relative_to": "storey-1"
+        },
+        "Representation": {
+          "depth": 3000,
+          "direction": [
+            0,
+            0,
+            1
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 4000,
+            "y": 200
+          }
+        }
+      },
+      "id": "wall-west",
+      "ifc_class": "IfcWall",
+      "property_sets": {},
+      "provenance": {
+        "source": "issue-package-storey-1"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "North window",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            0,
+            0,
+            0
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ],
+          "relative_to": "opening-window-north"
+        },
+        "OverallHeight": 1200,
+        "OverallWidth": 1500,
+        "Representation": {
+          "depth": 1200,
+          "direction": [
+            0,
+            0,
+            1
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 1500,
+            "y": 200
+          }
+        }
+      },
+      "id": "window-north",
+      "ifc_class": "IfcWindow",
+      "property_sets": {},
+      "provenance": {
+        "source": "issue-package-storey-1"
+      }
+    }
+  ],
+  "ifc_schema": "IFC2X3",
+  "provenance": {
+    "source": "text2ifc/staged-skeleton"
+  },
+  "relationships": [
+    {
+      "attributes": {
+        "RelatedObjects": [
+          "storey-1"
+        ],
+        "RelatingObject": "building-main"
+      },
+      "id": "aggregate-building-storeys",
+      "ifc_class": "IfcRelAggregates",
+      "provenance": {
+        "source": "text2ifc/staged-skeleton"
+      }
+    },
+    {
+      "attributes": {
+        "RelatedObjects": [
+          "site-main"
+        ],
+        "RelatingObject": "project-main"
+      },
+      "id": "aggregate-project-site",
+      "ifc_class": "IfcRelAggregates",
+      "provenance": {
+        "source": "text2ifc/staged-skeleton"
+      }
+    },
+    {
+      "attributes": {
+        "RelatedObjects": [
+          "building-main"
+        ],
+        "RelatingObject": "site-main"
+      },
+      "id": "aggregate-site-building",
+      "ifc_class": "IfcRelAggregates",
+      "provenance": {
+        "source": "text2ifc/staged-skeleton"
+      }
+    },
+    {
+      "attributes": {
+        "RelatedBuildingElement": "door-south",
+        "RelatingOpeningElement": "opening-door-south"
+      },
+      "id": "rel-fills-door-south",
+      "ifc_class": "IfcRelFillsElement",
+      "provenance": {
+        "source": "issue-package-storey-1"
+      }
+    },
+    {
+      "attributes": {
+        "RelatedBuildingElement": "window-north",
+        "RelatingOpeningElement": "opening-window-north"
+      },
+      "id": "rel-fills-window-north",
+      "ifc_class": "IfcRelFillsElement",
+      "provenance": {
+        "source": "issue-package-storey-1"
+      }
+    },
+    {
+      "attributes": {
+        "RelatedOpeningElement": "opening-door-south",
+        "RelatingBuildingElement": "wall-south"
+      },
+      "id": "rel-voids-door-south",
+      "ifc_class": "IfcRelVoidsElement",
+      "provenance": {
+        "source": "issue-package-storey-1"
+      }
+    },
+    {
+      "attributes": {
+        "RelatedOpeningElement": "opening-window-north",
+        "RelatingBuildingElement": "wall-north"
+      },
+      "id": "rel-voids-window-north",
+      "ifc_class": "IfcRelVoidsElement",
+      "provenance": {
+        "source": "issue-package-storey-1"
+      }
+    }
+  ],
+  "schema_version": "bim-json/2.0",
+  "units": {
+    "length": "MILLIMETRE"
+  }
+}

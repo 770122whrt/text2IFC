@@ -1,0 +1,1148 @@
+{
+  "candidates": [],
+  "model_fingerprint": "sha256:d91addae033f50c564cb3dfefaa7df496212ddd20da86d91bdd1ea256eb7373f",
+  "operation_id": null,
+  "operations": [
+    {
+      "authorized_semantics": [
+        {
+          "derivation_digest": "sha256:fd2b2257a8c6b4133980981d263476d6facdd3b56ec94e39c1b5a358b8deb42b",
+          "kind": "door_canonicalization",
+          "operation_type": "SINGLE_SWING_LEFT",
+          "source": "deterministic_policy"
+        },
+        {
+          "authorization": "deterministic_policy",
+          "formal_attributes": {
+            "construction_type": "NOTDEFINED",
+            "operation_type": "SINGLE_SWING_LEFT",
+            "parameter_takes_precedence": false,
+            "sizeable": false
+          },
+          "global_id": "173zVUXyDLQgxfp9GTXWgY",
+          "ifc_class": "IfcDoorStyle",
+          "kind": "system_generated_type",
+          "operation_id": "operation-door-001",
+          "template": {
+            "construction_type": "NOTDEFINED",
+            "name": "Text2IFC generated door type operation-door-001",
+            "operation_type": "SINGLE_SWING_LEFT",
+            "parameter_takes_precedence": false,
+            "sizeable": false
+          },
+          "template_digest": "sha256:b0f96dba33cbbfca1be5ccd9a27e2fc442f70e06c6c17d7b5f85cc759669702a",
+          "template_id": "text2ifc-door-single-swing-template",
+          "template_version": "0.1"
+        }
+      ],
+      "context": {
+        "base_model_fingerprint": "sha256:d91addae033f50c564cb3dfefaa7df496212ddd20da86d91bdd1ea256eb7373f",
+        "candidate_targets": [
+          {
+            "evidence": [
+              {
+                "candidate_value": "2IUEnGd5v4Yfg1ZkLtd0qa",
+                "field": "global_id",
+                "provenance": "IfcRoot.GlobalId",
+                "query_value": null,
+                "state": "unavailable"
+              },
+              {
+                "candidate_value": "IfcOpeningElement",
+                "field": "ifc_class",
+                "provenance": "IfcProduct.is_a",
+                "query_value": [
+                  "IfcOpeningElement"
+                ],
+                "state": "matched"
+              },
+              {
+                "candidate_value": "单扇 - 与墙齐:800x2480:255008:1",
+                "field": "name",
+                "provenance": "aliases",
+                "query_value": null,
+                "state": "unavailable"
+              },
+              {
+                "candidate_value": "标高2",
+                "field": "storey",
+                "provenance": "spatial_relationship",
+                "query_value": null,
+                "state": "unavailable"
+              },
+              {
+                "candidate_value": "measured_hosted_opening",
+                "field": "geometry_capability",
+                "provenance": "adapter",
+                "query_value": [
+                  "measured_hosted_opening"
+                ],
+                "state": "matched"
+              },
+              {
+                "candidate_value": 800.0,
+                "field": "geometry:opening_width_mm",
+                "provenance": "ifc_geometry",
+                "query_value": {
+                  "tolerance_mm": 1.0,
+                  "value": 800.0
+                },
+                "state": "matched"
+              },
+              {
+                "candidate_value": 2480.0,
+                "field": "geometry:opening_height_mm",
+                "provenance": "ifc_geometry",
+                "query_value": {
+                  "tolerance_mm": 1.0,
+                  "value": 2480.0
+                },
+                "state": "matched"
+              },
+              {
+                "candidate_value": 160.0,
+                "field": "geometry:opening_depth_mm",
+                "provenance": "ifc_geometry",
+                "query_value": {
+                  "tolerance_mm": 1.0,
+                  "value": 160.0
+                },
+                "state": "matched"
+              },
+              {
+                "candidate_value": 565.932051,
+                "field": "geometry:opening_center_offset_mm",
+                "provenance": "ifc_geometry",
+                "query_value": {
+                  "tolerance_mm": 1.0,
+                  "value": 565.932
+                },
+                "state": "matched"
+              },
+              {
+                "candidate_value": 130.359199,
+                "field": "geometry:opening_sill_height_mm",
+                "provenance": "ifc_geometry",
+                "query_value": {
+                  "tolerance_mm": 1.0,
+                  "value": 130.359
+                },
+                "state": "matched"
+              }
+            ],
+            "facets": {
+              "editable_target": true,
+              "host_wall_global_ids": [
+                "2HNE4WMQ1CXebZMaih8XoD"
+              ]
+            },
+            "geometry": {
+              "dimensions_mm": {
+                "depth": 160.0,
+                "height": 2480.0,
+                "width": 800.0
+              }
+            },
+            "geometry_capability": "measured_hosted_opening",
+            "ifc_class": "IfcOpeningElement",
+            "ifc_global_id": "2IUEnGd5v4Yfg1ZkLtd0qa",
+            "name": "单扇 - 与墙齐:800x2480:255008:1",
+            "properties": [],
+            "retrieval": {
+              "fused_score": 0,
+              "matched_fields": [],
+              "retriever": "structured",
+              "retriever_version": "text2ifc/structured-retriever/0.1",
+              "source_score": 0
+            },
+            "storey_name": "标高2",
+            "target_id": "ifc:2IUEnGd5v4Yfg1ZkLtd0qa",
+            "type_name": null
+          }
+        ],
+        "context_budget": {
+          "actual_bytes": 2935,
+          "estimated_tokens": 734,
+          "max_bytes": 48000,
+          "max_candidates": 5,
+          "mode": "normal",
+          "omitted_candidate_count": 0,
+          "selected_candidate_count": 1,
+          "token_estimator": "ceil(utf8_bytes/4)"
+        },
+        "model_constraints": {
+          "facts_source": "current_ifc_only",
+          "ifc_schema": "IFC2X3",
+          "index_schema_version": "text2ifc/ifc-index/0.4",
+          "source_ifc_sha256": "sha256:d91addae033f50c564cb3dfefaa7df496212ddd20da86d91bdd1ea256eb7373f",
+          "vector_retrieval": "disabled"
+        },
+        "model_fingerprint": "sha256:d91addae033f50c564cb3dfefaa7df496212ddd20da86d91bdd1ea256eb7373f",
+        "operation_hints": [
+          "fill_existing_opening_with_door"
+        ],
+        "query_schema_version": "text2ifc/ifc-target-query/0.1",
+        "resolution_schema_version": "text2ifc/ifc-target-resolution/0.1",
+        "resolved_target_id": "ifc:2IUEnGd5v4Yfg1ZkLtd0qa",
+        "schema_version": "text2ifc/ifc-target-context/0.1",
+        "score_version": "text2ifc/target-score/0.1",
+        "status": "resolved"
+      },
+      "evidence_pointers": [
+        "resolved:/operations/operation-door-001/context/candidate_targets/0"
+      ],
+      "operation_id": "operation-door-001",
+      "operation_type": "fill_existing_opening_with_door",
+      "parameters": {
+        "derivation": {
+          "digest": "sha256:fd2b2257a8c6b4133980981d263476d6facdd3b56ec94e39c1b5a358b8deb42b",
+          "position": {
+            "formula": "existing_opening_center",
+            "source_anchor": "opening:2IUEnGd5v4Yfg1ZkLtd0qa"
+          }
+        },
+        "door": {
+          "operation_derivation": {
+            "source": "explicit_formal_enum"
+          },
+          "operation_type": "SINGLE_SWING_LEFT",
+          "overall_height_mm": 2480.0,
+          "overall_width_mm": 800.0
+        },
+        "host_wall_global_id": "2HNE4WMQ1CXebZMaih8XoD",
+        "opening": {
+          "derivation": {
+            "formula": "fit_existing_opening",
+            "source": "opening:2IUEnGd5v4Yfg1ZkLtd0qa"
+          },
+          "dimension_meaning": "overall_opening",
+          "height_mm": 2480.0,
+          "sill_height_mm": 130.359199,
+          "width_mm": 800.0
+        },
+        "position": {
+          "center_offset_mm": 565.932051,
+          "reference": "wall_local_start"
+        }
+      },
+      "scope_ids": [
+        "2IUEnGd5v4Yfg1ZkLtd0qa"
+      ],
+      "target_global_id": "2IUEnGd5v4Yfg1ZkLtd0qa"
+    },
+    {
+      "authorized_semantics": [
+        {
+          "derivation_digest": "sha256:2dba89324da8ed0c712e9eb3db4f122d047af914ac4959f1d1e86e0e76eda447",
+          "kind": "door_canonicalization",
+          "operation_type": "SINGLE_SWING_RIGHT",
+          "source": "deterministic_policy"
+        },
+        {
+          "authorization": "deterministic_policy",
+          "formal_attributes": {
+            "construction_type": "NOTDEFINED",
+            "operation_type": "SINGLE_SWING_RIGHT",
+            "parameter_takes_precedence": false,
+            "sizeable": false
+          },
+          "global_id": "1iD2Y4VizOkR52RjJ3F7hn",
+          "ifc_class": "IfcDoorStyle",
+          "kind": "system_generated_type",
+          "operation_id": "operation-door-002",
+          "template": {
+            "construction_type": "NOTDEFINED",
+            "name": "Text2IFC generated door type operation-door-002",
+            "operation_type": "SINGLE_SWING_RIGHT",
+            "parameter_takes_precedence": false,
+            "sizeable": false
+          },
+          "template_digest": "sha256:2b75005c8d87ea2955a0d9fba990cbc3d4bfb0e4b14fd754f2fa2f994df04f65",
+          "template_id": "text2ifc-door-single-swing-template",
+          "template_version": "0.1"
+        }
+      ],
+      "context": {
+        "base_model_fingerprint": "sha256:d91addae033f50c564cb3dfefaa7df496212ddd20da86d91bdd1ea256eb7373f",
+        "candidate_targets": [
+          {
+            "evidence": [
+              {
+                "candidate_value": "2IUEnGd5v4Yfg1ZkLtd0tI",
+                "field": "global_id",
+                "provenance": "IfcRoot.GlobalId",
+                "query_value": null,
+                "state": "unavailable"
+              },
+              {
+                "candidate_value": "IfcOpeningElement",
+                "field": "ifc_class",
+                "provenance": "IfcProduct.is_a",
+                "query_value": [
+                  "IfcOpeningElement"
+                ],
+                "state": "matched"
+              },
+              {
+                "candidate_value": "单扇 - 与墙齐:800x2480:255190:1",
+                "field": "name",
+                "provenance": "aliases",
+                "query_value": null,
+                "state": "unavailable"
+              },
+              {
+                "candidate_value": "标高2",
+                "field": "storey",
+                "provenance": "spatial_relationship",
+                "query_value": null,
+                "state": "unavailable"
+              },
+              {
+                "candidate_value": "measured_hosted_opening",
+                "field": "geometry_capability",
+                "provenance": "adapter",
+                "query_value": [
+                  "measured_hosted_opening"
+                ],
+                "state": "matched"
+              },
+              {
+                "candidate_value": 800.0,
+                "field": "geometry:opening_width_mm",
+                "provenance": "ifc_geometry",
+                "query_value": {
+                  "tolerance_mm": 1.0,
+                  "value": 800.0
+                },
+                "state": "matched"
+              },
+              {
+                "candidate_value": 2480.0,
+                "field": "geometry:opening_height_mm",
+                "provenance": "ifc_geometry",
+                "query_value": {
+                  "tolerance_mm": 1.0,
+                  "value": 2480.0
+                },
+                "state": "matched"
+              },
+              {
+                "candidate_value": 140.0,
+                "field": "geometry:opening_depth_mm",
+                "provenance": "ifc_geometry",
+                "query_value": {
+                  "tolerance_mm": 1.0,
+                  "value": 140.0
+                },
+                "state": "matched"
+              },
+              {
+                "candidate_value": 849.0,
+                "field": "geometry:opening_center_offset_mm",
+                "provenance": "ifc_geometry",
+                "query_value": {
+                  "tolerance_mm": 1.0,
+                  "value": 849.0
+                },
+                "state": "matched"
+              },
+              {
+                "candidate_value": 80.359199,
+                "field": "geometry:opening_sill_height_mm",
+                "provenance": "ifc_geometry",
+                "query_value": {
+                  "tolerance_mm": 1.0,
+                  "value": 80.359
+                },
+                "state": "matched"
+              }
+            ],
+            "facets": {
+              "editable_target": true,
+              "host_wall_global_ids": [
+                "1cbLGwmrv8LAj2u11O6kgh"
+              ]
+            },
+            "geometry": {
+              "dimensions_mm": {
+                "depth": 140.0,
+                "height": 2480.0,
+                "width": 800.0
+              }
+            },
+            "geometry_capability": "measured_hosted_opening",
+            "ifc_class": "IfcOpeningElement",
+            "ifc_global_id": "2IUEnGd5v4Yfg1ZkLtd0tI",
+            "name": "单扇 - 与墙齐:800x2480:255190:1",
+            "properties": [],
+            "retrieval": {
+              "fused_score": 0,
+              "matched_fields": [],
+              "retriever": "structured",
+              "retriever_version": "text2ifc/structured-retriever/0.1",
+              "source_score": 0
+            },
+            "storey_name": "标高2",
+            "target_id": "ifc:2IUEnGd5v4Yfg1ZkLtd0tI",
+            "type_name": null
+          }
+        ],
+        "context_budget": {
+          "actual_bytes": 2926,
+          "estimated_tokens": 732,
+          "max_bytes": 48000,
+          "max_candidates": 5,
+          "mode": "normal",
+          "omitted_candidate_count": 0,
+          "selected_candidate_count": 1,
+          "token_estimator": "ceil(utf8_bytes/4)"
+        },
+        "model_constraints": {
+          "facts_source": "current_ifc_only",
+          "ifc_schema": "IFC2X3",
+          "index_schema_version": "text2ifc/ifc-index/0.4",
+          "source_ifc_sha256": "sha256:d91addae033f50c564cb3dfefaa7df496212ddd20da86d91bdd1ea256eb7373f",
+          "vector_retrieval": "disabled"
+        },
+        "model_fingerprint": "sha256:d91addae033f50c564cb3dfefaa7df496212ddd20da86d91bdd1ea256eb7373f",
+        "operation_hints": [
+          "fill_existing_opening_with_door"
+        ],
+        "query_schema_version": "text2ifc/ifc-target-query/0.1",
+        "resolution_schema_version": "text2ifc/ifc-target-resolution/0.1",
+        "resolved_target_id": "ifc:2IUEnGd5v4Yfg1ZkLtd0tI",
+        "schema_version": "text2ifc/ifc-target-context/0.1",
+        "score_version": "text2ifc/target-score/0.1",
+        "status": "resolved"
+      },
+      "evidence_pointers": [
+        "resolved:/operations/operation-door-002/context/candidate_targets/0"
+      ],
+      "operation_id": "operation-door-002",
+      "operation_type": "fill_existing_opening_with_door",
+      "parameters": {
+        "derivation": {
+          "digest": "sha256:2dba89324da8ed0c712e9eb3db4f122d047af914ac4959f1d1e86e0e76eda447",
+          "position": {
+            "formula": "existing_opening_center",
+            "source_anchor": "opening:2IUEnGd5v4Yfg1ZkLtd0tI"
+          }
+        },
+        "door": {
+          "operation_derivation": {
+            "source": "explicit_formal_enum"
+          },
+          "operation_type": "SINGLE_SWING_RIGHT",
+          "overall_height_mm": 2480.0,
+          "overall_width_mm": 800.0
+        },
+        "host_wall_global_id": "1cbLGwmrv8LAj2u11O6kgh",
+        "opening": {
+          "derivation": {
+            "formula": "fit_existing_opening",
+            "source": "opening:2IUEnGd5v4Yfg1ZkLtd0tI"
+          },
+          "dimension_meaning": "overall_opening",
+          "height_mm": 2480.0,
+          "sill_height_mm": 80.359199,
+          "width_mm": 800.0
+        },
+        "position": {
+          "center_offset_mm": 849.0,
+          "reference": "wall_local_start"
+        }
+      },
+      "scope_ids": [
+        "2IUEnGd5v4Yfg1ZkLtd0tI"
+      ],
+      "target_global_id": "2IUEnGd5v4Yfg1ZkLtd0tI"
+    },
+    {
+      "authorized_semantics": [
+        {
+          "derivation_digest": "sha256:580936448bcf2de4dc86e22654e4ff16f4f316bf81506592e2ff240ac69635c0",
+          "kind": "door_canonicalization",
+          "operation_type": "SINGLE_SWING_RIGHT",
+          "source": "deterministic_policy"
+        },
+        {
+          "authorization": "deterministic_policy",
+          "formal_attributes": {
+            "construction_type": "NOTDEFINED",
+            "operation_type": "SINGLE_SWING_RIGHT",
+            "parameter_takes_precedence": false,
+            "sizeable": false
+          },
+          "global_id": "0$aEb0nFPOjA2ap4LeB36o",
+          "ifc_class": "IfcDoorStyle",
+          "kind": "system_generated_type",
+          "operation_id": "operation-door-003",
+          "template": {
+            "construction_type": "NOTDEFINED",
+            "name": "Text2IFC generated door type operation-door-003",
+            "operation_type": "SINGLE_SWING_RIGHT",
+            "parameter_takes_precedence": false,
+            "sizeable": false
+          },
+          "template_digest": "sha256:cee74cc165c1a25821942823a0122f341af7856b429d4358312289707125b87e",
+          "template_id": "text2ifc-door-single-swing-template",
+          "template_version": "0.1"
+        }
+      ],
+      "context": {
+        "base_model_fingerprint": "sha256:d91addae033f50c564cb3dfefaa7df496212ddd20da86d91bdd1ea256eb7373f",
+        "candidate_targets": [
+          {
+            "evidence": [
+              {
+                "candidate_value": "08xWVL$9z6JRwr3piJHoYK",
+                "field": "global_id",
+                "provenance": "IfcRoot.GlobalId",
+                "query_value": null,
+                "state": "unavailable"
+              },
+              {
+                "candidate_value": "IfcOpeningElement",
+                "field": "ifc_class",
+                "provenance": "IfcProduct.is_a",
+                "query_value": [
+                  "IfcOpeningElement"
+                ],
+                "state": "matched"
+              },
+              {
+                "candidate_value": "单扇 - 与墙齐:760x2440:257419:1",
+                "field": "name",
+                "provenance": "aliases",
+                "query_value": null,
+                "state": "unavailable"
+              },
+              {
+                "candidate_value": "标高2",
+                "field": "storey",
+                "provenance": "spatial_relationship",
+                "query_value": null,
+                "state": "unavailable"
+              },
+              {
+                "candidate_value": "measured_hosted_opening",
+                "field": "geometry_capability",
+                "provenance": "adapter",
+                "query_value": [
+                  "measured_hosted_opening"
+                ],
+                "state": "matched"
+              },
+              {
+                "candidate_value": 760.0,
+                "field": "geometry:opening_width_mm",
+                "provenance": "ifc_geometry",
+                "query_value": {
+                  "tolerance_mm": 1.0,
+                  "value": 760.0
+                },
+                "state": "matched"
+              },
+              {
+                "candidate_value": 2440.0,
+                "field": "geometry:opening_height_mm",
+                "provenance": "ifc_geometry",
+                "query_value": {
+                  "tolerance_mm": 1.0,
+                  "value": 2440.0
+                },
+                "state": "matched"
+              },
+              {
+                "candidate_value": 130.0,
+                "field": "geometry:opening_depth_mm",
+                "provenance": "ifc_geometry",
+                "query_value": {
+                  "tolerance_mm": 1.0,
+                  "value": 130.0
+                },
+                "state": "matched"
+              },
+              {
+                "candidate_value": 5206.5,
+                "field": "geometry:opening_center_offset_mm",
+                "provenance": "ifc_geometry",
+                "query_value": {
+                  "tolerance_mm": 1.0,
+                  "value": 5206.5
+                },
+                "state": "matched"
+              },
+              {
+                "candidate_value": 0.0,
+                "field": "geometry:opening_sill_height_mm",
+                "provenance": "ifc_geometry",
+                "query_value": {
+                  "tolerance_mm": 1.0,
+                  "value": 0.0
+                },
+                "state": "matched"
+              }
+            ],
+            "facets": {
+              "editable_target": true,
+              "host_wall_global_ids": [
+                "2HNE4WMQ1CXebZMaih8Xg3"
+              ]
+            },
+            "geometry": {
+              "dimensions_mm": {
+                "depth": 130.0,
+                "height": 2440.0,
+                "width": 760.0
+              }
+            },
+            "geometry_capability": "measured_hosted_opening",
+            "ifc_class": "IfcOpeningElement",
+            "ifc_global_id": "08xWVL$9z6JRwr3piJHoYK",
+            "name": "单扇 - 与墙齐:760x2440:257419:1",
+            "properties": [],
+            "retrieval": {
+              "fused_score": 0,
+              "matched_fields": [],
+              "retriever": "structured",
+              "retriever_version": "text2ifc/structured-retriever/0.1",
+              "source_score": 0
+            },
+            "storey_name": "标高2",
+            "target_id": "ifc:08xWVL$9z6JRwr3piJHoYK",
+            "type_name": null
+          }
+        ],
+        "context_budget": {
+          "actual_bytes": 2919,
+          "estimated_tokens": 730,
+          "max_bytes": 48000,
+          "max_candidates": 5,
+          "mode": "normal",
+          "omitted_candidate_count": 0,
+          "selected_candidate_count": 1,
+          "token_estimator": "ceil(utf8_bytes/4)"
+        },
+        "model_constraints": {
+          "facts_source": "current_ifc_only",
+          "ifc_schema": "IFC2X3",
+          "index_schema_version": "text2ifc/ifc-index/0.4",
+          "source_ifc_sha256": "sha256:d91addae033f50c564cb3dfefaa7df496212ddd20da86d91bdd1ea256eb7373f",
+          "vector_retrieval": "disabled"
+        },
+        "model_fingerprint": "sha256:d91addae033f50c564cb3dfefaa7df496212ddd20da86d91bdd1ea256eb7373f",
+        "operation_hints": [
+          "fill_existing_opening_with_door"
+        ],
+        "query_schema_version": "text2ifc/ifc-target-query/0.1",
+        "resolution_schema_version": "text2ifc/ifc-target-resolution/0.1",
+        "resolved_target_id": "ifc:08xWVL$9z6JRwr3piJHoYK",
+        "schema_version": "text2ifc/ifc-target-context/0.1",
+        "score_version": "text2ifc/target-score/0.1",
+        "status": "resolved"
+      },
+      "evidence_pointers": [
+        "resolved:/operations/operation-door-003/context/candidate_targets/0"
+      ],
+      "operation_id": "operation-door-003",
+      "operation_type": "fill_existing_opening_with_door",
+      "parameters": {
+        "derivation": {
+          "digest": "sha256:580936448bcf2de4dc86e22654e4ff16f4f316bf81506592e2ff240ac69635c0",
+          "position": {
+            "formula": "existing_opening_center",
+            "source_anchor": "opening:08xWVL$9z6JRwr3piJHoYK"
+          }
+        },
+        "door": {
+          "operation_derivation": {
+            "source": "explicit_formal_enum"
+          },
+          "operation_type": "SINGLE_SWING_RIGHT",
+          "overall_height_mm": 2440.0,
+          "overall_width_mm": 760.0
+        },
+        "host_wall_global_id": "2HNE4WMQ1CXebZMaih8Xg3",
+        "opening": {
+          "derivation": {
+            "formula": "fit_existing_opening",
+            "source": "opening:08xWVL$9z6JRwr3piJHoYK"
+          },
+          "dimension_meaning": "overall_opening",
+          "height_mm": 2440.0,
+          "sill_height_mm": 0.0,
+          "width_mm": 760.0
+        },
+        "position": {
+          "center_offset_mm": 5206.5,
+          "reference": "wall_local_start"
+        }
+      },
+      "scope_ids": [
+        "08xWVL$9z6JRwr3piJHoYK"
+      ],
+      "target_global_id": "08xWVL$9z6JRwr3piJHoYK"
+    },
+    {
+      "authorized_semantics": [
+        {
+          "derivation_digest": "sha256:bda40e25eeb03270b8d7161911fb1b7afd5d7d3ce8cacca13a3958bc622b70b3",
+          "kind": "door_canonicalization",
+          "operation_type": "SINGLE_SWING_RIGHT",
+          "source": "deterministic_policy"
+        },
+        {
+          "authorization": "deterministic_policy",
+          "formal_attributes": {
+            "construction_type": "NOTDEFINED",
+            "operation_type": "SINGLE_SWING_RIGHT",
+            "parameter_takes_precedence": false,
+            "sizeable": false
+          },
+          "global_id": "1TGPlM_KfUjgmvEZgmrJdb",
+          "ifc_class": "IfcDoorStyle",
+          "kind": "system_generated_type",
+          "operation_id": "operation-door-004",
+          "template": {
+            "construction_type": "NOTDEFINED",
+            "name": "Text2IFC generated door type operation-door-004",
+            "operation_type": "SINGLE_SWING_RIGHT",
+            "parameter_takes_precedence": false,
+            "sizeable": false
+          },
+          "template_digest": "sha256:94faa53219d8c86c1d07adfa81ed149b152dcc304a2637e841626890d215b5ce",
+          "template_id": "text2ifc-door-single-swing-template",
+          "template_version": "0.1"
+        }
+      ],
+      "context": {
+        "base_model_fingerprint": "sha256:d91addae033f50c564cb3dfefaa7df496212ddd20da86d91bdd1ea256eb7373f",
+        "candidate_targets": [
+          {
+            "evidence": [
+              {
+                "candidate_value": "08xWVL$9z6JRwr3piJHoYg",
+                "field": "global_id",
+                "provenance": "IfcRoot.GlobalId",
+                "query_value": null,
+                "state": "unavailable"
+              },
+              {
+                "candidate_value": "IfcOpeningElement",
+                "field": "ifc_class",
+                "provenance": "IfcProduct.is_a",
+                "query_value": [
+                  "IfcOpeningElement"
+                ],
+                "state": "matched"
+              },
+              {
+                "candidate_value": "单扇 - 与墙齐:760x2440:257461:1",
+                "field": "name",
+                "provenance": "aliases",
+                "query_value": null,
+                "state": "unavailable"
+              },
+              {
+                "candidate_value": "标高2",
+                "field": "storey",
+                "provenance": "spatial_relationship",
+                "query_value": null,
+                "state": "unavailable"
+              },
+              {
+                "candidate_value": "measured_hosted_opening",
+                "field": "geometry_capability",
+                "provenance": "adapter",
+                "query_value": [
+                  "measured_hosted_opening"
+                ],
+                "state": "matched"
+              },
+              {
+                "candidate_value": 760.0,
+                "field": "geometry:opening_width_mm",
+                "provenance": "ifc_geometry",
+                "query_value": {
+                  "tolerance_mm": 1.0,
+                  "value": 760.0
+                },
+                "state": "matched"
+              },
+              {
+                "candidate_value": 2440.0,
+                "field": "geometry:opening_height_mm",
+                "provenance": "ifc_geometry",
+                "query_value": {
+                  "tolerance_mm": 1.0,
+                  "value": 2440.0
+                },
+                "state": "matched"
+              },
+              {
+                "candidate_value": 130.0,
+                "field": "geometry:opening_depth_mm",
+                "provenance": "ifc_geometry",
+                "query_value": {
+                  "tolerance_mm": 1.0,
+                  "value": 130.0
+                },
+                "state": "matched"
+              },
+              {
+                "candidate_value": 3259.927302,
+                "field": "geometry:opening_center_offset_mm",
+                "provenance": "ifc_geometry",
+                "query_value": {
+                  "tolerance_mm": 1.0,
+                  "value": 3259.927
+                },
+                "state": "matched"
+              },
+              {
+                "candidate_value": 0.0,
+                "field": "geometry:opening_sill_height_mm",
+                "provenance": "ifc_geometry",
+                "query_value": {
+                  "tolerance_mm": 1.0,
+                  "value": 0.0
+                },
+                "state": "matched"
+              }
+            ],
+            "facets": {
+              "editable_target": true,
+              "host_wall_global_ids": [
+                "2HNE4WMQ1CXebZMaih8Xg3"
+              ]
+            },
+            "geometry": {
+              "dimensions_mm": {
+                "depth": 130.0,
+                "height": 2440.0,
+                "width": 760.0
+              }
+            },
+            "geometry_capability": "measured_hosted_opening",
+            "ifc_class": "IfcOpeningElement",
+            "ifc_global_id": "08xWVL$9z6JRwr3piJHoYg",
+            "name": "单扇 - 与墙齐:760x2440:257461:1",
+            "properties": [],
+            "retrieval": {
+              "fused_score": 0,
+              "matched_fields": [],
+              "retriever": "structured",
+              "retriever_version": "text2ifc/structured-retriever/0.1",
+              "source_score": 0
+            },
+            "storey_name": "标高2",
+            "target_id": "ifc:08xWVL$9z6JRwr3piJHoYg",
+            "type_name": null
+          }
+        ],
+        "context_budget": {
+          "actual_bytes": 2926,
+          "estimated_tokens": 732,
+          "max_bytes": 48000,
+          "max_candidates": 5,
+          "mode": "normal",
+          "omitted_candidate_count": 0,
+          "selected_candidate_count": 1,
+          "token_estimator": "ceil(utf8_bytes/4)"
+        },
+        "model_constraints": {
+          "facts_source": "current_ifc_only",
+          "ifc_schema": "IFC2X3",
+          "index_schema_version": "text2ifc/ifc-index/0.4",
+          "source_ifc_sha256": "sha256:d91addae033f50c564cb3dfefaa7df496212ddd20da86d91bdd1ea256eb7373f",
+          "vector_retrieval": "disabled"
+        },
+        "model_fingerprint": "sha256:d91addae033f50c564cb3dfefaa7df496212ddd20da86d91bdd1ea256eb7373f",
+        "operation_hints": [
+          "fill_existing_opening_with_door"
+        ],
+        "query_schema_version": "text2ifc/ifc-target-query/0.1",
+        "resolution_schema_version": "text2ifc/ifc-target-resolution/0.1",
+        "resolved_target_id": "ifc:08xWVL$9z6JRwr3piJHoYg",
+        "schema_version": "text2ifc/ifc-target-context/0.1",
+        "score_version": "text2ifc/target-score/0.1",
+        "status": "resolved"
+      },
+      "evidence_pointers": [
+        "resolved:/operations/operation-door-004/context/candidate_targets/0"
+      ],
+      "operation_id": "operation-door-004",
+      "operation_type": "fill_existing_opening_with_door",
+      "parameters": {
+        "derivation": {
+          "digest": "sha256:bda40e25eeb03270b8d7161911fb1b7afd5d7d3ce8cacca13a3958bc622b70b3",
+          "position": {
+            "formula": "existing_opening_center",
+            "source_anchor": "opening:08xWVL$9z6JRwr3piJHoYg"
+          }
+        },
+        "door": {
+          "operation_derivation": {
+            "source": "explicit_formal_enum"
+          },
+          "operation_type": "SINGLE_SWING_RIGHT",
+          "overall_height_mm": 2440.0,
+          "overall_width_mm": 760.0
+        },
+        "host_wall_global_id": "2HNE4WMQ1CXebZMaih8Xg3",
+        "opening": {
+          "derivation": {
+            "formula": "fit_existing_opening",
+            "source": "opening:08xWVL$9z6JRwr3piJHoYg"
+          },
+          "dimension_meaning": "overall_opening",
+          "height_mm": 2440.0,
+          "sill_height_mm": 0.0,
+          "width_mm": 760.0
+        },
+        "position": {
+          "center_offset_mm": 3259.927302,
+          "reference": "wall_local_start"
+        }
+      },
+      "scope_ids": [
+        "08xWVL$9z6JRwr3piJHoYg"
+      ],
+      "target_global_id": "08xWVL$9z6JRwr3piJHoYg"
+    },
+    {
+      "authorized_semantics": [
+        {
+          "derivation_digest": "sha256:986b30511458a361b404ec9d5c3281e49dc912143b72dcd8b80c7f55de874503",
+          "kind": "door_canonicalization",
+          "operation_type": "NOTDEFINED",
+          "source": "deterministic_policy"
+        },
+        {
+          "authorization": "deterministic_policy",
+          "formal_attributes": {
+            "construction_type": "NOTDEFINED",
+            "operation_type": "NOTDEFINED",
+            "parameter_takes_precedence": false,
+            "sizeable": false
+          },
+          "global_id": "35xXPJEm9JOOhB$vd5WEVM",
+          "ifc_class": "IfcDoorStyle",
+          "kind": "system_generated_type",
+          "operation_id": "operation-door-005",
+          "template": {
+            "construction_type": "NOTDEFINED",
+            "name": "Text2IFC generated door type operation-door-005",
+            "operation_type": "NOTDEFINED",
+            "parameter_takes_precedence": false,
+            "sizeable": false
+          },
+          "template_digest": "sha256:c32af4e7dc33cc3e1c743da04efc45d6c590c2b735303e07efadeb6912bfcc63",
+          "template_id": "text2ifc-door-single-swing-template",
+          "template_version": "0.1"
+        }
+      ],
+      "context": {
+        "base_model_fingerprint": "sha256:d91addae033f50c564cb3dfefaa7df496212ddd20da86d91bdd1ea256eb7373f",
+        "candidate_targets": [
+          {
+            "evidence": [
+              {
+                "candidate_value": "08xWVL$9z6JRwr3piJHpOf",
+                "field": "global_id",
+                "provenance": "IfcRoot.GlobalId",
+                "query_value": null,
+                "state": "unavailable"
+              },
+              {
+                "candidate_value": "IfcOpeningElement",
+                "field": "ifc_class",
+                "provenance": "IfcProduct.is_a",
+                "query_value": [
+                  "IfcOpeningElement"
+                ],
+                "state": "matched"
+              },
+              {
+                "candidate_value": "四扇推拉门:M2424:258870:1",
+                "field": "name",
+                "provenance": "aliases",
+                "query_value": null,
+                "state": "unavailable"
+              },
+              {
+                "candidate_value": "标高2",
+                "field": "storey",
+                "provenance": "spatial_relationship",
+                "query_value": null,
+                "state": "unavailable"
+              },
+              {
+                "candidate_value": "measured_hosted_opening",
+                "field": "geometry_capability",
+                "provenance": "adapter",
+                "query_value": [
+                  "measured_hosted_opening"
+                ],
+                "state": "matched"
+              },
+              {
+                "candidate_value": 3560.0,
+                "field": "geometry:opening_width_mm",
+                "provenance": "ifc_geometry",
+                "query_value": {
+                  "tolerance_mm": 1.0,
+                  "value": 3560.0
+                },
+                "state": "matched"
+              },
+              {
+                "candidate_value": 2370.0,
+                "field": "geometry:opening_height_mm",
+                "provenance": "ifc_geometry",
+                "query_value": {
+                  "tolerance_mm": 1.0,
+                  "value": 2370.0
+                },
+                "state": "matched"
+              },
+              {
+                "candidate_value": 280.0,
+                "field": "geometry:opening_depth_mm",
+                "provenance": "ifc_geometry",
+                "query_value": {
+                  "tolerance_mm": 1.0,
+                  "value": 280.0
+                },
+                "state": "matched"
+              },
+              {
+                "candidate_value": 2980.0,
+                "field": "geometry:opening_center_offset_mm",
+                "provenance": "ifc_geometry",
+                "query_value": {
+                  "tolerance_mm": 1.0,
+                  "value": 2980.0
+                },
+                "state": "matched"
+              },
+              {
+                "candidate_value": 130.359199,
+                "field": "geometry:opening_sill_height_mm",
+                "provenance": "ifc_geometry",
+                "query_value": {
+                  "tolerance_mm": 1.0,
+                  "value": 130.359
+                },
+                "state": "matched"
+              }
+            ],
+            "facets": {
+              "editable_target": true,
+              "host_wall_global_ids": [
+                "2HNE4WMQ1CXebZMaih8YJg"
+              ]
+            },
+            "geometry": {
+              "dimensions_mm": {
+                "depth": 280.0,
+                "height": 2370.0,
+                "width": 3560.0
+              }
+            },
+            "geometry_capability": "measured_hosted_opening",
+            "ifc_class": "IfcOpeningElement",
+            "ifc_global_id": "08xWVL$9z6JRwr3piJHpOf",
+            "name": "四扇推拉门:M2424:258870:1",
+            "properties": [],
+            "retrieval": {
+              "fused_score": 0,
+              "matched_fields": [],
+              "retriever": "structured",
+              "retriever_version": "text2ifc/structured-retriever/0.1",
+              "source_score": 0
+            },
+            "storey_name": "标高2",
+            "target_id": "ifc:08xWVL$9z6JRwr3piJHpOf",
+            "type_name": null
+          }
+        ],
+        "context_budget": {
+          "actual_bytes": 2921,
+          "estimated_tokens": 731,
+          "max_bytes": 48000,
+          "max_candidates": 5,
+          "mode": "normal",
+          "omitted_candidate_count": 0,
+          "selected_candidate_count": 1,
+          "token_estimator": "ceil(utf8_bytes/4)"
+        },
+        "model_constraints": {
+          "facts_source": "current_ifc_only",
+          "ifc_schema": "IFC2X3",
+          "index_schema_version": "text2ifc/ifc-index/0.4",
+          "source_ifc_sha256": "sha256:d91addae033f50c564cb3dfefaa7df496212ddd20da86d91bdd1ea256eb7373f",
+          "vector_retrieval": "disabled"
+        },
+        "model_fingerprint": "sha256:d91addae033f50c564cb3dfefaa7df496212ddd20da86d91bdd1ea256eb7373f",
+        "operation_hints": [
+          "fill_existing_opening_with_door"
+        ],
+        "query_schema_version": "text2ifc/ifc-target-query/0.1",
+        "resolution_schema_version": "text2ifc/ifc-target-resolution/0.1",
+        "resolved_target_id": "ifc:08xWVL$9z6JRwr3piJHpOf",
+        "schema_version": "text2ifc/ifc-target-context/0.1",
+        "score_version": "text2ifc/target-score/0.1",
+        "status": "resolved"
+      },
+      "evidence_pointers": [
+        "resolved:/operations/operation-door-005/context/candidate_targets/0"
+      ],
+      "operation_id": "operation-door-005",
+      "operation_type": "fill_existing_opening_with_door",
+      "parameters": {
+        "derivation": {
+          "digest": "sha256:986b30511458a361b404ec9d5c3281e49dc912143b72dcd8b80c7f55de874503",
+          "position": {
+            "formula": "existing_opening_center",
+            "source_anchor": "opening:08xWVL$9z6JRwr3piJHpOf"
+          }
+        },
+        "door": {
+          "operation_derivation": {
+            "source": "explicit_notdefined_acceptance"
+          },
+          "operation_type": "NOTDEFINED",
+          "overall_height_mm": 2370.0,
+          "overall_width_mm": 3560.0
+        },
+        "host_wall_global_id": "2HNE4WMQ1CXebZMaih8YJg",
+        "opening": {
+          "derivation": {
+            "formula": "fit_existing_opening",
+            "source": "opening:08xWVL$9z6JRwr3piJHpOf"
+          },
+          "dimension_meaning": "overall_opening",
+          "height_mm": 2370.0,
+          "sill_height_mm": 130.359199,
+          "width_mm": 3560.0
+        },
+        "position": {
+          "center_offset_mm": 2980.0,
+          "reference": "wall_local_start"
+        }
+      },
+      "scope_ids": [
+        "08xWVL$9z6JRwr3piJHpOf"
+      ],
+      "target_global_id": "08xWVL$9z6JRwr3piJHpOf"
+    }
+  ],
+  "property_preview": null,
+  "property_resolutions": [],
+  "reason_code": null,
+  "schema_version": "text2ifc/ifc-resolution-flow/0.1",
+  "source_ifc_sha256": "sha256:d91addae033f50c564cb3dfefaa7df496212ddd20da86d91bdd1ea256eb7373f",
+  "status": "resolved"
+}

@@ -1,0 +1,77 @@
+{
+  "base_model_fingerprint": "sha256:a8558c195d1dba8277e9bcd9b0ee047e145658d3d1068b9aea0f1affac0c68c6",
+  "binding_status": "bound",
+  "changeset_id": "changeset-vvo-door-preserve-opening",
+  "evidence_refs": [
+    "request:/operation"
+  ],
+  "operations": [
+    {
+      "evidence_refs": [
+        "request:/operation"
+      ],
+      "operation_id": "operation-vvo-door-preserve-opening",
+      "operation_type": "fill_existing_opening_with_door",
+      "parameters": {
+        "door": {
+          "operation_type": "SINGLE_SWING_LEFT",
+          "overall_height_mm": 2480.0,
+          "overall_width_mm": 800.0
+        },
+        "host_wall_global_id": "2HNE4WMQ1CXebZMaih8XoD",
+        "opening": {
+          "height_mm": 2480.0,
+          "sill_height_mm": 130.359199,
+          "width_mm": 800.0
+        },
+        "position": {
+          "center_offset_mm": 565.932051,
+          "reference": "wall_local_start"
+        }
+      },
+      "semantic_assignments": [
+        {
+          "applicability": "required",
+          "authoring_action": "inherit_from_type",
+          "fact_key": "relationship:type",
+          "operation_id": "operation-vvo-door-preserve-opening",
+          "ownership": "type_inherited",
+          "provenance": [
+            "explicit-type-reuse:request"
+          ],
+          "scope": "door_occurrence",
+          "source_fact_key": "relationship:type",
+          "source_kind": "type_inherited",
+          "source_ref": "formal-type:2Bp10QP5H0qx3NLxP020qy",
+          "unit": null,
+          "value": "2Bp10QP5H0qx3NLxP020qy",
+          "value_type": "IfcDoorStyle"
+        }
+      ],
+      "semantic_manifest": {
+        "manifest_id": "manifest-operation-vvo-door-preserve-opening",
+        "policy_id": "door.fill-existing-opening.l2",
+        "policy_version": "0.1"
+      },
+      "target": {
+        "opening_global_id": "2IUEnGd5v4Yfg1ZkLtd0qa"
+      }
+    }
+  ],
+  "postconditions": [
+    "door_fills_opening"
+  ],
+  "preconditions": [
+    "opening_available"
+  ],
+  "schema_version": "text2ifc/ifc-repair-changeset/0.4",
+  "scope": {
+    "forbidden_ids": [],
+    "target_ids": [
+      "2IUEnGd5v4Yfg1ZkLtd0qa"
+    ]
+  },
+  "semantic_manifest_ref": "semantic-manifest.json",
+  "semantic_manifest_sha256": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+  "source_request_hash": "sha256:a5b21baf6467ed9b9642b9611afbb945c5a816bc3124b4fb3f7bdeff187997d4"
+}

@@ -1,7 +1,7 @@
-# 过程与机器权威
+# 过程与机器证据
 
-[Authoritative source bundle](<../../../../../ifc-repair-success-cases-v2-plan07-staging/mixed/door-window-beam-column/phase12-v2-vvo-door-window-beam-column-atomic-restoration>)
+[Authoritative source bundle](<authority/REPORT.md>)。Provider、runtime、验证和冻结材料集中保存在本案例 evidence。
 
-原 Provider attempts、请求、评估和发布材料保留原位；此目录不创造第二套验收事实。
+原路径与当前文件的一一对应见集合 manifest.json 的 legacy_bundles；原报告内历史路径按该映射解释。根目录 IFC 与 evidence 共享同一份内容，不另存展示副本。
 
-prior-REPORT.md（若存在）保存迁移前报告的原文字节，其中相对路径属于旧位置；当前有效入口以上面的 authority 为准。
+[人工审查过程与原件角色声明](review/)保存原展示中的 agent、changeset、input、validation 和 private-evaluation 文件。私有评估材料仅供修复后审查，不属于 Provider 输入。

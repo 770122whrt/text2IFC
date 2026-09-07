@@ -1,0 +1,30 @@
+{
+  "schema_version": "text2ifc/audit/2.0",
+  "recommendation": "reject",
+  "blocking": true,
+  "deterministic_gate_status": "failed",
+  "findings": [
+    {
+      "code": "gate_dispute",
+      "severity": "high",
+      "message": "Dynamic opening-fill gate failed for door-main-entrance with code OPENING_HOST_LOCAL_BOUNDS_MISMATCH, but the candidate BIM JSON correctly represents the opening placement (origin [0,0,0] relative to storey-1-wall-west, profile.x=1000, profile.y=200, ref_direction [0,1,0]) matching the design brief (center [0,4000], host wall west, width 1000). The gate analysis appears to have swapped the local X and Y axes, causing the bounds mismatch. This is a gate tool error, not a candidate issue.",
+      "component_ids": ["opening-door-main-entrance", "door-main-entrance", "storey-1-wall-west"],
+      "evidence_paths": [
+        "design-brief/design-brief.json:/known_facts/storeys/0/doors/5",
+        "generator/candidate.json:/entities/opening-door-main-entrance",
+        "gate-summary.json:/gate_results/gates/5/issues/0"
+      ],
+      "recommended_action": "Review gate logic for opening orientation; candidate is correct as per design brief."
+    }
+  ],
+  "evidence_paths": [
+    "design-brief/input.txt",
+    "design-brief/design-brief.json",
+    "generator/candidate.json",
+    "gate-summary.json",
+    "geometry-feedback.json",
+    "ifc-verification.json",
+    "repair/route.json",
+    "semantic-coverage.json"
+  ]
+}

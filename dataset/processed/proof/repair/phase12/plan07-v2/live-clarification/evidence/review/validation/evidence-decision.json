@@ -1,0 +1,62 @@
+{
+  "artifact_binding": {
+    "stage1_attempt_id": "clarification-resume:stage1:001",
+    "stage2_attempt_id": "clarification-resume:stage2:001",
+    "status": "passed"
+  },
+  "case_id": "clarification-resume",
+  "evidence_validation_status": "passed",
+  "independent_l1_operation_count": 1,
+  "independent_l2_operation_count": 1,
+  "l0_pass": true,
+  "l1_pass": true,
+  "l2_pass": true,
+  "model": "deepseek-v4-flash",
+  "operation_count": 1,
+  "phase_acceptance_eligible": false,
+  "proof_validation_status": "pending_plan_12_14",
+  "provider": "deepseek-openai-compatible",
+  "provider_calls": 3,
+  "provider_calls_by_stage": {
+    "property_resolution": 1,
+    "stage1": 1,
+    "stage2": 1
+  },
+  "reopened_ifc_count": 3,
+  "runtime_run_id": "repair-3b20845ec0864025b99af98658d52b9f",
+  "schema_version": "text2ifc/phase12-live-evidence-validation/0.2",
+  "structural_restoration": {
+    "axis_tolerance_mm": 0.01,
+    "case_id": "clarification-resume",
+    "coverage_mode": "requested_operation_subset",
+    "issues": [],
+    "orientation_tolerance_degrees": 0.1,
+    "outcomes": [
+      {
+        "checks": {
+          "created_member_present": true,
+          "repaired_axis_error_mm": 3.0863993684276414e-07,
+          "repaired_orientation_error_degrees": null,
+          "repaired_section_error_mm": 1.0231815394945443e-12,
+          "repaired_storey_matches": true,
+          "request_axis_error_mm": 3.0863993684276414e-07,
+          "request_section_error_mm": 1.0231815394945443e-12,
+          "storey_matches": true,
+          "target_absent_in_damaged": true,
+          "target_reconstructable": true
+        },
+        "family": "column",
+        "operation_id": "add-column-1",
+        "target_global_id": "1rsYNObuDC4euALdw6WUK4",
+        "target_role": "column"
+      }
+    ],
+    "restoration_eligible": true,
+    "schema_version": "text2ifc/structural-restoration-audit/0.2",
+    "section_tolerance_mm": 0.01,
+    "status": "passed",
+    "unrequested_damage_families": [
+      "beam"
+    ]
+  }
+}

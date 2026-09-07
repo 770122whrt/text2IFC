@@ -30,7 +30,7 @@
 | 语义结果 | 原验收记录通过；本轮未重新评估模型语义或能力。 |
 | 确定性执行 | 沿用原操作／编译结果；具体执行与 gates 见下方原记录摘录 |
 | 产物 | generated；本轮只验证可发现性、来源一致性与 reopen |
-| 证据合同 | [原运行材料](<../../../../../agent-demo/phase6.5-medium-100mm-gap-fix>)；原权威保持原位 |
+| 证据合同 | [原运行材料](<model.json>)；原权威字节已集中；旧路径由集合迁移索引解释 |
 | IFCCompare | N/A：generation 案例 |
 | genuine run ID | N/A（已授权确定性修订，无新 genuine run） |
 | Provider 调用次数 | 未知；见来源 Provider traces |

@@ -1,0 +1,37 @@
+{
+  "attempt": 1,
+  "issues": [],
+  "normalizations": [],
+  "provider_metadata": {
+    "estimated_input_tokens": "[REDACTED]",
+    "evidence_class": "live",
+    "max_input_tokens": "[REDACTED]",
+    "model": "deepseek-v4-flash",
+    "provider": "deepseek-openai-compatible",
+    "request_configuration": {
+      "temperature": {
+        "effective": false,
+        "value": 0
+      },
+      "thinking": {
+        "type": "enabled"
+      }
+    },
+    "response_id": "1f5880e6-0cce-4ef5-a966-622dbe126211",
+    "session_id": "ifc-repair-intent-request-7af95e2e5cb9145a",
+    "stop_reason": "stop",
+    "transport_attempts": 1,
+    "usage": {
+      "completion_tokens": 27306,
+      "completion_tokens_details": "[REDACTED]",
+      "prompt_cache_hit_tokens": "[REDACTED]",
+      "prompt_cache_miss_tokens": "[REDACTED]",
+      "prompt_tokens": 13419,
+      "prompt_tokens_details": "[REDACTED]",
+      "total_tokens": 40725
+    }
+  },
+  "response_excerpt": "{\n  \"schema_version\": \"text2ifc/ifc-repair-intent-body/0.9\",\n  \"operations\": [\n    {\n      \"operation_id\": \"window1-south-wall-4701961\",\n      \"operation_type\": \"add_window_with_opening_to_wall\",\n      \"routing_intent\": {\n        \"component_family\": \"window\",\n        \"action\": \"add_with_opening\",\n        \"operation_profile\": \"window.add-with-opening\",\n        \"source\": {\n          \"source_kind\": \"user_request\",\n          \"reference\": \"request:/text\",\n          \"excerpt\": \"窗 1：不要用已经删除的 Window GlobalId 或 Name 来定位。请在楼层标高 -2213.701 mm、朝南、长 17765.292 mm、高 3581.701 mm、厚 240 mm 的直墙上，以 wall_local_start 为基准，在中心偏移 4701.961 mm 处新建一个 Opening，并安装一扇宽 1180 mm、高 500 mm、窗台高 2670.828 mm 的 Window，Window 要与 Opening 完全匹配。窗型不做额外指定。请把这扇窗设为“深灰铝合金”材料，表面颜色为 RGB (0.18, 0.20, 0.22)。\"\n        }\n      },\n      \"target_query\": {\n        \"schema_version\": \"text2ifc/ifc-target-query/0.1\",\n        \"allowed_ifc_classes\": [\"IfcWall\"],\n        \"geometry_capabilities\": [\"straight_wall\"],\n        \"direction\": \"south\",\n        \"geometry_constraints\": [\n          { \"field\": \"storey_elevation_mm\", \"value\": -2213.701 },\n          { \"field\": \"wall_length_mm\", \"value\": 17765.292 },\n          { \"field\": \"wall_height_mm\", \"value\": 3581.701 },\n          { \"field\": \"wall_thickness_mm\", \"value\": 240 }\n        ]\n      },\n      \"parameters\": {\n        \"position\": {\n          \"reference\": \"wall_local_start\",\n          \"center_offset_mm\": 4701.961\n        },\n        \"opening\": {\n          \"width_mm\": 1180,\n          \"height_mm\": 500,\n          \"sill_height_mm\": 2670.828\n        },\n        \"window\": {\n          \"fit_opening\": true\n        }\n      },\n      \"attribute_intents\": [\n        {\n          \"intent_kind\": \"material\",\n          \"name\": \"Material\",\n          \"value\": \"深灰铝合金\",\n          \"source\": {\n            \"source_kind\": \"user_request\",\n            \"reference\": \"request:/text\",\n            \"excerpt\": \"请把这扇窗设为“深灰铝合金”材料，表面颜色为 RGB (0.18, 0.20, 0.22)。\"\n          }\n        }\n      ],\n      \"property_intents\": [],\n      \"semantic_bundle_refs\": [],\n      \"quantity_intents\": [],\n      \"occurrence_reuse_intent\": null,\n      \"prototype_intent\": null,\n      \"provenance\": [\n        {\n          \"source_kind\": \"user_request\",\n          \"reference\": \"request:/text\",\n          \"excerpt\": \"窗 1：不要用已经删除的 Window GlobalId 或 Name 来定位。请在楼层标高 -2213.701 mm、朝南、长 17765.292 mm、高 3581.701 mm、厚 240 mm 的直墙上，以 wall_local_start 为基准，在中心偏移 4701.961 mm 处新建一个 Opening，并安装一扇宽 1180 mm、高 500 mm、窗台高 2670.828 mm 的 Window，Window 要与 Opening 完全匹配。窗型不做额外指定。请把这扇窗设为“深灰铝合金”材料，表面颜色为 RGB (0.18, 0.20, 0.22)。\"\n        }\n      ],\n      \"appearance_intent\": {\n        \"intent_kind\": \"surface_color_rgb\",\n        \"red\": 0.18,\n        \"green\": 0.20,\n        \"blue\": 0.22,\n        \"source\": {\n          \"source_kind\": \"user_request\",\n          \"reference\": \"request:/text\",\n          \"excerpt\": \"请把这扇窗设为“深灰铝合金”材料，表面颜色为 RGB (0.18, 0.20, 0.22)。\"\n        }\n      }\n    },\n    {\n      \"operation_id\": \"window2-east-wall-9315561\",\n      \"operation_type\": \"add_window_with_opening_to_wall\",\n      \"routing_intent\": {\n        \"component_family\": \"window\",\n        \"action\": \"add_with_opening\",\n        \"operation_profile\": \"window.add-with-opening\",\n        \"source\": {\n          \"source_kind\": \"user_request\",\n          \"reference\": \"request:/text\",\n          \"excerpt\": \"窗 2：不要用已经删除的 Window GlobalId 或 Name 来定位。请在楼层标高 -2213.701 mm、朝东、长 13455.561 mm、高 4175.094 mm、厚 240 mm 的直墙上，以 wall_local_start 为基准，在中心偏移 9315.561 mm 处新建一个 Opening，并安装一扇宽 870 mm、高 2370 mm、窗台高 610 mm 的 Window，Window 要与 Opening 完全匹配。窗型不做额外指定。请把这扇窗设为“浅橡木”材料，表面颜色为 RGB (0.72, 0.45, 0.24)。\"\n        }\n      },\n      \"target_query\": {\n        \"schema_version\": \"text2ifc/ifc-target-query/0.1\",\n        \"allowed_ifc_classes\": [\"IfcWall\"],\n        \"geometry_capabilities\": [\"straight_wall\"],\n        \"direction\": \"east\",\n        \"geometry_constraints\": [\n          { \"field\": \"storey_elevation_mm\", \"value\": -2213.701 },\n          { \"field\": \"wall_length_mm\", \"value\": 13455.561 },\n          { \"field\": \"wall_height_mm\", \"value\": 4175.094 },\n          { \"field\": \"wall_thickness_mm\", \"value\": 240 }\n",
+  "response_sha256": "sha256:2ad8a855c6ecb7ac345df9d4279a5ab77a60c2d1570938110296db11bdcdf703",
+  "status": "valid"
+}

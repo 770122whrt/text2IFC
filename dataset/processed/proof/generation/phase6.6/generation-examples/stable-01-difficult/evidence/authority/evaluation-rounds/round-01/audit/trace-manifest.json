@@ -1,0 +1,53 @@
+{
+  "artifacts": {
+    "audit_report": "audit-report.json",
+    "metrics": "metrics.json",
+    "model_text": "model-text.txt",
+    "parsed_output": "parsed-output.json",
+    "rendered_prompt": "prompt-rendered.md",
+    "renderer_inputs": "prompt-render-input.json",
+    "route_decision": "../route-decision.json",
+    "validation": "validation.json"
+  },
+  "case_id": "ba2277d8363bce69",
+  "evidence_paths": [
+    "design-brief/input.txt",
+    "design-brief/conversation.json",
+    "design-brief/design-brief.json",
+    "design-brief/response.raw.json",
+    "generator/candidate.json",
+    "generator/validation.json",
+    "generator/metrics.json",
+    "repair/route.json",
+    "repair/metrics.json",
+    "gate-summary.json",
+    "semantic-capabilities.json",
+    "semantic-coverage.json",
+    "semantic-geometry-expectation.json",
+    "ifc-verification.json",
+    "geometry-feedback.json",
+    "geometry-expectation.json"
+  ],
+  "gate_summary_hash": "55252de04377f789184c8f0bf5c60b46aa3ee6f286d336265d955a3a8b88444d",
+  "provider": {
+    "artifacts": {
+      "events": "events.jsonl",
+      "metadata": "response-metadata.json",
+      "request": "request.redacted.json",
+      "response": "response.raw.json",
+      "text": "model-text.txt"
+    },
+    "deep_evidence": {},
+    "deferred_artifacts": {},
+    "evidence_class": "live",
+    "provider": "deepseek-openai-compatible",
+    "response_id": "204ba641-6994-4991-9064-5f7f6553d79c",
+    "session_id": "phase6.2-ba2277d8363bce69-audit-01",
+    "stop_reason": "stop",
+    "trace_level": "debug"
+  },
+  "schema_version": "text2ifc/live-stage-trace/1.0",
+  "stage": "audit",
+  "template_hash": "sha256:e69bd9b5b12175c1edcb9915641d99173799e71d67a6cd8dc5017cd82c289d7b",
+  "template_id": "audit.v2"
+}

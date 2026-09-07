@@ -1,6 +1,6 @@
 # phase12-plan07-live-column-clarification-resume
 
-状态：**pending_human_review**；证据方式：`live`。此次只整理展示，不改变原验收或 Phase 状态。
+状态：**accepted**；证据方式：`live`。2026-09-07 用户人工审查通过；原机器结果及 Phase 状态不变。
 
 ## 请求与输入
 
@@ -31,11 +31,11 @@
 | 语义结果 | 原验收记录通过；本轮未重新评估模型语义或能力。 |
 | 确定性执行 | 沿用原操作／编译结果；具体执行与 gates 见下方原记录摘录 |
 | 产物 | repaired；本轮只验证可发现性、来源一致性与 reopen |
-| 证据合同 | [原权威报告](<../../../../ifc-repair-success-cases-v2-plan07-staging/plan07-live-v2-uat-20260903T095045509630Z/cases/clarification-resume/REPORT.md>)；原权威保持原位 |
+| 证据合同 | [原权威报告](<evidence/authority/REPORT.md>)；原权威字节已集中；旧路径由集合迁移索引解释 |
 | IFCCompare | N/A：仅物理对照，无 case-specific private Gold |
 | genuine run ID | uat-20260903T095045509630Z |
 | Provider 调用次数 | 3 |
-| 人工审查 | pending_human_review；本轮不提升状态 |
+| 人工审查 | accepted；用户于 2026-09-07 明确批准 |
 
 ### 原记录中的适用检查
 

@@ -1,0 +1,288 @@
+{
+  "audit": {
+    "checks": [
+      {
+        "code": "CHANGESET_SCHEMA",
+        "evidence": {},
+        "status": "passed"
+      },
+      {
+        "code": "IFC_SCHEMA",
+        "evidence": {
+          "actual_schema": "IFC2X3"
+        },
+        "status": "passed"
+      },
+      {
+        "code": "BASE_MODEL_FINGERPRINT",
+        "evidence": {
+          "actual_fingerprint": "sha256:a611a682c79a79ace18a16bf5f1497bf32fe43a9447b92af22168149b36d20e4"
+        },
+        "status": "passed"
+      },
+      {
+        "code": "SOURCE_REQUEST_HASH",
+        "evidence": {
+          "actual_request_hash": "sha256:46dcdc16eaa8e8bdd95486441808cf345ba56f6ddca29ace74bffeebb98200bd"
+        },
+        "status": "passed"
+      },
+      {
+        "code": "OPERATION_REGISTRATION",
+        "evidence": {
+          "operation_type": "add_beam"
+        },
+        "status": "passed"
+      }
+    ],
+    "issues": [],
+    "operation_audits": [
+      {
+        "checks": [
+          {
+            "code": "STRUCTURAL_STOREY_AVAILABLE",
+            "evidence": {
+              "storey_global_id": "1vTeahUkP60PdWqwCTjUuM"
+            },
+            "status": "passed"
+          },
+          {
+            "code": "STRUCTURAL_AXIS_AVAILABLE",
+            "evidence": {
+              "axis_extent_mm": 4940.000000000001
+            },
+            "status": "passed"
+          },
+          {
+            "code": "STRUCTURAL_TYPE_AUTHORIZED",
+            "evidence": {
+              "assignment_count": 1
+            },
+            "status": "passed"
+          }
+        ],
+        "evidence": {
+          "axis_extent_mm": 4940.000000000001,
+          "storey_global_id": "1vTeahUkP60PdWqwCTjUuM"
+        },
+        "operation_id": "phase12-v2-vvo-beam-loadbearing-restoration-beam-1",
+        "operation_type": "add_beam",
+        "valid": true
+      }
+    ],
+    "schema_version": "text2ifc/ifc-repair-audit/0.1",
+    "valid": true
+  },
+  "issues": [],
+  "operations": [
+    {
+      "changes": {
+        "created": [
+          {
+            "global_id": "1$dsIBHQjPgQ9e0TBzjN6w",
+            "ifc_class": "IfcBeam",
+            "role": "beam"
+          },
+          {
+            "global_id": "1ok0WSj$5QVgnrSdHt3lI4",
+            "ifc_class": "IfcBeamType",
+            "role": "structural_type"
+          },
+          {
+            "global_id": "1gBH4CmYLV98kNl3D2l3hK",
+            "ifc_class": "IfcRelDefinesByType",
+            "role": "structural_type_relationship"
+          },
+          {
+            "global_id": "3EfgZ6d4rQ0g32$MsbY87y",
+            "ifc_class": "IfcPropertySet",
+            "role": "semantic_beam_pset"
+          },
+          {
+            "global_id": "3Zb3B_BIzIxfa_L0O5KRvv",
+            "ifc_class": "IfcRelDefinesByProperties",
+            "role": "semantic_beam_pset_relationship"
+          }
+        ],
+        "modified": [
+          {
+            "global_id": "2CsmzAChHF6O6maGblo6DL",
+            "ifc_class": "IfcRelContainedInSpatialStructure",
+            "role": "spatial_containment"
+          }
+        ],
+        "removed": [],
+        "resolved": {
+          "geometry": {
+            "axis_direction": [
+              0.0,
+              -1.0,
+              0.0
+            ],
+            "axis_end_mm": [
+              -3316.629521,
+              -8803.522838,
+              0.0
+            ],
+            "axis_extent_mm": 4940.0,
+            "axis_start_mm": [
+              -3316.629521,
+              -3863.522838,
+              0.0
+            ],
+            "orientation": [
+              0.0,
+              -1.0,
+              0.0
+            ],
+            "representation_type": "SweptSolid",
+            "section": {
+              "height_mm": 570.0,
+              "shape": "rectangle",
+              "width_mm": 455.0
+            }
+          },
+          "storey_global_id": "1vTeahUkP60PdWqwCTjUuM",
+          "type_global_id": "1ok0WSj$5QVgnrSdHt3lI4"
+        },
+        "semantic": {
+          "created": [
+            {
+              "global_id": "3EfgZ6d4rQ0g32$MsbY87y",
+              "ifc_class": "IfcPropertySet",
+              "role": "semantic_beam_pset"
+            },
+            {
+              "global_id": "3Zb3B_BIzIxfa_L0O5KRvv",
+              "ifc_class": "IfcRelDefinesByProperties",
+              "role": "semantic_beam_pset_relationship"
+            }
+          ],
+          "modified": [],
+          "scopes": {
+            "beam_occurrence": {
+              "created": [
+                {
+                  "global_id": "3EfgZ6d4rQ0g32$MsbY87y",
+                  "ifc_class": "IfcPropertySet",
+                  "role": "semantic_beam_pset"
+                },
+                {
+                  "global_id": "3Zb3B_BIzIxfa_L0O5KRvv",
+                  "ifc_class": "IfcRelDefinesByProperties",
+                  "role": "semantic_beam_pset_relationship"
+                }
+              ],
+              "modified": [],
+              "skipped": [
+                "relationship:type"
+              ],
+              "updated": []
+            }
+          },
+          "skipped": [
+            "relationship:type"
+          ],
+          "updated": []
+        }
+      },
+      "operation_id": "phase12-v2-vvo-beam-loadbearing-restoration-beam-1",
+      "operation_type": "add_beam"
+    }
+  ],
+  "output": {
+    "path": "E:\\code for project\\bimnet\\.pytest-tmp\\plan07-v2-full-run-20260903\\accepted\\phase12-v2-vvo-beam-loadbearing-restoration\\repaired.ifc",
+    "sha256": "d60b997989c4441583d43d6e40d046a83cfbcb554874da83fd74f7cba80d5c83"
+  },
+  "postconditions": [
+    {
+      "checks": [
+        {
+          "code": "BEAM_GEOMETRY_MATCHES",
+          "evidence": {
+            "axis_direction": [
+              0.0,
+              -1.0,
+              0.0
+            ],
+            "axis_end_mm": [
+              -3316.629521,
+              -8803.522838,
+              0.0
+            ],
+            "axis_extent_mm": 4940.0,
+            "axis_start_mm": [
+              -3316.629521,
+              -3863.522838,
+              0.0
+            ],
+            "orientation": [
+              0.0,
+              -1.0,
+              0.0
+            ],
+            "representation_type": "SweptSolid",
+            "section": {
+              "height_mm": 570.0,
+              "shape": "rectangle",
+              "width_mm": 455.0
+            }
+          },
+          "status": "passed"
+        },
+        {
+          "code": "BEAM_CONTAINED_IN_STOREY",
+          "evidence": {},
+          "status": "passed"
+        },
+        {
+          "code": "BEAM_TYPE_BOUND",
+          "evidence": {},
+          "status": "passed"
+        },
+        {
+          "code": "BEAM_ANALYSIS_RELATIONSHIPS_ABSENT",
+          "evidence": {},
+          "status": "passed"
+        }
+      ],
+      "evidence": {
+        "measurement": {
+          "axis_direction": [
+            0.0,
+            -1.0,
+            0.0
+          ],
+          "axis_end_mm": [
+            -3316.629521,
+            -8803.522838,
+            0.0
+          ],
+          "axis_extent_mm": 4940.0,
+          "axis_start_mm": [
+            -3316.629521,
+            -3863.522838,
+            0.0
+          ],
+          "orientation": [
+            0.0,
+            -1.0,
+            0.0
+          ],
+          "representation_type": "SweptSolid",
+          "section": {
+            "height_mm": 570.0,
+            "shape": "rectangle",
+            "width_mm": 455.0
+          }
+        }
+      },
+      "issues": [],
+      "operation_id": "phase12-v2-vvo-beam-loadbearing-restoration-beam-1",
+      "valid": true
+    }
+  ],
+  "published": true,
+  "schema_version": "text2ifc/ifc-repair-application/0.1",
+  "valid": true
+}

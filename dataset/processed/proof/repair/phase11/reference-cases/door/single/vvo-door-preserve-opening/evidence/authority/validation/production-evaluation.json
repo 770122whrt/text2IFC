@@ -1,0 +1,1034 @@
+{
+  "application": {
+    "applicability": "required",
+    "check_id": "application.valid",
+    "evidence": [
+      {
+        "actual_state": "available",
+        "actual_value": {
+          "published": true,
+          "valid": true
+        },
+        "expected_state": "available",
+        "expected_value": "passed",
+        "fact_id": "application.valid.evidence",
+        "provenance": [
+          "application_result",
+          "application.valid"
+        ],
+        "source_kind": "application_result",
+        "source_ref": "application.valid"
+      }
+    ],
+    "mandatory": true,
+    "policy_id": "evaluation.phase8",
+    "reason": "The deterministic application must complete and publish its candidate.",
+    "status": "passed"
+  },
+  "complete_repair_success": true,
+  "diagnostic_artifact_retained": false,
+  "evidence": [
+    {
+      "actual_state": "available",
+      "actual_value": "passed",
+      "expected_state": "available",
+      "expected_value": "all mandatory gates passed",
+      "fact_id": "run.summary",
+      "provenance": [
+        "evaluation_policy",
+        "phase8.1"
+      ],
+      "source_kind": "evaluation_policy",
+      "source_ref": "phase8.1"
+    }
+  ],
+  "operations": [
+    {
+      "evidence": [
+        {
+          "actual_state": "available",
+          "actual_value": {
+            "l1": "passed",
+            "l2": "passed"
+          },
+          "expected_state": "available",
+          "expected_value": "L1 and L2 passed",
+          "fact_id": "operation.operation-vvo-door-preserve-opening",
+          "provenance": [
+            "operation_policy",
+            "door.fill-existing-opening.l2"
+          ],
+          "source_kind": "operation_policy",
+          "source_ref": "door.fill-existing-opening.l2"
+        }
+      ],
+      "levels": [
+        {
+          "checks": [
+            {
+              "applicability": "required",
+              "check_id": "l1.door.dimensions",
+              "evidence": [
+                {
+                  "actual_state": "available",
+                  "actual_value": {
+                    "DOOR_DIMENSIONS_MATCH": "passed"
+                  },
+                  "expected_state": "available",
+                  "expected_value": {
+                    "DOOR_DIMENSIONS_MATCH": "passed"
+                  },
+                  "fact_id": "l1.door.dimensions.evidence",
+                  "provenance": [
+                    "operation_measurement",
+                    "operation:operation-vvo-door-preserve-opening"
+                  ],
+                  "source_kind": "operation_measurement",
+                  "source_ref": "operation:operation-vvo-door-preserve-opening"
+                }
+              ],
+              "mandatory": true,
+              "policy_id": "door.hosted-opening.l1",
+              "reason": "Door formal width and height must match the bound ChangeSet.",
+              "status": "passed"
+            },
+            {
+              "applicability": "required",
+              "check_id": "l1.door.fill-topology",
+              "evidence": [
+                {
+                  "actual_state": "available",
+                  "actual_value": {
+                    "DOOR_FILLS_OPENING": "passed",
+                    "OPENING_VOIDS_WALL": "passed"
+                  },
+                  "expected_state": "available",
+                  "expected_value": {
+                    "DOOR_FILLS_OPENING": "passed",
+                    "OPENING_VOIDS_WALL": "passed"
+                  },
+                  "fact_id": "l1.door.fill-topology.evidence",
+                  "provenance": [
+                    "operation_measurement",
+                    "operation:operation-vvo-door-preserve-opening"
+                  ],
+                  "source_kind": "operation_measurement",
+                  "source_ref": "operation:operation-vvo-door-preserve-opening"
+                }
+              ],
+              "mandatory": true,
+              "policy_id": "door.hosted-opening.l1",
+              "reason": "Door and retained Opening must form one exact fill/void chain.",
+              "status": "passed"
+            },
+            {
+              "applicability": "required",
+              "check_id": "l1.door.opening-alignment",
+              "evidence": [
+                {
+                  "actual_state": "available",
+                  "actual_value": {
+                    "DOOR_GEOMETRY_ALIGNED_WITH_OPENING": "passed"
+                  },
+                  "expected_state": "available",
+                  "expected_value": {
+                    "DOOR_GEOMETRY_ALIGNED_WITH_OPENING": "passed"
+                  },
+                  "fact_id": "l1.door.opening-alignment.evidence",
+                  "provenance": [
+                    "operation_measurement",
+                    "operation:operation-vvo-door-preserve-opening"
+                  ],
+                  "source_kind": "operation_measurement",
+                  "source_ref": "operation:operation-vvo-door-preserve-opening"
+                }
+              ],
+              "mandatory": true,
+              "policy_id": "door.hosted-opening.l1",
+              "reason": "Door geometry and nominal envelope must align with the retained Opening.",
+              "status": "passed"
+            },
+            {
+              "applicability": "required",
+              "check_id": "l1.door.storey",
+              "evidence": [
+                {
+                  "actual_state": "available",
+                  "actual_value": {
+                    "DOOR_STOREY_MATCHES_HOST": "passed"
+                  },
+                  "expected_state": "available",
+                  "expected_value": {
+                    "DOOR_STOREY_MATCHES_HOST": "passed"
+                  },
+                  "fact_id": "l1.door.storey.evidence",
+                  "provenance": [
+                    "operation_measurement",
+                    "operation:operation-vvo-door-preserve-opening"
+                  ],
+                  "source_kind": "operation_measurement",
+                  "source_ref": "operation:operation-vvo-door-preserve-opening"
+                }
+              ],
+              "mandatory": true,
+              "policy_id": "door.hosted-opening.l1",
+              "reason": "Door must use the Storey resolved from the retained Opening spatial context.",
+              "status": "passed"
+            },
+            {
+              "applicability": "required",
+              "check_id": "l1.door.type",
+              "evidence": [
+                {
+                  "actual_state": "available",
+                  "actual_value": {
+                    "DOOR_TYPE_BOUND": "passed"
+                  },
+                  "expected_state": "available",
+                  "expected_value": {
+                    "DOOR_TYPE_BOUND": "passed"
+                  },
+                  "fact_id": "l1.door.type.evidence",
+                  "provenance": [
+                    "operation_measurement",
+                    "operation:operation-vvo-door-preserve-opening"
+                  ],
+                  "source_kind": "operation_measurement",
+                  "source_ref": "operation:operation-vvo-door-preserve-opening"
+                }
+              ],
+              "mandatory": true,
+              "policy_id": "door.hosted-opening.l1",
+              "reason": "Door must have exactly one IfcDoorStyle binding.",
+              "status": "passed"
+            },
+            {
+              "applicability": "required",
+              "check_id": "l1.output.readable",
+              "evidence": [
+                {
+                  "actual_state": "available",
+                  "actual_value": {
+                    "after_error": null,
+                    "after_readable": true,
+                    "before_error": null,
+                    "before_readable": true
+                  },
+                  "expected_state": "available",
+                  "expected_value": {
+                    "after_readable": true,
+                    "before_readable": true
+                  },
+                  "fact_id": "l1.output.readable.evidence",
+                  "provenance": [
+                    "ifc_reopen",
+                    "repaired-ifc"
+                  ],
+                  "source_kind": "ifc_reopen",
+                  "source_ref": "repaired-ifc"
+                }
+              ],
+              "mandatory": true,
+              "policy_id": "l1.common",
+              "reason": "Both source and repaired IFC artifacts must reopen independently.",
+              "status": "passed"
+            },
+            {
+              "applicability": "required",
+              "check_id": "l1.output.schema",
+              "evidence": [
+                {
+                  "actual_state": "available",
+                  "actual_value": "IFC2X3",
+                  "expected_state": "available",
+                  "expected_value": "IFC2X3",
+                  "fact_id": "l1.output.schema.evidence",
+                  "provenance": [
+                    "ifc_schema",
+                    "repaired-ifc"
+                  ],
+                  "source_kind": "ifc_schema",
+                  "source_ref": "repaired-ifc"
+                }
+              ],
+              "mandatory": true,
+              "policy_id": "l1.common",
+              "reason": "The repaired IFC schema must match the source IFC schema.",
+              "status": "passed"
+            },
+            {
+              "applicability": "required",
+              "check_id": "l1.output.validation",
+              "evidence": [
+                {
+                  "actual_state": "available",
+                  "actual_value": {
+                    "baseline_diagnostic_count": 0,
+                    "baseline_status": "passed",
+                    "cache": {
+                      "baseline": {
+                        "key": {
+                          "diagnostic_normalization_version": "ifc-diagnostic-signature/0.1",
+                          "ifc_schema": "IFC2X3",
+                          "ifc_sha256": "sha256:a8558c195d1dba8277e9bcd9b0ee047e145658d3d1068b9aea0f1affac0c68c6",
+                          "ifcopenshell_version": "0.8.5",
+                          "validation_policy_version": "ifcopenshell-schema-no-express/0.1"
+                        },
+                        "key_digest": "sha256:5e286c1467afff5e2ffd5dec2abd11f1daaa8859b60ebe7d30f572fa14e8e0d2",
+                        "mode": "read_write",
+                        "reason": "entry_missing",
+                        "schema_version": "text2ifc/ifc-validation-cache/0.1",
+                        "status": "miss"
+                      },
+                      "candidate": {
+                        "key": {
+                          "diagnostic_normalization_version": "ifc-diagnostic-signature/0.1",
+                          "ifc_schema": "IFC2X3",
+                          "ifc_sha256": "sha256:43ef5af0ad9de74b3c7a36b2e94f5a51323190c1033cf4c1375d4fd96e3a6d43",
+                          "ifcopenshell_version": "0.8.5",
+                          "validation_policy_version": "ifcopenshell-schema-no-express/0.1"
+                        },
+                        "key_digest": "sha256:8db1ca7a0582d0811ff13dd2192ca562da075f505cf837a64422c1c85d7d768d",
+                        "mode": "read_write",
+                        "reason": "entry_missing",
+                        "schema_version": "text2ifc/ifc-validation-cache/0.1",
+                        "status": "miss"
+                      }
+                    },
+                    "candidate_diagnostic_count": 0,
+                    "execution": {
+                      "mode": "reused_models",
+                      "peak_rss_bytes": 174854144,
+                      "rss_limit_bytes": 4294967296,
+                      "stage_seconds": {
+                        "diff": 2.312999999994645,
+                        "validation": 7.98499999998603
+                      },
+                      "wall_seconds": 7.98499999998603,
+                      "worker_count": 3
+                    },
+                    "new_diagnostic_count": 0,
+                    "new_diagnostics": [],
+                    "new_diagnostics_truncated": false,
+                    "resolved_diagnostic_count": 0,
+                    "schema_version": "text2ifc/ifc-validation-delta/0.1",
+                    "status": "passed"
+                  },
+                  "expected_state": "available",
+                  "expected_value": {
+                    "new_diagnostic_count": 0
+                  },
+                  "fact_id": "l1.output.validation.evidence",
+                  "provenance": [
+                    "ifcopenshell_validation",
+                    "damaged-to-repaired"
+                  ],
+                  "source_kind": "ifcopenshell_validation",
+                  "source_ref": "damaged-to-repaired"
+                }
+              ],
+              "mandatory": true,
+              "policy_id": "l1.common",
+              "reason": "The repaired IFC must not introduce IfcOpenShell validation diagnostics beyond the damaged baseline.",
+              "status": "passed"
+            },
+            {
+              "applicability": "required",
+              "check_id": "l1.scope.created-roots",
+              "evidence": [
+                {
+                  "actual_state": "available",
+                  "actual_value": {
+                    "after": {
+                      "attribute_sha256": "sha256:dc2276e67b296f25bab51d9e89b17809cefd6c5bcf3c3d646c16f3c71347b632",
+                      "containers": [
+                        "1vTeahUkP60PdWqwCTjSGJ"
+                      ],
+                      "geometry": {
+                        "available": true,
+                        "representation_sha256": "sha256:287583e99c172260c8cc77f8aff0b9d8a06f3a8f98053c0304cbfa4587d6b272"
+                      },
+                      "ifc_class": "IfcDoor",
+                      "name": "Text2IFC door operation-vvo-door-preserve-opening",
+                      "placement": [
+                        [
+                          1.0,
+                          0.0,
+                          0.0,
+                          -7191.29262
+                        ],
+                        [
+                          0.0,
+                          1.0,
+                          0.0,
+                          7394.043844
+                        ],
+                        [
+                          0.0,
+                          0.0,
+                          1.0,
+                          -2213.700793
+                        ],
+                        [
+                          0.0,
+                          0.0,
+                          0.0,
+                          1.0
+                        ]
+                      ],
+                      "snapshot_sha256": "sha256:ed85994356ff3888f041f97d70fbaf539c51df32f155a5541787c7c603a113e1",
+                      "types": [
+                        "2Bp10QP5H0qx3NLxP020qy"
+                      ]
+                    },
+                    "authorization_reason": "authorized by Registry policy and ChangeSet operation scope",
+                    "authorized": true,
+                    "before": null,
+                    "change_kind": "created",
+                    "global_id": "29wFPfqAzOUwBFe2s9SBmg",
+                    "ifc_class": "IfcDoor",
+                    "is_relationship": false
+                  },
+                  "expected_state": "available",
+                  "expected_value": "policy-and-scope-authorized effect",
+                  "fact_id": "l1.scope.created-roots.0000",
+                  "provenance": [
+                    "ifc_actual_diff",
+                    "ifc-guid:29wFPfqAzOUwBFe2s9SBmg"
+                  ],
+                  "source_kind": "ifc_actual_diff",
+                  "source_ref": "ifc-guid:29wFPfqAzOUwBFe2s9SBmg"
+                }
+              ],
+              "mandatory": true,
+              "policy_id": "l1.common",
+              "reason": "Every actual IFC effect must be authorized by policy and declared scope.",
+              "status": "passed"
+            },
+            {
+              "applicability": "required",
+              "check_id": "l1.scope.modified-roots",
+              "evidence": [
+                {
+                  "actual_state": "available",
+                  "actual_value": {
+                    "changes": []
+                  },
+                  "expected_state": "available",
+                  "expected_value": "no unexplained effects",
+                  "fact_id": "l1.scope.modified-roots.evidence",
+                  "provenance": [
+                    "ifc_actual_diff",
+                    "reopened-ifc"
+                  ],
+                  "source_kind": "ifc_actual_diff",
+                  "source_ref": "reopened-ifc"
+                }
+              ],
+              "mandatory": true,
+              "policy_id": "l1.common",
+              "reason": "Every actual IFC effect must be authorized by policy and declared scope.",
+              "status": "passed"
+            },
+            {
+              "applicability": "required",
+              "check_id": "l1.scope.relations",
+              "evidence": [
+                {
+                  "actual_state": "available",
+                  "actual_value": {
+                    "after": {
+                      "attribute_sha256": "sha256:cb178c5a3a3c754ac01ed59cbddc3c9a748bc13cdba81783586b809ee4d0c5e5",
+                      "containers": null,
+                      "geometry": null,
+                      "ifc_class": "IfcRelDefinesByType",
+                      "name": null,
+                      "placement": null,
+                      "snapshot_sha256": "sha256:33c3616e28906fe0e962ad34c3ca0c71b11660550f4edc52de34ef8b5c4b50ed",
+                      "types": null
+                    },
+                    "authorization_reason": "authorized relationship role and endpoints",
+                    "authorized": true,
+                    "before": null,
+                    "change_kind": "created",
+                    "global_id": "0ar7Y1NfjMeh9qAAyJTw0s",
+                    "ifc_class": "IfcRelDefinesByType",
+                    "is_relationship": true
+                  },
+                  "expected_state": "available",
+                  "expected_value": "policy-and-scope-authorized effect",
+                  "fact_id": "l1.scope.relations.0000",
+                  "provenance": [
+                    "ifc_actual_diff",
+                    "ifc-guid:0ar7Y1NfjMeh9qAAyJTw0s"
+                  ],
+                  "source_kind": "ifc_actual_diff",
+                  "source_ref": "ifc-guid:0ar7Y1NfjMeh9qAAyJTw0s"
+                },
+                {
+                  "actual_state": "available",
+                  "actual_value": {
+                    "after": {
+                      "attribute_sha256": "sha256:2aaa53b8b5c900899174216fe9bc26f3817e18d07a57fb70ef5d691fc3bed539",
+                      "containers": null,
+                      "geometry": null,
+                      "ifc_class": "IfcRelFillsElement",
+                      "name": null,
+                      "placement": null,
+                      "snapshot_sha256": "sha256:28c3a3b6399da03e29425e3c5acae5767bc664dba18c27a650b7e534492ce4a2",
+                      "types": null
+                    },
+                    "authorization_reason": "authorized relationship role and endpoints",
+                    "authorized": true,
+                    "before": null,
+                    "change_kind": "created",
+                    "global_id": "2s$k_a_55INxGDd5SLFs$i",
+                    "ifc_class": "IfcRelFillsElement",
+                    "is_relationship": true
+                  },
+                  "expected_state": "available",
+                  "expected_value": "policy-and-scope-authorized effect",
+                  "fact_id": "l1.scope.relations.0001",
+                  "provenance": [
+                    "ifc_actual_diff",
+                    "ifc-guid:2s$k_a_55INxGDd5SLFs$i"
+                  ],
+                  "source_kind": "ifc_actual_diff",
+                  "source_ref": "ifc-guid:2s$k_a_55INxGDd5SLFs$i"
+                },
+                {
+                  "actual_state": "available",
+                  "actual_value": {
+                    "after": {
+                      "attribute_sha256": "sha256:95e0db5d2f195bcee75504423f0fc71a107efb067864e610f1325b3e32762a6b",
+                      "containers": null,
+                      "geometry": null,
+                      "ifc_class": "IfcRelContainedInSpatialStructure",
+                      "name": null,
+                      "placement": null,
+                      "snapshot_sha256": "sha256:91399068aae622406cf17ebb1122b5f3bcddecc017afd05ee458da53e3c1a755",
+                      "types": null
+                    },
+                    "authorization_reason": "authorized relationship role and endpoints",
+                    "authorized": true,
+                    "before": {
+                      "attribute_sha256": "sha256:dfbd98a9070e5509cf320993ffa2b8dfd163eddee6506f367fdf71d762b07bc2",
+                      "containers": null,
+                      "geometry": null,
+                      "ifc_class": "IfcRelContainedInSpatialStructure",
+                      "name": null,
+                      "placement": null,
+                      "snapshot_sha256": "sha256:09ffc512d4d178fbaa83039de4e489d78e95d3366ddea59cea7c8c65d6986ca7",
+                      "types": null
+                    },
+                    "change_kind": "modified",
+                    "global_id": "2GYf8OOb51cRZoIdR_6VwO",
+                    "ifc_class": "IfcRelContainedInSpatialStructure",
+                    "is_relationship": true
+                  },
+                  "expected_state": "available",
+                  "expected_value": "policy-and-scope-authorized effect",
+                  "fact_id": "l1.scope.relations.0002",
+                  "provenance": [
+                    "ifc_actual_diff",
+                    "ifc-guid:2GYf8OOb51cRZoIdR_6VwO"
+                  ],
+                  "source_kind": "ifc_actual_diff",
+                  "source_ref": "ifc-guid:2GYf8OOb51cRZoIdR_6VwO"
+                }
+              ],
+              "mandatory": true,
+              "policy_id": "l1.common",
+              "reason": "Every actual IFC effect must be authorized by policy and declared scope.",
+              "status": "passed"
+            },
+            {
+              "applicability": "required",
+              "check_id": "l1.scope.removed-roots",
+              "evidence": [
+                {
+                  "actual_state": "available",
+                  "actual_value": {
+                    "changes": []
+                  },
+                  "expected_state": "available",
+                  "expected_value": "no unexplained effects",
+                  "fact_id": "l1.scope.removed-roots.evidence",
+                  "provenance": [
+                    "ifc_actual_diff",
+                    "reopened-ifc"
+                  ],
+                  "source_kind": "ifc_actual_diff",
+                  "source_ref": "reopened-ifc"
+                }
+              ],
+              "mandatory": true,
+              "policy_id": "l1.common",
+              "reason": "Every actual IFC effect must be authorized by policy and declared scope.",
+              "status": "passed"
+            },
+            {
+              "applicability": "required",
+              "check_id": "l1.source.immutable",
+              "evidence": [
+                {
+                  "actual_state": "available",
+                  "actual_value": {
+                    "after": "sha256:a8558c195d1dba8277e9bcd9b0ee047e145658d3d1068b9aea0f1affac0c68c6",
+                    "before": "sha256:a8558c195d1dba8277e9bcd9b0ee047e145658d3d1068b9aea0f1affac0c68c6"
+                  },
+                  "expected_state": "available",
+                  "expected_value": "sha256:a8558c195d1dba8277e9bcd9b0ee047e145658d3d1068b9aea0f1affac0c68c6",
+                  "fact_id": "l1.source.immutable.evidence",
+                  "provenance": [
+                    "source_fingerprint",
+                    "dataset\\processed\\ifc-repair\\phase11-door-audit-fix-final-2\\vvo-door-preserve-opening\\fixture\\damaged.ifc"
+                  ],
+                  "source_kind": "source_fingerprint",
+                  "source_ref": "dataset\\processed\\ifc-repair\\phase11-door-audit-fix-final-2\\vvo-door-preserve-opening\\fixture\\damaged.ifc"
+                }
+              ],
+              "mandatory": true,
+              "policy_id": "l1.common",
+              "reason": "The source IFC must remain bound to the declared base fingerprint.",
+              "status": "passed"
+            }
+          ],
+          "evidence": [
+            {
+              "actual_state": "available",
+              "actual_value": {
+                "check_count": 13,
+                "readable": true
+              },
+              "expected_state": "available",
+              "expected_value": "readable policy-authorized physical repair",
+              "fact_id": "l1.summary",
+              "provenance": [
+                "ifc_actual_diff",
+                "reopened-ifc"
+              ],
+              "source_kind": "ifc_actual_diff",
+              "source_ref": "reopened-ifc"
+            }
+          ],
+          "level": "L1",
+          "reason": "Independent reopened IFC L1 authorization and measurement.",
+          "status": "passed"
+        },
+        {
+          "checks": [
+            {
+              "applicability": "required",
+              "check_id": "door.type",
+              "evidence": [
+                {
+                  "actual_state": "available",
+                  "actual_value": {
+                    "entity_source": "IfcDoor:29wFPfqAzOUwBFe2s9SBmg",
+                    "inherited": false,
+                    "pset_path": null,
+                    "unit": null,
+                    "value": "2Bp10QP5H0qx3NLxP020qy",
+                    "value_type": "IfcDoorStyle"
+                  },
+                  "expected_state": "available",
+                  "expected_value": {
+                    "entity_source": "public-damaged-ifc-and-bound-changeset",
+                    "inherited": true,
+                    "pset_path": null,
+                    "unit": null,
+                    "value": "2Bp10QP5H0qx3NLxP020qy",
+                    "value_type": "IfcDoorStyle"
+                  },
+                  "fact_id": "relationship:type",
+                  "provenance": [
+                    "phase11-public-production-authority",
+                    "operation:operation-vvo-door-preserve-opening",
+                    "repaired:application-role:door:operation-vvo-door-preserve-opening"
+                  ],
+                  "source_kind": "surviving_type",
+                  "source_ref": "current-ifc:2Bp10QP5H0qx3NLxP020qy"
+                }
+              ],
+              "mandatory": true,
+              "policy_id": "door.fill-existing-opening.l2",
+              "reason": "Authorized semantic fact is present and equivalent in repaired output",
+              "status": "passed"
+            },
+            {
+              "applicability": "required",
+              "check_id": "door.host",
+              "evidence": [
+                {
+                  "actual_state": "available",
+                  "actual_value": {
+                    "entity_source": "IfcDoor:29wFPfqAzOUwBFe2s9SBmg",
+                    "inherited": false,
+                    "pset_path": null,
+                    "unit": null,
+                    "value": "2HNE4WMQ1CXebZMaih8XoD",
+                    "value_type": "IfcWallStandardCase"
+                  },
+                  "expected_state": "available",
+                  "expected_value": {
+                    "entity_source": "public-damaged-ifc-and-bound-changeset",
+                    "inherited": false,
+                    "pset_path": null,
+                    "unit": null,
+                    "value": "2HNE4WMQ1CXebZMaih8XoD",
+                    "value_type": "IfcWallStandardCase"
+                  },
+                  "fact_id": "relationship:host",
+                  "provenance": [
+                    "phase11-public-production-authority",
+                    "operation:operation-vvo-door-preserve-opening",
+                    "repaired:application-role:door:operation-vvo-door-preserve-opening"
+                  ],
+                  "source_kind": "surviving_host",
+                  "source_ref": "current-ifc:2HNE4WMQ1CXebZMaih8XoD"
+                }
+              ],
+              "mandatory": true,
+              "policy_id": "door.fill-existing-opening.l2",
+              "reason": "Authorized semantic fact is present and equivalent in repaired output",
+              "status": "passed"
+            },
+            {
+              "applicability": "required",
+              "check_id": "door.storey",
+              "evidence": [
+                {
+                  "actual_state": "available",
+                  "actual_value": {
+                    "entity_source": "IfcDoor:29wFPfqAzOUwBFe2s9SBmg",
+                    "inherited": false,
+                    "pset_path": null,
+                    "unit": null,
+                    "value": "1vTeahUkP60PdWqwCTjSGJ",
+                    "value_type": "IfcBuildingStorey"
+                  },
+                  "expected_state": "available",
+                  "expected_value": {
+                    "entity_source": "public-damaged-ifc-and-bound-changeset",
+                    "inherited": false,
+                    "pset_path": null,
+                    "unit": null,
+                    "value": "1vTeahUkP60PdWqwCTjSGJ",
+                    "value_type": "IfcBuildingStorey"
+                  },
+                  "fact_id": "relationship:storey",
+                  "provenance": [
+                    "phase11-public-production-authority",
+                    "operation:operation-vvo-door-preserve-opening",
+                    "repaired:application-role:door:operation-vvo-door-preserve-opening"
+                  ],
+                  "source_kind": "surviving_host",
+                  "source_ref": "current-ifc:1vTeahUkP60PdWqwCTjSGJ"
+                }
+              ],
+              "mandatory": true,
+              "policy_id": "door.fill-existing-opening.l2",
+              "reason": "Authorized semantic fact is present and equivalent in repaired output",
+              "status": "passed"
+            },
+            {
+              "applicability": "required",
+              "check_id": "door.width",
+              "evidence": [
+                {
+                  "actual_state": "available",
+                  "actual_value": {
+                    "entity_source": "IfcDoor:29wFPfqAzOUwBFe2s9SBmg",
+                    "inherited": false,
+                    "pset_path": null,
+                    "unit": null,
+                    "value": 800.0,
+                    "value_type": "IfcPositiveLengthMeasure"
+                  },
+                  "expected_state": "available",
+                  "expected_value": {
+                    "entity_source": "public-damaged-ifc-and-bound-changeset",
+                    "inherited": false,
+                    "pset_path": null,
+                    "unit": null,
+                    "value": 800.0,
+                    "value_type": "IfcPositiveLengthMeasure"
+                  },
+                  "fact_id": "attribute:OverallWidth",
+                  "provenance": [
+                    "phase11-public-production-authority",
+                    "operation:operation-vvo-door-preserve-opening",
+                    "repaired:application-role:door:operation-vvo-door-preserve-opening"
+                  ],
+                  "source_kind": "explicit_request",
+                  "source_ref": "request:/operation"
+                }
+              ],
+              "mandatory": true,
+              "policy_id": "door.fill-existing-opening.l2",
+              "reason": "Authorized semantic fact is present and equivalent in repaired output",
+              "status": "passed"
+            },
+            {
+              "applicability": "required",
+              "check_id": "door.height",
+              "evidence": [
+                {
+                  "actual_state": "available",
+                  "actual_value": {
+                    "entity_source": "IfcDoor:29wFPfqAzOUwBFe2s9SBmg",
+                    "inherited": false,
+                    "pset_path": null,
+                    "unit": null,
+                    "value": 2480.0,
+                    "value_type": "IfcPositiveLengthMeasure"
+                  },
+                  "expected_state": "available",
+                  "expected_value": {
+                    "entity_source": "public-damaged-ifc-and-bound-changeset",
+                    "inherited": false,
+                    "pset_path": null,
+                    "unit": null,
+                    "value": 2480.0,
+                    "value_type": "IfcPositiveLengthMeasure"
+                  },
+                  "fact_id": "attribute:OverallHeight",
+                  "provenance": [
+                    "phase11-public-production-authority",
+                    "operation:operation-vvo-door-preserve-opening",
+                    "repaired:application-role:door:operation-vvo-door-preserve-opening"
+                  ],
+                  "source_kind": "explicit_request",
+                  "source_ref": "request:/operation"
+                }
+              ],
+              "mandatory": true,
+              "policy_id": "door.fill-existing-opening.l2",
+              "reason": "Authorized semantic fact is present and equivalent in repaired output",
+              "status": "passed"
+            },
+            {
+              "applicability": "conditional",
+              "check_id": "door.pset",
+              "evidence": [
+                {
+                  "actual_state": "not_applicable",
+                  "actual_value": null,
+                  "expected_state": "unavailable",
+                  "expected_value": null,
+                  "fact_id": "door.pset",
+                  "provenance": [
+                    "searched:explicit_request",
+                    "searched:surviving_target",
+                    "searched:surviving_host",
+                    "searched:surviving_type",
+                    "searched:approved_prototype",
+                    "searched:authorized_type_cohort",
+                    "searched:deterministic_policy",
+                    "searched:private_original"
+                  ],
+                  "source_kind": "source_search",
+                  "source_ref": "door.fill-existing-opening.l2/door.pset"
+                }
+              ],
+              "mandatory": false,
+              "policy_id": "door.fill-existing-opening.l2",
+              "reason": "No authorized source establishes this conditional semantic fact",
+              "status": "not_required"
+            },
+            {
+              "applicability": "conditional",
+              "check_id": "door.quantity",
+              "evidence": [
+                {
+                  "actual_state": "not_applicable",
+                  "actual_value": null,
+                  "expected_state": "unavailable",
+                  "expected_value": null,
+                  "fact_id": "door.quantity",
+                  "provenance": [
+                    "searched:explicit_request",
+                    "searched:surviving_target",
+                    "searched:surviving_host",
+                    "searched:surviving_type",
+                    "searched:approved_prototype",
+                    "searched:authorized_type_cohort",
+                    "searched:deterministic_policy",
+                    "searched:private_original"
+                  ],
+                  "source_kind": "source_search",
+                  "source_ref": "door.fill-existing-opening.l2/door.quantity"
+                }
+              ],
+              "mandatory": false,
+              "policy_id": "door.fill-existing-opening.l2",
+              "reason": "No authorized source establishes this conditional semantic fact",
+              "status": "not_required"
+            },
+            {
+              "applicability": "conditional",
+              "check_id": "door.material",
+              "evidence": [
+                {
+                  "actual_state": "not_applicable",
+                  "actual_value": null,
+                  "expected_state": "unavailable",
+                  "expected_value": null,
+                  "fact_id": "door.material",
+                  "provenance": [
+                    "searched:explicit_request",
+                    "searched:surviving_target",
+                    "searched:surviving_host",
+                    "searched:surviving_type",
+                    "searched:approved_prototype",
+                    "searched:authorized_type_cohort",
+                    "searched:deterministic_policy",
+                    "searched:private_original"
+                  ],
+                  "source_kind": "source_search",
+                  "source_ref": "door.fill-existing-opening.l2/door.material"
+                }
+              ],
+              "mandatory": false,
+              "policy_id": "door.fill-existing-opening.l2",
+              "reason": "No authorized source establishes this conditional semantic fact",
+              "status": "not_required"
+            },
+            {
+              "applicability": "conditional",
+              "check_id": "door.classification",
+              "evidence": [
+                {
+                  "actual_state": "not_applicable",
+                  "actual_value": null,
+                  "expected_state": "unavailable",
+                  "expected_value": null,
+                  "fact_id": "door.classification",
+                  "provenance": [
+                    "searched:explicit_request",
+                    "searched:surviving_target",
+                    "searched:surviving_host",
+                    "searched:surviving_type",
+                    "searched:approved_prototype",
+                    "searched:authorized_type_cohort",
+                    "searched:deterministic_policy",
+                    "searched:private_original"
+                  ],
+                  "source_kind": "source_search",
+                  "source_ref": "door.fill-existing-opening.l2/door.classification"
+                }
+              ],
+              "mandatory": false,
+              "policy_id": "door.fill-existing-opening.l2",
+              "reason": "No authorized source establishes this conditional semantic fact",
+              "status": "not_required"
+            }
+          ],
+          "evidence": [
+            {
+              "actual_state": "available",
+              "actual_value": {
+                "check_count": 9
+              },
+              "expected_state": "available",
+              "expected_value": "all mandatory L2 checks passed",
+              "fact_id": "l2.summary",
+              "provenance": [
+                "semantic_policy",
+                "door.fill-existing-opening.l2"
+              ],
+              "source_kind": "semantic_policy",
+              "source_ref": "door.fill-existing-opening.l2"
+            }
+          ],
+          "level": "L2",
+          "reason": "Policy-owned semantic facts are compared through authorized evidence.",
+          "status": "passed"
+        },
+        {
+          "checks": [
+            {
+              "applicability": "informational",
+              "check_id": "l3.authoring-identity",
+              "evidence": [
+                {
+                  "actual_state": "available",
+                  "actual_value": "29wFPfqAzOUwBFe2s9SBmg",
+                  "expected_state": "available",
+                  "expected_value": null,
+                  "fact_id": "l3.authoring-identity",
+                  "provenance": [
+                    "identity_observation",
+                    "operation:operation-vvo-door-preserve-opening"
+                  ],
+                  "source_kind": "identity_observation",
+                  "source_ref": "operation:operation-vvo-door-preserve-opening"
+                }
+              ],
+              "mandatory": false,
+              "policy_id": "l3.v1.1-observation",
+              "reason": "Original identity is observational and never gates v1.1 repair success.",
+              "status": "failed"
+            }
+          ],
+          "evidence": [
+            {
+              "actual_state": "available",
+              "actual_value": "observed",
+              "expected_state": "available",
+              "expected_value": "not required",
+              "fact_id": "l3.summary",
+              "provenance": [
+                "policy_boundary",
+                "v1.1"
+              ],
+              "source_kind": "policy_boundary",
+              "source_ref": "v1.1"
+            }
+          ],
+          "level": "L3",
+          "reason": "L3 authoring and identity exactness is not required in v1.1.",
+          "status": "not_required"
+        }
+      ],
+      "mandatory": true,
+      "operation_id": "operation-vvo-door-preserve-opening",
+      "operation_type": "fill_existing_opening_with_door",
+      "policy_id": "door.fill-existing-opening.l2",
+      "policy_version": "0.1",
+      "reason": "Mandatory L1 and L2 jointly determine operation success.",
+      "status": "passed"
+    }
+  ],
+  "policy_version": "phase8.1",
+  "preservation": {
+    "applicability": "required",
+    "check_id": "preservation.valid",
+    "evidence": [
+      {
+        "actual_state": "available",
+        "actual_value": {
+          "l1_status": "passed"
+        },
+        "expected_state": "available",
+        "expected_value": "passed",
+        "fact_id": "preservation.valid.evidence",
+        "provenance": [
+          "application_result",
+          "preservation.valid"
+        ],
+        "source_kind": "application_result",
+        "source_ref": "preservation.valid"
+      }
+    ],
+    "mandatory": true,
+    "policy_id": "evaluation.phase8",
+    "reason": "Independent L1 evidence must authorize preservation and scope effects.",
+    "status": "passed"
+  },
+  "reason": "Application, preservation, and mandatory L1/L2 are strict gates.",
+  "schema_version": "text2ifc/ifc-repair-evaluation/0.2",
+  "status": "passed",
+  "successful_artifact_publishable": true
+}

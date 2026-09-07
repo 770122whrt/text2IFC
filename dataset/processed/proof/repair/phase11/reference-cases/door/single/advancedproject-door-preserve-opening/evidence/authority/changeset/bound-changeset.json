@@ -1,0 +1,77 @@
+{
+  "base_model_fingerprint": "sha256:8e187d9a9ce07067f276c8afb056e294d83b08098371f619ac3b76577f5576bd",
+  "binding_status": "bound",
+  "changeset_id": "changeset-advancedproject-door-preserve-opening",
+  "evidence_refs": [
+    "request:/operation"
+  ],
+  "operations": [
+    {
+      "evidence_refs": [
+        "request:/operation"
+      ],
+      "operation_id": "operation-advancedproject-door-preserve-opening",
+      "operation_type": "fill_existing_opening_with_door",
+      "parameters": {
+        "door": {
+          "operation_type": "NOTDEFINED",
+          "overall_height_mm": 2134.0,
+          "overall_width_mm": 915.000000000034
+        },
+        "host_wall_global_id": "0MOEoDTm9EnO9yKsXjjlBg",
+        "opening": {
+          "height_mm": 2134.0,
+          "sill_height_mm": 0.0,
+          "width_mm": 915.0
+        },
+        "position": {
+          "center_offset_mm": 725.21419,
+          "reference": "wall_local_start"
+        }
+      },
+      "semantic_assignments": [
+        {
+          "applicability": "required",
+          "authoring_action": "inherit_from_type",
+          "fact_key": "relationship:type",
+          "operation_id": "operation-advancedproject-door-preserve-opening",
+          "ownership": "type_inherited",
+          "provenance": [
+            "explicit-type-reuse:request"
+          ],
+          "scope": "door_occurrence",
+          "source_fact_key": "relationship:type",
+          "source_kind": "type_inherited",
+          "source_ref": "formal-type:0Zs4aBjAr5AggJ3NBmSI$y",
+          "unit": null,
+          "value": "0Zs4aBjAr5AggJ3NBmSI$y",
+          "value_type": "IfcDoorStyle"
+        }
+      ],
+      "semantic_manifest": {
+        "manifest_id": "manifest-operation-advancedproject-door-preserve-opening",
+        "policy_id": "door.fill-existing-opening.l2",
+        "policy_version": "0.1"
+      },
+      "target": {
+        "opening_global_id": "0MOEoDTm9EnO9yKtjjjkME"
+      }
+    }
+  ],
+  "postconditions": [
+    "door_fills_opening"
+  ],
+  "preconditions": [
+    "opening_available"
+  ],
+  "schema_version": "text2ifc/ifc-repair-changeset/0.4",
+  "scope": {
+    "forbidden_ids": [],
+    "target_ids": [
+      "0MOEoDTm9EnO9yKtjjjkME"
+    ]
+  },
+  "semantic_manifest_ref": "semantic-manifest.json",
+  "semantic_manifest_sha256": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+  "source_request_hash": "sha256:3d9255a7afe73b8e719fae3677849fa4459445988af70b70fd84d420bdc35346"
+}

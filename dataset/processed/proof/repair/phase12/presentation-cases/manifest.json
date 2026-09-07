@@ -1,0 +1,614 @@
+{
+  "schema_version": "text2ifc/workflow-proof-package/0.1",
+  "collection_id": "presentation-cases",
+  "workflow": "repair",
+  "status": "pending_human_review",
+  "phase_assignment": "Phase 12 structural/mixed workflow organization; no phase acceptance change",
+  "cases": [
+    {
+      "case_id": "case-01-type-reuse",
+      "path": "case-01-type-reuse",
+      "status": "pending_human_review",
+      "run_status": "passed",
+      "outcome": "repaired",
+      "evidence_mode": "live",
+      "provider_calls": 2,
+      "run_id": "repair-a8f9a208687a4e6b92f3b2b822e469d3",
+      "authority": "case-01-type-reuse/evidence/frozen/authority.json",
+      "original_role": "physical_fixture_non_private_audit",
+      "ifccompare": "physical comparison applicable; third-party IFCCompare not run",
+      "artifacts": {
+        "01-original.ifc": {
+          "sha256": "b6c435be955aeb6b2998f42a62f4ebf8c3f91eb7d373ca71a2dcedfeb95b3fdc",
+          "size_bytes": 2409268,
+          "source": "case-01-type-reuse/01-original.ifc"
+        },
+        "02-damaged.ifc": {
+          "sha256": "a611a682c79a79ace18a16bf5f1497bf32fe43a9447b92af22168149b36d20e4",
+          "size_bytes": 2435315,
+          "source": "case-01-type-reuse/02-damaged.ifc"
+        },
+        "03-repaired.ifc": {
+          "sha256": "d856cfe98cd6bb2f5e05558ae5bc162e272de6080fda00184b6c9e8a4178d191",
+          "size_bytes": 2436288,
+          "source": "case-01-type-reuse/03-repaired.ifc"
+        },
+        "request.txt": {
+          "sha256": "0bc548ff92be42ddd07130cf0893cebed56c39321b2ea024181557c448fae697",
+          "size_bytes": 301,
+          "source": "case-01-type-reuse/request.txt"
+        }
+      }
+    },
+    {
+      "case_id": "case-02-explicit-color",
+      "path": "case-02-explicit-color",
+      "status": "pending_human_review",
+      "run_status": "passed",
+      "outcome": "repaired",
+      "evidence_mode": "live",
+      "provider_calls": 2,
+      "run_id": "repair-510a533e43c94b7083ea8824c2221685",
+      "authority": "case-02-explicit-color/evidence/frozen/authority.json",
+      "original_role": "physical_fixture_non_private_audit",
+      "ifccompare": "physical comparison applicable; third-party IFCCompare not run",
+      "artifacts": {
+        "01-original.ifc": {
+          "sha256": "b6c435be955aeb6b2998f42a62f4ebf8c3f91eb7d373ca71a2dcedfeb95b3fdc",
+          "size_bytes": 2409268,
+          "source": "case-02-explicit-color/01-original.ifc"
+        },
+        "02-damaged.ifc": {
+          "sha256": "a611a682c79a79ace18a16bf5f1497bf32fe43a9447b92af22168149b36d20e4",
+          "size_bytes": 2435315,
+          "source": "case-02-explicit-color/02-damaged.ifc"
+        },
+        "03-repaired.ifc": {
+          "sha256": "369531aabc3c611b6d3096d882db99dd9b5efac9797cc2b3ce02c35c2fc2d95b",
+          "size_bytes": 2436569,
+          "source": "case-02-explicit-color/03-repaired.ifc"
+        },
+        "request.txt": {
+          "sha256": "fe1f6eabe7d44767cdd4f843dbe25eaaffb83b65d2c905d2669f757ba010e943",
+          "size_bytes": 474,
+          "source": "case-02-explicit-color/request.txt"
+        }
+      }
+    },
+    {
+      "case_id": "case-03-mixed-material-color",
+      "path": "case-03-mixed-material-color",
+      "status": "pending_human_review",
+      "run_status": "passed",
+      "outcome": "repaired",
+      "evidence_mode": "live",
+      "provider_calls": 2,
+      "run_id": "repair-9c96869574ac414bb8af8d857055e0bb",
+      "authority": "case-03-mixed-material-color/evidence/frozen/authority.json",
+      "original_role": "physical_fixture_non_private_audit",
+      "ifccompare": "physical comparison applicable; third-party IFCCompare not run",
+      "artifacts": {
+        "01-original.ifc": {
+          "sha256": "b6c435be955aeb6b2998f42a62f4ebf8c3f91eb7d373ca71a2dcedfeb95b3fdc",
+          "size_bytes": 2409268,
+          "source": "case-03-mixed-material-color/01-original.ifc"
+        },
+        "02-damaged.ifc": {
+          "sha256": "4a0116d439bcc286e501f459afb4fe31c9607d9233f18fb373921d991c436e66",
+          "size_bytes": 2428264,
+          "source": "case-03-mixed-material-color/02-damaged.ifc"
+        },
+        "03-repaired.ifc": {
+          "sha256": "e93b222a63606f176da74f7ff869fdf860c7eda4e93c2b35d6e85807aae1c68d",
+          "size_bytes": 2442144,
+          "source": "case-03-mixed-material-color/03-repaired.ifc"
+        },
+        "request.txt": {
+          "sha256": "7af95e2e5cb9145ac697505812f53ad2b60a227e77e848e027f956f48bd708bd",
+          "size_bytes": 2990,
+          "source": "case-03-mixed-material-color/request.txt"
+        }
+      }
+    }
+  ],
+  "legacy_bundles": [
+    {
+      "id": "presentation-case-01-type-reuse",
+      "old_root": "dataset/processed/ifc-presentation-validation/success-cases/case-01-type-reuse",
+      "entries": [
+        {
+          "legacy_path": "01-original.ifc",
+          "path": "case-01-type-reuse/01-original.ifc",
+          "sha256": "b6c435be955aeb6b2998f42a62f4ebf8c3f91eb7d373ca71a2dcedfeb95b3fdc",
+          "size_bytes": 2409268
+        },
+        {
+          "legacy_path": "02-damaged.ifc",
+          "path": "case-01-type-reuse/02-damaged.ifc",
+          "sha256": "a611a682c79a79ace18a16bf5f1497bf32fe43a9447b92af22168149b36d20e4",
+          "size_bytes": 2435315
+        },
+        {
+          "legacy_path": "03-repaired.ifc",
+          "path": "case-01-type-reuse/03-repaired.ifc",
+          "sha256": "d856cfe98cd6bb2f5e05558ae5bc162e272de6080fda00184b6c9e8a4178d191",
+          "size_bytes": 2436288
+        },
+        {
+          "legacy_path": "evidence/frozen/authority.json",
+          "path": "case-01-type-reuse/evidence/frozen/authority.json",
+          "sha256": "c1be8a2c1487d90fecd955cde223f7aec7ac8088fb4334cdf096b46ee8b97938",
+          "size_bytes": 1063
+        },
+        {
+          "legacy_path": "evidence/provider-evidence/stage1-attempt-001.json",
+          "path": "case-01-type-reuse/evidence/provider-evidence/stage1-attempt-001.json",
+          "sha256": "2b84138d15b8946ddce7918b37d6121fbc2ee500017fb89c4ef0e2d4e5c830a6",
+          "size_bytes": 4139
+        },
+        {
+          "legacy_path": "evidence/provider-evidence/stage1-live-attempt-001.json",
+          "path": "case-01-type-reuse/evidence/provider-evidence/stage1-live-attempt-001.json",
+          "sha256": "f5bde73a0a16e3a125e12fa957283affb1f3b9a535d428f0821594c23b3ead57",
+          "size_bytes": 90973
+        },
+        {
+          "legacy_path": "evidence/provider-evidence/stage1-rendered-prompt.md",
+          "path": "case-01-type-reuse/evidence/provider-evidence/stage1-rendered-prompt.md",
+          "sha256": "168c6c3a1bc12ca63fea22845d73f05fdf489b9cba1f7884471e7587e7434d26",
+          "size_bytes": 41739
+        },
+        {
+          "legacy_path": "evidence/provider-evidence/stage2-diagnostics.json",
+          "path": "case-01-type-reuse/evidence/provider-evidence/stage2-diagnostics.json",
+          "sha256": "0e9233444afc87630093dc8387ee4369dd675563dbbbe89c8916207e84879d2e",
+          "size_bytes": 122
+        },
+        {
+          "legacy_path": "evidence/provider-evidence/stage2-live-request.json",
+          "path": "case-01-type-reuse/evidence/provider-evidence/stage2-live-request.json",
+          "sha256": "c5b6158d210d55786c16d98764899aa9609562a0982c9e6bd7757a575a5b47ac",
+          "size_bytes": 11732
+        },
+        {
+          "legacy_path": "evidence/provider-evidence/stage2-live-response.json",
+          "path": "case-01-type-reuse/evidence/provider-evidence/stage2-live-response.json",
+          "sha256": "e8acbdc0e395db5ebede514454b651b8e5d20e3cdc2c3696d96e40e4ad6854ae",
+          "size_bytes": 37975
+        },
+        {
+          "legacy_path": "evidence/provider-evidence/stage2-provider-metadata.json",
+          "path": "case-01-type-reuse/evidence/provider-evidence/stage2-provider-metadata.json",
+          "sha256": "7c1ba1448045c44750cd74e5abeb126e5cd4e816fb581df599cd96d534eadc9a",
+          "size_bytes": 800
+        },
+        {
+          "legacy_path": "evidence/provider-evidence/stage2-raw-response.txt",
+          "path": "case-01-type-reuse/evidence/provider-evidence/stage2-raw-response.txt",
+          "sha256": "9737c982e089b50f2a3c8cf0d53daeec6098cdcb801e4e909bea5f715660e884",
+          "size_bytes": 1287
+        },
+        {
+          "legacy_path": "evidence/provider-evidence/stage2-rendered-prompt.md",
+          "path": "case-01-type-reuse/evidence/provider-evidence/stage2-rendered-prompt.md",
+          "sha256": "98b0bfdc8512316251da00b85c57f8840045dbe21af91144023744be808496f8",
+          "size_bytes": 10386
+        },
+        {
+          "legacy_path": "evidence/runtime/api-context.json",
+          "path": "case-01-type-reuse/evidence/runtime/api-context.json",
+          "sha256": "f920f21129bb407db94d7dd67686cf00797179a2157076d693bc089fd0d2f38f",
+          "size_bytes": 2896
+        },
+        {
+          "legacy_path": "evidence/runtime/artifact-manifest.json",
+          "path": "case-01-type-reuse/evidence/runtime/artifact-manifest.json",
+          "sha256": "e638aecf982db34a09277203929f3f26f1c278c6e35f7d99e567efb54e83fd35",
+          "size_bytes": 706
+        },
+        {
+          "legacy_path": "evidence/runtime/bound-changeset.json",
+          "path": "case-01-type-reuse/evidence/runtime/bound-changeset.json",
+          "sha256": "3a8c232082f329c68b58b38d2025007b40695a59f2ad864f2cc208340190e5b2",
+          "size_bytes": 12208
+        },
+        {
+          "legacy_path": "evidence/runtime/repair-intent.json",
+          "path": "case-01-type-reuse/evidence/runtime/repair-intent.json",
+          "sha256": "8f6869a1b7375642b9f72a5ec880a9d12ffdfe6b266383105f607994c80f9552",
+          "size_bytes": 3217
+        },
+        {
+          "legacy_path": "evidence/runtime/resolution.json",
+          "path": "case-01-type-reuse/evidence/runtime/resolution.json",
+          "sha256": "e80e24006d60805a0e60035d0485d8d5cfc1c93763e9b83e8f8b5d46e78decc1",
+          "size_bytes": 3399
+        },
+        {
+          "legacy_path": "evidence/runtime/run-state.json",
+          "path": "case-01-type-reuse/evidence/runtime/run-state.json",
+          "sha256": "b653bc8e510d7f975bf5251b7aa9798fd6779f92abcec3d94ce6e2f43f40293a",
+          "size_bytes": 7923
+        },
+        {
+          "legacy_path": "evidence/runtime/semantic-manifest.json",
+          "path": "case-01-type-reuse/evidence/runtime/semantic-manifest.json",
+          "sha256": "a76bb59e92bb5d607d31f8dea4ca3ad4f09d4ff5a6365df3a7eb4886a8fb6be0",
+          "size_bytes": 7677
+        },
+        {
+          "legacy_path": "evidence/runtime/terminal-evidence.json",
+          "path": "case-01-type-reuse/evidence/runtime/terminal-evidence.json",
+          "sha256": "8429f4bb5d9f854bb22d548b7f7e1e14dba144cb4288566907a88dc3e6c6eacd",
+          "size_bytes": 6641
+        },
+        {
+          "legacy_path": "evidence/validation/intent-completeness.json",
+          "path": "case-01-type-reuse/evidence/validation/intent-completeness.json",
+          "sha256": "94e8b83114556012bb15fbf4697bcaefab1c4f2a72bda07e9383f9f04e1bc8be",
+          "size_bytes": 187
+        },
+        {
+          "legacy_path": "evidence/validation/proof-check.json",
+          "path": "case-01-type-reuse/evidence/validation/proof-check.json",
+          "sha256": "8fb3795b4dfcf2e0a7f491e3449a7992ed6d25a4b4156fb993de0ae8bca74b60",
+          "size_bytes": 490
+        },
+        {
+          "legacy_path": "evidence/validation/public-evaluation.json",
+          "path": "case-01-type-reuse/evidence/validation/public-evaluation.json",
+          "sha256": "1e0f20af959d14fb2f7caade00ca9badd938a92f61dd552d49632510d922a40e",
+          "size_bytes": 9344
+        },
+        {
+          "legacy_path": "REPORT.md",
+          "path": "case-01-type-reuse/evidence/frozen/source-REPORT.md",
+          "sha256": "39116295dba6cb12a2a14eae60c32a1ffd1756f4149c5313ba6a2a29032a96c4",
+          "size_bytes": 2086
+        },
+        {
+          "legacy_path": "request.txt",
+          "path": "case-01-type-reuse/request.txt",
+          "sha256": "0bc548ff92be42ddd07130cf0893cebed56c39321b2ea024181557c448fae697",
+          "size_bytes": 301
+        }
+      ]
+    },
+    {
+      "id": "presentation-case-02-explicit-color",
+      "old_root": "dataset/processed/ifc-presentation-validation/success-cases/case-02-explicit-color",
+      "entries": [
+        {
+          "legacy_path": "01-original.ifc",
+          "path": "case-02-explicit-color/01-original.ifc",
+          "sha256": "b6c435be955aeb6b2998f42a62f4ebf8c3f91eb7d373ca71a2dcedfeb95b3fdc",
+          "size_bytes": 2409268
+        },
+        {
+          "legacy_path": "02-damaged.ifc",
+          "path": "case-02-explicit-color/02-damaged.ifc",
+          "sha256": "a611a682c79a79ace18a16bf5f1497bf32fe43a9447b92af22168149b36d20e4",
+          "size_bytes": 2435315
+        },
+        {
+          "legacy_path": "03-repaired.ifc",
+          "path": "case-02-explicit-color/03-repaired.ifc",
+          "sha256": "369531aabc3c611b6d3096d882db99dd9b5efac9797cc2b3ce02c35c2fc2d95b",
+          "size_bytes": 2436569
+        },
+        {
+          "legacy_path": "evidence/frozen/authority.json",
+          "path": "case-02-explicit-color/evidence/frozen/authority.json",
+          "sha256": "4ea6bc1a37b48e738ff506d5566640f45c675ae710f4352e2aaf9606851947b8",
+          "size_bytes": 1052
+        },
+        {
+          "legacy_path": "evidence/provider-evidence/stage1-attempt-001.json",
+          "path": "case-02-explicit-color/evidence/provider-evidence/stage1-attempt-001.json",
+          "sha256": "c48b1ddd16f9909d0bed3a124e4cc9317d2afa65939e5ae8cad8101b355fea4e",
+          "size_bytes": 5493
+        },
+        {
+          "legacy_path": "evidence/provider-evidence/stage1-live-attempt-001.json",
+          "path": "case-02-explicit-color/evidence/provider-evidence/stage1-live-attempt-001.json",
+          "sha256": "3076e679363125101ba9502ec004d47513c835b993be88f0b893f498c9a763d1",
+          "size_bytes": 160278
+        },
+        {
+          "legacy_path": "evidence/provider-evidence/stage1-rendered-prompt.md",
+          "path": "case-02-explicit-color/evidence/provider-evidence/stage1-rendered-prompt.md",
+          "sha256": "85db2dfac2efb2f1e281ea291a022c6f6fe7af7f8d2179380988680f01b6375f",
+          "size_bytes": 43088
+        },
+        {
+          "legacy_path": "evidence/provider-evidence/stage2-diagnostics.json",
+          "path": "case-02-explicit-color/evidence/provider-evidence/stage2-diagnostics.json",
+          "sha256": "0e9233444afc87630093dc8387ee4369dd675563dbbbe89c8916207e84879d2e",
+          "size_bytes": 122
+        },
+        {
+          "legacy_path": "evidence/provider-evidence/stage2-live-request.json",
+          "path": "case-02-explicit-color/evidence/provider-evidence/stage2-live-request.json",
+          "sha256": "82c36d00b89478db38db015706588694950befbb96e01b44dfe7d4ecc585de62",
+          "size_bytes": 12956
+        },
+        {
+          "legacy_path": "evidence/provider-evidence/stage2-live-response.json",
+          "path": "case-02-explicit-color/evidence/provider-evidence/stage2-live-response.json",
+          "sha256": "4a91bd8d448cafe7c63ca276c4ccc4ea0738b22bacf92cb45ad0499b1604e35f",
+          "size_bytes": 9519
+        },
+        {
+          "legacy_path": "evidence/provider-evidence/stage2-provider-metadata.json",
+          "path": "case-02-explicit-color/evidence/provider-evidence/stage2-provider-metadata.json",
+          "sha256": "ae45db4cf6adc86b324571fbc7790e11a19b3d2a103d0df11fdbe4757884bddd",
+          "size_bytes": 799
+        },
+        {
+          "legacy_path": "evidence/provider-evidence/stage2-raw-response.txt",
+          "path": "case-02-explicit-color/evidence/provider-evidence/stage2-raw-response.txt",
+          "sha256": "3b2230cd794db468cb719b287b12531d131105456cff1b4415246bbf4a346611",
+          "size_bytes": 1875
+        },
+        {
+          "legacy_path": "evidence/provider-evidence/stage2-rendered-prompt.md",
+          "path": "case-02-explicit-color/evidence/provider-evidence/stage2-rendered-prompt.md",
+          "sha256": "55ef40aedfcefa37dfb4dde357bec5e9498f0064b0b4f0ca211c6ed0c056af1e",
+          "size_bytes": 11468
+        },
+        {
+          "legacy_path": "evidence/runtime/api-context.json",
+          "path": "case-02-explicit-color/evidence/runtime/api-context.json",
+          "sha256": "7277281dfbd5e5c554016643f99db8dc4f7f8cd01e3b42a9da7c9daa9850b009",
+          "size_bytes": 4067
+        },
+        {
+          "legacy_path": "evidence/runtime/artifact-manifest.json",
+          "path": "case-02-explicit-color/evidence/runtime/artifact-manifest.json",
+          "sha256": "90f3d9a28d2f988e036de8a759616fd31502b0dba73f4c8b73b7b7c8b883d422",
+          "size_bytes": 706
+        },
+        {
+          "legacy_path": "evidence/runtime/bound-changeset.json",
+          "path": "case-02-explicit-color/evidence/runtime/bound-changeset.json",
+          "sha256": "a35fd550826f440aecd37800a4fcdebc35c083677c6c96c66de0c485ddfb102d",
+          "size_bytes": 13065
+        },
+        {
+          "legacy_path": "evidence/runtime/repair-intent.json",
+          "path": "case-02-explicit-color/evidence/runtime/repair-intent.json",
+          "sha256": "5f0250ea8a7a87d82240d28500279a3d525d3acdbb1c30ef92e44c75b2687cb2",
+          "size_bytes": 4452
+        },
+        {
+          "legacy_path": "evidence/runtime/resolution.json",
+          "path": "case-02-explicit-color/evidence/runtime/resolution.json",
+          "sha256": "790ad1a9822e95ade2c3b4fdcc69e83856cae1011ba0cadcaa7318bb5defee1e",
+          "size_bytes": 3482
+        },
+        {
+          "legacy_path": "evidence/runtime/run-state.json",
+          "path": "case-02-explicit-color/evidence/runtime/run-state.json",
+          "sha256": "12110c4c988a161f3f27fb532e5f0dacae42e1f1a8ce5a3d040c08e90e3ae830",
+          "size_bytes": 7927
+        },
+        {
+          "legacy_path": "evidence/runtime/semantic-manifest.json",
+          "path": "case-02-explicit-color/evidence/runtime/semantic-manifest.json",
+          "sha256": "eb6bbcb391b4dc853b5be7910ac6316e6ee97af5ba1a568f68087ec745595e0d",
+          "size_bytes": 8148
+        },
+        {
+          "legacy_path": "evidence/runtime/terminal-evidence.json",
+          "path": "case-02-explicit-color/evidence/runtime/terminal-evidence.json",
+          "sha256": "6d22569b3cc009d10a93f026fb247b7374560436802ac78aeeef9d79bb46d57f",
+          "size_bytes": 7233
+        },
+        {
+          "legacy_path": "evidence/validation/independent-validation-original.json",
+          "path": "case-02-explicit-color/evidence/validation/independent-validation-original.json",
+          "sha256": "0f7faaa45130213a7b455d9f42da1c0a7648293d72408394bd2d141453034b3d",
+          "size_bytes": 2454
+        },
+        {
+          "legacy_path": "evidence/validation/intent-completeness.json",
+          "path": "case-02-explicit-color/evidence/validation/intent-completeness.json",
+          "sha256": "94e8b83114556012bb15fbf4697bcaefab1c4f2a72bda07e9383f9f04e1bc8be",
+          "size_bytes": 187
+        },
+        {
+          "legacy_path": "evidence/validation/proof-check.json",
+          "path": "case-02-explicit-color/evidence/validation/proof-check.json",
+          "sha256": "0410766758ed82a8dacccb0b547eee0f3b68f80c34685ff23b2e04411c577c2d",
+          "size_bytes": 494
+        },
+        {
+          "legacy_path": "evidence/validation/public-evaluation.json",
+          "path": "case-02-explicit-color/evidence/validation/public-evaluation.json",
+          "sha256": "9b0d9cdf69cd9c58420641099e7a30552989ef72180894b9bfa8cbe3765245d8",
+          "size_bytes": 9346
+        },
+        {
+          "legacy_path": "REPORT.md",
+          "path": "case-02-explicit-color/evidence/frozen/source-REPORT.md",
+          "sha256": "e235889a4d7ead70c2b3e7681acb09d54cbb7ebe34ff01b0c14d53557f0e56ec",
+          "size_bytes": 2107
+        },
+        {
+          "legacy_path": "request.txt",
+          "path": "case-02-explicit-color/request.txt",
+          "sha256": "fe1f6eabe7d44767cdd4f843dbe25eaaffb83b65d2c905d2669f757ba010e943",
+          "size_bytes": 474
+        }
+      ]
+    },
+    {
+      "id": "presentation-case-03-mixed-material-color",
+      "old_root": "dataset/processed/ifc-presentation-validation/success-cases/case-03-mixed-material-color",
+      "entries": [
+        {
+          "legacy_path": "01-original.ifc",
+          "path": "case-03-mixed-material-color/01-original.ifc",
+          "sha256": "b6c435be955aeb6b2998f42a62f4ebf8c3f91eb7d373ca71a2dcedfeb95b3fdc",
+          "size_bytes": 2409268
+        },
+        {
+          "legacy_path": "02-damaged.ifc",
+          "path": "case-03-mixed-material-color/02-damaged.ifc",
+          "sha256": "4a0116d439bcc286e501f459afb4fe31c9607d9233f18fb373921d991c436e66",
+          "size_bytes": 2428264
+        },
+        {
+          "legacy_path": "03-repaired.ifc",
+          "path": "case-03-mixed-material-color/03-repaired.ifc",
+          "sha256": "e93b222a63606f176da74f7ff869fdf860c7eda4e93c2b35d6e85807aae1c68d",
+          "size_bytes": 2442144
+        },
+        {
+          "legacy_path": "evidence/frozen/authority.json",
+          "path": "case-03-mixed-material-color/evidence/frozen/authority.json",
+          "sha256": "36c9f041222469c52af4d6458677cd926222c80ac6ba33bf620aab5ca98bf7a6",
+          "size_bytes": 1057
+        },
+        {
+          "legacy_path": "evidence/provider-evidence/stage1-attempt-001.json",
+          "path": "case-03-mixed-material-color/evidence/provider-evidence/stage1-attempt-001.json",
+          "sha256": "182b0b822c583d1c5b94bb830ae0611be8d46e5d25a3603e44487eea8fa51703",
+          "size_bytes": 6261
+        },
+        {
+          "legacy_path": "evidence/provider-evidence/stage1-live-attempt-001.json",
+          "path": "case-03-mixed-material-color/evidence/provider-evidence/stage1-live-attempt-001.json",
+          "sha256": "324e9b5f8b5be92b292fd20a06c355332d289b91fe98bf6d141deb74b85c5a49",
+          "size_bytes": 288655
+        },
+        {
+          "legacy_path": "evidence/provider-evidence/stage1-rendered-prompt.md",
+          "path": "case-03-mixed-material-color/evidence/provider-evidence/stage1-rendered-prompt.md",
+          "sha256": "7c618b83c34054df9ca24517b373dbed61636ae2fa84331f5d04376d1d8ed6e5",
+          "size_bytes": 47648
+        },
+        {
+          "legacy_path": "evidence/provider-evidence/stage2-diagnostics.json",
+          "path": "case-03-mixed-material-color/evidence/provider-evidence/stage2-diagnostics.json",
+          "sha256": "0e9233444afc87630093dc8387ee4369dd675563dbbbe89c8916207e84879d2e",
+          "size_bytes": 122
+        },
+        {
+          "legacy_path": "evidence/provider-evidence/stage2-live-request.json",
+          "path": "case-03-mixed-material-color/evidence/provider-evidence/stage2-live-request.json",
+          "sha256": "a7533da8f55a5a0c238cc2d1322dba24b8854947bf576270985c8781bf70e311",
+          "size_bytes": 44785
+        },
+        {
+          "legacy_path": "evidence/provider-evidence/stage2-live-response.json",
+          "path": "case-03-mixed-material-color/evidence/provider-evidence/stage2-live-response.json",
+          "sha256": "790aa27a74ff817c549faf0bc8d2ff9470f2c0cadb35a2d725f76116a1395713",
+          "size_bytes": 66953
+        },
+        {
+          "legacy_path": "evidence/provider-evidence/stage2-provider-metadata.json",
+          "path": "case-03-mixed-material-color/evidence/provider-evidence/stage2-provider-metadata.json",
+          "sha256": "1439f890f98f3c606dd6d44e836ff86de0ba73ea9f33ac5112bdd1018066a3f8",
+          "size_bytes": 802
+        },
+        {
+          "legacy_path": "evidence/provider-evidence/stage2-raw-response.txt",
+          "path": "case-03-mixed-material-color/evidence/provider-evidence/stage2-raw-response.txt",
+          "sha256": "7c753220468014e7f29ef5c7adf30f91caa674570fae149e08c54a6ca636b8bf",
+          "size_bytes": 8306
+        },
+        {
+          "legacy_path": "evidence/provider-evidence/stage2-rendered-prompt.md",
+          "path": "case-03-mixed-material-color/evidence/provider-evidence/stage2-rendered-prompt.md",
+          "sha256": "57c7ed72e3dfb40838557056d9e8b45bad0765c4e2d1a84b4f0cbe59f3e7c718",
+          "size_bytes": 41119
+        },
+        {
+          "legacy_path": "evidence/runtime/api-context.json",
+          "path": "case-03-mixed-material-color/evidence/runtime/api-context.json",
+          "sha256": "283dc2698a2dbbd985f7bf515cec42473c6bd78d93036f8f6770dbf3688ae3f5",
+          "size_bytes": 18117
+        },
+        {
+          "legacy_path": "evidence/runtime/artifact-manifest.json",
+          "path": "case-03-mixed-material-color/evidence/runtime/artifact-manifest.json",
+          "sha256": "79e617523cec9c96ba6753cb184285d6d0b9feded1ccc6f3493cbbe3578421a1",
+          "size_bytes": 709
+        },
+        {
+          "legacy_path": "evidence/runtime/bound-changeset.json",
+          "path": "case-03-mixed-material-color/evidence/runtime/bound-changeset.json",
+          "sha256": "f8479eecfd8f77f9229d925368470d827f6df842b4770e24ae5b9832c65dfc5b",
+          "size_bytes": 54122
+        },
+        {
+          "legacy_path": "evidence/runtime/repair-intent.json",
+          "path": "case-03-mixed-material-color/evidence/runtime/repair-intent.json",
+          "sha256": "9a1a1ce31f04239114a67fc54bc5733d774546f8336c75972058d989e362eb49",
+          "size_bytes": 20124
+        },
+        {
+          "legacy_path": "evidence/runtime/resolution.json",
+          "path": "case-03-mixed-material-color/evidence/runtime/resolution.json",
+          "sha256": "bd7e501d81d7afa525ef7891b23147ce26c02b853e8c8f9da151ec20ecddec08",
+          "size_bytes": 26213
+        },
+        {
+          "legacy_path": "evidence/runtime/run-state.json",
+          "path": "case-03-mixed-material-color/evidence/runtime/run-state.json",
+          "sha256": "cb8546350ce13c4c126b1256479b3820f84e07b5b988d609285f10f6b7d89608",
+          "size_bytes": 7904
+        },
+        {
+          "legacy_path": "evidence/runtime/semantic-manifests.json",
+          "path": "case-03-mixed-material-color/evidence/runtime/semantic-manifests.json",
+          "sha256": "c9bec3e7e0bd105d048e7f57ec9b78180df0fe7f07eb0fd078836a61b3ee36b1",
+          "size_bytes": 34139
+        },
+        {
+          "legacy_path": "evidence/runtime/terminal-evidence.json",
+          "path": "case-03-mixed-material-color/evidence/runtime/terminal-evidence.json",
+          "sha256": "e0aa32c5f80b3944022d4506d33fc09cacf1f7faf3b15217a98ccdc35c5a58ee",
+          "size_bytes": 48131
+        },
+        {
+          "legacy_path": "evidence/validation/independent-validation-original.json",
+          "path": "case-03-mixed-material-color/evidence/validation/independent-validation-original.json",
+          "sha256": "f743be21533473bb48bf4d548d987a09b3d6321ebd948e2ea8b8671bd6c30a75",
+          "size_bytes": 2102
+        },
+        {
+          "legacy_path": "evidence/validation/intent-completeness.json",
+          "path": "case-03-mixed-material-color/evidence/validation/intent-completeness.json",
+          "sha256": "94e8b83114556012bb15fbf4697bcaefab1c4f2a72bda07e9383f9f04e1bc8be",
+          "size_bytes": 187
+        },
+        {
+          "legacy_path": "evidence/validation/proof-check.json",
+          "path": "case-03-mixed-material-color/evidence/validation/proof-check.json",
+          "sha256": "a096346ade141f658f49ffe8ffbbbf9acbef540b46a9d951f73808000563a6f7",
+          "size_bytes": 1295
+        },
+        {
+          "legacy_path": "evidence/validation/public-evaluation.json",
+          "path": "case-03-mixed-material-color/evidence/validation/public-evaluation.json",
+          "sha256": "e3ba839cc21d076a51387994cae563c7b40977c49a5a8587711c82a07708740a",
+          "size_bytes": 132178
+        },
+        {
+          "legacy_path": "REPORT.md",
+          "path": "case-03-mixed-material-color/evidence/frozen/source-REPORT.md",
+          "sha256": "03868d0acbde6840887c935ae897683d2d89b5ff604346347f746063400eba41",
+          "size_bytes": 2464
+        },
+        {
+          "legacy_path": "request.txt",
+          "path": "case-03-mixed-material-color/request.txt",
+          "sha256": "7af95e2e5cb9145ac697505812f53ad2b60a227e77e848e027f956f48bd708bd",
+          "size_bytes": 2990
+        }
+      ]
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 # phase12-plan07-live-structural-program-guard
 
-状态：**pending_human_review**；证据方式：`live`。此次只整理展示，不改变原验收或 Phase 状态。
+状态：**accepted**；证据方式：`live`。2026-09-07 用户人工审查通过；原机器结果及 Phase 状态不变。
 
 ## 请求与输入
 
@@ -29,11 +29,11 @@
 | 语义结果 | 原记录为正确拒绝该不受支持请求。 |
 | 确定性执行 | 正确无输出；Stage 2 / apply / publish 的原记录见下方 |
 | 产物 | no_output；本轮只验证可发现性、来源一致性与 reopen |
-| 证据合同 | [原权威报告](<../../../../ifc-repair-success-cases-v2-plan07-staging/plan07-live-v2-uat-20260903T095045509630Z/cases/program-guard/REPORT.md>)；原权威保持原位 |
+| 证据合同 | [原权威报告](<evidence/authority/REPORT.md>)；原权威字节已集中；旧路径由集合迁移索引解释 |
 | IFCCompare | N/A：仅物理对照，无 case-specific private Gold |
 | genuine run ID | uat-20260903T095045509630Z |
 | Provider 调用次数 | 1 |
-| 人工审查 | pending_human_review；本轮不提升状态 |
+| 人工审查 | accepted；用户于 2026-09-07 明确批准 |
 
 ### 原记录中的适用检查
 

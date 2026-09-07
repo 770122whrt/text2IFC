@@ -29,7 +29,7 @@
 | 语义结果 | 原记录为正确拒绝该不受支持请求。 |
 | 确定性执行 | 正确无输出；Stage 2 / apply / publish 的原记录见下方 |
 | 产物 | no_output；本轮只验证可发现性、来源一致性与 reopen |
-| 证据合同 | [原运行材料](<../../../../phase11-live-uat/uat-20260731T224900289758Z/unsupported>)；原权威保持原位 |
+| 证据合同 | [原运行材料](<evidence/authority/case-result.json>)；原权威字节已集中；旧路径由集合迁移索引解释 |
 | IFCCompare | N/A：unsupported 无输出 |
 | genuine run ID | repair-091d667e6d334857aa364e8038ffd8e9 |
 | Provider 调用次数 | 1/0 (Stage 1/2) |

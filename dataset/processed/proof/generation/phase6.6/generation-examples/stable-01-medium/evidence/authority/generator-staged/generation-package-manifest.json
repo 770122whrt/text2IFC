@@ -1,0 +1,99 @@
+{
+  "issues": [],
+  "packages": [
+    {
+      "allowed_reference_ids": [],
+      "kind": "skeleton",
+      "owned_component_ids": [
+        "project-main",
+        "site-main",
+        "building-main",
+        "storey-1"
+      ],
+      "owned_relationship_ids": [
+        "aggregate-project-site",
+        "aggregate-site-building",
+        "aggregate-building-storeys"
+      ],
+      "package_id": "package-skeleton",
+      "storey_id": null
+    },
+    {
+      "allowed_reference_ids": [
+        "storey-1",
+        "wall-corridor-offA",
+        "wall-corridor-offB",
+        "wall-corridor-offC",
+        "wall-north-A",
+        "wall-north-B",
+        "wall-north-C",
+        "wall-south"
+      ],
+      "kind": "storey_local",
+      "owned_component_ids": [
+        "wall-west",
+        "wall-east",
+        "wall-south",
+        "wall-north-A",
+        "wall-north-B",
+        "wall-north-C",
+        "wall-corridor-offA",
+        "wall-corridor-offB",
+        "wall-corridor-offC",
+        "wall-offA-offB",
+        "wall-offB-offC",
+        "space-corridor",
+        "space-officeA",
+        "space-officeB",
+        "space-officeC",
+        "door-offA",
+        "opening-door-offA",
+        "door-offB",
+        "opening-door-offB",
+        "door-offC",
+        "opening-door-offC",
+        "door-main",
+        "opening-door-main",
+        "window-offA",
+        "opening-window-offA",
+        "window-offB",
+        "opening-window-offB",
+        "window-offC",
+        "opening-window-offC"
+      ],
+      "owned_relationship_ids": [
+        "rel-voids-door-offA",
+        "rel-fills-door-offA",
+        "rel-voids-door-offB",
+        "rel-fills-door-offB",
+        "rel-voids-door-offC",
+        "rel-fills-door-offC",
+        "rel-voids-door-main",
+        "rel-fills-door-main",
+        "rel-voids-window-offA",
+        "rel-fills-window-offA",
+        "rel-voids-window-offB",
+        "rel-fills-window-offB",
+        "rel-voids-window-offC",
+        "rel-fills-window-offC"
+      ],
+      "package_id": "package-storey-1",
+      "storey_id": "storey-1"
+    },
+    {
+      "allowed_reference_ids": [
+        "storey-1"
+      ],
+      "kind": "cross_storey",
+      "owned_component_ids": [
+        "ground-floor-slab"
+      ],
+      "owned_relationship_ids": [],
+      "package_id": "package-cross-storey",
+      "storey_id": null
+    }
+  ],
+  "schema_version": "text2ifc/generation-package-manifest/1.0",
+  "status": "ready",
+  "storey_count": 1
+}

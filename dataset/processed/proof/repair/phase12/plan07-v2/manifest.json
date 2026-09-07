@@ -1,190 +1,2679 @@
 {
-  "schema_version": "text2ifc/workflow-human-proof/0.1",
+  "schema_version": "text2ifc/workflow-proof-package/0.1",
   "collection_id": "plan07-v2",
   "workflow": "repair",
-  "status": "pending_human_review",
-  "authority": "dataset/processed/proof/ifc-repair-success-cases-v2-plan07-staging",
+  "status": "accepted",
   "cases": [
     {
       "case_id": "phase12-v2-vvo-beam-loadbearing-restoration",
       "path": "beam-loadbearing",
-      "status": "pending_human_review",
+      "status": "accepted",
       "outcome": "repaired",
       "evidence_mode": "offline_bound_deterministic",
       "provider_calls": 0,
       "run_id": "N/A（离线确定性）",
-      "authority": "dataset/processed/proof/ifc-repair-success-cases-v2-plan07-staging/structural/single/phase12-v2-vvo-beam-loadbearing-restoration",
+      "authority": "beam-loadbearing/evidence/authority/REPORT.md",
       "original_role": "private_ground_truth",
       "ifccompare": "沿用已冻结 private restoration / comparator 记录；本次不重跑",
       "artifacts": {
-        "01-original.ifc": "dataset/processed/proof/ifc-repair-success-cases-v2-plan07-staging/structural/single/phase12-v2-vvo-beam-loadbearing-restoration/original.ifc",
-        "02-damaged.ifc": "dataset/processed/proof/ifc-repair-success-cases-v2-plan07-staging/structural/single/phase12-v2-vvo-beam-loadbearing-restoration/damaged.ifc",
-        "03-repaired.ifc": "dataset/processed/proof/ifc-repair-success-cases-v2-plan07-staging/structural/single/phase12-v2-vvo-beam-loadbearing-restoration/repaired.ifc",
-        "request.txt": "dataset/processed/proof/ifc-repair-success-cases-v2-plan07-staging/structural/single/phase12-v2-vvo-beam-loadbearing-restoration/request.txt"
-      }
+        "01-original.ifc": {
+          "sha256": "b6c435be955aeb6b2998f42a62f4ebf8c3f91eb7d373ca71a2dcedfeb95b3fdc",
+          "size_bytes": 2409268,
+          "source": "beam-loadbearing/01-original.ifc"
+        },
+        "02-damaged.ifc": {
+          "sha256": "a611a682c79a79ace18a16bf5f1497bf32fe43a9447b92af22168149b36d20e4",
+          "size_bytes": 2435315,
+          "source": "beam-loadbearing/02-damaged.ifc"
+        },
+        "03-repaired.ifc": {
+          "sha256": "d60b997989c4441583d43d6e40d046a83cfbcb554874da83fd74f7cba80d5c83",
+          "size_bytes": 2436845,
+          "source": "beam-loadbearing/03-repaired.ifc"
+        },
+        "request.txt": {
+          "sha256": "de42ea501d3b0272aceee6143983dfc096743e525f5d70776fcda04062b54f00",
+          "size_bytes": 110,
+          "source": "beam-loadbearing/request.txt"
+        }
+      },
+      "legacy_authority": "dataset/processed/proof/ifc-repair-success-cases-v2-plan07-staging/structural/single/phase12-v2-vvo-beam-loadbearing-restoration"
     },
     {
       "case_id": "phase12-v2-vvo-column-loadbearing-restoration",
       "path": "column-loadbearing",
-      "status": "pending_human_review",
+      "status": "accepted",
       "outcome": "repaired",
       "evidence_mode": "offline_bound_deterministic",
       "provider_calls": 0,
       "run_id": "N/A（离线确定性）",
-      "authority": "dataset/processed/proof/ifc-repair-success-cases-v2-plan07-staging/structural/single/phase12-v2-vvo-column-loadbearing-restoration",
+      "authority": "column-loadbearing/evidence/authority/REPORT.md",
       "original_role": "private_ground_truth",
       "ifccompare": "沿用已冻结 private restoration / comparator 记录；本次不重跑",
       "artifacts": {
-        "01-original.ifc": "dataset/processed/proof/ifc-repair-success-cases-v2-plan07-staging/structural/single/phase12-v2-vvo-column-loadbearing-restoration/original.ifc",
-        "02-damaged.ifc": "dataset/processed/proof/ifc-repair-success-cases-v2-plan07-staging/structural/single/phase12-v2-vvo-column-loadbearing-restoration/damaged.ifc",
-        "03-repaired.ifc": "dataset/processed/proof/ifc-repair-success-cases-v2-plan07-staging/structural/single/phase12-v2-vvo-column-loadbearing-restoration/repaired.ifc",
-        "request.txt": "dataset/processed/proof/ifc-repair-success-cases-v2-plan07-staging/structural/single/phase12-v2-vvo-column-loadbearing-restoration/request.txt"
-      }
+        "01-original.ifc": {
+          "sha256": "b6c435be955aeb6b2998f42a62f4ebf8c3f91eb7d373ca71a2dcedfeb95b3fdc",
+          "size_bytes": 2409268,
+          "source": "column-loadbearing/01-original.ifc"
+        },
+        "02-damaged.ifc": {
+          "sha256": "0e36ffb6747fca2dfc65c0038be775b610bdcaeb28a0189786af29a697522f89",
+          "size_bytes": 2436369,
+          "source": "column-loadbearing/02-damaged.ifc"
+        },
+        "03-repaired.ifc": {
+          "sha256": "89a4e8562f353fa5d6387dc29f7c994d6ef1d15316e231c3c05ed206a09e8367",
+          "size_bytes": 2437931,
+          "source": "column-loadbearing/03-repaired.ifc"
+        },
+        "request.txt": {
+          "sha256": "3aef12f168328ff7e3936e4ea579e524c4309b9bdf913cafbacb60706d10adc0",
+          "size_bytes": 112,
+          "source": "column-loadbearing/request.txt"
+        }
+      },
+      "legacy_authority": "dataset/processed/proof/ifc-repair-success-cases-v2-plan07-staging/structural/single/phase12-v2-vvo-column-loadbearing-restoration"
     },
     {
       "case_id": "phase12-v2-vvo-beam-column-atomic-restoration",
       "path": "beam-column-atomic",
-      "status": "pending_human_review",
+      "status": "accepted",
       "outcome": "repaired",
       "evidence_mode": "offline_bound_deterministic",
       "provider_calls": 0,
       "run_id": "N/A（离线确定性）",
-      "authority": "dataset/processed/proof/ifc-repair-success-cases-v2-plan07-staging/structural/batch/phase12-v2-vvo-beam-column-atomic-restoration",
+      "authority": "beam-column-atomic/evidence/authority/REPORT.md",
       "original_role": "private_ground_truth",
       "ifccompare": "沿用已冻结 private restoration / comparator 记录；本次不重跑",
       "artifacts": {
-        "01-original.ifc": "dataset/processed/proof/ifc-repair-success-cases-v2-plan07-staging/structural/batch/phase12-v2-vvo-beam-column-atomic-restoration/original.ifc",
-        "02-damaged.ifc": "dataset/processed/proof/ifc-repair-success-cases-v2-plan07-staging/structural/batch/phase12-v2-vvo-beam-column-atomic-restoration/damaged.ifc",
-        "03-repaired.ifc": "dataset/processed/proof/ifc-repair-success-cases-v2-plan07-staging/structural/batch/phase12-v2-vvo-beam-column-atomic-restoration/repaired.ifc",
-        "request.txt": "dataset/processed/proof/ifc-repair-success-cases-v2-plan07-staging/structural/batch/phase12-v2-vvo-beam-column-atomic-restoration/request.txt"
-      }
+        "01-original.ifc": {
+          "sha256": "b6c435be955aeb6b2998f42a62f4ebf8c3f91eb7d373ca71a2dcedfeb95b3fdc",
+          "size_bytes": 2409268,
+          "source": "beam-column-atomic/01-original.ifc"
+        },
+        "02-damaged.ifc": {
+          "sha256": "636135b4bc12ea3e45d9a7155f714834ff5eaaba1f2d3d2e7a5ae84a525a59aa",
+          "size_bytes": 2434206,
+          "source": "beam-column-atomic/02-damaged.ifc"
+        },
+        "03-repaired.ifc": {
+          "sha256": "cd814cbcea73c1a0977bd2eeca6a9e1239c2633cea4a6469a630fcc95944f0d1",
+          "size_bytes": 2436834,
+          "source": "beam-column-atomic/03-repaired.ifc"
+        },
+        "request.txt": {
+          "sha256": "5af33fce6a6e34df0882fe0ef09a888259fec9b3b357043951968b84ebbb7b03",
+          "size_bytes": 93,
+          "source": "beam-column-atomic/request.txt"
+        }
+      },
+      "legacy_authority": "dataset/processed/proof/ifc-repair-success-cases-v2-plan07-staging/structural/batch/phase12-v2-vvo-beam-column-atomic-restoration"
     },
     {
       "case_id": "phase12-v2-vvo-beam-material-present-restoration",
       "path": "beam-material-present",
-      "status": "pending_human_review",
+      "status": "accepted",
       "outcome": "repaired",
       "evidence_mode": "offline_bound_deterministic",
       "provider_calls": 0,
       "run_id": "N/A（离线确定性）",
-      "authority": "dataset/processed/proof/ifc-repair-success-cases-v2-plan07-staging/structural/single/phase12-v2-vvo-beam-material-present-restoration",
+      "authority": "beam-material-present/evidence/authority/REPORT.md",
       "original_role": "private_ground_truth",
       "ifccompare": "沿用已冻结 private restoration / comparator 记录；本次不重跑",
       "artifacts": {
-        "01-original.ifc": "dataset/processed/proof/ifc-repair-success-cases-v2-plan07-staging/structural/single/phase12-v2-vvo-beam-material-present-restoration/original.ifc",
-        "02-damaged.ifc": "dataset/processed/proof/ifc-repair-success-cases-v2-plan07-staging/structural/single/phase12-v2-vvo-beam-material-present-restoration/damaged.ifc",
-        "03-repaired.ifc": "dataset/processed/proof/ifc-repair-success-cases-v2-plan07-staging/structural/single/phase12-v2-vvo-beam-material-present-restoration/repaired.ifc",
-        "request.txt": "dataset/processed/proof/ifc-repair-success-cases-v2-plan07-staging/structural/single/phase12-v2-vvo-beam-material-present-restoration/request.txt"
-      }
+        "01-original.ifc": {
+          "sha256": "b6c435be955aeb6b2998f42a62f4ebf8c3f91eb7d373ca71a2dcedfeb95b3fdc",
+          "size_bytes": 2409268,
+          "source": "beam-material-present/01-original.ifc"
+        },
+        "02-damaged.ifc": {
+          "sha256": "a611a682c79a79ace18a16bf5f1497bf32fe43a9447b92af22168149b36d20e4",
+          "size_bytes": 2435315,
+          "source": "beam-material-present/02-damaged.ifc"
+        },
+        "03-repaired.ifc": {
+          "sha256": "37f0b862adb07bb1f6ea72b853a46acfb935f6670e7176c7bfeed0ad2b8a739b",
+          "size_bytes": 2436714,
+          "source": "beam-material-present/03-repaired.ifc"
+        },
+        "request.txt": {
+          "sha256": "2f65fced59ec8060a9fb748531c4c9a477546d48079e99c26d3952620c41df29",
+          "size_bytes": 130,
+          "source": "beam-material-present/request.txt"
+        }
+      },
+      "legacy_authority": "dataset/processed/proof/ifc-repair-success-cases-v2-plan07-staging/structural/single/phase12-v2-vvo-beam-material-present-restoration"
     },
     {
       "case_id": "phase12-v2-vvo-column-material-absent-restoration",
       "path": "column-material-absent",
-      "status": "pending_human_review",
+      "status": "accepted",
       "outcome": "repaired",
       "evidence_mode": "offline_bound_deterministic",
       "provider_calls": 0,
       "run_id": "N/A（离线确定性）",
-      "authority": "dataset/processed/proof/ifc-repair-success-cases-v2-plan07-staging/structural/single/phase12-v2-vvo-column-material-absent-restoration",
+      "authority": "column-material-absent/evidence/authority/REPORT.md",
       "original_role": "private_ground_truth",
       "ifccompare": "沿用已冻结 private restoration / comparator 记录；本次不重跑",
       "artifacts": {
-        "01-original.ifc": "dataset/processed/proof/ifc-repair-success-cases-v2-plan07-staging/structural/single/phase12-v2-vvo-column-material-absent-restoration/original.ifc",
-        "02-damaged.ifc": "dataset/processed/proof/ifc-repair-success-cases-v2-plan07-staging/structural/single/phase12-v2-vvo-column-material-absent-restoration/damaged.ifc",
-        "03-repaired.ifc": "dataset/processed/proof/ifc-repair-success-cases-v2-plan07-staging/structural/single/phase12-v2-vvo-column-material-absent-restoration/repaired.ifc",
-        "request.txt": "dataset/processed/proof/ifc-repair-success-cases-v2-plan07-staging/structural/single/phase12-v2-vvo-column-material-absent-restoration/request.txt"
-      }
+        "01-original.ifc": {
+          "sha256": "b6c435be955aeb6b2998f42a62f4ebf8c3f91eb7d373ca71a2dcedfeb95b3fdc",
+          "size_bytes": 2409268,
+          "source": "column-material-absent/01-original.ifc"
+        },
+        "02-damaged.ifc": {
+          "sha256": "0e36ffb6747fca2dfc65c0038be775b610bdcaeb28a0189786af29a697522f89",
+          "size_bytes": 2436369,
+          "source": "column-material-absent/02-damaged.ifc"
+        },
+        "03-repaired.ifc": {
+          "sha256": "6180d58bc86cd2e5ea82efce1ad48bc14cb1f036c02eb43e3f21d865ed9253a9",
+          "size_bytes": 2437710,
+          "source": "column-material-absent/03-repaired.ifc"
+        },
+        "request.txt": {
+          "sha256": "254e910477f3718dd1689e579bc34e0c8199b3b567e0885b8f94e06626764bb2",
+          "size_bytes": 105,
+          "source": "column-material-absent/request.txt"
+        }
+      },
+      "legacy_authority": "dataset/processed/proof/ifc-repair-success-cases-v2-plan07-staging/structural/single/phase12-v2-vvo-column-material-absent-restoration"
     },
     {
       "case_id": "phase12-v2-vvo-door-window-beam-column-atomic-restoration",
       "path": "four-family-atomic",
-      "status": "pending_human_review",
+      "status": "accepted",
       "outcome": "repaired",
       "evidence_mode": "offline_bound_deterministic",
       "provider_calls": 0,
       "run_id": "N/A（离线确定性）",
-      "authority": "dataset/processed/proof/ifc-repair-success-cases-v2-plan07-staging/mixed/door-window-beam-column/phase12-v2-vvo-door-window-beam-column-atomic-restoration",
+      "authority": "four-family-atomic/evidence/authority/REPORT.md",
       "original_role": "private_ground_truth",
       "ifccompare": "沿用已冻结 private restoration / comparator 记录；本次不重跑",
       "artifacts": {
-        "01-original.ifc": "dataset/processed/proof/ifc-repair-success-cases-v2-plan07-staging/mixed/door-window-beam-column/phase12-v2-vvo-door-window-beam-column-atomic-restoration/original.ifc",
-        "02-damaged.ifc": "dataset/processed/proof/ifc-repair-success-cases-v2-plan07-staging/mixed/door-window-beam-column/phase12-v2-vvo-door-window-beam-column-atomic-restoration/damaged.ifc",
-        "03-repaired.ifc": "dataset/processed/proof/ifc-repair-success-cases-v2-plan07-staging/mixed/door-window-beam-column/phase12-v2-vvo-door-window-beam-column-atomic-restoration/repaired.ifc",
-        "request.txt": "dataset/processed/proof/ifc-repair-success-cases-v2-plan07-staging/mixed/door-window-beam-column/phase12-v2-vvo-door-window-beam-column-atomic-restoration/request.txt"
-      }
+        "01-original.ifc": {
+          "sha256": "b6c435be955aeb6b2998f42a62f4ebf8c3f91eb7d373ca71a2dcedfeb95b3fdc",
+          "size_bytes": 2409268,
+          "source": "four-family-atomic/01-original.ifc"
+        },
+        "02-damaged.ifc": {
+          "sha256": "4a0116d439bcc286e501f459afb4fe31c9607d9233f18fb373921d991c436e66",
+          "size_bytes": 2428264,
+          "source": "four-family-atomic/02-damaged.ifc"
+        },
+        "03-repaired.ifc": {
+          "sha256": "7b1b3df05109c983a041a380380311c28300d5a279842797ff40116545e6ee9b",
+          "size_bytes": 2441057,
+          "source": "four-family-atomic/03-repaired.ifc"
+        },
+        "request.txt": {
+          "sha256": "ced100e67c963e28942198d36e864fb363e62491d5a18430141d6deb4f678490",
+          "size_bytes": 1415,
+          "source": "four-family-atomic/request.txt"
+        }
+      },
+      "legacy_authority": "dataset/processed/proof/ifc-repair-success-cases-v2-plan07-staging/mixed/door-window-beam-column/phase12-v2-vvo-door-window-beam-column-atomic-restoration"
     },
     {
       "case_id": "phase12-plan07-live-beam-column-complete",
       "path": "live-complete",
-      "status": "pending_human_review",
+      "status": "accepted",
       "outcome": "repaired",
       "evidence_mode": "live",
       "provider_calls": 4,
       "run_id": "uat-20260903T095045509630Z",
-      "authority": "dataset/processed/proof/ifc-repair-success-cases-v2-plan07-staging/plan07-live-v2-uat-20260903T095045509630Z/cases/complete",
+      "authority": "live-complete/evidence/authority/REPORT.md",
       "original_role": "physical_fixture_non_private_audit",
       "ifccompare": "N/A：仅物理对照，无 case-specific private Gold",
       "artifacts": {
-        "01-original.ifc": "dataset/processed/proof/ifc-repair-success-cases-v2-plan07-staging/plan07-live-v2-uat-20260903T095045509630Z/cases/complete/original.ifc",
-        "02-damaged.ifc": "dataset/processed/proof/ifc-repair-success-cases-v2-plan07-staging/plan07-live-v2-uat-20260903T095045509630Z/cases/complete/damaged.ifc",
-        "03-repaired.ifc": "dataset/processed/proof/ifc-repair-success-cases-v2-plan07-staging/plan07-live-v2-uat-20260903T095045509630Z/cases/complete/repaired.ifc",
-        "request.txt": "dataset/processed/proof/ifc-repair-success-cases-v2-plan07-staging/plan07-live-v2-uat-20260903T095045509630Z/cases/complete/request.txt"
-      }
+        "01-original.ifc": {
+          "sha256": "b6c435be955aeb6b2998f42a62f4ebf8c3f91eb7d373ca71a2dcedfeb95b3fdc",
+          "size_bytes": 2409268,
+          "source": "live-complete/01-original.ifc"
+        },
+        "02-damaged.ifc": {
+          "sha256": "636135b4bc12ea3e45d9a7155f714834ff5eaaba1f2d3d2e7a5ae84a525a59aa",
+          "size_bytes": 2434206,
+          "source": "live-complete/02-damaged.ifc"
+        },
+        "03-repaired.ifc": {
+          "sha256": "d535770f73ce1c8ef64b66bf086a88e6f664e0a597c08c81a3830426269b1b94",
+          "size_bytes": 2436962,
+          "source": "live-complete/03-repaired.ifc"
+        },
+        "request.txt": {
+          "sha256": "fce41ddbb676597fd926a4139f71e57cc96cd8c3ff968dd2e06b9674fe8c8aab",
+          "size_bytes": 679,
+          "source": "live-complete/request.txt"
+        }
+      },
+      "legacy_authority": "dataset/processed/proof/ifc-repair-success-cases-v2-plan07-staging/plan07-live-v2-uat-20260903T095045509630Z/cases/complete"
     },
     {
       "case_id": "phase12-plan07-live-column-clarification-resume",
       "path": "live-clarification",
-      "status": "pending_human_review",
+      "status": "accepted",
       "outcome": "repaired",
       "evidence_mode": "live",
       "provider_calls": 3,
       "run_id": "uat-20260903T095045509630Z",
-      "authority": "dataset/processed/proof/ifc-repair-success-cases-v2-plan07-staging/plan07-live-v2-uat-20260903T095045509630Z/cases/clarification-resume",
+      "authority": "live-clarification/evidence/authority/REPORT.md",
       "original_role": "physical_fixture_non_private_audit",
       "ifccompare": "N/A：仅物理对照，无 case-specific private Gold",
       "artifacts": {
-        "01-original.ifc": "dataset/processed/proof/ifc-repair-success-cases-v2-plan07-staging/plan07-live-v2-uat-20260903T095045509630Z/cases/clarification-resume/original.ifc",
-        "02-damaged.ifc": "dataset/processed/proof/ifc-repair-success-cases-v2-plan07-staging/plan07-live-v2-uat-20260903T095045509630Z/cases/clarification-resume/damaged.ifc",
-        "03-repaired.ifc": "dataset/processed/proof/ifc-repair-success-cases-v2-plan07-staging/plan07-live-v2-uat-20260903T095045509630Z/cases/clarification-resume/repaired.ifc",
-        "request.txt": "dataset/processed/proof/ifc-repair-success-cases-v2-plan07-staging/plan07-live-v2-uat-20260903T095045509630Z/cases/clarification-resume/request.txt"
-      }
+        "01-original.ifc": {
+          "sha256": "b6c435be955aeb6b2998f42a62f4ebf8c3f91eb7d373ca71a2dcedfeb95b3fdc",
+          "size_bytes": 2409268,
+          "source": "live-clarification/01-original.ifc"
+        },
+        "02-damaged.ifc": {
+          "sha256": "636135b4bc12ea3e45d9a7155f714834ff5eaaba1f2d3d2e7a5ae84a525a59aa",
+          "size_bytes": 2434206,
+          "source": "live-clarification/02-damaged.ifc"
+        },
+        "03-repaired.ifc": {
+          "sha256": "327e72a6b5db916e6e8cbd721370165c37a44a396cf037c52ba442cccabeb58b",
+          "size_bytes": 2435560,
+          "source": "live-clarification/03-repaired.ifc"
+        },
+        "request.txt": {
+          "sha256": "179d2ecc46ee16f5e4b39583495f23b97aac6d678aa235a8c17de1a27f83a2a2",
+          "size_bytes": 430,
+          "source": "live-clarification/request.txt"
+        }
+      },
+      "legacy_authority": "dataset/processed/proof/ifc-repair-success-cases-v2-plan07-staging/plan07-live-v2-uat-20260903T095045509630Z/cases/clarification-resume"
     },
     {
       "case_id": "phase12-plan07-live-window-property-repair",
       "path": "live-window-property",
-      "status": "pending_human_review",
+      "status": "accepted",
       "outcome": "repaired",
       "evidence_mode": "live",
       "provider_calls": 3,
       "run_id": "uat-20260903T095045509630Z",
-      "authority": "dataset/processed/proof/ifc-repair-success-cases-v2-plan07-staging/plan07-live-v2-uat-20260903T095045509630Z/cases/window-semantic-canary",
+      "authority": "live-window-property/evidence/authority/REPORT.md",
       "original_role": "physical_fixture_non_private_audit",
       "ifccompare": "N/A：仅物理对照，无 case-specific private Gold",
       "artifacts": {
-        "01-original.ifc": "dataset/processed/proof/ifc-repair-success-cases-v2-plan07-staging/plan07-live-v2-uat-20260903T095045509630Z/cases/window-semantic-canary/original.ifc",
-        "02-damaged.ifc": "dataset/processed/proof/ifc-repair-success-cases-v2-plan07-staging/plan07-live-v2-uat-20260903T095045509630Z/cases/window-semantic-canary/damaged.ifc",
-        "03-repaired.ifc": "dataset/processed/proof/ifc-repair-success-cases-v2-plan07-staging/plan07-live-v2-uat-20260903T095045509630Z/cases/window-semantic-canary/repaired.ifc",
-        "request.txt": "dataset/processed/proof/ifc-repair-success-cases-v2-plan07-staging/plan07-live-v2-uat-20260903T095045509630Z/cases/window-semantic-canary/request.txt"
-      }
+        "01-original.ifc": {
+          "sha256": "b6c435be955aeb6b2998f42a62f4ebf8c3f91eb7d373ca71a2dcedfeb95b3fdc",
+          "size_bytes": 2409268,
+          "source": "live-window-property/01-original.ifc"
+        },
+        "02-damaged.ifc": {
+          "sha256": "636135b4bc12ea3e45d9a7155f714834ff5eaaba1f2d3d2e7a5ae84a525a59aa",
+          "size_bytes": 2434206,
+          "source": "live-window-property/02-damaged.ifc"
+        },
+        "03-repaired.ifc": {
+          "sha256": "f694e1051a5fa08bd7edc0de626e187086ea0baf7b47a9284848284de0fc2321",
+          "size_bytes": 2434274,
+          "source": "live-window-property/03-repaired.ifc"
+        },
+        "request.txt": {
+          "sha256": "21bfb3abdbb416df58fc17a1c3b35685ee9947c1cd9534a599d2d3fd9d912bb9",
+          "size_bytes": 144,
+          "source": "live-window-property/request.txt"
+        }
+      },
+      "legacy_authority": "dataset/processed/proof/ifc-repair-success-cases-v2-plan07-staging/plan07-live-v2-uat-20260903T095045509630Z/cases/window-semantic-canary"
     },
     {
       "case_id": "phase12-plan07-live-structural-program-guard",
       "path": "program-guard",
-      "status": "pending_human_review",
+      "status": "accepted",
       "outcome": "no_output",
       "evidence_mode": "live",
       "provider_calls": 1,
       "run_id": "uat-20260903T095045509630Z",
-      "authority": "dataset/processed/proof/ifc-repair-success-cases-v2-plan07-staging/plan07-live-v2-uat-20260903T095045509630Z/cases/program-guard",
+      "authority": "program-guard/evidence/authority/REPORT.md",
       "original_role": null,
       "ifccompare": "N/A：仅物理对照，无 case-specific private Gold",
       "artifacts": {
-        "02-damaged.ifc": "dataset/processed/proof/ifc-repair-success-cases-v2-plan07-staging/plan07-live-v2-uat-20260903T095045509630Z/cases/program-guard/damaged.ifc",
-        "request.txt": "dataset/processed/proof/ifc-repair-success-cases-v2-plan07-staging/plan07-live-v2-uat-20260903T095045509630Z/cases/program-guard/request.txt"
-      }
+        "02-damaged.ifc": {
+          "sha256": "636135b4bc12ea3e45d9a7155f714834ff5eaaba1f2d3d2e7a5ae84a525a59aa",
+          "size_bytes": 2434206,
+          "source": "program-guard/02-damaged.ifc"
+        },
+        "request.txt": {
+          "sha256": "a88b0a1a9ff17d034f53c4f141dbb6dc84779585e110783a6962fa108cc99bf0",
+          "size_bytes": 187,
+          "source": "program-guard/request.txt"
+        }
+      },
+      "legacy_authority": "dataset/processed/proof/ifc-repair-success-cases-v2-plan07-staging/plan07-live-v2-uat-20260903T095045509630Z/cases/program-guard"
     }
   ],
   "references": [],
-  "scope": "human discovery only; source acceptance and evidence contracts remain authoritative",
-  "r1_included": false
+  "scope": "storage consolidation; original acceptance unchanged; frozen bytes reconstructable",
+  "r1_included": false,
+  "legacy_bundles": [
+    {
+      "id": "frozen",
+      "old_root": "dataset/processed/proof/ifc-repair-success-cases-v2-plan07-staging",
+      "entries": [
+        {
+          "legacy_path": "manifest.json",
+          "path": "evidence/frozen/manifest.json",
+          "sha256": "1502d1e8d7a9eb016f5dda5aa6e354c4651c5b1a74cdd49e400d03397a29ea9e",
+          "size_bytes": 6582
+        },
+        {
+          "legacy_path": "mixed/door-window-beam-column/phase12-v2-vvo-door-window-beam-column-atomic-restoration/.validation-cache/6bf42b8f49be13da6fc56c1e3572ddbd9ef103fc040b42a96858c1773e63a462.json",
+          "path": "four-family-atomic/evidence/authority/.validation-cache/6bf42b8f49be13da6fc56c1e3572ddbd9ef103fc040b42a96858c1773e63a462.json",
+          "sha256": "dd730c719a352760068a82ec13fad67585f1fc48c2bf172ac23605cd9f07dbb0",
+          "size_bytes": 619
+        },
+        {
+          "legacy_path": "mixed/door-window-beam-column/phase12-v2-vvo-door-window-beam-column-atomic-restoration/.validation-cache/b16b04b83c9acc695ada228c54094a7755d1a7eccaa5e3da026372e517849747.json",
+          "path": "four-family-atomic/evidence/authority/.validation-cache/b16b04b83c9acc695ada228c54094a7755d1a7eccaa5e3da026372e517849747.json",
+          "sha256": "a14094b77a818dd9292cb6e020a2b470c5ba49455fae80587735eb712b428b3e",
+          "size_bytes": 619
+        },
+        {
+          "legacy_path": "mixed/door-window-beam-column/phase12-v2-vvo-door-window-beam-column-atomic-restoration/application.json",
+          "path": "four-family-atomic/evidence/authority/application.json",
+          "sha256": "3f463cc5f862f681be0a2650b80a36e9534becc86d85308e9832352447f8a116",
+          "size_bytes": 48656
+        },
+        {
+          "legacy_path": "mixed/door-window-beam-column/phase12-v2-vvo-door-window-beam-column-atomic-restoration/changeset.json",
+          "path": "four-family-atomic/evidence/authority/changeset.json",
+          "sha256": "8d1d87a650adc317fcde914557bec3978dff15ce6d1267f7ab70ca326e45453a",
+          "size_bytes": 27018
+        },
+        {
+          "legacy_path": "mixed/door-window-beam-column/phase12-v2-vvo-door-window-beam-column-atomic-restoration/comparison.json",
+          "path": "four-family-atomic/evidence/authority/comparison.json",
+          "sha256": "51d8699ac17355a1908fe69bbf4dfbcfda7c68dd69f94fead45454510f93b7e1",
+          "size_bytes": 42074
+        },
+        {
+          "legacy_path": "mixed/door-window-beam-column/phase12-v2-vvo-door-window-beam-column-atomic-restoration/damaged.ifc",
+          "path": "four-family-atomic/02-damaged.ifc",
+          "sha256": "4a0116d439bcc286e501f459afb4fe31c9607d9233f18fb373921d991c436e66",
+          "size_bytes": 2428264
+        },
+        {
+          "legacy_path": "mixed/door-window-beam-column/phase12-v2-vvo-door-window-beam-column-atomic-restoration/evaluation.json",
+          "path": "four-family-atomic/evidence/authority/evaluation.json",
+          "sha256": "8e8fc7be5afd91914b911c4f2e74e4f6e83d2e077ab912fca72ff0467e299b57",
+          "size_bytes": 895837
+        },
+        {
+          "legacy_path": "mixed/door-window-beam-column/phase12-v2-vvo-door-window-beam-column-atomic-restoration/FILES.json",
+          "path": "four-family-atomic/evidence/authority/FILES.json",
+          "sha256": "28524224564e89d4af6d460a3536aa5f8b66206b10f2329c6ccae5e9040c561f",
+          "size_bytes": 4738
+        },
+        {
+          "legacy_path": "mixed/door-window-beam-column/phase12-v2-vvo-door-window-beam-column-atomic-restoration/manifest.json",
+          "path": "four-family-atomic/evidence/authority/manifest.json",
+          "sha256": "22cd627c2c0280b916ba66929dbc859e56e15dcd642370a908c5e8657fe1677b",
+          "size_bytes": 9191
+        },
+        {
+          "legacy_path": "mixed/door-window-beam-column/phase12-v2-vvo-door-window-beam-column-atomic-restoration/mutation_manifest.private.json",
+          "path": "four-family-atomic/evidence/authority/mutation_manifest.private.json",
+          "sha256": "35d3a773f18f97c7d3cd57fc56c981fbc80f59c18f651867b8a3619eba60fa9d",
+          "size_bytes": 15545
+        },
+        {
+          "legacy_path": "mixed/door-window-beam-column/phase12-v2-vvo-door-window-beam-column-atomic-restoration/original.ifc",
+          "path": "four-family-atomic/01-original.ifc",
+          "sha256": "b6c435be955aeb6b2998f42a62f4ebf8c3f91eb7d373ca71a2dcedfeb95b3fdc",
+          "size_bytes": 2409268
+        },
+        {
+          "legacy_path": "mixed/door-window-beam-column/phase12-v2-vvo-door-window-beam-column-atomic-restoration/production-boundary.json",
+          "path": "four-family-atomic/evidence/authority/production-boundary.json",
+          "sha256": "26e7860408dc73192f27361be26a29aee75b2ef8efecd847505677be2385a551",
+          "size_bytes": 835
+        },
+        {
+          "legacy_path": "mixed/door-window-beam-column/phase12-v2-vvo-door-window-beam-column-atomic-restoration/production-evidence.json",
+          "path": "four-family-atomic/evidence/authority/production-evidence.json",
+          "sha256": "e06972238a6e7ecc28978b1a1a1f232770b21fa9b3e36384fa31326d8ef2ea66",
+          "size_bytes": 31994
+        },
+        {
+          "legacy_path": "mixed/door-window-beam-column/phase12-v2-vvo-door-window-beam-column-atomic-restoration/public-request-bundle.json",
+          "path": "four-family-atomic/evidence/authority/public-request-bundle.json",
+          "sha256": "b435343b1c4339a6a47917005da14d362ed21c33dea277b56182173bd136aaf3",
+          "size_bytes": 22380
+        },
+        {
+          "legacy_path": "mixed/door-window-beam-column/phase12-v2-vvo-door-window-beam-column-atomic-restoration/repair-intent.json",
+          "path": "four-family-atomic/evidence/authority/repair-intent.json",
+          "sha256": "7272c2dfdc42e83d50c586053d59a1b3436388c95019580cd8209ba72cc90a73",
+          "size_bytes": 19847
+        },
+        {
+          "legacy_path": "mixed/door-window-beam-column/phase12-v2-vvo-door-window-beam-column-atomic-restoration/repaired.ifc",
+          "path": "four-family-atomic/03-repaired.ifc",
+          "sha256": "7b1b3df05109c983a041a380380311c28300d5a279842797ff40116545e6ee9b",
+          "size_bytes": 2441057
+        },
+        {
+          "legacy_path": "mixed/door-window-beam-column/phase12-v2-vvo-door-window-beam-column-atomic-restoration/REPORT.md",
+          "path": "four-family-atomic/evidence/authority/REPORT.md",
+          "sha256": "fa503b5d30a130220907451247a4760b2678d1a8590b50f19651c5ea9c760448",
+          "size_bytes": 617
+        },
+        {
+          "legacy_path": "mixed/door-window-beam-column/phase12-v2-vvo-door-window-beam-column-atomic-restoration/request.txt",
+          "path": "four-family-atomic/request.txt",
+          "sha256": "ced100e67c963e28942198d36e864fb363e62491d5a18430141d6deb4f678490",
+          "size_bytes": 1415
+        },
+        {
+          "legacy_path": "mixed/door-window-beam-column/phase12-v2-vvo-door-window-beam-column-atomic-restoration/semantic-manifests.json",
+          "path": "four-family-atomic/evidence/authority/semantic-manifests.json",
+          "sha256": "5a6ef80cf0c57c93286f7868c2ff97545d409a49d1493957485e1954f99b47ee",
+          "size_bytes": 21394
+        },
+        {
+          "legacy_path": "mixed/door-window-beam-column/phase12-v2-vvo-door-window-beam-column-atomic-restoration/structural-restoration-audit.json",
+          "path": "four-family-atomic/evidence/authority/structural-restoration-audit.json",
+          "sha256": "c6479201853ef68508f39693cc9f16600bcbac1a71ceedcdc39b025d4824905b",
+          "size_bytes": 1819
+        },
+        {
+          "legacy_path": "mixed/door-window-beam-column/phase12-v2-vvo-door-window-beam-column-atomic-restoration/target-index.sqlite",
+          "path": "four-family-atomic/evidence/authority/target-index.sqlite",
+          "sha256": "56b883b81a841aea17389cf7f666e897bbdaaaa860597dfff088d5599faaa1e1",
+          "size_bytes": 1064960
+        },
+        {
+          "legacy_path": "mixed/door-window-beam-column/phase12-v2-vvo-door-window-beam-column-atomic-restoration/target-resolution.json",
+          "path": "four-family-atomic/evidence/authority/target-resolution.json",
+          "sha256": "68cb3096a3b42dc43452bcd799d9ea9f9a2949fdbee149881fa60aa316b16ddd",
+          "size_bytes": 44901
+        },
+        {
+          "legacy_path": "plan07-live-v2-uat-20260903T095045509630Z/cases/clarification-resume/application.json",
+          "path": "live-clarification/evidence/authority/application.json",
+          "sha256": "569528716707088afc4f0057578dadc80ff59a2989b32a1aacb45132b2252417",
+          "size_bytes": 7811
+        },
+        {
+          "legacy_path": "plan07-live-v2-uat-20260903T095045509630Z/cases/clarification-resume/base-damage-manifest.json",
+          "path": "live-clarification/evidence/authority/base-damage-manifest.json",
+          "sha256": "4206684c292528a865d65577a9498539ae91b7db4bc7b90dbb74047ffa6da1c9",
+          "size_bytes": 7362
+        },
+        {
+          "legacy_path": "plan07-live-v2-uat-20260903T095045509630Z/cases/clarification-resume/case-result.json",
+          "path": "live-clarification/evidence/authority/case-result.json",
+          "sha256": "dd633f4b837eeeaa0e2504d195b51e97da5e02342cee7a38acdf1b109fbd45e5",
+          "size_bytes": 136329
+        },
+        {
+          "legacy_path": "plan07-live-v2-uat-20260903T095045509630Z/cases/clarification-resume/changeset.json",
+          "path": "live-clarification/evidence/authority/changeset.json",
+          "sha256": "330a6c17da01274532f05ce4b9f73fa32928f034cca8375d9e080ea963fdd8e1",
+          "size_bytes": 4076
+        },
+        {
+          "legacy_path": "plan07-live-v2-uat-20260903T095045509630Z/cases/clarification-resume/clarification-answer.txt",
+          "path": "live-clarification/evidence/authority/clarification-answer.txt",
+          "sha256": "d09aba3b34f2799af6336bbba7843bff153fdd1ad8934b8d945ec0e6041a0183",
+          "size_bytes": 38
+        },
+        {
+          "legacy_path": "plan07-live-v2-uat-20260903T095045509630Z/cases/clarification-resume/damaged.ifc",
+          "path": "live-clarification/02-damaged.ifc",
+          "sha256": "636135b4bc12ea3e45d9a7155f714834ff5eaaba1f2d3d2e7a5ae84a525a59aa",
+          "size_bytes": 2434206
+        },
+        {
+          "legacy_path": "plan07-live-v2-uat-20260903T095045509630Z/cases/clarification-resume/evaluation.json",
+          "path": "live-clarification/evidence/authority/evaluation.json",
+          "sha256": "a94c145464f57f67c4dcca4a8bdef2790d7c8759b32c475d6342560cd487116a",
+          "size_bytes": 7580
+        },
+        {
+          "legacy_path": "plan07-live-v2-uat-20260903T095045509630Z/cases/clarification-resume/FILES.json",
+          "path": "live-clarification/evidence/authority/FILES.json",
+          "sha256": "f54c86289718ba9eb0c00bec99cd33c692c61207005e98e574196040fb5f66cf",
+          "size_bytes": 4124
+        },
+        {
+          "legacy_path": "plan07-live-v2-uat-20260903T095045509630Z/cases/clarification-resume/mutation_manifest.private.json",
+          "path": "live-clarification/evidence/authority/mutation_manifest.private.json",
+          "sha256": "f690251b3963352866c061a402aa2135917b63a9074362eb78e9773dc4830eb8",
+          "size_bytes": 14448
+        },
+        {
+          "legacy_path": "plan07-live-v2-uat-20260903T095045509630Z/cases/clarification-resume/original.ifc",
+          "path": "live-clarification/01-original.ifc",
+          "sha256": "b6c435be955aeb6b2998f42a62f4ebf8c3f91eb7d373ca71a2dcedfeb95b3fdc",
+          "size_bytes": 2409268
+        },
+        {
+          "legacy_path": "plan07-live-v2-uat-20260903T095045509630Z/cases/clarification-resume/prompt-profile-selection.json",
+          "path": "live-clarification/evidence/authority/prompt-profile-selection.json",
+          "sha256": "99761b17cf1b9e2692aa0ae8a4f64fbd25deb5f202b8ec16204f6ae578c4dfcc",
+          "size_bytes": 2912
+        },
+        {
+          "legacy_path": "plan07-live-v2-uat-20260903T095045509630Z/cases/clarification-resume/proof-result.json",
+          "path": "live-clarification/evidence/authority/proof-result.json",
+          "sha256": "d7b06c0d7594fa7f7436fd8deb391e5e13c512c5ae92dd015684cd311786ffc6",
+          "size_bytes": 2080
+        },
+        {
+          "legacy_path": "plan07-live-v2-uat-20260903T095045509630Z/cases/clarification-resume/provider-draft.json",
+          "path": "live-clarification/evidence/authority/provider-draft.json",
+          "sha256": "a411a29a2308e1f491a8f87e04aad7a82ed6adae54dc5b15008d75d5d126ff5f",
+          "size_bytes": 1726
+        },
+        {
+          "legacy_path": "plan07-live-v2-uat-20260903T095045509630Z/cases/clarification-resume/repair-intent.json",
+          "path": "live-clarification/evidence/authority/repair-intent.json",
+          "sha256": "2c5f9c66218c90a4982e048d1100500dca26496abf1dfd8f491a75a5a02c8a37",
+          "size_bytes": 4166
+        },
+        {
+          "legacy_path": "plan07-live-v2-uat-20260903T095045509630Z/cases/clarification-resume/repaired.ifc",
+          "path": "live-clarification/03-repaired.ifc",
+          "sha256": "327e72a6b5db916e6e8cbd721370165c37a44a396cf037c52ba442cccabeb58b",
+          "size_bytes": 2435560
+        },
+        {
+          "legacy_path": "plan07-live-v2-uat-20260903T095045509630Z/cases/clarification-resume/REPORT.md",
+          "path": "live-clarification/evidence/authority/REPORT.md",
+          "sha256": "ad2c49a53548aebf2e48ae9d194cdf5f8165db0c934e1bd1d3ac42f69d4c47e9",
+          "size_bytes": 604
+        },
+        {
+          "legacy_path": "plan07-live-v2-uat-20260903T095045509630Z/cases/clarification-resume/request.txt",
+          "path": "live-clarification/request.txt",
+          "sha256": "179d2ecc46ee16f5e4b39583495f23b97aac6d678aa235a8c17de1a27f83a2a2",
+          "size_bytes": 430
+        },
+        {
+          "legacy_path": "plan07-live-v2-uat-20260903T095045509630Z/cases/clarification-resume/source-role.json",
+          "path": "live-clarification/evidence/authority/source-role.json",
+          "sha256": "e7b34d3ed017f9b72e353a2f153c6129a8afa92c8e4692424a59890db96637af",
+          "size_bytes": 365
+        },
+        {
+          "legacy_path": "plan07-live-v2-uat-20260903T095045509630Z/cases/clarification-resume/structural-restoration-audit.json",
+          "path": "live-clarification/evidence/authority/structural-restoration-audit.json",
+          "sha256": "a92a83cc0243f5684ba72693e48ee40b7825553c99e5f0b90d3dbbccf4264849",
+          "size_bytes": 1098
+        },
+        {
+          "legacy_path": "plan07-live-v2-uat-20260903T095045509630Z/cases/clarification-resume/target-resolution.json",
+          "path": "live-clarification/evidence/authority/target-resolution.json",
+          "sha256": "a78df166a3e9046b16b41b2be6641d93fa2d850d4f93f78baf854b567c3c619a",
+          "size_bytes": 7726
+        },
+        {
+          "legacy_path": "plan07-live-v2-uat-20260903T095045509630Z/cases/complete/application.json",
+          "path": "live-complete/evidence/authority/application.json",
+          "sha256": "1b92d910b21f2264ffa49e718efc785f64bcbc459f8b26ec0b8679a2d4dcddf1",
+          "size_bytes": 14306
+        },
+        {
+          "legacy_path": "plan07-live-v2-uat-20260903T095045509630Z/cases/complete/base-damage-manifest.json",
+          "path": "live-complete/evidence/authority/base-damage-manifest.json",
+          "sha256": "4206684c292528a865d65577a9498539ae91b7db4bc7b90dbb74047ffa6da1c9",
+          "size_bytes": 7362
+        },
+        {
+          "legacy_path": "plan07-live-v2-uat-20260903T095045509630Z/cases/complete/case-result.json",
+          "path": "live-complete/evidence/authority/case-result.json",
+          "sha256": "3e7b2b0b2579a6ed1004aaece526bac99cb6c0090269cc67b7458f74fc33964a",
+          "size_bytes": 219916
+        },
+        {
+          "legacy_path": "plan07-live-v2-uat-20260903T095045509630Z/cases/complete/changeset.json",
+          "path": "live-complete/evidence/authority/changeset.json",
+          "sha256": "562a6d3f33381123a8bfeddbb9c16c3e4c58eb9b49c7ad035de1df39cca0904f",
+          "size_bytes": 7515
+        },
+        {
+          "legacy_path": "plan07-live-v2-uat-20260903T095045509630Z/cases/complete/damaged.ifc",
+          "path": "live-complete/02-damaged.ifc",
+          "sha256": "636135b4bc12ea3e45d9a7155f714834ff5eaaba1f2d3d2e7a5ae84a525a59aa",
+          "size_bytes": 2434206
+        },
+        {
+          "legacy_path": "plan07-live-v2-uat-20260903T095045509630Z/cases/complete/evaluation.json",
+          "path": "live-complete/evidence/authority/evaluation.json",
+          "sha256": "c21c0f3fdd15a39abd62d2dbd5f733dadfae1e2f90cf6e2ea78c8ecf0ab2d584",
+          "size_bytes": 19614
+        },
+        {
+          "legacy_path": "plan07-live-v2-uat-20260903T095045509630Z/cases/complete/FILES.json",
+          "path": "live-complete/evidence/authority/FILES.json",
+          "sha256": "6cb8e9e9f6000db13362dd3ccc741b358297f5f696052648484cb9b4d6f3d894",
+          "size_bytes": 3900
+        },
+        {
+          "legacy_path": "plan07-live-v2-uat-20260903T095045509630Z/cases/complete/mutation_manifest.private.json",
+          "path": "live-complete/evidence/authority/mutation_manifest.private.json",
+          "sha256": "f690251b3963352866c061a402aa2135917b63a9074362eb78e9773dc4830eb8",
+          "size_bytes": 14448
+        },
+        {
+          "legacy_path": "plan07-live-v2-uat-20260903T095045509630Z/cases/complete/original.ifc",
+          "path": "live-complete/01-original.ifc",
+          "sha256": "b6c435be955aeb6b2998f42a62f4ebf8c3f91eb7d373ca71a2dcedfeb95b3fdc",
+          "size_bytes": 2409268
+        },
+        {
+          "legacy_path": "plan07-live-v2-uat-20260903T095045509630Z/cases/complete/prompt-profile-selection.json",
+          "path": "live-complete/evidence/authority/prompt-profile-selection.json",
+          "sha256": "12c4df4f5773742cc61abad0fbc7d3a51423f7bd0eda43bed4e9e26426db2138",
+          "size_bytes": 5513
+        },
+        {
+          "legacy_path": "plan07-live-v2-uat-20260903T095045509630Z/cases/complete/proof-result.json",
+          "path": "live-complete/evidence/authority/proof-result.json",
+          "sha256": "00e83a4a4912740781c962f23ba396fdce4346a002a350fcbbc364bd9f2ad548",
+          "size_bytes": 2729
+        },
+        {
+          "legacy_path": "plan07-live-v2-uat-20260903T095045509630Z/cases/complete/provider-draft.json",
+          "path": "live-complete/evidence/authority/provider-draft.json",
+          "sha256": "6161f8ab4e8a01a3f710d4c43fe0e3d9cb4fa27d28ae9308ce46add7935965e6",
+          "size_bytes": 2697
+        },
+        {
+          "legacy_path": "plan07-live-v2-uat-20260903T095045509630Z/cases/complete/repair-intent.json",
+          "path": "live-complete/evidence/authority/repair-intent.json",
+          "sha256": "faacbf1781fe19b9235d875df06a3c6b33beb78b2ce385d19ac48e8d3707fdcb",
+          "size_bytes": 6046
+        },
+        {
+          "legacy_path": "plan07-live-v2-uat-20260903T095045509630Z/cases/complete/repaired.ifc",
+          "path": "live-complete/03-repaired.ifc",
+          "sha256": "d535770f73ce1c8ef64b66bf086a88e6f664e0a597c08c81a3830426269b1b94",
+          "size_bytes": 2436962
+        },
+        {
+          "legacy_path": "plan07-live-v2-uat-20260903T095045509630Z/cases/complete/REPORT.md",
+          "path": "live-complete/evidence/authority/REPORT.md",
+          "sha256": "6300c78a72f04bd563973e273b81d9302e6b09c059f197850720b0ff44eb66c3",
+          "size_bytes": 611
+        },
+        {
+          "legacy_path": "plan07-live-v2-uat-20260903T095045509630Z/cases/complete/request.txt",
+          "path": "live-complete/request.txt",
+          "sha256": "fce41ddbb676597fd926a4139f71e57cc96cd8c3ff968dd2e06b9674fe8c8aab",
+          "size_bytes": 679
+        },
+        {
+          "legacy_path": "plan07-live-v2-uat-20260903T095045509630Z/cases/complete/source-role.json",
+          "path": "live-complete/evidence/authority/source-role.json",
+          "sha256": "e7b34d3ed017f9b72e353a2f153c6129a8afa92c8e4692424a59890db96637af",
+          "size_bytes": 365
+        },
+        {
+          "legacy_path": "plan07-live-v2-uat-20260903T095045509630Z/cases/complete/structural-restoration-audit.json",
+          "path": "live-complete/evidence/authority/structural-restoration-audit.json",
+          "sha256": "94e5d32356dd139b65778571ac463d58f131577f53279568648727d5a68c2a80",
+          "size_bytes": 1751
+        },
+        {
+          "legacy_path": "plan07-live-v2-uat-20260903T095045509630Z/cases/complete/target-resolution.json",
+          "path": "live-complete/evidence/authority/target-resolution.json",
+          "sha256": "33842b89f9843df9b63b7351a8072c90a0ed1869709afe76eeaf8feb9ba5924a",
+          "size_bytes": 12683
+        },
+        {
+          "legacy_path": "plan07-live-v2-uat-20260903T095045509630Z/cases/program-guard/case-result.json",
+          "path": "program-guard/evidence/authority/case-result.json",
+          "sha256": "77e5e418713219498fe1d6b0f15721395f3a2555247659185858337bedf22933",
+          "size_bytes": 93495
+        },
+        {
+          "legacy_path": "plan07-live-v2-uat-20260903T095045509630Z/cases/program-guard/damaged.ifc",
+          "path": "program-guard/02-damaged.ifc",
+          "sha256": "636135b4bc12ea3e45d9a7155f714834ff5eaaba1f2d3d2e7a5ae84a525a59aa",
+          "size_bytes": 2434206
+        },
+        {
+          "legacy_path": "plan07-live-v2-uat-20260903T095045509630Z/cases/program-guard/FILES.json",
+          "path": "program-guard/evidence/authority/FILES.json",
+          "sha256": "c425eef2ae6a0c637054ee13da7689595e8743a5e632c75fae6feff156c8f2fd",
+          "size_bytes": 1348
+        },
+        {
+          "legacy_path": "plan07-live-v2-uat-20260903T095045509630Z/cases/program-guard/NO-REPAIR.md",
+          "path": "program-guard/evidence/authority/NO-REPAIR.md",
+          "sha256": "7d8bded9f76b1c570336b8891d1b456e63ba3767f4103891887ae678a7313e46",
+          "size_bytes": 292
+        },
+        {
+          "legacy_path": "plan07-live-v2-uat-20260903T095045509630Z/cases/program-guard/proof-result.json",
+          "path": "program-guard/evidence/authority/proof-result.json",
+          "sha256": "f8221b3c29a7a33639478b008c48393140a26879bdc0ee4b0eec52211b021738",
+          "size_bytes": 670
+        },
+        {
+          "legacy_path": "plan07-live-v2-uat-20260903T095045509630Z/cases/program-guard/REPORT.md",
+          "path": "program-guard/evidence/authority/REPORT.md",
+          "sha256": "8a54e2fad381fc17eb8da800137485081b79e8f178d5c87d5aa33fa9757ceb23",
+          "size_bytes": 235
+        },
+        {
+          "legacy_path": "plan07-live-v2-uat-20260903T095045509630Z/cases/program-guard/request.txt",
+          "path": "program-guard/request.txt",
+          "sha256": "a88b0a1a9ff17d034f53c4f141dbb6dc84779585e110783a6962fa108cc99bf0",
+          "size_bytes": 187
+        },
+        {
+          "legacy_path": "plan07-live-v2-uat-20260903T095045509630Z/cases/window-semantic-canary/application.json",
+          "path": "live-window-property/evidence/authority/application.json",
+          "sha256": "bec5fa20e447f778d7a65d92b876b59a2bc312b3e181e1c56cd579dea0c9786a",
+          "size_bytes": 4478
+        },
+        {
+          "legacy_path": "plan07-live-v2-uat-20260903T095045509630Z/cases/window-semantic-canary/base-damage-manifest.json",
+          "path": "live-window-property/evidence/authority/base-damage-manifest.json",
+          "sha256": "4206684c292528a865d65577a9498539ae91b7db4bc7b90dbb74047ffa6da1c9",
+          "size_bytes": 7362
+        },
+        {
+          "legacy_path": "plan07-live-v2-uat-20260903T095045509630Z/cases/window-semantic-canary/case-result.json",
+          "path": "live-window-property/evidence/authority/case-result.json",
+          "sha256": "f353ca39e61df660869b59e606b31efdb0c3baaaf2b88702a397233c7a065835",
+          "size_bytes": 104957
+        },
+        {
+          "legacy_path": "plan07-live-v2-uat-20260903T095045509630Z/cases/window-semantic-canary/changeset.json",
+          "path": "live-window-property/evidence/authority/changeset.json",
+          "sha256": "cc73d670797a2f54d00d11e3963938ab96681e135f8a972954ca018f5d82aae5",
+          "size_bytes": 1915
+        },
+        {
+          "legacy_path": "plan07-live-v2-uat-20260903T095045509630Z/cases/window-semantic-canary/damaged.ifc",
+          "path": "live-window-property/02-damaged.ifc",
+          "sha256": "636135b4bc12ea3e45d9a7155f714834ff5eaaba1f2d3d2e7a5ae84a525a59aa",
+          "size_bytes": 2434206
+        },
+        {
+          "legacy_path": "plan07-live-v2-uat-20260903T095045509630Z/cases/window-semantic-canary/evaluation.json",
+          "path": "live-window-property/evidence/authority/evaluation.json",
+          "sha256": "566730f03b71f61e56548acb14770cf8f526a850ba1e259e2196c4c141ce7c96",
+          "size_bytes": 5699
+        },
+        {
+          "legacy_path": "plan07-live-v2-uat-20260903T095045509630Z/cases/window-semantic-canary/FILES.json",
+          "path": "live-window-property/evidence/authority/FILES.json",
+          "sha256": "53ace88696dbae2174036e40a963a09aa1e23021b0c1496baf47b78905f8c020",
+          "size_bytes": 3677
+        },
+        {
+          "legacy_path": "plan07-live-v2-uat-20260903T095045509630Z/cases/window-semantic-canary/mutation_manifest.private.json",
+          "path": "live-window-property/evidence/authority/mutation_manifest.private.json",
+          "sha256": "f690251b3963352866c061a402aa2135917b63a9074362eb78e9773dc4830eb8",
+          "size_bytes": 14448
+        },
+        {
+          "legacy_path": "plan07-live-v2-uat-20260903T095045509630Z/cases/window-semantic-canary/original.ifc",
+          "path": "live-window-property/01-original.ifc",
+          "sha256": "b6c435be955aeb6b2998f42a62f4ebf8c3f91eb7d373ca71a2dcedfeb95b3fdc",
+          "size_bytes": 2409268
+        },
+        {
+          "legacy_path": "plan07-live-v2-uat-20260903T095045509630Z/cases/window-semantic-canary/prompt-profile-selection.json",
+          "path": "live-window-property/evidence/authority/prompt-profile-selection.json",
+          "sha256": "35e5fd94ab9f753ec1e548bd10104c778370bd8b52d208aaa3d8d518dd7b0825",
+          "size_bytes": 1914
+        },
+        {
+          "legacy_path": "plan07-live-v2-uat-20260903T095045509630Z/cases/window-semantic-canary/proof-result.json",
+          "path": "live-window-property/evidence/authority/proof-result.json",
+          "sha256": "08905eecbffd48b01669fb9033373fa21156220e8f5fafe1837a6301520711dc",
+          "size_bytes": 928
+        },
+        {
+          "legacy_path": "plan07-live-v2-uat-20260903T095045509630Z/cases/window-semantic-canary/provider-draft.json",
+          "path": "live-window-property/evidence/authority/provider-draft.json",
+          "sha256": "70af4e4df37cbfdd3895aaed2e4a1faab8dddd3189d08a7efc0b5e03d5636e9f",
+          "size_bytes": 1403
+        },
+        {
+          "legacy_path": "plan07-live-v2-uat-20260903T095045509630Z/cases/window-semantic-canary/repair-intent.json",
+          "path": "live-window-property/evidence/authority/repair-intent.json",
+          "sha256": "847a9f02edca04a47027746b47847f79231fb3d0142913a082a89ba5d73e6343",
+          "size_bytes": 2403
+        },
+        {
+          "legacy_path": "plan07-live-v2-uat-20260903T095045509630Z/cases/window-semantic-canary/repaired.ifc",
+          "path": "live-window-property/03-repaired.ifc",
+          "sha256": "f694e1051a5fa08bd7edc0de626e187086ea0baf7b47a9284848284de0fc2321",
+          "size_bytes": 2434274
+        },
+        {
+          "legacy_path": "plan07-live-v2-uat-20260903T095045509630Z/cases/window-semantic-canary/REPORT.md",
+          "path": "live-window-property/evidence/authority/REPORT.md",
+          "sha256": "03bcc0de76bc8bdf8764309bc5f8a16e150e3406887f34c2dff2b09dc3bf336d",
+          "size_bytes": 617
+        },
+        {
+          "legacy_path": "plan07-live-v2-uat-20260903T095045509630Z/cases/window-semantic-canary/request.txt",
+          "path": "live-window-property/request.txt",
+          "sha256": "21bfb3abdbb416df58fc17a1c3b35685ee9947c1cd9534a599d2d3fd9d912bb9",
+          "size_bytes": 144
+        },
+        {
+          "legacy_path": "plan07-live-v2-uat-20260903T095045509630Z/cases/window-semantic-canary/source-role.json",
+          "path": "live-window-property/evidence/authority/source-role.json",
+          "sha256": "e7b34d3ed017f9b72e353a2f153c6129a8afa92c8e4692424a59890db96637af",
+          "size_bytes": 365
+        },
+        {
+          "legacy_path": "plan07-live-v2-uat-20260903T095045509630Z/cases/window-semantic-canary/target-resolution.json",
+          "path": "live-window-property/evidence/authority/target-resolution.json",
+          "sha256": "bb66e04ba4a034e9d5a4c0d1b4eb1aad1f20fe275637854d9efe6288e47ee082",
+          "size_bytes": 5636
+        },
+        {
+          "legacy_path": "plan07-live-v2-uat-20260903T095045509630Z/manifest.json",
+          "path": "evidence/frozen/plan07-live-v2-uat-20260903T095045509630Z/manifest.json",
+          "sha256": "ce3a06796f9483868f05de0a7514a0caed1b709ec1f04e67a3c6090eb539d4f0",
+          "size_bytes": 15009
+        },
+        {
+          "legacy_path": "plan07-live-v2-uat-20260903T095045509630Z/proof-validation.json",
+          "path": "evidence/frozen/plan07-live-v2-uat-20260903T095045509630Z/proof-validation.json",
+          "sha256": "bc76b42b73fa8aac73bbf8071aae997f1eaf9cb63ee7975e056aee3e72178938",
+          "size_bytes": 2623
+        },
+        {
+          "legacy_path": "plan07-live-v2-uat-20260903T095045509630Z/provider-evidence/changed-scope-admission.json",
+          "path": "evidence/frozen/plan07-live-v2-uat-20260903T095045509630Z/provider-evidence/changed-scope-admission.json",
+          "sha256": "449d584a3019a0aa968d6ecc716a0f43c644c75fa6c943c5c59b91d5ff676dc2",
+          "size_bytes": 4194
+        },
+        {
+          "legacy_path": "plan07-live-v2-uat-20260903T095045509630Z/provider-evidence/live-uat-result.json",
+          "path": "evidence/frozen/plan07-live-v2-uat-20260903T095045509630Z/provider-evidence/live-uat-result.json",
+          "sha256": "4e39e12607f00cc3eaf33b9824e8ce8d19878360264354e9f938b80d8c055397",
+          "size_bytes": 567846
+        },
+        {
+          "legacy_path": "plan07-live-v2-uat-20260903T095045509630Z/REPORT.md",
+          "path": "evidence/frozen/plan07-live-v2-uat-20260903T095045509630Z/REPORT.md",
+          "sha256": "5bdfb4e18be936d6cdcb85ec276e3bc596d2e137689d1c09205572a0920666b8",
+          "size_bytes": 1271
+        },
+        {
+          "legacy_path": "README.md",
+          "path": "evidence/frozen/README.md",
+          "sha256": "21ebcde62168a6e1492e7fd77f1fbdcc4629983986730f519986442aa0e8368b",
+          "size_bytes": 333
+        },
+        {
+          "legacy_path": "structural/batch/phase12-v2-vvo-beam-column-atomic-restoration/.validation-cache/85b7382440210a12e4075102298a508434e7c3c4dc9c6b170843d4824eee77e9.json",
+          "path": "beam-column-atomic/evidence/authority/.validation-cache/85b7382440210a12e4075102298a508434e7c3c4dc9c6b170843d4824eee77e9.json",
+          "sha256": "b0a418e1cada76c110862fa5095e0b3c9b0215827ced6002b2a8304fe1d379eb",
+          "size_bytes": 619
+        },
+        {
+          "legacy_path": "structural/batch/phase12-v2-vvo-beam-column-atomic-restoration/.validation-cache/88ca75fb22917a928483395d1ae31f269e7644bf1d0b9ca4d25c77974d9e7682.json",
+          "path": "beam-column-atomic/evidence/authority/.validation-cache/88ca75fb22917a928483395d1ae31f269e7644bf1d0b9ca4d25c77974d9e7682.json",
+          "sha256": "96aa0da51e867707352eb0e8eb21ec710be672363bef3bd4fe47d81e927ff56b",
+          "size_bytes": 619
+        },
+        {
+          "legacy_path": "structural/batch/phase12-v2-vvo-beam-column-atomic-restoration/application.json",
+          "path": "beam-column-atomic/evidence/authority/application.json",
+          "sha256": "75dcc60496a8acf8eedcda0932aa66dac2e49d02f7b294b0eca769c5af78f693",
+          "size_bytes": 12316
+        },
+        {
+          "legacy_path": "structural/batch/phase12-v2-vvo-beam-column-atomic-restoration/changeset.json",
+          "path": "beam-column-atomic/evidence/authority/changeset.json",
+          "sha256": "11335ee58215c3639869dbe5b38cfb7e26908704107ccc9a8c533aa2c655665b",
+          "size_bytes": 10011
+        },
+        {
+          "legacy_path": "structural/batch/phase12-v2-vvo-beam-column-atomic-restoration/comparison.json",
+          "path": "beam-column-atomic/evidence/authority/comparison.json",
+          "sha256": "ad7b9318b3ce747ce3dac95891bd03d4b37a61c4425898083908ad25d0c3a818",
+          "size_bytes": 14435
+        },
+        {
+          "legacy_path": "structural/batch/phase12-v2-vvo-beam-column-atomic-restoration/damaged.ifc",
+          "path": "beam-column-atomic/02-damaged.ifc",
+          "sha256": "636135b4bc12ea3e45d9a7155f714834ff5eaaba1f2d3d2e7a5ae84a525a59aa",
+          "size_bytes": 2434206
+        },
+        {
+          "legacy_path": "structural/batch/phase12-v2-vvo-beam-column-atomic-restoration/evaluation.json",
+          "path": "beam-column-atomic/evidence/authority/evaluation.json",
+          "sha256": "43d3c231c723fea138289f6754332876c7a521ff8aae8cf8baca1ea40dca3057",
+          "size_bytes": 114545
+        },
+        {
+          "legacy_path": "structural/batch/phase12-v2-vvo-beam-column-atomic-restoration/FILES.json",
+          "path": "beam-column-atomic/evidence/authority/FILES.json",
+          "sha256": "17935ec2cb873c46543b76cd500084023a23404eaa2e0df12d8f558f18175ea2",
+          "size_bytes": 4708
+        },
+        {
+          "legacy_path": "structural/batch/phase12-v2-vvo-beam-column-atomic-restoration/manifest.json",
+          "path": "beam-column-atomic/evidence/authority/manifest.json",
+          "sha256": "4206684c292528a865d65577a9498539ae91b7db4bc7b90dbb74047ffa6da1c9",
+          "size_bytes": 7362
+        },
+        {
+          "legacy_path": "structural/batch/phase12-v2-vvo-beam-column-atomic-restoration/mutation_manifest.private.json",
+          "path": "beam-column-atomic/evidence/authority/mutation_manifest.private.json",
+          "sha256": "f690251b3963352866c061a402aa2135917b63a9074362eb78e9773dc4830eb8",
+          "size_bytes": 14448
+        },
+        {
+          "legacy_path": "structural/batch/phase12-v2-vvo-beam-column-atomic-restoration/mutation_report.json",
+          "path": "beam-column-atomic/evidence/authority/mutation_report.json",
+          "sha256": "637853965c8929ab1bb43c7a188c1c3f115f06e044a10b2f8d4391c1539d2933",
+          "size_bytes": 1699
+        },
+        {
+          "legacy_path": "structural/batch/phase12-v2-vvo-beam-column-atomic-restoration/original.ifc",
+          "path": "beam-column-atomic/01-original.ifc",
+          "sha256": "b6c435be955aeb6b2998f42a62f4ebf8c3f91eb7d373ca71a2dcedfeb95b3fdc",
+          "size_bytes": 2409268
+        },
+        {
+          "legacy_path": "structural/batch/phase12-v2-vvo-beam-column-atomic-restoration/production-boundary.json",
+          "path": "beam-column-atomic/evidence/authority/production-boundary.json",
+          "sha256": "f2b8edac667f0c7ee79431eae60b61a255dfc29588c806e791d0f70b8ab3cf8a",
+          "size_bytes": 744
+        },
+        {
+          "legacy_path": "structural/batch/phase12-v2-vvo-beam-column-atomic-restoration/production-evidence.json",
+          "path": "beam-column-atomic/evidence/authority/production-evidence.json",
+          "sha256": "afb34e9a95aa814010a6add0f891fa1acdadb302cc1116cbb6decedab39e4017",
+          "size_bytes": 6007
+        },
+        {
+          "legacy_path": "structural/batch/phase12-v2-vvo-beam-column-atomic-restoration/repair-intent.json",
+          "path": "beam-column-atomic/evidence/authority/repair-intent.json",
+          "sha256": "1dc8c6c1324451c609da779ed6bd276618af12c943b331be175508472abf3709",
+          "size_bytes": 4097
+        },
+        {
+          "legacy_path": "structural/batch/phase12-v2-vvo-beam-column-atomic-restoration/repaired.ifc",
+          "path": "beam-column-atomic/03-repaired.ifc",
+          "sha256": "cd814cbcea73c1a0977bd2eeca6a9e1239c2633cea4a6469a630fcc95944f0d1",
+          "size_bytes": 2436834
+        },
+        {
+          "legacy_path": "structural/batch/phase12-v2-vvo-beam-column-atomic-restoration/REPORT.md",
+          "path": "beam-column-atomic/evidence/authority/REPORT.md",
+          "sha256": "9f3090177ac2055856b7f6a02c1b3dde4616b6ad92946d44f669391817349f9a",
+          "size_bytes": 539
+        },
+        {
+          "legacy_path": "structural/batch/phase12-v2-vvo-beam-column-atomic-restoration/request.txt",
+          "path": "beam-column-atomic/request.txt",
+          "sha256": "5af33fce6a6e34df0882fe0ef09a888259fec9b3b357043951968b84ebbb7b03",
+          "size_bytes": 93
+        },
+        {
+          "legacy_path": "structural/batch/phase12-v2-vvo-beam-column-atomic-restoration/semantic-manifests.json",
+          "path": "beam-column-atomic/evidence/authority/semantic-manifests.json",
+          "sha256": "4152a1d339067aa26414b413667c08f2590c9e648797ae9a907982b300c43a98",
+          "size_bytes": 7747
+        },
+        {
+          "legacy_path": "structural/batch/phase12-v2-vvo-beam-column-atomic-restoration/structural-restoration-audit.json",
+          "path": "beam-column-atomic/evidence/authority/structural-restoration-audit.json",
+          "sha256": "e4e07be65db3cb20ba9983ee56e47eb1f205e37f419998e1320fa1498e5b2e71",
+          "size_bytes": 1783
+        },
+        {
+          "legacy_path": "structural/batch/phase12-v2-vvo-beam-column-atomic-restoration/target-index.sqlite",
+          "path": "beam-column-atomic/evidence/authority/target-index.sqlite",
+          "sha256": "a19e7f7e3d1acfefb672be9b11e2c5a2aa08b2f9cff216cde449d1099904c6ba",
+          "size_bytes": 1089536
+        },
+        {
+          "legacy_path": "structural/batch/phase12-v2-vvo-beam-column-atomic-restoration/target-resolution.json",
+          "path": "beam-column-atomic/evidence/authority/target-resolution.json",
+          "sha256": "c1050b53cdc93e2396125760433b152d6295cc8438181d8f6a9fe965b244a096",
+          "size_bytes": 11394
+        },
+        {
+          "legacy_path": "structural/single/phase12-v2-vvo-beam-loadbearing-restoration/.validation-cache/b07376cb606fc56fa2f059a946cce063ea703f4b78de63c7cabaa8419800320d.json",
+          "path": "beam-loadbearing/evidence/authority/.validation-cache/b07376cb606fc56fa2f059a946cce063ea703f4b78de63c7cabaa8419800320d.json",
+          "sha256": "d688507b18376420f6805dabdb828b836345f87a1dd36e15da11b204c133a843",
+          "size_bytes": 619
+        },
+        {
+          "legacy_path": "structural/single/phase12-v2-vvo-beam-loadbearing-restoration/.validation-cache/ba46b36193201c012d2241d32cbfa253173783395fd468158481704c8599f12e.json",
+          "path": "beam-loadbearing/evidence/authority/.validation-cache/ba46b36193201c012d2241d32cbfa253173783395fd468158481704c8599f12e.json",
+          "sha256": "24c0abe6fcb0d4c159601a25eb3da1a87bda3707e0ae77151b712f65bdd478aa",
+          "size_bytes": 619
+        },
+        {
+          "legacy_path": "structural/single/phase12-v2-vvo-beam-loadbearing-restoration/application.json",
+          "path": "beam-loadbearing/evidence/authority/application.json",
+          "sha256": "0f2844ca866471e2e33c7cb4ef6c4350186f786d0981c5c038445e83b23dc2da",
+          "size_bytes": 7929
+        },
+        {
+          "legacy_path": "structural/single/phase12-v2-vvo-beam-loadbearing-restoration/changeset.json",
+          "path": "beam-loadbearing/evidence/authority/changeset.json",
+          "sha256": "5aa6fbd5ab96cc2d0441db0c68cd8e6387d466aeb163a4c1b5075928693fc687",
+          "size_bytes": 6411
+        },
+        {
+          "legacy_path": "structural/single/phase12-v2-vvo-beam-loadbearing-restoration/comparison.json",
+          "path": "beam-loadbearing/evidence/authority/comparison.json",
+          "sha256": "a1860a0d117d10670985b7890e08d7fde14062157dfd43a60c34ce52d609aead",
+          "size_bytes": 5118
+        },
+        {
+          "legacy_path": "structural/single/phase12-v2-vvo-beam-loadbearing-restoration/damaged.ifc",
+          "path": "beam-loadbearing/02-damaged.ifc",
+          "sha256": "a611a682c79a79ace18a16bf5f1497bf32fe43a9447b92af22168149b36d20e4",
+          "size_bytes": 2435315
+        },
+        {
+          "legacy_path": "structural/single/phase12-v2-vvo-beam-loadbearing-restoration/evaluation.json",
+          "path": "beam-loadbearing/evidence/authority/evaluation.json",
+          "sha256": "bc3eba0350b616e0c071668a94894ee9d036de386844854023eb91b86275e87f",
+          "size_bytes": 43903
+        },
+        {
+          "legacy_path": "structural/single/phase12-v2-vvo-beam-loadbearing-restoration/FILES.json",
+          "path": "beam-loadbearing/evidence/authority/FILES.json",
+          "sha256": "2be34b0518af79dfe624df051862adc6148a8b4aee6663f7641b82030ed58bd3",
+          "size_bytes": 8831
+        },
+        {
+          "legacy_path": "structural/single/phase12-v2-vvo-beam-loadbearing-restoration/manifest.json",
+          "path": "beam-loadbearing/evidence/authority/manifest.json",
+          "sha256": "1d5b96b4411d62cef44b069d9555caeb60d45a3c83e3458e049d64ce0f599dcd",
+          "size_bytes": 11087
+        },
+        {
+          "legacy_path": "structural/single/phase12-v2-vvo-beam-loadbearing-restoration/mutation_manifest.private.json",
+          "path": "beam-loadbearing/evidence/authority/mutation_manifest.private.json",
+          "sha256": "fde41dcffc54861b54ef5c981932213bc2a80d67cbcc1d9f9ddb0a5219d8d1e8",
+          "size_bytes": 9154
+        },
+        {
+          "legacy_path": "structural/single/phase12-v2-vvo-beam-loadbearing-restoration/mutation_report.json",
+          "path": "beam-loadbearing/evidence/authority/mutation_report.json",
+          "sha256": "0a98d7ff21e7c0be9b9ab44678b77a5e796f520d1fb11b403c78ef846bc8b601",
+          "size_bytes": 1683
+        },
+        {
+          "legacy_path": "structural/single/phase12-v2-vvo-beam-loadbearing-restoration/original.ifc",
+          "path": "beam-loadbearing/01-original.ifc",
+          "sha256": "b6c435be955aeb6b2998f42a62f4ebf8c3f91eb7d373ca71a2dcedfeb95b3fdc",
+          "size_bytes": 2409268
+        },
+        {
+          "legacy_path": "structural/single/phase12-v2-vvo-beam-loadbearing-restoration/production-boundary.json",
+          "path": "beam-loadbearing/evidence/authority/production-boundary.json",
+          "sha256": "894555cd081f254f3b271e7cfe0b488c5130286de37cbe4821c54d5ebb96a2f6",
+          "size_bytes": 744
+        },
+        {
+          "legacy_path": "structural/single/phase12-v2-vvo-beam-loadbearing-restoration/production-evidence.json",
+          "path": "beam-loadbearing/evidence/authority/production-evidence.json",
+          "sha256": "6afaf5d9d0fe69b0adb44ab11738b1e3720c246659a29ce0fefd6d9f3083dd90",
+          "size_bytes": 4072
+        },
+        {
+          "legacy_path": "structural/single/phase12-v2-vvo-beam-loadbearing-restoration/property-resolution/phase12-v2-vvo-beam-loadbearing-restoration-beam-1/claim-001/admissibility.json",
+          "path": "beam-loadbearing/evidence/authority/property-resolution/phase12-v2-vvo-beam-loadbearing-restoration-beam-1/claim-001/admissibility.json",
+          "sha256": "7b804e3e8867724a16983be42e31526ec9a75673066ed842ae51d2b9f07f2c5f",
+          "size_bytes": 1221
+        },
+        {
+          "legacy_path": "structural/single/phase12-v2-vvo-beam-loadbearing-restoration/property-resolution/phase12-v2-vvo-beam-loadbearing-restoration-beam-1/claim-001/candidate-set.json",
+          "path": "beam-loadbearing/evidence/authority/property-resolution/phase12-v2-vvo-beam-loadbearing-restoration-beam-1/claim-001/candidate-set.json",
+          "sha256": "ac863cbd20bf55a275acaf8fbad10c1fe8c332e1f27a9fe92c7396dab069ac6c",
+          "size_bytes": 4638
+        },
+        {
+          "legacy_path": "structural/single/phase12-v2-vvo-beam-loadbearing-restoration/property-resolution/phase12-v2-vvo-beam-loadbearing-restoration-beam-1/claim-001/provider/attempt-001/parsed-response.json",
+          "path": "beam-loadbearing/evidence/authority/property-resolution/phase12-v2-vvo-beam-loadbearing-restoration-beam-1/claim-001/provider/attempt-001/parsed-response.json",
+          "sha256": "71cfc8f5734d2b2750f7eadd50ff19172b67130d14e81be6cc51c2819fab55c7",
+          "size_bytes": 241
+        },
+        {
+          "legacy_path": "structural/single/phase12-v2-vvo-beam-loadbearing-restoration/property-resolution/phase12-v2-vvo-beam-loadbearing-restoration-beam-1/claim-001/provider/attempt-001/provider-metadata.json",
+          "path": "beam-loadbearing/evidence/authority/property-resolution/phase12-v2-vvo-beam-loadbearing-restoration-beam-1/claim-001/provider/attempt-001/provider-metadata.json",
+          "sha256": "2176f2d626993128e362567e5c86d9d089d55d01e1e0a10c43824d6c326a0733",
+          "size_bytes": 174
+        },
+        {
+          "legacy_path": "structural/single/phase12-v2-vvo-beam-loadbearing-restoration/property-resolution/phase12-v2-vvo-beam-loadbearing-restoration-beam-1/claim-001/provider/attempt-001/raw-response.json",
+          "path": "beam-loadbearing/evidence/authority/property-resolution/phase12-v2-vvo-beam-loadbearing-restoration-beam-1/claim-001/provider/attempt-001/raw-response.json",
+          "sha256": "30e03be12dd38b0346a392d87af47c892f15b98acf92d97009816bf5f5e7f73d",
+          "size_bytes": 282
+        },
+        {
+          "legacy_path": "structural/single/phase12-v2-vvo-beam-loadbearing-restoration/property-resolution/phase12-v2-vvo-beam-loadbearing-restoration-beam-1/claim-001/provider/attempt-001/rendered-prompt.txt",
+          "path": "beam-loadbearing/evidence/authority/property-resolution/phase12-v2-vvo-beam-loadbearing-restoration-beam-1/claim-001/provider/attempt-001/rendered-prompt.txt",
+          "sha256": "55042d6822240c635d80fd80d1c57b1f43f7b2db70a4c8e88cfcefe3579d2dd6",
+          "size_bytes": 8979
+        },
+        {
+          "legacy_path": "structural/single/phase12-v2-vvo-beam-loadbearing-restoration/property-resolution/phase12-v2-vvo-beam-loadbearing-restoration-beam-1/claim-001/provider/attempt-001/renderer-input.json",
+          "path": "beam-loadbearing/evidence/authority/property-resolution/phase12-v2-vvo-beam-loadbearing-restoration-beam-1/claim-001/provider/attempt-001/renderer-input.json",
+          "sha256": "5a9d809289f99aa095bb11cbf70ce1a86b08af5405f06dba5975c5e4b12101b8",
+          "size_bytes": 8694
+        },
+        {
+          "legacy_path": "structural/single/phase12-v2-vvo-beam-loadbearing-restoration/property-resolution/phase12-v2-vvo-beam-loadbearing-restoration-beam-1/claim-001/provider/attempt-001/trace.json",
+          "path": "beam-loadbearing/evidence/authority/property-resolution/phase12-v2-vvo-beam-loadbearing-restoration-beam-1/claim-001/provider/attempt-001/trace.json",
+          "sha256": "6003d3bf53e32069f6620fd4c340cdfad84d6f68a8f139970ffb6895f49460ba",
+          "size_bytes": 1373
+        },
+        {
+          "legacy_path": "structural/single/phase12-v2-vvo-beam-loadbearing-restoration/property-resolution/phase12-v2-vvo-beam-loadbearing-restoration-beam-1/claim-001/provider/attempt-001/validation-feedback.json",
+          "path": "beam-loadbearing/evidence/authority/property-resolution/phase12-v2-vvo-beam-loadbearing-restoration-beam-1/claim-001/provider/attempt-001/validation-feedback.json",
+          "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+          "size_bytes": 3
+        },
+        {
+          "legacy_path": "structural/single/phase12-v2-vvo-beam-loadbearing-restoration/property-resolution/phase12-v2-vvo-beam-loadbearing-restoration-beam-1/claim-001/query.json",
+          "path": "beam-loadbearing/evidence/authority/property-resolution/phase12-v2-vvo-beam-loadbearing-restoration-beam-1/claim-001/query.json",
+          "sha256": "f95ad43fa54d8121f0af5401dae0b35c8618c3148b0dc987a71c265d43c09a4d",
+          "size_bytes": 729
+        },
+        {
+          "legacy_path": "structural/single/phase12-v2-vvo-beam-loadbearing-restoration/repair-intent.json",
+          "path": "beam-loadbearing/evidence/authority/repair-intent.json",
+          "sha256": "32b49bf6f10e467c91c9998f6cb8658807ff4091d150dfd22907602f36ca1a84",
+          "size_bytes": 2831
+        },
+        {
+          "legacy_path": "structural/single/phase12-v2-vvo-beam-loadbearing-restoration/repaired.ifc",
+          "path": "beam-loadbearing/03-repaired.ifc",
+          "sha256": "d60b997989c4441583d43d6e40d046a83cfbcb554874da83fd74f7cba80d5c83",
+          "size_bytes": 2436845
+        },
+        {
+          "legacy_path": "structural/single/phase12-v2-vvo-beam-loadbearing-restoration/REPORT.md",
+          "path": "beam-loadbearing/evidence/authority/REPORT.md",
+          "sha256": "7bb5ac064de01d840af5cb67842a4764f3c69603e769cbc55ed6da02ba36076d",
+          "size_bytes": 525
+        },
+        {
+          "legacy_path": "structural/single/phase12-v2-vvo-beam-loadbearing-restoration/request.txt",
+          "path": "beam-loadbearing/request.txt",
+          "sha256": "de42ea501d3b0272aceee6143983dfc096743e525f5d70776fcda04062b54f00",
+          "size_bytes": 110
+        },
+        {
+          "legacy_path": "structural/single/phase12-v2-vvo-beam-loadbearing-restoration/semantic-manifest.json",
+          "path": "beam-loadbearing/evidence/authority/semantic-manifest.json",
+          "sha256": "afa64da673ffab71dab8de4c8421782484c7dbb2a76e3e5e888511968284fe36",
+          "size_bytes": 4380
+        },
+        {
+          "legacy_path": "structural/single/phase12-v2-vvo-beam-loadbearing-restoration/structural-restoration-audit.json",
+          "path": "beam-loadbearing/evidence/authority/structural-restoration-audit.json",
+          "sha256": "e5dccf8e2771ed93b45fdda5ce19d3243f7fcc1f38d26afd6a5ce0f7acfcbe10",
+          "size_bytes": 1051
+        },
+        {
+          "legacy_path": "structural/single/phase12-v2-vvo-beam-loadbearing-restoration/target-index.sqlite",
+          "path": "beam-loadbearing/evidence/authority/target-index.sqlite",
+          "sha256": "c5666a2726f56797e8e43ea37ecff355509509701a6c3d1e263506315dc3ffed",
+          "size_bytes": 1093632
+        },
+        {
+          "legacy_path": "structural/single/phase12-v2-vvo-beam-loadbearing-restoration/target-resolution.json",
+          "path": "beam-loadbearing/evidence/authority/target-resolution.json",
+          "sha256": "6c9869629bf7d77a756593f5a684cccfe7c4e34cc1eb8866d4d2b7bcb15cb019",
+          "size_bytes": 7956
+        },
+        {
+          "legacy_path": "structural/single/phase12-v2-vvo-beam-material-present-restoration/.validation-cache/580d650b14063d162ae13fa8d7db782935f7c681f190c420583ee917d68d2c2a.json",
+          "path": "beam-material-present/evidence/authority/.validation-cache/580d650b14063d162ae13fa8d7db782935f7c681f190c420583ee917d68d2c2a.json",
+          "sha256": "5fc584c0e2e16bd14e63f1deb2f206dbea65c52136dee9f34d2a4ce5396ac20d",
+          "size_bytes": 619
+        },
+        {
+          "legacy_path": "structural/single/phase12-v2-vvo-beam-material-present-restoration/.validation-cache/ba46b36193201c012d2241d32cbfa253173783395fd468158481704c8599f12e.json",
+          "path": "beam-material-present/evidence/authority/.validation-cache/ba46b36193201c012d2241d32cbfa253173783395fd468158481704c8599f12e.json",
+          "sha256": "24c0abe6fcb0d4c159601a25eb3da1a87bda3707e0ae77151b712f65bdd478aa",
+          "size_bytes": 619
+        },
+        {
+          "legacy_path": "structural/single/phase12-v2-vvo-beam-material-present-restoration/application.json",
+          "path": "beam-material-present/evidence/authority/application.json",
+          "sha256": "10ab3dd55d204bb792efb7676ea18c8413fdfdbceb0b574d88695df411b9d19f",
+          "size_bytes": 7423
+        },
+        {
+          "legacy_path": "structural/single/phase12-v2-vvo-beam-material-present-restoration/changeset.json",
+          "path": "beam-material-present/evidence/authority/changeset.json",
+          "sha256": "99463cd2ad9c0b808662ca696b0e5b439f728114a38d61b601327618d738d58c",
+          "size_bytes": 6286
+        },
+        {
+          "legacy_path": "structural/single/phase12-v2-vvo-beam-material-present-restoration/comparison.json",
+          "path": "beam-material-present/evidence/authority/comparison.json",
+          "sha256": "d7cd5580cea740fa393868917a45e78bd73f519bd4e7dac88b4b4a9f934e993f",
+          "size_bytes": 5056
+        },
+        {
+          "legacy_path": "structural/single/phase12-v2-vvo-beam-material-present-restoration/damaged.ifc",
+          "path": "beam-material-present/02-damaged.ifc",
+          "sha256": "a611a682c79a79ace18a16bf5f1497bf32fe43a9447b92af22168149b36d20e4",
+          "size_bytes": 2435315
+        },
+        {
+          "legacy_path": "structural/single/phase12-v2-vvo-beam-material-present-restoration/evaluation.json",
+          "path": "beam-material-present/evidence/authority/evaluation.json",
+          "sha256": "2c5e5a7c645bfd6a941e07af2d524ea4b501ae2313e408366de04c66fe56d5f0",
+          "size_bytes": 42120
+        },
+        {
+          "legacy_path": "structural/single/phase12-v2-vvo-beam-material-present-restoration/FILES.json",
+          "path": "beam-material-present/evidence/authority/FILES.json",
+          "sha256": "4acc0c481b2b65679d8da5fc694cc0308d30e92ccc3e75bfc58a2a987e73218c",
+          "size_bytes": 4704
+        },
+        {
+          "legacy_path": "structural/single/phase12-v2-vvo-beam-material-present-restoration/manifest.json",
+          "path": "beam-material-present/evidence/authority/manifest.json",
+          "sha256": "7fdfdc7c6679c8033e6a7ffaac4de82b4a8f6ff2e066f9d692f7a9d081bf6477",
+          "size_bytes": 7321
+        },
+        {
+          "legacy_path": "structural/single/phase12-v2-vvo-beam-material-present-restoration/mutation_manifest.private.json",
+          "path": "beam-material-present/evidence/authority/mutation_manifest.private.json",
+          "sha256": "fde41dcffc54861b54ef5c981932213bc2a80d67cbcc1d9f9ddb0a5219d8d1e8",
+          "size_bytes": 9154
+        },
+        {
+          "legacy_path": "structural/single/phase12-v2-vvo-beam-material-present-restoration/mutation_report.json",
+          "path": "beam-material-present/evidence/authority/mutation_report.json",
+          "sha256": "0a98d7ff21e7c0be9b9ab44678b77a5e796f520d1fb11b403c78ef846bc8b601",
+          "size_bytes": 1683
+        },
+        {
+          "legacy_path": "structural/single/phase12-v2-vvo-beam-material-present-restoration/original.ifc",
+          "path": "beam-material-present/01-original.ifc",
+          "sha256": "b6c435be955aeb6b2998f42a62f4ebf8c3f91eb7d373ca71a2dcedfeb95b3fdc",
+          "size_bytes": 2409268
+        },
+        {
+          "legacy_path": "structural/single/phase12-v2-vvo-beam-material-present-restoration/production-boundary.json",
+          "path": "beam-material-present/evidence/authority/production-boundary.json",
+          "sha256": "c88937d01289cfe2f3b805a81fd178412ad00b9c5a705abc3164a950fa1ef778",
+          "size_bytes": 744
+        },
+        {
+          "legacy_path": "structural/single/phase12-v2-vvo-beam-material-present-restoration/production-evidence.json",
+          "path": "beam-material-present/evidence/authority/production-evidence.json",
+          "sha256": "edcb0f0f11816e47fe2baec432f0a61267fd0ee0171665f1af1d97c2c88feed9",
+          "size_bytes": 3934
+        },
+        {
+          "legacy_path": "structural/single/phase12-v2-vvo-beam-material-present-restoration/repair-intent.json",
+          "path": "beam-material-present/evidence/authority/repair-intent.json",
+          "sha256": "8e0a93066a37b06c6325dca20586bc08387304703ef398d8fff7f2bce6f4d6ee",
+          "size_bytes": 2816
+        },
+        {
+          "legacy_path": "structural/single/phase12-v2-vvo-beam-material-present-restoration/repaired.ifc",
+          "path": "beam-material-present/03-repaired.ifc",
+          "sha256": "37f0b862adb07bb1f6ea72b853a46acfb935f6670e7176c7bfeed0ad2b8a739b",
+          "size_bytes": 2436714
+        },
+        {
+          "legacy_path": "structural/single/phase12-v2-vvo-beam-material-present-restoration/REPORT.md",
+          "path": "beam-material-present/evidence/authority/REPORT.md",
+          "sha256": "ba192f7a8f40d7d04c66cf5eb85c013c56e42ee7fff216a7dc9f8eb46fb6f074",
+          "size_bytes": 530
+        },
+        {
+          "legacy_path": "structural/single/phase12-v2-vvo-beam-material-present-restoration/request.txt",
+          "path": "beam-material-present/request.txt",
+          "sha256": "2f65fced59ec8060a9fb748531c4c9a477546d48079e99c26d3952620c41df29",
+          "size_bytes": 130
+        },
+        {
+          "legacy_path": "structural/single/phase12-v2-vvo-beam-material-present-restoration/semantic-manifest.json",
+          "path": "beam-material-present/evidence/authority/semantic-manifest.json",
+          "sha256": "9e8df6f8337784d4e5eee4cf587b1ce100d56f1e977b4379d5e8b4abfca30368",
+          "size_bytes": 4248
+        },
+        {
+          "legacy_path": "structural/single/phase12-v2-vvo-beam-material-present-restoration/structural-restoration-audit.json",
+          "path": "beam-material-present/evidence/authority/structural-restoration-audit.json",
+          "sha256": "f18ce347f92994168b80c36c532bd0ea0206489d60129918f11872be56993c86",
+          "size_bytes": 1061
+        },
+        {
+          "legacy_path": "structural/single/phase12-v2-vvo-beam-material-present-restoration/target-index.sqlite",
+          "path": "beam-material-present/evidence/authority/target-index.sqlite",
+          "sha256": "897f7a396fc373dccf8b60697b2d55ecd8e9e828a32939c03f8ff4e0ab5b1a2a",
+          "size_bytes": 1093632
+        },
+        {
+          "legacy_path": "structural/single/phase12-v2-vvo-beam-material-present-restoration/target-resolution.json",
+          "path": "beam-material-present/evidence/authority/target-resolution.json",
+          "sha256": "1bfe8f9440dab05db1e2c232ebdf6b776342935ea6572341453d26ed4ccf7a19",
+          "size_bytes": 5874
+        },
+        {
+          "legacy_path": "structural/single/phase12-v2-vvo-column-loadbearing-restoration/.validation-cache/42e3c36f701216b4278cab8cc6d7b0c94f60cbfc2d78e4c51ebdcb80b3e68a59.json",
+          "path": "column-loadbearing/evidence/authority/.validation-cache/42e3c36f701216b4278cab8cc6d7b0c94f60cbfc2d78e4c51ebdcb80b3e68a59.json",
+          "sha256": "f33ecfd16347d1551c2255b060e467c88afb82f10ced35628d75ab3f6dadbe45",
+          "size_bytes": 619
+        },
+        {
+          "legacy_path": "structural/single/phase12-v2-vvo-column-loadbearing-restoration/.validation-cache/926da8b3bd65192ca5ca34e196b567846cb95f6e7f5e4ab57d4ce297a661c7f6.json",
+          "path": "column-loadbearing/evidence/authority/.validation-cache/926da8b3bd65192ca5ca34e196b567846cb95f6e7f5e4ab57d4ce297a661c7f6.json",
+          "sha256": "6fd0c3f95e839325fcf24e20c81d25374220950f0ecf927ac5cf287b74c72f16",
+          "size_bytes": 619
+        },
+        {
+          "legacy_path": "structural/single/phase12-v2-vvo-column-loadbearing-restoration/application.json",
+          "path": "column-loadbearing/evidence/authority/application.json",
+          "sha256": "cfc937b5490055d834563a86a11e986078683cdfeaceadefb5f9bc963f040ee8",
+          "size_bytes": 8055
+        },
+        {
+          "legacy_path": "structural/single/phase12-v2-vvo-column-loadbearing-restoration/changeset.json",
+          "path": "column-loadbearing/evidence/authority/changeset.json",
+          "sha256": "683915f9435ff6494e35b077815cb270f11ead951b4d6c191dc7c284139ee607",
+          "size_bytes": 6589
+        },
+        {
+          "legacy_path": "structural/single/phase12-v2-vvo-column-loadbearing-restoration/comparison.json",
+          "path": "column-loadbearing/evidence/authority/comparison.json",
+          "sha256": "4ac398272c3004693d97d4e4e66bf5ddd21cb7b32c3262dd532a066305a116c3",
+          "size_bytes": 11278
+        },
+        {
+          "legacy_path": "structural/single/phase12-v2-vvo-column-loadbearing-restoration/damaged.ifc",
+          "path": "column-loadbearing/02-damaged.ifc",
+          "sha256": "0e36ffb6747fca2dfc65c0038be775b610bdcaeb28a0189786af29a697522f89",
+          "size_bytes": 2436369
+        },
+        {
+          "legacy_path": "structural/single/phase12-v2-vvo-column-loadbearing-restoration/evaluation.json",
+          "path": "column-loadbearing/evidence/authority/evaluation.json",
+          "sha256": "bfc24279ba7e99b4ae3969e751f3d9eaa85058b41cd774dcaba5f64ea2d8a2a5",
+          "size_bytes": 44115
+        },
+        {
+          "legacy_path": "structural/single/phase12-v2-vvo-column-loadbearing-restoration/FILES.json",
+          "path": "column-loadbearing/evidence/authority/FILES.json",
+          "sha256": "9b2e1b2c19cd1782f2df82072117b08bf5c383c1525d25756defc29469ab5b83",
+          "size_bytes": 8914
+        },
+        {
+          "legacy_path": "structural/single/phase12-v2-vvo-column-loadbearing-restoration/manifest.json",
+          "path": "column-loadbearing/evidence/authority/manifest.json",
+          "sha256": "8d400e959e40f22d616ebf14e1b87727d4dde0f4f01fc1ce35e28dc874a4c680",
+          "size_bytes": 11174
+        },
+        {
+          "legacy_path": "structural/single/phase12-v2-vvo-column-loadbearing-restoration/mutation_manifest.private.json",
+          "path": "column-loadbearing/evidence/authority/mutation_manifest.private.json",
+          "sha256": "2b1126dd780c96fa93ecc83a30d13858ef21a683f3bcadf061767c4cc0fdf1b7",
+          "size_bytes": 6851
+        },
+        {
+          "legacy_path": "structural/single/phase12-v2-vvo-column-loadbearing-restoration/mutation_report.json",
+          "path": "column-loadbearing/evidence/authority/mutation_report.json",
+          "sha256": "89043695a935e61e0f263d41889580730e1b97f91587264d8f83cb6d5867aaa9",
+          "size_bytes": 1685
+        },
+        {
+          "legacy_path": "structural/single/phase12-v2-vvo-column-loadbearing-restoration/original.ifc",
+          "path": "column-loadbearing/01-original.ifc",
+          "sha256": "b6c435be955aeb6b2998f42a62f4ebf8c3f91eb7d373ca71a2dcedfeb95b3fdc",
+          "size_bytes": 2409268
+        },
+        {
+          "legacy_path": "structural/single/phase12-v2-vvo-column-loadbearing-restoration/production-boundary.json",
+          "path": "column-loadbearing/evidence/authority/production-boundary.json",
+          "sha256": "e776c9d0511b4b8c84e44c8c9dedb7724f8767c91e10ebf7f4749b72d21214b1",
+          "size_bytes": 744
+        },
+        {
+          "legacy_path": "structural/single/phase12-v2-vvo-column-loadbearing-restoration/production-evidence.json",
+          "path": "column-loadbearing/evidence/authority/production-evidence.json",
+          "sha256": "19c113e5c369f9d43ddcb88858a0cf97f55fc1fa2258807acc2c1cc838aa455a",
+          "size_bytes": 4159
+        },
+        {
+          "legacy_path": "structural/single/phase12-v2-vvo-column-loadbearing-restoration/property-resolution/phase12-v2-vvo-column-loadbearing-restoration-column-1/claim-001/admissibility.json",
+          "path": "column-loadbearing/evidence/authority/property-resolution/phase12-v2-vvo-column-loadbearing-restoration-column-1/claim-001/admissibility.json",
+          "sha256": "74b08b51fd5872a3e9f6c3a6a3665f737ac91d34830f0eed51820941ab99d17c",
+          "size_bytes": 1241
+        },
+        {
+          "legacy_path": "structural/single/phase12-v2-vvo-column-loadbearing-restoration/property-resolution/phase12-v2-vvo-column-loadbearing-restoration-column-1/claim-001/candidate-set.json",
+          "path": "column-loadbearing/evidence/authority/property-resolution/phase12-v2-vvo-column-loadbearing-restoration-column-1/claim-001/candidate-set.json",
+          "sha256": "19634a1384dfeae3c53ac90a36354b4229376eecd9b20cc8fbb4123a0fd38ffc",
+          "size_bytes": 4755
+        },
+        {
+          "legacy_path": "structural/single/phase12-v2-vvo-column-loadbearing-restoration/property-resolution/phase12-v2-vvo-column-loadbearing-restoration-column-1/claim-001/provider/attempt-001/parsed-response.json",
+          "path": "column-loadbearing/evidence/authority/property-resolution/phase12-v2-vvo-column-loadbearing-restoration-column-1/claim-001/provider/attempt-001/parsed-response.json",
+          "sha256": "94d914a89735284c7e4c09ca74bbba041c246858021349ea710e510e280124e5",
+          "size_bytes": 243
+        },
+        {
+          "legacy_path": "structural/single/phase12-v2-vvo-column-loadbearing-restoration/property-resolution/phase12-v2-vvo-column-loadbearing-restoration-column-1/claim-001/provider/attempt-001/provider-metadata.json",
+          "path": "column-loadbearing/evidence/authority/property-resolution/phase12-v2-vvo-column-loadbearing-restoration-column-1/claim-001/provider/attempt-001/provider-metadata.json",
+          "sha256": "2176f2d626993128e362567e5c86d9d089d55d01e1e0a10c43824d6c326a0733",
+          "size_bytes": 174
+        },
+        {
+          "legacy_path": "structural/single/phase12-v2-vvo-column-loadbearing-restoration/property-resolution/phase12-v2-vvo-column-loadbearing-restoration-column-1/claim-001/provider/attempt-001/raw-response.json",
+          "path": "column-loadbearing/evidence/authority/property-resolution/phase12-v2-vvo-column-loadbearing-restoration-column-1/claim-001/provider/attempt-001/raw-response.json",
+          "sha256": "6c1954b19bf55569cd479c83854d8318fc75fb1d660b0393c0b724826c0ebea7",
+          "size_bytes": 284
+        },
+        {
+          "legacy_path": "structural/single/phase12-v2-vvo-column-loadbearing-restoration/property-resolution/phase12-v2-vvo-column-loadbearing-restoration-column-1/claim-001/provider/attempt-001/rendered-prompt.txt",
+          "path": "column-loadbearing/evidence/authority/property-resolution/phase12-v2-vvo-column-loadbearing-restoration-column-1/claim-001/provider/attempt-001/rendered-prompt.txt",
+          "sha256": "cf0746f68bbef58eab5dd787582d5735ce8fc9e5d9b9174ca6bf4a0d72747659",
+          "size_bytes": 9114
+        },
+        {
+          "legacy_path": "structural/single/phase12-v2-vvo-column-loadbearing-restoration/property-resolution/phase12-v2-vvo-column-loadbearing-restoration-column-1/claim-001/provider/attempt-001/renderer-input.json",
+          "path": "column-loadbearing/evidence/authority/property-resolution/phase12-v2-vvo-column-loadbearing-restoration-column-1/claim-001/provider/attempt-001/renderer-input.json",
+          "sha256": "1e97675f6d687d9a6f98bb0d9c1a6b613e57cddde17ce639d44ee76cccf5dd15",
+          "size_bytes": 8829
+        },
+        {
+          "legacy_path": "structural/single/phase12-v2-vvo-column-loadbearing-restoration/property-resolution/phase12-v2-vvo-column-loadbearing-restoration-column-1/claim-001/provider/attempt-001/trace.json",
+          "path": "column-loadbearing/evidence/authority/property-resolution/phase12-v2-vvo-column-loadbearing-restoration-column-1/claim-001/provider/attempt-001/trace.json",
+          "sha256": "7514c7835f17adc278fc63e20ff2894b19ffdfcabbf0d6d72885b1aa2cd74622",
+          "size_bytes": 1393
+        },
+        {
+          "legacy_path": "structural/single/phase12-v2-vvo-column-loadbearing-restoration/property-resolution/phase12-v2-vvo-column-loadbearing-restoration-column-1/claim-001/provider/attempt-001/validation-feedback.json",
+          "path": "column-loadbearing/evidence/authority/property-resolution/phase12-v2-vvo-column-loadbearing-restoration-column-1/claim-001/provider/attempt-001/validation-feedback.json",
+          "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+          "size_bytes": 3
+        },
+        {
+          "legacy_path": "structural/single/phase12-v2-vvo-column-loadbearing-restoration/property-resolution/phase12-v2-vvo-column-loadbearing-restoration-column-1/claim-001/query.json",
+          "path": "column-loadbearing/evidence/authority/property-resolution/phase12-v2-vvo-column-loadbearing-restoration-column-1/claim-001/query.json",
+          "sha256": "61288dd90d620d09b4694232f2924304c56e9231746937b0f78292757849c1b1",
+          "size_bytes": 747
+        },
+        {
+          "legacy_path": "structural/single/phase12-v2-vvo-column-loadbearing-restoration/repair-intent.json",
+          "path": "column-loadbearing/evidence/authority/repair-intent.json",
+          "sha256": "91b05f01370bc268523b792fae04343530113f9d5be3f1d150b81b9b48b4a4d8",
+          "size_bytes": 2945
+        },
+        {
+          "legacy_path": "structural/single/phase12-v2-vvo-column-loadbearing-restoration/repaired.ifc",
+          "path": "column-loadbearing/03-repaired.ifc",
+          "sha256": "89a4e8562f353fa5d6387dc29f7c994d6ef1d15316e231c3c05ed206a09e8367",
+          "size_bytes": 2437931
+        },
+        {
+          "legacy_path": "structural/single/phase12-v2-vvo-column-loadbearing-restoration/REPORT.md",
+          "path": "column-loadbearing/evidence/authority/REPORT.md",
+          "sha256": "fa3f3f43e2d3b18d1707633430a6ff7262a7006ad365b9b8e3ae9c1cfd856d74",
+          "size_bytes": 529
+        },
+        {
+          "legacy_path": "structural/single/phase12-v2-vvo-column-loadbearing-restoration/request.txt",
+          "path": "column-loadbearing/request.txt",
+          "sha256": "3aef12f168328ff7e3936e4ea579e524c4309b9bdf913cafbacb60706d10adc0",
+          "size_bytes": 112
+        },
+        {
+          "legacy_path": "structural/single/phase12-v2-vvo-column-loadbearing-restoration/semantic-manifest.json",
+          "path": "column-loadbearing/evidence/authority/semantic-manifest.json",
+          "sha256": "c62ef6c8d026b92c718cd73fee794d4bde86950549c20fa3ffbc688e3632c627",
+          "size_bytes": 4456
+        },
+        {
+          "legacy_path": "structural/single/phase12-v2-vvo-column-loadbearing-restoration/structural-restoration-audit.json",
+          "path": "column-loadbearing/evidence/authority/structural-restoration-audit.json",
+          "sha256": "82b2e3c6a38ab3853e9c6d558906b19bbe578f00ba10463dce5f6e97e508845b",
+          "size_bytes": 1061
+        },
+        {
+          "legacy_path": "structural/single/phase12-v2-vvo-column-loadbearing-restoration/target-index.sqlite",
+          "path": "column-loadbearing/evidence/authority/target-index.sqlite",
+          "sha256": "1962fbbfb51c21e8626fb8ff67d58b975077d1ed56bdf787b3f2ed1a0fc8423e",
+          "size_bytes": 1097728
+        },
+        {
+          "legacy_path": "structural/single/phase12-v2-vvo-column-loadbearing-restoration/target-resolution.json",
+          "path": "column-loadbearing/evidence/authority/target-resolution.json",
+          "sha256": "9e9e72058873818a37ac1b64e4a9d24335af7bd3700a1a67295b27e52eed3597",
+          "size_bytes": 8093
+        },
+        {
+          "legacy_path": "structural/single/phase12-v2-vvo-column-material-absent-restoration/.validation-cache/42e3c36f701216b4278cab8cc6d7b0c94f60cbfc2d78e4c51ebdcb80b3e68a59.json",
+          "path": "column-material-absent/evidence/authority/.validation-cache/42e3c36f701216b4278cab8cc6d7b0c94f60cbfc2d78e4c51ebdcb80b3e68a59.json",
+          "sha256": "f33ecfd16347d1551c2255b060e467c88afb82f10ced35628d75ab3f6dadbe45",
+          "size_bytes": 619
+        },
+        {
+          "legacy_path": "structural/single/phase12-v2-vvo-column-material-absent-restoration/.validation-cache/f9a79c7e705e0693c4924b81e1ba07c0a4a31b3e6f0d9538ca86c0f465d205bd.json",
+          "path": "column-material-absent/evidence/authority/.validation-cache/f9a79c7e705e0693c4924b81e1ba07c0a4a31b3e6f0d9538ca86c0f465d205bd.json",
+          "sha256": "20ca52ef4072f90527953ab59c154e3c9616f7d8b71868fb73c8f2236a72a968",
+          "size_bytes": 619
+        },
+        {
+          "legacy_path": "structural/single/phase12-v2-vvo-column-material-absent-restoration/application.json",
+          "path": "column-material-absent/evidence/authority/application.json",
+          "sha256": "8e7dc91e5f61e0603a97701bc38012691e79d3a0b36c45b8cc5fb24df4bb47b9",
+          "size_bytes": 6891
+        },
+        {
+          "legacy_path": "structural/single/phase12-v2-vvo-column-material-absent-restoration/changeset.json",
+          "path": "column-material-absent/evidence/authority/changeset.json",
+          "sha256": "3d802ac5713aa2544d597aa72312473e25d27ffd1fc0674170bfa6c234956c5f",
+          "size_bytes": 5588
+        },
+        {
+          "legacy_path": "structural/single/phase12-v2-vvo-column-material-absent-restoration/comparison.json",
+          "path": "column-material-absent/evidence/authority/comparison.json",
+          "sha256": "66ca411c70c4dd569680f04898874aacf92571bf0df92c2509c9d30cbad69440",
+          "size_bytes": 11149
+        },
+        {
+          "legacy_path": "structural/single/phase12-v2-vvo-column-material-absent-restoration/damaged.ifc",
+          "path": "column-material-absent/02-damaged.ifc",
+          "sha256": "0e36ffb6747fca2dfc65c0038be775b610bdcaeb28a0189786af29a697522f89",
+          "size_bytes": 2436369
+        },
+        {
+          "legacy_path": "structural/single/phase12-v2-vvo-column-material-absent-restoration/evaluation.json",
+          "path": "column-material-absent/evidence/authority/evaluation.json",
+          "sha256": "82c4aac0ec4d3d8ed27520217dd1c79f82a9cfb5cb6b5c859f65e8172b504d0b",
+          "size_bytes": 40031
+        },
+        {
+          "legacy_path": "structural/single/phase12-v2-vvo-column-material-absent-restoration/FILES.json",
+          "path": "column-material-absent/evidence/authority/FILES.json",
+          "sha256": "e35a273a44224fcf5906e13ad21f7cd7ec925f0fb4cf3fe5e0acf92ac64d601d",
+          "size_bytes": 4706
+        },
+        {
+          "legacy_path": "structural/single/phase12-v2-vvo-column-material-absent-restoration/manifest.json",
+          "path": "column-material-absent/evidence/authority/manifest.json",
+          "sha256": "7073fe18e6de8e64cbdba73fccf0109be78a8eaf19045a851fc42faa3b7656cb",
+          "size_bytes": 7327
+        },
+        {
+          "legacy_path": "structural/single/phase12-v2-vvo-column-material-absent-restoration/mutation_manifest.private.json",
+          "path": "column-material-absent/evidence/authority/mutation_manifest.private.json",
+          "sha256": "2b1126dd780c96fa93ecc83a30d13858ef21a683f3bcadf061767c4cc0fdf1b7",
+          "size_bytes": 6851
+        },
+        {
+          "legacy_path": "structural/single/phase12-v2-vvo-column-material-absent-restoration/mutation_report.json",
+          "path": "column-material-absent/evidence/authority/mutation_report.json",
+          "sha256": "89043695a935e61e0f263d41889580730e1b97f91587264d8f83cb6d5867aaa9",
+          "size_bytes": 1685
+        },
+        {
+          "legacy_path": "structural/single/phase12-v2-vvo-column-material-absent-restoration/original.ifc",
+          "path": "column-material-absent/01-original.ifc",
+          "sha256": "b6c435be955aeb6b2998f42a62f4ebf8c3f91eb7d373ca71a2dcedfeb95b3fdc",
+          "size_bytes": 2409268
+        },
+        {
+          "legacy_path": "structural/single/phase12-v2-vvo-column-material-absent-restoration/production-boundary.json",
+          "path": "column-material-absent/evidence/authority/production-boundary.json",
+          "sha256": "09fea50a2eeb2a75c073a1cd45a0e6b7a6994305445515bbcca560ec6e684bb1",
+          "size_bytes": 744
+        },
+        {
+          "legacy_path": "structural/single/phase12-v2-vvo-column-material-absent-restoration/production-evidence.json",
+          "path": "column-material-absent/evidence/authority/production-evidence.json",
+          "sha256": "fcecc33cac293336c1a4693e1011bbb92d56c5ddb44f61c45070ef496bc2bf25",
+          "size_bytes": 3172
+        },
+        {
+          "legacy_path": "structural/single/phase12-v2-vvo-column-material-absent-restoration/repair-intent.json",
+          "path": "column-material-absent/evidence/authority/repair-intent.json",
+          "sha256": "96e6fccc5cb7d049d5851f54bf9b670bb7e0da92f6ee05915f3cfbae61d3289f",
+          "size_bytes": 2498
+        },
+        {
+          "legacy_path": "structural/single/phase12-v2-vvo-column-material-absent-restoration/repaired.ifc",
+          "path": "column-material-absent/03-repaired.ifc",
+          "sha256": "6180d58bc86cd2e5ea82efce1ad48bc14cb1f036c02eb43e3f21d865ed9253a9",
+          "size_bytes": 2437710
+        },
+        {
+          "legacy_path": "structural/single/phase12-v2-vvo-column-material-absent-restoration/REPORT.md",
+          "path": "column-material-absent/evidence/authority/REPORT.md",
+          "sha256": "5c69d1a4ace12a6c3d71218fe7e3075af30fb334cb259baa924af6629a505a23",
+          "size_bytes": 533
+        },
+        {
+          "legacy_path": "structural/single/phase12-v2-vvo-column-material-absent-restoration/request.txt",
+          "path": "column-material-absent/request.txt",
+          "sha256": "254e910477f3718dd1689e579bc34e0c8199b3b567e0885b8f94e06626764bb2",
+          "size_bytes": 105
+        },
+        {
+          "legacy_path": "structural/single/phase12-v2-vvo-column-material-absent-restoration/semantic-manifest.json",
+          "path": "column-material-absent/evidence/authority/semantic-manifest.json",
+          "sha256": "b5c35215aaf258af959b8b6f9aebe0001abf964aa7a47faba28ceafc64f67889",
+          "size_bytes": 3531
+        },
+        {
+          "legacy_path": "structural/single/phase12-v2-vvo-column-material-absent-restoration/structural-restoration-audit.json",
+          "path": "column-material-absent/evidence/authority/structural-restoration-audit.json",
+          "sha256": "1cfdf8994d6686325aa02b89526525cffd781993507a9de63556ac8f2c1b31ca",
+          "size_bytes": 1069
+        },
+        {
+          "legacy_path": "structural/single/phase12-v2-vvo-column-material-absent-restoration/target-index.sqlite",
+          "path": "column-material-absent/evidence/authority/target-index.sqlite",
+          "sha256": "9197685649314983e172844aa74b04d2ea4fb175f8be55368c0b81b91e401490",
+          "size_bytes": 1097728
+        },
+        {
+          "legacy_path": "structural/single/phase12-v2-vvo-column-material-absent-restoration/target-resolution.json",
+          "path": "column-material-absent/evidence/authority/target-resolution.json",
+          "sha256": "e7269059460019a2dae4b5c0a8ab147e182936121e93436383a4c96cbe621ef8",
+          "size_bytes": 5987
+        }
+      ]
+    },
+    {
+      "id": "previous-review-files",
+      "old_root": "dataset/processed/proof/repair/phase12/plan07-v2",
+      "scope": "only relocated review metadata subdirectories",
+      "entries": [
+        {
+          "legacy_path": "beam-loadbearing/agent/production-evidence.json",
+          "path": "beam-loadbearing/evidence/review/agent/production-evidence.json",
+          "sha256": "6afaf5d9d0fe69b0adb44ab11738b1e3720c246659a29ce0fefd6d9f3083dd90",
+          "size_bytes": 4072
+        },
+        {
+          "legacy_path": "beam-loadbearing/agent/repair-intent.json",
+          "path": "beam-loadbearing/evidence/review/agent/repair-intent.json",
+          "sha256": "32b49bf6f10e467c91c9998f6cb8658807ff4091d150dfd22907602f36ca1a84",
+          "size_bytes": 2831
+        },
+        {
+          "legacy_path": "beam-loadbearing/agent/semantic-manifest.json",
+          "path": "beam-loadbearing/evidence/review/agent/semantic-manifest.json",
+          "sha256": "afa64da673ffab71dab8de4c8421782484c7dbb2a76e3e5e888511968284fe36",
+          "size_bytes": 4380
+        },
+        {
+          "legacy_path": "beam-loadbearing/agent/target-resolution.json",
+          "path": "beam-loadbearing/evidence/review/agent/target-resolution.json",
+          "sha256": "6c9869629bf7d77a756593f5a684cccfe7c4e34cc1eb8866d4d2b7bcb15cb019",
+          "size_bytes": 7956
+        },
+        {
+          "legacy_path": "beam-loadbearing/agent/property-resolution/phase12-v2-vvo-beam-loadbearing-restoration-beam-1/claim-001/admissibility.json",
+          "path": "beam-loadbearing/evidence/review/agent/property-resolution/phase12-v2-vvo-beam-loadbearing-restoration-beam-1/claim-001/admissibility.json",
+          "sha256": "7b804e3e8867724a16983be42e31526ec9a75673066ed842ae51d2b9f07f2c5f",
+          "size_bytes": 1221
+        },
+        {
+          "legacy_path": "beam-loadbearing/agent/property-resolution/phase12-v2-vvo-beam-loadbearing-restoration-beam-1/claim-001/candidate-set.json",
+          "path": "beam-loadbearing/evidence/review/agent/property-resolution/phase12-v2-vvo-beam-loadbearing-restoration-beam-1/claim-001/candidate-set.json",
+          "sha256": "ac863cbd20bf55a275acaf8fbad10c1fe8c332e1f27a9fe92c7396dab069ac6c",
+          "size_bytes": 4638
+        },
+        {
+          "legacy_path": "beam-loadbearing/agent/property-resolution/phase12-v2-vvo-beam-loadbearing-restoration-beam-1/claim-001/query.json",
+          "path": "beam-loadbearing/evidence/review/agent/property-resolution/phase12-v2-vvo-beam-loadbearing-restoration-beam-1/claim-001/query.json",
+          "sha256": "f95ad43fa54d8121f0af5401dae0b35c8618c3148b0dc987a71c265d43c09a4d",
+          "size_bytes": 729
+        },
+        {
+          "legacy_path": "beam-loadbearing/agent/property-resolution/phase12-v2-vvo-beam-loadbearing-restoration-beam-1/claim-001/provider/attempt-001/parsed-response.json",
+          "path": "beam-loadbearing/evidence/review/agent/property-resolution/phase12-v2-vvo-beam-loadbearing-restoration-beam-1/claim-001/provider/attempt-001/parsed-response.json",
+          "sha256": "71cfc8f5734d2b2750f7eadd50ff19172b67130d14e81be6cc51c2819fab55c7",
+          "size_bytes": 241
+        },
+        {
+          "legacy_path": "beam-loadbearing/agent/property-resolution/phase12-v2-vvo-beam-loadbearing-restoration-beam-1/claim-001/provider/attempt-001/provider-metadata.json",
+          "path": "beam-loadbearing/evidence/review/agent/property-resolution/phase12-v2-vvo-beam-loadbearing-restoration-beam-1/claim-001/provider/attempt-001/provider-metadata.json",
+          "sha256": "2176f2d626993128e362567e5c86d9d089d55d01e1e0a10c43824d6c326a0733",
+          "size_bytes": 174
+        },
+        {
+          "legacy_path": "beam-loadbearing/agent/property-resolution/phase12-v2-vvo-beam-loadbearing-restoration-beam-1/claim-001/provider/attempt-001/raw-response.json",
+          "path": "beam-loadbearing/evidence/review/agent/property-resolution/phase12-v2-vvo-beam-loadbearing-restoration-beam-1/claim-001/provider/attempt-001/raw-response.json",
+          "sha256": "30e03be12dd38b0346a392d87af47c892f15b98acf92d97009816bf5f5e7f73d",
+          "size_bytes": 282
+        },
+        {
+          "legacy_path": "beam-loadbearing/agent/property-resolution/phase12-v2-vvo-beam-loadbearing-restoration-beam-1/claim-001/provider/attempt-001/rendered-prompt.txt",
+          "path": "beam-loadbearing/evidence/review/agent/property-resolution/phase12-v2-vvo-beam-loadbearing-restoration-beam-1/claim-001/provider/attempt-001/rendered-prompt.txt",
+          "sha256": "55042d6822240c635d80fd80d1c57b1f43f7b2db70a4c8e88cfcefe3579d2dd6",
+          "size_bytes": 8979
+        },
+        {
+          "legacy_path": "beam-loadbearing/agent/property-resolution/phase12-v2-vvo-beam-loadbearing-restoration-beam-1/claim-001/provider/attempt-001/renderer-input.json",
+          "path": "beam-loadbearing/evidence/review/agent/property-resolution/phase12-v2-vvo-beam-loadbearing-restoration-beam-1/claim-001/provider/attempt-001/renderer-input.json",
+          "sha256": "5a9d809289f99aa095bb11cbf70ce1a86b08af5405f06dba5975c5e4b12101b8",
+          "size_bytes": 8694
+        },
+        {
+          "legacy_path": "beam-loadbearing/agent/property-resolution/phase12-v2-vvo-beam-loadbearing-restoration-beam-1/claim-001/provider/attempt-001/trace.json",
+          "path": "beam-loadbearing/evidence/review/agent/property-resolution/phase12-v2-vvo-beam-loadbearing-restoration-beam-1/claim-001/provider/attempt-001/trace.json",
+          "sha256": "6003d3bf53e32069f6620fd4c340cdfad84d6f68a8f139970ffb6895f49460ba",
+          "size_bytes": 1373
+        },
+        {
+          "legacy_path": "beam-loadbearing/agent/property-resolution/phase12-v2-vvo-beam-loadbearing-restoration-beam-1/claim-001/provider/attempt-001/validation-feedback.json",
+          "path": "beam-loadbearing/evidence/review/agent/property-resolution/phase12-v2-vvo-beam-loadbearing-restoration-beam-1/claim-001/provider/attempt-001/validation-feedback.json",
+          "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+          "size_bytes": 3
+        },
+        {
+          "legacy_path": "beam-loadbearing/changeset/bound-changeset.json",
+          "path": "beam-loadbearing/evidence/review/changeset/bound-changeset.json",
+          "sha256": "5aa6fbd5ab96cc2d0441db0c68cd8e6387d466aeb163a4c1b5075928693fc687",
+          "size_bytes": 6411
+        },
+        {
+          "legacy_path": "beam-loadbearing/input/request.txt",
+          "path": "beam-loadbearing/evidence/review/input/request.txt",
+          "sha256": "de42ea501d3b0272aceee6143983dfc096743e525f5d70776fcda04062b54f00",
+          "size_bytes": 110
+        },
+        {
+          "legacy_path": "beam-loadbearing/private-evaluation/mutation-manifest.json",
+          "path": "beam-loadbearing/evidence/review/private-evaluation/mutation-manifest.json",
+          "sha256": "fde41dcffc54861b54ef5c981932213bc2a80d67cbcc1d9f9ddb0a5219d8d1e8",
+          "size_bytes": 9154
+        },
+        {
+          "legacy_path": "beam-loadbearing/private-evaluation/mutation-report.json",
+          "path": "beam-loadbearing/evidence/review/private-evaluation/mutation-report.json",
+          "sha256": "0a98d7ff21e7c0be9b9ab44678b77a5e796f520d1fb11b403c78ef846bc8b601",
+          "size_bytes": 1683
+        },
+        {
+          "legacy_path": "beam-loadbearing/validation/application.json",
+          "path": "beam-loadbearing/evidence/review/validation/application.json",
+          "sha256": "0f2844ca866471e2e33c7cb4ef6c4350186f786d0981c5c038445e83b23dc2da",
+          "size_bytes": 7929
+        },
+        {
+          "legacy_path": "beam-loadbearing/validation/AUDIT-REPORT.md",
+          "path": "beam-loadbearing/evidence/review/validation/AUDIT-REPORT.md",
+          "sha256": "ce034d461d1e1efa6cfc35b583ccac03a13c64bfc03db8a576af895e1573243a",
+          "size_bytes": 1172
+        },
+        {
+          "legacy_path": "beam-loadbearing/validation/ifc-comparison.json",
+          "path": "beam-loadbearing/evidence/review/validation/ifc-comparison.json",
+          "sha256": "a1860a0d117d10670985b7890e08d7fde14062157dfd43a60c34ce52d609aead",
+          "size_bytes": 5118
+        },
+        {
+          "legacy_path": "beam-loadbearing/validation/production-boundary.json",
+          "path": "beam-loadbearing/evidence/review/validation/production-boundary.json",
+          "sha256": "894555cd081f254f3b271e7cfe0b488c5130286de37cbe4821c54d5ebb96a2f6",
+          "size_bytes": 744
+        },
+        {
+          "legacy_path": "beam-loadbearing/validation/production-evaluation.json",
+          "path": "beam-loadbearing/evidence/review/validation/production-evaluation.json",
+          "sha256": "bc3eba0350b616e0c071668a94894ee9d036de386844854023eb91b86275e87f",
+          "size_bytes": 43903
+        },
+        {
+          "legacy_path": "beam-loadbearing/validation/source-run-manifest.json",
+          "path": "beam-loadbearing/evidence/review/validation/source-run-manifest.json",
+          "sha256": "1d5b96b4411d62cef44b069d9555caeb60d45a3c83e3458e049d64ce0f599dcd",
+          "size_bytes": 11087
+        },
+        {
+          "legacy_path": "beam-loadbearing/validation/structural-restoration-audit.json",
+          "path": "beam-loadbearing/evidence/review/validation/structural-restoration-audit.json",
+          "sha256": "e5dccf8e2771ed93b45fdda5ce19d3243f7fcc1f38d26afd6a5ce0f7acfcbe10",
+          "size_bytes": 1051
+        },
+        {
+          "legacy_path": "column-loadbearing/agent/production-evidence.json",
+          "path": "column-loadbearing/evidence/review/agent/production-evidence.json",
+          "sha256": "19c113e5c369f9d43ddcb88858a0cf97f55fc1fa2258807acc2c1cc838aa455a",
+          "size_bytes": 4159
+        },
+        {
+          "legacy_path": "column-loadbearing/agent/repair-intent.json",
+          "path": "column-loadbearing/evidence/review/agent/repair-intent.json",
+          "sha256": "91b05f01370bc268523b792fae04343530113f9d5be3f1d150b81b9b48b4a4d8",
+          "size_bytes": 2945
+        },
+        {
+          "legacy_path": "column-loadbearing/agent/semantic-manifest.json",
+          "path": "column-loadbearing/evidence/review/agent/semantic-manifest.json",
+          "sha256": "c62ef6c8d026b92c718cd73fee794d4bde86950549c20fa3ffbc688e3632c627",
+          "size_bytes": 4456
+        },
+        {
+          "legacy_path": "column-loadbearing/agent/target-resolution.json",
+          "path": "column-loadbearing/evidence/review/agent/target-resolution.json",
+          "sha256": "9e9e72058873818a37ac1b64e4a9d24335af7bd3700a1a67295b27e52eed3597",
+          "size_bytes": 8093
+        },
+        {
+          "legacy_path": "column-loadbearing/agent/property-resolution/phase12-v2-vvo-column-loadbearing-restoration-column-1/claim-001/admissibility.json",
+          "path": "column-loadbearing/evidence/review/agent/property-resolution/phase12-v2-vvo-column-loadbearing-restoration-column-1/claim-001/admissibility.json",
+          "sha256": "74b08b51fd5872a3e9f6c3a6a3665f737ac91d34830f0eed51820941ab99d17c",
+          "size_bytes": 1241
+        },
+        {
+          "legacy_path": "column-loadbearing/agent/property-resolution/phase12-v2-vvo-column-loadbearing-restoration-column-1/claim-001/candidate-set.json",
+          "path": "column-loadbearing/evidence/review/agent/property-resolution/phase12-v2-vvo-column-loadbearing-restoration-column-1/claim-001/candidate-set.json",
+          "sha256": "19634a1384dfeae3c53ac90a36354b4229376eecd9b20cc8fbb4123a0fd38ffc",
+          "size_bytes": 4755
+        },
+        {
+          "legacy_path": "column-loadbearing/agent/property-resolution/phase12-v2-vvo-column-loadbearing-restoration-column-1/claim-001/query.json",
+          "path": "column-loadbearing/evidence/review/agent/property-resolution/phase12-v2-vvo-column-loadbearing-restoration-column-1/claim-001/query.json",
+          "sha256": "61288dd90d620d09b4694232f2924304c56e9231746937b0f78292757849c1b1",
+          "size_bytes": 747
+        },
+        {
+          "legacy_path": "column-loadbearing/agent/property-resolution/phase12-v2-vvo-column-loadbearing-restoration-column-1/claim-001/provider/attempt-001/parsed-response.json",
+          "path": "column-loadbearing/evidence/review/agent/property-resolution/phase12-v2-vvo-column-loadbearing-restoration-column-1/claim-001/provider/attempt-001/parsed-response.json",
+          "sha256": "94d914a89735284c7e4c09ca74bbba041c246858021349ea710e510e280124e5",
+          "size_bytes": 243
+        },
+        {
+          "legacy_path": "column-loadbearing/agent/property-resolution/phase12-v2-vvo-column-loadbearing-restoration-column-1/claim-001/provider/attempt-001/provider-metadata.json",
+          "path": "column-loadbearing/evidence/review/agent/property-resolution/phase12-v2-vvo-column-loadbearing-restoration-column-1/claim-001/provider/attempt-001/provider-metadata.json",
+          "sha256": "2176f2d626993128e362567e5c86d9d089d55d01e1e0a10c43824d6c326a0733",
+          "size_bytes": 174
+        },
+        {
+          "legacy_path": "column-loadbearing/agent/property-resolution/phase12-v2-vvo-column-loadbearing-restoration-column-1/claim-001/provider/attempt-001/raw-response.json",
+          "path": "column-loadbearing/evidence/review/agent/property-resolution/phase12-v2-vvo-column-loadbearing-restoration-column-1/claim-001/provider/attempt-001/raw-response.json",
+          "sha256": "6c1954b19bf55569cd479c83854d8318fc75fb1d660b0393c0b724826c0ebea7",
+          "size_bytes": 284
+        },
+        {
+          "legacy_path": "column-loadbearing/agent/property-resolution/phase12-v2-vvo-column-loadbearing-restoration-column-1/claim-001/provider/attempt-001/rendered-prompt.txt",
+          "path": "column-loadbearing/evidence/review/agent/property-resolution/phase12-v2-vvo-column-loadbearing-restoration-column-1/claim-001/provider/attempt-001/rendered-prompt.txt",
+          "sha256": "cf0746f68bbef58eab5dd787582d5735ce8fc9e5d9b9174ca6bf4a0d72747659",
+          "size_bytes": 9114
+        },
+        {
+          "legacy_path": "column-loadbearing/agent/property-resolution/phase12-v2-vvo-column-loadbearing-restoration-column-1/claim-001/provider/attempt-001/renderer-input.json",
+          "path": "column-loadbearing/evidence/review/agent/property-resolution/phase12-v2-vvo-column-loadbearing-restoration-column-1/claim-001/provider/attempt-001/renderer-input.json",
+          "sha256": "1e97675f6d687d9a6f98bb0d9c1a6b613e57cddde17ce639d44ee76cccf5dd15",
+          "size_bytes": 8829
+        },
+        {
+          "legacy_path": "column-loadbearing/agent/property-resolution/phase12-v2-vvo-column-loadbearing-restoration-column-1/claim-001/provider/attempt-001/trace.json",
+          "path": "column-loadbearing/evidence/review/agent/property-resolution/phase12-v2-vvo-column-loadbearing-restoration-column-1/claim-001/provider/attempt-001/trace.json",
+          "sha256": "7514c7835f17adc278fc63e20ff2894b19ffdfcabbf0d6d72885b1aa2cd74622",
+          "size_bytes": 1393
+        },
+        {
+          "legacy_path": "column-loadbearing/agent/property-resolution/phase12-v2-vvo-column-loadbearing-restoration-column-1/claim-001/provider/attempt-001/validation-feedback.json",
+          "path": "column-loadbearing/evidence/review/agent/property-resolution/phase12-v2-vvo-column-loadbearing-restoration-column-1/claim-001/provider/attempt-001/validation-feedback.json",
+          "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+          "size_bytes": 3
+        },
+        {
+          "legacy_path": "column-loadbearing/changeset/bound-changeset.json",
+          "path": "column-loadbearing/evidence/review/changeset/bound-changeset.json",
+          "sha256": "683915f9435ff6494e35b077815cb270f11ead951b4d6c191dc7c284139ee607",
+          "size_bytes": 6589
+        },
+        {
+          "legacy_path": "column-loadbearing/input/request.txt",
+          "path": "column-loadbearing/evidence/review/input/request.txt",
+          "sha256": "3aef12f168328ff7e3936e4ea579e524c4309b9bdf913cafbacb60706d10adc0",
+          "size_bytes": 112
+        },
+        {
+          "legacy_path": "column-loadbearing/private-evaluation/mutation-manifest.json",
+          "path": "column-loadbearing/evidence/review/private-evaluation/mutation-manifest.json",
+          "sha256": "2b1126dd780c96fa93ecc83a30d13858ef21a683f3bcadf061767c4cc0fdf1b7",
+          "size_bytes": 6851
+        },
+        {
+          "legacy_path": "column-loadbearing/private-evaluation/mutation-report.json",
+          "path": "column-loadbearing/evidence/review/private-evaluation/mutation-report.json",
+          "sha256": "89043695a935e61e0f263d41889580730e1b97f91587264d8f83cb6d5867aaa9",
+          "size_bytes": 1685
+        },
+        {
+          "legacy_path": "column-loadbearing/validation/application.json",
+          "path": "column-loadbearing/evidence/review/validation/application.json",
+          "sha256": "cfc937b5490055d834563a86a11e986078683cdfeaceadefb5f9bc963f040ee8",
+          "size_bytes": 8055
+        },
+        {
+          "legacy_path": "column-loadbearing/validation/AUDIT-REPORT.md",
+          "path": "column-loadbearing/evidence/review/validation/AUDIT-REPORT.md",
+          "sha256": "e600cba47c03ee8a09e313054ac8e6ec12473d45b4929291c202789b4c4d6320",
+          "size_bytes": 1176
+        },
+        {
+          "legacy_path": "column-loadbearing/validation/ifc-comparison.json",
+          "path": "column-loadbearing/evidence/review/validation/ifc-comparison.json",
+          "sha256": "4ac398272c3004693d97d4e4e66bf5ddd21cb7b32c3262dd532a066305a116c3",
+          "size_bytes": 11278
+        },
+        {
+          "legacy_path": "column-loadbearing/validation/production-boundary.json",
+          "path": "column-loadbearing/evidence/review/validation/production-boundary.json",
+          "sha256": "e776c9d0511b4b8c84e44c8c9dedb7724f8767c91e10ebf7f4749b72d21214b1",
+          "size_bytes": 744
+        },
+        {
+          "legacy_path": "column-loadbearing/validation/production-evaluation.json",
+          "path": "column-loadbearing/evidence/review/validation/production-evaluation.json",
+          "sha256": "bfc24279ba7e99b4ae3969e751f3d9eaa85058b41cd774dcaba5f64ea2d8a2a5",
+          "size_bytes": 44115
+        },
+        {
+          "legacy_path": "column-loadbearing/validation/source-run-manifest.json",
+          "path": "column-loadbearing/evidence/review/validation/source-run-manifest.json",
+          "sha256": "8d400e959e40f22d616ebf14e1b87727d4dde0f4f01fc1ce35e28dc874a4c680",
+          "size_bytes": 11174
+        },
+        {
+          "legacy_path": "column-loadbearing/validation/structural-restoration-audit.json",
+          "path": "column-loadbearing/evidence/review/validation/structural-restoration-audit.json",
+          "sha256": "82b2e3c6a38ab3853e9c6d558906b19bbe578f00ba10463dce5f6e97e508845b",
+          "size_bytes": 1061
+        },
+        {
+          "legacy_path": "beam-column-atomic/agent/production-evidence.json",
+          "path": "beam-column-atomic/evidence/review/agent/production-evidence.json",
+          "sha256": "afb34e9a95aa814010a6add0f891fa1acdadb302cc1116cbb6decedab39e4017",
+          "size_bytes": 6007
+        },
+        {
+          "legacy_path": "beam-column-atomic/agent/repair-intent.json",
+          "path": "beam-column-atomic/evidence/review/agent/repair-intent.json",
+          "sha256": "1dc8c6c1324451c609da779ed6bd276618af12c943b331be175508472abf3709",
+          "size_bytes": 4097
+        },
+        {
+          "legacy_path": "beam-column-atomic/agent/semantic-manifests.json",
+          "path": "beam-column-atomic/evidence/review/agent/semantic-manifests.json",
+          "sha256": "4152a1d339067aa26414b413667c08f2590c9e648797ae9a907982b300c43a98",
+          "size_bytes": 7747
+        },
+        {
+          "legacy_path": "beam-column-atomic/agent/target-resolution.json",
+          "path": "beam-column-atomic/evidence/review/agent/target-resolution.json",
+          "sha256": "c1050b53cdc93e2396125760433b152d6295cc8438181d8f6a9fe965b244a096",
+          "size_bytes": 11394
+        },
+        {
+          "legacy_path": "beam-column-atomic/changeset/bound-changeset.json",
+          "path": "beam-column-atomic/evidence/review/changeset/bound-changeset.json",
+          "sha256": "11335ee58215c3639869dbe5b38cfb7e26908704107ccc9a8c533aa2c655665b",
+          "size_bytes": 10011
+        },
+        {
+          "legacy_path": "beam-column-atomic/input/request.txt",
+          "path": "beam-column-atomic/evidence/review/input/request.txt",
+          "sha256": "5af33fce6a6e34df0882fe0ef09a888259fec9b3b357043951968b84ebbb7b03",
+          "size_bytes": 93
+        },
+        {
+          "legacy_path": "beam-column-atomic/private-evaluation/mutation-manifest.json",
+          "path": "beam-column-atomic/evidence/review/private-evaluation/mutation-manifest.json",
+          "sha256": "f690251b3963352866c061a402aa2135917b63a9074362eb78e9773dc4830eb8",
+          "size_bytes": 14448
+        },
+        {
+          "legacy_path": "beam-column-atomic/private-evaluation/mutation-report.json",
+          "path": "beam-column-atomic/evidence/review/private-evaluation/mutation-report.json",
+          "sha256": "637853965c8929ab1bb43c7a188c1c3f115f06e044a10b2f8d4391c1539d2933",
+          "size_bytes": 1699
+        },
+        {
+          "legacy_path": "beam-column-atomic/validation/application.json",
+          "path": "beam-column-atomic/evidence/review/validation/application.json",
+          "sha256": "75dcc60496a8acf8eedcda0932aa66dac2e49d02f7b294b0eca769c5af78f693",
+          "size_bytes": 12316
+        },
+        {
+          "legacy_path": "beam-column-atomic/validation/AUDIT-REPORT.md",
+          "path": "beam-column-atomic/evidence/review/validation/AUDIT-REPORT.md",
+          "sha256": "eb452eff2876c86f5bd14cd176de5cbec27d2ea3fe0c98559240a1076a26fb44",
+          "size_bytes": 1186
+        },
+        {
+          "legacy_path": "beam-column-atomic/validation/ifc-comparison.json",
+          "path": "beam-column-atomic/evidence/review/validation/ifc-comparison.json",
+          "sha256": "ad7b9318b3ce747ce3dac95891bd03d4b37a61c4425898083908ad25d0c3a818",
+          "size_bytes": 14435
+        },
+        {
+          "legacy_path": "beam-column-atomic/validation/production-boundary.json",
+          "path": "beam-column-atomic/evidence/review/validation/production-boundary.json",
+          "sha256": "f2b8edac667f0c7ee79431eae60b61a255dfc29588c806e791d0f70b8ab3cf8a",
+          "size_bytes": 744
+        },
+        {
+          "legacy_path": "beam-column-atomic/validation/production-evaluation.json",
+          "path": "beam-column-atomic/evidence/review/validation/production-evaluation.json",
+          "sha256": "43d3c231c723fea138289f6754332876c7a521ff8aae8cf8baca1ea40dca3057",
+          "size_bytes": 114545
+        },
+        {
+          "legacy_path": "beam-column-atomic/validation/source-run-manifest.json",
+          "path": "beam-column-atomic/evidence/review/validation/source-run-manifest.json",
+          "sha256": "4206684c292528a865d65577a9498539ae91b7db4bc7b90dbb74047ffa6da1c9",
+          "size_bytes": 7362
+        },
+        {
+          "legacy_path": "beam-column-atomic/validation/structural-restoration-audit.json",
+          "path": "beam-column-atomic/evidence/review/validation/structural-restoration-audit.json",
+          "sha256": "e4e07be65db3cb20ba9983ee56e47eb1f205e37f419998e1320fa1498e5b2e71",
+          "size_bytes": 1783
+        },
+        {
+          "legacy_path": "beam-material-present/agent/production-evidence.json",
+          "path": "beam-material-present/evidence/review/agent/production-evidence.json",
+          "sha256": "edcb0f0f11816e47fe2baec432f0a61267fd0ee0171665f1af1d97c2c88feed9",
+          "size_bytes": 3934
+        },
+        {
+          "legacy_path": "beam-material-present/agent/repair-intent.json",
+          "path": "beam-material-present/evidence/review/agent/repair-intent.json",
+          "sha256": "8e0a93066a37b06c6325dca20586bc08387304703ef398d8fff7f2bce6f4d6ee",
+          "size_bytes": 2816
+        },
+        {
+          "legacy_path": "beam-material-present/agent/semantic-manifest.json",
+          "path": "beam-material-present/evidence/review/agent/semantic-manifest.json",
+          "sha256": "9e8df6f8337784d4e5eee4cf587b1ce100d56f1e977b4379d5e8b4abfca30368",
+          "size_bytes": 4248
+        },
+        {
+          "legacy_path": "beam-material-present/agent/target-resolution.json",
+          "path": "beam-material-present/evidence/review/agent/target-resolution.json",
+          "sha256": "1bfe8f9440dab05db1e2c232ebdf6b776342935ea6572341453d26ed4ccf7a19",
+          "size_bytes": 5874
+        },
+        {
+          "legacy_path": "beam-material-present/changeset/bound-changeset.json",
+          "path": "beam-material-present/evidence/review/changeset/bound-changeset.json",
+          "sha256": "99463cd2ad9c0b808662ca696b0e5b439f728114a38d61b601327618d738d58c",
+          "size_bytes": 6286
+        },
+        {
+          "legacy_path": "beam-material-present/input/request.txt",
+          "path": "beam-material-present/evidence/review/input/request.txt",
+          "sha256": "2f65fced59ec8060a9fb748531c4c9a477546d48079e99c26d3952620c41df29",
+          "size_bytes": 130
+        },
+        {
+          "legacy_path": "beam-material-present/private-evaluation/mutation-manifest.json",
+          "path": "beam-material-present/evidence/review/private-evaluation/mutation-manifest.json",
+          "sha256": "fde41dcffc54861b54ef5c981932213bc2a80d67cbcc1d9f9ddb0a5219d8d1e8",
+          "size_bytes": 9154
+        },
+        {
+          "legacy_path": "beam-material-present/private-evaluation/mutation-report.json",
+          "path": "beam-material-present/evidence/review/private-evaluation/mutation-report.json",
+          "sha256": "0a98d7ff21e7c0be9b9ab44678b77a5e796f520d1fb11b403c78ef846bc8b601",
+          "size_bytes": 1683
+        },
+        {
+          "legacy_path": "beam-material-present/validation/application.json",
+          "path": "beam-material-present/evidence/review/validation/application.json",
+          "sha256": "10ab3dd55d204bb792efb7676ea18c8413fdfdbceb0b574d88695df411b9d19f",
+          "size_bytes": 7423
+        },
+        {
+          "legacy_path": "beam-material-present/validation/AUDIT-REPORT.md",
+          "path": "beam-material-present/evidence/review/validation/AUDIT-REPORT.md",
+          "sha256": "c283449c02b13b7a319418332b46eed337ede952c0dec7c28201f648aa31b054",
+          "size_bytes": 1177
+        },
+        {
+          "legacy_path": "beam-material-present/validation/ifc-comparison.json",
+          "path": "beam-material-present/evidence/review/validation/ifc-comparison.json",
+          "sha256": "d7cd5580cea740fa393868917a45e78bd73f519bd4e7dac88b4b4a9f934e993f",
+          "size_bytes": 5056
+        },
+        {
+          "legacy_path": "beam-material-present/validation/production-boundary.json",
+          "path": "beam-material-present/evidence/review/validation/production-boundary.json",
+          "sha256": "c88937d01289cfe2f3b805a81fd178412ad00b9c5a705abc3164a950fa1ef778",
+          "size_bytes": 744
+        },
+        {
+          "legacy_path": "beam-material-present/validation/production-evaluation.json",
+          "path": "beam-material-present/evidence/review/validation/production-evaluation.json",
+          "sha256": "2c5e5a7c645bfd6a941e07af2d524ea4b501ae2313e408366de04c66fe56d5f0",
+          "size_bytes": 42120
+        },
+        {
+          "legacy_path": "beam-material-present/validation/source-run-manifest.json",
+          "path": "beam-material-present/evidence/review/validation/source-run-manifest.json",
+          "sha256": "7fdfdc7c6679c8033e6a7ffaac4de82b4a8f6ff2e066f9d692f7a9d081bf6477",
+          "size_bytes": 7321
+        },
+        {
+          "legacy_path": "beam-material-present/validation/structural-restoration-audit.json",
+          "path": "beam-material-present/evidence/review/validation/structural-restoration-audit.json",
+          "sha256": "f18ce347f92994168b80c36c532bd0ea0206489d60129918f11872be56993c86",
+          "size_bytes": 1061
+        },
+        {
+          "legacy_path": "column-material-absent/agent/production-evidence.json",
+          "path": "column-material-absent/evidence/review/agent/production-evidence.json",
+          "sha256": "fcecc33cac293336c1a4693e1011bbb92d56c5ddb44f61c45070ef496bc2bf25",
+          "size_bytes": 3172
+        },
+        {
+          "legacy_path": "column-material-absent/agent/repair-intent.json",
+          "path": "column-material-absent/evidence/review/agent/repair-intent.json",
+          "sha256": "96e6fccc5cb7d049d5851f54bf9b670bb7e0da92f6ee05915f3cfbae61d3289f",
+          "size_bytes": 2498
+        },
+        {
+          "legacy_path": "column-material-absent/agent/semantic-manifest.json",
+          "path": "column-material-absent/evidence/review/agent/semantic-manifest.json",
+          "sha256": "b5c35215aaf258af959b8b6f9aebe0001abf964aa7a47faba28ceafc64f67889",
+          "size_bytes": 3531
+        },
+        {
+          "legacy_path": "column-material-absent/agent/target-resolution.json",
+          "path": "column-material-absent/evidence/review/agent/target-resolution.json",
+          "sha256": "e7269059460019a2dae4b5c0a8ab147e182936121e93436383a4c96cbe621ef8",
+          "size_bytes": 5987
+        },
+        {
+          "legacy_path": "column-material-absent/changeset/bound-changeset.json",
+          "path": "column-material-absent/evidence/review/changeset/bound-changeset.json",
+          "sha256": "3d802ac5713aa2544d597aa72312473e25d27ffd1fc0674170bfa6c234956c5f",
+          "size_bytes": 5588
+        },
+        {
+          "legacy_path": "column-material-absent/input/request.txt",
+          "path": "column-material-absent/evidence/review/input/request.txt",
+          "sha256": "254e910477f3718dd1689e579bc34e0c8199b3b567e0885b8f94e06626764bb2",
+          "size_bytes": 105
+        },
+        {
+          "legacy_path": "column-material-absent/private-evaluation/mutation-manifest.json",
+          "path": "column-material-absent/evidence/review/private-evaluation/mutation-manifest.json",
+          "sha256": "2b1126dd780c96fa93ecc83a30d13858ef21a683f3bcadf061767c4cc0fdf1b7",
+          "size_bytes": 6851
+        },
+        {
+          "legacy_path": "column-material-absent/private-evaluation/mutation-report.json",
+          "path": "column-material-absent/evidence/review/private-evaluation/mutation-report.json",
+          "sha256": "89043695a935e61e0f263d41889580730e1b97f91587264d8f83cb6d5867aaa9",
+          "size_bytes": 1685
+        },
+        {
+          "legacy_path": "column-material-absent/validation/application.json",
+          "path": "column-material-absent/evidence/review/validation/application.json",
+          "sha256": "8e7dc91e5f61e0603a97701bc38012691e79d3a0b36c45b8cc5fb24df4bb47b9",
+          "size_bytes": 6891
+        },
+        {
+          "legacy_path": "column-material-absent/validation/AUDIT-REPORT.md",
+          "path": "column-material-absent/evidence/review/validation/AUDIT-REPORT.md",
+          "sha256": "6d0f00f70bdfa0d04ac9c5225fe344ab9b18f853e3bfacbabb6536bcdbaca058",
+          "size_bytes": 1180
+        },
+        {
+          "legacy_path": "column-material-absent/validation/ifc-comparison.json",
+          "path": "column-material-absent/evidence/review/validation/ifc-comparison.json",
+          "sha256": "66ca411c70c4dd569680f04898874aacf92571bf0df92c2509c9d30cbad69440",
+          "size_bytes": 11149
+        },
+        {
+          "legacy_path": "column-material-absent/validation/production-boundary.json",
+          "path": "column-material-absent/evidence/review/validation/production-boundary.json",
+          "sha256": "09fea50a2eeb2a75c073a1cd45a0e6b7a6994305445515bbcca560ec6e684bb1",
+          "size_bytes": 744
+        },
+        {
+          "legacy_path": "column-material-absent/validation/production-evaluation.json",
+          "path": "column-material-absent/evidence/review/validation/production-evaluation.json",
+          "sha256": "82c4aac0ec4d3d8ed27520217dd1c79f82a9cfb5cb6b5c859f65e8172b504d0b",
+          "size_bytes": 40031
+        },
+        {
+          "legacy_path": "column-material-absent/validation/source-run-manifest.json",
+          "path": "column-material-absent/evidence/review/validation/source-run-manifest.json",
+          "sha256": "7073fe18e6de8e64cbdba73fccf0109be78a8eaf19045a851fc42faa3b7656cb",
+          "size_bytes": 7327
+        },
+        {
+          "legacy_path": "column-material-absent/validation/structural-restoration-audit.json",
+          "path": "column-material-absent/evidence/review/validation/structural-restoration-audit.json",
+          "sha256": "1cfdf8994d6686325aa02b89526525cffd781993507a9de63556ac8f2c1b31ca",
+          "size_bytes": 1069
+        },
+        {
+          "legacy_path": "four-family-atomic/agent/production-evidence.json",
+          "path": "four-family-atomic/evidence/review/agent/production-evidence.json",
+          "sha256": "e06972238a6e7ecc28978b1a1a1f232770b21fa9b3e36384fa31326d8ef2ea66",
+          "size_bytes": 31994
+        },
+        {
+          "legacy_path": "four-family-atomic/agent/repair-intent.json",
+          "path": "four-family-atomic/evidence/review/agent/repair-intent.json",
+          "sha256": "7272c2dfdc42e83d50c586053d59a1b3436388c95019580cd8209ba72cc90a73",
+          "size_bytes": 19847
+        },
+        {
+          "legacy_path": "four-family-atomic/agent/semantic-manifests.json",
+          "path": "four-family-atomic/evidence/review/agent/semantic-manifests.json",
+          "sha256": "5a6ef80cf0c57c93286f7868c2ff97545d409a49d1493957485e1954f99b47ee",
+          "size_bytes": 21394
+        },
+        {
+          "legacy_path": "four-family-atomic/agent/target-resolution.json",
+          "path": "four-family-atomic/evidence/review/agent/target-resolution.json",
+          "sha256": "68cb3096a3b42dc43452bcd799d9ea9f9a2949fdbee149881fa60aa316b16ddd",
+          "size_bytes": 44901
+        },
+        {
+          "legacy_path": "four-family-atomic/changeset/bound-changeset.json",
+          "path": "four-family-atomic/evidence/review/changeset/bound-changeset.json",
+          "sha256": "8d1d87a650adc317fcde914557bec3978dff15ce6d1267f7ab70ca326e45453a",
+          "size_bytes": 27018
+        },
+        {
+          "legacy_path": "four-family-atomic/input/request.txt",
+          "path": "four-family-atomic/evidence/review/input/request.txt",
+          "sha256": "ced100e67c963e28942198d36e864fb363e62491d5a18430141d6deb4f678490",
+          "size_bytes": 1415
+        },
+        {
+          "legacy_path": "four-family-atomic/private-evaluation/mutation-manifest.json",
+          "path": "four-family-atomic/evidence/review/private-evaluation/mutation-manifest.json",
+          "sha256": "35d3a773f18f97c7d3cd57fc56c981fbc80f59c18f651867b8a3619eba60fa9d",
+          "size_bytes": 15545
+        },
+        {
+          "legacy_path": "four-family-atomic/validation/application.json",
+          "path": "four-family-atomic/evidence/review/validation/application.json",
+          "sha256": "3f463cc5f862f681be0a2650b80a36e9534becc86d85308e9832352447f8a116",
+          "size_bytes": 48656
+        },
+        {
+          "legacy_path": "four-family-atomic/validation/AUDIT-REPORT.md",
+          "path": "four-family-atomic/evidence/review/validation/AUDIT-REPORT.md",
+          "sha256": "8fbc9bf92edcfae0af5583039863bc0992d6fb50da22e17591511329f6ab45de",
+          "size_bytes": 1264
+        },
+        {
+          "legacy_path": "four-family-atomic/validation/ifc-comparison.json",
+          "path": "four-family-atomic/evidence/review/validation/ifc-comparison.json",
+          "sha256": "51d8699ac17355a1908fe69bbf4dfbcfda7c68dd69f94fead45454510f93b7e1",
+          "size_bytes": 42074
+        },
+        {
+          "legacy_path": "four-family-atomic/validation/production-boundary.json",
+          "path": "four-family-atomic/evidence/review/validation/production-boundary.json",
+          "sha256": "26e7860408dc73192f27361be26a29aee75b2ef8efecd847505677be2385a551",
+          "size_bytes": 835
+        },
+        {
+          "legacy_path": "four-family-atomic/validation/production-evaluation.json",
+          "path": "four-family-atomic/evidence/review/validation/production-evaluation.json",
+          "sha256": "8e8fc7be5afd91914b911c4f2e74e4f6e83d2e077ab912fca72ff0467e299b57",
+          "size_bytes": 895837
+        },
+        {
+          "legacy_path": "four-family-atomic/validation/source-run-manifest.json",
+          "path": "four-family-atomic/evidence/review/validation/source-run-manifest.json",
+          "sha256": "22cd627c2c0280b916ba66929dbc859e56e15dcd642370a908c5e8657fe1677b",
+          "size_bytes": 9191
+        },
+        {
+          "legacy_path": "four-family-atomic/validation/structural-restoration-audit.json",
+          "path": "four-family-atomic/evidence/review/validation/structural-restoration-audit.json",
+          "sha256": "c6479201853ef68508f39693cc9f16600bcbac1a71ceedcdc39b025d4824905b",
+          "size_bytes": 1819
+        },
+        {
+          "legacy_path": "four-family-atomic/validation/source/public-request-bundle.json",
+          "path": "four-family-atomic/evidence/review/validation/source/public-request-bundle.json",
+          "sha256": "b435343b1c4339a6a47917005da14d362ed21c33dea277b56182173bd136aaf3",
+          "size_bytes": 22380
+        },
+        {
+          "legacy_path": "live-complete/agent/prompt-profile-selection.json",
+          "path": "live-complete/evidence/review/agent/prompt-profile-selection.json",
+          "sha256": "12c4df4f5773742cc61abad0fbc7d3a51423f7bd0eda43bed4e9e26426db2138",
+          "size_bytes": 5513
+        },
+        {
+          "legacy_path": "live-complete/agent/provider-attempts.json",
+          "path": "live-complete/evidence/review/agent/provider-attempts.json",
+          "sha256": "3e7b2b0b2579a6ed1004aaece526bac99cb6c0090269cc67b7458f74fc33964a",
+          "size_bytes": 219916
+        },
+        {
+          "legacy_path": "live-complete/agent/provider-draft.json",
+          "path": "live-complete/evidence/review/agent/provider-draft.json",
+          "sha256": "6161f8ab4e8a01a3f710d4c43fe0e3d9cb4fa27d28ae9308ce46add7935965e6",
+          "size_bytes": 2697
+        },
+        {
+          "legacy_path": "live-complete/agent/repair-intent.json",
+          "path": "live-complete/evidence/review/agent/repair-intent.json",
+          "sha256": "faacbf1781fe19b9235d875df06a3c6b33beb78b2ce385d19ac48e8d3707fdcb",
+          "size_bytes": 6046
+        },
+        {
+          "legacy_path": "live-complete/agent/target-resolution.json",
+          "path": "live-complete/evidence/review/agent/target-resolution.json",
+          "sha256": "33842b89f9843df9b63b7351a8072c90a0ed1869709afe76eeaf8feb9ba5924a",
+          "size_bytes": 12683
+        },
+        {
+          "legacy_path": "live-complete/changeset/bound-changeset.json",
+          "path": "live-complete/evidence/review/changeset/bound-changeset.json",
+          "sha256": "562a6d3f33381123a8bfeddbb9c16c3e4c58eb9b49c7ad035de1df39cca0904f",
+          "size_bytes": 7515
+        },
+        {
+          "legacy_path": "live-complete/input/request.txt",
+          "path": "live-complete/evidence/review/input/request.txt",
+          "sha256": "fce41ddbb676597fd926a4139f71e57cc96cd8c3ff968dd2e06b9674fe8c8aab",
+          "size_bytes": 679
+        },
+        {
+          "legacy_path": "live-complete/private-evaluation/mutation-manifest.json",
+          "path": "live-complete/evidence/review/private-evaluation/mutation-manifest.json",
+          "sha256": "f690251b3963352866c061a402aa2135917b63a9074362eb78e9773dc4830eb8",
+          "size_bytes": 14448
+        },
+        {
+          "legacy_path": "live-complete/private-evaluation/original-role.json",
+          "path": "live-complete/evidence/review/private-evaluation/original-role.json",
+          "sha256": "e7b34d3ed017f9b72e353a2f153c6129a8afa92c8e4692424a59890db96637af",
+          "size_bytes": 365
+        },
+        {
+          "legacy_path": "live-complete/validation/application.json",
+          "path": "live-complete/evidence/review/validation/application.json",
+          "sha256": "1b92d910b21f2264ffa49e718efc785f64bcbc459f8b26ec0b8679a2d4dcddf1",
+          "size_bytes": 14306
+        },
+        {
+          "legacy_path": "live-complete/validation/AUDIT-REPORT.md",
+          "path": "live-complete/evidence/review/validation/AUDIT-REPORT.md",
+          "sha256": "4569ab5395851a11e1b555b994b81b3e5b5b536a1062bf1931960cb895e4c23b",
+          "size_bytes": 1442
+        },
+        {
+          "legacy_path": "live-complete/validation/base-damage-source-manifest.json",
+          "path": "live-complete/evidence/review/validation/base-damage-source-manifest.json",
+          "sha256": "4206684c292528a865d65577a9498539ae91b7db4bc7b90dbb74047ffa6da1c9",
+          "size_bytes": 7362
+        },
+        {
+          "legacy_path": "live-complete/validation/evidence-decision.json",
+          "path": "live-complete/evidence/review/validation/evidence-decision.json",
+          "sha256": "00e83a4a4912740781c962f23ba396fdce4346a002a350fcbbc364bd9f2ad548",
+          "size_bytes": 2729
+        },
+        {
+          "legacy_path": "live-complete/validation/production-evaluation.json",
+          "path": "live-complete/evidence/review/validation/production-evaluation.json",
+          "sha256": "c21c0f3fdd15a39abd62d2dbd5f733dadfae1e2f90cf6e2ea78c8ecf0ab2d584",
+          "size_bytes": 19614
+        },
+        {
+          "legacy_path": "live-complete/validation/structural-restoration-audit.json",
+          "path": "live-complete/evidence/review/validation/structural-restoration-audit.json",
+          "sha256": "94e5d32356dd139b65778571ac463d58f131577f53279568648727d5a68c2a80",
+          "size_bytes": 1751
+        },
+        {
+          "legacy_path": "live-clarification/agent/prompt-profile-selection.json",
+          "path": "live-clarification/evidence/review/agent/prompt-profile-selection.json",
+          "sha256": "99761b17cf1b9e2692aa0ae8a4f64fbd25deb5f202b8ec16204f6ae578c4dfcc",
+          "size_bytes": 2912
+        },
+        {
+          "legacy_path": "live-clarification/agent/provider-attempts.json",
+          "path": "live-clarification/evidence/review/agent/provider-attempts.json",
+          "sha256": "dd633f4b837eeeaa0e2504d195b51e97da5e02342cee7a38acdf1b109fbd45e5",
+          "size_bytes": 136329
+        },
+        {
+          "legacy_path": "live-clarification/agent/provider-draft.json",
+          "path": "live-clarification/evidence/review/agent/provider-draft.json",
+          "sha256": "a411a29a2308e1f491a8f87e04aad7a82ed6adae54dc5b15008d75d5d126ff5f",
+          "size_bytes": 1726
+        },
+        {
+          "legacy_path": "live-clarification/agent/repair-intent.json",
+          "path": "live-clarification/evidence/review/agent/repair-intent.json",
+          "sha256": "2c5f9c66218c90a4982e048d1100500dca26496abf1dfd8f491a75a5a02c8a37",
+          "size_bytes": 4166
+        },
+        {
+          "legacy_path": "live-clarification/agent/target-resolution.json",
+          "path": "live-clarification/evidence/review/agent/target-resolution.json",
+          "sha256": "a78df166a3e9046b16b41b2be6641d93fa2d850d4f93f78baf854b567c3c619a",
+          "size_bytes": 7726
+        },
+        {
+          "legacy_path": "live-clarification/changeset/bound-changeset.json",
+          "path": "live-clarification/evidence/review/changeset/bound-changeset.json",
+          "sha256": "330a6c17da01274532f05ce4b9f73fa32928f034cca8375d9e080ea963fdd8e1",
+          "size_bytes": 4076
+        },
+        {
+          "legacy_path": "live-clarification/input/clarification-answer.txt",
+          "path": "live-clarification/evidence/review/input/clarification-answer.txt",
+          "sha256": "d09aba3b34f2799af6336bbba7843bff153fdd1ad8934b8d945ec0e6041a0183",
+          "size_bytes": 38
+        },
+        {
+          "legacy_path": "live-clarification/input/request.txt",
+          "path": "live-clarification/evidence/review/input/request.txt",
+          "sha256": "179d2ecc46ee16f5e4b39583495f23b97aac6d678aa235a8c17de1a27f83a2a2",
+          "size_bytes": 430
+        },
+        {
+          "legacy_path": "live-clarification/private-evaluation/mutation-manifest.json",
+          "path": "live-clarification/evidence/review/private-evaluation/mutation-manifest.json",
+          "sha256": "f690251b3963352866c061a402aa2135917b63a9074362eb78e9773dc4830eb8",
+          "size_bytes": 14448
+        },
+        {
+          "legacy_path": "live-clarification/private-evaluation/original-role.json",
+          "path": "live-clarification/evidence/review/private-evaluation/original-role.json",
+          "sha256": "e7b34d3ed017f9b72e353a2f153c6129a8afa92c8e4692424a59890db96637af",
+          "size_bytes": 365
+        },
+        {
+          "legacy_path": "live-clarification/validation/application.json",
+          "path": "live-clarification/evidence/review/validation/application.json",
+          "sha256": "569528716707088afc4f0057578dadc80ff59a2989b32a1aacb45132b2252417",
+          "size_bytes": 7811
+        },
+        {
+          "legacy_path": "live-clarification/validation/AUDIT-REPORT.md",
+          "path": "live-clarification/evidence/review/validation/AUDIT-REPORT.md",
+          "sha256": "449251abce14c63790d2521b0e6ef190fddc36910f330a343ad9fcb937f388eb",
+          "size_bytes": 1439
+        },
+        {
+          "legacy_path": "live-clarification/validation/base-damage-source-manifest.json",
+          "path": "live-clarification/evidence/review/validation/base-damage-source-manifest.json",
+          "sha256": "4206684c292528a865d65577a9498539ae91b7db4bc7b90dbb74047ffa6da1c9",
+          "size_bytes": 7362
+        },
+        {
+          "legacy_path": "live-clarification/validation/evidence-decision.json",
+          "path": "live-clarification/evidence/review/validation/evidence-decision.json",
+          "sha256": "d7b06c0d7594fa7f7436fd8deb391e5e13c512c5ae92dd015684cd311786ffc6",
+          "size_bytes": 2080
+        },
+        {
+          "legacy_path": "live-clarification/validation/production-evaluation.json",
+          "path": "live-clarification/evidence/review/validation/production-evaluation.json",
+          "sha256": "a94c145464f57f67c4dcca4a8bdef2790d7c8759b32c475d6342560cd487116a",
+          "size_bytes": 7580
+        },
+        {
+          "legacy_path": "live-clarification/validation/structural-restoration-audit.json",
+          "path": "live-clarification/evidence/review/validation/structural-restoration-audit.json",
+          "sha256": "a92a83cc0243f5684ba72693e48ee40b7825553c99e5f0b90d3dbbccf4264849",
+          "size_bytes": 1098
+        },
+        {
+          "legacy_path": "live-window-property/agent/prompt-profile-selection.json",
+          "path": "live-window-property/evidence/review/agent/prompt-profile-selection.json",
+          "sha256": "35e5fd94ab9f753ec1e548bd10104c778370bd8b52d208aaa3d8d518dd7b0825",
+          "size_bytes": 1914
+        },
+        {
+          "legacy_path": "live-window-property/agent/provider-attempts.json",
+          "path": "live-window-property/evidence/review/agent/provider-attempts.json",
+          "sha256": "f353ca39e61df660869b59e606b31efdb0c3baaaf2b88702a397233c7a065835",
+          "size_bytes": 104957
+        },
+        {
+          "legacy_path": "live-window-property/agent/provider-draft.json",
+          "path": "live-window-property/evidence/review/agent/provider-draft.json",
+          "sha256": "70af4e4df37cbfdd3895aaed2e4a1faab8dddd3189d08a7efc0b5e03d5636e9f",
+          "size_bytes": 1403
+        },
+        {
+          "legacy_path": "live-window-property/agent/repair-intent.json",
+          "path": "live-window-property/evidence/review/agent/repair-intent.json",
+          "sha256": "847a9f02edca04a47027746b47847f79231fb3d0142913a082a89ba5d73e6343",
+          "size_bytes": 2403
+        },
+        {
+          "legacy_path": "live-window-property/agent/target-resolution.json",
+          "path": "live-window-property/evidence/review/agent/target-resolution.json",
+          "sha256": "bb66e04ba4a034e9d5a4c0d1b4eb1aad1f20fe275637854d9efe6288e47ee082",
+          "size_bytes": 5636
+        },
+        {
+          "legacy_path": "live-window-property/changeset/bound-changeset.json",
+          "path": "live-window-property/evidence/review/changeset/bound-changeset.json",
+          "sha256": "cc73d670797a2f54d00d11e3963938ab96681e135f8a972954ca018f5d82aae5",
+          "size_bytes": 1915
+        },
+        {
+          "legacy_path": "live-window-property/input/request.txt",
+          "path": "live-window-property/evidence/review/input/request.txt",
+          "sha256": "21bfb3abdbb416df58fc17a1c3b35685ee9947c1cd9534a599d2d3fd9d912bb9",
+          "size_bytes": 144
+        },
+        {
+          "legacy_path": "live-window-property/private-evaluation/mutation-manifest.json",
+          "path": "live-window-property/evidence/review/private-evaluation/mutation-manifest.json",
+          "sha256": "f690251b3963352866c061a402aa2135917b63a9074362eb78e9773dc4830eb8",
+          "size_bytes": 14448
+        },
+        {
+          "legacy_path": "live-window-property/private-evaluation/original-role.json",
+          "path": "live-window-property/evidence/review/private-evaluation/original-role.json",
+          "sha256": "e7b34d3ed017f9b72e353a2f153c6129a8afa92c8e4692424a59890db96637af",
+          "size_bytes": 365
+        },
+        {
+          "legacy_path": "live-window-property/validation/application.json",
+          "path": "live-window-property/evidence/review/validation/application.json",
+          "sha256": "bec5fa20e447f778d7a65d92b876b59a2bc312b3e181e1c56cd579dea0c9786a",
+          "size_bytes": 4478
+        },
+        {
+          "legacy_path": "live-window-property/validation/AUDIT-REPORT.md",
+          "path": "live-window-property/evidence/review/validation/AUDIT-REPORT.md",
+          "sha256": "cf43ab98f19469f29857c9eed3d026f100b87fd5952a604e9f771fa549524788",
+          "size_bytes": 1449
+        },
+        {
+          "legacy_path": "live-window-property/validation/base-damage-source-manifest.json",
+          "path": "live-window-property/evidence/review/validation/base-damage-source-manifest.json",
+          "sha256": "4206684c292528a865d65577a9498539ae91b7db4bc7b90dbb74047ffa6da1c9",
+          "size_bytes": 7362
+        },
+        {
+          "legacy_path": "live-window-property/validation/evidence-decision.json",
+          "path": "live-window-property/evidence/review/validation/evidence-decision.json",
+          "sha256": "08905eecbffd48b01669fb9033373fa21156220e8f5fafe1837a6301520711dc",
+          "size_bytes": 928
+        },
+        {
+          "legacy_path": "live-window-property/validation/production-evaluation.json",
+          "path": "live-window-property/evidence/review/validation/production-evaluation.json",
+          "sha256": "566730f03b71f61e56548acb14770cf8f526a850ba1e259e2196c4c141ce7c96",
+          "size_bytes": 5699
+        },
+        {
+          "legacy_path": "program-guard/agent/provider-attempts.json",
+          "path": "program-guard/evidence/review/agent/provider-attempts.json",
+          "sha256": "77e5e418713219498fe1d6b0f15721395f3a2555247659185858337bedf22933",
+          "size_bytes": 93495
+        },
+        {
+          "legacy_path": "program-guard/input/request.txt",
+          "path": "program-guard/evidence/review/input/request.txt",
+          "sha256": "a88b0a1a9ff17d034f53c4f141dbb6dc84779585e110783a6962fa108cc99bf0",
+          "size_bytes": 187
+        },
+        {
+          "legacy_path": "program-guard/validation/AUDIT-REPORT.md",
+          "path": "program-guard/evidence/review/validation/AUDIT-REPORT.md",
+          "sha256": "20f98d2c112a4d13a2dafdea7d25dadc5e2c2ff1956df8e896f0ba7b53308b08",
+          "size_bytes": 826
+        },
+        {
+          "legacy_path": "program-guard/validation/evidence-decision.json",
+          "path": "program-guard/evidence/review/validation/evidence-decision.json",
+          "sha256": "f8221b3c29a7a33639478b008c48393140a26879bdc0ee4b0eec52211b021738",
+          "size_bytes": 670
+        }
+      ]
+    }
+  ],
+  "legacy_authority": "dataset/processed/proof/ifc-repair-success-cases-v2-plan07-staging",
+  "human_review": {
+    "decision": "accepted",
+    "reviewer": "user",
+    "date": "2026-09-07",
+    "source": "current conversation",
+    "statement": "plan07我审批完了 是通过的",
+    "case_ids": [
+      "phase12-v2-vvo-beam-loadbearing-restoration",
+      "phase12-v2-vvo-column-loadbearing-restoration",
+      "phase12-v2-vvo-beam-column-atomic-restoration",
+      "phase12-v2-vvo-beam-material-present-restoration",
+      "phase12-v2-vvo-column-material-absent-restoration",
+      "phase12-v2-vvo-door-window-beam-column-atomic-restoration",
+      "phase12-plan07-live-beam-column-complete",
+      "phase12-plan07-live-column-clarification-resume",
+      "phase12-plan07-live-window-property-repair",
+      "phase12-plan07-live-structural-program-guard"
+    ],
+    "scope": "human review approval only; original run and machine evidence unchanged"
+  }
 }

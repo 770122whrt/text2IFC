@@ -1,0 +1,49 @@
+{
+  "schema_version": "text2ifc/approved-bbox-repair/1.0",
+  "source_candidate": "source-candidate.json",
+  "units": "MILLIMETRE",
+  "reason": "Align perimeter clear-space bounds and derived shared-boundary wall endpoints with the inner faces of 200 mm exterior walls centered on the declared outline.",
+  "spaces": {
+    "space-1-reception": {"x": [100, 3000], "y": [100, 4000]},
+    "space-1-meeting": {"x": [3000, 5800], "y": [100, 4000]},
+    "space-1-office-north": {"x": [100, 3000], "y": [4000, 7900]},
+    "space-1-stair-hall": {"x": [3000, 5800], "y": [4000, 7900]},
+    "space-1-service-south": {"x": [5800, 9900], "y": [100, 2400]},
+    "space-1-service-north": {"x": [5800, 9900], "y": [2400, 4900]},
+    "space-2-office-south": {"x": [100, 3800], "y": [100, 4000]},
+    "space-2-core-lobby": {"x": [3800, 5800], "y": [100, 4000]},
+    "space-2-office-north": {"x": [100, 3800], "y": [4000, 7900]},
+    "space-2-east-south": {"x": [5800, 9900], "y": [100, 2400]},
+    "space-2-east-north": {"x": [5800, 9900], "y": [2400, 4900]}
+  },
+  "walls": {
+    "wall-1-reception-meeting": {"x": [2900, 3100], "y": [100, 4000]},
+    "wall-1-reception-office": {"x": [100, 3000], "y": [3900, 4100]},
+    "wall-1-office-stair": {"x": [2900, 3100], "y": [4000, 7900]},
+    "wall-1-meeting-service-south": {"x": [5700, 5900], "y": [100, 2400]},
+    "wall-1-service-divider": {"x": [5800, 9900], "y": [2300, 2500]},
+    "wall-2-office-core": {"x": [3700, 3900], "y": [100, 4000]},
+    "wall-2-office-south-north": {"x": [100, 3800], "y": [3900, 4100]},
+    "wall-2-core-east-south": {"x": [5700, 5900], "y": [100, 2400]},
+    "wall-2-east-divider": {"x": [5800, 9900], "y": [2300, 2500]}
+  },
+  "opening_local_placement_compensations": {
+    "opening-door-1-reception-meeting": {"origin": [-50, 0, 0]},
+    "opening-door-1-service": {"origin": [-50, 0, 0]},
+    "opening-door-2-office-core": {"origin": [-50, 0, 0]},
+    "opening-door-2-east": {"origin": [-50, 0, 0]}
+  },
+  "world_geometry_must_remain_unchanged": [
+    "opening-door-1-reception-meeting",
+    "door-1-reception-meeting",
+    "opening-door-1-service",
+    "door-1-service",
+    "opening-door-2-office-core",
+    "door-2-office-core",
+    "opening-door-2-east",
+    "door-2-east"
+  ],
+  "must_remain_unchanged": [
+    "wall-2-core-east-north"
+  ]
+}

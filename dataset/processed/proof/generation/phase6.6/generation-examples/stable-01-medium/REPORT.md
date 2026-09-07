@@ -44,7 +44,7 @@
 | 语义结果 | 原验收记录通过；本轮未重新评估模型语义或能力。 |
 | 确定性执行 | 沿用原操作／编译结果；具体执行与 gates 见下方原记录摘录 |
 | 产物 | generated；本轮只验证可发现性、来源一致性与 reopen |
-| 证据合同 | [原权威报告](<../../../../../agent-demo/phase6.6-medium-live-64k-fix2/runs/8c8ef9a111e326d7/REPORT.md>)；原权威保持原位 |
+| 证据合同 | [原权威报告](<evidence/authority/acceptance-metrics.json>)；原权威字节已集中；旧路径由集合迁移索引解释 |
 | IFCCompare | N/A：generation 案例 |
 | genuine run ID | 8c8ef9a111e326d7 |
 | Provider 调用次数 | 未知；见来源 Provider traces |

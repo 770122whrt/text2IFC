@@ -1,0 +1,86 @@
+{
+  "counts": {
+    "after": {
+      "IfcBuilding": 1,
+      "IfcBuildingStorey": 2,
+      "IfcDoor": 17,
+      "IfcOpeningElement": 60,
+      "IfcProject": 1,
+      "IfcRelFillsElement": 59,
+      "IfcRelVoidsElement": 60,
+      "IfcSite": 1,
+      "IfcSpace": 8,
+      "IfcWall": 18,
+      "IfcWindow": 42
+    },
+    "before": {
+      "IfcBuilding": 1,
+      "IfcBuildingStorey": 2,
+      "IfcDoor": 18,
+      "IfcOpeningElement": 60,
+      "IfcProject": 1,
+      "IfcRelFillsElement": 60,
+      "IfcRelVoidsElement": 60,
+      "IfcSite": 1,
+      "IfcSpace": 8,
+      "IfcWall": 18,
+      "IfcWindow": 42
+    }
+  },
+  "damaged_ifc": {
+    "path": "damaged.ifc",
+    "sha256": "37c395b695f2efad78598811b643987e53a347fb0f33c07698eff29818629390"
+  },
+  "mutation_type": "remove_door_preserve_opening",
+  "schema_version": "text2ifc/ifc-repair-door-mutation-private/0.1",
+  "source": {
+    "path": "E:/code for project/bimnet/dataset/external/bim-whale-ifc-samples/LargeBuilding/IFC/LargeBuilding.ifc",
+    "schema": "IFC2X3",
+    "sha256": "102f8123f85eae5e237d7f6a9dcbc364bd5f1c0cfb94b40a7eeb2d7eac9bb725",
+    "size_bytes": 1292595
+  },
+  "target": {
+    "door": {
+      "global_id": "2cXV28XOjE6f6irgi0COhu",
+      "name": "M_Single-Flush:Inside Door:353172",
+      "operation_type": "SINGLE_SWING_RIGHT",
+      "overall_height_mm": 2134.0,
+      "overall_width_mm": 915.0,
+      "type_global_id": "2cXV28XOjE6f6irhu0COgZ",
+      "type_name": "M_Single-Flush:Inside Door"
+    },
+    "opening": {
+      "dimensions_mm": [
+        {
+          "identifier": "Body",
+          "items": [
+            {
+              "depth": 200.0,
+              "extruded_direction": [
+                0.0,
+                0.0,
+                1.0
+              ],
+              "ifc_class": "IfcExtrudedAreaSolid",
+              "profile_ifc_class": "IfcRectangleProfileDef",
+              "profile_x_dim": 915.0,
+              "profile_y_dim": 2134.0
+            }
+          ],
+          "type": "SweptSolid"
+        }
+      ],
+      "global_id": "2cXV28XOjE6f6irhW0COhu",
+      "name": "M_Single-Flush:Inside Door:353172:1"
+    },
+    "storey": {
+      "global_id": "2nxdYR2RHCDBiKJuiQr1XP",
+      "name": "Level 1"
+    },
+    "wall": {
+      "global_id": "2cXV28XOjE6f6irgi0COfF",
+      "ifc_class": "IfcWallStandardCase",
+      "name": "Basic Wall:Outside wall:353059"
+    }
+  }
+}

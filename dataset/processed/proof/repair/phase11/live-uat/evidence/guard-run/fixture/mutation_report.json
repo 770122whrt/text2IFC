@@ -1,0 +1,56 @@
+{
+  "checks": {
+    "door_removed": true,
+    "opening_preservation_matches_mode": true,
+    "schema_preserved": true,
+    "source_unchanged": true
+  },
+  "counts": {
+    "after": {
+      "IfcBuilding": 1,
+      "IfcBuildingStorey": 2,
+      "IfcDoor": 17,
+      "IfcOpeningElement": 60,
+      "IfcProject": 1,
+      "IfcRelFillsElement": 59,
+      "IfcRelVoidsElement": 60,
+      "IfcSite": 1,
+      "IfcSpace": 8,
+      "IfcWall": 18,
+      "IfcWindow": 42
+    },
+    "before": {
+      "IfcBuilding": 1,
+      "IfcBuildingStorey": 2,
+      "IfcDoor": 18,
+      "IfcOpeningElement": 60,
+      "IfcProject": 1,
+      "IfcRelFillsElement": 60,
+      "IfcRelVoidsElement": 60,
+      "IfcSite": 1,
+      "IfcSpace": 8,
+      "IfcWall": 18,
+      "IfcWindow": 42
+    }
+  },
+  "damage_scope": {
+    "door_removed": true,
+    "fill_removed": true,
+    "opening_removed": false,
+    "void_removed": false
+  },
+  "damaged_sha256": "37c395b695f2efad78598811b643987e53a347fb0f33c07698eff29818629390",
+  "mutation_type": "remove_door_preserve_opening",
+  "removed_doors": [
+    {
+      "global_id": "2cXV28XOjE6f6irgi0COhu",
+      "name": "M_Single-Flush:Inside Door:353172",
+      "operation_type": "SINGLE_SWING_RIGHT",
+      "type_global_id": "2cXV28XOjE6f6irhu0COgZ",
+      "type_name": "M_Single-Flush:Inside Door"
+    }
+  ],
+  "schema_version": "text2ifc/ifc-repair-door-mutation-report/0.1",
+  "source_sha256": "102f8123f85eae5e237d7f6a9dcbc364bd5f1c0cfb94b40a7eeb2d7eac9bb725",
+  "valid": true
+}

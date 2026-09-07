@@ -1,0 +1,104 @@
+{
+  "applicability_by_operation": {
+    "phase12-v2-vvo-beam-material-present-restoration-beam-1": {
+      "beam.material": {
+        "applicability": "conditional",
+        "evidence_pointer": "production-evidence:/phase12-v2-vvo-beam-material-present-restoration-beam-1/beam.material",
+        "mandatory": true,
+        "outcome": "evaluable",
+        "verified_absence": true
+      },
+      "beam.pset": {
+        "applicability": "conditional",
+        "evidence_pointer": "production-evidence:/phase12-v2-vvo-beam-material-present-restoration-beam-1/beam.pset",
+        "mandatory": false,
+        "outcome": "not_required",
+        "verified_absence": true
+      },
+      "beam.storey": {
+        "applicability": "required",
+        "evidence_pointer": "production-evidence:/phase12-v2-vvo-beam-material-present-restoration-beam-1/beam.storey",
+        "mandatory": true,
+        "outcome": "evaluable",
+        "verified_absence": false
+      },
+      "beam.type": {
+        "applicability": "required",
+        "evidence_pointer": "production-evidence:/phase12-v2-vvo-beam-material-present-restoration-beam-1/beam.type",
+        "mandatory": true,
+        "outcome": "evaluable",
+        "verified_absence": false
+      },
+      "explicit.material-C_-C30": {
+        "applicability": "required",
+        "evidence_pointer": "production-evidence:/phase12-v2-vvo-beam-material-present-restoration-beam-1/explicit.material-C_-C30",
+        "mandatory": true,
+        "outcome": "evaluable",
+        "verified_absence": false
+      }
+    }
+  },
+  "conflicts": [],
+  "expected_facts_by_operation": {
+    "phase12-v2-vvo-beam-material-present-restoration-beam-1": [
+      {
+        "fact_key": "material:C_-C30",
+        "inherited": false,
+        "provenance": [
+          "request-source:user_request",
+          "request-evidence:request:/operations/0/materials/0",
+          "operation:phase12-v2-vvo-beam-material-present-restoration-beam-1"
+        ],
+        "source_kind": "explicit_request",
+        "source_ref": "request:/operations/0/materials/0",
+        "unit": null,
+        "value": "C_钢筋砼C30",
+        "value_type": "IfcMaterial"
+      },
+      {
+        "fact_key": "relationship:host",
+        "inherited": false,
+        "provenance": [
+          "resolved-host-target:1vTeahUkP60PdWqwCTjUuM",
+          "resolved-host:1vTeahUkP60PdWqwCTjUuM",
+          "operation:phase12-v2-vvo-beam-material-present-restoration-beam-1"
+        ],
+        "source_kind": "surviving_target",
+        "source_ref": "current-host-binding:1vTeahUkP60PdWqwCTjUuM",
+        "unit": null,
+        "value": "1vTeahUkP60PdWqwCTjUuM",
+        "value_type": "IfcBuildingStorey"
+      },
+      {
+        "fact_key": "relationship:storey",
+        "inherited": false,
+        "provenance": [
+          "operation:phase12-v2-vvo-beam-material-present-restoration-beam-1",
+          "registered-beam-storey-policy:0.1"
+        ],
+        "source_kind": "deterministic_policy",
+        "source_ref": "resolved:/operations/phase12-v2-vvo-beam-material-present-restoration-beam-1/target",
+        "unit": null,
+        "value": "1vTeahUkP60PdWqwCTjUuM",
+        "value_type": "IfcBuildingStorey"
+      },
+      {
+        "fact_key": "relationship:type",
+        "inherited": true,
+        "provenance": [
+          "operation:phase12-v2-vvo-beam-material-present-restoration-beam-1",
+          "generated-type-template:0.1"
+        ],
+        "source_kind": "deterministic_policy",
+        "source_ref": "generated-type:1jETnFAZHLPxfNg7aIm67K",
+        "unit": null,
+        "value": "1jETnFAZHLPxfNg7aIm67K",
+        "value_type": "IfcBeamType"
+      }
+    ]
+  },
+  "operation_types": {
+    "phase12-v2-vvo-beam-material-present-restoration-beam-1": "add_beam"
+  },
+  "schema_version": "text2ifc/phase12-production-evidence/0.1"
+}

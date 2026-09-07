@@ -1,0 +1,62 @@
+{
+  "schema_version": "text2ifc/phase11-live-provider-evidence/0.1",
+  "secrets_redacted": true,
+  "stage1": [
+    {
+      "path": "intent/attempt-001.json",
+      "record": {
+        "attempt": 1,
+        "issues": [],
+        "normalizations": [],
+        "provider_metadata": {
+          "estimated_input_tokens": "[REDACTED]",
+          "evidence_class": "live",
+          "max_input_tokens": "[REDACTED]",
+          "model": "deepseek-v4-flash",
+          "provider": "deepseek-openai-compatible",
+          "response_id": "b58551a3-6661-47c1-b21f-8306374256cb",
+          "session_id": "ifc-repair-intent-request-62d4d1b5370e8ba1",
+          "stop_reason": "stop",
+          "transport_attempts": 1,
+          "usage": {
+            "completion_tokens": 2229,
+            "completion_tokens_details": "[REDACTED]",
+            "prompt_cache_hit_tokens": "[REDACTED]",
+            "prompt_cache_miss_tokens": "[REDACTED]",
+            "prompt_tokens": 7400,
+            "prompt_tokens_details": "[REDACTED]",
+            "total_tokens": 9629
+          }
+        },
+        "response_excerpt": "{\"schema_version\":\"text2ifc/ifc-repair-intent-body/0.5\",\"operations\":[{\"operation_id\":\"door-1\",\"operation_type\":\"fill_existing_opening_with_door\",\"routing_intent\":{\"component_family\":\"door\",\"action\":\"fill_existing_opening\",\"operation_profile\":\"door.fill-existing-opening.v0.2\",\"source\":{\"source_kind\":\"user_request\",\"reference\":\"request:/text\",\"excerpt\":\"在已有洞口 2cXV28XOjE6f6irhW0COhu 中安装一扇门\"}},\"target_query\":{\"schema_version\":\"text2ifc/ifc-target-query/0.1\",\"allowed_ifc_classes\":[\"IfcOpeningElement\"],\"global_id\":\"2cXV28XOjE6f6irhW0COhu\"},\"parameters\":{\"fit_existing_opening\":true},\"attribute_intents\":[],\"property_intents\":[],\"semantic_bundle_refs\":[],\"quantity_intents\":[],\"occurrence_reuse_intent\":null,\"prototype_intent\":{\"reference_kind\":\"global_id\",\"reference\":\"2cXV28XOjE6f6irhu0COgZ\",\"source\":{\"source_kind\":\"user_request\",\"reference\":\"request:/text\",\"excerpt\":\"明确复用现有 DoorStyle “M_Single-Flush:Inside Door”（GlobalId 2cXV28XOjE6f6irhu0COgZ）\"}},\"provenance\":[{\"source_kind\":\"user_request\",\"reference\":\"request:/text\",\"excerpt\":\"在已有洞口 2cXV28XOjE6f6irhW0COhu 中安装一扇门。明确复用现有 DoorStyle “M_Single-Flush:Inside Door”（GlobalId 2cXV28XOjE6f6irhu0COgZ）。保留 damaged IFC 中可确定的洞口、墙和楼层关系，不要猜测未提供的材料或五金。\"}]}],\"semantic_bundles\":[],\"provenance\":[{\"source_kind\":\"user_request\",\"reference\":\"request:/text\",\"excerpt\":\"在已有洞口 2cXV28XOjE6f6irhW0COhu 中安装一扇门。明确复用现有 DoorStyle “M_Single-Flush:Inside Door”（GlobalId 2cXV28XOjE6f6irhu0COgZ）。保留 damaged IFC 中可确定的洞口、墙和楼层关系，不要猜测未提供的材料或五金。\"}]}",
+        "response_sha256": "sha256:da6035aab7133f9f5c4c474f825534799d3e97c90a4b8d6a155edfe83c5e96cc",
+        "status": "valid"
+      }
+    }
+  ],
+  "stage2": [
+    {
+      "path": "changeset/attempt-001/provider-metadata.json",
+      "record": {
+        "estimated_input_tokens": "[REDACTED]",
+        "evidence_class": "live",
+        "max_input_tokens": "[REDACTED]",
+        "model": "deepseek-v4-flash",
+        "provider": "deepseek-openai-compatible",
+        "response_id": "6f9b7204-3447-4166-b9d7-592b379aef68",
+        "session_id": "ifc-repair-repair-6a40fe52c87849b79f66eba9ffcf539e",
+        "stop_reason": "stop",
+        "transport_attempts": 1,
+        "usage": {
+          "completion_tokens": 3321,
+          "completion_tokens_details": "[REDACTED]",
+          "prompt_cache_hit_tokens": "[REDACTED]",
+          "prompt_cache_miss_tokens": "[REDACTED]",
+          "prompt_tokens": 3771,
+          "prompt_tokens_details": "[REDACTED]",
+          "total_tokens": 7092
+        }
+      }
+    }
+  ]
+}

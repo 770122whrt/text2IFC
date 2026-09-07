@@ -33,7 +33,7 @@
 | 语义结果 | N/A（没有真实 Provider 语义评测）；原记录为离线确定性 operation-engine 通过。 |
 | 确定性执行 | 沿用原操作／编译结果；具体执行与 gates 见下方原记录摘录 |
 | 产物 | repaired；本轮只验证可发现性、来源一致性与 reopen |
-| 证据合同 | [原权威报告](<../../../../../../ifc-repair-success-cases/window/batch/px4-five-window/REPORT.md>)；原权威保持原位 |
+| 证据合同 | [原权威报告](<evidence/authority/REPORT.md>)；原权威字节已集中；旧路径由集合迁移索引解释 |
 | IFCCompare | 沿用原案例评估；本案属于 5 个 legacy_unverifiable 历史 Window 案，不得当作新的完整 Proof |
 | genuine run ID | N/A（离线确定性） |
 | Provider 调用次数 | 0 |

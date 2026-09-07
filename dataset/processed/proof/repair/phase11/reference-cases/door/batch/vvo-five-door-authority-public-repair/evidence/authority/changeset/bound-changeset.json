@@ -1,0 +1,455 @@
+{
+  "base_model_fingerprint": "sha256:d91addae033f50c564cb3dfefaa7df496212ddd20da86d91bdd1ea256eb7373f",
+  "binding_status": "bound",
+  "changeset_id": "changeset-vvo-five-door-authority-public-repair",
+  "evidence_refs": [
+    "request:/operations"
+  ],
+  "operations": [
+    {
+      "evidence_refs": [
+        "request:/operations"
+      ],
+      "operation_id": "operation-door-001",
+      "operation_type": "fill_existing_opening_with_door",
+      "parameters": {
+        "derivation": {
+          "digest": "sha256:fd2b2257a8c6b4133980981d263476d6facdd3b56ec94e39c1b5a358b8deb42b",
+          "position": {
+            "formula": "existing_opening_center",
+            "source_anchor": "opening:2IUEnGd5v4Yfg1ZkLtd0qa"
+          }
+        },
+        "door": {
+          "operation_derivation": {
+            "source": "explicit_formal_enum"
+          },
+          "operation_type": "SINGLE_SWING_LEFT",
+          "overall_height_mm": 2480.0,
+          "overall_width_mm": 800.0
+        },
+        "host_wall_global_id": "2HNE4WMQ1CXebZMaih8XoD",
+        "opening": {
+          "derivation": {
+            "formula": "fit_existing_opening",
+            "source": "opening:2IUEnGd5v4Yfg1ZkLtd0qa"
+          },
+          "dimension_meaning": "overall_opening",
+          "height_mm": 2480.0,
+          "sill_height_mm": 130.359199,
+          "width_mm": 800.0
+        },
+        "position": {
+          "center_offset_mm": 565.932051,
+          "reference": "wall_local_start"
+        }
+      },
+      "semantic_assignments": [
+        {
+          "applicability": "required",
+          "authoring_action": "inherit_from_type",
+          "derivation": {
+            "formal_attributes": {
+              "construction_type": "NOTDEFINED",
+              "operation_type": "SINGLE_SWING_LEFT",
+              "parameter_takes_precedence": false,
+              "sizeable": false
+            },
+            "ifc_class": "IfcDoorStyle",
+            "template": {
+              "construction_type": "NOTDEFINED",
+              "name": "Text2IFC generated door type operation-door-001",
+              "operation_type": "SINGLE_SWING_LEFT",
+              "parameter_takes_precedence": false,
+              "sizeable": false
+            },
+            "template_digest": "sha256:b0f96dba33cbbfca1be5ccd9a27e2fc442f70e06c6c17d7b5f85cc759669702a",
+            "template_id": "text2ifc-door-single-swing-template",
+            "template_version": "0.1"
+          },
+          "fact_key": "relationship:type",
+          "operation_id": "operation-door-001",
+          "ownership": "type_inherited",
+          "provenance": [
+            "generated-type-template:0.1"
+          ],
+          "scope": "door_occurrence",
+          "source_fact_key": "relationship:type",
+          "source_kind": "deterministic_derived",
+          "source_ref": "generated-type:173zVUXyDLQgxfp9GTXWgY",
+          "unit": null,
+          "value": "173zVUXyDLQgxfp9GTXWgY",
+          "value_type": "IfcDoorStyle"
+        }
+      ],
+      "semantic_manifest": {
+        "manifest_id": "manifest-operation-door-001",
+        "policy_id": "door.fill-existing-opening.l2",
+        "policy_version": "0.1"
+      },
+      "target": {
+        "opening_global_id": "2IUEnGd5v4Yfg1ZkLtd0qa"
+      }
+    },
+    {
+      "evidence_refs": [
+        "request:/operations"
+      ],
+      "operation_id": "operation-door-002",
+      "operation_type": "fill_existing_opening_with_door",
+      "parameters": {
+        "derivation": {
+          "digest": "sha256:2dba89324da8ed0c712e9eb3db4f122d047af914ac4959f1d1e86e0e76eda447",
+          "position": {
+            "formula": "existing_opening_center",
+            "source_anchor": "opening:2IUEnGd5v4Yfg1ZkLtd0tI"
+          }
+        },
+        "door": {
+          "operation_derivation": {
+            "source": "explicit_formal_enum"
+          },
+          "operation_type": "SINGLE_SWING_RIGHT",
+          "overall_height_mm": 2480.0,
+          "overall_width_mm": 800.0
+        },
+        "host_wall_global_id": "1cbLGwmrv8LAj2u11O6kgh",
+        "opening": {
+          "derivation": {
+            "formula": "fit_existing_opening",
+            "source": "opening:2IUEnGd5v4Yfg1ZkLtd0tI"
+          },
+          "dimension_meaning": "overall_opening",
+          "height_mm": 2480.0,
+          "sill_height_mm": 80.359199,
+          "width_mm": 800.0
+        },
+        "position": {
+          "center_offset_mm": 849.0,
+          "reference": "wall_local_start"
+        }
+      },
+      "semantic_assignments": [
+        {
+          "applicability": "required",
+          "authoring_action": "inherit_from_type",
+          "derivation": {
+            "formal_attributes": {
+              "construction_type": "NOTDEFINED",
+              "operation_type": "SINGLE_SWING_RIGHT",
+              "parameter_takes_precedence": false,
+              "sizeable": false
+            },
+            "ifc_class": "IfcDoorStyle",
+            "template": {
+              "construction_type": "NOTDEFINED",
+              "name": "Text2IFC generated door type operation-door-002",
+              "operation_type": "SINGLE_SWING_RIGHT",
+              "parameter_takes_precedence": false,
+              "sizeable": false
+            },
+            "template_digest": "sha256:2b75005c8d87ea2955a0d9fba990cbc3d4bfb0e4b14fd754f2fa2f994df04f65",
+            "template_id": "text2ifc-door-single-swing-template",
+            "template_version": "0.1"
+          },
+          "fact_key": "relationship:type",
+          "operation_id": "operation-door-002",
+          "ownership": "type_inherited",
+          "provenance": [
+            "generated-type-template:0.1"
+          ],
+          "scope": "door_occurrence",
+          "source_fact_key": "relationship:type",
+          "source_kind": "deterministic_derived",
+          "source_ref": "generated-type:1iD2Y4VizOkR52RjJ3F7hn",
+          "unit": null,
+          "value": "1iD2Y4VizOkR52RjJ3F7hn",
+          "value_type": "IfcDoorStyle"
+        }
+      ],
+      "semantic_manifest": {
+        "manifest_id": "manifest-operation-door-002",
+        "policy_id": "door.fill-existing-opening.l2",
+        "policy_version": "0.1"
+      },
+      "target": {
+        "opening_global_id": "2IUEnGd5v4Yfg1ZkLtd0tI"
+      }
+    },
+    {
+      "evidence_refs": [
+        "request:/operations"
+      ],
+      "operation_id": "operation-door-003",
+      "operation_type": "fill_existing_opening_with_door",
+      "parameters": {
+        "derivation": {
+          "digest": "sha256:580936448bcf2de4dc86e22654e4ff16f4f316bf81506592e2ff240ac69635c0",
+          "position": {
+            "formula": "existing_opening_center",
+            "source_anchor": "opening:08xWVL$9z6JRwr3piJHoYK"
+          }
+        },
+        "door": {
+          "operation_derivation": {
+            "source": "explicit_formal_enum"
+          },
+          "operation_type": "SINGLE_SWING_RIGHT",
+          "overall_height_mm": 2440.0,
+          "overall_width_mm": 760.0
+        },
+        "host_wall_global_id": "2HNE4WMQ1CXebZMaih8Xg3",
+        "opening": {
+          "derivation": {
+            "formula": "fit_existing_opening",
+            "source": "opening:08xWVL$9z6JRwr3piJHoYK"
+          },
+          "dimension_meaning": "overall_opening",
+          "height_mm": 2440.0,
+          "sill_height_mm": 0.0,
+          "width_mm": 760.0
+        },
+        "position": {
+          "center_offset_mm": 5206.5,
+          "reference": "wall_local_start"
+        }
+      },
+      "semantic_assignments": [
+        {
+          "applicability": "required",
+          "authoring_action": "inherit_from_type",
+          "derivation": {
+            "formal_attributes": {
+              "construction_type": "NOTDEFINED",
+              "operation_type": "SINGLE_SWING_RIGHT",
+              "parameter_takes_precedence": false,
+              "sizeable": false
+            },
+            "ifc_class": "IfcDoorStyle",
+            "template": {
+              "construction_type": "NOTDEFINED",
+              "name": "Text2IFC generated door type operation-door-003",
+              "operation_type": "SINGLE_SWING_RIGHT",
+              "parameter_takes_precedence": false,
+              "sizeable": false
+            },
+            "template_digest": "sha256:cee74cc165c1a25821942823a0122f341af7856b429d4358312289707125b87e",
+            "template_id": "text2ifc-door-single-swing-template",
+            "template_version": "0.1"
+          },
+          "fact_key": "relationship:type",
+          "operation_id": "operation-door-003",
+          "ownership": "type_inherited",
+          "provenance": [
+            "generated-type-template:0.1"
+          ],
+          "scope": "door_occurrence",
+          "source_fact_key": "relationship:type",
+          "source_kind": "deterministic_derived",
+          "source_ref": "generated-type:0$aEb0nFPOjA2ap4LeB36o",
+          "unit": null,
+          "value": "0$aEb0nFPOjA2ap4LeB36o",
+          "value_type": "IfcDoorStyle"
+        }
+      ],
+      "semantic_manifest": {
+        "manifest_id": "manifest-operation-door-003",
+        "policy_id": "door.fill-existing-opening.l2",
+        "policy_version": "0.1"
+      },
+      "target": {
+        "opening_global_id": "08xWVL$9z6JRwr3piJHoYK"
+      }
+    },
+    {
+      "evidence_refs": [
+        "request:/operations"
+      ],
+      "operation_id": "operation-door-004",
+      "operation_type": "fill_existing_opening_with_door",
+      "parameters": {
+        "derivation": {
+          "digest": "sha256:bda40e25eeb03270b8d7161911fb1b7afd5d7d3ce8cacca13a3958bc622b70b3",
+          "position": {
+            "formula": "existing_opening_center",
+            "source_anchor": "opening:08xWVL$9z6JRwr3piJHoYg"
+          }
+        },
+        "door": {
+          "operation_derivation": {
+            "source": "explicit_formal_enum"
+          },
+          "operation_type": "SINGLE_SWING_RIGHT",
+          "overall_height_mm": 2440.0,
+          "overall_width_mm": 760.0
+        },
+        "host_wall_global_id": "2HNE4WMQ1CXebZMaih8Xg3",
+        "opening": {
+          "derivation": {
+            "formula": "fit_existing_opening",
+            "source": "opening:08xWVL$9z6JRwr3piJHoYg"
+          },
+          "dimension_meaning": "overall_opening",
+          "height_mm": 2440.0,
+          "sill_height_mm": 0.0,
+          "width_mm": 760.0
+        },
+        "position": {
+          "center_offset_mm": 3259.927302,
+          "reference": "wall_local_start"
+        }
+      },
+      "semantic_assignments": [
+        {
+          "applicability": "required",
+          "authoring_action": "inherit_from_type",
+          "derivation": {
+            "formal_attributes": {
+              "construction_type": "NOTDEFINED",
+              "operation_type": "SINGLE_SWING_RIGHT",
+              "parameter_takes_precedence": false,
+              "sizeable": false
+            },
+            "ifc_class": "IfcDoorStyle",
+            "template": {
+              "construction_type": "NOTDEFINED",
+              "name": "Text2IFC generated door type operation-door-004",
+              "operation_type": "SINGLE_SWING_RIGHT",
+              "parameter_takes_precedence": false,
+              "sizeable": false
+            },
+            "template_digest": "sha256:94faa53219d8c86c1d07adfa81ed149b152dcc304a2637e841626890d215b5ce",
+            "template_id": "text2ifc-door-single-swing-template",
+            "template_version": "0.1"
+          },
+          "fact_key": "relationship:type",
+          "operation_id": "operation-door-004",
+          "ownership": "type_inherited",
+          "provenance": [
+            "generated-type-template:0.1"
+          ],
+          "scope": "door_occurrence",
+          "source_fact_key": "relationship:type",
+          "source_kind": "deterministic_derived",
+          "source_ref": "generated-type:1TGPlM_KfUjgmvEZgmrJdb",
+          "unit": null,
+          "value": "1TGPlM_KfUjgmvEZgmrJdb",
+          "value_type": "IfcDoorStyle"
+        }
+      ],
+      "semantic_manifest": {
+        "manifest_id": "manifest-operation-door-004",
+        "policy_id": "door.fill-existing-opening.l2",
+        "policy_version": "0.1"
+      },
+      "target": {
+        "opening_global_id": "08xWVL$9z6JRwr3piJHoYg"
+      }
+    },
+    {
+      "evidence_refs": [
+        "request:/operations"
+      ],
+      "operation_id": "operation-door-005",
+      "operation_type": "fill_existing_opening_with_door",
+      "parameters": {
+        "derivation": {
+          "digest": "sha256:986b30511458a361b404ec9d5c3281e49dc912143b72dcd8b80c7f55de874503",
+          "position": {
+            "formula": "existing_opening_center",
+            "source_anchor": "opening:08xWVL$9z6JRwr3piJHpOf"
+          }
+        },
+        "door": {
+          "operation_derivation": {
+            "source": "explicit_notdefined_acceptance"
+          },
+          "operation_type": "NOTDEFINED",
+          "overall_height_mm": 2370.0,
+          "overall_width_mm": 3560.0
+        },
+        "host_wall_global_id": "2HNE4WMQ1CXebZMaih8YJg",
+        "opening": {
+          "derivation": {
+            "formula": "fit_existing_opening",
+            "source": "opening:08xWVL$9z6JRwr3piJHpOf"
+          },
+          "dimension_meaning": "overall_opening",
+          "height_mm": 2370.0,
+          "sill_height_mm": 130.359199,
+          "width_mm": 3560.0
+        },
+        "position": {
+          "center_offset_mm": 2980.0,
+          "reference": "wall_local_start"
+        }
+      },
+      "semantic_assignments": [
+        {
+          "applicability": "required",
+          "authoring_action": "inherit_from_type",
+          "derivation": {
+            "formal_attributes": {
+              "construction_type": "NOTDEFINED",
+              "operation_type": "NOTDEFINED",
+              "parameter_takes_precedence": false,
+              "sizeable": false
+            },
+            "ifc_class": "IfcDoorStyle",
+            "template": {
+              "construction_type": "NOTDEFINED",
+              "name": "Text2IFC generated door type operation-door-005",
+              "operation_type": "NOTDEFINED",
+              "parameter_takes_precedence": false,
+              "sizeable": false
+            },
+            "template_digest": "sha256:c32af4e7dc33cc3e1c743da04efc45d6c590c2b735303e07efadeb6912bfcc63",
+            "template_id": "text2ifc-door-single-swing-template",
+            "template_version": "0.1"
+          },
+          "fact_key": "relationship:type",
+          "operation_id": "operation-door-005",
+          "ownership": "type_inherited",
+          "provenance": [
+            "generated-type-template:0.1"
+          ],
+          "scope": "door_occurrence",
+          "source_fact_key": "relationship:type",
+          "source_kind": "deterministic_derived",
+          "source_ref": "generated-type:35xXPJEm9JOOhB$vd5WEVM",
+          "unit": null,
+          "value": "35xXPJEm9JOOhB$vd5WEVM",
+          "value_type": "IfcDoorStyle"
+        }
+      ],
+      "semantic_manifest": {
+        "manifest_id": "manifest-operation-door-005",
+        "policy_id": "door.fill-existing-opening.l2",
+        "policy_version": "0.1"
+      },
+      "target": {
+        "opening_global_id": "08xWVL$9z6JRwr3piJHpOf"
+      }
+    }
+  ],
+  "postconditions": [
+    "windows_and_doors_hosted"
+  ],
+  "preconditions": [
+    "public_targets_available"
+  ],
+  "schema_version": "text2ifc/ifc-repair-changeset/0.4",
+  "scope": {
+    "forbidden_ids": [],
+    "target_ids": [
+      "2IUEnGd5v4Yfg1ZkLtd0qa",
+      "2IUEnGd5v4Yfg1ZkLtd0tI",
+      "08xWVL$9z6JRwr3piJHoYK",
+      "08xWVL$9z6JRwr3piJHoYg",
+      "08xWVL$9z6JRwr3piJHpOf"
+    ]
+  },
+  "semantic_manifest_ref": "semantic-manifests.json",
+  "semantic_manifest_sha256": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+  "source_request_hash": "sha256:64e86f704b8f838fe7e16a9ae1de9c0db87bcd79f14a755553a4a1653c33abe0"
+}
