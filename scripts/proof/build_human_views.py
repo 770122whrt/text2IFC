@@ -95,6 +95,9 @@ def artifact_map(case, sources):
 
 def finish_case(collection, case, *, case_id, authority, sources, status, outcome,
                 mode, calls, run_id, original_role=None, detail="", prior_text="", ifccompare="未知；参见冻结评估"):
+    manifest = collection / "manifest.json"
+    if manifest.exists() and read(manifest).get("schema_version") == "text2ifc/workflow-proof-package/0.1":
+        raise ValueError("collection already consolidated; edit its navigation directly, never rebuild from retired sources")
     artifacts = artifact_map(case, sources)
     request = (case / "request.txt").read_text(encoding="utf-8")
     if outcome == "no_output":

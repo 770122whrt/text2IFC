@@ -57,6 +57,12 @@ def validate_collection(collection: Path, repo: Path, *, reopen: bool = True) ->
         if not collection.is_relative_to(repo / "dataset/processed/proof"):
             raise ValueError("collection outside repository Proof root")
         manifest = json.loads((collection / "manifest.json").read_text(encoding="utf-8"))
+        if manifest.get("schema_version") == "text2ifc/workflow-proof-package/0.1":
+            try:
+                from scripts.proof.package import validate_package
+            except ModuleNotFoundError:  # Direct script execution.
+                from package import validate_package
+            return validate_package(collection, manifest, reopen=reopen)
         if manifest.get("schema_version") != SCHEMA:
             raise ValueError("unsupported human-view schema")
         if manifest.get("workflow") not in {"repair", "generation"}:

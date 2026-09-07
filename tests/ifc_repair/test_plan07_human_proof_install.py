@@ -47,10 +47,10 @@ def test_checked_in_plan07_human_proof_is_directly_reviewable() -> None:
     assert (sample_layout / "01-original.ifc").is_file()
     assert (sample_layout / "02-damaged.ifc").is_file()
     assert (sample_layout / "03-repaired.ifc").is_file()
-    assert (sample_layout / "input/request.txt").is_file()
-    assert (sample_layout / "agent/repair-intent.json").is_file()
-    assert (sample_layout / "changeset/bound-changeset.json").is_file()
-    assert (sample_layout / "validation/evidence-decision.json").is_file()
+    assert (sample_layout / "request.txt").is_file()
+    assert (sample_layout / "evidence/review/agent/repair-intent.json").is_file()
+    assert (sample_layout / "evidence/review/changeset/bound-changeset.json").is_file()
+    assert (sample_layout / "evidence/review/validation/evidence-decision.json").is_file()
 
     guard = (
         DEFAULT_COLLECTION_ROOT

@@ -2,6 +2,8 @@ import json
 import re
 from pathlib import Path
 
+from scripts.proof.package import legacy_file
+
 from scripts.ifc_repair.validate_success_cases import (
     validate_success_case_collection,
 )
@@ -69,9 +71,9 @@ def test_checked_in_success_case_collection_is_self_consistent() -> None:
 
 
 def test_phase11_proofs_follow_family_and_case_kind_directories() -> None:
-    collection = ROOT / "dataset/processed/proof/ifc-repair-success-cases"
+    collection = ROOT / "dataset/processed/proof/repair/phase11/reference-cases"
     manifest = json.loads(
-        (collection / "manifest.json").read_text(encoding="utf-8")
+        legacy_file(collection, "manifest.json").read_text(encoding="utf-8")
     )
     cases = {item["case_id"]: item for item in manifest["cases"]}
 
@@ -135,24 +137,24 @@ def test_phase11_curation_routes_by_operation_family_not_operation_type() -> Non
 def test_mixed_door_window_proof_preserves_guid_free_targeting_evidence() -> None:
     case = (
         ROOT
-        / "dataset/processed/proof/ifc-repair-success-cases/mixed/door-window"
+        / "dataset/processed/proof/repair/phase11/reference-cases/mixed/door-window"
         / "vvo-two-door-two-window-mixed"
     )
-    request = (case / "input/request.txt").read_text(encoding="utf-8")
+    request = legacy_file(ROOT / "dataset/processed/proof/repair/phase11/reference-cases", "mixed/door-window/" + case.name + "/input/request.txt").read_text(encoding="utf-8")
     assert re.findall(
         r"(?<![0-9A-Za-z_$])[0-3][0-9A-Za-z_$]{21}(?![0-9A-Za-z_$])",
         request,
     ) == []
 
     intent = json.loads(
-        (case / "agent/repair-intent.json").read_text(encoding="utf-8")
+        legacy_file(ROOT / "dataset/processed/proof/repair/phase11/reference-cases", "mixed/door-window/" + case.name + "/agent/repair-intent.json").read_text(encoding="utf-8")
     )
     assert all(
         operation["target_query"].get("global_id") is None
         for operation in intent["operations"]
     )
     resolution = json.loads(
-        (case / "agent/target-resolution.json").read_text(encoding="utf-8")
+        legacy_file(ROOT / "dataset/processed/proof/repair/phase11/reference-cases", "mixed/door-window/" + case.name + "/agent/target-resolution.json").read_text(encoding="utf-8")
     )
     assert resolution["status"] == "resolved"
     assert len(resolution["operations"]) == 4
@@ -161,17 +163,17 @@ def test_mixed_door_window_proof_preserves_guid_free_targeting_evidence() -> Non
 def test_dental_mixed_proof_uses_name_free_geometry_and_recreates_openings() -> None:
     case = (
         ROOT
-        / "dataset/processed/proof/ifc-repair-success-cases/mixed/door-window"
+        / "dataset/processed/proof/repair/phase11/reference-cases/mixed/door-window"
         / "dental-clinic-two-door-two-window-geometry-targeted"
     )
-    request = (case / "input/request.txt").read_text(encoding="utf-8")
+    request = legacy_file(ROOT / "dataset/processed/proof/repair/phase11/reference-cases", "mixed/door-window/" + case.name + "/input/request.txt").read_text(encoding="utf-8")
     assert re.findall(
         r"(?<![0-9A-Za-z_$])[0-3][0-9A-Za-z_$]{21}(?![0-9A-Za-z_$])",
         request,
     ) == []
 
     intent = json.loads(
-        (case / "agent/repair-intent.json").read_text(encoding="utf-8")
+        legacy_file(ROOT / "dataset/processed/proof/repair/phase11/reference-cases", "mixed/door-window/" + case.name + "/agent/repair-intent.json").read_text(encoding="utf-8")
     )
     for operation in intent["operations"]:
         query = operation["target_query"]
@@ -181,7 +183,7 @@ def test_dental_mixed_proof_uses_name_free_geometry_and_recreates_openings() -> 
         assert len(query["geometry_constraints"]) == 4
 
     changeset = json.loads(
-        (case / "changeset/bound-changeset.json").read_text(
+        legacy_file(ROOT / "dataset/processed/proof/repair/phase11/reference-cases", "mixed/door-window/" + case.name + "/changeset/bound-changeset.json").read_text(
             encoding="utf-8"
         )
     )
@@ -193,7 +195,7 @@ def test_dental_mixed_proof_uses_name_free_geometry_and_recreates_openings() -> 
     assert "fill_existing_opening_with_door" not in operation_types
 
     source_manifest = json.loads(
-        (case / "validation/source-run-manifest.json").read_text(
+        legacy_file(ROOT / "dataset/processed/proof/repair/phase11/reference-cases", "mixed/door-window/" + case.name + "/validation/source-run-manifest.json").read_text(
             encoding="utf-8"
         )
     )

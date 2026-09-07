@@ -656,7 +656,7 @@ def validate_plan07_layout(
     source_root: Path = DEFAULT_SOURCE_ROOT,
 ) -> dict[str, Any]:
     modern_path = collection_root / "manifest.json"
-    if modern_path.is_file() and _read_json(modern_path).get("schema_version") == "text2ifc/workflow-human-proof/0.1":
+    if modern_path.is_file() and _read_json(modern_path).get("schema_version") in {"text2ifc/workflow-human-proof/0.1", "text2ifc/workflow-proof-package/0.1"}:
         from scripts.proof.validate_human_views import validate_collection
         modern = _read_json(modern_path)
         result = validate_collection(collection_root, ROOT)
@@ -667,7 +667,7 @@ def validate_plan07_layout(
             errors.append("frozen Plan 07 case set mismatch")
         if modern.get("status") != "pending_human_review" or modern.get("r1_included") is not False:
             errors.append("Plan 07 must remain pending review and exclude R1")
-        accepted = _read_json(ROOT / "dataset/processed/proof/ifc-repair-success-cases/manifest.json")
+        accepted = _read_json(ROOT / "dataset/processed/proof/repair/phase11/reference-cases/manifest.json")
         overlap = {c["case_id"] for c in cases} & {c["case_id"] for c in accepted["cases"]}
         if overlap:
             errors.append("review cases overlap accepted authority")
@@ -676,11 +676,13 @@ def validate_plan07_layout(
             if spec is None:
                 continue
             expected = _authority_case_root(source_root, spec).resolve()
-            if (ROOT / case["authority"]).resolve() != expected:
+            if (ROOT / case.get("legacy_authority", case["authority"])).resolve() != expected:
                 errors.append("Plan 07 source authority mismatch")
             if case["provider_calls"] != spec.provider_calls or case["evidence_mode"] != spec.evidence_mode:
                 errors.append("frozen Provider evidence metadata mismatch")
             case_root = collection_root / case["path"]
+            if modern.get("schema_version") == "text2ifc/workflow-proof-package/0.1":
+                case_root = case_root / "evidence/review"
             if case["outcome"] == "no_output":
                 decision = _read_json(case_root / "validation/evidence-decision.json")
                 if (decision.get("mutation_attempted") is not False or decision.get("source_unchanged") is not True
