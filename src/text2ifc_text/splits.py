@@ -96,7 +96,13 @@ def _require_unique(values: Iterable[str], *, label: str) -> None:
 
 def load_bimnet_manifest(path: Path | str) -> list[dict[str, Any]]:
     manifest_path = Path(path)
-    records = _read_jsonl(manifest_path)
+    records = [
+        record
+        for record in _read_jsonl(manifest_path)
+        if record.get("source_id") in {None, "bimnet"}
+        and str(record.get("id", "")).startswith("bimnet-ifc2x3-")
+    ]
+    _require(records != [], f"manifest {_relative(manifest_path)} has no BIMNet records")
     ids: list[str] = []
     for index, record in enumerate(records, start=1):
         record_id = record.get("id")

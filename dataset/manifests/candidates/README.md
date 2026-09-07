@@ -34,3 +34,11 @@ These are source-resolution signals only. Exact file identity requires SHA256 eq
 ## Admission rule
 
 A file can move from this candidate layer to canonical source manifests only after provenance/rights review appropriate to the source and the project technical certification pipeline. Dataset-level or repository-level licenses must not be silently promoted to model-level rights when the source does not explicitly provide that grant.
+
+## 2026-09-07 repository handoff
+
+当前池含 396 条记录、6 个来源族；筛选结果为 167 retain_candidate、105 pending_fetch、103 existing_reference、21 exclude。BIMData 来源证据与 resolution 各 107 条，只读 provenance audit 无缺失项。候选数字不能相加到 canonical manifest，也不表示已取得训练或再分发许可。
+
+buildingSMART Community 的早期获取记录见 `../acquisitions/buildingsmart-community.json`（81 个发现、0 个获取，包含 LFS pointer 拒绝）；它是历史获取尝试，不覆盖当前统一 manifest 中的 74 条 Community 登记。
+
+下一步优先处理 167 个保留候选的上游字节、来源权利、SHA 去重、IFC2X3 reopen 与技术准入，再处理 105 个待获取项。统一来源 manifest 的 BIMNet split loader 只选择 BIMNet 记录，继续保持原 scene-family 划分；不把外部来源混入 BIMNet 训练划分。
