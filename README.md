@@ -18,6 +18,8 @@ JSON representation between language understanding and IFC generation.
 
 - [Generation and repair Proof](dataset/processed/proof/README.md)
 - [Repository slimming proposal](docs/architecture/repository-organization-refactor.md)
+- [External IFC candidate screening and next steps](dataset/manifests/candidates/README.md)
+- [Repair Type/material support and generation appearance status](docs/validation/ifc2x3-changeset/ifc-presentation-development-boundary-2026-09-03.md#10-2026-09-07-git-接续状态)
 
 ## Core Generation Workflow
 

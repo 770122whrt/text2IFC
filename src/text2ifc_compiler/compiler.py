@@ -1,3 +1,4 @@
+import json
 import os
 import tempfile
 from dataclasses import dataclass
@@ -7,6 +8,7 @@ from typing import Any, Mapping
 from text2ifc_contract.validation import ValidationIssue
 from text2ifc_contract.validation import validate_document
 from text2ifc_contract.validation_v2 import validate_v2_document
+from text2ifc_presentation import apply_generation_profile
 
 from .bootstrap import build_ifc, build_ifc_v2
 from .verification import IfcValidationIssue, verify_ifc
@@ -28,7 +30,11 @@ class CompilationResult:
 
 
 def compile_document(
-    document: Mapping[str, Any], output_path: str | Path
+    document: Mapping[str, Any],
+    output_path: str | Path,
+    *,
+    appearance_profile: str | None = None,
+    appearance_seed: str | None = None,
 ) -> CompilationResult:
     if document.get("schema_version") == "bim-json/2.0":
         input_issues = tuple(validate_v2_document(document))
@@ -50,6 +56,20 @@ def compile_document(
 
     output = Path(output_path).resolve()
     bootstrap = builder(document)
+    if appearance_profile is not None:
+        seed = appearance_seed
+        if seed is None:
+            seed = json.dumps(
+                document,
+                ensure_ascii=False,
+                sort_keys=True,
+                separators=(",", ":"),
+            )
+        apply_generation_profile(
+            bootstrap.ifc_file,
+            requested_profile=appearance_profile,
+            seed=str(seed),
+        )
     ifc_issues = verify_ifc(bootstrap.ifc_file, express_rules=False)
     if ifc_issues:
         return CompilationResult(ifc_issues=ifc_issues)

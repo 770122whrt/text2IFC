@@ -98,6 +98,8 @@ Schema、EXPRESS Schema 和数据 manifest 仍保留在其机器可读目录。
 - [BIM JSON 1.0 Contract Reference](reference/bim-json-1.0.md)
 - [Dataset Organization](../dataset/data_organization.md)
 - [External Data Source Catalog](../dataset/sources/CATALOG.md)
+- [外部 IFC 候选池、筛选状态与准入边界](../dataset/manifests/candidates/README.md)
+- [Repair Type/材质与 Generation 外观接续状态](validation/ifc2x3-changeset/ifc-presentation-development-boundary-2026-09-03.md#10-2026-09-07-git-接续状态)
 - [Processed Dataset 与 Proof 分层](../dataset/processed/README.md)
 - [Dataset Manifest Format](../dataset/manifests/README.md)
 - [Authorized BIMNet IFC2X3 Manifest](../dataset/manifests/bimnet-ifc2x3.jsonl)

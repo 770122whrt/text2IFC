@@ -9,7 +9,7 @@
 | bim-json-1.0/、bim-json-2.0/、full_dump/、roundtrip_ifc/、roundtrip_json/ | 提取、版本合同及回转派生产物 | 按实际消费者判断，不按版本名删除 |
 | descriptions/、text2json/、phase4/、phase6/ | 历史数据构建和训练／评估产物 | 保留 split、来源和实验边界 |
 | review/ | 数据审查产物 | 不自动提升为正式训练数据 |
-| ifc-presentation-validation/ | 其他任务的展示验证工作 | 本次不吸收或清理 |
+| ifc-presentation-validation/ | 展示验证的原始运行工作区 | 三个案例已集中到 Proof；本地来源与调试目录保留，不重复提交 success-cases 副本 |
 | jsonfix/、ifc_parsed_data.json、ifc_parsed_enhanced.json | 既有修复／解析材料 | 未确认废弃前保留 |
 
 重点入口：[Plan 07 已通过矩阵](proof/repair/phase12/plan07-v2/REPORT.md)、[R1](proof/repair/phase12.1/r1/REPORT.md)、[generation](proof/generation/README.md)。
