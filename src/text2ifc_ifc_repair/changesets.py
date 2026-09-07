@@ -23,8 +23,10 @@ BOUND_CHANGESET_SCHEMA_VERSION = "text2ifc/ifc-repair-changeset/0.2"
 BOUND_CHANGESET_SCHEMA_VERSION_0_3 = "text2ifc/ifc-repair-changeset/0.3"
 BOUND_CHANGESET_SCHEMA_VERSION_0_4 = "text2ifc/ifc-repair-changeset/0.4"
 BOUND_CHANGESET_SCHEMA_VERSION_0_5 = "text2ifc/ifc-repair-changeset/0.5"
+BOUND_CHANGESET_SCHEMA_VERSION_0_6 = "text2ifc/ifc-repair-changeset/0.6"
 DRAFT_CHANGESET_SCHEMA_VERSION = "text2ifc/ifc-repair-changeset-draft/0.2"
 DRAFT_CHANGESET_SCHEMA_VERSION_0_3 = "text2ifc/ifc-repair-changeset-draft/0.3"
+DRAFT_CHANGESET_SCHEMA_VERSION_0_4 = "text2ifc/ifc-repair-changeset-draft/0.4"
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 CHANGESET_SCHEMA_PATH = (
     PROJECT_ROOT / "schemas" / "agent" / "ifc-repair-changeset-0.1.schema.json"
@@ -33,8 +35,10 @@ BOUND_CHANGESET_SCHEMA_PATH = PROJECT_ROOT / "schemas" / "agent" / "ifc-repair-c
 BOUND_CHANGESET_SCHEMA_PATH_0_3 = PROJECT_ROOT / "schemas" / "agent" / "ifc-repair-changeset-0.3.schema.json"
 BOUND_CHANGESET_SCHEMA_PATH_0_4 = PROJECT_ROOT / "schemas" / "agent" / "ifc-repair-changeset-0.4.schema.json"
 BOUND_CHANGESET_SCHEMA_PATH_0_5 = PROJECT_ROOT / "schemas" / "agent" / "ifc-repair-changeset-0.5.schema.json"
+BOUND_CHANGESET_SCHEMA_PATH_0_6 = PROJECT_ROOT / "schemas" / "agent" / "ifc-repair-changeset-0.6.schema.json"
 DRAFT_CHANGESET_SCHEMA_PATH = PROJECT_ROOT / "schemas" / "agent" / "ifc-repair-changeset-draft-0.2.schema.json"
 DRAFT_CHANGESET_SCHEMA_PATH_0_3 = PROJECT_ROOT / "schemas" / "agent" / "ifc-repair-changeset-draft-0.3.schema.json"
+DRAFT_CHANGESET_SCHEMA_PATH_0_4 = PROJECT_ROOT / "schemas" / "agent" / "ifc-repair-changeset-draft-0.4.schema.json"
 
 
 @lru_cache(maxsize=1)
@@ -65,6 +69,7 @@ def load_changeset_draft_schema(
     path = {
         DRAFT_CHANGESET_SCHEMA_VERSION: DRAFT_CHANGESET_SCHEMA_PATH,
         DRAFT_CHANGESET_SCHEMA_VERSION_0_3: DRAFT_CHANGESET_SCHEMA_PATH_0_3,
+        DRAFT_CHANGESET_SCHEMA_VERSION_0_4: DRAFT_CHANGESET_SCHEMA_PATH_0_4,
     }.get(version)
     if path is None:
         raise ValueError(f"unsupported draft ChangeSet schema: {version}")
@@ -79,6 +84,7 @@ def load_bound_changeset_schema(
         BOUND_CHANGESET_SCHEMA_VERSION_0_3: BOUND_CHANGESET_SCHEMA_PATH_0_3,
         BOUND_CHANGESET_SCHEMA_VERSION_0_4: BOUND_CHANGESET_SCHEMA_PATH_0_4,
         BOUND_CHANGESET_SCHEMA_VERSION_0_5: BOUND_CHANGESET_SCHEMA_PATH_0_5,
+        BOUND_CHANGESET_SCHEMA_VERSION_0_6: BOUND_CHANGESET_SCHEMA_PATH_0_6,
     }.get(version)
     if path is None:
         raise ValueError(f"unsupported bound ChangeSet schema: {version}")
@@ -97,6 +103,8 @@ def validate_changeset(document: Any) -> list[ValidationIssue]:
         schema = _cached_schema(str(BOUND_CHANGESET_SCHEMA_PATH_0_4))
     elif version == BOUND_CHANGESET_SCHEMA_VERSION_0_5:
         schema = _cached_schema(str(BOUND_CHANGESET_SCHEMA_PATH_0_5))
+    elif version == BOUND_CHANGESET_SCHEMA_VERSION_0_6:
+        schema = _cached_schema(str(BOUND_CHANGESET_SCHEMA_PATH_0_6))
     else:
         schema = _cached_changeset_schema()
     validator = Draft202012Validator(schema)
@@ -130,8 +138,10 @@ def validate_changeset_draft(
     path = {
         DRAFT_CHANGESET_SCHEMA_VERSION: DRAFT_CHANGESET_SCHEMA_PATH,
         DRAFT_CHANGESET_SCHEMA_VERSION_0_3: DRAFT_CHANGESET_SCHEMA_PATH_0_3,
+        DRAFT_CHANGESET_SCHEMA_VERSION_0_4: DRAFT_CHANGESET_SCHEMA_PATH_0_4,
     }.get(version, DRAFT_CHANGESET_SCHEMA_PATH)
-    validator = Draft202012Validator(_cached_schema(str(path)))
+    schema = _cached_schema(str(path))
+    validator = Draft202012Validator(schema)
     issues = [
         ValidationIssue(
             code="DRAFT_SCHEMA_VALIDATION_ERROR",
@@ -268,6 +278,11 @@ def _require_exact_draft_authority(
                 "DRAFT_AUTHORITY_PARAMETERS_MISMATCH:"
                 f"/operations/{index}/parameters"
             )
+        if operation.get("appearance") != expected.get("appearance"):
+            raise ValueError(
+                "DRAFT_AUTHORITY_APPEARANCE_MISMATCH:"
+                f"/operations/{index}/appearance"
+            )
         if operation.get("evidence_refs") != expected.get("evidence_refs"):
             raise ValueError(
                 "DRAFT_AUTHORITY_OPERATION_EVIDENCE_MISMATCH:"
@@ -304,7 +319,7 @@ def _assignment_payload(
         "deterministic_policy",
     }
     if bound_schema_version == BOUND_CHANGESET_SCHEMA_VERSION or (
-        bound_schema_version == BOUND_CHANGESET_SCHEMA_VERSION_0_5
+        bound_schema_version in {BOUND_CHANGESET_SCHEMA_VERSION_0_5, BOUND_CHANGESET_SCHEMA_VERSION_0_6}
         and payload["source_kind"] in legacy_source_kinds
     ):
         payload.pop("scope", None)

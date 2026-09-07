@@ -19,7 +19,7 @@ SOURCE = (
 )
 DOOR_ID = "2cXV28XOjE6f6irgi0COhu"
 OPENING_ID = "2cXV28XOjE6f6irhW0COhu"
-VVO_SOURCE = ROOT / "dataset" / "ifc" / "train" / "vvo.ifc"
+VVO_SOURCE = ROOT / "dataset" / "external" / "bimnet" / "vvo.ifc"
 VVO_DOOR_IDS = (
     "2IUEnGd5v4Yfg1ZlPtd0qa",
     "2IUEnGd5v4Yfg1ZlPtd0tI",

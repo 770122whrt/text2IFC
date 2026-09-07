@@ -33,6 +33,7 @@ from text2ifc_ifc_repair.evaluation_policy import (
 )
 from text2ifc_ifc_repair.registry import OperationDefinition, OperationRegistryError
 from text2ifc_ifc_repair.type_templates import ensure_bound_type
+from text2ifc_presentation import apply_repair_appearance_on_occurrence
 from text2ifc_ifc_repair.operations.hosted_opening import (
     body_context as hosted_body_context,
     deterministic_global_id as hosted_deterministic_global_id,
@@ -856,6 +857,14 @@ def _applicator(*, operation: Mapping[str, Any], model: Any) -> dict[str, Any]:
     modified.append(
         {"role": "spatial_containment", "global_id": str(containment.GlobalId)}
     )
+    appearance_result = apply_repair_appearance_on_occurrence(
+        model,
+        type_object=window_type,
+        occurrence=window,
+        explicit_appearance=(
+            None if operation.get("appearance") is None else dict(operation["appearance"])
+        ),
+    )
 
     return {
         "created": [
@@ -896,6 +905,7 @@ def _applicator(*, operation: Mapping[str, Any], model: Any) -> dict[str, Any]:
             "window_type_global_id": (
                 str(window_type.GlobalId) if window_type is not None else None
             ),
+            "appearance": appearance_result,
         },
     }
 

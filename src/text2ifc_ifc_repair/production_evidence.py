@@ -735,7 +735,11 @@ def _request_fact(operation_id: str, intent: AttributeIntent) -> SemanticFact:
         pset_path=pset_path,
         entity_source=f"request-operation:{operation_id}",
         source_kind=EvidenceSourceKind.EXPLICIT_REQUEST,
-        source_ref=intent.source.reference,
+        source_ref=(
+            "request:/text"
+            if intent.intent_kind == "material"
+            else intent.source.reference
+        ),
         provenance=(
             f"request-source:{intent.source.source_kind}",
             f"request-evidence:{intent.source.reference}",

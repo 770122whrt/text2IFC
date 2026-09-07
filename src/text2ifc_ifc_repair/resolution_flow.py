@@ -75,6 +75,7 @@ class ResolvedOperation:
     evidence_pointers: tuple[str, ...]
     parameters: Mapping[str, Any]
     context: Mapping[str, Any]
+    appearance: Mapping[str, Any] | None = None
     authorized_semantics: tuple[Mapping[str, Any], ...] = ()
 
     def to_dict(self) -> dict[str, Any]:
@@ -86,6 +87,7 @@ class ResolvedOperation:
             "evidence_pointers": list(self.evidence_pointers),
             "parameters": thaw_json(self.parameters),
             "context": thaw_json(self.context),
+            **({"appearance": thaw_json(self.appearance)} if self.appearance is not None else {}),
             "authorized_semantics": [thaw_json(item) for item in self.authorized_semantics],
         }
 
@@ -303,6 +305,16 @@ def resolve_repair_intent(
                 evidence_pointers=evidence,
                 parameters=resolved_parameters,
                 context=context,
+                appearance=(
+                    None
+                    if operation.appearance_intent is None
+                    else {
+                        "intent_kind": operation.appearance_intent.intent_kind,
+                        "red": operation.appearance_intent.red,
+                        "green": operation.appearance_intent.green,
+                        "blue": operation.appearance_intent.blue,
+                    }
+                ),
                 authorized_semantics=semantics,
             )
         )

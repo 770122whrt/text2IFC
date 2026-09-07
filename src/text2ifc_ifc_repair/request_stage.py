@@ -36,6 +36,7 @@ from .repair_intent import (
     REPAIR_INTENT_BODY_SCHEMA_VERSION_0_6,
     REPAIR_INTENT_BODY_SCHEMA_VERSION_0_7,
     REPAIR_INTENT_BODY_SCHEMA_VERSION_0_8,
+    REPAIR_INTENT_BODY_SCHEMA_VERSION_0_9,
     REPAIR_INTENT_SCHEMA_VERSION,
     REPAIR_INTENT_SCHEMA_VERSION_0_2,
     REPAIR_INTENT_SCHEMA_VERSION_0_3,
@@ -44,6 +45,7 @@ from .repair_intent import (
     REPAIR_INTENT_SCHEMA_VERSION_0_6,
     REPAIR_INTENT_SCHEMA_VERSION_0_7,
     REPAIR_INTENT_SCHEMA_VERSION_0_8,
+    REPAIR_INTENT_SCHEMA_VERSION_0_9,
     fingerprint_text,
     hash_request,
     load_repair_intent_body_schema,
@@ -62,6 +64,7 @@ TEMPLATE_ID_0_8 = "ifc-repair-intent.v0.8"
 TEMPLATE_ID_0_9 = "ifc-repair-intent.v0.9"
 TEMPLATE_ID_0_10 = "ifc-repair-intent.v0.10"
 TEMPLATE_ID_0_11 = "ifc-repair-intent.v0.11"
+TEMPLATE_ID_0_12 = "ifc-repair-intent.v0.12"
 _STABLE_INTERNAL_ID = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._:/-]*$")
 _INTENT_CONTRACTS = {
     REPAIR_INTENT_SCHEMA_VERSION: (
@@ -95,6 +98,10 @@ _INTENT_CONTRACTS = {
     REPAIR_INTENT_SCHEMA_VERSION_0_8: (
         REPAIR_INTENT_BODY_SCHEMA_VERSION_0_8,
         TEMPLATE_ID_0_11,
+    ),
+    REPAIR_INTENT_SCHEMA_VERSION_0_9: (
+        REPAIR_INTENT_BODY_SCHEMA_VERSION_0_9,
+        TEMPLATE_ID_0_12,
     ),
 }
 MAX_REQUEST_BYTES = DEFAULT_REPAIR_INTENT_LIMITS.max_request_bytes
@@ -141,6 +148,7 @@ def generate_repair_intent(
             REPAIR_INTENT_SCHEMA_VERSION_0_6,
             REPAIR_INTENT_SCHEMA_VERSION_0_7,
             REPAIR_INTENT_SCHEMA_VERSION_0_8,
+            REPAIR_INTENT_SCHEMA_VERSION_0_9,
         }
         else _supported_operations(registry)
     )
@@ -247,7 +255,10 @@ def generate_repair_intent(
                             error.message,
                             path=_pointer(error.absolute_path),
                         )
-                    if intent_schema_version == REPAIR_INTENT_SCHEMA_VERSION_0_8:
+                    if intent_schema_version in {
+                        REPAIR_INTENT_SCHEMA_VERSION_0_8,
+                        REPAIR_INTENT_SCHEMA_VERSION_0_9,
+                    }:
                         _validate_stable_internal_operation_ids(parsed)
                     parsed, normalizations = (
                         _fold_created_occurrence_property_operations(
@@ -261,6 +272,7 @@ def generate_repair_intent(
                             REPAIR_INTENT_SCHEMA_VERSION_0_6,
                             REPAIR_INTENT_SCHEMA_VERSION_0_7,
                             REPAIR_INTENT_SCHEMA_VERSION_0_8,
+                            REPAIR_INTENT_SCHEMA_VERSION_0_9,
                         }
                     ):
                         _validate_operation_routing(
@@ -692,6 +704,7 @@ def _fold_created_occurrence_property_operations(
         REPAIR_INTENT_BODY_SCHEMA_VERSION_0_6,
         REPAIR_INTENT_BODY_SCHEMA_VERSION_0_7,
         REPAIR_INTENT_BODY_SCHEMA_VERSION_0_8,
+        REPAIR_INTENT_BODY_SCHEMA_VERSION_0_9,
     }:
         return normalized, []
 

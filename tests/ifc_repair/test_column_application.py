@@ -17,7 +17,7 @@ from text2ifc_ifc_repair.resolution_flow import (
 
 
 ROOT = Path(__file__).resolve().parents[2]
-D7N = ROOT / "dataset" / "ifc" / "test" / "d7n.ifc"
+D7N = ROOT / "dataset" / "external" / "bimnet" / "d7n.ifc"
 STOREY_ID = "0K_MqVdrL0JOCMi_GblRwJ"
 
 

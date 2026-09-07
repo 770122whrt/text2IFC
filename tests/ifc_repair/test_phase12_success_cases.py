@@ -41,17 +41,14 @@ from scripts.ifc_repair.validate_success_cases import (
 
 
 ROOT = Path(__file__).resolve().parents[2]
-D7N = ROOT / "dataset" / "ifc" / "test" / "d7n.ifc"
+D7N = ROOT / "dataset" / "external" / "bimnet" / "d7n.ifc"
 STOREY_ID = "0K_MqVdrL0JOCMi_GblRwJ"
 CASE_ID = "phase12-d7n-beam-column-strict-proof"
 CASE_PATH = Path("structural") / "single" / CASE_ID
 BASE_DAMAGE_CASE_ID = "phase12-d7n-beam-column-atomic"
-BASE_DAMAGE_CASE = (
-    ROOT
-    / "dataset/processed/proof/ifc-repair-success-cases"
-    / "structural/batch"
-    / BASE_DAMAGE_CASE_ID
-)
+# Withdrawn historical evidence is isolated as regression-only fixture; see sidecar.
+BASE_DAMAGE_CASE = ROOT / "tests/ifc_repair/fixtures/historical-plan07-base"
+
 LIVE_CASE_ID = "phase12-live-deepseek-complete"
 LIVE_CASE_PATH = Path("structural") / "live" / LIVE_CASE_ID
 CURATOR_SCRIPT = ROOT / "scripts/ifc_repair/curate_phase12_live_proof.py"
@@ -67,6 +64,9 @@ def _curator_module():
     assert spec is not None and spec.loader is not None
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
+    # Inject regression-only bytes into this isolated test module, never the live runner.
+    module.SOURCE = BASE_DAMAGE_CASE / "damaged.ifc"
+    module.BASE_DAMAGE_CASE = BASE_DAMAGE_CASE
     return module
 
 
@@ -1517,7 +1517,12 @@ def _live_proof_collection(tmp_path: Path) -> tuple[Path, Path]:
     case_root = collection / LIVE_CASE_PATH
     shutil.copytree(BASE_DAMAGE_CASE, case_root)
     base_manifest_path = case_root / "base-damage-source-manifest.json"
-    shutil.copy2(case_root / "manifest.json", base_manifest_path)
+    base_manifest = json.loads((case_root / "manifest.json").read_text(encoding="utf-8"))
+    # Adapt only the disposable fixture locator after verifying the relocated source.
+    assert _sha256(D7N) == base_manifest["source"]["sha256"]
+    assert D7N.stat().st_size == base_manifest["source"]["size_bytes"]
+    base_manifest["source"]["path"] = D7N.relative_to(ROOT).as_posix()
+    _write_json(base_manifest_path, base_manifest)
     intent = _upgrade_live_intent(
         json.loads(
             (case_root / "repair-intent.json").read_text(encoding="utf-8")
@@ -1666,18 +1671,21 @@ def _live_proof_collection(tmp_path: Path) -> tuple[Path, Path]:
     return collection, case_root
 
 
-def test_live_structural_proof_recomputes_transcript_and_base_damage_authority(
+def test_withdrawn_live_structural_proof_cannot_regain_restoration_acceptance(
     tmp_path: Path,
 ) -> None:
     collection, _case_root = _live_proof_collection(tmp_path)
 
     result = validate_success_case_collection(collection)
 
-    assert result.status == "passed", result.errors
-    assert result.independently_recomputed_case_count == 1
-    assert result.cases[0]["provider_evidence_mode"] == "live"
-    assert result.cases[0]["live_transcript_status"] == "strict_recomputed"
-    assert result.cases[0]["base_damage_case_id"] == BASE_DAMAGE_CASE_ID
+    # The 2026-09-03 structural-restoration erratum withdrew this exact fixture.
+    # A valid-looking transcript must not override its invalid damage authority.
+    # Legitimate structural proof still has a separate positive recomputation test.
+    assert result.status == "failed", result.errors
+    assert result.errors == [
+        f"{LIVE_CASE_ID}: STRUCTURAL_MUTATION_TARGET_NOT_RECONSTRUCTABLE:beam"
+    ]
+    assert result.independently_recomputed_case_count == 0
 
 
 def test_property_authority_replay_accepts_public_user_candidate_selection(
@@ -1701,6 +1709,7 @@ def test_property_authority_replay_accepts_public_user_candidate_selection(
         provider,
         case_root,
         property_knowledge_runtime=offline_property_runtime(),
+        source_path=BASE_DAMAGE_CASE / "damaged.ifc",
     )
     assert final["status"] == "succeeded"
     run_root = case_root / "runtime" / "runs" / str(final["run_id"])
@@ -1731,9 +1740,9 @@ def test_property_authority_replay_accepts_public_user_candidate_selection(
 
     def replay() -> dict[str, Any]:
         return success_validator._audit_structural_authority_replay(
-            damaged_ifc_path=live_uat.SOURCE,
+            damaged_ifc_path=BASE_DAMAGE_CASE / "damaged.ifc",
             damaged_sha256=success_validator._normalize_sha256(
-                _sha256(live_uat.SOURCE)
+                _sha256(BASE_DAMAGE_CASE / "damaged.ifc")
             ),
             intent=intent,
             changeset=changeset,

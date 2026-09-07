@@ -17,7 +17,7 @@ from text2ifc_ifc_repair.operations.structural_member import (
 
 
 ROOT = Path(__file__).resolve().parents[2]
-D7N = ROOT / "dataset" / "ifc" / "test" / "d7n.ifc"
+D7N = ROOT / "dataset" / "external" / "bimnet" / "d7n.ifc"
 
 
 def _model_context() -> tuple[object, object, object, object]:
