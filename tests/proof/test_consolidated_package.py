@@ -123,3 +123,24 @@ def test_legacy_file_resolves_without_recreating_the_old_tree(tmp_path):
     (collection / "manifest.json").write_text(json.dumps({"schema_version":m.SCHEMA,"legacy_bundles":[frozen]}))
     assert m.legacy_file(collection, "source.ifc") == collection / "02-damaged.ifc"
     with pytest.raises(ValueError):m.legacy_file(collection, "missing.ifc")
+
+
+def test_only_explicit_review_allows_pending_to_accepted():
+    m = api()
+    old={"collection_id":"plan07-v2","status":"pending_human_review","cases":[{"case_id":"one","status":"pending_human_review","run_id":"unchanged"}]}
+    import copy
+    current=copy.deepcopy(old);current["status"]="accepted";current["cases"][0]["status"]="accepted"
+    assert not m.review_transition_is_valid(old,current)
+    current["human_review"]={"decision":"accepted","reviewer":"user","date":"2026-09-07","source":"current conversation","statement":"plan07我审批完了 是通过的","case_ids":["one"]}
+    assert m.review_transition_is_valid(old,current)
+    current["human_review"]["case_ids"]=[]
+    assert not m.review_transition_is_valid(old,current)
+
+
+def test_approval_does_not_authorize_changed_run_or_outcome():
+    m=api()
+    old={"collection_id":"p","status":"pending_human_review","cases":[{"case_id":"one","status":"pending_human_review","outcome":"no_output","run_id":"old"}]}
+    import copy
+    current=copy.deepcopy(old);current["status"]="accepted";current["cases"][0].update(status="accepted",run_id="new")
+    current["human_review"]={"decision":"accepted","reviewer":"user","date":"2026-09-07","source":"current conversation","statement":"approved","case_ids":["one"]}
+    assert not m.review_transition_is_valid(old,current)

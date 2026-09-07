@@ -23,7 +23,9 @@ def test_checked_in_plan07_human_proof_is_directly_reviewable() -> None:
             encoding="utf-8"
         )
     )
-    assert manifest["status"] == "pending_human_review"
+    assert manifest["status"] == "accepted"
+    assert manifest["human_review"]["reviewer"] == "user"
+    assert manifest["human_review"]["date"] == "2026-09-07"
     assert manifest["r1_included"] is False
     for case in manifest["cases"]:
         case_root = DEFAULT_COLLECTION_ROOT / case["path"]

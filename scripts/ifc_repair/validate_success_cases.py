@@ -7143,6 +7143,9 @@ def main(argv: Iterable[str] | None = None) -> int:
         else {}
     )
     if manifest.get("schema_version") == "text2ifc/workflow-proof-package/0.1":
+        import sys
+        if str(ROOT) not in sys.path:
+            sys.path.insert(0, str(ROOT))
         from scripts.proof.package import projection_for_validation
         args.collection_root = projection_for_validation(args.collection_root.resolve(), ROOT / ".tmp/proof-validation")
         manifest = _read_json(args.collection_root / "manifest.json")

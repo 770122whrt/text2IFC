@@ -25,7 +25,7 @@ from text2ifc_ifc_repair.prompt_profiles import (  # noqa: E402
 
 DEFAULT_SOURCE = ROOT / "dataset/processed/ifc-repair/phase11-door-offline"
 DEFAULT_COLLECTION = (
-    ROOT / "dataset/processed/proof/ifc-repair-success-cases"
+    ROOT / "dataset/processed/ifc-repair-runs/curation-staging/phase11-reference"
 )
 PROFILE_BY_OPERATION = {
     "add_window_with_opening_to_wall": "window.add-with-opening",

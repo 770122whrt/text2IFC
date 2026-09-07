@@ -665,8 +665,13 @@ def validate_plan07_layout(
         cases = modern.get("cases", [])
         if {c.get("case_id") for c in cases} != set(specs) or len(cases) != 10:
             errors.append("frozen Plan 07 case set mismatch")
-        if modern.get("status") != "pending_human_review" or modern.get("r1_included") is not False:
-            errors.append("Plan 07 must remain pending review and exclude R1")
+        review_ok = False
+        if modern.get("schema_version") == "text2ifc/workflow-proof-package/0.1":
+            from scripts.proof.package import review_transition_is_valid
+            previous = _read_json(collection_root / "evidence/previous-view/manifest.json")
+            review_ok = review_transition_is_valid(previous, modern)
+        if (modern.get("status") != "pending_human_review" and not review_ok) or modern.get("r1_included") is not False:
+            errors.append("Plan 07 requires explicit human acceptance and must exclude R1")
         accepted = _read_json(ROOT / "dataset/processed/proof/repair/phase11/reference-cases/manifest.json")
         overlap = {c["case_id"] for c in cases} & {c["case_id"] for c in accepted["cases"]}
         if overlap:

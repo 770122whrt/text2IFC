@@ -138,7 +138,8 @@ def validate_package(collection, document, *, reopen=True):
         old = json.loads(previous.read_text(encoding="utf-8"))
         fields = ("case_id", "status", "outcome", "evidence_mode", "provider_calls", "run_id", "original_role", "ifccompare")
         if old.get("status") != document.get("status") or [{k:c.get(k) for k in fields} for c in old["cases"]] != [{k:c.get(k) for k in fields} for c in document.get("cases", [])]:
-            errors.append("migration changed frozen case decisions")
+            if not review_transition_is_valid(old, document):
+                errors.append("migration changed frozen case decisions without explicit review")
     seen = set()
     for case in document.get("cases", []):
         try:
@@ -257,3 +258,22 @@ def legacy_file(collection, relative, *, bundle_id="frozen"):
     entry = matches[0]
     verify_bundle(collection, {"entries": [entry]})
     return contained(collection, entry["path"])
+
+
+def review_transition_is_valid(previous, current):
+    """Validate the recorded human decision; this is provenance, not authentication."""
+    review = current.get("human_review", {})
+    old_cases, new_cases = previous.get("cases", []), current.get("cases", [])
+    if (previous.get("collection_id") != current.get("collection_id")
+            or previous.get("status") != "pending_human_review"
+            or current.get("status") != "accepted"
+            or review.get("decision") != "accepted" or review.get("reviewer") != "user"
+            or not all(review.get(k) for k in ("date", "source", "statement"))
+            or len(old_cases) != len(new_cases) or not old_cases):
+        return False
+    ids = [c.get("case_id") for c in old_cases]
+    if review.get("case_ids") != ids:
+        return False
+    fields = ("case_id", "outcome", "evidence_mode", "provider_calls", "run_id", "original_role", "ifccompare")
+    return all(a.get("status") == "pending_human_review" and b.get("status") == "accepted"
+               and all(a.get(k) == b.get(k) for k in fields) for a, b in zip(old_cases, new_cases))
