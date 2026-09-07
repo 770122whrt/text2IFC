@@ -6,7 +6,7 @@
 
 ## 当前人读入口与路径约定
 
-人读视图统一放在 `dataset/processed/proof/{generation,repair}/<phase>/<collection>/`，集合状态保存在索引中；原机器 authority 保持原位。
+人读视图统一放在 `dataset/processed/proof/{generation,repair}/<phase>/<collection>/`，集合状态保存在索引中。经用户批准的集中迁移采用 `text2ifc/workflow-proof-package/0.1`：案例根 IFC 与 evidence 共享一份内容，legacy_bundles 映射旧路径并保存原始哈希和大小。冻结机器合同与验收状态不改写。
 
 新视图采用 additive `text2ifc/workflow-human-proof/0.1` 索引：artifacts 绑定仓库内明确 evidence roots 的文件，request 从 JSON 字段提取时显式记录 field。复制文件保留原字节；generation 不使用 repair 三元组。旧 schema 和机器 FILES 不改写。
 
@@ -21,7 +21,7 @@
 1. **人类可读视图**：集合根目录的 `README.md`、`REPORT.md`、`manifest.json`，以及按 `family/kind/case-id` 分类的案例目录。它负责导航、解释、直接展示必要 IFC。
 2. **机器权威包**：既有 curator/proof/run package。它保存 Provider attempts、Prompt/profile、intent、resolution、candidate/admissibility、ChangeSet、apply、terminal、evaluation、hash 和独立复算结果。
 
-人类视图是 additive discovery layer，不移动、不重命名、不改写 accepted machine authority。二者若有差异，必须停止发布并调查；不能靠修改报告掩盖差异。
+普通展示维护仍为 additive discovery layer，不迁移或改写 accepted machine authority。已批准的集中包迁移是明确例外，必须保留逐字节还原索引并完成适用冻结验证。二者若有差异，必须停止发布并调查；不能靠修改报告掩盖差异。
 
 ## 2. 标准目录
 

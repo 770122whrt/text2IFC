@@ -49,5 +49,5 @@
 ## Proof navigation
 
 - Human Proof entry: `dataset/processed/proof/README.md`; workflow/phase/collection directories are stable across review status changes.
-- Existing machine authorities remain at their frozen locations. Use the human view manifest to reach them; do not relocate or rewrite them during presentation maintenance.
+- Approved consolidated packages keep frozen evidence bytes in workflow/phase/collection directories. Their manifest maps legacy paths to current files; do not rewrite frozen evidence or move it again during ordinary presentation maintenance.
 - New human views use `scripts/proof/validate_human_views.py`; legacy validators keep their original schema contracts.

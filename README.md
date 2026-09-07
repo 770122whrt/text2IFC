@@ -46,10 +46,11 @@ reopens the candidate, and publishes it only after the applicable L0/L1/L2 and
 preservation gates pass.
 
 - [IFC repair architecture and roadmap](docs/architecture/ifc-repair-pipeline-status-and-roadmap.md)
+- [Material and appearance repair cases](dataset/processed/proof/repair/phase12/presentation-cases/REPORT.md)
 - [Phase 12 Plan 07 human Proof review](dataset/processed/proof/repair/phase12/plan07-v2/REPORT.md)
 - [Phase 12 Plan 07 closeout handover](docs/handoffs/phase12-plan07-closeout-handover-2026-09-03.md)
 - [IFC repair Proof presentation standard](docs/validation/ifc-repair-proof-format.md)
 
-The Plan 07 human review bundle is intentionally separate from its append-only
-machine authority. Repair Milestone R1 has its own evidence collection and is
+The Plan 07 review bundle keeps readable files and frozen machine evidence in
+one collection. Repair Milestone R1 has its own evidence collection and is
 not folded into the Plan 07 review manifest.

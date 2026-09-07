@@ -125,3 +125,5 @@ Schema、EXPRESS Schema 和数据 manifest 仍保留在其机器可读目录。
 3. 只有当前重点或主要入口才同时加入本页；
 4. Prompt 必须引用设计权威，不能复制并独立演化设计决定；
 5. 移动文档后运行本地链接检查，避免 Path drift。
+
+- [材质与外观修复：三个真实运行的中文报告](../dataset/processed/proof/repair/phase12/presentation-cases/REPORT.md)（运行 PASS，人工待审）。

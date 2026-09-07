@@ -1,64 +1,103 @@
-# text2IFC 目录瘦身与后续重构方案
+# text2IFC 目录清理与证据集中记录
 
-记录日期：2026-09-06。当前目录清理与人读 Proof 迁移已获批准；下面的后续重构是建议，尚未实施。产品名称 text2IFC；BIMNet 保留数据来源含义。
+更新：2026-09-07。用户批准集中迁移、成功 run 退役和“同一冻结案例通过后删除历史失败”的策略；Plan07 于本日另获用户人工审查通过。产品名为 text2IFC，BIMNet 保留数据来源含义。
 
-## 结论
+## 已执行
 
-主要占用来自运行证据、外部 IFC、模型和 Git 对象，而不是 Python 源码。大幅减少体积需要明确存储与保留策略；把 src 改名或把 scripts 再套一层目录不会释放这些空间。
+本轮只调整存储、导航和路径加载。生产修复行为、冻结请求、Gold、阈值、Provider 输出及 Phase 状态不变。R1 完整迁移验收尚未完成，其旧权威与原 run 暂时保留。
 
-本轮已采用的组织原则是：人读 Proof 按 workflow / phase / collection 展示；机器证据维持冻结位置；可再生 pytest 缓存与真实运行分开处理。
+- 已批准 pytest 工作区及 12 个重复 IFC：删除 13,312 文件，3,058,116,112 字节（2.848 GiB）。
+- 四个旧 Proof 根目录的完整内容已经集中，旧目录退役。
+- 六个 generation 成功来源和一个历史 guard 来源已全部绑定到 Proof，原案例目录退役。
+- Plan07：10 案 accepted，用户审批原文“plan07我审批完了 是通过的”；6 offline、3 live repaired、1 guard，11 次 genuine 调用不变。
+- 新材质外观集合：3 个来源运行 PASS，pending_human_review；来源进程目录和暂存内容保留。
+- R1：12 案原 accepted 状态不变；新包文件检查通过，完整复算尚未完成，不宣称迁移已验收。
 
-## 实测占用
+## 目录与阅读
 
-以下只枚举元数据，没有全仓库哈希或读取大文件内容。统计是执行过程快照；不可读目录对应的数值为下界，不是完整占用。文件体积为逻辑字节，未等同 NTFS 实际占用。
+```text
+dataset/processed/proof/
+  README.md
+  PROOF-INVENTORY.json
+  generation/phase6.6/generation-examples/   # 6 accepted
+  repair/phase11/reference-cases/           # 16 accepted，5 个旧 Window 有限制
+  repair/phase11/live-uat/                  # 1 historical，无输出
+  repair/phase12/plan07-v2/                 # 10 accepted，用户已审
+  repair/phase12/presentation-cases/        # 3 run PASS，人工待审
+  repair/phase12.1/r1/                      # 12 原 accepted，迁移验收待完成
+```
 
-| 目录 | 可读文件总量 | 文件数 | 完整性 |
-|---|---:|---:|---|
-| `.git/lfs/objects` | 2.97 GiB | 3,372 | 元数据可读 |
-| `.git/objects` | 1.74 GiB | 26,498 | 元数据可读 |
-| `.cache` | 4.29 GiB | 34 | 元数据可读 |
-| `.deps` | 0.15 GiB | 2,868 | 元数据可读 |
-| `.venv` | 1.09 GiB | 42,341 | 元数据可读 |
-| `dataset/external` | 5.61 GiB | 651 | 元数据可读 |
-| `dataset/processed/ifc-repair` | 3.12 GiB | 3,352 | 86 个不可读目录，另跳过 0 个链接 |
-| `dataset/processed/ifc-repair-runs` | 7.94 GiB | 23,415 | 23 个不可读目录，另跳过 4 个链接 |
-| `dataset/processed/agent-demo` | 0.07 GiB | 2,853 | 元数据可读 |
-| `dataset/processed/proof` | 2.12 GiB | 1,903 | 元数据可读 |
-| `.tmp/dataset-acquisition` | 0.00 GiB | 4 | 元数据可读 |
+[Proof 入口](../../dataset/processed/proof/README.md) · [Plan07](../../dataset/processed/proof/repair/phase12/plan07-v2/REPORT.md) · [材质外观](../../dataset/processed/proof/repair/phase12/presentation-cases/REPORT.md)。
 
-`proof/` 包含本轮新增的人读副本，因此和整理前不可直接当作同一快照。约 427 MiB 的参考 IFC 副本是已批准的可发现性开销；R1 与 Plan 07 人读目录采用迁移，避免再各复制一整套。Git LFS 本地对象与 checkout 不是两份可随意互删的数据。
+每个集合提供 README、REPORT、manifest 和案例目录。repair 根目录直接展示 REPORT.md、request.txt、合法 original（如有）、02-damaged.ifc 与 03-repaired.ifc 或 NO-REPAIR.md；generation 展示 model.json 与 generated.ifc。过程材料在 evidence。
 
-## 建议次序和验收边界
+人读材料是请求、IFC 和中文报告；机器证据是 Provider 请求响应、runtime、ChangeSet、terminal、验证和冻结索引。二者不是 original/repaired 的区别，它们描述同一案例并共享根目录 IFC。新包版本 text2ifc/workflow-proof-package/0.1 的 legacy_bundles 保存旧路径、现路径、SHA-256 和大小；旧合同与报告字节不改写。
 
-| 次序 | 准确范围 | 建议 | 开始条件／验证 |
-|---|---|---|---|
-| 1 | `dataset/processed/ifc-repair-runs/`、`dataset/processed/ifc-repair/` | 按 run 建立用途、是否 genuine、引用关系和可恢复性索引；先识别可以丢弃的 offline 临时子树 | 每项列出保留副本／重建命令；不可读目录与真实 attempts 不自动删除 |
-| 2 | `.cache/models/`、`.cache/ifc2x3/`、`.cache/property-resolution/` | 将模型与可再生检索索引分开；评估多个 checkout 共用只读模型存储 | 先确认当前消费者和配置入口；模型版本、离线可用性与路径切换验证通过；不得直接删模型 |
-| 3 | `dataset/manifests/`、`src/text2ifc_dataset/` | 收敛到 source/file authority，加兼容投影；逐个迁移旧消费者 | `audit.py`、`phase6_manifest.py`、`ifc_repair_benchmarks.py` 仍使用旧 manifest；消费者为零且等价性通过后才移除旧文件 |
-| 4 | `scripts/dataset/` | 将获取脚本重复的下载、manifest 登记、幂等去重归入一个内部模块，保留已有 CLI 入口 | 先比较脚本实现；选两个独立来源试点；使用离线 fixtures，不顺带重新下载 |
-| 5 | `scripts/ifc_repair/` | 分清运行器、Proof 收纳工具和分析工具；先建立入口索引，再考虑迁移重复 helper | 不重构 Provider/repair 状态机；冻结 CLI、source fingerprint 和发布路径行为 |
-| 6 | `.git/objects/`、`.git/lfs/objects/` | 先核查哪些历史对象仍被 refs/worktrees 使用，确认远端和恢复条件，再考虑普通维护 | 本轮不 gc/prune，不重写历史，不 force push；不能按对象文件名手删 |
+## 已退役路径与恢复
 
-## 目前不建议做的事情
+| 原路径 | 当前保留索引 | bundle / 文件数 |
+|---|---|---|
+| `dataset/processed/proof/text2ifc-success-cases` | `dataset/processed/proof/generation/phase6.6/generation-examples/manifest.json` | `frozen` / 21 |
+| `dataset/processed/proof/phase11-live-uat` | `dataset/processed/proof/repair/phase11/live-uat/manifest.json` | `legacy-root` / 7 |
+| `dataset/processed/proof/ifc-repair-success-cases` | `dataset/processed/proof/repair/phase11/reference-cases/manifest.json` | `frozen` / 287 |
+| `dataset/processed/proof/ifc-repair-success-cases-v2-plan07-staging` | `dataset/processed/proof/repair/phase12/plan07-v2/manifest.json` | `frozen` / 223 |
+| `dataset/processed/agent-demo/phase6.5-wave10-easy-live/runs/d2f86855a9738b50` | `dataset/processed/proof/generation/phase6.6/generation-examples/manifest.json` | `source-stable-01-easy` / 154 |
+| `dataset/processed/agent-demo/phase6.6-medium-live-64k-fix2/runs/8c8ef9a111e326d7` | `dataset/processed/proof/generation/phase6.6/generation-examples/manifest.json` | `source-stable-01-medium` / 142 |
+| `dataset/processed/agent-demo/phase6.6-difficult-stair-fix-live-64k-explicit-hosts/runs/ba2277d8363bce69` | `dataset/processed/proof/generation/phase6.6/generation-examples/manifest.json` | `source-stable-01-difficult` / 210 |
+| `dataset/processed/agent-demo/phase6.5-easy-accepted` | `dataset/processed/proof/generation/phase6.6/generation-examples/manifest.json` | `source-two-storey-final-712` / 8 |
+| `dataset/processed/agent-demo/phase6.5-medium-100mm-gap-fix` | `dataset/processed/proof/generation/phase6.6/generation-examples/manifest.json` | `source-output-713-success` / 5 |
+| `dataset/processed/agent-demo/phase6.5-hard-accepted` | `dataset/processed/proof/generation/phase6.6/generation-examples/manifest.json` | `source-hard-three-storey-final` / 17 |
+| `dataset/processed/ifc-repair/phase11-live-uat/uat-20260731T224900289758Z/unsupported-complex-door` | `dataset/processed/proof/repair/phase11/live-uat/manifest.json` | `guard-run` / 22 |
 
-- 不整体搬走或压缩 genuine run 权威：现有路径、manifest、FILES、runtime 和评估绑定需要专门的迁移例外。若采用外部归档，须先验证完整恢复、回链与权限，再决定本地保留策略。
-- 不把 `.venv`、`.deps`、模型下载统一清空；它们分别承担环境和离线运行依赖。
-- 不合并 `scripts/bim_json/` 与 `scripts/bim_json_v2/` 或对应 tests；它们承载不同版本合同。
-- 不因为 case 曾失败就删 source/attempt；错误 Proof 可退出有效索引，原始失败与回归 fixture 仍有独立价值。
-- 不立即拆分 `src/text2ifc_ifc_repair/` 大模块：当前该目录有其他任务的未提交行为修改；应在行为合同稳定后另行做模块接口审查。
+普通临时产物的精确目录：
 
-## 文档组织
+- `dataset/processed/ifc-repair-runs/phase12-live/uat-20260820T135432218011Z/preflight/` 下 pytest-full-suite、pytest-focused、pytest-cache-full-suite、pytest-cache-focused。
+- `dataset/processed/ifc-repair-runs/phase12-live/uat-20260830T174344933512Z/preflight/` 下同样四类目录。
+- 两个 full-suite 的 test_link_run_escape_is_reject0 与 test_stage_directory_rejects_r0 子树含 reparse points，继续保留；未放宽 ACL 或遍历链接。
+- `dataset/processed/ifc-repair/phase11-door-audit-performance-check`、`phase11-door-audit-performance-check-2`、`phase11-door-audit-performance-check-3`、`phase11-door-audit-performance-check-5` 中 `advancedproject-door-preserve-opening/{original.ifc,damaged.ifc,repaired.ifc}` 共 12 文件；各角色 SHA 与保留的 `phase11-door-audit-performance-check-6/advancedproject-door-preserve-opening/` 相同。独立小报告仍保留。
 
-`docs/README.md` 是唯一总入口。`docs/architecture/` 放结构方案；`docs/validation/` 放跨阶段验证合同；`.planning/` 放 Phase 执行权威。`docs/handoffs/` 与 `docs/context-handoff/` 目前有不同用途，优先补索引，不为美观合并。旧报告记录的历史路径不改写成新的实验事实。
+未跟踪 pytest 产物没有 Git 恢复副本，可重跑原离线测试再生；没有保留同体积备份。重复 IFC 从上述 -6 保留副本恢复。迁移证据用 `scripts/proof/materialize_frozen_bundle.py --root <集合> --bundle <id> --destination <不存在的目录>` 重建旧布局。原 Git/LFS 历史仍保留，不重写历史或 prune LFS。
 
-## 下一轮建议的最小工作包
+## Proof 为什么重
 
-优先只做“运行目录保留索引 + 两个数据获取脚本的重复实现审查”。交付一份可审批的准确迁移／删除列表和一组保持 CLI 行为的离线测试，再决定是否执行。这样能同时处理占用大户和代码重复，避免把整个仓库重构成一个无法审查的大提交。
+清理前 Proof 为 2,273,857,411 字节（约 2.12 GiB），1,862 文件：211 个 IFC 共 2,113,275,001 字节，占 92.94%；SQLite 约 106.57 MiB，JSON 约 45.21 MiB。211 个已提交 IFC 路径对应 66 个 Git LFS OID，唯一内容约 732.52 MiB，重复路径理论量约 1.253 GiB。读取既有 LFS 指针，没有全仓库哈希。
 
-[Proof 入口](../../dataset/processed/proof/README.md) · [文档索引](../README.md)
+主要重复是同一案例的机器 IFC 与人读 IFC、跨案例共享输入及旧 staging 副本。R1 E2/M1/H2 使用相同约 76.60 MiB 输入；输出大小相同不代表内容相同。本次收敛同案例双份 IFC，保留跨案例直接可见文件，不使用硬链接。Git/LFS 对象和依赖缓存不当作垃圾删除。
 
-## 本轮已执行与验证
+## 实际验证与边界
 
-已清理获批的 pytest 缓存、Python 字节码和一个重复浏览器快照：660 个文件、24,781,716 字节（23.63 MiB，逻辑体积）。缓存可由相应离线测试重新生成；重复快照保留较早的同内容文件。根目录终端历史移动到 `docs/reports/terminal-session-history.md`，原文字节保留。已提交文件的旧版本可从 Git 历史提取到独立目录。
+- 六集合文件绑定、状态、角色和输出/no-output 互斥检查：48 案、115 次 IFC2X3 reopen，通过。
+- 参考集合从新包还原冻结布局，已提交代码完整验证通过：16 案、45 操作、247 文件、48 reopens、11 案独立复算，5 个历史 Window 的原有局限保留。
+- 人工审批更新后的聚焦测试：37 passed，1 deselected。排除的是已有完整独立验证覆盖的参考集合重验，不是全库通过。
+- 冻结 Prompt 末尾空行保留；当前人读导航格式及链接检查通过。
+- R1 当前脏工作树重验 10 案报 resolution_replay，H4/A1 通过；隔离使用 fe33afb397b4d3c7cee60ce1e831f4c5a2545f50 已提交代码，排除其他任务改动。完整检查中断未形成报告，E1 已通过，E2 正单独诊断。文件检查不代替完整复算。
+- 新外观案例的实现/schema 正由来源进程交付；本次只归档成功快照，不宣称旧的已提交代码能完整重放新案例。
+- 本任务没有 Provider 调用、Full Preflight、IFCCompare 或全库测试，不新增能力结论或关闭 Phase。
 
-Proof 共有 45 个独立人读案例；历史 UAT 另引用 2 个已有案例。106 次 IFC reopen 和 157 项来源一致性检查通过；17 个聚焦测试通过。导航和迁移不修改冻结机器权威，不产生新能力结论，不关闭 Phase；未运行 Full Preflight、Provider、IFCCompare 或完整 curator。模型、外部数据、真实运行、不可读目录及其他任务修改继续保留。
+## 条件失败清理：尚未执行
+
+以下 11 个目录已核对同一冻结 manifest、验收合同、逐案例请求 SHA、源 IFC SHA/大小及对应 passed 运行；结果覆盖所有实际案例目录。R1 迁移验收问题解决前继续保留。
+
+| ifc-repair-runs/repair-milestone-r1/ 下目录 | 文件 | 字节 | Git 跟踪 |
+|---|---:|---:|---:|
+| `r1-20260831T151326967970Z` | 184 | 215,267,217 | 0 |
+| `r1-20260831T155141193325Z` | 495 | 434,474,114 | 0 |
+| `r1-20260901T034310928815Z` | 495 | 434,302,725 | 0 |
+| `r1-20260901T052919004905Z` | 85 | 24,367,730 | 0 |
+| `r1-20260901T134510430440Z` | 522 | 455,053,472 | 522 |
+| `r1-20260901T154532207844Z` | 715 | 654,927,335 | 715 |
+| `r1-20260902T053023885207Z` | 707 | 656,220,561 | 0 |
+| `r1-20260902T141632454789Z` | 18 | 3,672,133 | 0 |
+| `r1-20260902T142055280724Z` | 23 | 3,481,553 | 0 |
+| `r1-20260902T142600567859Z` | 23 | 3,332,823 | 0 |
+| `r1-20260902T150713117380Z` | 37 | 3,482,422 | 0 |
+
+`r1-20260901T055419268779Z` 的 H3 请求不匹配，保留；无完整 result、无调用准入目录、独立诊断及 IFCCompare 目录也保留。删除后不得声称历史失败全量保留，也不能用筛选后的成功包计算成功率。
+
+## 后续适度重构与并发工作
+
+- src 保留现有 production 模块边界，不为整齐改动 Agent、apply 或 evaluation。
+- scripts/proof 统一包映射和验证入口；原 schema 验证继续沿用。旧 curator 默认写 ifc-repair-runs/curation-staging，避免重建旧 Proof 顶层目录。
+- repair run 作为工作区；成功归档后按映射退役。活动、归属不明、不可读或依赖未闭合目录保留。
+- .venv、.cache、模型、下载数据、外部 IFC、Git/LFS 不作笼统删除。
+- 其他任务的 114 项暂存、生产/测试修改和 dirty submodule 均保留。本任务只提交明确路径，不能靠吞并他人工作把工作树变干净。

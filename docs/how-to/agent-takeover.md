@@ -338,8 +338,8 @@ Windows 下 pytest 临时目录权限异常时，使用仓库内明确的 `--bas
 - `dataset/processed/ifc-repair-runs/` 保存原始运行、Provider attempts 和终端材料；
 - `dataset/processed/proof/` 保存冻结 Proof、人读视图或机器权威；
 - pytest cache、离线 preflight 临时目录和已确认完全重复的未跟踪副本可以清理；
-- genuine Provider 的成功或失败 attempts、accepted authority、repaired IFC 和独立
-  evaluation 不得因为“已经修好”而直接删除。
+- 本次用户批准成功 run 完整迁入 Proof 后退役原目录；冻结机器证据字节及旧路径映射保留。
+- 用户另批准 genuine 失败在对应冻结案例通过后销毁：必须核对同一 manifest、请求、输入指纹和验收合同；不匹配或仍在使用的运行保留。删除后不能声称失败历史仍完整，也不能据此计算成功率。
 
 删除前先解析准确路径并确认它位于预期仓库子树；再用 `git ls-files` 判断是否已被
 跟踪。不要对 dataset 根目录、仓库根目录或未解析变量执行递归删除。
