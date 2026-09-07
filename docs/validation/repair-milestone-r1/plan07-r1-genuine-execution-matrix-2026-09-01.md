@@ -1,5 +1,8 @@
 # Plan 07 and Repair Milestone R1 Genuine Execution Matrix
 
+> 2026-09-07 导航更新：证据已集中到 [工作流 Proof](../../../dataset/processed/proof/README.md)，旧路径见集合 manifest 的 legacy_bundles。Plan07 已获用户人工审查通过；下文日期、原运行结论与冻结记录仍表示历史事实。
+
+
 - Date: 2026-09-01
 - Branch: `codex/workflow-dataset-links`
 - Implementation checkpoint: `223e46e7`
@@ -18,7 +21,7 @@ independent Proof 0.3. The historical rows and false/pending eligibility fields
 below remain unchanged. Current closure evidence is the
 [final R1 Proof Matrix](repair-proof-matrix-2026-09-03.md), accepted run
 `r1-20260902T152701658266Z` and curated Proof root
-`dataset/processed/proof/repair-milestone-r1/r1-20260902T152701658266Z-curated/`.
+`dataset/processed/proof/repair/phase12.1/r1/`.
 The original Plan 07 four cases were also rerun once on the final code as
 `uat-20260902T180900748385Z`: 4/4 PASS with 11 genuine calls. Its changed-scope
 curator packaging limitation is recorded in the final matrix and is not
@@ -27,11 +30,11 @@ represented as a second independently curated Proof.
 ## 1. Plan 07 frozen four-case genuine matrix
 
 Evidence:
-[live-uat-result.json](../../../dataset/processed/proof/ifc-repair-success-cases/structural/live/phase12-live-deepseek-complete/provider-evidence/live-uat-result.json)
+[live-uat-result.json](../../../dataset/processed/ifc-repair-runs/phase12-live/uat-20260830T174344933512Z/live-uat-result.json)
 
 | Case | Request / intended path | Calls S1/S1.5/S2 | Semantic/model | Deterministic execution | IFC artifact and L0/L1/L2 | Evidence/contract |
 |---|---|---:|---|---|---|---|
-| `complete` | Beam + Column complete natural-language properties | 1/2/1 | two property decisions confirmed | apply and reopen succeeded | [repaired IFC](../../../dataset/processed/proof/ifc-repair-success-cases/structural/live/phase12-live-deepseek-complete/runtime/runs/repair-233cb4e15aad442fbcf00fbc10584f83/.terminal-bundles/6af48e15b81842aaac434bf8a1a07c1d/successful/repaired.ifc); L0/L1/L2 PASS | case contract PASS |
+| `complete` | Beam + Column complete natural-language properties | 1/2/1 | two property decisions confirmed | apply and reopen succeeded | [repaired IFC](../../../dataset/processed/ifc-repair-runs/phase12-live/uat-20260830T174344933512Z/cases/complete/runtime/runs/repair-233cb4e15aad442fbcf00fbc10584f83/.terminal-bundles/6af48e15b81842aaac434bf8a1a07c1d/successful/repaired.ifc); L0/L1/L2 PASS | case contract PASS |
 | `clarification-resume` | property clarification then stable-identity resume | 1/1/1 | clarification and selected property confirmed | resume, apply and reopen succeeded | result records repaired IFC and L0/L1/L2 PASS; only the complete-case IFC remains under the current curated root | case contract PASS |
 | `window-semantic-canary` | Window `外窗=true` through Vector + Stage 1.5 | 1/1/1 | `Pset_WindowCommon.IsExternal` confirmed | apply and reopen succeeded | result records repaired IFC and L0/L1/L2 PASS; raw IFC path is no longer present under the current curated root | case contract PASS |
 | `program-guard` | supported Beam request plus unsupported analysis program | 1/0/0 | unsupported program recognized | stopped before Stage 1.5/Stage 2/apply | no repaired IFC; L0/L1/L2 N/A by contract | guard contract PASS |

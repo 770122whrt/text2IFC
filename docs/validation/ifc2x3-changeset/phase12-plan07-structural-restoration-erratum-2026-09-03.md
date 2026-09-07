@@ -1,5 +1,8 @@
 # Phase 12 Plan 07 结构恢复证据勘误与重新准入要求
 
+> 2026-09-07 导航更新：证据已集中到 [工作流 Proof](../../../dataset/processed/proof/README.md)，旧路径见集合 manifest 的 legacy_bundles。Plan07 已获用户人工审查通过；下文日期、原运行结论与冻结记录仍表示历史事实。
+
+
 日期：2026-09-03
 状态：**旧 Proof 已撤销；VVO v2 replacement 的离线矩阵和 genuine Provider evidence 已通过，正式 Phase acceptance 仍等待冻结 Plan 12/14 Proof gate**
 
@@ -19,7 +22,7 @@
   （Stage 1=4、Stage 1.5=4、Stage 2=3），model 为 `deepseek-v4-flash` 且 thinking
   enabled。
 - 人读入口：
-  `dataset/processed/proof/ifc-repair-success-cases-v2-plan07-staging/plan07-live-v2-uat-20260903T095045509630Z/REPORT.md`。
+  `dataset/processed/proof/repair/phase12/plan07-v2/evidence/frozen/plan07-live-v2-uat-20260903T095045509630Z/REPORT.md`。
   `complete`、`clarification-resume`、`window-semantic-canary` 均直接包含
   `repaired.ifc`；`program-guard` 以 `NO-REPAIR.md` 说明零 mutation/零 publish。
 - 澄清案按 request 只恢复 Column；同一 damaged IFC 中未被请求的 Beam 明确记录为

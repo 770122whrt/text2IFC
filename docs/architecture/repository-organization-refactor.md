@@ -4,14 +4,14 @@
 
 ## 已执行
 
-本轮只调整存储、导航和路径加载。生产修复行为、冻结请求、Gold、阈值、Provider 输出及 Phase 状态不变。R1 完整迁移验收尚未完成，其旧权威与原 run 暂时保留。
+本轮只调整存储、导航和路径加载。生产修复行为、冻结请求、Gold、阈值、Provider 输出及 Phase 状态不变。R1 完整迁移验收通过，旧权威和已完整绑定的成功原 run 已退役。
 
 - 已批准 pytest 工作区及 12 个重复 IFC：删除 13,312 文件，3,058,116,112 字节（2.848 GiB）。
 - 四个旧 Proof 根目录的完整内容已经集中，旧目录退役。
 - 六个 generation 成功来源和一个历史 guard 来源已全部绑定到 Proof，原案例目录退役。
 - Plan07：10 案 accepted，用户审批原文“plan07我审批完了 是通过的”；6 offline、3 live repaired、1 guard，11 次 genuine 调用不变。
 - 新材质外观集合：3 个来源运行 PASS，pending_human_review；来源进程目录和暂存内容保留。
-- R1：12 案原 accepted 状态不变；新包文件检查通过，完整复算尚未完成，不宣称迁移已验收。
+- R1：12 案原 accepted 状态不变；原合同逐案复算与集合检查均通过，旧顶层目录和对应成功原 run 已退役。
 
 ## 目录与阅读
 
@@ -24,7 +24,7 @@ dataset/processed/proof/
   repair/phase11/live-uat/                  # 1 historical，无输出
   repair/phase12/plan07-v2/                 # 10 accepted，用户已审
   repair/phase12/presentation-cases/        # 3 run PASS，人工待审
-  repair/phase12.1/r1/                      # 12 原 accepted，迁移验收待完成
+  repair/phase12.1/r1/                      # 12 accepted，迁移已验证
 ```
 
 [Proof 入口](../../dataset/processed/proof/README.md) · [Plan07](../../dataset/processed/proof/repair/phase12/plan07-v2/REPORT.md) · [材质外观](../../dataset/processed/proof/repair/phase12/presentation-cases/REPORT.md)。
@@ -48,6 +48,8 @@ dataset/processed/proof/
 | `dataset/processed/agent-demo/phase6.5-medium-100mm-gap-fix` | `dataset/processed/proof/generation/phase6.6/generation-examples/manifest.json` | `source-output-713-success` / 5 |
 | `dataset/processed/agent-demo/phase6.5-hard-accepted` | `dataset/processed/proof/generation/phase6.6/generation-examples/manifest.json` | `source-hard-three-storey-final` / 17 |
 | `dataset/processed/ifc-repair/phase11-live-uat/uat-20260731T224900289758Z/unsupported-complex-door` | `dataset/processed/proof/repair/phase11/live-uat/manifest.json` | `guard-run` / 22 |
+| `dataset/processed/proof/repair-milestone-r1` | `dataset/processed/proof/repair/phase12.1/r1/manifest.json` | `legacy-root` / 805 |
+| `dataset/processed/ifc-repair-runs/repair-milestone-r1/r1-20260902T152701658266Z` | `dataset/processed/proof/repair/phase12.1/r1/manifest.json` | `run-original` / 731 |
 
 普通临时产物的精确目录：
 
@@ -64,19 +66,22 @@ dataset/processed/proof/
 
 主要重复是同一案例的机器 IFC 与人读 IFC、跨案例共享输入及旧 staging 副本。R1 E2/M1/H2 使用相同约 76.60 MiB 输入；输出大小相同不代表内容相同。本次收敛同案例双份 IFC，保留跨案例直接可见文件，不使用硬链接。Git/LFS 对象和依赖缓存不当作垃圾删除。
 
+当前 Proof 为 1,273,865,831 字节（约 1.186 GiB），2,384 文件；相对盘点减少约 0.931 GiB。包含 Proof 新增机器证据与报告后，已记录范围的文件逻辑体积净减少约 6.497 GiB。此数字不计本任务产生后又清除的验证副本，不等于 Git/LFS 历史缩减或磁盘分配块精确变化。
+
 ## 实际验证与边界
 
 - 六集合文件绑定、状态、角色和输出/no-output 互斥检查：48 案、115 次 IFC2X3 reopen，通过。
 - 参考集合从新包还原冻结布局，已提交代码完整验证通过：16 案、45 操作、247 文件、48 reopens、11 案独立复算，5 个历史 Window 的原有局限保留。
 - 人工审批更新后的聚焦测试：37 passed，1 deselected。排除的是已有完整独立验证覆盖的参考集合重验，不是全库通过。
+- staging 路径相关测试：6 passed、1 deselected。被排除的准入检查实际报 LIVE_V2_ADMISSION_PATH_INVALID：当前 changed-scope-admission-v2.json 缺失，新的真实调用仍被阻止；不重建准入、不自动升级 Full Preflight。
 - 冻结 Prompt 末尾空行保留；当前人读导航格式及链接检查通过。
-- R1 当前脏工作树重验 10 案报 resolution_replay，H4/A1 通过；隔离使用 fe33afb397b4d3c7cee60ce1e831f4c5a2545f50 已提交代码，排除其他任务改动。完整检查中断未形成报告，E1 已通过，E2 正单独诊断。文件检查不代替完整复算。
+- R1 当前脏工作树重验 10 案报 resolution_replay，H4/A1 通过；隔离使用 fe33afb397b4d3c7cee60ce1e831f4c5a2545f50 已提交代码，排除其他任务改动。最终以隔离进程逐案完成全部原检查，再执行原集合/schema 检查并汇总：12 案、13 操作、785 文件、23 reopens、12 独立复算，零错误、零限制。未把最初中断的单进程运行计为通过；[完整结果](../../dataset/processed/proof/repair/phase12.1/r1/evidence/migration-validation.json) 与 [执行上下文](../../dataset/processed/proof/repair/phase12.1/r1/evidence/migration-validation-context.json) 可查。
 - 新外观案例的实现/schema 正由来源进程交付；本次只归档成功快照，不宣称旧的已提交代码能完整重放新案例。
 - 本任务没有 Provider 调用、Full Preflight、IFCCompare 或全库测试，不新增能力结论或关闭 Phase。
 
-## 条件失败清理：尚未执行
+## 条件失败清理：已执行
 
-以下 11 个目录已核对同一冻结 manifest、验收合同、逐案例请求 SHA、源 IFC SHA/大小及对应 passed 运行；结果覆盖所有实际案例目录。R1 迁移验收问题解决前继续保留。
+以下 10 个失败目录已核对同一冻结 manifest、验收合同、逐案例请求 SHA、源 IFC SHA/大小及对应 passed 运行，且 R1 迁移验证通过后已删除：2,597 文件、2,232,361,524 字节（2.079 GiB）。逐案匹配、恢复提交与保留原因见 [退役审计](../../dataset/processed/proof/repair/phase12.1/r1/evidence/retirement.json)。其中已跟踪文件可从提交 378accee 的 Git/LFS 恢复；未跟踪的失败运行按授权销毁，没有完整备份。
 
 | ifc-repair-runs/repair-milestone-r1/ 下目录 | 文件 | 字节 | Git 跟踪 |
 |---|---:|---:|---:|
@@ -86,18 +91,17 @@ dataset/processed/proof/
 | `r1-20260901T052919004905Z` | 85 | 24,367,730 | 0 |
 | `r1-20260901T134510430440Z` | 522 | 455,053,472 | 522 |
 | `r1-20260901T154532207844Z` | 715 | 654,927,335 | 715 |
-| `r1-20260902T053023885207Z` | 707 | 656,220,561 | 0 |
 | `r1-20260902T141632454789Z` | 18 | 3,672,133 | 0 |
 | `r1-20260902T142055280724Z` | 23 | 3,481,553 | 0 |
 | `r1-20260902T142600567859Z` | 23 | 3,332,823 | 0 |
 | `r1-20260902T150713117380Z` | 37 | 3,482,422 | 0 |
 
-`r1-20260901T055419268779Z` 的 H3 请求不匹配，保留；无完整 result、无调用准入目录、独立诊断及 IFCCompare 目录也保留。删除后不得声称历史失败全量保留，也不能用筛选后的成功包计算成功率。
+`r1-20260902T053023885207Z` 是独立的 passed 历史运行，不属于失败销毁范围，保留其 707 文件、656,220,561 字节；`r1-20260901T055419268779Z` 的 H3 请求不匹配，保留；无完整 result、无调用准入目录、独立诊断及 IFCCompare 目录也保留。删除后不得声称历史失败全量保留，也不能用筛选后的成功包计算成功率。
 
 ## 后续适度重构与并发工作
 
 - src 保留现有 production 模块边界，不为整齐改动 Agent、apply 或 evaluation。
-- scripts/proof 统一包映射和验证入口；原 schema 验证继续沿用。旧 curator 默认写 ifc-repair-runs/curation-staging，避免重建旧 Proof 顶层目录。
+- scripts/proof 统一包映射和验证入口；原 schema 验证继续沿用。旧 curator 和 Plan07 v2 runner 默认写 ifc-repair-runs/curation-staging，避免重建旧 Proof 顶层目录。旧 Plan07 installer 的验证来源常量仍保留冻结历史路径语义；新安装需显式指定来源，不重建已集中包。
 - repair run 作为工作区；成功归档后按映射退役。活动、归属不明、不可读或依赖未闭合目录保留。
 - .venv、.cache、模型、下载数据、外部 IFC、Git/LFS 不作笼统删除。
 - 其他任务的 114 项暂存、生产/测试修改和 dirty submodule 均保留。本任务只提交明确路径，不能靠吞并他人工作把工作树变干净。

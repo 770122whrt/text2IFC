@@ -1,5 +1,8 @@
 # Phase 12 / 12.1 Beam、Column 与 Property Resolution 最终验证报告
 
+> 2026-09-07 导航更新：证据已集中到 [工作流 Proof](../../../dataset/processed/proof/README.md)，旧路径见集合 manifest 的 legacy_bundles。Plan07 已获用户人工审查通过；下文日期、原运行结论与冻结记录仍表示历史事实。
+
+
 ## 结论
 
 Phase 12 与插入修复阶段 Phase 12.1 已通过冻结验收并闭合。最终依据是连续、未拼接的
@@ -58,8 +61,8 @@ source SHA 不变。任何 repaired IFC 都会反而违反 H4 合同。
 ## 证据路径
 
 - [最终 12 案 Proof Matrix](../repair-milestone-r1/repair-proof-matrix-2026-09-03.md)
-- [R1 执行结果](../../../dataset/processed/ifc-repair-runs/repair-milestone-r1/r1-20260902T152701658266Z/r1-execution-result.json)
-- [Curated Proof 0.3](../../../dataset/processed/proof/repair-milestone-r1/r1-20260902T152701658266Z-curated/PROOF-VALIDATION.json)
+- [R1 执行结果](../../../dataset/processed/proof/repair/phase12.1/r1/evidence/run-original/r1-execution-result.json)
+- [Curated Proof 0.3](../../../dataset/processed/proof/repair/phase12.1/r1/evidence/frozen/PROOF-VALIDATION.json)
 - [IFCCompare/collection summary](../../../dataset/processed/ifc-repair-runs/repair-milestone-r1/r1-final-ifccompare-20260903/validation-summary.json)
 - [最终代码 Plan 07 四案](../../../dataset/processed/ifc-repair-runs/phase12-live/uat-20260902T180900748385Z/live-uat-result.json)
 

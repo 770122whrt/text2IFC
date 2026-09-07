@@ -29,7 +29,7 @@ from text2ifc_knowledge.property_runtime import (
 
 DEFAULT_OUTPUT = ROOT / "dataset/processed/ifc-repair-runs/phase12-live-v2"
 DEFAULT_PROOF_ROOT = (
-    ROOT / "dataset/processed/proof/ifc-repair-success-cases-v2-plan07-staging"
+    ROOT / "dataset/processed/ifc-repair-runs/curation-staging/plan07-v2"
 )
 SOURCE = (
     ROOT

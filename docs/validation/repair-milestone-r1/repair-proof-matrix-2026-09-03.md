@@ -1,5 +1,8 @@
 # Repair Milestone R1 Final Proof Matrix
 
+> 2026-09-07 导航更新：证据已集中到 [工作流 Proof](../../../dataset/processed/proof/README.md)，旧路径见集合 manifest 的 legacy_bundles。Plan07 已获用户人工审查通过；下文日期、原运行结论与冻结记录仍表示历史事实。
+
+
 - Closure date: 2026-09-03
 - Branch: `codex/workflow-dataset-links`
 - Accepted genuine run: `r1-20260902T152701658266Z`
@@ -18,10 +21,10 @@ evidence rather than rewriting the historical result.
 
 ## Accepted evidence roots
 
-- [ordered execution result](../../../dataset/processed/ifc-repair-runs/repair-milestone-r1/r1-20260902T152701658266Z/r1-execution-result.json)
-- [curated Proof root](../../../dataset/processed/proof/repair-milestone-r1/r1-20260902T152701658266Z-curated/)
-- [Proof validation 0.3](../../../dataset/processed/proof/repair-milestone-r1/r1-20260902T152701658266Z-curated/PROOF-VALIDATION.json)
-- [curation binding](../../../dataset/processed/proof/repair-milestone-r1/r1-20260902T152701658266Z-curated/CURATION.json)
+- [ordered execution result](../../../dataset/processed/proof/repair/phase12.1/r1/evidence/run-original/r1-execution-result.json)
+- [curated Proof root](../../../dataset/processed/proof/repair/phase12.1/r1/)
+- [Proof validation 0.3](../../../dataset/processed/proof/repair/phase12.1/r1/evidence/frozen/PROOF-VALIDATION.json)
+- [curation binding](../../../dataset/processed/proof/repair/phase12.1/r1/evidence/frozen/CURATION.json)
 - [final IFCCompare/collection summary](../../../dataset/processed/ifc-repair-runs/repair-milestone-r1/r1-final-ifccompare-20260903/validation-summary.json)
 - [final-code Plan 07 live result](../../../dataset/processed/ifc-repair-runs/phase12-live/uat-20260902T180900748385Z/live-uat-result.json)
 - [final-code Plan 07 zero-network admission](../../../dataset/processed/ifc-repair-runs/phase12-live/admission-20260903-r1-final-code/changed-scope-admission.json)
@@ -86,18 +89,18 @@ accepted from terminal self-report.
 
 | Case | Calls S1/S1.5/S2 | Semantic/model outcome | Deterministic execution outcome | Artifact outcome | Evidence/contract outcome | IFCCompare |
 |---|---:|---|---|---|---|---|
-| `E1` | 1/1/1 | `IsExternal=true` selected from offered authority | occurrence property applied; source unchanged | [repaired IFC](../../../dataset/processed/ifc-repair-runs/repair-milestone-r1/r1-20260902T152701658266Z/cases/E1/runtime/runs/repair-b86897cf5de942b8a12be6c012a3ed7a/.terminal-bundles/1955cfe7022d4f7a930aae57660293fe/successful/repaired.ifc); L0/L1/L2 PASS | Proof PASS; property and preservation predicates PASS | N/A: no legal R1 private triplet |
-| `E2` | 2/1/1 | corrected Stage 1 output then `FireRating=EI60` selected | occurrence property applied; source unchanged | [repaired IFC](../../../dataset/processed/ifc-repair-runs/repair-milestone-r1/r1-20260902T152701658266Z/cases/E2/runtime/runs/repair-7ffe3c5e21e24bfc80e01690320fbfa7/.terminal-bundles/fad7684d445e45d79dddc15e0a9d6cbe/successful/repaired.ifc); L0/L1/L2 PASS | Proof PASS; correction attempt retained | N/A |
-| `E3` | 1/1/1 | Beam occurrence `Reference=B-204` selected | exact occurrence property applied | [repaired IFC](../../../dataset/processed/ifc-repair-runs/repair-milestone-r1/r1-20260902T152701658266Z/cases/E3/runtime/runs/repair-f930e1b7bdf64579a246beede1bc4c87/.terminal-bundles/94556f6ba9554957902fffb840384b4d/successful/repaired.ifc); L0/L1/L2 PASS | Proof PASS; occurrence scope verified | N/A |
-| `E4` | 1/1/1 | Wall `AcousticRating=Rw 50` selected | occurrence property applied | [repaired IFC](../../../dataset/processed/ifc-repair-runs/repair-milestone-r1/r1-20260902T152701658266Z/cases/E4/runtime/runs/repair-83fc4d551d9c488196f846a7aebaf78e/.terminal-bundles/72f3314937ac42678eefccc3f3375d2b/successful/repaired.ifc); L0/L1/L2 PASS | Proof PASS; preservation PASS | N/A |
-| `M1` | 3/2/1 | invalid Boolean stopped; user detail resumed as `EI60` with stable property identity | first path did not mutate; resumed path applied | [repaired IFC](../../../dataset/processed/ifc-repair-runs/repair-milestone-r1/r1-20260902T152701658266Z/cases/M1/runtime/runs/repair-7e0a896445a24d42b29a72b28a191b10/.terminal-bundles/003936332c2f48b2a4de0f22891c5ed9/successful/repaired.ifc); L0/L1/L2 PASS | Proof PASS; clarification lineage retained | N/A |
-| `M2` | 1/1/1 | generated Beam Type plus occurrence `Pset_BeamCommon.Reference` | Beam and requested property applied | [repaired IFC](../../../dataset/processed/ifc-repair-runs/repair-milestone-r1/r1-20260902T152701658266Z/cases/M2/runtime/runs/repair-7988ad21f9a54fa9b7400b7f8ce10c51/.terminal-bundles/776136b479644cb185204585bfc9f238/successful/repaired.ifc); L0/L1/L2 PASS | Proof PASS; root `Tag` was not substituted | N/A |
-| `M3` | 2/1/1 | corrected Stage 1 output; Column `LoadBearing` authority selected | Column/Type/property applied | [repaired IFC](../../../dataset/processed/ifc-repair-runs/repair-milestone-r1/r1-20260902T152701658266Z/cases/M3/runtime/runs/repair-f12def4310484e858169f78b1b5429cc/.terminal-bundles/5d1181db5f10453eb3b327d9cd4c4a2f/successful/repaired.ifc); L0/L1/L2 PASS | Proof PASS; correction retained | N/A |
-| `H1` | 1/1/1 | mixed Beam add plus Window property intent confirmed | two-operation ChangeSet applied atomically | [repaired IFC](../../../dataset/processed/ifc-repair-runs/repair-milestone-r1/r1-20260902T152701658266Z/cases/H1/runtime/runs/repair-ced900798d8c479da01c5d903cc7d061/.terminal-bundles/3ccdee3857664c7597a9a686aa9e8552/successful/repaired.ifc); L0/L1/L2 PASS | Proof PASS; both predicates and atomic set PASS | N/A |
-| `H2` | 1/2/1 | Door and Wall properties independently selected | two target operations applied atomically | [repaired IFC](../../../dataset/processed/ifc-repair-runs/repair-milestone-r1/r1-20260902T152701658266Z/cases/H2/runtime/runs/repair-de5a7bd04fb44cd59e8188fd2675b050/.terminal-bundles/7fb9a33c90814184b9150308d6f12b49/successful/repaired.ifc); L0/L1/L2 PASS | Proof PASS; two authority and preservation checks PASS | N/A |
-| `H3` | 1/1/1 | offered Window candidates restored; frozen stable identity resumed; `IsExternal=true` selected | clarification/resume applied to currently offered identity | [repaired IFC](../../../dataset/processed/ifc-repair-runs/repair-milestone-r1/r1-20260902T152701658266Z/cases/H3/runtime/runs/repair-c29c5e7113c9410fb80277c383232a11/.terminal-bundles/36116cb0488b4a8d9e61682e1fec3d1a/successful/repaired.ifc); L0/L1/L2 PASS | Proof PASS; terminal class `CLARIFICATION_THEN_SUCCESS` | N/A |
+| `E1` | 1/1/1 | `IsExternal=true` selected from offered authority | occurrence property applied; source unchanged | [repaired IFC](../../../dataset/processed/proof/repair/phase12.1/r1/E1/03-repaired.ifc); L0/L1/L2 PASS | Proof PASS; property and preservation predicates PASS | N/A: no legal R1 private triplet |
+| `E2` | 2/1/1 | corrected Stage 1 output then `FireRating=EI60` selected | occurrence property applied; source unchanged | [repaired IFC](../../../dataset/processed/proof/repair/phase12.1/r1/E2/03-repaired.ifc); L0/L1/L2 PASS | Proof PASS; correction attempt retained | N/A |
+| `E3` | 1/1/1 | Beam occurrence `Reference=B-204` selected | exact occurrence property applied | [repaired IFC](../../../dataset/processed/proof/repair/phase12.1/r1/E3/03-repaired.ifc); L0/L1/L2 PASS | Proof PASS; occurrence scope verified | N/A |
+| `E4` | 1/1/1 | Wall `AcousticRating=Rw 50` selected | occurrence property applied | [repaired IFC](../../../dataset/processed/proof/repair/phase12.1/r1/E4/03-repaired.ifc); L0/L1/L2 PASS | Proof PASS; preservation PASS | N/A |
+| `M1` | 3/2/1 | invalid Boolean stopped; user detail resumed as `EI60` with stable property identity | first path did not mutate; resumed path applied | [repaired IFC](../../../dataset/processed/proof/repair/phase12.1/r1/M1/03-repaired.ifc); L0/L1/L2 PASS | Proof PASS; clarification lineage retained | N/A |
+| `M2` | 1/1/1 | generated Beam Type plus occurrence `Pset_BeamCommon.Reference` | Beam and requested property applied | [repaired IFC](../../../dataset/processed/proof/repair/phase12.1/r1/M2/03-repaired.ifc); L0/L1/L2 PASS | Proof PASS; root `Tag` was not substituted | N/A |
+| `M3` | 2/1/1 | corrected Stage 1 output; Column `LoadBearing` authority selected | Column/Type/property applied | [repaired IFC](../../../dataset/processed/proof/repair/phase12.1/r1/M3/03-repaired.ifc); L0/L1/L2 PASS | Proof PASS; correction retained | N/A |
+| `H1` | 1/1/1 | mixed Beam add plus Window property intent confirmed | two-operation ChangeSet applied atomically | [repaired IFC](../../../dataset/processed/proof/repair/phase12.1/r1/H1/03-repaired.ifc); L0/L1/L2 PASS | Proof PASS; both predicates and atomic set PASS | N/A |
+| `H2` | 1/2/1 | Door and Wall properties independently selected | two target operations applied atomically | [repaired IFC](../../../dataset/processed/proof/repair/phase12.1/r1/H2/03-repaired.ifc); L0/L1/L2 PASS | Proof PASS; two authority and preservation checks PASS | N/A |
+| `H3` | 1/1/1 | offered Window candidates restored; frozen stable identity resumed; `IsExternal=true` selected | clarification/resume applied to currently offered identity | [repaired IFC](../../../dataset/processed/proof/repair/phase12.1/r1/H3/03-repaired.ifc); L0/L1/L2 PASS | Proof PASS; terminal class `CLARIFICATION_THEN_SUCCESS` | N/A |
 | `H4` | 1/0/0 | Stage 1 recognized unsupported structural-analysis work inside an atomic request | whole transaction stopped before Stage 1.5, Stage 2 or apply | no repaired IFC by contract; source SHA before=after; zero candidate output | Proof PASS; `UNSUPPORTED_ATOMIC_GUARD`, one valid no-output case | N/A by design |
-| `A1` | 2/0/1 | corrected Stage 1 output; exact existing Type reuse requested | Beam added with existing Type; no property stage applicable | [repaired IFC](../../../dataset/processed/ifc-repair-runs/repair-milestone-r1/r1-20260902T152701658266Z/cases/A1/runtime/runs/repair-6ddc28933f2b4c27a9920a7cd99bf048/.terminal-bundles/1d0f3be436984b6aa1103924fd25399a/successful/repaired.ifc); L0/L1/L2 PASS | Proof PASS; exact-Type relation verified | N/A |
+| `A1` | 2/0/1 | corrected Stage 1 output; exact existing Type reuse requested | Beam added with existing Type; no property stage applicable | [repaired IFC](../../../dataset/processed/proof/repair/phase12.1/r1/A1/03-repaired.ifc); L0/L1/L2 PASS | Proof PASS; exact-Type relation verified | N/A |
 
 ## Why H4 has no repair artifact
 

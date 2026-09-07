@@ -1,5 +1,8 @@
 # Repair Milestone R1 / Phase 12.1 Closure Handoff — 2026-09-03
 
+> 2026-09-07 导航更新：证据已集中到 [工作流 Proof](../../dataset/processed/proof/README.md)，旧路径见集合 manifest 的 legacy_bundles。Plan07 已获用户人工审查通过；下文日期、原运行结论与冻结记录仍表示历史事实。
+
+
 ## Final state
 
 Repair Milestone R1, Phase 12 and Phase 12.1 are closed on
@@ -8,7 +11,7 @@ Repair Milestone R1, Phase 12 and Phase 12.1 are closed on
 execution with 12/12 frozen contracts passed and 40 genuine Provider calls.
 
 The accepted Proof root is
-`dataset/processed/proof/repair-milestone-r1/r1-20260902T152701658266Z-curated/`.
+`dataset/processed/proof/repair/phase12.1/r1/`.
 Proof validation 0.3 passed with 12 cases, 13 operations, 785 checked files,
 23 IFC reopens, 12 independent recomputations, one intentional no-output case,
 zero errors and zero limitations.
@@ -43,8 +46,8 @@ zero mutation and produced no output.
 - `docs/validation/repair-milestone-r1/repair-proof-matrix-2026-09-03.md`
 - `.planning/phases/12.1-property-resolution-rag-reranker/12.1-07-SUMMARY.md`
 - `docs/validation/ifc2x3-changeset/phase12-beam-column-validation-report.md`
-- `dataset/processed/ifc-repair-runs/repair-milestone-r1/r1-20260902T152701658266Z/r1-execution-result.json`
-- `dataset/processed/proof/repair-milestone-r1/r1-20260902T152701658266Z-curated/PROOF-VALIDATION.json`
+- `dataset/processed/proof/repair/phase12.1/r1/evidence/run-original/r1-execution-result.json`
+- `dataset/processed/proof/repair/phase12.1/r1/evidence/frozen/PROOF-VALIDATION.json`
 - `dataset/processed/ifc-repair-runs/phase12-live/uat-20260902T180900748385Z/live-uat-result.json`
 
 No Phase 13 work should be inferred from this handoff. Starting it requires a
