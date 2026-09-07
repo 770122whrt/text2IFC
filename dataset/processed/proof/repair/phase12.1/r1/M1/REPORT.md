@@ -30,10 +30,10 @@
 |---|---|
 | 语义结果 | 非法 Boolean 值先被阻止；补充用户信息后以 EI60 和稳定 property identity 恢复。 |
 | 确定性执行 | 沿用原操作／编译结果；具体执行与 gates 见下方原记录摘录 |
-| 产物 | repaired；本轮只验证可发现性、来源一致性与 reopen |
-| 证据合同 | [原权威报告](<../../../../repair-milestone-r1/r1-20260902T152701658266Z-curated/cases/M1/REPORT.md>)；原权威保持原位 |
+| 产物 | repaired；本轮已验证产物绑定与原合同，完整结果见下文 |
+| 证据合同 | [原权威报告](<evidence/authority/REPORT.md>)；原权威字节已集中；旧路径由集合迁移索引解释 |
 | IFCCompare | N/A：R1 没有运行前冻结的 case-specific private triplet |
-| genuine run ID | r1-20260902T152701658266Z |
+| genuine run ID | repair-7e0a896445a24d42b29a72b28a191b10；集合运行 r1-20260902T152701658266Z |
 | Provider 调用次数 | 3/2/1 |
 | 人工审查 | accepted；本轮不提升状态 |
 
@@ -46,3 +46,5 @@
 未在原记录中单列的 atomicity、preservation 或其他门结果记为未知；正确无输出案的输出 reopen/L0/L1/L2 为 N/A。本轮的文件 reopen 只证明文件可打开，不代替这些语义和执行门。
 
 完整过程：[evidence/README.md](evidence/README.md)。这里可进入 Provider attempts、ChangeSet、终端和评估材料；正文不重复展开 runtime 日志。
+
+2026-09-07 迁移复核：本案原合同完整检查通过；[集合结果](../evidence/migration-validation.json) 与 [验证范围](../evidence/migration-validation-context.json)。原冻结证据字节与验收状态未改写。
