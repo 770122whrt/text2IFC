@@ -40,7 +40,7 @@ def patch(value, scope, *, omit_last=False, drift=False):
             attrs['Description'] = 'unrequested'
         cs['operations'].append({'operation_id': f'fix-{n}', 'op': 'update_entity',
             'target_id': entity_id, 'target_component_hash': idx[entity_id],
-            'changes': {'/attributes': attrs}, 'evidence_refs': scope['source_issue_ids']})
+            'changes': {'/attributes': attrs}, 'evidence_refs': [i + ':/actual' for i in scope['source_issue_ids']]})
     return cs
 
 
@@ -48,7 +48,7 @@ def apply(value, g, cs):
     from text2ifc_agent.changeset_apply import apply_changeset
     return apply_changeset(candidate=value, changeset=cs, scope=g['scope'],
         base_revision=_revision(value, _expected_facts()), expected_facts=_expected_facts(),
-        allow_field_containers=True)
+        allow_field_containers=True, required_field_values=g['required_field_values'])
 
 
 def test_multiple_enum_errors_are_one_stable_atomic_group():
@@ -64,7 +64,7 @@ def test_multiple_enum_errors_are_one_stable_atomic_group():
     assert not validate_v2_document(result['candidate'])
 
 
-@pytest.mark.parametrize('mode', ['partial', 'unrelated', 'stale'])
+@pytest.mark.parametrize('mode', ['partial', 'unrelated', 'stale', 'remove'])
 def test_group_never_promotes_partial_or_out_of_scope_result(mode):
     value = candidate()
     original = copy.deepcopy(value)
@@ -72,6 +72,10 @@ def test_group_never_promotes_partial_or_out_of_scope_result(mode):
     cs = patch(value, g['scope'], omit_last=mode == 'partial', drift=mode == 'unrelated')
     if mode == 'stale':
         cs['base_candidate_hash'] = 'sha256:' + '0' * 64
+    if mode == 'remove':
+        for op in cs['operations']:
+            op['op'] = 'remove_entity'
+            op.pop('changes')
     result = apply(value, g, cs)
     assert not result['valid'] and result['candidate'] is None
     assert value == original
@@ -89,6 +93,9 @@ def test_registry_derived_unique_field_rename_preserves_value_and_other_attribut
     assert result['valid'], result['issues']
     after = next(e for e in result['candidate']['entities'] if e['id'] == wall['id'])
     assert after['attributes']['Name'] == wall['attributes']['Names']
+    cs = patch(value, g['scope'])
+    cs['operations'][0]['changes']['/attributes']['Name'] = 'changed meaning'
+    assert not apply(value, g, cs)['valid']
 
 
 @pytest.mark.parametrize('change', ['unknown', 'collision', 'wrong_value', 'duplicate_id', 'conflict'])
@@ -134,7 +141,8 @@ def test_public_repair_stage_uses_bounded_changeset_for_invalid_formal(tmp_path)
     records = {'conversation':[], 'design-brief':{'schema_version':'text2ifc/design-brief/2.1',
         'known_facts':expected}, 'parsed-output':value,
         'validation':{'valid':False, 'issues':[vars(i) for i in validate_v2_document(value)]},
-        'metrics':{'contract_valid':False}}
+        'metrics':{'contract_valid':False, 'classification':'formal'}}
+    (tmp_path/'expected-facts.json').write_text(json.dumps(expected), encoding='utf-8')
     for name, record in records.items():
         (source/f'{name}.json').write_text(json.dumps(record), encoding='utf-8')
     provider = SequenceProvider([patch(value, g['scope'])])

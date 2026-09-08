@@ -23,6 +23,8 @@ def apply_changeset(
     scope: Mapping[str, Any],
     base_revision: Mapping[str, Any],
     expected_facts: Mapping[str, Any],
+    allow_field_containers: bool = False,
+    required_field_values: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Apply a valid ChangeSet atomically or return no promoted candidate."""
 
@@ -38,6 +40,7 @@ def apply_changeset(
         scope=scope,
         base_revision=base_revision,
         expected_facts=expected_facts,
+        allow_field_containers=allow_field_containers,
     )
     if issues:
         return _failure_many(issues)
@@ -66,6 +69,12 @@ def apply_changeset(
         )
 
     after_index = build_candidate_index(composed)
+    for component_id, fields in (required_field_values or {}).items():
+        actual = after_index['entities'].get(component_id, {}).get('attributes', {})
+        for pointer, expected in fields.items():
+            if pointer.removeprefix('/attributes/') not in actual or actual[pointer.removeprefix('/attributes/')] != expected:
+                return _failure('CHANGESET_REQUIRED_VALUE_CHANGED', pointer,
+                                'A field spelling repair must preserve the original typed value.')
     preservation = _preservation_report(before_index, after_index, scope)
     if preservation["forbidden_drift_ids"]:
         return _failure(
@@ -119,6 +128,7 @@ def _preflight_issues(
     scope: Mapping[str, Any],
     base_revision: Mapping[str, Any],
     expected_facts: Mapping[str, Any],
+    allow_field_containers: bool = False,
 ) -> list[dict[str, str]]:
     issues: list[dict[str, str]] = []
     changeset_contract = validate_changeset(changeset)
@@ -215,6 +225,9 @@ def _preflight_issues(
         collection = entities if is_entity else relationships
         allowed = allowed_entities if is_entity else allowed_relationships
         path = f"/operations/{index}"
+        if allow_field_containers and op != 'update_entity':
+            issues.append(_issue('CHANGESET_SCOPE_VIOLATION', path,
+                                 'Early field recovery only permits entity field updates.'))
         if target_id not in allowed:
             issues.append(
                 _issue(
@@ -269,7 +282,10 @@ def _preflight_issues(
                             "Stable identity and IFC class cannot be updated.",
                         )
                     )
-                elif not any(_path_allowed(change_path, prefix) for prefix in permitted):
+                elif not any(_path_allowed(change_path, prefix) for prefix in permitted) and not (
+                    allow_field_containers and change_path == '/attributes'
+                    and _field_container_allowed(collection[target_id], operation['changes'][change_path], permitted)
+                ):
                     issues.append(
                         _issue(
                             "CHANGESET_SCOPE_VIOLATION",
@@ -293,6 +309,19 @@ def _preflight_issues(
                     )
                 )
     return _sorted_issues(issues)
+
+
+def _field_container_allowed(component, attributes, permitted):
+    # Existing ChangeSet 1.0 can replace an object. This opt-in route verifies
+    # its actual leaf delta, so renaming a field does not grant the whole object.
+    from .fact_delta import evaluate_repair_fact_delta
+    if not isinstance(attributes, Mapping):
+        return False
+    before = {'attributes': component.get('attributes', {})}
+    after = {'attributes': attributes}
+    return evaluate_repair_fact_delta(before=before, after=after,
+        allowed_change_paths=permitted,
+        evidence_by_path={p: ['schema:IFC2X3'] for p in permitted})['valid']
 
 
 def _apply_operations(candidate: dict[str, Any], operations: Sequence[Mapping[str, Any]]) -> None:

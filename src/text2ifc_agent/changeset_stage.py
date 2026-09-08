@@ -49,6 +49,7 @@ def run_changeset_stage(
     issues: list[dict[str, Any]],
     context_issues: list[dict[str, Any]] | None = None,
     trace_level: str | None = "debug",
+    field_recovery: bool = False,
 ) -> dict[str, Any]:
     """Ask the provider for a ChangeSet or canonical Draft and validate its binding."""
 
@@ -76,7 +77,12 @@ def run_changeset_stage(
     if new_semantics:
         renderer_inputs['FORMAL_SCHEMA'] = _load_schema_path(PROJECT_ROOT / 'schemas/bim-json/2.1/schema.json')
         renderer_inputs['IFC_AUTHORING_CONTRACT'] = build_authoring_contract()
-    rendered = render_prompt(template_id='bim-json-changeset.v1.2' if new_semantics else CHANGESET_TEMPLATE_ID, inputs=renderer_inputs)
+    if field_recovery:
+        from .early_recovery import semantic_dependency_context
+        renderer_inputs['READ_ONLY_COMPONENTS'] = semantic_dependency_context(candidate, scope['entity_ids'])
+    template_id = ('bim-json-changeset.v1.3' if field_recovery else
+                   'bim-json-changeset.v1.2' if new_semantics else CHANGESET_TEMPLATE_ID)
+    rendered = render_prompt(template_id=template_id, inputs=renderer_inputs)
     _write_json(output / "prompt-render-input.json", renderer_inputs)
     _write_text(output / "prompt-rendered.md", rendered["text"])
 

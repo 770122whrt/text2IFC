@@ -29,6 +29,7 @@ def derive_change_scope(
     scope_id: str,
     base_revision_id: str,
     dependency_hints: Sequence[Mapping[str, Any]] | None = None,
+    traverse_dependencies: bool = True,
 ) -> dict[str, Any]:
     """Return one validated scope or explicit unresolved-target issues."""
 
@@ -105,7 +106,7 @@ def derive_change_scope(
     if diagnostics:
         return {"scope": None, "issues": _sorted_diagnostics(diagnostics)}
 
-    changed = True
+    changed = traverse_dependencies
     while changed:
         changed = False
         for relationship_id, relationship in sorted(relationships.items()):

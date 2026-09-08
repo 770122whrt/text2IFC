@@ -847,6 +847,8 @@ def run_repair_stage(
     candidate = repair_source.document
     validation_issues = list(validation.get("issues", []))
     geometry_issues = [dict(issue) for issue in list(geometry_feedback or [])]
+    from .early_recovery import build_field_recovery_group
+    field_group = build_field_recovery_group(candidate, validation_issues) if candidate and not geometry_issues else {'eligible': False}
     route = route_generation_failure(
         previous_candidate=candidate,
         validation_feedback=validation_issues,
@@ -872,7 +874,34 @@ def run_repair_stage(
     fact_delta: dict[str, Any] | None = None
     repair_diagnostics: list[dict[str, Any]] = []
     repair_template_id = REPAIR_TEMPLATE_ID
-    if route["route"] == "no_repair_needed":
+    if field_group['eligible'] and prior_attempt_count < 3:
+        from .scoped_loop import run_scoped_changeset_round
+        from .expected_facts import build_expected_facts
+        expected_path = source.parent / 'expected-facts.json'
+        expected = (json.loads(expected_path.read_text(encoding='utf-8')) if expected_path.is_file()
+                    else build_expected_facts(case_id=case_id, design_brief=design_brief))
+        scoped = run_scoped_changeset_round(provider=provider_factory(), output_dir=output/'scoped',
+            case_id=case_id, round_number=1, user_request=user_request, conversation=conversation,
+            design_brief=design_brief, expected_facts=expected, candidate=candidate,
+            issues=validation_issues, trace_level=trace_level, field_recovery=True,
+            max_attempts=3-prior_attempt_count)
+        # Count actual traces, including unsuccessful retries, rather than the last stage only.
+        provider_call_count = len(list((output/'scoped').rglob('metrics.json')))
+        evidence_class = scoped.get('stage', {}).get('evidence_class', 'deterministic-no-call')
+        valid = scoped['valid']
+        repair_template_id = 'bim-json-changeset.v1.3'
+        repair_diagnostics = scoped.get('issues', [])
+        if valid:
+            repaired_document = scoped['candidate']
+            repaired_artifact_name = 'repaired-candidate.json'
+            _write_json(output/repaired_artifact_name, repaired_document)
+        route = {'route':'repair_attempted' if valid else 'blocked_failure',
+            'recovery_contract':'text2ifc/early-field-recovery/1.0',
+            'repair_attempts':[{'attempt_number': i+1, 'result_status':
+                'improved' if valid and i == provider_call_count-1 else 'blocked'}
+                for i in range(provider_call_count)],
+            'scoped_evidence':'scoped', 'issues':repair_diagnostics}
+    elif route["route"] == "no_repair_needed":
         evidence_class = "live-derived-no-call"
         valid = bool(validation.get("valid")) and candidate is not None
     elif route["route"] == "repair_attempted" and candidate is not None:

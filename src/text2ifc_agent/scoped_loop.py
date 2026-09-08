@@ -68,12 +68,22 @@ def run_scoped_changeset_round(
     issues: Sequence[Issue | Mapping[str, Any]],
     trace_level: str | None = "debug",
     base_revision: Mapping[str, Any] | None = None,
+    field_recovery: bool = False,
+    max_attempts: int = MAX_CHANGESET_ATTEMPTS,
 ) -> dict[str, Any]:
     """Generate, validate, and transactionally apply one bounded ChangeSet."""
 
     output = Path(output_dir)
     output.mkdir(parents=True, exist_ok=True)
     revision = dict(base_revision or _initial_revision(candidate, expected_facts))
+    recovery = None
+    if field_recovery:
+        from .early_recovery import build_field_recovery_group
+        recovery = build_field_recovery_group(candidate, issues)
+        if not recovery['eligible'] or base_revision is not None:
+            return _blocked('scope_unresolved', [{'code':'EARLY_RECOVERY_UNPROVEN', 'path':'/',
+                'message':'Early field recovery requires one independently reproduced, bounded error group.'}])
+        issues = recovery['issues']
     resolved = resolve_issue_component_refs(candidate=candidate, issues=issues)
     _write_json(
         output / "scope-resolution.json",
@@ -103,6 +113,7 @@ def run_scoped_changeset_round(
         issues=resolved["resolved"],
         scope_id=f"scope-revision-{next_sequence:02d}",
         base_revision_id=str(revision["revision_id"]),
+        traverse_dependencies=not field_recovery,
     )
     if scope_result["scope"] is None:
         return _blocked("scope_unresolved", scope_result["issues"])
@@ -115,7 +126,8 @@ def run_scoped_changeset_round(
     changeset: dict[str, Any] = {}
     applied: dict[str, Any] = {}
     application_feedback: list[dict[str, Any]] = []
-    for attempt in range(1, MAX_CHANGESET_ATTEMPTS + 1):
+    max_attempts = max(1, min(max_attempts, MAX_CHANGESET_ATTEMPTS))
+    for attempt in range(1, max_attempts + 1):
         active_output = output if attempt == 1 else output / f"attempt-{attempt:02d}"
         stage = run_changeset_stage(
             provider=provider,
@@ -132,10 +144,11 @@ def run_scoped_changeset_round(
             issues=resolved["resolved"],
             context_issues=[*resolved["context"], *application_feedback],
             trace_level=trace_level,
+            field_recovery=field_recovery,
         )
         if (
             stage["classification"] == "invalid"
-            and attempt < MAX_CHANGESET_ATTEMPTS
+            and attempt < max_attempts
         ):
             application_feedback = _changeset_validation_feedback(
                 stage["diagnostics"]
@@ -155,6 +168,8 @@ def run_scoped_changeset_round(
             scope=scope,
             base_revision=revision,
             expected_facts=expected_facts,
+            allow_field_containers=field_recovery,
+            required_field_values=recovery['required_field_values'] if recovery else None,
         )
         application_payload = {
             "valid": applied["valid"],
@@ -168,7 +183,7 @@ def run_scoped_changeset_round(
                 _write_json(output / "changeset.json", changeset)
                 _write_json(output / "application.json", application_payload)
             break
-        if attempt == MAX_CHANGESET_ATTEMPTS:
+        if attempt == max_attempts:
             return {
                 **_blocked("application_blocked", applied["issues"]),
                 "stage": stage,
