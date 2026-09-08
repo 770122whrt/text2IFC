@@ -273,3 +273,16 @@ Generation 当前 `geometry_v2.py` 限定 `extruded_profile`，compiler 对应�
 - 四个展示 IFC、8 个 SVG XML/本地链接检查通过。机器记录与完整 pytest XML 见[离线验证 evidence](../../dataset/processed/ifc-presentation-validation/semantic-appearance-20260908-final/evidence/README.md)。各组有重叠，不合并为独立案例总数或能力分数。
 
 本轮 Code HEAD 为 `82476b5b`。框/面板为受限、关闭状态的矩形实体，左右门向以 IFC2X3 DoorStyle 表达；不提供开门动画或复杂五金。仅支持本页定义的竖直矩形墙/开口及合法参数，超出范围阻断。人工 viewer/主题审查、真实 Provider 验证和正式 accepted Proof 安装均未进行，不能由这些离线结果替代。
+
+## 12. 2026-09-08 真实运行与通用边界调试
+
+用户后续明确授权 DeepSeek 真实调用及两条链路的人工检查材料。上节“未调用真实 Provider”是此前离线检查点；当前待验收入口为 [真实运行报告](../../dataset/processed/ifc-presentation-validation/live-semantic-20260908-01/REPORT.md)。它位于展示验证目录，尚未安装 accepted Proof。
+
+- Repair：dataset `vvo.ifc` 在执行前冻结为 private_ground_truth，仅删除一个实例属性关系。公共 API 实际只接收 damaged 与公开请求；成功 live-04 有 2 次真实调用，完整 IFC 发布并通过独立四项有类型属性核对。原有 STEP 实体均未改动，三份文件各 152 个构件的网格和样式一致。此前真实失败 attempt-02 及离线回归分别保留。公共 conditional L2 的 not_required 标签不用于证明请求值，报告链接独立重读结果。
+- Generation：真实 Brief 澄清／恢复及两次 Generator 均保留。第二次真实候选纠正局部坐标重复旋转；未经手改候选，修复确定性代码后编译、重读、候选和几何检查通过，45 项独立用户预期核对通过。整体、门窗近景已由 Agent 查看；人工审查待确认。用户明确授权具体载荷后，真实 Audit 接受且最终发布验收通过；最终 IFC 再独立核对 45 项通过。该结果经历开发纠错及同例复验，不是完整真实 CLI 首次成功或盲测能力提升，accepted Proof 仍待人工确认。
+- 通用修复：冻结 Brief／canonical 身份在语义、空间几何、门窗宿主检查中一致绑定；多候选、类别不符和跨楼层错误继续阻断。IfcWallStandardCase 计入墙家族。Name／Description 在开洞、填充、聚合、Type 和连接路径均按文本处理。澄清恢复保存既有调用；请求／响应先落盘，失败尝试和重复编号不得被覆盖。既有 Prompt、Schema 和 profile 版本未重写。
+- 最终聚焦回归：82 passed（通用身份、关系、Type、调用证据与恢复），34 passed（公共完整入口、旧／canonical ID、简化／详细门窗、staged 与恢复）。此前 84 项身份／几何和 77 项关系／模板检查也通过，各组有重叠。stage 初始失败及 Repair 广泛测试超时保留，不能称为全库通过。未运行 Full Preflight、全库 pytest 或 accepted curator。
+
+已准备 `generation/request.txt` 与最终完整 `generated.ifc`，以及 Repair 的 `01-original.ifc`／`02-damaged.ifc`／`03-repaired.ifc`。交互 HTML 从重读 IFC 提取实际网格、样式、直接及有效属性，可打开后审查；普通属性与内部溯源属性在报告中区分。下一步等待用户对两条链路分别确认，再按适用检查整理 Proof。真实尝试清单记录 9 次调用（Generation 5、Repair 4，包含此前失败尝试）。单例修复和真实可行性记录不能宣称类级或系统级能力提升。
+
+交付位置说明：本批真实运行及待人工检查材料仍保存在上述本地展示目录，尚未纳入 Git 或发布为 Proof；本轮只提交通用代码、测试和离线查看器。查看器可用 `.venv\Scripts\python.exe scripts/presentation/render_ifc_review.py <input.ifc> <新的输出.html>` 生成，已有输出拒绝覆盖。
