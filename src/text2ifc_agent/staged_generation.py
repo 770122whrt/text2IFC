@@ -147,6 +147,7 @@ def run_staged_generation(
                 scope=scope,
                 issues=[*base_issues, *retry_feedback],
                 trace_level=trace_level,
+                generation_package=package,
             )
             if stage.get("classification") == "draft" and stage.get("valid") is True:
                 record = {

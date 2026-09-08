@@ -50,6 +50,7 @@ def run_changeset_stage(
     context_issues: list[dict[str, Any]] | None = None,
     trace_level: str | None = "debug",
     field_recovery: bool = False,
+    generation_package: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Ask the provider for a ChangeSet or canonical Draft and validate its binding."""
 
@@ -76,12 +77,16 @@ def run_changeset_stage(
     }
     if new_semantics:
         renderer_inputs['FORMAL_SCHEMA'] = _load_schema_path(PROJECT_ROOT / 'schemas/bim-json/2.1/schema.json')
-        renderer_inputs['IFC_AUTHORING_CONTRACT'] = build_authoring_contract()
-    if field_recovery:
-        from .early_recovery import semantic_dependency_context
-        renderer_inputs['READ_ONLY_COMPONENTS'] = semantic_dependency_context(candidate, scope['entity_ids'])
+        from .changeset_context import select_changeset_context
+        selection = select_changeset_context(candidate=candidate, scope=scope,
+            field_recovery=field_recovery, package=generation_package)
+        renderer_inputs['IFC_AUTHORING_CONTRACT'] = selection['authoring_contract']
+        renderer_inputs['READ_ONLY_COMPONENTS'] = selection['read_only_components']
+        renderer_inputs['FEW_SHOTS'] = [_read_json(PROJECT_ROOT/'prompts/agent/few-shot'/name)
+                                       for name in selection['few_shot_names']]
+        _write_json(output/'context-selection.json', selection)
     template_id = ('bim-json-changeset.v1.3' if field_recovery else
-                   'bim-json-changeset.v1.2' if new_semantics else CHANGESET_TEMPLATE_ID)
+                   'bim-json-changeset.v1.4' if new_semantics else CHANGESET_TEMPLATE_ID)
     rendered = render_prompt(template_id=template_id, inputs=renderer_inputs)
     _write_json(output / "prompt-render-input.json", renderer_inputs)
     _write_text(output / "prompt-rendered.md", rendered["text"])

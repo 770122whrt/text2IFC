@@ -78,6 +78,14 @@ def semantic_dependency_context(candidate, component_ids):
     index = build_candidate_index(candidate)
     records = {**index['entities'], **index['relationships']}
     selected = set(component_ids)
+    # A Type may attach its instances through multiple relations. Expand the
+    # read anchors once to the Type, then collect every directly affected user.
+    for relation in index['relationships'].values():
+        attrs = relation.get('attributes', {})
+        if relation.get('ifc_class') == 'IfcRelDefinesByType' and (
+            set(attrs.get('RelatedObjects', [])) & selected
+        ):
+            selected.add(attrs.get('RelatingType'))
     related = set()
     for rid, relation in index['relationships'].items():
         if relation.get('ifc_class') not in {'IfcRelDefinesByType', 'IfcRelDefinesByProperties', 'IfcRelAssociatesMaterial'}:
@@ -91,4 +99,4 @@ def semantic_dependency_context(candidate, component_ids):
                 refs.update(v for v in value if isinstance(v, str) and v in records)
         if refs & selected or rid in selected:
             related.update(refs | {rid})
-    return {key: records[key] for key in sorted(related - selected)}
+    return {key: records[key] for key in sorted(related - set(component_ids))}

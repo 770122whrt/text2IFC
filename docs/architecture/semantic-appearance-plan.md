@@ -340,7 +340,7 @@ Generation 当前 `geometry_v2.py` 限定 `extruded_profile`，compiler 对应�
 |---|---|---|
 | T1 合同一致性 | IFC registry 派生字段／枚举／可编写范围，Generator、Repair、ChangeSet 共用；新增 Prompt 版本与 registry，旧版本字节不变；覆盖有／无 Type、不同构件及未知类拒绝 | implemented：Generator／Repair 2.2、ChangeSet 1.2；9 项先红后绿。两策略公共语义／ChangeSet 回归另有 32 项通过（扩展轮共 40 passed／1 failed，唯一失败为测试读取 fake 未记录的 prompt；修正实际载荷捕获后 9 项通过）。仅离线证据。 |
 | T2 有界早期恢复 | 新错误子因路由、稳定 ID 的字段授权和 Type 依赖；一次完成可授权的错误组，禁止未合法候选晋升；明确冲突／缺失事实仍阻断；覆盖公共 CLI 与 staged 相关路径、源与未请求内容保全 | partial：已接通新 Formal 的枚举／唯一末尾 s 字段改名错误组；独立重现 validator 后才授权，ChangeSet 事务逐叶检查、值保全、禁止增删，Type 及共享实例只读。45 项聚焦回归通过；完整公共路径／staged 接入检查在 T5 完成前不标 completed。几何／门向冲突仍不扩大白名单。 |
-| T3 生成及反馈上下文 | 按任务／包／错误选择必要示例与 schema 资料；依赖上下文不自动成为写权限；保留完整原始 traces 和冻结请求，legacy_full 默认不变 | pending |
+| T3 生成及反馈上下文 | 按任务／包／错误选择必要示例与 schema 资料；依赖上下文不自动成为写权限；保留完整原始 traces 和冻结请求，legacy_full 默认不变 | implemented：ChangeSet 1.4 按字段／局部／楼层包选择示例和 registry；独立只读依赖含宿主、放置父节点及跨关系共享 Type 用户。包缺少完整类别声明时保留全 registry。冻结 Brief／Expected Facts 不裁剪。4 项先红后绿，两策略公共语义／分包／旧 Prompt／早期恢复共 58 项通过。 |
 | T4 进度与总预算 | 保留可信基线、区分新暴露与回归错误、重复候选／循环停止，统一任务内调用及 token 上限；预算耗尽不发布部分结果，恢复后不得重置已用预算 | pending |
 | T5 公共接入与验证 | 逐项聚焦回归后，运行变更相关公共 API／CLI 离线全链路与恢复、安全、版本兼容检查；记录新 stage admission 判断；再决定是否进入真实双层验收 | pending |
 
