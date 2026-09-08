@@ -148,7 +148,6 @@ def make_openai_design_brief_invoker(
     root = Path(run_dir)
     client = _openai_client(config=config, client_factory=client_factory)
     from .generation_budget import GenerationBudget
-    budget = GenerationBudget(root)
 
     def invoke(transcript: list[dict[str, Any]], call_index: int) -> ClarificationCall:
         if not transcript:
@@ -160,6 +159,7 @@ def make_openai_design_brief_invoker(
         except FileExistsError:
             raise OpenAICompatError("DESIGN_BRIEF_ATTEMPT_ALREADY_EXISTS",
                                     evidence={"call_index": call_index, "transport_attempted": False}) from None
+        budget = GenerationBudget(root)
         selection = select_design_brief_context(
             user_request=original_request,
             conversation=transcript,

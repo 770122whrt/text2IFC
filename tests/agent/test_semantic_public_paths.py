@@ -125,7 +125,8 @@ def test_staged_shared_type_is_authored_once_after_instances(tmp_path):
 
 @pytest.mark.parametrize('detailed', [False, True])
 @pytest.mark.parametrize('canonical_ids', [False, True])
-def test_ready_session_public_chain_reaches_final_acceptance(tmp_path, detailed, canonical_ids):
+@pytest.mark.parametrize('recover_field', [False, True])
+def test_ready_session_public_chain_reaches_final_acceptance(tmp_path, detailed, canonical_ids, recover_field):
     from text2ifc_agent.live_pipeline import run_design_brief_stage
     from text2ifc_agent.interactive_cli_flow import run_ready_session_to_ifc
     from text2ifc_agent.session_store import SessionStore
@@ -186,9 +187,32 @@ def test_ready_session_public_chain_reaches_final_acceptance(tmp_path, detailed,
         candidate = bind(candidate)
         for relation in candidate['relationships']:
             relation['attributes']['Name'] = '显式关系名称'
-    provider=SequenceProvider([candidate,audit])
+    payloads = [candidate, audit]
+    if recover_field:
+        from text2ifc_agent.early_recovery import build_field_recovery_group
+        from text2ifc_agent.candidate_index import build_candidate_index
+        from text2ifc_contract.validation_v2 import validate_v2_document
+        from text2ifc_agent.expected_facts import build_expected_facts
+        from tests.agent.test_phase6_5_changeset_apply import _changeset
+        broken = copy.deepcopy(candidate)
+        space = next(e for e in broken['entities'] if e['ifc_class']=='IfcSpace')
+        space['attributes']['InteriorOrExteriorSpace'] = 'ROOM'
+        errors = [vars(i) for i in validate_v2_document(broken)]
+        group = build_field_recovery_group(broken, errors)
+        assert group['eligible']
+        frozen = build_expected_facts(case_id=session.session_hash, design_brief=brief)
+        operation = {'operation_id':'fix-space-enum', 'op':'update_entity', 'target_id':space['id'],
+            'target_component_hash':build_candidate_index(broken)['component_hashes'][space['id']],
+            'changes':{'/attributes/InteriorOrExteriorSpace':'INTERNAL'},
+            'evidence_refs':[i+':/actual' for i in group['scope']['source_issue_ids']]}
+        correction = _changeset(broken, frozen, operation=operation)
+        correction['source_issue_ids'] = group['scope']['source_issue_ids']
+        payloads = [broken, correction, audit]
+    provider=SequenceProvider(payloads)
     result=run_ready_session_to_ifc(store=store,session=session.session_hash,provider_factory=lambda:provider)
     assert result.status=='compiled', result
-    assert len(provider.calls)==2
+    assert len(provider.calls)==(3 if recover_field else 2)
+    if recover_field:
+        assert (session.run_dir/'repair/scoped/changeset.json').is_file()
     assert Path(result.ifc_path).is_file()
     assert json.loads((session.run_dir/'semantic-verification.json').read_text(encoding='utf-8'))['valid']

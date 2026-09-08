@@ -147,7 +147,8 @@ def run_scoped_changeset_round(
             trace_level=trace_level,
             field_recovery=field_recovery,
         )
-        retry_key = (stage.get('classification'), retry_candidate_key(active_output))
+        retry_key = (stage.get('classification'), hash_json_value(stage.get('diagnostics', [])),
+                     retry_candidate_key(active_output))
         if retry_key in seen_candidates:
             diagnostics = [{'code':'CHANGESET_REPEATED_CANDIDATE', 'path':'/operations',
                             'message':'The same failed patch was returned for the unchanged base.'}]

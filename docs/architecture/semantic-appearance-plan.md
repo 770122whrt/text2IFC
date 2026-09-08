@@ -339,13 +339,17 @@ Generation 当前 `geometry_v2.py` 限定 `extruded_profile`，compiler 对应�
 | 步骤 | 实施及验收边界 | 当前状态 |
 |---|---|---|
 | T1 合同一致性 | IFC registry 派生字段／枚举／可编写范围，Generator、Repair、ChangeSet 共用；新增 Prompt 版本与 registry，旧版本字节不变；覆盖有／无 Type、不同构件及未知类拒绝 | implemented：Generator／Repair 2.2、ChangeSet 1.2；9 项先红后绿。两策略公共语义／ChangeSet 回归另有 32 项通过（扩展轮共 40 passed／1 failed，唯一失败为测试读取 fake 未记录的 prompt；修正实际载荷捕获后 9 项通过）。仅离线证据。 |
-| T2 有界早期恢复 | 新错误子因路由、稳定 ID 的字段授权和 Type 依赖；一次完成可授权的错误组，禁止未合法候选晋升；明确冲突／缺失事实仍阻断；覆盖公共 CLI 与 staged 相关路径、源与未请求内容保全 | partial：已接通新 Formal 的枚举／唯一末尾 s 字段改名错误组；独立重现 validator 后才授权，ChangeSet 事务逐叶检查、值保全、禁止增删，Type 及共享实例只读。45 项聚焦回归通过；完整公共路径／staged 接入检查在 T5 完成前不标 completed。几何／门向冲突仍不扩大白名单。 |
+| T2 有界早期恢复 | 新错误子因路由、稳定 ID 的字段授权和 Type 依赖；一次完成可授权的错误组，禁止未合法候选晋升；明确冲突／缺失事实仍阻断；覆盖公共 CLI 与 staged 相关路径、源与未请求内容保全 | implemented：新 Formal 的枚举／唯一末尾 s 字段改名错误组；独立重现 validator 后才授权，ChangeSet 事务逐叶检查、值保全、禁止增删，Type 及共享实例只读。45 项聚焦回归通过；T5 新增四个完整公共恢复案例通过，两策略相关分包路径通过。几何／门向冲突仍不扩大白名单。 |
 | T3 生成及反馈上下文 | 按任务／包／错误选择必要示例与 schema 资料；依赖上下文不自动成为写权限；保留完整原始 traces 和冻结请求，legacy_full 默认不变 | implemented：ChangeSet 1.4 按字段／局部／楼层包选择示例和 registry；独立只读依赖含宿主、放置父节点及跨关系共享 Type 用户。包缺少完整类别声明时保留全 registry。冻结 Brief／Expected Facts 不裁剪。4 项先红后绿，两策略公共语义／分包／旧 Prompt／早期恢复共 58 项通过。 |
 | T4 进度与总预算 | 保留可信基线、区分新暴露与回归错误、重复候选／循环停止，统一任务内调用及 token 上限；预算耗尽不发布部分结果，恢复后不得重置已用预算 | implemented：公共 Generation 的 Brief／Generator／Repair／ChangeSet／Audit 共用落盘预算，恢复冻结额度；原子候选保留，重复失败 patch 与同阶段 A→B→A 停止，跨校验阶段推进不误判。预算耗尽返回 budget_blocked、无交付指针；33 项预算／循环／分包回归及此前 32 项公共／恢复回归通过，存在重叠。 |
-| T5 公共接入与验证 | 逐项聚焦回归后，运行变更相关公共 API／CLI 离线全链路与恢复、安全、版本兼容检查；记录新 stage admission 判断；再决定是否进入真实双层验收 | pending |
+| T5 公共接入与验证 | 逐项聚焦回归后，运行变更相关公共 API／CLI 离线全链路与恢复、安全、版本兼容检查；记录新 stage admission 判断；再决定是否进入真实双层验收 | scoped complete：新字段恢复经公共入口到最终 IFC，含旧／canonical ID、简化／详细门窗四种组合；最终重读语义检查通过。Prompt／版本／Provider seam 轮为 67 passed／2 failed，既有 attempt 冲突检查顺序修复后，相关最后一轮 36 passed。compileall 与 diff check 通过。live admission：not_admitted；旧准入不覆盖本次入口／事务变化，需要单独 Generation Stage Preflight，未自动升级 Full Preflight 或启动真实调用。 |
 
 新增严格 Provider 输出适配属于 T5 后的可选受控实验，先做离线兼容性评估；不自动切换 Beta 端点、Provider、生成默认策略或扩大真实调用预算。Repair 自然语言空间定位是已记录的后续能力缺口，不把本次 Generation 纠错改动冒充该能力已完成。本轮真实 Provider 暂停，Full Preflight 仍需单独明确批准；Proof 登记继续等待用户人工检查。
 
 修复前冻结失败案例族：字段名／枚举／值类型（正例、非法值、相邻合法类、无 Type）；门向／开口局部轴（旋转宿主、跨楼层、显式冲突）；Type 共享依赖（单实例、多实例、未请求范围）；原子恢复（多错误组、合法字段对、无关变化、空／截断输出）；上下文／预算（small/multi-storey、stage/resume、重复输出、失败消耗）。现有双层真实候选仅作为已揭示开发复现，禁止混入盲测成功率。
 
 预算合同：公共 Generation 新任务默认最多 32 次调用、累计 2,000,000 token、3,600 秒已测 Provider 活动时间；这是拒绝继续调用的工程上限，不是新真实调用授权。每次调用先预留 UTF-8 输入字节数＋既有 Provider 输出上限，不下调输出长度来绕过预算；已返回且有合法 usage 的调用按实际消耗结算，空／失败／中断用量不明时保留预留量。旧会话逐文件收纳既有 response/request 的预算占用，记录来源哈希；无法判断的副本保守重复计数，历史未测耗时明确标记未知。恢复不能静默扩大额度，锁冲突或损坏状态阻断。活动时间门禁不会中断正在执行的 transport；最终发布前再次检查。直接调用内部 stage helper 不构成完整任务预算入口。
+
+本轮收尾证据：[本地离线记录](../../dataset/processed/ifc-presentation-validation/two-storey-human-review-20260908/scoped-offline-evidence/pipeline-stability-implementation-20260908/verification.json)。各轮测试存在重叠，失败 XML 同样保留，不合并为独立案例成功率。新增错误组测试只使用测试场景；此前双层真实候选没有被手改、重编译或登记为成功 Proof。
+
+下一步明确为 **Generation Stage Preflight／新准入**，随后才能恢复真实双层开发验收；该阶段尚未执行。当前改动证明确定性约束、恢复及预算机制的离线行为，不能声称真实修复成功率已提高。仍未实现任意字段别名推断、自动解决真实用户门向／材料／exact Type 冲突、跨 IFC Type 复用、Repair 工程师语言空间定位或 strict Provider 适配。已有 Proof 的人工确认与登记要求不变。

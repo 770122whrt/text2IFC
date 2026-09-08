@@ -126,3 +126,22 @@ def test_scoped_recovery_stops_repeated_failed_patch_and_keeps_attempts(tmp_path
     assert len(raw.calls) == 2
     assert (tmp_path/'attempt-02/response.raw.json').is_file()
     assert not (tmp_path/'revisions').exists()
+
+
+def test_contract_progress_with_same_operations_is_not_a_repeat(tmp_path):
+    from copy import deepcopy
+    from tests.agent.test_early_field_recovery import candidate, group, patch, _expected_facts
+    from text2ifc_agent.scoped_loop import run_scoped_changeset_round
+    from text2ifc_contract.validation_v2 import validate_v2_document
+    value = candidate()
+    good = patch(value, group(value)['scope'])
+    first, second = deepcopy(good), deepcopy(good)
+    first.pop('changeset_id')
+    second.pop('base_revision_id')
+    provider = SequenceProvider([first, second, good])
+    result = run_scoped_changeset_round(provider=provider, output_dir=tmp_path, case_id='contract-progress',
+        round_number=1, user_request='Generate a room', conversation=[], design_brief={},
+        expected_facts=_expected_facts(), candidate=value,
+        issues=[vars(i) for i in validate_v2_document(value)], field_recovery=True)
+    assert result['valid']
+    assert len(provider.calls) == 3

@@ -150,7 +150,8 @@ def run_staged_generation(
                 generation_package=package,
             )
             from .changeset_stage import retry_candidate_key
-            retry_key = (stage.get('classification'), retry_candidate_key(active_dir))
+            retry_key = (stage.get('classification'), hash_json_value(stage.get('diagnostics', [])),
+                         retry_candidate_key(active_dir))
             if attempt_count == 1:
                 seen_candidates = set()
             if retry_key in seen_candidates:
