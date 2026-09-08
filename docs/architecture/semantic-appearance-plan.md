@@ -292,3 +292,58 @@ Generation 当前 `geometry_v2.py` 限定 `extruded_profile`，compiler 对应�
 用户随后要求按既有 Proof 格式先收纳、检查通过后再登记。已新增本地待检查视图：[Generation](../../dataset/processed/proof/generation/phase6.6/semantic-appearance-20260908/README.md) 与 [Repair](../../dataset/processed/proof/repair/phase12.1/semantic-appearance-20260908/README.md)。两者仅使用独立 `review-manifest.json`，标记 `pending_human_review`／`unregistered`，没有主 `manifest.json`，未改 Proof 总索引或 accepted 名单。源运行保持不动，真实成功与失败材料按既有 package schema 逐字节复制并记录旧路径映射。
 
 原 request.txt 是 UTF-8，旧 HTTP 服务缺少 charset 导致浏览器误解码。新增中文阅读页并保持原始请求字节；`.venv\Scripts\python.exe scripts/presentation/serve_review.py --root dataset/processed/proof --port 8768` 可启动本地 UTF-8 查看服务。文本 HTTP 回归 3 项通过；两包既有人读检查通过，重读 4 份 IFC，122 个展示链接正常。此次仅收纳待检查视图，未运行 accepted curator，未登记或提交这些本地 Proof 材料。
+
+### 双层案例与自然语言定位反馈
+
+用户要求保留单层案例，新增更完整的双层 Generation，并尽量使用工程师语言定位 Repair 目标。单层案例仍待人工检查、未登记。Repair 的待检查报告已补充平面定位图及属性前后中文解释，原始技术请求和三份 IFC 字节未改；18 个报告链接及四份核心文件绑定检查通过。当前无 GUID 的“标高0层、长约2.22米、厚240毫米”查询确实返回两个候选，未强行选中；`direction` 描述轴线朝向，不能冒充外立面方位。任意“北侧／从西数第二个／距转角若干米”的组合定位尚未实现，本次报告中的人类表达示意没有作为新 Provider 输入执行。
+
+新增[双层开发记录](../../dataset/processed/ifc-presentation-validation/two-storey-human-review-20260908/REPORT.md)：运行前冻结输入和预期，设计包含上下两层活动厅、直跑楼梯与实际楼板洞口、10 窗／3 门和协调主题。累计 5 次真实响应（2 Brief、3 Generator）均保留。首次 Brief 因文本末尾换行回显差异被拒绝；随后公共 CLI 候选存在 IFC2X3 楼梯属性名、DoorStyle 与局部坐标轴错误。既有反馈接口纠正一次返回空正文，有限重试返回完整 JSON，但十个 WindowStyle 使用非法 ConstructionType=`WINDOW`，离线原样重放确认阻断。当前没有可交付双层 IFC，本轮真实调用已停止；未运行新 Audit、最终验收或双层视觉检查，未收纳为成功 Proof。
+
+两组新增聚焦回归为 54 passed 与 59 passed（离线、存在重叠），复用并核对既有同阶段准入源哈希；没有修改生产代码或已注册 Prompt／Schema／profile，没有运行 Full Preflight。下一步先冻结枚举约束、无 Type 请求最小附件与公共纠错案例族，再评估通用修复；若继续真实调用须基于适用的离线复验，保留这些失败。新成功案例只需既有 Proof 格式与实际 IFC 静态图，不另建网页；仍须等用户人工确认后登记。
+
+## 13. 2026-09-08 Pipeline 稳定性排查与批准实施
+
+用户进一步要求解释 LLM 修好一处又破坏另一处的原因，并检查 pipeline 的稳定性改进点。本节记录当前源码、实际载荷和离线探针得到的发现，不改变已批准产品范围，也不是新的实施完成声明。基线 HEAD `3626133d`，生产代码／Prompt／Schema 未改；既有待审 Proof、原始响应和其他任务修改保留。本轮没有真实 Provider、Full Preflight 或 accepted 安装。
+
+### 13.1 已核实的缺口与可复用机制
+
+| 优先级／环节 | 当前证据 | 建议及边界 |
+|---|---|---|
+| P0：生成合同与验证合同 | Formal 2.1 的 attributes 只显式约束放置和表示；实际 Generator 的 Schema／capability／few-shot／反馈均未给出 ConstructionType 及其枚举。IFC2X3 校验在输出后才拒绝 WINDOW。 | 从现有 IFC schema 与支持矩阵派生按类别选择的字段、枚举和约束上下文，带版本／哈希；生成和校验共用权威，避免手抄第二份枚举。无用户 Type 请求时约束多余样式生成，必要合法附件由现有确定性代码负责，不推断材料或性能。 |
+| P0：早期失败与局部修复接入 | `failure_routing.py` 可修集合包含 INVALID_ENUM，却没有实际产生的 INVALID_IFC_ATTRIBUTE_TYPE；BASIC_FILLING_CONSTRAINT_CONFLICT 也阻断。`interactive_cli_flow.py` 对 invalid Formal 提前返回，已有 scoped ChangeSet 路径主要在后续几何／Audit 纠错阶段。 | 按错误子因和证据生成恢复动作，打通可恢复的早期错误；真实用户冲突、缺事实、unsupported 保持澄清／阻断，不能仅把整类冲突加入白名单。 |
+| P0：合法修改范围 | 实际楼梯旧字段 NumberOfRisers 的报错仅授权旧路径；只做正确字段改名也因新增 NumberOfRiser 被 fact-delta 拒绝。同路径权限正例通过、无关改名反例被拒。 | 由 schema 和冻结请求生成成对字段操作与精确授权；以稳定实体 ID 绑定，减少数组下标和顺序引起的虚假变化。保留无关对象保护，不扩大到整份文档。 |
+| P0：语义依赖范围 | 对实际门的 Representation 问题派生的范围有 7 个实体、6 条关系，但不包含冲突的 DoorStyle；当前自动遍历关系不含 IfcRelDefinesByType。 | 补 Type／样式／材料／属性的语义依赖；区分只读上下文、可写字段和受影响但应保全的实例。不能遍历到共享 Type 就自动授权修改整个共享组。 |
+| P0：早期候选的修复进度 | `apply_changeset` 在提升 revision 前要求整个 Formal 校验通过。内存中只纠正十个错误窗样式之一后仍有 9 个错误，因此不能直接套用现有“合法 revision”应用器逐个积累这类修复。 | 优先构造能一次修完的有界依赖组；若仍需分步修 invalid candidate，必须明确未验收工作区与可发布 revision 的区别，验证未修错误集合和已通过不变量，不放宽最终发布。 |
+| P1：缩小生成与反馈上下文 | legacy_full 输出整份模型；纠正载荷约 99 KB。已有 staged 按包生成、冻结既有构件哈希；但 ChangeSet stage 仍固定加载八个 few-shot，并传完整 Brief／Expected Facts。 | 复用现有分包和 scoped component 机制；按包／错误选择例子与只读依赖，保留相关约束。legacy_full 默认不变、staged 显式选择，需同预算对照才能声称后者更稳定或更省。 |
+| P1：输出约束与 Provider 故障 | `OpenAICompatibleLiveProvider.generate_live` 的 schema 参数未进入 API 约束，实际用 json_object；temperature=0 已设置，DeepSeek thinking 的元数据标记其不生效。空正文已有真实证据。 | 先补有效的类别合同，再评估严格输出适配；仅 JSON 合法不能保证 IFC 合法。空正文／截断／连接错误走各自有上限的恢复，不混同语义修复；不要把继续降温当成主要方案。 |
+| P1：进度、回滚与预算 | 已有 revision／component hash、事务式 ChangeSet、最终全局 gates 和 bounded attempts。旧修复按问题数量下降判断 improved，feedback loop 允许问题签名变化后继续；staged 和 scoped 各有自己的重试上限。 | 保留最后可信候选，比较已修／残留／新增根因及强制 gate 状态，识别 A→B→A 和重复候选；增加贯穿同一任务的调用／token／时间预算。检查阶段推进后才新暴露的问题，避免把“数量没降”一概判成无进展。 |
+
+主要实现：[Provider](../../src/text2ifc_agent/openai_compat.py)、[旧生成修复与权限](../../src/text2ifc_agent/live_pipeline.py)、[失败路由](../../src/text2ifc_agent/failure_routing.py)、[公共链路](../../src/text2ifc_agent/interactive_cli_flow.py)、[局部修订](../../src/text2ifc_agent/scoped_loop.py)、[依赖范围](../../src/text2ifc_agent/change_scope.py)、[事务应用](../../src/text2ifc_agent/changeset_apply.py)、[分包生成](../../src/text2ifc_agent/staged_generation.py)、[反馈轮次](../../src/text2ifc_agent/feedback_loop.py)。这些机制已有部分实现，建议优先接通和补齐，不重复建设第二套编排。
+
+### 13.2 验证与方法依据
+
+本轮聚焦运行 `test_repair_fact_delta.py`、`test_generator_failure_routing.py`、`test_phase6_5_changeset_apply.py`、`test_phase6_5_scoped_loop.py`、`test_phase6_5_staged_generation.py`、`test_phase6_4_feedback_loop.py`：**57 passed**。测试为离线 seam／fake，不代表真实恢复成功。额外只读／内存探针证明枚举路由阻断、合法字段改名被权限拦截、只修一个样式仍剩九错、门的 Type 未进入自动 scope；没有保存修改后的候选或编译 IFC。
+
+- [测试 XML](../../dataset/processed/ifc-presentation-validation/two-storey-human-review-20260908/scoped-offline-evidence/pipeline-stability-inspection-01.xml)
+- [合同／权限／早期恢复探针](../../dataset/processed/ifc-presentation-validation/two-storey-human-review-20260908/scoped-offline-evidence/pipeline-stability-inspection-01.json)
+- [Type 依赖探针](../../dataset/processed/ifc-presentation-validation/two-storey-human-review-20260908/scoped-offline-evidence/pipeline-stability-type-scope-01.json)
+
+方法参考：[Self-Debugging](https://arxiv.org/abs/2304.05128) 在代码任务中使用执行反馈与失败预测复用；[自纠错边界研究](https://arxiv.org/abs/2310.01798) 说明无外部反馈的自我修正并不可靠，不能将其标题概括成所有模型均不能纠错。这些研究支持优先验证反馈质量，但不证明 text2IFC 上的改进幅度。[DeepSeek JSON Output](https://api-docs.deepseek.com/guides/json_mode/) 明确说明 JSON 模式可能返回空正文；[strict Tool Calls](https://api-docs.deepseek.com/guides/tool_calls/) 是另一个具有 schema 子集和 Beta 端点要求的能力，当前仓库未接入，本轮没有测试其真实效果。严格输出也不能替代关系、几何、用户语义和 IFC 重读校验，且适配不能迫使缺省普通属性填 null。
+
+建议实施顺序为 P0 合同一致性与最小附件 → 早期路由／依赖授权／有界修复组 → P1 上下文选择与全任务预算 → 可选 strict Provider 适配及 staged 同预算对照。修改前冻结跨构件、跨楼层、旋转宿主、Type 共享冲突、空响应和恢复失败案例族；同例只能证明修复可行。实际成功率须另外以固定 evaluator、包含失败的完整分母、隔离场景的配对测试报告 first-attempt／bounded-retry 严格成功率、无关变更率、误发布率、调用数、token 和延迟。
+
+### 13.3 已批准的执行合同与进度
+
+用户已批准更新本计划并逐点修复。第 13.1 节从调查建议转为本次实施依据，按下列顺序推进；本表只凭代码／测试／提交证据更新，不将计划写成完成状态。
+
+| 步骤 | 实施及验收边界 | 当前状态 |
+|---|---|---|
+| T1 合同一致性 | IFC registry 派生字段／枚举／可编写范围，Generator、Repair、ChangeSet 共用；新增 Prompt 版本与 registry，旧版本字节不变；覆盖有／无 Type、不同构件及未知类拒绝 | pending |
+| T2 有界早期恢复 | 新错误子因路由、稳定 ID 的字段授权和 Type 依赖；一次完成可授权的错误组，禁止未合法候选晋升；明确冲突／缺失事实仍阻断；覆盖公共 CLI 与 staged 相关路径、源与未请求内容保全 | pending |
+| T3 生成及反馈上下文 | 按任务／包／错误选择必要示例与 schema 资料；依赖上下文不自动成为写权限；保留完整原始 traces 和冻结请求，legacy_full 默认不变 | pending |
+| T4 进度与总预算 | 保留可信基线、区分新暴露与回归错误、重复候选／循环停止，统一任务内调用及 token 上限；预算耗尽不发布部分结果，恢复后不得重置已用预算 | pending |
+| T5 公共接入与验证 | 逐项聚焦回归后，运行变更相关公共 API／CLI 离线全链路与恢复、安全、版本兼容检查；记录新 stage admission 判断；再决定是否进入真实双层验收 | pending |
+
+新增严格 Provider 输出适配属于 T5 后的可选受控实验，先做离线兼容性评估；不自动切换 Beta 端点、Provider、生成默认策略或扩大真实调用预算。Repair 自然语言空间定位是已记录的后续能力缺口，不把本次 Generation 纠错改动冒充该能力已完成。本轮真实 Provider 暂停，Full Preflight 仍需单独明确批准；Proof 登记继续等待用户人工检查。
+
+修复前冻结失败案例族：字段名／枚举／值类型（正例、非法值、相邻合法类、无 Type）；门向／开口局部轴（旋转宿主、跨楼层、显式冲突）；Type 共享依赖（单实例、多实例、未请求范围）；原子恢复（多错误组、合法字段对、无关变化、空／截断输出）；上下文／预算（small/multi-storey、stage/resume、重复输出、失败消耗）。现有双层真实候选仅作为已揭示开发复现，禁止混入盲测成功率。
