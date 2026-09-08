@@ -25,7 +25,7 @@ from .property_resolution_coordinator import (
 from .property_resolution_stage import generate_property_resolution_decision
 from .semantic_authoring import semantic_manifest_to_dict
 from .repair_intent import RepairIntent
-from .repair_intent import REPAIR_INTENT_SCHEMA_VERSION_0_8
+from .repair_intent import REPAIR_INTENT_SCHEMA_VERSION_0_10
 from .request_stage import generate_repair_intent
 from .run_models import (
     Clarification,
@@ -73,7 +73,7 @@ class RepairAPI:
         changeset_stage: Callable[..., Mapping[str, Any]] = generate_bound_changeset,
         orchestrator_factory: Callable[..., RepairOrchestrator] = RepairOrchestrator,
         orchestrator_options: Mapping[str, Any] | None = None,
-        intent_schema_version: str = REPAIR_INTENT_SCHEMA_VERSION_0_8,
+        intent_schema_version: str = REPAIR_INTENT_SCHEMA_VERSION_0_10,
         property_knowledge_resolver: Any | None = None,
         property_knowledge_runtime: Any | None = None,
         property_resolution_stage: Callable[..., Mapping[str, Any]] = (
@@ -127,7 +127,7 @@ class RepairAPI:
         config = load_openai_compatible_runtime_config(
             dict(os.environ) if environment is None else dict(environment)
         )
-        intent_schema_version = REPAIR_INTENT_SCHEMA_VERSION_0_8
+        intent_schema_version = REPAIR_INTENT_SCHEMA_VERSION_0_10
         return cls(
             output_root,
             provider=OpenAICompatibleLiveProvider(config=config),
@@ -693,6 +693,8 @@ class RepairAPI:
                         state.source.sha256,
                     )
                 )
+            if intent.schema_version == REPAIR_INTENT_SCHEMA_VERSION_0_10:
+                resolver_options["source_ifc_path"] = state.source.reference
             orchestrator_options["resolver_options"] = resolver_options
             orchestrator = self._orchestrator_factory(
                 run_directory=run_dir,
@@ -982,6 +984,10 @@ def _clarification(run_id: str, version: int, resolution: Any) -> Clarification:
         if slots
         else "目标不唯一或证据不足，请选择候选、补充说明或取消。"
     )
+    if str(resolution.reason_code).startswith("EXACT_TYPE_") or resolution.reason_code == "TYPE_PROPERTY_MUTATION_DEFERRED":
+        reason = "additional_target_detail"
+        modes = ("add_detail", "cancel")
+        question = "指定 Type 与请求语义需要澄清（" + str(resolution.reason_code) + "）。请明确保留 Type 定义、调整请求，或显式授权合法的实例属性覆盖；不会修改共享 Type。"
     return Clarification(
         clarification_id=f"clarify-{version:03d}",
         run_id=run_id,

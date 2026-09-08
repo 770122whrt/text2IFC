@@ -133,6 +133,7 @@ def resolve_repair_intent(
     operation_registry: OperationRegistry | None = None,
     property_registry: IfcKnowledgeRegistry | None = None,
     property_knowledge_resolver: PropertyKnowledgeResolverProtocol | None = None,
+    source_ifc_path: Any = None,
 ) -> ResolutionBatch:
     """Resolve all operations in stable order or return one fail-closed pause."""
 
@@ -147,6 +148,7 @@ def resolve_repair_intent(
     completed: list[ResolvedOperation] = []
     property_evidence: list[Mapping[str, Any]] = []
     pending_property_batches: list[PropertyConfirmationBatch] = []
+    semantic_source = None
     for operation in intent.operations:
         try:
             expanded_properties, expanded_quantities = expand_semantic_bundles(
@@ -386,6 +388,16 @@ def resolve_repair_intent(
                     completed[-1],
                     authorized_semantics=(*completed[-1].authorized_semantics, prototype_result[1]),
                 )
+                if intent.schema_version == "text2ifc/ifc-repair-intent/0.10":
+                    from .semantic_conflicts import open_verified_source, type_request_conflict
+                    try:
+                        if semantic_source is None:
+                            semantic_source = open_verified_source(source_ifc_path, expected_source_sha256)
+                        conflict = type_request_conflict(semantic_source, prototype_result[1]["global_id"], operation)
+                    except (ValueError, OSError, RuntimeError) as error:
+                        conflict = str(error) if str(error).startswith("EXACT_TYPE_") else "EXACT_TYPE_SOURCE_UNAVAILABLE"
+                    if conflict:
+                        return ResolutionBatch(status="clarification_required", reason_code=conflict, operation_id=operation.operation_id, operations=tuple(completed), source_ifc_sha256=expected_source_sha256, model_fingerprint=intent.model_fingerprint)
             elif prototype_result[0] == "ambiguous":
                 return ResolutionBatch(
                     status="clarification_required", reason_code="prototype_selection",
@@ -501,6 +513,8 @@ def resolve_repair_intent(
                 try:
                     property_scope = normalize_property_scope(property_intent.scope)
                 except ValueError as error:
+                    if intent.schema_version == "text2ifc/ifc-repair-intent/0.10":
+                        return ResolutionBatch(status="clarification_required", reason_code=str(error), operation_id=operation.operation_id, operations=tuple(completed), source_ifc_sha256=expected_source_sha256, model_fingerprint=intent.model_fingerprint)
                     return _failure(
                         intent,
                         str(error),
@@ -589,6 +603,11 @@ def resolve_repair_intent(
                     existing_facts=(),
                     registry=knowledge,
                 )
+                if semantic_source is not None and prototype is not None and prototype.reference_kind in {"global_id", "type_name"}:
+                    from .semantic_conflicts import type_property_conflict
+                    conflict = type_property_conflict(semantic_source, prototype_result[1]["global_id"], exact_intent, explicit_scope=property_intent.scope)
+                    if conflict:
+                        return ResolutionBatch(status="clarification_required", reason_code=conflict, operation_id=operation.operation_id, operations=tuple(completed), source_ifc_sha256=expected_source_sha256, model_fingerprint=intent.model_fingerprint)
                 if (
                     property_resolution.status
                     is PropertyResolutionStatus.CLARIFICATION_REQUIRED
