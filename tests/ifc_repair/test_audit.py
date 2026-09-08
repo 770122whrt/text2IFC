@@ -215,7 +215,7 @@ def test_audit_rejects_target_outside_scope(tmp_path: Path) -> None:
 
 
 def test_audit_rejects_curved_wall_with_stable_code() -> None:
-    curved_ifc = ROOT / "dataset" / "ifc" / "test" / "px4_2.ifc"
+    curved_ifc = ROOT / "dataset" / "external" / "bimnet" / "px4_2.ifc"
     request = "在指定曲墙上新增窗洞。\n"
     fingerprint = "sha256:" + hashlib.sha256(curved_ifc.read_bytes()).hexdigest()
     changeset = {

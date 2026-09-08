@@ -1,5 +1,6 @@
 import json
 from pathlib import Path
+import pytest
 
 from scripts.ifc_repair.audit_door_repair_triplet import audit_case
 
@@ -25,6 +26,13 @@ FIVE_DOOR_CASE = (
     / "batch"
     / "vvo-five-door-authority-public-repair"
 )
+
+
+@pytest.fixture(autouse=True)
+def _bind_consolidated_proof(phase11_frozen_proof, monkeypatch):
+    module = __import__(__name__, fromlist=["CASE"])
+    monkeypatch.setattr(module, "CASE", phase11_frozen_proof / "mixed/door-window/vvo-authority-triplet-public-repair")
+    monkeypatch.setattr(module, "FIVE_DOOR_CASE", phase11_frozen_proof / "door/batch/vvo-five-door-authority-public-repair")
 
 
 def test_checked_in_vvo_triplet_has_authoritative_l0_l1_l2_release() -> None:
