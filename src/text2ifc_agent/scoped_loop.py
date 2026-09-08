@@ -10,7 +10,7 @@ from typing import Any, Mapping, Sequence
 from .candidate_index import build_candidate_index
 from .change_scope import derive_change_scope
 from .changeset_apply import apply_changeset
-from .changeset_stage import run_changeset_stage
+from .changeset_stage import run_changeset_stage, retry_candidate_key
 from .issues import Issue
 from .revisions import hash_json_value
 
@@ -127,6 +127,7 @@ def run_scoped_changeset_round(
     applied: dict[str, Any] = {}
     application_feedback: list[dict[str, Any]] = []
     max_attempts = max(1, min(max_attempts, MAX_CHANGESET_ATTEMPTS))
+    seen_candidates = set()
     for attempt in range(1, max_attempts + 1):
         active_output = output if attempt == 1 else output / f"attempt-{attempt:02d}"
         stage = run_changeset_stage(
@@ -146,6 +147,13 @@ def run_scoped_changeset_round(
             trace_level=trace_level,
             field_recovery=field_recovery,
         )
+        retry_key = (stage.get('classification'), retry_candidate_key(active_output))
+        if retry_key in seen_candidates:
+            diagnostics = [{'code':'CHANGESET_REPEATED_CANDIDATE', 'path':'/operations',
+                            'message':'The same failed patch was returned for the unchanged base.'}]
+            _write_json(active_output/'retry-decision.json', {'retry_allowed':False, 'issues':diagnostics})
+            return {**_blocked('repeated_candidate', diagnostics), 'stage':stage, 'scope':scope}
+        seen_candidates.add(retry_key)
         if (
             stage["classification"] == "invalid"
             and attempt < max_attempts

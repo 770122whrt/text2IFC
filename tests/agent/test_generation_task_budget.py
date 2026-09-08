@@ -54,6 +54,18 @@ def test_reopen_cannot_silently_enlarge_budget(tmp_path):
         budget(tmp_path, max_calls=100)
 
 
+def test_legacy_evidence_is_charged_once_without_rewriting_sources(tmp_path):
+    raw = tmp_path/'design-brief/response.raw.json'
+    raw.parent.mkdir()
+    raw.write_text(json.dumps({'id':'old', 'usage':{'input_tokens':11,'output_tokens':17}}))
+    before = raw.read_bytes()
+    ledger = budget(tmp_path)
+    assert ledger.snapshot()['calls_used'] == 1
+    assert ledger.snapshot()['tokens_used_or_reserved'] == 28
+    assert budget(tmp_path).snapshot()['calls_used'] == 1
+    assert raw.read_bytes() == before
+
+
 def test_actual_usage_and_active_time_accumulate(tmp_path):
     from text2ifc_agent.generation_budget import GenerationBudgetExceeded
     ledger = budget(tmp_path, max_calls=5, max_tokens=1000, max_active_seconds=2)
@@ -77,3 +89,40 @@ def test_feedback_stops_a_b_a_cycle_but_allows_new_stage(tmp_path):
     assert write('error B', 'geometry')['retry_allowed']
     saved = json.loads((tmp_path/'feedback-rounds.json').read_text())
     assert len(saved['rounds']) == 4
+
+
+def test_public_budget_exhaustion_before_audit_never_publishes(tmp_path):
+    from text2ifc_agent.generation_budget import BudgetLimits
+    from text2ifc_agent.interactive_cli_flow import run_ready_session_to_ifc
+    from text2ifc_agent.session_store import SessionStore
+    from tests.agent.test_interactive_cli_generation import _write_ready_design_brief_call, _SequenceLiveProvider, PHASE6_1_COMPLETE
+    store = SessionStore.open(tmp_path/'sessions.sqlite', artifact_root=tmp_path)
+    session = store.create_session(original_input='Generate a room')
+    _write_ready_design_brief_call(session.run_dir)
+    store.mark_session_status(session.session_id, 'ready')
+    candidate = json.loads((PHASE6_1_COMPLETE/'generator/candidate.json').read_text(encoding='utf-8'))
+    provider = _SequenceLiveProvider([candidate])
+    result = run_ready_session_to_ifc(store=store, session=session.session_id,
+        provider_factory=lambda:provider, budget_limits=BudgetLimits(max_calls=2))
+    assert result.status == 'budget_blocked' and result.ifc_path is None
+    assert len(provider.session_ids) == 1
+    assert store.get_session(session.session_id).status == 'budget_blocked'
+    assert not (session.run_dir/'final-acceptance.json').exists()
+
+
+def test_scoped_recovery_stops_repeated_failed_patch_and_keeps_attempts(tmp_path):
+    from tests.agent.test_early_field_recovery import candidate, group, patch, _expected_facts
+    from text2ifc_agent.scoped_loop import run_scoped_changeset_round
+    from text2ifc_contract.validation_v2 import validate_v2_document
+    value = candidate()
+    g = group(value)
+    partial = patch(value, g['scope'], omit_last=True)
+    raw = SequenceProvider([partial, partial, patch(value, g['scope'])])
+    result = run_scoped_changeset_round(provider=raw, output_dir=tmp_path, case_id='repeat',
+        round_number=1, user_request='Generate a room', conversation=[], design_brief={},
+        expected_facts=_expected_facts(), candidate=value,
+        issues=[vars(i) for i in validate_v2_document(value)], field_recovery=True)
+    assert not result['valid'] and result['status'] == 'repeated_candidate'
+    assert len(raw.calls) == 2
+    assert (tmp_path/'attempt-02/response.raw.json').is_file()
+    assert not (tmp_path/'revisions').exists()

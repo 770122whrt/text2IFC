@@ -149,6 +149,16 @@ def run_staged_generation(
                 trace_level=trace_level,
                 generation_package=package,
             )
+            from .changeset_stage import retry_candidate_key
+            retry_key = (stage.get('classification'), retry_candidate_key(active_dir))
+            if attempt_count == 1:
+                seen_candidates = set()
+            if retry_key in seen_candidates:
+                gate = {'valid':False, 'issues':[{'code':'CHANGESET_REPEATED_CANDIDATE',
+                    'path':'/operations', 'message':'The same failed package was returned for the unchanged workspace.'}]}
+                _write_json(active_dir/'retry-decision.json', gate)
+                break
+            seen_candidates.add(retry_key)
             if stage.get("classification") == "draft" and stage.get("valid") is True:
                 record = {
                     "package_id": package_id,

@@ -221,6 +221,21 @@ def _scoped_components(
     return components
 
 
+def retry_candidate_key(output_dir):
+    """Ignore new trace/operation IDs when detecting the same failed patch."""
+    from .revisions import hash_json_value
+    root = Path(output_dir)
+    parsed = root/'parsed-output.json'
+    if parsed.is_file():
+        value = _read_json(parsed)
+        if isinstance(value, dict) and isinstance(value.get('operations'), list):
+            value = [{k:v for k,v in op.items() if k not in {'operation_id', 'evidence_refs'}}
+                     if isinstance(op, dict) else op for op in value['operations']]
+        return hash_json_value(value)
+    text_path = root/'model-text.txt'
+    return hash_json_value(text_path.read_text(encoding='utf-8') if text_path.is_file() else None)
+
+
 def _binding_diagnostics(
     changeset: Mapping[str, Any],
     base_revision: Mapping[str, Any],

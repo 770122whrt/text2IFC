@@ -147,6 +147,8 @@ def make_openai_design_brief_invoker(
 
     root = Path(run_dir)
     client = _openai_client(config=config, client_factory=client_factory)
+    from .generation_budget import GenerationBudget
+    budget = GenerationBudget(root)
 
     def invoke(transcript: list[dict[str, Any]], call_index: int) -> ClarificationCall:
         if not transcript:
@@ -189,15 +191,21 @@ def make_openai_design_brief_invoker(
         _write_json(call_dir / "prompt-render-input.json", renderer_inputs)
         (call_dir / "prompt-rendered.md").write_text(rendered["text"], encoding="utf-8")
         _write_json(call_dir / "request.redacted.json", request)
+        import time
+        reservation = budget.reserve(stage='design_brief',
+            reserved_tokens=len(rendered['text'].encode('utf-8')) + config.max_completion_tokens)
+        started = time.monotonic()
         try:
             response = client.chat.completions.create(**request)
         except Exception as error:
+            budget.settle(reservation, elapsed_seconds=time.monotonic()-started, failed=True)
             failure = {"exception_type": type(error).__name__, "status": "transport_failed"}
             _write_json(call_dir / "transport-failure.json", failure)
             # Provider exceptions may contain credentials or private endpoint URLs.
             raise OpenAICompatError("Design Brief transport failed", evidence=failure) from None
         payload = _object_to_dict(response)
         _write_json(call_dir / "response.raw.json", payload)
+        budget.settle(reservation, usage=payload.get('usage', {}), elapsed_seconds=time.monotonic()-started)
         evidence = parse_chat_completion_evidence(
             payload,
             request=request,
@@ -450,12 +458,47 @@ def run_ready_session_to_ifc(
     trace_level: str | None = "debug",
     progress: Callable[[str, dict[str, Any]], None] | None = None,
     generation_strategy: str = "legacy_full",
+    budget_limits: Any = None,
+) -> SessionIfcResult:
+    """Run the public chain, returning a non-publishing terminal budget result."""
+    from .generation_budget import GenerationBudgetExceeded
+    try:
+        return _run_ready_session_to_ifc(store=store, session=session,
+            provider_factory=provider_factory, trace_level=trace_level, progress=progress,
+            generation_strategy=generation_strategy, budget_limits=budget_limits)
+    except GenerationBudgetExceeded as error:
+        stored = store.get_session(session)
+        _write_json(stored.run_dir/'generation-budget-decision.json', {
+            'schema_version':'text2ifc/generation-budget-decision/1.0',
+            'status':'budget_blocked', 'publication_permitted':False,
+            'reason':str(error), 'evidence':error.evidence})
+        store.mark_session_status(stored.session_id, 'budget_blocked')
+        store.export_session(stored.session_id)
+        return SessionIfcResult(session_id=stored.session_id, session_hash=stored.session_hash,
+            status='budget_blocked', generator_status='budget_blocked',
+            repair_route='blocked_failure', audit_status='not_accepted', ifc_path=None, report_path=None)
+
+
+def _run_ready_session_to_ifc(
+    *,
+    store: SessionStore,
+    session: str,
+    provider_factory: Callable[[], Any],
+    trace_level: str | None = "debug",
+    progress: Callable[[str, dict[str, Any]], None] | None = None,
+    generation_strategy: str = "legacy_full",
+    budget_limits: Any = None,
 ) -> SessionIfcResult:
     """Generate BIM JSON, run deterministic gates, and compile a ready session."""
 
     stored_session = store.get_session(session)
     if stored_session.status != "ready":
         raise ValueError("Phase 6.2 IFC generation requires a ready session")
+
+    from .generation_budget import GenerationBudget, BudgetedProvider
+    budget = GenerationBudget(stored_session.run_dir, budget_limits)
+    raw_provider_factory = provider_factory
+    provider_factory = lambda: BudgetedProvider(raw_provider_factory(), budget)
 
     design_dir = _prepare_design_source(stored_session)
     design_brief = json.loads((design_dir / "design-brief.json").read_text(encoding="utf-8"))
@@ -902,6 +945,7 @@ def run_ready_session_to_ifc(
         )
 
     _emit_progress(progress, "final_acceptance", {"status": "started"})
+    budget.assert_publishable()
     final = run_final_acceptance_stage(
         case_dir=stored_session.run_dir,
         output_dir=stored_session.run_dir,
