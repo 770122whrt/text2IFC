@@ -1,5 +1,7 @@
 # IFC Presentation Development Boundary
 
+> 接续计划：[Type、材质、属性和外观计划](../../architecture/semantic-appearance-plan.md)。已定稿范围：Type 按需在当前项目内组织，增加小型内置参数化模板与 Generation 基础门窗细节；Repair 保留原几何，模板不默认补写材料或性能属性，不实现跨 IFC 参照。下文保留第一阶段边界和已完成验证，后续离线实施与验证记录见该计划第 11 节，不覆盖本页历史边界或声称真实 Provider 能力提升。
+
 状态：**FROZEN FOR IMPLEMENTATION**
 
 日期：2026-09-03

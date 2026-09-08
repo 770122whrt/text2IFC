@@ -1,0 +1,275 @@
+# Repair 与 Generation 的 Type、材质、属性和外观计划
+
+更新：2026-09-08。状态：范围已定稿；S0—S4 离线实施已落地，S5 离线展示完成、人工视觉审查待进行。纳入小型内置参数化模板和 Generation 基础门窗细节，Repair 保留原几何。
+
+最新决定：用户选择“采用建议：小型模板＋Generation 基础门窗细节”。它取代此前 Generation 全程保持现有几何的范围限制；默认配色、性能属性缺省不写入、不实现跨 IFC 参照的决定继续有效。实施顺序为先补齐语义链路，再完善配色与门窗细节。第 10 节保留工程探测、模板边界和独立审查依据。
+
+本计划的目标是让 IFC 在当前支持的建筑范围内同时满足请求、具有合理语义，并呈现协调的颜色。它接续已有 presentation 实现，不改变既有 Phase 或 Proof 的验收状态。当前实现基线为 `362f5b49`，历史实现与验证记录见 [第一阶段边界](../validation/ifc2x3-changeset/ifc-presentation-development-boundary-2026-09-03.md)。
+
+## 1. 已确定的范围
+
+1. 优先完成这条产品线；外部 IFC 来源扩展不作为前置任务。
+2. 维护少量内置参数化构造/样式模板，初版为单面板窗、双竖面板窗、左/右单开门。不维护外部 IFC Type 资产库，不实现参照另一份 IFC、跨 IFC 检索、资产导入或跨 IFC 类型复用。
+3. Generation 的新 Type 在本次生成的项目中建立。只有用户表达类型、同规格共享或同类型要求时，才进入对应的类型组织分支；不按颜色相同或尺寸碰巧相同自动强行合并。
+4. 没有 Type 需求时，不强求新建或复用 Type，不询问用户必须选择哪一个 Type。既有 IFC/编译合同要求的最小合法类型附件仍由代码处理，并与用户的设计意图区分。
+5. Repair 可按请求使用当前待修 IFC 中仍存在的 Type；这不引入第二份参照 IFC。未请求的类型、属性、材质与样式保持不变。
+6. 材质、property 和颜色质量不以存在 Type 为前提。没有 Type 关系的构件也可以有合理材料、合法属性和协调样式。
+7. Generation 在新版本表示合同下增加基础门窗细节，直接呈现窗框、玻璃面板、门框和门扇等适用部件。Repair 不升级或替换已有几何；其他 Generation 构件与旧版本几何行为保持不变。任意分格、推拉/折叠、复杂五金和外伸装饰不在本轮范围。
+8. 用户未指定外观时采用默认风格。未提供强度、耐火、热工等性能值时，不创建相应 property；不写零值、占位值或“未知”。
+9. 保持 IFC2X3、现有构件支持范围及现行默认生成策略；不同时扩展 IFC4、复杂曲面、完整建筑系统或大型建筑生成能力。
+
+“相同类型”与“完全相同实例”不等价：类型表达共同定义，位置、编号、实例属性和按合同可变的尺寸仍属于实例。类型关系不能代替材料、属性和几何的实际验证。
+
+## 2. 基线与真正缺口
+
+| 部分 | 当前已具备 | 本计划补齐 |
+|---|---|---|
+| Repair | Type 绑定与保真、属性解析/写入、显式材质和外观合同、多色映射 Type 保留 | 同一请求中 Type/材质/属性/颜色的一致性、冲突说明、无 Type 需求的兼容路径及组合回归 |
+| Generation Type/property | BIM JSON 2.0、类型关系写入、property set 写入 | 从需求确定作用域、按需创建/共享项目内 Type、属性依据与有效值检查，完整接入公共流程 |
+| Generation 材质 | 部分材料层表达；编译器已有 WallStandardCase 材料层路径 | 对实际支持构件逐类核对材料写入，缺失/不支持内容不能只停留在 JSON 或静默丢弃 |
+| Generation 外观 | 可选 compiler profile/seed、有限 palette、共享样式工具 | 请求与主题传递、材料/部件角色协调、绑定优先级、最终 IFC 外观检查 |
+| Generation 门窗细节 | 单拉伸表示；基础门窗 API 的隔离探测已完成 | 受限参数化模板、新版本表示合同、开口/墙厚/坐标适配、分部件几何与样式，接入完整公共生成路径 |
+| 验证 | 编译/reopen、几何、Repair L0/L1/L2/preservation、离线 presentation 示例 | 请求到最终 IFC 的语义与视觉双重结果，以及失败/澄清/恢复与发布边界 |
+
+现有 `apply_generation_profile()` 主要按构件类别和身份选择样式并写到表示项；这不能证明材料合理，也不能证明自然语言已经选择了合适主题。公共 `live_pipeline.py` 与编译 CLI 的调用尚未传入这些外观选项。
+
+## 3. 信息依据与缺失处理
+
+每项待写入事实区分四种来源：用户明确要求、当前模型既有事实、可验证的确定性推导、允许的生成设计选择。缺失值保持未提供，并在结果中说明；不向标准布尔/数值 property 写入字符串“未知”。
+
+| 信息 | Generation 规则 | Repair 规则 |
+|---|---|---|
+| Type | 用户要求时在当前项目内创建/共享；不依赖外部库 | 按请求解析当前 IFC 中的类型；无法唯一解析则澄清 |
+| 材料/构造层 | 有明确请求或可用类型定义时处理；未指定时沿用既有最小合法附件，不因默认配色额外推断物理材料或构造层 | 保留已有事实，只写入本次请求授权且适用的材料 |
+| 普通属性 | 处理用户值及既有合同允许、具有明确前提的推导；不新增自动补齐普通属性的默认策略 | 按合法属性合同与作用域写入，不自动补全整个模型 |
+| 性能值 | 用户未提供则不创建相应 property；不写入 null、零值或“未知”占位，不因其缺失触发澄清 | 不从外观猜测性能，不使用 private Gold 补值 |
+| 外观 | 用户颜色/风格优先；未指定时自动采用默认协调风格 | 已有权威与修改范围优先，不自动美化源 IFC |
+| 模板参数 | 显式输入优先；模板可提供已冻结、可校验的局部构造参数和样式默认值，记录模板 ID/版本与参数来源；不能据此补写材料、性能值或更改宿主/开口尺寸 | 不用 Generation 模板替换源 IFC 的几何或 Type 权威 |
+
+用户提出性能指标时，区分“设计要求/用户声明”与“实测或认证值”；即使属性可写入，也不宣称已经验证实际性能。设计选择记录在现有 provenance/报告链路中，不伪装成外部来源事实。
+
+丰富语义以请求相关信息是否正确、可解释为标准；不追求 property 个数或 Type 覆盖率。
+
+## 4. 两条流程与冲突策略
+
+Generation：
+
+```text
+需求 / Design Brief / 必要澄清
+→ 构件规格、材料、属性与整体风格决策
+→ 有 Type 需求时：当前项目内创建/共享类型；否则沿用无强制复用路径
+→ 对支持的新建门窗选择内置模板，绑定用户参数和允许的构造默认值
+→ Formal BIM JSON 及必要的版本化控制信息
+→ 确定性构件、关系、材料、属性与样式写入
+→ reopen、语义和几何检查、外观检查
+→ 发布 IFC 与可读报告
+```
+
+Repair：
+
+```text
+当前待修 IFC + 请求
+→ 解析目标及请求涉及的 Type/材料/属性/外观
+→ 检查证据、作用域与冲突
+→ 有界 ChangeSet / 确定性绑定 / 原子应用
+→ reopen、L0/L1/L2、preservation 与有效语义检查
+→ 发布 repaired IFC 或明确 no-output
+```
+
+- 复用/共享 Type 时，不能通过修改它的定义影响请求之外的实例；实例覆盖和类型级修改必须区分。
+- 用户要求 exact Type，同时要求与该 Type 不兼容的材质/属性/颜色时，进入澄清，不静默覆盖 Type，也不无声丢弃用户要求。已有版本行为作为历史事实保留；新路由经版本化合同与回归后生效。
+- 本轮不新增“复制现有 Type 并任意变体化”的通用 Repair 操作；Generation 中用户明确要求不同规格时，可分别新建项目内类型。
+- 梁柱长度、轴线、位置等按当前请求和几何合同生成；不因为共享 Type 而覆盖实例尺寸。Repair 门窗沿用已有几何权威分类；Generation 新门窗按新版本参数合同构建，不能改变旧表示的含义。
+- 同名不能证明同一 Type/材料。目标模型内使用稳定身份和完整定义判定，不用名称或 RGB 做语义去重键。
+- 没有兼容材料表达、属性不适用、类型关系冲突或事实不足时，保留 Draft/澄清/不支持结果；不能丢字段后发布为成功。
+
+## 5. 配色与材料表达
+
+未指定颜色/风格时自动采用默认协调风格。初始主题建议低饱和度、有限强调色；已有明确材料时保持相应视觉倾向，没有材料依据时只表达颜色，不据此声称物理材质。具体色板可通过首批效果审查调整。
+
+1. 一次生成采用一个协调主题；颜色按材料、类型和建筑角色组织，而非逐实例随机着色。
+2. 用户明确颜色优先。木饰面、玻璃、金属框等在符合请求时采用可辨认的表达；颜色不能反向创造材料语义。
+3. 材料级样式用于共有表达；构件或部件的明确差异使用受控样式覆盖。不能把全局 style override 当成默认材质实现。
+4. 同一材料可有经明确区分的表面处理；不同外观不自动意味着不同物理材料。共享材料样式的修改范围必须可控。
+5. Generation 基础门窗通过确定性模板建立适用的框、扇和玻璃面板表示，并按部件角色分色；玻璃面板的透明样式不等于已经写入或验证物理玻璃材料。Repair 保留已有分部件样式和几何，不为美化重建表示。只改主题时，任何构件的几何签名均不得变化。
+6. 稳定性检查比较语义与样式签名，不要求包含时间等元数据的整个 IFC 字节相同。“颜色更多”不作为视觉质量指标。
+
+## 6. 实施顺序与提交边界
+
+下列 S0—S5 是本任务的交付步骤，不是新的正式 Phase 编号。每步先确定可观察失败与预期结果，再修改最小相关模块。
+
+| 步骤 | 工作与主要路径 | 可审查交付 / 完成条件 |
+|---|---|---|
+| S0：冻结输入与适用合同 | `src/text2ifc_agent/design_brief.py`、`semantic_capabilities.py`；`src/text2ifc_contract/`；现有 schemas | 形成逐项语义预期、材料支持矩阵与作用域/冲突矩阵；加入 Type 家族配对、实例有效 Type 唯一性。冻结模板默认参数白名单、来源和边界；区分 Repair/纯配色几何保全与 Generation 新门窗几何验收。先冻结公共入口纵向案例，并按最窄边界保留能复现审核问题的失败测试；已注册版本不重写 |
+| S1：Repair 收尾 | `src/text2ifc_ifc_repair/{repair_intent,resolution_flow,semantic_authoring,type_templates}.py`、`operations/`、相关 request/provider 路由 | 指定/未指定 Type、材质和属性作用域、冲突澄清、多实例保全都有聚焦与公共离线回归。已有成功结果不被提升为新版本 live 证据 |
+| S2：Generation 语义闭环 | `src/text2ifc_compiler/{bootstrap,relationships,properties,compiler}.py`；必要时新增独立 `materials.py`；Agent Brief/semantic coverage | 先明确单材料/材料层的构件支持矩阵及版本合同；按需创建和共享项目内 Type。独立读回 reopened IFC 的有效 Type、材料、直接/继承 property 和缺省性能属性，逐项核对预期；一个纵向案例通过后再扩构件范围 |
+| S3a：协调外观 | `src/text2ifc_presentation/`、compiler 外观绑定处 | 在 S2 语义纵向案例通过后接入主题；按已有材料/角色绑定，显式颜色可追溯；只改样式时几何、尺寸、开口与位置不变 |
+| S3b：模板与基础门窗细节 | `src/text2ifc_contract/geometry_v2.py` 对应的新版本合同、`schemas/bim-json/` 新版本、`src/text2ifc_compiler/geometry.py` 及独立模板模块、presentation 部件绑定 | 单/双竖面板窗、左/右单开门的受限参数表示；模板 ID/版本、有效参数和来源可追溯；毫米/米、旋转放置、宿主墙厚、开口、部件角色与分色全部验证。新模板不依赖 Type 共享，不改 Repair 或旧版本几何行为 |
+| S4：公共入口覆盖补齐 | `src/text2ifc_agent/{live_pipeline,interactive_cli_flow,staged_generation,generation_packages}.py`、`scripts/bim_json/compile_ifc.py` | 在 S2 已打通的纵向入口基础上补齐其余入口；语义、主题、模板版本和参数从请求传至最终编译，澄清/恢复后不丢失；保留 `legacy_full` 默认与 `staged` 显式选择；两条策略的新版本相关路径与旧版本兼容路径均验证 |
+| S5：结果审查与 Proof | `scripts/presentation/validate_offline.py`、聚焦 tests、现有 human Proof 工具 | 每案可找到 request、BIM JSON/输入 IFC、最终 IFC 或 no-output、逐项语义表及视觉视图；来源和验收等级明确，人工审查后才提升相应状态 |
+
+预计按 Repair、Generation 语义、Generation 外观、模板/门窗几何、公共接入/验证形成独立实现提交；每个行为提交附带相关测试。共享代码只共享机械写入/检查能力，Repair 与 Generation 的决策优先级分别保留。
+
+本轮为受限门窗参数表示增加适用的 Formal 合同版本，并同步版本注册、编译入口与聚焦测试。具体版本号在 S0 核对当前 registry 后确定，不重写已注册 Prompt/Schema，也不将新参数塞入旧 `extruded_profile` 含义中。超出本轮支持的 geometry 仍进入 Draft/澄清/明确不支持，不能静默退回简单盒子后称为完成细节请求。
+
+## 7. 首批案例与验证
+
+### S0 冻结合同（2026-09-08）
+
+新 Formal 版本为 `bim-json/2.1`，2.0 Schema 字节不变。新版本添加单材料、Type 材料层集合、外观控制和独立 `basic_filling` 表示；不改变 `extruded_profile`。同一对象最多一个材料附件，材料身份按对象/附件创建，不按名字合并。普通实例允许直接材料/property 覆盖继承值；共享 Type 定义不随实例覆盖改变。
+
+| 对象/作用域 | 单材料 | 层材料 | 缺省 |
+|---|---|---|---|
+| Wall / WallStandardCase 实例 | Wall 支持；StandardCase 使用单层 usage 表达 | AXIS2，厚度合计等于矩形墙厚 | 仅 StandardCase 保留既有最小合法层附件 |
+| Slab / Roof / Plate / Covering 实例 | 支持 | AXIS3，厚度合计等于竖向拉伸深度 | 无 |
+| Beam / Column / Door / Window / Member / Railing / Stair / StairFlight / CurtainWall 实例 | 支持 | 不支持，阻断且说明 | 无 |
+| 上述构件适用的项目内 Type / DoorStyle / WindowStyle | 支持 | 仅 WallType / SlabType / PlateType / CoveringType 支持 layer set（无 usage） | 无 |
+| Project / Site / Building / Storey / Space / Opening | 不纳入本轮材料 authoring | 不支持 | 无 |
+
+Type 配对显式按 IFC2X3 家族验证，Door→DoorStyle、Window→WindowStyle、Wall/WallStandardCase→WallType，其余按对应 Type；每实例最多一个定义关系，重复同 Type 关系亦拒绝。2.1 扩展只开放已支持构件的适用 Type，不扩展新构件族。属性需通过当前 PSD 的身份、值类型及适用家族检查；Type 上标准属性按对应 occurrence 家族检查。报告区分直接值、继承值及用户声明，未请求性能值不写入。
+
+模板版本 `text2ifc/basic-filling/1.0`：`window-single`、`window-double-vertical`、`door-left`、`door-right`。长度在 Formal 中为毫米；模板仅允许 `frame_width`（默认 50，合法 10–100）、`frame_depth`（默认 60，合法 20–200）、`panel_thickness`（窗默认 6，合法 3–30；门默认 40，合法 10–100）、`split_ratio`（双窗默认 0.5，合法 0.2–0.8）。框深/面板厚不得超出开口深度，框宽不得消灭净开口；默认不适配时阻断，不自动缩放。总体宽高、深度、宿主、开口和 placement 是输入约束，不是模板默认。门套/门槛外伸关闭；使用关闭状态门扇，开启侧通过新类型/模板合同表达。每个有效参数记录 `user` 或模板 ID/版本来源；不从模板写材料或性能属性。
+
+失败边界与排序假设：① 通用 Type 父类检查放过错误家族/多重关系；② 材料 first-item/仅墙分支静默丢值；③ coverage 支持标签不等于 IFC 有效值；④ Type 继承/覆盖与样式写入可能污染另一组。先以 contract/compiler 公共入口建立正负、重复/边界及跨家族测试，再接入从冻结 Brief 到 reopened IFC 的独立逐项检查。此案例族用于 Bug 修复与离线回归，不是盲测能力提升数据集。
+
+初始展示范围建议为小型住宅与小型办公组合场景，覆盖现有可生成的墙、板、梁、柱、门、窗。此范围是首批检查载体，不声称复杂整栋建筑能力，也不为了覆盖表新增 Repair operation。
+
+| 案例族 | 核心预期 |
+|---|---|
+| G1：未提 Type、材料或性能属性，只描述建筑 | 不强制寻找/共享 Type；默认风格正常生效；未提供的性能 property 在 IFC 中不存在；没有相关缺参澄清，不推断物理材料 |
+| G2：要求多扇同类型门 | 当前项目中新建共同 Type，实例位置/编号独立，类型材料/property 关系正确 |
+| G3：相同尺寸但指定不同材料或类型 | 不错误合并；样式变化不污染另一组 |
+| G4：指定材料、颜色和合法 property | 最终 IFC 中逐项可查；用户要求不被主题覆盖 |
+| G5：材质层厚度冲突或明确请求的属性不适用/不完整 | 按合同澄清、Draft 或明确不支持；与 G1 的“用户未请求性能属性”区分，后者直接不写属性 |
+| G6：同一几何更换主题 | 固定 viewer 配置和视角检查配色、部件样式与适用透明度；只改主题时几何签名不变 |
+| G7：澄清后恢复、同 seed 再编译 | 语义/风格决策不丢失，样式签名稳定；不要求 IFC 整体哈希相同 |
+| G8：malformed/truncated 输出或发布失败 | 不发布被遗漏语义的候选，不留下伪成功状态 |
+| G9：四种基础门窗模板 | 单面板窗、双竖面板窗、左/右单开门均有适用的框/面板/扇部件，可重读、网格化和分色；无 Type 共享需求也可构建 |
+| G10：模板单位、尺寸与开口边界 | 覆盖毫米/米、旋转放置、墙厚变化、小尺寸及非法参数；区分外轮廓、净开口和深度，部件不能越过冻结的几何边界；不得通过移动开口或放宽旧阈值使检查通过 |
+| G11：模板与用户值冲突 | 用户参数优先，模板默认值不覆盖显式尺寸、材料、颜色和属性；不合法或不能满足时阻断；模板 ID/版本及来源可查，不新增缺省材料/性能属性 |
+| G12：新旧版本与恢复 | 旧表示编译行为保持；新模板参数经澄清/恢复和两种生成策略后不漂移；Repair 不受 Generation 模板影响 |
+| R1：明确选择当前 IFC 的 Type | Type 权威保真；相关材料/属性/样式有效值可追溯 |
+| R2：没有 Type 请求，仅修改已有支持的语义 | 不强制换 Type，不补写未授权信息 |
+| R3：exact Type 与显式要求冲突 | 新合同下进入澄清，源文件无 mutation/no publish |
+| R4：共享 Type 与多色部件 | 未请求实例与 Type 定义不被改动；框/玻璃原样式不扁平覆盖 |
+| R5：不适用 property 或原子多操作失败 | 拒绝不合法写入，完整回滚，repaired/no-output 互斥 |
+| R6：合法无输出、澄清恢复和来源保全 | 最终状态、调用边界和证据正确；private Gold 不进入生产 |
+
+这些是待冻结的案例族，不是已通过的案例数量。实施前加入正向、负向、边界和不同场景 sibling，保持解释维度独立，避免一次修改多个因素后无法定位原因。
+
+验证分两层：
+
+- **语义/执行硬门**：请求相关字段必须正确表达或明确报告未满足；类型和实例作用域正确，材料不丢失，属性适用且有依据；几何、reopen、原子发布及适用的 Repair L0/L1/L2/preservation 全部通过。核心阻断错误不得通过视觉评分抵消。
+- **人工视觉门**：配色比较固定几何、viewer 配置、光照、背景和视角；门窗细节比较固定宿主、开口、名义尺寸及 viewer 条件，允许新合同内的分部件几何变化。检查协调性、框/扇层次、部件分色、适用透明度和穿插/异常覆盖。每项记录通过/需调整与原因；视觉审查不能代替语义验收。
+
+人工视觉门适用于首批主题和代表性展示/Proof 的审查，不把每次普通生成都挂起等待人工。普通运行经自动语义、执行和样式有效性检查后可交付 IFC；运行发布状态与主题/Proof 人工审查状态分别记录。最终 IFC 检查不得仅复用 Agent 自报的 represented 标签。
+
+Generation 没有 repair 三元组；IFCCompare 的 original/damaged/repaired 角色为 N/A。Repair 仅在已有合法、预先冻结的私有评估合同下使用相应比较。只改报告或导航时不重跑 curator。
+
+迭代先跑相关 tests；第一次进入新的 Agent/公共执行阶段，按 [Agent 准入协议](../validation/agent-capability-evaluation.md) 完成该阶段 seam 和完整离线 API/CLI 路径。Full Preflight 仍须另说明范围并获得明确批准。当前计划不授权新 Provider 调用；离线完成后再单独讨论 live 验证。
+
+## 8. 交付与阅读方式
+
+每个新展示案例应包括中文 `REPORT.md`、`request.txt`、最终 BIM JSON（Generation）或输入 IFC（Repair）、最终 IFC/明确 no-output、`evidence/` 和必要视图。报告给出 Type、材料、属性、颜色的请求值/有效结果/依据/结论；使用模板时同时列出模板 ID/版本、有效参数及默认值来源。门窗展示提供整体视图与部件近景，不要求读者理解 runtime。
+
+沿用 [Proof 工作流目录](../../dataset/processed/proof/README.md) 与现有机器合同。正式 Phase 归属待与当前规划对齐后确定；不挤入历史 accepted 集合，也不为讨论先创建空 Proof 目录。模型表现只有在适用验收实际完成后才可宣称。
+
+## 9. 已确认的讨论结论
+
+| 决策 | 用户答复 | 本计划的落实方式 |
+|---|---|---|
+| Q1：未指定的语义与颜色 | 未处理时按默认风格处理颜色；强度、耐火等没有提供则直接没有该属性 | 默认颜色与语义补全分开：性能 property 缺省时不创建、不占位、不因此澄清；不新增自动补齐材料或普通属性的默认策略，既有合法编译附件和有依据的请求处理继续保留 |
+| Q2：门窗分部件几何（早期决定，Generation 范围已由 Q3 更新） | 先保留现有几何，只完善语义与外观 | Repair 和纯样式修改仍需几何保全；Generation 基础门窗细节按 Q3 纳入 |
+| Q3：审核后的最终范围 | 采用建议：小型模板＋Generation 基础门窗细节 | 少量内置参数化模板；单/双竖面板窗、左/右单开门；先完成语义再实施；Repair 保留原几何，模板不默认补写材料或性能属性 |
+
+Q3 是当前模板与门窗几何范围的决定；第 1—8 节已同步。性能属性缺省不写、跨 IFC 参照不实现等决定不重复询问。实施时不将缺省性能属性或未要求 Type 当作阻塞。
+
+## 10. 已选模板方案、工程评估与独立审查
+
+### 10.1 小型模板与请求驱动可以并存
+
+已选择“严格满足显式输入＋小组内置参数化模板”。模板是版本化的构造/样式规则；实际 IFC Type 仍在本次项目中建立，不读取第二份 IFC，也不引入外部资产库。
+
+- 初版采用单面板窗、双竖面板窗、左/右单开门四种受限变体；梁柱沿用已有参数化规则，不囤积大量固定尺寸 Type 文件。
+- 用户尺寸、材料、类型、合法 property 和显式颜色优先；模板只填允许的空缺。适配不了时澄清或明确不支持，不能悄悄替换要求。
+- 模板只提供构造/样式，不额外补物理材料、普通属性和性能属性；有依据的用户请求及既有合法事实按第 3 节处理，不从外观反推材料。
+- 使用模板不意味着必须让所有实例共享一个 IFC Type。仍按用户类型需求和现有合法附件规则组织 Type/实例。
+- 同一模板可由不同尺寸参数生成不同项目内定义；模板默认值与用户输入分别记录。不能将模板中的任意性能值继承进未请求的生成结果。
+
+模板默认参数限定为局部框宽、框深、面板厚度、分格比例及样式等受限构造选择；在 S0 逐项确定合法区间、尺寸适配规则和版本，不预先猜定统一数值。宿主、开口尺寸、位置等继续遵守当前需求合同；缺失会影响意图或几何正确性的事实时澄清。面板数量和门开启方向从明确请求或已授权的设计选择解析并记录，不能由模板暗中改变。默认值不合法时阻断，不能通过缩放用户尺寸或更换所需材料来适配模板。
+
+### 10.2 门窗工程难度：局部成型较低，接入中等，Repair 扩展较高
+
+已核对本机 IfcOpenShell `0.8.5` 和官方 [window API](https://docs.ifcopenshell.org/autoapi/ifcopenshell/api/geometry/add_window_representation/index.html)、[door API](https://docs.ifcopenshell.org/autoapi/ifcopenshell/api/geometry/add_door_representation/index.html)。它们提供 lining、frame/panel、glass 等参数，能够借助 ShapeAspect 标记部件角色；不需要 LLM 生成顶点或自行从零实现全部实体算法。
+
+本次仅做隔离的内存 API 探测，结果保存在本地临时记录 `.tmp/semantic-appearance-api-assessment.json`，不是 accepted Proof：
+
+| 探测 | 观察结果 |
+|---|---|
+| 单面板窗、双竖面板窗，各用毫米/米单位 | 4 组均可 IFC2X3 序列化重读、网格化，宽高符合输入；可区分 Lining/Framing/Glazing |
+| 左/右单开门，各用毫米/米，API 默认参数 | 4 组可重读和网格化，但输入 900×2100 mm 的外包围盒约为 950×2125 mm；默认门套等装饰不能直接套用当前开口宽高断言 |
+| 同一组门关闭 casing/threshold 参数 | 4 组可重读、网格化并保持 900×2100 mm 宽高，仍有门框/门扇相关部件；几何深度约 115 mm，尚需真实墙厚/开口位置适配验证 |
+| 双竖面板窗省略第二项 panel 参数 | 初始探测产生 IndexError；显式传两个 panel 定义后通过。生产前需要自己的数量/尺寸参数校验 |
+
+本次没有运行完整 IFC Schema/项目验证、公共生成链路、viewer 视觉审查、真实 Provider 或 Proof curator。API 能创建几何只证明局部实现可行，不证明整体接入完成。
+
+| 实现范围 | 难度判断 / 当前决定 | 主要工作 |
+|---|---|---|
+| Generation 单/双竖面板窗＋左/右单开门的基础细节 | 中等，已纳入 | 新的受限表示合同；局部坐标/毫米单位、开口与墙厚适配；部件分色；完整 IFC 语义/几何读回和公共路径回归 |
+| 任意分格、推拉/折叠、复杂门套/五金 | 较高，当前不建议 | 参数组合与形状边界增长，开启行为、净开口与实体包围盒需各自定义 |
+| 把现有 Repair 门窗统一升级为丰富几何 | 较高，当前不建议 | 现有 exact Type/maps 保真、source/preservation、旧比较器及坐标/尺寸合同同时受影响 |
+
+本轮仅扩 Generation 新建门窗；Repair 的已有 exact Type 几何继续保留。初版去掉超出当前开口表达的外伸装饰，但仍需分别验证总宽高、净开口、深度和位置，不能只看包围盒，也不能放宽旧验收阈值来容纳新几何。
+
+Generation 当前 `geometry_v2.py` 限定 `extruded_profile`，compiler 对应单个拉伸体；因此门窗细节不能静默替换同一冻结 representation 的含义。应先定义受限、版本化的门窗参数表示，再实现确定性编译。几何配置与 Type 复用是独立问题，可以分别推进。
+
+### 10.3 用户要求的独立 subagent 审核
+
+本次独立只读审核发现 5 项；主线不重复执行审核探针：
+
+| 优先级 | 发现与证据 | 对计划的处理 |
+|---|---|---|
+| P1 | `src/text2ifc_agent/semantic_coverage.py:641` 的局部覆盖检查不能证明值在候选/最终 IFC 中存在；内存探针中空候选仍将材料/耐火事实标 represented | S0/S2 明确独立 reopened IFC 读回及逐项比较，先做纵向公共入口案例 |
+| P1 | `schemas/bim-json/2.0/schema.json:138` 当前只有材料层 usage；`bootstrap.py:283` 取首项，`:366` 写入路径局限于 WallStandardCase | 先冻结按构件/作用域划分的单材料和层材料支持矩阵，不能仅改 Prompt/配色 |
+| P1 | `src/text2ifc_contract/relationships_v2.py:23` 局部 Type 检查缺家族配对/唯一性；探针中 Beam 同时指向 WindowStyle/DoorStyle 未报错 | 加入兼容类别、唯一有效 Type、继承/覆盖与跨组保全硬门 |
+| P2 | 审核时内置模板默认内容尚未决定 | 用户已选定模板与基础门窗范围；本节限定构造/样式默认值，禁止默认补写材料和性能属性；S0 冻结具体参数及边界 |
+| P2 | 计划原先未区分普通生成交付与人工视觉验收 | 已明确普通运行自动检查后交付，首批主题和代表性 Proof 单独人工审查 |
+
+两个内存探针只证明相应局部门禁存在缺口，不证明完整发布链路必然放行错误结果。修复前需形成能命中真实边界的 red-capable 用例；本次未修改任何生产行为。
+
+
+## 11. 2026-09-08 实施与离线验证
+
+当前事实来自工作树和测试，不沿用会话显示推断。接管时 HEAD 为 `362f5b49`、暂存区为空，新计划及三个导航尚未提交；新行为此前未实施。其他任务的 ifc-bench、历史运行和权限异常 Proof 路径保持原状。
+
+| 步骤 | 实施状态与实际结果 |
+|---|---|
+| S0 | 已冻结本页支持矩阵、IFC2X3 Type 家族/唯一性、单材料/层材料作用域和模板参数。保留缺值、错值、畸形 Type、重复关系、错家族及边界案例的先红后绿记录。 |
+| S1 | Repair Intent/Body 0.10、Prompt 0.13 为公共 API 新默认。exact Type 与材料、颜色、继承属性冲突在 Stage2 前澄清；明确实例属性覆盖走既有合法流程。旧版本合同继续可用。 |
+| S2 | 新 Formal 2.1、Brief 2.1、Draft 1.1。请求期冻结 semantic_expectations；候选和最终验收都独立重读 IFC 比较 Type、材料、属性、显式颜色及模板。represented 标签不再作为这些值存在的证据。无请求材料/普通属性被阻断。 |
+| S3a | neutral-architectural / warm-residential 协调主题、角色及部件样式；显式值优先，默认色实际值也经独立读回。共享材料实体只绑定一次样式，实例配色不污染共享材料。纯主题变化保持网格。 |
+| S3b | 四模板的受限拉伸实体构造、ShapeAspect 部件、门向 Style、参数来源已实现。选择独立矩形实体以避免 API 隐含门套/门槛外伸。重读校验名义尺寸、局部部件占用体积、世界放置、净开口、宿主边界和门向。 |
+| S4 | legacy_full 默认不变；staged 显式选择，新增末尾 semantic_types 包。四模板覆盖两策略，公共 CLI 编译、完整 Brief→最终验收、澄清持久化、新旧版本兼容已离线验证。冻结请求不允许降版或丢弃主题/seed。 |
+| S5 | 新离线展示具有中文逐项表、IFC、BIM JSON、请求、evidence 和网格整体/近景。普通自动交付与主题/Proof 人工审查分开；后者待进行，不安装到 accepted Proof。 |
+
+`depth` 表示宿主与开口共同允许的对称安装深度预算，实际框深和面板厚分别由白名单参数表达。开口切割体可以比墙厚，但不能把切割体深度直接当作门窗可用深度。旧 `extruded_profile` 含义不变；Repair 不采用 Generation 模板升级几何。
+
+运行与查看：
+
+- [四模板中文展示入口](../../dataset/processed/ifc-presentation-validation/semantic-appearance-20260908-final/REPORT.md)。图像来自实际重读 IFC 三角网格的固定正交投影，不能代替真实 viewer 人工审查。
+- 离线重建：`.venv\Scripts\python.exe scripts/presentation/validate_semantic_appearance.py --output-dir <新的目录>`；已存在目录拒绝覆盖。
+- 公共离线编译：`.venv\Scripts\python.exe scripts/bim_json/compile_ifc.py <candidate.json> <output.ifc>`。
+- 现有交互入口 `scripts/agent/run_phase6_2_cli.py` 使用新 Brief/Generator 合同；本任务未调用其真实 Provider。Repair 通过既有 `RepairAPI.start` / `continue_with_answer` 接入。
+- 公共运行目录生成 `request-semantics.json`、`semantic-verification.json` 和中文 `semantic-report.md`；最终发布前再校验。请求期错误在恢复后仍阻断，不能因 Brief 变更丢失冻结预期。
+
+验证等级：全部为确定性离线测试或本机 IFC 编译/序列化/网格检查。不是真实 Provider、盲测能力提升或 accepted Proof。未运行真实 Provider、Full Preflight、全库 pytest、accepted curator 或人工视觉审查。初次离线渲染失败及中间成功目录保留，正式查看入口另建 fresh 目录。
+
+
+### 实际验证记录与限制
+
+- 第一组阶段范围回归：406 passed / 1 failed；畸形 Type 引用的材料继承异常修复后，相关 91 项通过。
+- 扩大的阶段范围回归：451 passed / 1 failed；在编辑新 Prompt/hash 时读到短暂不一致，冻结文件后相关 47 项通过。失败记录保留，不将该整轮标成全绿。
+- 首轮 Brief 降版防护与新旧公共调用兼容的最终复验：75 passed / 0 failed。旧版回放显式选择 `design_brief_schema_version="text2ifc/design-brief/2.0"`；新调用默认 2.1 并拒绝降版响应。
+- 四个展示 IFC、8 个 SVG XML/本地链接检查通过。机器记录与完整 pytest XML 见[离线验证 evidence](../../dataset/processed/ifc-presentation-validation/semantic-appearance-20260908-final/evidence/README.md)。各组有重叠，不合并为独立案例总数或能力分数。
+
+本轮 Code HEAD 为 `82476b5b`。框/面板为受限、关闭状态的矩形实体，左右门向以 IFC2X3 DoorStyle 表达；不提供开门动画或复杂五金。仅支持本页定义的竖直矩形墙/开口及合法参数，超出范围阻断。人工 viewer/主题审查、真实 Provider 验证和正式 accepted Proof 安装均未进行，不能由这些离线结果替代。

@@ -28,6 +28,8 @@
 
 ## 当前重点
 
+- [Type、材质、属性和外观的接续计划](architecture/semantic-appearance-plan.md)
+  - 离线实施与验证已落地，人工视觉审查待进行：项目内 Type 按需组织，内置小型参数化模板与 Generation 基础门窗细节；默认配色，不补写缺省材料/性能属性；Repair 保留原几何，不实现跨 IFC 参照。
 - [首次接管 text2IFC 项目](how-to/agent-takeover.md)
   - 先确认 Git 与当前状态，再按任务类型选择架构、Phase、验证和证据入口。
 - [Phase 12 Plan 07 技术 handover](handoffs/phase12-plan07-closeout-handover-2026-09-03.md)

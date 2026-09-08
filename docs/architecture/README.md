@@ -20,6 +20,8 @@
 
 ## 专题设计与决策
 
+- [Repair 与 Generation 的 Type、材质、属性和外观计划](semantic-appearance-plan.md)
+  - 离线实施与验证已落地，人工视觉审查待进行：项目内 Type 按需组织，小型内置模板与 Generation 基础门窗细节；默认配色，不补写缺省材料/性能属性；Repair 保留原几何，不实现跨 IFC 参照。
 - [Feedback Routing Design](feedback-routing/design.md)
 - [Feedback Routing Implementation Prompt](feedback-routing/implementation-prompt.md)
 - [Text-to-JSON RAG、Fine-tune 与 Agent 决策](text2json-rag-finetune-decision.md)
