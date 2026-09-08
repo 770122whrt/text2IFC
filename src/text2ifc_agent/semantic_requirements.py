@@ -98,6 +98,7 @@ def request_semantics_for_case(root: Path) -> dict[str, Any]:
     frozen_path = root / 'expected-facts.json'
     if frozen_path.is_file():
         frozen = json.loads(frozen_path.read_text(encoding='utf-8'))
+        projected['entity_id_contract'] = copy.deepcopy(frozen.get('entity_id_contract', {}))
         if 'semantic_expectations' in frozen:
             # Both request projections constrain output. A changed Brief cannot
             # weaken a saved expectation during resume or final acceptance.
@@ -110,6 +111,78 @@ def request_semantics_for_case(root: Path) -> dict[str, Any]:
     projected['valid'] = not projected['issues']
     encoded = json.dumps(projected['expectations'], ensure_ascii=False, sort_keys=True, separators=(',', ':')).encode('utf-8')
     projected['expectations_hash'] = hashlib.sha256(encoded).hexdigest()
+    return projected
+
+
+def bind_semantic_targets(candidate, request):
+    """Resolve only frozen identity aliases; never infer requested values.
+
+    Geometry permits both the Brief ID and its deterministic canonical ID.
+    Semantic checks must use the same pair, while refusing collisions across
+    instances or storeys. Saved expectations remain byte-for-byte untouched.
+    """
+    bound = copy.deepcopy(request)
+    families = {'walls': {'IfcWall', 'IfcWallStandardCase'}, 'spaces': {'IfcSpace'},
+                'doors': {'IfcDoor'}, 'windows': {'IfcWindow'}}
+    records = [(item, families[group])
+               for group, items in request.get('entity_id_contract', {}).items()
+               if group in families for item in items]
+    for expectation in bound['expectations']:
+        identity = expectation['entity_id']
+        matches = [(item, family) for item, family in records
+                   if identity in {item.get('brief_id'), item.get('entity_id')}]
+        if not matches:
+            continue
+        aliases = {value for item, _ in matches
+                   for value in (item.get('brief_id'), item.get('entity_id')) if value}
+        targets = [e for e in candidate.get('entities', []) if e.get('id') in aliases]
+        # A bare Brief ID repeated on multiple storeys cannot select one merely
+        # because another storey's candidate happens to be missing.
+        canonical = {(item.get('entity_id'), item.get('storey')) for item, _ in matches}
+        if len(canonical) != 1 or len(targets) != 1:
+            bound['issues'].append({'code': 'SEMANTIC_TARGET_BINDING_AMBIGUOUS',
+                                    'path': expectation.get('source_path', '/semantic_expectations'),
+                                    'message': '冻结身份映射没有唯一候选构件，不能猜测语义作用对象。'})
+            continue
+        if targets[0].get('ifc_class') not in matches[0][1]:
+            bound['issues'].append({'code': 'SEMANTIC_TARGET_FAMILY_MISMATCH',
+                                    'path': expectation.get('source_path', '/semantic_expectations'),
+                                    'message': '候选构件类别与冻结身份映射不兼容。'})
+            continue
+        expectation['entity_id'] = targets[0]['id']
+    encoded = json.dumps(bound['expectations'], ensure_ascii=False, sort_keys=True,
+                         separators=(',', ':')).encode('utf-8')
+    bound['expectations_hash'] = hashlib.sha256(encoded).hexdigest()
+    bound['valid'] = not bound['issues']
+    return bound
+
+
+def bind_geometry_targets(candidate, expected_facts, geometry):
+    """Bind geometric expectations through the same frozen identity pairs."""
+    projected = copy.deepcopy(geometry)
+    aliases = {}
+    for collection in ('spaces', 'walls', 'doors', 'windows'):
+        values = projected.get(collection, {})
+        request = {'expectations': [{'entity_id': identity} for identity in values],
+                   'entity_id_contract': expected_facts.get('entity_id_contract', {}), 'issues': []}
+        bound = bind_semantic_targets(candidate, request)
+        if bound['issues']:
+            projected['complete'] = False
+            projected.setdefault('unresolved', []).extend(
+                {'path': issue['path'], 'reason': issue['code']} for issue in bound['issues'])
+            continue
+        aliases.update({old: new['entity_id'] for old, new in zip(values, bound['expectations'])})
+        projected[collection] = {aliases[old]: value for old, value in values.items()}
+    # Explicit contact obligations are IDs as well; bounds and provenance stay
+    # request-owned. Do not regenerate dimensions from the candidate.
+    for collection in ('slabs', 'roof', 'stairs', 'floor_openings', 'products'):
+        for value in projected.get(collection, {}).values():
+            if isinstance(value, dict) and isinstance(value.get('must_touch_walls'), list):
+                value['must_touch_walls'] = [aliases.get(wall, wall) for wall in value['must_touch_walls']]
+    if isinstance(projected.get('accepted_wall_sets'), list):
+        projected['accepted_wall_sets'] = [
+            bind_geometry_targets(candidate, expected_facts, wall_set)
+            for wall_set in projected['accepted_wall_sets']]
     return projected
 
 

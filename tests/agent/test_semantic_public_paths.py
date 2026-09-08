@@ -124,7 +124,8 @@ def test_staged_shared_type_is_authored_once_after_instances(tmp_path):
 
 
 @pytest.mark.parametrize('detailed', [False, True])
-def test_ready_session_public_chain_reaches_final_acceptance(tmp_path, detailed):
+@pytest.mark.parametrize('canonical_ids', [False, True])
+def test_ready_session_public_chain_reaches_final_acceptance(tmp_path, detailed, canonical_ids):
     from text2ifc_agent.live_pipeline import run_design_brief_stage
     from text2ifc_agent.interactive_cli_flow import run_ready_session_to_ifc
     from text2ifc_agent.session_store import SessionStore
@@ -169,6 +170,22 @@ def test_ready_session_public_chain_reaches_final_acceptance(tmp_path, detailed)
     audit={'schema_version':'text2ifc/audit/2.0','recommendation':'accept','blocking':False,
         'deterministic_gate_status':'passed','findings':[],
         'evidence_paths':['generator/candidate.json','ifc-verification.json','semantic-verification.json']}
+    if canonical_ids:
+        from text2ifc_agent.expected_facts import build_expected_facts
+        frozen = build_expected_facts(case_id=session.session_hash, design_brief=brief)
+        aliases = {item['brief_id']: item['entity_id']
+                   for records in frozen['entity_id_contract'].values() for item in records}
+        def bind(value):
+            if isinstance(value, str):
+                return aliases.get(value, value)
+            if isinstance(value, list):
+                return [bind(item) for item in value]
+            if isinstance(value, dict):
+                return {key: bind(item) for key, item in value.items()}
+            return value
+        candidate = bind(candidate)
+        for relation in candidate['relationships']:
+            relation['attributes']['Name'] = '显式关系名称'
     provider=SequenceProvider([candidate,audit])
     result=run_ready_session_to_ifc(store=store,session=session.session_hash,provider_factory=lambda:provider)
     assert result.status=='compiled', result

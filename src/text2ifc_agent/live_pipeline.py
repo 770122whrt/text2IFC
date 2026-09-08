@@ -1411,10 +1411,10 @@ def run_candidate_gate_stage(
     candidate = json.loads(candidate_path.read_text(encoding="utf-8"))
 
     output_ifc = output / "output.ifc"
-    from .semantic_requirements import request_semantics_for_case, unauthorized_candidate_semantics, request_contract_issues
+    from .semantic_requirements import bind_semantic_targets, request_semantics_for_case, unauthorized_candidate_semantics, request_contract_issues
     from text2ifc_compiler.compiler import CompilationResult
     from text2ifc_contract.validation import ValidationIssue
-    request_semantics = request_semantics_for_case(case_root)
+    request_semantics = bind_semantic_targets(candidate, request_semantics_for_case(case_root))
     semantic_expectations = request_semantics['expectations']
     request_semantics['issues'].extend(unauthorized_candidate_semantics(candidate, semantic_expectations))
     request_semantics['issues'].extend(request_contract_issues(candidate, request_semantics))
@@ -1562,6 +1562,7 @@ def _semantic_geometry_expectation_from_case(
     if not isinstance(design_brief, dict):
         return None
     expected_facts_path = case_root / "expected-facts.json"
+    expected_facts = {}
     if expected_facts_path.is_file():
         expected_facts = json.loads(expected_facts_path.read_text(encoding="utf-8"))
         if isinstance(expected_facts, dict):
@@ -1581,12 +1582,17 @@ def _semantic_geometry_expectation_from_case(
                     "products",
                 )
             ):
-                return design_expectation
-    return build_semantic_geometry_expectation(
+                from .semantic_requirements import bind_geometry_targets
+                return bind_geometry_targets(candidate, expected_facts, design_expectation)
+    geometry = build_semantic_geometry_expectation(
         case_id=case_id,
         design_brief=design_brief,
         candidate=candidate,
     )
+    if geometry is not None and isinstance(expected_facts, dict):
+        from .semantic_requirements import bind_geometry_targets
+        return bind_geometry_targets(candidate, expected_facts, geometry)
+    return geometry
 
 
 def _find_design_brief_path(case_root: Path) -> Path | None:

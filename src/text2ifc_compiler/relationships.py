@@ -25,10 +25,13 @@ def add_v2_relationships(
                 for entity_id in attributes["RelatedObjects"]
             ]
             if _aggregate_already_assigned(relating_object, related_objects):
+                for relation in relating_object.IsDecomposedBy:
+                    if any(item in relation.RelatedObjects for item in related_objects):
+                        _apply_literal_metadata(relation, attributes)
                 continue
         if ifc_class == "IfcRelDefinesByType":
             attributes = record["attributes"]
-            assign_type(
+            relation = assign_type(
                 ifc_file,
                 related_objects=[
                     entities[entity_id]
@@ -37,6 +40,8 @@ def add_v2_relationships(
                 relating_type=entities[attributes["RelatingType"]],
                 should_map_representations=False,
             )
+            if relation is not None:
+                _apply_literal_metadata(relation, attributes)
             continue
         if ifc_class == "IfcRelConnectsPathElements":
             attributes = record["attributes"]
@@ -47,8 +52,8 @@ def add_v2_relationships(
                     "bim-json/2.0", ifc_class, record["id"]
                 ),
                 OwnerHistory=ifcopenshell.api.owner.create_owner_history(ifc_file),
-                Name=None,
-                Description=None,
+                Name=attributes.get("Name"),
+                Description=attributes.get("Description"),
                 ConnectionGeometry=None,
                 RelatingElement=entities[attributes["RelatingElement"]],
                 RelatedElement=entities[attributes["RelatedElement"]],
@@ -65,6 +70,7 @@ def add_v2_relationships(
                 else entities[entity_id]
             )
             for name, entity_id in record["attributes"].items()
+            if name not in {"Name", "Description"}
         }
         ifc_file.create_entity(
             ifc_class,
@@ -73,10 +79,16 @@ def add_v2_relationships(
                 "bim-json/2.0", ifc_class, record["id"]
             ),
             OwnerHistory=ifcopenshell.api.owner.create_owner_history(ifc_file),
-            Name=None,
-            Description=None,
+            Name=record["attributes"].get("Name"),
+            Description=record["attributes"].get("Description"),
             **attributes,
         )
+
+
+def _apply_literal_metadata(relation: Any, attributes: Mapping[str, Any]) -> None:
+    for name in ("Name", "Description"):
+        if name in attributes:
+            setattr(relation, name, attributes[name])
 
 
 def _aggregate_already_assigned(relating_object: Any, related_objects: list[Any]) -> bool:

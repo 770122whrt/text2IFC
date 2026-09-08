@@ -152,8 +152,13 @@ def _storey_containment_gate(
 
             expected_host = _string(record.get("host_wall"))
             if expected_host and collection in {"doors", "windows"}:
+                host_match = _resolve_expected_entity(
+                    graph=graph, expected_facts=expected_facts, collection="walls",
+                    record={"id": expected_host, "storey": expected_storey},
+                )
+                resolved_host = host_match["candidate_id"] if host_match else expected_host
                 actual_host = graph.host_wall_for_opening_element(candidate_id) if candidate_id else None
-                if actual_host != expected_host:
+                if actual_host != resolved_host:
                     issues.append(
                         {
                             "code": "HOST_WALL_MISMATCH",
@@ -258,19 +263,25 @@ def _resolve_expected_entity(
         expected_id=expected_id,
         expected_storey=expected_storey,
     )
-    if canonical_id and graph.entity(canonical_id) is not None:
+    contract = expected_facts.get("entity_id_contract", {})
+    offered = [item for item in _records(contract.get(collection, []))
+               if item.get("brief_id") == expected_id and item.get("storey") == expected_storey]
+    if len({item.get("entity_id") for item in offered}) > 1:
+        return None
+    exact_ids = {identity for identity in (canonical_id, expected_id)
+                 if identity and graph.entity(identity) is not None}
+    if len(exact_ids) > 1:
+        return None
+    if exact_ids:
+        candidate_id = next(iter(exact_ids))
+        ifc_class = _expected_record_ifc_class(collection, record)
+        if candidate_id not in graph.ids_by_class(ifc_class):
+            return None
         return {
             "collection": collection,
             "expected_id": expected_id,
-            "candidate_id": canonical_id,
-            "match_basis": "canonical_entity_id",
-        }
-    if graph.entity(expected_id) is not None:
-        return {
-            "collection": collection,
-            "expected_id": expected_id,
-            "candidate_id": expected_id,
-            "match_basis": "exact_brief_id",
+            "candidate_id": candidate_id,
+            "match_basis": "canonical_entity_id" if candidate_id == canonical_id else "exact_brief_id",
         }
 
     expected_tokens = set(_entity_id_tokens(expected_id))
@@ -659,6 +670,7 @@ class _CandidateGraph:
             entity_id
             for entity_id, entity in self.entities.items()
             if entity.get("ifc_class") == ifc_class
+            or ifc_class == "IfcWall" and entity.get("ifc_class") == "IfcWallStandardCase"
         ]
 
     def count_collection_by_storey(self, ifc_class: str) -> dict[str, int]:
