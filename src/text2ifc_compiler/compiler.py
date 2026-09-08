@@ -101,6 +101,8 @@ def compile_document(
             import ifcopenshell
             from text2ifc_presentation.generation import verify_appearance
             semantic_issues += tuple(verify_appearance(ifcopenshell.open(str(temporary_path)), document))
+            from .basic_filling import verify_basic_filling
+            semantic_issues += tuple(verify_basic_filling(ifcopenshell.open(str(temporary_path)), document))
         if semantic_expectations:
             semantic_issues += verify_semantic_expectations(temporary_path, semantic_expectations)
         if semantic_issues:
