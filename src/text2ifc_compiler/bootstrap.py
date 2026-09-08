@@ -303,7 +303,7 @@ def build_ifc_v2(document: Mapping[str, Any]) -> BootstrapResult:
         assign_identity(
             ifc_file,
             entity,
-            contract_version="bim-json/2.0",
+            contract_version=document["schema_version"],
             object_kind=record["ifc_class"],
             bim_json_id=record["id"],
             global_id=record.get("global_id"),
@@ -357,19 +357,16 @@ def build_ifc_v2(document: Mapping[str, Any]) -> BootstrapResult:
         entity = entities[record["id"]]
         representation = record["attributes"].get("Representation")
         if representation is not None:
-            add_v2_geometry(
+            if representation.get("kind") == "basic_filling":
+                from .basic_filling import add_basic_filling_geometry
+                add_basic_filling_geometry(ifc_file, entity, representation, body_context)
+            else:
+                add_v2_geometry(
                 ifc_file,
                 entity,
                 representation,
                 body_context,
-            )
-        if entity.is_a() == "IfcWallStandardCase":
-            _add_wall_standard_case_material(
-                ifc_file,
-                entity,
-                representation,
-                _first_material_assignment(record),
-            )
+                )
 
     for record in document["entities"]:
         entity = entities[record["id"]]
@@ -398,4 +395,25 @@ def build_ifc_v2(document: Mapping[str, Any]) -> BootstrapResult:
     add_v2_relationships(
         ifc_file, document["relationships"], entities
     )
+    # Write Type associations after assign_type: its API may otherwise synthesize
+    # occurrence usages, obscuring direct versus inherited request scope.
+    from .materials import apply_material_assignment
+    type_ids = {entity_id: r["attributes"]["RelatingType"] for r in document["relationships"] if r["ifc_class"] == "IfcRelDefinesByType" for entity_id in r["attributes"]["RelatedObjects"]}
+    for record in document["entities"]:
+        entity = entities[record["id"]]
+        assignment = _first_material_assignment(record)
+        representation = record["attributes"].get("Representation")
+        if entity.is_a() == "IfcWallStandardCase":
+            if assignment is None and record["id"] in type_ids:
+                assignment = _first_material_assignment(records[type_ids[record["id"]]])
+                if assignment and assignment["kind"] == "material_layer_set":
+                    assignment = {**assignment, "direction": "AXIS2", "direction_sense": "POSITIVE", "offset_from_reference_line": 0.0}
+            if assignment and assignment["kind"] == "single_material":
+                assignment = {"layer_set_name": assignment["name"], "direction": "AXIS2", "direction_sense": "POSITIVE", "offset_from_reference_line": 0.0, "layers": [{"name": assignment["name"], "thickness": representation["profile"]["y"]}]}
+            _add_wall_standard_case_material(ifc_file, entity, representation, assignment)
+        elif assignment:
+            apply_material_assignment(ifc_file, entity, assignment)
+    if any(r["attributes"].get("Representation", {}).get("kind") == "basic_filling" for r in document["entities"]):
+        from .basic_filling import ensure_basic_filling_styles
+        ensure_basic_filling_styles(ifc_file, records, entities)
     return BootstrapResult(ifc_file=ifc_file, body_context=body_context)

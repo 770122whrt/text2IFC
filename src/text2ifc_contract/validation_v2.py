@@ -73,9 +73,15 @@ def _attribute_type_matches(value: Any, record: dict[str, Any]) -> bool:
     return False
 
 
-def _semantic_issues(document: dict[str, Any]) -> list[ValidationIssue]:
+def _semantic_issues(document: dict[str, Any], *, extended=False) -> list[ValidationIssue]:
     registry = load_ifc2x3_registry()
     capabilities = load_capabilities()
+    if extended:
+        from .materials import TYPE_OCCURRENCE
+        capabilities = dict(capabilities)
+        for type_class in TYPE_OCCURRENCE:
+            if registry.declaration(type_class) is not None:
+                capabilities[type_class] = "generate"
     issues = _non_finite_number_issues(document)
     first_ids: dict[str, str] = {}
     first_global_ids: dict[str, str] = {}
@@ -217,6 +223,11 @@ def _semantic_issues(document: dict[str, Any]) -> list[ValidationIssue]:
                     continue
                 applicable = set(pset["applicable_classes"])
                 lineage = {ifc_class, *declaration["supertypes"]}
+                if extended:
+                    from .materials import TYPE_OCCURRENCE
+                    occurrence = TYPE_OCCURRENCE.get(ifc_class)
+                    if occurrence:
+                        lineage.update({occurrence, *registry.declaration(occurrence)["supertypes"]})
                 if applicable and not applicable.intersection(lineage):
                     issues.append(
                         _issue(
@@ -245,12 +256,21 @@ def _semantic_issues(document: dict[str, Any]) -> list[ValidationIssue]:
                             )
                         )
     issues.extend(validate_placement_graph(document))
-    issues.extend(validate_geometry(document))
+    if extended:
+        from .validation_v21 import validate_v21_geometry
+        issues.extend(validate_v21_geometry(document))
+    else:
+        issues.extend(validate_geometry(document))
+    from .materials import validate_materials
+    issues.extend(validate_materials(document))
     issues.extend(validate_relationships(document))
     return _sort_issues(issues)
 
 
 def validate_v2_document(document: Any) -> list[ValidationIssue]:
+    if isinstance(document, dict) and document.get("schema_version") == "bim-json/2.1":
+        from .validation_v21 import validate_v21_document
+        return validate_v21_document(document)
     validator = Draft202012Validator(load_schema_v2())
     structural = [
         issue
