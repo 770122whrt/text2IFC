@@ -53,6 +53,7 @@ def select_design_brief_context(
     user_request: str,
     conversation: list[dict[str, Any]],
     max_few_shots: int = 3,
+    schema_version: str = "bim-json/2.0",
 ) -> dict[str, Any]:
     """Select request-relevant evidence without deciding which facts are required."""
     request_text = user_request + "\n" + "\n".join(
@@ -61,24 +62,27 @@ def select_design_brief_context(
         if isinstance(turn, dict)
     )
     evidence: list[dict[str, Any]] = []
+    schema_path = PROJECT_ROOT / "schemas/bim-json/2.1/schema.json" if schema_version == "bim-json/2.1" else BIM_JSON_SCHEMA_PATH
     for evidence_id, pointer in _COMMON_SCHEMA_FRAGMENTS:
         evidence.append(
             _evidence_record(
                 evidence_id=evidence_id,
                 kind="bim_json_schema",
-                source_path=BIM_JSON_SCHEMA_PATH,
+                source_path=schema_path,
                 json_pointer=pointer,
             )
         )
 
     selected_classes = _select_ifc_classes(request_text)
+    type_capabilities = json.loads(schema_path.read_text(encoding='utf-8')).get('x-generation-type-capabilities', {})
     for ifc_class in selected_classes:
+        new_type = ifc_class in type_capabilities
         evidence.append(
             _evidence_record(
                 evidence_id=f"capability:IFC2X3:{ifc_class}",
                 kind="ifc_generation_capability",
-                source_path=CAPABILITY_PATH,
-                json_pointer=f"/entities/{ifc_class}",
+                source_path=schema_path if new_type else CAPABILITY_PATH,
+                json_pointer=f'/x-generation-type-capabilities/{ifc_class}' if new_type else f"/entities/{ifc_class}",
             )
         )
     evidence.append(

@@ -221,6 +221,14 @@ def build_generation_package_manifest(
                 "allowed_reference_ids": sorted({*storey_ids, *cross_refs}),
             }
         )
+    type_expectations = [e for e in expected_facts.get('semantic_expectations', []) if e.get('kind') == 'type']
+    if type_expectations:
+        packages.append({
+            'package_id': 'package-semantic-types', 'kind': 'semantic_types', 'storey_id': None,
+            'owned_component_ids': sorted({e['value'] for e in type_expectations}),
+            'owned_relationship_ids': sorted({f"rel-type-{e['entity_id']}" for e in type_expectations}),
+            'allowed_reference_ids': sorted({e['entity_id'] for e in type_expectations}),
+        })
     return {
         "schema_version": MANIFEST_VERSION,
         "status": "ready",

@@ -9,7 +9,7 @@ from pathlib import Path
 from typing import Any, Mapping
 
 from text2ifc_contract.draft import validate_draft
-from text2ifc_contract.schema import load_draft_schema
+from text2ifc_contract.schema import load_draft_schema, _load_schema_path
 
 from .candidate_index import build_candidate_index
 from .changesets import load_changeset_schema, validate_changeset
@@ -55,6 +55,9 @@ def run_changeset_stage(
     output.mkdir(parents=True, exist_ok=True)
     changeset_schema = load_changeset_schema()
     draft_schema = load_draft_schema()
+    new_semantics = candidate.get('schema_version') == 'bim-json/2.1'
+    if new_semantics:
+        draft_schema = _load_schema_path(PROJECT_ROOT / 'schemas/bim-json/draft/1.1/schema.json')
     renderer_inputs = {
         "USER_REQUEST": user_request,
         "CONVERSATION": conversation,
@@ -69,7 +72,9 @@ def run_changeset_stage(
         "DRAFT_SCHEMA": draft_schema,
         "FEW_SHOTS": [_read_json(path) for path in FEW_SHOT_PATHS],
     }
-    rendered = render_prompt(template_id=CHANGESET_TEMPLATE_ID, inputs=renderer_inputs)
+    if new_semantics:
+        renderer_inputs['FORMAL_SCHEMA'] = _load_schema_path(PROJECT_ROOT / 'schemas/bim-json/2.1/schema.json')
+    rendered = render_prompt(template_id='bim-json-changeset.v1.1' if new_semantics else CHANGESET_TEMPLATE_ID, inputs=renderer_inputs)
     _write_json(output / "prompt-render-input.json", renderer_inputs)
     _write_text(output / "prompt-rendered.md", rendered["text"])
 
@@ -108,7 +113,7 @@ def run_changeset_stage(
         if not diagnostics:
             classification = "changeset"
             artifact_name = "changeset.json"
-    elif parsed.get("draft_version") == "bim-json-draft/1.0":
+    elif parsed.get("draft_version") in {"bim-json-draft/1.0", "bim-json-draft/1.1"}:
         diagnostics.extend(_issue_payload(issue) for issue in validate_draft(parsed))
         if not diagnostics:
             classification = "draft"

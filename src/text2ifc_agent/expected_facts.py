@@ -241,6 +241,16 @@ def build_expected_facts(
             )
     if isinstance(fixture_reuse, Mapping):
         payload["fixture_reuse"] = deepcopy(dict(fixture_reuse))
+    from .semantic_requirements import project_semantic_requirements, generation_schema_version
+    semantics = project_semantic_requirements(design_brief)
+    if generation_schema_version(design_brief) == 'bim-json/2.1':
+        payload['generation_schema_version'] = 'bim-json/2.1'
+    if semantics['expectations'] or semantics['issues']:
+        payload['semantic_expectations'] = semantics['expectations']
+        payload['semantic_projection_issues'] = semantics['issues']
+        payload['semantic_expectations_hash'] = semantics['expectations_hash']
+    if isinstance(known_facts.get('appearance'), Mapping):
+        payload['appearance'] = deepcopy(dict(known_facts['appearance']))
     payload["generation_package_manifest"] = build_generation_package_manifest(payload)
     return payload
 

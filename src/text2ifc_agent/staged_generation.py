@@ -50,7 +50,7 @@ def build_skeleton_workspace(expected_facts: Mapping[str, Any]) -> dict[str, Any
         ),
     ]
     return {
-        "schema_version": "bim-json/2.0",
+        "schema_version": expected_facts.get('generation_schema_version', 'bim-json/2.0'),
         "ifc_schema": "IFC2X3",
         "units": {"length": "MILLIMETRE"},
         "entities": entities,
@@ -79,6 +79,8 @@ def run_staged_generation(
     if manifest.get("status") != "ready":
         return _blocked("draft_required", manifest.get("issues", []), [])
     workspace = copy.deepcopy(dict(skeleton))
+    if workspace.get('schema_version') == 'bim-json/2.1' and expected_facts.get('appearance'):
+        workspace['appearance'] = copy.deepcopy(expected_facts['appearance'])
     revision = _revision(
         candidate=workspace,
         expected_facts=expected_facts,

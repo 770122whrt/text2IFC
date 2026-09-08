@@ -51,7 +51,7 @@ from .staged_generation import build_skeleton_workspace, run_staged_generation
 from .state import redact_metadata
 
 
-DESIGN_BRIEF_TEMPLATE_ID = "design-brief.v2.1"
+DESIGN_BRIEF_TEMPLATE_ID = "design-brief.v2.2"
 SCAFFOLD_ELIGIBLE_DYNAMIC_ISSUES = {
     "EXPECTED_ENTITY_MISSING",
     "OPENING_FILL_RELATIONSHIP_MISSING",
@@ -157,8 +157,9 @@ def make_openai_design_brief_invoker(
         selection = select_design_brief_context(
             user_request=original_request,
             conversation=transcript,
+            schema_version="bim-json/2.1",
         )
-        schema = load_design_brief_schema("text2ifc/design-brief/2.0")
+        schema = load_design_brief_schema("text2ifc/design-brief/2.1")
         renderer_inputs = {
             "USER_REQUEST": original_request,
             "CONVERSATION": transcript,
@@ -237,6 +238,7 @@ def make_openai_design_brief_invoker(
         issues = validate_design_brief(
             parsed,
             evidence_catalog=selection["evidence"],
+            expected_schema_version='text2ifc/design-brief/2.1',
         )
         serialized_issues = [
             {
@@ -1311,7 +1313,7 @@ def _run_staged_initial_generation(
             "status": classification,
             "contract_status": classification,
             "classification": classification,
-            "schema_version": "bim-json/2.0" if classification == "formal" else None,
+            "schema_version": result['candidate'].get('schema_version') if classification == "formal" else None,
             "diagnostics": diagnostics,
         },
     )

@@ -3,10 +3,11 @@
 from __future__ import annotations
 
 from typing import Any
+from pathlib import Path
 
 from jsonschema import Draft202012Validator
 
-from .schema import load_draft_schema
+from .schema import load_draft_schema, _load_schema_path
 from .validation import ValidationIssue, _normalize_error, _sort_issues
 
 
@@ -28,7 +29,10 @@ def _path_parent_exists(document: Any, pointer: str) -> bool:
 
 
 def validate_draft(document: Any) -> list[ValidationIssue]:
-    validator = Draft202012Validator(load_draft_schema())
+    schema = load_draft_schema()
+    if isinstance(document, dict) and document.get('draft_version') == 'bim-json-draft/1.1':
+        schema = _load_schema_path(Path(__file__).resolve().parents[2] / 'schemas/bim-json/draft/1.1/schema.json')
+    validator = Draft202012Validator(schema)
     issues = [
         issue
         for error in validator.iter_errors(document)
