@@ -286,3 +286,9 @@ Generation 当前 `geometry_v2.py` 限定 `extruded_profile`，compiler 对应�
 已准备 `generation/request.txt` 与最终完整 `generated.ifc`，以及 Repair 的 `01-original.ifc`／`02-damaged.ifc`／`03-repaired.ifc`。交互 HTML 从重读 IFC 提取实际网格、样式、直接及有效属性，可打开后审查；普通属性与内部溯源属性在报告中区分。下一步等待用户对两条链路分别确认，再按适用检查整理 Proof。真实尝试清单记录 9 次调用（Generation 5、Repair 4，包含此前失败尝试）。单例修复和真实可行性记录不能宣称类级或系统级能力提升。
 
 交付位置说明：本批真实运行及待人工检查材料仍保存在上述本地展示目录，尚未纳入 Git 或发布为 Proof；本轮只提交通用代码、测试和离线查看器。查看器可用 `.venv\Scripts\python.exe scripts/presentation/render_ifc_review.py <input.ifc> <新的输出.html>` 生成，已有输出拒绝覆盖。
+
+### 人工检查收纳更新
+
+用户随后要求按既有 Proof 格式先收纳、检查通过后再登记。已新增本地待检查视图：[Generation](../../dataset/processed/proof/generation/phase6.6/semantic-appearance-20260908/README.md) 与 [Repair](../../dataset/processed/proof/repair/phase12.1/semantic-appearance-20260908/README.md)。两者仅使用独立 `review-manifest.json`，标记 `pending_human_review`／`unregistered`，没有主 `manifest.json`，未改 Proof 总索引或 accepted 名单。源运行保持不动，真实成功与失败材料按既有 package schema 逐字节复制并记录旧路径映射。
+
+原 request.txt 是 UTF-8，旧 HTTP 服务缺少 charset 导致浏览器误解码。新增中文阅读页并保持原始请求字节；`.venv\Scripts\python.exe scripts/presentation/serve_review.py --root dataset/processed/proof --port 8768` 可启动本地 UTF-8 查看服务。文本 HTTP 回归 3 项通过；两包既有人读检查通过，重读 4 份 IFC，122 个展示链接正常。此次仅收纳待检查视图，未运行 accepted curator，未登记或提交这些本地 Proof 材料。
