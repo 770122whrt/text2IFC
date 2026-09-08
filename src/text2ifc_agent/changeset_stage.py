@@ -12,6 +12,7 @@ from text2ifc_contract.draft import validate_draft
 from text2ifc_contract.schema import load_draft_schema, _load_schema_path
 
 from .candidate_index import build_candidate_index
+from .authoring_contract import build_authoring_contract
 from .changesets import load_changeset_schema, validate_changeset
 from .live_trace import write_live_trace
 from .prompt_registry import render_prompt
@@ -74,7 +75,8 @@ def run_changeset_stage(
     }
     if new_semantics:
         renderer_inputs['FORMAL_SCHEMA'] = _load_schema_path(PROJECT_ROOT / 'schemas/bim-json/2.1/schema.json')
-    rendered = render_prompt(template_id='bim-json-changeset.v1.1' if new_semantics else CHANGESET_TEMPLATE_ID, inputs=renderer_inputs)
+        renderer_inputs['IFC_AUTHORING_CONTRACT'] = build_authoring_contract()
+    rendered = render_prompt(template_id='bim-json-changeset.v1.2' if new_semantics else CHANGESET_TEMPLATE_ID, inputs=renderer_inputs)
     _write_json(output / "prompt-render-input.json", renderer_inputs)
     _write_text(output / "prompt-rendered.md", rendered["text"])
 

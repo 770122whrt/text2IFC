@@ -35,6 +35,7 @@ from .providers import validate_provider_output
 from .route_decision import write_route_decision
 from .run_report import build_live_run_report, resolve_final_design_brief_dir
 from .semantic_capabilities import build_semantic_capability_profile
+from .authoring_contract import build_authoring_contract
 from .semantic_coverage import (
     build_design_geometry_expectation,
     build_semantic_geometry_expectation,
@@ -548,8 +549,10 @@ def run_generator_stage(
         "FEW_SHOTS": generator_context["few_shots"],
         "GENERATION_FEEDBACK": dict(generation_feedback or {}),
     }
+    if new_semantics:
+        renderer_inputs['IFC_AUTHORING_CONTRACT'] = build_authoring_contract()
     rendered = render_prompt(
-        template_id='bim-json-generator.v2.1' if new_semantics else GENERATOR_TEMPLATE_ID,
+        template_id='bim-json-generator.v2.2' if new_semantics else GENERATOR_TEMPLATE_ID,
         inputs=renderer_inputs,
     )
 
@@ -879,7 +882,7 @@ def run_repair_stage(
         draft_path = PROJECT_ROOT / 'schemas/bim-json/draft/1.1/schema.json' if new_semantics else DRAFT_SCHEMA_PATH
         formal_schema = json.loads(formal_path.read_text(encoding="utf-8"))
         draft_schema = json.loads(draft_path.read_text(encoding="utf-8"))
-        repair_template_id = 'bim-json-generator-repair.v2.1' if new_semantics else REPAIR_TEMPLATE_ID
+        repair_template_id = 'bim-json-generator-repair.v2.2' if new_semantics else REPAIR_TEMPLATE_ID
         repair_issues = [*validation_issues, *geometry_issues]
         allowed_change_paths = _repair_allowed_change_paths(
             repair_issues,
@@ -902,6 +905,8 @@ def run_repair_stage(
             "ALLOWED_CHANGE_PATHS": allowed_change_paths,
             "EVIDENCE_BY_PATH": evidence_by_path,
         }
+        if new_semantics:
+            renderer_inputs['IFC_AUTHORING_CONTRACT'] = build_authoring_contract()
         rendered = render_prompt(
             template_id=repair_template_id,
             inputs=renderer_inputs,

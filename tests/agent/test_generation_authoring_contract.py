@@ -61,12 +61,16 @@ def test_generator_receives_registered_new_contract_without_rewriting_old_prompt
     for name, value in [('conversation', []), ('context-selection', {'evidence': []}),
                         ('design-brief', {'schema_version':'text2ifc/design-brief/2.1','status':'ready','known_facts':{}})]:
         (source/f'{name}.json').write_text(json.dumps(value), encoding='utf-8')
-    provider = SequenceProvider([copy.deepcopy(candidate)])
+    class RecordingProvider(SequenceProvider):
+        def generate_live(self, **kwargs):
+            self.sent_prompt = kwargs['prompt']
+            return super().generate_live(**kwargs)
+    provider = RecordingProvider([copy.deepcopy(candidate)])
     result = run_generator_stage(provider=provider, output_dir=tmp_path/'generator', design_source_dir=source, case_id='contract-family')
     assert result['valid']
     sent = json.loads((tmp_path/'generator/prompt-render-input.json').read_text(encoding='utf-8'))
     assert 'IFC_AUTHORING_CONTRACT' in sent
-    assert 'OTHER_CONSTRUCTION' in provider.calls[0]['prompt']
+    assert 'OTHER_CONSTRUCTION' in provider.sent_prompt
     trace = json.loads((tmp_path/'generator/trace-manifest.json').read_text(encoding='utf-8'))
     assert trace['template_id'] == 'bim-json-generator.v2.2'
     registry = load_prompt_registry()
