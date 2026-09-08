@@ -364,6 +364,7 @@ def test_default_live_repl_design_brief_trace_is_session_scoped(tmp_path):
     )
     output = io.StringIO()
     ready_brief = _brief(original_request=ORIGINAL_REQUEST, status="ready")
+    ready_brief["schema_version"] = "text2ifc/design-brief/2.1"
     selection = select_design_brief_context(
         user_request=ORIGINAL_REQUEST,
         conversation=[
@@ -378,6 +379,10 @@ def test_default_live_repl_design_brief_trace_is_session_scoped(tmp_path):
             encoding="utf-8"
         )
     )
+    candidate["schema_version"] = "bim-json/2.1"
+    for entity in candidate["entities"]:
+        entity["property_sets"] = {}
+        entity.pop("materials", None)
     audit = {
         "schema_version": "text2ifc/audit/2.0",
         "recommendation": "accept",

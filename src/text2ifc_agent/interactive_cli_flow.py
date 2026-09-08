@@ -153,7 +153,11 @@ def make_openai_design_brief_invoker(
             raise ValueError("Design Brief invocation requires transcript")
         original_request = str(transcript[0].get("content", ""))
         call_dir = root / "calls" / f"{call_index:02d}-design-brief"
-        call_dir.mkdir(parents=True, exist_ok=True)
+        try:
+            call_dir.mkdir(parents=True, exist_ok=False)
+        except FileExistsError:
+            raise OpenAICompatError("DESIGN_BRIEF_ATTEMPT_ALREADY_EXISTS",
+                                    evidence={"call_index": call_index, "transport_attempted": False}) from None
         selection = select_design_brief_context(
             user_request=original_request,
             conversation=transcript,
@@ -178,8 +182,22 @@ def make_openai_design_brief_invoker(
             "response_format": {"type": "json_object"},
         }
         request.update(token_limit_request(config))
-        response = client.chat.completions.create(**request)
+        # Persist the attempt before transport/parsing: even an unusable response
+        # is real evidence, and must not disappear from the review lineage.
+        _write_json(call_dir / "conversation.json", transcript)
+        _write_json(call_dir / "context-selection.json", selection)
+        _write_json(call_dir / "prompt-render-input.json", renderer_inputs)
+        (call_dir / "prompt-rendered.md").write_text(rendered["text"], encoding="utf-8")
+        _write_json(call_dir / "request.redacted.json", request)
+        try:
+            response = client.chat.completions.create(**request)
+        except Exception as error:
+            failure = {"exception_type": type(error).__name__, "status": "transport_failed"}
+            _write_json(call_dir / "transport-failure.json", failure)
+            # Provider exceptions may contain credentials or private endpoint URLs.
+            raise OpenAICompatError("Design Brief transport failed", evidence=failure) from None
         payload = _object_to_dict(response)
+        _write_json(call_dir / "response.raw.json", payload)
         evidence = parse_chat_completion_evidence(
             payload,
             request=request,
@@ -340,9 +358,27 @@ def run_design_brief_clarification_loop(
     )
     persisted_turn_count = 1
 
-    first_call = invoke_design_brief(controller.transcript_dicts(), 1)
-    controller = controller.record_model_call(first_call)
-    _record_call(store, stored_session.session_id, first_call)
+    saved_calls = [row["payload"] for row in store.session_export_payload(session)["agent_calls"]
+                   if row["payload"].get("role") == "design_brief"]
+    if saved_calls:
+        stored_turns = store.list_turns(session)
+        for row in saved_calls:
+            call = _restore_design_brief_call(row, stored_session.run_dir)
+            if not controller.calls:
+                controller = controller.record_model_call(call)
+            else:
+                answer = stored_turns[len(controller.transcript)]
+                if answer.role != "user":
+                    raise ValueError("CLARIFICATION_RESUME_TRANSCRIPT_MISMATCH")
+                controller = controller.answer_and_rerun(
+                    answer=answer.text, invoke_design_brief=lambda _turns, _index: call)
+        if [(t.role, t.content) for t in controller.transcript] != [(t.role, t.text) for t in stored_turns]:
+            raise ValueError("CLARIFICATION_RESUME_TRANSCRIPT_MISMATCH")
+        persisted_turn_count = len(stored_turns)
+    else:
+        first_call = invoke_design_brief(controller.transcript_dicts(), 1)
+        controller = controller.record_model_call(first_call)
+        _record_call(store, stored_session.session_id, first_call)
     persisted_turn_count = _persist_new_turns(
         store=store,
         session_id=stored_session.session_id,
@@ -2105,6 +2141,24 @@ def _promote_repaired_candidate(run_dir: Path, repaired_candidate: Path) -> None
     _write_json(metrics_path, metrics)
 
 
+def _restore_design_brief_call(row: Mapping[str, Any], run_dir: Path) -> ClarificationCall:
+    """Rebuild a persisted call without invoking Provider or overwriting evidence."""
+    if isinstance(row.get("call"), Mapping):
+        return ClarificationCall(**row["call"])
+    directory = Path(str(row["artifact_dir"]))
+    if not directory.is_absolute():
+        directory = run_dir / directory
+    directory = directory.resolve()
+    if not directory.is_relative_to(run_dir.resolve()):
+        raise ValueError("CLARIFICATION_RESUME_ARTIFACT_OUTSIDE_SESSION")
+    brief = _read_required_json(directory / "design-brief.json")
+    selection = _read_required_json(directory / "context-selection.json")
+    return ClarificationCall(
+        call_index=int(row["call_index"]), response_id=str(row["response_id"]),
+        prompt_template_id=str(row["prompt_template_id"]), prompt_template_hash=str(row["prompt_template_hash"]),
+        artifact_dir=str(directory), brief=brief, evidence_catalog=selection["evidence"])
+
+
 def _record_call(store: SessionStore, session_id: str, call: ClarificationCall) -> None:
     store.record_agent_call(
         session_id,
@@ -2116,6 +2170,7 @@ def _record_call(store: SessionStore, session_id: str, call: ClarificationCall) 
             "prompt_template_hash": call.prompt_template_hash,
             "artifact_dir": call.artifact_dir,
             "status": call.brief.get("status"),
+            "call": call.to_dict(),
         },
     )
 
