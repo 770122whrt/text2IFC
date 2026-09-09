@@ -880,7 +880,12 @@ def _write_design_brief_trace_fixture(
         "conversation.json": transcript,
         "context-selection.json": {"evidence": EVIDENCE, "few_shots": []},
         "request.redacted.json": {"model": "mimo-v2.5-pro"},
-        "response.raw.json": {"id": f"msg_phase62_fix_{call_index}"},
+        "response.raw.json": {
+            "id": f"msg_phase62_fix_{call_index}",
+            # This is a completed fake call, including its simulated usage.
+            # Missing historical usage intentionally blocks budget admission.
+            "usage": {"input_tokens": 100, "output_tokens": 200},
+        },
         "design-brief.json": brief,
         "validation.json": {"valid": True, "issue_count": 0, "issues": []},
         "metrics.json": {"response_id": f"msg_phase62_fix_{call_index}"},

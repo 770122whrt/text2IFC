@@ -76,6 +76,23 @@ def test_actual_usage_and_active_time_accumulate(tmp_path):
         ledger.reserve(stage='generator', reserved_tokens=500)
 
 
+@pytest.mark.parametrize('usage', [None, {}, {'input_tokens': 11}])
+def test_unknown_legacy_usage_blocks_transport_and_preserves_evidence(tmp_path, usage):
+    from text2ifc_agent.generation_budget import BudgetedProvider, GenerationBudgetExceeded
+    raw = tmp_path / 'design-brief/response.raw.json'
+    raw.parent.mkdir()
+    raw.write_text(json.dumps({'id': 'old-unknown', 'usage': usage}), encoding='utf-8')
+    before = raw.read_bytes()
+    provider = SequenceProvider([{}])
+    for _ in range(2):
+        ledger = budget(tmp_path)
+        with pytest.raises(GenerationBudgetExceeded):
+            call(BudgetedProvider(provider, ledger, max_output_tokens=100))
+        assert ledger.snapshot()['calls_used'] == 1
+    assert not provider.calls
+    assert raw.read_bytes() == before
+
+
 def test_feedback_stops_a_b_a_cycle_but_allows_new_stage(tmp_path):
     from text2ifc_agent.feedback_loop import write_feedback_artifacts
     def write(evidence, stage='audit'):
