@@ -370,3 +370,23 @@ Generation 当前 `geometry_v2.py` 限定 `extruded_profile`，compiler 对应�
 新增只读 `generation-authoring-contract/1.1`：明确矩形中心／底标高、父子坐标逆变换、楼层标高只应用一次，以及 slab void、开口和填充的编码规则。支持显式选择 1.0，旧投影哈希不变；已注册 Prompt／Schema 未改。八项朝向／尺寸组合独立编译并检查 IFC 网格包围盒；相关公共链路／两策略／早期恢复回归 67 passed，上下文／预算／版本 25 passed，旧哈希 1 passed。初始 10 failed／8 passed 的红测试及一次命令路径错误保留。[补充准入](../../dataset/processed/ifc-presentation-validation/two-storey-human-review-20260909/admission/geometry-admission.json)复用同阶段基础证据并覆盖变更上下游；不扩大 BASIC_FILLING_CONSTRAINT_CONFLICT 自动修复白名单。
 
 第二次真实生成准备复用原 Brief、继承累计预算并保存到 fresh 目录，但 transport 前被自动审批拒绝：要求明确授权向 `api.deepseek.com` 发送本次完整新载荷。已生成[本地载荷预览](../../dataset/processed/ifc-presentation-validation/two-storey-human-review-20260909/geometry-payload-preview/prompt-rendered.md)，待用户确认该具体范围。此审批拒绝不是一次 Provider 失败，也没有新增真实调用。当前详细入口为[本轮报告](../../dataset/processed/ifc-presentation-validation/two-storey-human-review-20260909/REPORT.md)；尚无可交付双层 IFC，未进行双层视觉检查或 Proof 登记。
+
+## 14. 渐进重构：工程意图到确定性几何
+
+用户已批准将“LLM表达工程意图，确定性代码完成坐标换算与IFC组装”作为后续重要方向，要求逐渐重构，不一次完成。每次只接入一个有明确输入、失败复现和保全检查的构件路径；不能把新辅助函数当作完整Generation链路已迁移。
+
+### 第一小步：矩形边界与 scaffold 屋面（2026-09-09）
+
+已实现 `geometry_authoring.rectangular_prism_attributes`：输入明确父级及父坐标系中的三维最小／最大边界，确定性计算XY中心、底标高和截面／拉伸尺寸，输出既有BIM JSON的放置与表示属性。拒绝缺少父级、非数值、NaN／Infinity、退化或反向边界；不猜测角点含义、不隐式转换单位、不修改输入、不添加材料或普通属性。旋转及平移由父级已有放置继承一次。
+
+本次只接入 `complex_scaffold` 的矩形屋面，修复其将 `(0,0)` 角点误用为截面中心、屋面偏移半个宽度／进深的确定性缺陷。hypotheses：若是原点错位，XY应恰好偏移半尺寸且旋转后偏移随父级旋转；若是单位错误，跨度也会变化；若是层高重复，Z边界会错。重读IFC的两层／三层及旋转父级案例确认第一项，未修改尺寸或Z语义。该路径不是默认LLM候选的自动校正器，也不能修复此前双层真实候选。
+
+验证：新增20项先红后绿（其中4项直接复现屋面实际IFC包围盒错误）；连同scaffold、公共入口相关集成与多层矩阵，共 **30 passed**。与基线 `33ecbfc0` 的确定性比较证明两层／三层仅屋面XY中心改变，其他实体和全部关系相同；compileall及相关diff检查通过。证据位于本地 `.tmp/roof-refactor-red-20260909.xml`、`.tmp/roof-refactor-green-20260909.xml`、`.tmp/roof-refactor-preservation-20260909.json`。这些是聚焦离线回归，不是系统能力提升或真实Provider结果。
+
+### 后续顺序（尚未实施）
+
+1. 明确墙／楼板的边界和锚点输入后，逐个接入同类确定性转换；先修正实际旧路径，再扩大使用范围。
+2. 为一个门窗入口增加显式“楼层＋宿主＋尺寸＋位置”到局部放置的转换，冻结缺事实、旋转宿主、跨层和共享依赖边界；不得自动移动宿主来适配错误候选。
+3. 需要LLM提供新的工程意图结构时，新增版本合同并接入一条公共纵向链路，再逐步扩构件与两种策略。每一步仍须独立重读IFC、约束修改范围并保留失败证据。
+
+本轮未新增真实Provider调用、未运行Full Preflight、未修改Prompt／Schema或accepted Proof；legacy_full默认与staged显式选择不变。scaffold源码已变化，旧live准入哈希不能直接复用，后续调用前需评估并补充受影响路径验证。本轮请求只完成这个小范围重构，不继续扩大到完整几何重写；真实双层交付及人工Proof仍未完成。

@@ -6,6 +6,8 @@ import re
 import hashlib
 from typing import Any, Mapping
 
+from .geometry_authoring import rectangular_prism_attributes
+
 
 PROVENANCE = {"source": "phase6.3-complex-scaffold"}
 
@@ -162,11 +164,10 @@ def build_scaffold_candidate(
                 {
                     "Name": str(roof.get("source_key", "Roof")),
                     "ShapeType": "FLAT_ROOF",
-                    "ObjectPlacement": _placement("building-1", [0, 0, roof_elevation]),
-                    "Representation": _rectangle_representation(
-                        width,
-                        depth,
-                        roof_thickness,
+                    **rectangular_prism_attributes(
+                        relative_to="building-1",
+                        lower=[0, 0, roof_elevation],
+                        upper=[width, depth, roof_elevation + roof_thickness],
                     ),
                 },
             )
