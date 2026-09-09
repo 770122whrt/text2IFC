@@ -1285,6 +1285,15 @@ def _attempt_geometry_repair_after_audit(
     repair_attempt_count: int,
 ) -> dict[str, Any] | None:
     run_dir = stored_session.run_dir
+    # None from the scoped loop can mean a deliberate refusal, not "try a
+    # different repair mechanism". Honor the current persisted decision before
+    # the legacy fallback can reserve budget or instantiate a provider.
+    decision = _read_optional_json(run_dir / "route-decision.json")
+    if decision is not None and (
+        decision.get("retry_allowed") is not True
+        or decision.get("route") not in {"regenerate_json", "repair_json"}
+    ):
+        return None
     audit_report_path = run_dir / "audit" / "audit-report.json"
     geometry_feedback_path = run_dir / "geometry-feedback.json"
     if not audit_report_path.is_file() or not geometry_feedback_path.is_file():

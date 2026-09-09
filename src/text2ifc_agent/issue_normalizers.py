@@ -183,15 +183,16 @@ def normalize_gate_sidecars(case_dir: Path | str) -> list[Issue]:
     if geometry and geometry.get("success") is False:
         for index, item in enumerate(_list_of_dicts(geometry.get("issues")), start=1):
             code = _upper_code(item)
+            gate_review = _gate_issue_type(code) == "gate_false_positive"
             issues.extend(
                 _targeted_issues(
                     issue_id=f"issue_geometry_gate_{index:04d}",
                     source="geometry_gate",
                     severity="blocking",
-                    owner="generator",
-                    issue_type="geometry_invalid",
-                    route="regenerate_json",
-                    retryable=True,
+                    owner="gate" if gate_review else "generator",
+                    issue_type="gate_false_positive" if gate_review else "geometry_invalid",
+                    route="gate_issue" if gate_review else "regenerate_json",
+                    retryable=not gate_review,
                     detail=item,
                     target_ids=_existing_target_ids(item.get("entity_ids"), candidate_ids),
                 )
@@ -253,7 +254,12 @@ def normalize_audit_findings(
     candidate_ids = _candidate_entity_ids(candidate)
     for index, finding in enumerate(findings, start=1):
         code = _upper_code(finding)
-        owner, issue_type, route = _audit_mapping(code)
+        # Classification is structured evidence; diagnostic prose is not a
+        # control signal and must never silently change repair ownership.
+        classification = str(finding.get("classification", "")).upper()
+        owner, issue_type, route = _audit_mapping(
+            "GATE_DISPUTE" if classification == "GATE_DISPUTE" else code
+        )
         issues.extend(
             _targeted_issues(
                 issue_id=f"issue_audit_{index:04d}",
@@ -335,6 +341,11 @@ def write_terminal_issues(
 
 def _gate_issue_type(code: str) -> str:
     upper = code.upper()
+    # The existing gate_false_positive category represents disputed gate
+    # applicability, not a claim that the candidate is correct. Fail closed
+    # pending engineering review; an incomplete evaluator cannot authorize edits.
+    if upper in {"GEOMETRY_EXPECTATION_INCOMPLETE", "GATE_DISPUTE"} or "FALSE_POSITIVE" in upper:
+        return "gate_false_positive"
     if "MISMATCH" in upper:
         return "geometry_invalid"
     if "ENTITY" in upper:
@@ -349,12 +360,12 @@ def _gate_issue_type(code: str) -> str:
         return "missing_space_boundary"
     if "STAIR" in upper or "VERTICAL" in upper:
         return "missing_vertical_connection"
-    if "FALSE_POSITIVE" in upper:
-        return "gate_false_positive"
     return "geometry_invalid"
 
 
 def _audit_mapping(code: str) -> tuple[str, str, str]:
+    if code in {"GATE_DISPUTE", "GEOMETRY_EXPECTATION_INCOMPLETE"} or "FALSE_POSITIVE" in code:
+        return "gate", "gate_false_positive", "gate_issue"
     if code == "IFC_SCHEMA_ERROR":
         return "generator", "geometry_invalid", "regenerate_json"
     if "DESIGN" in code or "ORIGINAL_REQUEST" in code:

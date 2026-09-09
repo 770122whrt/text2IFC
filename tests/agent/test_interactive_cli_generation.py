@@ -1,4 +1,5 @@
 import json
+import pytest
 from copy import deepcopy
 from pathlib import Path
 
@@ -62,6 +63,50 @@ class _SequenceLiveProvider:
                 metadata={"provider": "mimo", "session_id": session_id},
             ),
         )
+
+
+@pytest.mark.parametrize('strategy', ['legacy_full', 'staged'])
+def test_gate_dispute_blocks_public_candidate_repair_without_provider_retry(tmp_path, monkeypatch, strategy):
+    root = tmp_path / strategy
+    store = SessionStore.open(root / 'sessions.sqlite', artifact_root=root)
+    session = store.create_session(original_input='Create a rectangular room with confirmed dimensions.')
+    _write_ready_design_brief_call(session.run_dir)
+    store.mark_session_status(session.session_id, 'ready')
+    candidate = _geometry_blocked_candidate(json.loads(
+        (PHASE6_1_COMPLETE / 'generator/candidate.json').read_text(encoding='utf-8')))
+    if strategy == 'staged':
+        # Only the initial staged provider seam is replaced; compile, gates,
+        # Audit normalization, recovery routing and terminal publication are real.
+        import text2ifc_agent.interactive_cli_flow as flow
+        def staged(**kwargs):
+            return {'valid': True, 'candidate': candidate, 'package_count': 1,
+                    'provider_call_count': 0, 'status': 'formal', 'package_records': [],
+                    'revision': {'revision_id': 'revision-02', 'sequence': 2,
+                                 'candidate_hash': build_candidate_index(candidate)['candidate_hash']}}
+        monkeypatch.setattr(flow, 'run_staged_generation', staged)
+    audit = {'schema_version': 'text2ifc/audit/2.0', 'recommendation': 'revise',
+             'blocking': True, 'deterministic_gate_status': 'failed',
+             'findings': [{'code': 'GATE_DISPUTE', 'classification': 'gate_dispute',
+                           'message': 'Expected geometry needs review before candidate changes.'}],
+             'evidence_paths': ['gate-summary.json']}
+    provider = _SequenceLiveProvider(([candidate] if strategy == 'legacy_full' else []) + [audit])
+    try:
+        result = run_ready_session_to_ifc(store=store, session=session.session_hash,
+                                         provider_factory=lambda: provider,
+                                         generation_strategy=strategy)
+        assert result.status == 'audit_blocked'
+        assert store.get_session(session.session_hash).status == 'audit_blocked'
+        # Existing public API retains a diagnostic IFC path on audit_blocked;
+        # it must not acquire a final acceptance artifact or a compiled status.
+        assert not (session.run_dir/'final-acceptance.json').exists()
+        route = json.loads((session.run_dir/'route-decision.json').read_text(encoding='utf-8'))
+        assert route['route'] == 'gate_issue'
+        assert not route['retry_allowed']
+        assert len(provider.session_ids) == (2 if strategy == 'legacy_full' else 1)
+        assert not list(session.run_dir.glob('changeset-round-*'))
+        assert json.loads((session.run_dir/'candidate.json').read_text(encoding='utf-8')) == candidate
+    finally:
+        store.close()
 
 
 def test_ready_phase6_2_session_generates_ifc_report_and_db_artifacts(tmp_path):
