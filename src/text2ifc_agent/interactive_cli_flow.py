@@ -51,7 +51,7 @@ from .staged_generation import build_skeleton_workspace, run_staged_generation
 from .state import redact_metadata
 
 
-DESIGN_BRIEF_TEMPLATE_ID = "design-brief.v2.2"
+DESIGN_BRIEF_TEMPLATE_ID = "design-brief.v2.3"
 SCAFFOLD_ELIGIBLE_DYNAMIC_ISSUES = {
     "EXPECTED_ENTITY_MISSING",
     "OPENING_FILL_RELATIONSHIP_MISSING",

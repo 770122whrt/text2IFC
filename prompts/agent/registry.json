@@ -1338,6 +1338,67 @@
         "array_index_target",
         "unauthorized_component_change"
       ]
+    },
+    {
+      "template_id": "design-brief.v2.3",
+      "role": "design_brief",
+      "mode": "extract_or_clarify",
+      "path": "prompts/agent/design-brief-v2.3.md",
+      "sha256": "sha256:4e55a836dd172edc4f64f8d57c9c934bab391bf68a18ed908169d4ffc5333d57",
+      "required_inputs": [
+        "USER_REQUEST",
+        "CONVERSATION",
+        "DESIGN_BRIEF_SCHEMA",
+        "EVIDENCE_CATALOG",
+        "FEW_SHOTS"
+      ],
+      "forbidden_outputs": [
+        "bim_json_entities",
+        "bim_json_relationships",
+        "raw_ifc",
+        "step_text",
+        "step_id",
+        "IfcCartesianPoint",
+        "IfcDirection",
+        "IfcOwnerHistory",
+        "compiler_only_object"
+      ]
+    },
+    {
+      "template_id": "bim-json-changeset.v1.5",
+      "role": "bim_json_generator",
+      "mode": "changeset",
+      "path": "prompts/agent/bim-json-changeset-v1.5.md",
+      "sha256": "sha256:908c7f0d11b4a4c910350b0930b02d1b124d234db2e5988b52f2fb5968073596",
+      "required_inputs": [
+        "USER_REQUEST",
+        "CONVERSATION",
+        "DESIGN_BRIEF",
+        "EXPECTED_FACTS",
+        "SCOPED_COMPONENTS",
+        "BASE_REVISION",
+        "CHANGE_SCOPE",
+        "ISSUES",
+        "CONTEXT_ISSUES",
+        "CHANGESET_SCHEMA",
+        "DRAFT_SCHEMA",
+        "FEW_SHOTS",
+        "FORMAL_SCHEMA",
+        "IFC_AUTHORING_CONTRACT",
+        "READ_ONLY_COMPONENTS"
+      ],
+      "forbidden_outputs": [
+        "raw_ifc",
+        "step_text",
+        "step_id",
+        "IfcCartesianPoint",
+        "IfcDirection",
+        "IfcOwnerHistory",
+        "compiler_only_object",
+        "full_bim_json_replacement",
+        "array_index_target",
+        "unauthorized_component_change"
+      ]
     }
   ]
 }

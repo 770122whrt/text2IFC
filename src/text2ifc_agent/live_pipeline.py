@@ -44,7 +44,7 @@ from .semantic_coverage import (
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
-DESIGN_BRIEF_TEMPLATE_ID = "design-brief.v2.2"
+DESIGN_BRIEF_TEMPLATE_ID = "design-brief.v2.3"
 GENERATOR_TEMPLATE_ID = "bim-json-generator.v2"
 REPAIR_TEMPLATE_ID = "bim-json-generator-repair.v2"
 AUDIT_TEMPLATE_ID = "audit.v2"

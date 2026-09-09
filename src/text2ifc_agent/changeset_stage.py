@@ -86,7 +86,7 @@ def run_changeset_stage(
                                        for name in selection['few_shot_names']]
         _write_json(output/'context-selection.json', selection)
     template_id = ('bim-json-changeset.v1.3' if field_recovery else
-                   'bim-json-changeset.v1.4' if new_semantics else CHANGESET_TEMPLATE_ID)
+                   'bim-json-changeset.v1.5' if new_semantics else CHANGESET_TEMPLATE_ID)
     rendered = render_prompt(template_id=template_id, inputs=renderer_inputs)
     _write_json(output / "prompt-render-input.json", renderer_inputs)
     _write_text(output / "prompt-rendered.md", rendered["text"])

@@ -357,7 +357,7 @@ def test_openai_design_brief_invoker_writes_trace_and_returns_call(tmp_path):
     )
 
     assert call.response_id == "chatcmpl-design-001"
-    assert call.prompt_template_id == "design-brief.v2.2"
+    assert call.prompt_template_id == "design-brief.v2.3"
     assert call.brief == brief
     assert captured["model"] == "mimo-v2.5-pro"
     assert captured["max_completion_tokens"] == 131072
