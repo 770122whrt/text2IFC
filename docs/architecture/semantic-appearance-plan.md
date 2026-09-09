@@ -353,3 +353,20 @@ Generation 当前 `geometry_v2.py` 限定 `extruded_profile`，compiler 对应�
 本轮收尾证据：[本地离线记录](../../dataset/processed/ifc-presentation-validation/two-storey-human-review-20260908/scoped-offline-evidence/pipeline-stability-implementation-20260908/verification.json)。各轮测试存在重叠，失败 XML 同样保留，不合并为独立案例成功率。新增错误组测试只使用测试场景；此前双层真实候选没有被手改、重编译或登记为成功 Proof。
 
 下一步明确为 **Generation Stage Preflight／新准入**，随后才能恢复真实双层开发验收；该阶段尚未执行。当前改动证明确定性约束、恢复及预算机制的离线行为，不能声称真实修复成功率已提高。仍未实现任意字段别名推断、自动解决真实用户门向／材料／exact Type 冲突、跨 IFC Type 复用、Repair 工程师语言空间定位或 strict Provider 适配。已有 Proof 的人工确认与登记要求不变。
+
+### 13.4 2026-09-09 阶段准入与真实双层复验
+
+本节更新上一检查点。用户已明确要求完成修复并调用 Provider，原双层请求及独立 IFC 预期保持冻结；复验属于已揭示开发案例，不是盲测。
+
+- Generation Stage Preflight：`tests/agent tests/compiler tests/contract_v2 tests/ifc_quality` 首轮 **905 passed／3 failed／0 skipped**，原 XML 与日志保留。三项失败均来自旧 REPL 离线夹具只写响应 ID、缺少模拟 token usage，被新历史预算门禁正确阻断；补齐夹具用量后，REPL／预算相关 **19 passed**，含三项新增未知历史用量拒绝案例的预算复验 **13 passed**。这两组存在重叠，不合并为独立总数。
+- `compileall src tests scripts` 与相关路径 `git diff --check` 通过。三层代表性离线模型经真实公共 ready-session 代码、编译和最终 gates 发布 IFC，约 9.3 秒，主进程峰值工作集约 164 MiB；生成／Audit 上下文分别 45,780／45,331 UTF-8 字节。未测子进程内存，不宣称大型建筑性能。测量脚本的缺失 sidecar、非法空 provenance、统计字段错误均保留，不能计作产品或真实 Provider 失败。
+- [当前 Stage Admission](../../dataset/processed/ifc-presentation-validation/two-storey-human-review-20260909/admission/admission.json) 已记录环节矩阵、初轮失败、聚焦修正、依赖和源哈希。准入仅覆盖 Generation，Repair source／private Gold 在纯文本 Generation 输入中不适用；没有执行 Full Preflight。
+- 已基于该准入启动 `api.deepseek.com / deepseek-v4-flash` 的真实公共 CLI，默认 `legacy_full`。调用运行目录独立于旧尝试，全部原始响应、失败和预算记录保留。完成状态、独立 IFC 逐项核对和视觉检查以后续实际运行报告为准；未通过前不称为可交付双层 IFC。
+
+本次只修正离线夹具及增补预算反例，没有削弱未知用量阻断或扩大任务预算。待人工 Proof 仍不得登记或晋升 accepted。
+
+真实运行更新：Brief `cbd4a500-48aa-4d1e-9909-f2fb74d5ebc4` ready，Generator `b48255e4-349d-43e9-816b-8600b6fd6450` 返回完整 JSON，但九项基础门窗约束阻断，无 IFC／Audit。两次响应共 117,920 reported token，原始尝试保留。候选普遍把矩形截面中心误作角点，旋转宿主的子级还重复设置世界轴；不能仅改报错的门窗或放宽门禁。
+
+新增只读 `generation-authoring-contract/1.1`：明确矩形中心／底标高、父子坐标逆变换、楼层标高只应用一次，以及 slab void、开口和填充的编码规则。支持显式选择 1.0，旧投影哈希不变；已注册 Prompt／Schema 未改。八项朝向／尺寸组合独立编译并检查 IFC 网格包围盒；相关公共链路／两策略／早期恢复回归 67 passed，上下文／预算／版本 25 passed，旧哈希 1 passed。初始 10 failed／8 passed 的红测试及一次命令路径错误保留。[补充准入](../../dataset/processed/ifc-presentation-validation/two-storey-human-review-20260909/admission/geometry-admission.json)复用同阶段基础证据并覆盖变更上下游；不扩大 BASIC_FILLING_CONSTRAINT_CONFLICT 自动修复白名单。
+
+第二次真实生成准备复用原 Brief、继承累计预算并保存到 fresh 目录，但 transport 前被自动审批拒绝：要求明确授权向 `api.deepseek.com` 发送本次完整新载荷。已生成[本地载荷预览](../../dataset/processed/ifc-presentation-validation/two-storey-human-review-20260909/geometry-payload-preview/prompt-rendered.md)，待用户确认该具体范围。此审批拒绝不是一次 Provider 失败，也没有新增真实调用。当前详细入口为[本轮报告](../../dataset/processed/ifc-presentation-validation/two-storey-human-review-20260909/REPORT.md)；尚无可交付双层 IFC，未进行双层视觉检查或 Proof 登记。

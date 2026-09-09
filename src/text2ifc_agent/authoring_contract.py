@@ -13,12 +13,14 @@ from text2ifc_contract.validation_v2 import _ENUMERATION
 from text2ifc_knowledge.registry import load_ifc2x3_registry
 
 ROOT = Path(__file__).resolve().parents[2]
-CONTRACT_VERSION = 'text2ifc/generation-authoring-contract/1.0'
+CONTRACT_VERSION = 'text2ifc/generation-authoring-contract/1.1'
 _MANAGED = {'GlobalId', 'OwnerHistory', 'HasPropertySets', 'RepresentationMaps'}
 
 
-def build_authoring_contract(classes: Iterable[str] | None = None) -> dict:
+def build_authoring_contract(classes: Iterable[str] | None = None, *, version: str = '1.1') -> dict:
     """Offer legal fields, not default facts or authorization to invent values."""
+    if version not in {'1.0', '1.1'}:
+        raise ValueError(f'Unsupported authoring contract version: {version}')
     registry = load_ifc2x3_registry()
     supported = {k for k, v in load_capabilities().items() if v == 'generate'}
     supported.update(k for k in TYPE_OCCURRENCE if registry.entity(k))
@@ -62,7 +64,7 @@ def build_authoring_contract(classes: Iterable[str] | None = None) -> dict:
     sources = ['schemas/ifc/generated/IFC2X3/declarations.json',
                'schemas/ifc/capabilities/IFC2X3.json', 'schemas/bim-json/2.1/schema.json']
     result = {
-        'schema_version': CONTRACT_VERSION, 'ifc_schema': 'IFC2X3',
+        'schema_version': f'text2ifc/generation-authoring-contract/{version}', 'ifc_schema': 'IFC2X3',
         'source_hashes': {p: hashlib.sha256((ROOT/p).read_bytes()).hexdigest() for p in sources},
         'classes': records,
         'policies': {
@@ -74,6 +76,32 @@ def build_authoring_contract(classes: Iterable[str] | None = None) -> dict:
             'repair': 'The offered schema is read-only evidence, not write permission. Edit only explicitly authorized stable components and paths. Missing user facts or explicit conflicts require Draft.',
         },
     }
+    if version == '1.1':
+        result['geometry_encoding'] = {
+            'rectangle': {
+                'anchor': 'profile_center_at_extrusion_base',
+                'local_bounds': '[-x/2,+x/2] by [-y/2,+y/2]; vertical extrusion z=0..depth',
+                'requested_bounds_to_origin': 'For an axis-aligned requested box [xmin,xmax] [ymin,ymax] [zmin,zmax], origin=((xmin+xmax)/2,(ymin+ymax)/2,zmin), profile=(xmax-xmin,ymax-ymin), depth=zmax-zmin.',
+                'position': 'ObjectPlacement origin is NOT the southwest corner. Rectangle, polygon and stair profiles have different anchor meanings. Polygon coordinates are explicit local vertices; do not recenter them implicitly.',
+            },
+            'placement': {
+                'child_origin_formula': 'inverse(parent_world) @ requested_world_point',
+                'child_axes_formula': 'inverse(parent_world_rotation) @ requested_world_rotation',
+                'composition': 'world = parent_world @ local; include each rotation and storey elevation exactly once.',
+                'storey': 'Set ObjectPlacement translation to the requested storey elevation. Elevation metadata alone is not the placement. Children use storey-relative Z; never add the storey elevation twice.',
+            },
+            'wall_opening_filling': {
+                'wall': 'Local X is wall length, Y is thickness, Z is height. Start the wall at its bottom center. A north-running wall may use ref_direction=[0,1,0]; its local +Y points west.',
+                'opening': 'Use the opening bottom CENTER expressed in the host wall local frame, not its edge or an unconverted world coordinate. For aligned host and opening use local axis=[0,0,1], ref_direction=[1,0,0]. Opening profile x=nominal width, y=cut depth; extrusion depth=nominal height.',
+                'filling': 'When relative_to is the opening and centers align, use origin=[0,0,0], axis=[0,0,1], ref_direction=[1,0,0]. Do not copy the rotated host axes into its child a second time. basic_filling width/depth are centered in XY; height starts at local Z=0.',
+                'bounds': 'Check opening in host coordinates: abs(center_x)+width/2 <= host_length/2, bottom_z>=0, bottom_z+height<=host_height. Filling installation depth must fit wall thickness, even if cut depth is greater.',
+            },
+            'slab_void': 'Rectangular slabs and slab openings also use XY center origins. Convert a requested opening center into the slab frame; use an actual IfcRelVoidsElement and a cut spanning the slab thickness. Do not subtract half-width/half-length twice.',
+            'policy': 'These are encoding rules, not permission to alter requested dimensions, materials, host, position, Type or opening. If explicit geometry is inconsistent, return Draft; do not fix it by resizing or moving user requirements.',
+        }
+        for source in ['src/text2ifc_compiler/geometry.py', 'src/text2ifc_contract/placement.py',
+                       'src/text2ifc_contract/basic_filling.py', 'src/text2ifc_compiler/basic_filling.py']:
+            result['source_hashes'][source] = hashlib.sha256((ROOT/source).read_bytes()).hexdigest()
     encoded = json.dumps(result, sort_keys=True, ensure_ascii=False, separators=(',', ':')).encode('utf-8')
     result['contract_hash'] = 'sha256:' + hashlib.sha256(encoded).hexdigest()
     return result
