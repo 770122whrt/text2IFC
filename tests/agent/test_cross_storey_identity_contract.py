@@ -98,7 +98,7 @@ def test_public_generator_receives_cross_storey_ids_and_versioned_instruction(tm
     rendered = json.loads((tmp_path/'generator/prompt-render-input.json').read_text(encoding='utf-8'))
     assert rendered['ENTITY_ID_CONTRACT']['stair_flights'][0]['entity_id'] == 'actual-child'
     trace = json.loads((tmp_path/'generator/trace-manifest.json').read_text(encoding='utf-8'))
-    assert trace['template_id'] == 'bim-json-generator.v2.3'
+    assert trace['template_id'] == 'bim-json-generator.v2.4'
     prompt = (tmp_path/'generator/prompt-rendered.md').read_text(encoding='utf-8')
     assert 'entity_id' in prompt and 'parent_id' in prompt and 'host_id' in prompt
 

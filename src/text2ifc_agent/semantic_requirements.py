@@ -250,15 +250,19 @@ def request_contract_issues(candidate, request):
 
 
 def unauthorized_candidate_semantics(candidate, expectations):
-    """New-version defaults cannot manufacture physical or performance facts."""
+    """Defaults cannot manufacture facts or grant whole-product style overrides."""
     if candidate.get('schema_version') != 'bim-json/2.1':
         return []
     allowed_properties = {(e['entity_id'], e.get('pset'), e.get('property'))
                           for e in expectations if e['kind'] == 'property'}
     allowed_materials = {e['entity_id'] for e in expectations if e['kind'] == 'material'}
+    allowed_appearance = {e['entity_id'] for e in expectations if e['kind'] == 'appearance'}
     issues = _unauthorized_candidate_types(candidate, expectations)
     for record in candidate.get('entities', []):
         entity_id = record['id']
+        if 'appearance' in record and entity_id not in allowed_appearance:
+            issues.append({'code': 'UNREQUESTED_APPEARANCE', 'path': f'/entities/{entity_id}/appearance',
+                           'message': '整件外观覆盖没有冻结请求授权；主题或部件风格说明不能授权整件同色/同透明度。撤销该可选字段后使用确定性主题和模板部件样式。'})
         if record.get('materials') and entity_id not in allowed_materials:
             issues.append({'code': 'UNREQUESTED_MATERIAL', 'path': f'/entities/{entity_id}/materials',
                            'message': '配色或模板不能补写未经请求授权的材料。'})

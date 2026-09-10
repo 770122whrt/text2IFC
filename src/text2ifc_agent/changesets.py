@@ -20,24 +20,28 @@ CHANGESET_SCHEMA_PATH = (
 )
 
 
-@lru_cache(maxsize=1)
-def _cached_changeset_schema() -> dict[str, Any]:
-    schema = json.loads(CHANGESET_SCHEMA_PATH.read_text(encoding="utf-8"))
+@lru_cache(maxsize=2)
+def _cached_changeset_schema(version=CHANGESET_SCHEMA_VERSION) -> dict[str, Any]:
+    paths = {CHANGESET_SCHEMA_VERSION: CHANGESET_SCHEMA_PATH,
+             'text2ifc/bim-json-changeset/1.1': CHANGESET_SCHEMA_PATH.with_name('bim-json-changeset-1.1.schema.json')}
+    schema = json.loads(paths[version].read_text(encoding="utf-8"))
     _assert_local_references(schema)
     Draft202012Validator.check_schema(schema)
     return schema
 
 
-def load_changeset_schema() -> dict[str, Any]:
+def load_changeset_schema(version=CHANGESET_SCHEMA_VERSION) -> dict[str, Any]:
     """Return a copy of the canonical ChangeSet JSON Schema."""
 
-    return copy.deepcopy(_cached_changeset_schema())
+    return copy.deepcopy(_cached_changeset_schema(version))
 
 
 def validate_changeset(document: Any) -> list[ValidationIssue]:
     """Return stable structural and semantic ChangeSet diagnostics."""
 
-    validator = Draft202012Validator(_cached_changeset_schema())
+    version = document.get('schema_version') if isinstance(document, dict) else None
+    validator = Draft202012Validator(_cached_changeset_schema(
+        version if version == 'text2ifc/bim-json-changeset/1.1' else CHANGESET_SCHEMA_VERSION))
     issues = [
         ValidationIssue(
             code="SCHEMA_VALIDATION_ERROR",
@@ -94,6 +98,12 @@ def _semantic_issues(document: dict[str, Any]) -> list[ValidationIssue]:
                 )
             )
         targets.add(target)
+
+        for pointer in operation.get('remove_paths', []):
+            if any(p == pointer or p.startswith(pointer + '/') or pointer.startswith(p + '/')
+                   for p in operation.get('changes', {})):
+                issues.append(ValidationIssue('CHANGESET_CONFLICTING_PATHS', f'/operations/{index}',
+                                              'A path cannot be both updated and removed.'))
 
         if operation["op"] in {"add_entity", "add_relationship"}:
             provenance = operation["value"].get("provenance")

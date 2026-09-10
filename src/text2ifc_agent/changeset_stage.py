@@ -57,7 +57,9 @@ def run_changeset_stage(
 
     output = Path(output_dir)
     output.mkdir(parents=True, exist_ok=True)
-    changeset_schema = load_changeset_schema()
+    field_removal = any(e.get('remove_paths') for e in (semantic_correction or {}).get('edits', {}).values())
+    changeset_version = 'text2ifc/bim-json-changeset/1.1' if field_removal else 'text2ifc/bim-json-changeset/1.0'
+    changeset_schema = load_changeset_schema(changeset_version)
     draft_schema = load_draft_schema()
     new_semantics = candidate.get('schema_version') == 'bim-json/2.1'
     if new_semantics:
@@ -88,7 +90,8 @@ def run_changeset_stage(
         _write_json(output/'context-selection.json', selection)
     if semantic_correction:
         renderer_inputs['SEMANTIC_CORRECTION'] = dict(semantic_correction)
-    template_id = ('bim-json-changeset.v1.6' if semantic_correction else
+    template_id = ('bim-json-changeset.v1.7' if field_removal else
+                   'bim-json-changeset.v1.6' if semantic_correction else
                    'bim-json-changeset.v1.3' if field_recovery else
                    'bim-json-changeset.v1.5' if new_semantics else CHANGESET_TEMPLATE_ID)
     rendered = render_prompt(template_id=template_id, inputs=renderer_inputs)
@@ -132,7 +135,7 @@ def run_changeset_stage(
     parse_status, parsed, parse_diagnostics = result.output.parse_json()
     provider_parsed = copy.deepcopy(parsed)
     control_normalizations: list[dict[str, str]] = []
-    if isinstance(parsed, Mapping) and parsed.get("schema_version") == "text2ifc/bim-json-changeset/1.0":
+    if isinstance(parsed, Mapping) and parsed.get("schema_version") == changeset_version:
         parsed, control_normalizations = _bind_malformed_hashes(parsed, base_revision)
     normalization_diagnostics = [*parse_diagnostics, *control_normalizations]
     diagnostics = list(parse_diagnostics)
@@ -143,7 +146,7 @@ def run_changeset_stage(
         diagnostics.append(
             _diagnostic("CHANGESET_OUTPUT_CONTRACT_ERROR", "/", "Output is not a JSON object.")
         )
-    elif parsed.get("schema_version") == "text2ifc/bim-json-changeset/1.0":
+    elif parsed.get("schema_version") == changeset_version:
         contract_issues = [_issue_payload(issue) for issue in validate_changeset(parsed)]
         diagnostics.extend(contract_issues)
         if not contract_issues:

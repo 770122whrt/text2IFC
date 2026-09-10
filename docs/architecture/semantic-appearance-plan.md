@@ -621,3 +621,9 @@ B 四张实际 IFC 图片本轮重新查看：浅暖墙、深色框与蓝灰玻�
 修改前扩展失败族并命中两种策略与 ready-session 完整公共链路：36 failed /14 passed，红 XML 为 `.tmp/appearance-projection-red-20260910.xml`。修复后31项投影/类型/冲突/恢复保全测试通过，相关公共链路/Type清理/身份/早期恢复/门禁回归108 passed；XML 为 `.tmp/appearance-projection-unit-green-20260910.xml` 与 `.tmp/appearance-projection-public-green-20260910.xml`。原 A 候选在 `.tmp/appearance-projection-original-a-20260910/` 只读复制后重检，候选字节未变，公共 candidate gates、编译重读和冻结290项IFC检查全部通过；108点楼梯净空采样最小约3米、零间隙0处。这仅为已揭示案例的离线诊断，未重写原失败运行，未补造真实Audit或注册Proof。后续应复核本阶段受影响路径并记录准入更新，再继续已授权A/B任务；前次A真实3次消费仍计入同一分支任务总预算，B本任务尚未消费，不能因重启把失败花费清零。
 
 收尾补测发现新说明来源最初固定写成根目录 Brief 路径，虽文本正确，但在存在 canonical final Brief 时可能指向旧副本。新增 red 测试后改为记录实际选中文件的相对路径，最终投影族32 passed（`.tmp/appearance-projection-unit-final-20260910.xml`）。仅修正本次新增来源记录，未改变既有 final Brief 选择规则。
+
+2026-09-10 下一次 A 真运行 `25a7dcb4706b8bf4`（`projection-retry-20260910/`）生产状态 compiled、Audit accepted，但独立重读290项中34项失败：19扇门窗部件统一着色，15扇窗的窗框也被设为透明。新3次调用加前次3次共计6次；B仍0次。原IFC、原始响应与生产状态保留，独立QA失败单独记录并新增 RUN-HOLD，不能登记为验收Proof。
+
+定位顺序：① 检查器对映射样式误读；② 候选整件覆盖抹平模板分部件样式；③ 编译器默认模板分色错误。实际IFC直接Body样式均为explicit-user、窗透明度均0.7，原网格近景也显示透明框；候选19扇门窗和15面墙有实体appearance，而冻结Brief无任何实体appearance要求。证据支持②，编译器忠实执行已有整件覆盖合同；production检查只核对候选值，缺少覆盖授权门禁。不得通过改变旧appearance含义或放宽独立检查掩盖。
+
+本次小步修复限Generation请求授权：默认配色仍由主题/模板确定；实体或Type的整件appearance须有冻结语义要求，候选自报来源不能授权。显式整件同色/透明请求仍照常表达。为使loop可真正撤销未经授权的可选字段，新增ChangeSet 1.1的受限remove_paths（初版只支持/appearance），只在新鲜诊断和精确语义修复计划共同授权时可用；保持1.0字节及行为，禁止null/空对象替代缺省、禁止删除几何/身份或整个构件。Generator和相关ChangeSet提示新增版本，旧版本保留。先冻结 `tests/agent/test_unrequested_appearance.py` 的四模板、明确覆盖、伪造来源、跨家族、原子越权和纯外观几何保全案例族；修复后补当前阶段相关公共链路与版本/事务准入，未获授权Full Preflight。A/B后续只作为同案例重试证据，不作盲测能力提升。

@@ -92,6 +92,9 @@ def build_semantic_correction(*, candidate, design_brief, expected_facts, issues
                                if kept else {'op': 'remove_relationship'})
         elif issue['code'] == 'UNREQUESTED_MATERIAL':
             _set_edit(edits, identity, '/materials', [])
+        elif issue['code'] == 'UNREQUESTED_APPEARANCE':
+            edits.setdefault(identity, {'op': 'update_entity'}).setdefault('remove_paths', []).append('/appearance')
+            contract['schema_version'] = 'text2ifc/generation-semantic-correction/1.1'
         elif issue['code'] == 'UNREQUESTED_PROPERTY':
             properties = edits.get(identity, {}).get('changes', {}).get('/property_sets')
             if properties is None:
@@ -177,7 +180,7 @@ def extend_semantic_scope(*, candidate, scope, correction, scope_id, base_revisi
         scope[kind] = sorted(set(scope[kind]) | {identity})
         # Scope 1.0 has no operation vocabulary. /attributes is a location,
         # not permission to remove: the separate bound contract enforces that.
-        paths = list(edit.get('changes', {})) or ['/attributes']
+        paths = [*edit.get('changes', {}), *edit.get('remove_paths', [])] or ['/attributes']
         scope['allowed_paths'][identity] = sorted(set(scope['allowed_paths'].get(identity, [])) | set(paths))
     scope['forbidden_ids'] = sorted(set(index['component_hashes']) - set(scope['entity_ids']) - set(scope['relationship_ids']))
     errors = validate_change_scope(scope)
@@ -198,8 +201,10 @@ def validate_semantic_application(*, candidate, composed, expected_facts, correc
         if edit['op'].startswith('remove_'):
             if record is not None:
                 errors.append(_issue('INCOMPLETE', f'{identity} and its explicit dependencies must be removed together.'))
-        elif record is None or any(hash_json_value(_read_pointer(record, p)) != hash_json_value(value) for p, value in edit['changes'].items()):
+        elif record is None or any(hash_json_value(_read_pointer(record, p)) != hash_json_value(value) for p, value in edit.get('changes', {}).items()):
             errors.append(_issue('VALUE_MISMATCH', f'{identity} must preserve the exact request-owned correction values.'))
+        elif any(p.lstrip('/') in record for p in edit.get('remove_paths', [])):
+            errors.append(_issue('VALUE_MISMATCH', f'{identity} must omit the unauthorized optional override, not replace it with null or an empty value.'))
     return errors
 
 
@@ -222,7 +227,7 @@ def _collection_path(reference):
 
 
 def _set_edit(edits, identity, pointer, value):
-    edits.setdefault(identity, {'op': 'update_entity', 'changes': {}})['changes'][pointer] = copy.deepcopy(value)
+    edits.setdefault(identity, {'op': 'update_entity'}).setdefault('changes', {})[pointer] = copy.deepcopy(value)
 
 
 def _semantic_value(field, expectation):

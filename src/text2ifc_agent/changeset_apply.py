@@ -289,7 +289,15 @@ def _preflight_issues(
             )
         if op.startswith("update_"):
             permitted = scope["allowed_paths"].get(target_id, [])
-            for change_path in operation["changes"]:
+            for remove_path in operation.get('remove_paths', []):
+                planned = (semantic_correction or {}).get('edits', {}).get(target_id, {})
+                if (candidate.get('schema_version') != 'bim-json/2.1' or allow_field_containers
+                        or remove_path not in planned.get('remove_paths', [])
+                        or remove_path not in permitted or remove_path != '/appearance'
+                        or 'appearance' not in collection[target_id]):
+                    issues.append(_issue('CHANGESET_SCOPE_VIOLATION', path,
+                        'Optional field removal requires an exact request-owned semantic correction, current field and scope.'))
+            for change_path in operation.get("changes", {}):
                 if change_path in {"/id", "/ifc_class"}:
                     issues.append(
                         _issue(
@@ -356,8 +364,11 @@ def _apply_operations(candidate: dict[str, Any], operations: Sequence[Mapping[st
             del collection[target_index]
             continue
         target = collection[target_index]
-        for pointer, value in sorted(operation["changes"].items()):
+        for pointer, value in sorted(operation.get("changes", {}).items()):
             _set_pointer(target, pointer, copy.deepcopy(value))
+        for pointer in operation.get('remove_paths', []):
+            # Version 1.1 and preflight admit only this optional top-level field.
+            del target[pointer.lstrip('/')]
 
 
 def _set_pointer(target: Any, pointer: str, value: Any) -> None:

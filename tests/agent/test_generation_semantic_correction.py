@@ -84,7 +84,7 @@ class PatchProvider:
         return SequenceProvider([payload]).generate_live(**kwargs)
 
 
-def run_round(tmp_path, data, edits):
+def run_round(tmp_path, data, edits, provider_class=PatchProvider):
     candidate, brief, expected, *_ = data
     _write(tmp_path/'generator/candidate.json', candidate)
     _write(tmp_path/'design-brief.json', brief)
@@ -92,7 +92,7 @@ def run_round(tmp_path, data, edits):
     gate = run_candidate_gate_stage(case_dir=tmp_path, output_dir=tmp_path, case_id='semantic-family')
     assert not gate['semantic_verification']['valid']
     before = copy.deepcopy(candidate)
-    provider = PatchProvider(tmp_path/'round', candidate, edits)
+    provider = provider_class(tmp_path/'round', candidate, edits)
     result = run_scoped_changeset_round(provider=provider, output_dir=tmp_path/'round', case_id='semantic-family',
         round_number=1, user_request='这面墙使用指定砖材，耐火要求60分钟。其它内容保持。', conversation=[],
         design_brief=brief, expected_facts=expected, candidate=candidate,
@@ -227,7 +227,8 @@ def test_orphan_type_families_do_not_need_a_relationship_issue(tmp_path, kind):
     assert result['preservation']['changed_ids'] == [data[5]['id']]
 
 
-def test_staged_output_semantic_cleanup_uses_same_public_round(tmp_path):
+@pytest.mark.parametrize('cleanup', ['property', 'appearance'])
+def test_staged_output_semantic_cleanup_uses_same_public_round(tmp_path, cleanup):
     from text2ifc_agent.staged_generation import run_staged_generation
     from tests.agent.test_phase6_5_staged_generation import _fixture, _changesets
     skeleton, manifest, expected, values = _fixture(1)
@@ -239,13 +240,20 @@ def test_staged_output_semantic_cleanup_uses_same_public_round(tmp_path):
     wall = next(row for row in values[0] if row['id'] == 'wall-1')
     wall['attributes']['Representation']['profile']['x'] = 4000
     wall['property_sets'] = {'Pset_WallCommon': {'FireRating': 'guessed'}}
+    edits = {'wall-1': {'op': 'update_entity', 'changes': {'/property_sets': {}}}}
+    provider_class = PatchProvider
+    if cleanup == 'appearance':
+        from tests.agent.test_unrequested_appearance import RemovalProvider
+        provider_class = RemovalProvider
+        wall['property_sets'] = {}
+        wall['appearance'] = {'color': [.1, .2, .3]}
+        edits = {'wall-1': {'op': 'update_entity', 'remove_paths': ['/appearance']}}
     brief = {'schema_version': 'text2ifc/design-brief/2.1', 'known_facts': {}}
     stage = run_staged_generation(provider=SequenceProvider(_changesets(skeleton, manifest, expected, values)),
         output_dir=tmp_path/'staged', case_id='staged-cleanup', user_request='按已确认尺寸生成。',
         conversation=[], design_brief=brief, expected_facts=expected, skeleton=skeleton, manifest=manifest)
     assert stage['valid'], stage
-    result, _ = run_round(tmp_path/'review', (stage['candidate'], brief, expected),
-        {'wall-1': {'op': 'update_entity', 'changes': {'/property_sets': {}}}})
+    result, _ = run_round(tmp_path/'review', (stage['candidate'], brief, expected), edits, provider_class)
     assert result['valid'], result
     final = tmp_path/'final'
     _write(final/'generator/candidate.json', result['candidate'])
@@ -255,7 +263,8 @@ def test_staged_output_semantic_cleanup_uses_same_public_round(tmp_path):
     assert gate['semantic_verification']['valid']
 
 
-def test_ready_session_semantic_loop_publishes_and_resume_does_not_recall(tmp_path):
+@pytest.mark.parametrize('cleanup', ['type', 'appearance', 'mixed'])
+def test_ready_session_semantic_loop_publishes_and_resume_does_not_recall(tmp_path, cleanup):
     from text2ifc_agent.live_pipeline import run_design_brief_stage
     from text2ifc_agent.interactive_cli_flow import run_ready_session_to_ifc
     from text2ifc_agent.session_store import SessionStore
@@ -271,6 +280,17 @@ def test_ready_session_semantic_loop_publishes_and_resume_does_not_recall(tmp_pa
     extra['attributes'] = {'Name': 'Unrequested wall type', 'PredefinedType': 'STANDARD'}
     candidate['entities'].append(extra)
     candidate['relationships'].append(_relation('unwanted-membership', extra['id'], ['wall-south', 'wall-north']))
+    edits = {extra['id']: {'op':'remove_entity'}, 'unwanted-membership': {'op':'remove_relationship'}}
+    provider_class = PatchProvider
+    if cleanup != 'type':
+        from tests.agent.test_unrequested_appearance import RemovalProvider
+        provider_class = RemovalProvider
+        next(e for e in candidate['entities'] if e['id']=='wall-south')['appearance'] = {'color':[.1,.2,.3]}
+        edits['wall-south'] = {'op':'update_entity', 'remove_paths':['/appearance']}
+        if cleanup == 'appearance':
+            candidate['entities'].remove(extra)
+            candidate['relationships'] = [r for r in candidate['relationships'] if r['id']!='unwanted-membership']
+            edits = {'wall-south': edits['wall-south']}
     store = SessionStore.open(tmp_path/'sessions.sqlite', artifact_root=tmp_path)
     session = store.create_session(original_input=brief['original_request'])
     result = run_design_brief_stage(provider=SequenceProvider([brief]),
@@ -290,8 +310,7 @@ def test_ready_session_semantic_loop_publishes_and_resume_does_not_recall(tmp_pa
         def generate_live(self, **kwargs):
             self.calls.append(kwargs['state']['stage'])
             if kwargs['state']['stage'] == 'changeset':
-                return PatchProvider(session.run_dir/'changeset-round-01', candidate,
-                    {extra['id']: {'op':'remove_entity'}, 'unwanted-membership': {'op':'remove_relationship'}}).generate_live(**kwargs)
+                return provider_class(session.run_dir/'changeset-round-01', candidate, edits).generate_live(**kwargs)
             payload = candidate if len(self.calls) == 1 else audit
             return SequenceProvider([payload]).generate_live(**kwargs)
 
