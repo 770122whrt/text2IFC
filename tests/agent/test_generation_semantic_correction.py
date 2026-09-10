@@ -248,7 +248,7 @@ def test_staged_output_semantic_cleanup_uses_same_public_round(tmp_path, cleanup
         wall['property_sets'] = {}
         wall['appearance'] = {'color': [.1, .2, .3]}
         edits = {'wall-1': {'op': 'update_entity', 'remove_paths': ['/appearance']}}
-    brief = {'schema_version': 'text2ifc/design-brief/2.1', 'known_facts': {}}
+    brief = {'schema_version': 'text2ifc/design-brief/2.1', 'known_facts': {'semantic_requirements': []}}
     stage = run_staged_generation(provider=SequenceProvider(_changesets(skeleton, manifest, expected, values)),
         output_dir=tmp_path/'staged', case_id='staged-cleanup', user_request='按已确认尺寸生成。',
         conversation=[], design_brief=brief, expected_facts=expected, skeleton=skeleton, manifest=manifest)
@@ -271,6 +271,7 @@ def test_ready_session_semantic_loop_publishes_and_resume_does_not_recall(tmp_pa
     from tests.agent.test_phase6_2_fix_semantic_fidelity import _outside_boundary_design_brief, _outside_boundary_center_overlap_candidate
     brief = _outside_boundary_design_brief()
     brief['schema_version'] = 'text2ifc/design-brief/2.1'
+    brief['known_facts']['semantic_requirements'] = []
     brief['provenance'].update(selected_evidence_ids=[], few_shot_ids=[])
     candidate = _outside_boundary_center_overlap_candidate()
     candidate['schema_version'] = 'bim-json/2.1'

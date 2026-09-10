@@ -60,7 +60,7 @@ def test_new_request_contract_cannot_silently_downgrade_or_drop_theme(tmp_path, 
         entity['property_sets'] = {}
     (tmp_path/'generator/candidate.json').write_text(json.dumps(candidate),encoding='utf-8')
     (tmp_path/'design-brief.json').write_text(json.dumps({'schema_version':'text2ifc/design-brief/2.1',
-        'known_facts':{'appearance':{'profile':'warm-residential'}}}),encoding='utf-8')
+        'known_facts':{'appearance':{'profile':'warm-residential'}, 'semantic_requirements': []}}),encoding='utf-8')
     result = run_candidate_gate_stage(case_dir=tmp_path,output_dir=tmp_path,case_id='contract')
     assert not result['compile_reopen_success']
     assert not (tmp_path/'output.ifc').exists()

@@ -144,6 +144,7 @@ def make_openai_design_brief_invoker(
     run_dir: Path | str,
     client_factory: Callable[..., Any] | None = None,
     design_review_enabled: bool = False,
+    design_brief_schema_version: str = 'text2ifc/design-brief/2.1',
 ) -> DesignBriefInvoker:
     """Create a Design Brief invoker backed by OpenAI-compatible Chat Completions."""
 
@@ -167,7 +168,8 @@ def make_openai_design_brief_invoker(
             conversation=transcript,
             schema_version="bim-json/2.1",
         )
-        schema = load_design_brief_schema("text2ifc/design-brief/2.1")
+        from .design_brief import design_brief_template_id
+        schema = load_design_brief_schema(design_brief_schema_version)
         renderer_inputs = {
             "USER_REQUEST": original_request,
             "CONVERSATION": transcript,
@@ -176,7 +178,7 @@ def make_openai_design_brief_invoker(
             "FEW_SHOTS": selection["few_shots"],
         }
         rendered = render_prompt(
-            template_id=DESIGN_REVIEW_BRIEF_TEMPLATE_ID if design_review_enabled else DESIGN_BRIEF_TEMPLATE_ID,
+            template_id=design_brief_template_id(design_brief_schema_version, design_review_enabled=design_review_enabled),
             inputs=renderer_inputs,
         )
         request = {
@@ -266,7 +268,8 @@ def make_openai_design_brief_invoker(
         issues = validate_design_brief(
             parsed,
             evidence_catalog=selection["evidence"],
-            expected_schema_version='text2ifc/design-brief/2.1',
+            expected_schema_version=design_brief_schema_version,
+            conversation=transcript,
         )
         serialized_issues = [
             {
@@ -306,6 +309,25 @@ def make_openai_design_brief_invoker(
             },
             metrics=metrics,
         )
+        from .brief_semantic_repair import semantic_repair_eligible, repair_semantic_brief
+        if semantic_repair_eligible(parsed, issues):
+            from .generation_budget import BudgetedProvider
+            from .openai_compat import OpenAICompatibleLiveProvider
+            _write_json(call_dir / 'initial-validation.json', {'valid': False, 'issues': serialized_issues})
+            repaired = repair_semantic_brief(
+                provider=BudgetedProvider(OpenAICompatibleLiveProvider(config=config, client_factory=lambda **_: client), budget),
+                output_dir=call_dir/'semantic-repair', brief=parsed,
+                case={'user_request': original_request, 'conversation': transcript},
+                evidence_catalog=selection['evidence'], session_id=f'brief-{call_index}-semantic-repair')
+            serialized_issues = repaired['issues']
+            issues = serialized_issues
+            metrics['semantic_repair'] = {key: value for key, value in repaired.items() if key != 'brief'}
+            metrics['schema_semantic_valid'] = repaired['valid']
+            _write_json(call_dir / 'metrics.json', metrics)
+            _write_json(call_dir / 'validation.json', {'valid': repaired['valid'],
+                'issue_count': len(serialized_issues), 'issues': serialized_issues})
+            if repaired['valid']:
+                parsed = repaired['brief']
         if issues:
             raise OpenAICompatError(
                 "OpenAI-compatible Design Brief failed schema validation",
@@ -509,8 +531,8 @@ def _run_ready_session_to_ifc(
     trace_path = design_dir / "trace-manifest.json"
     brief_trace = _read_required_json(trace_path) if trace_path.is_file() else {}
     if review_context is None and (
-        brief_metrics.get("prompt_template_id") == DESIGN_REVIEW_BRIEF_TEMPLATE_ID
-        or brief_trace.get("template_id") == DESIGN_REVIEW_BRIEF_TEMPLATE_ID
+        brief_metrics.get("prompt_template_id") in {DESIGN_REVIEW_BRIEF_TEMPLATE_ID, 'design-brief.v2.6'}
+        or brief_trace.get("template_id") in {DESIGN_REVIEW_BRIEF_TEMPLATE_ID, 'design-brief.v2.6'}
     ):
         raise ValueError("DESIGN_REVIEW_CONTEXT_REQUIRED")
     design_brief = json.loads((design_dir / "design-brief.json").read_text(encoding="utf-8"))

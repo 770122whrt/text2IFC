@@ -146,7 +146,7 @@ def test_public_gate_blocks_unrequested_type_before_compilation(tmp_path):
     extra['attributes'] = {'Name': 'Unexpected', 'PredefinedType': 'NOTDEFINED'}
     candidate['entities'].append(extra)
     _write(tmp_path / 'generator/candidate.json', candidate)
-    _write(tmp_path / 'design-brief.json', {'schema_version': 'text2ifc/design-brief/2.1', 'known_facts': {}})
+    _write(tmp_path / 'design-brief.json', {'schema_version': 'text2ifc/design-brief/2.1', 'known_facts': {'semantic_requirements': []}})
     original = (tmp_path / 'generator/candidate.json').read_bytes()
     result = run_candidate_gate_stage(case_dir=tmp_path, output_dir=tmp_path, case_id='unrequested-type')
     assert not result['compile_reopen_success']
@@ -161,7 +161,7 @@ def test_public_gate_keeps_compiler_owned_minimal_door_style(tmp_path):
     for entity in candidate['entities']:
         entity['materials'], entity['property_sets'] = [], {}
     _write(tmp_path / 'generator/candidate.json', candidate)
-    _write(tmp_path / 'design-brief.json', {'schema_version': 'text2ifc/design-brief/2.1', 'known_facts': {}})
+    _write(tmp_path / 'design-brief.json', {'schema_version': 'text2ifc/design-brief/2.1', 'known_facts': {'semantic_requirements': []}})
     result = run_candidate_gate_stage(case_dir=tmp_path, output_dir=tmp_path, case_id='compiler-style')
     assert result['compile_reopen_success'], result['ifc_verification']
     model = ifcopenshell.open(str(tmp_path / 'output.ifc'))

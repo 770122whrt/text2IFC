@@ -24,8 +24,9 @@ def test_new_design_call_cannot_silently_return_old_contract(tmp_path):
 
 
 @pytest.mark.parametrize('strategy', ['legacy_full', 'staged'])
+@pytest.mark.parametrize('brief_version', ['2.1', '2.2'])
 @pytest.mark.parametrize('template', ['window-single','window-double-vertical','door-left','door-right'])
-def test_public_strategies_preserve_explicit_material_and_property(tmp_path, strategy, template):
+def test_public_strategies_preserve_explicit_material_and_property(tmp_path, strategy, template, brief_version):
     skeleton, manifest, expected, values = _fixture(1)
     skeleton['schema_version'] = 'bim-json/2.1'
     skeleton['appearance'] = {'profile': 'warm-residential', 'seed': 'public-frozen'}
@@ -44,11 +45,14 @@ def test_public_strategies_preserve_explicit_material_and_property(tmp_path, str
         'template_version':'text2ifc/basic-filling/1.0', 'width':1000, 'height':2100, 'depth':200, 'parameters':{}}
     wall['materials'] = [{'kind':'single_material','name':'Requested brick'}]
     wall['property_sets'] = {'Pset_WallCommon': {'FireRating':'60'}}
-    brief = {'schema_version':'text2ifc/design-brief/2.1','status':'ready','known_facts': {
+    brief = {'schema_version':f'text2ifc/design-brief/{brief_version}','status':'ready','known_facts': {
         'appearance': {**skeleton['appearance'], 'style_notes': '外观协调；材料和性能仍以明确请求为准。'},
         'semantic_requirements':[{'entity_id':'wall-1', 'material':wall['materials'][0],
                                   'property_sets':wall['property_sets']},
             {'entity_id':'window-1', 'template':{'template_id':template,'template_version':'text2ifc/basic-filling/1.0'}}]}}
+    if brief_version == '2.2':
+        from tests.agent.test_semantic_authority_completeness import review
+        brief['known_facts']['semantic_review'] = review(material=True, property=True, template=True)
     if strategy == 'staged':
         provider = SequenceProvider(_changesets(skeleton,manifest,expected,values))
         result = run_staged_generation(provider=provider,output_dir=tmp_path/'generator',case_id='public',
@@ -129,13 +133,14 @@ def test_staged_shared_type_is_authored_once_after_instances(tmp_path):
 @pytest.mark.parametrize('detailed', [False, True])
 @pytest.mark.parametrize('canonical_ids', [False, True])
 @pytest.mark.parametrize('recover_field', [False, True])
-def test_ready_session_public_chain_reaches_final_acceptance(tmp_path, detailed, canonical_ids, recover_field):
+@pytest.mark.parametrize('brief_version', ['2.1', '2.2'])
+def test_ready_session_public_chain_reaches_final_acceptance(tmp_path, detailed, canonical_ids, recover_field, brief_version):
     from text2ifc_agent.live_pipeline import run_design_brief_stage
     from text2ifc_agent.interactive_cli_flow import run_ready_session_to_ifc
     from text2ifc_agent.session_store import SessionStore
     from tests.agent.test_phase6_2_fix_semantic_fidelity import _outside_boundary_design_brief, _outside_boundary_center_overlap_candidate
     brief = _outside_boundary_design_brief()
-    brief['schema_version']='text2ifc/design-brief/2.1'
+    brief['schema_version']=f'text2ifc/design-brief/{brief_version}'
     brief['known_facts']['appearance'] = {'profile': 'warm-residential', 'style_notes': '浅墙深框；风格文字待视觉审查。'}
     brief['original_request'] += ' 墙体使用Requested brick，耐火设计要求60分钟。'
     brief['provenance'].update(selected_evidence_ids=[], few_shot_ids=[])
@@ -167,9 +172,16 @@ def test_ready_session_public_chain_reaches_final_acceptance(tmp_path, detailed,
             record['property_sets']={'Pset_WallCommon':{'FireRating':'60'}}
     store=SessionStore.open(tmp_path/'sessions.sqlite',artifact_root=tmp_path)
     session=store.create_session(original_input=brief['original_request'])
+    if brief_version == '2.2':
+        from tests.agent.test_semantic_authority_completeness import review
+        declared = {'material': True, 'property': True}
+        if detailed:
+            declared['template'] = True
+        brief['known_facts']['semantic_review'] = review(**declared)
     design = run_design_brief_stage(provider=SequenceProvider([brief]),
-        case={'case_id':session.session_hash,'user_request':brief['original_request'],'conversation':[]},
-        output_dir=session.run_dir/'design-brief')
+        case={'case_id':session.session_hash,'user_request':brief['original_request'],
+              'conversation':[{'turn_id':'turn-user-001','role':'user','content':brief['original_request']}]},
+        output_dir=session.run_dir/'design-brief', design_brief_schema_version=brief['schema_version'])
     assert design['valid'],design
     (session.run_dir/'design-brief.json').write_text(json.dumps(brief),encoding='utf-8')
     store.mark_session_status(session.session_id,'ready')

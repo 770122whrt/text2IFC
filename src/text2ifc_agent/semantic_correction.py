@@ -32,6 +32,8 @@ def build_semantic_correction(*, candidate, design_brief, expected_facts, issues
     request['issues'].extend(expected_facts.get('semantic_projection_issues', []))
     request['entity_id_contract'] = expected_facts.get('entity_id_contract', {})
     request = bind_semantic_targets(candidate, request)
+    if request['issues'] or not request['authority_declared']:
+        return _block(contract, 'REQUEST_INVALID', 'Frozen semantic authority is incomplete or inconsistent; correct the Brief before candidate cleanup.')
     expected = request['expectations']
     fresh = {i['path']: i for i in unauthorized_candidate_semantics(candidate, expected)}
     selected = {}

@@ -14,6 +14,8 @@ from typing import Any, Mapping
 
 
 SEMANTIC_FIELDS = {'material', 'materials', 'property_sets', 'type_id', 'appearance', 'template'}
+SEMANTIC_BRIEF_VERSIONS = {'text2ifc/design-brief/2.1', 'text2ifc/design-brief/2.2'}
+SEMANTIC_KINDS = {'material', 'property', 'type', 'appearance', 'template'}
 
 
 @lru_cache(maxsize=1)
@@ -52,7 +54,7 @@ def _project_appearance(selection, source_path):
 
 def generation_schema_version(brief: Mapping[str, Any]) -> str:
     known = brief.get('known_facts', {})
-    if brief.get('schema_version') == 'text2ifc/design-brief/2.1' or (
+    if brief.get('schema_version') in SEMANTIC_BRIEF_VERSIONS or (
         isinstance(known, Mapping) and known.get('semantic_requirements')
     ):
         return 'bim-json/2.1'
@@ -64,6 +66,12 @@ def project_semantic_requirements(brief: Mapping[str, Any]) -> dict[str, Any]:
     expectations: list[dict[str, Any]] = []
     issues: list[dict[str, str]] = []
     records: list[tuple[str, Mapping[str, Any]]] = []
+    if brief.get('schema_version') in SEMANTIC_BRIEF_VERSIONS and (
+        not isinstance(known, Mapping) or not isinstance(known.get('semantic_requirements'), list)
+    ):
+        issues.append({'code': 'SEMANTIC_AUTHORITY_INCOMPLETE',
+                       'path': '/known_facts/semantic_requirements',
+                       'message': '语义提取尚未明确：缺少数组不能视为用户无要求。请依据原始对话校正 Brief，禁止据此清除候选语义。'})
 
     def walk(value, path):
         if isinstance(value, Mapping):
@@ -71,7 +79,7 @@ def project_semantic_requirements(brief: Mapping[str, Any]) -> dict[str, Any]:
                 records.append((path, value))
                 return
             for key, child in value.items():
-                if path == '/known_facts' and key == 'appearance':
+                if path == '/known_facts' and key in {'appearance', 'semantic_review'}:
                     continue
                 walk(child, f'{path}/{key}')
         elif isinstance(value, list):
@@ -80,6 +88,9 @@ def project_semantic_requirements(brief: Mapping[str, Any]) -> dict[str, Any]:
 
     walk(known, '/known_facts')
     for path, record in records:
+        if brief.get('schema_version') == 'text2ifc/design-brief/2.2' and not path.startswith('/known_facts/semantic_requirements/'):
+            issues.append({'code': 'SEMANTIC_AUTHORITY_NON_CANONICAL', 'path': path,
+                           'message': '结构化语义要求必须完整放入 semantic_requirements，不能散落后被遗漏。'})
         entity_id = record.get('entity_id') or record.get('id')
         if not isinstance(entity_id, str) or not entity_id:
             issues.append({'code': 'SEMANTIC_TARGET_REQUIRED', 'path': path,
@@ -118,8 +129,25 @@ def project_semantic_requirements(brief: Mapping[str, Any]) -> dict[str, Any]:
         for field, kind in [('type_id', 'type'), ('appearance', 'appearance'), ('template', 'template')]:
             if field in record:
                 expectations.append({**base, 'kind': kind, 'value': copy.deepcopy(record[field])})
+    if brief.get('schema_version') == 'text2ifc/design-brief/2.2':
+        review = known.get('semantic_review', {}) if isinstance(known, Mapping) else {}
+        for kind in sorted(SEMANTIC_KINDS):
+            entry = review.get(kind, {}) if isinstance(review, Mapping) else {}
+            status = entry.get('status') if isinstance(entry, Mapping) else None
+            has_values = any(e['kind'] == kind for e in expectations)
+            if status not in {'specified', 'not_specified', 'unresolved'} or (
+                status == 'unresolved'
+            ):
+                issues.append({'code': 'SEMANTIC_AUTHORITY_INCOMPLETE',
+                               'path': f'/known_facts/semantic_review/{kind}',
+                               'message': '该类语义尚未完成检查，不能按无要求发布或删除。'})
+            elif (status == 'specified' and not has_values) or (status == 'not_specified' and has_values):
+                issues.append({'code': 'SEMANTIC_AUTHORITY_CONFLICT',
+                               'path': f'/known_facts/semantic_review/{kind}',
+                               'message': '语义检查声明与结构化要求不一致，需校正 Brief。'})
     encoded = json.dumps(expectations, ensure_ascii=False, sort_keys=True, separators=(',', ':')).encode('utf-8')
     return {'schema_version': 'text2ifc/request-semantics/1.0', 'expectations': expectations,
+            'authority_declared': isinstance(known, Mapping) and isinstance(known.get('semantic_requirements'), list),
             'issues': issues, 'valid': not issues, 'expectations_hash': hashlib.sha256(encoded).hexdigest()}
 
 
@@ -129,7 +157,7 @@ def request_semantics_for_case(root: Path) -> dict[str, Any]:
     brief_path = next((p for p in paths if p.is_file()), None)
     brief = json.loads(brief_path.read_text(encoding='utf-8')) if brief_path else {}
     projected = project_semantic_requirements(brief)
-    projected['minimum_schema_version'] = 'bim-json/2.1' if brief.get('schema_version') == 'text2ifc/design-brief/2.1' else None
+    projected['minimum_schema_version'] = 'bim-json/2.1' if brief.get('schema_version') in SEMANTIC_BRIEF_VERSIONS else None
     projected['appearance_requests'], projected['appearance_notes'] = [], []
 
     def add_appearance(selection, source_path):

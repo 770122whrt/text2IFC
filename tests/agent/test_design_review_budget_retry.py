@@ -29,6 +29,7 @@ def test_retry_keeps_task_spend_but_requests_new_brief(tmp_path, branch, used):
     call = parent / 'calls/01-design-brief'
     brief = harness.read(call / 'design-brief.json')
     brief['schema_version'] = 'text2ifc/design-brief/2.1'
+    brief['known_facts']['semantic_requirements'] = []
     brief['known_facts']['appearance'] = {'profile': 'warm-residential', 'style_notes': '协调外观，仍需视觉核对。'}
     turns = harness.read(call / 'conversation.json')
     turns.append({'turn_id': 'approved', 'role': 'user', 'content': '保留已确认决定并继续。'})

@@ -25,6 +25,7 @@ def test_fresh_branches_compile_without_reusing_prior_brief_or_budget(tmp_path, 
     turns.append({'turn_id': 'turn-authorized', 'role': 'user', 'content': '按已确认的决定建模并记录局限。'})
     brief = harness.read(call / 'design-brief.json')
     brief['schema_version'] = 'text2ifc/design-brief/2.1'
+    brief['known_facts']['semantic_requirements'] = []
     harness.write(prior / 'generation-budget.json', {'unusable_old_budget': True})
     frozen = {p.relative_to(prior): p.read_bytes() for p in prior.rglob('*') if p.is_file()}
     case = tmp_path / branch

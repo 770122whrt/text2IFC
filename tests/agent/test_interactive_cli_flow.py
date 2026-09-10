@@ -38,6 +38,7 @@ def _brief(*, original_request: str, status: str, source_turns=None):
         "original_request": original_request,
         "status": status,
         "known_facts": {
+            "semantic_requirements": [],
             "space": {"length_mm": 6000, "width_mm": 4000, "height_mm": 3000},
             "walls": {"count": 4, "enclosure": "closed"},
         },

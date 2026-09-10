@@ -635,3 +635,7 @@ B 四张实际 IFC 图片本轮重新查看：浅暖墙、深色框与蓝灰玻�
 新增阻断已记录于该包 RUN-HOLD：Brief在 `material_and_attribute_policy` 自由文字中正确保留砖和混凝土要求，却完全没有 `semantic_requirements`；投影把缺失字段折成空预期，授权19项材料清空，后续Audit也未阻止发布。原始候选其实含这些材料。机制问题是“未完成结构化提取”被当成“明确无请求”，而非本次RGB修复倒退或编译器丢字段。20项跨Wall/Beam/Door/Slab、不同自由文字位置的离线复现中12项仍错误授权删除；8项明确空清单/明确要求对照符合预期。脚本和结果见该包 semantic-authority-reproduction.py/json，尚未作此新缺陷的产品修复，不得将580项准入复用为继续transport的依据。
 
 下一步严格限语义权威完整性：区分“明确无要求”“已结构化要求”“提取未完成/来源不合约”，未知状态不得授权删除；按新版本合同把缺少规范清单的Brief退回Agent校正，冻结几何/用户决策不变，不把这类Agent返工变成无谓用户澄清。不为本例增加 `material_and_attribute_policy` 别名，不从任意自由文字/颜色反推材料，也不通过放宽检查保留虚构材料。先冻结缺失、显式空、部分遗漏、合法语义、多构件、澄清恢复与原子保全失败族，验证后再继续同一A/B预算。当前按用户“遇问题停下”暂停真实调用并给出报告，B尚未执行、A/B尚未待验收Proof、没有push。
+
+2026-09-10 继续实施上述边界：新增 Design Brief 2.2，明确要求 canonical semantic_requirements 和材料、属性、Type、构件外观、模板五类 semantic_review（specified / not_specified / unresolved，引用真实用户轮次）。缺失不是空值，声明与清单矛盾或 ready 仍 unresolved 均阻断。旧版本文件保持不变；2.1 缺失清单不再授予删除权限，显式空清单保持旧合法含义。新合同先显式用于 A/B，并覆盖普通/设计合理性审查两个 Prompt 入口；默认生成策略不变。
+
+Brief 语义校正限定一次 Agent 调用，计入同一任务预算，只能修改 known_facts.semantic_requirements / semantic_review；初次响应、校正响应与反馈分别保留。尺寸、位置、楼层、稳定身份、已批准决定和 original_request 一律保持；拒绝校正越界、伪造用户轮次、截断、仍未完成提取以及借校正绕过真实用户歧义。类别检查与来源绑定可证明结构化合同成立，不能证明任意自然语言被完整理解；最终仍须由冻结原请求预期独立重读 IFC。当前仅进行离线实现与验证，不复用已被 RUN-HOLD 否定的准入，不启动真实调用。

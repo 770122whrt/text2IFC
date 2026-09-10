@@ -250,6 +250,7 @@ def build_expected_facts(
     semantics = project_semantic_requirements(design_brief)
     if generation_schema_version(design_brief) == 'bim-json/2.1':
         payload['generation_schema_version'] = 'bim-json/2.1'
+        payload['semantic_authority_declared'] = semantics['authority_declared']
     if semantics['expectations'] or semantics['issues']:
         payload['semantic_expectations'] = semantics['expectations']
         payload['semantic_projection_issues'] = semantics['issues']

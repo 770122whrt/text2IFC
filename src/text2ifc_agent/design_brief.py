@@ -18,6 +18,7 @@ from text2ifc_contract.validation import (
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DESIGN_BRIEF_SCHEMA_PATHS = {
+    "text2ifc/design-brief/2.2": PROJECT_ROOT / 'schemas/agent/design-brief/2.2/schema.json',
     "text2ifc/design-brief/2.1": PROJECT_ROOT / 'schemas/agent/design-brief/2.1/schema.json',
     "text2ifc/design-brief/1.0": (
         PROJECT_ROOT / "schemas" / "agent" / "design-brief" / "1.0" / "schema.json"
@@ -28,7 +29,7 @@ DESIGN_BRIEF_SCHEMA_PATHS = {
 }
 
 
-@lru_cache(maxsize=2)
+@lru_cache(maxsize=4)
 def load_design_brief_schema(
     schema_version: str = "text2ifc/design-brief/1.0",
 ) -> dict[str, Any]:
@@ -46,6 +47,7 @@ def validate_design_brief(
     *,
     evidence_catalog: list[dict[str, Any]] | None = None,
     expected_schema_version: str | None = None,
+    conversation: list[dict[str, Any]] | None = None,
 ) -> list[ValidationIssue]:
     """Return stable field-level issues without mutating the brief."""
     schema_version = (
@@ -70,13 +72,31 @@ def validate_design_brief(
         for error in validator.iter_errors(document)
         for issue in _normalize_error(error)
     ]
-    if schema_version in {"text2ifc/design-brief/2.0", "text2ifc/design-brief/2.1"} and isinstance(document, dict):
+    if schema_version in {"text2ifc/design-brief/2.0", "text2ifc/design-brief/2.1", "text2ifc/design-brief/2.2"} and isinstance(document, dict):
         issues.extend(_validate_v2_semantics(document, evidence_catalog or []))
-    if schema_version == 'text2ifc/design-brief/2.1' and not issues:
+    if schema_version in {'text2ifc/design-brief/2.1', 'text2ifc/design-brief/2.2'} and not issues:
         from .semantic_requirements import project_semantic_requirements
         if document.get('status') == 'ready':
             issues.extend(ValidationIssue(**i) for i in project_semantic_requirements(document)['issues'])
+    if schema_version == 'text2ifc/design-brief/2.2' and conversation is not None and not issues:
+        user_turns = {t.get('turn_id') for t in conversation if t.get('role') == 'user'}
+        for kind, entry in document['known_facts']['semantic_review'].items():
+            if not set(entry['source_turns']).issubset(user_turns):
+                issues.append(ValidationIssue('SEMANTIC_AUTHORITY_SOURCE_INVALID',
+                    f'/known_facts/semantic_review/{kind}/source_turns',
+                    '语义检查只能引用本次对话中真实存在的用户轮次。'))
     return _sort_issues(issues)
+
+
+def design_brief_template_id(schema_version: str, *, design_review_enabled: bool) -> str:
+    """Preserve released contracts while explicitly selecting the stronger one."""
+    if schema_version == 'text2ifc/design-brief/2.2':
+        return 'design-brief.v2.6' if design_review_enabled else 'design-brief.v2.5'
+    if schema_version == 'text2ifc/design-brief/2.1':
+        return 'design-brief.v2.4' if design_review_enabled else 'design-brief.v2.3'
+    if schema_version == 'text2ifc/design-brief/2.0' and not design_review_enabled:
+        return 'design-brief.v2.1'
+    raise ValueError('Unsupported Design Brief stage contract or review mode.')
 
 
 def _validate_v2_semantics(

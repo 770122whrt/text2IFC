@@ -19,7 +19,7 @@ from .clarification import (
     ClarificationController,
     ClarificationError,
 )
-from .design_brief import load_design_brief_schema, validate_design_brief
+from .design_brief import design_brief_template_id, load_design_brief_schema, validate_design_brief
 from .live_trace import write_live_trace
 from .audit import collect_revision_audit_evidence
 from .design_review import load_design_review_context, validate_design_review_output
@@ -154,9 +154,9 @@ def run_design_brief_stage(
     output.mkdir(parents=True, exist_ok=True)
     user_request = str(case["user_request"])
     conversation = list(case["conversation"])
-    if design_brief_schema_version not in {'text2ifc/design-brief/2.0','text2ifc/design-brief/2.1'}:
+    if design_brief_schema_version not in {'text2ifc/design-brief/2.0','text2ifc/design-brief/2.1','text2ifc/design-brief/2.2'}:
         raise ValueError('Unsupported Design Brief stage contract.')
-    new_semantics = design_brief_schema_version == 'text2ifc/design-brief/2.1'
+    new_semantics = design_brief_schema_version in {'text2ifc/design-brief/2.1', 'text2ifc/design-brief/2.2'}
     if design_review_enabled and not new_semantics:
         raise ValueError('Design review requires Design Brief 2.1')
     selection = select_design_brief_context(
@@ -173,8 +173,7 @@ def run_design_brief_stage(
         "FEW_SHOTS": selection["few_shots"],
     }
     rendered = render_prompt(
-        template_id=(DESIGN_REVIEW_BRIEF_TEMPLATE_ID if design_review_enabled
-                     else DESIGN_BRIEF_TEMPLATE_ID if new_semantics else 'design-brief.v2.1'),
+        template_id=design_brief_template_id(design_brief_schema_version, design_review_enabled=design_review_enabled),
         inputs=renderer_inputs,
     )
 
@@ -210,9 +209,19 @@ def run_design_brief_stage(
             parsed,
             evidence_catalog=selection["evidence"],
             expected_schema_version=design_brief_schema_version,
+            conversation=conversation,
         )
 
     serialized_issues = [asdict(issue) for issue in issues]
+    semantic_repair = None
+    from .brief_semantic_repair import semantic_repair_eligible, repair_semantic_brief
+    if parse_status == 'ok' and not parse_diagnostics and semantic_repair_eligible(parsed, issues):
+        _write_json(output / 'initial-validation.json', {'valid': False, 'issues': serialized_issues})
+        semantic_repair = repair_semantic_brief(provider=provider, output_dir=output/'semantic-repair',
+            brief=parsed, case=case, evidence_catalog=selection['evidence'], session_id=session_id+'-semantic-repair')
+        serialized_issues = semantic_repair['issues']
+        if semantic_repair['valid']:
+            parsed = semantic_repair['brief']
     if parse_status != "ok":
         serialized_issues = list(parse_diagnostics)
     schema_semantic_valid = parse_status == "ok" and not serialized_issues
@@ -259,6 +268,9 @@ def run_design_brief_stage(
         ),
     }
     _write_json(output / "metrics.json", metrics)
+    if semantic_repair is not None:
+        metrics['semantic_repair'] = {key: value for key, value in semantic_repair.items() if key != 'brief'}
+        _write_json(output / 'metrics.json', metrics)
 
     trace_manifest = {
         "schema_version": "text2ifc/live-stage-trace/1.0",
@@ -296,6 +308,10 @@ def run_design_brief_stage(
         },
     }
     _write_json(output / "trace-manifest.json", trace_manifest)
+    if semantic_repair is not None:
+        trace_manifest['artifacts']['semantic_repair'] = 'semantic-repair/'
+        trace_manifest['artifacts']['initial_validation'] = 'initial-validation.json'
+        _write_json(output / 'trace-manifest.json', trace_manifest)
     return {
         "case_id": case["case_id"],
         "stage": "design-brief",
@@ -1477,8 +1493,14 @@ def run_candidate_gate_stage(
     from text2ifc_compiler.compiler import CompilationResult
     from text2ifc_contract.validation import ValidationIssue
     request_semantics = bind_semantic_targets(candidate, request_semantics_for_case(case_root))
+    if candidate.get('schema_version') == 'bim-json/2.1' and not request_semantics['authority_declared']:
+        if not any(i['code'] == 'SEMANTIC_AUTHORITY_INCOMPLETE' for i in request_semantics['issues']):
+            request_semantics['issues'].append({'code': 'SEMANTIC_AUTHORITY_INCOMPLETE',
+                'path': '/known_facts/semantic_requirements',
+                'message': '缺少独立于候选的明确语义清单，不能发布或据此清理候选。'})
     semantic_expectations = request_semantics['expectations']
-    request_semantics['issues'].extend(unauthorized_candidate_semantics(candidate, semantic_expectations))
+    if not request_semantics['issues']:
+        request_semantics['issues'].extend(unauthorized_candidate_semantics(candidate, semantic_expectations))
     request_semantics['issues'].extend(request_contract_issues(candidate, request_semantics))
     request_semantics['valid'] = not request_semantics['issues']
     _write_json(output / 'request-semantics.json', request_semantics)

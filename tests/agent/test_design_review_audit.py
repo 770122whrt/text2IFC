@@ -133,6 +133,7 @@ def test_public_brief_stage_can_explicitly_select_the_review_contract(tmp_path):
     root = _write_auditable_case_dir(tmp_path / "reference")
     brief = json.loads((root / "design-brief/design-brief.json").read_text(encoding="utf-8"))
     brief["schema_version"] = "text2ifc/design-brief/2.1"
+    brief['known_facts']['semantic_requirements'] = []
     provider = _RecordingLiveProvider(brief)
     target = tmp_path / "review-brief"
     result = run_design_brief_stage(provider=provider, output_dir=target,

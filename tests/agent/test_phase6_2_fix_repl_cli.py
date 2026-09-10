@@ -365,6 +365,7 @@ def test_default_live_repl_design_brief_trace_is_session_scoped(tmp_path):
     output = io.StringIO()
     ready_brief = _brief(original_request=ORIGINAL_REQUEST, status="ready")
     ready_brief["schema_version"] = "text2ifc/design-brief/2.1"
+    ready_brief['known_facts']['semantic_requirements'] = []
     selection = select_design_brief_context(
         user_request=ORIGINAL_REQUEST,
         conversation=[

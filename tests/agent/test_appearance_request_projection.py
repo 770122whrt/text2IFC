@@ -65,7 +65,7 @@ def test_resume_keeps_saved_choices_and_narrative_provenance(tmp_path, changed):
     if changed:
         later[changed] = 'neutral-architectural' if changed == 'profile' else 'changed'
     write(tmp_path / 'design-brief.json', {'schema_version': 'text2ifc/design-brief/2.1',
-                                          'known_facts': {'appearance': later}})
+                                          'known_facts': {'appearance': later, 'semantic_requirements': []}})
     write(tmp_path / 'expected-facts.json', {'generation_schema_version': 'bim-json/2.1', 'appearance': frozen})
     original = {p.name: p.read_bytes() for p in tmp_path.iterdir()}
     request = request_semantics_for_case(tmp_path)

@@ -106,6 +106,7 @@ class ClarificationController:
         issues = validate_design_brief(
             call.brief,
             evidence_catalog=call.evidence_catalog,
+            conversation=self.transcript_dicts(),
         )
         if issues:
             rendered = ", ".join(
