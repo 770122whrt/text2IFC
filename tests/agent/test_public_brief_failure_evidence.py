@@ -84,3 +84,21 @@ def test_budget_rejection_remains_nontransport_failure(tmp_path):
             case=complete_room_case())
     assert not calls and budget.snapshot()['calls_used'] == 0
     assert not (tmp_path / 'stage/response.raw.json').exists()
+
+
+def test_case_runner_persists_failed_initial_brief_and_does_not_generate(tmp_path):
+    import importlib.util
+    from pathlib import Path
+    path = Path('dataset/processed/ifc-presentation-validation/c-shaped-teaching-building-20260910/run_case.py')
+    spec = importlib.util.spec_from_file_location('c_case_runner', path)
+    runner = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(runner)
+    provider, calls, payload = provider_for('truncated')
+    output = tmp_path / 'public-run'
+    with pytest.raises(Exception, match='finish_reason=length'):
+        runner.execute(output=output, provider_factory=lambda: provider, evidence_class='synthetic_offline')
+    record = json.loads((output / 'execution.json').read_text(encoding='utf-8'))
+    assert record['status'] == 'exception' and record['budget_after']['calls_used'] == 1
+    assert len(calls) == 1 and not list(output.rglob('*.ifc'))
+    response = output / 'runs' / record['run_id'] / 'calls/01-design-brief/response.raw.json'
+    assert json.loads(response.read_text(encoding='utf-8')) == payload

@@ -20,7 +20,7 @@ from .clarification import (
     ClarificationError,
 )
 from .design_brief import design_brief_template_id, load_design_brief_schema, validate_design_brief
-from .live_trace import write_live_trace
+from .live_trace import write_live_trace, write_provider_failure_trace
 from .audit import collect_revision_audit_evidence
 from .design_review import load_design_review_context, validate_design_review_output
 from .prompt_registry import render_prompt
@@ -152,6 +152,18 @@ def run_design_brief_stage(
     """Run one Design Brief v2 call and preserve all input/output evidence."""
     output = Path(output_dir)
     output.mkdir(parents=True, exist_ok=True)
+    # Each directory is one attempt. Claim before rendering or transport so a
+    # resumed/concurrent caller cannot replace even an incomplete earlier trace.
+    previous = ('input.txt', 'conversation.json', 'context-selection.json',
+                'prompt-render-input.json', 'prompt-rendered.md', 'request.redacted.json',
+                'response.raw.json', 'provider-error.json', 'design-brief.json')
+    if any((output / name).exists() for name in previous):
+        raise ValueError('DESIGN_BRIEF_ATTEMPT_ALREADY_EXISTS')
+    try:
+        with (output / '.design-brief-attempt').open('x', encoding='utf-8') as claim:
+            claim.write('This directory belongs to one Design Brief attempt.\n')
+    except FileExistsError:
+        raise ValueError('DESIGN_BRIEF_ATTEMPT_ALREADY_EXISTS') from None
     user_request = str(case["user_request"])
     conversation = list(case["conversation"])
     if design_brief_schema_version not in {'text2ifc/design-brief/2.0','text2ifc/design-brief/2.1','text2ifc/design-brief/2.2','text2ifc/design-brief/2.3'}:
@@ -189,12 +201,16 @@ def run_design_brief_stage(
         if call_index is not None
         else f"phase6.1-{case['case_id']}-design-brief-v2"
     )
-    result = provider.generate_live(
-        session_id=session_id,
-        prompt=rendered["text"],
-        schema=schema,
-        state={"case_id": case["case_id"], "stage": "design-brief"},
-    )
+    try:
+        result = provider.generate_live(
+            session_id=session_id,
+            prompt=rendered["text"],
+            schema=schema,
+            state={"case_id": case["case_id"], "stage": "design-brief"},
+        )
+    except Exception as error:
+        write_provider_failure_trace(error=error, output_dir=output, stage='design-brief')
+        raise
     provider_manifest = write_live_trace(
         result=result,
         output_dir=output,
