@@ -200,3 +200,112 @@ def test_unrequested_property_removal_preserves_requested_siblings(tmp_path):
     result, _ = run_round(tmp_path, data, {data[3]['id']: {'op': 'update_entity', 'changes': {'/property_sets': req['property_sets']}}})
     assert result['valid'], result
     assert build_candidate_index(result['candidate'])['entities'][data[3]['id']]['property_sets'] == req['property_sets']
+
+
+def test_property_cleanup_escapes_user_pset_keys(tmp_path):
+    data = fixture(shared=True)
+    data[6]['attributes']['RelatedObjects'] = [data[3]['id']]
+    data[5]['materials'], data[5]['property_sets'] = [], {}
+    data[3]['property_sets'] = {'User/Pset': {'value~key': 'guessed'}}
+    result, _ = run_round(tmp_path, data, {data[3]['id']: {'op': 'update_entity', 'changes': {'/property_sets': {}}}})
+    assert result['valid'], result
+
+
+@pytest.mark.parametrize('kind', ['IfcBeamType', 'IfcSlabType', 'IfcDoorStyle', 'IfcWindowStyle'])
+def test_orphan_type_families_do_not_need_a_relationship_issue(tmp_path, kind):
+    data = fixture()
+    data[0]['relationships'].remove(data[6])
+    data[5]['ifc_class'] = kind
+    data[5]['materials'], data[5]['property_sets'] = [], {}
+    data[5]['attributes'] = ({'Name': 'Unrequested style', 'ConstructionType': 'NOTDEFINED',
+        'OperationType': 'NOTDEFINED', 'ParameterTakesPrecedence': False, 'Sizeable': False}
+        if kind.endswith('Style') else {'Name': 'Unrequested type', 'PredefinedType': 'NOTDEFINED'})
+    data[1]['known_facts']['semantic_requirements'] = []
+    data[2]['semantic_expectations'] = []
+    result, _ = run_round(tmp_path, data, {data[5]['id']: {'op': 'remove_entity'}})
+    assert result['valid'], result
+    assert result['preservation']['changed_ids'] == [data[5]['id']]
+
+
+def test_staged_output_semantic_cleanup_uses_same_public_round(tmp_path):
+    from text2ifc_agent.staged_generation import run_staged_generation
+    from tests.agent.test_phase6_5_staged_generation import _fixture, _changesets
+    skeleton, manifest, expected, values = _fixture(1)
+    skeleton['schema_version'] = 'bim-json/2.1'
+    for group in values:
+        for row in group:
+            if row['ifc_class'] == 'IfcSpace':
+                row['attributes']['InteriorOrExteriorSpace'] = 'INTERNAL'
+    wall = next(row for row in values[0] if row['id'] == 'wall-1')
+    wall['attributes']['Representation']['profile']['x'] = 4000
+    wall['property_sets'] = {'Pset_WallCommon': {'FireRating': 'guessed'}}
+    brief = {'schema_version': 'text2ifc/design-brief/2.1', 'known_facts': {}}
+    stage = run_staged_generation(provider=SequenceProvider(_changesets(skeleton, manifest, expected, values)),
+        output_dir=tmp_path/'staged', case_id='staged-cleanup', user_request='按已确认尺寸生成。',
+        conversation=[], design_brief=brief, expected_facts=expected, skeleton=skeleton, manifest=manifest)
+    assert stage['valid'], stage
+    result, _ = run_round(tmp_path/'review', (stage['candidate'], brief, expected),
+        {'wall-1': {'op': 'update_entity', 'changes': {'/property_sets': {}}}})
+    assert result['valid'], result
+    final = tmp_path/'final'
+    _write(final/'generator/candidate.json', result['candidate'])
+    _write(final/'design-brief.json', brief)
+    gate = run_candidate_gate_stage(case_dir=final, output_dir=final, case_id='staged-corrected')
+    assert gate['compile_reopen_success'], gate
+    assert gate['semantic_verification']['valid']
+
+
+def test_ready_session_semantic_loop_publishes_and_resume_does_not_recall(tmp_path):
+    from text2ifc_agent.live_pipeline import run_design_brief_stage
+    from text2ifc_agent.interactive_cli_flow import run_ready_session_to_ifc
+    from text2ifc_agent.session_store import SessionStore
+    from tests.agent.test_phase6_2_fix_semantic_fidelity import _outside_boundary_design_brief, _outside_boundary_center_overlap_candidate
+    brief = _outside_boundary_design_brief()
+    brief['schema_version'] = 'text2ifc/design-brief/2.1'
+    brief['provenance'].update(selected_evidence_ids=[], few_shot_ids=[])
+    candidate = _outside_boundary_center_overlap_candidate()
+    candidate['schema_version'] = 'bim-json/2.1'
+    for row in candidate['entities']:
+        row['property_sets'], row['materials'] = {}, []
+    extra = _entity('unwanted-shared-type')
+    extra['attributes'] = {'Name': 'Unrequested wall type', 'PredefinedType': 'STANDARD'}
+    candidate['entities'].append(extra)
+    candidate['relationships'].append(_relation('unwanted-membership', extra['id'], ['wall-south', 'wall-north']))
+    store = SessionStore.open(tmp_path/'sessions.sqlite', artifact_root=tmp_path)
+    session = store.create_session(original_input=brief['original_request'])
+    result = run_design_brief_stage(provider=SequenceProvider([brief]),
+        case={'case_id':session.session_hash, 'user_request':brief['original_request'], 'conversation':[]},
+        output_dir=session.run_dir/'design-brief')
+    assert result['valid'], result
+    _write(session.run_dir/'design-brief.json', brief)
+    store.mark_session_status(session.session_id, 'ready')
+    audit = {'schema_version':'text2ifc/audit/2.0', 'recommendation':'accept', 'blocking':False,
+        'deterministic_gate_status':'passed', 'findings':[],
+        'evidence_paths':['generator/candidate.json','ifc-verification.json','semantic-verification.json']}
+
+    class PublicProvider:
+        def __init__(self):
+            self.calls = []
+
+        def generate_live(self, **kwargs):
+            self.calls.append(kwargs['state']['stage'])
+            if kwargs['state']['stage'] == 'changeset':
+                return PatchProvider(session.run_dir/'changeset-round-01', candidate,
+                    {extra['id']: {'op':'remove_entity'}, 'unwanted-membership': {'op':'remove_relationship'}}).generate_live(**kwargs)
+            payload = candidate if len(self.calls) == 1 else audit
+            return SequenceProvider([payload]).generate_live(**kwargs)
+
+    provider = PublicProvider()
+    result = run_ready_session_to_ifc(store=store, session=session.session_hash, provider_factory=lambda:provider)
+    assert result.status == 'compiled', result
+    assert provider.calls.count('changeset') == 1
+    model = ifcopenshell.open(str(result.ifc_path))
+    assert not model.by_type('IfcWallType')
+    count = len(provider.calls)
+    before = Path(result.ifc_path).read_bytes()
+    # The ready-only API rejects a completed session before transport. The CLI
+    # reads the existing artifacts instead; neither path regenerates this run.
+    with pytest.raises(ValueError, match='requires a ready session'):
+        run_ready_session_to_ifc(store=store, session=session.session_hash, provider_factory=lambda:provider)
+    assert len(provider.calls) == count
+    assert Path(result.ifc_path).read_bytes() == before
