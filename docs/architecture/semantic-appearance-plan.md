@@ -663,3 +663,11 @@ Brief 语义校正限定一次 Agent 调用，计入同一任务预算，只能�
 2026-09-10 用户随后明确要求直接尝试一个阶段定位截断。公共Brief异常留痕与attempt目录保全已修复（75f70f5d），失败族先14失败/3通过；相关公共入口/澄清/语义/生成路径220项有效检查通过，旧成功夹具缺少显式空语义清单的问题经修改前代码复核后仅修正夹具。新单响应诊断runner离线验证ready/截断、账本继承及Prompt不变，随后只增加一次真实Brief响应：返回ready，结构校验0问题，response_id=d15e96ef-6636-476f-bfd0-fa291afb2ebb；输入18460、输出45174（其中reasoning33759）、总63634 token，165.359秒。相同渲染Prompt，仍用65536单次上限；旧总83996减新输入18460恰为65536，强支持旧失败命中单次输出额度，但旧原始响应缺失，不能确认截断位置或更深原因。本次没复现截断，不代表稳定性问题消失。新C累计2次调用/147630 token/447.655秒，后续必须继承 `c-shaped-brief-debug-20260910/live-attempt/generation-budget.json`，旧1次账本不可继续当最新值。
 
 同时发现普通Prompt v2.7最终输出检查仍写2.0而正文/Schema为2.3；审查v2.8已正确。新增普通v2.9只纠正这一句，保留全部旧版本及Schema；普通/审查对照先1失败/1通过，修正后158项相关验证通过。此修正在真实成功之后，v2.9仅有离线验证，不能归因为真实成功的原因。详见 [单阶段报告](../../dataset/processed/ifc-presentation-validation/c-shaped-brief-debug-20260910/REPORT.md)。本轮未继续Generation/Audit/IFC，未Full Preflight或push；C仍非待验收Proof，A/B accepted不变。下一步可在适用准入更新后将合法Brief接回公共Generation，独立冻结预期保持，不为C型增加特判或盲目扩大输出额度。
+
+### 2026-09-10：单次额度配对实验与获准运行目录退役
+
+用户要求先推送，再实验并给出节省token建议。既有提交已普通推送到codex/workflow-dataset-links；双层人工review包原来仅存在于本地，核对533份源文件副本后另以9dfd91b4保全并推送，保持人工accepted、机器blocked。用户随后明确批准清单12目录；等待实验结束后，核验9,378份源文件及831份规范Proof副本，删除约112.18 MiB重复runtime与本对话合成测试目录。A/B运行脚本、原输入、早期失败、全部Proof和C型证据均保留；A/B与双层人读检查/3次IFC重开及保留脚本10项回归通过。旧admission/FILES保持历史快照，原runtime路径已退役，后续准入必须重新绑定规范Proof，不能直接重用旧快照。详见[清理记录](../reports/run-cleanup-review-20260910/REPORT.md)。
+
+实验仅改变单次输出额度，使用当前普通Prompt v2.9与Brief2.3，按预先冻结的96K→64K顺序各执行一次真实Brief，不进入Generation/Audit。38项实验runner与受影响公共路径离线检查通过，沿用同阶段证据，没有Full Preflight。两组请求逐字段比较仅max_tokens不同；均finish_reason=stop、Schema/严格合同校验通过，但均needs_clarification，不能写成ready。96K输出68,621（推理54,461），64K输出47,369（推理36,911）；新增总152,910token。C任务最新累计4次/300,540token/886.717秒，原32次/200万token/3600秒不变，最新账本位于c-shaped-brief-budget-experiment-20260910/live/generation-budget.json。旧失败和账本不改写。
+
+结论与下一步：96K这次使用超过旧上限的空间，但64K这次也成功；单次配对受随机性、缓存和顺序影响，不证明提高额度改善稳定性或节省成本。先建议新版本输入去重、重复规则/相关上下文精简，再比较实际用量与语义保全；若仍长推理，再独立评估阶段设置及按全局布局/构件语义拆分、稳定ID合并和共享预算。此轮没有实施这些生产改动。两组均按现有Prompt的STAIR_OPENING_SPACE_COLLISION规则对交通空间含楼梯井提出澄清；模型声称“确定性检查”不是本实验真实执行独立检查的证据。需复核这条规则的适用性和是否属于多余澄清，再由用户确认确有歧义的设计选择，不能代答、默认建筑不合理或直接放行。详见[额度实验报告](../../dataset/processed/ifc-presentation-validation/c-shaped-brief-budget-experiment-20260910/REPORT.md)。C仍无新IFC/Proof，不升级为系统能力提升。

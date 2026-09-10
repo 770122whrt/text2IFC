@@ -1,0 +1,395 @@
+{
+  "schema_version": "text2ifc/design-brief/2.3",
+  "language": "zh-CN",
+  "original_request": "请帮我建一栋三层的小型教学活动楼，平面做成向东敞开的C形。重点是清楚、整齐、协调，保留中间开敞空间；这次只建建筑本体，不做景观、家具、栏杆和设备，不把模型当作可直接施工的设计。\n\n尺寸按毫米表达，下面提到的距离也给出米，方便读。以建筑外轮廓西南角为定位原点，往东、往北、往上分别是三个正方向。\n\n建筑外包络东西13.2米、南北16.8米。西侧是一条宽4.8米、贯通南北的交通体量；北翼和南翼各向东伸出8.4米，各宽4.8米。中间东侧留出东西8.4米、南北7.2米的开敞缺口，缺口南边距建筑最南端4.8米。三层的外轮廓完全相同，屋面也跟着C形走，不能拿一个完整矩形把中间缺口盖上，也不加跨缺口的桥。\n\n首层、二层、三层完成面标高分别是0、3.15、6.30米；各层净高3米。楼板厚150毫米，顶面与相应完成面齐平；平屋面底面在9.30米，厚150毫米。各层楼板和屋面采用连续C形轮廓。首层楼板没有楼梯洞口，二、三层按下面的楼梯要求真实开洞。\n\n外墙及内部分隔墙统一厚200毫米，墙体全部落在外轮廓以内。外墙沿C形的八条边布置，相邻墙端部连接但不要重复堆叠。每层只有南、北两个教学活动室，以及西侧一个贯通的交通/楼梯空间，共九个空间。教学室与西侧交通空间之间的分隔墙，都放在距建筑西侧4.6到4.8米这一条带内；南室的分隔墙从南端内墙面延伸到4.8米位置，北室的分隔墙从12米位置延伸到北端内墙面。不要再分小教室。\n\n两个教学室的净空间：南室东西4.8到13.0米、南北0.2到4.6米；北室东西4.8到13.0米、南北12.2到16.6米。交通空间的净范围为东西0.2到4.6米、南北0.2到16.6米。空间高度都取3米，与所属楼层对应。\n\n楼梯放在西侧交通空间内，用两个在平面上并列的直跑梯段联系三层：一层到二层的梯段距建筑西侧0.4到1.6米，南北5.4到10.8米，从南向北上升；二层到三层的梯段距西侧2.8到4.0米，南北范围相同，从北向南上升。两段净宽均1.2米，每段18级、每级高175毫米，踏步水平进深300毫米；标高分别0到3.15米、3.15到6.30米。北侧平台利用二层楼板在南北10.8到12米之间的区域，南侧平台利用三层楼板在4.2到5.4米之间的区域，两处平台东西范围均0.2到4.6米，不另叠加一块实体板。二层楼板洞口只对应第一段，三层只对应第二段，洞口平面范围与各自梯段一致，穿透150毫米楼板。\n\n每层南、北教学室各有一扇900毫米宽、2100毫米高的右单开门，都在上述分隔墙上，门中心分别距建筑南侧2.4米和14.4米，门底与本层完成面平齐。首层另设一扇1200毫米宽、2400毫米高的左单开入口门，位于西外墙中间，中心距南侧8.4米。上层不要复制这个入口门。门都带基本门框和门扇，不加复杂五金。\n\n每层七扇窗：南教学室的南外墙、北教学室的北外墙各两扇，中心距西侧7.2米和10.8米；南教学室朝缺口的墙和北教学室朝缺口的墙各一扇，中心距西侧9米。这六扇窗均宽1800毫米、高1500毫米，采用双竖面板。西外墙再设一扇宽900毫米、高1800毫米的单面板窗，中心距南侧2.4米。所有窗台距本层完成面900毫米，窗洞、窗和宿主墙一一对应，三层上下对齐。不要在东侧两个端墙上额外加窗。\n\n墙体明确采用砖，楼板及屋面明确采用混凝土，其他构件暂不指定物理材料。风格用现有warm-residential协调主题：暖浅墙面、深色细门窗框、通透玻璃和与框分色的门扇。不要为了视觉效果增加别的物理材料、整件颜色覆盖或性能属性。我没有要求共享Type；只保留合法表达所需的最小附件。\n\n这些尺寸与布置是本次希望忠实表达的方案。若有必要事实缺失、输入矛盾、当前系统不支持的表达，或你认为会影响使用的明显几何问题，请先集中指出并澄清，不要自行改尺寸或补构件。最终报告应区分用户要求符合性、确定性检查和尚未验证的工程合理性；没有检测到问题也不能写成全面合规。\n",
+  "status": "needs_clarification",
+  "known_facts": {
+    "units": "MILLIMETRE",
+    "coordinate_system": {
+      "origin": "建筑外轮廓西南角",
+      "x_axis": "向东为正",
+      "y_axis": "向北为正",
+      "z_axis": "向上为正",
+      "unit": "mm"
+    },
+    "appearance": {
+      "profile": "warm-residential",
+      "style_notes": "暖浅墙面、深色细门窗框、通透玻璃、与框分色的门扇；来自用户指定的现有 warm-residential 协调主题。这些是主题/模板级部件风格，不是整件颜色覆盖。",
+      "source": "user"
+    },
+    "building": {
+      "id": "building-1",
+      "name": "三层小型教学活动楼",
+      "storey_count": 3,
+      "shape": "C 形，向东敞开，保留中间开敞缺口",
+      "outline": {
+        "x_min": 0,
+        "x_max": 13200,
+        "y_min": 0,
+        "y_max": 16800,
+        "polygon": [[0, 0], [13200, 0], [13200, 4800], [4800, 4800], [4800, 12000], [13200, 12000], [13200, 16800], [0, 16800], [0, 0]]
+      },
+      "west_bar": {"bounds": {"x": [0, 4800], "y": [0, 16800]}},
+      "south_wing": {"bounds": {"x": [4800, 13200], "y": [0, 4800]}},
+      "north_wing": {"bounds": {"x": [4800, 13200], "y": [12000, 16800]}},
+      "notch": {"bounds": {"x": [4800, 13200], "y": [4800, 12000]}, "open": true},
+      "wall_thickness_mm": 200,
+      "floor_slab_thickness_mm": 150,
+      "roof_slab_thickness_mm": 150,
+      "floor_to_floor_mm": 3150,
+      "net_storey_height_mm": 3000,
+      "exterior_wall_edge_count": 8,
+      "roof": "平屋面，随 C 形连续，不覆盖中间缺口，不设跨缺口桥",
+      "scope_exclusions": ["景观", "家具", "栏杆", "设备", "施工级设计深度", "东侧两个端墙的额外窗"],
+      "scope_note": "只建建筑本体；不作为可直接施工的设计。"
+    },
+    "storeys": [
+      {
+        "id": "storey-1",
+        "name": "首层",
+        "elevation_mm": 0,
+        "net_height_mm": 3000,
+        "spaces": [
+          {"id": "storey-1-space-south-classroom", "name": "南教学室", "bounds": {"x": [4800, 13000], "y": [200, 4600]}, "height_mm": 3000},
+          {"id": "storey-1-space-north-classroom", "name": "北教学室", "bounds": {"x": [4800, 13000], "y": [12200, 16600]}, "height_mm": 3000},
+          {"id": "storey-1-space-circulation", "name": "西侧交通/楼梯空间", "bounds": {"x": [200, 4600], "y": [200, 16600]}, "height_mm": 3000}
+        ],
+        "walls": {
+          "exterior": [
+            {"id": "storey-1-wall-south", "bounds": {"x": [0, 13200], "y": [0, 200]}, "thickness_mm": 200, "height_mm": 3000},
+            {"id": "storey-1-wall-east-south", "bounds": {"x": [13000, 13200], "y": [200, 4600]}, "thickness_mm": 200, "height_mm": 3000},
+            {"id": "storey-1-wall-notch-south", "bounds": {"x": [4800, 13200], "y": [4600, 4800]}, "thickness_mm": 200, "height_mm": 3000},
+            {"id": "storey-1-wall-notch-west", "bounds": {"x": [4600, 4800], "y": [4800, 12000]}, "thickness_mm": 200, "height_mm": 3000},
+            {"id": "storey-1-wall-notch-north", "bounds": {"x": [4800, 13200], "y": [12000, 12200]}, "thickness_mm": 200, "height_mm": 3000},
+            {"id": "storey-1-wall-east-north", "bounds": {"x": [13000, 13200], "y": [12200, 16600]}, "thickness_mm": 200, "height_mm": 3000},
+            {"id": "storey-1-wall-north", "bounds": {"x": [0, 13200], "y": [16600, 16800]}, "thickness_mm": 200, "height_mm": 3000},
+            {"id": "storey-1-wall-west", "bounds": {"x": [0, 200], "y": [200, 16600]}, "thickness_mm": 200, "height_mm": 3000}
+          ],
+          "interior": [
+            {"id": "storey-1-wall-partition-south", "bounds": {"x": [4600, 4800], "y": [200, 4800]}, "thickness_mm": 200, "height_mm": 3000, "connects": ["storey-1-space-circulation", "storey-1-space-south-classroom"]},
+            {"id": "storey-1-wall-partition-north", "bounds": {"x": [4600, 4800], "y": [12000, 16600]}, "thickness_mm": 200, "height_mm": 3000, "connects": ["storey-1-space-circulation", "storey-1-space-north-classroom"]}
+          ]
+        },
+        "doors": [
+          {"id": "storey-1-door-south-classroom", "name": "南教学室门", "host_wall": "storey-1-wall-partition-south", "width_mm": 900, "height_mm": 2100, "center_global_mm": [4700, 2400], "bottom_elevation_mm": 0, "template": {"template_id": "door-right", "template_version": "text2ifc/basic-filling/1.0"}},
+          {"id": "storey-1-door-north-classroom", "name": "北教学室门", "host_wall": "storey-1-wall-partition-north", "width_mm": 900, "height_mm": 2100, "center_global_mm": [4700, 14400], "bottom_elevation_mm": 0, "template": {"template_id": "door-right", "template_version": "text2ifc/basic-filling/1.0"}},
+          {"id": "storey-1-door-entrance", "name": "首层入口门", "host_wall": "storey-1-wall-west", "width_mm": 1200, "height_mm": 2400, "center_global_mm": [100, 8400], "bottom_elevation_mm": 0, "template": {"template_id": "door-left", "template_version": "text2ifc/basic-filling/1.0"}}
+        ],
+        "windows": [
+          {"id": "storey-1-window-south-1", "host_wall": "storey-1-wall-south", "width_mm": 1800, "height_mm": 1500, "sill_height_mm": 900, "center_global_mm": [7200, 100], "template": {"template_id": "window-double-vertical", "template_version": "text2ifc/basic-filling/1.0"}},
+          {"id": "storey-1-window-south-2", "host_wall": "storey-1-wall-south", "width_mm": 1800, "height_mm": 1500, "sill_height_mm": 900, "center_global_mm": [10800, 100], "template": {"template_id": "window-double-vertical", "template_version": "text2ifc/basic-filling/1.0"}},
+          {"id": "storey-1-window-north-1", "host_wall": "storey-1-wall-north", "width_mm": 1800, "height_mm": 1500, "sill_height_mm": 900, "center_global_mm": [7200, 16700], "template": {"template_id": "window-double-vertical", "template_version": "text2ifc/basic-filling/1.0"}},
+          {"id": "storey-1-window-north-2", "host_wall": "storey-1-wall-north", "width_mm": 1800, "height_mm": 1500, "sill_height_mm": 900, "center_global_mm": [10800, 16700], "template": {"template_id": "window-double-vertical", "template_version": "text2ifc/basic-filling/1.0"}},
+          {"id": "storey-1-window-notch-south", "host_wall": "storey-1-wall-notch-south", "width_mm": 1800, "height_mm": 1500, "sill_height_mm": 900, "center_global_mm": [9000, 4700], "template": {"template_id": "window-double-vertical", "template_version": "text2ifc/basic-filling/1.0"}},
+          {"id": "storey-1-window-notch-north", "host_wall": "storey-1-wall-notch-north", "width_mm": 1800, "height_mm": 1500, "sill_height_mm": 900, "center_global_mm": [9000, 12100], "template": {"template_id": "window-double-vertical", "template_version": "text2ifc/basic-filling/1.0"}},
+          {"id": "storey-1-window-west", "host_wall": "storey-1-wall-west", "width_mm": 900, "height_mm": 1800, "sill_height_mm": 900, "center_global_mm": [100, 2400], "template": {"template_id": "window-single", "template_version": "text2ifc/basic-filling/1.0"}}
+        ]
+      },
+      {
+        "id": "storey-2",
+        "name": "二层",
+        "elevation_mm": 3150,
+        "net_height_mm": 3000,
+        "spaces": [
+          {"id": "storey-2-space-south-classroom", "name": "南教学室", "bounds": {"x": [4800, 13000], "y": [200, 4600]}, "height_mm": 3000},
+          {"id": "storey-2-space-north-classroom", "name": "北教学室", "bounds": {"x": [4800, 13000], "y": [12200, 16600]}, "height_mm": 3000},
+          {"id": "storey-2-space-circulation", "name": "西侧交通/楼梯空间", "bounds": {"x": [200, 4600], "y": [200, 16600]}, "height_mm": 3000}
+        ],
+        "walls": {
+          "exterior": [
+            {"id": "storey-2-wall-south", "bounds": {"x": [0, 13200], "y": [0, 200]}, "thickness_mm": 200, "height_mm": 3000},
+            {"id": "storey-2-wall-east-south", "bounds": {"x": [13000, 13200], "y": [200, 4600]}, "thickness_mm": 200, "height_mm": 3000},
+            {"id": "storey-2-wall-notch-south", "bounds": {"x": [4800, 13200], "y": [4600, 4800]}, "thickness_mm": 200, "height_mm": 3000},
+            {"id": "storey-2-wall-notch-west", "bounds": {"x": [4600, 4800], "y": [4800, 12000]}, "thickness_mm": 200, "height_mm": 3000},
+            {"id": "storey-2-wall-notch-north", "bounds": {"x": [4800, 13200], "y": [12000, 12200]}, "thickness_mm": 200, "height_mm": 3000},
+            {"id": "storey-2-wall-east-north", "bounds": {"x": [13000, 13200], "y": [12200, 16600]}, "thickness_mm": 200, "height_mm": 3000},
+            {"id": "storey-2-wall-north", "bounds": {"x": [0, 13200], "y": [16600, 16800]}, "thickness_mm": 200, "height_mm": 3000},
+            {"id": "storey-2-wall-west", "bounds": {"x": [0, 200], "y": [200, 16600]}, "thickness_mm": 200, "height_mm": 3000}
+          ],
+          "interior": [
+            {"id": "storey-2-wall-partition-south", "bounds": {"x": [4600, 4800], "y": [200, 4800]}, "thickness_mm": 200, "height_mm": 3000, "connects": ["storey-2-space-circulation", "storey-2-space-south-classroom"]},
+            {"id": "storey-2-wall-partition-north", "bounds": {"x": [4600, 4800], "y": [12000, 16600]}, "thickness_mm": 200, "height_mm": 3000, "connects": ["storey-2-space-circulation", "storey-2-space-north-classroom"]}
+          ]
+        },
+        "doors": [
+          {"id": "storey-2-door-south-classroom", "name": "南教学室门", "host_wall": "storey-2-wall-partition-south", "width_mm": 900, "height_mm": 2100, "center_global_mm": [4700, 2400], "bottom_elevation_mm": 3150, "template": {"template_id": "door-right", "template_version": "text2ifc/basic-filling/1.0"}},
+          {"id": "storey-2-door-north-classroom", "name": "北教学室门", "host_wall": "storey-2-wall-partition-north", "width_mm": 900, "height_mm": 2100, "center_global_mm": [4700, 14400], "bottom_elevation_mm": 3150, "template": {"template_id": "door-right", "template_version": "text2ifc/basic-filling/1.0"}}
+        ],
+        "windows": [
+          {"id": "storey-2-window-south-1", "host_wall": "storey-2-wall-south", "width_mm": 1800, "height_mm": 1500, "sill_height_mm": 900, "center_global_mm": [7200, 100], "template": {"template_id": "window-double-vertical", "template_version": "text2ifc/basic-filling/1.0"}},
+          {"id": "storey-2-window-south-2", "host_wall": "storey-2-wall-south", "width_mm": 1800, "height_mm": 1500, "sill_height_mm": 900, "center_global_mm": [10800, 100], "template": {"template_id": "window-double-vertical", "template_version": "text2ifc/basic-filling/1.0"}},
+          {"id": "storey-2-window-north-1", "host_wall": "storey-2-wall-north", "width_mm": 1800, "height_mm": 1500, "sill_height_mm": 900, "center_global_mm": [7200, 16700], "template": {"template_id": "window-double-vertical", "template_version": "text2ifc/basic-filling/1.0"}},
+          {"id": "storey-2-window-north-2", "host_wall": "storey-2-wall-north", "width_mm": 1800, "height_mm": 1500, "sill_height_mm": 900, "center_global_mm": [10800, 16700], "template": {"template_id": "window-double-vertical", "template_version": "text2ifc/basic-filling/1.0"}},
+          {"id": "storey-2-window-notch-south", "host_wall": "storey-2-wall-notch-south", "width_mm": 1800, "height_mm": 1500, "sill_height_mm": 900, "center_global_mm": [9000, 4700], "template": {"template_id": "window-double-vertical", "template_version": "text2ifc/basic-filling/1.0"}},
+          {"id": "storey-2-window-notch-north", "host_wall": "storey-2-wall-notch-north", "width_mm": 1800, "height_mm": 1500, "sill_height_mm": 900, "center_global_mm": [9000, 12100], "template": {"template_id": "window-double-vertical", "template_version": "text2ifc/basic-filling/1.0"}},
+          {"id": "storey-2-window-west", "host_wall": "storey-2-wall-west", "width_mm": 900, "height_mm": 1800, "sill_height_mm": 900, "center_global_mm": [100, 2400], "template": {"template_id": "window-single", "template_version": "text2ifc/basic-filling/1.0"}}
+        ]
+      },
+      {
+        "id": "storey-3",
+        "name": "三层",
+        "elevation_mm": 6300,
+        "net_height_mm": 3000,
+        "spaces": [
+          {"id": "storey-3-space-south-classroom", "name": "南教学室", "bounds": {"x": [4800, 13000], "y": [200, 4600]}, "height_mm": 3000},
+          {"id": "storey-3-space-north-classroom", "name": "北教学室", "bounds": {"x": [4800, 13000], "y": [12200, 16600]}, "height_mm": 3000},
+          {"id": "storey-3-space-circulation", "name": "西侧交通/楼梯空间", "bounds": {"x": [200, 4600], "y": [200, 16600]}, "height_mm": 3000}
+        ],
+        "walls": {
+          "exterior": [
+            {"id": "storey-3-wall-south", "bounds": {"x": [0, 13200], "y": [0, 200]}, "thickness_mm": 200, "height_mm": 3000},
+            {"id": "storey-3-wall-east-south", "bounds": {"x": [13000, 13200], "y": [200, 4600]}, "thickness_mm": 200, "height_mm": 3000},
+            {"id": "storey-3-wall-notch-south", "bounds": {"x": [4800, 13200], "y": [4600, 4800]}, "thickness_mm": 200, "height_mm": 3000},
+            {"id": "storey-3-wall-notch-west", "bounds": {"x": [4600, 4800], "y": [4800, 12000]}, "thickness_mm": 200, "height_mm": 3000},
+            {"id": "storey-3-wall-notch-north", "bounds": {"x": [4800, 13200], "y": [12000, 12200]}, "thickness_mm": 200, "height_mm": 3000},
+            {"id": "storey-3-wall-east-north", "bounds": {"x": [13000, 13200], "y": [12200, 16600]}, "thickness_mm": 200, "height_mm": 3000},
+            {"id": "storey-3-wall-north", "bounds": {"x": [0, 13200], "y": [16600, 16800]}, "thickness_mm": 200, "height_mm": 3000},
+            {"id": "storey-3-wall-west", "bounds": {"x": [0, 200], "y": [200, 16600]}, "thickness_mm": 200, "height_mm": 3000}
+          ],
+          "interior": [
+            {"id": "storey-3-wall-partition-south", "bounds": {"x": [4600, 4800], "y": [200, 4800]}, "thickness_mm": 200, "height_mm": 3000, "connects": ["storey-3-space-circulation", "storey-3-space-south-classroom"]},
+            {"id": "storey-3-wall-partition-north", "bounds": {"x": [4600, 4800], "y": [12000, 16600]}, "thickness_mm": 200, "height_mm": 3000, "connects": ["storey-3-space-circulation", "storey-3-space-north-classroom"]}
+          ]
+        },
+        "doors": [
+          {"id": "storey-3-door-south-classroom", "name": "南教学室门", "host_wall": "storey-3-wall-partition-south", "width_mm": 900, "height_mm": 2100, "center_global_mm": [4700, 2400], "bottom_elevation_mm": 6300, "template": {"template_id": "door-right", "template_version": "text2ifc/basic-filling/1.0"}},
+          {"id": "storey-3-door-north-classroom", "name": "北教学室门", "host_wall": "storey-3-wall-partition-north", "width_mm": 900, "height_mm": 2100, "center_global_mm": [4700, 14400], "bottom_elevation_mm": 6300, "template": {"template_id": "door-right", "template_version": "text2ifc/basic-filling/1.0"}}
+        ],
+        "windows": [
+          {"id": "storey-3-window-south-1", "host_wall": "storey-3-wall-south", "width_mm": 1800, "height_mm": 1500, "sill_height_mm": 900, "center_global_mm": [7200, 100], "template": {"template_id": "window-double-vertical", "template_version": "text2ifc/basic-filling/1.0"}},
+          {"id": "storey-3-window-south-2", "host_wall": "storey-3-wall-south", "width_mm": 1800, "height_mm": 1500, "sill_height_mm": 900, "center_global_mm": [10800, 100], "template": {"template_id": "window-double-vertical", "template_version": "text2ifc/basic-filling/1.0"}},
+          {"id": "storey-3-window-north-1", "host_wall": "storey-3-wall-north", "width_mm": 1800, "height_mm": 1500, "sill_height_mm": 900, "center_global_mm": [7200, 16700], "template": {"template_id": "window-double-vertical", "template_version": "text2ifc/basic-filling/1.0"}},
+          {"id": "storey-3-window-north-2", "host_wall": "storey-3-wall-north", "width_mm": 1800, "height_mm": 1500, "sill_height_mm": 900, "center_global_mm": [10800, 16700], "template": {"template_id": "window-double-vertical", "template_version": "text2ifc/basic-filling/1.0"}},
+          {"id": "storey-3-window-notch-south", "host_wall": "storey-3-wall-notch-south", "width_mm": 1800, "height_mm": 1500, "sill_height_mm": 900, "center_global_mm": [9000, 4700], "template": {"template_id": "window-double-vertical", "template_version": "text2ifc/basic-filling/1.0"}},
+          {"id": "storey-3-window-notch-north", "host_wall": "storey-3-wall-notch-north", "width_mm": 1800, "height_mm": 1500, "sill_height_mm": 900, "center_global_mm": [9000, 12100], "template": {"template_id": "window-double-vertical", "template_version": "text2ifc/basic-filling/1.0"}},
+          {"id": "storey-3-window-west", "host_wall": "storey-3-wall-west", "width_mm": 900, "height_mm": 1800, "sill_height_mm": 900, "center_global_mm": [100, 2400], "template": {"template_id": "window-single", "template_version": "text2ifc/basic-filling/1.0"}}
+        ]
+      }
+    ],
+    "floor_slabs": [
+      {
+        "id": "slab-storey-1",
+        "storey": "storey-1",
+        "top_elevation_mm": 0,
+        "thickness_mm": 150,
+        "polygon": [[0, 0], [13200, 0], [13200, 4800], [4800, 4800], [4800, 12000], [13200, 12000], [13200, 16800], [0, 16800], [0, 0]],
+        "openings": [],
+        "note": "首层楼板无楼梯洞口；连续 C 形轮廓，顶面与本层完成面齐平。"
+      },
+      {
+        "id": "slab-storey-2",
+        "storey": "storey-2",
+        "top_elevation_mm": 3150,
+        "thickness_mm": 150,
+        "polygon": [[0, 0], [13200, 0], [13200, 4800], [4800, 4800], [4800, 12000], [13200, 12000], [13200, 16800], [0, 16800], [0, 0]],
+        "opening": {"id": "opening-stair-flight-1", "bounds": {"x": [400, 1600], "y": [5400, 10800]}},
+        "note": "洞口只对应一层到二层的梯段（第一段），范围与梯段一致，穿透 150mm 楼板；y 10800–12000 区域利用本楼板作为北侧楼梯平台，不另加实体板。"
+      },
+      {
+        "id": "slab-storey-3",
+        "storey": "storey-3",
+        "top_elevation_mm": 6300,
+        "thickness_mm": 150,
+        "polygon": [[0, 0], [13200, 0], [13200, 4800], [4800, 4800], [4800, 12000], [13200, 12000], [13200, 16800], [0, 16800], [0, 0]],
+        "opening": {"id": "opening-stair-flight-2", "bounds": {"x": [2800, 4000], "y": [5400, 10800]}},
+        "note": "洞口只对应二层到三层的梯段（第二段），范围与梯段一致，穿透 150mm 楼板；y 4200–5400 区域利用本楼板作为南侧楼梯平台，不另加实体板。"
+      }
+    ],
+    "roof_slab": {
+      "id": "roof-slab",
+      "bottom_elevation_mm": 9300,
+      "top_elevation_mm": 9450,
+      "thickness_mm": 150,
+      "polygon": [[0, 0], [13200, 0], [13200, 4800], [4800, 4800], [4800, 12000], [13200, 12000], [13200, 16800], [0, 16800], [0, 0]],
+      "note": "平屋面，随 C 形连续，不覆盖中间缺口，不设跨缺口桥。"
+    },
+    "stairs": [
+      {
+        "id": "stair-flight-1",
+        "from_storey": "storey-1",
+        "to_storey": "storey-2",
+        "bounds": {"x": [400, 1600], "y": [5400, 10800]},
+        "opening_bounds": {"x": [400, 1600], "y": [5400, 10800]},
+        "clear_width_mm": 1200,
+        "start_elevation_mm": 0,
+        "end_elevation_mm": 3150,
+        "run_direction": "南→北（上升）",
+        "number_of_risers": 18,
+        "number_of_treads": 17,
+        "riser_height_mm": 175,
+        "tread_depth_mm": 300,
+        "landing": "landing-north-storey-2",
+        "note": "直跑梯段，位于西侧交通空间内，距建筑西侧 400–1600mm；与第二段在平面上并列。"
+      },
+      {
+        "id": "stair-flight-2",
+        "from_storey": "storey-2",
+        "to_storey": "storey-3",
+        "bounds": {"x": [2800, 4000], "y": [5400, 10800]},
+        "opening_bounds": {"x": [2800, 4000], "y": [5400, 10800]},
+        "clear_width_mm": 1200,
+        "start_elevation_mm": 3150,
+        "end_elevation_mm": 6300,
+        "run_direction": "北→南（上升）",
+        "number_of_risers": 18,
+        "number_of_treads": 17,
+        "riser_height_mm": 175,
+        "tread_depth_mm": 300,
+        "landing": "landing-south-storey-3",
+        "note": "直跑梯段，距建筑西侧 2800–4000mm，南北范围与第一段相同。"
+      }
+    ],
+    "landings": [
+      {"id": "landing-north-storey-2", "storey": "storey-2", "bounds": {"x": [200, 4600], "y": [10800, 12000]}, "top_elevation_mm": 3150, "host_slab": "slab-storey-2", "additional_solid": false},
+      {"id": "landing-south-storey-3", "storey": "storey-3", "bounds": {"x": [200, 4600], "y": [4200, 5400]}, "top_elevation_mm": 6300, "host_slab": "slab-storey-3", "additional_solid": false}
+    ],
+    "railings": [],
+    "semantic_requirements": [
+      {"entity_id": "storey-1-wall-south", "scope": "direct", "source": "user", "material": {"kind": "single_material", "name": "砖"}},
+      {"entity_id": "storey-1-wall-east-south", "scope": "direct", "source": "user", "material": {"kind": "single_material", "name": "砖"}},
+      {"entity_id": "storey-1-wall-notch-south", "scope": "direct", "source": "user", "material": {"kind": "single_material", "name": "砖"}},
+      {"entity_id": "storey-1-wall-notch-west", "scope": "direct", "source": "user", "material": {"kind": "single_material", "name": "砖"}},
+      {"entity_id": "storey-1-wall-notch-north", "scope": "direct", "source": "user", "material": {"kind": "single_material", "name": "砖"}},
+      {"entity_id": "storey-1-wall-east-north", "scope": "direct", "source": "user", "material": {"kind": "single_material", "name": "砖"}},
+      {"entity_id": "storey-1-wall-north", "scope": "direct", "source": "user", "material": {"kind": "single_material", "name": "砖"}},
+      {"entity_id": "storey-1-wall-west", "scope": "direct", "source": "user", "material": {"kind": "single_material", "name": "砖"}},
+      {"entity_id": "storey-1-wall-partition-south", "scope": "direct", "source": "user", "material": {"kind": "single_material", "name": "砖"}},
+      {"entity_id": "storey-1-wall-partition-north", "scope": "direct", "source": "user", "material": {"kind": "single_material", "name": "砖"}},
+      {"entity_id": "storey-2-wall-south", "scope": "direct", "source": "user", "material": {"kind": "single_material", "name": "砖"}},
+      {"entity_id": "storey-2-wall-east-south", "scope": "direct", "source": "user", "material": {"kind": "single_material", "name": "砖"}},
+      {"entity_id": "storey-2-wall-notch-south", "scope": "direct", "source": "user", "material": {"kind": "single_material", "name": "砖"}},
+      {"entity_id": "storey-2-wall-notch-west", "scope": "direct", "source": "user", "material": {"kind": "single_material", "name": "砖"}},
+      {"entity_id": "storey-2-wall-notch-north", "scope": "direct", "source": "user", "material": {"kind": "single_material", "name": "砖"}},
+      {"entity_id": "storey-2-wall-east-north", "scope": "direct", "source": "user", "material": {"kind": "single_material", "name": "砖"}},
+      {"entity_id": "storey-2-wall-north", "scope": "direct", "source": "user", "material": {"kind": "single_material", "name": "砖"}},
+      {"entity_id": "storey-2-wall-west", "scope": "direct", "source": "user", "material": {"kind": "single_material", "name": "砖"}},
+      {"entity_id": "storey-2-wall-partition-south", "scope": "direct", "source": "user", "material": {"kind": "single_material", "name": "砖"}},
+      {"entity_id": "storey-2-wall-partition-north", "scope": "direct", "source": "user", "material": {"kind": "single_material", "name": "砖"}},
+      {"entity_id": "storey-3-wall-south", "scope": "direct", "source": "user", "material": {"kind": "single_material", "name": "砖"}},
+      {"entity_id": "storey-3-wall-east-south", "scope": "direct", "source": "user", "material": {"kind": "single_material", "name": "砖"}},
+      {"entity_id": "storey-3-wall-notch-south", "scope": "direct", "source": "user", "material": {"kind": "single_material", "name": "砖"}},
+      {"entity_id": "storey-3-wall-notch-west", "scope": "direct", "source": "user", "material": {"kind": "single_material", "name": "砖"}},
+      {"entity_id": "storey-3-wall-notch-north", "scope": "direct", "source": "user", "material": {"kind": "single_material", "name": "砖"}},
+      {"entity_id": "storey-3-wall-east-north", "scope": "direct", "source": "user", "material": {"kind": "single_material", "name": "砖"}},
+      {"entity_id": "storey-3-wall-north", "scope": "direct", "source": "user", "material": {"kind": "single_material", "name": "砖"}},
+      {"entity_id": "storey-3-wall-west", "scope": "direct", "source": "user", "material": {"kind": "single_material", "name": "砖"}},
+      {"entity_id": "storey-3-wall-partition-south", "scope": "direct", "source": "user", "material": {"kind": "single_material", "name": "砖"}},
+      {"entity_id": "storey-3-wall-partition-north", "scope": "direct", "source": "user", "material": {"kind": "single_material", "name": "砖"}},
+      {"entity_id": "slab-storey-1", "scope": "direct", "source": "user", "material": {"kind": "single_material", "name": "混凝土"}},
+      {"entity_id": "slab-storey-2", "scope": "direct", "source": "user", "material": {"kind": "single_material", "name": "混凝土"}},
+      {"entity_id": "slab-storey-3", "scope": "direct", "source": "user", "material": {"kind": "single_material", "name": "混凝土"}},
+      {"entity_id": "roof-slab", "scope": "direct", "source": "user", "material": {"kind": "single_material", "name": "混凝土"}},
+      {"entity_id": "storey-1-door-south-classroom", "scope": "direct", "source": "user", "template": {"template_id": "door-right", "template_version": "text2ifc/basic-filling/1.0"}},
+      {"entity_id": "storey-1-door-north-classroom", "scope": "direct", "source": "user", "template": {"template_id": "door-right", "template_version": "text2ifc/basic-filling/1.0"}},
+      {"entity_id": "storey-1-door-entrance", "scope": "direct", "source": "user", "template": {"template_id": "door-left", "template_version": "text2ifc/basic-filling/1.0"}},
+      {"entity_id": "storey-1-window-south-1", "scope": "direct", "source": "user", "template": {"template_id": "window-double-vertical", "template_version": "text2ifc/basic-filling/1.0"}},
+      {"entity_id": "storey-1-window-south-2", "scope": "direct", "source": "user", "template": {"template_id": "window-double-vertical", "template_version": "text2ifc/basic-filling/1.0"}},
+      {"entity_id": "storey-1-window-north-1", "scope": "direct", "source": "user", "template": {"template_id": "window-double-vertical", "template_version": "text2ifc/basic-filling/1.0"}},
+      {"entity_id": "storey-1-window-north-2", "scope": "direct", "source": "user", "template": {"template_id": "window-double-vertical", "template_version": "text2ifc/basic-filling/1.0"}},
+      {"entity_id": "storey-1-window-notch-south", "scope": "direct", "source": "user", "template": {"template_id": "window-double-vertical", "template_version": "text2ifc/basic-filling/1.0"}},
+      {"entity_id": "storey-1-window-notch-north", "scope": "direct", "source": "user", "template": {"template_id": "window-double-vertical", "template_version": "text2ifc/basic-filling/1.0"}},
+      {"entity_id": "storey-1-window-west", "scope": "direct", "source": "user", "template": {"template_id": "window-single", "template_version": "text2ifc/basic-filling/1.0"}},
+      {"entity_id": "storey-2-door-south-classroom", "scope": "direct", "source": "user", "template": {"template_id": "door-right", "template_version": "text2ifc/basic-filling/1.0"}},
+      {"entity_id": "storey-2-door-north-classroom", "scope": "direct", "source": "user", "template": {"template_id": "door-right", "template_version": "text2ifc/basic-filling/1.0"}},
+      {"entity_id": "storey-2-window-south-1", "scope": "direct", "source": "user", "template": {"template_id": "window-double-vertical", "template_version": "text2ifc/basic-filling/1.0"}},
+      {"entity_id": "storey-2-window-south-2", "scope": "direct", "source": "user", "template": {"template_id": "window-double-vertical", "template_version": "text2ifc/basic-filling/1.0"}},
+      {"entity_id": "storey-2-window-north-1", "scope": "direct", "source": "user", "template": {"template_id": "window-double-vertical", "template_version": "text2ifc/basic-filling/1.0"}},
+      {"entity_id": "storey-2-window-north-2", "scope": "direct", "source": "user", "template": {"template_id": "window-double-vertical", "template_version": "text2ifc/basic-filling/1.0"}},
+      {"entity_id": "storey-2-window-notch-south", "scope": "direct", "source": "user", "template": {"template_id": "window-double-vertical", "template_version": "text2ifc/basic-filling/1.0"}},
+      {"entity_id": "storey-2-window-notch-north", "scope": "direct", "source": "user", "template": {"template_id": "window-double-vertical", "template_version": "text2ifc/basic-filling/1.0"}},
+      {"entity_id": "storey-2-window-west", "scope": "direct", "source": "user", "template": {"template_id": "window-single", "template_version": "text2ifc/basic-filling/1.0"}},
+      {"entity_id": "storey-3-door-south-classroom", "scope": "direct", "source": "user", "template": {"template_id": "door-right", "template_version": "text2ifc/basic-filling/1.0"}},
+      {"entity_id": "storey-3-door-north-classroom", "scope": "direct", "source": "user", "template": {"template_id": "door-right", "template_version": "text2ifc/basic-filling/1.0"}},
+      {"entity_id": "storey-3-window-south-1", "scope": "direct", "source": "user", "template": {"template_id": "window-double-vertical", "template_version": "text2ifc/basic-filling/1.0"}},
+      {"entity_id": "storey-3-window-south-2", "scope": "direct", "source": "user", "template": {"template_id": "window-double-vertical", "template_version": "text2ifc/basic-filling/1.0"}},
+      {"entity_id": "storey-3-window-north-1", "scope": "direct", "source": "user", "template": {"template_id": "window-double-vertical", "template_version": "text2ifc/basic-filling/1.0"}},
+      {"entity_id": "storey-3-window-north-2", "scope": "direct", "source": "user", "template": {"template_id": "window-double-vertical", "template_version": "text2ifc/basic-filling/1.0"}},
+      {"entity_id": "storey-3-window-notch-south", "scope": "direct", "source": "user", "template": {"template_id": "window-double-vertical", "template_version": "text2ifc/basic-filling/1.0"}},
+      {"entity_id": "storey-3-window-notch-north", "scope": "direct", "source": "user", "template": {"template_id": "window-double-vertical", "template_version": "text2ifc/basic-filling/1.0"}},
+      {"entity_id": "storey-3-window-west", "scope": "direct", "source": "user", "template": {"template_id": "window-single", "template_version": "text2ifc/basic-filling/1.0"}}
+    ],
+    "semantic_review": {
+      "material": {"status": "specified", "source_turns": ["turn-user-001"]},
+      "property": {"status": "not_specified", "source_turns": ["turn-user-001"]},
+      "type": {"status": "not_specified", "source_turns": ["turn-user-001"]},
+      "appearance": {"status": "not_specified", "source_turns": ["turn-user-001"]},
+      "template": {"status": "specified", "source_turns": ["turn-user-001"]}
+    }
+  },
+  "fact_sources": [
+    {"path": "/known_facts/building", "source_turns": ["turn-user-001"], "evidence_refs": ["schema:bim-json-v2:profile", "capability:IFC2X3:IfcBuilding"]},
+    {"path": "/known_facts/storeys", "source_turns": ["turn-user-001"], "evidence_refs": ["schema:bim-json-v2:entity", "schema:bim-json-v2:object-placement", "capability:IFC2X3:IfcBuildingStorey", "capability:IFC2X3:IfcSpace", "capability:IFC2X3:IfcWall", "capability:IFC2X3:IfcDoor", "capability:IFC2X3:IfcWindow"]},
+    {"path": "/known_facts/floor_slabs", "source_turns": ["turn-user-001"], "evidence_refs": ["schema:bim-json-v2:profile", "capability:IFC2X3:IfcSlab", "capability:IFC2X3:IfcOpeningElement", "capability:IFC2X3:IfcRelVoidsElement"]},
+    {"path": "/known_facts/roof_slab", "source_turns": ["turn-user-001"], "evidence_refs": ["schema:bim-json-v2:profile", "capability:IFC2X3:IfcRoof"]},
+    {"path": "/known_facts/stairs", "source_turns": ["turn-user-001"], "evidence_refs": ["schema:bim-json-v2:representation", "capability:IFC2X3:IfcStair"]},
+    {"path": "/known_facts/landings", "source_turns": ["turn-user-001"], "evidence_refs": ["capability:IFC2X3:IfcSlab"]},
+    {"path": "/known_facts/semantic_requirements", "source_turns": ["turn-user-001"], "evidence_refs": ["schema:bim-json-v2:entity", "schema:bim-json-v2:representation"]},
+    {"path": "/known_facts/appearance", "source_turns": ["turn-user-001"], "evidence_refs": ["schema:bim-json-v2:root"]},
+    {"path": "/known_facts/semantic_review", "source_turns": ["turn-user-001"], "evidence_refs": ["schema:bim-json-v2:entity", "schema:bim-json-v2:representation"]}
+  ],
+  "missing_facts": [],
+  "ambiguities": [
+    {
+      "id": "amb-stair-opening-circulation-space-overlap",
+      "path": "/known_facts/floor_slabs/1/opening/bounds",
+      "message": "二层、三层楼板的楼梯洞口范围与你声明的西侧交通空间净范围正面积重叠：二层洞口 x 400–1600、y 5400–10800，三层洞口 x 2800–4000、y 5400–10800；而 storey-2、storey-3 的交通空间净范围均为 x 200–4600、y 200–16600。",
+      "reason": "STAIR_OPENING_SPACE_COLLISION：确定性检查显示楼梯洞口与同层已声明空间正相交。按现状，二、三层的西侧交通空间在其净矩形内包含一个贯通上下层的楼梯井。不能自行删除洞口、楼梯或空间，也不能自行缩减空间净矩形来消除重叠，因此需要你确认空间划分口径。",
+      "blocking": true,
+      "options": [
+        "保持现有净矩形：西侧交通空间为一个贯通三层的空间，二、三层在楼梯处含楼板洞口（洞口仍按各自梯段范围保留，空间净范围不变）",
+        "按楼板洞口拆分：二、三层把西侧空间拆分为走道与楼梯井等独立净矩形，并给出新的空间净范围"
+      ],
+      "evidence_refs": ["schema:bim-json-v2:representation", "capability:IFC2X3:IfcSpace", "capability:IFC2X3:IfcOpeningElement", "capability:IFC2X3:IfcRelVoidsElement"],
+      "source_turns": ["turn-user-001"]
+    },
+    {
+      "id": "amb-stair-step-count-convention",
+      "path": "/known_facts/stairs/0",
+      "message": "楼梯每段“18级”记录为 18 个踢面（18×175=3150mm，与层高一致），对应 17 个踏面（17×300=5100mm 水平投影）；梯段声明范围南北 5400mm，差额 300mm 落在梯段顶部与平台衔接处。",
+      "reason": "原文同时给出“18级”“每级高175mm”“踏步进深300mm”和梯段南北范围 5400mm。18 级作为踢面数与层高 3150mm 完全吻合；若按 18 个踏面理解则水平投影 5400mm 与范围吻合，但踢面数将变为 19，与层高不符。该口径差异不影响已明确的梯段边界与楼板洞口范围，因此记录为待确认口径，不阻塞生成。",
+      "blocking": false,
+      "options": [
+        "按 18 踢面 / 17 踏面记录，顶部剩余 300mm 作为到达踏步与平台衔接（当前记录方式）",
+        "按 18 个踏面理解（水平投影 5400mm），则踢面数为 19，与层高 3150mm 不符，需要你修正其中一项"
+      ],
+      "evidence_refs": ["schema:bim-json-v2:representation", "capability:IFC2X3:IfcStair"],
+      "source_turns": ["turn-user-001"]
+    }
+  ],
+  "unsupported_requests": [],
+  "user_corrections": [],
+  "clarification_questions": [
+    {
+      "id": "q-stair-opening-vs-circulation-space",
+      "text": "你声明的西侧交通空间净范围（x 0.2–4.6m、y 0.2–16.6m）在二、三层正好包含楼梯处的楼板洞口（二层 x 0.4–1.6m、三层 x 2.8–4.0m，y 均为 5.4–10.8m）。请确认口径：该空间按“贯通三层、含楼梯井洞口”的一个空间保留现有净范围，还是需要把二、三层西侧空间按洞口拆分为走道/楼梯井等独立净矩形？在你确认前我不会改动洞口、楼梯或空间。",
+      "targets": ["amb-stair-opening-circulation-space-overlap"],
+      "reason": "该问题只询问确定性检查发现的正相交所对应的阻塞事实：空间与楼板洞口的口径，其余几何均已明确。",
+      "evidence_refs": ["schema:bim-json-v2:representation", "capability:IFC2X3:IfcSpace", "capability:IFC2X3:IfcOpeningElement"]
+    }
+  ],
+  "provenance": {
+    "source_turns": ["turn-user-001"],
+    "selected_evidence_ids": [
+      "schema:bim-json-v2:root",
+      "schema:bim-json-v2:entity",
+      "schema:bim-json-v2:attributes",
+      "schema:bim-json-v2:representation",
+      "schema:bim-json-v2:profile",
+      "schema:bim-json-v2:object-placement",
+      "schema:bim-json-v2:relationship",
+      "capability:IFC2X3:IfcBuilding",
+      "capability:IFC2X3:IfcBuildingStorey",
+      "capability:IFC2X3:IfcSpace",
+      "capability:IFC2X3:IfcWall",
+      "capability:IFC2X3:IfcDoor",
+      "capability:IFC2X3:IfcWindow",
+      "capability:IFC2X3:IfcOpeningElement",
+      "capability:IFC2X3:IfcSlab",
+      "capability:IFC2X3:IfcRoof",
+      "capability:IFC2X3:IfcStair",
+      "capability:IFC2X3:IfcRelVoidsElement",
+      "capability:IFC2X3:IfcRelFillsElement"
+    ],
+    "few_shot_ids": ["design-brief-v2.standard-two-storey-building", "design-brief-v2.complete-room-openings"]
+  }
+}

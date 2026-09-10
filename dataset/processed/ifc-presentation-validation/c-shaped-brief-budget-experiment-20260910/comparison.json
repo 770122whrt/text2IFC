@@ -1,0 +1,298 @@
+{
+  "status": "completed",
+  "scope": "two real single-response Brief calls, one per cap; no Generation/Audit/IFC",
+  "request_diff_keys": [
+    "max_tokens"
+  ],
+  "prompt_identical": true,
+  "arms": [
+    {
+      "label": "96k",
+      "cap": 98304,
+      "status": "needs_clarification",
+      "valid": true,
+      "finish_reason": "stop",
+      "response_id": "2feeef84-02cf-4c8e-b5ff-b2aae626a66b",
+      "model": "deepseek-flash",
+      "input_tokens": 18460,
+      "completion_tokens": 68621,
+      "reasoning_tokens": 54461,
+      "visible_tokens": 14160,
+      "total_tokens": 87081,
+      "cache_hit_tokens": 14208,
+      "active_seconds": 266.125,
+      "brief_observations": {
+        "storeys": 3,
+        "spaces": 9,
+        "walls": 30,
+        "doors": 7,
+        "windows": 21,
+        "stairs": 2,
+        "semantic_fields": {
+          "material": 34,
+          "template": 28,
+          "type": 0,
+          "properties": 0,
+          "appearance": 0
+        },
+        "materials": [
+          "混凝土",
+          "砖"
+        ],
+        "appearance": {
+          "profile": "warm-residential",
+          "source": "user",
+          "style_notes": "暖浅墙面、深色细门窗框、通透玻璃、与框分色的门扇；来自用户指定的现有 warm-residential 协调主题。这些是主题/模板级部件风格，不是整件颜色覆盖。"
+        },
+        "roof": {
+          "bottom_elevation_mm": 9300,
+          "id": "roof-slab",
+          "note": "平屋面，随 C 形连续，不覆盖中间缺口，不设跨缺口桥。",
+          "polygon": [
+            [
+              0,
+              0
+            ],
+            [
+              13200,
+              0
+            ],
+            [
+              13200,
+              4800
+            ],
+            [
+              4800,
+              4800
+            ],
+            [
+              4800,
+              12000
+            ],
+            [
+              13200,
+              12000
+            ],
+            [
+              13200,
+              16800
+            ],
+            [
+              0,
+              16800
+            ],
+            [
+              0,
+              0
+            ]
+          ],
+          "thickness_mm": 150,
+          "top_elevation_mm": 9450
+        },
+        "clarifications": [
+          {
+            "evidence_refs": [
+              "schema:bim-json-v2:representation",
+              "capability:IFC2X3:IfcSpace",
+              "capability:IFC2X3:IfcOpeningElement"
+            ],
+            "id": "q-stair-opening-vs-circulation-space",
+            "reason": "该问题只询问确定性检查发现的正相交所对应的阻塞事实：空间与楼板洞口的口径，其余几何均已明确。",
+            "targets": [
+              "amb-stair-opening-circulation-space-overlap"
+            ],
+            "text": "你声明的西侧交通空间净范围（x 0.2–4.6m、y 0.2–16.6m）在二、三层正好包含楼梯处的楼板洞口（二层 x 0.4–1.6m、三层 x 2.8–4.0m，y 均为 5.4–10.8m）。请确认口径：该空间按“贯通三层、含楼梯井洞口”的一个空间保留现有净范围，还是需要把二、三层西侧空间按洞口拆分为走道/楼梯井等独立净矩形？在你确认前我不会改动洞口、楼梯或空间。"
+          }
+        ],
+        "blocking_ambiguities": [
+          "amb-stair-opening-circulation-space-overlap"
+        ]
+      },
+      "output_characters": 36641
+    },
+    {
+      "label": "64k",
+      "cap": 65536,
+      "status": "needs_clarification",
+      "valid": true,
+      "finish_reason": "stop",
+      "response_id": "8b419717-2ad3-47e3-88b8-44a4714a4702",
+      "model": "deepseek-flash",
+      "input_tokens": 18460,
+      "completion_tokens": 47369,
+      "reasoning_tokens": 36911,
+      "visible_tokens": 10458,
+      "total_tokens": 65829,
+      "cache_hit_tokens": 18304,
+      "active_seconds": 172.93699999999808,
+      "brief_observations": {
+        "storeys": 3,
+        "spaces": 9,
+        "walls": 30,
+        "doors": 7,
+        "windows": 21,
+        "stairs": 2,
+        "semantic_fields": {
+          "material": 34,
+          "template": 28,
+          "type": 0,
+          "properties": 0,
+          "appearance": 0
+        },
+        "materials": [
+          "混凝土",
+          "砖"
+        ],
+        "appearance": {
+          "profile": "warm-residential",
+          "style_notes": "暖浅墙面、深色细门窗框、通透玻璃、门扇与门窗框分色；不新增物理材料、不做整件颜色覆盖、不添加性能属性"
+        },
+        "roof": {
+          "bottom_elevation_mm": 9300,
+          "continuous_c_outline": true,
+          "covers_notch": false,
+          "id": "roof-slab",
+          "polygon": [
+            [
+              0,
+              0
+            ],
+            [
+              13200,
+              0
+            ],
+            [
+              13200,
+              4800
+            ],
+            [
+              4800,
+              4800
+            ],
+            [
+              4800,
+              12000
+            ],
+            [
+              13200,
+              12000
+            ],
+            [
+              13200,
+              16800
+            ],
+            [
+              0,
+              16800
+            ],
+            [
+              0,
+              0
+            ]
+          ],
+          "thickness_mm": 150
+        },
+        "clarifications": [
+          {
+            "evidence_refs": [
+              "capability:IFC2X3:IfcSlab",
+              "capability:IFC2X3:IfcSpace",
+              "capability:IFC2X3:IfcOpeningElement"
+            ],
+            "id": "q-stair-opening-space-collision",
+            "reason": "该重叠是当前已声明楼层楼板洞口与同层交通/楼梯空间之间的确定几何冲突，需要用户决定保留或调整空间范围后才能忠实生成。",
+            "targets": [
+              "amb-stair-opening-space-collision"
+            ],
+            "text": "二、三层楼板上的楼梯洞口（二层东西400到1600毫米、南北5400到10800毫米；三层东西2800到4000毫米、南北5400到10800毫米）完全落在同层西侧交通/楼梯空间的净范围（东西0.2到4.6米、南北0.2到16.6米）之内，属于楼板洞口与同层空间平面重叠。请问这个楼梯井空洞是本来就包含在该交通/楼梯空间内（空间净范围保持不变），还是需要把该空间按层拆分、把洞口区域排除在空间净范围之外？"
+          }
+        ],
+        "blocking_ambiguities": [
+          "amb-stair-opening-space-collision"
+        ]
+      },
+      "output_characters": 28901
+    }
+  ],
+  "budget_before": {
+    "schema_version": "text2ifc/generation-budget/1.0",
+    "limits": {
+      "max_calls": 32,
+      "max_tokens": 2000000,
+      "max_active_seconds": 3600
+    },
+    "attempts": [
+      {
+        "attempt": 1,
+        "stage": "design-brief",
+        "status": "failed",
+        "tokens_charged": 83996,
+        "reserved_tokens": 129036,
+        "elapsed_seconds": 282.2960000000021
+      },
+      {
+        "attempt": 2,
+        "stage": "design-brief",
+        "status": "completed",
+        "tokens_charged": 63634,
+        "reserved_tokens": 129036,
+        "elapsed_seconds": 165.35899999999674
+      }
+    ],
+    "calls_used": 2,
+    "tokens_used_or_reserved": 147630,
+    "active_seconds": 447.65499999999884
+  },
+  "budget_after": {
+    "schema_version": "text2ifc/generation-budget/1.0",
+    "limits": {
+      "max_calls": 32,
+      "max_tokens": 2000000,
+      "max_active_seconds": 3600
+    },
+    "attempts": [
+      {
+        "attempt": 1,
+        "stage": "design-brief",
+        "status": "failed",
+        "tokens_charged": 83996,
+        "reserved_tokens": 129036,
+        "elapsed_seconds": 282.2960000000021
+      },
+      {
+        "attempt": 2,
+        "stage": "design-brief",
+        "status": "completed",
+        "tokens_charged": 63634,
+        "reserved_tokens": 129036,
+        "elapsed_seconds": 165.35899999999674
+      },
+      {
+        "attempt": 3,
+        "stage": "design-brief",
+        "status": "completed",
+        "tokens_charged": 87081,
+        "reserved_tokens": 161804,
+        "elapsed_seconds": 266.125
+      },
+      {
+        "attempt": 4,
+        "stage": "design-brief",
+        "status": "completed",
+        "tokens_charged": 65829,
+        "reserved_tokens": 129036,
+        "elapsed_seconds": 172.93699999999808
+      }
+    ],
+    "calls_used": 4,
+    "tokens_used_or_reserved": 300540,
+    "active_seconds": 886.7169999999969
+  },
+  "added_tokens": 152910,
+  "limitations": [
+    "N=1 per cap; decoding randomness, order and cache confounded; no reliability rate or causal effect estimate",
+    "Brief validation and selected field inventory do not independently prove all request values or final IFC semantics",
+    "Both responses require clarification; neither is generation-ready",
+    "Clarification is model interpretation of the existing Prompt rule; its assertion of deterministic checking is not an independently executed check"
+  ]
+}
