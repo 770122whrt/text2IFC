@@ -88,6 +88,11 @@ class ClarificationController:
         self,
         call: ClarificationCall,
     ) -> "ClarificationController":
+        if self.status != "awaiting_model":
+            raise ClarificationError(
+                "Design Brief call requires awaiting_model; "
+                "pending questions require a user answer and terminal states cannot advance"
+            )
         expected_index = len(self.calls) + 1
         if call.call_index != expected_index:
             raise ClarificationError(
@@ -153,7 +158,7 @@ class ClarificationController:
     ) -> "ClarificationController":
         if self.status != "needs_clarification" or not self.pending_question_ids:
             raise ClarificationError("no open model-authored clarification question")
-        if not answer:
+        if not answer.strip():
             raise ClarificationError("user answer must be preserved as non-empty text")
         transcript = (
             *self.transcript,

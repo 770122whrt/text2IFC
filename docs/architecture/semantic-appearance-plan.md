@@ -494,3 +494,9 @@ R1 本批为 partial：新增 Brief 2.3 与 ChangeSet 1.5，两个公共 Brief �
 本批 debug 假设按优先级：① 共享控制器仅检查回答 truthiness，纯空白可触发后续模型调用；② record_model_call 未限制等待状态，可能无用户回答即替换 Brief；③ 问题未覆盖全部阻断项导致丢失——代码及 Prompt 核对表明每轮 1–3 个关键问题可分轮处理，不能据此认定缺陷，本批不更改该合同。
 
 修复前冻结测试族：空串／空格／制表符／换行／全角空格的回答不调用后续模型；有效回答原文字节保留，未知回答保持 Draft，部分回答仍可继续澄清；等待用户及终端状态不能直接接收新 Brief；公共澄清入口和数据库恢复后仍遵守以上限制。该族是离线回归，不是盲测能力评估；本批不声称已能识别任意设计冲突或已完成合理性 Audit。
+
+第一批已实现：`ClarificationController.record_model_call` 只允许 `awaiting_model` 接收结果；等待用户及终端状态不得直接被新 Brief 覆盖。`answer_and_rerun` 在调用 invoker 前拒绝纯空白回答，仅用于判断的 strip 不修改有效回答原文。终端 REPL 已有空白处理，此次补齐共享控制器及可程序调用／恢复的公共入口边界。
+
+验证：首轮夹具缺少必要 evidence_refs，13 failed／4 passed 不能作为产品基线；修正夹具后有效红结果为 **12 failed／5 passed**，最小实现后 **17 passed**。直接相关回归 **60 passed**（包含这17项，不相加），覆盖 `test_clarification_answer_boundary`、`test_live_clarification`、`test_clarification_resume_preservation`、`test_clarification_demo`、`test_interactive_cli_flow`、`test_phase6_2_fix_repl_cli`、`test_interactive_cli_generation`、`test_design_brief_attempt_preservation`；公共路径使用 fake Provider，实际会话恢复及相关 IFC 编译检查，不是 live 能力证据。聚焦 compileall 和本任务路径 diff 检查通过；本地红／绿／回归 XML 保留在 `.tmp/clarification-boundary-{red-valid,green,regression}-20260910.xml`。测试与政策冻结提交 `a6ea9fbc`。
+
+本批仅证明空白回答和非法状态跃迁缺陷已修复。并未验证模型能正确理解所有有效文字回答，也未实施新的 Audit 合理性字段或净空算法。未运行 Full Preflight、Stage Preflight 或真实 Provider；再次 live 前需对上述共享澄清路径变化复核准入。旧三层 IFC、机器 Audit、报告及 Proof 状态未改。
