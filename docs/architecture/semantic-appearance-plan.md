@@ -518,3 +518,11 @@ Audit 3.0 必须逐项保留已知问题和局限，不能降级、遗漏、重�
 最终普通生成、staged 相关公共路径及 REPL 回归 **19 passed**（`.tmp/design-review-public-final-20260910.xml`），验证显式启用与缺失上下文检查后的兼容性；测试与上述范围重叠，不相加为成功率。离线 A/B 公共链路的实际编译／重读仅验证接入，不代表三层新布局已经生成或通过工程检查。
 
 分支输入、预算及运行前检查准备位于 `dataset/processed/ifc-presentation-validation/three-storey-clarification-branches-20260910/`。两份 request.txt 与原文逐字节一致，追加脚本分别冻结到 conversation.json 并绑定独立检查器。原 IFC 对 A 新预期出现19项差异，对 B 原预期290项通过；同一原 IFC 的108个轴向净空采样最小为0、3个采样为0。此采样只覆盖本案南北直跑楼梯上方梯段／楼板／屋面／梁，非规范阈值判断或完整通行审查。每分支最多6次调用、80万 token、1800秒 Provider 活动时间；本次具体载荷授权待用户回复，尚未执行，不登记 Proof。
+
+### A 首次真实尝试与共用缺陷暂停（2026-09-10）
+
+用户随后明确回复“支持授权真实运行”。再次核对现有文件／依赖及两个分支 dry run 后，A 会话 `48dcf264b1a6df16` 完成 Brief、Generator、Audit、ChangeSet 共4次真实响应，288,462 reported token、446.750秒 Provider 活动时间。Brief ready 并提取修订布局；首个候选 JSON 合同通过，但18个 Type 的材料作用域被门禁拒绝，另有2个跨层楼梯名称误报。Audit 3.0 保留修订决定并标记 `not_verified`，没有越过技术硬门；ChangeSet 因授权字段不匹配返回 Draft，最终 `audit_blocked`，无新 IFC。详见[本次真实运行报告](../../dataset/processed/ifc-presentation-validation/three-storey-clarification-branches-20260910/REPORT.md)。
+
+离线原样复现确认 `_targeted_issues` 将具体 `/materials` 字段压成 `#/attributes`，Change Scope 因而不允许修正门禁所指材料；模型提出的范围澄清不能作为需要用户再次批准建筑设计的理由。另一个问题是名称检查将合法起止层描述中的到达层误作归属冲突；两段楼梯到达层均与冻结 Expected Facts 相符。4个合成字段探针中3个不满足精确路径目标、1个未知目标保全通过；没有修改生产行为或旧运行证据，不是修复成功证据。
+
+下一步保持小步：① 建立正／反／边界及跨场景测试，再保留确定性报错的精确实体字段路径，不扩大到整实体或未经证据绑定的关系；② 使跨层名称检查依据已确认起止层判断适用性，保留无关层名及真实归属错误的阻断；③ 验证公共 ChangeSet、原子应用／回滚与范围外保全，以及两策略相关共用路径；④ 更新适用准入后再继续剩余授权预算。B 尚未启动，0次调用；A 预算已用4次，不得重置后假称新的完整6次额度。当前操作层准入暂停记录为 `RUN-HOLD.json`，不能仅凭旧 admission 文件哈希仍匹配就继续调用。两份新 IFC、图片、Proof及人工验收仍未完成；旧请求／IFC哈希保持不变。
