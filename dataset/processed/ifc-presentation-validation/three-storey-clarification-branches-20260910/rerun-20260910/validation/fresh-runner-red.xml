@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="2" skipped="0" tests="2" time="7.841" timestamp="2026-09-10T15:28:18.798727+08:00" hostname="what-do-matter"><testcase classname="tests.agent.test_design_review_fresh_rerun" name="test_fresh_branches_compile_without_reusing_prior_brief_or_budget[A-revise]" time="0.019"><failure message="FileNotFoundError: [Errno 2] No such file or directory: 'E:\\code for project\\bimnet\\dataset\\processed\\ifc-presentation-validation\\three-storey-clarification-branches-20260910\\rerun-20260910\\run_branches.py'">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-ab-fresh-red-20260910/test_fresh_branches_compile_wi0')
+branch = 'A-revise'
+
+    @pytest.mark.parametrize('branch', ['A-revise', 'B-retain'])
+    def test_fresh_branches_compile_without_reusing_prior_brief_or_budget(tmp_path, branch):
+        spec = importlib.util.spec_from_file_location('fresh_branch_harness', SCRIPT)
+        harness = importlib.util.module_from_spec(spec)
+&gt;       spec.loader.exec_module(harness)
+
+tests\agent\test_design_review_fresh_rerun.py:20: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+&lt;frozen importlib._bootstrap_external&gt;:991: in exec_module
+    ???
+&lt;frozen importlib._bootstrap_external&gt;:1128: in get_code
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;_frozen_importlib_external.SourceFileLoader object at 0x000002D17F9771A0&gt;
+path = 'E:\\code for project\\bimnet\\dataset\\processed\\ifc-presentation-validation\\three-storey-clarification-branches-20260910\\rerun-20260910\\run_branches.py'
+
+&gt;   ???
+E   FileNotFoundError: [Errno 2] No such file or directory: 'E:\\code for project\\bimnet\\dataset\\processed\\ifc-presentation-validation\\three-storey-clarification-branches-20260910\\rerun-20260910\\run_branches.py'
+
+&lt;frozen importlib._bootstrap_external&gt;:1186: FileNotFoundError</failure></testcase><testcase classname="tests.agent.test_design_review_fresh_rerun" name="test_fresh_branches_compile_without_reusing_prior_brief_or_budget[B-retain]" time="0.008"><failure message="FileNotFoundError: [Errno 2] No such file or directory: 'E:\\code for project\\bimnet\\dataset\\processed\\ifc-presentation-validation\\three-storey-clarification-branches-20260910\\rerun-20260910\\run_branches.py'">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-ab-fresh-red-20260910/test_fresh_branches_compile_wi1')
+branch = 'B-retain'
+
+    @pytest.mark.parametrize('branch', ['A-revise', 'B-retain'])
+    def test_fresh_branches_compile_without_reusing_prior_brief_or_budget(tmp_path, branch):
+        spec = importlib.util.spec_from_file_location('fresh_branch_harness', SCRIPT)
+        harness = importlib.util.module_from_spec(spec)
+&gt;       spec.loader.exec_module(harness)
+
+tests\agent\test_design_review_fresh_rerun.py:20: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+&lt;frozen importlib._bootstrap_external&gt;:991: in exec_module
+    ???
+&lt;frozen importlib._bootstrap_external&gt;:1128: in get_code
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;_frozen_importlib_external.SourceFileLoader object at 0x000002D17F9AE630&gt;
+path = 'E:\\code for project\\bimnet\\dataset\\processed\\ifc-presentation-validation\\three-storey-clarification-branches-20260910\\rerun-20260910\\run_branches.py'
+
+&gt;   ???
+E   FileNotFoundError: [Errno 2] No such file or directory: 'E:\\code for project\\bimnet\\dataset\\processed\\ifc-presentation-validation\\three-storey-clarification-branches-20260910\\rerun-20260910\\run_branches.py'
+
+&lt;frozen importlib._bootstrap_external&gt;:1186: FileNotFoundError</failure></testcase></testsuite></testsuites>

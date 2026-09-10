@@ -1,0 +1,29 @@
+{
+  "user_request": "下一步进行provider的调用 并进行A/B两个分支的重新运行。然后给我进行审查 如果遇到问题随时停下 如果没有遇到问题就开启goal模式完成",
+  "destination": "https://api.deepseek.com",
+  "model": "deepseek-v4-flash",
+  "scope": "Fresh full Generation A/B from frozen request and approved scripted branch conversation. No prior Brief/candidate/budget reused.",
+  "per_branch_whole_run_limits": {
+    "max_calls": 32,
+    "max_tokens": 2000000,
+    "max_active_seconds": 3600
+  },
+  "payload": [
+    "original request",
+    "approved branch conversation",
+    "public reference concern",
+    "new Design Brief",
+    "candidate JSON",
+    "automatic feedback",
+    "run metadata"
+  ],
+  "excluded": [
+    "IFC file bytes",
+    "private Gold",
+    "Repair source",
+    "other task data",
+    "credential text"
+  ],
+  "human_review": "pending; no accepted Proof installation",
+  "github_push_authorized": false
+}

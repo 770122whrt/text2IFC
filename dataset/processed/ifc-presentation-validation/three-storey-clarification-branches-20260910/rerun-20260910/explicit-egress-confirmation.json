@@ -1,0 +1,21 @@
+{
+  "confirmed_at": "2026-09-10T07:47:24.420188+00:00",
+  "user_reply": "批准本次 A/B 两个完整 loop 的上述载荷与目的地",
+  "payload_preview_sha256": "a7040cb445cfe5bbee2631c339231945f21fd1f7f23e591df644a5455bcd3ba8",
+  "destination": "https://api.deepseek.com",
+  "model": "deepseek-v4-flash",
+  "scope": "A/B frozen requests and approved conversations plus their new Brief/candidate/feedback/runtime metadata; one fresh complete loop per branch",
+  "per_branch_limits": {
+    "max_calls": 32,
+    "max_tokens": 2000000,
+    "max_active_seconds": 3600
+  },
+  "exclusions": [
+    "original IFC bytes",
+    "private Gold",
+    "other task data",
+    "credential text"
+  ],
+  "supersedes_approval_hold": "execution-hold.json",
+  "github_push_authorized": false
+}
