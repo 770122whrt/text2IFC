@@ -140,11 +140,8 @@ def build_design_geometry_expectation(
             if opening_bounds is None and schema_version == "text2ifc/design-geometry-expectation/1.1":
                 unresolved.append(_unresolved_geometry(path=source_path, reason="floor_opening_bounds_missing"))
             if opening_bounds is not None:
-                opening_id = _string(opening.get("id")) or (
-                    f"opening-{slab_id}-stair"
-                    if opening_index == 0
-                    else f"opening-{slab_id}-stair-{opening_index + 1}"
-                )
+                from .cross_storey_identity import floor_opening_id
+                opening_id = floor_opening_id(opening, slab_id, opening_index)
                 if opening_id in floor_openings and schema_version == "text2ifc/design-geometry-expectation/1.1":
                     unresolved.append(_unresolved_geometry(path=source_path, reason="floor_opening_identity_duplicate"))
                     continue
@@ -210,9 +207,8 @@ def build_design_geometry_expectation(
                     source_fact_refs=[path],
                 )
             )
-        flight_ids = stair.get("flight_ids")
-        if not isinstance(flight_ids, list) or not flight_ids:
-            flight_ids = [stair_id.replace("stair-", "stair-flight-", 1)]
+        from .cross_storey_identity import stair_flight_ids
+        flight_ids = stair_flight_ids(stair, stair_id)
         stairs[stair_id] = {
             "flight_ids": [str(item) for item in flight_ids],
             "bbox": _bbox(bounds[0], bounds[1], bounds[2], bounds[3], start, end),

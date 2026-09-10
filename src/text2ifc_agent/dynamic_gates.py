@@ -217,7 +217,8 @@ def _storey_name_consistency_gate(
             # Only a uniquely identified frozen connection can explain a
             # destination label. Candidate prose cannot authorize new floors.
             connections = [record for record in _records(expected_facts.get("stairs"))
-                           if record.get("id") == entity_id]
+                           if record.get("id") == entity_id
+                           or _is_frozen_stair_child(graph, entity_id, record)]
             if len(connections) == 1 and connections[0].get("from_storey") == actual_storey:
                 destination = connections[0].get("to_storey")
                 destination_name = storey_names.get(destination)
@@ -259,6 +260,23 @@ def _group_storey_names(storey_names: Mapping[str, str]) -> dict[str, list[str]]
     for storey_id, name in storey_names.items():
         grouped[name].append(storey_id)
     return grouped
+
+
+def _is_frozen_stair_child(graph, entity_id, record):
+    from .cross_storey_identity import stair_flight_ids
+    parent_id = record.get('id')
+    if not isinstance(parent_id, str) or not parent_id:
+        return False
+    child = graph.entities.get(entity_id, {})
+    parent = graph.entities.get(parent_id, {})
+    if (child.get('ifc_class') != 'IfcStairFlight' or parent.get('ifc_class') != 'IfcStair'
+        or entity_id not in stair_flight_ids(record, parent_id)
+        or graph.storey_for_entity(parent_id) != record.get('from_storey')):
+        return False
+    parents = [relation.get('attributes', {}).get('RelatingObject')
+               for relation in graph.relationships if relation.get('ifc_class') == 'IfcRelAggregates'
+               and entity_id in relation.get('attributes', {}).get('RelatedObjects', [])]
+    return parents == [parent_id]
 
 
 def _resolve_expected_entity(

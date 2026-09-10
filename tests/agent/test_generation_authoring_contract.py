@@ -73,7 +73,7 @@ def test_generator_receives_registered_new_contract_without_rewriting_old_prompt
     assert 'OTHER_CONSTRUCTION' in provider.sent_prompt
     assert sent['IFC_AUTHORING_CONTRACT']['geometry_encoding']['rectangle']['anchor'] == 'profile_center_at_extrusion_base'
     trace = json.loads((tmp_path/'generator/trace-manifest.json').read_text(encoding='utf-8'))
-    assert trace['template_id'] == 'bim-json-generator.v2.2'
+    assert trace['template_id'] == 'bim-json-generator.v2.3'
     registry = load_prompt_registry()
     assert 'bim-json-generator.v2.1' in registry
     for template in ['bim-json-generator.v2.2','bim-json-generator-repair.v2.2','bim-json-changeset.v1.2']:

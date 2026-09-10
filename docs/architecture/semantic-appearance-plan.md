@@ -570,3 +570,17 @@ B Audit 持续记录 retained_known_issue；独立108点净空采样最小0米�
 编辑前假设按优先级冻结：① Generator 的 entity_id_contract 只有墙／空间／门窗，缺少楼梯父子和楼板洞口，导致 authoring 和几何身份要求脱节；② v2.2 语义 Prompt 未保留 v2 的逐字使用技术 ID 指令，需新增版本补回而不重写旧版；③ 楼梯名称豁免仅匹配父项自身 ID，漏掉合法聚合的梯段子项，须以唯一冻结父子身份及实际关系验证，不能泛化豁免；④ 截断 parser 抛出证据后，ChangeSet 未落盘，预算也只记预留值，需在异常边界保留已收到响应与有效用量并停止，不自动重试。
 
 冻结测试族覆盖不同 ID 命名／语言、显式与派生子项／洞口、重复或跨角色身份、错误父项／聚合／归属、公共 Generator 合同传递，以及公共 ChangeSet 的截断／无 choice／禁止输出／非 JSON／正常响应／缺失用量／耗尽预算。范围限于身份合同传递、名称适用性和失败证据，不删除 Type、不改用户布局或尺寸、不重写旧 IFC／运行／Prompt／Schema，不调用 Provider 或 Full Preflight。
+
+根因已核实：B 实际发送的技术身份表只有 doors／spaces／walls／windows 四组；楼梯父子和楼板洞口未列入，而下游按 Brief ID 和确定性派生 ID 严格查找。旧 v2 Prompt 有逐字使用技术 ID 的规则，语义 v2.2 仅保留技术身份输入而未保留完整指令。新增 `bim-json-generator.v2.3` 补回规则，旧版本字节及 registry 旧条目不改；不是通过取消身份检查来接受旧 B。
+
+已实施：`cross_storey_identity.py` 统一梯段及楼板洞口 ID 投影，补充到现有 entity_id_contract 的 slabs／floor_openings／stairs／stair_flights／roof；父项、子项和宿主单独列明，显式 ID 不改前后缀。沿用既有正常派生 ID；父项不含原前缀时，原代码会派生出同名子项，现改为独立子项 ID。跨角色和重复技术身份在投影时阻断，候选不能靠自己改名重新定义冻结身份。分包与几何预期调用同一派生函数；维持 explicit／derived 洞口绑定边界，未修改 IFC 检查器。
+
+名称修复补齐之前遗漏的父子路径：只有冻结记录提供的梯段身份、唯一实际 IfcRelAggregates、正确 IfcStair 父项和起始层归属同时成立，子梯段名称才允许包含目的层。错误父项／无聚合／重复聚合／未提供子项／错误归属继续拒绝。之前只测父项 ID 的名称豁免属于覆盖不足，本次补的是这个缺口，不声称此前已完整解决。
+
+异常边界已补：OpenAI-compatible adapter 在截断、无 choice 或禁止输出等解析拒绝时保留已收到的脱敏响应；ChangeSet 保存 provider-error、实际收到的 response 和可用文本／用量，再以 provider_failed 停止 scoped／staged 循环。携带完整 LiveProviderResult 的另一异常接口也覆盖。连接失败没有 response 时不造 response 文件；预算耗尽仍在 transport 前抛出原预算停止。异常中有效用量用于结算，缺失时仍保守计入原预留值，原 A/B 预算不回填、不重置。
+
+验证：首次导入名称拼写错误不计产品基线；修正后有效红结果21 failed／8 passed（`763e749e`）。随后更正夹具 bounds 字段为现有 x／y 合同，追加 scoped／staged 停止、连接失败和携带响应异常；后者先1 failed／12 passed，再修复。补充测试提交 `f73b7ed2`。聚焦29 passed；身份／分包／原门禁回归147 passed；Provider／预算／循环回归91 passed；最终受影响聚焦60 passed；公共 Generator、两策略、续跑、Gate/Audit 和 CLI／恢复回归67 passed。以上互有重叠，不累计为独立案例成功率，全部使用 fake／注入 Provider；涉及的实际 IFC 编译重读仍是离线验证。XML 为 `.tmp/ab-{boundary-green,identity-regression,failure-regression,boundary-final,public-final}-20260910.xml`；聚焦 compileall、新 Prompt registry 哈希及 diff 检查通过。未运行 Stage／Full Preflight 或新真实调用，旧 RUN-HOLD 继续生效。
+
+A 来源对照确认 Brief 逐字节复用、候选未复用、新调用只有 generate／audit，重启时只余2次预算。该安排验证了新门禁能拒绝另一候选，不是 Type 生成／自动改正已经修好的验证；下一次 A 真实尝试前仍需另行闭合这项行为和预算。B 首次只读探针漏调既有 wall／space binder，额外 missing-wall／space 诊断属于探针接入错误，原探针保留；按实际绑定步骤复查的 v2 记录确认旧 IFC 仍仅有2项 MISSING_STAIR_OPENING、2项 MISSING_STAIR_FLIGHT，没有被放行（`.tmp/ab-identity-readonly-diagnosis-v2-20260910.json`）。174份首次记录及335份续跑冻结文件无变化。
+
+B 四张实际 IFC 图片本轮重新查看：浅暖墙、深色框与蓝灰玻璃协调，门窗部件清楚，体量仍基础；原零净空缺陷按保留决定存在，不做美化性几何修改。原候选、人工验收及 Proof 状态不变。已知限制仍是：模型是否遵守新身份合同未经新 live 验证；多余 Type 图清理未实施；已丢失的第6次响应无法回填；这批离线修复不构成系统成功率提升。

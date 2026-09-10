@@ -179,6 +179,11 @@ def build_expected_facts(
         doors=doors,
         windows=windows,
     )
+    from .cross_storey_identity import cross_storey_entity_records
+    entity_id_contract.update(cross_storey_entity_records(slabs=slabs, stairs=stairs, roof=roof))
+    technical_ids = [record['entity_id'] for records in entity_id_contract.values() for record in records]
+    if len(technical_ids) != len(set(technical_ids)):
+        raise ExpectedFactsError('ENTITY_IDENTITY_AMBIGUOUS: technical IDs must have unique component roles.')
 
     source_paths = _source_paths(design_brief.get("fact_sources", []))
     payload: dict[str, Any] = {

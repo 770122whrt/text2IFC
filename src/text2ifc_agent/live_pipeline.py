@@ -558,7 +558,7 @@ def run_generator_stage(
     if new_semantics:
         renderer_inputs['IFC_AUTHORING_CONTRACT'] = build_authoring_contract()
     rendered = render_prompt(
-        template_id='bim-json-generator.v2.2' if new_semantics else GENERATOR_TEMPLATE_ID,
+        template_id='bim-json-generator.v2.3' if new_semantics else GENERATOR_TEMPLATE_ID,
         inputs=renderer_inputs,
     )
 
