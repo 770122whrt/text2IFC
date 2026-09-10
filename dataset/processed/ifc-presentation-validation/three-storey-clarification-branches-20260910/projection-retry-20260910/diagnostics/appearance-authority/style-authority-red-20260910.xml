@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="23" skipped="0" tests="33" time="34.389" timestamp="2026-09-10T16:43:49.115833+08:00" hostname="what-do-matter"><testcase classname="tests.agent.test_unrequested_appearance" name="test_public_gate_requires_request_authority[False-window-single]" time="1.699"><failure message="assert True is False">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-style-authority-red-20260910/test_public_gate_requires_requ0')
+template = 'window-single', explicit = False
+
+    @pytest.mark.parametrize('template', TEMPLATES)
+    @pytest.mark.parametrize('explicit', [False, True])
+    def test_public_gate_requires_request_authority(tmp_path, template, explicit):
+        candidate, brief, expected, filling = fixture(template, explicit)
+        _write(tmp_path/'generator/candidate.json', candidate)
+        _write(tmp_path/'design-brief.json', brief)
+        _write(tmp_path/'expected-facts.json', expected)
+        gate = run_candidate_gate_stage(case_dir=tmp_path, output_dir=tmp_path, case_id='style-authority')
+&gt;       assert gate['compile_reopen_success'] is explicit
+E       assert True is False
+
+tests\agent\test_unrequested_appearance.py:50: AssertionError</failure></testcase><testcase classname="tests.agent.test_unrequested_appearance" name="test_public_gate_requires_request_authority[False-window-double-vertical]" time="1.676"><failure message="assert True is False">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-style-authority-red-20260910/test_public_gate_requires_requ1')
+template = 'window-double-vertical', explicit = False
+
+    @pytest.mark.parametrize('template', TEMPLATES)
+    @pytest.mark.parametrize('explicit', [False, True])
+    def test_public_gate_requires_request_authority(tmp_path, template, explicit):
+        candidate, brief, expected, filling = fixture(template, explicit)
+        _write(tmp_path/'generator/candidate.json', candidate)
+        _write(tmp_path/'design-brief.json', brief)
+        _write(tmp_path/'expected-facts.json', expected)
+        gate = run_candidate_gate_stage(case_dir=tmp_path, output_dir=tmp_path, case_id='style-authority')
+&gt;       assert gate['compile_reopen_success'] is explicit
+E       assert True is False
+
+tests\agent\test_unrequested_appearance.py:50: AssertionError</failure></testcase><testcase classname="tests.agent.test_unrequested_appearance" name="test_public_gate_requires_request_authority[False-door-left]" time="1.564"><failure message="assert True is False">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-style-authority-red-20260910/test_public_gate_requires_requ2')
+template = 'door-left', explicit = False
+
+    @pytest.mark.parametrize('template', TEMPLATES)
+    @pytest.mark.parametrize('explicit', [False, True])
+    def test_public_gate_requires_request_authority(tmp_path, template, explicit):
+        candidate, brief, expected, filling = fixture(template, explicit)
+        _write(tmp_path/'generator/candidate.json', candidate)
+        _write(tmp_path/'design-brief.json', brief)
+        _write(tmp_path/'expected-facts.json', expected)
+        gate = run_candidate_gate_stage(case_dir=tmp_path, output_dir=tmp_path, case_id='style-authority')
+&gt;       assert gate['compile_reopen_success'] is explicit
+E       assert True is False
+
+tests\agent\test_unrequested_appearance.py:50: AssertionError</failure></testcase><testcase classname="tests.agent.test_unrequested_appearance" name="test_public_gate_requires_request_authority[False-door-right]" time="1.567"><failure message="assert True is False">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-style-authority-red-20260910/test_public_gate_requires_requ3')
+template = 'door-right', explicit = False
+
+    @pytest.mark.parametrize('template', TEMPLATES)
+    @pytest.mark.parametrize('explicit', [False, True])
+    def test_public_gate_requires_request_authority(tmp_path, template, explicit):
+        candidate, brief, expected, filling = fixture(template, explicit)
+        _write(tmp_path/'generator/candidate.json', candidate)
+        _write(tmp_path/'design-brief.json', brief)
+        _write(tmp_path/'expected-facts.json', expected)
+        gate = run_candidate_gate_stage(case_dir=tmp_path, output_dir=tmp_path, case_id='style-authority')
+&gt;       assert gate['compile_reopen_success'] is explicit
+E       assert True is False
+
+tests\agent\test_unrequested_appearance.py:50: AssertionError</failure></testcase><testcase classname="tests.agent.test_unrequested_appearance" name="test_public_gate_requires_request_authority[True-window-single]" time="1.711" /><testcase classname="tests.agent.test_unrequested_appearance" name="test_public_gate_requires_request_authority[True-window-double-vertical]" time="1.642" /><testcase classname="tests.agent.test_unrequested_appearance" name="test_public_gate_requires_request_authority[True-door-left]" time="1.624" /><testcase classname="tests.agent.test_unrequested_appearance" name="test_public_gate_requires_request_authority[True-door-right]" time="1.668" /><testcase classname="tests.agent.test_unrequested_appearance" name="test_candidate_source_label_cannot_authorize_override[user-IfcWall]" time="0.042"><failure message="assert False&#10; +  where False = any(&lt;generator object test_candidate_source_label_cannot_authorize_override.&lt;locals&gt;.&lt;genexpr&gt; at 0x000001A5B8553B90&gt;)">family = 'IfcWall', provenance = 'user'
+
+    @pytest.mark.parametrize('family', ['IfcWall', 'IfcBeam', 'IfcDoor', 'IfcWindow', 'IfcWindowStyle'])
+    @pytest.mark.parametrize('provenance', ['user', 'theme', 'template'])
+    def test_candidate_source_label_cannot_authorize_override(family, provenance):
+        e = {'id': 'opaque-style-target', 'ifc_class': family,
+             'appearance': {'color': [0, 0, 0], 'transparency': 1}, 'provenance': {'source': provenance}}
+        issues = unauthorized_candidate_semantics({'schema_version': 'bim-json/2.1', 'entities': [e]}, [])
+&gt;       assert any(i['code'] == 'UNREQUESTED_APPEARANCE' for i in issues)
+E       assert False
+E        +  where False = any(&lt;generator object test_candidate_source_label_cannot_authorize_override.&lt;locals&gt;.&lt;genexpr&gt; at 0x000001A5B8553B90&gt;)
+
+tests\agent\test_unrequested_appearance.py:62: AssertionError</failure></testcase><testcase classname="tests.agent.test_unrequested_appearance" name="test_candidate_source_label_cannot_authorize_override[user-IfcBeam]" time="0.041"><failure message="assert False&#10; +  where False = any(&lt;generator object test_candidate_source_label_cannot_authorize_override.&lt;locals&gt;.&lt;genexpr&gt; at 0x000001A5B8553C60&gt;)">family = 'IfcBeam', provenance = 'user'
+
+    @pytest.mark.parametrize('family', ['IfcWall', 'IfcBeam', 'IfcDoor', 'IfcWindow', 'IfcWindowStyle'])
+    @pytest.mark.parametrize('provenance', ['user', 'theme', 'template'])
+    def test_candidate_source_label_cannot_authorize_override(family, provenance):
+        e = {'id': 'opaque-style-target', 'ifc_class': family,
+             'appearance': {'color': [0, 0, 0], 'transparency': 1}, 'provenance': {'source': provenance}}
+        issues = unauthorized_candidate_semantics({'schema_version': 'bim-json/2.1', 'entities': [e]}, [])
+&gt;       assert any(i['code'] == 'UNREQUESTED_APPEARANCE' for i in issues)
+E       assert False
+E        +  where False = any(&lt;generator object test_candidate_source_label_cannot_authorize_override.&lt;locals&gt;.&lt;genexpr&gt; at 0x000001A5B8553C60&gt;)
+
+tests\agent\test_unrequested_appearance.py:62: AssertionError</failure></testcase><testcase classname="tests.agent.test_unrequested_appearance" name="test_candidate_source_label_cannot_authorize_override[user-IfcDoor]" time="0.039"><failure message="assert False&#10; +  where False = any(&lt;generator object test_candidate_source_label_cannot_authorize_override.&lt;locals&gt;.&lt;genexpr&gt; at 0x000001A5B8552B50&gt;)">family = 'IfcDoor', provenance = 'user'
+
+    @pytest.mark.parametrize('family', ['IfcWall', 'IfcBeam', 'IfcDoor', 'IfcWindow', 'IfcWindowStyle'])
+    @pytest.mark.parametrize('provenance', ['user', 'theme', 'template'])
+    def test_candidate_source_label_cannot_authorize_override(family, provenance):
+        e = {'id': 'opaque-style-target', 'ifc_class': family,
+             'appearance': {'color': [0, 0, 0], 'transparency': 1}, 'provenance': {'source': provenance}}
+        issues = unauthorized_candidate_semantics({'schema_version': 'bim-json/2.1', 'entities': [e]}, [])
+&gt;       assert any(i['code'] == 'UNREQUESTED_APPEARANCE' for i in issues)
+E       assert False
+E        +  where False = any(&lt;generator object test_candidate_source_label_cannot_authorize_override.&lt;locals&gt;.&lt;genexpr&gt; at 0x000001A5B8552B50&gt;)
+
+tests\agent\test_unrequested_appearance.py:62: AssertionError</failure></testcase><testcase classname="tests.agent.test_unrequested_appearance" name="test_candidate_source_label_cannot_authorize_override[user-IfcWindow]" time="0.074"><failure message="assert False&#10; +  where False = any(&lt;generator object test_candidate_source_label_cannot_authorize_override.&lt;locals&gt;.&lt;genexpr&gt; at 0x000001A5B8550110&gt;)">family = 'IfcWindow', provenance = 'user'
+
+    @pytest.mark.parametrize('family', ['IfcWall', 'IfcBeam', 'IfcDoor', 'IfcWindow', 'IfcWindowStyle'])
+    @pytest.mark.parametrize('provenance', ['user', 'theme', 'template'])
+    def test_candidate_source_label_cannot_authorize_override(family, provenance):
+        e = {'id': 'opaque-style-target', 'ifc_class': family,
+             'appearance': {'color': [0, 0, 0], 'transparency': 1}, 'provenance': {'source': provenance}}
+        issues = unauthorized_candidate_semantics({'schema_version': 'bim-json/2.1', 'entities': [e]}, [])
+&gt;       assert any(i['code'] == 'UNREQUESTED_APPEARANCE' for i in issues)
+E       assert False
+E        +  where False = any(&lt;generator object test_candidate_source_label_cannot_authorize_override.&lt;locals&gt;.&lt;genexpr&gt; at 0x000001A5B8550110&gt;)
+
+tests\agent\test_unrequested_appearance.py:62: AssertionError</failure></testcase><testcase classname="tests.agent.test_unrequested_appearance" name="test_candidate_source_label_cannot_authorize_override[user-IfcWindowStyle]" time="0.041"><failure message="assert False&#10; +  where False = any(&lt;generator object test_candidate_source_label_cannot_authorize_override.&lt;locals&gt;.&lt;genexpr&gt; at 0x000001A5B3517ED0&gt;)">family = 'IfcWindowStyle', provenance = 'user'
+
+    @pytest.mark.parametrize('family', ['IfcWall', 'IfcBeam', 'IfcDoor', 'IfcWindow', 'IfcWindowStyle'])
+    @pytest.mark.parametrize('provenance', ['user', 'theme', 'template'])
+    def test_candidate_source_label_cannot_authorize_override(family, provenance):
+        e = {'id': 'opaque-style-target', 'ifc_class': family,
+             'appearance': {'color': [0, 0, 0], 'transparency': 1}, 'provenance': {'source': provenance}}
+        issues = unauthorized_candidate_semantics({'schema_version': 'bim-json/2.1', 'entities': [e]}, [])
+&gt;       assert any(i['code'] == 'UNREQUESTED_APPEARANCE' for i in issues)
+E       assert False
+E        +  where False = any(&lt;generator object test_candidate_source_label_cannot_authorize_override.&lt;locals&gt;.&lt;genexpr&gt; at 0x000001A5B3517ED0&gt;)
+
+tests\agent\test_unrequested_appearance.py:62: AssertionError</failure></testcase><testcase classname="tests.agent.test_unrequested_appearance" name="test_candidate_source_label_cannot_authorize_override[theme-IfcWall]" time="0.041"><failure message="assert False&#10; +  where False = any(&lt;generator object test_candidate_source_label_cannot_authorize_override.&lt;locals&gt;.&lt;genexpr&gt; at 0x000001A5B3514790&gt;)">family = 'IfcWall', provenance = 'theme'
+
+    @pytest.mark.parametrize('family', ['IfcWall', 'IfcBeam', 'IfcDoor', 'IfcWindow', 'IfcWindowStyle'])
+    @pytest.mark.parametrize('provenance', ['user', 'theme', 'template'])
+    def test_candidate_source_label_cannot_authorize_override(family, provenance):
+        e = {'id': 'opaque-style-target', 'ifc_class': family,
+             'appearance': {'color': [0, 0, 0], 'transparency': 1}, 'provenance': {'source': provenance}}
+        issues = unauthorized_candidate_semantics({'schema_version': 'bim-json/2.1', 'entities': [e]}, [])
+&gt;       assert any(i['code'] == 'UNREQUESTED_APPEARANCE' for i in issues)
+E       assert False
+E        +  where False = any(&lt;generator object test_candidate_source_label_cannot_authorize_override.&lt;locals&gt;.&lt;genexpr&gt; at 0x000001A5B3514790&gt;)
+
+tests\agent\test_unrequested_appearance.py:62: AssertionError</failure></testcase><testcase classname="tests.agent.test_unrequested_appearance" name="test_candidate_source_label_cannot_authorize_override[theme-IfcBeam]" time="0.070"><failure message="assert False&#10; +  where False = any(&lt;generator object test_candidate_source_label_cannot_authorize_override.&lt;locals&gt;.&lt;genexpr&gt; at 0x000001A5B3514EE0&gt;)">family = 'IfcBeam', provenance = 'theme'
+
+    @pytest.mark.parametrize('family', ['IfcWall', 'IfcBeam', 'IfcDoor', 'IfcWindow', 'IfcWindowStyle'])
+    @pytest.mark.parametrize('provenance', ['user', 'theme', 'template'])
+    def test_candidate_source_label_cannot_authorize_override(family, provenance):
+        e = {'id': 'opaque-style-target', 'ifc_class': family,
+             'appearance': {'color': [0, 0, 0], 'transparency': 1}, 'provenance': {'source': provenance}}
+        issues = unauthorized_candidate_semantics({'schema_version': 'bim-json/2.1', 'entities': [e]}, [])
+&gt;       assert any(i['code'] == 'UNREQUESTED_APPEARANCE' for i in issues)
+E       assert False
+E        +  where False = any(&lt;generator object test_candidate_source_label_cannot_authorize_override.&lt;locals&gt;.&lt;genexpr&gt; at 0x000001A5B3514EE0&gt;)
+
+tests\agent\test_unrequested_appearance.py:62: AssertionError</failure></testcase><testcase classname="tests.agent.test_unrequested_appearance" name="test_candidate_source_label_cannot_authorize_override[theme-IfcDoor]" time="0.041"><failure message="assert False&#10; +  where False = any(&lt;generator object test_candidate_source_label_cannot_authorize_override.&lt;locals&gt;.&lt;genexpr&gt; at 0x000001A5B3514380&gt;)">family = 'IfcDoor', provenance = 'theme'
+
+    @pytest.mark.parametrize('family', ['IfcWall', 'IfcBeam', 'IfcDoor', 'IfcWindow', 'IfcWindowStyle'])
+    @pytest.mark.parametrize('provenance', ['user', 'theme', 'template'])
+    def test_candidate_source_label_cannot_authorize_override(family, provenance):
+        e = {'id': 'opaque-style-target', 'ifc_class': family,
+             'appearance': {'color': [0, 0, 0], 'transparency': 1}, 'provenance': {'source': provenance}}
+        issues = unauthorized_candidate_semantics({'schema_version': 'bim-json/2.1', 'entities': [e]}, [])
+&gt;       assert any(i['code'] == 'UNREQUESTED_APPEARANCE' for i in issues)
+E       assert False
+E        +  where False = any(&lt;generator object test_candidate_source_label_cannot_authorize_override.&lt;locals&gt;.&lt;genexpr&gt; at 0x000001A5B3514380&gt;)
+
+tests\agent\test_unrequested_appearance.py:62: AssertionError</failure></testcase><testcase classname="tests.agent.test_unrequested_appearance" name="test_candidate_source_label_cannot_authorize_override[theme-IfcWindow]" time="0.043"><failure message="assert False&#10; +  where False = any(&lt;generator object test_candidate_source_label_cannot_authorize_override.&lt;locals&gt;.&lt;genexpr&gt; at 0x000001A5B3515B10&gt;)">family = 'IfcWindow', provenance = 'theme'
+
+    @pytest.mark.parametrize('family', ['IfcWall', 'IfcBeam', 'IfcDoor', 'IfcWindow', 'IfcWindowStyle'])
+    @pytest.mark.parametrize('provenance', ['user', 'theme', 'template'])
+    def test_candidate_source_label_cannot_authorize_override(family, provenance):
+        e = {'id': 'opaque-style-target', 'ifc_class': family,
+             'appearance': {'color': [0, 0, 0], 'transparency': 1}, 'provenance': {'source': provenance}}
+        issues = unauthorized_candidate_semantics({'schema_version': 'bim-json/2.1', 'entities': [e]}, [])
+&gt;       assert any(i['code'] == 'UNREQUESTED_APPEARANCE' for i in issues)
+E       assert False
+E        +  where False = any(&lt;generator object test_candidate_source_label_cannot_authorize_override.&lt;locals&gt;.&lt;genexpr&gt; at 0x000001A5B3515B10&gt;)
+
+tests\agent\test_unrequested_appearance.py:62: AssertionError</failure></testcase><testcase classname="tests.agent.test_unrequested_appearance" name="test_candidate_source_label_cannot_authorize_override[theme-IfcWindowStyle]" time="0.042"><failure message="assert False&#10; +  where False = any(&lt;generator object test_candidate_source_label_cannot_authorize_override.&lt;locals&gt;.&lt;genexpr&gt; at 0x000001A5B3516740&gt;)">family = 'IfcWindowStyle', provenance = 'theme'
+
+    @pytest.mark.parametrize('family', ['IfcWall', 'IfcBeam', 'IfcDoor', 'IfcWindow', 'IfcWindowStyle'])
+    @pytest.mark.parametrize('provenance', ['user', 'theme', 'template'])
+    def test_candidate_source_label_cannot_authorize_override(family, provenance):
+        e = {'id': 'opaque-style-target', 'ifc_class': family,
+             'appearance': {'color': [0, 0, 0], 'transparency': 1}, 'provenance': {'source': provenance}}
+        issues = unauthorized_candidate_semantics({'schema_version': 'bim-json/2.1', 'entities': [e]}, [])
+&gt;       assert any(i['code'] == 'UNREQUESTED_APPEARANCE' for i in issues)
+E       assert False
+E        +  where False = any(&lt;generator object test_candidate_source_label_cannot_authorize_override.&lt;locals&gt;.&lt;genexpr&gt; at 0x000001A5B3516740&gt;)
+
+tests\agent\test_unrequested_appearance.py:62: AssertionError</failure></testcase><testcase classname="tests.agent.test_unrequested_appearance" name="test_candidate_source_label_cannot_authorize_override[template-IfcWall]" time="0.042"><failure message="assert False&#10; +  where False = any(&lt;generator object test_candidate_source_label_cannot_authorize_override.&lt;locals&gt;.&lt;genexpr&gt; at 0x000001A5B35168E0&gt;)">family = 'IfcWall', provenance = 'template'
+
+    @pytest.mark.parametrize('family', ['IfcWall', 'IfcBeam', 'IfcDoor', 'IfcWindow', 'IfcWindowStyle'])
+    @pytest.mark.parametrize('provenance', ['user', 'theme', 'template'])
+    def test_candidate_source_label_cannot_authorize_override(family, provenance):
+        e = {'id': 'opaque-style-target', 'ifc_class': family,
+             'appearance': {'color': [0, 0, 0], 'transparency': 1}, 'provenance': {'source': provenance}}
+        issues = unauthorized_candidate_semantics({'schema_version': 'bim-json/2.1', 'entities': [e]}, [])
+&gt;       assert any(i['code'] == 'UNREQUESTED_APPEARANCE' for i in issues)
+E       assert False
+E        +  where False = any(&lt;generator object test_candidate_source_label_cannot_authorize_override.&lt;locals&gt;.&lt;genexpr&gt; at 0x000001A5B35168E0&gt;)
+
+tests\agent\test_unrequested_appearance.py:62: AssertionError</failure></testcase><testcase classname="tests.agent.test_unrequested_appearance" name="test_candidate_source_label_cannot_authorize_override[template-IfcBeam]" time="0.042"><failure message="assert False&#10; +  where False = any(&lt;generator object test_candidate_source_label_cannot_authorize_override.&lt;locals&gt;.&lt;genexpr&gt; at 0x000001A5B3516CF0&gt;)">family = 'IfcBeam', provenance = 'template'
+
+    @pytest.mark.parametrize('family', ['IfcWall', 'IfcBeam', 'IfcDoor', 'IfcWindow', 'IfcWindowStyle'])
+    @pytest.mark.parametrize('provenance', ['user', 'theme', 'template'])
+    def test_candidate_source_label_cannot_authorize_override(family, provenance):
+        e = {'id': 'opaque-style-target', 'ifc_class': family,
+             'appearance': {'color': [0, 0, 0], 'transparency': 1}, 'provenance': {'source': provenance}}
+        issues = unauthorized_candidate_semantics({'schema_version': 'bim-json/2.1', 'entities': [e]}, [])
+&gt;       assert any(i['code'] == 'UNREQUESTED_APPEARANCE' for i in issues)
+E       assert False
+E        +  where False = any(&lt;generator object test_candidate_source_label_cannot_authorize_override.&lt;locals&gt;.&lt;genexpr&gt; at 0x000001A5B3516CF0&gt;)
+
+tests\agent\test_unrequested_appearance.py:62: AssertionError</failure></testcase><testcase classname="tests.agent.test_unrequested_appearance" name="test_candidate_source_label_cannot_authorize_override[template-IfcDoor]" time="0.041"><failure message="assert False&#10; +  where False = any(&lt;generator object test_candidate_source_label_cannot_authorize_override.&lt;locals&gt;.&lt;genexpr&gt; at 0x000001A58A821080&gt;)">family = 'IfcDoor', provenance = 'template'
+
+    @pytest.mark.parametrize('family', ['IfcWall', 'IfcBeam', 'IfcDoor', 'IfcWindow', 'IfcWindowStyle'])
+    @pytest.mark.parametrize('provenance', ['user', 'theme', 'template'])
+    def test_candidate_source_label_cannot_authorize_override(family, provenance):
+        e = {'id': 'opaque-style-target', 'ifc_class': family,
+             'appearance': {'color': [0, 0, 0], 'transparency': 1}, 'provenance': {'source': provenance}}
+        issues = unauthorized_candidate_semantics({'schema_version': 'bim-json/2.1', 'entities': [e]}, [])
+&gt;       assert any(i['code'] == 'UNREQUESTED_APPEARANCE' for i in issues)
+E       assert False
+E        +  where False = any(&lt;generator object test_candidate_source_label_cannot_authorize_override.&lt;locals&gt;.&lt;genexpr&gt; at 0x000001A58A821080&gt;)
+
+tests\agent\test_unrequested_appearance.py:62: AssertionError</failure></testcase><testcase classname="tests.agent.test_unrequested_appearance" name="test_candidate_source_label_cannot_authorize_override[template-IfcWindow]" time="0.071"><failure message="assert False&#10; +  where False = any(&lt;generator object test_candidate_source_label_cannot_authorize_override.&lt;locals&gt;.&lt;genexpr&gt; at 0x000001A58A821560&gt;)">family = 'IfcWindow', provenance = 'template'
+
+    @pytest.mark.parametrize('family', ['IfcWall', 'IfcBeam', 'IfcDoor', 'IfcWindow', 'IfcWindowStyle'])
+    @pytest.mark.parametrize('provenance', ['user', 'theme', 'template'])
+    def test_candidate_source_label_cannot_authorize_override(family, provenance):
+        e = {'id': 'opaque-style-target', 'ifc_class': family,
+             'appearance': {'color': [0, 0, 0], 'transparency': 1}, 'provenance': {'source': provenance}}
+        issues = unauthorized_candidate_semantics({'schema_version': 'bim-json/2.1', 'entities': [e]}, [])
+&gt;       assert any(i['code'] == 'UNREQUESTED_APPEARANCE' for i in issues)
+E       assert False
+E        +  where False = any(&lt;generator object test_candidate_source_label_cannot_authorize_override.&lt;locals&gt;.&lt;genexpr&gt; at 0x000001A58A821560&gt;)
+
+tests\agent\test_unrequested_appearance.py:62: AssertionError</failure></testcase><testcase classname="tests.agent.test_unrequested_appearance" name="test_candidate_source_label_cannot_authorize_override[template-IfcWindowStyle]" time="0.042"><failure message="assert False&#10; +  where False = any(&lt;generator object test_candidate_source_label_cannot_authorize_override.&lt;locals&gt;.&lt;genexpr&gt; at 0x000001A58A821560&gt;)">family = 'IfcWindowStyle', provenance = 'template'
+
+    @pytest.mark.parametrize('family', ['IfcWall', 'IfcBeam', 'IfcDoor', 'IfcWindow', 'IfcWindowStyle'])
+    @pytest.mark.parametrize('provenance', ['user', 'theme', 'template'])
+    def test_candidate_source_label_cannot_authorize_override(family, provenance):
+        e = {'id': 'opaque-style-target', 'ifc_class': family,
+             'appearance': {'color': [0, 0, 0], 'transparency': 1}, 'provenance': {'source': provenance}}
+        issues = unauthorized_candidate_semantics({'schema_version': 'bim-json/2.1', 'entities': [e]}, [])
+&gt;       assert any(i['code'] == 'UNREQUESTED_APPEARANCE' for i in issues)
+E       assert False
+E        +  where False = any(&lt;generator object test_candidate_source_label_cannot_authorize_override.&lt;locals&gt;.&lt;genexpr&gt; at 0x000001A58A821560&gt;)
+
+tests\agent\test_unrequested_appearance.py:62: AssertionError</failure></testcase><testcase classname="tests.agent.test_unrequested_appearance" name="test_scoped_unset_restores_part_styles_without_geometry_change[window-single]" time="1.578"><failure message="assert not True">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-style-authority-red-20260910/test_scoped_unset_restores_par0')
+template = 'window-single'
+
+    @pytest.mark.parametrize('template', TEMPLATES)
+    def test_scoped_unset_restores_part_styles_without_geometry_change(tmp_path, template):
+        candidate, brief, expected, filling = fixture(template)
+        for name, value in [('generator/candidate', candidate), ('design-brief', brief), ('expected-facts', expected)]:
+            _write(tmp_path/(name+'.json'), value)
+        before = copy.deepcopy(candidate)
+        gate = run_candidate_gate_stage(case_dir=tmp_path, output_dir=tmp_path, case_id='style-cleanup')
+&gt;       assert not gate['compile_reopen_success']
+E       assert not True
+
+tests\agent\test_unrequested_appearance.py:86: AssertionError</failure></testcase><testcase classname="tests.agent.test_unrequested_appearance" name="test_scoped_unset_restores_part_styles_without_geometry_change[window-double-vertical]" time="1.676"><failure message="assert not True">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-style-authority-red-20260910/test_scoped_unset_restores_par1')
+template = 'window-double-vertical'
+
+    @pytest.mark.parametrize('template', TEMPLATES)
+    def test_scoped_unset_restores_part_styles_without_geometry_change(tmp_path, template):
+        candidate, brief, expected, filling = fixture(template)
+        for name, value in [('generator/candidate', candidate), ('design-brief', brief), ('expected-facts', expected)]:
+            _write(tmp_path/(name+'.json'), value)
+        before = copy.deepcopy(candidate)
+        gate = run_candidate_gate_stage(case_dir=tmp_path, output_dir=tmp_path, case_id='style-cleanup')
+&gt;       assert not gate['compile_reopen_success']
+E       assert not True
+
+tests\agent\test_unrequested_appearance.py:86: AssertionError</failure></testcase><testcase classname="tests.agent.test_unrequested_appearance" name="test_scoped_unset_restores_part_styles_without_geometry_change[door-left]" time="1.626"><failure message="assert not True">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-style-authority-red-20260910/test_scoped_unset_restores_par2')
+template = 'door-left'
+
+    @pytest.mark.parametrize('template', TEMPLATES)
+    def test_scoped_unset_restores_part_styles_without_geometry_change(tmp_path, template):
+        candidate, brief, expected, filling = fixture(template)
+        for name, value in [('generator/candidate', candidate), ('design-brief', brief), ('expected-facts', expected)]:
+            _write(tmp_path/(name+'.json'), value)
+        before = copy.deepcopy(candidate)
+        gate = run_candidate_gate_stage(case_dir=tmp_path, output_dir=tmp_path, case_id='style-cleanup')
+&gt;       assert not gate['compile_reopen_success']
+E       assert not True
+
+tests\agent\test_unrequested_appearance.py:86: AssertionError</failure></testcase><testcase classname="tests.agent.test_unrequested_appearance" name="test_scoped_unset_restores_part_styles_without_geometry_change[door-right]" time="1.620"><failure message="assert not True">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-style-authority-red-20260910/test_scoped_unset_restores_par3')
+template = 'door-right'
+
+    @pytest.mark.parametrize('template', TEMPLATES)
+    def test_scoped_unset_restores_part_styles_without_geometry_change(tmp_path, template):
+        candidate, brief, expected, filling = fixture(template)
+        for name, value in [('generator/candidate', candidate), ('design-brief', brief), ('expected-facts', expected)]:
+            _write(tmp_path/(name+'.json'), value)
+        before = copy.deepcopy(candidate)
+        gate = run_candidate_gate_stage(case_dir=tmp_path, output_dir=tmp_path, case_id='style-cleanup')
+&gt;       assert not gate['compile_reopen_success']
+E       assert not True
+
+tests\agent\test_unrequested_appearance.py:86: AssertionError</failure></testcase><testcase classname="tests.agent.test_unrequested_appearance" name="test_cleanup_cannot_expand_scope_or_encode_absence_as_a_value[geometry]" time="2.025" /><testcase classname="tests.agent.test_unrequested_appearance" name="test_cleanup_cannot_expand_scope_or_encode_absence_as_a_value[identity]" time="2.049" /><testcase classname="tests.agent.test_unrequested_appearance" name="test_cleanup_cannot_expand_scope_or_encode_absence_as_a_value[unknown_field]" time="2.078" /><testcase classname="tests.agent.test_unrequested_appearance" name="test_cleanup_cannot_expand_scope_or_encode_absence_as_a_value[whole_entity]" time="2.016" /><testcase classname="tests.agent.test_unrequested_appearance" name="test_cleanup_cannot_expand_scope_or_encode_absence_as_a_value[null]" time="2.031" /><testcase classname="tests.agent.test_unrequested_appearance" name="test_cleanup_cannot_expand_scope_or_encode_absence_as_a_value[empty]" time="1.959" /></testsuite></testsuites>

@@ -1,0 +1,1835 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="29" skipped="0" tests="60" time="48.903" timestamp="2026-09-10T16:47:16.997087+08:00" hostname="what-do-matter"><testcase classname="tests.agent.test_unrequested_appearance" name="test_public_gate_requires_request_authority[False-window-single]" time="0.195" /><testcase classname="tests.agent.test_unrequested_appearance" name="test_public_gate_requires_request_authority[False-window-double-vertical]" time="0.120" /><testcase classname="tests.agent.test_unrequested_appearance" name="test_public_gate_requires_request_authority[False-door-left]" time="0.091" /><testcase classname="tests.agent.test_unrequested_appearance" name="test_public_gate_requires_request_authority[False-door-right]" time="0.099" /><testcase classname="tests.agent.test_unrequested_appearance" name="test_public_gate_requires_request_authority[True-window-single]" time="2.805" /><testcase classname="tests.agent.test_unrequested_appearance" name="test_public_gate_requires_request_authority[True-window-double-vertical]" time="3.396" /><testcase classname="tests.agent.test_unrequested_appearance" name="test_public_gate_requires_request_authority[True-door-left]" time="3.617" /><testcase classname="tests.agent.test_unrequested_appearance" name="test_public_gate_requires_request_authority[True-door-right]" time="3.673" /><testcase classname="tests.agent.test_unrequested_appearance" name="test_candidate_source_label_cannot_authorize_override[user-IfcWall]" time="0.076" /><testcase classname="tests.agent.test_unrequested_appearance" name="test_candidate_source_label_cannot_authorize_override[user-IfcBeam]" time="0.111" /><testcase classname="tests.agent.test_unrequested_appearance" name="test_candidate_source_label_cannot_authorize_override[user-IfcDoor]" time="0.080" /><testcase classname="tests.agent.test_unrequested_appearance" name="test_candidate_source_label_cannot_authorize_override[user-IfcWindow]" time="0.085" /><testcase classname="tests.agent.test_unrequested_appearance" name="test_candidate_source_label_cannot_authorize_override[user-IfcWindowStyle]" time="0.137" /><testcase classname="tests.agent.test_unrequested_appearance" name="test_candidate_source_label_cannot_authorize_override[theme-IfcWall]" time="0.100" /><testcase classname="tests.agent.test_unrequested_appearance" name="test_candidate_source_label_cannot_authorize_override[theme-IfcBeam]" time="0.075" /><testcase classname="tests.agent.test_unrequested_appearance" name="test_candidate_source_label_cannot_authorize_override[theme-IfcDoor]" time="0.122" /><testcase classname="tests.agent.test_unrequested_appearance" name="test_candidate_source_label_cannot_authorize_override[theme-IfcWindow]" time="0.102" /><testcase classname="tests.agent.test_unrequested_appearance" name="test_candidate_source_label_cannot_authorize_override[theme-IfcWindowStyle]" time="0.106" /><testcase classname="tests.agent.test_unrequested_appearance" name="test_candidate_source_label_cannot_authorize_override[template-IfcWall]" time="0.090" /><testcase classname="tests.agent.test_unrequested_appearance" name="test_candidate_source_label_cannot_authorize_override[template-IfcBeam]" time="0.129" /><testcase classname="tests.agent.test_unrequested_appearance" name="test_candidate_source_label_cannot_authorize_override[template-IfcDoor]" time="0.093" /><testcase classname="tests.agent.test_unrequested_appearance" name="test_candidate_source_label_cannot_authorize_override[template-IfcWindow]" time="0.089" /><testcase classname="tests.agent.test_unrequested_appearance" name="test_candidate_source_label_cannot_authorize_override[template-IfcWindowStyle]" time="0.127" /><testcase classname="tests.agent.test_unrequested_appearance" name="test_scoped_unset_restores_part_styles_without_geometry_change[window-single]" time="1.050"><failure message="text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for bim-json-generator.v2.4: sha256:393cb7462725de1f1b8dacf493615a117e7a7fc6b03ea4935ba0574f72c3762f">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-style-authority-green-20260910/test_scoped_unset_restores_par0')
+template = 'window-single'
+
+    @pytest.mark.parametrize('template', TEMPLATES)
+    def test_scoped_unset_restores_part_styles_without_geometry_change(tmp_path, template):
+        candidate, brief, expected, filling = fixture(template)
+        for name, value in [('generator/candidate', candidate), ('design-brief', brief), ('expected-facts', expected)]:
+            _write(tmp_path/(name+'.json'), value)
+        before = copy.deepcopy(candidate)
+        gate = run_candidate_gate_stage(case_dir=tmp_path, output_dir=tmp_path, case_id='style-cleanup')
+        assert not gate['compile_reopen_success']
+        provider = RemovalProvider(tmp_path/'round', candidate, {filling['id']: {
+            'op': 'update_entity', 'remove_paths': ['/appearance']}})
+&gt;       result = run_scoped_changeset_round(provider=provider, output_dir=tmp_path/'round', case_id='style-cleanup',
+            round_number=1, user_request='使用协调主题和默认部件分色。', conversation=[],
+            design_brief=brief, expected_facts=expected, candidate=candidate,
+            issues=normalize_gate_sidecars(tmp_path), max_attempts=1)
+
+tests\agent\test_unrequested_appearance.py:89: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\text2ifc_agent\scoped_loop.py:156: in run_scoped_changeset_round
+    stage = run_changeset_stage(
+src\text2ifc_agent\changeset_stage.py:97: in run_changeset_stage
+    rendered = render_prompt(template_id=template_id, inputs=renderer_inputs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\text2ifc_agent\prompt_registry.py:79: in render_prompt
+    registry = load_prompt_registry(registry_path)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+registry_path = WindowsPath('E:/code for project/bimnet/prompts/agent/registry.json')
+
+    def load_prompt_registry(
+        registry_path: Path | str = DEFAULT_REGISTRY_PATH,
+    ) -&gt; dict[str, dict[str, Any]]:
+        """Load templates keyed by ID and verify their content hashes."""
+        path = Path(registry_path)
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        templates = payload.get("templates")
+        if not isinstance(templates, list):
+            raise PromptRegistryError("prompt registry templates must be a list")
+    
+        registry: dict[str, dict[str, Any]] = {}
+        for raw_template in templates:
+            if not isinstance(raw_template, dict):
+                raise PromptRegistryError("prompt registry template must be an object")
+            missing = [field for field in REQUIRED_TEMPLATE_FIELDS if field not in raw_template]
+            if missing:
+                raise PromptRegistryError(
+                    "prompt template missing required fields: " + ", ".join(missing)
+                )
+            template = dict(raw_template)
+            template_id = str(template["template_id"])
+            if template_id in registry:
+                raise PromptRegistryError(f"duplicate prompt template_id: {template_id}")
+            template_path = _project_path(str(template["path"]))
+            actual_hash = _template_sha256(template_path)
+            if template["sha256"] != actual_hash:
+&gt;               raise PromptRegistryError(
+                    f"prompt template hash mismatch for {template_id}: {actual_hash}"
+                )
+E               text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for bim-json-generator.v2.4: sha256:393cb7462725de1f1b8dacf493615a117e7a7fc6b03ea4935ba0574f72c3762f
+
+src\text2ifc_agent\prompt_registry.py:65: PromptRegistryError</failure></testcase><testcase classname="tests.agent.test_unrequested_appearance" name="test_scoped_unset_restores_part_styles_without_geometry_change[window-double-vertical]" time="1.031"><failure message="text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for bim-json-generator.v2.4: sha256:393cb7462725de1f1b8dacf493615a117e7a7fc6b03ea4935ba0574f72c3762f">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-style-authority-green-20260910/test_scoped_unset_restores_par1')
+template = 'window-double-vertical'
+
+    @pytest.mark.parametrize('template', TEMPLATES)
+    def test_scoped_unset_restores_part_styles_without_geometry_change(tmp_path, template):
+        candidate, brief, expected, filling = fixture(template)
+        for name, value in [('generator/candidate', candidate), ('design-brief', brief), ('expected-facts', expected)]:
+            _write(tmp_path/(name+'.json'), value)
+        before = copy.deepcopy(candidate)
+        gate = run_candidate_gate_stage(case_dir=tmp_path, output_dir=tmp_path, case_id='style-cleanup')
+        assert not gate['compile_reopen_success']
+        provider = RemovalProvider(tmp_path/'round', candidate, {filling['id']: {
+            'op': 'update_entity', 'remove_paths': ['/appearance']}})
+&gt;       result = run_scoped_changeset_round(provider=provider, output_dir=tmp_path/'round', case_id='style-cleanup',
+            round_number=1, user_request='使用协调主题和默认部件分色。', conversation=[],
+            design_brief=brief, expected_facts=expected, candidate=candidate,
+            issues=normalize_gate_sidecars(tmp_path), max_attempts=1)
+
+tests\agent\test_unrequested_appearance.py:89: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\text2ifc_agent\scoped_loop.py:156: in run_scoped_changeset_round
+    stage = run_changeset_stage(
+src\text2ifc_agent\changeset_stage.py:97: in run_changeset_stage
+    rendered = render_prompt(template_id=template_id, inputs=renderer_inputs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\text2ifc_agent\prompt_registry.py:79: in render_prompt
+    registry = load_prompt_registry(registry_path)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+registry_path = WindowsPath('E:/code for project/bimnet/prompts/agent/registry.json')
+
+    def load_prompt_registry(
+        registry_path: Path | str = DEFAULT_REGISTRY_PATH,
+    ) -&gt; dict[str, dict[str, Any]]:
+        """Load templates keyed by ID and verify their content hashes."""
+        path = Path(registry_path)
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        templates = payload.get("templates")
+        if not isinstance(templates, list):
+            raise PromptRegistryError("prompt registry templates must be a list")
+    
+        registry: dict[str, dict[str, Any]] = {}
+        for raw_template in templates:
+            if not isinstance(raw_template, dict):
+                raise PromptRegistryError("prompt registry template must be an object")
+            missing = [field for field in REQUIRED_TEMPLATE_FIELDS if field not in raw_template]
+            if missing:
+                raise PromptRegistryError(
+                    "prompt template missing required fields: " + ", ".join(missing)
+                )
+            template = dict(raw_template)
+            template_id = str(template["template_id"])
+            if template_id in registry:
+                raise PromptRegistryError(f"duplicate prompt template_id: {template_id}")
+            template_path = _project_path(str(template["path"]))
+            actual_hash = _template_sha256(template_path)
+            if template["sha256"] != actual_hash:
+&gt;               raise PromptRegistryError(
+                    f"prompt template hash mismatch for {template_id}: {actual_hash}"
+                )
+E               text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for bim-json-generator.v2.4: sha256:393cb7462725de1f1b8dacf493615a117e7a7fc6b03ea4935ba0574f72c3762f
+
+src\text2ifc_agent\prompt_registry.py:65: PromptRegistryError</failure></testcase><testcase classname="tests.agent.test_unrequested_appearance" name="test_scoped_unset_restores_part_styles_without_geometry_change[door-left]" time="0.953"><failure message="text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for bim-json-generator.v2.4: sha256:393cb7462725de1f1b8dacf493615a117e7a7fc6b03ea4935ba0574f72c3762f">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-style-authority-green-20260910/test_scoped_unset_restores_par2')
+template = 'door-left'
+
+    @pytest.mark.parametrize('template', TEMPLATES)
+    def test_scoped_unset_restores_part_styles_without_geometry_change(tmp_path, template):
+        candidate, brief, expected, filling = fixture(template)
+        for name, value in [('generator/candidate', candidate), ('design-brief', brief), ('expected-facts', expected)]:
+            _write(tmp_path/(name+'.json'), value)
+        before = copy.deepcopy(candidate)
+        gate = run_candidate_gate_stage(case_dir=tmp_path, output_dir=tmp_path, case_id='style-cleanup')
+        assert not gate['compile_reopen_success']
+        provider = RemovalProvider(tmp_path/'round', candidate, {filling['id']: {
+            'op': 'update_entity', 'remove_paths': ['/appearance']}})
+&gt;       result = run_scoped_changeset_round(provider=provider, output_dir=tmp_path/'round', case_id='style-cleanup',
+            round_number=1, user_request='使用协调主题和默认部件分色。', conversation=[],
+            design_brief=brief, expected_facts=expected, candidate=candidate,
+            issues=normalize_gate_sidecars(tmp_path), max_attempts=1)
+
+tests\agent\test_unrequested_appearance.py:89: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\text2ifc_agent\scoped_loop.py:156: in run_scoped_changeset_round
+    stage = run_changeset_stage(
+src\text2ifc_agent\changeset_stage.py:97: in run_changeset_stage
+    rendered = render_prompt(template_id=template_id, inputs=renderer_inputs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\text2ifc_agent\prompt_registry.py:79: in render_prompt
+    registry = load_prompt_registry(registry_path)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+registry_path = WindowsPath('E:/code for project/bimnet/prompts/agent/registry.json')
+
+    def load_prompt_registry(
+        registry_path: Path | str = DEFAULT_REGISTRY_PATH,
+    ) -&gt; dict[str, dict[str, Any]]:
+        """Load templates keyed by ID and verify their content hashes."""
+        path = Path(registry_path)
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        templates = payload.get("templates")
+        if not isinstance(templates, list):
+            raise PromptRegistryError("prompt registry templates must be a list")
+    
+        registry: dict[str, dict[str, Any]] = {}
+        for raw_template in templates:
+            if not isinstance(raw_template, dict):
+                raise PromptRegistryError("prompt registry template must be an object")
+            missing = [field for field in REQUIRED_TEMPLATE_FIELDS if field not in raw_template]
+            if missing:
+                raise PromptRegistryError(
+                    "prompt template missing required fields: " + ", ".join(missing)
+                )
+            template = dict(raw_template)
+            template_id = str(template["template_id"])
+            if template_id in registry:
+                raise PromptRegistryError(f"duplicate prompt template_id: {template_id}")
+            template_path = _project_path(str(template["path"]))
+            actual_hash = _template_sha256(template_path)
+            if template["sha256"] != actual_hash:
+&gt;               raise PromptRegistryError(
+                    f"prompt template hash mismatch for {template_id}: {actual_hash}"
+                )
+E               text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for bim-json-generator.v2.4: sha256:393cb7462725de1f1b8dacf493615a117e7a7fc6b03ea4935ba0574f72c3762f
+
+src\text2ifc_agent\prompt_registry.py:65: PromptRegistryError</failure></testcase><testcase classname="tests.agent.test_unrequested_appearance" name="test_scoped_unset_restores_part_styles_without_geometry_change[door-right]" time="0.976"><failure message="text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for bim-json-generator.v2.4: sha256:393cb7462725de1f1b8dacf493615a117e7a7fc6b03ea4935ba0574f72c3762f">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-style-authority-green-20260910/test_scoped_unset_restores_par3')
+template = 'door-right'
+
+    @pytest.mark.parametrize('template', TEMPLATES)
+    def test_scoped_unset_restores_part_styles_without_geometry_change(tmp_path, template):
+        candidate, brief, expected, filling = fixture(template)
+        for name, value in [('generator/candidate', candidate), ('design-brief', brief), ('expected-facts', expected)]:
+            _write(tmp_path/(name+'.json'), value)
+        before = copy.deepcopy(candidate)
+        gate = run_candidate_gate_stage(case_dir=tmp_path, output_dir=tmp_path, case_id='style-cleanup')
+        assert not gate['compile_reopen_success']
+        provider = RemovalProvider(tmp_path/'round', candidate, {filling['id']: {
+            'op': 'update_entity', 'remove_paths': ['/appearance']}})
+&gt;       result = run_scoped_changeset_round(provider=provider, output_dir=tmp_path/'round', case_id='style-cleanup',
+            round_number=1, user_request='使用协调主题和默认部件分色。', conversation=[],
+            design_brief=brief, expected_facts=expected, candidate=candidate,
+            issues=normalize_gate_sidecars(tmp_path), max_attempts=1)
+
+tests\agent\test_unrequested_appearance.py:89: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\text2ifc_agent\scoped_loop.py:156: in run_scoped_changeset_round
+    stage = run_changeset_stage(
+src\text2ifc_agent\changeset_stage.py:97: in run_changeset_stage
+    rendered = render_prompt(template_id=template_id, inputs=renderer_inputs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\text2ifc_agent\prompt_registry.py:79: in render_prompt
+    registry = load_prompt_registry(registry_path)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+registry_path = WindowsPath('E:/code for project/bimnet/prompts/agent/registry.json')
+
+    def load_prompt_registry(
+        registry_path: Path | str = DEFAULT_REGISTRY_PATH,
+    ) -&gt; dict[str, dict[str, Any]]:
+        """Load templates keyed by ID and verify their content hashes."""
+        path = Path(registry_path)
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        templates = payload.get("templates")
+        if not isinstance(templates, list):
+            raise PromptRegistryError("prompt registry templates must be a list")
+    
+        registry: dict[str, dict[str, Any]] = {}
+        for raw_template in templates:
+            if not isinstance(raw_template, dict):
+                raise PromptRegistryError("prompt registry template must be an object")
+            missing = [field for field in REQUIRED_TEMPLATE_FIELDS if field not in raw_template]
+            if missing:
+                raise PromptRegistryError(
+                    "prompt template missing required fields: " + ", ".join(missing)
+                )
+            template = dict(raw_template)
+            template_id = str(template["template_id"])
+            if template_id in registry:
+                raise PromptRegistryError(f"duplicate prompt template_id: {template_id}")
+            template_path = _project_path(str(template["path"]))
+            actual_hash = _template_sha256(template_path)
+            if template["sha256"] != actual_hash:
+&gt;               raise PromptRegistryError(
+                    f"prompt template hash mismatch for {template_id}: {actual_hash}"
+                )
+E               text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for bim-json-generator.v2.4: sha256:393cb7462725de1f1b8dacf493615a117e7a7fc6b03ea4935ba0574f72c3762f
+
+src\text2ifc_agent\prompt_registry.py:65: PromptRegistryError</failure></testcase><testcase classname="tests.agent.test_unrequested_appearance" name="test_cleanup_cannot_expand_scope_or_encode_absence_as_a_value[geometry]" time="0.980"><failure message="text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for bim-json-generator.v2.4: sha256:393cb7462725de1f1b8dacf493615a117e7a7fc6b03ea4935ba0574f72c3762f">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-style-authority-green-20260910/test_cleanup_cannot_expand_sco0')
+attack = 'geometry'
+
+    @pytest.mark.parametrize('attack', ['geometry', 'identity', 'unknown_field', 'whole_entity', 'null', 'empty'])
+    def test_cleanup_cannot_expand_scope_or_encode_absence_as_a_value(tmp_path, attack):
+        candidate, brief, expected, filling = fixture()
+        for name, value in [('generator/candidate', candidate), ('design-brief', brief), ('expected-facts', expected)]:
+            _write(tmp_path/(name+'.json'), value)
+        run_candidate_gate_stage(case_dir=tmp_path, output_dir=tmp_path, case_id='style-attack')
+        edit = {'op': 'update_entity', 'remove_paths': ['/appearance']}
+        if attack in ('geometry', 'identity', 'unknown_field'):
+            edit['remove_paths'].append({'geometry': '/attributes/Representation', 'identity': '/id',
+                                         'unknown_field': '/made_up'}[attack])
+        elif attack == 'whole_entity':
+            edit = {'op': 'remove_entity'}
+        else:
+            edit = {'op': 'update_entity', 'changes': {'/appearance': None if attack == 'null' else {}}}
+        provider = RemovalProvider(tmp_path/'round', candidate, {filling['id']: edit})
+&gt;       result = run_scoped_changeset_round(provider=provider, output_dir=tmp_path/'round', case_id='style-attack',
+            round_number=1, user_request='主题默认值。', conversation=[], design_brief=brief,
+            expected_facts=expected, candidate=candidate, issues=normalize_gate_sidecars(tmp_path), max_attempts=1)
+
+tests\agent\test_unrequested_appearance.py:133: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\text2ifc_agent\scoped_loop.py:156: in run_scoped_changeset_round
+    stage = run_changeset_stage(
+src\text2ifc_agent\changeset_stage.py:97: in run_changeset_stage
+    rendered = render_prompt(template_id=template_id, inputs=renderer_inputs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\text2ifc_agent\prompt_registry.py:79: in render_prompt
+    registry = load_prompt_registry(registry_path)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+registry_path = WindowsPath('E:/code for project/bimnet/prompts/agent/registry.json')
+
+    def load_prompt_registry(
+        registry_path: Path | str = DEFAULT_REGISTRY_PATH,
+    ) -&gt; dict[str, dict[str, Any]]:
+        """Load templates keyed by ID and verify their content hashes."""
+        path = Path(registry_path)
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        templates = payload.get("templates")
+        if not isinstance(templates, list):
+            raise PromptRegistryError("prompt registry templates must be a list")
+    
+        registry: dict[str, dict[str, Any]] = {}
+        for raw_template in templates:
+            if not isinstance(raw_template, dict):
+                raise PromptRegistryError("prompt registry template must be an object")
+            missing = [field for field in REQUIRED_TEMPLATE_FIELDS if field not in raw_template]
+            if missing:
+                raise PromptRegistryError(
+                    "prompt template missing required fields: " + ", ".join(missing)
+                )
+            template = dict(raw_template)
+            template_id = str(template["template_id"])
+            if template_id in registry:
+                raise PromptRegistryError(f"duplicate prompt template_id: {template_id}")
+            template_path = _project_path(str(template["path"]))
+            actual_hash = _template_sha256(template_path)
+            if template["sha256"] != actual_hash:
+&gt;               raise PromptRegistryError(
+                    f"prompt template hash mismatch for {template_id}: {actual_hash}"
+                )
+E               text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for bim-json-generator.v2.4: sha256:393cb7462725de1f1b8dacf493615a117e7a7fc6b03ea4935ba0574f72c3762f
+
+src\text2ifc_agent\prompt_registry.py:65: PromptRegistryError</failure></testcase><testcase classname="tests.agent.test_unrequested_appearance" name="test_cleanup_cannot_expand_scope_or_encode_absence_as_a_value[identity]" time="0.975"><failure message="text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for bim-json-generator.v2.4: sha256:393cb7462725de1f1b8dacf493615a117e7a7fc6b03ea4935ba0574f72c3762f">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-style-authority-green-20260910/test_cleanup_cannot_expand_sco1')
+attack = 'identity'
+
+    @pytest.mark.parametrize('attack', ['geometry', 'identity', 'unknown_field', 'whole_entity', 'null', 'empty'])
+    def test_cleanup_cannot_expand_scope_or_encode_absence_as_a_value(tmp_path, attack):
+        candidate, brief, expected, filling = fixture()
+        for name, value in [('generator/candidate', candidate), ('design-brief', brief), ('expected-facts', expected)]:
+            _write(tmp_path/(name+'.json'), value)
+        run_candidate_gate_stage(case_dir=tmp_path, output_dir=tmp_path, case_id='style-attack')
+        edit = {'op': 'update_entity', 'remove_paths': ['/appearance']}
+        if attack in ('geometry', 'identity', 'unknown_field'):
+            edit['remove_paths'].append({'geometry': '/attributes/Representation', 'identity': '/id',
+                                         'unknown_field': '/made_up'}[attack])
+        elif attack == 'whole_entity':
+            edit = {'op': 'remove_entity'}
+        else:
+            edit = {'op': 'update_entity', 'changes': {'/appearance': None if attack == 'null' else {}}}
+        provider = RemovalProvider(tmp_path/'round', candidate, {filling['id']: edit})
+&gt;       result = run_scoped_changeset_round(provider=provider, output_dir=tmp_path/'round', case_id='style-attack',
+            round_number=1, user_request='主题默认值。', conversation=[], design_brief=brief,
+            expected_facts=expected, candidate=candidate, issues=normalize_gate_sidecars(tmp_path), max_attempts=1)
+
+tests\agent\test_unrequested_appearance.py:133: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\text2ifc_agent\scoped_loop.py:156: in run_scoped_changeset_round
+    stage = run_changeset_stage(
+src\text2ifc_agent\changeset_stage.py:97: in run_changeset_stage
+    rendered = render_prompt(template_id=template_id, inputs=renderer_inputs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\text2ifc_agent\prompt_registry.py:79: in render_prompt
+    registry = load_prompt_registry(registry_path)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+registry_path = WindowsPath('E:/code for project/bimnet/prompts/agent/registry.json')
+
+    def load_prompt_registry(
+        registry_path: Path | str = DEFAULT_REGISTRY_PATH,
+    ) -&gt; dict[str, dict[str, Any]]:
+        """Load templates keyed by ID and verify their content hashes."""
+        path = Path(registry_path)
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        templates = payload.get("templates")
+        if not isinstance(templates, list):
+            raise PromptRegistryError("prompt registry templates must be a list")
+    
+        registry: dict[str, dict[str, Any]] = {}
+        for raw_template in templates:
+            if not isinstance(raw_template, dict):
+                raise PromptRegistryError("prompt registry template must be an object")
+            missing = [field for field in REQUIRED_TEMPLATE_FIELDS if field not in raw_template]
+            if missing:
+                raise PromptRegistryError(
+                    "prompt template missing required fields: " + ", ".join(missing)
+                )
+            template = dict(raw_template)
+            template_id = str(template["template_id"])
+            if template_id in registry:
+                raise PromptRegistryError(f"duplicate prompt template_id: {template_id}")
+            template_path = _project_path(str(template["path"]))
+            actual_hash = _template_sha256(template_path)
+            if template["sha256"] != actual_hash:
+&gt;               raise PromptRegistryError(
+                    f"prompt template hash mismatch for {template_id}: {actual_hash}"
+                )
+E               text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for bim-json-generator.v2.4: sha256:393cb7462725de1f1b8dacf493615a117e7a7fc6b03ea4935ba0574f72c3762f
+
+src\text2ifc_agent\prompt_registry.py:65: PromptRegistryError</failure></testcase><testcase classname="tests.agent.test_unrequested_appearance" name="test_cleanup_cannot_expand_scope_or_encode_absence_as_a_value[unknown_field]" time="0.896"><failure message="text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for bim-json-generator.v2.4: sha256:393cb7462725de1f1b8dacf493615a117e7a7fc6b03ea4935ba0574f72c3762f">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-style-authority-green-20260910/test_cleanup_cannot_expand_sco2')
+attack = 'unknown_field'
+
+    @pytest.mark.parametrize('attack', ['geometry', 'identity', 'unknown_field', 'whole_entity', 'null', 'empty'])
+    def test_cleanup_cannot_expand_scope_or_encode_absence_as_a_value(tmp_path, attack):
+        candidate, brief, expected, filling = fixture()
+        for name, value in [('generator/candidate', candidate), ('design-brief', brief), ('expected-facts', expected)]:
+            _write(tmp_path/(name+'.json'), value)
+        run_candidate_gate_stage(case_dir=tmp_path, output_dir=tmp_path, case_id='style-attack')
+        edit = {'op': 'update_entity', 'remove_paths': ['/appearance']}
+        if attack in ('geometry', 'identity', 'unknown_field'):
+            edit['remove_paths'].append({'geometry': '/attributes/Representation', 'identity': '/id',
+                                         'unknown_field': '/made_up'}[attack])
+        elif attack == 'whole_entity':
+            edit = {'op': 'remove_entity'}
+        else:
+            edit = {'op': 'update_entity', 'changes': {'/appearance': None if attack == 'null' else {}}}
+        provider = RemovalProvider(tmp_path/'round', candidate, {filling['id']: edit})
+&gt;       result = run_scoped_changeset_round(provider=provider, output_dir=tmp_path/'round', case_id='style-attack',
+            round_number=1, user_request='主题默认值。', conversation=[], design_brief=brief,
+            expected_facts=expected, candidate=candidate, issues=normalize_gate_sidecars(tmp_path), max_attempts=1)
+
+tests\agent\test_unrequested_appearance.py:133: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\text2ifc_agent\scoped_loop.py:156: in run_scoped_changeset_round
+    stage = run_changeset_stage(
+src\text2ifc_agent\changeset_stage.py:97: in run_changeset_stage
+    rendered = render_prompt(template_id=template_id, inputs=renderer_inputs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\text2ifc_agent\prompt_registry.py:79: in render_prompt
+    registry = load_prompt_registry(registry_path)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+registry_path = WindowsPath('E:/code for project/bimnet/prompts/agent/registry.json')
+
+    def load_prompt_registry(
+        registry_path: Path | str = DEFAULT_REGISTRY_PATH,
+    ) -&gt; dict[str, dict[str, Any]]:
+        """Load templates keyed by ID and verify their content hashes."""
+        path = Path(registry_path)
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        templates = payload.get("templates")
+        if not isinstance(templates, list):
+            raise PromptRegistryError("prompt registry templates must be a list")
+    
+        registry: dict[str, dict[str, Any]] = {}
+        for raw_template in templates:
+            if not isinstance(raw_template, dict):
+                raise PromptRegistryError("prompt registry template must be an object")
+            missing = [field for field in REQUIRED_TEMPLATE_FIELDS if field not in raw_template]
+            if missing:
+                raise PromptRegistryError(
+                    "prompt template missing required fields: " + ", ".join(missing)
+                )
+            template = dict(raw_template)
+            template_id = str(template["template_id"])
+            if template_id in registry:
+                raise PromptRegistryError(f"duplicate prompt template_id: {template_id}")
+            template_path = _project_path(str(template["path"]))
+            actual_hash = _template_sha256(template_path)
+            if template["sha256"] != actual_hash:
+&gt;               raise PromptRegistryError(
+                    f"prompt template hash mismatch for {template_id}: {actual_hash}"
+                )
+E               text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for bim-json-generator.v2.4: sha256:393cb7462725de1f1b8dacf493615a117e7a7fc6b03ea4935ba0574f72c3762f
+
+src\text2ifc_agent\prompt_registry.py:65: PromptRegistryError</failure></testcase><testcase classname="tests.agent.test_unrequested_appearance" name="test_cleanup_cannot_expand_scope_or_encode_absence_as_a_value[whole_entity]" time="0.883"><failure message="text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for bim-json-generator.v2.4: sha256:393cb7462725de1f1b8dacf493615a117e7a7fc6b03ea4935ba0574f72c3762f">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-style-authority-green-20260910/test_cleanup_cannot_expand_sco3')
+attack = 'whole_entity'
+
+    @pytest.mark.parametrize('attack', ['geometry', 'identity', 'unknown_field', 'whole_entity', 'null', 'empty'])
+    def test_cleanup_cannot_expand_scope_or_encode_absence_as_a_value(tmp_path, attack):
+        candidate, brief, expected, filling = fixture()
+        for name, value in [('generator/candidate', candidate), ('design-brief', brief), ('expected-facts', expected)]:
+            _write(tmp_path/(name+'.json'), value)
+        run_candidate_gate_stage(case_dir=tmp_path, output_dir=tmp_path, case_id='style-attack')
+        edit = {'op': 'update_entity', 'remove_paths': ['/appearance']}
+        if attack in ('geometry', 'identity', 'unknown_field'):
+            edit['remove_paths'].append({'geometry': '/attributes/Representation', 'identity': '/id',
+                                         'unknown_field': '/made_up'}[attack])
+        elif attack == 'whole_entity':
+            edit = {'op': 'remove_entity'}
+        else:
+            edit = {'op': 'update_entity', 'changes': {'/appearance': None if attack == 'null' else {}}}
+        provider = RemovalProvider(tmp_path/'round', candidate, {filling['id']: edit})
+&gt;       result = run_scoped_changeset_round(provider=provider, output_dir=tmp_path/'round', case_id='style-attack',
+            round_number=1, user_request='主题默认值。', conversation=[], design_brief=brief,
+            expected_facts=expected, candidate=candidate, issues=normalize_gate_sidecars(tmp_path), max_attempts=1)
+
+tests\agent\test_unrequested_appearance.py:133: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\text2ifc_agent\scoped_loop.py:156: in run_scoped_changeset_round
+    stage = run_changeset_stage(
+src\text2ifc_agent\changeset_stage.py:97: in run_changeset_stage
+    rendered = render_prompt(template_id=template_id, inputs=renderer_inputs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\text2ifc_agent\prompt_registry.py:79: in render_prompt
+    registry = load_prompt_registry(registry_path)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+registry_path = WindowsPath('E:/code for project/bimnet/prompts/agent/registry.json')
+
+    def load_prompt_registry(
+        registry_path: Path | str = DEFAULT_REGISTRY_PATH,
+    ) -&gt; dict[str, dict[str, Any]]:
+        """Load templates keyed by ID and verify their content hashes."""
+        path = Path(registry_path)
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        templates = payload.get("templates")
+        if not isinstance(templates, list):
+            raise PromptRegistryError("prompt registry templates must be a list")
+    
+        registry: dict[str, dict[str, Any]] = {}
+        for raw_template in templates:
+            if not isinstance(raw_template, dict):
+                raise PromptRegistryError("prompt registry template must be an object")
+            missing = [field for field in REQUIRED_TEMPLATE_FIELDS if field not in raw_template]
+            if missing:
+                raise PromptRegistryError(
+                    "prompt template missing required fields: " + ", ".join(missing)
+                )
+            template = dict(raw_template)
+            template_id = str(template["template_id"])
+            if template_id in registry:
+                raise PromptRegistryError(f"duplicate prompt template_id: {template_id}")
+            template_path = _project_path(str(template["path"]))
+            actual_hash = _template_sha256(template_path)
+            if template["sha256"] != actual_hash:
+&gt;               raise PromptRegistryError(
+                    f"prompt template hash mismatch for {template_id}: {actual_hash}"
+                )
+E               text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for bim-json-generator.v2.4: sha256:393cb7462725de1f1b8dacf493615a117e7a7fc6b03ea4935ba0574f72c3762f
+
+src\text2ifc_agent\prompt_registry.py:65: PromptRegistryError</failure></testcase><testcase classname="tests.agent.test_unrequested_appearance" name="test_cleanup_cannot_expand_scope_or_encode_absence_as_a_value[null]" time="0.879"><failure message="text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for bim-json-generator.v2.4: sha256:393cb7462725de1f1b8dacf493615a117e7a7fc6b03ea4935ba0574f72c3762f">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-style-authority-green-20260910/test_cleanup_cannot_expand_sco4')
+attack = 'null'
+
+    @pytest.mark.parametrize('attack', ['geometry', 'identity', 'unknown_field', 'whole_entity', 'null', 'empty'])
+    def test_cleanup_cannot_expand_scope_or_encode_absence_as_a_value(tmp_path, attack):
+        candidate, brief, expected, filling = fixture()
+        for name, value in [('generator/candidate', candidate), ('design-brief', brief), ('expected-facts', expected)]:
+            _write(tmp_path/(name+'.json'), value)
+        run_candidate_gate_stage(case_dir=tmp_path, output_dir=tmp_path, case_id='style-attack')
+        edit = {'op': 'update_entity', 'remove_paths': ['/appearance']}
+        if attack in ('geometry', 'identity', 'unknown_field'):
+            edit['remove_paths'].append({'geometry': '/attributes/Representation', 'identity': '/id',
+                                         'unknown_field': '/made_up'}[attack])
+        elif attack == 'whole_entity':
+            edit = {'op': 'remove_entity'}
+        else:
+            edit = {'op': 'update_entity', 'changes': {'/appearance': None if attack == 'null' else {}}}
+        provider = RemovalProvider(tmp_path/'round', candidate, {filling['id']: edit})
+&gt;       result = run_scoped_changeset_round(provider=provider, output_dir=tmp_path/'round', case_id='style-attack',
+            round_number=1, user_request='主题默认值。', conversation=[], design_brief=brief,
+            expected_facts=expected, candidate=candidate, issues=normalize_gate_sidecars(tmp_path), max_attempts=1)
+
+tests\agent\test_unrequested_appearance.py:133: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\text2ifc_agent\scoped_loop.py:156: in run_scoped_changeset_round
+    stage = run_changeset_stage(
+src\text2ifc_agent\changeset_stage.py:97: in run_changeset_stage
+    rendered = render_prompt(template_id=template_id, inputs=renderer_inputs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\text2ifc_agent\prompt_registry.py:79: in render_prompt
+    registry = load_prompt_registry(registry_path)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+registry_path = WindowsPath('E:/code for project/bimnet/prompts/agent/registry.json')
+
+    def load_prompt_registry(
+        registry_path: Path | str = DEFAULT_REGISTRY_PATH,
+    ) -&gt; dict[str, dict[str, Any]]:
+        """Load templates keyed by ID and verify their content hashes."""
+        path = Path(registry_path)
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        templates = payload.get("templates")
+        if not isinstance(templates, list):
+            raise PromptRegistryError("prompt registry templates must be a list")
+    
+        registry: dict[str, dict[str, Any]] = {}
+        for raw_template in templates:
+            if not isinstance(raw_template, dict):
+                raise PromptRegistryError("prompt registry template must be an object")
+            missing = [field for field in REQUIRED_TEMPLATE_FIELDS if field not in raw_template]
+            if missing:
+                raise PromptRegistryError(
+                    "prompt template missing required fields: " + ", ".join(missing)
+                )
+            template = dict(raw_template)
+            template_id = str(template["template_id"])
+            if template_id in registry:
+                raise PromptRegistryError(f"duplicate prompt template_id: {template_id}")
+            template_path = _project_path(str(template["path"]))
+            actual_hash = _template_sha256(template_path)
+            if template["sha256"] != actual_hash:
+&gt;               raise PromptRegistryError(
+                    f"prompt template hash mismatch for {template_id}: {actual_hash}"
+                )
+E               text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for bim-json-generator.v2.4: sha256:393cb7462725de1f1b8dacf493615a117e7a7fc6b03ea4935ba0574f72c3762f
+
+src\text2ifc_agent\prompt_registry.py:65: PromptRegistryError</failure></testcase><testcase classname="tests.agent.test_unrequested_appearance" name="test_cleanup_cannot_expand_scope_or_encode_absence_as_a_value[empty]" time="0.918"><failure message="text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for bim-json-generator.v2.4: sha256:393cb7462725de1f1b8dacf493615a117e7a7fc6b03ea4935ba0574f72c3762f">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-style-authority-green-20260910/test_cleanup_cannot_expand_sco5')
+attack = 'empty'
+
+    @pytest.mark.parametrize('attack', ['geometry', 'identity', 'unknown_field', 'whole_entity', 'null', 'empty'])
+    def test_cleanup_cannot_expand_scope_or_encode_absence_as_a_value(tmp_path, attack):
+        candidate, brief, expected, filling = fixture()
+        for name, value in [('generator/candidate', candidate), ('design-brief', brief), ('expected-facts', expected)]:
+            _write(tmp_path/(name+'.json'), value)
+        run_candidate_gate_stage(case_dir=tmp_path, output_dir=tmp_path, case_id='style-attack')
+        edit = {'op': 'update_entity', 'remove_paths': ['/appearance']}
+        if attack in ('geometry', 'identity', 'unknown_field'):
+            edit['remove_paths'].append({'geometry': '/attributes/Representation', 'identity': '/id',
+                                         'unknown_field': '/made_up'}[attack])
+        elif attack == 'whole_entity':
+            edit = {'op': 'remove_entity'}
+        else:
+            edit = {'op': 'update_entity', 'changes': {'/appearance': None if attack == 'null' else {}}}
+        provider = RemovalProvider(tmp_path/'round', candidate, {filling['id']: edit})
+&gt;       result = run_scoped_changeset_round(provider=provider, output_dir=tmp_path/'round', case_id='style-attack',
+            round_number=1, user_request='主题默认值。', conversation=[], design_brief=brief,
+            expected_facts=expected, candidate=candidate, issues=normalize_gate_sidecars(tmp_path), max_attempts=1)
+
+tests\agent\test_unrequested_appearance.py:133: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\text2ifc_agent\scoped_loop.py:156: in run_scoped_changeset_round
+    stage = run_changeset_stage(
+src\text2ifc_agent\changeset_stage.py:97: in run_changeset_stage
+    rendered = render_prompt(template_id=template_id, inputs=renderer_inputs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\text2ifc_agent\prompt_registry.py:79: in render_prompt
+    registry = load_prompt_registry(registry_path)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+registry_path = WindowsPath('E:/code for project/bimnet/prompts/agent/registry.json')
+
+    def load_prompt_registry(
+        registry_path: Path | str = DEFAULT_REGISTRY_PATH,
+    ) -&gt; dict[str, dict[str, Any]]:
+        """Load templates keyed by ID and verify their content hashes."""
+        path = Path(registry_path)
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        templates = payload.get("templates")
+        if not isinstance(templates, list):
+            raise PromptRegistryError("prompt registry templates must be a list")
+    
+        registry: dict[str, dict[str, Any]] = {}
+        for raw_template in templates:
+            if not isinstance(raw_template, dict):
+                raise PromptRegistryError("prompt registry template must be an object")
+            missing = [field for field in REQUIRED_TEMPLATE_FIELDS if field not in raw_template]
+            if missing:
+                raise PromptRegistryError(
+                    "prompt template missing required fields: " + ", ".join(missing)
+                )
+            template = dict(raw_template)
+            template_id = str(template["template_id"])
+            if template_id in registry:
+                raise PromptRegistryError(f"duplicate prompt template_id: {template_id}")
+            template_path = _project_path(str(template["path"]))
+            actual_hash = _template_sha256(template_path)
+            if template["sha256"] != actual_hash:
+&gt;               raise PromptRegistryError(
+                    f"prompt template hash mismatch for {template_id}: {actual_hash}"
+                )
+E               text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for bim-json-generator.v2.4: sha256:393cb7462725de1f1b8dacf493615a117e7a7fc6b03ea4935ba0574f72c3762f
+
+src\text2ifc_agent\prompt_registry.py:65: PromptRegistryError</failure></testcase><testcase classname="tests.agent.test_generation_semantic_correction" name="test_public_cleanup_restores_only_request_values_and_reopens[alpha]" time="0.978"><failure message="text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for bim-json-generator.v2.4: sha256:393cb7462725de1f1b8dacf493615a117e7a7fc6b03ea4935ba0574f72c3762f">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-style-authority-green-20260910/test_public_cleanup_restores_o0')
+prefix = 'alpha'
+
+    @pytest.mark.parametrize('prefix', ['alpha', 'opaque-71', 'building-z'])
+    def test_public_cleanup_restores_only_request_values_and_reopens(tmp_path, prefix):
+        data = fixture(prefix=prefix)
+&gt;       result, provider = run_round(tmp_path, data, edits_for(data))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_generation_semantic_correction.py:107: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\agent\test_generation_semantic_correction.py:96: in run_round
+    result = run_scoped_changeset_round(provider=provider, output_dir=tmp_path/'round', case_id='semantic-family',
+src\text2ifc_agent\scoped_loop.py:156: in run_scoped_changeset_round
+    stage = run_changeset_stage(
+src\text2ifc_agent\changeset_stage.py:97: in run_changeset_stage
+    rendered = render_prompt(template_id=template_id, inputs=renderer_inputs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\text2ifc_agent\prompt_registry.py:79: in render_prompt
+    registry = load_prompt_registry(registry_path)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+registry_path = WindowsPath('E:/code for project/bimnet/prompts/agent/registry.json')
+
+    def load_prompt_registry(
+        registry_path: Path | str = DEFAULT_REGISTRY_PATH,
+    ) -&gt; dict[str, dict[str, Any]]:
+        """Load templates keyed by ID and verify their content hashes."""
+        path = Path(registry_path)
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        templates = payload.get("templates")
+        if not isinstance(templates, list):
+            raise PromptRegistryError("prompt registry templates must be a list")
+    
+        registry: dict[str, dict[str, Any]] = {}
+        for raw_template in templates:
+            if not isinstance(raw_template, dict):
+                raise PromptRegistryError("prompt registry template must be an object")
+            missing = [field for field in REQUIRED_TEMPLATE_FIELDS if field not in raw_template]
+            if missing:
+                raise PromptRegistryError(
+                    "prompt template missing required fields: " + ", ".join(missing)
+                )
+            template = dict(raw_template)
+            template_id = str(template["template_id"])
+            if template_id in registry:
+                raise PromptRegistryError(f"duplicate prompt template_id: {template_id}")
+            template_path = _project_path(str(template["path"]))
+            actual_hash = _template_sha256(template_path)
+            if template["sha256"] != actual_hash:
+&gt;               raise PromptRegistryError(
+                    f"prompt template hash mismatch for {template_id}: {actual_hash}"
+                )
+E               text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for bim-json-generator.v2.4: sha256:393cb7462725de1f1b8dacf493615a117e7a7fc6b03ea4935ba0574f72c3762f
+
+src\text2ifc_agent\prompt_registry.py:65: PromptRegistryError</failure></testcase><testcase classname="tests.agent.test_generation_semantic_correction" name="test_public_cleanup_restores_only_request_values_and_reopens[opaque-71]" time="1.031"><failure message="text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for bim-json-generator.v2.4: sha256:393cb7462725de1f1b8dacf493615a117e7a7fc6b03ea4935ba0574f72c3762f">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-style-authority-green-20260910/test_public_cleanup_restores_o1')
+prefix = 'opaque-71'
+
+    @pytest.mark.parametrize('prefix', ['alpha', 'opaque-71', 'building-z'])
+    def test_public_cleanup_restores_only_request_values_and_reopens(tmp_path, prefix):
+        data = fixture(prefix=prefix)
+&gt;       result, provider = run_round(tmp_path, data, edits_for(data))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_generation_semantic_correction.py:107: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\agent\test_generation_semantic_correction.py:96: in run_round
+    result = run_scoped_changeset_round(provider=provider, output_dir=tmp_path/'round', case_id='semantic-family',
+src\text2ifc_agent\scoped_loop.py:156: in run_scoped_changeset_round
+    stage = run_changeset_stage(
+src\text2ifc_agent\changeset_stage.py:97: in run_changeset_stage
+    rendered = render_prompt(template_id=template_id, inputs=renderer_inputs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\text2ifc_agent\prompt_registry.py:79: in render_prompt
+    registry = load_prompt_registry(registry_path)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+registry_path = WindowsPath('E:/code for project/bimnet/prompts/agent/registry.json')
+
+    def load_prompt_registry(
+        registry_path: Path | str = DEFAULT_REGISTRY_PATH,
+    ) -&gt; dict[str, dict[str, Any]]:
+        """Load templates keyed by ID and verify their content hashes."""
+        path = Path(registry_path)
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        templates = payload.get("templates")
+        if not isinstance(templates, list):
+            raise PromptRegistryError("prompt registry templates must be a list")
+    
+        registry: dict[str, dict[str, Any]] = {}
+        for raw_template in templates:
+            if not isinstance(raw_template, dict):
+                raise PromptRegistryError("prompt registry template must be an object")
+            missing = [field for field in REQUIRED_TEMPLATE_FIELDS if field not in raw_template]
+            if missing:
+                raise PromptRegistryError(
+                    "prompt template missing required fields: " + ", ".join(missing)
+                )
+            template = dict(raw_template)
+            template_id = str(template["template_id"])
+            if template_id in registry:
+                raise PromptRegistryError(f"duplicate prompt template_id: {template_id}")
+            template_path = _project_path(str(template["path"]))
+            actual_hash = _template_sha256(template_path)
+            if template["sha256"] != actual_hash:
+&gt;               raise PromptRegistryError(
+                    f"prompt template hash mismatch for {template_id}: {actual_hash}"
+                )
+E               text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for bim-json-generator.v2.4: sha256:393cb7462725de1f1b8dacf493615a117e7a7fc6b03ea4935ba0574f72c3762f
+
+src\text2ifc_agent\prompt_registry.py:65: PromptRegistryError</failure></testcase><testcase classname="tests.agent.test_generation_semantic_correction" name="test_public_cleanup_restores_only_request_values_and_reopens[building-z]" time="0.889"><failure message="text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for bim-json-generator.v2.4: sha256:393cb7462725de1f1b8dacf493615a117e7a7fc6b03ea4935ba0574f72c3762f">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-style-authority-green-20260910/test_public_cleanup_restores_o2')
+prefix = 'building-z'
+
+    @pytest.mark.parametrize('prefix', ['alpha', 'opaque-71', 'building-z'])
+    def test_public_cleanup_restores_only_request_values_and_reopens(tmp_path, prefix):
+        data = fixture(prefix=prefix)
+&gt;       result, provider = run_round(tmp_path, data, edits_for(data))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_generation_semantic_correction.py:107: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\agent\test_generation_semantic_correction.py:96: in run_round
+    result = run_scoped_changeset_round(provider=provider, output_dir=tmp_path/'round', case_id='semantic-family',
+src\text2ifc_agent\scoped_loop.py:156: in run_scoped_changeset_round
+    stage = run_changeset_stage(
+src\text2ifc_agent\changeset_stage.py:97: in run_changeset_stage
+    rendered = render_prompt(template_id=template_id, inputs=renderer_inputs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\text2ifc_agent\prompt_registry.py:79: in render_prompt
+    registry = load_prompt_registry(registry_path)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+registry_path = WindowsPath('E:/code for project/bimnet/prompts/agent/registry.json')
+
+    def load_prompt_registry(
+        registry_path: Path | str = DEFAULT_REGISTRY_PATH,
+    ) -&gt; dict[str, dict[str, Any]]:
+        """Load templates keyed by ID and verify their content hashes."""
+        path = Path(registry_path)
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        templates = payload.get("templates")
+        if not isinstance(templates, list):
+            raise PromptRegistryError("prompt registry templates must be a list")
+    
+        registry: dict[str, dict[str, Any]] = {}
+        for raw_template in templates:
+            if not isinstance(raw_template, dict):
+                raise PromptRegistryError("prompt registry template must be an object")
+            missing = [field for field in REQUIRED_TEMPLATE_FIELDS if field not in raw_template]
+            if missing:
+                raise PromptRegistryError(
+                    "prompt template missing required fields: " + ", ".join(missing)
+                )
+            template = dict(raw_template)
+            template_id = str(template["template_id"])
+            if template_id in registry:
+                raise PromptRegistryError(f"duplicate prompt template_id: {template_id}")
+            template_path = _project_path(str(template["path"]))
+            actual_hash = _template_sha256(template_path)
+            if template["sha256"] != actual_hash:
+&gt;               raise PromptRegistryError(
+                    f"prompt template hash mismatch for {template_id}: {actual_hash}"
+                )
+E               text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for bim-json-generator.v2.4: sha256:393cb7462725de1f1b8dacf493615a117e7a7fc6b03ea4935ba0574f72c3762f
+
+src\text2ifc_agent\prompt_registry.py:65: PromptRegistryError</failure></testcase><testcase classname="tests.agent.test_generation_semantic_correction" name="test_mixed_type_members_keep_legal_group_and_direct_values" time="0.899"><failure message="text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for bim-json-generator.v2.4: sha256:393cb7462725de1f1b8dacf493615a117e7a7fc6b03ea4935ba0574f72c3762f">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-style-authority-green-20260910/test_mixed_type_members_keep_l0')
+
+    def test_mixed_type_members_keep_legal_group_and_direct_values(tmp_path):
+        data = fixture(shared=True)
+        # Already correct direct values must not be changed while trimming membership.
+        req = data[1]['known_facts']['semantic_requirements'][0]
+        data[3]['materials'], data[3]['property_sets'] = [req['material']], copy.deepcopy(req['property_sets'])
+        edits = edits_for(data, shared=True)
+        edits.pop(data[3]['id'])
+&gt;       result, _ = run_round(tmp_path, data, edits)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_generation_semantic_correction.py:137: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\agent\test_generation_semantic_correction.py:96: in run_round
+    result = run_scoped_changeset_round(provider=provider, output_dir=tmp_path/'round', case_id='semantic-family',
+src\text2ifc_agent\scoped_loop.py:156: in run_scoped_changeset_round
+    stage = run_changeset_stage(
+src\text2ifc_agent\changeset_stage.py:97: in run_changeset_stage
+    rendered = render_prompt(template_id=template_id, inputs=renderer_inputs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\text2ifc_agent\prompt_registry.py:79: in render_prompt
+    registry = load_prompt_registry(registry_path)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+registry_path = WindowsPath('E:/code for project/bimnet/prompts/agent/registry.json')
+
+    def load_prompt_registry(
+        registry_path: Path | str = DEFAULT_REGISTRY_PATH,
+    ) -&gt; dict[str, dict[str, Any]]:
+        """Load templates keyed by ID and verify their content hashes."""
+        path = Path(registry_path)
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        templates = payload.get("templates")
+        if not isinstance(templates, list):
+            raise PromptRegistryError("prompt registry templates must be a list")
+    
+        registry: dict[str, dict[str, Any]] = {}
+        for raw_template in templates:
+            if not isinstance(raw_template, dict):
+                raise PromptRegistryError("prompt registry template must be an object")
+            missing = [field for field in REQUIRED_TEMPLATE_FIELDS if field not in raw_template]
+            if missing:
+                raise PromptRegistryError(
+                    "prompt template missing required fields: " + ", ".join(missing)
+                )
+            template = dict(raw_template)
+            template_id = str(template["template_id"])
+            if template_id in registry:
+                raise PromptRegistryError(f"duplicate prompt template_id: {template_id}")
+            template_path = _project_path(str(template["path"]))
+            actual_hash = _template_sha256(template_path)
+            if template["sha256"] != actual_hash:
+&gt;               raise PromptRegistryError(
+                    f"prompt template hash mismatch for {template_id}: {actual_hash}"
+                )
+E               text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for bim-json-generator.v2.4: sha256:393cb7462725de1f1b8dacf493615a117e7a7fc6b03ea4935ba0574f72c3762f
+
+src\text2ifc_agent\prompt_registry.py:65: PromptRegistryError</failure></testcase><testcase classname="tests.agent.test_generation_semantic_correction" name="test_bad_cleanup_is_atomic_and_never_published[partial]" time="0.851"><failure message="text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for bim-json-generator.v2.4: sha256:393cb7462725de1f1b8dacf493615a117e7a7fc6b03ea4935ba0574f72c3762f">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-style-authority-green-20260910/test_bad_cleanup_is_atomic_and0')
+attack = 'partial'
+
+    @pytest.mark.parametrize('attack', ['partial', 'geometry', 'wrong_material', 'erase_requested', 'other_member'])
+    def test_bad_cleanup_is_atomic_and_never_published(tmp_path, attack):
+        data = fixture()
+        edits = edits_for(data)
+        if attack == 'partial':
+            edits.pop(data[6]['id'])
+        elif attack == 'geometry':
+            edits[data[3]['id']]['changes']['/attributes/Name'] = 'Unrequested rename'
+        elif attack == 'wrong_material':
+            edits[data[3]['id']]['changes']['/materials'] = data[5]['materials']
+        elif attack == 'erase_requested':
+            edits[data[3]['id']] = {'op': 'remove_entity'}
+        else:
+            edits[data[4]['id']] = {'op': 'remove_entity'}
+&gt;       result, _ = run_round(tmp_path, data, edits)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_generation_semantic_correction.py:160: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\agent\test_generation_semantic_correction.py:96: in run_round
+    result = run_scoped_changeset_round(provider=provider, output_dir=tmp_path/'round', case_id='semantic-family',
+src\text2ifc_agent\scoped_loop.py:156: in run_scoped_changeset_round
+    stage = run_changeset_stage(
+src\text2ifc_agent\changeset_stage.py:97: in run_changeset_stage
+    rendered = render_prompt(template_id=template_id, inputs=renderer_inputs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\text2ifc_agent\prompt_registry.py:79: in render_prompt
+    registry = load_prompt_registry(registry_path)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+registry_path = WindowsPath('E:/code for project/bimnet/prompts/agent/registry.json')
+
+    def load_prompt_registry(
+        registry_path: Path | str = DEFAULT_REGISTRY_PATH,
+    ) -&gt; dict[str, dict[str, Any]]:
+        """Load templates keyed by ID and verify their content hashes."""
+        path = Path(registry_path)
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        templates = payload.get("templates")
+        if not isinstance(templates, list):
+            raise PromptRegistryError("prompt registry templates must be a list")
+    
+        registry: dict[str, dict[str, Any]] = {}
+        for raw_template in templates:
+            if not isinstance(raw_template, dict):
+                raise PromptRegistryError("prompt registry template must be an object")
+            missing = [field for field in REQUIRED_TEMPLATE_FIELDS if field not in raw_template]
+            if missing:
+                raise PromptRegistryError(
+                    "prompt template missing required fields: " + ", ".join(missing)
+                )
+            template = dict(raw_template)
+            template_id = str(template["template_id"])
+            if template_id in registry:
+                raise PromptRegistryError(f"duplicate prompt template_id: {template_id}")
+            template_path = _project_path(str(template["path"]))
+            actual_hash = _template_sha256(template_path)
+            if template["sha256"] != actual_hash:
+&gt;               raise PromptRegistryError(
+                    f"prompt template hash mismatch for {template_id}: {actual_hash}"
+                )
+E               text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for bim-json-generator.v2.4: sha256:393cb7462725de1f1b8dacf493615a117e7a7fc6b03ea4935ba0574f72c3762f
+
+src\text2ifc_agent\prompt_registry.py:65: PromptRegistryError</failure></testcase><testcase classname="tests.agent.test_generation_semantic_correction" name="test_bad_cleanup_is_atomic_and_never_published[geometry]" time="0.938"><failure message="text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for bim-json-generator.v2.4: sha256:393cb7462725de1f1b8dacf493615a117e7a7fc6b03ea4935ba0574f72c3762f">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-style-authority-green-20260910/test_bad_cleanup_is_atomic_and1')
+attack = 'geometry'
+
+    @pytest.mark.parametrize('attack', ['partial', 'geometry', 'wrong_material', 'erase_requested', 'other_member'])
+    def test_bad_cleanup_is_atomic_and_never_published(tmp_path, attack):
+        data = fixture()
+        edits = edits_for(data)
+        if attack == 'partial':
+            edits.pop(data[6]['id'])
+        elif attack == 'geometry':
+            edits[data[3]['id']]['changes']['/attributes/Name'] = 'Unrequested rename'
+        elif attack == 'wrong_material':
+            edits[data[3]['id']]['changes']['/materials'] = data[5]['materials']
+        elif attack == 'erase_requested':
+            edits[data[3]['id']] = {'op': 'remove_entity'}
+        else:
+            edits[data[4]['id']] = {'op': 'remove_entity'}
+&gt;       result, _ = run_round(tmp_path, data, edits)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_generation_semantic_correction.py:160: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\agent\test_generation_semantic_correction.py:96: in run_round
+    result = run_scoped_changeset_round(provider=provider, output_dir=tmp_path/'round', case_id='semantic-family',
+src\text2ifc_agent\scoped_loop.py:156: in run_scoped_changeset_round
+    stage = run_changeset_stage(
+src\text2ifc_agent\changeset_stage.py:97: in run_changeset_stage
+    rendered = render_prompt(template_id=template_id, inputs=renderer_inputs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\text2ifc_agent\prompt_registry.py:79: in render_prompt
+    registry = load_prompt_registry(registry_path)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+registry_path = WindowsPath('E:/code for project/bimnet/prompts/agent/registry.json')
+
+    def load_prompt_registry(
+        registry_path: Path | str = DEFAULT_REGISTRY_PATH,
+    ) -&gt; dict[str, dict[str, Any]]:
+        """Load templates keyed by ID and verify their content hashes."""
+        path = Path(registry_path)
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        templates = payload.get("templates")
+        if not isinstance(templates, list):
+            raise PromptRegistryError("prompt registry templates must be a list")
+    
+        registry: dict[str, dict[str, Any]] = {}
+        for raw_template in templates:
+            if not isinstance(raw_template, dict):
+                raise PromptRegistryError("prompt registry template must be an object")
+            missing = [field for field in REQUIRED_TEMPLATE_FIELDS if field not in raw_template]
+            if missing:
+                raise PromptRegistryError(
+                    "prompt template missing required fields: " + ", ".join(missing)
+                )
+            template = dict(raw_template)
+            template_id = str(template["template_id"])
+            if template_id in registry:
+                raise PromptRegistryError(f"duplicate prompt template_id: {template_id}")
+            template_path = _project_path(str(template["path"]))
+            actual_hash = _template_sha256(template_path)
+            if template["sha256"] != actual_hash:
+&gt;               raise PromptRegistryError(
+                    f"prompt template hash mismatch for {template_id}: {actual_hash}"
+                )
+E               text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for bim-json-generator.v2.4: sha256:393cb7462725de1f1b8dacf493615a117e7a7fc6b03ea4935ba0574f72c3762f
+
+src\text2ifc_agent\prompt_registry.py:65: PromptRegistryError</failure></testcase><testcase classname="tests.agent.test_generation_semantic_correction" name="test_bad_cleanup_is_atomic_and_never_published[wrong_material]" time="0.894"><failure message="text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for bim-json-generator.v2.4: sha256:393cb7462725de1f1b8dacf493615a117e7a7fc6b03ea4935ba0574f72c3762f">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-style-authority-green-20260910/test_bad_cleanup_is_atomic_and2')
+attack = 'wrong_material'
+
+    @pytest.mark.parametrize('attack', ['partial', 'geometry', 'wrong_material', 'erase_requested', 'other_member'])
+    def test_bad_cleanup_is_atomic_and_never_published(tmp_path, attack):
+        data = fixture()
+        edits = edits_for(data)
+        if attack == 'partial':
+            edits.pop(data[6]['id'])
+        elif attack == 'geometry':
+            edits[data[3]['id']]['changes']['/attributes/Name'] = 'Unrequested rename'
+        elif attack == 'wrong_material':
+            edits[data[3]['id']]['changes']['/materials'] = data[5]['materials']
+        elif attack == 'erase_requested':
+            edits[data[3]['id']] = {'op': 'remove_entity'}
+        else:
+            edits[data[4]['id']] = {'op': 'remove_entity'}
+&gt;       result, _ = run_round(tmp_path, data, edits)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_generation_semantic_correction.py:160: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\agent\test_generation_semantic_correction.py:96: in run_round
+    result = run_scoped_changeset_round(provider=provider, output_dir=tmp_path/'round', case_id='semantic-family',
+src\text2ifc_agent\scoped_loop.py:156: in run_scoped_changeset_round
+    stage = run_changeset_stage(
+src\text2ifc_agent\changeset_stage.py:97: in run_changeset_stage
+    rendered = render_prompt(template_id=template_id, inputs=renderer_inputs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\text2ifc_agent\prompt_registry.py:79: in render_prompt
+    registry = load_prompt_registry(registry_path)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+registry_path = WindowsPath('E:/code for project/bimnet/prompts/agent/registry.json')
+
+    def load_prompt_registry(
+        registry_path: Path | str = DEFAULT_REGISTRY_PATH,
+    ) -&gt; dict[str, dict[str, Any]]:
+        """Load templates keyed by ID and verify their content hashes."""
+        path = Path(registry_path)
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        templates = payload.get("templates")
+        if not isinstance(templates, list):
+            raise PromptRegistryError("prompt registry templates must be a list")
+    
+        registry: dict[str, dict[str, Any]] = {}
+        for raw_template in templates:
+            if not isinstance(raw_template, dict):
+                raise PromptRegistryError("prompt registry template must be an object")
+            missing = [field for field in REQUIRED_TEMPLATE_FIELDS if field not in raw_template]
+            if missing:
+                raise PromptRegistryError(
+                    "prompt template missing required fields: " + ", ".join(missing)
+                )
+            template = dict(raw_template)
+            template_id = str(template["template_id"])
+            if template_id in registry:
+                raise PromptRegistryError(f"duplicate prompt template_id: {template_id}")
+            template_path = _project_path(str(template["path"]))
+            actual_hash = _template_sha256(template_path)
+            if template["sha256"] != actual_hash:
+&gt;               raise PromptRegistryError(
+                    f"prompt template hash mismatch for {template_id}: {actual_hash}"
+                )
+E               text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for bim-json-generator.v2.4: sha256:393cb7462725de1f1b8dacf493615a117e7a7fc6b03ea4935ba0574f72c3762f
+
+src\text2ifc_agent\prompt_registry.py:65: PromptRegistryError</failure></testcase><testcase classname="tests.agent.test_generation_semantic_correction" name="test_bad_cleanup_is_atomic_and_never_published[erase_requested]" time="0.913"><failure message="text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for bim-json-generator.v2.4: sha256:393cb7462725de1f1b8dacf493615a117e7a7fc6b03ea4935ba0574f72c3762f">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-style-authority-green-20260910/test_bad_cleanup_is_atomic_and3')
+attack = 'erase_requested'
+
+    @pytest.mark.parametrize('attack', ['partial', 'geometry', 'wrong_material', 'erase_requested', 'other_member'])
+    def test_bad_cleanup_is_atomic_and_never_published(tmp_path, attack):
+        data = fixture()
+        edits = edits_for(data)
+        if attack == 'partial':
+            edits.pop(data[6]['id'])
+        elif attack == 'geometry':
+            edits[data[3]['id']]['changes']['/attributes/Name'] = 'Unrequested rename'
+        elif attack == 'wrong_material':
+            edits[data[3]['id']]['changes']['/materials'] = data[5]['materials']
+        elif attack == 'erase_requested':
+            edits[data[3]['id']] = {'op': 'remove_entity'}
+        else:
+            edits[data[4]['id']] = {'op': 'remove_entity'}
+&gt;       result, _ = run_round(tmp_path, data, edits)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_generation_semantic_correction.py:160: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\agent\test_generation_semantic_correction.py:96: in run_round
+    result = run_scoped_changeset_round(provider=provider, output_dir=tmp_path/'round', case_id='semantic-family',
+src\text2ifc_agent\scoped_loop.py:156: in run_scoped_changeset_round
+    stage = run_changeset_stage(
+src\text2ifc_agent\changeset_stage.py:97: in run_changeset_stage
+    rendered = render_prompt(template_id=template_id, inputs=renderer_inputs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\text2ifc_agent\prompt_registry.py:79: in render_prompt
+    registry = load_prompt_registry(registry_path)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+registry_path = WindowsPath('E:/code for project/bimnet/prompts/agent/registry.json')
+
+    def load_prompt_registry(
+        registry_path: Path | str = DEFAULT_REGISTRY_PATH,
+    ) -&gt; dict[str, dict[str, Any]]:
+        """Load templates keyed by ID and verify their content hashes."""
+        path = Path(registry_path)
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        templates = payload.get("templates")
+        if not isinstance(templates, list):
+            raise PromptRegistryError("prompt registry templates must be a list")
+    
+        registry: dict[str, dict[str, Any]] = {}
+        for raw_template in templates:
+            if not isinstance(raw_template, dict):
+                raise PromptRegistryError("prompt registry template must be an object")
+            missing = [field for field in REQUIRED_TEMPLATE_FIELDS if field not in raw_template]
+            if missing:
+                raise PromptRegistryError(
+                    "prompt template missing required fields: " + ", ".join(missing)
+                )
+            template = dict(raw_template)
+            template_id = str(template["template_id"])
+            if template_id in registry:
+                raise PromptRegistryError(f"duplicate prompt template_id: {template_id}")
+            template_path = _project_path(str(template["path"]))
+            actual_hash = _template_sha256(template_path)
+            if template["sha256"] != actual_hash:
+&gt;               raise PromptRegistryError(
+                    f"prompt template hash mismatch for {template_id}: {actual_hash}"
+                )
+E               text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for bim-json-generator.v2.4: sha256:393cb7462725de1f1b8dacf493615a117e7a7fc6b03ea4935ba0574f72c3762f
+
+src\text2ifc_agent\prompt_registry.py:65: PromptRegistryError</failure></testcase><testcase classname="tests.agent.test_generation_semantic_correction" name="test_bad_cleanup_is_atomic_and_never_published[other_member]" time="0.911"><failure message="text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for bim-json-generator.v2.4: sha256:393cb7462725de1f1b8dacf493615a117e7a7fc6b03ea4935ba0574f72c3762f">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-style-authority-green-20260910/test_bad_cleanup_is_atomic_and4')
+attack = 'other_member'
+
+    @pytest.mark.parametrize('attack', ['partial', 'geometry', 'wrong_material', 'erase_requested', 'other_member'])
+    def test_bad_cleanup_is_atomic_and_never_published(tmp_path, attack):
+        data = fixture()
+        edits = edits_for(data)
+        if attack == 'partial':
+            edits.pop(data[6]['id'])
+        elif attack == 'geometry':
+            edits[data[3]['id']]['changes']['/attributes/Name'] = 'Unrequested rename'
+        elif attack == 'wrong_material':
+            edits[data[3]['id']]['changes']['/materials'] = data[5]['materials']
+        elif attack == 'erase_requested':
+            edits[data[3]['id']] = {'op': 'remove_entity'}
+        else:
+            edits[data[4]['id']] = {'op': 'remove_entity'}
+&gt;       result, _ = run_round(tmp_path, data, edits)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_generation_semantic_correction.py:160: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\agent\test_generation_semantic_correction.py:96: in run_round
+    result = run_scoped_changeset_round(provider=provider, output_dir=tmp_path/'round', case_id='semantic-family',
+src\text2ifc_agent\scoped_loop.py:156: in run_scoped_changeset_round
+    stage = run_changeset_stage(
+src\text2ifc_agent\changeset_stage.py:97: in run_changeset_stage
+    rendered = render_prompt(template_id=template_id, inputs=renderer_inputs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\text2ifc_agent\prompt_registry.py:79: in render_prompt
+    registry = load_prompt_registry(registry_path)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+registry_path = WindowsPath('E:/code for project/bimnet/prompts/agent/registry.json')
+
+    def load_prompt_registry(
+        registry_path: Path | str = DEFAULT_REGISTRY_PATH,
+    ) -&gt; dict[str, dict[str, Any]]:
+        """Load templates keyed by ID and verify their content hashes."""
+        path = Path(registry_path)
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        templates = payload.get("templates")
+        if not isinstance(templates, list):
+            raise PromptRegistryError("prompt registry templates must be a list")
+    
+        registry: dict[str, dict[str, Any]] = {}
+        for raw_template in templates:
+            if not isinstance(raw_template, dict):
+                raise PromptRegistryError("prompt registry template must be an object")
+            missing = [field for field in REQUIRED_TEMPLATE_FIELDS if field not in raw_template]
+            if missing:
+                raise PromptRegistryError(
+                    "prompt template missing required fields: " + ", ".join(missing)
+                )
+            template = dict(raw_template)
+            template_id = str(template["template_id"])
+            if template_id in registry:
+                raise PromptRegistryError(f"duplicate prompt template_id: {template_id}")
+            template_path = _project_path(str(template["path"]))
+            actual_hash = _template_sha256(template_path)
+            if template["sha256"] != actual_hash:
+&gt;               raise PromptRegistryError(
+                    f"prompt template hash mismatch for {template_id}: {actual_hash}"
+                )
+E               text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for bim-json-generator.v2.4: sha256:393cb7462725de1f1b8dacf493615a117e7a7fc6b03ea4935ba0574f72c3762f
+
+src\text2ifc_agent\prompt_registry.py:65: PromptRegistryError</failure></testcase><testcase classname="tests.agent.test_generation_semantic_correction" name="test_unproven_cleanup_stops_before_transport[inherited]" time="0.355" /><testcase classname="tests.agent.test_generation_semantic_correction" name="test_unproven_cleanup_stops_before_transport[unknown_reference]" time="0.317" /><testcase classname="tests.agent.test_generation_semantic_correction" name="test_unproven_cleanup_stops_before_transport[conflicting_frozen_value]" time="0.374" /><testcase classname="tests.agent.test_generation_semantic_correction" name="test_unproven_cleanup_stops_before_transport[requested_type_semantics]" time="0.353" /><testcase classname="tests.agent.test_generation_semantic_correction" name="test_field_permission_does_not_authorize_deleting_a_requested_type" time="0.918"><failure message="text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for bim-json-generator.v2.4: sha256:393cb7462725de1f1b8dacf493615a117e7a7fc6b03ea4935ba0574f72c3762f">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-style-authority-green-20260910/test_field_permission_does_not0')
+
+    def test_field_permission_does_not_authorize_deleting_a_requested_type(tmp_path):
+        data = fixture(shared=True)
+&gt;       result, _ = run_round(tmp_path, data, {data[5]['id']: {'op': 'remove_entity'},
+            data[6]['id']: {'op': 'remove_relationship'}})
+
+tests\agent\test_generation_semantic_correction.py:188: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\agent\test_generation_semantic_correction.py:96: in run_round
+    result = run_scoped_changeset_round(provider=provider, output_dir=tmp_path/'round', case_id='semantic-family',
+src\text2ifc_agent\scoped_loop.py:156: in run_scoped_changeset_round
+    stage = run_changeset_stage(
+src\text2ifc_agent\changeset_stage.py:97: in run_changeset_stage
+    rendered = render_prompt(template_id=template_id, inputs=renderer_inputs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\text2ifc_agent\prompt_registry.py:79: in render_prompt
+    registry = load_prompt_registry(registry_path)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+registry_path = WindowsPath('E:/code for project/bimnet/prompts/agent/registry.json')
+
+    def load_prompt_registry(
+        registry_path: Path | str = DEFAULT_REGISTRY_PATH,
+    ) -&gt; dict[str, dict[str, Any]]:
+        """Load templates keyed by ID and verify their content hashes."""
+        path = Path(registry_path)
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        templates = payload.get("templates")
+        if not isinstance(templates, list):
+            raise PromptRegistryError("prompt registry templates must be a list")
+    
+        registry: dict[str, dict[str, Any]] = {}
+        for raw_template in templates:
+            if not isinstance(raw_template, dict):
+                raise PromptRegistryError("prompt registry template must be an object")
+            missing = [field for field in REQUIRED_TEMPLATE_FIELDS if field not in raw_template]
+            if missing:
+                raise PromptRegistryError(
+                    "prompt template missing required fields: " + ", ".join(missing)
+                )
+            template = dict(raw_template)
+            template_id = str(template["template_id"])
+            if template_id in registry:
+                raise PromptRegistryError(f"duplicate prompt template_id: {template_id}")
+            template_path = _project_path(str(template["path"]))
+            actual_hash = _template_sha256(template_path)
+            if template["sha256"] != actual_hash:
+&gt;               raise PromptRegistryError(
+                    f"prompt template hash mismatch for {template_id}: {actual_hash}"
+                )
+E               text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for bim-json-generator.v2.4: sha256:393cb7462725de1f1b8dacf493615a117e7a7fc6b03ea4935ba0574f72c3762f
+
+src\text2ifc_agent\prompt_registry.py:65: PromptRegistryError</failure></testcase><testcase classname="tests.agent.test_generation_semantic_correction" name="test_unrequested_property_removal_preserves_requested_siblings" time="0.893"><failure message="text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for bim-json-generator.v2.4: sha256:393cb7462725de1f1b8dacf493615a117e7a7fc6b03ea4935ba0574f72c3762f">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-style-authority-green-20260910/test_unrequested_property_remo0')
+
+    def test_unrequested_property_removal_preserves_requested_siblings(tmp_path):
+        data = fixture(shared=True)
+        data[6]['attributes']['RelatedObjects'] = [data[3]['id']]
+        data[5]['materials'], data[5]['property_sets'] = [], {}
+        req = data[1]['known_facts']['semantic_requirements'][0]
+        data[3]['materials'], data[3]['property_sets'] = [req['material']], copy.deepcopy(req['property_sets'])
+        data[3]['property_sets']['Pset_WallCommon']['ThermalTransmittance'] = 0
+&gt;       result, _ = run_round(tmp_path, data, {data[3]['id']: {'op': 'update_entity', 'changes': {'/property_sets': req['property_sets']}}})
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_generation_semantic_correction.py:200: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\agent\test_generation_semantic_correction.py:96: in run_round
+    result = run_scoped_changeset_round(provider=provider, output_dir=tmp_path/'round', case_id='semantic-family',
+src\text2ifc_agent\scoped_loop.py:156: in run_scoped_changeset_round
+    stage = run_changeset_stage(
+src\text2ifc_agent\changeset_stage.py:97: in run_changeset_stage
+    rendered = render_prompt(template_id=template_id, inputs=renderer_inputs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\text2ifc_agent\prompt_registry.py:79: in render_prompt
+    registry = load_prompt_registry(registry_path)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+registry_path = WindowsPath('E:/code for project/bimnet/prompts/agent/registry.json')
+
+    def load_prompt_registry(
+        registry_path: Path | str = DEFAULT_REGISTRY_PATH,
+    ) -&gt; dict[str, dict[str, Any]]:
+        """Load templates keyed by ID and verify their content hashes."""
+        path = Path(registry_path)
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        templates = payload.get("templates")
+        if not isinstance(templates, list):
+            raise PromptRegistryError("prompt registry templates must be a list")
+    
+        registry: dict[str, dict[str, Any]] = {}
+        for raw_template in templates:
+            if not isinstance(raw_template, dict):
+                raise PromptRegistryError("prompt registry template must be an object")
+            missing = [field for field in REQUIRED_TEMPLATE_FIELDS if field not in raw_template]
+            if missing:
+                raise PromptRegistryError(
+                    "prompt template missing required fields: " + ", ".join(missing)
+                )
+            template = dict(raw_template)
+            template_id = str(template["template_id"])
+            if template_id in registry:
+                raise PromptRegistryError(f"duplicate prompt template_id: {template_id}")
+            template_path = _project_path(str(template["path"]))
+            actual_hash = _template_sha256(template_path)
+            if template["sha256"] != actual_hash:
+&gt;               raise PromptRegistryError(
+                    f"prompt template hash mismatch for {template_id}: {actual_hash}"
+                )
+E               text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for bim-json-generator.v2.4: sha256:393cb7462725de1f1b8dacf493615a117e7a7fc6b03ea4935ba0574f72c3762f
+
+src\text2ifc_agent\prompt_registry.py:65: PromptRegistryError</failure></testcase><testcase classname="tests.agent.test_generation_semantic_correction" name="test_property_cleanup_escapes_user_pset_keys" time="0.959"><failure message="text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for bim-json-generator.v2.4: sha256:393cb7462725de1f1b8dacf493615a117e7a7fc6b03ea4935ba0574f72c3762f">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-style-authority-green-20260910/test_property_cleanup_escapes_0')
+
+    def test_property_cleanup_escapes_user_pset_keys(tmp_path):
+        data = fixture(shared=True)
+        data[6]['attributes']['RelatedObjects'] = [data[3]['id']]
+        data[5]['materials'], data[5]['property_sets'] = [], {}
+        data[3]['property_sets'] = {'User/Pset': {'value~key': 'guessed'}}
+&gt;       result, _ = run_round(tmp_path, data, {data[3]['id']: {'op': 'update_entity', 'changes': {'/property_sets': {}}}})
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_generation_semantic_correction.py:210: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\agent\test_generation_semantic_correction.py:96: in run_round
+    result = run_scoped_changeset_round(provider=provider, output_dir=tmp_path/'round', case_id='semantic-family',
+src\text2ifc_agent\scoped_loop.py:156: in run_scoped_changeset_round
+    stage = run_changeset_stage(
+src\text2ifc_agent\changeset_stage.py:97: in run_changeset_stage
+    rendered = render_prompt(template_id=template_id, inputs=renderer_inputs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\text2ifc_agent\prompt_registry.py:79: in render_prompt
+    registry = load_prompt_registry(registry_path)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+registry_path = WindowsPath('E:/code for project/bimnet/prompts/agent/registry.json')
+
+    def load_prompt_registry(
+        registry_path: Path | str = DEFAULT_REGISTRY_PATH,
+    ) -&gt; dict[str, dict[str, Any]]:
+        """Load templates keyed by ID and verify their content hashes."""
+        path = Path(registry_path)
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        templates = payload.get("templates")
+        if not isinstance(templates, list):
+            raise PromptRegistryError("prompt registry templates must be a list")
+    
+        registry: dict[str, dict[str, Any]] = {}
+        for raw_template in templates:
+            if not isinstance(raw_template, dict):
+                raise PromptRegistryError("prompt registry template must be an object")
+            missing = [field for field in REQUIRED_TEMPLATE_FIELDS if field not in raw_template]
+            if missing:
+                raise PromptRegistryError(
+                    "prompt template missing required fields: " + ", ".join(missing)
+                )
+            template = dict(raw_template)
+            template_id = str(template["template_id"])
+            if template_id in registry:
+                raise PromptRegistryError(f"duplicate prompt template_id: {template_id}")
+            template_path = _project_path(str(template["path"]))
+            actual_hash = _template_sha256(template_path)
+            if template["sha256"] != actual_hash:
+&gt;               raise PromptRegistryError(
+                    f"prompt template hash mismatch for {template_id}: {actual_hash}"
+                )
+E               text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for bim-json-generator.v2.4: sha256:393cb7462725de1f1b8dacf493615a117e7a7fc6b03ea4935ba0574f72c3762f
+
+src\text2ifc_agent\prompt_registry.py:65: PromptRegistryError</failure></testcase><testcase classname="tests.agent.test_generation_semantic_correction" name="test_orphan_type_families_do_not_need_a_relationship_issue[IfcBeamType]" time="1.016"><failure message="text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for bim-json-generator.v2.4: sha256:393cb7462725de1f1b8dacf493615a117e7a7fc6b03ea4935ba0574f72c3762f">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-style-authority-green-20260910/test_orphan_type_families_do_n0')
+kind = 'IfcBeamType'
+
+    @pytest.mark.parametrize('kind', ['IfcBeamType', 'IfcSlabType', 'IfcDoorStyle', 'IfcWindowStyle'])
+    def test_orphan_type_families_do_not_need_a_relationship_issue(tmp_path, kind):
+        data = fixture()
+        data[0]['relationships'].remove(data[6])
+        data[5]['ifc_class'] = kind
+        data[5]['materials'], data[5]['property_sets'] = [], {}
+        data[5]['attributes'] = ({'Name': 'Unrequested style', 'ConstructionType': 'NOTDEFINED',
+            'OperationType': 'NOTDEFINED', 'ParameterTakesPrecedence': False, 'Sizeable': False}
+            if kind.endswith('Style') else {'Name': 'Unrequested type', 'PredefinedType': 'NOTDEFINED'})
+        data[1]['known_facts']['semantic_requirements'] = []
+        data[2]['semantic_expectations'] = []
+&gt;       result, _ = run_round(tmp_path, data, {data[5]['id']: {'op': 'remove_entity'}})
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_generation_semantic_correction.py:225: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\agent\test_generation_semantic_correction.py:96: in run_round
+    result = run_scoped_changeset_round(provider=provider, output_dir=tmp_path/'round', case_id='semantic-family',
+src\text2ifc_agent\scoped_loop.py:156: in run_scoped_changeset_round
+    stage = run_changeset_stage(
+src\text2ifc_agent\changeset_stage.py:97: in run_changeset_stage
+    rendered = render_prompt(template_id=template_id, inputs=renderer_inputs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\text2ifc_agent\prompt_registry.py:79: in render_prompt
+    registry = load_prompt_registry(registry_path)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+registry_path = WindowsPath('E:/code for project/bimnet/prompts/agent/registry.json')
+
+    def load_prompt_registry(
+        registry_path: Path | str = DEFAULT_REGISTRY_PATH,
+    ) -&gt; dict[str, dict[str, Any]]:
+        """Load templates keyed by ID and verify their content hashes."""
+        path = Path(registry_path)
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        templates = payload.get("templates")
+        if not isinstance(templates, list):
+            raise PromptRegistryError("prompt registry templates must be a list")
+    
+        registry: dict[str, dict[str, Any]] = {}
+        for raw_template in templates:
+            if not isinstance(raw_template, dict):
+                raise PromptRegistryError("prompt registry template must be an object")
+            missing = [field for field in REQUIRED_TEMPLATE_FIELDS if field not in raw_template]
+            if missing:
+                raise PromptRegistryError(
+                    "prompt template missing required fields: " + ", ".join(missing)
+                )
+            template = dict(raw_template)
+            template_id = str(template["template_id"])
+            if template_id in registry:
+                raise PromptRegistryError(f"duplicate prompt template_id: {template_id}")
+            template_path = _project_path(str(template["path"]))
+            actual_hash = _template_sha256(template_path)
+            if template["sha256"] != actual_hash:
+&gt;               raise PromptRegistryError(
+                    f"prompt template hash mismatch for {template_id}: {actual_hash}"
+                )
+E               text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for bim-json-generator.v2.4: sha256:393cb7462725de1f1b8dacf493615a117e7a7fc6b03ea4935ba0574f72c3762f
+
+src\text2ifc_agent\prompt_registry.py:65: PromptRegistryError</failure></testcase><testcase classname="tests.agent.test_generation_semantic_correction" name="test_orphan_type_families_do_not_need_a_relationship_issue[IfcSlabType]" time="0.942"><failure message="text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for bim-json-generator.v2.4: sha256:393cb7462725de1f1b8dacf493615a117e7a7fc6b03ea4935ba0574f72c3762f">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-style-authority-green-20260910/test_orphan_type_families_do_n1')
+kind = 'IfcSlabType'
+
+    @pytest.mark.parametrize('kind', ['IfcBeamType', 'IfcSlabType', 'IfcDoorStyle', 'IfcWindowStyle'])
+    def test_orphan_type_families_do_not_need_a_relationship_issue(tmp_path, kind):
+        data = fixture()
+        data[0]['relationships'].remove(data[6])
+        data[5]['ifc_class'] = kind
+        data[5]['materials'], data[5]['property_sets'] = [], {}
+        data[5]['attributes'] = ({'Name': 'Unrequested style', 'ConstructionType': 'NOTDEFINED',
+            'OperationType': 'NOTDEFINED', 'ParameterTakesPrecedence': False, 'Sizeable': False}
+            if kind.endswith('Style') else {'Name': 'Unrequested type', 'PredefinedType': 'NOTDEFINED'})
+        data[1]['known_facts']['semantic_requirements'] = []
+        data[2]['semantic_expectations'] = []
+&gt;       result, _ = run_round(tmp_path, data, {data[5]['id']: {'op': 'remove_entity'}})
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_generation_semantic_correction.py:225: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\agent\test_generation_semantic_correction.py:96: in run_round
+    result = run_scoped_changeset_round(provider=provider, output_dir=tmp_path/'round', case_id='semantic-family',
+src\text2ifc_agent\scoped_loop.py:156: in run_scoped_changeset_round
+    stage = run_changeset_stage(
+src\text2ifc_agent\changeset_stage.py:97: in run_changeset_stage
+    rendered = render_prompt(template_id=template_id, inputs=renderer_inputs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\text2ifc_agent\prompt_registry.py:79: in render_prompt
+    registry = load_prompt_registry(registry_path)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+registry_path = WindowsPath('E:/code for project/bimnet/prompts/agent/registry.json')
+
+    def load_prompt_registry(
+        registry_path: Path | str = DEFAULT_REGISTRY_PATH,
+    ) -&gt; dict[str, dict[str, Any]]:
+        """Load templates keyed by ID and verify their content hashes."""
+        path = Path(registry_path)
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        templates = payload.get("templates")
+        if not isinstance(templates, list):
+            raise PromptRegistryError("prompt registry templates must be a list")
+    
+        registry: dict[str, dict[str, Any]] = {}
+        for raw_template in templates:
+            if not isinstance(raw_template, dict):
+                raise PromptRegistryError("prompt registry template must be an object")
+            missing = [field for field in REQUIRED_TEMPLATE_FIELDS if field not in raw_template]
+            if missing:
+                raise PromptRegistryError(
+                    "prompt template missing required fields: " + ", ".join(missing)
+                )
+            template = dict(raw_template)
+            template_id = str(template["template_id"])
+            if template_id in registry:
+                raise PromptRegistryError(f"duplicate prompt template_id: {template_id}")
+            template_path = _project_path(str(template["path"]))
+            actual_hash = _template_sha256(template_path)
+            if template["sha256"] != actual_hash:
+&gt;               raise PromptRegistryError(
+                    f"prompt template hash mismatch for {template_id}: {actual_hash}"
+                )
+E               text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for bim-json-generator.v2.4: sha256:393cb7462725de1f1b8dacf493615a117e7a7fc6b03ea4935ba0574f72c3762f
+
+src\text2ifc_agent\prompt_registry.py:65: PromptRegistryError</failure></testcase><testcase classname="tests.agent.test_generation_semantic_correction" name="test_orphan_type_families_do_not_need_a_relationship_issue[IfcDoorStyle]" time="0.873"><failure message="text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for bim-json-generator.v2.4: sha256:393cb7462725de1f1b8dacf493615a117e7a7fc6b03ea4935ba0574f72c3762f">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-style-authority-green-20260910/test_orphan_type_families_do_n2')
+kind = 'IfcDoorStyle'
+
+    @pytest.mark.parametrize('kind', ['IfcBeamType', 'IfcSlabType', 'IfcDoorStyle', 'IfcWindowStyle'])
+    def test_orphan_type_families_do_not_need_a_relationship_issue(tmp_path, kind):
+        data = fixture()
+        data[0]['relationships'].remove(data[6])
+        data[5]['ifc_class'] = kind
+        data[5]['materials'], data[5]['property_sets'] = [], {}
+        data[5]['attributes'] = ({'Name': 'Unrequested style', 'ConstructionType': 'NOTDEFINED',
+            'OperationType': 'NOTDEFINED', 'ParameterTakesPrecedence': False, 'Sizeable': False}
+            if kind.endswith('Style') else {'Name': 'Unrequested type', 'PredefinedType': 'NOTDEFINED'})
+        data[1]['known_facts']['semantic_requirements'] = []
+        data[2]['semantic_expectations'] = []
+&gt;       result, _ = run_round(tmp_path, data, {data[5]['id']: {'op': 'remove_entity'}})
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_generation_semantic_correction.py:225: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\agent\test_generation_semantic_correction.py:96: in run_round
+    result = run_scoped_changeset_round(provider=provider, output_dir=tmp_path/'round', case_id='semantic-family',
+src\text2ifc_agent\scoped_loop.py:156: in run_scoped_changeset_round
+    stage = run_changeset_stage(
+src\text2ifc_agent\changeset_stage.py:97: in run_changeset_stage
+    rendered = render_prompt(template_id=template_id, inputs=renderer_inputs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\text2ifc_agent\prompt_registry.py:79: in render_prompt
+    registry = load_prompt_registry(registry_path)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+registry_path = WindowsPath('E:/code for project/bimnet/prompts/agent/registry.json')
+
+    def load_prompt_registry(
+        registry_path: Path | str = DEFAULT_REGISTRY_PATH,
+    ) -&gt; dict[str, dict[str, Any]]:
+        """Load templates keyed by ID and verify their content hashes."""
+        path = Path(registry_path)
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        templates = payload.get("templates")
+        if not isinstance(templates, list):
+            raise PromptRegistryError("prompt registry templates must be a list")
+    
+        registry: dict[str, dict[str, Any]] = {}
+        for raw_template in templates:
+            if not isinstance(raw_template, dict):
+                raise PromptRegistryError("prompt registry template must be an object")
+            missing = [field for field in REQUIRED_TEMPLATE_FIELDS if field not in raw_template]
+            if missing:
+                raise PromptRegistryError(
+                    "prompt template missing required fields: " + ", ".join(missing)
+                )
+            template = dict(raw_template)
+            template_id = str(template["template_id"])
+            if template_id in registry:
+                raise PromptRegistryError(f"duplicate prompt template_id: {template_id}")
+            template_path = _project_path(str(template["path"]))
+            actual_hash = _template_sha256(template_path)
+            if template["sha256"] != actual_hash:
+&gt;               raise PromptRegistryError(
+                    f"prompt template hash mismatch for {template_id}: {actual_hash}"
+                )
+E               text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for bim-json-generator.v2.4: sha256:393cb7462725de1f1b8dacf493615a117e7a7fc6b03ea4935ba0574f72c3762f
+
+src\text2ifc_agent\prompt_registry.py:65: PromptRegistryError</failure></testcase><testcase classname="tests.agent.test_generation_semantic_correction" name="test_orphan_type_families_do_not_need_a_relationship_issue[IfcWindowStyle]" time="0.937"><failure message="text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for bim-json-generator.v2.4: sha256:393cb7462725de1f1b8dacf493615a117e7a7fc6b03ea4935ba0574f72c3762f">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-style-authority-green-20260910/test_orphan_type_families_do_n3')
+kind = 'IfcWindowStyle'
+
+    @pytest.mark.parametrize('kind', ['IfcBeamType', 'IfcSlabType', 'IfcDoorStyle', 'IfcWindowStyle'])
+    def test_orphan_type_families_do_not_need_a_relationship_issue(tmp_path, kind):
+        data = fixture()
+        data[0]['relationships'].remove(data[6])
+        data[5]['ifc_class'] = kind
+        data[5]['materials'], data[5]['property_sets'] = [], {}
+        data[5]['attributes'] = ({'Name': 'Unrequested style', 'ConstructionType': 'NOTDEFINED',
+            'OperationType': 'NOTDEFINED', 'ParameterTakesPrecedence': False, 'Sizeable': False}
+            if kind.endswith('Style') else {'Name': 'Unrequested type', 'PredefinedType': 'NOTDEFINED'})
+        data[1]['known_facts']['semantic_requirements'] = []
+        data[2]['semantic_expectations'] = []
+&gt;       result, _ = run_round(tmp_path, data, {data[5]['id']: {'op': 'remove_entity'}})
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_generation_semantic_correction.py:225: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\agent\test_generation_semantic_correction.py:96: in run_round
+    result = run_scoped_changeset_round(provider=provider, output_dir=tmp_path/'round', case_id='semantic-family',
+src\text2ifc_agent\scoped_loop.py:156: in run_scoped_changeset_round
+    stage = run_changeset_stage(
+src\text2ifc_agent\changeset_stage.py:97: in run_changeset_stage
+    rendered = render_prompt(template_id=template_id, inputs=renderer_inputs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\text2ifc_agent\prompt_registry.py:79: in render_prompt
+    registry = load_prompt_registry(registry_path)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+registry_path = WindowsPath('E:/code for project/bimnet/prompts/agent/registry.json')
+
+    def load_prompt_registry(
+        registry_path: Path | str = DEFAULT_REGISTRY_PATH,
+    ) -&gt; dict[str, dict[str, Any]]:
+        """Load templates keyed by ID and verify their content hashes."""
+        path = Path(registry_path)
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        templates = payload.get("templates")
+        if not isinstance(templates, list):
+            raise PromptRegistryError("prompt registry templates must be a list")
+    
+        registry: dict[str, dict[str, Any]] = {}
+        for raw_template in templates:
+            if not isinstance(raw_template, dict):
+                raise PromptRegistryError("prompt registry template must be an object")
+            missing = [field for field in REQUIRED_TEMPLATE_FIELDS if field not in raw_template]
+            if missing:
+                raise PromptRegistryError(
+                    "prompt template missing required fields: " + ", ".join(missing)
+                )
+            template = dict(raw_template)
+            template_id = str(template["template_id"])
+            if template_id in registry:
+                raise PromptRegistryError(f"duplicate prompt template_id: {template_id}")
+            template_path = _project_path(str(template["path"]))
+            actual_hash = _template_sha256(template_path)
+            if template["sha256"] != actual_hash:
+&gt;               raise PromptRegistryError(
+                    f"prompt template hash mismatch for {template_id}: {actual_hash}"
+                )
+E               text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for bim-json-generator.v2.4: sha256:393cb7462725de1f1b8dacf493615a117e7a7fc6b03ea4935ba0574f72c3762f
+
+src\text2ifc_agent\prompt_registry.py:65: PromptRegistryError</failure></testcase><testcase classname="tests.agent.test_generation_semantic_correction" name="test_staged_output_semantic_cleanup_uses_same_public_round" time="0.609"><failure message="text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for bim-json-generator.v2.4: sha256:393cb7462725de1f1b8dacf493615a117e7a7fc6b03ea4935ba0574f72c3762f">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-style-authority-green-20260910/test_staged_output_semantic_cl0')
+
+    def test_staged_output_semantic_cleanup_uses_same_public_round(tmp_path):
+        from text2ifc_agent.staged_generation import run_staged_generation
+        from tests.agent.test_phase6_5_staged_generation import _fixture, _changesets
+        skeleton, manifest, expected, values = _fixture(1)
+        skeleton['schema_version'] = 'bim-json/2.1'
+        for group in values:
+            for row in group:
+                if row['ifc_class'] == 'IfcSpace':
+                    row['attributes']['InteriorOrExteriorSpace'] = 'INTERNAL'
+        wall = next(row for row in values[0] if row['id'] == 'wall-1')
+        wall['attributes']['Representation']['profile']['x'] = 4000
+        wall['property_sets'] = {'Pset_WallCommon': {'FireRating': 'guessed'}}
+        brief = {'schema_version': 'text2ifc/design-brief/2.1', 'known_facts': {}}
+&gt;       stage = run_staged_generation(provider=SequenceProvider(_changesets(skeleton, manifest, expected, values)),
+            output_dir=tmp_path/'staged', case_id='staged-cleanup', user_request='按已确认尺寸生成。',
+            conversation=[], design_brief=brief, expected_facts=expected, skeleton=skeleton, manifest=manifest)
+
+tests\agent\test_generation_semantic_correction.py:243: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\text2ifc_agent\staged_generation.py:136: in run_staged_generation
+    stage = run_changeset_stage(
+src\text2ifc_agent\changeset_stage.py:97: in run_changeset_stage
+    rendered = render_prompt(template_id=template_id, inputs=renderer_inputs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\text2ifc_agent\prompt_registry.py:79: in render_prompt
+    registry = load_prompt_registry(registry_path)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+registry_path = WindowsPath('E:/code for project/bimnet/prompts/agent/registry.json')
+
+    def load_prompt_registry(
+        registry_path: Path | str = DEFAULT_REGISTRY_PATH,
+    ) -&gt; dict[str, dict[str, Any]]:
+        """Load templates keyed by ID and verify their content hashes."""
+        path = Path(registry_path)
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        templates = payload.get("templates")
+        if not isinstance(templates, list):
+            raise PromptRegistryError("prompt registry templates must be a list")
+    
+        registry: dict[str, dict[str, Any]] = {}
+        for raw_template in templates:
+            if not isinstance(raw_template, dict):
+                raise PromptRegistryError("prompt registry template must be an object")
+            missing = [field for field in REQUIRED_TEMPLATE_FIELDS if field not in raw_template]
+            if missing:
+                raise PromptRegistryError(
+                    "prompt template missing required fields: " + ", ".join(missing)
+                )
+            template = dict(raw_template)
+            template_id = str(template["template_id"])
+            if template_id in registry:
+                raise PromptRegistryError(f"duplicate prompt template_id: {template_id}")
+            template_path = _project_path(str(template["path"]))
+            actual_hash = _template_sha256(template_path)
+            if template["sha256"] != actual_hash:
+&gt;               raise PromptRegistryError(
+                    f"prompt template hash mismatch for {template_id}: {actual_hash}"
+                )
+E               text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for bim-json-generator.v2.4: sha256:393cb7462725de1f1b8dacf493615a117e7a7fc6b03ea4935ba0574f72c3762f
+
+src\text2ifc_agent\prompt_registry.py:65: PromptRegistryError</failure></testcase><testcase classname="tests.agent.test_generation_semantic_correction" name="test_ready_session_semantic_loop_publishes_and_resume_does_not_recall" time="0.605"><failure message="text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for bim-json-generator.v2.4: sha256:393cb7462725de1f1b8dacf493615a117e7a7fc6b03ea4935ba0574f72c3762f">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-style-authority-green-20260910/test_ready_session_semantic_lo0')
+
+    def test_ready_session_semantic_loop_publishes_and_resume_does_not_recall(tmp_path):
+        from text2ifc_agent.live_pipeline import run_design_brief_stage
+        from text2ifc_agent.interactive_cli_flow import run_ready_session_to_ifc
+        from text2ifc_agent.session_store import SessionStore
+        from tests.agent.test_phase6_2_fix_semantic_fidelity import _outside_boundary_design_brief, _outside_boundary_center_overlap_candidate
+        brief = _outside_boundary_design_brief()
+        brief['schema_version'] = 'text2ifc/design-brief/2.1'
+        brief['provenance'].update(selected_evidence_ids=[], few_shot_ids=[])
+        candidate = _outside_boundary_center_overlap_candidate()
+        candidate['schema_version'] = 'bim-json/2.1'
+        for row in candidate['entities']:
+            row['property_sets'], row['materials'] = {}, []
+        extra = _entity('unwanted-shared-type')
+        extra['attributes'] = {'Name': 'Unrequested wall type', 'PredefinedType': 'STANDARD'}
+        candidate['entities'].append(extra)
+        candidate['relationships'].append(_relation('unwanted-membership', extra['id'], ['wall-south', 'wall-north']))
+        store = SessionStore.open(tmp_path/'sessions.sqlite', artifact_root=tmp_path)
+        session = store.create_session(original_input=brief['original_request'])
+&gt;       result = run_design_brief_stage(provider=SequenceProvider([brief]),
+            case={'case_id':session.session_hash, 'user_request':brief['original_request'], 'conversation':[]},
+            output_dir=session.run_dir/'design-brief')
+
+tests\agent\test_generation_semantic_correction.py:276: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\text2ifc_agent\live_pipeline.py:175: in run_design_brief_stage
+    rendered = render_prompt(
+src\text2ifc_agent\prompt_registry.py:79: in render_prompt
+    registry = load_prompt_registry(registry_path)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+registry_path = WindowsPath('E:/code for project/bimnet/prompts/agent/registry.json')
+
+    def load_prompt_registry(
+        registry_path: Path | str = DEFAULT_REGISTRY_PATH,
+    ) -&gt; dict[str, dict[str, Any]]:
+        """Load templates keyed by ID and verify their content hashes."""
+        path = Path(registry_path)
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        templates = payload.get("templates")
+        if not isinstance(templates, list):
+            raise PromptRegistryError("prompt registry templates must be a list")
+    
+        registry: dict[str, dict[str, Any]] = {}
+        for raw_template in templates:
+            if not isinstance(raw_template, dict):
+                raise PromptRegistryError("prompt registry template must be an object")
+            missing = [field for field in REQUIRED_TEMPLATE_FIELDS if field not in raw_template]
+            if missing:
+                raise PromptRegistryError(
+                    "prompt template missing required fields: " + ", ".join(missing)
+                )
+            template = dict(raw_template)
+            template_id = str(template["template_id"])
+            if template_id in registry:
+                raise PromptRegistryError(f"duplicate prompt template_id: {template_id}")
+            template_path = _project_path(str(template["path"]))
+            actual_hash = _template_sha256(template_path)
+            if template["sha256"] != actual_hash:
+&gt;               raise PromptRegistryError(
+                    f"prompt template hash mismatch for {template_id}: {actual_hash}"
+                )
+E               text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for bim-json-generator.v2.4: sha256:393cb7462725de1f1b8dacf493615a117e7a7fc6b03ea4935ba0574f72c3762f
+
+src\text2ifc_agent\prompt_registry.py:65: PromptRegistryError</failure></testcase><testcase classname="tests.agent.test_generation_semantic_correction" name="test_context_only_issue_cannot_crash_or_authorize_semantic_cleanup" time="0.116" /><testcase classname="tests.agent.test_generation_semantic_correction" name="test_duplicate_candidate_identity_blocks_before_transport" time="0.016" /><testcase classname="tests.agent.test_generation_semantic_correction" name="test_boolean_and_numeric_frozen_values_are_not_interchangeable" time="0.350" /><testcase classname="tests.agent.test_generation_semantic_correction" name="test_cleanup_preserves_already_correct_inherited_values" time="0.909"><failure message="text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for bim-json-generator.v2.4: sha256:393cb7462725de1f1b8dacf493615a117e7a7fc6b03ea4935ba0574f72c3762f">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-style-authority-green-20260910/test_cleanup_preserves_already0')
+
+    def test_cleanup_preserves_already_correct_inherited_values(tmp_path):
+        data = fixture(shared=True)
+        req = data[1]['known_facts']['semantic_requirements'][0]
+        req['scope'] = 'inherited'
+        data[5]['materials'], data[5]['property_sets'] = [req['material']], copy.deepcopy(req['property_sets'])
+        data[1]['known_facts']['semantic_requirements'].append({'entity_id': data[5]['id'],
+            'material': req['material'], 'property_sets': copy.deepcopy(req['property_sets'])})
+        data[2]['semantic_expectations'] = project_semantic_requirements(data[1])['expectations']
+        data[5]['property_sets']['Pset_WallCommon']['ThermalTransmittance'] = 0
+&gt;       result, _ = run_round(tmp_path, data, {
+            data[5]['id']: {'op': 'update_entity', 'changes': {'/property_sets': req['property_sets']}},
+            data[6]['id']: {'op': 'update_relationship', 'changes': {'/attributes/RelatedObjects': [data[3]['id']]}}})
+
+tests\agent\test_generation_semantic_correction.py:354: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\agent\test_generation_semantic_correction.py:96: in run_round
+    result = run_scoped_changeset_round(provider=provider, output_dir=tmp_path/'round', case_id='semantic-family',
+src\text2ifc_agent\scoped_loop.py:156: in run_scoped_changeset_round
+    stage = run_changeset_stage(
+src\text2ifc_agent\changeset_stage.py:97: in run_changeset_stage
+    rendered = render_prompt(template_id=template_id, inputs=renderer_inputs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\text2ifc_agent\prompt_registry.py:79: in render_prompt
+    registry = load_prompt_registry(registry_path)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+registry_path = WindowsPath('E:/code for project/bimnet/prompts/agent/registry.json')
+
+    def load_prompt_registry(
+        registry_path: Path | str = DEFAULT_REGISTRY_PATH,
+    ) -&gt; dict[str, dict[str, Any]]:
+        """Load templates keyed by ID and verify their content hashes."""
+        path = Path(registry_path)
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        templates = payload.get("templates")
+        if not isinstance(templates, list):
+            raise PromptRegistryError("prompt registry templates must be a list")
+    
+        registry: dict[str, dict[str, Any]] = {}
+        for raw_template in templates:
+            if not isinstance(raw_template, dict):
+                raise PromptRegistryError("prompt registry template must be an object")
+            missing = [field for field in REQUIRED_TEMPLATE_FIELDS if field not in raw_template]
+            if missing:
+                raise PromptRegistryError(
+                    "prompt template missing required fields: " + ", ".join(missing)
+                )
+            template = dict(raw_template)
+            template_id = str(template["template_id"])
+            if template_id in registry:
+                raise PromptRegistryError(f"duplicate prompt template_id: {template_id}")
+            template_path = _project_path(str(template["path"]))
+            actual_hash = _template_sha256(template_path)
+            if template["sha256"] != actual_hash:
+&gt;               raise PromptRegistryError(
+                    f"prompt template hash mismatch for {template_id}: {actual_hash}"
+                )
+E               text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for bim-json-generator.v2.4: sha256:393cb7462725de1f1b8dacf493615a117e7a7fc6b03ea4935ba0574f72c3762f
+
+src\text2ifc_agent\prompt_registry.py:65: PromptRegistryError</failure></testcase><testcase classname="tests.agent.test_generation_semantic_correction" name="test_detachment_cannot_choose_between_conflicting_direct_and_effective_values" time="0.372" /></testsuite></testsuites>
