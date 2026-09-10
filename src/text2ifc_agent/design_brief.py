@@ -18,6 +18,7 @@ from text2ifc_contract.validation import (
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DESIGN_BRIEF_SCHEMA_PATHS = {
+    "text2ifc/design-brief/2.3": PROJECT_ROOT / 'schemas/agent/design-brief/2.3/schema.json',
     "text2ifc/design-brief/2.2": PROJECT_ROOT / 'schemas/agent/design-brief/2.2/schema.json',
     "text2ifc/design-brief/2.1": PROJECT_ROOT / 'schemas/agent/design-brief/2.1/schema.json',
     "text2ifc/design-brief/1.0": (
@@ -29,7 +30,7 @@ DESIGN_BRIEF_SCHEMA_PATHS = {
 }
 
 
-@lru_cache(maxsize=4)
+@lru_cache(maxsize=5)
 def load_design_brief_schema(
     schema_version: str = "text2ifc/design-brief/1.0",
 ) -> dict[str, Any]:
@@ -72,13 +73,13 @@ def validate_design_brief(
         for error in validator.iter_errors(document)
         for issue in _normalize_error(error)
     ]
-    if schema_version in {"text2ifc/design-brief/2.0", "text2ifc/design-brief/2.1", "text2ifc/design-brief/2.2"} and isinstance(document, dict):
+    if schema_version in {"text2ifc/design-brief/2.0", "text2ifc/design-brief/2.1", "text2ifc/design-brief/2.2", "text2ifc/design-brief/2.3"} and isinstance(document, dict):
         issues.extend(_validate_v2_semantics(document, evidence_catalog or []))
-    if schema_version in {'text2ifc/design-brief/2.1', 'text2ifc/design-brief/2.2'} and not issues:
+    if schema_version in {'text2ifc/design-brief/2.1', 'text2ifc/design-brief/2.2', 'text2ifc/design-brief/2.3'} and not issues:
         from .semantic_requirements import project_semantic_requirements
         if document.get('status') == 'ready':
             issues.extend(ValidationIssue(**i) for i in project_semantic_requirements(document)['issues'])
-    if schema_version == 'text2ifc/design-brief/2.2' and conversation is not None and not issues:
+    if schema_version in {'text2ifc/design-brief/2.2', 'text2ifc/design-brief/2.3'} and conversation is not None and not issues:
         user_turns = {t.get('turn_id') for t in conversation if t.get('role') == 'user'}
         for kind, entry in document['known_facts']['semantic_review'].items():
             if not set(entry['source_turns']).issubset(user_turns):
@@ -90,6 +91,8 @@ def validate_design_brief(
 
 def design_brief_template_id(schema_version: str, *, design_review_enabled: bool) -> str:
     """Preserve released contracts while explicitly selecting the stronger one."""
+    if schema_version == 'text2ifc/design-brief/2.3':
+        return 'design-brief.v2.8' if design_review_enabled else 'design-brief.v2.7'
     if schema_version == 'text2ifc/design-brief/2.2':
         return 'design-brief.v2.6' if design_review_enabled else 'design-brief.v2.5'
     if schema_version == 'text2ifc/design-brief/2.1':

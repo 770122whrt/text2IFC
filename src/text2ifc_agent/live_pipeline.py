@@ -154,9 +154,9 @@ def run_design_brief_stage(
     output.mkdir(parents=True, exist_ok=True)
     user_request = str(case["user_request"])
     conversation = list(case["conversation"])
-    if design_brief_schema_version not in {'text2ifc/design-brief/2.0','text2ifc/design-brief/2.1','text2ifc/design-brief/2.2'}:
+    if design_brief_schema_version not in {'text2ifc/design-brief/2.0','text2ifc/design-brief/2.1','text2ifc/design-brief/2.2','text2ifc/design-brief/2.3'}:
         raise ValueError('Unsupported Design Brief stage contract.')
-    new_semantics = design_brief_schema_version in {'text2ifc/design-brief/2.1', 'text2ifc/design-brief/2.2'}
+    new_semantics = design_brief_schema_version in {'text2ifc/design-brief/2.1', 'text2ifc/design-brief/2.2', 'text2ifc/design-brief/2.3'}
     if design_review_enabled and not new_semantics:
         raise ValueError('Design review requires Design Brief 2.1')
     selection = select_design_brief_context(

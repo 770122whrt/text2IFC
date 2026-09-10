@@ -27,7 +27,7 @@ def _fixed_part(brief):
 
 def semantic_repair_eligible(brief, issues):
     """Only schema/projection defects wholly inside the two semantic fields."""
-    if not isinstance(brief, dict) or brief.get('schema_version') != 'text2ifc/design-brief/2.2' or brief.get('status') != 'ready':
+    if not isinstance(brief, dict) or brief.get('schema_version') not in {'text2ifc/design-brief/2.2', 'text2ifc/design-brief/2.3'} or brief.get('status') != 'ready':
         return False
     if not issues:
         return False
@@ -59,16 +59,21 @@ def repair_semantic_brief(*, provider, output_dir, brief, case, evidence_catalog
     """Caller owns the shared budget. Every attempt is retained, success is atomic."""
     root = Path(output_dir)
     root.mkdir(parents=True, exist_ok=False)
-    schema = load_design_brief_schema('text2ifc/design-brief/2.2')
+    version = brief.get('schema_version')
+    schema = load_design_brief_schema(version)
     issues = validate_design_brief(brief, evidence_catalog=evidence_catalog,
-        expected_schema_version='text2ifc/design-brief/2.2', conversation=case['conversation'])
+        expected_schema_version=version, conversation=case['conversation'])
     if not semantic_repair_eligible(brief, issues):
         report = {'valid': False, 'issues': [asdict(i) for i in issues], 'status': 'not_eligible'}
         _write(root, 'validation.json', report)
         return report
     inputs = {'USER_REQUEST': case['user_request'], 'CONVERSATION': case['conversation'],
         'PREVIOUS_BRIEF': brief, 'VALIDATION_ISSUES': [asdict(i) for i in issues], 'DESIGN_BRIEF_SCHEMA': schema}
-    rendered = render_prompt(template_id='design-brief-semantic-repair.v1.0', inputs=inputs)
+    if version == 'text2ifc/design-brief/2.3':
+        from .semantic_requirements import element_appearance_schema
+        inputs['ELEMENT_APPEARANCE_SCHEMA'] = element_appearance_schema()
+    rendered = render_prompt(template_id='design-brief-semantic-repair.v1.1' if version == 'text2ifc/design-brief/2.3'
+                             else 'design-brief-semantic-repair.v1.0', inputs=inputs)
     _write(root, 'prompt-render-input.json', inputs)
     _write(root, 'prompt-identity.json', rendered['metadata'])
     (root/'prompt-rendered.md').write_text(rendered['text'], encoding='utf-8')
@@ -83,7 +88,7 @@ def repair_semantic_brief(*, provider, output_dir, brief, case, evidence_catalog
     errors = list(diagnostics)
     if status == 'ok' and parsed is not None and not errors:
         errors = [asdict(i) for i in validate_design_brief(parsed, evidence_catalog=evidence_catalog,
-            expected_schema_version='text2ifc/design-brief/2.2', conversation=case['conversation'])]
+            expected_schema_version=version, conversation=case['conversation'])]
         if not errors and _fixed_part(parsed) != _fixed_part(brief):
             errors.append({'code': 'BRIEF_SEMANTIC_REPAIR_SCOPE_VIOLATION', 'path': '/',
                            'message': 'Brief 校正改变了冻结语义字段以外的内容。'})

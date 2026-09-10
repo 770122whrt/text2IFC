@@ -14,7 +14,7 @@ from typing import Any, Mapping
 
 
 SEMANTIC_FIELDS = {'material', 'materials', 'property_sets', 'type_id', 'appearance', 'template'}
-SEMANTIC_BRIEF_VERSIONS = {'text2ifc/design-brief/2.1', 'text2ifc/design-brief/2.2'}
+SEMANTIC_BRIEF_VERSIONS = {'text2ifc/design-brief/2.1', 'text2ifc/design-brief/2.2', 'text2ifc/design-brief/2.3'}
 SEMANTIC_KINDS = {'material', 'property', 'type', 'appearance', 'template'}
 
 
@@ -22,6 +22,15 @@ SEMANTIC_KINDS = {'material', 'property', 'type', 'appearance', 'template'}
 def _appearance_schema():
     from text2ifc_contract.schema import load_schema_v21
     return load_schema_v21()['properties']['appearance']
+
+
+@lru_cache(maxsize=1)
+def element_appearance_schema():
+    """Request grammar derives from the executable whole-element contract."""
+    from text2ifc_contract.schema import load_schema_v21
+    schema = copy.deepcopy(load_schema_v21()['$defs']['entity']['properties']['appearance'])
+    schema['minProperties'] = 1
+    return schema
 
 
 def _project_appearance(selection, source_path):
@@ -88,7 +97,7 @@ def project_semantic_requirements(brief: Mapping[str, Any]) -> dict[str, Any]:
 
     walk(known, '/known_facts')
     for path, record in records:
-        if brief.get('schema_version') == 'text2ifc/design-brief/2.2' and not path.startswith('/known_facts/semantic_requirements/'):
+        if brief.get('schema_version') in {'text2ifc/design-brief/2.2', 'text2ifc/design-brief/2.3'} and not path.startswith('/known_facts/semantic_requirements/'):
             issues.append({'code': 'SEMANTIC_AUTHORITY_NON_CANONICAL', 'path': path,
                            'message': '结构化语义要求必须完整放入 semantic_requirements，不能散落后被遗漏。'})
         entity_id = record.get('entity_id') or record.get('id')
@@ -128,8 +137,15 @@ def project_semantic_requirements(brief: Mapping[str, Any]) -> dict[str, Any]:
                                          'property': name, 'value': copy.deepcopy(value)})
         for field, kind in [('type_id', 'type'), ('appearance', 'appearance'), ('template', 'template')]:
             if field in record:
+                if field == 'appearance':
+                    from jsonschema import Draft202012Validator
+                    malformed = list(Draft202012Validator(element_appearance_schema()).iter_errors(record[field]))
+                    if malformed:
+                        issues.append({'code': 'SEMANTIC_AUTHORITY_APPEARANCE_INVALID', 'path': path+'/appearance',
+                            'message': '构件 appearance 只支持非空数值 RGB/透明度覆盖；主题及窗框、玻璃等部件说明不能作为整件外观字段。'})
+                        continue
                 expectations.append({**base, 'kind': kind, 'value': copy.deepcopy(record[field])})
-    if brief.get('schema_version') == 'text2ifc/design-brief/2.2':
+    if brief.get('schema_version') in {'text2ifc/design-brief/2.2', 'text2ifc/design-brief/2.3'}:
         review = known.get('semantic_review', {}) if isinstance(known, Mapping) else {}
         for kind in sorted(SEMANTIC_KINDS):
             entry = review.get(kind, {}) if isinstance(review, Mapping) else {}

@@ -155,11 +155,13 @@ def test_semantic_extraction_failure_routes_to_brief_not_user_or_candidate(tmp_p
         assert row.suggested_route == 'revise_design_brief'
 
 
-def test_interactive_invoker_repairs_with_same_budget_and_preserves_initial_trace(tmp_path):
+@pytest.mark.parametrize('version', ['2.2', '2.3'])
+def test_interactive_invoker_repairs_with_same_budget_and_preserves_initial_trace(tmp_path, version):
     from types import SimpleNamespace
     from text2ifc_agent.interactive_cli_flow import make_openai_design_brief_invoker
     from text2ifc_agent.openai_compat import load_openai_compatible_runtime_config
     case, brief = valid_brief()
+    brief['schema_version'] = 'text2ifc/design-brief/' + version
     initial = copy.deepcopy(brief)
     initial['known_facts'].pop('semantic_review')
     payloads = [initial, brief]
@@ -173,7 +175,7 @@ def test_interactive_invoker_repairs_with_same_budget_and_preserves_initial_trac
     config = load_openai_compatible_runtime_config({'TEXT2IFC_PROVIDER': 'deepseek', 'API_KEY': 'fake-key',
         'OPENAI_BASE_URL': 'https://example.invalid', 'TEXT2IFC_DEEPSEEK_MODEL': 'fake'})
     invoke = make_openai_design_brief_invoker(config=config, run_dir=tmp_path,
-        design_brief_schema_version='text2ifc/design-brief/2.2',
+        design_brief_schema_version=brief['schema_version'],
         client_factory=lambda **_: SimpleNamespace(chat=SimpleNamespace(completions=SimpleNamespace(create=create))))
     result = invoke(case['conversation'], 1)
     assert result.brief == brief
