@@ -1,0 +1,544 @@
+{
+  "scope": "diagnostic hand-authored ChangeSet against preserved live candidate; not Provider output or accepted model",
+  "source_hashes_unchanged": {
+    "candidate.json": "856435b64499301b4efe3cfb8f2e8881c43bc56e11d23c11ab14d5072e300e1d",
+    "expected-facts.json": "7c669ba63646667a198d9820432842c36cbe2a1797cca4f154921c8f0ed76942",
+    "request-semantics.json": "888361ff0fb3bc56287d042fb21f6e2327eb85ff4bbee530070dc7e7712ada03",
+    "changeset-round-01/change-scope.json": "0016582b34a4db50e190f63b4842cab4916a61a2ca1627205f7cd5a0925c4210",
+    "changeset-round-01/base-revision.json": "84b3c95d605010961d1b0051b53d1cb3cbf9d93e1f7850dfa00542b273e08947",
+    "generator/prompt-rendered.md": "9707db382d6d388a129bbd1ce003745ee386560218b3dd64fca21e0a76230eac",
+    "generator/prompt-render-input.json": "5f048a2f45eaf4b3aa6d81aee40531769ee4f874b0936386d6fa64be14947810"
+  },
+  "generator_input_keys": [
+    "CAPABILITY_PROFILE",
+    "CONVERSATION",
+    "DESIGN_BRIEF",
+    "DRAFT_SCHEMA",
+    "ENTITY_ID_CONTRACT",
+    "FEW_SHOTS",
+    "FORMAL_SCHEMA",
+    "GENERATION_FEEDBACK",
+    "IFC_AUTHORING_CONTRACT",
+    "USER_REQUEST"
+  ],
+  "authoring_contract_input_keys": [
+    "ENTITY_ID_CONTRACT",
+    "IFC_AUTHORING_CONTRACT"
+  ],
+  "explicit_no_unrequested_type_instruction_present": true,
+  "contract_no_type_instruction_present": true,
+  "material_expectation_scopes": {
+    "direct": 38
+  },
+  "type_expectation_count": 0,
+  "candidate_type_counts": {
+    "IfcWallType": 15,
+    "IfcSlabType": 3,
+    "IfcDoorStyle": 4,
+    "IfcWindowStyle": 15
+  },
+  "duplicated_material_rows": [
+    {
+      "type_id": "slabtype-slab-ground",
+      "type_materials": [
+        {
+          "kind": "material_layer_set",
+          "layer_set_name": "混凝土板-150",
+          "layers": [
+            {
+              "name": "混凝土",
+              "thickness": 150
+            }
+          ]
+        }
+      ],
+      "instances": [
+        {
+          "id": "slab-ground",
+          "materials": [
+            {
+              "kind": "single_material",
+              "name": "混凝土"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type_id": "slabtype-slab-storey-2",
+      "type_materials": [
+        {
+          "kind": "material_layer_set",
+          "layer_set_name": "混凝土板-150",
+          "layers": [
+            {
+              "name": "混凝土",
+              "thickness": 150
+            }
+          ]
+        }
+      ],
+      "instances": [
+        {
+          "id": "slab-storey-2",
+          "materials": [
+            {
+              "kind": "single_material",
+              "name": "混凝土"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type_id": "slabtype-slab-storey-3",
+      "type_materials": [
+        {
+          "kind": "material_layer_set",
+          "layer_set_name": "混凝土板-150",
+          "layers": [
+            {
+              "name": "混凝土",
+              "thickness": 150
+            }
+          ]
+        }
+      ],
+      "instances": [
+        {
+          "id": "slab-storey-3",
+          "materials": [
+            {
+              "kind": "single_material",
+              "name": "混凝土"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type_id": "walltype-storey-1-wall-divider",
+      "type_materials": [
+        {
+          "kind": "material_layer_set",
+          "layer_set_name": "砖墙-200",
+          "layers": [
+            {
+              "name": "砖",
+              "thickness": 200
+            }
+          ]
+        }
+      ],
+      "instances": [
+        {
+          "id": "wall-storey-1-storey-1-wall-divider",
+          "materials": [
+            {
+              "kind": "single_material",
+              "name": "砖"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type_id": "walltype-storey-1-wall-east",
+      "type_materials": [
+        {
+          "kind": "material_layer_set",
+          "layer_set_name": "砖墙-200",
+          "layers": [
+            {
+              "name": "砖",
+              "thickness": 200
+            }
+          ]
+        }
+      ],
+      "instances": [
+        {
+          "id": "wall-storey-1-storey-1-wall-east",
+          "materials": [
+            {
+              "kind": "single_material",
+              "name": "砖"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type_id": "walltype-storey-1-wall-north",
+      "type_materials": [
+        {
+          "kind": "material_layer_set",
+          "layer_set_name": "砖墙-200",
+          "layers": [
+            {
+              "name": "砖",
+              "thickness": 200
+            }
+          ]
+        }
+      ],
+      "instances": [
+        {
+          "id": "wall-storey-1-storey-1-wall-north",
+          "materials": [
+            {
+              "kind": "single_material",
+              "name": "砖"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type_id": "walltype-storey-1-wall-south",
+      "type_materials": [
+        {
+          "kind": "material_layer_set",
+          "layer_set_name": "砖墙-200",
+          "layers": [
+            {
+              "name": "砖",
+              "thickness": 200
+            }
+          ]
+        }
+      ],
+      "instances": [
+        {
+          "id": "wall-storey-1-storey-1-wall-south",
+          "materials": [
+            {
+              "kind": "single_material",
+              "name": "砖"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type_id": "walltype-storey-1-wall-west",
+      "type_materials": [
+        {
+          "kind": "material_layer_set",
+          "layer_set_name": "砖墙-200",
+          "layers": [
+            {
+              "name": "砖",
+              "thickness": 200
+            }
+          ]
+        }
+      ],
+      "instances": [
+        {
+          "id": "wall-storey-1-storey-1-wall-west",
+          "materials": [
+            {
+              "kind": "single_material",
+              "name": "砖"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type_id": "walltype-storey-2-wall-divider",
+      "type_materials": [
+        {
+          "kind": "material_layer_set",
+          "layer_set_name": "砖墙-200",
+          "layers": [
+            {
+              "name": "砖",
+              "thickness": 200
+            }
+          ]
+        }
+      ],
+      "instances": [
+        {
+          "id": "wall-storey-2-storey-2-wall-divider",
+          "materials": [
+            {
+              "kind": "single_material",
+              "name": "砖"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type_id": "walltype-storey-2-wall-east",
+      "type_materials": [
+        {
+          "kind": "material_layer_set",
+          "layer_set_name": "砖墙-200",
+          "layers": [
+            {
+              "name": "砖",
+              "thickness": 200
+            }
+          ]
+        }
+      ],
+      "instances": [
+        {
+          "id": "wall-storey-2-storey-2-wall-east",
+          "materials": [
+            {
+              "kind": "single_material",
+              "name": "砖"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type_id": "walltype-storey-2-wall-north",
+      "type_materials": [
+        {
+          "kind": "material_layer_set",
+          "layer_set_name": "砖墙-200",
+          "layers": [
+            {
+              "name": "砖",
+              "thickness": 200
+            }
+          ]
+        }
+      ],
+      "instances": [
+        {
+          "id": "wall-storey-2-storey-2-wall-north",
+          "materials": [
+            {
+              "kind": "single_material",
+              "name": "砖"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type_id": "walltype-storey-2-wall-south",
+      "type_materials": [
+        {
+          "kind": "material_layer_set",
+          "layer_set_name": "砖墙-200",
+          "layers": [
+            {
+              "name": "砖",
+              "thickness": 200
+            }
+          ]
+        }
+      ],
+      "instances": [
+        {
+          "id": "wall-storey-2-storey-2-wall-south",
+          "materials": [
+            {
+              "kind": "single_material",
+              "name": "砖"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type_id": "walltype-storey-2-wall-west",
+      "type_materials": [
+        {
+          "kind": "material_layer_set",
+          "layer_set_name": "砖墙-200",
+          "layers": [
+            {
+              "name": "砖",
+              "thickness": 200
+            }
+          ]
+        }
+      ],
+      "instances": [
+        {
+          "id": "wall-storey-2-storey-2-wall-west",
+          "materials": [
+            {
+              "kind": "single_material",
+              "name": "砖"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type_id": "walltype-storey-3-wall-divider",
+      "type_materials": [
+        {
+          "kind": "material_layer_set",
+          "layer_set_name": "砖墙-200",
+          "layers": [
+            {
+              "name": "砖",
+              "thickness": 200
+            }
+          ]
+        }
+      ],
+      "instances": [
+        {
+          "id": "wall-storey-3-storey-3-wall-divider",
+          "materials": [
+            {
+              "kind": "single_material",
+              "name": "砖"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type_id": "walltype-storey-3-wall-east",
+      "type_materials": [
+        {
+          "kind": "material_layer_set",
+          "layer_set_name": "砖墙-200",
+          "layers": [
+            {
+              "name": "砖",
+              "thickness": 200
+            }
+          ]
+        }
+      ],
+      "instances": [
+        {
+          "id": "wall-storey-3-storey-3-wall-east",
+          "materials": [
+            {
+              "kind": "single_material",
+              "name": "砖"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type_id": "walltype-storey-3-wall-north",
+      "type_materials": [
+        {
+          "kind": "material_layer_set",
+          "layer_set_name": "砖墙-200",
+          "layers": [
+            {
+              "name": "砖",
+              "thickness": 200
+            }
+          ]
+        }
+      ],
+      "instances": [
+        {
+          "id": "wall-storey-3-storey-3-wall-north",
+          "materials": [
+            {
+              "kind": "single_material",
+              "name": "砖"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type_id": "walltype-storey-3-wall-south",
+      "type_materials": [
+        {
+          "kind": "material_layer_set",
+          "layer_set_name": "砖墙-200",
+          "layers": [
+            {
+              "name": "砖",
+              "thickness": 200
+            }
+          ]
+        }
+      ],
+      "instances": [
+        {
+          "id": "wall-storey-3-storey-3-wall-south",
+          "materials": [
+            {
+              "kind": "single_material",
+              "name": "砖"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type_id": "walltype-storey-3-wall-west",
+      "type_materials": [
+        {
+          "kind": "material_layer_set",
+          "layer_set_name": "砖墙-200",
+          "layers": [
+            {
+              "name": "砖",
+              "thickness": 200
+            }
+          ]
+        }
+      ],
+      "instances": [
+        {
+          "id": "wall-storey-3-storey-3-wall-west",
+          "materials": [
+            {
+              "kind": "single_material",
+              "name": "砖"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "changeset_schema_valid": true,
+  "old_scope_result": {
+    "valid": false,
+    "issue_codes": {
+      "CHANGESET_SCOPE_VIOLATION": 18
+    }
+  },
+  "precise_scope_result": {
+    "valid": true,
+    "changed_components": [
+      "slabtype-slab-ground",
+      "slabtype-slab-storey-2",
+      "slabtype-slab-storey-3",
+      "walltype-storey-1-wall-divider",
+      "walltype-storey-1-wall-east",
+      "walltype-storey-1-wall-north",
+      "walltype-storey-1-wall-south",
+      "walltype-storey-1-wall-west",
+      "walltype-storey-2-wall-divider",
+      "walltype-storey-2-wall-east",
+      "walltype-storey-2-wall-north",
+      "walltype-storey-2-wall-south",
+      "walltype-storey-2-wall-west",
+      "walltype-storey-3-wall-divider",
+      "walltype-storey-3-wall-east",
+      "walltype-storey-3-wall-north",
+      "walltype-storey-3-wall-south",
+      "walltype-storey-3-wall-west"
+    ],
+    "unrelated_component_drift": false,
+    "remaining_unauthorized_semantics": 0
+  },
+  "remaining_type_entities_after_material_only_repair": 37,
+  "limits": "No compiler/IFC test in this probe. Material-only repair does not remove unrequested Type entities; it isolates field-scope and schema feasibility, not full product compliance."
+}
