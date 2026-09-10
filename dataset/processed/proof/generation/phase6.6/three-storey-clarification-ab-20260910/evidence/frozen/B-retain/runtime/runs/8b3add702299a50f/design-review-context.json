@@ -1,0 +1,16 @@
+{
+  "schema_version": "text2ifc/design-review-context/1.0",
+  "conversation_sha256": "d77b2ccb9010f4fc775dd851f22101f4ca26fafaa1018ee41affb05d05194191",
+  "concerns": [
+    {
+      "id": "reference-stair-walking-clearance",
+      "description": "参考 IFC 中反向梯段共用同一平面，首段接近二层北端平台时局部净空为零。此为参考模型发现，仍需独立检查本次 IFC。",
+      "location": "一层通往二层楼梯的北端",
+      "decision": "retain",
+      "decision_turn_id": "turn-user-003",
+      "decision_quote": "我已知悉两段反向楼梯在同一平面相互遮挡，接近二层北端平台处局部净空为零，无法作为正常通行楼梯使用。本分支用于忠实建模和问题展示，请仍严格按原始请求中的尺寸、位置、方向、洞口与关系生成，不要移动楼梯或修改大厅、分隔墙、门窗来消除这个问题。请在 Audit 和交付报告中保留问题位置、影响以及我的保留决定，不得写成合理性或建筑规范检查通过。其他原要求不变。",
+      "evidence_path": "reference-review.json",
+      "evidence_sha256": "7d9c07609dbd6aca103b22b04d2824e5c37a2ce43d75887a4c0fe0478121b65e"
+    }
+  ]
+}
