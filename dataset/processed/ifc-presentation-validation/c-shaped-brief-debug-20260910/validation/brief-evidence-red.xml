@@ -1,0 +1,1721 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="14" skipped="0" tests="17" time="4.583" timestamp="2026-09-10T22:00:35.098756+08:00" hostname="what-do-matter"><testcase classname="tests.agent.test_public_brief_failure_evidence" name="test_exception_evidence_survives_public_brief_stage[True-truncated]" time="0.190"><failure message="FileNotFoundError: [Errno 2] No such file or directory: 'E:\\code for project\\bimnet\\.tmp\\brief-evidence-red\\test_exception_evidence_surviv0\\stage\\provider-error.json'">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/brief-evidence-red/test_exception_evidence_surviv0')
+kind = 'truncated', known_usage = True
+
+    @pytest.mark.parametrize('kind', ['truncated', 'no_choices', 'forbidden', 'connection'])
+    @pytest.mark.parametrize('known_usage', [True, False])
+    def test_exception_evidence_survives_public_brief_stage(tmp_path, kind, known_usage):
+        provider, calls, response = provider_for(kind, known_usage)
+        budget = GenerationBudget(tmp_path / 'budget')
+        stage = tmp_path / 'stage'
+        with pytest.raises(Exception):
+            run_design_brief_stage(provider=BudgetedProvider(provider, budget), output_dir=stage,
+                case=complete_room_case(), design_brief_schema_version='text2ifc/design-brief/2.3')
+        assert len(calls) == 1
+&gt;       failure = json.loads((stage / 'provider-error.json').read_text(encoding='utf-8'))
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_public_brief_failure_evidence.py:43: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+E:\anaconda\Lib\pathlib.py:1027: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('E:/code for project/bimnet/.tmp/brief-evidence-red/test_exception_evidence_surviv0/stage/provider-error.json')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+&gt;       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'E:\\code for project\\bimnet\\.tmp\\brief-evidence-red\\test_exception_evidence_surviv0\\stage\\provider-error.json'
+
+E:\anaconda\Lib\pathlib.py:1013: FileNotFoundError</failure></testcase><testcase classname="tests.agent.test_public_brief_failure_evidence" name="test_exception_evidence_survives_public_brief_stage[True-no_choices]" time="0.145"><failure message="FileNotFoundError: [Errno 2] No such file or directory: 'E:\\code for project\\bimnet\\.tmp\\brief-evidence-red\\test_exception_evidence_surviv1\\stage\\provider-error.json'">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/brief-evidence-red/test_exception_evidence_surviv1')
+kind = 'no_choices', known_usage = True
+
+    @pytest.mark.parametrize('kind', ['truncated', 'no_choices', 'forbidden', 'connection'])
+    @pytest.mark.parametrize('known_usage', [True, False])
+    def test_exception_evidence_survives_public_brief_stage(tmp_path, kind, known_usage):
+        provider, calls, response = provider_for(kind, known_usage)
+        budget = GenerationBudget(tmp_path / 'budget')
+        stage = tmp_path / 'stage'
+        with pytest.raises(Exception):
+            run_design_brief_stage(provider=BudgetedProvider(provider, budget), output_dir=stage,
+                case=complete_room_case(), design_brief_schema_version='text2ifc/design-brief/2.3')
+        assert len(calls) == 1
+&gt;       failure = json.loads((stage / 'provider-error.json').read_text(encoding='utf-8'))
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_public_brief_failure_evidence.py:43: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+E:\anaconda\Lib\pathlib.py:1027: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('E:/code for project/bimnet/.tmp/brief-evidence-red/test_exception_evidence_surviv1/stage/provider-error.json')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+&gt;       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'E:\\code for project\\bimnet\\.tmp\\brief-evidence-red\\test_exception_evidence_surviv1\\stage\\provider-error.json'
+
+E:\anaconda\Lib\pathlib.py:1013: FileNotFoundError</failure></testcase><testcase classname="tests.agent.test_public_brief_failure_evidence" name="test_exception_evidence_survives_public_brief_stage[True-forbidden]" time="0.142"><failure message="FileNotFoundError: [Errno 2] No such file or directory: 'E:\\code for project\\bimnet\\.tmp\\brief-evidence-red\\test_exception_evidence_surviv2\\stage\\provider-error.json'">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/brief-evidence-red/test_exception_evidence_surviv2')
+kind = 'forbidden', known_usage = True
+
+    @pytest.mark.parametrize('kind', ['truncated', 'no_choices', 'forbidden', 'connection'])
+    @pytest.mark.parametrize('known_usage', [True, False])
+    def test_exception_evidence_survives_public_brief_stage(tmp_path, kind, known_usage):
+        provider, calls, response = provider_for(kind, known_usage)
+        budget = GenerationBudget(tmp_path / 'budget')
+        stage = tmp_path / 'stage'
+        with pytest.raises(Exception):
+            run_design_brief_stage(provider=BudgetedProvider(provider, budget), output_dir=stage,
+                case=complete_room_case(), design_brief_schema_version='text2ifc/design-brief/2.3')
+        assert len(calls) == 1
+&gt;       failure = json.loads((stage / 'provider-error.json').read_text(encoding='utf-8'))
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_public_brief_failure_evidence.py:43: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+E:\anaconda\Lib\pathlib.py:1027: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('E:/code for project/bimnet/.tmp/brief-evidence-red/test_exception_evidence_surviv2/stage/provider-error.json')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+&gt;       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'E:\\code for project\\bimnet\\.tmp\\brief-evidence-red\\test_exception_evidence_surviv2\\stage\\provider-error.json'
+
+E:\anaconda\Lib\pathlib.py:1013: FileNotFoundError</failure></testcase><testcase classname="tests.agent.test_public_brief_failure_evidence" name="test_exception_evidence_survives_public_brief_stage[True-connection]" time="0.142"><failure message="FileNotFoundError: [Errno 2] No such file or directory: 'E:\\code for project\\bimnet\\.tmp\\brief-evidence-red\\test_exception_evidence_surviv3\\stage\\provider-error.json'">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/brief-evidence-red/test_exception_evidence_surviv3')
+kind = 'connection', known_usage = True
+
+    @pytest.mark.parametrize('kind', ['truncated', 'no_choices', 'forbidden', 'connection'])
+    @pytest.mark.parametrize('known_usage', [True, False])
+    def test_exception_evidence_survives_public_brief_stage(tmp_path, kind, known_usage):
+        provider, calls, response = provider_for(kind, known_usage)
+        budget = GenerationBudget(tmp_path / 'budget')
+        stage = tmp_path / 'stage'
+        with pytest.raises(Exception):
+            run_design_brief_stage(provider=BudgetedProvider(provider, budget), output_dir=stage,
+                case=complete_room_case(), design_brief_schema_version='text2ifc/design-brief/2.3')
+        assert len(calls) == 1
+&gt;       failure = json.loads((stage / 'provider-error.json').read_text(encoding='utf-8'))
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_public_brief_failure_evidence.py:43: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+E:\anaconda\Lib\pathlib.py:1027: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('E:/code for project/bimnet/.tmp/brief-evidence-red/test_exception_evidence_surviv3/stage/provider-error.json')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+&gt;       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'E:\\code for project\\bimnet\\.tmp\\brief-evidence-red\\test_exception_evidence_surviv3\\stage\\provider-error.json'
+
+E:\anaconda\Lib\pathlib.py:1013: FileNotFoundError</failure></testcase><testcase classname="tests.agent.test_public_brief_failure_evidence" name="test_exception_evidence_survives_public_brief_stage[False-truncated]" time="0.144"><failure message="FileNotFoundError: [Errno 2] No such file or directory: 'E:\\code for project\\bimnet\\.tmp\\brief-evidence-red\\test_exception_evidence_surviv4\\stage\\provider-error.json'">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/brief-evidence-red/test_exception_evidence_surviv4')
+kind = 'truncated', known_usage = False
+
+    @pytest.mark.parametrize('kind', ['truncated', 'no_choices', 'forbidden', 'connection'])
+    @pytest.mark.parametrize('known_usage', [True, False])
+    def test_exception_evidence_survives_public_brief_stage(tmp_path, kind, known_usage):
+        provider, calls, response = provider_for(kind, known_usage)
+        budget = GenerationBudget(tmp_path / 'budget')
+        stage = tmp_path / 'stage'
+        with pytest.raises(Exception):
+            run_design_brief_stage(provider=BudgetedProvider(provider, budget), output_dir=stage,
+                case=complete_room_case(), design_brief_schema_version='text2ifc/design-brief/2.3')
+        assert len(calls) == 1
+&gt;       failure = json.loads((stage / 'provider-error.json').read_text(encoding='utf-8'))
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_public_brief_failure_evidence.py:43: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+E:\anaconda\Lib\pathlib.py:1027: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('E:/code for project/bimnet/.tmp/brief-evidence-red/test_exception_evidence_surviv4/stage/provider-error.json')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+&gt;       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'E:\\code for project\\bimnet\\.tmp\\brief-evidence-red\\test_exception_evidence_surviv4\\stage\\provider-error.json'
+
+E:\anaconda\Lib\pathlib.py:1013: FileNotFoundError</failure></testcase><testcase classname="tests.agent.test_public_brief_failure_evidence" name="test_exception_evidence_survives_public_brief_stage[False-no_choices]" time="0.141"><failure message="FileNotFoundError: [Errno 2] No such file or directory: 'E:\\code for project\\bimnet\\.tmp\\brief-evidence-red\\test_exception_evidence_surviv5\\stage\\provider-error.json'">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/brief-evidence-red/test_exception_evidence_surviv5')
+kind = 'no_choices', known_usage = False
+
+    @pytest.mark.parametrize('kind', ['truncated', 'no_choices', 'forbidden', 'connection'])
+    @pytest.mark.parametrize('known_usage', [True, False])
+    def test_exception_evidence_survives_public_brief_stage(tmp_path, kind, known_usage):
+        provider, calls, response = provider_for(kind, known_usage)
+        budget = GenerationBudget(tmp_path / 'budget')
+        stage = tmp_path / 'stage'
+        with pytest.raises(Exception):
+            run_design_brief_stage(provider=BudgetedProvider(provider, budget), output_dir=stage,
+                case=complete_room_case(), design_brief_schema_version='text2ifc/design-brief/2.3')
+        assert len(calls) == 1
+&gt;       failure = json.loads((stage / 'provider-error.json').read_text(encoding='utf-8'))
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_public_brief_failure_evidence.py:43: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+E:\anaconda\Lib\pathlib.py:1027: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('E:/code for project/bimnet/.tmp/brief-evidence-red/test_exception_evidence_surviv5/stage/provider-error.json')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+&gt;       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'E:\\code for project\\bimnet\\.tmp\\brief-evidence-red\\test_exception_evidence_surviv5\\stage\\provider-error.json'
+
+E:\anaconda\Lib\pathlib.py:1013: FileNotFoundError</failure></testcase><testcase classname="tests.agent.test_public_brief_failure_evidence" name="test_exception_evidence_survives_public_brief_stage[False-forbidden]" time="0.139"><failure message="FileNotFoundError: [Errno 2] No such file or directory: 'E:\\code for project\\bimnet\\.tmp\\brief-evidence-red\\test_exception_evidence_surviv6\\stage\\provider-error.json'">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/brief-evidence-red/test_exception_evidence_surviv6')
+kind = 'forbidden', known_usage = False
+
+    @pytest.mark.parametrize('kind', ['truncated', 'no_choices', 'forbidden', 'connection'])
+    @pytest.mark.parametrize('known_usage', [True, False])
+    def test_exception_evidence_survives_public_brief_stage(tmp_path, kind, known_usage):
+        provider, calls, response = provider_for(kind, known_usage)
+        budget = GenerationBudget(tmp_path / 'budget')
+        stage = tmp_path / 'stage'
+        with pytest.raises(Exception):
+            run_design_brief_stage(provider=BudgetedProvider(provider, budget), output_dir=stage,
+                case=complete_room_case(), design_brief_schema_version='text2ifc/design-brief/2.3')
+        assert len(calls) == 1
+&gt;       failure = json.loads((stage / 'provider-error.json').read_text(encoding='utf-8'))
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_public_brief_failure_evidence.py:43: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+E:\anaconda\Lib\pathlib.py:1027: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('E:/code for project/bimnet/.tmp/brief-evidence-red/test_exception_evidence_surviv6/stage/provider-error.json')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+&gt;       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'E:\\code for project\\bimnet\\.tmp\\brief-evidence-red\\test_exception_evidence_surviv6\\stage\\provider-error.json'
+
+E:\anaconda\Lib\pathlib.py:1013: FileNotFoundError</failure></testcase><testcase classname="tests.agent.test_public_brief_failure_evidence" name="test_exception_evidence_survives_public_brief_stage[False-connection]" time="0.161"><failure message="FileNotFoundError: [Errno 2] No such file or directory: 'E:\\code for project\\bimnet\\.tmp\\brief-evidence-red\\test_exception_evidence_surviv7\\stage\\provider-error.json'">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/brief-evidence-red/test_exception_evidence_surviv7')
+kind = 'connection', known_usage = False
+
+    @pytest.mark.parametrize('kind', ['truncated', 'no_choices', 'forbidden', 'connection'])
+    @pytest.mark.parametrize('known_usage', [True, False])
+    def test_exception_evidence_survives_public_brief_stage(tmp_path, kind, known_usage):
+        provider, calls, response = provider_for(kind, known_usage)
+        budget = GenerationBudget(tmp_path / 'budget')
+        stage = tmp_path / 'stage'
+        with pytest.raises(Exception):
+            run_design_brief_stage(provider=BudgetedProvider(provider, budget), output_dir=stage,
+                case=complete_room_case(), design_brief_schema_version='text2ifc/design-brief/2.3')
+        assert len(calls) == 1
+&gt;       failure = json.loads((stage / 'provider-error.json').read_text(encoding='utf-8'))
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_public_brief_failure_evidence.py:43: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+E:\anaconda\Lib\pathlib.py:1027: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('E:/code for project/bimnet/.tmp/brief-evidence-red/test_exception_evidence_surviv7/stage/provider-error.json')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+&gt;       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'E:\\code for project\\bimnet\\.tmp\\brief-evidence-red\\test_exception_evidence_surviv7\\stage\\provider-error.json'
+
+E:\anaconda\Lib\pathlib.py:1013: FileNotFoundError</failure></testcase><testcase classname="tests.agent.test_public_brief_failure_evidence" name="test_existing_attempt_is_immutable_before_transport[input.txt]" time="0.121"><failure message="AssertionError: Regex pattern did not match.&#10; Regex: 'DESIGN_BRIEF_ATTEMPT_ALREADY_EXISTS'&#10; Input: 'OpenAI-compatible chat completion is truncated: finish_reason=length'">self = &lt;text2ifc_agent.openai_compat.OpenAICompatibleLiveProvider object at 0x00000294FF8CB140&gt;
+
+    def generate_live(
+        self,
+        *,
+        session_id: str,
+        prompt: str,
+        schema: dict[str, Any],
+        state: dict[str, Any],
+    ) -&gt; LiveProviderResult:
+        del schema, state
+        estimated_input_tokens = estimate_openai_compatible_input_tokens(prompt)
+        if estimated_input_tokens &gt; self.config.max_input_tokens:
+            raise ProviderOutputError(
+                f"OpenAI-compatible input token budget exceeded for {session_id}",
+                details={
+                    "provider": self.config.provider_label,
+                    "failure_class": "input_token_budget_exceeded",
+                    "session_id": session_id,
+                    "estimated_input_tokens": estimated_input_tokens,
+                    "max_input_tokens": self.config.max_input_tokens,
+                    "token_estimator": "ascii/4+non_ascii",
+                },
+            )
+        request = {
+            "model": self.config.model,
+            "messages": [{"role": "user", "content": prompt}],
+            "temperature": 0,
+            "response_format": {"type": "json_object"},
+        }
+        request.update(_token_limit_request(self.config))
+        request.update(_provider_request_extensions(self.config))
+        transport_attempts = 0
+        while True:
+            transport_attempts += 1
+            try:
+                response = self.client.chat.completions.create(**request)
+                break
+            except Exception as exc:
+                exception_chain = _exception_type_chain(exc)
+                retryable = _retryable_connection_error(exception_chain)
+                if retryable and transport_attempts &lt; self.connection_max_attempts:
+                    delay = self.connection_retry_delay_seconds * (
+                        2 ** (transport_attempts - 1)
+                    )
+                    self._sleep(delay)
+                    continue
+                raise ProviderOutputError(
+                    f"OpenAI-compatible live request failed for {session_id}: {type(exc).__name__}",
+                    details={
+                        "provider": self.config.provider_label,
+                        "failure_class": "provider_connection_error",
+                        "exception_type": type(exc).__name__,
+                        "exception_chain": exception_chain,
+                        "transport_attempts": transport_attempts,
+                        "session_id": session_id,
+                        "request": redact_provider_payload(request),
+                    },
+                ) from exc
+        payload = _object_to_dict(response)
+        try:
+&gt;           evidence = parse_chat_completion_evidence(
+                payload, request=request, evidence_class="live",
+                provider_label=self.config.provider_label,
+            )
+
+src\text2ifc_agent\openai_compat.py:294: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+response = {'choices': [{'finish_reason': 'length', 'message': {'content': '{"status":', 'reasoning_content': 'synthetic reasonin... 'id': 'offline-brief', 'model': 'fixture', 'usage': {'completion_tokens': 7, 'prompt_tokens': 11, 'total_tokens': 18}}
+
+    def parse_chat_completion_evidence(
+        response: dict[str, Any],
+        *,
+        request: dict[str, Any],
+        evidence_class: str,
+        provider_label: str = "mimo-openai-compatible",
+    ) -&gt; dict[str, Any]:
+        """Extract acceptance evidence from an OpenAI chat-completion response."""
+    
+        choice = _first_choice(response)
+        message = choice.get("message") if isinstance(choice.get("message"), dict) else {}
+        finish_reason = choice.get("finish_reason")
+        evidence = {
+            "provider": provider_label,
+            "evidence_class": evidence_class,
+            "response_id": response.get("id"),
+            "object": response.get("object"),
+            "model": response.get("model"),
+            "finish_reason": finish_reason,
+            "content_text": str(message.get("content", "")),
+            "usage": dict(response.get("usage", {})) if isinstance(response.get("usage"), dict) else {},
+            "request": redact_provider_payload(request),
+            "parse_eligible": finish_reason != "length",
+        }
+        if finish_reason == "length":
+            evidence["failure_class"] = "truncated"
+&gt;           raise OpenAICompatError(
+                "OpenAI-compatible chat completion is truncated: finish_reason=length",
+                evidence=evidence,
+            )
+E           text2ifc_agent.openai_compat.OpenAICompatError: OpenAI-compatible chat completion is truncated: finish_reason=length
+
+src\text2ifc_agent\openai_compat.py:432: OpenAICompatError
+
+The above exception was the direct cause of the following exception:
+
+tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/brief-evidence-red/test_existing_attempt_is_immut0')
+artifact = 'input.txt'
+
+    @pytest.mark.parametrize('artifact', ['input.txt', 'response.raw.json', 'request.redacted.json',
+        'provider-error.json', 'design-brief.json', '.design-brief-attempt'])
+    def test_existing_attempt_is_immutable_before_transport(tmp_path, artifact):
+        target = tmp_path / artifact
+        target.write_bytes(b'original evidence')
+        provider, calls, _ = provider_for('truncated')
+        with pytest.raises(Exception, match='DESIGN_BRIEF_ATTEMPT_ALREADY_EXISTS'):
+&gt;           run_design_brief_stage(provider=provider, output_dir=tmp_path, case=complete_room_case())
+
+tests\agent\test_public_brief_failure_evidence.py:65: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\text2ifc_agent\live_pipeline.py:192: in run_design_brief_stage
+    result = provider.generate_live(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;text2ifc_agent.openai_compat.OpenAICompatibleLiveProvider object at 0x00000294FF8CB140&gt;
+
+    def generate_live(
+        self,
+        *,
+        session_id: str,
+        prompt: str,
+        schema: dict[str, Any],
+        state: dict[str, Any],
+    ) -&gt; LiveProviderResult:
+        del schema, state
+        estimated_input_tokens = estimate_openai_compatible_input_tokens(prompt)
+        if estimated_input_tokens &gt; self.config.max_input_tokens:
+            raise ProviderOutputError(
+                f"OpenAI-compatible input token budget exceeded for {session_id}",
+                details={
+                    "provider": self.config.provider_label,
+                    "failure_class": "input_token_budget_exceeded",
+                    "session_id": session_id,
+                    "estimated_input_tokens": estimated_input_tokens,
+                    "max_input_tokens": self.config.max_input_tokens,
+                    "token_estimator": "ascii/4+non_ascii",
+                },
+            )
+        request = {
+            "model": self.config.model,
+            "messages": [{"role": "user", "content": prompt}],
+            "temperature": 0,
+            "response_format": {"type": "json_object"},
+        }
+        request.update(_token_limit_request(self.config))
+        request.update(_provider_request_extensions(self.config))
+        transport_attempts = 0
+        while True:
+            transport_attempts += 1
+            try:
+                response = self.client.chat.completions.create(**request)
+                break
+            except Exception as exc:
+                exception_chain = _exception_type_chain(exc)
+                retryable = _retryable_connection_error(exception_chain)
+                if retryable and transport_attempts &lt; self.connection_max_attempts:
+                    delay = self.connection_retry_delay_seconds * (
+                        2 ** (transport_attempts - 1)
+                    )
+                    self._sleep(delay)
+                    continue
+                raise ProviderOutputError(
+                    f"OpenAI-compatible live request failed for {session_id}: {type(exc).__name__}",
+                    details={
+                        "provider": self.config.provider_label,
+                        "failure_class": "provider_connection_error",
+                        "exception_type": type(exc).__name__,
+                        "exception_chain": exception_chain,
+                        "transport_attempts": transport_attempts,
+                        "session_id": session_id,
+                        "request": redact_provider_payload(request),
+                    },
+                ) from exc
+        payload = _object_to_dict(response)
+        try:
+            evidence = parse_chat_completion_evidence(
+                payload, request=request, evidence_class="live",
+                provider_label=self.config.provider_label,
+            )
+            output = validate_provider_output(ProviderOutput(
+                text=str(evidence["content_text"]),
+                metadata={
+                    "provider": self.config.provider_label,
+                    "evidence_class": "live",
+                    "session_id": session_id,
+                    "response_id": evidence["response_id"],
+                    "model": evidence["model"],
+                    "stop_reason": evidence["finish_reason"],
+                    "usage": evidence["usage"],
+                    "estimated_input_tokens": estimated_input_tokens,
+                    "max_input_tokens": self.config.max_input_tokens,
+                    "transport_attempts": transport_attempts,
+                    **_provider_request_configuration_metadata(self.config, request),
+                },
+            ))
+        except (OpenAICompatError, ProviderOutputError) as error:
+            details = getattr(error, 'evidence', getattr(error, 'details', {}))
+            preserved = {**details, 'provider': self.config.provider_label,
+                'evidence_class': 'live', 'session_id': session_id,
+                'request': redact_provider_payload(request),
+                'response': redact_provider_payload(payload),
+                'response_id': payload.get('id'), 'model': payload.get('model'),
+                'usage': payload.get('usage', {})}
+            if isinstance(error, OpenAICompatError):
+&gt;               raise OpenAICompatError(str(error), evidence=preserved) from error
+E               text2ifc_agent.openai_compat.OpenAICompatError: OpenAI-compatible chat completion is truncated: finish_reason=length
+
+src\text2ifc_agent\openai_compat.py:323: OpenAICompatError
+
+During handling of the above exception, another exception occurred:
+
+tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/brief-evidence-red/test_existing_attempt_is_immut0')
+artifact = 'input.txt'
+
+    @pytest.mark.parametrize('artifact', ['input.txt', 'response.raw.json', 'request.redacted.json',
+        'provider-error.json', 'design-brief.json', '.design-brief-attempt'])
+    def test_existing_attempt_is_immutable_before_transport(tmp_path, artifact):
+        target = tmp_path / artifact
+        target.write_bytes(b'original evidence')
+        provider, calls, _ = provider_for('truncated')
+&gt;       with pytest.raises(Exception, match='DESIGN_BRIEF_ATTEMPT_ALREADY_EXISTS'):
+E       AssertionError: Regex pattern did not match.
+E        Regex: 'DESIGN_BRIEF_ATTEMPT_ALREADY_EXISTS'
+E        Input: 'OpenAI-compatible chat completion is truncated: finish_reason=length'
+
+tests\agent\test_public_brief_failure_evidence.py:64: AssertionError</failure></testcase><testcase classname="tests.agent.test_public_brief_failure_evidence" name="test_existing_attempt_is_immutable_before_transport[response.raw.json]" time="0.093"><failure message="AssertionError: Regex pattern did not match.&#10; Regex: 'DESIGN_BRIEF_ATTEMPT_ALREADY_EXISTS'&#10; Input: 'OpenAI-compatible chat completion is truncated: finish_reason=length'">self = &lt;text2ifc_agent.openai_compat.OpenAICompatibleLiveProvider object at 0x00000294FF916060&gt;
+
+    def generate_live(
+        self,
+        *,
+        session_id: str,
+        prompt: str,
+        schema: dict[str, Any],
+        state: dict[str, Any],
+    ) -&gt; LiveProviderResult:
+        del schema, state
+        estimated_input_tokens = estimate_openai_compatible_input_tokens(prompt)
+        if estimated_input_tokens &gt; self.config.max_input_tokens:
+            raise ProviderOutputError(
+                f"OpenAI-compatible input token budget exceeded for {session_id}",
+                details={
+                    "provider": self.config.provider_label,
+                    "failure_class": "input_token_budget_exceeded",
+                    "session_id": session_id,
+                    "estimated_input_tokens": estimated_input_tokens,
+                    "max_input_tokens": self.config.max_input_tokens,
+                    "token_estimator": "ascii/4+non_ascii",
+                },
+            )
+        request = {
+            "model": self.config.model,
+            "messages": [{"role": "user", "content": prompt}],
+            "temperature": 0,
+            "response_format": {"type": "json_object"},
+        }
+        request.update(_token_limit_request(self.config))
+        request.update(_provider_request_extensions(self.config))
+        transport_attempts = 0
+        while True:
+            transport_attempts += 1
+            try:
+                response = self.client.chat.completions.create(**request)
+                break
+            except Exception as exc:
+                exception_chain = _exception_type_chain(exc)
+                retryable = _retryable_connection_error(exception_chain)
+                if retryable and transport_attempts &lt; self.connection_max_attempts:
+                    delay = self.connection_retry_delay_seconds * (
+                        2 ** (transport_attempts - 1)
+                    )
+                    self._sleep(delay)
+                    continue
+                raise ProviderOutputError(
+                    f"OpenAI-compatible live request failed for {session_id}: {type(exc).__name__}",
+                    details={
+                        "provider": self.config.provider_label,
+                        "failure_class": "provider_connection_error",
+                        "exception_type": type(exc).__name__,
+                        "exception_chain": exception_chain,
+                        "transport_attempts": transport_attempts,
+                        "session_id": session_id,
+                        "request": redact_provider_payload(request),
+                    },
+                ) from exc
+        payload = _object_to_dict(response)
+        try:
+&gt;           evidence = parse_chat_completion_evidence(
+                payload, request=request, evidence_class="live",
+                provider_label=self.config.provider_label,
+            )
+
+src\text2ifc_agent\openai_compat.py:294: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+response = {'choices': [{'finish_reason': 'length', 'message': {'content': '{"status":', 'reasoning_content': 'synthetic reasonin... 'id': 'offline-brief', 'model': 'fixture', 'usage': {'completion_tokens': 7, 'prompt_tokens': 11, 'total_tokens': 18}}
+
+    def parse_chat_completion_evidence(
+        response: dict[str, Any],
+        *,
+        request: dict[str, Any],
+        evidence_class: str,
+        provider_label: str = "mimo-openai-compatible",
+    ) -&gt; dict[str, Any]:
+        """Extract acceptance evidence from an OpenAI chat-completion response."""
+    
+        choice = _first_choice(response)
+        message = choice.get("message") if isinstance(choice.get("message"), dict) else {}
+        finish_reason = choice.get("finish_reason")
+        evidence = {
+            "provider": provider_label,
+            "evidence_class": evidence_class,
+            "response_id": response.get("id"),
+            "object": response.get("object"),
+            "model": response.get("model"),
+            "finish_reason": finish_reason,
+            "content_text": str(message.get("content", "")),
+            "usage": dict(response.get("usage", {})) if isinstance(response.get("usage"), dict) else {},
+            "request": redact_provider_payload(request),
+            "parse_eligible": finish_reason != "length",
+        }
+        if finish_reason == "length":
+            evidence["failure_class"] = "truncated"
+&gt;           raise OpenAICompatError(
+                "OpenAI-compatible chat completion is truncated: finish_reason=length",
+                evidence=evidence,
+            )
+E           text2ifc_agent.openai_compat.OpenAICompatError: OpenAI-compatible chat completion is truncated: finish_reason=length
+
+src\text2ifc_agent\openai_compat.py:432: OpenAICompatError
+
+The above exception was the direct cause of the following exception:
+
+tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/brief-evidence-red/test_existing_attempt_is_immut1')
+artifact = 'response.raw.json'
+
+    @pytest.mark.parametrize('artifact', ['input.txt', 'response.raw.json', 'request.redacted.json',
+        'provider-error.json', 'design-brief.json', '.design-brief-attempt'])
+    def test_existing_attempt_is_immutable_before_transport(tmp_path, artifact):
+        target = tmp_path / artifact
+        target.write_bytes(b'original evidence')
+        provider, calls, _ = provider_for('truncated')
+        with pytest.raises(Exception, match='DESIGN_BRIEF_ATTEMPT_ALREADY_EXISTS'):
+&gt;           run_design_brief_stage(provider=provider, output_dir=tmp_path, case=complete_room_case())
+
+tests\agent\test_public_brief_failure_evidence.py:65: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\text2ifc_agent\live_pipeline.py:192: in run_design_brief_stage
+    result = provider.generate_live(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;text2ifc_agent.openai_compat.OpenAICompatibleLiveProvider object at 0x00000294FF916060&gt;
+
+    def generate_live(
+        self,
+        *,
+        session_id: str,
+        prompt: str,
+        schema: dict[str, Any],
+        state: dict[str, Any],
+    ) -&gt; LiveProviderResult:
+        del schema, state
+        estimated_input_tokens = estimate_openai_compatible_input_tokens(prompt)
+        if estimated_input_tokens &gt; self.config.max_input_tokens:
+            raise ProviderOutputError(
+                f"OpenAI-compatible input token budget exceeded for {session_id}",
+                details={
+                    "provider": self.config.provider_label,
+                    "failure_class": "input_token_budget_exceeded",
+                    "session_id": session_id,
+                    "estimated_input_tokens": estimated_input_tokens,
+                    "max_input_tokens": self.config.max_input_tokens,
+                    "token_estimator": "ascii/4+non_ascii",
+                },
+            )
+        request = {
+            "model": self.config.model,
+            "messages": [{"role": "user", "content": prompt}],
+            "temperature": 0,
+            "response_format": {"type": "json_object"},
+        }
+        request.update(_token_limit_request(self.config))
+        request.update(_provider_request_extensions(self.config))
+        transport_attempts = 0
+        while True:
+            transport_attempts += 1
+            try:
+                response = self.client.chat.completions.create(**request)
+                break
+            except Exception as exc:
+                exception_chain = _exception_type_chain(exc)
+                retryable = _retryable_connection_error(exception_chain)
+                if retryable and transport_attempts &lt; self.connection_max_attempts:
+                    delay = self.connection_retry_delay_seconds * (
+                        2 ** (transport_attempts - 1)
+                    )
+                    self._sleep(delay)
+                    continue
+                raise ProviderOutputError(
+                    f"OpenAI-compatible live request failed for {session_id}: {type(exc).__name__}",
+                    details={
+                        "provider": self.config.provider_label,
+                        "failure_class": "provider_connection_error",
+                        "exception_type": type(exc).__name__,
+                        "exception_chain": exception_chain,
+                        "transport_attempts": transport_attempts,
+                        "session_id": session_id,
+                        "request": redact_provider_payload(request),
+                    },
+                ) from exc
+        payload = _object_to_dict(response)
+        try:
+            evidence = parse_chat_completion_evidence(
+                payload, request=request, evidence_class="live",
+                provider_label=self.config.provider_label,
+            )
+            output = validate_provider_output(ProviderOutput(
+                text=str(evidence["content_text"]),
+                metadata={
+                    "provider": self.config.provider_label,
+                    "evidence_class": "live",
+                    "session_id": session_id,
+                    "response_id": evidence["response_id"],
+                    "model": evidence["model"],
+                    "stop_reason": evidence["finish_reason"],
+                    "usage": evidence["usage"],
+                    "estimated_input_tokens": estimated_input_tokens,
+                    "max_input_tokens": self.config.max_input_tokens,
+                    "transport_attempts": transport_attempts,
+                    **_provider_request_configuration_metadata(self.config, request),
+                },
+            ))
+        except (OpenAICompatError, ProviderOutputError) as error:
+            details = getattr(error, 'evidence', getattr(error, 'details', {}))
+            preserved = {**details, 'provider': self.config.provider_label,
+                'evidence_class': 'live', 'session_id': session_id,
+                'request': redact_provider_payload(request),
+                'response': redact_provider_payload(payload),
+                'response_id': payload.get('id'), 'model': payload.get('model'),
+                'usage': payload.get('usage', {})}
+            if isinstance(error, OpenAICompatError):
+&gt;               raise OpenAICompatError(str(error), evidence=preserved) from error
+E               text2ifc_agent.openai_compat.OpenAICompatError: OpenAI-compatible chat completion is truncated: finish_reason=length
+
+src\text2ifc_agent\openai_compat.py:323: OpenAICompatError
+
+During handling of the above exception, another exception occurred:
+
+tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/brief-evidence-red/test_existing_attempt_is_immut1')
+artifact = 'response.raw.json'
+
+    @pytest.mark.parametrize('artifact', ['input.txt', 'response.raw.json', 'request.redacted.json',
+        'provider-error.json', 'design-brief.json', '.design-brief-attempt'])
+    def test_existing_attempt_is_immutable_before_transport(tmp_path, artifact):
+        target = tmp_path / artifact
+        target.write_bytes(b'original evidence')
+        provider, calls, _ = provider_for('truncated')
+&gt;       with pytest.raises(Exception, match='DESIGN_BRIEF_ATTEMPT_ALREADY_EXISTS'):
+E       AssertionError: Regex pattern did not match.
+E        Regex: 'DESIGN_BRIEF_ATTEMPT_ALREADY_EXISTS'
+E        Input: 'OpenAI-compatible chat completion is truncated: finish_reason=length'
+
+tests\agent\test_public_brief_failure_evidence.py:64: AssertionError</failure></testcase><testcase classname="tests.agent.test_public_brief_failure_evidence" name="test_existing_attempt_is_immutable_before_transport[request.redacted.json]" time="0.093"><failure message="AssertionError: Regex pattern did not match.&#10; Regex: 'DESIGN_BRIEF_ATTEMPT_ALREADY_EXISTS'&#10; Input: 'OpenAI-compatible chat completion is truncated: finish_reason=length'">self = &lt;text2ifc_agent.openai_compat.OpenAICompatibleLiveProvider object at 0x00000294FF911910&gt;
+
+    def generate_live(
+        self,
+        *,
+        session_id: str,
+        prompt: str,
+        schema: dict[str, Any],
+        state: dict[str, Any],
+    ) -&gt; LiveProviderResult:
+        del schema, state
+        estimated_input_tokens = estimate_openai_compatible_input_tokens(prompt)
+        if estimated_input_tokens &gt; self.config.max_input_tokens:
+            raise ProviderOutputError(
+                f"OpenAI-compatible input token budget exceeded for {session_id}",
+                details={
+                    "provider": self.config.provider_label,
+                    "failure_class": "input_token_budget_exceeded",
+                    "session_id": session_id,
+                    "estimated_input_tokens": estimated_input_tokens,
+                    "max_input_tokens": self.config.max_input_tokens,
+                    "token_estimator": "ascii/4+non_ascii",
+                },
+            )
+        request = {
+            "model": self.config.model,
+            "messages": [{"role": "user", "content": prompt}],
+            "temperature": 0,
+            "response_format": {"type": "json_object"},
+        }
+        request.update(_token_limit_request(self.config))
+        request.update(_provider_request_extensions(self.config))
+        transport_attempts = 0
+        while True:
+            transport_attempts += 1
+            try:
+                response = self.client.chat.completions.create(**request)
+                break
+            except Exception as exc:
+                exception_chain = _exception_type_chain(exc)
+                retryable = _retryable_connection_error(exception_chain)
+                if retryable and transport_attempts &lt; self.connection_max_attempts:
+                    delay = self.connection_retry_delay_seconds * (
+                        2 ** (transport_attempts - 1)
+                    )
+                    self._sleep(delay)
+                    continue
+                raise ProviderOutputError(
+                    f"OpenAI-compatible live request failed for {session_id}: {type(exc).__name__}",
+                    details={
+                        "provider": self.config.provider_label,
+                        "failure_class": "provider_connection_error",
+                        "exception_type": type(exc).__name__,
+                        "exception_chain": exception_chain,
+                        "transport_attempts": transport_attempts,
+                        "session_id": session_id,
+                        "request": redact_provider_payload(request),
+                    },
+                ) from exc
+        payload = _object_to_dict(response)
+        try:
+&gt;           evidence = parse_chat_completion_evidence(
+                payload, request=request, evidence_class="live",
+                provider_label=self.config.provider_label,
+            )
+
+src\text2ifc_agent\openai_compat.py:294: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+response = {'choices': [{'finish_reason': 'length', 'message': {'content': '{"status":', 'reasoning_content': 'synthetic reasonin... 'id': 'offline-brief', 'model': 'fixture', 'usage': {'completion_tokens': 7, 'prompt_tokens': 11, 'total_tokens': 18}}
+
+    def parse_chat_completion_evidence(
+        response: dict[str, Any],
+        *,
+        request: dict[str, Any],
+        evidence_class: str,
+        provider_label: str = "mimo-openai-compatible",
+    ) -&gt; dict[str, Any]:
+        """Extract acceptance evidence from an OpenAI chat-completion response."""
+    
+        choice = _first_choice(response)
+        message = choice.get("message") if isinstance(choice.get("message"), dict) else {}
+        finish_reason = choice.get("finish_reason")
+        evidence = {
+            "provider": provider_label,
+            "evidence_class": evidence_class,
+            "response_id": response.get("id"),
+            "object": response.get("object"),
+            "model": response.get("model"),
+            "finish_reason": finish_reason,
+            "content_text": str(message.get("content", "")),
+            "usage": dict(response.get("usage", {})) if isinstance(response.get("usage"), dict) else {},
+            "request": redact_provider_payload(request),
+            "parse_eligible": finish_reason != "length",
+        }
+        if finish_reason == "length":
+            evidence["failure_class"] = "truncated"
+&gt;           raise OpenAICompatError(
+                "OpenAI-compatible chat completion is truncated: finish_reason=length",
+                evidence=evidence,
+            )
+E           text2ifc_agent.openai_compat.OpenAICompatError: OpenAI-compatible chat completion is truncated: finish_reason=length
+
+src\text2ifc_agent\openai_compat.py:432: OpenAICompatError
+
+The above exception was the direct cause of the following exception:
+
+tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/brief-evidence-red/test_existing_attempt_is_immut2')
+artifact = 'request.redacted.json'
+
+    @pytest.mark.parametrize('artifact', ['input.txt', 'response.raw.json', 'request.redacted.json',
+        'provider-error.json', 'design-brief.json', '.design-brief-attempt'])
+    def test_existing_attempt_is_immutable_before_transport(tmp_path, artifact):
+        target = tmp_path / artifact
+        target.write_bytes(b'original evidence')
+        provider, calls, _ = provider_for('truncated')
+        with pytest.raises(Exception, match='DESIGN_BRIEF_ATTEMPT_ALREADY_EXISTS'):
+&gt;           run_design_brief_stage(provider=provider, output_dir=tmp_path, case=complete_room_case())
+
+tests\agent\test_public_brief_failure_evidence.py:65: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\text2ifc_agent\live_pipeline.py:192: in run_design_brief_stage
+    result = provider.generate_live(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;text2ifc_agent.openai_compat.OpenAICompatibleLiveProvider object at 0x00000294FF911910&gt;
+
+    def generate_live(
+        self,
+        *,
+        session_id: str,
+        prompt: str,
+        schema: dict[str, Any],
+        state: dict[str, Any],
+    ) -&gt; LiveProviderResult:
+        del schema, state
+        estimated_input_tokens = estimate_openai_compatible_input_tokens(prompt)
+        if estimated_input_tokens &gt; self.config.max_input_tokens:
+            raise ProviderOutputError(
+                f"OpenAI-compatible input token budget exceeded for {session_id}",
+                details={
+                    "provider": self.config.provider_label,
+                    "failure_class": "input_token_budget_exceeded",
+                    "session_id": session_id,
+                    "estimated_input_tokens": estimated_input_tokens,
+                    "max_input_tokens": self.config.max_input_tokens,
+                    "token_estimator": "ascii/4+non_ascii",
+                },
+            )
+        request = {
+            "model": self.config.model,
+            "messages": [{"role": "user", "content": prompt}],
+            "temperature": 0,
+            "response_format": {"type": "json_object"},
+        }
+        request.update(_token_limit_request(self.config))
+        request.update(_provider_request_extensions(self.config))
+        transport_attempts = 0
+        while True:
+            transport_attempts += 1
+            try:
+                response = self.client.chat.completions.create(**request)
+                break
+            except Exception as exc:
+                exception_chain = _exception_type_chain(exc)
+                retryable = _retryable_connection_error(exception_chain)
+                if retryable and transport_attempts &lt; self.connection_max_attempts:
+                    delay = self.connection_retry_delay_seconds * (
+                        2 ** (transport_attempts - 1)
+                    )
+                    self._sleep(delay)
+                    continue
+                raise ProviderOutputError(
+                    f"OpenAI-compatible live request failed for {session_id}: {type(exc).__name__}",
+                    details={
+                        "provider": self.config.provider_label,
+                        "failure_class": "provider_connection_error",
+                        "exception_type": type(exc).__name__,
+                        "exception_chain": exception_chain,
+                        "transport_attempts": transport_attempts,
+                        "session_id": session_id,
+                        "request": redact_provider_payload(request),
+                    },
+                ) from exc
+        payload = _object_to_dict(response)
+        try:
+            evidence = parse_chat_completion_evidence(
+                payload, request=request, evidence_class="live",
+                provider_label=self.config.provider_label,
+            )
+            output = validate_provider_output(ProviderOutput(
+                text=str(evidence["content_text"]),
+                metadata={
+                    "provider": self.config.provider_label,
+                    "evidence_class": "live",
+                    "session_id": session_id,
+                    "response_id": evidence["response_id"],
+                    "model": evidence["model"],
+                    "stop_reason": evidence["finish_reason"],
+                    "usage": evidence["usage"],
+                    "estimated_input_tokens": estimated_input_tokens,
+                    "max_input_tokens": self.config.max_input_tokens,
+                    "transport_attempts": transport_attempts,
+                    **_provider_request_configuration_metadata(self.config, request),
+                },
+            ))
+        except (OpenAICompatError, ProviderOutputError) as error:
+            details = getattr(error, 'evidence', getattr(error, 'details', {}))
+            preserved = {**details, 'provider': self.config.provider_label,
+                'evidence_class': 'live', 'session_id': session_id,
+                'request': redact_provider_payload(request),
+                'response': redact_provider_payload(payload),
+                'response_id': payload.get('id'), 'model': payload.get('model'),
+                'usage': payload.get('usage', {})}
+            if isinstance(error, OpenAICompatError):
+&gt;               raise OpenAICompatError(str(error), evidence=preserved) from error
+E               text2ifc_agent.openai_compat.OpenAICompatError: OpenAI-compatible chat completion is truncated: finish_reason=length
+
+src\text2ifc_agent\openai_compat.py:323: OpenAICompatError
+
+During handling of the above exception, another exception occurred:
+
+tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/brief-evidence-red/test_existing_attempt_is_immut2')
+artifact = 'request.redacted.json'
+
+    @pytest.mark.parametrize('artifact', ['input.txt', 'response.raw.json', 'request.redacted.json',
+        'provider-error.json', 'design-brief.json', '.design-brief-attempt'])
+    def test_existing_attempt_is_immutable_before_transport(tmp_path, artifact):
+        target = tmp_path / artifact
+        target.write_bytes(b'original evidence')
+        provider, calls, _ = provider_for('truncated')
+&gt;       with pytest.raises(Exception, match='DESIGN_BRIEF_ATTEMPT_ALREADY_EXISTS'):
+E       AssertionError: Regex pattern did not match.
+E        Regex: 'DESIGN_BRIEF_ATTEMPT_ALREADY_EXISTS'
+E        Input: 'OpenAI-compatible chat completion is truncated: finish_reason=length'
+
+tests\agent\test_public_brief_failure_evidence.py:64: AssertionError</failure></testcase><testcase classname="tests.agent.test_public_brief_failure_evidence" name="test_existing_attempt_is_immutable_before_transport[provider-error.json]" time="0.104"><failure message="AssertionError: Regex pattern did not match.&#10; Regex: 'DESIGN_BRIEF_ATTEMPT_ALREADY_EXISTS'&#10; Input: 'OpenAI-compatible chat completion is truncated: finish_reason=length'">self = &lt;text2ifc_agent.openai_compat.OpenAICompatibleLiveProvider object at 0x00000294FF915F40&gt;
+
+    def generate_live(
+        self,
+        *,
+        session_id: str,
+        prompt: str,
+        schema: dict[str, Any],
+        state: dict[str, Any],
+    ) -&gt; LiveProviderResult:
+        del schema, state
+        estimated_input_tokens = estimate_openai_compatible_input_tokens(prompt)
+        if estimated_input_tokens &gt; self.config.max_input_tokens:
+            raise ProviderOutputError(
+                f"OpenAI-compatible input token budget exceeded for {session_id}",
+                details={
+                    "provider": self.config.provider_label,
+                    "failure_class": "input_token_budget_exceeded",
+                    "session_id": session_id,
+                    "estimated_input_tokens": estimated_input_tokens,
+                    "max_input_tokens": self.config.max_input_tokens,
+                    "token_estimator": "ascii/4+non_ascii",
+                },
+            )
+        request = {
+            "model": self.config.model,
+            "messages": [{"role": "user", "content": prompt}],
+            "temperature": 0,
+            "response_format": {"type": "json_object"},
+        }
+        request.update(_token_limit_request(self.config))
+        request.update(_provider_request_extensions(self.config))
+        transport_attempts = 0
+        while True:
+            transport_attempts += 1
+            try:
+                response = self.client.chat.completions.create(**request)
+                break
+            except Exception as exc:
+                exception_chain = _exception_type_chain(exc)
+                retryable = _retryable_connection_error(exception_chain)
+                if retryable and transport_attempts &lt; self.connection_max_attempts:
+                    delay = self.connection_retry_delay_seconds * (
+                        2 ** (transport_attempts - 1)
+                    )
+                    self._sleep(delay)
+                    continue
+                raise ProviderOutputError(
+                    f"OpenAI-compatible live request failed for {session_id}: {type(exc).__name__}",
+                    details={
+                        "provider": self.config.provider_label,
+                        "failure_class": "provider_connection_error",
+                        "exception_type": type(exc).__name__,
+                        "exception_chain": exception_chain,
+                        "transport_attempts": transport_attempts,
+                        "session_id": session_id,
+                        "request": redact_provider_payload(request),
+                    },
+                ) from exc
+        payload = _object_to_dict(response)
+        try:
+&gt;           evidence = parse_chat_completion_evidence(
+                payload, request=request, evidence_class="live",
+                provider_label=self.config.provider_label,
+            )
+
+src\text2ifc_agent\openai_compat.py:294: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+response = {'choices': [{'finish_reason': 'length', 'message': {'content': '{"status":', 'reasoning_content': 'synthetic reasonin... 'id': 'offline-brief', 'model': 'fixture', 'usage': {'completion_tokens': 7, 'prompt_tokens': 11, 'total_tokens': 18}}
+
+    def parse_chat_completion_evidence(
+        response: dict[str, Any],
+        *,
+        request: dict[str, Any],
+        evidence_class: str,
+        provider_label: str = "mimo-openai-compatible",
+    ) -&gt; dict[str, Any]:
+        """Extract acceptance evidence from an OpenAI chat-completion response."""
+    
+        choice = _first_choice(response)
+        message = choice.get("message") if isinstance(choice.get("message"), dict) else {}
+        finish_reason = choice.get("finish_reason")
+        evidence = {
+            "provider": provider_label,
+            "evidence_class": evidence_class,
+            "response_id": response.get("id"),
+            "object": response.get("object"),
+            "model": response.get("model"),
+            "finish_reason": finish_reason,
+            "content_text": str(message.get("content", "")),
+            "usage": dict(response.get("usage", {})) if isinstance(response.get("usage"), dict) else {},
+            "request": redact_provider_payload(request),
+            "parse_eligible": finish_reason != "length",
+        }
+        if finish_reason == "length":
+            evidence["failure_class"] = "truncated"
+&gt;           raise OpenAICompatError(
+                "OpenAI-compatible chat completion is truncated: finish_reason=length",
+                evidence=evidence,
+            )
+E           text2ifc_agent.openai_compat.OpenAICompatError: OpenAI-compatible chat completion is truncated: finish_reason=length
+
+src\text2ifc_agent\openai_compat.py:432: OpenAICompatError
+
+The above exception was the direct cause of the following exception:
+
+tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/brief-evidence-red/test_existing_attempt_is_immut3')
+artifact = 'provider-error.json'
+
+    @pytest.mark.parametrize('artifact', ['input.txt', 'response.raw.json', 'request.redacted.json',
+        'provider-error.json', 'design-brief.json', '.design-brief-attempt'])
+    def test_existing_attempt_is_immutable_before_transport(tmp_path, artifact):
+        target = tmp_path / artifact
+        target.write_bytes(b'original evidence')
+        provider, calls, _ = provider_for('truncated')
+        with pytest.raises(Exception, match='DESIGN_BRIEF_ATTEMPT_ALREADY_EXISTS'):
+&gt;           run_design_brief_stage(provider=provider, output_dir=tmp_path, case=complete_room_case())
+
+tests\agent\test_public_brief_failure_evidence.py:65: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\text2ifc_agent\live_pipeline.py:192: in run_design_brief_stage
+    result = provider.generate_live(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;text2ifc_agent.openai_compat.OpenAICompatibleLiveProvider object at 0x00000294FF915F40&gt;
+
+    def generate_live(
+        self,
+        *,
+        session_id: str,
+        prompt: str,
+        schema: dict[str, Any],
+        state: dict[str, Any],
+    ) -&gt; LiveProviderResult:
+        del schema, state
+        estimated_input_tokens = estimate_openai_compatible_input_tokens(prompt)
+        if estimated_input_tokens &gt; self.config.max_input_tokens:
+            raise ProviderOutputError(
+                f"OpenAI-compatible input token budget exceeded for {session_id}",
+                details={
+                    "provider": self.config.provider_label,
+                    "failure_class": "input_token_budget_exceeded",
+                    "session_id": session_id,
+                    "estimated_input_tokens": estimated_input_tokens,
+                    "max_input_tokens": self.config.max_input_tokens,
+                    "token_estimator": "ascii/4+non_ascii",
+                },
+            )
+        request = {
+            "model": self.config.model,
+            "messages": [{"role": "user", "content": prompt}],
+            "temperature": 0,
+            "response_format": {"type": "json_object"},
+        }
+        request.update(_token_limit_request(self.config))
+        request.update(_provider_request_extensions(self.config))
+        transport_attempts = 0
+        while True:
+            transport_attempts += 1
+            try:
+                response = self.client.chat.completions.create(**request)
+                break
+            except Exception as exc:
+                exception_chain = _exception_type_chain(exc)
+                retryable = _retryable_connection_error(exception_chain)
+                if retryable and transport_attempts &lt; self.connection_max_attempts:
+                    delay = self.connection_retry_delay_seconds * (
+                        2 ** (transport_attempts - 1)
+                    )
+                    self._sleep(delay)
+                    continue
+                raise ProviderOutputError(
+                    f"OpenAI-compatible live request failed for {session_id}: {type(exc).__name__}",
+                    details={
+                        "provider": self.config.provider_label,
+                        "failure_class": "provider_connection_error",
+                        "exception_type": type(exc).__name__,
+                        "exception_chain": exception_chain,
+                        "transport_attempts": transport_attempts,
+                        "session_id": session_id,
+                        "request": redact_provider_payload(request),
+                    },
+                ) from exc
+        payload = _object_to_dict(response)
+        try:
+            evidence = parse_chat_completion_evidence(
+                payload, request=request, evidence_class="live",
+                provider_label=self.config.provider_label,
+            )
+            output = validate_provider_output(ProviderOutput(
+                text=str(evidence["content_text"]),
+                metadata={
+                    "provider": self.config.provider_label,
+                    "evidence_class": "live",
+                    "session_id": session_id,
+                    "response_id": evidence["response_id"],
+                    "model": evidence["model"],
+                    "stop_reason": evidence["finish_reason"],
+                    "usage": evidence["usage"],
+                    "estimated_input_tokens": estimated_input_tokens,
+                    "max_input_tokens": self.config.max_input_tokens,
+                    "transport_attempts": transport_attempts,
+                    **_provider_request_configuration_metadata(self.config, request),
+                },
+            ))
+        except (OpenAICompatError, ProviderOutputError) as error:
+            details = getattr(error, 'evidence', getattr(error, 'details', {}))
+            preserved = {**details, 'provider': self.config.provider_label,
+                'evidence_class': 'live', 'session_id': session_id,
+                'request': redact_provider_payload(request),
+                'response': redact_provider_payload(payload),
+                'response_id': payload.get('id'), 'model': payload.get('model'),
+                'usage': payload.get('usage', {})}
+            if isinstance(error, OpenAICompatError):
+&gt;               raise OpenAICompatError(str(error), evidence=preserved) from error
+E               text2ifc_agent.openai_compat.OpenAICompatError: OpenAI-compatible chat completion is truncated: finish_reason=length
+
+src\text2ifc_agent\openai_compat.py:323: OpenAICompatError
+
+During handling of the above exception, another exception occurred:
+
+tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/brief-evidence-red/test_existing_attempt_is_immut3')
+artifact = 'provider-error.json'
+
+    @pytest.mark.parametrize('artifact', ['input.txt', 'response.raw.json', 'request.redacted.json',
+        'provider-error.json', 'design-brief.json', '.design-brief-attempt'])
+    def test_existing_attempt_is_immutable_before_transport(tmp_path, artifact):
+        target = tmp_path / artifact
+        target.write_bytes(b'original evidence')
+        provider, calls, _ = provider_for('truncated')
+&gt;       with pytest.raises(Exception, match='DESIGN_BRIEF_ATTEMPT_ALREADY_EXISTS'):
+E       AssertionError: Regex pattern did not match.
+E        Regex: 'DESIGN_BRIEF_ATTEMPT_ALREADY_EXISTS'
+E        Input: 'OpenAI-compatible chat completion is truncated: finish_reason=length'
+
+tests\agent\test_public_brief_failure_evidence.py:64: AssertionError</failure></testcase><testcase classname="tests.agent.test_public_brief_failure_evidence" name="test_existing_attempt_is_immutable_before_transport[design-brief.json]" time="0.156"><failure message="AssertionError: Regex pattern did not match.&#10; Regex: 'DESIGN_BRIEF_ATTEMPT_ALREADY_EXISTS'&#10; Input: 'OpenAI-compatible chat completion is truncated: finish_reason=length'">self = &lt;text2ifc_agent.openai_compat.OpenAICompatibleLiveProvider object at 0x00000294FF8CB6E0&gt;
+
+    def generate_live(
+        self,
+        *,
+        session_id: str,
+        prompt: str,
+        schema: dict[str, Any],
+        state: dict[str, Any],
+    ) -&gt; LiveProviderResult:
+        del schema, state
+        estimated_input_tokens = estimate_openai_compatible_input_tokens(prompt)
+        if estimated_input_tokens &gt; self.config.max_input_tokens:
+            raise ProviderOutputError(
+                f"OpenAI-compatible input token budget exceeded for {session_id}",
+                details={
+                    "provider": self.config.provider_label,
+                    "failure_class": "input_token_budget_exceeded",
+                    "session_id": session_id,
+                    "estimated_input_tokens": estimated_input_tokens,
+                    "max_input_tokens": self.config.max_input_tokens,
+                    "token_estimator": "ascii/4+non_ascii",
+                },
+            )
+        request = {
+            "model": self.config.model,
+            "messages": [{"role": "user", "content": prompt}],
+            "temperature": 0,
+            "response_format": {"type": "json_object"},
+        }
+        request.update(_token_limit_request(self.config))
+        request.update(_provider_request_extensions(self.config))
+        transport_attempts = 0
+        while True:
+            transport_attempts += 1
+            try:
+                response = self.client.chat.completions.create(**request)
+                break
+            except Exception as exc:
+                exception_chain = _exception_type_chain(exc)
+                retryable = _retryable_connection_error(exception_chain)
+                if retryable and transport_attempts &lt; self.connection_max_attempts:
+                    delay = self.connection_retry_delay_seconds * (
+                        2 ** (transport_attempts - 1)
+                    )
+                    self._sleep(delay)
+                    continue
+                raise ProviderOutputError(
+                    f"OpenAI-compatible live request failed for {session_id}: {type(exc).__name__}",
+                    details={
+                        "provider": self.config.provider_label,
+                        "failure_class": "provider_connection_error",
+                        "exception_type": type(exc).__name__,
+                        "exception_chain": exception_chain,
+                        "transport_attempts": transport_attempts,
+                        "session_id": session_id,
+                        "request": redact_provider_payload(request),
+                    },
+                ) from exc
+        payload = _object_to_dict(response)
+        try:
+&gt;           evidence = parse_chat_completion_evidence(
+                payload, request=request, evidence_class="live",
+                provider_label=self.config.provider_label,
+            )
+
+src\text2ifc_agent\openai_compat.py:294: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+response = {'choices': [{'finish_reason': 'length', 'message': {'content': '{"status":', 'reasoning_content': 'synthetic reasonin... 'id': 'offline-brief', 'model': 'fixture', 'usage': {'completion_tokens': 7, 'prompt_tokens': 11, 'total_tokens': 18}}
+
+    def parse_chat_completion_evidence(
+        response: dict[str, Any],
+        *,
+        request: dict[str, Any],
+        evidence_class: str,
+        provider_label: str = "mimo-openai-compatible",
+    ) -&gt; dict[str, Any]:
+        """Extract acceptance evidence from an OpenAI chat-completion response."""
+    
+        choice = _first_choice(response)
+        message = choice.get("message") if isinstance(choice.get("message"), dict) else {}
+        finish_reason = choice.get("finish_reason")
+        evidence = {
+            "provider": provider_label,
+            "evidence_class": evidence_class,
+            "response_id": response.get("id"),
+            "object": response.get("object"),
+            "model": response.get("model"),
+            "finish_reason": finish_reason,
+            "content_text": str(message.get("content", "")),
+            "usage": dict(response.get("usage", {})) if isinstance(response.get("usage"), dict) else {},
+            "request": redact_provider_payload(request),
+            "parse_eligible": finish_reason != "length",
+        }
+        if finish_reason == "length":
+            evidence["failure_class"] = "truncated"
+&gt;           raise OpenAICompatError(
+                "OpenAI-compatible chat completion is truncated: finish_reason=length",
+                evidence=evidence,
+            )
+E           text2ifc_agent.openai_compat.OpenAICompatError: OpenAI-compatible chat completion is truncated: finish_reason=length
+
+src\text2ifc_agent\openai_compat.py:432: OpenAICompatError
+
+The above exception was the direct cause of the following exception:
+
+tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/brief-evidence-red/test_existing_attempt_is_immut4')
+artifact = 'design-brief.json'
+
+    @pytest.mark.parametrize('artifact', ['input.txt', 'response.raw.json', 'request.redacted.json',
+        'provider-error.json', 'design-brief.json', '.design-brief-attempt'])
+    def test_existing_attempt_is_immutable_before_transport(tmp_path, artifact):
+        target = tmp_path / artifact
+        target.write_bytes(b'original evidence')
+        provider, calls, _ = provider_for('truncated')
+        with pytest.raises(Exception, match='DESIGN_BRIEF_ATTEMPT_ALREADY_EXISTS'):
+&gt;           run_design_brief_stage(provider=provider, output_dir=tmp_path, case=complete_room_case())
+
+tests\agent\test_public_brief_failure_evidence.py:65: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\text2ifc_agent\live_pipeline.py:192: in run_design_brief_stage
+    result = provider.generate_live(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;text2ifc_agent.openai_compat.OpenAICompatibleLiveProvider object at 0x00000294FF8CB6E0&gt;
+
+    def generate_live(
+        self,
+        *,
+        session_id: str,
+        prompt: str,
+        schema: dict[str, Any],
+        state: dict[str, Any],
+    ) -&gt; LiveProviderResult:
+        del schema, state
+        estimated_input_tokens = estimate_openai_compatible_input_tokens(prompt)
+        if estimated_input_tokens &gt; self.config.max_input_tokens:
+            raise ProviderOutputError(
+                f"OpenAI-compatible input token budget exceeded for {session_id}",
+                details={
+                    "provider": self.config.provider_label,
+                    "failure_class": "input_token_budget_exceeded",
+                    "session_id": session_id,
+                    "estimated_input_tokens": estimated_input_tokens,
+                    "max_input_tokens": self.config.max_input_tokens,
+                    "token_estimator": "ascii/4+non_ascii",
+                },
+            )
+        request = {
+            "model": self.config.model,
+            "messages": [{"role": "user", "content": prompt}],
+            "temperature": 0,
+            "response_format": {"type": "json_object"},
+        }
+        request.update(_token_limit_request(self.config))
+        request.update(_provider_request_extensions(self.config))
+        transport_attempts = 0
+        while True:
+            transport_attempts += 1
+            try:
+                response = self.client.chat.completions.create(**request)
+                break
+            except Exception as exc:
+                exception_chain = _exception_type_chain(exc)
+                retryable = _retryable_connection_error(exception_chain)
+                if retryable and transport_attempts &lt; self.connection_max_attempts:
+                    delay = self.connection_retry_delay_seconds * (
+                        2 ** (transport_attempts - 1)
+                    )
+                    self._sleep(delay)
+                    continue
+                raise ProviderOutputError(
+                    f"OpenAI-compatible live request failed for {session_id}: {type(exc).__name__}",
+                    details={
+                        "provider": self.config.provider_label,
+                        "failure_class": "provider_connection_error",
+                        "exception_type": type(exc).__name__,
+                        "exception_chain": exception_chain,
+                        "transport_attempts": transport_attempts,
+                        "session_id": session_id,
+                        "request": redact_provider_payload(request),
+                    },
+                ) from exc
+        payload = _object_to_dict(response)
+        try:
+            evidence = parse_chat_completion_evidence(
+                payload, request=request, evidence_class="live",
+                provider_label=self.config.provider_label,
+            )
+            output = validate_provider_output(ProviderOutput(
+                text=str(evidence["content_text"]),
+                metadata={
+                    "provider": self.config.provider_label,
+                    "evidence_class": "live",
+                    "session_id": session_id,
+                    "response_id": evidence["response_id"],
+                    "model": evidence["model"],
+                    "stop_reason": evidence["finish_reason"],
+                    "usage": evidence["usage"],
+                    "estimated_input_tokens": estimated_input_tokens,
+                    "max_input_tokens": self.config.max_input_tokens,
+                    "transport_attempts": transport_attempts,
+                    **_provider_request_configuration_metadata(self.config, request),
+                },
+            ))
+        except (OpenAICompatError, ProviderOutputError) as error:
+            details = getattr(error, 'evidence', getattr(error, 'details', {}))
+            preserved = {**details, 'provider': self.config.provider_label,
+                'evidence_class': 'live', 'session_id': session_id,
+                'request': redact_provider_payload(request),
+                'response': redact_provider_payload(payload),
+                'response_id': payload.get('id'), 'model': payload.get('model'),
+                'usage': payload.get('usage', {})}
+            if isinstance(error, OpenAICompatError):
+&gt;               raise OpenAICompatError(str(error), evidence=preserved) from error
+E               text2ifc_agent.openai_compat.OpenAICompatError: OpenAI-compatible chat completion is truncated: finish_reason=length
+
+src\text2ifc_agent\openai_compat.py:323: OpenAICompatError
+
+During handling of the above exception, another exception occurred:
+
+tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/brief-evidence-red/test_existing_attempt_is_immut4')
+artifact = 'design-brief.json'
+
+    @pytest.mark.parametrize('artifact', ['input.txt', 'response.raw.json', 'request.redacted.json',
+        'provider-error.json', 'design-brief.json', '.design-brief-attempt'])
+    def test_existing_attempt_is_immutable_before_transport(tmp_path, artifact):
+        target = tmp_path / artifact
+        target.write_bytes(b'original evidence')
+        provider, calls, _ = provider_for('truncated')
+&gt;       with pytest.raises(Exception, match='DESIGN_BRIEF_ATTEMPT_ALREADY_EXISTS'):
+E       AssertionError: Regex pattern did not match.
+E        Regex: 'DESIGN_BRIEF_ATTEMPT_ALREADY_EXISTS'
+E        Input: 'OpenAI-compatible chat completion is truncated: finish_reason=length'
+
+tests\agent\test_public_brief_failure_evidence.py:64: AssertionError</failure></testcase><testcase classname="tests.agent.test_public_brief_failure_evidence" name="test_existing_attempt_is_immutable_before_transport[.design-brief-attempt]" time="0.100"><failure message="AssertionError: Regex pattern did not match.&#10; Regex: 'DESIGN_BRIEF_ATTEMPT_ALREADY_EXISTS'&#10; Input: 'OpenAI-compatible chat completion is truncated: finish_reason=length'">self = &lt;text2ifc_agent.openai_compat.OpenAICompatibleLiveProvider object at 0x00000294FF90B170&gt;
+
+    def generate_live(
+        self,
+        *,
+        session_id: str,
+        prompt: str,
+        schema: dict[str, Any],
+        state: dict[str, Any],
+    ) -&gt; LiveProviderResult:
+        del schema, state
+        estimated_input_tokens = estimate_openai_compatible_input_tokens(prompt)
+        if estimated_input_tokens &gt; self.config.max_input_tokens:
+            raise ProviderOutputError(
+                f"OpenAI-compatible input token budget exceeded for {session_id}",
+                details={
+                    "provider": self.config.provider_label,
+                    "failure_class": "input_token_budget_exceeded",
+                    "session_id": session_id,
+                    "estimated_input_tokens": estimated_input_tokens,
+                    "max_input_tokens": self.config.max_input_tokens,
+                    "token_estimator": "ascii/4+non_ascii",
+                },
+            )
+        request = {
+            "model": self.config.model,
+            "messages": [{"role": "user", "content": prompt}],
+            "temperature": 0,
+            "response_format": {"type": "json_object"},
+        }
+        request.update(_token_limit_request(self.config))
+        request.update(_provider_request_extensions(self.config))
+        transport_attempts = 0
+        while True:
+            transport_attempts += 1
+            try:
+                response = self.client.chat.completions.create(**request)
+                break
+            except Exception as exc:
+                exception_chain = _exception_type_chain(exc)
+                retryable = _retryable_connection_error(exception_chain)
+                if retryable and transport_attempts &lt; self.connection_max_attempts:
+                    delay = self.connection_retry_delay_seconds * (
+                        2 ** (transport_attempts - 1)
+                    )
+                    self._sleep(delay)
+                    continue
+                raise ProviderOutputError(
+                    f"OpenAI-compatible live request failed for {session_id}: {type(exc).__name__}",
+                    details={
+                        "provider": self.config.provider_label,
+                        "failure_class": "provider_connection_error",
+                        "exception_type": type(exc).__name__,
+                        "exception_chain": exception_chain,
+                        "transport_attempts": transport_attempts,
+                        "session_id": session_id,
+                        "request": redact_provider_payload(request),
+                    },
+                ) from exc
+        payload = _object_to_dict(response)
+        try:
+&gt;           evidence = parse_chat_completion_evidence(
+                payload, request=request, evidence_class="live",
+                provider_label=self.config.provider_label,
+            )
+
+src\text2ifc_agent\openai_compat.py:294: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+response = {'choices': [{'finish_reason': 'length', 'message': {'content': '{"status":', 'reasoning_content': 'synthetic reasonin... 'id': 'offline-brief', 'model': 'fixture', 'usage': {'completion_tokens': 7, 'prompt_tokens': 11, 'total_tokens': 18}}
+
+    def parse_chat_completion_evidence(
+        response: dict[str, Any],
+        *,
+        request: dict[str, Any],
+        evidence_class: str,
+        provider_label: str = "mimo-openai-compatible",
+    ) -&gt; dict[str, Any]:
+        """Extract acceptance evidence from an OpenAI chat-completion response."""
+    
+        choice = _first_choice(response)
+        message = choice.get("message") if isinstance(choice.get("message"), dict) else {}
+        finish_reason = choice.get("finish_reason")
+        evidence = {
+            "provider": provider_label,
+            "evidence_class": evidence_class,
+            "response_id": response.get("id"),
+            "object": response.get("object"),
+            "model": response.get("model"),
+            "finish_reason": finish_reason,
+            "content_text": str(message.get("content", "")),
+            "usage": dict(response.get("usage", {})) if isinstance(response.get("usage"), dict) else {},
+            "request": redact_provider_payload(request),
+            "parse_eligible": finish_reason != "length",
+        }
+        if finish_reason == "length":
+            evidence["failure_class"] = "truncated"
+&gt;           raise OpenAICompatError(
+                "OpenAI-compatible chat completion is truncated: finish_reason=length",
+                evidence=evidence,
+            )
+E           text2ifc_agent.openai_compat.OpenAICompatError: OpenAI-compatible chat completion is truncated: finish_reason=length
+
+src\text2ifc_agent\openai_compat.py:432: OpenAICompatError
+
+The above exception was the direct cause of the following exception:
+
+tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/brief-evidence-red/test_existing_attempt_is_immut5')
+artifact = '.design-brief-attempt'
+
+    @pytest.mark.parametrize('artifact', ['input.txt', 'response.raw.json', 'request.redacted.json',
+        'provider-error.json', 'design-brief.json', '.design-brief-attempt'])
+    def test_existing_attempt_is_immutable_before_transport(tmp_path, artifact):
+        target = tmp_path / artifact
+        target.write_bytes(b'original evidence')
+        provider, calls, _ = provider_for('truncated')
+        with pytest.raises(Exception, match='DESIGN_BRIEF_ATTEMPT_ALREADY_EXISTS'):
+&gt;           run_design_brief_stage(provider=provider, output_dir=tmp_path, case=complete_room_case())
+
+tests\agent\test_public_brief_failure_evidence.py:65: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\text2ifc_agent\live_pipeline.py:192: in run_design_brief_stage
+    result = provider.generate_live(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;text2ifc_agent.openai_compat.OpenAICompatibleLiveProvider object at 0x00000294FF90B170&gt;
+
+    def generate_live(
+        self,
+        *,
+        session_id: str,
+        prompt: str,
+        schema: dict[str, Any],
+        state: dict[str, Any],
+    ) -&gt; LiveProviderResult:
+        del schema, state
+        estimated_input_tokens = estimate_openai_compatible_input_tokens(prompt)
+        if estimated_input_tokens &gt; self.config.max_input_tokens:
+            raise ProviderOutputError(
+                f"OpenAI-compatible input token budget exceeded for {session_id}",
+                details={
+                    "provider": self.config.provider_label,
+                    "failure_class": "input_token_budget_exceeded",
+                    "session_id": session_id,
+                    "estimated_input_tokens": estimated_input_tokens,
+                    "max_input_tokens": self.config.max_input_tokens,
+                    "token_estimator": "ascii/4+non_ascii",
+                },
+            )
+        request = {
+            "model": self.config.model,
+            "messages": [{"role": "user", "content": prompt}],
+            "temperature": 0,
+            "response_format": {"type": "json_object"},
+        }
+        request.update(_token_limit_request(self.config))
+        request.update(_provider_request_extensions(self.config))
+        transport_attempts = 0
+        while True:
+            transport_attempts += 1
+            try:
+                response = self.client.chat.completions.create(**request)
+                break
+            except Exception as exc:
+                exception_chain = _exception_type_chain(exc)
+                retryable = _retryable_connection_error(exception_chain)
+                if retryable and transport_attempts &lt; self.connection_max_attempts:
+                    delay = self.connection_retry_delay_seconds * (
+                        2 ** (transport_attempts - 1)
+                    )
+                    self._sleep(delay)
+                    continue
+                raise ProviderOutputError(
+                    f"OpenAI-compatible live request failed for {session_id}: {type(exc).__name__}",
+                    details={
+                        "provider": self.config.provider_label,
+                        "failure_class": "provider_connection_error",
+                        "exception_type": type(exc).__name__,
+                        "exception_chain": exception_chain,
+                        "transport_attempts": transport_attempts,
+                        "session_id": session_id,
+                        "request": redact_provider_payload(request),
+                    },
+                ) from exc
+        payload = _object_to_dict(response)
+        try:
+            evidence = parse_chat_completion_evidence(
+                payload, request=request, evidence_class="live",
+                provider_label=self.config.provider_label,
+            )
+            output = validate_provider_output(ProviderOutput(
+                text=str(evidence["content_text"]),
+                metadata={
+                    "provider": self.config.provider_label,
+                    "evidence_class": "live",
+                    "session_id": session_id,
+                    "response_id": evidence["response_id"],
+                    "model": evidence["model"],
+                    "stop_reason": evidence["finish_reason"],
+                    "usage": evidence["usage"],
+                    "estimated_input_tokens": estimated_input_tokens,
+                    "max_input_tokens": self.config.max_input_tokens,
+                    "transport_attempts": transport_attempts,
+                    **_provider_request_configuration_metadata(self.config, request),
+                },
+            ))
+        except (OpenAICompatError, ProviderOutputError) as error:
+            details = getattr(error, 'evidence', getattr(error, 'details', {}))
+            preserved = {**details, 'provider': self.config.provider_label,
+                'evidence_class': 'live', 'session_id': session_id,
+                'request': redact_provider_payload(request),
+                'response': redact_provider_payload(payload),
+                'response_id': payload.get('id'), 'model': payload.get('model'),
+                'usage': payload.get('usage', {})}
+            if isinstance(error, OpenAICompatError):
+&gt;               raise OpenAICompatError(str(error), evidence=preserved) from error
+E               text2ifc_agent.openai_compat.OpenAICompatError: OpenAI-compatible chat completion is truncated: finish_reason=length
+
+src\text2ifc_agent\openai_compat.py:323: OpenAICompatError
+
+During handling of the above exception, another exception occurred:
+
+tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/brief-evidence-red/test_existing_attempt_is_immut5')
+artifact = '.design-brief-attempt'
+
+    @pytest.mark.parametrize('artifact', ['input.txt', 'response.raw.json', 'request.redacted.json',
+        'provider-error.json', 'design-brief.json', '.design-brief-attempt'])
+    def test_existing_attempt_is_immutable_before_transport(tmp_path, artifact):
+        target = tmp_path / artifact
+        target.write_bytes(b'original evidence')
+        provider, calls, _ = provider_for('truncated')
+&gt;       with pytest.raises(Exception, match='DESIGN_BRIEF_ATTEMPT_ALREADY_EXISTS'):
+E       AssertionError: Regex pattern did not match.
+E        Regex: 'DESIGN_BRIEF_ATTEMPT_ALREADY_EXISTS'
+E        Input: 'OpenAI-compatible chat completion is truncated: finish_reason=length'
+
+tests\agent\test_public_brief_failure_evidence.py:64: AssertionError</failure></testcase><testcase classname="tests.agent.test_public_brief_failure_evidence" name="test_invalid_returned_content_keeps_existing_rejection[empty]" time="0.130" /><testcase classname="tests.agent.test_public_brief_failure_evidence" name="test_invalid_returned_content_keeps_existing_rejection[malformed]" time="0.179" /><testcase classname="tests.agent.test_public_brief_failure_evidence" name="test_budget_rejection_remains_nontransport_failure" time="0.154" /></testsuite></testsuites>
