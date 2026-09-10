@@ -309,3 +309,34 @@ def test_ready_session_semantic_loop_publishes_and_resume_does_not_recall(tmp_pa
         run_ready_session_to_ifc(store=store, session=session.session_hash, provider_factory=lambda:provider)
     assert len(provider.calls) == count
     assert Path(result.ifc_path).read_bytes() == before
+
+
+def test_context_only_issue_cannot_crash_or_authorize_semantic_cleanup(tmp_path):
+    from text2ifc_agent.semantic_correction import build_semantic_correction
+    data = fixture()
+    issues = [{'issue_id': 'context-only', 'actual_ref': None, 'evidence': 'Audit context'}]
+    result = build_semantic_correction(candidate=data[0], design_brief=data[1], expected_facts=data[2], issues=issues)
+    assert result['edits'] == {}
+    assert result['source_issue_ids'] == []
+
+
+def test_duplicate_candidate_identity_blocks_before_transport(tmp_path):
+    data = fixture()
+    data[0]['entities'].append(copy.deepcopy(data[3]))
+    provider = SequenceProvider([])
+    result = run_scoped_changeset_round(provider=provider, output_dir=tmp_path, case_id='duplicate',
+        round_number=1, user_request='按请求修正。', conversation=[], design_brief=data[1],
+        expected_facts=data[2], candidate=data[0], issues=[])
+    assert not result['valid'] and result['candidate'] is None
+    assert any(i['code'] == 'CHANGESET_BASE_CANDIDATE_INVALID' for i in result['issues'])
+    assert not provider.calls
+
+
+def test_boolean_and_numeric_frozen_values_are_not_interchangeable(tmp_path):
+    data = fixture()
+    data[1]['known_facts']['semantic_requirements'][0]['property_sets']['Pset_WallCommon']['FireRating'] = 1
+    data[2]['semantic_expectations'][1]['value'] = True
+    result, provider = run_round(tmp_path, data, edits_for(data))
+    assert not result['valid']
+    assert not provider.calls
+    assert any(i['code'] == 'SEMANTIC_CORRECTION_REQUEST_CONFLICT' for i in result['issues'])
