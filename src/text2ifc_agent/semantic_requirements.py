@@ -33,6 +33,15 @@ def element_appearance_schema():
     return schema
 
 
+@lru_cache(maxsize=1)
+def _material_validator():
+    """Use the compiler's material grammar, including its referenced definitions."""
+    from jsonschema import Draft202012Validator
+    from text2ifc_contract.schema import load_schema_v21
+    schema = load_schema_v21()
+    return Draft202012Validator({'$ref': '#/$defs/materialAssignment', '$defs': schema['$defs']})
+
+
 def _project_appearance(selection, source_path):
     """Separate the known narrative field; never discard unknown constraints."""
     from jsonschema import Draft202012Validator
@@ -115,9 +124,9 @@ def project_semantic_requirements(brief: Mapping[str, Any]) -> dict[str, Any]:
             if material is None:
                 assignments = record.get('materials')
                 material = assignments[0] if isinstance(assignments, list) and len(assignments) == 1 else None
-            if not isinstance(material, Mapping):
+            if not isinstance(material, Mapping) or not _material_validator().is_valid(material):
                 issues.append({'code': 'SEMANTIC_MATERIAL_INCOMPLETE', 'path': path,
-                               'message': '材料需明确单材料或完整层构造，不得丢弃或猜测。'})
+                               'message': '材料需符合实际材料合同：single_material 必须含非空 name；分层需完整层名和正厚度。空对象、未知字段和不完整构造不能成为冻结要求；请按用户原文校正，不得猜测。'})
             else:
                 expectations.append({**base, 'kind': 'material', 'value': copy.deepcopy(dict(material))})
         property_sets = record.get('property_sets', {})
