@@ -212,8 +212,23 @@ def _storey_name_consistency_gate(
         actual_name = _string(attributes.get("Name")) if isinstance(attributes, Mapping) else None
         if not actual_storey or not expected_storey_name or not actual_name:
             continue
+        endpoint_storeys = set()
+        if entity.get("ifc_class") in {"IfcStair", "IfcStairFlight"}:
+            # Only a uniquely identified frozen connection can explain a
+            # destination label. Candidate prose cannot authorize new floors.
+            connections = [record for record in _records(expected_facts.get("stairs"))
+                           if record.get("id") == entity_id]
+            if len(connections) == 1 and connections[0].get("from_storey") == actual_storey:
+                destination = connections[0].get("to_storey")
+                destination_name = storey_names.get(destination)
+                if (destination_name and expected_storey_name in actual_name
+                    and destination_name in actual_name
+                    and unique_labels.get(expected_storey_name) == actual_storey
+                    and unique_labels.get(destination_name) == destination):
+                    endpoint_storeys.add(destination)
         for conflicting_name, conflicting_storey in sorted(unique_labels.items()):
-            if conflicting_storey == actual_storey or conflicting_name not in actual_name:
+            if (conflicting_storey == actual_storey or conflicting_storey in endpoint_storeys
+                or conflicting_name not in actual_name):
                 continue
             issues.append(
                 {
