@@ -290,14 +290,12 @@ class OpenAICompatibleLiveProvider:
                     },
                 ) from exc
         payload = _object_to_dict(response)
-        evidence = parse_chat_completion_evidence(
-            payload,
-            request=request,
-            evidence_class="live",
-            provider_label=self.config.provider_label,
-        )
-        output = validate_provider_output(
-            ProviderOutput(
+        try:
+            evidence = parse_chat_completion_evidence(
+                payload, request=request, evidence_class="live",
+                provider_label=self.config.provider_label,
+            )
+            output = validate_provider_output(ProviderOutput(
                 text=str(evidence["content_text"]),
                 metadata={
                     "provider": self.config.provider_label,
@@ -312,8 +310,18 @@ class OpenAICompatibleLiveProvider:
                     "transport_attempts": transport_attempts,
                     **_provider_request_configuration_metadata(self.config, request),
                 },
-            )
-        )
+            ))
+        except (OpenAICompatError, ProviderOutputError) as error:
+            details = getattr(error, 'evidence', getattr(error, 'details', {}))
+            preserved = {**details, 'provider': self.config.provider_label,
+                'evidence_class': 'live', 'session_id': session_id,
+                'request': redact_provider_payload(request),
+                'response': redact_provider_payload(payload),
+                'response_id': payload.get('id'), 'model': payload.get('model'),
+                'usage': payload.get('usage', {})}
+            if isinstance(error, OpenAICompatError):
+                raise OpenAICompatError(str(error), evidence=preserved) from error
+            raise ProviderOutputError(str(error), details=preserved) from error
         response_envelope = {
             **payload,
             "stop_reason": evidence["finish_reason"],

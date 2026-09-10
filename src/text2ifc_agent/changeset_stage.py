@@ -91,13 +91,34 @@ def run_changeset_stage(
     _write_json(output / "prompt-render-input.json", renderer_inputs)
     _write_text(output / "prompt-rendered.md", rendered["text"])
 
-    result = provider.generate_live(
-        session_id=f"phase6.5-{case_id}-changeset-{call_index:02d}",
-        prompt=rendered["text"],
-        schema=changeset_schema,
-        state={"case_id": case_id, "stage": "changeset", "call_index": call_index},
-    )
-    validate_provider_output(result.output)
+    from .openai_compat import OpenAICompatError
+    from .providers import ProviderOutputError
+    from .generation_budget import GenerationBudgetExceeded
+    result = None
+    try:
+        result = provider.generate_live(
+            session_id=f"phase6.5-{case_id}-changeset-{call_index:02d}",
+            prompt=rendered["text"], schema=changeset_schema,
+            state={"case_id": case_id, "stage": "changeset", "call_index": call_index},
+        )
+        validate_provider_output(result.output)
+    except GenerationBudgetExceeded:
+        raise
+    except (OpenAICompatError, ProviderOutputError) as error:
+        if result is not None and isinstance(error, ProviderOutputError):
+            error.live_result = result
+        from .live_trace import write_provider_failure_trace
+        failure = write_provider_failure_trace(error=error, output_dir=output, stage='changeset')
+        diagnostics = [_diagnostic('CHANGESET_PROVIDER_FAILED', '/',
+                                  f"Provider response unavailable or unusable: {failure['failure_class']}.")]
+        result = {'case_id': case_id, 'stage': 'changeset', 'call_index': call_index,
+            'classification': 'provider_failed', 'valid': False, 'diagnostics': diagnostics,
+            'response_id': failure['details'].get('response_id'),
+            'evidence_class': failure['details'].get('evidence_class', 'unavailable'),
+            'output_dir': str(output), 'usage': failure['details'].get('usage', {})}
+        _write_json(output/'validation.json', {'valid': False, 'issues': diagnostics})
+        _write_json(output/'metrics.json', result)
+        return result
     provider_manifest = write_live_trace(
         result=result,
         output_dir=output,

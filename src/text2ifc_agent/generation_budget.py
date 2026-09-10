@@ -172,8 +172,14 @@ class BudgetedProvider:
         started = time.monotonic()
         try:
             result = self.provider.generate_live(**kwargs)
-        except Exception:
-            self.budget.settle(token, elapsed_seconds=time.monotonic()-started, failed=True)
+        except Exception as error:
+            evidence = getattr(error, 'evidence', getattr(error, 'details', {}))
+            usage = evidence.get('usage') if isinstance(evidence, dict) else None
+            live_result = getattr(error, 'live_result', None)
+            if usage is None and live_result is not None:
+                usage = live_result.response.get('usage', {})
+            self.budget.settle(token, usage=usage,
+                               elapsed_seconds=time.monotonic()-started, failed=True)
             raise
         self.budget.settle(token, usage=result.response.get('usage', {}),
                            elapsed_seconds=time.monotonic()-started)

@@ -20,6 +20,34 @@ TRACE_FILES = {
 }
 
 
+def write_provider_failure_trace(*, error, output_dir, stage):
+    """Persist received failure evidence without claiming a usable response."""
+    details = getattr(error, 'evidence', getattr(error, 'details', {}))
+    live_result = getattr(error, 'live_result', None)
+    if isinstance(live_result, LiveProviderResult):
+        details = {**details, 'response': live_result.response, 'request': live_result.request,
+            'content_text': live_result.output.text, 'session_id': live_result.session_id,
+            'response_id': live_result.response.get('id'), 'usage': live_result.response.get('usage', {}),
+            'provider': live_result.output.metadata.get('provider', 'unknown'),
+            'evidence_class': live_result.evidence_class}
+    details = redact_provider_payload(details) if isinstance(details, dict) else {}
+    output = Path(output_dir)
+    output.mkdir(parents=True, exist_ok=True)
+    # No raw response is manufactured for connection/budget errors.
+    if isinstance(details.get('response'), dict):
+        _write_json(output/'response.raw.json', details['response'])
+    if isinstance(details.get('request'), dict):
+        _write_json(output/'request.redacted.json', {'request': details['request']})
+    if isinstance(details.get('content_text'), str):
+        _write_text(output/'model-text.txt', details['content_text'])
+    payload = {'schema_version': 'text2ifc/provider-failure/1.0', 'stage': stage,
+        'status': 'failed', 'valid': False, 'exception_type': type(error).__name__,
+        'provider': details.get('provider', 'unknown'),
+        'failure_class': details.get('failure_class', 'provider_output_error'), 'details': details}
+    _write_json(output/'provider-error.json', payload)
+    return payload
+
+
 def write_live_trace(
     *,
     result: LiveProviderResult,

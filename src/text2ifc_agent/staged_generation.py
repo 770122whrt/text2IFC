@@ -150,6 +150,12 @@ def run_staged_generation(
                 generation_package=package,
             )
             from .changeset_stage import retry_candidate_key
+            if stage.get('classification') == 'provider_failed':
+                package_records.append({'package_id': package_id,
+                    'artifact_dir': active_dir.relative_to(output).as_posix(),
+                    'status': 'provider_failed', 'attempt_count': attempt_count})
+                _write_json(output/'package-records.json', {'packages': package_records})
+                return _blocked('provider_failed', stage.get('diagnostics', []), package_records)
             retry_key = (stage.get('classification'), hash_json_value(stage.get('diagnostics', [])),
                          retry_candidate_key(active_dir))
             if attempt_count == 1:
