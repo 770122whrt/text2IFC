@@ -8,11 +8,46 @@ from __future__ import annotations
 import copy
 import hashlib
 import json
+from functools import lru_cache
 from pathlib import Path
 from typing import Any, Mapping
 
 
 SEMANTIC_FIELDS = {'material', 'materials', 'property_sets', 'type_id', 'appearance', 'template'}
+
+
+@lru_cache(maxsize=1)
+def _appearance_schema():
+    from text2ifc_contract.schema import load_schema_v21
+    return load_schema_v21()['properties']['appearance']
+
+
+def _project_appearance(selection, source_path):
+    """Separate the known narrative field; never discard unknown constraints."""
+    from jsonschema import Draft202012Validator
+
+    issues, notes = [], []
+    if not isinstance(selection, Mapping):
+        return {}, notes, [{'code': 'REQUEST_APPEARANCE_INVALID', 'path': '/appearance',
+                            'message': f'外观请求必须为对象；来源：{source_path}。'}]
+    schema = _appearance_schema()
+    constraints = {key: copy.deepcopy(value) for key, value in selection.items()
+                   if key in schema['properties']}
+    for key in selection:
+        if key not in schema['properties'] and key != 'style_notes':
+            issues.append({'code': 'REQUEST_APPEARANCE_UNSUPPORTED_FIELD', 'path': '/appearance',
+                           'message': f'顶层外观不支持字段 {key!r}，需明确适用构件或受支持表达；来源：{source_path}。'})
+    if 'style_notes' in selection:
+        if isinstance(selection['style_notes'], str):
+            notes.append({'text': selection['style_notes'], 'source_path': source_path + '/style_notes'})
+        else:
+            issues.append({'code': 'REQUEST_APPEARANCE_INVALID', 'path': '/appearance/style_notes',
+                           'message': f'风格说明必须为文字，不能隐藏结构化要求；来源：{source_path}。'})
+    for error in Draft202012Validator(schema).iter_errors(constraints):
+        pointer = '/appearance' + ''.join('/' + str(key) for key in error.path)
+        issues.append({'code': 'REQUEST_APPEARANCE_INVALID', 'path': pointer,
+                       'message': f'外观请求不符合当前字段类型或支持范围：{error.message}；来源：{source_path}。'})
+    return constraints, notes, issues
 
 
 def generation_schema_version(brief: Mapping[str, Any]) -> str:
@@ -91,10 +126,22 @@ def project_semantic_requirements(brief: Mapping[str, Any]) -> dict[str, Any]:
 def request_semantics_for_case(root: Path) -> dict[str, Any]:
     from .run_report import resolve_final_design_brief_dir
     paths = [resolve_final_design_brief_dir(root) / 'design-brief.json', root / 'design-brief.json']
-    brief = next((json.loads(p.read_text(encoding='utf-8')) for p in paths if p.is_file()), {})
+    brief_path = next((p for p in paths if p.is_file()), None)
+    brief = json.loads(brief_path.read_text(encoding='utf-8')) if brief_path else {}
     projected = project_semantic_requirements(brief)
     projected['minimum_schema_version'] = 'bim-json/2.1' if brief.get('schema_version') == 'text2ifc/design-brief/2.1' else None
-    projected['appearance_requests'] = [brief['known_facts']['appearance']] if isinstance(brief.get('known_facts', {}).get('appearance'), Mapping) else []
+    projected['appearance_requests'], projected['appearance_notes'] = [], []
+
+    def add_appearance(selection, source_path):
+        constraints, notes, issues = _project_appearance(selection, source_path)
+        if constraints:
+            projected['appearance_requests'].append(constraints)
+        projected['appearance_notes'].extend(notes)
+        projected['issues'].extend(issues)
+
+    known = brief.get('known_facts', {})
+    if isinstance(known, Mapping) and 'appearance' in known:
+        add_appearance(known['appearance'], brief_path.relative_to(root).as_posix() + '#/known_facts/appearance')
     frozen_path = root / 'expected-facts.json'
     if frozen_path.is_file():
         frozen = json.loads(frozen_path.read_text(encoding='utf-8'))
@@ -106,8 +153,8 @@ def request_semantics_for_case(root: Path) -> dict[str, Any]:
         projected['issues'].extend(frozen.get('semantic_projection_issues', []))
         if frozen.get('generation_schema_version') == 'bim-json/2.1':
             projected['minimum_schema_version'] = 'bim-json/2.1'
-        if isinstance(frozen.get('appearance'), Mapping):
-            projected['appearance_requests'].append(frozen['appearance'])
+        if 'appearance' in frozen:
+            add_appearance(frozen['appearance'], 'expected-facts.json#/appearance')
     projected['valid'] = not projected['issues']
     encoded = json.dumps(projected['expectations'], ensure_ascii=False, sort_keys=True, separators=(',', ':')).encode('utf-8')
     projected['expectations_hash'] = hashlib.sha256(encoded).hexdigest()
@@ -191,8 +238,14 @@ def request_contract_issues(candidate, request):
     if request.get('minimum_schema_version') and candidate.get('schema_version') != request['minimum_schema_version']:
         issues.append({'code':'REQUEST_CONTRACT_DOWNGRADE','path':'/schema_version', 'message':'新请求必须保留其 Generation 语义合同。'})
     for selection in request.get('appearance_requests', []):
-        if any(candidate.get('appearance', {}).get(key) != value for key, value in selection.items()):
-            issues.append({'code':'REQUEST_APPEARANCE_MISMATCH','path':'/appearance','message':'候选遗漏或改变了冻结请求的主题/seed。'})
+        constraints, _notes, invalid = _project_appearance(selection, '/appearance')
+        issues.extend(invalid)
+        actual = candidate.get('appearance', {})
+        if constraints and (not isinstance(actual, Mapping) or
+                            any(actual.get(key) != value for key, value in constraints.items())):
+            issue = {'code':'REQUEST_APPEARANCE_MISMATCH','path':'/appearance','message':'候选遗漏或改变了冻结请求的主题/seed。'}
+            if issue not in issues:
+                issues.append(issue)
     return issues
 
 

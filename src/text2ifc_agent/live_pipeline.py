@@ -1500,7 +1500,8 @@ def run_candidate_gate_stage(
     _write_json(output / 'semantic-verification.json', semantic_verification)
     from .semantic_report import write_semantic_report
     write_semantic_report(output / 'semantic-report.md', output_ifc if compilation.success else None,
-                          semantic_expectations, semantic_verification['issues'])
+                          semantic_expectations, semantic_verification['issues'],
+                          appearance_notes=request_semantics.get('appearance_notes', []))
     ifc_verification = {
         "success": compilation.success,
         "output_path": str(output_ifc) if compilation.success else None,

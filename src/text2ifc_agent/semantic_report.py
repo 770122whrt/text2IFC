@@ -9,7 +9,7 @@ from text2ifc_compiler.semantic_verification import material_value, verify_seman
 from text2ifc_presentation import item_appearance_signatures
 
 
-def write_semantic_report(path, ifc_path, expectations, issues=()):
+def write_semantic_report(path, ifc_path, expectations, issues=(), *, appearance_notes=()):
     output = Path(path)
     model = ifcopenshell.open(str(ifc_path)) if ifc_path and Path(ifc_path).is_file() else None
     entities = {}
@@ -43,6 +43,11 @@ def write_semantic_report(path, ifc_path, expectations, issues=()):
         lines.append(f"| {expected['entity_id']} / {scope} | {label} | {text(expected.get('value'))} | {text(actual)} | {'通过' if okay else '未满足'} |")
     if not expectations: lines.extend(['', '没有显式语义附加要求；不据此推断材料或性能属性。'])
     if issues: lines.extend(['', '阻断详情：', '', *['- '+text(issue) for issue in issues]])
+    if appearance_notes:
+        lines.extend(['', '风格说明与来源：', '',
+                      '以下原文保留供 Audit 和人工视觉核对，不作为 IFC 字段逐字比对，也不据此判定风格已经满足。'])
+        for note in appearance_notes:
+            lines.append('- ' + text(note['text']) + '（来源：' + note['source_path'] + '）')
     lines.extend(['', '人工主题/代表性 Proof 视觉审查：待审；普通运行的自动交付状态与人工审查分别记录。', ''])
     output.write_text('\n'.join(lines),encoding='utf-8')
     return output

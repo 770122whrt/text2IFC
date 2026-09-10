@@ -28,6 +28,7 @@ def test_new_design_call_cannot_silently_return_old_contract(tmp_path):
 def test_public_strategies_preserve_explicit_material_and_property(tmp_path, strategy, template):
     skeleton, manifest, expected, values = _fixture(1)
     skeleton['schema_version'] = 'bim-json/2.1'
+    skeleton['appearance'] = {'profile': 'warm-residential', 'seed': 'public-frozen'}
     for group in values:
         for item in group:
             if item['ifc_class'] == 'IfcSpace':
@@ -44,6 +45,7 @@ def test_public_strategies_preserve_explicit_material_and_property(tmp_path, str
     wall['materials'] = [{'kind':'single_material','name':'Requested brick'}]
     wall['property_sets'] = {'Pset_WallCommon': {'FireRating':'60'}}
     brief = {'schema_version':'text2ifc/design-brief/2.1','status':'ready','known_facts': {
+        'appearance': {**skeleton['appearance'], 'style_notes': '外观协调；材料和性能仍以明确请求为准。'},
         'semantic_requirements':[{'entity_id':'wall-1', 'material':wall['materials'][0],
                                   'property_sets':wall['property_sets']},
             {'entity_id':'window-1', 'template':{'template_id':template,'template_version':'text2ifc/basic-filling/1.0'}}]}}
@@ -75,6 +77,7 @@ def test_public_strategies_preserve_explicit_material_and_property(tmp_path, str
     assert gates['semantic_verification']['valid']
     model=ifcopenshell.open(str(tmp_path/'output.ifc'))
     assert any(m.Name=='Requested brick' for m in model.by_type('IfcMaterial'))
+    assert '外观协调；材料和性能仍以明确请求为准。' in (tmp_path/'semantic-report.md').read_text(encoding='utf-8')
 
 
 def test_new_schema_compilation_cli(tmp_path):
@@ -133,6 +136,7 @@ def test_ready_session_public_chain_reaches_final_acceptance(tmp_path, detailed,
     from tests.agent.test_phase6_2_fix_semantic_fidelity import _outside_boundary_design_brief, _outside_boundary_center_overlap_candidate
     brief = _outside_boundary_design_brief()
     brief['schema_version']='text2ifc/design-brief/2.1'
+    brief['known_facts']['appearance'] = {'profile': 'warm-residential', 'style_notes': '浅墙深框；风格文字待视觉审查。'}
     brief['original_request'] += ' 墙体使用Requested brick，耐火设计要求60分钟。'
     brief['provenance'].update(selected_evidence_ids=[], few_shot_ids=[])
     brief['known_facts']['semantic_requirements']=[{'entity_id':'wall-south',
@@ -140,6 +144,7 @@ def test_ready_session_public_chain_reaches_final_acceptance(tmp_path, detailed,
         'property_sets':{'Pset_WallCommon':{'FireRating':'60'}}}]
     candidate = _outside_boundary_center_overlap_candidate()
     candidate['schema_version']='bim-json/2.1'
+    candidate['appearance'] = {'profile': 'warm-residential'}
     if detailed:
         by_id={e['id']:e for e in candidate['entities']}
         for filling_id, template in [('door-1','door-left'),('window-1','window-double-vertical')]:
@@ -216,3 +221,4 @@ def test_ready_session_public_chain_reaches_final_acceptance(tmp_path, detailed,
         assert (session.run_dir/'repair/scoped/changeset.json').is_file()
     assert Path(result.ifc_path).is_file()
     assert json.loads((session.run_dir/'semantic-verification.json').read_text(encoding='utf-8'))['valid']
+    assert '浅墙深框；风格文字待视觉审查。' in (session.run_dir/'semantic-report.md').read_text(encoding='utf-8')
