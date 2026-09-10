@@ -562,3 +562,11 @@ B 会话 `51592773914118fb` 执行 Brief、Generator、Audit、ChangeSet、Audit
 另有证据保存缺陷：OpenAI-compatible 解析器收到截断响应后携带 evidence 抛错，ChangeSet 调用路径未持久化该异常证据；本次第6次响应正文、响应 ID 和实际用量未落盘。已有输入、异常类型、预算和终端观察保留，不能补造丢失响应。下一小步优先公共截断／畸形响应证据落盘，再统一身份合同；修复进展按各阻断项分别记录，保留名称修复的局部进展事实，避免把任意变更误称整体修复。Type 图处理仍另行限定范围。
 
 B Audit 持续记录 retained_known_issue；独立108点净空采样最小0米、3点为0，已知缺陷保留。图片来自实际候选 IFC，Codex 已做整体／剖开／门窗检查，配色协调但造型基础，无人工验收或合理性通过结论。候选只供诊断，未登记 Proof。新 [RUN-HOLD.json](../../dataset/processed/ifc-presentation-validation/three-storey-clarification-branches-20260910/continuation-20260910/RUN-HOLD.json) 暂停后续调用，原准入／旧暂停／174份历史冻结文件及参考 IFC 不改写；两案均耗尽6次预算。继续前需先离线修复、适用复核及新的调用预算，不追加重试，不运行 Full Preflight。本次未推送 GitHub。
+
+### A 起点澄清与 B 有界根因修复（2026-09-10）
+
+用户要求先查原因、解释与旧修复的区别，再小改。A 实际复用首次 ready 的真实 Brief，从 Generator 重新调用，不复用旧失败候选；ready 是当时合同检查结果，不是任意语义无缺陷的保证。此前 Type 工作只补拒绝及修改权限，未修模型生成收敛或 Type 图清理，故不能将 A 重试解释为已修好该问题后的成功起点。
+
+编辑前假设按优先级冻结：① Generator 的 entity_id_contract 只有墙／空间／门窗，缺少楼梯父子和楼板洞口，导致 authoring 和几何身份要求脱节；② v2.2 语义 Prompt 未保留 v2 的逐字使用技术 ID 指令，需新增版本补回而不重写旧版；③ 楼梯名称豁免仅匹配父项自身 ID，漏掉合法聚合的梯段子项，须以唯一冻结父子身份及实际关系验证，不能泛化豁免；④ 截断 parser 抛出证据后，ChangeSet 未落盘，预算也只记预留值，需在异常边界保留已收到响应与有效用量并停止，不自动重试。
+
+冻结测试族覆盖不同 ID 命名／语言、显式与派生子项／洞口、重复或跨角色身份、错误父项／聚合／归属、公共 Generator 合同传递，以及公共 ChangeSet 的截断／无 choice／禁止输出／非 JSON／正常响应／缺失用量／耗尽预算。范围限于身份合同传递、名称适用性和失败证据，不删除 Type、不改用户布局或尺寸、不重写旧 IFC／运行／Prompt／Schema，不调用 Provider 或 Full Preflight。
