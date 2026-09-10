@@ -1,0 +1,142 @@
+{
+  "branch": "A-revise",
+  "status": "budget_blocked",
+  "limits": {
+    "max_calls": 6,
+    "max_tokens": 800000,
+    "max_active_seconds": 1800
+  },
+  "started_at": "2026-09-10T04:22:15.657627+00:00",
+  "conversation_origin": "user-authorized scripted branch; not spontaneous live clarification",
+  "reused_design_brief": true,
+  "session_hash": "60b27145d6d8d3a3",
+  "run_dir": "E:\\code for project\\bimnet\\dataset\\processed\\ifc-presentation-validation\\three-storey-clarification-branches-20260910\\continuation-20260910\\A-revise\\runtime\\runs\\60b27145d6d8d3a3",
+  "lineage": {
+    "parent_run": "E:\\code for project\\bimnet\\dataset\\processed\\ifc-presentation-validation\\three-storey-clarification-branches-20260910\\A-revise\\runtime\\runs\\48dcf264b1a6df16",
+    "budget_sha256": "d035bcff15b33e58d2f6d83322665c0ebe5171573bdad90e94747e64f8c0d810",
+    "brief_sha256": "eca9aceedffac27aab18dad389ec9ffce04fe4adfede1c4046aad7aa3ff73acd",
+    "brief_origin": "preserved prior Provider response; no new Brief call"
+  },
+  "budget_before": {
+    "schema_version": "text2ifc/generation-budget/1.0",
+    "limits": {
+      "max_calls": 6,
+      "max_tokens": 800000,
+      "max_active_seconds": 1800
+    },
+    "attempts": [
+      {
+        "attempt": 1,
+        "stage": "design-brief",
+        "status": "completed",
+        "tokens_charged": 43558,
+        "reserved_tokens": 123537,
+        "elapsed_seconds": 99.25
+      },
+      {
+        "attempt": 2,
+        "stage": "generate",
+        "status": "completed",
+        "tokens_charged": 102128,
+        "reserved_tokens": 176794,
+        "elapsed_seconds": 232.45299999999952
+      },
+      {
+        "attempt": 3,
+        "stage": "audit",
+        "status": "completed",
+        "tokens_charged": 60968,
+        "reserved_tokens": 215070,
+        "elapsed_seconds": 41.17199999999957
+      },
+      {
+        "attempt": 4,
+        "stage": "changeset",
+        "status": "completed",
+        "tokens_charged": 81808,
+        "reserved_tokens": 254000,
+        "elapsed_seconds": 73.875
+      }
+    ],
+    "calls_used": 4,
+    "tokens_used_or_reserved": 288462,
+    "active_seconds": 446.7499999999991
+  },
+  "brief_result": {
+    "valid": true,
+    "status": "ready",
+    "reused": true
+  },
+  "result": {
+    "session_id": "phase6.2-ab62ed1413c9495a92351730bd049122",
+    "session_hash": "60b27145d6d8d3a3",
+    "status": "budget_blocked",
+    "generator_status": "budget_blocked",
+    "repair_route": "blocked_failure",
+    "audit_status": "not_accepted",
+    "ifc_path": null,
+    "report_path": null
+  },
+  "budget_after": {
+    "schema_version": "text2ifc/generation-budget/1.0",
+    "limits": {
+      "max_calls": 6,
+      "max_tokens": 800000,
+      "max_active_seconds": 1800
+    },
+    "attempts": [
+      {
+        "attempt": 1,
+        "stage": "design-brief",
+        "status": "completed",
+        "tokens_charged": 43558,
+        "reserved_tokens": 123537,
+        "elapsed_seconds": 99.25
+      },
+      {
+        "attempt": 2,
+        "stage": "generate",
+        "status": "completed",
+        "tokens_charged": 102128,
+        "reserved_tokens": 176794,
+        "elapsed_seconds": 232.45299999999952
+      },
+      {
+        "attempt": 3,
+        "stage": "audit",
+        "status": "completed",
+        "tokens_charged": 60968,
+        "reserved_tokens": 215070,
+        "elapsed_seconds": 41.17199999999957
+      },
+      {
+        "attempt": 4,
+        "stage": "changeset",
+        "status": "completed",
+        "tokens_charged": 81808,
+        "reserved_tokens": 254000,
+        "elapsed_seconds": 73.875
+      },
+      {
+        "attempt": 5,
+        "stage": "generate",
+        "status": "completed",
+        "tokens_charged": 90395,
+        "reserved_tokens": 176794,
+        "elapsed_seconds": 181.5
+      },
+      {
+        "attempt": 6,
+        "stage": "audit",
+        "status": "completed",
+        "tokens_charged": 53769,
+        "reserved_tokens": 209693,
+        "elapsed_seconds": 20.56300000000192
+      }
+    ],
+    "calls_used": 6,
+    "tokens_used_or_reserved": 432626,
+    "active_seconds": 648.813000000001
+  },
+  "finished_at": "2026-09-10T04:25:44.994934+00:00"
+}

@@ -550,3 +550,15 @@ Audit 3.0 必须逐项保留已知问题和局限，不能降级、遗漏、重�
 续跑新增 `continue_branches.py`，保留原 runner、RUN-HOLD 和已提交运行证据。新目录 `continuation-20260910/` 单独保存当前准入和产物。A 复用首次真实 Brief 的原始文件，创建有来源关联的新 Generation 会话，原4次预算完整继承，至多再2次调用；不是原候选的局部 Type 删除，也不把复用 Brief 记为新调用。B 从冻结脚本开始，至多6次调用。两案同样保留80万 token、1800秒 Provider 活动时间上限，任何额外调用需另行授权。离线 runner 公共链路3 passed，涵盖两案实际编译／重读、原目录不变、累计预算、耗尽不调用和重复输出路径拒绝。继续使用 legacy_full；不改原请求、布局选择、Prompt／Schema、几何模板、Type 清理合同及 Proof 状态。
 
 最终受影响公共路径回归31 passed（`.tmp/branch-continuation-public-20260910.xml`），覆盖两种策略的语义公共路径、Gate/Audit bundle、几何修复循环与 scoped loop；与前述范围重叠，不累加为成功率。原准入555个文件绑定只发生4个预期生产文件变化，其余551个保持一致；据本次52／3／31项及上一小步39／69项有效结果续接同一 Stage Admission，不运行 Full Preflight。新准入通过前暂停仍有效；旧暂停文件保留，由新准入明确绑定并说明解除依据，不改写旧失败记录。
+
+### A/B 续跑结果与再次暂停（2026-09-10）
+
+准入和具体授权冻结后真实执行8次新增调用，详见[续跑报告](../../dataset/processed/ifc-presentation-validation/three-storey-clarification-branches-20260910/continuation-20260910/REPORT.md)。A 新会话 `60b27145d6d8d3a3` 复用真实 Brief，Generator／Audit 共2次；新候选再次增加39个 Type／Style、39条关联及34项普通属性，语义门拒绝。累计6次达到上限，最终 budget_blocked，无 IFC。新增144,164 reported token、202.063秒；含首次累计432,626 token、648.813秒。准确拦截不是自动修复成功，本轮仍未扩展 Type 删除或继承值迁移。
+
+B 会话 `51592773914118fb` 执行 Brief、Generator、Audit、ChangeSet、Audit、ChangeSet 共6次。最终留下的候选 IFC 可编译重读，独立请求检查290项通过，40个可见实体网格成功；但生产几何门仍有2项 MISSING_STAIR_OPENING、2项 MISSING_STAIR_FLIGHT。第1轮补丁修正两处梯段名称，身份问题保留；第2轮响应 finish_reason=length，抛出 OpenAICompatError，流程未完成发布。前5次 reported token 合计320,167；第6次实际用量没有保存，按208,955预留 token 保守计账后预算为529,122，不是真实总用量。Provider 活动时间651.532秒。
+
+只读定位新增共用缺口：Brief／预期中的楼梯与梯段身份同候选不一致（stair-1-flight → 派生 stair-flight-1-flight，而候选为 stair-1／stair-flight-1）；洞口实际 ID 多出 opening- 前缀。独立几何符合不能覆盖严格身份合同，下一步先冻结身份来源、父子角色及合法绑定的失败案例族，不临时加字符串别名或放宽门禁。楼梯名称的最小修复依赖唯一匹配的冻结记录，尚未解决此父子身份投影问题。
+
+另有证据保存缺陷：OpenAI-compatible 解析器收到截断响应后携带 evidence 抛错，ChangeSet 调用路径未持久化该异常证据；本次第6次响应正文、响应 ID 和实际用量未落盘。已有输入、异常类型、预算和终端观察保留，不能补造丢失响应。下一小步优先公共截断／畸形响应证据落盘，再统一身份合同；修复进展按各阻断项分别记录，保留名称修复的局部进展事实，避免把任意变更误称整体修复。Type 图处理仍另行限定范围。
+
+B Audit 持续记录 retained_known_issue；独立108点净空采样最小0米、3点为0，已知缺陷保留。图片来自实际候选 IFC，Codex 已做整体／剖开／门窗检查，配色协调但造型基础，无人工验收或合理性通过结论。候选只供诊断，未登记 Proof。新 [RUN-HOLD.json](../../dataset/processed/ifc-presentation-validation/three-storey-clarification-branches-20260910/continuation-20260910/RUN-HOLD.json) 暂停后续调用，原准入／旧暂停／174份历史冻结文件及参考 IFC 不改写；两案均耗尽6次预算。继续前需先离线修复、适用复核及新的调用预算，不追加重试，不运行 Full Preflight。本次未推送 GitHub。

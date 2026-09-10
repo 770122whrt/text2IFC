@@ -1,0 +1,52 @@
+{
+  "role": "post-run Codex observation; not raw provider evidence",
+  "observed_execution_exception": "OpenAICompatError",
+  "observed_terminal_message": "OpenAI-compatible chat completion is truncated: finish_reason=length",
+  "observation_source": "execution tool traceback during this authorized run; traceback was not written into run.log",
+  "run_log_size_bytes": 0,
+  "independently_persisted_evidence": [
+    "execution.json: exception_type and failed budget attempt 6",
+    "runtime/runs/51592773914118fb/changeset-round-02/: pre-call inputs"
+  ],
+  "available_attempt_inputs": [
+    {
+      "path": "runtime/runs/51592773914118fb/changeset-round-02/base-revision.json",
+      "sha256": "568d9f04620d8c656b3a68362d627253a4472fc4cc94534bf224788224f44e51"
+    },
+    {
+      "path": "runtime/runs/51592773914118fb/changeset-round-02/change-scope.json",
+      "sha256": "d305b01526a75af6b6252e0d30de02db83474870f08a5a6de9d5efdb5d167efe"
+    },
+    {
+      "path": "runtime/runs/51592773914118fb/changeset-round-02/context-selection.json",
+      "sha256": "2bf2a71a7450b91a38d0f974e74ee9b54bfd8a724241d0934fb4b38c00df0fcd"
+    },
+    {
+      "path": "runtime/runs/51592773914118fb/changeset-round-02/prompt-render-input.json",
+      "sha256": "b1430c47bbfe242a8506762b747d155f4ce96d37fb9bb4b2d9ea13afe9e0098d"
+    },
+    {
+      "path": "runtime/runs/51592773914118fb/changeset-round-02/prompt-rendered.md",
+      "sha256": "a3c915dd2a86127a39c708f51e0f22b4cf11355d27e1c92c7e84590b8fc17007"
+    },
+    {
+      "path": "runtime/runs/51592773914118fb/changeset-round-02/resolved-issues.json",
+      "sha256": "e23eb9160e9c2485a939ed324367094348f0da7b2d4f7f4885e4128acff27053"
+    },
+    {
+      "path": "runtime/runs/51592773914118fb/changeset-round-02/scope-resolution.json",
+      "sha256": "4b4b3ba3055dd4f64cfb47f9af185fcbfd5b8c803c97d12d16935c951f4c8dc5"
+    }
+  ],
+  "unavailable": [
+    "raw response body",
+    "response id",
+    "provider-reported usage"
+  ],
+  "actual_usage": null,
+  "usage_status": "unknown; no reconstructed or fabricated provider values",
+  "budget_charge_kind": "conservative original reservation, not reported usage",
+  "budget_tokens_charged": 208955,
+  "diagnosed_boundary": "OpenAI-compatible parser carries evidence in its truncation exception; ChangeSet stage does not persist it before the harness records only exception_type and re-raises.",
+  "backfill_performed": false
+}
