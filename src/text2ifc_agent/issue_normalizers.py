@@ -9,6 +9,14 @@ from typing import Any, Mapping, Sequence
 from .issues import Issue, write_issues
 
 
+def _source_authority_error(code: str) -> bool:
+    return code.startswith('SEMANTIC_AUTHORITY_') or code in {
+        'SEMANTIC_MATERIAL_INCOMPLETE', 'SEMANTIC_PROPERTY_INCOMPLETE',
+        'SEMANTIC_SCOPE_INVALID', 'SEMANTIC_TARGET_REQUIRED',
+        'REQUEST_APPEARANCE_INVALID', 'REQUEST_APPEARANCE_UNSUPPORTED_FIELD',
+    }
+
+
 def normalize_validation_issues(
     diagnostics: Sequence[Mapping[str, Any]],
     *,
@@ -21,7 +29,7 @@ def normalize_validation_issues(
         code = _upper_code(diagnostic)
         path = _string_or_none(diagnostic.get("path"))
         message = _diagnostic_message(diagnostic)
-        if code.startswith('SEMANTIC_AUTHORITY_'):
+        if _source_authority_error(code):
             owner, issue_type, route, retryable = 'design_brief', 'semantic_mismatch', 'revise_design_brief', True
         elif source == "semantic_validation" and "AUDIT" in code:
             owner = "provider"
@@ -159,7 +167,7 @@ def normalize_reopen_result(result: Mapping[str, Any]) -> list[Issue]:
         source_items = [result]
     issues: list[Issue] = []
     for index, item in enumerate(source_items, start=1):
-        authority = _upper_code(item).startswith('SEMANTIC_AUTHORITY_')
+        authority = _source_authority_error(_upper_code(item))
         issues.append(
             Issue(
                 issue_id=f"issue_reopen_check_{index:04d}",
@@ -182,20 +190,23 @@ def normalize_gate_sidecars(case_dir: Path | str) -> list[Issue]:
     root = Path(case_dir)
     issues: list[Issue] = []
     candidate_ids = _candidate_entity_ids(_read_json(root / "candidate.json"))
+    verification = _read_json(root / 'ifc-verification.json') or {}
+    native_error_codes = {_upper_code(item) for item in _list_of_dicts(verification.get('ifc_issues'))}
     geometry = _read_json(root / "geometry-feedback.json")
     if geometry and geometry.get("success") is False:
         for index, item in enumerate(_list_of_dicts(geometry.get("issues")), start=1):
             code = _upper_code(item)
             gate_review = _gate_issue_type(code) == "gate_false_positive"
+            compiler_failure = code == 'COMPILE_REOPEN_FAILED' or code in native_error_codes
             issues.extend(
                 _targeted_issues(
                     issue_id=f"issue_geometry_gate_{index:04d}",
                     source="geometry_gate",
                     severity="blocking",
-                    owner="gate" if gate_review else "generator",
-                    issue_type="gate_false_positive" if gate_review else "geometry_invalid",
-                    route="gate_issue" if gate_review else "regenerate_json",
-                    retryable=not gate_review,
+                    owner="compiler" if compiler_failure else "gate" if gate_review else "generator",
+                    issue_type="reopen_error" if compiler_failure else "gate_false_positive" if gate_review else "geometry_invalid",
+                    route="runtime_blocked" if compiler_failure else "gate_issue" if gate_review else "regenerate_json",
+                    retryable=not (gate_review or compiler_failure),
                     detail=item,
                     target_ids=_existing_target_ids(item.get("entity_ids"), candidate_ids),
                 )
@@ -216,20 +227,21 @@ def normalize_gate_sidecars(case_dir: Path | str) -> list[Issue]:
                 gate_index += 1
                 code = _upper_code(detail)
                 issue_type = _gate_issue_type(str(code))
-                authority = code.startswith('SEMANTIC_AUTHORITY_')
+                authority = _source_authority_error(code)
+                compiler_failure = code == 'COMPILE_REOPEN_FAILED' or code in native_error_codes
                 issues.extend(
                     _targeted_issues(
                         issue_id=f"issue_deterministic_gate_{gate_index:04d}",
                         source="deterministic_gate",
                         severity="blocking",
-                        owner="design_brief" if authority else "generator" if issue_type != "gate_false_positive" else "gate",
-                        issue_type="semantic_mismatch" if authority else issue_type,
+                        owner="design_brief" if authority else "compiler" if compiler_failure else "generator" if issue_type != "gate_false_positive" else "gate",
+                        issue_type="semantic_mismatch" if authority else "reopen_error" if compiler_failure else issue_type,
                         route=(
-                            "revise_design_brief" if authority else "gate_issue"
+                            "revise_design_brief" if authority else "runtime_blocked" if compiler_failure else "gate_issue"
                             if issue_type == "gate_false_positive"
                             else "regenerate_json"
                         ),
-                        retryable=issue_type != "gate_false_positive",
+                        retryable=not compiler_failure and issue_type != "gate_false_positive",
                         detail=detail,
                         target_ids=_existing_target_ids(
                             _structured_target_ids(detail), candidate_ids

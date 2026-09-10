@@ -271,6 +271,13 @@ def _geometry_gate(root: Path) -> dict[str, Any]:
             basis="geometry feedback sidecar is not present",
             source_paths=[],
         )
+    verification = _read_optional_json(root / 'ifc-verification.json')
+    if (payload.get('execution_status') == 'not_run'
+        and payload.get('blocked_by') == 'ifc-verification.json'
+        and verification is not None and verification.get('success') is False):
+        return _gate('geometry', applicability='not_applicable', status='skipped',
+            basis='Geometry was not evaluated because compile/reopen verification failed.',
+            source_paths=['geometry-feedback.json', 'ifc-verification.json'])
     issues = _issues_from_payload(payload)
     return _gate(
         "geometry",

@@ -32,7 +32,7 @@ from .gate_audit_bundle import (
     validate_gate_summary_binding,
     write_gate_summary,
 )
-from .providers import validate_provider_output
+from .providers import ProviderOutputError, validate_provider_output
 from .route_decision import write_route_decision
 from .run_report import build_live_run_report, resolve_final_design_brief_dir
 from .semantic_capabilities import build_semantic_capability_profile
@@ -1220,6 +1220,9 @@ def run_audit_report_stage(
         "ifc_compile_reopen": bool(ifc_verification.get("success"))
         if ifc_verification is not None
         else True,
+        "ifc_verification_feedback": ifc_verification
+        if ifc_verification is not None
+        else {"success": None, "input_issues": [], "ifc_issues": [], "skip_reason": "not_run"},
         "geometry_success": bool(geometry_feedback.get("success"))
         if geometry_feedback is not None
         else True,
@@ -1255,13 +1258,38 @@ def run_audit_report_stage(
     rendered = render_prompt(template_id=template_id, inputs=renderer_inputs)
     _write_json(output / "prompt-render-input.json", renderer_inputs)
     _write_text(output / "prompt-rendered.md", rendered["text"])
-    result = provider.generate_live(
-        session_id=f"{session_prefix}-{case_id}-audit-{audit_call_index:02d}",
-        prompt=rendered["text"],
-        schema={"schema_version": "text2ifc/audit/3.0" if review_context is not None else "text2ifc/audit/2.0"},
-        state={"case_id": case_id, "stage": "audit"},
-    )
-    validate_provider_output(result.output)
+    result = None
+    try:
+        result = provider.generate_live(
+            session_id=f"{session_prefix}-{case_id}-audit-{audit_call_index:02d}",
+            prompt=rendered["text"],
+            schema={"schema_version": "text2ifc/audit/3.0" if review_context is not None else "text2ifc/audit/2.0"},
+            state={"case_id": case_id, "stage": "audit"},
+        )
+        validate_provider_output(result.output)
+    except ProviderOutputError as error:
+        from .live_trace import write_provider_failure_trace
+        # A failed later Audit must not borrow the previous round's response or
+        # overwrite any earlier failure when a session is resumed.
+        attempt_root = root / 'audit-failures'
+        attempt_root.mkdir(exist_ok=True)
+        suffix = 0
+        while True:
+            name = f'attempt-{audit_call_index:02d}' + (f'-retry-{suffix:02d}' if suffix else '')
+            failure_dir = attempt_root / name
+            try:
+                failure_dir.mkdir()
+                break
+            except FileExistsError:
+                suffix += 1
+        for name in ('prompt-render-input.json', 'prompt-rendered.md'):
+            (failure_dir / name).write_bytes((output / name).read_bytes())
+        if result is not None and error.live_result is None:
+            error.live_result = result
+        write_provider_failure_trace(error=error, output_dir=failure_dir, stage='audit')
+        error._text2ifc_stage = 'audit'
+        error._text2ifc_failure_artifact = (failure_dir / 'provider-error.json').relative_to(root).as_posix()
+        raise
     provider_manifest = write_live_trace(
         result=result,
         output_dir=output,
@@ -1553,13 +1581,9 @@ def run_candidate_gate_stage(
     else:
         geometry_feedback = {
             "success": False,
-            "issues": [
-                {
-                    "code": "COMPILE_REOPEN_FAILED",
-                    "path": "/output.ifc",
-                    "message": "IFC compilation or reopen verification failed.",
-                }
-            ],
+            "execution_status": "not_run",
+            "blocked_by": "ifc-verification.json",
+            "issues": [],
             "metrics": {},
             "expectation_source": expectation_for_check.get("source", "candidate"),
         }

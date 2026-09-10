@@ -501,6 +501,22 @@ def run_ready_session_to_ifc(
         return SessionIfcResult(session_id=stored.session_id, session_hash=stored.session_hash,
             status='budget_blocked', generator_status='budget_blocked',
             repair_route='blocked_failure', audit_status='not_accepted', ifc_path=None, report_path=None)
+    except ProviderOutputError as error:
+        stored = store.get_session(session)
+        stage = getattr(error, '_text2ifc_stage', 'provider')
+        failure = _record_provider_failure(store=store, stored_session=stored, stage=stage, exc=error)
+        artifact = getattr(error, '_text2ifc_failure_artifact', None)
+        if artifact is not None:
+            store.record_artifact(stored.session_id, kind='provider_failure_attempt',
+                path=Path('runs') / stored.session_hash / artifact)
+        _write_provider_failure_issues(store=store, stored_session=stored,
+            stage=stage, error_payload=failure)
+        store.export_session(stored.session_id)
+        metrics = _read_optional_json(stored.run_dir / 'generator/metrics.json') or {}
+        return SessionIfcResult(session_id=stored.session_id, session_hash=stored.session_hash,
+            status='provider_failed', generator_status=str(metrics.get('status', 'not_reported')),
+            repair_route='blocked_failure', audit_status='provider_failed' if stage == 'audit' else 'not_accepted',
+            ifc_path=None, report_path=None)
 
 
 def _run_ready_session_to_ifc(
