@@ -474,6 +474,27 @@ def _targeted_issues(
 ) -> list[Issue]:
     targets = list(target_ids)
     refs = [f"entity:{target_id}#/attributes" for target_id in targets]
+    path = _string_or_none(detail.get("path"))
+    parts = path.split("/") if path else []
+    semantic_field = (
+        len(parts) >= 4 and parts[1] == "entities"
+        and parts[3] in {"materials", "property_sets", "appearance", "template"}
+    )
+    if semantic_field:
+        # Keep the field pointer. The existing scoped-loop resolver binds its
+        # collection selector to the exact candidate, including escaped keys.
+        # A diagnostic that names different targets cannot grant either scope.
+        selector = parts[2].replace("~1", "/").replace("~0", "~")
+        declared = detail.get("target_entity_ids") or detail.get("entity_ids")
+        if isinstance(declared, list) and set(declared) != {selector}:
+            refs = [None]
+            owner, issue_type, route, retryable = "gate", "gate_false_positive", "gate_issue", False
+        else:
+            refs = [path]
+    elif _upper_code(detail) in {"UNREQUESTED_TYPE", "UNREQUESTED_TYPE_ASSIGNMENT"}:
+        # A whole Type diagnostic is not permission to delete it or its graph.
+        # Exact relationship fields remain resolvable by the shared resolver.
+        refs = [path]
     if not refs:
         refs = [fallback_ref or _string_or_none(detail.get("path"))]
     return [

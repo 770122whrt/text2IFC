@@ -20,6 +20,7 @@ _TRAVERSABLE_RELATIONSHIPS = {
     "IfcRelSpaceBoundary",
 }
 _CONTAINMENT = "IfcRelContainedInSpatialStructure"
+_LOCAL_SEMANTIC_FIELDS = {"materials", "property_sets", "appearance", "template"}
 
 
 def derive_change_scope(
@@ -38,6 +39,7 @@ def derive_change_scope(
     relationships = index["relationships"]
     all_ids = set(entities) | set(relationships)
     allowed_entities: set[str] = set()
+    dependency_entities: set[str] = set()
     allowed_relationships: set[str] = set()
     allowed_paths: dict[str, set[str]] = {}
     dependencies: list[dict[str, str]] = []
@@ -73,6 +75,11 @@ def derive_change_scope(
             continue
         _allow(kind, component_id, allowed_entities, allowed_relationships)
         allowed_paths.setdefault(component_id, set()).add(match.group("path"))
+        # A local semantic field does not justify editing geometry relations.
+        # Mixed rounds still traverse from their independently identified
+        # geometry targets, including a target with both kinds of issue.
+        if kind == "entity" and match.group("path").split("/")[1] not in _LOCAL_SEMANTIC_FIELDS:
+            dependency_entities.add(component_id)
 
     for hint in dependency_hints or []:
         target_id = str(hint.get("target_id", ""))
@@ -92,6 +99,8 @@ def derive_change_scope(
             allowed_entities,
             allowed_relationships,
         )
+        if dependency_id in entities:
+            dependency_entities.add(dependency_id)
         for path in hint.get("allowed_paths", []):
             allowed_paths.setdefault(dependency_id, set()).add(str(path))
         dependencies.append(
@@ -116,7 +125,7 @@ def derive_change_scope(
             attributes = relationship.get("attributes", {})
             if not isinstance(attributes, Mapping):
                 continue
-            current_entities = set(allowed_entities)
+            current_entities = set(dependency_entities)
             if ifc_class == _CONTAINMENT:
                 related = _string_ids(attributes.get("RelatedElements"), entities)
                 if not (related & current_entities):
@@ -141,8 +150,9 @@ def derive_change_scope(
                 }
             )
             changed = True
-            for entity_id in sorted(referenced - allowed_entities):
+            for entity_id in sorted(referenced - dependency_entities):
                 allowed_entities.add(entity_id)
+                dependency_entities.add(entity_id)
                 dependencies.append(
                     {
                         "target_id": relationship_id,

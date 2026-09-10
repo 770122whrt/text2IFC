@@ -203,7 +203,7 @@ def unauthorized_candidate_semantics(candidate, expectations):
     allowed_properties = {(e['entity_id'], e.get('pset'), e.get('property'))
                           for e in expectations if e['kind'] == 'property'}
     allowed_materials = {e['entity_id'] for e in expectations if e['kind'] == 'material'}
-    issues = []
+    issues = _unauthorized_candidate_types(candidate, expectations)
     for record in candidate.get('entities', []):
         entity_id = record['id']
         if record.get('materials') and entity_id not in allowed_materials:
@@ -214,4 +214,43 @@ def unauthorized_candidate_semantics(candidate, expectations):
                 if (entity_id, pset, prop) not in allowed_properties:
                     issues.append({'code': 'UNREQUESTED_PROPERTY', 'path': f'/entities/{entity_id}/property_sets/{pset}/{prop}',
                                    'message': '属性没有冻结请求或有依据的推导，不能自动补值。'})
+    return issues
+
+
+def _unauthorized_candidate_types(candidate, expectations):
+    """Check explicit Generation Type objects and membership, before compilation.
+
+    Compiler-created basic-filling attachments are not candidate records. A
+    candidate provenance label cannot grant that deterministic-code exception.
+    """
+    from text2ifc_knowledge.registry import load_ifc2x3_registry
+
+    requested_pairs = {
+        (e['entity_id'], e['value']) for e in expectations
+        if e['kind'] == 'type' and isinstance(e.get('value'), str)
+    }
+    allowed_types = {type_id for _, type_id in requested_pairs}
+    registry = load_ifc2x3_registry()
+    issues = []
+    for record in candidate.get('entities', []):
+        declaration = registry.declaration(record.get('ifc_class', ''))
+        is_type = declaration and (
+            record['ifc_class'] == 'IfcTypeObject' or 'IfcTypeObject' in declaration.get('supertypes', [])
+        )
+        if is_type and record['id'] not in allowed_types:
+            issues.append({'code': 'UNREQUESTED_TYPE', 'path': f"/entities/{record['id']}",
+                           'message': '显式 Type／Style 未获冻结请求授权；编译器最小附件不能由候选自报。'})
+    for relation in candidate.get('relationships', []):
+        if relation.get('ifc_class') != 'IfcRelDefinesByType':
+            continue
+        attributes = relation.get('attributes', {})
+        type_id = attributes.get('RelatingType')
+        if type_id not in allowed_types:
+            issues.append({'code': 'UNREQUESTED_TYPE_ASSIGNMENT',
+                           'path': f"/relationships/{relation['id']}/attributes/RelatingType",
+                           'message': '类型关联指向未请求的 Type，不能由候选自行增加类型组织。'})
+        elif any((instance, type_id) not in requested_pairs for instance in attributes.get('RelatedObjects', [])):
+            issues.append({'code': 'UNREQUESTED_TYPE_ASSIGNMENT',
+                           'path': f"/relationships/{relation['id']}/attributes/RelatedObjects",
+                           'message': '类型关联包含未经请求授权的实例，不能扩大共享类型的作用范围。'})
     return issues
