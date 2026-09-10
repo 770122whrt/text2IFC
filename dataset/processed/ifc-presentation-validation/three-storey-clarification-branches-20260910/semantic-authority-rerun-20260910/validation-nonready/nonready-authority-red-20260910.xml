@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="2" skipped="0" tests="3" time="1.811" timestamp="2026-09-10T18:30:04.849790+08:00" hostname="what-do-matter"><testcase classname="tests.agent.test_semantic_authority_completeness" name="test_unresolved_semantics_never_authorize_cleanup_even_outside_ready[ready]" time="0.004" /><testcase classname="tests.agent.test_semantic_authority_completeness" name="test_unresolved_semantics_never_authorize_cleanup_even_outside_ready[needs_clarification]" time="0.002"><failure message="assert not True">status = 'needs_clarification'
+
+    @pytest.mark.parametrize('status', ['ready', 'needs_clarification', None])
+    def test_unresolved_semantics_never_authorize_cleanup_even_outside_ready(status):
+        candidate, brief, expected, *_ = fixture()
+        brief['schema_version'] = 'text2ifc/design-brief/2.2'
+        brief['status'] = status
+        brief['known_facts']['semantic_review'] = review(material=True, property=True)
+        brief['known_facts']['semantic_review']['type']['status'] = 'unresolved'
+        projection = project_semantic_requirements(brief)
+&gt;       assert not projection['valid']
+E       assert not True
+
+tests\agent\test_semantic_authority_completeness.py:288: AssertionError</failure></testcase><testcase classname="tests.agent.test_semantic_authority_completeness" name="test_unresolved_semantics_never_authorize_cleanup_even_outside_ready[None]" time="0.002"><failure message="assert not True">status = None
+
+    @pytest.mark.parametrize('status', ['ready', 'needs_clarification', None])
+    def test_unresolved_semantics_never_authorize_cleanup_even_outside_ready(status):
+        candidate, brief, expected, *_ = fixture()
+        brief['schema_version'] = 'text2ifc/design-brief/2.2'
+        brief['status'] = status
+        brief['known_facts']['semantic_review'] = review(material=True, property=True)
+        brief['known_facts']['semantic_review']['type']['status'] = 'unresolved'
+        projection = project_semantic_requirements(brief)
+&gt;       assert not projection['valid']
+E       assert not True
+
+tests\agent\test_semantic_authority_completeness.py:288: AssertionError</failure></testcase></testsuite></testsuites>

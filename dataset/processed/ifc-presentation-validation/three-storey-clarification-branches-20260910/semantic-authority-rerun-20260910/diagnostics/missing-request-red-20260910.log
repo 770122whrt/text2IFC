@@ -1,0 +1,24 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+_________ test_candidate_without_any_request_authority_cannot_publish _________
+
+tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-missing-request-red-20260910/test_candidate_without_any_req0')
+
+    def test_candidate_without_any_request_authority_cannot_publish(tmp_path):
+        from text2ifc_agent.live_pipeline import run_candidate_gate_stage
+        from tests.agent.test_semantic_scope_and_type_policy import _write
+        candidate, *_ = fixture()
+        for e in candidate['entities']:
+            e['materials'], e['property_sets'] = [], {}
+        candidate['entities'] = [e for e in candidate['entities'] if not e['ifc_class'].endswith('Type')]
+        candidate['relationships'] = [r for r in candidate['relationships'] if r['ifc_class'] != 'IfcRelDefinesByType']
+        _write(tmp_path/'generator/candidate.json', candidate)
+        result = run_candidate_gate_stage(case_dir=tmp_path, output_dir=tmp_path, case_id='missing-source')
+>       assert not result['compile_reopen_success']
+E       assert not True
+
+tests\agent\test_semantic_authority_completeness.py:215: AssertionError
+- generated xml file: E:\code for project\bimnet\.tmp\missing-request-red-20260910.xml -
+=========================== short test summary info ===========================
+FAILED tests/agent/test_semantic_authority_completeness.py::test_candidate_without_any_request_authority_cannot_publish
+1 failed, 29 deselected in 4.54s
