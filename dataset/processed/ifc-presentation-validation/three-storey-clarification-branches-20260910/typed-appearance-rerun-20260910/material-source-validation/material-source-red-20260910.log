@@ -1,0 +1,537 @@
+FFF......FFFFFFFFFFFFFFFFFFFFF.......F.FF                                [100%]
+================================== FAILURES ===================================
+________ test_malformed_material_is_not_frozen[value0-wall-elsewhere] _________
+
+identity = 'wall-elsewhere', value = {}
+
+    @pytest.mark.parametrize('identity', ['wall-elsewhere', 'door-elsewhere', 'slab-elsewhere'])
+    @pytest.mark.parametrize('value', [{}, None, [], {'name': 'Brick'},
+        {'kind': 'single_material'}, {'kind': 'single_material', 'name': ''},
+        {**SINGLE, 'strength': 0}, {**LAYERED, 'layers': []},
+        {**LAYERED, 'layers': [{'name': 'Brick', 'thickness': 0}]},
+        {**USAGE, 'direction': 'Y'}])
+    def test_malformed_material_is_not_frozen(identity, value):
+        brief = source({'entity_id': identity, 'material': value})
+        before = copy.deepcopy(brief)
+        result = project_semantic_requirements(brief)
+>       assert not result['valid']
+E       assert not True
+
+tests\agent\test_brief_material_grammar.py:33: AssertionError
+________ test_malformed_material_is_not_frozen[value0-door-elsewhere] _________
+
+identity = 'door-elsewhere', value = {}
+
+    @pytest.mark.parametrize('identity', ['wall-elsewhere', 'door-elsewhere', 'slab-elsewhere'])
+    @pytest.mark.parametrize('value', [{}, None, [], {'name': 'Brick'},
+        {'kind': 'single_material'}, {'kind': 'single_material', 'name': ''},
+        {**SINGLE, 'strength': 0}, {**LAYERED, 'layers': []},
+        {**LAYERED, 'layers': [{'name': 'Brick', 'thickness': 0}]},
+        {**USAGE, 'direction': 'Y'}])
+    def test_malformed_material_is_not_frozen(identity, value):
+        brief = source({'entity_id': identity, 'material': value})
+        before = copy.deepcopy(brief)
+        result = project_semantic_requirements(brief)
+>       assert not result['valid']
+E       assert not True
+
+tests\agent\test_brief_material_grammar.py:33: AssertionError
+________ test_malformed_material_is_not_frozen[value0-slab-elsewhere] _________
+
+identity = 'slab-elsewhere', value = {}
+
+    @pytest.mark.parametrize('identity', ['wall-elsewhere', 'door-elsewhere', 'slab-elsewhere'])
+    @pytest.mark.parametrize('value', [{}, None, [], {'name': 'Brick'},
+        {'kind': 'single_material'}, {'kind': 'single_material', 'name': ''},
+        {**SINGLE, 'strength': 0}, {**LAYERED, 'layers': []},
+        {**LAYERED, 'layers': [{'name': 'Brick', 'thickness': 0}]},
+        {**USAGE, 'direction': 'Y'}])
+    def test_malformed_material_is_not_frozen(identity, value):
+        brief = source({'entity_id': identity, 'material': value})
+        before = copy.deepcopy(brief)
+        result = project_semantic_requirements(brief)
+>       assert not result['valid']
+E       assert not True
+
+tests\agent\test_brief_material_grammar.py:33: AssertionError
+________ test_malformed_material_is_not_frozen[value3-wall-elsewhere] _________
+
+identity = 'wall-elsewhere', value = {'name': 'Brick'}
+
+    @pytest.mark.parametrize('identity', ['wall-elsewhere', 'door-elsewhere', 'slab-elsewhere'])
+    @pytest.mark.parametrize('value', [{}, None, [], {'name': 'Brick'},
+        {'kind': 'single_material'}, {'kind': 'single_material', 'name': ''},
+        {**SINGLE, 'strength': 0}, {**LAYERED, 'layers': []},
+        {**LAYERED, 'layers': [{'name': 'Brick', 'thickness': 0}]},
+        {**USAGE, 'direction': 'Y'}])
+    def test_malformed_material_is_not_frozen(identity, value):
+        brief = source({'entity_id': identity, 'material': value})
+        before = copy.deepcopy(brief)
+        result = project_semantic_requirements(brief)
+>       assert not result['valid']
+E       assert not True
+
+tests\agent\test_brief_material_grammar.py:33: AssertionError
+________ test_malformed_material_is_not_frozen[value3-door-elsewhere] _________
+
+identity = 'door-elsewhere', value = {'name': 'Brick'}
+
+    @pytest.mark.parametrize('identity', ['wall-elsewhere', 'door-elsewhere', 'slab-elsewhere'])
+    @pytest.mark.parametrize('value', [{}, None, [], {'name': 'Brick'},
+        {'kind': 'single_material'}, {'kind': 'single_material', 'name': ''},
+        {**SINGLE, 'strength': 0}, {**LAYERED, 'layers': []},
+        {**LAYERED, 'layers': [{'name': 'Brick', 'thickness': 0}]},
+        {**USAGE, 'direction': 'Y'}])
+    def test_malformed_material_is_not_frozen(identity, value):
+        brief = source({'entity_id': identity, 'material': value})
+        before = copy.deepcopy(brief)
+        result = project_semantic_requirements(brief)
+>       assert not result['valid']
+E       assert not True
+
+tests\agent\test_brief_material_grammar.py:33: AssertionError
+________ test_malformed_material_is_not_frozen[value3-slab-elsewhere] _________
+
+identity = 'slab-elsewhere', value = {'name': 'Brick'}
+
+    @pytest.mark.parametrize('identity', ['wall-elsewhere', 'door-elsewhere', 'slab-elsewhere'])
+    @pytest.mark.parametrize('value', [{}, None, [], {'name': 'Brick'},
+        {'kind': 'single_material'}, {'kind': 'single_material', 'name': ''},
+        {**SINGLE, 'strength': 0}, {**LAYERED, 'layers': []},
+        {**LAYERED, 'layers': [{'name': 'Brick', 'thickness': 0}]},
+        {**USAGE, 'direction': 'Y'}])
+    def test_malformed_material_is_not_frozen(identity, value):
+        brief = source({'entity_id': identity, 'material': value})
+        before = copy.deepcopy(brief)
+        result = project_semantic_requirements(brief)
+>       assert not result['valid']
+E       assert not True
+
+tests\agent\test_brief_material_grammar.py:33: AssertionError
+________ test_malformed_material_is_not_frozen[value4-wall-elsewhere] _________
+
+identity = 'wall-elsewhere', value = {'kind': 'single_material'}
+
+    @pytest.mark.parametrize('identity', ['wall-elsewhere', 'door-elsewhere', 'slab-elsewhere'])
+    @pytest.mark.parametrize('value', [{}, None, [], {'name': 'Brick'},
+        {'kind': 'single_material'}, {'kind': 'single_material', 'name': ''},
+        {**SINGLE, 'strength': 0}, {**LAYERED, 'layers': []},
+        {**LAYERED, 'layers': [{'name': 'Brick', 'thickness': 0}]},
+        {**USAGE, 'direction': 'Y'}])
+    def test_malformed_material_is_not_frozen(identity, value):
+        brief = source({'entity_id': identity, 'material': value})
+        before = copy.deepcopy(brief)
+        result = project_semantic_requirements(brief)
+>       assert not result['valid']
+E       assert not True
+
+tests\agent\test_brief_material_grammar.py:33: AssertionError
+________ test_malformed_material_is_not_frozen[value4-door-elsewhere] _________
+
+identity = 'door-elsewhere', value = {'kind': 'single_material'}
+
+    @pytest.mark.parametrize('identity', ['wall-elsewhere', 'door-elsewhere', 'slab-elsewhere'])
+    @pytest.mark.parametrize('value', [{}, None, [], {'name': 'Brick'},
+        {'kind': 'single_material'}, {'kind': 'single_material', 'name': ''},
+        {**SINGLE, 'strength': 0}, {**LAYERED, 'layers': []},
+        {**LAYERED, 'layers': [{'name': 'Brick', 'thickness': 0}]},
+        {**USAGE, 'direction': 'Y'}])
+    def test_malformed_material_is_not_frozen(identity, value):
+        brief = source({'entity_id': identity, 'material': value})
+        before = copy.deepcopy(brief)
+        result = project_semantic_requirements(brief)
+>       assert not result['valid']
+E       assert not True
+
+tests\agent\test_brief_material_grammar.py:33: AssertionError
+________ test_malformed_material_is_not_frozen[value4-slab-elsewhere] _________
+
+identity = 'slab-elsewhere', value = {'kind': 'single_material'}
+
+    @pytest.mark.parametrize('identity', ['wall-elsewhere', 'door-elsewhere', 'slab-elsewhere'])
+    @pytest.mark.parametrize('value', [{}, None, [], {'name': 'Brick'},
+        {'kind': 'single_material'}, {'kind': 'single_material', 'name': ''},
+        {**SINGLE, 'strength': 0}, {**LAYERED, 'layers': []},
+        {**LAYERED, 'layers': [{'name': 'Brick', 'thickness': 0}]},
+        {**USAGE, 'direction': 'Y'}])
+    def test_malformed_material_is_not_frozen(identity, value):
+        brief = source({'entity_id': identity, 'material': value})
+        before = copy.deepcopy(brief)
+        result = project_semantic_requirements(brief)
+>       assert not result['valid']
+E       assert not True
+
+tests\agent\test_brief_material_grammar.py:33: AssertionError
+________ test_malformed_material_is_not_frozen[value5-wall-elsewhere] _________
+
+identity = 'wall-elsewhere', value = {'kind': 'single_material', 'name': ''}
+
+    @pytest.mark.parametrize('identity', ['wall-elsewhere', 'door-elsewhere', 'slab-elsewhere'])
+    @pytest.mark.parametrize('value', [{}, None, [], {'name': 'Brick'},
+        {'kind': 'single_material'}, {'kind': 'single_material', 'name': ''},
+        {**SINGLE, 'strength': 0}, {**LAYERED, 'layers': []},
+        {**LAYERED, 'layers': [{'name': 'Brick', 'thickness': 0}]},
+        {**USAGE, 'direction': 'Y'}])
+    def test_malformed_material_is_not_frozen(identity, value):
+        brief = source({'entity_id': identity, 'material': value})
+        before = copy.deepcopy(brief)
+        result = project_semantic_requirements(brief)
+>       assert not result['valid']
+E       assert not True
+
+tests\agent\test_brief_material_grammar.py:33: AssertionError
+________ test_malformed_material_is_not_frozen[value5-door-elsewhere] _________
+
+identity = 'door-elsewhere', value = {'kind': 'single_material', 'name': ''}
+
+    @pytest.mark.parametrize('identity', ['wall-elsewhere', 'door-elsewhere', 'slab-elsewhere'])
+    @pytest.mark.parametrize('value', [{}, None, [], {'name': 'Brick'},
+        {'kind': 'single_material'}, {'kind': 'single_material', 'name': ''},
+        {**SINGLE, 'strength': 0}, {**LAYERED, 'layers': []},
+        {**LAYERED, 'layers': [{'name': 'Brick', 'thickness': 0}]},
+        {**USAGE, 'direction': 'Y'}])
+    def test_malformed_material_is_not_frozen(identity, value):
+        brief = source({'entity_id': identity, 'material': value})
+        before = copy.deepcopy(brief)
+        result = project_semantic_requirements(brief)
+>       assert not result['valid']
+E       assert not True
+
+tests\agent\test_brief_material_grammar.py:33: AssertionError
+________ test_malformed_material_is_not_frozen[value5-slab-elsewhere] _________
+
+identity = 'slab-elsewhere', value = {'kind': 'single_material', 'name': ''}
+
+    @pytest.mark.parametrize('identity', ['wall-elsewhere', 'door-elsewhere', 'slab-elsewhere'])
+    @pytest.mark.parametrize('value', [{}, None, [], {'name': 'Brick'},
+        {'kind': 'single_material'}, {'kind': 'single_material', 'name': ''},
+        {**SINGLE, 'strength': 0}, {**LAYERED, 'layers': []},
+        {**LAYERED, 'layers': [{'name': 'Brick', 'thickness': 0}]},
+        {**USAGE, 'direction': 'Y'}])
+    def test_malformed_material_is_not_frozen(identity, value):
+        brief = source({'entity_id': identity, 'material': value})
+        before = copy.deepcopy(brief)
+        result = project_semantic_requirements(brief)
+>       assert not result['valid']
+E       assert not True
+
+tests\agent\test_brief_material_grammar.py:33: AssertionError
+________ test_malformed_material_is_not_frozen[value6-wall-elsewhere] _________
+
+identity = 'wall-elsewhere'
+value = {'kind': 'single_material', 'name': 'Brick', 'strength': 0}
+
+    @pytest.mark.parametrize('identity', ['wall-elsewhere', 'door-elsewhere', 'slab-elsewhere'])
+    @pytest.mark.parametrize('value', [{}, None, [], {'name': 'Brick'},
+        {'kind': 'single_material'}, {'kind': 'single_material', 'name': ''},
+        {**SINGLE, 'strength': 0}, {**LAYERED, 'layers': []},
+        {**LAYERED, 'layers': [{'name': 'Brick', 'thickness': 0}]},
+        {**USAGE, 'direction': 'Y'}])
+    def test_malformed_material_is_not_frozen(identity, value):
+        brief = source({'entity_id': identity, 'material': value})
+        before = copy.deepcopy(brief)
+        result = project_semantic_requirements(brief)
+>       assert not result['valid']
+E       assert not True
+
+tests\agent\test_brief_material_grammar.py:33: AssertionError
+________ test_malformed_material_is_not_frozen[value6-door-elsewhere] _________
+
+identity = 'door-elsewhere'
+value = {'kind': 'single_material', 'name': 'Brick', 'strength': 0}
+
+    @pytest.mark.parametrize('identity', ['wall-elsewhere', 'door-elsewhere', 'slab-elsewhere'])
+    @pytest.mark.parametrize('value', [{}, None, [], {'name': 'Brick'},
+        {'kind': 'single_material'}, {'kind': 'single_material', 'name': ''},
+        {**SINGLE, 'strength': 0}, {**LAYERED, 'layers': []},
+        {**LAYERED, 'layers': [{'name': 'Brick', 'thickness': 0}]},
+        {**USAGE, 'direction': 'Y'}])
+    def test_malformed_material_is_not_frozen(identity, value):
+        brief = source({'entity_id': identity, 'material': value})
+        before = copy.deepcopy(brief)
+        result = project_semantic_requirements(brief)
+>       assert not result['valid']
+E       assert not True
+
+tests\agent\test_brief_material_grammar.py:33: AssertionError
+________ test_malformed_material_is_not_frozen[value6-slab-elsewhere] _________
+
+identity = 'slab-elsewhere'
+value = {'kind': 'single_material', 'name': 'Brick', 'strength': 0}
+
+    @pytest.mark.parametrize('identity', ['wall-elsewhere', 'door-elsewhere', 'slab-elsewhere'])
+    @pytest.mark.parametrize('value', [{}, None, [], {'name': 'Brick'},
+        {'kind': 'single_material'}, {'kind': 'single_material', 'name': ''},
+        {**SINGLE, 'strength': 0}, {**LAYERED, 'layers': []},
+        {**LAYERED, 'layers': [{'name': 'Brick', 'thickness': 0}]},
+        {**USAGE, 'direction': 'Y'}])
+    def test_malformed_material_is_not_frozen(identity, value):
+        brief = source({'entity_id': identity, 'material': value})
+        before = copy.deepcopy(brief)
+        result = project_semantic_requirements(brief)
+>       assert not result['valid']
+E       assert not True
+
+tests\agent\test_brief_material_grammar.py:33: AssertionError
+________ test_malformed_material_is_not_frozen[value7-wall-elsewhere] _________
+
+identity = 'wall-elsewhere'
+value = {'kind': 'material_layer_set', 'layer_set_name': 'Assembly', 'layers': []}
+
+    @pytest.mark.parametrize('identity', ['wall-elsewhere', 'door-elsewhere', 'slab-elsewhere'])
+    @pytest.mark.parametrize('value', [{}, None, [], {'name': 'Brick'},
+        {'kind': 'single_material'}, {'kind': 'single_material', 'name': ''},
+        {**SINGLE, 'strength': 0}, {**LAYERED, 'layers': []},
+        {**LAYERED, 'layers': [{'name': 'Brick', 'thickness': 0}]},
+        {**USAGE, 'direction': 'Y'}])
+    def test_malformed_material_is_not_frozen(identity, value):
+        brief = source({'entity_id': identity, 'material': value})
+        before = copy.deepcopy(brief)
+        result = project_semantic_requirements(brief)
+>       assert not result['valid']
+E       assert not True
+
+tests\agent\test_brief_material_grammar.py:33: AssertionError
+________ test_malformed_material_is_not_frozen[value7-door-elsewhere] _________
+
+identity = 'door-elsewhere'
+value = {'kind': 'material_layer_set', 'layer_set_name': 'Assembly', 'layers': []}
+
+    @pytest.mark.parametrize('identity', ['wall-elsewhere', 'door-elsewhere', 'slab-elsewhere'])
+    @pytest.mark.parametrize('value', [{}, None, [], {'name': 'Brick'},
+        {'kind': 'single_material'}, {'kind': 'single_material', 'name': ''},
+        {**SINGLE, 'strength': 0}, {**LAYERED, 'layers': []},
+        {**LAYERED, 'layers': [{'name': 'Brick', 'thickness': 0}]},
+        {**USAGE, 'direction': 'Y'}])
+    def test_malformed_material_is_not_frozen(identity, value):
+        brief = source({'entity_id': identity, 'material': value})
+        before = copy.deepcopy(brief)
+        result = project_semantic_requirements(brief)
+>       assert not result['valid']
+E       assert not True
+
+tests\agent\test_brief_material_grammar.py:33: AssertionError
+________ test_malformed_material_is_not_frozen[value7-slab-elsewhere] _________
+
+identity = 'slab-elsewhere'
+value = {'kind': 'material_layer_set', 'layer_set_name': 'Assembly', 'layers': []}
+
+    @pytest.mark.parametrize('identity', ['wall-elsewhere', 'door-elsewhere', 'slab-elsewhere'])
+    @pytest.mark.parametrize('value', [{}, None, [], {'name': 'Brick'},
+        {'kind': 'single_material'}, {'kind': 'single_material', 'name': ''},
+        {**SINGLE, 'strength': 0}, {**LAYERED, 'layers': []},
+        {**LAYERED, 'layers': [{'name': 'Brick', 'thickness': 0}]},
+        {**USAGE, 'direction': 'Y'}])
+    def test_malformed_material_is_not_frozen(identity, value):
+        brief = source({'entity_id': identity, 'material': value})
+        before = copy.deepcopy(brief)
+        result = project_semantic_requirements(brief)
+>       assert not result['valid']
+E       assert not True
+
+tests\agent\test_brief_material_grammar.py:33: AssertionError
+________ test_malformed_material_is_not_frozen[value8-wall-elsewhere] _________
+
+identity = 'wall-elsewhere'
+value = {'kind': 'material_layer_set', 'layer_set_name': 'Assembly', 'layers': [{'name': 'Brick', 'thickness': 0}]}
+
+    @pytest.mark.parametrize('identity', ['wall-elsewhere', 'door-elsewhere', 'slab-elsewhere'])
+    @pytest.mark.parametrize('value', [{}, None, [], {'name': 'Brick'},
+        {'kind': 'single_material'}, {'kind': 'single_material', 'name': ''},
+        {**SINGLE, 'strength': 0}, {**LAYERED, 'layers': []},
+        {**LAYERED, 'layers': [{'name': 'Brick', 'thickness': 0}]},
+        {**USAGE, 'direction': 'Y'}])
+    def test_malformed_material_is_not_frozen(identity, value):
+        brief = source({'entity_id': identity, 'material': value})
+        before = copy.deepcopy(brief)
+        result = project_semantic_requirements(brief)
+>       assert not result['valid']
+E       assert not True
+
+tests\agent\test_brief_material_grammar.py:33: AssertionError
+________ test_malformed_material_is_not_frozen[value8-door-elsewhere] _________
+
+identity = 'door-elsewhere'
+value = {'kind': 'material_layer_set', 'layer_set_name': 'Assembly', 'layers': [{'name': 'Brick', 'thickness': 0}]}
+
+    @pytest.mark.parametrize('identity', ['wall-elsewhere', 'door-elsewhere', 'slab-elsewhere'])
+    @pytest.mark.parametrize('value', [{}, None, [], {'name': 'Brick'},
+        {'kind': 'single_material'}, {'kind': 'single_material', 'name': ''},
+        {**SINGLE, 'strength': 0}, {**LAYERED, 'layers': []},
+        {**LAYERED, 'layers': [{'name': 'Brick', 'thickness': 0}]},
+        {**USAGE, 'direction': 'Y'}])
+    def test_malformed_material_is_not_frozen(identity, value):
+        brief = source({'entity_id': identity, 'material': value})
+        before = copy.deepcopy(brief)
+        result = project_semantic_requirements(brief)
+>       assert not result['valid']
+E       assert not True
+
+tests\agent\test_brief_material_grammar.py:33: AssertionError
+________ test_malformed_material_is_not_frozen[value8-slab-elsewhere] _________
+
+identity = 'slab-elsewhere'
+value = {'kind': 'material_layer_set', 'layer_set_name': 'Assembly', 'layers': [{'name': 'Brick', 'thickness': 0}]}
+
+    @pytest.mark.parametrize('identity', ['wall-elsewhere', 'door-elsewhere', 'slab-elsewhere'])
+    @pytest.mark.parametrize('value', [{}, None, [], {'name': 'Brick'},
+        {'kind': 'single_material'}, {'kind': 'single_material', 'name': ''},
+        {**SINGLE, 'strength': 0}, {**LAYERED, 'layers': []},
+        {**LAYERED, 'layers': [{'name': 'Brick', 'thickness': 0}]},
+        {**USAGE, 'direction': 'Y'}])
+    def test_malformed_material_is_not_frozen(identity, value):
+        brief = source({'entity_id': identity, 'material': value})
+        before = copy.deepcopy(brief)
+        result = project_semantic_requirements(brief)
+>       assert not result['valid']
+E       assert not True
+
+tests\agent\test_brief_material_grammar.py:33: AssertionError
+________ test_malformed_material_is_not_frozen[value9-wall-elsewhere] _________
+
+identity = 'wall-elsewhere'
+value = {'direction': 'Y', 'direction_sense': 'NEGATIVE', 'kind': 'material_layer_set_usage', 'layer_set_name': 'Assembly', ...}
+
+    @pytest.mark.parametrize('identity', ['wall-elsewhere', 'door-elsewhere', 'slab-elsewhere'])
+    @pytest.mark.parametrize('value', [{}, None, [], {'name': 'Brick'},
+        {'kind': 'single_material'}, {'kind': 'single_material', 'name': ''},
+        {**SINGLE, 'strength': 0}, {**LAYERED, 'layers': []},
+        {**LAYERED, 'layers': [{'name': 'Brick', 'thickness': 0}]},
+        {**USAGE, 'direction': 'Y'}])
+    def test_malformed_material_is_not_frozen(identity, value):
+        brief = source({'entity_id': identity, 'material': value})
+        before = copy.deepcopy(brief)
+        result = project_semantic_requirements(brief)
+>       assert not result['valid']
+E       assert not True
+
+tests\agent\test_brief_material_grammar.py:33: AssertionError
+________ test_malformed_material_is_not_frozen[value9-door-elsewhere] _________
+
+identity = 'door-elsewhere'
+value = {'direction': 'Y', 'direction_sense': 'NEGATIVE', 'kind': 'material_layer_set_usage', 'layer_set_name': 'Assembly', ...}
+
+    @pytest.mark.parametrize('identity', ['wall-elsewhere', 'door-elsewhere', 'slab-elsewhere'])
+    @pytest.mark.parametrize('value', [{}, None, [], {'name': 'Brick'},
+        {'kind': 'single_material'}, {'kind': 'single_material', 'name': ''},
+        {**SINGLE, 'strength': 0}, {**LAYERED, 'layers': []},
+        {**LAYERED, 'layers': [{'name': 'Brick', 'thickness': 0}]},
+        {**USAGE, 'direction': 'Y'}])
+    def test_malformed_material_is_not_frozen(identity, value):
+        brief = source({'entity_id': identity, 'material': value})
+        before = copy.deepcopy(brief)
+        result = project_semantic_requirements(brief)
+>       assert not result['valid']
+E       assert not True
+
+tests\agent\test_brief_material_grammar.py:33: AssertionError
+________ test_malformed_material_is_not_frozen[value9-slab-elsewhere] _________
+
+identity = 'slab-elsewhere'
+value = {'direction': 'Y', 'direction_sense': 'NEGATIVE', 'kind': 'material_layer_set_usage', 'layer_set_name': 'Assembly', ...}
+
+    @pytest.mark.parametrize('identity', ['wall-elsewhere', 'door-elsewhere', 'slab-elsewhere'])
+    @pytest.mark.parametrize('value', [{}, None, [], {'name': 'Brick'},
+        {'kind': 'single_material'}, {'kind': 'single_material', 'name': ''},
+        {**SINGLE, 'strength': 0}, {**LAYERED, 'layers': []},
+        {**LAYERED, 'layers': [{'name': 'Brick', 'thickness': 0}]},
+        {**USAGE, 'direction': 'Y'}])
+    def test_malformed_material_is_not_frozen(identity, value):
+        brief = source({'entity_id': identity, 'material': value})
+        before = copy.deepcopy(brief)
+        result = project_semantic_requirements(brief)
+>       assert not result['valid']
+E       assert not True
+
+tests\agent\test_brief_material_grammar.py:33: AssertionError
+_ test_legacy_assignment_array_cannot_hide_incomplete_or_multiple_values[assignments1] _
+
+assignments = [{}]
+
+    @pytest.mark.parametrize('assignments', [[], [{}], [SINGLE, LAYERED]])
+    def test_legacy_assignment_array_cannot_hide_incomplete_or_multiple_values(assignments):
+        result = project_semantic_requirements(source({'entity_id': 'opaque-id', 'materials': assignments}))
+>       assert not result['valid']
+E       assert not True
+
+tests\agent\test_brief_material_grammar.py:52: AssertionError
+_ test_public_brief_repair_can_remove_invalid_material_without_erasing_valid_requirement[False] _
+
+tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-material-source-red-20260910/test_public_brief_repair_can_r0')
+design_review = False
+
+    @pytest.mark.parametrize('design_review', [False, True])
+    def test_public_brief_repair_can_remove_invalid_material_without_erasing_valid_requirement(tmp_path, design_review):
+        from text2ifc_agent.live_pipeline import run_design_brief_stage
+        from tests.agent.test_phase6_5_staged_generation import SequenceProvider
+        case, brief = valid_brief()
+        brief['schema_version'] = 'text2ifc/design-brief/2.3'
+        brief['known_facts']['semantic_requirements'] = [{'entity_id': 'wall-keep', 'material': SINGLE}]
+        brief['known_facts']['semantic_review'] = review(material=True)
+        broken = copy.deepcopy(brief)
+        broken['known_facts']['semantic_requirements'].append({'entity_id': 'window-other', 'material': {}})
+        provider = SequenceProvider([broken, brief])
+        result = run_design_brief_stage(provider=provider, output_dir=tmp_path, case=case,
+            design_review_enabled=design_review, design_brief_schema_version=brief['schema_version'])
+        assert result['valid'], result
+>       assert len(provider.calls) == 2
+E       AssertionError: assert 1 == 2
+E        +  where 1 = len([{'schema': {'$defs': {'ambiguity': {'additionalProperties': False, 'properties': {'blocking': {...}, 'evidence_refs':...session_id': 'phase6.1-complete-room-design-brief-v2', 'state': {'case_id': 'complete-room', 'stage': 'design-brief'}}])
+E        +    where [{'schema': {'$defs': {'ambiguity': {'additionalProperties': False, 'properties': {'blocking': {...}, 'evidence_refs':...session_id': 'phase6.1-complete-room-design-brief-v2', 'state': {'case_id': 'complete-room', 'stage': 'design-brief'}}] = <tests.agent.test_phase6_5_staged_generation.SequenceProvider object at 0x000001D5FED670E0>.calls
+
+tests\agent\test_brief_material_grammar.py:70: AssertionError
+_ test_public_brief_repair_can_remove_invalid_material_without_erasing_valid_requirement[True] _
+
+tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-material-source-red-20260910/test_public_brief_repair_can_r1')
+design_review = True
+
+    @pytest.mark.parametrize('design_review', [False, True])
+    def test_public_brief_repair_can_remove_invalid_material_without_erasing_valid_requirement(tmp_path, design_review):
+        from text2ifc_agent.live_pipeline import run_design_brief_stage
+        from tests.agent.test_phase6_5_staged_generation import SequenceProvider
+        case, brief = valid_brief()
+        brief['schema_version'] = 'text2ifc/design-brief/2.3'
+        brief['known_facts']['semantic_requirements'] = [{'entity_id': 'wall-keep', 'material': SINGLE}]
+        brief['known_facts']['semantic_review'] = review(material=True)
+        broken = copy.deepcopy(brief)
+        broken['known_facts']['semantic_requirements'].append({'entity_id': 'window-other', 'material': {}})
+        provider = SequenceProvider([broken, brief])
+        result = run_design_brief_stage(provider=provider, output_dir=tmp_path, case=case,
+            design_review_enabled=design_review, design_brief_schema_version=brief['schema_version'])
+        assert result['valid'], result
+>       assert len(provider.calls) == 2
+E       AssertionError: assert 1 == 2
+E        +  where 1 = len([{'schema': {'$defs': {'ambiguity': {'additionalProperties': False, 'properties': {'blocking': {...}, 'evidence_refs':...session_id': 'phase6.1-complete-room-design-brief-v2', 'state': {'case_id': 'complete-room', 'stage': 'design-brief'}}])
+E        +    where [{'schema': {'$defs': {'ambiguity': {'additionalProperties': False, 'properties': {'blocking': {...}, 'evidence_refs':...session_id': 'phase6.1-complete-room-design-brief-v2', 'state': {'case_id': 'complete-room', 'stage': 'design-brief'}}] = <tests.agent.test_phase6_5_staged_generation.SequenceProvider object at 0x000001D5FED66660>.calls
+
+tests\agent\test_brief_material_grammar.py:70: AssertionError
+- generated xml file: E:\code for project\bimnet\.tmp\material-source-red-20260910.xml -
+=========================== short test summary info ===========================
+FAILED tests/agent/test_brief_material_grammar.py::test_malformed_material_is_not_frozen[value0-wall-elsewhere]
+FAILED tests/agent/test_brief_material_grammar.py::test_malformed_material_is_not_frozen[value0-door-elsewhere]
+FAILED tests/agent/test_brief_material_grammar.py::test_malformed_material_is_not_frozen[value0-slab-elsewhere]
+FAILED tests/agent/test_brief_material_grammar.py::test_malformed_material_is_not_frozen[value3-wall-elsewhere]
+FAILED tests/agent/test_brief_material_grammar.py::test_malformed_material_is_not_frozen[value3-door-elsewhere]
+FAILED tests/agent/test_brief_material_grammar.py::test_malformed_material_is_not_frozen[value3-slab-elsewhere]
+FAILED tests/agent/test_brief_material_grammar.py::test_malformed_material_is_not_frozen[value4-wall-elsewhere]
+FAILED tests/agent/test_brief_material_grammar.py::test_malformed_material_is_not_frozen[value4-door-elsewhere]
+FAILED tests/agent/test_brief_material_grammar.py::test_malformed_material_is_not_frozen[value4-slab-elsewhere]
+FAILED tests/agent/test_brief_material_grammar.py::test_malformed_material_is_not_frozen[value5-wall-elsewhere]
+FAILED tests/agent/test_brief_material_grammar.py::test_malformed_material_is_not_frozen[value5-door-elsewhere]
+FAILED tests/agent/test_brief_material_grammar.py::test_malformed_material_is_not_frozen[value5-slab-elsewhere]
+FAILED tests/agent/test_brief_material_grammar.py::test_malformed_material_is_not_frozen[value6-wall-elsewhere]
+FAILED tests/agent/test_brief_material_grammar.py::test_malformed_material_is_not_frozen[value6-door-elsewhere]
+FAILED tests/agent/test_brief_material_grammar.py::test_malformed_material_is_not_frozen[value6-slab-elsewhere]
+FAILED tests/agent/test_brief_material_grammar.py::test_malformed_material_is_not_frozen[value7-wall-elsewhere]
+FAILED tests/agent/test_brief_material_grammar.py::test_malformed_material_is_not_frozen[value7-door-elsewhere]
+FAILED tests/agent/test_brief_material_grammar.py::test_malformed_material_is_not_frozen[value7-slab-elsewhere]
+FAILED tests/agent/test_brief_material_grammar.py::test_malformed_material_is_not_frozen[value8-wall-elsewhere]
+FAILED tests/agent/test_brief_material_grammar.py::test_malformed_material_is_not_frozen[value8-door-elsewhere]
+FAILED tests/agent/test_brief_material_grammar.py::test_malformed_material_is_not_frozen[value8-slab-elsewhere]
+FAILED tests/agent/test_brief_material_grammar.py::test_malformed_material_is_not_frozen[value9-wall-elsewhere]
+FAILED tests/agent/test_brief_material_grammar.py::test_malformed_material_is_not_frozen[value9-door-elsewhere]
+FAILED tests/agent/test_brief_material_grammar.py::test_malformed_material_is_not_frozen[value9-slab-elsewhere]
+FAILED tests/agent/test_brief_material_grammar.py::test_legacy_assignment_array_cannot_hide_incomplete_or_multiple_values[assignments1]
+FAILED tests/agent/test_brief_material_grammar.py::test_public_brief_repair_can_remove_invalid_material_without_erasing_valid_requirement[False]
+FAILED tests/agent/test_brief_material_grammar.py::test_public_brief_repair_can_remove_invalid_material_without_erasing_valid_requirement[True]
+27 failed, 14 passed in 5.00s
