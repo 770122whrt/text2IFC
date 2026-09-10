@@ -11,11 +11,11 @@ from text2ifc_agent.semantic_coverage import build_design_geometry_expectation a
 
 def _brief(stair_id='stair-north-flight', flight_ids=None, explicit_opening=True):
     stair = {'id': stair_id, 'from_storey': 'ground', 'to_storey': 'upper',
-             'bounds': {'x_mm': [1000, 2200], 'y_mm': [1000, 6400]},
+             'bounds': {'x': [1000, 2200], 'y': [1000, 6400]},
              'start_elevation_mm': 0, 'end_elevation_mm': 3150}
     if flight_ids is not None:
         stair['flight_ids'] = flight_ids
-    opening = {'bounds': {'x_mm': [800, 2400], 'y_mm': [800, 6600]}}
+    opening = {'bounds': {'x': [800, 2400], 'y': [800, 6600]}}
     if explicit_opening:
         opening['id'] = 'upper-stair-void'
     return {'schema_version': 'text2ifc/design-brief/2.1', 'status': 'ready',
@@ -24,9 +24,9 @@ def _brief(stair_id='stair-north-flight', flight_ids=None, explicit_opening=True
                 {'id': 'upper', 'name': '二层', 'elevation_mm': 3150}],
                 'stairs': [stair], 'floor_slabs': [{'id': 'upper-slab', 'storey': 'upper',
                     'top_elevation_mm': 3150, 'thickness_mm': 150,
-                    'bounds': {'x_mm': [0, 8000], 'y_mm': [0, 9000]}, 'opening': opening}],
+                    'bounds': {'x': [0, 8000], 'y': [0, 9000]}, 'opening': opening}],
                 'roof_slab': {'id': 'top-roof', 'bottom_elevation_mm': 6150,
-                    'thickness_mm': 150, 'bounds': {'x_mm': [0, 8000], 'y_mm': [0, 9000]}}}}
+                    'thickness_mm': 150, 'bounds': {'x': [0, 8000], 'y': [0, 9000]}}}}
 
 
 @pytest.mark.parametrize('stair_id,flights', [
