@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="10" skipped="0" tests="18" time="6.119" timestamp="2026-09-09T12:05:46.799846+08:00" hostname="what-do-matter"><testcase classname="tests.agent.test_generation_authoring_contract" name="test_enum_choices_match_actual_ifc_validation[IfcWindowStyle-ConstructionType-ALUMINIUM-WINDOW]" time="0.377" /><testcase classname="tests.agent.test_generation_authoring_contract" name="test_enum_choices_match_actual_ifc_validation[IfcDoorStyle-OperationType-SINGLE_SWING_LEFT-LEFT]" time="0.138" /><testcase classname="tests.agent.test_generation_authoring_contract" name="test_enum_choices_match_actual_ifc_validation[IfcSlab-PredefinedType-FLOOR-WALL]" time="0.136" /><testcase classname="tests.agent.test_generation_authoring_contract" name="test_field_names_and_compiler_boundary_are_not_guessed" time="0.097" /><testcase classname="tests.agent.test_generation_authoring_contract" name="test_unknown_and_compiler_only_classes_fail_closed[IfcNotAClass]" time="0.080" /><testcase classname="tests.agent.test_generation_authoring_contract" name="test_unknown_and_compiler_only_classes_fail_closed[IfcCartesianPoint]" time="0.092" /><testcase classname="tests.agent.test_generation_authoring_contract" name="test_unknown_and_compiler_only_classes_fail_closed[IfcOwnerHistory]" time="0.084" /><testcase classname="tests.agent.test_generation_authoring_contract" name="test_scoped_contract_hash_is_deterministic_and_no_defaults_invented" time="0.282" /><testcase classname="tests.agent.test_generation_authoring_contract" name="test_generator_receives_registered_new_contract_without_rewriting_old_prompt" time="2.372"><failure message="KeyError: 'geometry_encoding'">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/geometry-contract-red-20260909/test_generator_receives_regist0')
+
+    def test_generator_receives_registered_new_contract_without_rewriting_old_prompt(tmp_path):
+        from text2ifc_agent.live_pipeline import run_generator_stage
+        from text2ifc_agent.prompt_registry import load_prompt_registry
+        from tests.agent.test_phase6_5_staged_generation import SequenceProvider
+        root = Path(__file__).resolve().parents[2]
+        candidate = json.loads((root/'tests/contract_v2/fixtures/complete.json').read_text(encoding='utf-8'))
+        candidate['schema_version'] = 'bim-json/2.1'
+        source = tmp_path/'design-brief'
+        source.mkdir()
+        (source/'input.txt').write_text('生成一间房间。', encoding='utf-8')
+        for name, value in [('conversation', []), ('context-selection', {'evidence': []}),
+                            ('design-brief', {'schema_version':'text2ifc/design-brief/2.1','status':'ready','known_facts':{}})]:
+            (source/f'{name}.json').write_text(json.dumps(value), encoding='utf-8')
+        class RecordingProvider(SequenceProvider):
+            def generate_live(self, **kwargs):
+                self.sent_prompt = kwargs['prompt']
+                return super().generate_live(**kwargs)
+        provider = RecordingProvider([copy.deepcopy(candidate)])
+        result = run_generator_stage(provider=provider, output_dir=tmp_path/'generator', design_source_dir=source, case_id='contract-family')
+        assert result['valid']
+        sent = json.loads((tmp_path/'generator/prompt-render-input.json').read_text(encoding='utf-8'))
+        assert 'IFC_AUTHORING_CONTRACT' in sent
+        assert 'OTHER_CONSTRUCTION' in provider.sent_prompt
+&gt;       assert sent['IFC_AUTHORING_CONTRACT']['geometry_encoding']['rectangle']['anchor'] == 'profile_center_at_extrusion_base'
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'geometry_encoding'
+
+tests\agent\test_generation_authoring_contract.py:74: KeyError</failure></testcase><testcase classname="tests.agent.test_generation_authoring_contract" name="test_geometry_contract_version_preserves_legacy_projection" time="0.001"><failure message="TypeError: build_authoring_contract() got an unexpected keyword argument 'version'">def test_geometry_contract_version_preserves_legacy_projection():
+        from text2ifc_agent.authoring_contract import build_authoring_contract
+&gt;       old = build_authoring_contract(['IfcWall'], version='1.0')
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: build_authoring_contract() got an unexpected keyword argument 'version'
+
+tests\agent\test_generation_authoring_contract.py:85: TypeError</failure></testcase><testcase classname="tests.agent.test_generation_authoring_contract" name="test_offered_center_anchor_matches_actual_reopened_geometry[size0-0]" time="0.274"><failure message="KeyError: 'geometry_encoding'">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/geometry-contract-red-20260909/test_offered_center_anchor_mat0')
+angle = 0, size = (2800, 180, 2400)
+
+    @pytest.mark.parametrize('angle', [0, 90, -90, 180])
+    @pytest.mark.parametrize('size', [(2800, 180, 2400), (5600, 300, 3200)])
+    def test_offered_center_anchor_matches_actual_reopened_geometry(tmp_path, angle, size):
+        import math
+        import ifcopenshell
+        import ifcopenshell.geom
+        from scripts.presentation.validate_semantic_appearance import candidate
+        from text2ifc_compiler import compile_document
+        value = candidate('window-single')
+        records = {e['id']: e for e in value['entities']}
+        wall = records['wall-1']['attributes']
+        wall['ObjectPlacement']['origin'] = [1300, -700, 3150]
+        radians = math.radians(angle)
+        wall['ObjectPlacement']['ref_direction'] = [math.cos(radians), math.sin(radians), 0]
+        wall['Representation']['profile'].update(x=size[0], y=size[1])
+        wall['Representation']['depth'] = size[2]
+        # Keep filling within the explicitly supported host thickness.
+        records['door-1']['attributes']['Representation']['depth'] = min(180, size[1])
+        records['opening-1']['attributes']['Representation']['profile']['y'] = size[1]
+&gt;       assert contract(['IfcWall'])['geometry_encoding']['rectangle']['anchor'] == 'profile_center_at_extrusion_base'
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'geometry_encoding'
+
+tests\agent\test_generation_authoring_contract.py:114: KeyError</failure></testcase><testcase classname="tests.agent.test_generation_authoring_contract" name="test_offered_center_anchor_matches_actual_reopened_geometry[size0-90]" time="0.100"><failure message="KeyError: 'geometry_encoding'">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/geometry-contract-red-20260909/test_offered_center_anchor_mat1')
+angle = 90, size = (2800, 180, 2400)
+
+    @pytest.mark.parametrize('angle', [0, 90, -90, 180])
+    @pytest.mark.parametrize('size', [(2800, 180, 2400), (5600, 300, 3200)])
+    def test_offered_center_anchor_matches_actual_reopened_geometry(tmp_path, angle, size):
+        import math
+        import ifcopenshell
+        import ifcopenshell.geom
+        from scripts.presentation.validate_semantic_appearance import candidate
+        from text2ifc_compiler import compile_document
+        value = candidate('window-single')
+        records = {e['id']: e for e in value['entities']}
+        wall = records['wall-1']['attributes']
+        wall['ObjectPlacement']['origin'] = [1300, -700, 3150]
+        radians = math.radians(angle)
+        wall['ObjectPlacement']['ref_direction'] = [math.cos(radians), math.sin(radians), 0]
+        wall['Representation']['profile'].update(x=size[0], y=size[1])
+        wall['Representation']['depth'] = size[2]
+        # Keep filling within the explicitly supported host thickness.
+        records['door-1']['attributes']['Representation']['depth'] = min(180, size[1])
+        records['opening-1']['attributes']['Representation']['profile']['y'] = size[1]
+&gt;       assert contract(['IfcWall'])['geometry_encoding']['rectangle']['anchor'] == 'profile_center_at_extrusion_base'
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'geometry_encoding'
+
+tests\agent\test_generation_authoring_contract.py:114: KeyError</failure></testcase><testcase classname="tests.agent.test_generation_authoring_contract" name="test_offered_center_anchor_matches_actual_reopened_geometry[size0--90]" time="0.138"><failure message="KeyError: 'geometry_encoding'">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/geometry-contract-red-20260909/test_offered_center_anchor_mat2')
+angle = -90, size = (2800, 180, 2400)
+
+    @pytest.mark.parametrize('angle', [0, 90, -90, 180])
+    @pytest.mark.parametrize('size', [(2800, 180, 2400), (5600, 300, 3200)])
+    def test_offered_center_anchor_matches_actual_reopened_geometry(tmp_path, angle, size):
+        import math
+        import ifcopenshell
+        import ifcopenshell.geom
+        from scripts.presentation.validate_semantic_appearance import candidate
+        from text2ifc_compiler import compile_document
+        value = candidate('window-single')
+        records = {e['id']: e for e in value['entities']}
+        wall = records['wall-1']['attributes']
+        wall['ObjectPlacement']['origin'] = [1300, -700, 3150]
+        radians = math.radians(angle)
+        wall['ObjectPlacement']['ref_direction'] = [math.cos(radians), math.sin(radians), 0]
+        wall['Representation']['profile'].update(x=size[0], y=size[1])
+        wall['Representation']['depth'] = size[2]
+        # Keep filling within the explicitly supported host thickness.
+        records['door-1']['attributes']['Representation']['depth'] = min(180, size[1])
+        records['opening-1']['attributes']['Representation']['profile']['y'] = size[1]
+&gt;       assert contract(['IfcWall'])['geometry_encoding']['rectangle']['anchor'] == 'profile_center_at_extrusion_base'
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'geometry_encoding'
+
+tests\agent\test_generation_authoring_contract.py:114: KeyError</failure></testcase><testcase classname="tests.agent.test_generation_authoring_contract" name="test_offered_center_anchor_matches_actual_reopened_geometry[size0-180]" time="0.095"><failure message="KeyError: 'geometry_encoding'">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/geometry-contract-red-20260909/test_offered_center_anchor_mat3')
+angle = 180, size = (2800, 180, 2400)
+
+    @pytest.mark.parametrize('angle', [0, 90, -90, 180])
+    @pytest.mark.parametrize('size', [(2800, 180, 2400), (5600, 300, 3200)])
+    def test_offered_center_anchor_matches_actual_reopened_geometry(tmp_path, angle, size):
+        import math
+        import ifcopenshell
+        import ifcopenshell.geom
+        from scripts.presentation.validate_semantic_appearance import candidate
+        from text2ifc_compiler import compile_document
+        value = candidate('window-single')
+        records = {e['id']: e for e in value['entities']}
+        wall = records['wall-1']['attributes']
+        wall['ObjectPlacement']['origin'] = [1300, -700, 3150]
+        radians = math.radians(angle)
+        wall['ObjectPlacement']['ref_direction'] = [math.cos(radians), math.sin(radians), 0]
+        wall['Representation']['profile'].update(x=size[0], y=size[1])
+        wall['Representation']['depth'] = size[2]
+        # Keep filling within the explicitly supported host thickness.
+        records['door-1']['attributes']['Representation']['depth'] = min(180, size[1])
+        records['opening-1']['attributes']['Representation']['profile']['y'] = size[1]
+&gt;       assert contract(['IfcWall'])['geometry_encoding']['rectangle']['anchor'] == 'profile_center_at_extrusion_base'
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'geometry_encoding'
+
+tests\agent\test_generation_authoring_contract.py:114: KeyError</failure></testcase><testcase classname="tests.agent.test_generation_authoring_contract" name="test_offered_center_anchor_matches_actual_reopened_geometry[size1-0]" time="0.119"><failure message="KeyError: 'geometry_encoding'">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/geometry-contract-red-20260909/test_offered_center_anchor_mat4')
+angle = 0, size = (5600, 300, 3200)
+
+    @pytest.mark.parametrize('angle', [0, 90, -90, 180])
+    @pytest.mark.parametrize('size', [(2800, 180, 2400), (5600, 300, 3200)])
+    def test_offered_center_anchor_matches_actual_reopened_geometry(tmp_path, angle, size):
+        import math
+        import ifcopenshell
+        import ifcopenshell.geom
+        from scripts.presentation.validate_semantic_appearance import candidate
+        from text2ifc_compiler import compile_document
+        value = candidate('window-single')
+        records = {e['id']: e for e in value['entities']}
+        wall = records['wall-1']['attributes']
+        wall['ObjectPlacement']['origin'] = [1300, -700, 3150]
+        radians = math.radians(angle)
+        wall['ObjectPlacement']['ref_direction'] = [math.cos(radians), math.sin(radians), 0]
+        wall['Representation']['profile'].update(x=size[0], y=size[1])
+        wall['Representation']['depth'] = size[2]
+        # Keep filling within the explicitly supported host thickness.
+        records['door-1']['attributes']['Representation']['depth'] = min(180, size[1])
+        records['opening-1']['attributes']['Representation']['profile']['y'] = size[1]
+&gt;       assert contract(['IfcWall'])['geometry_encoding']['rectangle']['anchor'] == 'profile_center_at_extrusion_base'
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'geometry_encoding'
+
+tests\agent\test_generation_authoring_contract.py:114: KeyError</failure></testcase><testcase classname="tests.agent.test_generation_authoring_contract" name="test_offered_center_anchor_matches_actual_reopened_geometry[size1-90]" time="0.126"><failure message="KeyError: 'geometry_encoding'">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/geometry-contract-red-20260909/test_offered_center_anchor_mat5')
+angle = 90, size = (5600, 300, 3200)
+
+    @pytest.mark.parametrize('angle', [0, 90, -90, 180])
+    @pytest.mark.parametrize('size', [(2800, 180, 2400), (5600, 300, 3200)])
+    def test_offered_center_anchor_matches_actual_reopened_geometry(tmp_path, angle, size):
+        import math
+        import ifcopenshell
+        import ifcopenshell.geom
+        from scripts.presentation.validate_semantic_appearance import candidate
+        from text2ifc_compiler import compile_document
+        value = candidate('window-single')
+        records = {e['id']: e for e in value['entities']}
+        wall = records['wall-1']['attributes']
+        wall['ObjectPlacement']['origin'] = [1300, -700, 3150]
+        radians = math.radians(angle)
+        wall['ObjectPlacement']['ref_direction'] = [math.cos(radians), math.sin(radians), 0]
+        wall['Representation']['profile'].update(x=size[0], y=size[1])
+        wall['Representation']['depth'] = size[2]
+        # Keep filling within the explicitly supported host thickness.
+        records['door-1']['attributes']['Representation']['depth'] = min(180, size[1])
+        records['opening-1']['attributes']['Representation']['profile']['y'] = size[1]
+&gt;       assert contract(['IfcWall'])['geometry_encoding']['rectangle']['anchor'] == 'profile_center_at_extrusion_base'
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'geometry_encoding'
+
+tests\agent\test_generation_authoring_contract.py:114: KeyError</failure></testcase><testcase classname="tests.agent.test_generation_authoring_contract" name="test_offered_center_anchor_matches_actual_reopened_geometry[size1--90]" time="0.073"><failure message="KeyError: 'geometry_encoding'">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/geometry-contract-red-20260909/test_offered_center_anchor_mat6')
+angle = -90, size = (5600, 300, 3200)
+
+    @pytest.mark.parametrize('angle', [0, 90, -90, 180])
+    @pytest.mark.parametrize('size', [(2800, 180, 2400), (5600, 300, 3200)])
+    def test_offered_center_anchor_matches_actual_reopened_geometry(tmp_path, angle, size):
+        import math
+        import ifcopenshell
+        import ifcopenshell.geom
+        from scripts.presentation.validate_semantic_appearance import candidate
+        from text2ifc_compiler import compile_document
+        value = candidate('window-single')
+        records = {e['id']: e for e in value['entities']}
+        wall = records['wall-1']['attributes']
+        wall['ObjectPlacement']['origin'] = [1300, -700, 3150]
+        radians = math.radians(angle)
+        wall['ObjectPlacement']['ref_direction'] = [math.cos(radians), math.sin(radians), 0]
+        wall['Representation']['profile'].update(x=size[0], y=size[1])
+        wall['Representation']['depth'] = size[2]
+        # Keep filling within the explicitly supported host thickness.
+        records['door-1']['attributes']['Representation']['depth'] = min(180, size[1])
+        records['opening-1']['attributes']['Representation']['profile']['y'] = size[1]
+&gt;       assert contract(['IfcWall'])['geometry_encoding']['rectangle']['anchor'] == 'profile_center_at_extrusion_base'
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'geometry_encoding'
+
+tests\agent\test_generation_authoring_contract.py:114: KeyError</failure></testcase><testcase classname="tests.agent.test_generation_authoring_contract" name="test_offered_center_anchor_matches_actual_reopened_geometry[size1-180]" time="0.125"><failure message="KeyError: 'geometry_encoding'">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/geometry-contract-red-20260909/test_offered_center_anchor_mat7')
+angle = 180, size = (5600, 300, 3200)
+
+    @pytest.mark.parametrize('angle', [0, 90, -90, 180])
+    @pytest.mark.parametrize('size', [(2800, 180, 2400), (5600, 300, 3200)])
+    def test_offered_center_anchor_matches_actual_reopened_geometry(tmp_path, angle, size):
+        import math
+        import ifcopenshell
+        import ifcopenshell.geom
+        from scripts.presentation.validate_semantic_appearance import candidate
+        from text2ifc_compiler import compile_document
+        value = candidate('window-single')
+        records = {e['id']: e for e in value['entities']}
+        wall = records['wall-1']['attributes']
+        wall['ObjectPlacement']['origin'] = [1300, -700, 3150]
+        radians = math.radians(angle)
+        wall['ObjectPlacement']['ref_direction'] = [math.cos(radians), math.sin(radians), 0]
+        wall['Representation']['profile'].update(x=size[0], y=size[1])
+        wall['Representation']['depth'] = size[2]
+        # Keep filling within the explicitly supported host thickness.
+        records['door-1']['attributes']['Representation']['depth'] = min(180, size[1])
+        records['opening-1']['attributes']['Representation']['profile']['y'] = size[1]
+&gt;       assert contract(['IfcWall'])['geometry_encoding']['rectangle']['anchor'] == 'profile_center_at_extrusion_base'
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'geometry_encoding'
+
+tests\agent\test_generation_authoring_contract.py:114: KeyError</failure></testcase></testsuite></testsuites>

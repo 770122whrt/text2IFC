@@ -1,0 +1,1816 @@
+{
+  "agent_calls": [
+    {
+      "created_at": "2026-09-09T03:39:28+00:00",
+      "payload": {
+        "artifact_dir": "E:\\code for project\\bimnet\\dataset\\processed\\ifc-presentation-validation\\two-storey-human-review-20260909\\runtime\\runs\\148bdf3872e74ccd\\calls\\01-design-brief",
+        "call": {
+          "artifact_dir": "E:\\code for project\\bimnet\\dataset\\processed\\ifc-presentation-validation\\two-storey-human-review-20260909\\runtime\\runs\\148bdf3872e74ccd\\calls\\01-design-brief",
+          "brief": {
+            "ambiguities": [],
+            "clarification_questions": [],
+            "fact_sources": [
+              {
+                "evidence_refs": [
+                  "schema:bim-json-v2:entity",
+                  "schema:bim-json-v2:representation",
+                  "capability:IFC2X3:IfcBuilding",
+                  "capability:IFC2X3:IfcBuildingStorey",
+                  "capability:IFC2X3:IfcSpace",
+                  "capability:IFC2X3:IfcWall",
+                  "capability:IFC2X3:IfcDoor",
+                  "capability:IFC2X3:IfcWindow",
+                  "capability:IFC2X3:IfcSlab",
+                  "capability:IFC2X3:IfcRoof",
+                  "capability:IFC2X3:IfcStair",
+                  "capability:IFC2X3:IfcOpeningElement"
+                ],
+                "path": "/known_facts",
+                "source_turns": [
+                  "turn-user-001"
+                ]
+              }
+            ],
+            "known_facts": {
+              "appearance": {
+                "profile": "warm-residential"
+              },
+              "building": {
+                "exterior_wall_thickness_mm": 200,
+                "interior_clear_bounds": {
+                  "x": [
+                    0,
+                    9000
+                  ],
+                  "y": [
+                    0,
+                    8000
+                  ]
+                },
+                "storey_count": 2
+              },
+              "floor_slabs": [
+                {
+                  "bounds": {
+                    "x": [
+                      -200,
+                      9200
+                    ],
+                    "y": [
+                      -200,
+                      8200
+                    ]
+                  },
+                  "id": "ground-slab",
+                  "storey": "storey-1",
+                  "thickness_mm": 150,
+                  "top_elevation_mm": 0
+                },
+                {
+                  "bounds": {
+                    "x": [
+                      -200,
+                      9200
+                    ],
+                    "y": [
+                      -200,
+                      8200
+                    ]
+                  },
+                  "id": "second-floor-slab",
+                  "opening": {
+                    "bounds": {
+                      "x": [
+                        7200,
+                        8800
+                      ],
+                      "y": [
+                        1200,
+                        6600
+                      ]
+                    }
+                  },
+                  "storey": "storey-2",
+                  "thickness_mm": 150,
+                  "top_elevation_mm": 3150
+                }
+              ],
+              "roof_slab": {
+                "bottom_elevation_mm": 6150,
+                "bounds": {
+                  "x": [
+                    -200,
+                    9200
+                  ],
+                  "y": [
+                    -200,
+                    8200
+                  ]
+                },
+                "id": "roof-slab",
+                "thickness_mm": 150
+              },
+              "semantic_requirements": [
+                {
+                  "entity_id": "storey-1-wall-south",
+                  "material": {
+                    "kind": "single_material",
+                    "name": "砖"
+                  },
+                  "scope": "direct",
+                  "source": "user"
+                },
+                {
+                  "entity_id": "storey-1-wall-north",
+                  "material": {
+                    "kind": "single_material",
+                    "name": "砖"
+                  },
+                  "scope": "direct",
+                  "source": "user"
+                },
+                {
+                  "entity_id": "storey-1-wall-west",
+                  "material": {
+                    "kind": "single_material",
+                    "name": "砖"
+                  },
+                  "scope": "direct",
+                  "source": "user"
+                },
+                {
+                  "entity_id": "storey-1-wall-east",
+                  "material": {
+                    "kind": "single_material",
+                    "name": "砖"
+                  },
+                  "scope": "direct",
+                  "source": "user"
+                },
+                {
+                  "entity_id": "storey-1-wall-partition",
+                  "material": {
+                    "kind": "single_material",
+                    "name": "砖"
+                  },
+                  "scope": "direct",
+                  "source": "user"
+                },
+                {
+                  "entity_id": "storey-2-wall-south",
+                  "material": {
+                    "kind": "single_material",
+                    "name": "砖"
+                  },
+                  "scope": "direct",
+                  "source": "user"
+                },
+                {
+                  "entity_id": "storey-2-wall-north",
+                  "material": {
+                    "kind": "single_material",
+                    "name": "砖"
+                  },
+                  "scope": "direct",
+                  "source": "user"
+                },
+                {
+                  "entity_id": "storey-2-wall-west",
+                  "material": {
+                    "kind": "single_material",
+                    "name": "砖"
+                  },
+                  "scope": "direct",
+                  "source": "user"
+                },
+                {
+                  "entity_id": "storey-2-wall-east",
+                  "material": {
+                    "kind": "single_material",
+                    "name": "砖"
+                  },
+                  "scope": "direct",
+                  "source": "user"
+                },
+                {
+                  "entity_id": "storey-2-wall-partition",
+                  "material": {
+                    "kind": "single_material",
+                    "name": "砖"
+                  },
+                  "scope": "direct",
+                  "source": "user"
+                },
+                {
+                  "entity_id": "ground-slab",
+                  "material": {
+                    "kind": "single_material",
+                    "name": "混凝土"
+                  },
+                  "scope": "direct",
+                  "source": "user"
+                },
+                {
+                  "entity_id": "second-floor-slab",
+                  "material": {
+                    "kind": "single_material",
+                    "name": "混凝土"
+                  },
+                  "scope": "direct",
+                  "source": "user"
+                },
+                {
+                  "entity_id": "roof-slab",
+                  "material": {
+                    "kind": "single_material",
+                    "name": "混凝土"
+                  },
+                  "scope": "direct",
+                  "source": "user"
+                },
+                {
+                  "entity_id": "door-ground-main",
+                  "scope": "direct",
+                  "source": "user",
+                  "template": {
+                    "template_id": "door-left",
+                    "template_version": "text2ifc/basic-filling/1.0"
+                  }
+                },
+                {
+                  "entity_id": "door-ground-partition",
+                  "scope": "direct",
+                  "source": "user",
+                  "template": {
+                    "template_id": "door-right",
+                    "template_version": "text2ifc/basic-filling/1.0"
+                  }
+                },
+                {
+                  "entity_id": "door-second-partition",
+                  "scope": "direct",
+                  "source": "user",
+                  "template": {
+                    "template_id": "door-right",
+                    "template_version": "text2ifc/basic-filling/1.0"
+                  }
+                },
+                {
+                  "entity_id": "window-ground-south-1",
+                  "scope": "direct",
+                  "source": "user",
+                  "template": {
+                    "template_id": "window-double-vertical",
+                    "template_version": "text2ifc/basic-filling/1.0"
+                  }
+                },
+                {
+                  "entity_id": "window-ground-south-2",
+                  "scope": "direct",
+                  "source": "user",
+                  "template": {
+                    "template_id": "window-double-vertical",
+                    "template_version": "text2ifc/basic-filling/1.0"
+                  }
+                },
+                {
+                  "entity_id": "window-ground-north-1",
+                  "scope": "direct",
+                  "source": "user",
+                  "template": {
+                    "template_id": "window-double-vertical",
+                    "template_version": "text2ifc/basic-filling/1.0"
+                  }
+                },
+                {
+                  "entity_id": "window-ground-west-1",
+                  "scope": "direct",
+                  "source": "user",
+                  "template": {
+                    "template_id": "window-double-vertical",
+                    "template_version": "text2ifc/basic-filling/1.0"
+                  }
+                },
+                {
+                  "entity_id": "window-ground-east-1",
+                  "scope": "direct",
+                  "source": "user",
+                  "template": {
+                    "template_id": "window-single",
+                    "template_version": "text2ifc/basic-filling/1.0"
+                  }
+                },
+                {
+                  "entity_id": "window-second-south-1",
+                  "scope": "direct",
+                  "source": "user",
+                  "template": {
+                    "template_id": "window-double-vertical",
+                    "template_version": "text2ifc/basic-filling/1.0"
+                  }
+                },
+                {
+                  "entity_id": "window-second-south-2",
+                  "scope": "direct",
+                  "source": "user",
+                  "template": {
+                    "template_id": "window-double-vertical",
+                    "template_version": "text2ifc/basic-filling/1.0"
+                  }
+                },
+                {
+                  "entity_id": "window-second-north-1",
+                  "scope": "direct",
+                  "source": "user",
+                  "template": {
+                    "template_id": "window-double-vertical",
+                    "template_version": "text2ifc/basic-filling/1.0"
+                  }
+                },
+                {
+                  "entity_id": "window-second-west-1",
+                  "scope": "direct",
+                  "source": "user",
+                  "template": {
+                    "template_id": "window-double-vertical",
+                    "template_version": "text2ifc/basic-filling/1.0"
+                  }
+                },
+                {
+                  "entity_id": "window-second-east-1",
+                  "scope": "direct",
+                  "source": "user",
+                  "template": {
+                    "template_id": "window-single",
+                    "template_version": "text2ifc/basic-filling/1.0"
+                  }
+                }
+              ],
+              "stairs": [
+                {
+                  "bounds": {
+                    "x": [
+                      7400,
+                      8600
+                    ],
+                    "y": [
+                      1200,
+                      6600
+                    ]
+                  },
+                  "end_elevation_mm": 3150,
+                  "from_storey": "storey-1",
+                  "id": "stair-1",
+                  "number_of_risers": 18,
+                  "opening_bounds": {
+                    "x": [
+                      7200,
+                      8800
+                    ],
+                    "y": [
+                      1200,
+                      6600
+                    ]
+                  },
+                  "riser_height_mm": 175,
+                  "run_direction": "north",
+                  "start_elevation_mm": 0,
+                  "to_storey": "storey-2",
+                  "tread_depth_mm": 300,
+                  "width_mm": 1200
+                }
+              ],
+              "storeys": [
+                {
+                  "doors": [
+                    {
+                      "center_x_from_west_inner_edge_mm": 3400,
+                      "height_mm": 2400,
+                      "host_wall": "storey-1-wall-south",
+                      "id": "door-ground-main",
+                      "single_leaf": "left",
+                      "width_mm": 1200
+                    },
+                    {
+                      "center_y_from_south_inner_edge_mm": 600,
+                      "height_mm": 2100,
+                      "host_wall": "storey-1-wall-partition",
+                      "id": "door-ground-partition",
+                      "single_leaf": "right",
+                      "width_mm": 900
+                    }
+                  ],
+                  "elevation_mm": 0,
+                  "id": "storey-1",
+                  "name": "首层",
+                  "net_height_mm": 3000,
+                  "spaces": [
+                    {
+                      "bounds": {
+                        "x": [
+                          0,
+                          6800
+                        ],
+                        "y": [
+                          0,
+                          8000
+                        ]
+                      },
+                      "id": "space-reading-lobby",
+                      "name": "接待阅览厅"
+                    },
+                    {
+                      "bounds": {
+                        "x": [
+                          7000,
+                          9000
+                        ],
+                        "y": [
+                          0,
+                          8000
+                        ]
+                      },
+                      "id": "space-stair-hall-1",
+                      "name": "楼梯间"
+                    }
+                  ],
+                  "walls": {
+                    "exterior": [
+                      {
+                        "id": "storey-1-wall-south",
+                        "side": "south",
+                        "thickness_mm": 200
+                      },
+                      {
+                        "id": "storey-1-wall-north",
+                        "side": "north",
+                        "thickness_mm": 200
+                      },
+                      {
+                        "id": "storey-1-wall-west",
+                        "side": "west",
+                        "thickness_mm": 200
+                      },
+                      {
+                        "id": "storey-1-wall-east",
+                        "side": "east",
+                        "thickness_mm": 200
+                      }
+                    ],
+                    "interior": [
+                      {
+                        "connects": [
+                          "space-reading-lobby",
+                          "space-stair-hall-1"
+                        ],
+                        "id": "storey-1-wall-partition",
+                        "thickness_mm": 200
+                      }
+                    ]
+                  },
+                  "windows": [
+                    {
+                      "center_x_from_west_inner_edge_mm": 1500,
+                      "height_mm": 1500,
+                      "host_wall": "storey-1-wall-south",
+                      "id": "window-ground-south-1",
+                      "sill_height_mm": 900,
+                      "width_mm": 1800
+                    },
+                    {
+                      "center_x_from_west_inner_edge_mm": 5300,
+                      "height_mm": 1500,
+                      "host_wall": "storey-1-wall-south",
+                      "id": "window-ground-south-2",
+                      "sill_height_mm": 900,
+                      "width_mm": 1800
+                    },
+                    {
+                      "center_x_from_west_inner_edge_mm": 3400,
+                      "height_mm": 1500,
+                      "host_wall": "storey-1-wall-north",
+                      "id": "window-ground-north-1",
+                      "sill_height_mm": 900,
+                      "width_mm": 2400
+                    },
+                    {
+                      "center_y_from_south_inner_edge_mm": 4000,
+                      "height_mm": 1500,
+                      "host_wall": "storey-1-wall-west",
+                      "id": "window-ground-west-1",
+                      "sill_height_mm": 900,
+                      "width_mm": 1800
+                    },
+                    {
+                      "center_y_from_south_inner_edge_mm": 4000,
+                      "height_mm": 1800,
+                      "host_wall": "storey-1-wall-east",
+                      "id": "window-ground-east-1",
+                      "sill_height_mm": 600,
+                      "width_mm": 900
+                    }
+                  ]
+                },
+                {
+                  "doors": [
+                    {
+                      "center_y_from_south_inner_edge_mm": 7300,
+                      "height_mm": 2100,
+                      "host_wall": "storey-2-wall-partition",
+                      "id": "door-second-partition",
+                      "single_leaf": "right",
+                      "width_mm": 900
+                    }
+                  ],
+                  "elevation_mm": 3150,
+                  "id": "storey-2",
+                  "name": "二层",
+                  "net_height_mm": 3000,
+                  "spaces": [
+                    {
+                      "bounds": {
+                        "x": [
+                          0,
+                          6800
+                        ],
+                        "y": [
+                          0,
+                          8000
+                        ]
+                      },
+                      "id": "space-activity-hall",
+                      "name": "多功能活动厅"
+                    },
+                    {
+                      "bounds": {
+                        "x": [
+                          7000,
+                          9000
+                        ],
+                        "y": [
+                          6600,
+                          8000
+                        ]
+                      },
+                      "id": "space-stair-platform-2",
+                      "name": "北端楼梯平台"
+                    }
+                  ],
+                  "walls": {
+                    "exterior": [
+                      {
+                        "id": "storey-2-wall-south",
+                        "side": "south",
+                        "thickness_mm": 200
+                      },
+                      {
+                        "id": "storey-2-wall-north",
+                        "side": "north",
+                        "thickness_mm": 200
+                      },
+                      {
+                        "id": "storey-2-wall-west",
+                        "side": "west",
+                        "thickness_mm": 200
+                      },
+                      {
+                        "id": "storey-2-wall-east",
+                        "side": "east",
+                        "thickness_mm": 200
+                      }
+                    ],
+                    "interior": [
+                      {
+                        "connects": [
+                          "space-activity-hall",
+                          "space-stair-platform-2"
+                        ],
+                        "id": "storey-2-wall-partition",
+                        "thickness_mm": 200
+                      }
+                    ]
+                  },
+                  "windows": [
+                    {
+                      "center_x_from_west_inner_edge_mm": 1500,
+                      "height_mm": 1500,
+                      "host_wall": "storey-2-wall-south",
+                      "id": "window-second-south-1",
+                      "sill_height_mm": 900,
+                      "width_mm": 1800
+                    },
+                    {
+                      "center_x_from_west_inner_edge_mm": 5300,
+                      "height_mm": 1500,
+                      "host_wall": "storey-2-wall-south",
+                      "id": "window-second-south-2",
+                      "sill_height_mm": 900,
+                      "width_mm": 1800
+                    },
+                    {
+                      "center_x_from_west_inner_edge_mm": 3400,
+                      "height_mm": 1500,
+                      "host_wall": "storey-2-wall-north",
+                      "id": "window-second-north-1",
+                      "sill_height_mm": 900,
+                      "width_mm": 2400
+                    },
+                    {
+                      "center_y_from_south_inner_edge_mm": 4000,
+                      "height_mm": 1500,
+                      "host_wall": "storey-2-wall-west",
+                      "id": "window-second-west-1",
+                      "sill_height_mm": 900,
+                      "width_mm": 1800
+                    },
+                    {
+                      "center_y_from_south_inner_edge_mm": 4000,
+                      "height_mm": 1800,
+                      "host_wall": "storey-2-wall-east",
+                      "id": "window-second-east-1",
+                      "sill_height_mm": 600,
+                      "width_mm": 900
+                    }
+                  ]
+                }
+              ]
+            },
+            "language": "zh-CN",
+            "missing_facts": [],
+            "original_request": "请设计并生成一栋两层的小型社区阅读与活动楼，提供完整 IFC2X3 文件，单位毫米。首层是接待阅览厅，二层是安静的多功能活动厅，东侧设置独立楼梯间。希望它看起来像一栋完整的小建筑：立面门窗上下对齐、间距均衡，墙体、门窗框和门扇配色协调，有真实的窗框、玻璃、门框、门扇与楼梯踏步。采用 warm-residential 风格，玻璃透明；不要求家具、机电、栏杆、复杂五金或外伸装饰。\n\n建筑内部净尺寸为东西 9 米、南北 8 米，外墙厚 200 毫米。首层完成面标高 0，二层完成面标高 3150，每层室内净高 3000。地坪和二层楼板厚 150；平屋面底标高 6150、厚 150。地坪、楼板和屋面覆盖外墙外边界；二层楼板须留实际楼梯洞口，不能用整块楼板封住楼梯。各层外墙独立，不能跨楼层复用。\n\n以首层室内西南角为原点，向东为 X、向北为 Y、向上为 Z。每层西侧大厅净范围为 X=0～6800、Y=0～8000；分隔墙占 X=6800～7000，东侧楼梯间净范围为 X=7000～9000、Y=0～8000。首层在分隔墙南端开一樘门，中心距室内南边 600；二层在分隔墙北端开一樘门，中心距室内南边 7300，两樘门均宽 900、高 2100，右单开，底面与本层地坪齐平。只生成这一道分隔墙，不把大厅与楼梯間的边界重复建成两道墙。\n\n楼梯沿北向直跑，从首层完成面 0 升到二层完成面 3150，属于首层并连接二层。净宽 1200，平面范围 X=7400～8600、Y=1200～6600，18 级、每级高 175、踏步进深 300。首层南端保留 1200 深的进梯区域，二层北端保留 Y=6600～8000 的平台。二层楼梯洞口范围为 X=7200～8800、Y=1200～6600，洞口穿透楼板。首层为阅览厅和楼梯间各建一个空间，二层为活动厅及北端楼梯平台各建一个空间；洞口不得当成房间。\n\n主入口位于首层南墙，中心距室内西边 3400，宽 1200、高 2400，左单开，门底与地坪齐平。南立面每层各有两扇双竖面板窗，中心距室内西边分别为 1500、5300，均宽 1800、高 1500、窗台高 900；上下层窗中心对齐，首层入口在两窗之间。每层北墙在西侧大厅中部各有一扇宽 2400、高 1500 的双竖面板窗，中心距西边 3400、窗台高 900。每层西墙中央各有一扇宽 1800、高 1500 的双竖面板窗，中心距南边 4000、窗台高 900。每层东墙中央各有一扇宽 900、高 1800 的单面板窗，中心距南边 4000、窗台高 600。窗台高度均从所属楼层完成面算起。总计 3 樘门、10 扇窗，每个开口必须与门窗名义宽高相同并穿透自己的宿主墙，门窗均置于相应楼层。\n\n墙体材料为砖；地坪、二层楼板和屋面材料为混凝土。其他构件不指定物理材料，不要由颜色推断木材或玻璃材料。未提供强度、耐火、承重或热工性能，也没有共享 Type 的要求，不要自动补写这些属性或强制合并 Type。尺寸及空间关系必须满足以上要求；如果有真实冲突，请明确指出，不要静默改变。",
+            "provenance": {
+              "few_shot_ids": [
+                "design-brief-v2.standard-two-storey-building",
+                "design-brief-v2.complete-room-openings"
+              ],
+              "selected_evidence_ids": [
+                "schema:bim-json-v2:root",
+                "schema:bim-json-v2:entity",
+                "schema:bim-json-v2:representation",
+                "capability:IFC2X3:IfcBuilding",
+                "capability:IFC2X3:IfcBuildingStorey",
+                "capability:IFC2X3:IfcSpace",
+                "capability:IFC2X3:IfcWall",
+                "capability:IFC2X3:IfcDoor",
+                "capability:IFC2X3:IfcWindow",
+                "capability:IFC2X3:IfcSlab",
+                "capability:IFC2X3:IfcRoof",
+                "capability:IFC2X3:IfcStair",
+                "capability:IFC2X3:IfcOpeningElement"
+              ],
+              "source_turns": [
+                "turn-user-001"
+              ]
+            },
+            "schema_version": "text2ifc/design-brief/2.1",
+            "status": "ready",
+            "unsupported_requests": [],
+            "user_corrections": []
+          },
+          "call_index": 1,
+          "evidence_catalog": [
+            {
+              "content": {
+                "$defs": {
+                  "attributes": {
+                    "properties": {
+                      "ObjectPlacement": {
+                        "$ref": "#/$defs/objectPlacement"
+                      },
+                      "Representation": {
+                        "$ref": "#/$defs/representation"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "entity": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "appearance": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "color": {
+                            "items": {
+                              "maximum": 1,
+                              "minimum": 0,
+                              "type": "number"
+                            },
+                            "maxItems": 3,
+                            "minItems": 3,
+                            "type": "array"
+                          },
+                          "transparency": {
+                            "maximum": 1,
+                            "minimum": 0,
+                            "type": "number"
+                          }
+                        },
+                        "type": "object"
+                      },
+                      "attributes": {
+                        "$ref": "#/$defs/attributes"
+                      },
+                      "global_id": {},
+                      "id": {
+                        "$ref": "#/$defs/nonEmptyString"
+                      },
+                      "ifc_class": {
+                        "$ref": "#/$defs/nonEmptyString"
+                      },
+                      "materials": {
+                        "items": {
+                          "$ref": "#/$defs/materialAssignment"
+                        },
+                        "maxItems": 1,
+                        "type": "array"
+                      },
+                      "property_sets": {
+                        "additionalProperties": {
+                          "type": "object"
+                        },
+                        "type": "object"
+                      },
+                      "provenance": {
+                        "$ref": "#/$defs/provenance"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "ifc_class",
+                      "attributes",
+                      "property_sets",
+                      "provenance"
+                    ],
+                    "type": "object"
+                  },
+                  "localPosition": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "axis": {
+                        "$ref": "#/$defs/vector3"
+                      },
+                      "origin": {
+                        "$ref": "#/$defs/vector3"
+                      },
+                      "ref_direction": {
+                        "$ref": "#/$defs/vector3"
+                      }
+                    },
+                    "required": [
+                      "origin",
+                      "axis",
+                      "ref_direction"
+                    ],
+                    "type": "object"
+                  },
+                  "materialAssignment": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/$defs/materialLayerSetUsage"
+                      },
+                      {
+                        "additionalProperties": false,
+                        "properties": {
+                          "kind": {
+                            "const": "single_material"
+                          },
+                          "name": {
+                            "$ref": "#/$defs/nonEmptyString"
+                          }
+                        },
+                        "required": [
+                          "kind",
+                          "name"
+                        ],
+                        "type": "object"
+                      },
+                      {
+                        "additionalProperties": false,
+                        "properties": {
+                          "kind": {
+                            "const": "material_layer_set"
+                          },
+                          "layer_set_name": {
+                            "$ref": "#/$defs/nonEmptyString"
+                          },
+                          "layers": {
+                            "items": {
+                              "$ref": "#/$defs/materialLayer"
+                            },
+                            "minItems": 1,
+                            "type": "array"
+                          }
+                        },
+                        "required": [
+                          "kind",
+                          "layer_set_name",
+                          "layers"
+                        ],
+                        "type": "object"
+                      }
+                    ]
+                  },
+                  "materialLayer": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "name": {
+                        "$ref": "#/$defs/nonEmptyString"
+                      },
+                      "thickness": {
+                        "exclusiveMinimum": 0,
+                        "type": "number"
+                      }
+                    },
+                    "required": [
+                      "name",
+                      "thickness"
+                    ],
+                    "type": "object"
+                  },
+                  "materialLayerSetUsage": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "direction": {
+                        "enum": [
+                          "AXIS1",
+                          "AXIS2",
+                          "AXIS3"
+                        ]
+                      },
+                      "direction_sense": {
+                        "enum": [
+                          "POSITIVE",
+                          "NEGATIVE"
+                        ]
+                      },
+                      "kind": {
+                        "const": "material_layer_set_usage"
+                      },
+                      "layer_set_name": {
+                        "$ref": "#/$defs/nonEmptyString"
+                      },
+                      "layers": {
+                        "items": {
+                          "$ref": "#/$defs/materialLayer"
+                        },
+                        "minItems": 1,
+                        "type": "array"
+                      },
+                      "offset_from_reference_line": {
+                        "type": "number"
+                      }
+                    },
+                    "required": [
+                      "kind",
+                      "layer_set_name",
+                      "direction",
+                      "direction_sense",
+                      "offset_from_reference_line",
+                      "layers"
+                    ],
+                    "type": "object"
+                  },
+                  "nonEmptyString": {
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "objectPlacement": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "axis": {
+                        "$ref": "#/$defs/vector3"
+                      },
+                      "origin": {
+                        "$ref": "#/$defs/vector3"
+                      },
+                      "ref_direction": {
+                        "$ref": "#/$defs/vector3"
+                      },
+                      "relative_to": {
+                        "$ref": "#/$defs/nonEmptyString"
+                      }
+                    },
+                    "required": [
+                      "relative_to",
+                      "origin",
+                      "axis",
+                      "ref_direction"
+                    ],
+                    "type": "object"
+                  },
+                  "point2": {
+                    "items": {
+                      "type": "number"
+                    },
+                    "maxItems": 2,
+                    "minItems": 2,
+                    "type": "array"
+                  },
+                  "profile": {
+                    "allOf": [
+                      {
+                        "if": {
+                          "properties": {
+                            "kind": {
+                              "const": "rectangle"
+                            }
+                          },
+                          "required": [
+                            "kind"
+                          ]
+                        },
+                        "then": {
+                          "required": [
+                            "x",
+                            "y"
+                          ]
+                        }
+                      },
+                      {
+                        "if": {
+                          "properties": {
+                            "kind": {
+                              "const": "polygon"
+                            }
+                          },
+                          "required": [
+                            "kind"
+                          ]
+                        },
+                        "then": {
+                          "required": [
+                            "points"
+                          ]
+                        }
+                      }
+                    ],
+                    "properties": {
+                      "kind": {
+                        "type": "string"
+                      },
+                      "points": {
+                        "items": {
+                          "$ref": "#/$defs/point2"
+                        },
+                        "type": "array"
+                      },
+                      "x": {
+                        "type": "number"
+                      },
+                      "y": {
+                        "type": "number"
+                      }
+                    },
+                    "required": [
+                      "kind"
+                    ],
+                    "type": "object"
+                  },
+                  "provenance": {
+                    "minProperties": 1,
+                    "type": "object"
+                  },
+                  "relationship": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "attributes": {
+                        "type": "object"
+                      },
+                      "global_id": {},
+                      "id": {
+                        "$ref": "#/$defs/nonEmptyString"
+                      },
+                      "ifc_class": {
+                        "$ref": "#/$defs/nonEmptyString"
+                      },
+                      "provenance": {
+                        "$ref": "#/$defs/provenance"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "ifc_class",
+                      "attributes",
+                      "provenance"
+                    ],
+                    "type": "object"
+                  },
+                  "representation": {
+                    "allOf": [
+                      {
+                        "if": {
+                          "properties": {
+                            "kind": {
+                              "const": "extruded_profile"
+                            }
+                          },
+                          "required": [
+                            "kind"
+                          ]
+                        },
+                        "then": {
+                          "required": [
+                            "profile",
+                            "depth",
+                            "direction"
+                          ]
+                        }
+                      },
+                      {
+                        "if": {
+                          "properties": {
+                            "kind": {
+                              "const": "basic_filling"
+                            }
+                          },
+                          "required": [
+                            "kind"
+                          ]
+                        },
+                        "then": {
+                          "required": [
+                            "template_id",
+                            "template_version",
+                            "width",
+                            "height",
+                            "depth"
+                          ]
+                        }
+                      }
+                    ],
+                    "properties": {
+                      "depth": {
+                        "type": "number"
+                      },
+                      "direction": {
+                        "$ref": "#/$defs/vector3"
+                      },
+                      "height": {
+                        "exclusiveMinimum": 0,
+                        "type": "number"
+                      },
+                      "kind": {
+                        "type": "string"
+                      },
+                      "parameters": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "frame_depth": {
+                            "type": "number"
+                          },
+                          "frame_width": {
+                            "type": "number"
+                          },
+                          "panel_thickness": {
+                            "type": "number"
+                          },
+                          "split_ratio": {
+                            "type": "number"
+                          }
+                        },
+                        "type": "object"
+                      },
+                      "position": {
+                        "$ref": "#/$defs/localPosition"
+                      },
+                      "profile": {
+                        "$ref": "#/$defs/profile"
+                      },
+                      "template_id": {
+                        "enum": [
+                          "window-single",
+                          "window-double-vertical",
+                          "door-left",
+                          "door-right"
+                        ]
+                      },
+                      "template_version": {
+                        "const": "text2ifc/basic-filling/1.0"
+                      },
+                      "width": {
+                        "exclusiveMinimum": 0,
+                        "type": "number"
+                      }
+                    },
+                    "required": [
+                      "kind"
+                    ],
+                    "type": "object"
+                  },
+                  "units": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "length": {
+                        "const": "MILLIMETRE"
+                      }
+                    },
+                    "required": [
+                      "length"
+                    ],
+                    "type": "object"
+                  },
+                  "vector3": {
+                    "items": {
+                      "type": "number"
+                    },
+                    "maxItems": 3,
+                    "minItems": 3,
+                    "type": "array"
+                  }
+                },
+                "$id": "https://text2ifc.local/schemas/bim-json/2.1/schema.json",
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "additionalProperties": false,
+                "properties": {
+                  "appearance": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "profile": {
+                        "enum": [
+                          "neutral-architectural",
+                          "warm-residential"
+                        ]
+                      },
+                      "seed": {
+                        "type": "string"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "entities": {
+                    "items": {
+                      "$ref": "#/$defs/entity"
+                    },
+                    "type": "array"
+                  },
+                  "ifc_schema": {
+                    "const": "IFC2X3"
+                  },
+                  "provenance": {
+                    "$ref": "#/$defs/provenance"
+                  },
+                  "relationships": {
+                    "items": {
+                      "$ref": "#/$defs/relationship"
+                    },
+                    "type": "array"
+                  },
+                  "schema_version": {
+                    "const": "bim-json/2.1"
+                  },
+                  "units": {
+                    "$ref": "#/$defs/units"
+                  }
+                },
+                "required": [
+                  "schema_version",
+                  "ifc_schema",
+                  "units",
+                  "entities",
+                  "relationships",
+                  "provenance"
+                ],
+                "title": "text2IFC BIM JSON 2.1",
+                "type": "object",
+                "x-generation-type-capabilities": {
+                  "IfcBeamType": "generate",
+                  "IfcColumnType": "generate",
+                  "IfcCoveringType": "generate",
+                  "IfcCurtainWallType": "generate",
+                  "IfcDoorStyle": "generate",
+                  "IfcMemberType": "generate",
+                  "IfcPlateType": "generate",
+                  "IfcRailingType": "generate",
+                  "IfcSlabType": "generate",
+                  "IfcStairFlightType": "generate",
+                  "IfcWallType": "generate",
+                  "IfcWindowStyle": "generate"
+                }
+              },
+              "evidence_id": "schema:bim-json-v2:root",
+              "json_pointer": "/",
+              "kind": "bim_json_schema",
+              "source_path": "schemas/bim-json/2.1/schema.json",
+              "source_sha256": "sha256:842e2a2451c2240a919fbf3c09912ed25a06fa4f4ef512d89d8d6a2d1e7ee691"
+            },
+            {
+              "content": {
+                "additionalProperties": false,
+                "properties": {
+                  "appearance": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "color": {
+                        "items": {
+                          "maximum": 1,
+                          "minimum": 0,
+                          "type": "number"
+                        },
+                        "maxItems": 3,
+                        "minItems": 3,
+                        "type": "array"
+                      },
+                      "transparency": {
+                        "maximum": 1,
+                        "minimum": 0,
+                        "type": "number"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "attributes": {
+                    "$ref": "#/$defs/attributes"
+                  },
+                  "global_id": {},
+                  "id": {
+                    "$ref": "#/$defs/nonEmptyString"
+                  },
+                  "ifc_class": {
+                    "$ref": "#/$defs/nonEmptyString"
+                  },
+                  "materials": {
+                    "items": {
+                      "$ref": "#/$defs/materialAssignment"
+                    },
+                    "maxItems": 1,
+                    "type": "array"
+                  },
+                  "property_sets": {
+                    "additionalProperties": {
+                      "type": "object"
+                    },
+                    "type": "object"
+                  },
+                  "provenance": {
+                    "$ref": "#/$defs/provenance"
+                  }
+                },
+                "required": [
+                  "id",
+                  "ifc_class",
+                  "attributes",
+                  "property_sets",
+                  "provenance"
+                ],
+                "type": "object"
+              },
+              "evidence_id": "schema:bim-json-v2:entity",
+              "json_pointer": "/$defs/entity",
+              "kind": "bim_json_schema",
+              "source_path": "schemas/bim-json/2.1/schema.json",
+              "source_sha256": "sha256:842e2a2451c2240a919fbf3c09912ed25a06fa4f4ef512d89d8d6a2d1e7ee691"
+            },
+            {
+              "content": {
+                "properties": {
+                  "ObjectPlacement": {
+                    "$ref": "#/$defs/objectPlacement"
+                  },
+                  "Representation": {
+                    "$ref": "#/$defs/representation"
+                  }
+                },
+                "type": "object"
+              },
+              "evidence_id": "schema:bim-json-v2:attributes",
+              "json_pointer": "/$defs/attributes",
+              "kind": "bim_json_schema",
+              "source_path": "schemas/bim-json/2.1/schema.json",
+              "source_sha256": "sha256:842e2a2451c2240a919fbf3c09912ed25a06fa4f4ef512d89d8d6a2d1e7ee691"
+            },
+            {
+              "content": {
+                "allOf": [
+                  {
+                    "if": {
+                      "properties": {
+                        "kind": {
+                          "const": "extruded_profile"
+                        }
+                      },
+                      "required": [
+                        "kind"
+                      ]
+                    },
+                    "then": {
+                      "required": [
+                        "profile",
+                        "depth",
+                        "direction"
+                      ]
+                    }
+                  },
+                  {
+                    "if": {
+                      "properties": {
+                        "kind": {
+                          "const": "basic_filling"
+                        }
+                      },
+                      "required": [
+                        "kind"
+                      ]
+                    },
+                    "then": {
+                      "required": [
+                        "template_id",
+                        "template_version",
+                        "width",
+                        "height",
+                        "depth"
+                      ]
+                    }
+                  }
+                ],
+                "properties": {
+                  "depth": {
+                    "type": "number"
+                  },
+                  "direction": {
+                    "$ref": "#/$defs/vector3"
+                  },
+                  "height": {
+                    "exclusiveMinimum": 0,
+                    "type": "number"
+                  },
+                  "kind": {
+                    "type": "string"
+                  },
+                  "parameters": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "frame_depth": {
+                        "type": "number"
+                      },
+                      "frame_width": {
+                        "type": "number"
+                      },
+                      "panel_thickness": {
+                        "type": "number"
+                      },
+                      "split_ratio": {
+                        "type": "number"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "position": {
+                    "$ref": "#/$defs/localPosition"
+                  },
+                  "profile": {
+                    "$ref": "#/$defs/profile"
+                  },
+                  "template_id": {
+                    "enum": [
+                      "window-single",
+                      "window-double-vertical",
+                      "door-left",
+                      "door-right"
+                    ]
+                  },
+                  "template_version": {
+                    "const": "text2ifc/basic-filling/1.0"
+                  },
+                  "width": {
+                    "exclusiveMinimum": 0,
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "kind"
+                ],
+                "type": "object"
+              },
+              "evidence_id": "schema:bim-json-v2:representation",
+              "json_pointer": "/$defs/representation",
+              "kind": "bim_json_schema",
+              "source_path": "schemas/bim-json/2.1/schema.json",
+              "source_sha256": "sha256:842e2a2451c2240a919fbf3c09912ed25a06fa4f4ef512d89d8d6a2d1e7ee691"
+            },
+            {
+              "content": {
+                "allOf": [
+                  {
+                    "if": {
+                      "properties": {
+                        "kind": {
+                          "const": "rectangle"
+                        }
+                      },
+                      "required": [
+                        "kind"
+                      ]
+                    },
+                    "then": {
+                      "required": [
+                        "x",
+                        "y"
+                      ]
+                    }
+                  },
+                  {
+                    "if": {
+                      "properties": {
+                        "kind": {
+                          "const": "polygon"
+                        }
+                      },
+                      "required": [
+                        "kind"
+                      ]
+                    },
+                    "then": {
+                      "required": [
+                        "points"
+                      ]
+                    }
+                  }
+                ],
+                "properties": {
+                  "kind": {
+                    "type": "string"
+                  },
+                  "points": {
+                    "items": {
+                      "$ref": "#/$defs/point2"
+                    },
+                    "type": "array"
+                  },
+                  "x": {
+                    "type": "number"
+                  },
+                  "y": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "kind"
+                ],
+                "type": "object"
+              },
+              "evidence_id": "schema:bim-json-v2:profile",
+              "json_pointer": "/$defs/profile",
+              "kind": "bim_json_schema",
+              "source_path": "schemas/bim-json/2.1/schema.json",
+              "source_sha256": "sha256:842e2a2451c2240a919fbf3c09912ed25a06fa4f4ef512d89d8d6a2d1e7ee691"
+            },
+            {
+              "content": {
+                "additionalProperties": false,
+                "properties": {
+                  "axis": {
+                    "$ref": "#/$defs/vector3"
+                  },
+                  "origin": {
+                    "$ref": "#/$defs/vector3"
+                  },
+                  "ref_direction": {
+                    "$ref": "#/$defs/vector3"
+                  },
+                  "relative_to": {
+                    "$ref": "#/$defs/nonEmptyString"
+                  }
+                },
+                "required": [
+                  "relative_to",
+                  "origin",
+                  "axis",
+                  "ref_direction"
+                ],
+                "type": "object"
+              },
+              "evidence_id": "schema:bim-json-v2:object-placement",
+              "json_pointer": "/$defs/objectPlacement",
+              "kind": "bim_json_schema",
+              "source_path": "schemas/bim-json/2.1/schema.json",
+              "source_sha256": "sha256:842e2a2451c2240a919fbf3c09912ed25a06fa4f4ef512d89d8d6a2d1e7ee691"
+            },
+            {
+              "content": {
+                "additionalProperties": false,
+                "properties": {
+                  "attributes": {
+                    "type": "object"
+                  },
+                  "global_id": {},
+                  "id": {
+                    "$ref": "#/$defs/nonEmptyString"
+                  },
+                  "ifc_class": {
+                    "$ref": "#/$defs/nonEmptyString"
+                  },
+                  "provenance": {
+                    "$ref": "#/$defs/provenance"
+                  }
+                },
+                "required": [
+                  "id",
+                  "ifc_class",
+                  "attributes",
+                  "provenance"
+                ],
+                "type": "object"
+              },
+              "evidence_id": "schema:bim-json-v2:relationship",
+              "json_pointer": "/$defs/relationship",
+              "kind": "bim_json_schema",
+              "source_path": "schemas/bim-json/2.1/schema.json",
+              "source_sha256": "sha256:842e2a2451c2240a919fbf3c09912ed25a06fa4f4ef512d89d8d6a2d1e7ee691"
+            },
+            {
+              "content": "generate",
+              "evidence_id": "capability:IFC2X3:IfcBuilding",
+              "json_pointer": "/entities/IfcBuilding",
+              "kind": "ifc_generation_capability",
+              "source_path": "schemas/ifc/capabilities/IFC2X3.json",
+              "source_sha256": "sha256:9b071f0a2ee21de04f834479aa22bfaf85df20ec4f73fbe8db79664fb5b8ba99"
+            },
+            {
+              "content": "generate",
+              "evidence_id": "capability:IFC2X3:IfcSpace",
+              "json_pointer": "/entities/IfcSpace",
+              "kind": "ifc_generation_capability",
+              "source_path": "schemas/ifc/capabilities/IFC2X3.json",
+              "source_sha256": "sha256:9b071f0a2ee21de04f834479aa22bfaf85df20ec4f73fbe8db79664fb5b8ba99"
+            },
+            {
+              "content": "generate",
+              "evidence_id": "capability:IFC2X3:IfcWall",
+              "json_pointer": "/entities/IfcWall",
+              "kind": "ifc_generation_capability",
+              "source_path": "schemas/ifc/capabilities/IFC2X3.json",
+              "source_sha256": "sha256:9b071f0a2ee21de04f834479aa22bfaf85df20ec4f73fbe8db79664fb5b8ba99"
+            },
+            {
+              "content": "generate",
+              "evidence_id": "capability:IFC2X3:IfcDoor",
+              "json_pointer": "/entities/IfcDoor",
+              "kind": "ifc_generation_capability",
+              "source_path": "schemas/ifc/capabilities/IFC2X3.json",
+              "source_sha256": "sha256:9b071f0a2ee21de04f834479aa22bfaf85df20ec4f73fbe8db79664fb5b8ba99"
+            },
+            {
+              "content": "generate",
+              "evidence_id": "capability:IFC2X3:IfcWindow",
+              "json_pointer": "/entities/IfcWindow",
+              "kind": "ifc_generation_capability",
+              "source_path": "schemas/ifc/capabilities/IFC2X3.json",
+              "source_sha256": "sha256:9b071f0a2ee21de04f834479aa22bfaf85df20ec4f73fbe8db79664fb5b8ba99"
+            },
+            {
+              "content": "generate",
+              "evidence_id": "capability:IFC2X3:IfcOpeningElement",
+              "json_pointer": "/entities/IfcOpeningElement",
+              "kind": "ifc_generation_capability",
+              "source_path": "schemas/ifc/capabilities/IFC2X3.json",
+              "source_sha256": "sha256:9b071f0a2ee21de04f834479aa22bfaf85df20ec4f73fbe8db79664fb5b8ba99"
+            },
+            {
+              "content": "generate",
+              "evidence_id": "capability:IFC2X3:IfcBuildingStorey",
+              "json_pointer": "/entities/IfcBuildingStorey",
+              "kind": "ifc_generation_capability",
+              "source_path": "schemas/ifc/capabilities/IFC2X3.json",
+              "source_sha256": "sha256:9b071f0a2ee21de04f834479aa22bfaf85df20ec4f73fbe8db79664fb5b8ba99"
+            },
+            {
+              "content": "generate",
+              "evidence_id": "capability:IFC2X3:IfcSlab",
+              "json_pointer": "/entities/IfcSlab",
+              "kind": "ifc_generation_capability",
+              "source_path": "schemas/ifc/capabilities/IFC2X3.json",
+              "source_sha256": "sha256:9b071f0a2ee21de04f834479aa22bfaf85df20ec4f73fbe8db79664fb5b8ba99"
+            },
+            {
+              "content": "generate",
+              "evidence_id": "capability:IFC2X3:IfcRoof",
+              "json_pointer": "/entities/IfcRoof",
+              "kind": "ifc_generation_capability",
+              "source_path": "schemas/ifc/capabilities/IFC2X3.json",
+              "source_sha256": "sha256:9b071f0a2ee21de04f834479aa22bfaf85df20ec4f73fbe8db79664fb5b8ba99"
+            },
+            {
+              "content": "generate",
+              "evidence_id": "capability:IFC2X3:IfcStair",
+              "json_pointer": "/entities/IfcStair",
+              "kind": "ifc_generation_capability",
+              "source_path": "schemas/ifc/capabilities/IFC2X3.json",
+              "source_sha256": "sha256:9b071f0a2ee21de04f834479aa22bfaf85df20ec4f73fbe8db79664fb5b8ba99"
+            },
+            {
+              "content": "generate",
+              "evidence_id": "capability:IFC2X3:IfcRailing",
+              "json_pointer": "/entities/IfcRailing",
+              "kind": "ifc_generation_capability",
+              "source_path": "schemas/ifc/capabilities/IFC2X3.json",
+              "source_sha256": "sha256:9b071f0a2ee21de04f834479aa22bfaf85df20ec4f73fbe8db79664fb5b8ba99"
+            },
+            {
+              "content": "generate",
+              "evidence_id": "capability:IFC2X3:IfcRelVoidsElement",
+              "json_pointer": "/entities/IfcRelVoidsElement",
+              "kind": "ifc_generation_capability",
+              "source_path": "schemas/ifc/capabilities/IFC2X3.json",
+              "source_sha256": "sha256:9b071f0a2ee21de04f834479aa22bfaf85df20ec4f73fbe8db79664fb5b8ba99"
+            },
+            {
+              "content": "generate",
+              "evidence_id": "capability:IFC2X3:IfcRelFillsElement",
+              "json_pointer": "/entities/IfcRelFillsElement",
+              "kind": "ifc_generation_capability",
+              "source_path": "schemas/ifc/capabilities/IFC2X3.json",
+              "source_sha256": "sha256:9b071f0a2ee21de04f834479aa22bfaf85df20ec4f73fbe8db79664fb5b8ba99"
+            },
+            {
+              "content": {
+                "cross_checks": {
+                  "ifcopenshell_pset_adapter": {
+                    "property_sets": 317,
+                    "simple_property_templates": 1850
+                  }
+                },
+                "generator_version": 1,
+                "ifcopenshell_version": "0.8.5",
+                "outputs": {
+                  "declarations.json": {
+                    "counts": {
+                      "declarations": 980,
+                      "entities": 653
+                    },
+                    "sha256": "b822174bb9e5541e7f8d3703850b67e1010332ec92e611a992b235e523f9d4fa"
+                  },
+                  "property_sets.json": {
+                    "counts": {
+                      "complex_properties": 6,
+                      "property_definitions": 1832,
+                      "property_sets": 317,
+                      "simple_properties": 1850
+                    },
+                    "sha256": "88e4fb846e0b8f7dbd515d6b7c4f8628a6871da60b769cb248ea0175b4dbc51b"
+                  }
+                },
+                "schema": "IFC2X3",
+                "source_manifest_sha256": "ea1de62ad5d7007cf8725e2414ac618c2d7e679f8221b9e83eedd864b0c047d9",
+                "sources": {
+                  "ifc2x3-tc1-express": {
+                    "role": "structural-authority",
+                    "sha256": "e18a1b2c3e29f5256904c83378ccad0850f52287a8d0122d149aba4a417fe5e5",
+                    "url": "https://standards.buildingsmart.org/IFC/RELEASE/IFC2x3/TC1/EXPRESS/IFC2X3_TC1.exp"
+                  },
+                  "ifc2x3-tc1-html-psd": {
+                    "role": "property-set-authority",
+                    "sha256": "ba22d66bc961b14a65d393e9a83672c17b646d7cdf2991a242f136b2e7849b6f",
+                    "url": "https://standards.buildingsmart.org/IFC/RELEASE/IFC2x3/TC1/IFC2x3_TC1_HTML_distribution-pset_errata.zip"
+                  },
+                  "ifc2x3-tc1-xsd": {
+                    "role": "ifcxml-support",
+                    "sha256": "e49b60b94bd2ce6aed8486a55bd94e788180109283fb856805995f7a627d1e03",
+                    "url": "https://standards.buildingsmart.org/IFC/RELEASE/IFC2x3/TC1/XML/IFC2X3.xsd"
+                  }
+                }
+              },
+              "evidence_id": "registry:IFC2X3:manifest",
+              "json_pointer": "/",
+              "kind": "ifc_registry_manifest",
+              "source_path": "schemas/ifc/generated/IFC2X3/registry-manifest.json",
+              "source_sha256": "sha256:aca93c3c5c7953546b0d8001ba3b0a8344c0ebe827f02641b6101c364393749a"
+            }
+          ],
+          "prompt_template_hash": "sha256:5980fd3098a237d24e03adb7467f70cc18f1efe176076e5d0e63e1972e36f81d",
+          "prompt_template_id": "design-brief.v2.2",
+          "response_id": "cbd4a500-48aa-4d1e-9909-f2fb74d5ebc4"
+        },
+        "call_index": 1,
+        "prompt_template_hash": "sha256:5980fd3098a237d24e03adb7467f70cc18f1efe176076e5d0e63e1972e36f81d",
+        "prompt_template_id": "design-brief.v2.2",
+        "response_id": "cbd4a500-48aa-4d1e-9909-f2fb74d5ebc4",
+        "role": "design_brief",
+        "status": "ready"
+      }
+    }
+  ],
+  "artifacts": [
+    {
+      "created_at": "2026-09-09T03:39:28+00:00",
+      "kind": "design_brief",
+      "path": "runs/148bdf3872e74ccd/design-brief.json"
+    },
+    {
+      "created_at": "2026-09-09T03:39:28+00:00",
+      "kind": "expected_facts",
+      "path": "runs/148bdf3872e74ccd/expected-facts.json"
+    },
+    {
+      "created_at": "2026-09-09T03:44:19+00:00",
+      "kind": "issues",
+      "path": "runs/148bdf3872e74ccd/issues.json"
+    },
+    {
+      "created_at": "2026-09-09T03:44:19+00:00",
+      "kind": "route_decision",
+      "path": "runs/148bdf3872e74ccd/route-decision.json"
+    },
+    {
+      "created_at": "2026-09-09T03:44:19+00:00",
+      "kind": "feedback_rounds",
+      "path": "runs/148bdf3872e74ccd/feedback-rounds.json"
+    },
+    {
+      "created_at": "2026-09-09T03:44:20+00:00",
+      "kind": "case_result",
+      "path": "runs/148bdf3872e74ccd/case-result.json"
+    },
+    {
+      "created_at": "2026-09-09T03:44:20+00:00",
+      "kind": "session_export",
+      "path": "runs/148bdf3872e74ccd/session-export.json"
+    }
+  ],
+  "events": [
+    {
+      "created_at": "2026-09-09T03:44:18+00:00",
+      "event_index": 0,
+      "event_type": "generator_completed",
+      "payload": {
+        "case_id": "148bdf3872e74ccd",
+        "classification": "formal",
+        "contract_valid": false,
+        "evidence_class": "live",
+        "output_dir": "dataset/processed/ifc-presentation-validation/two-storey-human-review-20260909/runtime/runs/148bdf3872e74ccd/generator",
+        "response_id": "b48255e4-349d-43e9-816b-8600b6fd6450",
+        "stage": "generate",
+        "status": "invalid",
+        "strict_output_contract_valid": true,
+        "valid": false
+      }
+    },
+    {
+      "created_at": "2026-09-09T03:44:19+00:00",
+      "event_index": 1,
+      "event_type": "repair_completed",
+      "payload": {
+        "case_id": "148bdf3872e74ccd",
+        "evidence_class": "deterministic-no-call",
+        "output_dir": "dataset/processed/ifc-presentation-validation/two-storey-human-review-20260909/runtime/runs/148bdf3872e74ccd/repair",
+        "provider_call_count": 0,
+        "repair_attempts": [],
+        "route": "blocked_failure",
+        "source_generator_response_id": "b48255e4-349d-43e9-816b-8600b6fd6450",
+        "stage": "repair",
+        "valid": false
+      }
+    }
+  ],
+  "gates": [],
+  "metrics": [
+    {
+      "created_at": "2026-09-09T03:44:18+00:00",
+      "payload": {
+        "case_id": "148bdf3872e74ccd",
+        "classification": "formal",
+        "contract_valid": false,
+        "evidence_class": "live",
+        "output_dir": "dataset/processed/ifc-presentation-validation/two-storey-human-review-20260909/runtime/runs/148bdf3872e74ccd/generator",
+        "response_id": "b48255e4-349d-43e9-816b-8600b6fd6450",
+        "stage": "generate",
+        "status": "invalid",
+        "strict_output_contract_valid": true,
+        "valid": false
+      }
+    },
+    {
+      "created_at": "2026-09-09T03:44:19+00:00",
+      "payload": {
+        "case_id": "148bdf3872e74ccd",
+        "evidence_class": "deterministic-no-call",
+        "output_dir": "dataset/processed/ifc-presentation-validation/two-storey-human-review-20260909/runtime/runs/148bdf3872e74ccd/repair",
+        "provider_call_count": 0,
+        "repair_attempts": [],
+        "route": "blocked_failure",
+        "source_generator_response_id": "b48255e4-349d-43e9-816b-8600b6fd6450",
+        "stage": "repair",
+        "valid": false
+      }
+    }
+  ],
+  "prompts": [],
+  "responses": [],
+  "schema_version": "text2ifc/phase6.2-session-export-v1",
+  "session": {
+    "created_at": "2026-09-09T03:35:02+00:00",
+    "original_input": "请设计并生成一栋两层的小型社区阅读与活动楼，提供完整 IFC2X3 文件，单位毫米。首层是接待阅览厅，二层是安静的多功能活动厅，东侧设置独立楼梯间。希望它看起来像一栋完整的小建筑：立面门窗上下对齐、间距均衡，墙体、门窗框和门扇配色协调，有真实的窗框、玻璃、门框、门扇与楼梯踏步。采用 warm-residential 风格，玻璃透明；不要求家具、机电、栏杆、复杂五金或外伸装饰。\n\n建筑内部净尺寸为东西 9 米、南北 8 米，外墙厚 200 毫米。首层完成面标高 0，二层完成面标高 3150，每层室内净高 3000。地坪和二层楼板厚 150；平屋面底标高 6150、厚 150。地坪、楼板和屋面覆盖外墙外边界；二层楼板须留实际楼梯洞口，不能用整块楼板封住楼梯。各层外墙独立，不能跨楼层复用。\n\n以首层室内西南角为原点，向东为 X、向北为 Y、向上为 Z。每层西侧大厅净范围为 X=0～6800、Y=0～8000；分隔墙占 X=6800～7000，东侧楼梯间净范围为 X=7000～9000、Y=0～8000。首层在分隔墙南端开一樘门，中心距室内南边 600；二层在分隔墙北端开一樘门，中心距室内南边 7300，两樘门均宽 900、高 2100，右单开，底面与本层地坪齐平。只生成这一道分隔墙，不把大厅与楼梯間的边界重复建成两道墙。\n\n楼梯沿北向直跑，从首层完成面 0 升到二层完成面 3150，属于首层并连接二层。净宽 1200，平面范围 X=7400～8600、Y=1200～6600，18 级、每级高 175、踏步进深 300。首层南端保留 1200 深的进梯区域，二层北端保留 Y=6600～8000 的平台。二层楼梯洞口范围为 X=7200～8800、Y=1200～6600，洞口穿透楼板。首层为阅览厅和楼梯间各建一个空间，二层为活动厅及北端楼梯平台各建一个空间；洞口不得当成房间。\n\n主入口位于首层南墙，中心距室内西边 3400，宽 1200、高 2400，左单开，门底与地坪齐平。南立面每层各有两扇双竖面板窗，中心距室内西边分别为 1500、5300，均宽 1800、高 1500、窗台高 900；上下层窗中心对齐，首层入口在两窗之间。每层北墙在西侧大厅中部各有一扇宽 2400、高 1500 的双竖面板窗，中心距西边 3400、窗台高 900。每层西墙中央各有一扇宽 1800、高 1500 的双竖面板窗，中心距南边 4000、窗台高 900。每层东墙中央各有一扇宽 900、高 1800 的单面板窗，中心距南边 4000、窗台高 600。窗台高度均从所属楼层完成面算起。总计 3 樘门、10 扇窗，每个开口必须与门窗名义宽高相同并穿透自己的宿主墙，门窗均置于相应楼层。\n\n墙体材料为砖；地坪、二层楼板和屋面材料为混凝土。其他构件不指定物理材料，不要由颜色推断木材或玻璃材料。未提供强度、耐火、承重或热工性能，也没有共享 Type 的要求，不要自动补写这些属性或强制合并 Type。尺寸及空间关系必须满足以上要求；如果有真实冲突，请明确指出，不要静默改变。",
+    "run_dir": "E:\\code for project\\bimnet\\dataset\\processed\\ifc-presentation-validation\\two-storey-human-review-20260909\\runtime\\runs\\148bdf3872e74ccd",
+    "session_hash": "148bdf3872e74ccd",
+    "session_id": "phase6.2-5d7450f518b14b18b8724cf3fefc7164",
+    "status": "draft_or_blocked",
+    "updated_at": "2026-09-09T03:44:20+00:00"
+  },
+  "turns": [
+    {
+      "created_at": "2026-09-09T03:35:02+00:00",
+      "role": "user",
+      "text": "请设计并生成一栋两层的小型社区阅读与活动楼，提供完整 IFC2X3 文件，单位毫米。首层是接待阅览厅，二层是安静的多功能活动厅，东侧设置独立楼梯间。希望它看起来像一栋完整的小建筑：立面门窗上下对齐、间距均衡，墙体、门窗框和门扇配色协调，有真实的窗框、玻璃、门框、门扇与楼梯踏步。采用 warm-residential 风格，玻璃透明；不要求家具、机电、栏杆、复杂五金或外伸装饰。\n\n建筑内部净尺寸为东西 9 米、南北 8 米，外墙厚 200 毫米。首层完成面标高 0，二层完成面标高 3150，每层室内净高 3000。地坪和二层楼板厚 150；平屋面底标高 6150、厚 150。地坪、楼板和屋面覆盖外墙外边界；二层楼板须留实际楼梯洞口，不能用整块楼板封住楼梯。各层外墙独立，不能跨楼层复用。\n\n以首层室内西南角为原点，向东为 X、向北为 Y、向上为 Z。每层西侧大厅净范围为 X=0～6800、Y=0～8000；分隔墙占 X=6800～7000，东侧楼梯间净范围为 X=7000～9000、Y=0～8000。首层在分隔墙南端开一樘门，中心距室内南边 600；二层在分隔墙北端开一樘门，中心距室内南边 7300，两樘门均宽 900、高 2100，右单开，底面与本层地坪齐平。只生成这一道分隔墙，不把大厅与楼梯間的边界重复建成两道墙。\n\n楼梯沿北向直跑，从首层完成面 0 升到二层完成面 3150，属于首层并连接二层。净宽 1200，平面范围 X=7400～8600、Y=1200～6600，18 级、每级高 175、踏步进深 300。首层南端保留 1200 深的进梯区域，二层北端保留 Y=6600～8000 的平台。二层楼梯洞口范围为 X=7200～8800、Y=1200～6600，洞口穿透楼板。首层为阅览厅和楼梯间各建一个空间，二层为活动厅及北端楼梯平台各建一个空间；洞口不得当成房间。\n\n主入口位于首层南墙，中心距室内西边 3400，宽 1200、高 2400，左单开，门底与地坪齐平。南立面每层各有两扇双竖面板窗，中心距室内西边分别为 1500、5300，均宽 1800、高 1500、窗台高 900；上下层窗中心对齐，首层入口在两窗之间。每层北墙在西侧大厅中部各有一扇宽 2400、高 1500 的双竖面板窗，中心距西边 3400、窗台高 900。每层西墙中央各有一扇宽 1800、高 1500 的双竖面板窗，中心距南边 4000、窗台高 900。每层东墙中央各有一扇宽 900、高 1800 的单面板窗，中心距南边 4000、窗台高 600。窗台高度均从所属楼层完成面算起。总计 3 樘门、10 扇窗，每个开口必须与门窗名义宽高相同并穿透自己的宿主墙，门窗均置于相应楼层。\n\n墙体材料为砖；地坪、二层楼板和屋面材料为混凝土。其他构件不指定物理材料，不要由颜色推断木材或玻璃材料。未提供强度、耐火、承重或热工性能，也没有共享 Type 的要求，不要自动补写这些属性或强制合并 Type。尺寸及空间关系必须满足以上要求；如果有真实冲突，请明确指出，不要静默改变。",
+      "turn_index": 0
+    }
+  ]
+}

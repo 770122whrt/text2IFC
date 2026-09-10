@@ -1,0 +1,682 @@
+{
+  "appearance_requests": [
+    {
+      "profile": "warm-residential"
+    },
+    {
+      "profile": "warm-residential"
+    }
+  ],
+  "entity_id_contract": {
+    "doors": [
+      {
+        "brief_id": "door-ground-main",
+        "entity_id": "door-storey-1-door-ground-main",
+        "storey": "storey-1"
+      },
+      {
+        "brief_id": "door-ground-partition",
+        "entity_id": "door-storey-1-door-ground-partition",
+        "storey": "storey-1"
+      },
+      {
+        "brief_id": "door-second-partition",
+        "entity_id": "door-storey-2-door-second-partition",
+        "storey": "storey-2"
+      }
+    ],
+    "spaces": [
+      {
+        "brief_id": "space-reading-lobby",
+        "entity_id": "space-storey-1-space-reading-lobby",
+        "storey": "storey-1"
+      },
+      {
+        "brief_id": "space-stair-hall-1",
+        "entity_id": "space-storey-1-space-stair-hall-1",
+        "storey": "storey-1"
+      },
+      {
+        "brief_id": "space-activity-hall",
+        "entity_id": "space-storey-2-space-activity-hall",
+        "storey": "storey-2"
+      },
+      {
+        "brief_id": "space-stair-platform-2",
+        "entity_id": "space-storey-2-space-stair-platform-2",
+        "storey": "storey-2"
+      }
+    ],
+    "walls": [
+      {
+        "brief_id": "storey-1-wall-south",
+        "entity_id": "wall-storey-1-storey-1-wall-south",
+        "storey": "storey-1"
+      },
+      {
+        "brief_id": "storey-1-wall-north",
+        "entity_id": "wall-storey-1-storey-1-wall-north",
+        "storey": "storey-1"
+      },
+      {
+        "brief_id": "storey-1-wall-west",
+        "entity_id": "wall-storey-1-storey-1-wall-west",
+        "storey": "storey-1"
+      },
+      {
+        "brief_id": "storey-1-wall-east",
+        "entity_id": "wall-storey-1-storey-1-wall-east",
+        "storey": "storey-1"
+      },
+      {
+        "brief_id": "storey-1-wall-partition",
+        "entity_id": "wall-storey-1-storey-1-wall-partition",
+        "storey": "storey-1"
+      },
+      {
+        "brief_id": "storey-2-wall-south",
+        "entity_id": "wall-storey-2-storey-2-wall-south",
+        "storey": "storey-2"
+      },
+      {
+        "brief_id": "storey-2-wall-north",
+        "entity_id": "wall-storey-2-storey-2-wall-north",
+        "storey": "storey-2"
+      },
+      {
+        "brief_id": "storey-2-wall-west",
+        "entity_id": "wall-storey-2-storey-2-wall-west",
+        "storey": "storey-2"
+      },
+      {
+        "brief_id": "storey-2-wall-east",
+        "entity_id": "wall-storey-2-storey-2-wall-east",
+        "storey": "storey-2"
+      },
+      {
+        "brief_id": "storey-2-wall-partition",
+        "entity_id": "wall-storey-2-storey-2-wall-partition",
+        "storey": "storey-2"
+      }
+    ],
+    "windows": [
+      {
+        "brief_id": "window-ground-south-1",
+        "entity_id": "window-storey-1-window-ground-south-1",
+        "storey": "storey-1"
+      },
+      {
+        "brief_id": "window-ground-south-2",
+        "entity_id": "window-storey-1-window-ground-south-2",
+        "storey": "storey-1"
+      },
+      {
+        "brief_id": "window-ground-north-1",
+        "entity_id": "window-storey-1-window-ground-north-1",
+        "storey": "storey-1"
+      },
+      {
+        "brief_id": "window-ground-west-1",
+        "entity_id": "window-storey-1-window-ground-west-1",
+        "storey": "storey-1"
+      },
+      {
+        "brief_id": "window-ground-east-1",
+        "entity_id": "window-storey-1-window-ground-east-1",
+        "storey": "storey-1"
+      },
+      {
+        "brief_id": "window-second-south-1",
+        "entity_id": "window-storey-2-window-second-south-1",
+        "storey": "storey-2"
+      },
+      {
+        "brief_id": "window-second-south-2",
+        "entity_id": "window-storey-2-window-second-south-2",
+        "storey": "storey-2"
+      },
+      {
+        "brief_id": "window-second-north-1",
+        "entity_id": "window-storey-2-window-second-north-1",
+        "storey": "storey-2"
+      },
+      {
+        "brief_id": "window-second-west-1",
+        "entity_id": "window-storey-2-window-second-west-1",
+        "storey": "storey-2"
+      },
+      {
+        "brief_id": "window-second-east-1",
+        "entity_id": "window-storey-2-window-second-east-1",
+        "storey": "storey-2"
+      }
+    ]
+  },
+  "expectations": [
+    {
+      "entity_id": "wall-storey-1-storey-1-wall-south",
+      "kind": "material",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/0",
+      "value": {
+        "kind": "single_material",
+        "name": "砖"
+      }
+    },
+    {
+      "entity_id": "wall-storey-1-storey-1-wall-north",
+      "kind": "material",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/1",
+      "value": {
+        "kind": "single_material",
+        "name": "砖"
+      }
+    },
+    {
+      "entity_id": "wall-storey-1-storey-1-wall-west",
+      "kind": "material",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/2",
+      "value": {
+        "kind": "single_material",
+        "name": "砖"
+      }
+    },
+    {
+      "entity_id": "wall-storey-1-storey-1-wall-east",
+      "kind": "material",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/3",
+      "value": {
+        "kind": "single_material",
+        "name": "砖"
+      }
+    },
+    {
+      "entity_id": "wall-storey-1-storey-1-wall-partition",
+      "kind": "material",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/4",
+      "value": {
+        "kind": "single_material",
+        "name": "砖"
+      }
+    },
+    {
+      "entity_id": "wall-storey-2-storey-2-wall-south",
+      "kind": "material",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/5",
+      "value": {
+        "kind": "single_material",
+        "name": "砖"
+      }
+    },
+    {
+      "entity_id": "wall-storey-2-storey-2-wall-north",
+      "kind": "material",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/6",
+      "value": {
+        "kind": "single_material",
+        "name": "砖"
+      }
+    },
+    {
+      "entity_id": "wall-storey-2-storey-2-wall-west",
+      "kind": "material",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/7",
+      "value": {
+        "kind": "single_material",
+        "name": "砖"
+      }
+    },
+    {
+      "entity_id": "wall-storey-2-storey-2-wall-east",
+      "kind": "material",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/8",
+      "value": {
+        "kind": "single_material",
+        "name": "砖"
+      }
+    },
+    {
+      "entity_id": "wall-storey-2-storey-2-wall-partition",
+      "kind": "material",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/9",
+      "value": {
+        "kind": "single_material",
+        "name": "砖"
+      }
+    },
+    {
+      "entity_id": "ground-slab",
+      "kind": "material",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/10",
+      "value": {
+        "kind": "single_material",
+        "name": "混凝土"
+      }
+    },
+    {
+      "entity_id": "second-floor-slab",
+      "kind": "material",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/11",
+      "value": {
+        "kind": "single_material",
+        "name": "混凝土"
+      }
+    },
+    {
+      "entity_id": "roof-slab",
+      "kind": "material",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/12",
+      "value": {
+        "kind": "single_material",
+        "name": "混凝土"
+      }
+    },
+    {
+      "entity_id": "door-storey-1-door-ground-main",
+      "kind": "template",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/13",
+      "value": {
+        "template_id": "door-left",
+        "template_version": "text2ifc/basic-filling/1.0"
+      }
+    },
+    {
+      "entity_id": "door-storey-1-door-ground-partition",
+      "kind": "template",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/14",
+      "value": {
+        "template_id": "door-right",
+        "template_version": "text2ifc/basic-filling/1.0"
+      }
+    },
+    {
+      "entity_id": "door-storey-2-door-second-partition",
+      "kind": "template",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/15",
+      "value": {
+        "template_id": "door-right",
+        "template_version": "text2ifc/basic-filling/1.0"
+      }
+    },
+    {
+      "entity_id": "window-storey-1-window-ground-south-1",
+      "kind": "template",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/16",
+      "value": {
+        "template_id": "window-double-vertical",
+        "template_version": "text2ifc/basic-filling/1.0"
+      }
+    },
+    {
+      "entity_id": "window-storey-1-window-ground-south-2",
+      "kind": "template",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/17",
+      "value": {
+        "template_id": "window-double-vertical",
+        "template_version": "text2ifc/basic-filling/1.0"
+      }
+    },
+    {
+      "entity_id": "window-storey-1-window-ground-north-1",
+      "kind": "template",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/18",
+      "value": {
+        "template_id": "window-double-vertical",
+        "template_version": "text2ifc/basic-filling/1.0"
+      }
+    },
+    {
+      "entity_id": "window-storey-1-window-ground-west-1",
+      "kind": "template",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/19",
+      "value": {
+        "template_id": "window-double-vertical",
+        "template_version": "text2ifc/basic-filling/1.0"
+      }
+    },
+    {
+      "entity_id": "window-storey-1-window-ground-east-1",
+      "kind": "template",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/20",
+      "value": {
+        "template_id": "window-single",
+        "template_version": "text2ifc/basic-filling/1.0"
+      }
+    },
+    {
+      "entity_id": "window-storey-2-window-second-south-1",
+      "kind": "template",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/21",
+      "value": {
+        "template_id": "window-double-vertical",
+        "template_version": "text2ifc/basic-filling/1.0"
+      }
+    },
+    {
+      "entity_id": "window-storey-2-window-second-south-2",
+      "kind": "template",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/22",
+      "value": {
+        "template_id": "window-double-vertical",
+        "template_version": "text2ifc/basic-filling/1.0"
+      }
+    },
+    {
+      "entity_id": "window-storey-2-window-second-north-1",
+      "kind": "template",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/23",
+      "value": {
+        "template_id": "window-double-vertical",
+        "template_version": "text2ifc/basic-filling/1.0"
+      }
+    },
+    {
+      "entity_id": "window-storey-2-window-second-west-1",
+      "kind": "template",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/24",
+      "value": {
+        "template_id": "window-double-vertical",
+        "template_version": "text2ifc/basic-filling/1.0"
+      }
+    },
+    {
+      "entity_id": "window-storey-2-window-second-east-1",
+      "kind": "template",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/25",
+      "value": {
+        "template_id": "window-single",
+        "template_version": "text2ifc/basic-filling/1.0"
+      }
+    },
+    {
+      "entity_id": "wall-storey-1-storey-1-wall-south",
+      "kind": "material",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/0",
+      "value": {
+        "kind": "single_material",
+        "name": "砖"
+      }
+    },
+    {
+      "entity_id": "wall-storey-1-storey-1-wall-north",
+      "kind": "material",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/1",
+      "value": {
+        "kind": "single_material",
+        "name": "砖"
+      }
+    },
+    {
+      "entity_id": "wall-storey-1-storey-1-wall-west",
+      "kind": "material",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/2",
+      "value": {
+        "kind": "single_material",
+        "name": "砖"
+      }
+    },
+    {
+      "entity_id": "wall-storey-1-storey-1-wall-east",
+      "kind": "material",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/3",
+      "value": {
+        "kind": "single_material",
+        "name": "砖"
+      }
+    },
+    {
+      "entity_id": "wall-storey-1-storey-1-wall-partition",
+      "kind": "material",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/4",
+      "value": {
+        "kind": "single_material",
+        "name": "砖"
+      }
+    },
+    {
+      "entity_id": "wall-storey-2-storey-2-wall-south",
+      "kind": "material",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/5",
+      "value": {
+        "kind": "single_material",
+        "name": "砖"
+      }
+    },
+    {
+      "entity_id": "wall-storey-2-storey-2-wall-north",
+      "kind": "material",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/6",
+      "value": {
+        "kind": "single_material",
+        "name": "砖"
+      }
+    },
+    {
+      "entity_id": "wall-storey-2-storey-2-wall-west",
+      "kind": "material",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/7",
+      "value": {
+        "kind": "single_material",
+        "name": "砖"
+      }
+    },
+    {
+      "entity_id": "wall-storey-2-storey-2-wall-east",
+      "kind": "material",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/8",
+      "value": {
+        "kind": "single_material",
+        "name": "砖"
+      }
+    },
+    {
+      "entity_id": "wall-storey-2-storey-2-wall-partition",
+      "kind": "material",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/9",
+      "value": {
+        "kind": "single_material",
+        "name": "砖"
+      }
+    },
+    {
+      "entity_id": "ground-slab",
+      "kind": "material",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/10",
+      "value": {
+        "kind": "single_material",
+        "name": "混凝土"
+      }
+    },
+    {
+      "entity_id": "second-floor-slab",
+      "kind": "material",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/11",
+      "value": {
+        "kind": "single_material",
+        "name": "混凝土"
+      }
+    },
+    {
+      "entity_id": "roof-slab",
+      "kind": "material",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/12",
+      "value": {
+        "kind": "single_material",
+        "name": "混凝土"
+      }
+    },
+    {
+      "entity_id": "door-storey-1-door-ground-main",
+      "kind": "template",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/13",
+      "value": {
+        "template_id": "door-left",
+        "template_version": "text2ifc/basic-filling/1.0"
+      }
+    },
+    {
+      "entity_id": "door-storey-1-door-ground-partition",
+      "kind": "template",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/14",
+      "value": {
+        "template_id": "door-right",
+        "template_version": "text2ifc/basic-filling/1.0"
+      }
+    },
+    {
+      "entity_id": "door-storey-2-door-second-partition",
+      "kind": "template",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/15",
+      "value": {
+        "template_id": "door-right",
+        "template_version": "text2ifc/basic-filling/1.0"
+      }
+    },
+    {
+      "entity_id": "window-storey-1-window-ground-south-1",
+      "kind": "template",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/16",
+      "value": {
+        "template_id": "window-double-vertical",
+        "template_version": "text2ifc/basic-filling/1.0"
+      }
+    },
+    {
+      "entity_id": "window-storey-1-window-ground-south-2",
+      "kind": "template",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/17",
+      "value": {
+        "template_id": "window-double-vertical",
+        "template_version": "text2ifc/basic-filling/1.0"
+      }
+    },
+    {
+      "entity_id": "window-storey-1-window-ground-north-1",
+      "kind": "template",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/18",
+      "value": {
+        "template_id": "window-double-vertical",
+        "template_version": "text2ifc/basic-filling/1.0"
+      }
+    },
+    {
+      "entity_id": "window-storey-1-window-ground-west-1",
+      "kind": "template",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/19",
+      "value": {
+        "template_id": "window-double-vertical",
+        "template_version": "text2ifc/basic-filling/1.0"
+      }
+    },
+    {
+      "entity_id": "window-storey-1-window-ground-east-1",
+      "kind": "template",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/20",
+      "value": {
+        "template_id": "window-single",
+        "template_version": "text2ifc/basic-filling/1.0"
+      }
+    },
+    {
+      "entity_id": "window-storey-2-window-second-south-1",
+      "kind": "template",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/21",
+      "value": {
+        "template_id": "window-double-vertical",
+        "template_version": "text2ifc/basic-filling/1.0"
+      }
+    },
+    {
+      "entity_id": "window-storey-2-window-second-south-2",
+      "kind": "template",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/22",
+      "value": {
+        "template_id": "window-double-vertical",
+        "template_version": "text2ifc/basic-filling/1.0"
+      }
+    },
+    {
+      "entity_id": "window-storey-2-window-second-north-1",
+      "kind": "template",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/23",
+      "value": {
+        "template_id": "window-double-vertical",
+        "template_version": "text2ifc/basic-filling/1.0"
+      }
+    },
+    {
+      "entity_id": "window-storey-2-window-second-west-1",
+      "kind": "template",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/24",
+      "value": {
+        "template_id": "window-double-vertical",
+        "template_version": "text2ifc/basic-filling/1.0"
+      }
+    },
+    {
+      "entity_id": "window-storey-2-window-second-east-1",
+      "kind": "template",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/25",
+      "value": {
+        "template_id": "window-single",
+        "template_version": "text2ifc/basic-filling/1.0"
+      }
+    }
+  ],
+  "expectations_hash": "495ce5b69a26b9af7b59609cb4a65d2e7397bed1548028f5e37c5a73844bf8ae",
+  "issues": [],
+  "minimum_schema_version": "bim-json/2.1",
+  "schema_version": "text2ifc/request-semantics/1.0",
+  "valid": true
+}

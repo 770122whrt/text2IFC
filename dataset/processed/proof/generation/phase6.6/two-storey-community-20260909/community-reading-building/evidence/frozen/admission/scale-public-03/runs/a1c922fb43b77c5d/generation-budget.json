@@ -1,0 +1,37 @@
+{
+  "schema_version": "text2ifc/generation-budget/1.0",
+  "limits": {
+    "max_calls": 32,
+    "max_tokens": 2000000,
+    "max_active_seconds": 3600
+  },
+  "attempts": [
+    {
+      "attempt": 1,
+      "stage": "historical",
+      "status": "imported",
+      "source": "design-brief/response.raw.json",
+      "source_sha256": "650e51ddab88109e988d15d479bd52364f99c13e43a2cb8494e9181f4b8ade8e",
+      "reserved_tokens": 2000000,
+      "tokens_charged": 20,
+      "elapsed_seconds": 0,
+      "active_time_unknown": true
+    },
+    {
+      "attempt": 2,
+      "stage": "generate",
+      "status": "completed",
+      "tokens_charged": 20,
+      "reserved_tokens": 176852,
+      "elapsed_seconds": 0
+    },
+    {
+      "attempt": 3,
+      "stage": "audit",
+      "status": "completed",
+      "tokens_charged": 20,
+      "reserved_tokens": 176403,
+      "elapsed_seconds": 0
+    }
+  ]
+}

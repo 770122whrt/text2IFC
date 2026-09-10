@@ -1,0 +1,166 @@
+{
+  "rounds": [
+    {
+      "attempted_action": "prepare_generator_feedback",
+      "input_issue_count": 10,
+      "issue_delta": null,
+      "issue_set_changed": false,
+      "issues": [
+        {
+          "actual_ref": "/floor_openings/opening-second-floor-slab-stair",
+          "evidence": "MISSING_STAIR_OPENING: Expected component 'opening-second-floor-slab-stair' was not found in the IFC. Evidence: {\"entity_ids\": [\"opening-second-floor-slab-stair\"], \"path\": \"/floor_openings/opening-second-floor-slab-stair\", \"source_fact_refs\": [\"/known_facts/floor_slabs/1/openings/0\"]}",
+          "expected_fact_ref": null,
+          "issue_id": "issue_geometry_gate_0001",
+          "issue_type": "geometry_invalid",
+          "owner": "generator",
+          "retryable": true,
+          "severity": "blocking",
+          "source": "geometry_gate",
+          "suggested_route": "regenerate_json"
+        },
+        {
+          "actual_ref": "/known_facts/storeys/0/walls/interior/0",
+          "evidence": "GEOMETRY_EXPECTATION_INCOMPLETE: Required geometry could not be derived from confirmed facts. Evidence: {\"actual\": {\"reason\": \"shared_boundary_not_unique_or_wall_thickness_missing\"}, \"path\": \"/known_facts/storeys/0/walls/interior/0\", \"source_fact_refs\": [\"/known_facts/storeys/0/spaces/0\", \"/known_facts/storeys/0/spaces/1\", \"/known_facts/storeys/0/walls/interior/0\"]}",
+          "expected_fact_ref": null,
+          "issue_id": "issue_geometry_gate_0002",
+          "issue_type": "geometry_invalid",
+          "owner": "generator",
+          "retryable": true,
+          "severity": "blocking",
+          "source": "geometry_gate",
+          "suggested_route": "regenerate_json"
+        },
+        {
+          "actual_ref": "/known_facts/storeys/1/walls/interior/0",
+          "evidence": "GEOMETRY_EXPECTATION_INCOMPLETE: Required geometry could not be derived from confirmed facts. Evidence: {\"actual\": {\"reason\": \"shared_boundary_not_unique_or_wall_thickness_missing\"}, \"path\": \"/known_facts/storeys/1/walls/interior/0\", \"source_fact_refs\": [\"/known_facts/storeys/1/spaces/0\", \"/known_facts/storeys/1/spaces/1\", \"/known_facts/storeys/1/walls/interior/0\"]}",
+          "expected_fact_ref": null,
+          "issue_id": "issue_geometry_gate_0003",
+          "issue_type": "geometry_invalid",
+          "owner": "generator",
+          "retryable": true,
+          "severity": "blocking",
+          "source": "geometry_gate",
+          "suggested_route": "regenerate_json"
+        },
+        {
+          "actual_ref": "/floor_openings/opening-second-floor-slab-stair",
+          "evidence": "MISSING_STAIR_OPENING: Expected component 'opening-second-floor-slab-stair' was not found in the IFC. Evidence: {\"path\": \"/floor_openings/opening-second-floor-slab-stair\"}",
+          "expected_fact_ref": null,
+          "issue_id": "issue_deterministic_gate_0001",
+          "issue_type": "missing_vertical_connection",
+          "owner": "generator",
+          "retryable": true,
+          "severity": "blocking",
+          "source": "deterministic_gate",
+          "suggested_route": "regenerate_json"
+        },
+        {
+          "actual_ref": "/known_facts/storeys/0/walls/interior/0",
+          "evidence": "GEOMETRY_EXPECTATION_INCOMPLETE: Required geometry could not be derived from confirmed facts. Evidence: {\"path\": \"/known_facts/storeys/0/walls/interior/0\"}",
+          "expected_fact_ref": null,
+          "issue_id": "issue_deterministic_gate_0002",
+          "issue_type": "geometry_invalid",
+          "owner": "generator",
+          "retryable": true,
+          "severity": "blocking",
+          "source": "deterministic_gate",
+          "suggested_route": "regenerate_json"
+        },
+        {
+          "actual_ref": "/known_facts/storeys/1/walls/interior/0",
+          "evidence": "GEOMETRY_EXPECTATION_INCOMPLETE: Required geometry could not be derived from confirmed facts. Evidence: {\"path\": \"/known_facts/storeys/1/walls/interior/0\"}",
+          "expected_fact_ref": null,
+          "issue_id": "issue_deterministic_gate_0003",
+          "issue_type": "geometry_invalid",
+          "owner": "generator",
+          "retryable": true,
+          "severity": "blocking",
+          "source": "deterministic_gate",
+          "suggested_route": "regenerate_json"
+        },
+        {
+          "actual_ref": "entity:second-floor-slab#/attributes",
+          "evidence": "MISSING_STAIR_OPENING: The deterministic geometry gate failed because the expected floor opening 'opening-second-floor-slab-stair' was not found in the geometry feedback. The candidate declares void 'opening-second-floor-stair-void' against 'second-floor-slab', but the floor opening metrics remain empty. This must be revised so the stair opening is recognized under the deterministic geometry expectation; audit wording cannot override this gate failure. Evidence: {\"classification\": \"candidate_geometry_issue\", \"component_ids\": [\"second-floor-slab\", \"opening-second-floor-stair-void\"], \"evidence_paths\": [\"gate-summary.json\", \"geometry-feedback.json\", \"semantic-geometry-expectation.json\", \"generator/candidate.json\", \"generator/metrics.json\"]}",
+          "expected_fact_ref": null,
+          "issue_id": "issue_audit_0001_01",
+          "issue_type": "geometry_invalid",
+          "owner": "generator",
+          "retryable": true,
+          "severity": "blocking",
+          "source": "audit",
+          "suggested_route": "regenerate_json"
+        },
+        {
+          "actual_ref": "entity:opening-second-floor-stair-void#/attributes",
+          "evidence": "MISSING_STAIR_OPENING: The deterministic geometry gate failed because the expected floor opening 'opening-second-floor-slab-stair' was not found in the geometry feedback. The candidate declares void 'opening-second-floor-stair-void' against 'second-floor-slab', but the floor opening metrics remain empty. This must be revised so the stair opening is recognized under the deterministic geometry expectation; audit wording cannot override this gate failure. Evidence: {\"classification\": \"candidate_geometry_issue\", \"component_ids\": [\"second-floor-slab\", \"opening-second-floor-stair-void\"], \"evidence_paths\": [\"gate-summary.json\", \"geometry-feedback.json\", \"semantic-geometry-expectation.json\", \"generator/candidate.json\", \"generator/metrics.json\"]}",
+          "expected_fact_ref": null,
+          "issue_id": "issue_audit_0001_02",
+          "issue_type": "geometry_invalid",
+          "owner": "generator",
+          "retryable": true,
+          "severity": "blocking",
+          "source": "audit",
+          "suggested_route": "regenerate_json"
+        },
+        {
+          "actual_ref": "entity:wall-storey-1-storey-1-wall-partition#/attributes",
+          "evidence": "GATE_DISPUTE: The deterministic geometry gate also reports GEOMETRY_EXPECTATION_INCOMPLETE for the interior partition walls at /known_facts/storeys/0/walls/interior/0 and /known_facts/storeys/1/walls/interior/0 because it cannot derive a unique shared-boundary/thickness expectation. The candidate appears to contain the intended single partition wall on each storey, but the gate evidence is underspecified. This is a gate_dispute and remains blocking pending human/developer review; it cannot be accepted by audit. Evidence: {\"classification\": \"gate_dispute\", \"component_ids\": [\"wall-storey-1-storey-1-wall-partition\", \"wall-storey-2-storey-2-wall-partition\"], \"evidence_paths\": [\"geometry-feedback.json\", \"semantic-geometry-expectation.json\", \"design-brief/design-brief.json\", \"gate-summary.json\"]}",
+          "expected_fact_ref": null,
+          "issue_id": "issue_audit_0002_01",
+          "issue_type": "semantic_mismatch",
+          "owner": "audit",
+          "retryable": true,
+          "severity": "blocking",
+          "source": "audit",
+          "suggested_route": "revise_design_brief"
+        },
+        {
+          "actual_ref": "entity:wall-storey-2-storey-2-wall-partition#/attributes",
+          "evidence": "GATE_DISPUTE: The deterministic geometry gate also reports GEOMETRY_EXPECTATION_INCOMPLETE for the interior partition walls at /known_facts/storeys/0/walls/interior/0 and /known_facts/storeys/1/walls/interior/0 because it cannot derive a unique shared-boundary/thickness expectation. The candidate appears to contain the intended single partition wall on each storey, but the gate evidence is underspecified. This is a gate_dispute and remains blocking pending human/developer review; it cannot be accepted by audit. Evidence: {\"classification\": \"gate_dispute\", \"component_ids\": [\"wall-storey-1-storey-1-wall-partition\", \"wall-storey-2-storey-2-wall-partition\"], \"evidence_paths\": [\"geometry-feedback.json\", \"semantic-geometry-expectation.json\", \"design-brief/design-brief.json\", \"gate-summary.json\"]}",
+          "expected_fact_ref": null,
+          "issue_id": "issue_audit_0002_02",
+          "issue_type": "semantic_mismatch",
+          "owner": "audit",
+          "retryable": true,
+          "severity": "blocking",
+          "source": "audit",
+          "suggested_route": "revise_design_brief"
+        }
+      ],
+      "max_feedback_rounds": 3,
+      "output_issue_count": 10,
+      "retry_allowed": true,
+      "round_index": 0,
+      "route": "regenerate_json",
+      "route_decision": {
+        "blocking_issue_ids": [
+          "issue_geometry_gate_0001",
+          "issue_geometry_gate_0002",
+          "issue_geometry_gate_0003",
+          "issue_deterministic_gate_0001",
+          "issue_deterministic_gate_0002",
+          "issue_deterministic_gate_0003",
+          "issue_audit_0001_01",
+          "issue_audit_0001_02",
+          "issue_audit_0002_01",
+          "issue_audit_0002_02"
+        ],
+        "current_feedback_round": 0,
+        "final_status": "blocked",
+        "human_review_required": false,
+        "max_feedback_rounds": 3,
+        "reason": "Route regenerate_json selected from 10 issue(s); first issue issue_geometry_gate_0001 is geometry_invalid owned by generator.",
+        "retry_allowed": true,
+        "route": "regenerate_json",
+        "schema_version": "text2ifc/route-decision/2.0",
+        "source_issue_count": 10,
+        "target_stage": "generator"
+      },
+      "schema_version": "text2ifc/feedback-round/1.0",
+      "source_stage": "audit",
+      "target_stage": "generator",
+      "terminal_status": "retry_prepared"
+    }
+  ],
+  "schema_version": "text2ifc/feedback-rounds/1.0"
+}

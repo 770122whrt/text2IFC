@@ -1,0 +1,59 @@
+{
+  "clarification_targets": [
+    {
+      "entity_id": "opening-second-floor-stair-void",
+      "path": "/entities/opening-second-floor-stair-void/id",
+      "question": "Should the second-floor stair opening stable id be changed from 'opening-second-floor-stair-void' to 'opening-second-floor-slab-stair', with the void relationship re-identified as 'rel-voids-second-floor-slab'? Authorizing that rename/add operation in a new CHANGE_SCOPE is required."
+    },
+    {
+      "entity_id": "wall-storey-1-storey-1-wall-partition",
+      "path": "/known_facts/storeys/0/walls/interior/0",
+      "question": "The single partition wall at X=6800..7000 with thickness 200 matches the user text. Should the audit accept the explicit partition coordinates, or should the bounding spaces be adjusted to share a boundary before deterministic geometry validation can proceed?"
+    }
+  ],
+  "draft_version": "bim-json-draft/1.1",
+  "losses": [],
+  "missing_facts": [
+    {
+      "code": "stable_identifier_scope_mismatch",
+      "entity_id": "opening-second-floor-stair-void",
+      "message": "The deterministic geometry gate expects a second-floor stair opening with stable id 'opening-second-floor-slab-stair', but CHANGE_SCOPE only authorizes the existing 'opening-second-floor-stair-void'. Renaming or adding the expected id is not authorized by the provided scope.",
+      "path": "/entities/opening-second-floor-stair-void/id"
+    },
+    {
+      "code": "gate_dispute_unresolved",
+      "entity_id": "wall-storey-1-storey-1-wall-partition",
+      "message": "The audit reports GEOMETRY_EXPECTATION_INCOMPLETE because it cannot derive a unique shared-boundary/thickness expectation for the interior partition. The zone facts explicitly describe the partition as X=6800..7000 with thickness 200 between hall X=0..6800 and stair hall X=7000..9000; resolving this gate dispute requires human/developer review, not a component geometry change.",
+      "path": "/known_facts/storeys/0/walls/interior/0"
+    },
+    {
+      "code": "gate_dispute_unresolved",
+      "entity_id": "wall-storey-2-storey-2-wall-partition",
+      "message": "The audit reports GEOMETRY_EXPECTATION_INCOMPLETE for the second-storey partition for the same reason as storey-1. The generated partition matches the confirmed brief and the blocking gate dispute must be resolved by human/developer review before reliable geometry acceptance.",
+      "path": "/known_facts/storeys/1/walls/interior/0"
+    }
+  ],
+  "partial_document": {
+    "entities": [],
+    "ifc_schema": "IFC2X3",
+    "provenance": {
+      "basis_revision": "revision-00",
+      "draft_reason": "unresolved_scope_and_gate_dispute"
+    },
+    "relationships": [],
+    "schema_version": "bim-json/2.1",
+    "units": {
+      "length": "MILLIMETRE"
+    }
+  },
+  "provenance": {
+    "basis_revision": "revision-00",
+    "source_issue_ids": [
+      "issue_audit_0001_01",
+      "issue_audit_0001_02",
+      "issue_audit_0002_01",
+      "issue_audit_0002_02"
+    ]
+  },
+  "target_schema_version": "bim-json/2.1"
+}

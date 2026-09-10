@@ -14,6 +14,8 @@
 
 共 50 个直接展示案例。历史 live UAT 另引用 reference-cases 的两个成功案，不重复收纳。Plan07 已经用户人工审查通过；材质外观集合等待人工审查；整理不关闭 Phase、不提升模型能力结论。
 
+另有[双层社区阅读活动楼的人工验收记录](generation/phase6.6/two-storey-community-20260909/REPORT.md)：用户于 2026-09-09 验收模型与展示，工程门禁仍为 blocked，未完成终端发布。该独立 review 集合不计入上述 50 案或 accepted machine 索引。
+
 ## 如何读案例
 
 - repair：request.txt、02-damaged.ifc、03-repaired.ifc；正确无输出案使用 NO-REPAIR.md。
