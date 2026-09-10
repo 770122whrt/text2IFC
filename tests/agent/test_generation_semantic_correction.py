@@ -340,3 +340,34 @@ def test_boolean_and_numeric_frozen_values_are_not_interchangeable(tmp_path):
     assert not result['valid']
     assert not provider.calls
     assert any(i['code'] == 'SEMANTIC_CORRECTION_REQUEST_CONFLICT' for i in result['issues'])
+
+
+def test_cleanup_preserves_already_correct_inherited_values(tmp_path):
+    data = fixture(shared=True)
+    req = data[1]['known_facts']['semantic_requirements'][0]
+    req['scope'] = 'inherited'
+    data[5]['materials'], data[5]['property_sets'] = [req['material']], copy.deepcopy(req['property_sets'])
+    data[1]['known_facts']['semantic_requirements'].append({'entity_id': data[5]['id'],
+        'material': req['material'], 'property_sets': copy.deepcopy(req['property_sets'])})
+    data[2]['semantic_expectations'] = project_semantic_requirements(data[1])['expectations']
+    data[5]['property_sets']['Pset_WallCommon']['ThermalTransmittance'] = 0
+    result, _ = run_round(tmp_path, data, {
+        data[5]['id']: {'op': 'update_entity', 'changes': {'/property_sets': req['property_sets']}},
+        data[6]['id']: {'op': 'update_relationship', 'changes': {'/attributes/RelatedObjects': [data[3]['id']]}}})
+    assert result['valid'], result
+    assert build_candidate_index(result['candidate'])['entities'][data[3]['id']] == data[3]
+    final = tmp_path/'final'
+    _write(final/'generator/candidate.json', result['candidate'])
+    _write(final/'design-brief.json', data[1])
+    gate = run_candidate_gate_stage(case_dir=final, output_dir=final, case_id='preserved-inheritance')
+    assert gate['compile_reopen_success'] and gate['semantic_verification']['valid'], gate
+
+
+def test_detachment_cannot_choose_between_conflicting_direct_and_effective_values(tmp_path):
+    data = fixture()
+    data[2]['semantic_expectations'][0]['scope'] = 'direct'
+    data[2]['semantic_expectations'][0]['value'] = {'kind': 'single_material', 'name': 'Other brick'}
+    result, provider = run_round(tmp_path, data, edits_for(data))
+    assert not result['valid']
+    assert not provider.calls
+    assert any(i['code'] == 'SEMANTIC_CORRECTION_REQUEST_CONFLICT' for i in result['issues'])
