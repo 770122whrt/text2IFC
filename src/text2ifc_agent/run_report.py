@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import Any
 
 from .audit import collect_revision_audit_evidence
+from .design_review import design_review_report_lines
 
 
 class RunReportError(ValueError):
@@ -131,6 +132,7 @@ def build_live_run_report(*, case_dir: Path | str) -> Path:
     lines.extend(_stage_section(root, "BIM JSON Generator", generator))
     lines.extend(_repair_section(repair))
     lines.extend(_stage_section(root, "Audit Agent", audit))
+    lines.extend(design_review_report_lines(root))
     lines.extend(_semantic_coverage_section(root))
     lines.extend(_generated_ifc_gates_section(root))
     lines.extend(_revision_history_section(root))

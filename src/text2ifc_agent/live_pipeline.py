@@ -22,6 +22,7 @@ from .clarification import (
 from .design_brief import load_design_brief_schema, validate_design_brief
 from .live_trace import write_live_trace
 from .audit import collect_revision_audit_evidence
+from .design_review import load_design_review_context, validate_design_review_output
 from .prompt_registry import render_prompt
 from .generator import validate_generation_document
 from .failure_routing import route_generation_failure
@@ -45,6 +46,7 @@ from .semantic_coverage import (
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DESIGN_BRIEF_TEMPLATE_ID = "design-brief.v2.3"
+DESIGN_REVIEW_BRIEF_TEMPLATE_ID = "design-brief.v2.4"
 GENERATOR_TEMPLATE_ID = "bim-json-generator.v2"
 REPAIR_TEMPLATE_ID = "bim-json-generator-repair.v2"
 AUDIT_TEMPLATE_ID = "audit.v2"
@@ -145,6 +147,7 @@ def run_design_brief_stage(
     case: dict[str, Any],
     trace_level: str | None = "debug",
     design_brief_schema_version: str = 'text2ifc/design-brief/2.1',
+    design_review_enabled: bool = False,
 ) -> dict[str, Any]:
     """Run one Design Brief v2 call and preserve all input/output evidence."""
     output = Path(output_dir)
@@ -154,6 +157,8 @@ def run_design_brief_stage(
     if design_brief_schema_version not in {'text2ifc/design-brief/2.0','text2ifc/design-brief/2.1'}:
         raise ValueError('Unsupported Design Brief stage contract.')
     new_semantics = design_brief_schema_version == 'text2ifc/design-brief/2.1'
+    if design_review_enabled and not new_semantics:
+        raise ValueError('Design review requires Design Brief 2.1')
     selection = select_design_brief_context(
         user_request=user_request,
         conversation=conversation,
@@ -168,7 +173,8 @@ def run_design_brief_stage(
         "FEW_SHOTS": selection["few_shots"],
     }
     rendered = render_prompt(
-        template_id=DESIGN_BRIEF_TEMPLATE_ID if new_semantics else 'design-brief.v2.1',
+        template_id=(DESIGN_REVIEW_BRIEF_TEMPLATE_ID if design_review_enabled
+                     else DESIGN_BRIEF_TEMPLATE_ID if new_semantics else 'design-brief.v2.1'),
         inputs=renderer_inputs,
     )
 
@@ -1128,7 +1134,7 @@ def run_audit_report_stage(
     audit_call_index: int = 1,
     trace_level: str | None = "debug",
 ) -> dict[str, Any]:
-    """Run real Audit v2 and generate the case report from sidecars."""
+    """Run Audit, using v3 for a bound user design-review context."""
     root = Path(case_dir)
     output = root / "audit"
     output.mkdir(parents=True, exist_ok=True)
@@ -1138,6 +1144,11 @@ def run_audit_report_stage(
     user_request = (design / "input.txt").read_text(encoding="utf-8").rstrip("\r\n")
     conversation = json.loads(
         (design / "conversation.json").read_text(encoding="utf-8")
+    )
+    review_context = load_design_review_context(root, design / "conversation.json")
+    review_context_sha256 = (
+        hashlib.sha256((root / "design-review-context.json").read_bytes()).hexdigest()
+        if review_context is not None else None
     )
     design_brief = json.loads(
         (design / "design-brief.json").read_text(encoding="utf-8")
@@ -1219,13 +1230,19 @@ def run_audit_report_stage(
         },
         "EVIDENCE_PATHS": evidence_paths,
     }
-    rendered = render_prompt(template_id=AUDIT_TEMPLATE_ID, inputs=renderer_inputs)
+    if review_context is not None:
+        renderer_inputs["DESIGN_REVIEW_CONTEXT"] = review_context
+        evidence_paths.extend(["design-review-context.json", *(
+            row["evidence_path"] for row in review_context["concerns"]
+        )])
+    template_id = "audit.v3" if review_context is not None else AUDIT_TEMPLATE_ID
+    rendered = render_prompt(template_id=template_id, inputs=renderer_inputs)
     _write_json(output / "prompt-render-input.json", renderer_inputs)
     _write_text(output / "prompt-rendered.md", rendered["text"])
     result = provider.generate_live(
         session_id=f"{session_prefix}-{case_id}-audit-{audit_call_index:02d}",
         prompt=rendered["text"],
-        schema={"schema_version": "text2ifc/audit/2.0"},
+        schema={"schema_version": "text2ifc/audit/3.0" if review_context is not None else "text2ifc/audit/2.0"},
         state={"case_id": case_id, "stage": "audit"},
     )
     validate_provider_output(result.output)
@@ -1243,6 +1260,7 @@ def run_audit_report_stage(
             parsed,
             case_dir=root,
             deterministic_gates=deterministic_gates,
+            review_context=review_context,
         )
     else:
         issues = list(normalization_diagnostics)
@@ -1282,6 +1300,7 @@ def run_audit_report_stage(
     metrics = {
         "case_id": case_id,
         "stage": "audit",
+        "design_review_context_sha256": review_context_sha256,
         "valid": valid,
         "route_decision": route_decision["route"],
         "route_owner_stage": route_decision["owner_stage"],
@@ -1368,6 +1387,15 @@ def run_final_acceptance_stage(
         raise ValueError("Final acceptance requires a non-blocking accepted audit")
     if audit_metrics.get("strict_output_contract_valid") is not True:
         raise ValueError("Final acceptance requires strict Audit output contract")
+    review_context = load_design_review_context(
+        case_root, resolve_final_design_brief_dir(case_root) / "conversation.json"
+    )
+    if audit_report.get("schema_version") == "text2ifc/audit/3.0" or audit_metrics.get("design_review_context_sha256") is not None or review_context is not None:
+        if review_context is None or audit_metrics.get("design_review_context_sha256") != hashlib.sha256((case_root / "design-review-context.json").read_bytes()).hexdigest():
+            raise ValueError("DESIGN_REVIEW_FINAL_CONTEXT_CHANGED")
+        review_errors = validate_design_review_output(audit_report, review_context, case_root)
+        if review_errors or audit_metrics.get("valid") is not True:
+            raise ValueError("DESIGN_REVIEW_FINAL_ACCEPTANCE_BLOCKED")
 
     gate_result = run_candidate_gate_stage(
         case_dir=case_root,
@@ -1827,14 +1855,18 @@ def _validate_live_audit_output(
     *,
     case_dir: Path,
     deterministic_gates: dict[str, Any],
+    review_context: dict[str, Any] | None = None,
 ) -> list[dict[str, Any]]:
     issues: list[dict[str, Any]] = []
-    if payload.get("schema_version") != "text2ifc/audit/2.0":
+    expected_version = "text2ifc/audit/3.0" if review_context is not None else "text2ifc/audit/2.0"
+    if review_context is not None:
+        issues.extend(validate_design_review_output(payload, review_context, case_dir))
+    if payload.get("schema_version") != expected_version:
         issues.append(
             {
                 "code": "UNSUPPORTED_AUDIT_VERSION",
                 "path": "/schema_version",
-                "message": "Audit output must use text2ifc/audit/2.0.",
+                "message": f"Audit output must use {expected_version}.",
             }
         )
     if payload.get("recommendation") not in {"accept", "revise", "reject"}:

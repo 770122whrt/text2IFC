@@ -116,3 +116,112 @@ def test_invalid_confirmation_context_stops_before_provider(tmp_path, change):
     with pytest.raises(ValueError, match="DESIGN_REVIEW"):
         run_audit_report_stage(provider=provider, case_dir=root, case_id=change)
     assert provider.prompt == ""
+
+
+def test_review_brief_is_explicit_and_does_not_silently_change_ordinary_generation():
+    from text2ifc_agent import interactive_cli_flow, live_pipeline
+    from text2ifc_agent.prompt_registry import load_prompt_registry
+    assert interactive_cli_flow.DESIGN_BRIEF_TEMPLATE_ID == live_pipeline.DESIGN_BRIEF_TEMPLATE_ID == "design-brief.v2.3"
+    assert interactive_cli_flow.DESIGN_REVIEW_BRIEF_TEMPLATE_ID == live_pipeline.DESIGN_REVIEW_BRIEF_TEMPLATE_ID == "design-brief.v2.4"
+    registry = load_prompt_registry()
+    assert registry["design-brief.v2.3"]["sha256"] != registry["design-brief.v2.4"]["sha256"]
+    assert registry["audit.v2"]["sha256"] != registry["audit.v3"]["sha256"]
+
+
+def test_public_brief_stage_can_explicitly_select_the_review_contract(tmp_path):
+    from text2ifc_agent.live_pipeline import complete_room_case, run_design_brief_stage
+    root = _write_auditable_case_dir(tmp_path / "reference")
+    brief = json.loads((root / "design-brief/design-brief.json").read_text(encoding="utf-8"))
+    brief["schema_version"] = "text2ifc/design-brief/2.1"
+    provider = _RecordingLiveProvider(brief)
+    target = tmp_path / "review-brief"
+    result = run_design_brief_stage(provider=provider, output_dir=target,
+                                    case=complete_room_case(), design_review_enabled=True)
+    assert result["valid"]
+    trace = json.loads((target / "trace-manifest.json").read_text(encoding="utf-8"))
+    assert trace["template_id"] == "design-brief.v2.4"
+
+
+def test_retained_design_problem_never_overrides_a_failed_hard_gate(tmp_path):
+    from text2ifc_agent.live_pipeline import _validate_live_audit_output
+    root = _write_auditable_case_dir(tmp_path / "hard-gate")
+    context = _context(root)
+    issues = _validate_live_audit_output(_audit(), case_dir=root,
+                                       deterministic_gates={"geometry_success": False}, review_context=context)
+    assert any(issue["code"] == "AUDIT_OVERRIDE_ATTEMPT" for issue in issues)
+
+
+def test_review_brief_cannot_generate_without_bound_decision_context(tmp_path):
+    from text2ifc_agent.interactive_cli_flow import run_ready_session_to_ifc
+    from text2ifc_agent.session_store import SessionStore
+    from tests.agent.test_interactive_cli_generation import _write_ready_design_brief_call
+    store = SessionStore.open(tmp_path / "sessions.sqlite", artifact_root=tmp_path)
+    session = store.create_session(original_input="保留已知问题并说明。")
+    try:
+        _write_ready_design_brief_call(session.run_dir)
+        path = session.run_dir / "calls/01-design-brief/metrics.json"
+        metrics = json.loads(path.read_text(encoding="utf-8"))
+        metrics["prompt_template_id"] = "design-brief.v2.4"
+        path.write_text(json.dumps(metrics), encoding="utf-8")
+        store.mark_session_status(session.session_id, "ready")
+        def forbidden():
+            raise AssertionError("Missing context must stop before Provider creation")
+        with pytest.raises(ValueError, match="DESIGN_REVIEW_CONTEXT_REQUIRED"):
+            run_ready_session_to_ifc(store=store, session=session.session_hash, provider_factory=forbidden)
+        assert not (session.run_dir / "output.ifc").exists()
+    finally:
+        store.close()
+
+
+@pytest.mark.parametrize("change", ["removed", "rebound"])
+def test_final_acceptance_rechecks_the_same_context_before_compile(tmp_path, monkeypatch, change):
+    from text2ifc_agent import live_pipeline
+    root = _write_auditable_case_dir(tmp_path / change)
+    context = _context(root)
+    result = run_audit_report_stage(provider=_RecordingLiveProvider(_audit()), case_dir=root, case_id=change)
+    assert result["valid"]
+    if change == "removed":
+        (root / "design-review-context.json").unlink()  # Only this isolated pytest fixture.
+    else:
+        context["concerns"][0]["description"] = "篡改了冻结的问题描述"
+        (root / "design-review-context.json").write_text(json.dumps(context), encoding="utf-8")
+    calls = []
+    def gate(**kwargs):
+        calls.append(kwargs)
+        raise AssertionError("must not compile after changed review context")
+    monkeypatch.setattr(live_pipeline, "run_candidate_gate_stage", gate)
+    with pytest.raises(ValueError, match="DESIGN_REVIEW"):
+        live_pipeline.run_final_acceptance_stage(case_dir=root, output_dir=root, case_id=change)
+    assert calls == []
+
+
+@pytest.mark.parametrize("decision", ["retain", "revise"])
+def test_public_generation_keeps_review_in_final_session_report(tmp_path, decision):
+    import ifcopenshell
+    from text2ifc_agent.interactive_cli_flow import run_ready_session_to_ifc
+    from text2ifc_agent.session_store import SessionStore
+    from tests.agent.test_interactive_cli_generation import (
+        PHASE6_1_COMPLETE, _SequenceLiveProvider, _write_ready_design_brief_call,
+    )
+    store = SessionStore.open(tmp_path / "sessions.sqlite", artifact_root=tmp_path)
+    session = store.create_session(original_input="按确认的要求建模，记录已知问题。")
+    try:
+        _write_ready_design_brief_call(session.run_dir)
+        design = session.run_dir / "design-brief"
+        design.mkdir()
+        call = session.run_dir / "calls/01-design-brief"
+        (design / "conversation.json").write_bytes((call / "conversation.json").read_bytes())
+        _context(session.run_dir, decision)
+        (call / "conversation.json").write_bytes((design / "conversation.json").read_bytes())
+        store.mark_session_status(session.session_id, "ready")
+        candidate = json.loads((PHASE6_1_COMPLETE / "generator/candidate.json").read_text(encoding="utf-8"))
+        provider = _SequenceLiveProvider([candidate, _audit("retained_known_issue" if decision == "retain" else "not_verified")])
+        result = run_ready_session_to_ifc(store=store, session=session.session_hash, provider_factory=lambda: provider)
+        assert result.status == "compiled"
+        assert len(provider.session_ids) == 2
+        assert ifcopenshell.open(str(session.run_dir / "output.ifc")).schema == "IFC2X3"
+        report = (session.run_dir / "report.md").read_text(encoding="utf-8")
+        assert "合理性问题与用户决定" in report
+        assert "未进行完整建筑规范审查" in report
+    finally:
+        store.close()

@@ -1399,6 +1399,62 @@
         "array_index_target",
         "unauthorized_component_change"
       ]
+    },
+    {
+      "template_id": "audit.v3",
+      "role": "audit",
+      "mode": "semantic_review",
+      "path": "prompts/agent/audit-v3.md",
+      "sha256": "sha256:0a80b643e365c8c2514e78f1cd4a57fc4ba3c87167bdbdd7453d1eacf04c8313",
+      "required_inputs": [
+        "USER_REQUEST",
+        "CONVERSATION",
+        "DESIGN_BRIEF",
+        "TERMINAL_DOCUMENT",
+        "DETERMINISTIC_GATES",
+        "REVISION_EVIDENCE",
+        "REPAIR_ROUTE",
+        "METRICS",
+        "EVIDENCE_PATHS",
+        "DESIGN_REVIEW_CONTEXT"
+      ],
+      "forbidden_outputs": [
+        "bim_json_generation",
+        "bim_json_repair",
+        "raw_ifc",
+        "step_text",
+        "step_id",
+        "IfcCartesianPoint",
+        "IfcDirection",
+        "IfcOwnerHistory",
+        "compiler_only_object",
+        "deterministic_gate_override"
+      ]
+    },
+    {
+      "template_id": "design-brief.v2.4",
+      "role": "design_brief",
+      "mode": "extract_or_clarify",
+      "path": "prompts/agent/design-brief-v2.4.md",
+      "sha256": "sha256:2cf6c38b53c13f2f62c23990513f6b2f7ef0ceac93129cbf91b8a282fc960834",
+      "required_inputs": [
+        "USER_REQUEST",
+        "CONVERSATION",
+        "DESIGN_BRIEF_SCHEMA",
+        "EVIDENCE_CATALOG",
+        "FEW_SHOTS"
+      ],
+      "forbidden_outputs": [
+        "bim_json_entities",
+        "bim_json_relationships",
+        "raw_ifc",
+        "step_text",
+        "step_id",
+        "IfcCartesianPoint",
+        "IfcDirection",
+        "IfcOwnerHistory",
+        "compiler_only_object"
+      ]
     }
   ]
 }

@@ -52,6 +52,7 @@ from .state import redact_metadata
 
 
 DESIGN_BRIEF_TEMPLATE_ID = "design-brief.v2.3"
+DESIGN_REVIEW_BRIEF_TEMPLATE_ID = "design-brief.v2.4"
 SCAFFOLD_ELIGIBLE_DYNAMIC_ISSUES = {
     "EXPECTED_ENTITY_MISSING",
     "OPENING_FILL_RELATIONSHIP_MISSING",
@@ -142,6 +143,7 @@ def make_openai_design_brief_invoker(
     config: OpenAICompatRuntimeConfig,
     run_dir: Path | str,
     client_factory: Callable[..., Any] | None = None,
+    design_review_enabled: bool = False,
 ) -> DesignBriefInvoker:
     """Create a Design Brief invoker backed by OpenAI-compatible Chat Completions."""
 
@@ -174,7 +176,7 @@ def make_openai_design_brief_invoker(
             "FEW_SHOTS": selection["few_shots"],
         }
         rendered = render_prompt(
-            template_id=DESIGN_BRIEF_TEMPLATE_ID,
+            template_id=DESIGN_REVIEW_BRIEF_TEMPLATE_ID if design_review_enabled else DESIGN_BRIEF_TEMPLATE_ID,
             inputs=renderer_inputs,
         )
         request = {
@@ -501,6 +503,16 @@ def _run_ready_session_to_ifc(
     provider_factory = lambda: BudgetedProvider(raw_provider_factory(), budget)
 
     design_dir = _prepare_design_source(stored_session)
+    from .design_review import load_design_review_context
+    review_context = load_design_review_context(stored_session.run_dir, design_dir / "conversation.json")
+    brief_metrics = _read_required_json(design_dir / "metrics.json")
+    trace_path = design_dir / "trace-manifest.json"
+    brief_trace = _read_required_json(trace_path) if trace_path.is_file() else {}
+    if review_context is None and (
+        brief_metrics.get("prompt_template_id") == DESIGN_REVIEW_BRIEF_TEMPLATE_ID
+        or brief_trace.get("template_id") == DESIGN_REVIEW_BRIEF_TEMPLATE_ID
+    ):
+        raise ValueError("DESIGN_REVIEW_CONTEXT_REQUIRED")
     design_brief = json.loads((design_dir / "design-brief.json").read_text(encoding="utf-8"))
     expected_facts_path = write_expected_facts(
         case_dir=stored_session.run_dir,
@@ -2504,6 +2516,8 @@ def _write_phase6_2_session_report(
         _json_block(artifacts),
         "",
     ]
+    from .design_review import design_review_report_lines
+    lines.extend(design_review_report_lines(session.run_dir))
     (session.run_dir / "report.md").write_text("\n".join(lines), encoding="utf-8")
 
 
