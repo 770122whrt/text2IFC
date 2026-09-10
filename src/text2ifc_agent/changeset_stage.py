@@ -51,6 +51,7 @@ def run_changeset_stage(
     trace_level: str | None = "debug",
     field_recovery: bool = False,
     generation_package: Mapping[str, Any] | None = None,
+    semantic_correction: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Ask the provider for a ChangeSet or canonical Draft and validate its binding."""
 
@@ -85,7 +86,10 @@ def run_changeset_stage(
         renderer_inputs['FEW_SHOTS'] = [_read_json(PROJECT_ROOT/'prompts/agent/few-shot'/name)
                                        for name in selection['few_shot_names']]
         _write_json(output/'context-selection.json', selection)
-    template_id = ('bim-json-changeset.v1.3' if field_recovery else
+    if semantic_correction:
+        renderer_inputs['SEMANTIC_CORRECTION'] = dict(semantic_correction)
+    template_id = ('bim-json-changeset.v1.6' if semantic_correction else
+                   'bim-json-changeset.v1.3' if field_recovery else
                    'bim-json-changeset.v1.5' if new_semantics else CHANGESET_TEMPLATE_ID)
     rendered = render_prompt(template_id=template_id, inputs=renderer_inputs)
     _write_json(output / "prompt-render-input.json", renderer_inputs)

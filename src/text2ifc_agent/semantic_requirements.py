@@ -212,7 +212,9 @@ def unauthorized_candidate_semantics(candidate, expectations):
         for pset, values in record.get('property_sets', {}).items():
             for prop in values:
                 if (entity_id, pset, prop) not in allowed_properties:
-                    issues.append({'code': 'UNREQUESTED_PROPERTY', 'path': f'/entities/{entity_id}/property_sets/{pset}/{prop}',
+                    pset_token = pset.replace('~', '~0').replace('/', '~1')
+                    prop_token = prop.replace('~', '~0').replace('/', '~1')
+                    issues.append({'code': 'UNREQUESTED_PROPERTY', 'path': f'/entities/{entity_id}/property_sets/{pset_token}/{prop_token}',
                                    'message': '属性没有冻结请求或有依据的推导，不能自动补值。'})
     return issues
 

@@ -596,3 +596,18 @@ B 四张实际 IFC 图片本轮重新查看：浅暖墙、深色框与蓝灰玻�
 实施边界：限于新 Generation 语义合同中的受控 ChangeSet 修正，不对 Repair 源 IFC 应用模板或自动 Type 清理，不重写旧 Prompt／Schema。优先复用已有显式 remove/update 操作；只开放确定性门禁证实的未请求 Type、未授权关联或成员及明确语义字段，合法 Type、跨组成员、几何和其它实体继续保全。未知引用、无法唯一绑定、需要猜测值或作用域的情形停止并给出诊断。用户已确认 B 保留的净空缺陷不改。
 
 先冻结失败案例族再改代码：无 Type 请求／合法 Type 保留、混合共享成员、不同构件族及无规律 ID、实例直接值与 Type 附带值、未知引用／重复身份、部分删除／原子回滚、越权几何／跨组修改；公共路径使用 fake Provider 完成 Gate→Issue→Scope→ChangeSet→编译重读，并回归两策略、恢复及循环退出。现有 B 身份与异常证据测试纳入相关回归。结论仅限离线 Bug fixed，不把揭示案例称盲测或系统成功率提升；不启动新真实 Provider、Full Preflight、Proof 安装或 GitHub 推送。
+
+本轮已完成的通用代码修复：
+
+- `semantic_correction.py` 从冻结 Brief／expected facts 重新绑定请求、独立重算未授权语义问题，再生成受限操作合同。只有命中真实问题的 scope 才扩展；明确列出删除 Type、删除关联或缩减成员，以及需要保留的请求值和依赖。未请求 Type 不再停留于不可执行的整记录 Issue。
+- 同一合同进入模型上下文、scope 和原子应用检查。继续使用 ChangeSet 1.0 的显式 remove／update，不自动应用或级联删除。新增 `bim-json-changeset.v1.6`，原 Prompt 与 registry 旧条目保持不变。字段权限不再意味着可以删除合法 Type、类型关联或只有语义字段权限的实例；部分清理、越权修改和不正确的请求值不生成新 revision。
+- 属性清理使用精确的最终容器值保留其它属性，支持带 `/`、`~` 的合法自定义键。Type 删除影响实例时，仅从冻结请求写回必要的直接值；不复制 Type 中猜测的材料／性能。已有正确继承值保持继承，合法共享成员及其它构件保持不变；未知引用、身份不唯一、直接／有效值冲突或需要猜测覆盖的情况在 transport 前停止。布尔与数值不能被 Python 的相等比较混同。重复候选身份返回结构化阻断，不再抛出未处理异常。
+- 预算实现原本就是整次 Generation 共享，不需新增分阶段配额。确认公共循环有3轮反馈上限、无进展停止、A→B→A 循环检测、同一基底重复失败补丁停止、Draft／unsupported／范围不明和 Provider 失败停止，以及持久化共享预算兜底。历史账本不变；新完整真实运行不得套用旧 A 只剩2次调用的安排。
+
+验证记录：`3374b975` 先提交问题记录及首批失败族，红结果10 failed／5 passed。公共补测发现属性路径转义缺口；另两项初始失败来自测试夹具洞口挖空整面墙及误用 ready-only API 重入完成会话，修正测试前提，未为此修改产品几何或恢复行为。之后补充空引用、重复身份、类型化值冲突、合法继承保全及 direct／effective 冲突的红测试（`da44a3db`、`3dcadd7d`、`efd1c97c`）。最终新增案例族27 passed，相关公共／身份／两策略／恢复回归135 passed；最后固定代码状态的 Changed-scope 复核126 passed（包括新增27项、已有语义 scope／原子应用／失败证据／预算和公共语义链路）。这些集合重叠，不累加为独立案例数或成功率。XML 分别为 `.tmp/semantic-correction-final-20260910.xml`、`.tmp/semantic-correction-public-regression-v2-20260910.xml`、`.tmp/semantic-correction-closeout-20260910.xml`；最初公共回归命令含不存在的测试文件、没有执行测试，其同名无 v2 XML 保留，不计通过。聚焦 compileall、Prompt registry 哈希及 diff 检查通过。
+
+原 A 冻结候选的离线诊断重放保存在 `.tmp/semantic-correction-frozen-a-replay-20260910/`，未修改原运行。第一轮确定性构造78个显式操作，移除39个未请求 Type 和39条关联；其中附带的34项未请求属性随其所属 Type 删除。120个其它实体／关系的 hash 全保留，材料／属性请求由 reopened IFC 独立检查通过。此时才暴露旧候选原有的一项 `STAIR_RISE_DIRECTION_MISMATCH`：楼梯放置已相对二层，却再次加入3150毫米层标高，世界 Z 为6.3–9.45米而冻结请求为3.15–6.3米；不是语义清理移动了几何。
+
+第二轮按既有父子坐标合同，从请求起点标高减去父层标高构造局部补丁，通过现有公共 `run_scoped_changeset_round` 接续 revision-01→revision-02，语义值及其余几何保持，最终 candidate gate、编译重读及语义检查通过。`two-round-replay-result.json` 记录该结果。第一轮为确定性策略重放，第二轮为 fake Provider；没有真实 Audit、完整终端验收或人工验收，因此该 IFC 仅为离线诊断，不进入 Proof，也不把原 A 的 budget_blocked 改成成功。
+
+本轮代码闭环完成，允许结论为 **Bug fixed（离线）**。原始174份与续跑335份冻结文件、参考 IFC 及 B 诊断 IFC 的哈希均不变。B 已有身份和失败证据修复保持通过，其用户确认保留的净空缺陷不改。下一步真实 A/B 必须使用当前 Prompt／应用合同、覆盖完整 loop 的新预算及适用 Stage Admission；新操作权限改变了执行边界，旧准入与 RUN-HOLD 不能直接转为放行。仍未执行新的 Stage／Full Preflight、真实 Provider、人工验收、Proof 安装或 push；不声明模型收敛率或系统能力已经提高。

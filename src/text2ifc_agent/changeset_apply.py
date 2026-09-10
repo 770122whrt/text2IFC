@@ -25,6 +25,7 @@ def apply_changeset(
     expected_facts: Mapping[str, Any],
     allow_field_containers: bool = False,
     required_field_values: Mapping[str, Any] | None = None,
+    semantic_correction: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Apply a valid ChangeSet atomically or return no promoted candidate."""
 
@@ -41,6 +42,7 @@ def apply_changeset(
         base_revision=base_revision,
         expected_facts=expected_facts,
         allow_field_containers=allow_field_containers,
+        semantic_correction=semantic_correction,
     )
     if issues:
         return _failure_many(issues)
@@ -54,6 +56,13 @@ def apply_changeset(
     composed["relationships"] = sorted(
         composed["relationships"], key=lambda item: item["id"]
     )
+
+    if semantic_correction:
+        from .semantic_correction import validate_semantic_application
+        semantic_issues = validate_semantic_application(candidate=candidate, composed=composed,
+            expected_facts=expected_facts, correction=semantic_correction)
+        if semantic_issues:
+            return _failure_many(semantic_issues)
 
     formal_issues = validate_v2_document(composed)
     if formal_issues:
@@ -129,6 +138,7 @@ def _preflight_issues(
     base_revision: Mapping[str, Any],
     expected_facts: Mapping[str, Any],
     allow_field_containers: bool = False,
+    semantic_correction: Mapping[str, Any] | None = None,
 ) -> list[dict[str, str]]:
     issues: list[dict[str, str]] = []
     changeset_contract = validate_changeset(changeset)
@@ -225,6 +235,12 @@ def _preflight_issues(
         collection = entities if is_entity else relationships
         allowed = allowed_entities if is_entity else allowed_relationships
         path = f"/operations/{index}"
+        if candidate.get('schema_version') == 'bim-json/2.1' and op.startswith('remove_') and target_id in collection:
+            from .semantic_correction import protected_semantic_removal
+            planned = (semantic_correction or {}).get('edits', {}).get(target_id, {})
+            if protected_semantic_removal(collection[target_id], scope['allowed_paths'].get(target_id, [])) and planned.get('op') != op:
+                issues.append(_issue('CHANGESET_SCOPE_VIOLATION', path,
+                    'A semantic field or Type membership permission does not authorize whole-record deletion.'))
         if allow_field_containers and op != 'update_entity':
             issues.append(_issue('CHANGESET_SCOPE_VIOLATION', path,
                                  'Early field recovery only permits entity field updates.'))
