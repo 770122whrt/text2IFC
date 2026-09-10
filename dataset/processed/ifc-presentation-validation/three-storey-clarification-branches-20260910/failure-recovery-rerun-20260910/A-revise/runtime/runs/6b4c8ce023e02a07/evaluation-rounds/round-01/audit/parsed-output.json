@@ -1,0 +1,101 @@
+{
+  "blocking": false,
+  "design_review": {
+    "concerns": [
+      {
+        "description": "参考模型显示一层通往二层的第一段梯段在接近二层北端平台处被上方反向的第二段梯段遮挡、局部净空为零；用户在 turn-user-003 明确选择调整内部布局而不保留该缺陷，要求两段梯段平面东西并列。当前候选已按该修订实现：第一段楼梯 stair-1 及其梯段 stair-flight-1 位于 X=7500~8700、Y=1500~6900（标高 0~3150），第二段楼梯 stair-2 及其梯段 stair-flight-2 位于 X=8800~10000、Y=1500~6900（标高 3150~6300），二层楼板洞口 slab-2-opening-stair 随第一段、三层楼板洞口 slab-3-opening-stair 随第二段，两段梯段在平面上不再重叠，上层楼板在梯段上方按洞口真实穿透而非完整封闭；确定性几何 gate（geometry-feedback.json）报告 success=true 且无净空相关 issue。本次仅做候选与已确认修订的一致性检查，未做独立工程净空验算（无独立人体/疏散净空计算、无规范核对），故不判定为已解决或合规，仅记为未独立验证。",
+        "evidence_paths": [
+          "design-review-context.json",
+          "reference-review.json",
+          "geometry-feedback.json",
+          "generator/candidate.json"
+        ],
+        "id": "reference-stair-walking-clearance",
+        "status": "not_verified"
+      }
+    ],
+    "limitations": [
+      "未进行完整建筑规范审查。",
+      "未对楼梯净空、疏散、结构、热工、耐火做独立工程验算，仅核对几何与已确认语义是否落位。",
+      "确定性 gate 通过仅代表模式、编译、重开、几何与语义覆盖一致，不代表工程合理性。"
+    ],
+    "scope": "limited_review_not_code_compliance"
+  },
+  "deterministic_gate_status": "passed",
+  "evidence_paths": [
+    "design-brief/design-brief.json",
+    "design-review-context.json",
+    "reference-review.json",
+    "generator/candidate.json",
+    "gate-summary.json",
+    "geometry-feedback.json",
+    "ifc-verification.json",
+    "semantic-coverage.json",
+    "repair/route.json",
+    "generator/metrics.json"
+  ],
+  "findings": [
+    {
+      "blocking": false,
+      "code": "design_review_revision_applied",
+      "component_ids": [
+        "wall-storey-1-storey-1-wall-partition",
+        "wall-storey-2-storey-2-wall-partition",
+        "wall-storey-3-storey-3-wall-partition",
+        "stair-1",
+        "stair-flight-1",
+        "stair-2",
+        "stair-flight-2",
+        "slab-2-opening-stair",
+        "slab-3-opening-stair",
+        "space-storey-1-space-1-stair-room",
+        "space-storey-2-space-2-platform-north",
+        "space-storey-3-space-3-platform-south",
+        "door-storey-1-door-1-partition",
+        "door-storey-2-door-2-partition",
+        "door-storey-3-door-3-partition"
+      ],
+      "evidence_paths": [
+        "design-brief/design-brief.json",
+        "design-review-context.json",
+        "generator/candidate.json",
+        "geometry-feedback.json"
+      ],
+      "message": "候选 BIM JSON 与 turn-user-003 确认的修订一致：三层分隔墙西移至 X=7300~7500、厚 200、Y=0~8400；各层大厅净范围 X=0~7300、楼梯间/平台净范围 X=7500~10000；第一段楼梯平面 X=7500~8700、第二段楼梯平面 X=8800~10000，两段梯段平面不再重叠；二层楼板洞口随第一段西移（X=7500~8700）、三层楼板洞口随第二段东移（X=8800~10000），保持真实穿透；三樘分隔墙门中心随墙西移至 X=7400，南北位置 700/7650/700、宽 900、高 2100、右单开不变；建筑外轮廓、楼层标高、外墙门窗、材料与配色均未改变。",
+      "severity": "info"
+    },
+    {
+      "blocking": false,
+      "code": "geometry_invariants_machine_verified",
+      "component_ids": [
+        "slab-2-floor",
+        "slab-3-floor",
+        "roof-slab",
+        "wall-storey-3-storey-3-wall-north",
+        "space-storey-3-space-3-hall"
+      ],
+      "evidence_paths": [
+        "gate-summary.json",
+        "geometry-feedback.json",
+        "ifc-verification.json",
+        "semantic-coverage.json"
+      ],
+      "message": "确定性几何 gate 无 issue：楼板/屋面/墙体/空间包络与修订值一致（二层洞口 X 7.5~8.7、三层洞口 X 8.8~10.0，Y 1.5~6.9）；墙顶与上层楼板/屋面底面相接（0/3.0、3.15/6.15、6.3/9.3），无未解释竖向缝隙；楼梯均有 stepped profile 且无墙体相交报告。Audit 不重算上述机器已通过的同一不变量。",
+      "severity": "info"
+    },
+    {
+      "blocking": false,
+      "code": "scope_limitation_no_code_compliance",
+      "component_ids": [],
+      "evidence_paths": [
+        "design-brief/design-brief.json",
+        "repair/route.json",
+        "generator/metrics.json"
+      ],
+      "message": "按用户 turn-user-003 要求记录：本次仅生成建筑几何与用户已明确语义，未做完整工程与规范审查；本 Audit 仅核对意图、Brief、候选一致性、确定性 gate 与证据路径，不构成规范合规结论、净空工程验算或安全性认定。",
+      "severity": "info"
+    }
+  ],
+  "recommendation": "accept",
+  "schema_version": "text2ifc/audit/3.0"
+}
