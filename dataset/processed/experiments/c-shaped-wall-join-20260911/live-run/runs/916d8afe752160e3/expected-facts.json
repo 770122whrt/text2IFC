@@ -1,0 +1,2868 @@
+{
+  "appearance": {
+    "element_overrides_requested": false,
+    "profile": "warm-residential",
+    "style_notes": "暖浅色墙面、深色细门窗框、通透玻璃、门扇与门框分色；未要求整件颜色覆盖或透明度覆盖，未要求额外物理材料或性能属性"
+  },
+  "case_id": "916d8afe752160e3",
+  "door_counts_by_storey": {
+    "storey-1": 3,
+    "storey-2": 2,
+    "storey-3": 2
+  },
+  "doors": [
+    {
+      "bottom_at_finished_floor": true,
+      "center_global_mm": [
+        4700,
+        2400
+      ],
+      "height_mm": 2100,
+      "host_wall": "storey-1-wall-partition-south",
+      "id": "storey-1-door-south-teaching",
+      "operation": "single_swing_right",
+      "source_key": "首层.door[1]",
+      "storey": "storey-1",
+      "template_id": "door-right",
+      "width_mm": 900
+    },
+    {
+      "bottom_at_finished_floor": true,
+      "center_global_mm": [
+        4700,
+        14400
+      ],
+      "height_mm": 2100,
+      "host_wall": "storey-1-wall-partition-north",
+      "id": "storey-1-door-north-teaching",
+      "operation": "single_swing_right",
+      "source_key": "首层.door[2]",
+      "storey": "storey-1",
+      "template_id": "door-right",
+      "width_mm": 900
+    },
+    {
+      "bottom_at_finished_floor": true,
+      "center_global_mm": [
+        100,
+        4200
+      ],
+      "height_mm": 2400,
+      "host_wall": "storey-1-wall-west",
+      "id": "storey-1-door-entrance",
+      "note": "原文中心距南侧8400毫米；经用户确认南移至4200毫米（避开第一梯段）",
+      "operation": "single_swing_left",
+      "source_key": "首层.door[3]",
+      "storey": "storey-1",
+      "template_id": "door-left",
+      "width_mm": 1200
+    },
+    {
+      "bottom_at_finished_floor": true,
+      "center_global_mm": [
+        4700,
+        2400
+      ],
+      "height_mm": 2100,
+      "host_wall": "storey-2-wall-partition-south",
+      "id": "storey-2-door-south-teaching",
+      "operation": "single_swing_right",
+      "source_key": "二层.door[1]",
+      "storey": "storey-2",
+      "template_id": "door-right",
+      "width_mm": 900
+    },
+    {
+      "bottom_at_finished_floor": true,
+      "center_global_mm": [
+        4700,
+        14400
+      ],
+      "height_mm": 2100,
+      "host_wall": "storey-2-wall-partition-north",
+      "id": "storey-2-door-north-teaching",
+      "operation": "single_swing_right",
+      "source_key": "二层.door[2]",
+      "storey": "storey-2",
+      "template_id": "door-right",
+      "width_mm": 900
+    },
+    {
+      "bottom_at_finished_floor": true,
+      "center_global_mm": [
+        4700,
+        2400
+      ],
+      "height_mm": 2100,
+      "host_wall": "storey-3-wall-partition-south",
+      "id": "storey-3-door-south-teaching",
+      "operation": "single_swing_right",
+      "source_key": "三层.door[1]",
+      "storey": "storey-3",
+      "template_id": "door-right",
+      "width_mm": 900
+    },
+    {
+      "bottom_at_finished_floor": true,
+      "center_global_mm": [
+        4700,
+        14400
+      ],
+      "height_mm": 2100,
+      "host_wall": "storey-3-wall-partition-north",
+      "id": "storey-3-door-north-teaching",
+      "operation": "single_swing_right",
+      "source_key": "三层.door[2]",
+      "storey": "storey-3",
+      "template_id": "door-right",
+      "width_mm": 900
+    }
+  ],
+  "entity_id_contract": {
+    "doors": [
+      {
+        "brief_id": "storey-1-door-south-teaching",
+        "entity_id": "door-storey-1-storey-1-door-south-teaching",
+        "storey": "storey-1"
+      },
+      {
+        "brief_id": "storey-1-door-north-teaching",
+        "entity_id": "door-storey-1-storey-1-door-north-teaching",
+        "storey": "storey-1"
+      },
+      {
+        "brief_id": "storey-1-door-entrance",
+        "entity_id": "door-storey-1-storey-1-door-entrance",
+        "storey": "storey-1"
+      },
+      {
+        "brief_id": "storey-2-door-south-teaching",
+        "entity_id": "door-storey-2-storey-2-door-south-teaching",
+        "storey": "storey-2"
+      },
+      {
+        "brief_id": "storey-2-door-north-teaching",
+        "entity_id": "door-storey-2-storey-2-door-north-teaching",
+        "storey": "storey-2"
+      },
+      {
+        "brief_id": "storey-3-door-south-teaching",
+        "entity_id": "door-storey-3-storey-3-door-south-teaching",
+        "storey": "storey-3"
+      },
+      {
+        "brief_id": "storey-3-door-north-teaching",
+        "entity_id": "door-storey-3-storey-3-door-north-teaching",
+        "storey": "storey-3"
+      }
+    ],
+    "floor_openings": [
+      {
+        "brief_id": "floor-slab-storey-2-opening-stair-flight-1",
+        "entity_id": "floor-slab-storey-2-opening-stair-flight-1",
+        "host_id": "floor-slab-storey-2",
+        "identity_source": "explicit",
+        "storey": "storey-2"
+      },
+      {
+        "brief_id": "floor-slab-storey-3-opening-stair-flight-2",
+        "entity_id": "floor-slab-storey-3-opening-stair-flight-2",
+        "host_id": "floor-slab-storey-3",
+        "identity_source": "explicit",
+        "storey": "storey-3"
+      }
+    ],
+    "roof": [
+      {
+        "brief_id": "roof-slab",
+        "entity_id": "roof-slab"
+      }
+    ],
+    "slabs": [
+      {
+        "brief_id": "floor-slab-storey-1",
+        "entity_id": "floor-slab-storey-1",
+        "storey": "storey-1"
+      },
+      {
+        "brief_id": "floor-slab-storey-2",
+        "entity_id": "floor-slab-storey-2",
+        "storey": "storey-2"
+      },
+      {
+        "brief_id": "floor-slab-storey-3",
+        "entity_id": "floor-slab-storey-3",
+        "storey": "storey-3"
+      }
+    ],
+    "spaces": [
+      {
+        "brief_id": "storey-1-space-south-teaching",
+        "entity_id": "space-storey-1-storey-1-space-south-teaching",
+        "storey": "storey-1"
+      },
+      {
+        "brief_id": "storey-1-space-north-teaching",
+        "entity_id": "space-storey-1-storey-1-space-north-teaching",
+        "storey": "storey-1"
+      },
+      {
+        "brief_id": "storey-1-space-circulation",
+        "entity_id": "space-storey-1-storey-1-space-circulation",
+        "storey": "storey-1"
+      },
+      {
+        "brief_id": "storey-2-space-south-teaching",
+        "entity_id": "space-storey-2-storey-2-space-south-teaching",
+        "storey": "storey-2"
+      },
+      {
+        "brief_id": "storey-2-space-north-teaching",
+        "entity_id": "space-storey-2-storey-2-space-north-teaching",
+        "storey": "storey-2"
+      },
+      {
+        "brief_id": "storey-2-space-circulation",
+        "entity_id": "space-storey-2-storey-2-space-circulation",
+        "storey": "storey-2"
+      },
+      {
+        "brief_id": "storey-3-space-south-teaching",
+        "entity_id": "space-storey-3-storey-3-space-south-teaching",
+        "storey": "storey-3"
+      },
+      {
+        "brief_id": "storey-3-space-north-teaching",
+        "entity_id": "space-storey-3-storey-3-space-north-teaching",
+        "storey": "storey-3"
+      },
+      {
+        "brief_id": "storey-3-space-circulation",
+        "entity_id": "space-storey-3-storey-3-space-circulation",
+        "storey": "storey-3"
+      }
+    ],
+    "stair_flights": [
+      {
+        "brief_id": "stair-flight-flight-1",
+        "entity_id": "stair-flight-flight-1",
+        "parent_id": "stair-flight-1",
+        "storey": "storey-1",
+        "to_storey": "storey-2"
+      },
+      {
+        "brief_id": "stair-flight-flight-2",
+        "entity_id": "stair-flight-flight-2",
+        "parent_id": "stair-flight-2",
+        "storey": "storey-2",
+        "to_storey": "storey-3"
+      }
+    ],
+    "stairs": [
+      {
+        "brief_id": "stair-flight-1",
+        "entity_id": "stair-flight-1",
+        "storey": "storey-1",
+        "to_storey": "storey-2"
+      },
+      {
+        "brief_id": "stair-flight-2",
+        "entity_id": "stair-flight-2",
+        "storey": "storey-2",
+        "to_storey": "storey-3"
+      }
+    ],
+    "walls": [
+      {
+        "brief_id": "storey-1-wall-south",
+        "entity_id": "wall-storey-1-storey-1-wall-south",
+        "storey": "storey-1"
+      },
+      {
+        "brief_id": "storey-1-wall-east-south",
+        "entity_id": "wall-storey-1-storey-1-wall-east-south",
+        "storey": "storey-1"
+      },
+      {
+        "brief_id": "storey-1-wall-notch-south",
+        "entity_id": "wall-storey-1-storey-1-wall-notch-south",
+        "storey": "storey-1"
+      },
+      {
+        "brief_id": "storey-1-wall-notch-west",
+        "entity_id": "wall-storey-1-storey-1-wall-notch-west",
+        "storey": "storey-1"
+      },
+      {
+        "brief_id": "storey-1-wall-notch-north",
+        "entity_id": "wall-storey-1-storey-1-wall-notch-north",
+        "storey": "storey-1"
+      },
+      {
+        "brief_id": "storey-1-wall-east-north",
+        "entity_id": "wall-storey-1-storey-1-wall-east-north",
+        "storey": "storey-1"
+      },
+      {
+        "brief_id": "storey-1-wall-north",
+        "entity_id": "wall-storey-1-storey-1-wall-north",
+        "storey": "storey-1"
+      },
+      {
+        "brief_id": "storey-1-wall-west",
+        "entity_id": "wall-storey-1-storey-1-wall-west",
+        "storey": "storey-1"
+      },
+      {
+        "brief_id": "storey-1-wall-partition-south",
+        "entity_id": "wall-storey-1-storey-1-wall-partition-south",
+        "storey": "storey-1"
+      },
+      {
+        "brief_id": "storey-1-wall-partition-north",
+        "entity_id": "wall-storey-1-storey-1-wall-partition-north",
+        "storey": "storey-1"
+      },
+      {
+        "brief_id": "storey-2-wall-south",
+        "entity_id": "wall-storey-2-storey-2-wall-south",
+        "storey": "storey-2"
+      },
+      {
+        "brief_id": "storey-2-wall-east-south",
+        "entity_id": "wall-storey-2-storey-2-wall-east-south",
+        "storey": "storey-2"
+      },
+      {
+        "brief_id": "storey-2-wall-notch-south",
+        "entity_id": "wall-storey-2-storey-2-wall-notch-south",
+        "storey": "storey-2"
+      },
+      {
+        "brief_id": "storey-2-wall-notch-west",
+        "entity_id": "wall-storey-2-storey-2-wall-notch-west",
+        "storey": "storey-2"
+      },
+      {
+        "brief_id": "storey-2-wall-notch-north",
+        "entity_id": "wall-storey-2-storey-2-wall-notch-north",
+        "storey": "storey-2"
+      },
+      {
+        "brief_id": "storey-2-wall-east-north",
+        "entity_id": "wall-storey-2-storey-2-wall-east-north",
+        "storey": "storey-2"
+      },
+      {
+        "brief_id": "storey-2-wall-north",
+        "entity_id": "wall-storey-2-storey-2-wall-north",
+        "storey": "storey-2"
+      },
+      {
+        "brief_id": "storey-2-wall-west",
+        "entity_id": "wall-storey-2-storey-2-wall-west",
+        "storey": "storey-2"
+      },
+      {
+        "brief_id": "storey-2-wall-partition-south",
+        "entity_id": "wall-storey-2-storey-2-wall-partition-south",
+        "storey": "storey-2"
+      },
+      {
+        "brief_id": "storey-2-wall-partition-north",
+        "entity_id": "wall-storey-2-storey-2-wall-partition-north",
+        "storey": "storey-2"
+      },
+      {
+        "brief_id": "storey-3-wall-south",
+        "entity_id": "wall-storey-3-storey-3-wall-south",
+        "storey": "storey-3"
+      },
+      {
+        "brief_id": "storey-3-wall-east-south",
+        "entity_id": "wall-storey-3-storey-3-wall-east-south",
+        "storey": "storey-3"
+      },
+      {
+        "brief_id": "storey-3-wall-notch-south",
+        "entity_id": "wall-storey-3-storey-3-wall-notch-south",
+        "storey": "storey-3"
+      },
+      {
+        "brief_id": "storey-3-wall-notch-west",
+        "entity_id": "wall-storey-3-storey-3-wall-notch-west",
+        "storey": "storey-3"
+      },
+      {
+        "brief_id": "storey-3-wall-notch-north",
+        "entity_id": "wall-storey-3-storey-3-wall-notch-north",
+        "storey": "storey-3"
+      },
+      {
+        "brief_id": "storey-3-wall-east-north",
+        "entity_id": "wall-storey-3-storey-3-wall-east-north",
+        "storey": "storey-3"
+      },
+      {
+        "brief_id": "storey-3-wall-north",
+        "entity_id": "wall-storey-3-storey-3-wall-north",
+        "storey": "storey-3"
+      },
+      {
+        "brief_id": "storey-3-wall-west",
+        "entity_id": "wall-storey-3-storey-3-wall-west",
+        "storey": "storey-3"
+      },
+      {
+        "brief_id": "storey-3-wall-partition-south",
+        "entity_id": "wall-storey-3-storey-3-wall-partition-south",
+        "storey": "storey-3"
+      },
+      {
+        "brief_id": "storey-3-wall-partition-north",
+        "entity_id": "wall-storey-3-storey-3-wall-partition-north",
+        "storey": "storey-3"
+      }
+    ],
+    "windows": [
+      {
+        "brief_id": "storey-1-window-south-1",
+        "entity_id": "window-storey-1-storey-1-window-south-1",
+        "storey": "storey-1"
+      },
+      {
+        "brief_id": "storey-1-window-south-2",
+        "entity_id": "window-storey-1-storey-1-window-south-2",
+        "storey": "storey-1"
+      },
+      {
+        "brief_id": "storey-1-window-north-1",
+        "entity_id": "window-storey-1-storey-1-window-north-1",
+        "storey": "storey-1"
+      },
+      {
+        "brief_id": "storey-1-window-north-2",
+        "entity_id": "window-storey-1-storey-1-window-north-2",
+        "storey": "storey-1"
+      },
+      {
+        "brief_id": "storey-1-window-notch-south",
+        "entity_id": "window-storey-1-storey-1-window-notch-south",
+        "storey": "storey-1"
+      },
+      {
+        "brief_id": "storey-1-window-notch-north",
+        "entity_id": "window-storey-1-storey-1-window-notch-north",
+        "storey": "storey-1"
+      },
+      {
+        "brief_id": "storey-1-window-west",
+        "entity_id": "window-storey-1-storey-1-window-west",
+        "storey": "storey-1"
+      },
+      {
+        "brief_id": "storey-2-window-south-1",
+        "entity_id": "window-storey-2-storey-2-window-south-1",
+        "storey": "storey-2"
+      },
+      {
+        "brief_id": "storey-2-window-south-2",
+        "entity_id": "window-storey-2-storey-2-window-south-2",
+        "storey": "storey-2"
+      },
+      {
+        "brief_id": "storey-2-window-north-1",
+        "entity_id": "window-storey-2-storey-2-window-north-1",
+        "storey": "storey-2"
+      },
+      {
+        "brief_id": "storey-2-window-north-2",
+        "entity_id": "window-storey-2-storey-2-window-north-2",
+        "storey": "storey-2"
+      },
+      {
+        "brief_id": "storey-2-window-notch-south",
+        "entity_id": "window-storey-2-storey-2-window-notch-south",
+        "storey": "storey-2"
+      },
+      {
+        "brief_id": "storey-2-window-notch-north",
+        "entity_id": "window-storey-2-storey-2-window-notch-north",
+        "storey": "storey-2"
+      },
+      {
+        "brief_id": "storey-2-window-west",
+        "entity_id": "window-storey-2-storey-2-window-west",
+        "storey": "storey-2"
+      },
+      {
+        "brief_id": "storey-3-window-south-1",
+        "entity_id": "window-storey-3-storey-3-window-south-1",
+        "storey": "storey-3"
+      },
+      {
+        "brief_id": "storey-3-window-south-2",
+        "entity_id": "window-storey-3-storey-3-window-south-2",
+        "storey": "storey-3"
+      },
+      {
+        "brief_id": "storey-3-window-north-1",
+        "entity_id": "window-storey-3-storey-3-window-north-1",
+        "storey": "storey-3"
+      },
+      {
+        "brief_id": "storey-3-window-north-2",
+        "entity_id": "window-storey-3-storey-3-window-north-2",
+        "storey": "storey-3"
+      },
+      {
+        "brief_id": "storey-3-window-notch-south",
+        "entity_id": "window-storey-3-storey-3-window-notch-south",
+        "storey": "storey-3"
+      },
+      {
+        "brief_id": "storey-3-window-notch-north",
+        "entity_id": "window-storey-3-storey-3-window-notch-north",
+        "storey": "storey-3"
+      },
+      {
+        "brief_id": "storey-3-window-west",
+        "entity_id": "window-storey-3-storey-3-window-west",
+        "storey": "storey-3"
+      }
+    ]
+  },
+  "generation_package_manifest": {
+    "issues": [],
+    "packages": [
+      {
+        "allowed_reference_ids": [],
+        "kind": "skeleton",
+        "owned_component_ids": [
+          "project-main",
+          "site-main",
+          "building-main",
+          "storey-1",
+          "storey-2",
+          "storey-3"
+        ],
+        "owned_relationship_ids": [
+          "aggregate-project-site",
+          "aggregate-site-building",
+          "aggregate-building-storeys"
+        ],
+        "package_id": "package-skeleton",
+        "storey_id": null
+      },
+      {
+        "allowed_reference_ids": [
+          "storey-1",
+          "storey-1-wall-north",
+          "storey-1-wall-notch-north",
+          "storey-1-wall-notch-south",
+          "storey-1-wall-partition-north",
+          "storey-1-wall-partition-south",
+          "storey-1-wall-south",
+          "storey-1-wall-west"
+        ],
+        "kind": "storey_local",
+        "owned_component_classes": {},
+        "owned_component_ids": [
+          "storey-1-wall-south",
+          "storey-1-wall-east-south",
+          "storey-1-wall-notch-south",
+          "storey-1-wall-notch-west",
+          "storey-1-wall-notch-north",
+          "storey-1-wall-east-north",
+          "storey-1-wall-north",
+          "storey-1-wall-west",
+          "storey-1-wall-partition-south",
+          "storey-1-wall-partition-north",
+          "storey-1-space-south-teaching",
+          "storey-1-space-north-teaching",
+          "storey-1-space-circulation",
+          "storey-1-door-south-teaching",
+          "opening-storey-1-door-south-teaching",
+          "storey-1-door-north-teaching",
+          "opening-storey-1-door-north-teaching",
+          "storey-1-door-entrance",
+          "opening-storey-1-door-entrance",
+          "storey-1-window-south-1",
+          "opening-storey-1-window-south-1",
+          "storey-1-window-south-2",
+          "opening-storey-1-window-south-2",
+          "storey-1-window-north-1",
+          "opening-storey-1-window-north-1",
+          "storey-1-window-north-2",
+          "opening-storey-1-window-north-2",
+          "storey-1-window-notch-south",
+          "opening-storey-1-window-notch-south",
+          "storey-1-window-notch-north",
+          "opening-storey-1-window-notch-north",
+          "storey-1-window-west",
+          "opening-storey-1-window-west"
+        ],
+        "owned_relationship_ids": [
+          "rel-voids-storey-1-door-south-teaching",
+          "rel-fills-storey-1-door-south-teaching",
+          "rel-voids-storey-1-door-north-teaching",
+          "rel-fills-storey-1-door-north-teaching",
+          "rel-voids-storey-1-door-entrance",
+          "rel-fills-storey-1-door-entrance",
+          "rel-voids-storey-1-window-south-1",
+          "rel-fills-storey-1-window-south-1",
+          "rel-voids-storey-1-window-south-2",
+          "rel-fills-storey-1-window-south-2",
+          "rel-voids-storey-1-window-north-1",
+          "rel-fills-storey-1-window-north-1",
+          "rel-voids-storey-1-window-north-2",
+          "rel-fills-storey-1-window-north-2",
+          "rel-voids-storey-1-window-notch-south",
+          "rel-fills-storey-1-window-notch-south",
+          "rel-voids-storey-1-window-notch-north",
+          "rel-fills-storey-1-window-notch-north",
+          "rel-voids-storey-1-window-west",
+          "rel-fills-storey-1-window-west"
+        ],
+        "package_id": "package-storey-1",
+        "storey_id": "storey-1"
+      },
+      {
+        "allowed_reference_ids": [
+          "storey-2",
+          "storey-2-wall-north",
+          "storey-2-wall-notch-north",
+          "storey-2-wall-notch-south",
+          "storey-2-wall-partition-north",
+          "storey-2-wall-partition-south",
+          "storey-2-wall-south",
+          "storey-2-wall-west"
+        ],
+        "kind": "storey_local",
+        "owned_component_classes": {},
+        "owned_component_ids": [
+          "storey-2-wall-south",
+          "storey-2-wall-east-south",
+          "storey-2-wall-notch-south",
+          "storey-2-wall-notch-west",
+          "storey-2-wall-notch-north",
+          "storey-2-wall-east-north",
+          "storey-2-wall-north",
+          "storey-2-wall-west",
+          "storey-2-wall-partition-south",
+          "storey-2-wall-partition-north",
+          "storey-2-space-south-teaching",
+          "storey-2-space-north-teaching",
+          "storey-2-space-circulation",
+          "storey-2-door-south-teaching",
+          "opening-storey-2-door-south-teaching",
+          "storey-2-door-north-teaching",
+          "opening-storey-2-door-north-teaching",
+          "storey-2-window-south-1",
+          "opening-storey-2-window-south-1",
+          "storey-2-window-south-2",
+          "opening-storey-2-window-south-2",
+          "storey-2-window-north-1",
+          "opening-storey-2-window-north-1",
+          "storey-2-window-north-2",
+          "opening-storey-2-window-north-2",
+          "storey-2-window-notch-south",
+          "opening-storey-2-window-notch-south",
+          "storey-2-window-notch-north",
+          "opening-storey-2-window-notch-north",
+          "storey-2-window-west",
+          "opening-storey-2-window-west"
+        ],
+        "owned_relationship_ids": [
+          "rel-voids-storey-2-door-south-teaching",
+          "rel-fills-storey-2-door-south-teaching",
+          "rel-voids-storey-2-door-north-teaching",
+          "rel-fills-storey-2-door-north-teaching",
+          "rel-voids-storey-2-window-south-1",
+          "rel-fills-storey-2-window-south-1",
+          "rel-voids-storey-2-window-south-2",
+          "rel-fills-storey-2-window-south-2",
+          "rel-voids-storey-2-window-north-1",
+          "rel-fills-storey-2-window-north-1",
+          "rel-voids-storey-2-window-north-2",
+          "rel-fills-storey-2-window-north-2",
+          "rel-voids-storey-2-window-notch-south",
+          "rel-fills-storey-2-window-notch-south",
+          "rel-voids-storey-2-window-notch-north",
+          "rel-fills-storey-2-window-notch-north",
+          "rel-voids-storey-2-window-west",
+          "rel-fills-storey-2-window-west"
+        ],
+        "package_id": "package-storey-2",
+        "storey_id": "storey-2"
+      },
+      {
+        "allowed_reference_ids": [
+          "storey-3",
+          "storey-3-wall-north",
+          "storey-3-wall-notch-north",
+          "storey-3-wall-notch-south",
+          "storey-3-wall-partition-north",
+          "storey-3-wall-partition-south",
+          "storey-3-wall-south",
+          "storey-3-wall-west"
+        ],
+        "kind": "storey_local",
+        "owned_component_classes": {},
+        "owned_component_ids": [
+          "storey-3-wall-south",
+          "storey-3-wall-east-south",
+          "storey-3-wall-notch-south",
+          "storey-3-wall-notch-west",
+          "storey-3-wall-notch-north",
+          "storey-3-wall-east-north",
+          "storey-3-wall-north",
+          "storey-3-wall-west",
+          "storey-3-wall-partition-south",
+          "storey-3-wall-partition-north",
+          "storey-3-space-south-teaching",
+          "storey-3-space-north-teaching",
+          "storey-3-space-circulation",
+          "storey-3-door-south-teaching",
+          "opening-storey-3-door-south-teaching",
+          "storey-3-door-north-teaching",
+          "opening-storey-3-door-north-teaching",
+          "storey-3-window-south-1",
+          "opening-storey-3-window-south-1",
+          "storey-3-window-south-2",
+          "opening-storey-3-window-south-2",
+          "storey-3-window-north-1",
+          "opening-storey-3-window-north-1",
+          "storey-3-window-north-2",
+          "opening-storey-3-window-north-2",
+          "storey-3-window-notch-south",
+          "opening-storey-3-window-notch-south",
+          "storey-3-window-notch-north",
+          "opening-storey-3-window-notch-north",
+          "storey-3-window-west",
+          "opening-storey-3-window-west"
+        ],
+        "owned_relationship_ids": [
+          "rel-voids-storey-3-door-south-teaching",
+          "rel-fills-storey-3-door-south-teaching",
+          "rel-voids-storey-3-door-north-teaching",
+          "rel-fills-storey-3-door-north-teaching",
+          "rel-voids-storey-3-window-south-1",
+          "rel-fills-storey-3-window-south-1",
+          "rel-voids-storey-3-window-south-2",
+          "rel-fills-storey-3-window-south-2",
+          "rel-voids-storey-3-window-north-1",
+          "rel-fills-storey-3-window-north-1",
+          "rel-voids-storey-3-window-north-2",
+          "rel-fills-storey-3-window-north-2",
+          "rel-voids-storey-3-window-notch-south",
+          "rel-fills-storey-3-window-notch-south",
+          "rel-voids-storey-3-window-notch-north",
+          "rel-fills-storey-3-window-notch-north",
+          "rel-voids-storey-3-window-west",
+          "rel-fills-storey-3-window-west"
+        ],
+        "package_id": "package-storey-3",
+        "storey_id": "storey-3"
+      },
+      {
+        "allowed_reference_ids": [
+          "storey-1",
+          "storey-2",
+          "storey-3"
+        ],
+        "kind": "cross_storey",
+        "owned_component_ids": [
+          "floor-slab-storey-1",
+          "floor-slab-storey-2",
+          "floor-slab-storey-2-opening-stair-flight-1",
+          "floor-slab-storey-3",
+          "floor-slab-storey-3-opening-stair-flight-2",
+          "stair-flight-1",
+          "stair-flight-flight-1",
+          "stair-flight-2",
+          "stair-flight-flight-2",
+          "roof-slab"
+        ],
+        "owned_relationship_ids": [
+          "rel-voids-floor-slab-storey-2",
+          "rel-voids-floor-slab-storey-3",
+          "aggregate-stair-flight-1-flight",
+          "aggregate-stair-flight-2-flight"
+        ],
+        "package_id": "package-cross-storey",
+        "storey_id": null
+      }
+    ],
+    "schema_version": "text2ifc/generation-package-manifest/1.0",
+    "status": "ready",
+    "storey_count": 3
+  },
+  "generation_schema_version": "bim-json/2.1",
+  "products": [],
+  "required_relationships": {
+    "containment": {
+      "doors": 7,
+      "products": 0,
+      "slabs": 3,
+      "spaces": 9,
+      "storeys": 3,
+      "walls": 30,
+      "windows": 21
+    },
+    "opening_fill": {
+      "doors": 7,
+      "windows": 21
+    }
+  },
+  "roof": {
+    "bottom_elevation_mm": 9300,
+    "bounds": {
+      "x": [
+        0,
+        13200
+      ],
+      "y": [
+        0,
+        16800
+      ]
+    },
+    "covers_notch": false,
+    "form": "flat",
+    "id": "roof-slab",
+    "polygon": [
+      [
+        0,
+        0
+      ],
+      [
+        13200,
+        0
+      ],
+      [
+        13200,
+        4800
+      ],
+      [
+        4800,
+        4800
+      ],
+      [
+        4800,
+        12000
+      ],
+      [
+        13200,
+        12000
+      ],
+      [
+        13200,
+        16800
+      ],
+      [
+        0,
+        16800
+      ],
+      [
+        0,
+        0
+      ]
+    ],
+    "source_key": "roof",
+    "thickness_mm": 150,
+    "top_elevation_mm": 9450
+  },
+  "schema_version": "text2ifc/expected-facts/1.0",
+  "semantic_authority_declared": true,
+  "semantic_expectations": [
+    {
+      "entity_id": "storey-1-wall-south",
+      "kind": "material",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/0",
+      "value": {
+        "kind": "single_material",
+        "name": "brick"
+      }
+    },
+    {
+      "entity_id": "storey-1-wall-east-south",
+      "kind": "material",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/1",
+      "value": {
+        "kind": "single_material",
+        "name": "brick"
+      }
+    },
+    {
+      "entity_id": "storey-1-wall-notch-south",
+      "kind": "material",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/2",
+      "value": {
+        "kind": "single_material",
+        "name": "brick"
+      }
+    },
+    {
+      "entity_id": "storey-1-wall-notch-west",
+      "kind": "material",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/3",
+      "value": {
+        "kind": "single_material",
+        "name": "brick"
+      }
+    },
+    {
+      "entity_id": "storey-1-wall-notch-north",
+      "kind": "material",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/4",
+      "value": {
+        "kind": "single_material",
+        "name": "brick"
+      }
+    },
+    {
+      "entity_id": "storey-1-wall-east-north",
+      "kind": "material",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/5",
+      "value": {
+        "kind": "single_material",
+        "name": "brick"
+      }
+    },
+    {
+      "entity_id": "storey-1-wall-north",
+      "kind": "material",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/6",
+      "value": {
+        "kind": "single_material",
+        "name": "brick"
+      }
+    },
+    {
+      "entity_id": "storey-1-wall-west",
+      "kind": "material",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/7",
+      "value": {
+        "kind": "single_material",
+        "name": "brick"
+      }
+    },
+    {
+      "entity_id": "storey-1-wall-partition-south",
+      "kind": "material",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/8",
+      "value": {
+        "kind": "single_material",
+        "name": "brick"
+      }
+    },
+    {
+      "entity_id": "storey-1-wall-partition-north",
+      "kind": "material",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/9",
+      "value": {
+        "kind": "single_material",
+        "name": "brick"
+      }
+    },
+    {
+      "entity_id": "storey-2-wall-south",
+      "kind": "material",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/10",
+      "value": {
+        "kind": "single_material",
+        "name": "brick"
+      }
+    },
+    {
+      "entity_id": "storey-2-wall-east-south",
+      "kind": "material",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/11",
+      "value": {
+        "kind": "single_material",
+        "name": "brick"
+      }
+    },
+    {
+      "entity_id": "storey-2-wall-notch-south",
+      "kind": "material",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/12",
+      "value": {
+        "kind": "single_material",
+        "name": "brick"
+      }
+    },
+    {
+      "entity_id": "storey-2-wall-notch-west",
+      "kind": "material",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/13",
+      "value": {
+        "kind": "single_material",
+        "name": "brick"
+      }
+    },
+    {
+      "entity_id": "storey-2-wall-notch-north",
+      "kind": "material",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/14",
+      "value": {
+        "kind": "single_material",
+        "name": "brick"
+      }
+    },
+    {
+      "entity_id": "storey-2-wall-east-north",
+      "kind": "material",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/15",
+      "value": {
+        "kind": "single_material",
+        "name": "brick"
+      }
+    },
+    {
+      "entity_id": "storey-2-wall-north",
+      "kind": "material",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/16",
+      "value": {
+        "kind": "single_material",
+        "name": "brick"
+      }
+    },
+    {
+      "entity_id": "storey-2-wall-west",
+      "kind": "material",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/17",
+      "value": {
+        "kind": "single_material",
+        "name": "brick"
+      }
+    },
+    {
+      "entity_id": "storey-2-wall-partition-south",
+      "kind": "material",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/18",
+      "value": {
+        "kind": "single_material",
+        "name": "brick"
+      }
+    },
+    {
+      "entity_id": "storey-2-wall-partition-north",
+      "kind": "material",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/19",
+      "value": {
+        "kind": "single_material",
+        "name": "brick"
+      }
+    },
+    {
+      "entity_id": "storey-3-wall-south",
+      "kind": "material",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/20",
+      "value": {
+        "kind": "single_material",
+        "name": "brick"
+      }
+    },
+    {
+      "entity_id": "storey-3-wall-east-south",
+      "kind": "material",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/21",
+      "value": {
+        "kind": "single_material",
+        "name": "brick"
+      }
+    },
+    {
+      "entity_id": "storey-3-wall-notch-south",
+      "kind": "material",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/22",
+      "value": {
+        "kind": "single_material",
+        "name": "brick"
+      }
+    },
+    {
+      "entity_id": "storey-3-wall-notch-west",
+      "kind": "material",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/23",
+      "value": {
+        "kind": "single_material",
+        "name": "brick"
+      }
+    },
+    {
+      "entity_id": "storey-3-wall-notch-north",
+      "kind": "material",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/24",
+      "value": {
+        "kind": "single_material",
+        "name": "brick"
+      }
+    },
+    {
+      "entity_id": "storey-3-wall-east-north",
+      "kind": "material",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/25",
+      "value": {
+        "kind": "single_material",
+        "name": "brick"
+      }
+    },
+    {
+      "entity_id": "storey-3-wall-north",
+      "kind": "material",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/26",
+      "value": {
+        "kind": "single_material",
+        "name": "brick"
+      }
+    },
+    {
+      "entity_id": "storey-3-wall-west",
+      "kind": "material",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/27",
+      "value": {
+        "kind": "single_material",
+        "name": "brick"
+      }
+    },
+    {
+      "entity_id": "storey-3-wall-partition-south",
+      "kind": "material",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/28",
+      "value": {
+        "kind": "single_material",
+        "name": "brick"
+      }
+    },
+    {
+      "entity_id": "storey-3-wall-partition-north",
+      "kind": "material",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/29",
+      "value": {
+        "kind": "single_material",
+        "name": "brick"
+      }
+    },
+    {
+      "entity_id": "floor-slab-storey-1",
+      "kind": "material",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/30",
+      "value": {
+        "kind": "single_material",
+        "name": "concrete"
+      }
+    },
+    {
+      "entity_id": "floor-slab-storey-2",
+      "kind": "material",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/31",
+      "value": {
+        "kind": "single_material",
+        "name": "concrete"
+      }
+    },
+    {
+      "entity_id": "floor-slab-storey-3",
+      "kind": "material",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/32",
+      "value": {
+        "kind": "single_material",
+        "name": "concrete"
+      }
+    },
+    {
+      "entity_id": "roof-slab",
+      "kind": "material",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/33",
+      "value": {
+        "kind": "single_material",
+        "name": "concrete"
+      }
+    },
+    {
+      "entity_id": "storey-1-door-south-teaching",
+      "kind": "template",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/34",
+      "value": {
+        "template_id": "door-right",
+        "template_version": "text2ifc/basic-filling/1.0"
+      }
+    },
+    {
+      "entity_id": "storey-1-door-north-teaching",
+      "kind": "template",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/35",
+      "value": {
+        "template_id": "door-right",
+        "template_version": "text2ifc/basic-filling/1.0"
+      }
+    },
+    {
+      "entity_id": "storey-1-door-entrance",
+      "kind": "template",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/36",
+      "value": {
+        "template_id": "door-left",
+        "template_version": "text2ifc/basic-filling/1.0"
+      }
+    },
+    {
+      "entity_id": "storey-2-door-south-teaching",
+      "kind": "template",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/37",
+      "value": {
+        "template_id": "door-right",
+        "template_version": "text2ifc/basic-filling/1.0"
+      }
+    },
+    {
+      "entity_id": "storey-2-door-north-teaching",
+      "kind": "template",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/38",
+      "value": {
+        "template_id": "door-right",
+        "template_version": "text2ifc/basic-filling/1.0"
+      }
+    },
+    {
+      "entity_id": "storey-3-door-south-teaching",
+      "kind": "template",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/39",
+      "value": {
+        "template_id": "door-right",
+        "template_version": "text2ifc/basic-filling/1.0"
+      }
+    },
+    {
+      "entity_id": "storey-3-door-north-teaching",
+      "kind": "template",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/40",
+      "value": {
+        "template_id": "door-right",
+        "template_version": "text2ifc/basic-filling/1.0"
+      }
+    },
+    {
+      "entity_id": "storey-1-window-south-1",
+      "kind": "template",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/41",
+      "value": {
+        "template_id": "window-double-vertical",
+        "template_version": "text2ifc/basic-filling/1.0"
+      }
+    },
+    {
+      "entity_id": "storey-1-window-south-2",
+      "kind": "template",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/42",
+      "value": {
+        "template_id": "window-double-vertical",
+        "template_version": "text2ifc/basic-filling/1.0"
+      }
+    },
+    {
+      "entity_id": "storey-1-window-north-1",
+      "kind": "template",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/43",
+      "value": {
+        "template_id": "window-double-vertical",
+        "template_version": "text2ifc/basic-filling/1.0"
+      }
+    },
+    {
+      "entity_id": "storey-1-window-north-2",
+      "kind": "template",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/44",
+      "value": {
+        "template_id": "window-double-vertical",
+        "template_version": "text2ifc/basic-filling/1.0"
+      }
+    },
+    {
+      "entity_id": "storey-1-window-notch-south",
+      "kind": "template",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/45",
+      "value": {
+        "template_id": "window-double-vertical",
+        "template_version": "text2ifc/basic-filling/1.0"
+      }
+    },
+    {
+      "entity_id": "storey-1-window-notch-north",
+      "kind": "template",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/46",
+      "value": {
+        "template_id": "window-double-vertical",
+        "template_version": "text2ifc/basic-filling/1.0"
+      }
+    },
+    {
+      "entity_id": "storey-1-window-west",
+      "kind": "template",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/47",
+      "value": {
+        "template_id": "window-single",
+        "template_version": "text2ifc/basic-filling/1.0"
+      }
+    },
+    {
+      "entity_id": "storey-2-window-south-1",
+      "kind": "template",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/48",
+      "value": {
+        "template_id": "window-double-vertical",
+        "template_version": "text2ifc/basic-filling/1.0"
+      }
+    },
+    {
+      "entity_id": "storey-2-window-south-2",
+      "kind": "template",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/49",
+      "value": {
+        "template_id": "window-double-vertical",
+        "template_version": "text2ifc/basic-filling/1.0"
+      }
+    },
+    {
+      "entity_id": "storey-2-window-north-1",
+      "kind": "template",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/50",
+      "value": {
+        "template_id": "window-double-vertical",
+        "template_version": "text2ifc/basic-filling/1.0"
+      }
+    },
+    {
+      "entity_id": "storey-2-window-north-2",
+      "kind": "template",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/51",
+      "value": {
+        "template_id": "window-double-vertical",
+        "template_version": "text2ifc/basic-filling/1.0"
+      }
+    },
+    {
+      "entity_id": "storey-2-window-notch-south",
+      "kind": "template",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/52",
+      "value": {
+        "template_id": "window-double-vertical",
+        "template_version": "text2ifc/basic-filling/1.0"
+      }
+    },
+    {
+      "entity_id": "storey-2-window-notch-north",
+      "kind": "template",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/53",
+      "value": {
+        "template_id": "window-double-vertical",
+        "template_version": "text2ifc/basic-filling/1.0"
+      }
+    },
+    {
+      "entity_id": "storey-2-window-west",
+      "kind": "template",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/54",
+      "value": {
+        "template_id": "window-single",
+        "template_version": "text2ifc/basic-filling/1.0"
+      }
+    },
+    {
+      "entity_id": "storey-3-window-south-1",
+      "kind": "template",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/55",
+      "value": {
+        "template_id": "window-double-vertical",
+        "template_version": "text2ifc/basic-filling/1.0"
+      }
+    },
+    {
+      "entity_id": "storey-3-window-south-2",
+      "kind": "template",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/56",
+      "value": {
+        "template_id": "window-double-vertical",
+        "template_version": "text2ifc/basic-filling/1.0"
+      }
+    },
+    {
+      "entity_id": "storey-3-window-north-1",
+      "kind": "template",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/57",
+      "value": {
+        "template_id": "window-double-vertical",
+        "template_version": "text2ifc/basic-filling/1.0"
+      }
+    },
+    {
+      "entity_id": "storey-3-window-north-2",
+      "kind": "template",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/58",
+      "value": {
+        "template_id": "window-double-vertical",
+        "template_version": "text2ifc/basic-filling/1.0"
+      }
+    },
+    {
+      "entity_id": "storey-3-window-notch-south",
+      "kind": "template",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/59",
+      "value": {
+        "template_id": "window-double-vertical",
+        "template_version": "text2ifc/basic-filling/1.0"
+      }
+    },
+    {
+      "entity_id": "storey-3-window-notch-north",
+      "kind": "template",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/60",
+      "value": {
+        "template_id": "window-double-vertical",
+        "template_version": "text2ifc/basic-filling/1.0"
+      }
+    },
+    {
+      "entity_id": "storey-3-window-west",
+      "kind": "template",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/61",
+      "value": {
+        "template_id": "window-single",
+        "template_version": "text2ifc/basic-filling/1.0"
+      }
+    }
+  ],
+  "semantic_expectations_hash": "ca2086a4e3b46bc84500513af4c5bfbdc6d519965dcf18dacf3b9213cc55948a",
+  "semantic_projection_issues": [],
+  "sidecar_role": "orchestration_expectations_not_bim_json_schema",
+  "slabs": [
+    {
+      "bounds": {
+        "x": [
+          0,
+          13200
+        ],
+        "y": [
+          0,
+          16800
+        ]
+      },
+      "id": "floor-slab-storey-1",
+      "note": "首层楼板没有楼梯洞口",
+      "openings": [],
+      "polygon": [
+        [
+          0,
+          0
+        ],
+        [
+          13200,
+          0
+        ],
+        [
+          13200,
+          4800
+        ],
+        [
+          4800,
+          4800
+        ],
+        [
+          4800,
+          12000
+        ],
+        [
+          13200,
+          12000
+        ],
+        [
+          13200,
+          16800
+        ],
+        [
+          0,
+          16800
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "storey": "storey-1",
+      "thickness_mm": 150,
+      "top_elevation_mm": 0
+    },
+    {
+      "bounds": {
+        "x": [
+          0,
+          13200
+        ],
+        "y": [
+          0,
+          16800
+        ]
+      },
+      "id": "floor-slab-storey-2",
+      "note": "洞口只对应第一段梯段",
+      "opening": {
+        "bounds": {
+          "x": [
+            400,
+            1600
+          ],
+          "y": [
+            5400,
+            10800
+          ]
+        },
+        "host": "stair-flight-1",
+        "id": "floor-slab-storey-2-opening-stair-flight-1",
+        "purpose": "stair_opening",
+        "through_thickness_mm": 150
+      },
+      "polygon": [
+        [
+          0,
+          0
+        ],
+        [
+          13200,
+          0
+        ],
+        [
+          13200,
+          4800
+        ],
+        [
+          4800,
+          4800
+        ],
+        [
+          4800,
+          12000
+        ],
+        [
+          13200,
+          12000
+        ],
+        [
+          13200,
+          16800
+        ],
+        [
+          0,
+          16800
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "storey": "storey-2",
+      "thickness_mm": 150,
+      "top_elevation_mm": 3150
+    },
+    {
+      "bounds": {
+        "x": [
+          0,
+          13200
+        ],
+        "y": [
+          0,
+          16800
+        ]
+      },
+      "id": "floor-slab-storey-3",
+      "note": "洞口只对应第二段梯段",
+      "opening": {
+        "bounds": {
+          "x": [
+            2800,
+            4000
+          ],
+          "y": [
+            5400,
+            10800
+          ]
+        },
+        "host": "stair-flight-2",
+        "id": "floor-slab-storey-3-opening-stair-flight-2",
+        "purpose": "stair_opening",
+        "through_thickness_mm": 150
+      },
+      "polygon": [
+        [
+          0,
+          0
+        ],
+        [
+          13200,
+          0
+        ],
+        [
+          13200,
+          4800
+        ],
+        [
+          4800,
+          4800
+        ],
+        [
+          4800,
+          12000
+        ],
+        [
+          13200,
+          12000
+        ],
+        [
+          13200,
+          16800
+        ],
+        [
+          0,
+          16800
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "storey": "storey-3",
+      "thickness_mm": 150,
+      "top_elevation_mm": 6300
+    }
+  ],
+  "source": {
+    "design_brief_schema_version": "text2ifc/design-brief/2.3",
+    "language": "zh-CN",
+    "status": "ready"
+  },
+  "source_paths": {
+    "/known_facts/appearance": [
+      "turn-user-001"
+    ],
+    "/known_facts/building": [
+      "turn-user-001"
+    ],
+    "/known_facts/constraints": [
+      "turn-user-001"
+    ],
+    "/known_facts/floor_slabs": [
+      "turn-user-001"
+    ],
+    "/known_facts/roof_slab": [
+      "turn-user-001"
+    ],
+    "/known_facts/semantic_requirements": [
+      "turn-user-001"
+    ],
+    "/known_facts/semantic_review": [
+      "turn-user-001"
+    ],
+    "/known_facts/stair_landings": [
+      "turn-user-001"
+    ],
+    "/known_facts/stairs": [
+      "turn-user-001"
+    ],
+    "/known_facts/storeys": [
+      "turn-user-001"
+    ],
+    "/known_facts/storeys/0/doors/2/center_global_mm": [
+      "turn-assistant-002",
+      "turn-user-003"
+    ]
+  },
+  "space_counts_by_storey": {
+    "storey-1": 3,
+    "storey-2": 3,
+    "storey-3": 3
+  },
+  "spaces": [
+    {
+      "bounds": {
+        "x": [
+          4800,
+          13000
+        ],
+        "y": [
+          200,
+          4600
+        ]
+      },
+      "function": "teaching_activity_room",
+      "height_mm": 3000,
+      "id": "storey-1-space-south-teaching",
+      "name": "南教学室",
+      "source_key": "首层.spaces[1]",
+      "storey": "storey-1"
+    },
+    {
+      "bounds": {
+        "x": [
+          4800,
+          13000
+        ],
+        "y": [
+          12200,
+          16600
+        ]
+      },
+      "function": "teaching_activity_room",
+      "height_mm": 3000,
+      "id": "storey-1-space-north-teaching",
+      "name": "北教学室",
+      "source_key": "首层.spaces[2]",
+      "storey": "storey-1"
+    },
+    {
+      "bounds": {
+        "x": [
+          200,
+          4600
+        ],
+        "y": [
+          200,
+          16600
+        ]
+      },
+      "function": "circulation_and_stair",
+      "height_mm": 3000,
+      "id": "storey-1-space-circulation",
+      "name": "西侧交通/楼梯空间",
+      "source_key": "首层.spaces[3]",
+      "storey": "storey-1"
+    },
+    {
+      "bounds": {
+        "x": [
+          4800,
+          13000
+        ],
+        "y": [
+          200,
+          4600
+        ]
+      },
+      "function": "teaching_activity_room",
+      "height_mm": 3000,
+      "id": "storey-2-space-south-teaching",
+      "name": "南教学室",
+      "source_key": "二层.spaces[1]",
+      "storey": "storey-2"
+    },
+    {
+      "bounds": {
+        "x": [
+          4800,
+          13000
+        ],
+        "y": [
+          12200,
+          16600
+        ]
+      },
+      "function": "teaching_activity_room",
+      "height_mm": 3000,
+      "id": "storey-2-space-north-teaching",
+      "name": "北教学室",
+      "source_key": "二层.spaces[2]",
+      "storey": "storey-2"
+    },
+    {
+      "bounds": {
+        "x": [
+          200,
+          4600
+        ],
+        "y": [
+          200,
+          16600
+        ]
+      },
+      "function": "circulation_and_stair",
+      "height_mm": 3000,
+      "id": "storey-2-space-circulation",
+      "name": "西侧交通/楼梯空间",
+      "source_key": "二层.spaces[3]",
+      "storey": "storey-2"
+    },
+    {
+      "bounds": {
+        "x": [
+          4800,
+          13000
+        ],
+        "y": [
+          200,
+          4600
+        ]
+      },
+      "function": "teaching_activity_room",
+      "height_mm": 3000,
+      "id": "storey-3-space-south-teaching",
+      "name": "南教学室",
+      "source_key": "三层.spaces[1]",
+      "storey": "storey-3"
+    },
+    {
+      "bounds": {
+        "x": [
+          4800,
+          13000
+        ],
+        "y": [
+          12200,
+          16600
+        ]
+      },
+      "function": "teaching_activity_room",
+      "height_mm": 3000,
+      "id": "storey-3-space-north-teaching",
+      "name": "北教学室",
+      "source_key": "三层.spaces[2]",
+      "storey": "storey-3"
+    },
+    {
+      "bounds": {
+        "x": [
+          200,
+          4600
+        ],
+        "y": [
+          200,
+          16600
+        ]
+      },
+      "function": "circulation_and_stair",
+      "height_mm": 3000,
+      "id": "storey-3-space-circulation",
+      "name": "西侧交通/楼梯空间",
+      "source_key": "三层.spaces[3]",
+      "storey": "storey-3"
+    }
+  ],
+  "stairs": [
+    {
+      "bounds": {
+        "x": [
+          400,
+          1600
+        ],
+        "y": [
+          5400,
+          10800
+        ]
+      },
+      "end_elevation_mm": 3150,
+      "from_storey": "storey-1",
+      "id": "stair-flight-1",
+      "number_of_risers": 18,
+      "opening_bounds": {
+        "x": [
+          400,
+          1600
+        ],
+        "y": [
+          5400,
+          10800
+        ]
+      },
+      "opening_host_slab": "floor-slab-storey-2",
+      "riser_height_mm": 175,
+      "run_direction": "south_to_north",
+      "start_elevation_mm": 0,
+      "to_storey": "storey-2",
+      "tread_depth_mm": 300,
+      "width_mm": 1200
+    },
+    {
+      "bounds": {
+        "x": [
+          2800,
+          4000
+        ],
+        "y": [
+          5400,
+          10800
+        ]
+      },
+      "end_elevation_mm": 6300,
+      "from_storey": "storey-2",
+      "id": "stair-flight-2",
+      "number_of_risers": 18,
+      "opening_bounds": {
+        "x": [
+          2800,
+          4000
+        ],
+        "y": [
+          5400,
+          10800
+        ]
+      },
+      "opening_host_slab": "floor-slab-storey-3",
+      "riser_height_mm": 175,
+      "run_direction": "north_to_south",
+      "start_elevation_mm": 3150,
+      "to_storey": "storey-3",
+      "tread_depth_mm": 300,
+      "width_mm": 1200
+    }
+  ],
+  "storey_count": 3,
+  "storeys": [
+    {
+      "elevation_mm": 0,
+      "id": "storey-1",
+      "name": "首层",
+      "source_key": "首层"
+    },
+    {
+      "elevation_mm": 3150,
+      "id": "storey-2",
+      "name": "二层",
+      "source_key": "二层"
+    },
+    {
+      "elevation_mm": 6300,
+      "id": "storey-3",
+      "name": "三层",
+      "source_key": "三层"
+    }
+  ],
+  "total_counts": {
+    "IfcBuildingStorey": 3,
+    "IfcDoor": 7,
+    "IfcSlab": 3,
+    "IfcSpace": 9,
+    "IfcWall": 30,
+    "IfcWindow": 21
+  },
+  "unresolved_expectations": [],
+  "walls": [
+    {
+      "bounds": {
+        "x": [
+          0,
+          13200
+        ],
+        "y": [
+          0,
+          200
+        ]
+      },
+      "height_mm": 3000,
+      "id": "storey-1-wall-south",
+      "source_key": "storey-1.walls.exterior[1]",
+      "storey": "storey-1",
+      "thickness_mm": 200
+    },
+    {
+      "bounds": {
+        "x": [
+          13000,
+          13200
+        ],
+        "y": [
+          200,
+          4600
+        ]
+      },
+      "height_mm": 3000,
+      "id": "storey-1-wall-east-south",
+      "source_key": "storey-1.walls.exterior[2]",
+      "storey": "storey-1",
+      "thickness_mm": 200
+    },
+    {
+      "bounds": {
+        "x": [
+          4800,
+          13200
+        ],
+        "y": [
+          4600,
+          4800
+        ]
+      },
+      "height_mm": 3000,
+      "id": "storey-1-wall-notch-south",
+      "source_key": "storey-1.walls.exterior[3]",
+      "storey": "storey-1",
+      "thickness_mm": 200
+    },
+    {
+      "bounds": {
+        "x": [
+          4800,
+          5000
+        ],
+        "y": [
+          4800,
+          12000
+        ]
+      },
+      "height_mm": 3000,
+      "id": "storey-1-wall-notch-west",
+      "source_key": "storey-1.walls.exterior[4]",
+      "storey": "storey-1",
+      "thickness_mm": 200
+    },
+    {
+      "bounds": {
+        "x": [
+          4800,
+          13200
+        ],
+        "y": [
+          12000,
+          12200
+        ]
+      },
+      "height_mm": 3000,
+      "id": "storey-1-wall-notch-north",
+      "source_key": "storey-1.walls.exterior[5]",
+      "storey": "storey-1",
+      "thickness_mm": 200
+    },
+    {
+      "bounds": {
+        "x": [
+          13000,
+          13200
+        ],
+        "y": [
+          12200,
+          16600
+        ]
+      },
+      "height_mm": 3000,
+      "id": "storey-1-wall-east-north",
+      "source_key": "storey-1.walls.exterior[6]",
+      "storey": "storey-1",
+      "thickness_mm": 200
+    },
+    {
+      "bounds": {
+        "x": [
+          0,
+          13200
+        ],
+        "y": [
+          16600,
+          16800
+        ]
+      },
+      "height_mm": 3000,
+      "id": "storey-1-wall-north",
+      "source_key": "storey-1.walls.exterior[7]",
+      "storey": "storey-1",
+      "thickness_mm": 200
+    },
+    {
+      "bounds": {
+        "x": [
+          0,
+          200
+        ],
+        "y": [
+          200,
+          16600
+        ]
+      },
+      "height_mm": 3000,
+      "id": "storey-1-wall-west",
+      "source_key": "storey-1.walls.exterior[8]",
+      "storey": "storey-1",
+      "thickness_mm": 200
+    },
+    {
+      "bounds": {
+        "x": [
+          4600,
+          4800
+        ],
+        "y": [
+          200,
+          4800
+        ]
+      },
+      "connects": [
+        "storey-1-space-circulation",
+        "storey-1-space-south-teaching"
+      ],
+      "height_mm": 3000,
+      "id": "storey-1-wall-partition-south",
+      "source_key": "storey-1.walls.interior[9]",
+      "storey": "storey-1",
+      "thickness_mm": 200
+    },
+    {
+      "bounds": {
+        "x": [
+          4600,
+          4800
+        ],
+        "y": [
+          12000,
+          16600
+        ]
+      },
+      "connects": [
+        "storey-1-space-circulation",
+        "storey-1-space-north-teaching"
+      ],
+      "height_mm": 3000,
+      "id": "storey-1-wall-partition-north",
+      "source_key": "storey-1.walls.interior[10]",
+      "storey": "storey-1",
+      "thickness_mm": 200
+    },
+    {
+      "bounds": {
+        "x": [
+          0,
+          13200
+        ],
+        "y": [
+          0,
+          200
+        ]
+      },
+      "height_mm": 3000,
+      "id": "storey-2-wall-south",
+      "source_key": "storey-2.walls.exterior[1]",
+      "storey": "storey-2",
+      "thickness_mm": 200
+    },
+    {
+      "bounds": {
+        "x": [
+          13000,
+          13200
+        ],
+        "y": [
+          200,
+          4600
+        ]
+      },
+      "height_mm": 3000,
+      "id": "storey-2-wall-east-south",
+      "source_key": "storey-2.walls.exterior[2]",
+      "storey": "storey-2",
+      "thickness_mm": 200
+    },
+    {
+      "bounds": {
+        "x": [
+          4800,
+          13200
+        ],
+        "y": [
+          4600,
+          4800
+        ]
+      },
+      "height_mm": 3000,
+      "id": "storey-2-wall-notch-south",
+      "source_key": "storey-2.walls.exterior[3]",
+      "storey": "storey-2",
+      "thickness_mm": 200
+    },
+    {
+      "bounds": {
+        "x": [
+          4800,
+          5000
+        ],
+        "y": [
+          4800,
+          12000
+        ]
+      },
+      "height_mm": 3000,
+      "id": "storey-2-wall-notch-west",
+      "source_key": "storey-2.walls.exterior[4]",
+      "storey": "storey-2",
+      "thickness_mm": 200
+    },
+    {
+      "bounds": {
+        "x": [
+          4800,
+          13200
+        ],
+        "y": [
+          12000,
+          12200
+        ]
+      },
+      "height_mm": 3000,
+      "id": "storey-2-wall-notch-north",
+      "source_key": "storey-2.walls.exterior[5]",
+      "storey": "storey-2",
+      "thickness_mm": 200
+    },
+    {
+      "bounds": {
+        "x": [
+          13000,
+          13200
+        ],
+        "y": [
+          12200,
+          16600
+        ]
+      },
+      "height_mm": 3000,
+      "id": "storey-2-wall-east-north",
+      "source_key": "storey-2.walls.exterior[6]",
+      "storey": "storey-2",
+      "thickness_mm": 200
+    },
+    {
+      "bounds": {
+        "x": [
+          0,
+          13200
+        ],
+        "y": [
+          16600,
+          16800
+        ]
+      },
+      "height_mm": 3000,
+      "id": "storey-2-wall-north",
+      "source_key": "storey-2.walls.exterior[7]",
+      "storey": "storey-2",
+      "thickness_mm": 200
+    },
+    {
+      "bounds": {
+        "x": [
+          0,
+          200
+        ],
+        "y": [
+          200,
+          16600
+        ]
+      },
+      "height_mm": 3000,
+      "id": "storey-2-wall-west",
+      "source_key": "storey-2.walls.exterior[8]",
+      "storey": "storey-2",
+      "thickness_mm": 200
+    },
+    {
+      "bounds": {
+        "x": [
+          4600,
+          4800
+        ],
+        "y": [
+          200,
+          4800
+        ]
+      },
+      "connects": [
+        "storey-2-space-circulation",
+        "storey-2-space-south-teaching"
+      ],
+      "height_mm": 3000,
+      "id": "storey-2-wall-partition-south",
+      "source_key": "storey-2.walls.interior[9]",
+      "storey": "storey-2",
+      "thickness_mm": 200
+    },
+    {
+      "bounds": {
+        "x": [
+          4600,
+          4800
+        ],
+        "y": [
+          12000,
+          16600
+        ]
+      },
+      "connects": [
+        "storey-2-space-circulation",
+        "storey-2-space-north-teaching"
+      ],
+      "height_mm": 3000,
+      "id": "storey-2-wall-partition-north",
+      "source_key": "storey-2.walls.interior[10]",
+      "storey": "storey-2",
+      "thickness_mm": 200
+    },
+    {
+      "bounds": {
+        "x": [
+          0,
+          13200
+        ],
+        "y": [
+          0,
+          200
+        ]
+      },
+      "height_mm": 3000,
+      "id": "storey-3-wall-south",
+      "source_key": "storey-3.walls.exterior[1]",
+      "storey": "storey-3",
+      "thickness_mm": 200
+    },
+    {
+      "bounds": {
+        "x": [
+          13000,
+          13200
+        ],
+        "y": [
+          200,
+          4600
+        ]
+      },
+      "height_mm": 3000,
+      "id": "storey-3-wall-east-south",
+      "source_key": "storey-3.walls.exterior[2]",
+      "storey": "storey-3",
+      "thickness_mm": 200
+    },
+    {
+      "bounds": {
+        "x": [
+          4800,
+          13200
+        ],
+        "y": [
+          4600,
+          4800
+        ]
+      },
+      "height_mm": 3000,
+      "id": "storey-3-wall-notch-south",
+      "source_key": "storey-3.walls.exterior[3]",
+      "storey": "storey-3",
+      "thickness_mm": 200
+    },
+    {
+      "bounds": {
+        "x": [
+          4800,
+          5000
+        ],
+        "y": [
+          4800,
+          12000
+        ]
+      },
+      "height_mm": 3000,
+      "id": "storey-3-wall-notch-west",
+      "source_key": "storey-3.walls.exterior[4]",
+      "storey": "storey-3",
+      "thickness_mm": 200
+    },
+    {
+      "bounds": {
+        "x": [
+          4800,
+          13200
+        ],
+        "y": [
+          12000,
+          12200
+        ]
+      },
+      "height_mm": 3000,
+      "id": "storey-3-wall-notch-north",
+      "source_key": "storey-3.walls.exterior[5]",
+      "storey": "storey-3",
+      "thickness_mm": 200
+    },
+    {
+      "bounds": {
+        "x": [
+          13000,
+          13200
+        ],
+        "y": [
+          12200,
+          16600
+        ]
+      },
+      "height_mm": 3000,
+      "id": "storey-3-wall-east-north",
+      "source_key": "storey-3.walls.exterior[6]",
+      "storey": "storey-3",
+      "thickness_mm": 200
+    },
+    {
+      "bounds": {
+        "x": [
+          0,
+          13200
+        ],
+        "y": [
+          16600,
+          16800
+        ]
+      },
+      "height_mm": 3000,
+      "id": "storey-3-wall-north",
+      "source_key": "storey-3.walls.exterior[7]",
+      "storey": "storey-3",
+      "thickness_mm": 200
+    },
+    {
+      "bounds": {
+        "x": [
+          0,
+          200
+        ],
+        "y": [
+          200,
+          16600
+        ]
+      },
+      "height_mm": 3000,
+      "id": "storey-3-wall-west",
+      "source_key": "storey-3.walls.exterior[8]",
+      "storey": "storey-3",
+      "thickness_mm": 200
+    },
+    {
+      "bounds": {
+        "x": [
+          4600,
+          4800
+        ],
+        "y": [
+          200,
+          4800
+        ]
+      },
+      "connects": [
+        "storey-3-space-circulation",
+        "storey-3-space-south-teaching"
+      ],
+      "height_mm": 3000,
+      "id": "storey-3-wall-partition-south",
+      "source_key": "storey-3.walls.interior[9]",
+      "storey": "storey-3",
+      "thickness_mm": 200
+    },
+    {
+      "bounds": {
+        "x": [
+          4600,
+          4800
+        ],
+        "y": [
+          12000,
+          16600
+        ]
+      },
+      "connects": [
+        "storey-3-space-circulation",
+        "storey-3-space-north-teaching"
+      ],
+      "height_mm": 3000,
+      "id": "storey-3-wall-partition-north",
+      "source_key": "storey-3.walls.interior[10]",
+      "storey": "storey-3",
+      "thickness_mm": 200
+    }
+  ],
+  "window_counts_by_storey": {
+    "storey-1": 7,
+    "storey-2": 7,
+    "storey-3": 7
+  },
+  "windows": [
+    {
+      "center_global_mm": [
+        7200,
+        100
+      ],
+      "height_mm": 1500,
+      "host_wall": "storey-1-wall-south",
+      "id": "storey-1-window-south-1",
+      "panel": "double_vertical",
+      "sill_height_mm": 900,
+      "source_key": "首层.window[1]",
+      "storey": "storey-1",
+      "template_id": "window-double-vertical",
+      "width_mm": 1800
+    },
+    {
+      "center_global_mm": [
+        10800,
+        100
+      ],
+      "height_mm": 1500,
+      "host_wall": "storey-1-wall-south",
+      "id": "storey-1-window-south-2",
+      "panel": "double_vertical",
+      "sill_height_mm": 900,
+      "source_key": "首层.window[2]",
+      "storey": "storey-1",
+      "template_id": "window-double-vertical",
+      "width_mm": 1800
+    },
+    {
+      "center_global_mm": [
+        7200,
+        16700
+      ],
+      "height_mm": 1500,
+      "host_wall": "storey-1-wall-north",
+      "id": "storey-1-window-north-1",
+      "panel": "double_vertical",
+      "sill_height_mm": 900,
+      "source_key": "首层.window[3]",
+      "storey": "storey-1",
+      "template_id": "window-double-vertical",
+      "width_mm": 1800
+    },
+    {
+      "center_global_mm": [
+        10800,
+        16700
+      ],
+      "height_mm": 1500,
+      "host_wall": "storey-1-wall-north",
+      "id": "storey-1-window-north-2",
+      "panel": "double_vertical",
+      "sill_height_mm": 900,
+      "source_key": "首层.window[4]",
+      "storey": "storey-1",
+      "template_id": "window-double-vertical",
+      "width_mm": 1800
+    },
+    {
+      "center_global_mm": [
+        9000,
+        4700
+      ],
+      "height_mm": 1500,
+      "host_wall": "storey-1-wall-notch-south",
+      "id": "storey-1-window-notch-south",
+      "panel": "double_vertical",
+      "sill_height_mm": 900,
+      "source_key": "首层.window[5]",
+      "storey": "storey-1",
+      "template_id": "window-double-vertical",
+      "width_mm": 1800
+    },
+    {
+      "center_global_mm": [
+        9000,
+        12100
+      ],
+      "height_mm": 1500,
+      "host_wall": "storey-1-wall-notch-north",
+      "id": "storey-1-window-notch-north",
+      "panel": "double_vertical",
+      "sill_height_mm": 900,
+      "source_key": "首层.window[6]",
+      "storey": "storey-1",
+      "template_id": "window-double-vertical",
+      "width_mm": 1800
+    },
+    {
+      "center_global_mm": [
+        100,
+        2400
+      ],
+      "height_mm": 1800,
+      "host_wall": "storey-1-wall-west",
+      "id": "storey-1-window-west",
+      "panel": "single",
+      "sill_height_mm": 900,
+      "source_key": "首层.window[7]",
+      "storey": "storey-1",
+      "template_id": "window-single",
+      "width_mm": 900
+    },
+    {
+      "center_global_mm": [
+        7200,
+        100
+      ],
+      "height_mm": 1500,
+      "host_wall": "storey-2-wall-south",
+      "id": "storey-2-window-south-1",
+      "panel": "double_vertical",
+      "sill_height_mm": 900,
+      "source_key": "二层.window[1]",
+      "storey": "storey-2",
+      "template_id": "window-double-vertical",
+      "width_mm": 1800
+    },
+    {
+      "center_global_mm": [
+        10800,
+        100
+      ],
+      "height_mm": 1500,
+      "host_wall": "storey-2-wall-south",
+      "id": "storey-2-window-south-2",
+      "panel": "double_vertical",
+      "sill_height_mm": 900,
+      "source_key": "二层.window[2]",
+      "storey": "storey-2",
+      "template_id": "window-double-vertical",
+      "width_mm": 1800
+    },
+    {
+      "center_global_mm": [
+        7200,
+        16700
+      ],
+      "height_mm": 1500,
+      "host_wall": "storey-2-wall-north",
+      "id": "storey-2-window-north-1",
+      "panel": "double_vertical",
+      "sill_height_mm": 900,
+      "source_key": "二层.window[3]",
+      "storey": "storey-2",
+      "template_id": "window-double-vertical",
+      "width_mm": 1800
+    },
+    {
+      "center_global_mm": [
+        10800,
+        16700
+      ],
+      "height_mm": 1500,
+      "host_wall": "storey-2-wall-north",
+      "id": "storey-2-window-north-2",
+      "panel": "double_vertical",
+      "sill_height_mm": 900,
+      "source_key": "二层.window[4]",
+      "storey": "storey-2",
+      "template_id": "window-double-vertical",
+      "width_mm": 1800
+    },
+    {
+      "center_global_mm": [
+        9000,
+        4700
+      ],
+      "height_mm": 1500,
+      "host_wall": "storey-2-wall-notch-south",
+      "id": "storey-2-window-notch-south",
+      "panel": "double_vertical",
+      "sill_height_mm": 900,
+      "source_key": "二层.window[5]",
+      "storey": "storey-2",
+      "template_id": "window-double-vertical",
+      "width_mm": 1800
+    },
+    {
+      "center_global_mm": [
+        9000,
+        12100
+      ],
+      "height_mm": 1500,
+      "host_wall": "storey-2-wall-notch-north",
+      "id": "storey-2-window-notch-north",
+      "panel": "double_vertical",
+      "sill_height_mm": 900,
+      "source_key": "二层.window[6]",
+      "storey": "storey-2",
+      "template_id": "window-double-vertical",
+      "width_mm": 1800
+    },
+    {
+      "center_global_mm": [
+        100,
+        2400
+      ],
+      "height_mm": 1800,
+      "host_wall": "storey-2-wall-west",
+      "id": "storey-2-window-west",
+      "panel": "single",
+      "sill_height_mm": 900,
+      "source_key": "二层.window[7]",
+      "storey": "storey-2",
+      "template_id": "window-single",
+      "width_mm": 900
+    },
+    {
+      "center_global_mm": [
+        7200,
+        100
+      ],
+      "height_mm": 1500,
+      "host_wall": "storey-3-wall-south",
+      "id": "storey-3-window-south-1",
+      "panel": "double_vertical",
+      "sill_height_mm": 900,
+      "source_key": "三层.window[1]",
+      "storey": "storey-3",
+      "template_id": "window-double-vertical",
+      "width_mm": 1800
+    },
+    {
+      "center_global_mm": [
+        10800,
+        100
+      ],
+      "height_mm": 1500,
+      "host_wall": "storey-3-wall-south",
+      "id": "storey-3-window-south-2",
+      "panel": "double_vertical",
+      "sill_height_mm": 900,
+      "source_key": "三层.window[2]",
+      "storey": "storey-3",
+      "template_id": "window-double-vertical",
+      "width_mm": 1800
+    },
+    {
+      "center_global_mm": [
+        7200,
+        16700
+      ],
+      "height_mm": 1500,
+      "host_wall": "storey-3-wall-north",
+      "id": "storey-3-window-north-1",
+      "panel": "double_vertical",
+      "sill_height_mm": 900,
+      "source_key": "三层.window[3]",
+      "storey": "storey-3",
+      "template_id": "window-double-vertical",
+      "width_mm": 1800
+    },
+    {
+      "center_global_mm": [
+        10800,
+        16700
+      ],
+      "height_mm": 1500,
+      "host_wall": "storey-3-wall-north",
+      "id": "storey-3-window-north-2",
+      "panel": "double_vertical",
+      "sill_height_mm": 900,
+      "source_key": "三层.window[4]",
+      "storey": "storey-3",
+      "template_id": "window-double-vertical",
+      "width_mm": 1800
+    },
+    {
+      "center_global_mm": [
+        9000,
+        4700
+      ],
+      "height_mm": 1500,
+      "host_wall": "storey-3-wall-notch-south",
+      "id": "storey-3-window-notch-south",
+      "panel": "double_vertical",
+      "sill_height_mm": 900,
+      "source_key": "三层.window[5]",
+      "storey": "storey-3",
+      "template_id": "window-double-vertical",
+      "width_mm": 1800
+    },
+    {
+      "center_global_mm": [
+        9000,
+        12100
+      ],
+      "height_mm": 1500,
+      "host_wall": "storey-3-wall-notch-north",
+      "id": "storey-3-window-notch-north",
+      "panel": "double_vertical",
+      "sill_height_mm": 900,
+      "source_key": "三层.window[6]",
+      "storey": "storey-3",
+      "template_id": "window-double-vertical",
+      "width_mm": 1800
+    },
+    {
+      "center_global_mm": [
+        100,
+        2400
+      ],
+      "height_mm": 1800,
+      "host_wall": "storey-3-wall-west",
+      "id": "storey-3-window-west",
+      "panel": "single",
+      "sill_height_mm": 900,
+      "source_key": "三层.window[7]",
+      "storey": "storey-3",
+      "template_id": "window-single",
+      "width_mm": 900
+    }
+  ]
+}

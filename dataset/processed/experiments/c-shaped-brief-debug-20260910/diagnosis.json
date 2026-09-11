@@ -1,0 +1,50 @@
+{
+  "status": "ready",
+  "raw_response_sha256": "690062a28304fb111e3baaa40c217d9b492c59965640eb5fed3b472dc5001409",
+  "prompt_identical_to_failed_attempt": true,
+  "requested_model": "deepseek-v4-flash",
+  "returned_model": "deepseek-flash",
+  "finish_reason": "stop",
+  "output_limit": 65536,
+  "thinking": {
+    "type": "enabled"
+  },
+  "usage": {
+    "completion_tokens": 45174,
+    "completion_tokens_details": {
+      "accepted_prediction_tokens": null,
+      "audio_tokens": null,
+      "reasoning_tokens": 33759,
+      "rejected_prediction_tokens": null
+    },
+    "prompt_cache_hit_tokens": 18304,
+    "prompt_cache_miss_tokens": 156,
+    "prompt_tokens": 18460,
+    "prompt_tokens_details": {
+      "audio_tokens": null,
+      "cached_tokens": 18304
+    },
+    "total_tokens": 63634
+  },
+  "json_content_chars": 31047,
+  "reasoning_content_chars": 110325,
+  "visible_output_tokens_inferred": 11415,
+  "prior_output_tokens_if_input_tokenization_unchanged": 65536,
+  "cap_hit_inference": "Strongly consistent with 65536 output cap; prior response/usage breakdown missing, so cutoff location and original reasoning share are unknown.",
+  "schema_version": "text2ifc/design-brief/2.3",
+  "validation": {
+    "issue_count": 0,
+    "issues": [],
+    "valid": true
+  },
+  "missing_facts": [],
+  "ambiguities": [],
+  "unsupported_requests": [],
+  "spontaneous_design_issue_claim": "No issues reported in missing_facts/ambiguities/unsupported_requests. No Audit or independent IFC check was run.",
+  "prompt_conflict": {
+    "ordinary_v2_7": "Header/schema 2.3, final output instruction 2.0.",
+    "review_v2_8": "Final instruction already 2.3; unaffected.",
+    "cause_of_truncation_proven": false
+  },
+  "source": "https://api-docs.deepseek.com/api/create-chat-completion/"
+}

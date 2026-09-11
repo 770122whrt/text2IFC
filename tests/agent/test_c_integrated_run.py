@@ -13,7 +13,7 @@ def module(name, path):
     return m
 
 
-ROOT = Path('dataset/processed/ifc-presentation-validation')
+ROOT = Path('dataset/processed/experiments')
 SOURCE = ROOT/'c-shaped-teaching-building-20260910'
 
 

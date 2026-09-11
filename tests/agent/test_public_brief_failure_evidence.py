@@ -89,7 +89,7 @@ def test_budget_rejection_remains_nontransport_failure(tmp_path):
 def test_case_runner_persists_failed_initial_brief_and_does_not_generate(tmp_path):
     import importlib.util
     from pathlib import Path
-    path = Path('dataset/processed/ifc-presentation-validation/c-shaped-teaching-building-20260910/run_case.py')
+    path = Path('dataset/processed/experiments/c-shaped-teaching-building-20260910/run_case.py')
     spec = importlib.util.spec_from_file_location('c_case_runner', path)
     runner = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(runner)

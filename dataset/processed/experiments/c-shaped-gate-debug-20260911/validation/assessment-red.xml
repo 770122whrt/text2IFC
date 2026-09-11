@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="5" skipped="0" tests="5" time="2.314" timestamp="2026-09-11T12:49:21.025337+08:00" hostname="what-do-matter"><testcase classname="tests.agent.test_repair_assessment_scope" name="test_no_repair_route_reports_only_supplied_feedback[None]" time="0.157"><failure message="AssertionError: assert 'text2ifc/repair-route/1.0' == 'text2ifc/repair-route/1.1'&#10;  &#10;  - text2ifc/repair-route/1.1&#10;  ?                         ^&#10;  + text2ifc/repair-route/1.0&#10;  ?                         ^">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-assessment-red/test_no_repair_route_reports_o0')
+feedback = None
+
+    @pytest.mark.parametrize('feedback', [None, []])
+    def test_no_repair_route_reports_only_supplied_feedback(tmp_path, feedback):
+        source = _write_valid_generator_source(tmp_path/'generator')
+        result = run_repair_stage(provider_factory=lambda:pytest.fail('no provider needed'),
+            output_dir=tmp_path/'repair', generator_source_dir=source, case_id='route-scope',
+            geometry_feedback=feedback)
+        assert result['route']=='no_repair_needed'
+        route=json.loads((tmp_path/'repair/route.json').read_text(encoding='utf-8'))
+        metrics=json.loads((tmp_path/'repair/metrics.json').read_text(encoding='utf-8'))
+&gt;       assert route['schema_version']=='text2ifc/repair-route/1.1'
+E       AssertionError: assert 'text2ifc/repair-route/1.0' == 'text2ifc/repair-route/1.1'
+E         
+E         - text2ifc/repair-route/1.1
+E         ?                         ^
+E         + text2ifc/repair-route/1.0
+E         ?                         ^
+
+tests\agent\test_repair_assessment_scope.py:19: AssertionError</failure></testcase><testcase classname="tests.agent.test_repair_assessment_scope" name="test_no_repair_route_reports_only_supplied_feedback[feedback1]" time="0.072"><failure message="AssertionError: assert 'text2ifc/repair-route/1.0' == 'text2ifc/repair-route/1.1'&#10;  &#10;  - text2ifc/repair-route/1.1&#10;  ?                         ^&#10;  + text2ifc/repair-route/1.0&#10;  ?                         ^">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-assessment-red/test_no_repair_route_reports_o1')
+feedback = []
+
+    @pytest.mark.parametrize('feedback', [None, []])
+    def test_no_repair_route_reports_only_supplied_feedback(tmp_path, feedback):
+        source = _write_valid_generator_source(tmp_path/'generator')
+        result = run_repair_stage(provider_factory=lambda:pytest.fail('no provider needed'),
+            output_dir=tmp_path/'repair', generator_source_dir=source, case_id='route-scope',
+            geometry_feedback=feedback)
+        assert result['route']=='no_repair_needed'
+        route=json.loads((tmp_path/'repair/route.json').read_text(encoding='utf-8'))
+        metrics=json.loads((tmp_path/'repair/metrics.json').read_text(encoding='utf-8'))
+&gt;       assert route['schema_version']=='text2ifc/repair-route/1.1'
+E       AssertionError: assert 'text2ifc/repair-route/1.0' == 'text2ifc/repair-route/1.1'
+E         
+E         - text2ifc/repair-route/1.1
+E         ?                         ^
+E         + text2ifc/repair-route/1.0
+E         ?                         ^
+
+tests\agent\test_repair_assessment_scope.py:19: AssertionError</failure></testcase><testcase classname="tests.agent.test_repair_assessment_scope" name="test_route_pass_is_scoped_and_cannot_override_current_geometry[no_repair_needed]" time="0.130"><failure message="AssertionError: assert 'not a geometry pass' in 'repair route is no_repair_needed'">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-assessment-red/test_route_pass_is_scoped_and_0')
+route = 'no_repair_needed'
+
+    @pytest.mark.parametrize('route', ['no_repair_needed','repair_attempted','blocked_failure'])
+    def test_route_pass_is_scoped_and_cannot_override_current_geometry(tmp_path, route):
+        root=_write_gate_case(tmp_path)
+        _write_json(root/'repair/route.json', {'schema_version':'text2ifc/repair-route/1.0',
+            'route':route,'geometry_issue_count':0})
+        summary=write_gate_summary(case_dir=root,case_id='old-route-current-geometry')
+        gates={g['name']:g for g in summary['gates']}
+&gt;       assert 'not a geometry pass' in gates['repair_route']['basis']
+E       AssertionError: assert 'not a geometry pass' in 'repair route is no_repair_needed'
+
+tests\agent\test_repair_assessment_scope.py:33: AssertionError</failure></testcase><testcase classname="tests.agent.test_repair_assessment_scope" name="test_route_pass_is_scoped_and_cannot_override_current_geometry[repair_attempted]" time="0.051"><failure message="AssertionError: assert 'not a geometry pass' in 'repair route is repair_attempted'">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-assessment-red/test_route_pass_is_scoped_and_1')
+route = 'repair_attempted'
+
+    @pytest.mark.parametrize('route', ['no_repair_needed','repair_attempted','blocked_failure'])
+    def test_route_pass_is_scoped_and_cannot_override_current_geometry(tmp_path, route):
+        root=_write_gate_case(tmp_path)
+        _write_json(root/'repair/route.json', {'schema_version':'text2ifc/repair-route/1.0',
+            'route':route,'geometry_issue_count':0})
+        summary=write_gate_summary(case_dir=root,case_id='old-route-current-geometry')
+        gates={g['name']:g for g in summary['gates']}
+&gt;       assert 'not a geometry pass' in gates['repair_route']['basis']
+E       AssertionError: assert 'not a geometry pass' in 'repair route is repair_attempted'
+
+tests\agent\test_repair_assessment_scope.py:33: AssertionError</failure></testcase><testcase classname="tests.agent.test_repair_assessment_scope" name="test_route_pass_is_scoped_and_cannot_override_current_geometry[blocked_failure]" time="0.054"><failure message="AssertionError: assert 'not a geometry pass' in 'repair route is blocked_failure'">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-assessment-red/test_route_pass_is_scoped_and_2')
+route = 'blocked_failure'
+
+    @pytest.mark.parametrize('route', ['no_repair_needed','repair_attempted','blocked_failure'])
+    def test_route_pass_is_scoped_and_cannot_override_current_geometry(tmp_path, route):
+        root=_write_gate_case(tmp_path)
+        _write_json(root/'repair/route.json', {'schema_version':'text2ifc/repair-route/1.0',
+            'route':route,'geometry_issue_count':0})
+        summary=write_gate_summary(case_dir=root,case_id='old-route-current-geometry')
+        gates={g['name']:g for g in summary['gates']}
+&gt;       assert 'not a geometry pass' in gates['repair_route']['basis']
+E       AssertionError: assert 'not a geometry pass' in 'repair route is blocked_failure'
+
+tests\agent\test_repair_assessment_scope.py:33: AssertionError</failure></testcase></testsuite></testsuites>

@@ -29,9 +29,9 @@
 ## 当前重点
 
 - [Type、材质、属性和外观的接续计划](architecture/semantic-appearance-plan.md)
-  - A/B 已人工验收，当前优先完成 C 型教学楼；项目内 Type 按需组织，内置小型参数化模板与 Generation 基础门窗细节；默认配色，不补写缺省材料/性能属性；Repair 保留原几何，不实现跨 IFC 参照。
+  - A/B/C 已人工验收，C与实验已分别收纳；项目内 Type 按需组织，内置小型参数化模板与 Generation 基础门窗细节；默认配色，不补写缺省材料/性能属性；Repair 保留原几何，不实现跨 IFC 参照。
 - [Token 效率与质量保全计划](architecture/token-efficiency-plan.md)
-  - 一次真实 Audit 配对已完成并记录实际 token；回到 C 型教学楼，大型优化后置。
+  - 一次真实 Audit 配对已完成并记录实际 token；[C与实验归档](../dataset/processed/experiments/README.md)已整理，后续优化按独立计划小步推进。
 - [首次接管 text2IFC 项目](how-to/agent-takeover.md)
   - 先确认 Git 与当前状态，再按任务类型选择架构、Phase、验证和证据入口。
 - [Phase 12 Plan 07 技术 handover](handoffs/phase12-plan07-closeout-handover-2026-09-03.md)

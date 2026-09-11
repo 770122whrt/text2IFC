@@ -13,7 +13,7 @@ from text2ifc_agent.openai_compat import OpenAICompatError
 
 
 def module():
-    path = Path('dataset/processed/ifc-presentation-validation/audit-token-pair-20260911/run_pair.py')
+    path = Path('dataset/processed/experiments/audit-token-pair-20260911/run_pair.py')
     spec = importlib.util.spec_from_file_location('audit_token_pair', path)
     m = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(m)

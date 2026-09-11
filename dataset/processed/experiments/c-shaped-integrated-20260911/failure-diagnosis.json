@@ -1,0 +1,28 @@
+{
+  "evidence_class": "frozen_replay",
+  "network_calls": 0,
+  "fake_adapter_calls": 1,
+  "syntax_error": {
+    "message": "Expecting property name enclosed in double quotes",
+    "line": 1,
+    "column": 17507,
+    "offset": 17506,
+    "context": "00,1600],\"y\":[5400,10800]},\"thickness_penetrated_mm\":150,\"note\":\"洞口平面范围与 stair-flight-1 一致，只对应第一段\"},{\"id\":\"slab-storey-3\",\"storey\":\"storey-3\",\"top_elevation_mm\":6300,\"thickness_mm\":150,\"top_flush_with"
+  },
+  "result": {
+    "case_id": "c-malformed-replay",
+    "stage": "design-brief",
+    "status": "blocked_prompt_defect",
+    "valid": false,
+    "schema_semantic_valid": false,
+    "strict_output_contract_valid": false,
+    "output_dir": ".tmp/c-integrated-malformed-replay",
+    "response_id": "04107290-427d-4196-95cb-f93a4825fa34",
+    "evidence_class": "frozen_replay"
+  },
+  "source_sha256": "5b948f0fe68f3d8c4b71e668ce66d21bf3e99de43b03d154fe6bd1242d2dc641",
+  "source_unchanged": true,
+  "diagnosis": "Provider returned syntactically invalid nested JSON despite stop. Strict parsing correctly blocked it. Existing semantic repair requires parse_status=ok and cannot process this response. No byte repair or publication.",
+  "rule_observation": "No STAIR_OPENING_SPACE_COLLISION string in this invalid response; not proof of a valid corrected Brief.",
+  "design_question": "Independently confirmed original entry door Y=7800..9000 lies opposite stair plan Y=5400..10800; horizontal gap from inner west wall X=200 to stair X=400 is 200 mm. Potential access issue, not a completed clearance/code analysis."
+}

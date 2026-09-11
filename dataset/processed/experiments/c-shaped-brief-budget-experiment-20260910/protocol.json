@@ -1,0 +1,39 @@
+{
+  "request_sha256": "32b2ba205339134d1ba8077b4d8f477ae520816780e8df080d0b4993b48bb233",
+  "prior_budget_sha256": "d7f28542c8b94e0a4e330ebb2245fe03023f4a8e7b908436eb64185860266277",
+  "prompt_sha256": "bb2ffc9fad1bec8d4b6885361d967c22e68e596ca7821851ec1e89b1de8f279b",
+  "prompt_identity": {
+    "template_id": "design-brief.v2.9",
+    "template_hash": "sha256:782e45341b96a985fe597728362c569f64bf600e1653f28b2c49402f8d3078d2",
+    "role": "design_brief",
+    "mode": "extract_or_clarify",
+    "template_path": "prompts/agent/design-brief-v2.9.md"
+  },
+  "output_caps_in_order": [
+    98304,
+    65536
+  ],
+  "reason_for_order": "Predeclared 96K then64K; one paired exploratory observation, not randomised reliability evaluation.",
+  "model": "deepseek-v4-flash",
+  "destination": "https://api.deepseek.com",
+  "thinking": "enabled",
+  "limits": {
+    "max_calls": 32,
+    "max_tokens": 2000000,
+    "max_active_seconds": 3600
+  },
+  "max_new_responses": 2,
+  "invariants": [
+    "Same request/conversation/schema/prompt/config except max_completion_tokens",
+    "One response per arm; no semantic correction,Generation,Audit or IFC",
+    "Continue existing2 calls/147630 tokens/447.655 seconds; preserve originals"
+  ],
+  "metrics": [
+    "finish_reason",
+    "valid/ready",
+    "prompt/output/reasoning/total tokens",
+    "activity time",
+    "material/template/source preservation observations"
+  ],
+  "claims": "Exploratory comparison only. A 96K success below64K does not demonstrate benefit; randomness and cache/order are confounds."
+}

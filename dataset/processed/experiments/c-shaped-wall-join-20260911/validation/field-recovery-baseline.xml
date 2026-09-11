@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="7" skipped="0" tests="13" time="19.786" timestamp="2026-09-11T14:35:42.707059+08:00" hostname="what-do-matter"><testcase classname="tests.agent.test_enum_field_recovery" name="test_unique_closed_enum_offers_only_rename_and_preserves_source[IfcSpace-InteriorOrExternalSpace-INTERNAL-InteriorOrExteriorSpace]" time="0.716"><failure message="assert False">cls = 'IfcSpace', old = 'InteriorOrExternalSpace', value = 'INTERNAL'
+new = 'InteriorOrExteriorSpace'
+
+    @pytest.mark.parametrize('cls,old,value,new', [
+        ('IfcSpace', 'InteriorOrExternalSpace', 'INTERNAL', 'InteriorOrExteriorSpace'),
+        ('IfcSpace', 'SpaceExposure', 'EXTERNAL', 'InteriorOrExteriorSpace'),
+        ('IfcWindowStyle', 'PanelOperation', 'SINGLE_PANEL', 'OperationType'),
+    ])
+    def test_unique_closed_enum_offers_only_rename_and_preserves_source(cls, old, value, new):
+        if cls == 'IfcSpace':
+            doc, entity = candidate(cls, old, value)
+        else:
+            doc = _candidate()
+            doc['schema_version'] = 'bim-json/2.1'
+            entity = {'id': 'style', 'ifc_class': cls, 'attributes': {old: value}, 'property_sets': {}, 'provenance': {'source': 'test'}}
+            doc['entities'].append(entity)
+        before = copy.deepcopy(doc)
+        g = group(doc)
+&gt;       assert g['eligible']
+E       assert False
+
+tests\agent\test_enum_field_recovery.py:56: AssertionError</failure></testcase><testcase classname="tests.agent.test_enum_field_recovery" name="test_unique_closed_enum_offers_only_rename_and_preserves_source[IfcSpace-SpaceExposure-EXTERNAL-InteriorOrExteriorSpace]" time="0.831"><failure message="assert False">cls = 'IfcSpace', old = 'SpaceExposure', value = 'EXTERNAL'
+new = 'InteriorOrExteriorSpace'
+
+    @pytest.mark.parametrize('cls,old,value,new', [
+        ('IfcSpace', 'InteriorOrExternalSpace', 'INTERNAL', 'InteriorOrExteriorSpace'),
+        ('IfcSpace', 'SpaceExposure', 'EXTERNAL', 'InteriorOrExteriorSpace'),
+        ('IfcWindowStyle', 'PanelOperation', 'SINGLE_PANEL', 'OperationType'),
+    ])
+    def test_unique_closed_enum_offers_only_rename_and_preserves_source(cls, old, value, new):
+        if cls == 'IfcSpace':
+            doc, entity = candidate(cls, old, value)
+        else:
+            doc = _candidate()
+            doc['schema_version'] = 'bim-json/2.1'
+            entity = {'id': 'style', 'ifc_class': cls, 'attributes': {old: value}, 'property_sets': {}, 'provenance': {'source': 'test'}}
+            doc['entities'].append(entity)
+        before = copy.deepcopy(doc)
+        g = group(doc)
+&gt;       assert g['eligible']
+E       assert False
+
+tests\agent\test_enum_field_recovery.py:56: AssertionError</failure></testcase><testcase classname="tests.agent.test_enum_field_recovery" name="test_unique_closed_enum_offers_only_rename_and_preserves_source[IfcWindowStyle-PanelOperation-SINGLE_PANEL-OperationType]" time="1.515"><failure message="assert False">cls = 'IfcWindowStyle', old = 'PanelOperation', value = 'SINGLE_PANEL'
+new = 'OperationType'
+
+    @pytest.mark.parametrize('cls,old,value,new', [
+        ('IfcSpace', 'InteriorOrExternalSpace', 'INTERNAL', 'InteriorOrExteriorSpace'),
+        ('IfcSpace', 'SpaceExposure', 'EXTERNAL', 'InteriorOrExteriorSpace'),
+        ('IfcWindowStyle', 'PanelOperation', 'SINGLE_PANEL', 'OperationType'),
+    ])
+    def test_unique_closed_enum_offers_only_rename_and_preserves_source(cls, old, value, new):
+        if cls == 'IfcSpace':
+            doc, entity = candidate(cls, old, value)
+        else:
+            doc = _candidate()
+            doc['schema_version'] = 'bim-json/2.1'
+            entity = {'id': 'style', 'ifc_class': cls, 'attributes': {old: value}, 'property_sets': {}, 'provenance': {'source': 'test'}}
+            doc['entities'].append(entity)
+        before = copy.deepcopy(doc)
+        g = group(doc)
+&gt;       assert g['eligible']
+E       assert False
+
+tests\agent\test_enum_field_recovery.py:56: AssertionError</failure></testcase><testcase classname="tests.agent.test_enum_field_recovery" name="test_unproven_enum_identity_or_conflicting_sources_fail_closed[ambiguous]" time="1.573" /><testcase classname="tests.agent.test_enum_field_recovery" name="test_unproven_enum_identity_or_conflicting_sources_fail_closed[existing]" time="1.608" /><testcase classname="tests.agent.test_enum_field_recovery" name="test_unproven_enum_identity_or_conflicting_sources_fail_closed[unknown]" time="1.430" /><testcase classname="tests.agent.test_enum_field_recovery" name="test_unproven_enum_identity_or_conflicting_sources_fail_closed[number]" time="1.543" /><testcase classname="tests.agent.test_enum_field_recovery" name="test_unproven_enum_identity_or_conflicting_sources_fail_closed[feedback]" time="0.003" /><testcase classname="tests.agent.test_enum_field_recovery" name="test_unproven_enum_identity_or_conflicting_sources_fail_closed[two_sources]" time="1.372" /><testcase classname="tests.agent.test_enum_field_recovery" name="test_out_of_scope_or_changed_value_rolls_back[value]" time="1.667"><failure message="assert False">mode = 'value'
+
+    @pytest.mark.parametrize('mode', ['value', 'unrelated', 'relationship'])
+    def test_out_of_scope_or_changed_value_rolls_back(mode):
+        doc, _ = candidate()
+        before = copy.deepcopy(doc)
+        g = group(doc)
+&gt;       assert g['eligible']
+E       assert False
+
+tests\agent\test_enum_field_recovery.py:90: AssertionError</failure></testcase><testcase classname="tests.agent.test_enum_field_recovery" name="test_out_of_scope_or_changed_value_rolls_back[unrelated]" time="1.865"><failure message="assert False">mode = 'unrelated'
+
+    @pytest.mark.parametrize('mode', ['value', 'unrelated', 'relationship'])
+    def test_out_of_scope_or_changed_value_rolls_back(mode):
+        doc, _ = candidate()
+        before = copy.deepcopy(doc)
+        g = group(doc)
+&gt;       assert g['eligible']
+E       assert False
+
+tests\agent\test_enum_field_recovery.py:90: AssertionError</failure></testcase><testcase classname="tests.agent.test_enum_field_recovery" name="test_out_of_scope_or_changed_value_rolls_back[relationship]" time="1.512"><failure message="assert False">mode = 'relationship'
+
+    @pytest.mark.parametrize('mode', ['value', 'unrelated', 'relationship'])
+    def test_out_of_scope_or_changed_value_rolls_back(mode):
+        doc, _ = candidate()
+        before = copy.deepcopy(doc)
+        g = group(doc)
+&gt;       assert g['eligible']
+E       assert False
+
+tests\agent\test_enum_field_recovery.py:90: AssertionError</failure></testcase><testcase classname="tests.agent.test_enum_field_recovery" name="test_public_formal_repair_uses_changeset_and_preserves_all_relationships" time="3.627"><failure message="assert False">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/enum-baseline-tmp/test_public_formal_repair_uses0')
+
+    def test_public_formal_repair_uses_changeset_and_preserves_all_relationships(tmp_path):
+        from text2ifc_agent.live_pipeline import run_repair_stage
+        from tests.agent.test_phase6_5_staged_generation import SequenceProvider
+        doc, _ = candidate()
+        g = group(doc)
+&gt;       assert g['eligible']
+E       assert False
+
+tests\agent\test_enum_field_recovery.py:111: AssertionError</failure></testcase></testsuite></testsuites>

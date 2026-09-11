@@ -1,12 +1,12 @@
 # Token 效率与质量保全计划
 
-更新：2026-09-11。**真实 Audit 配对小实验已完成；当前回到 C 型教学楼，其他 token 优化后置。**
+更新：2026-09-11。**真实 Audit 配对小实验已完成；C 型教学楼已人工验收；下一步再按本计划讨论A/B/C开发对照，不在本次整理中开启实验。**
 
-C同步观察已推进至真实候选和Audit，但候选仍被门禁阻断。对实际Audit消息逐字重建后，既定两个去重区域没有可收益的重复对象；177865→177865字节，实验格式反而需178796字节，因此回退full并跳过无信息增益的额外Provider调用。本轮C的T1节省为0，不能套用此前B修复后24.20%的输入降幅。该检查点C累计8次583435 token包含当时全部历史失败/实验；完整结果及下一墙体合同阻断见 [C报告](../../dataset/processed/ifc-presentation-validation/c-shaped-gate-debug-20260911/REPORT.md)。
+以下为早期阻断检查点，最终C已通过并人工验收；全历史见 [实验归档](../../dataset/processed/experiments/README.md)。当时C同步观察已推进至真实候选和Audit，但候选仍被门禁阻断。对实际Audit消息逐字重建后，既定两个去重区域没有可收益的重复对象；177865→177865字节，实验格式反而需178796字节，因此回退full并跳过无信息增益的额外Provider调用。本轮C的T1节省为0，不能套用此前B修复后24.20%的输入降幅。该检查点C累计8次583435 token包含当时全部历史失败/实验；完整结果及下一墙体合同阻断见 [C报告](../../dataset/processed/experiments/c-shaped-gate-debug-20260911/REPORT.md)。
 
 上述“没有可收益重复”仅限T1既定的DETERMINISTIC_GATES/REVISION_EVIDENCE两个区域。逐项归因确认：C首轮无ChangeSet revision，修订证据仅113字节；两个区域内512/128字节阈值均无重复，而全体已发送字段间有21个至少512字节的重复对象（有嵌套，不可相加当节省）。候选占43.21%、Brief19.85%、机器检查26.53%。因此零收益的原因是首轮缺少修订副本、算法覆盖范围有限和引用开销，不是C没有重复，也不是应立即降低阈值。见 [归因记录](../validation/token-efficiency/20260911-c-scope-diagnosis/REPORT.md)。旧冻结报告不回写。
 
-最新C墙边界真实复跑另增3次248191 token，累计11次831626 token；完整JSON Repair丢失两条关系而停止，无新IFC/Audit。局部字段恢复与剩余凹形墙约束回到语义主计划处理，不计为token优化。见 [最新C报告](../../dataset/processed/ifc-presentation-validation/c-shaped-wall-join-20260911/REPORT.md)。
+历史墙边界检查点另增3次248191 token，累计11次831626 token；完整JSON Repair丢失两条关系而停止，无新IFC/Audit。局部字段恢复与剩余凹形墙约束回到语义主计划处理，不计为token优化。见 [当时C报告](../../dataset/processed/experiments/c-shaped-wall-join-20260911/REPORT.md)。
 
 用户最新顺序：先修Bug完成C；随后把A/B/C作为三个**开发/回归场景**，在同一修复后代码基线、同一冻结输入和评价器下开展分阶段token实验，再做完整loop复核。先比较跨字段精确去重（保留角色/来源和完整还原），后比较语义参数因子化、staged依赖分包；一次改变一个变量。原始A/B/C成本受代码、请求、重试次数差异影响，不可直接拿来判定优化收益。三个已见案例不是独立盲测集，正式研究另建未见组。每步记录input/output/reasoning/cache、失败、额外修复、发布质量和全loop成本；保持accepted Proof原字节，不把开发实验覆盖其历史证据。
 
@@ -22,7 +22,7 @@ C同步观察已推进至真实候选和Audit，但候选仍被门禁阻断。�
 
 ## 1. 目标、现状与不可牺牲的质量
 
-本轮结果见 [真实配对报告](../../dataset/processed/ifc-presentation-validation/audit-token-pair-20260911/REPORT.md)：input 91,765→69,558（−24.20%），output 6,033→4,160（−31.05%），合计−24.62%；共2次、171,516实际token。关键判据一致，但去重版增加两条非阻断说明，缓存命中差异大。保留full默认，不声称质量非劣效或费用同比下降。后续T2/T3/T5–T7暂停；T4澄清规则修复回归语义主计划的C主线，不以节约token为理由减少必要澄清。
+本轮结果见 [真实配对报告](../../dataset/processed/experiments/audit-token-pair-20260911/REPORT.md)：input 91,765→69,558（−24.20%），output 6,033→4,160（−31.05%），合计−24.62%；共2次、171,516实际token。关键判据一致，但去重版增加两条非阻断说明，缓存命中差异大。保留full默认，不声称质量非劣效或费用同比下降。后续T2/T3/T5–T7暂停；T4澄清规则修复回归语义主计划的C主线，不以节约token为理由减少必要澄清。
 
 目标是在忠实建模和成功交付约束下减少**整次 loop 的实际输入与输出**，包括失败、澄清、语义校正、Audit 和 ChangeSet。分别报告逻辑输入、输出（含 Provider 计入的 reasoning）、缓存命中、费用和时间；缓存折扣不冒充上下文 token 减少，降低单次上限不冒充节省，失败花费不从分母移除。
 

@@ -662,11 +662,11 @@ Brief 语义校正限定一次 Agent 调用，计入同一任务预算，只能�
 
 下一组限定为三层C型教学活动楼（向东敞开，13.2×16.8米外包络，6教学室、3交通空间，21窗、7门），沿用现有构件/模板/材料合同和legacy_full，不扩展新产品能力。`c-shaped-teaching-building-20260910/request.txt`为助手编写的人类工程语言测试请求；运行前冻结独立预期和评价器，包含C形真实缺口/体积，不能只检查矩形包围盒。本轮不预置已知concern或复用A/B参考IFC，分开记录模型自主提出的问题、确定性规则检出和事后独立检出；信息不足或冲突时暂停等真实用户回答，不脚本化代答。它是新场景前瞻可行性/稳定性观察，单次结果不支持成功率估计或系统能力提升。新Provider载荷仍需具体授权，旧A/B授权不能直接挪用。
 
-2026-09-10 用户已批准本次C型教学楼独立载荷、api.deepseek.com/deepseek-v4-flash及32次/200万token/3600秒共用预算。运行前复用未变生产路径的799项阶段证据，新增11项凹形几何检查、精确新runner的完整fake公共链路及485项独立IFC检查、5类评价器负对照；Full Preflight未运行。真实run `41edcb4296d1b826` 首次Design Brief返回finish_reason=length，预算记录1次失败调用、83996 token、282.296秒，未进入Generation/Audit，无最终IFC。发现初始公共 `run_design_brief_stage` 未在Provider抛异常时保存异常内的原始响应，进程结束后该响应缺失；只能确认截断，不能推断Prompt/Schema或模型推理的深层原因。CLI Brief、Audit、ChangeSet既有留痕不能证明这个入口已覆盖。三类异常与空内容对照的离线复现支持该缺口，尚未修复。按约暂停真实调用，原准入失效但快照保留；详见 [C型报告](../../dataset/processed/ifc-presentation-validation/c-shaped-teaching-building-20260910/REPORT.md)。下一小步只补公共Brief异常留痕、attempt保全及公共调用方的失败/恢复验证，再更新局部准入；任何重试继承原预算，不补造缺失响应、不用offline IFC代替交付。C未验收/未入Proof，A/B accepted保持。
+2026-09-10 用户已批准本次C型教学楼独立载荷、api.deepseek.com/deepseek-v4-flash及32次/200万token/3600秒共用预算。运行前复用未变生产路径的799项阶段证据，新增11项凹形几何检查、精确新runner的完整fake公共链路及485项独立IFC检查、5类评价器负对照；Full Preflight未运行。真实run `41edcb4296d1b826` 首次Design Brief返回finish_reason=length，预算记录1次失败调用、83996 token、282.296秒，未进入Generation/Audit，无最终IFC。发现初始公共 `run_design_brief_stage` 未在Provider抛异常时保存异常内的原始响应，进程结束后该响应缺失；只能确认截断，不能推断Prompt/Schema或模型推理的深层原因。CLI Brief、Audit、ChangeSet既有留痕不能证明这个入口已覆盖。三类异常与空内容对照的离线复现支持该缺口，尚未修复。按约暂停真实调用，原准入失效但快照保留；详见 [C型报告](../../dataset/processed/experiments/c-shaped-teaching-building-20260910/REPORT.md)。下一小步只补公共Brief异常留痕、attempt保全及公共调用方的失败/恢复验证，再更新局部准入；任何重试继承原预算，不补造缺失响应、不用offline IFC代替交付。C未验收/未入Proof，A/B accepted保持。
 
 2026-09-10 用户随后明确要求直接尝试一个阶段定位截断。公共Brief异常留痕与attempt目录保全已修复（75f70f5d），失败族先14失败/3通过；相关公共入口/澄清/语义/生成路径220项有效检查通过，旧成功夹具缺少显式空语义清单的问题经修改前代码复核后仅修正夹具。新单响应诊断runner离线验证ready/截断、账本继承及Prompt不变，随后只增加一次真实Brief响应：返回ready，结构校验0问题，response_id=d15e96ef-6636-476f-bfd0-fa291afb2ebb；输入18460、输出45174（其中reasoning33759）、总63634 token，165.359秒。相同渲染Prompt，仍用65536单次上限；旧总83996减新输入18460恰为65536，强支持旧失败命中单次输出额度，但旧原始响应缺失，不能确认截断位置或更深原因。本次没复现截断，不代表稳定性问题消失。新C累计2次调用/147630 token/447.655秒，后续必须继承 `c-shaped-brief-debug-20260910/live-attempt/generation-budget.json`，旧1次账本不可继续当最新值。
 
-同时发现普通Prompt v2.7最终输出检查仍写2.0而正文/Schema为2.3；审查v2.8已正确。新增普通v2.9只纠正这一句，保留全部旧版本及Schema；普通/审查对照先1失败/1通过，修正后158项相关验证通过。此修正在真实成功之后，v2.9仅有离线验证，不能归因为真实成功的原因。详见 [单阶段报告](../../dataset/processed/ifc-presentation-validation/c-shaped-brief-debug-20260910/REPORT.md)。本轮未继续Generation/Audit/IFC，未Full Preflight或push；C仍非待验收Proof，A/B accepted不变。下一步可在适用准入更新后将合法Brief接回公共Generation，独立冻结预期保持，不为C型增加特判或盲目扩大输出额度。
+同时发现普通Prompt v2.7最终输出检查仍写2.0而正文/Schema为2.3；审查v2.8已正确。新增普通v2.9只纠正这一句，保留全部旧版本及Schema；普通/审查对照先1失败/1通过，修正后158项相关验证通过。此修正在真实成功之后，v2.9仅有离线验证，不能归因为真实成功的原因。详见 [单阶段报告](../../dataset/processed/experiments/c-shaped-brief-debug-20260910/REPORT.md)。本轮未继续Generation/Audit/IFC，未Full Preflight或push；C仍非待验收Proof，A/B accepted不变。下一步可在适用准入更新后将合法Brief接回公共Generation，独立冻结预期保持，不为C型增加特判或盲目扩大输出额度。
 
 ### 2026-09-10：单次额度配对实验与获准运行目录退役
 
@@ -674,7 +674,7 @@ Brief 语义校正限定一次 Agent 调用，计入同一任务预算，只能�
 
 实验仅改变单次输出额度，使用当前普通Prompt v2.9与Brief2.3，按预先冻结的96K→64K顺序各执行一次真实Brief，不进入Generation/Audit。38项实验runner与受影响公共路径离线检查通过，沿用同阶段证据，没有Full Preflight。两组请求逐字段比较仅max_tokens不同；均finish_reason=stop、Schema/严格合同校验通过，但均needs_clarification，不能写成ready。96K输出68,621（推理54,461），64K输出47,369（推理36,911）；新增总152,910token。C任务最新累计4次/300,540token/886.717秒，原32次/200万token/3600秒不变，最新账本位于c-shaped-brief-budget-experiment-20260910/live/generation-budget.json。旧失败和账本不改写。
 
-结论与下一步：96K这次使用超过旧上限的空间，但64K这次也成功；单次配对受随机性、缓存和顺序影响，不证明提高额度改善稳定性或节省成本。先建议新版本输入去重、重复规则/相关上下文精简，再比较实际用量与语义保全；若仍长推理，再独立评估阶段设置及按全局布局/构件语义拆分、稳定ID合并和共享预算。此轮没有实施这些生产改动。两组均按现有Prompt的STAIR_OPENING_SPACE_COLLISION规则对交通空间含楼梯井提出澄清；模型声称“确定性检查”不是本实验真实执行独立检查的证据。需复核这条规则的适用性和是否属于多余澄清，再由用户确认确有歧义的设计选择，不能代答、默认建筑不合理或直接放行。详见[额度实验报告](../../dataset/processed/ifc-presentation-validation/c-shaped-brief-budget-experiment-20260910/REPORT.md)。C仍无新IFC/Proof，不升级为系统能力提升。
+结论与下一步：96K这次使用超过旧上限的空间，但64K这次也成功；单次配对受随机性、缓存和顺序影响，不证明提高额度改善稳定性或节省成本。先建议新版本输入去重、重复规则/相关上下文精简，再比较实际用量与语义保全；若仍长推理，再独立评估阶段设置及按全局布局/构件语义拆分、稳定ID合并和共享预算。此轮没有实施这些生产改动。两组均按现有Prompt的STAIR_OPENING_SPACE_COLLISION规则对交通空间含楼梯井提出澄清；模型声称“确定性检查”不是本实验真实执行独立检查的证据。需复核这条规则的适用性和是否属于多余澄清，再由用户确认确有歧义的设计选择，不能代答、默认建筑不合理或直接放行。详见[额度实验报告](../../dataset/processed/experiments/c-shaped-brief-budget-experiment-20260910/REPORT.md)。C仍无新IFC/Proof，不升级为系统能力提升。
 
 ## 19. Token 效率与质量保全：渐进实施计划（2026-09-11）
 
@@ -684,7 +684,7 @@ Brief 语义校正限定一次 Agent 调用，计入同一任务预算，只能�
 
 ### C 当前交付与通用修复状态
 
-最新结果：`7fba0151` 上真实run `defec36086974f4b` 已 compiled / Audit accept，独立重开IFC485项通过，原生网格视觉检查完成，待人工检查，不登记accepted Proof。报告和IFC见 `dataset/processed/ifc-presentation-validation/c-shaped-plan-constraints-20260911/REPORT.md`。新增6次/545404 token，C累计17次/1377030 token/2295.968秒；所有真实失败保留。两次名称改名相关调用228248 token仅为观察开销，不称压缩收益。
+最新结果：`7fba0151` 上真实run `defec36086974f4b` 已 compiled / Audit accept，独立重开IFC485项通过，原生网格视觉检查完成，待人工检查，不登记accepted Proof。报告和IFC见 `dataset/processed/experiments/c-shaped-plan-constraints-20260911/REPORT.md`。新增6次/545404 token，C累计17次/1377030 token/2295.968秒；所有真实失败保留。两次名称改名相关调用228248 token仅为观察开销，不称压缩收益。
 
 运行中暴露旧名称gate的两个误报边界：跨层楼梯要求名称必须逐字含出发层名，以及洞口未识别冻结楼梯服务语境。已按冻结关系/端点/唯一宿主和精确开口范围修复，不加中文别名，不改IFC输出或独立评价器。名称族旧15失败/26通过，修复后99项相关回归（含两策略完整公共链路）通过；旧候选同评分器重检3误报→0，最终0→0，均为离线。名称修复后未再调用Provider。原准入保持历史快照，下次调用需针对改动复验，不能直接复用旧文件绑定。后续先人工检查C，再回到独立token计划；系统能力结论仍等待分组隔离的Baseline/Candidate评测。
 
@@ -712,7 +712,7 @@ Brief 语义校正限定一次 Agent 调用，计入同一任务预算，只能�
 
 上述两处局部修复已完成：轮廓族3红/7绿→10通过；路由族5红→5通过并追加1个非空失败反馈负例。108项相关回归、追加6项范围检查及4项精确公共C运行器检查通过（存在重叠，不作独立样本累加）。真实候选副本重检把3条预期缺失替换为2条真实洞口偏移失败，原候选/源IFC字节不变。route运行时记录新增1.1，明确反馈是否提供及不证明几何通过；旧注册Prompt/Schema不改，真正gate_dispute仍阻断。
 
-下一阻断已证实：Brief投影的首层矩形墙轮廓存在12对正面积重叠，西南角(0.05,0.05)米未被墙覆盖；即使把候选墙移回正确中心也不会消除该Brief缺陷。下一小步只研究明确墙厚/外轮廓/墙端连接要求的接合合同：区分中心线与实体边界，Agent产生的派生端点应能退回校正，真实用户尺寸/门窗/空间冻结不变；先跨矩形/L形/C形、平移/朝向及冲突族复现，再决定最小代码或新版本Prompt变化。不能自动改用户设计、把重叠问题伪装成新增用户歧义或扩大成任意墙布尔系统。当前暂停真实重试，没有C最终IFC/Proof；具体证据见 [C门禁诊断报告](../../dataset/processed/ifc-presentation-validation/c-shaped-gate-debug-20260911/REPORT.md)。
+下一阻断已证实：Brief投影的首层矩形墙轮廓存在12对正面积重叠，西南角(0.05,0.05)米未被墙覆盖；即使把候选墙移回正确中心也不会消除该Brief缺陷。下一小步只研究明确墙厚/外轮廓/墙端连接要求的接合合同：区分中心线与实体边界，Agent产生的派生端点应能退回校正，真实用户尺寸/门窗/空间冻结不变；先跨矩形/L形/C形、平移/朝向及冲突族复现，再决定最小代码或新版本Prompt变化。不能自动改用户设计、把重叠问题伪装成新增用户歧义或扩大成任意墙布尔系统。当前暂停真实重试，没有C最终IFC/Proof；具体证据见 [C门禁诊断报告](../../dataset/processed/experiments/c-shaped-gate-debug-20260911/REPORT.md)。
 
 2026-09-11进行中：已冻结7个跨场景正反边界，原规则2项红测试命中。新增普通v2.10/审查v2.11，仅修改空间/洞口冲突规则；2.3 Schema不变，旧Prompt不动，新审查版本仍要求绑定审查上下文。64项聚焦检查通过；C公共完整链路离线验证与适用准入更新进行中。按用户最新要求，将实验接入C交付观察，不再等待其他token研究；保留原C请求、独立评价器及累计预算。只有真实新歧义才停等用户，不能把Prompt规则修正当作用户新增设计回答。
 

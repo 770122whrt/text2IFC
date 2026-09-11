@@ -4,6 +4,7 @@
 |---|---|---:|
 | [generation-examples](phase6.6/generation-examples/REPORT.md) | accepted | 6 |
 | [三层建筑A/B](phase6.6/three-storey-clarification-ab-20260910/REPORT.md) | accepted；人工已验收，B保留已知问题 | 2 |
+| [三层C型教学楼](phase6.6/c-shaped-teaching-20260911/REPORT.md) | accepted；人工已验收 | 1 |
 
 ## 人工验收记录（工程门禁另列）
 

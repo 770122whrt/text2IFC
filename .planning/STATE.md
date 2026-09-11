@@ -16,11 +16,14 @@ progress:
 
 ## 当前增量工作：C 型 Generation（2026-09-11）
 
-本次用户再次明确要求新真实Provider运行：最新代码d0c39dc4上run `05c6de3a19ed20f9`已compiled，Brief/Generator/Audit共3次首次通过，无修复loop，独立IFC485项通过。新文件/输入/图片/报告位于 `dataset/processed/ifc-presentation-validation/c-shaped-current-provider-20260911/REPORT.md`，待人工检查，未登记Proof；上一轮产物不变。最新预算为该目录`live-run/runs/05c6de3a19ed20f9/generation-budget.json`，累计20次/1597750 token/2628.983秒；本次新增220720 token。Audit文字有“每层9个空间”口误，报告已明确实际每层3个/全楼9个，以独立IFC检查为准，原响应不改。以下为之前修复和运行历史。
+**当前：用户已验收最新C（run 05c6de3a19ed20f9），已收纳 `dataset/processed/proof/generation/phase6.6/c-shaped-teaching-20260911/REPORT.md`。9组历史实验独立归档至 `dataset/processed/experiments/README.md`；旧运行目录退役结果以 `docs/reports/c-proof-archive-20260911/REPORT.md` 为准。下文是原运行和调试检查点，不再代表待人工审查。**
 
-最新状态：C真实run `defec36086974f4b`已完成并产出IFC，Audit接受、冻结独立检查485项通过、简单原生网格视觉检查完成，待人工检查；未进入accepted Proof。入口4.2米真实澄清保持。报告/IFC入口为 `dataset/processed/ifc-presentation-validation/c-shaped-plan-constraints-20260911/REPORT.md`。运行实现为7fba0151（Brief2.4结构化墙界与受限校正）；运行后又修复名称gate的跨层服务语境误报，99项离线相关回归通过，未追加真实调用。最新共享账本为该目录`live-run/runs/defec36086974f4b/generation-budget.json`，累计17次/1377030 token/2295.968秒，原上限32次/200万/3600秒不变。admission是运行前历史快照，代码已变化不能直接复用。先用户检查C，再进入独立token计划；不把同例成功或新增测试数称作系统能力提升。下段为之前阻断诊断，当前状态以本段为准。
 
-最新实施依据为 `docs/architecture/semantic-appearance-plan.md`，token实验单独见 `docs/architecture/token-efficiency-plan.md`。入口中心4.2米真实澄清不变。新墙边界 Prompt 后真实run `916d8afe752160e3` 因完整JSON Repair漏掉两条楼梯聚合关系停止，无新IFC/无Audit/非待验收Proof；旧可重开诊断IFC保持。已转入唯一闭集枚举字段的局部ChangeSet恢复，范围外关系/原值冻结，离线验证不等于真实修复成功。Brief仍有凹口墙落在轮廓外，下一步先处理明确轮廓约束与派生边界的一致性，再准入继续Provider。C最新账本为 `c-shaped-wall-join-20260911/live-run/runs/916d8afe752160e3/generation-budget.json`，累计11次/831626 token/1793.529秒；原32次/200万token/3600秒不变，不复用旧账本或当前已变化的准入。完整报告见 `dataset/processed/ifc-presentation-validation/c-shaped-wall-join-20260911/REPORT.md`。C完成后再做A/B/C同代码、同输入、同评价器的token开发实验；下方Phase/R1历史状态及accepted Proof保持原义。
+最新C：代码d0c39dc4上run `05c6de3a19ed20f9`，3次真实调用首次通过，无修复loop，独立IFC485/485。新增220720 token；C累计20次/1597750 token/2628.983秒。最新账本位于Proof的 `evidence/frozen/live-run/runs/05c6de3a19ed20f9/generation-budget.json`。本次收纳只做确定性复核，不追加Provider。Audit“每层9空间”口误保留原响应，报告说明实际每层3个、全楼9个。
+
+历史开发结果保存在 `dataset/processed/experiments/`：`c-shaped-wall-join-20260911`保留丢聚合关系的失败，`c-shaped-plan-constraints-20260911`保留前一轮IFC及名称误报修复，其他失败和token实验由该目录README串联。它们不自动晋升为第二份accepted Proof。旧admission仅为历史快照，新调用必须重新判断准入。
+
+下一步按 `docs/architecture/token-efficiency-plan.md` 讨论A/B/C同代码、同冻结输入、同评价器的token开发实验，保持Proof字节；当前不运行新实验，不把单例或测试数当作系统能力提升。语义/外观唯一计划仍为 `docs/architecture/semantic-appearance-plan.md`，下方Phase/R1状态保持历史原义。
 
 ## Codex Task Pilot Checkpoint — 2026-07-31
 

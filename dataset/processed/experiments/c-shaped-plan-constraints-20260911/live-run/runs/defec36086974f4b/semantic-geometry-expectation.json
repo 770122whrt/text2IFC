@@ -1,0 +1,1061 @@
+{
+  "case_id": "defec36086974f4b",
+  "complete": true,
+  "doors": {},
+  "floor_openings": {
+    "slab-storey-2-opening-stair-1": {
+      "bbox": {
+        "x": [
+          0.4,
+          1.6
+        ],
+        "y": [
+          5.4,
+          10.8
+        ],
+        "z": [
+          3.0,
+          3.15
+        ]
+      },
+      "bbox_issue_code": "FLOOR_OPENING_BBOX_MISMATCH",
+      "host_slab_id": "slab-storey-2",
+      "identity_source": "explicit",
+      "source_fact_refs": [
+        "/known_facts/floor_slabs/1/opening"
+      ]
+    },
+    "slab-storey-3-opening-stair-2": {
+      "bbox": {
+        "x": [
+          2.8,
+          4.0
+        ],
+        "y": [
+          5.4,
+          10.8
+        ],
+        "z": [
+          6.15,
+          6.3
+        ]
+      },
+      "bbox_issue_code": "FLOOR_OPENING_BBOX_MISMATCH",
+      "host_slab_id": "slab-storey-3",
+      "identity_source": "explicit",
+      "source_fact_refs": [
+        "/known_facts/floor_slabs/2/opening"
+      ]
+    }
+  },
+  "products": {},
+  "roof": {
+    "roof-slab": {
+      "bbox": {
+        "x": [
+          0.0,
+          13.2
+        ],
+        "y": [
+          0.0,
+          16.8
+        ],
+        "z": [
+          9.3,
+          9.45
+        ]
+      },
+      "datum": "roof_bottom",
+      "source_fact_refs": [
+        "/known_facts/roof_slab"
+      ]
+    }
+  },
+  "schema_version": "text2ifc/design-geometry-expectation/1.1",
+  "slabs": {
+    "slab-storey-1": {
+      "bbox": {
+        "x": [
+          0.0,
+          13.2
+        ],
+        "y": [
+          0.0,
+          16.8
+        ],
+        "z": [
+          -0.15,
+          0.0
+        ]
+      },
+      "datum": "slab_top",
+      "must_touch_walls": [],
+      "source_fact_refs": [
+        "/known_facts/floor_slabs/0"
+      ]
+    },
+    "slab-storey-2": {
+      "bbox": {
+        "x": [
+          0.0,
+          13.2
+        ],
+        "y": [
+          0.0,
+          16.8
+        ],
+        "z": [
+          3.0,
+          3.15
+        ]
+      },
+      "datum": "slab_top",
+      "must_touch_walls": [
+        "wall-storey-1-storey-1-wall-east-north",
+        "wall-storey-1-storey-1-wall-east-south",
+        "wall-storey-1-storey-1-wall-north",
+        "wall-storey-1-storey-1-wall-notch-north",
+        "wall-storey-1-storey-1-wall-notch-south",
+        "wall-storey-1-storey-1-wall-notch-west",
+        "wall-storey-1-storey-1-wall-partition-north",
+        "wall-storey-1-storey-1-wall-partition-south",
+        "wall-storey-1-storey-1-wall-south",
+        "wall-storey-1-storey-1-wall-west"
+      ],
+      "source_fact_refs": [
+        "/known_facts/floor_slabs/1"
+      ]
+    },
+    "slab-storey-3": {
+      "bbox": {
+        "x": [
+          0.0,
+          13.2
+        ],
+        "y": [
+          0.0,
+          16.8
+        ],
+        "z": [
+          6.15,
+          6.3
+        ]
+      },
+      "datum": "slab_top",
+      "must_touch_walls": [
+        "wall-storey-2-storey-2-wall-east-north",
+        "wall-storey-2-storey-2-wall-east-south",
+        "wall-storey-2-storey-2-wall-north",
+        "wall-storey-2-storey-2-wall-notch-north",
+        "wall-storey-2-storey-2-wall-notch-south",
+        "wall-storey-2-storey-2-wall-notch-west",
+        "wall-storey-2-storey-2-wall-partition-north",
+        "wall-storey-2-storey-2-wall-partition-south",
+        "wall-storey-2-storey-2-wall-south",
+        "wall-storey-2-storey-2-wall-west"
+      ],
+      "source_fact_refs": [
+        "/known_facts/floor_slabs/2"
+      ]
+    }
+  },
+  "source": "design_brief_expected_facts",
+  "spaces": {
+    "space-storey-1-storey-1-space-circulation": {
+      "bbox": {
+        "x": [
+          0.2,
+          4.6
+        ],
+        "y": [
+          0.2,
+          16.6
+        ],
+        "z": [
+          0.0,
+          3.0
+        ]
+      },
+      "source_fact_refs": [
+        "/known_facts/storeys/0/spaces/2"
+      ],
+      "storey_id": "storey-1"
+    },
+    "space-storey-1-storey-1-space-north-teaching": {
+      "bbox": {
+        "x": [
+          4.8,
+          13.0
+        ],
+        "y": [
+          12.2,
+          16.6
+        ],
+        "z": [
+          0.0,
+          3.0
+        ]
+      },
+      "source_fact_refs": [
+        "/known_facts/storeys/0/spaces/1"
+      ],
+      "storey_id": "storey-1"
+    },
+    "space-storey-1-storey-1-space-south-teaching": {
+      "bbox": {
+        "x": [
+          4.8,
+          13.0
+        ],
+        "y": [
+          0.2,
+          4.6
+        ],
+        "z": [
+          0.0,
+          3.0
+        ]
+      },
+      "source_fact_refs": [
+        "/known_facts/storeys/0/spaces/0"
+      ],
+      "storey_id": "storey-1"
+    },
+    "space-storey-2-storey-2-space-circulation": {
+      "bbox": {
+        "x": [
+          0.2,
+          4.6
+        ],
+        "y": [
+          0.2,
+          16.6
+        ],
+        "z": [
+          3.15,
+          6.15
+        ]
+      },
+      "source_fact_refs": [
+        "/known_facts/storeys/1/spaces/2"
+      ],
+      "storey_id": "storey-2"
+    },
+    "space-storey-2-storey-2-space-north-teaching": {
+      "bbox": {
+        "x": [
+          4.8,
+          13.0
+        ],
+        "y": [
+          12.2,
+          16.6
+        ],
+        "z": [
+          3.15,
+          6.15
+        ]
+      },
+      "source_fact_refs": [
+        "/known_facts/storeys/1/spaces/1"
+      ],
+      "storey_id": "storey-2"
+    },
+    "space-storey-2-storey-2-space-south-teaching": {
+      "bbox": {
+        "x": [
+          4.8,
+          13.0
+        ],
+        "y": [
+          0.2,
+          4.6
+        ],
+        "z": [
+          3.15,
+          6.15
+        ]
+      },
+      "source_fact_refs": [
+        "/known_facts/storeys/1/spaces/0"
+      ],
+      "storey_id": "storey-2"
+    },
+    "space-storey-3-storey-3-space-circulation": {
+      "bbox": {
+        "x": [
+          0.2,
+          4.6
+        ],
+        "y": [
+          0.2,
+          16.6
+        ],
+        "z": [
+          6.3,
+          9.3
+        ]
+      },
+      "source_fact_refs": [
+        "/known_facts/storeys/2/spaces/2"
+      ],
+      "storey_id": "storey-3"
+    },
+    "space-storey-3-storey-3-space-north-teaching": {
+      "bbox": {
+        "x": [
+          4.8,
+          13.0
+        ],
+        "y": [
+          12.2,
+          16.6
+        ],
+        "z": [
+          6.3,
+          9.3
+        ]
+      },
+      "source_fact_refs": [
+        "/known_facts/storeys/2/spaces/1"
+      ],
+      "storey_id": "storey-3"
+    },
+    "space-storey-3-storey-3-space-south-teaching": {
+      "bbox": {
+        "x": [
+          4.8,
+          13.0
+        ],
+        "y": [
+          0.2,
+          4.6
+        ],
+        "z": [
+          6.3,
+          9.3
+        ]
+      },
+      "source_fact_refs": [
+        "/known_facts/storeys/2/spaces/0"
+      ],
+      "storey_id": "storey-3"
+    }
+  },
+  "stairs": {
+    "stair-1": {
+      "bbox": {
+        "x": [
+          0.4,
+          1.6
+        ],
+        "y": [
+          5.4,
+          10.8
+        ],
+        "z": [
+          0.0,
+          3.15
+        ]
+      },
+      "bbox_issue_code": "STAIR_BBOX_MISMATCH",
+      "flight_ids": [
+        "stair-flight-1"
+      ],
+      "require_steps": true,
+      "source_fact_refs": [
+        "/known_facts/stairs/0"
+      ]
+    },
+    "stair-2": {
+      "bbox": {
+        "x": [
+          2.8,
+          4.0
+        ],
+        "y": [
+          5.4,
+          10.8
+        ],
+        "z": [
+          3.15,
+          6.3
+        ]
+      },
+      "bbox_issue_code": "STAIR_BBOX_MISMATCH",
+      "flight_ids": [
+        "stair-flight-2"
+      ],
+      "require_steps": true,
+      "source_fact_refs": [
+        "/known_facts/stairs/1"
+      ]
+    }
+  },
+  "tolerance": 0.05,
+  "units": "METRE",
+  "unresolved": [],
+  "walls": {
+    "wall-storey-1-storey-1-wall-east-north": {
+      "axis": "y",
+      "bbox": {
+        "x": [
+          13.0,
+          13.2
+        ],
+        "y": [
+          12.0,
+          16.8
+        ],
+        "z": [
+          0.0,
+          3.0
+        ]
+      },
+      "bbox_issue_code": "WALL_SEGMENT_MISMATCH",
+      "bbox_issue_path": "/walls/storey-1-wall-east-north",
+      "source_fact_refs": [
+        "/known_facts/walls/5"
+      ]
+    },
+    "wall-storey-1-storey-1-wall-east-south": {
+      "axis": "y",
+      "bbox": {
+        "x": [
+          13.0,
+          13.2
+        ],
+        "y": [
+          0.0,
+          4.8
+        ],
+        "z": [
+          0.0,
+          3.0
+        ]
+      },
+      "bbox_issue_code": "WALL_SEGMENT_MISMATCH",
+      "bbox_issue_path": "/walls/storey-1-wall-east-south",
+      "source_fact_refs": [
+        "/known_facts/walls/1"
+      ]
+    },
+    "wall-storey-1-storey-1-wall-north": {
+      "axis": "x",
+      "bbox": {
+        "x": [
+          0.2,
+          13.0
+        ],
+        "y": [
+          16.6,
+          16.8
+        ],
+        "z": [
+          0.0,
+          3.0
+        ]
+      },
+      "bbox_issue_code": "WALL_SEGMENT_MISMATCH",
+      "bbox_issue_path": "/walls/storey-1-wall-north",
+      "source_fact_refs": [
+        "/known_facts/walls/6"
+      ]
+    },
+    "wall-storey-1-storey-1-wall-notch-north": {
+      "axis": "x",
+      "bbox": {
+        "x": [
+          4.8,
+          13.0
+        ],
+        "y": [
+          12.0,
+          12.2
+        ],
+        "z": [
+          0.0,
+          3.0
+        ]
+      },
+      "bbox_issue_code": "WALL_SEGMENT_MISMATCH",
+      "bbox_issue_path": "/walls/storey-1-wall-notch-north",
+      "source_fact_refs": [
+        "/known_facts/walls/4"
+      ]
+    },
+    "wall-storey-1-storey-1-wall-notch-south": {
+      "axis": "x",
+      "bbox": {
+        "x": [
+          4.8,
+          13.0
+        ],
+        "y": [
+          4.6,
+          4.8
+        ],
+        "z": [
+          0.0,
+          3.0
+        ]
+      },
+      "bbox_issue_code": "WALL_SEGMENT_MISMATCH",
+      "bbox_issue_path": "/walls/storey-1-wall-notch-south",
+      "source_fact_refs": [
+        "/known_facts/walls/2"
+      ]
+    },
+    "wall-storey-1-storey-1-wall-notch-west": {
+      "axis": "y",
+      "bbox": {
+        "x": [
+          4.6,
+          4.8
+        ],
+        "y": [
+          4.8,
+          12.0
+        ],
+        "z": [
+          0.0,
+          3.0
+        ]
+      },
+      "bbox_issue_code": "WALL_SEGMENT_MISMATCH",
+      "bbox_issue_path": "/walls/storey-1-wall-notch-west",
+      "source_fact_refs": [
+        "/known_facts/walls/3"
+      ]
+    },
+    "wall-storey-1-storey-1-wall-partition-north": {
+      "axis": "y",
+      "bbox": {
+        "x": [
+          4.6,
+          4.8
+        ],
+        "y": [
+          12.0,
+          16.6
+        ],
+        "z": [
+          0.0,
+          3.0
+        ]
+      },
+      "bbox_issue_code": "WALL_SEGMENT_MISMATCH",
+      "bbox_issue_path": "/walls/storey-1-wall-partition-north",
+      "source_fact_refs": [
+        "/known_facts/storeys/0/walls/interior/1"
+      ]
+    },
+    "wall-storey-1-storey-1-wall-partition-south": {
+      "axis": "y",
+      "bbox": {
+        "x": [
+          4.6,
+          4.8
+        ],
+        "y": [
+          0.2,
+          4.8
+        ],
+        "z": [
+          0.0,
+          3.0
+        ]
+      },
+      "bbox_issue_code": "WALL_SEGMENT_MISMATCH",
+      "bbox_issue_path": "/walls/storey-1-wall-partition-south",
+      "source_fact_refs": [
+        "/known_facts/storeys/0/walls/interior/0"
+      ]
+    },
+    "wall-storey-1-storey-1-wall-south": {
+      "axis": "x",
+      "bbox": {
+        "x": [
+          0.2,
+          13.0
+        ],
+        "y": [
+          0.0,
+          0.2
+        ],
+        "z": [
+          0.0,
+          3.0
+        ]
+      },
+      "bbox_issue_code": "WALL_SEGMENT_MISMATCH",
+      "bbox_issue_path": "/walls/storey-1-wall-south",
+      "source_fact_refs": [
+        "/known_facts/walls/0"
+      ]
+    },
+    "wall-storey-1-storey-1-wall-west": {
+      "axis": "y",
+      "bbox": {
+        "x": [
+          0.0,
+          0.2
+        ],
+        "y": [
+          0.0,
+          16.8
+        ],
+        "z": [
+          0.0,
+          3.0
+        ]
+      },
+      "bbox_issue_code": "WALL_SEGMENT_MISMATCH",
+      "bbox_issue_path": "/walls/storey-1-wall-west",
+      "source_fact_refs": [
+        "/known_facts/walls/7"
+      ]
+    },
+    "wall-storey-2-storey-2-wall-east-north": {
+      "axis": "y",
+      "bbox": {
+        "x": [
+          13.0,
+          13.2
+        ],
+        "y": [
+          12.0,
+          16.8
+        ],
+        "z": [
+          3.15,
+          6.15
+        ]
+      },
+      "bbox_issue_code": "WALL_SEGMENT_MISMATCH",
+      "bbox_issue_path": "/walls/storey-2-wall-east-north",
+      "source_fact_refs": [
+        "/known_facts/walls/15"
+      ]
+    },
+    "wall-storey-2-storey-2-wall-east-south": {
+      "axis": "y",
+      "bbox": {
+        "x": [
+          13.0,
+          13.2
+        ],
+        "y": [
+          0.0,
+          4.8
+        ],
+        "z": [
+          3.15,
+          6.15
+        ]
+      },
+      "bbox_issue_code": "WALL_SEGMENT_MISMATCH",
+      "bbox_issue_path": "/walls/storey-2-wall-east-south",
+      "source_fact_refs": [
+        "/known_facts/walls/11"
+      ]
+    },
+    "wall-storey-2-storey-2-wall-north": {
+      "axis": "x",
+      "bbox": {
+        "x": [
+          0.2,
+          13.0
+        ],
+        "y": [
+          16.6,
+          16.8
+        ],
+        "z": [
+          3.15,
+          6.15
+        ]
+      },
+      "bbox_issue_code": "WALL_SEGMENT_MISMATCH",
+      "bbox_issue_path": "/walls/storey-2-wall-north",
+      "source_fact_refs": [
+        "/known_facts/walls/16"
+      ]
+    },
+    "wall-storey-2-storey-2-wall-notch-north": {
+      "axis": "x",
+      "bbox": {
+        "x": [
+          4.8,
+          13.0
+        ],
+        "y": [
+          12.0,
+          12.2
+        ],
+        "z": [
+          3.15,
+          6.15
+        ]
+      },
+      "bbox_issue_code": "WALL_SEGMENT_MISMATCH",
+      "bbox_issue_path": "/walls/storey-2-wall-notch-north",
+      "source_fact_refs": [
+        "/known_facts/walls/14"
+      ]
+    },
+    "wall-storey-2-storey-2-wall-notch-south": {
+      "axis": "x",
+      "bbox": {
+        "x": [
+          4.8,
+          13.0
+        ],
+        "y": [
+          4.6,
+          4.8
+        ],
+        "z": [
+          3.15,
+          6.15
+        ]
+      },
+      "bbox_issue_code": "WALL_SEGMENT_MISMATCH",
+      "bbox_issue_path": "/walls/storey-2-wall-notch-south",
+      "source_fact_refs": [
+        "/known_facts/walls/12"
+      ]
+    },
+    "wall-storey-2-storey-2-wall-notch-west": {
+      "axis": "y",
+      "bbox": {
+        "x": [
+          4.6,
+          4.8
+        ],
+        "y": [
+          4.8,
+          12.0
+        ],
+        "z": [
+          3.15,
+          6.15
+        ]
+      },
+      "bbox_issue_code": "WALL_SEGMENT_MISMATCH",
+      "bbox_issue_path": "/walls/storey-2-wall-notch-west",
+      "source_fact_refs": [
+        "/known_facts/walls/13"
+      ]
+    },
+    "wall-storey-2-storey-2-wall-partition-north": {
+      "axis": "y",
+      "bbox": {
+        "x": [
+          4.6,
+          4.8
+        ],
+        "y": [
+          12.0,
+          16.6
+        ],
+        "z": [
+          3.15,
+          6.15
+        ]
+      },
+      "bbox_issue_code": "WALL_SEGMENT_MISMATCH",
+      "bbox_issue_path": "/walls/storey-2-wall-partition-north",
+      "source_fact_refs": [
+        "/known_facts/storeys/1/walls/interior/1"
+      ]
+    },
+    "wall-storey-2-storey-2-wall-partition-south": {
+      "axis": "y",
+      "bbox": {
+        "x": [
+          4.6,
+          4.8
+        ],
+        "y": [
+          0.2,
+          4.8
+        ],
+        "z": [
+          3.15,
+          6.15
+        ]
+      },
+      "bbox_issue_code": "WALL_SEGMENT_MISMATCH",
+      "bbox_issue_path": "/walls/storey-2-wall-partition-south",
+      "source_fact_refs": [
+        "/known_facts/storeys/1/walls/interior/0"
+      ]
+    },
+    "wall-storey-2-storey-2-wall-south": {
+      "axis": "x",
+      "bbox": {
+        "x": [
+          0.2,
+          13.0
+        ],
+        "y": [
+          0.0,
+          0.2
+        ],
+        "z": [
+          3.15,
+          6.15
+        ]
+      },
+      "bbox_issue_code": "WALL_SEGMENT_MISMATCH",
+      "bbox_issue_path": "/walls/storey-2-wall-south",
+      "source_fact_refs": [
+        "/known_facts/walls/10"
+      ]
+    },
+    "wall-storey-2-storey-2-wall-west": {
+      "axis": "y",
+      "bbox": {
+        "x": [
+          0.0,
+          0.2
+        ],
+        "y": [
+          0.0,
+          16.8
+        ],
+        "z": [
+          3.15,
+          6.15
+        ]
+      },
+      "bbox_issue_code": "WALL_SEGMENT_MISMATCH",
+      "bbox_issue_path": "/walls/storey-2-wall-west",
+      "source_fact_refs": [
+        "/known_facts/walls/17"
+      ]
+    },
+    "wall-storey-3-storey-3-wall-east-north": {
+      "axis": "y",
+      "bbox": {
+        "x": [
+          13.0,
+          13.2
+        ],
+        "y": [
+          12.0,
+          16.8
+        ],
+        "z": [
+          6.3,
+          9.3
+        ]
+      },
+      "bbox_issue_code": "WALL_SEGMENT_MISMATCH",
+      "bbox_issue_path": "/walls/storey-3-wall-east-north",
+      "source_fact_refs": [
+        "/known_facts/walls/25"
+      ]
+    },
+    "wall-storey-3-storey-3-wall-east-south": {
+      "axis": "y",
+      "bbox": {
+        "x": [
+          13.0,
+          13.2
+        ],
+        "y": [
+          0.0,
+          4.8
+        ],
+        "z": [
+          6.3,
+          9.3
+        ]
+      },
+      "bbox_issue_code": "WALL_SEGMENT_MISMATCH",
+      "bbox_issue_path": "/walls/storey-3-wall-east-south",
+      "source_fact_refs": [
+        "/known_facts/walls/21"
+      ]
+    },
+    "wall-storey-3-storey-3-wall-north": {
+      "axis": "x",
+      "bbox": {
+        "x": [
+          0.2,
+          13.0
+        ],
+        "y": [
+          16.6,
+          16.8
+        ],
+        "z": [
+          6.3,
+          9.3
+        ]
+      },
+      "bbox_issue_code": "WALL_SEGMENT_MISMATCH",
+      "bbox_issue_path": "/walls/storey-3-wall-north",
+      "source_fact_refs": [
+        "/known_facts/walls/26"
+      ]
+    },
+    "wall-storey-3-storey-3-wall-notch-north": {
+      "axis": "x",
+      "bbox": {
+        "x": [
+          4.8,
+          13.0
+        ],
+        "y": [
+          12.0,
+          12.2
+        ],
+        "z": [
+          6.3,
+          9.3
+        ]
+      },
+      "bbox_issue_code": "WALL_SEGMENT_MISMATCH",
+      "bbox_issue_path": "/walls/storey-3-wall-notch-north",
+      "source_fact_refs": [
+        "/known_facts/walls/24"
+      ]
+    },
+    "wall-storey-3-storey-3-wall-notch-south": {
+      "axis": "x",
+      "bbox": {
+        "x": [
+          4.8,
+          13.0
+        ],
+        "y": [
+          4.6,
+          4.8
+        ],
+        "z": [
+          6.3,
+          9.3
+        ]
+      },
+      "bbox_issue_code": "WALL_SEGMENT_MISMATCH",
+      "bbox_issue_path": "/walls/storey-3-wall-notch-south",
+      "source_fact_refs": [
+        "/known_facts/walls/22"
+      ]
+    },
+    "wall-storey-3-storey-3-wall-notch-west": {
+      "axis": "y",
+      "bbox": {
+        "x": [
+          4.6,
+          4.8
+        ],
+        "y": [
+          4.8,
+          12.0
+        ],
+        "z": [
+          6.3,
+          9.3
+        ]
+      },
+      "bbox_issue_code": "WALL_SEGMENT_MISMATCH",
+      "bbox_issue_path": "/walls/storey-3-wall-notch-west",
+      "source_fact_refs": [
+        "/known_facts/walls/23"
+      ]
+    },
+    "wall-storey-3-storey-3-wall-partition-north": {
+      "axis": "y",
+      "bbox": {
+        "x": [
+          4.6,
+          4.8
+        ],
+        "y": [
+          12.0,
+          16.6
+        ],
+        "z": [
+          6.3,
+          9.3
+        ]
+      },
+      "bbox_issue_code": "WALL_SEGMENT_MISMATCH",
+      "bbox_issue_path": "/walls/storey-3-wall-partition-north",
+      "source_fact_refs": [
+        "/known_facts/storeys/2/walls/interior/1"
+      ]
+    },
+    "wall-storey-3-storey-3-wall-partition-south": {
+      "axis": "y",
+      "bbox": {
+        "x": [
+          4.6,
+          4.8
+        ],
+        "y": [
+          0.2,
+          4.8
+        ],
+        "z": [
+          6.3,
+          9.3
+        ]
+      },
+      "bbox_issue_code": "WALL_SEGMENT_MISMATCH",
+      "bbox_issue_path": "/walls/storey-3-wall-partition-south",
+      "source_fact_refs": [
+        "/known_facts/storeys/2/walls/interior/0"
+      ]
+    },
+    "wall-storey-3-storey-3-wall-south": {
+      "axis": "x",
+      "bbox": {
+        "x": [
+          0.2,
+          13.0
+        ],
+        "y": [
+          0.0,
+          0.2
+        ],
+        "z": [
+          6.3,
+          9.3
+        ]
+      },
+      "bbox_issue_code": "WALL_SEGMENT_MISMATCH",
+      "bbox_issue_path": "/walls/storey-3-wall-south",
+      "source_fact_refs": [
+        "/known_facts/walls/20"
+      ]
+    },
+    "wall-storey-3-storey-3-wall-west": {
+      "axis": "y",
+      "bbox": {
+        "x": [
+          0.0,
+          0.2
+        ],
+        "y": [
+          0.0,
+          16.8
+        ],
+        "z": [
+          6.3,
+          9.3
+        ]
+      },
+      "bbox_issue_code": "WALL_SEGMENT_MISMATCH",
+      "bbox_issue_path": "/walls/storey-3-wall-west",
+      "source_fact_refs": [
+        "/known_facts/walls/27"
+      ]
+    }
+  },
+  "windows": {}
+}
